@@ -162,15 +162,50 @@
 # ALSO vtable slot 6 -- the slot every seat wires by name -- which is section
 # 14's practical rule firing a second time.
 #
-# THE CLAIM THAT ONE TU IS THE WHOLE WALL RESTS ON THE IMAGE. Section 4 says the
-# two prescribed detectors (a link, a `::*` sweep) are a floor rather than a
-# census because the plain-int third shape defeats both. This lane scanned the
-# OVERLAY for the five-instruction encoding itself --
+# THE CLAIM THAT ONE TU IS THE WHOLE WALL RESTS ON THE IMAGE. port/
+# mg_fanout_costs.txt section 4 says the two prescribed detectors (a link, a
+# `::*` sweep) are a floor rather than a census because the plain-int third
+# shape defeats both. This lane scanned the OVERLAY for the five-instruction
+# encoding itself --
 #     add Rd,Rn,Rm,asr #1   then   ands Rx,Ry,#1
-# -- which is blind to spelling. Over all of ov006 it returns 114 sites; over
-# this class's code span (0x02124908..0x0212a3c0) it returns exactly ONE, at
-# 0x021254dc. The `::*` sweep over this slice's closure agrees and adds nothing.
-# Details in MgBSC_StateDispatch.cpp section 3.
+# -- which is blind to spelling. Over all of ov006 it returns 114 sites.
+#
+# THE SCAN IS OVER THE CLASS'S BODIES, EACH AT ITS OWN START AND SIZE FROM
+# config/arm9/overlays/ov006/symbols.txt, NOT over an address span:
+#
+#   this class's 20 OWN bodies (8 vtable overrides, 11 state       1 site
+#     bodies, the factory)                                         0x021254dc
+#   the 8 INHERITED dScMgSingle3DBase_c bodies                     0 sites
+#
+# One site, in func_ov006_021254c0, which is slot 6. The `::*` sweep over this
+# slice's closure agrees and adds nothing.
+#
+# AN EARLIER VERSION OF THIS PARAGRAPH USED A SPAN AND THE SPAN WAS WRONG TWICE.
+# It read "over this class's code span (0x02124908..0x0212a3c0) it returns
+# exactly ONE". That span is NOT this class's -- its own bodies end at
+# 0x0212568c and 0x0212a3c0 is 0x4d34 bytes further on, inside the NEIGHBOUR's
+# code -- and the scan over it returns FIVE. The four extra sites are real, and
+# they belong to exactly the class section 4 above attributes those four state
+# tables to. THE TWO SECTIONS NOW AGREE: section 4 says the tables are 0x179's,
+# and this section says the dispatchers that read them are 0x179's too.
+#
+# THE FOUR ARE NAMED SO THE NEXT LANE INHERITS A PRICE, NOT JUST A VTABLE.
+# Section 4 hands whoever takes MgSnowballSlalom a resolved vtable
+# (data_ov006_0214000c). A resolved vtable with the wall priced at zero would be
+# worse than nothing, so:
+#
+#   0x02129dc0  func_ov006_02129d94   dispatches data_ov006_02143070
+#   0x02129df8  func_ov006_02129d94   AND data_ov006_02143020 -- one TU, two
+#                                     tables, two decode sites
+#   0x0212a248  func_ov006_0212a224   dispatches data_ov006_02143050
+#   0x0212a324  func_ov006_0212a2e0   dispatches data_ov006_02143038
+#
+# Four decode sites across THREE TUs, covering FOUR tables and 14 slots, all
+# arity 1. That class's own vtable slot 6 (func_ov006_021283a4) is NOT among
+# them -- it reaches the machine by CALLING func_ov006_0212a2e0 rather than
+# decoding a pair itself, so reading slot 6 alone would price its wall at zero.
+# Its machine is also TWO LEVELS DEEP: _0212a224 and _02129d94 are slots 1 and 2
+# of data_ov006_02143038. Details in MgBSC_StateDispatch.cpp section 3.
 #
 # ALSO EXCLUDED, both against existing host copies rather than against this
 # class:
@@ -216,20 +251,44 @@
 #
 # ---- 9. THE SLICE IS THE DELTA ONLY --------------------------------------
 #
-# The closure was walked over the ROM's arm_call relocation graph from this
-# class's fourteen override bodies, its factory and its eleven state bodies:
-# 539 TUs reached, of which the great majority are already carried by a WIRED
-# slice, 17 are replaced by existing host copies, and 3 are excluded per
-# section 6. That leaves the 87 lines below.
+# THE 23 LINES BELOW ARE WHAT THE LINK ASKED FOR, and the route to them is
+# worth recording because the first route was wrong.
 #
-# THE "WIRED" QUALIFIER IS LOAD-BEARING AND COST THIS LANE ONE PASS. The first
-# delta was taken against every port/slice_*.txt on disk, and eight of those
-# files are not read by port/CMakeLists.txt at all -- port/slice_mga361.txt
-# among them, the 0x169 derivation that was never seated. Counting an unwired
-# slice as coverage hid two TUs this seat genuinely needs
-# (src/func_ov004_020b0620.cpp and src/func_ov006_0210a6e4.cpp, both of which
-# then turned out to be host-copy exclusions rather than slice lines -- but the
-# check is what surfaced them).
+# THE STATIC CLOSURE WALK OVER-REACHED AND WAS ABANDONED. Walking the ROM's
+# arm_call relocation graph from this class's fourteen override bodies, its
+# factory and its eleven state bodies reaches 539 TUs, and subtracting what a
+# wired slice already carries leaves 87. Wiring those 87 does not build. The
+# graph keeps walking through the framework into arm9 leaves that the PORT DOES
+# NOT REACH THE SAME WAY THE ROM DOES -- some are hand-written mwcc `asm void`
+# primitives MSVC cannot compile at all (src/DecompressLZ16.c is the one that
+# failed first), and others are already provided by a host seam
+# (hal/fs.cpp defines DecompressLZ16, hal/cxx_aliases.cpp the ARM context
+# helpers, and so on). A relocation graph measures what the ROM calls. A slice
+# has to list what the HOST LINKER still wants, and those are different sets.
+#
+# SO THE DOCUMENTED METHOD WAS USED INSTEAD: seed with the class's own TUs,
+# link, and add exactly what LNK2019 names. It closed in THREE waves and asked
+# for FOUR symbols in total -- two ordinary /alternatename rows (both in
+# port/unmatched/MgBSC_Faces.cpp) and two slice lines
+# (src/func_ov004_020b5c18.cpp, which func_ov004_020b5ed0 calls, and
+# src/func_ov004_020b6324.c, which slot 21 tail-jumps to). That is section 14's
+# "budget ONE wave plus its own alias row", near enough.
+#
+# THE COUNT IS CHECKED AGAINST THE HEADLINE RATHER THAN TRUSTED. port/tools/
+# linkage.py reads 6665 before this seat and 6688 after, and 6688 - 6665 = 23 =
+# the number of src lines below. Section 14's rule is that every slice line
+# moves the headline by exactly one, banner or no banner, so an equal delta is
+# also the proof that CMake read every line -- a line lost to a stray bracket in
+# this file would show up as a short delta.
+#
+# ONE THING THE ABANDONED WALK DID EARN, because it is a trap the next lane can
+# still hit: the delta must be taken against slices CMakeLists ACTUALLY READS.
+# Eight port/slice_*.txt files are not read by port/CMakeLists.txt at all --
+# port/slice_mga361.txt among them, the 0x169 derivation that was never seated
+# -- and counting an unwired slice as coverage hides TUs a seat genuinely needs.
+# Here it hid src/func_ov004_020b0620.cpp and src/func_ov006_0210a6e4.cpp; both
+# turned out to be host-copy exclusions rather than slice lines (section 6), but
+# the check is what surfaced them.
 #
 # Both of this class's overlay constructors are already in port/slice_mg1.txt
 # (lines 155 and 156) as part of the thirty-five, so neither is listed here.

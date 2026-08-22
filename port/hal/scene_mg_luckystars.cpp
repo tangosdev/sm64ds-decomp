@@ -156,9 +156,20 @@
 //
 // The claim that ONE TU is the whole wall for this class is not made from a
 // source sweep.  MgBSC_StateDispatch.cpp section 3 scans the OVERLAY IMAGE for
-// the five-instruction ARM Itanium encoding and finds exactly one site in this
-// class's whole code span.  That detector is blind to spelling, so it covers
+// the five-instruction ARM Itanium encoding, body by body, each taken at its
+// own start and size from ov006's symbols.txt: ONE site across this class's
+// twenty own bodies (0x021254dc, slot 6) and ZERO across the eight it inherits
+// from dScMgSingle3DBase_c.  That detector is blind to spelling, so it covers
 // the plain-int third shape the two prescribed detectors cannot see.
+//
+// BODY BY BODY, NOT BY ADDRESS RANGE.  An earlier version of this file scanned
+// the span 0x02124908..0x0212a3c0 and called it "this class's whole code span".
+// It is not: this class's bodies end at 0x0212568c, and that range runs 0x4d34
+// bytes further into the NEIGHBOUR, where it picks up four more real dispatch
+// sites belonging to MgSnowballSlalom.  MgBSC_StateDispatch.cpp section 3 names
+// those four, because port/slice_lky.txt section 4 hands that class's vtable to
+// a future lane and a resolved vtable beside a wall priced at zero would be
+// worse than handing them nothing.
 //
 // ---- 8. WHAT THIS SEAT DOES NOT CLAIM -------------------------------------
 //

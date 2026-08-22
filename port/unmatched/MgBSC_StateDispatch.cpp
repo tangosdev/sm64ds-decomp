@@ -76,8 +76,8 @@
 // port/mg_fanout_costs.txt section 14 tells a lane to ask "how deep is the
 // machine" rather than "how many TUs name the table", and to check whether any
 // state ADDRESS is also a dispatcher.  None of the eleven above is: the ROM
-// scan in section 3 finds exactly one Itanium decode site in this class's whole
-// code span, and it is slot 6's.
+// scan in section 3 walks this class's bodies one at a time and finds exactly
+// one Itanium decode site across all twenty of them, and it is slot 6's.
 //
 // ---- 3. THE DETECTOR THAT SETTLES IT IS THE ROM, NOT THE SOURCE -----------
 //
@@ -96,11 +96,49 @@
 //
 // That test is blind to how the source spells the pair, so it finds the
 // extern "C" shape, the C++-linkage shape and the plain-int shape alike.  Run
-// over the whole of ov006 it returns 114 sites; run over this class's code span
-// (0x02124908..0x0212a3c0) it returns exactly ONE, at 0x021254dc, inside
-// func_ov006_021254c0.  The `::*` sweep over this class's 90-TU closure agrees
-// and adds nothing.  So this file is the whole of this class's wall, and the
-// claim rests on the image rather than on a source convention.
+// over the whole of ov006 it returns 114 sites.
+//
+// SCAN THE CLASS'S BODIES, NOT AN ADDRESS SPAN.  Each body is taken at its own
+// start and size from config/arm9/overlays/ov006/symbols.txt:
+//
+//   this class's 20 OWN bodies       1 site   0x021254dc, in func_ov006_021254c0
+//     (8 vtable overrides + 11 state bodies + the factory)
+//   the 8 INHERITED middle-base       0 sites
+//     bodies of dScMgSingle3DBase_c
+//
+// So the wall is ONE TU, at vtable slot 6.  The `::*` sweep over this class's
+// closure agrees and adds nothing, and the claim rests on the image rather than
+// on a source convention.
+//
+// AN EARLIER VERSION OF THIS PARAGRAPH SCANNED A SPAN AND THE SPAN WAS WRONG
+// TWICE, which is worth keeping because the mistake is the one this class
+// invites.  It read "over this class's code span (0x02124908..0x0212a3c0) it
+// returns exactly ONE".  That span is NOT this class's -- its own bodies end at
+// 0x0212568c, and 0x0212a3c0 is 0x4d34 bytes further on, deep inside the
+// NEIGHBOUR's code -- and the scan over it returns FIVE, not one.  The extra
+// four are genuine dispatch sequences and they belong to the class section 4
+// correctly attributes them to.  A body-by-body scan cannot make that error;
+// an address range picked by eye can, and did.
+//
+// THE OTHER FOUR SITES ARE MgSnowballSlalom's, AND THE NEXT LANE IS OWED THEM.
+// Section 4 hands whoever takes 0x179 a resolved vtable (data_ov006_0214000c).
+// Handing them a resolved vtable and a wall priced at zero would be worse than
+// handing them nothing, so the four sites are named here:
+//
+//   0x02129dc0  func_ov006_02129d94   dispatches data_ov006_02143070
+//   0x02129df8  func_ov006_02129d94   AND data_ov006_02143020 -- one TU, two
+//                                     tables, two decode sites
+//   0x0212a248  func_ov006_0212a224   dispatches data_ov006_02143050
+//   0x0212a324  func_ov006_0212a2e0   dispatches data_ov006_02143038
+//
+// Four decode sites across THREE TUs, covering FOUR tables (14 slots in total,
+// all arity 1, built by src/__sinit_ov006_021333e0.c).  Its vtable slot 6,
+// func_ov006_021283a4, is NOT one of them: it reaches the machine by CALLING
+// func_ov006_0212a2e0 rather than decoding a pair itself, so a lane that only
+// read slot 6 would price that class's wall at zero as well.  0x179's state
+// machine is also TWO LEVELS DEEP -- _0212a224 and _02129d94 are themselves
+// slots 1 and 2 of data_ov006_02143038 -- which is the section 14 depth
+// question already answered for them.
 //
 // ---- 4. THE SLOT-6 DISASSEMBLY, WHICH IS THE ONLY THING WORTH COPYING -----
 //
