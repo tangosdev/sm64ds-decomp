@@ -119,6 +119,17 @@
 //
 // ---- 6. THREE FLOORS, AND THEY ARE ALL ON THE PATH -----------------------
 //
+// AMENDED, run mg10 lane F371: TWO OF THE THREE ARE CLOSED. The ov004 floor
+// turned out to be BRESENHAM'S LINE ALGORITHM with vtable slot 34 as its
+// brush -- it is what draws this board's four rails and its rungs -- and
+// seating it made slot 34 reachable for the first time in port history, which
+// is what finally gave the mb_v34 defect noted below a witness. That thunk is
+// repaired. func_ov006_020d36a4, the round setup, is seated as well. Only
+// func_ov006_020d27dc (0xe48, the walker tick) still stands, and
+// port/mg_fanout_costs.txt section 21 maps it for whoever takes it. The
+// paragraphs below are left as lane S371 wrote them because the derivation is
+// still how all three were found; only the status changed.
+//
 // func_ov006_020d27dc (0xe48) and func_ov006_020d36a4 (0x4fc) have config
 // symbols, no delink block and no src file in any overlay. Slot 6 calls both;
 // func_ov006_020d3ba0 -- which slot 0 and slot 18 both end on -- calls the

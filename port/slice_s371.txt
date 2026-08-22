@@ -330,6 +330,14 @@
 #
 # ---- 6. TWO HARD FLOORS, BOTH ON THE TICK PATH ----------------------------
 #
+# AMENDED, run mg10 lane F371: ONE OF THE TWO IS CLOSED and the third floor
+# this file's header counts (the ov004 one, in section 7 below) is closed too.
+# func_ov006_020d36a4 is src/func_ov006_020d36a4.c now, seated at the end of
+# this file, and func_ov004_020ae5c4 is src/func_ov004_020ae5c4.c in
+# port/slice_mg1.txt. What follows is left as lane S371 wrote it because the
+# DERIVATION is still how both were found; only the status changed.
+# port/mg_fanout_costs.txt section 21 has the closures and maps the survivor.
+#
 # The cost table's nosrc column reads 0 for this class and that column counts
 # only vtable BODIES. Section 13 CORRECTION 3's method -- a delinks join over
 # every CALLEE of every override, not over the state addresses -- finds two:

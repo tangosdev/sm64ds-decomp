@@ -22,6 +22,16 @@ lane, because it corrects two numbers in section 2 that a link cannot produce.
 Sections 1, 3, 5, 6, 7 and 9 are MG1's and are unchanged except where section
 10 names them.
 
+AMENDED BY run mg10 lane F371. SECTION 21 IS NEW and it closes two of section
+19's three floors. Two things in it are worth a reader's time before the rest:
+the ov004 floor turned out to be BRESENHAM'S LINE ALGORITHM with vtable slot 34
+as its brush, which is how the amidakuji board is drawn and therefore what the
+"draw lines on the Touch Screen" rules text is about; and seating it made slot
+34 REACHABLE FOR THE FIRST TIME IN PORT HISTORY, which is what finally gave
+section 19's deliberately-unrepaired mb_v34 defect a witness. Section 19's
+"whether it PLAYS without them is not something this lane can say" is answered
+in section 21(5), and the answer is no, with the reason named.
+
 
 1. THE HEADLINE, AND THE CORRECTION IT RESTS ON
 ------------------------------------------------
@@ -2761,3 +2771,204 @@ of these costs the port one LINKED function today, so retiring them moves the
 headline in the right direction as well as the honest one. Nothing here is a
 port defect that a port lane can close alone -- that is the whole point of the
 list, and it is why none of these were fixed in the run that found them.
+
+21. THE AMIDA BOARD IS A LINE RASTERISER, AND SLOT 34 DISPATCHES AT LAST,
+    run mg10 lane F371
+--------------------------------------------------------------------------------
+
+Worktree C:/tmp/mAf, branch mg10-f371, base c941e1855, private build
+C:/tmp/mAf/build/port with CMAKE_HOME_DIRECTORY verified C:/tmp/mAf/port.
+Baseline gate on that tree before a line was edited: build green with every
+post-link guard passing, and scene 371 at 300 frames under SM64DS_FAULTS_FATAL=1
+exit 0 and clean, reproducing section 19's numbers exactly -- init 1, behavior
+253, render 300, slot 36 asked 1322 answering true 0, slot 35 asked 0, floors
+173 and 1, mode byte 0, layout +0x4700 = 0x98.
+
+BOTH OVERLAY BASES WERE PROVEN BEFORE ANY DISASSEMBLY WAS TRUSTED, which is the
+cheap half of section 15's method and the half a lane skips at its peril.
+ov006 at 0x020bfec0: func_ov006_020d1170 and _020d1188 reproduce section 19's
+six-instruction mode predicates instruction for instruction, cmp #1 and cmp #2.
+ov004 at 0x020ad660: func_ov004_020ad660 reproduces the family's five-
+instruction slot 35, and 0x020ae5c4's prologue reproduces its nine-register push
+and 0x14 subtraction.
+
+SECTION 19 LEFT THREE FLOORS. TWO ARE CLOSED AND THE THIRD IS MEASURED.
+
+  func_ov004_020ae5c4  0x294  CLOSED  src/func_ov004_020ae5c4.c  NONMATCHING
+  func_ov006_020d36a4  0x4fc  CLOSED  src/func_ov006_020d36a4.c  NONMATCHING
+  func_ov006_020d27dc  0xe48  STANDS  and section 19's 792 asks are still 792
+
+---- 1. WHAT THE ov004 FLOOR IS, AND IT ANSWERS SECTION 19's OPEN QUESTION ----
+
+func_ov004_020ae5c4 IS BRESENHAM'S LINE ALGORITHM. It walks from (x0,y0) to
+(x1,y1) -- x-major or y-major on |dx| >= |dy|, error accumulator seeded at half
+the major axis, the minor axis stepped on overflow -- and at every lattice point
+it visits it dispatches VTABLE SLOT 34. Slot 34 is the BRUSH: the base's own
+body, src/func_ov004_020ae3b4.c, writes an n-by-n block of val through
+MultiCopy_Int. So the pair is "draw a line of thickness n in colour val", and
+the seven parameters are (obj, x0, y0, x1, y1, val, n).
+
+THE AMIDAKUJI BOARD IS DRAWN WITH IT, and the two halves were derived
+independently and then agreed, which is what makes this a finding rather than a
+reading. src/func_ov006_020d3ba0.c calls it with (0x20, -0xb4) -> (0x20,
++0x4700) and the same for 0x60, 0xa0 and 0xe0 -- FOUR VERTICAL RAILS -- and
+with (x, y) -> (x + 0x40, y) for the horizontal RUNGS. Separately,
+func_ov006_020d36a4's tail writes each walker's start X as LANE[i] * 64 + 32,
+which is 32, 96, 160 and 224. The board and the walkers agree on where the
+ladder is, and neither number was read off the other.
+
+That is the mechanism behind both titles' rules text. Section 19 quoted "draw
+lines on the Touch Screen to create new routes for him" and called touch the
+live question; this is the code the stylus would be driving.
+
+---- 2. SLOT 34 IS REACHABLE NOW, AND THE mb_v34 REPAIR HAS ITS WITNESS ------
+
+SECTION 19 FOUND A LIVE HOST-ABI DEFECT AND DELIBERATELY DID NOT FIX IT, on the
+rule that a repair with no dispatch to witness it is wiring without evidence.
+hal/scene_mg.cpp's shared mb_v34 was declared (void *, void *) and called the
+five-parameter src/func_ov004_020ae3b4.c with ONE argument. It could not be
+convicted because the tree's ONLY slot-34 dispatcher is func_ov004_020ae5c4 --
+eight ldr Rd,[Rn,#0x88] sites, every one inside it, each storing one word at
+[sp] before the blx -- and that body was TRAPPED. Slot 34 was unreachable on
+every scene rather than merely unreached on the ones anybody had booted.
+
+SEATING THE DISPATCHER IS WHAT TURNED THE WITNESS ON. With the body in place,
+scene 371 at 300 frames enters slot 34 ONE THOUSAND SEVEN HUNDRED AND EIGHTY-
+FIVE times, where the census had no row for it at all before. The thunk now
+takes and forwards cx, cy, val and n, and the five are read off the DISPATCH
+SITES rather than off the callee:
+
+    str r7,[sp] / ldr Rd,[r0] / ldr r3,[sp,#0x3c] / ldr Rd,[Rd,#0x88]
+    / mov r1,sb / mov r2,r8 / blx Rd
+
+r1 and r2 are the walked coordinates, r3 is the caller's val, the pushed word is
+its n, and src/func_ov004_020ae3b4.c declares the same five.
+
+AND THE ARITY RATCHET AGREED WITHOUT BEING ASKED, which is the cheapest
+confirmation in the run. port/tools/aritycheck.py --gate-plainfunc came back
+"117 baselined, 117 live, 0 NEW, 1 retired" and the retired row was
+func_ov004_020ae3b4|port/hal/scene_mg.cpp -- the exact declaration repaired. The
+row is deleted from aritycheck_plainfunc_baseline.txt as the gate instructs. The
+receiver ratchet is 166 live, 0 NEW.
+
+---- 3. WHAT THE ov006 ROUND SETUP DOES -------------------------------------
+
+func_ov006_020d36a4 shuffles the four ladder lanes and refuses a board that
+repeats the previous round. Three arms, on slot 36 and on the walker count:
+
+  MODE 2 ("Connect the Characters")  a full four-lane Fisher-Yates, then the
+      goal rows off the state index -- {0,0,3,3} for state 0, {0,0,1,3} for
+      states 1, 3 and 5, and the identity otherwise -- written through the
+      permutation into data_ov006_02141640. On the first round (+0x5374 == 0) it
+      is accepted; afterwards the previous board is saved in
+      data_ov006_02141650 and the shuffle repeats until something differs.
+  ONE WALKER (+0x46c8 == 1)          swap lane 0 with one other. The first round
+      draws from all four; later rounds draw 1..3, so the board must move.
+  MANY WALKERS                       shuffle everything, then compare the
+      OCCUPANCY SET rather than the permutation, in two four-byte marks.
+
+The three draws are all the game's 15-bit range idiom,
+((RandomIntInternal(&seed) >> 16) & 0x7fff) * range >> 15, UNSIGNED throughout
+-- the ROM emits lsr for both shifts, and writing it signed emits asr, which is
+one of the two levers that took this body from 999 to a two-instruction miss.
+
+THE RUN CHECKS THE BODY BY ARITHMETIC RATHER THAN BY ASSERTION. Seating it
+raised scene 371's slot-36 count from 1322 to 1331 at 300 frames and from 5822
+to 5831 at 1200. The +9 is exactly this body's own dispatches: one mode select
+plus two per lane across four lanes, which is the ROM's three sites 0x020d36c0,
+0x020d3ab0 and 0x020d3b20. Nothing else in the census moved.
+
+---- 4. TWO TRAPS FOUND ON THE WAY, AND ONE OF THEM IS SECTION 19's ---------
+
+THE TENTATIVE-DEFINITION TRAP FIRED, AND IT IS THE ONE SECTION 19 RECORDS.
+src/func_ov006_020d36a4.c is //cpp-marked, and a bare "int data_0209d4b8;" in
+its extern "C" block is a TENTATIVE DEFINITION to mwccarm and a STRONG one to
+MSVC, so the link came back LNK2005 against the arm9 RNG seed
+hal/scene_mg_faces.cpp owns inside DSSTATE. Section 19 hit this on
+src/func_ov006_020d3ba0.c and paid a host copy for it. THIS ONE DID NOT NEED
+ONE, and the distinction is worth carrying: that TU WRITES the seed, this one
+only takes its ADDRESS, so "extern int" is both the honest spelling and the
+working one. Reach for the host copy only when the TU actually defines it.
+
+THE UNDERSIZED-GLOBAL HAZARD WAS CHECKED RATHER THAN ASSUMED. The round setup
+indexes data_ov006_0212e1a8 with state * 0x1c + 0x14, and that symbol is FOUR
+BYTES WIDE in config/arm9/overlays/ov006/symbols.txt -- exactly the shape the
+undersized-hosted-global rule warns about. It is safe here, and the reason is
+mechanical rather than lucky: port/tools/ovdata.py emits every ov006 word into
+its own .dsstate$pk006_NNNN section in ROM order, and the generated mount
+carries a runtime PACK BROKEN check asserting each symbol's offset from the
+base. So a stride-0x1c read through a four-byte symbol lands on the right bytes,
+the same device hal/auto_bss.cpp uses for the four stylus records. A lane that
+hosted this table as a standalone global would have read off the end.
+
+---- 5. WHAT THE PICTURE SHOWS, AND THE ONE THING IT SAYS PLAINLY -----------
+
+BMPs are captured at 300 and at 1200 frames (runs/mg10/bmp/). They are BYTE-
+IDENTICAL to each other -- one sha256 across both -- and they carry 172 distinct
+colours, so there is a real rendered board and not a blank screen.
+
+THAT PAIR OF FACTS IS THE HONEST ANSWER TO SECTION 19's "WHETHER IT PLAYS".
+Nine hundred frames apart and not one pixel differs, so nothing on this scene
+MOVES. The board draws and the class ticks, and the walkers stay where the round
+setup put them, because the body that moves them is the floor still standing.
+Section 19 could only say "whether it PLAYS without them is not something this
+lane can say"; this lane can say it does not, and can say which of the three
+floors is the reason.
+
+NOBODY HAS HELD EITHER BMP NEXT TO A DS, and this lane does not judge them.
+
+---- 6. WHAT THE LAST FLOOR IS, MAPPED BUT NOT TAKEN ------------------------
+
+func_ov006_020d27dc, 0xe48, 910 instructions, ONE caller inside vtable slot 6,
+entered 173 times at 300 frames and 792 at 1200. It is THE WALKER TICK and the
+next lane should not start from scratch:
+
+  - It calls func_ov006_020d25fc FORTY-TWO times, and every one of that body's
+    call sites in the whole overlay is inside this one. src/func_ov006_020d25fc.c
+    reads the walker's (col,row) at +0x4660/+0x4664, offsets it by one of EIGHT
+    directions on a 0..7 selector, and probes. So this floor is an eight-
+    neighbour LINE FOLLOWER: it looks around each walker for the drawn line and
+    decides which way to step, which is exactly what an amidakuji walker does.
+  - Its other callees are func_02012718 (eleven sites), func_020126e8 and
+    func_020126ac (six sites each, always as a pair immediately before a run of
+    five 020d25fc probes) and func_02012dbc (one).
+  - It opens with a per-walker countdown over the release delays at +0x46b8 --
+    the same field the round setup staggers -- and returns early when +0x46c8 is
+    not positive.
+  - It then pushes THIRTEEN constants to its own frame (0xd7, 0xcf, 0xc7, 0xbf,
+    0xe0, 0x1c0, and 1, 2, 3, 4, 5, 6, 7) before the per-walker loop, which is
+    what a goal-row Y table plus a direction set looks like.
+  - The per-walker loop switches on the walker's X against 0x20, 0x60, 0xa0 and
+    0xe0 -- the four rails again -- compares each against the goal columns at
+    +0x4714, +0x4718, +0x471c and +0x4720, and sets an arrival byte at +0x5398
+    through +0x539b.
+  - Three of its instructions dispatch slot 36, so the mode branch inside it is
+    still code the port cannot run.
+
+LINKAGE, measured on both ends by two builds of this tree:
+
+    7101 / 11285 (62.9%)  ->  7103 / 11285 (62.9%)     +2
+
+  by module, the only two rows that moved:
+
+    module   total  linked  unlinked   linked
+    ov004      280     249        31    88.9%    (was 248, 88.6%)
+    ov006     1868    1164       704    62.3%    (was 1163)
+
+  +2 against two slice lines, which closes exactly. Battery ALL GREEN over all
+  23 scenes, ptr_audit 0 unhosted code pointers, both arity ratchets 0 NEW, and
+  the curling canary on scene 374 reports 32557 call(s) / 32557 routed / 0
+  UNHANDLED -- the same number section 19 records, which is what says this lane
+  did not reach into anybody else's data.
+
+WHAT THIS SECTION DOES NOT KNOW.
+  - WHETHER THE BOARD IS DRAWN RIGHT. The rasteriser is verified as far as an
+    identical mnemonic multiset over 165 instructions, and the rails it is
+    called with match the walkers' start positions, but no frame has been held
+    next to a DS.
+  - WHAT THE OTHER MODE LOOKS LIKE. The port still takes ov005 row 0, so slot 36
+    answers false 5831 times out of 5831 and "Connect the Characters" has still
+    never been run. Both new bodies have a mode-2 arm that no run here entered.
+  - TOUCH IS STILL UNMEASURED. Section 19 left it open and it stays open: the
+    line the stylus would draw goes through the rasteriser seated here, but
+    nothing in this lane drove a stylus.

@@ -136,7 +136,6 @@ func_ov004_020adc3c|src/func_ov004_020ad8b8.c
 func_ov004_020adfc4|src/func_ov004_020b39a4.c
 func_ov004_020adfc4|src/func_ov004_020b484c.c
 func_ov004_020adfc4|src/func_ov006_020dd658.c
-func_ov004_020ae3b4|port/hal/scene_mg.cpp
 func_ov004_020af04c|src/func_ov006_020e6d8c.c
 func_ov004_020af27c|src/func_ov006_020e6d98.c
 func_ov004_020b04f4|src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp
