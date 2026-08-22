@@ -349,8 +349,10 @@ def test_manifest_section_claims_are_explicit_and_unambiguous():
     ]})
     assert reasons == []
     assert claims == [
-        {"name": ".text", "start": 0x1000, "end": 0x1010},
-        {"name": ".data", "start": 0x2000, "end": 0x2010},
+        {"name": ".text", "module_section": ".text",
+         "start": 0x1000, "end": 0x1010},
+        {"name": ".data", "module_section": ".data",
+         "start": 0x2000, "end": 0x2010},
     ]
 
     _claims, reasons = tubuild.manifest_section_claims({"sections": [
@@ -361,6 +363,22 @@ def test_manifest_section_claims_are_explicit_and_unambiguous():
     ]})
     assert any("duplicate .data claim" in r for r in reasons)
     assert any("unsupported name" in r for r in reasons)
+
+    claims, reasons = tubuild.manifest_section_claims({"sections": [
+        {"name": ".text", "start": "0x1000", "end": "0x1010"},
+        {"name": ".rodata", "module_section": ".data",
+         "start": "0x2040", "end": "0x2050"},
+    ]})
+    assert reasons == []
+    assert claims[1] == {"name": ".rodata", "module_section": ".data",
+                         "start": 0x2040, "end": 0x2050}
+
+    _claims, reasons = tubuild.manifest_section_claims({"sections": [
+        {"name": ".text", "start": "0x1000", "end": "0x1010"},
+        {"name": ".rodata", "module_section": ".mystery",
+         "start": "0x2040", "end": "0x2050"},
+    ]})
+    assert any("unsupported module_section" in r for r in reasons)
 
 
 def test_splice_relinquishes_exact_manifest_data_and_bss_ranges_only():
@@ -411,6 +429,33 @@ def test_splice_relinquishes_exact_manifest_data_and_bss_ranges_only():
         assert replaced is None
         assert any("not pure gap ownership" in r for r in reasons)
         assert occupied.read_bytes() == before
+
+
+def test_splice_maps_compiler_rodata_into_module_data():
+    text = (
+        "    .text start:0x00001000 end:0x00001100 kind:code align:4\n"
+        "    .data start:0x00002000 end:0x00002100 kind:data align:4\n"
+        "src/one.c:\n"
+        "    complete\n"
+        "    .text start:0x00001000 end:0x00001010\n"
+    )
+    claims = [
+        {"name": ".text", "module_section": ".text",
+         "start": 0x1000, "end": 0x1010},
+        {"name": ".rodata", "module_section": ".data",
+         "start": 0x2040, "end": 0x2050},
+    ]
+    with tempfile.TemporaryDirectory() as td:
+        path = pathlib.Path(td) / "delinks.txt"
+        path.write_text(text, encoding="utf-8")
+        replaced, reasons = tubuild.splice_tu_entry(
+            path, 0x1000, 0x1010, "src_tu/T.cpp", ["src/one.c"],
+            section_claims=claims)
+        assert reasons == []
+        assert replaced == ["src/one.c"]
+        got = path.read_text(encoding="utf-8")
+        assert "    .rodata start:" not in got
+        assert "    .data start:0x00002040 end:0x00002050" in got
 
 
 def _compile_tu_fixture(source):

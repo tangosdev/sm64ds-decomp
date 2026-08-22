@@ -1399,10 +1399,16 @@ def entry_is_complete(body_lines):
 def manifest_section_claims(entry):
     """Return normalized manifest section claims and structural refusal reasons.
 
-    A claim is the exact range the recovered object may replace in one loadable
-    module section.  One claim per section name is deliberate for this first data
-    phase: mwldarm concatenates a TU's repeated input sections of the same name into
-    one contribution, while two disjoint ranges would need an explicit input-section
+    A claim is the exact range one compiler input section may replace in one
+    loadable module output section.  ``name`` is the ELF input section and the
+    optional ``module_section`` is the delinks/module section containing its retail
+    range (defaulting to ``name``).  Keeping those identities separate is necessary
+    for ordinary linker mappings such as input ``.rodata`` being placed in output
+    ``.data``; it does not weaken the byte, symbol, or relocation checks on the input.
+
+    One claim per input section name is deliberate for this first data phase:
+    mwldarm concatenates a TU's repeated input sections of the same name into one
+    contribution, while two disjoint ranges would need an explicit input-section
     partition the manifest cannot yet express.  Refusing that ambiguity is safer than
     assigning output by list position.
     """
@@ -1418,6 +1424,12 @@ def manifest_section_claims(entry):
         if name not in _TU_SECTION_NAMES:
             reasons.append(f"sections[{i}] has unsupported name {name!r}; expected one "
                            f"of {list(_TU_SECTION_NAMES)}")
+            continue
+        module_section = claim.get("module_section", name)
+        if module_section not in _TU_SECTION_NAMES:
+            reasons.append(f"sections[{i}] has unsupported module_section "
+                           f"{module_section!r}; expected one of "
+                           f"{list(_TU_SECTION_NAMES)}")
             continue
         if name in seen:
             reasons.append(f"duplicate {name} claim; this schema supports one contiguous "
@@ -1436,7 +1448,8 @@ def manifest_section_claims(entry):
             reasons.append(f"sections[{i}] {name} is empty/reversed: "
                            f"0x{start:08x}..0x{end:08x}")
             continue
-        rows.append({"name": name, "start": start, "end": end})
+        rows.append({"name": name, "module_section": module_section,
+                     "start": start, "end": end})
 
     if sum(1 for r in rows if r["name"] == ".text") != 1:
         reasons.append("manifest must claim exactly one .text contribution")
@@ -1450,18 +1463,21 @@ def manifest_section_claims(entry):
 
 
 def validate_claims_in_module(delinks_path, claims):
-    """Every claim must be wholly inside the same-named module section header."""
+    """Every claim must be wholly inside its declared module output section."""
     header, _entries = parse_delinks_file(delinks_path)
     containers = collections.defaultdict(list)
     for name, start, end in EN.sections(header):
         containers[name].append((start, end))
     reasons = []
     for c in claims:
-        homes = [(a, b) for a, b in containers.get(c["name"], [])
+        output_name = c.get("module_section", c["name"])
+        homes = [(a, b) for a, b in containers.get(output_name, [])
                  if a <= c["start"] and c["end"] <= b]
         if len(homes) != 1:
-            reasons.append(f"{c['name']} claim 0x{c['start']:08x}..0x{c['end']:08x} is "
-                           f"not wholly inside exactly one same-named module section")
+            mapping = (c["name"] if output_name == c["name"] else
+                       f"{c['name']} -> {output_name}")
+            reasons.append(f"{mapping} claim 0x{c['start']:08x}..0x{c['end']:08x} is "
+                           f"not wholly inside exactly one declared module section")
     return reasons
 
 
@@ -1582,7 +1598,8 @@ def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy,
             out.append(f"{tu_rel}:")
             out.append("    complete")
             for claim in claims:
-                out.append(f"    {claim['name']} start:0x{claim['start']:08x} "
+                output_name = claim.get("module_section", claim["name"])
+                out.append(f"    {output_name} start:0x{claim['start']:08x} "
                            f"end:0x{claim['end']:08x}")
             out.append("")
             continue
@@ -2797,7 +2814,10 @@ def cmd_linkcheck(args):
             print(f"        {entry['source']}: complete")
             for claim in claims:
                 source = "legacy entries" if claim["name"] == ".text" else "ROM gap"
-                print(f"          {claim['name']:8} 0x{claim['start']:08x}.."
+                output_name = claim.get("module_section", claim["name"])
+                label = (claim["name"] if output_name == claim["name"] else
+                         f"{claim['name']} -> {output_name}")
+                print(f"          {label:16} 0x{claim['start']:08x}.."
                       f"0x{claim['end']:08x}  relinquished from {source}")
 
     # dsd's linker script selects contributions by object BASENAME, so a shadow TU
