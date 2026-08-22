@@ -237,3 +237,78 @@ src/func_ov006_020e82c8.c
 src/func_ov006_020e8214.c
 # f44 2
 src/func_ov006_020e81e0.c
+
+# ---- wave 2: the closure the first link named ------------------------------
+#
+# Nineteen unresolved externals over three targets, line for line the same set
+# on all three. Eighteen are ov006 bodies this class's own code calls, and one
+# is arm9. THE arm9 ONE IS LISTED, against port/slice_mg1.txt's general rule
+# that the arm9 half comes back through /OPT:REF: func_020179b4 had no other
+# caller in the build, so /OPT:REF had already dropped it, which is the same
+# exception curling's wave 2 hit for twenty of them.
+#
+# ONE OF THE NINETEEN IS NOT HERE. func_ov006_020e7be8 is the per-frame tick of
+# the sub-object at this+0x4fd8, and a `::*` sweep over these additions BEFORE
+# they were wired found that it dispatches a member pointer held in an OBJECT
+# FIELD. It is the EIGHTH dispatcher in a class the cost file budgets five for,
+# and no link could ever have named the defect: the type is local to the TU, so
+# no global is emitted and no symbol can fail. Host-copied in
+# port/unmatched/Mg3DEsp_FieldPmf.cpp, which carries the derivation, the four
+# routed addresses and the six source pairs.
+src/func_ov006_020e814c.c
+src/func_ov006_020e7fe8.cpp
+src/func_ov006_020e8aac.c
+src/func_ov006_020e81a4.c
+src/func_ov006_020e8354.c
+src/func_ov006_020e8b18.c
+src/func_ov006_020e8e10.cpp
+src/func_ov006_020e80d8.cpp
+src/func_ov006_020e984c.c
+src/func_ov006_020e95a4.c
+src/func_ov006_020e95e4.c
+src/func_ov006_020e93e8.c
+src/func_ov006_020e8d7c.c
+src/func_020179b4.c
+#
+# THE OTHER READER AND THE FOUR WRITERS OF THE FIELD, which are ordinary slice
+# lines and are only grouped here because they are what makes the field's six
+# source pairs make sense. func_ov006_020e7b44 is the RENDER half of the same
+# idle test and does NOT dispatch, so it needs no host copy.
+src/func_ov006_020e7b44.cpp
+src/func_ov006_020e7d7c.c
+src/func_ov006_020e7e74.c
+src/func_ov006_020e7fb0.c
+#
+# ---- wave 2b: the four field states, which arrive with the dispatch --------
+#
+# Named by the address switch in port/unmatched/Mg3DEsp_FieldPmf.cpp and by
+# nothing else, exactly as run link60 lane MG2 measured for curling ("state
+# bodies added to the slice: 0 predicted, 4 measured -- they arrive with the
+# dispatch, not with the closure"). Every one has a src TU and every adjustment
+# word is zero. func_ov006_020e7fac is the idle body the two sentinels name.
+src/func_ov006_020e7cc0.cpp
+src/func_ov006_020e7de8.c
+src/func_ov006_020e7f04.cpp
+src/func_ov006_020e7fac.c
+
+# ---- wave 3: the second wave's own closure ---------------------------------
+#
+# Twenty-seven unresolved externals: eleven ov006 bodies, fourteen ordinary
+# /alternatename rows and two more shadow-class destructors. All sixteen faces
+# are in port/unmatched/Mg3DEsp_Faces.cpp. Every one of the eleven was swept for
+# `::*`, for the //cpp marker and for the shared placeholder names before it was
+# listed; all eleven come back clean, so this class's dispatcher count stays at
+# eight.
+src/func_ov006_020e7818.c
+src/func_ov006_020e7aac.c
+src/func_ov006_020e7954.c
+src/func_ov006_020e7b0c.c
+src/func_ov006_020e7a50.cpp
+src/func_ov006_020e777c.cpp
+src/func_ov006_020e7940.c
+src/func_ov006_020e794c.c
+src/func_ov006_020e792c.c
+src/func_ov006_020e7910.c
+# the fifth writer of the field at the sub-object's +0x210, and the only one
+# that spells the eight-byte pair as a `double`
+src/func_ov006_020e7f5c.cpp

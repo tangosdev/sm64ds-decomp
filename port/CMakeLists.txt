@@ -4217,7 +4217,17 @@ set(SLICE_PSY_SOURCES hal/scene_mg_psycheout.cpp
                       unmatched/Mg3DEsp_StateDispatch.cpp
                       # REPLACES src/func_ov006_020e9cec.c, which is out of
                       # the slice: see the block below this one.
-                      unmatched/Mg3DEsp_Cleanup.cpp)
+                      unmatched/Mg3DEsp_Cleanup.cpp
+                      # REPLACES src/func_ov006_020e7be8.cpp, out of the slice:
+                      # the EIGHTH dispatcher, and the one that reads its member
+                      # pointer out of an OBJECT FIELD rather than a table. No
+                      # link can name that defect -- the type is local to the TU
+                      # so no global is emitted -- and the `::*` sweep over the
+                      # wave-2 additions is what found it.
+                      unmatched/Mg3DEsp_FieldPmf.cpp
+                      # The two C++-linkage alias rows the link asked for and
+                      # the three shadow-class destructors src's D2 spells.
+                      unmatched/Mg3DEsp_Faces.cpp)
 foreach(line IN LISTS SLICE_PSY_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")

@@ -220,6 +220,10 @@ unsigned port_mg_esp3d_state_hits(void);
 unsigned port_mg_esp3d_floor_hits(void);
 unsigned port_mg_esp3d_nonmatching(void);
 void     port_mg_esp3d_table_counts(unsigned *out7);
+/* the FIELD dispatcher's, from unmatched/Mg3DEsp_FieldPmf.cpp -- a separate
+   pair because it is a separate defect: a member pointer held in an object
+   field rather than in a table, on the sub-object at this+0x4fd8. */
+void     port_mg_esp3d_field_counts(unsigned *calls, unsigned *routed);
 /* the framework's, from unmatched/MgBase_StateDispatch.cpp */
 void     port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
 
@@ -501,6 +505,11 @@ extern "C" void port_scene_esp3d_hits(void)
         std::printf("[scene] dScMg3DEsp_c per table: f2c(slot6) %u, "
                     "fac %u, f5c %u, f74 %u, f1c %u, f8c %u, f44 %u\n",
                     t[0], t[1], t[2], t[3], t[4], t[5], t[6]);
+        unsigned fc = 0, fr = 0;
+        port_mg_esp3d_field_counts(&fc, &fr);
+        std::printf("[scene] dScMg3DEsp_c FIELD dispatch (sub-object +0x4fd8, "
+                    "member pointer at its +0x210): %u call(s), %u routed\n",
+                    fc, fr);
     }
 
     std::printf("[scene] dScMg3DEsp_c floors: NONE. All twenty-two state code "
