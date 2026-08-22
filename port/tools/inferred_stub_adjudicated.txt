@@ -610,3 +610,50 @@ func_ov006_020d9104  REAL_DECOMP  port/slice_sos.txt  slot 18, the state reset, 
 # from that pool word, calls
 # func_ov004_020b29c0, returns this -- 020d5a78 without the Deallocate, which
 # is the D2/D0 difference and is what its two-line src spells.
+# run mg6, lane S75, 2026-08-21. THE SEVENTH ov006 MINIGAME CLASS SEATED:
+# dScMgCurling2_c, actor id 0x177 (scene 375), the advanced ("jokyu") half of
+# the curling pair whose basic half is dScMgCurling_c / scene 374.
+#
+# THE CLASS NAME IS THE ROM'S AND IS NOT INFERRED FROM PROXIMITY. The word
+# immediately before vtable slot 0 -- data_ov006_0213c510[-1] = 0x0213c4bc --
+# is an mwcc typeinfo record {typeinfo-vptr 0x0209a764, name 0x0213c4c8, base
+# 0x020bbf6c}, and 0x0213c4c8 reads "15dScMgCurling2_c". The same three-word
+# shape at 0x0213c2c4 names dScMgCurling_c for the table at 0x0213c304, which
+# is the control. The base pointer is ov004's, the same word curling's record
+# carries, so the chain is Scene -> dScMgBase_c -> dScMgCurling2_c: two deep,
+# not three, and no intermediate table to fill.
+#
+# THE WIDTH IS 36 AND ALL THREE OF SECTION 11's CHECKS SAY SO.
+#   1. SPAN     data_ov006_0213c510 -> data_ov006_0213c5a0, exactly 36 words.
+#   2. SLOT 35  0x020ad660, the dScMgBase_c-derived terminal every one of the
+#               five classes checked in section 11 holds.
+#   3. WORD 36  0x2f474d2f, ASCII "/MG/" -- and it is not merely "a file path"
+#               here, it is THIS class's own path string. src/func_ov006_
+#               020e6894.c passes &data_ov006_0213c5a0 to func_020adc74 and the
+#               bytes there read "/MG/d_2d_mg_bg_jokyu_curling_ncg.bin". A
+#               37-slot fill would have written a host thunk over the first
+#               four characters of the filename the class opens on boot.
+#
+# THE OVERRIDE SHAPE IS CURLING'S EXACTLY: slots 0, 6, 9, 16, 17, 18, six
+# overrides, five markers, no nosrc. Slot 16 carries no marker and was
+# disassembled with the other five anyway, because it and slot 17 are the D2/D0
+# pair and reading one without the other proves nothing about either.
+#
+# ALL SIX DISASSEMBLED WITH CAPSTONE OUT OF extracted/overlays/overlay_0006.bin
+# AT BASE 0x020bfec0 -- the shipped image, deliberately not a dsd export --
+# and compared instruction for instruction with src BEFORE any seating.
+# RESULT: 6 REAL DECOMP, 0 guesses, 0 unverifiable. Not one constant, offset,
+# literal-pool word, branch target or instruction count differs.
+# Full dumps: runs/mg6/out/S75/adjudication_dumps.txt.
+#
+# THE RECOVERED NAMES DISAGREE WITH THE BODIES ON TWO OF THE SIX, which is what
+# every lane before this one found the marker doing. Slots 17 and 18 are both
+# named dScMgCurling2_c_OnYoshiTryEat (18 with its own address as a suffix, to
+# keep the two apart); 17 is the deleting destructor and 18 is the state reset.
+# The names are wrong and the bodies are exact.
+func_ov006_020e6894  REAL_DECOMP  port/slice_s75.txt  lane S75. slot 0 InitResources, 0x360, 203 instructions plus a THIRTEEN-word literal pool every word of which src names (0213c5a0, 0209d45c, 0400000e, 00001220, 0400000c, 00005420, 04000008, 00005620, 0209d454, 0400100c, 00000814, 04000050, 04001050). Opens with func_020adc74(&data_ov006_0213c5a0) and the predicated early-out movs r6,r0 / addeq sp,#8 / moveq r0,#0 / popeq / bxeq lr, which is src's "if (r6 == 0) return 0;". Main engine: data_0209d45c |= 8 then 0x0400000e bic 3 orr 2 then and 0x43 orr 0x1220; DecompressLZ16(r6, func_02054d88()); LoadFile(0x45) -> GX::LoadBGPltt(0x60, 0x1a0) -> Deallocate; LoadFile(0x42) -> func_02056314(0, 0x800) -> Deallocate; data_0209d45c |= 4 and 0x0400000c bic 3 orr 2 / and 0x43 orr 0x5420; LoadFile(0x41) held live in r4 across TWO screen fills -- G2::GetBG2ScrPtr then MultiStore16(0x4300, 0x1000) through a STACK SLOT at [sp,#4] (src's volatile u16 sp4, stored then reloaded, which is why it is spelled as a variable and not an immediate), func_020563d4(0, 0x800), then 0x04000008 bic 3 orr 2 / and 0x43 orr 0x5620, G2::GetBG0ScrPtr, the same 0x4300 through [sp,#6] (sp6), func_02056554(0, 0x800) -- and only then Deallocated. LoadFile(0xc7) and LoadFile(0xc8) held in r5/r4 across the whole sub-engine block: DecompressLZ16(c7, 0x6400000) and GX::LoadOBJPltt(c8, 0, 0x100); data_0209d454 |= 4 and 0x0400100c bic 3 orr 2 / and 0x43 orr 0x814; DecompressLZ16(r6, G2S::GetBG2CharPtr()); LoadFile(0x45) -> GXS::LoadBGPltt(0x60, 0x1a0) -> Deallocate; LoadFile(0x43) -> func_02056374(0, 0x800) -> Deallocate; Ov004_Deallocate(r6) at 0x020adc5c; then the two held files replayed as DecompressLZ16(c7, 0x6600000) and GXS::LoadOBJPltt(c8, 0, 0x100) and both Deallocated last. Tail: func_ov006_020e668c, _020e667c, _020e6528; byte +0x55bb = 1, HALFWORD +0x55b4 = 0, byte +0x55c3 = 1 (r3 reused, which is why src orders the three that way); func_ov006_020e5ffc, _020e48d4; +0x5580 = 1 -- THE STATE INDEX slot 6 dispatches on and slot 18 zeroes, which cross-confirms all three; func_ov004_020b04d0(0x20); halfword +0x55b6 = 0x40; +0xa4 = 1; two G2x::SetBlendAlpha calls with the fifth argument on the stack, (0x4000050, 0, 0xd, 2, 0x10) and (0x4001050, 0, 4, 2, 0x10); +0x55ac = func_ov004_020adc1c(); return 1
+func_ov006_020e683c  REAL_DECOMP  port/slice_s75.txt  lane S75. slot 6 Behavior, 0x58, 21 instructions plus a one-word pool holding 0x02141a18. THIS CLASS'S HALF OF THE WALL, and it is lane FLW's THIRD shape rather than section 4's first: the state index is read at c+0x5000+0x580 (0x5580), add r3, r1, r0, lsl #3 strides data_ov006_02141a18 by EIGHT, and then the five-instruction ARM Itanium sequence verbatim -- ldr r1,[r3,#4] (the adjustment), add r0,r4,r1,asr#1, ands r1,r1,#1, the ldrne/ldrne/ldrne virtual arm and the ldreq plain arm, blx r1. src/func_ov006_020e683c.cpp spells the pair as struct Ent{int a; int b;} INSIDE extern "C", so it emits no member-pointer symbol and contains no ::* -- neither the link nor a source sweep can see it and only a run convicts it. Then func_ov006_020e4800(c), func_ov006_020e3948(c), return 1 -- src's two calls in src's order. The +0x5580 index cross-confirms slots 0 and 18, which write and zero the same word
+func_ov006_020e67f0  REAL_DECOMP  port/slice_s75.txt  lane S75. slot 9 Render, 0x4c, 19 instructions, NO literal pool. Two receiverless ov004 calls first -- func_ov004_020adc1c then func_ov004_020b19f0, neither given r0 -- then six calls with the receiver reloaded from r4 before each: 020e4a84, 020e4fe8, 020e507c, 020e38b0, 020e3bc4, 020e4b78, then mov r0,#1 and return. src lists the same two and the same six in the same order and nothing else. Every one of the six has a matched src TU, so unlike dScMgCoin_c's Render this body reaches no floor
+func_ov006_020e3854  REAL_DECOMP  port/slice_s75.txt  lane S75. slot 16 D2, 0x24, 8 instructions plus a one-word pool. CARRIES NO MARKER and is listed because it is the other half of the D2/D0 pair and because it is the row that names the table: str data_ov006_0213c510 into [this] -- this class's OWN vtable, the strongest single confirmation that 0x0213c510 is the right table for id 0x177 -- then func_ov004_020b29c0(this), return this. Its marked D0 sibling 020e3878 stores the SAME word, which cross-confirms the resolution the way curling's 020e0638 does for 020e065c
+func_ov006_020e3878  REAL_DECOMP  port/slice_s75.txt  lane S75. slot 17 D0, 0x38, 12 instructions plus a two-word pool (0x0213c510 and 0x020a0eac). str data_ov006_0213c510 into [this], func_ov004_020b29c0(this), then Memory::Deallocate at 0x0203c1e8 with the heap loaded BY VALUE from data_020a0eac (ldr r1,[pc] then ldr r1,[r1], two loads, not one). src spells the first as VT and the heap as HEAP, both per-TU PLACEHOLDERS out of include/decl_common.h that exist in no config, and the ROM pool resolves them to exactly those two -- the identical shape ruled for dScMgCoin_c's 020dbe64 and dScMgFlower_c's 0212a5c8. The recovered NAME says OnYoshiTryEat and is wrong; the body is the deleting destructor
+func_ov006_020e6774  REAL_DECOMP  port/slice_s75.txt  lane S75. slot 18 state reset, 0x7c, 29 instructions plus a two-word pool holding 0x04000050 and 0x04001050. add r1,r4,#0x5000 / mov r2,#0 / str r2,[r1,#0x580] zeroes +0x5580, THE SAME state index slot 6 dispatches on and slot 0 sets to 1 -- three bodies agreeing on one word. Then func_ov006_020e668c(c), func_ov006_020e6528(c), and the two G2x::SetBlendAlpha calls with the fifth argument written to [sp] before each, (0x4000050, 0, 0xd, 2, 0x10) and (0x4001050, 0, 4, 2, 0x10) -- byte for byte the pair slot 0 ends with, which is what a reset of an init is. Tail: +0x55ac = func_ov004_020adc1c(). Void return. The recovered NAME says OnYoshiTryEat_020e6774 and is wrong

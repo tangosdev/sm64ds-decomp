@@ -1,0 +1,225 @@
+# Lane S75, run mg6: dScMgCurling2_c, actor id 0x177 (scene 375) -- the ADVANCED
+# half of the curling pair whose basic half is scene 374, and the seventh ov006
+# minigame class the port seats.
+#
+# ---- THE IDENTITY, AND THE ONE THING THE ROM DOES NOT SAY -----------------
+#
+# THE CLASS NAME IS THE ROM'S. The word before vtable slot 0 --
+# data_ov006_0213c510[-1] = 0x0213c4bc -- is an mwcc typeinfo record whose three
+# words are {0x0209a764 the __si_class_type_info vptr, 0x0213c4c8 the name,
+# 0x020bbf6c the base}, and the bytes at 0x0213c4c8 read "15dScMgCurling2_c".
+# The control is one table down: 0x0213c2c4 has the identical shape and names
+# "14dScMgCurling_c" for the vtable at 0x0213c304, which is scene 374's. Both
+# records carry the SAME base pointer, ov004's 0x020bbf6c, so this class's
+# hierarchy is two deep and not three:
+#
+#     Scene -> dScMgBase_c (data_ov004_020bc0c0) -> dScMgCurling2_c (0213c510)
+#
+# There is no intermediate table to fill, which is the difference between this
+# seat and dScMgFlower_c's and dScMgCup_c's.
+#
+# THE SPAWNINFO IS 0x0213c434 AND THE FACTORY IS 0x020e6bf4, derived by
+# port/mg_fanout_costs.txt section 3's mechanical recipe: scan
+# extracted/overlays/overlay_0006.bin for the doubled-id word 0x01770177 and
+# take the word before it. It occurs EXACTLY ONCE in the overlay, at 0x0213c438,
+# so the record is 0x0213c434 = {0x020e6bf4, 0x01770177} and there is no second
+# candidate to choose between.
+#
+# THE PLAYER-FACING TITLE IS "SHELL SMASH", AND THE TREE ALREADY NAMED IT.
+# The arm9 spawn table data_02090864 holds one record pointer per actor id;
+# entry 0x177 sits at 0x02090e40 and holds 0x0213c434, which is this class's
+# SpawnInfo, and config/arm9/overlays/ov098/symbols.txt:113 names that record
+#
+#     MgShellSmash_SpawnInfo kind:data(any) addr:0x0213c434 ambiguous
+#
+# It predates this lane -- it arrived with the 2026-07-10 spawn-table naming
+# import (#211) -- and it is filed under ov098 rather than ov006 because the
+# two overlays OVERLAP that address, which is what the `ambiguous` flag on the
+# row records. THAT IS WHY THIS LANE DID NOT FIND IT AT FIRST and it is the
+# method correction worth carrying forward: a sweep of ov006's own symbols.txt
+# for Mg* spawn names cannot find a symbol filed under another overlay. Sweep
+# the whole config for the ADDRESS, not one overlay for the name.
+#
+# THE ADDRESSING IS CHECKED RATHER THAN ASSUMED, and by controls rather than by
+# arithmetic. The two neighbouring entries in the same table are
+#
+#     entry 0x176 at 0x02090e3c -> 0x0213c214   MgShuffleShell_SpawnInfo
+#     entry 0x178 at 0x02090e44 -> 0x0213ebd0   MgBingoBallSlotsShot_SpawnInfo
+#
+# and both are exactly the addresses port/mg_fanout_costs.txt section 4 and
+# section 11 independently give those two classes. Two known-good neighbours
+# either side is a stronger check on the indexing than the multiplication is.
+#
+# AND THE ROM ITSELF STORES NO TITLE TEXT AT ALL. That is a separate finding
+# and it survives the citation above rather than being replaced by it: a search
+# of the whole 16 MB image for the ASCII and the UTF-16LE spelling of
+# "Shuffle", "Trampoline", "Wiggler", "Bob-omb" and "Memory Ma" returns ZERO
+# hits each; the five EUR language archives (ARCHIVE/cee|cef|ceg|cei|ces.narc)
+# hold only battle-mode and option-screen tile sheets; data/DSMT/EUR/
+# texBank_E.bmd holds the title and file-menu textures and nothing
+# minigame-shaped; and MG/d_2d_mg_common_* (the one per-language MG sheet)
+# decodes to "RULES", "TIME" and "HIGH SCORE". So NO lane can read a title out
+# of this image, and every title in this port comes from the config. The right
+# move when a title is missing is to search the config harder, not the ROM.
+#
+# THE ASSET EVIDENCE CORROBORATES THE NAME AND IS KEPT FOR THAT REASON:
+#
+#   1. The class loads "/MG/d_2d_mg_bg_jokyu_curling_ncg.bin" -- the literal at
+#      data_ov006_0213c5a0 that slot 0 hands to func_020adc74. JOKYU is the
+#      developers' romanisation of the Japanese for ADVANCED, and it is the
+#      overlay's own consistent marker for the harder half of a pair: the same
+#      MG directory carries thum_shinkei/thum_jokyu_shinkei,
+#      thum_trampoline/thum_jokyu_trampoline, thum_monte/thum_jokyu_monte and
+#      thum_pachinko/thum_jokyu_pachinko.
+#   2. In every pair where BOTH ids already carry a config spawn symbol, the
+#      plain class is the first title and the *2 class is the second:
+#        dScMgJump_c/dScMgJump2_c             Bounce and Pounce / and Trounce
+#        dScMgTrampoline_c/dScMgTrampoline2_c Trampoline Time / Trampoline Terror
+#        dScMgMemory_c/dScMgMemory2_c         Memory Match / Memory Master
+#        dScMgPachinko_c/dScMgPachinko2_c     Bob-omb Squad / Lakitu Launch
+#        dScMgMCarlo_c/dScMgMCarlo2_c         (Pair-a-Gone) / Pair-a-Gone and On
+#      dScMgCurling_c is MgShuffleShell, so dScMgCurling2_c is the other half,
+#      and MgShellSmash_SpawnInfo says which half by name.
+#
+# So the title is a CONFIG READ reached by ROM-verified addressing, with the
+# asset naming agreeing independently. Everything else in this file is a
+# straight ROM read.
+#
+# ---- THE WIDTH IS 36, ALL THREE CHECKS ------------------------------------
+#
+#   1. SPAN     data_ov006_0213c510 -> data_ov006_0213c5a0 in
+#               config/arm9/overlays/ov006/symbols.txt: exactly 36 words.
+#   2. SLOT 35  0x020ad660, the dScMgBase_c-derived terminal.
+#   3. WORD 36  0x2f474d2f. Curling's control word is the same four bytes and
+#               port/mg_fanout_costs.txt section 11 calls it "ASCII /MG/ -- a
+#               file path". Here it is sharper than that: 0x0213c5a0 IS this
+#               class's own path string, the one slot 0 opens the scene with.
+#               A 37-slot fill would overwrite "/MG/" in the filename the class
+#               needs on its first frame.
+#
+# AND THE SECTION-11 NEIGHBOUR HAZARD IS MEASURED RATHER THAN ASSUMED, because
+# this table sits closer to curling's live data than any other class's does.
+# Curling's vtable is 0x0213c304 and its 25 source pairs span
+# 0x0213c1e4..0x0213c2bc; this table starts 0x20c words above the top of that
+# span, so no fill of 36, 37 or even 100 words from 0x0213c510 can reach it.
+# The hazard runs the other way and is also absent: this class's OWN 25 source
+# pairs span 0x0213c3d4..0x0213c4b4, which ends 0x5c bytes BELOW slot 0, so the
+# fill cannot touch its own constructor's inputs either.
+#
+# ---- THE STATE MACHINE: SEVEN TABLES, 25 SLOTS, ONE FLOOR -----------------
+#
+# __sinit_ov006_02130758 is this class's overlay constructor and its copied
+# .data range brackets the SpawnInfo exactly the way section 4 says curling's
+# does: the 25 source pairs run 0x0213c3d4..0x0213c4b4 and 0x0213c434 sits in
+# the gap between the pairs at 0x0213c42c and 0x0213c43c. IT IS NOT SWEPT. Every
+# pair below is the one the constructor NAMES, one assignment at a time, which
+# is the only safe way to read this range.
+#
+#   table                n  arity  dispatched by
+#   -------------------  -  -----  --------------------------------------------
+#   data_ov006_02141978  2    0    func_ov006_020e6354
+#   data_ov006_02141988  3    1    func_ov006_020e4800
+#   data_ov006_021419a0  3    1    func_ov006_020e42b4  (its second table)
+#   data_ov006_021419b8  4    1    func_ov006_020e4744
+#   data_ov006_021419d8  4    1    func_ov006_020e6354  (its second table)
+#   data_ov006_021419f8  4    1    func_ov006_020e42b4
+#   data_ov006_02141a18  5    0    func_ov006_020e683c  (vtable slot 6)
+#
+# ALL 25 ADJUSTMENT WORDS ARE ZERO, read out of the image pair by pair.
+#
+# THE ARITY COLUMN IS NOT stategen's. stategen REFUSED this constructor --
+# "no src TU declares data_ov006_02141a18 as a typed member-pointer array" --
+# because the TU that dispatches it spells the pair as two plain ints. Forcing
+# --arity 0 to get past the refusal produces the right ADDRESSES and the WRONG
+# arity for five of the seven tables, and a switch built from that output would
+# have dropped the index argument at nineteen of the twenty-five call sites.
+# The arities above are read off the ROM instead -- 0x020e42b4 sets `mov r1,r5`
+# before both of its `blx r2`, 0x020e4744 lets the incoming r1 ride through --
+# and they agree with the matched src signatures at all 24 bodies that have one.
+#
+# ONE HARD FLOOR: 0x020e4bd4, slot 1 of data_ov006_02141978. It has a config
+# symbol and NO delink block and NO src file, which is this class's analogue of
+# curling's func_ov006_020e1854. It is reported by the address switch, never
+# called, and never given an invented body.
+#
+# TWO MORE FLOORS OUTSIDE THE STATE MACHINE, both reached from bodies in this
+# slice and neither in it: func_ov006_020e513c and func_ov006_020e5450. Same
+# ruling -- symbol, no delink block, no src.
+#
+# ---- WHAT IS NOT IN THIS FILE ---------------------------------------------
+#
+# THE arm9 AND ov004 HALVES. Section 5's ruling and curling's precedent: the
+# closure reaches them, they already have matched TUs in the build, and
+# /OPT:REF brings them back for free the moment ov006 references them. Measured
+# on this class rather than assumed -- of the 78 ov004/ov006 TUs the call
+# closure reaches from the two roots, 29 are ALREADY defined in
+# build/port/walk_window.map before this lane changed a line, and all 29 are
+# ov004 or shared-ov006 bodies curling and the five other seated classes paid
+# for. The 49 that are new are every one of them inside this class's own code
+# block, 0x020e3854..0x020e6bf4.
+#
+# THE FIVE DISPATCHING TUs. They are host-copied in
+# unmatched/MgCurling2_StateDispatch.cpp and are therefore OUT of the list
+# below, which is the same trade MG2 made five times for curling. Listing them
+# here as well would be a duplicate symbol.
+#     src/func_ov006_020e683c.cpp   slot 6 Behavior, table 02141a18
+#     src/func_ov006_020e6354.cpp   tables 02141978 and 021419d8
+#     src/func_ov006_020e4800.cpp   table 02141988
+#     src/func_ov006_020e42b4.cpp   tables 021419f8 and 021419a0
+#     src/func_ov006_020e4744.cpp   table 021419b8
+#
+# WHY ALL FIVE AND NOT JUST THE ONE THE LINK NAMES. port/mg_fanout_costs.txt
+# section 4's rulebook corollary keys on the SPELLING: a pair whose consumer
+# names a member-pointer type needs a host copy whether it is called or only
+# copied. Four of the five name one (`typedef void (C::*PMF)(int);`), and two
+# of those four declare it inside extern "C" so the global mangles as the plain
+# C name the mount already defines and the LINK NEVER COMPLAINS. The fifth,
+# 020e683c, names no member-pointer type at all and open-codes the Itanium
+# sequence in plain ints -- lane FLW's third shape, which neither the link nor
+# a `::*` sweep can see and only a run convicts.
+#
+# ---- THE 44 LINES -----------------------------------------------------------
+src/func_ov006_020e3854.c
+src/func_ov006_020e3878.c
+src/func_ov006_020e38b0.c
+src/func_ov006_020e3948.c
+src/func_ov006_020e3b9c.c
+src/func_ov006_020e3bc4.c
+src/func_ov006_020e3c4c.c
+src/func_ov006_020e3ce0.c
+src/func_ov006_020e3db4.c
+src/func_ov006_020e3e4c.c
+src/func_ov006_020e3f54.c
+src/func_ov006_020e4094.c
+src/func_ov006_020e41d0.c
+src/func_ov006_020e4348.c
+src/func_ov006_020e440c.c
+src/func_ov006_020e4520.c
+src/func_ov006_020e4630.c
+src/func_ov006_020e4794.c
+src/func_ov006_020e48d4.c
+src/func_ov006_020e4a84.c
+src/func_ov006_020e4b00.c
+src/func_ov006_020e4b78.c
+src/func_ov006_020e4ed4.c
+src/func_ov006_020e4fe8.c
+src/func_ov006_020e507c.c
+src/func_ov006_020e59b0.c
+src/func_ov006_020e5a0c.c
+src/func_ov006_020e5b70.c
+src/func_ov006_020e5b7c.c
+src/func_ov006_020e5e3c.c
+src/func_ov006_020e5ffc.c
+src/func_ov006_020e6118.c
+src/func_ov006_020e619c.c
+src/func_ov006_020e61c0.c
+src/func_ov006_020e61c4.c
+src/func_ov006_020e628c.c
+src/func_ov006_020e64e4.c
+src/func_ov006_020e6528.c
+src/func_ov006_020e667c.c
+src/func_ov006_020e668c.c
+src/func_ov006_020e6774.c
+src/func_ov006_020e67f0.c
+src/func_ov006_020e6894.c
+src/func_ov006_020e6bf4.c
