@@ -126,6 +126,157 @@ class Isolate(unittest.TestCase):
         self.assertIn("surviving", plan["error"])
         self.assertIn("references compiler-only helper", plan["error"])
 
+    def test_exact_vague_rtti_externalization_keeps_named_imports(self):
+        """A dedicated inherited RTTI section becomes an import, not lost bytes."""
+        import io
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+
+        obj = self.build(
+            "struct Base { virtual ~Base() {} };\n"
+            "struct A : Base { virtual void a(); }; void A::a() {}\n")
+        raw = obj.read_bytes()
+        out, plan = OI.derive_externalized(raw, ["_ZTI4Base", "_ZTS4Base"])
+        self.assertIsNone(plan["error"])
+        self.assertEqual(obj.read_bytes(), raw, "externalization must be pure")
+        self.assertEqual(plan["externalise"], ["_ZTI4Base", "_ZTS4Base"])
+
+        elf = ELFFile(io.BytesIO(out))
+        symtab = elf.get_section_by_name(".symtab")
+        syms = {s.name: s for s in symtab.iter_symbols()}
+        self.assertEqual(syms["_ZTI4Base"]["st_shndx"], "SHN_UNDEF")
+        self.assertEqual(syms["_ZTS4Base"]["st_shndx"], "SHN_UNDEF")
+        self.assertNotEqual(syms["_ZTI1A"]["st_shndx"], "SHN_UNDEF")
+        referenced = set()
+        for sec in elf.iter_sections():
+            if isinstance(sec, RelocationSection) and sec.header["sh_size"]:
+                referenced.update(symtab.get_symbol(r["r_info_sym"]).name
+                                  for r in sec.iter_relocations())
+        self.assertIn("_ZTI4Base", referenced,
+                      "the surviving derived RTTI must still import its base RTTI")
+
+    def test_externalized_vague_rtti_links_to_one_canonical_definition(self):
+        """mwldarm resolves the surviving derived RTTI through the exact import."""
+        import io
+        from elftools.elf.elffile import ELFFile
+
+        canonical = self.build(
+            "struct Base { virtual ~Base() {} };\n"
+            "struct A : Base { virtual void a(); }; void A::a() {}\n").read_bytes()
+        consumer = self.build(
+            "struct Base { virtual ~Base() {} };\n"
+            "struct B : Base { virtual void b(); }; void B::b() {}\n").read_bytes()
+        externalized, plan = OI.derive_externalized(
+            consumer, ["_ZTI4Base", "_ZTS4Base"])
+        self.assertIsNone(plan["error"])
+
+        from rombuild import LD_VERSION, MW, launcher
+        d = pathlib.Path(self.tmp.name)
+        canonical_o, consumer_o, linked = d / "canonical.o", d / "consumer.o", d / "linked.o"
+        canonical_o.write_bytes(canonical)
+        consumer_o.write_bytes(externalized)
+        objects = d / "objects.txt"
+        objects.write_text(f"{canonical_o}\n{consumer_o}\n", encoding="utf-8")
+
+        runtime_symbols = set()
+        for raw in (canonical, externalized):
+            elf = ELFFile(io.BytesIO(raw))
+            symtab = elf.get_section_by_name(".symtab")
+            runtime_symbols.update(s.name for s in symtab.iter_symbols()
+                                   if s.name and s["st_shndx"] == "SHN_UNDEF"
+                                   and s.name not in ("_ZTI4Base", "_ZTS4Base"))
+        runtime_defs = "\n".join(
+            f"  {name} = 0x02010000;" for name in sorted(runtime_symbols))
+        lcf = d / "fixture.lcf"
+        lcf.write_text(
+            "MEMORY { TEST : ORIGIN = 0x02000000 > linked.bin }\n"
+            f"SECTIONS {{\n{runtime_defs}\n.fixture : {{\n"
+            "  canonical.o(.text) consumer.o(.text) "
+            "canonical.o(.data) consumer.o(.data)\n"
+            "} > TEST }\n", encoding="utf-8")
+        cmd = [*launcher(), str(MW / LD_VERSION / "mwldarm.exe"),
+               "-proc", "arm946e", "-nostdlib", "-interworking", "-nodead",
+               "-m", "_ZN1A1aEv", f"@{objects}", str(lcf), "-o", str(linked)]
+        result = subprocess.run(cmd, capture_output=True, text=True, cwd=d)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        linked_elf = ELFFile(io.BytesIO(linked.read_bytes()))
+        names = [s.name for s in linked_elf.get_section_by_name(".symtab").iter_symbols()
+                 if s["st_shndx"] != "SHN_UNDEF"]
+        self.assertEqual(names.count("_ZTI4Base"), 1)
+        self.assertEqual(names.count("_ZTS4Base"), 1)
+        self.assertIn("_ZTI1B", names,
+                      "the consumer's surviving RTTI must participate in the link")
+
+    def test_vague_rtti_externalization_refuses_a_shared_section(self):
+        """The exact name cannot license a neighbour in the same input section."""
+        import io
+        import struct
+        from elftools.elf.elffile import ELFFile
+
+        obj = self.build(
+            "struct Base { virtual ~Base() {} };\n"
+            "struct A : Base { virtual void a(); }; void A::a() {}\n")
+        raw = bytearray(obj.read_bytes())
+        elf = ELFFile(io.BytesIO(bytes(raw)))
+        symtab = elf.get_section_by_name(".symtab")
+        symbols = list(symtab.iter_symbols())
+        zti_section = next(s["st_shndx"] for s in symbols if s.name == "_ZTI4Base")
+        zts_index = next(i for i, s in enumerate(symbols) if s.name == "_ZTS4Base")
+        endian = "<" if elf.little_endian else ">"
+        struct.pack_into(endian + "H", raw,
+                         symtab.header["sh_offset"] + zts_index * 16 + 14,
+                         zti_section)
+        out, plan = OI.derive_externalized(bytes(raw), ["_ZTI4Base"])
+        self.assertIsNone(out)
+        self.assertIn("also defines", plan["error"])
+
+    def test_vague_rtti_externalization_refuses_an_unnamed_section_reference(self):
+        """A section-symbol addend cannot be preserved by a named import."""
+        import io
+        import struct
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+
+        obj = self.build(
+            "struct Base { virtual ~Base() {} };\n"
+            "struct A : Base { virtual void a(); }; void A::a() {}\n")
+        raw = bytearray(obj.read_bytes())
+        elf = ELFFile(io.BytesIO(bytes(raw)))
+        secs = list(elf.iter_sections())
+        symtab = elf.get_section_by_name(".symtab")
+        symbols = list(symtab.iter_symbols())
+        dropped = next(s["st_shndx"] for s in symbols if s.name == "_ZTI4Base")
+        # mwcc does not emit STT_SECTION entries for every repeated .data section.
+        # Repurpose another fixture RTTI symbol into the exact unnamed shape an ELF
+        # producer could legally use, then point a surviving reloc through it.
+        section_symbol = next(i for i, s in enumerate(symbols)
+                              if s.name == "_ZTS4Base")
+        patched = False
+        endian = "<" if elf.little_endian else ">"
+        symbol_entry = symtab.header["sh_offset"] + section_symbol * 16
+        struct.pack_into(endian + "III", raw, symbol_entry, 0, 0, 0)
+        raw[symbol_entry + 12] = 0x03  # STB_LOCAL/STT_SECTION
+        struct.pack_into(endian + "H", raw, symbol_entry + 14, dropped)
+        for relsec in secs:
+            if not isinstance(relsec, RelocationSection) or relsec.header["sh_info"] == dropped:
+                continue
+            for i, reloc in enumerate(relsec.iter_relocations()):
+                if symtab.get_symbol(reloc["r_info_sym"]).name != "_ZTI4Base":
+                    continue
+                r_info = (section_symbol << 8) | reloc["r_info_type"]
+                struct.pack_into(endian + "I", raw,
+                                 relsec.header["sh_offset"]
+                                 + i * relsec.header["sh_entsize"] + 4,
+                                 r_info)
+                patched = True
+                break
+            if patched:
+                break
+        self.assertTrue(patched, "fixture must reference the inherited RTTI by name")
+        out, plan = OI.derive_externalized(bytes(raw), ["_ZTI4Base"])
+        self.assertIsNone(out)
+        self.assertIn("unnamed section", plan["error"])
+
     def test_vtable_addend_is_corrected_to_zero(self):
         """8 -> 0, because the ROM symbol is already past the preamble."""
         from elftools.elf.elffile import ELFFile

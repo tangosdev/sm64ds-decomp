@@ -383,6 +383,109 @@ def derive_deadstrip(raw, symbol_names):
     return _apply(raw, p, None), p
 
 
+def externalize_plan(raw, symbol_names):
+    """Plan exact removal of dedicated vague RTTI definition sections.
+
+    This is deliberately not a generic COMDAT/coalescing implementation.  The only
+    accepted definitions are explicitly named ``_ZTI``/``_ZTS`` objects emitted as
+    ``STB_LOPROC`` in a dedicated, non-empty ``.data`` section.  A caller must prove
+    that another canonical definition is correct before applying this mechanical
+    step; this function proves only that zeroing the selected sections and turning
+    their symbols into imports cannot discard any neighbouring content.
+
+    References by name from surviving sections are allowed -- importing the selected
+    definition is the point.  A reference through an unnamed section symbol is not:
+    after the section is emptied there is no symbol that can preserve its offset, so
+    that shape is refused rather than guessed.
+    """
+    names = [str(name) for name in symbol_names if str(name)]
+    if not names:
+        return {"error": "no vague RTTI symbols were requested"}
+    if len(names) != len(set(names)):
+        return {"error": "duplicate vague RTTI symbol was requested"}
+    wanted = set(names)
+
+    elf = ELFFile(io.BytesIO(bytes(raw)))
+    secs = list(elf.iter_sections())
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return {"error": "no .symtab"}
+    syms = list(symtab.iter_symbols())
+
+    by_name = {name: [s for s in syms
+                      if s.name == name
+                      and s["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")]
+               for name in wanted}
+    missing = sorted(name for name, matches in by_name.items() if not matches)
+    if missing:
+        return {"error": f"vague RTTI symbol(s) not defined: {missing}"}
+    ambiguous = sorted(name for name, matches in by_name.items() if len(matches) != 1)
+    if ambiguous:
+        return {"error": f"vague RTTI symbol(s) have multiple definitions: {ambiguous}"}
+
+    drop_content = set()
+    for name in sorted(wanted):
+        sym = by_name[name][0]
+        if not name.startswith(("_ZTI", "_ZTS")):
+            return {"error": f"{name}: only exact _ZTI/_ZTS RTTI objects may be externalized"}
+        if sym["st_info"]["bind"] != "STB_LOPROC" \
+                or sym["st_info"]["type"] != "STT_OBJECT":
+            return {"error": f"{name}: expected STB_LOPROC/STT_OBJECT, got "
+                    f"{sym['st_info']['bind']}/{sym['st_info']['type']}"}
+        shndx = sym["st_shndx"]
+        if not isinstance(shndx, int) or shndx >= len(secs):
+            return {"error": f"{name}: definition is not in an ordinary section"}
+        sec = secs[shndx]
+        if sec.name != ".data" or sec.header["sh_type"] != "SHT_PROGBITS" \
+                or not sec.header["sh_size"]:
+            return {"error": f"{name}: expected a non-empty .data/SHT_PROGBITS section"}
+        if sym["st_value"] != 0 or sym["st_size"] != sec.header["sh_size"]:
+            return {"error": f"{name}: definition does not exactly cover its section "
+                    f"(value=0x{sym['st_value']:x}, symbol=0x{sym['st_size']:x}, "
+                    f"section=0x{sec.header['sh_size']:x})"}
+        occupants = sorted(s.name for s in syms
+                           if s.name and not s.name.startswith("$")
+                           and s["st_shndx"] == shndx
+                           and s["st_info"]["type"] != "STT_SECTION")
+        if occupants != [name]:
+            return {"error": f"{name}: section[{shndx}] also defines "
+                    f"{[n for n in occupants if n != name]}"}
+        if shndx in drop_content:
+            return {"error": f"{name}: policy symbols share section[{shndx}]"}
+        drop_content.add(shndx)
+
+    referenced = set()
+    for rel in secs:
+        if not isinstance(rel, RelocationSection) or rel.header["sh_info"] in drop_content:
+            continue
+        source = secs[rel.header["sh_info"]]
+        if source.header["sh_type"] not in CONTENT or not source.header["sh_size"]:
+            continue
+        for r in rel.iter_relocations():
+            target = symtab.get_symbol(r["r_info_sym"])
+            if not target.name and target["st_shndx"] in drop_content:
+                return {"error": f"surviving section[{rel.header['sh_info']}] "
+                        f"{source.name} references unnamed section[{target['st_shndx']}] "
+                        f"at 0x{r['r_offset']:x}"}
+            if target.name in wanted:
+                referenced.add(target.name)
+
+    drop = set(drop_content)
+    drop.update(i for i, sec in enumerate(secs)
+                if isinstance(sec, RelocationSection) and sec.header["sh_size"]
+                and sec.header["sh_info"] in drop_content)
+    return {"keep": None, "drop": sorted(drop), "externalise": sorted(wanted),
+            "dead": [], "referenced": sorted(referenced), "error": None}
+
+
+def derive_externalized(raw, symbol_names):
+    """Return an object importing exact dedicated vague RTTI definitions."""
+    p = externalize_plan(raw, symbol_names)
+    if p.get("error"):
+        return None, p
+    return _apply(raw, p, None), p
+
+
 def isolate(obj, keep_symbol):
     """Apply `plan` to the object file in place. Returns the plan.
 

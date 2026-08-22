@@ -466,6 +466,61 @@ def _compile_tu_fixture(source):
         return tubuild.M.compile_c(src, tubuild.RB.VERSION, flags)
 
 
+def _vague_externalization_fixture():
+    """Real mwcc vague RTTI plus injected canonical ROM/config evidence."""
+    import io
+    from elftools.elf.elffile import ELFFile
+    from elftools.elf.relocation import RelocationSection
+
+    obj = _compile_tu_fixture(
+        "struct Base { virtual ~Base() {} };\n"
+        "struct A : Base { virtual void a(); }; void A::a() {}\n")
+    elf = ELFFile(io.BytesIO(obj))
+    sections = list(elf.iter_sections())
+    symtab = elf.get_section_by_name(".symtab")
+    symbols = list(symtab.iter_symbols())
+    addresses = {"_ZTI4Base": 0x5000, "_ZTS4Base": 0x5100}
+    policies, targets, config, homes, name_index = [], {}, {"arm9": {}}, {}, {}
+    next_destination = 0x6000
+    for name, address in addresses.items():
+        sym = next(s for s in symbols if s.name == name)
+        section = sections[sym["st_shndx"]]
+        relocs = []
+        for relsec in sections:
+            if not isinstance(relsec, RelocationSection) \
+                    or relsec.header["sh_info"] != sym["st_shndx"]:
+                continue
+            for reloc in relsec.iter_relocations():
+                target = symtab.get_symbol(reloc["r_info_sym"])
+                relocs.append({
+                    "offset": reloc["r_offset"], "type": "R_ARM_ABS32",
+                    "kind": "load", "symbol": target.name,
+                    "addend": reloc["r_addend"], "target_module": "arm9",
+                    "target_address": next_destination,
+                })
+                config["arm9"][address + reloc["r_offset"]] = (
+                    "load", next_destination, "arm9")
+                name_index[target.name] = ("arm9", next_destination - reloc["r_addend"])
+                next_destination += 4
+        policies.append({
+            "symbol": name, "disposition": "canonical-import",
+            "section": ".data", "binding": "STB_LOPROC",
+            "size": section.header["sh_size"], "canonical_module": "arm9",
+            "canonical_address": address, "reason": "inherited RTTI fixture",
+            "relocations": relocs,
+        })
+        targets[("arm9", address, section.header["sh_size"])] = section.data()
+        homes[name] = [("arm9", address)]
+
+    entry = {"module": "ov999", "functions": [], "data": [], "rodata": [],
+             "bss": [], "externalized_output": policies}
+
+    def target_reader(module, address, size):
+        return targets.get((module, address, size))
+
+    return obj, entry, homes, config, targets, target_reader, name_index
+
+
 def test_nontext_verifier_checks_layout_bytes_symbols_and_reloc_destinations():
     if not _toolchain():
         return
@@ -772,6 +827,105 @@ def test_vague_inherited_rtti_coalescing_remains_explicitly_unsupported():
         "vague duplicate output must remain fatal until exact coalescing is implemented"
 
 
+def test_exact_vague_externalization_requires_canonical_bytes_relocs_and_home():
+    if not _toolchain():
+        return
+    import copy
+
+    obj, entry, homes, cfg, targets, reader, name_index = \
+        _vague_externalization_fixture()
+    out, report, reasons = tubuild.apply_externalized_output_policy(
+        obj, entry, homes=homes, config_relocs=cfg, target_reader=reader,
+        name_index=name_index)
+    assert reasons == [] and out is not None
+    assert report["externalized"] == ["_ZTI4Base", "_ZTS4Base"]
+    assert all(row["ok"] for row in report["verification"]["rows"])
+    inv = tubuild.elf_inventory(out)
+    defined = {row["name"] for row in inv["symbols"]}
+    assert "_ZTI4Base" not in defined and "_ZTS4Base" not in defined
+
+    bad_homes = dict(homes, _ZTI4Base=[("arm9", 0x5004)])
+    out, _report, reasons = tubuild.apply_externalized_output_policy(
+        obj, entry, homes=bad_homes, config_relocs=cfg, target_reader=reader,
+        name_index=name_index)
+    assert out is None and any("unique canonical home" in r for r in reasons)
+
+    damaged = dict(targets)
+    zts_key = next(key for key in damaged if key[1] == 0x5100)
+    zts = bytearray(damaged[zts_key])
+    zts[0] ^= 0xff
+    damaged[zts_key] = bytes(zts)
+    out, _report, reasons = tubuild.apply_externalized_output_policy(
+        obj, entry, homes=homes, config_relocs=cfg,
+        target_reader=lambda module, address, size: damaged.get((module, address, size)),
+        name_index=name_index)
+    assert out is None and any("non-relocated byte" in r for r in reasons)
+
+    wrong_addend = copy.deepcopy(entry)
+    wrong_addend["externalized_output"][0]["relocations"][0]["addend"] += 4
+    out, _report, reasons = tubuild.apply_externalized_output_policy(
+        obj, wrong_addend, homes=homes, config_relocs=cfg, target_reader=reader,
+        name_index=name_index)
+    assert out is None and any("addend" in r for r in reasons)
+
+    wrong_cfg = copy.deepcopy(cfg)
+    source = next(iter(wrong_cfg["arm9"]))
+    kind, destination, module = wrong_cfg["arm9"][source]
+    wrong_cfg["arm9"][source] = (kind, destination + 4, module)
+    out, _report, reasons = tubuild.apply_externalized_output_policy(
+        obj, entry, homes=homes, config_relocs=wrong_cfg, target_reader=reader,
+        name_index=name_index)
+    assert out is None and any("canonical relocation" in r for r in reasons)
+
+    wrong_names = dict(name_index)
+    symbol = entry["externalized_output"][0]["relocations"][0]["symbol"]
+    module, address = wrong_names[symbol]
+    wrong_names[symbol] = (module, address + 4)
+    out, _report, reasons = tubuild.apply_externalized_output_policy(
+        obj, entry, homes=homes, config_relocs=cfg, target_reader=reader,
+        name_index=wrong_names)
+    assert out is None and any("resolves to" in r for r in reasons)
+
+    unresolved = dict(name_index)
+    del unresolved[symbol]
+    out, _report, reasons = tubuild.apply_externalized_output_policy(
+        obj, entry, homes=homes, config_relocs=cfg, target_reader=reader,
+        name_index=unresolved)
+    assert out is None and any("is unresolved" in r for r in reasons)
+
+
+def test_exact_vague_externalization_rejects_wrong_binding_and_vtables():
+    if not _toolchain():
+        return
+    import io
+    import struct
+    from elftools.elf.elffile import ELFFile
+
+    obj, entry, homes, cfg, _targets, reader, name_index = \
+        _vague_externalization_fixture()
+    raw = bytearray(obj)
+    elf = ELFFile(io.BytesIO(obj))
+    symtab = elf.get_section_by_name(".symtab")
+    index = next(i for i, sym in enumerate(symtab.iter_symbols())
+                 if sym.name == "_ZTI4Base")
+    # Elf32_Sym st_info: bind in the high nibble, type in the low.  Make this a
+    # strong STB_GLOBAL/STT_OBJECT definition without disturbing any other field.
+    raw[symtab.header["sh_offset"] + index * 16 + 12] = 0x11
+    out, _report, reasons = tubuild.apply_externalized_output_policy(
+        bytes(raw), entry, homes=homes, config_relocs=cfg, target_reader=reader,
+        name_index=name_index)
+    assert out is None and any("STB_GLOBAL/STT_OBJECT" in r for r in reasons)
+
+    vtable_entry = {"externalized_output": [{
+        "symbol": "_ZTV4Base", "disposition": "canonical-import",
+        "section": ".data", "binding": "STB_LOPROC", "size": 8,
+        "canonical_module": "arm9", "canonical_address": 0x5000,
+        "reason": "must fail closed", "relocations": [],
+    }]}
+    _rows, reasons = tubuild.manifest_externalized_output(vtable_entry)
+    assert any("not an _ZTI/_ZTS" in reason for reason in reasons)
+
+
 def test_scratch_and_no_rom_results_are_not_promotion_ready():
     assert tubuild.classify_link_result(True, True, None, False) == \
         "module-data-verified"
@@ -788,6 +942,8 @@ def test_scratch_and_no_rom_results_are_not_promotion_ready():
         dict(ready, sections=[{"name": ".text"}, {"name": ".data"}])))
     assert any("compiler_only_output" in reason for reason in tubuild.promotion_refusals(
         dict(ready, compiler_only_output=[{"symbol": "D2"}])))
+    assert any("externalized_output" in reason for reason in tubuild.promotion_refusals(
+        dict(ready, externalized_output=[{"symbol": "_ZTI4Base"}])))
     no_rom = dict(ready, verification={"linkcheck": {
         "result": "link-verified", "phases": {"rom": None}, "rom": {}}})
     assert any("full-ROM phase" in reason for reason in tubuild.promotion_refusals(no_rom))

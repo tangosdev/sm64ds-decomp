@@ -1891,6 +1891,324 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
                  "droppedSections": plan.get("drop", [])}, []
 
 
+def manifest_externalized_output(entry):
+    """Normalize exact vague-RTTI imports declared by a TU manifest entry.
+
+    This schema intentionally describes individual definitions, not a linkage class.
+    It cannot say "all vague symbols" and it cannot externalize vtables.  Each row
+    names one dedicated ``_ZTI``/``_ZTS`` section, its unique configured canonical
+    home, and every relocation in the canonical copy::
+
+        {"symbol": "_ZTI4Base", "disposition": "canonical-import",
+         "section": ".data", "binding": "STB_LOPROC", "size": "0x8",
+         "canonical_module": "arm9", "canonical_address": "0x02001000",
+         "reason": "inherited RTTI copy",
+         "relocations": [{"offset": 0, "type": "R_ARM_ABS32", "kind": "load",
+                           "symbol": "_ZTVN3abi17__class_type_infoE", "addend": 8,
+                           "target_module": "arm9",
+                           "target_address": "0x02002000"}]}
+
+    The nested relocation rows are evidence, not linker aliases.  This scratch-only
+    pass drops their sections before linking, so ABI-vtable address-point rewriting
+    remains outside its scope and any surviving instance still fails closed.
+    """
+    raw = entry.get("externalized_output", [])
+    if raw is None:
+        raw = []
+    if not isinstance(raw, list):
+        return [], ["externalized_output must be a list"]
+
+    rows, reasons, seen = [], [], set()
+    for i, item in enumerate(raw):
+        label = f"externalized_output[{i}]"
+        if not isinstance(item, dict):
+            reasons.append(f"{label} is not an object")
+            continue
+        symbol = item.get("symbol")
+        if not symbol:
+            reasons.append(f"{label} has no symbol")
+            continue
+        if symbol in seen:
+            reasons.append(f"duplicate externalized_output policy for {symbol}")
+            continue
+        seen.add(symbol)
+        if not symbol.startswith(("_ZTI", "_ZTS")):
+            reasons.append(f"{label} {symbol} is not an _ZTI/_ZTS RTTI object")
+        if item.get("disposition") != "canonical-import":
+            reasons.append(f"{label} {symbol} has unsupported disposition "
+                           f"{item.get('disposition')!r}")
+        if item.get("section") != ".data":
+            reasons.append(f"{label} {symbol} must name a .data definition")
+        if item.get("binding") != "STB_LOPROC":
+            reasons.append(f"{label} {symbol} must require STB_LOPROC binding")
+        if not str(item.get("reason", "")).strip():
+            reasons.append(f"{label} {symbol} needs a non-empty reason")
+
+        try:
+            size = int(item["size"], 0) if isinstance(item["size"], str) \
+                else int(item["size"])
+            address = int(item["canonical_address"], 0) \
+                if isinstance(item["canonical_address"], str) \
+                else int(item["canonical_address"])
+        except (KeyError, TypeError, ValueError):
+            reasons.append(f"{label} {symbol} needs valid size and canonical_address")
+            continue
+        if size <= 0:
+            reasons.append(f"{label} {symbol} has non-positive size 0x{size:x}")
+        module = item.get("canonical_module")
+        if not isinstance(module, str) or not module:
+            reasons.append(f"{label} {symbol} needs canonical_module")
+            continue
+        module = RL.normalize_module(module)
+
+        relocs = item.get("relocations")
+        if not isinstance(relocs, list):
+            reasons.append(f"{label} {symbol} relocations must be a list")
+            continue
+        normalized_relocs, offsets = [], set()
+        for j, reloc in enumerate(relocs):
+            rlabel = f"{label}.relocations[{j}]"
+            if not isinstance(reloc, dict):
+                reasons.append(f"{rlabel} is not an object")
+                continue
+            required = ("offset", "type", "kind", "symbol", "addend",
+                        "target_module", "target_address")
+            missing = [key for key in required if key not in reloc]
+            if missing:
+                reasons.append(f"{rlabel} is missing {missing}")
+                continue
+            try:
+                offset = int(reloc["offset"], 0) if isinstance(reloc["offset"], str) \
+                    else int(reloc["offset"])
+                addend = int(reloc["addend"], 0) if isinstance(reloc["addend"], str) \
+                    else int(reloc["addend"])
+                target = int(reloc["target_address"], 0) \
+                    if isinstance(reloc["target_address"], str) \
+                    else int(reloc["target_address"])
+            except (TypeError, ValueError):
+                reasons.append(f"{rlabel} has an invalid offset/addend/target_address")
+                continue
+            if offset in offsets:
+                reasons.append(f"{label} {symbol} has duplicate relocation offset "
+                               f"0x{offset:x}")
+                continue
+            offsets.add(offset)
+            if offset < 0 or offset + 4 > size or offset & 3:
+                reasons.append(f"{rlabel} offset 0x{offset:x} is not one aligned word "
+                               f"inside size 0x{size:x}")
+            if reloc["type"] != "R_ARM_ABS32" or reloc["kind"] != "load":
+                reasons.append(f"{rlabel} must be R_ARM_ABS32/load")
+            if not reloc["symbol"]:
+                reasons.append(f"{rlabel} has an empty symbol")
+            normalized = dict(reloc)
+            normalized.update({"offset": offset, "addend": addend,
+                               "target_address": target,
+                               "target_module": RL.normalize_module(
+                                   reloc["target_module"])})
+            normalized_relocs.append(normalized)
+
+        row = dict(item)
+        row.update({"size": size, "canonical_address": address,
+                    "canonical_module": module, "relocations": normalized_relocs})
+        rows.append(row)
+    return rows, reasons
+
+
+def verify_externalized_output(obj_bytes, entry, policies=None, homes=None,
+                               config_relocs=None, target_reader=None,
+                               name_index=None):
+    """Prove exact manifest-listed RTTI copies equal their configured homes."""
+    if policies is None:
+        policies, structural = manifest_externalized_output(entry)
+    else:
+        structural = []
+    if structural:
+        return {"ok": False, "rows": [], "errors": structural}
+    if not policies:
+        return {"ok": True, "rows": [], "errors": []}
+
+    homes = all_symbol_homes() if homes is None else homes
+    config_relocs = RA.build_config_relocs() if config_relocs is None else config_relocs
+    target_reader = BP.target_bytes if target_reader is None else target_reader
+    name_index = RA.build_name_index() if name_index is None else name_index
+    elf = ELFFile(io.BytesIO(obj_bytes))
+    secs = list(elf.iter_sections())
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return {"ok": False, "rows": [], "errors": ["no .symtab"]}
+    syms = list(symtab.iter_symbols())
+    licensed = {f["symbol"] for f in entry.get("functions", [])}
+    licensed |= {row["symbol"] for _sec, row in manifest_owned_symbol_rows(entry)}
+
+    report_rows, reasons, used_sections = [], [], set()
+    for policy in policies:
+        name = policy["symbol"]
+        prefix = f"externalized_output {name}"
+        row_reasons = []
+        matches = [s for s in syms if s.name == name
+                   and s["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")]
+        if name in licensed:
+            row_reasons.append("is also licensed by the TU manifest")
+        configured = {(RL.normalize_module(mod), addr)
+                      for mod, addr in homes.get(name, [])}
+        canonical = (policy["canonical_module"], policy["canonical_address"])
+        if configured != {canonical}:
+            row_reasons.append(f"configured homes are {sorted(configured)}, expected the "
+                               f"unique canonical home {canonical}")
+        if len(matches) != 1:
+            row_reasons.append(f"has {len(matches)} defined ELF symbols, expected one")
+            reasons.extend(f"{prefix}: {reason}" for reason in row_reasons)
+            report_rows.append({"symbol": name, "ok": False,
+                                "errors": row_reasons})
+            continue
+
+        sym = matches[0]
+        shndx = sym["st_shndx"]
+        sec = secs[shndx] if isinstance(shndx, int) and shndx < len(secs) else None
+        if sym["st_info"]["bind"] != "STB_LOPROC" \
+                or sym["st_info"]["type"] != "STT_OBJECT":
+            row_reasons.append(f"ELF binding/type is {sym['st_info']['bind']}/"
+                               f"{sym['st_info']['type']}, expected STB_LOPROC/STT_OBJECT")
+        if sec is None or sec.name != ".data" \
+                or sec.header["sh_type"] != "SHT_PROGBITS" \
+                or not sec.header["sh_size"]:
+            row_reasons.append("definition is not in a non-empty .data/SHT_PROGBITS section")
+        if sec is not None:
+            occupants = sorted(s.name for s in syms
+                               if s.name and not s.name.startswith("$")
+                               and s["st_shndx"] == shndx
+                               and s["st_info"]["type"] != "STT_SECTION")
+            if occupants != [name]:
+                row_reasons.append(f"section[{shndx}] also defines "
+                                   f"{[n for n in occupants if n != name]}")
+            if shndx in used_sections:
+                row_reasons.append(f"shares section[{shndx}] with another policy row")
+            used_sections.add(shndx)
+            if sym["st_value"] != 0 or sym["st_size"] != policy["size"] \
+                    or sec.header["sh_size"] != policy["size"]:
+                row_reasons.append(f"value/sizes are value=0x{sym['st_value']:x}, "
+                                   f"symbol=0x{sym['st_size']:x}, "
+                                   f"section=0x{sec.header['sh_size']:x}, manifest="
+                                   f"0x{policy['size']:x}")
+
+        emitted_relocs = {}
+        if sec is not None:
+            for relsec in secs:
+                if not isinstance(relsec, RelocationSection) \
+                        or relsec.header["sh_info"] != shndx:
+                    continue
+                if not relsec.is_RELA():
+                    row_reasons.append(f"section[{shndx}] uses REL, not RELA")
+                    continue
+                for reloc in relsec.iter_relocations():
+                    offset = reloc["r_offset"]
+                    if offset in emitted_relocs:
+                        row_reasons.append(f"duplicate emitted relocation at 0x{offset:x}")
+                    target = symtab.get_symbol(reloc["r_info_sym"])
+                    emitted_relocs[offset] = {
+                        "offset": offset,
+                        "type": _ELF_RELOC_NAME.get(reloc["r_info_type"],
+                                                    reloc["r_info_type"]),
+                        "kind": _NON_TEXT_RELOC_KIND.get(reloc["r_info_type"]),
+                        "symbol": target.name, "addend": reloc["r_addend"],
+                    }
+        expected_relocs = {reloc["offset"]: reloc for reloc in policy["relocations"]}
+        if set(emitted_relocs) != set(expected_relocs):
+            row_reasons.append(f"relocation offsets are {sorted(emitted_relocs)}, expected "
+                               f"{sorted(expected_relocs)}")
+        cfgmap = config_relocs.get(policy["canonical_module"], {})
+        for offset, expected in sorted(expected_relocs.items()):
+            emitted = emitted_relocs.get(offset)
+            if emitted is not None:
+                for field in ("type", "kind", "symbol", "addend"):
+                    if emitted[field] != expected[field]:
+                        row_reasons.append(f"relocation +0x{offset:x} {field} is "
+                                           f"{emitted[field]!r}, expected "
+                                           f"{expected[field]!r}")
+                resolved = RA.resolve_candidate(emitted["symbol"], name_index)
+                if resolved is None:
+                    row_reasons.append(f"relocation +0x{offset:x} symbol "
+                                       f"{emitted['symbol']} is unresolved")
+                else:
+                    candidate_module = (RL.normalize_module(resolved[0])
+                                        if resolved[0] is not None else None)
+                    candidate_address = resolved[1] + emitted["addend"]
+                    if (candidate_module, candidate_address) != \
+                            (expected["target_module"], expected["target_address"]):
+                        row_reasons.append(f"relocation +0x{offset:x} resolves to "
+                                           f"{candidate_module}:0x{candidate_address:08x}, "
+                                           f"expected {expected['target_module']}:"
+                                           f"0x{expected['target_address']:08x}")
+            cfg = cfgmap.get(policy["canonical_address"] + offset)
+            want_cfg = (expected["kind"], expected["target_address"],
+                        expected["target_module"])
+            got_cfg = ((cfg[0], cfg[1], RL.normalize_module(cfg[2])) if cfg else None)
+            if got_cfg != want_cfg:
+                row_reasons.append(f"canonical relocation +0x{offset:x} is {got_cfg}, "
+                                   f"expected {want_cfg}")
+        configured_offsets = {source - policy["canonical_address"] for source in cfgmap
+                              if policy["canonical_address"] <= source
+                              < policy["canonical_address"] + policy["size"]}
+        if configured_offsets != set(expected_relocs):
+            row_reasons.append(f"configured relocation offsets are "
+                               f"{sorted(configured_offsets)}, expected "
+                               f"{sorted(expected_relocs)}")
+
+        target = target_reader(policy["canonical_module"],
+                               policy["canonical_address"], policy["size"])
+        if target is None or len(target) != policy["size"]:
+            row_reasons.append("canonical target bytes are unavailable or short")
+            differing = policy["size"]
+        elif sec is None:
+            differing = policy["size"]
+        else:
+            wildcard = {byte for offset in emitted_relocs for byte in range(offset, offset + 4)}
+            differing = sum(1 for i, (left, right) in enumerate(zip(sec.data(), target))
+                            if i not in wildcard and left != right)
+            if differing:
+                row_reasons.append(f"has {differing} non-relocated byte(s) different "
+                                   "from its canonical home")
+
+        reasons.extend(f"{prefix}: {reason}" for reason in row_reasons)
+        report_rows.append({"symbol": name,
+                            "canonicalModule": policy["canonical_module"],
+                            "canonicalAddress": f"0x{policy['canonical_address']:08x}",
+                            "size": policy["size"], "relocCount": len(emitted_relocs),
+                            "differingBytes": differing, "ok": not row_reasons,
+                            "errors": row_reasons})
+    return {"ok": not reasons, "rows": report_rows, "errors": reasons}
+
+
+def apply_externalized_output_policy(obj_bytes, entry, homes=None,
+                                     config_relocs=None, target_reader=None,
+                                     name_index=None):
+    """Verify then externalize exact RTTI definitions in a scratch TU object."""
+    policies, structural = manifest_externalized_output(entry)
+    if structural:
+        return None, {"requested": [row.get("symbol") for row in policies],
+                      "verification": {"ok": False, "rows": [],
+                                       "errors": structural}}, structural
+    if not policies:
+        return obj_bytes, {"requested": [], "externalized": [],
+                           "verification": {"ok": True, "rows": [], "errors": []}}, []
+    verification = verify_externalized_output(
+        obj_bytes, entry, policies=policies, homes=homes,
+        config_relocs=config_relocs, target_reader=target_reader,
+        name_index=name_index)
+    if not verification["ok"]:
+        return None, {"requested": [row["symbol"] for row in policies],
+                      "verification": verification}, verification["errors"]
+    wanted = [row["symbol"] for row in policies]
+    out, plan = OI.derive_externalized(obj_bytes, wanted)
+    if out is None:
+        reason = f"exact RTTI externalization refused: {plan.get('error')}"
+        return None, {"requested": wanted, "verification": verification,
+                      "objisolate": plan}, [reason]
+    return out, {"requested": wanted, "externalized": plan.get("externalise", []),
+                 "droppedSections": plan.get("drop", []),
+                 "verification": verification}, []
+
+
 def _align_up(value, alignment):
     alignment = max(1, int(alignment or 1))
     return (value + alignment - 1) & ~(alignment - 1)
@@ -2989,6 +3307,25 @@ def cmd_linkcheck(args):
             print(f"      explicitly deadstripped {compiler_only['deadstripped']} from the "
                   f"SCRATCH object only (production source/config untouched)")
 
+        externalized_tu, externalized, externalized_reasons = \
+            apply_externalized_output_policy(linked_tu, entry)
+        report["externalizedOutput"] = externalized
+        if externalized_reasons:
+            print("      REFUSED -- exact vague RTTI externalization policy:")
+            for reason in externalized_reasons:
+                print(f"        {reason}")
+            report["externalizedOutput"]["errors"] = externalized_reasons
+            report["result"] = "externalization-refused"
+            _write_link_report(scratch, report)
+            _record_linkcheck(data, entry, report, baseline)
+            return 1
+        if externalized_tu != linked_tu:
+            linked_tu = externalized_tu
+            scratch_rewrite = True
+            tu_obj.write_bytes(linked_tu)
+            print(f"      externalized {externalized['externalized']} to their exact "
+                  "configured canonical homes in the SCRATCH object only")
+
         owned = verify_owned_sections(linked_tu, entry, claims)
         report["ownedSections"] = owned
         for row in owned["rows"]:
@@ -3383,6 +3720,8 @@ def promotion_refusals(entry):
         reasons.append("production promotion does not yet install non-.text delinks claims")
     if entry.get("compiler_only_output"):
         reasons.append("production rombuild does not apply compiler_only_output policy")
+    if entry.get("externalized_output"):
+        reasons.append("production rombuild does not apply externalized_output policy")
     linkcheck = entry.get("verification", {}).get("linkcheck", {})
     if linkcheck.get("phases", {}).get("rom") is not True:
         reasons.append("the recorded full-ROM phase is not green")
