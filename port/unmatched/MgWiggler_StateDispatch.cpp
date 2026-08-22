@@ -216,9 +216,32 @@ static unsigned g_wig_hits;         /* dispatches this file routed itself */
 static unsigned g_wig_opencoded;    /* dispatches through func_ov006_020eb610 */
 static unsigned g_wig_scene_hits;   /* of g_wig_hits, the scene object's own */
 
+/* A PER-ADDRESS CENSUS, and it is not decoration. A total routed count and a
+   zero UNHANDLED count together say "every address the class asked for was one
+   this file owns"; neither says WHICH of the fifteen ran. The difference
+   matters for a class with no state index: without this, "the state machine
+   moved" would rest on an aggregate. Taken at the DISPATCH SITE, which is the
+   shape lane L375 recommends over a counter inside a ROM body -- a census here
+   survives its body being decompiled, or in this class's case being routed. */
+static const unsigned kWigStates[] = {
+    0x020ed270u, 0x020ed274u, 0x020ed328u, 0x020ed34cu, 0x020ed494u,
+    0x020ed844u,
+    0x020eb018u, 0x020eb0c8u, 0x020eb1e0u, 0x020eb31cu, 0x020eb3e4u,
+    0x020ec458u, 0x020ec6e8u, 0x020ec93cu, 0x020ecb80u,
+};
+enum { kWigStateCount = sizeof kWigStates / sizeof kWigStates[0] };
+static unsigned g_wig_state_hits[kWigStateCount];
+
+static void wig_note(unsigned code)
+{
+    for (unsigned i = 0; i < (unsigned)kWigStateCount; ++i)
+        if (kWigStates[i] == code) { ++g_wig_state_hits[i]; return; }
+}
+
 static int wig_try(void *self, unsigned code)
 {
     char *c = (char *)self;
+    wig_note(code);
     switch (code) {
     /* the scene object's own six, +0x4660 */
     case 0x020ed270u: func_ov006_020ed270();  ++g_wig_scene_hits; return 1;
@@ -240,6 +263,15 @@ static int wig_try(void *self, unsigned code)
     default:                                  return 0;
     }
 }
+
+extern "C" unsigned port_mg_wiggler_state_count(void)
+{ return (unsigned)kWigStateCount; }
+
+extern "C" unsigned port_mg_wiggler_state_addr(unsigned i)
+{ return i < (unsigned)kWigStateCount ? kWigStates[i] : 0u; }
+
+extern "C" unsigned port_mg_wiggler_state_hit(unsigned i)
+{ return i < (unsigned)kWigStateCount ? g_wig_state_hits[i] : 0u; }
 
 /* The one entry point for this class. Everything it does not own goes to the
    framework's chain, so the null guard, the nonzero-adjustment refusal and the

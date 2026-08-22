@@ -205,6 +205,9 @@ void *MgWhichWiggler_Spawn(void);
 void port_mg_wiggler_counts(unsigned *calls, unsigned *hits, unsigned *scene,
                             unsigned *opencoded);
 void port_mg_wiggler_trap_counts(unsigned *render, unsigned *setup);
+unsigned port_mg_wiggler_state_count(void);
+unsigned port_mg_wiggler_state_addr(unsigned i);
+unsigned port_mg_wiggler_state_hit(unsigned i);
 
 }  /* extern "C" */
 
@@ -284,36 +287,9 @@ static int __fastcall wig_init(void *s, void *)
 static int __fastcall wig_clean(void *s, void *)
 { WIG(3); return func_ov006_020ecec8(s); }
 
-/* SM64DS_WIG_KIND=<n>: pin data_ov006_02141fd8, the selector
-   src/func_ov006_020ecdb8.c's four-way switch reads to pick which wiggler
-   set-up runs. A DIAGNOSTIC, off unless the variable is set.
-
-   IT EXISTS FOR ONE REASON. Variant 3 of the four is this class's second floor
-   (func_ov006_020ec4dc has a config symbol, no delink block and no src file),
-   and an unattended boot reaches a variant when the game decides to. Pinning is
-   how each of the four gets exercised on purpose, and it is the only way to
-   make the trap fire and be counted rather than to report a zero that could
-   mean either "the variant is fine" or "the variant was never reached".
-
-   IT PINS RATHER THAN POKES ONCE, because the ROM writes this word itself from
-   func_ov006_020ed494 and func_ov006_020ed8a4, and it writes only this one
-   halfword of mounted .bss, before the ROM body reads it. */
 static int __fastcall wig_beh(void *s, void *)
 {
     WIG(6);
-    static int kind = -2;
-    if (kind == -2) {
-        const char *e = std::getenv("SM64DS_WIG_KIND");
-        kind = (e && e[0]) ? std::atoi(e) : -1;
-        if (kind >= 0)
-            std::fprintf(stderr, "  [scene] SM64DS_WIG_KIND=%d: pinning "
-                         "dScMgHanachan_c's set-up selector at "
-                         "data_ov006_02141fd8. This is a diagnostic and not how "
-                         "the game runs.\n", kind);
-    }
-    if (kind >= 0)
-        data_ov006_02141fd8 = (short)kind;
-
     static int tick;
     static int trace = -2;
     if (trace == -2)
@@ -338,8 +314,65 @@ static void *__fastcall wig_d0(void *s, void *)
    address. On most classes the ROM body then ignores its r1. NOT HERE:
    0x020eda48 opens `cmp r1,#1` and `cmp r1,#0x12` and branches three ways on
    it, so the parameter is forwarded rather than only cleaned. */
+/* SM64DS_WIG_LEVEL=<n>: seed the clear count at +0xbc before slot 18's ROM body
+   deals the round. A DIAGNOSTIC, off unless the variable is set, and it seeds
+   the ROM'S OWN INPUT rather than an outcome, which is the shape run mg8 lane
+   MMD used for Memory Master's board ladder.
+
+   WHAT IT DRIVES, disassembled rather than guessed. src/func_ov006_020ed8a4.c
+   is the round dealer, called from the tail of slot 18, and it reads exactly
+   one int -- +0xbc, the clear count slot 18 itself increments on a win and
+   zeroes on a reset:
+
+     +0xbc < 10  kind      = data_ov006_0212e80c[+0xbc]  (s16 table)
+                 wigglers  = data_ov006_0212e820[+0xbc]  (s32 table)
+     otherwise   kind      = func_ov006_020ebe6c(), a uniform 0..3
+                 wigglers  = 15 when the kind is 3, else 3 + a 0..2 random
+
+   and the two tables, read out of extracted/overlays/overlay_0006.bin at base
+   0x020bfec0:
+
+     clear count   0  1  2  3  4  5  6  7   8   9
+     kind          0  0  0  1  1  2  2  2   3   3
+     wigglers      3  4  5  4  6  3  4  5  15  15
+
+   SO THE SECOND FLOOR IS REACHABLE IN PLAY AND THE LADDER SAYS WHEN. Kind 3 is
+   func_ov006_020ec4dc, the set-up variant with no src file, and the ROM picks it
+   at clear count EIGHT. A port with no save medium restarts at zero every
+   launch (port/mg_fanout_costs.txt section 17's deliberate divergence), so an
+   unattended boot never gets there and the trap's zero says only that. This
+   variable is how the zero stops being the whole story.
+
+   IT SEEDS AND THEN REPORTS WHAT THE ROM MADE OF IT rather than pinning:
+   func_ov006_020eda48's own arms move +0xbc before the dealer reads it (state 1
+   increments, state 0x12 zeroes, anything else leaves it), so the seat prints
+   the st argument it was called with and the kind and count that came out. */
+static int g_wig_level = -2;
+static int g_wig_reset_st = -1;
+static int g_wig_dealt_kind = -1;
+static int g_wig_dealt_count = -1;
+
 static int __fastcall wig_reset(void *s, void *, int st)
-{ WIG(18); func_ov006_020eda48((char *)s, st); return 1; }
+{
+    WIG(18);
+    if (g_wig_level == -2) {
+        const char *e = std::getenv("SM64DS_WIG_LEVEL");
+        g_wig_level = (e && e[0]) ? std::atoi(e) : -1;
+        if (g_wig_level >= 0)
+            std::fprintf(stderr, "  [scene] SM64DS_WIG_LEVEL=%d: seeding "
+                         "dScMgHanachan_c's clear count at +0xbc before the "
+                         "round is dealt. This is a diagnostic and not how the "
+                         "game runs; the port has no save medium, so an "
+                         "unattended boot always starts at 0.\n", g_wig_level);
+    }
+    if (g_wig_level >= 0)
+        *(int *)((char *)s + 0xbc) = g_wig_level;
+    g_wig_reset_st = st;
+    func_ov006_020eda48((char *)s, st);
+    g_wig_dealt_kind  = (int)data_ov006_02141fd8;
+    g_wig_dealt_count = data_ov006_0213c958;
+    return 1;
+}
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics the ov003,
    ov007, curling, flower and bomroom seats all carry, counted separately so a
@@ -528,6 +561,22 @@ extern "C" void port_scene_wiggler_hits(void)
             std::printf(" 0x%08x", g_wig_state_seen[i]);
         std::printf("\n");
     }
+    /* THE PER-ADDRESS CENSUS. A routed total and a zero UNHANDLED say every
+       address the class asked for was one this seat owns; they do not say which
+       of the fifteen ran, and on a class with no state index that is the
+       difference between "the machine moved" and an aggregate. A zero on a row
+       is a statement about this run, not about the body. */
+    {
+        const unsigned n = port_mg_wiggler_state_count();
+        std::printf("[scene] dScMgHanachan_c per-state census (%u routed "
+                    "addresses, the whole set):\n   ", n);
+        for (unsigned i = 0; i < n; ++i) {
+            std::printf(" %08x:%u", port_mg_wiggler_state_addr(i),
+                        port_mg_wiggler_state_hit(i));
+            if (i == 5) std::printf("\n   ");   /* the scene's six, then the wigglers' */
+        }
+        std::printf("\n");
+    }
     /* THE TWO FLOORS, REPORTED WHETHER OR NOT THEY FIRED, and the two zeros
        mean different things. */
     {
@@ -542,6 +591,16 @@ extern "C" void port_scene_wiggler_hits(void)
                     "never read 3, and variants 0, 1 and 2 are matched\n",
                     render, (int)data_ov006_02141fd8, setup);
     }
+    /* THE ROUND THE ROM DEALT, and its one input. func_ov006_020ed8a4 reads the
+       clear count at +0xbc and nothing else; the two tables it indexes are in
+       wig_reset's block above. */
+    std::printf("[scene] dScMgHanachan_c round: slot 18 called with st=%d, "
+                "clear count +0xbc = %d at exit, dealt kind %d and %d "
+                "wiggler(s)%s\n",
+                g_wig_reset_st,
+                g_wig_self ? *(int *)(g_wig_self + 0xbc) : -1,
+                g_wig_dealt_kind, g_wig_dealt_count,
+                g_wig_level >= 0 ? " (SM64DS_WIG_LEVEL was set)" : "");
     if (g_wig_self)
         std::printf("[scene] dScMgHanachan_c object at %p, state word 0x%08x, "
                     "adjustment %d, score %u, wiggler count %d\n",
