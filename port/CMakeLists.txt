@@ -3778,10 +3778,12 @@ set_source_files_properties(
 # framework, the thirty-five overlay constructors and the arm9 waves under
 # them; CMake appends both lists to the same target and dedupes identical
 # absolute paths, so nothing is compiled twice. port/slice_sos.txt says what it
-# reaches, why its ov004 delta is ZERO, and records the class's two hard
-# floors.
+# reaches, why its ov004 delta is ZERO, and records the class's two former
+# floors, both closed by run mg7 lane L370: src/func_ov006_020d7c4c.c
+# (byte-matched) and src/func_ov006_020d8408.c (NONMATCHING, logic verified).
+# unmatched/MgBomroom_Traps.cpp held the trap for the second and is deleted.
 #
-# SEVEN HOST COPIES AND ONE TRAP, which is the largest pointer-to-member bill
+# SEVEN HOST COPIES AND NO TRAP LEFT, which is the largest pointer-to-member bill
 # any seated class has run up: seven tables, seven dispatchers, thirty-three
 # states. Six of the seven dispatchers are findable by a link or by a
 # member-pointer source sweep and the seventh is findable by neither -- it
@@ -3792,7 +3794,6 @@ set_source_files_properties(
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sos.txt" SLICE_SOS_LINES)
 set(SLICE_SOS_SOURCES hal/scene_mg_bomroom.cpp
                       unmatched/MgBomroom_StateDispatch.cpp
-                      unmatched/MgBomroom_Traps.cpp
                       unmatched/MgBomroom_Faces.cpp)
 
 # THE DELETING DESTRUCTOR SPELLS ITS OWN TABLE AS THE SHARED PLACEHOLDER `VT`,

@@ -45,19 +45,25 @@
 //   before the blx; arity 0 is a blx with r1 destroyed by the sequence itself
 //   and never reloaded. Every one of the seven was checked at its own blx.
 //
-// ---- ONE STATE HAS NO BODY, AND IT IS A DECOMP FLOOR -----------------------
+// ---- THE STATE THAT HAD NO BODY NOW HAS ONE (run mg7, lane L370) -----------
 //
-// 0x020d7c4c, slot 5 of data_ov006_02141730. config/arm9/overlays/ov006/
-// symbols.txt names it and sizes it 0x230; there is NO delink block covering it
-// in config/arm9/overlays/ov006/delinks.txt and NO src file in either
-// extension, all three checked rather than assumed. So dScMgBomroom_c cannot
-// reach every one of its own states however this seat is written, exactly as
-// dScMgCurling_c could not reach 0x020e1854 before lane CT1 transcribed it.
+// 0x020d7c4c, slot 5 of data_ov006_02141730, is decompiled and BYTE-MATCHED --
+// src/func_ov006_020d7c4c.c, 0x230, matching mwccarm 1.2/base, 1.2/sp2 and
+// 1.2/sp2p3 with strict relocs. The reporting case that stood here (it counted
+// how often the ROM's own state machine ASKED for a body this build did not
+// have) is retired, and the slot calls the real body.
 //
-// It is counted and reported here rather than given an invented body, because
-// a plausible state is the guess port/tools/inferred_stub_guard exists to
-// refuse. The census in hal/scene_mg_bomroom.cpp prints the count whether or
-// not it fired, so a zero says which zero it is.
+// IT IS THE BOMB'S FREE-FLIGHT STATE: advance the position along the heading
+// through data_02082214, then bounce off the walls of whichever of the two
+// boxes the +0x696 flag selects (right box x in [0xc0,0x100], left box x in
+// [0,0x40], both y in [0x40,0x80], radius 12). That is why it was never wanted
+// on an mg6 run: the machine parked at index 2 and no bomb ever reached flight.
+//
+// THE COUNTER IS KEPT AND ITS MEANING IS INVERTED. It used to say "the game
+// wanted a body that is missing"; it now says "the newly landed body RAN".
+// A zero on a scene-370 run is no longer a decomp gap, it is the statement
+// that no bomb was in flight, and hal/scene_mg_bomroom.cpp's census prints it
+// either way so a zero still says which zero it is.
 //
 // ---- WHY SEVEN HOST COPIES, AND WHY ONLY SIX OF THEM ARE FINDABLE ----------
 //
@@ -161,6 +167,7 @@ void func_ov006_020d64c8(char *o, int i);
 void func_ov006_020d65b4(int c, int i);
 void func_ov006_020d7778(void);              /* one-argument slot, bx lr body */
 void func_ov006_020d777c(char *self, int idx);
+void func_ov006_020d7c4c(char *c, int i);    /* run mg7: was the missing state */
 void func_ov006_020d7958(void);              /* one-argument slot, bx lr body */
 void func_ov006_020d795c(char *o, int i);
 void func_ov006_020d7a84(char *c, int i);
@@ -217,11 +224,11 @@ int  func_ov006_020d91b0(char *c);
 // ---- the class's address switch --------------------------------------------
 
 static unsigned g_bomroom_state_hits;
-/* THE BODILESS-STATE COUNTER. 0x020d7c4c is the class's one state with no
-   decompiled body; this counts how often the ROM's own state machine ASKED for
-   it. A nonzero reading is not a bug in this file, it is the size of the
-   decomp gap measured from the game's own behaviour. */
-static unsigned g_bomroom_floor_hits;
+/* THE FREE-FLIGHT-STATE COUNTER. 0x020d7c4c used to have no decompiled body
+   and this counted how often the ROM's own state machine ASKED for one. Run
+   mg7 landed the body byte-matched, so it now counts how often that state
+   RAN. */
+static unsigned g_bomroom_flight_calls;
 /* HOW OFTEN THE OPEN-CODED DISPATCHER RAN, counted separately because it is
    the one shape neither the link nor a source sweep can find. On a build that
    still compiled src/func_ov006_020d8f98.cpp this count would be zero AND the
@@ -259,9 +266,10 @@ static int bomroom_try_1(void *self, unsigned code, int a)
     case 0x020d7f5cu: func_ov006_020d7f5c(c, a);              return 1;
     case 0x020d7edcu: func_ov006_020d7edc((unsigned char *)c, a); return 1;
     case 0x020d7e7cu: func_ov006_020d7e7c(c, a);              return 1;
-    /* THE FLOOR. Slot 5 of this table, no delink block and no src TU. Counted
-       and named; never invented. */
-    case 0x020d7c4cu: ++g_bomroom_floor_hits;                 return 1;
+    /* Slot 5 of this table. Was the floor; run mg7 decompiled and byte-matched
+       it, so this dispatches the real body and the count says it ran. */
+    case 0x020d7c4cu: ++g_bomroom_flight_calls;
+                      func_ov006_020d7c4c(c, a);              return 1;
     case 0x020d7c00u: func_ov006_020d7c00(c, a);              return 1; /* host */
     /* data_ov006_02141708, five slots, dispatched by func_ov006_020d7c00 */
     case 0x020d7a84u: func_ov006_020d7a84(c, a);              return 1;
@@ -315,9 +323,9 @@ extern "C" unsigned port_mg_bomroom_state_hits(void)
     return g_bomroom_state_hits;
 }
 
-extern "C" unsigned port_mg_bomroom_floor_hits(void)
+extern "C" unsigned port_mg_bomroom_flight_calls(void)
 {
-    return g_bomroom_floor_hits;
+    return g_bomroom_flight_calls;
 }
 
 extern "C" unsigned port_mg_bomroom_opencoded_calls(void)

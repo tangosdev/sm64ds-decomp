@@ -95,38 +95,51 @@
 #                                                          state setter
 # Adding a line for any of them would put a second definition in the link.
 #
-# TWO HARD FLOORS, BOTH DECOMP GAPS AND NEITHER A PORT ONE. Both are named in
-# config/arm9/overlays/ov006/symbols.txt, neither has a delink block in
-# config/arm9/overlays/ov006/delinks.txt and neither has a src file in either
-# extension -- all three checked rather than assumed:
-#     func_ov006_020d7c4c  0x230  STATE slot 5 of data_ov006_02141730. Handled
-#                                 at the dispatch site in
-#                                 unmatched/MgBomroom_StateDispatch.cpp, where
-#                                 the report can say which state was wanted.
-#                                 The func_ov006_020e1854 precedent.
+# THE TWO HARD FLOORS ARE CLOSED (run mg7, lane L370). Both were named in
+# config/arm9/overlays/ov006/symbols.txt with no delink block and no src file;
+# both now have one, and both are active lines in this list:
+#     func_ov006_020d7c4c  0x230  STATE slot 5 of data_ov006_02141730, the bomb
+#                                 free-flight state: move along the heading
+#                                 through data_02082214, then bounce inside
+#                                 whichever of the two boxes the +0x696 flag
+#                                 selects. BYTE-MATCHED at mwccarm 1.2/base,
+#                                 1.2/sp2 and 1.2/sp2p3 with strict relocs.
+#                                 The func_ov006_020e1854 precedent, finished.
 #     func_ov006_020d8408  0x4fc  the one callee of func_ov006_020d8ff4, which
-#                                 is state slot 2 of data_ov006_021416e0. A
-#                                 named trap in unmatched/MgBomroom_Traps.cpp,
-#                                 the func_ov006_020dbe9c precedent.
+#                                 is state slot 2 of data_ov006_021416e0: the
+#                                 bomb spawner, a thirteen-step difficulty
+#                                 ladder off the spawn count at +0x62d8 driving
+#                                 how many bombs are released, in what pattern,
+#                                 and how long until the next wave. Decompiled
+#                                 NONMATCHING -- register allocation and
+#                                 scheduling residue only, logic verified
+#                                 against the ROM instruction for instruction,
+#                                 and the file's banner carries the full
+#                                 accounting. The trap that stood for it in
+#                                 unmatched/MgBomroom_Traps.cpp is DELETED.
 #
-# THE SECOND FLOOR COSTS A LINKED FUNCTION AS WELL AS A BODY, and the seat
-# measured it rather than assuming the arithmetic. This list has 72 active
-# lines and the seat's linkage delta is +71, not +72. The one TU /OPT:REF
-# dropped is src/func_ov006_020d66c4.cpp, and the reason is the floor: every
+# THE SECOND FLOOR COST A LINKED FUNCTION AS WELL AS A BODY, and closing it
+# pays that back. This list had 72 active lines against a +71 linkage delta,
+# because the one TU /OPT:REF dropped was src/func_ov006_020d66c4.cpp: every
 # relocation that reaches 0x020d66c4 anywhere in ov006 comes from inside
 # func_ov006_020d8408 (five call sites, 0x020d86e8, _8768, _8794, _8814,
-# _8884), so with that body undecompiled the TU has no caller in the build.
-# It is left in the list rather than removed -- it IS in the class's closure,
-# it compiles, and it links itself the day 0x020d8408 lands.
+# _8884), so with that body undecompiled the TU had no caller in the build. It
+# was left in the list rather than removed, on the stated expectation that it
+# would link itself the day 0x020d8408 landed. It has. The list is now 74
+# active lines -- the original 72 plus the two closed floors -- and the
+# expected linkage delta is the full 74: +71 measured on mg6, +1 for
+# func_ov006_020d66c4 finally acquiring a caller, +2 for the new bodies.
 #
-# THE FLOOR ALSO PINS THE STATE MACHINE, which is the bigger consequence. Slot
-# 0 sets the top-level index at +0x62d0 to 1 and the game walks to 2 and stays
-# there, because state 2 (func_ov006_020d8ff4) calls 0x020d8408 and that body
-# is what advances the index. Measured: 1200 frames of scene 370 leaves the
-# index at 2 with the trap entered 1152 times. So four of the five top-level
-# states are unreachable on any headless run, including state 3, which is the
-# open-coded dispatcher. hal/scene_mg_bomroom.cpp's SM64DS_SOS_STATE probe is
-# how this lane reached them.
+# THE FLOOR ALSO PINNED THE STATE MACHINE, which was the bigger consequence.
+# Slot 0 sets the top-level index at +0x62d0 to 1 and the game walked to 2 and
+# stayed there, because state 2 (func_ov006_020d8ff4) calls 0x020d8408 and that
+# body is what advances the index. Measured on mg6: 1200 frames of scene 370
+# left the index at 2 with the trap entered 1152 times, so four of the five
+# top-level states were unreachable on any headless run -- including state 3,
+# the open-coded dispatcher. With the spawner seated the machine advances
+# unaided. hal/scene_mg_bomroom.cpp's SM64DS_SOS_STATE probe is kept anyway,
+# because an unaided run reaches a state when the game decides to and pinning
+# is how each state gets exercised on purpose.
 #
 # SEVEN TUs ARE HOST-COPIED AND ARE COMMENTED OUT BELOW, and this class is the
 # first seat to carry ALL THREE of the shapes port/mg_fanout_costs.txt section
@@ -199,12 +212,14 @@ src/func_ov006_020d7958.c
 src/func_ov006_020d795c.c
 src/func_ov006_020d7a84.c
 # HOST-COPIED (SOS): src/func_ov006_020d7c00.cpp -- table data_ov006_02141708, arity 1, member-pointer typed through an Entry wrapper; ALSO state slot 6 of 02141730
+src/func_ov006_020d7c4c.c
 src/func_ov006_020d7e7c.c
 src/func_ov006_020d7edc.c
 src/func_ov006_020d7f5c.c
 src/func_ov006_020d816c.c
 src/func_ov006_020d8324.c
 # HOST-COPIED (SOS): src/func_ov006_020d836c.cpp -- table data_ov006_02141730, arity 1, member-pointer typed
+src/func_ov006_020d8408.c
 src/func_ov006_020d8904.c
 src/func_ov006_020d893c.c
 src/func_ov006_020d89c4.c
