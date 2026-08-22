@@ -3091,8 +3091,9 @@ int  *MgLakituLaunch_Spawn(void);
 
 /* the class's state machine, port/unmatched/MgPachinko2_StateDispatch.cpp */
 void port_mg_pachinko2_state_counts(unsigned *hits, unsigned *missing);
-/* the one dispatcher callee with no body, port/unmatched/MgPachinko2_Traps.cpp */
-unsigned port_mg_pachinko2_trap_hits(void);
+/* its per-slot breakdown, same file: a total says the machine dispatched,
+   only the breakdown says it MOVED. Run mg7 lane L369. */
+void port_mg_pachinko2_state_census(void);
 
 }  /* extern "C" */
 
@@ -3229,14 +3230,17 @@ extern "C" void port_scene_mg_pachinko2_hits(void)
         unsigned hits = 0, missing = 0, calls = 0, unknown = 0;
         port_mg_pachinko2_state_counts(&hits, &missing);
         port_mg_dispatch_counts(&calls, &unknown);
+        /* Run mg7 lane L369 closed all four of the addresses that used to
+           land in the reporting case, so `missing` is write-never now and
+           printing it is proof rather than a warning. The per-entry follow-up
+           line goes with the trap that produced it: func_ov006_0210076c is a
+           real src TU on slice_lkt.txt and has nothing of its own to say. */
         std::printf("[scene] dScMgPachinko2_c state dispatch: %u routed to one "
-                    "of this class's 28 states, %u of those reached one of the "
-                    "FOUR addresses with no decompiled body, %u framework "
-                    "call(s), %u UNHANDLED address(es)\n",
+                    "of this class's 28 states, %u of those reached an address "
+                    "with no decompiled body (all 28 have one since run mg7), "
+                    "%u framework call(s), %u UNHANDLED address(es)\n",
                     hits, missing, calls, unknown);
-        std::printf("[scene] dScMgPachinko2_c per-entry follow-up "
-                    "func_ov006_0210076c (no delink block, no src TU): "
-                    "entered %u time(s)\n", port_mg_pachinko2_trap_hits());
+        port_mg_pachinko2_state_census();
     }
     if (g_mg_pachinko2_self)
         std::printf("[scene] dScMgPachinko2_c object at %p, state index %d\n",

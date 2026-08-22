@@ -470,7 +470,25 @@ void port_mg_hud_scaled_number_020b2220(int x, int y, int num, int a3, int a4,
 
 /* no delink block and no src in their own overlay's config */
 int func_ov004_020ae858(void *)             { mg_trap("func_ov004_020ae858"); return 0; }
-int func_ov004_020b1710(void *)             { mg_trap("func_ov004_020b1710"); return 0; }
+
+/* ---- SEATED, run mg7 lane L369 -----------------------------------------
+ *
+ * func_ov004_020b1710 IS NOT A TRAP ANY MORE, and it was the minigame HUD's
+ * value drawer. The trap took (void *) and returned int where the ROM takes
+ * four arguments and returns void, so the x, the y and the number the six
+ * matched call sites in src/func_ov004_020b14f0.c pass were all sitting on
+ * the stack with nothing reading them -- the same defect class as
+ * func_ov004_020b2220 below, found the same way: a 3000-frame boot of scene
+ * 369 under SM64DS_FAULTS_FATAL=1 entered this one 5657 times.
+ *
+ * IT IS A REAL DECOMPILATION, not a host copy. src/func_ov004_020b1710.c
+ * byte-matches at mwccarm 1.2/base, 1.2/sp2 and 1.2/sp2p3 and carries its own
+ * delink block in config/arm9/overlays/ov004/delinks.txt, so there is nothing
+ * to route to and no port_ name to spell: the symbol comes from
+ * port/slice_mg1.txt and this line is simply deleted. Two of the six bodies
+ * that file's header calls unmatched are real decompilations now, which
+ * leaves func_ov004_020ae858 as the last ov004 trap in this file.
+ */
 
 /* ---- SEATED, run mg5 lane WTIMER ----------------------------------------
  *
