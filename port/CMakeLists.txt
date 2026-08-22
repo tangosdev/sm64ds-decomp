@@ -4245,7 +4245,16 @@ set(SLICE_BOX_SOURCES hal/scene_mg_boombox.cpp
                       # sites, and four I/O-window stores that need the
                       # geometry proxy. Found by the BATTERY, which renders;
                       # this lane's own NO_RENDER boots were clean over it.
-                      unmatched/MgSound_ModelRender_020c29dc.cpp)
+                      unmatched/MgSound_ModelRender_020c29dc.cpp
+                      # REPLACES src/func_ov006_020c2924.cpp, out of the slice:
+                      # a RECEIVER DROP at a host C++ virtual -- a __cdecl-typed
+                      # raw vtable read against a __thiscall body, where the
+                      # stack balances so nothing faults and no ABI checker can
+                      # see it. Its own sibling one line earlier spells the same
+                      # call correctly and the host copy borrows that spelling.
+                      # Found by a WORD-BY-WORD `blx Rm` sweep, not by a link,
+                      # a `::*` sweep, a source grep or a run.
+                      unmatched/MgSound_ShadowFader_020c2924.cpp)
 foreach(line IN LISTS SLICE_BOX_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")

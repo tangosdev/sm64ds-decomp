@@ -32,6 +32,27 @@
 # reads "19dScMgSingle3DBase_c". So the intermediate base is NAMED by the ROM
 # rather than inferred from an override count.
 #
+# ---- THE PRECEDENT THIS SEAT IS CUT FROM ---------------------------------
+#
+# dScMgMemory2_c (actor id 0x16b, scene 363, run mg6 lane MEM), and the choice
+# is on shape rather than on cost. Of the eleven classes seated before this
+# one it is the only one that matches on all four things that decided the
+# work here: a THREE-DEEP hierarchy under dScMgSingle3DBase_c with the SAME
+# six inherited slots (2, 5, 7, 10, 26, 33); its own hal file rather than a
+# block in hal/scene_mg.cpp; a state machine with a FIELD member pointer
+# beside its table ones; and a sub-object in the 0x020cXXXX family whose model
+# draw carries the local-shadow-class defect. hal/scene_mg_boombox.cpp is
+# hal/scene_mg_memory2.cpp's structure with this class's addresses, and
+# port/unmatched/MgSound_ModelRender_020c29dc.cpp is
+# port/unmatched/MgMemory2_ModelRender_020c1804.cpp's.
+#
+# WHERE IT STOPS BEING THE PRECEDENT, so a reader does not over-borrow:
+# dScMgMemory2_c has FOUR state tables and this class has FIFTEEN; memory2's
+# slot 6 IS a pointer-to-member dispatcher and this one is a plain switch that
+# CALLS two; memory2's slot 18 ignores its second argument and this one reads
+# it; and memory2's floor was closed by run mg7 while this class's is open and
+# is what a tap lands on.
+#
 # ---- THE HIERARCHY IS THREE DEEP -----------------------------------------
 #
 #     Scene -> dScMgBase_c         data_ov004_020bc0c0  36
@@ -105,6 +126,50 @@
 # SLOT 19 IS NOT THIS CLASS'S: dScMgSound_c does not override it (the table
 # holds dScMgBase_c's 0x020b2994) and it is entered zero times as well.
 #
+# ---- THREE MORE HOST COPIES THAT ARE NOT WALL WORK -----------------------
+#
+# Sixteen host copies are the pointer-to-member wall (below). THREE more are
+# not, and none of the three is findable by either prescribed detector. They
+# are listed together because they are one disease -- a call that reaches the
+# right code with the wrong ABI -- in three different disguises:
+#
+#   func_ov006_0211ba88   a raw vtable-word read typed `int (*)(void)`, so
+#                         vtable slot 35 is called with NO receiver at all.
+#                         Plus two more divergences from the ROM in the same
+#                         body. MgSound_ShadowSlot35.cpp.
+#   func_ov006_020c29dc   a local shadow CLASS at the right ROM byte (+0x14)
+#                         and therefore the WRONG host slot, because
+#                         hal/cxxname_bridge.cpp fills the model vtables in
+#                         MSVC order. Plus four I/O-window stores.
+#                         MgSound_ModelRender_020c29dc.cpp.
+#   func_ov006_020c2924   a raw vtable read typed `int (**)(void*)`, so the
+#                         object is PUSHED where the host body reads ecx. The
+#                         slot is right, the stack balances, and the receiver
+#                         does not arrive. MgSound_ShadowFader_020c2924.cpp.
+#
+# HOW THE THIRD WAS FOUND, because the method transfers and the first two were
+# found by luck (a link message and a battery fault). A WORD-BY-WORD sweep of
+# this class's code block 0x02119904..0x0211cb70 and its sub-object's
+# 0x020c2200..0x020c3400 for `blx Rm` where Rm was loaded by an
+# `ldr Rm,[Rn,#imm]` whose Rn is neither pc nor sp. TWENTY-THREE sites, and
+# every one of them is accounted for:
+#
+#   15  ldr Rm,[Rn,#0x0]     the pointer-to-member pairs (13 sub-dispatchers
+#                            and the two open-coded level-1 ones)
+#    3  ldr Rm,[Rn,#0x8c]    vtable slot 35, in 0211b9c8 (correct in src),
+#                            0211ba88 (host-copied) and 0211bc8c (the floor)
+#    2  ldr Rm,[Rn,#0x14]    the model draw, host-copied
+#    2  ldr Rm,[Rn,#0x18]    the installed fader's IsAtEnd: 0x020c2878 inside
+#                            func_ov006_020c2848 is CORRECT and is left alone;
+#                            0x020c2940 inside func_ov006_020c2924 is the one
+#                            host-copied here
+#    1  ldr Rm,[Rn,#0x0]     the sub-object's FIELD member pointer, in
+#                            func_ov006_020c2b8c, host-copied with the wall
+#
+# WORD BY WORD AND NOT BY DISASSEMBLING LINEARLY, which stops at the first
+# literal pool and would have missed everything after 0x0211b9c4 (run mg9
+# lane PSY's sweep lesson).
+#
 # ---- ELEVEN MARKERS, ALL RULED BY THIS LANE ------------------------------
 #
 # All eleven were disassembled out of the shipped overlay image and compared
@@ -137,7 +202,7 @@
 # Listing any of them would be an LNK2005. The two that are genuinely new are
 # at the foot of this file.
 #
-# ---- SIXTEEN TUs ARE HOST-COPIED AND ARE NOT LISTED BELOW ----------------
+# ---- SIXTEEN OF THE NINETEEN HOST COPIES ARE THE WALL --------------------
 #
 # The mwcc POINTER-TO-MEMBER wall, and this class carries ALL THREE of the
 # shapes port/mg_fanout_costs.txt section 4 distinguishes. The full derivation
@@ -369,7 +434,17 @@ src/func_ov006_020c26f4.c
 src/func_ov006_020c271c.c
 src/func_ov006_020c27c4.cpp
 src/func_ov006_020c2848.cpp
-src/func_ov006_020c2924.cpp
+# HOST-COPIED (mg9 lane BOX): src/func_ov006_020c2924.cpp -- a RECEIVER
+#   DROP at a host C++ virtual. It reads the installed fader's vtable
+#   through `int (**vt)(void*)` and calls vt[6](obj), which is __cdecl
+#   with the object PUSHED, against HalFaderWipe::IsAtEnd, which is
+#   __thiscall and reads ecx. The stack balances, so nothing faults and
+#   neither abicheck nor aritycheck can see it; the answer is garbage and
+#   it gates seven stores. Its own sibling one line earlier,
+#   src/func_ov006_020c2848.cpp, spells the SAME call on the SAME object
+#   at the SAME byte correctly, with a seven-virtual shadow class, and the
+#   host copy borrows that spelling. See
+#   port/unmatched/MgSound_ShadowFader_020c2924.cpp.
 src/func_ov006_020c2984.c
 src/func_ov006_020c2994.c
 # HOST-COPIED (mg9 lane BOX): src/func_ov006_020c29dc.cpp -- the sub-object's
