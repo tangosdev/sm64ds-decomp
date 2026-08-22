@@ -2218,6 +2218,17 @@ void port_scene_fill_curling2(void);
 extern unsigned char MgPuzzlePanelPuzzlePanic_SpawnInfo[];
 void *port_mg_panel_spawn(void);
 void port_scene_fill_panel(void);
+/* run mg9 lane MMT: dScMgMemory_c, actor id 0x16a = scene 362, the "Memory
+   Match" minigame and the immediate SIBLING of the 363 row above. The spawn
+   symbol is MgMemoryMatch and the ROM's own RTTI at 0x0213d0b4 -- reached
+   through the type_info the relocated word before the vtable points at --
+   reads "13dScMgMemory_c", so the row is named for the class the way
+   SCENE_MG_CURLING and SCENE_MG_MEMORY2 are. Same reads_sublevel reasoning as
+   the rows above, re-checked for this class: no relocation in ov006 lands on
+   data_02092110 and no TU in this class's closure names it. */
+extern unsigned char MgMemoryMatch_SpawnInfo[];
+void *port_mg_memory1_spawn(void);
+void port_scene_fill_memory1(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2344,6 +2355,33 @@ static const PortSceneClass port_scene_classes[] = {
        so appending is a rule this lane obeys rather than a hazard it needs. */
     {380, "SCENE_MG_PANEL", MgPuzzlePanelPuzzlePanic_SpawnInfo,
      port_mg_panel_spawn, port_scene_fill_panel, 0},
+    /* 362 is 0x16a, spelled in decimal for the two reasons every row above
+       gives: the others are, and port/tools/battery.py reads its hosted-scene
+       set out of this table. APPENDED AFTER EVERY EXISTING ROW, run mg9 lane
+       MMT, and the position is load-bearing TWICE for this class, the same way
+       it is for the 363 row.
+
+       It is the latent-safe direction port/mg_fanout_costs.txt section 11
+       derives from the once-per-process constructor gate: this function walks
+       the table in order and calls every row's fill on every boot, while
+       port_scene_mg_overlay_load runs the thirty-five overlay constructors
+       ONCE PER PROCESS at the tail of the FIRST minigame row's fill, so a row
+       placed earlier would have its fill run before those constructors read
+       the mounted .data. And this class shares the dScMgSingle3DBase_c table
+       at 0x0213e448 with the flower row and the 363 row, so running last means
+       the flower's fill keeps claiming the middle table and BOTH other seats'
+       middle-table witnesses keep counting exactly what they counted before
+       this seat existed. hal/scene_mg_memory1.cpp section 3 is the argument.
+
+       SECTION 11's ACTUAL HAZARD IS LIVE FOR THIS CLASS AND IS MEASURED
+       ABSENT. 0x16a is one of the twelve rows section 11 corrected from width
+       37 to width 36, and the word at index 36 of data_ov006_0213d1b8 is the
+       code half of an mwcc pair whose body, func_ov006_020f6538, is
+       dScMgMemory2_c's round-end state -- so a 37-slot fill here would clobber
+       a live state of the row above on the same tree. This fill is called with
+       36, and port/slice_mmt.txt has all four checks that say 36. */
+    {362, "SCENE_MG_MEMORY1", MgMemoryMatch_SpawnInfo, port_mg_memory1_spawn,
+     port_scene_fill_memory1, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
