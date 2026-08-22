@@ -295,8 +295,9 @@
 #
 # THE COMMENTS IN THIS FILE CARRY NO UNMATCHED SQUARE BRACKET, AND THAT IS A
 # BUILD REQUIREMENT RATHER THAN A STYLE. CMake's file(STRINGS) hands its result
-# to list parsing, which treats `[` ... `]` as a bracket group and will not split
-# on the separator inside one. An unmatched `[` in a comment therefore swallows
+# to list parsing, which treats an open square bracket and its close as a
+# bracket group and will not split on the separator inside one. An unmatched
+# open bracket in a comment therefore swallows
 # EVERY line after it into a single element, the foreach's `^#` test skips that
 # one element, and the whole source list comes out empty -- which reads at the
 # link as every TU in the seat unresolved, i.e. as a wrong seat rather than as a
