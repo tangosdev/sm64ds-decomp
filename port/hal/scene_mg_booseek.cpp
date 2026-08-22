@@ -247,7 +247,24 @@ static void *__fastcall boo_d0(void *s, void *)
    a value that picks between two different bodies of work, and a thunk
    declared (void*, void*) would have leaked the stack AND read a garbage
    reset flag. Section 4's BASESET amendment is the general case; this is a
-   measured instance of it. */
+   measured instance of it.
+
+   IT IS FORWARDED AND IT IS UNEXERCISED, and run mg9 lane LKY's note asks for
+   both halves said out loud. FORWARDED: the thunk names the parameter and
+   hands it to the body, rather than declaring it only so __fastcall pops four
+   bytes. UNEXERCISED: this class's slot-18 counter reads ZERO on every run in
+   the proof set -- 300 and 1200 frames, with render and without -- so nothing
+   here has watched the body take either arm. What is proven is that the
+   ARGUMENT EXISTS and that the port hands it over; which arm a real reset
+   takes is a touch question this lane cannot answer.
+
+   SLOT 19 IS A DIFFERENT ANSWER TO THE SAME QUESTION and belongs beside it.
+   This class does NOT override slot 19: it inherits dScMgBase_c's
+   func_ov004_020b2994, whose entire body is `mov r0,#1 / bx lr`, so the second
+   argument the ROM's dispatch sites pass is READ BY NOTHING. That one IS
+   witnessed -- the 1200-frame census reports framework slot 19 entered once --
+   and it is witnessed only because this lane repaired the shadow-array call
+   that reaches it (port/unmatched/MgBase_ShadowSlot19.cpp). */
 static int __fastcall boo_reset(void *s, void *, int reset)
 { BOO(18); func_ov006_02120248((char *)s, reset); return 1; }
 static int __fastcall boo_v20(void *, void *)

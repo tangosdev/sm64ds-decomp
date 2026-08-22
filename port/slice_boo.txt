@@ -70,6 +70,18 @@
 # land anywhere in 0x0213fa0c..0x0213fa9c except the vtable's own type_info
 # word, so nothing else in the overlay reaches into this span.
 #
+# AND A FIFTH, run mg9 lane LKY's, which needs no symbol table and no judgment
+# at all: a vtable's relocations come out of relocs.txt at a STRIDE OF FOUR for
+# exactly the table's width and then jump. Read for this table:
+#
+#   from:0x0213fa0c  then +4, +4, ... unbroken to from:0x0213fa98
+#   then from:0x0213faa0, a stride of EIGHT
+#
+# Thirty-six rows at four bytes and the thirty-seventh is not there. This is
+# the strongest of the five because it cannot be fooled by an unsymbolised gap
+# the way the span check can, and it does not depend on knowing what the
+# family's terminal word is. All five agree.
+#
 # Section 3's row for 0x183 (36 / 8 / 6 / 0) is CONFIRMED EXACTLY by
 # port/tools/vtablerows.py --vtable 0x0213fa0c --width 36, whose whole-table
 # reconstruction on this tree is EXACT 29/29 with totals 353/264/4.
