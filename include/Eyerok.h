@@ -85,6 +85,7 @@ struct Eyerok : dBgActor_c {
     int Behavior();
     int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
     int Render();
 
     /* Slot 29, dActor_c's egg-aim callback (include/dActor_c.h). Attributed

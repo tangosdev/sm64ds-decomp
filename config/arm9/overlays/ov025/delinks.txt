@@ -124,7 +124,7 @@ src/_ZN11PyramidLiftD0Ev.c:
     complete
     .text start:0x02112148 end:0x021121c0
 
-src/_ZN11PyramidLift16CleanupResourcesEv.c:
+src/_ZN11PyramidLift16CleanupResourcesEv.cpp:
     complete
     .text start:0x021121c0 end:0x021121fc
 

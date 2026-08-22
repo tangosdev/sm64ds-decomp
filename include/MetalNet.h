@@ -26,6 +26,7 @@ struct MetalNet : dBgActor_c {
     int Behavior();
     int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
     int Render();
 };
 

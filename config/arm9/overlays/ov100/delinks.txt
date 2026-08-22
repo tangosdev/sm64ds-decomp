@@ -458,7 +458,7 @@ src/_ZN4Fish16CleanupResourcesEv.cpp:
     complete
     .text start:0x02146a98 end:0x02146b00
 
-src/_ZN4Fish16OnPendingDestroyEv.c:
+src/_ZN4Fish16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02146b00 end:0x02146b04
 

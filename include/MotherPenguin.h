@@ -60,6 +60,7 @@ struct MotherPenguin {
     /* methods */
     int Behavior();
     int InitResources();
+    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
     int Render();
 #endif
 };

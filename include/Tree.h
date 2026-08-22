@@ -18,6 +18,7 @@ struct Tree {
 #ifdef __cplusplus
     /* methods */
     int CleanupResources();
+    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
     int Render();
 #endif
 };

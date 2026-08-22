@@ -280,7 +280,7 @@ src/func_ov022_02112790.cpp:
     complete
     .text start:0x02112790 end:0x021127e0
 
-src/_ZN11VolcanoFire16CleanupResourcesEv.c:
+src/_ZN11VolcanoFire16CleanupResourcesEv.cpp:
     complete
     .text start:0x021127e0 end:0x02112800
 

@@ -388,7 +388,7 @@ src/func_ov062_0211afbc.c:
     complete
     .text start:0x0211afbc end:0x0211b000
 
-src/_ZN9KoopaFlag16CleanupResourcesEv.c:
+src/_ZN9KoopaFlag16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211b000 end:0x0211b030
 

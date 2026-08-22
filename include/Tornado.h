@@ -72,6 +72,7 @@ struct Tornado {
 #ifdef __cplusplus
     /* methods */
     int Behavior();
+    int CleanupResources();                  /* slot  3 */
     int InitResources();
 #endif
 };

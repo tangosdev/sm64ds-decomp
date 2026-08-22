@@ -111,7 +111,7 @@ src/_ZN7daKrb_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212b510 end:0x0212b5b8
 
-src/_ZN7daKrb_c16OnPendingDestroyEv.c:
+src/_ZN7daKrb_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212b5b8 end:0x0212b5bc
 

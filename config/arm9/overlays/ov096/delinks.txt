@@ -171,7 +171,7 @@ src/func_ov096_021372c0.cpp:
     complete
     .text start:0x021372c0 end:0x021373e4
 
-src/_ZN7Tornado16CleanupResourcesEv.c:
+src/_ZN7Tornado16CleanupResourcesEv.cpp:
     complete
     .text start:0x021373e4 end:0x02137414
 

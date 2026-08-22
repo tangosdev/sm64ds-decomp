@@ -104,7 +104,7 @@ src/_ZN13RacingPenguin16CleanupResourcesEv.cpp:
     complete
     .text start:0x021122f8 end:0x0211235c
 
-src/_ZN13RacingPenguin16OnPendingDestroyEv.c:
+src/_ZN13RacingPenguin16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0211235c end:0x02112360
 

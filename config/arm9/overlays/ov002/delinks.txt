@@ -556,7 +556,7 @@ src/func_ov002_020b2c44.cpp:
     complete
     .text start:0x020b2c44 end:0x020b2e30
 
-src/_ZN11WingFeather16CleanupResourcesEv.c:
+src/_ZN11WingFeather16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b2e30 end:0x020b2e54
 
@@ -752,7 +752,7 @@ src/func_ov002_020b47ec.c:
     complete
     .text start:0x020b47ec end:0x020b482c
 
-src/_ZN21MegaMushroomCreateTag16CleanupResourcesEv.c:
+src/_ZN21MegaMushroomCreateTag16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b482c end:0x020b4850
 
@@ -1611,7 +1611,7 @@ src/func_ov002_020bc664.c:
     complete
     .text start:0x020bc664 end:0x020bc6a4
 
-src/_ZN12HealingHeart16CleanupResourcesEv.c:
+src/_ZN12HealingHeart16CleanupResourcesEv.cpp:
     complete
     .text start:0x020bc6a4 end:0x020bc6d4
 
@@ -4472,7 +4472,7 @@ src/_ZN4Tree16CleanupResourcesEv.cpp:
     complete
     .text start:0x020ec020 end:0x020ec0a0
 
-src/_ZN4Tree16OnPendingDestroyEv.c:
+src/_ZN4Tree16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020ec0a0 end:0x020ec0a4
 
@@ -5640,7 +5640,7 @@ src/_ZN14CutsceneObject16CleanupResourcesEv.cpp:
     complete
     .text start:0x020f8028 end:0x020f80a8
 
-src/_ZN14CutsceneObject16OnPendingDestroyEv.c:
+src/_ZN14CutsceneObject16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020f80a8 end:0x020f80ac
 

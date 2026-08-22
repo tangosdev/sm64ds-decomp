@@ -222,7 +222,7 @@ src/_ZN6Eyerok16CleanupResourcesEv.cpp:
     complete
     .text start:0x02119654 end:0x021197a0
 
-src/_ZN6Eyerok16OnPendingDestroyEv.c:
+src/_ZN6Eyerok16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021197a0 end:0x021197a4
 

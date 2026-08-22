@@ -96,7 +96,7 @@ src/_ZN8MetalNet16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111e60 end:0x02111ea4
 
-src/_ZN8MetalNet16OnPendingDestroyEv.c:
+src/_ZN8MetalNet16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02111ea4 end:0x02111ea8
 
@@ -124,7 +124,7 @@ src/_ZN4FlagD0Ev.c:
     complete
     .text start:0x021120a8 end:0x021120ec
 
-src/_ZN4Flag16CleanupResourcesEv.c:
+src/_ZN4Flag16CleanupResourcesEv.cpp:
     complete
     .text start:0x021120ec end:0x0211211c
 

@@ -47,6 +47,7 @@ struct CutsceneObject {
     int Behavior();
     int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
     int Render();
 #endif
 };

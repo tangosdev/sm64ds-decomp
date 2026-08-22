@@ -120,7 +120,7 @@ src/_ZN13MotherPenguin16CleanupResourcesEv.cpp:
     complete
     .text start:0x021123ec end:0x02112450
 
-src/_ZN13MotherPenguin16OnPendingDestroyEv.c:
+src/_ZN13MotherPenguin16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02112450 end:0x02112454
 

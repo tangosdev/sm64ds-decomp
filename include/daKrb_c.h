@@ -110,6 +110,7 @@ struct daKrb_c : dCapEnemy_c {
     /* methods */
     int Behavior();
     int CleanupResources();
+    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
     int Render();
 
     /* --- vtable, resolved from the census worklist against dActor_c --- */
