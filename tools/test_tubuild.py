@@ -342,6 +342,218 @@ def test_splice_refuses_a_span_it_cannot_tile_exactly():
         assert wrong.read_bytes() == real.read_bytes()
 
 
+def test_manifest_section_claims_are_explicit_and_unambiguous():
+    claims, reasons = tubuild.manifest_section_claims({"sections": [
+        {"name": ".text", "start": "0x1000", "end": "0x1010"},
+        {"name": ".data", "start": "0x2000", "end": "0x2010"},
+    ]})
+    assert reasons == []
+    assert claims == [
+        {"name": ".text", "start": 0x1000, "end": 0x1010},
+        {"name": ".data", "start": 0x2000, "end": 0x2010},
+    ]
+
+    _claims, reasons = tubuild.manifest_section_claims({"sections": [
+        {"name": ".text", "start": "0x1000", "end": "0x1010"},
+        {"name": ".data", "start": "0x2000", "end": "0x2010"},
+        {"name": ".data", "start": "0x3000", "end": "0x3010"},
+        {"name": ".mystery", "start": "0x4000", "end": "0x4010"},
+    ]})
+    assert any("duplicate .data claim" in r for r in reasons)
+    assert any("unsupported name" in r for r in reasons)
+
+
+def test_splice_relinquishes_exact_manifest_data_and_bss_ranges_only():
+    """The multi-section entry is written to a scratch copy; production config stays.
+
+    The negative half plants an existing data owner and proves the same claim refuses
+    without touching the file, rather than silently producing two owners.
+    """
+    text = (
+        "    .text start:0x00001000 end:0x00001100 kind:code align:4\n"
+        "    .data start:0x00002000 end:0x00002100 kind:data align:4\n"
+        "    .bss start:0x00003000 end:0x00003100 kind:bss align:4\n"
+        "src/one.c:\n"
+        "    complete\n"
+        "    .text start:0x00001000 end:0x00001010\n\n"
+        "src/two.c:\n"
+        "    complete\n"
+        "    .text start:0x00001010 end:0x00001020\n"
+    )
+    claims = [
+        {"name": ".text", "start": 0x1000, "end": 0x1020},
+        {"name": ".data", "start": 0x2040, "end": 0x2050},
+        {"name": ".bss", "start": 0x3080, "end": 0x3090},
+    ]
+    with tempfile.TemporaryDirectory() as td:
+        path = pathlib.Path(td) / "delinks.txt"
+        path.write_text(text, encoding="utf-8")
+        replaced, reasons = tubuild.splice_tu_entry(
+            path, 0x1000, 0x1020, "src_tu/T.cpp", ["src/one.c", "src/two.c"],
+            section_claims=claims)
+        assert reasons == []
+        assert replaced == ["src/one.c", "src/two.c"]
+        got = path.read_text(encoding="utf-8")
+        assert got.count("src_tu/T.cpp:") == 1
+        assert "    .text start:0x00001000 end:0x00001020" in got
+        assert "    .data start:0x00002040 end:0x00002050" in got
+        assert "    .bss start:0x00003080 end:0x00003090" in got
+        assert "src/one.c:" not in got and "src/two.c:" not in got
+
+        occupied = pathlib.Path(td) / "occupied.txt"
+        occupied.write_text(text + "\nsrc/data.c:\n    complete\n"
+                            "    .data start:0x00002048 end:0x00002058\n",
+                            encoding="utf-8")
+        before = occupied.read_bytes()
+        replaced, reasons = tubuild.splice_tu_entry(
+            occupied, 0x1000, 0x1020, "src_tu/T.cpp", ["src/one.c", "src/two.c"],
+            section_claims=claims)
+        assert replaced is None
+        assert any("not pure gap ownership" in r for r in reasons)
+        assert occupied.read_bytes() == before
+
+
+def _compile_tu_fixture(source):
+    with tempfile.TemporaryDirectory() as td:
+        src = pathlib.Path(td) / "fixture.cpp"
+        src.write_text("//cpp\n" + source, encoding="utf-8")
+        flags = tubuild.RB.CFLAGS.replace("-lang c99", "-lang c++")
+        return tubuild.M.compile_c(src, tubuild.RB.VERSION, flags)
+
+
+def test_nontext_verifier_checks_layout_bytes_symbols_and_reloc_destinations():
+    if not _toolchain():
+        return
+    obj = _compile_tu_fixture(
+        'extern "C" int external_value;\n'
+        'extern "C" int *owned_ptr = &external_value;\n'
+        'extern "C" int owned_word = 0x11223344;\n'
+        'extern "C" int owned_zero = 0;\n')
+    assert obj is not None
+    data_start, bss_start = 0x2000, 0x3000
+    data, error = tubuild.section_contribution(obj, ".data", data_start)
+    assert error is None and data["relocs"]
+    bss, error = tubuild.section_contribution(obj, ".bss", bss_start)
+    assert error is None
+    assert all(x == 0 for x in bss["bytes"])
+
+    entry = {
+        "module": "ov999", "functions": [],
+        "data": [{"symbol": n, "address": f"0x{r['address']:08x}",
+                  "size": f"0x{r['size']:x}"}
+                 for n, r in data["symbols"].items() if r["type"] == "STT_OBJECT"],
+        "bss": [{"symbol": n, "address": f"0x{r['address']:08x}",
+                 "size": f"0x{r['size']:x}"}
+                for n, r in bss["symbols"].items() if r["type"] == "STT_OBJECT"],
+    }
+    claims = [
+        {"name": ".data", "start": data_start, "end": data_start + len(data["bytes"])},
+        {"name": ".bss", "start": bss_start, "end": bss_start + len(bss["bytes"])},
+    ]
+    reloc = data["relocs"][0]
+    source = data_start + reloc["offset"]
+    destination = 0x12345678
+    cfg = {"ov999": {source: ("load", destination, "arm9")}}
+    entry["relocations"] = [{
+        "section": ".data", "source": f"0x{source:08x}",
+        "type": "R_ARM_ABS32", "kind": "load", "symbol": reloc["symbol"],
+        "addend": reloc["addend"], "target_module": "arm9",
+        "target_address": f"0x{destination:08x}",
+    }]
+    bss_homes = {row["symbol"]: [("ov999", int(row["address"], 0))]
+                 for row in entry["bss"]}
+
+    def target_reader(_module, start, size):
+        assert start == data_start and size == len(data["bytes"])
+        return data["bytes"]
+
+    result = tubuild.verify_owned_sections(
+        obj, entry, claims, name_index={"external_value": ("arm9", destination)},
+        config_relocs=cfg, sym_index={}, target_reader=target_reader,
+        symbol_homes=bss_homes, bss_boundaries={bss_start, bss_start + len(bss["bytes"])})
+    assert result["ok"], result["errors"]
+    assert result["relocations"][0]["verdict"] == "OK"
+
+    wrong_module = tubuild.verify_owned_sections(
+        obj, entry, claims, name_index={"external_value": ("ov123", destination)},
+        config_relocs=cfg, sym_index={}, target_reader=target_reader,
+        symbol_homes=bss_homes, bss_boundaries={bss_start, bss_start + len(bss["bytes"])})
+    assert not wrong_module["ok"]
+    assert any(r["verdict"] == "WRONG-MODULE" for r in wrong_module["relocations"])
+
+    wrong_kind_entry = dict(entry)
+    wrong_kind_entry["relocations"] = [dict(entry["relocations"][0], kind="arm_call")]
+    wrong_kind = tubuild.verify_owned_sections(
+        obj, wrong_kind_entry, claims,
+        name_index={"external_value": ("arm9", destination)}, config_relocs=cfg,
+        sym_index={}, target_reader=target_reader, symbol_homes=bss_homes,
+        bss_boundaries={bss_start, bss_start + len(bss["bytes"])})
+    assert not wrong_kind["ok"]
+    assert any(r["verdict"] == "WRONG-KIND" for r in wrong_kind["relocations"])
+
+    wrong_type_entry = dict(entry)
+    wrong_type_entry["relocations"] = [dict(entry["relocations"][0], type="R_ARM_CALL")]
+    wrong_type = tubuild.verify_owned_sections(
+        obj, wrong_type_entry, claims,
+        name_index={"external_value": ("arm9", destination)}, config_relocs=cfg,
+        sym_index={}, target_reader=target_reader, symbol_homes=bss_homes,
+        bss_boundaries={bss_start, bss_start + len(bss["bytes"])})
+    assert not wrong_type["ok"]
+    assert any(r["verdict"] == "WRONG-TYPE" for r in wrong_type["relocations"])
+
+    wrong_addend_entry = dict(entry)
+    wrong_addend_entry["relocations"] = [dict(entry["relocations"][0],
+                                                  addend=reloc["addend"] + 4)]
+    wrong_addend = tubuild.verify_owned_sections(
+        obj, wrong_addend_entry, claims,
+        name_index={"external_value": ("arm9", destination)}, config_relocs=cfg,
+        sym_index={}, target_reader=target_reader, symbol_homes=bss_homes,
+        bss_boundaries={bss_start, bss_start + len(bss["bytes"])})
+    assert not wrong_addend["ok"]
+    assert any(r["verdict"] == "WRONG-ADDEND" for r in wrong_addend["relocations"])
+
+    # Wildcarding is limited to the relocated word. A different ordinary data word
+    # must still fail the byte gate.
+    damaged = bytearray(data["bytes"])
+    protected = {reloc["offset"] & ~3}
+    ordinary = next(i for i in range(0, len(damaged), 4) if i not in protected)
+    damaged[ordinary] ^= 0xff
+    bad_bytes = tubuild.verify_owned_sections(
+        obj, entry, claims, name_index={"external_value": ("arm9", destination)},
+        config_relocs=cfg, sym_index={},
+        target_reader=lambda _m, _s, _n: bytes(damaged), symbol_homes=bss_homes,
+        bss_boundaries={bss_start, bss_start + len(bss["bytes"])})
+    assert not bad_bytes["ok"]
+    assert any("non-relocated" in e for e in bad_bytes["errors"])
+
+
+def test_compiler_only_policy_is_exact_and_refuses_a_real_rom_home():
+    if not _toolchain():
+        return
+    obj = _compile_tu_fixture(
+        "struct P { int p[4]; virtual ~P(); virtual void f(); };\nP::~P(){}\n")
+    assert obj is not None
+    base = {"functions": [{"symbol": "_ZN1PD0Ev"}, {"symbol": "_ZN1PD1Ev"}],
+            "data": [], "bss": []}
+
+    out, report, reasons = tubuild.apply_compiler_only_policy(obj, base, homes={})
+    assert out is None
+    assert any("_ZN1PD2Ev" in r and "no compiler_only_output" in r for r in reasons)
+
+    entry = dict(base, compiler_only_output=[{
+        "symbol": "_ZN1PD2Ev", "disposition": "deadstrip",
+        "reason": "compiler-generated base-object destructor; no ROM symbol/caller",
+    }])
+    out, report, reasons = tubuild.apply_compiler_only_policy(obj, entry, homes={})
+    assert reasons == [] and out is not None
+    assert report["deadstripped"] == ["_ZN1PD2Ev"]
+
+    out, _report, reasons = tubuild.apply_compiler_only_policy(
+        obj, entry, homes={"_ZN1PD2Ev": [("ov999", 0x1234)]})
+    assert out is None
+    assert any("configured ROM home" in r for r in reasons)
+
+
 def test_unknown_id_fails_closed_with_a_clear_reason():
     code, out = _run("inspect", "ov999/NoSuchClass")
     assert code != 0
@@ -368,6 +580,172 @@ if __name__ == "__main__":
 
 
 import tubuild
+
+
+def test_vtable_storage_address_requires_an_explicit_consistent_bias():
+    if not _toolchain():
+        return
+    obj = _compile_tu_fixture(
+        'extern "C" int _ZTV1V[3] = {1, 2, 3};\n'
+        'extern "C" int* vptr = _ZTV1V + 2;\n')
+    start = 0x4000
+    data, error = tubuild.section_contribution(obj, ".data", start)
+    assert error is None
+    emitted = data["symbols"]["_ZTV1V"]
+    pointer = data["symbols"]["vptr"]
+    reloc = next(r for r in data["relocs"] if r["symbol"] == "_ZTV1V")
+    source = start + reloc["offset"]
+    public = emitted["address"] + 8
+    claims = [{"name": ".data", "start": start,
+               "end": start + len(data["bytes"])}]
+
+    def run(row):
+        entry = {"module": "ov999", "functions": [], "data": [row, {
+                     "symbol": "vptr", "address": hex(pointer["address"]),
+                     "size": hex(pointer["size"])}],
+                 "bss": [], "relocations": [{
+                     "section": ".data", "source": hex(source),
+                     "type": "R_ARM_ABS32", "kind": "load", "symbol": "_ZTV1V",
+                     "addend": reloc["addend"], "target_module": "ov999",
+                     "target_address": hex(public)}]}
+        return tubuild.verify_owned_sections(
+            obj, entry, claims, name_index={},
+            config_relocs={"ov999": {source: ("load", public, "ov999")}},
+            sym_index={}, target_reader=lambda _m, _s, _n: data["bytes"],
+            symbol_homes={}, bss_boundaries=set())
+
+    implicit = run({"symbol": "_ZTV1V", "address": hex(public),
+                    "size": hex(emitted["size"])})
+    assert not implicit["ok"]
+    assert any("emitted address" in reason for reason in implicit["errors"])
+
+    explicit = run({"symbol": "_ZTV1V", "address": hex(public),
+                    "emitted_storage_address": hex(emitted["address"]),
+                    "address_point_bias": "0x8", "size": hex(emitted["size"])})
+    assert explicit["ok"], explicit["errors"]
+
+    inconsistent = run({"symbol": "_ZTV1V", "address": hex(public),
+                        "emitted_storage_address": hex(emitted["address"]),
+                        "address_point_bias": "0x4", "size": hex(emitted["size"])})
+    assert not inconsistent["ok"]
+    assert any("does not equal public address" in reason
+               for reason in inconsistent["errors"])
+
+
+def test_bss_without_independent_configured_symbols_and_boundaries_is_inferred_only():
+    if not _toolchain():
+        return
+    obj = _compile_tu_fixture('extern "C" int invented_bss = 0;\n')
+    start = 0x5000
+    bss, error = tubuild.section_contribution(obj, ".bss", start)
+    assert error is None
+    row = bss["symbols"]["invented_bss"]
+    entry = {"module": "ov999", "functions": [], "data": [], "relocations": [],
+             "bss": [{"symbol": "invented_bss", "address": hex(row["address"]),
+                      "size": hex(row["size"])}]}
+    result = tubuild.verify_owned_sections(
+        obj, entry, [{"name": ".bss", "start": start,
+                     "end": start + len(bss["bytes"])}],
+        name_index={}, config_relocs={"ov999": {}}, sym_index={},
+        target_reader=lambda *_args: None, symbol_homes={}, bss_boundaries=set())
+    assert not result["ok"]
+    assert any("no independent ov999 symbols.txt home" in reason
+               for reason in result["errors"])
+    assert any("boundary anchors" in reason for reason in result["errors"])
+
+
+def test_object_audit_makes_an_extra_unclaimed_object_and_section_fatal():
+    if not _toolchain():
+        return
+    obj = _compile_tu_fixture('extern "C" int unexpected_data = 7;\n')
+    entry = {"module": "ov999", "functions": [], "sections": [
+        {"name": ".text", "start": "0x1000", "end": "0x1004"}],
+        "data": [], "bss": []}
+    rows, extra, _emitted, order_ok = tubuild.audit_tu_object(
+        obj, entry, 0x1000, 0x1004, ranges={})
+    reasons = tubuild.object_audit_refusals(rows, extra, order_ok)
+    assert any("unlicensed defined symbol unexpected_data" in r for r in reasons)
+    assert any("unlicensed content section .data" in r for r in reasons)
+
+
+def test_vague_inherited_rtti_coalescing_remains_explicitly_unsupported():
+    """Two TUs emit the same STB_LOPROC base metadata; linker behavior is not a license."""
+    if not _toolchain():
+        return
+    common = "struct Base { virtual void f() {} };\n"
+    a = _compile_tu_fixture(common + "struct A : Base { virtual void a(); }; void A::a() {}\n")
+    b = _compile_tu_fixture(common + "struct B : Base { virtual void b(); }; void B::b() {}\n")
+    inv_a, inv_b = tubuild.elf_inventory(a), tubuild.elf_inventory(b)
+    vague_a = {s["name"] for s in inv_a["symbols"] if s["bind"] == "STB_LOPROC"}
+    vague_b = {s["name"] for s in inv_b["symbols"] if s["bind"] == "STB_LOPROC"}
+    inherited = sorted(n for n in vague_a & vague_b if n.startswith(("_ZTI", "_ZTS", "_ZTV")))
+    assert inherited, "fixture must measure duplicate inherited vague RTTI/vtable output"
+
+    # Measure the linker too: it accepts the two objects and coalesces each shared
+    # vague definition to one output definition.  That fact is deliberately evidence,
+    # not permission for the ownership gate below to discard either input definition.
+    with tempfile.TemporaryDirectory() as td:
+        td = pathlib.Path(td)
+        ao, bo, linked = td / "a.o", td / "b.o", td / "linked.o"
+        ao.write_bytes(a)
+        bo.write_bytes(b)
+        objects = td / "objects.txt"
+        objects.write_text(f"{ao}\n{bo}\n", encoding="utf-8")
+        runtime_vtables = set()
+        for raw in (a, b):
+            elf = tubuild.ELFFile(tubuild.io.BytesIO(raw))
+            symtab = elf.get_section_by_name(".symtab")
+            runtime_vtables.update(s.name for s in symtab.iter_symbols()
+                                   if s["st_shndx"] == "SHN_UNDEF"
+                                   and s.name.startswith("_ZTV"))
+        runtime_defs = "\n".join(
+            f"  {name} = 0x02010000;" for name in sorted(runtime_vtables))
+        lcf = td / "fixture.lcf"
+        lcf.write_text(
+            "MEMORY { TEST : ORIGIN = 0x02000000 > linked.bin }\n"
+            f"SECTIONS {{\n{runtime_defs}\n.fixture : {{\n"
+            "  a.o(.text) b.o(.text) a.o(.data) b.o(.data)\n"
+            "} > TEST }\n", encoding="utf-8")
+        cmd = [*tubuild.RB.launcher(),
+               str(tubuild.RB.MW / tubuild.RB.LD_VERSION / "mwldarm.exe"),
+               "-proc", "arm946e", "-nostdlib", "-interworking", "-nodead",
+               "-m", "_ZN1A1aEv",
+               f"@{objects}", str(lcf), "-o", str(linked)]
+        result = subprocess.run(cmd, capture_output=True, text=True, cwd=td)
+        assert result.returncode == 0, result.stdout + result.stderr
+        linked_inv = tubuild.elf_inventory(linked.read_bytes())
+        linked_names = [s["name"] for s in linked_inv["symbols"]]
+        assert all(linked_names.count(name) == 1 for name in inherited)
+
+    entry = {"module": "ov999", "functions": [], "sections": [
+        {"name": ".text", "start": "0x1000", "end": "0x1004"}],
+        "data": [], "bss": []}
+    rows, extra, _emitted, order_ok = tubuild.audit_tu_object(
+        a, entry, 0x1000, 0x1004, ranges={})
+    reasons = tubuild.object_audit_refusals(rows, extra, order_ok)
+    assert any(any(name in reason for name in inherited) for reason in reasons), \
+        "vague duplicate output must remain fatal until exact coalescing is implemented"
+
+
+def test_scratch_and_no_rom_results_are_not_promotion_ready():
+    assert tubuild.classify_link_result(True, True, None, False) == \
+        "module-data-verified"
+    assert tubuild.classify_link_result(True, True, True, True) == \
+        "scratch-data-verified"
+    assert tubuild.classify_link_result(True, True, True, False) == "data-verified"
+
+    ready = {"status": "link-verified", "sections": [{"name": ".text"}],
+             "verification": {"linkcheck": {
+                 "result": "link-verified", "phases": {"rom": True},
+                 "rom": {"matchesStockRom": True}}}}
+    assert tubuild.promotion_refusals(ready) == []
+    assert any("non-.text" in reason for reason in tubuild.promotion_refusals(
+        dict(ready, sections=[{"name": ".text"}, {"name": ".data"}])))
+    assert any("compiler_only_output" in reason for reason in tubuild.promotion_refusals(
+        dict(ready, compiler_only_output=[{"symbol": "D2"}])))
+    no_rom = dict(ready, verification={"linkcheck": {
+        "result": "link-verified", "phases": {"rom": None}, "rom": {}}})
+    assert any("full-ROM phase" in reason for reason in tubuild.promotion_refusals(no_rom))
 
 # ---------------------------------------------------------------- create repairs
 # The three assemble_shadow_source behaviors proven by six modules of

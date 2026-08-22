@@ -288,6 +288,101 @@ def derive(raw, keep_symbol):
     return _apply(raw, p, keep_symbol), p
 
 
+def deadstrip_plan(raw, symbol_names):
+    """Plan removal of exact, explicitly named compiler-only output sections.
+
+    This is intentionally narrower than a linker dead-strip pass.  TU reconstruction
+    occasionally makes mwcc emit a destructor D2 or an inline/helper body which the
+    retail link discarded, while this repository links with ``-nodead``.  A caller may
+    model that historical discard only when all of these facts are mechanically true:
+
+    * every requested symbol is a defined function in its own content section;
+    * every named, non-mapping symbol in each removed section is requested too;
+    * no relocation from a surviving content section references a requested symbol or
+      an unnamed section symbol for a removed section.
+
+    There are no patterns and no binding-based guesses.  The caller must name every
+    symbol, and any ambiguity is an error.  The returned plan has the same shape as
+    :func:`plan`, so :func:`_apply` remains the single implementation of the safe ELF
+    header surgery (zero section sizes and externalise visible definitions).
+    """
+    wanted = {str(n) for n in symbol_names if str(n)}
+    if not wanted:
+        return {"error": "no compiler-only symbols were requested"}
+
+    elf = ELFFile(io.BytesIO(bytes(raw)))
+    secs = list(elf.iter_sections())
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return {"error": "no .symtab"}
+    syms = list(symtab.iter_symbols())
+
+    defined = {s.name: s for s in syms
+               if s.name and s["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")}
+    missing = sorted(wanted - set(defined))
+    if missing:
+        return {"error": f"compiler-only symbol(s) not defined: {missing}"}
+
+    bad_type = sorted(n for n in wanted
+                      if defined[n]["st_info"]["type"] != "STT_FUNC")
+    if bad_type:
+        return {"error": f"compiler-only deadstrip currently accepts functions only: "
+                         f"{bad_type}"}
+
+    drop_content = {defined[n]["st_shndx"] for n in wanted}
+    if not all(isinstance(i, int) and secs[i].header["sh_type"] in CONTENT
+               for i in drop_content):
+        return {"error": "a compiler-only symbol is not in a content section"}
+
+    for shndx in sorted(drop_content):
+        occupants = {s.name for s in syms
+                     if s.name and not s.name.startswith("$")
+                     and s["st_shndx"] == shndx
+                     and s["st_info"]["type"] != "STT_SECTION"}
+        foreign = sorted(occupants - wanted)
+        if foreign:
+            return {"error": f"section[{shndx}] {secs[shndx].name} also defines "
+                             f"non-policy symbol(s): {foreign}"}
+
+    # A discarded section may have relocations of its own; those disappear with it.
+    # Only references from SURVIVING content are load-bearing and therefore blockers.
+    for rel in secs:
+        if not isinstance(rel, RelocationSection) or rel.header["sh_info"] in drop_content:
+            continue
+        source = secs[rel.header["sh_info"]]
+        if source.header["sh_type"] not in CONTENT or not source.header["sh_size"]:
+            continue
+        for r in rel.iter_relocations():
+            target = symtab.get_symbol(r["r_info_sym"])
+            names_target = target.name in wanted
+            section_target = (not target.name and target["st_shndx"] in drop_content)
+            if names_target or section_target:
+                label = target.name or f"section[{target['st_shndx']}]"
+                return {"error": f"surviving section[{rel.header['sh_info']}] "
+                                 f"{source.name} references compiler-only {label} at "
+                                 f"0x{r['r_offset']:x}"}
+
+    drop = set(drop_content)
+    drop.update(i for i, s in enumerate(secs)
+                if isinstance(s, RelocationSection) and s.header["sh_size"]
+                and s.header["sh_info"] in drop_content)
+    return {"keep": None, "drop": sorted(drop), "externalise": [],
+            "dead": sorted(wanted), "referenced": [], "error": None}
+
+
+def derive_deadstrip(raw, symbol_names):
+    """Return an object with exact declared compiler-only sections discarded.
+
+    ``None`` is returned instead of bytes when :func:`deadstrip_plan` refuses.  The
+    input is never mutated.  This exists for scratch TU links; production one-function
+    isolation continues to use :func:`derive` unchanged.
+    """
+    p = deadstrip_plan(raw, symbol_names)
+    if p.get("error"):
+        return None, p
+    return _apply(raw, p, None), p
+
+
 def isolate(obj, keep_symbol):
     """Apply `plan` to the object file in place. Returns the plan.
 

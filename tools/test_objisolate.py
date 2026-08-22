@@ -91,6 +91,41 @@ class Isolate(unittest.TestCase):
         self.assertIsNone(plan2["error"])
         self.assertNotEqual(other, out)
 
+    def test_exact_deadstrip_removes_unreferenced_compiler_only_d2(self):
+        """A whole-TU scratch link may model the retail link's discarded D2.
+
+        The operation is exact-symbol and pure: D2's section disappears, D0/D1 and
+        the data emitted by the same real destructor remain, and the input object is
+        untouched.  This is deliberately not ordinary one-function isolation.
+        """
+        import io
+        from elftools.elf.elffile import ELFFile
+
+        obj = self.build("struct P { int p[4]; virtual ~P(); virtual void f(); };\n"
+                         "P::~P(){}\n")
+        raw = obj.read_bytes()
+        out, plan = OI.derive_deadstrip(raw, ["_ZN1PD2Ev"])
+        self.assertIsNone(plan["error"])
+        self.assertEqual(obj.read_bytes(), raw)
+        self.assertIsNotNone(out)
+
+        elf = ELFFile(io.BytesIO(out))
+        syms = {s.name: s for s in elf.get_section_by_name(".symtab").iter_symbols()}
+        self.assertEqual(syms["_ZN1PD2Ev"]["st_shndx"], "SHN_UNDEF")
+        self.assertNotEqual(syms["_ZN1PD0Ev"]["st_shndx"], "SHN_UNDEF")
+        self.assertNotEqual(syms["_ZN1PD1Ev"]["st_shndx"], "SHN_UNDEF")
+        self.assertTrue(any(s.name == ".data" and s.header["sh_size"]
+                            for s in elf.iter_sections()))
+
+    def test_exact_deadstrip_refuses_a_surviving_reference(self):
+        """Calling something is proof it is not dead compiler output."""
+        obj = self.build('extern "C" int helper(int x) { return x + 1; }\n'
+                         'extern "C" int kept(int x) { return helper(x); }\n')
+        out, plan = OI.derive_deadstrip(obj.read_bytes(), ["helper"])
+        self.assertIsNone(out)
+        self.assertIn("surviving", plan["error"])
+        self.assertIn("references compiler-only helper", plan["error"])
+
     def test_vtable_addend_is_corrected_to_zero(self):
         """8 -> 0, because the ROM symbol is already past the preamble."""
         from elftools.elf.elffile import ELFFile
