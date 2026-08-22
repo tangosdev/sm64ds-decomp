@@ -1754,3 +1754,169 @@ WHAT THIS SECTION DOES NOT KNOW.
   - WHICH MODE BYTE IS WHICH TITLE. Both readers of slot 35 are identified and
     the byte reads 0 on the port's direct boot. Nothing here says what sets it
     or what the other value plays like.
+
+15. THE CARD DRAW, AND THE FLOOR THAT WAS THE WHOLE MINIGAME, run mg7 lane
+    MEMCARDS
+--------------------------------------------------------------------------------
+
+Worktree C:/tmp/m7c, branch mg7-memcards, base 2a1ecc015, private build
+C:/tmp/m7c/build/port with CMAKE_HOME_DIRECTORY verified C:/tmp/m7c/port.
+Baseline gate on that tree before a line was edited: scene 363 boots clean at
+120, 300, 600, 900 and 1500 frames under SM64DS_FAULTS_FATAL=1, 0 UNHANDLED
+addresses on every one, and the floor trap firing once per render frame.
+
+SECTION 13 CLOSED ON "NO FRAME HAS BEEN LOOKED AT ... AND THE RENDER PATH HAS A
+TRAP IN IT". Somebody looked. Memory Master reached the deal and dealt sixteen
+cards onto an empty green table: no cards in Luigi's hands, no card spots on the
+touch screen, and every census line in the seat reading exactly as green as it
+had read on a run where the deal never happened.
+
+BOTH HALVES OF THAT ARE ONE BODY, and it is section 13's own floor.
+
+  func_ov006_020f5b98, ov006, 0xa8, forty instructions plus two pool words. It
+  is the sixth call vtable slot 9 (Render) makes, and it is the ONLY code in
+  dScMgMemory2_c that puts a card pixel anywhere. Nothing else in the class
+  draws one, on either screen, in any state. There was never a second gap to
+  find: the hand and the table are the same twenty records and the same loop.
+
+WHAT IT DOES, read out of extracted/overlays/overlay_0006.bin at base
+0x020bfec0 (alignment checked first on func_ov006_020f73f4, whose disassembly
+reproduces src/func_ov006_020f73f4.c call for call):
+
+    p = c; for (i = 0; i < 0x14; i++, p += 0x18)
+        if (p[+0x51ba])
+            Hud_RenderSprite(
+                data_ov006_02142490[ data_ov006_0213d45c[ p[+0x51b8]*5
+                                                        + p[+0x51bd] ] ],
+                *(int*)(p+0x51a8) >> 12, *(int*)(p+0x51ac) >> 12,
+                -1, *(int*)(c+0x53d4) != 2);
+
+  Twenty records at +0x51a8, stride 0x18. Per record: +0x00/+0x04 the 20.12
+  screen x/y, +0x10 the card identity, +0x12 the in-play gate this loop reads,
+  +0x13 the gate func_ov006_020f5c40's per-card dispatch reads, +0x14 the
+  per-card state it dispatches ON, +0x15 the flip frame.
+
+  data_ov006_0213d45c is TWELVE ROWS OF FIVE HALFWORDS -- 0x78 to the next
+  symbol, which is the class vtable. Row = card identity, column = flip frame.
+  Row 0 and row 11 are all zero; rows 1..10 read {0, 1, 2, 2k+2, 2k+1}, so ten
+  card types over sprite indices 0..0x16, which is exactly the twenty-three
+  words __sinit_ov006_021314e4 copies from data_ov006_02133810 into
+  data_ov006_02142490. Ten types dealt twice is twenty cards, and
+  src/func_ov006_020f6c90.c deals 16, 18 or 20 of them on the difficulty byte
+  at +0x540a.
+
+  BOTH TABLES HAVE EXACTLY ONE LOAD RELOCATION OUTSIDE THAT CONSTRUCTOR AND IT
+  IS THIS FUNCTION'S OWN LITERAL POOL (from:0x020f5c38 and from:0x020f5c3c).
+  So nothing else in ov006 reads either one, which is the second witness that
+  this is the only card draw and not one of several.
+
+  0x020af68c is Hud_RenderSprite in ov004's symbols.txt, so the class draws its
+  cards through the same HUD sprite seam eight other ov006 minigames use, and
+  the fifth argument is the state index at +0x53d4 as a flag: every state but 2
+  passes 1.
+
+THE MODULE-RESIDENCY TRAP IS REAL AND IT ALMOST CLOSED THIS FLOOR TWICE.
+src/func_ov002_020f5b98.c EXISTS, is thirteen instructions, takes a
+`struct Ent *`, and belongs to ov002. Section 13 warned about it; the warning
+earned its place. The new TU is src/func_ov006_020f5b98.c and the slice comment,
+the Faces comment and this paragraph all say the ov002 file is not a substitute.
+
+WHAT THE SYMPTOM LOOKED LIKE IN NUMBERS, which is the part worth reusing. The
+seat now prints the card records, and on the UNFIXED tree at 600 frames they
+read
+
+    16 of 20 record(s) live, 16 inside the screen box, x 80..176 y 24..168
+    sub OAM: 125 parked, 3 placed
+
+-- a whole 4x4 grid laid out at real screen coordinates with three sprites in
+OAM. THAT PAIR OF LINES IS THE BUG, and no line the seat printed before this
+lane could have shown it: slot hits, state dispatch counts, field dispatch
+counts and UNHANDLED were all identical on a run that renders the cards and a
+run that renders none of them. A census that measures only dispatch cannot see
+a missing draw.
+
+AFTER, same frames, same environment: 35 placed, which is 3 + 32, which is
+sixteen cards at two OAM entries each. The card sprite is 32 by 64 in two
+32-by-32 cells, the bottom 48 rows the card and the top 16 a soft shadow, so
+every row but the first has its shadow covered by the card above it.
+
+TOUCH IS MEASURED NOW, AND SECTIONS 13 AND 14 BOTH LEFT IT OPEN. The per-card
+state machine is func_ov006_020f5c40 over data_ov006_02142408, and slot 2 of
+that table is func_ov006_020f5f0c, which compares data_020a0dea/deb against a
+record's own x/y in a +-0x10 by +-0x16 box. At 700 frames all sixteen cards sit
+in state 2 with +0x5406 = 0: the class is waiting on the stylus, unaided.
+SM64DS_TOUCH_PROBE=600-604:80:24 pokes the top-left slot and record 12 goes to
+state 4 at flip frame 4, +0x5406 reads 1, +0x53f0 reads 12, and the frame shows
+that card face up. THE MINIGAME IS PLAYABLE, not merely bootable.
+
+data_ov006_021423a8 IS STILL NOT REACHED, and this lane can say it from runs
+rather than from a relocation count. Section 13 left the three-state table with
+no dispatcher and named the framework's UNHANDLED line as the detector. Scene
+363 at 120, 300, 600, 900, 1500 and 700-with-touch frames reports 0 UNHANDLED
+addresses on every run, including every run that passes through the deal and
+into state 2, and including the run where a stylus turned a card over. The
+table is unreachable as shipped and it had nothing to do with this bug.
+
+THE NEW TU IS NONMATCHING, AND IT IS A COLOURING AND SCHEDULING FLOOR RATHER
+THAN A LOGIC ONE. This is worth stating precisely because the divergence count
+reads high:
+
+  - Only mwccarm 1.2/base, 1.2/sp2, 1.2/sp2p3 and 2004/b56 produce a 0xa8 body
+    at all. All twenty-one other installed builds (1.2/sp3, 1.2/sp4, every 2.0
+    service pack, every dsi) come out a different SIZE, so the compiler tier is
+    not in question.
+  - On all four, the candidate compiles to FORTY INSTRUCTIONS with an IDENTICAL
+    MNEMONIC MULTISET to the ROM's -- add x6, ldr x6, mov x7, ldrb x3, cmp x3,
+    asr x2, and one each of mla, lsl, ldrh, movne, mvn, str, sub, push, pop,
+    bx, beq, blt, bl. Nothing is inserted, nothing is deleted, and the only
+    opcode-shape difference in the whole body is the bl's target, which is the
+    wildcarded relocation. Twenty-four words differ, every one of them by a
+    register number or a schedule slot.
+  - ONE SHAPE REACHES 23 AND IS NOT THE ONE SHIPPED. Writing the fifth argument
+    as the bare comparison costs a word less but compiles the flag as a
+    movne/moveq pair, where the ROM emits an unconditional mov of a hoisted
+    zero and then a movne of a hoisted one -- which is an if-statement. A word
+    closer to the bytes and a step further from the construct is the wrong
+    trade for a file that will be read as the ROM's logic.
+  - The residue is one rotation. The ROM colours (i, base, -1, table1) into
+    r4..r7 with the constant 0 in sb; every candidate colours (base, -1,
+    table1, 0) into r4..r7 with i in sb -- the same five values in the same
+    relative order with the loop counter moved from the head of the list to the
+    tail. The scratch pair swaps with it: the ROM computes the flag into r0 and
+    the state into r1 and keeps the flag live across the index computation,
+    which is what pushes the flip frame onto lr; the candidate computes the
+    state into r0, stores the flag to [sp] immediately and never needs lr.
+  - What was tried: about thirty source shapes by hand (declaration order both
+    ways, the flag as an if, an if/else, a ternary and an inline comparison,
+    the index and the coordinates as locals, for/while/do loop forms, char*,
+    unsigned char*, void* and struct-typed record walks, int/unsigned/long
+    counters), ten compiler builds crossed with twelve optimisation settings,
+    and roughly 20,000 decomp-permuter iterations from two different seeds.
+    The floor is 23 differing words for the closest shape, 24 for the one
+    shipped, and it does not move.
+  - config/match_attempts.jsonl already carries a near_miss row for
+    ov006:0x020f5b98 at 23 divergences from a fable escalation batch in July,
+    which is the same floor reached independently.
+
+  So the banner is the one src/func_ov006_020f6904.c carries, in the same class
+  and at a higher divergence count, and the rule it stands on is the one
+  tools/nonmatching.py states: the logic is verified right and only the codegen
+  floor remains. tools/nonmatching.py's own --max-div gate REFUSES this entry at
+  its default, because its metric is a text edit distance over the disassembly
+  and a scheduling move costs it an insert plus a delete; the multiset check
+  above is the measurement that says what the edit distance cannot.
+
+WHAT THIS SECTION DOES NOT KNOW.
+  - WHETHER THE PICTURE IS RIGHT, only that there is one. The cards, the deal
+    animation, the flip frames and the turned-over face all render and the
+    numbers behind them are the ROM's, but nobody has held this next to a DS.
+    The soft shadow above the top row in particular is asserted to be the top
+    16 rows of the card's own 32-by-64 sprite and not an artefact, on the
+    strength of the OAM count and the fact that it belongs to the top row --
+    which is evidence, not a verdict.
+  - WHAT THE OTHER TWO DIFFICULTIES LOOK LIKE. +0x540a reads 0 on a direct
+    scene boot, which is the sixteen-card board. The eighteen- and twenty-card
+    boards are in func_ov006_020f6c90 and untested here.
+  - WHETHER A MATCHED PAIR ENDS THE ROUND. The touch probe turns one card over.
+    func_ov006_020f5a64 is the comparison and it needs two picks; nothing here
+    drives a second one.
