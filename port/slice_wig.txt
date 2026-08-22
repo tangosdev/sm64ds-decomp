@@ -1,0 +1,341 @@
+# Lane WIG, run mg9: dScMgHanachan_c, actor id 0x182 (scene 386) -- the
+# "Which Wiggler" minigame, and the twelfth ov006 minigame class the port seats.
+#
+# ---- THE IDENTITY, DERIVED FRESH FROM THE ROM -----------------------------
+#
+# Every address below was derived by this lane out of
+# extracted/overlays/overlay_0006.bin at base 0x020bfec0 (the shipped image,
+# never a dsd export) rather than taken from the handover, by the mechanical
+# route port/mg_fanout_costs.txt section 3 prescribes.
+#
+#   THE SPAWNINFO. The doubled-id word 0x01820182 occurs EXACTLY ONCE in the
+#   whole overlay, at 0x0213c990, which puts the eight-byte SpawnInfo record at
+#   0x0213c98c with the factory in the word before it: 0x020ede18, which
+#   config/arm9/overlays/ov006/symbols.txt names MgWhichWiggler_Spawn
+#   (size 0x68). There is no second candidate to choose between.
+#
+#   THE FACTORY'S OWN RELOCATION CONFIRMS THE VTABLE:
+#       from:0x020ede70 kind:load to:0x0213cab8 module:overlay(6)
+#   and 0x020ede70 is inside MgWhichWiggler_Spawn's literal pool
+#   (0x020ede18 + 0x58). The other two load relocations that reach 0x0213cab8
+#   are the two destructors' pools, 0x020ea2c0 (slot 16, D2) and 0x020ea318
+#   (slot 17, D0), and there are no others in the overlay.
+#
+#   AND arm9's OWN SPAWN TABLE AGREES, which is the check lane S75 recommends
+#   and which is stronger than the arithmetic on its own. data_02090864 holds
+#   one record pointer per actor id; entry 0x182 sits at 0x02090e6c and holds
+#   0x0213c98c. Its neighbours are known-good: 0x181 -> 0x0213fbc8 and
+#   0x183 -> 0x0213f974, and 0x176/0x177/0x178 three rows earlier read
+#   0x0213c214, 0x0213c434 and 0x0213ebd0, which are exactly the three addresses
+#   port/mg_fanout_costs.txt and port/slice_s75.txt give those classes.
+#
+#   THE CLASS NAME IS THE ROM'S, through the type_info the word BEFORE the
+#   vtable points at -- lane PPP's chain, which beats a src spelling because a
+#   per-TU placeholder can be wrong and a relocation cannot:
+#       from:0x0213cab4 kind:load to:0x0213ca7c module:overlay(6)
+#       from:0x0213ca80 kind:load to:0x0213ca88 module:overlay(6)
+#   and 0x0213ca88 reads "15dScMgHanachan_c". The record's third word,
+#   0x0213ca84 -> 0x020bbf6c, is ov004's "11dScMgBase_c".
+#
+# THE SPAWN SYMBOL SAYS WhichWiggler AND THE CLASS SAYS Hanachan, AND BOTH ARE
+# THE ROM'S. That is curling's MgShuffleShell / dScMgCurling_c shape and
+# bomroom's MgSortOrSplode / dScMgBomroom_c shape exactly, and the class name is
+# the one this seat's files are named after, per the rule lane MG1 set.
+# "Hanachan" is the Japanese name for the Wiggler; the localised title is the
+# guessing game.
+#
+# THE PLAYER-FACING TITLE IS "WHICH WIGGLER" and it comes from the config, not
+# from the image. port/slice_s75.txt establishes that no minigame title text is
+# stored anywhere in the 16 MB ROM; this lane re-checked nothing there and takes
+# that finding as it stands. The spawn symbol IS the config's title.
+#
+# ---- THE ov005 ROW, RECORD AND TEXT ---------------------------------------
+#
+# The spawn param now flows automatically through
+# hal/scene_mg_sound.cpp's port_mg_scene_spawn_param, and section 17 of
+# port/mg_fanout_costs.txt requires a lane to VERIFY that its scene's row
+# resolves and to report the two indices. Read out of
+# extracted/overlays/overlay_0005.bin at file offset 0x2618, 36 rows of 0x34:
+#
+#     id 0x182 appears EXACTLY ONCE, at row 27
+#     param 0x000f1b00  ->  save record 27, name text 15, slot-35 low byte 0
+#     music 18, enable 2
+#
+# ONCE MATTERS. Six ids appear on two ov005 rows (0x0173, 0x0178, 0x0179,
+# 0x017a, 0x017c, 0x016c) because the ROM's menu selects by POSITION and the
+# port takes the first row, which is the caveat section 17 attaches to scene
+# 380's censuses. 0x182 is not one of the six, so the port's row and the ROM's
+# are the same row and no such caveat applies here.
+#
+# ---- THE WIDTH IS 36 AND IT WAS CHECKED FOUR WAYS -------------------------
+#
+# port/mg_fanout_costs.txt section 11 gives three checks because twelve of the
+# widths in that file's section 3 table were phantoms. This lane took all three
+# and added a fourth.
+#   1. SPAN. config/arm9/overlays/ov006/symbols.txt puts the next symbol
+#      (data_ov006_0213cb48) exactly 0x90 bytes past the vtable, so 36 words is
+#      an upper bound and a 37th slot cannot exist inside the table.
+#   2. TERMINAL SLOT. Slot 35 holds 0x020ad660, the word every dScMgBase_c-
+#      derived table holds there.
+#   3. WHAT THE WORD PAST IT IS. Index 36 reads 0xffffffff -- the first word of
+#      data_ov006_0213cb48 and an address in no module.
+#   4. RELOCATION COUNT, which is this lane's addition and which is the check
+#      that cannot be argued with. A vtable word is a code address and is
+#      therefore ALWAYS relocated. Exactly THIRTY-SIX relocation rows have a
+#      source inside [0x0213cab8, 0x0213cb48), one per slot, running
+#      0x0213cab8, 0x0213cabc, ... 0x0213cb44 with no gaps -- and there is NO
+#      row at 0x0213cb48. A 37th slot would have a 37th row. Check 3 is the one
+#      section 11 warns is easiest to wave through; this one is not.
+#
+# ---- SEVEN OVERRIDES, SIX MARKERS, ZERO nosrc -----------------------------
+#
+# Which the fan-out table predicts and a fresh word-for-word diff against
+# dScMgBase_c's own table (data_ov004_020bc0c0, read out of
+# extracted/overlays/overlay_0004.bin at base 0x020ad660) confirms: slots 0, 3,
+# 6, 9, 16, 17 and 18 differ and no other slot does. All SIX marker bodies were
+# disassembled out of the shipped overlay image and ruled REAL_DECOMP before
+# anything was seated; port/tools/inferred_stub_adjudicated.txt carries the
+# per-body evidence with the instruction and literal-pool arithmetic. Slot 16
+# (D2) carries no marker and is not ruled, though it was disassembled anyway as
+# one of the two reads that fix the hierarchy depth.
+#
+# SLOT 3 IS NEW TO THIS FAMILY. No seated minigame class before this one
+# overrides CleanupResources; the six seated at six or seven overrides all sit
+# on 0, 6, 9, 16, 17, 18. The body is func_ov004_020ad90c(this) then return 1.
+#
+# THE HIERARCHY IS TWO DEEP. The RTTI chain above says so, and section 13's
+# CORRECTION 1 prescribes two reads of CODE as the cheap confirmation. Both were
+# taken and both agree: the factory does ONE `str r1,[r4]` from a pool word that
+# resolves to 0x0213cab8, and slot 16 (0x020ea280) and slot 17 (0x020ea2c8) each
+# do ONE `str ip,[r4]` from their own pool -- 0x020ea2c0 and 0x020ea318, both
+# 0213CAB8 -- and then call func_ov004_020b29c0 with nothing in between. So
+# there is no dScMgSingle3DBase_c-shaped middle table and this seat fills one
+# derived table plus the shared base one.
+#
+# THE FACTORY NEEDS NO DISPLACEMENT RULING, and it is worth saying because
+# 0x169's did. src/MgWhichWiggler_Spawn.cpp calls func_ov004_020b2adc(o) WITH
+# its argument, where src/func_ov006_020e0574.cpp calls the same base
+# constructor with none and rides r0 through. That callee dereferences on its
+# first statement and then writes three vtable words through the pointer, so the
+# difference is a wild write versus a correct one. This factory is on the
+# correct side of it and is a plain slice line. Verified against the ROM at
+# 0x020ede18 (0x68 bytes) during this lane's adjudication pass: allocation size
+# 0x4f68 = 20328, matching src, and the ROM's `movs r4,r0` leaves r0 holding the
+# object across the `bl 0x020b2adc`.
+#
+# ---- THIS CLASS HAS NO OVERLAY CONSTRUCTOR AND NO STATE TABLE -------------
+#
+# THAT IS MEASURED, NOT INFERRED FROM NOT FINDING ONE. Not one relocation in
+# config/arm9/overlays/ov006/relocs.txt whose source lies inside any __sinit
+# block lands anywhere in [0x0213c98c, 0x0213cab8], which is the whole of this
+# class's .data. Every seated class before this one had a constructor that
+# copies {code, adj} pairs into a .bss table, and port/tools/stategen.py is
+# built to read exactly that; there is nothing here for it to read, and the
+# honest answer is that the tool has no input rather than that it found no
+# tables.
+#
+# WHAT THE ROM HAS INSTEAD is TWENTY-NINE individually symbolised {code, adj}
+# pairs laid end to end in .data at 0x0213c994..0x0213ca74, stride 8, EVERY
+# ADJUSTMENT WORD ZERO, each with exactly ONE load relocation reaching it and
+# that one from a code literal pool inside this class's own block. They hold
+# FOURTEEN distinct code words and ALL FOURTEEN HAVE A MATCHED src TU, so this
+# class has ZERO bodiless state wants. The full pair-to-loader table is in
+# port/unmatched/MgWiggler_StateDispatch.cpp's header.
+#
+# TWO OBJECTS, THREE FIELDS. The scene object holds its state pair at +0x4660;
+# each of the FIFTEEN wiggler sub-objects at scene+0x4678 (stride 0x98, and the
+# factory's own __destroy_arr call spells 0xf and 0x98) holds one at +0x10 and a
+# SECOND at +0x00. Six code words are the scene's, eight the wigglers'.
+#
+# ---- FIVE DISPATCHERS, AND A THIRD DETECTOR THIS LANE RECOMMENDS ----------
+#
+# port/mg_fanout_costs.txt section 4 prescribes a link and a `::*` source sweep
+# and lane FLW's amendment says to treat their union as a floor rather than a
+# census. On this class the amendment is the whole story. The link says nothing
+# at all -- there is no table global to be unresolved, because every pointer is
+# a FIELD -- and the source sweep finds four of the five:
+#
+#     func_ov006_020ed18c   VTABLE SLOT 6, the Behavior. scene +0x4660
+#     func_ov006_020eb018   sub-object +0x10
+#     func_ov006_020eb0c8   sub-object +0x10
+#     func_ov006_020eb31c   sub-object +0x10, and it copies the pair to +0x00
+#     func_ov006_020eb610   sub-object +0x00, OPEN-CODED IN PLAIN INTS
+#
+# THE FIFTH WAS FOUND BY A ROM SWEEP, and the method is the transferable part.
+# Decode every word of ov006's text and look for `add Rd,Rn,Rm,asr #1`
+# immediately followed by `ands Rm,Rm,#1`. That pair is the ARM Itanium
+# member-pointer sequence's own fingerprint and no source-level disguise can
+# remove it. Over all of ov006 it finds 114 sites; five are inside this class's
+# code block (0x020eb028, 0x020eb124, 0x020eb390, 0x020eb728, 0x020ed1b4) and
+# they are exactly the five above. It is cheap, it is exhaustive over a module,
+# and unlike the two prescribed detectors it cannot return a false clean.
+#
+# IT ALSO SETTLES A FALSE POSITIVE. A source sweep for `>>1` beside `&1` over
+# this class's TUs flags src/func_ov006_020ecba4.c as well. That file's `>>12`
+# and `param & 1` are ordinary 20.12 fixed-point arithmetic, and the ROM sweep
+# finding no decode in its 0x214 bytes is what says so.
+#
+# SLOT 6 BEING ONE OF THE FIVE IS WHY THE RULE EXISTS. Lane PPP found the same
+# shape in a vtable slot and wrote the rule as "before wiring slot 6 by name,
+# read the src". This lane read it before wiring anything.
+#
+# ---- THE STORED PAIR KEEPS THE ROM'S OWN WORDS ----------------------------
+#
+# The ov085/ov100 shape -- write host addresses over the .data pairs before
+# anything reads them -- is WRONG here, for the reason section 4 gives for
+# src/func_ov006_020c3b80.c. Slot 9 Render (src/func_ov006_020ecee4.c) reads the
+# scene object's stored pair AS TWO INTS and compares it BY VALUE against five
+# of the .data pairs, five times, to decide what to draw. A host address never
+# equals a DS address, so a seat that rewrote the pair would leave all five
+# tests permanently false while every dispatch still looked fine. Routing
+# happens at the DISPATCH SITE only, and Render is an ordinary slice line rather
+# than a host copy because two ints is the alias-safe half of the rulebook
+# corollary.
+#
+# ---- TWO FLOORS, AND THE VTABLE AXIS CANNOT SEE EITHER --------------------
+#
+# Section 3's row for this class reads 7 / 6 / ZERO nosrc and that column is
+# right: all seven override bodies have a matched src TU. Section 13's
+# CORRECTION 3 says the check that finds a real floor is a delinks join over
+# every CALLEE of every override, and that is what turned these up. Of the 64
+# ov006 functions the closure reaches, exactly two have a config symbol, no
+# delink block in config/arm9/overlays/ov006/delinks.txt and no src file in
+# either extension in any module:
+#
+#     func_ov006_020ea914  0x324  ON THE RENDER PATH. Slot 9 calls it
+#                                 unconditionally at 0x020ed0c8 with the word at
+#                                 scene+0x4f60 as its only argument, and that is
+#                                 its ONLY call site: exactly one arm_call
+#                                 relocation in all of ov006 reaches it.
+#     func_ov006_020ec4dc  0x20c  WIGGLER SET-UP VARIANT 3 OF 4.
+#                                 src/func_ov006_020ecdb8.c ends in a four-way
+#                                 switch on data_ov006_02141fd8: case 0 ->
+#                                 func_ov006_020ecba4, case 1 -> _020ec9c0,
+#                                 case 2 -> _020ec84c, all matched; case 3 and
+#                                 default -> this. Its only call site is
+#                                 0x020eceb0, `mov r0,r6 / mov r1,r5 / bl`, so
+#                                 it takes a receiver AND one argument.
+#
+# Both get a named trap that counts itself in
+# port/unmatched/MgWiggler_Faces.cpp, and the seat reports both whether or not
+# they fire, because a silent zero and an absent instrument look the same in a
+# log -- and these two zeros mean different things. The pair that installs
+# 0x020ec458 is loaded by func_ov006_020ec4dc and by nothing else, so with that
+# body trapped one of the fourteen routed states is installed by nothing the
+# port can run. It is routed anyway; a routed address that is never asked for
+# costs one switch arm.
+#
+# ---- HOW THIS LIST WAS DERIVED --------------------------------------------
+#
+# A relocation closure from TWO roots -- the SpawnInfo record 0x0213c98c and the
+# vtable 0x0213cab8. Section 1 of port/mg_fanout_costs.txt prescribes the
+# SpawnInfo plus the class's own overlay constructor; this class has no
+# constructor, and the vtable stands in its place because the fill installs it
+# and because the factory reaches it by relocation anyway. Module residency
+# enforced (main + itcm + ov001 + ov004 + ov006):
+#
+#     ov006  64 functions      ov004  160      ov001  6      itcm  18
+#     main  614 functions
+#
+# THE ov006 SET IS THE CLASS'S OWN BLOCK. 63 of the 64 are the functions
+# config/arm9/overlays/ov006/symbols.txt places in [0x020ea280, 0x020ede80];
+# the 64th is func_ov006_0210c374, shared ov006 glue that slice_flw.txt and
+# slice_pch.txt already wire.
+#
+# THE arm9 AND ov004 FRAMEWORK HALVES ARE NOT REPEATED HERE. port/slice_mg1.txt
+# already lists the ov004 framework, the thirty-five overlay constructors and
+# the arm9 waves under them; CMake appends both lists to the same targets and
+# dedupes identical absolute paths. Only the delta is below.
+#
+# THE ov004 DELTA IS ZERO, AND THAT IS A MEASUREMENT. The closure reaches
+# FIFTEEN ov004 TUs that are in no build target, and every one of the fifteen is
+# deliberately excluded because MG1/MG2/BASESET host-copied it:
+#     func_ov004_020add88  _020adf2c  _020b31b4  _020b321c  _020b3278
+#     _020b8714  _020b8778                       the pointer-to-member group
+#     func_ov004_020aeed8  _020af094              MgBase_DeclConflict
+#     func_ov004_020b0620                         MgBase_Slot7
+#     func_ov004_020b0930                         MgBase_Slot1
+#     func_ov004_020b0840  _020b7460              BASESET
+#     func_ov004_020b2cb8                         MgBase_LangTable
+#     func_ov004_020b87e0                         the framework's PMF state
+#                                                 setter
+# Adding a line for any of them would put a second definition in the link.
+#
+# NO BARE VT OR HEAP EXTERN IN THIS SLICE, and that is a sweep rather than an
+# assumption. Lane SOS's failure -- a D0 spelling its own table as the shared
+# placeholder VT, which hal/cxx_aliases.cpp binds to the ov002 ENEMY table --
+# links cleanly and writes the wrong vtable into the object on teardown. A scan
+# of all 62 src TUs in this list for a bare VT or HEAP token finds NONE: both of
+# this class's destructors spell data_ov006_0213cab8 by its config name and the
+# D0 loads the heap through data_020a0eac. So this seat owes no per-source
+# COMPILE_DEFINITIONS rename, and the COFF short-name scan over its built
+# objects is the proof rather than this paragraph.
+#
+# FIVE TUs ARE HOST-COPIED AND ARE COMMENTED OUT BELOW. Their bodies are in
+# port/unmatched/MgWiggler_StateDispatch.cpp, each verbatim but for the
+# member-pointer declaration and the dispatch site. Listing both copies would be
+# a duplicate symbol; listing neither would drop the dispatch silently.
+
+# ---- ov006: the class's own closure, minus the five host copies ------------
+src/MgWhichWiggler_Spawn.cpp
+src/func_ov006_020ea280.c
+src/func_ov006_020ea2c8.cpp
+src/func_ov006_020ea324.c
+src/func_ov006_020ea350.c
+src/func_ov006_020ea3d0.c
+src/func_ov006_020ea5f0.c
+src/func_ov006_020ea658.c
+src/func_ov006_020ea670.c
+src/func_ov006_020ea71c.c
+src/func_ov006_020ea81c.c
+src/func_ov006_020ea8e0.c
+src/func_ov006_020eac38.c
+# HOST-COPIED (WIG): src/func_ov006_020eb018.cpp -- table-free FIELD pmf at sub-object +0x10, member-pointer typed
+# HOST-COPIED (WIG): src/func_ov006_020eb0c8.cpp -- FIELD pmf at sub-object +0x10, member-pointer typed
+src/func_ov006_020eb1e0.c
+# HOST-COPIED (WIG): src/func_ov006_020eb31c.cpp -- FIELD pmf at sub-object +0x10, member-pointer typed; ALSO copies the pair down to +0x00
+src/func_ov006_020eb3e4.c
+src/func_ov006_020eb558.cpp
+# HOST-COPIED (WIG): src/func_ov006_020eb610.cpp -- FIELD pmf at sub-object +0x00, OPEN-CODED IN INTS; neither the link nor a member-pointer source sweep can see it
+src/func_ov006_020eb768.c
+src/func_ov006_020eb7b0.c
+src/func_ov006_020eb7f8.c
+src/func_ov006_020eb8f0.cpp
+src/func_ov006_020eb9b0.c
+src/func_ov006_020eb9dc.c
+src/func_ov006_020ebb40.c
+src/func_ov006_020ebc08.c
+src/func_ov006_020ebc7c.c
+src/func_ov006_020ebd7c.c
+src/func_ov006_020ebe6c.c
+src/func_ov006_020ebeb4.c
+src/func_ov006_020ebf20.c
+src/func_ov006_020ec134.c
+src/func_ov006_020ec2bc.c
+src/func_ov006_020ec458.c
+src/func_ov006_020ec6e8.c
+src/func_ov006_020ec84c.c
+src/func_ov006_020ec93c.c
+src/func_ov006_020ec9c0.c
+src/func_ov006_020ecb80.c
+src/func_ov006_020ecba4.c
+src/func_ov006_020ecdb8.c
+src/func_ov006_020ecec8.c
+src/func_ov006_020ecee4.c
+# HOST-COPIED (WIG): src/func_ov006_020ed18c.cpp -- FIELD pmf at scene +0x4660, member-pointer typed; VTABLE SLOT 6, Behavior
+src/func_ov006_020ed270.c
+src/func_ov006_020ed274.c
+src/func_ov006_020ed300.c
+src/func_ov006_020ed328.c
+src/func_ov006_020ed32c.c
+src/func_ov006_020ed34c.c
+src/func_ov006_020ed40c.c
+src/func_ov006_020ed494.c
+src/func_ov006_020ed81c.c
+src/func_ov006_020ed844.cpp
+src/func_ov006_020ed8a4.c
+src/func_ov006_020eda48.c
+src/func_ov006_020edb04.cpp
+src/func_ov006_020edcb0.c
+src/func_ov006_020ede80.c
+# ALREADY WIRED (slice_ccn.txt): src/func_ov006_0210c374.cpp -- listed for closure completeness only; CMake dedupes identical absolute paths, so it adds no line to the build and no linkage
