@@ -4225,9 +4225,16 @@ set(SLICE_PSY_SOURCES hal/scene_mg_psycheout.cpp
                       # so no global is emitted -- and the `::*` sweep over the
                       # wave-2 additions is what found it.
                       unmatched/Mg3DEsp_FieldPmf.cpp
-                      # The two C++-linkage alias rows the link asked for and
-                      # the three shadow-class destructors src's D2 spells.
-                      unmatched/Mg3DEsp_Faces.cpp)
+                      # The alias rows the link asked for and the five
+                      # shadow-class destructors src's two destructors spell.
+                      unmatched/Mg3DEsp_Faces.cpp
+                      # REPLACES src/func_ov006_020e7b44.cpp, out of the slice:
+                      # a shadow-class Render dispatch on a plain ModelAnim,
+                      # whose _ZTV9ModelAnim slot 5 is a real Virtual18 and is
+                      # deliberately NOT dual-filled. The TU
+                      # hal/cxxname_bridge.cpp says trap-by-Virtual18 will name
+                      # if it ever appears.
+                      unmatched/Mg3DEsp_ModelAnimRender_020e7b44.cpp)
 foreach(line IN LISTS SLICE_PSY_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")

@@ -228,6 +228,36 @@ int func_02017acc(void *self, unsigned id)
 /* PORT_HOST_ABI: ARM r1 fileID ride-through into SharedFilePtr::Construct. */
 int SharedFilePtr_Construct_TexSeq(void *self, unsigned id)
 { _ZN13SharedFilePtr9ConstructEj(self, id); return (int)self; }
+/* PORT_HOST_ABI: ARM r1 fileID ride-through, run mg9 lane PSY. THE FIFTH
+   MEMBER OF THIS CATALOG AND THE ONE THAT WAS MISSING. func_02017a24 is the
+   same veneer as its four siblings above and below -- ROM 0x02017a24 is
+   `push {r4,lr} / mov r4,r0 / bl 0x2017ae4 / mov r0,r4 / pop / bx lr`, r1
+   never written, so the fileID rides through -- but it was the only one left
+   compiled from src, where src/func_02017a24.c spells `int f(int x)` and
+   drops the id. The chain below it drops the id twice more before anything
+   stores it: func_02017ae4 and func_02017e48 are the same shape, and
+   func_02017e0c is the first body that takes two parameters. So on the host
+   the id that reached func_02018a24 was func_02017e48's OWN RETURN ADDRESS.
+
+   MEASURED, scene 389 (dScMg3DEsp_c), the first class to construct a
+   SharedFilePtr through this entry point:
+
+       [mg-snd] scene 0x185 ov005 row 18: music=20 enable=2 (start)
+       FATAL: fs fileID 0xf40c matches no archive range
+
+   where the constructor asked for 0x1ef. Every other seated minigame reaches
+   its files through _ZN13SharedFilePtr9ConstructEj or one of the four veneers
+   here, all of which already spell both arguments, which is why eleven classes
+   booted over this hole.
+
+   port/tools/aritycheck.py's census NAMED IT and nobody had read it: the JSON
+   carries `func_02017a24 def_n 1 / decl_n 2 INVENTS` twice, once for
+   __sinit_ov006_0212f6b4 and once for __sinit_ov006_02130a08. That census is
+   REPORT ONLY -- only the receiver and plain-name subsets are ratcheted -- so
+   it never failed a build. src/func_02017a24.c is now out of port/slice_mg1.txt
+   and this is the definition. */
+int func_02017a24(void *self, unsigned id)
+{ _ZN13SharedFilePtr9ConstructEj(self, id); return (int)self; }
 /* PORT_HOST_ABI: fileptr dtor veneer; host card seam does not refcount. */
 int func_02017ab4(int x) { return x; }   /* static-dtor veneer: no-op */
 /* PORT_HOST_ABI: ARM r1 fileID ride-through into SharedFilePtr::Construct. */

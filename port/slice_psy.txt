@@ -86,6 +86,14 @@
 #      pointer, so word 36 carrying none means it cannot be one. Check 3 says
 #      what the word is and check 4 says what it is not, from a different file.
 #
+#   5. RELOCATION STRIDE. Run mg9 lane LKY's check, which needs no config
+#      symbol and no judgment at all: a vtable's relocations run at a 4-byte
+#      stride for exactly the table width and then jump. From 0x0213c8c4 the
+#      stride is 4 for THIRTY-FIVE consecutive steps -- 36 relocated words --
+#      and the step after 0x0213c950 is TWELVE, to 0x0213c95c. Five checks,
+#      four files (symbols.txt, the overlay image, relocs.txt twice over) and
+#      one answer.
+#
 #      NOTHING IN THIS FILE MAY CONTAIN AN UNBALANCED SQUARE BRACKET, and this
 #      paragraph is where the first draft had two of them. CMake reads a slice
 #      with file(STRINGS), and an unmatched opening square bracket makes that
@@ -270,11 +278,20 @@ src/func_ov006_020e93e8.c
 src/func_ov006_020e8d7c.c
 src/func_020179b4.c
 #
-# THE OTHER READER AND THE FOUR WRITERS OF THE FIELD, which are ordinary slice
-# lines and are only grouped here because they are what makes the field's six
-# source pairs make sense. func_ov006_020e7b44 is the RENDER half of the same
-# idle test and does NOT dispatch, so it needs no host copy.
-src/func_ov006_020e7b44.cpp
+# THE FOUR WRITERS OF THE FIELD, which are ordinary slice lines and are only
+# grouped here because they are what makes the field's six source pairs make
+# sense.
+#
+# THE OTHER READER IS NOT HERE, AND THE REASON IS A SECOND DEFECT.
+# func_ov006_020e7b44 is the RENDER half of the same idle test and does NOT
+# dispatch the field, so it needed no host copy for THAT -- but it dispatches
+# the sub-object's ModelAnim at +0xc through a six-virtual local shadow, which
+# is ROM numbering, and hal/cxxname_bridge.cpp deliberately does not dual-fill
+# _ZTV9ModelAnim slot 5 because that slot is a real Virtual18. It is the TU
+# that file's ModelAnim2 block says "trap-by-Virtual18 will name it if such a
+# TU ever appears" about. Host-copied in
+# port/unmatched/Mg3DEsp_ModelAnimRender_020e7b44.cpp; found by run mg9's
+# mandatory element-vtable check, not by a fault.
 src/func_ov006_020e7d7c.c
 src/func_ov006_020e7e74.c
 src/func_ov006_020e7fb0.c
