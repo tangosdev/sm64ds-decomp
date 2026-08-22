@@ -114,33 +114,49 @@
 // more that is this class's own: the source pairs share their span with
 // MgBoomBox_SpawnInfo, whose factory word the registry writes.
 //
-// ---- ONE HARD FLOOR, AND IT IS NOT IN THE nosrc COLUMN --------------------
+// ---- THE ONE HARD FLOOR IS RETIRED, run mg10 lane F367 --------------------
 //
 //   func_ov006_0211bc8c   slot 1 of data_ov006_02142df8, 0x2b8 bytes
 //
-// It has a config symbol, NO delink block (the gap 0x0211bc8c..0x0211bf44 is
-// exactly its symbol size) and NO src file in either extension anywhere in the
-// tree. port/mg_fanout_costs.txt section 3 lists this class at nosrc 0, and
-// that column is right: it is computed over VTABLE slots, and this floor is a
-// STATE. Section 13's CORRECTION 3 says the same thing from the other side --
-// "both of this class's 'is it a floor' questions were answered wrong by
-// looking at the STATE tables" -- and the general rule that survives both is
-// that the floor question has to be asked of every reachable address, not of
-// one axis. It is emitted below as a REPORTING case and never as a call, and
-// no symbol is invented for it.
+// Run mg9 shipped this address as a REPORTING case with no symbol invented for
+// it: config symbol, no delink block, no src file in either extension. It is
+// now src/func_ov006_0211bc8c.cpp, a BYTE MATCH on mwccarm 2004/b56 with all
+// fourteen relocation destinations checked against ov006's relocs.txt, and it
+// has a delink block covering exactly 0x0211bc8c..0x0211bf44. The switch below
+// routes it like the other fifty-five and the counter that used to say "asks
+// for the floor" now says "entries into state 1".
 //
-// AND IT IS THE FIRST STATE A TAP PRODUCES, WHICH MAKES ITS BOOT-TIME ZERO A
-// LIE OF THE KIND section 16 warns about. An unattended 1200-frame boot asks
-// for it ZERO times, and that zero says only that the floor is not in the way
-// of a BOOT. Driven: SM64DS_TOUCH_PROBE="100-104:64:32,160-164:128:32" pokes
-// two of the six pads, both records move from state 0 to state 1, the per-round
-// tap counter at +0x5624 reaches its own early-out of 2, and the SAME 300-frame
-// run reports 338 asks for 0x0211bc8c where the untouched one reported none.
-// So slot 1 of data_ov006_02142df8 is what a TAPPED PAD runs, and this class
-// cannot be played past its first tap until that body is decompiled. It is
-// dScMgPanel_c's "ONE MISSING BODY MANUFACTURES THE ENTRY INTO THE OTHER"
-// (section 14) with the entry manufactured by the PLAYER instead of by a
-// second gap.
+// WHY IT MATTERED, kept because it is the reason the run law calls a
+// trap-shaped floor worse than a missing one. An unattended 1200-frame boot
+// asked for it ZERO times, which said only that it was not in the way of a
+// BOOT. Driven -- SM64DS_TOUCH_PROBE="100-104:64:32,160-164:128:32" pokes two
+// of the six pads, both records move from state 0 to state 1, the per-round tap
+// counter at +0x5624 reaches its own early-out of 2 -- the SAME 300-frame run
+// reported 338 asks where the untouched one reported none. Every one of those
+// 338 was a pad tick that did nothing, so a tap changed the state byte and then
+// the pad froze: no press animation, no note, no sound. That is the whole of
+// what stood between this seat and a playable Boom Box.
+//
+// WHAT THE BODY DOES, so the next reader need not re-derive it. It runs the
+// press animation on the per-step timer at +0x50f0 against the eight-entry
+// frame table data_ov006_0212ef3c, stepping the sub-index at +0x50f7 from 0 to
+// 6 and returning each time. On the step that would make it 7 it clamps back to
+// 6 and COMMITS: the record moves to state 2 (func_ov006_0211bc68), the note
+// index at +0x50f8 plus one is appended to the 16-bit play log at +0x5610 with
+// the pad index packed into the high byte, the write cursor at +0x5625 advances,
+// +0x5614 is seeded 0x20, func_ov006_0211b654 fills up to three of the THIRTY
+// records with note entities -- which is what the second level-1 dispatcher then
+// ticks and draws -- and one of three arm9 sound entry points fires on vtable
+// slot 35 and the mode byte at +0x5627. The slot-35 call goes through a 36-slot
+// shadow class, so the receiver arrives in r0; this class has already produced
+// three receiver-drop defects and the byte match is what proves this is not a
+// fourth. Finally, on the SECOND tap of a round (+0x5624 == 1) it calls
+// func_ov006_020c2300 on the +0x4f38 sub-object.
+//
+// TWO SLICE LINES STOP BEING FREE. src/func_ov006_0211b654.c and
+// src/func_ov006_020c2300.c were in port/slice_box.txt reachable only from
+// 0x0211bd88 and 0x0211bf10, both inside this body, so /OPT:REF dropped them
+// and run mg9 budgeted them as +0 on the headline. They now have a caller.
 //
 // ---- ONE STATE IS A JOIN MISS AND IS NOT A FLOOR --------------------------
 //
@@ -153,7 +169,8 @@
 // port/unmatched/MgSound_ShadowSlot35.cpp rather than sliced. That file
 // carries the evidence.
 
-#include <cstdio>
+/* <cstdio> is gone with the floor's reporting case: this file prints nothing
+   now, it counts. The seat does the printing. */
 
 /* The eight-byte mwcc member pointer, in the only spelling that is true on
    both machines: two words, no member-pointer type anywhere. */
@@ -185,19 +202,22 @@ extern MgPmf data_ov006_02142cc0[];
 extern MgPmf data_ov006_02142d08[];
 extern MgPmf data_ov006_02142db0[];
 
-/* ---- the fifty-six reachable state bodies -------------------------------
+/* ---- the fifty-seven reachable state bodies ------------------------------
    Reached ONLY through the switch below: the pair words are mounted DATA
    holding DS addresses, so nothing else in the build names them and /OPT:REF
-   would drop every one of them without this file. The forty that are not
-   defined here or in MgSound_ShadowSlot35.cpp join port/slice_box.txt in the
-   same commit.
+   would drop every one of them without this file. The forty-one that are not
+   defined here or in MgSound_ShadowSlot35.cpp are in port/slice_box.txt.
+
+   FIFTY-SIX UNTIL RUN mg10 LANE F367. The fifty-seventh is 0x0211bc8c, which
+   run mg9 could only report; it now has a matched body and a slice line and is
+   declared and routed exactly like the rest.
 
    EVERY DECLARATION'S PARAMETER COUNT MATCHES ITS DEFINITION'S. The three
    spelled `(void)` below are empty bodies in src and are declared and called
    with no argument, which is the shape port/tools/aritycheck.py checks and the
    shape MgPanel_StateDispatch.cpp already uses for func_ov006_02104ec8. */
 void func_ov006_0211bf44(char *c, int i);   /* 02142df8 p0 */
-/* 02142df8 p1 is func_ov006_0211bc8c, THE FLOOR -- no symbol is invented */
+void func_ov006_0211bc8c(char *c, int i);   /* 02142df8 p1, was THE FLOOR */
 void func_ov006_0211bc68(char *c, int i);   /* 02142df8 p2 */
 void func_ov006_0211bbe0(char *c, int i);   /* 02142df8 p3 */
 int  func_ov006_0211ba88(char *c, int i);   /* 02142df8 p4, host copy */
@@ -277,15 +297,19 @@ void port_mg_sound_counts(unsigned *hits, unsigned *floor, unsigned *unknown,
 
 }  /* extern "C" */
 
-/* THE WITNESS, AND THE COUNTS ARE DISJOINT ON PURPOSE. A hit is a state this
-   class ROUTED TO A REAL BODY; a floor entry is the one address with no body;
-   unknown is a code word this switch does not know, which is the number that
-   convicts a missed dispatcher. MgPanel_StateDispatch.cpp records that an
-   earlier version of its own counter added floor entries to the hit count and
-   read "2508 routed" when 951 of those went nowhere; that mistake is not
-   repeated here -- the switch returns -1 for a floor and only +1 counts. */
+/* THE WITNESS. A hit is a state this class ROUTED TO A REAL BODY; unknown is a
+   code word this switch does not know, which is the number that convicts a
+   missed dispatcher.
+
+   THE SECOND COUNTER IS NO LONGER A FLOOR COUNT AND IS NOT SUBTRACTED FROM THE
+   HITS. Run mg9 kept it because 0x0211bc8c had no body and an ask for it went
+   nowhere; MgPanel_StateDispatch.cpp records reading "2508 routed" when 951 of
+   those had gone nowhere, and that mistake was not repeated. Since run mg10
+   lane F367 the address has a matched body, so it is counted BOTH as an
+   ordinary hit and here, and this counter's only job is to say how many of the
+   hits were the tapped-pad state. No case returns a negative any more. */
 static unsigned g_snd_hits;
-static unsigned g_snd_floor_02142df8;
+static unsigned g_snd_state1_0211bc8c;
 static unsigned g_snd_unknown;
 
 static int sound_try_1(void *self, unsigned code, int a)
@@ -294,6 +318,11 @@ static int sound_try_1(void *self, unsigned code, int a)
     switch (code) {
     /* data_ov006_02142df8, 5 slots, dispatched by func_ov006_0211b954 */
     case 0x0211bf44u: func_ov006_0211bf44(c, a);   return 1;
+    /* p1, run mg9's one hard floor, decompiled and routed by run mg10 lane
+       F367. The separate counter stays: it is the number that says a tap
+       produced an EXECUTION and not just an ask. */
+    case 0x0211bc8cu: ++g_snd_state1_0211bc8c;
+                      func_ov006_0211bc8c(c, a);   return 1;
     case 0x0211bc68u: func_ov006_0211bc68(c, a);   return 1;
     case 0x0211bbe0u: func_ov006_0211bbe0(c, a);   return 1;
     case 0x0211ba88u: func_ov006_0211ba88(c, a);   return 1;
@@ -365,23 +394,6 @@ static int sound_try_1(void *self, unsigned code, int a)
     case 0x02119dc4u: func_ov006_02119dc4(c, a);   return 1;
     case 0x02119d50u: func_ov006_02119d50(c, a);   return 1;
 
-    /* ---- THE FLOOR, REPORTED AND NEVER CALLED ---------------------------
-     *
-     * 0x0211bc8c is slot 1 of data_ov006_02142df8. It has a config symbol
-     * (0x2b8 bytes), no delink block and no src file in either extension. It
-     * is one of the ten per-entity states of the 0x14-stride array, so a class
-     * that asks for it loses one entity's tick and carries on; the count is
-     * the witness and this is the name. REPORTED ONCE, not once per entry, for
-     * MgPanel_StateDispatch.cpp's reason -- a per-entry line puts identical
-     * rows in the shipped playlog and says nothing the count does not. */
-    case 0x0211bc8cu:
-        if (++g_snd_floor_02142df8 == 1)
-            std::fprintf(stderr, "  [scene] dScMgSound_c FLOOR: state "
-                         "0x0211bc8c (slot 1 of data_ov006_02142df8) has no "
-                         "delink block and no src file in any extension. The "
-                         "state is not entered. (Reported once; the count is "
-                         "in the run report.)\n");
-        return -1;
     default:
         return 0;
     }
@@ -394,9 +406,7 @@ static int sound_try_1(void *self, unsigned code, int a)
 extern "C" void port_mg_sound_call1(void *self, unsigned code, int adj, int a)
 {
     if (code != 0 && adj == 0) {
-        const int r = sound_try_1(self, code, a);
-        if (r > 0) { ++g_snd_hits; return; }
-        if (r < 0) { return; }            /* the named floor, already counted */
+        if (sound_try_1(self, code, a) > 0) { ++g_snd_hits; return; }
     }
     if (code != 0)
         ++g_snd_unknown;
@@ -404,13 +414,18 @@ extern "C" void port_mg_sound_call1(void *self, unsigned code, int adj, int a)
 }
 
 
+/* THE SECOND PARAMETER IS STILL SPELLED `floor` SO THE SEAT'S CALL AND EVERY
+   OTHER CALLER'S KEEP THE SAME ABI ACROSS THIS CHANGE -- a six-argument
+   signature that changed arity here would be exactly the cross-TU drift
+   port/tools/aritycheck.py exists to catch. What it CARRIES changed: it is now
+   the number of entries into state 1, which run mg10 lane F367 decompiled. */
 extern "C" void port_mg_sound_counts(unsigned *hits, unsigned *floor,
                                      unsigned *unknown, unsigned *field_calls,
                                      unsigned *field_routed,
                                      unsigned *field_unknown)
 {
     if (hits)          *hits          = g_snd_hits;
-    if (floor)         *floor         = g_snd_floor_02142df8;
+    if (floor)         *floor         = g_snd_state1_0211bc8c;
     if (unknown)       *unknown       = g_snd_unknown;
     /* The FIELD counts come from the shared host copy now. The mapping is
        exact: its `calls` counts every entry as this file's did, its `routed`
