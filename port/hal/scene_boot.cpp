@@ -2218,6 +2218,19 @@ void port_scene_fill_curling2(void);
 extern unsigned char MgPuzzlePanelPuzzlePanic_SpawnInfo[];
 void *port_mg_panel_spawn(void);
 void port_scene_fill_panel(void);
+/* run mg9 lane BOO: dScMgTeresa_c, actor id 0x183, "Hide and Boo Seek". The
+   spawn symbol MgHideAndBooSeek carries the player title and the ROM's own
+   RTTI at 0x0213f9c0 -- reached through the type_info the word BEFORE the
+   vtable points at, relocs.txt from:0x0213fa08 to:0x0213f9b4 -- reads
+   "13dScMgTeresa_c", so the row is named for the class the way SCENE_MG_PANEL
+   and SCENE_MG_LUIGI are. Teresa is Boo's Japanese name, so the two witnesses
+   agree about what the class is and only the relocation is unfalsifiable.
+   Same reads_sublevel reasoning as every minigame row above, re-checked for
+   this class rather than copied: no relocation in ov006 lands on
+   data_02092110 and no TU in this class's closure names it. */
+extern unsigned char MgHideAndBooSeek_SpawnInfo[];
+void *port_mg_booseek_spawn(void);
+void port_scene_fill_booseek(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2344,6 +2357,29 @@ static const PortSceneClass port_scene_classes[] = {
        so appending is a rule this lane obeys rather than a hazard it needs. */
     {380, "SCENE_MG_PANEL", MgPuzzlePanelPuzzlePanic_SpawnInfo,
      port_mg_panel_spawn, port_scene_fill_panel, 0},
+    /* 387 is 0x183, spelled in decimal for the two reasons every row above
+       gives: the others are, and port/tools/battery.py reads its hosted-scene
+       set out of this table. APPENDED AFTER EVERY EXISTING ROW, which is the
+       rule port/mg_fanout_costs.txt section 11 derives from the once-per-
+       process constructor gate: this function walks the table in order and
+       calls every row's fill on every boot, while port_scene_mg_overlay_load
+       runs the thirty-five constructors ONCE PER PROCESS at the tail of the
+       FIRST minigame row's fill, so a row placed before an earlier class's
+       would have its fill run before those constructors read the mounted
+       .data.
+
+       FOR THIS CLASS THE RULE IS OBEYED RATHER THAN RELIED ON, and that is
+       measured rather than assumed. The width is 36 by all three of section
+       11's checks (span to data_ov006_0213fa9c is exactly 36 words, slot 35
+       holds the family's terminal 0x020ad660, and the word past the end is
+       0x00000001 rather than a code address), and the fourth check says the
+       hazard cannot arise at all: NO relocation anywhere in ov006 lands inside
+       0x0213fa0c..0x0213fa9c except the table's own type_info word, so no
+       overlay constructor reads any part of this table and there is no word
+       here for a fill to clobber ahead of a copy. port/slice_boo.txt carries
+       all four. */
+    {387, "SCENE_MG_BOOSEEK", MgHideAndBooSeek_SpawnInfo,
+     port_mg_booseek_spawn, port_scene_fill_booseek, 0},
     {0, 0, 0, 0, 0, 0},
 };
 

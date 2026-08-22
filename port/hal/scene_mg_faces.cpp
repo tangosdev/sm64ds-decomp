@@ -471,6 +471,31 @@ void port_mg_hud_scaled_number_020b2220(int x, int y, int num, int a3, int a4,
 /* no delink block and no src in their own overlay's config */
 int func_ov004_020ae858(void *)             { mg_trap("func_ov004_020ae858"); return 0; }
 
+/* ---- run mg9 lane BOO: a SECOND ov004 floor, and it lives here rather than
+ * in that lane's own hal file because it is the FAMILY's and not one class's.
+ * config/arm9/overlays/ov004/symbols.txt names func_ov004_020ae5c4 and sizes
+ * it 0x294; delinks.txt's block before it runs .text 0x020ae3b4..0x020ae5c4
+ * and covers no part of it; and no src file defines it in either extension or
+ * in any other module. SEVEN ov006 TUs across the family call it --
+ * func_ov006_020d1ba0, _020d2580, _020d3ba0, _0211f9fc, _0212157c, _02121d64
+ * and _02124088 -- so a per-lane copy of this line would become a duplicate
+ * symbol the day a second seat reaches one of them. dScMgTeresa_c reaches it
+ * through src/func_ov006_0211f9fc.c.
+ *
+ * THE SIGNATURE IS THE ROM'S, WHICH IS THE WHOLE POINT OF THE LINE ABOVE IT
+ * BEING WRONG FOR TWO RUNS. func_ov004_020b1710 and func_ov004_020b2220 both
+ * stood here taking (void *) while the ROM took four and seven arguments, and
+ * both silently dropped every one of them. This body takes SEVEN: r0..r3 plus
+ * three stack words, read off its own prologue --
+ *     push {r4,r5,r6,r7,r8,sb,sl,fp,lr} / sub sp,sp,#0x14
+ *     mov sb,r1 / str r3,[sp,#8] / mov r8,r2 / str r0,[sp,#4]
+ *     ldr r3,[sp,#0x3c] / ldr r7,[sp,#0x40] / ldr r3,[sp,#0x38]
+ * where 0x38, 0x3c and 0x40 are the first three words above the 0x24+0x14
+ * frame. src/func_ov006_0211f9fc.c declares it the same way and passes seven,
+ * so the count agrees from both ends. */
+int func_ov004_020ae5c4(int, int, int, int, int, int, int)
+{ mg_trap("func_ov004_020ae5c4"); return 0; }
+
 /* ---- SEATED, run mg7 lane L369 -----------------------------------------
  *
  * func_ov004_020b1710 IS NOT A TRAP ANY MORE, and it was the minigame HUD's
