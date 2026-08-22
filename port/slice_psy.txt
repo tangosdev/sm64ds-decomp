@@ -321,7 +321,11 @@ src/func_ov006_020e7aac.c
 src/func_ov006_020e7954.c
 src/func_ov006_020e7b0c.c
 src/func_ov006_020e7a50.cpp
-src/func_ov006_020e777c.cpp
+# src/func_ov006_020e777c.cpp IS OUT: the SECOND shadow-class Render dispatch
+# on a plain ModelAnim, and the one that was measured as a fault rather than
+# read. Host-copied in port/unmatched/Mg3DEsp_ModelAnimRender_020e777c.cpp,
+# whose header carries the nine-dispatch sweep of the whole class code block
+# that says these two are the only broken sites.
 src/func_ov006_020e7940.c
 src/func_ov006_020e794c.c
 src/func_ov006_020e792c.c

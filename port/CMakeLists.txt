@@ -4234,7 +4234,12 @@ set(SLICE_PSY_SOURCES hal/scene_mg_psycheout.cpp
                       # deliberately NOT dual-filled. The TU
                       # hal/cxxname_bridge.cpp says trap-by-Virtual18 will name
                       # if it ever appears.
-                      unmatched/Mg3DEsp_ModelAnimRender_020e7b44.cpp)
+                      unmatched/Mg3DEsp_ModelAnimRender_020e7b44.cpp
+                      # REPLACES src/func_ov006_020e777c.cpp, out of the slice:
+                      # the same defect one frame down, on the array of THREE
+                      # ModelAnims at the sub-object's +0x84. This one crashed
+                      # a rendered run; its sibling above was found by reading.
+                      unmatched/Mg3DEsp_ModelAnimRender_020e777c.cpp)
 foreach(line IN LISTS SLICE_PSY_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
