@@ -205,10 +205,6 @@ unsigned port_mg_memory2_state_hits(void);
 unsigned port_mg_memory2_floor_hits(void);
 unsigned port_mg_memory2_nonmatching(void);
 void     port_mg_memory2_field_counts(unsigned *calls, unsigned *hits);
-/* the named trap in unmatched/MgMemory2_Faces.cpp, section 3 there: this
-   class's ONE hard floor, on the Render path. Printed whether or not it
-   fired, so "the render path is complete" is never inferred from silence. */
-unsigned port_mg_memory2_trap_hits(void);
 /* the framework's, from unmatched/MgBase_StateDispatch.cpp */
 void     port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
 
@@ -466,14 +462,14 @@ extern "C" void port_scene_memory2_hits(void)
                     fcalls, fhits, calls, unknown);
     }
 
-    /* THE ONE HARD FLOOR, REPORTED WHETHER OR NOT IT FIRED. func_ov006_020f5b98
-       is the sixth call vtable slot 9 (Render) makes, and it has a config
-       symbol, no delink block and no src in either extension. A zero here means
-       Render never got that far on this run, not that the render path is
-       complete. */
-    std::printf("[scene] dScMgMemory2_c floor: the Render callee "
-                "0x020f5b98 (NO SOURCE) trapped %u time(s)\n",
-                port_mg_memory2_trap_hits());
+    /* THE FLOOR THAT USED TO BE HERE. func_ov006_020f5b98 is the sixth call
+       vtable slot 9 (Render) makes, and it is the only code in this class that
+       draws a card. It has a config symbol, still no delink block, and now a
+       src TU: src/func_ov006_020f5b98.c, carried by port/slice_mem.txt. The
+       line stays so a reader of an old log and a reader of a new one are
+       looking at the same place. */
+    std::printf("[scene] dScMgMemory2_c floor: the Render callee 0x020f5b98 is "
+                "DECOMPILED (src/func_ov006_020f5b98.c) and no longer trapped\n");
 
     /* The two state indexes the ROM's own dispatchers read, at the offsets
        disassembled in unmatched/MgMemory2_StateDispatch.cpp section 2. +0x53d4
