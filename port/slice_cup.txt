@@ -1,0 +1,302 @@
+# Gate CUP: dScMgCup_c -- the minigame the ROM calls "TOX BOX SHUFFLE".
+# Actor id 0x169 = scene 361. Run mg9, lane CUP.
+#
+# THE TITLE IS DERIVED, by run mg9 lane S371's method, and CONTROLLED. The
+# chain: scene 361 = id 0x169 -> ov005 ROW 23 (the only row of the thirty-six
+# carrying this id, so no menu-position ambiguity here) -> that row's +0x04
+# word, param 0x000b1700 -> (param >> 16) & 0xff = 11 -> data_ov004_020bc070[11]
+# = 559 -> message 559 of data/message/msg_data_eng.bin (LZ77 type 0x10, 91712
+# bytes; MESGbmg1 / INF1 711 entries of 64 / DAT1) = "Tox Box Shuffle", "Oh,
+# no! Yoshi's trapped in a Tox Box!". The 559 is cross-checked against the LIVE
+# object's +0x465e on a running scene-361 boot, which reads 559 too. The same
+# chain over every ALREADY-SEATED id reproduces its known title exactly,
+# including both rows of the three duplicated ids -- that control is what makes
+# this a derivation. The text is a glyph-index stream, not ASCII ('A' = 0x0a,
+# 'a' = 0x2d, space = 0x4d), which is why ASCII sweeps never found these names.
+#
+# THE PREDECESSOR ARTIFACT IS port/slice_mga361.txt AND IT IS SUPERSEDED BY
+# THIS FILE, not deleted. Run link60 lane MGA derived that closure against a
+# tree at 5831/11250 and deliberately wired none of it -- "THIS FILE IS IN NO
+# TARGET ... wiring a slice whose faces are not written yet does not half-seat
+# a class, it breaks the link for every lane sharing the branch". This file is
+# the seat that finishes that job. What MGA's list got RIGHT is most of it;
+# what it got wrong is in section 5 below and is worth more to the next lane.
+#
+# Read port/mg_fanout_costs.txt section 12 first (the ten ROM adjudications,
+# already paid) and section 11 second (the vtable WIDTH correction, which was
+# FOUND on this class and is load-bearing for it: a 37-slot fill here writes a
+# host thunk over a word CURLING's own overlay constructor copies).
+#
+# ---- 1. THE CLASS, DERIVED FROM RELOCATIONS -------------------------------
+#
+# Section 12 reads the hierarchy off the two deleting destructors. This lane
+# used the STRONGER chain lane PPP prescribes -- the type_info records, whose
+# every edge is a relocation and therefore cannot be a per-TU placeholder
+# spelling:
+#
+#   relocs.txt  from:0x0213c150 kind:load to:0x0213c048   (word before vtable)
+#   0x0213c048 = { 0x0209a764 __si_class_type_info,
+#                  0x0213c054 -> "10dScMgCup_c",
+#                  0x0213bc64 -> the BASE record }
+#   relocs.txt  from:0x0213e444 kind:load to:0x0213bc64   (word before the
+#                                                          MIDDLE vtable, the
+#                                                          same record)
+#   0x0213bc64 = { 0x0209a764,
+#                  0x0213bd00 -> "19dScMgSingle3DBase_c",
+#                  0x020bbf6c -> ov004 }
+#   0x020bbf6c = { 0x0209a764, 0x020bbf84 -> "11dScMgBase_c", ... }
+#
+#     Scene -> dScMgBase_c         0x020bc0c0  36  (ov004, curling's fill)
+#           -> dScMgSingle3DBase_c 0x0213e448  36  ovr 8,  mark 6,  nosrc 0
+#           -> dScMgCup_c          0x0213c154  36  ovr 13, mark 9,  nosrc 0
+#
+#   SpawnInfo  data_ov006_0213c020 = { factory 0x020e0574, 0x01690169 }
+#   factory    func_ov006_020e0574, 0xc0
+#   .init ctor __sinit_ov006_021303d0
+#
+# THE OVERRIDE ARITHMETIC, so it can be checked rather than believed. The
+# derived table differs from dScMgBase_c's in 13 slots: 0, 2, 5, 6, 7, 9, 10,
+# 16, 17, 18, 20, 26, 33. SIX of those (2, 5, 7, 10, 26, 33) hold the MIDDLE
+# base's body unchanged and SEVEN (0, 6, 9, 16, 17, 18, 20) are this class's
+# own. 6 + 7 = 13, and port/tools/vtablerows.py --vtable 0x0213c154 --width 36
+# reads ovr 13 / mark 9 / nosrc 0 out of the ROM independently, which is
+# section 3's row exactly.
+#
+# DISTINCT OVERRIDE BODIES ACROSS THE TWO NEW TABLES IS FIFTEEN, NOT SIXTEEN,
+# and section 12's "Sixteen distinct override bodies ... ten carrying the
+# marker" is high by one on the first number. The middle table contributes 8
+# (0210a6e4, 0210a608, 0210a698, 0210a664, 0210a4b0, 0210a4e8, 0210a600,
+# 0210a708) and this class contributes 7 (020e0308, 020e0204, 020e0068,
+# 020de988, 020dea1c, 020dfeec, 020dfed4); 8 + 7 = 15 and no body is in both
+# sets. THE TEN IS EXACT and is the number that costs anything: the marker
+# bodies are 020dea1c, 020dfed4, 020e0204, 020e0308, 0210a4e8, 0210a600,
+# 0210a608, 0210a664, 0210a698 and 0210a6e4, and all ten are ruled REAL_DECOMP
+# in port/tools/inferred_stub_adjudicated.txt (rows 290-299). Cross-check:
+# this class's own marker count is 4 and the six it inherits contribute 5, so
+# the derived table reads mark 9; the middle table reads mark 6; the union of
+# distinct marker BODIES is 4 + 6 = 10. Nothing was re-adjudicated by this
+# lane and nothing needed to be.
+#
+# ---- 2. THE THREE WIDTH CHECKS, RE-RUN ------------------------------------
+#
+#   1. SPAN. config/arm9/overlays/ov006/symbols.txt:
+#        data_ov006_0213c154 -> next symbol data_ov006_0213c1e4 = 0x90 = 36
+#        data_ov006_0213e448 -> next symbol data_ov006_0213e4d8 = 0x90 = 36
+#      An UPPER bound only, so it refuses a width and never grants one.
+#   2. TERMINAL SLOT. Slot 35 holds 0x020ad660 on both tables, which every
+#      dScMgBase_c-derived table holds.
+#   3. WHAT THE WORD PAST THE END IS. On the middle table, 0x050a0a0f -- the
+#      first word of data_ov006_0213e4d8, and the same reading
+#      hal/scene_mg_memory2.cpp took. On THIS table it is 0x020e0a24 followed
+#      by 0x00000000, an mwcc {code, adjustment} PAIR, and
+#      src/__sinit_ov006_021304ac.c line 75 copies it:
+#
+#          data_ov006_02141930.p2 = data_ov006_0213c1e4;
+#
+#      That is CURLING's overlay constructor filling curling's state table
+#      0x02141930 slot 2, whose address port/unmatched/MgCurling_StateDispatch
+#      .cpp independently lists as 020e0a24. Re-read out of
+#      extracted/overlays/overlay_0006.bin at base 0x020bfec0 and re-checked
+#      against that sinit line by this lane rather than cited from section 11.
+#      A 37-slot fill here corrupts the minigame that has shipped longest.
+#
+#   A PROPOSED FIFTH CHECK FAILS ON THIS CLASS, IN THE GRANTING DIRECTION.
+#   Run mg9 lane LKY offered one that "needs no symbols and no judgment": the
+#   vtable's relocation stride runs at 4 bytes for exactly the table width and
+#   then jumps to 8. Read off config/arm9/overlays/ov006/relocs.txt:
+#
+#     dScMgFlower_c       0x02140140   36 consecutive 4-byte relocs   -> 36 ok
+#     dScMgSingle3DBase_c 0x0213e448   36, then a gap of 12           -> 36 ok
+#     dScMgCup_c          0x0213c154   37, then a gap of 8            -> 37 WRONG
+#
+#   The run does not stop at the end of this table because the word past the
+#   end IS ITSELF A RELOCATED CODE WORD at the next four-byte boundary --
+#   0x0213c1e4 is the mwcc pair's code half -- so its relocation continues the
+#   stride, and the 8-byte gap the check looks for arrives one slot late, after
+#   the pair's zero adjustment. The check therefore reads 37 on exactly the
+#   class section 11's hazard was found on. Fine as a confirmation when it
+#   agrees with the span; never a substitute for it.
+#
+# ---- 3. THE STATE MACHINE IS ONE TABLE AND ONE LEVEL DEEP -----------------
+#
+#     python port/tools/stategen.py --sinit src/__sinit_ov006_021303d0.c \
+#            --overlay 6
+#
+#     ov006: 1 table(s), 8 slot(s), 8 distinct state address(es)
+#     data_ov006_02141870  n 8  arity 0
+#       020dfd48 020dfcd8 020df5b8 020df540 020df3bc 020df28c 020df1c0 020df1bc
+#     REFUSALS: none
+#
+# All eight have matched src TUs and all eight are in the list below, so this
+# class has NO state floor. The DEPTH check port/mg_fanout_costs.txt section 14
+# prescribes -- "is any state address also in the dispatcher list" -- comes back
+# no: none of the eight state TUs holds a member-pointer dispatch, a sweep
+# token or a second stategen table. dScMgPanel_c cost eleven host copies
+# because its machine was two levels deep; this one is one level.
+#
+# ARITY 0 IS READ OFF THE ROM. func_ov006_020e0204 sets no r1 before its
+# blx r1, so the callee is passed the advanced this and nothing else, and
+# all eight src signatures agree (seven char *, one (void) for the 4-byte
+# bx lr body at 0x020df1bc). Every adjustment word is 0.
+#
+# ---- 4. THE WALL IS TWO TUs, AND SECTION 12 SAYS IT IS ONE ----------------
+#
+# THE LARGEST FINDING OF THIS LANE. port/tools/inferred_stub_adjudicated.txt's
+# row for func_ov006_020e0204 calls it "the class ONLY pointer-to-member
+# dispatch site", and port/slice_mga361.txt section 4 says "exactly ONE TU
+# dispatches it ... Curling needs five host copies; this needs one" and then
+# lists src/func_ov006_020c2b8c.cpp as an ORDINARY SLICE LINE.
+#
+# Both sentences are true of the class's own STATE TABLE and false of the
+# class. The Behavior's second-to-last statement is
+#
+#     func_ov006_020c2b8c(o + 0x4f38);
+#
+# and src/func_ov006_020c2b8c.cpp is
+#
+#     struct C; typedef void (C::*PMF)(); struct C { PMF pmf; };
+#     void func_ov006_020c2b8c(C* c) {
+#         func_ov006_020c2be8(c);
+#         if (c->pmf) (c->*(c->pmf))();
+#         ...
+#
+# -- section 4's SECOND silent shape, a member pointer held in a FIELD of the
+# object, which emits no global for any link to name. The ROM at 0x020c2b8c is
+# the five-instruction Itanium sequence verbatim with the null guard in front
+# of it (the disassembly is in port/unmatched/MgCup_SubDispatch.cpp's header).
+# On MSVC c->pmf is a four-byte read of word 0 of the mounted sub-object -- a
+# raw DS code address -- and the first frame the Behavior runs it jumps there.
+#
+# THE LESSON IS NOT "SECTION 12 WAS SLOPPY". Lane MGA published a closure and
+# wired none of it, so nothing ever RAN, and section 4's own conclusion is that
+# only a run convicts this shape. What a later lane should take from it: a
+# derivation that has never been executed can be complete on every axis it
+# measured and still be missing a dispatcher, and the cheap re-check when you
+# pick such a derivation up is to sweep ITS OWN LIST for a member-pointer
+# dispatch before wiring it. That sweep is what found this, in the first minute
+# of this lane's slice work.
+#
+# THE FOUR SUB-OBJECT ADDRESSES, from the pairs at 0x0213adb8..0x0213adf8, each
+# cross-checked against its load relocation in ov006's relocs.txt:
+#
+#   0213adc0 {020c24e4, 0}  written by func_ov006_020c2594
+#   0213adc8 {020c27c4, 0}  written by func_ov006_020c2848
+#   0213adf0 {020c263c, 0}  written by func_ov006_020c2664
+#   0213adf8 {020c23a8, 0}  written by func_ov006_020c2440
+#   0213adb8 {020c27c4, 0}  NOT a state -- the idle SENTINEL that
+#                           src/func_ov006_020c2994.c compares the live pair
+#                           against BY VALUE, which is why the stored words are
+#                           routed at the dispatch site and never rewritten
+#
+# Four distinct code words (020c27c4 is both 0213adc8's and the sentinel's),
+# all four matched, all four added to the list below. Two more pairs in the
+# same block (0213add0 {020c22d8,0}, 0213ade0 {020c26f4,0}) have writers that
+# are in NO part of this class's closure and are deliberately unrouted; the
+# switch reports them by address if one ever appears.
+#
+# ---- 5. WHAT THIS LIST IS, AGAINST MGA's ----------------------------------
+#
+# MGA's list is 68 lines. On the mg9 base (c693e8952, 6665/11283) EIGHTEEN of
+# them are already compiled into walk_window by other lanes' slices -- the six
+# 0x0210a6xx middle-base bodies arrived with the flower and memory2 seats -- so
+# they are not repeated here. FIVE more are removed:
+#
+#   src/func_ov006_020e0574.cpp  the FACTORY. Host-copied in
+#       port/unmatched/MgCup_Factory.cpp because it calls the base constructor
+#       with NO argument and the callee writes three vtable words through the
+#       pointer it never received. That header is the displacement ruling
+#       section 12 grants to "whichever lane seats 361".
+#   src/func_ov006_020e0204.cpp  the BEHAVIOR, the table dispatcher. Host-copied
+#       in port/unmatched/MgCup_StateDispatch.cpp. (MGA had already removed it,
+#       so it is not one of the sixty-eight.)
+#   src/func_ov006_020c2b8c.cpp  the SUB-OBJECT dispatcher, section 4 above.
+#       Host-copied in port/unmatched/MgCup_SubDispatch.cpp.
+#   src/func_ov006_0210a6e4.cpp  vtable slot 2, the argument ride-through.
+#       port/unmatched/MgFlower_Slot2.cpp host-copies it as
+#       port_mg_flower_after_init and this seat CALLS that rather than writing
+#       a second; listing the src line would be an LNK2005 against it. MGA's
+#       list predates that host copy.
+#   src/func_ov004_020b0620.cpp  MGA's "1 COMPILE FIX" (C2733 against
+#       include/decl_common.h). Retired: port/unmatched/MgBase_Slot7.cpp
+#       host-copies that body, so the src line is not wanted and the compile
+#       error cannot happen.
+#
+# and FIVE are added: the four sub-object state bodies above plus
+# src/func_ov006_020c2984.c, which three of them call.
+#
+#   68 - 18 already compiled in - 4 removed from the sixty-eight + 5 added
+#   = 51 lines.
+#
+# MGA's OTHER THREE FRONTIER ITEMS ARE ALL RETIRED by later lanes and this
+# lane re-checked each against build/port/walk_window.map rather than assuming:
+# data_ov004_020beb6c and data_ov004_020beb74 are hosted, and the named trap
+# for func_ov004_020b0e84 stands. Its "2 NAME-SPELLING FACES"
+# (?data_ov006_0213c154@@3PAXA and ?data_ov006_0213e448@@3PAXA) also vanish,
+# because they came from the FACTORY declaring both vtables outside its
+# extern "C" block and the factory is host-copied -- MgCup_Factory.cpp declares
+# them at the C linkage the mount defines them with. The two destructors that
+# also name the tables, src/func_ov006_020de988.cpp and _020dea1c.cpp, declare
+# them INSIDE extern "C" and need nothing.
+#
+# port/tools/closure.py over this list against this tree's walk_window.map:
+# 0 COMPILE FAILURES, 0 UNRESOLVED, 0 DUP-DEF. ONE probe wave, which is the
+# fan-out dividend section 14 predicts for a class after the framework half is
+# paid, not this lane's skill.
+#
+# ---- 6. WHAT THIS SEAT DOES NOT CLAIM -------------------------------------
+#
+# NO FRAME HAS BEEN LOOKED AT. The runs render and the census counts the render
+# slot, but nobody has held this next to a DS. TOUCH IS UNMEASURED: this is a
+# shell game and whether it can leave its first states without a stylus is not
+# something a headless run can say. Section 9's notes stand for this class too.
+#
+# ---- the list ---------------------------------------------------------------
+src/func_02012174.c
+src/func_ov004_020b2574.c
+src/func_ov004_020b6808.c
+src/func_ov006_020c225c.c
+src/func_ov006_020c2290.c
+src/func_ov006_020c23a8.cpp
+src/func_ov006_020c2440.cpp
+src/func_ov006_020c24e4.cpp
+src/func_ov006_020c2594.c
+src/func_ov006_020c263c.c
+src/func_ov006_020c2664.c
+src/func_ov006_020c27c4.cpp
+src/func_ov006_020c2848.cpp
+src/func_ov006_020c2924.cpp
+src/func_ov006_020c2984.c
+src/func_ov006_020c2994.c
+src/func_ov006_020c2be8.c
+src/func_ov006_020c3050.c
+src/func_ov006_020c3288.c
+src/func_ov006_020c33dc.c
+src/func_ov006_020de988.cpp
+src/func_ov006_020dea1c.cpp
+src/func_ov006_020deac4.c
+src/func_ov006_020deac8.c
+src/func_ov006_020deaf0.c
+src/func_ov006_020deb48.c
+src/func_ov006_020debb4.c
+src/func_ov006_020debfc.c
+src/func_ov006_020dec3c.c
+src/func_ov006_020dec5c.c
+src/func_ov006_020dec88.cpp
+src/func_ov006_020ded00.c
+src/func_ov006_020ded84.c
+src/func_ov006_020dedfc.c
+src/func_ov006_020deed8.c
+src/func_ov006_020df024.c
+src/func_ov006_020df1bc.c
+src/func_ov006_020df1c0.cpp
+src/func_ov006_020df28c.c
+src/func_ov006_020df3bc.c
+src/func_ov006_020df540.c
+src/func_ov006_020df5b8.c
+src/func_ov006_020dfcd8.c
+src/func_ov006_020dfd48.c
+src/func_ov006_020dfed4.c
+src/func_ov006_020dfeec.c
+src/func_ov006_020e0068.c
+src/func_ov006_020e0308.cpp
+src/func_ov006_020e0634.c
