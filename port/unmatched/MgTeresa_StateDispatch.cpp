@@ -93,27 +93,30 @@
 // mount's tables have been correct all along -- section 4's "only the
 // CONSUMERS were wrong".
 //
-// ---- ONE FLOOR IS IN A TABLE, AND IT IS REPORTED, NEVER CALLED -----------
+// ---- THE ONE FLOOR IN A TABLE IS RETIRED (run mg10, lane F387) -----------
 //
 //   0x0211ebdc   slot 7 of data_ov006_02142ed8, size 0x258.
 //
-// config/arm9/overlays/ov006/symbols.txt names it and
-// config/arm9/overlays/ov006/delinks.txt covers no part of it -- the block
-// before it runs .text 0x0211eb90..0x0211ebdc -- and no src file defines it in
-// either extension or in any other module. port/tools/stategen.py refuses it
-// under REFUSALS. It is emitted below as a REPORTING case and never as a call,
-// and no symbol is invented for it. That is curling's func_ov006_020e1854
-// shape, and this lane does not transcribe it either.
+// Run mg9 emitted this address as a REPORTING case that returned -1 and never
+// called anything, because no src file defined it. It is decompiled now:
+// src/func_ov006_0211ebdc.c byte-matches the ROM under mwccarm 2004/b56 and
+// passes tools/linkcheck.py VERIFIED with zero blind relocations. The case
+// below is an ordinary call in the data_ov006_02142ed8 group beside its
+// sibling 0x0211ee34, and THE FLOOR COUNTER IS GONE RATHER THAN LEFT READING
+// ZERO -- a counter nothing can increment is not a measurement, and the number
+// that still means something is the routed one, which absorbs this state's
+// asks (539 over 1200 frames on the mg9 proof runs).
 //
-// THIS CLASS'S OTHER TWO FLOORS ARE NOT IN THIS FILE. func_ov006_0211e72c is
-// on the RENDER path (the sixth call vtable slot 9 makes) and gets its named
-// trap in hal/scene_mg_booseek.cpp; func_ov004_020ae5c4 is ov004's and gets
-// its trap in hal/scene_mg_faces.cpp beside func_ov004_020ae858. Section 13's
-// CORRECTION 3 is the reason the render one was looked for at all: both of
-// dScMgMemory2_c's "is it a floor" questions were answered wrong by looking at
-// the STATE tables, and the real floor was in a vtable body's own callees.
+// THE OTHER TWO FLOORS. func_ov006_0211e72c was on the RENDER path (the sixth
+// call vtable slot 9 makes) and is ALSO retired by this lane --
+// src/func_ov006_0211e72c.c, same two gates -- so hal/scene_mg_booseek.cpp no
+// longer carries a trap either. func_ov004_020ae5c4 is ov004's, is still a
+// floor, and still gets its trap in hal/scene_mg_faces.cpp beside
+// func_ov004_020ae858; seven ov006 TUs across the family reach it, so it is
+// not this class's to retire.
 
-#include <cstdio>
+/* <cstdio> was included here for the floor's one-shot report; with the floor
+   retired this file prints nothing at all and the seat owns the whole report. */
 
 /* The eight-byte mwcc member pointer, in the only spelling that is true on
    both machines: two words, no member-pointer type anywhere. */
@@ -168,6 +171,7 @@ void func_ov006_0211f1a4(char *c, int i);
 void func_ov006_0211f0d0(char *c, int i);
 void func_ov006_0211f040(char *c, int i);
 void func_ov006_0211ee34(char *c, int i);
+void func_ov006_0211ebdc(char *c, int i);   /* mg9's floor, decompiled in mg10 */
 
 /* data_ov006_02142f18, arity 1 */
 void func_ov006_0211d4e8(char *c, int i);
@@ -190,19 +194,23 @@ void func_ov006_0211dd0c(char *c);
 void func_ov006_0211f6fc(char *c);
 void func_ov006_0211d5a8(char *c);
 
-void port_mg_teresa_counts(unsigned *hits, unsigned *floor, unsigned *unknown);
+void port_mg_teresa_counts(unsigned *hits, unsigned *unknown);
 void port_mg_teresa_state_index(int *l1);
 
 }  /* extern "C" */
 
-/* THE WITNESS, AND THE THREE COUNTS ARE DISJOINT ON PURPOSE. A hit is a state
-   this class ROUTED TO A REAL BODY; a floor entry is the one address with no
-   decompiled body; unknown is a code word neither switch knows, which is the
-   number that convicts a missed dispatcher. dScMgPanel_c's first version
-   counted a floor entry as a hit and read 2508 routed when 951 had gone
-   nowhere -- so the switches return -1 for a floor here and only +1 counts. */
+/* THE WITNESS, AND THE TWO COUNTS ARE DISJOINT ON PURPOSE. A hit is a state
+   this class ROUTED TO A REAL BODY; unknown is a code word neither switch
+   knows, which is the number that convicts a missed dispatcher. dScMgPanel_c's
+   first version counted a floor entry as a hit and read 2508 routed when 951
+   had gone nowhere, which is why the two were ever separated.
+
+   THERE WAS A THIRD COUNTER UNTIL RUN mg10 and it is gone rather than pinned
+   at zero: it counted asks for 0x0211ebdc, the one state address with no
+   decompiled body, and that address has one now. The rule the third counter
+   enforced still holds -- a switch returns +1 only for a body it actually
+   called -- and it is the rule, not the counter, that was load-bearing. */
 static unsigned g_teresa_hits;
-static unsigned g_teresa_floor_ed8;
 static unsigned g_teresa_unknown;
 static char *g_teresa_self;
 
@@ -239,6 +247,10 @@ static int teresa_try_1(void *self, unsigned code, int a)
     case 0x0211f0d0u: func_ov006_0211f0d0(c, a); return 1;
     case 0x0211f040u: func_ov006_0211f040(c, a); return 1;
     case 0x0211ee34u: func_ov006_0211ee34(c, a); return 1;
+    /* slot 7, run mg9's reported floor, decompiled by run mg10 lane F387.
+       0x0211ee34 above is slot 6 of the same table and the two read the same
+       record fields, which is the cross-check on the layout. */
+    case 0x0211ebdcu: func_ov006_0211ebdc(c, a); return 1;
     /* data_ov006_02142f18 */
     case 0x0211d4e8u: func_ov006_0211d4e8(c, a); return 1;
     case 0x0211d368u: func_ov006_0211d368(c, a); return 1;
@@ -249,22 +261,6 @@ static int teresa_try_1(void *self, unsigned code, int a)
     case 0x0211ce94u: func_ov006_0211ce94(c, a); return 1;
     case 0x0211ce90u: func_ov006_0211ce90();     return 1;
     case 0x0211cd24u: func_ov006_0211cd24(c, a); return 1;
-
-    /* ---- THE ONE FLOOR IN A TABLE, REPORTED AND NEVER CALLED ------------
-     *
-     * REPORTED ONCE, not once per entry. 0x0211ebdc is slot 7 of
-     * data_ov006_02142ed8, which func_ov006_0211f6fc dispatches once per live
-     * record per frame, so a per-entry line would put up to sixteen identical
-     * rows a frame in the shipped playlog and say nothing the count does not.
-     * The count is the witness; this is the name. */
-    case 0x0211ebdcu:
-        if (++g_teresa_floor_ed8 == 1)
-            std::fprintf(stderr, "  [scene] dScMgTeresa_c FLOOR: state "
-                         "0x0211ebdc (slot 7 of data_ov006_02142ed8, size "
-                         "0x258) has no delink block and no src file. The "
-                         "state is not entered. (Reported once; the count is "
-                         "in the run report.)\n");
-        return -1;
     default:
         return 0;
     }
@@ -279,7 +275,12 @@ extern "C" void port_mg_teresa_call0(void *self, unsigned code, int adj)
     if (code != 0 && adj == 0) {
         const int r = teresa_try_0(self, code);
         if (r > 0) { ++g_teresa_hits; return; }
-        if (r < 0) { return; }            /* a named floor, already counted */
+        /* -1 is the tri-state's "a named floor, already reported". NOTHING IN
+           THIS CLASS RETURNS IT ANY MORE -- run mg10 decompiled the one address
+           that did -- and the arm is kept rather than deleted so a future floor
+           in this class lands on the shape the other seats use instead of being
+           silently counted as unknown. */
+        if (r < 0) { return; }
     }
     if (code != 0)
         ++g_teresa_unknown;
@@ -298,11 +299,9 @@ extern "C" void port_mg_teresa_call1(void *self, unsigned code, int adj, int a)
     port_mg_call1(self, code, adj, a);
 }
 
-extern "C" void port_mg_teresa_counts(unsigned *hits, unsigned *floor,
-                                      unsigned *unknown)
+extern "C" void port_mg_teresa_counts(unsigned *hits, unsigned *unknown)
 {
     if (hits)    *hits    = g_teresa_hits;
-    if (floor)   *floor   = g_teresa_floor_ed8;
     if (unknown) *unknown = g_teresa_unknown;
 }
 

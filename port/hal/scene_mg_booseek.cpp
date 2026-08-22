@@ -70,39 +70,44 @@
 // compiles, a `::*` sweep sees it but a face generator does not, and it would
 // stride an eight-byte table by four. The face below points at the host copy.
 //
-// ---- 5. ONE NAMED TRAP, AND IT IS ON THE RENDER PATH ----------------------
+// ---- 5. THE RENDER TRAP IS RETIRED (run mg10, lane F387) ------------------
 //
-// func_ov006_0211e72c, ov006, size 0xac. It is the SIXTH call vtable slot 9
-// (Render) makes: src/func_ov006_02120348.c runs func_ov004_020b1e34, then
-// 0211ddcc, 0211e29c, 0211e460, 0211e118, and then this one.
-// config/arm9/overlays/ov006/symbols.txt names it;
-// config/arm9/overlays/ov006/delinks.txt covers no part of it (the block
-// before runs .text 0x0211e658..0x0211e72c and the next starts at
-// 0x0211e7d8); and no src file defines it in either extension or in any other
-// module, so the module-residency trap section 13's CORRECTION 3 records was
-// checked and is not the answer here.
+// func_ov006_0211e72c, ov006, size 0xac, the SIXTH call vtable slot 9 (Render)
+// makes: src/func_ov006_02120348.c runs func_ov004_020b1e34, then 0211ddcc,
+// 0211e29c, 0211e460, 0211e118, and then this one.
 //
-// IT GETS A TRAP AND DELIBERATELY NOT A PLAUSIBLE BODY.
+// Run mg9 gave it a counted trap because no src file defined it and
 // port/tools/inferred_stub_guard.py exists to refuse the invention that would
-// go here. What the trap costs is measurable rather than mysterious:
-// disassembled at base 0x020bfec0 the body walks records off self+0x4000,
-// reads a gate byte at +0x467a and holds 0x1000 and -1 in registers across the
-// loop, so with it trapped whatever it draws is simply not drawn. The class
-// boots, ticks and renders everything else.
+// otherwise go in its place. mg9's own measurement of what that cost was
+// exactly right and is worth keeping in view now that the bill has been paid:
+// the trap ran 300 times in a 300-frame run and 1200 times in a 1200-frame run
+// and did nothing each time, so THE CLASS HAS BEEN DRAWING EVERYTHING EXCEPT
+// THE BOOS.
 //
-// SECTION 13's CORRECTION 3 IS WHY IT WAS LOOKED FOR AT ALL. Both of
-// dScMgMemory2_c's "is it a floor" questions were answered wrong by looking at
-// the STATE tables, where section 4 points a reader, and its real floor was in
-// a vtable body's own callees. The check that finds one is a delinks join over
-// every callee of every override, and that is the check that found this.
+// It is decompiled: src/func_ov006_0211e72c.c byte-matches the ROM under
+// mwccarm 2004/b56 and passes tools/linkcheck.py VERIFIED with zero blind
+// relocations. It is a plain OAM sprite loop over the sixteen 0x24-stride
+// records at this + 0x4660 -- gate byte at +0x1a, x and y at +0x00 and +0x04,
+// one OAM::Render per live record out of the fourteen-pointer sprite table
+// data_ov006_0213a964, indexed facing * 7 + frame. So there is no trap in this
+// file any more and the slice carries the body instead.
 //
-// THE OTHER TWO FLOORS ARE NOT IN THIS FILE. func_ov006_0211ebdc is a state
-// and is reported by the address switch in unmatched/MgTeresa_StateDispatch.
-// cpp; func_ov004_020ae5c4 is ov004's and its trap goes in
-// hal/scene_mg_faces.cpp beside func_ov004_020ae858, which is where this
-// family's ov004 traps live. Seven ov006 TUs across the family call it, so a
-// per-lane copy of that trap would be a duplicate symbol the day a second lane
-// reaches it.
+// SECTION 13's CORRECTION 3 IS WHY IT WAS LOOKED FOR AT ALL, and that stands
+// whether or not the floor is retired. Both of dScMgMemory2_c's "is it a
+// floor" questions were answered wrong by looking at the STATE tables, where
+// section 4 points a reader, and its real floor was in a vtable body's own
+// callees. The check that finds one is a delinks join over every callee of
+// every override, and that is the check that found this.
+//
+// THE OTHER TWO FLOORS. func_ov006_0211ebdc is a state, was reported by the
+// address switch in unmatched/MgTeresa_StateDispatch.cpp, and is retired by
+// this same lane -- src/func_ov006_0211ebdc.c, same two gates. It is the body
+// that drives the byte at +0x1e the loop above picks the sprite ROW with, so
+// the two were always one piece of work. func_ov004_020ae5c4 is ov004's, is
+// STILL A FLOOR, and its trap stays in hal/scene_mg_faces.cpp beside
+// func_ov004_020ae858, which is where this family's ov004 traps live. Seven
+// ov006 TUs across the family call it, so a per-lane copy of that trap would
+// be a duplicate symbol the day a second lane reaches it.
 //
 // ---- 6. THE TWO ALIAS ROWS ------------------------------------------------
 //
@@ -178,7 +183,7 @@ void  func_ov006_021200dc(int self, int cx, int cy, int val, int n);
 void *MgHideAndBooSeek_Spawn(void);
 
 /* the state machine's witnesses, from unmatched/MgTeresa_StateDispatch.cpp */
-void port_mg_teresa_counts(unsigned *hits, unsigned *floor, unsigned *unknown);
+void port_mg_teresa_counts(unsigned *hits, unsigned *unknown);
 void port_mg_teresa_state_index(int *l1);
 
 }  /* extern "C" */
@@ -186,26 +191,6 @@ void port_mg_teresa_state_index(int *l1);
 /* ---- 6. THE TWO ALIAS ROWS, and the derivation is in the header ---------- */
 #pragma comment(linker, "/alternatename:__ZTV13dScMgTeresa_c=_data_ov006_0213fa0c")
 #pragma comment(linker, "/alternatename:?GetBG0CharPtr@G2S@@SAPADXZ=__ZN3G2S13GetBG0CharPtrEv")
-
-// ---- the named trap --------------------------------------------------------
-//
-// Counted rather than only announced, for the reason section 13's own trap
-// gives: a trap that prints once and counts nothing cannot tell a run where
-// the body is never reached from a run where it is reached every frame, and
-// those are different facts about the same seat.
-static unsigned g_boo_trap_e72c;
-
-extern "C" void func_ov006_0211e72c(void *)
-{
-    if (++g_boo_trap_e72c == 1) {
-        std::fprintf(stderr, "  [scene] dScMgTeresa_c FLOOR: "
-                     "func_ov006_0211e72c (ov006, 0xac, the sixth call vtable "
-                     "slot 9 makes) has no delink block and no src file. It "
-                     "does nothing. (Reported once; the count is in the run "
-                     "report.)\n");
-        std::fflush(stderr);
-    }
-}
 
 // ---- the tick witness ------------------------------------------------------
 //
@@ -458,27 +443,26 @@ extern "C" void port_scene_booseek_hits(void)
        which is exactly what section 10 left unproven for curling and section
        13 proved on a different class. */
     {
-        unsigned hits = 0, floor = 0, unknown = 0;
+        unsigned hits = 0, unknown = 0;
         unsigned fcalls = 0, funknown = 0;
         int l1 = -1;
-        port_mg_teresa_counts(&hits, &floor, &unknown);
+        port_mg_teresa_counts(&hits, &unknown);
         port_mg_dispatch_counts(&fcalls, &funknown);
         port_mg_teresa_state_index(&l1);
+        /* THE FLOOR COLUMN IS GONE FROM THIS LINE, and that is the whole of
+           what run mg10 changed about the witness. mg9 printed "%u ask(s) for
+           the floor 0x0211ebdc" beside the routed count because that state had
+           no body; it has one now, so those asks are inside the routed number
+           and there is no third column to print. A reader comparing an mg9 log
+           with this one should expect routed to jump by exactly what the floor
+           column used to read. */
         std::printf("[scene] dScMgTeresa_c state dispatch: %u routed across "
-                    "its FOUR tables, %u ask(s) for the floor 0x0211ebdc, %u "
-                    "UNHANDLED address(es); framework %u call(s), %u "
-                    "UNHANDLED\n", hits, floor, unknown, fcalls, funknown);
+                    "its FOUR tables, %u UNHANDLED address(es); framework %u "
+                    "call(s), %u UNHANDLED\n", hits, unknown, fcalls, funknown);
         std::printf("[scene] dScMgTeresa_c level-1 state index +0x4be8 = %d "
                     "at exit (InitResources seats it at 1; slot 18 zeroes "
                     "it)\n", l1);
     }
-
-    if (g_boo_trap_e72c)
-        std::printf("[scene] dScMgTeresa_c render floor func_ov006_0211e72c "
-                    "entered %u time(s) and did nothing\n", g_boo_trap_e72c);
-    else
-        std::printf("[scene] dScMgTeresa_c render floor func_ov006_0211e72c "
-                    "was never entered\n");
 
     /* The object's own live fields, so "the class ran" is a measurement rather
        than an inference from a slot counter. +0x4be8 is the level-1 state
@@ -518,6 +502,33 @@ extern "C" void port_scene_booseek_hits(void)
                 }
             }
             std::printf("   (%d of 16 live)\n", live);
+        }
+
+        /* THE RENDER CENSUS, AND IT IS A SEPARATE GATE FROM THE ONE ABOVE.
+           +0x4677 is the TICK gate func_ov006_0211f6fc reads; +0x467a is the
+           RENDER gate src/func_ov006_0211e72c reads, and src/
+           func_ov006_0211ebdc.c clears BOTH in the same statement when a Boo
+           finishes fading. Printing the drawn set beside the ticked set is what
+           makes "the sprite loop ran" a measurement rather than an inference
+           from the picture: a run where these two columns disagree has a Boo
+           being ticked and not drawn, or drawn and not ticked, and either one
+           is a wiring fault this seat should say out loud. Each row also prints
+           the sprite index the loop would have used, row*7 + column, which is
+           the only place a reader can see that it stayed inside the
+           fourteen-pointer table. */
+        {
+            int drawn = 0, i;
+            std::printf("[scene] dScMgTeresa_c drawn records:");
+            for (i = 0; i < 0x10; ++i) {
+                char *e = c + i * 0x24;
+                if (*(unsigned char *)(e + 0x467a)) {
+                    const unsigned row = *(unsigned char *)(e + 0x467e);
+                    const unsigned col = *(unsigned char *)(e + 0x467d);
+                    ++drawn;
+                    std::printf(" %d:r%uc%u=%u", i, row, col, row * 7 + col);
+                }
+            }
+            std::printf("   (%d of 16 drawn, sprite table holds 14)\n", drawn);
         }
     } else {
         std::printf("[scene] dScMgTeresa_c: the class never spawned\n");

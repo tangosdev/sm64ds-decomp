@@ -182,29 +182,47 @@
 # port/unmatched/MgTeresa_StateDispatch.cpp; the mounted .data keeps the ROM's
 # own words for the same reason section 4 gives.
 #
-# ---- THREE FLOORS, AND ONE OF THEM IS ov004'S -----------------------------
+# ---- THREE FLOORS; TWO ARE RETIRED (run mg10, lane F387) ------------------
 #
 # Bodies with a config symbol, no delink block, and no src file in EITHER
 # extension and in NO other module (the module-residency trap section 13's
-# CORRECTION 3 records was checked for all three):
+# CORRECTION 3 records was checked for all three). Run mg9 found all three and
+# trapped all three; run mg10 lane F387 decompiled the two ov006 ones. BOTH
+# BYTE-MATCH under mwccarm 2004/b56 and both pass tools/linkcheck.py VERIFIED
+# with zero blind relocations, so neither is a transcription and neither needed
+# a NONMATCHING banner.
 #
-#   func_ov006_0211e72c  0xac   THE RENDER FLOOR. It is the sixth call vtable
-#       slot 9 makes (src/func_ov006_02120348.c, after func_ov004_020b1e34 and
-#       four ov006 bodies). Delink blocks run .text 0x0211e658..0x0211e72c and
-#       resume at 0x0211e7d8, so the gap is exactly this function. It reads
-#       self+0x467a and takes the receiver only. This is section 13 CORRECTION
-#       3's shape one class over: the floor is in a vtable body's own callees,
-#       not in the state tables, and the check that finds it is a delinks join
-#       over every callee of every override.
-#   func_ov006_0211ebdc  0x258  slot 7 of data_ov006_02142ed8. stategen refuses
-#       it under REFUSALS. Signature confirmed from its own prologue:
-#       mov r6,r1 / mul r4,r6,#0x24, so (this, int i).
+#   func_ov006_0211e72c  0xac   THE RENDER FLOOR, RETIRED. It is the sixth call
+#       vtable slot 9 makes (src/func_ov006_02120348.c, after func_ov004_
+#       020b1e34 and four ov006 bodies). Delink blocks run .text
+#       0x0211e658..0x0211e72c and resume at 0x0211e7d8, so the gap is exactly
+#       this function. mg9 read it as walking records off self+0x4000 with a
+#       gate byte at +0x467a and 0x1000 and -1 held across the loop, and that
+#       reading was right as far as it went: it is an OAM sprite loop over the
+#       sixteen 0x24-stride records, one _ZN3OAM6RenderEbP7OamAttriiii5Fix12
+#       IiES3_ii per live record, drawing the Boos. The 0x1000 pair is the
+#       unity scale and the -1 is the palette argument. See
+#       src/func_ov006_0211e72c.c. This is section 13 CORRECTION 3's shape one
+#       class over: the floor was in a vtable body's own callees, not in the
+#       state tables, and the check that finds it is a delinks join over every
+#       callee of every override.
+#   func_ov006_0211ebdc  0x258  slot 7 of data_ov006_02142ed8, RETIRED.
+#       stategen refused it under REFUSALS. mg9's signature reading from the
+#       prologue -- mov r6,r1 / mul r4,r6,#0x24, so (this, int i) -- is
+#       confirmed by the matching body. It is the Boo's ordinary tick: timers,
+#       animation frame, func_ov006_0211f454 and _0211f34c to move and bounce,
+#       the facing byte off the sign of data_02082214's sine entry, and the
+#       fade that clears both the tick gate at +0x4677 and the render gate at
+#       +0x467a. Its sibling src/func_ov006_0211ee34.c is slot 6 of the same
+#       table and reads the same record fields, which is the cross-check that
+#       the layout is right and not merely self-consistent.
 #   func_ov004_020ae5c4  0x294  ov004, and the family's rather than this
-#       class's. Reached from src/func_ov006_0211f9fc.c, which declares it with
-#       SEVEN arguments; the ROM agrees -- r0..r3 plus [sp,#0x38], [sp,#0x3c],
-#       [sp,#0x40] after push{9}+sub#0x14. Its trap goes in
-#       hal/scene_mg_faces.cpp beside func_ov004_020ae858 because that is where
-#       this family's ov004 traps live, NOT in this lane's own hal file.
+#       class's. STILL A FLOOR and not this lane's to retire. Reached from
+#       src/func_ov006_0211f9fc.c, which declares it with SEVEN arguments; the
+#       ROM agrees -- r0..r3 plus three stack words at 0x38, 0x3c and 0x40
+#       after push{9}+sub#0x14. Its trap stays in hal/scene_mg_faces.cpp beside
+#       func_ov004_020ae858 because that is where this family's ov004 traps
+#       live, NOT in this lane's own hal file.
 #
 # ---- NO ELEMENT VTABLES, AND THAT IS MEASURED THREE WAYS ------------------
 #
@@ -275,7 +293,20 @@
 #   _func_ov006_0211e72c            the render floor above
 #   _func_ov006_0211d5a8 _0211dd0c _0211f6fc   the three host-copied dispatchers
 #
-# ZERO dup-def candidates, and zero of the 75 lines below appears in any other
+# RUN mg10 TOOK ONE ROW OFF THAT LIST AND ADDED NONE. _func_ov006_0211e72c is
+# defined by the slice now, so the seat's trap is gone and the link does not
+# ask for it; the same holds for the state floor, which was never on this list
+# because MgTeresa_StateDispatch.cpp reported it rather than calling it. The
+# two new bodies name five external things between them and the image already
+# carries every one: _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii,
+# _ZN5Sound12PlayBank2_2DEj, _ZN3G2x13SetBlendAlphaEPVttttt and data_02082214
+# are arm9 and three of the four are already reached by
+# src/func_ov006_0211ee34.c in this same slice, and data_ov006_0213a964 is a
+# plain ov006 mount symbol. So this lane's link wave is EMPTY, and that is a
+# measurement (the map before and after names the same externals minus the one
+# row) rather than an expectation.
+#
+# ZERO dup-def candidates, and zero of the 77 lines below appears in any other
 # port/slice_*.txt -- checked against all of them, because CMake dedupes only
 # identical absolute paths and a second copy becomes a second object (the
 # LNK2005 the flower slice records for _ZN8Particle10SysTrackerD1Ev).
@@ -292,15 +323,20 @@
 # names happen to sort after the comment -- while every static check over the
 # file still counted 75 source lines. THAT IS THE WHOLE HAZARD IN ONE
 # OBSERVATION: the file reads correct to every reader except the one that
-# matters. The character is named in words here, brackets balance line by line
-# (7 and 7, none unbalanced), and address ranges are written 0xAAAA..0xBBBB.
+# matters. The character is named in words here, brackets balance line by line,
+# and address ranges are written 0xAAAA..0xBBBB. Run mg10 rechecked the balance
+# after rewriting three sections and it still holds with none unbalanced.
 #
 # ---- THE ov006 LINES -------------------------------------------------------
 #
-# 75 lines. The closure walk from 39 roots -- the factory, the eight override
-# bodies, the four dispatchers and the 27 state addresses -- reaches 82 ov006
-# functions; 80 have src, four of those are host-copied dispatchers, one is the
-# host-copied InitResources, and two are the ov006 floors. 82 - 2 - 4 - 1 = 75.
+# 77 lines, which is mg9's 75 plus the two floors run mg10 decompiled. The
+# closure walk from 39 roots -- the factory, the eight override bodies, the
+# four dispatchers and the 27 state addresses -- reaches the same 82 ov006
+# functions it always did; ALL 82 have src now, four of those are host-copied
+# dispatchers and one is the host-copied InitResources. 82 - 4 - 1 = 77.
+# The closure did not grow: neither new body calls an ov006 function the walk
+# had not already reached (0211e72c calls only arm9, and 0211ebdc calls
+# func_ov006_0211f454 and _0211f34c, both already listed below).
 #
 # NO arm9 AND NO ov004 LINES. The closure reaches 27 arm9 and 17 ov004 call
 # targets and the image already carries every one of them that has a body; the
@@ -353,10 +389,12 @@ src/func_ov006_0211e4e0.c
 src/func_ov006_0211e55c.c
 src/func_ov006_0211e5cc.c
 src/func_ov006_0211e658.c
+src/func_ov006_0211e72c.c
 src/func_ov006_0211e7d8.c
 src/func_ov006_0211e8a8.c
 src/func_ov006_0211ea70.c
 src/func_ov006_0211eb90.c
+src/func_ov006_0211ebdc.c
 src/func_ov006_0211ee34.c
 src/func_ov006_0211f040.cpp
 src/func_ov006_0211f0d0.c
