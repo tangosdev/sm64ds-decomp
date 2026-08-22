@@ -16,7 +16,7 @@ src/func_ov030_0211124c.cpp:
     complete
     .text start:0x0211124c end:0x0211130c
 
-src/_ZN9UkikiCage16CleanupResourcesEv.c:
+src/_ZN9UkikiCage16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211130c end:0x02111350
 
@@ -212,11 +212,11 @@ src/func_ov030_021141a8.c:
     complete
     .text start:0x021141a8 end:0x021141c4
 
-src/_ZN5Ukiki16CleanupResourcesEv.c:
+src/_ZN5Ukiki16CleanupResourcesEv.cpp:
     complete
     .text start:0x021141c4 end:0x0211422c
 
-src/_ZN5Ukiki16OnPendingDestroyEv.c:
+src/_ZN5Ukiki16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0211422c end:0x02114230
 

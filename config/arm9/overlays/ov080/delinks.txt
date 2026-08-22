@@ -68,7 +68,7 @@ src/func_ov080_02124418.c:
     complete
     .text start:0x02124418 end:0x02124458
 
-src/_ZN9MontyMole16CleanupResourcesEv.c:
+src/_ZN9MontyMole16CleanupResourcesEv.cpp:
     complete
     .text start:0x02124458 end:0x021244b4
 

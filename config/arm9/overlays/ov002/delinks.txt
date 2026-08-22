@@ -508,7 +508,7 @@ src/func_ov002_020b2150.cpp:
     complete
     .text start:0x020b2150 end:0x020b2198
 
-src/_ZN4Coin16CleanupResourcesEv.c:
+src/_ZN4Coin16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b2198 end:0x020b2284
 
@@ -520,7 +520,7 @@ src/_ZN4Coin8BehaviorEv.cpp:
     complete
     .text start:0x020b2324 end:0x020b2508
 
-src/_ZN4Coin13InitResourcesEv.c:
+src/_ZN4Coin13InitResourcesEv.cpp:
     complete
     .text start:0x020b2508 end:0x020b2a34
 
@@ -760,7 +760,7 @@ src/_ZN21MegaMushroomCreateTag8BehaviorEv.cpp:
     complete
     .text start:0x020b4850 end:0x020b49a8
 
-src/_ZN21MegaMushroomCreateTag13InitResourcesEv.c:
+src/_ZN21MegaMushroomCreateTag13InitResourcesEv.cpp:
     complete
     .text start:0x020b49a8 end:0x020b4a00
 
@@ -1311,7 +1311,7 @@ src/func_ov002_020b9a1c.c:
     complete
     .text start:0x020b9a1c end:0x020b9a7c
 
-src/_ZN11PowerFlower16CleanupResourcesEv.c:
+src/_ZN11PowerFlower16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b9a7c end:0x020b9aac
 

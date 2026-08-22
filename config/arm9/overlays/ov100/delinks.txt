@@ -307,7 +307,7 @@ src/_ZN4Door16CleanupResourcesEv.cpp:
     complete
     .text start:0x0214542c end:0x021454c4
 
-src/_ZN4Door16OnPendingDestroyEv.c:
+src/_ZN4Door16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021454c4 end:0x021454c8
 
