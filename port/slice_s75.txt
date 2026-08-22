@@ -137,14 +137,30 @@
 # before both of its `blx r2`, 0x020e4744 lets the incoming r1 ride through --
 # and they agree with the matched src signatures at all 24 bodies that have one.
 #
-# ONE HARD FLOOR: 0x020e4bd4, slot 1 of data_ov006_02141978. It has a config
-# symbol and NO delink block and NO src file, which is this class's analogue of
-# curling's func_ov006_020e1854. It is reported by the address switch, never
-# called, and never given an invented body.
+# ALL THREE OF THIS CLASS'S FLOORS ARE RETIRED, run mg7 lane L375. They were
+# 0x020e4bd4 (slot 1 of data_ov006_02141978, a live state the address switch
+# reported instead of calling), 0x020e513c and 0x020e5450 (both reached from
+# bodies in this slice and neither in it). All three are now decompiled from
+# extracted/overlays/overlay_0006.bin and are in the list below; all three ship
+# NONMATCHING-bannered with the ROM read stated in the file header.
 #
-# TWO MORE FLOORS OUTSIDE THE STATE MACHINE, both reached from bodies in this
-# slice and neither in it: func_ov006_020e513c and func_ov006_020e5450. Same
-# ruling -- symbol, no delink block, no src.
+#   src/func_ov006_020e4bd4.c   0x300  the stylus aim state; SIZE EXACT
+#                                      192/192 words, register colouring only
+#   src/func_ov006_020e513c.c   0x314  overlap depenetration over the eleven
+#                                      0x30-stride shell records
+#   src/func_ov006_020e5450.c   0x560  the shell-vs-shell elastic collision --
+#                                      the body mg6's 1200-frame run asked for
+#                                      6810 times with nothing behind it
+#
+# AND THE VENEER LANDMINE IS DEFUSED. src/func_ov006_020e5b70.c is the image's
+# `ldr ip,[pc]; bx ip; .word 0x020e5450` tail jump; it used to declare the
+# callee `(void)` and call it with no arguments, which was harmless only while
+# 0x020e5450 was a port trap that ignored its parameters. It now takes
+# (char *, int) and forwards both, and mwccarm 1.2/sp2p3 emits the SAME THREE
+# WORDS either way, so the fix is a byte-gate-clean src correction and no host
+# copy of the veneer is needed. The dispatch site in
+# unmatched/MgCurling2_StateDispatch.cpp was dropping the arguments too and is
+# fixed with it -- one half alone would not have been enough.
 #
 # ---- WHAT IS NOT IN THIS FILE ---------------------------------------------
 #
@@ -178,7 +194,7 @@
 # sequence in plain ints -- lane FLW's third shape, which neither the link nor
 # a `::*` sweep can see and only a run convicts.
 #
-# ---- THE 44 LINES -----------------------------------------------------------
+# ---- THE 47 LINES -----------------------------------------------------------
 src/func_ov006_020e3854.c
 src/func_ov006_020e3878.c
 src/func_ov006_020e38b0.c
@@ -201,9 +217,12 @@ src/func_ov006_020e48d4.c
 src/func_ov006_020e4a84.c
 src/func_ov006_020e4b00.c
 src/func_ov006_020e4b78.c
+src/func_ov006_020e4bd4.c
 src/func_ov006_020e4ed4.c
 src/func_ov006_020e4fe8.c
 src/func_ov006_020e507c.c
+src/func_ov006_020e513c.c
+src/func_ov006_020e5450.c
 src/func_ov006_020e59b0.c
 src/func_ov006_020e5a0c.c
 src/func_ov006_020e5b70.c

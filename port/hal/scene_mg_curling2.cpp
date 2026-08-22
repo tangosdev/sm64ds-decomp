@@ -88,22 +88,32 @@
 // census printed below is the detector, and a run with slot hits and zero
 // dispatch calls has ticked the object without entering its state machine.
 //
-// ---- 6. THE FLOORS --------------------------------------------------------
+// ---- 6. THE FLOORS ARE RETIRED -------------------------------------------
 //
-// Three, all the same class of thing: a config symbol, no delink block in
-// config/arm9/overlays/ov006/delinks.txt, no src file anywhere.
+// Run mg6 left three, all the same class of thing: a config symbol, no delink
+// block in config/arm9/overlays/ov006/delinks.txt, no src file anywhere. Run
+// mg7 lane L375 decompiled all three out of
+// extracted/overlays/overlay_0006.bin at base 0x020bfec0, which is the decomp
+// transcription lanes CT1 and CUR2 did for curling and not a port job:
 //
-//   func_ov006_020e4bd4   slot 1 of state table data_ov006_02141978. A LIVE
-//                         STATE TARGET, so like curling's func_ov006_020e1854
-//                         this class cannot reach every one of its own states
-//                         even with the dispatch wired. Reported by the
-//                         address switch, never called.
-//   func_ov006_020e513c   reached from bodies in the slice
-//   func_ov006_020e5450   reached from bodies in the slice
+//   func_ov006_020e4bd4   0x300  slot 1 of state table data_ov006_02141978, a
+//                                LIVE state -- the stylus aim step. SIZE EXACT
+//                                192/192 words; register colouring only.
+//   func_ov006_020e513c   0x314  overlap depenetration over the eleven records
+//   func_ov006_020e5450   0x560  the shell-vs-shell elastic collision, asked
+//                                for 6810 times in the mg6 1200-frame run
 //
-// None gets an invented body. port/tools/inferred_stub_guard.py exists to
-// refuse exactly that, and retiring them is a decomp transcription of the kind
-// lanes CT1 and CUR2 did for curling, not a port job.
+// All three ship NONMATCHING-bannered. None is an invented body:
+// port/tools/inferred_stub_guard.py exists to refuse exactly that, and each
+// file's header states the ROM read it was transcribed from.
+//
+// AND THE VENEER LANDMINE mg6 recorded is defused. src/func_ov006_020e5b70.c is
+// the image's `ldr ip,[pc]; bx ip; .word 0x020e5450` tail jump; it declared the
+// callee `(void)` and dropped both arguments, which cost nothing only while
+// 0x020e5450 was a trap. It now takes (char *, int) and forwards them, and
+// mwccarm 1.2/sp2p3 emits the same three words either way, so no host copy of
+// the veneer was needed. The dispatch site in MgCurling2_StateDispatch.cpp was
+// dropping them too and is fixed with it.
 
 #include "hal/screen_gap.h"
 
@@ -143,9 +153,11 @@ unsigned port_mg_curling2_state_calls(void);
 unsigned port_mg_curling2_state_unknown(void);
 unsigned port_mg_curling2_state_floor(void);
 
-/* the two undecompiled bodies, from unmatched/MgCurling2_Traps.cpp */
-unsigned port_mg_curling2_trap_513c(void);
-unsigned port_mg_curling2_trap_5450(void);
+/* the round-end machine's per-slot census, same file: table data_ov006_021419d8
+   slot 0..3 = 020e5e3c / 020e5b7c / 020e5b70 / 020e5a0c, and the state that used
+   to be reported as a floor */
+unsigned port_mg_curling2_d8_hits(int slot);
+unsigned port_mg_curling2_state_4bd4(void);
 
 void port_scene_curling2_hits(void);
 
@@ -339,18 +351,26 @@ extern "C" void port_scene_curling2_hits(void)
 
     std::printf("[scene] dScMgCurling2_c state dispatch: %u call(s) through "
                 "the address switches, %u UNHANDLED address(es), %u to the "
-                "undecompiled floor func_ov006_020e4bd4\n",
+                "retired floor (must stay 0: func_ov006_020e4bd4 has a body)\n",
                 port_mg_curling2_state_calls(),
                 port_mg_curling2_state_unknown(),
                 port_mg_curling2_state_floor());
 
-    /* THE TWO UNDECOMPILED BODIES, printed on every run and not only when they
-       fire. A zero here is a claim -- "the record machine ran" -- and a claim
-       that is only printed when it is false is not a measurement. */
-    std::printf("[scene] undecompiled bodies entered: func_ov006_020e513c %u, "
-                "func_ov006_020e5450 %u  (both: config symbol, no delink "
-                "block, no src; see port/unmatched/MgCurling2_Traps.cpp)\n",
-                port_mg_curling2_trap_513c(), port_mg_curling2_trap_5450());
+    /* THE ROUND-END MACHINE, printed on every run and not only when it moves.
+       Table data_ov006_021419d8 is the eleven-record machine run mg6 could not
+       run: three of its four states entered a trap and returned, so the records
+       stayed where slot 0 left them. All four now have bodies behind them --
+       slot 0 -> func_ov006_020e513c, slot 1 -> func_ov006_020e5450, slot 2 ->
+       the same body through the argument-forwarding veneer
+       func_ov006_020e5b70 -- so these four counters moving IS the machine
+       running. A zero row is a claim, and a claim only printed when it is false
+       is not a measurement. */
+    std::printf("[scene] curling2 round-end machine (table 021419d8): "
+                "slot0 020e5e3c %u, slot1 020e5b7c %u, slot2 020e5b70 %u, "
+                "slot3 020e5a0c %u; state 020e4bd4 %u\n",
+                port_mg_curling2_d8_hits(0), port_mg_curling2_d8_hits(1),
+                port_mg_curling2_d8_hits(2), port_mg_curling2_d8_hits(3),
+                port_mg_curling2_state_4bd4());
     std::fflush(stdout);
 }
 
