@@ -81,12 +81,21 @@
 //
 //   - The middle table data_ov006_0213e448 is claimed by whichever fill runs
 //     FIRST, and this row is appended after the flower's and the sibling's, so
-//     the flower keeps it and both other copies find no DS word left to write.
-//     This seat's middle-table witness therefore reads ZERO and that is the
-//     correct reading, not a miss.
+//     the flower keeps it and both other copies write nothing into it.
 //   - This seat's own table data_ov006_0213d1b8 is named by NO other file, so
 //     the six inherited slots in it are this file's alone.  Three copies of the
 //     array cannot collide on it because no other fill ever visits it.
+//
+// AND THE WITNESS BELOW COUNTS THE SECOND OF THOSE, NOT THE FIRST.  A first
+// draft of this paragraph said this seat's dScMgSingle3DBase_c counter "reads
+// ZERO and that is the correct reading"; the run says 11642 on a 1500-frame
+// boot and the run is right.  kSingle3DFaces is applied to BOTH tables, and
+// the copy that lands is the one in this class's own derived table -- slots 2,
+// 7, 10, 26 and 33 of data_ov006_0213d1b8, which is where every one of those
+// dispatches actually goes.  The zero belongs to the OTHER seats' copies of
+// the array, which is what hal/scene_mg_flower.cpp's own line reports on a
+// scene-362 run.  Two counters, two tables, and the mistake was reading the
+// array's NAME as its destination.
 //
 // ---- 4. SLOT 2 IS NOT src's BODY, AND IT IS NOT THIS LANE'S HOST COPY -----
 //
@@ -490,8 +499,9 @@ extern "C" void port_scene_memory1_hits(void)
     std::printf("   (%u total)\n", total);
 
     std::printf("[scene] dScMgSingle3DBase_c slots entered (this seat's copy, "
-                "expected 0 -- the flower row claims the middle table and this "
-                "count is this class's own derived table only):");
+                "which lands in this class's OWN derived table -- the flower "
+                "row claims the middle table itself, so its copy reads 0 and "
+                "this one does not):");
     for (int i = 0; i < 36; ++i)
         if (g_mem1_base_hits[i]) std::printf(" %d(x%u)", i, g_mem1_base_hits[i]);
     std::printf("   (%u total)\n", mtotal);

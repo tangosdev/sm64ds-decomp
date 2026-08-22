@@ -133,5 +133,39 @@ unsigned port_mg_memory1_carddraw_hits(void) { return g_mem1_carddraw_hits; }
 
 // ---- 3. the aliases the link asked for -------------------------------------
 //
-// Filled in from this seat's own link waves; see section 2 for the rule each
-// row was ruled by.
+// WAVE 1 PRODUCED EXACTLY ONE UNRESOLVED EXTERNAL, on all three targets, line
+// for line:
+//
+//     func_ov006_020f3834.cpp.obj : error LNK2019: unresolved external symbol
+//     "void * data_ov006_0213d1b8" (?data_ov006_0213d1b8@@3PAXA)
+//
+// and that is the whole of this seat's wall bill.  The reason it is one row and
+// not the sibling's forty-one is that this class's ov004 closure and its shared
+// model sub-object are both already seated: run mg6 lane MEM paid the forty-one
+// for the same sub-object at the same +0x4f38, and run mg5 lane BASESET paid
+// the framework's.
+//
+// THE RULING.  src/func_ov006_020f3834.cpp (slot 16, the D2) declares
+// `extern void* data_ov006_0213d1b8;` OUTSIDE an extern "C" block, so MSVC
+// mangles it, while the ov006 mount defines the plain C name.  Its sibling
+// src/func_ov006_020f3888.cpp (slot 17, the D0) declares the same table through
+// include/decl_common.h at C linkage and resolves without help, which is why
+// only one of the two destructors shows up in the link -- the same one-of-a-
+// pair spelling defect port/mg_fanout_costs.txt section 6 catalogues.
+//
+// IT IS AN ALIAS AND NOT A HOST COPY, and the rulebook corollary section 4
+// states is why.  The consumer is `*(void**)c = &data_ov006_0213d1b8;`: it
+// takes the ADDRESS of a vtable, so a name that resolves to the same address is
+// exactly right and no stride is involved.  The member-pointer half of the
+// corollary cannot apply -- this symbol is a 36-word virtual table, not a
+// {code, adjustment} pair, and the fill in hal/scene_mg_memory1.cpp is the only
+// thing that ever indexes it.  hal/scene_mg_memory2.cpp's seat carries the
+// identical two rows for 0x0213d4d4 and 0x0213e448.
+//
+// facegen was NOT the classifier here and this line says so rather than
+// implying a tool blessed it: the failed link had already truncated
+// walk_window.map, which is both facegen's and closure.py's universe (finding 3
+// of section 10), and a one-row wall does not repay rebuilding that universe
+// out of the object symbol tables.  The row was ruled by hand against the
+// consumer, which is the standard the corollary sets.
+#pragma comment(linker, "/alternatename:?data_ov006_0213d1b8@@3PAXA=_data_ov006_0213d1b8")
