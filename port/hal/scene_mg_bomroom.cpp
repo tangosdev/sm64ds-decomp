@@ -417,9 +417,12 @@ extern "C" void port_scene_bomroom_hits(void)
        not that the body is absent. */
     std::printf("[scene] dScMgBomroom_c former floors: state 0x020d7c4c "
                 "(slot 5 of data_ov006_02141730, byte-matched) ran %u "
-                "time(s); callee 0x020d8408 (0x4fc, called by state 2 of "
-                "data_ov006_021416e0) is linked and its spawn counter is the "
-                "line below\n",
+                "time(s) -- it is the free-flight state and is PLAYER-GATED, "
+                "entered only when func_ov006_020d6b88 sees a dropped bomb "
+                "inside a bin, so zero on a no-input run is the game's answer "
+                "and not a missing body; callee 0x020d8408 (0x4fc, called by "
+                "state 2 of data_ov006_021416e0) is linked and its spawn "
+                "counter is the line below\n",
                 port_mg_bomroom_flight_calls());
     if (g_sos_self)
         std::printf("[scene] dScMgBomroom_c object at %p, state index %d, "
