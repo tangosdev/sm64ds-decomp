@@ -237,7 +237,8 @@
 #   divide-by-five magic, which is the strip length 5 the class's own +0x503a
 #   holds) = 110 = 0x1b8/4. Its five callees, for the floor wave that takes it:
 #   DecIfAbove0_Byte (0x0203add4), the ITCM divide helper (0x01ffabe4),
-#   func_02012790 twice, func_ov004_020adb1c.#
+#   func_02012790 twice, func_ov004_020adb1c.
+#
 #   AND THE FLOOR IS NOT AN UNTOUCHED BODY. The near-miss check this lane's
 #   review ordered found a row for it: nearmiss/db.jsonl line 45,
 #   func_ov006_0210adac, size 440 = 0x1b8, lang c, run
@@ -250,9 +251,20 @@
 #   wave should price this as a 101-of-110 near-miss with one characterised
 #   divergence rather than as untouched work. The candidate also independently
 #   confirms what this lane derived state 2 DOES from the neighbouring states:
-#   it compares the three visible symbols at +0x5031 across the reels, writes
-#   the win index to +0x5010 and the payout to +0x5014, and advances the state
-#   index to 3.
+#   it compares the three visible symbols at +0x5031 across the reels and
+#   writes the win index to +0x5010. IT HAS TWO EXITS AND THIS FILE USED TO
+#   NAME ONLY ONE. On the PAY path (total > 0) it writes the payout to +0x5014,
+#   sets the state index to 3, plays 0x26 and holds +0x503e for 0x28 frames; on
+#   the NO-WIN path it sets the state index to 4, plays 0xe and holds for 0x50.
+#   The ROM says the same thing first-hand -- the payout store to +0x5014 at
+#   0x0210aef8, then `mov r2,#3` at 0x0210aefc with `mov r0,#0x26` and the 0x28
+#   strb at 0x0210af14, against `mov r2,#4` at 0x0210af24 with `mov r0,#0xe`
+#   and the 0x50 strb at 0x0210af3c -- so the candidate and the disassembly
+#   agree on both exits rather than the candidate being taken on trust.
+#   BOTH EXITS LAND ON THE SAME BODY: slots 3 and 4 of
+#   data_ov006_02142bdc are both func_ov006_0210ac3c, which is why one payout
+#   state serves a win and a loss and why the dispatcher's per-slot counter
+#   charges slot 3 for both.
 #   NO src ROW IS OWED BY THIS LANE and none is written: this lane changed no
 #   src/ file at all (git diff --stat over src/ is empty against the base), so
 #   there is no banner to re-snapshot and nothing to ingest.
@@ -384,7 +396,7 @@
 # faultmap symbolization beside it.
 #
 # THE MODULE-RELATIVE ADDRESSES MOVED AND NOTHING ELSE DID. The original quote
-# read +0x000bea2c for the fault and +0x001578 92 / +0x000a1632 / +0x000a17ad /
+# read +0x000bea2c for the fault and +0x00157892 / +0x000a1632 / +0x000a17ad /
 # +0x000a2103 for the frames; the reproduction reads +0x000bea7c and
 # +0x001578e2 / +0x000a15a2 / +0x000a17fd / +0x000a2153. Those are the same
 # functions at the same offsets INTO them (+0xc, +0x42, +0x62, +0xed, +0x23 in

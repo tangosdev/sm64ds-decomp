@@ -141,8 +141,26 @@
 // one characterised divergence and a documented list of fifteen failed
 // levers, not a body nobody has looked at. The candidate ALSO independently
 // confirms this file's reading of what state 2 does: it walks the three
-// visible symbols at +0x5031, compares them across the reels, writes the win
-// index to +0x5010 and the payout to +0x5014, and sets the state index to 3.
+// visible symbols at +0x5031, compares them across the reels and writes the
+// win index to +0x5010.
+//
+// IT HAS TWO EXITS AND THIS PARAGRAPH USED TO NAME ONLY ONE. On the PAY path
+// (total > 0) it writes the payout to +0x5014, sets the state index to 3,
+// plays sound 0x26 and holds +0x503e for 0x28 frames. On the NO-WIN path it
+// sets the state index to 4, plays 0xe and holds for 0x50. The ROM says it
+// first-hand as well -- the payout store to +0x5014 at 0x0210aef8, then
+// `mov r2,#3` at 0x0210aefc / `mov r0,#0x26` / `str r2,[r1]` with the 0x28
+// strb at 0x0210af14, against `mov r2,#4` at 0x0210af24 / `mov r0,#0xe` /
+// `str r2,[r1]` with the 0x50 strb at 0x0210af3c -- so the two exits are the
+// disassembly's finding and the candidate's agreement with it, not the
+// candidate taken on trust.
+//
+// BOTH EXITS LAND ON THE SAME BODY, which is the detail that makes the table
+// make sense: slots 3 and 4 of data_ov006_02142bdc are BOTH
+// func_ov006_0210ac3c, so one payout state serves a win and a loss and tells
+// them apart by the index it was entered on. It is also why the per-slot
+// counter in this file charges slot 3 for both, and why the switch below has
+// one arm for the two slots.
 //
 // NO BODY IS INVENTED FOR IT. unmatched/MgCurling_State_020e1854.cpp is the
 // precedent for TRANSCRIBING such a state from the ROM, and it is the right
