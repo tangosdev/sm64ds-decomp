@@ -1,11 +1,9 @@
 //cpp
 // @symbol _ZN10dScTitle_c6RenderEv
-/* recovered: renamed to Class_Method, declarations from a shared header */
+/* dScTitle_c::Render() -- vtable slot 9. Real C++ method over the shared
+ * header; this body never touches its own fields. */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScTitle_c::Render() -- vtable slot 9. extern "C" carries the literal
- * mangled name unmangled -- see include/dScTitle_c.h. This body never
- * touches its own fields, so it does not need the header. */
+#include "dScTitle_c.h"
 extern "C" {
 extern int data_0209b2f4;
 extern char data_0209e674[];
@@ -18,7 +16,7 @@ namespace OAM { void EnableSubOAM(OamTmp*);
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 extern "C" void _ZN3OAM12EnableSubOAMEv(OamTmp*);
  }
-extern "C" int _ZN10dScTitle_c6RenderEv(void)
+s32 dScTitle_c::Render()
 {
     OamTmp tmp;
     OAM::_ZN3OAM12EnableSubOAMEv(&tmp);
