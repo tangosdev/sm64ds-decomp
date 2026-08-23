@@ -150,12 +150,15 @@
 // structurally zero for the sibling's reason: if a later lane ever adds a
 // state this class cannot reach, this is where it is counted.
 //
-// THE CLASS'S ONE FLOOR IS NOT A STATE, and it is in unmatched/
-// MgMemory1_Faces.cpp: func_ov006_020f3e68, the card draw, the sixth call
-// vtable slot 9 makes.  Section 13's method in port/mg_fanout_costs.txt is
-// what found it -- a delinks join over every callee of every override, not
-// over the state addresses -- and it found it in exactly the place that
-// section says to look.
+// THE CLASS'S ONE FLOOR WAS NOT A STATE, AND IT IS CLOSED.
+// func_ov006_020f3e68, the card draw, the sixth call vtable slot 9 makes, was
+// a named trap in unmatched/MgMemory1_Faces.cpp when this file was written.
+// Section 13's method in port/mg_fanout_costs.txt is what found it -- a
+// delinks join over every callee of every override, not over the state
+// addresses -- and it found it in exactly the place that section says to look.
+// Run mg10 lane F362 decompiled it: src/func_ov006_020f3e68.c, carried by
+// port/slice_mmt.txt, NONMATCHING at 24 of 42 words on colouring and schedule.
+// The trap is deleted, so dScMgMemory_c now has NO floor of either kind.
 //
 // ---- 5. WHY THIS FILE HAS ITS OWN ENTRY POINTS ----------------------------
 //

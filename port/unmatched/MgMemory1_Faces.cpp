@@ -1,7 +1,8 @@
-// PORT_HOST_ABI. dScMgMemory_c's own faces and its one named trap.
-// Run mg9, lane MMT.  Actor id 0x16a, scene 362, "Memory Match".
+// PORT_HOST_ABI. dScMgMemory_c's own faces.  Its one named trap is GONE.
+// Run mg9, lane MMT; the trap retired by run mg10, lane F362.
+// Actor id 0x16a, scene 362, "Memory Match".
 //
-// ---- 1. THE TRAP IS THE CARD DRAW, AND IT IS THIS CLASS'S ONLY FLOOR ------
+// ---- 1. THE TRAP THAT USED TO BE HERE WAS THE CARD DRAW -------------------
 //
 // func_ov006_020f3e68, ov006, size 0xa8, forty instructions plus two pool
 // words.  It is the SIXTH call vtable slot 9 (Render) makes -- see
@@ -23,19 +24,28 @@
 // table are the same records and the same loop", and run mg7 lane MEMCARDS
 // decompiled it as a NONMATCHING body after about thirty source shapes, ten
 // compiler builds crossed with twelve optimisation settings and 30,452
-// permuter iterations.  THIS LANE DOES NOT ATTEMPT THAT.  A seat with a trap
-// here boots, ticks, deals and plays its state machine, and draws NO CARDS,
-// and hal/scene_mg_memory1.cpp says so on every run rather than leaving the
-// absence to be inferred from a green census.
+// permuter iterations.  RUN mg9 LANE MMT DID NOT ATTEMPT THAT and trapped it
+// instead; a seat with a trap here booted, ticked, dealt and played its state
+// machine, and drew NO CARDS.
 //
-// WHY IT IS A FLOOR AND NOT A LOOKUP MISS.  Three checks, all on this tree:
+// RUN mg10 LANE F362 DECOMPILED IT.  src/func_ov006_020f3e68.c is the body and
+// port/slice_mmt.txt carries it, so this file no longer defines the symbol at
+// all.  It is NONMATCHING at 24 of 42 words and the file's own banner is the
+// measurement: the ROM body is the sibling's 0x020f5b98 with FOUR constants
+// changed (the state offset, the record count and the two pool words), the
+// residue is the sibling's one-register rotation to the word, and the base
+// permuter score is the same 1395.
+//
+// WHY IT WAS A FLOOR AND NOT A LOOKUP MISS.  Three checks, all re-run on this
+// tree by lane F362 before the body was written:
 //   - config/arm9/overlays/ov006/symbols.txt names it and sizes it 0xa8.
 //   - config/arm9/overlays/ov006/delinks.txt has a HOLE there: the block
 //     before it ends at 0x020f3e68 and the next one starts at 0x020f3f10.
-//   - No src file defines it in EITHER extension, in any overlay.  It is the
+//     THAT HOLE IS STILL THERE AND MUST STAY: a NONMATCHING TU gets no delink
+//     block, so the ROM build keeps using the ROM's own bytes.
+//   - No src file defined it in EITHER extension, in any overlay.  It was the
 //     only one of the forty-seven functions in this class's code block
-//     (0x020f3834..0x020f5564) without a src TU; the other forty-six all have
-//     one and all forty-six are in port/slice_mmt.txt.
+//     (0x020f3834..0x020f5564) without a src TU; all forty-seven have one now.
 // The module-residency trap section 13 warns about does not fire here -- there
 // is no src/func_ovNNN_020f3e68.* at any other overlay either -- but the check
 // was run rather than assumed, because it is exactly what almost closed the
@@ -81,9 +91,18 @@
 //   dScMgMemory_c is one, measured off the relocation set rather than off a
 //   reading of the class.
 //
-// THE TRAP COUNTS ITSELF, so "the cards did not draw" is a number rather than
-// an absence: one entry per Render frame is the reading that says the seat
-// reached the draw and the draw is the hole.
+//   AND BOTH POOL WORDS HAVE ONE READER, which lane F362 measured and lane MMT
+//   did not: ov006's relocs.txt has exactly ONE load to 0x0213d168 in the whole
+//   overlay (from:0x020f3f08, this body's own pool) and exactly TWO to
+//   0x0214236c (from:0x020f3f0c, the same pool, and from:0x02131468, the
+//   constructor that fills it).  Nothing else in the overlay reads either
+//   table, which is the same reading section 15 records for the sibling's pair.
+//
+// THE TRAP COUNTED ITSELF, so "the cards did not draw" was a number rather than
+// an absence: one entry per Render frame was the reading that said the seat
+// reached the draw and the draw was the hole.  hal/scene_mg_memory1.cpp reports
+// the card records themselves and the sub-OAM census instead now, which is what
+// the count was standing in for.
 //
 // ---- 2. THE FACES BELOW WERE NAMED BY A LINK ------------------------------
 //
@@ -96,40 +115,6 @@
 //
 //     A PAIR WHOSE CONSUMER SPELLS IT AS TWO INTS IS SAFE AS AN ALIAS.
 //     A PAIR WHOSE CONSUMER NAMES A MEMBER-POINTER TYPE NEEDS A HOST COPY.
-
-#include <cstdio>
-
-extern "C" {
-
-// ---- 1. the named trap -----------------------------------------------------
-
-static unsigned g_mem1_carddraw_hits;
-
-/* THE CARD DRAW.  Counted, reported once, and it draws nothing.  A plausible
-   body here is exactly the guess port/tools/inferred_stub_guard exists to
-   refuse, and a plausible CARD LAYOUT would be worse than no cards: it would
-   put a picture on the screen that nobody could tell from the ROM's without a
-   DS beside it. */
-void func_ov006_020f3e68(void *self)
-{
-    static int said;
-    (void)self;
-    ++g_mem1_carddraw_hits;
-    if (!said) {
-        said = 1;
-        std::fprintf(stderr, "  [scene] dScMgMemory_c CARD DRAW IS A FLOOR: "
-                     "func_ov006_020f3e68 has no src TU and no delink block, "
-                     "so no card is drawn on any frame. The deal, the board "
-                     "and the per-card state machine all run; only the sprite "
-                     "call is missing. See unmatched/MgMemory1_Faces.cpp "
-                     "section 1.\n");
-        std::fflush(stderr);
-    }
-}
-
-unsigned port_mg_memory1_carddraw_hits(void) { return g_mem1_carddraw_hits; }
-
-}  /* extern "C" */
 
 // ---- 3. the aliases the link asked for -------------------------------------
 //
@@ -169,3 +154,16 @@ unsigned port_mg_memory1_carddraw_hits(void) { return g_mem1_carddraw_hits; }
 // out of the object symbol tables.  The row was ruled by hand against the
 // consumer, which is the standard the corollary sets.
 #pragma comment(linker, "/alternatename:?data_ov006_0213d1b8@@3PAXA=_data_ov006_0213d1b8")
+
+// ---- 4. the card draw is a real body now -----------------------------------
+//
+// Nothing is defined here for 0x020f3e68 any more.  src/func_ov006_020f3e68.c
+// defines it and port/slice_mmt.txt compiles it, so a tree that loses that
+// slice line fails to LINK rather than quietly drawing nothing.  The trap is
+// DELETED rather than emptied: an emptied trap still satisfies the symbol and
+// still draws nothing, and the link is the only instrument that can tell the
+// difference.
+//
+// THIS FILE NOW CONTAINS NO CODE AT ALL, only the one alias row section 3
+// rules on.  It stays because that row is real and because sections 1 and 2
+// are the derivation a future reader needs; it is not a placeholder.

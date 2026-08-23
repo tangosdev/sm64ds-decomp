@@ -4324,11 +4324,10 @@ endforeach()
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_mmt.txt" SLICE_MMT_LINES)
 set(SLICE_MMT_SOURCES hal/scene_mg_memory1.cpp
                       unmatched/MgMemory1_StateDispatch.cpp
-                      # The class's ONE floor and the aliases the link asked
-                      # for. func_ov006_020f3e68 is the card draw -- no src TU
-                      # in any overlay, no delink block -- and it is a NAMED
-                      # COUNTING TRAP here rather than a guessed body, so the
-                      # seat boots and plays and draws no cards, and says so.
+                      # The aliases the link asked for. Its named trap for
+                      # func_ov006_020f3e68 is GONE: run mg10 lane F362
+                      # decompiled that body (the card draw) into
+                      # src/func_ov006_020f3e68.c and slice_mmt.txt carries it.
                       unmatched/MgMemory1_Faces.cpp)
 foreach(line IN LISTS SLICE_MMT_LINES)
     string(STRIP "${line}" line)
