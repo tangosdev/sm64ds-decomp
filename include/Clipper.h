@@ -6,6 +6,11 @@
 #define CLIPPER_H
 #include "types.h"
 
+#ifdef __cplusplus
+struct Matrix4x3;
+#include "math/Fix12.h"
+#endif
+
 struct Clipper {
     u8  pad_000[0x4];
     /* The four clip-plane normals, written as a run by Func_0201559C: it builds
@@ -23,6 +28,15 @@ struct Clipper {
 #ifdef __cplusplus
     /* methods */
     void Func_0201559C();
+
+    /* Methods whose mangled names carry a by-value class parameter (5Fix12IiE)
+       are deliberately NOT definable as real methods -- see
+       notes/mwccarm-codegen.md 6az. CW homes class-typed by-value parameters
+       to the stack, costing +0x14, so these keep extern "C" definitions with
+       scalar args. A true-signature declaration for callers is fine and is
+       tracked separately. */
+    int  Func_020150E8(Vector3 &v, Fix12<int> clip, u8 *hint);
+    void Func_02015560(Matrix4x3 &mat, Vector3 &srcVec, Fix12<int> scale, Vector3 &dstVec);
 #endif
 };
 

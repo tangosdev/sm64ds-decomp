@@ -1940,11 +1940,11 @@ src/_ZN5dCc_cC2Ev.cpp:
     complete
     .text start:0x020150cc end:0x020150e8
 
-src/_ZN7Clipper13Func_020150E8ER7Vector35Fix12IiEPh.c:
+src/_ZN7Clipper13Func_020150E8ER7Vector35Fix12IiEPh.cpp:
     complete
     .text start:0x020150e8 end:0x02015560
 
-src/_ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_.c:
+src/_ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_.cpp:
     complete
     .text start:0x02015560 end:0x0201559c
 
