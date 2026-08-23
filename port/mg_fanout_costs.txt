@@ -3116,6 +3116,16 @@ TWO LEVERS DID ALL THE WORK AND BOTH ARE REUSABLE:
       from the other end, and unlike that one it is a rule rather than a
       per-array coin flip.
 
+THERE ARE NOW TWO NEAR-MISS ROWS FOR THIS ADDRESS AND THE OLDER ONE IS DEAD,
+which is said here rather than left for whoever queries the database by name.
+nearmiss/db.jsonl already carried a func_ov006_020d27dc row from the automated
+grind batch `lunavyqo-batch2-grind`, at 184 divergences, and nothing in the
+schema marks a row as superseded. This lane's row is the one to read: it is
+tagged `run: mg10 lane WALKER`, it is the only one of the two with a
+`candidate_size` and a `note`, and its c_source is byte-equal to the shipped TU.
+The old row is left in place because the database is a history of attempts and
+deleting a losing attempt hides the ladder that was climbed.
+
 RELOC DESTINATIONS, AND A GATE VERDICT THAT NEEDS READING TWICE.
 reloc_audit.check_destinations run directly on the object returns 68 rows,
 verdict EXTRA on all 68, missing 68. THAT IS AN ALIGNMENT ARTEFACT AND NOT A
