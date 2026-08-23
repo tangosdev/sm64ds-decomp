@@ -250,6 +250,9 @@ unsigned port_mg_snowball_live(void);
 void     port_mg_snowball_sel_range(int *lo, int *hi);
 void     port_mg_snowball_slot_hits(const unsigned **v, unsigned *n);
 
+/* unmatched/MgSnowball_Faces.cpp's two trapped closure floors. */
+void     port_mg_snowball_floor_counts(unsigned *obstacles, unsigned *layout);
+
 /* unmatched/MgBase_StateDispatch.cpp's framework census. */
 void     port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
 
@@ -543,6 +546,23 @@ extern "C" void port_scene_snowball_hits(void)
                     "addresses in the four tables reach a matched src TU, all "
                     "fourteen are distinct, and none carries a NONMATCHING "
                     "banner\n");
+
+        /* THE CLOSURE FLOORS ARE A DIFFERENT THING FROM THE STATE FLOOR AND
+           THE SEAT SAYS BOTH.  Zero state-table floors does not mean zero
+           gaps: two large bodies this class's own slots CALL have no src TU
+           anywhere in the tree, and they are trapped in
+           unmatched/MgSnowball_Faces.cpp.  A nonzero count here is the
+           measured size of the player-facing gap, not a fault. */
+        {
+            unsigned obst = 0, layout = 0;
+            port_mg_snowball_floor_counts(&obst, &layout);
+            std::printf("[scene] dScMgSnowball_c CLOSURE floors (trapped, "
+                        "count-and-return): func_ov006_02125f68 the obstacle "
+                        "pass %u call(s), func_ov006_02126ee4 the course "
+                        "layout %u call(s). Neither has a src TU; the rocks "
+                        "message 554 promises are the expected gap\n",
+                        obst, layout);
+        }
     }
 
     /* THE SCENE PHASE AND THE SCREEN-SWAP FLAG.  Slot 6 dispatches a six-arm

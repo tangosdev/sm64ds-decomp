@@ -389,3 +389,38 @@ src/func_ov006_0212992c.c
 src/func_ov006_02129894.cpp
 src/func_ov006_021297c0.c
 src/func_ov006_0212972c.c
+#
+# ---- 12. WAVE 1: WHAT THE LINK ASKED FOR --------------------------------
+#
+# The first link of this seat named ELEVEN symbols and they split three ways.
+#
+# ONE is an /alternatename row, in port/unmatched/MgSnowball_Faces.cpp: the
+# constructor's src declares this class's vtable at C++ linkage, so the
+# reference mangles as ?data_ov006_0214000c@@3PAXA against the mount's plain
+# _data_ov006_0214000c.  It did NOT ask for the middle base's twin, because an
+# earlier seat under dScMgSingle3DBase_c already stands that row.
+#
+# TWO are FLOORS with no src TU anywhere in the tree, trapped in the same file
+# and counted rather than guessed:
+#     func_ov006_02125f68   0x9e0, called twice from vtable slot 6
+#     func_ov006_02126ee4   0xacc, called from vtable slot 18 and slot 0
+# Both are this class's alone -- their complete caller sets in ov006 are those
+# four sites -- so they are trapped in this lane's own file rather than in the
+# shared hal/scene_mg_faces.cpp, and the mg9 BOO/S371 LNK2005 collision shape
+# cannot repeat.  func_ov006_02126ee4 calls RandomIntInternal eleven times and
+# nothing else: it is the course layout.  func_ov006_02125f68 is the obstacle
+# and collision pass.  SO THE ROCKS message 554 promises are the expected
+# player-facing gap in this seat, stated up front rather than found by eye.
+#
+# EIGHT are ordinary slice lines and are appended below.  Section 14 of
+# port/mg_fanout_costs.txt says to budget ONE wave plus its own alias row;
+# this class took one wave, one alias and two traps.
+#
+src/func_ov006_02125800.c
+src/func_ov006_02125804.c
+src/func_ov006_02125890.c
+src/func_ov006_02126948.c
+src/func_ov006_02126a98.c
+src/func_ov006_021279b0.cpp
+src/func_ov006_0212968c.c
+src/func_ov006_02129690.c

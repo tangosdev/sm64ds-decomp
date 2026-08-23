@@ -4990,7 +4990,16 @@ set(SLICE_SNW_SOURCES hal/scene_mg_snowball.cpp
                       # LOUD shape).  src/func_ov006_0212a2e0.cpp,
                       # src/func_ov006_0212a224.cpp and
                       # src/func_ov006_02129d94.cpp are out of the slice.
-                      unmatched/MgSnowball_StateDispatch.cpp)
+                      unmatched/MgSnowball_StateDispatch.cpp
+                      # The one /alternatename row the first link asked for
+                      # (this class's vtable declared at C++ linkage in the
+                      # constructor), plus the TWO closure floors: two large
+                      # ov006 bodies with no src TU anywhere in the tree, whose
+                      # complete caller sets are this class's own slots 0, 6
+                      # and 18.  Trapped in this lane's file rather than the
+                      # shared hal/scene_mg_faces.cpp precisely because nothing
+                      # else in the overlay reaches them.
+                      unmatched/MgSnowball_Faces.cpp)
 foreach(line IN LISTS SLICE_SNW_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
