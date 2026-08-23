@@ -729,6 +729,74 @@ Gaps, per cluster, from what the two overlays actually poke:
      shell cluster) and scene 1's pre-existing garbled top-left block (368 px,
      garbage in both arms, flagged for the owner).
 
+  k. ENGINE A ORDERED SPRITE AGAINST BACKGROUND NOT AT ALL. Closed by run mg10
+     lane RGX, which is the half j names and leaves open.
+
+     hal/message_compositor.cpp's raster_obj wrote its hit buffer over whatever
+     the BG loop had left there, so every sprite covered every background
+     whatever the two priorities said. GBATEK's OAM attribute 2 calls bits
+     10-11 the sprite's "Priority relative to BG (0-3; 0=Highest)" and gives
+     the TIE to the sprite: where a sprite's priority equals a background
+     layer's, the sprite is displayed on top of that layer. So a sprite loses
+     only to a background whose priority NUMBER is strictly smaller, and the
+     test is `<` rather than `<=`.
+
+     BESIDE j's TEST, NOT INSIDE IT, which is what j says to do: the two rules
+     have opposite ties, and folding them together by dropping j's owner check
+     would apply the sprite-against-sprite tie to backgrounds. Separate tests,
+     separate kill switches -- SM64DS_OBJBG_OFF=1 here, SM64DS_OBJPRIO_A_OFF=1
+     there.
+
+     THE 3D LAYER NEEDED NOTHING, and h is why. With bit 3 set BG0 IS the 3D
+     layer, so "OBJ against the 3D layer" is this same rule, and h's
+     layer_behind_3d already gives the sprite the tie (`prio > p3d`). read_bg
+     disables BG0 exactly then, so no hit-buffer cell is ever owned by it and
+     the new test cannot see the 3D layer at all. Said here because a reader
+     who finds k and not h would conclude the 3D case is missing.
+
+     THE SWEEP: 22 of the 23 hosted scenes and the level 1 selftest are
+     byte-identical across the arms, the selftest at the md5 g and i record.
+     Scene 370 is the only row that moves, 8960 host px, and it moves because
+     that scene's BG0 is a priority-0 curtain that was already burying BG2 and
+     BG3 whole -- the sprites are simply no longer drawing over the thing that
+     covers everything else. Flagged for the owner rather than smoothed over.
+     Full derivation, the GBATEK citations, the toggle-honesty proof against a
+     base build and the per-pixel transcripts are in port/ppu_blend.txt's mg10
+     section.
+
+  l. THE 3D LAYER LOST ITS PROJECTION MATRIX EVERY FRAME. Closed by run mg10
+     lane RGX while chasing scene 361's empty top screen; the third defect in
+     this file that is a HOST frame-boundary artefact rather than a display
+     mode the port failed to model.
+
+     ntr/gx.cpp's gx_reset models no ROM instruction: hal/scene_boot.cpp's
+     frame loop calls it once a frame as the host's own begin-frame, and it did
+     `g = State{}`, which returns the projection matrix to the identity. The DS
+     has no frame boundary for that state -- the matrices are latched registers
+     -- so a scene that programs its camera ONCE and never touches it again was
+     correct on hardware and blank here.
+
+     TWO HOSTED SCENES DO EXACTLY THAT, and they are the two whose top captures
+     were byte-identical to each other, which is the check that says one defect
+     and not two: 361 (dScMgCup_c) and 367 (dScMgSound_c) load the projection
+     from Camera_UpdateMatrices at init only, while 362, 363, 381, 388, 389 and
+     390 reload it from Render every frame and so could not notice.
+     ppu_audit's PROJ_IDENTITY row read 1 on all 300 samples of 361 and 367 and
+     0 on the rest; 311 of 361's 1806 triangles were drawable against 1163 of
+     363's 1783; and 361's top screen carried 21 distinct colours.
+
+     THE COMPOSITOR WAS NOT INVOLVED AND THE ATTRIBUTION SAYS SO: on 361 it
+     reported `3D 193428 px kept, 3180 buried` out of 196608 host pixels, with
+     no 2D layer owning anything but 795 px of OBJ. It kept 98.4% of a layer
+     that had nothing in it.
+
+     AFTER: 361 and 367 both go PROJ_IDENTITY 1 -> 0 and drawable to 1806 of
+     1806, and 361's top screen to 4311 distinct colours. Every other hosted
+     scene and every mounted level's selftest is byte-identical.
+     SM64DS_PROJ_CARRY_OFF=1 restores the old wipe. This is gx_reset's own
+     light-table defect one class of state over, and that comment is the
+     precedent it cites.
+
 None of a..f blocks LINKING either overlay. They block the overlay doing
 anything visible once linked. That distinction is the whole shape of this
 category: the code is 97% matched and the hardware is 70% modelled, and what

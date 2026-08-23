@@ -499,3 +499,320 @@ twice -- and a row is evidence only when the control is 0:
   f300  ON-vs-OFF   272 px   control     0 px   kept
 
 All three kept rows are top-screen-only and are the snow-under-the-shell shape.
+
+
+================================================================================
+OBJ-VS-BG: THE HALF SGX LEFT OPEN, AND WHAT IT COSTS
+(run mg10, lane RGX)
+================================================================================
+
+SGX above fixed sprite-against-sprite on engine A and said, in the code and in
+this file and in port/ov004_ov007_2d_map.txt section 7 j, that sprite-against-
+BACKGROUND was a different rule it was deliberately not taking. This is that
+rule.
+
+
+1. THE RULE, CITED RATHER THAN INFERRED
+---------------------------------------
+
+GBATEK, OAM attribute 2, names the field the sprite is ordered by: bits 10-11
+are the "Priority relative to BG (0-3; 0=Highest)". The same page settles the
+tie in the sprite's favour -- when a sprite's priority equals a background
+layer's, the sprite "becomes higher priority and is displayed on top of that BG
+layer". GBATEK's BGxCNT page gives the backgrounds' own field the same shape
+("BG Priority (0-3, 0=Highest)") and breaks BG-against-BG ties by index: at
+equal priority BG0 is in front and BG3 behind.
+
+So a sprite loses to a background ONLY when the background's priority NUMBER is
+strictly smaller. The test is `<`, not `<=`, and getting that backwards would
+hide every sprite that shares a priority with a background it is meant to sit on
+top of.
+
+THE THREE BG-AGAINST-BG HALVES WERE ALREADY RIGHT and are not touched: the BG
+loop in hal/message_compositor.cpp walks prio 3 -> 0 and, within a priority,
+BG3 -> BG0, so the last background to write a cell is the frontmost one. That is
+why comparing the sprite against ONE cell answers the whole layer -- the cell
+holds the background the hardware would have shown.
+
+THE 3D LAYER IS THE SAME RULE AND WAS ALREADY IMPLEMENTED. With DISPCNT bit 3
+set BG0 IS the 3D engine's output, so "OBJ against the 3D layer" is "OBJ against
+BG0" and the tie still goes to the sprite. read_bg disables BG0 exactly then, so
+no hit-buffer cell is ever owned by it and the new test cannot see it; the
+comparison happens at the final blit instead, in layer_behind_3d, whose OBJ arm
+is `prio > p3d`. Strictly worse loses, equal wins. Nothing about the 3D layer
+moves in this lane, and this paragraph exists because a reader who finds the new
+test and not that one would conclude the 3D case is missing.
+
+
+2. THE CHANGE (hal/message_compositor.cpp, raster_obj, one test)
+----------------------------------------------------------------
+
+    if (!objbg_off && g_a[py][px].hit
+        && g_a[py][px].owner != kOwnerObj
+        && g_a[py][px].prio < prio)
+        continue;
+
+BESIDE SGX's test, NOT INSIDE IT. The two are different rules with different
+ties -- sprite-against-sprite keeps the last writer on a tie, sprite-against-
+background gives the tie to the sprite -- and they get separate kill switches so
+a lane bisecting a changed frame can switch off one without the other:
+SM64DS_OBJBG_OFF=1 here, SM64DS_OBJPRIO_A_OFF=1 there.
+
+WHAT IT ALSO FIXES, WITHOUT BEING ABOUT BLENDING. The semi-transparent OBJ path
+blends against whatever g_a holds, and before this test that could be a
+background IN FRONT of the sprite -- a blend against a layer the hardware would
+never have put underneath it. Those pixels are skipped outright now.
+
+SM64DS_OBJBG_PROBE=x,y is the per-pixel transcript this lane's evidence is taken
+with. Section 4 of the mg8 write-up above took the same reading by hand-patching
+raster_obj for one run; keeping the probe means the next lane needs no patch. It
+prints, for one DS pixel: what the BG loop left there, one line per OAM entry
+that reaches it with what each of the two OBJ tests decided, and the 2D result.
+
+
+3. THE TOGGLE IS HONEST, PROVEN THE SGX WAY
+-------------------------------------------
+
+.dsstate lands at the SAME base AND the same span before and after this change,
+[0xc5c000, 0xd463d0), 959440 bytes, so notes/port-selftest-bmp-gate.md permits
+the cross-binary compare as well as the one-binary A/B.
+
+Tip binary with SM64DS_OBJBG_OFF=1, against a base build made in the same
+worktree from clean c941e1855: all 23 hosted scenes and the level-1 selftest
+BYTE-IDENTICAL, 24 rows of 24, zero differing. The switch restores the old
+compositor exactly.
+
+
+4. THE SWEEP
+------------
+
+A/B on ONE BINARY, 300 headless frames, every hosted scene plus the level-1
+selftest, top capture (SM64DS_SCENE_BMP, which is the 512x384 framebuffer in
+either stacked layout -- so the stacked-height trap run mg9 lane CUP records
+cannot reach this table), md5 over each:
+
+  scene 1, 4, 361, 362, 363, 364, 366, 367, 368, 369, 371, 374, 375, 376,
+        378, 380, 381, 386, 387, 388, 389, 390          IDENTICAL
+  level 1 selftest    IDENTICAL, md5 5b783a29d753ce4dfbd35c79a7b2850f, the
+                      value port/ov004_ov007_2d_map.txt records
+  scene 370           DIFFERS, 8960 host px / 2240 DS px, bbox DS
+                      (48,0)-(207,191)
+
+TWENTY-TWO OF THE TWENTY-THREE DO NOT MOVE, and the reason is not luck: a scene
+only moves here if it has a sprite overlapping a background whose priority
+number beats the sprite's, and most of these scenes put their sprites at
+priority 0 or run one background.
+
+Scene 375, the scene SGX moved, does NOT move here: its snow is priority 0, its
+shells priority 1 and its reflections priority 2, against BG2 and BG3 at
+priority 2 -- so no sprite in it meets a strictly better background.
+
+
+5. SCENE 370, THE ONE CHANGE, PROBED RATHER THAN ARGUED
+-------------------------------------------------------
+
+FLAGGED FOR THE OWNER AS A CHANGE THAT LOOKS LIKE A LOSS. Green sprite texels
+(4abd31, 189c00) become 000018. SM64DS_OBJBG_PROBE=104,0, last frame:
+
+  f300 (104,0) BG loop left BG0 prio 0 colour 000018
+  f300 (104,0) oam  6 mode0 prio2 texel 4abd31: SKIP, BG0 prio 0 is in front
+  f300 (104,0) 2D result: BG0 prio 0 colour 000018
+
+Engine A on the IDLE scene runs DISPCNT 0x00001d00 (bit 3 clear, BG0/BG2/BG3/OBJ
+enabled, and d45c = 0x1d agrees so the enables are the game's own), BG0CNT 0x5610
+priority 0, BG2CNT 0x9411 priority 1, BG3CNT 0x1212 priority 2. BG0 is a FLAT
+SOLID CURTAIN on that frame -- 4bpp index histogram i14 x49152, every one of its
+768 screen entries naming palette bank 14 -- and it owns 47986 of 49152 pixels
+while BG2 and BG3 own ZERO between them.
+
+SO THE SPRITES ARE NOT WHAT BROKE. BG0's curtain was burying both artwork layers
+before this change and still is; what this change adds is that the sprites at
+priority 2 no longer draw over the thing that is already covering everything
+else. The layering is now what the registers say, and the registers are the
+open question. Recorded here rather than smoothed over: the frame reads worse
+and the rule is right, and those are both true.
+
+
+6. WHAT THIS DOES NOT CLOSE
+---------------------------
+
+A 1st-target BG blending over the OBJ layer. The BG loop runs entirely before
+raster_obj, so g_a never holds an OBJ pixel while a background is being
+composited, and BLDCNT naming OBJ as a 2nd target under a BG 1st target cannot
+fire. Pre-existing, unchanged by this lane, and it needs the same fix the
+remaining semi-OBJ divergence needs: resolving OBJ into its own buffer the way
+ntr/ppu_sub.cpp does.
+
+
+================================================================================
+THE 3D LAYER'S PROJECTION MATRIX DID NOT SURVIVE THE HOST'S FRAME BOUNDARY
+(run mg10, lane RGX)
+================================================================================
+
+Not a blend and not a priority, and it is in this file because it was found
+INSIDE a compositor investigation and the first three measurements a reader will
+reach for all point at the compositor and are all wrong.
+
+THE REPORT was scene 361 (dScMgCup_c, "Tox Box Shuffle"): the top screen shows
+essentially nothing. Run mg9's CUP review localized it to "between triangle
+rasterization and engine A's BG0 composite" and recorded that DISPCNT is
+byte-identical to shipped scene 363, which works.
+
+THE COMPOSITOR IS EXONERATED WITH A NUMBER, which is the half this file owes.
+hal/message_compositor.cpp's attribution on 361, last frame of 300:
+
+  BG0 0 px   BG1 0 px   BG2 0 px   BG3 0 px   OBJ 795 px
+  3D  193428 px kept, 3180 px buried under a 2D layer in front of it
+      (host 512x384 = 196608 px)
+
+DISPCNT 0x00001108: bit 3 set, BG0 enabled, so the 3D layer IS in the picture
+and the compositor keeps 98.4% of it. What it keeps is a nearly flat blue field
+-- 21 distinct colours over the whole capture, against 8985 on 363.
+
+  scene            PROJ_IDENTITY   triangles   drawable
+  361 CUP                1            1806        311
+  367 BOOMBOX            1            1806        177
+  387 BOOSEEK            1               0          0
+  362 MEMORY1            0            1783       1219
+  363 MEMORY2            0            1783       1163
+  381 MCARLO             0            1783       1219
+  388 LUCKYSTARS         0            1783       1219
+  389 PSYCHEOUT          0             383        181
+  390 FLOWER             0             878        760
+
+361 and 367 are the two scenes with an identity projection AND their top
+captures are BYTE-IDENTICAL to each other, which is the check that says one
+defect rather than two.
+
+THE CAUSE. SM64DS_MTX_LOG's call stacks, resolved through walk_window.map:
+
+  363, EVERY FRAME   port_scene_run -> port_actor_render -> func_02043fdc
+                     -> port_dispatch_guarded -> func_0204322c -> mem_render
+                     -> func_ov006_020f73f4 -> Camera_UpdateMatrices
+                     -> G3i_PerspectiveW_ -> gx_write_port
+  361, ONCE AT INIT  port_scene_run -> Scene::SpawnIfNecessary -> ...
+                     -> cup_init -> func_ov006_020e0308 -> Camera_UpdateMatrices
+
+MTX_LOAD_4x4 runs 1 per frame on 363 and 0 per frame on 361 after boot. 361
+programs its camera once, which for a fixed-camera shell game is the ROM's
+intent and is correct on a DS -- the projection matrix is a latched register
+bank with no frame boundary. The PORT threw it away: hal/scene_boot.cpp's frame
+loop calls ntr::gx_reset() once a frame and gx_reset did `g = State{}`.
+
+gx_reset MODELS NO ROM INSTRUCTION. Nothing in the game calls it; it is the
+host's own begin-frame. That is the same argument its own comment already makes
+about the light table -- "it is not per-frame state ... nothing on a DS clears
+them at a frame boundary" -- which run mg5 lane YTEX had to carry across for
+exactly this reason. The projection matrix is the same class of state.
+
+THE FIX is three lines in ntr/gx.cpp: keep g.proj across the assignment.
+SM64DS_PROJ_CARRY_OFF=1 restores the wipe on the same binary. The projection
+STACK is deliberately not carried; the line that identities it has its own
+derivation about display lists opening with MTX_RESTORE, nothing measured needs
+it, and nothing in the sweeps moved without it.
+
+AFTER:
+  361  PROJ_IDENTITY 1 -> 0, drawable 311 -> 1806 of 1806 (at 300 frames),
+       top screen 21 distinct colours -> 4311
+  367  PROJ_IDENTITY 1 -> 0, drawable 177 -> 1806 of 1806 (at 120 frames --
+       not like-for-like with 361's 300-frame row), 21 -> 4311
+  363  unchanged; it reloads every frame, so a carry cannot reach it
+  (361's and 367's captures are byte-identical to each other in both arms,
+  so their colour counts are necessarily equal; an earlier draft here read
+  7082/7073 off a stacked capture mislabelled as the top screen)
+
+THE SWEEPS. .dsstate does not move, [0xc5c000, 0xd463d0), 959440 bytes.
+
+  23 hosted scenes + level-1 selftest, SM64DS_PROJ_CARRY_OFF=1 vs default:
+      DIFFERS 361 and 367 ONLY
+  the SM64DS_PROJ_CARRY_OFF arm vs the tip that predates this change:
+      byte-identical on all 24 rows -- the switch is honest
+  ALL 46 MOUNTED LEVELS' selftest BMPs, same A/B on one binary:
+      46 of 46 BYTE-IDENTICAL, level 1 at 5b783a29d753ce4dfbd35c79a7b2850f
+  canary 374: 12a97fbf4fe0c12573dbf8a56eb32aed, EXACT in every arm
+
+The level sweep is here because a geometry-engine change owes it: a level is a
+3D scene too, and the 23 hosted scenes are not the whole regression surface.
+
+WHAT IS STILL OPEN. Scene 387 (dScMgBooSeek_c) reports PROJ_IDENTITY 1 as well
+and is NOT fixed by this, because it submits ZERO triangles -- a different
+defect that happens to share one row of this table. Named so the table is not
+read as closing it.
+
+
+================================================================================
+SCENE 370's BOMB MARCH: THE COMPOSITOR IS NOT WHY IT DOES NOT DRAW
+(run mg10, lane RGX)
+================================================================================
+
+hal/scene_mg_bomroom.cpp section 9 records, from run mg8, that the seeded
+bin-full repro reaches the carry with the counter advancing while "the central
+play field is BLACK and no bombs are drawn in it", and that lane SGX's engine-A
+OBJ priority fix was the plausible cure and was not the cure. This lane put the
+OBJ-vs-BG rule in as well, re-ran the same repro, and it is still not the cure.
+What follows is where it actually is, so the next lane does not spend another
+run on the raster.
+
+THE ARMS FIRST. SM64DS_SOS_FILL=40 + SM64DS_SOS_TRACE=1, top capture, ON vs
+SM64DS_OBJBG_OFF=1: f380 1708 px, f450 4908 px, f560 1720 px -- and the black
+field is IDENTICAL in both arms. The rule does not touch it. The trace says the
+march is running: t374 top=3 sub=2, all forty bombs at state 6 substate 4.
+
+1. THE BOMBS ARE OBJ, ON BOTH ENGINES. src/func_ov004_020afdd0.cpp is the
+   framework plotter -- OAM::Render at y + 0xc0 + G for the top engine and
+   OAM::RenderSub at y for the bottom, the RenderOamBothScreens shape.
+
+2. THEY ARE NOT IN ENGINE A's OAM IN THAT REPRO, AND THE SEED IS WHY.
+   src/func_ov006_020d7524.c is the bomb renderer, reached from Render slot 9,
+   and it opens `if (self->e[i].b699 == 0) continue;` -- byte +0x4699. The ROM
+   sets that byte in func_ov006_020d8324, the spawn-delay state, which counts
+   +0x4690 down and then writes +0x4699 = 1, +0x4694 = 1, +0x4697 = 1.
+
+   sos_binfill writes +0x698, +0x697, +0x69b, +0x69c, +0x69d, +0x690, +0x692,
+   +0x696, +0x670, +0x688, +0x68c, +0x660 and +0x664 -- every field
+   func_ov006_020d8408 writes, which is exactly what its header promises -- and
+   then calls the ROM's drop handler, which parks the bomb at +0x697 == 5. The
+   delay state never runs, so +0x4699 is never set, so no seeded bomb is ever
+   submitted. The seed jumps a bomb from "just spawned" straight to "parked in a
+   bin" and skips the state that turns its drawing on.
+
+   MEASURED, by a temporary edit made, read and reverted: adding +0x699 = 1 and
+   +0x694 = 1 to the seed takes engine A's OBJ ownership at f380 from 2956 px to
+   13475 px. The bombs draw. Nothing in the compositor changed.
+
+   THE ONE-LINE HANDBACK, for whoever owns hal/scene_mg_bomroom.cpp: in
+   sos_binfill, beside the existing +0x698/+0x697 writes, add
+       *(unsigned char *)(b + 0x699) = 1;
+       *(unsigned char *)(b + 0x694) = 1;
+   which is what func_ov006_020d8324 writes when the delay it seeds expires.
+   NOT taken here: that file is not this lane's.
+
+3. THE BLACK FIELD IS BG2 SCROLLING OFF, AND THE ROM DRIVES IT.
+   src/func_ov006_020d5b10.c state 1 does `+0x62dc += 0x3000` per frame and
+   `SetBg2Offset(0, +0x62dc >> 12)`, up to 0xc0 = 192, then clamps. BG2CNT 0x9411
+   is a 32x64 map -- 256x512 px -- whose content ENDS at map row 191. Read off
+   the strip probe across the whole ramp:
+
+     rows  24..191   5120/8192 opaque      (flat, the field)
+     rows 189..220    480/8192 opaque      (the last of it leaving)
+     rows 192..223      0/8192 opaque      (empty map)
+
+   so at vofs 192 BG2 owns 0 px and BG3 -- priority 2, 8192/8192 opaque, 74.5%
+   near-black there -- is what shows. Probed at DS(150,100):
+
+     f380  BG loop left BG2 prio 1 colour cecece
+     f560  BG loop left BG3 prio 2 colour 000000
+
+   The compositor draws what the registers and VRAM say, on both frames.
+
+4. AND THE ROM ITSELF STOPS DRAWING THE MARCHING BOMBS. At the clamp,
+   func_ov006_020d5b10 calls func_ov006_020d8904, which writes +0x699 = 0 on
+   every bomb in state 6. With the seed corrected, engine A's OBJ ownership runs
+   13275..14290 px through f442 and falls to 2956 px by f506, centred on that
+   clamp.
+
+STILL OPEN, AND IT IS A CARTRIDGE-DATA QUESTION RATHER THAN A RASTER ONE:
+whether BG3's near-black centre is what a real DS shows once the field slides
+off. That is scene 366's shape -- compare BG3's tiles and palette against the
+ROM's own files, the way run mg5 lane WREND settled the Luigi curtain -- and it
+is not answerable from this side of the compositor.
