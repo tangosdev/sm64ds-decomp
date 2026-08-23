@@ -1,36 +1,52 @@
 //cpp
+#include "ArrowSignRight.h"
+
+struct ArrowSignFileColumn {
+    void *value;
+    void *nextColumn1;
+    void *nextColumn2;
+};
+
 extern "C" {
-extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* bmd, int a, int b);
-extern void _ZN11ShadowModel10InitCuboidEv(void* self);
-extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* self);
-extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
-extern void func_ov098_02137c8c(char* t);
-extern void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void* fp);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* kcl, void* mtx, int fix, short s, void* clps);
+void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
+void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b);
+void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
+void func_ov098_02137c8c(char *self);
+void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp);
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void *self, void *kcl, void *mtx, int scale, short angle, void *clps);
 
-struct Entry { void* a; void* b; void* c; };
-extern struct Entry data_ov098_0213c380[];
-
-int _ZN14ArrowSignRight13InitResourcesEv(char* c){
-  unsigned short field = *(unsigned short*)(c+0xc);
-  if(field != 0x12b){
-    if(field == 0x12c)
-      *(unsigned char*)(c+0x37c) = 1;
-  } else {
-    *(unsigned char*)(c+0x37c) = 0;
-  }
-  unsigned int idx = *(unsigned char*)(c+0x37c);
-  void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov098_0213c380[idx].a);
-  _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, m, 1, -1);
-  _ZN11ShadowModel10InitCuboidEv(c+0x320);
-  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
-  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
-  func_ov098_02137c8c(c);
-  unsigned int idx2 = *(unsigned char*)(c+0x37c);
-  void* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov098_0213c380[idx2].b);
-  _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-      c+0x124, kcl, c+0x2ec, 0x199, *(short*)(c+0x8e), data_ov098_0213c380[idx2].c);
-  return 1;
+/* Each row is model/KCL/CLPS, but the ROM gives each column its own symbol.
+ * These three overlapping stride-0xc views keep those relocation destinations
+ * distinct while still indexing the table as rows. */
+extern ArrowSignFileColumn data_ov098_0213c380[];
+extern ArrowSignFileColumn data_ov098_0213c384[];
+extern ArrowSignFileColumn data_ov098_0213c388[];
 }
+
+int ArrowSignRight::InitResources()
+{
+    u16 id = actorID;
+    if (id != 0x12b) {
+        if (id == 0x12c)
+            unk_37c = 1;
+    } else {
+        unk_37c = 0;
+    }
+
+    u32 modelIndex = unk_37c;
+    void *model = _ZN5Model8LoadFileER13SharedFilePtr(data_ov098_0213c380[modelIndex].value);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, model, 1, -1);
+    mShadowModel.InitCuboid();
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(this);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(this);
+    func_ov098_02137c8c((char *)this);
+
+    u32 collisionIndex = unk_37c;
+    void *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov098_0213c384[collisionIndex].value);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY,
+        data_ov098_0213c388[collisionIndex].value);
+    return 1;
 }

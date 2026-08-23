@@ -31,6 +31,7 @@ struct ArrowSignRight : dBgActor_c {
 
     int Behavior();
     int CleanupResources();
+    int InitResources();
     int Render();
     virtual int  OnAttacked1(dActor_c &other);      /* slot 22 */
     virtual void OnHitByMegaChar(Player &player);   /* slot 27 */

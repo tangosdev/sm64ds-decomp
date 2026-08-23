@@ -30,6 +30,7 @@ struct SlidingIce : dBgActor_c {
 
     int Behavior();
     int CleanupResources();
+    int InitResources();
     int Render();
 
     virtual void OnHitByMegaChar(Player &player);   /* slot 27 */

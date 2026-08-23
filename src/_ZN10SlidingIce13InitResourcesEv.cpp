@@ -1,39 +1,46 @@
 //cpp
-#include "dBgW.h"
+#include "SlidingIce.h"
+
 extern "C" {
-extern int _ZN5Model8LoadFileER13SharedFilePtr(void *);
-extern int _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *);
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, int, int, int);
-extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *);
-extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, int, void *, int, int, void *);
-extern void func_020393d4(int *p, int v);
+int _ZN5Model8LoadFileER13SharedFilePtr(void *);
+int _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *);
+int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, int, int, int);
+void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *);
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *);
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void *, int, void *, int, int, void *);
+void func_020393d4(int *p, int v);
 extern int data_ov027_02113be8[];
 extern char data_ov027_02113be0[];
 extern char data_ov027_02113108[];
 extern int _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_[];
-int _ZN10SlidingIce13InitResourcesEv(char *c){
-  _ZN5Model8LoadFileER13SharedFilePtr(data_ov027_02113be8);
-  _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov027_02113be0);
-  int on = (*(unsigned short*)(c+0xc)==0x5d);
-  if(on){
-    if(_ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, data_ov027_02113be8[1], 1, -1)==0)
-      return 0;
-    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
-    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        c+0x124, *(int*)(data_ov027_02113be0+4), c+0x2ec, 0x1000, *(short*)(c+0x8e), data_ov027_02113108);
-    func_020393d4((int*)(c+0x124), (int)_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
-    *(char*)(c+0x170) = 0;
-    ((dBgW *)(c+0x124))->Enable((dActor_c *)(c));
-    *(int*)(c+0x98) = 0x2d000;
-    *(short*)(c+0x31e) = 0x64;
-    *(short*)(c+0x94) = -0x4000;
-    *(int*)(c+0x324) = *(int*)(c+0x60) - 0xc8000;
-  } else {
-    *(short*)(c+0x31e) = *(unsigned char*)(c+0x320) * 0x14;
-    *(char*)(c+0x320) = 5;
-  }
-  return 1;
 }
+
+int SlidingIce::InitResources()
+{
+    _ZN5Model8LoadFileER13SharedFilePtr(data_ov027_02113be8);
+    _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov027_02113be0);
+
+    int on = (actorID == 0x5d);
+    if (on) {
+        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, data_ov027_02113be8[1], 1, -1) == 0)
+            return 0;
+        _ZN10dBgActor_c21UpdateModelPosAndRotYEv(this);
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(this);
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+            &mMeshCollider, *(int *)(data_ov027_02113be0 + 4), &mClsnMat,
+            0x1000, mAngleY, data_ov027_02113108);
+        func_020393d4((int *)&mMeshCollider,
+            (int)_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+        mMeshCollider.unk_4c = 0;
+        mMeshCollider.Enable(this);
+        mHorzSpeed = 0x2d000;
+        unk_31e = 0x64;
+        mPrevAngleY = -0x4000;
+        mMinPosY = mPosY - 0xc8000;
+    } else {
+        unk_31e = (u8)mNumToBigIce * 0x14;
+        mNumToBigIce = 5;
+    }
+    return 1;
 }

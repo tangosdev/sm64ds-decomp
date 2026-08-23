@@ -1,12 +1,19 @@
 //cpp
-struct PathLift;
-typedef void (PathLift::*PLFn)();
-struct Entry { char pad[8]; PLFn fn; char tail[4]; };
-extern "C" Entry data_ov002_0210af2c[];
-struct PathLift { char pad[0x450]; };
-extern "C" void _ZN8PathLift12BaseBehaviorEv(PathLift *c) {
-    int i = *(int*)((char*)c + 0x44c);
-    Entry *e = &data_ov002_0210af2c[i];
-    (c->*(e->fn))();
-    *((unsigned char*)c + 0x42a) = 0;
+#include "PathLift.h"
+
+typedef void (PathLift::*PathLiftStateFn)();
+
+struct PathLiftState {
+    char pad_00[8];
+    PathLiftStateFn behavior;
+    char pad_0c[4];
+};
+
+extern "C" PathLiftState data_ov002_0210af2c[];
+
+void PathLift::BaseBehavior()
+{
+    PathLiftState &state = data_ov002_0210af2c[mState];
+    (this->*state.behavior)();
+    unk_42a = 0;
 }

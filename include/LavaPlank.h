@@ -26,6 +26,7 @@ struct LavaPlank : dBgActor_c {
     /* --- vtable --- */
     virtual ~LavaPlank();
 
+    int Behavior();
     int CleanupResources();
     int InitResources();
     int Render();

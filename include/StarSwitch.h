@@ -45,6 +45,7 @@ struct StarSwitch : dBgActor_c {
 
     int Behavior();
     int CleanupResources();
+    int InitResources();
     int Render();
     void OnGroundPounded(dActor_c &other);
 };
