@@ -4739,27 +4739,20 @@ def cmd_promote(args):
               f"so `CREDIT LOST` is structural for this workstream and needs an explicit "
               f"policy (an attribution.json override keyed on the surviving path, or the "
               f"attribution-override label) BEFORE the first real promotion.")
-    # And a harder one that the credit computation above does not reach, found while
-    # investigating whether partial isolation changes the promotion story. It does not
-    # depend on git lineage at all, so no commit arrangement and no override touches it.
-    print(f"   HARDER, AND NOT WAIVABLE: tools/validate_merge.py binds a function to a "
-          f"source by FILE STEM -- function_snapshot() builds {{stem: path}} over src/ and "
-          f"looks the SYMBOL NAME up in it. Collapsing these {len(legacy)} files leaves no "
-          f"stem equal to any of the {len(legacy)} symbols, so all {len(legacy)} functions "
-          f"leave `matched` and the merge gate raises `lost {len(legacy)} matched "
-          f"function(s)`. Precisely: the attribution-override label maps to "
-          f"--allow-attribution-change, which DOES waive credit 'changed or was lost' "
-          f"(the two attribution reasons) -- but `lost N matched function(s)` is a "
-          f"separate, unconditional matched-COVERAGE check (validate_merge.py ~line 410), "
-          f"gated by no flag at all. No existing override reaches it. Verified against the "
-          f"real function_snapshot/attribution_snapshot at HEAD, where all {len(legacy)} "
-          f"are matched and credited today.")
-    print("   Consequence for sequencing: a whole-TU source collapse cannot land through "
-          "CI until validate_merge learns a symbol->source mapping that is not "
-          "'stem == symbol name'. config/**/delinks.txt already carries exactly that "
-          "mapping (each entry names a source AND the range it owns), and so does "
-          "config/tu_manifest.json; neither is consulted. `linkcheck --partial` is "
-          "unaffected -- it changes no source path at all.")
+    # validate_merge used to infer ownership only from filename stems. It now asks the
+    # revision's delinks enrollment map first, so a single path can retain matched and
+    # byte-verified coverage for every licensed function range it owns. Keep the dry
+    # run explicit about what remains; stale blockers are worse than no diagnosis here.
+    print("   COVERAGE GATE IS TU-AWARE: tools/validate_merge.py resolves source ownership "
+          "from config/**/delinks.txt before falling back to 'stem == symbol name', and "
+          "counts every function address inside a complete enrolled range. A shared TU "
+          "path therefore does not inherently lose matched or byte-verified coverage.")
+    print("   STILL BLOCKING PRODUCTION: tools/rombuild.py reduces its enrolled sources to "
+          "one symbol per path before isolation; enroll/eligibility, compiler-pin and "
+          "init ownership, metrics, port manifests, and contributor attribution also "
+          "need an explicit shared-source contract. Run tools/cpp_tu_compat.py for the "
+          "current executable compatibility matrix. `linkcheck --partial` remains the "
+          "non-mutating proof path while these blockers are present.")
     print("   Related, and NOT triggered by this TU but by any key-function TU: dsd "
           "derives vtable/typeinfo ownership from the mangled class name in the "
           "delinks.txt PATH, so replacing src/_ZN<Class>D1Ev.cpp with src/<dir>/<Class>.cpp "

@@ -9,7 +9,7 @@
 # WHY A LIST AND NOT A LIVE CHECK
 # --------------------------------
 # The other half of the byte-gate-failure class -- a zero-size record sharing an address
-# with a sized function -- IS derived live, in chaos_db_ci.alias_collision_addresses(),
+# with a sized function -- IS derived live, in bytegate.alias_collision_addresses(),
 # because it reads nothing but committed config. This half cannot be: deciding it means
 # running mwccarm, and the two workflows that regenerate chaos-db.json (update-chaos-data
 # and report) run on a stock ubuntu runner with `pip install pyelftools capstone` and
@@ -39,8 +39,8 @@
 #
 # HISTORY
 # --------
-# Recorded at a6dd3d3ec with 18 rows. `--recheck` now confirms 1 and retires 17: the
-# self-healing property did exactly what its docstring promised -- the 17 fixes were
+# Recorded at a6dd3d3ec with 18 rows. Rechecks retired all 18: the self-healing
+# property did exactly what its docstring promised -- the fixes were
 # made without reference to this file, and the rows lapsed on their own. They are
 # deleted here rather than left to lapse because a lapsed row is indistinguishable
 # from an un-re-checked one, which is what test_bytegate.test_no_row_is_stale exists
@@ -58,16 +58,12 @@
 # NOT "proven wrong", and repairing 15 of them into byte matches is what that predicted.
 # See audit/enrollment_report.md 4a.
 
-# --- extern "C" signature clash with include/decl_common.h (1) --------------------
+# --- retired extern "C" signature clash with include/decl_common.h ----------------
 # The file declares a symbol `extern "C"` with one signature and decl_common.h declares
 # the same symbol with C++ linkage and a different parameter type, so mwccarm rejects the
 # pair as an illegal overload and never reaches codegen.
 #
-# This is the one row of the original 16 that survives, and it is not a harder signature
-# problem -- the same repair compiles it. It stays because compiling it exposes calls to
-# func_02111b64/func_02111b6c, an address that resolves in four overlays (ov008, ov012,
-# ov013, ov017), so resolve_placeholders cannot settle the destination and
-# check_references reports a NEW unresolvable reference. It also fails eligibility rule 2
-# (.text section size against declared size), so repairing it would not enrol it either.
-# Retire this row only together with the co-residency work that settles the callee.
-2371acc5ad305f55 src/func_ov002_020e3e00.cpp extern-c-clash
+# This was the final row. Its source changed, and a pinned all-version `--recheck` on
+# 2026-08-22 confirmed that it now compiles, so the buildability exclusion is retired.
+# Its placeholder co-residency and eligibility questions belong to their own gates;
+# keeping a will-not-build row after it builds would conflate those policies.
