@@ -5027,6 +5027,13 @@ set(SLICE_BNP_SOURCES hal/scene_mg_jump.cpp
                       # src/func_ov006_020c4cd8.cpp and
                       # src/func_ov006_020c7860.cpp are OUT of slice_bnp.txt.
                       unmatched/MgD3DBase_ObjStateDispatch.cpp
+                      # The two virtual-shadow dispatches in the base family's
+                      # per-frame sub-object draws -- the defect
+                      # unmatched/MgMemory2_ModelRender_020c1804.cpp records,
+                      # twice, on plain ModelAnims. src/func_ov006_020c4c54.cpp
+                      # and src/func_ov006_020c7734.cpp are OUT of
+                      # slice_bnp.txt. Also shared with 0x175/0x180/0x181.
+                      unmatched/MgD3DBase_ModelRender.cpp
                       ${BNP_HOSTGEN_GEN})
 foreach(line IN LISTS SLICE_BNP_LINES)
     string(STRIP "${line}" line)
@@ -5038,6 +5045,8 @@ endforeach()
 foreach(dup IN ITEMS src/func_ov006_020ee27c.cpp
                      src/func_ov006_020c4cd8.cpp
                      src/func_ov006_020c7860.cpp
+                     src/func_ov006_020c4c54.cpp
+                     src/func_ov006_020c7734.cpp
                      src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp
                      src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp
                      src/func_ov006_020e6e78.cpp)

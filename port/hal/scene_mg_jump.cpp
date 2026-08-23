@@ -345,6 +345,12 @@ void  func_ov006_020e7124(void *self);          /* slot 33 */
 int   _ZN17MgBounceAndPounceD1Ev(void *self);
 int   _ZN17MgBounceAndPounceD0Ev(void *self);
 
+/* globals the SM64DS_BNP_TRACE render probe reads */
+extern int   data_ov006_02140328;
+extern int   data_ov006_02140324;
+extern int   data_ov006_02140418[];
+extern char *data_ov006_02140420[];
+
 /* the ROM's own state-0 installer, called only by the section-5 diagnostic */
 void  func_ov006_020ee658(void *self);
 
@@ -453,8 +459,36 @@ static int __fastcall bnp_beh(void *s, void *)
     return func_ov006_020ee27c(s);
 }
 
-static int   __fastcall bnp_render(void *s, void *)
-{ BNP(9);  return func_ov006_020ee034(s); }
+/* SM64DS_BNP_TRACE=1 also prints the ELEMENT VTABLE this class's Render
+   dispatches through, ONCE, before the first frame's dispatch. Slot 9 ends with
+   `((void(**)(void*,void*))(*(int*)(c+0x501c)))[5](c+0x501c, &t)` -- the Model
+   the factory constructs at that offset -- and run mg9 lane S381's headline is
+   that a factory-built sub-object carries its OWN table in word 0. A null in
+   that table's slot 5 is a jump to address zero from inside a body the seat
+   never sees, so the word is printed rather than assumed. */
+static int __fastcall bnp_render(void *s, void *)
+{
+    BNP(9);
+    static int shown;
+    if (!shown && std::getenv("SM64DS_BNP_TRACE")) {
+        shown = 1;
+        void **vt = *(void ***)((char *)s + 0x501c);
+        std::fprintf(stderr, "  [bnp] Render element object at %p, its vtable "
+                     "%p, slot5 %p, slot4 %p\n",
+                     (void *)((char *)s + 0x501c), (void *)vt,
+                     vt ? vt[5] : 0, vt ? vt[4] : 0);
+        std::fprintf(stderr, "  [bnp] Render inputs: +0x4664=%u  +0x5024=%p  "
+                     "*(+0x5028)=%p  loop counts 02140328=%d 02140418=%d  "
+                     "list base 02140420=%p 02140324=%d\n",
+                     (unsigned)*(unsigned short *)((char *)s + 0x4664),
+                     (void *)((char *)s + 0x5024),
+                     *(void **)((char *)s + 0x5028),
+                     data_ov006_02140328, data_ov006_02140418[0],
+                     (void *)data_ov006_02140420[0], data_ov006_02140324);
+        std::fflush(stderr);
+    }
+    return func_ov006_020ee034(s);
+}
 static void *__fastcall bnp_d2(void *s, void *)
 { BNP(16); return func_ov006_020edec0(s); }
 static void *__fastcall bnp_d0(void *s, void *)
@@ -667,6 +701,23 @@ extern "C" void port_scene_fill_jump(void)
         const char *s9 = std::getenv("SM64DS_SCENE_SLOT9");
         if (s0 && s0[0] == '0') vt[0] = (void *)bnp_init_noop;
         if (s9 && s9[0] == '0') vt[9] = (void *)bnp_render_noop;
+    }
+
+    /* SM64DS_BNP_TRACE=1: print both filled tables. A raw-DS census answers
+       "did a DS word survive"; it does not answer "is any slot NULL", and a
+       null slot is a jump to address zero rather than to a DS address. */
+    if (std::getenv("SM64DS_BNP_TRACE")) {
+        for (int t = 0; t < 3; ++t) {
+            void **p = t == 0 ? base : (t == 1 ? d3dbase : vt);
+            std::fprintf(stderr, "  [bnp] table %d (%s):\n",
+                         t, t == 0 ? "dScMgBase_c" :
+                            (t == 1 ? "dScMgD3DBase_c" : "dScMgJump_c"));
+            for (int i = 0; i < 36; ++i) {
+                std::fprintf(stderr, " %2d:%p", i, p[i]);
+                if (i % 6 == 5) std::fprintf(stderr, "\n");
+            }
+            std::fflush(stderr);
+        }
     }
 
     {

@@ -344,7 +344,7 @@
 #
 # ---- 11. THE LIST ----------------------------------------------------------
 #
-# 133 TUs. The ov004 framework, the thirty-five overlay constructors and the
+# 131 TUs. The ov004 framework, the thirty-five overlay constructors and the
 # arm9 waves under them are already carried by slice_mg1.txt; CMake appends
 # both lists to the same target and dedupes identical absolute paths, so
 # nothing is compiled twice. Lanes BNT, TTI and TTE will list the
@@ -374,7 +374,6 @@ src/func_ov006_020c4710.c
 src/func_ov006_020c47d4.c
 src/func_ov006_020c49d8.c
 src/func_ov006_020c4c00.c
-src/func_ov006_020c4c54.cpp
 src/func_ov006_020c4d1c.c
 src/func_ov006_020c4d20.c
 src/func_ov006_020c4d3c.c
@@ -418,7 +417,6 @@ src/func_ov006_020c7418.c
 src/func_ov006_020c7490.c
 src/func_ov006_020c7574.c
 src/func_ov006_020c76e0.cpp
-src/func_ov006_020c7734.cpp
 src/func_ov006_020c78ec.cpp
 src/func_ov006_020c79a8.cpp
 src/func_ov006_020c7a30.c
