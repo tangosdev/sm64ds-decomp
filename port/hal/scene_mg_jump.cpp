@@ -102,7 +102,9 @@
 // the next starts at 0x020eeafc, which is the body's own size to the byte --
 // and NO src file in either extension anywhere in the tree. It is the ONLY gap
 // in this class's code: a delink walk over 0x020edec0..0x020eebe8 finds
-// nineteen bodies and exactly one hole, this one. It is trapped below, and the
+// EIGHTEEN delink blocks and exactly one hole, this one -- while ov006's symbol
+// table names NINETEEN functions in the same span, the difference being the
+// floor itself, which has a symbol and no block. It is trapped below, and the
 // trap is honest about what it costs, because this floor is not an ordinary
 // one:
 //
@@ -347,6 +349,8 @@ int   _ZN17MgBounceAndPounceD0Ev(void *self);
 /* globals the SM64DS_BNP_TRACE render probe reads */
 extern int   data_ov006_02140328;
 extern int   data_ov006_02140324;
+extern int   data_ov006_02140428;
+extern int   data_ov006_02140304;
 extern int   data_ov006_02140418[];
 extern char *data_ov006_02140420[];
 
@@ -484,6 +488,13 @@ static int __fastcall bnp_render(void *s, void *)
                      *(void **)((char *)s + 0x5028),
                      data_ov006_02140328, data_ov006_02140418[0],
                      (void *)data_ov006_02140420[0], data_ov006_02140324);
+        /* the two globals that gate the ONE arm of state 020ee508 that reaches
+           func_ov006_020c81e0 and installs the pair {0x020c814c, 0} -- lane
+           BNT's dead-state finding, answered with a measurement. The arm needs
+           02140428 nonzero AND 02140304 zero. */
+        std::fprintf(stderr, "  [bnp] 020ee508 arm gate: 02140428=%d (needs "
+                     "!=0)  02140304=%d (needs ==0)\n",
+                     data_ov006_02140428, data_ov006_02140304);
         std::fflush(stderr);
     }
     return func_ov006_020ee034(s);

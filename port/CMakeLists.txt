@@ -4956,21 +4956,36 @@ endforeach()
 # adjudications, the seven state pairs and the one floor.
 #
 # THIS IS THE FIRST OF FOUR CLASSES UNDER dScMgD3DBase_c (0x174, 0x175, 0x180,
-# 0x181), and FOUR of the files below are SHARED with the other three rather
-# than owned by this lane. Lanes BNP and BNT of this same run arrived at all
-# four repairs INDEPENDENTLY and converged on the same filenames and the same
-# symbol names precisely so the two trees dedupe here instead of colliding:
+# 0x181), and FOUR of the files below are named for the BASE and are reusable by
+# the whole family rather than owned by this lane:
 #
-#   unmatched/MgD3DBase_Slots.cpp            slots 2, 10, 27, 28
-#   unmatched/MgD3DBase_DeclConflict.cpp     slot 24 (the decl_common C2733)
-#   unmatched/MgD3DBase_ModelAnimRender.cpp  the two ModelAnim shadow draws
+#   unmatched/MgD3DBase_Slots.cpp            slots 2, 10, 27, 28   (also BNT's)
+#   unmatched/MgD3DBase_DeclConflict.cpp     slot 24, the C2733    (also BNT's)
+#   unmatched/MgD3DBase_ModelAnimRender.cpp  the ModelAnim draws   (also BNT's)
 #   unmatched/MgD3DBase_ObjStateDispatch.cpp the two shared PMF dispatchers
+#                                            -- BNP-ONLY, see below
 #
-# Whichever family lane merges first brings them; the others must NOT add a
-# second copy under another name, because every one of these defines a symbol
-# the linker will see twice. The dScMgD3DBase_c half of slice_bnp.txt IS safe
-# to list twice: CMake appends every list to the same targets and dedupes
-# identical absolute paths.
+# THREE of the four are files lane BNT wrote as well. BNP and BNT hit those
+# three independently, from two different scenes, and converged on the same
+# filenames and the same symbol names precisely so the two trees collide in ONE
+# visible place each instead of producing three duplicate symbols.
+#
+# THE FOURTH IS BNP-ONLY and the distinction matters at the merge: BNT's tree has
+# no MgD3DBase_ObjStateDispatch.cpp and defines none of its symbols, because its
+# closure does not reach those two dispatchers. Nothing collides on it.
+#
+# AND THE THREE CONVERGED FILES ARE NOT BYTE-IDENTICAL, so the merge gate must
+# resolve three ADD/ADD conflicts by PICKING ONE COPY -- it does not get a free
+# dedupe. Comment-stripped diffs: BNT's Slots carries a vestigial
+# `#include <cstdio>` nothing uses; DeclConflict is CODE-IDENTICAL and differs
+# only in prose; ModelAnimRender differs in type spelling (BNT forward-declares
+# struct OamAttr / Matrix2x2 unqualified, this copy includes common.h and uses
+# the struct keyword) over the same two bodies. Lane TTI adopted THIS lane's
+# copies byte-identical, so picking the BNP copy leaves two of the four family
+# trees already in agreement.
+#
+# The dScMgD3DBase_c half of slice_bnp.txt IS safe to list twice: CMake appends
+# every list to the same targets and dedupes identical absolute paths.
 #
 # ONE VARIABLE, for the reason the flower, memory2, LKY and BOO blocks give:
 # the slice's ov006 bodies are only reachable through the address switches in

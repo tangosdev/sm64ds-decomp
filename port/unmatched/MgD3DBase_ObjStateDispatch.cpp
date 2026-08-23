@@ -1,11 +1,15 @@
 // PORT_HOST_ABI. The SECOND and THIRD mwcc pointer-to-member walls in
 // dScMgJump_c's closure, and NEITHER belongs to that class. Run mg11, lane BNP.
 //
-// SHARED FILE, NOT A LANE FILE, for the same reason MgD3DBase_Slot2.cpp is: the
-// two dispatchers below live in ov006's shared minigame-object region
-// (0x020c4000..0x020c9000), which dScMgD3DBase_c's four subclasses -- 0x174,
-// 0x175, 0x180 and 0x181 -- all reach. Whichever of the four seats lands first
-// owns this file; the other three call it rather than adding a second copy.
+// NAMED FOR THE BASE, BUT BNP-ONLY IN PRACTICE, and the distinction is a merge
+// fact rather than a style point. The two dispatchers below live in ov006's
+// shared minigame-object region (0x020c4000..0x020c9000), so any
+// dScMgD3DBase_c subclass whose closure reaches them can call this file --
+// which is why it carries the base's name. But lane BNT's tree has NO
+// MgD3DBase_ObjStateDispatch.cpp and defines none of these symbols: 0x175's
+// closure does not reach either dispatcher. So unlike the other three
+// MgD3DBase_* files this one has no BNP/BNT add/add conflict at the merge, and
+// a merge note that lumps all four together as "converged" is wrong by one.
 //
 // ---- 1. HOW THEY WERE FOUND, AND WHY THE FIRST SWEEP MISSED THEM ----------
 //

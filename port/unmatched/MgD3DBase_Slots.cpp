@@ -5,9 +5,16 @@
  * BNP (0x174, scene 372) and BNT (0x175, scene 373) of run mg11 arrived at
  * these four repairs INDEPENDENTLY, from two different scenes, and converged on
  * the same four bodies with the same four spellings. The file keeps BNT's
- * filename and BNT's four symbol names so the two lanes' trees dedupe at the
- * merge instead of colliding; the measurements below are BNP's own. Lanes
- * seating 0x180 and 0x181 should call these four rather than add a fifth copy.
+ * filename and BNT's four symbol names so the two lanes' trees collide in ONE
+ * visible place instead of producing four duplicate symbols; the measurements
+ * below are BNP's own. Lanes seating 0x180 and 0x181 should call these four
+ * rather than add a fifth copy.
+ *
+ * THE TWO COPIES ARE NOT BYTE-IDENTICAL, so the merge resolves an ADD/ADD
+ * conflict here by picking one rather than getting a free dedupe. The only code
+ * difference is a vestigial `#include <cstdio>` in BNT's copy that nothing in
+ * the file uses; the four bodies are the same. Lane TTI adopted THIS copy
+ * byte-identical.
  *
  * All four slots hold ONE body each in all four subclasses' tables, so a repair
  * here is a repair for the whole family.

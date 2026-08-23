@@ -227,6 +227,45 @@
 # last random draw. Reading it as an adjustment word would invent an eighth
 # state at code 0xffffffff that nothing installs.
 #
+# THE STATE CHAIN'S OWN CLOSURE WAS CHECKED AGAINST A NEIGHBOUR'S FINDING, and
+# it holds. Lane BNT traced a state pair it could not reach -- {0x020c814c, 0},
+# installed by func_ov006_020c81e0 -- and found the only path to it runs through
+# THIS class's field states:
+#
+#     func_ov006_020ee508  (state, the pair at 0x0213cb84)
+#       -> func_ov006_020ee3bc   sole caller, 0x020ee580
+#         -> func_ov006_020c7418 sole caller, 0x020c7454
+#           -> func_ov006_020c81e0
+#
+# ALL FOUR ARE ALREADY IN THE LIST BELOW and all four are in the linked map:
+# func_ov006_020ee3bc, _020c7418, _020c81e0 and the state body _020c814c itself,
+# which unmatched/MgD3DBase_ObjStateDispatch.cpp routes as one of its 25 cases.
+# This slice's closure did not under-root, because it was built from TWO nets
+# rather than a bl-walk: the address-range seed over this class's and the base's
+# code blocks caught 020ee3bc directly, port/tools/closure.py's compile-and-
+# resolve rounds pulled 020c7418 and 020c81e0 in as NAMED externals, and the
+# PMF-installed states -- which no bl-walk can see -- came from the relocation
+# set (every {code, adj=0} pair in ov006 .data whose code word is a function
+# start in 0x020c4000..0x020c9000).
+#
+# THE ARM IS NEVER TAKEN IN ANY RUN THIS LANE MADE, and the gate is MEASURED
+# rather than reasoned. src/func_ov006_020ee508.c reaches 020ee3bc only when
+# data_ov006_02140428 is NONZERO and data_ov006_02140304 is ZERO, and a probe in
+# the seat's Render thunk reads them on the first frame of a started scene-372
+# boot as
+#
+#     [bnp] 020ee508 arm gate: 02140428=3 (needs !=0)  02140304=6 (needs ==0)
+#
+# so the SECOND test is what closes the arm, not the first. 02140428 is set to 3
+# by func_ov006_020c7574, which slot 0 calls; 02140304 reads 6 and nothing in
+# this closure drives it to zero on an unattended or a scripted-stylus run. The
+# 25-state census accordingly reads 020c814c:0 in every banked started run,
+# touched and untouched, at 900 and at 1200 frames.
+#
+# THIS IS A COMPLETENESS RESULT AND NOT A DEFECT: the TUs are sliced, linked and
+# routed, so retiring the floor or driving 02140304 to zero would exercise them
+# with nothing further to wire.
+#
 # ---- 8. THE ONE FLOOR ------------------------------------------------------
 #
 # func_ov006_020ee994, vtable slot 18, 0x168 bytes.
@@ -251,11 +290,14 @@
 #      ZERO files, so no differently-named TU claims the address either -- which
 #      is the check that would have caught PGO's case and does not fire here.
 #
-# It is also the only gap in this class's code: a delink walk over
-# 0x020edec0..0x020eebe8 finds nineteen bodies and exactly one hole. 3008 bytes
-# covered of 3368, and 3008 + 0x168 = 3368 exactly. And there are ZERO
-# NONMATCHING TUs anywhere in the 85-line list below, so the seated-NONMATCHING
-# route PGO's lane took has nothing to act on here.
+# It is also the only gap in this class's code, and the two counts that describe
+# that are DIFFERENT counts: a delink walk over 0x020edec0..0x020eebe8 returns
+# EIGHTEEN blocks and exactly one hole, while config/arm9/overlays/ov006/
+# symbols.txt names NINETEEN functions in the same span. The difference is the
+# floor: it has a config symbol and no block. 3008 bytes covered of 3368, and
+# 3008 + 0x168 = 3368 exactly. And there are ZERO NONMATCHING TUs anywhere in
+# the 129-line list below, so the seated-NONMATCHING route PGO's lane took has
+# nothing to act on here.
 #
 # IT IS THE ONLY BODY THAT STARTS THE STATE MACHINE, which makes this floor
 # cost more than lane S364's did. Slot 0 ends with a dispatch through the
@@ -274,12 +316,30 @@
 #
 # ---- 9. THE HOST COPIES, AND WHY EACH ONE IS OWED -------------------------
 #
-# FIVE FILES, and FOUR OF THEM ARE SHARED WITH 0x175, 0x180 AND 0x181 rather
-# than owned by this lane. Lanes BNP (0x174) and BNT (0x175) of run mg11 hit all
-# four independently, from two different scenes, and converged on the same
-# filenames and the same symbol names on purpose: every one of these defines a
-# symbol the linker would otherwise see twice, so matching names turns four
-# certain LNK2005s at the merge into one visible dedupe per file.
+# FIVE FILES. FOUR are named for the BASE and are reusable by the whole family
+# (0x175, 0x180, 0x181); ONE is this class's own. Of the four base files, THREE
+# are ones lane BNT wrote too -- BNP and BNT hit those three independently, from
+# two different scenes, and converged on the same filenames and the same symbol
+# names on purpose, because each defines a symbol the linker would otherwise see
+# twice. The fourth, MgD3DBase_ObjStateDispatch.cpp, IS BNP-ONLY: BNT's tree has
+# no such file and defines none of its symbols, so there is no BNP/BNT collision
+# on it at all. Getting that count right matters at the merge, and this file
+# used to say FOUR converged.
+#
+# THE THREE CONVERGED FILES ARE NOT BYTE-IDENTICAL BETWEEN THE TWO LANES, so the
+# merge gate resolves three ADD/ADD conflicts by picking one copy, it does not
+# get a free dedupe. Measured with a comment-stripped diff:
+#   MgD3DBase_Slots.cpp            BNT carries a vestigial #include <cstdio>
+#                                  that nothing in the file uses; otherwise
+#                                  code-identical.
+#   MgD3DBase_DeclConflict.cpp     CODE-IDENTICAL; only the prose differs.
+#   MgD3DBase_ModelAnimRender.cpp  a type-spelling difference: BNT
+#                                  forward-declares struct OamAttr / Matrix2x2
+#                                  and names them unqualified, this copy
+#                                  includes common.h and spells them with the
+#                                  struct keyword. Same two bodies either way.
+# Lane TTI adopted THIS lane's copies byte-identical, so picking the BNP copy is
+# the choice that leaves two of the four family trees already agreeing.
 #
 # unmatched/MgBounceAndPounce_StateDispatch.cpp -- THIS LANE'S OWN. Replaces
 # src/func_ov006_020ee27c.cpp, which is OUT of the list below: vtable slot 6,
@@ -384,8 +444,8 @@
 #  -  1  src/func_ov006_020e6db4.c, COMPILED but DROPPED BY /OPT:REF. It is in
 #        the slice because it sits inside dScMgD3DBase_c's code block, not
 #        because anything in this closure calls it: its four arm_call
-#        relocations in ov006 all come from 0x020cffec, 0x020d0024 and
-#        0x020d08ec, which are outside this slice.
+#        relocations in ov006 come from 0x020cffec, 0x020d0024, 0x020d08ec and
+#        0x020d0928 -- all four listed, all four outside this slice.
 #  = 128
 #
 #   0 of the 129 were already linked at the base, checked by intersecting the
