@@ -13,11 +13,8 @@
  * BootScene, because that is what its destructor symbols (_ZN9BootSceneD1Ev /
  * _ZN9BootSceneD0Ev) mangle to. This header follows include/Stage.h's
  * precedent: named after the coinage, not the ROM struct name.
- * include/dScBoot_c.h is left in place -- src/_ZN9BootScene13InitResourcesEv.c
- * still includes it for field-offset arithmetic (src/_ZN9BootScene8BehaviorEv.c
- * indexes `c` directly and includes neither header) and both are out of this
- * slice's LAYOUT scope (see NOT CONVERTED below); only their SYMBOL NAMES are
- * this slice's work.
+ * include/dScBoot_c.h is left in place for other includers; neither
+ * BootScene source needs it any more (see CONVERTED below).
  *
  * DERIVATION. The ROM's type graph (tools/rtti_extract.py) has dScBoot_c at
  * 0x020914c8, vtable 0x02091528 (data_02091528) -- and its single base is
@@ -36,21 +33,26 @@
  * config/arm9/relocs.txt's vtable words at 0x02091528 and 0x02091540 (slots
  * 0 and 6), which load exactly these two addresses.
  *
- * NOT CONVERTED TO REAL METHODS BY THIS PASS, same idiom as include/Door.h
- * and src/_ZN7fBase_c13InitResourcesEv.cpp: both are declared here as
- * overrides so the header documents the vtable completely, but defined as
- * free functions taking the object pointer explicitly, never as real
- * `BootScene::` methods -- so nothing about their bodies or field-offset
- * arithmetic (still through include/dScBoot_c.h) had to change to land the
- * correct mangled symbol.
+ * CONVERTED 2026-08-22. Both are now real `BootScene::` methods
+ * (src/_ZN9BootScene13InitResourcesEv.cpp, src/_ZN9BootScene8BehaviorEv.cpp),
+ * both byte-exact, and neither includes include/dScBoot_c.h any more -- the
+ * whole of both bodies reads in the member names below.
+ *
+ * The paragraph this replaces said they were "NOT CONVERTED BY THIS PASS" and
+ * was read afterwards as saying they COULD NOT be. Worth being precise about
+ * why they could: see KEY FUNCTION below. Only the first of its two reasons is
+ * the mechanism; the second was a restatement of the status quo, not a
+ * constraint on it. Bracketing eligible.py across the conversion returned a
+ * byte-identical name list, which is the gate that would show a _ZTV appearing
  *
  * KEY FUNCTION. Slot 16 (the D1) is declared first below, which is safe for a
  * derived class (an override takes its base's slot wherever it is declared)
  * and deliberate: it makes ~BootScene the key function, and ~BootScene is
  * only ever defined as a real out-of-line destructor in _ZN9BootSceneD1Ev.cpp
  * and _ZN9BootSceneD0Ev.cpp. Declaring InitResources/Behavior as overrides
- * below does not compete with the destructor for the role, because neither
- * is ever defined as a real BootScene:: method (see NOT CONVERTED above).
+ * below does not compete with the destructor for the role, and neither does
+ * DEFINING them: the key function is the first non-inline virtual DECLARED,
+ * so the destructor holds the role wherever the other two live.
  *
  * LAYOUT. include/dScBoot_c.h (the auto-generated header) put a u16 at 0x050,
  * a u8 at 0x052, an assumed pad at 0x053, then u8s at 0x054 and 0x055, ending
