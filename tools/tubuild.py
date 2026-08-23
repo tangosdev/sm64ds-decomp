@@ -4575,11 +4575,14 @@ def promotion_refusals(entry):
         reasons.append("manifest status is not link-verified or data-verified")
     if any(s.get("name") != ".text" for s in entry.get("sections", [])
            if isinstance(s, dict)):
-        reasons.append("production promotion does not yet install non-.text delinks claims")
+        reasons.append("promotion does not yet install tracked non-.text delinks claims; "
+                       "rombuild --partitioned-tu supports them only in a generated profile")
     if entry.get("compiler_only_output"):
-        reasons.append("production rombuild does not apply compiler_only_output policy")
+        reasons.append("promotion does not yet persist compiler_only_output policy; "
+                       "rombuild --partitioned-tu applies it in the opt-in production path")
     if entry.get("externalized_output"):
-        reasons.append("production rombuild does not apply externalized_output policy")
+        reasons.append("promotion does not yet persist externalized_output policy; "
+                       "rombuild --partitioned-tu applies it in the opt-in production path")
     linkcheck = entry.get("verification", {}).get("linkcheck", {})
     if linkcheck.get("phases", {}).get("rom") is not True:
         reasons.append("the recorded full-ROM phase is not green")

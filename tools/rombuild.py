@@ -23,6 +23,8 @@ Usage:
     python tools/rombuild.py --no-check      # skip fidelity analysis (unchecked output)
     python tools/rombuild.py -j 16           # parallel compiles
     python tools/rombuild.py --no-cache      # recompile everything, ignore build/objcache
+    python tools/rombuild.py --partitioned-tu ov002/daObjAbuku_c
+                                              # one proven merged TU, full production gates
 
 Compiled objects are cached by content under `build/objcache`, so an incremental
 build only runs mwccarm for the files a change actually reaches -- see
@@ -440,13 +442,14 @@ def retarget_text_section(obj, section=".init"):
 
 
 def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_root=None,
-                data_sink=None):
+                data_sink=None, prebuilt=None):
     """Compile one enrolled source file to the object path dsd's objects.txt names.
 
     Returns (rel, error-or-None, outcome), where outcome is how the object was
     obtained: "hit" straight from the cache, "miss" compiled and stored,
-    "uncacheable" compiled but not storable, "error" failed to compile. See
-    rombuild_cache for why a hit reproduces the compile exactly.
+    "uncacheable" compiled but not storable, "tu-derived" copied from the
+    manifest-backed partitioned-TU preparation, or "error" failed to compile.
+    See rombuild_cache for why a hit reproduces the compile exactly.
 
     `build_root` must match the config's `build_path`, because that is what dsd's
     generated objects.txt names -- it defaults to this repository's `build/`, the
@@ -455,6 +458,12 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_roo
     src = REPO / rel
     obj = (pathlib.Path(build_root) if build_root else BUILD) / pathlib.Path(rel).with_suffix(".o")
     obj.parent.mkdir(parents=True, exist_ok=True)
+    if prebuilt is not None:
+        source = pathlib.Path(prebuilt)
+        if not source.is_file():
+            return rel, f"prepared TU object is missing: {source}", "error"
+        obj.write_bytes(source.read_bytes())
+        return rel, None, "tu-derived"
     version = (vers or {}).get(pathlib.Path(rel).stem, VERSION)
     flags = CFLAGS
     # A leading //cpp marker means C++, matched to how match.py/fdiff compile it.
@@ -553,7 +562,17 @@ def main():
     ap.add_argument("--tu-module", action="append", default=[], metavar="MODULE",
                     help="build this module from its config_tu/ merged TUs instead of "
                          "the per-function src/ files (repeatable; e.g. --tu-module ov010)")
+    ap.add_argument("--partitioned-tu", action="append", default=[], metavar="TU_ID",
+                    help="production-build one partitioned-link-verified manifest TU: "
+                         "compile it once, substitute its exact derived text objects, "
+                         "and link its licensed reduced non-text object (repeatable)")
     args = ap.parse_args()
+    if args.tu_module and args.partitioned_tu:
+        ap.error("--tu-module and --partitioned-tu are mutually exclusive")
+    if args.partitioned_tu and args.profile != "stock":
+        ap.error("--partitioned-tu currently supports only the stock profile")
+    if args.partitioned_tu and args.no_check:
+        ap.error("--partitioned-tu cannot be combined with --no-check")
 
     report_path = pathlib.Path(args.report_json or
                                BUILD / ("rombuild-report.json" if args.profile == "stock"
@@ -597,6 +616,21 @@ def main():
         profile = RP.prepare_profile(args.profile, tu_modules=args.tu_module)
         config_root = profile["configRoot"]
         config_yaml = profile["configYaml"]
+        tu_prepared = None
+        tu_overrides = {}
+        if args.partitioned_tu:
+            import tu_production as TP
+            try:
+                tu_prepared = TP.prepare(
+                    args.partitioned_tu, config_root,
+                    BUILD / "tu-production", jobs=args.jobs)
+            except TP.ProductionTuError as exc:
+                raise BuildError("partitioned TU preparation", 1, str(exc)) from exc
+            tu_overrides = {
+                rel.replace("\\", "/"): path
+                for rel, path in tu_prepared["overrides"].items()
+            }
+            report["partitionedTus"] = TP.report_view(tu_prepared)
         report["profileConfig"] = str(config_root.relative_to(REPO))
         if profile.get("tuModules"):
             report["tuModules"] = profile["tuModules"]
@@ -617,7 +651,7 @@ def main():
 
         # A TU-built module's delinks name src_tu/ merged files; widen the allowed
         # source roots so those enroll like any other complete entry.
-        extra_roots = ("src_tu",) if profile.get("tuModules") else ()
+        extra_roots = ("src_tu",) if profile.get("tuModules") or tu_prepared else ()
         srcs = enrolled(config_root, extra_roots=extra_roots)
         vers = versions()
         # Before the first compile: a pin that no longer names a real file has quietly
@@ -653,7 +687,9 @@ def main():
             with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
                 for rel, err, outcome in ex.map(
                         lambda s: compile_one(s, vers, cache, init_srcs, syms,
-                                              data_sink=data_sink), srcs):
+                                              data_sink=data_sink,
+                                              prebuilt=tu_overrides.get(
+                                                  s.replace("\\", "/"))), srcs):
                     outcomes[outcome] = outcomes.get(outcome, 0) + 1
                     if err:
                         failures.append((rel, err))
@@ -661,9 +697,12 @@ def main():
             detail = "\n".join(f"{rel}: {err}" for rel, err in failures[:10])
             raise BuildError("mwccarm", 1, detail)
         report["objectCache"] = cache.summary(outcomes)
+        report["objectCache"]["tuDerived"] = outcomes.get("tu-derived", 0)
         if cache.enabled:
             print(f"      {outcomes.get('hit', 0)} reused from cache, "
-                  f"{report['objectCache']['compiled']} compiled")
+                  f"{report['objectCache']['compiled']} compiled"
+                  + (f", {outcomes.get('tu-derived', 0)} prepared from merged TU(s)"
+                     if outcomes.get("tu-derived") else ""))
             if outcomes.get("miss") or outcomes.get("uncacheable"):
                 cache.prune(args.cache_max_mb * 1024 * 1024)
         report["phases"].append("mwccarm")
@@ -673,6 +712,21 @@ def main():
              f"@{BUILD / 'objects.txt'}", str(BUILD / "arm9.lcf"),
              "-o", str(BUILD / "final_link.o")], "mwldarm")
         report["phases"].append("mwldarm")
+
+        if tu_prepared:
+            verification = TP.verify_link(config_yaml, BUILD / "final_link.o", tu_prepared)
+            report["partitionedTuLinkVerification"] = verification
+            if not verification["ok"]:
+                detail = []
+                if not verification["modulesOk"]:
+                    detail.append("dsd check modules --fail did not pass")
+                detail.extend(f"new symbol error: {line}"
+                              for line in verification["newSymbolErrors"])
+                detail.extend(verification["storageAliasErrors"])
+                raise BuildError("partitioned TU link verification", 1,
+                                 "\n".join(detail) or "unknown verification failure")
+            print("      partitioned TU gates: dsd modules PASS, zero new symbol "
+                  "errors, storage aliases exact")
 
         if args.no_rom:
             print("[5/6] skipped (--no-rom)")
@@ -691,11 +745,24 @@ def main():
             if not rom_path.is_absolute():
                 rom_path = REPO / rom_path
             if rom_path.is_file():
+                rom_sha256 = hashlib.sha256(rom_path.read_bytes()).hexdigest()
                 report["romArtifact"] = {
                     "path": str(rom_path),
                     "bytes": rom_path.stat().st_size,
-                    "sha256": hashlib.sha256(rom_path.read_bytes()).hexdigest(),
+                    "sha256": rom_sha256,
                 }
+                if tu_prepared:
+                    expected = tu_prepared["baseline"]["romSha256"]
+                    report["partitionedTuRom"] = {
+                        "expectedSha256": expected,
+                        "actualSha256": rom_sha256,
+                        "identical": rom_sha256 == expected,
+                    }
+                    if rom_sha256 != expected:
+                        raise BuildError(
+                            "partitioned TU ROM comparison", 1,
+                            f"built ROM sha256 {rom_sha256} differs from strict stock "
+                            f"control {expected}")
 
         if args.no_check:
             print("[6/6] skipped (--no-check)")

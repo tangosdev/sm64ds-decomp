@@ -429,14 +429,14 @@
           "symbol": "_ZN12FallBlockBfs16CleanupResourcesEv",
           "address": "0x02111dfc",
           "size": "0x00000014",
-          "legacy_source": "src/_ZN12FallBlockBfs16CleanupResourcesEv.c",
+          "legacy_source": "src/_ZN12FallBlockBfs16CleanupResourcesEv.cpp",
           "ordinal": 2
         },
         {
           "symbol": "_ZN12FallBlockBfs13InitResourcesEv",
           "address": "0x02111e10",
           "size": "0x00000014",
-          "legacy_source": "src/_ZN12FallBlockBfs13InitResourcesEv.c",
+          "legacy_source": "src/_ZN12FallBlockBfs13InitResourcesEv.cpp",
           "ordinal": 3
         },
         {
@@ -9090,7 +9090,7 @@
                   "sectionIndex": 13,
                   "section": "OV002"
                 },
-                "baselineElfSha256": "18e8c7e11ba3f7249f3689e065fb05d4f7afd7114710ef70979de00c3a319804",
+                "baselineElfSha256": "1dddee7fa196334e0d863ee38b26b650b63a9f7a1015708b6a3b8a6f2a247097",
                 "exact": true
               }
             ],
@@ -9117,7 +9117,7 @@
             "selectorCount": 11623,
             "objectCount": 11416,
             "selectorListSha256": "e4c0a852da1dfc74b75acf408f2ae3a42d4070c1057e8f178ed9691fbe7bfc1a",
-            "objectListSha256": "af44995ad26abef83f05c8ef97fffed2e74c5f00c2a06239caf28796493ad6f2"
+            "objectListSha256": "df8f694839ee42ee4eb1bb523add6c706bfba74953912d88a4ee69598b714d2e"
           },
           "ranges": [
             {
@@ -9468,7 +9468,7 @@
                   "sectionIndex": 13,
                   "section": "OV002"
                 },
-                "baselineElfSha256": "18e8c7e11ba3f7249f3689e065fb05d4f7afd7114710ef70979de00c3a319804",
+                "baselineElfSha256": "1dddee7fa196334e0d863ee38b26b650b63a9f7a1015708b6a3b8a6f2a247097",
                 "exact": true
               }
             ],
@@ -9495,7 +9495,7 @@
             "selectorCount": 11623,
             "objectCount": 11416,
             "selectorListSha256": "e4c0a852da1dfc74b75acf408f2ae3a42d4070c1057e8f178ed9691fbe7bfc1a",
-            "objectListSha256": "af44995ad26abef83f05c8ef97fffed2e74c5f00c2a06239caf28796493ad6f2"
+            "objectListSha256": "df8f694839ee42ee4eb1bb523add6c706bfba74953912d88a4ee69598b714d2e"
           },
           "ranges": [
             {
