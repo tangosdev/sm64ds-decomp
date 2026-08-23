@@ -123,7 +123,7 @@ dCc_c     CylinderClsn       # actor-vs-actor volume ─┐ intrusive list head
 inheritance depth". The RTTI records are `__vmi_class_type_info` with public non-virtual
 bases: **[P]**
 
-```arm
+```text
 dBgCh_Gnd    -> dBgCh @0, dBgPi @0x10
 dBgCh_Lin    -> dBgCh @0, dBgPi @0x10, dM3dGLin @0x38
 dBgCh_SphCrr -> dBgCh @0, dBgPi @0x10, dM3dGSph @0x38
@@ -141,7 +141,7 @@ read as ruling inheritance out is in fact its signature.
 Shared prefix, proven three ways (RTTI offsets, the three destructors, the thunk
 adjustments):
 
-```arm
+```text
 0x00  dBgCh   0x10 B   vptr, u8 detectMask@0x04, s32 ownerID@0x08, dActor_c* owner@0x0c
 0x10  dBgPi   0x28 B   the dBgPi the hit is written into — SECOND vptr
 0x38  dM3dGLin (0x18) / dM3dGSph (0x14)  — THIRD vptr, SphCrr only

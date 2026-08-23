@@ -47,7 +47,7 @@ constants came back exact.
 
 `data_ov002_0210a59c`, file offset `0x5CF3C` in `overlay_0002.bin`, raw words:
 
-```arm
+```text
 0x5cf3c: 0002a000  ->  42.0
 0x5cf40: 00034000  ->  52.0
 0x5cf44: 00045000  ->  69.0
@@ -222,7 +222,7 @@ let `ChangeState` and every `St_*_Main` drop their per-file local `struct State`
 An earlier pass claimed the camera behaviour table at `0x0209b008` had **exactly 15** entries at
 0x10 stride, "matching N64's 15 populated camera modes." **This is wrong.** The relocs continue:
 
-```arm
+```text
 0x0209b000 0x0209b004 0x0209b008 0x0209b018 ... 0x0209b0e8 0x0209b0f8
 0x0209b108 0x0209b118 0x0209b128 0x0209b138
 ```
