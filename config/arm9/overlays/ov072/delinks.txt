@@ -200,7 +200,7 @@ src/SnowmanHead_Spawn.c:
     complete
     .text start:0x021207d4 end:0x02120824
 
-src/_ZN11daBgSnwmn_cD1Ev.c:
+src/_ZN11daBgSnwmn_cD1Ev.cpp:
     complete
     .text start:0x02120824 end:0x02120874
 

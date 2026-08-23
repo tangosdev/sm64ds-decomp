@@ -2420,7 +2420,7 @@ src/_ZN10dFdDummy_cD0Ev.c:
     complete
     .text start:0x02017228 end:0x02017254
 
-src/_ZN10dFdDummy_cD1Ev.c:
+src/_ZN10dFdDummy_cD1Ev.cpp:
     complete
     .text start:0x02017254 end:0x02017278
 
@@ -4672,7 +4672,7 @@ src/_ZN7Message10LoadTextVSEv.cpp:
     complete
     .text start:0x020349e0 end:0x02034a78
 
-src/_ZN7dScMB_cD1Ev.c:
+src/_ZN7dScMB_cD1Ev.cpp:
     complete
     .text start:0x02034a78 end:0x02034ac0
 

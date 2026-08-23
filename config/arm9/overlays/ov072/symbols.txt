@@ -132,6 +132,7 @@ _ZTI11daBgSnwmn_c kind:data(any) addr:0x02122938
 _ZTS11daBgSnwmn_c kind:data(any) addr:0x02122944
 data_ov072_02122954 kind:data(any) addr:0x02122954 ambiguous
 data_ov072_02122978 kind:data(any) addr:0x02122978
+_ZTV11daBgSnwmn_c kind:data(any) addr:0x02122978
 data_ov072_021229f4 kind:data(any) addr:0x021229f4
 data_ov072_021229fc kind:data(any) addr:0x021229fc
 data_ov072_02122a04 kind:data(any) addr:0x02122a04

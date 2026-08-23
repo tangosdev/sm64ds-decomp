@@ -172,6 +172,7 @@ data_ov026_02113aa0 kind:data(any) addr:0x02113aa0 ambiguous
 _ZTS17daObjWlPolelift_c kind:data(any) addr:0x02113aa8
 data_ov026_02113abc kind:data(any) addr:0x02113abc ambiguous
 data_ov026_02113ae0 kind:data(any) addr:0x02113ae0
+_ZTV17daObjWlPolelift_c kind:data(any) addr:0x02113ae0
 data_ov026_02113b10 kind:data(any) addr:0x02113b10 ambiguous
 data_ov026_02113b2c kind:data(any) addr:0x02113b2c ambiguous
 data_ov026_02113b50 kind:data(any) addr:0x02113b50 ambiguous

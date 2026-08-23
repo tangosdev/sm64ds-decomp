@@ -199,7 +199,7 @@ src/UnchainedChomp_Spawn.c:
     complete
     .text start:0x021442dc end:0x021443f4
 
-src/_ZN4DoorD1Ev.c:
+src/_ZN4DoorD1Ev.cpp:
     complete
     .text start:0x021443f4 end:0x02144424
 

@@ -3,7 +3,7 @@
     .ctor       start:0x020c2430 end:0x020c2430 kind:rodata align:4
     .data       start:0x020c2440 end:0x020c3020 kind:data align:32
     .bss        start:0x020c3020 end:0x020c3020 kind:bss align:32
-src/_ZN11dScMiniGm_cD1Ev.c:
+src/_ZN11dScMiniGm_cD1Ev.cpp:
     complete
     .text start:0x020bfec0 end:0x020bfefc
 

@@ -3635,6 +3635,7 @@ _ZTS10dFdDummy_c kind:data(any) addr:0x0208ea30
 _ZTS10dFdColor_c kind:data(any) addr:0x0208ea40
 _ZTS15dFdBrightness_c kind:data(any) addr:0x0208ea50
 data_0208ea6c kind:data(any) addr:0x0208ea6c
+_ZTV10dFdDummy_c kind:data(any) addr:0x0208ea6c
 _ZTV9FaderWipe kind:data(any) addr:0x0208ea9c
 data_0208eacc kind:data(any) addr:0x0208eacc
 data_0208eafc kind:data(any) addr:0x0208eafc
@@ -4268,6 +4269,7 @@ _ZTIN7dScMB_c15graphCallback_cE kind:data(any) addr:0x0209437c
 data_02094390 kind:data(any) addr:0x02094390
 _ZTSN7dScMB_c15graphCallback_cE kind:data(any) addr:0x020943a0
 data_020943c4 kind:data(any) addr:0x020943c4
+_ZTV7dScMB_c kind:data(any) addr:0x020943c4
 data_0209440c kind:data(any) addr:0x0209440c
 data_0209444c kind:data(any) addr:0x0209444c
 data_0209446c kind:data(any) addr:0x0209446c

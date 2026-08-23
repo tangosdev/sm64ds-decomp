@@ -4,7 +4,7 @@
     .ctor       start:0x02112da4 end:0x02112db8 kind:rodata align:4
     .data       start:0x02112dc0 end:0x02113ea0 kind:data align:32
     .bss        start:0x02113ea0 end:0x02113f80 kind:bss align:32
-src/_ZN17daObjWlPolelift_cD1Ev.c:
+src/_ZN17daObjWlPolelift_cD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111e0
 
