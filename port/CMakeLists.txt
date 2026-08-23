@@ -4996,7 +4996,14 @@ set(SLICE_TTI_SOURCES hal/scene_mg_trampoline.cpp
                       # their literal pools) and one hosted arm9 BSS global
                       unmatched/MgTrampolineTime_Faces.cpp
                       # the class's ONE undecompiled body, count-and-return
-                      unmatched/MgTrampolineTime_Floors.cpp)
+                      unmatched/MgTrampolineTime_Floors.cpp
+                      # the SECOND level of the wall: dMgTrmpln3DMario_c, the
+                      # four element records the factory builds at this+0x500c,
+                      # has a field-held member pointer of its own at
+                      # element+0x64 and one dispatcher over 21 bodies. Its src
+                      # open-codes the pair correctly and would still have
+                      # jumped to a DS address; MSVC refuses it anyway (C2761).
+                      unmatched/MgTrmpln3DMario_StateDispatch.cpp)
 foreach(line IN LISTS SLICE_TTI_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -5005,7 +5012,7 @@ foreach(line IN LISTS SLICE_TTI_LINES)
     list(APPEND SLICE_TTI_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-# ONE OF THE FORTY-NINE .c FILES IN THIS SLICE IS REALLY C++ -- a //cpp marker
+# TWO OF THIS SLICE'S .c FILES ARE REALLY C++ -- a //cpp marker
 # and a top-level `extern "C"` block, which is invalid C. All 49 were SWEPT for
 # the marker and for `extern "C"`, `virtual`, `class`, `namespace`, `bool`,
 # `new`/`delete` and `::` rather than this one being found by a compile error
@@ -5016,6 +5023,7 @@ endforeach()
 # real hit.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/MgTrampolineTime_Spawn.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020cb1a8.c"
     PROPERTIES LANGUAGE CXX)
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_fdr.txt" SLICE_FDR_LINES)
