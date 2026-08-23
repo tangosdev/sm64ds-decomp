@@ -791,7 +791,7 @@ Gaps, per cluster, from what the two overlays actually poke:
      that had nothing in it.
 
      AFTER: 361 and 367 both go PROJ_IDENTITY 1 -> 0 and drawable to 1806 of
-     1806, and 361's top screen to 7082 distinct colours. Every other hosted
+     1806, and 361's top screen to 4311 distinct colours. Every other hosted
      scene and every mounted level's selftest is byte-identical.
      SM64DS_PROJ_CARRY_OFF=1 restores the old wipe. This is gx_reset's own
      light-table defect one class of state over, and that comment is the

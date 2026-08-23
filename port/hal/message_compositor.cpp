@@ -1308,10 +1308,9 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
                 g_a[py][px].color = color;
                 g_a[py][px].hit = true;
                 g_a[py][px].owner = kOwnerObj;
-                /* The priority the OBJ-vs-OBJ test above and the 3D layer's
-                   test in the final blit both read. raster_obj still draws
-                   sprites over every BG regardless of priority; that half of
-                   the gap is untouched here. */
+                /* The priority the OBJ-vs-OBJ test above, the OBJ-vs-BG test
+                   at the top of this loop, and the 3D layer's test in the
+                   final blit all read. */
                 g_a[py][px].prio = prio;
             }
         }

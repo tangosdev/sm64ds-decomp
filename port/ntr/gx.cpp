@@ -1059,7 +1059,7 @@ void gx_reset() {
        what says it is one defect and not two.
 
        AFTER: 361 and 367 both go PROJ_IDENTITY 1 -> 0 and drawable -> 1806 of
-       1806, and 361's top screen goes from 21 distinct colours to 7082.
+       1806, and 361's top screen goes from 21 distinct colours to 4311.
 
        AND NOTHING ELSE MOVES, swept rather than assumed, on one binary against
        SM64DS_PROJ_CARRY_OFF=1: the other 21 hosted scenes byte-identical, and

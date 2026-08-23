@@ -712,10 +712,14 @@ derivation about display lists opening with MTX_RESTORE, nothing measured needs
 it, and nothing in the sweeps moved without it.
 
 AFTER:
-  361  PROJ_IDENTITY 1 -> 0, drawable 311 -> 1806 of 1806, top screen 21
-       distinct colours -> 7082
-  367  PROJ_IDENTITY 1 -> 0, drawable 177 -> 1806 of 1806, 21 -> 7073
+  361  PROJ_IDENTITY 1 -> 0, drawable 311 -> 1806 of 1806 (at 300 frames),
+       top screen 21 distinct colours -> 4311
+  367  PROJ_IDENTITY 1 -> 0, drawable 177 -> 1806 of 1806 (at 120 frames --
+       not like-for-like with 361's 300-frame row), 21 -> 4311
   363  unchanged; it reloads every frame, so a carry cannot reach it
+  (361's and 367's captures are byte-identical to each other in both arms,
+  so their colour counts are necessarily equal; an earlier draft here read
+  7082/7073 off a stacked capture mislabelled as the top screen)
 
 THE SWEEPS. .dsstate does not move, [0xc5c000, 0xd463d0), 959440 bytes.
 
