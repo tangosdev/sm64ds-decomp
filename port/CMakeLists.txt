@@ -4990,7 +4990,13 @@ set(SLICE_TTI_SOURCES hal/scene_mg_trampoline.cpp
                       # -- so the body is re-spelled with one cast under its
                       # OWN name and src/func_ov006_02120da8.c is out of the
                       # slice. Not an ABI repair: the behaviour is identical.
-                      unmatched/MgTrampolineTime_Brush.cpp)
+                      unmatched/MgTrampolineTime_Brush.cpp
+                      # the name-spelling repairs (32 C++-linkage references to
+                      # C-named mount symbols, three bare names resolved from
+                      # their literal pools) and one hosted arm9 BSS global
+                      unmatched/MgTrampolineTime_Faces.cpp
+                      # the class's ONE undecompiled body, count-and-return
+                      unmatched/MgTrampolineTime_Floors.cpp)
 foreach(line IN LISTS SLICE_TTI_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")

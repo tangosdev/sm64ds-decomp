@@ -141,7 +141,7 @@
 // The first constructor's body is a call, then `str r1,[r4]` with r1 loaded
 // from its own pool at 0x020cd154 = 0x0213b2c4.  So every one of those four
 // records carries a MOUNTED ROM TABLE as its vptr.  Its type_info sits at
-// 0x0213b2c0 -> 0x0213b244, whose name pointer reads "17dMgTrmpln2Mario_c",
+// 0x0213b2c0 -> 0x0213b244, whose name pointer reads "18dMgTrmpln3DMario_c",
 // and the ONLY two relocations naming data_ov006_0213b2c4 in the whole overlay
 // are this class's element constructor (0x020cd154) and its element destructor
 // (0x020cd0c0, inside func_ov006_020ccfc8).  Nothing else in ov006 builds an
@@ -245,7 +245,7 @@ extern unsigned char data_ov004_020bc0c0[];        /* dScMgBase_c,        36 */
 extern unsigned char _ZTV17MgBounceAndPounce[];    /* dScMgD3DBase_c,  0..19 */
 extern unsigned char data_ov006_0213c67c[];        /* dScMgD3DBase_c, 20..35 */
 extern unsigned char data_ov006_0213fb34[];        /* dScMgTrampoline_c,  36 */
-extern unsigned char data_ov006_0213b2c4[];        /* dMgTrmpln2Mario_c,   5 */
+extern unsigned char data_ov006_0213b2c4[];        /* dMgTrmpln3DMario_c,   5 */
 extern unsigned char MgTrampolineTime_SpawnInfo[];
 
 /* dScMgD3DBase_c's seventeen overrides.  Slots 2 and 10 are NOT src's bodies:
@@ -287,7 +287,7 @@ int   func_ov006_021211bc(void *t);           /* slot 25                   */
 void  func_ov006_02120da8(void *obj, int x_base, int y, int val, int n);
                                               /* slot 34, five parameters  */
 
-/* dMgTrmpln2Mario_c's five, section 5 */
+/* dMgTrmpln3DMario_c's five, section 5 */
 int  func_ov006_020cafac(int p);
 int  func_ov006_020cafa4(int p);
 int  func_ov006_020caf44(int p);
@@ -299,6 +299,8 @@ void *MgTrampolineTime_Spawn(void);
 
 /* the dispatch file's witnesses */
 unsigned port_mg_tti_state_hits(void);
+/* the floor file's witness, unmatched/MgTrampolineTime_Floors.cpp */
+unsigned port_mg_tti_hittest_calls(void);
 unsigned port_mg_tti_floor_hits(void);
 void     port_mg_tti_link_range(int *lo, int *hi);
 void     port_mg_tti_link_hits(unsigned *out5);
@@ -422,7 +424,7 @@ static int  __fastcall tti_v25(void *s, void *)
 static void __fastcall tti_v34(void *s, void *, int a, int b, int c, int d)
 { TTI(34); func_ov006_02120da8(s, a, b, c, d); }
 
-/* ---- dMgTrmpln2Mario_c's five, section 5 --------------------------------- */
+/* ---- dMgTrmpln3DMario_c's five, section 5 --------------------------------- */
 static int  __fastcall mario_v0(void *s, void *)
 { MAR(0); return func_ov006_020cafac((int)(size_t)s); }
 static int  __fastcall mario_v1(void *s, void *)
@@ -579,7 +581,7 @@ extern "C" void port_scene_fill_trampoline(void)
             std::fprintf(stderr, "  [scene] TRAMPOLINE FILL INCOMPLETE: "
                          "dScMgBase_c leaves %u of 36 raw DS words, "
                          "dScMgD3DBase_c %u of 36, dScMgTrampoline_c %u of 36, "
-                         "dMgTrmpln2Mario_c %u of 5. A dispatch of any of them "
+                         "dMgTrmpln3DMario_c %u of 5. A dispatch of any of them "
                          "jumps to a DS address as a host one.\n",
                          lb, lm, lv, le);
             std::fflush(stderr);
@@ -652,7 +654,7 @@ extern "C" void port_scene_trampoline_hits(void)
                 " (17 is EXPECTED on a tree with no sibling row, section 3)\n",
                 mtotal, g_tti_mid_claimed);
 
-    std::printf("[scene] dMgTrmpln2Mario_c element slots entered:");
+    std::printf("[scene] dMgTrmpln3DMario_c element slots entered:");
     for (int i = 0; i < 5; ++i)
         if (g_mario_hits[i]) std::printf(" %d(x%u)", i, g_mario_hits[i]);
     std::printf("   (%u total); element-table fill claimed %u of 5\n",
@@ -691,6 +693,11 @@ extern "C" void port_scene_trampoline_hits(void)
         std::printf("[scene] dScMgTrampoline_c state floor: NONE. All five "
                     "addresses in the chain reach a matched src TU and none "
                     "carries a NONMATCHING banner\n");
+        std::printf("[scene] dScMgTrampoline_c ONE floor, one level "
+                    "down: func_ov006_020d0c38 (the stylus hit test, "
+                    "no src in the decomp) trapped %u time(s); it "
+                    "decides hit sound vs miss sound and nothing "
+                    "else\n", port_mg_tti_hittest_calls());
     }
 
     /* The member pointer itself, at the offset disassembled in
