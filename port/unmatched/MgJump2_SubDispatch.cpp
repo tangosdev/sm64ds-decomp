@@ -62,22 +62,48 @@
 // NEITHER HAS A NULL GUARD.  port_mg_call0 refuses a zero code and reports it,
 // which is the only net under a field that is ticked before it is seeded.
 //
-// ---- 4. THE TWENTY-TWO STATES, AND WHICH FIELD EACH BELONGS TO -----------
+// ---- 4. THE TWENTY-FIVE STATES, AND WHICH FIELD EACH BELONGS TO ----------
 //
-// Thirty-six eight-byte {code, 0} records sit in two runs of ov006 .data, and
-// the split between the two fields was MEASURED (each writer's own store
-// offset) rather than inferred from the addresses:
+// THIRTY-EIGHT eight-byte {code, 0} records sit in two runs of ov006 .data,
+// and the split between the two fields was MEASURED (each writer's own store
+// offset) rather than inferred from the addresses.  Each run is bounded by its
+// FIRST and LAST ACTUAL RECORD, not by a swept address range -- section 4b is
+// what that distinction is worth:
 //
-//   FIELD +0x30, twenty-four records 0x0213af10..0x0213afd0, SIXTEEN distinct
-//     code words: 0x020c4d1c (a 0x18-byte idle), 0x020c4e8c, 0x020c4fa4,
-//     0x020c53f8, 0x020c5530, 0x020c5658, 0x020c5928, 0x020c5bf8, 0x020c5d28,
-//     0x020c6088, 0x020c61c4, 0x020c627c, 0x020c6378, 0x020c6400, 0x020c66bc
-//     and 0x020c6a9c.
-//   FIELD +0x3c, fifteen records 0x0213b020..0x0213b090, NINE distinct code
-//     words: 0x020c78ec, 0x020c7a30, 0x020c7c68, 0x020c8048, 0x020c814c,
-//     0x020c833c, 0x020c85bc, 0x020c864c and 0x020c8680.
+//   FIELD +0x30, TWENTY-THREE records, first 0x0213af18, last 0x0213afc8,
+//     SIXTEEN distinct code words: 0x020c4d1c (a 0x18-byte idle), 0x020c4e8c,
+//     0x020c4fa4, 0x020c53f8, 0x020c5530, 0x020c5658, 0x020c5928, 0x020c5bf8,
+//     0x020c5d28, 0x020c6088, 0x020c61c4, 0x020c627c, 0x020c6378, 0x020c6400,
+//     0x020c66bc and 0x020c6a9c.
+//   FIELD +0x3c, FIFTEEN records, first 0x0213b020, last 0x0213b090, NINE
+//     distinct code words: 0x020c78ec, 0x020c7a30, 0x020c7c68, 0x020c8048,
+//     0x020c814c, 0x020c833c, 0x020c85bc, 0x020c864c and 0x020c8680.
 //
-// THE FIRST VERSION OF THIS FILE CARRIED TEN OF THE TWENTY-TWO, and the run is
+// 23 + 15 = 38 records, 16 + 9 = 25 distinct codes, and there are 25 cases in
+// the switch below.
+//
+// ---- 4b. WHY THE ENDPOINTS ARE RECORDS AND NOT A RANGE -------------------
+//
+// An earlier version of this block quoted the +0x30 run as
+// "0x0213af10..0x0213afd0", and NEITHER of those two addresses is a record:
+// 0x0213af10 is {0,0} with no relocation and 0x0213afd0 is {0, 0x02138000}.
+// Quoting a range invites a sweep, and a sweep over this neighbourhood
+// over-reads.  Widening the window by 0x118 bytes picks up FIVE more real
+// records -- 0x0213aec0, 0x0213aec8, 0x0213aed0, 0x0213aed8 and 0x0213aee0,
+// holding 0x020c3ad8, 0x020c395c, 0x020c38ac, 0x020c3904 and 0x020c3ad8 --
+// which would put the distinct count at TWENTY rather than sixteen.
+//
+// THEY BELONG TO A DIFFERENT FAMILY AND NOT TO THIS ONE.  Their five loaders
+// (func_ov006_020c38b0, _020c3908, _020c3990, _020c3adc, _020c3b80) are the
+// func_ov006_020c3d18 machine that run mg5 lane FLW already host-copies in
+// port/unmatched/MgFlower_SubDispatch.cpp, and hal/scene_mg_flower.cpp's own
+// GROUP D note already aliases func_ov006_020c3adc.  NONE of the nine
+// addresses appears anywhere in this lane's 230-body closure -- checked, not
+// assumed.  That is why this block names records and this file's switch keys
+// on CODE WORDS: an address-keyed switch cannot mis-route a neighbour's state
+// even when a reader's window is too wide.
+//
+// THE FIRST VERSION OF THIS FILE CARRIED TEN OF THE TWENTY-FIVE, and the run is
 // what caught it. A scan that took only pair records whose single relocation
 // came from inside the closure-as-then-known found six and four; the writers
 // of the other twelve (func_ov006_020c4f68, _020c762c, _020c8270, _020c81e0,
@@ -85,7 +111,27 @@
 // were not in that closure BECAUSE they are only reachable through the
 // dispatch this file implements. The closure and the switch are mutually
 // recursive, and the fix is to walk it again with every code word as a root
-// until it stabilises -- 172 bodies, then 207, then 223.
+// until it stabilises. The successive answers were 172 (vtable and class field
+// states as roots), 207 (plus the first ten sub-object states), 223 (plus the
+// rest of the twenty-two then known) and finally 230, from ONE authoritative
+// walk over all FIFTY-NINE roots -- the factory, the eight own overrides, the
+// seventeen middle-base overrides, the five class states, the twenty-five
+// sub-object states and the three element-vtable bodies. Only the 230 is a
+// measurement; the three before it are under-counts, kept so the shape of the
+// mistake stays legible.
+//
+// ONE OF THOSE TWELVE WRITERS IS NOT IN THE BINARY AND SAYS SO HERE.
+// func_ov006_020c81e0 -- the sole installer of the {0x020c814c, 0} record at
+// 0x0213b080 -- is reachable ONLY from 0x174's own state machine
+// (func_ov006_020ee508 -> _020ee3bc -> _020c7418 -> _020c81e0; the last three
+// are absent from this lane's 230-body closure and present in 0x174's once its
+// five field states are used as roots). It has a src TU and its own delink
+// block, and it is deliberately NOT in port/slice_bnt.txt: nothing a scene-373
+// build runs can reach it. So `case 0x020c814cu` below is UNREACHABLE ON THIS
+// TREE and becomes live when lane BNP seats 0x174 into the same process. It is
+// kept rather than deleted because both classes drive the SAME two shared
+// sub-object families through this same code, and a switch that is complete
+// over the two data runs cannot mis-route -- it keys on a code word.
 //
 // THE 600-FRAME RUN NAMED THE TWO THAT MATTERED, which is why the run is the
 // acceptance and not the scan: "MINIGAME STATE DISPATCH UNHANDLED: DS address

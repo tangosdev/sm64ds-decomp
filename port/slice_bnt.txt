@@ -168,7 +168,7 @@
 #
 # ---- 6. THE PMF WALL IS THREE DISPATCHERS, FOUND BY TWO DETECTORS --------
 #
-# Both prescribed detectors were run over this lane's whole 207-body closure,
+# Both prescribed detectors were run over this lane's whole 230-body closure,
 # not over its vtable, and they AGREE EXACTLY:
 #
 #   * THE ENCODING SCAN (run mg9 lane LKY's detector, blind to spelling) finds
@@ -288,75 +288,150 @@
 # the merge finds duplicate rows for them, keeping one per body is right and
 # the verdicts should agree.  Disagreement is the thing to stop on.
 #
-# ---- 11. THE CLOSURE, AND THE TWENTY EXCLUSIONS -------------------------
+# ---- 11. THE CLOSURE, AND THE TWENTY-FOUR TUs LEFT OUT ------------------
 #
-# 223 bodies, walked from the factory, the eight own overrides, the seventeen
-# middle-base overrides, the five field states and the TWENTY-TWO sub-object
-# states.  THE WALK HAD TO BE RUN THREE TIMES and that is the finding, not a
-# process note: a pointer-to-member state is invisible to a bl walk, so each
-# round of states pulls in writers that install more states, and the closure
-# and the dispatch switch are mutually recursive.  172 bodies with the vtable
-# and field states as roots, 207 once the first ten sub-object states were
-# added, 223 once all twenty-two were -- and the twelve the second round missed
-# were named by a RUN, not by a scan (section 6).  THE ACCOUNTING IS EXACT:
+# EVERY TERM BELOW WAS RE-DERIVED MECHANICALLY for the lane review, by ONE
+# authoritative walk over all FIFTY-NINE roots -- the factory, the eight own
+# vtable overrides, the seventeen middle-base overrides, the five class field
+# states, the twenty-five sub-object states and the three element-vtable
+# bodies -- with each bucket printed as a MEMBERSHIP LIST rather than a count,
+# so a wrong term shows up as a wrong list.  The earlier version of this
+# section had two wrong terms and a stale intermediate closure size in its
+# prose; the defect shape was appending to a list without re-counting it.
 #
-#     223 = 66 already active in another slice
-#         + 20 excluded because a host file already defines them
+# THE WALK HAD TO BE RUN FOUR TIMES and that is the finding, not a process
+# note: a pointer-to-member state is invisible to a bl walk, so each round of
+# states pulls in writers that install more states.  172 bodies with the
+# vtable and class field states as roots, 207 once the first ten sub-object
+# states were added, 223 once the rest of the twenty-two then known were, and
+# 230 from the authoritative walk above.  ONLY THE 230 IS A MEASUREMENT; the
+# three before it are under-counts, and the states the middle rounds missed
+# were named by a RUN, not by a scan (section 6).
+#
+#     230 = 64 already active in another slice
+#         + 20 whose symbol a host file ALSO defines
+#         +  4 routed around by a port_-named repair
 #         +  1 with no src at all
-#         + 136 NEW, which is the list below, all ov006
+#         + 141 NEW, which is 141 of the 144 lines below
+#
+# AND THE SLICE IS THREE LINES LONGER THAN THE CLOSURE:
+#
+#     144 slice lines = 141 from the walk (all ov006)
+#                     +   3 arm9 TUs the LINK named, which an ov004/ov006
+#                         closure walker cannot see because it never opens
+#                         arm9: src/func_02053ea0.c, src/func_02053eb0.c and
+#                         src/func_02054748.c
+#
+# THE +144 LINKAGE HEADLINE RESTS ON THAT 144 and reconciles with it exactly:
+# base 98a4c0e8f 7121/11293, tip 7265/11293.
 #
 # THE ONE WITH NO SRC is func_ov004_020ae858, and it is not a new floor: it is
 # ALREADY TRAPPED in hal/scene_mg_faces.cpp, where seven ov006 TUs across this
 # family already reach it.  This lane adds no trap and retires none.
 #
-# THE TWENTY EXCLUSIONS.  EIGHT are this lane's own host copies:
+# ---- 11a. THE TWENTY WHOSE SYMBOL A HOST FILE ALSO DEFINES --------------
+#
+# Listing any of these WOULD be an LNK2005: a port host file defines the same
+# symbol.  SIX are this lane's own:
 #
 #   src/func_ov006_020ef3e0.cpp   unmatched/MgJump2_FieldPmf.cpp   (slot 6)
 #   src/func_ov006_020c4cd8.cpp   unmatched/MgJump2_SubDispatch.cpp
 #   src/func_ov006_020c7860.cpp   unmatched/MgJump2_SubDispatch.cpp
-#   src/func_ov006_020e6e78.cpp   unmatched/MgD3DBase_DeclConflict.cpp (slot 24,
-#                                 the decl_common.h C2733)
-#   src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp
-#                                 unmatched/MgD3DBase_Slots.cpp  (slot 2: the
-#                                 dropped FLAG and the dropped RETURN)
-#   src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp
-#                                 unmatched/MgD3DBase_Slots.cpp  (slot 10: the
-#                                 dropped RECEIVER)
-#   src/func_ov006_020e6d98.c     unmatched/MgD3DBase_Slots.cpp  (slot 27)
-#   src/func_ov006_020e6d8c.c     unmatched/MgD3DBase_Slots.cpp  (slot 28)
+#   src/func_ov006_020e6e78.cpp   unmatched/MgD3DBase_DeclConflict.cpp
+#                                 (slot 24, the decl_common.h C2733)
 #   src/func_ov006_020c4c54.cpp   unmatched/MgD3DBase_ModelAnimRender.cpp
 #   src/func_ov006_020c7734.cpp   unmatched/MgD3DBase_ModelAnimRender.cpp
 #                                 -- both dispatch a six-virtual SHADOW's m5
 #                                 (ROM slot 5) on a plain ModelAnim, which MSVC
 #                                 sends to Virtual18. The second one FAULTED a
-#                                 rendered 300-frame run; section 12.
+#                                 rendered 300-frame run -- the archived log is
+#                                 out/BNT/evidence/fault_modelanim_render_020c7734.log
 #
-# FOUR ARE THE FRAMEWORK'S, and three of those four were found only by a
-# SYMBOL-LEVEL scan of port/unmatched and port/hal for a definition of every
-# name in the list below:
+# FOURTEEN are the framework's, and the SYMBOL-LEVEL scan is what found them
+# all -- a line-match against the other slices finds only some:
 #
-#   src/func_ov004_020b87e0.cpp   framework, unmatched/MgBase_StateSetter.cpp
-#   src/func_ov004_020aeed8.cpp   framework, unmatched/MgBase_DeclConflict.cpp
-#   src/func_ov004_020af094.cpp   framework, unmatched/MgBase_DeclConflict.cpp
-#   src/func_ov004_020b0930.cpp   framework, unmatched/MgBase_Slot1.cpp
+#   src/func_ov004_020add88.cpp   unmatched/MgBase_StateDispatch.cpp
+#   src/func_ov004_020adf2c.cpp   unmatched/MgBase_StateDispatch.cpp
+#   src/func_ov004_020aeed8.cpp   unmatched/MgBase_DeclConflict.cpp
+#   src/func_ov004_020af094.cpp   unmatched/MgBase_DeclConflict.cpp
+#   src/func_ov004_020afdd0.cpp   hal/screen_gap.cpp
+#   src/func_ov004_020b0620.cpp   unmatched/MgBase_Slot7.cpp
+#   src/func_ov004_020b0840.c     unmatched/MgBase_Slot5.cpp
+#   src/func_ov004_020b0930.cpp   unmatched/MgBase_Slot1.cpp
+#   src/func_ov004_020b2cb8.c     unmatched/MgBase_LangTable.cpp
+#   src/func_ov004_020b31b4.cpp   unmatched/MgBase_StateDispatch.cpp
+#   src/func_ov004_020b321c.cpp   unmatched/MgBase_StateDispatch.cpp
+#   src/func_ov004_020b8714.cpp   unmatched/MgBase_StateDispatch.cpp
+#   src/func_ov004_020b8778.cpp   unmatched/MgBase_StateDispatch.cpp
+#   src/func_ov004_020b87e0.cpp   unmatched/MgBase_StateSetter.cpp
 #
-# THE OTHER EIGHT are already recorded as HOST-COPIED (MG2) in slice_mg1.txt's
-# own comments and a line-match against slice files finds them there:
-# func_ov004_020add88, _020adf2c, _020b0840, _020b2cb8, _020b31b4, _020b321c,
-# _020b8714 and _020b8778.
+# THE SCAN IS THE POINT.  _020aeed8, _020af094 and _020b0930 are named only
+# inside PROSE in slice_mg1.txt and slice_pch.txt -- not on a HOST-COPIED line
+# -- and _020afdd0, _020b0620, _020b0840 and _020b2cb8 are not on a
+# HOST-COPIED line anywhere either.  A line-match against the other slices
+# misses seven of the fourteen; listing any of them here is an LNK2005.
 #
-# THE THREE THE SYMBOL SCAN FOUND ARE THE POINT OF DOING IT.  _020aeed8,
-# _020af094 and _020b0930 are named only inside PROSE in slice_mg1.txt and
-# slice_pch.txt -- not on a HOST-COPIED line -- so a line-match against the
-# other slices misses all three, and listing any of them here would have been
-# three LNK2005s at link time.
+# ---- 11b. THE FOUR ROUTED AROUND, WHICH ARE NOT AN LNK2005 --------------
+#
+# AN EARLIER VERSION OF THIS SECTION PUT THESE FOUR IN THE LIST ABOVE AND
+# CLAIMED THE SAME REASON FOR THEM.  THE REASON WAS WRONG.  No file in the
+# tree defines their symbols: unmatched/MgD3DBase_Slots.cpp defines
+# port_mg_d3dbase_after_init, _before_render, _slot27 and _slot28 -- NEW names
+# -- so listing the four src TUs would link cleanly and produce no duplicate
+# symbol at all.  The outcome is unchanged (the link is green either way) but
+# the argument was not, and a wrong argument in a slice header is how the next
+# lane inherits a wrong rule.
+#
+#   src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp   slot 2
+#   src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp         slot 10
+#   src/func_ov006_020e6d98.c                              slot 27
+#   src/func_ov006_020e6d8c.c                              slot 28
+#
+# THE REAL REASON IS THE ONE port/unmatched/MgFlower_Slot2.cpp GIVES: the seat
+# calls the port_-named repair instead, so the src symbol would be compiled,
+# referenced by nothing, and dropped by /OPT:REF -- and the map would carry a
+# decompilation the build does not use.  They are left out so nothing claims
+# one.  Section 5 of this file is what each repair changes and why.
+#
+# ---- 11c. ONE STATE IS DEAD ON THIS TREE, AND IT IS NOT A MISSING LINE ---
+#
+# `case 0x020c814cu` in port/unmatched/MgJump2_SubDispatch.cpp CANNOT FIRE in
+# a scene-373 build, and the lane review is right that shipping it silently was
+# the defect. The finding, floor-style:
+#
+#   THE STATE       0x020c814c, src/func_ov006_020c814c.cpp, matched, no
+#                   NONMATCHING banner. It is a real body.
+#   THE RECORD      0x0213b080 {0x020c814c, 0}, in the +0x3c run, ONE
+#                   relocation, from func_ov006_020c81e0.
+#   THE INSTALLER   func_ov006_020c81e0, size 0x90, HAS src
+#                   (src/func_ov006_020c81e0.c) and HAS its own delink block
+#                   (.text start:0x020c81e0 end:0x020c8270). So this is NOT a
+#                   decomp floor: nothing is undecompiled.
+#   WHY IT IS DEAD  The installer is reachable only from 0x174's own state
+#                   machine. The chain is
+#                       func_ov006_020ee508   (one of 0x174's five field states)
+#                     -> func_ov006_020ee3bc  (its only caller, 0x020ee580)
+#                     -> func_ov006_020c7418  (its only caller, 0x020c7454)
+#                     -> func_ov006_020c81e0
+#                   and NONE of those four is in this lane's 230-body closure,
+#                   while ALL of them appear in 0x174's closure once its five
+#                   field states are used as roots (104 bodies). Both checks
+#                   were run; neither is inferred.
+#   THE RULING      It stays OUT of this slice -- a scene-373 build cannot
+#                   reach it, and listing it would put a body in the map that
+#                   nothing calls -- and the switch KEEPS the case, because
+#                   0x174 and 0x175 drive the SAME two shared sub-object
+#                   families through the same code, so the case goes live the
+#                   moment lane BNP seats 0x174 into the same process. An
+#                   address-keyed switch cannot mis-route in the meantime.
+#   FOR LANE BNP    src/func_ov006_020c81e0.c and src/func_ov006_020c7418.c
+#                   belong in slice_bnp.txt, not here.
 #
 # THE SLICE IS THE DELTA ONLY.  slice_mg1.txt already carries the ov004
 # framework, the thirty-five overlay constructors and the arm9 waves under
 # them; CMake appends every list to the same targets and dedupes identical
-# absolute paths, so nothing is compiled twice.  142 lines follow: 136 ov006 plus the three arm9 TUs the link named
-# (src/func_02053ea0.c, _02053eb0.c and _02054748.c), which the ov004/ov006
-# closure walker cannot see because it does not open arm9.
+# absolute paths, so nothing is compiled twice.  144 lines follow: 141 ov006
+# from the closure walk plus the 3 arm9 TUs section 11 accounts for.
 
 
 
