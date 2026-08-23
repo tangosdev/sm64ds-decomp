@@ -1820,7 +1820,7 @@ src/_ZN8dCcPos_c10GetOwnerIDEv.cpp:
     complete
     .text start:0x02014818 end:0x02014820
 
-src/_ZN8dCcPos_c6GetPosEv.c:
+src/_ZN8dCcPos_c6GetPosEv.cpp:
     complete
     .text start:0x02014820 end:0x02014828
 
@@ -1836,7 +1836,7 @@ src/_ZN8dCcPos_cC1Ev.c:
     complete
     .text start:0x02014878 end:0x0201489c
 
-src/_ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3.c:
+src/_ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3.cpp:
     complete
     .text start:0x0201489c end:0x020148c8
 
@@ -1880,7 +1880,7 @@ src/func_02014a20.c:
     complete
     .text start:0x02014a20 end:0x02014a2c
 
-src/_ZN10dCcAcPos_c6GetPosEv.c:
+src/_ZN10dCcAcPos_c6GetPosEv.cpp:
     complete
     .text start:0x02014a2c end:0x02014a34
 
@@ -2412,7 +2412,7 @@ src/_ZN10dFdDummy_c15SetBackwardTimeEj.cpp:
     complete
     .text start:0x020171f0 end:0x0201721c
 
-src/_ZN10dFdDummy_c11AdvanceFadeEv.c:
+src/_ZN10dFdDummy_c11AdvanceFadeEv.cpp:
     complete
     .text start:0x0201721c end:0x02017228
 
@@ -5051,7 +5051,7 @@ src/func_02037464.c:
     complete
     .text start:0x02037464 end:0x0203748c
 
-src/_ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c.c:
+src/_ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c.cpp:
     complete
     .text start:0x0203748c end:0x020374b8
 
@@ -5125,7 +5125,7 @@ src/func_020378dc.c:
     complete
     .text start:0x020378dc end:0x020378e4
 
-src/_ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi.c:
+src/_ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi.cpp:
     complete
     .text start:0x020378e4 end:0x02037938
 
