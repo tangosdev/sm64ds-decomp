@@ -6745,8 +6745,9 @@ endforeach()
 set(SCENE_MG_SLOT1_SOURCES hal/scene_mg_slot1.cpp)
 
 # Run mg11 lane MUG: dScMgSlot3_c, the "Mix-a-Mug" slot machine, actor id
-# 0x16d = scene 365, and the FIFTH class the port seats under
-# dScMgSingle3DBase_c.
+# 0x16d = scene 365, and the NINTH class the port seats under
+# dScMgSingle3DBase_c (eight at base; port/slice_mug.txt has the sweep that
+# counts them).
 #
 #   Scene -> dScMgBase_c (ov004 0x020bc0c0) -> dScMgSingle3DBase_c
 #         (ov006 0x0213e448) -> dScMgSlot3_c (ov006 0x0213eaa8)

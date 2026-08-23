@@ -2787,11 +2787,14 @@ static const PortSceneClass port_scene_classes[] = {
        0x0213e4e0..0x0213e588 into data_ov006_02142bdc. Nothing this fill
        writes is inside that span; its whole reach is [0x0213eaa8, 0x0213eb38).
 
-       TWO: this class is the FIFTH seated under dScMgSingle3DBase_c
-       (0x0213e448), after the flower, memory2, cup, boombox and mcarlo rows,
-       so running last means the earlier fill keeps the middle table and every
-       earlier seat's middle-table witness keeps counting exactly what it
-       counted before this row existed. hal/scene_mg_slot3.cpp section 3 is the
+       TWO: this class is the NINTH seated under dScMgSingle3DBase_c
+       (0x0213e448). EIGHT were seated at base -- the 361, 362, 363, 367, 381,
+       388, 389 and 390 rows -- so running last means the earlier fill keeps
+       the middle table and every earlier seat's middle-table witness keeps
+       counting exactly what it counted before this row existed. (The count is
+       measured in port/slice_mug.txt by sweeping every ov006 vtable's typeinfo
+       base word, not inherited from a neighbour's header; this comment said
+       FIFTH until review and was wrong by four.) hal/scene_mg_slot3.cpp section 3 is the
        argument and this seat prints its claimed counts so the split is
        measured rather than assumed.
 

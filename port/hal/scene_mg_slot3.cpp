@@ -1,7 +1,9 @@
 // dScMgSlot3_c, the "Mix-a-Mug" slot machine -- actor id 0x16d, scene 365.
-// Run mg11, lane MUG. The FIFTH class the port seats under
-// dScMgSingle3DBase_c, and the SECOND of the ROM's three dScMgSlotN_c classes
-// after dScMgSlot1_c (0x16c, scene 364, "Mario Slot", seated by run mg9).
+// Run mg11, lane MUG. The NINTH class the port seats under
+// dScMgSingle3DBase_c (eight were seated at base 98a4c0e8f; the count is
+// measured in port/slice_mug.txt, not inherited), and the SECOND of the ROM's
+// three dScMgSlotN_c classes after dScMgSlot1_c (0x16c, scene 364, "Mario
+// Slot", seated by run mg9).
 //
 // Read port/slice_mug.txt for the identity derivation (six ROM witnesses, of
 // which the player title is one), the five width checks, the state machine and
@@ -38,7 +40,7 @@
 //     order, 0x0213eaa8 first and 0x0213e448 second. Both bodies' literal
 //     pools hold exactly those two words.
 //
-// ---- 3. THE FILL IS ADDRESS-KEYED, AND THIS IS THE FIFTH CLAIM ON THE
+// ---- 3. THE FILL IS ADDRESS-KEYED, AND THIS IS THE NINTH CLAIM ON THE
 //         MIDDLE TABLE -----------------------------------------------------
 //
 // port_scene_fill_rom and slot3_apply both key on the ROM WORD a slot holds,
@@ -55,10 +57,11 @@
 // 0x0210a4e8 in the middle table, 0x0210a954 / 0x0210a9a8 in the derived one --
 // so both arrays can be applied to both tables and each writes only its own.
 //
-// FOUR OTHER SEATED FILES DEFINE THEIR OWN COPY OF kSingle3DFaces:
-// hal/scene_mg_flower.cpp, hal/scene_mg_memory2.cpp, hal/scene_mg_mcarlo.cpp
-// and hal/scene_mg_boombox.cpp (and hal/scene_mg_cup.cpp carries the same
-// eight addresses). That is safe for the reason hal/scene_mg_memory2.cpp
+// EIGHT OTHER SEATED FILES DEFINE THEIR OWN COPY OF kSingle3DFaces, counted
+// by grepping the base tree for the face address 0x0210a6e4u:
+// hal/scene_mg_boombox.cpp, _cup.cpp, _flower.cpp, _luckystars.cpp,
+// _mcarlo.cpp, _memory1.cpp, _memory2.cpp and _psycheout.cpp. That is safe for
+// the reason hal/scene_mg_memory2.cpp
 // section 3 measures: the fill keys on a DS address, every row's fill runs on
 // every boot, and the fill that runs FIRST claims the table -- the later ones
 // find nothing left to write. This class's registry row is appended after all
@@ -67,15 +70,17 @@
 // own middle copy therefore reports ZERO on any tree that carries the flower
 // row, and that zero is the CHECK rather than a disappointment.
 //
-// THE PROMOTION ARGUMENT IS NOW OWED FIVE TIMES OVER, and this lane again does
-// NOT take it: exporting kSingle3DFaces as a seam touches five files other
+// THE PROMOTION ARGUMENT IS NOW OWED NINE TIMES OVER, and this lane again does
+// NOT take it: exporting kSingle3DFaces as a seam touches eight files other
 // mg11 lanes may be editing in parallel, and the run's merge plan is a serial
 // merge of nine branches. The count is recorded so the lane that does it has
-// the number rather than the intention.
+// the number rather than the intention -- and it is recorded as a MEASUREMENT
+// for the reason port/slice_mug.txt gives: this file inherited "five" from a
+// neighbour's header and it was wrong by four.
 //
 // ---- 4. SLOT 2 IS NOT src's BODY, AND SLOT 33 IS NOT src's EITHER ---------
 //
-// Inherited unchanged from the four earlier seats under this base, and stated
+// Inherited unchanged from the eight earlier seats under this base, and stated
 // rather than cross-referenced because a reader of THIS file needs to know why
 // two of the eight rows below do not name the src symbol:
 //
@@ -85,7 +90,9 @@
 // that is the only way to spell an unnamed value in C. On the host the callee
 // would read stack litter. The repair is port_mg_flower_after_init in
 // port/unmatched/MgFlower_Slot2.cpp, whose header asks the next lane to call
-// it rather than write a second one; this is the fifth lane to do so, and
+// it rather than write a second one; this is the NINTH lane to do so (eight
+// call sites in the base tree, one each in the eight hal files listed in
+// section 3, counted by grepping 98a4c0e8f for port_mg_flower_after_init), and
 // src/func_ov006_0210a6e4.cpp stays out of port/slice_mug.txt for that reason.
 //
 // func_ov006_0210a708 (slot 33, the once-per-boot 3D setup) ends with two
@@ -157,8 +164,13 @@
 //                             0x0213e5a0 is exactly the typeinfo record
 //                             whose name string reads "12dScMgSlot1_c".
 //                             The config symbol boundary sits at the VTABLE,
-//                             not at the header, which is why the span reads
-//                             two words long on every table in this overlay.
+//                             not at the header, which is why THIS span reads
+//                             two words long. NOT a general rule: all 55 ov006
+//                             vtables have an unsymbolised header, but only 13
+//                             have a vtable as their PREVIOUS symbol, and this
+//                             is the ONLY 0x98 span in the overlay (29 of the
+//                             other 30 scene tables span exactly 0x90).
+//                             port/slice_mug.txt check 3 has the sweep.
 //   4 RELOCATION COUNT        36 relocations at indices 0..35 with NONE at
 //                             index 36. A vtable slot is a relocated word by
 //                             construction. (The 37th relocation inside the
@@ -430,7 +442,7 @@ extern "C" void port_scene_fill_slot3(void)
     /* THE MIDDLE TABLE. Live storage in its own right -- the destructor chain
        writes it into the object on the way down, so a slot dispatched between
        the two vptr writes reads it. Section 3 is why applying this file's own
-       arrays here is safe beside the four earlier seats', and why the claimed
+       arrays here is safe beside the eight earlier seats', and why the claimed
        count below is expected to be ZERO on a tree carrying them. */
     port_scene_mg_fill_shared(mid, 36);
     g_s3_mid_claimed =

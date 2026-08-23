@@ -1122,12 +1122,25 @@ func_ov006_0210a600  REAL_DECOMP  port/slice_psy.txt  lane PSY, RE-DERIVED. slot
 # ---------------------------------------------------------------------------
 # run mg11 (lane MUG, the "Mix-a-Mug" seat), 2026-08-23.
 #
-# dScMgSlot3_c (actor id 0x16d, scene 365, ov006) is the fifth class the port
-# seats under dScMgSingle3DBase_c. Fifteen of its thirty-six slots are
-# overridden across the two tables and THIRTEEN of those fifteen carry the
-# marker, which is port/mg_fanout_costs.txt section 3's mark column exactly.
-# Six of the thirteen are the middle base's and are already ruled above (lane
-# PSY re-derived all six). The EIGHT below are this class's own, disassembled
+# dScMgSlot3_c (actor id 0x16d, scene 365, ov006) is the NINTH class the port
+# seats under dScMgSingle3DBase_c (eight were seated at the base commit; the
+# sweep that counts them is in port/slice_mug.txt, and this header said "fifth"
+# until review). Fifteen of its thirty-six slots are overridden across the two
+# tables and THIRTEEN of those fifteen carry the marker, which is
+# port/mg_fanout_costs.txt section 3's mark column exactly.
+#
+# FIVE of the thirteen SLOTS are the middle base's and are already ruled above,
+# and the EIGHT below are this class's own: 5 + 8 = 13. This header said "six
+# of the thirteen", which sums to fourteen against a thirteen and CROSSED TWO
+# UNITS -- six is the per-BODY figure (17 distinct override bodies across both
+# tables, 14 marker-carrying, of which 6 are the middle base's and 8 this
+# class's) and five is the per-SLOT one. The difference is slots 16 and 17,
+# which hold DIFFERENT bodies in the two tables, so the middle base's own D0
+# func_ov006_0210a4e8 is a marker-carrying BODY that is not a marker-carrying
+# SLOT of this class. Both numbers are right for their unit; the sentence had
+# one unit's numerator over the other's denominator.
+#
+# The EIGHT below are this class's own, disassembled
 # out of extracted/overlays/overlay_0006.bin at base 0x020bfec0 -- the shipped
 # RAM image, deliberately not a dsd export -- and compared against src. RESULT:
 # 8 REAL DECOMP, 0 genuine guesses, 0 unverifiable. The instruction-plus-pool

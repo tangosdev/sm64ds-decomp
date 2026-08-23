@@ -117,6 +117,33 @@
 // sees. The UNHANDLED counter stays meaning "a dispatch this port cannot
 // explain".
 //
+//
+// AND IT IS NOT AN UNTOUCHED BODY: THERE IS A NEAR-MISS ROW FOR IT. The
+// per-item near-miss check this lane's review ordered turned one up --
+// nearmiss/db.jsonl line 45, name func_ov006_0210adac, size 440 (= 0x1b8),
+// lang c, from run `fable-hardmatch-20260801` -- carrying a full candidate
+// c_source and this verdict, quoted rather than summarised:
+//
+//     "struct-2D-sym form; equal=101/110 falign; sole real divergence = SR
+//      init add r6,sl,#5 rematerialized per outer iter in ROM vs
+//      hoisted+spilled [sp,#4] by mwcc (frame 0x14 vs 0xc); tried: row ptr,
+//      register, do-while, outer do-while, u64 launder, (int)c grouping,
+//      subscript, 5*(j-1), pragmas loop_invariants/propagation/
+//      strength_reduction/lifetimes, C++, int param, manual hoists - all
+//      fail; SR-off fixes init placement but kills LICM hoists of divisor/1/5
+//      and buf ptr walks"
+//
+// NOTHING ABOUT THE SEAT CHANGES. "No delink block and no src file in any
+// module" is still exactly true -- there is no src/func_ov006_0210adac.c or
+// .cpp, which is what decides whether this dispatch site can name a body --
+// and a near-miss row is a candidate, not a definition. What changes is the
+// PRICE the floor wave should put on it: this is a 101-of-110 near-miss with
+// one characterised divergence and a documented list of fifteen failed
+// levers, not a body nobody has looked at. The candidate ALSO independently
+// confirms this file's reading of what state 2 does: it walks the three
+// visible symbols at +0x5031, compares them across the reels, writes the win
+// index to +0x5010 and the payout to +0x5014, and sets the state index to 3.
+//
 // NO BODY IS INVENTED FOR IT. unmatched/MgCurling_State_020e1854.cpp is the
 // precedent for TRANSCRIBING such a state from the ROM, and it is the right
 // next step for this address -- but a transcription is a decompilation and

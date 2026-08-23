@@ -42,13 +42,21 @@
  *
  * MEASURED, scene 365, this tree, before this file existed:
  *
- *   FAULT code c0000005 at +0x000bea2c accessing ffffec00
+ *   FAULT code c0000005 at +0x000bea7c accessing ffffec00
  *     walker node 307FAFF4 actor 307FAFBC id 0x16d
- *     slot3_render -> func_ov006_0210b648+0x23
+ *     slot3_render+0xc -> func_ov006_0210b648+0x23
  *       -> func_ov006_020c201c+0xed
  *       -> func_ov006_020c1f4c+0x62
  *       -> BlendModelAnim::Virtual10+0x42
  *       -> Model::Virtual10+0xc,  eax=ffffec00
+ *
+ * BANKED AS A REPRODUCTION: runs/mg11/out/MUG/fault_c0000005_shadowclass_
+ * playlog.log and its faultmap symbolization. The first boot's playlog was
+ * rotated out of the build directory before it was banked, so the fault was
+ * re-created by reverting the one line below to src's shadow dispatch in a
+ * scratch build and restoring it afterwards. The module-relative bases moved
+ * between the two builds; the functions, the offsets into them, the fault
+ * code, the faulting address and the actor id are identical.
  *
  * which is the MgMemory2_ModelRender_020c1804 chain one slot over, ending in
  * the same Model::Virtual10.
