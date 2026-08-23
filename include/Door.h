@@ -40,13 +40,10 @@
  * exactly the addresses above.) All five bytes still match; only the symbol
  * NAMES were placeholders (func_ov100_0214xxxx), now renamed.
  *
- * NOT CONVERTED TO REAL METHODS BY THIS PASS. Each of the five sources above
- * is still defined as a free function taking the object pointer explicitly,
- * the same idiom src/_ZN7fBase_c13InitResourcesEv.cpp uses for fBase_c's own
- * slot 0: declared here as a virtual override (so the header documents the
- * vtable completely) but never given a `Door::` definition anywhere, so
- * nothing about their bodies had to change to land the correct mangled
- * symbol.
+ * REAL METHOD STATUS. CleanupResources and Behavior are genuine `Door::`
+ * definitions. InitResources, Render and OnPendingDestroy still use the
+ * historical free-function ABI spelling; each needs its own byte-verified
+ * conversion rather than being inferred from the declaration alone.
  *
  * THEIR FIELD ACCESS, HOWEVER, IS NOW THIS HEADER'S. The naming slice left
  * Door described by two headers at once: this one, and the generated flat
@@ -122,10 +119,9 @@ struct Door : dActor_c {
 
     /* --- overrides of inherited fBase_c slots dActor_c left untouched (see
        include/dActor_c.h: "Slots 0, 3, 6, 9, 12 ... still point at the
-       fBase_c implementations"). Declared here purely so this header
-       documents the vtable completely; each is DEFINED as a free function
-       under its mangled symbol, not as a real Door:: method -- see NOT
-       CONVERTED above. --- */
+       fBase_c implementations"). CleanupResources and Behavior are real
+       Door methods; the remaining overrides retain their historical ABI
+       spellings until each can be converted without changing ROM bytes. --- */
     virtual s32 InitResources();          /* slot 0 */
     virtual s32 CleanupResources();       /* slot 3 */
     virtual s32 Behavior();               /* slot 6 */

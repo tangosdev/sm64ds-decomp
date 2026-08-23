@@ -6,9 +6,9 @@
 #include "Door.h"
 #include "SharedFilePtr.h"
 /* recovered: renamed to Class_Method, vtable slot 3 */
-/* Door::CleanupResources -- vtable slot 3, ov100 0x0214542c. Declared as an
- * override in include/Door.h, defined here as an extern "C" free function
- * under the mangled symbol, the same idiom the rest of the class uses.
+/* Door::CleanupResources -- vtable slot 3, ov100 0x0214542c. This is the real
+ * virtual override declared in include/Door.h rather than a free function
+ * that only borrows the method's mangled symbol.
  *
  * FOLDED ONTO include/Door.h with the two files that used to include the
  * retired flat header. This one never included it -- it reached 0x008, 0x138
@@ -27,21 +27,21 @@ struct Elem { void* a; void* b; char pad[8]; };
 extern Elem data_ov100_02148204[];
 extern "C" {
 extern void* data_ov100_02148744;
-int _ZN4Door16CleanupResourcesEv(Door* self) {
-  Elem* e = &data_ov100_02148204[self->param1];
+}
+int Door::CleanupResources() {
+  Elem* e = &data_ov100_02148204[param1];
   Model* key;
   ((SharedFilePtr *)(e->a))->Release();
   ((SharedFilePtr *)(&data_ov100_02148744))->Release();
-  key = self->unk_138;
+  key = unk_138;
   if (key != 0) {
     delete key;
     ((SharedFilePtr *)(e->b))->Release();
   }
-  if (self->unk_13c != 0) {
-    unsigned int v = self->param1;
+  if (unk_13c != 0) {
+    unsigned int v = param1;
     if (v >= 9 && v <= 0xd) UnloadKeyModels(v - 7);
-    ((SharedFilePtr *)(self->unk_13c))->Release();
+    ((SharedFilePtr *)(unk_13c))->Release();
   }
   return 1;
-}
 }

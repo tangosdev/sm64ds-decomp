@@ -2,11 +2,11 @@
 // @symbol _ZN4Door8BehaviorEv
 // recovered name: Door::Behavior
 /* recovered: renamed to Class_Method, vtable slot 6 */
-/* Door::Behavior -- vtable slot 6, ov100 0x02145550. Declared as an override
- * in include/Door.h, defined here as an extern "C" free function under the
- * mangled symbol, the same idiom the rest of the class uses.
+/* Door::Behavior -- vtable slot 6, ov100 0x02145550. This is the real virtual
+ * override declared in include/Door.h rather than a free function that only
+ * borrows the method's mangled symbol.
  *
- * FOLDED ONTO include/Door.h alongside the rest of the class: `self->unk_140`
+ * FOLDED ONTO include/Door.h alongside the rest of the class: `unk_140`
  * rather than a raw `c + 0x140`. Byte-exact under the pinned 2004/b56 before
  * and after.
  *
@@ -36,11 +36,11 @@ struct CallbackNode {
 extern "C" {
 extern int func_ov100_02145370(Door *self);
 }
-extern "C" int _ZN4Door8BehaviorEv(Door *self) {
-    int res = func_ov100_02145370(self);
-    CallbackNode *node = (CallbackNode *)self->unk_140;
+int Door::Behavior() {
+    int res = func_ov100_02145370(this);
+    CallbackNode *node = (CallbackNode *)unk_140;
     if (*(int*)&node->callback != 0) {
-        (self->*(node->callback))(res);
+        (this->*(node->callback))(res);
     }
     return 1;
 }
