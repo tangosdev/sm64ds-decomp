@@ -392,10 +392,10 @@
 # port/tools/linkage.py, same tree, same tool, both ends:
 #
 #   base 98a4c0e8f built clean, before any edit   7121 / 11293   63.1%
-#   this branch                                   7264 / 11293   64.3%
-#   delta                                         +143
+#   this branch                                   7262 / 11293   64.3%
+#   delta                                         +141
 #
-# against 145 src lines below.  THE TWO-LINE SHORTFALL IS ACCOUNTED FOR AND IS
+# against 143 src lines below.  THE TWO-LINE SHORTFALL IS ACCOUNTED FOR AND IS
 # NOT A LOST LINE: src/_ZN5Model17LoadTextureToVramEPcj.cpp and
 # src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c were ALREADY linked through
 # port/slice_gate4b.txt and port/slice_gate7.txt.  They are listed here because
