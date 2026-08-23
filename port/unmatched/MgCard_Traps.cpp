@@ -46,8 +46,21 @@
  *
  * Disassembled from extracted/overlays/overlay_0006.bin at base 0x020bfec0 --
  * the shipped image, deliberately not a dsd export, whose relocated words would
- * make literals read as live pointers.  0x2ac = 171 words; 0 literal-pool words
- * (every constant is an immediate), so 171 instructions + 0 pool = 171 = size/4.
+ * make literals read as live pointers.  0x2ac = 171 words; ONE literal-pool
+ * word, at 0x020da41c, so 170 instructions + 1 pool = 171 = size/4.
+ *
+ * AN EARLIER VERSION OF THIS LINE READ "0 literal-pool words (every constant is
+ * an immediate), so 171 instructions + 0 pool = 171", AND IT WAS WRONG.  Review
+ * found it.  The pool word is 0x020da41c and it holds 0x0213bcd8, which
+ * config/arm9/overlays/ov006/relocs.txt confirms with
+ * `from:0x020da41c kind:load to:0x0213bcd8` -- a relocation an immediate can
+ * never carry.  0x0213bcd8 is the six-word run {0, 1, 2, 3, 4, 0}, the IDENTITY
+ * permutation this body seeds its ordering from before it sorts, which is why
+ * the wrong number was also the more interesting one to lose: the one pool word
+ * in the body names the thing the body is for.  The arithmetic is mandatory and
+ * it now comes from a tool rather than from a reading -- two independent splits
+ * (pc-relative load targets, and load relocations sited inside the span) that
+ * agree word for word.
  *
  *   0x020da180  a six-entry short HISTOGRAM is zeroed on the stack at sp+8
  *   0x020da1b4  five iterations of `ldrb r1,[r7,#0x2a]` (the card FACE) and
@@ -78,11 +91,18 @@
  * A trap-shaped floor HIDES its callees from static closure, and here it also
  * hides the machine's own progress.  func_ov006_020d99ec is reached from
  * NOWHERE ELSE in the image -- a grep of src/ finds exactly one file naming it,
- * its own -- so with this trap standing:
+ * its own -- and it is the SOLE WRITER OF STATE 7, which is the half that
+ * actually carries the conclusion and is measured rather than assumed: a sweep
+ * of all thirty-six of this class's src bodies for a write of 7 to a card's
+ * +0x2b returns exactly one hit, src/func_ov006_020d99ec.c:4.  So with this
+ * trap standing:
  *
  *   - no card is given a slide target and none enters state 7;
- *   - src/func_ov006_020d9c5c.cpp's `st == 7` arm is what promotes a card to
- *     state 8, so no card reaches state 8;
+ *   - state 8 has TWO writers, one per element class, and BOTH are inside a
+ *     `state == 7` arm: src/func_ov006_020d9c5c.cpp:67 (dMgCardObj_c's tick)
+ *     and src/func_ov006_020d978c.cpp:53 (dMgDilarCardObj_c's tick).  So no
+ *     card reaches state 8 -- not because one promoter is missing, but because
+ *     the ONE feeder of state 7 is behind this trap;
  *   - state 10 of the machine is
  *         if (func_ov006_020da860(c+0x51a8, 8) && func_ov006_020da860(c+0x5298, 8))
  *     -- ALL FIVE cards of BOTH hands at state 8 -- so the machine reaches

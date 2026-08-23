@@ -107,9 +107,19 @@
 #      -- state slot 0 of the SEATED dScMgCoin_c.  A 37-slot fill of this table
 #      would write a host thunk over a live neighbour's state, which is section
 #      11's whole warning with a named victim.
-#   4. RELOCATION COUNT.  ov006's relocs.txt carries 36 CONTIGUOUS load
-#      relocations at a four-byte stride from 0x0213bdb4 to 0x0213be40, one per
-#      slot.
+#   4. RELOCATION COMPLETENESS -- WHICH IS NOT A BOUND ON THE END, AND AN
+#      EARLIER VERSION OF THIS LINE PRETENDED IT WAS.  It read "36 CONTIGUOUS
+#      load relocations at a four-byte stride from 0x0213bdb4 to 0x0213be40, one
+#      per slot", which invited the reading that the stride-4 run STOPS at slot
+#      35.  It does not: measured over ov006's relocs.txt the contiguous
+#      four-byte run starting at 0x0213bdb4 is THIRTY-SEVEN relocations long and
+#      its last is 0x0213be44, because the first word of the member-pointer pair
+#      that follows the table is an address too and therefore carries a
+#      relocation of its own at exactly +4.  What this check really measures is
+#      COMPLETENESS: all 36 slots carry a load relocation, none is missing, so
+#      the fill is keying on a table the ROM relocates in full rather than on a
+#      run with holes in it.  WHERE THE TABLE ENDS IS FIXED BY CHECKS 2, 3 AND 5
+#      AND BY NOTHING IN THIS ONE.
 #   5. RELOCATION STRIDE (run mg9 lane LKY's fifth check).  From 0x0213be44 on
 #      the stride is EIGHT: be44, be4c, be54, be5c, ...  A vtable is relocated
 #      every word; an mwcc member-pointer table every other word.  The stride
@@ -193,9 +203,12 @@
 #     020d9854, 020d9de0   the two element ticks, `ldr r1,[r1,#8]`
 #     020da030, 020da0e4   the two element seeders, same
 #                          ELEMENT SLOT 2
-#     020dbd0c             func_ov006_020dbaf0  `ldr r2,[r0] / mvn r1,#0 /
-#                          ldr r2,[r2,#0x48]` -- THIS CLASS'S OWN SLOT 18,
-#                          dispatched with one argument, value -1
+#     020dbd0c             func_ov006_020dbaf0 -- THIS CLASS'S OWN SLOT 18,
+#                          dispatched with one argument, value -1.  The address
+#                          in this column is the blx ITSELF, which is what the
+#                          sweep reports; the four-instruction sequence it ends
+#                          runs 0x020dbd00..0x020dbd0c and is
+#                          `ldr r2,[r0] / mvn r1,#0 / ldr r2,[r2,#0x48] / blx r2`
 #
 # An offset match is a candidate; a blx on the loaded word is the finding, and
 # all nine are the second kind.  hal/scene_mg_card.cpp fills all four tables.
@@ -221,9 +234,16 @@
 #
 # THE CONSEQUENCE IS A STALL AND THIS FILE STATES IT RATHER THAN DISCOVERING IT
 # IN A RUN.  State 10 of the machine waits for all five cards of BOTH hands to
-# reach state 8, src/func_ov006_020d9c5c.cpp promotes 7 -> 8 and nothing else
-# does, so with the trap standing the machine reaches state 10 and stays there.
-# Retiring it is a DECOMP (a delink block plus a matched src TU), not a port
+# reach state 8.  State 8 has TWO writers, one per element class, and BOTH sit
+# inside a `state == 7` arm -- src/func_ov006_020d9c5c.cpp:67 (dMgCardObj_c's
+# tick) and src/func_ov006_020d978c.cpp:53 (dMgDilarCardObj_c's tick).  AN
+# EARLIER VERSION OF THIS SENTENCE SAID "src/func_ov006_020d9c5c.cpp promotes
+# 7 -> 8 and nothing else does", which is false: it named the player's card
+# class and missed the dealer's, the same one-of-two blind spot the element
+# vtables themselves are about.  The conclusion is unchanged and rests on the
+# other end of the chain -- state 7 has exactly ONE feeder, and it is behind
+# this floor -- so with the trap standing the machine reaches state 10 and stays
+# there.  Retiring it is a DECOMP (a delink block plus a matched src TU), not a port
 # fix.  port/mg_fanout_costs.txt section 3's nosrc column reads 0 for this id
 # and is still right: that column counts VTABLE SLOTS, and this is a state.
 #

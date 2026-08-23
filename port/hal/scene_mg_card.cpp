@@ -72,7 +72,9 @@
 //     slot 2   0x020d9854, 0x020d9de0, 0x020da030, 0x020da0e4
 //              the two element ticks and the two element seeders
 //     +0x48    0x020dbd0c                src/func_ov006_020dbaf0.cpp, the class's
-//              OWN vtable slot 18, dispatched with r1 = -1 (`mvn r1,#0`)
+//              OWN vtable slot 18, dispatched with r1 = -1 (`mvn r1,#0`).  The
+//              address is the blx itself, which is what the sweep reports; the
+//              sequence it ends runs 0x020dbd00..0x020dbd0c.
 //
 // So a seat that filled the class table alone would leave ten live objects
 // jumping to raw DS addresses on the first rendered frame.
@@ -89,8 +91,15 @@
 //      data_ov006_021417c8[0] -- state slot 0 of dScMgCoin_c, actor id 0x17a,
 //      WHICH THIS PORT HAS SHIPPED AS SCENE_MG_COIN SINCE RUN mg5.  A 37-slot
 //      fill here would write a host thunk over a live neighbour's state.
-//   4. RELOCATION COUNT.  ov006's relocs.txt carries 36 contiguous load
-//      relocations at a four-byte stride, 0x0213bdb4 through 0x0213be40.
+//   4. RELOCATION COMPLETENESS, AND IT IS NOT A BOUND ON THE END.  All 36 slots
+//      carry a load relocation in ov006's relocs.txt -- none is missing -- so
+//      the fill keys on a table the ROM relocates in full rather than on a run
+//      with holes.  IT DOES NOT SAY WHERE THE TABLE STOPS, and an earlier
+//      version of this line ("36 contiguous load relocations at a four-byte
+//      stride, 0x0213bdb4 through 0x0213be40") implied it did.  Measured, the
+//      contiguous four-byte run from 0x0213bdb4 is THIRTY-SEVEN long and ends
+//      at 0x0213be44, because the first word of the pair that follows is an
+//      address too.  Checks 2, 3 and 5 are what bound the end.
 //   5. RELOCATION STRIDE.  From 0x0213be44 on the stride is EIGHT
 //      (be44, be4c, be54, ...).  A vtable is relocated every word; an mwcc
 //      member-pointer table every other word.  The stride change is where the
