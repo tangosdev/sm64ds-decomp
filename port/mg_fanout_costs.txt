@@ -2870,7 +2870,9 @@ repeats the previous round. Three arms, on slot 36 and on the walker count:
 The three draws are all the game's 15-bit range idiom,
 ((RandomIntInternal(&seed) >> 16) & 0x7fff) * range >> 15, UNSIGNED throughout
 -- the ROM emits lsr for both shifts, and writing it signed emits asr, which is
-one of the two levers that took this body from 999 to its eight-byte miss.
+one of the two levers that took this body from 999 to its eight-byte miss
+(999 is the harness's UNSCOREABLE sentinel for a size mismatch, not a
+divergence count).
 
 THE RUN CHECKS THE BODY BY ARITHMETIC RATHER THAN BY ASSERTION. Seating it
 raised scene 371's slot-36 count from 1322 to 1331 at 300 frames and from 5822
