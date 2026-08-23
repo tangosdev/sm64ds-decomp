@@ -237,6 +237,27 @@
 # agrees with all of theirs.  Slots 16 and 33 carry no marker and are therefore
 # not ruled on.
 #
+# WHAT THE GUARD COUNTS IS SEATED, NOT RULED, AND THE TWO DIVERGE BY ONE HERE.
+# port/tools/inferred_stub_guard.py counts marker-carrying bodies the SLICE
+# seats; this file adds FOURTEEN rulings but the guard's figure moves by EIGHT:
+#
+#   base 98a4c0e8f   194 seated inferred stubs live, 149 ROM-ADJUDICATED
+#   SNW tip          202 seated inferred stubs live, 157 ROM-ADJUDICATED
+#   delta                    +8                             +8
+#
+# NINE of the fourteen are this class's own, so the naive expectation is +9.
+# The ninth is func_ov006_02127d10, vtable slot 9, and section 14 HOST-COPIES
+# it: its src TU leaves the slice, so the guard stops counting it as seated
+# while its ruling stays true and stays needed.  That is the same standing the
+# five middle-base rows have -- ruled here, linked from somewhere else or not
+# at all -- and it is why an adjudication row is evidence about a ROM BODY
+# rather than a licence for a slice line.
+#
+# A DRAFT OF THIS LANE'S REPORT QUOTED 158 AND +9, which was true at the build
+# before the host copy landed and went stale the moment it did.  Review caught
+# it.  The figure lives here now, measured at the tip, so the next reader gets
+# it from the file that owns it rather than from a number typed once.
+#
 # SLOT 18 READS ITS SECOND ARGUMENT AND THE THUNK FORWARDS IT.  This is the
 # second class to do it -- run mg9 lane LKY found the first, in dScMgBSC_c, and
 # relayed it as "witness, don't assume".  func_ov006_0212921c saves r1 into r4
@@ -349,8 +370,14 @@
 # before and after this seat and the delta must equal the number of src lines
 # below, because every slice line moves the headline by exactly one.  An equal
 # delta is also the proof that CMake read every line: a line lost to a stray
-# bracket in this file shows up as a short delta.  Section 12 carries the
-# numbers.
+# bracket in this file shows up as a short delta.  SECTION 15 carries the
+# numbers, and it is the last section of this file.
+#
+# THAT SENTENCE USED TO POINT AT SECTION 12, WHICH IS THE WAVE-1 LIST AND HAS
+# NEVER CARRIED A LINKAGE FIGURE.  Review caught it: the check had been run and
+# passed, and the file promised a record of it that was never written.  A slice
+# that says "the numbers are over there" and has no over-there is worse than
+# one that says nothing, because a reader stops looking.
 #
 # ---- 11. THE SLICE ------------------------------------------------------
 #
@@ -503,6 +530,68 @@ src/func_ov006_0212a3c0.c
 # builds that sub-object with _ZN5ModelC1Ev.  Everything else in the 167-line
 # body is transcribed unchanged.
 #
-# The slice line for src/func_ov006_02127d10.c is REMOVED above rather than
-# left in beside the host copy, so the two cannot both define the symbol.  The
-# headline delta below counts 33 slice lines, not 34, for that reason.
+# The slice line for src/func_ov006_02127d10.c is REMOVED from section 11
+# rather than left in beside the host copy, so the two cannot both define the
+# symbol.  The headline delta in SECTION 15 counts 33 slice lines, not 34, for
+# that reason -- this line used to say "the delta below" with nothing below it.
+#
+# ---- 15. THE LINKAGE DELTA, MEASURED ON BOTH ENDS -----------------------
+#
+# port/tools/linkage.py, read on this same tree at the base commit and at this
+# lane's tip, both built here rather than one of them quoted:
+#
+#   base 98a4c0e8f   linked into walk_window : 7121  (63.1%)
+#   SNW tip          linked into walk_window : 7154  (63.3%)
+#   delta                                      +33
+#
+# and section 11 plus section 13 carry exactly THIRTY-THREE src/ lines between
+# them.  Every slice line moves the headline by exactly one, banner or no
+# banner, so an equal delta is also the proof that CMake read every line: a
+# line lost to a stray bracket in this file would show up as a short delta.
+#
+# THE BASE BINARY WAS VERIFIED PRE-SEAT RATHER THAN ASSUMED, which is the
+# stale-artifact discipline this tree keeps learning:
+#
+#   $ grep -c "port_scene_fill_snowball\|MgSnowball_StateDispatch" #         build/port/walk_window.map
+#   0
+#
+# BOTH DIRECTIONS RECONCILE, and the intermediate reading is kept because it is
+# the check.  The wave-1 and wave-2 build read 34 src/ lines and measured 7155,
+# +34.  Wave 3 removed src/func_ov006_02127d10.c in favour of
+# port/unmatched/MgSnowball_ModelRender.cpp, and the headline moved to 7154 --
+# down by exactly the one line that left.  A slice line and a headline point
+# are the same thing in both directions.
+#
+# ---- 16. WHAT THIS SEAT DOES NOT CLAIM ABOUT INPUT ----------------------
+#
+# MEASURED AND SOLID: the scroll word at +0xab6c reads 5552 on every run this
+# lane made -- 300, 800, 1200 and 3000 frames, render on and off.  The snowball
+# does not roll on any unattended run.
+#
+# NOT ESTABLISHED, AND AN EARLIER DRAFT OF THIS FILE'S LANE REPORT SAID IT WAS:
+# why it does not roll.  That draft read a zero from SM64DS_TOUCH_PROBE and
+# concluded "the scripted stylus does not reach the scene path, so forward
+# motion can only be tested with a real mouse".  A CONTROL DISPROVED THE
+# INSTRUMENT.  Run mg11's other lanes drove their machines with the same
+# mechanism (PKR advanced a state 4 -> 10, MUG stopped three reels), so this
+# lane re-ran a rub in MUG's shape -- 48 short frame windows walking x --
+# and then pointed the SAME invocation and the SAME binary at SCENE 363,
+# Memory Master, which run mg8 lane MMD is on record driving this way:
+#
+#   scene 377, 48-window rub, 1200 frames   EXIT 0, [touch] lines: 0
+#   scene 363, MMD's own probe string,      EXIT 0, [touch] lines: 0
+#     "200-202:120:70,400-402:120:95,600-602:120:120", 800 frames
+#
+# A KNOWN-DRIVABLE SCENE READS ZERO TOO, so the zero is a property of this
+# lane's invocation or build shape and says nothing about scene 377.  The
+# reading was a broken instrument, not a measurement, and the conclusion drawn
+# from it is withdrawn.
+#
+# SO THE OPEN QUESTION IS WHY THE BALL DOES NOT MOVE, and there are two live
+# candidates this lane cannot separate: the input never arrives, or
+# func_ov006_02125f68 -- the obstacle and collision pass, trapped in section 12
+# because it has no src TU -- is what advances it.  Whoever picks this up
+# should get the stylus working against scene 363 as the control FIRST, and
+# only then ask scene 377 the question.
+#
+# runs/mg11/out/SNW/EVIDENCE_NOTE.txt carries both runs and the control.
