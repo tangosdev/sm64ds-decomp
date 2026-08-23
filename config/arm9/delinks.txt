@@ -4420,7 +4420,7 @@ src/_ZN7dWipe_cD0Ev.c:
     complete
     .text start:0x0202fbc8 end:0x0202fc08
 
-src/_ZN7dWipe_cD1Ev.c:
+src/_ZN7dWipe_cD1Ev.cpp:
     complete
     .text start:0x0202fc08 end:0x0202fc40
 
