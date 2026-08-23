@@ -91,8 +91,9 @@
 //       grid the difficulty ladder reaches at clear count 8.
 //
 // NO REPLACEMENT INSTRUMENT WAS INVENTED. A trap counts itself because a
-// trapped body cannot be observed any other way; a seated one can. 020ea914 is
-// Render's unconditional and only callee, so the seat's slot 9 hit count IS its
+// trapped body cannot be observed any other way; a seated one can. Render is
+// 020ea914's only caller and the call is unconditional (a join point every
+// path through Render reaches), so the seat's slot 9 hit count IS its
 // call count, and 020ec4dc runs exactly when the dealt kind is 3, which the
 // seat's round line already prints. Both facts come off measurements the run
 // already takes, so port_mg_wiggler_trap_counts is removed rather than

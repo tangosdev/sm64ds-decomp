@@ -169,9 +169,10 @@
 // NEITHER IS A TRAP COUNT ANY MORE. A trap counts itself because a trapped
 // body cannot be observed any other way; a seated one can, so the report below
 // uses what the run already measures instead of a weaker replacement
-// instrument. 020ea914 is Render's unconditional and only callee, so slot 9's
-// hit count IS its call count; 020ec4dc runs when and only when the dealt kind
-// is 3, which the round line already prints.
+// instrument. Render is 020ea914's ONLY CALLER and the call is unconditional
+// (the 0x020ED0C0 join point every path through Render reaches, no early
+// return), so slot 9's hit count IS its call count; 020ec4dc runs when and
+// only when the dealt kind is 3, which the round line already prints.
 //
 // ---- 9. THE ELEMENT-VTABLE CHECK, AND IT COMES BACK CLEAN ----------------
 //
@@ -740,7 +741,7 @@ extern "C" void port_scene_wiggler_hits(void)
          which the round line below already prints as the dealt kind. */
     std::printf("[scene] dScMgHanachan_c former floors, both now seated: "
                 "func_ov006_020ea914 (0x324, the question picture) ran %u "
-                "time(s) -- Render's only callee, so this is slot 9's own "
+                "time(s) -- Render is its only caller, so this is slot 9's own "
                 "count; func_ov006_020ec4dc (0x20c, the fifteen-wiggler board) "
                 "ran on this round if the dealt kind is 3, and the selector "
                 "data_ov006_02141fd8 reads %d\n",

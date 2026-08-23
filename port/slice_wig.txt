@@ -265,9 +265,10 @@
 #
 # NEITHER IS REPORTED AS A TRAP COUNT ANY MORE, and the seat does not invent an
 # instrument to replace them. Both are witnessed by things a run already
-# measures: 020ea914 is Render's unconditional and only callee, so the slot 9
-# hit count IS its call count, and 020ec4dc runs exactly when the dealt kind is
-# 3, which the round line already prints.
+# measures: Render is 020ea914's only caller and the call is unconditional (a
+# join point every path through Render reaches), so the slot 9 hit count IS its
+# call count, and 020ec4dc runs exactly when the dealt kind is 3, which the
+# round line already prints.
 #
 # ---- HOW THIS LIST WAS DERIVED --------------------------------------------
 #
