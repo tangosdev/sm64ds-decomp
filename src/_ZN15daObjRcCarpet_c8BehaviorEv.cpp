@@ -1,23 +1,25 @@
 //cpp
 // @symbol _ZN15daObjRcCarpet_c8BehaviorEv
+#include "daObjRcCarpet_c.h"
+
+int ApproachLinear(int &value, int target, int step);
 extern "C" {
-extern void _Z14ApproachLinearRiii(int* p, int target, int step);
-extern void _ZN8PathLift12BaseBehaviorEv(void* c);
-extern void _ZN9Animation7AdvanceEv(void* a);
-extern void func_ov036_021122c0(char* c);
-extern void func_ov036_0211224c(char* c);
+extern void func_ov036_021122c0(daObjRcCarpet_c *self);
+extern void func_ov036_0211224c(daObjRcCarpet_c *self);
+/* The true signature carries two by-value Fix12<int> parameters, which mwccarm
+   homes to the stack. Keep the verified scalar ABI spelling (runbook wall 6az). */
 extern void _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* t, int a, int b);
 }
 
-extern "C" int _ZN15daObjRcCarpet_c8BehaviorEv(char* c){
-    if (*(unsigned char*)(c + 0x42a) != 0)
-        _Z14ApproachLinearRiii((int*)(c + 0x4bc), -0x14000, 0x5000);
+int daObjRcCarpet_c::Behavior() {
+    if (unk_42a != 0)
+        ApproachLinear(unk_4bc, -0x14000, 0x5000);
     else
-        _Z14ApproachLinearRiii((int*)(c + 0x4bc), 0, 0x5000);
-    _ZN8PathLift12BaseBehaviorEv(c);
-    _ZN9Animation7AdvanceEv(c + 0x4a0);
-    func_ov036_021122c0(c);
-    func_ov036_0211224c(c);
-    _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0);
+        ApproachLinear(unk_4bc, 0, 0x5000);
+    BaseBehavior();
+    mModelAnim.Advance();
+    func_ov036_021122c0(this);
+    func_ov036_0211224c(this);
+    _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0);
     return 1;
 }
