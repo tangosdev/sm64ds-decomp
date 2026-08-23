@@ -164,7 +164,7 @@
 # `add Rd,Rn,Rm,asr #1` immediately followed by `ands Rm,Rm,#1` -- answers the
 # right question when it is run over the WHOLE slice. Over all of ov006 it
 # finds 114 sites, which reproduces lane WIG's figure for the same overlay
-# digit for digit. Over the 133 TUs below it finds THREE:
+# digit for digit. Over this slice's TUs it finds THREE:
 #
 #   020ee290  func_ov006_020ee27c   vtable slot 6, this class's own
 #   020c4ce8  func_ov006_020c4cd8   an object adapter's tick, the pair at +0x30
@@ -293,6 +293,15 @@
 # 0. The scene booted clean, exited 0 and did nothing. Also shared with 0x175,
 # 0x180 and 0x181.
 #
+# unmatched/MgD3DBase_ModelRender.cpp REPLACES src/func_ov006_020c4c54.cpp and
+# src/func_ov006_020c7734.cpp, both OUT of the list below. Both spell their
+# per-frame ModelAnim sub-object as a local SIX-virtual struct and call the
+# sixth method -- the ROM's numbering -- where the host _ZTV9ModelAnim is
+# MSVC-numbered and its slot 5 is Virtual18 rather than Render. That file's
+# header carries the scratch-revert proof: without it, a render run of scene
+# 372 with the state machine started crashes at 300, 600 and 1200 frames, 3 of
+# 3; with it, all three exit 0. Also shared with 0x175, 0x180 and 0x181.
+#
 # unmatched/MgD3DBase_ObjStateDispatch.cpp REPLACES
 # src/func_ov006_020c4cd8.cpp and src/func_ov006_020c7860.cpp, both OUT of the
 # list below. Section 6 is how they were found and what they cost; the file's
@@ -342,7 +351,31 @@
 #   shape and it was checked rather than assumed; none of the four is a
 #   __thiscall thunk.
 #
-# ---- 11. THE LIST ----------------------------------------------------------
+# ---- 11. WHAT LINKED, AND THE ONE THAT DID NOT ----------------------------
+#
+# Measured on the merge-candidate binary against the base build's own map:
+#
+#   base 98a4c0e8f   7121 / 11293 matched TUs linked  (63.1%)
+#   this seat        7252 / 11293                      (64.2%)   +131
+#
+# THE +131 RECONCILES EXACTLY, and the accounting is lane S364's
+# compiled-versus-linked lesson in practice:
+#
+#   131  TUs in the list below
+#  -  1  src/func_ov006_020e6db4.c, COMPILED but DROPPED BY /OPT:REF. It is in
+#        the slice because it sits inside dScMgD3DBase_c's code block, not
+#        because anything in this closure calls it: its four arm_call
+#        relocations in ov006 all come from 0x020cffec, 0x020d0024 and
+#        0x020d08ec, which are outside this slice.
+#  +  1  src/func_ov006_020e6e78.cpp, which is NOT in the list (it is compiled
+#        through tools/hostgen.py) but whose generated object keeps the stem, so
+#        port/tools/linkage.py's join counts the matched TU as linked.
+#  = 131
+#
+#   0 of the 131 were already linked at the base, checked by intersecting the
+#   two maps' object columns, so none of the delta is another lane's work.
+#
+# ---- 12. THE LIST ----------------------------------------------------------
 #
 # 131 TUs. The ov004 framework, the thirty-five overlay constructors and the
 # arm9 waves under them are already carried by slice_mg1.txt; CMake appends
