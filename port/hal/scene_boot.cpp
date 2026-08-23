@@ -2794,7 +2794,8 @@ static const PortSceneClass port_scene_classes[] = {
        counting exactly what it counted before this row existed. (The count is
        measured in port/slice_mug.txt by sweeping every ov006 vtable's typeinfo
        base word, not inherited from a neighbour's header; this comment said
-       FIFTH until review and was wrong by four.) hal/scene_mg_slot3.cpp section 3 is the
+       FIFTH until review and was wrong by four.) hal/scene_mg_slot3.cpp
+       section 3 is the
        argument and this seat prints its claimed counts so the split is
        measured rather than assumed.
 
