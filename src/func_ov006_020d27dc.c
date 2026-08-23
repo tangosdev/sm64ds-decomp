@@ -5,12 +5,14 @@
 // is 2004/b56; the next best is 1.2/base at 199 differing instructions, so this
 // is not a version-pinning question. Counts as decompiled, not matched.
 //
-// THE RESIDUE IS THREE SITES AND IT IS MEASURED, not estimated. A structural
-// diff of the two disassemblies (branch targets and pc-relative pool references
-// normalised away, difflib alignment) leaves TWELVE ROM instructions and TEN
+// THE RESIDUE IS THREE SITES AND IT IS MEASURED, not estimated. A CODE-ONLY
+// structural diff of the two disassemblies (the literal pool split off at the
+// last `bx lr` before comparing, branch targets and pc-relative pool references
+// normalised away, difflib alignment) leaves ELEVEN ROM instructions and NINE
 // candidate instructions without a counterpart, and they decompose as:
 //
-//   (1) CONTROL-FLOW SHAPE, and it is ELEVEN of the twelve.
+//   (1) CONTROL-FLOW SHAPE, SEVEN of the eleven, and it is the only site that
+//       costs shape as well as size.
 //       0x020D2D40 plus the block at 0x020D2D60..0x020D2D80, the `rounds < 5`
 //       decision at the end of the non-mode-2 arrival arm. The ROM branches --
 //       `blt 0x020d2d6c` -- to a SECOND full epilogue, so the two arms get one
@@ -18,22 +20,31 @@
 //       add sp / pop / bx lr / add r0,sb,#0x4000 / mov r1,#0 / str r1,[r0,#0x6d0]).
 //       mwccarm IF-CONVERTS it instead and predicates the whole short arm plus
 //       its epilogue (six candidate instructions, addlt / movlt / strlt /
-//       addlt sp / poplt / bxlt). Costs ONE word.
+//       addlt sp / poplt / bxlt). 7 ROM against 6 candidate: costs ONE word.
 //   (2) REGISTER ALLOCATION, 0x020D2934, three ROM instructions vs two.
 //       The ROM keeps the walker base sb + i*8 alive in r2 across the colp
 //       computation -- `ldr r1,[pool] / mov r2,r7 / add r7,r2,r1` -- where the
 //       candidate overwrites it, `ldr r0,[pool] / add r7,r7,r0`. Costs ONE word.
-//   (3) SCHEDULE, one instruction, no size cost. `mov r8,#0` (the per-walker
-//       loop's index init) sits at 0x020D282C in the ROM, inside the conditional
-//       block that follows the countdown loop, and in the candidate it sits
-//       about twelve instructions later among the constant materialisation.
+//   (3) SCHEDULE, one instruction each way, no size cost. `mov r8,#0` (the
+//       per-walker loop's index init) sits at 0x020D282C in the ROM, inside the
+//       conditional block that follows the countdown loop, and in the candidate
+//       it sits twelve instructions later among the constant materialisation.
 //
-//   1 + 1 = 2 words, which IS the size deficit exactly. Nothing else moved.
+//   7 + 3 + 1 = 11 ROM and 6 + 2 + 1 = 9 candidate, so the decomposition closes
+//   on the headline. 1 + 1 = 2 words, which IS the size deficit exactly.
+//   Nothing else moved.
 //
-//   AND A FOURTH ROW THAT IS NOT A DIVERGENCE, recorded so nobody counts it as
-//   one: pool word fifteen at 0x020D3610 reads 0x0212e1c0 in the ROM and zero in
-//   the candidate object, because it carries the load RELOCATION to
-//   data_ov006_0212e1c0 and an unlinked object holds zero under a relocation.
+//   THE TOOLING PRINTS 12 AND 10, NOT 11 AND 9, AND THE DIFFERENCE IS NOT A
+//   DIVERGENCE. runs/mg10/out/WALKER/score2.py and hunks.py disassemble the
+//   WHOLE symbol, literal pool included, so pool word ELEVEN of fifteen at
+//   0x020D3610 counts as one ROM-only instruction and one candidate-only one.
+//   That word reads 0x0212e1c0 in the ROM and zero in the candidate object
+//   because it carries the load RELOCATION to data_ov006_0212e1c0, and an
+//   unlinked object holds zero under a relocation. The pool is otherwise
+//   word-for-word identical and the same fifteen words long. Every figure in
+//   the lever ladder below is on that whole-symbol metric, so they are all
+//   comparable with each other and all one pair higher than the code-only
+//   count; the shipped file reads 12 there and 11 code-only.
 //
 // THE IF-CONVERSION IS A FLOOR AT THIS OPTIMISATION LEVEL and was not merely
 // observed. Eight spellings of that decision were compiled -- if/else with a
@@ -59,7 +70,7 @@
 //   1x load 0x0212e1c0.
 //
 // THE TWO LEVERS THAT MATTER, measured on THIS file rather than on an earlier
-// draft (differing-instruction counts at 2004/b56, this file = 12):
+// draft (whole-symbol differing-instruction counts at 2004/b56, this file = 12):
 //   #pragma optimization_level 2 removed .......... 303
 //   #pragma opt_common_subs off removed .......... 336
 //   both removed ................................. 329
@@ -67,21 +78,35 @@
 //   optimization_level 3 or 4 .................... 303
 //   opt_dead_code off ............................. 93
 //   optimize_for_size on ......................... 113
-//   ADDRESS OPERAND ORDER reverted ................ 60
+//   ADDRESS OPERAND ORDER reverted, all ten ....... 60
+//   ...the seven macros only ...................... 49
+//   ...the three inline expressions only .......... 23
 //   no effect at all (byte-identical output): opt_strength_reduction off,
 //   opt_propagation off, opt_lifetimes off, opt_dead_assignments off,
 //   optimize_for_size off, opt_loop_invariants off, opt_unroll_loops off,
 //   opt_conditional_moves off.
 //
-// THE ADDRESS OPERAND ORDER IS THE FINDING WORTH CARRYING and it is cheap. Every
-// member macro below is spelled `(sb) + (i) * K + 0xNNNN` and NOT
-// `(sb) + 0xNNNN + (i) * K`. The two are the same expression in C and they are
-// not the same instructions: written constant-first, mwccarm folds sb with the
-// constant and emits `add rX,sb,#0x4000 / ldr rD,[rX, i lsl 3]`; written
-// index-first it emits the ROM's `add rX,sb,i lsl 3 / ldr rD,[rX,#0xNNN]`. That
-// one edit took this body from 84 differing instructions to 40. It is the same
-// family of fact as src/func_ov006_020d36a4.c's "indexed pointer versus
-// byte-offset expression" note, from the other end.
+// THE ADDRESS OPERAND ORDER IS THE FINDING WORTH CARRYING and it is cheap. Spell
+// a member address `(sb) + (i) * K + 0xNNNN` and NOT `(sb) + 0xNNNN + (i) * K`.
+// The two are the same expression in C and they are not the same instructions:
+// written constant-first, mwccarm folds sb with the constant and emits
+// `add rX,sb,#0x4000 / ldr rD,[rX, i lsl 3]`; written index-first it emits the
+// ROM's `add rX,sb,i lsl 3 / ldr rD,[rX,#0xNNN]`. It is the same family of fact
+// as src/func_ov006_020d36a4.c's "indexed pointer versus byte-offset expression"
+// note, from the other end, and unlike that one it is a rule rather than a
+// per-array coin flip.
+//
+// THE REVERT IS SPELLED OUT SO THE 60 AND THE 49 CAN BE RE-DERIVED, because a
+// lever figure nobody can reproduce is a claim and not a measurement. TEN
+// spellings in this file carry the order. SEVEN are the member macros below --
+// DELAY, GOAL, COLP, ROWP, DIRP, STEPP and DONEP -- and THREE are inline in the
+// body: `sb + j * 4 + 0x46b8` in the countdown loop, and `w + 0x4664` and
+// `w + 0x4660` where the walker base is reused. Flipping all ten to
+// constant-first gives 60; the seven macros alone give 49; the three inline
+// expressions alone give 23. The two halves do NOT add -- 49 + 23 is 72 and the
+// full revert measures 60 -- so the lever is reported as three measurements
+// rather than as one number with a mechanism attached. No claim is made here
+// about why they interact; it was not measured.
 //
 // ---- WHAT THIS BODY IS ----------------------------------------------------
 //

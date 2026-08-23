@@ -2992,17 +2992,45 @@ WHAT THIS SECTION DOES NOT KNOW.
 Worktree C:/tmp/mWk, branch mg10-walker, base bae3a92e6, private build
 C:/tmp/mWk/build/port with CMAKE_HOME_DIRECTORY verified C:/tmp/mWk/port.
 
-SECTION 21 PART 6 WAS A GOOD MAP AND EVERY CLAIM IN IT HELD. The eight-neighbour
-reading, the forty-two probe sites, the thirteen constants, the four rails, the
-+0x5398 arrival bytes, the three slot-36 dispatch addresses and the single caller
-were all confirmed against a fresh disassembly before a line of C was written.
-Two of its figures are now sharper rather than corrected: the "thirteen
-constants" are four sound ids (0xbf, 0xc7, 0xcf, 0xd7) indexed by the winner's
-goal index, the arrival sound 0xe0, the rail-snap note 0x1c0, and the seven
-direction numbers 1..7; and the "three slot-36 dispatches" are not three per
-tick, they are all inside the ARRIVAL arm and run TWO per arrival (one when a
-walker passes the bottom, then exactly one of the other two depending on whether
-it landed on its goal).
+SECTION 21 PART 6 WAS A GOOD MAP AND ONE OF ITS READINGS WAS WRONG. The
+eight-neighbour reading, the forty-two probe sites, the four rails, the +0x5398
+arrival bytes, the three slot-36 dispatch addresses and the single caller were
+all confirmed against a fresh disassembly before a line of C was written. Two
+entries do not survive that check and they are CORRECTIONS, not refinements:
+
+  CORRECTION 1, AND IT IS A WRONG READING RATHER THAN A VAGUE ONE. Section 21
+  part 6 says the thirteen constants "read as a goal-row Y table plus a direction
+  set". THERE IS NO GOAL-ROW Y TABLE. The nine frame slots and four registers
+  hold sp+0x10 = 0xe0, +0x14 = 0xbf, +0x18 = 0xc7, +0x1c = 0xcf, +0x20 = 0xd7,
+  +0x24 = 0x1c0, +0x30 = 5, +0x34 = 2, +0x38 = 7, r6 = 1, fp = 4, r4 = 6,
+  r5 = 3. ALL SIX of the non-direction values are SOUND IDS, checked at their
+  use sites rather than inferred from their magnitudes: 0xbf, 0xc7, 0xcf and 0xd7
+  are picked by a four-entry jump table at 0x020d2b04 on the winner's goal index
+  and each is loaded into r0 immediately before a `bl func_02012718`; 0xe0 is the
+  arrival sound, loaded into r0 before func_02012718 at 0x020D2AE0 and 0x020D2C2C;
+  and 0x1c0 is the rail-snap note, loaded into r0 before func_020126ac at
+  0x020D2F98 and its five siblings. r0 is the sound-id parameter in both callees.
+  The remaining seven, 1..7, are the direction numbers. So the six values that
+  looked like a row table are six sound ids and NOT ONE of them is a row.
+
+  0xe0 IS WHY THE WRONG READING WAS PLAUSIBLE, and it is worth naming so the next
+  reader does not repeat it: 0xe0 is also the fourth rail's X coordinate, and this
+  body really does compare columns against 0x20 / 0x60 / 0xa0 / 0xe0 a few hundred
+  instructions further down. The constant in the entry block is not that one. A
+  magnitude that matches a known coordinate is a coincidence until the use site
+  says otherwise, and here the use site says sound.
+
+  Section 21's own text is left standing and is corrected HERE rather than edited
+  in place, so the record shows what was believed and when.
+
+  CORRECTION 2. "Three of its instructions dispatch slot 36" is true and the
+  natural reading of it is not: they are NOT three per tick. All three sit on the
+  fall-through of `cmp r1,r0 / ble 0x020d2e78` at 0x020d28f4, that is, entirely
+  inside the ARRIVAL arm -- the walking arm begins at 0x020d2e78 and contains
+  none of them -- and 0x020d2ab0's `bne 0x20d2d84` routes to EITHER the second or
+  the third and never both. So the count is TWO PER ARRIVAL. A lane predicting
+  "+3 per tick execution" from section 21 would have predicted a rise of about
+  2400 at 1200 frames; the measured change is a FALL of 1309.
 
   ov006's base 0x020bfec0 was PROVEN before any disassembly was trusted, on
   section 21's own control: func_ov006_020d1170 and _020d1188 reproduce the
@@ -3091,11 +3119,27 @@ dispatches) trace a whole amidakuji round:
 ---- 3. THE BYTE GATE, AND THE TWO LEVERS ----------------------------------
 
 NONMATCHING at 0xe40 vs 0xe48: TWO code words short, the pool the SAME fifteen
-words. Twelve differing instructions at three sites, decomposed and measured in
-the TU's banner and in the near-miss row; the two lost words are one
-if-conversion mwccarm forces and one register-allocation copy, and 1 + 1 = 2
-closes the deficit exactly. 2004/b56 by a wide margin -- the next best build is
-1.2/base at 199 differing instructions.
+words (ROM 899 code + 15 pool, candidate 897 + 15). A CODE-ONLY structural diff
+leaves ELEVEN ROM instructions and NINE candidate instructions without a
+counterpart, at THREE sites: the if-conversion at 0x020D2D40 plus its second
+epilogue block (7 ROM against 6 candidate, one word), the register-allocation
+copy at 0x020D2934 (3 against 2, one word), and one scheduling move of
+`mov r8,#0` (1 against 1, no words). 7 + 3 + 1 = 11 and 6 + 2 + 1 = 9, so the
+decomposition closes on its own headline, and 1 + 1 = 2 is the size deficit
+exactly. 2004/b56 by a wide margin -- the next best build is 1.2/base at 199.
+
+  THE TOOLING PRINTS 12 AND 10 AND THAT IS NOT AN ELEVENTH AND TWELFTH
+  DIVERGENCE. runs/mg10/out/WALKER/score2.py and hunks.py disassemble the WHOLE
+  symbol, literal pool included, so pool word ELEVEN of fifteen at 0x020D3610
+  counts as one ROM-only instruction and one candidate-only one. That word is
+  0x0212e1c0 in the ROM and zero in the object because it carries the load
+  RELOCATION to data_ov006_0212e1c0. The pool is otherwise word-for-word
+  identical. THE LEVER LADDER BELOW IS ON THE WHOLE-SYMBOL METRIC, one pair
+  higher than the code-only count throughout, so its entries are comparable with
+  each other; the shipped file reads 12 there and 11 code-only. An earlier draft
+  of this section, of the TU banner and of the near-miss note presented 12 as
+  decomposing into the three sites, which it does not -- the three sites hold
+  eleven.
 
 TWO LEVERS DID ALL THE WORK AND BOTH ARE REUSABLE:
 
@@ -3111,10 +3155,28 @@ TWO LEVERS DID ALL THE WORK AND BOTH ARE REUSABLE:
       they are not the same instructions: constant-first, mwccarm folds sb with
       the constant and emits `add rX,sb,#0x4000 / ldr rD,[rX, i lsl 3]`;
       index-first it emits the ROM's `add rX,sb,i lsl 3 / ldr rD,[rX,#0xNNN]`.
-      That one edit took this body from 84 differing instructions to 40. It is
-      section 21 part 3's "indexed pointer versus byte-offset expression" seen
-      from the other end, and unlike that one it is a rule rather than a
+      It is section 21 part 3's "indexed pointer versus byte-offset expression"
+      seen from the other end, and unlike that one it is a rule rather than a
       per-array coin flip.
+
+      THE REVERT IS SPELLED OUT SO ITS FIGURES CAN BE RE-DERIVED, because a
+      lever number nobody can reproduce is a claim and not a measurement. TEN
+      spellings in the TU carry the order: SEVEN member macros (DELAY, GOAL,
+      COLP, ROWP, DIRP, STEPP, DONEP) and THREE inline expressions in the body
+      (`sb + j * 4 + 0x46b8` in the countdown loop, and `w + 0x4664` and
+      `w + 0x4660` where the walker base is reused). Flipping all ten to
+      constant-first measures 60; the seven macros alone 49; the three inline
+      expressions alone 23; shipped, index-first throughout, 12. The two halves
+      do NOT add -- 49 + 23 is 72 against a measured 60 -- so this is recorded as
+      three measurements and NO claim is made about why they interact, because
+      that was not measured.
+
+      AN EARLIER DRAFT OF THIS SECTION CLAIMED "84 differing instructions to 40"
+      for this edit. Both numbers were real readings taken mid-session, but the
+      intermediate source states behind them are preserved nowhere, so the figure
+      was not re-derivable from anything committed and it is withdrawn. The three
+      measurements above replace it and every one of them can be reproduced from
+      the shipped TU with the flip list named here.
 
 THERE ARE NOW TWO NEAR-MISS ROWS FOR THIS ADDRESS AND THE OLDER ONE IS DEAD,
 which is said here rather than left for whoever queries the database by name.
@@ -3139,7 +3201,30 @@ CONFIRMATION of where the two words went.
 
 ---- 4. LINKAGE, AND SECTION 21's PREDICTION COMES TRUE ---------------------
 
-    7118 / 11293 (63.0%)  ->  7121 / 11293 (63.1%)     +3
+    7118 / 11292 (63.0%)  ->  7121 / 11293 (63.1%)     +3 linked, +1 total
+
+  THE DENOMINATOR MOVES BY ONE AND AN EARLIER DRAFT PRINTED 11293 ON BOTH ENDS.
+  That was a measurement artefact, not a convention: port/tools/linkage.py builds
+  its universe from the DISTINCT STEMS of every .c and .cpp under src/ (its
+  matched_tus() walks src/ and keys on the file stem), and this lane ADDS one --
+  src/func_ov006_020d27dc.c. The before-figure was taken after that file was
+  already committed, so it read the tip's denominator with the new TU present but
+  not yet linked; the linked count 7118 was unaffected and is right. Re-derived
+  from git rather than from a rerun: `git ls-tree -r --name-only bae3a92e6 src/`
+  yields 11292 distinct .c/.cpp stems and the working tree yields 11293, the one
+  difference being exactly this TU.
+
+  THE SAME ARTEFACT IS IN SECTION 21's ROW AND IT IS FLAGGED HERE RATHER THAN
+  EDITED THERE, since a lane does not rewrite another lane's record. Section 21
+  prints `7101 / 11285 -> 7103 / 11285`, but that lane landed TWO new src files
+  (src/func_ov004_020ae5c4.c in 5c173cb62 and src/func_ov006_020d36a4.c in
+  a8f292cd0), so its universe grew by two and its BASE denominator was 11283 --
+  which is exactly the figure section 20 records as its own tip. Sections 19 and
+  20 are unaffected: their +217, +53 and +24 came from adding SLICE LINES for TUs
+  that already existed in src/, which moves the numerator and not the universe.
+  The rule for the next lane is short: the denominator moves if and only if you
+  add a file under src/, and it moves by the number of NEW STEMS, not by the
+  number of slice lines.
 
   by module, the only two rows that moved:
 
