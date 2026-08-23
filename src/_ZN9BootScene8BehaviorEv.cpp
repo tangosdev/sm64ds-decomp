@@ -1,18 +1,32 @@
-#include "types.h"
+//cpp
 // @symbol _ZN9BootScene8BehaviorEv
-// recovered name: BootScene::Behavior
-/* recovered: renamed to Class_Method, declarations from a shared header */
+/* BootScene::Behavior -- vtable slot 6, arm9 0x02005418.
+ *
+ * The boot menu's whole state machine, in unk_052: wait out the fade (0/7),
+ * watch the touch screen for the two language/erase buttons (1/3), confirm
+ * (2/6), and run the "erase all save data" countdown (4/5). unk_050 is the
+ * frame countdown, unk_053 which button is highlighted, unk_054/unk_055 the
+ * two debounce timers, unk_056 the erase countdown. data_0208ee44 is the frame
+ * step, so every countdown decrements by it rather than by one.
+ *
+ * MIGRATED DESPITE include/BootScene.h's "NOT CONVERTED" note -- see
+ * src/_ZN9BootScene13InitResourcesEv.cpp for why that note's second reason is
+ * not the mechanism and the destructor being declared first is.
+ *
+ * THE `volatile' READS AND THE LADR() WRITES ARE THE ROM'S, not decoration:
+ * every one of them is a read-modify-write on a countdown, where naming the
+ * member lets mwccarm CSE the field address and costs an instruction. They are
+ * per-SITE -- the plain `unk_053' sites next to them convert to
+ * members and these do not.
+ */
+#include "BootScene.h"
 #include "decl_Message.h"
 #include "decl_SaveData.h"
 #include "decl_common.h"
 #include "MessageBank.h"
-/* recovered: renamed to Class_Method, vtable slot 6 */
-/* BootScene::Behavior -- vtable slot 6, arm9 0x02005418. Same idiom as
- * src/_ZN4Door13InitResourcesEv.c: declared as an override in
- * include/BootScene.h, defined here under the mangled symbol, not as a real
- * BootScene:: method -- see include/BootScene.h's NOT CONVERTED. */
-extern u8 data_0209f5bc[];
 
+extern "C" {
+extern u8 data_0209f5bc[];
 extern u8 data_0209f1e8;
 extern u8 data_020a0e40;
 extern u16 data_020a0e58[];
@@ -24,21 +38,21 @@ extern u8 data_020a0dea[];
 extern u8 data_020a0deb[];
 extern u8 data_0209d454;
 
-extern void _ZN8dScene_c14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
-extern u32 _ZN3G2S13GetBG1CharPtrEv(void);
-extern u32 LoadCompressedFileAt(u16 fileID, void *target);
-extern int LoadFile(int handle);
-extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void *_ZN3G2S12GetBG1ScrPtrEv(void);
-extern void func_02012790(int a);
+void _ZN8dScene_c14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
+u32 _ZN3G2S13GetBG1CharPtrEv(void);
+u32 LoadCompressedFileAt(u16 fileID, void *target);
+int LoadFile(int handle);
+void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
+void *_ZN3G2S12GetBG1ScrPtrEv(void);
+void func_02012790(int a);
+}
 
 #define LADR(p) ((void *)(unsigned int)(p))
 
 #pragma opt_common_subs off
 
-int _ZN9BootScene8BehaviorEv(void *arg0)
+s32 BootScene::Behavior()
 {
-    char *c = (char *)arg0;
     u16 h58, h5a;
     int r4;
 
@@ -49,8 +63,8 @@ int _ZN9BootScene8BehaviorEv(void *arg0)
     if (data_0209f1e8 == 0) {
         data_0209f1e8 = (u8)func_0201a1bc();
         if (data_0209f1e8 == 0) {
-            if ((int)*(volatile u16 *)(c + 0x50) > (int)(r4 * 2)) {
-                *(u16 *)LADR(c + 0x50) -= r4;
+            if ((int)*(volatile u16 *)&unk_050 > (int)(r4 * 2)) {
+                *(u16 *)LADR(&unk_050) -= r4;
             }
             return 1;
         }
@@ -63,26 +77,26 @@ int _ZN9BootScene8BehaviorEv(void *arg0)
     if (vt[5](obj) != 0) {
         int f52;
 
-        if (*(volatile u8 *)(c + 0x54) != 0) {
-            *(u8 *)LADR(c + 0x54) -= r4;
-            if (*(u8 *)(c + 0x54) == 0) {
-                func_02005348(c);
+        if (*(volatile u8 *)&unk_054 != 0) {
+            *(u8 *)LADR(&unk_054) -= r4;
+            if (unk_054 == 0) {
+                func_02005348(this);
             }
         }
-        if (*(volatile u8 *)(c + 0x55) != 0) {
-            *(u8 *)LADR(c + 0x55) -= r4;
+        if (*(volatile u8 *)&unk_055 != 0) {
+            *(u8 *)LADR(&unk_055) -= r4;
             return 1;
         }
 
-        f52 = *(u8 *)(c + 0x52);
+        f52 = unk_052;
         switch (f52) {
         case 0:
         case 7:
-            if (*(volatile u16 *)(c + 0x50) != 0) {
-                *(u16 *)LADR(c + 0x50) -= r4;
-                if (*(u16 *)(c + 0x50) == 0) {
+            if (*(volatile u16 *)&unk_050 != 0) {
+                *(u16 *)LADR(&unk_050) -= r4;
+                if (unk_050 == 0) {
                     _ZN8dScene_c14StartSceneFadeEjjt(func_0203da3c() != 0 ? 6 : 1, 0, 0);
-                } else if (*(u8 *)(c + 0x52) == 0 && h58 == 0xf03) {
+                } else if (unk_052 == 0 && h58 == 0xf03) {
                     u16 lang;
                     int f;
 
@@ -104,13 +118,13 @@ int _ZN9BootScene8BehaviorEv(void *arg0)
                     LoadCompressedFileAt(0x22d, _ZN3G2S12GetBG1ScrPtrEv());
                     LoadCompressedFileAt(0x9803, (char *)_ZN3G2S12GetBG1ScrPtrEv() + 0x800);
                     func_0201cd08(0x29a);
-                    *(u8 *)(c + 0x53) = 1;
-                    func_02005348(c);
+                    unk_053 = 1;
+                    func_02005348(this);
                     SetSubBg0Offset(0, 0);
                     SetSubBg1Offset(0, 0);
                     data_0209d454 |= 3;
                     data_0209d454 &= ~4;
-                    *(u8 *)(c + 0x52) = 1;
+                    unk_052 = 1;
                 }
             }
             break;
@@ -138,19 +152,19 @@ int _ZN9BootScene8BehaviorEv(void *arg0)
                      && (u8)(data_020a0dea[pi * 4] - 0x28) < 0x50
                      && (u8)(data_020a0deb[pi * 4] - 0x98) < 0x20)
                     || (h5a & 0x20)) {
-                    if (*(u8 *)(c + 0x53) == 0) {
-                        *(u8 *)(c + 0x54) = 0x10;
+                    if (unk_053 == 0) {
+                        unk_054 = 0x10;
                     }
-                    *(u8 *)(c + 0x53) = 0;
-                    func_02005348(c);
+                    unk_053 = 0;
+                    func_02005348(this);
                     func_02012790(0);
                     if ((u8)(data_020a0dea[data_020a0e40 * 4] - 0x28) < 0x50
                         && (u8)(data_020a0deb[data_020a0e40 * 4] - 0x98) < 0x20) {
-                        *(u8 *)(c + 0x55) = 0x20;
-                        if (*(u8 *)(c + 0x52) == 1) {
-                            *(u8 *)(c + 0x52) = 2;
+                        unk_055 = 0x20;
+                        if (unk_052 == 1) {
+                            unk_052 = 2;
                         } else {
-                            *(u8 *)(c + 0x52) = 4;
+                            unk_052 = 4;
                         }
                     }
                 } else {
@@ -165,31 +179,31 @@ int _ZN9BootScene8BehaviorEv(void *arg0)
                          && (u8)(data_020a0dea[pi * 4] - 0x88) < 0x50
                          && (u8)(data_020a0deb[pi * 4] - 0x98) < 0x20)
                         || (h5a & 0x10)) {
-                        if (*(u8 *)(c + 0x53) == 1) {
-                            *(u8 *)(c + 0x54) = 0x10;
+                        if (unk_053 == 1) {
+                            unk_054 = 0x10;
                         }
-                        *(u8 *)(c + 0x53) = 1;
-                        func_02005348(c);
+                        unk_053 = 1;
+                        func_02005348(this);
                         func_02012790(0);
                         if ((u8)(data_020a0dea[data_020a0e40 * 4] - 0x88) < 0x50) {
                             if ((u8)(data_020a0deb[data_020a0e40 * 4] - 0x98) < 0x20) {
-                                *(u8 *)(c + 0x55) = 0x20;
-                                *(u8 *)(c + 0x52) = 6;
+                                unk_055 = 0x20;
+                                unk_052 = 6;
                             }
                         }
                     } else if (h5a & 9) {
-                        *(u8 *)(c + 0x54) = 0x10;
-                        *(u8 *)(c + 0x55) = 0x20;
-                        func_02005348(c);
+                        unk_054 = 0x10;
+                        unk_055 = 0x20;
+                        func_02005348(this);
                         func_02012790(0);
-                        if (*(u8 *)(c + 0x53) == 0) {
-                            if (*(u8 *)(c + 0x52) == 1) {
-                                *(u8 *)(c + 0x52) = 2;
+                        if (unk_053 == 0) {
+                            if (unk_052 == 1) {
+                                unk_052 = 2;
                             } else {
-                                *(u8 *)(c + 0x52) = 4;
+                                unk_052 = 4;
                             }
                         } else {
-                            *(u8 *)(c + 0x52) = 6;
+                            unk_052 = 6;
                         }
                     }
                 }
@@ -199,34 +213,34 @@ int _ZN9BootScene8BehaviorEv(void *arg0)
 
         case 2:
             func_0201cd08(0x29b);
-            *(u8 *)(c + 0x53) = 1;
-            func_02005348(c);
-            *(u8 *)(c + 0x52) = 3;
+            unk_053 = 1;
+            func_02005348(this);
+            unk_052 = 3;
             break;
 
         case 4:
             *(volatile u16 *)0x0400100a = (u16)((*(volatile u16 *)0x0400100a & 0x43) | 0x218);
             _ZN7Message21DisplaySaveStatusTextEt(0x29c);
-            *(u8 *)(c + 0x56) = 0x78;
-            *(u8 *)(c + 0x52) = 5;
+            unk_056 = 0x78;
+            unk_052 = 5;
             break;
 
         case 5:
-            if (*(u8 *)(c + 0x56) == 0x3c) {
+            if (unk_056 == 0x3c) {
                 _ZN8SaveData16EraseAllSaveDataEv();
             }
-            if (*(volatile u8 *)(c + 0x56) != 0) {
+            if (*(volatile u8 *)&unk_056 != 0) {
                 u8 t;
 
-                *(u8 *)LADR(c + 0x56) -= r4;
-                t = *(u8 *)(c + 0x56);
+                *(u8 *)LADR(&unk_056) -= r4;
+                t = unk_056;
                 if (t == 0x3c) {
                     _ZN7Message21DisplaySaveStatusTextEt(0x29d);
                 } else if (t == 0) {
                     data_0209d454 &= ~3;
                     data_0209d454 |= 4;
-                    *(u16 *)(c + 0x50) = 0x3c;
-                    *(u8 *)(c + 0x52) = 7;
+                    unk_050 = 0x3c;
+                    unk_052 = 7;
                 }
             }
             break;
@@ -234,8 +248,8 @@ int _ZN9BootScene8BehaviorEv(void *arg0)
         case 6:
             data_0209d454 &= ~3;
             data_0209d454 |= 4;
-            *(u16 *)(c + 0x50) = 0x3c;
-            *(u8 *)(c + 0x52) = 0;
+            unk_050 = 0x3c;
+            unk_052 = 0;
             break;
         }
     }

@@ -32,7 +32,7 @@ src/_ZN7daDgr_c6RenderEv.cpp:
     complete
     .text start:0x021113c8 end:0x021113f0
 
-src/_ZN7daDgr_c8BehaviorEv.c:
+src/_ZN7daDgr_c8BehaviorEv.cpp:
     complete
     .text start:0x021113f0 end:0x021117dc
 
