@@ -44,6 +44,7 @@ take over, ping the claimant first.
 | Amp, Bird | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus four cleanup hooks and two deleting destructors migrated to C++; all fourteen class consumers strict-matched and link-checked with `blind: 0`; Platform/collision work excluded |
 | AmbientSoundEffects, BobOmbBuddy | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus four cleanup/render hooks and two deleting destructors migrated to C++; all thirteen class consumers strict-matched and link-checked with `blind: 0`; Platform/collision work excluded |
 | BabyPenguin, Lakitu | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus four cleanup hooks and two deleting destructors migrated to C++; all fourteen class consumers strict-matched and link-checked with `blind: 0`; Platform/collision work excluded |
+| daObjRcCarpet_c | andrewboudreau | 2026-08-23 | **active** - converting matched InitResources and Behavior into real C++ methods; destructor variants excluded |
 
 ## Claims
 
