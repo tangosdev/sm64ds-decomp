@@ -331,8 +331,14 @@
 #
 # ---- 11a. THE TWENTY WHOSE SYMBOL A HOST FILE ALSO DEFINES --------------
 #
-# Listing any of these WOULD be an LNK2005: a port host file defines the same
-# symbol.  SIX are this lane's own:
+# NINETEEN OF THE TWENTY would be an LNK2005 if listed: a port host file
+# defines the same symbol.  THE TWENTIETH IS NOT, and the sentence used to say
+# it was -- src/func_ov004_020afdd0.cpp is already a PLAIN line in
+# slice_mg1.txt and port/CMakeLists.txt renames its symbol to
+# func_ov004_020afdd0__rom through COMPILE_DEFINITIONS (the OAM::Render router
+# pair), so the src TU and hal/screen_gap.cpp's definition are different
+# symbols and both link.  It is out of this slice because it is already in a
+# built one, not because it would collide.  SIX are this lane's own:
 #
 #   src/func_ov006_020ef3e0.cpp   unmatched/MgJump2_FieldPmf.cpp   (slot 6)
 #   src/func_ov006_020c4cd8.cpp   unmatched/MgJump2_SubDispatch.cpp
@@ -365,11 +371,15 @@
 #   src/func_ov004_020b8778.cpp   unmatched/MgBase_StateDispatch.cpp
 #   src/func_ov004_020b87e0.cpp   unmatched/MgBase_StateSetter.cpp
 #
-# THE SCAN IS THE POINT.  _020aeed8, _020af094 and _020b0930 are named only
-# inside PROSE in slice_mg1.txt and slice_pch.txt -- not on a HOST-COPIED line
-# -- and _020afdd0, _020b0620, _020b0840 and _020b2cb8 are not on a
-# HOST-COPIED line anywhere either.  A line-match against the other slices
-# misses seven of the fourteen; listing any of them here is an LNK2005.
+# THE SCAN IS THE POINT, and the number is FOUR rather than the seven this
+# paragraph used to claim -- re-measured entry by entry rather than adjusted.
+# A line-match against the other slices FINDS ten of the fourteen: eight on a
+# HOST-COPIED line (_020add88, _020adf2c, _020b0840, _020b2cb8, _020b31b4,
+# _020b321c, _020b8714, _020b8778) and two as plain src lines (_020afdd0 in
+# slice_mg1.txt, _020b0620 in slice_mga361.txt, which is a reference slice no
+# CMake target reads).  It MISSES exactly four, each named only inside prose:
+# _020aeed8, _020af094, _020b0930 and _020b87e0.  Those four are why the scan
+# is symbol-level; listing any of them here is an LNK2005.
 #
 # ---- 11b. THE FOUR ROUTED AROUND, WHICH ARE NOT AN LNK2005 --------------
 #

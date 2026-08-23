@@ -86,7 +86,7 @@
 //
 // An earlier version of this block quoted the +0x30 run as
 // "0x0213af10..0x0213afd0", and NEITHER of those two addresses is a record:
-// 0x0213af10 is {0,0} with no relocation and 0x0213afd0 is {0, 0x02138000}.
+// 0x0213af10 is {0,0} with no relocation and 0x0213afd0 is {0, 0x0213b000}.
 // Quoting a range invites a sweep, and a sweep over this neighbourhood
 // over-reads.  Widening the window by 0x118 bytes picks up FIVE more real
 // records -- 0x0213aec0, 0x0213aec8, 0x0213aed0, 0x0213aed8 and 0x0213aee0,
@@ -106,14 +106,16 @@
 // THE FIRST VERSION OF THIS FILE CARRIED TEN OF THE TWENTY-FIVE, and the run is
 // what caught it. A scan that took only pair records whose single relocation
 // came from inside the closure-as-then-known found six and four; the writers
-// of the other twelve (func_ov006_020c4f68, _020c762c, _020c8270, _020c81e0,
-// _020c85a0, _020c8768 and the eleven-arm switch inside func_ov006_020c6a9c)
-// were not in that closure BECAUSE they are only reachable through the
-// dispatch this file implements. The closure and the switch are mutually
-// recursive, and the fix is to walk it again with every code word as a root
-// until it stabilises. The successive answers were 172 (vtable and class field
-// states as roots), 207 (plus the first ten sub-object states), 223 (plus the
-// rest of the twenty-two then known) and finally 230, from ONE authoritative
+// that install the rest -- func_ov006_020c4f68, _020c762c, _020c8270,
+// _020c81e0, _020c85a0 and _020c8768, plus the eleven-arm switch inside
+// func_ov006_020c6a9c, which is six writers and a switch and not the "other
+// twelve" this sentence used to say -- were not in that closure BECAUSE they
+// are only reachable through the dispatch this file implements. The closure
+// and the switch are mutually recursive, and the fix is to walk it again with
+// every code word as a root until it stabilises. The successive answers were
+// 172 (vtable and class field states as roots), 207 (plus the first ten
+// sub-object states), 223 (plus the rest of the twenty-two then known) and
+// finally 230, from ONE authoritative
 // walk over all FIFTY-NINE roots -- the factory, the eight own overrides, the
 // seventeen middle-base overrides, the five class states, the twenty-five
 // sub-object states and the three element-vtable bodies. Only the 230 is a
