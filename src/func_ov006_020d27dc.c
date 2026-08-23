@@ -78,9 +78,11 @@
 //   optimization_level 3 or 4 .................... 303
 //   opt_dead_code off ............................. 93
 //   optimize_for_size on ......................... 113
-//   ADDRESS OPERAND ORDER reverted, all ten ....... 60
-//   ...the seven macros only ...................... 49
-//   ...the three inline expressions only .......... 23
+//   ADDRESS OPERAND ORDER reverted, ALL TEN spellings ....... 65
+//   ...the seven macros + the countdown inline (EIGHT) ...... 60
+//   ...the seven member macros only ......................... 49
+//   ...the three inline expressions only .................... 28
+//   ...the one countdown-loop inline only ................... 23
 //   no effect at all (byte-identical output): opt_strength_reduction off,
 //   opt_propagation off, opt_lifetimes off, opt_dead_assignments off,
 //   optimize_for_size off, opt_loop_invariants off, opt_unroll_loops off,
@@ -96,17 +98,32 @@
 // note, from the other end, and unlike that one it is a rule rather than a
 // per-array coin flip.
 //
-// THE REVERT IS SPELLED OUT SO THE 60 AND THE 49 CAN BE RE-DERIVED, because a
-// lever figure nobody can reproduce is a claim and not a measurement. TEN
+// THE REVERT IS SPELLED OUT SO EVERY FIGURE ABOVE CAN BE RE-DERIVED, because a
+// lever number nobody can reproduce is a claim and not a measurement. TEN
 // spellings in this file carry the order. SEVEN are the member macros below --
 // DELAY, GOAL, COLP, ROWP, DIRP, STEPP and DONEP -- and THREE are inline in the
-// body: `sb + j * 4 + 0x46b8` in the countdown loop, and `w + 0x4664` and
-// `w + 0x4660` where the walker base is reused. Flipping all ten to
-// constant-first gives 60; the seven macros alone give 49; the three inline
-// expressions alone give 23. The two halves do NOT add -- 49 + 23 is 72 and the
-// full revert measures 60 -- so the lever is reported as three measurements
-// rather than as one number with a mechanism attached. No claim is made here
-// about why they interact; it was not measured.
+// body: `sb + j * 4 + 0x46b8` in the countdown loop, and `w + 0x4664` (once) and
+// `w + 0x4660` (twice) where the walker base is reused. Each figure names the
+// exact set flipped, and the inline flips are to `sb + 0x46b8 + j * 4`,
+// `sb + 0x4664 + i * 8` and `sb + 0x4660 + i * 8` -- CONSTANT-FIRST AGAINST sb,
+// which is the transform under test.
+//
+// THE SETS DO NOT ADD AND THE LADDER IS REPORTED AS SIX MEASUREMENTS FOR THAT
+// REASON: the seven macros measure 49 and the countdown inline measures 23, but
+// their eight-spelling union measures 60, not 72. No claim is made here about
+// why they interact, because that was not measured.
+//
+// AND ONE WRONG WAY TO FLIP THEM IS RECORDED SO THE LADDER CANNOT BE
+// MISREPRODUCED. An earlier version of this banner reached the w pair by
+// commuting the addition in place -- `w + 0x4664` written as `0x4664 + w` -- and
+// that is INERT: it measures 12, byte-identical to shipped, because it only
+// reorders an addition against a pointer mwccarm has already computed. It is not
+// the transform under test, and because it changes nothing it made the
+// three-inline set read 23 (the countdown inline's own figure) and the ten-
+// spelling set read 60 (the eight-spelling figure). Both were published under
+// the wrong labels until an independent rebuild of each set caught it. The flip
+// that actually exercises the lever removes `w` from the expression and spells
+// the address against sb with the constant first.
 //
 // ---- WHAT THIS BODY IS ----------------------------------------------------
 //

@@ -3163,13 +3163,36 @@ TWO LEVERS DID ALL THE WORK AND BOTH ARE REUSABLE:
       lever number nobody can reproduce is a claim and not a measurement. TEN
       spellings in the TU carry the order: SEVEN member macros (DELAY, GOAL,
       COLP, ROWP, DIRP, STEPP, DONEP) and THREE inline expressions in the body
-      (`sb + j * 4 + 0x46b8` in the countdown loop, and `w + 0x4664` and
-      `w + 0x4660` where the walker base is reused). Flipping all ten to
-      constant-first measures 60; the seven macros alone 49; the three inline
-      expressions alone 23; shipped, index-first throughout, 12. The two halves
-      do NOT add -- 49 + 23 is 72 against a measured 60 -- so this is recorded as
-      three measurements and NO claim is made about why they interact, because
-      that was not measured.
+      (`sb + j * 4 + 0x46b8` in the countdown loop, and `w + 0x4664` once and
+      `w + 0x4660` twice, where the walker base is reused). The inline flips are
+      to `sb + 0x46b8 + j * 4`, `sb + 0x4664 + i * 8` and `sb + 0x4660 + i * 8`
+      -- CONSTANT-FIRST AGAINST sb, which is the transform under test. Six
+      measurements, each naming the exact set flipped:
+
+          shipped, index-first throughout ......................... 12
+          the ONE countdown-loop inline only ..................... 23
+          the THREE inline expressions only ...................... 28
+          the SEVEN member macros only ........................... 49
+          the seven macros + the countdown inline (EIGHT) ........ 60
+          ALL TEN spellings ...................................... 65
+
+      THE SETS DO NOT ADD, and the ladder is six rows for that reason: 49 for the
+      macros and 23 for the countdown inline against 60 for their eight-spelling
+      union, not 72. NO claim is made about why they interact, because that was
+      not measured.
+
+      ONE WRONG WAY TO FLIP THEM IS RECORDED SO THE LADDER CANNOT BE
+      MISREPRODUCED, and it is the mistake this section already made. Reaching
+      the w pair by commuting the addition in place -- `w + 0x4664` written as
+      `0x4664 + w` -- is INERT. It measures 12, byte-identical to shipped,
+      because it only reorders an addition against a pointer mwccarm has already
+      computed. An earlier draft of this section flipped the pair that way, so
+      its "three inline expressions alone" was really the countdown inline's own
+      figure (23) and its "all ten" was really the eight-spelling figure (60):
+      two real measurements under two wrong labels. An independent rebuild of
+      each named set is what caught it, which is the general lesson -- a lever
+      figure is only reproducible if the SET is named as precisely as the number,
+      and a flip that changes nothing looks exactly like a flip that was applied.
 
       AN EARLIER DRAFT OF THIS SECTION CLAIMED "84 differing instructions to 40"
       for this edit. Both numbers were real readings taken mid-session, but the
