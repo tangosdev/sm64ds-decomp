@@ -4984,7 +4984,13 @@ set(SLICE_TTI_SOURCES hal/scene_mg_trampoline.cpp
                       # unmatched/MgFlower_Slot2.cpp gives; the three sibling
                       # lanes under the same base must CALL these rather than
                       # write a second copy.
-                      unmatched/MgD3DBase_RideThrough.cpp)
+                      unmatched/MgD3DBase_RideThrough.cpp
+                      # vtable SLOT 34, the brush. src does arithmetic on a
+                      # void* -- a GNU/mwcc extension MSVC refuses with C2036
+                      # -- so the body is re-spelled with one cast under its
+                      # OWN name and src/func_ov006_02120da8.c is out of the
+                      # slice. Not an ABI repair: the behaviour is identical.
+                      unmatched/MgTrampolineTime_Brush.cpp)
 foreach(line IN LISTS SLICE_TTI_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -4992,6 +4998,19 @@ foreach(line IN LISTS SLICE_TTI_LINES)
     endif()
     list(APPEND SLICE_TTI_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+
+# ONE OF THE FORTY-NINE .c FILES IN THIS SLICE IS REALLY C++ -- a //cpp marker
+# and a top-level `extern "C"` block, which is invalid C. All 49 were SWEPT for
+# the marker and for `extern "C"`, `virtual`, `class`, `namespace`, `bool`,
+# `new`/`delete` and `::` rather than this one being found by a compile error
+# and the other forty-eight left to luck, which is the sweep the BOO and SMB
+# blocks above record doing for theirs. Eleven files hit on `::` and every one
+# of the eleven is a recovered-name COMMENT ("dScMgTrampoline_c::Behavior --
+# recovered from vtable slot identity"), checked line by line; this is the only
+# real hit.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/MgTrampolineTime_Spawn.c"
+    PROPERTIES LANGUAGE CXX)
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_fdr.txt" SLICE_FDR_LINES)
 set(FDR_FADER_SOURCES hal/fdr_arm9_fader_seat.cpp)

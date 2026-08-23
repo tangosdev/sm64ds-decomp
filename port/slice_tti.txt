@@ -48,7 +48,6 @@ src/func_ov006_02120c40.c
 src/func_ov006_02120ca0.c
 src/func_ov006_02120d0c.c
 src/func_ov006_02120d8c.c
-src/func_ov006_02120da8.c
 src/func_ov006_02120f18.c
 src/func_ov006_0212101c.c
 src/func_ov006_021211bc.c

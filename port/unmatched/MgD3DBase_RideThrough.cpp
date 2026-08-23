@@ -95,7 +95,10 @@ extern "C" {
 void func_ov004_020b08f0(void *c, unsigned f);
 int  func_ov004_020b04f4(void *c);
 int  _ZN8Particle10SysTracker10InitialiseEv(void *);
-int  _ZN8Particle9RenderAllEv(void);
+/* void, matching src/_ZN8Particle9RenderAllEv.c and hal/particle_bridges.cpp.
+   The src TU this file re-spells declares it int and discards the value, which
+   is a decompiler's spelling of the ROM's `bl` with nothing after it. */
+void _ZN8Particle9RenderAllEv(void);
 
 /* ROM 0x020e70c0, dScMgD3DBase_c vtable slot 2 */
 int port_mg_d3d_after_init(void *c, unsigned f)
