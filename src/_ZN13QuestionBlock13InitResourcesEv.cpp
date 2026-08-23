@@ -1,14 +1,20 @@
-extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int b);
-extern void* _ZN9Animation8LoadFileER13SharedFilePtr(void* sfp);
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* bca, int a, int fx, unsigned int f);
-extern void _ZN11ShadowModel10InitCuboidEv(void* thiz);
-extern void func_ov102_02149da8(void* c, int i);
-extern void func_ov102_02149ff0(char* c);
-extern void func_ov102_02149e38(char* self);
-extern void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void* sfp);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, void* kcl, void* mtx, int fix, short s, void* clps);
-extern unsigned char _ZN8dActor_c9TrackStarEjj(void* c, unsigned int a, unsigned int b);
+//cpp
+// @symbol _ZN13QuestionBlock13InitResourcesEv
+/* recovered: named members + shared header, real C++ method */
+#include "QuestionBlock.h"
+
+extern "C" {
+void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
+void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, void *bmd, int a, int b);
+void *_ZN9Animation8LoadFileER13SharedFilePtr(void *sfp);
+void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thiz, void *bca, int a, int fx, unsigned int f);
+void func_ov102_02149da8(void *c, int i);
+void func_ov102_02149ff0(char *c);
+void func_ov102_02149e38(char *self);
+void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *sfp);
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *thiz, void *kcl, void *mtx, int fix, short s, void *clps);
+unsigned char _ZN8dActor_c9TrackStarEjj(void *c, unsigned int a, unsigned int b);
+}
 
 extern char data_ov102_0214e7e8, data_ov102_0214e808, data_ov102_0214e7f8;
 extern char data_ov002_0210d9e0, data_ov102_0214e800, data_ov102_0214e7f0;
@@ -20,14 +26,14 @@ extern char data_ov002_0210d9d0;
 
 struct M12 { int w[12]; };
 
-int _ZN13QuestionBlock13InitResourcesEv(char* c)
+int QuestionBlock::InitResources()
 {
-    void* r5 = 0;
-    switch (*(unsigned short*)(c + 0xc) - 0x14) {
+    void *r5 = 0;
+    switch (actorID - 0x14) {
     case 0:
         r5 = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov102_0214e7e8);
-        _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x320, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov102_0214e808), 1, 0x19);
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x320, _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov102_0214e7f8), 0, 0x1000, 0);
+        _ZN9ModelBase7SetFileEP8BMD_Fileii((char *)&mModelAnim, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov102_0214e808), 1, 0x19);
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&mModelAnim, _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov102_0214e7f8), 0, 0x1000, 0);
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9e0);
         break;
     case 1:
@@ -51,49 +57,49 @@ int _ZN13QuestionBlock13InitResourcesEv(char* c)
         break;
     }
 
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, r5, 1, -1);
-    _ZN11ShadowModel10InitCuboidEv(c + 0x384);
-    func_ov102_02149da8(c, 0);
-    *(int*)(c + 0xa0) = -0x3c000;
-    *(int*)(c + 0x80) = 0x1000;
-    *(int*)(c + 0x84) = 0x1000;
-    *(int*)(c + 0x88) = 0x1000;
-    func_ov102_02149ff0(c);
-    func_ov102_02149e38(c);
-    *(struct M12*)(c + 0x3ac) = *(struct M12*)(c + 0xf0);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii((char *)&mModel, r5, 1, -1);
+    mShadowModel.InitCuboid();
+    func_ov102_02149da8((char *)this, 0);
+    mTerminalVelocity = -0x3c000;
+    mScaleX = 0x1000;
+    mScaleY = 0x1000;
+    mScaleZ = 0x1000;
+    func_ov102_02149ff0((char *)this);
+    func_ov102_02149e38((char *)this);
+    *(struct M12 *)((char *)this + 0x3ac) = *(struct M12 *)((char *)this + 0xf0);
     {
-        void* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov102_0214e7d0);
-        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x124, kcl, c + 0x2ec, 0x199, *(short*)(c + 0x8e), &data_ov002_0210d954);
+        void *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov102_0214e7d0);
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((char *)&mMeshCollider, kcl, (char *)&mClsnMat, 0x199, mAngleY, &data_ov002_0210d954);
     }
-    *(int*)(c + 0x3e0) = *(int*)(c + 0x60);
-    *(unsigned char*)(c + 0x3f3) = (unsigned char)*(int*)(c + 8);
-    if (*(unsigned char*)(c + 0x3f3) == 0xff)
-        *(unsigned char*)(c + 0x3f3) = 0;
-    if (*(unsigned char*)(c + 0x3f3) == 1) {
-        *(unsigned char*)(c + 0x3f1) = (unsigned char)(*(unsigned int*)(c + 8) >> 8);
-        if (*(unsigned char*)(c + 0x3f1) == 0xff)
-            *(unsigned char*)(c + 0x3f1) = 0;
-        *(unsigned char*)(c + 0x3f0) = _ZN8dActor_c9TrackStarEjj(c, *(unsigned char*)(c + 0x3f1), 2);
+    unk_3e0 = mPosY;
+    unk_3f3 = (unsigned char)param1;
+    if (unk_3f3 == 0xff)
+        unk_3f3 = 0;
+    if (unk_3f3 == 1) {
+        unk_3f1 = (unsigned char)(param1 >> 8);
+        if (unk_3f1 == 0xff)
+            unk_3f1 = 0;
+        unk_3f0 = _ZN8dActor_c9TrackStarEjj((char *)this, unk_3f1, 2);
     }
 
     {
-        int b16 = !(*(unsigned short*)(c + 0xc) != 0x16);
+        int b16 = !(actorID != 0x16);
         if (b16 != 0) {
-            *(unsigned char*)(c + 0x3f3) = 0;
+            unk_3f3 = 0;
             _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da58);
         }
     }
 
     {
-        int b14 = !(*(unsigned short*)(c + 0xc) != 0x14);
+        int b14 = !(actorID != 0x14);
         if (b14 == 0) {
-            int b15 = !(*(unsigned short*)(c + 0xc) != 0x15);
+            int b15 = !(actorID != 0x15);
             if (b15 == 0)
                 goto end;
         }
     }
 
-    switch (*(unsigned char*)(c + 0x3f3)) {
+    switch (unk_3f3) {
     case 0:
     case 1:
         break;

@@ -188,7 +188,7 @@ src/_ZN10SlidingBox6RenderEv.cpp:
     complete
     .text start:0x02113130 end:0x02113158
 
-src/_ZN10SlidingBox8BehaviorEv.c:
+src/_ZN10SlidingBox8BehaviorEv.cpp:
     complete
     .text start:0x02113158 end:0x02113434
 

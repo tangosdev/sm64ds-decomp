@@ -63,6 +63,7 @@ struct ToxBox {
 #ifdef __cplusplus
     /* methods */
     int CleanupResources();
+    int InitResources();
     int Render();
 #endif
 };

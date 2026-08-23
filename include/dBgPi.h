@@ -19,6 +19,7 @@ struct dBgPi {
     s32 unk_024;            /* 0x024 */
 #ifdef __cplusplus
     /* methods */
+    void CopyTo(dBgPi &dst) const;
     u32 GetClsnID() const;
 #endif
 };

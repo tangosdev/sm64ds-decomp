@@ -46,6 +46,7 @@ struct QuestionBlock : dBgActor_c {
 
     int Behavior();
     int CleanupResources();
+    int InitResources();
     int Render();
 
     /* Slots 21/22/24/27/28, all dActor_c combat-callback overrides (see

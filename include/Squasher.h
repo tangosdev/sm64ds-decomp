@@ -29,6 +29,7 @@ struct Squasher : dBgActor_c {
     /* --- vtable --- */
     virtual ~Squasher();
 
+    int Behavior();
     int CleanupResources();
     int InitResources();
     int Render();

@@ -49,6 +49,7 @@ struct SlidingBox {
     u8  mState;            /* 0x4f4 */
 #ifdef __cplusplus
     /* methods */
+    int Behavior();
     int CleanupResources();
     int InitResources();
     int Render();

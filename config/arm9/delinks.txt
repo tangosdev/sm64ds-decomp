@@ -5323,7 +5323,7 @@ src/_ZN5dBgPiaSERKS_.cpp:
     complete
     .text start:0x02038018 end:0x0203806c
 
-src/_ZNK5dBgPi6CopyToERS_.c:
+src/_ZNK5dBgPi6CopyToERS_.cpp:
     complete
     .text start:0x0203806c end:0x020380c0
 
