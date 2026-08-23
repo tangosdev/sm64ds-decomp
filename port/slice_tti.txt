@@ -214,7 +214,14 @@
 #
 # The first constructor's body is a call, then `str r1,[r4]` with r1 loaded from
 # its own pool at 0x020cd154 = 0x0213b2c4.  The type_info at 0x0213b2c0 points
-# at 0x0213b244, whose name pointer reads "17dMgTrmpln2Mario_c".  The ONLY two
+# at 0x0213b244, whose SECOND word 0x0213b270 is the name pointer and reads
+# "18dMgTrmpln3DMario_c" (its base 0x0213b19c names "19dMgTrmpObjAdapter_c").
+# THE FIRST READING OF THAT NAME WAS WRONG and is worth the line: it took the
+# string from the record's own second WORD rather than from what that word
+# POINTS AT, which lands three words early, in the middle of the pointers, and
+# produced "17dMgTrmpln2Mario_c" -- a plausible name with a plausible length
+# prefix.  The link caught it: src/func_ov006_020cd12c.c names the vtable
+# _ZTV18dMgTrmpln3DMario_c and the LNK2019 spelled it out.  The ONLY two
 # relocations naming data_ov006_0213b2c4 in the whole overlay are that element
 # constructor and the element destructor at 0x020cd0c0 (inside
 # func_ov006_020ccfc8), and 0x020cd12c itself has exactly ONE reference in the
@@ -286,6 +293,107 @@
 # so this class's slot 19 takes NEITHER the receiver nor the second argument.
 # The thunks declare the parameter so __fastcall cleans four bytes and record
 # what arrived, which is the measurement rather than the claim.
+
+# ---- 11. THE SECOND LEVEL OF THE WALL, WHICH SECTION 6 DOES NOT COVER -----
+#
+# Section 6's one-site claim is scoped to THIS CLASS'S OWN BODIES and it is
+# true there.  The ELEMENT class has a machine of its own, and it is bigger:
+#
+#   dMgTrmpln3DMario_c, one FIELD-HELD member pointer at element+0x64/+0x68,
+#   ONE decode site (0x020cb080, in func_ov006_020cb030), THIRTY-SEVEN pair
+#   slots at 0x0213b0f4..0x0213b224, TWENTY-ONE distinct code words, every
+#   adjustment zero, and NO overlay constructor -- ov006's .init has no
+#   relocation into that data either.
+#
+# All twenty-one reach a matched src TU, so that machine has no state floor.
+# port/unmatched/MgTrmpln3DMario_StateDispatch.cpp is the host copy, its
+# section 4 lists the three words inside the pair span that are NOT pairs, and
+# its section 5b records a wrong-twin call in the src.
+#
+# THE ANSWER TO SECTION 14'S DEPTH QUESTION IS THEREFORE YES for this class,
+# and a lane that had only run section 6's scan over the class's own bodies
+# would have answered no.  The scan has to follow the FACTORY'S PRODUCTS, not
+# only the class.
+#
+# ---- 12. THREE BODIES WITH NO DECOMPILATION, AND THE nosrc COLUMN IS BLIND -
+#
+# port/mg_fanout_costs.txt's nosrc column reads 0 for this class and that is
+# correct AND incomplete: the column is computed over the VTABLE, so it cannot
+# see anything one level down.  Checked here body by body against
+# config/arm9/overlays/ov006/delinks.txt and src/:
+#
+#   func_ov006_020d0c38  0x3ac  the stylus hit test, called by slot 23
+#   func_ov006_020cf2fc  0x45c  called from 0x020d0a80
+#   func_ov006_020d01e0  0x800  called from 0x020d0ba8, 0x020d0c08, 0x020d0f7c
+#
+# Each has a config symbol and a size, no delink block over it and no src file.
+# port/unmatched/MgTrampolineTime_Floors.cpp traps all three count-and-return
+# and the seat prints the counts on every run.  MEASURED over 3000 frames:
+# 020d0c38 x0, 020cf2fc x0, 020d01e0 x1.
+#
+# ---- 13. TWO CROSS-MODULE MISBINDINGS, AND THEY WERE THE BOOT BLOCKER ------
+#
+# src/func_ov006_020cd12c.c calls data_ov007_020cd72c and
+# src/func_ov006_020cb16c.c calls data_ov007_020ccd78.  Both DS addresses carry
+# an ov006 FUNCTION and an ov007 DATA symbol, and both ROM relocations read
+# `kind:arm_call ... module:overlay(6)`.  On hardware the two overlays are never
+# resident together, so the address is unambiguous wherever this code can run;
+# the port mounts both, so the call jumped into ov007's bytes and scene 384
+# could not boot.  port/tools/faultmap.py resolved the faulting eip to
+# `data _data_ov007_020cd72c in ov007_syms.c.obj, +0x0 into it`.
+# port/unmatched/MgTrmpln3DMario_ModuleFix.cpp carries both repairs; the second
+# is also a dropped receiver and is one of the element class's states.
+#
+# This is the AMBIGUOUS-MODULE class run mg9 lane S364 found at 0x020ad494, and
+# the sweep that finds it is two greps over a slice: a `data_` symbol used as a
+# call, and any ovNNN name inside a TU of a different overlay.
+#
+# ---- 14. ONE MORE HOST COPY: THE ELEMENT'S MODEL DRAW ---------------------
+#
+# src/func_ov006_020cafb4.cpp models the object at element+0x6c with a local
+# six-pure-virtual shadow and calls its SIXTH virtual, which is the ROM's
+# numbering (byte +0x14 = ModelAnim::Render) and NOT MSVC's (where the sixth
+# word is Virtual18).  Same defect as the flower's and Door_Render.cpp's.
+# port/unmatched/MgTrmpln3DMario_ModelRender.cpp is the repair; the run that
+# convicted it and the SM64DS_SCENE_SLOT9=0 control that acquitted everything
+# else are in that file's header.
+#
+# ---- 15. THE SLICE IS THE DELTA ONLY, AND THE COUNT RECONCILES ------------
+#
+# The closure was NOT taken from a relocation graph.  It was taken the
+# documented way -- seed with the class's own TUs, link, add exactly what
+# LNK2019 names -- and it closed in FIVE waves.  A relocation graph measures
+# what the ROM calls; a slice has to list what the HOST LINKER still wants, and
+# those are different sets.
+#
+# port/tools/linkage.py, same tree, same tool, both ends:
+#
+#   base 98a4c0e8f built clean, before any edit   7121 / 11293   63.1%
+#   this branch                                   7264 / 11293   64.3%
+#   delta                                         +143
+#
+# against 145 src lines below.  THE TWO-LINE SHORTFALL IS ACCOUNTED FOR AND IS
+# NOT A LOST LINE: src/_ZN5Model17LoadTextureToVramEPcj.cpp and
+# src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c were ALREADY linked through
+# port/slice_gate4b.txt and port/slice_gate7.txt.  They are listed here because
+# this seat needs them by name and a slice that depends on another slice's
+# membership is a trap; CMake dedupes identical absolute paths, so listing them
+# costs nothing and neither moves the headline.
+#
+# THE DELTA IS ALSO THE PROOF THAT CMake READ EVERY LINE.  Run mg11 lane RLT
+# reports that one unbalanced `[` in a slice comment makes CMake swallow the
+# rest of the file, which reads exactly like a wall.  This file's brackets
+# balance (1/1, 21/21, 5/5) and an equal-minus-two delta is the measurement
+# that says so.
+#
+# ---- 16. WHAT THIS LANE DID NOT TOUCH -------------------------------------
+#
+# port/mg_fanout_costs.txt.  Nine lanes are live on this run and that file is a
+# guaranteed conflict, so everything that would have gone into its section 3
+# row for 0x180 is here instead: 25/16/0 reproduced exactly, the middle base it
+# does not mention, the element vtable and its 21-body machine, the three
+# bodiless closure members its nosrc column cannot see, and the two
+# cross-module misbindings.
 
 src/MgTrampolineTime_Spawn.c
 src/Sound_PlayBank1Panned.cpp
