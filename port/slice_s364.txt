@@ -256,7 +256,9 @@
 # exact at 519 words, 431 of them byte-identical at their own offset, a further
 # 42 relocation slots whose destinations were checked one at a time against
 # config/arm9/overlays/ov006/relocs.txt and all 42 agree, and 46 residual words
-# that are register allocation and nothing else. 473 of 519 is 91.1%.
+# -- 39 register allocation, 4 a deliberate addressing-form trade at the touch-
+# point loads, 3 one schedule move (the banner has the decomposition). 473 of
+# 519 is 91.1%.
 #
 # THE SIX DROPPED BODIES COME BACK, which is section 9's standing credit being
 # collected. func_ov006_0210c180, _c1a8, _c218, _c278, _c2c0 and _c500 had no

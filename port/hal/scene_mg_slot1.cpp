@@ -127,7 +127,8 @@
 // 519 words against the ROM's 519, 431 of them byte-identical at their own
 // offset, a further 42 relocation slots whose destinations were checked one at
 // a time against config/arm9/overlays/ov006/relocs.txt and all 42 agree, and 46
-// residual words that are register allocation and nothing else. That is 473 of
+// residual words -- 39 register allocation, 4 a deliberate addressing-form
+// trade, 3 one schedule move (the banner has the decomposition). That is 473 of
 // 519, 91.1%. The relocation check is the half that matters to this file: it
 // says every one of the eighteen distinct callees and both indirect dispatches
 // are wired to the address the ROM wires them to, so nothing in the residue is
@@ -244,7 +245,8 @@ static int __fastcall s1_init(void *s, void *)
  * src/func_ov006_0210c9e0.cpp is NONMATCHING and its banner says how far it
  * got: size exact at 519 words, 431 byte-identical, 42 relocation slots whose
  * destinations all agree with config/arm9/overlays/ov006/relocs.txt, and 46
- * residual words that are register allocation only.
+ * residual words (39 register allocation, 4 an addressing-form trade, 3 one
+ * schedule move; the banner has the decomposition).
  *
  * THE ASK COUNTER STAYS and it is not ceremony. It was the instrument that
  * measured the trap, and it is the instrument that measures the seat: the

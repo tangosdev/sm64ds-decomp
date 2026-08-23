@@ -1,5 +1,6 @@
 //cpp
-// NONMATCHING: register allocation only. Logic verified against the ROM
+// NONMATCHING: register allocation, one addressing-form trade, and one
+// schedule window (decomposition below). Logic verified against the ROM
 // instruction for instruction; not byte-matchable from C at mwccarm 2004/b56.
 // Counts as decompiled, not matched.
 //
@@ -12,9 +13,16 @@
 // CLOSEST APPROACH: SIZE EXACT -- 519 words against the ROM's 519, 0x81c to
 // the byte. 431 of those words are byte-identical at their own offset and a
 // further 42 are relocation slots which hold a placeholder in the object and
-// carry the ROM's word once linked. That is 473 of 519 (91.1%). The 46 residual
-// words are ALL register allocation: the same instruction, the same operands,
-// a different register number. The dominant one is the prologue's r1/r2 swap --
+// carry the ROM's word once linked. That is 473 of 519 (91.1%). Of the 46
+// residual words, 39 are register allocation -- the same instruction, the same
+// operands, a different register number. FOUR (0x0210cc48..0x0210cc54) are an
+// addressing-form difference taken deliberately: the ROM builds a base pointer
+// `table + idx*4` and reads it with immediate offsets #2/#3, where the
+// two-indexed-loads spelling below computes the indices and does register-
+// offset loads -- the trade the touch-point paragraph argues for, costing 4
+// words here to save 2 elsewhere. THREE (0x0210cc58..0x0210cc60) are one
+// schedule move: `mov r5,#0` emitted two slots early, pushing two pool loads
+// down. The dominant regalloc divergence is the prologue's r1/r2 swap --
 // the ROM puts `self + 0x4000` in r2 and the state index in r1, this build the
 // other way round -- and it propagates into arms 6 and 13, which read that base
 // again before the first call clobbers it.
@@ -92,12 +100,10 @@
 //     and `[idx*4+3]`, not through a base pointer: a base pointer gets hoisted
 //     above the press test and loses two words.
 //
-// THE ONE THING NOT REPRODUCED THAT IS NOT REGALLOC is case 6's test. The ROM
-// materialises the boolean -- `cmp r0,#0; moveq r0,#1; movne r0,#0; cmp r0,#0;
-// beq` -- where every C spelling tried here folds it to a single `cmp/bne`.
-// `!x`, `(x == 0)` into a local, and `(x == 0) == 1` were all tried; the last
-// one is three words closer in size and 72 words worse everywhere else, so the
-// folded form is what ships. Three words of the residue are that.
+// CASE 6's MATERIALISED BOOLEAN IS REPRODUCED BYTE-EXACT in the shipped form
+// -- `cmp r0,#0; moveq r0,#1; movne r0,#0; cmp r0,#0; beq`, all five words,
+// zero residue there. (An earlier draft folded it to a single `cmp/bne` and a
+// stale paragraph here once claimed that folded form shipped; it does not.)
 
 typedef unsigned char u8;
 typedef unsigned short u16;
