@@ -301,6 +301,8 @@ void *MgTrampolineTime_Spawn(void);
 unsigned port_mg_tti_state_hits(void);
 /* the floor file's witness, unmatched/MgTrampolineTime_Floors.cpp */
 unsigned port_mg_tti_hittest_calls(void);
+void     port_mg_tti_floor_counts(unsigned *hit, unsigned *f2fc,
+                                  unsigned *f1e0);
 unsigned port_mg_tti_floor_hits(void);
 void     port_mg_tti_link_range(int *lo, int *hi);
 void     port_mg_tti_link_hits(unsigned *out5);
@@ -698,6 +700,15 @@ extern "C" void port_scene_trampoline_hits(void)
                     "no src in the decomp) trapped %u time(s); it "
                     "decides hit sound vs miss sound and nothing "
                     "else\n", port_mg_tti_hittest_calls());
+        {
+            unsigned h = 0, f2 = 0, f1 = 0;
+            port_mg_tti_floor_counts(&h, &f2, &f1);
+            std::printf("[scene] dScMgTrampoline_c closure floors: "
+                        "020d0c38 (hit test) x%u, 020cf2fc (0x45c) x%u, "
+                        "020d01e0 (0x800) x%u -- three ov006 bodies with "
+                        "no decompilation anywhere, trapped "
+                        "count-and-return\n", h, f2, f1);
+        }
     }
 
     /* The member pointer itself, at the offset disassembled in

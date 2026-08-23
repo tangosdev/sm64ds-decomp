@@ -136,10 +136,31 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:?data_0209f5f8@@3EA=_data_0209f5f8")
 #pragma comment(linker, "/alternatename:?data_ov006_02141a48@@3PAXA=_data_ov006_02141a48")
 
+/* ---- 2b. the SECOND wave's rows, same shapes -----------------------------
+   Two more ints and three `struct G2` objects, all from the element-object
+   machinery the first wave pulled in (func_ov006_020cafb4, _020cb030,
+   _020ccd78, _020cf758).  data_ov006_02140564 appears TWICE in this file, once
+   as ?...@@3HA and once as ?...@@3UG2@@A: two TUs declare the same mount word
+   with two different C++ types, so each mangling needs its own row and neither
+   is redundant. */
+#pragma comment(linker, "/alternatename:?data_ov006_0214058c@@3HA=_data_ov006_0214058c")
+#pragma comment(linker, "/alternatename:?data_ov006_021405c8@@3HA=_data_ov006_021405c8")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b12c@@3UG2@@A=_data_ov006_0213b12c")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b184@@3UG2@@A=_data_ov006_0213b184")
+#pragma comment(linker, "/alternatename:?data_ov006_02140564@@3UG2@@A=_data_ov006_02140564")
+
 /* ---- 3. the three bare names, resolved from their literal pools ---------- */
 #pragma comment(linker, "/alternatename:__ZTV18dMgTrmpln3DMario_c=_data_ov006_0213b2c4")
 #pragma comment(linker, "/alternatename:_func_020beb74=_data_ov004_020beb74")
 #pragma comment(linker, "/alternatename:_Scene_AfterRender=__ZN5Scene11AfterRenderEj")
+/* src/func_ov006_020d0b2c.cpp spells Model::LoadTextureToVram as a free
+   function in a Model namespace, so MSVC mangles the CALL as
+   ?LoadTextureToVram@Model@@YAHPADI@Z while the body the port already links
+   (src/_ZN5Model17LoadTextureToVramEPcj.cpp, wired by port/slice_gate4b.txt)
+   carries the ARM mangling as a plain C name.  config/arm9/symbols.txt names
+   the ROM body _ZN5Model17LoadTextureToVramEPcj at 0x02045c10, so the two are
+   the same function under two spellings and the row joins them. */
+#pragma comment(linker, "/alternatename:?LoadTextureToVram@Model@@YAHPADI@Z=__ZN5Model17LoadTextureToVramEPcj")
 
 /* MSVC emits nothing for a TU that is only pragmas, and an empty object still
    carries the linker directives. This symbol exists so a reader grepping for
