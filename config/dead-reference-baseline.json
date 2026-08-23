@@ -510,6 +510,10 @@
    "ref": "src/arm9/func_0200abcd.c"
   },
   {
+   "file": "tools/symscope.py",
+   "ref": "src/Foo.cpp"
+  },
+  {
    "file": "tools/test_demember_calls.py",
    "ref": "src/func_ov022_02111bdc.cpp"
   },
