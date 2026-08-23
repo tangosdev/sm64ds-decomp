@@ -1,0 +1,74 @@
+# Lane TTI of run mg11: dScMgTrampoline_c, the "Trampoline Time" minigame.
+#
+# actor id 0x180 (scene 384), spawn symbol MgTrampolineTime_Spawn (0x02122490),
+# SpawnInfo 0x0213fab8, vtable data_ov006_0213fb34.  Every one of those was
+# re-read out of the ROM by this lane rather than taken from the handover.
+# The doubled-id word 0x01800180 sits at 0x0213fabc, which puts the record at
+# 0x0213fab8 with the factory in the word before it:
+#
+#     0213fab8  90 24 12 02   0x02122490   the factory
+#               80 01 80 01   384, 384     the id, twice
+#
+# PLACEHOLDER HEADER -- the full derivation is written after the link closes.
+
+src/MgTrampolineTime_Spawn.c
+src/_ZN17MgBounceAndPounce11AfterRenderEj.cpp
+src/_ZN17MgBounceAndPounce14BeforeBehaviorEv.cpp
+src/_ZN17MgBounceAndPounce19BeforeInitResourcesEv.cpp
+src/_ZN17MgBounceAndPounce21AfterCleanupResourcesEj.cpp
+src/func_ov006_020caf44.c
+src/func_ov006_020caf4c.c
+src/func_ov006_020cafa4.c
+src/func_ov006_020cafac.c
+src/func_ov006_020ccfc8.cpp
+src/func_ov006_020cd12c.c
+src/func_ov006_020cd720.c
+src/func_ov006_020e6cac.c
+src/func_ov006_020e6d24.cpp
+src/func_ov006_020e6d8c.c
+src/func_ov006_020e6d98.c
+src/func_ov006_020e6e4c.c
+src/func_ov006_020e7124.c
+src/func_ov006_020e72c0.c
+src/func_ov006_021207dc.c
+src/func_ov006_02120880.cpp
+src/func_ov006_02120938.c
+src/func_ov006_0212093c.c
+src/func_ov006_021209ac.cpp
+src/func_ov006_02120a18.c
+src/func_ov006_02120a44.c
+src/func_ov006_02120a54.c
+src/func_ov006_02120a64.c
+src/func_ov006_02120ab8.c
+src/func_ov006_02120b30.c
+src/func_ov006_02120b7c.c
+src/func_ov006_02120bc8.c
+src/func_ov006_02120c08.c
+src/func_ov006_02120c40.c
+src/func_ov006_02120ca0.c
+src/func_ov006_02120d0c.c
+src/func_ov006_02120d8c.c
+src/func_ov006_02120da8.c
+src/func_ov006_02120f18.c
+src/func_ov006_0212101c.c
+src/func_ov006_021211bc.c
+src/func_ov006_021211e0.cpp
+src/func_ov006_021212e0.c
+src/func_ov006_021212fc.c
+src/func_ov006_0212157c.c
+src/func_ov006_02121750.c
+src/func_ov006_02121768.c
+src/func_ov006_02121774.c
+src/func_ov006_02121778.c
+src/func_ov006_02121848.c
+src/func_ov006_021218c4.c
+src/func_ov006_021218fc.c
+src/func_ov006_02121bc8.cpp
+src/func_ov006_02121cf4.c
+src/func_ov006_02121d64.cpp
+src/func_ov006_02121f04.c
+src/func_ov006_02121f70.c
+src/func_ov006_02121fa4.c
+src/func_ov006_02122198.cpp
+src/func_ov006_0212231c.c
+src/func_ov006_021225a8.c
