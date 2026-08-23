@@ -3579,7 +3579,7 @@ WHAT THIS SECTION DOES NOT KNOW.
 
 port/slice_s381.txt states the rule as "an UNMATCHED open bracket in any line
 swallows every line AFTER IT into that one list element", and run mg9 lane S364
-ate the same trap independently. This lane scanned all 141 slice_*.txt files for
+ate the same trap independently. This lane scanned all 150 slice_*.txt files for
 lines whose `[` and `]` counts disagree, found exactly one file that is not its
 own -- port/slice_gate21.txt lines 119 and 120, a `[D1, D0, GetPos,` /
 `GetOwnerID],` range split across two lines with THIRTEEN src rows after it --
@@ -3599,7 +3599,7 @@ elements printed):
     `[[` and `]]` on adjacent lines                        3   same
     `[` with NO `]` anywhere in the file                   1   the whole rest of
                                                                the file collapses
-    `[` closed several lines LATER, past src rows          2   every line from the
+    `[` whose `]` comes several lines LATER, past src rows 2   every line from the
                                                                open to the close
                                                                becomes ONE element
                                                                -- the src rows
@@ -3618,3 +3618,17 @@ its list came back 94 long for a 246-line file with every kept line a comment.
 The 0xAAAA..0xBBBB spelling convention stays exactly as it is; this only stops
 the next lane from spending an hour on a two-line range that was never a
 problem, and tells it which shape to actually look for.
+
+THE SCOPE FIGURE IN THE PARAGRAPH ABOVE WAS WRONG ON ITS FIRST WRITING, AND THE
+CAUSE IS WORTH MORE THAN THE DIGIT. It read 141; the count is 150 (149 tracked
+port/slice_*.txt at base 98a4c0e8f plus this lane's own slice_pgo.txt), and the
+lane reviewer caught it. The scan itself was real and its conclusion is
+unaffected -- it globbed `port/slice_*.txt` and reported every line whose bracket
+counts disagree -- but IT NEVER PRINTED A TOTAL. Only the offending lines were
+printed, so the "141" was written from memory beside a measurement that did not
+include it. That is a worse shape than a stale number, because a stale number
+was once true: a scope figure standing next to real evidence borrows the
+evidence's credibility without ever having been measured. A scan whose scope a
+sentence quotes must PRINT its scope, and this one now has `git ls-tree -r
+--name-only <rev> -- port/ | grep -c '^port/slice_.*\.txt$'` behind it at both
+ends.
