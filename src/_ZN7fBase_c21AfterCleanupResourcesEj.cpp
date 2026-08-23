@@ -26,7 +26,11 @@ struct SceneNode { char b[0x14]; };
 struct PListNode { char b[0x10]; };
 
 extern "C" {
+#ifdef SM64DS_PLATFORM_PC
+  extern char data_020a4b6c;          /* host storage is supplied by actor_vtables.cpp */
+#else
   char data_020a4b6c;                 /* 0x020a4b6c */
+#endif
   char data_020a4ba8;                 /* 0x020a4ba8 */
   void func_0203b3c0(void*, void*);
   void func_0203b27c(void*, void*);

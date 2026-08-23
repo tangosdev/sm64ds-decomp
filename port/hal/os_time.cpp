@@ -14,7 +14,7 @@ typedef long long s64;
 
 static s64 g_ticks;
 
-s64 func_02059650()
+extern "C" s64 func_02059650()
 {
     return g_ticks;
 }

@@ -33,8 +33,11 @@ void MultiStore_Int(int val, int *dst, int len)
 // for data (no calling convention); the decorated spellings come verbatim
 // from link errors -- the linker is the authority on decoration.
 #pragma comment(linker, "/alternatename:_data_020a4d38=__ZN6Memory16rootHeapIteratorE")
+#pragma comment(linker, "/alternatename:_data_020a4d34=__ZN6Memory25isRootHeapIterInitializedE")
 #pragma comment(linker, "/alternatename:?_ZN6Memory16rootHeapIteratorE@@3DA=__ZN6Memory16rootHeapIteratorE")
 #pragma comment(linker, "/alternatename:?_ZN6Memory25isRootHeapIterInitializedE@@3HA=__ZN6Memory25isRootHeapIterInitializedE")
+#pragma comment(linker, "/alternatename:?data_020a4d34@@3HA=__ZN6Memory25isRootHeapIterInitializedE")
+#pragma comment(linker, "/alternatename:?data_020a4d38@@3DA=__ZN6Memory16rootHeapIteratorE")
 // FUNCTION alias only where the conventions MATCH: this reference and the C
 // definition are both __cdecl free functions.
 #pragma comment(linker, "/alternatename:?_ZN18NestedHeapIteratorC1Ej@@YAXPAXI@Z=__ZN18NestedHeapIteratorC1Ej")
@@ -53,9 +56,52 @@ void _ZN18NestedHeapIterator8AddFirstEP13HeapAllocator(void *self, HeapAllocator
 int _ZN18NestedHeapIterator4NextEP13HeapAllocator(void *self, HeapAllocator *a)
 { return ((NestedHeapIterator *)self)->Next(a); }
 }
-// And the reverse direction: AddLast/AddFirst reference Init as a C++
-// __cdecl FREE function (?_ZN..4Init..@@YAXPAD0@Z, char* args) while
-// Init.cpp defines the method. C++ linkage on purpose -- extern "C" would
-// decorate this wrong.
-void _ZN18NestedHeapIterator4InitEP13HeapAllocator(char *self, char *a)
-{ ((NestedHeapIterator *)self)->Init((HeapAllocator *)a); }
+// C-name references left in the slice -> methods that have since migrated to
+// real C++. These must be forwarders, not /alternatename aliases: instance
+// methods use __thiscall on x86 MSVC while the historical C spellings are
+// __cdecl and pass `this` on the stack.
+#include "Heap.h"
+#include "ExpandingHeap.h"
+#include "ExpandingHeapAllocator.h"
+#include "MemoryNode.h"
+extern "C" {
+ExpandingHeapAllocator *_ZN4Heap28CreateExpandingHeapAllocatorEPvjj(
+    void *address, u32 size, u32 flags)
+{ return Heap::CreateExpandingHeapAllocator(address, size, flags); }
+
+void *_ZN22ExpandingHeapAllocator8AllocateEji(
+    ExpandingHeapAllocator *self, u32 size, int align)
+{ return self->Allocate(size, align); }
+
+int _ZN22ExpandingHeapAllocator10DeallocateEPv(
+    ExpandingHeapAllocator *self, void *ptr)
+{ return self->Deallocate(ptr); }
+
+void *_ZN22ExpandingHeapAllocator16AllocateForwardsEjj(
+    ExpandingHeapAllocator *self, u32 size, u32 align)
+{ return self->AllocateForwards(size, align); }
+
+void *_ZN22ExpandingHeapAllocator17AllocateBackwardsEjj(
+    ExpandingHeapAllocator *self, u32 size, u32 align)
+{ return self->AllocateBackwards(size, align); }
+
+void *_ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt(
+    MemoryNode::Target *extent, u16 tag)
+{ return ExpandingHeapAllocator::CreateNode(extent, tag); }
+
+void *_ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_(
+    MemoryNode *list, MemoryNode *node, MemoryNode *prev)
+{ return ExpandingHeapAllocator::LinkNode(list, node, prev); }
+
+void *_ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_(
+    MemoryNode *list, MemoryNode *node)
+{ return ExpandingHeapAllocator::UnlinkNode(list, node); }
+
+NestedHeapIterator *_ZN18NestedHeapIterator10FindNestedEPv(void *address)
+{ return NestedHeapIterator::FindNested(address); }
+
+void _ZN18NestedHeapIterator4InitEP13HeapAllocator(
+    NestedHeapIterator *self, HeapAllocator *allocator)
+{ self->Init(allocator); }
+
+}

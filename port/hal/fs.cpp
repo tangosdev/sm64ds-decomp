@@ -34,6 +34,14 @@
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef unsigned char u8;
+#include "SharedFilePtr.h"
+
+extern "C" {
+void *_ZN13SharedFilePtr8LoadFileEv(SharedFilePtr *self)
+{ return self->SharedFilePtr::LoadFile(); }
+void _ZN13SharedFilePtr7ReleaseEv(SharedFilePtr *self)
+{ self->SharedFilePtr::Release(); }
+}
 
 #ifndef PORT_REPO_ROOT
 #define PORT_REPO_ROOT "."

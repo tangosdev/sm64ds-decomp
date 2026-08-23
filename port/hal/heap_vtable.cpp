@@ -9,9 +9,9 @@
 // __thiscall passes it; the dummy edx parameter absorbs fastcall's second
 // register) forwarding to the real V-methods from src/.
 //
-// Slot evidence, from the shadow classes in the callers themselves:
-//   Heap::Allocate    casts to {v0,v1,v2, m(uint,int)}  -> slot 3 = VAllocate
-//   Heap::Deallocate  casts to {v0..v3,   m(void*)}     -> slot 4 = VDeallocate
+// The sources now compile against the real Heap hierarchy. On x86 MSVC one
+// deleting-destructor entry precedes the fourteen V* methods, so VAllocate and
+// VDeallocate are host slots 2 and 3 (their ROM/Itanium slots are 3 and 4).
 // Slots without caller evidence are TRAPS that abort loudly with the slot
 // number -- a silent wrong-slot dispatch is the exact class of bug the
 // hybrid's gates existed to catch, and the port has no gate to catch it.
@@ -19,19 +19,26 @@
 #include <stdlib.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include "Heap.h"
+#include "ExpandingHeap.h"
+#include "ExpandingHeapAllocator.h"
 
-typedef unsigned int u32;
+namespace Memory {
+void *Allocate(u32 size, int align, Heap *heap);
+}
+#pragma comment(linker, "/alternatename:?Allocate@Memory@@YAPAXIHPAUHeap@@@Z=?Allocate@Memory@@YAPAXIHPAVHeap@@@Z")
 
-// Shadow declarations that mangle identically to the src/ definitions.
-struct ExpandingHeap {
-    void *VAllocate(u32 size, int align);
-    int VDeallocate(void *p);
-};
-struct ExpandingHeapAllocator {
-    void *Allocate(u32 size, int align);
-    static u32 SizeofInternal(void *p);
-    u32 MemoryLeft();
-};
+extern "C" {
+u32 _ZN22ExpandingHeapAllocator14SizeofInternalEPv(void *ptr)
+{ return ExpandingHeapAllocator::SizeofInternal(ptr); }
+u32 _ZN22ExpandingHeapAllocator10MemoryLeftEv(
+    ExpandingHeapAllocator *self)
+{ return self->MemoryLeft(); }
+Heap *_ZN4Heap13SetupRootHeapEv()
+{ return Heap::SetupRootHeap(); }
+void *_ZN6Memory8AllocateEjiP4Heap(u32 size, int align, Heap *heap)
+{ return Memory::Allocate(size, align, heap); }
+}
 
 // ---- globals the root-heap chain stores through --------------------------
 extern "C" {
@@ -40,50 +47,17 @@ void *data_020a0ea0;   /* Memory::defaultHeapPtr */
 int data_02099d90;     /* heap bring-up state flag */
 }
 
-// ---- allocator methods -> the C-linkage definitions from gate 2 ----------
-extern "C" {
-void *_ZN22ExpandingHeapAllocator8AllocateEji(void *self, u32 size, int align);
-int _ZN22ExpandingHeapAllocator10DeallocateEPv(void *self, void *p);
-u32 _ZN22ExpandingHeapAllocator14SizeofInternalEPv(void *p);
-u32 _ZN22ExpandingHeapAllocator10MemoryLeftEv(void *self);
-}
-void *ExpandingHeapAllocator::Allocate(u32 size, int align)
-{ return _ZN22ExpandingHeapAllocator8AllocateEji(this, size, align); }
-u32 ExpandingHeapAllocator::SizeofInternal(void *p)
-{ return _ZN22ExpandingHeapAllocator14SizeofInternalEPv(p); }
-u32 ExpandingHeapAllocator::MemoryLeft()
-{ return _ZN22ExpandingHeapAllocator10MemoryLeftEv(this); }
-
-// ---- cross-linkage bridges surfaced by the link, both directions ---------
-// C++ method VDeallocate -> its C-linkage definition
-extern "C" int _ZN13ExpandingHeap11VDeallocateEPv(void *self, void *p);
-int ExpandingHeap::VDeallocate(void *p)
-{ return _ZN13ExpandingHeap11VDeallocateEPv(this, p); }
-
 // C references to Heap::Allocate/Deallocate -> the MSVC method definitions.
-// The src/ TUs declare `class Heap` (mangles PAV); a struct shadow here would
-// mangle PAU and miss, so the method shadow must be a class too.
-class Heap {
-public:
-    int Allocate(u32 size, int align);
-    void Deallocate(void *p);
-};
 extern "C" {
-int _ZN4Heap8AllocateEji(void *self, u32 size, int align)
+void *_ZN4Heap8AllocateEji(void *self, u32 size, int align)
 { return ((Heap *)self)->Allocate(size, align); }
 void _ZN4Heap10DeallocateEPv(void *self, void *p)
 { ((Heap *)self)->Deallocate(p); }
 }
 
-// C++ references to Memory::Allocate(u32,int,Heap*) -> the C definition
-extern "C" void *_ZN6Memory8AllocateEjiP4Heap(u32 size, int align, void *heap);
-namespace Memory {
-void *Allocate(u32 size, int align, Heap *heap)
-{ return _ZN6Memory8AllocateEjiP4Heap(size, align, heap); }
-}
-
 // Memory::defaultHeapPtr is data_020a0ea0 by its address-name (data alias).
 #pragma comment(linker, "/alternatename:?defaultHeapPtr@Memory@@3PAVHeap@@A=_data_020a0ea0")
+#pragma comment(linker, "/alternatename:?defaultHeapPtr@Memory@@3PAUHeap@@A=_data_020a0ea0")
 
 // Crash(): the game's fatal stop. Loud on host. C linkage for the .c TUs;
 // the C++-linkage references alias onto the same definition.
@@ -109,20 +83,36 @@ extern "C" void *_ZN4Heap8AllocateEj(void *self, u32 size)
 
 // ---- the synthetic vtable ------------------------------------------------
 static void *__fastcall slot_alloc(void *self, void *, u32 size, int align)
-{ return ((ExpandingHeap *)self)->VAllocate(size, align); }
-static int __fastcall slot_dealloc(void *self, void *, void *p)
-{ return ((ExpandingHeap *)self)->VDeallocate(p); }
+{ return ((ExpandingHeap *)self)->ExpandingHeap::VAllocate(size, align); }
+static void __fastcall slot_dealloc(void *self, void *, void *p)
+{ ((ExpandingHeap *)self)->ExpandingHeap::VDeallocate(p); }
+static u32 __fastcall slot_sizeof(void *self, void *, void *p)
+{ return ((ExpandingHeap *)self)->ExpandingHeap::VSizeof(p); }
+static u32 __fastcall slot_memory_left(void *self, void *)
+{ return ((ExpandingHeap *)self)->ExpandingHeap::VMemoryLeft(); }
 
 #define TRAP(n) \
     static void __fastcall slot_trap##n(void *, void *) { \
         fprintf(stderr, "FATAL: ExpandingHeap vtable slot %d dispatched " \
                         "with no caller evidence (see heap_vtable.cpp)\n", n); \
         abort(); }
-TRAP(0) TRAP(1) TRAP(2) TRAP(5) TRAP(6) TRAP(7)
+TRAP(0) TRAP(1) TRAP(4) TRAP(5) TRAP(6) TRAP(7)
+TRAP(9) TRAP(10) TRAP(12) TRAP(13) TRAP(14)
 
-extern "C" void *_ZTV13ExpandingHeap[8] = {
-    (void *)slot_trap0, (void *)slot_trap1, (void *)slot_trap2,
-    (void *)slot_alloc,        /* 3: VAllocate, pinned by Heap::Allocate */
-    (void *)slot_dealloc,      /* 4: VDeallocate, pinned by Heap::Deallocate */
-    (void *)slot_trap5, (void *)slot_trap6, (void *)slot_trap7,
+extern "C" void *_ZTV13ExpandingHeap[15] = {
+    (void *)slot_trap0,        /*  0: deleting destructor */
+    (void *)slot_trap1,        /*  1: VDestroy */
+    (void *)slot_alloc,        /*  2: VAllocate */
+    (void *)slot_dealloc,      /*  3: VDeallocate */
+    (void *)slot_trap4,        /*  4: VDeallocateAll */
+    (void *)slot_trap5,        /*  5: VIntact */
+    (void *)slot_trap6,        /*  6: VRescue */
+    (void *)slot_trap7,        /*  7: VReallocate */
+    (void *)slot_sizeof,       /*  8: VSizeof */
+    (void *)slot_trap9,        /*  9: VMaxAllocationUnitSize */
+    (void *)slot_trap10,       /* 10: VMaxAllocatableSize */
+    (void *)slot_memory_left,  /* 11: VMemoryLeft */
+    (void *)slot_trap12,       /* 12: VSetNodeID */
+    (void *)slot_trap13,       /* 13: VGetNodeID */
+    (void *)slot_trap14,       /* 14: VResizeToFit */
 };
