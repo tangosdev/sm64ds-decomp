@@ -3,11 +3,13 @@
  * ov017/ShipWater  (7 function(s))
  *
  * NOT ENROLLED, NOT CANONICAL. This file contributes nothing to the ROM
- * build. It is a STARTING POINT (plan sec 7.3): local shadow declarations
- * below were carried verbatim from the legacy files, not reconciled against
- * real project headers -- that judgement call is left to a human/LLM review,
- * the way pilot #1 reconciled PoleLift::Render and ::CleanupResources by hand
- * (see notes/tu-reconstruction-pilot-report.md sec 5.2).
+ * build. Render/CleanupResources/Behavior are reconciled against the real
+ * headers (mModel/mMeshCollider/mTextureTransformer are real inherited
+ * members; the legacy generator's local shadow structs and offset casts are
+ * gone), the same reconciliation pilot #1 did by hand for PoleLift's
+ * equivalents (see notes/tu-reconstruction-pilot-report.md sec 5.2). What is
+ * left as extern "C" is load-bearing: Sound::PlayLong and the two Fix12<int>
+ * SetFile calls have no real-method route yet (see the comments at each).
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
  * emits one .text section per function, in the REVERSE of source order, so
@@ -36,22 +38,14 @@
 #include "decl_Platform.h"
 #include "decl_TextureTransformer.h"
 
-/* Local shadow declarations carried from the legacy files verbatim.
- * NOT reconciled against real project headers -- check include/*.h for
- * each of these before compiling; a real header should usually win. */
-/* shadow struct 'Sub' */
-struct Sub { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
-
-/* shadow struct 'Base' */
-struct Base { char pad[0xd4]; Sub sub; };
-
+/* Sound::PlayLong has no header declaration yet (Sound.h keeps only PlayBank3
+ * and Player::SetPlayableSeqCount so far), and the position it takes by
+ * const-reference is dActor_c's mCamSpacePosX/Y/Z -- three separate s32
+ * fields, not a Vector3 -- so a real call still needs a reinterpret at the
+ * call site either way. Left as the mangled free function until one of
+ * those two gets fixed; not a shadow-struct workaround. */
 extern "C" {
-extern "C" void _ZN18TextureTransformer6UpdateER15ModelComponents(void *, void *);
-extern char* _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, char* prev);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int e);
-extern int _ZN9Animation7AdvanceEv(char* t);
-extern int _ZN10dBgActor_c21UpdateModelPosAndRotYEv(char* t);
-extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char* t);
 extern int _ZTV9ShipWater[];
 extern SharedFilePtr data_ov017_02111c80;   /* the KCL handle */
 extern SharedFilePtr data_ov017_02111c88;   /* the BMD handle */
@@ -135,15 +129,17 @@ int ShipWater::Behavior()
 {
     if (mChestsOpen == 0) {
         int ok = 1;
-        char* p = _ZN8dActor_c15FindWithActorIDEjPS_(0xd, 0);
+        dActor_c* p = dActor_c::FindWithActorID(0xd, 0);
         while (p != 0) {
-            int state = *(int*)(p+0x16c);
+            /* offset into the chest actor's own (unrecovered) type -- ID 0xd is not
+             * ShipWater or any class this file's headers know about */
+            int state = *(int*)((char*)p + 0x16c);
             int cond = 1;
             if (state != 1) {
                 if (state != 2) cond = 0;
             }
             if (cond == 0) ok = 0;
-            p = _ZN8dActor_c15FindWithActorIDEjPS_(0xd, p);
+            p = dActor_c::FindWithActorID(0xd, p);
         }
         if (ok != 0) mChestsOpen = 1;
     } else {
@@ -156,10 +152,10 @@ int ShipWater::Behavior()
             *q -= 0x5000;
         }
     }
-    (*(s32 *)((char *)&mTextureTransformer + 0xc)) = 0x1000;
-    _ZN9Animation7AdvanceEv((char*)&(*(u8 *)&mTextureTransformer));
-    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
-    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
+    mTextureTransformer.speed = 0x1000;
+    mTextureTransformer.Advance();
+    UpdateModelPosAndRotY();
+    UpdateClsnPosAndRot();
     return 1;
 }
 
@@ -170,7 +166,9 @@ int ShipWater::Behavior()
 /* recovered: named members + shared header, real C++ method */
 int ShipWater::Render()
 {
- _ZN18TextureTransformer6UpdateER15ModelComponents((char *)((Base *)this) + 0x320, (char *)((Base *)this) + 0xdc); Sub *b = &((Base *)this)->sub; b->m(0); return 1;
+    mTextureTransformer.Update(mModel.data);
+    mModel.Render(0);
+    return 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -181,8 +179,8 @@ int ShipWater::Render()
 /* recovered: named members + shared header, real C++ method */
 int ShipWater::CleanupResources()
 {
-    if (((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
-        ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
+    if (mMeshCollider.IsEnabled()) {
+        mMeshCollider.Disable();
     }
     data_ov017_02111c88.Release();
     data_ov017_02111c80.Release();
