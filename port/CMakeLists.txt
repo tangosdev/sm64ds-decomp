@@ -5010,7 +5010,11 @@ set(SLICE_TTI_SOURCES hal/scene_mg_trampoline.cpp
                       # two overlays are never co-resident), a hard crash in a
                       # port that mounts both. This was the only thing stopping
                       # scene 384 from booting.
-                      unmatched/MgTrmpln3DMario_ModuleFix.cpp)
+                      unmatched/MgTrmpln3DMario_ModuleFix.cpp
+                      # the element's per-frame model draw: the local-shadow
+                      # slot-numbering defect Door_Render.cpp and the flower's
+                      # ModelRender file already carry, one class over
+                      unmatched/MgTrmpln3DMario_ModelRender.cpp)
 foreach(line IN LISTS SLICE_TTI_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")

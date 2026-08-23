@@ -328,7 +328,6 @@ src/func_ov006_020caf44.c
 src/func_ov006_020caf4c.c
 src/func_ov006_020cafa4.c
 src/func_ov006_020cafac.c
-src/func_ov006_020cafb4.cpp
 src/func_ov006_020cafdc.cpp
 src/func_ov006_020cb134.cpp
 src/func_ov006_020cb1a8.c
