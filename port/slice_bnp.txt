@@ -76,6 +76,17 @@
 #    check 3 carries less: the stride change is what identifies 0x0213cc74 as
 #    the first word of a pair run.
 #
+# THIS TABLE DOES NOT OVER-READ, and that is worth recording because a
+# neighbouring lane hit a table that does. Lane MUG found spans that run PAST
+# the terminal slot because the NEXT table's {0, &typeinfo} RTTI header sits
+# between the two symbols, and in that shape the word at width+1 is a
+# neighbour's typeinfo pointer that a too-wide fill would clobber invisibly. A
+# sweep of all 49 ov006 vtables says that is TEN tables, not a rule: 29 span
+# exactly 36 words and end on the terminal slot. THIS IS ONE OF THE 29. The
+# span is 0x90 to the byte, slot 35 is the terminal 0x020ad660, and the words
+# past the end are a member-pointer pair rather than an RTTI header -- so the
+# runtime read-back MUG added for its own class has nothing to check here.
+#
 # A STRIDE-8 PAIR SWEEP PAST THIS TABLE OVERCOUNTS, and lane PGO's note about
 # phantom entries applies to this class in its own pair run rather than past
 # the vtable: MgBounceAndPounce_SpawnInfo at 0x0213cb64 is {factory, doubled
