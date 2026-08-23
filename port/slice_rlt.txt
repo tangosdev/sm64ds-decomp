@@ -275,6 +275,154 @@
 # the raw-DS-word count for all three.
 #
 # ===========================================================================
+# 9. WHAT IT COST, AND WHAT THE RUN SAYS
+# ===========================================================================
+#
+# WAVES: TWO, against the one-plus-an-alias-row shape section 14 of
+# port/mg_fanout_costs.txt predicts for a late lane. Wave 1 was twelve LNK2019s
+# naming this class's own bodies, and it was not a wall -- it was the bracket
+# trap of section 2 leaving the slice empty. With the slice actually read,
+# wave 1 is FOUR unresolved externals and wave 2 is none.
+#
+#     item                              predicted   measured
+#     -------------------------------   ---------   -------------------------
+#     link waves                                1   2 (one of them the trap)
+#     unresolved externals                      1   4, then 0
+#     ordinary /alternatename faces             -   4
+#     __thiscall faces                          -   0
+#     dispatching TUs to host-copy              5   1
+#     state entries to route                   25   2
+#     of those with no matched body             1   0
+#     host copies for other defects             -   2 (the factory, the draw)
+#     named traps stood                         -   0
+#     ordinary slice lines                      -   41
+#     registry rows                             1   1
+#     per-source -D rows                        -   0
+#
+# ZERO TRAPS AND ZERO FLOORS, and that is a measurement rather than an absence:
+# all 41 symbols in this class's code block have a matched src TU, and the
+# closure walk over the block's 269 relocations reaches nothing in ov006 that
+# does not. Two of the 41 have no delink block in
+# config/arm9/overlays/ov006/delinks.txt (func_ov006_02108b90 and
+# func_ov006_02108d28) -- a decomp-side observation recorded so it is not
+# re-derived as a mystery, exactly as run mg7 lane L370's row was; it costs the
+# port nothing, because the port slices a src file and does not need the block.
+#
+# NO PER-SOURCE -D ROW IS OWED, and that is a sweep rather than an absence: a
+# COFF short-name census for _VT, _VT0, _HEAP, _G0, _G1, _G2, _R0, _R1 and _R2
+# over ALL 45 objects this seat builds (41 slice lines plus the four host
+# files, every one of them located in the build tree by name rather than from a
+# hand-written list -- the run mg9 lane PSY correction) finds none.
+#
+# LINKAGE, measured on both ends by two builds of this same tree:
+#
+#     7121 / 11293 (63.1%)  ->  7162 / 11293 (63.4%)     +41
+#
+#   by module, the only row that moved:
+#
+#     module   total  linked  unlinked   linked
+#     ov006     1876    1222       654   65.1%     (was 1181, 63.0%)
+#
+#   arm9 1880 and ov002 1129 are unchanged on both ends, which is section 5 of
+#   port/mg_fanout_costs.txt holding again: this class added no ov004 line at
+#   all, and the arm9 half came back through /OPT:REF for free.
+#
+#   +41 IS THE SLICE LINE COUNT EXACTLY, and the DENOMINATOR DOES NOT MOVE
+#   because this lane adds no file under src/. The three displaced TUs were in
+#   no slice on the base, so nothing goes backwards; the displacement's price
+#   is the counterfactual +44 this slice would have reached with them.
+#
+# THE BOOT. SM64DS_SCENE=383 with SM64DS_FAULTS_FATAL=1 and NOTHING SWITCHED
+# OFF -- the render bucket runs -- at 300, 1200 and 3600 frames, all CLEAN,
+# exit 0:
+#
+#    300 frames   init 1, behavior 253, render 300, state-reset 1, slot19 0
+#                 wheel dispatch 253 call(s), 253 routed, spin x253, settle x0
+#                 state index +0x53e6 = 2, board mode +0x53e4 = 1
+#                 wheel angle +0xc2 = 1536, velocity +0xc8 = -512, target 10125
+#                 member pointer = 0x021082fc with adjustment 0
+#                 fill claims: middle 0, derived 14
+#                 5 of 5 records initialised; 5566 shared field call(s), 5566
+#                 routed; 0 framework calls; 0 UNHANDLED
+#   1200 frames   init 1, behavior 1153, render 1200, state-reset 1, slot19 20
+#                 wheel dispatch 1153 call(s), 1153 routed, spin x970,
+#                 settle x183
+#                 state index +0x53e6 = 7, ball sprite +0x53d6 = 10
+#                 member pointer = 0x02107ea8 with adjustment 0
+#                 21 framework call(s), 0 UNHANDLED; 25366 shared field
+#                 call(s), 25366 routed
+#   3600 frames   init 1, behavior 3553, render 3600, state-reset 3, slot19 168
+#                 wheel dispatch 3553 call(s), 3553 routed, spin x2894,
+#                 settle x659
+#                 state index +0x53e6 = 7, ball sprite +0x53d6 = 11
+#                 171 framework call(s), 0 UNHANDLED; 78166 shared field
+#                 call(s), 78166 routed
+#
+#   THE MEMBER POINTER HANDS OVER, WHICH IS THE WHOLE POINT OF SECTION 5. At
+#   300 frames the wheel is in state 0x021082fc 253 times out of 253 and has
+#   never reached 0x02107ea8; at 1200 the split is 970 / 183 and the stored
+#   pair reads 0x02107ea8. The spin state is the one that installs the settle
+#   state, so the run walks the two-address universe the relocation set
+#   predicts and meets nothing else -- 3553 calls, 3553 routed, zero falling
+#   through to the framework's UNHANDLED line.
+#
+#   THE CLASS PLAYS A ROUND AND THEN ANOTHER. Slot 18 is the round reset and it
+#   fires ONCE at 1200 frames and THREE times at 3600, the state index walks 1
+#   to 7 through slot 6's and slot 19's arms, and the ball sprite index
+#   +0x53d6 -- the pocket the ball is drawn in, indexed into the pair of 20.12
+#   coordinate arrays at 0x02142ab4 and 0x02142ab8 -- reads 10 at the end of
+#   the first round and 11 at the end of the third. That is the ROM's own
+#   described game: the wheel spins, decelerates, settles, and the ball ends up
+#   somewhere.
+#
+#   Slot 9 is entered on every frame and slot 6 on 253 of 300 and 1153 of 1200,
+#   so the framework's BeforeBehavior gates the first 47 frames exactly as it
+#   does on scenes 371 and 380. That is the ROM's, not a defect.
+#
+#   THE CURLING CANARY REPRODUCES EXACTLY on this tip: scene 374 at 300 frames
+#   reports 32557 call(s) / 32557 routed / 0 UNHANDLED, which is what says a
+#   three-table fill in the registry did not reach into anybody else's data.
+#
+# THE PICTURE MOVES, AND THE FIRST ATTEMPT TO SHOW THAT WAS A STALE ARTIFACT.
+# Seven captures at 60, 150, 300, 600, 900, 1200 and 1800 frames give SEVEN
+# DISTINCT sha256s, each 512x384 with between 5147 and 9972 distinct colours,
+# and the stacked pair is 512x832. The first attempt read
+# walk_window_selftest.bmp out of the build directory after each run and got
+# ONE hash seven times -- because a direct scene boot does not write that file
+# at all and it was left over from an earlier run. The env that captures a
+# scene is SM64DS_SCENE_BMP, with SM64DS_SCENE_BMP_STACKED for the two-screen
+# image; the tell was that the "layout dsstate" line the selftest prints beside
+# its own dump never appeared. Recorded because seven identical hashes would
+# have been reported as "nothing on this scene moves", which is the exact
+# opposite of what the run says.
+#
+# NOBODY HAS HELD ANY OF THESE NEXT TO A DS, and this lane does not judge them.
+#
+# ===========================================================================
+# 10. WHAT THIS SEAT DOES NOT KNOW
+# ===========================================================================
+#
+#   - HOW MANY MUSHROOMS THE PLAYER SHOULD GET. Slot 18 sets the active record
+#     count at +0x53fc from data_ov004_020beb68's +0xa8, clamped to 5, and slot
+#     0 seeds +0xa8 from func_ov004_020ad8b8(), which is
+#     data_0209caf4 row 13 field 1 -- the persistent per-minigame LEVEL. The
+#     port has no backup cart, so SaveData::SetDefaultValuesMg zeroes record 13
+#     on every boot and every run above reports "spawned 0 of 5". All five
+#     records ARE initialised by slot 18's loop; none is made active. That is
+#     the save-medium gap port/mg_fanout_costs.txt section 17 documents,
+#     observed here on a second class, and it is not a minigame gap. What a DS
+#     player sees at level 0 is not something a headless run can say.
+#   - WHETHER THE PICTURE IS RIGHT, only that there is one and that it changes.
+#   - TOUCH IS UNMEASURED. The ROM's own rules text for this game is "Guess
+#     where the ball will land on the roulette wheel", so the guess is an input
+#     and nothing in a headless boot places one.
+#   - WHAT THE FRAMEWORK STATE MACHINE DOES HERE. It fires -- 21 calls at 1200
+#     frames and 171 at 3600, against zero on most seated scenes -- with 0
+#     UNHANDLED addresses, so none of the twenty-two open rows in
+#     runs/mg5/out/fwk/framework_unrouted_22.txt is exercised on this scene and
+#     none was routed. Routing an address no run touches buys no evidence.
+#
+# ===========================================================================
 # 8. THE LINES
 # ===========================================================================
 #

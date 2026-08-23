@@ -89,10 +89,16 @@
 // became `func_ov004_020b2adc(p);`. The declaration is spelled the way
 // src/func_ov004_020b2adc.c DEFINES it, `void *(char *)`, rather than the way
 // the displaced TU declared it, so port/tools/aritycheck.py sees a declaration
-// that agrees with the definition instead of one more zero-argument row --
-// which retires this file's own row from
-// port/tools/aritycheck_plainfunc_baseline.txt
-// (`func_ov004_020b2adc|src/MgMushroomRoulette_Spawn.cpp`).
+// that agrees with the definition instead of one more zero-argument row.
+//
+// IT DOES NOT RETIRE THE BASELINE ROW, AND AN EARLIER DRAFT OF THIS PARAGRAPH
+// SAID IT DID. port/tools/aritycheck_plainfunc_baseline.txt carries
+// `func_ov004_020b2adc|src/MgMushroomRoulette_Spawn.cpp`, and the ratchet
+// measured on this tree after the seat reads "117 baselined, 117 live, 0 NEW,
+// 0 RETIRED". The reason is worth carrying: aritycheck walks src/ TEXT and has
+// no opinion about what the linker kept, so displacing a TU cannot retire its
+// row -- only correcting the src spelling can, and the src spelling is right
+// about the ROM. The row stays as decomp-side debt this file routes around.
 //
 // THE TWO ARRAY CALLBACKS ARE BOTH `bx lr` AND THAT IS MEASURED, not assumed
 // from their size column. func_ov006_0210a4ac (r3, the constructor) and

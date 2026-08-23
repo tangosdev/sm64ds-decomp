@@ -149,8 +149,14 @@
 // literal pool = 60 words = 0xf0, the size config gives).
 //
 // IT DEFINES func_ov006_02107db8, so src/func_ov006_02107db8.cpp is OUT of
-// port/slice_rlt.txt -- listing both would be an LNK2005. That is the one
-// linked function this repair costs.
+// port/slice_rlt.txt -- listing both would be an LNK2005.
+//
+// WHAT THE DISPLACEMENT COSTS IS COUNTERFACTUAL AND IS MEASURED AS SUCH. This
+// TU was in no slice on the base, so nothing was LOST: port/tools/linkage.py
+// reads 7121/11293 before the seat and 7162/11293 after, +41 against 41 slice
+// lines, and no row goes backwards. The price is the line the slice could
+// otherwise have carried -- 44 rather than 41 across this file, the factory
+// and the model-render sibling -- and it is paid three times in this lane.
 //
 // NOTHING IS OWED ON THE DECOMP SIDE. Both constructs produce the ROM's own
 // instruction sequence under mwccarm; the defects are entirely the host's

@@ -64,8 +64,10 @@
 // Model::Render(0) calls. There is nothing else in the function.
 //
 // IT DEFINES func_ov006_02107d80, so src/func_ov006_02107d80.cpp is OUT of
-// port/slice_rlt.txt -- listing both would be an LNK2005. That is the one
-// linked function this repair costs.
+// port/slice_rlt.txt -- listing both would be an LNK2005. The cost is the
+// counterfactual slice line, not a regression: this TU was in no slice on the
+// base, and the measured headline goes 7121 -> 7162 with nothing falling.
+// port/unmatched/MgRoulette_WheelDispatch.cpp carries the arithmetic.
 //
 // NOTHING IS OWED ON THE DECOMP SIDE: the shadow class produces the ROM's own
 // instruction sequence under mwccarm, and the defect is entirely the host's
