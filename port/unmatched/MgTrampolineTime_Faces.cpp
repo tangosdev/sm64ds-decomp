@@ -149,6 +149,20 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:?data_ov006_0213b184@@3UG2@@A=_data_ov006_0213b184")
 #pragma comment(linker, "/alternatename:?data_ov006_02140564@@3UG2@@A=_data_ov006_02140564")
 
+/* ---- 2c. the THIRD wave. Same shapes; two of them are a SECOND mangling
+   of a word this file already carries (data_ov006_021405c8 as int and as
+   int*, data_ov006_0213b22c as void**), which is two TUs disagreeing about
+   the type of one mount word rather than a duplicate row. */
+#pragma comment(linker, "/alternatename:?data_ov006_021405c8@@3PAHA=_data_ov006_021405c8")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b0f0@@3HA=_data_ov006_0213b0f0")
+#pragma comment(linker, "/alternatename:?data_ov006_02140574@@3HA=_data_ov006_02140574")
+#pragma comment(linker, "/alternatename:?data_ov006_02140598@@3HA=_data_ov006_02140598")
+#pragma comment(linker, "/alternatename:?data_ov006_021405a8@@3HA=_data_ov006_021405a8")
+#pragma comment(linker, "/alternatename:?data_ov006_021405b4@@3HA=_data_ov006_021405b4")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b14c@@3US8@@A=_data_ov006_0213b14c")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b22c@@3PAPAXA=_data_ov006_0213b22c")
+#pragma comment(linker, "/alternatename:?data_ov006_02141a40@@3PAXA=_data_ov006_02141a40")
+
 /* ---- 3. the three bare names, resolved from their literal pools ---------- */
 #pragma comment(linker, "/alternatename:__ZTV18dMgTrmpln3DMario_c=_data_ov006_0213b2c4")
 #pragma comment(linker, "/alternatename:_func_020beb74=_data_ov004_020beb74")
