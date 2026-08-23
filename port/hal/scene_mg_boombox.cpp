@@ -181,12 +181,19 @@
 // increments the per-round tap counter at +0x5624 and plays
 // Sound::PlayBank2_2D(0x201).
 //
-// STATE 1 IS func_ov006_0211bc8c, WHICH IS THIS CLASS'S ONE HARD FLOOR. So the
-// class's zero floor asks on an unattended boot is one of the dishonest zeros
-// port/mg_fanout_costs.txt section 16 lists, and this seat says so out loud
-// rather than banking it: SM64DS_TOUCH_PROBE="100-104:64:32,160-164:128:32"
-// moves two records to state 1, drives +0x5624 to its own early-out of 2, and
-// turns 0 floor asks into 338 over the same 300 frames.
+// STATE 1 IS func_ov006_0211bc8c. Run mg9 left it as this class's ONE HARD
+// FLOOR -- an address with a config symbol and no body anywhere -- so a tap
+// changed the record's state byte and the pad then froze: no press animation,
+// no note, no sound. RUN mg10 LANE F367 DECOMPILED IT (byte match, mwccarm
+// 2004/b56) and the switch in unmatched/MgSound_StateDispatch.cpp now routes
+// it, so a tap runs the press animation, commits the note into the play log at
+// +0x5610, spawns note entities through func_ov006_0211b654 and plays a sound.
+//
+// THE UNATTENDED BOOT STILL READS ZERO FOR STATE 1, and that zero is honest:
+// nothing taps. SM64DS_TOUCH_PROBE="100-104:64:32,160-164:128:32" moves two
+// records to state 1 and drives +0x5624 to its own early-out of 2. Under run
+// mg9 that produced 338 asks for a body that did not exist; it now produces
+// routed executions of one that does.
 //
 // The census below therefore prints the pad coordinates and the tap counter,
 // so the next reader can drive it without re-deriving either.
@@ -534,12 +541,20 @@ extern "C" void port_scene_boombox_hits(void)
         unsigned calls = 0, fwunk = 0;
         port_mg_sound_counts(&hits, &floor, &unknown, &fc, &fr, &fu);
         port_mg_dispatch_counts(&calls, &fwunk);
+        /* THE SECOND NUMBER USED TO BE THE FLOOR COUNT AND IS NOW A SUBSET OF
+           THE FIRST. Run mg9 shipped 0x0211bc8c as an address with no body, so
+           an ask for it was reported and NOT counted as routed; run mg10 lane
+           F367 decompiled it, so it routes like the other fifty-five and this
+           number says how many of the routed dispatches were the tapped-pad
+           state. On an unattended boot it reads 0 because nothing taps -- that
+           zero is the honest one, and a driven run is what moves it. */
         std::printf("[scene] dScMgSound_c state dispatch: %u routed to one of "
-                    "the class's 56 reachable table states across 15 tables, "
-                    "%u ask(s) for the floor 0x0211bc8c, %u UNHANDLED by this "
-                    "class's switch; sub-object FIELD dispatch %u call(s), %u "
-                    "routed to one of its six states, %u UNHANDLED; %u "
-                    "framework call(s), %u UNHANDLED address(es)\n",
+                    "the class's 57 reachable table states across 15 tables, "
+                    "%u of them state 1 (0x0211bc8c, the tapped pad), %u "
+                    "UNHANDLED by this class's switch; sub-object FIELD "
+                    "dispatch %u call(s), %u routed to one of its six states, "
+                    "%u UNHANDLED; %u framework call(s), %u UNHANDLED "
+                    "address(es)\n",
                     hits, floor, unknown, fc, fr, fu, calls, fwunk);
     }
 

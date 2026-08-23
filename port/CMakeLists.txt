@@ -4399,9 +4399,10 @@ endforeach()
 # framework, the thirty-five overlay constructors and the arm9 waves under
 # them; this class's ov004 delta is TWO lines. CMake appends every list to the
 # same targets and dedupes identical absolute paths, so nothing is compiled
-# twice. port/slice_box.txt says what it reaches and records the class's ONE
-# hard floor (func_ov006_0211bc8c, a STATE and not a vtable slot, which is why
-# section 3's nosrc column is right at 0 and still does not see it).
+# twice. port/slice_box.txt says what it reaches. THE CLASS'S ONE HARD FLOOR IS
+# GONE: func_ov006_0211bc8c was a STATE and not a vtable slot, which is why
+# section 3's nosrc column read 0 and never saw it, and run mg10 lane F367
+# decompiled it -- it is src/func_ov006_0211bc8c.cpp in the slice now.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_box.txt" SLICE_BOX_LINES)
 set(SLICE_BOX_SOURCES hal/scene_mg_boombox.cpp
                       unmatched/MgSound_StateDispatch.cpp

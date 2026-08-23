@@ -267,29 +267,72 @@
 # the code-word range is what decides. This is section 9's "attribution
 # over-attributes, sinit reading is ground truth" arriving from a new angle.
 #
-# ---- ONE HARD FLOOR, AND IT IS NOT IN THE nosrc COLUMN -------------------
+# ---- THE ONE HARD FLOOR IS RETIRED, run mg10 lane F367 -------------------
 #
 #   func_ov006_0211bc8c   slot 1 of data_ov006_02142df8, 0x2b8 bytes
 #
-# Config symbol, NO delink block (the gap 0x0211bc8c..0x0211bf44 is exactly its
-# symbol size) and NO src file in either extension anywhere in the tree.
-# Section 3 lists this class at nosrc 0 and that column is RIGHT: it is
-# computed over VTABLE slots and this floor is a STATE. It gets a reporting
-# case in the address switch and no invented symbol.
+# Run mg9 left this as a config symbol with NO delink block (the gap
+# 0x0211bc8c..0x0211bf44 is exactly its symbol size) and NO src file in either
+# extension anywhere in the tree, routed to a reporting case in the address
+# switch with no invented symbol. Section 3 listed the class at nosrc 0 and
+# that column was RIGHT -- it is computed over VTABLE slots and this floor was
+# a STATE, which is the reason the axis could not see it.
 #
-# AND IT IS THE FIRST STATE A TAP PRODUCES. An unattended 1200-frame boot asks
-# for it zero times, and that zero is one of the dishonest ones section 16
-# lists. src/func_ov006_0211bf44.c -- slot 0 of the same table, and what all
-# six pads sit in on a boot -- is a STYLUS HIT TEST: it compares
+# IT IS NOW src/func_ov006_0211bc8c.cpp. Byte match on mwccarm 2004/b56, all
+# FOURTEEN relocation destinations checked against ov006's relocs.txt (eleven
+# arm_calls and three pool loads), and a delink block covering exactly
+# 0x0211bc8c..0x0211bf44. The instruction arithmetic: 165 instructions
+# (0x0211bc8c..0x0211bf1c) plus a NINE-word pool 0x000050f0, 0x000050f7,
+# 0x0212ef3c, 0x000050f8, 0x00005610, 0x00005625, 0x0213f794, 0x0213f7e8,
+# 0x00004f38; 165 + 9 = 174 = 0x2b8/4.
+#
+# IT IS THE FIRST STATE A TAP PRODUCES, which is why an unattended 1200-frame
+# boot asked for it zero times and why that zero was one of the dishonest ones
+# section 16 lists. src/func_ov006_0211bf44.c -- slot 0 of the same table, and
+# what all six pads sit in on a boot -- is a STYLUS HIT TEST: it compares
 # data_020a0dea/deb against the record's own x/y in a +-0x18 box and, on a hit,
 # writes state 1 into the record and plays Sound::PlayBank2_2D(0x201). State 1
 # is 0x0211bc8c. Driven with SM64DS_TOUCH_PROBE="100-104:64:32,160-164:128:32"
 # the two poked records move 0 -> 1, the per-round tap counter at +0x5624
-# reaches its own early-out of 2, and the same 300-frame run reports 338 asks
-# for the floor where the untouched run reported none. So this class boots and
-# ticks, and it cannot be PLAYED past its first tap until 0x0211bc8c is
-# decompiled. That is one decomp job and it is the whole of what stands between
-# this seat and a playable Boom Box.
+# reaches its own early-out of 2, and the same 300-frame run reported 338 asks
+# for a body that did not exist. Those are now executions.
+#
+# WHAT THE BODY DOES. The pad's press animation is a per-step timer: the u16 at
+# +0x50f0 + i*0x14 counts up every tick and is compared against
+# data_ov006_0212ef3c[+0x50f7], an EIGHT-entry u16 frame table reading
+# {2,2,3,4,4,4,6,4}. On each expiry the timer resets and the sub-index at
+# +0x50f7 advances, returning while it is <= 6. The step that would make it 7
+# clamps it back to 6 and COMMITS:
+#   - the record's state byte at +0x50f4 becomes 2 (src/func_ov006_0211bc68.c);
+#   - the note index at +0x50f8 plus one is appended to the 16-bit play log at
+#     +0x5610 under the write cursor at +0x5625, then OR'd with the pad index
+#     in the high byte, and the cursor advances;
+#   - +0x5614 is seeded 0x20;
+#   - func_ov006_0211b654 fills up to three of the THIRTY records with note
+#     entities, which is what func_ov006_0211b5e0 then ticks and draws;
+#   - vtable slot 35 is called ON THE RECEIVER and, with the mode byte at
+#     +0x5627, picks one of three arm9 sound entry points -- func_02012790
+#     (Sound::Play2D bank 2), func_02012174 (bank 1, transposed by
+#     data_02075250[a]) or Sound::PlayBank2_2D;
+#   - and on the SECOND tap of a round (+0x5624 == 1) func_ov006_020c2300 runs
+#     on the +0x4f38 sub-object.
+#
+# THE TWO SOUND TABLES ARE 42 ENTRIES EACH, read out of the image rather than
+# assumed from the symbol span: data_ov006_0213f794 is the per-note kind (every
+# entry is 1 or 2) and data_ov006_0213f7e8 the per-note sound id. Entries
+# 0x1a..0x29 of the id table are FOUR GROUPS OF FOUR -- {56,120,184,248},
+# {57,121,185,249}, {58,122,186,250}, {59,123,187,251} -- which is what the mode
+# 1 arm's subtraction loop indexes: the quotient picks the group base and the
+# remainder is func_02012174's first argument, the offset into data_02075250.
+# The data is the check on the reading, not the other way round.
+#
+# THE RECEIVER IS PASSED, AND THE BYTE MATCH IS THE PROOF. This class has
+# already produced three receiver-drop defects at exactly this shape (see the
+# section above), and 0x0211bc8c is the THIRD of the three `ldr Rm,[Rn,#0x8c]`
+# sites the word-by-word sweep found. The src spelling is the 36-slot shadow
+# class src/func_ov006_0211b9c8.cpp already uses for this class, and the match
+# means the ROM's `mov r0,r6 / ldr r1,[r0] / ldr r1,[r1,#0x8c] / blx r1` is
+# reproduced instruction for instruction, receiver included.
 #
 # ---- ONE STATE IS A JOIN MISS, AND IT IS ALSO BROKEN FOUR WAYS -----------
 #
@@ -337,6 +380,29 @@
 #
 # ---- LINKAGE, MEASURED ON BOTH ENDS OF THIS TREE -------------------------
 #
+# RUN mg10 LANE F367, the floor's own row, measured on both ends against two
+# builds of this repository rather than derived:
+#
+#     7101 / 11283 (62.9%)  ->  7104 / 11284 (63.0%)     +3
+#
+# base c941e1855 built in a throwaway worktree, tip 2b8090c24 built in the
+# lane's own. THE +3 IS NAMED, and each was confirmed absent from the base map
+# and present in the tip map, one row per object:
+#
+#     func_ov006_0211bc8c   the new matched TU, which is also the +1 on the
+#                           denominator
+#     func_ov006_0211b654   /OPT:REF dropped it -- its only code reference in
+#     func_ov006_020c2300   the whole tree is the floor, so neither had a
+#                           caller until the floor existed
+#
+# func_02012790 and Sound::PlayBank2_2D do NOT move the number and the reason
+# is measured rather than assumed: both already have many other live callers
+# (src/func_ov006_0211b80c.c is one, and it is in this very slice), so they
+# were in the base map already.
+#
+# RUN mg9's ROW, kept because the denominators are the cross-check: mg9's after
+# column reads 11283, which is exactly what the base build measures here.
+#
 #     6665 / 11283 (59.1%)  ->  6751 / 11283 (59.8%)     +86
 #
 #   module   before        after
@@ -351,20 +417,21 @@
 # what is left for ov004. It agrees with the two ov004 slice lines at the foot
 # of this file, which is a cross-check and not the source of the number.
 #
-# +86 IS 88 SLICE LINES MINUS TWO, AND THE TWO ARE THE FLOOR'S OWN CALLEES.
+# +86 WAS 88 SLICE LINES MINUS TWO, AND THE TWO WERE THE FLOOR'S OWN CALLEES.
 # Section 14 says every slice line moves the headline by one, banner or no
-# banner. Two of this seat's do not, and the reason is the run law's warning
+# banner. Two of run mg9's did not, and the reason was the run law's warning
 # that "a trap-shaped floor HIDES its callees from static closure":
 #
 #     src/func_ov006_0211b654.c   called ONLY from 0x0211bd88
 #     src/func_ov006_020c2300.c   called ONLY from 0x0211bf10
 #
-# and both of those addresses are inside func_ov006_0211bc8c -- the floor. The
-# closure walk reached them through the ROM's relocations, but on the host the
-# only caller does not exist, so /OPT:REF drops both and neither symbol appears
-# in walk_window.map. THEY STAY IN THE SLICE: the day 0x0211bc8c is
-# decompiled they come back for nothing, which is the "budget the extra slice
-# lines when you retire a floor" rule paid in advance rather than owed.
+# and both of those addresses are inside func_ov006_0211bc8c. The closure walk
+# reached them through the ROM's relocations, but on the host the only caller
+# did not exist, so /OPT:REF dropped both and neither symbol appeared in
+# walk_window.map. RUN mg10 LANE F367 COLLECTED THAT DEBT: the caller exists,
+# both come back, and this run's own new line is the floor itself. That is the
+# "budget the extra slice lines when you retire a floor" rule paid in advance
+# and then drawn down, which is what it was written for.
 #
 # ---- vtspan --fills CALLS THIS SEAT SHORT, AND SECTION 18 IS WHY ---------
 #
@@ -438,7 +505,9 @@
 # HOST-COPIED (mg9 lane BOX), port/unmatched/MgSound_ShadowSlot35.cpp:
 #   src/func_ov006_0211ba88.c    -- and it is a delinks JOIN MISS as well, so
 #   it never appeared in the closure listing either way.
-# NO BODY ANYWHERE: func_ov006_0211bc8c, this class's one floor.
+# THE FLOOR IS RETIRED (run mg10 lane F367): func_ov006_0211bc8c is now
+#   src/func_ov006_0211bc8c.cpp, listed below in address order, byte-matched
+#   and delinked. It is the only line this run adds.
 src/MgBoomBox_Spawn.cpp
 src/func_ov006_020c225c.c
 src/func_ov006_020c2290.c
@@ -536,6 +605,7 @@ src/func_ov006_0211b80c.c
 src/func_ov006_0211b9c8.cpp
 src/func_ov006_0211bbe0.c
 src/func_ov006_0211bc68.c
+src/func_ov006_0211bc8c.cpp
 src/func_ov006_0211bf44.c
 src/func_ov006_0211c080.c
 src/func_ov006_0211c478.c
