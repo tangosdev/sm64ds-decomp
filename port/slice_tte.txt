@@ -310,9 +310,13 @@
 #     Virtual18. Invisible to NO_RENDER and invisible until slot 10 was repaired,
 #     because until then nothing rendered. The closure was SWEPT for it rather
 #     than waited on: every slice TU declaring a local struct with virtuals was
-#     scanned for which index it dispatches -- twenty hits, fourteen at index 4
-#     on the element table this seat fills, one at index 18 (slot 18), three on
-#     argument objects that are not ModelAnims, and exactly TWO at index 5.
+#     scanned for which index it dispatches. TWENTY hits, and they decompose
+#     exactly: 13 at index 4 (byte 0x10) on the Trampoline-Mario element's own
+#     five-slot table, which this seat fills, so those land on this port's own
+#     thunks; 1 at index 18 (byte 0x48), the scene's own slot-18 dispatch from
+#     slot 0; 2 at index 0, 1 at index 1 and 1 at index 2 on argument objects
+#     that are not ModelAnims; and exactly TWO at index 5 (byte 0x14).
+#     13 + 1 + 2 + 1 + 1 + 2 = 20.
 #
 # SLOT 2 IS IN THAT SHARED FILE TOO. This lane first wrote its own
 # port/unmatched/MgTrampolineTerror_Slot2.cpp for the flower's argument

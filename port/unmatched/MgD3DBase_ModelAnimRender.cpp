@@ -58,13 +58,13 @@
  *
  * THE CLOSURE WAS SWEPT RATHER THAN WAITED ON.  Every TU in port/slice_tte.txt
  * that declares a local struct with virtuals was scanned for WHICH virtual it
- * calls and at what index: twenty hits, of which fourteen dispatch INDEX 4
- * (byte 0x10) on the Trampoline-Mario element's own five-slot table
+ * calls and at what index. TWENTY hits, decomposed exactly: THIRTEEN dispatch
+ * INDEX 4 (byte 0x10) on the Trampoline-Mario element's own five-slot table
  * (0x0213b2e0, which hal/scene_mg_trampoline2.cpp fills, so those are correct
- * and land on this port's own thunks), one dispatches index 18 on a 19-virtual
- * scene shadow (slot 18, the state reset), three dispatch indices 0..2 on
- * argument objects that are not ModelAnims, and exactly TWO dispatch INDEX 5.
- * Those two are here.
+ * and land on this port's own thunks); ONE dispatches index 18 on a 19-virtual
+ * scene shadow (slot 18, the state reset, from slot 0); FOUR dispatch indices
+ * 0, 1 and 2 on argument objects that are not ModelAnims; and exactly TWO
+ * dispatch INDEX 5 (byte 0x14). 13 + 1 + 4 + 2 = 20. Those two are here.
  *
  * ---- WHAT DIVERGES FROM src, EXACTLY --------------------------------------
  *
