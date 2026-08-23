@@ -501,6 +501,9 @@ def main():
                     help="object cache location (default build/objcache)")
     ap.add_argument("--cache-max-mb", type=int, default=1024,
                     help="prune the object cache back under this size after a build")
+    ap.add_argument("--tu-module", action="append", default=[], metavar="MODULE",
+                    help="build this module from its config_tu/ merged TUs instead of "
+                         "the per-function src/ files (repeatable; e.g. --tu-module ov010)")
     args = ap.parse_args()
 
     report_path = pathlib.Path(args.report_json or
@@ -542,10 +545,12 @@ def main():
                                  "waiver to config/layout-known-issues.txt only if the "
                                  "violation is genuinely pre-existing.")
 
-        profile = RP.prepare_profile(args.profile)
+        profile = RP.prepare_profile(args.profile, tu_modules=args.tu_module)
         config_root = profile["configRoot"]
         config_yaml = profile["configYaml"]
         report["profileConfig"] = str(config_root.relative_to(REPO))
+        if profile.get("tuModules"):
+            report["tuModules"] = profile["tuModules"]
         report["modReplacements"] = profile["modReplacements"]
         report["modGapFallbacks"] = profile["modGapFallbacks"]
 
@@ -561,7 +566,10 @@ def main():
         run([str(DSD), "lcf", "-c", str(config_yaml)], "dsd lcf")
         report["phases"].append("dsd lcf")
 
-        srcs = enrolled(config_root)
+        # A TU-built module's delinks name src_tu/ merged files; widen the allowed
+        # source roots so those enroll like any other complete entry.
+        extra_roots = ("src_tu",) if profile.get("tuModules") else ()
+        srcs = enrolled(config_root, extra_roots=extra_roots)
         vers = versions()
         # Before the first compile: a pin that no longer names a real file has quietly
         # stopped applying, and the only symptom downstream is a few wrong bytes in one

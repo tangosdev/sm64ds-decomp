@@ -20,6 +20,7 @@ import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 SOURCE_CONFIG = REPO / "config" / "arm9"
+CONFIG_TU = REPO / "config_tu" / "arm9"
 BUILD = REPO / "build"
 sys.path.insert(0, str(REPO / "tools"))
 import srcpath as SP  # noqa: E402
@@ -142,8 +143,75 @@ def _stock_delinks(generated_root, repo):
     return replacements, gap_fallbacks
 
 
+def _module_delinks_rel(module):
+    """The delinks.txt path for a module id, relative to a config-arm9 root.
+
+    Overlays live under ``overlays/<id>/``; the main module is the root itself;
+    the ITCM/DTCM autoloads are their own subdirectory. This spelling is shared by
+    the tracked ``config/arm9`` tree, the generated profile tree, and ``config_tu``.
+    """
+    if module == "main":
+        return pathlib.PurePosixPath("delinks.txt")
+    if module in ("itcm", "dtcm"):
+        return pathlib.PurePosixPath(module) / "delinks.txt"
+    if re.fullmatch(r"ov\d{3}", module):
+        return pathlib.PurePosixPath("overlays") / module / "delinks.txt"
+    raise ProfileError(f"unrecognized TU module id: {module!r}")
+
+
+def available_tu_modules(config_tu=CONFIG_TU):
+    """Module ids that have a config_tu/ TU-granular delinks root to build from."""
+    if not config_tu.is_dir():
+        return []
+    found = []
+    if (config_tu / "delinks.txt").is_file():
+        found.append("main")
+    for sub in ("itcm", "dtcm"):
+        if (config_tu / sub / "delinks.txt").is_file():
+            found.append(sub)
+    ovdir = config_tu / "overlays"
+    if ovdir.is_dir():
+        found.extend(sorted(p.parent.name for p in ovdir.glob("*/delinks.txt")))
+    return found
+
+
+def _apply_tu_modules(generated_root, config_tu, tu_modules):
+    """Replace each named module's per-function delinks with its config_tu TU root.
+
+    For every module id, the generated tree's ``delinks.txt`` is overwritten by the
+    config_tu TU-granular version, and a ``complete`` marker is injected under every
+    ``src_tu/`` entry so dsd compiles the merged TU instead of supplying ROM bytes.
+    This enforces module-level exclusivity: the module's ~N single-function ``src/``
+    entries are entirely replaced by its handful of TU entries. The config_tu
+    delinks already carry the correct per-section ranges; only ``complete`` is added.
+    """
+    applied = []
+    for module in tu_modules:
+        rel = _module_delinks_rel(module)
+        tu_delinks = config_tu / rel
+        if not tu_delinks.is_file():
+            raise ProfileError(f"no config_tu delinks for module {module!r}: {tu_delinks}")
+        gen_delinks = generated_root / rel
+        if not gen_delinks.is_file():
+            raise ProfileError(f"generated config has no delinks for module {module!r}: {gen_delinks}")
+        out, entries = [], 0
+        for line in tu_delinks.read_text(encoding="utf-8").splitlines():
+            out.append(line)
+            stripped = line.strip()
+            if line and not line[0].isspace() and stripped.startswith("src_tu/") \
+                    and stripped.endswith(":"):
+                out.append("    complete")
+                entries += 1
+        if entries == 0:
+            raise ProfileError(f"config_tu delinks for {module!r} names no src_tu/ entry")
+        gen_delinks.write_text("\n".join(out) + "\n", encoding="utf-8", newline="\n")
+        applied.append({"module": module, "entries": entries,
+                        "delinks": rel.as_posix()})
+    return applied
+
+
 def prepare_profile(profile="stock", repo=REPO, source_config=SOURCE_CONFIG, build=BUILD,
-                    out_root=None, build_root=None):
+                    out_root=None, build_root=None, tu_modules=(), config_tu=CONFIG_TU):
     """Return metadata for a fresh generated build profile.
 
     ``configYaml`` and ``configRoot`` are pathlib paths.  The remaining fields are JSON
@@ -182,6 +250,9 @@ def prepare_profile(profile="stock", repo=REPO, source_config=SOURCE_CONFIG, bui
     replacements, gap_fallbacks = (_stock_delinks(generated_root, repo)
                                    if profile == "stock" else ([], []))
 
+    tu_applied = (_apply_tu_modules(generated_root, pathlib.Path(config_tu), tu_modules)
+                  if tu_modules else [])
+
     meta = {
         "schemaVersion": 1,
         "profile": profile,
@@ -191,6 +262,7 @@ def prepare_profile(profile="stock", repo=REPO, source_config=SOURCE_CONFIG, bui
         "buildRoot": effective_build,
         "modReplacements": replacements,
         "modGapFallbacks": gap_fallbacks,
+        "tuModules": tu_applied,
     }
     serializable = {k: str(v) if isinstance(v, pathlib.Path) else v for k, v in meta.items()}
     (profile_parent / "profile.json").write_text(
