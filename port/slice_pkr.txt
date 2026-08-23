@@ -153,6 +153,17 @@
 # hits inside this class -- 0x020d9750 and 0x020d9c20 -- are ordinary 20.12
 # fixed-point shifts and carry neither the `ands #1` nor the `blx`.)
 #
+# THE `::*` SOURCE SWEEP AGREES, AND IT WAS RUN OVER THE BODIES RATHER THAN
+# OVER THE SLICE.  Sweeping a SLICE for `::*` is vacuous for any class whose
+# dispatchers are already host-copied, because the slice is exactly the file
+# list with those TUs removed: run over port/slice_ccn.txt the sweep returns
+# ZERO for dScMgCoin_c, a class with seven of them.  Run over the seven src TUs
+# themselves it returns seven of seven.  Over this class's 36 src bodies --
+# every body in its code block except the floor, none of them excluded from
+# anything -- it returns ZERO.  So all three prescribed detectors agree here:
+# the link names no member-pointer-mangled symbol, the source sweep finds no
+# `::*`, and the encoding scan finds no dispatch.
+#
 # THIS CLASS HAS NO POINTER-TO-MEMBER WALL.  Its state machine is an ordinary
 # 14-arm ARM jump table in src/func_ov006_020dac34.c:
 #
