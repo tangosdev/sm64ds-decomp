@@ -7725,7 +7725,7 @@
           "symbol": "_ZN4Trap13InitResourcesEv",
           "address": "0x02111654",
           "size": "0x000001f8",
-          "legacy_source": "src/_ZN4Trap13InitResourcesEv.c",
+          "legacy_source": "src/_ZN4Trap13InitResourcesEv.cpp",
           "ordinal": 13
         },
         {
