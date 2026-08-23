@@ -245,12 +245,14 @@
 # five load relocations fall on slots.  The mounted array is 28 bytes and the
 # fill writes the first 20.
 #
-# ---- 9. TWO RIDE-THROUGHS, ONE OF THEM A DROPPED RECEIVER ----------------
+# ---- 9. FOUR RIDE-THROUGHS, AND THE FAMILY OWNS THE REPAIR ---------------
 #
-# ALSO EXCLUDED, and repaired in port/unmatched/MgD3DBase_RideThrough.cpp:
+# ALSO EXCLUDED, and repaired in port/unmatched/MgD3DBase_Slots.cpp:
 #
-#     src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp   middle slot 2
+#     src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp   middle slot  2
 #     src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp         middle slot 10
+#     src/func_ov006_020e6d98.c                              middle slot 27
+#     src/func_ov006_020e6d8c.c                              middle slot 28
 #
 # Slot 2 is the flower's disease exactly: the ROM does `mov r4,r0` then
 # `bl 0x020b08f0` with r1 NEVER WRITTEN, so the framework's flags word rides
@@ -258,10 +260,31 @@
 # for an unnamed value.  Slot 10 is worse: the ROM does `bl 0x020b04f4` with r0
 # UNTOUCHED FROM ENTRY, so `this` itself rides through, and src takes NO
 # parameter at all -- a DROPPED RECEIVER, which is the bin-softlock disease the
-# run law names.  Both repairs carry port_ names and neither defines the src
-# symbol, so both src TUs stay out of this slice and nothing in the tree claims
-# a decompilation it does not have.  The bodies are the SHARED BASE's, so the
-# three sibling lanes must call them rather than write a second copy.
+# run law names.  Slots 27 and 28 are the same shape one step further: both ROM
+# bodies are `ldr ip,[pc] / bx ip` veneers onto dScMgBase_c's own slot bodies,
+# so r0 and r1 both ride through, and both src TUs take no parameter at all.
+#
+# THIS LANE FOUND TWO OF THE FOUR AND MISSED THE OTHER TWO.  Slots 2 and 10
+# were repaired here from the start; slots 27 and 28 were called with no
+# argument by this file's own faces, which handed both arm9 bodies stack litter
+# as `this`, and it took lanes BNT and BNP -- the two other classes under the
+# same base -- to find them.  The repair adopted here is THEIR file, taken
+# verbatim off mg11-bnp with their port_mg_d3dbase_* symbol names, so the
+# family merge dedupes one copy instead of colliding on four.  Its two bodies
+# for slots 2 and 10 were re-read against the ROM before adopting and agree
+# with this lane's own, statement for statement.
+#
+# ALSO EXCLUDED, and repaired in port/unmatched/MgD3DBase_DeclConflict.cpp
+# (the same family file, same reason -- adopted rather than duplicated):
+#
+#     src/func_ov006_020e6e78.cpp                            middle slot 24
+#
+# include/decl_common.h opens an extern "C" block at line 20 and declares that
+# symbol taking `void*` at line 1516, while the TU that includes it defines it
+# taking `char*`, so MSVC refuses the pair as two overloads of one C symbol
+# (C2733).  It is a DECOMP-SIDE defect: the shared header and the body disagree
+# about the same symbol, and the decomp's own build does not notice because
+# both spellings assemble to the same ARM.
 #
 # ALSO EXCLUDED, under its own name because the port cannot compile the src at
 # all rather than because the src is wrong:
