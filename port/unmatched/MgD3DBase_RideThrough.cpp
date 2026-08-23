@@ -1,8 +1,9 @@
-/* PORT_HOST_ABI.  dScMgD3DBase_c's TWO ride-through repairs.
- * Run mg11, lane TTI.  Neither of these is a decompilation and neither claims
- * to be one: both are the host's calling convention being placed by hand, on
- * two bodies whose src is a correct reading of an ARM function and a wrong
- * program on x86.
+/* PORT_HOST_ABI.  dScMgD3DBase_c's host copies: TWO ride-through repairs and
+ * ONE body the host compiler will not accept from src at all.
+ * Run mg11, lane TTI.  None of the three is a decompilation and none claims to
+ * be one: the first two are the host's calling convention being placed by hand,
+ * on bodies whose src is a correct reading of an ARM function and a wrong
+ * program on x86, and the third is a re-spelling of a body MSVC refuses.
  *
  * THE SHAPE, WHICH IS port_mg_flower_after_init's EXACTLY.  On ARM an argument
  * a function never names is still in its register when that function calls
@@ -88,6 +89,41 @@
  * them inherits slots 2 and 10 unchanged.  THEY SHOULD CALL THESE RATHER THAN
  * WRITE A SECOND COPY: a second definition of either name is an LNK2005, and
  * two host copies over the same two DS words would split the per-slot witness.
+ *
+ * ---- 4. SLOT 24, ROM 0x020e6e78: THE HEADER AND THE BODY DISAGREE --------
+ *
+ * This one is not an ABI repair.  src/func_ov006_020e6e78.cpp is a faithful
+ * decompilation -- it was disassembled and ruled REAL_DECOMP by this lane, and
+ * the ruling is in port/tools/inferred_stub_adjudicated.txt -- but the port
+ * cannot compile it:
+ *
+ *     src\func_ov006_020e6e78.cpp(13): error C2733: 'func_ov006_020e6e78':
+ *     you cannot overload a function with 'extern "C"' linkage
+ *
+ * because include/decl_common.h opens `extern "C" {` at line 20 and declares
+ *
+ *     extern int func_ov006_020e6e78(void*);        line 1516
+ *
+ * while the TU that includes it defines
+ *
+ *     extern "C" int func_ov006_020e6e78(char* self);
+ *
+ * void* and char* are different parameter types, so the two are overloads of
+ * one extern "C" name.  mwcc accepted the pair; MSVC will not, and it is right
+ * to refuse -- a C symbol cannot have two signatures.  THIS IS A DECOMP-SIDE
+ * DEFECT worth routing: the shared header and the body disagree about the same
+ * symbol, and nothing in the decomp's own build notices because the two
+ * spellings compile to the same ARM.
+ *
+ * The body below is that file verbatim, with decl_common.h not included and its
+ * four externs spelled locally instead, and NOTHING ELSE MOVED: the same guard,
+ * the same in-place toggle of the +0x4664 halfword, the same 0xbc stride, the
+ * same two arms and the same return values.  It takes the same symbol name --
+ * the unmatched/MgBSC_StateDispatch.cpp convention for "the port cannot compile
+ * the src" -- so src/func_ov006_020e6e78.cpp stays out of port/slice_tti.txt.
+ *
+ * It is dScMgD3DBase_c's slot 24 and therefore SHARED FOUR WAYS, which is why
+ * it is in this file and not in a per-class one.
  */
 
 extern "C" {
@@ -113,6 +149,44 @@ int port_mg_d3d_before_render(void *c)
     if (func_ov004_020b04f4(c) == 0)
         return 0;
     _ZN8Particle9RenderAllEv();
+    return 1;
+}
+
+/* ---- section 4: ROM 0x020e6e78, dScMgD3DBase_c vtable slot 24 ------------
+   src/func_ov006_020e6e78.cpp verbatim.  decl_common.h is deliberately NOT
+   included -- including it is what makes the TU uncompilable -- so its four
+   externs are spelled here.  The declaration below uses char*, which is what
+   the ROM body's own src uses and what the pointer arithmetic needs. */
+int  func_ov004_020ae140(void *self);
+void Camera_UpdateMatrices(int arg);
+int  func_ov006_020e7508(void);
+int  func_ov006_020e759c(void);
+extern unsigned char data_0209f5f8;
+extern unsigned char data_0209d464;
+extern int data_ov006_02141a44;
+
+int func_ov006_020e6e78(char *self)
+{
+    if (func_ov004_020ae140(self) == 0) return 0;
+    if (*(int *)(self + 0x4628) == 0) {
+        if (data_0209d464 == 0) return 0;
+        if (*(unsigned short *)(self + 0x4664) == 0)
+            *(unsigned short *)(self + 0x4664) = 1;
+        else
+            *(unsigned short *)(self + 0x4664) = 0;
+        int v = (int)(self + 0x466c + (*(unsigned short *)(self + 0x4664)) * 0xbc);
+        data_ov006_02141a44 = v;
+        Camera_UpdateMatrices(v);
+        if (*(unsigned short *)(self + 0x4664) == 1) {
+            func_ov006_020e7508();
+        } else {
+            func_ov006_020e759c();
+            if (data_0209f5f8 == 0) {
+                *(int *)0x4001000 &= ~0xe000;
+                data_0209f5f8 = 1;
+            }
+        }
+    }
     return 1;
 }
 
