@@ -149,6 +149,16 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:?data_ov006_0213b184@@3UG2@@A=_data_ov006_0213b184")
 #pragma comment(linker, "/alternatename:?data_ov006_02140564@@3UG2@@A=_data_ov006_02140564")
 
+/* ---- 2d. the FOURTH wave, all the same shape ------------------------- */
+#pragma comment(linker, "/alternatename:?data_ov006_0213b1d4@@3PAHA=_data_ov006_0213b1d4")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b1dc@@3PAHA=_data_ov006_0213b1dc")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b1ec@@3PAHA=_data_ov006_0213b1ec")
+#pragma comment(linker, "/alternatename:?data_ov006_02140544@@3HA=_data_ov006_02140544")
+#pragma comment(linker, "/alternatename:?data_ov006_02140558@@3HA=_data_ov006_02140558")
+#pragma comment(linker, "/alternatename:?data_ov006_02140578@@3HA=_data_ov006_02140578")
+#pragma comment(linker, "/alternatename:?data_ov006_021405b0@@3HA=_data_ov006_021405b0")
+#pragma comment(linker, "/alternatename:?data_ov006_0214059c@@3PAXA=_data_ov006_0214059c")
+
 /* ---- 2c. the THIRD wave. Same shapes; two of them are a SECOND mangling
    of a word this file already carries (data_ov006_021405c8 as int and as
    int*, data_ov006_0213b22c as void**), which is two TUs disagreeing about
@@ -174,7 +184,16 @@ DSSTATE_END
    carries the ARM mangling as a plain C name.  config/arm9/symbols.txt names
    the ROM body _ZN5Model17LoadTextureToVramEPcj at 0x02045c10, so the two are
    the same function under two spellings and the row joins them. */
-#pragma comment(linker, "/alternatename:?LoadTextureToVram@Model@@YAHPADI@Z=__ZN5Model17LoadTextureToVramEPcj")
+/* THE FIRST VERSION OF THIS ROW POINTED AT A SYMBOL THAT DOES NOT EXIST and
+   is kept as a comment because the failure mode is silent: it named
+   __ZN5Model17LoadTextureToVramEPcj, the ITANIUM spelling, on the assumption
+   that src/_ZN5Model17LoadTextureToVramEPcj.cpp defines a plain C name.  It
+   does not -- the file is a //cpp TU that defines the STATIC MEMBER declared
+   in include/Model.h, so MSVC emits ?LoadTextureToVram@Model@@SAIPADI@Z
+   (read out of the compiled .obj, not guessed).  TWO /alternatename rows for
+   the SAME left side do not both apply: the link kept the first and the
+   symbol stayed unresolved through a whole build.  The live row is in
+   section 5. */
 
 /* ---- 5. TWO C++ SPELLINGS THAT NEED A SHIM RATHER THAN AN ALIAS -------
 
