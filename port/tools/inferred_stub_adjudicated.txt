@@ -1118,3 +1118,50 @@ func_ov006_0210a608  REAL_DECOMP  port/slice_psy.txt  lane PSY, RE-DERIVED. slot
 func_ov006_0210a698  REAL_DECOMP  port/slice_psy.txt  lane PSY, RE-DERIVED. slot 7 BeforeBehavior of the middle base, 0x4c, 17 instructions plus a two-word pool holding 0x020a0db0 and 0x0000471c = 19 = 0x4c/4. bl 0x020b0620 (the base body) and an early moveq r0,#0 / popeq / bxeq lr on a zero return, then ldr r0,[pc] / ldr r0,[r0] / ands r0,r0,#1 / beq on data_020a0db0's low bit, and only then Particle::SysTracker::Update at 0x02022f20 with this+0x471c. mov r0,#1 on both live paths. src reproduces the guard, the bit test and the offset. Agrees with the two existing rows
 func_ov006_0210a664  REAL_DECOMP  port/slice_psy.txt  lane PSY, RE-DERIVED. slot 10 BeforeRender of the middle base, 0x34, 13 instructions and NO literal pool = 13 = 0x34/4. bl 0x020b04f4 (the base body) with the caller's r0 riding through untouched -- there is no mov r0,rX before it -- then the conditional early return addeq sp / moveq r0,#0 / ldmeq / bxeq lr, then bl 0x02022ee0 which src names Particle::RenderAll, then mov r0,#1. src matches. Agrees with the two existing rows
 func_ov006_0210a600  REAL_DECOMP  port/slice_psy.txt  lane PSY, RE-DERIVED. slot 26 of the middle base, 0x8, 2 instructions and no pool = 2 = 0x8/4. mov r0,#1 / bx lr. src is a bare return 1. There is nothing else this body could be, and the row exists because the marker is on it and the guard refuses an unruled marker rather than because the ruling was hard. Agrees with the two existing rows
+#
+# ---------------------------------------------------------------------------
+# run mg11 (lane TTE), 2026-08-23.
+#
+# dScMgTrampoline2_c, actor id 0x181 = scene 385, "Trampoline Terror". All
+# SEVENTEEN marker-carrying bodies this seat installs a face over were
+# disassembled out of extracted/overlays/overlay_0006.bin at base 0x020bfec0 --
+# the shipped image, deliberately not a dsd export, whose relocated words would
+# make literals read as live pointers -- and compared instruction for
+# instruction against src/, INCLUDING every literal-pool word against the
+# constant the src names. RESULT: 17 REAL DECOMP, 0 genuine guesses, 0
+# unverifiable. No constant, offset, branch target or instruction count differs
+# in any of the seventeen.
+#
+# FIFTEEN are the derived table's (port/tools/vtablerows.py --vtable 0x0213fc7c
+# --width 36 prints ovr 25, mark 15, nosrc 0) and TWO more -- func_ov006_020e6e78
+# and func_ov006_020e6e54 -- are slots 24 and 25 of the MIDDLE table
+# 0x0213c62c, which this seat also fills and which the derived table overrides.
+#
+# THE "recovered name" COMMENTS ON THE SHARED BODIES ARE NAMING ARTIFACTS AND
+# NOT ATTRIBUTION. The eight bodies at 0x020e6xxx/0x020e7xxx belong to
+# dScMgD3DBase_c (the ROM's RTTI at 0x0213c5c8), which four classes derive from
+# -- 0x174, 0x175, 0x180 and 0x181. src calls six of them
+# dScMgTrampoline2_c_Something and two dScMgJump2_c_Something; both spellings
+# are the naming pass picking one derived class out of four.
+#
+# Full per-body evidence: runs/mg11/status/TTE.md and runs/mg11/out/TTE/report.md.
+#
+# ---- dScMgD3DBase_c's shared bodies, seated on both tables by this lane ----
+func_ov006_020e6e78  REAL_DECOMP  TTE.md#0x181  slot 24 OnKicked: 0x48; guard bl 020ae140, +0x4628 test, data_0209d464 test, +0x4664 toggle, +0x466c + n*0xbc into data_ov006_02141a44 + Camera_UpdateMatrices, 020e7508/020e759c arms; all five pool words (0209d464, 0000466c, 02141a44, 0209f5f8, 04001000) match src
+func_ov006_020e6e54  REAL_DECOMP  TTE.md#0x181  slot 25 OnPushed: 9 instructions, bl 020ae128 then normalise to 0/1; exact
+func_ov006_020e6e4c  REAL_DECOMP  TTE.md#0x181  slot 26: mov r0,#2 / bx lr; src returns 2; exact
+func_ov006_020e6d98  REAL_DECOMP  TTE.md#0x181  slot 27: ldr ip,[pc] / bx ip, pool 0x020af27c -- tail-call veneer onto ov004 020af27c; src spells the same callee
+func_ov006_020e6d8c  REAL_DECOMP  TTE.md#0x181  slot 28: ldr ip,[pc] / bx ip, pool 0x020af04c -- tail-call veneer onto ov004 020af04c; src spells the same callee
+func_ov006_020e6d24  REAL_DECOMP  TTE.md#0x181  slot 29: 0x68; 020e73c4, GXS::LoadOBJPltt(data_ov006_02141a48[0],0x100,0x100), data_0209e660=0, +0xa0 = func_02053eb0(), SetBankForSubBG(0x80), +0x4660 = func_02053ea0(), SetBankForSubOBJ(0x100), tail func_ov004_020af094; both pool words match
+func_ov006_020e6cac  REAL_DECOMP  TTE.md#0x181  slot 30: 0x78; SetBankForSubBG(+0xa0), SetBankForSubOBJ(+0x4660), data_0209e660=1, 020e740c, func_ov004_020aeed8, then the +0x4664==1 split onto 020e7508 / 020e759c + data_0209f5f8 latch; both pool words match
+func_ov006_020e72c0  REAL_DECOMP  TTE.md#0x181  slot 31 Kill: 0x104; the language ladder LoadCompressedFileAt(data_ov006_0213c5fc[lang]) + DecompressLZ16(data_ov006_0213c5e8[lang]) + the 0x0400100a mask sequence + LoadCompressedFileAt(data_ov006_0213c610[lang]) + fixed id 0x5b; all five pool words (0213c5fc, 0213c5e8, 0400100a, 0209d454, 0213c610) match src
+# ---- dScMgTrampoline2_c's own ---------------------------------------------
+func_ov006_021243ec  REAL_DECOMP  TTE.md#0x181  slot 0 InitResources: 0x1bc; 021245a8, data_0209d45c=0x1d, G3X::SetFog(0,0,2,0x1000), the 0x04000060/0x04000008 masks, fdiv(0xc0000, data_02082414), two Camera_UpdateMatrices on +0x466c/+0x4728, the 020cae9c gate, five array initialisers, and the tail VIRTUAL DISPATCH ldr r2,[r0]/ldr r2,[r2,#0x48]/blx r2 with r1=-1 (slot 18); all twelve pool words match src
+func_ov006_0212318c  REAL_DECOMP  TTE.md#0x181  slot 3 CleanupResources: 8 instructions, 020ceedc then ov004 020ad90c, return 1; exact
+func_ov006_021231ac  REAL_DECOMP  TTE.md#0x181  slot 9 Render: 0x194; the 0xfffff008 vector + func_0203cd80(-0x4000), the 0x040004c8/0x040004cc writes, the +0x4664==1 gate, the 0x6e/0x12 three-sprite loop with the language==5||==4 -4 adjust, func_ov004_020b1a5c(data_ov006_02140830,6), the +0x7ba8==0 arm; all ten pool words (fffff008, 3ff, 040004c8, 7fff, 040004cc, 40007fff, 0213b0f0, 02134ecc, 0213fc48, 02140830) match src
+func_ov006_021226b0  REAL_DECOMP  TTE.md#0x181  slot 17 D0: 0x118; writes 0x0213fc7c, six __destroy_arr in exact reverse of the factory's six func_020733a8 (0x7ad0/5/0x24, 0x7164/0x14/0x78, 0x6ffc/0xa/0x24, 0x5ddc/0xa/0x1d0, 0x5458/3/0x32c, 0x500c/5/0xdc), writes 0x0213c62c, SysTracker::D1 at +0x47e4, 020b29c0, Memory::Deallocate(this, data_020a0eac); all sixteen pool words match
+func_ov006_021242cc  REAL_DECOMP  TTE.md#0x181  slot 18 state reset: 0x120; G2x::SetBlendAlpha(0x4000050,1,0x2e,0x10,0x10), the four data_020a0dbc shorts into +0x7ba0/a2/9c/9e, +0xbc clamp at 0x270e, 020cad3c(0x1000), 020cac9c, data_ov006_021405bc=1, 020d0b04, 020cee5c, 020eeff0, 02122b24, 02120ca0, 020c8a9c(0,data_ov006_0213fc20[lang]), six field zeroes, +0x7ac8=0x14000, the MultiStore16 0x6000 clear, tail-call 02124228; all five pool words match. r1 is NEVER read in the 0x120 bytes
+func_ov006_02124298  REAL_DECOMP  TTE.md#0x181  slot 19: 0x34; 020c8a9c(0, data_ov006_0213fc20[GetGameLanguage()]) then return 1; the one pool word 0x0213fc20 matches
+func_ov006_02122f24  REAL_DECOMP  TTE.md#0x181  slot 23 OnAttacked2: 0x1a0; the ov004 020ae1a0 guard, the two virtual probes on data_0209f5bc through slots 0x14 and 0x1c writing data_ov006_0213fbc4, the +0x4628 gate, the +0x7bab arm with the 0x18/0xe8 corner tests, 020d0c38 on the four packed shorts, func_02012718(0x1af, sum<<11) vs func_02012790(0xe), the MultiStore16 0x6000 clear and the two byte clears; all three pool words (0209f5bc, 0213fbc4, 1af) match
+func_ov006_021230e8  REAL_DECOMP  TTE.md#0x181  slot 24 OnKicked: 0xa4; guard 020e6e78, +0x4628 test, the +0x4664 split writing data_0209d45c bit 3 and SetBg2Offset(0,0)/(0,0xc0) with 0x04000018 = 0 / 0xc00000; both pool words match
+func_ov006_021230c4  REAL_DECOMP  TTE.md#0x181  slot 25 OnPushed: 9 instructions, bl 020e6e54 then normalise to 0/1; exact
