@@ -244,7 +244,30 @@
 # AND IT IS NOT dScMgSmartball_c, which is 0x178 and carries "Bingo Ball" and
 # "Slots Shot" -- that class is the ball game, this one is the reels.
 #
-# ---- 5. THE ONE FLOOR IS THE BEHAVIOR, AND IT IS THE WHOLE STATE MACHINE ---
+# ---- 5. THE ONE FLOOR IS RETIRED. Run mg10, lane F364 --------------------
+#
+# EVERYTHING BELOW THIS LINE UNTIL SECTION 6 IS THE STATE THE FLOOR WAS IN AND
+# IS KEPT because the derivation is what the retirement was built on. What
+# CHANGED: src/func_ov006_0210c9e0.cpp now exists, it is the twenty-fourth line
+# of the list at the foot of this file, and hal/scene_mg_slot1.cpp's slot 6 is
+# a forwarder into it rather than a counting trap.
+#
+# THE BODY IS NONMATCHING AND THE BANNER SAYS EXACTLY HOW FAR IT GOT: size
+# exact at 519 words, 431 of them byte-identical at their own offset, a further
+# 42 relocation slots whose destinations were checked one at a time against
+# config/arm9/overlays/ov006/relocs.txt and all 42 agree, and 46 residual words
+# -- 39 register allocation, 4 a deliberate addressing-form trade at the touch-
+# point loads, 3 one schedule move (the banner has the decomposition). 473 of
+# 519 is 91.1%.
+#
+# THE SIX DROPPED BODIES COME BACK, which is section 9's standing credit being
+# collected. func_ov006_0210c180, _c1a8, _c218, _c278, _c2c0 and _c500 had no
+# reference edge in the whole binary while their only caller was the trap, so
+# /OPT:REF discarded them; the seated Behavior calls all six and they link.
+#
+# WHAT THE SCREEN DOES NOW is the negation of the paragraph at the end of this
+# section: the state index leaves 0, the reels spin, a touch inside a reel's
+# 0x40 by 0x40 box stops it, the line is scored and the payout is paid.
 #
 #   func_ov006_0210c9e0   vtable slot 6, 0x81c bytes
 #
@@ -501,5 +524,6 @@ src/func_ov006_0210c500.c
 src/func_ov006_0210c638.c
 src/func_ov006_0210c674.c
 src/_ZN3OAM7SECONDSE.cpp
+src/func_ov006_0210c9e0.cpp
 src/func_ov006_0210d1fc.cpp
 src/func_ov006_0210d6b8.cpp
