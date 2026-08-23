@@ -105,15 +105,21 @@
 // THIS CLASS IS THE SECOND, and it was checked from the ROM rather than
 // inherited:
 //
-//   func_ov006_0210b314 keeps r1 (`mov r8, r1` at 0x0210b31c) and branches on
-//   it THREE ways -- `cmp r8,#3` at 0x0210b324, `cmp r8,#0x12` at 0x0210b32c
-//   and the `== 4` arm -- and the three arms do different things: 3 and 0x12
-//   are the round START (score 0xc, best-score clamp at 0x270e, level 0), and
-//   4 is the round ADVANCE (level += 1 up to 5, best += 1).
+//   func_ov006_0210b314 keeps r1 (`mov r8, r1` at 0x0210b31c) and tests it --
+//   `cmp r8,#3` at 0x0210b324, `cmp r8,#0x12` at 0x0210b32c, and an `== 4` arm
+//   -- so the body has THREE distinct paths through it: 3 and 0x12 are the
+//   round START (score 0xc, best-score clamp at 0x270e, level 0), 4 is the
+//   round ADVANCE (level += 1 up to 5, best += 1), and any other value skips
+//   both of those AND the board set-up and runs only the closing block, which
+//   re-arms the three reels and puts the state index back to 0.
 //
-//   BOTH ROM DISPATCH SITES PASS A REAL VALUE. 0x0210bfe8 is `mov r1,#3`
-//   inside slot 0 InitResources, and 0x0210aca0 is `mov r1,#4` inside state
-//   0x0210ac3c. There is no site that passes -1 the way dScMgMCarlo_c's does.
+//   ALL THREE ROM DISPATCH SITES PASS A REAL VALUE, and there are THREE rather
+//   than two: 0x0210bfe8 is `mov r1,#3` inside slot 0 InitResources, and state
+//   func_ov006_0210ac3c has TWO -- 0x0210ac9c is `mov r1,#4` on the
+//   round-cleared arm and 0x0210acd0 is `mov r1,#5` on the coins-remaining
+//   arm. So the third path is not hypothetical: 5 is the ordinary "spin again
+//   at the same level" reset and the ROM asks for it by name. There is no site
+//   that passes -1 the way dScMgMCarlo_c's does.
 //
 // So slot3_reset below FORWARDS its third parameter. A ride-through thunk here
 // would have started every round at level 0 and never advanced the board size,
@@ -222,6 +228,10 @@ extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,         36 */
 extern unsigned char data_ov006_0213e448[];   /* dScMgSingle3DBase_c, 36 */
 extern unsigned char data_ov006_0213eaa8[];   /* dScMgSlot3_c,        36 */
 extern unsigned char data_ov006_0213e508[];   /* the SpawnInfo record    */
+/* dScMgSlot1_c's typeinfo record -- NOT dispatched, NOT filled and NOT this
+   class's. It is named for one reason: the census below reads the word past
+   this seat's 36 and has to say what that word is supposed to be. */
+extern unsigned char data_ov006_0213e5a0[];
 
 /* dScMgSingle3DBase_c's eight overrides. Slot 2 is NOT src's body and slot 33
    is the hostgen'd copy: see section 4. */
@@ -288,7 +298,8 @@ static unsigned g_s3_base_hits[36];   /* the same slots on the MIDDLE table */
 /* the last value slot 18 was actually dispatched with, so section 5's finding
    has a runtime witness rather than only a disassembly. -1 means never. */
 static int g_s3_slot18_arg = -1;
-static unsigned g_s3_slot18_arg3, g_s3_slot18_arg4, g_s3_slot18_argother;
+static unsigned g_s3_slot18_arg3, g_s3_slot18_arg4, g_s3_slot18_arg5,
+                g_s3_slot18_argother;
 
 /* ---- dScMgSingle3DBase_c's eight ---------------------------------------- */
 static void *__fastcall s3b_ainit(void *s, void *, unsigned f)
@@ -332,6 +343,7 @@ static int  __fastcall slot3_reset(void *s, void *, int mode)
   g_s3_slot18_arg = mode;
   if (mode == 3 || mode == 0x12) ++g_s3_slot18_arg3;
   else if (mode == 4)            ++g_s3_slot18_arg4;
+  else if (mode == 5)            ++g_s3_slot18_arg5;
   else                           ++g_s3_slot18_argother;
   func_ov006_0210b314((char *)s, mode); return 1; }
 static int  __fastcall slot3_v29(void *s, void *)
@@ -529,14 +541,46 @@ extern "C" void port_scene_slot3_hits(void)
                 "derived table %u slot(s) (of 8 + 9 face rows)\n",
                 g_s3_mid_claimed, g_s3_vt_claimed);
 
+    /* SECTION 7's WIDTH CHECK, ASKED OF THE RUNNING PROCESS. The five static
+       checks say this table is 36 words and that the two words past it are
+       dScMgSlot1_c's RTTI header -- {0, &typeinfo} in front of the scene-364
+       vtable at 0x0213eb40, which the SCENE_MG_SLOT1 row ships. A fill one or
+       two words too wide would put a host thunk there and NOTHING WOULD
+       FAULT: the port never dereferences a typeinfo pointer, so scene 364
+       would keep booting and keep printing an unchanged census. That is the
+       one hazard a runtime census cannot see, which is why this line reads
+       the two words back instead.
+
+       THE EXPECTED VALUE IS NOT THE ROM's LITERAL, and getting that wrong the
+       first time is worth the sentence: the ov006 mount is a PACKED,
+       CONTIGUOUS blob (port/ov006_syms.txt: "--pack fills the space BETWEEN
+       mounted symbols ... makes the run contiguous"), so the two words really
+       are the neighbour's -- but the mount REBASES relocated words, so the
+       typeinfo pointer reads as the HOST address of data_ov006_0213e5a0 and
+       not as 0x0213e5a0. Comparing against the mount's own symbol is the check
+       that survives that, and it is the stronger comparison anyway: it asks
+       "is this still the word the mount emitted", which is exactly the
+       question. */
+    {
+        const unsigned *past = (const unsigned *)(data_ov006_0213eaa8 + 36 * 4);
+        const unsigned want = (unsigned)(size_t)data_ov006_0213e5a0;
+        std::printf("[scene] dScMgSlot3_c words past its 36: [36] = 0x%08x, "
+                    "[37] = 0x%08x (the mount's own &data_ov006_0213e5a0 = "
+                    "0x%08x, dScMgSlot1_c's typeinfo, scene 364)%s\n",
+                    past[0], past[1], want,
+                    (past[0] == 0u && past[1] == want)
+                        ? "  UNTOUCHED" : "  *** CLOBBERED ***");
+    }
+
     /* SECTION 5's FINDING, WITNESSED AT RUN TIME. Every seated class before
        dScMg3DEsp_c has a slot-18 body that ignores this argument; this one
        branches on it three ways. Printing the split says the forward happened
        and which arms ran, rather than leaving it to the disassembly. */
     std::printf("[scene] dScMgSlot3_c slot-18 second argument: last %d; "
-                "round-start(3/0x12) %u, round-advance(4) %u, other %u\n",
+                "round-start(3/0x12) %u, round-advance(4) %u, respin(5) %u, "
+                "other %u\n",
                 g_s3_slot18_arg, g_s3_slot18_arg3, g_s3_slot18_arg4,
-                g_s3_slot18_argother);
+                g_s3_slot18_arg5, g_s3_slot18_argother);
 
     /* THE STATE MACHINE'S OWN WITNESS. This class dispatches its states
        through an mwcc member-pointer table, so the honest instrument is BOTH
@@ -606,3 +650,39 @@ extern "C" void port_scene_slot3_hits(void)
     }
     std::fflush(stdout);
 }
+
+/* ---- THE NAME-SPELLING ALIASES -------------------------------------------
+ *
+ * The "C-named symbols declared at C++ linkage" case hal/scene_boot.cpp
+ * section 1 carries twenty-three of for the star select. TWO TUs in this slice
+ * reach a symbol through a namespace-scope declaration rather than through an
+ * extern "C" block, so MSVC puts the TYPE into the symbol name and the plain C
+ * definition can never satisfy it. Both were found by the link, both are one
+ * row, and neither is a member pointer -- which is the rulebook corollary that
+ * makes an alias safe: the two spellings have to describe the same bytes at
+ * the same address, and mwcc's eight-byte member-pointer pair against MSVC's
+ * four-byte one is the case where they do not.
+ *
+ * ?data_ov006_0213eaa8@@3PAXA. src/func_ov006_0210a954.cpp (slot 16, the D2)
+ * declares `extern void* data_ov006_0213eaa8;` outside its extern "C" block
+ * and stores its ADDRESS into the object's first word. Its D0 sibling
+ * src/func_ov006_0210a9a8.cpp declares the same table inside extern "C" and
+ * needs no row, which is the two spellings of one table sitting three lines
+ * apart in the same class. The right-hand side is the ov006 mount's own
+ * definition of the vtable this seat fills.
+ *
+ * ?GetBG1ScrPtr@G2@@SAPAXXZ. src/func_ov006_0210aa60.cpp (slot 32) declares a
+ * local `struct G2 { static void* GetBG1ScrPtr(); };` to spell the arm9 static,
+ * so MSVC mangles the call while the port defines the Itanium name at C
+ * linkage. The double underscore on the right is the same shape
+ * hal/actor_faces_bob.cpp's Model::LoadFile row and eight others in
+ * hal/actor_classes_*.cpp use.
+ *
+ * NO ROW IS OWED FOR data_ov006_0213e448: src/func_ov006_0210a954.cpp declares
+ * it the same way, and hal/scene_mg_flower.cpp already carries
+ * ?data_ov006_0213e448@@3HA while port/unmatched/MgMemory2_Faces.cpp carries
+ * ?data_ov006_0213e448@@3PAXA. A second /alternatename for the same LHS is
+ * noise a reader has to diff, and the link is satisfied.
+ */
+#pragma comment(linker, "/alternatename:?data_ov006_0213eaa8@@3PAXA=_data_ov006_0213eaa8")
+#pragma comment(linker, "/alternatename:?GetBG1ScrPtr@G2@@SAPAXXZ=__ZN2G212GetBG1ScrPtrEv")

@@ -6794,7 +6794,9 @@ set(SCENE_MG_SLOT1_SOURCES hal/scene_mg_slot1.cpp)
 # references port_mg_slot3_spawn and port_scene_fill_slot3 by name.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_mug.txt" SLICE_MUG_LINES)
 set(SLICE_MUG_SOURCES hal/scene_mg_slot3.cpp
-                      unmatched/MgSlot3_StateDispatch.cpp)
+                      unmatched/MgSlot3_StateDispatch.cpp
+                      unmatched/MgSlot3_SubObjCtor.cpp
+                      unmatched/MgSlot3_SubObjUpdate_020c1f4c.cpp)
 foreach(line IN LISTS SLICE_MUG_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")

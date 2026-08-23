@@ -109,11 +109,11 @@
 #      span over-reads by exactly two words, on this table and on every other
 #      table in ov006, and the two words are not padding: they are the
 #      neighbour's.
-#   4. RELOCATION COUNT. 37 load relocations fall inside [0x0213eaa8,
-#      0x0213eb40): indices 0..35 complete, NONE at index 36, and one at index
-#      37 -- which is the neighbour's typeinfo pointer, a relocated word for
-#      its own reason. A vtable slot is a relocated word by construction, so
-#      index 36 with no relocation is not a slot.
+#   4. RELOCATION COUNT. 37 load relocations fall inside the half-open range
+#      0x0213eaa8..0x0213eb40: indices 0..35 complete, NONE at index 36, and
+#      one at index 37 -- which is the neighbour's typeinfo pointer, a
+#      relocated word for its own reason. A vtable slot is a relocated word by
+#      construction, so index 36 with no relocation is not a slot.
 #   5. RELOCATION STRIDE (run mg9 lane LKY's check). Stride 4 for exactly 36
 #      consecutive words from 0x0213eaa8, then a jump of 8 across the zero at
 #      index 36, then 4 again through the neighbour's table. The jump IS the
@@ -160,13 +160,17 @@
 # ---- SLOT 18 TAKES A REAL ARGUMENT ----------------------------------------
 #
 # The SECOND class in the family to do so, after dScMg3DEsp_c (run mg9 lane
-# PSY). func_ov006_0210b314 keeps r1 (`mov r8,r1` at 0x0210b31c) and branches
-# on it three ways -- 3 and 0x12 are the round START, 4 is the round ADVANCE --
-# and both ROM dispatch sites pass a real value: `mov r1,#3` at 0x0210bfe8
-# inside slot 0, `mov r1,#4` at 0x0210aca0 inside state 0x0210ac3c. The face in
-# hal/scene_mg_slot3.cpp FORWARDS it. A ride-through thunk would have started
-# every round at level 0 and never advanced the board, and neither the byte
-# gate nor the link can see that.
+# PSY). func_ov006_0210b314 keeps r1 (`mov r8,r1` at 0x0210b31c) and tests it
+# against 3, 0x12 and 4, so the body has three distinct paths: 3 and 0x12 are
+# the round START, 4 is the round ADVANCE, and anything else runs only the
+# closing block that re-arms the reels and zeroes the state index. THREE ROM
+# dispatch sites, all passing a real value: `mov r1,#3` at 0x0210bfe8 inside
+# slot 0, and `mov r1,#4` at 0x0210ac9c and `mov r1,#5` at 0x0210acd0, both
+# inside state func_ov006_0210ac3c -- the round-cleared arm and the
+# coins-remaining arm. The face in hal/scene_mg_slot3.cpp FORWARDS it and the
+# census counts the three values separately. A ride-through thunk would have
+# started every round at level 0, never advanced the board and never re-spun,
+# and neither the byte gate nor the link can see that.
 #
 # ---- SLOT 32 TAKES NO RECEIVER --------------------------------------------
 #
@@ -219,12 +223,93 @@
 #   src/func_ov006_0210a708.c    slot 33 of the middle base. Its last two
 #     stores reach LIGHT_COLOR at 0x040004cc, so it builds from the FLW
 #     hostgen'd copy port/CMakeLists.txt already emits.
+#   src/func_ov006_020c221c.c    the +0x4f38 sub-object's constructor. It
+#     passes two literal-pool file ids by the invented names g0 and g1, which
+#     exist in no config -- the defect unmatched/MgMemory2_SubObjCtor.cpp
+#     records for the sibling body func_ov006_020c0a48. Host-copied with the
+#     ROM's own 0x205 and 0x206 in unmatched/MgSlot3_SubObjCtor.cpp, which is
+#     the second linked function this seat pays.
+#   src/func_ov006_020c1f4c.cpp  the +0x4f38 sub-object's per-frame matrix
+#     update. It dispatches the BlendModelAnim at +0x10 through a LOCAL SHADOW
+#     CLASS of four virtuals and calls v3, which is the ROM's byte +0xc =
+#     UpdateVerts; on the host that index is Virtual10(Matrix4x3&) and the
+#     shadow passes no argument. hal/blend_vtable.cpp's own header predicted
+#     exactly this failure for exactly this reason. Host-copied in
+#     unmatched/MgSlot3_SubObjUpdate_020c1f4c.cpp, which is the third linked
+#     function this seat pays, and section "THE SHADOW-CLASS FAULT" below is
+#     the measurement.
 #
 # NO BODY IS INVENTED FOR THE FLOOR. unmatched/MgCurling_State_020e1854.cpp is
 # the precedent for transcribing such a state from the ROM and it is the right
 # next step for 0x0210adac -- but a transcription is a decompilation and this
 # is a seat lane. The dispatch site names it, counts it and reports what the
 # player loses.
+#
+# ---- THE SHADOW-CLASS FAULT, PREDICTED IN WRITING AND THEN MEASURED -------
+#
+# The seat's FIRST scene-365 boot took an access violation on frame 1, and the
+# cause was already written down in the file that owns the table:
+# hal/blend_vtable.cpp's header says "a TU that dispatches Render through a
+# LOCAL SHADOW CLASS (which counts in ROM numbering) cannot be served by this
+# array", lists both numberings, and names Butterfly, Fish and QuestionBlock as
+# the classes that had already walked into it on ModelAnim. This class walks
+# into it on UpdateVerts.
+#
+# src/func_ov006_020c1f4c.cpp spells the BlendModelAnim at +0x10 as a local
+# four-virtual struct and calls v3. The ROM's own instruction is
+# `ldr r1,[r1,#0xc] / blx r1` at 0x020c1fa0, and _ZTV14BlendModelAnim at arm9
+# 0x0208e94c has UpdateVerts at byte 0xc because Itanium spends TWO slots on
+# the destructor. hal/blend_vtable.cpp fills the host array in MSVC order,
+# where byte 0xc is Virtual10(Matrix4x3&) -- so the shadow call landed on a
+# body expecting a matrix reference it was never passed.
+#
+#   FAULT code c0000005 at +0x000bea2c accessing ffffec00
+#     walker node 307FAFF4 actor 307FAFBC id 0x16d
+#     slot3_render -> func_ov006_0210b648+0x23 -> func_ov006_020c201c+0xed
+#       -> func_ov006_020c1f4c+0x62 -> BlendModelAnim::Virtual10+0x42
+#       -> Model::Virtual10+0xc,  eax=ffffec00
+#
+# THE REPAIR IS ONE LINE IN A HOST COPY and it is
+# unmatched/MgSlot3_SubObjUpdate_020c1f4c.cpp. WHICH CLASS THE OBJECT IS was
+# established from the CONSTRUCTOR rather than from the call, which is the rule
+# unmatched/MgMemory2_ModelRender_020c1804.cpp lays down: func_ov006_020c221c
+# runs _ZN14BlendModelAnimC1Ev(t + 0x10), so +0x10 is a BlendModelAnim and its
+# UpdateVerts is MSVC slot 2.
+#
+# WHAT THIS DOES NOT MEAN. It is not a new defect class and it is not a
+# framework bug -- it is the fifth instance of a known one, and the value of
+# recording it here is that the prediction and the measurement can be read
+# next to each other. The scan that would have found it before the run is the
+# one this lane ran afterwards: grep every TU in the slice for `virtual`, then
+# check each shadow dispatch's byte offset against the REAL class's ROM vtable.
+# Three TUs in this slice declare a shadow struct. The other two
+# (func_ov006_0210ac3c.cpp and func_ov006_0210bdb0.cpp) dispatch byte 0x48 of
+# the SCENE object, and scene tables are the ROM's own storage with host
+# pointers substituted slot for slot, so ROM numbering is the right numbering
+# there and both are correct. The rule that separates them: a shadow dispatch
+# is safe on a table the port FILLS IN ROM ORDER and unsafe on one it fills in
+# MSVC order.
+#
+# ---- THE BRACKET TRAP, EATEN AGAIN AND WORTH ONE MORE PARAGRAPH -----------
+#
+# port/slice_s381.txt documents it and this lane walked into it anyway, which
+# is the argument for the paragraph rather than against it. Check 4 above used
+# to open its range with a square bracket and close it with a parenthesis on
+# the NEXT line. CMake's file(STRINGS) is what reads this file, and an
+# UNMATCHED open bracket in any line swallows every line after it into one list
+# element -- so all twenty-five source lines at the foot of this file silently
+# stopped being sources.
+#
+# AND THE SYMPTOM POINTS AT THE SEAT, WHICH IS WHY IT IS WORTH REPEATING. The
+# .cpp files in this gate's set() line still compiled, so the build reported
+# SIXTEEN unresolved externals in hal/scene_mg_slot3.cpp and
+# unmatched/MgSlot3_StateDispatch.cpp -- every one of them a body this slice
+# was supposed to bring, named by the face that wanted it. It reads exactly
+# like "the face array is wrong" and not at all like "the slice was not read".
+# The half-open ranges in this file are spelled 0xAAAA..0xBBBB for that reason,
+# and the two remaining square brackets above (`str r1,[r4]` and
+# `data_ov004_020bc070[27]`) both open and close on their own line, which is
+# harmless.
 #
 # ---- THE DELTA -------------------------------------------------------------
 #
@@ -237,12 +322,10 @@
 src/func_ov006_020c1eb4.c
 src/func_ov006_020c1ef8.c
 src/func_ov006_020c1f04.c
-src/func_ov006_020c1f4c.cpp
 src/func_ov006_020c201c.cpp
 src/func_ov006_020c2144.c
 src/func_ov006_020c2154.c
 src/func_ov006_020c21e4.c
-src/func_ov006_020c221c.c
 src/func_ov006_0210a954.cpp
 src/func_ov006_0210a9a8.cpp
 src/func_ov006_0210aa10.c
