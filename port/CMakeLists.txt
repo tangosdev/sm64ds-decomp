@@ -4979,12 +4979,16 @@ set(SLICE_TTI_SOURCES hal/scene_mg_trampoline.cpp
                       # shapes port/mg_fanout_costs.txt section 4 names.
                       # src/func_ov006_021214f8.cpp is out of the slice.
                       unmatched/MgTrampolineTime_StateDispatch.cpp
-                      # dScMgD3DBase_c's two ride-through repairs, slots 2 and
-                      # 10.  Both src TUs stay out of the slice for the reason
-                      # unmatched/MgFlower_Slot2.cpp gives; the three sibling
-                      # lanes under the same base must CALL these rather than
-                      # write a second copy.
-                      unmatched/MgD3DBase_RideThrough.cpp
+                      # dScMgD3DBase_c's SHARED framework-slot repairs, taken
+                      # VERBATIM off mg11-bnp so the family merge dedupes
+                      # instead of colliding: slots 2, 10, 27 and 28 in
+                      # MgD3DBase_Slots.cpp and the slot-24 decl_common C2733
+                      # in MgD3DBase_DeclConflict.cpp. Four classes derive from
+                      # that base and three other lanes are seating them in
+                      # this run; the four src TUs they replace stay out of
+                      # every slice.
+                      unmatched/MgD3DBase_Slots.cpp
+                      unmatched/MgD3DBase_DeclConflict.cpp
                       # vtable SLOT 34, the brush. src does arithmetic on a
                       # void* -- a GNU/mwcc extension MSVC refuses with C2036
                       # -- so the body is re-spelled with one cast under its

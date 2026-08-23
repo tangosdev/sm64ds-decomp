@@ -193,7 +193,7 @@
 //   with none -- a DROPPED RECEIVER, which is the bin-softlock disease the run
 //   law names, and it would hand dScMgBase_c::BeforeRender a garbage `this`.
 //
-// Both repairs are in port/unmatched/MgD3DBase_RideThrough.cpp under port_
+// Both repairs are in port/unmatched/MgD3DBase_Slots.cpp under port_
 // names, the port_mg_flower_after_init precedent exactly: this tree does not
 // claim a decompilation it does not have, so those two src TUs stay OUT of
 // port/slice_tti.txt and the faces below call the repaired bodies.
@@ -249,9 +249,11 @@ extern unsigned char data_ov006_0213b2c4[];        /* dMgTrmpln3DMario_c,   5 */
 extern unsigned char MgTrampolineTime_SpawnInfo[];
 
 /* dScMgD3DBase_c's seventeen overrides.  Slots 2 and 10 are NOT src's bodies:
-   see section 7 and port/unmatched/MgD3DBase_RideThrough.cpp. */
-int  port_mg_d3d_after_init(void *c, unsigned f);            /* slot  2 */
-int  port_mg_d3d_before_render(void *c);                     /* slot 10 */
+   see section 7 and port/unmatched/MgD3DBase_Slots.cpp. */
+int  port_mg_d3dbase_after_init(void *c, unsigned f);        /* slot  2 */
+int  port_mg_d3dbase_before_render(void *c);                 /* slot 10 */
+void port_mg_d3dbase_slot27(void *c);                        /* slot 27 */
+void port_mg_d3dbase_slot28(void *c);                        /* slot 28 */
 
 /* the plain-C-named half of the middle base.  The four that src spells as real
    C++ methods (BeforeInitResources, AfterCleanupResources, BeforeBehavior,
@@ -263,8 +265,6 @@ int  _ZN17MgBounceAndPounceD0Ev(void *self);                 /* slot 17 D0 */
 int  func_ov006_020e6e78(char *self);                        /* slot 24 */
 int  func_ov006_020e6e54(void *t);                           /* slot 25 */
 int  func_ov006_020e6e4c(void);                              /* slot 26 */
-void func_ov006_020e6d98(void);                              /* slot 27 */
-void func_ov006_020e6d8c(void);                              /* slot 28 */
 void func_ov006_020e6d24(char *c);                           /* slot 29 */
 void func_ov006_020e6cac(char *c);                           /* slot 30 */
 void func_ov006_020e72c0(char *c);                           /* slot 31 */
@@ -350,13 +350,13 @@ static int g_tti_mode18 = -1, g_tti_mode19 = -1;
 static int  __fastcall d3_binit(void *s, void *)
 { D3D(1);  return ((MgBounceAndPounce *)s)->BeforeInitResources(); }
 static int  __fastcall d3_ainit(void *s, void *, unsigned f)
-{ D3D(2);  return port_mg_d3d_after_init(s, f); }
+{ D3D(2);  return port_mg_d3dbase_after_init(s, f); }
 static void __fastcall d3_aclean(void *s, void *, unsigned f)
 { D3D(5);  ((MgBounceAndPounce *)s)->AfterCleanupResources(f); }
 static int  __fastcall d3_bbeh(void *s, void *)
 { D3D(7);  return ((MgBounceAndPounce *)s)->BeforeBehavior(); }
 static int  __fastcall d3_bren(void *s, void *)
-{ D3D(10); return port_mg_d3d_before_render(s); }
+{ D3D(10); return port_mg_d3dbase_before_render(s); }
 static void __fastcall d3_aren(void *s, void *, unsigned f)
 { D3D(11); ((MgBounceAndPounce *)s)->AfterRender(f); }
 static void *__fastcall d3_d1(void *s, void *)
@@ -370,9 +370,9 @@ static int  __fastcall d3_v25(void *s, void *)
 static int  __fastcall d3_v26(void *, void *)
 { D3D(26); return func_ov006_020e6e4c(); }
 static int  __fastcall d3_v27(void *, void *)
-{ D3D(27); func_ov006_020e6d98(); return 1; }
+{ D3D(27); port_mg_d3dbase_slot27(s); return 1; }
 static int  __fastcall d3_v28(void *, void *)
-{ D3D(28); func_ov006_020e6d8c(); return 1; }
+{ D3D(28); port_mg_d3dbase_slot28(s); return 1; }
 static int  __fastcall d3_v29(void *s, void *)
 { D3D(29); func_ov006_020e6d24((char *)s); return 1; }
 static int  __fastcall d3_v30(void *s, void *)
