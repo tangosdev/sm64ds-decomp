@@ -371,7 +371,7 @@
 # below, because every slice line moves the headline by exactly one.  An equal
 # delta is also the proof that CMake read every line: a line lost to a stray
 # bracket in this file shows up as a short delta.  SECTION 15 carries the
-# numbers, and it is the last section of this file.
+# numbers.
 #
 # THAT SENTENCE USED TO POINT AT SECTION 12, WHICH IS THE WAVE-1 LIST AND HAS
 # NEVER CARRIED A LINKAGE FIGURE.  Review caught it: the check had been run and
@@ -544,7 +544,7 @@ src/func_ov006_0212a3c0.c
 #   SNW tip          linked into walk_window : 7154  (63.3%)
 #   delta                                      +33
 #
-# and section 11 plus section 13 carry exactly THIRTY-THREE src/ lines between
+# and sections 11, 12 and 13 carry exactly THIRTY-THREE src/ lines between
 # them.  Every slice line moves the headline by exactly one, banner or no
 # banner, so an equal delta is also the proof that CMake read every line: a
 # line lost to a stray bracket in this file would show up as a short delta.
