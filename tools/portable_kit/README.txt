@@ -64,14 +64,16 @@ Keyboard and mouse:
     C                   put the camera back behind Mario
     Right mouse drag    look around
     Mouse wheel         zoom
-    Esc                 quit
+    Esc                 open or close the debug menu (quit with Alt+F4
+                        or the window's X button)
 
 Extra keys:
 
     F1   change camera: chase rig, free camera, DS-exact stepped rotate
     F3   stats overlay (frame rate, where Mario is, what state he is in)
     F4   switch character on the spot: Mario, Luigi, Wario, Yoshi
-    F5   debug menu. Arrows or the d-pad move, Enter or A picks, F5 closes.
+    F5   debug menu (same as Esc). Arrows or the d-pad move, Enter or A
+         picks, F5 or Esc closes.
          The game pauses while it is open. Rows:
              warp to any entrance in the level
              level select (the game's own table; picking a level loads it)

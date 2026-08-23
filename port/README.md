@@ -47,7 +47,7 @@ window. Gate 24 is the exception and keeps its own smoke.
 | Gate | Binary | What runs on host |
 |---|---|---|
 | 10 | `smoke_player` | Player spawns and stands: ten body/head models from real archives, InitResources end to end, the real `ChangeState` into `St_Walk` |
-| 12 | `walk_window` | the interactive window: WASD walks, ESC quits, camera follows |
+| 12 | `walk_window` | the interactive window: WASD walks, ESC opens the debug menu, camera follows |
 | 13 | `walk_window` | jump, camera-relative controls, and the real Camera actor's 19-state machine driving the projection |
 | 14 | `walk_window` | the real level boot: `Stage::LoadClsnAndObjects` over the castle grounds' own ov009, mounted whole |
 | 15 | `walk_window` | the game's own per-frame actor spine and real `WithMeshClsn` tracking (nothing calls `Player::Behavior` directly any more) |
