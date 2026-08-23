@@ -31,8 +31,8 @@ int WingFeather::InitResources()
     if (!_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel))
         return 0;
 
-    unk_09c = -0x199;
-    unk_0a0 = -0x28000;
+    mVertAccel = -0x199;
+    mTerminalVelocity = -0x28000;
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x124, (dActor_c *)((char *)this), 0x6e000, 0x6e000, 0x100002, 0);
     func_ov002_020b2c44(((char *)this));
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x158, (dActor_c *)((char *)this), 0x28000, 0xa000, 0, 0);
@@ -44,6 +44,6 @@ int WingFeather::InitResources()
         mAngleY = ((Sub *)(data_0209f318 + 0x100))->f7c + 0x4000;
     }
     unk_384 = 0xb4;
-    unk_0a8 = 0x3000;
+    mVertSpeed = 0x3000;
     return 1;
 }

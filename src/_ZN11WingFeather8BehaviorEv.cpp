@@ -51,7 +51,7 @@ int WingFeather::Behavior()
 
     if (_ZNK10dBgCh_Actr10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
         _Z15ApproachLinear2Rsss((short*)((char*)&unk_37c), 0, 0x50);
-        _Z14ApproachLinearRiii((int*)((char*)&unk_098), 0, 0x555);
+        _Z14ApproachLinearRiii((int*)((char*)&mHorzSpeed), 0, 0x555);
         if (DecIfAbove0_Byte((u8*)((char*)&unk_384)) == 0) {
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, mPosX, mPosY, mPosZ);
             _ZN7fBase_c18MarkForDestructionEv(((char*)this));
@@ -65,7 +65,7 @@ int WingFeather::Behavior()
            dBgCh_Actr's pad_135 -- so the offset is spelled out. */
         u16 newv = *(u16*)((char*)((char*)&mWithMeshClsn + 0x1a8) + 0x7c);
         int idx = ((newv >> 4) << 1) + 1;
-        unk_098 = (int)(((s64)unk_378 * data_02082214[idx] + 0x800) >> 12);
+        mHorzSpeed = (int)(((s64)unk_378 * data_02082214[idx] + 0x800) >> 12);
     }
 
     _Z14ApproachLinearRiii((int*)((char*)&unk_378), 0x10000, 0x332);
