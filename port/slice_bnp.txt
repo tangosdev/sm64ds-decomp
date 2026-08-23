@@ -274,58 +274,66 @@
 #
 # ---- 9. THE HOST COPIES, AND WHY EACH ONE IS OWED -------------------------
 #
-# unmatched/MgBounceAndPounce_StateDispatch.cpp REPLACES
-# src/func_ov006_020ee27c.cpp, which is OUT of the list below. Taking both is a
-# duplicate symbol; taking the src one puts the mwcc member-pointer stride
-# back.
+# FIVE FILES, and FOUR OF THEM ARE SHARED WITH 0x175, 0x180 AND 0x181 rather
+# than owned by this lane. Lanes BNP (0x174) and BNT (0x175) of run mg11 hit all
+# four independently, from two different scenes, and converged on the same
+# filenames and the same symbol names on purpose: every one of these defines a
+# symbol the linker would otherwise see twice, so matching names turns four
+# certain LNK2005s at the merge into one visible dedupe per file.
 #
-# unmatched/MgD3DBase_BeforeRender.cpp REPLACES
-# src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp, which is OUT of the list
-# below. That TU declares func_ov004_020b04f4 with NO parameter and calls it
-# with none, which is a faithful transcription of an ARM ride-through and a
-# DROPPED RECEIVER on the host: the callee reads self+0x4628, self+0xf0 and
-# self+0xcc. It is not a one-call forwarder, so the tail-jump mechanism cannot
-# carry the argument. The file is named for the BASE because all four
-# dScMgD3DBase_c classes hold 0x020e7040 in slot 10.
+# unmatched/MgBounceAndPounce_StateDispatch.cpp -- THIS LANE'S OWN. Replaces
+# src/func_ov006_020ee27c.cpp, which is OUT of the list below: vtable slot 6,
+# `(c->*c->m)()` over self+0x5004. Taking both is a duplicate symbol; taking the
+# src one puts the mwcc member-pointer stride back.
 #
-# unmatched/MgD3DBase_Slot2.cpp REPLACES
-# src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp, which is OUT of the
-# list below. It is the SECOND INSTANCE of a defect lane FLW already fixed once
-# for a different base class (unmatched/MgFlower_Slot2.cpp, offset +0x471c);
-# this is dScMgD3DBase_c's copy at offset +0x47e4. The TU calls
-# func_ov004_020b08f0 with ONE argument because the ROM never names the second
-# -- r1 rides through untouched -- and that argument reaches
-# Scene::AfterInitResources, where vfSuccess == 1 MARKS THE ACTOR FOR
-# DESTRUCTION. THIS LANE MEASURED IT RATHER THAN INHERITING THE CLAIM: the
-# first proof run of scene 372 with the src TU wired straight to the vtable
-# face reported init 1, cleanup 1, behavior 0, D2 1 and the framework's
-# pending-destroy slot entered once, while scene 386 on the same binary --
-# whose class keeps the FRAMEWORK's slot 2 -- reported behavior 253 and cleanup
-# 0. The scene booted clean, exited 0 and did nothing. Also shared with 0x175,
-# 0x180 and 0x181.
+# unmatched/MgD3DBase_Slots.cpp -- SHARED. Four ARM ride-throughs in the base's
+# table:
+#   slot 2  drops the framework flag that decides whether the actor is
+#           DESTROYED on frame 0 (measured: behavior 0 and cleanup 1 before,
+#           behavior 253 and cleanup 0 after, on the same binary, with scene 386
+#           as the control);
+#   slot 10 drops the receiver into func_ov004_020b04f4, which reads self+0x4628
+#           / +0xf0 / +0xcc. It is not a one-call forwarder, so the tail-jump
+#           mechanism cannot carry it;
+#   slots 27 and 28 are one-call veneers whose targets read the receiver. The
+#           tail-jump mechanism COULD carry those two -- but this lane measured
+#           that port/tools/tailjump_guard.py does not have them in its
+#           assertion set (35 frames / 22 veneer derived, unchanged from base
+#           with both TUs sliced), so nothing would notice if the form stopped
+#           holding.
+# src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp,
+# src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp, src/func_ov006_020e6d98.c and
+# src/func_ov006_020e6d8c.c are all OUT of the list below. The four bodies carry
+# port_ names and do NOT define the decomp symbols, which is
+# unmatched/MgFlower_Slot2.cpp's rule: the port's map never claims a
+# decompilation that does not exist.
 #
-# unmatched/MgD3DBase_ModelRender.cpp REPLACES src/func_ov006_020c4c54.cpp and
-# src/func_ov006_020c7734.cpp, both OUT of the list below. Both spell their
-# per-frame ModelAnim sub-object as a local SIX-virtual struct and call the
-# sixth method -- the ROM's numbering -- where the host _ZTV9ModelAnim is
-# MSVC-numbered and its slot 5 is Virtual18 rather than Render. That file's
-# header carries the scratch-revert proof: without it, a render run of scene
-# 372 with the state machine started crashes at 300, 600 and 1200 frames, 3 of
-# 3; with it, all three exit 0. Also shared with 0x175, 0x180 and 0x181.
+# unmatched/MgD3DBase_DeclConflict.cpp -- SHARED. Replaces
+# src/func_ov006_020e6e78.cpp (slot 24), OUT of the list below:
+# decl_common.h:1516 declares it `(void*)` while the TU defines it `(char*)`,
+# which is one register on the ROM and C2733 to MSVC. THIS LANE'S FIRST ROUTE
+# WAS tools/hostgen.py's HEADER_SHADOW list and it is RETIRED, for two merge
+# reasons worth writing down: a HEADER_SHADOW row is an edit to a SHARED TOOL
+# all four family lanes would have had to add and then de-duplicate, and
+# hostgen's generated object lands at a FIXED output path, so two lanes each
+# adding the add_custom_command for one symbol is a CMake error rather than a
+# dedupe.
 #
-# unmatched/MgD3DBase_ObjStateDispatch.cpp REPLACES
+# unmatched/MgD3DBase_ModelAnimRender.cpp -- SHARED. Replaces
+# src/func_ov006_020c4c54.cpp and src/func_ov006_020c7734.cpp, both OUT of the
+# list below. Both spell their per-frame ModelAnim sub-object as a local
+# SIX-virtual struct and call the sixth method -- the ROM's numbering -- where
+# the host _ZTV9ModelAnim is MSVC-numbered and its slot 5 is Virtual18 rather
+# than Render, and hal/cxxname_bridge.cpp says in as many words that this table
+# cannot be dual-filled the way _ZTV5Model is. Proven by SCRATCH REVERT: without
+# it a render run of scene 372 with the state machine started crashes at 300,
+# 600 and 1200 frames, 3 of 3; with it all three exit 0.
+#
+# unmatched/MgD3DBase_ObjStateDispatch.cpp -- SHARED. Replaces
 # src/func_ov006_020c4cd8.cpp and src/func_ov006_020c7860.cpp, both OUT of the
-# list below. Section 6 is how they were found and what they cost; the file's
-# own header carries the twenty-five-state enumeration and the relocation-set
-# method that produced it. Named for the BASE, not for this lane, because all
-# four dScMgD3DBase_c classes reach that region.
-#
-# src/func_ov006_020e6e78.cpp goes through tools/hostgen.py rather than into
-# the list below, for two reasons in one file: decl_common.h:1516 declares it
-# `(void*)` while the TU defines it `(char*)` (C2733), and the TU writes
-# *(int*)0x4001000 directly, which hostgen rewrites to NTR_MMIO. The
-# HEADER_SHADOW row is keyed on the symbol and is therefore ALSO shared by the
-# other three classes in this family.
+# list below. Section 6 is how they were found and what they cost; that file's
+# header carries the twenty-five-state enumeration and the relocation-set method
+# that produced it.
 #
 # ---- 10. WHAT THE ARITY AUDIT FOUND, AND WHAT IT DID NOT ------------------
 #
@@ -367,28 +375,27 @@
 # Measured on the merge-candidate binary against the base build's own map:
 #
 #   base 98a4c0e8f   7121 / 11293 matched TUs linked  (63.1%)
-#   this seat        7252 / 11293                      (64.2%)   +131
+#   this seat        7249 / 11293                      (64.2%)   +128
 #
-# THE +131 RECONCILES EXACTLY, and the accounting is lane S364's
+# THE +128 RECONCILES EXACTLY, and the accounting is lane S364's
 # compiled-versus-linked lesson in practice:
 #
-#   131  TUs in the list below
+#   129  TUs in the list below
 #  -  1  src/func_ov006_020e6db4.c, COMPILED but DROPPED BY /OPT:REF. It is in
 #        the slice because it sits inside dScMgD3DBase_c's code block, not
 #        because anything in this closure calls it: its four arm_call
 #        relocations in ov006 all come from 0x020cffec, 0x020d0024 and
 #        0x020d08ec, which are outside this slice.
-#  +  1  src/func_ov006_020e6e78.cpp, which is NOT in the list (it is compiled
-#        through tools/hostgen.py) but whose generated object keeps the stem, so
-#        port/tools/linkage.py's join counts the matched TU as linked.
-#  = 131
+#  = 128
 #
-#   0 of the 131 were already linked at the base, checked by intersecting the
-#   two maps' object columns, so none of the delta is another lane's work.
+#   0 of the 129 were already linked at the base, checked by intersecting the
+#   two maps' object columns, so none of the delta is another lane's work. The
+#   six other new objects in the map are the seat and the five host copies,
+#   which are not matched TUs and are not counted.
 #
 # ---- 12. THE LIST ----------------------------------------------------------
 #
-# 131 TUs. The ov004 framework, the thirty-five overlay constructors and the
+# 129 TUs. The ov004 framework, the thirty-five overlay constructors and the
 # arm9 waves under them are already carried by slice_mg1.txt; CMake appends
 # both lists to the same target and dedupes identical absolute paths, so
 # nothing is compiled twice. Lanes BNT, TTI and TTE will list the
@@ -492,8 +499,6 @@ src/func_ov006_020c8c6c.c
 src/func_ov006_020c8c78.c
 src/func_ov006_020e6cac.c
 src/func_ov006_020e6d24.cpp
-src/func_ov006_020e6d8c.c
-src/func_ov006_020e6d98.c
 src/func_ov006_020e6da4.c
 src/func_ov006_020e6db4.c
 src/func_ov006_020e6e3c.c

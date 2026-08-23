@@ -329,13 +329,12 @@ int   func_ov006_020ee8dc(void *self, int sel); /* slot 19, READS arg2 */
  * decides whether the actor is destroyed on frame 0. See
  * unmatched/MgD3DBase_Slot2.cpp, which carries the measurement. */
 int   port_mg_d3dbase_after_init(void *c, unsigned f);
-int   _ZN17MgBounceAndPounce12BeforeRenderEv(void *self);          /* slot 10,
-                                                 HOST COPY -- see section 6 */
+int   port_mg_d3dbase_before_render(void *c);   /* slot 10, SHARED host copy */
+void  port_mg_d3dbase_slot27(void *c);          /* slot 27, SHARED host copy */
+void  port_mg_d3dbase_slot28(void *c);          /* slot 28, SHARED host copy */
 int   func_ov006_020e6e78(void *self);          /* slot 24 */
 int   func_ov006_020e6e54(void *self);          /* slot 25 */
 int   func_ov006_020e6e4c(void);                /* slot 26, `mov r0,#2; bx lr` */
-void  func_ov006_020e6d98(void *self);          /* slot 27, tail-jump veneer */
-void  func_ov006_020e6d8c(void *self);          /* slot 28, tail-jump veneer */
 void  func_ov006_020e6d24(void *self);          /* slot 29 */
 void  func_ov006_020e6cac(void *self);          /* slot 30 */
 void  func_ov006_020e72c0(void *self);          /* slot 31 */
@@ -556,7 +555,7 @@ static int __fastcall bnp_v5(void *s, void *, unsigned b)
 static int __fastcall bnp_v7(void *s, void *)
 { BNP(7); return ((MgBounceAndPounce *)s)->BeforeBehavior(); }
 static int __fastcall bnp_v10(void *s, void *)
-{ BNP(10); return _ZN17MgBounceAndPounce12BeforeRenderEv(s); }
+{ BNP(10); return port_mg_d3dbase_before_render(s); }
 
 /* SLOT 11 READS ITS SECOND ARGUMENT: the ROM body spins on VCOUNT and then
    TAIL-JUMPS to Scene::AfterRender(0x0202e398) with both registers riding
@@ -571,18 +570,19 @@ static int __fastcall bnp_v25(void *s, void *)
 /* SLOT 26 IS `mov r0,#2; bx lr` IN THE ROM -- eight bytes, no receiver read. */
 static int __fastcall bnp_v26(void *, void *)
 { BNP(26); return func_ov006_020e6e4c(); }
-/* SLOTS 27 AND 28 ARE TAIL-JUMP VENEERS. In the ROM each is `ldr ip,[pc]; bx
-   ip` onto an ov004 body that DOES read r0 (func_ov004_020af27c reads
-   self+0x4630 at 0x020af284, func_ov004_020af04c reads self+0xf4 at
-   0x020af060). Their src TUs declare the target with no parameter, which is
-   correct only because MSVC compiles a one-call forwarder as a jmp that reuses
-   this frame -- port/tools/tailjump_guard.py is what asserts that form still
-   holds. So these thunks PASS the receiver even though the callee's own source
-   never names it. */
+/* SLOTS 27 AND 28 ARE TAIL-JUMP VENEERS whose targets DO read the receiver
+   (func_ov004_020af27c reads self+0x4630 at 0x020af284, func_ov004_020af04c
+   reads self+0xf4 at 0x020af060) while their src TUs declare those targets with
+   no parameter. The port's tail-jump mechanism could carry that -- but this
+   lane measured that port/tools/tailjump_guard.py does NOT have these two in
+   its assertion set (35 frames / 22 veneer derived, unchanged from base with
+   both TUs in the slice), so nothing would notice if the form stopped holding.
+   Both go through the shared host copies instead, which is what lane BNT chose
+   independently. */
 static int __fastcall bnp_v27(void *s, void *)
-{ BNP(27); func_ov006_020e6d98(s); return 0; }
+{ BNP(27); port_mg_d3dbase_slot27(s); return 0; }
 static int __fastcall bnp_v28(void *s, void *)
-{ BNP(28); func_ov006_020e6d8c(s); return 0; }
+{ BNP(28); port_mg_d3dbase_slot28(s); return 0; }
 static int __fastcall bnp_v29(void *s, void *)
 { BNP(29); func_ov006_020e6d24(s); return 0; }
 static int __fastcall bnp_v30(void *s, void *)

@@ -418,14 +418,6 @@ HEADER_SHADOW = {
     # src/func_ov071_02121ba4.cpp defines it `(char*)`. One register on the
     # ROM, C2733 to MSVC -- the func_ov102_0214b248 case exactly.
     "func_ov071_02121ba4": "decl_common.h",
-    # run mg11 lane BNP, dScMgD3DBase_c (the base of ids 0x174, 0x175, 0x180
-    # and 0x181): decl_common.h:1516 declares func_ov006_020e6e78 `(void*)`
-    # inside its extern "C" block while src/func_ov006_020e6e78.cpp defines it
-    # `(char*)`. One register on the ROM, C2733 to MSVC -- the
-    # func_ov102_0214b248 case again. THIS TU IS SHARED BY FOUR CLASSES, so
-    # whichever of the four seats lands first owns this row and the other three
-    # must not add a second copy of it.
-    "func_ov006_020e6e78": "decl_common.h",
 }
 
 # ---- REDUNDANT OUT-OF-LINE MEMBER REDECLARATIONS ---------------------------

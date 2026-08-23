@@ -4956,85 +4956,42 @@ endforeach()
 # adjudications, the seven state pairs and the one floor.
 #
 # THIS IS THE FIRST OF FOUR CLASSES UNDER dScMgD3DBase_c (0x174, 0x175, 0x180,
-# 0x181), and three things in this block are therefore SHARED rather than this
-# lane's. Whichever of the four seats lands first owns them and the other three
-# must reuse rather than re-add:
+# 0x181), and FOUR of the files below are SHARED with the other three rather
+# than owned by this lane. Lanes BNP and BNT of this same run arrived at all
+# four repairs INDEPENDENTLY and converged on the same filenames and the same
+# symbol names precisely so the two trees dedupe here instead of colliding:
 #
-#   * unmatched/MgD3DBase_BeforeRender.cpp, the receiver repair for the base's
-#     vtable slot 10 (see slice_bnp.txt section 9);
-#   * the HEADER_SHADOW row for func_ov006_020e6e78 in tools/hostgen.py, and
-#     the add_custom_command below that generates it -- two rules with the same
-#     OUTPUT path is a CMake error, so the second lane through must delete its
-#     copy of the rule, not rename the output;
-#   * the dScMgD3DBase_c half of slice_bnp.txt (the TUs in
-#     0x020e6c28..0x020e740c). Those ARE safe to list twice: CMake appends every
-#     list to the same targets and dedupes identical absolute paths.
+#   unmatched/MgD3DBase_Slots.cpp            slots 2, 10, 27, 28
+#   unmatched/MgD3DBase_DeclConflict.cpp     slot 24 (the decl_common C2733)
+#   unmatched/MgD3DBase_ModelAnimRender.cpp  the two ModelAnim shadow draws
+#   unmatched/MgD3DBase_ObjStateDispatch.cpp the two shared PMF dispatchers
+#
+# Whichever family lane merges first brings them; the others must NOT add a
+# second copy under another name, because every one of these defines a symbol
+# the linker will see twice. The dScMgD3DBase_c half of slice_bnp.txt IS safe
+# to list twice: CMake appends every list to the same targets and dedupes
+# identical absolute paths.
 #
 # ONE VARIABLE, for the reason the flower, memory2, LKY and BOO blocks give:
-# the slice's ov006 bodies are only reachable through the address switch in
-# unmatched/MgBounceAndPounce_StateDispatch.cpp -- the state pairs are mounted
-# DATA holding DS addresses, so nothing else in the build names them and
-# /OPT:REF would drop them -- and that file cannot link without them.
+# the slice's ov006 bodies are only reachable through the address switches in
+# unmatched/MgBounceAndPounce_StateDispatch.cpp and
+# unmatched/MgD3DBase_ObjStateDispatch.cpp -- the state pairs are mounted DATA
+# holding DS addresses, so nothing else in the build names them and /OPT:REF
+# would drop them -- and those files cannot link without them.
 # hal/scene_boot.cpp's port_scene_classes table carries the scene-372 row, so
 # every target that compiles scene_boot.cpp references port_mg_jump_spawn and
 # port_scene_fill_jump by name.
-#
-# src/func_ov006_020e6e78.cpp goes through hostgen for TWO reasons in one file:
-# decl_common.h:1516 declares it `(void*)` while the TU defines it `(char*)`,
-# which is one register on the ROM and C2733 to MSVC (the func_ov102_0214b248
-# case), and the TU writes *(int*)0x4001000 directly, which hostgen rewrites to
-# NTR_MMIO. It is therefore NOT in slice_bnp.txt.
-set(BNP_HOSTGEN_SYMS func_ov006_020e6e78)
-set(BNP_HOSTGEN_GEN "")
-foreach(sym IN LISTS BNP_HOSTGEN_SYMS)
-    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
-        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
-    else()
-        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
-    endif()
-    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
-    add_custom_command(OUTPUT "${sym_out}"
-        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
-                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
-        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
-        COMMENT "hostgen ${sym}")
-    list(APPEND BNP_HOSTGEN_GEN "${sym_out}")
-endforeach()
-
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_bnp.txt" SLICE_BNP_LINES)
 set(SLICE_BNP_SOURCES hal/scene_mg_jump.cpp
-                      # The one pointer-to-member host copy: vtable SLOT 6.
+                      # This class's own pointer-to-member wall: vtable SLOT 6.
                       # src/func_ov006_020ee27c.cpp is OUT of slice_bnp.txt.
                       unmatched/MgBounceAndPounce_StateDispatch.cpp
-                      # The base class's slot-10 receiver repair, shared with
-                      # ids 0x175, 0x180 and 0x181.
-                      # src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp is OUT
-                      # of slice_bnp.txt.
-                      unmatched/MgD3DBase_BeforeRender.cpp
-                      # The base class's slot-2 ride-through repair, the second
-                      # instance of the defect unmatched/MgFlower_Slot2.cpp
-                      # fixed for dScMgSingle3DBase_c. Also shared with ids
-                      # 0x175, 0x180 and 0x181.
-                      # src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp is
-                      # OUT of slice_bnp.txt.
-                      unmatched/MgD3DBase_Slot2.cpp
-                      # The SECOND and THIRD pointer-to-member walls in this
-                      # closure, both in ov006's shared minigame-object region
-                      # and both shared with 0x175, 0x180 and 0x181. Found by
-                      # running lane LKY's encoding detector over the WHOLE
-                      # slice rather than over the class; a `::*` sweep scoped
-                      # to the class returns one file and misses these two.
-                      # src/func_ov006_020c4cd8.cpp and
-                      # src/func_ov006_020c7860.cpp are OUT of slice_bnp.txt.
-                      unmatched/MgD3DBase_ObjStateDispatch.cpp
-                      # The two virtual-shadow dispatches in the base family's
-                      # per-frame sub-object draws -- the defect
-                      # unmatched/MgMemory2_ModelRender_020c1804.cpp records,
-                      # twice, on plain ModelAnims. src/func_ov006_020c4c54.cpp
-                      # and src/func_ov006_020c7734.cpp are OUT of
-                      # slice_bnp.txt. Also shared with 0x175/0x180/0x181.
-                      unmatched/MgD3DBase_ModelRender.cpp
-                      ${BNP_HOSTGEN_GEN})
+                      # The four SHARED base-class repairs. See the block above
+                      # before adding any of these from another family lane.
+                      unmatched/MgD3DBase_Slots.cpp
+                      unmatched/MgD3DBase_DeclConflict.cpp
+                      unmatched/MgD3DBase_ModelAnimRender.cpp
+                      unmatched/MgD3DBase_ObjStateDispatch.cpp)
 foreach(line IN LISTS SLICE_BNP_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -5047,9 +5004,11 @@ foreach(dup IN ITEMS src/func_ov006_020ee27c.cpp
                      src/func_ov006_020c7860.cpp
                      src/func_ov006_020c4c54.cpp
                      src/func_ov006_020c7734.cpp
+                     src/func_ov006_020e6e78.cpp
+                     src/func_ov006_020e6d98.c
+                     src/func_ov006_020e6d8c.c
                      src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp
-                     src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp
-                     src/func_ov006_020e6e78.cpp)
+                     src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp)
     if(dup IN_LIST SLICE_BNP_LINES)
         message(FATAL_ERROR "slice_bnp.txt lists ${dup}, which the BNP seat "
                 "replaces with its own definition. Taking both is a duplicate "
