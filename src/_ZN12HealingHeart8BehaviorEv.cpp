@@ -45,7 +45,7 @@ int HealingHeart::Behavior()
                         amount = (hp / 4 + 1) << 8;
                     }
                     _ZN6Player4HealEi(other, amount);
-                    _ZN5Sound9PlayBank3EjRK7Vector3(0x61, (Vector3 *)&unk_074);
+                    _ZN5Sound9PlayBank3EjRK7Vector3(0x61, (Vector3 *)&mCamSpacePosX);
                 }
             }
             mHealTimer = 0x5a;
