@@ -169,20 +169,42 @@ extern void *data_ov006_02141a40;
 
 }  /* extern "C" */
 
+/* THE DISTINCT-STATE TABLE HOLDS EVERY STATE EITHER MACHINE HAS, and the
+   number is checked against the switch rather than picked: field +0x30 has
+   SIXTEEN code words and field +0x3c has NINE, so 32 leaves headroom for a
+   state a later reading adds without the table quietly truncating.
+
+   IT USED TO BE EIGHT, WHICH IS EXACTLY THE +0x30 MACHINE'S OBSERVED COUNT,
+   so every "8 distinct" this file has ever printed was AT THE CAP and could
+   not be told from saturation.  The overflow counter below exists so that can
+   never be true silently again: a census that drops a state must SAY it
+   dropped one.  The lane review that caught this is the reason both numbers
+   are now printed. */
+enum { SUB_SEEN_MAX = 32 };
+
 static unsigned g_sub_calls[2], g_sub_routed[2], g_sub_unknown[2];
-static unsigned g_sub_distinct[2];
-static unsigned g_sub_seen[2][8], g_sub_hits[2][8];
+static unsigned g_sub_distinct[2], g_sub_dropped[2];
+static unsigned g_sub_seen[2][SUB_SEEN_MAX], g_sub_hits[2][SUB_SEEN_MAX];
 
 static void sub_note(int which, unsigned code)
 {
     for (unsigned i = 0; i < g_sub_distinct[which]; ++i)
         if (g_sub_seen[which][i] == code) { ++g_sub_hits[which][i]; return; }
-    if (g_sub_distinct[which] < 8) {
+    if (g_sub_distinct[which] < SUB_SEEN_MAX) {
         g_sub_seen[which][g_sub_distinct[which]] = code;
         g_sub_hits[which][g_sub_distinct[which]] = 1;
         ++g_sub_distinct[which];
+    } else {
+        ++g_sub_dropped[which];
     }
 }
+
+extern "C" unsigned port_mg_jump2_sub_dropped(int which)
+{
+    return (which < 0 || which > 1) ? 0u : g_sub_dropped[which];
+}
+
+extern "C" unsigned port_mg_jump2_sub_capacity(void) { return SUB_SEEN_MAX; }
 
 static int sub_try(void *self, unsigned code)
 {

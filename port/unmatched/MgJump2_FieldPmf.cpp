@@ -124,22 +124,33 @@ static unsigned g_jump2_field_calls, g_jump2_field_routed;
    that ticks the object without ever changing state reads as a success on a
    call count alone, and that is exactly the vacuous-clean shape the run law
    refuses. */
+/* Sized against the switch, not guessed: this class has FIVE states, and 32
+   is the same headroom unmatched/MgJump2_SubDispatch.cpp uses for the same
+   reason.  The overflow counter is the disclosure: a table that silently
+   truncates prints a number indistinguishable from saturation. */
+enum { FIELD_SEEN_MAX = 32 };
+
 static unsigned g_jump2_last_code;
-static unsigned g_jump2_distinct;
-static unsigned g_jump2_seen[8];
-static unsigned g_jump2_hits[8];
+static unsigned g_jump2_distinct, g_jump2_dropped;
+static unsigned g_jump2_seen[FIELD_SEEN_MAX];
+static unsigned g_jump2_hits[FIELD_SEEN_MAX];
 
 static void jump2_note(unsigned code)
 {
     for (unsigned i = 0; i < g_jump2_distinct; ++i)
         if (g_jump2_seen[i] == code) { ++g_jump2_hits[i]; g_jump2_last_code = code; return; }
-    if (g_jump2_distinct < 8) {
+    if (g_jump2_distinct < FIELD_SEEN_MAX) {
         g_jump2_seen[g_jump2_distinct] = code;
         g_jump2_hits[g_jump2_distinct] = 1;
         ++g_jump2_distinct;
+    } else {
+        ++g_jump2_dropped;
     }
     g_jump2_last_code = code;
 }
+
+extern "C" unsigned port_mg_jump2_field_dropped(void) { return g_jump2_dropped; }
+extern "C" unsigned port_mg_jump2_field_capacity(void) { return FIELD_SEEN_MAX; }
 
 static int jump2_field_try(void *self, unsigned code)
 {

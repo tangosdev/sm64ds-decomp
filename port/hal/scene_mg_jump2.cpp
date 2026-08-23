@@ -240,6 +240,14 @@ unsigned port_mg_jump2_field_row(unsigned i, unsigned *code);
 void     port_mg_jump2_sub_counts(int which, unsigned *calls, unsigned *routed,
                                   unsigned *unknown, unsigned *distinct);
 unsigned port_mg_jump2_sub_row(int which, unsigned i, unsigned *code);
+/* THE CENSUS PRINTS ITS OWN CAPACITY, because a distinct-state count that has
+   saturated reads exactly like one that has not.  Both tables used to hold
+   EIGHT, which is the +0x30 machine's own observed count, so every "8 distinct"
+   printed before the lane review was AT the cap and nothing said so. */
+unsigned port_mg_jump2_sub_dropped(int which);
+unsigned port_mg_jump2_sub_capacity(void);
+unsigned port_mg_jump2_field_dropped(void);
+unsigned port_mg_jump2_field_capacity(void);
 /* the framework's, from unmatched/MgBase_StateDispatch.cpp */
 void     port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
 
@@ -584,7 +592,9 @@ extern "C" void port_scene_jump2_hits(void)
             std::printf(" %08x(x%u)", code, n);
         }
         if (!distinct) std::printf(" NONE");
-        std::printf("\n");
+        std::printf("   [%u of 5 possible; table holds %u, %u dropped]\n",
+                    distinct, port_mg_jump2_field_capacity(),
+                    port_mg_jump2_field_dropped());
         std::printf("[scene] dScMgJump2_c state floor: NONE. All five code "
                     "words reachable through data_ov006_0213cc74/84/8c/94/9c "
                     "have a matched src TU and none carries a NONMATCHING "
@@ -608,7 +618,9 @@ extern "C" void port_scene_jump2_hits(void)
             std::printf(" %08x(x%u)", code, n);
         }
         if (!distinct) std::printf(" NONE");
-        std::printf("\n");
+        std::printf("   [%u of %d possible; table holds %u, %u dropped]\n",
+                    distinct, w ? 9 : 16, port_mg_jump2_sub_capacity(),
+                    port_mg_jump2_sub_dropped(w));
     }
 
     /* THE SCREEN THE 3D IS ON.  The halfword at +0x4664 is this family's
