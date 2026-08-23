@@ -195,7 +195,7 @@ src/_ZN11BillBlasterD1Ev.cpp:
     complete
     .text start:0x02126dbc end:0x02126e00
 
-src/_ZN11BillBlasterD0Ev.c:
+src/_ZN11BillBlasterD0Ev.cpp:
     complete
     .text start:0x02126e00 end:0x02126e58
 

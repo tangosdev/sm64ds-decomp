@@ -127,7 +127,7 @@ src/_ZN10ShutterHmcD1Ev.cpp:
     complete
     .text start:0x02112db4 end:0x02112e04
 
-src/_ZN10ShutterHmcD0Ev.c:
+src/_ZN10ShutterHmcD0Ev.cpp:
     complete
     .text start:0x02112e04 end:0x02112e68
 

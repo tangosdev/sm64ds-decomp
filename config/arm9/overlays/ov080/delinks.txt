@@ -112,7 +112,7 @@ src/_ZN11CrazedCrateD1Ev.cpp:
     complete
     .text start:0x02124a20 end:0x02124a68
 
-src/_ZN11CrazedCrateD0Ev.c:
+src/_ZN11CrazedCrateD0Ev.cpp:
     complete
     .text start:0x02124a68 end:0x02124ac4
 

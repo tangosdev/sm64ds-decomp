@@ -44,7 +44,7 @@ src/_ZN10ChillBullyD1Ev.cpp:
     complete
     .text start:0x021115c4 end:0x02111618
 
-src/_ZN10ChillBullyD0Ev.c:
+src/_ZN10ChillBullyD0Ev.cpp:
     complete
     .text start:0x02111618 end:0x02111680
 
