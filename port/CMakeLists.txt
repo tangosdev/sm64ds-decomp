@@ -5011,6 +5011,22 @@ set(SLICE_BNP_SOURCES hal/scene_mg_jump.cpp
                       # src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp is OUT
                       # of slice_bnp.txt.
                       unmatched/MgD3DBase_BeforeRender.cpp
+                      # The base class's slot-2 ride-through repair, the second
+                      # instance of the defect unmatched/MgFlower_Slot2.cpp
+                      # fixed for dScMgSingle3DBase_c. Also shared with ids
+                      # 0x175, 0x180 and 0x181.
+                      # src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp is
+                      # OUT of slice_bnp.txt.
+                      unmatched/MgD3DBase_Slot2.cpp
+                      # The SECOND and THIRD pointer-to-member walls in this
+                      # closure, both in ov006's shared minigame-object region
+                      # and both shared with 0x175, 0x180 and 0x181. Found by
+                      # running lane LKY's encoding detector over the WHOLE
+                      # slice rather than over the class; a `::*` sweep scoped
+                      # to the class returns one file and misses these two.
+                      # src/func_ov006_020c4cd8.cpp and
+                      # src/func_ov006_020c7860.cpp are OUT of slice_bnp.txt.
+                      unmatched/MgD3DBase_ObjStateDispatch.cpp
                       ${BNP_HOSTGEN_GEN})
 foreach(line IN LISTS SLICE_BNP_LINES)
     string(STRIP "${line}" line)
@@ -5020,7 +5036,10 @@ foreach(line IN LISTS SLICE_BNP_LINES)
     list(APPEND SLICE_BNP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 foreach(dup IN ITEMS src/func_ov006_020ee27c.cpp
+                     src/func_ov006_020c4cd8.cpp
+                     src/func_ov006_020c7860.cpp
                      src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp
+                     src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp
                      src/func_ov006_020e6e78.cpp)
     if(dup IN_LIST SLICE_BNP_LINES)
         message(FATAL_ERROR "slice_bnp.txt lists ${dup}, which the BNP seat "

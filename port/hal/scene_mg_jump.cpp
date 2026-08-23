@@ -238,16 +238,26 @@
 #pragma comment(linker, "/alternatename:?data_ov006_02141a48@@3PAXA=_data_ov006_02141a48")
 #pragma comment(linker, "/alternatename:_Scene_AfterRender=__ZN5Scene11AfterRenderEj")
 #pragma comment(linker, "/alternatename:_func_020beb74=_data_ov004_020beb74")
+/* _func_ov006_020e6df0 -- the SAME name-spelling shape as _func_020beb74, in
+   the other direction. src/func_ov006_020c7c68.c calls the body at 0x020e6df0
+   by its address-shaped name, but config/arm9/overlays/ov006/symbols.txt gives
+   that address the RECOVERED name Sound_PlayBank1Panned, and
+   src/Sound_PlayBank1Panned.cpp defines it under that name inside extern "C".
+   One body, two spellings, and the caller has the one the config retired. */
+#pragma comment(linker, "/alternatename:_func_ov006_020e6df0=_Sound_PlayBank1Panned")
 #pragma comment(linker, "/alternatename:?LoadFile@Animation@@SAPAUBCA_File@@AAUSharedFilePtr@@@Z=__ZN9Animation8LoadFileER13SharedFilePtr")
 #pragma comment(linker, "/alternatename:?SetAnim@ModelAnim@@QAEHPAUBCA_File@@HHI@Z=?SetAnim@ModelAnim@@QAEXPAUBCA_File@@HHI@Z")
 
 #include "hal/screen_gap.h"
 
+/* The class the four real C++ methods are members of. It is the SAME generated
+   header the four src TUs include, so the declarations the seat calls through
+   and the definitions the linker finds are one text. */
+#include "MgBounceAndPounce.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-
-struct MgBounceAndPounce;
 
 extern "C" {
 
@@ -258,6 +268,15 @@ int      port_scene_env_want(void);
 
 /* the framework's own dispatch census, from unmatched/MgBase_StateDispatch.cpp */
 void port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
+
+/* the SHARED object-state dispatch half,
+   unmatched/MgD3DBase_ObjStateDispatch.cpp -- the second and third
+   pointer-to-member walls in this closure, neither of them this class's */
+void     port_mg_objstate_counts(unsigned *calls, unsigned *hits,
+                                 unsigned *nullpmf);
+unsigned port_mg_objstate_count(void);
+unsigned port_mg_objstate_addr(unsigned i);
+unsigned port_mg_objstate_hit(unsigned i);
 
 /* this class's dispatch half, unmatched/MgBounceAndPounce_StateDispatch.cpp */
 void     port_mg_jump_counts(unsigned *calls, unsigned *hits, unsigned *nullpmf);
@@ -288,15 +307,30 @@ void *func_ov006_020edf54(void *self);          /* slot 17 D0 */
 /*    slot 18 is func_ov006_020ee994 and is THE FLOOR -- trapped below */
 int   func_ov006_020ee8dc(void *self, int sel); /* slot 19, READS arg2 */
 
-/* ---- dScMgD3DBase_c's fifteen, shared with ids 0x175, 0x180 and 0x181 ---- */
-int   _ZN17MgBounceAndPounce19BeforeInitResourcesEv(void *self);   /* slot 1  */
-int   _ZN17MgBounceAndPounce18AfterInitResourcesEj(void *self);    /* slot 2  */
-void  _ZN17MgBounceAndPounce21AfterCleanupResourcesEj(void *self,
-                                                      unsigned b); /* slot 5  */
-int   _ZN17MgBounceAndPounce14BeforeBehaviorEv(void *self);        /* slot 7  */
+/* ---- dScMgD3DBase_c's fifteen, shared with ids 0x175, 0x180 and 0x181 ----
+ *
+ * FOUR OF THEM ARE REAL C++ METHODS AND CANNOT BE REACHED BY THE ITANIUM NAME,
+ * which cost this lane one link. src/_ZN17MgBounceAndPounce19BeforeInitResourc
+ * esEv.cpp, _14BeforeBehaviorEv.cpp, _21AfterCleanupResourcesEj.cpp and
+ * _11AfterRenderEj.cpp define their bodies as `int MgBounceAndPounce::Method()`
+ * rather than inside extern "C", so MSVC emits only its own mangling
+ * (?BeforeInitResources@MgBounceAndPounce@@QAEHXZ) and the flat _ZN name the
+ * other eleven use resolves to nothing. This is the MSVC-NAME SHADOW shape
+ * port/tools/linkage.py reports as its second join. The fix is to call them
+ * THROUGH THE CLASS, out of the generated header the src TUs themselves
+ * include, rather than to invent four /alternatename rows onto manglings the
+ * seat would then have to keep in sync by hand.
+ *
+ * The other ELEVEN really are extern "C" with the Itanium name as the C
+ * identifier and are declared as such below.
+ */
+/* slot 2, the SHARED SLOT-2 REPAIR. NOT the src symbol: the matched TU drops
+ * the framework's second argument at its own call site and that argument
+ * decides whether the actor is destroyed on frame 0. See
+ * unmatched/MgD3DBase_Slot2.cpp, which carries the measurement. */
+int   port_mg_d3dbase_after_init(void *c, unsigned f);
 int   _ZN17MgBounceAndPounce12BeforeRenderEv(void *self);          /* slot 10,
                                                  HOST COPY -- see section 6 */
-void  _ZN17MgBounceAndPounce11AfterRenderEj(void *self, unsigned a); /* slot 11 */
 int   func_ov006_020e6e78(void *self);          /* slot 24 */
 int   func_ov006_020e6e54(void *self);          /* slot 25 */
 int   func_ov006_020e6e4c(void);                /* slot 26, `mov r0,#2; bx lr` */
@@ -470,23 +504,23 @@ static int __fastcall bnp_slot18_trap(void *s, void *, int st)
 // ---- dScMgD3DBase_c's seventeen --------------------------------------------
 
 static int __fastcall bnp_v1(void *s, void *)
-{ BNP(1); return _ZN17MgBounceAndPounce19BeforeInitResourcesEv(s); }
+{ BNP(1); return ((MgBounceAndPounce *)s)->BeforeInitResources(); }
 
 /* SLOT 2 DROPS ITS SECOND ARGUMENT ON THE ROM TOO. 0x020e70c0 saves r0 and
    never reads r1: it calls func_ov004_020b08f0(self) then Particle::SysTracker
    ::Initialise(self+0x47e4). The src declares one parameter, and this thunk
    pops the framework's second without forwarding it, which is what the ROM
    does. */
-static int __fastcall bnp_v2(void *s, void *, unsigned)
-{ BNP(2); return _ZN17MgBounceAndPounce18AfterInitResourcesEj(s); }
+static int __fastcall bnp_v2(void *s, void *, unsigned f)
+{ BNP(2); return port_mg_d3dbase_after_init(s, f); }
 
 /* SLOT 5 READS ITS SECOND ARGUMENT: 0x020e6f68 is `mov r4,r1` and 0x020e6f70
    is `cmp r4,#2`, a three-way split. Forwarded. */
 static int __fastcall bnp_v5(void *s, void *, unsigned b)
-{ BNP(5); _ZN17MgBounceAndPounce21AfterCleanupResourcesEj(s, b); return 1; }
+{ BNP(5); ((MgBounceAndPounce *)s)->AfterCleanupResources(b); return 1; }
 
 static int __fastcall bnp_v7(void *s, void *)
-{ BNP(7); return _ZN17MgBounceAndPounce14BeforeBehaviorEv(s); }
+{ BNP(7); return ((MgBounceAndPounce *)s)->BeforeBehavior(); }
 static int __fastcall bnp_v10(void *s, void *)
 { BNP(10); return _ZN17MgBounceAndPounce12BeforeRenderEv(s); }
 
@@ -494,7 +528,7 @@ static int __fastcall bnp_v10(void *s, void *)
    TAIL-JUMPS to Scene::AfterRender(0x0202e398) with both registers riding
    through, and the src passes both explicitly. Forwarded. */
 static int __fastcall bnp_v11(void *s, void *, unsigned a)
-{ BNP(11); _ZN17MgBounceAndPounce11AfterRenderEj(s, a); return 1; }
+{ BNP(11); ((MgBounceAndPounce *)s)->AfterRender(a); return 1; }
 
 static int __fastcall bnp_v24(void *s, void *)
 { BNP(24); return func_ov006_020e6e78(s); }
@@ -737,6 +771,27 @@ extern "C" void port_scene_jump_hits(void)
         for (unsigned i = 0; i < n; ++i)
             std::printf(" %08x:%u", port_mg_jump_state_addr(i),
                         port_mg_jump_state_hit(i));
+        std::printf("\n");
+    }
+    /* THE SHARED OBJECT MACHINE, counted separately because it is NOT this
+       class's. Two dispatchers in ov006's shared minigame-object region and
+       twenty-five state bodies; every dScMgD3DBase_c subclass reaches them, and
+       before this seat none of the twenty-five was in any slice in the tree. A
+       nonzero UNROUTED here would be a jump to a DS address. */
+    {
+        unsigned oc = 0, oh = 0, onull = 0;
+        port_mg_objstate_counts(&oc, &oh, &onull);
+        std::printf("[scene] shared object-state dispatch (dScMgD3DBase_c's "
+                    "two, NOT dScMgJump_c's): %u call(s), %u routed, %u null "
+                    "pair(s), %u unrouted\n",
+                    oc, oh, onull, oc - oh - onull);
+        const unsigned n = port_mg_objstate_count();
+        std::printf("[scene] shared object-state census (%u addresses):\n   ", n);
+        for (unsigned i = 0; i < n; ++i) {
+            std::printf(" %08x:%u", port_mg_objstate_addr(i),
+                        port_mg_objstate_hit(i));
+            if (i % 8 == 7) std::printf("\n   ");
+        }
         std::printf("\n");
     }
     /* STATE MOVEMENT, AS AN ADDRESS. */

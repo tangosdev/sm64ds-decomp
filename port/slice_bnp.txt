@@ -150,19 +150,43 @@
 #
 # ---- 6. ONE DISPATCHER, AND THE ENCODING SCAN CONFIRMS IT -----------------
 #
-# A `::*` / `->*` sweep over all 41 TUs of this class's code block and the
-# base's returns exactly ONE file, src/func_ov006_020ee27c.cpp -- vtable slot 6,
-# `(c->*c->m)()` over self+0x5004.
+# THIS SECTION USED TO SAY "ONE DISPATCHER" AND THAT WAS A SCOPING ERROR THE
+# LANE'S OWN PROOF RUN CAUGHT. What is true is narrower than what was written,
+# and the correction is the more useful half.
 #
-# Lane LKY's encoding detector was run as the independent net for the
-# open-coded third shape: decode every word of the overlay and look for
-# `add Rd,Rn,Rm,asr #1` immediately followed by `ands Rm,Rm,#1`. Over ALL of
-# ov006 it finds 114 sites, which reproduces lane WIG's figure for the same
-# overlay digit for digit. Inside this class's code block
-# (0x020edec0..0x020eebe8) it finds ONE, 0x020ee290, and that is the slot-6
-# body. Inside dScMgD3DBase_c's block (0x020e6c28..0x020e740c) it finds ZERO.
-# For contrast and as the not-blind control, id 0x175's own block finds one at
-# 0x020ef44c, which is lane BNT's business and not this one's.
+# A `::*` / `->*` sweep over the 41 TUs of THIS CLASS's code block and the
+# base's returns exactly ONE file, src/func_ov006_020ee27c.cpp -- vtable slot 6,
+# `(c->*c->m)()` over self+0x5004. That statement is still true and it is not
+# the answer to the question a seat has to ask, because A SEAT LINKS THE
+# CLOSURE, NOT THE CLASS.
+#
+# Lane LKY's encoding detector -- decode every word and look for
+# `add Rd,Rn,Rm,asr #1` immediately followed by `ands Rm,Rm,#1` -- answers the
+# right question when it is run over the WHOLE slice. Over all of ov006 it
+# finds 114 sites, which reproduces lane WIG's figure for the same overlay
+# digit for digit. Over the 133 TUs below it finds THREE:
+#
+#   020ee290  func_ov006_020ee27c   vtable slot 6, this class's own
+#   020c4ce8  func_ov006_020c4cd8   an object adapter's tick, the pair at +0x30
+#   020c7898  func_ov006_020c7860   a second object's tick, the pair at +0x3c
+#
+# Inside this class's own code block (0x020edec0..0x020eebe8) it finds exactly
+# the first. Inside dScMgD3DBase_c's block (0x020e6c28..0x020e740c) it finds
+# ZERO. For contrast and as the not-blind control, id 0x175's own block finds
+# one at 0x020ef44c, which is lane BNT's business and not this one's.
+#
+# THE TWO EXTRA ONES ARE NOT THIS CLASS'S AND ARE NOT OPTIONAL. They live in
+# ov006's shared minigame-object region, all four dScMgD3DBase_c subclasses
+# reach them, and unmatched/MgD3DBase_ObjStateDispatch.cpp host-copies both and
+# routes their twenty-five state bodies. WHAT NAMED THEM WAS A CRASH, not a
+# sweep: the lane's first run with the state machine started faulted with
+#
+#   FAULT code c0000005 at +0x01cc4d1c accessing 020c4d1c
+#     walker node 307FA7F4 actor 307FA7CC id 0x174
+#     regs eax=020c4d1c ebx=020ee5b8
+#
+# and 0x020c4d1c is a real four-byte ov006 function, so the jump was a member
+# pointer nobody had routed rather than a wild address.
 #
 # ---- 7. THE SEVEN STATE PAIRS ----------------------------------------------
 #
@@ -253,6 +277,29 @@
 # carry the argument. The file is named for the BASE because all four
 # dScMgD3DBase_c classes hold 0x020e7040 in slot 10.
 #
+# unmatched/MgD3DBase_Slot2.cpp REPLACES
+# src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp, which is OUT of the
+# list below. It is the SECOND INSTANCE of a defect lane FLW already fixed once
+# for a different base class (unmatched/MgFlower_Slot2.cpp, offset +0x471c);
+# this is dScMgD3DBase_c's copy at offset +0x47e4. The TU calls
+# func_ov004_020b08f0 with ONE argument because the ROM never names the second
+# -- r1 rides through untouched -- and that argument reaches
+# Scene::AfterInitResources, where vfSuccess == 1 MARKS THE ACTOR FOR
+# DESTRUCTION. THIS LANE MEASURED IT RATHER THAN INHERITING THE CLAIM: the
+# first proof run of scene 372 with the src TU wired straight to the vtable
+# face reported init 1, cleanup 1, behavior 0, D2 1 and the framework's
+# pending-destroy slot entered once, while scene 386 on the same binary --
+# whose class keeps the FRAMEWORK's slot 2 -- reported behavior 253 and cleanup
+# 0. The scene booted clean, exited 0 and did nothing. Also shared with 0x175,
+# 0x180 and 0x181.
+#
+# unmatched/MgD3DBase_ObjStateDispatch.cpp REPLACES
+# src/func_ov006_020c4cd8.cpp and src/func_ov006_020c7860.cpp, both OUT of the
+# list below. Section 6 is how they were found and what they cost; the file's
+# own header carries the twenty-five-state enumeration and the relocation-set
+# method that produced it. Named for the BASE, not for this lane, because all
+# four dScMgD3DBase_c classes reach that region.
+#
 # src/func_ov006_020e6e78.cpp goes through tools/hostgen.py rather than into
 # the list below, for two reasons in one file: decl_common.h:1516 declares it
 # `(void*)` while the TU defines it `(char*)` (C2733), and the TU writes
@@ -297,7 +344,7 @@
 #
 # ---- 11. THE LIST ----------------------------------------------------------
 #
-# 85 TUs. The ov004 framework, the thirty-five overlay constructors and the
+# 133 TUs. The ov004 framework, the thirty-five overlay constructors and the
 # arm9 waves under them are already carried by slice_mg1.txt; CMake appends
 # both lists to the same target and dedupes identical absolute paths, so
 # nothing is compiled twice. Lanes BNT, TTI and TTE will list the
@@ -308,7 +355,6 @@ src/MgBounceAndPounce_Spawn.cpp
 src/Sound_PlayBank1Panned.cpp
 src/_ZN17MgBounceAndPounce11AfterRenderEj.cpp
 src/_ZN17MgBounceAndPounce14BeforeBehaviorEv.cpp
-src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp
 src/_ZN17MgBounceAndPounce19BeforeInitResourcesEv.cpp
 src/_ZN17MgBounceAndPounce21AfterCleanupResourcesEj.cpp
 src/_ZN17MgBounceAndPounceD0Ev.cpp
@@ -317,6 +363,7 @@ src/func_02053ea0.c
 src/func_02053eb0.c
 src/func_02054748.c
 src/func_ov006_020bfec0.cpp
+src/func_ov006_020bfff8.cpp
 src/func_ov006_020c4048.c
 src/func_ov006_020c4060.c
 src/func_ov006_020c40e8.c
@@ -324,11 +371,41 @@ src/func_ov006_020c425c.c
 src/func_ov006_020c42bc.c
 src/func_ov006_020c4684.c
 src/func_ov006_020c4710.c
+src/func_ov006_020c47d4.c
+src/func_ov006_020c49d8.c
 src/func_ov006_020c4c00.c
 src/func_ov006_020c4c54.cpp
-src/func_ov006_020c4cd8.cpp
+src/func_ov006_020c4d1c.c
 src/func_ov006_020c4d20.c
+src/func_ov006_020c4d3c.c
+src/func_ov006_020c4e8c.c
+src/func_ov006_020c4f68.c
+src/func_ov006_020c4fa4.cpp
+src/func_ov006_020c5370.c
+src/func_ov006_020c53f8.c
+src/func_ov006_020c54f4.c
+src/func_ov006_020c5530.c
+src/func_ov006_020c561c.c
+src/func_ov006_020c5658.c
+src/func_ov006_020c57d4.c
+src/func_ov006_020c5928.c
+src/func_ov006_020c5aa4.c
+src/func_ov006_020c5bf8.c
+src/func_ov006_020c5cf4.c
+src/func_ov006_020c5d28.c
+src/func_ov006_020c5ec8.c
+src/func_ov006_020c6088.c
+src/func_ov006_020c6188.c
+src/func_ov006_020c61c4.c
+src/func_ov006_020c6248.c
+src/func_ov006_020c627c.c
+src/func_ov006_020c6348.c
+src/func_ov006_020c6378.c
+src/func_ov006_020c63dc.c
+src/func_ov006_020c6400.c
 src/func_ov006_020c64e4.c
+src/func_ov006_020c66bc.c
+src/func_ov006_020c6a9c.c
 src/func_ov006_020c6e4c.cpp
 src/func_ov006_020c6f3c.c
 src/func_ov006_020c6f70.c
@@ -342,11 +419,25 @@ src/func_ov006_020c7490.c
 src/func_ov006_020c7574.c
 src/func_ov006_020c76e0.cpp
 src/func_ov006_020c7734.cpp
-src/func_ov006_020c7860.cpp
+src/func_ov006_020c78ec.cpp
+src/func_ov006_020c79a8.cpp
+src/func_ov006_020c7a30.c
+src/func_ov006_020c7ba4.c
+src/func_ov006_020c7c68.c
+src/func_ov006_020c802c.c
+src/func_ov006_020c8048.c
 src/func_ov006_020c8084.cpp
+src/func_ov006_020c814c.cpp
 src/func_ov006_020c81e0.c
+src/func_ov006_020c8270.c
+src/func_ov006_020c833c.c
+src/func_ov006_020c85a0.c
+src/func_ov006_020c85bc.cpp
 src/func_ov006_020c862c.c
+src/func_ov006_020c864c.c
 src/func_ov006_020c8658.c
+src/func_ov006_020c8680.c
+src/func_ov006_020c8768.c
 src/func_ov006_020c87d0.cpp
 src/func_ov006_020c893c.cpp
 src/func_ov006_020c8a04.c
@@ -356,6 +447,7 @@ src/func_ov006_020c8a9c.c
 src/func_ov006_020c8af4.c
 src/func_ov006_020c8ba8.cpp
 src/func_ov006_020c8c6c.c
+src/func_ov006_020c8c78.c
 src/func_ov006_020e6cac.c
 src/func_ov006_020e6d24.cpp
 src/func_ov006_020e6d8c.c
@@ -389,3 +481,6 @@ src/func_ov006_020ee5b8.c
 src/func_ov006_020ee658.c
 src/func_ov006_020ee690.cpp
 src/func_ov006_020ee8dc.cpp
+src/func_ov006_020eee3c.c
+src/func_ov006_020eef40.c
+src/func_ov006_020ef05c.c
