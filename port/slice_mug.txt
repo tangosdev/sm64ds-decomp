@@ -1,0 +1,261 @@
+# Gate MUG: dScMgSlot3_c, the "Mix-a-Mug" slot machine. Actor id 0x16d
+# (scene 365). Run mg11, lane MUG.
+#
+# THE IDENTITY WAS DERIVED FROM THE ROM, and it had to be: section 3 of
+# port/mg_fanout_costs.txt has no spawn symbol for this id and calls the record
+# (data_ov006_0213e508). Six independent witnesses, every one reproducible in a
+# minute:
+#
+#   1. THE SPAWN TABLE. arm9's ACTOR_SPAWN_TABLE is 0x02090864, so entry 365 is
+#      at 0x02090864 + 365*4 = 0x02090e18, and that word reads 0x0213e508 in
+#      extracted/arm9_dec.bin. config/arm9/relocs.txt carries the same edge:
+#      from:0x02090e18 kind:load to:0x0213e508 module:overlays(6,99).
+#   2. THE DOUBLED ID. data_ov006_0213e508 = {factory 0x0210c120, 0x016d016d},
+#      which is the mechanical SpawnInfo shape section 3 prescribes.
+#   3. THE RTTI. The word before the vtable, 0x0213eaa4, points at the typeinfo
+#      record 0x0213e588 = {0x0209a764, name 0x0213e5ac, base 0x0213bc64}, and
+#      0x0213e5ac reads "12dScMgSlot3_c". The class is dScMgSlot3_c.
+#   4. THE FAMILY THE NAME BELONGS TO. 0x0213e5bc, sixteen bytes further on,
+#      reads "12dScMgSlot1_c" -- the class of id 0x16c, scene 364, which the
+#      port already ships as SCENE_MG_SLOT1 and which run mg9 lane S364 named
+#      "Mario Slot". So the ROM's own class names put this id in a SLOT-MACHINE
+#      family, which is a prediction the title chain below could have failed.
+#      (The two are NOT siblings in the type graph: dScMgSlot1_c's typeinfo
+#      base word is 0x020bbf6c, dScMgBase_c's own record, so Slot1 sits two
+#      deep while Slot3 sits three deep under dScMgSingle3DBase_c.)
+#   5. THE FACTORY. func_ov006_0210c120 is ActorBase::operator new(0x5044),
+#      then func_ov004_020b2adc (dScMgBase_c's constructor), then
+#      `str r1,[r4]` with 0x0213e448 and `str r1,[r4]` again with 0x0213eaa8.
+#      Two sub-objects are constructed on the way: Particle::SysTracker at
+#      this+0x471c (0x02023204) and the family's shared BlendModelAnim /
+#      SharedFilePtr block at this+0x4f38 (func_ov006_020c221c).
+#   6. THE PLAYER TITLE, END TO END AND OUT OF THE ROM. The ov005 launch table
+#      (data_ov005_020c24d8, overlay_0005.bin file offset 0x2618, 36 rows of
+#      0x34) has EXACTLY ONE row for scene 365 -- row 31, param 0x001b1400.
+#      dScMgBase_c's constructor turns the NAME-TEXT index into a message id
+#      through data_ov004_020bc070[27] = 575, and message 575 of
+#      data/message/msg_data_eng.bin reads
+#
+#          "Mix-a-Mug
+#
+#           Line up the slots on the
+#           Touch Screen to form a face.
+#           Win more coins by matching the
+#           center face in the slots to
+#           the one on the top screen."
+#
+#      "Line up the slots ... to form a face" is what a class named
+#      dScMgSlot3_c should say, and witnesses 3, 4 and 6 are three independent
+#      readings that agree.
+#
+# WHICH BYTE OF THE PARAM IS THE NAME-TEXT INDEX WAS CONTROLLED, NOT ASSUMED,
+# and for this row it matters more than it did for any earlier lane: row 31's
+# two candidate bytes hold DIFFERENT values (0x1b = 27 and 0x14 = 20), where
+# most rows hold the same number twice and cannot tell the two readings apart.
+# Both bytes are permutations of 0..35 across the 36 rows, so neither is
+# refuted by shape. The control is the config's own spawn symbols: decoding all
+# 36 rows BOTH ways and comparing against the 25 rows that carry a spawn
+# symbol, the (param >> 16) & 0xff reading agrees with the config on 25 of 25
+# and the (param >> 8) & 0xff reading disagrees on ten, naming Picture Poker
+# for scene 381, Which Wiggler for scene 380 and Snowball Slalom for scene 368.
+# The three COMPOUND config names also split correctly only under the first
+# reading (MgBingoBallSlotsShot -> row 10 "Bingo Ball" / row 22 "Slots Shot").
+# So name text = 27 -> "Mix-a-Mug", and save record = (param >> 8) & 0xff = 20.
+# This lane wrote its own decoder pass over tools/message_bank.py's extraction
+# rather than reading run mg9's answer, and it lands on the same string
+# port/mg_fanout_costs.txt line 2612 already records.
+#
+# ---- THE HIERARCHY IS THREE DEEP, AND THE ROM SAYS SO THREE TIMES ---------
+#
+#     Scene -> dScMgBase_c         0x020bc0c0  36  (ov004, curling's fill)
+#           -> dScMgSingle3DBase_c 0x0213e448  36  ovr 8,  mark 6,  nosrc 0
+#           -> dScMgSlot3_c        0x0213eaa8  36  ovr 9,  mark 8,  nosrc 0
+#
+#   - the TYPEINFO's base word is 0x0213bc64, which is dScMgSingle3DBase_c's
+#     own typeinfo record (name pointer 0x0213bd00 = "19dScMgSingle3DBase_c").
+#   - the FACTORY writes 0x0213e448 into the object's first word and then
+#     0x0213eaa8 over it (0x0210c144 and 0x0210c158).
+#   - the DESTRUCTORS unwind them in the opposite order: slot 17
+#     (func_ov006_0210a9a8, the D0) and its unmarked D2 sibling slot 16
+#     (func_ov006_0210a954) both store 0x0213eaa8 first and 0x0213e448 last,
+#     and both literal pools hold exactly those two words.
+#
+# This seat is the FIFTH into the middle table, after dScMgFlower_c (0x186),
+# dScMgMemory2_c (0x16b), dScMgCup_c (0x169), dScMgSound_c (0x16f) and
+# dScMgMCarlo_c (0x17d) -- five files now carry their own kSingle3DFaces copy.
+# hal/scene_mg_slot3.cpp section 3 is why that is safe and which fill claims
+# it.
+#
+# ---- THE WIDTH IS 36, AND THE SPAN SAYS 38 --------------------------------
+#
+# port/mg_fanout_costs.txt line 1287 already RESOLVED this: the span is an
+# upper bound only, inflated by unsymbolised padding, so "0x16d's span of 38
+# does NOT contradict its documented 36". This lane did not re-litigate it and
+# does not. What it adds is the MECHANISM, because "padding" turns out to be
+# the wrong word for what those two words are and the right word names a live
+# victim:
+#
+#   1. SPAN. config/arm9/overlays/ov006/symbols.txt: data_ov006_0213eaa8 ->
+#      next symbol data_ov006_0213eb40. 0x98 bytes = 38 words. UPPER BOUND.
+#   2. TERMINAL SLOT. Slot 35 holds 0x020ad660, the word every
+#      dScMgBase_c-derived table holds. Both tables this seat fills do.
+#   3. WHAT THE WORDS PAST THE END ARE. Index 36 = 0x00000000 and index 37 =
+#      0x0213e5a0. THOSE TWO WORDS ARE THE RTTI HEADER OF THE NEXT CLASS'S
+#      VTABLE. Every vtable in this overlay is preceded by a {0, &typeinfo}
+#      pair -- this one's own is at 0x0213eaa0/0x0213eaa4 = {0, 0x0213e588} --
+#      and the config symbol boundary is placed at the VTABLE, not at the
+#      header. 0x0213e5a0 is the typeinfo record whose name string reads
+#      "12dScMgSlot1_c", and data_ov006_0213eb40 is that class's vtable. So the
+#      span over-reads by exactly two words, on this table and on every other
+#      table in ov006, and the two words are not padding: they are the
+#      neighbour's.
+#   4. RELOCATION COUNT. 37 load relocations fall inside [0x0213eaa8,
+#      0x0213eb40): indices 0..35 complete, NONE at index 36, and one at index
+#      37 -- which is the neighbour's typeinfo pointer, a relocated word for
+#      its own reason. A vtable slot is a relocated word by construction, so
+#      index 36 with no relocation is not a slot.
+#   5. RELOCATION STRIDE (run mg9 lane LKY's check). Stride 4 for exactly 36
+#      consecutive words from 0x0213eaa8, then a jump of 8 across the zero at
+#      index 36, then 4 again through the neighbour's table. The jump IS the
+#      table ending, and it lands where checks 2, 3 and 4 already put it.
+#
+# THE VICTIM IS NAMED AND SHIPS TODAY. A 38-slot fill here would write a host
+# thunk over 0x0213eb3c, dScMgSlot1_c's typeinfo pointer -- scene 364, the
+# SCENE_MG_SLOT1 row, seated by run mg9 lane S364 and in every build since.
+# The fill is called with 36 and this lane's sibling canary is a scene-364
+# boot.
+#
+# ---- THIS CLASS HAS A POINTER-TO-MEMBER STATE MACHINE, AND ONE FLOOR -------
+#
+# Eight states in data_ov006_02142bdc, filled by __sinit_ov006_02132894,
+# dispatched from vtable slot 6 (func_ov006_0210bcb0) at stride EIGHT with
+# arity 0. port/unmatched/MgSlot3_StateDispatch.cpp is the host copy and its
+# header carries the ROM disassembly, the two attribution witnesses and the
+# slot order. Two things belong here rather than there:
+#
+#   THE WHOLE CLASS HAS EXACTLY ONE PMF SITE, measured rather than assumed.
+#   Every word of the code block 0x0210a954..0x0210c180 was decoded and matched
+#   against the ARM Itanium signature (`add Rd,Rn,Rm,asr #1`, `ands Rx,Rm,#1`,
+#   and the eight-byte `add Rd,Rn,Rm,lsl #3` stride) -- run mg9 lane LKY's
+#   detector for the third shape, the open-coded-in-plain-ints one that neither
+#   a link nor a `::*` sweep can see. THREE hits, all three inside
+#   func_ov006_0210bcb0 and all three part of the one sequence. A `::*` sweep
+#   over every TU in this slice is clean, and no TU in it reaches
+#   func_ov006_020c2b8c, the field-held dispatcher the +0x4f38 family's OTHER
+#   two classes go through (this class's Behavior calls func_ov006_020c2144,
+#   which is a four-instruction veneer onto BlendModelAnim::Advance).
+#
+#   SECTION 3's nosrc COLUMN READS 0 FOR THIS ROW AND THE CLASS HAS A FLOOR.
+#   The column is computed over the VTABLE; the floor is in the STATE table.
+#   func_ov006_0210adac (0x1b8, config symbol, no delink block, no src in any
+#   module) is slot 2, the face-evaluation step between the third reel stopping
+#   and the payout. A seat lane that trusted the column would not have looked.
+#   Adjudication arithmetic: 108 instructions plus a two-word literal pool
+#   (0x0000503e at 0x0210af5c, 0x66666667 at 0x0210af60 -- the signed
+#   divide-by-five magic, which is the strip length 5 the class's own +0x503a
+#   holds) = 110 = 0x1b8/4. Its five callees, for the floor wave that takes it:
+#   DecIfAbove0_Byte (0x0203add4), the ITCM divide helper (0x01ffabe4),
+#   func_02012790 twice, func_ov004_020adb1c.
+#
+# ---- SLOT 18 TAKES A REAL ARGUMENT ----------------------------------------
+#
+# The SECOND class in the family to do so, after dScMg3DEsp_c (run mg9 lane
+# PSY). func_ov006_0210b314 keeps r1 (`mov r8,r1` at 0x0210b31c) and branches
+# on it three ways -- 3 and 0x12 are the round START, 4 is the round ADVANCE --
+# and both ROM dispatch sites pass a real value: `mov r1,#3` at 0x0210bfe8
+# inside slot 0, `mov r1,#4` at 0x0210aca0 inside state 0x0210ac3c. The face in
+# hal/scene_mg_slot3.cpp FORWARDS it. A ride-through thunk would have started
+# every round at level 0 and never advanced the board, and neither the byte
+# gate nor the link can see that.
+#
+# ---- SLOT 32 TAKES NO RECEIVER --------------------------------------------
+#
+# src/func_ov006_0210aa60.cpp declares (void) and the ROM agrees: the body's
+# first use of r0 is `mov r0,#0` at 0x0210aa68 feeding SetBg1Offset(0,0). This
+# is the ARM ride-through, not the dropped-receiver defect -- there is no
+# receiver in the body to drop. hal/scene_mg.cpp's own base face for this slot
+# (mb_v32, over func_ov004_020b27f4) is spelled the same way.
+#
+# ---- THE EIGHT ROM ADJUDICATIONS ------------------------------------------
+#
+# Thirteen of this class's fifteen override SLOTS carry the "recovered from
+# vtable slot identity" marker, which is section 3's mark column exactly. By
+# BODY the count is fourteen of seventeen (the extra is the middle base's own
+# D0, func_ov006_0210a4e8): slots 16 and 17 hold different bodies in the two
+# tables, so the per-slot and per-body counts differ by one and both are
+# right for their unit.
+#
+# SIX OF THE FOURTEEN ARE ALREADY RULED -- the middle base's, by run mg9 lane
+# PSY and four earlier lanes. The EIGHT this lane owes are its own class's, all
+# eight disassembled out of extracted/overlays/overlay_0006.bin at base
+# 0x020bfec0 and compared against src, with the instruction/pool arithmetic
+# closing on every one:
+#
+#   body     slot  size    instructions + pool = size/4
+#   -------- ----  -----   -----------------------------
+#   0210bdb0   0   0x370   197 + 23 = 220
+#   0210bcb0   6   0x100    57 +  7 =  64
+#   0210b648   9   0x668   398 + 12 = 410
+#   0210a954  16   0x54     ---   (no marker; not owed)
+#   0210a9a8  17   0x68     21 +  5 =  26
+#   0210b314  18   0x334   201 +  4 = 205
+#   0210aa3c  29   0x24      7 +  2 =   9
+#   0210aa10  30   0x2c      8 +  3 =  11
+#   0210aa60  32   0xa8     38 +  4 =  42
+#
+# The rows and their evidence are in port/tools/inferred_stub_adjudicated.txt.
+#
+# ---- WHAT IS NOT IN THIS SLICE AND WHY ------------------------------------
+#
+# HOST-COPIED, so listing them here would be an LNK2005 against a file already
+# on every target:
+#   src/func_ov006_0210bcb0.cpp  vtable slot 6. It is the pointer-to-member
+#     dispatcher; port/unmatched/MgSlot3_StateDispatch.cpp defines the same
+#     symbol with the dispatch routed through an address switch.
+#   src/func_ov006_0210a6e4.cpp  slot 2 of the middle base. It drops the
+#     framework's second argument (the ROM rides it through r1). The repair is
+#     port_mg_flower_after_init in port/unmatched/MgFlower_Slot2.cpp; this is
+#     the fifth lane to call it rather than write a second one.
+#   src/func_ov006_0210a708.c    slot 33 of the middle base. Its last two
+#     stores reach LIGHT_COLOR at 0x040004cc, so it builds from the FLW
+#     hostgen'd copy port/CMakeLists.txt already emits.
+#
+# NO BODY IS INVENTED FOR THE FLOOR. unmatched/MgCurling_State_020e1854.cpp is
+# the precedent for transcribing such a state from the ROM and it is the right
+# next step for 0x0210adac -- but a transcription is a decompilation and this
+# is a seat lane. The dispatch site names it, counts it and reports what the
+# player loses.
+#
+# ---- THE DELTA -------------------------------------------------------------
+#
+# This class's own sixteen bodies (its whole code block minus the host-copied
+# slot 6 and minus the bodiless floor), then the nine ov006 bodies of the
+# shared +0x4f38 / +0x4660 sub-object family that no earlier minigame slice
+# reached -- the BlendModelAnim + SharedFilePtr block the factory constructs
+# and the camera preset the Render and InitResources call -- then whatever the
+# link asked for, each line marked with the wave that added it.
+src/func_ov006_020c1eb4.c
+src/func_ov006_020c1ef8.c
+src/func_ov006_020c1f04.c
+src/func_ov006_020c1f4c.cpp
+src/func_ov006_020c201c.cpp
+src/func_ov006_020c2144.c
+src/func_ov006_020c2154.c
+src/func_ov006_020c21e4.c
+src/func_ov006_020c221c.c
+src/func_ov006_0210a954.cpp
+src/func_ov006_0210a9a8.cpp
+src/func_ov006_0210aa10.c
+src/func_ov006_0210aa3c.c
+src/func_ov006_0210aa60.cpp
+src/func_ov006_0210ab08.c
+src/func_ov006_0210ab90.c
+src/func_ov006_0210ab94.c
+src/func_ov006_0210ac38.c
+src/func_ov006_0210ac3c.cpp
+src/func_ov006_0210af64.c
+src/func_ov006_0210b1fc.c
+src/func_ov006_0210b314.c
+src/func_ov006_0210b648.c
+src/func_ov006_0210bdb0.cpp
+src/func_ov006_0210c120.c
