@@ -369,9 +369,15 @@ static int  __fastcall d3_v25(void *s, void *)
 { D3D(25); return func_ov006_020e6e54(s); }
 static int  __fastcall d3_v26(void *, void *)
 { D3D(26); return func_ov006_020e6e4c(); }
-static int  __fastcall d3_v27(void *, void *)
+/* SLOTS 27 AND 28 TAKE THE RECEIVER AND THIS LANE HAD DROPPED IT.  The two
+   ROM bodies are `ldr ip,[pc] / bx ip` veneers onto dScMgBase_c's own slot-27
+   and slot-28 bodies, so r0 rides through untouched; their src TUs take no
+   parameter and this file used to call them the same way, which handed both
+   arm9 bodies stack litter as `this`.  Lanes BNT and BNP found it first and
+   port/unmatched/MgD3DBase_Slots.cpp is their repair, adopted verbatim. */
+static int  __fastcall d3_v27(void *s, void *)
 { D3D(27); port_mg_d3dbase_slot27(s); return 1; }
-static int  __fastcall d3_v28(void *, void *)
+static int  __fastcall d3_v28(void *s, void *)
 { D3D(28); port_mg_d3dbase_slot28(s); return 1; }
 static int  __fastcall d3_v29(void *s, void *)
 { D3D(29); func_ov006_020e6d24((char *)s); return 1; }
