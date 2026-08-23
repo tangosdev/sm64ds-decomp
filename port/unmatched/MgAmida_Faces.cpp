@@ -86,7 +86,6 @@
 extern "C" {
 
 static unsigned g_amida_floor_27dc;
-static unsigned g_amida_floor_36a4;
 
 /* THE HOLE IN THE BEHAVIOR'S OWN CALL LIST. 0xe48 bytes, one caller. */
 void func_ov006_020d27dc(char *c);
@@ -96,13 +95,26 @@ void func_ov006_020d27dc(char *c)
     ++g_amida_floor_27dc;
 }
 
-/* THE HOLE ON THE INIT PATH AND THE TICK PATH BOTH. 0x4fc bytes, two callers. */
-void func_ov006_020d36a4(void *sb);
-void func_ov006_020d36a4(void *sb)
-{
-    (void)sb;
-    ++g_amida_floor_36a4;
-}
+/* ---- SEATED, run mg10 lane F371 -----------------------------------------
+ *
+ * func_ov006_020d36a4 IS NOT A TRAP ANY MORE and its counter is gone with it,
+ * which is run mg7 lane L369's treatment of func_ov006_0210076c rather than an
+ * empty shell: a trap standing beside a real definition is a duplicate symbol,
+ * not a safety net.
+ *
+ * It is the ROUND SETUP. It shuffles the four ladder lanes with the game's
+ * 15-bit range draw, refuses a board whose result repeats the previous round's
+ * (mode 2 compares the permutation, the many-walker arm compares the occupancy
+ * set), and then initialises the four walkers. The tail is what identifies the
+ * whole class: it writes each walker's start X as LANE[i] * 64 + 32, which is
+ * 32, 96, 160 and 224 -- exactly the four rail coordinates 0x20, 0x60, 0xa0 and
+ * 0xe0 that src/func_ov006_020d3ba0.c draws its vertical lines at through the
+ * ov004 rasteriser this lane also seated. The board and the walkers agree on
+ * where the ladder is, and neither half was read from the other.
+ *
+ * The symbol comes from port/slice_s371.txt. src/func_ov006_020d36a4.c is
+ * NONMATCHING at two instructions and its banner names the exact idiom.
+ */
 
 /* ---- THE THIRD FLOOR, AND IT IS ov004's -- TRAPPED IN THE FAMILY FILE ----
  *
@@ -163,6 +175,5 @@ void func_ov006_020d36a4(void *sb)
  * class discards the result, so the trap returns 0 and asserts nothing.
  */
 unsigned port_mg_amida_floor_27dc(void)  { return g_amida_floor_27dc; }
-unsigned port_mg_amida_floor_36a4(void)  { return g_amida_floor_36a4; }
 
 }  /* extern "C" */

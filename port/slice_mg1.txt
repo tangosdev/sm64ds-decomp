@@ -666,3 +666,31 @@ src/func_ov004_020b51e4.c
 # target that compiles the faces: the symbol is no longer defined anywhere
 # else. A 3000-frame boot of scene 369 alone entered that trap 5657 times.
 src/func_ov004_020b1710.c
+# Run mg10, lane F371. THE SIXTH OF THE SIX GENUINELY-UNMATCHED BODIES THIS
+# FILE'S HEADER NAMES IS NOW SEATED, and it is the one that was hiding a live
+# host-ABI defect nobody could reach.
+#
+# func_ov004_020ae5c4 is the family's LINE RASTERISER: a Bresenham walk from
+# (x0,y0) to (x1,y1) that stamps vtable slot 34 at every lattice point. Slot 34
+# is the BRUSH -- the base's own body, src/func_ov004_020ae3b4.c at line 261
+# above, writes an n-by-n block of `val` through MultiCopy_Int -- so the pair is
+# "draw a line of thickness n in colour val", and the amidakuji board is drawn
+# with it: four vertical rails at x = 0x20, 0x60, 0xa0, 0xe0 and horizontal
+# rungs (x,y) -> (x+0x40,y), from src/func_ov006_020d3ba0.c.
+#
+# THE LINE IS NOT OPTIONAL ON ANY TARGET THAT COMPILES THE FACES, for
+# func_ov004_020b1710's reason above: hal/scene_mg_faces.cpp's trap for this
+# symbol is DELETED in the same commit and the symbol is defined nowhere else.
+# Seven ov006 TUs across the family call it.
+#
+# AND SEATING IT MAKES SLOT 34 REACHABLE FOR THE FIRST TIME IN PORT HISTORY.
+# This body is the tree's ONLY slot-34 dispatcher (eight `ldr Rd,[Rn,#0x88]`
+# sites, all inside it, each with one word pushed before the blx). While it was
+# trapped, hal/scene_mg.cpp's shared mb_v34 could declare the five-parameter
+# base body with ONE parameter and call it with one argument and never be
+# convicted. That thunk is repaired in the same commit, witnessed by a run.
+#
+# It is a .c compiled as C++ (a //cpp marker and a dummy 35-virtual struct is
+# how the slot-34 dispatch is spelled), so it carries a LANGUAGE CXX row in
+# port/CMakeLists.txt beside this slice's other C++ .c files.
+src/func_ov004_020ae5c4.c

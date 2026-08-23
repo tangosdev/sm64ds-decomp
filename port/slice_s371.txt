@@ -330,6 +330,14 @@
 #
 # ---- 6. TWO HARD FLOORS, BOTH ON THE TICK PATH ----------------------------
 #
+# AMENDED, run mg10 lane F371: ONE OF THE TWO IS CLOSED and the third floor
+# this file's header counts (the ov004 one, in section 7 below) is closed too.
+# func_ov006_020d36a4 is src/func_ov006_020d36a4.c now, seated at the end of
+# this file, and func_ov004_020ae5c4 is src/func_ov004_020ae5c4.c in
+# port/slice_mg1.txt. What follows is left as lane S371 wrote it because the
+# DERIVATION is still how both were found; only the status changed.
+# port/mg_fanout_costs.txt section 21 has the closures and maps the survivor.
+#
 # The cost table's nosrc column reads 0 for this class and that column counts
 # only vtable BODIES. Section 13 CORRECTION 3's method -- a delinks join over
 # every CALLEE of every override, not over the state addresses -- finds two:
@@ -402,3 +410,23 @@ src/func_ov006_020d5924.cpp
 # walk did not reach it. It is a two-line empty body.
 src/func_ov006_020d5a50.c
 src/func_ov006_020d5974.cpp
+# WAVE 3, run mg10 lane F371. THE FIRST OF THIS CLASS'S TWO ov006 FLOORS IS
+# CLOSED. func_ov006_020d36a4 is the ROUND SETUP: it shuffles the four ladder
+# lanes with the game's 15-bit range draw, refuses a board that repeats the
+# previous round, and initialises the four walkers.
+#
+# THE TAIL IS WHAT IDENTIFIES THE WHOLE CLASS, and it is a control this lane
+# did not arrange: the walker's start X is LANE[i] * 64 + 32, which is 32, 96,
+# 160 and 224, and those are exactly the four rail coordinates 0x20, 0x60, 0xa0
+# and 0xe0 that src/func_ov006_020d3ba0.c draws its vertical lines at. The board
+# and the walkers agree on where the ladder is and neither half was read off the
+# other.
+#
+# Its trap in port/unmatched/MgAmida_Faces.cpp is DELETED rather than emptied,
+# and its counter with it -- run mg7 lane L369's rule that a trap standing
+# beside a real definition is a duplicate symbol, not a safety net.
+#
+# It is a .c compiled as C++ (the slot-36 dispatch is spelled through a dummy
+# 37-virtual struct, the same device src/func_ov006_020d3ba0.c uses in this
+# class), so it carries a LANGUAGE CXX row in port/CMakeLists.txt.
+src/func_ov006_020d36a4.c

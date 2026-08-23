@@ -119,6 +119,17 @@
 //
 // ---- 6. THREE FLOORS, AND THEY ARE ALL ON THE PATH -----------------------
 //
+// AMENDED, run mg10 lane F371: TWO OF THE THREE ARE CLOSED. The ov004 floor
+// turned out to be BRESENHAM'S LINE ALGORITHM with vtable slot 34 as its
+// brush -- it is what draws this board's four rails and its rungs -- and
+// seating it made slot 34 reachable for the first time in port history, which
+// is what finally gave the mb_v34 defect noted below a witness. That thunk is
+// repaired. func_ov006_020d36a4, the round setup, is seated as well. Only
+// func_ov006_020d27dc (0xe48, the walker tick) still stands, and
+// port/mg_fanout_costs.txt section 21 maps it for whoever takes it. The
+// paragraphs below are left as lane S371 wrote them because the derivation is
+// still how all three were found; only the status changed.
+//
 // func_ov006_020d27dc (0xe48) and func_ov006_020d36a4 (0x4fc) have config
 // symbols, no delink block and no src file in any overlay. Slot 6 calls both;
 // func_ov006_020d3ba0 -- which slot 0 and slot 18 both end on -- calls the
@@ -200,7 +211,6 @@ void *func_ov006_020d5974(void);
    counter to read. Run mg9 merged this lane with lane BOO, which owns that
    trap; entries into it report themselves on stderr from the family file. */
 unsigned port_mg_amida_floor_27dc(void);
-unsigned port_mg_amida_floor_36a4(void);
 
 void port_scene_amida_hits(void);
 
@@ -495,13 +505,20 @@ extern "C" void port_scene_amida_hits(void)
        section 16's rule. Both bodies branch on slot 36 internally, so these
        counters are also the count of mode decisions this seat did not get to
        make. */
+    /* ONE FLOOR LEFT OF THE THREE, run mg10 lane F371. func_ov006_020d36a4
+       (the round setup) and func_ov004_020ae5c4 (the family's line rasteriser,
+       and the tree's only slot-34 dispatcher) both have real bodies now, so
+       their counters are DELETED rather than left reading zero -- a counter
+       beside a real definition measures nothing. The remaining hole is the big
+       one and it is still on the tick path. */
     std::printf("[scene] dScMgAmida_c floor asks: func_ov006_020d27dc %u "
-                "(0xe48, one caller, vtable slot 6), func_ov006_020d36a4 %u "
-                "(0x4fc, two callers, slot 6 and the init tail); the third "
-                "floor func_ov004_020ae5c4 (0x294, ov004, ten call sites in "
-                "this class and the family's slot-34 dispatcher) is the "
-                "family's and reports from hal/scene_mg_faces.cpp\n",
-                port_mg_amida_floor_27dc(), port_mg_amida_floor_36a4());
+                "(0xe48, one caller, vtable slot 6). The other two floors are "
+                "CLOSED: func_ov006_020d36a4 (0x4fc, the round setup) and "
+                "func_ov004_020ae5c4 (0x294, ov004, the family's line "
+                "rasteriser and the tree's only slot-34 dispatcher) both have "
+                "bodies, and slot 34's own hit count above is the witness for "
+                "the second\n",
+                port_mg_amida_floor_27dc());
 
     /* THE STATE INDEX IS PRINTED BECAUSE IT IS THE ONLY THING THAT SEPARATES
        "the behavior slot ran" from "the state machine ran". Slot 6 is a
