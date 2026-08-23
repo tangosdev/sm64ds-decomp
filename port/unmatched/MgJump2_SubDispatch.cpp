@@ -96,11 +96,19 @@
 // framework-routed count is ZERO on both machines rather than a scan that
 // says it should be.
 //
-// Writers confirmed by their own str offsets: 0x020c6ca4, 0x020c68f4,
-// 0x020c64e4, 0x020c4d20, 0x020c4c54, 0x020c4710, 0x020c4060 and 0x020c4148
-// all write +0x30/+0x34; 0x020c7300, 0x020c8658, 0x020c862c and 0x020c8084 all
-// write +0x3c/+0x40.  Every adjustment word is zero and every code word has a
-// matched src TU, so neither machine has a floor.
+// THE SPLIT WAS MEASURED ON THE WRITERS THEMSELVES, not read off the record
+// addresses: every function that installs one of these records was
+// disassembled and its own store offset taken.  Eight write +0x30/+0x34
+// (0x020c4060, 0x020c4148, 0x020c4710, 0x020c4c54, 0x020c4d20, 0x020c64e4,
+// 0x020c68f4, 0x020c6ca4) plus the eleven-arm switch inside
+// func_ov006_020c6a9c and func_ov006_020c4f68; the rest write +0x3c/+0x40
+// (0x020c7300, 0x020c762c, 0x020c79a8, 0x020c7ba4, 0x020c802c, 0x020c8084,
+// 0x020c8270, 0x020c81e0, 0x020c85a0, 0x020c862c, 0x020c8658, 0x020c8768).
+// EVERY adjustment word is zero and EVERY one of the twenty-five code words
+// resolves to a matched src TU with no NONMATCHING banner, so neither machine
+// has a floor -- checked per body against src/ rather than inferred from the
+// costs table's nosrc column, which is computed over the VTABLE only and
+// cannot see a state-table floor at all.
 //
 // BOTH SWITCHES CARRY BOTH SETS.  A field is one address and a code word is
 // one address, so the two key sets are disjoint and a shared switch cannot
