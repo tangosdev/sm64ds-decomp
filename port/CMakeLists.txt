@@ -4504,12 +4504,15 @@ set_source_files_properties(
 # code block are the SpawnInfo's factory word and the eleven vtable slots. So
 # no slice line is excluded and there is no duplicate-symbol assertion to make.
 #
-# unmatched/MgAmida_Faces.cpp IS NOT A FACE FILE DESPITE THE NAME, and it is
-# named for the family's convention rather than its contents: it holds the two
-# counting traps for func_ov006_020d27dc (0xe48) and func_ov006_020d36a4
-# (0x4fc), both of which have a config symbol, no delink block and no src file
-# in any overlay. slice_s371.txt lists neither, which is what keeps the
-# Behavior's slice line linkable.
+# unmatched/MgAmida_Faces.cpp IS NOT A FACE FILE DESPITE THE NAME, and as of
+# run mg10 lane WALKER it is not a TRAP file either -- it traps nothing. It held
+# the two counting traps for func_ov006_020d27dc (0xe48) and
+# func_ov006_020d36a4 (0x4fc); both are decompiled now and both traps are
+# deleted, so what is left is the DERIVATION that found the holes. It stays in
+# the slice because that derivation -- a delinks join over every callee of every
+# override, which is the check that finds a callee-shaped floor when the nosrc
+# column reads zero -- is the reusable part, and deleting the file would delete
+# it.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_s371.txt" SLICE_S371_LINES)
 set(SLICE_S371_SOURCES hal/scene_mg_amida.cpp
                        unmatched/MgAmida_Faces.cpp
@@ -4524,26 +4527,19 @@ foreach(line IN LISTS SLICE_S371_LINES)
     endif()
     list(APPEND SLICE_S371_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
-# ONE FLOOR MUST STAY OUT OF THE SLICE, and it was two until run mg10 lane
-# F371. A slice line that came back (a decomp landing, a rename, a merge) would
-# define the same symbol twice and the link would say so -- but it would say so
-# as a duplicate-symbol wall far from its cause, so the assertion is here
-# instead. When the remaining body IS decompiled, the fix is to delete its trap
-# from unmatched/MgAmida_Faces.cpp and its name from this list in the same
-# commit, the way lane L380 retired MgPanel's.
+# NO FLOOR HAS TO STAY OUT OF THIS SLICE ANY MORE, run mg10 lane WALKER, and
+# the whole sequencing guard is gone with the last trap it sequenced. It named
+# two bodies at run mg9, one after run mg10 lane F371, and none now:
+# src/func_ov006_020d27dc.c is a real decompilation in the slice and its trap in
+# unmatched/MgAmida_Faces.cpp is deleted, so an assertion naming it would refuse
+# the very landing it was written to sequence -- which is exactly the reasoning
+# that retired the 020d36a4 rows one wave earlier, applied to the last row.
 #
-# THE 020d36a4 ROWS ARE GONE FROM THIS LIST BECAUSE THE PROCEDURE ABOVE WAS
-# FOLLOWED, not because the assertion was in the way: src/func_ov006_020d36a4.c
-# is a real decompilation in the slice now and its trap is deleted, so a guard
-# naming it would refuse the very landing it was written to sequence. That is
-# the whole point of retiring the pair together.
-foreach(dup IN ITEMS src/func_ov006_020d27dc.c src/func_ov006_020d27dc.cpp)
-    if(dup IN_LIST SLICE_S371_LINES)
-        message(FATAL_ERROR "slice_s371.txt lists ${dup}, which "
-                "unmatched/MgAmida_Faces.cpp traps. Taking both is a duplicate "
-                "symbol; retire the trap in the same commit as the body")
-    endif()
-endforeach()
+# WHAT THE GUARD WAS FOR is worth keeping in words even though the code is gone,
+# because the next class with a trapped callee needs it: a slice line that comes
+# back while a trap still defines the same symbol is a duplicate symbol, and the
+# link reports that as a wall far from its cause. The rule the two retirements
+# share is that the trap and the slice line move IN THE SAME COMMIT.
 # And the one host-copied body, for the same reason the S75 block asserts its
 # five: a slice line that came back would be a duplicate symbol far from its
 # cause, and taking the src one instead would put the arm9 RNG seed's second
@@ -4566,8 +4562,13 @@ endif()
 # it: tools/hostgen.py wraps every .c in extern "C" unconditionally, and a
 # //cpp file's struct-with-virtuals inside that wrap is not what is wanted. The
 # TU spells its own linkage.
+#
+# AND RUN mg10 LANE WALKER MAKES IT TWO. src/func_ov006_020d27dc.c is //cpp for
+# the same reason and spells its own extern "C" for the same reason: it
+# dispatches slot 36 three times through the same dummy 37-virtual struct.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020d36a4.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020d27dc.c"
     PROPERTIES LANGUAGE CXX)
 
 # Run mg9 lane S381: dScMgMCarlo_c, the "Pair-a-Gone" card minigame, actor id

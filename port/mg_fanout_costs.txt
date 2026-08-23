@@ -2985,3 +2985,321 @@ WHAT THIS SECTION DOES NOT KNOW.
   - TOUCH IS STILL UNMEASURED. Section 19 left it open and it stays open: the
     line the stylus would draw goes through the rasteriser seated here, but
     nothing in this lane drove a stylus.
+
+22. THE WALKERS WALK: SCENE 371's LAST FLOOR, run mg10 lane WALKER
+--------------------------------------------------------------------------------
+
+Worktree C:/tmp/mWk, branch mg10-walker, base bae3a92e6, private build
+C:/tmp/mWk/build/port with CMAKE_HOME_DIRECTORY verified C:/tmp/mWk/port.
+
+SECTION 21 PART 6 WAS A GOOD MAP AND ONE OF ITS READINGS WAS WRONG. The
+eight-neighbour reading, the forty-two probe sites, the four rails, the +0x5398
+arrival bytes, the three slot-36 dispatch addresses and the single caller were
+all confirmed against a fresh disassembly before a line of C was written. Two
+entries do not survive that check and they are CORRECTIONS, not refinements:
+
+  CORRECTION 1, AND IT IS A WRONG READING RATHER THAN A VAGUE ONE. Section 21
+  part 6 says the thirteen constants "read as a goal-row Y table plus a direction
+  set". THERE IS NO GOAL-ROW Y TABLE. The nine frame slots and four registers
+  hold sp+0x10 = 0xe0, +0x14 = 0xbf, +0x18 = 0xc7, +0x1c = 0xcf, +0x20 = 0xd7,
+  +0x24 = 0x1c0, +0x30 = 5, +0x34 = 2, +0x38 = 7, r6 = 1, fp = 4, r4 = 6,
+  r5 = 3. ALL SIX of the non-direction values are SOUND IDS, checked at their
+  use sites rather than inferred from their magnitudes: 0xbf, 0xc7, 0xcf and 0xd7
+  are picked by a four-entry jump table at 0x020d2b04 on the winner's goal index
+  and each is loaded into r0 immediately before a `bl func_02012718`; 0xe0 is the
+  arrival sound, loaded into r0 before func_02012718 at 0x020D2AE0 and 0x020D2C2C;
+  and 0x1c0 is the rail-snap note, loaded into r0 before func_020126ac at
+  0x020D2F98 and its five siblings. r0 is the sound-id parameter in both callees.
+  The remaining seven, 1..7, are the direction numbers. So the six values that
+  looked like a row table are six sound ids and NOT ONE of them is a row.
+
+  0xe0 IS WHY THE WRONG READING WAS PLAUSIBLE, and it is worth naming so the next
+  reader does not repeat it: 0xe0 is also the fourth rail's X coordinate, and this
+  body really does compare columns against 0x20 / 0x60 / 0xa0 / 0xe0 a few hundred
+  instructions further down. The constant in the entry block is not that one. A
+  magnitude that matches a known coordinate is a coincidence until the use site
+  says otherwise, and here the use site says sound.
+
+  Section 21's own text is left standing and is corrected HERE rather than edited
+  in place, so the record shows what was believed and when.
+
+  CORRECTION 2. "Three of its instructions dispatch slot 36" is true and the
+  natural reading of it is not: they are NOT three per tick. All three sit on the
+  fall-through of `cmp r1,r0 / ble 0x020d2e78` at 0x020d28f4, that is, entirely
+  inside the ARRIVAL arm -- the walking arm begins at 0x020d2e78 and contains
+  none of them -- and 0x020d2ab0's `bne 0x20d2d84` routes to EITHER the second or
+  the third and never both. So the count is TWO PER ARRIVAL. A lane predicting
+  "+3 per tick execution" from section 21 would have predicted a rise of about
+  2400 at 1200 frames; the measured change is a FALL of 1309.
+
+  ov006's base 0x020bfec0 was PROVEN before any disassembly was trusted, on
+  section 21's own control: func_ov006_020d1170 and _020d1188 reproduce the
+  six-instruction cmp #1 / cmp #2 mode predicates instruction for instruction.
+  The body decoded to 899 instructions plus a 15-word pool, exactly as mapped,
+  and the reloc join over its range returns 68 rows that match the map's counts
+  term for term (42 + 11 + 6 + 6 + 1 + 1 + 1).
+
+---- 1. WHAT THE BODY IS ---------------------------------------------------
+
+AN EIGHT-NEIGHBOUR LINE FOLLOWER WITH A RAIL SNAP. Per walker, per tick, once
+its release delay at +0x46b8 has run out:
+
+  ROW <= the board bottom at +0x4700 -- THE WALKING ARM. If the walker has not
+      picked up the line yet (step state at +0x4680 is 0 or 1) it moves down one
+      row and probes LEFT then RIGHT. Otherwise it switches on the direction at
+      +0x4684 and tries FIVE directions in preference order, taking the first
+      that hits; when all five miss it turns around. The order is per-direction
+      and hand-written rather than generated -- the current direction first, then
+      its two 45-degree neighbours, then its two 90-degree ones, but which of
+      each pair comes first varies row to row -- and the fallback is always the
+      180-degree reverse:
+
+          dir  probes in order        fallback
+           0   0, 1, 3, 5, 2              7
+           1   1, 0, 2, 3, 4              6
+           2   2, 1, 4, 0, 7              5
+           3   3, 0, 5, 1, 6              4
+           4   4, 2, 7, 1, 6              3
+           5   5, 6, 3, 0, 7              2
+           6   6, 5, 7, 3, 4              1
+           7   7, 6, 4, 5, 2              0
+
+      Forty of the forty-two probes are that table; the other two are the
+      left-then-right pair above it.
+
+  THE RAIL SNAP is the half that ties this body to the board. Six of the eight
+      directions guard on the walker's column FIRST: the three with a leftward
+      component (0, 3, 5) check 0x21, 0x61, 0xa1, 0xe1 and step LEFT, the three
+      with a rightward component (2, 4, 7) check 0x1f, 0x5f, 0x9f, 0xdf and step
+      RIGHT, and both land on 0x20, 0x60, 0xa0 or 0xe0. Direction is then forced
+      to 6 (straight down), the step state is set to 1, and a note plays at sound
+      id 0x1c0. Directions 1 and 6 carry no guard because they do not move the
+      column at all. Those eight constants were read out of THIS body and only
+      then found to be the rails section 21 part 1 derived from
+      func_ov004_020ae5c4's call sites and the columns func_ov006_020d36a4's tail
+      writes. Three independent derivations agree.
+
+  ROW > the bottom -- THE ARRIVAL ARM, and it is where the mode lives. The
+      walker's column is switched against the same four rails and compared
+      against the goal columns at +0x4714..+0x4720. In mode 2 each walker has
+      its OWN goal index at +0x46a4; otherwise every walker is looking for the
+      single index 1. A miss sets the per-rail byte at +0x5398..+0x539b.
+
+---- 2. THE MOTION WITNESS, WHICH IS THE WHOLE POINT ------------------------
+
+SECTION 21 PART 5 COULD SAY THE SCENE DOES NOT PLAY AND NAME THE REASON. This
+section can say it plays. Before this lane, scene 371's 300-frame and 1200-frame
+BMPs were ONE sha256 -- nine hundred frames apart and not one pixel different.
+After it, six frame counts give SIX DISTINCT IMAGES, and the walker's own state
+words (the census reads them out of the object now, rather than only counting
+dispatches) trace a whole amidakuji round:
+
+     60f   col 96  row -204  dir -1  step 0   on its start rail, no line yet
+    150f   col 70  row -167  dir  3  step 2   following a rung LEFT, mid-span
+    300f   col 32  row -102  dir  6  step 1   snapped onto rail 0x20, descending
+    600f   col 96  row   42  dir  6  step 1   crossed back to rail 0x60
+    900f   col 96  row  153  dir  6           past the bottom (layout 152),
+                                              arrival mark +0x5399 = 1, state 3
+   1200f   unchanged -- the round is over
+
+  THE ARRIVAL BYTE THAT GOT SET IS THE SECOND OF THE FOUR, which is the rail the
+  walker is standing on. Nothing chose that; it falls out of the column. And
+  col 70 at 150 frames is not a rail at all -- it is mid-rung, which is what says
+  the walker is walking the horizontal line rather than teleporting between
+  rails.
+
+  A DISPATCH COUNT COULD NOT HAVE SAID THIS, and that is why the census was
+  changed. Slot 36 at 300 frames is UNCHANGED at 1331, because at 300 frames no
+  walker has reached the bottom and the arrival arm has not run. At 1200 frames
+  it FALLS from 5831 to 4522 -- a floor closing made a counter go DOWN -- because
+  the class no longer spends every frame in the same state: +0x46d0 advances from
+  1 to 3 between frame 600 and frame 900, which only the arrival arm can do. A
+  lane reading only "slot 36 went up by N" would have called that a regression.
+
+---- 3. THE BYTE GATE, AND THE TWO LEVERS ----------------------------------
+
+NONMATCHING at 0xe40 vs 0xe48: TWO code words short, the pool the SAME fifteen
+words (ROM 899 code + 15 pool, candidate 897 + 15). A CODE-ONLY structural diff
+leaves ELEVEN ROM instructions and NINE candidate instructions without a
+counterpart, at THREE sites: the if-conversion at 0x020D2D40 plus its second
+epilogue block (7 ROM against 6 candidate, one word), the register-allocation
+copy at 0x020D2934 (3 against 2, one word), and one scheduling move of
+`mov r8,#0` (1 against 1, no words). 7 + 3 + 1 = 11 and 6 + 2 + 1 = 9, so the
+decomposition closes on its own headline, and 1 + 1 = 2 is the size deficit
+exactly. 2004/b56 by a wide margin -- the next best build is 1.2/base at 199.
+
+  THE TOOLING PRINTS 12 AND 10 AND THAT IS NOT AN ELEVENTH AND TWELFTH
+  DIVERGENCE. runs/mg10/out/WALKER/score2.py and hunks.py disassemble the WHOLE
+  symbol, literal pool included, so pool word ELEVEN of fifteen at 0x020D3610
+  counts as one ROM-only instruction and one candidate-only one. That word is
+  0x0212e1c0 in the ROM and zero in the object because it carries the load
+  RELOCATION to data_ov006_0212e1c0. The pool is otherwise word-for-word
+  identical. THE LEVER LADDER BELOW IS ON THE WHOLE-SYMBOL METRIC, one pair
+  higher than the code-only count throughout, so its entries are comparable with
+  each other; the shipped file reads 12 there and 11 code-only. An earlier draft
+  of this section, of the TU banner and of the near-miss note presented 12 as
+  decomposing into the three sites, which it does not -- the three sites hold
+  eleven.
+
+TWO LEVERS DID ALL THE WORK AND BOTH ARE REUSABLE:
+
+  #pragma optimization_level 2. Without it this body sits at 303 differing
+      instructions; with it, 12. The precedent for an optimisation-level pragma
+      in this tree is src's single `#pragma O3`. `#pragma O2` is NOT the same
+      thing and does nothing here, while `optimization_level 2` reproduces
+      -O2,p exactly under the repo's canonical -O4,p flags.
+
+  THE ADDRESS OPERAND ORDER, and this one is cheap enough that every future lane
+      should try it first. Spell a member address `(sb) + (i) * K + 0xNNNN` and
+      NOT `(sb) + 0xNNNN + (i) * K`. The two are the same expression in C and
+      they are not the same instructions: constant-first, mwccarm folds sb with
+      the constant and emits `add rX,sb,#0x4000 / ldr rD,[rX, i lsl 3]`;
+      index-first it emits the ROM's `add rX,sb,i lsl 3 / ldr rD,[rX,#0xNNN]`.
+      It is section 21 part 3's "indexed pointer versus byte-offset expression"
+      seen from the other end, and unlike that one it is a rule rather than a
+      per-array coin flip.
+
+      THE REVERT IS SPELLED OUT SO ITS FIGURES CAN BE RE-DERIVED, because a
+      lever number nobody can reproduce is a claim and not a measurement. TEN
+      spellings in the TU carry the order: SEVEN member macros (DELAY, GOAL,
+      COLP, ROWP, DIRP, STEPP, DONEP) and THREE inline expressions in the body
+      (`sb + j * 4 + 0x46b8` in the countdown loop, and `w + 0x4664` once and
+      `w + 0x4660` twice, where the walker base is reused). The inline flips are
+      to `sb + 0x46b8 + j * 4`, `sb + 0x4664 + i * 8` and `sb + 0x4660 + i * 8`
+      -- CONSTANT-FIRST AGAINST sb, which is the transform under test. Six
+      measurements, each naming the exact set flipped:
+
+          shipped, index-first throughout ......................... 12
+          the ONE countdown-loop inline only ..................... 23
+          the THREE inline expressions only ...................... 28
+          the SEVEN member macros only ........................... 49
+          the seven macros + the countdown inline (EIGHT) ........ 60
+          ALL TEN spellings ...................................... 65
+
+      THE SETS DO NOT ADD, and the ladder is six rows for that reason: 49 for the
+      macros and 23 for the countdown inline against 60 for their eight-spelling
+      union, not 72. NO claim is made about why they interact, because that was
+      not measured.
+
+      ONE WRONG WAY TO FLIP THEM IS RECORDED SO THE LADDER CANNOT BE
+      MISREPRODUCED, and it is the mistake this section already made. Reaching
+      the w pair by commuting the addition in place -- `w + 0x4664` written as
+      `0x4664 + w` -- is INERT. It measures 12, byte-identical to shipped,
+      because it only reorders an addition against a pointer mwccarm has already
+      computed. An earlier draft of this section flipped the pair that way, so
+      its "three inline expressions alone" was really the countdown inline's own
+      figure (23) and its "all ten" was really the eight-spelling figure (60):
+      two real measurements under two wrong labels. An independent rebuild of
+      each named set is what caught it, which is the general lesson -- a lever
+      figure is only reproducible if the SET is named as precisely as the number,
+      and a flip that changes nothing looks exactly like a flip that was applied.
+
+      AN EARLIER DRAFT OF THIS SECTION CLAIMED "84 differing instructions to 40"
+      for this edit. Both numbers were real readings taken mid-session, but the
+      intermediate source states behind them are preserved nowhere, so the figure
+      was not re-derivable from anything committed and it is withdrawn. The three
+      measurements above replace it and every one of them can be reproduced from
+      the shipped TU with the flip list named here.
+
+THERE ARE NOW TWO NEAR-MISS ROWS FOR THIS ADDRESS AND THE OLDER ONE IS DEAD,
+which is said here rather than left for whoever queries the database by name.
+nearmiss/db.jsonl already carried a func_ov006_020d27dc row from the automated
+grind batch `lunavyqo-batch2-grind`, at 184 divergences, and nothing in the
+schema marks a row as superseded. This lane's row is the one to read: it is
+tagged `run: mg10 lane WALKER`, it is the only one of the two with a
+`candidate_size` and a `note`, and its c_source is byte-equal to the shipped TU.
+The old row is left in place because the database is a history of attempts and
+deleting a losing attempt hides the ladder that was climbed.
+
+RELOC DESTINATIONS, AND A GATE VERDICT THAT NEEDS READING TWICE.
+reloc_audit.check_destinations run directly on the object returns 68 rows,
+verdict EXTRA on all 68, missing 68. THAT IS AN ALIGNMENT ARTEFACT AND NOT A
+WRONG DESTINATION: the check looks its config row up by absolute address, and
+every one of the 68 relocations sits past the first lost word, so every offset
+misses. The check a size-shifted body does admit was run instead: 68 both sides,
+destination SEQUENCE identical in address order, and the per-relocation shift is
+exactly 4 bytes for the first EIGHT and 8 bytes for the remaining SIXTY, the
+split falling precisely on the second lost word. THE SHIFT PATTERN IS ITSELF A
+CONFIRMATION of where the two words went.
+
+---- 4. LINKAGE, AND SECTION 21's PREDICTION COMES TRUE ---------------------
+
+    7118 / 11292 (63.0%)  ->  7121 / 11293 (63.1%)     +3 linked, +1 total
+
+  THE DENOMINATOR MOVES BY ONE AND AN EARLIER DRAFT PRINTED 11293 ON BOTH ENDS.
+  That was a measurement artefact, not a convention: port/tools/linkage.py builds
+  its universe from the DISTINCT STEMS of every .c and .cpp under src/ (its
+  matched_tus() walks src/ and keys on the file stem), and this lane ADDS one --
+  src/func_ov006_020d27dc.c. The before-figure was taken after that file was
+  already committed, so it read the tip's denominator with the new TU present but
+  not yet linked; the linked count 7118 was unaffected and is right. Re-derived
+  from git rather than from a rerun: `git ls-tree -r --name-only bae3a92e6 src/`
+  yields 11292 distinct .c/.cpp stems and the working tree yields 11293, the one
+  difference being exactly this TU.
+
+  THE SAME ARTEFACT IS IN SECTION 21's ROW AND IT IS FLAGGED HERE RATHER THAN
+  EDITED THERE, since a lane does not rewrite another lane's record. Section 21
+  prints `7101 / 11285 -> 7103 / 11285`, but that lane landed TWO new src files
+  (src/func_ov004_020ae5c4.c in 5c173cb62 and src/func_ov006_020d36a4.c in
+  a8f292cd0), so its universe grew by two and its BASE denominator was 11283 --
+  which is exactly the figure section 20 records as its own tip. Sections 19 and
+  20 are unaffected: their +217, +53 and +24 came from adding SLICE LINES for TUs
+  that already existed in src/, which moves the numerator and not the universe.
+  The rule for the next lane is short: the denominator moves if and only if you
+  add a file under src/, and it moves by the number of NEW STEMS, not by the
+  number of slice lines.
+
+  by module, the only two rows that moved:
+
+    module   total  linked  unlinked   linked
+    arm9      3098    1880      1218    60.7%    (was 1879)
+    ov006     1876    1181       695    63.0%    (was 1179)
+
+  +3 AGAINST TWO SLICE LINES, AND THE THIRD IS THE INTERESTING ONE:
+
+    arm9  +1   src/func_02012dbc.c, a new slice_mg1 line. Seating this body gave
+               it its FIRST caller in the build -- the ROM has one call site for
+               it in the whole overlay, at 0x020d2da0 in here -- so /OPT:REF had
+               dropped it. It forwards to func_0204f9c4, already in that slice
+               through func_02012dd0, so it pulled in nothing new.
+    ov006 +2   src/func_ov006_020d27dc.c itself, AND src/func_ov006_020d25fc.c,
+               which was already a slice line and was being DROPPED. Section 21
+               predicted this in words: "every one of its 42 call sites is inside
+               func_ov006_020d27dc, which is a trap". It was checked rather than
+               assumed -- all 42 relocations to 0x020d25fc lie between 0x020d2ec8
+               and 0x020d35b8, inside this body's span, and no other file in the
+               tree calls it -- so pre-seat it had zero callers and now it has
+               forty-two.
+
+  A TRAP-SHAPED FLOOR HIDES ITS CALLEES FROM THE LINK, and this is the clean
+  demonstration of the other half: closing one hides nothing any more, and the
+  headline moves by more than the slice lines that were added.
+
+---- 5. GATES ---------------------------------------------------------------
+
+  build            green, every post-link guard passing
+  battery          ALL GREEN -- 23 hosted scenes and every mounted level
+  canary 374       32557 call(s) / 32557 routed / 0 UNHANDLED, exact
+  scene 371        clean, exit 0, at 60, 150, 300, 600, 900 and 1200 frames
+                   under SM64DS_FAULTS_FATAL=1
+  scene 387        clean, exit 0, 300 frames, 0 UNHANDLED
+  arity ratchets   receiver 166 baselined / 166 live / 0 NEW / 0 retired;
+                   plain-name 117 / 117 / 0 NEW / 0 retired
+  ptr_audit        0 unhosted code pointers
+
+WHAT THIS SECTION DOES NOT KNOW.
+  - WHAT MODE 2 STILL LOOKS LIKE. The port takes ov005 row 0, so slot 36 answers
+    false every time it is asked and "Connect the Characters" has never run.
+    This body's mode-2 arms -- the per-walker goal index at +0x46a4, the
+    four-sound winner jingle, the 0x1c2 / 0x1c3 pair -- are still code no run in
+    this tree has entered. That is now the only thing standing between this class
+    and both of its titles.
+  - WHETHER THE PICTURE IS RIGHT. Six BMPs are captured and they differ from each
+    other, which is what proves motion. NOBODY HAS HELD ONE NEXT TO A DS, and
+    this lane does not judge them.
+  - TOUCH IS STILL UNMEASURED. Sections 19 and 21 left it open and it stays open.
+    The line the stylus would draw goes through the rasteriser, and this body is
+    what would follow it, but nothing here drove a stylus.
+  - THE ROUND RAN WITH ONE WALKER. +0x46c8 is 1 on this seat, so the many-walker
+    arm of this tick and the many-walker arm of the round setup are both
+    exercised only in their single-walker form.

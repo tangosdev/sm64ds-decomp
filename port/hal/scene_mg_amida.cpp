@@ -205,12 +205,12 @@ int   func_ov006_020d1188(void *c);           /* slot 36 mode == 2         */
 /* the factory */
 void *func_ov006_020d5974(void);
 
-/* the two floors this class owns, from unmatched/MgAmida_Faces.cpp. The third,
-   func_ov004_020ae5c4, is the FAMILY's and is trapped in hal/scene_mg_faces.cpp
-   -- seven ov006 TUs across the family call it -- so it has no per-class
-   counter to read. Run mg9 merged this lane with lane BOO, which owns that
-   trap; entries into it report themselves on stderr from the family file. */
-unsigned port_mg_amida_floor_27dc(void);
+/* THIS CLASS OWNS NO FLOORS ANY MORE, run mg10 lane WALKER, and the
+   declaration that stood here is gone with the counter it read.
+   unmatched/MgAmida_Faces.cpp traps nothing now: func_ov006_020d36a4 and
+   func_ov004_020ae5c4 got bodies in the previous wave and func_ov006_020d27dc,
+   the walker tick, has one in this one. A counter beside a real definition
+   measures nothing, so all three are deleted rather than left reading zero. */
 
 void port_scene_amida_hits(void);
 
@@ -505,20 +505,21 @@ extern "C" void port_scene_amida_hits(void)
        section 16's rule. Both bodies branch on slot 36 internally, so these
        counters are also the count of mode decisions this seat did not get to
        make. */
-    /* ONE FLOOR LEFT OF THE THREE, run mg10 lane F371. func_ov006_020d36a4
-       (the round setup) and func_ov004_020ae5c4 (the family's line rasteriser,
-       and the tree's only slot-34 dispatcher) both have real bodies now, so
-       their counters are DELETED rather than left reading zero -- a counter
-       beside a real definition measures nothing. The remaining hole is the big
-       one and it is still on the tick path. */
-    std::printf("[scene] dScMgAmida_c floor asks: func_ov006_020d27dc %u "
-                "(0xe48, one caller, vtable slot 6). The other two floors are "
-                "CLOSED: func_ov006_020d36a4 (0x4fc, the round setup) and "
-                "func_ov004_020ae5c4 (0x294, ov004, the family's line "
-                "rasteriser and the tree's only slot-34 dispatcher) both have "
-                "bodies, and slot 34's own hit count above is the witness for "
-                "the second\n",
-                port_mg_amida_floor_27dc());
+    /* NO FLOORS LEFT, run mg10 lane WALKER, and the line says so by NAMING ALL
+       THREE rather than by falling silent. A seat that stops printing a floor
+       line is indistinguishable from a seat whose print was deleted by
+       accident, which is the failure section 16's rule exists to prevent; a
+       line that names the three addresses and asserts they are all closed is
+       checkable against the slot counts printed above it. Slot 34's own hit
+       count is the witness for the rasteriser, and slot 36's rise over the
+       pre-seat 1331 at 300 frames and 5831 at 1200 is the witness for the
+       walker tick. */
+    std::printf("[scene] dScMgAmida_c floor asks: NONE. All three are CLOSED "
+                "-- func_ov006_020d27dc (0xe48, the walker tick, one caller, "
+                "inside vtable slot 6), func_ov006_020d36a4 (0x4fc, the round "
+                "setup) and func_ov004_020ae5c4 (0x294, ov004, the family's "
+                "line rasteriser and the tree's only slot-34 dispatcher) all "
+                "have bodies\n");
 
     /* THE STATE INDEX IS PRINTED BECAUSE IT IS THE ONLY THING THAT SEPARATES
        "the behavior slot ran" from "the state machine ran". Slot 6 is a
@@ -540,6 +541,48 @@ extern "C" void port_scene_amida_hits(void)
                     "0x%08x\n",
                     (unsigned)(*(const unsigned *)(c + 8) & 0xffu),
                     *(const unsigned *)(c + 8));
+        /* THE WALKERS THEMSELVES, run mg10 lane WALKER. Everything above is a
+           COUNT of dispatches, and a count cannot tell "the tick ran" from "the
+           tick moved something" -- which is the exact question this class was
+           stuck on, because for two waves scene 371 rendered a correct board
+           whose 300-frame and 1200-frame images were byte-identical. These are
+           the state words func_ov006_020d27dc actually writes, read straight
+           out of the object:
+
+             +0x4660/+0x4664 per walker  its column and row (stride 8)
+             +0x4684 per walker          the direction it is travelling, 0..7
+             +0x4680 per walker          its step state (>= 2 means it has
+                                         picked up the drawn line)
+             +0x46b8 per walker          its remaining release delay
+             +0x46b4 per walker          set once it has finished
+             +0x5398..+0x539b           the per-rail arrival marks, one per
+                                         rail, set when a walker lands on a
+                                         rail that is NOT its goal
+
+           A run where the columns are still the four start rails and the rows
+           have not moved is a run where the tick did nothing, no matter what
+           the dispatch counts say. */
+        {
+            const int n = *(const int *)(c + 0x46c8);
+            std::printf("[scene] amida walkers (%d): ", n);
+            for (int k = 0; k < n && k < 8; k++)
+                std::printf("[%d] col %d row %d dir %d step %u delay %d "
+                            "done %u  ",
+                            k,
+                            *(const int *)(c + 0x4660 + k * 8),
+                            *(const int *)(c + 0x4664 + k * 8),
+                            *(const int *)(c + 0x4684 + k * 4),
+                            (unsigned)*(const unsigned char *)(c + 0x4680 + k),
+                            *(const int *)(c + 0x46b8 + k * 4),
+                            (unsigned)*(const unsigned char *)(c + 0x46b4 + k));
+            std::printf("\n[scene] amida arrival marks +0x5398..+0x539b = "
+                        "%u %u %u %u, finished +0x46cc = %d of %d\n",
+                        (unsigned)*(const unsigned char *)(c + 0x5398),
+                        (unsigned)*(const unsigned char *)(c + 0x5399),
+                        (unsigned)*(const unsigned char *)(c + 0x539a),
+                        (unsigned)*(const unsigned char *)(c + 0x539b),
+                        *(const int *)(c + 0x46cc), n);
+        }
     } else {
         std::printf("[scene] amida state: the class never spawned\n");
     }
