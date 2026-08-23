@@ -135,6 +135,12 @@ NAMED = [
     # state helper) reads a s16 out of at +0x56. No relocations in it -- pure
     # data, byte-hosted the same as every table above.
     "data_02082714",
+    # run mg11 lane BNT: dScMgJump2_c's InitResources (func_ov006_020ef834)
+    # loads 0x02082614 and reads a SIGNED HALFWORD out of it at 0x020ef8c8
+    # (ldrsh r1,[r1]) before calling func_02053258. 0x100 bytes, the delta to
+    # data_02082714 above it, and no relocations in the span -- pure data,
+    # byte-hosted the same as every table here.
+    "data_02082614",
     # gate 32: the coin tables Actor::GivePlayerCoins indexes (id and amount),
     # and the per-character cap-model constant data_0208a0e0 sits beside them.
     "data_02075230", "data_02075238",
