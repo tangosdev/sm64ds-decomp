@@ -430,3 +430,31 @@ src/func_ov006_020d5974.cpp
 # 37-virtual struct, the same device src/func_ov006_020d3ba0.c uses in this
 # class), so it carries a LANGUAGE CXX row in port/CMakeLists.txt.
 src/func_ov006_020d36a4.c
+# WAVE 4, run mg10 lane WALKER. THE LAST FLOOR IN THIS SCENE IS CLOSED.
+# func_ov006_020d27dc is THE WALKER TICK, 0xe48 = 3656 bytes, the largest single
+# hole in any seated minigame, one caller at 0x020d4d78 inside vtable slot 6.
+#
+# IT IS AN EIGHT-NEIGHBOUR LINE FOLLOWER. All forty-two call sites of
+# func_ov006_020d25fc in the whole overlay are inside it: forty are an eight-row
+# direction preference table -- the current direction first, then its two
+# 45-degree neighbours, then its two 90-degree ones, with the 180-degree reverse
+# as the fallback when all five miss -- and the other two are the left-then-right
+# pair a walker still in step state 0 or 1 tries after moving down a row.
+#
+# THE RAIL SNAP TIES IT TO THE BOARD and the agreement was not arranged. Six of
+# the eight directions guard on the walker's column: the three with a leftward
+# component check 0x21/0x61/0xa1/0xe1 and step left, the three with a rightward
+# component check 0x1f/0x5f/0x9f/0xdf and step right, and both land the walker on
+# 0x20, 0x60, 0xa0 or 0xe0 -- the four rails src/func_ov004_020ae5c4 draws and
+# the four columns src/func_ov006_020d36a4 starts the walkers on. Those constants
+# were read out of this body before either neighbour was consulted.
+#
+# Its trap in port/unmatched/MgAmida_Faces.cpp is DELETED rather than emptied and
+# its counter with it, which retires the last row of the CMake sequencing guard
+# as well: that guard now names nothing and is gone.
+#
+# It is a .c compiled as C++ -- three slot-36 dispatches (0x020D2924, 0x020D2ABC,
+# 0x020D2D8C) spelled through the same dummy 37-virtual struct
+# src/func_ov006_020d36a4.c and src/func_ov006_020d3ba0.c use -- so it carries a
+# LANGUAGE CXX row in port/CMakeLists.txt.
+src/func_ov006_020d27dc.c

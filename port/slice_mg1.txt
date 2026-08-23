@@ -478,6 +478,15 @@ src/func_02012468.c
 src/func_020126ac.c
 src/func_020126e8.c
 src/func_02012718.c
+# src/func_02012dbc.c IS A WAVE-4 ADDITION, run mg10 lane WALKER, and it is here
+# for exactly the reason this block exists: the LINKER asked for it. Seating
+# src/func_ov006_020d27dc.c (dScMgAmida_c's walker tick) gave it its first
+# caller in the build -- the ROM has one call site for it in the whole overlay,
+# at 0x020d2da0 inside that body -- so /OPT:REF had dropped it and it did not
+# come back for free. It is a four-line forwarder to func_0204f9c4(0xe, a),
+# which is already in this slice eight lines below, so it costs one TU and
+# pulls in nothing new.
+src/func_02012dbc.c
 src/func_02012dd0.c
 src/func_02012e1c.c
 src/func_02012e78.c

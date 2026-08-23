@@ -85,15 +85,34 @@
 
 extern "C" {
 
-static unsigned g_amida_floor_27dc;
-
-/* THE HOLE IN THE BEHAVIOR'S OWN CALL LIST. 0xe48 bytes, one caller. */
-void func_ov006_020d27dc(char *c);
-void func_ov006_020d27dc(char *c)
-{
-    (void)c;
-    ++g_amida_floor_27dc;
-}
+/* ---- SEATED, run mg10 lane WALKER ---------------------------------------
+ *
+ * func_ov006_020d27dc IS NOT A TRAP ANY MORE and its counter is gone with it,
+ * the same treatment its sibling got one wave earlier: a trap standing beside a
+ * real definition is a duplicate symbol, not a safety net. This file now traps
+ * NOTHING, and the header above is kept because it is the derivation that found
+ * both holes rather than a list of what is still missing.
+ *
+ * It is THE WALKER TICK, the largest single hole in any seated minigame, and it
+ * is an EIGHT-NEIGHBOUR LINE FOLLOWER: forty of its forty-two calls to
+ * func_ov006_020d25fc are an eight-row direction preference table (the probed
+ * direction first, then its two 45-degree neighbours, then its two 90-degree
+ * ones, and the 180-degree reverse as the fallback when all five miss), and the
+ * other two are the left-then-right pair a walker still in step state 0 or 1
+ * tries after moving down a row. Six of the eight directions snap a walker that
+ * has run one pixel past a rail back onto 0x20, 0x60, 0xa0 or 0xe0 -- the four
+ * rails src/func_ov004_020ae5c4 draws and the four columns
+ * src/func_ov006_020d36a4 starts the walkers on.
+ *
+ * ITS THREE SLOT-36 DISPATCHES ARE STILL THE MODE BRANCH (0x020D2924,
+ * 0x020D2ABC, 0x020D2D8C) and they are all in the ARRIVAL arm: one when a
+ * walker passes the board bottom, then exactly one of the other two depending
+ * on whether it landed on its goal rail. So a seat that runs this body adds
+ * TWO slot-36 dispatches per arrival, not three per tick.
+ *
+ * The symbol comes from port/slice_s371.txt. src/func_ov006_020d27dc.c is
+ * NONMATCHING two code words short and its banner decomposes the residue.
+ */
 
 /* ---- SEATED, run mg10 lane F371 -----------------------------------------
  *
@@ -174,6 +193,4 @@ void func_ov006_020d27dc(char *c)
  * no `mov r0,#N` in front of it), and every one of the ten call sites in this
  * class discards the result, so the trap returns 0 and asserts nothing.
  */
-unsigned port_mg_amida_floor_27dc(void)  { return g_amida_floor_27dc; }
-
 }  /* extern "C" */
