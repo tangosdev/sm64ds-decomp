@@ -3427,15 +3427,18 @@ Two independent sweeps writing the same scratch `cand.cpp` fabricated a stable-l
 "floor": scores for one process were read off the other's file. It reads exactly like a
 real plateau. Per-process temp names, or one sweep at a time.
 
-## 6bk. Two CSE/colouring levers off scene 387's Boo pair (both MATCHED, 2026-08-22)
+## 6bk. One CSE lever off scene 387's Boo pair, and one RETRACTED (both MATCHED, 2026-08-22)
 
 Run mg10 lane F387. Two ov006 bodies that had no source at all -- the sprite loop
 `func_ov006_0211e72c` (0xac) and the state `func_ov006_0211ebdc` (0x258) -- both went
 from "every instruction identical, only register numbers differ" to byte-exact under
-2004/b56, and the two levers are different faces of the same fact: **mwcc's CSE web is
-keyed on the EXPRESSION, and the launder is a web splitter, not only an addressing-mode
-knob.** 6bj established the launder controls addressing mode and statement position
-controls LICM level; this is the third knob on the same axis.
+2004/b56. One lever came out of that, part 1 below: **mwcc's CSE web is keyed on the
+EXPRESSION, and the launder is a web splitter, not only an addressing-mode knob.** 6bj
+established the launder controls addressing mode and statement position controls LICM
+level; this is the third knob on the same axis.
+
+Part 2 was banked here the same day as a second lever and is **RETRACTED** -- read it
+before spending any time on the spelling it recommends.
 
 ### 1. Three spellings of one address make mwcc rematerialise instead of commoning it
 
@@ -3474,49 +3477,51 @@ Cost accounting, so the shape is recognisable next time: one commoned address is
 the whole colouring. A body that is short by a couple of words AND pushes one more
 register than the ROM is this, not a missing statement.
 
-### 2. A wider-typed constant zero changes its RANK in the hoisted-invariant list
+### 2. RETRACTED -- a wider-typed constant zero does NOT change its rank here
 
-`0211e72c`'s loop hoists five constants. The ROM's assignment, r4 upwards, is
+**This entry was wrong. It is corrected in place rather than deleted, because other
+lanes may already have mined it.** As banked, it claimed `0211e72c`'s ninth argument
+had to be spelt `(int)(long long)0`; that a plain `0` rotated the hoisted-invariant
+list by one register; and that the difference was "17 of 43 words differing by a
+register number and nothing else".
+
+Measured on the file as committed, at 2004/b56 with DEFAULT_FLAGS and nothing but that
+one token moved:
 
 ```
-[-1, i, this, 0, 0x1000, 1]
+(int)(long long)0   .text len 0xac   sha1 00fed75803087a455d2ef98be3443bea1656fdbb
+plain 0             .text len 0xac   sha1 00fed75803087a455d2ef98be3443bea1656fdbb
+                    IDENTICAL text, reloc offsets equal, both byte-exact vs the ROM
 ```
 
-and a plain-C source gives
+Zero words differ, not seventeen. Control, to show the harness reads the file it is
+given: the same variant with `0x1000` changed to `0x1001` compiles to 0xb4 and matches
+nothing. The committed source now spells the argument plain `0`.
 
-```
-[i, this, 0, 0x1000, 1, -1]
-```
+What survives is only a statement about the ROM, not about any spelling: the allocation
+r4 upwards is `[-1, i, this, 0, 0x1000, 1]`. The likeliest reading is that the
+declaration-order tuning this entry itself describes ("Declaration order moved it 22 ->
+17") already closed the rotation, so by the time the cast was tried it had nothing left
+to do and was banked on a stale measurement.
 
--- the same list **rotated by one**, every instruction otherwise identical, 17 of 43
-words differing by a register number and nothing else. Declaration order moved it 22 ->
-17 and then stalled; statement order (all 120 permutations of the five in-loop
-assignments) did not move it at all; all 25 installed mwccarm builds agree.
+**The lesson worth keeping is the one that got skipped:** re-measure a candidate lever
+against the FINAL file, with only that token moved, before banking it. Everything that
+lands after a lever is found can make it inert, and it goes on reading as load-bearing
+because the file still matches.
 
-The fix is one token, on the argument that is a plain `0`:
-
-```c
-OAM::Render(1, tbl[idx], x, y, -1, prio, 0x1000, 0x1000, (int)(long long)0, mode);
-```
-
-`0 & 0xFFFFFFFFFFFFFFFF`, `(long long)0` and `(int)0LL` all work identically, so it is
-the WIDER TYPE and not the operator. It promotes `-1` to the front of the invariant
-list and the rotation disappears. This is the 6-series launder acting on a **value**
-rather than on an address, and the effect is a rank change, not a materialisation
-change: the constant still ends up in a register, just a different one, and everything
-else follows it.
-
-**The general rule these two share:** when the residue is a pure permutation of the
+**The general rule part 1 carries:** when the residue is a pure permutation of the
 register file with the schedule already exact, stop looking at the statements and start
 looking at what mwcc thinks is the SAME expression. Merging or splitting one web
 renumbers everything downstream of it.
 
-### The permuter found both, and the hand pass was still worth it
+### The permuter found it, and the hand pass was still worth it
 
-Both levers came out of `tools/permuter` (score 0 at iteration 188 and 430 respectively,
-minutes each) buried in the usual mutation noise -- `>> ((0, 12))`, `if (1) {}`, and the
-tail of `0211ebdc` rewritten to use `i * 0x24` where the head uses `k`. Reducing each
-output by hand to the smallest spelling that still matches is what turned a mutation
-into a lever: the `i * 0x24` tail was ALSO load-bearing on its own (it settles an r4/r5
-swap worth 33 words) and would have read as noise if it had been cleaned away with the
-rest. **Reduce, do not just tidy.**
+Both candidates came out of `tools/permuter` (score 0 at iteration 188 and 430
+respectively, minutes each) buried in the usual mutation noise -- `>> ((0, 12))`,
+`if (1) {}`, and the tail of `0211ebdc` rewritten to use `i * 0x24` where the head uses
+`k`. Reducing each output by hand to the smallest spelling that still matches is what
+turned a mutation into part 1: the `i * 0x24` tail is load-bearing on its own -- respelt
+`k` the body compiles to 0x254 against the ROM's 0x258, one word short -- and it would
+have read as noise if it had been cleaned away with the rest. **Reduce, do not just
+tidy.** Reducing is also what part 2 needed and did not get: reduce the candidate, then
+re-measure it against the final file.

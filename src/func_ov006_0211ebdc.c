@@ -50,10 +50,11 @@
       address at each group, which is what the ROM does. The cast is the only
       one in the file and it is here for that reason alone.
 
-   2. THE LAST BLOCK USES `i * 0x24` RATHER THAN `k`. That is what puts the
-      product in r4 and the state-byte address in r5, the way the ROM has them;
-      with `k` throughout, the two are swapped and thirty-three words differ by
-      a register number with every instruction otherwise identical.
+   2. THE LAST BLOCK USES `i * 0x24` RATHER THAN `k`. Spelling the tail `k`
+      instead costs a word: with only that token changed the body compiles to
+      0x254 against the ROM's 0x258, so this is a length change and not a
+      register permutation. Same figure whether just the tail is respelt or
+      every `i * 0x24` in the file is. Measured at 2004/b56.
 
    G2x::SetBlendAlpha's fourth argument is declared int here, not the unsigned
    short src/func_ov006_0211ee34.c uses, and that is not a discrepancy the

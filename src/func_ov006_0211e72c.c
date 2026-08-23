@@ -20,12 +20,14 @@
 
    THESE GO ON THE SUB SCREEN. OAM::Render's first parameter is `bool sub` --
    src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii.cpp names it -- and this loop
-   passes 1 where every other caller in the tree passes 0. So a capture of the
-   TOP screen alone cannot show this body running, however many Boos are live;
-   SM64DS_SCENE_BMP_STACKED is the artifact that can. The rest of the argument
-   list is unremarkable and is written out because a reader should not have to
-   count commas: palette -1, priority from the record, unity scale on both
-   axes, no rotation.
+   passes 1. The same reading from the other side: the two wrappers whose whole
+   body is that call with a 1 in front are the ones named RenderSub --
+   src/_ZN3OAM9RenderSubEP7OamAttrii.c and its ..iiii.c sibling. So a capture
+   of the TOP screen alone cannot show this body running, however many Boos are
+   live; SM64DS_SCENE_BMP_STACKED is the artifact that can. The rest of the
+   argument list is unremarkable and is written out because a reader should not
+   have to count commas: palette -1, priority from the record, unity scale on
+   both axes, no rotation.
 
    THE SPRITE TABLE IS TWO ROWS OF SEVEN and the ROM says so twice. The symbol
    span 0x0213a964..0x0213a99c is 0x38 = fourteen words, and
@@ -34,16 +36,7 @@
    relocated OamAttr pointer and there is no fifteenth. The index is
    +0x1e * 7 + +0x1d, and src/func_ov006_0211ebdc.c writes +0x1e as 0 or 1 off
    the sign of the sine table, so the row is which way the Boo faces and the
-   column is its seven-frame animation.
-
-   THE NINTH ARGUMENT IS WRITTEN (int)(long long)0 AND THAT IS DELIBERATE. It
-   is a plain zero and every caller in the tree passes one. Spelt `0`, mwcc
-   hoists the loop's constants in the order [0, 1, -1, 0x1000] and the ROM's is
-   [-1, 0, 1, 0x1000] -- the whole allocation comes out rotated by one register
-   with every instruction otherwise identical, seventeen words differing by a
-   register number and nothing else. The wider-typed zero moves -1 to the front
-   of that list. src/func_ov002_020f1fcc.c uses the same long-long laundering
-   on an address for the same class of reason. */
+   column is its seven-frame animation. */
 
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
     int sub, void *attr, int xOff, int yOff, int palette, int priority,
@@ -71,7 +64,7 @@ void func_ov006_0211e72c(char *c)
                 mode = 1;
             _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
                 1, data_ov006_0213a964[idx], x, y, -1, prio,
-                0x1000, 0x1000, (int)(long long)0, mode);
+                0x1000, 0x1000, 0, mode);
         }
         c += 0x24;
     }
