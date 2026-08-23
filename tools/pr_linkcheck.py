@@ -181,8 +181,8 @@ def check_file(path, idx, ledger):
     tail branch relocated to the wrong dtor. Emitted symbols with no ROM slot (inline
     or local emissions) are simply not ROM functions and are ignored.
 
-    WHICH SYMBOLS THE FILE OWNS is `srcpath.symbols_for`, not `Path.stem`. For the
-    11,289 one-function files those are the same string. For a merged translation unit
+    WHICH SYMBOLS THE FILE OWNS is `srcpath.symbols_for`, not `Path.stem`. For a legacy
+    one-function source those are the same string. For a merged translation unit
     they are not: `src_tu/actors/ActorBase_SceneNode.cpp` holds two functions and is named
     after neither, so the stem resolved to nothing and the whole file was reported
     `unresolved` with `0` slots checked -- a file the PR comment listed as examined and
@@ -204,7 +204,7 @@ def check_file(path, idx, ledger):
         # not in its sibling's object, and reusing it reports NO-SYM on a file that is
         # perfectly correct. (Measured on ActorBase_SceneNode: shared object ->
         # Reset VERIFIED, SceneNode() NO-SYM; per-symbol -> both VERIFIED.) For the
-        # 11,289 one-function files this is exactly one call, as before.
+        # ordinary one-function sources this is exactly one call, as before.
         obj = wsym = None
         for addr, size, mod in slots:
             obj, wsym, _ = RA.winning_object(sym, addr, size, mod)

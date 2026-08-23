@@ -1,6 +1,12 @@
 # Translation-unit reconstruction and consolidation plan
 
-**Status:** design proposal. Nothing in this document is implemented, and the current one-function-per-file build remains authoritative until a candidate translation unit passes every gate described below.
+> **Status: active design history with shadow tooling implemented.** `tools/tubuild.py`,
+> `src_tu/`, and `config/tu_manifest.json` now exercise candidate translation units,
+> but manifest entries still do not control the normal ROM build and production
+> promotion remains dry-run only. The current `config/**/delinks.txt` enrollment is
+> authoritative until a candidate passes the gates below and is promoted. Use
+> [`cpp-tu-current-state.md`](cpp-tu-current-state.md) for generated current counts and
+> compatibility blockers; keep this document as the architecture and safety rationale.
 
 **Related notes:**
 

@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """Emit a ph-shaped (TU-granular) dsd config root beside the per-function one.
 
-`config/**/delinks.txt` is per-function: 11,170 entries, every one exactly one
-section, `.text`/`.init` only, median 92 bytes. zeldaret/ph -- same dsd 0.11.0,
-same file format -- writes 75 entries, median 1,272 bytes, one to six sections
-each. That file is the ONLY thing that decides the treemap/objdiff unit, so the
-shape of the report is entirely a property of this one text file.
+At the time this experiment was written, `config/**/delinks.txt` was measured as
+11,170 per-function entries, one section each, `.text`/`.init` only, with a 92-byte
+median. That is historical input evidence, not a live invariant: shared-source ranges
+now exist. zeldaret/ph -- same dsd 0.11.0, same file format -- wrote 75 entries,
+median 1,272 bytes, one to six sections each. That file is the ONLY thing that decides
+the treemap/objdiff unit, so the shape of the report is entirely a property of this one
+text file.
 
 This generator writes a PARALLEL root (`config_tu/` by default) holding the same
 modules in the TU shape. Nothing here touches `config/`, `src/` or `src_tu/`, and

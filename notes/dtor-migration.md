@@ -1,5 +1,12 @@
 # Migrating destructors to real C++
 
+> **Status: historical research note, partially superseded.** The backlog counts are
+> frozen, and the absolute D0 conclusion in section 0 was disproved after relocation
+> checking and object isolation were fixed. `tools/d0_migrate.py` records and automates
+> the current method; `python tools/langmode_audit.py` and
+> [`cpp-tu-current-state.md`](cpp-tu-current-state.md) provide live status. The failure
+> analysis below remains useful unless a section is explicitly marked superseded.
+
 **Scope:** what actually blocks a `D1` file from becoming `Class::~Class()`, measured
 rather than assumed. Companion to `runbook-type-reconstruction.md` §7, which recorded
 the wall before objisolate came down and is no longer the whole story.
@@ -9,7 +16,11 @@ The remaining backlog is mostly destructors: at the time of writing
 **D1 192** (74 migrated) against **374** ordinary methods. So this is the bulk of the
 work, and most of it is blocked by four specific things rather than by one wall.
 
-## 0. D0 is not migratable, ever
+## 0. D0 is not migratable, ever [SUPERSEDED]
+
+This conclusion is retained as research history, not current guidance. A real
+`X::~X()` can emit D2/D0/D1 together, and `objisolate` can keep the D0 contribution;
+`tools/d0_migrate.py` is the current executable path.
 
 `D0` is the *deleting* destructor. The compiler generates it; nobody writes it. Renaming
 its file `.cpp` changes an extension without migrating anything and raises

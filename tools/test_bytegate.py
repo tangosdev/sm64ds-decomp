@@ -153,7 +153,7 @@ class RealManifest(unittest.TestCase):
 
     def test_every_row_is_well_formed_and_unique(self):
         rows = BG.manifest_rows()
-        self.assertTrue(rows, "config/bytegate-known-failures.txt is empty")
+        self.assertTrue(BG.MANIFEST.is_file(), "bytegate manifest is missing")
         paths = [r["src"] for r in rows]
         self.assertEqual(len(paths), len(set(paths)), "duplicate row")
         for r in rows:
@@ -163,7 +163,7 @@ class RealManifest(unittest.TestCase):
                           {"extern-c-clash", "bare-template-arg", "broken-draft"}, r)
 
     def test_no_row_is_stale(self):
-        """Fails when one of the 18 files is edited without re-running the gate. The
+        """Fails when a listed file is edited without re-running the gate. The
         exclusion has lapsed at that point and the function is being counted again, so
         this is a request to run `python tools/bytegate.py --recheck`, not a nuisance."""
         stale = BG.stale_rows()

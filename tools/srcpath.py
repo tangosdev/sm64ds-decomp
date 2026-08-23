@@ -9,8 +9,8 @@ knowledge, ledger, name_evidence, nonmatching, progress, rebuild_ledger,
 reconcile_names, reverify_corpus, rombuild_versions, sigaudit, stamp_provenance,
 verify_mangled, worklist -- so the directory is a decision this module makes alone.
 
-The convention still holds for 11,289 of the tree's files, and `enroll` is what makes it
-load-bearing rather than cosmetic -- it writes each source's path into
+The convention still holds for legacy one-function sources, and `enroll` is what makes
+it load-bearing rather than cosmetic -- it writes each source's path into
 `config/**/delinks.txt` for the ROM link, so a file that moves has to stay findable or
 its function silently drops back to ROM bytes.
 
@@ -18,8 +18,8 @@ But the convention is not the only answer, and it is no longer the FIRST one. Se
 `_enrolment` below: delinks.txt already records which file owns which address range, and
 that record is what dsd compiles. A merged translation unit -- two functions, one file,
 a name that is neither symbol -- is invisible to the convention and perfectly visible to
-the enrolment table. Ask the table first, fall back to the convention. Where they agree,
-which today is all 11,169 enrolled functions, nothing changes.
+the enrolment table. Ask the table first, fall back to the convention. Where one source
+owns one same-named function, nothing changes; shared-source entries also round-trip.
 
 WHY THERE IS NO COMMITTED INDEX
 -------------------------------
@@ -29,8 +29,8 @@ essentially every PR, in a repo landing one every few minutes. Resolution is ins
 
 0. the enrolment table -- 106 delinks.txt plus 106 symbols.txt, parsed once into a dict
    in 0.08s, cached. Authoritative, because it is what the linker reads;
-1. the direct hit `src/<symbol>.c|.cpp` -- O(1), no scan, and correct for every file
-   in the tree today, so the common path costs nothing;
+1. the direct hit `src/<symbol>.c|.cpp` -- O(1), no scan, and correct for ordinary
+   one-function sources, so the common path costs nothing;
 2. failing that, a lazily built map of everything under `src/` -- one `rglob`, cached,
    which is what makes a subdirectory layout work the day a file moves.
 
@@ -89,7 +89,10 @@ _enrolment_cache = None
 
 
 def symbol_for(path):
-    """The symbol a source file claims. The filename IS the symbol (AGENTS.md)."""
+    """The filename-based symbol for a legacy one-function source.
+
+    Use :func:`symbols_for` when enrollment may map several functions to one source.
+    """
     return pathlib.Path(path).stem
 
 
@@ -135,9 +138,9 @@ def _enrolment():
     --------------------------------------------------
     The convention says `src/<symbol>.c`. The enrolment table says: the delinks entry
     whose section range contains the symbol's address is the file dsd compiles for that
-    range. Today those two agree on all 11,169 enrolled functions -- measured, see
-    test_enrolment_agrees_with_the_filename_convention -- because every one of the
-    11,170 entries holds exactly one function and is named after it.
+    range. Most sources still agree with the convention; a source that owns several
+    symbol addresses legitimately does not. The live-tree round-trip is measured by
+    ``test_enrolment_round_trips_single_and_multi_symbol_sources``.
 
     They stop agreeing the moment one file owns two functions, which is what TU
     reconstruction produces: a promoted `src/actors/ActorBase_SceneNode.cpp` is the
@@ -209,9 +212,9 @@ def enrolment_index():
 def enrolled_path_for(symbol):
     """The file the ROM build compiles for ``symbol``, or None if it is not enrolled.
 
-    None is not a failure and is the common case for unfinished work: 227 of the ROM's
-    11,396 function symbols have no delinks entry, 120 of them with a `src/` file
-    already written. The convention answers for every one of them."""
+    None is not a failure: unfinished or ROM-byte-backed work may have no source-owned
+    delinks range even when a convention-named draft already exists. ``path_for`` adds
+    that filename fallback when callers want either kind of answer."""
     rel = enrolment_index().get(symbol)
     if rel is None:
         return None
@@ -223,9 +226,9 @@ def symbols_for(path):
     """Every symbol ``path`` owns, in ROM address order.
 
     The inverse of ``path_for``, and the half a merged TU makes necessary: `symbol_for`
-    reads one symbol off the filename, which is right for 11,289 of the tree's files and
-    wrong for every file that owns more than one function. Falls back to the filename so
-    an unenrolled file answers exactly as it always did."""
+    reads one symbol off the filename, which is right for legacy one-function sources
+    and wrong for every source that owns more than one function. Falls back to the
+    filename so an unenrolled file answers exactly as it always did."""
     owned = _enrolment()[1].get(_repo_relative(path))
     if owned:
         return list(owned)
