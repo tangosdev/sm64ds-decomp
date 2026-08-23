@@ -5012,18 +5012,21 @@ foreach(line IN LISTS SLICE_TTI_LINES)
     list(APPEND SLICE_TTI_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-# TWO OF THIS SLICE'S .c FILES ARE REALLY C++ -- a //cpp marker
+# FIVE OF THIS SLICE'S .c FILES ARE REALLY C++ -- a //cpp marker
 # and a top-level `extern "C"` block, which is invalid C. All 49 were SWEPT for
 # the marker and for `extern "C"`, `virtual`, `class`, `namespace`, `bool`,
 # `new`/`delete` and `::` rather than this one being found by a compile error
-# and the other forty-eight left to luck, which is the sweep the BOO and SMB
+# and the rest left to luck, which is the sweep the BOO and SMB
 # blocks above record doing for theirs. Eleven files hit on `::` and every one
 # of the eleven is a recovered-name COMMENT ("dScMgTrampoline_c::Behavior --
 # recovered from vtable slot identity"), checked line by line; this is the only
 # real hit.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/MgTrampolineTime_Spawn.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020c9c8c.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020cb1a8.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020cb528.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020cc198.c"
     PROPERTIES LANGUAGE CXX)
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_fdr.txt" SLICE_FDR_LINES)
