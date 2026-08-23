@@ -3,6 +3,7 @@ import pathlib
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import rombuild as RB  # noqa: E402
@@ -52,6 +53,74 @@ class RomBuildEnrollment(unittest.TestCase):
         with self.assertRaises(RB.BuildError) as raised:
             RB.enrolled(self.config)
         self.assertIn("unsafe complete", raised.exception.output)
+
+    def test_enrolled_symbols_group_one_source_in_rom_order(self):
+        candidates = [
+            (self.config, "Second", "src/Pair.cpp", 0x02000004, 4, ".text"),
+            (self.config, "Only", "src/Only.cpp", 0x02000020, 4, ".text"),
+            (self.config, "First", "src/Pair.cpp", 0x02000000, 4, ".text"),
+        ]
+        with mock.patch("enroll.candidates", return_value=(candidates, {})):
+            self.assertEqual(RB.enrolled_symbols(), {
+                "src/Pair.cpp": ["First", "Second"],
+                "src/Only.cpp": ["Only"],
+            })
+
+    def test_nested_function_records_are_aliases_not_required_definitions(self):
+        rel = "src/func_01ff97d8.c"
+        candidates = [
+            (self.config, "func_01ff98f4", rel, 0x01ff98f4, 0x0b0, ".text"),
+            (self.config, "func_01ff99a4", rel, 0x01ff99a4, 0x39c, ".text"),
+            (self.config, "func_01ff97d8", rel, 0x01ff97d8, 0xb6c, ".text"),
+            (self.config, "func_01ff9e2c", rel, 0x01ff9e2c, 0x518, ".text"),
+            (self.config, "func_01ff9d40", rel, 0x01ff9d40, 0x0ec, ".text"),
+        ]
+        with mock.patch("enroll.candidates", return_value=(candidates, {})):
+            mapping = RB.enrolled_symbols()
+        self.assertEqual(mapping, {rel: ["func_01ff97d8"]})
+
+        obj = self.repo / "Outer.o"
+        obj.write_bytes(b"object")
+        with mock.patch.object(RB.OI, "isolate", return_value={"error": None}) as one, \
+                mock.patch.object(RB.OI, "isolate_many",
+                                  return_value={"error": None}) as many:
+            self.assertIsNone(RB._isolate(obj, rel, mapping))
+        one.assert_called_once_with(obj, "func_01ff97d8")
+        many.assert_not_called()
+
+    def test_non_symbol_tu_path_never_guesses_among_overlapping_records(self):
+        rows = [
+            (0x02000000, 0x100, "Outer"),
+            (0x02000020, 0x020, "Nested"),
+        ]
+        self.assertEqual(RB._definition_symbols("src/actors/Pair.cpp", rows),
+                         ["Outer", "Nested"])
+
+    def test_stem_owner_with_a_disjoint_member_never_collapses(self):
+        rows = [
+            (0x02000000, 0x100, "Outer"),
+            (0x02000020, 0x020, "Nested"),
+            (0x02000100, 0x010, "Disjoint"),
+        ]
+        self.assertEqual(RB._definition_symbols("src/Outer.c", rows),
+                         ["Outer", "Nested", "Disjoint"])
+
+    def test_isolate_dispatches_multi_and_singleton_ownership_separately(self):
+        obj = self.repo / "Example.o"
+        obj.write_bytes(b"object")
+        with mock.patch.object(RB.OI, "isolate", return_value={"error": None}) as one, \
+                mock.patch.object(RB.OI, "isolate_many",
+                                  return_value={"error": None}) as many:
+            self.assertIsNone(RB._isolate(
+                obj, "src/Pair.cpp", {"src/Pair.cpp": ["First", "Second"]}))
+            many.assert_called_once_with(obj, ["First", "Second"])
+            one.assert_not_called()
+
+            many.reset_mock()
+            self.assertIsNone(RB._isolate(
+                obj, "src/Only.cpp", {"src/Only.cpp": ["Only"]}))
+            one.assert_called_once_with(obj, "Only")
+            many.assert_not_called()
 
 
 def _compiler():

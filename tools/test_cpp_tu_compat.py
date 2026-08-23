@@ -26,9 +26,9 @@ class CppTuCompatibility(unittest.TestCase):
             {name: row["status"] for name, row in self.rows.items()},
             {
                 "srcpath": "ready",
-                "enroll": "blocked",
+                "enroll": "ready",
                 "eligible": "gap",
-                "rombuild": "blocked",
+                "rombuild": "ready",
                 "validate_merge": "ready",
                 "tiers": "gap",
                 "langmode_audit": "gap",
@@ -38,7 +38,7 @@ class CppTuCompatibility(unittest.TestCase):
         self.assertFalse(self.report["productionCompatible"])
         self.assertFalse(self.report["allSurfacesReady"])
         self.assertEqual(self.report["blockers"], [
-            "enroll", "rombuild", "port_refcheck",
+            "port_refcheck",
         ])
         self.assertEqual(self.report["policyAndMetricGaps"], [
             "eligible", "tiers", "langmode_audit", "attribution",
@@ -46,11 +46,16 @@ class CppTuCompatibility(unittest.TestCase):
 
         self.assertEqual(self.rows["srcpath"]["evidence"]["symbolsForSource"],
                          list(CTC.SYMBOLS))
-        self.assertEqual(self.rows["enroll"]["evidence"]["roundTripEntries"], 2)
-        self.assertEqual(self.rows["enroll"]["evidence"]["roundTripCompleteMarks"], 0)
+        self.assertEqual(self.rows["enroll"]["evidence"]["roundTripEntries"], 1)
+        self.assertEqual(self.rows["enroll"]["evidence"]["roundTripCompleteMarks"], 1)
         self.assertEqual(self.rows["eligible"]["evidence"]["isolatedSymbols"],
                          list(CTC.SYMBOLS))
         self.assertEqual(len(self.rows["rombuild"]["evidence"]["enrolledSymbolMap"]), 1)
+        self.assertEqual(
+            self.rows["rombuild"]["evidence"]["enrolledSymbolMap"][CTC.SOURCE],
+            list(CTC.SYMBOLS))
+        self.assertEqual(self.rows["rombuild"]["evidence"]["symbolsKeptByIsolation"],
+                         [list(CTC.SYMBOLS)])
         self.assertEqual(self.rows["validate_merge"]["evidence"]["sourceFunctions"], 2)
         self.assertEqual(self.rows["validate_merge"]["evidence"]["completeRanges"], 1)
         self.assertEqual(self.rows["tiers"]["evidence"]["legacyFiles"], 2)

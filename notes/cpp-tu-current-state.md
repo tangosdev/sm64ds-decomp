@@ -31,13 +31,13 @@ CONVERTED is the strict five-criterion result from `tiers.converted(src)`.
 | Measure | Live value |
 | --- | ---: |
 | Tracked production source files | 11303 |
-| Tracked `.c` files | 6915 |
-| Tracked `.cpp` files | 4388 |
+| Tracked `.c` files | 6909 |
+| Tracked `.cpp` files | 4394 |
 | `.cpp` files missing first-line `//cpp` | 11 |
 | Mangled-symbol source files | 3318 |
 | Genuinely migrated C++ symbol files | 2758 |
 | Not semantically migrated | 558 |
-| `.cpp` files still hand-spelling their symbol | 189 |
+| `.cpp` files still hand-spelling their symbol | 195 |
 | Nonmatching C++-symbol drafts | 14 |
 | Delinks path-owned function-symbol records | 11191 |
 | Path-owned records still supplied from ROM bytes | 128 |
@@ -92,8 +92,8 @@ All surfaces ready: **NO**.
 This is a behavior-backed result from a disposable source containing two C++
 methods, not a checklist copied from prose. Run
 `python tools/cpp_tu_compat.py` for the per-surface
-evidence. Current ready surfaces: `srcpath`, `validate_merge`.
-Current hard production blockers: `enroll`, `rombuild`, `port_refcheck`.
+evidence. Current ready surfaces: `srcpath`, `enroll`, `rombuild`, `validate_merge`.
+Current hard production blockers: `port_refcheck`.
 Current policy/metric gaps: `eligible`, `tiers`, `langmode_audit`, `attribution`.
 
 ## Which source answers which question
