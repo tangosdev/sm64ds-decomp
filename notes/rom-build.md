@@ -169,7 +169,7 @@ file; in the main module, 3,084 of 3,090.
 Verified by running dsd 0.11.0 against an isolated copy of the config. A *file entry* is
 an unindented path ending in `:`, followed by indented lines:
 
-```sh
+```text
     .text       start:0x02004000 end:0x020736f4 kind:code align:32
     ...
 src/AngleDiff.c:
