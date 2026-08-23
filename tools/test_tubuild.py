@@ -251,6 +251,9 @@ def test_promote_dry_run_refuses_a_tu_that_is_not_link_verified_but_still_explai
     assert "git rm src/_ZN8PoleLift6RenderEv.cpp" in out
     assert "NOTHING IS WRITTEN BY THIS COMMAND" in out
     assert "DRY RUN COMPLETE" in out
+    assert "COVERAGE GATE IS TU-AWARE" in out
+    assert "function_snapshot() builds {stem: path}" not in out
+    assert "tools/cpp_tu_compat.py" in out
     assert (REPO / "src_tu" / "actors" / "PoleLift.cpp").is_file()
     assert (REPO / "src" / "_ZN8PoleLift6RenderEv.cpp").is_file()
 

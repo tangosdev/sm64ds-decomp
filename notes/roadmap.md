@@ -1,5 +1,12 @@
 # Roadmap: from ROM to a native PC EXE
 
+> **Status: historical strategy snapshot.** The percentages and phase labels below
+> are frozen at the commit where this plan was written; they are not the current
+> project dashboard. Use [`cpp-tu-current-state.md`](cpp-tu-current-state.md) for the
+> generated C++/translation-unit status and `README.md` plus
+> `python tools/progress.py --bar --from-src` for current matching progress. Keep this document
+> for its long-range port architecture, not for work selection or current counts.
+
 **North Star:** a Windows `.exe` that runs Super Mario 64 DS natively on PC, no
 emulator, built entirely from source. This is exactly what happened to the N64 game
 (`sm64-port`), and it is reachable, but only as the far end of a long road. Four
