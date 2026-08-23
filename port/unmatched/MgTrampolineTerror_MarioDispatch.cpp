@@ -13,13 +13,20 @@
  *     src/func_ov006_020cea2c.cpp   PMF *pp = (PMF *)c;  (((C *)c)->**pp)();
  *
  * Both are real `T::*` declarations, so the prescribed `::*` sweep finds them.
- * THIS LANE RAN THAT SWEEP OVER ALL 191 TUs of its closure (the 186 slice lines
- * plus the five it host-copies or hostgens) and it returns exactly FOUR PMF-
- * shaped files: these two, src/func_ov006_02123340.cpp (the class's own vtable
- * slot 6, unmatched/MgTrampolineTerror_StateDispatch.cpp) and
- * src/func_ov006_020c8f20.cpp (the plain-int third shape,
- * unmatched/MgTrampolineTerror_SubDispatch.cpp).  Four sites, four host copies,
- * and the run is what confirms the count.
+ * THIS LANE RAN THAT SWEEP OVER ALL 216 TUs of its closure -- the 204 slice
+ * lines PLUS the 12 TUs it host-copies or repairs, which are not slice lines and
+ * would otherwise never be swept -- and it returns exactly THREE files: these
+ * two and src/func_ov006_02123340.cpp (the class's own vtable slot 6,
+ * unmatched/MgTrampolineTerror_StateDispatch.cpp).
+ *
+ * THE FOURTH WALL IS NOT ONE OF THEM, and saying it was is the error the mg11
+ * review caught. src/func_ov006_020c8f20.cpp declares no `T::*` anywhere; it
+ * open-codes the decode in plain ints, which is precisely why
+ * unmatched/MgTrampolineTerror_SubDispatch.cpp exists and why a RUN was needed
+ * to convict it. The lane's sweep tool reports PMF-SHAPED files -- its `::*` arm
+ * and its open-coded arm added together -- and reading that total as the `::*`
+ * answer put a file inside the detector it is invisible to. FOUR WALLS, THREE
+ * FOUND BY THE SWEEP, ONE FOUND BY A RUN.
  *
  * IT WAS FOUND BY A RUN BEFORE THE SWEEP WAS RUN, which is the honest order and
  * the reason the sweep is now written down.  A 3000-frame RENDERED boot of

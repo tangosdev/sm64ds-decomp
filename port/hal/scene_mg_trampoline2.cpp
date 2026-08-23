@@ -117,12 +117,20 @@
 // three bodies and lane BNT reached them from scene 373 while this lane reached
 // them from scene 385.  Slot 10 is BeforeRender and its src spells
 // `func_ov004_020b04f4()` with no argument, so Actor::BeforeRender was handed
-// stack litter and answered NO -- the framework then skipped slots 9 and 11 and
-// this scene ticked its whole state machine while drawing nothing.  Measured:
-// before the repair, scene 385 reported slot 7 at 300 hits on a 300-frame run
-// and slots 9/10/11 at ZERO, against a control boot of scene 388 (a class NOT
-// under this base) reporting 600/600.  Slots 27 and 28 are tail-call veneers
-// whose srcs drop the same receiver.
+// stack litter and answered NO -- the framework then skipped SLOT 9 and this
+// scene ticked its whole state machine while drawing nothing.  Measured with
+// RENDERING ON at both ends, which is the only config in which the question
+// means anything:
+//
+//   before, 1500 frames   render 0     slot 10 1500  slot 11 1500
+//   after,  3000 frames   render 3000  slot 10 3000  slot 11 3000
+//   control 388, 600      render 600   slot 10 600
+//
+// SLOT 10 WAS DISPATCHED THROUGHOUT AND ANSWERED NO; slot 9 is the one that
+// never ran.  An earlier version of this comment said slots 9/10/11 all read
+// ZERO, which was a SM64DS_SCENE_NO_RENDER=1 census compared against a rendered
+// control -- the wrong config on one side of an A/B.  Slots 27 and 28 are
+// tail-call veneers whose srcs drop the same receiver.
 //
 // SLOT 11 LOOKS LIKE THE SAME DEFECT AND IS NOT, checked rather than assumed.
 // 0x020e700c also never reads r1 -- but it ends in `bx ip` to 0x0202e398, a

@@ -25,9 +25,13 @@
  *
  * It is INVISIBLE to SM64DS_SCENE_NO_RENDER=1 and it was invisible to this lane
  * for a second reason on top: until port/unmatched/MgD3DBase_Slots.cpp put the
- * receiver back into slot 10, the framework refused to draw this family at all,
- * so slots 9, 10 and 11 read ZERO and no render code ran to be wrong.  With
- * slot 10 repaired, a 300-frame RENDERED boot of scene 385 faults immediately:
+ * receiver back into dScMgD3DBase_c slot 10, Actor::BeforeRender answered NO on
+ * every frame and the framework skipped SLOT 9 -- so no render code ran to be
+ * wrong.  (Slot 10 itself WAS dispatched, 1500 times on a 1500-frame rendered
+ * boot, and so was slot 11; only slot 9 read zero.  An earlier version of this
+ * header said all three read zero, which was a NO_RENDER census quoted in a
+ * rendered comparison.)  With slot 10 repaired, a 300-frame RENDERED boot of
+ * scene 385 faults immediately:
  *
  *     FAULT code c0000005 at +0x303fd460 accessing 307fd460
  *       regs ... ebp=004915f4   -> func_ov006_020caadc+0xf4
@@ -56,15 +60,25 @@
  * Model::mat4x3 is +0x1c into a Model, so `c` is a Model/ModelAnim by its own
  * preceding statement.  The argument c+0x50 is that object's scale vector.
  *
- * THE CLOSURE WAS SWEPT RATHER THAN WAITED ON.  Every TU in port/slice_tte.txt
- * that declares a local struct with virtuals was scanned for WHICH virtual it
- * calls and at what index. TWENTY hits, decomposed exactly: THIRTEEN dispatch
- * INDEX 4 (byte 0x10) on the Trampoline-Mario element's own five-slot table
- * (0x0213b2e0, which hal/scene_mg_trampoline2.cpp fills, so those are correct
- * and land on this port's own thunks); ONE dispatches index 18 on a 19-virtual
- * scene shadow (slot 18, the state reset, from slot 0); FOUR dispatch indices
- * 0, 1 and 2 on argument objects that are not ModelAnims; and exactly TWO
- * dispatch INDEX 5 (byte 0x14). 13 + 1 + 4 + 2 = 20. Those two are here.
+ * THE CLOSURE WAS SWEPT RATHER THAN WAITED ON, and the sweep has to be phrased
+ * over the CLOSURE rather than over the slice or it cannot see its own answer.
+ * Every TU declaring a local struct with virtuals was scanned for WHICH virtual
+ * it calls and at what index.
+ *
+ *   over the 204 lines of port/slice_tte.txt          18 hits, NONE at index 5
+ *     13 at index 4 (byte 0x10) on the Trampoline-Mario element's own five-slot
+ *        table 0x0213b2e0, which hal/scene_mg_trampoline2.cpp fills, so those
+ *        land on this port's own thunks
+ *      1 at index 18 (byte 0x48), the scene's slot-18 dispatch from slot 0
+ *      2 at index 0, 1 at index 1, 1 at index 2, on argument objects that are
+ *        not ModelAnims
+ *   plus the two HOST-COPIED files below   2 hits, both at INDEX 5 (byte 0x14)
+ *
+ * 18 + 2 = 20 over the closure. An earlier version of this paragraph said
+ * "every TU in port/slice_tte.txt ... TWENTY hits", which is false twice over:
+ * the slice answers 18, and src/func_ov006_020c8e90.cpp and
+ * src/func_ov006_02122814.cpp stopped being slice lines the moment this file
+ * took them. The two hits it was quoted for were outside the set it named.
  *
  * ---- WHAT DIVERGES FROM src, EXACTLY --------------------------------------
  *

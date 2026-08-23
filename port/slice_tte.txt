@@ -223,12 +223,22 @@
 #   run mg9 lane LKY reported -- reproduced here from the image, not cited.
 #   -> port/unmatched/MgTrampolineTerror_StateDispatch.cpp
 #
-#   THE `::*` SWEEP over all 191 TUs of the closure (the slice lines plus the
-#   five this lane host-copies or hostgens) returns FOUR PMF-shaped files. Two
-#   are the sites above and below; the other two are
-#   src/func_ov006_020cea2c.cpp and src/func_ov006_020cf758.cpp, which dispatch
-#   the 3D-Mario record's member pointer at OFFSET 0.
+#   THE `::*` SWEEP over all 216 TUs of the closure -- the 204 slice lines below
+#   PLUS the 12 TUs this lane host-copies or repairs, which are not slice lines
+#   and would otherwise never be swept -- returns THREE files, and all three
+#   really do declare a `T::*`: src/func_ov006_02123340.cpp (the site above),
+#   src/func_ov006_020cea2c.cpp and src/func_ov006_020cf758.cpp, the last two
+#   dispatching the 3D-Mario record's member pointer at OFFSET 0.
 #   -> port/unmatched/MgTrampolineTerror_MarioDispatch.cpp
+#
+#   THREE, NOT FOUR, AND THE FOURTH IS THE POINT OF THE NEXT BULLET. An earlier
+#   version of this paragraph said the sweep returns FOUR and counted
+#   src/func_ov006_020c8f20.cpp among them, which contradicts the bullet below
+#   saying that file defeats this detector -- and the file contains no `::*` at
+#   all. The tool that produced the four was reporting PMF-SHAPED files, which is
+#   its `::*` arm and its open-coded arm added together; reading its total as one
+#   detector's answer is what put the fourth in the wrong bullet. FOUR WALLS,
+#   THREE FOUND BY THE SWEEP, ONE FOUND BY A RUN.
 #
 #   THE THIRD SHAPE, open-coded in plain ints, defeats both and was convicted BY
 #   A RUN: src/func_ov006_020c8f20.cpp decodes {off, adj} by hand on the
@@ -301,22 +311,44 @@
 #   port/unmatched/MgD3DBase_Slots.cpp           slots 10, 27 and 28 drop the
 #     receiver an ARM register carried. SLOT 10 IS BeforeRender AND IT COSTS THE
 #     WHOLE PICTURE: handed stack litter, Actor::BeforeRender answers NO and the
-#     framework skips slots 9 and 11. Measured before the repair on scene 385:
-#     slot 7 at 300 hits over 300 frames with slots 9/10/11 at ZERO, against a
-#     control boot of scene 388 (a class NOT under this base) at 600/600.
-#     After: 300/300/300.
+#     framework skips SLOT 9. Measured on scene 385 with RENDERING ON, which is
+#     the only config in which the question means anything:
+#
+#       before the repair, 1500 frames   render 0    slot 10 1500  slot 11 1500
+#       after  the repair, 3000 frames   render 3000 slot 10 3000  slot 11 3000
+#       control, scene 388, 600 frames   render 600  slot 10 600
+#
+#     SLOT 10 WAS DISPATCHED ALL ALONG AND ANSWERED NO; slot 9 is the one that
+#     never ran. Slot 11 ran too. That is the mechanism working exactly as
+#     Actor::BeforeRender's gate is supposed to, on a garbage receiver.
+#
+#     AN EARLIER VERSION OF THIS PARAGRAPH SAID "slots 9/10/11 at ZERO" and it
+#     was measured in the wrong config: those zeros came from a
+#     SM64DS_SCENE_NO_RENDER=1 run, where the whole render bucket never executes
+#     and all three slots read zero whatever the code does. Comparing that
+#     against a RENDERED control boot of 388 is run mg9 lane S364's error
+#     exactly -- measuring against the wrong config and reading the difference
+#     as a defect. The defect was real and the fix is unchanged; the census that
+#     was quoted for it was not evidence of it. Both halves of the true A/B are
+#     banked in runs/mg11/out/TTE/evidence/census/.
 #   port/unmatched/MgD3DBase_ModelAnimRender.cpp two mwcc virtual-shadow
 #     dispatches onto ModelAnim's ROM slot 5 (byte 0x14), which MSVC numbers as
 #     Virtual18. Invisible to NO_RENDER and invisible until slot 10 was repaired,
 #     because until then nothing rendered. The closure was SWEPT for it rather
-#     than waited on: every slice TU declaring a local struct with virtuals was
-#     scanned for which index it dispatches. TWENTY hits, and they decompose
-#     exactly: 13 at index 4 (byte 0x10) on the Trampoline-Mario element's own
+#     than waited on: every TU declaring a local struct with virtuals was scanned
+#     for which index it dispatches. OVER THE 204 SLICE LINES THE ANSWER IS
+#     EIGHTEEN: 13 at index 4 (byte 0x10) on the Trampoline-Mario element's own
 #     five-slot table, which this seat fills, so those land on this port's own
 #     thunks; 1 at index 18 (byte 0x48), the scene's own slot-18 dispatch from
-#     slot 0; 2 at index 0, 1 at index 1 and 1 at index 2 on argument objects
-#     that are not ModelAnims; and exactly TWO at index 5 (byte 0x14).
-#     13 + 1 + 2 + 1 + 1 + 2 = 20.
+#     slot 0; and 2 at index 0, 1 at index 1 and 1 at index 2 on argument objects
+#     that are not ModelAnims. 13 + 1 + 2 + 1 + 1 = 18, and NOT ONE of them is at
+#     index 5.
+#     THE TWO INDEX-5 HITS ARE IN HOST-COPIED FILES, NOT SLICE LINES:
+#     src/func_ov006_020c8e90.cpp and src/func_ov006_02122814.cpp left this slice
+#     the moment MgD3DBase_ModelAnimRender.cpp took them, so a sweep phrased as
+#     "every TU in slice_tte.txt" cannot see the very hits it is quoted for.
+#     18 over the slice + 2 in the two host copies = 20 over the closure, and the
+#     twenty is only true of the closure.
 #
 # SLOT 2 IS IN THAT SHARED FILE TOO. This lane first wrote its own
 # port/unmatched/MgTrampolineTerror_Slot2.cpp for the flower's argument
@@ -325,13 +357,21 @@
 # same offset and the same forwarded return. This tree carries BNP's file
 # verbatim.
 #
-# THE ONE FILE THAT IS STILL A UNION RATHER THAN A COPY is
-# MgD3DBase_ModelAnimRender.cpp. BNP's version repairs func_ov006_020c4c54 and
-# func_ov006_020c7734, which 0x174 reaches; this tree's version repairs
-# func_ov006_020c8e90 and func_ov006_02122814, which 0x181 reaches. The four
-# bodies are disjoint, so THE MERGED FILE MUST BE THE UNION OF ALL FOUR -- this
-# is a difference to reconcile, not a duplicate to drop, and the header of each
-# names its own two.
+# THE ONE FILE THAT IS NOT A COPY is MgD3DBase_ModelAnimRender.cpp, and the
+# merge instruction for it is NOT "take the union of two files". THREE DISJOINT
+# TEXTS EXIST under that one name, checked by md5 across the three worktrees:
+#
+#   mg11-bnp  defines func_ov006_020c4c54 and func_ov006_020c7734
+#   mg11-bnt  defines func_ov006_020c4c54 and func_ov006_020c7734  -- THE SAME
+#             TWO SYMBOLS, different text
+#   mg11-tte  defines func_ov006_020c8e90 and func_ov006_02122814
+#
+# So the gate has TWO jobs, not one: PICK ONE TEXT for the BNP/BNT pair (they
+# collide symbol for symbol and only one can link), then APPEND this tree's two
+# bodies to whichever it picked, UNION the three extern blocks, and RECONCILE
+# the three headers into one. FOUR BODIES SURVIVE AND NOTHING COLLIDES, because
+# 0x174's pair and 0x181's pair are disjoint -- but calling the whole thing "a
+# union" hides the one real decision in it, which is BNP-versus-BNT.
 #
 # ---- 10. THE ONE THUNK DEFECT THIS LANE INTRODUCED AND CAUGHT -------------
 #

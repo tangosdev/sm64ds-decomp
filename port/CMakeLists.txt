@@ -5058,7 +5058,7 @@ set_source_files_properties(
     PROPERTIES COMPILE_DEFINITIONS "data_ov007_020cd72c=func_ov006_020cd72c")
 
 # THE ONE BARE VT EXTERN IN THIS SLICE, and it is the run law's per-source
-# rename onto this lane's own pool word. Every one of the slice's 181 TUs was
+# rename onto this lane's own pool word. Every one of the slice's 204 TUs was
 # swept (comments stripped) for VT / VT0 / VT1 / VT2 / HEAP / G0 / G1 / G2 /
 # R0 / R1 / R2; there are four hits and three of them are LOCAL TYPE NAMES
 # (`typedef struct { int x, y; } G2;` in src/func_ov006_020cc8c8.c and the two
