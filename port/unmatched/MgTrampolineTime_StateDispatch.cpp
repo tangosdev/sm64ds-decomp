@@ -45,10 +45,12 @@
 //     0x0213fad0       dScMgTrampoline_c,  vtable 0x0213fb34   id 0x180  THIS
 //     0x0213fc04       dScMgTrampoline2_c, vtable 0x0213fc7c   id 0x181
 //
-// symbols/actor_renames_report.txt already records the consequence as eight
-// "SKIP MgTrampolineTime: ... already claimed by MgBounceAndPounce" lines: the
-// namer walked the derived classes in address order and gave the FIRST one the
-// shared base's bodies.  This lane does not rename anything -- config is not
+// symbols/actor_renames_report.txt already records the consequence as NINE
+// "SKIP MgTrampolineTime: ... already claimed by MgBounceAndPounce" lines, and
+// nine more for MgTrampolineTerror: the namer walked the derived classes in
+// address order and gave the FIRST one the shared base's bodies.  Three
+// committed places in this lane said eight; the dropped line is the first,
+// `ov006:0x213c62c ... (vtable alloc=?)`, the TABLE rather than a body in it.  This lane does not rename anything -- config is not
 // this lane's file and three sibling lanes are live on the same base in the
 // same run -- it records the correction so the decomp side can route it.
 //
@@ -98,6 +100,19 @@
 //   the 13 INHERITED dScMgD3DBase_c bodies                   0 sites
 //   whole-overlay control                                  114 sites
 //
+// THE ADDRESS A DECODE SITE IS REPORTED AT IS THE `add`, the FIRST instruction
+// of the five-instruction sequence, in every place this lane names one.  The
+// detector matches on the add/ands pair, so the add is what it has; the `blx`
+// is three or five instructions later and is a different number for the same
+// site.  Both sequences in full:
+//
+//     func_ov006_021214f8   add 0x0212151c   ands 0x02121520   blx 0x02121534
+//     func_ov006_020cb030   add 0x020cb068   ands 0x020cb06c   blx 0x020cb080
+//
+// An earlier version of the element file reported ITS site at the blx while
+// this class's was reported at the add, so two numbers that look like the same
+// kind of thing were pointing at different instructions.
+//
 // One site, and it is vtable SLOT 6 -- the slot every seat wires by name, which
 // is section 14's practical rule firing again: read the slot-6 src before
 // wiring it.  The `::*` sweep over this class's closure agrees and adds
@@ -146,12 +161,17 @@
 // therefore remains the single place that decides what a null code word means,
 // what a nonzero adjustment means and how an unhandled address is reported.
 //
-// There is no port_mg_tti_call1: this class has no arity-1 anything.  The pair
-// run that sits IMMEDIATELY AFTER this class's vtable (0x0213fbc8 onward, six
-// pairs) is dScMgTrampoline2_c's -- every one of its code words lands in
-// 0x0212471c..0x02124088, past this class's last body, and every literal pool
-// that names one is inside that class's own code.  It is deliberately NOT
-// routed here; lane TTE owns it.
+// There is no port_mg_tti_call1: this class has no arity-1 anything.  The run
+// that sits IMMEDIATELY AFTER this class's vtable is dScMgTrampoline2_c's, and
+// it is FIVE PAIRS: 0x0213fbd0, 0x0213fbd8, 0x0213fbe0, 0x0213fbe8 and
+// 0x0213fbf0.  0x0213fbc8 is NOT one of them -- config names it
+// MgTrampolineTerror_SpawnInfo and the word after it is the doubled id
+// 0x01810181, which is the SpawnInfo-in-the-pair-run trap section 3 of this
+// file documents for THIS class's own run.  An earlier version of this comment
+// counted six and took the range from the SpawnInfo's factory word.  The five
+// real code words land in 0x02123b20..0x02124088, past this class's last body
+// (0x021225a8), and every literal pool that names one is inside that class's
+// own code.  Deliberately NOT routed here; lane TTE owns it.
 
 #include <cstdio>
 

@@ -5027,15 +5027,26 @@ foreach(line IN LISTS SLICE_TTI_LINES)
     list(APPEND SLICE_TTI_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-# FIVE OF THIS SLICE'S .c FILES ARE REALLY C++ -- a //cpp marker
-# and a top-level `extern "C"` block, which is invalid C. All 49 were SWEPT for
-# the marker and for `extern "C"`, `virtual`, `class`, `namespace`, `bool`,
-# `new`/`delete` and `::` rather than this one being found by a compile error
-# and the rest left to luck, which is the sweep the BOO and SMB
-# blocks above record doing for theirs. Eleven files hit on `::` and every one
-# of the eleven is a recovered-name COMMENT ("dScMgTrampoline_c::Behavior --
-# recovered from vtable slot identity"), checked line by line; this is the only
-# real hit.
+# FIVE OF THIS SLICE'S 98 .c FILES ARE REALLY C++ -- a //cpp marker and a
+# top-level `extern "C"` block, which is invalid C. ALL 98 were SWEPT for the
+# marker and for `extern "C"`, `virtual`, `class`, `namespace`, `bool`,
+# `new`/`delete` and `::` rather than any one of the five being found by a
+# compile error and the rest left to luck, which is the sweep the BOO and SMB
+# blocks above record doing for theirs. The slice is 143 lines: 98 .c and
+# 45 .cpp.
+#
+# THE `::` ARM OF THE SWEEP: 12 of the 98 contain `::` somewhere, and 11 of the
+# 12 have it only in a recovered-name COMMENT ("dScMgTrampoline_c::Behavior --
+# recovered from vtable slot identity"), checked line by line against a
+# comment-stripping match. The twelfth, src/func_ov006_020cb1a8.c, has it in
+# CODE (`Sound::PlayBank2_2D`, `ModelAnim::SetAnim`) and is in the list below.
+#
+# THIS COMMENT SAID "All 49" AND "Eleven files" UNDER A HEADING SAYING FIVE.
+# Both figures were true of the slice as it stood when the block was first
+# written, at 49 .c files and one CXX row, and neither was re-measured as four
+# closure waves grew the slice to 98. A count in a comment is a measurement
+# with no gate under it; the numbers above were re-taken against the committed
+# slice.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/MgTrampolineTime_Spawn.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020c9c8c.c"

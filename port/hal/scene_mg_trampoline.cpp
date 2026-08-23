@@ -52,10 +52,14 @@
 // type_info records in ov006 carry 0x0213c5c8 as their base:
 // dScMgD3DBase_c itself, dScMgJump_c (0x174), dScMgJump2_c (0x175),
 // THIS class (0x180) and dScMgTrampoline2_c (0x181).
-// symbols/actor_renames_report.txt already records the consequence as eight
-// "already claimed by MgBounceAndPounce" SKIP lines.  This lane does not
-// rename config -- three sibling lanes are live on the same base in this run
-// -- it records the correction for the decomp side to route.
+// symbols/actor_renames_report.txt already records the consequence as NINE
+// "already claimed by MgBounceAndPounce" SKIP lines, and nine more for
+// MgTrampolineTerror.  Three committed places in this lane said eight; the one
+// all three dropped is the FIRST, `ov006:0x213c62c ... (vtable alloc=?)`,
+// which is the TABLE rather than a body in it -- the row that put the
+// MgBounceAndPounce name on dScMgD3DBase_c's vtable in the first place.  This
+// lane does not rename config -- three sibling lanes are live on the same base
+// in this run -- it records the correction for the decomp side to route.
 //
 // ---- 3. THE FILL IS ADDRESS-KEYED, SO FOUR TABLES ARE CHEAP ---------------
 //

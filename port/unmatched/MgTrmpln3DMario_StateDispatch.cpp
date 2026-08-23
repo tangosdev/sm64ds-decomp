@@ -19,7 +19,10 @@
 // So this class is TWO LEVELS DEEP, which is the question
 // port/mg_fanout_costs.txt section 14 tells a lane to ask and the answer here
 // is YES.  The outer machine is five links; this one is twenty-one bodies over
-// thirty-seven pair slots.
+// THIRTY-EIGHT pair slots.  (0x0213b224 - 0x0213b0f4) / 8 + 1 = 39 slots in
+// the run, less the one non-pair inside it (0x0213b19c) = 38.  Three committed
+// places said thirty-seven; section 4 records why the lane's own verifier did
+// not catch it.
 //
 // ---- 2. THE ONE DECODE SITE, FOUND BY THE IMAGE --------------------------
 //
@@ -27,7 +30,20 @@
 // invented, blind to spelling) over the element machinery 0x020caf00..
 // 0x020cd800, body by body at each body's own start and size:
 //
-//     func_ov006_020cb030   ONE site, at 0x020cb080
+//     func_ov006_020cb030   ONE site, at 0x020cb068
+//
+// THE ADDRESS A DECODE SITE IS REPORTED AT IS THE `add`, the FIRST instruction
+// of the five-instruction sequence, in every place this lane names one.  The
+// detector matches on the add/ands pair, so the add is what it has; the `blx`
+// is three or five instructions later and is a different number for the same
+// site.  Both sequences in full:
+//
+//     func_ov006_021214f8   add 0x0212151c   ands 0x02121520   blx 0x02121534
+//     func_ov006_020cb030   add 0x020cb068   ands 0x020cb06c   blx 0x020cb080
+//
+// An earlier version of the element file reported ITS site at the blx while
+// this class's was reported at the add, so two numbers that look like the same
+// kind of thing were pointing at different instructions.
 //
 // and nothing else in that range.  Every other `blx` in it is an ordinary
 // vtable dispatch (`ldr r1,[r0] / ldr r1,[r1,#imm] / blx r1`), which is a
@@ -73,7 +89,13 @@
 // NO relocation into this class's data, the same as the outer class.  The pairs
 // are statically relocated .data at an eight-byte stride from 0x0213b0f4 to
 // 0x0213b224, and each one is identified by the literal pool that LOADS it --
-// thirty-seven slots, TWENTY-ONE distinct code words, every adjustment zero.
+// THIRTY-EIGHT slots, TWENTY-ONE distinct code words, every adjustment zero.
+//
+// THE COUNT WAS WRONG IN THREE COMMITTED PLACES AND THE LANE'S OWN VERIFIER
+// COULD NOT HAVE CAUGHT IT: tmp/tti/verify.py checked that the distinct code
+// words number 21 and that every adjustment is zero, and it never counted the
+// slots.  A self-audit catches only what it measures.  The slot-count check
+// is in verify.py now.
 //
 // A SWEEP OF THE SPAN WOULD HAVE COLLECTED THREE WORDS THAT ARE NOT PAIRS,
 // which is the curling trap for the third time in this lane:

@@ -67,11 +67,38 @@
  * src/func_ov006_020cd12c.c and src/func_ov006_020cb16c.c are OUT of
  * port/slice_tti.txt -- the unmatched/MgBSC_StateDispatch.cpp convention.
  *
- * THIS IS A DECOMP-SIDE CORRECTION TO ROUTE, and it is worth two lines in
- * whatever carries them: the byte gate cannot see it (both spellings assemble
- * to the same `bl`), and no checker in this tree looks for an ov007 name inside
- * an ov006 TU.  The sweep that found the second one is two greps and is worth
- * running over every ov006 slice in the port.
+ * ---- 3b. A THIRD INSTANCE, OUTSIDE EVERY SLICE --------------------------
+ *
+ * This lane's sweep ran over ITS OWN SLICE and found two.  The independent
+ * reviewer ran it over src/ and found a third:
+ *
+ *     src/func_ov006_020cd6f4.c   `data_ov007_020cd72c(c)`
+ *         from:0x020cd6fc kind:arm_call to:0x020cd72c module:overlay(6)
+ *
+ * -- the SAME wrong symbol as section 2's, in a different body, and a 0x2c
+ * body whose only other relocation is a load of data_ov006_0213b3e0.  It is
+ * re-derived here rather than taken on the reviewer's word.
+ *
+ * IT IS NOT A LIVE DEFECT ON THIS TREE and it is listed anyway.  No wired
+ * slice compiles src/func_ov006_020cd6f4.c, so nothing in the port can reach
+ * it today; the moment some lane's closure pulls it in, it is a jump into
+ * ov007's bytes exactly like the other two were.  Scoping a sweep to your own
+ * slice finds the instances that can hurt you and none of the ones that will
+ * hurt the next lane.
+ *
+ * ---- 3c. THE ROUTED DECOMP-SIDE CORRECTION LIST, ALL THREE ---------------
+ *
+ *     src/func_ov006_020cd12c.c   data_ov007_020cd72c  -> func_ov006_020cd72c
+ *     src/func_ov006_020cb16c.c   data_ov007_020ccd78  -> func_ov006_020ccd78
+ *                                 (and the receiver it drops)
+ *     src/func_ov006_020cd6f4.c   data_ov007_020cd72c  -> func_ov006_020cd72c
+ *
+ * THIS IS A DECOMP-SIDE CORRECTION TO ROUTE, and it is worth the three lines
+ * above in whatever carries them: the byte gate cannot see it (both spellings
+ * assemble to the same `bl`), and no checker in this tree looks for an ov007
+ * name inside an ov006 TU.  The sweep is two greps -- a `data_` symbol used as
+ * a call, and any ovNNN name inside a TU of a different overlay -- and it
+ * belongs over ALL of src/, not over one slice.
  */
 
 extern "C" {

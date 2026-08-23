@@ -23,13 +23,31 @@
  * ?data_ov006_...@@3USharedFilePtr@@A.  The mount defines all thirteen as
  * plain C names.
  *
- * ---- 2. THE SIXTEEN int AND short ROWS -----------------------------------
+ * ---- 2. THE SEVENTEEN int AND short ROWS OF THE FIRST WAVE ---------------
  *
- * Same TU and its neighbours, same shape, different types: fourteen `int`
- * (?...@@3HA) and three `short` (?...@@3FA).  data_ov006_0212e044/48/4c are the
- * three halfwords chain link 0 (src/func_ov006_02121d64.cpp) and the state
- * setter src/func_ov006_02121f04.c seed the object's +0x5db0..+0x5db6 block
- * from.
+ * Same TU and its neighbours, same shape, different types: FOURTEEN `int`
+ * (?...@@3HA) and THREE `short` (?...@@3FA), which is seventeen.  The heading
+ * on this section used to say SIXTEEN while the sentence under it said
+ * fourteen and three -- a heading and its own body disagreeing by one, which
+ * is what a summary written before the list it summarises does.
+ *
+ * THE WHOLE FILE'S CENSUS, so a reader does not have to add up four waves.
+ * Counted off the committed file, 59 /alternatename rows:
+ *
+ *     13  ?...@@3USharedFilePtr@@A     section 1
+ *     25  ?...@@3HA          int       sections 2, 2b, 2c, 2d
+ *      4  ?...@@3PAHA        int*      sections 2c, 2d
+ *      3  ?...@@3FA          short     section 2
+ *      3  ?...@@3UG2@@A      struct G2 section 2b
+ *      3  ?...@@3PAXA        void*     sections 2, 2c
+ *      1  ?...@@3US8@@A      struct S8 section 2c
+ *      1  ?...@@3PAPAXA      void**    section 2c
+ *      1  ?...@@3EA          uchar     section 2
+ *      5  the bare names and the two C++ spellings, sections 3 and 5
+ *
+ * data_ov006_0212e044/48/4c are the three halfwords chain link 0
+ * (src/func_ov006_02121d64.cpp) and the state setter src/func_ov006_02121f04.c
+ * seed the object's +0x5db0..+0x5db6 block from.
  *
  * TWO OF THE int ROWS ARE VTABLES AND NOT DATA, which is worth naming rather
  * than leaving in a list of sixteen: ?data_ov006_0213b2c4@@3HA is

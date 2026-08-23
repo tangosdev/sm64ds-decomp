@@ -50,11 +50,32 @@
  * symbol and its size, delinks.txt has no block over it, and no file in src/
  * defines it.
  *
- *   func_ov006_020cf2fc  0x45c.  Called once, from 0x020d0a80 inside
- *                        func_ov006_020d0a3c.
- *   func_ov006_020d01e0  0x800.  Called THREE times, from 0x020d0ba8 and
- *                        0x020d0c08 (both inside func_ov006_020d0bd8, which
- *                        this slice compiles) and from 0x020d0f7c.
+ *   func_ov006_020cf2fc  0x45c.  Called once, from 0x020d0a80, which is inside
+ *                        func_ov006_020d09e0 (0x020d09e0..0x020d0ac0) -- the
+ *                        body vtable slot 9 calls through
+ *                        func_ov006_020cd270's neighbour in Render's tail.
+ *   func_ov006_020d01e0  0x800.  Called THREE times, and from THREE DIFFERENT
+ *                        bodies, one call each:
+ *                          0x020d0ba8  in func_ov006_020d0b78
+ *                          0x020d0c08  in func_ov006_020d0bd8 (this slice
+ *                                      compiles it)
+ *                          0x020d0f7c  in func_ov006_020d0c38 -- which is
+ *                                      ITSELF one of the three floors trapped
+ *                                      in this file
+ *
+ * THE FIRST VERSION OF THOSE TWO LINES NAMED TWO BODIES THAT DO NOT HOLD THE
+ * CALLS, and one of them does not exist at all.  There is no
+ * func_ov006_020d0a3c in config/arm9/overlays/ov006/symbols.txt; 0x020d0a80 is
+ * mid-body of func_ov006_020d09e0.  And 0x020d0ba8 is in func_ov006_020d0b78,
+ * not func_ov006_020d0bd8 -- the two calls were assumed to share a body because
+ * they are 0x60 bytes apart, and a body boundary sits between them.  Both were
+ * re-derived by resolving each `from:` address against the symbol table's
+ * start+size spans rather than by reading the nearest symbol below it.
+ *
+ * ONE OF THE THREE CALLERS IS A TRAP OF THIS FILE'S OWN, which strengthens the
+ * measurement below rather than weakening it: the 0x020d0f7c call can never
+ * fire while func_ov006_020d0c38 returns count-and-return, so the run's
+ * `020d01e0 x1` is one call from a live body, not one of three.
  *
  * 0x800 is the largest body in this class's closure and neither trap can be
  * argued away as unreachable: func_ov006_020d0bd8 is on the path chain link 0

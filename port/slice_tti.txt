@@ -57,10 +57,17 @@
 #     0x0213fad0       dScMgTrampoline_c,      vtable 0x0213fb34   id 0x180
 #     0x0213fc04       dScMgTrampoline2_c,     vtable 0x0213fc7c   id 0x181
 #
-# symbols/actor_renames_report.txt already records the consequence as eight
+# symbols/actor_renames_report.txt already records the consequence as NINE
 # "SKIP MgTrampolineTime: ... already claimed by MgBounceAndPounce" lines and
-# eight more for MgTrampolineTerror: the namer walked the derived classes in
-# address order and gave the shared base's bodies to the first one it saw.
+# NINE more for MgTrampolineTerror -- `grep -c` says nine for each -- because
+# the namer walked the derived classes in address order and gave the shared
+# base's bodies to the first one it saw.
+#
+# THREE COMMITTED PLACES IN THIS LANE SAID EIGHT, and the line all three
+# dropped is the FIRST one: `ov006:0x213c62c ... (vtable alloc=?)`.  The eight
+# that were counted are the eight BODIES; the ninth is the TABLE, and it is
+# the one that matters most, because it is the row that put the
+# MgBounceAndPounce name on dScMgD3DBase_c's vtable in the first place.
 # THIS LANE DOES NOT RENAME CONFIG.  config is not this lane's file and three
 # sibling lanes are live on the same base in this run; the correction is
 # recorded here for the decomp side to route.
@@ -156,6 +163,19 @@
 #                                        0x0212151c, in func_ov006_021214f8
 #   the 13 INHERITED dScMgD3DBase_c bodies                       0 sites
 #
+# THE ADDRESS A DECODE SITE IS REPORTED AT IS THE `add`, the FIRST instruction
+# of the five-instruction sequence, in every place this lane names one.  The
+# detector matches on the add/ands pair, so the add is what it has; the `blx`
+# is three or five instructions later and is a different number for the same
+# site.  Both sequences in full:
+#
+#     func_ov006_021214f8   add 0x0212151c   ands 0x02121520   blx 0x02121534
+#     func_ov006_020cb030   add 0x020cb068   ands 0x020cb06c   blx 0x020cb080
+#
+# An earlier version of the element file reported ITS site at the blx while
+# this class's was reported at the add, so two numbers that look like the same
+# kind of thing were pointing at different instructions.
+#
 # The `::*` sweep over this slice's closure agrees and adds nothing.
 #
 # ---- 7. FIVE STATES, A CHAIN, AND NO OVERLAY CONSTRUCTOR AT ALL -----------
@@ -195,13 +215,38 @@
 # Stars trap in one class, and the five literal pools that actually name a pair
 # skip both.
 #
-# WHAT THIS LANE DELIBERATELY LEFT ALONE.  The pair run at 0x0213fbc8 onward --
-# six pairs, immediately after THIS class's vtable -- is dScMgTrampoline2_c's.
-# Every one of its code words lands in 0x0212471c..0x02124088, past this class's
-# last body, and every literal pool that names one is inside 0x181's own code
-# (0x021230bc, 0x02123bf0, 0x02123c74, 0x02123cb0, 0x02124024, 0x02124084,
-# 0x02124294, 0x021242c8, 0x02124708).  Address adjacency to this class's table
-# is not ownership; the reading pool is.  Lane TTE owns those six.
+# WHAT THIS LANE DELIBERATELY LEFT ALONE.  The run immediately after THIS
+# class's vtable is dScMgTrampoline2_c's, and it is FIVE PAIRS, not six:
+#
+#     0213fbc8  {0212471c, 01810181}   NOT A PAIR -- it is
+#                                      MgTrampolineTerror_SpawnInfo, the
+#                                      factory word and the doubled id 0x181
+#     0213fbd0  {02123b20, 0}
+#     0213fbd8  {02124088, 0}
+#     0213fbe0  {02123b24, 0}
+#     0213fbe8  {02123cb4, 0}
+#     0213fbf0  {02123bf4, 0}
+#
+# THE SIXTH PAIR WAS A SpawnInfo, WHICH IS THE TRAP THIS FILE DOCUMENTS TWO
+# SECTIONS EARLIER.  Section 7 names the SpawnInfo-inside-the-pair-run trap for
+# THIS class (0x0213fab8) and this paragraph then walked into the sibling's copy
+# of it.  config/arm9/overlays/ov006/symbols.txt has the answer in one line --
+# `MgTrampolineTerror_SpawnInfo ... addr:0x0213fbc8` -- and the word after it is
+# the doubled id 0x01810181.  A rule you can state is not a rule you have
+# applied.
+#
+# The five real code words land in 0x02123b20..0x02124088, past this class's
+# last body (which ends at 0x021225a8).  An earlier version of this paragraph
+# wrote that range as 0x0212471c..0x02124088, which is INVERTED and takes its
+# low end from the SpawnInfo's factory word rather than from a pair.
+#
+# The pools that name one are inside 0x181's own code.  FIVE of the nine
+# addresses this file used to list name a PAIR -- 0x02123bf0, 0x02123c74,
+# 0x02123cb0, 0x02124084 and 0x02124294 -- and the other four (0x021230bc,
+# 0x02124024, 0x021242c8, 0x02124708) load 0x181's OTHER .data words
+# (0x0213fbc4, 0x0213fc10, 0x0213fc20, 0x0213fc34), which is why nine pools
+# cannot identify five pairs.  Address adjacency to this class's table is not
+# ownership; the reading pool is.  Lane TTE owns those five.
 #
 # ---- 8. THE ELEMENT VTABLE, AND IT IS DISPATCHED --------------------------
 #
@@ -323,10 +368,19 @@
 # true there.  The ELEMENT class has a machine of its own, and it is bigger:
 #
 #   dMgTrmpln3DMario_c, one FIELD-HELD member pointer at element+0x64/+0x68,
-#   ONE decode site (0x020cb080, in func_ov006_020cb030), THIRTY-SEVEN pair
-#   slots at 0x0213b0f4..0x0213b224, TWENTY-ONE distinct code words, every
-#   adjustment zero, and NO overlay constructor -- ov006's .init has no
-#   relocation into that data either.
+#   ONE decode site (the add at 0x020cb068, in func_ov006_020cb030),
+#   THIRTY-EIGHT pair slots at 0x0213b0f4..0x0213b224, TWENTY-ONE distinct
+#   code words, every adjustment zero, and NO overlay constructor -- ov006's
+#   .init has no relocation into that data either.
+#
+#   THIRTY-EIGHT, AND THE FIRST THREE COMMITTED PLACES SAID THIRTY-SEVEN.
+#   (0x0213b224 - 0x0213b0f4) / 8 + 1 = 39 eight-byte slots in the run, less
+#   the ONE non-pair inside it (0x0213b19c, the type_info) = 38.  The two
+#   other non-pairs this file names, 0x0213b0ec and 0x0213b22c, sit OUTSIDE
+#   that first-to-last span and are not part of the 39.  The miscount stood
+#   because tmp/tti/verify.py checked the DISTINCT CODE WORDS (21) and never
+#   checked the slot count at all -- a self-audit only catches what it
+#   measures.  The check is in verify.py now.
 #
 # All twenty-one reach a matched src TU, so that machine has no state floor.
 # port/unmatched/MgTrmpln3DMario_StateDispatch.cpp is the host copy, its
