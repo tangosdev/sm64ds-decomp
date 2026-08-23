@@ -28,7 +28,8 @@
 // routed.
 //
 // LANE LKY'S ENCODING DETECTOR RUN OVER THE WHOLE CLOSURE IS WHAT NAMES THEM.
-// Decoding every word of the 84 TUs in port/slice_bnp.txt and looking for
+// Decoding every word of the TUs in port/slice_bnp.txt (84 when this was first
+// written, 129 once the twenty-five state bodies below were added) and looking for
 // `add Rd,Rn,Rm,asr #1` immediately followed by `ands Rm,Rm,#1` finds THREE
 // sites, not one:
 //
