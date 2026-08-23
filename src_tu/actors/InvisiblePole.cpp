@@ -128,6 +128,15 @@ s32 InvisiblePole::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
+/* ROM ordinal 1 -- _ZN13InvisiblePoleD0Ev, 0x020b0600, size 0x44 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN13InvisiblePoleD0Ev
+/* No hand-written body: keeping this alongside the real out-of-line D1 below
+   in the same TU is an mwcc internal compiler error (ELFgen.c:483) -- see
+   memory. The real `InvisiblePole::~InvisiblePole(){}` (D1, below) makes the
+   compiler emit BOTH D1 and D0 itself; D0 still MATCHes the ROM. */
+
+/* -------------------------------------------------------------------------- */
 /* ROM ordinal 0 -- _ZN13InvisiblePoleD1Ev, 0x020b05d0, size 0x30 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN13InvisiblePoleD1Ev
