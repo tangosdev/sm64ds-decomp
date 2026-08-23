@@ -94,11 +94,9 @@ data_ov047_02112324 kind:data(any) addr:0x02112324
 _ZTI20daObjKm3_Kaitendai_c kind:data(any) addr:0x02112328
 data_ov047_02112334 kind:data(any) addr:0x02112334
 _ZTS20daObjKm3_Kaitendai_c kind:data(any) addr:0x02112340
-data_ov047_02112358 kind:data(any) addr:0x02112358 ambiguous
-data_ov047_02112368 kind:data(any) addr:0x02112368 ambiguous
+data_ov047_02112358 kind:data(any) addr:0x02112358
+data_ov047_02112374 kind:data(any) addr:0x02112374
 _ZTV20daObjKm3_Kaitendai_c kind:data(any) addr:0x0211237c
-data_ov047_021123e4 kind:data(any) addr:0x021123e4 ambiguous
-data_ov047_021123f4 kind:data(any) addr:0x021123f4 ambiguous
 _ZTI17daObjKm3_Kuruma_c kind:data(any) addr:0x021123fc
 data_ov047_02112404 kind:data(any) addr:0x02112404 ambiguous
 data_ov047_02112408 kind:data(any) addr:0x02112408
