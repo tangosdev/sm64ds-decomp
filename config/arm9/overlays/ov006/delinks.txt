@@ -6385,6 +6385,10 @@ src/func_ov006_0211e658.c:
     complete
     .text start:0x0211e658 end:0x0211e72c
 
+src/func_ov006_0211e72c.c:
+    complete
+    .text start:0x0211e72c end:0x0211e7d8
+
 src/func_ov006_0211e7d8.c:
     complete
     .text start:0x0211e7d8 end:0x0211e8a8
@@ -6396,6 +6400,10 @@ src/func_ov006_0211e8a8.c:
 src/func_ov006_0211eb90.c:
     complete
     .text start:0x0211eb90 end:0x0211ebdc
+
+src/func_ov006_0211ebdc.c:
+    complete
+    .text start:0x0211ebdc end:0x0211ee34
 
 src/func_ov006_0211ee34.c:
     complete
