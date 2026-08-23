@@ -176,6 +176,45 @@ DSSTATE_END
    the same function under two spellings and the row joins them. */
 #pragma comment(linker, "/alternatename:?LoadTextureToVram@Model@@YAHPADI@Z=__ZN5Model17LoadTextureToVramEPcj")
 
+/* ---- 5. TWO C++ SPELLINGS THAT NEED A SHIM RATHER THAN AN ALIAS -------
+
+   ModelAnim::SetAnim.  src/func_ov006_020cb528.c and _020cb690.cpp call it
+   as a METHOD on a shadow class of their own, so MSVC wants
+   ?SetAnim@ModelAnim@@QAEXPAXHHI@Z -- __thiscall, receiver in ecx.  The
+   definition the port links is
+   src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c, a plain C free
+   function taking the receiver as its FIRST STACK ARGUMENT.
+
+   AN /alternatename BETWEEN THOSE TWO WOULD BE THE FASTCALL-VS-CDECL
+   DEFECT, not a fix: the caller would leave the receiver in ecx and the
+   callee would read it off the stack.  So this is a real forwarding
+   method, which is the shape hal/bob_enemy_shadow_faces.cpp uses for the
+   BCA_File* overload of the same function.  Two overloads, two symbols,
+   no clash.
+
+   Model::LoadTextureToVram is the opposite case and DOES take an alias.
+   src/func_ov006_020d0b2c.cpp spells it as a free function at namespace
+   scope (?LoadTextureToVram@Model@@YAHPADI@Z, __cdecl) while
+   include/Model.h declares it a STATIC member and
+   src/_ZN5Model17LoadTextureToVramEPcj.cpp defines it
+   (?LoadTextureToVram@Model@@SAIPADI@Z).  A static member is __cdecl too,
+   the parameter lists are identical and int/unsigned return in the same
+   register, so the two really are one function under two spellings. */
+struct ModelAnim { void SetAnim(void *f, int flags, int speed,
+                                unsigned start); };
+extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+        void *self, void *f, int flags, int speed, unsigned start);
+void ModelAnim::SetAnim(void *f, int flags, int speed, unsigned start)
+{ _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(this, f, flags, speed, start); }
+
+#pragma comment(linker, "/alternatename:?LoadTextureToVram@Model@@YAHPADI@Z=?LoadTextureToVram@Model@@SAIPADI@Z")
+
+/* src/func_ov006_020c7c68.c calls func_ov006_020e6df0, which is not a
+   symbol: config/arm9/overlays/ov006/symbols.txt names 0x020e6df0
+   Sound_PlayBank1Panned, and delinks.txt gives it its own .text block
+   0x020e6df0..0x020e6e3c.  Same bare-name shape as section 3. */
+#pragma comment(linker, "/alternatename:_func_ov006_020e6df0=_Sound_PlayBank1Panned")
+
 /* MSVC emits nothing for a TU that is only pragmas, and an empty object still
    carries the linker directives. This symbol exists so a reader grepping for
    who owns these rows finds a definition rather than only a comment. */

@@ -296,6 +296,7 @@ src/_ZN17MgBounceAndPounce21AfterCleanupResourcesEj.cpp
 src/_ZN17MgBounceAndPounceD0Ev.cpp
 src/_ZN17MgBounceAndPounceD1Ev.cpp
 src/_ZN5Model17LoadTextureToVramEPcj.cpp
+src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c
 src/func_02053ea0.c
 src/func_02053eb0.c
 src/func_02054748.c
@@ -380,6 +381,7 @@ src/func_ov006_020e6cac.c
 src/func_ov006_020e6d24.cpp
 src/func_ov006_020e6d8c.c
 src/func_ov006_020e6d98.c
+src/func_ov006_020e6da4.c
 src/func_ov006_020e6e3c.c
 src/func_ov006_020e6e4c.c
 src/func_ov006_020e6e54.c
