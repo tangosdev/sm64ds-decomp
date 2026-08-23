@@ -1,45 +1,34 @@
 //cpp
-typedef int Fix12;
-struct Vector3 { int x, y, z; };
-
-struct dCcAc_c {
-    char dummy;
-};
-
-struct dActor_c {
-    char pad8[8];
-    unsigned int flags8;        // 0x8
-    char pad_to8c[0x8c - 0xc];
-    short f8c;                   // 0x8c
-    short f8e;                   // 0x8e
-    short f90;                   // 0x90
-    char pad_to100[0x100 - 0x92];
-    char f100[0x40];            // 0x100..
-};
-
-extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *clsn, struct dActor_c *a, Fix12 x, Fix12 z, unsigned int b, unsigned int c);
+// @symbol _ZN14EnemySwitchTag13InitResourcesEv
+/* EnemySwitchTag::InitResources -- vtable slot 0. Real C++ method over the
+ * shared header; the pre-0x108 fields the body reads (actor flags at +0x8,
+ * spawn params at +0x8c/+0x8e/+0x90) live in dActor_c's inherited span, read
+ * by raw offset, and the named tail fields are written through members. */
+#include "EnemySwitchTag.h"
+extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *clsn, void *a, int x, int z, unsigned int b, unsigned int c);
 extern "C" void _ZN5Event8ClearBitEj(unsigned int bit);
 
-extern "C" int _ZN14EnemySwitchTag13InitResourcesEv(struct dActor_c *a)
+int EnemySwitchTag::InitResources()
 {
+    char *a = (char *)this;
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-        (void *)((char *)a + 0xd4), a,
-        ((a->f8c + 1) * 0x64) << 0xc,
-        ((a->f8e + 1) * 0xc8) << 0xc,
+        a + 0xd4, this,
+        ((*(s16 *)(a + 0x8c) + 1) * 0x64) << 0xc,
+        ((*(s16 *)(a + 0x8e) + 1) * 0xc8) << 0xc,
         2, 0x400000);
 
-    *(unsigned char *)((char *)a + 0x10d) = a->flags8 & 0x1f;
-    *(unsigned char *)((char *)a + 0x10c) = (a->flags8 >> 5) & 1;
+    mEventID = *(u32 *)(a + 8) & 0x1f;
+    unk_10c = (*(u32 *)(a + 8) >> 5) & 1;
 
     {
-        short t = a->f90;
+        s16 t = *(s16 *)(a + 0x90);
         if (t <= 0)
-            *(short *)((char *)a + 0x108) = 0x96;
+            unk_108 = 0x96;
         else
-            *(short *)((char *)a + 0x108) = t;
+            unk_108 = t;
     }
-    *(short *)((char *)a + 0x10a) = 0;
+    unk_10a = 0;
 
-    _ZN5Event8ClearBitEj(*(unsigned char *)((char *)a + 0x10d));
+    _ZN5Event8ClearBitEj(mEventID);
     return 1;
 }
