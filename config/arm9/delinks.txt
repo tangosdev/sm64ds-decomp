@@ -1948,7 +1948,7 @@ src/_ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_.c:
     complete
     .text start:0x02015560 end:0x0201559c
 
-src/_ZN7Clipper13Func_0201559CEv.c:
+src/_ZN7Clipper13Func_0201559CEv.cpp:
     complete
     .text start:0x0201559c end:0x020156dc
 
@@ -3430,7 +3430,7 @@ src/func_02020820.c:
     complete
     .text start:0x02020820 end:0x02020884
 
-src/_ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2.c:
+src/_ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2.cpp:
     complete
     .text start:0x02020884 end:0x0202096c
 
@@ -3446,7 +3446,7 @@ src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi.c:
     complete
     .text start:0x02021024 end:0x020214a4
 
-src/_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2.c:
+src/_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2.cpp:
     complete
     .text start:0x020214a4 end:0x02021788
 
@@ -3458,7 +3458,7 @@ src/_ZN3OAM5FlushEv.cpp:
     complete
     .text start:0x02021864 end:0x02021898
 
-src/_ZN3OAM4LoadEv.c:
+src/_ZN3OAM4LoadEv.cpp:
     complete
     .text start:0x02021898 end:0x0202194c
 
@@ -5555,7 +5555,7 @@ src/_ZN4dBgW10DetectClsnER9dBgCh_Gnd.cpp:
     complete
     .text start:0x02039480 end:0x02039488
 
-src/_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b.c:
+src/_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b.cpp:
     complete
     .text start:0x02039488 end:0x020395fc
 
@@ -7822,7 +7822,7 @@ src/_ZN18NestedHeapIterator6RemoveEP13HeapAllocator.cpp:
     complete
     .text start:0x0204dd28 end:0x0204dd98
 
-src/_ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_.c:
+src/_ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_.cpp:
     complete
     .text start:0x0204dd98 end:0x0204de0c
 
@@ -7850,7 +7850,7 @@ src/_ZN13HeapAllocatorC1EjPvPvj.cpp:
     complete
     .text start:0x0204df54 end:0x0204dfe8
 
-src/_ZN18NestedHeapIterator10FindNestedEPv.c:
+src/_ZN18NestedHeapIterator10FindNestedEPv.cpp:
     complete
     .text start:0x0204dfe8 end:0x0204e014
 

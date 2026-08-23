@@ -23,7 +23,7 @@ src/func_0203821c.c
 src/func_020381cc.c
 src/func_02037eb0.c
 src/Vec3_Dist.c
-src/_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b.c
+src/_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b.cpp
 src/_ZNK11SurfaceInfo12CopyNormalToER7Vector3.cpp
 src/_ZN4dBgWC2Ev.c
 src/func_02038228.c

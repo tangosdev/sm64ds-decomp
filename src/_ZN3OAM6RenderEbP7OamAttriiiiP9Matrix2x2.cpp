@@ -1,9 +1,22 @@
-#include "types.h"
+//cpp
 // @symbol _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2
-/* recovered: named members + shared header, declarations from a shared header */
+/* recovered: named members + shared header, declarations from a shared header
+ *
+ * OAM::Render -- place one object into whichever OAM buffer is being written
+ * this frame, clipping it against the screen first. STATIC: no `this'.
+ *
+ * THIS FILE KEEPS ITS OWN OamAttr DEFINITION, and include/OAM.h's note explains
+ * why that header forward-declares the type instead of including OamAttr.h: this
+ * file needs the eight bytes as bitfields, and the shared header spells them as
+ * four u16. Both views complete the same forward declaration, so the parameter
+ * types still agree with the declaration in OAM.h.
+ *
+ * `draw' is bool because the mangled name says so (`Eb'); the ROM only ever
+ * tests it.
+ */
+#include "types.h"
 #include "decl_OAM.h"
 #include "decl_common.h"
-/* recovered: named members + shared header */
 #include "OAM.h"
 typedef struct OamAttr {
     u32 yb : 8, objMode : 2, mode : 2, mosaic : 1, dep : 1, shape : 2, xc : 9, aff : 5, size : 2;
@@ -12,14 +25,11 @@ typedef struct OamAttr {
 #define ATTR01(o) (*(u32 *)(o))
 typedef struct Matrix2x2 { s32 m00, m01, m10, m11; } Matrix2x2;
 
-extern int _ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2(OamAttr *attr, int *count, Matrix2x2 *mtx);
+extern "C" u8 data_0209e660;
+extern "C" OamAttr data_0209e674[];
+extern "C" OamAttr data_0209ea74[];
 
-extern u8 data_0209e660;
-extern OamAttr data_0209e674[];
-extern OamAttr data_0209ea74[];
-
-void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(
-    int draw, OamAttr *obj, int px, int py, int pal, int prio, Matrix2x2 *mtx)
+void OAM::Render(bool draw, OamAttr *obj, int px, int py, int pal, int prio, Matrix2x2 *mtx)
 {
     OamAttr *res;
     int *counter;
@@ -50,8 +60,8 @@ void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(
     y = *(s8 *)obj;
     x += px;
     y += py;
-    w = _ZN3OAM11GetObjWidthEii((ATTR01(obj) << 16) >> 30, ATTR01(obj) >> 30);
-    h = _ZN3OAM12GetObjHeightEii((ATTR01(obj) << 16) >> 30, ATTR01(obj) >> 30);
+    w = GetObjWidth((ATTR01(obj) << 16) >> 30, ATTR01(obj) >> 30);
+    h = GetObjHeight((ATTR01(obj) << 16) >> 30, ATTR01(obj) >> 30);
 
     if (mtx != 0) {
         if (obj->objMode != 1) {
@@ -75,7 +85,7 @@ void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(
     {
     u32 flags;
     if (mtx != 0) {
-        idx = _ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2(res - *counter, affctr, mtx);
+        idx = LoadAffineParams(res - *counter, affctr, mtx);
         if (idx == -1) return;
         if (obj->objMode == 1)
             flags = 0x100;

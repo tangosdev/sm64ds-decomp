@@ -36,6 +36,8 @@
 #define OAM_H
 #include "types.h"
 struct OamAttr;   /* fwd only -- see the note above */
+struct Matrix2x2; /* fwd only -- a pointer parameter needs no more, and the two
+                     files that pass one keep their own 4 x s32 definition */
 
 struct OAM {
     u8  pad_000[0xa8];
@@ -55,6 +57,12 @@ struct OAM {
     static u8 GetObjHeight(int shape, int sizeBits);
     static u32 EnableSubOAM();
     static void Flush();
+    static void Load();
+    /* Returns the affine-slot index, or -1 when the table is full. `count' is the
+       live entry count and is advanced by 4 -- one OAM entry per matrix
+       coefficient, which is also why the search strides by 4. */
+    static int LoadAffineParams(OamAttr* attr, int* count, Matrix2x2* mtx);
+    static void Render(bool draw, OamAttr* obj, int x, int y, int palette, int priority, Matrix2x2* mtx);
     static void RenderSub(OamAttr* data, s32 x, s32 y);
     static void RenderSub(OamAttr* data, s32 x, s32 y, s32 palette, s32 priority);
 #endif

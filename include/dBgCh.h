@@ -68,6 +68,16 @@ struct dBgCh {
     virtual ~dBgCh();        /* slots 0 (D1), 1 (D0) */
 
     /* --- non-virtual --- */
+    /* STATIC -- see the header note above: four parameters in r0-r3 and no
+       stack argument is what settles it, not the mangled name.
+
+       The return type is not part of an Itanium mangled name, so it is free to
+       choose -- and MEASURED either way: `int' and `bool' both reproduce the
+       body byte for byte, because every return is already 0 or 1 and mwccarm
+       emits no normalising instruction. `bool' is the one that says what the
+       function means. */
+    static bool ShouldPassThroughImpl(void *p, const CLPS &clps, const dBgCh &bg, bool flag);
+
     void StartDetectingToxic();
     void StartDetectingWater();
     void StopDetectingOrdinary();
