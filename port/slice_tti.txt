@@ -381,9 +381,12 @@
 # costs nothing and neither moves the headline.
 #
 # THE DELTA IS ALSO THE PROOF THAT CMake READ EVERY LINE.  Run mg11 lane RLT
-# reports that one unbalanced `[` in a slice comment makes CMake swallow the
+# reports that one unbalanced open-bracket in a slice comment makes CMake
+# swallow the
 # rest of the file, which reads exactly like a wall.  This file's brackets
-# balance (1/1, 21/21, 5/5) and an equal-minus-two delta is the measurement
+# balance -- checked with a counter after every edit, and this very paragraph
+# broke the balance the first time it was written -- and an equal-minus-two
+# delta is the measurement
 # that says so.
 #
 # ---- 16. WHAT THIS LANE DID NOT TOUCH -------------------------------------
