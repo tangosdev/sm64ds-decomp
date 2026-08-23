@@ -39,24 +39,50 @@
  * `mat` instead of `scale`, and Virtual18's first statement dereferences mat as
  * a Matrix4x3.
  *
- * MEASURED, scene 372, this tree, before this file existed. A render run
- * (SM64DS_FAULTS_FATAL=1, no NO_RENDER) died on the first frame with
+ * MEASURED, scene 372, this tree, AND PROVEN BY SCRATCH REVERT rather than by
+ * one observation. The reproducible statement is:
  *
- *   code c0000005  eip 00000000  access 00000008 at 00000000
- *   ebx 307fa7cc  ecx 307fa7cc  edi 307fa7cc
- *   stack: port_scene_tick -> port_actor_render -> func_02043fdc ->
- *          port_dispatch_guarded -> func_0204322c -> port_actor_process
+ *   WITHOUT this file (src/func_ov006_020c4c54.cpp and
+ *   src/func_ov006_020c7734.cpp back in port/slice_bnp.txt, this file out of
+ *   the CMake source list, full rebuild):
+ *     SM64DS_SCENE=372 SM64DS_FAULTS_FATAL=1 SM64DS_BNP_START_STATE=1
+ *     at 300, 600 and 1200 frames  ->  exit -1073741819 (0xC0000005), 3 of 3
  *
- * and the same binary with SM64DS_SCENE_SLOT9=0 -- this class's Render replaced
- * by a counting no-op -- ran 60 render frames clean with BeforeRender and
- * AfterRender both entered 60 times. Scenes 386, 388 and 389 render clean on
- * the same binary, so the path itself is sound and the defect is in these two
- * bodies. func_0204322c is ActorBase::Process dispatching the three arm9
+ *   WITH this file, the same three runs  ->  exit 0, 3 of 3
+ *
+ * The fault record from the reverted build:
+ *
+ *   FAULT code c0000005 at +0xffc00000 accessing 00000000
+ *     walker node 307FA804 actor 307FA7CC id 0x174
+ *     regs eax=00000000 ecx=307fa7cc ebx=307fa7cc edi=307fa7cc
+ *     stack: main -> port_scene_run -> port_scene_tick -> port_actor_render ->
+ *            func_02043fdc -> port_dispatch_guarded -> func_0204322c ->
+ *            port_actor_process
+ *
+ * 307FA7CC + 0x38 = 307FA804, so the walker node is the actor's RENDER list
+ * node. func_0204322c is ActorBase::Process dispatching the three arm9
  * member-pointer globals data_02099ecc / data_02099e74 / data_02099e9c, whose
  * ROM words are {0x24,1}, {0x28,1} and {0x2c,1} -- virtual, vtable bytes 0x24,
  * 0x28 and 0x2c, which are slots 9, 10 and 11: Render, BeforeRender,
- * AfterRender. So the crash is inside the Render slot, which is what the
- * SLOT9=0 control says independently.
+ * AfterRender. An independent control agrees: the same binary with
+ * SM64DS_SCENE_SLOT9=0 -- this class's Render replaced by a counting no-op --
+ * runs 60 render frames clean with BeforeRender and AfterRender both entered
+ * 60 times, and scenes 386, 388 and 389 render clean on the same binary, so the
+ * path is sound and the defect is inside the Render slot.
+ *
+ * BOTH LOOPS REALLY RUN, which is what puts these two bodies on that path and
+ * is measured rather than assumed. func_ov006_020c425c iterates
+ * data_ov006_02140328 times over func_ov006_020c4c54 and func_ov006_020c70d0
+ * iterates data_ov006_02140418[0] times over func_ov006_020c7734; a probe in
+ * the seat's Render thunk reads those two globals on the first frame of a
+ * scene-372 boot as 6 and 3.
+ *
+ * ONE EARLIER OBSERVATION IS RECORDED AND NOT RELIED ON. The first crash this
+ * lane saw was a render run with the state machine NOT started, on a binary
+ * two builds older, with the same dump shape. That configuration does NOT
+ * reproduce on the current tree in either direction -- reverted or repaired, a
+ * plain render run of scene 372 exits 0 -- so the case for this file rests on
+ * the three-and-three revert pair above and not on that first sighting.
  *
  * ---- WHAT CHANGED FROM src, so it can be checked line by line -------------
  *
