@@ -311,6 +311,114 @@
 # `data_ov004_020bc070[27]`) both open and close on their own line, which is
 # harmless.
 #
+# ---- WHAT THE SEAT MEASURED, on this tree, both ends ----------------------
+#
+# LINKAGE  7121 / 11293 (63.1%)  ->  7144 / 11293 (63.3%)   +23
+#   which is the slice's line count EXACTLY, all 23 of them, and is lane PPP's
+#   rule holding: every slice line moves the headline by one. By module,
+#   ov006 1181 -> 1204 (+23), and arm9 1880, ov004 249 and ov002 1129 are
+#   unchanged on both ends -- this class added no ov004 line at all, which is
+#   section 5's "the arm9 half comes back for free" holding again.
+#
+#   THE BASE END WAS BUILT FIRST, BEFORE ANY EDIT, rather than measured by
+#   checking the base out over the working tree. Run mg11 lane PKR hit the
+#   other shape: a `git checkout <base> -- port/` window turns any concurrent
+#   commit into a silent revert. Building first has no such window.
+#
+#   IT READ +24 FOR ONE BUILD IN BETWEEN and the missing line is accounted for
+#   rather than waved at: src/func_ov006_020c1f4c.cpp was in the slice until
+#   the shadow-class fault was diagnosed, and moving it into
+#   unmatched/MgSlot3_SubObjUpdate_020c1f4c.cpp is what took the count from 24
+#   to 23. The two other host copies this seat pays cost their lines the same
+#   way (func_ov006_0210bcb0 and func_ov006_020c221c were never in the slice).
+#
+# THE BOOT, SM64DS_FAULTS_FATAL=1 with nothing switched off:
+#
+#     300 frames    clean, exit 0. init 1, behavior 253, render 300,
+#                   round set-up 1, v32 1, D2 0, D0 0
+#     1200 frames   clean, exit 0. init 1, behavior 1153, render 1200,
+#                   round set-up 1, v32 1
+#     fill claims   middle table 0, derived table 15 of the 8 + 9 face rows,
+#                   which is section 3's prediction exactly: the two that do
+#                   not land are the middle base's own D2 and D0, because this
+#                   class overrides slots 16 and 17 with bodies of its own
+#     state machine 253 dispatches at 300 frames, 1153 at 1200, all routed,
+#                   0 UNHANDLED, 0 to the bodiless state 2
+#     state slots   0(x60) then 1(x193) at 300 frames and 1(x1093) at 1200 --
+#                   the index goes 0 -> 1 and settles there
+#     reels         +0x4fe4 = { 0x89000, 0xca000, 0x7b000 } at 300 frames and
+#                   { 0x4d000, 0x52000, 0xb7000 } at 1200. THE REELS SPIN,
+#                   which is the number run mg9 lane S364 could not get out of
+#                   dScMgSlot1_c (its reels were pinned at 0 for 1153 asks)
+#     slot 18       dispatched once, with the argument 3 -- the round START --
+#                   and the census splits 3/0x12, 4, 5 and other separately
+#     spawn param   0x001b1400 -> save record 20, name text 27, mode 0, which
+#                   is ov005 row 31 and is the row this seat verified rather
+#                   than assumed. The sound seat agrees:
+#                   "[mg-snd] scene 0x16d ov005 row 31: music=8 enable=2"
+#     past the end  [36] = 0x00000000 and [37] = the mount's own
+#                   &data_ov006_0213e5a0, UNTOUCHED
+#     UNHANDLED     0 on both runs
+#
+# THE STATE INDEX SETTLES AT 1 ON AN UNATTENDED BOOT AND THAT IS HONEST RATHER
+# THAN A GAP. State 1 is the spin: it walks the three reels and waits for the
+# stylus, and message 575 is "Line up the slots on the Touch Screen". Nothing
+# in a headless boot taps.
+#
+# SO THE FLOOR WAS DRIVEN TO, WITH A SCRIPTED STYLUS, rather than left as an
+# argument. src/func_ov006_0210af64.c reads the touch record's Y byte
+# (data_020a0deb) and stops reel 0 on 0x40..0x57, reel 1 on 0x58..0x6f and
+# reel 2 on 0x70..0x87, and sets the state index to 2 once all three have
+# landed. Three taps, one per band:
+#
+#     SM64DS_TOUCH_PROBE="200-202:120:70,400-402:120:95,600-602:120:120"
+#     SM64DS_SCENE=365 SM64DS_SCENE_FRAMES=1200 SM64DS_FAULTS_FATAL=1
+#
+#     state slots   0(x60) 1(x495) 2(x598)
+#     state index   +0x5000 = 2, reels stopped +0x503d = 3,
+#                   reels +0x4fe4 = { 0x0, 0x0, 0x0 } -- all three snapped
+#     floor         598 dispatches to 0x0210adac, every one reported once by
+#                   name on stderr and counted separately
+#     UNHANDLED     0, and the run still exits 0
+#
+# THAT IS THE WHOLE CLAIM AND ITS WHOLE LIMIT. The round plays: the reels
+# spin, the stylus stops them one at a time, the machine advances 0 -> 1 -> 2.
+# It then stops, because state 2 has no body. 598 frames of a 1200-frame run
+# sat in a state that does nothing, and the player would see three stopped
+# reels and no payout. The UNHANDLED counter stays 0 because the address is
+# accounted for, not because nothing is missing -- section 16's distinction
+# between the zeros that are honest and the zeros that are not, applied to
+# this lane's own instrument.
+#
+# THE FRAMES CAPTURED FOR TANGO, and what the capture does and does not say.
+# Three frame counts, top screen and stacked, from ONE build:
+#
+#     365_top_f60.bmp      48832468d6f9a9113f1499c32af618b1
+#     365_top_f180.bmp     589daac0c61a4b16b2ab1d49056b3a72
+#     365_top_f300.bmp     06815f668527056d783b4caeb7d6747e
+#     365_stacked_f60.bmp  e3fbc8532a24e89068ce25ff72688763
+#     365_stacked_f180.bmp 31c4593f2edb8b3deb6f79c5dcd4e34a
+#     365_stacked_f300.bmp 84ce38d7510bccc0ad7460524fc03190
+#
+# SIX DISTINCT HASHES, which is the check rather than a statistic: a direct
+# scene boot never writes walk_window_selftest.bmp, so a lane that read that
+# file out of the build dir would get ONE hash at every frame count and would
+# write up "nothing on this scene moves" -- the exact opposite of the truth.
+# The tell is the layout line, and these runs have it: "[sub] layout: STACKED,
+# both DS screens full size" and "wrote ...365_stacked_f300.bmp, 512x832: the
+# top screen over the bottom screen, each 512x384, with 0 row(s) of headroom
+# above and 64 row(s) of gap between them".
+#
+# NO CROSS-BUILD BYTE COMPARISON IS MADE and none is claimed, so
+# notes/port-selftest-bmp-gate.md's rule -- compare byte-exact only between
+# builds whose .dsstate base agrees -- does not apply to any statement here.
+# For a reviewer who wants to compare against another build: this one's
+# .dsstate runs 0x00c61000..0x00d4b3d0 (dsstate_lo/dsstate_hi in
+# walk_window.map).
+#
+# NOBODY HAS LOOKED AT A FRAME NEXT TO A DS. The census says what the class
+# does; it cannot say the picture is right, and this lane does not judge it.
+#
 # ---- THE DELTA -------------------------------------------------------------
 #
 # This class's own sixteen bodies (its whole code block minus the host-copied
