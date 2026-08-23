@@ -2066,8 +2066,14 @@ WHAT THIS SECTION DOES NOT KNOW.
     func_ov006_020f5a64 is the comparison and it needs two picks; nothing here
     drives a second one.
 
-
-16. THE FIVE FLOOR CLOSURES, run mg7 lanes MEMCARDS, L369, L370, L375, L380
+CROSS-REF, added at the mg10 merge: the SECOND card draw is closed too. Run
+mg10 lane F362 decompiled func_ov006_020f3e68 (dScMgMemory1_c, scene 362,
+Memory Match) as this section's sibling body with four constants adjusted --
+the ROM's two bodies are the same forty instructions and differ in five words,
+one of which is the shared bl's PC-relative encoding (same target 0x020af68c).
+src/func_ov006_020f3e68.c's banner carries the table; its review record is the
+run's F362.md. The tap proof there is the pair to this section's deal: record
+flips on both ends, cards draw only on the seated end.
 --------------------------------------------------------------------------------
 
 Five lane branches merged in scene order onto port-mount-noseat-cluster at base

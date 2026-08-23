@@ -6,16 +6,22 @@
 // src/func_ov006_020f5b98.c is dScMgMemory2_c's card draw. Disassembled side by
 // side out of extracted/overlays/overlay_0006.bin at base 0x020bfec0, the two
 // ROM bodies are the SAME FORTY INSTRUCTIONS in the same order, and the only
-// words that differ anywhere in either are
+// words that differ anywhere in either are FIVE
 //
 //     ldr r1,[r5,#0x314]  here   vs  #0x3d4    the state offset
+//     bl (+0x80)          e7 disp vs 9b disp   SAME TARGET 0x020af68c, the
+//                                              PC-relative encoding differs
+//                                              because the two bodies sit at
+//                                              different addresses
 //     cmp r4,#0xc         here   vs  #0x14     twelve records vs twenty
 //     pool 0x0213d168     here   vs 0x0213d45c the identity/frame table
 //     pool 0x0214236c     here   vs 0x02142490 the OAM pointer array
 //
-// The two branch encodings are identical words (0a000012 and baffffe4), so even
-// the block layout is shared. That is why this file is the sibling's source
-// with the four constants adjusted rather than an independent shape.
+// The two CONDITIONAL branch encodings are identical words (0a000012 and
+// baffffe4); the bl above is the third branch and differs only in its
+// displacement. That is why this file is the sibling's source with the four
+// constants adjusted rather than an independent shape -- the bl row is an
+// address artifact, not a fifth constant.
 //
 // AND THE RESIDUE IS THE SIBLING'S TOO, TO THE WORD. tools/match.py: 24 of 42
 // words differ on all four builds that produce a 0xa8 body at all (1.2/base,

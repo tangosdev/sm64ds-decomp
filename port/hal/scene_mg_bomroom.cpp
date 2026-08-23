@@ -341,6 +341,14 @@ static void sos_binfill(char *s, int n, int side)
         /* func_ov006_020d8408's spawn block, verbatim, minus the difficulty
            ladder that only picks the angle and the release pattern. */
         *(unsigned char *)(b + 0x698) = 1;
+        /* The draw gate and its companion, from func_ov006_020d8324's expiry
+           write (+0x4699 = 1, +0x4694 = 1): the seed parks a bomb straight
+           past the spawn-delay state that would set them, and the renderer
+           func_ov006_020d7524 skips any bomb whose +0x4699 is 0. Run mg10
+           lane RGX measured the gap (engine A OBJ 2956 -> 13475 px) and
+           documented the fix in port/ppu_blend.txt. */
+        *(unsigned char *)(b + 0x699) = 1;
+        *(unsigned char *)(b + 0x694) = 1;
         *(unsigned char *)(b + 0x697) = 0;
         *(unsigned char *)(b + 0x69b) = 0;
         *(unsigned char *)(b + 0x69c) = 0;
