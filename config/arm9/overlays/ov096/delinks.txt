@@ -7,7 +7,7 @@ src/_ZN5PokeyD1Ev.cpp:
     complete
     .text start:0x02135700 end:0x02135748
 
-src/_ZN5PokeyD0Ev.c:
+src/_ZN5PokeyD0Ev.cpp:
     complete
     .text start:0x02135748 end:0x021357a4
 

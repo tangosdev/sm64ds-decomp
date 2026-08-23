@@ -7,7 +7,7 @@ src/_ZN11DiamondLiftD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111e4
 
-src/_ZN11DiamondLiftD0Ev.c:
+src/_ZN11DiamondLiftD0Ev.cpp:
     complete
     .text start:0x021111e4 end:0x0211123c
 

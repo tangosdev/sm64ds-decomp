@@ -180,7 +180,7 @@ src/_ZN12MetalNetLiftD1Ev.cpp:
     complete
     .text start:0x02117978 end:0x021179bc
 
-src/_ZN12MetalNetLiftD0Ev.c:
+src/_ZN12MetalNetLiftD0Ev.cpp:
     complete
     .text start:0x021179bc end:0x02117a14
 
