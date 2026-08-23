@@ -228,6 +228,133 @@ def plan(raw, keep_symbol):
             "dead": sorted(dead), "referenced": sorted(referenced), "error": None}
 
 
+def plan_many(raw, keep_symbols):
+    """Validate an exact text-only multi-function object for production linking.
+
+    This is deliberately not ``plan`` with a wider argument.  The one-function
+    pipeline is allowed to discard compiler-emitted neighbours and data because one
+    delinks entry licenses one function.  A consolidated source has one spanning
+    delinks entry: its intact object is the linker contribution, so silently dropping
+    an unexpected helper or data section would create a hole inside a range dsd no
+    longer fills from the ROM.
+
+    The accepted shape is intentionally narrow:
+
+    * at least two distinct requested symbols, each defined exactly once as a function;
+    * one dedicated, non-empty ``.text`` section per requested symbol;
+    * those sections occur in the caller's ROM order;
+    * no other non-debug content and no unlicensed symbol in a kept section; and
+    * no undefined RTTI relocation that still needs the single-function ``-8`` rewrite.
+
+    Success therefore needs no ELF surgery: the exact input object is preserved.  The
+    returned plan uses the familiar shape so callers can report one isolation verdict
+    without weakening or changing ``plan``/``derive``/``isolate`` for singletons.
+    """
+    requested = [str(name) for name in keep_symbols if str(name)]
+    if len(requested) < 2:
+        return {"error": "multi-symbol isolation needs at least two symbols"}
+    if len(set(requested)) != len(requested):
+        return {"error": "duplicate multi-symbol isolation request"}
+
+    elf = ELFFile(io.BytesIO(bytes(raw)))
+    secs = list(elf.iter_sections())
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return {"error": "no .symtab"}
+    syms = list(symtab.iter_symbols())
+
+    by_name = {
+        name: [s for s in syms if s.name == name
+               and s["st_shndx"] not in ("SHN_UNDEF", SHN_UNDEF)]
+        for name in requested
+    }
+    for name in requested:
+        matches = by_name[name]
+        if len(matches) != 1:
+            return {"error": f"{name} has {len(matches)} defined symbols, expected one"}
+        sym = matches[0]
+        if sym["st_info"]["type"] != "STT_FUNC":
+            return {"error": f"{name} is {sym['st_info']['type']}, expected STT_FUNC"}
+        shndx = sym["st_shndx"]
+        sec = secs[shndx] if isinstance(shndx, int) else None
+        if sec is None or sec.name != ".text" \
+                or sec.header["sh_type"] != "SHT_PROGBITS" \
+                or not sec.header["sh_size"]:
+            return {"error": f"{name} is not in a non-empty .text/SHT_PROGBITS section"}
+        if sym["st_value"] != 0 or sym["st_size"] != sec.header["sh_size"]:
+            return {"error": f"{name} does not exactly cover its .text section "
+                             f"(value=0x{sym['st_value']:x}, symbol=0x{sym['st_size']:x}, "
+                             f"section=0x{sec.header['sh_size']:x})"}
+
+    keep = [by_name[name][0]["st_shndx"] for name in requested]
+    if len(set(keep)) != len(keep):
+        return {"error": "requested functions do not occupy distinct .text sections"}
+
+    occupants = sorted({
+        sym.name for sym in syms
+        if sym.name and not sym.name.startswith("$")
+        and sym["st_info"]["type"] != "STT_SECTION"
+        and sym["st_shndx"] in set(keep)
+    })
+    foreign = sorted(set(occupants) - set(requested))
+    if foreign:
+        return {"error": f"kept function section(s) also define unlicensed symbol(s): "
+                         f"{foreign}"}
+
+    live = [
+        (index, sec) for index, sec in enumerate(secs)
+        if sec.header["sh_type"] in CONTENT and sec.header["sh_size"]
+        and not any(sec.name.startswith(prefix) for prefix in IGNORE)
+    ]
+    extra = [(index, sec) for index, sec in live if index not in set(keep)]
+    if extra:
+        detail = []
+        for index, sec in extra:
+            names = sorted({
+                sym.name for sym in syms
+                if sym.name and not sym.name.startswith("$")
+                and sym["st_info"]["type"] != "STT_SECTION"
+                and sym["st_shndx"] == index
+            })
+            detail.append(f"section[{index}] {sec.name} size 0x{sec.header['sh_size']:x} "
+                          f"defines {names}")
+        return {"error": "unlicensed content in text-only multi-symbol object: "
+                         + "; ".join(detail)}
+
+    emitted = [name for _index, name in sorted(zip(keep, requested))]
+    if emitted != requested:
+        return {"error": "requested functions are not emitted in ROM order: "
+                         f"requested {requested}, emitted {emitted}"}
+
+    referenced = set()
+    for relsec in secs:
+        if not isinstance(relsec, RelocationSection) or relsec.header["sh_info"] not in keep:
+            continue
+        for reloc in relsec.iter_relocations():
+            target = symtab.get_symbol(reloc["r_info_sym"])
+            if target.name:
+                referenced.add(target.name)
+            if not target.name.startswith(("_ZTV", "_ZTI", "_ZTS")):
+                continue
+            if not relsec.is_RELA():
+                return {"error": f"{target.name}: RTTI reloc is REL, not RELA"}
+            if target["st_shndx"] in ("SHN_UNDEF", SHN_UNDEF) \
+                    and reloc["r_addend"] != 0:
+                return {"error": f"{target.name}: intact multi-symbol object has "
+                                 f"undefined RTTI addend {reloc['r_addend']}; text-only "
+                                 "production isolation cannot rewrite it"}
+
+    return {"keep": keep, "keepSymbols": requested, "drop": [],
+            "externalise": [], "dead": [], "referenced": sorted(referenced),
+            "error": None}
+
+
+def derive_many(raw, keep_symbols):
+    """Pure, fail-closed validation of one exact text-only multi-function object."""
+    p = plan_many(bytes(raw), keep_symbols)
+    return (None, p) if p.get("error") else (bytes(raw), p)
+
+
 def referenced_undefined(raw, keep_symbol):
     """Undefined symbol names the kept function actually references.
 
@@ -916,6 +1043,15 @@ def isolate(obj, keep_symbol):
     if p.get("error") or not (p["drop"] or p["externalise"]):
         return p
     obj.write_bytes(out)
+    return p
+
+
+def isolate_many(obj, keep_symbols):
+    """Validate and preserve an exact text-only multi-function object in place."""
+    raw = obj.read_bytes()
+    out, p = derive_many(raw, keep_symbols)
+    if out is not None and out != raw:
+        obj.write_bytes(out)
     return p
 
 

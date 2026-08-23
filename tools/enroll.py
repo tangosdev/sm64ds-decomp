@@ -46,6 +46,40 @@ SYM_RE = re.compile(
     r"^(\S+)\s+kind:function\((arm|thumb),size=0x([0-9a-fA-F]+)\)\s+addr:0x([0-9a-fA-F]+)")
 SEC_RE = re.compile(
     r"^\s+(\.\S+)\s+start:0x([0-9a-fA-F]+)\s+end:0x([0-9a-fA-F]+)\s+kind:(\S+)")
+ENTRY_SEC_RE = re.compile(
+    r"^\s+(\.\S+)\s+start:0x([0-9a-fA-F]+)\s+end:0x([0-9a-fA-F]+)")
+
+
+class EnrollmentError(ValueError):
+    """A delinks rewrite would lose or ambiguously expand source ownership."""
+
+
+def read_delinks_full(path):
+    """Return ``(header, [(source_path, body_lines), ...])`` without losing bodies.
+
+    The old boolean view in :func:`read_delinks` is enough for readers that only ask
+    whether a path is complete.  A writer needs the full entry: one translation unit
+    may own several functions and several sections, none of which can be reconstructed
+    safely from a function list alone.
+    """
+    header, entries = [], []
+    cur, body = None, []
+    for raw in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        if not raw.strip():
+            continue
+        line = raw.rstrip()
+        if line[0].isspace():
+            if cur is None:
+                header.append(line)
+            else:
+                body.append(line)
+            continue
+        if cur is not None:
+            entries.append((cur, body))
+        cur, body = line.strip().rstrip(":"), []
+    if cur is not None:
+        entries.append((cur, body))
+    return header, entries
 
 
 def read_delinks(path):
@@ -54,19 +88,142 @@ def read_delinks(path):
     Header = the leading indented section lines. A file entry is an unindented path
     ending in ':' followed by indented lines; we only care whether `complete` is there.
     """
-    header, entries, cur = [], {}, None
-    for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
-        if not line.strip():
-            continue
-        if line[0].isspace():
-            if cur is None:
-                header.append(line.rstrip())
-            elif line.strip() == "complete":
-                entries[cur] = True
-        else:
-            cur = line.strip().rstrip(":")
-            entries.setdefault(cur, False)
+    header, full = read_delinks_full(path)
+    entries = {}
+    for rel, body in full:
+        entries[rel] = any(line.strip() == "complete" for line in body)
     return header, entries
+
+
+def _body_with_complete(body, done):
+    """Toggle only ``complete`` while preserving every other structured line."""
+    out, found = [], False
+    for line in body:
+        if line.strip() != "complete":
+            out.append(line)
+        elif done and not found:
+            out.append(line)
+            found = True
+    if done and not found:
+        out.insert(0, "    complete")
+    return out
+
+
+def _body_ranges(body):
+    """Structured ``(section, start, end)`` rows in one entry body."""
+    ranges = []
+    for line in body:
+        m = ENTRY_SEC_RE.match(line)
+        if m:
+            ranges.append((m.group(1), int(m.group(2), 16), int(m.group(3), 16)))
+    return ranges
+
+
+def _body_covers(body, rows):
+    """Whether every candidate's full range is licensed by the preserved body."""
+    ranges = _body_ranges(body)
+    return all(any(sec == row[5] and lo <= row[3] and row[3] + row[4] <= hi
+                   for sec, lo, hi in ranges)
+               for row in rows)
+
+
+def render_entries(header, existing_entries, module_candidates, promote=(),
+                   all_complete=False, demote_all=False):
+    """Render one delinks entry per source, preserving existing ownership bodies.
+
+    ``module_candidates`` remains one row per function because eligibility is still a
+    per-symbol question.  Rendering is a per-object question: several rows may point at
+    one source, including overlapping entry-point aliases inside a single asm routine.
+    Existing bodies are authoritative for their ranges and non-text sections.  A new
+    shared source without such an entry is refused because a function list cannot prove
+    the object's licensed span.
+
+    Returns ``(text, entry_count, complete_count)``.
+    """
+    promote = set(promote)
+    existing = {}
+    for rel, body in existing_entries:
+        if rel in existing:
+            raise EnrollmentError(f"duplicate existing delinks entry for {rel}")
+        existing[rel] = list(body)
+
+    grouped = collections.defaultdict(list)
+    for row in module_candidates:
+        grouped[row[2]].append(row)
+
+    ordered = sorted(grouped.items(), key=lambda item: min(row[3] for row in item[1]))
+    rendered, consumed, n_complete = [], set(), 0
+    for rel, rows in ordered:
+        rows.sort(key=lambda row: row[3])
+        names = {row[1] for row in rows}
+        requested = names & promote
+        if len(names) > 1 and requested and requested != names:
+            missing = ", ".join(sorted(names - requested))
+            raise EnrollmentError(
+                f"partial --complete-list for shared source {rel}; also require: {missing}")
+
+        body = existing.get(rel)
+        if body is not None:
+            consumed.add(rel)
+        if body is None and len(rows) == 1:
+            # Preserve the historical move contract: a same-symbol source that moved
+            # between src/ and mods/ keeps its full range/body and complete state.
+            name = rows[0][1]
+            moved = [(old_rel, old_body) for old_rel, old_body in existing.items()
+                     if pathlib.PurePosixPath(old_rel).stem == name]
+            if len(moved) > 1:
+                raise EnrollmentError(
+                    f"ambiguous prior delinks entries for moved symbol {name}: "
+                    + ", ".join(old_rel for old_rel, _body in moved))
+            if moved:
+                old_rel, body = moved[0]
+                consumed.add(old_rel)
+        if body is None:
+            if len(rows) > 1:
+                raise EnrollmentError(
+                    f"shared source {rel} has no existing delinks body; refusing to "
+                    "infer its object range from individual functions")
+            row = rows[0]
+            body = [f"    {row[5]} start:0x{row[3]:08x} "
+                    f"end:0x{row[3] + row[4]:08x}"]
+        elif not _body_covers(body, rows):
+            raise EnrollmentError(
+                f"existing delinks body for {rel} does not cover every candidate range")
+
+        was_complete = any(line.strip() == "complete" for line in body)
+        selected = all_complete or bool(names) and names <= promote
+        done = selected or (was_complete and not demote_all)
+        rendered.append((min(row[3] for row in rows), rel,
+                         _body_with_complete(body, done)))
+        n_complete += int(done)
+
+    # An incomplete entry is an intentional ROM-byte placeholder: dsd does not open
+    # its path, and dropping it is an unrelated ownership mutation. Carry it through
+    # verbatim even when candidate policy currently rejects its source (for example a
+    # NONMATCHING banner). A complete unmatched entry is different: preserving it may
+    # compile a missing/draft source while dropping it would silently fall back to ROM
+    # bytes, so neither rewrite is safe and the operator must resolve it explicitly.
+    for rel, body in existing.items():
+        if rel in consumed:
+            continue
+        if any(line.strip() == "complete" for line in body):
+            raise EnrollmentError(
+                f"complete existing source {rel} has no candidate; refusing to demote "
+                "or preserve an unverified build input implicitly")
+        ranges = _body_ranges(body)
+        if not ranges:
+            raise EnrollmentError(
+                f"existing ROM-byte entry {rel} has no section range to preserve")
+        rendered.append((min(lo for _sec, lo, _hi in ranges), rel, list(body)))
+
+    lines = list(header)
+    for _addr, rel, body in sorted(rendered, key=lambda row: (row[0], row[1])):
+        lines.append(f"{rel}:")
+        lines.extend(body)
+        lines.append("")
+
+    text = "\n".join(lines).rstrip("\n") + "\n"
+    return text, len(rendered), n_complete
 
 
 def sections(header):
@@ -180,35 +337,35 @@ def main():
         bymod[c[0]].append(c)
 
     n_entries = n_complete = 0
-    touched = []
+    touched, rewrites = [], []
     for d in sorted(CONFIG.rglob("symbols.txt")):
         path = d.parent / "delinks.txt"
         if not path.is_file():
             continue
-        header, existing = read_delinks(path)
-        # Key the carried-over `complete` marks by symbol name, not path: a function
-        # that moved between src/ and mods/ is the same function and must keep its mark.
-        existing_by_name = {pathlib.Path(p2).stem: v for p2, v in existing.items()}
-        lines = list(header)
-
-        if not args.clear:
-            # Sorted by address: delink file entries are consumed in link order.
-            for (_d, name, rel, addr, size, sec) in sorted(bymod.get(d.parent, []), key=lambda x: x[3]):
-                done = (args.all_complete or name in promote
-                        or (existing_by_name.get(name, False) and not args.demote_all))
-                lines.append(f"{rel}:")
-                if done:
-                    lines.append("    complete")
-                    n_complete += 1
-                lines.append(f"    {sec} start:0x{addr:08x} end:0x{addr + size:08x}")
-                lines.append("")
-                n_entries += 1
-
-        text = "\n".join(lines).rstrip("\n") + "\n"
+        header, existing = read_delinks_full(path)
+        if args.clear:
+            text = "\n".join(header).rstrip("\n") + "\n"
+            module_entries = module_complete = 0
+        else:
+            try:
+                text, module_entries, module_complete = render_entries(
+                    header, existing, bymod.get(d.parent, []), promote,
+                    all_complete=args.all_complete, demote_all=args.demote_all)
+            except EnrollmentError as exc:
+                print(f"enroll: {path.relative_to(REPO).as_posix()}: {exc}",
+                      file=sys.stderr)
+                return 2
+        n_entries += module_entries
+        n_complete += module_complete
         if text != path.read_text(encoding="utf-8", errors="ignore"):
             touched.append(path.relative_to(REPO).as_posix())
-            if not args.dry_run:
-                path.write_text(text, encoding="utf-8", newline="\n")
+            rewrites.append((path, text))
+
+    # Rendering every module first makes every refusal fail closed: a partial shared
+    # complete-list or malformed preserved body cannot leave earlier modules rewritten.
+    if not args.dry_run:
+        for path, text in rewrites:
+            path.write_text(text, encoding="utf-8", newline="\n")
 
     print(f"candidates: {len(cands)}")
     for k, v in skipped.most_common():
@@ -216,7 +373,8 @@ def main():
     print(f"entries written: {n_entries}  ({n_complete} complete / "
           f"{n_entries - n_complete} rom-bytes)")
     print(f"delinks.txt files {'that would change' if args.dry_run else 'changed'}: {len(touched)}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

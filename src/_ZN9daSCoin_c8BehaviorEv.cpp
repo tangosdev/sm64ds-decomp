@@ -1,16 +1,15 @@
 //cpp
 // @symbol _ZN9daSCoin_c8BehaviorEv
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations
- * from a shared header. Was func_ov002_020f06c0, vtable slot 6. */
+/* daSCoin_c::Behavior -- vtable slot 6. Real C++ method over the shared header,
+ * named members and real inherited method calls. */
 #include "decl_common.h"
 #include "daSCoin_c.h"
-// recovered name: daSCoin_c_Behavior
-/* daSCoin_c::Behavior - recovered from vtable slot identity */
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
 
-extern "C" int _ZN9daSCoin_c8BehaviorEv(char *c)
+s32 daSCoin_c::Behavior()
 {
-    struct daSCoin_c *self = (struct daSCoin_c *)(void *)c;
+    char *c = (char *)this;
+    daSCoin_c *self = this;
     if (self->unk_113) {
         if (DecIfAbove0_Byte((unsigned char *)(c + 0x113)) == 0) {
             func_ov002_020f05f4(c);

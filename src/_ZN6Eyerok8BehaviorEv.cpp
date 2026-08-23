@@ -1,12 +1,15 @@
 //cpp
+// @symbol _ZN6Eyerok8BehaviorEv
+/* Eyerok::Behavior -- vtable slot 6. Real C++ method over the shared header.
+ * EVec3 is a local plain-int triple (stack temps); callees whose ROM symbols
+ * carry by-value/ref class parameters keep their literal mangled extern "C"
+ * spellings. */
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
 
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
+#include "Eyerok.h"
 
-struct Vector3 { int x, y, z; };
+struct EVec3 { int x, y, z; };
 
 struct C;
 typedef int (C::*PMF)();
@@ -26,7 +29,7 @@ extern void func_ov066_021194fc(char *c);
 extern int _ZN4dBgW9IsEnabledEv(char *c);
 extern void func_ov066_021194a4(char *c);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(char *c, void *clsn);
-extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(char *c, const Vector3 *v);
+extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(char *c, const void *v);
 extern void _ZN5dCc_c5ClearEv(char *c);
 extern void _ZN5dCc_c6UpdateEv(char *c);
 extern void _ZN14BlendModelAnim7AdvanceEv(char *c);
@@ -38,8 +41,10 @@ extern char data_020a0e68[];
 extern int data_ov066_0211ad18[];
 }
 
-extern "C" int _ZN6Eyerok8BehaviorEv(char *c)
+int Eyerok::Behavior()
 {
+    char *c = (char *)this;
+
     DecIfAbove0_Short((u16 *)(c + 0x4d0));
     DecIfAbove0_Short((u16 *)(c + 0x4d2));
 
@@ -62,8 +67,8 @@ extern "C" int _ZN6Eyerok8BehaviorEv(char *c)
             int *pz;
             int *py;
             int zero;
-            Vector3 vin;
-            Vector3 vout;
+            EVec3 vin;
+            EVec3 vout;
             *(int *)(bx + off) = *(int *)(c + 0x5c);
             *(int *)(by + off) = *(int *)(c + 0x60);
             *(int *)(bz + off) = *(int *)(c + 0x64);
@@ -161,7 +166,7 @@ extern "C" int _ZN6Eyerok8BehaviorEv(char *c)
     }
 
     {
-        Vector3 vrel;
+        EVec3 vrel;
         *(int *)(c + 0x4a8) = *(int *)(c + 0x4b4) + 0x8000;
         _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
         *(int *)(c + 0x354) = *(int *)(c + 0x5c);

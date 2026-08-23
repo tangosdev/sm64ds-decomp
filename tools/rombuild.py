@@ -286,7 +286,11 @@ def init_section_sources():
 
 
 def _isolate(obj, rel, syms, data_sink=None):
-    """Reduce a compiled `src/` object to its declared function. Returns an error or None.
+    """Reduce a compiled `src/` object to its declared function(s).
+
+    A legacy source owns one function and takes the unchanged singular isolation path.
+    A consolidated, text-only source owns several functions in ROM order and takes
+    objisolate's separate fail-closed intact-object path. Returns an error or None.
 
     `mods/` is deliberately exempt. A mod is not a recovered ROM function: it may
     legitimately define helpers and data alongside its entry point, and isolation
@@ -306,7 +310,14 @@ def _isolate(obj, rel, syms, data_sink=None):
         # Measurement only: check_object swallows its own exceptions, and nothing here
         # can fail the build. See tools/romdata_check.py for why it is not a gate.
         data_sink.extend(RDC.check_object(obj, rel))
-    plan = OI.isolate(obj, (syms or {}).get(rel, pathlib.Path(rel).stem))
+    selected = (syms or {}).get(rel, pathlib.Path(rel).stem)
+    if isinstance(selected, (list, tuple)):
+        if not selected:
+            return "source owns no enrolled functions"
+        plan = (OI.isolate(obj, selected[0]) if len(selected) == 1
+                else OI.isolate_many(obj, selected))
+    else:
+        plan = OI.isolate(obj, selected)
     if plan.get("kind") == OI.NOT_A_FUNCTION:
         return None          # nothing to reduce; other gates judge this file
     return plan.get("error")
@@ -331,17 +342,55 @@ def _retarget(obj, rel, init_srcs):
 
 
 def enrolled_symbols():
-    """{rel: symbol} for enrolled sources.
+    """{rel: [symbols in ROM order]} for enrolled sources.
 
-    objisolate needs the symbol to keep, and the file stem is NOT it -- not as a
-    rule. The two coincide for all 11,160 candidates today, which is exactly the
-    condition under which keying on the stem goes unnoticed until it does not; the
-    same divergence build_pin's version lookup already carries. Keying on the
-    enrolled symbol costs one dict and cannot drift.
+    objisolate needs every disjoint function definition a source emits, and the file
+    stem is NOT that ownership contract. Grouping matters as soon as one consolidated
+    source replaces several legacy files; a dict comprehension silently retained only
+    the last member. Candidate ranges recognize the one exact legacy outer-owner alias
+    shape and otherwise provide the linker/ROM order required by the fail-closed intact
+    multi-function object path.
     """
     import enroll as E
     cands, _ = E.candidates()
-    return {rel: name for (_d, name, rel, _addr, _size, _sec) in cands}
+    grouped = {}
+    for _d, name, rel, addr, _size, _sec in cands:
+        grouped.setdefault(rel, []).append((addr, _size, name))
+    return {rel: _definition_symbols(rel, rows)
+            for rel, rows in grouped.items()}
+
+
+def _definition_symbols(rel, rows):
+    """Collapse owned records only for one exact legacy outer-owner alias shape.
+
+    Some ROM functions contain independently named entry points.  The concrete case
+    is ``src/func_01ff97d8.c``: one 0xb6c outer function owns the complete range while
+    four nonzero function records partition its interior.  Those records are useful
+    address/ownership aliases, but mwcc emits only the outer definition.  Treating the
+    five records as a consolidated TU would make the exact object fail with four
+    invented missing-definition errors.
+
+    There is exactly one safe exception to "every nonzero record needs a definition":
+    the legacy source's filename stem names one candidate whose interval fully contains
+    every other candidate interval.  That is direct evidence that the file's declared
+    outer function owns nested address aliases, so only the outer definition is asked
+    of the object.
+
+    No widest-range or overlap heuristic is used.  A promoted TU filename does not name
+    a function, and a stem owner beside any disjoint member is not the legacy alias-owner
+    shape; both return every ROM-ordered record so ``isolate_many`` fails closed if the
+    object does not define them.
+    """
+    stem = pathlib.PurePosixPath(rel).stem
+    ordered = sorted(rows)
+    owners = [(addr, size, name) for addr, size, name in ordered if name == stem]
+    if len(owners) == 1:
+        owner_addr, owner_size, owner_name = owners[0]
+        owner_end = owner_addr + owner_size
+        if all(owner_addr <= addr and addr + size <= owner_end
+               for addr, size, _name in ordered):
+            return [owner_name]
+    return [name for _addr, _size, name in ordered]
 
 
 def retarget_text_section(obj, section=".init"):

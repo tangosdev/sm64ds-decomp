@@ -1,9 +1,12 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
+// @symbol _ZN14QuestionSwitch8BehaviorEv
+/* QuestionSwitch::Behavior -- vtable slot 6. Real C++ method over the shared
+ * header. Callees whose ROM symbols carry by-value class parameters keep their
+ * literal mangled extern "C" spellings; QSVec3 is a local plain-int triple, a
+ * stack temp only. */
+#include "QuestionSwitch.h"
 
-struct Vector3 { int x, y, z; };
+struct QSVec3 { int x, y, z; };
 
 extern "C" {
 unsigned short DecIfAbove0_Short(unsigned short* p);
@@ -32,8 +35,9 @@ extern u8 data_0209d684;
 extern u8 data_0209d660;
 extern u32 data_0209caa0[];
 
-extern "C" int _ZN14QuestionSwitch8BehaviorEv(char* self)
+int QuestionSwitch::Behavior()
 {
+    char* self = (char*)this;
     if (*(u16*)(self + 0x71c) != 0) {
         if (DecIfAbove0_Short((u16*)(self + 0x71c)) == 0) {
             _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, 0x7f, 0, 0x8777, 0);
@@ -96,7 +100,7 @@ extern "C" int _ZN14QuestionSwitch8BehaviorEv(char* self)
                 *(char**)(self + 0x320) = self + 0x4ec;
                 data_0209caa0[1] |= 0x80000000;
                 {
-                    volatile Vector3 v;
+                    volatile QSVec3 v;
                     int y = *(int*)(self + 0x60) + 0x64000;
                     int z = *(int*)(self + 0x64);
                     int x = *(int*)(self + 0x5c);

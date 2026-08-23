@@ -1,9 +1,9 @@
 //cpp
 // @symbol _ZN12daObjAbuku_c8BehaviorEv
-/* recovered: renamed to Class_Method, declarations from a shared header.
- * Was func_ov002_020b33dc, vtable slot 6. */
+/* daObjAbuku_c::Behavior -- vtable slot 6. Real C++ method over the shared
+ * header. */
 #include "decl_common.h"
-/* daObjAbuku_c::Behavior - recovered from vtable slot identity */
+#include "daObjAbuku_c.h"
 typedef long long s64;
 extern short data_02082214[];
 extern "C" void _Z14ApproachLinearRiii(int* p, int b, int c);
@@ -15,8 +15,9 @@ extern "C" void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Ca
 extern "C" void _ZN5dCc_c5ClearEv(char* cl);
 extern "C" void _ZN5dCc_c6UpdateEv(char* cl);
 
-extern "C" int _ZN12daObjAbuku_c8BehaviorEv(char* self)
+s32 daObjAbuku_c::Behavior()
 {
+    char* self = (char*)this;
     *(short*)(((int)self + 0x10c)) += 0x400;
     int v = *(volatile unsigned short*)(self + 0x10c);
     int x = v >> 4;

@@ -262,7 +262,7 @@ def _probe_rombuild(fixture):
     enrolled = RB.enrolled(fixture.repo / "config")
     mapping = RB.enrolled_symbols()
     selected = []
-    with mock.patch.object(RB.OI, "isolate",
+    with mock.patch.object(RB.OI, "isolate_many",
                            side_effect=lambda _obj, name: selected.append(name) or {}):
         RB._isolate(fixture.repo / "Pair.o", SOURCE, mapping)
     ok = (enrolled == [SOURCE] and mapping.get(SOURCE) == list(SYMBOLS)
@@ -271,9 +271,10 @@ def _probe_rombuild(fixture):
         "rombuild", "ready" if ok else "blocked",
         {"compiledSources": enrolled, "enrolledSymbolMap": mapping,
          "symbolsKeptByIsolation": selected},
-        "The source list deduplicates the TU correctly, but rel->symbol ownership keeps "
-        "only one member and isolation discards the other." if not ok else
-        "Compilation and isolation preserve every member of the shared source.")
+        "The source list or multi-symbol isolation loses at least one shared member."
+        if not ok else
+        "Compilation groups the members in ROM order and fail-closed isolation preserves "
+        "the exact text-only object.")
 
 
 @contextlib.contextmanager

@@ -91,6 +91,97 @@ class Isolate(unittest.TestCase):
         self.assertIsNone(plan2["error"])
         self.assertNotEqual(other, out)
 
+    def _plain_two_function_tu(self, extra=""):
+        # mwcc emits function sections in reverse source order.  Defining Second
+        # first therefore makes the object order match the ROM-order license below.
+        obj = self.build(
+            "struct Pair { void First(); void Second(); };\n"
+            "void Pair::Second() {}\n"
+            "void Pair::First() {}\n" + extra)
+        return obj, ["_ZN4Pair5FirstEv", "_ZN4Pair6SecondEv"]
+
+    def test_multi_symbol_isolation_preserves_one_exact_text_only_object(self):
+        obj, names = self._plain_two_function_tu()
+        raw = obj.read_bytes()
+        out, plan = OI.derive_many(raw, names)
+        self.assertIsNone(plan["error"])
+        self.assertEqual(plan["keepSymbols"], names)
+        self.assertEqual(len(plan["keep"]), 2)
+        self.assertEqual(out, raw)
+        OI.isolate_many(obj, names)
+        self.assertEqual(obj.read_bytes(), raw)
+
+    def test_multi_symbol_isolation_refuses_a_missing_member(self):
+        obj, names = self._plain_two_function_tu()
+        out, plan = OI.derive_many(
+            obj.read_bytes(), [names[0], "_ZN4Pair7MissingEv"])
+        self.assertIsNone(out)
+        self.assertIn("0 defined symbols", plan["error"])
+
+    def test_multi_symbol_isolation_refuses_ambiguous_definitions(self):
+        import io
+        import struct
+        from elftools.elf.elffile import ELFFile
+
+        obj, names = self._plain_two_function_tu()
+        raw = bytearray(obj.read_bytes())
+        elf = ELFFile(io.BytesIO(bytes(raw)))
+        symtab = elf.get_section_by_name(".symtab")
+        symbols = list(symtab.iter_symbols())
+        first_index, first = next((i, s) for i, s in enumerate(symbols)
+                                  if s.name == names[0]
+                                  and s["st_shndx"] != "SHN_UNDEF")
+        second_index, _second = next((i, s) for i, s in enumerate(symbols)
+                                     if s.name == names[1]
+                                     and s["st_shndx"] != "SHN_UNDEF")
+        self.assertNotEqual(first_index, second_index)
+        endian = "<" if elf.little_endian else ">"
+        struct.pack_into(endian + "I", raw,
+                         symtab.header["sh_offset"] + second_index * 16,
+                         first["st_name"])
+
+        out, plan = OI.derive_many(bytes(raw), names)
+        self.assertIsNone(out)
+        self.assertIn("2 defined symbols", plan["error"])
+
+    def test_multi_symbol_isolation_refuses_unlicensed_helper_content(self):
+        obj, names = self._plain_two_function_tu(
+            'extern "C" int helper(int x) { return x + 1; }\n')
+        out, plan = OI.derive_many(obj.read_bytes(), names)
+        self.assertIsNone(out)
+        self.assertIn("unlicensed content", plan["error"])
+        self.assertIn("helper", plan["error"])
+
+    def test_multi_symbol_isolation_refuses_unlicensed_data(self):
+        obj, names = self._plain_two_function_tu(
+            'extern "C" int owned_data = 1;\n')
+        out, plan = OI.derive_many(obj.read_bytes(), names)
+        self.assertIsNone(out)
+        self.assertIn("unlicensed content", plan["error"])
+        self.assertIn("owned_data", plan["error"])
+
+    def test_multi_symbol_isolation_refuses_wrong_emission_order(self):
+        # mwcc emits these function sections in reverse source order.  This spelling
+        # therefore disagrees with the requested ROM order instead of silently
+        # accepting an object that would swap the two contributions.
+        obj = self.build(
+            "struct Pair { void First(); void Second(); };\n"
+            "void Pair::First() {}\n"
+            "void Pair::Second() {}\n")
+        names = ["_ZN4Pair5FirstEv", "_ZN4Pair6SecondEv"]
+        out, plan = OI.derive_many(obj.read_bytes(), names)
+        self.assertIsNone(out)
+        self.assertIn("not emitted in ROM order", plan["error"])
+
+    def test_multi_symbol_isolation_does_not_replace_singleton_semantics(self):
+        obj, names = self._plain_two_function_tu()
+        out, plan = OI.derive_many(obj.read_bytes(), [names[0]])
+        self.assertIsNone(out)
+        self.assertIn("at least two", plan["error"])
+        singular, singular_plan = OI.derive(obj.read_bytes(), names[0])
+        self.assertIsNone(singular_plan["error"])
+        self.assertIsNotNone(singular)
+
     def test_exact_deadstrip_removes_unreferenced_compiler_only_d2(self):
         """A whole-TU scratch link may model the retail link's discarded D2.
 
