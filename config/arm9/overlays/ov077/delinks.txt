@@ -136,7 +136,7 @@ src/_ZN5SpinyD1Ev.cpp:
     complete
     .text start:0x02124b64 end:0x02124bb4
 
-src/_ZN5SpinyD0Ev.c:
+src/_ZN5SpinyD0Ev.cpp:
     complete
     .text start:0x02124bb4 end:0x02124c18
 

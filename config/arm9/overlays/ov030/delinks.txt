@@ -64,7 +64,7 @@ src/_ZN5UkikiD1Ev.cpp:
     complete
     .text start:0x02111688 end:0x021116d0
 
-src/_ZN5UkikiD0Ev.c:
+src/_ZN5UkikiD0Ev.cpp:
     complete
     .text start:0x021116d0 end:0x0211172c
 

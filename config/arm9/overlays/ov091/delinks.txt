@@ -172,7 +172,7 @@ src/_ZN6ThwompD1Ev.cpp:
     complete
     .text start:0x02132938 end:0x02132998
 
-src/_ZN6ThwompD0Ev.c:
+src/_ZN6ThwompD0Ev.cpp:
     complete
     .text start:0x02132998 end:0x02132a0c
 

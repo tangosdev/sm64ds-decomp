@@ -196,7 +196,7 @@ src/_ZN8PaintingD1Ev.cpp:
     complete
     .text start:0x02125404 end:0x02125428
 
-src/_ZN8PaintingD0Ev.c:
+src/_ZN8PaintingD0Ev.cpp:
     complete
     .text start:0x02125428 end:0x02125460
 
