@@ -360,6 +360,27 @@
 #                   &data_ov006_0213e5a0, UNTOUCHED
 #     UNHANDLED     0 on both runs
 #
+# THE FLOWER KEEPS THE MIDDLE TABLE, measured against a number this tree
+# already carried rather than against a baseline this lane produced. Run mg9
+# lane S381 recorded scene 390's witness as `2(x1) 7(x300) 10(x300) 26(x4082)
+# 33(x1)` with its own row in the table; on this tree, with the scene-365 row
+# appended after every other, it reads
+#
+#     [scene] dScMgSingle3DBase_c slots entered: 2(x1) 7(x300) 10(x300)
+#             26(x4082) 33(x1)   (4684 total)
+#
+# digit for digit. This seat's own middle copy claims 0, which is the other
+# half of the same statement.
+#
+# THE SIBLING CANARY IS SCENE 364, because it is the class whose RTTI header
+# sits in this table's span. It boots clean at 300 frames with `init 1,
+# behavior 253, render 300, state-reset 1`, its betIcon sub-table at
+# `0(x253) 1(x300)`, its Behavior func_ov006_0210c9e0 entered 253 times and
+# its own slot-18 argument reading `3(x1)`. A CENSUS ALONE WOULD NOT HAVE
+# CAUGHT THE HAZARD, which is why the runtime word check above exists: the
+# port never dereferences a typeinfo pointer, so a clobbered one would leave
+# every one of those numbers unchanged.
+#
 # THE STATE INDEX SETTLES AT 1 ON AN UNATTENDED BOOT AND THAT IS HONEST RATHER
 # THAN A GAP. State 1 is the spin: it walks the three reels and waits for the
 # stylus, and message 575 is "Line up the slots on the Touch Screen". Nothing
