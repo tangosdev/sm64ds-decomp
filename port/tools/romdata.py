@@ -56,6 +56,22 @@ TABLES = [
     (0x02082214, 0x4000, "short"),  # s16 trig table the material bind indexes
     (0x020755A0, 16, "unsigned char"),  # OBJ width table  (size + shape * 4)
     (0x020755AC, 16, "unsigned char"),  # OBJ height table
+    # ONE ROW THAT DELIBERATELY OVERLAPS THE TRIG TABLE, run mg11 lane SNW.
+    # 0x02082314 is 0x100 bytes into the s16 table above -- entry 128 -- and
+    # dScMgSnowball_c reads it BY NAME rather than by index:
+    # src/func_ov006_02126948.c does fdiv(0xc0000, data_02082314), and the ROM
+    # at 0x02126958 is `ldrsh r1,[r1]` off a pool word holding 0x02082314, so
+    # the read is one SIGNED HALFWORD and include/decl_common.h declares it
+    # `extern short data_02082314;` to match.
+    #
+    # THE OVERLAP IS THE ESTABLISHED SHAPE IN THIS LIST, not a new liberty:
+    # the two OBJ tables above overlap by four bytes and the header explains
+    # why. A separate two-byte emission is right here for the same reason it
+    # is there -- both hosts hold the ROM's own bytes for their own address,
+    # nothing writes either (the trig table is read-only), and the alternative
+    # would be a hand-typed constant in a HAL file, which is a value nobody
+    # can re-derive from the image.
+    (0x02082314, 2, "short"),       # trig table entry 128, read by name
 ]
 
 

@@ -4999,7 +4999,18 @@ set(SLICE_SNW_SOURCES hal/scene_mg_snowball.cpp
                       # and 18.  Trapped in this lane's file rather than the
                       # shared hal/scene_mg_faces.cpp precisely because nothing
                       # else in the overlay reaches them.
-                      unmatched/MgSnowball_Faces.cpp)
+                      unmatched/MgSnowball_Faces.cpp
+                      # Vtable SLOT 9, Render.  Not a pointer-to-member TU --
+                      # the Itanium scan finds no site in it -- but it carries
+                      # the OTHER shadow-dispatch shape Door_Render.cpp and
+                      # MgFlower_ModelRender_020c3bf4.cpp name: a C function
+                      # pointer read out of a model's vtable and called with
+                      # the C convention, into a __fastcall thunk.  The vtable
+                      # read is correct (the _ZTV5Model dual fill serves it);
+                      # the convention is not, and the stack came back four
+                      # bytes short.  Found by a run, not by a checker.
+                      # src/func_ov006_02127d10.c is out of the slice.
+                      unmatched/MgSnowball_ModelRender.cpp)
 foreach(line IN LISTS SLICE_SNW_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")

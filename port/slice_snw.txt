@@ -370,7 +370,6 @@ src/func_ov006_021295ac.cpp
 src/func_ov006_02129268.c
 src/func_ov006_021291f8.c
 src/func_ov006_021283a4.c
-src/func_ov006_02127d10.c
 src/func_ov006_0212568c.cpp
 src/func_ov006_0212573c.cpp
 src/func_ov006_0212921c.c
@@ -424,3 +423,86 @@ src/func_ov006_02126a98.c
 src/func_ov006_021279b0.cpp
 src/func_ov006_0212968c.c
 src/func_ov006_02129690.c
+#
+# ---- 13. WAVE 2: THE TRAP RULE FIRING -----------------------------------
+#
+# The second link named FOUR symbols and three of them are the trap rule doing
+# exactly what port/mg_fanout_costs.txt says it does: A TRAP-SHAPED FLOOR HIDES
+# ITS CALLEES FROM STATIC CLOSURE.  None of the four is reachable from a vtable
+# slot; all four hang off bodies wave 1 pulled in.
+#
+#   src/func_ov006_02125994.c   called by func_ov006_021279b0
+#   src/func_ov006_0212a3c0.c   called by func_ov006_021279b0
+#   func_ov006_02126b4c         NO SRC -- a THIRD floor, 0x398, called twice
+#                               by func_ov006_02126a98.  Trapped beside the
+#                               other two in port/unmatched/MgSnowball_Faces.cpp.
+#                               It writes tilemap entries into both screens'
+#                               BG2 blocks: MultiStore16 sixteen times and the
+#                               two GetBG2ScrPtr getters eight times each.
+#   data_02082314               an arm9 s16 the class reads BY NAME.  It is
+#                               0x100 bytes into the trig table
+#                               port/tools/romdata.py already emits, and the
+#                               ROM read is `ldrsh r1,[r1]` off a pool word
+#                               holding that address, so the fix is one more
+#                               two-byte row in romdata.py's TABLES -- ROM
+#                               bytes for a ROM address, the same deliberate
+#                               overlap the two OBJ tables in that list
+#                               already carry.
+#
+# So the budget for this class was TWO waves, one alias row and THREE traps,
+# against section 14's "one wave plus its own alias row".  The trap rule is the
+# whole of the difference and it is predictable: budget an extra wave per trap.
+#
+src/func_ov006_02125994.c
+src/func_ov006_0212a3c0.c
+#
+# ---- 14. WAVE 3: A DEFECT ONLY A RUN COULD FIND -------------------------
+#
+# EXCLUDED and host-copied in port/unmatched/MgSnowball_ModelRender.cpp:
+#
+#     src/func_ov006_02127d10.c   vtable SLOT 9, Render
+#
+# It is not a pointer-to-member TU and the Itanium scan is right to find no
+# site in it.  It carries the OTHER shadow-dispatch shape, the one
+# port/unmatched/Door_Render.cpp and MgFlower_ModelRender_020c3bf4.cpp name and
+# the one run mg10 called the invisible-defect class: a C FUNCTION POINTER read
+# out of a model's vtable and called with the C calling convention.
+#
+#     void *self = (void*)(c + 0xaba4);
+#     void (*fn)(void*, int*) =
+#         *(void(**)(void*, int*))((char*)(*(void**)self) + 0x14);
+#     fn(self, vecArr);
+#
+# THE VTABLE READ IS FINE AND THAT WAS MEASURED RATHER THAN ASSUMED.
+# hal/cxxname_bridge.cpp dual-fills _ZTV5Model[4] and [5] with mv_render for
+# exactly this shape, and a probe in this seat's render thunk printed the live
+# table on scene 377's first Render: vptr 0x00CBD6B0 = __ZTV5Model, word 5 =
+# 0x004281A0 = ?mv_render@@YIXPAX0PBX@Z.  Byte +0x14 resolves to the right
+# function.
+#
+# THE CALLING CONVENTION IS WHAT BREAKS.  mv_render is __fastcall (receiver in
+# ecx, a dummy in edx, the scale on the stack, callee cleans four); the src's
+# fn is cdecl (both on the stack, caller cleans eight).  So the thunk read a
+# stale ecx as its receiver and got the model pointer as its scale, and the
+# stack came back four bytes short.  The fault is the return, not the call:
+#
+#     FAULT code c0000005 at +0x303f3a64 accessing 307f3a64
+#       walker node 307F3A9C actor 307F3A64 id 0x179
+#       eip 307f3a64   -- the actor's OWN address, returned into
+#
+# NEITHER PRESCRIBED DETECTOR CAN SEE IT.  There is no unresolved symbol (the
+# call is through a local variable), no arity row (the pointer type and the
+# call agree with each other), and no Itanium encoding (it is not a member
+# pointer).  What found it was a RUN with SM64DS_FAULTS_FATAL=1, and the A/B
+# that localised it needed no patch at all: SM64DS_SCENE_SLOT9=0 and
+# SM64DS_SCENE_NO_RENDER=1 both exit 0 on the same 300 frames.
+#
+# THE COST OF THE HOST COPY IS ONE LINE PAIR.  The `fn` read and its call
+# become `((Model *)(c + 0xaba4))->Render((const Vector3 *)vecArr)` -- still
+# virtual, and safe to type as Model because this class's own constructor
+# builds that sub-object with _ZN5ModelC1Ev.  Everything else in the 167-line
+# body is transcribed unchanged.
+#
+# The slice line for src/func_ov006_02127d10.c is REMOVED above rather than
+# left in beside the host copy, so the two cannot both define the symbol.  The
+# headline delta below counts 33 slice lines, not 34, for that reason.
