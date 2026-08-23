@@ -11,10 +11,12 @@
 // stack-argument offset by 8), 19 are a register number only, and 22 are a
 // schedule move. The ROM caches y1 in a local at [sp,#0xc] and re-homes val
 // into its own incoming slot at [sp,#0x3c]; both are spill decisions no source
-// shape reached. What was tried: the abs as a ternary and as an if (the if is
-// shipped and took the count from 999 to 58), dx-first and dy-first
-// declaration order, endpoint locals in six placements, self-copy locals for
-// val and n, and the loop tests against parameters and against locals. 58 is
+// shape reached. What was tried: the abs as a ternary and as an if (both sit at
+// size 0x294; the ternary measures 66 divergences, the shipped if 58 -- the
+// rsbmi/movpl pairing below is the mechanism), dx-first and dy-first
+// declaration order (byte-identical either way, see below), endpoint locals in
+// six placements, self-copy locals for val and n, and the loop tests against
+// parameters and against locals. 58 is
 // the floor for every variant that keeps the size, and every variant that
 // changed the size changed it by a whole block.
 //
@@ -25,7 +27,8 @@
 // which writes an n-by-n block of `val` through MultiCopy_Int -- so this
 // function is "draw a line of thickness n in colour val", and its callers are
 // the amidakuji board. src/func_ov006_020d3ba0.c draws the four VERTICAL RAILS
-// with it (x = 0x20, 0x60, 0xa0, 0xe0, each from y = -0xb4 down to the layout
+// with it (x = 0x20, 0x60, 0xa0, 0xe0, each from y = -0xd4 in the mode-0/1 arm
+// the port takes -- the mode-2 arm starts at -0xb4 -- down to the layout
 // value at +0x4700) and the horizontal RUNGS as (x, y) -> (x + 0x40, y), which
 // is the ladder the player of "Mario's Slides" adds routes to. That is the
 // mechanism behind both titles' rules text, "draw lines on the Touch Screen".
@@ -64,9 +67,10 @@ struct Obj {
 extern "C" void func_ov004_020ae5c4(void *obj, int x0, int y0, int x1, int y1,
                                     int val, int n)
 {
-    /* DECLARATION ORDER IS LOAD-BEARING HERE, which is the pret idiom this
-       repo records: dy is declared before dx because the ROM colours dy into
-       fp and dx into r6, and declaring dx first hands fp to dx instead. */
+    /* Declaration order was tested and is INERT here: dy-first and dx-first
+       compile byte-identical at 1.2/base, sp2, sp2p3 and 2004/b56. The pret
+       declaration-order idiom does not bite in this body; the order below is
+       kept only because it is what shipped. */
     int dy;
     int dx;
     int adx;

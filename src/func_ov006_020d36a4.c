@@ -1,17 +1,23 @@
 //cpp
-// NONMATCHING: one constant-materialisation idiom, size 0x504 vs 0x4fc (two
-// instructions). Logic verified correct vs ROM; not byte-matchable from C at
-// any of the twenty-five installed mwccarm builds. Counts as decompiled, not
-// matched.
+// NONMATCHING: size 0x504 vs the ROM's 0x4fc -- net +3 code words and -1 pool
+// word (ROM 313 code + 6 pool, candidate 316 code + 5 pool). Logic verified
+// correct vs ROM; not byte-matchable from C at any of the twenty-five
+// installed mwccarm builds. Counts as decompiled, not matched.
 //
-// THE RESIDUE IS TWO INSTRUCTIONS IN ONE PLACE AND THE CAUSE IS NAMED. In the
-// shuffle's swap the ROM holds the array offset 0x4694 in a REGISTER for the
-// whole loop and reaches the second element with a pre-indexed writeback:
+// THE RESIDUE IS DISTRIBUTED, NOT LOCALISED. A register-normalised structural
+// diff (branch targets ignored) shows 48 differing blocks spread across the
+// shuffle's addressing, three loops the candidate strength-reduces where the
+// ROM recomputes with scaled indices, and the goal-switch layout. The 0x4694
+// materialisation is ONE contributor: in the shuffle's swap the ROM holds the
+// array offset 0x4694 in a REGISTER for the whole loop and reaches the second
+// element with a pre-indexed writeback:
 //     add r1, sb, r8, lsl #2 / add r2, sb, r0, lsl #2 / add r0, r1, r4
 //     ldr r3, [r0] / ldr r1, [r2, r4]! / str r1, [r0] / str r3, [r2]
-// 0x4694 is not an ARM immediate, so it has to be either a register or a
-// split, and mwccarm takes the split -- `add rN, #0x4000` plus a #0x694 load
-// offset -- which costs one extra instruction on each of the two sides.
+// 0x4694 is not an ARM immediate, so it is either a register or a split, and
+// mwccarm takes the split -- `add rN, #0x4000` plus a #0x694 load offset. The
+// ROM also DUPLICATES the one-walker swap in both arms (0x020d38c4 and
+// 0x020d3900) where this candidate shares it; writing the swap into each arm
+// was measured and is worse (0x520), so the sharing stays.
 //
 // WHAT MOVED THE COUNT, recorded because the two spellings are not
 // interchangeable and the next reader should not "tidy" either one: the lane

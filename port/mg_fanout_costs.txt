@@ -2846,7 +2846,7 @@ its n, and src/func_ov004_020ae3b4.c declares the same five.
 
 AND THE ARITY RATCHET AGREED WITHOUT BEING ASKED, which is the cheapest
 confirmation in the run. port/tools/aritycheck.py --gate-plainfunc came back
-"117 baselined, 117 live, 0 NEW, 1 retired" and the retired row was
+"118 baselined, 117 live, 0 NEW, 1 retired" and the retired row was
 func_ov004_020ae3b4|port/hal/scene_mg.cpp -- the exact declaration repaired. The
 row is deleted from aritycheck_plainfunc_baseline.txt as the gate instructs. The
 receiver ratchet is 166 live, 0 NEW.
@@ -2870,7 +2870,7 @@ repeats the previous round. Three arms, on slot 36 and on the walker count:
 The three draws are all the game's 15-bit range idiom,
 ((RandomIntInternal(&seed) >> 16) & 0x7fff) * range >> 15, UNSIGNED throughout
 -- the ROM emits lsr for both shifts, and writing it signed emits asr, which is
-one of the two levers that took this body from 999 to a two-instruction miss.
+one of the two levers that took this body from 999 to its eight-byte miss.
 
 THE RUN CHECKS THE BODY BY ARITHMETIC RATHER THAN BY ASSERTION. Seating it
 raised scene 371's slot-36 count from 1322 to 1331 at 300 frames and from 5822
@@ -2886,9 +2886,10 @@ its extern "C" block is a TENTATIVE DEFINITION to mwccarm and a STRONG one to
 MSVC, so the link came back LNK2005 against the arm9 RNG seed
 hal/scene_mg_faces.cpp owns inside DSSTATE. Section 19 hit this on
 src/func_ov006_020d3ba0.c and paid a host copy for it. THIS ONE DID NOT NEED
-ONE, and the distinction is worth carrying: that TU WRITES the seed, this one
-only takes its ADDRESS, so "extern int" is both the honest spelling and the
-working one. Reach for the host copy only when the TU actually defines it.
+ONE, and the distinction is worth carrying: that TU's spelling DEFINES the seed
+(both TUs only ever take its address), this one merely DECLARES it, so
+"extern int" is both the honest spelling and the working one. Reach for the
+host copy only when the TU actually defines it.
 
 THE UNDERSIZED-GLOBAL HAZARD WAS CHECKED RATHER THAN ASSUMED. The round setup
 indexes data_ov006_0212e1a8 with state * 0x1c + 0x14, and that symbol is FOUR
@@ -2919,7 +2920,8 @@ NOBODY HAS HELD EITHER BMP NEXT TO A DS, and this lane does not judge them.
 
 ---- 6. WHAT THE LAST FLOOR IS, MAPPED BUT NOT TAKEN ------------------------
 
-func_ov006_020d27dc, 0xe48, 910 instructions, ONE caller inside vtable slot 6,
+func_ov006_020d27dc, 0xe48 = 914 words (899 instructions + a 15-word trailing
+pool at 0x020d35e8..0x020d3620), ONE caller inside vtable slot 6,
 entered 173 times at 300 frames and 792 at 1200. It is THE WALKER TICK and the
 next lane should not start from scratch:
 
@@ -2931,13 +2933,16 @@ next lane should not start from scratch:
     decides which way to step, which is exactly what an amidakuji walker does.
   - Its other callees are func_02012718 (eleven sites), func_020126e8 and
     func_020126ac (six sites each, always as a pair immediately before a run of
-    five 020d25fc probes) and func_02012dbc (one).
+    five 020d25fc probes), func_02012dbc (one), and one arm_call to 0x01ffabe4;
+    it also carries one load reloc to 0x0212e1c0.
   - It opens with a per-walker countdown over the release delays at +0x46b8 --
     the same field the round setup staggers -- and returns early when +0x46c8 is
     not positive.
-  - It then pushes THIRTEEN constants to its own frame (0xd7, 0xcf, 0xc7, 0xbf,
-    0xe0, 0x1c0, and 1, 2, 3, 4, 5, 6, 7) before the per-walker loop, which is
-    what a goal-row Y table plus a direction set looks like.
+  - It then materialises THIRTEEN constants before the per-walker loop (0xd7,
+    0xcf, 0xc7, 0xbf, 0xe0, 0x1c0, and 1..7) -- nine of them pushed to its own
+    frame (0xd7, 0xcf, 0xc7, 0xbf, 0xe0, 0x1c0, 2, 5, 7), the other four held
+    in r6, r5, fp and r4 -- which is what a goal-row Y table plus a direction
+    set looks like.
   - The per-walker loop switches on the walker's X against 0x20, 0x60, 0xa0 and
     0xe0 -- the four rails again -- compares each against the goal columns at
     +0x4714, +0x4718, +0x471c and +0x4720, and sets an arrival byte at +0x5398
