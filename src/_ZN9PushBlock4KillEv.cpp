@@ -6,30 +6,32 @@
  * dActor_c's 0x020100dc in both tables. So this is PushBlock's own override of
  * the one virtual dBgActor_c adds.
  *
- * Kept as an extern "C" free function under the literal mangled name rather
- * than a real method -- the body is unconverted, still reading `this` as a
- * raw `char*` and calling PoofDustAt/PlayBank3/MarkForDestruction by their
- * mangled names directly. */
-struct Vector3 { int x, y, z; };
-extern "C" {
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-extern void _ZN8dActor_c10PoofDustAtERK7Vector3(void* self, const Vector3& vec);
-extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3& pos);
-extern void _ZN7fBase_c18MarkForDestructionEv(void* self);
-}
-extern "C" void _ZN9PushBlock4KillEv(char* c);
-void _ZN9PushBlock4KillEv(char* c) {
+ * Same shape as dBgActor_c::Kill (its base's slot 31): spawn a poof particle
+ * above the block, poof-dust at that point, play the break sound at
+ * mCamSpacePos, then mark for destruction. Particle::System::NewSimple stays
+ * spelled as its mangled name because its coordinates are Fix12<int> BY VALUE;
+ * declaring the true types changes how the caller passes them and breaks the
+ * bytes (notes/mwccarm-codegen.md 6az, and
+ * src/_ZN8dActor_c10PoofDustAtERK7Vector3.cpp). */
+#include "PushBlock.h"
+#include "Sound.h"
+
+extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
+    u32 id, Fix12i x, Fix12i y, Fix12i z);
+
+void PushBlock::Kill()
+{
     Vector3 vec;
     Vector3 vec2;
-    vec.x = *(int*)(c + 0x5c);
-    vec.y = *(int*)(c + 0x60);
-    vec.z = *(int*)(c + 0x64);
+    vec.x = mPosX;
+    vec.y = mPosY;
+    vec.z = mPosZ;
     vec.y += 0x96000;
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x48, vec.x, vec.y, vec.z);
-    ((int*)&vec2)[0] = ((int*)&vec)[0];
-    ((int*)&vec2)[1] = ((int*)&vec)[1];
-    ((int*)&vec2)[2] = ((int*)&vec)[2];
-    _ZN8dActor_c10PoofDustAtERK7Vector3(c, vec2);
-    _ZN5Sound9PlayBank3EjRK7Vector3(0x41, *(Vector3*)(c + 0x74));
-    _ZN7fBase_c18MarkForDestructionEv(c);
+    vec2.x = vec.x;
+    vec2.y = vec.y;
+    vec2.z = vec.z;
+    PoofDustAt(vec2);
+    Sound::PlayBank3(0x41, *(Vector3 *)&mCamSpacePosX);
+    MarkForDestruction();
 }

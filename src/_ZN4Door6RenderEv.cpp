@@ -3,9 +3,9 @@
 #include "Door.h"
 // recovered name: Door::Render
 /* recovered: renamed to Class_Method, vtable slot 9 */
-/* Door::Render -- vtable slot 9, ov100 0x021454c8. Declared as an override in
- * include/Door.h, defined here as an extern "C" free function under the
- * mangled symbol, the same idiom the rest of the class uses.
+/* Door::Render -- vtable slot 9, ov100 0x021454c8. Declared in include/Door.h
+ * and defined here as a real Door::Render() method; the object is `this` and
+ * every field is named.
  *
  * FOLDED ONTO include/Door.h. This file used to include the generated flat
  * placeholder include/daDoor_c.h and reach its own object through raw
@@ -39,22 +39,22 @@
 extern "C" {
 extern unsigned char IsAreaShowing(int idx);
 }
-extern "C" int _ZN4Door6RenderEv(Door *self) {
-    if (IsAreaShowing((char)self->mAngleX) == 0) {
-        if (IsAreaShowing((char)self->mAngleZ) == 0) goto done;
+int Door::Render() {
+    if (IsAreaShowing((char)mAngleX) == 0) {
+        if (IsAreaShowing((char)mAngleZ) == 0) goto done;
     }
     {
         /* &mModel is taken HERE and not at the top of the function: hoisting
            it costs a callee-saved register and a stack adjust the ROM does
            not have (`add r5,r4,#0xd4` before the area checks, plus `sub sp`).
            The ROM computes it lazily, so this does too. */
-        ModelAnim *body = &self->mModel;
+        ModelAnim *body = &mModel;
         Model *key;
         body->Render(0);
-        key = self->unk_138;
+        key = unk_138;
         if (key == 0) goto done;
-        key->Virtual10(*self->mModel.data.transforms);
-        self->unk_138->Render(0);
+        key->Virtual10(*mModel.data.transforms);
+        unk_138->Render(0);
     }
 done:
     return 1;
