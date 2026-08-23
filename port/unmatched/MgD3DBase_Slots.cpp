@@ -13,8 +13,16 @@
  * THE TWO COPIES ARE NOT BYTE-IDENTICAL, so the merge resolves an ADD/ADD
  * conflict here by picking one rather than getting a free dedupe. The only code
  * difference is a vestigial `#include <cstdio>` in BNT's copy that nothing in
- * the file uses; the four bodies are the same. Lane TTI adopted THIS copy
- * byte-identical.
+ * the file uses; the four bodies are the same. As of e9f6b9b36 lane TTI carried
+ * this file byte-identical; this header has since been edited, so the two now
+ * differ in prose only.
+ *
+ * THAT SENTENCE IS PINNED TO A COMMIT ON PURPOSE, and the reason is the bug it
+ * replaces. The earlier wording claimed, in this file, that another lane's copy
+ * of THIS FILE was byte-identical to it -- and writing the claim changed the
+ * bytes, so the sentence falsified itself the moment it was saved. A claim
+ * about a concurrent lane's file state is volatile by construction: pin it to a
+ * commit, or state it from OUTSIDE the compared files, or do not write it.
  *
  * All four slots hold ONE body each in all four subclasses' tables, so a repair
  * here is a repair for the whole family.

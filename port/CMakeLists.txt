@@ -4980,9 +4980,12 @@ endforeach()
 # `#include <cstdio>` nothing uses; DeclConflict is CODE-IDENTICAL and differs
 # only in prose; ModelAnimRender differs in type spelling (BNT forward-declares
 # struct OamAttr / Matrix2x2 unqualified, this copy includes common.h and uses
-# the struct keyword) over the same two bodies. Lane TTI adopted THIS lane's
-# copies byte-identical, so picking the BNP copy leaves two of the four family
-# trees already in agreement.
+# the struct keyword) over the same two bodies. What lane TTI carries is in
+# port/slice_bnp.txt section 9 and is NOT "all four byte-identical": TTI has TWO
+# of the four, DeclConflict byte-identical and Slots prose-only-different, with
+# ModelAnimRender and ObjStateDispatch absent. Stated there rather than here,
+# and pinned to a commit, because an identity claim written inside one of the
+# files being compared falsifies itself the moment it is saved.
 #
 # The dScMgD3DBase_c half of slice_bnp.txt IS safe to list twice: CMake appends
 # every list to the same targets and dedupes identical absolute paths.

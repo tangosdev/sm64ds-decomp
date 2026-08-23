@@ -338,8 +338,27 @@
 #                                  and names them unqualified, this copy
 #                                  includes common.h and spells them with the
 #                                  struct keyword. Same two bodies either way.
-# Lane TTI adopted THIS lane's copies byte-identical, so picking the BNP copy is
-# the choice that leaves two of the four family trees already agreeing.
+#
+# WHAT LANE TTI CARRIES, measured at BNP tip 35b39f15b against TTI's worktree.
+# TTI has TWO of the four files, not all four:
+#   MgD3DBase_DeclConflict.cpp     BYTE-IDENTICAL to this lane's copy.
+#   MgD3DBase_Slots.cpp            differs in PROSE ONLY -- the code is
+#                                  identical, and it was byte-identical to this
+#                                  lane's copy as of e9f6b9b36, before this
+#                                  lane edited that header.
+#   MgD3DBase_ModelAnimRender.cpp  ABSENT from TTI entirely.
+#   MgD3DBase_ObjStateDispatch.cpp ABSENT from TTI entirely.
+# So there is no "two of the four family trees already agree" conclusion to
+# draw, and the earlier version of these lines drew one. The merge consequence
+# is the paragraph above and is unchanged: three add/add conflicts, resolved by
+# picking one copy, all three divergences prose-only or type-spelling.
+#
+# THIS PARAGRAPH LIVES HERE RATHER THAN IN THE FILES IT DESCRIBES, deliberately.
+# The claim it replaces was written INSIDE MgD3DBase_Slots.cpp and asserted that
+# another lane's copy of that same file was byte-identical to it -- which the
+# act of writing it falsified. An identity claim about a file has to be made
+# from outside that file, and pinned to a commit, or it is volatile by
+# construction.
 #
 # unmatched/MgBounceAndPounce_StateDispatch.cpp -- THIS LANE'S OWN. Replaces
 # src/func_ov006_020ee27c.cpp, which is OUT of the list below: vtable slot 6,
