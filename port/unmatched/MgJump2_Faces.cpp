@@ -89,6 +89,18 @@
 // ov006 minigame.  The alias resolves the SPELLING, not the address.
 #pragma comment(linker, "/alternatename:_func_020beb74=_data_ov004_020beb74")
 
+// ---- 2b. A SECOND BARE NAME, AND IT IS A FUNCTION ------------------------
+//
+// src/func_ov006_020c7c68.c declares and calls `func_ov006_020e6df0`, which is
+// the ADDRESS-SHAPED spelling of an ov006 body the config gives a real name:
+// config/arm9/overlays/ov006/symbols.txt:  Sound_PlayBank1Panned
+// kind:function(arm,size=0x4c) addr:0x020e6df0.  src/Sound_PlayBank1Panned.cpp
+// is in port/slice_bnt.txt and defines it under the NAME, so this is a
+// spelling and not a slice line -- the same shape scene_mg_flower.cpp's
+// `_func_02012754 = __ZN5Sound12PlayBank2_2DEj` row records for the arm9 half
+// of the same family.  Both sides are cdecl and the three arguments agree.
+#pragma comment(linker, "/alternatename:_func_ov006_020e6df0=_Sound_PlayBank1Panned")
+
 // ---- 3. THE THREE C++ METHOD SPELLINGS -----------------------------------
 //
 // Three bodies are already in the build under their Itanium C names and are
@@ -116,8 +128,57 @@
 //   same thing -- r0 and r1 ride through the veneer untouched into an empty
 //   body.
 #pragma comment(linker, "/alternatename:?LoadFile@Animation@@SAPAUBCA_File@@AAUSharedFilePtr@@@Z=__ZN9Animation8LoadFileER13SharedFilePtr")
-#pragma comment(linker, "/alternatename:?SetAnim@ModelAnim@@QAEHPAUBCA_File@@HHI@Z=__ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj")
 #pragma comment(linker, "/alternatename:_Scene_AfterRender=__ZN5Scene11AfterRenderEj")
+
+// ---- 3b. THE THIRD ONE IS NOT AN ALIAS, AND THE FIRST RUN PROVED IT ------
+//
+// ModelAnim::SetAnim IS AN INSTANCE METHOD, so `?SetAnim@ModelAnim@@QAEHPAU
+// BCA_File@@HHI@Z` is __THISCALL: the caller leaves `this` in ECX and pushes
+// only the four real arguments.  An /alternatename straight onto the CDECL
+// body __ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj is therefore the
+// MIS-BRIDGED RECEIVER defect hal/method_faces.cpp's checklist lists as
+// failure mode 3, and this lane shipped it into a build before catching it.
+//
+// THE FAULT, so the shape is on the record rather than the conclusion:
+//
+//     FAULT code c0000005 at +0x000c1c1a accessing 00000002
+//     +0x000c1c1a -> __ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj +0x2a
+//
+// +0x2a is `ldr r0,[r5,#0x60]`'s host equivalent -- the body reading `thiz`,
+// which had arrived holding the BCA_File* the caller pushed first, because the
+// real receiver never left ECX.  0x00000002 is what that read produced.
+//
+// THE FIX IS THE SHADOW-PLUS-ALIAS FORM hal/actor_faces_bob.cpp uses for
+// ModelBase::SetFile, and for the same second reason: the definition cannot be
+// spelled twice.  hal/bob_enemy_shadow_faces.cpp already carries a VOID-
+// returning ModelAnim::SetAnim face for ov084's caller, and this caller's
+// shadow declares it INT-returning, so the two manglings differ (QAEX vs QAEH)
+// and both are needed.  A face struct under a different name gets the
+// __thiscall convention from the language, forwards `this` as the first
+// argument, and an alias points the real mangling at it.
+//
+// THE INT IS THE TRUTHFUL SHAPE, checked in the ROM rather than assumed.
+// ModelAnim::SetAnim at arm9 0x02016748 ends BOTH of its arms with a `bl`
+// (0x02015bf8 and 0x02015c20) and then pops and returns, so r0 rides the
+// callee's value out -- the same reading actor_faces_bob.cpp makes for
+// ModelBase::SetFile.  src spells the definition `void` because nothing in the
+// matched tree read it; func_ov006_020c6e4c discards the result too, so the
+// declared int changes no behaviour and only keeps eax from being invented.
+
+struct BCA_File;
+extern "C" int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+        void *thiz, BCA_File *animFile, int flags, int speed, unsigned start);
+
+struct ModelAnimFace {
+    int SetAnim(BCA_File *animFile, int flags, int speed, unsigned start);
+};
+int ModelAnimFace::SetAnim(BCA_File *animFile, int flags, int speed,
+                           unsigned start)
+{
+    return _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(this, animFile, flags,
+                                                       speed, start);
+}
+#pragma comment(linker, "/alternatename:?SetAnim@ModelAnim@@QAEHPAUBCA_File@@HHI@Z=?SetAnim@ModelAnimFace@@QAEHPAUBCA_File@@HHI@Z")
 
 // ---- 4. WHAT IS NOT HERE, AND WHY ----------------------------------------
 //

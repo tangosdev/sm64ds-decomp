@@ -11,7 +11,7 @@
 // each one dispatches a member pointer held in ITS OWN object.  Neither the
 // class's vtable derivation nor a __sinit reading would have produced them.
 // They were found by the two prescribed detectors run over this lane's whole
-// 207-body closure rather than over its vtable:
+// closure rather than over its vtable:
 //
 //   * the ENCODING SCAN (run mg9 lane LKY's detector, blind to spelling):
 //     THREE ARM Itanium five-instruction dispatch sites in the closure --
@@ -62,24 +62,39 @@
 // NEITHER HAS A NULL GUARD.  port_mg_call0 refuses a zero code and reports it,
 // which is the only net under a field that is ticked before it is seeded.
 //
-// ---- 4. THE TEN STATES, AND WHICH FIELD EACH BELONGS TO ------------------
+// ---- 4. THE TWENTY-TWO STATES, AND WHICH FIELD EACH BELONGS TO -----------
 //
-// Sixteen eight-byte {code, 0} records in this closure are installed by a TU
-// inside it.  They split cleanly in two, and the split was MEASURED (each
-// writer's own store offset) rather than inferred from the addresses:
+// Thirty-six eight-byte {code, 0} records sit in two runs of ov006 .data, and
+// the split between the two fields was MEASURED (each writer's own store
+// offset) rather than inferred from the addresses:
 //
-//   FIELD +0x30, records 0x0213af38..0x0213afc8, six distinct code words
-//     0x020c4d1c  func_ov006_020c4d1c(void)     idle-shaped, 0x18
-//     0x020c4e8c  func_ov006_020c4e8c(char *)
-//     0x020c4fa4  func_ov006_020c4fa4(char *)
-//     0x020c6400  func_ov006_020c6400(char *)
-//     0x020c66bc  func_ov006_020c66bc(char *)
-//     0x020c6a9c  func_ov006_020c6a9c(char *)
-//   FIELD +0x3c, records 0x0213b040..0x0213b090, four distinct code words
-//     0x020c8048  func_ov006_020c8048(void *)
-//     0x020c85bc  func_ov006_020c85bc(char *)
-//     0x020c864c  func_ov006_020c864c(int *)
-//     0x020c8680  func_ov006_020c8680(char *)
+//   FIELD +0x30, twenty-four records 0x0213af10..0x0213afd0, SIXTEEN distinct
+//     code words: 0x020c4d1c (a 0x18-byte idle), 0x020c4e8c, 0x020c4fa4,
+//     0x020c53f8, 0x020c5530, 0x020c5658, 0x020c5928, 0x020c5bf8, 0x020c5d28,
+//     0x020c6088, 0x020c61c4, 0x020c627c, 0x020c6378, 0x020c6400, 0x020c66bc
+//     and 0x020c6a9c.
+//   FIELD +0x3c, fifteen records 0x0213b020..0x0213b090, NINE distinct code
+//     words: 0x020c78ec, 0x020c7a30, 0x020c7c68, 0x020c8048, 0x020c814c,
+//     0x020c833c, 0x020c85bc, 0x020c864c and 0x020c8680.
+//
+// THE FIRST VERSION OF THIS FILE CARRIED TEN OF THE TWENTY-TWO, and the run is
+// what caught it. A scan that took only pair records whose single relocation
+// came from inside the closure-as-then-known found six and four; the writers
+// of the other twelve (func_ov006_020c4f68, _020c762c, _020c8270, _020c81e0,
+// _020c85a0, _020c8768 and the eleven-arm switch inside func_ov006_020c6a9c)
+// were not in that closure BECAUSE they are only reachable through the
+// dispatch this file implements. The closure and the switch are mutually
+// recursive, and the fix is to walk it again with every code word as a root
+// until it stabilises -- 172 bodies, then 207, then 223.
+//
+// THE 600-FRAME RUN NAMED THE TWO THAT MATTERED, which is why the run is the
+// acceptance and not the scan: "MINIGAME STATE DISPATCH UNHANDLED: DS address
+// 0x020c833c" and "... 0x020c6378", 1266 + 914 ticks that reached the
+// framework and did nothing. A second 1800-frame run named one more,
+// 0x020c7c68, once the element vtable below stopped faulting the run early.
+// ALL TWENTY-FIVE are cases below, and the acceptance is a run whose
+// framework-routed count is ZERO on both machines rather than a scan that
+// says it should be.
 //
 // Writers confirmed by their own str offsets: 0x020c6ca4, 0x020c68f4,
 // 0x020c64e4, 0x020c4d20, 0x020c4c54, 0x020c4710, 0x020c4060 and 0x020c4148
@@ -102,16 +117,31 @@ extern "C" {
 
 void port_mg_call0(void *self, unsigned code, int adj);
 
-/* field +0x30's six */
+/* field +0x30's SIXTEEN */
 void func_ov006_020c4d1c(void);
 void func_ov006_020c4e8c(char *c);
 void func_ov006_020c4fa4(char *c);
+void func_ov006_020c53f8(char *c);
+void func_ov006_020c5530(char *c);
+void func_ov006_020c5658(char *c);
+void func_ov006_020c5928(char *c);
+void func_ov006_020c5bf8(char *c);
+void func_ov006_020c5d28(char *c);
+void func_ov006_020c6088(char *c);
+void func_ov006_020c61c4(int c);
+void func_ov006_020c627c(char *c);
+void func_ov006_020c6378(int c);
 void func_ov006_020c6400(char *self);
 void func_ov006_020c66bc(char *c);
 void func_ov006_020c6a9c(char *c);
 
-/* field +0x3c's four */
+/* field +0x3c's NINE */
+void func_ov006_020c78ec(char *thiz);
+void func_ov006_020c7a30(char *c);
+void func_ov006_020c7c68(char *c);
 void func_ov006_020c8048(void *c);
+void func_ov006_020c814c(char *c);
+void func_ov006_020c833c(char *c);
 void func_ov006_020c85bc(char *o);
 void func_ov006_020c864c(int *p);
 void func_ov006_020c8680(char *self);
@@ -153,10 +183,25 @@ static int sub_try(void *self, unsigned code)
     case 0x020c4d1cu: func_ov006_020c4d1c();  return 1;
     case 0x020c4e8cu: func_ov006_020c4e8c(c); return 1;
     case 0x020c4fa4u: func_ov006_020c4fa4(c); return 1;
+    case 0x020c53f8u: func_ov006_020c53f8(c); return 1;
+    case 0x020c5530u: func_ov006_020c5530(c); return 1;
+    case 0x020c5658u: func_ov006_020c5658(c); return 1;
+    case 0x020c5928u: func_ov006_020c5928(c); return 1;
+    case 0x020c5bf8u: func_ov006_020c5bf8(c); return 1;
+    case 0x020c5d28u: func_ov006_020c5d28(c); return 1;
+    case 0x020c6088u: func_ov006_020c6088(c); return 1;
+    case 0x020c61c4u: func_ov006_020c61c4((int)c); return 1;
+    case 0x020c627cu: func_ov006_020c627c(c); return 1;
+    case 0x020c6378u: func_ov006_020c6378((int)c); return 1;
     case 0x020c6400u: func_ov006_020c6400(c); return 1;
     case 0x020c66bcu: func_ov006_020c66bc(c); return 1;
     case 0x020c6a9cu: func_ov006_020c6a9c(c); return 1;
+    case 0x020c78ecu: func_ov006_020c78ec(c); return 1;
+    case 0x020c7a30u: func_ov006_020c7a30(c); return 1;
+    case 0x020c7c68u: func_ov006_020c7c68(c); return 1;
     case 0x020c8048u: func_ov006_020c8048(c); return 1;
+    case 0x020c814cu: func_ov006_020c814c(c); return 1;
+    case 0x020c833cu: func_ov006_020c833c(c); return 1;
     case 0x020c85bcu: func_ov006_020c85bc(c); return 1;
     case 0x020c864cu: func_ov006_020c864c((int *)c); return 1;
     case 0x020c8680u: func_ov006_020c8680(c); return 1;

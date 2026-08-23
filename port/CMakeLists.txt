@@ -4988,6 +4988,13 @@ set(SLICE_BNT_SOURCES hal/scene_mg_jump2.cpp
                       # all four ids under this base need it and all four hit
                       # the same conflict, so the merge keeps exactly one copy.
                       unmatched/MgD3DBase_DeclConflict.cpp
+                      # dScMgD3DBase_c slots 2, 10, 27 and 28: four bodies that
+                      # each drop an argument the ROM rides through in a
+                      # register. Slot 2's dropped RETURN is what put this
+                      # class's actor on the cleanup list instead of the
+                      # behaviour list on the first run. ALSO NOT LANE-NAMED --
+                      # all four ids under this base need all four repairs.
+                      unmatched/MgD3DBase_Slots.cpp
                       # The link faces the FIRST link of this seat asked for:
                       # 27 C++-linkage spellings of C-named DS data, one bare
                       # func_-prefixed name for an ov004 bss word, and three

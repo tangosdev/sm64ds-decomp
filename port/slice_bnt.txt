@@ -288,29 +288,47 @@
 # the merge finds duplicate rows for them, keeping one per body is right and
 # the verdicts should agree.  Disagreement is the thing to stop on.
 #
-# ---- 11. THE CLOSURE, AND THE FIFTEEN EXCLUSIONS -------------------------
+# ---- 11. THE CLOSURE, AND THE TWENTY EXCLUSIONS -------------------------
 #
-# 207 bodies walked from the factory, the eight own overrides, the seventeen
-# middle-base overrides, the five field states and the ten sub-object states
-# (the PMF states are invisible to a bl walk, so the walk was re-run with them
-# as roots until it stabilised).  THE ACCOUNTING IS EXACT AND IT CLOSES:
+# 223 bodies, walked from the factory, the eight own overrides, the seventeen
+# middle-base overrides, the five field states and the TWENTY-TWO sub-object
+# states.  THE WALK HAD TO BE RUN THREE TIMES and that is the finding, not a
+# process note: a pointer-to-member state is invisible to a bl walk, so each
+# round of states pulls in writers that install more states, and the closure
+# and the dispatch switch are mutually recursive.  172 bodies with the vtable
+# and field states as roots, 207 once the first ten sub-object states were
+# added, 223 once all twenty-two were -- and the twelve the second round missed
+# were named by a RUN, not by a scan (section 6).  THE ACCOUNTING IS EXACT:
 #
-#     207 = 66 already active in another slice
-#         + 15 excluded because a host file already defines them
+#     223 = 66 already active in another slice
+#         + 20 excluded because a host file already defines them
 #         +  1 with no src at all
-#         + 125 NEW, which is the list below
+#         + 136 NEW, which is the list below, all ov006
 #
 # THE ONE WITH NO SRC is func_ov004_020ae858, and it is not a new floor: it is
 # ALREADY TRAPPED in hal/scene_mg_faces.cpp, where seven ov006 TUs across this
 # family already reach it.  This lane adds no trap and retires none.
 #
-# THE FIFTEEN EXCLUSIONS.  Four are this lane's own host copies and three more
-# were found only by a SYMBOL-LEVEL scan of port/unmatched and port/hal for a
-# definition of every name in the list below:
+# THE TWENTY EXCLUSIONS.  EIGHT are this lane's own host copies:
 #
-#   src/func_ov006_020ef3e0.cpp   this lane's, unmatched/MgJump2_FieldPmf.cpp
-#   src/func_ov006_020c4cd8.cpp   this lane's, unmatched/MgJump2_SubDispatch.cpp
-#   src/func_ov006_020c7860.cpp   this lane's, unmatched/MgJump2_SubDispatch.cpp
+#   src/func_ov006_020ef3e0.cpp   unmatched/MgJump2_FieldPmf.cpp   (slot 6)
+#   src/func_ov006_020c4cd8.cpp   unmatched/MgJump2_SubDispatch.cpp
+#   src/func_ov006_020c7860.cpp   unmatched/MgJump2_SubDispatch.cpp
+#   src/func_ov006_020e6e78.cpp   unmatched/MgD3DBase_DeclConflict.cpp (slot 24,
+#                                 the decl_common.h C2733)
+#   src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp
+#                                 unmatched/MgD3DBase_Slots.cpp  (slot 2: the
+#                                 dropped FLAG and the dropped RETURN)
+#   src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp
+#                                 unmatched/MgD3DBase_Slots.cpp  (slot 10: the
+#                                 dropped RECEIVER)
+#   src/func_ov006_020e6d98.c     unmatched/MgD3DBase_Slots.cpp  (slot 27)
+#   src/func_ov006_020e6d8c.c     unmatched/MgD3DBase_Slots.cpp  (slot 28)
+#
+# FOUR ARE THE FRAMEWORK'S, and three of those four were found only by a
+# SYMBOL-LEVEL scan of port/unmatched and port/hal for a definition of every
+# name in the list below:
+#
 #   src/func_ov004_020b87e0.cpp   framework, unmatched/MgBase_StateSetter.cpp
 #   src/func_ov004_020aeed8.cpp   framework, unmatched/MgBase_DeclConflict.cpp
 #   src/func_ov004_020af094.cpp   framework, unmatched/MgBase_DeclConflict.cpp
@@ -330,7 +348,10 @@
 # THE SLICE IS THE DELTA ONLY.  slice_mg1.txt already carries the ov004
 # framework, the thirty-five overlay constructors and the arm9 waves under
 # them; CMake appends every list to the same targets and dedupes identical
-# absolute paths, so nothing is compiled twice.  125 lines follow, all ov006.
+# absolute paths, so nothing is compiled twice.  142 lines follow: 136 ov006 plus the three arm9 TUs the link named
+# (src/func_02053ea0.c, _02053eb0.c and _02054748.c), which the ov004/ov006
+# closure walker cannot see because it does not open arm9.
+
 
 
 src/func_02053ea0.c
@@ -358,15 +379,25 @@ src/func_ov006_020c4e8c.c
 src/func_ov006_020c4f68.c
 src/func_ov006_020c4fa4.cpp
 src/func_ov006_020c5370.c
+src/func_ov006_020c53f8.c
 src/func_ov006_020c54f4.c
+src/func_ov006_020c5530.c
 src/func_ov006_020c561c.c
+src/func_ov006_020c5658.c
 src/func_ov006_020c57d4.c
+src/func_ov006_020c5928.c
 src/func_ov006_020c5aa4.c
+src/func_ov006_020c5bf8.c
 src/func_ov006_020c5cf4.c
+src/func_ov006_020c5d28.c
 src/func_ov006_020c5ec8.c
+src/func_ov006_020c6088.c
 src/func_ov006_020c6188.c
+src/func_ov006_020c61c4.c
 src/func_ov006_020c6248.c
+src/func_ov006_020c627c.c
 src/func_ov006_020c6348.c
+src/func_ov006_020c6378.c
 src/func_ov006_020c63dc.c
 src/func_ov006_020c6400.c
 src/func_ov006_020c64e4.c
@@ -386,12 +417,25 @@ src/func_ov006_020c7300.c
 src/func_ov006_020c7388.c
 src/func_ov006_020c7490.c
 src/func_ov006_020c7574.c
+src/func_ov006_020c762c.c
+src/func_ov006_020c78ec.cpp
+src/func_ov006_020c7a30.c
+src/func_ov006_020c8768.c
+src/func_ov006_020c8c78.c
+src/func_ov006_020c76d0.c
+src/func_ov006_020c76d8.c
 src/func_ov006_020c76e0.cpp
 src/func_ov006_020c7734.cpp
+src/func_ov006_020c79a8.cpp
+src/func_ov006_020c7ba4.c
+src/func_ov006_020c7c68.c
 src/func_ov006_020c802c.c
 src/func_ov006_020c8048.c
 src/func_ov006_020c8084.cpp
+src/func_ov006_020c814c.cpp
 src/func_ov006_020c8270.c
+src/func_ov006_020c833c.c
+src/func_ov006_020c85a0.c
 src/func_ov006_020c85bc.cpp
 src/func_ov006_020c862c.c
 src/func_ov006_020c864c.c
@@ -410,21 +454,14 @@ src/_ZN17MgBounceAndPounceD1Ev.cpp
 src/_ZN17MgBounceAndPounceD0Ev.cpp
 src/func_ov006_020e6cac.c
 src/func_ov006_020e6d24.cpp
-src/func_ov006_020e6d8c.c
-src/func_ov006_020e6d98.c
 src/func_ov006_020e6da4.c
 src/Sound_PlayBank1Panned.cpp
 src/func_ov006_020e6e3c.c
 src/func_ov006_020e6e4c.c
 src/func_ov006_020e6e54.c
-# HOST-COPIED (BNT): src/func_ov006_020e6e78.cpp -- decl_common.h C2733;
-# the copy is port/unmatched/MgD3DBase_DeclConflict.cpp and it is SHARED with
-# the three sibling lanes, so the merge keeps exactly one.
 src/_ZN17MgBounceAndPounce21AfterCleanupResourcesEj.cpp
 src/_ZN17MgBounceAndPounce11AfterRenderEj.cpp
-src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp
 src/_ZN17MgBounceAndPounce14BeforeBehaviorEv.cpp
-src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp
 src/_ZN17MgBounceAndPounce19BeforeInitResourcesEv.cpp
 src/func_ov006_020e7110.c
 src/func_ov006_020e7124.c
