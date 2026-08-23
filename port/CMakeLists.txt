@@ -5003,7 +5003,14 @@ set(SLICE_TTI_SOURCES hal/scene_mg_trampoline.cpp
                       # element+0x64 and one dispatcher over 21 bodies. Its src
                       # open-codes the pair correctly and would still have
                       # jumped to a DS address; MSVC refuses it anyway (C2761).
-                      unmatched/MgTrmpln3DMario_StateDispatch.cpp)
+                      unmatched/MgTrmpln3DMario_StateDispatch.cpp
+                      # TWO CROSS-MODULE MISBINDINGS: src calls the ov007 DATA
+                      # symbol that shares a DS address with the ov006 FUNCTION
+                      # the ROM's relocation names. Harmless on hardware (the
+                      # two overlays are never co-resident), a hard crash in a
+                      # port that mounts both. This was the only thing stopping
+                      # scene 384 from booting.
+                      unmatched/MgTrmpln3DMario_ModuleFix.cpp)
 foreach(line IN LISTS SLICE_TTI_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
