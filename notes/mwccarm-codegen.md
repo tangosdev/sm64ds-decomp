@@ -3427,6 +3427,105 @@ Two independent sweeps writing the same scratch `cand.cpp` fabricated a stable-l
 "floor": scores for one process were read off the other's file. It reads exactly like a
 real plateau. Per-process temp names, or one sweep at a time.
 
+## 6bk. One CSE lever off scene 387's Boo pair, and one RETRACTED (both MATCHED, 2026-08-22)
+
+Run mg10 lane F387. Two ov006 bodies that had no source at all -- the sprite loop
+`func_ov006_0211e72c` (0xac) and the state `func_ov006_0211ebdc` (0x258) -- both went
+from "every instruction identical, only register numbers differ" to byte-exact under
+2004/b56. One lever came out of that, part 1 below: **mwcc's CSE web is keyed on the
+EXPRESSION, and the launder is a web splitter, not only an addressing-mode knob.** 6bj
+established the launder controls addressing mode and statement position controls LICM
+level; this is the third knob on the same axis.
+
+Part 2 was banked here the same day as a second lever and is **RETRACTED** -- read it
+before spending any time on the spelling it recommends.
+
+### 1. Three spellings of one address make mwcc rematerialise instead of commoning it
+
+`0211ebdc` reads `this + i*0x24 + K` in four separate places, two of them on opposite
+sides of two `bl`s. The ROM recomputes the base **four times**:
+
+```
+0211ebf4  add r0, r7, r4        ; and again at 0211eca8, 0211ece8, 0211edec
+0211ebf8  add r0, r0, #0x4600
+0211ebfc  ldrh r0, [r0, #0x74]
+```
+
+Written with ONE spelling (`c + m + K` everywhere, `int m = i * 0x24`) mwcc commons
+`c + m` into a **fifth callee-saved register**, keeps it live across both calls, and the
+body comes out **two words short with a six-register push against the ROM's five**. It
+is not a placement problem -- there is no loop here for 6bj's LICM lever to bite on --
+and no declaration order moves it, because the value being commoned is a compiler temp,
+not a local.
+
+What moves it is spelling the three groups three different ways:
+
+```c
+*(u16 *)(c + k + 0x4674)                     /* k = i * 0x24 */
+*(u16 *)(c + i * 0x24 + 0x466c)              /* the same value, a different tree */
+*(u16 *)((char *)((int)c + k) + 0x4672)      /* one launder, and only one */
+```
+
+Each is a distinct expression to the CSE pass, so it rebuilds the address at each group
+exactly as the ROM does. **Two spellings are not enough for three groups** -- reusing
+`c + i * 0x24` for two of them collapses those two back together and the body is one
+word short again -- and the count of distinct spellings you need is the count of times
+the ROM recomputes it, minus the one it rematerialises for free inside a conditional.
+
+Cost accounting, so the shape is recognisable next time: one commoned address is
+`-(N-1)` words against N recomputations, and it also **buys a register**, which rotates
+the whole colouring. A body that is short by a couple of words AND pushes one more
+register than the ROM is this, not a missing statement.
+
+### 2. RETRACTED -- a wider-typed constant zero does NOT change its rank here
+
+**This entry was wrong. It is corrected in place rather than deleted, because other
+lanes may already have mined it.** As banked, it claimed `0211e72c`'s ninth argument
+had to be spelt `(int)(long long)0`; that a plain `0` rotated the hoisted-invariant
+list by one register; and that the difference was "17 of 43 words differing by a
+register number and nothing else".
+
+Measured on the file as committed, at 2004/b56 with DEFAULT_FLAGS and nothing but that
+one token moved:
+
+```
+(int)(long long)0   .text len 0xac   sha1 00fed75803087a455d2ef98be3443bea1656fdbb
+plain 0             .text len 0xac   sha1 00fed75803087a455d2ef98be3443bea1656fdbb
+                    IDENTICAL text, reloc offsets equal, both byte-exact vs the ROM
+```
+
+Zero words differ, not seventeen. Control, to show the harness reads the file it is
+given: the same variant with `0x1000` changed to `0x1001` compiles to 0xb4 and matches
+nothing. The committed source now spells the argument plain `0`.
+
+What survives is only a statement about the ROM, not about any spelling: the allocation
+r4 upwards is `[-1, i, this, 0, 0x1000, 1]`. The likeliest reading is that the
+declaration-order tuning this entry itself describes ("Declaration order moved it 22 ->
+17") already closed the rotation, so by the time the cast was tried it had nothing left
+to do and was banked on a stale measurement.
+
+**The lesson worth keeping is the one that got skipped:** re-measure a candidate lever
+against the FINAL file, with only that token moved, before banking it. Everything that
+lands after a lever is found can make it inert, and it goes on reading as load-bearing
+because the file still matches.
+
+**The general rule part 1 carries:** when the residue is a pure permutation of the
+register file with the schedule already exact, stop looking at the statements and start
+looking at what mwcc thinks is the SAME expression. Merging or splitting one web
+renumbers everything downstream of it.
+
+### The permuter found it, and the hand pass was still worth it
+
+Both candidates came out of `tools/permuter` (score 0 at iteration 188 and 430
+respectively, minutes each) buried in the usual mutation noise -- `>> ((0, 12))`,
+`if (1) {}`, and the tail of `0211ebdc` rewritten to use `i * 0x24` where the head uses
+`k`. Reducing each output by hand to the smallest spelling that still matches is what
+turned a mutation into part 1: the `i * 0x24` tail is load-bearing on its own -- respelt
+`k` the body compiles to 0x254 against the ROM's 0x258, one word short -- and it would
+have read as noise if it had been cleaned away with the rest. **Reduce, do not just
+tidy.** Reducing is also what part 2 needed and did not get: reduce the candidate, then
+re-measure it against the final file.
+
 ## 6bl. Struct-copy assignment defeats the ROM's interleaved shift schedule; pointer-arith with an explicit successor local keeps it (func_ov006_020ea914, 2026-08-22)
 
 Run mg10 lane F386, banked from the src banner where it was measured
