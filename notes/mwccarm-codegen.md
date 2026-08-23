@@ -3426,3 +3426,22 @@ that survives restarts is evidence of a placement problem, not of a coloring flo
 Two independent sweeps writing the same scratch `cand.cpp` fabricated a stable-looking
 "floor": scores for one process were read off the other's file. It reads exactly like a
 real plateau. Per-process temp names, or one sweep at a time.
+
+## 6bl. Struct-copy assignment defeats the ROM's interleaved shift schedule; pointer-arith with an explicit successor local keeps it (func_ov006_020ea914, 2026-08-22)
+
+Run mg10 lane F386, banked from the src banner where it was measured
+(src/func_ov006_020ea914.c lines 85-90); indexed here so future lanes
+find it. Two spellings of the same record-shift loop:
+
+- `p[j] = p[j+1]` as a WHOLE-STRUCT assignment lets mwcc prove the copy
+  cannot alias, and it HOISTS BOTH LOADS: ldr/ldr then str/str.
+- Spelling the two words through pointer arithmetic, with the successor
+  index held in an explicit local (`k = j + 1`) used at every site,
+  reproduces the ROM's interleaved ldr/str/ldr/str schedule
+  instruction-for-instruction in that window.
+
+The shipped form's shift loop is exact including the schedule; the only
+residue there is the two scratch temps transposed (r0/r1 vs the ROM's
+r1/r0), which is register identity, not the schedule. Reach for the
+pointer-arith + named-successor spelling whenever a copy loop's loads
+and stores interleave in the ROM instead of pairing up.

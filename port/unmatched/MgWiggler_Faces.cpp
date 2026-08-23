@@ -51,52 +51,56 @@
 //                    with a src TU that was in no slice. It is a slice line in
 //                    port/slice_wig.txt and not a face.
 //
-// ---- THE TWO FLOORS, AND HOW THEY WERE FOUND ------------------------------
+// ---- THE TWO FLOORS ARE CLOSED, AND THIS FILE NO LONGER TRAPS THEM --------
 //
-// Not by the vtable axis. port/mg_fanout_costs.txt section 3 records this class
-// as 7 overrides / 6 markers / ZERO nosrc, and that column is right: all seven
-// override bodies have a matched src TU. Section 13's CORRECTION 3 says the
-// check that finds a real floor is a delinks join over every CALLEE of every
-// override, not over the state addresses, and that is what turned these up. Of
-// the 64 ov006 functions this class's relocation closure reaches, exactly two
-// have a config symbol, NO delink block in
-// config/arm9/overlays/ov006/delinks.txt, and no src file in either extension
-// in any module:
+// Run mg10, lane F386. Both bodies now have a src TU, both are in
+// port/slice_wig.txt, and the two counting traps that used to stand here are
+// gone. The header is kept because how they were FOUND is the reusable part:
+// not by the vtable axis -- port/mg_fanout_costs.txt section 3 records this
+// class as 7 overrides / 6 markers / ZERO nosrc and that column is right -- but
+// by section 13's CORRECTION 3, a delinks join over every CALLEE of every
+// override. Of the 64 ov006 functions this class's relocation closure reaches,
+// exactly two had a config symbol, NO delink block and no src file in either
+// extension in any module:
 //
-//   func_ov006_020ea914  0x324  ON THE RENDER PATH, and it is the same shape
-//       section 15 measured for Memory Master's card draw. Slot 9 Render calls
-//       it UNCONDITIONALLY at 0x020ed0c8 -- `add r0,r4,#0x4000 / ldr r0,[r0,
+//   func_ov006_020ea914  0x324  ON THE RENDER PATH, the same shape section 15
+//       measured for Memory Master's card draw. Slot 9 Render calls it
+//       UNCONDITIONALLY at 0x020ed0c8 -- `add r0,r4,#0x4000 / ldr r0,[r0,
 //       #0xf60] / bl 0x020ea914`, receiver only, no second argument -- and that
 //       is its ONLY call site: exactly one arm_call relocation in all of ov006
 //       reaches 0x020ea914. Whatever this body draws, nothing else in the class
-//       draws it.
+//       draws it, and the trap's 1200-of-1200 said the class was drawing it
+//       into a counter on every rendered frame.
+//       NOW: src/func_ov006_020ea914.c, NONMATCHING with 165 of 201 words
+//       identical and one register-allocation cause written up in the file. It
+//       is the question picture -- one wiggler at a fixed pose, five body
+//       segments through OAM::Render and the face sprite on segment 0.
 //
-//   func_ov006_020ec4dc  0x20c  ONE OF FOUR WIGGLER SET-UP VARIANTS, and this
-//       is the useful half of the finding. src/func_ov006_020ecdb8.c ends in a
-//       four-way switch on data_ov006_02141fd8:
+//   func_ov006_020ec4dc  0x20c  ONE OF FOUR WIGGLER SET-UP VARIANTS.
+//       src/func_ov006_020ecdb8.c ends in a four-way switch on
+//       data_ov006_02141fd8:
 //           case 0 -> func_ov006_020ecba4    matched
 //           case 1 -> func_ov006_020ec9c0    matched
 //           case 2 -> func_ov006_020ec84c    matched
-//           case 3/default -> func_ov006_020ec4dc   THIS, and only this, is a
-//                                                   decomp gap
+//           case 3/default -> func_ov006_020ec4dc   this
 //       Its only call site is 0x020eceb0, `mov r0,r6 / mov r1,r5 / bl` --
-//       receiver and ONE argument, which is why the trap below declares two
-//       parameters rather than cleaning one. So three of the four wiggler kinds
-//       are whole and the fourth is missing, and the class only reaches the
-//       fourth when that selector reads 3.
+//       receiver and ONE argument, which the trap read off the ROM rather than
+//       off the src declaration, and the seated body takes the same two.
+//       NOW: src/func_ov006_020ec4dc.c, MATCHED at mwccarm 2004/b56 with strict
+//       relocs and carrying a delink block. It lays out the fifteen-wiggler
+//       grid the difficulty ladder reaches at clear count 8.
 //
-// BOTH TRAPS COUNT THEMSELVES AND BOTH ARE REPORTED WHETHER OR NOT THEY FIRE.
-// A silent zero and an absent instrument look the same in a log, and the two
-// zeros here mean different things: a zero on 0x020ea914 would mean Render never
-// ran, and a zero on 0x020ec4dc means the selector never read 3. The seat's
-// report says which.
-//
-// NEITHER TRAP GUESSES. port/tools/inferred_stub_guard exists to refuse a
-// plausible body, and a render routine and a set-up routine are exactly the
-// shapes where a plausible body is worst: it would draw something, and nobody
-// would know it was invented. Both count and return.
+// NO REPLACEMENT INSTRUMENT WAS INVENTED. A trap counts itself because a
+// trapped body cannot be observed any other way; a seated one can. Render is
+// 020ea914's only caller and the call is unconditional (a join point every
+// path through Render reaches), so the seat's slot 9 hit count IS its
+// call count, and 020ec4dc runs exactly when the dealt kind is 3, which the
+// seat's round line already prints. Both facts come off measurements the run
+// already takes, so port_mg_wiggler_trap_counts is removed rather than
+// reimplemented against something weaker.
 
-#include <cstdio>
+/* <cstdio> was here for the two traps' counters and nothing left in this file
+   prints. */
 
 /* The three alias rows, section "WHAT THE FIRST LINK ASKED FOR" above. */
 #pragma comment(linker, "/alternatename:?data_ov006_0213c96c@@3UPair@@A=_data_ov006_0213c96c")
@@ -108,9 +112,6 @@
    for its own _Z15ApproachLinear2Rsss row. */
 extern "C++" int ApproachLinear(short &x, short target, short step);
 
-static unsigned g_wig_trap_020ea914;
-static unsigned g_wig_trap_020ec4dc;
-
 extern "C" {
 
 /* func_0203adec is arm9's _Z14ApproachLinearRsss under the address-shaped name
@@ -120,30 +121,6 @@ extern "C" {
 void func_0203adec(short *x, short target, int step)
 {
     ApproachLinear(*x, target, (short)step);
-}
-
-/* func_ov006_020ea914(void *) -- slot 9 Render's sixth call, the class's only
-   draw of whatever sits at scene+0x4f60. */
-void func_ov006_020ea914(void *p)
-{
-    (void)p;
-    ++g_wig_trap_020ea914;
-}
-
-/* func_ov006_020ec4dc(void *, int) -- wiggler set-up variant 3. TWO
-   parameters, read off the ROM's own call site and not from the src
-   declaration, though the two agree here. */
-void func_ov006_020ec4dc(void *self, int arg)
-{
-    (void)self;
-    (void)arg;
-    ++g_wig_trap_020ec4dc;
-}
-
-void port_mg_wiggler_trap_counts(unsigned *render, unsigned *setup)
-{
-    if (render) *render = g_wig_trap_020ea914;
-    if (setup)  *setup  = g_wig_trap_020ec4dc;
 }
 
 }  /* extern "C" */
