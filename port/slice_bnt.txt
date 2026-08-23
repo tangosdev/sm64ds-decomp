@@ -324,6 +324,12 @@
 #                                 dropped RECEIVER)
 #   src/func_ov006_020e6d98.c     unmatched/MgD3DBase_Slots.cpp  (slot 27)
 #   src/func_ov006_020e6d8c.c     unmatched/MgD3DBase_Slots.cpp  (slot 28)
+#   src/func_ov006_020c4c54.cpp   unmatched/MgD3DBase_ModelAnimRender.cpp
+#   src/func_ov006_020c7734.cpp   unmatched/MgD3DBase_ModelAnimRender.cpp
+#                                 -- both dispatch a six-virtual SHADOW's m5
+#                                 (ROM slot 5) on a plain ModelAnim, which MSVC
+#                                 sends to Virtual18. The second one FAULTED a
+#                                 rendered 300-frame run; section 12.
 #
 # FOUR ARE THE FRAMEWORK'S, and three of those four were found only by a
 # SYMBOL-LEVEL scan of port/unmatched and port/hal for a definition of every
@@ -371,7 +377,6 @@ src/func_ov006_020c4710.c
 src/func_ov006_020c47d4.c
 src/func_ov006_020c49d8.c
 src/func_ov006_020c4c00.c
-src/func_ov006_020c4c54.cpp
 src/func_ov006_020c4d1c.c
 src/func_ov006_020c4d20.c
 src/func_ov006_020c4d3c.c
@@ -425,7 +430,6 @@ src/func_ov006_020c8c78.c
 src/func_ov006_020c76d0.c
 src/func_ov006_020c76d8.c
 src/func_ov006_020c76e0.cpp
-src/func_ov006_020c7734.cpp
 src/func_ov006_020c79a8.cpp
 src/func_ov006_020c7ba4.c
 src/func_ov006_020c7c68.c

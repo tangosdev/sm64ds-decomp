@@ -4995,6 +4995,12 @@ set(SLICE_BNT_SOURCES hal/scene_mg_jump2.cpp
                       # behaviour list on the first run. ALSO NOT LANE-NAMED --
                       # all four ids under this base need all four repairs.
                       unmatched/MgD3DBase_Slots.cpp
+                      # The two ModelAnim shadow-render dispatches. ROM slot 5
+                      # is MSVC's Virtual18, so the shadow call reached a
+                      # two-argument body with one argument and faulted the
+                      # RENDERED battery row. Shared with the sibling lanes for
+                      # the same reason the file above is.
+                      unmatched/MgD3DBase_ModelAnimRender.cpp
                       # The link faces the FIRST link of this seat asked for:
                       # 27 C++-linkage spellings of C-named DS data, one bare
                       # func_-prefixed name for an ov004 bss word, and three
