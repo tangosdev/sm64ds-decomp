@@ -5,8 +5,8 @@ modules and percentages.
 
 Derived the same way as progress.py --write-readme:
   universe   config/**/symbols.txt  (name, addr, size per module)
-  matched    src/<name>.c[pp] exists, is not marked // NONMATCHING, and is not in the
-             byte-gate-failure class (policy D -- see tools/bytegate.py)
+  matched    srcpath resolves a source, it is not marked // NONMATCHING, and the record
+             is not in the byte-gate-failure class (policy D -- see tools/bytegate.py)
   near-miss  nearmiss/db.jsonl (committed) -> div badge
   author     git history: the FIRST contributor to land the surviving match for each
              function (see first_matchers) -- credit follows renames and is not stolen by
@@ -45,8 +45,9 @@ def enrolled_addresses():
     """{(module, addr)} for every range a delinks.txt marks ``complete``.
 
     This is the set the ROM build actually compiles and byte-compares against the
-    cartridge.  ``matched`` below is a different and much weaker test -- a ``src/``
-    file named after the symbol, with no ``NONMATCHING`` banner and no ``dcd`` blob --
+    cartridge.  ``matched`` below is a different and much weaker test -- a source
+    resolved through enrollment/filename fallback, with no ``NONMATCHING`` banner or
+    ``dcd`` blob and no byte-gate exclusion --
     and the two differ by several hundred functions, because a file can sit in the
     tree, be counted, and be compiled by nothing.  The published percentage was the
     weaker number alone, so both now ride along and the site can say which is which.
@@ -92,20 +93,7 @@ def alias_collision_addresses():
     Committed config only, no ROM and no compiler, so it runs in the workflows that
     publish the count. The other half of the class cannot be; see tools/bytegate.py.
     """
-    out = set()
-    for sym, label in RL.module_universe():
-        sized, zero = set(), []
-        for line in sym.read_text(errors="ignore").splitlines():
-            m = FUNC_RE.match(line)
-            if not m:
-                continue
-            size, addr = int(m.group(2), 16), int(m.group(3), 16)
-            if size == 0:
-                zero.append(addr)
-            else:
-                sized.add(addr)
-        out.update((label, a) for a in zero if a in sized)
-    return out
+    return BG.alias_collision_addresses(RL.module_universe)
 
 
 def enrollment_of(label, addr, src_path, enrolled, blocks):
@@ -612,7 +600,7 @@ def main():
                 matched_n += 1
                 # Byte-verified is the subset the ROM build proves: enrolled, compiled,
                 # linked into its module and compared to the cartridge. The rest are
-                # matched on the strength of a filename and are filled at link time by
+                # matched on the strength of a source claim and are filled at link time by
                 # a gap object holding the ROM's own bytes.
                 if (label, addr) in enrolled:
                     rec["verified"] = True
@@ -680,7 +668,7 @@ def main():
           f"{db['stats']['moduleCount']} modules, "
           f"{sum(1 for f in functions if 'author' in f)} authored")
     # Both numbers in the log, always. The gap between them is the number of functions
-    # counted on the strength of a filename that no build compiles, and it is only
+    # counted on the strength of a source claim that no build compiles, and it is only
     # visible if the smaller figure is printed next to the larger one.
     print(f"  byte-verified: {verified_n}/{len(functions)} funcs, "
           f"{verified_b}/{total_b} bytes "

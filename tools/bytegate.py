@@ -14,11 +14,11 @@ that test which cannot be computed from committed data alone.
 The class splits by what it takes to decide it, and the two halves are implemented
 differently on purpose:
 
-  zero-size alias   DERIVED, live, in chaos_db_ci.alias_collision_addresses(). It reads
-                    config/**/symbols.txt and nothing else, so it costs nothing in CI
-                    and it self-heals in both directions: fix the config and the record
-                    returns to the count, match one of the four aliases that are
-                    currently unmatched and it is excluded the same day.
+  zero-size alias   DERIVED, live, by alias_collision_addresses() below. It reads
+                    config/**/symbols.txt and nothing else, so the progress and Chaos
+                    generators share one definition and it self-heals in both
+                    directions: fix the config and the record returns to the count;
+                    match a previously unmatched alias and it is excluded the same day.
 
   will not build    a MANIFEST, config/bytegate-known-failures.txt, because deciding it
                     means running mwccarm. The two workflows that regenerate the
@@ -37,8 +37,8 @@ is what tools/test_bytegate.py's staleness check is for, and it fails loudly rat
 letting the count go quietly wrong. Both failure directions land on the old status quo
 plus a red test, never on a silently smaller-or-larger number.
 
-That property has now been exercised: 17 of the original 18 rows were repaired without
-anyone consulting this file, and every one lapsed on its own. The manifest is down to 1.
+That property has now been exercised: all 18 original rows were repaired without anyone
+consulting this file, and every one lapsed on its own. The manifest is now empty.
 
 What this does NOT do: notice a NEW file that will not build. Nothing in CI can, for the
 same no-compiler reason. `--scan` below is the discovery pass, run with a compiler.
@@ -52,10 +52,43 @@ import argparse
 import hashlib
 import pathlib
 import sys
+import re
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 MANIFEST = REPO / "config" / "bytegate-known-failures.txt"
 HASH_LEN = 16
+FUNC_RE = re.compile(
+    r"^(\S+)\s+kind:function\([^)]*,size=0x([0-9a-fA-F]+)\).*?"
+    r"addr:0x([0-9a-fA-F]+)"
+)
+
+
+def alias_collision_addresses(module_universe=None) -> set[tuple[str, int]]:
+    """``{(module, addr)}`` where a zero-size function aliases a sized record.
+
+    Only the zero-size side is excluded from MATCHED. Address-keying lets callers make
+    that decision while visiting the full symbol record, and deriving it from committed
+    config keeps the progress and Chaos generators in lockstep.
+    """
+    if module_universe is None:
+        sys.path.insert(0, str(REPO / "tools"))
+        import relocs as RL
+        module_universe = RL.module_universe
+
+    out = set()
+    for symbols, label in module_universe():
+        sized, zero = set(), []
+        for line in symbols.read_text(errors="ignore").splitlines():
+            match = FUNC_RE.match(line)
+            if not match:
+                continue
+            size, addr = int(match.group(2), 16), int(match.group(3), 16)
+            if size:
+                sized.add(addr)
+            else:
+                zero.append(addr)
+        out.update((label, addr) for addr in zero if addr in sized)
+    return out
 
 
 def source_hash(path: pathlib.Path) -> str | None:

@@ -61,6 +61,8 @@ struct dCc_c;
 /* Only ever named through a pointer below; the definition lives in common.h /
    math/Matrix.h, which this header deliberately does not pull in. */
 struct Matrix4x3;
+struct ShadowModel;
+#include "math/Fix12.h"
 
 /* The actor heap and its deallocator, for the inline operator delete at the end of
    the class. `data_020a0eac` is the heap every actor is allocated from -- the same
@@ -455,6 +457,17 @@ struct dActor_c : dBase_c {
        parameters to the stack, costing +0x14, so those keep extern "C"
        definitions with scalar args. A true-signature declaration for callers is
        fine and is tracked separately. */
+    void SpawnFireball(const Vector3 &pos, const Vector3_16 *rot,
+                        Fix12<int> horzSpeed, Fix12<int> unk35c, u32 param1);
+    bool IsPlayerInRange(Fix12<int> posX, Fix12<int> posY, Fix12<int> posZ,
+                          s32 maxDist);
+    void DropShadowScaleXYZ(ShadowModel &shadow, Matrix4x3 &matrix,
+                             Fix12<int> scaleX, Fix12<int> scaleY,
+                             Fix12<int> scaleZ, u32 opacity);
+    s16  ReflectAngle(Fix12<int> normalX, Fix12<int> normalZ, s16 angToReflect);
+    void SpawnCoins(const Vector3 &pos, u32 count, Fix12<int> spread, s16 angle);
+    void DropShadowRadHeight(ShadowModel &shadow, Matrix4x3 &matrix,
+                              Fix12<int> radius, Fix12<int> depth, u32 opacity);
 
     /* THE COUNTERPART OF fBase_c::operator new, AND WHAT LETS A REAL `~Class()`
        REPRODUCE THE ROM'S DELETING DESTRUCTOR.

@@ -1,6 +1,13 @@
 # Plan: closing the C/C++ language-mode gap (issue #821)
 
-**Status:** proposal.
+> **Status: historical campaign plan.** Its measurements describe the named
+> historical commit, not the current tree. `python tools/langmode_audit.py` is the
+> live language-mode authority, and [`cpp-tu-current-state.md`](cpp-tu-current-state.md)
+> is the generated cross-workstream summary. In particular, the old decision below
+> against build-speed concatenation does not supersede evidence-based reconstruction
+> of original translation units.
+
+**Original status:** proposal.
 **Provoked by:** [#821 "This is 100% fakematch"](https://github.com/tangosdev/sm64ds-decomp/issues/821).
 **Prerequisite reading:** `notes/runbook-type-reconstruction.md` (the ladder, the safety
 model, the dead ends). This plan schedules that runbook; it does not replace it.
@@ -368,9 +375,12 @@ and treat the standalone 14 as last.
 
 ## 5. Explicit non-goals
 
-- **Consolidating one-function files into real TUs.** Measured and declined: byte-safe,
-  worth only 14–19% (runbook §4). The repo convention is one function per file, filename
-  *is* the symbol (`AGENTS.md`). Do not reopen this without new numbers.
+- **Consolidating one-function files for build speed.** Measured and declined in this
+  campaign: byte-safe in the sampled form, worth only 14–19% (runbook §4). This does
+  **not** decide the newer reconstruction work, whose purpose is to recover
+  evidence-backed original source ownership, declarations, and compiler emission.
+  See [`translation-unit-reconstruction-plan.md`](translation-unit-reconstruction-plan.md)
+  and the live authority page before drawing a current conclusion from this section.
 - **Declaring any method with a by-value class parameter** (`5Fix12IiE`). Dead end across
   all 25 compilers and every optimization level. Keep as `extern "C"` with scalar args.
 - **Deriving a signature from call sites.** They disagree 27% of the time; the definition

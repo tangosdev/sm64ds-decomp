@@ -1016,7 +1016,7 @@ src/_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3.cpp:
     complete
     .text start:0x02010180 end:0x020102b0
 
-src/_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.c:
+src/_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.cpp:
     complete
     .text start:0x020102b0 end:0x02010304
 
@@ -1036,7 +1036,7 @@ src/_ZN8dActor_c14GetSubtractionEss.cpp:
     complete
     .text start:0x020103f4 end:0x02010428
 
-src/_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s.c:
+src/_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s.cpp:
     complete
     .text start:0x02010428 end:0x0201045c
 
@@ -1044,7 +1044,7 @@ src/_ZN8dActor_c15IsPlayerInRangeERK7Vector3i.cpp:
     complete
     .text start:0x0201045c end:0x02010498
 
-src/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.c:
+src/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.cpp:
     complete
     .text start:0x02010498 end:0x020104dc
 
@@ -1068,7 +1068,7 @@ src/_ZN8dActor_c15GivePlayerCoinsER6Playerhj.cpp:
     complete
     .text start:0x0201061c end:0x02010714
 
-src/_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs.c:
+src/_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs.cpp:
     complete
     .text start:0x02010714 end:0x02010844
 
@@ -1108,11 +1108,11 @@ src/_ZN8dActor_c13ClosestPlayerEv.cpp:
     complete
     .text start:0x02010ad8 end:0x02010b9c
 
-src/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.c:
+src/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.cpp:
     complete
     .text start:0x02010b9c end:0x02010be8
 
-src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c:
+src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.cpp:
     complete
     .text start:0x02010be8 end:0x02010c30
 

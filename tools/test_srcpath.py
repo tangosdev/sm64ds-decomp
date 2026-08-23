@@ -352,30 +352,28 @@ class SrcPath(unittest.TestCase):
 class EnrolmentMatchesTheTree(unittest.TestCase):
     """Against the REAL repository, not a fixture.
 
-    Consulting the enrolment table before the filename convention is only safe because
-    the two agree everywhere today. That is a property of the checked-in tree, so it is
-    measured here rather than asserted in a docstring: the day an entry stops being
-    named after the function it holds, this fails and someone reads why."""
+    The filename convention remains the fallback for a one-symbol source.  It cannot
+    describe a source that owns several symbols; that is exactly why the authoritative
+    enrollment table exists.  Both shapes are checked here against the live tree."""
 
-    def test_enrolment_agrees_with_the_filename_convention(self):
+    def test_enrolment_round_trips_single_and_multi_symbol_sources(self):
         idx = SP.enrolment_index()
         self.assertGreater(len(idx), 10_000, "config/**/delinks.txt did not parse")
-        disagree = []
+        by_path = {}
         for symbol, rel in idx.items():
-            convention = None
-            for ext in SP.SOURCE_SUFFIXES:
-                if (SP.SRC / (symbol + ext)).is_file():
-                    convention = SP.SRC / (symbol + ext)
-                    break
-            if convention is None:
-                found = SP._scan().get(symbol, [])
-                if found:
-                    convention = sorted(
-                        found, key=lambda q: SP.SOURCE_SUFFIXES.index(q.suffix))[0]
-            if convention is None or convention.resolve() != (SP.REPO / rel).resolve():
-                disagree.append((symbol, rel, convention))
-        self.assertEqual(disagree, [], "enrolment and filename disagree -- read "
-                                       "srcpath._enrolment before changing this")
+            by_path.setdefault(rel, []).append(symbol)
+
+        for rel, symbols in by_path.items():
+            source = SP.REPO / rel
+            with self.subTest(source=rel, symbols=symbols):
+                self.assertTrue(source.is_file(), "enrollment points at a missing source")
+                self.assertEqual(SP.symbols_for(source), symbols)
+                for symbol in symbols:
+                    self.assertEqual(SP.path_for(symbol).resolve(), source.resolve())
+                if len(symbols) == 1:
+                    self.assertEqual(
+                        SP.symbol_for(source), symbols[0],
+                        "a one-symbol source no longer follows the filename fallback")
 
     def test_no_enrolled_entry_points_outside_src(self):
         """`mods/` is the one that exists today. Any other would be just as wrong."""

@@ -166,7 +166,7 @@ def function_snapshot(rev):
 
     # Which file owns a function has two answers and this needs the authoritative one.
     # `sources` above is the filename convention -- stem == symbol -- which is right for
-    # 11,289 of the tree's files and blind to every merged translation unit, whose name
+    # legacy one-function sources and blind to every merged translation unit, whose name
     # is neither of the symbols in it. Blind here does not read as "unknown": it reads as
     # "no source exists", so the functions leave `matched`, leave the byte-verified
     # count, and hand their authors' credit to nobody, while the ROM build goes on
@@ -224,9 +224,8 @@ def enrollment_snapshot(rev):
     mods = {k: e for k, e in entries.items() if e["kind"] == "mod"}
     # FUNCTIONS IN THE RANGES, NOT THE NUMBER OF RANGES. `len(src)` counted delinks
     # entries and called them functions, which was the same number only while every
-    # entry held exactly one -- true for all 11,170 of them until a translation unit is
-    # promoted. Merging two entries into one covering the identical address span then
-    # reads as `source-built function coverage decreased`, an unconditional failure,
+    # entry held exactly one. Merging two entries into one covering the identical span
+    # then reads as `source-built function coverage decreased`, an unconditional failure,
     # for arithmetic rather than for lost coverage: `sourceBytes` does not move,
     # because no byte left the set.
     addrs = _rev_enrolment(rev)[0]
@@ -251,11 +250,12 @@ def enrollment_snapshot(rev):
 def verification_split(functions, enrollment):
     """Divide ``matched`` into what the ROM build PROVES and what only asserts itself.
 
-    ``function_snapshot`` calls a function matched when a file named after its symbol
-    exists in ``src/``, carries no ``NONMATCHING`` banner, and is not a ``dcd``
-    transcription.  That is a filename test.  Nothing in it compiles the file, links
-    it, or compares a byte -- and it cannot, because the real per-function ledger
-    (``progress/matched.jsonl``) is gitignored and never reaches a validator.
+    ``function_snapshot`` calls a function matched when its delinks enrollment resolves
+    to a source in ``src/`` (falling back to a file named after the symbol), that source
+    carries no ``NONMATCHING`` banner, and is not a ``dcd`` transcription. Nothing in
+    that classification compiles the file, links it, or compares a byte -- and it
+    cannot, because the real per-function ledger (``progress/matched.jsonl``) is
+    gitignored and never reaches a validator.
 
     What the cartridge actually settles is the OTHER set: a range carrying ``complete``
     in a ``delinks.txt`` is compiled, linked into its module, and byte-compared against

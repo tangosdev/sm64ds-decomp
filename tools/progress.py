@@ -7,18 +7,20 @@ line: {"addr","name","size","module","versions"}). De-duped by addr.
 Usage:
     python tools/progress.py               # full report (uses the local ledger)
     python tools/progress.py --bar         # ready-to-paste README "## Progress" block
+    python tools/progress.py --bar --from-src  # ignore any ambient chaos-db.json
     python tools/progress.py --write-readme  # rewrite that block in place in README.md
 
 --bar and --write-readme deliberately do NOT use progress/matched.jsonl: that
 ledger is git-ignored (local-only, per-contributor, and known to drift stale).
 Instead they derive the matched set
-from committed data alone (config/**/symbols.txt cross-referenced against which
-functions have a src/<name>.c[pp] file), so the number is reproducible on a
+from committed data alone (config/**/symbols.txt cross-referenced through srcpath,
+then filtered by the shared byte-gate policy), so the number is reproducible on a
 fresh checkout with no ROM and no local state - which is what the hosted
 update-chaos-data.yml workflow needs.
 """
 import json
 import asm_policy  # noqa: E402
+import bytegate as BG  # noqa: E402
 import pathlib
 import re
 import sys
@@ -35,7 +37,20 @@ README_START = "<!-- progress:start -->"
 README_END = "<!-- progress:end -->"
 
 FUNC_RE = re.compile(r"kind:function\((?:arm|thumb),size=0x([0-9a-fA-F]+)\)")
-FUNC_NAME_RE = re.compile(r"^(\S+)\s+kind:function\((?:arm|thumb),size=0x([0-9a-fA-F]+)\)")
+FUNC_NAME_RE = re.compile(
+    r"^(\S+)\s+kind:function\((?:arm|thumb),size=0x([0-9a-fA-F]+)\)"
+    r".*?addr:0x([0-9a-fA-F]+)"
+)
+
+
+def source_counts_as_matched(path, src_path, module, addr, size,
+                             alias_addrs, excluded_paths):
+    """Apply the same committed-data MATCHED policy as ``chaos_db_ci``."""
+    text = path.read_text(errors="ignore")
+    countable = (not asm_policy.has_draft_banner(text)
+                 and asm_policy.classify(text) != "transcribed")
+    zero_alias = size == 0 and (module, addr) in alias_addrs
+    return countable and not zero_alias and src_path not in excluded_paths
 
 
 def totals():
@@ -61,9 +76,12 @@ def totals():
 
 def synced_from_src():
     """Matched set derived only from committed data: a function counts as
-    matched if config declares it and src/<name>.c or src/<name>.cpp exists.
+    matched if config declares it, srcpath resolves a source, and the committed-data
+    byte gate accepts that source/record.
     Returns (done_n, done_b, n, total_bytes)."""
     n = total_bytes = done_n = done_b = 0
+    alias_addrs = BG.alias_collision_addresses()
+    excluded_paths = BG.excluded_paths()
     # Every module, itcm included, via the one definition in relocs.py. This used
     # to skip itcm/dtcm to agree with chaos-db and the treemap, which skipped them
     # too, so all the surfaces agreed on a number that left out 43 real functions
@@ -74,14 +92,14 @@ def synced_from_src():
             m = FUNC_NAME_RE.match(line)
             if not m:
                 continue
-            name, sz = m.group(1), int(m.group(2), 16)
+            name, sz, addr = m.group(1), int(m.group(2), 16), int(m.group(3), 16)
             n += 1
             total_bytes += sz
             f = SP.path_for(name)
             if f is not None:
-                # a "// NONMATCHING" hatch has a src file but is NOT a byte-match;
-                # do not count it toward matched progress
-                if not asm_policy.has_draft_banner(f.read_text(errors="ignore")):
+                src_path = f.relative_to(REPO).as_posix()
+                if source_counts_as_matched(
+                        f, src_path, _label, addr, sz, alias_addrs, excluded_paths):
                     done_n += 1
                     done_b += sz
     return done_n, done_b, n, total_bytes
@@ -158,8 +176,13 @@ def from_db(path):
 
 
 def _db_path():
-    """--from-db PATH if given & present; else chaos-db.json at the repo root; else None (fall back
-    to the committed-data scan)."""
+    """Select an explicit DB, ambient DB, or the committed-source scan.
+
+    ``--from-src`` is the deterministic escape hatch for authority/reporting callers:
+    it ignores a stale local ``chaos-db.json`` that would otherwise win.
+    """
+    if "--from-src" in sys.argv:
+        return None
     if "--from-db" in sys.argv:
         i = sys.argv.index("--from-db")
         if i + 1 < len(sys.argv):
