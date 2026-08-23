@@ -218,6 +218,16 @@ void *MgPicturePoker_Spawn(void);
 unsigned port_mg_card_floor_hits(void);
 /* the framework's, from unmatched/MgBase_StateDispatch.cpp */
 void     port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
+/* the +0x4f38 sub-object's FIELD-held member pointer, from
+   unmatched/MgMemory2_FieldPmf.cpp.  This class's state machine WAITS ON that
+   machine at states 2, 5 and 7 -- every one of them is
+   `if (func_ov006_020c1718(this+0x4f38))` -- so a census that prints this
+   class's own state index and not this counter cannot tell a machine that is
+   waiting correctly from one that is waiting on a dispatcher that never ran. */
+void     port_mg_memory2_field_counts(unsigned *calls, unsigned *hits);
+/* the idle sentinel that gate compares against, and the shared-file pair the
+   sub-object parks on.  Read, never written. */
+extern unsigned char data_ov006_0213ac58[];
 
 /* the persistent minigame record this class's level is READ FROM and WRITTEN
    BACK TO.  Nothing new is defined here: the storage is hal/level_boot.cpp's
@@ -577,6 +587,31 @@ extern "C" void port_scene_card_hits(void)
                     " for every card to reach state 8 -- so a nonzero count "
                     "here is the machine ARRIVING at its floor, not passing "
                     "it\n", port_mg_card_floor_hits());
+    }
+
+    /* THE SUB-OBJECT'S MACHINE, because THREE of this class's fourteen states
+       do nothing but wait on it.  States 2, 5 and 7 all gate on
+       func_ov006_020c1718(this+0x4f38), which asks whether the +0x4f38 pair
+       equals the idle sentinel data_ov006_0213ac58 BY VALUE -- which is also
+       the second reader that makes rewriting the stored pair illegal.  The
+       calls counter is unmatched/MgMemory2_FieldPmf.cpp's; anything it cannot
+       route falls through to the framework and is reported as UNHANDLED there,
+       so calls > hits with zero UNHANDLED means the framework took them. */
+    {
+        unsigned fcalls = 0, fhits = 0;
+        port_mg_memory2_field_counts(&fcalls, &fhits);
+        std::printf("[scene] dScMgCard_c +0x4f38 sub-object field dispatch: "
+                    "%u call(s), %u routed here", fcalls, fhits);
+        if (g_card_self) {
+            const unsigned *p = (const unsigned *)(g_card_self + 0x4f38);
+            const unsigned *g = (const unsigned *)data_ov006_0213ac58;
+            std::printf("; stored pair {%08x, %08x} vs idle sentinel "
+                        "{%08x, %08x} -> gate %s", p[0], p[1], g[0], g[1],
+                        (p[0] == g[0] && (p[1] == g[1] || p[0] == 0))
+                            ? "OPEN (states 2/5/7 may advance)"
+                            : "SHUT (states 2/5/7 wait)");
+        }
+        std::printf("\n");
     }
 
     /* The state index the ROM's own dispatcher reads, at the offset
