@@ -92,8 +92,15 @@ typedef unsigned int u32;
 
 extern "C" int host_setting_lovesme_character(void);   /* hal/host_settings.cpp */
 extern "C" int host_setting_custom_palette(void);      /* hal/host_settings.cpp */
+extern "C" const char *host_setting_character_palette(int); /* host_settings */
+extern "C" int host_setting_character_palette_any(void);    /* host_settings */
 extern "C" const char *port_fs_catalog_path(unsigned); /* hal/fs.cpp */
 extern "C" unsigned port_fs_interior_id(const char *); /* hal/fs.cpp */
+/* romdata.py's host-shaped copy of the ROM's mount table: which runtime id
+   range each NARC owns. hal/fs.cpp declares it the same way and
+   build/port/host-src/romdata.c defines it. */
+struct port_arc_entry { unsigned short base, end; const char *narc; };
+extern "C" struct port_arc_entry port_archive_map[13]; /* host-src/romdata.c */
 
 extern "C" {
 extern unsigned (*port_fs_mod_map)(unsigned fileID);
@@ -239,17 +246,18 @@ u8 *catalog_file_load(unsigned fileID, u32 *len_out)
     return file_load(path, len_out);
 }
 
-/* One member of ARCHIVE/arc0.narc, decompressed. NARC: sections from 0x10,
-   BTAF holds the member count and start/end pairs, GMIF holds the data. */
-u8 *arc0_member(unsigned idx, u32 *len_out)
+/* One member of an archive, decompressed. NARC: sections from 0x10, BTAF
+   holds the member count and start/end pairs, GMIF holds the data. `rel` is
+   the archive's path under extracted/dsd/files, the same spelling
+   port_archive_map carries. */
+u8 *narc_member(const char *rel, unsigned idx, u32 *len_out)
 {
     char path[520];
     u32 nlen = 0;
     u8 *n;
     u32 off, fat_off = 0, nfiles = 0, img = 0, s = 0, e = 0;
     u8 *out = 0;
-    snprintf(path, sizeof path, "%s/extracted/dsd/files/ARCHIVE/arc0.narc",
-             mods_root());
+    snprintf(path, sizeof path, "%s/extracted/dsd/files/%s", mods_root(), rel);
     n = file_load(path, &nlen);
     if (!n)
         return 0;
@@ -282,6 +290,51 @@ u8 *arc0_member(unsigned idx, u32 *len_out)
 done:
     free(n);
     return out;
+}
+
+u8 *arc0_member(unsigned idx, u32 *len_out)
+{
+    return narc_member("ARCHIVE/arc0.narc", idx, len_out);
+}
+
+/* Resolve a file NAME to this dump's runtime id: the loose catalog first,
+   then the archives' own BTNF name tables. The ONE resolver every mod in
+   this file uses, so a target named in a combo file and a target named in
+   the table below can never disagree about what a path means. 0 when no
+   file in this dump answers to that name. */
+unsigned resolve_file_by_name(const char *path)
+{
+    for (unsigned id = 0; id < CATALOG_SCAN_MAX; ++id) {
+        const char *cp = port_fs_catalog_path(id);
+        if (cp && path_ends_with(cp, path))
+            return id;
+    }
+    return port_fs_interior_id(path);
+}
+
+/* Decompressed bytes of any file the game can serve, by NAME. Loose files
+   come out of the catalog; an archive interior is sliced out of whichever
+   archive's id range owns the resolved id. Used to read the ROM's OWN data
+   back out of the player's extraction -- see the Yoshi rows below -- so it
+   deliberately reads the file rather than waiting for one to come past the
+   filter: nothing promises the order files load in. */
+u8 *file_by_name(const char *path, u32 *len_out)
+{
+    unsigned id;
+    for (unsigned i = 0; i < CATALOG_SCAN_MAX; ++i) {
+        const char *cp = port_fs_catalog_path(i);
+        if (cp && path_ends_with(cp, path))
+            return catalog_file_load(i, len_out);
+    }
+    id = port_fs_interior_id(path);
+    if (!id)
+        return 0;
+    for (int i = 0; i < 13; ++i) {
+        struct port_arc_entry *e = &port_archive_map[i];
+        if (id >= e->base && id < e->end)
+            return narc_member(e->narc, (unsigned)(id - e->base), len_out);
+    }
+    return 0;
 }
 
 /* ---- little helpers shared by the composer -------------------------------*/
@@ -1341,6 +1394,11 @@ int palette_combo(void)
     return v;
 }
 
+/* THE PER-CHARACTER PALETTE PICKER below; declared here because this key
+   stands down when that one is set, and the two blocks read in the other
+   order. */
+int pc_any(void);
+
 struct PalPatch {
     unsigned file_id;   /* resolved at load; 0 = not in this dump, disabled */
     u16 count;
@@ -1356,8 +1414,10 @@ unsigned g_pal_npatch;
 int g_pal_state;        /* 0 not tried, 1 loaded, -1 absent or refused */
 
 /* The gap art's probe order: beside the exe (the bundle), then the asset
-   root (the repo or SM64DS_ASSET_ROOT), then the working directory. */
-FILE *palette_open(int combo, char *shown, size_t cap)
+   root (the repo or SM64DS_ASSET_ROOT), then the working directory. `base`
+   is the file's basename without the extension, so the combo key and the
+   per-character keys look in exactly the same three places. */
+FILE *palette_open_named(const char *base, char *shown, size_t cap)
 {
     char path[1024];
 #ifdef _WIN32
@@ -1371,8 +1431,7 @@ FILE *palette_open(int combo, char *shown, size_t cap)
                 slash = fwd;
             if (slash) {
                 *slash = '\0';
-                snprintf(path, sizeof path, "%s\\palettes\\combo%d.pal",
-                         exe, combo);
+                snprintf(path, sizeof path, "%s\\palettes\\%s.pal", exe, base);
                 FILE *f = fopen(path, "rb");
                 if (f) {
                     snprintf(shown, cap, "%s", path);
@@ -1382,8 +1441,7 @@ FILE *palette_open(int combo, char *shown, size_t cap)
         }
     }
 #endif
-    snprintf(path, sizeof path, "%s/palettes/combo%d.pal", mods_root(),
-             combo);
+    snprintf(path, sizeof path, "%s/palettes/%s.pal", mods_root(), base);
     {
         FILE *f = fopen(path, "rb");
         if (f) {
@@ -1391,7 +1449,7 @@ FILE *palette_open(int combo, char *shown, size_t cap)
             return f;
         }
     }
-    snprintf(path, sizeof path, "palettes/combo%d.pal", combo);
+    snprintf(path, sizeof path, "palettes/%s.pal", base);
     {
         FILE *f = fopen(path, "rb");
         if (f) {
@@ -1400,6 +1458,13 @@ FILE *palette_open(int combo, char *shown, size_t cap)
         }
     }
     return 0;
+}
+
+FILE *palette_open(int combo, char *shown, size_t cap)
+{
+    char base[32];
+    snprintf(base, sizeof base, "combo%d", combo);
+    return palette_open_named(base, shown, cap);
 }
 
 void palette_release(void)
@@ -1411,13 +1476,79 @@ void palette_release(void)
     g_pal_npatch = 0;
 }
 
+/* Read an open .pal into a fresh blob plus a fresh record array, both the
+   caller's to free. Returns the record count, or 0 for anything that is not
+   a palmod v2 blob this build understands -- the caller says so in its own
+   words, because "combo 2" and "PaletteLuigi" are different sentences to a
+   player. Each record's colors point INTO the blob, so the two live and die
+   together. Closes the file either way.
+
+   ONE PARSER for both keys, deliberately: the combo file and the four
+   per-character files are the same format compiled by the same tool, and a
+   second copy of these bounds checks would be a second place for them to
+   drift. */
+unsigned palm_read(FILE *f, u8 **blob_out, struct PalPatch **patch_out)
+{
+    u8 *blob = 0;
+    struct PalPatch *patch = 0;
+    long len;
+    u32 nrec, cur;
+    unsigned got = 0;
+    *blob_out = 0;
+    *patch_out = 0;
+    fseek(f, 0, SEEK_END);
+    len = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    if (len < 8 || len > 4 * 1024 * 1024)
+        goto refuse;
+    blob = (u8 *)malloc((size_t)len);
+    if (!blob || (long)fread(blob, 1, len, f) != len)
+        goto refuse;
+    fclose(f);
+    f = 0;
+    if (memcmp(blob, "PALM", 4) != 0 || rd16(blob, 4) != 2)
+        goto refuse;
+    nrec = rd16(blob, 6);
+    if (nrec == 0 || nrec > 512)
+        goto refuse;
+    patch = (struct PalPatch *)calloc(nrec, sizeof *patch);
+    if (!patch)
+        goto refuse;
+    cur = 8;
+    for (u32 r = 0; r < nrec; ++r) {
+        struct PalPatch *p = &patch[r];
+        u32 pl, nl;
+        if (cur + 4 > (u32)len)
+            goto refuse;
+        pl = blob[cur];
+        nl = blob[cur + 1];
+        p->count = rd16(blob, cur + 2);
+        if (pl == 0 || pl >= sizeof p->path || nl == 0 ||
+            nl >= sizeof p->name || p->count == 0 || p->count > 4096 ||
+            cur + 4 + pl + nl + (u32)p->count * 2 > (u32)len)
+            goto refuse;
+        memcpy(p->path, blob + cur + 4, pl);
+        memcpy(p->name, blob + cur + 4 + pl, nl);
+        p->colors = blob + cur + 4 + pl + nl;
+        cur += 4 + pl + nl + (u32)p->count * 2;
+        ++got;
+    }
+    *blob_out = blob;
+    *patch_out = patch;
+    return got;
+refuse:
+    if (f)
+        fclose(f);
+    free(blob);
+    free(patch);
+    return 0;
+}
+
 void palette_load(void)
 {
     const int combo = palette_combo();
     char shown[1024];
     FILE *f;
-    long len;
-    u32 nrec, cur;
     if (g_pal_state)
         return;
     g_pal_state = -1;
@@ -1428,54 +1559,19 @@ void palette_load(void)
                         "directory; colors stay the ROM's\n", combo, combo);
         return;
     }
-    fseek(f, 0, SEEK_END);
-    len = ftell(f);
-    fseek(f, 0, SEEK_SET);
-    if (len < 8 || len > 4 * 1024 * 1024)
-        goto refuse_close;
-    g_pal_blob = (u8 *)malloc((size_t)len);
-    if (!g_pal_blob || (long)fread(g_pal_blob, 1, len, f) != len)
-        goto refuse_close;
-    fclose(f);
-    f = 0;
-    if (memcmp(g_pal_blob, "PALM", 4) != 0 || rd16(g_pal_blob, 4) != 2)
-        goto refuse;
-    nrec = rd16(g_pal_blob, 6);
-    if (nrec == 0 || nrec > 512)
-        goto refuse;
-    g_pal_patch = (struct PalPatch *)calloc(nrec, sizeof *g_pal_patch);
-    if (!g_pal_patch)
-        goto refuse;
-    cur = 8;
-    for (u32 r = 0; r < nrec; ++r) {
-        struct PalPatch *p = &g_pal_patch[r];
-        u32 pl, nl;
-        if (cur + 4 > (u32)len)
-            goto refuse;
-        pl = g_pal_blob[cur];
-        nl = g_pal_blob[cur + 1];
-        p->count = rd16(g_pal_blob, cur + 2);
-        if (pl == 0 || pl >= sizeof p->path || nl == 0 ||
-            nl >= sizeof p->name || p->count == 0 || p->count > 4096 ||
-            cur + 4 + pl + nl + (u32)p->count * 2 > (u32)len)
-            goto refuse;
-        memcpy(p->path, g_pal_blob + cur + 4, pl);
-        memcpy(p->name, g_pal_blob + cur + 4 + pl, nl);
-        p->colors = g_pal_blob + cur + 4 + pl + nl;
-        cur += 4 + pl + nl + (u32)p->count * 2;
-        ++g_pal_npatch;
+    g_pal_npatch = palm_read(f, &g_pal_blob, &g_pal_patch);
+    if (!g_pal_npatch) {
+        palette_release();
+        fprintf(stderr, "[mods] CustomPalette %d: %s is not a palmod blob "
+                        "this build understands; colors stay the ROM's\n",
+                combo, shown);
+        return;
     }
     /* resolve every record's file NAME to this dump's id: the loose catalog
        first (the resolve_ids scan), then the archives' own name tables */
     for (u32 r = 0; r < g_pal_npatch; ++r) {
         struct PalPatch *p = &g_pal_patch[r];
-        for (unsigned id = 0; id < CATALOG_SCAN_MAX && !p->file_id; ++id) {
-            const char *cp = port_fs_catalog_path(id);
-            if (cp && path_ends_with(cp, p->path))
-                p->file_id = id;
-        }
-        if (!p->file_id)
-            p->file_id = port_fs_interior_id(p->path);
+        p->file_id = resolve_file_by_name(p->path);
         if (!p->file_id)
             fprintf(stderr, "[mods] CustomPalette %d: %s is not in this "
                             "dump; that record is off for this run\n",
@@ -1484,14 +1580,6 @@ void palette_load(void)
     g_pal_state = 1;
     fprintf(stderr, "[mods] CustomPalette %d: %u palette patch record(s) "
                     "(%s)\n", combo, g_pal_npatch, shown);
-    return;
-refuse_close:
-    fclose(f);
-refuse:
-    palette_release();
-    fprintf(stderr, "[mods] CustomPalette %d: %s is not a palmod blob this "
-                    "build understands; colors stay the ROM's\n",
-            combo, shown);
 }
 
 /* Exact NUL-terminated string at offset `at` in a bounded buffer. */
@@ -1541,6 +1629,11 @@ const char *palette_try(const struct PalPatch *p, u8 *d, u32 size)
 
 u32 palette_filter(unsigned fileID, u8 **data, u32 size)
 {
+    /* The four per-character keys replace this one entirely; pc_load says so
+       once, on stderr, so a support log never has to guess which mod wrote a
+       color. See THE PER-CHARACTER PALETTE PICKER below. */
+    if (pc_any())
+        return size;
     if (!palette_combo())
         return size;
     palette_load();
@@ -1562,6 +1655,347 @@ u32 palette_filter(unsigned fileID, u8 **data, u32 size)
             fprintf(stderr, "[mods] CustomPalette %d: %s '%s' recolored, "
                             "%u colors\n",
                     palette_combo(), p->path, p->name, p->count);
+    }
+    return size;
+}
+
+/* ---- THE THIRD MOD: the per-character palette picker ----------------------
+   PaletteMario, PaletteLuigi, PaletteWario and PaletteYoshi: one key per
+   playable character, each naming the colors that character wears. "" or an
+   absent key is the ROM, and the ROM is the default.
+
+   WHY FOUR KEYS AND NOT ONE MORE COMBO. CustomPalette above picks a whole
+   FILE and applies every record in it, so a player who likes one author's
+   Mario and another author's Luigi cannot have both. These keys are keyed on
+   the CHARACTER instead: each names a palette file of its own, and only the
+   records aimed at that character's own files are applied out of it. One
+   authored file can therefore serve all four keys with four different
+   answers, and the same file can be Mario's under one key and ignored under
+   another.
+
+   WHICH FILES ARE "THAT CHARACTER'S" is the table PC_FILES below and nothing
+   else: body, head with cap, head without cap, plus for Luigi the two
+   texture-swap files that drive his body and capped head. Ownership is
+   decided on the RESOLVED FILE ID, never on the spelling of a path, because
+   a suffix test cannot tell data/player/mario_head_cap.bmd from
+   data/player/b_mario_head_cap.bmd and a mod that quietly recolored balloon
+   Mario when asked for Mario would be a bug nobody could see. A record whose
+   file resolves to somebody else's is dropped in silence at load; a record
+   whose file is not in the dump AT ALL is said out loud, because that one is
+   always either a typo or a dump problem.
+
+   APPLIED RECORDS KEEP EVERY RULE CustomPalette HAS. palette_try is the same
+   function: the palette is found by ITS OWN name in the served file's table,
+   the color count must equal the palette's exactly, nothing moves and
+   nothing is reallocated, and every disagreement refuses out loud and serves
+   the ROM's colors.
+
+   ---- THE BUILT-IN YOSHI COLORS -------------------------------------------
+   PaletteYoshi also takes "yoshi:green", "yoshi:red", "yoshi:blue" and
+   "yoshi:yellow", which need no file: they are the ROM's own four-player
+   colors, read out of the player's own extraction.
+
+   THE ROM'S SHAPE, verified against the extraction rather than assumed:
+   data/player/yoshi_model.bmd holds ONE palette, yoshi_all_16p_pl, and it is
+   128 bytes -- four stacked 16-color rows, and their colors say plainly
+   which is which (row 0 greens, row 1 reds, row 2 blues, row 3 yellows).
+   Both head files, yoshi_head.bmd and yoshi_head_fill.bmd, hold a palette of
+   the SAME NAME that is 32 bytes, and those 32 bytes are byte-identical to
+   the body's row 0.
+
+   HOW VS PICKS A ROW, from the matched source and not from guesswork:
+   func_ov002_020e5948 (src/func_ov002_020e5948.c) ends its resource load
+   with Player+0x61C = the Yoshi BODY model's material[0] palette base plus
+   (playerNo << 1). Player::Render (src/_ZN6Player6RenderEv.cpp) then writes
+   that one value into +0x20 of every runtime material record -- but only
+   when data_0209f2d8 == 1, which is VS, and param1 == 3, which is Yoshi.
+
+   AND THAT IS THE ANSWER TO THE HEAD QUESTION. Render does it TWICE, in two
+   separate loops: once over the BODY model's materials, and once over the
+   HEAD model's, with the same value both times. So in VS the head files are
+   not edited, not resized and not reloaded -- their own 16-color palette is
+   simply never sampled, because every head material has been re-pointed at
+   the BODY's palette, shifted to the chosen row. Both head materials in both
+   head files already share palette 0 (yoshi_all_tx and yoshi_eye_tx alike),
+   so the shift moves the skin and the eyes together, as one set.
+
+   The arrangement proves itself: player 0 shifts by nothing, so VS green
+   samples the body's row 0 -- and the head files' own palette IS the body's
+   row 0, byte for byte. Adventure Yoshi and VS-green Yoshi are therefore the
+   same picture, which is only true if one step of playerNo is exactly one
+   16-color row.
+
+   SO THE BUILT-IN IS: put the chosen row where row 0 is in the body file,
+   and put the SAME row into each head file's 16-color palette. Rows 1..3 of
+   the body are left exactly as authored -- nothing in adventure points at
+   them -- and the head palettes stay 16 colors, because they are 16-color
+   palettes for 16-color textures and growing one to 64 would upload three
+   rows of colors nothing samples over the top of whatever VRAM follows.
+
+   THE EYES COME ALONG, AND THAT IS CORRECT HERE. Recoloring Yoshi's skin
+   moves his eye colors too, because they share the palette. For these four
+   built-ins that is not a risk but the point: the colors being copied are
+   the ROM's own authored rows, and the ROM keeps indices 4, 5, 6 and 12..15
+   identical across all four rows precisely so the eyes and the whites do not
+   move. An AUTHORED .pal has no such guarantee, which is why a hand-written
+   Yoshi palette is worth looking at twice. */
+
+enum { PC_MARIO = 0, PC_LUIGI = 1, PC_WARIO = 2, PC_YOSHI = 3,
+       PC_COUNT = 4, PC_MAX_FILES = 5 };
+
+const char *const PC_KEY[PC_COUNT] = {
+    "PaletteMario", "PaletteLuigi", "PaletteWario", "PaletteYoshi",
+};
+const char *const PC_WHO[PC_COUNT] = { "Mario", "Luigi", "Wario", "Yoshi" };
+
+/* The files a key may touch. Yoshi's "head with cap" is yoshi_head.bmd and
+   his "head without cap" is yoshi_head_fill.bmd; he has no dropped cap.
+   Luigi carries two more because his body and capped head each have two
+   texture variants a texture sequence swaps between -- recolor one of a pair
+   and he flashes his old color on the frames the other is up. */
+const char *const PC_FILES[PC_COUNT][PC_MAX_FILES] = {
+    { "data/player/mario_model.bmd",
+      "data/player/mario_head_cap.bmd",
+      "data/player/mario_head_nocap.bmd", 0, 0 },
+    { "data/player/luigi_model.bmd",
+      "data/player/luigi_head_cap.bmd",
+      "data/player/luigi_head_nocap.bmd",
+      "data/player/L_tx_bodytrans.btp",
+      "data/player/L_tx_headtrans.btp" },
+    { "data/player/wario_model.bmd",
+      "data/player/wario_head_cap.bmd",
+      "data/player/wario_head_nocap.bmd", 0, 0 },
+    { "data/player/yoshi_model.bmd",
+      "data/player/yoshi_head.bmd",
+      "data/player/yoshi_head_fill.bmd", 0, 0 },
+};
+
+const char *const YOSHI_ROW_KEY[4] = {
+    "yoshi:green", "yoshi:red", "yoshi:blue", "yoshi:yellow",
+};
+const char *const YOSHI_BODY = "data/player/yoshi_model.bmd";
+const char *const YOSHI_HEAD = "data/player/yoshi_head.bmd";
+const char *const YOSHI_FILL = "data/player/yoshi_head_fill.bmd";
+const char *const YOSHI_PAL = "yoshi_all_16p_pl";
+
+unsigned g_pc_owned[PC_COUNT][PC_MAX_FILES];
+
+struct PcPal {
+    int active;
+    u8 *blob;               /* the .pal bytes, or the synthesized color sets */
+    struct PalPatch *patch; /* records, colors pointing into blob */
+    unsigned npatch;
+};
+struct PcPal g_pc[PC_COUNT];
+int g_pc_state;             /* 0 not tried, 1 loaded */
+
+/* The boot latch for "is this mod on at all", so the filter's per-file cost
+   stays one compare. */
+int pc_any(void)
+{
+    static int v = -1;
+    if (v < 0)
+        v = host_setting_character_palette_any();
+    return v;
+}
+
+/* Which character owns a resolved file id, or -1 for nobody's. */
+int pc_owner(unsigned fileID)
+{
+    if (!fileID)
+        return -1;
+    for (int c = 0; c < PC_COUNT; ++c)
+        for (int k = 0; k < PC_MAX_FILES; ++k)
+            if (g_pc_owned[c][k] && g_pc_owned[c][k] == fileID)
+                return c;
+    return -1;
+}
+
+/* 0..3 for a built-in Yoshi row spelling, else -1. */
+int pc_yoshi_builtin(const char *v)
+{
+    for (int r = 0; r < 4; ++r)
+        if (strcmp(v, YOSHI_ROW_KEY[r]) == 0)
+            return r;
+    return -1;
+}
+
+/* A BASENAME, not a path. The schema says a value names palettes/<v>.pal, so
+   a value carrying a separator is a typo rather than a choice -- and reading
+   through one would let settings.json reach anywhere on the disk. */
+int pc_name_is_plain(const char *v)
+{
+    for (; *v; ++v)
+        if (*v == '/' || *v == '\\' || *v == ':')
+            return 0;
+    return 1;
+}
+
+/* Build Yoshi's three records for VS row `row` out of the ROM's own body
+   palette. 1 on success; 0 leaves Yoshi on the ROM and sets *why. */
+int pc_build_yoshi(int row, const char **why)
+{
+    static const u16 kCount[3] = { 64, 16, 16 };
+    static const u32 kOff[3] = { 0, 128, 160 };
+    const char *kPath[3];
+    u32 blen = 0, dp = 0, sz = 0;
+    u8 *body, *syn;
+    struct PalPatch *pp;
+
+    kPath[0] = YOSHI_BODY;
+    kPath[1] = YOSHI_HEAD;
+    kPath[2] = YOSHI_FILL;
+
+    *why = "yoshi_model.bmd is not in this dump";
+    body = file_by_name(YOSHI_BODY, &blen);
+    if (!body)
+        return 0;
+    *why = "yoshi_all_16p_pl is not the four stacked rows this build knows";
+    if (!palette_named(body, blen, YOSHI_PAL, &dp, &sz) || sz != 128) {
+        free(body);
+        return 0;
+    }
+    *why = "out of host memory";
+    syn = (u8 *)malloc(64 * 2 + 16 * 2 + 16 * 2);
+    pp = (struct PalPatch *)calloc(3, sizeof *pp);
+    if (!syn || !pp) {
+        free(syn);
+        free(pp);
+        free(body);
+        return 0;
+    }
+    /* the body keeps rows 1..3 exactly as authored and only row 0 moves;
+       each head file gets the chosen row on its own, 16 colors, in place */
+    memcpy(syn, body + dp, 128);
+    memcpy(syn, body + dp + (u32)row * 32, 32);
+    memcpy(syn + 128, body + dp + (u32)row * 32, 32);
+    memcpy(syn + 160, body + dp + (u32)row * 32, 32);
+    free(body);
+    for (int i = 0; i < 3; ++i) {
+        snprintf(pp[i].path, sizeof pp[i].path, "%s", kPath[i]);
+        snprintf(pp[i].name, sizeof pp[i].name, "%s", YOSHI_PAL);
+        pp[i].count = kCount[i];
+        pp[i].colors = syn + kOff[i];
+        pp[i].file_id = resolve_file_by_name(pp[i].path);
+    }
+    g_pc[PC_YOSHI].blob = syn;
+    g_pc[PC_YOSHI].patch = pp;
+    g_pc[PC_YOSHI].npatch = 3;
+    return 1;
+}
+
+void pc_load(void)
+{
+    if (g_pc_state)
+        return;
+    g_pc_state = 1;
+
+    for (int c = 0; c < PC_COUNT; ++c)
+        for (int k = 0; k < PC_MAX_FILES; ++k)
+            if (PC_FILES[c][k])
+                g_pc_owned[c][k] = resolve_file_by_name(PC_FILES[c][k]);
+
+    if (palette_combo())
+        fprintf(stderr, "[mods] CustomPalette %d is off for this run: the "
+                        "per-character palette keys are set, and two mods "
+                        "writing the same palettes would make the colors "
+                        "depend on which one ran last\n", palette_combo());
+
+    for (int c = 0; c < PC_COUNT; ++c) {
+        const char *v = host_setting_character_palette(c);
+        char shown[1024];
+        FILE *f;
+        unsigned kept = 0, n;
+        if (!*v)
+            continue;
+
+        if (c == PC_YOSHI) {
+            const int row = pc_yoshi_builtin(v);
+            if (row >= 0) {
+                const char *why = "?";
+                if (pc_build_yoshi(row, &why)) {
+                    g_pc[c].active = 1;
+                    fprintf(stderr, "[mods] PaletteYoshi %s: %u record(s) "
+                                    "from the game's own four-player colors "
+                                    "(row %d of %s)\n",
+                            v, g_pc[c].npatch, row, YOSHI_PAL);
+                } else {
+                    fprintf(stderr, "[mods] PaletteYoshi %s REFUSED: %s; "
+                                    "Yoshi keeps the ROM's colors\n", v, why);
+                }
+                continue;
+            }
+        }
+
+        if (!pc_name_is_plain(v)) {
+            fprintf(stderr, "[mods] %s %s: a palette name is a plain file "
+                            "name, not a path; %s keeps the ROM's colors\n",
+                    PC_KEY[c], v, PC_WHO[c]);
+            continue;
+        }
+        f = palette_open_named(v, shown, sizeof shown);
+        if (!f) {
+            fprintf(stderr, "[mods] %s %s: no palettes/%s.pal beside the "
+                            "exe, the asset root, or the working directory; "
+                            "%s keeps the ROM's colors\n",
+                    PC_KEY[c], v, v, PC_WHO[c]);
+            continue;
+        }
+        n = palm_read(f, &g_pc[c].blob, &g_pc[c].patch);
+        if (!n) {
+            fprintf(stderr, "[mods] %s %s: %s is not a palmod blob this "
+                            "build understands; %s keeps the ROM's colors\n",
+                    PC_KEY[c], v, shown, PC_WHO[c]);
+            continue;
+        }
+        /* keep only what is aimed at this character's own files, compacting
+           in place so the filter loop has nothing to skip */
+        for (unsigned r = 0; r < n; ++r) {
+            struct PalPatch *p = &g_pc[c].patch[r];
+            p->file_id = resolve_file_by_name(p->path);
+            if (!p->file_id) {
+                fprintf(stderr, "[mods] %s %s: %s is not in this dump; that "
+                                "record is off for this run\n",
+                        PC_KEY[c], v, p->path);
+                continue;
+            }
+            if (pc_owner(p->file_id) != c)
+                continue;   /* somebody else's file in a shared palette */
+            if (kept != r)
+                g_pc[c].patch[kept] = *p;
+            ++kept;
+        }
+        g_pc[c].npatch = kept;
+        g_pc[c].active = kept > 0;
+        fprintf(stderr, "[mods] %s %s: %u of %u record(s) apply to %s (%s)\n",
+                PC_KEY[c], v, kept, n, PC_WHO[c], shown);
+    }
+}
+
+u32 character_palette_filter(unsigned fileID, u8 **data, u32 size)
+{
+    if (!pc_any())
+        return size;
+    pc_load();
+    for (int c = 0; c < PC_COUNT; ++c) {
+        if (!g_pc[c].active)
+            continue;
+        for (unsigned i = 0; i < g_pc[c].npatch; ++i) {
+            struct PalPatch *p = &g_pc[c].patch[i];
+            const char *why;
+            if (p->file_id != fileID)
+                continue;
+            why = palette_try(p, *data, size);
+            if (p->said++)
+                continue;
+            if (why)
+                fprintf(stderr, "[mods] %s: %s '%s' REFUSED: %s; served as "
+                                "the ROM has it\n",
+                        PC_KEY[c], p->path, p->name, why);
+            else
+                fprintf(stderr, "[mods] %s: %s '%s' recolored, %u colors\n",
+                        PC_KEY[c], p->path, p->name, p->count);
+        }
     }
     return size;
 }
@@ -1643,11 +2077,15 @@ u32 lovesme_filter(unsigned fileID, u8 **data, u32 size)
 
 /* The installed filter is a chain, each mod deciding for itself whether the
    file is its business. Loves Me first because it can REPLACE the buffer;
-   the palette patch then edits whatever bytes are actually being served. */
+   the palette patches then edit whatever bytes are actually being served.
+   The two palette mods are mutually exclusive by construction -- each one
+   returns untouched when the other's keys are the ones set -- so their order
+   here decides nothing, and neither can write over the other. */
 u32 mod_filter(unsigned fileID, u8 **data, u32 size)
 {
     size = lovesme_filter(fileID, data, size);
     size = palette_filter(fileID, data, size);
+    size = character_palette_filter(fileID, data, size);
     return size;
 }
 
