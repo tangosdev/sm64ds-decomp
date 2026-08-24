@@ -11,7 +11,7 @@ extern void _ZN5dBgPiC1Ev(void *p);
 void *_ZN12dBgCh_SphCrrC1Ev(struct dBgCh_SphCrr *self) {
     _ZN5dBgChC2Ev(((char *)self));
     _ZN5dBgPiC2Ev((int *)((char *)&self->unk_010));
-    func_0203ac70((int *)((char *)&self->unk_038));
+    _ZN8dM3dGSphC2Ev((int *)((char *)&self->unk_038));
     *(int **)((char *)self) = &data_02099338;
     *(int **)((char *)&self->unk_010) = &data_02099348;
     *(int **)((char *)&self->unk_038) = &data_02099358;
