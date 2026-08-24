@@ -33,13 +33,13 @@ void cMgSmartball_ball_c::RestoreInitial()
     state3b = 0;
     mZoneDwell = 0;
     targetIndex = -1;
-    unk_0fc = 0;
+    mCollisionCooldown = 0;
     mIsWaiting = 1;
     mQueueGap = 0;
     mExpireTimer = 0;
     mIsFrozen = 0;
     mStuckFrames = 0;
-    unk_120 = 0;
+    mPipeUsed = 0;
     mInPlay = 1;
     if ((*(int *)((char *)mpManager + 8) & 0xff) && mIndex >= 9)
         mInPlay = 0;

@@ -7,5 +7,5 @@ void cMgSmartball_pushswitch_c::RestoreInitial()
 {
     cMgSmartball_object_c::RestoreInitial();
     unk_031 = 0;
-    unk_034 = 0;
+    mReleaseDelay = 0;
 }

@@ -100,8 +100,8 @@ void cMgSmartball_ball_c::SaveSnapshot()
         mLastPos1 = mCurrent1;
     }
 after2:
-    if (unk_0fc > 0)
-        unk_0fc -= 1;
+    if (mCollisionCooldown > 0)
+        mCollisionCooldown -= 1;
     if (mZoneCooldown > 0)
         mZoneCooldown -= 1;
     if (state3a != 1) {

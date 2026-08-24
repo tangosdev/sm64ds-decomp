@@ -4,9 +4,19 @@
  * exhaustively; see notes/minigame-provenance.md.
  *
  * FIELD NAMES, and the evidence behind each, are tabulated in
- * notes/smartball-provenance.md. Three fields keep an unk_ name on purpose:
- * unk_039, unk_0fc and unk_120 have no reader anywhere in the tree, so there
- * is nothing to name them from. */
+ * notes/smartball-provenance.md. ONE field keeps an unk_ name on purpose:
+ * unk_039 has no reader anywhere in the tree, so there is nothing to name it
+ * from.
+ *
+ * TWO FIELDS THAT USED TO SAY THAT ARE NAMED NOW, and the correction is worth
+ * recording because it is the same mistake twice: both readers live OUTSIDE
+ * this class, reaching the ball through the manager's table rather than
+ * through `this`, so a search of this class's own four functions found
+ * nothing and concluded there was nothing. mCollisionCooldown (0x0fc) is read
+ * and written by func_ov006_02115830, the ball-vs-ball collision resolver;
+ * mPipeUsed (0x120) by cMgSmartball_dokan_c::SaveSnapshot. Neither spells the
+ * field by name -- both cast a raw offset off a table entry -- which is why
+ * grepping for the field name found nothing either. */
 #ifndef CMGSMARTBALL_BALL_C_H
 #define CMGSMARTBALL_BALL_C_H
 #include "types.h"
@@ -61,10 +71,15 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
                           exhaustive zero pass skips straight over it */
 
     s32 targetIndex;  /* 0x0f8 -- set to -1 by RestoreInitial */
-    s32 unk_0fc;      /* 0x0fc -- a countdown SaveSnapshot decrements while >0
-                          and RestoreInitial zeroes. NOTHING ELSE in the tree
-                          reads or writes it, so what it gates is unknown --
-                          left unk_ deliberately. */
+    s32 mCollisionCooldown; /* 0x0fc -- frames before this ball may exchange
+                             velocity with another one again. SaveSnapshot ages
+                             it while >0 and RestoreInitial zeroes it, but the
+                             evidence is func_ov006_02115830, the ball-vs-ball
+                             resolver: given two balls it returns without
+                             touching either velocity when EITHER one's counter
+                             is still positive, and it sets BOTH counters to 3
+                             on the way out of either path. Three frames of
+                             deafness after a hit, on both participants. */
     u8  mIsWaiting;      /* 0x100 -- 1 while this ball is still queued behind the
                              one in play. RestoreInitial sets it; SaveSnapshot
                              clears it once the base's mIndex (this ball's own
@@ -102,8 +117,14 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
                              reset to 0 on a refresh, zeroed by RestoreInitial.
                              func_ov006_02111df4 reports the ball as needing a
                              rescue once it reaches 0x78 (120 frames). */
-    u8  unk_120;      /* 0x120 -- RestoreInitial zeroes it and NOTHING in the
-                          tree ever reads it. No evidence, so no name. */
+    u8  mPipeUsed;       /* 0x120 -- one-shot: this ball has already been taken
+                             by the pipe. cMgSmartball_dokan_c::SaveSnapshot
+                             sweeps the manager's ball table, skips any ball
+                             with this set, and -- for one that is in the mouth
+                             of the pipe (within 0x8000 in x, between -0x40000
+                             and -0x38000 in z of the pipe) -- warps it, scores
+                             it, and sets this. RestoreInitial zeroes it, which
+                             is what makes it once per ball per round. */
     u8  mInPlay;         /* 0x121 -- 1 while this ball is a live participant.
                              Update draws nothing while it is 0;
                              func_ov006_02111df4 reports a ball with it clear as

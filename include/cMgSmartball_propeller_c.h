@@ -46,11 +46,11 @@
  * carry whatever the allocator left there until RestoreInitial first sets
  * them.
  *
- * SaveSnapshot's own .cpp does NOT use unk_034/unk_036 by name, even though
+ * SaveSnapshot's own .cpp does NOT use mSpinSpeedTarget/mSpinSpeed by name, even though
  * they are declared below and Update/RestoreInitial use them freely: named
  * member access there measurably changed codegen. Compiled with the named
  * members it was 0x98 bytes against a required 0xac -- mwcc CSEs the
- * repeated `this->unk_036` reads/writes into fewer reloads than the ROM's
+ * repeated `this->mSpinSpeed` reads/writes into fewer reloads than the ROM's
  * three separately-cast `*(short*)(c+0x36)` expressions allow. The .cpp
  * keeps the original's raw-offset shape (a local `char* c = (char*)this`
  * and explicit casts) to reproduce that; see the file for the measurement
@@ -67,12 +67,17 @@ struct cMgSmartball_propeller_c : cMgSmartball_object_c {
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
 
-    s16 unk_034;       /* 0x034 -- target rotation speed; RestoreInitial
-                           sets it to 0x40 */
-    s16 unk_036;       /* 0x036 -- current rotation speed, eased toward
-                           unk_034 by +-8 per SaveSnapshot call and added
-                           onto the base's angle (unk_032) each time;
-                           zeroed by RestoreInitial */
+    s16 mSpinSpeedTarget; /* 0x034 -- the rotation speed mSpinSpeed is eased
+                              toward. RestoreInitial is the only writer in the
+                              tree and sets it to 0x40; nothing else changes
+                              it, so "target" is what the ease relationship
+                              proves, not a role anyone assigns it. */
+    s16 mSpinSpeed;       /* 0x036 -- the live rotation speed. SaveSnapshot
+                              steps it by +-8 toward mSpinSpeedTarget, clamping
+                              on overshoot, and then ADDS it onto the base's
+                              angle at 0x32 every frame -- which is what makes
+                              it an angular speed rather than an angle.
+                              RestoreInitial zeroes it. */
     u8  pad_038[0x40]; /* 0x038..0x077 -- unmodelled, not unread; see
                            above */
 };

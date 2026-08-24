@@ -36,7 +36,7 @@ section).
 
 ## cMgSmartball_ball_c (`include/cMgSmartball_ball_c.h`)
 
-14 of 17 `unk_` fields named.
+16 of 17 `unk_` fields named.
 
 | offset | name | evidence |
 | --- | --- | --- |
@@ -44,6 +44,7 @@ section).
 | 0x038 | `mUpperWallSolid` | Set to 1 by `SaveSnapshot` when the ball is inside x [0xe8000,0xf0000) z [0x78000,0xa8000). Its only reader is `src/func_ov006_021126b4.c`, the out-of-bounds predicate, where a non-zero value makes it report z >= 0x78000 in the x band [0xd8000,0xe0000) as blocked. |
 | 0x03c | `mZoneDwell` | `SaveSnapshot` counts it up while the ball is inside x [0x8000,0xd8000) z [0x74000,0x7c000), sets `state3b` past 0x1e, saturates at 0x12c, and resets it to 0 on the frame the ball leaves. A dwell counter, not a countdown. |
 | 0x040 | `mExpireTimer` | Armed by `src/func_ov006_02111dcc.c`, which refuses to re-arm it while it is positive. `SaveSnapshot` ages it and, on expiry, clears the base's `mIsActive`; after that both `SaveSnapshot` and `Update` return immediately. |
+| 0x0fc | `mCollisionCooldown` | Three frames of deafness after a ball-vs-ball hit. `src/func_ov006_02115830.c`, the collision resolver, returns without touching either velocity while EITHER participant's counter is positive, and sets BOTH to 3 on the way out of either path; `SaveSnapshot` ages it and `RestoreInitial` zeroes it. |
 | 0x100 | `mIsWaiting` | 1 = still queued. `RestoreInitial` sets it; `SaveSnapshot` clears it once this ball's index equals `mgr+0x4664` and `mInPlay` is up. While set, `SaveSnapshot` runs `src/func_ov006_021128fc.c` (line up behind the predecessor in `mgr+0x4688`); once clear it runs the physics path `src/func_ov006_02112ad8.c`. |
 | 0x104 | `mQueueGap` | `src/func_ov006_021128fc.c` writes it twice, both times as `(this ball's index - mgr[0x4664]) * 0xf`. Nothing reads it back -- the name records the arithmetic, which is unambiguous, not a use. |
 | 0x108 | `mFrozenPos0` | Written only by `src/func_ov006_02111d4c.c`, which copies `mCurrent0` here. |
@@ -52,6 +53,7 @@ section).
 | 0x114 | `mLastPos0` | `SaveSnapshot` refreshes the pair from `mCurrent` whenever the ball is in bounds and has travelled 0x8000 or more from it. |
 | 0x118 | `mLastPos1` | Same, the z half. |
 | 0x11c | `mStuckFrames` | Incremented by `SaveSnapshot` when the ball is out of bounds or has not moved 0x8000; reset to 0 on a refresh. `src/func_ov006_02111df4.c` reports the ball as needing a rescue once it reaches 0x78 -- 120 frames, two seconds. |
+| 0x120 | `mPipeUsed` | One-shot: this ball has already been taken by the pipe. `cMgSmartball_dokan_c::SaveSnapshot` sweeps the manager's ball table, skips any ball with it set, and -- for a ball in the pipe's mouth (within 0x8000 in x, -0x40000..-0x38000 in z) -- warps it, scores it and sets this. `RestoreInitial` zeroes it, so it is once per ball per round. |
 | 0x121 | `mInPlay` | `src/_ZN19cMgSmartball_ball_c6UpdateEv.cpp` draws nothing while it is 0; `src/func_ov006_02111df4.c` reports a ball with it clear as finished; `src/func_ov006_021128fc.c` tests it on both this ball and its predecessor; `src/func_ov006_02111e7c.c` raises it. `RestoreInitial` clears it only for slot indices >= 9 on the second board. |
 | 0x129 | `mExitGateOpen` | `SaveSnapshot` latches it once the ball has crossed the plane through the corner (0xd8000, -0x80000) by more than the base's `mRadius`. Until then `src/func_ov006_021126b4.c` reports z < -0x80000 as out of bounds, and `src/func_ov006_021122e0.c` gates its bottom-right exit test on it. |
 
@@ -60,8 +62,14 @@ Left `unk_`, deliberately:
 | offset | why |
 | --- | --- |
 | 0x039 | Cleared next to `mUpperWallSolid` and by `RestoreInitial`. Nothing in the tree reads it. |
-| 0x0fc | A countdown `SaveSnapshot` ages and `RestoreInitial` zeroes -- and nothing else in the tree mentions. What it gates is unknown. |
-| 0x120 | `RestoreInitial` zeroes it; no reader anywhere. |
+
+`mCollisionCooldown` and `mPipeUsed` were in this table until a later pass
+found their readers. Both live OUTSIDE the class, reaching the ball through
+the manager's table at `mgr+0x4688` rather than through `this`, and both spell
+the field as a raw offset off that table entry -- so neither a read of the
+class's own four functions nor a grep for the field name turns them up. That
+is the search this family's remaining `unk_` fields should get before anyone
+concludes they have no reader.
 
 
 ## cMgSmartball_slot_c (`include/cMgSmartball_slot_c.h`)
@@ -108,6 +116,59 @@ helpers are what say so.
 | 0x034 | `mVariant` | Written exactly twice in the tree, both by the spawner `src/func_ov006_02115b0c.c`: objects built from the first tilemap layer get 0, those from the second get 1. The constructor `src/func_ov006_02111b40.c` leaves 2, which is the value `Update`'s switch has no case for. Never assigned at runtime, so it is a kind, not a state. |
 | 0x038 | `mWasHit` | Raised by `src/func_ov006_02112190.c`, the ball-vs-kinoko proximity test, on the object it hit (reached through `mgr+0x46bc`). `SaveSnapshot` consumes it: fires the effect and sound, clears the flag and re-arms `mHitTimer`. |
 | 0x03c | `mHitTimer` | `SaveSnapshot` ages it and, in its last four frames, sweeps `mgr+0x4688` for a live ball within 0x11000 -- re-arming to 4 while one is still resting on the mushroom. For a variant-1 mushroom it also drives the base's `mRadius` down by 0x1000 a frame while it runs and back to 0x7000 once it drains, which is the squash `Update` turns into a render scale. |
+
+
+## cMgSmartball_wing_c (`include/cMgSmartball_wing_c.h`)
+
+2 of 5 named. All five are zeroed by `RestoreInitial`, but only two are ever
+read back, and neither reader is a method of this class.
+
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x040 | `mTriggerCount` | Incremented by `src/func_ov006_0210d8bc.c`, which `cMgSmartball_pakkun_c::SaveSnapshot` calls on this object (reached as `mgr+0x4780`) each time the piranha takes a ball. Three readers agree it is a count and not a flag: this class's `SaveSnapshot` eases the angle only while it is > 0, its `Update` draws the two extra base sprites only while it is <= 1, and `src/func_ov006_0210dbb0.c` -- the wing's collision routine -- runs its body test only while it is <= 1. `func_ov006_0210d8bc` itself branches on the value reaching exactly 1, playing sound 0x1a1 the first time and 0x1a2 after. |
+| 0x044 | `mAngleSettled` | Raised by `src/func_ov006_021156f8.c`, the manager's "is the table at rest" check, once `src/func_ov006_0210d898.c` reports this wing done -- which is either `mTriggerCount == 0` or the angle at 0x32 having reached its 0x3000 limit. Its one reader is this class's `SaveSnapshot`, which stops easing the angle while it is set. |
+
+Left `unk_`, deliberately:
+
+| offset | why |
+| --- | --- |
+| 0x034 | `src/func_ov006_0210d8bc.c` sets it to 0x14 on the call that takes `mTriggerCount` to 1 and to 0 on every later call; `RestoreInitial` zeroes it. Nothing reads it back. The shape suggests a timer; a suggestion is not evidence. |
+| 0x038 | Zeroed by the same call and by `RestoreInitial`. No reader. |
+| 0x03c | Set to 1 by the same call, zeroed by `RestoreInitial`. No reader. |
+
+
+## cMgSmartball_propeller_c (`include/cMgSmartball_propeller_c.h`)
+
+2 of 2 named. The pair is a classic ease-toward-target, and the ease is the
+whole evidence: one field is stepped toward the other.
+
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x034 | `mSpinSpeedTarget` | The value `mSpinSpeed` is stepped toward. `RestoreInitial` is its only writer in the tree and sets it to 0x40. "Target" is what the ease relationship in `SaveSnapshot` proves; nothing in the tree assigns it a role beyond that. |
+| 0x036 | `mSpinSpeed` | `src/_ZN24cMgSmartball_propeller_c12SaveSnapshotEv.cpp` steps it by +-8 toward `mSpinSpeedTarget`, clamping on overshoot in either direction, and then ADDS it onto the base's angle at 0x32 every frame -- which is what makes it an angular speed and not an angle. `RestoreInitial` zeroes it. |
+
+Note for anyone editing the bodies: `SaveSnapshot` deliberately does NOT spell
+these two by name. Named member access there compiles to 0x98 bytes against a
+required 0xac, because mwcc CSEs the repeated load; the raw-cast shape is
+load-bearing. `Update` and `RestoreInitial` are unaffected -- see the header.
+
+
+## cMgSmartball_pushswitch_c (`include/cMgSmartball_pushswitch_c.h`)
+
+1 of 1 named.
+
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x034 | `mReleaseDelay` | How long the switch stays down once nothing is holding it. `src/func_ov006_0210e1fc.c` -- the ball-vs-switch proximity test -- presses the switch: it sets the base's `unk_031`, arms this field with 0xa, starts the slot machine (`func_ov006_0210fb04` on `mgr+0x4778`) and plays sound 0x1a4. `SaveSnapshot` then ages it while positive and, only while `unk_031` is set, calls `src/func_ov006_0210e120.c`, which returns 1 exactly when NO active ball is within 0x12000 of the switch. Clear and drained to zero -> `unk_031` is cleared and the switch pops back out; a ball still near -> the field is reloaded to 0xa. So the ten frames are counted from the last frame a ball was on it, not from the press. `RestoreInitial` zeroes it. |
+
+
+## cMgSmartball_ana_c (`include/cMgSmartball_ana_c.h`)
+
+1 of 1 named. `ana` is the hole a ball drops into.
+
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x034 | `mRespawnTimer` | Armed with 0x3c -- one second -- by `src/func_ov006_021115cc.c`, which `src/func_ov006_02112ad8.c` (the ball physics) calls on this hole the frame a ball falls in; the same call raises the base's `unk_031` and plays the effect. `SaveSnapshot` ages it and, on the frame it reaches zero, calls `src/func_ov006_02114ec0.c` on the manager -- which walks the ball table and puts the first active ball not yet in play INTO play -- and sets the base's `unk_032`. So the field is the delay between losing a ball down this hole and being served the next one. `Update` treats it as exactly that: while `unk_031` is set it picks one of three warning sprites at the 0x28 and 0x14 thresholds, i.e. the countdown is shown to the player. `RestoreInitial` zeroes it. |
 
 
 ## cMgSmartball_spring_c (`include/cMgSmartball_spring_c.h`)
