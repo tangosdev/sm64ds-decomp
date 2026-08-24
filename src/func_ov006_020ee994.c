@@ -76,26 +76,75 @@
 // 0x164 vs 0x168. Every other instruction is the same opcode with the same
 // operands in the same order, and the five pool words are in the ROM's order.
 //
-// LEVERS TRIED, ALL FAILED. Loop form is not the axis: do-while, backward
-// goto, for(;;)+break, while(1)+break and store-inside-the-loop all compile to
-// a BYTE-IDENTICAL object (same md5), so mwccarm normalises the shape before
-// it decides. Also tried and byte-identical: the seed as a local pointer (the
-// spelling src/func_ov006_020c44b4.c uses), the seed as an array, a signed
-// compare, `10 * x` operand order, a temporary for the shifted value, and
-// dropping the inner parentheses; a `long long` launder on the multiply made
-// it worse (0x180). Not a compiler-version question either -- match.py --all
-// over ALL TWENTY-FIVE installed mwccarm builds returns 0x164 from every one.
-// Not an optimisation-level question -- -O4,p, -O4,s, -O4, -O3,p and -O2,p all
-// give 0x164 (-O1 gives 0x184). And the pragma family the near-miss database
-// names for this shape (nearmiss row 44, the Mix-a-Mug floor's "rematerialised
-// per outer iter in ROM vs hoisted" divergence) DOES NOT EXIST in this build:
-// opt_loop_invariants, opt_propagation, opt_common_subs,
-// opt_strength_reduction, opt_lifetimes, register_coloring, global_optimizer,
-// peephole, optimize_for_size, opt_unroll_loops, opt_pointer_analysis and
-// opt_vectorize_loops were each set `off` and each produced an object with the
-// SAME md5 as no pragma at all -- they are accepted (no illpragmas warning)
-// and inert. Register pressure is not the axis either: adding live locals
-// makes mwccarm reach for r9/r10/r11, it never stops hoisting.
+// ---- THE MECHANISM IS KNOWN, AND IT IS WHY THE MATCH IS OUT OF REACH ------
+//
+// THE HOIST IS DEFEATED BY MAKING THE LOOP IRREDUCIBLE, and that is measured
+// rather than guessed. nearmiss/db.jsonl already carried an attempt at this
+// address (source `log_attempt`) whose reroll loop has TWO ENTRIES -- the same
+// guard written twice, the second jumping past the draw straight to the test:
+//
+//     if ((unsigned)v < 0xf) goto skip;
+//     if ((unsigned)v < 0xf) goto mid;     /* the second entry */
+//   roll:  v = <the draw>;
+//   mid:   if (v == data_ov006_0213cb48) goto roll;
+//
+// That attempt compiles with NO preheader, the three constants rematerialised
+// in the loop exactly as the ROM has them, and the ROM's own frame --
+// push{r4,r5,lr} + sub sp,#4, receiver in r5, draw in r4. DELETING THE SECOND
+// GUARD AND CHANGING NOTHING ELSE puts the preheader and the five-register
+// frame straight back (0x164), so the second entry is the whole lever: mwccarm
+// will not hoist out of a multi-entry loop and hoists unconditionally out of a
+// single-entry one.
+//
+// AND IT CANNOT BE HAD FOR FREE, which is the wall. The second entry needs a
+// real conditional branch (cmp + b) that the ROM does not have, so that
+// attempt comes out at 0x170 -- ROM + exactly those two instructions, every
+// other word in place. Moving the entry off the hot path to the function tail
+// gets to 0x16c, but only by paying for it elsewhere: the value it tests has
+// to stay live to the end, which adds a third callee-saved register, which
+// removes the `sub sp,#4`/`add sp,#4` pair (four pushed registers are already
+// 8-byte aligned) -- so the size comes closer while the PROLOGUE BYTES move
+// further away. Keeping the ROM's two-callee-saved frame and adding any
+// second entry is +2; getting to +0 in size requires a four-register frame the
+// ROM does not have. The two constraints are mutually exclusive from C.
+//
+// OTHER LEVERS TRIED, ALL FAILED. Loop form is not the axis: do-while,
+// backward goto, for(;;)+break, while(1)+break and store-inside-the-loop all
+// compile to a BYTE-IDENTICAL object (same md5), so mwccarm normalises the
+// shape before it decides. Also tried and byte-identical: the seed as a local
+// pointer (the spelling src/func_ov006_020c44b4.c uses), the seed as an array,
+// a signed compare and signed-v typing, `10 * x` operand order, a temporary
+// for the shifted value, dropping the inner parentheses, and `volatile` on
+// either global or both; a `long long` launder on the multiply made it worse
+// (0x180). THE STATEMENT-POSITION LEVER OF notes/mwccarm-codegen.md 6bj DOES
+// NOT REACH IT: writing the address as a local assigned as the FIRST statement
+// inside the loop body -- the move that took func_ov006_02106168 from 24 to 8
+// -- leaves this at 0x164 for the seed, for the last-draw word, and for both,
+// because 6bj's lever chooses WHICH loop level a hoist lands at and this
+// function has only one level for it to land above. Dead-code entries do not
+// work either: `if (0) goto mid`, an unreachable `goto mid` after a return,
+// after the guard's own goto, and after the loop all get deleted before the
+// decision is made (0x164 each). Not a compiler-version question -- match.py
+// --all over ALL TWENTY-FIVE installed mwccarm builds returns 0x164 from every
+// one. Not an optimisation-level question -- -O4,p, -O4,s, -O4, -O3,p and
+// -O2,p all give 0x164 (-O1 gives 0x184). And the pragma family the near-miss
+// database names for this shape (nearmiss row 44, the Mix-a-Mug floor's
+// "rematerialised per outer iter in ROM vs hoisted" divergence) IS INERT HERE:
+// opt_loop_invariants, opt_moveinvariantsinaddressexpr, opt_propagation,
+// opt_common_subs, opt_strength_reduction, opt_lifetimes, register_coloring,
+// global_optimizer, peephole, optimize_for_size, opt_unroll_loops,
+// opt_pointer_analysis and opt_vectorize_loops were each set `off` and each
+// produced an object with the SAME md5 as no pragma at all -- they are
+// accepted (no illpragmas warning) and they change nothing. Register pressure
+// is not the axis either: adding live locals makes mwccarm reach for
+// r9/r10/r11, it never stops hoisting.
+//
+// WHY THIS FILE SHIPS THE SINGLE-ENTRY SPELLING. The two-entry form is nearer
+// the ROM's bytes and further from its meaning: the duplicate guard is a
+// branch the ROM does not execute, written only to lie to the optimiser, and
+// this TU is compiled by MSVC into the PC port as well, where it would be a
+// real test on a real hot path. A NONMATCHING body that says what the ROM does
+// is worth more here than a NONMATCHING body that is two words closer.
 
 #include "types.h"
 

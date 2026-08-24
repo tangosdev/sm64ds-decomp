@@ -3544,3 +3544,78 @@ residue there is the two scratch temps transposed (r0/r1 vs the ROM's
 r1/r0), which is register identity, not the schedule. Reach for the
 pointer-arith + named-successor spelling whenever a copy loop's loads
 and stores interleave in the ROM instead of pairing up.
+
+## 6bn. mwccarm hoists loop constants unconditionally out of a SINGLE-ENTRY loop, and the only lever is irreducibility -- which is never free (func_ov006_020ee994, div: size 0x164 vs 0x168, 2026-08-24)
+
+Bounce and Pounce's ignition (ov006 slot 18, scene 372) transcribes to an
+instruction-for-instruction candidate that is exactly ONE WORD SHORT, and the whole
+divergence is one reroll loop:
+
+```
+ROM   020EEA44 ldr r0,[pc,#0xa4]   ; &data_0209e650      \  materialised
+      020EEA54 mov r0,#0xa         ;                      }  INSIDE the loop,
+      020EEA5C ldr r0,[pc,#0x90]   ; &data_ov006_0213cb48/   every iteration
+ours           ldr r4,[pc,#0xa4] / ldr r8,[pc,#0xa4] / mov r7,#0xa
+               in a preheader, plus an in-loop `mov r0,r4`
+```
+
+Three constants held across the call cost three extra callee-saved registers, so the
+frame goes from the ROM's `push{r4,r5,lr}` + `sub sp,#4` (three registers need the
+alignment word) to `push{r4,r5,r6,r7,r8,lr}` (six are already aligned, no `sub`), and
+the receiver/draw colours walk one seat over. Net: preheader +3, in-loop -3 +1,
+prologue/epilogue -2. One word.
+
+**The lever is a MULTI-ENTRY loop, and nothing else found in twelve families of
+attempt.** A second entry -- the guard written twice, the second jumping past the draw
+straight to the test -- and mwccarm stops hoisting completely: no preheader, the ROM's
+own frame, the ROM's own colouring. Deleting that second guard and changing nothing
+else puts the preheader and the five-register frame straight back. So the rule is
+sharp: *mwccarm hoists out of a reducible loop unconditionally and out of an
+irreducible one never.*
+
+**But the second entry is never free, and that is the floor.** It needs a real `cmp` +
+conditional branch the ROM does not have, so the two-entry spelling lands at ROM + 2
+words with every other word in place. Moving the entry to the function tail, off the
+hot path, reaches ROM + 1 -- but only because the tested value must stay live to the
+end, which adds a *third* callee-saved register, which deletes the `sub sp,#4` /
+`add sp,#4` pair. The size gets closer while the prologue bytes get further away.
+**Keeping the ROM's two-callee-saved frame and buying a second entry are mutually
+exclusive from C**: +2 with the right frame, +0 in size with the wrong one.
+
+### What does NOT move it (all measured on this body, all byte-identical unless noted)
+
+- **Loop form.** do-while, backward `goto`, `for(;;)`+break, `while(1)`+break, and
+  store-inside-the-loop compile to the SAME md5. mwccarm normalises loop shape before
+  it decides, so a "try a different loop spelling" sweep here is pure cost.
+- **6bj's statement-position lever.** Writing the address as a local assigned as the
+  first statement *inside* the loop body -- the move that took func_ov006_02106168
+  from 24 to 8 -- does nothing here, for the seed word, the last-draw word, or both.
+  6bj's lever chooses WHICH loop level an invariant is hoisted to; this function has
+  one loop, so there is no other level and the hoist goes to the only preheader there
+  is. **6bj is about placement among nested loops, not about whether a hoist happens.**
+- **Dead-code entries.** `if (0) goto mid`, and an unreachable `goto mid` placed after
+  a `return`, after the guard's own goto, or after the loop, are all deleted before the
+  hoisting decision. The CFG edge has to be live to count.
+- **The optimiser pragmas, and this is worth pinning.** `opt_loop_invariants`,
+  `opt_moveinvariantsinaddressexpr`, `opt_propagation`, `opt_common_subs`,
+  `opt_strength_reduction`, `opt_lifetimes`, `register_coloring`, `global_optimizer`,
+  `peephole`, `optimize_for_size`, `opt_unroll_loops`, `opt_pointer_analysis` and
+  `opt_vectorize_loops` set `off` each produce an object with the SAME md5 as no
+  pragma at all. They are ACCEPTED -- `-w illpragmas` says nothing -- and inert. A
+  pragma that raises no warning is not evidence that it did anything; hash the object.
+- **Register pressure.** Adding live locals makes mwccarm reach for r9/r10/r11. It
+  spills before it un-hoists.
+- **Compiler version and optimisation level.** All 25 installed mwccarm builds give
+  0x164. So do -O4,p / -O4,s / -O4 / -O3,p / -O2,p (-O1 gives 0x184). This is not a
+  version wall and not a level knob.
+- `volatile` on either global or both, the seed as an array or as a local pointer, a
+  signed compare, `10 * x` operand order, a temporary for the shifted value, dropping
+  the inner parentheses. A `long long` launder on the multiply makes it worse (0x180).
+
+### The reusable read
+
+A candidate that is short by exactly one word with a preheader the ROM does not have is
+this shape, and the diagnosis is two commands: count the pushed registers, then delete
+the loop and see whether the frame shrinks. If the ROM's frame implies fewer
+callee-saved registers than the candidate uses, the missing word is the alignment
+`sub sp,#4` and the cause is upstream in the hoist, not anywhere near the epilogue.
