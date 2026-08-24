@@ -1,6 +1,6 @@
 #include "types.h"
 extern void *_ZN7fBase_cnwEj(unsigned);
-extern void _ZN7fBase_cC1Ev(void *);
+extern void _ZN7fBase_cC2Ev(void *);
 
 extern int data_0208e4b8[];
 extern int _ZTV8dScene_c[];
@@ -12,7 +12,7 @@ void *func_020352b4(void)
 {
     char *p = (char *)_ZN7fBase_cnwEj(0x68);
     if (p) {
-        _ZN7fBase_cC1Ev(p);
+        _ZN7fBase_cC2Ev(p);
         *(int **)p = data_0208e4b8;
         *(int **)p = _ZTV8dScene_c;
         {

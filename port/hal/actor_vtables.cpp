@@ -81,7 +81,7 @@ int data_0208e3a4[20];
 }
 
 // ---- fBase_c::fBase_c() transcription ---------------------------------
-// The ROM ctor is a hand-asm block (src/_ZN7fBase_cC1Ev.cpp); this is its
+// The ROM ctor is a hand-asm block (src/_ZN7fBase_cC2Ev.cpp); this is its
 // C transcription, field for field against the disassembly there. The spawn
 // CONTEXT globals it reads (pending actor ID, area byte, the spawn-info
 // pointer table for the two processing-list priorities) are storage here;
@@ -101,7 +101,7 @@ int data_020a4b6c[8];           /* the scene tree root the ctor links into */
 void *data_020a4bb8_storage[512];
 void **data_020a4bb8 = data_020a4bb8_storage;  /* actorID -> SpawnInfo* */
 
-void *_ZN7fBase_cC1Ev(char *self)
+void *_ZN7fBase_cC2Ev(char *self)
 {
     *(void **)self = data_02099edc;
     _ZN7fBase_c9SceneNodeC1Ev(self + 0x14);
