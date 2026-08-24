@@ -12,7 +12,10 @@ struct LVL_Overlay;
 /* Particle::SysTracker, embedded at Stage+0x50. Declared locally rather than
  * pulled from include/Particle.h / include/Particle__SysTracker.h, which are
  * two separate generated shadows of this same class; merging them is its own
- * change with its own blast radius. See notes/scene-provenance.md.
+ * change with its own blast radius. See notes/scene-provenance.md, and
+ * notes/system-provenance.md for what each field below is and how it is known.
+ * This copy and include/Particle.h are kept identical by hand;
+ * include/Particle__SysTracker.h is the third shadow and still says unk_.
  *
  * The destructor is declared, never defined -- src/_ZN8Particle10SysTrackerD1Ev.cpp
  * supplies it as an extern "C" free function, and this declaration only lets
@@ -85,6 +88,24 @@ struct SysTracker {
 typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1];
 }
 
+/* One per level texture animation, eight slots' worth at Stage+0x8bc.
+ * Stage::LoadTextureTransformers fills them: for each entry of the level's
+ * animation table (data_0209f340) that carries a BTA file it news a 0x14-byte
+ * TextureTransformer, constructs it, and stores it in the slot, striding 0xc.
+ * Stage::Render advances the transformer when the flag at +0x04 is set;
+ * Stage::RenderModelTransparent reads the same flag to decide whether that
+ * part's materials get the transparent bit; Stage::CleanupResources destroys
+ * the transformer through its vtable and then walks the list at +0x08, whose
+ * next pointer is at +0x0c, freeing every block. */
+struct StageTexAnimSlot {
+    void *mTransformer;     /* 0x00 - TextureTransformer, 0x14 bytes, heap */
+    u8  mActive;            /* 0x04 */
+    u8  pad_05[0x3];
+    void *mBlockList;       /* 0x08 - singly linked, next pointer at +0x0c */
+};
+
+typedef char StageTexAnimSlot_size_must_be_0xc[sizeof(struct StageTexAnimSlot) == 0xc ? 1 : -1];
+
 /* The playable level: fBase_c -> dBase_c -> dScene_c -> Stage (dScStage_c in
  * the ROM's own type graph). A leaf; it adds no virtual of its own and
  * overrides six of dScene_c's, plus the destructor pair.
@@ -99,13 +120,14 @@ typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1]
 struct Stage : dScene_c {
     Particle::SysTracker mSysTracker;  /* 0x050 */
     Model mModel;             /* 0x86c */
-    u8  pad_8bc[0x60];       /* Model ends 0x8bc; dBgW_Kc does not start until 0x91c */
+    StageTexAnimSlot mTexAnimSlots[8];  /* 0x8bc - Model ends here, and dBgW_Kc
+                                           does not start until 0x91c */
     dBgW_Kc mMeshCollider; /* 0x91c */
     /* Two fog setups, 0x28 apart: LoadFog fills both by hand and then walks
        this array with `dst += 0x28` per level fog record. */
     Fog mFog[2];            /* 0x96c */
     /* Allocated by LoadSkybox, destroyed through its vtable by CleanupResources. */
-    Model *skyboxModel;     /* 0x9bc */
+    Model *mSkyboxModel;    /* 0x9bc */
 
     /* Declared first, deliberately: makes ~Stage the key function. */
     virtual ~Stage();
@@ -150,7 +172,12 @@ struct Stage : dScene_c {
     static int  CanPause();
     /* Trailing extent the ROM's `new Stage` size literal proves; see
        tools/opnew_sizes.py. */
-    u8 pad_9c0[0x8];
+    u8  pad_9c0[0x4];
+    /* Latches the two-phase level load. InitResources runs its whole first
+       block only while this is zero, sets it when data_0209fc68 says a wait is
+       needed, and from then on returns -1 -- "call me again" -- until
+       func_020308a8 reports the load finished. */
+    s32 mWaitingForLoad;    /* 0x9c4 */
 
     /* Scene-graph hooks: vtable slots 1/2 of dScStage_c::graphCallback_c.
        Non-virtual on purpose -- declaring them virtual would make this TU emit

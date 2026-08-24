@@ -22,10 +22,10 @@ void Stage::RenderModelTransparent()
 {
     char *p = (char *)(((int)((char *)this) + 0x874));
     char *arr = *(char **)(*(char **)p + 8);
-    char *q = ((char *)this) + 0x8bc;
+    StageTexAnimSlot *q = mTexAnimSlots;
     int i;
-    for (i = 0; i < *(u8 *)(data_0209f340 + 0x14); i++, q += 0xc, arr += 0x40) {
-        if (*(u8 *)(q + 4) != 0) {
+    for (i = 0; i < *(u8 *)(data_0209f340 + 0x14); i++, q++, arr += 0x40) {
+        if (q->mActive != 0) {
             u8 *bp = *(u8 **)(arr + 0x34);
             u16 j;
             for (j = 0; j < *(u16 *)(arr + 0x30); j++) {

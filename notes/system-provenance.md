@@ -243,3 +243,58 @@ conservative name stands.
 | `BMD_Bone::unk_04`, `unk_38` | Rebased, so pointers. Only `materialIds` at 0x34 has a reader (`Model::HideMaterial` / `ShowMaterial`). |
 | `BMD_Texture::unk_0c` | Not rebased, not read. |
 | `BMD_DisplayList::unk_00`, `unk_04` | `unk_04` is rebased, so a pointer; `unk_00` is not. |
+
+---
+
+## Stage — `include/Stage.h`
+
+`Stage` is the playable level scene, and it had no `unk_` fields of its own:
+the thirty this pass was pointed at all belonged to the `Particle::SysTracker`
+embedded at 0x50, which is the same class as `include/Particle.h` and is
+covered by the table at the top of this file. The two copies are kept identical
+by hand. (`include/Particle__SysTracker.h` is a third copy and still says
+`unk_`; nothing in this pass owns it.)
+
+What was left here was *padding* rather than `unk_`, and two runs of it turned
+out to be real structure.
+
+### 0x8bc — eight texture-animation slots
+
+Was `pad_8bc[0x60]`, and four functions were walking it by hand with a 0xc
+stride. It is an array of eight `StageTexAnimSlot`, one per entry of the
+level's texture-animation table (`data_0209f340`):
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x00 | `mTransformer` | `Stage::LoadTextureTransformers` news a 0x14-byte `TextureTransformer`, constructs it, stores it here and calls `SetFile` on it; `Stage::RenderModel` passes it to `TextureTransformer::Update`; `Stage::CleanupResources` destroys it through its vtable. |
+| 0x04 | `mActive` | Gates the slot in three places: `Stage::Render` only advances the animation when it is set, and `Stage::RenderModel` and `Stage::RenderModelTransparent` both use it to decide whether that part's materials get the transparent bit or lose it. |
+| 0x08 | `mBlockList` | `Stage::CleanupResources` walks it as a singly linked list, freeing each block and following the next pointer at the block's `+0x0c` — which is inside the *block*, not the slot; the slot's own stride is 0xc. |
+
+Three private redeclarations of this record existed —
+`struct Slot` in `Stage::RenderModel`, `struct AnimSlot` in `Stage::Render`,
+and raw `char *` arithmetic in `Stage::CleanupResources`,
+`Stage::RenderModelTransparent` and `Stage::LoadTextureTransformers`. All but
+`Stage::Render`'s (which carries its own full shadow of `Stage` and is a larger
+change) now use the header type. Every one re-verified byte-identical.
+
+### 0x9c4 — the two-phase load latch
+
+Was inside `pad_9c0[0x8]`, reached as `*(s32*)((char*)thiz + 0x9c4)`.
+`Stage::InitResources` runs its entire first block only while it is zero, sets
+it to 1 at the end of that block when `data_0209fc68` says a wait is needed,
+and then — on this call and every later one — returns -1 while
+`func_020308a8()` reports the load unfinished. That is a "call me again" latch,
+so the field is `mWaitingForLoad`. `Stage::InitResources` itself carries a
+local shadow of the class and still spells it as a raw poke; the header now
+names the field for anything that includes it.
+
+`skyboxModel` became `mSkyboxModel`, for the `m`-prefix convention the rest of
+the class already follows.
+
+### A side effect worth recording
+
+`build/eligible-names.txt` gained one entry across this pass and lost none:
+`_ZN5Model17UpdateFileOffsetsER8BMD_File` became eligible once the raw
+`*(int *)(m + 4)` pokes in it were replaced by the `BMD_DisplayList` /
+`BMD_DisplayListGroup` field accesses. Collapsing a shadow onto a real type is
+not only a readability change; it can move a file across the eligibility gate.

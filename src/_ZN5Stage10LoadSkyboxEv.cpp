@@ -7,7 +7,7 @@
  * This file used to declare its own `struct Stage { char pad[0x9bc]; Model* }`
  * and its own `struct Model { char data[0x50]; }` -- two shadow types that
  * between them encoded the entire layout claim this slice moves into
- * include/Stage.h. It is the reason `skyboxModel` is typed there: the store here
+ * include/Stage.h. It is the reason `mSkyboxModel` is typed there: the store here
  * and the virtual destroy in CleanupResources are the two ends of the evidence.
  *
  * The `new` is spelled as the raw _Znwj call rather than as `new Model` because
@@ -32,7 +32,7 @@ void Stage::LoadSkybox()
     if (model != 0) {
         model = (Model *)_ZN5ModelC1Ev(model);
     }
-    skyboxModel = model;
+    mSkyboxModel = model;
     u16 fileID = data_02075620[skyboxID - 1];
-    _ZN5Model14LoadAndSetFileEtii(skyboxModel, fileID, 0, 2);
+    _ZN5Model14LoadAndSetFileEtii(mSkyboxModel, fileID, 0, 2);
 }
