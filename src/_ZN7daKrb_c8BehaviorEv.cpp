@@ -66,9 +66,9 @@ int daKrb_c::Behavior()
                 v1.y = 0x6c000;
                 v1.z = 0;
                 _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(((char*)this), &v1);
-                mPosX = unk_41c;
-                mPosY = unk_420;
-                mPosZ = unk_424;
+                mPosX = mHomePos.x;
+                mPosY = mHomePos.y;
+                mPosZ = mHomePos.z;
                 mAngleX = 0;
                 mAngleY = 0;
                 mAngleZ = 0;
@@ -132,13 +132,13 @@ int daKrb_c::Behavior()
 
     if (mDeathState == 0 && mState != 2 && mState != 3) {
         if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(((char*)this), ((char*)this) + 0x1b4, 0x32000, 0x1f49, 0, 1, 0x32000) != 0) {
-            mPosX = unk_410;
-            mPosY = unk_414;
-            mPosZ = unk_418;
+            mPosX = mSafePos.x;
+            mPosY = mSafePos.y;
+            mPosZ = mSafePos.z;
         } else {
-            unk_410 = mPosX;
-            unk_414 = mPosY;
-            unk_418 = mPosZ;
+            mSafePos.x = mPosX;
+            mSafePos.y = mPosY;
+            mSafePos.z = mPosZ;
         }
     }
 
@@ -166,13 +166,13 @@ int daKrb_c::Behavior()
     if (mState == 0) {
         int b = (mFlags & 8) ? 1 : 0;
         if (b == 0) {
-            if (Vec3_Dist((Vector3*)((char*)&mPosX), (Vector3*)((char*)&unk_428)) < 0xa000) {
+            if (Vec3_Dist((Vector3*)((char*)&mPosX), &mStuckCheckPos) < 0xa000) {
                 *(u16*)((char*)&mStuckTimer) += 1;
                 if (mCapId < 6 && mStuckTimer == 0x1e) {
                     func_ov084_02129c9c(((char*)this));
-                    unk_458 = 0x5a;
+                    mTimer458 = 0x5a;
                 }
-                if (mStuckTimer >= 0x12c && unk_458 == 0) {
+                if (mStuckTimer >= 0x12c && mTimer458 == 0) {
                     func_ov084_021296cc(((char*)this));
                     _ZN12dEnemyBase_c9SpawnCoinEv(((char*)this));
                     func_ov084_02129498(((char*)this));
@@ -180,23 +180,23 @@ int daKrb_c::Behavior()
                     v2.y = 0x6c000;
                     v2.z = 0;
                     _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(((char*)this), &v2);
-                    mPosX = unk_41c;
-                    mPosY = unk_420;
-                    mPosZ = unk_424;
+                    mPosX = mHomePos.x;
+                    mPosY = mHomePos.y;
+                    mPosZ = mHomePos.z;
                     _ZN11dCapEnemy_c15RespawnIfHasCapEv(((char*)this));
                     return 1;
                 }
             } else {
                 mStuckTimer = 0;
-                unk_428 = mPosX;
-                unk_42c = mPosY;
-                unk_430 = mPosZ;
+                mStuckCheckPos.x = mPosX;
+                mStuckCheckPos.y = mPosY;
+                mStuckCheckPos.z = mPosZ;
             }
             goto done;
         }
     }
 
-    if (unk_458 == 0)
+    if (mTimer458 == 0)
         mStuckTimer = 0;
 done:
     return 1;
