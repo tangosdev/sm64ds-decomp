@@ -331,6 +331,34 @@ void  func_ov006_020f9994(char *thiz, int event);  /* slot 1 the update  */
 /* the factory */
 void *MgPairAGoneAndOn_Spawn(void);
 
+/* ---- THE LOOP TRACE, SM64DS_MC2_TRACE=1 (run mg12 lane CRD) -------------
+   Diagnostic only. Every global the class's state-3 loop reads or writes,
+   printed once a frame, so a deadlock can be READ rather than reasoned about.
+   Names are the plain C spellings the mount defines; the widths are the ones
+   the ROM's own ldr/ldrsh/ldrb use at each address. */
+extern int           data_ov006_0213d700;     /* the dealt-card sweep, Fix12 */
+extern short         data_ov006_0213d6f8;     /* board height (cards)        */
+extern short         data_ov006_0213d6f4;     /* cards left                  */
+extern int           data_ov006_0213d6fc;     /* the "input armed" flag      */
+extern short         data_ov006_0214255c;     /* the clear animation counter */
+extern short         data_ov006_02142558;     /* the pair timer              */
+extern short         data_ov006_02142560;
+extern short         data_ov006_02142564;
+extern char         *data_ov006_02142568;
+extern char         *data_ov006_0214256c;
+extern char         *data_ov006_02142570;     /* first selected card         */
+extern char         *data_ov006_02142574;     /* second selected card        */
+extern char         *data_ov006_02142578;
+extern char         *data_ov006_0214257c;     /* the live card list head     */
+extern int           data_ov006_02142580[];   /* the ten face weights        */
+extern unsigned char data_020a0de8[];         /* stylus: touched             */
+extern unsigned char data_020a0de9[];         /* stylus: edge                */
+extern unsigned char data_020a0dea[];         /* stylus: x                   */
+extern unsigned char data_020a0deb[];         /* stylus: y                   */
+extern int           data_020a0e40[];         /* the local player index      */
+int  func_ov006_020f95f0(void);               /* "the board has settled"     */
+int  func_ov006_020f96e0(void);               /* "a matching pair exists"    */
+
 /* the framework's dispatch witness, from unmatched/MgBase_StateDispatch.cpp */
 void  port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
 
@@ -395,8 +423,53 @@ static int  __fastcall mc2_init(void *s, void *)
    existing caller of slot 3 in this port already uses. */
 static int  __fastcall mc2_clean(void *s, void *)
 { MC2(3);  return func_ov006_020f9fe0(s); }
+/* SM64DS_MC2_TRACE=1: the state-3 loop, once a frame. Section CRD. */
+static int  g_mc2_trace = -1;
+static void mc2_trace(const char *when, const char *self)
+{
+    if (g_mc2_trace < 0) {
+        const char *e = std::getenv("SM64DS_MC2_TRACE");
+        g_mc2_trace = (e && *e && *e != '0') ? 1 : 0;
+    }
+    if (!g_mc2_trace) return;
+    const int idx = data_020a0e40 ? (int)((unsigned char *)data_020a0e40)[0] : 0;
+    std::printf("[mc2] %-3s tick %u state %d step %d sweep %d (%d) "
+                "h6f8 %d left6f4 %d armed6fc %d clr255c %d timer2558 %d "
+                "sel %p/%p head %p settled %d pair %d "
+                "touch %u/%u @%u,%u\n",
+                when, g_mc2_hits[6],
+                self ? *(const short *)(self + 0x5928) : -1,
+                self ? *(const short *)(self + 0x592e) : -1,
+                data_ov006_0213d700, data_ov006_0213d700 >> 12,
+                (int)data_ov006_0213d6f8, (int)data_ov006_0213d6f4,
+                data_ov006_0213d6fc, (int)data_ov006_0214255c,
+                (int)data_ov006_02142558,
+                (void *)data_ov006_02142570, (void *)data_ov006_02142574,
+                (void *)data_ov006_0214257c,
+                func_ov006_020f95f0(), func_ov006_020f96e0(),
+                (unsigned)data_020a0de8[idx * 4], (unsigned)data_020a0de9[idx * 4],
+                (unsigned)data_020a0dea[idx * 4], (unsigned)data_020a0deb[idx * 4]);
+    /* the whole card array, so a tap plan can be computed from a run */
+    if (self && when[0] == 'i' && (g_mc2_hits[6] % 5) == 0) {
+        for (int i = 0; i < 0x28; ++i) {
+            const char *r = self + 0x51a8 + i * 0x30;
+            std::printf("[mc2]     card %d state %u key %d face %u pos %d,%d "
+                        "vis %u\n", i,
+                        (unsigned)(unsigned char)r[0x2d],
+                        (int)*(const short *)(r + 0x2a),
+                        (unsigned)(unsigned char)r[0x2c],
+                        *(const int *)(r + 0x0c) >> 12,
+                        *(const int *)(r + 0x10) >> 12,
+                        (unsigned)(unsigned char)r[0x2e]);
+        }
+    }
+    std::fflush(stdout);
+}
+
 static int  __fastcall mc2_beh(void *s, void *)
-{ MC2(6);  return func_ov006_020fa13c(s); }
+{ MC2(6);  mc2_trace("in", (const char *)s);
+  const int r = func_ov006_020fa13c(s);
+  mc2_trace("out", (const char *)s); return r; }
 static int  __fastcall mc2_render(void *s, void *)
 { MC2(9);  return func_ov006_020f9ffc((char *)s); }
 static void *__fastcall mc2_d2(void *s, void *)

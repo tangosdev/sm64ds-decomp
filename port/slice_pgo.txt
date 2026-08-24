@@ -230,6 +230,110 @@
 # 25 delink blocks with the one gap filled). The delinks join was run over every
 # callee of every override as well and it is clean.
 #
+# ---- RUN mg12 LANE CRD: THE "STATE 3 DEADLOCK" DOES NOT EXIST -------------
+#
+# Run mg11's triage recorded scene 382 as a NEW BUG, "deadlock at state 3", and
+# derived a closed loop for it: the state-3 exit needs func_ov006_020f95f0 true,
+# which needs the sweep data_ov006_0213d700 to reach the board height
+# data_ov006_0213d6f8; the sweep is board_step * 5 << 12 with the step at
+# +0x592e pinned at 0; and the play arm forces data_ov006_0213d6fc to 0, which
+# is the first-line early-out of the selection test func_ov006_020f9bec. Every
+# figure in that derivation is real. THE LOOP IS NOT.
+#
+# TWO MEASUREMENTS RETIRE IT, and the second is the one that matters.
+#
+#   1. THE BYTE GATE. tools/match.py at 2004/b56 with STRICT RELOCS, against
+#      the ROM's own bytes rather than a rebuild
+#
+#          --bin extracted/overlays/overlay_0006.bin --base 0x020bfec0
+#          --module ov006
+#
+#      over EVERY body in this class's code block 0x020f8ef4..0x020fa75c:
+#      TWENTY-FOUR OF TWENTY-FIVE MATCH. The one that does not is slot 19
+#      (func_ov006_020fa3d0), the NONMATCHING TU this file already accounts
+#      for, and it is not in the tap loop. A matching body cannot be wrong
+#      about the ROM: the compiled bytes ARE the ROM's bytes, and strict-reloc
+#      mode proves every call and global DESTINATION on top of that. The same
+#      sweep over the sibling's block 0x020f7634..0x020f8ef4 reads 25 of 25.
+#      So no src statement in either class diverges, and the search for one
+#      was over before it started.
+#
+#   2. THE RUN, READ RATHER THAN REASONED ABOUT. hal/scene_mg_mcarlo2.cpp now
+#      carries SM64DS_MC2_TRACE, which prints every global the state-3 loop
+#      touches once a frame plus the whole forty-record card array. On an
+#      unattended boot, from tick 300 onward:
+#
+#          state 3, sweep 20, height 40, SETTLED 1, ARMED 1, pair-exists 1
+#
+#      The board IS settled and input IS armed. The triage's arithmetic came
+#      from case 2's `sweep = step * 5 << 12`, which does not run in state 3 at
+#      all: in state 3 the sweep is driven by func_ov006_020f9000's else arm,
+#      ApproachLinear on the sweep toward min(height, 0x14) << 12 by 0x800 a
+#      frame, and it converges on 20 within forty frames of the deal. And the
+#      step reading 0 at exit is the step AFTER case 2 reset it on the frame it
+#      advanced the state, not a step that never moved.
+#
+# WHY THE TRIAGE'S PROBE MEASURED NOTHING, reproduced exactly on this tree: its
+# blind five-by-five grid was replayed byte for byte and gave the identical null
+# census: 49280 card updates and slot19 0, where 49280 is 20 x 2464 EXACTLY.
+# The denominator is 2464 and not the run's 2653 behaviour ticks, because the
+# first 189 ticks are the deal, when the sweep is still climbing and the update
+# loop runs sweep>>12 times rather than twenty. 2653 - 2464 = 189 is that deal.
+# Traced, the same taps read
+#
+#      40,36    misses      -- no card owns that column
+#      88,36    SELECTS the card at 80,0
+#      128,36   selects the card at 112,0, faces differ, both DESELECT
+#
+# The grid marches ROW BY ROW, not column by column: its generator loops y over
+# 36, 70, 104, 138, 168 on the OUTSIDE and x over 40, 88, 128, 168, 216 on the
+# inside, so five taps share a y before the y moves at all. And it never once
+# landed two ADJACENT SAME-FACE cards, which is the only thing that clears a
+# pair. Nothing
+# in the census it read -- updates per frame, the state index, slot19 -- can see
+# a select followed by a deselect, so a working game and a dead one print the
+# same numbers. THE INSTRUMENT WAS THE BUG.
+#
+# WHAT A TAP ACTUALLY DOES, measured on this tree. The card sprite is handed to
+# Hud_RenderSprite at x+0x18, y+0x18 (0x020f996c and 0x020f9974) and the hit
+# test at 0x020f9c6c accepts x+8..x+39 by y+1..y+48, so the hot box IS the drawn
+# card and a tap at the card's own centre selects it. Taps at 68,24 and 100,24
+# select cards 0 and 1, the 0x20 pair timer arms, the pair clears, the height
+# goes 40 to 38, the board redeals and re-settles with the step at 2.
+#
+# AND THE GAME PLAYS. _work/solve.py reads the board out of the trace and
+# appends the next tap pair, which works because the scene is deterministic and
+# a plan is a prefix of a longer plan. FORTY consecutive clears ran over 6700
+# frames with no fault, no UNHANDLED address, none of the 24 or the 7 trapping
+# sites entered, and exit 0. The cleared-card counter on the top screen reads 2
+# at frame 600 and 80 at frame 6600, which is two a clear and is the score.
+#
+# SLOT 19 IS STILL UNENTERED HERE AND THAT IS THE HONEST KIND OF ZERO, for a
+# reason this class's own message text states: "This game of Pair-a-Gone goes on
+# forever". State 3 advances to 4 in exactly one place -- the else arm, when
+# func_ov006_020f96e0 finds NO adjacent same-face pair left -- and the board is
+# always twenty cards on a five-by-four grid. That grid holds FIFTY-FIVE
+# adjacent position pairs under func_ov006_020f9cbc's own predicate, which is
+# `cmp r2,#2 / bge` at 0x020f9d34 for the column difference and `cmp r0,#2 /
+# movlt` at 0x020f9d44 for the row difference, both required under 2. The faces
+# filling them were COUNTED rather than guessed, off the trace dumps: FIVE
+# distinct faces on the opening deal, holding at five for the whole opening
+# stretch, and four to seven across the forty-clear run, out of
+# func_ov006_020f9560's TEN-entry weight table at data_ov006_0212e954 (0x28
+# bytes to the next config symbol, so ten ints). So a stuck board is a rare tail
+# event by construction rather than a state the game walks into, and the mode's
+# end for a player is leaving the minigame rather than finishing it. The
+# sibling's round DOES end, and lane CRD's proof of these states therefore lives
+# on scene 381, where slot 19 is entered 131 times through the same shapes.
+#
+# AN EARLIER REVISION OF THIS PARAGRAPH SAID "about sixty adjacent positions
+# drawn from eight or more faces" AND NEITHER HALF HAD BEEN COUNTED. The error
+# ran in the safe direction and the conclusion survives it a fortiori: FEWER
+# faces over the same fifty-five positions makes a matching adjacent pair MORE
+# likely, not less, so the stuck board slot 19 waits on is rarer than the
+# sentence claimed and its zero is more firmly an honest one. Corrected anyway,
+# because a figure nobody counted is a claim about the tree and not a fact.
+#
 # ---- WHAT IS NOT IN THIS SLICE AND WHY ------------------------------------
 #
 # HOST-COPIED ELSEWHERE, and listing any of them here would be an LNK2005

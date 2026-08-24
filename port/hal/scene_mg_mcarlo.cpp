@@ -274,6 +274,26 @@ void  func_ov006_020f7ee4(char *thiz, int event);  /* slot  1 the update */
 /* the factory */
 void *func_ov006_020f8e44(void);
 
+/* ---- THE LOOP TRACE, SM64DS_MC_TRACE=1 (run mg12 lane CRD) --------------
+   The sibling of hal/scene_mg_mcarlo2.cpp's SM64DS_MC2_TRACE, same globals one
+   class over: 0x0213d564/6c/70/74 here for 0x0213d6fc/f4/f8/700 there. */
+extern int           data_ov006_0213d574;     /* the dealt-card sweep, Fix12 */
+extern int           data_ov006_0213d570;     /* board height (cards)        */
+extern int           data_ov006_0213d56c;     /* cards left                  */
+extern int           data_ov006_0213d564;     /* the "input armed" flag      */
+extern short         data_ov006_021424ec;     /* the pair timer              */
+extern int           data_ov006_021424f4;     /* the clear animation counter */
+extern char         *data_ov006_021424fc;     /* first selected card         */
+extern char         *data_ov006_02142508;     /* second selected card        */
+extern char         *data_ov006_02142500;     /* the live card list head     */
+extern unsigned char data_020a0de8[];
+extern unsigned char data_020a0de9[];
+extern unsigned char data_020a0dea[];
+extern unsigned char data_020a0deb[];
+extern int           data_020a0e40[];
+int  func_ov006_020f7a90(void);               /* "the board has settled"     */
+int  func_ov006_020f7b90(void);               /* "a matching pair exists"    */
+
 /* the framework's dispatch witness, from unmatched/MgBase_StateDispatch.cpp */
 void  port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
 
@@ -334,8 +354,52 @@ static int  __fastcall mca_init(void *s, void *)
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly. */
   hal_gapless_minigames_latch(); return r; }
+/* SM64DS_MC_TRACE=1: the state-3 loop, once a frame. Section CRD. */
+static int  g_mca_trace = -1;
+static void mca_trace(const char *when, const char *self)
+{
+    if (g_mca_trace < 0) {
+        const char *e = std::getenv("SM64DS_MC_TRACE");
+        g_mca_trace = (e && *e && *e != '0') ? 1 : 0;
+    }
+    if (!g_mca_trace) return;
+    const int idx = data_020a0e40 ? (int)((unsigned char *)data_020a0e40)[0] : 0;
+    std::printf("[mc1] %-3s tick %u state %d step %d sweep %d (%d) "
+                "h570 %d left56c %d armed564 %d clr24f4 %d timer24ec %d "
+                "sel %p/%p head %p settled %d pair %d "
+                "touch %u/%u @%u,%u\n",
+                when, g_mca_hits[6],
+                self ? *(const short *)(self + 0x60a8) : -1,
+                self ? *(const short *)(self + 0x60ae) : -1,
+                data_ov006_0213d574, data_ov006_0213d574 >> 12,
+                data_ov006_0213d570, data_ov006_0213d56c,
+                data_ov006_0213d564, data_ov006_021424f4,
+                (int)data_ov006_021424ec,
+                (void *)data_ov006_021424fc, (void *)data_ov006_02142508,
+                (void *)data_ov006_02142500,
+                func_ov006_020f7a90(), func_ov006_020f7b90(),
+                (unsigned)data_020a0de8[idx * 4], (unsigned)data_020a0de9[idx * 4],
+                (unsigned)data_020a0dea[idx * 4], (unsigned)data_020a0deb[idx * 4]);
+    if (self && when[0] == 'i' && (g_mca_hits[6] % 5) == 0) {
+        for (int i = 0; i < 0x50; ++i) {
+            const char *r = self + 0x51a8 + i * 0x30;
+            std::printf("[mc1]     card %d state %u key %d face %u pos %d,%d "
+                        "vis %u\n", i,
+                        (unsigned)(unsigned char)r[0x2d],
+                        (int)*(const short *)(r + 0x2a),
+                        (unsigned)(unsigned char)r[0x2c],
+                        *(const int *)(r + 0x0c) >> 12,
+                        *(const int *)(r + 0x10) >> 12,
+                        (unsigned)(unsigned char)r[0x2e]);
+        }
+    }
+    std::fflush(stdout);
+}
+
 static int  __fastcall mca_beh(void *s, void *)
-{ MCA(6);  return func_ov006_020f869c(s); }
+{ MCA(6);  mca_trace("in", (const char *)s);
+  const int r = func_ov006_020f869c(s);
+  mca_trace("out", (const char *)s); return r; }
 static int  __fastcall mca_render(void *s, void *)
 { MCA(9);  return func_ov006_020f85b0((char *)s); }
 static void *__fastcall mca_d2(void *s, void *)
