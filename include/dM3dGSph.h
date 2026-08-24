@@ -29,11 +29,11 @@
  *
  * PROMOTED to a real polymorphic class (Phase 2c of notes/collision-system.md):
  * under C++ the vptr is placed implicitly by the virtual declaration, and the
- * constructor is DECLARED here and DEFINED in src/_ZN8dM3dGSphC1Ev.cpp as real
- * C++ -- its ROM body is exactly the one synthesized vptr store. The
- * destructor is defined out of line as real C++; objisolate retains D1 and
- * strips its compiler-generated D0/D2 siblings, which remain separately
- * enrolled at their ROM addresses.
+ * constructor is declared here and defined as real C++ in separately enrolled
+ * C1 and C2 files -- each ROM body is exactly the synthesized vptr store. The
+ * destructor is also defined out of line as real C++; objisolate retains the
+ * selected ABI variant while its siblings remain enrolled at their own ROM
+ * addresses.
  *
  * The C branch keeps an explicit vptr word because check_header_offsets.py
  * reads these structs without modelling the implicit one; the size assert
@@ -52,8 +52,8 @@ struct dM3dGSph {
      * implicitly at 0x00. */
     virtual ~dM3dGSph();
 
-    /* DECLARED, never defined in this header; the definition lives in
-     * src/_ZN8dM3dGSphC1Ev.cpp. */
+    /* Declared here and defined out of line so each constructor ABI variant can
+     * be isolated at its own ROM address. */
     dM3dGSph();
 };
 
