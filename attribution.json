@@ -549,6 +549,8 @@
     "src/_ZN5dBgPcD2Ev.c": "tangosdev",
     "src/_ZN5dBgPiC1Ev.cpp": "tangosdev",
     "src/_ZN5dBgPiD0Ev.c": "tangosdev",
-    "src/_ZN5dBgPiD1Ev.cpp": "tangosdev"
+    "src/_ZN5dBgPiD1Ev.cpp": "tangosdev",
+    "src/_ZN8dM3dGSphD0Ev.c": "tangosdev",
+    "src/_ZN8dM3dGSphD1Ev.cpp": "tangosdev"
   }
 }

@@ -1,2 +1,7 @@
-extern int _ZTV8dM3dGSph[];
-void func_0203ac50(int *p) { p[0] = (int)_ZTV8dM3dGSph; }
+//cpp
+// @symbol _ZN8dM3dGSphD1Ev
+#include "dM3dGSph.h"
+
+dM3dGSph::~dM3dGSph()
+{
+}
