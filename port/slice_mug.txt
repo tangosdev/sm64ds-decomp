@@ -609,7 +609,7 @@
 #                    alternatename 1897 scanned / 0 new defeats, gxband layout,
 #                    tailjump 97 assertions)
 #     canary 374     32557 / 32557 / 0 EXACT, exit 0
-#     battery        ALL GREEN -- 32 hosted scenes, 46 levels, all 20 smoke
+#     battery        ALL GREEN -- 32 hosted scenes, 46 levels, all 19 smoke
 #                    binaries, ptr_audit 0 unhosted code pointers
 #     linkage        7654 (67.8%) MEASURED on this tree. The base was not
 #                    re-measured, so no delta is claimed here; the only

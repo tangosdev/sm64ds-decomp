@@ -3578,11 +3578,14 @@ shifted. That is the near-miss the banked row
 (nearmiss/db.jsonl, run `fable-hardmatch-20260801`) sat on at 101/110.
 
 **Everything placement-shaped is inert on it,** and this was measured rather than
-assumed (a bogus pragma name as the 6as control, and four pragmas that DO move the
-output as the positive control): all ~60 `opt_*` pragmas on and off, all 24
-declaration orders, all 25 installed mwccarm builds, the whole `-O`/`-opt` flag range,
-a 378-variant loop/access/dividend grid, 23 further access spellings, the explicit
-hand-written row pointer in three initialiser spellings, and the u64 launder in six.
+assumed: 61 pragma names (every `opt_*` in notes/mwccarm-pragmas.txt that takes no
+numeric argument, plus `peephole` and `optimize_for_size`) in both directions, 123
+compiles, none of which beat the baseline; a bogus pragma name as the 6as control;
+and twelve names that DO move the output, all in the worse direction, as the
+positive control. Then all 24 declaration orders, all 25 installed mwccarm builds,
+the whole `-O`/`-opt` flag range, a 378-variant loop/access/dividend grid, 23
+further access spellings, the explicit hand-written row pointer in three initialiser
+spellings, and the u64 launder in six.
 
 **Why they are inert.** The decision is not LICM's. A controlled pair - the same
 function with only the struct pad and the inner loop's start index changed - shows it:
