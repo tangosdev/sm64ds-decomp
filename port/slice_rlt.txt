@@ -1,0 +1,492 @@
+# slice_rlt.txt -- dScMgRoulette_c, actor id 0x17f = scene 383, "Mushroom
+# Roulette". Run mg11, lane RLT.
+#
+# Worktree C:/tmp/mBb, branch mg11-rlt, base 98a4c0e8f, private build
+# C:/tmp/mBb/build/port with CMAKE_HOME_DIRECTORY verified C:/tmp/mBb/port.
+# Baseline gate on that tree BEFORE a line was edited: build green with every
+# post-link guard passing, battery ALL GREEN over 23 hosted scenes, linkage
+# 7121/11293 (63.1%), ptr_audit 0 unhosted code pointers, and the curling
+# canary on scene 374 reporting 32557 call(s) / 32557 routed / 0 UNHANDLED.
+#
+# ===========================================================================
+# 1. THE IDENTITY, ALL OF IT OUT OF THE ROM
+# ===========================================================================
+#
+#   class          dScMgRoulette_c
+#   SpawnInfo      0x0213e2f0  MgMushroomRoulette_SpawnInfo
+#   factory        0x0210a400  MgMushroomRoulette_Spawn, 0xac
+#   vtable         0x0213e39c  36 slots, 14 overrides, 11 markers, 0 nosrc
+#   object size    0x5400
+#   code block     0x0210788c .. 0x0210a4ac   41 symbols, ALL with a src TU
+#   data span      0x0213e2dc .. 0x0213e42c
+#   .init ctor     NONE -- see section 5
+#   state index    +0x53e6, zeroed by slot 18 and switched on by slots 6 and 19
+#
+# THE CLASS NAME IS THE ROM'S OWN and it is the type_info chain rather than a
+# src spelling, which port/mg_fanout_costs.txt section 14 prescribes as the
+# stronger witness (a per-TU placeholder can be wrong, a relocation cannot):
+#
+#   relocs.txt  from:0x0213e398 kind:load to:0x0213e300 module:overlay(6)
+#   0x0213e300  { 0x0209a764, 0x0213e30c, 0x0213bc64 }
+#   0x0213e30c  "15dScMgRoulette_c"        in overlay_0006.bin at base 0x020bfec0
+#
+# The word immediately before a class's vtable is its type_info; that record's
+# second word is the name and its THIRD is the base's type_info. 0x0213bc64's
+# own name string at 0x0213bd00 reads "19dScMgSingle3DBase_c", so the hierarchy
+# is stated by the compiler:
+#
+#     Scene -> dScMgBase_c         data_ov004_020bc0c0  36 slots
+#           -> dScMgSingle3DBase_c data_ov006_0213e448  36  ovr 8, mark 6
+#           -> dScMgRoulette_c     data_ov006_0213e39c  36  ovr 14, mark 11
+#
+# and it is stated twice more by code: the factory writes 0x0213e448 into the
+# object's first word and then 0x0213e39c over it (0x0210a428 and 0x0210a43c),
+# and slots 16 and 17 unwind them in the opposite order. This is the FIFTH
+# class the port seats under dScMgSingle3DBase_c, after the flower, memory2,
+# luckystars and mcarlo rows.
+#
+# THE PLAYER TITLE IS DERIVED, NOT ASSUMED, through run mg9 lane S371's BMG
+# chain, and this class is one of the twenty-five where the chain has a config
+# spawn symbol to be CONTROLLED against rather than only to produce a name:
+#
+#   ov005 row 13  (hal/scene_mg_sound.cpp, id=0x017f -- the ONLY row for this
+#                  id, so section 17's first-match-by-position caveat does not
+#                  apply here)
+#   param         0x00090d00
+#     (param >> 8)  & 0xff = 0x0d = 13   save record data_0209caf4[13]
+#     (param >> 16) & 0xff = 0x09 =  9   name-text id
+#     (param      ) & 0xff = 0x00        the vtable-slot-35 boolean, 0
+#   text 9    -> data_ov004_020bc070[9] = 557
+#   BMG 557   -> "Mushroom Roulette\n\nGuess where the ball will land on the
+#                 roulette wheel.\nGuess correctly to win coins!"
+#
+# decoded from NitroFS file 643 (data/message/msg_data_eng.bin) with
+# tools/message_bank.py. The config's own MgMushroomRoulette_Spawn agrees, and
+# the ROM's rules text is the reason the run's own numbers are read the way
+# section 6 reads them: there is a WHEEL and there is a BALL.
+#
+# ===========================================================================
+# 2. THE WIDTH IS 36, CHECKED FOUR WAYS
+# ===========================================================================
+#
+# port/mg_fanout_costs.txt section 11 measured that twelve of twenty-nine
+# widths in its own table were phantoms, and that a 37-slot fill writes a host
+# thunk over live ROM data belonging to another class. Both new tables went
+# through all three of its checks plus the fourth that section 19 added:
+#
+#   1. SPAN. config/arm9/overlays/ov006/symbols.txt: data_ov006_0213e39c ->
+#      data_ov006_0213e42c is 0x90 = 36 words, so a 37th slot cannot exist
+#      inside the table. The span REFUSES 37. (For the middle table,
+#      0x0213e448 -> 0x0213e4d8 is 0x90 = 36, the same reading four earlier
+#      lanes made.)
+#   2. TERMINAL SLOT. Slot 35 of both tables holds ov004's 0x020ad660, the
+#      family terminator every dScMgBase_c-derived table carries unless it
+#      overrides it (0x173 is the one exception in the family and it is a
+#      different class).
+#   3. WHAT THE WORD IS. Index 36 of the derived table reads 0x000000c2 and the
+#      three words after it read 0xc4, 0xbf, 0xc0 -- a small-integer table, not
+#      a code address. Index 36 of the middle table is 0x050a0a0f, the first
+#      word of data_ov006_0213e4d8, which is the reading the flower lane made.
+#   4. THE RELOCATION SET, which is the cheapest of the four and cannot be
+#      fooled by a word that happens to look like a code address. Exactly 36
+#      load relocations have a source in the half-open range 0x0213e39c up to
+#      0x0213e42c -- first 0x0213e39c, last 0x0213e428 -- and there is NO
+#      relocation row at 0x0213e42c. A vtable slot is a relocated word by
+#      construction.
+#
+# THE BRACKET TRAP BIT THIS FILE WHILE IT WAS BEING WRITTEN, and the paragraph
+# above is where it bit. The sentence originally spelled that range with a
+# mathematical half-open bracket, one open square bracket and no close.
+# port/CMakeLists.txt reads this file with CMake's file(STRINGS), which treats
+# an unbalanced open square bracket as the start of a bracket argument: every
+# line from there to the end of the file collapsed into ONE list element with
+# the newlines turned into semicolons, so the loop that skips comment lines saw
+# a single non-comment element that was not a path, appended nothing, and the
+# build compiled the seat with an EMPTY SLICE. It failed loudly (twelve
+# LNK2019s naming this class's own bodies) rather than quietly, which is luck
+# rather than design. Run mg9 lanes S381 and S364 both recorded this trap; it
+# is recorded here a third time because the failure it produces names the
+# symbols and not the cause. KEEP SQUARE BRACKETS BALANCED IN A SLICE COMMENT.
+#
+# THE FIFTH CHECK (run mg9 lane LKY's relocation STRIDE) IS NOT QUOTED HERE.
+# Section 11 recalibrated it as an upper bound that fails in the GRANTING
+# direction, and it agrees with the span on this table anyway; a check that can
+# only confirm adds nothing once four independent ones have answered.
+#
+# THE OVERRIDE AND MARKER COLUMNS RECONSTRUCT EXACTLY. Against dScMgBase_c's
+# own table at 0x020bc0c0, this table differs at slots
+#
+#     0, 2, 3, 5, 6, 7, 9, 10, 16, 17, 18, 19, 26, 33      = 14 overrides
+#
+# of which SIX (2, 5, 7, 10, 26, 33) hold dScMgSingle3DBase_c's bodies and
+# EIGHT are this class's own. Eleven of the fourteen src TUs carry the
+# "recovered from vtable slot identity" marker and none of the fourteen is
+# missing a src file, which is the 14 / 11 / 0 row section 3 of
+# port/mg_fanout_costs.txt prints and which port/tools/vtablerows.py
+# --reconstruct reproduces.
+#
+# ===========================================================================
+# 3. THE SIX ROM ADJUDICATIONS THIS LANE OWED, AND THE FIVE IT DID NOT
+# ===========================================================================
+#
+# Eleven marker-carrying bodies, of which the five that belong to
+# dScMgSingle3DBase_c (0x0210a6e4, 0x0210a608, 0x0210a698, 0x0210a664,
+# 0x0210a600) were already ruled REAL_DECOMP by earlier lanes and are in
+# port/tools/inferred_stub_adjudicated.txt several times over. The SIX this
+# class owns were disassembled out of extracted/overlays/overlay_0006.bin at
+# base 0x020bfec0 (the shipped image, never a dsd export) and compared with
+# src instruction for instruction before a face row was written. All six rule
+# REAL DECOMP, 0 guesses. Per-body evidence is appended to that file.
+#
+# THE BASE WAS PROVEN FIRST, on the control run mg10 lane F371 established:
+# func_ov006_020d1170 and _020d1188 reproduce the six-instruction mode
+# predicates instruction for instruction, `cmp r0,#1` and `cmp r0,#2`.
+#
+# EVERY COUNT CLOSES AS instructions + pool = size/4:
+#
+#   0x0210980c  0x28  = 10 words   9 instructions + 1 pool  (0x0000530c)
+#   0x02107920  0xa8  = 42 words  33 instructions + 9 pool
+#   0x021095cc  0xfc  = 63 words  57 instructions + 6 pool
+#   0x021096c8  0x144 = 81 words  77 instructions + 4 pool
+#   0x0210a194  0x26c = 155 words 144 instructions + 11 pool
+#   0x02109834  0x26c = 155 words 138 instructions + 17 pool
+#
+# ===========================================================================
+# 4. THE FACTORY DROPS THE RECEIVER, AND IT IS THE SECOND AND LAST ONE
+# ===========================================================================
+#
+# port/unmatched/MgCup_Factory.cpp, the same repair for dScMgCup_c, says:
+# "Exactly TWO drop it -- this one and src/MgMushroomRoulette_Spawn.cpp (id
+# 0x17f, not seated)". This lane seats 0x17f and
+# port/unmatched/MgRoulette_Factory.cpp is the other half, so the family's
+# dropped-receiver factory set is closed. The ROM at 0x0210a410 is
+# `movs r4,r0` and at 0x0210a418 `bl 0x20b2adc` with nothing between them, so
+# r0 still holds the object; src transcribes that as `func_ov004_020b2adc();`
+# and on the host the callee reads [esp+4] and WRITES THREE VTABLE WORDS
+# THROUGH IT. The displacement ruling port/mg_fanout_costs.txt section 12
+# granted "whichever lane seats 361" is spent here for the other id it names,
+# with the reasoning in that file's header rather than repeated.
+#
+# ===========================================================================
+# 5. THE POINTER-TO-MEMBER WALL IS ONE TU AND ITS UNIVERSE IS TWO
+# ===========================================================================
+#
+# port/mg_fanout_costs.txt section 4 is explicit that neither a link nor a
+# `::*` sweep licenses the word "none", so four detectors were run and the
+# answer is not none.
+#
+#   - THE SOURCE, READ BEFORE THE FACE ARRAY WAS WIRED (section 14's practical
+#     rule). Slot 6 (src/func_ov006_02109aac.c) is a plain
+#     `switch (*(short *)(c + 0x53e6))` and slot 19 (src/func_ov006_021096c8.c)
+#     is the ROM's own `cmp r0,#9 / addls pc,pc,r0,lsl #2` ten-arm jump table
+#     on the same index. Neither is the wall.
+#   - A `::*` SWEEP over all 41 TUs in the class's code block: EXACTLY ONE,
+#     src/func_ov006_02107db8.cpp.
+#   - THE WORD-DECODE SCAN, for the third shape neither prescribed detector can
+#     see. Every word of 0x0210788c..0x0210a4ac was decoded looking for
+#     `add Rd,Rn,Rm,asr #1`: ONE site, 0x02107e30, inside that same TU. Five
+#     `blx Rn` sites exist in the block and all five are accounted for: two in
+#     func_ov006_02107d80 and one in func_ov006_02107db8 are Model virtual
+#     dispatches (section 6), 0x02107e44 is the member-pointer call itself, and
+#     0x0210a3c4 is slot 0's tail dispatch of vtable slot 18.
+#   - THE RELOCATION SET, which is a census rather than an absence and is one
+#     grep. In the class's whole .data span exactly THREE data words carry a
+#     relocation into its own code on top of the 36 vtable slots:
+#
+#         0x0213e2f0  -> 0x0210a400   the SpawnInfo's factory word
+#         0x0213e2e8  -> 0x021082fc   an mwcc pair {code, 0}
+#         0x0213e2f8  -> 0x02107ea8   an mwcc pair {code, 0}
+#
+# SO THE WHEEL'S STATE MACHINE IS TWO STATES AND THE UNIVERSE IS BOUNDED FROM
+# THE CONSUMERS. data_ov006_0213e2e8 is installed by func_ov006_02108508, which
+# vtable slot 18's func_ov006_02108524 calls; data_ov006_0213e2f8 by
+# func_ov006_021082c4, which state 0x021082fc itself calls. Those two literal
+# pool loads (from:0x02108520 and from:0x021082f8) are the ONLY relocations in
+# the whole overlay that name either pair. Both are routed in
+# port/unmatched/MgRoulette_WheelDispatch.cpp.
+#
+# NEITHER WRITER NEEDS A HOST COPY, which is section 4's rulebook corollary
+# applied rather than a shortcut: both spell the pair as two plain ints
+# (`struct S { int w[2]; }` and `struct Pair { int a, b; }`), which is eight
+# bytes on both machines, so the COPY was already right and only the CONSUMER
+# was wrong. Both stay in this slice.
+#
+# NO OVERLAY CONSTRUCTOR TOUCHES THIS CLASS AT ALL, and that is measured rather
+# than assumed: not one relocation whose source lies in ov006's .init range
+# (0x0212f4c4..0x0213356c) lands anywhere in this class's code block or its
+# data span. So there is no .bss dispatch table, stategen has no constructor to
+# read, and the registry-row ordering rule of section 11 is obeyed here rather
+# than relied on.
+#
+# THE FRAMEWORK'S WALL AND THE SHARED SUB-OBJECT'S ARE STILL PAID AND ARE
+# INHERITED. This class reaches func_ov004_020b87e0 through dScMgBase_c like
+# every sibling, and vtable slot 6 calls func_ov006_020c19d0 on this+0x4f38
+# every frame -- the shared model sub-object's FIELD member pointer, routed by
+# port/unmatched/MgMemory2_FieldPmf.cpp, which is already in the build. The
+# seat prints both chains' counts rather than folding them into its own.
+#
+# ===========================================================================
+# 6. TWO SHADOW-CLASS DEFECTS, BOTH ON THE WHEEL'S TWO MODELS
+# ===========================================================================
+#
+# The wheel object at this+0x530c holds two HOST C++ Model objects at +0x10 and
+# +0x60: MgMushroomRoulette_Spawn constructs them with _ZN5ModelC1Ev and vtable
+# slot 0's func_ov006_021085c0 hands them NitroFS files 0x21d and 0x21e through
+# ModelBase::SetFile. Two src TUs dispatch through them with LOCAL SHADOW
+# CLASSES, which is the wrong half of port/mg_fanout_costs.txt section 13's
+# test -- a shadow over a MOUNTED ROM table is correct because the port's fills
+# keep ROM word order, a shadow over an MSVC vtable is not:
+#
+#   src/func_ov006_02107d80.cpp   ROM slot 5, byte +0x14, TWICE, with a NULL
+#                                 scale. include/Model.h reads _ZTV5Model out
+#                                 of the ROM as (0 D1, 1 D0, 2 DoSetFile,
+#                                 3 UpdateVerts, 4 Virtual10, 5 Render), so
+#                                 this is Model::Render(0). MSVC folds D1 and
+#                                 D0, so the sixth MSVC word is one PAST Render
+#                                 -- off the end of the vtable.
+#                                 HOST COPY: MgRoulette_ModelRender_02107d80.cpp
+#   src/func_ov006_02107db8.cpp   ROM slot 3, byte +0xc, once -- UpdateVerts.
+#                                 The host's fourth word is Virtual10, which is
+#                                 __thiscall with one stack parameter and so
+#                                 returns `ret 4` off a stack the caller never
+#                                 pushed. That is the exact pair of failures
+#                                 MgMemory2_ShadowSlot_020c06dc.cpp measured.
+#                                 HOST COPY: MgRoulette_WheelDispatch.cpp, which
+#                                 also owns the member pointer above.
+#
+# WHICH CLASS THE OBJECTS ARE IS ESTABLISHED FROM THE CONSTRUCTOR rather than
+# guessed from the call, which is the discipline that file records. Both
+# dispatches stay VIRTUAL rather than qualified, for
+# MgFlower_ModelRender_020c3bf4.cpp's reason.
+#
+# ===========================================================================
+# 7. THE ELEMENT-VTABLE CHECK, ANSWERED BY MEASUREMENT
+# ===========================================================================
+#
+# Run mg9 lane S381's law: a factory-built record object can carry its OWN
+# mounted ROM vtable in word 0, invisible to every vtable-axis derivation. This
+# factory builds five 0x34-byte records at this+0x51a8 through func_020733a8
+# with element constructor func_ov006_0210a4ac and destructor
+# func_ov006_021079c8, and BOTH ARE ONE WORD OF 0xe12fff1e -- `bx lr` -- in the
+# shipped image. Nothing writes word 0 at construction; the only later writer
+# is slot 18's func_ov006_021092a0, which stores the plain fixed-point number
+# 0xc000 there. The two Models are host C++ objects with MSVC vptrs. So this
+# class fills THREE tables and there is no fourth, and the seat's census prints
+# the raw-DS-word count for all three.
+#
+# ===========================================================================
+# 9. WHAT IT COST, AND WHAT THE RUN SAYS
+# ===========================================================================
+#
+# WAVES: TWO, against the one-plus-an-alias-row shape section 14 of
+# port/mg_fanout_costs.txt predicts for a late lane. Wave 1 was twelve LNK2019s
+# naming this class's own bodies, and it was not a wall -- it was the bracket
+# trap of section 2 leaving the slice empty. With the slice actually read,
+# wave 1 is FOUR unresolved externals and wave 2 is none.
+#
+#     item                              predicted   measured
+#     -------------------------------   ---------   -------------------------
+#     link waves                                1   2 (one of them the trap)
+#     unresolved externals                      1   4, then 0
+#     ordinary /alternatename faces             -   4
+#     __thiscall faces                          -   0
+#     dispatching TUs to host-copy              5   1
+#     state entries to route                   25   2
+#     of those with no matched body             1   0
+#     host copies for other defects             -   2 (the factory, the draw)
+#     named traps stood                         -   0
+#     ordinary slice lines                      -   41
+#     registry rows                             1   1
+#     per-source -D rows                        -   0
+#
+# ZERO TRAPS AND ZERO FLOORS, and that is a measurement rather than an absence:
+# all 41 symbols in this class's code block have a matched src TU, and the
+# closure walk over the block's 269 relocations reaches nothing in ov006 that
+# does not. Two of the 41 have no delink block in
+# config/arm9/overlays/ov006/delinks.txt (func_ov006_02108b90 and
+# func_ov006_02108d28) -- a decomp-side observation recorded so it is not
+# re-derived as a mystery, exactly as run mg7 lane L370's row was; it costs the
+# port nothing, because the port slices a src file and does not need the block.
+#
+# NO PER-SOURCE -D ROW IS OWED, and that is a sweep rather than an absence: a
+# COFF short-name census for _VT, _VT0, _HEAP, _G0, _G1, _G2, _R0, _R1 and _R2
+# over ALL 45 objects this seat builds (41 slice lines plus the four host
+# files, every one of them located in the build tree by name rather than from a
+# hand-written list -- the run mg9 lane PSY correction) finds none.
+#
+# LINKAGE, measured on both ends by two builds of this same tree:
+#
+#     7121 / 11293 (63.1%)  ->  7162 / 11293 (63.4%)     +41
+#
+#   by module, the only row that moved:
+#
+#     module   total  linked  unlinked   linked
+#     ov006     1876    1222       654   65.1%     (was 1181, 63.0%)
+#
+#   arm9 1880 and ov002 1129 are unchanged on both ends, which is section 5 of
+#   port/mg_fanout_costs.txt holding again: this class added no ov004 line at
+#   all, and the arm9 half came back through /OPT:REF for free.
+#
+#   +41 IS THE SLICE LINE COUNT EXACTLY, and the DENOMINATOR DOES NOT MOVE
+#   because this lane adds no file under src/. The three displaced TUs were in
+#   no slice on the base, so nothing goes backwards; the displacement's price
+#   is the counterfactual +44 this slice would have reached with them.
+#
+# THE BOOT. SM64DS_SCENE=383 with SM64DS_FAULTS_FATAL=1 and NOTHING SWITCHED
+# OFF -- the render bucket runs -- at 300, 1200 and 3600 frames, all CLEAN,
+# exit 0:
+#
+#    300 frames   init 1, behavior 253, render 300, state-reset 1, slot19 0
+#                 wheel dispatch 253 call(s), 253 routed, spin x253, settle x0
+#                 state index +0x53e6 = 2, board mode +0x53e4 = 1
+#                 wheel angle +0xc2 = 1536, velocity +0xc8 = -512, target 10125
+#                 member pointer = 0x021082fc with adjustment 0
+#                 fill claims: middle 0, derived 14
+#                 5 of 5 records initialised; 5566 shared field call(s), 5566
+#                 routed; 0 framework calls; 0 UNHANDLED
+#   1200 frames   init 1, behavior 1153, render 1200, state-reset 1, slot19 20
+#                 wheel dispatch 1153 call(s), 1153 routed, spin x970,
+#                 settle x183
+#                 state index +0x53e6 = 7, ball sprite +0x53d6 = 10
+#                 member pointer = 0x02107ea8 with adjustment 0
+#                 21 framework call(s), 0 UNHANDLED; 25366 shared field
+#                 call(s), 25366 routed
+#   3600 frames   init 1, behavior 3553, render 3600, state-reset 3, slot19 168
+#                 wheel dispatch 3553 call(s), 3553 routed, spin x2894,
+#                 settle x659
+#                 state index +0x53e6 = 7, ball sprite +0x53d6 = 11
+#                 171 framework call(s), 0 UNHANDLED; 78166 shared field
+#                 call(s), 78166 routed
+#
+#   THE MEMBER POINTER HANDS OVER, WHICH IS THE WHOLE POINT OF SECTION 5. At
+#   300 frames the wheel is in state 0x021082fc 253 times out of 253 and has
+#   never reached 0x02107ea8; at 1200 the split is 970 / 183 and the stored
+#   pair reads 0x02107ea8. The spin state is the one that installs the settle
+#   state, so the run walks the two-address universe the relocation set
+#   predicts and meets nothing else -- 3553 calls, 3553 routed, zero falling
+#   through to the framework's UNHANDLED line.
+#
+#   THE CLASS PLAYS A ROUND AND THEN ANOTHER. Slot 18 is the round reset and it
+#   fires ONCE at 1200 frames and THREE times at 3600, the state index walks 1
+#   to 7 through slot 6's and slot 19's arms, and the ball sprite index
+#   +0x53d6 -- the pocket the ball is drawn in, indexed into the pair of 20.12
+#   coordinate arrays at 0x02142ab4 and 0x02142ab8 -- reads 10 at the end of
+#   the first round and 11 at the end of the third. That is the ROM's own
+#   described game: the wheel spins, decelerates, settles, and the ball ends up
+#   somewhere.
+#
+#   Slot 9 is entered on every frame and slot 6 on 253 of 300 and 1153 of 1200,
+#   so the framework's BeforeBehavior gates the first 47 frames exactly as it
+#   does on scenes 371 and 380. That is the ROM's, not a defect.
+#
+#   THE CURLING CANARY REPRODUCES EXACTLY on this tip: scene 374 at 300 frames
+#   reports 32557 call(s) / 32557 routed / 0 UNHANDLED, which is what says a
+#   three-table fill in the registry did not reach into anybody else's data.
+#
+# THE PICTURE MOVES, AND THE FIRST ATTEMPT TO SHOW THAT WAS A STALE ARTIFACT.
+# Seven captures at 60, 150, 300, 600, 900, 1200 and 1800 frames give SEVEN
+# DISTINCT sha256s, each 512x384 with between 5147 and 9972 distinct colours,
+# and the stacked pair is 512x832. The first attempt read
+# walk_window_selftest.bmp out of the build directory after each run and got
+# ONE hash seven times -- because a direct scene boot does not write that file
+# at all and it was left over from an earlier run. The env that captures a
+# scene is SM64DS_SCENE_BMP, with SM64DS_SCENE_BMP_STACKED for the two-screen
+# image; the tell was that the "layout dsstate" line the selftest prints beside
+# its own dump never appeared. Recorded because seven identical hashes would
+# have been reported as "nothing on this scene moves", which is the exact
+# opposite of what the run says.
+#
+# NOBODY HAS HELD ANY OF THESE NEXT TO A DS, and this lane does not judge them.
+#
+# ===========================================================================
+# 10. WHAT THIS SEAT DOES NOT KNOW
+# ===========================================================================
+#
+#   - HOW MANY MUSHROOMS THE PLAYER SHOULD GET. Slot 18 sets the active record
+#     count at +0x53fc from data_ov004_020beb68's +0xa8, clamped to 5, and slot
+#     0 seeds +0xa8 from func_ov004_020ad8b8(), which is
+#     data_0209caf4 row 13 field 1 -- the persistent per-minigame LEVEL. The
+#     port has no backup cart, so SaveData::SetDefaultValuesMg zeroes record 13
+#     on every boot and every run above reports "spawned 0 of 5". All five
+#     records ARE initialised by slot 18's loop; none is made active. That is
+#     the save-medium gap port/mg_fanout_costs.txt section 17 documents,
+#     observed here on a second class, and it is not a minigame gap. What a DS
+#     player sees at level 0 is not something a headless run can say.
+#   - WHETHER THE PICTURE IS RIGHT, only that there is one and that it changes.
+#   - TOUCH IS UNMEASURED. The ROM's own rules text for this game is "Guess
+#     where the ball will land on the roulette wheel", so the guess is an input
+#     and nothing in a headless boot places one.
+#   - WHAT THE FRAMEWORK STATE MACHINE DOES HERE. It fires -- 21 calls at 1200
+#     frames and 171 at 3600, against zero on most seated scenes -- with 0
+#     UNHANDLED addresses, so none of the twenty-two open rows in
+#     runs/mg5/out/fwk/framework_unrouted_22.txt is exercised on this scene and
+#     none was routed. Routing an address no run touches buys no evidence.
+#
+# ===========================================================================
+# 8. THE LINES
+# ===========================================================================
+#
+# THE SLICE IS THE DELTA ONLY. slice_mg1.txt carries the ov004 framework, the
+# thirty-five overlay constructors and the arm9 waves under them; slice_mem.txt
+# carries the +0x4f38 model sub-object family this class shares with
+# dScMgMemory2_c, including the three host copies that family owes
+# (MgMemory2_SubObjCtor.cpp, MgMemory2_ModelRender_020c1804.cpp and
+# MgMemory2_FieldPmf.cpp, all three of which this class's slot 0, slot 6 and
+# slot 9 reach); slice_flw.txt and slice_mga361.txt carry the eight
+# dScMgSingle3DBase_c bodies. CMake appends every list to the same targets and
+# dedupes identical absolute paths, so nothing is compiled twice.
+#
+# THREE OF THE CLASS'S OWN 41 BODIES ARE NOT HERE because a host copy defines
+# each of them and listing both would be an LNK2005:
+#
+#   src/MgMushroomRoulette_Spawn.cpp  -> unmatched/MgRoulette_Factory.cpp
+#   src/func_ov006_02107db8.cpp       -> unmatched/MgRoulette_WheelDispatch.cpp
+#   src/func_ov006_02107d80.cpp       -> unmatched/MgRoulette_ModelRender_02107d80.cpp
+#
+# THREE LINES ARE NOT IN THE CLASS'S CODE BLOCK and are here because nothing
+# else in the tree had reached them: func_ov006_0210a4ac (the element
+# constructor the factory hands func_020733a8) and func_ov006_020c0e8c /
+# func_ov006_020c0efc (two of the shared sub-object's accessors that slot 6 and
+# slot 18 call and that slice_mem.txt does not carry).
+
+src/func_ov006_0210788c.c
+src/func_ov006_02107920.cpp
+src/func_ov006_021079c8.c
+src/func_ov006_021079cc.c
+src/func_ov006_02107a6c.cpp
+src/func_ov006_02107b14.c
+src/func_ov006_02107b70.c
+src/func_ov006_02107b94.c
+src/func_ov006_02107c50.c
+src/func_ov006_02107d20.c
+src/func_ov006_02107d58.c
+src/func_ov006_02107ea8.c
+src/func_ov006_021082c4.c
+src/func_ov006_021082fc.c
+src/func_ov006_02108508.c
+src/func_ov006_02108524.c
+src/func_ov006_0210858c.c
+src/func_ov006_021085c0.c
+src/func_ov006_02108650.c
+src/func_ov006_02108b90.c
+src/func_ov006_02108cc0.c
+src/func_ov006_02108d28.c
+src/func_ov006_02108e24.c
+src/func_ov006_02108f2c.c
+src/func_ov006_0210927c.c
+src/func_ov006_021092a0.c
+src/func_ov006_021092e8.c
+src/func_ov006_0210935c.c
+src/func_ov006_021094ac.c
+src/func_ov006_02109530.c
+src/func_ov006_021095ac.c
+src/func_ov006_021095cc.c
+src/func_ov006_021096c8.c
+src/func_ov006_0210980c.c
+src/func_ov006_02109834.c
+src/func_ov006_02109aa0.c
+src/func_ov006_02109aac.c
+src/func_ov006_0210a194.cpp
+src/func_ov006_0210a4ac.c
+src/func_ov006_020c0e8c.c
+src/func_ov006_020c0efc.c

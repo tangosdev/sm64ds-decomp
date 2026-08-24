@@ -2458,6 +2458,23 @@ void port_scene_fill_card(void);
 extern unsigned char MgPairAGoneAndOn_SpawnInfo[];
 void *port_mg_mcarlo2_spawn(void);
 void port_scene_fill_mcarlo2(void);
+/* run mg11 lane RLT: dScMgRoulette_c, actor id 0x17f = scene 383, "Mushroom
+   Roulette". The spawn symbol is MgMushroomRoulette and the ROM's own type_info
+   -- reached the way every row above reaches its, through the word BEFORE the
+   vtable: relocs.txt from:0x0213e398 to:0x0213e300, whose name pointer
+   0x0213e30c reads "15dScMgRoulette_c" -- so the row is named for the class the
+   way SCENE_MG_CURLING, SCENE_MG_PANEL and SCENE_MG_ESP3D are. The player title
+   is the ov005 launch table's only row for this id (row 13, param 0x00090d00 ->
+   name-text 9 -> data_ov004_020bc070[9] = message 557 = "Mushroom Roulette").
+   port/slice_rlt.txt carries the derivation, the four width checks, the six ROM
+   adjudications and the two-address member-pointer census;
+   hal/scene_mg_roulette.cpp is the seat. Same reads_sublevel reasoning as the
+   rows above, re-checked for this class rather than copied: no relocation
+   anywhere in ov006 lands on data_02092110 and no TU in this class's closure
+   names it. */
+extern unsigned char MgMushroomRoulette_SpawnInfo[];
+void *port_mg_roulette_spawn(void);
+void port_scene_fill_roulette(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -3064,6 +3081,41 @@ static const PortSceneClass port_scene_classes[] = {
        thunk over the first state of a different minigame. */
     {382, "SCENE_MG_MCARLO2", MgPairAGoneAndOn_SpawnInfo, port_mg_mcarlo2_spawn,
      port_scene_fill_mcarlo2, 0},
+    /* 383 is 0x17f, spelled in decimal for the same two reasons every row above
+       is: the others are, and port/tools/battery.py reads its hosted-scene set
+       out of this table. APPENDED AFTER EVERY EXISTING ROW, run mg11 lane RLT,
+       and the ordering rule earns its keep twice for this class as it does for
+       the luckystars row.
+
+       FIRST, the once-per-process constructor gate port/mg_fanout_costs.txt
+       section 11 derives: this function walks the table in order and calls
+       every row's fill on every boot, while port_scene_mg_overlay_load runs the
+       thirty-five overlay constructors ONCE PER PROCESS at the tail of the
+       FIRST minigame row's fill, so a row placed earlier would have its fill
+       run before those constructors read the mounted .data. HERE THE HAZARD IS
+       MEASURED ABSENT rather than avoided: not one relocation whose source lies
+       in ov006's .init range (0x0212f4c4..0x0213356c) lands anywhere in this
+       class's code block (0x0210788c..0x0210a4ac) or its data span
+       (0x0213e2dc..0x0213e42c), so no constructor reads a word this fill
+       writes. Nothing in the fill writes outside its own 36-slot table either
+       -- the width is checked FOUR ways in port/slice_rlt.txt, the fourth being
+       that exactly 36 relocation rows have a source inside the table and there
+       is none at index 36.
+
+       SECOND, dScMgSingle3DBase_c. This is the FIFTH class the port seats under
+       data_ov006_0213e448, after the flower, memory2, luckystars and mcarlo
+       rows, and all five define their own face array over the same eight DS
+       words. rlt_apply keys on a DS address, so the fill that runs first claims
+       the middle table and the ones after it write nothing there. Appending
+       after all four means the flower keeps that table and every earlier
+       witness is unchanged; hal/scene_mg_roulette.cpp section 3 prints this
+       seat's own claimed counts so the split is measured rather than assumed.
+
+       reads_sublevel is 0 for the curling row's reason, re-derived rather than
+       copied: no relocation anywhere in ov006 lands on data_02092110 and no TU
+       in this class's closure names it. A minigame is not about a course. */
+    {383, "SCENE_MG_ROULETTE", MgMushroomRoulette_SpawnInfo,
+     port_mg_roulette_spawn, port_scene_fill_roulette, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
