@@ -116,6 +116,11 @@ struct dBgW_Kc : dBgW {
     virtual int DetectClsn(dBgCh_Lin &ray);             /* slot 7 - ITCM */
     virtual int DetectClsn(dBgCh_SphCrr &sphere);           /* slot 8 - ITCM */
 
+    /* DECLARED, never defined as a method here -- src/_ZN7dBgW_KcC1Ev.cpp
+       owns C1 and src/_ZN7dBgW_KcC2Ev.c the base-subobject variant
+       (notes/ctor-migration.md section 2). */
+    dBgW_Kc();
+
     /* --- non-virtual --- */
     void SetFile(KCL_File *file, CLPS_Block &clps);
     /* Both ITCM, both reading kclFile->origin.y out of the file's 1/64 scale.

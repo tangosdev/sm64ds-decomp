@@ -103,6 +103,12 @@ struct dBgW {
     virtual s16 GetAngularVelY();                         /* slot 11 */
     virtual void GetVelocity(Vector3 &res);               /* slot 12 */
 
+    /* DECLARED, never defined as a method here -- src/_ZN4dBgWC2Ev.cpp owns
+       the one out-of-line definition, and declaring it is what makes derived
+       constructors emit `bl _ZN4dBgWC2Ev' instead of synthesising the base
+       step inline (notes/ctor-migration.md section 2). */
+    dBgW();
+
     /* --- non-virtual --- */
     int Enable(dActor_c *actor);
     int Disable();

@@ -107,11 +107,13 @@ every failure belonged to the slice. Rule of thumb: when failures explode
 across many modules at once, diff module SIZES first — one growing module
 names the real offenders, and per-function spelunking is wasted motion.
 
-The census this attacks (`tools/langmode_audit.py --by-class`): **C1 41,
-C2 10, C3 2 unmigrated**, against 397 plain methods and 65 D1s — though §5c
-reclassifies the two "C3"s and at least three C1s (Camera, Minimap, HUD) as
+The census this attacks (`tools/langmode_audit.py --by-class`, 2026-08-24):
+**C1 32 (8 migrated), C2 14 (2 migrated), C3 2** — against 397 plain methods
+and 65 D1s — though §5c
+reclassifies the two "C3"s and at least two C1s (Camera settled; Minimap,
+HUD pending shape-check) as
 factories that no source form can express, so the true migratable backlog is
-smaller than the raw census. D0 is out of
+smaller than the raw census; §7 enumerates it symbol by symbol. D0 is out of
 backlog forever; constructors were the last symbol kind with no playbook.
 
 PathPtr also supplied the first live sighting of §2's blast radius: the
@@ -355,6 +357,35 @@ None of this unblocks the factory itself (§5d), but it names two more links
 of the hierarchy for every FUTURE constructor migration on the chain, and it
 corrects the leaf-single plan below.
 
+### 5f. dBgPi's own pair: a base subobject at +0x04 the flat header cannot spell
+
+The probe behind §2 and §6 (build/probe_dbgpi1.cpp) measured mwcc's
+constructor emission order for a polymorphic class with an out-of-line ctor:
+**base-subobject calls first, then the derived vptr store, then member
+constructors, then body statements.** That order is what makes §2 work, and
+it also dates ROM bodies: any call BEFORE the vptr store is base work;
+everything after it is members or body.
+
+dBgPi's ROM pair (C1 0x0203816c / C2 0x0203819c) reads:
+
+```text
+bl func_02037f18(this + 0x04)
+vptr = _ZTV5dBgPi (data_02099368)
+bl func_020380c0(this)
+```
+
+func_02037f18 stores five words at +0x04..+0x14 (`0xfc0, 0xff, 0, 0, 0`) and
+NO vtable — so whatever it constructs at +0x04 is non-polymorphic, yet its
+call sits before the derived vptr store, which only a BASE step can. The
+original source therefore had a base class whose storage begins at +0x04,
+under a vptr at +0x00 — an arrangement a single-inheritance header cannot
+spell (a base lands at +0x00, not +0x04). Most likely true shape: an empty
+polymorphic primary base holding just the +0x00 vptr, with the five-word
+non-polymorphic base second. That needs its own probe before anyone touches
+dBgPi.h's field section; until then both definitions stay hand shells
+(`src/_ZN5dBgPiC1Ev.c` / `_ZN5dBgPiC2Ev.c`) while the DECLARATION in
+include/dBgPi.h keeps serving every child's synthesized base step.
+
 ## 6. The recipe, condensed
 
 ```cpp
@@ -372,6 +403,13 @@ Class::Class() : member(0)      // init list = every store the ROM makes
 }
 ```
 
+The compiler's own ordering, measured once and relied on everywhere
+(build/probe_dbgpi1.cpp): **base-subobject calls → derived vptr store →
+member constructors → body statements.** A call that precedes the vptr
+store is base work; anything after it is members or body. That is why §2
+works, why an empty-body derived ctor reproduces its ROM twin exactly, and
+how a ROM ctor is dated from its `bl` order alone.
+
 Verify with the strict bar, then the whole-ROM gate:
 
 ```sh
@@ -385,25 +423,49 @@ keep it when it defines the sibling variant (§1).
 
 ## 7. Worklist order from here
 
-1. ~~**fBase_c / dActor_c chain**~~ DONE (2026-08-23): `_ZN7fBase_cC1Ev`
-   renamed C2 per §4b, 17 callers audited, ROM green. Remaining for the full
-   chain: declare `dView_c` and correct `Camera`'s header to real
-   inheritance (§5e facts), then dActor_c's pair becomes a §6 application —
-   its own ctor is still nonmatching asm until someone reproduces it from
-   real C++.
-2. **dBgCh/dBgPi/dM3dG collision family**: base ctors NAMED, `dM3dGSph` and
-   `dBgCh_Lin` PROMOTED AND MIGRATED (seventh landed; first MI — see the
-   table notes for the objisolate UNDEF-addend extension). Remaining:
-   un-flatten dBgCh_Gnd and dBgCh_SphCrr headers (their base steps are
-   already real symbols), then their ctors plus the dBgW_Kc* family follow
-   as §6 applications.
-3. **Leaf singles** (`Minimap`, `HUD`, `PathPtr`, `Clipper`,
-   `TextureSequence`, …) — with one new gate learned the hard way:
-   **shape-check before attempting**. Disassemble the candidate first; if it
-   starts `operator new` → null-check, it is a factory (§5c/§5d), not a
-   constructor, and no source form exists. Genuine receive-`this` ctors
-   (Minimap and HUD looked like it during the §4b caller sweep) remain one
-   §6 application each once their headers declare the ctor. `Camera` is
-   settled: factory, blocked by §5d, hierarchy knowledge banked in §5e.
-4. ModelAnim family dtor-style follow-ups (`Model::C2` stays hand-written
-   until someone wants it real; nothing calls it as a complete object).
+The complete measured backlog (2026-08-24 census over `config/**/symbols.txt`:
+every `_ZN…C[123]Ev` function symbol cross-checked against `src/`). Ten real
+constructors are landed (nine above, plus `dCapEnemy_c::dCapEnemy_c`, which
+arrived from main with #1614); everything below is still a hand-mangled shell,
+asm transcription, or absent.
+
+1. ~~**fBase_c / dActor_c chain**~~ DONE as a naming step (2026-08-23):
+   `_ZN7fBase_cC1Ev` renamed C2 per §4b, 17 callers audited, ROM green.
+2. ~~**dBgCh_Gnd**~~ DONE (ninth, above).
+3. **Collision family, continued** — the natural next slice; each is one §6
+   application once its header un-flattens:
+   `dBgCh_C2Ev` 0x02035514 · `dBgCh_ActrC1Ev` 0x02037430 · `dBgPiC1/C2Ev`
+   0x0203816c/9c · `dBgWC2Ev` 0x0203969c · `dBgW_KcC1Ev` 0x02039894 ·
+   `dBgW_KcMbgC1Ev` 0x0203a494 · `dBgW_KcMbgSclYC1Ev` 0x0203ab8c. The Kc*
+   trio inherits through dBgW/dBgCh like Gnd does; dBgPi's own pair becoming
+   real is what lets every child TU spell base steps by name.
+4. **Leaf singles, config module**: `ClipperC1Ev` 0x02015730 ·
+   `MaterialChangerC1Ev` 0x02015850 · `TextureTransformerC1Ev` 0x02015950 ·
+   `TextureSequenceC1Ev` 0x02015a50 · `AnimationC1/C2Ev` 0x02015cf8/18 ·
+   `Particle14SimpleCallbackC2Ev` 0x02022680 ·
+   `Particle10SysTrackerC1Ev` 0x02023204 (0x1d0 — the biggest body on the
+   list; expect member-ctor synthesis work). Shape-check before attempting:
+   if the disassembly starts `operator new` → null-check, it is a factory
+   (§5c/§5d) and no source form exists. `Camera` is settled that way;
+   FaderWipe C1 0x02017480 has no source at all and needs the same check
+   before anyone promotes its header.
+5. **Anim/model family**: `ModelAnimC1/C2Ev` 0x02016958/98 ·
+   `ModelAnim2C1Ev` 0x020163a0 · `BlendModelAnimC1Ev` 0x020166d4.
+   (`Model::C2` stays hand-written until someone wants it real; nothing
+   calls it as a complete object.)
+6. **dCc response family**: `dCcPos_cC1Ev` 0x02014878 ·
+   `dCcAc_cC1/C2Ev` 0x020149c8/f4 · `dCcAcPos_cC1Ev` 0x02014a84 ·
+   `dCc_cC2Ev` 0x020150cc. Small bodies; blocked only on their headers
+   declaring bases.
+7. **Hierarchy-rooted, hardest last**: `fBase_c9SceneNodeC1Ev` 0x0203b4c4
+   (nested class, independent of the chain — try early if 3–6 stall);
+   `fBase_cC2Ev` 0x02043dec is a 0x160 NONMATCHING asm transcription today —
+   reproducing it from real C++ needs the `dBase_c` intermediate declared
+   (§5b/§5e facts) and is the root of everything below it:
+   `dActor_cC1/C2Ev` 0x020113c0/0x0201150c · `dEnemyBase_cC2Ev` 0x020aed98 ·
+   `dBgActor_cC2Ev` 0x020eea50.
+8. **Overlays**: `PlayerC1Ev` 0x020e68f4 · `MinimapC1Ev` 0x020fb8bc ·
+   `HUDC1Ev` 0x020fe154. Minimap and HUD looked like genuine receive-`this`
+   ctors during the §4b caller sweep — shape-check, then §6.
+9. **Settled, do not retry** (the §5c factory wall): `PlayerC3Ev`,
+   `StageC3Ev`, `CameraC1Ev`.
