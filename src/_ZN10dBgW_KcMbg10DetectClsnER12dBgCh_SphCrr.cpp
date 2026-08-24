@@ -79,7 +79,7 @@ int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr & sphere_)
     int r;
 
     _ZN12dBgCh_SphCrrC1Ev(&loc);
-    func_02039e48(this, &sphere->pos, pos);
+    func_02039e48(this, &sphere->centre, pos);
     _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(&loc, pos,
         FMUL(*(int*)&sphere->radius, unk_164), 0);
     loc.f_ec = FMUL(sphere->unk_0ec, unk_164);
@@ -95,7 +95,9 @@ int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr & sphere_)
         d[10] = FMUL(d[4], *(int*)&scale);
         d[11] = FMUL(d[5], *(int*)&scale);
         func_02037a6c(sphere, d[6], d[7], d[8], d[9], d[10], d[11]);
-        _ZN5dBgPiaSERKS_(&sphere->unk_010, loc.result);
+        /* through the REFERENCE: a pointer-level upcast makes mwcc emit the
+           null-checked MI adjustment (cmp/addne), the ROM's is unconditional */
+        _ZN5dBgPiaSERKS_(&(dBgPi &)sphere_, loc.result);
         *(u8*)(&sphere->flags) |= 1;
         if (loc.flags & 4) {
             if (sphere->flags & 4) {

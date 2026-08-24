@@ -3,9 +3,8 @@
 **Written 2026-08-23**, branch `worktree-ctor-frontier`. Companion to
 `dtor-migration.md`, which this mirrors. Before this week the tree recorded
 **0 constructors migrated, ever** (`notes/dtor-variant-audit.md`,
-`plan-cpp-language-mode.md` Phase 5); it now records four, all in the model
-family, all verified strict (bytes + reloc destinations) under 2004/b56 with
-the full ROM rebuilding 106/106 exact:
+`plan-cpp-language-mode.md` Phase 5); it now records **eight**, all verified
+under 2004/b56 with the full ROM rebuilding 106/106 exact:
 
 | file | function | ROM |
 |---|---|---|
@@ -16,6 +15,7 @@ the full ROM rebuilding 106/106 exact:
 | `src/_ZN7PathPtrC1Ev.cpp` | `PathPtr::PathPtr()` | 0x0203ad74, 0x10 |
 | `src/_ZN8dM3dGSphC1Ev.cpp` | `dM3dGSph::dM3dGSph()` | 0x0203ac60, 0x10 |
 | `src/_ZN9dBgCh_LinC1Ev.cpp` | `dBgCh_Lin::dBgCh_Lin()` | 0x020377b0, 0x5c |
+| `src/_ZN12dBgCh_SphCrrC1Ev.cpp` | `dBgCh_SphCrr::dBgCh_SphCrr()` | 0x02037d18, 0x6c |
 
 The seventh is the tree's **first multiple-inheritance constructor**: its
 header declares `dBgCh_Lin : dBgCh, dBgPi, dM3dGLin` straight out of the
@@ -45,6 +45,24 @@ constant. Writing the chain literally — `lineEnd.z = 0;
 lineEnd.y = lineEnd.z; lineEnd.x = lineEnd.y; clsnDist = 0;` — reproduced
 the schedule byte-for-byte, including the scheduler parking
 `add r0,r4,#0x64` between the two vptr stores, on the first attempt.
+
+The eighth (`dBgCh_SphCrr`, three polymorphic bases) added one more measured
+rule, and it bit three times in one commit before the gates caught all three:
+**an MI upcast spelled on a POINTER emits a null-checked adjustment; spelled
+through a REFERENCE it is unconditional.** `(dM3dGSph *)self` for a base at
++0x38 compiles to `movs r0,self; addne r0,#0x38; ...` — the ABI must keep a
+null derived pointer null — where the ROM has plain `add r0,#0x38`. The
+byte-exact spellings are `&(dM3dGSph &)*self` (lvalue) or `&(dBgPi &)sphere`
+(reference parameter): convert the object, then take the address. Probed
+directly against 2004/b56 with a two-base struct; both forms emit the single
+`add`. Two of the three sites kept their size (movs/addne reuse the slots),
+which is exactly why eligible.py stayed green while rombuild's byte analysis
+flagged the third — the per-word compare is the only gate that sees
+condition codes. Also worth recording: `dBgW_Kc::DetectClsn(dBgCh_SphCrr&)`
+and the KcMbg overload now reach interiors by real base names —
+`sphere.centre` through dM3dGSph, `&(dBgPi &)sphere` for the dBgPi
+sub-object — replacing the last flat `unk_010`/`unk_038`/`pos` spellings in
+their C++ TUs.
 
 The census this attacks (`tools/langmode_audit.py --by-class`): **C1 41,
 C2 10, C3 2 unmigrated**, against 397 plain methods and 65 D1s — though §5c

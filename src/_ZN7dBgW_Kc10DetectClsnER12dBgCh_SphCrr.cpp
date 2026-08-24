@@ -342,7 +342,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     Vector3 vb;
     Vector3 vc;
 
-    c = &sphere.pos;
+    c = &sphere.centre;   /* the dM3dGSph base sub-object's centre, at 0x3c */
     f = kclFile;
     {
         /* Per-site (const Vector3 *) casts, ABOVE the rad6/origin declarations,
@@ -763,7 +763,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                         }
                         if (!contactKind) contactKind = k1;
 
-                        func_02037fd4((dBgPi *)&sphere.unk_010, triID, &data_020a0cec);
+                        func_02037fd4(&(dBgPi &)sphere, triID, &data_020a0cec);
                         sphere.flags |= 1;
 
                         if (cls == 0) {
