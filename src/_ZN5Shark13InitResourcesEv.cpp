@@ -38,13 +38,13 @@ int Shark::InitResources()
     if (mPathID < 0) mPathID = 0;
     _ZN7PathPtrC1Ev(p1_storage);
     _ZN7PathPtr6FromIDEj(p1_storage, mPathID);
-    unk_38c = _ZNK7PathPtr8NumNodesEv(p1_storage);
+    mPathNodeCount = _ZNK7PathPtr8NumNodesEv(p1_storage);
     mTerminalVelocity = -0x3c000;
-    unk_374 = 0;
-    unk_378 = 0;
-    unk_37c = 0;
+    mClsnOffset.x = 0;
+    mClsnOffset.y = 0;
+    mClsnOffset.z = 0;
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-        ((char*)this) + 0x110, ((char*)this), ((char*)this) + 0x374, 0x42000, 0x6e000, 0x200004, 0);
+        ((char*)this) + 0x110, ((char*)this), &mClsnOffset, 0x42000, 0x6e000, 0x200004, 0);
     _ZN7PathPtrC1Ev(p2_storage);
     _ZN7PathPtr6FromIDEj(p2_storage, mPathID);
     mPathNodeIdx = 1;

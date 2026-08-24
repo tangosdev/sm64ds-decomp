@@ -23,13 +23,14 @@ struct Shark : dEnemyBase_c {
     dCcAcPos_c mdCcAcPos_c;/* 0x110 */
     dBgCh_Actr mWithMeshClsn;       /* 0x150 */
     ModelAnim mModelAnim;             /* 0x30c */
-    s32 unk_370;                      /* 0x370 */
-    s32 unk_374;                      /* 0x374 */
-    s32 unk_378;                      /* 0x378 */
-    s32 unk_37c;                      /* 0x37c */
+    /* The state pointer. func_ov090_021338b4 sets it (InitResources passes
+       data_ov090_021345cc) and Behavior calls the pointer-to-member-function
+       at +8 through it. */
+    s32 mState;                       /* 0x370 */
+    Vector3 mClsnOffset;              /* 0x374 */
     u8  pad_380[0x8];
     s32 mPathID;                      /* 0x388 */
-    s32 unk_38c;                      /* 0x38c */
+    s32 mPathNodeCount;               /* 0x38c */
     s32 mPathNodeIdx;                 /* 0x390 */
 
     /* --- vtable --- */
@@ -99,13 +100,13 @@ struct Shark {
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x30c -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     ModelAnim mModelAnim;            /* 0x30c */
-    s32 unk_370;            /* 0x370 */
-    s32 unk_374;            /* 0x374 */
-    s32 unk_378;            /* 0x378 */
-    s32 unk_37c;            /* 0x37c */
+    s32 mState;            /* 0x370 */
+    s32 mClsnOffsetX;            /* 0x374 */
+    s32 mClsnOffsetY;            /* 0x378 */
+    s32 mClsnOffsetZ;            /* 0x37c */
     u8  pad_380[0x8];
     s32 mPathID;            /* 0x388 */
-    s32 unk_38c;            /* 0x38c */
+    s32 mPathNodeCount;            /* 0x38c */
     s32 mPathNodeIdx;            /* 0x390 */
 };
 

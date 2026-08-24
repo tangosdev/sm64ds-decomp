@@ -38,7 +38,7 @@ int Shark::Behavior()
 {
     DecIfAbove0_Short((u16 *)&unk_100);
     {
-        SharkBehaviorState *state = *(SharkBehaviorState **)&unk_370;
+        SharkBehaviorState *state = *(SharkBehaviorState **)&mState;
         if (state->callback != 0) {
             (((SharkCallbackOwner *)this)->*(state->callback))();
         }
@@ -56,7 +56,7 @@ int Shark::Behavior()
         distance = LenVec3(&difference);
         if (distance == 0 || distance <= 0x258000) {
             mPathNodeIdx++;
-            if (mPathNodeIdx >= unk_38c)
+            if (mPathNodeIdx >= mPathNodeCount)
                 mPathNodeIdx = 0;
         }
         ApproachLinear(mPrevAngleY,

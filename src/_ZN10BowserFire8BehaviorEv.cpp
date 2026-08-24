@@ -15,11 +15,11 @@ int BowserFire::Behavior()
 {
     dActor_c *self = (dActor_c*)((char *)this);
     *(int*)(((int)((char *)this) + 0x370)) += 1;
-    (self->*data_ov060_0211afb4[unk_35c].pmf)();
-    *(unsigned short*)(((int)((char *)this) + 0x374)) += 1;
+    (self->*data_ov060_0211afb4[mVariant].pmf)();
+    mFrameCount += 1;
     if (mVertAccel != 0) {
         dBgCh_Actr_UpdateDiscreteNoLava_veneer((char *)&mWithMeshClsn);
-        if (unk_35c != 4) {
+        if (mVariant != 4) {
             if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mWithMeshClsn) != 0) {
                 mVertSpeed = 0;
                 mVertAccel = 0;

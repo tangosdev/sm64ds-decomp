@@ -37,13 +37,13 @@ struct BowserFire : dEnemyBase_c {
     dCcAc_c mdCcAc_c;     /* 0x2d0 */
     ShadowModel mShadowModel;                   /* 0x304 */
     u8  pad_32c[0x30];
-    s32 unk_35c;            /* 0x35c */
+    s32 mVariant;            /* 0x35c */
     s32 unk_360;            /* 0x360 */
-    s32 unk_364;            /* 0x364 */
+    s32 mGroundY;            /* 0x364 */
     u8  pad_368[0x4];
     s32 unk_36c;            /* 0x36c */
     u8  pad_370[0x4];
-    s16 unk_374;            /* 0x374 */
+    u16 mFrameCount;            /* 0x374 */
     u8  pad_376[0x2];
     u8  unk_378;            /* 0x378 */
     u8  unk_379;            /* 0x379 */
@@ -87,13 +87,13 @@ struct BowserFire {
     u8  pad_2d1[0x33];
     u8  mShadowModel;            /* 0x304 */
     u8  pad_305[0x57];
-    s32 unk_35c;            /* 0x35c */
+    s32 mVariant;            /* 0x35c */
     s32 unk_360;            /* 0x360 */
-    s32 unk_364;            /* 0x364 */
+    s32 mGroundY;            /* 0x364 */
     u8  pad_368[0x4];
     s32 unk_36c;            /* 0x36c */
     u8  pad_370[0x4];
-    s16 unk_374;            /* 0x374 */
+    u16 mFrameCount;            /* 0x374 */
     u8  pad_376[0x2];
     u8  unk_378;            /* 0x378 */
     u8  unk_379;            /* 0x379 */

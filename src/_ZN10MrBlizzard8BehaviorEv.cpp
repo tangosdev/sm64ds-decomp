@@ -31,7 +31,7 @@ int MrBlizzard::Behavior()
     char* c = (char*)((C*)this);
     void* r5;
     char* p;
-    if (*(int*)(c + 0x41c) == 3) {
+    if (mType == 3) {
         switch (*(unsigned char*)(c + 0x469)) {
         case 0:
             if (_ZN8SaveData16HasPlayerLostCapEv()) *(unsigned char*)(c + 0x469) = 1;
@@ -41,16 +41,16 @@ int MrBlizzard::Behavior()
             if (!_ZN8SaveData16HasPlayerLostCapEv()) *(unsigned char*)(c + 0x469) = 2;
             break;
         case 2:
-            if (_ZN8SaveData16HasPlayerLostCapEv()) *(int*)(c + 0x41c) = 2;
+            if (_ZN8SaveData16HasPlayerLostCapEv()) mType = 2;
             break;
         }
         return 1;
     }
     if (_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(c, c + 0x150, c + 0x30c, 3)) return 1;
     if (*(int*)(c + 0x10c) != 0) {
-        if (_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(c, c + 0x150) && *(int*)(c + 0x41c) == 2) {
-            _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xdf, 0x300, (Vector3*)(c + 0x44c), 0, *(signed char*)(c + 0xcc), -1);
-            *(int*)(c + 0x41c) = 0;
+        if (_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(c, c + 0x150) && mType == 2) {
+            _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xdf, 0x300, &mHomePos, 0, *(signed char*)(c + 0xcc), -1);
+            mType = 0;
         }
         if (*(int*)(c + 0x10c) == 0 && *(unsigned char*)(c + 0x468) != 0) {
             func_02012694(0x166, c + 0x74);
@@ -59,11 +59,11 @@ int MrBlizzard::Behavior()
         func_ov081_021254d8(c);
         return 1;
     }
-    if (*(int*)(c + 0x41c) == 2
+    if (mType == 2
         && (char*)((C*)this)->pp != &data_ov081_02128e94
         && (char*)((C*)this)->pp != &data_ov081_02128e24
         && _ZN8SaveData16HasPlayerLostCapEv()
-        && *(int*)(c + 0x400) == 0) {
+        && mCapUniqueID == 0) {
 
         p = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
         if (p != 0) {
@@ -73,7 +73,7 @@ int MrBlizzard::Behavior()
                 0x10d, param, (Vector3*)(c + 0x5c), 0, *(signed char*)(c + 0xcc), -1);
             if (r5 != 0) {
                 _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(r5, 0x64000, 0xc8000, 0x1000000, 0x1000000);
-                *(int*)(c + 0x400) = *(int*)((char*)r5 + 4);
+                mCapUniqueID = *(int*)((char*)r5 + 4);
             }
         }
 
@@ -87,7 +87,7 @@ int MrBlizzard::Behavior()
         (((C*)this)->**p)();
     }
     _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x110);
-    if (*(int*)(c + 0x41c) == 0)
+    if (mType == 0)
         _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, c + 0x150, 0);
     func_ov081_021254d8(c);
     if ((char*)((C*)this)->pp != &data_ov081_02128e84
@@ -101,7 +101,7 @@ int MrBlizzard::Behavior()
         if (p != 0 && *(unsigned char*)(p + 0x6fb) == 0)
             _ZN5dCc_c6UpdateEv(c + 0x110);
     }
-    *(int*)(c + 0x368) = 0x1000;
+    mModelAnim.speed = 0x1000;
     _ZN9Animation7AdvanceEv(c + 0x35c);
     return 1;
 }
