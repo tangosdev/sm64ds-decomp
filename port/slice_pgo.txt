@@ -275,15 +275,21 @@
 #
 # WHY THE TRIAGE'S PROBE MEASURED NOTHING, reproduced exactly on this tree: its
 # blind five-by-five grid was replayed byte for byte and gave the identical null
-# census (49280 card updates over 2653 ticks, exactly twenty a frame, slot19 0).
+# census: 49280 card updates and slot19 0, where 49280 is 20 x 2464 EXACTLY.
+# The denominator is 2464 and not the run's 2653 behaviour ticks, because the
+# first 189 ticks are the deal, when the sweep is still climbing and the update
+# loop runs sweep>>12 times rather than twenty. 2653 - 2464 = 189 is that deal.
 # Traced, the same taps read
 #
 #      40,36    misses      -- no card owns that column
 #      88,36    SELECTS the card at 80,0
 #      128,36   selects the card at 112,0, faces differ, both DESELECT
 #
-# The grid marches across the board in column order and never once landed two
-# ADJACENT SAME-FACE cards, which is the only thing that clears a pair. Nothing
+# The grid marches ROW BY ROW, not column by column: its generator loops y over
+# 36, 70, 104, 138, 168 on the OUTSIDE and x over 40, 88, 128, 168, 216 on the
+# inside, so five taps share a y before the y moves at all. And it never once
+# landed two ADJACENT SAME-FACE cards, which is the only thing that clears a
+# pair. Nothing
 # in the census it read -- updates per frame, the state index, slot19 -- can see
 # a select followed by a deselect, so a working game and a dead one print the
 # same numbers. THE INSTRUMENT WAS THE BUG.
@@ -306,12 +312,27 @@
 # reason this class's own message text states: "This game of Pair-a-Gone goes on
 # forever". State 3 advances to 4 in exactly one place -- the else arm, when
 # func_ov006_020f96e0 finds NO adjacent same-face pair left -- and the board is
-# always twenty cards on a five-by-four grid, which is about sixty adjacent
-# positions drawn from eight or more faces. A stuck board is a rare tail event
-# by construction, not a state the game walks into, and the mode's end for a
-# player is leaving the minigame rather than finishing it. The sibling's round
-# DOES end, and lane CRD's proof of these states therefore lives on scene 381,
-# where slot 19 is entered 131 times through the same shapes.
+# always twenty cards on a five-by-four grid. That grid holds FIFTY-FIVE
+# adjacent position pairs under func_ov006_020f9cbc's own predicate, which is
+# `cmp r2,#2 / bge` at 0x020f9d34 for the column difference and `cmp r0,#2 /
+# movlt` at 0x020f9d44 for the row difference, both required under 2. The faces
+# filling them were COUNTED rather than guessed, off the trace dumps: FIVE
+# distinct faces on the opening deal, holding at five for the whole opening
+# stretch, and four to seven across the forty-clear run, out of
+# func_ov006_020f9560's TEN-entry weight table at data_ov006_0212e954 (0x28
+# bytes to the next config symbol, so ten ints). So a stuck board is a rare tail
+# event by construction rather than a state the game walks into, and the mode's
+# end for a player is leaving the minigame rather than finishing it. The
+# sibling's round DOES end, and lane CRD's proof of these states therefore lives
+# on scene 381, where slot 19 is entered 131 times through the same shapes.
+#
+# AN EARLIER REVISION OF THIS PARAGRAPH SAID "about sixty adjacent positions
+# drawn from eight or more faces" AND NEITHER HALF HAD BEEN COUNTED. The error
+# ran in the safe direction and the conclusion survives it a fortiori: FEWER
+# faces over the same fifty-five positions makes a matching adjacent pair MORE
+# likely, not less, so the stuck board slot 19 waits on is rarer than the
+# sentence claimed and its zero is more firmly an honest one. Corrected anyway,
+# because a figure nobody counted is a claim about the tree and not a fact.
 #
 # ---- WHAT IS NOT IN THIS SLICE AND WHY ------------------------------------
 #

@@ -351,7 +351,8 @@
 # WHAT THE TAP GEOMETRY IS, since the triage's probe is what actually failed.
 # The card sprite goes to Hud_RenderSprite at x+0x18, y+0x18 and the hit test
 # accepts x+8..x+39 by y+1..y+48, so the hot box IS the drawn card. The triage
-# swept a blind five-by-five grid in column order; consecutive taps land on
+# swept a blind five-by-five grid ROW BY ROW -- five taps share a y before the y
+# moves, which is its generator's loop order; consecutive taps land on
 # adjacent cards, a pair only clears when the two faces MATCH, and its fifty
 # taps never once hit a matching adjacent pair. A select followed by a deselect
 # leaves every census number in this file unchanged, so the run read as dead.
