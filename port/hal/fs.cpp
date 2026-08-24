@@ -271,6 +271,84 @@ static int port_fs_archive_fill(struct fs_cache_entry *ent, unsigned fileID)
     abort();
 }
 
+/* One BTNF directory, recursively: names are length-prefixed, high bit set
+   marks a subdirectory entry (name then u16 dir id); file ids count up from
+   the directory record's firstFile. Returns the interior index of `want`
+   built as a forward-slash path, or -1. Depth and cursor are both bounded:
+   a malformed table returns -1, never walks wild. */
+static long btnf_find(const u8 *nb, u32 nsize, unsigned dir, char *buf,
+                      size_t pos, size_t cap, const char *want, int depth)
+{
+    u32 e, p;
+    unsigned fid;
+    if (depth > 16 || (u32)(dir & 0xFFF) * 8 + 8 > nsize)
+        return -1;
+    e = (u32)(dir & 0xFFF) * 8;
+    p = nb[e] | nb[e + 1] << 8 | nb[e + 2] << 16 | (u32)nb[e + 3] << 24;
+    fid = (unsigned)(nb[e + 4] | nb[e + 5] << 8);
+    while (p < nsize) {
+        u8 t = nb[p++];
+        u32 ln = t & 0x7F;
+        if (t == 0)
+            break;
+        if (p + ln > nsize || pos + ln + 2 > cap)
+            return -1;
+        memcpy(buf + pos, nb + p, ln);
+        p += ln;
+        if (t & 0x80) {
+            unsigned sub;
+            if (p + 2 > nsize)
+                return -1;
+            sub = (unsigned)(nb[p] | nb[p + 1] << 8);
+            p += 2;
+            buf[pos + ln] = '/';
+            buf[pos + ln + 1] = '\0';
+            long r = btnf_find(nb, nsize, sub, buf, pos + ln + 1, cap, want,
+                               depth + 1);
+            if (r >= 0)
+                return r;
+        } else {
+            buf[pos + ln] = '\0';
+            if (strcmp(buf, want) == 0)
+                return (long)fid;
+            ++fid;
+        }
+    }
+    return -1;
+}
+
+/* Resolve an archive-interior file by its BTNF path ("data/player/
+   mario_model.bmd") to the runtime file id, or 0 when no mounted archive
+   names it. For mods, which key their targets by NAME: every id table here
+   is generated from the player's own dump, so a shipped id would be a guess
+   where a shipped name is a fact. */
+extern "C" unsigned port_fs_interior_id(const char *want)
+{
+    for (int i = 0; i < 13; ++i) {
+        struct port_arc_entry *e = &port_archive_map[i];
+        u8 *a = port_fs_archive_image(i, e);
+        u32 btaf_size, btnf_size;
+        u8 *btaf, *btnf;
+        char buf[256];
+        long idx;
+        if (!a || g_arc_len[i] < 0x18 || memcmp(a, "NARC", 4) != 0)
+            continue;
+        btaf = a + 0x10;
+        btaf_size = btaf[4] | btaf[5] << 8 | btaf[6] << 16 | (u32)btaf[7] << 24;
+        btnf = btaf + btaf_size;
+        if (btnf + 8 > a + g_arc_len[i])
+            continue;
+        btnf_size = btnf[4] | btnf[5] << 8 | btnf[6] << 16 | (u32)btnf[7] << 24;
+        if (btnf_size <= 8 || btnf + btnf_size > a + g_arc_len[i])
+            continue;
+        idx = btnf_find(btnf + 8, btnf_size - 8, 0, buf, 0, sizeof buf,
+                        want, 0);
+        if (idx >= 0 && e->base + idx < e->end)
+            return (unsigned)(e->base + idx);
+    }
+    return 0;
+}
+
 /* ---- host file cache ----------------------------------------------------
    WHY: SharedFilePtr is refcounted, and every file whose count reaches zero
    is Deallocate'd by func_02017c24 and re-read on the next reference. That
@@ -437,10 +515,6 @@ static int fs_cache_fill(struct fs_cache_entry *e, unsigned fileID)
     fclose(f);
     ok = fs_entry_store(e, raw, (u32)fsize);
     free(raw);
-    /* mod filter, on the decompressed master and before anyone caches or
-       copies it, so a rewritten file is rewritten exactly once */
-    if (ok && port_fs_mod_filter)
-        e->size = port_fs_mod_filter(fileID, &e->data, e->size);
     return ok;
 }
 
@@ -499,6 +573,13 @@ void *_ZN13SharedFilePtr4LoadEv(struct SharedFilePtrC *self)
         memset(slot, 0, sizeof *slot);
         ok = archive ? port_fs_archive_fill(slot, fid)
                      : fs_cache_fill(slot, fid);
+        /* mod filter, on the decompressed master and before anyone caches or
+           copies it, so a rewritten file is rewritten exactly once -- and
+           HERE, after both fills, so the two id namespaces cannot disagree
+           about whether mods exist (the character models are archive
+           interiors). */
+        if (ok && port_fs_mod_filter)
+            slot->size = port_fs_mod_filter(fid, &slot->data, slot->size);
         if (!ok) {
             if (slot->data) { free(slot->data); slot->data = 0; }
             return 0;

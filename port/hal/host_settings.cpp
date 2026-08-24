@@ -503,6 +503,19 @@ const char *const LOVESME_KEY[6] = {
 };
 int g_lovesme_character;             /* default 0, and 0 is the ROM */
 
+/* ---- CustomPalette, the third Mods-panel key that changes the GAME --------
+   Which palette combo recolors the playable characters. The ROM's colors
+   are the default and 0 is the ROM. 1..3 name a combo FILE,
+   palettes/combo<N>.pal beside settings.json, holding replacement color
+   sets the file seam writes into the characters' model palettes as they
+   load. The key only picks the file; every target name and color comes out
+   of the file itself, so this build never learns who is recolored what.
+
+   Like LovesMeCharacter the mechanism is hal/fs_mods.cpp's and is
+   boot-latched -- the file layer caches what it serves. A value outside
+   1..3 reads as the default, the ROM. */
+int g_custom_palette;                /* default 0, and 0 is the ROM */
+
 /* Volume, 0..100, or -1 while the file has never named one. The launcher owns
    this key and also passes it as SM64DS_VOLUME at launch; the file copy exists
    so the live re-read below can move it while the game is running. */
@@ -558,6 +571,7 @@ void load_once(void)
     g_gapless_minigames = 0;
     g_lovesme_character = 0;
     g_mouse_capture = 0;
+    g_custom_palette = 0;
 
     char path[1024];
     if (!find_settings(path, sizeof path)) return;
@@ -606,6 +620,11 @@ void load_once(void)
                         ieq(who, LOVESME_KEY[i], strlen(who)))
                         g_lovesme_character = i + 1;
             /* "", an absent key and any other spelling are all Yoshi */
+        }
+        {
+            /* out of range is the ROM, same shape as the spellings above */
+            const int n = json_int(text, "CustomPalette", 0);
+            if (n >= 1 && n <= 3) g_custom_palette = n;
         }
         {
             char mode[16];
@@ -674,6 +693,13 @@ void load_once(void)
                         "Me...? minigame's Yoshi is replaced at the file "
                         "layer. This is a mod, not the game. (%s)\n",
                 LOVESME_KEY[g_lovesme_character - 1], path);
+    /* Same plain-words rule again. */
+    if (g_custom_palette)
+        fprintf(stderr, "[settings] CustomPalette %d -- character colors "
+                        "are rewritten at the file layer from "
+                        "palettes/combo%d.pal. This is a mod, not the "
+                        "game. (%s)\n",
+                g_custom_palette, g_custom_palette, path);
 }
 
 /* ---- the live re-read -----------------------------------------------------
@@ -812,6 +838,14 @@ extern "C" int host_setting_lovesme_character(void)
 {
     load_once();
     return g_lovesme_character;
+}
+
+/* CustomPalette: 0 the ROM's colors, 1..3 a combo file. Boot-latched like
+   every Mods key; hal/fs_mods.cpp is the only reader. */
+extern "C" int host_setting_custom_palette(void)
+{
+    load_once();
+    return g_custom_palette;
 }
 
 extern "C" int host_setting_volume(void)
