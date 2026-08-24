@@ -11,8 +11,8 @@
  * The five-state snowball roll: 0 counts in, 1 steers with the touch screen
  * and grows the ball, 2/3 are the crash, 4 is the melt, 5 is over. The
  * `if (B(0xc4) == 0) { ... }` prologue is the same idiom roughly 25 ov006
- * files carry -- include/dScMgBase_c.h names those bytes (unk_0c3, unk_0c4,
- * unk_0c0) and this file predates that naming.
+ * files carry -- include/dScMgBase_c.h names those bytes (mPromptEnabled, mPromptBlinkCount,
+ * mPromptBlinkTimer) and this file predates that naming.
  *
  * THE ADDRESS MACROS AND THE `AT`/`LNDR` LAUNDERS ARE LOAD-BEARING and are
  * inherited verbatim from the pre-migration file: they are what stops mwcc

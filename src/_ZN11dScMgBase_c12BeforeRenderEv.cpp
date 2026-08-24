@@ -16,7 +16,7 @@ int dScMgBase_c::BeforeRender()
     if (dScene_c::BeforeRender() == 0)
         return 0;
 
-    if (unk_4628 != 0) {
+    if (mMenuOpen != 0) {
         func_ov004_020ae858(c);
         return 0;
     }

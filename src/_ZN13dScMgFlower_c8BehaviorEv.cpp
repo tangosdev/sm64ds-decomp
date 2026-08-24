@@ -60,10 +60,10 @@ s32 dScMgFlower_c::Behavior()
     V2 d2;
     V2 d3;
 
-    if (self->unk_0c4 == 0) {
-        self->unk_0c3 = 1;
-        self->unk_0c4 = 1;
-        self->unk_0c0 = 0;
+    if (self->mPromptBlinkCount == 0) {
+        self->mPromptEnabled = 1;
+        self->mPromptBlinkCount = 1;
+        self->mPromptBlinkTimer = 0;
     }
     if (self->unk_5fd0 > 0) {
         if (self->unk_5fc8 == -1) {
@@ -259,7 +259,7 @@ s32 dScMgFlower_c::Behavior()
             else
                 func_ov006_020c38b0(c + 0x51f8);
         }
-        self->unk_0c3 = 0;
+        self->mPromptEnabled = 0;
         func_ov006_0212a654(c);
         break;
     default:
