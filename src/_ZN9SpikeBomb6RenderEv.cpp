@@ -13,8 +13,8 @@ struct Sub {
 
 int SpikeBomb::Render()
 {
-    if (unk_170 != 0) return 1;
-    if (unk_1ae < 8) return 1;
+    if (mStateIndex != 0) return 1;
+    if (mOpacity < 8) return 1;
     ((Sub*)((unsigned char*)&mModel))->m(0);
     return 1;
 }
