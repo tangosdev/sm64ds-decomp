@@ -109,3 +109,67 @@ because both objects start with a pointer-sized word. It now takes `char *`.
 * Seven of the ten `mSystemID_*` slots and eleven of the `mCallback_*`
   subobjects keep their offset in the name. The evidence proves what they
   *are*; nothing surviving in the tree says which effect each one drives.
+
+---
+
+## Minimap — `include/Minimap.h`
+
+`Minimap` derives from `dBase_c` and there is one of it. Its own six methods
+are the evidence here, but the class is still a system class in the sense that
+matters: the fields it computes are consumed by hardware registers and by
+`OAM::Render`, not by anything that looks like actor behaviour, and its two
+biggest readers carried private shadows of the class rather than including the
+header.
+
+### Two 2x2 affine matrices
+
+Both blocks are four consecutive `s32` filled in the same shape — `A` and `B`
+from the sine/cosine table `data_02082214` indexed by `angle >> 4` and scaled,
+then `C = -B` and `D = A`. That is a rotate-and-scale matrix, and
+`OAM::Render`'s overload taking a `Matrix2x2 *` (`_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2`)
+names the type in its own mangled signature.
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x050-0x05c | `mBgMatrixA` … `mBgMatrixD` | `Minimap::Behavior` fills them from `data_02082214` scaled by `mInvScale`, sets `C = -B` and `D = A`, and passes `&mBgMatrixA` to `UpdateMinimap` as a four-word block. `Minimap::InitResources` seeds 0x1000, 0, 0, 0x1000 — the Fix12 identity. 0x05c was called `mPosX`; `mPosX = mBgMatrixA` in `Behavior` is what makes that name untenable. |
+| 0x200-0x20c | `mArrowMatrixA` … `mArrowMatrixD` | `Minimap::Render` fills them from the same table scaled by `mArrowScale` (0x210), in both the VS and single-player branches, immediately before drawing `OAM::MM_ARROW`. Seeded to the same Fix12 identity. |
+
+### Where the map is centred
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x1e0-0x1e8 | `mMapOriginX/Y/Z` | A per-level constant world position. `InitResources` writes 0x258000/0/0x64000 for one level group, -0x2bc000/0/-0x2bc000 for another and zero otherwise; nothing else assigns it. |
+| 0x1f4-0x1fc | `mMapCenterWorldX/Y/Z` | The centre actually used this frame. `Behavior` copies `mMapOrigin*` into it, projects the player through `Minimap::GetPosOnMinimap`, clamps the icon to the visible window, unprojects with `Minimap::GetPosFromMinimapPos` and adds the difference back — so the map scrolls only as far as it must to keep the player on screen. Every icon on the map is projected relative to it, and `mMapCenterX/Y` are recomputed from its x and z. |
+
+### Two fields the header did not reach
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x22e | `mStarIconAnimFrame[12]` | Was `pad_22e[0xc]`. `Minimap::Render` advances entry `i` by `data_0208ee44`, wraps it at 12, and uses `% 12 > 4` to choose between the two frames of a star marker; it resets the entry to 0 for any star not on the current map. |
+| 0x256 | `mStarKeyBlinkTimer` | Was past the end of the declared struct entirely. `Render` increments it, wraps it at 5, and draws the first of the two `OAM::MM_STAR_KEYS` frames while it is below 2. The size assert is unchanged: 0x257 still rounds to 0x258. |
+
+### Shadow structs collapsed onto the header
+
+`Minimap::Render` carried a 33-field private redeclaration of the class and
+`Minimap::UpdateLevelSpecific` a one-method stub; both now include
+`include/Minimap.h`, which needed `int Render();` and
+`static void UpdateLevelSpecific();` added to it. `build/eligible-names.txt` is
+byte-identical across that header change.
+
+Collapsing `Render` onto the real header cost one thing: the shadow spelled
+0x21c `s16` and the header spells it `u16` (`Behavior` casts every read to
+`(u16)`, which is why). `Render` reads it *without* a cast, so the ROM does an
+`ldrsh` there and the two call sites now say `(s16)this->mAngle`. Without that
+the function is two words off — the only two words in this whole pass that a
+rename could have silently changed.
+
+Two raw pokes also collapsed onto members and stayed byte-identical:
+`*(u8*)((int)((char*)this + i) + 0x22e) += …` is `mStarIconAnimFrame[i] += …`,
+and `*(u8*)((int)this + 0x256) += 1` is `mStarKeyBlinkTimer += 1`.
+
+### Deliberately left `unk_`
+
+0x090, 0x094, 0x098, 0x09c and 0x1ec are each written once, to zero, by
+`InitResources`, and no matched function reads any of them. 0x090 sits between
+the player-icon arrays and the star-icon arrays and 0x1ec between the two
+Vector3s, so a shape can be guessed for both — but a guess is what it would be.

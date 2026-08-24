@@ -95,27 +95,27 @@ int Minimap::InitResources()
             mMapCenterOffset = 0x80;
 
             if (SublevelToLevel(data_0209f2f8) == 4) {
-                unk_1e0 = 0x258000;
-                unk_1e4 = 0;
-                unk_1e8 = 0x64000;
+                mMapOriginX = 0x258000;
+                mMapOriginY = 0;
+                mMapOriginZ = 0x64000;
             } else if (SublevelToLevel(data_0209f2f8) == 0x1d && data_0209f2f8 != 1 && data_0209f2f8 != 0x33 && data_0209f2f8 != 3) {
-                unk_1e0 = -0x2bc000;
-                unk_1e4 = 0;
-                unk_1e8 = -0x2bc000;
+                mMapOriginX = -0x2bc000;
+                mMapOriginY = 0;
+                mMapOriginZ = -0x2bc000;
             } else {
                 SublevelToLevel(data_0209f2f8);
-                unk_1e0 = 0;
-                unk_1e4 = 0;
-                unk_1e8 = 0;
+                mMapOriginX = 0;
+                mMapOriginY = 0;
+                mMapOriginZ = 0;
             }
             mArrowType = 1;
         } else {
             *(volatile u16*)0x400100e = (u16)(((0x1f - data_ov002_02111148) << 8) | ((*(volatile u16*)0x400100e & 0x43) | 0x10));
             mMapWidth = 0x80;
             mMapCenterOffset = 0x40;
-            unk_1e0 = 0;
-            unk_1e4 = 0;
-            unk_1e8 = 0;
+            mMapOriginX = 0;
+            mMapOriginY = 0;
+            mMapOriginZ = 0;
             mArrowType = 2;
         }
         data_0209d454 |= 8;
@@ -144,14 +144,14 @@ int Minimap::InitResources()
     }
 
     data_ov002_02111150 = 0;
-    unk_050 = 0x1000;
-    unk_054 = 0;
-    unk_058 = 0;
-    mPosX = 0x1000;
-    unk_200 = 0x1000;
-    unk_204 = 0;
-    unk_208 = 0;
-    unk_20c = 0x1000;
+    mBgMatrixA = 0x1000;
+    mBgMatrixB = 0;
+    mBgMatrixC = 0;
+    mBgMatrixD = 0x1000;
+    mArrowMatrixA = 0x1000;
+    mArrowMatrixB = 0;
+    mArrowMatrixC = 0;
+    mArrowMatrixD = 0x1000;
     unk_1ec = 0;
     mArrowScale = 0x1000;
     unk_090 = 0;
