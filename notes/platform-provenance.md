@@ -129,7 +129,7 @@ single-int-by-value fourth parameter, which is exactly what `math/Fix12.h`'s
 Contrast the two `IsClsnInRange*` symbols, whose names make the same `Fix12<int>`
 claim and whose bytes **refuse** it — see the note in `include/dActor_c.h` about
 CW homing class-typed by-value parameters to the stack, and the header comment in
-`src_tu/actors/dBgActor_c.cpp`. `UpdateKillByMegaChar` is non-virtual, so the
+`src_tu/actors/Platform.cpp`. `UpdateKillByMegaChar` is non-virtual, so the
 declaration adds no slot and no field; the 0x320 assertion is unaffected.
 
 ---
@@ -310,7 +310,8 @@ they are `s32` / `u32` now. Same offsets, same size, byte-verified.
 
 ## `include/daObjSm_Lift_c.h` (SkiLift)
 
-An RTTI-derived flat placeholder from `tools/deepen_rtti.py`, shared by
+An RTTI-derived flat placeholder credited to a `deepen_rtti.py` that has
+never existed in this repo (see notes/minigame-provenance.md), shared by
 `SkiLift::InitResources` and `func_ov018_021122ec` (ov018).
 
 | offset | name | evidence |

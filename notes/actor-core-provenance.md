@@ -15,7 +15,7 @@ See also `notes/actor-vtables.md`, `notes/mwccarm-codegen.md`, `notes/actor-nami
 `fBase_c`'s code is one contiguous run, `0x02043444..0x02043f4c`, 25 functions.
 
 That range is a correction. The banner used to say `0x02043494..0x02043e04` and
-both ends were wrong; `src_tu/actors/fBase_c.cpp` reconciled it against the
+both ends were wrong; `src_tu/actors/ActorBase.cpp` reconciled it against the
 cartridge while rebuilding the translation unit.
 
 * `0x02043444` is the real start: `_ZN7fBase_cnwEj`, this class's own
@@ -125,7 +125,7 @@ D1 body plus those instructions:
     fBase_c::~fBase_c [D0]  0x02043d78  0x44 = D1's 0x30 + 0x14
     dBase_c::~dBase_c [D0]  0x02013ea4  0x38 = D1's 0x24 + 0x14
 
-Compiled without the declaration, `src_tu/actors/dBase_c.cpp`'s D0 came out the
+Compiled without the declaration, `src_tu/actors/ActorDerived.cpp`'s D0 came out the
 wrong SIZE (`999 word(s) differ`); with it, 5/5 MATCH.
 
 Why it is declared on `dActor_c` as well as on `fBase_c`: mwcc inlines

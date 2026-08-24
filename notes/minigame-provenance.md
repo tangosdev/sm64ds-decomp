@@ -62,7 +62,7 @@ allocation.
 
 ## dScMgBase_c (include/dScMgBase_c.h)
 
-The banner claimed `tools/deepen_rtti.py` generated the file. That tool has
+The banner credited the file to a `deepen_rtti.py` under `tools/`. That tool has
 never existed in this repo (`git log --all --diff-filter=A -- '*deepen_rtti*'`
 is empty; see notes/runbook-type-reconstruction.md section 2), so every field
 that does not carry its own evidence note is an unverified placeholder rather
@@ -171,8 +171,8 @@ either shadow header). This is a third local copy of the identical type;
 consolidating all three is a separate change with its own blast radius.
 
 **0x4700..0x4718** (seven fields) were split out of the former `pad_4660[0xbc]`:
-dScMgRoulette_c's Render (src/func_ov006_02109834.c) and dScMg3DEsp_c's Render
-(src/func_ov006_020e9d1c.cpp) both write those exact offsets, so they belong to
+dScMgRoulette_c's Render (src/_ZN15dScMgRoulette_c6RenderEv.cpp) and dScMg3DEsp_c's Render
+(src/_ZN12dScMg3DEsp_c6RenderEv.cpp) both write those exact offsets, so they belong to
 this class, not either leaf. 0x4718..0x471b has no matched access and stays
 padding.
 
@@ -261,7 +261,7 @@ dScMgBase_c.h override returns void, so this now calls the base method as
 a plain statement instead of returning it, same fix dScMgLuigi_c's own
 slot 5 needed), 6 (Behavior), 9 (Render), 16 (D1), 17 (D0), 18 (own new
 slot, not yet named -- stays a raw extern "C" helper,
-src/func_ov006_020d52f0.cpp, same precedent as every other dScMgBase_c
+src/func_ov006_020d52f0.c, same precedent as every other dScMgBase_c
 leaf's slot 18; it no longer includes this header at all -- its one
 inherited-field access at 0xbc is dScMgBase_c's own pad_0bc, not a named
 field there either, so it now reaches it via a raw char* offset, the same
