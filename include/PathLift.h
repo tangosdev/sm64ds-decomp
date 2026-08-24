@@ -24,8 +24,8 @@ struct PathLift : dBgActor_c {
     u8  pad_31e[0x2];
     Model mModels[3];                     /* 0x320 */
     u8  pad_410[0x1a];
-    u8  unk_42a;                          /* 0x42a */
-    u8  unk_42b;                          /* 0x42b */
+    u8  mAfterClsnRan;                    /* 0x42a -- set by AfterClsn, cleared by the last statement of BaseBehavior */
+    u8  mTriggerDelay;                    /* 0x42b -- DecIfAbove0_Byte; AfterClsn only fires the state change at 0 */
     u8  pad_42c[0x20];
     s32 mState;                          /* 0x44c */
 
@@ -55,8 +55,8 @@ struct PathLift {
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x13e];
-    u8  unk_42a;            /* 0x42a */
-    u8  unk_42b;            /* 0x42b */
+    u8  mAfterClsnRan;            /* 0x42a */
+    u8  mTriggerDelay;            /* 0x42b */
     u8  pad_42c[0x20];
     s32 mState;            /* 0x44c */
 };

@@ -12,7 +12,7 @@ extern void _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* t, int a, int b);
 }
 
 int daObjRcCarpet_c::Behavior() {
-    if (unk_42a != 0)
+    if (mAfterClsnRan != 0)
         ApproachLinear(unk_4bc, -0x14000, 0x5000);
     else
         ApproachLinear(unk_4bc, 0, 0x5000);

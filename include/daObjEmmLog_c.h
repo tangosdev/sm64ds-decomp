@@ -22,8 +22,8 @@
 #include "dBgActor_c.h"
 
 struct daObjEmmLog_c : dBgActor_c {
-    s32 unk_320;            /* 0x320 */
-    s32 unk_324;            /* 0x324 */
+    s32 mBasePosY;          /* 0x320 -- InitResources copies mPosY; Behavior computes mPosY = mBasePosY + sine * mBobAmplitude */
+    s32 mBobAmplitude;      /* 0x324 -- 0x64000, or the spawn byte * 0xa000 */
 
     virtual ~daObjEmmLog_c();
 
@@ -42,8 +42,8 @@ struct daObjEmmLog_c {
     u8  pad_000[0x60];
     s32 unk_060;            /* 0x060 */
     u8  pad_064[0x2bc];
-    s32 unk_320;            /* 0x320 */
-    s32 unk_324;            /* 0x324 */
+    s32 mBasePosY;          /* 0x320 -- InitResources copies mPosY; Behavior computes mPosY = mBasePosY + sine * mBobAmplitude */
+    s32 mBobAmplitude;      /* 0x324 -- 0x64000, or the spawn byte * 0xa000 */
 };
 
 #endif /* __cplusplus */

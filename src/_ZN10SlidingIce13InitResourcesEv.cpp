@@ -35,11 +35,11 @@ int SlidingIce::InitResources()
         mMeshCollider.unk_4c = 0;
         mMeshCollider.Enable(this);
         mHorzSpeed = 0x2d000;
-        unk_31e = 0x64;
+        mDelayTimer = 0x64;
         mPrevAngleY = -0x4000;
         mMinPosY = mPosY - 0xc8000;
     } else {
-        unk_31e = (u8)mNumToBigIce * 0x14;
+        mDelayTimer = (u8)mNumToBigIce * 0x14;
         mNumToBigIce = 5;
     }
     return 1;

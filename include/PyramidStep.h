@@ -25,7 +25,12 @@ struct PyramidStep : dBgActor_c {
     s16 mStateTimer;                      /* 0x370 */
     u8 mState;                       /* 0x372 */
     u8  pad_373[0x1];
-    u8 unk_374;                       /* 0x374 */
+    /* InitResources passes `&mClsnMat2' as the `const Matrix4x3 &' argument of
+       dBgW_KcMbg::SetFile; a Matrix4x3 is 0x30 bytes and 0x374 + 0x30 = 0x3a4,
+       the factory's own operator new literal, so the tail this header used to
+       call padding IS the matrix. Left a u8 marker, the idiom this family's C
+       twins already use. */
+    u8  mClsnMat2[0x30];              /* 0x374 */
 
     /* --- vtable --- */
     virtual ~PyramidStep();
@@ -35,10 +40,6 @@ struct PyramidStep : dBgActor_c {
     int InitResources();
     int Render();
 
-    /* Tail padding. The field span stops short of the real size: PyramidStep_Spawn
-       calls fBase_c::operator new(0x3a4), read off the retail
-       instruction. A span is only a LOWER BOUND. */
-    u8 pad_378[0x2c];      /* 0x378, to the ROM's 0x3a4 */
 };
 
 typedef char PyramidStep_size_must_be_0x3a4[sizeof(PyramidStep) == 0x3a4 ? 1 : -1];
@@ -52,9 +53,9 @@ struct PyramidStep {
     u8  pad_000[0x8];
     s32 unk_008;            /* 0x008 */
     u8  pad_00c[0x82];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x18];
-    s32 unk_0a8;            /* 0x0a8 */
+    s32 mVertSpeed;         /* 0x0a8 */
     u8  pad_0ac[0x28];
     /* Model member, named by the class's own destructor calling
        Model's D1 at +0x0d4 -- a relocation the ROM build
@@ -71,7 +72,7 @@ struct PyramidStep {
     s16 mStateTimer;            /* 0x370 */
     u8  mState;            /* 0x372 */
     u8  pad_373[0x1];
-    u8  unk_374;            /* 0x374 */
+    u8  mClsnMat2[0x30];    /* 0x374 */
 };
 
 #endif /* __cplusplus */

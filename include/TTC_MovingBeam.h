@@ -25,7 +25,7 @@ struct TTC_MovingBeam : dBgActor_c {
     s32 mEndPosY;                      /* 0x324 */
     u8 mDirection;                       /* 0x328 */
     u8  pad_329[0x7];
-    s32 unk_330;                      /* 0x330 */
+    s32 mGroundY;                     /* 0x330 -- InitResources' dBgCh_Gnd raycast result, falling back to the probe height */
     ShadowModel mShadowModel;         /* 0x334 */
 
     /* --- vtable --- */
@@ -75,7 +75,7 @@ struct TTC_MovingBeam {
     s32 mEndPosY;            /* 0x324 */
     u8  mDirection;            /* 0x328 */
     u8  pad_329[0x7];
-    s32 unk_330;            /* 0x330 */
+    s32 mGroundY;            /* 0x330 */
     ShadowModel mShadowModel; /* 0x334 */
 };
 

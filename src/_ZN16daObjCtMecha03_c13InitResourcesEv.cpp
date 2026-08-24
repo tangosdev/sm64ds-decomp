@@ -58,10 +58,10 @@ int daObjCtMecha03_c::InitResources()
     _ZN9ModelBase7SetFileEP8BMD_Fileii((void *)(self + 0xd4), bmd, 1, -1);
     _ZN11ShadowModel10InitCuboidEv((void *)(self + 0x330));
 
-    unk_31e = 1;
-    unk_320 = data_ov065_0211c0b0[data_0209f2c0];
-    unk_322 = 0x1964;
-    mAngleZ = unk_322;
+    mSwingDir = 1;
+    mSwingAccel = data_ov065_0211c0b0[data_0209f2c0];
+    mSwingAngle = 0x1964;
+    mAngleZ = mSwingAngle;
 
     func_ov065_0211a114(self);
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
