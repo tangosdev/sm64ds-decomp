@@ -617,10 +617,10 @@ int dScene_c::BeforeBehavior()
         return 1;
     }
 
-    if ((unk_013 & 1) != 0) {
+    if ((pauseFlags & 1) != 0) {
         if (func_020431c4(this) == 0) {
-            unk_013 &= ~1;
-            unk_013 &= ~4;
+            pauseFlags &= ~1;
+            pauseFlags &= ~4;
         }
         return 0;
     } else {

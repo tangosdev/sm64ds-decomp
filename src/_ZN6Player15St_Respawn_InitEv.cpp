@@ -27,9 +27,9 @@ int Player::St_Respawn_Init()
     mPosZ = mSpawnPosZ;
     mPosY += 0x3e8000;
     func_02035860(&mMeshClsn, &mPosX);
-    unk_068 = mPosX;
-    unk_06c = mPosY;
-    unk_070 = mPosZ;
+    mPrevPosX = mPosX;
+    mPrevPosY = mPosY;
+    mPrevPosZ = mPosZ;
     mPrevAngleY = mSpawnAngleY;
     mAngleY = mPrevAngleY;
     mIsBodyClsnEnabled = 1;

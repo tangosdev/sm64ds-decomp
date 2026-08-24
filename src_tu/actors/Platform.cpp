@@ -121,7 +121,7 @@ int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(struct dBgActor_c *self,
     v.x = self->mPosX;
     v.y = self->mPosY;
     v.z = self->mPosZ;
-    if (b == 0) v.y = v.y + self->unk_0b4;
+    if (b == 0) v.y = v.y + self->mClipOffsetY;
     else v.y = v.y + b;
     void *p = _ZN8dActor_c13ClosestPlayerEv(((char *)self));
     int d = Vec3_Dist(&v, (char *)p + 0x5c);
@@ -148,8 +148,8 @@ int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(struct dBgActor_c *self, int a, 
     v.x = self->mPosX;
     v.y = self->mPosY;
     v.z = self->mPosZ;
-    if (a == 0) a = self->unk_0b8 << 3;
-    if (b == 0) v.y = v.y + self->unk_0b4;
+    if (a == 0) a = self->mClipRadius << 3;
+    if (b == 0) v.y = v.y + self->mClipOffsetY;
     else v.y = v.y + b;
     void *p = _ZN8dActor_c13ClosestPlayerEv(((char *)self));
     int d = Vec3_Dist(&v, (char *)p + 0x5c);
