@@ -4807,7 +4807,7 @@ src/func_02035504.c:
     complete
     .text start:0x02035504 end:0x02035514
 
-src/_ZN5dBgChC2Ev.c:
+src/_ZN5dBgChC2Ev.cpp:
     complete
     .text start:0x02035514 end:0x0203553c
 
