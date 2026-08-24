@@ -1,24 +1,27 @@
 //cpp
 // @symbol _ZN7daDgr_c13InitResourcesEv
-/* daDgr_c::InitResources -- vtable slot 0.
+/* daDgr_c::InitResources -- vtable slot 0. Real C++ method over the shared
+ * header: loads the swinging platform's model and its KCL, points the mesh
+ * collider's update hook at dBgW::UpdatePosAndAngs, zeroes the facing angle the
+ * KCL was baked against, and parks the swing state -- resting height, angular
+ * speed, phase, stage, direction and both particle handles.
  *
- * Kept as an extern "C" free function under the mangled name, the same
- * convention include/fBase_c.h's own InitResources note documents:
- * declared as a real virtual method in the header so callers mangle it
- * correctly, but defined here as a free function operating on a raw `char*`
- * rather than converted to a true `daDgr_c::InitResources()` member -- no
- * caller in the tree invokes it as a method, so there is nothing to gain by
- * converting the body and a real risk of a codegen-driven byte miss doing
- * so. */
+ * (This used to be an extern "C" free function over a raw `char *` with every
+ * field reached by literal offset. Converting it to a real method and naming
+ * the fields is byte-exact under the pinned 2004/b56 -- checked with
+ * tools/build_pin.verify.)
+ *
+ * The two func_ov025_* helpers still take a `char *`: decl_common.h spells them
+ * that way and this file does not own that header. */
+#include "daDgr_c.h"
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* daDgr_c::InitResources - recovered from vtable slot identity */
+
 typedef int Fix12i;
-struct SharedFilePtr; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
-struct Model { int d; };
-struct ModelBase { int d; };
-struct dBgW_Kc { int d; };
-struct dBgW_KcMbg { int d; };
+struct SharedFilePtr;
+struct BMD_File;
+struct KCL_File;
+struct CLPS_Block;
+struct ModelBase;
 
 extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr&);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(ModelBase*, BMD_File*, int, int);
@@ -32,29 +35,28 @@ extern SharedFilePtr data_ov025_02113a60;
 extern CLPS_Block data_ov025_02112c28;
 extern int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 
-extern "C" int _ZN7daDgr_c13InitResourcesEv(char* thiz)
+s32 daDgr_c::InitResources()
 {
-    char* c = thiz;
-    func_ov025_02111344(c);
-    func_ov025_021112e0(c);
+    func_ov025_02111344((char*)this);
+    func_ov025_021112e0((char*)this);
     {
         BMD_File* bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov025_02113a68);
-        _ZN9ModelBase7SetFileEP8BMD_Fileii((ModelBase*)(c + 0xd4), bmd, 1, -1);
+        _ZN9ModelBase7SetFileEP8BMD_Fileii((ModelBase*)&mModel, bmd, 1, -1);
     }
     {
         KCL_File* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov025_02113a60);
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            (dBgW_KcMbg*)(c + 0x124), kcl, *(const Matrix4x3*)(c + 0x2ec),
-            0x1000, *(short*)(c + 0x8e), data_ov025_02112c28);
+            &mMeshCollider, kcl, mClsnMat, 0x1000, mAngleY, data_ov025_02112c28);
     }
-    func_020393d4((int*)(c + 0x124), (int)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
-    *(short*)(c + 0x8e) = 0;
-    *(int*)(c + 0x320) = *(int*)(c + 0x60);
-    *(short*)(c + 0x324) = 0;
-    *(short*)(c + 0x326) = 0;
-    *(unsigned char*)(c + 0x328) = 0;
-    *(unsigned char*)(c + 0x329) = 0;
-    *(int*)(c + 0x330) = 0;
-    *(int*)(c + 0x32c) = *(int*)(c + 0x330);
+    func_020393d4((int*)&mMeshCollider,
+                  (int)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+    mAngleY = 0;
+    mBasePosY = mPosY;
+    mAngleXSpeed = 0;
+    mPhaseTimer = 0;
+    mSwingStage = 0;
+    mSwingDir = 0;
+    mDustParticle2 = 0;
+    mDustParticle1 = mDustParticle2;
     return 1;
 }

@@ -56,3 +56,95 @@ Raw-offset collapses, each re-verified byte-exact:
   `BlueCoinSwitch::Render` already used.
 * `CleanupResources`: `((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))` →
   `((dBgW *)&mMeshCollider)`.
+
+---
+
+## Crate (`include/Crate.h`, ov098, size 0x608)
+
+Bodies read: `src/_ZN5Crate13InitResourcesEv.cpp`, `src/_ZN5Crate8BehaviorEv.cpp`,
+`src/_ZN5Crate6RenderEv.cpp`, `src/_ZN5Crate16CleanupResourcesEv.cpp`,
+`src/_ZN5Crate4KillEv.cpp`, `src/_ZN5Crate13OnTurnIntoEggER6Player.cpp`,
+`src/_ZN5Crate13OnYoshiTryEatEv.cpp`,
+`src/_ZN5Crate15OnGroundPoundedER8dActor_c.cpp`, `src/Crate_SetState.cpp`.
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x4e8/0x4ec/0x4f0 | `mHomePosX/Y/Z` | `InitResources` copies `mPosX/mPosY/mPosZ` into them once; `Behavior` passes `&mHomePosX` as the second `Vector3 *` of `Vec3_HorzDist(&mPosX, …)`. A spawn position kept to measure drift. |
+| 0x500/0x502/0x504 | `mHomeAngleX/Y/Z` | `InitResources` copies `mAngleX/mAngleY/mAngleZ` into them, in the same run as the position triple above. |
+| 0x560 | `mState` | `Crate_SetState(c, i)` writes `i` to 0x560 and immediately dispatches `data_ov098_0213c878[i]`, a table of pointer-to-member functions — so 0x560 is the state index into that table. `Render` short-circuits on `mState == 6`, the value `Kill`, `OnTurnIntoEgg` and the two destruction paths in `Behavior` all park the crate at. |
+| 0x5e4 | `mHoldingPlayer` | already typed `Player *`; `Behavior` calls `Player::DropActor()` on it when the pause bit `0x4000000` of `data_0209b454` is set and the crate's own `mFlags & 0x4000000` is set. Only a carrying player can be made to drop the actor. |
+| 0x5f4 | `mClsnYOffset` | `Behavior`'s only use: the crate's own position minus this value in Y is what both `dCcAcPos_c` members' `pos` are set to each frame. A vertical offset from the model origin to the collision origin. |
+| 0x5fc | `mParticleHandle1` | `Behavior` passes the field as the first argument of `Particle::System::New(u32, u32, …)` and stores the returned pointer straight back into it — a handle the particle system reads and rewrites. Effect id `0x13a`. |
+| 0x600 | `mParticleHandle2` | same shape, through `Particle::System::NewUnkCallback818`, effect id `0x13b`. |
+| 0x606 | `mBreakTimer` | `Behavior` runs the whole break sequence under `if (0x606 != 0)`: `DecIfAbove0_Byte(&0x606)` once a frame, spawning the two particles while it is still above zero, and on the frame it reaches zero poofing dust and setting state 6. `OnYoshiTryEat` returns 0 (inedible) while it is nonzero and 6 otherwise. A countdown to destruction, not a flag. |
+| 0x607 | `mCoinsPaid` | `OnTurnIntoEgg` pays three coins only when it is not already `1`, then sets it to `1`, on both the `Player::IsCollectingCap` branch (`dActor_c::GivePlayerCoins(…, 3, 0)`) and the egg branch (`Player::RegisterEggCoinCount(player, 3, …)`). A once-only latch. |
+
+In the `#else` C twin only, three offsets that are `dActor_c`'s and are already named
+on the C++ side of the very same header were repointed to those names — the same
+correction `include/CrazedCrate.h` documents having made: `0x09c` → `mVertAccel`
+(`InitResources` writes `-0x2000`), `0x0a0` → `mTerminalVelocity` (`-0x3c000`),
+`0x0b0` → `mFlags`.
+
+Four more C-twin offsets are interior fields of members the C++ side already names:
+`0x598/0x59c/0x5a0` are `mdCcAcPos_c1.pos.x/y/z` (`0x564 + 0x34`) and
+`0x5d8/0x5dc/0x5e0` are `mdCcAcPos_c2.pos.x/y/z` (`0x5a4 + 0x34`) — `Behavior` writes
+exactly those six through the C++ member spellings. They are now
+`mdCcAcPos_c1_posX/Y/Z` and `mdCcAcPos_c2_posX/Y/Z`.
+
+Left `unk_`: nothing in this class's own span. `include/Crate.h`'s `pad_` runs are
+unevidenced and stay padding.
+
+Raw-offset collapses, each re-verified byte-exact:
+
+* `InitResources`: `((char *)this) + 0xd4` → `&mModel`, `+ 0x124` → `&mMeshCollider`,
+  `+ 0x2ec` → `&mClsnMat`, `+ 0x320` → `&mWithMeshClsn`. The one remaining raw
+  `this + 0xd0` write is deliberate and documented in the header: it is `dBgActor_c`'s
+  generic pad, not a `Crate` field.
+* `Behavior`: `*(void **)((char *)&unk_5e4)` → `mHoldingPlayer` (2 sites),
+  `(u8 *)((char *)&unk_606)` → `&mBreakTimer`,
+  `*(void **)((char *)&unk_5fc) = …` → `mParticleHandle1 = (u32)…` (and `…600`),
+  and the two `(char *)&mPosX` / `(char *)&mHomePosX` double casts.
+* `Render`: `(Sub *)((char *)&mModel)` → `(Sub *)&mModel`.
+
+`Crate_SetState.cpp` keeps its local `struct C` shadow on purpose: it calls through a
+pointer-to-member function, and that representation is not the same for a polymorphic
+class as for the flat shadow the ROM's own code is built against.
+
+---
+
+## daDgr_c (`include/daDgr_c.h`, ov025, size 0x334)
+
+A swinging platform. Bodies read: `src/_ZN7daDgr_c13InitResourcesEv.cpp`,
+`src/_ZN7daDgr_c8BehaviorEv.cpp`, `src/_ZN7daDgr_c6RenderEv.cpp`,
+`src/_ZN7daDgr_c16CleanupResourcesEv.cpp`, `src/func_ov025_02111898.c` (the factory).
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x320 | `mBasePosY` | `InitResources` copies `mPosY` into it once; `Behavior` never writes it again and computes `mPosY = mBasePosY + |sine * 23|` from `data_02082214` every swing frame, and puts the dust particles at `mBasePosY - 0xb9000`. The resting height the swing is measured from. |
+| 0x324 | `mAngleXSpeed` | `Behavior` sets it to `±(0x400 / n)` and then adds it to `mAngleX` — it is only ever the per-frame angular step. It is also the guard on the swing sound: the sample only plays when it is nonzero. |
+| 0x326 | `mPhaseTimer` | incremented once per `Behavior` call on every path, and compared against `0x20`, `n + 8`, `m` and `m - 1`; zeroed whenever one of those thresholds is hit. A frame counter within the current stage. |
+| 0x328 | `mSwingStage` | counts `0 … 0x14` and then goes to the `-1` "hold at the end" sentinel; `Behavior` reads it as `10 - mSwingStage` and folds that to a magnitude, which is what makes the platform ease in and out. |
+| 0x329 | `mSwingDir` | flipped with `^ 1` exactly when a swing finishes (`mSwingStage == 0x14`), and the only thing it decides is the sign of the Z step (`±0x14000 / n`) and of `mAngleXSpeed`. A direction bit, not a counter. |
+| 0x32c | `mDustParticle1` | passed as the first argument of `Particle::System::New(u32, u32, …)` and overwritten with that call's result — a recycled handle. Effect `0x2d`, placed 100 units along the platform's facing (`data_02082214[(mAngleY >> 4) * 2 + 1]`). |
+| 0x330 | `mDustParticle2` | identical shape, placed 100 units the other way. The two ends of the platform. |
+
+In the `#else` C twin only, eight offsets that are `dActor_c`'s and are already named
+in `include/dActor_c.h` at exactly those offsets were repointed to those names:
+`0x074` → `mCamSpacePosX` (the twin already named `mCamSpacePosY/Z` right after it),
+`0x098` → `mHorzSpeed`, `0x09c` → `mVertAccel`, `0x0a0` → `mTerminalVelocity`,
+`0x0a8` → `mVertSpeed`, `0x0b0` → `mFlags`, `0x0b4` → `mClipOffsetY`,
+`0x0b8` → `mClipRadius`.
+
+Left `unk_`: `0x31c` / `0x31d` in the C twin — those are `dBgActor_c`'s own two
+trailing bytes and are `unk_` in `include/dBgActor_c.h` too, which this pass does not
+own.
+
+`src/_ZN7daDgr_c13InitResourcesEv.cpp` was an `extern "C"` free function over a raw
+`char *`, with four local one-word shadow structs (`Model`, `ModelBase`, `dBgW_Kc`,
+`dBgW_KcMbg`) and every field reached by literal offset — `*(int *)(c + 0x320) =
+*(int *)(c + 0x60);`. It is now a real `s32 daDgr_c::InitResources()` over the shared
+header, with `&mModel`, `&mMeshCollider`, `mClsnMat`, `mAngleY`, `mPosY` and the six
+named swing fields. Byte-exact under 2004/b56. The file's old banner claimed there was
+"nothing to gain by converting the body and a real risk of a codegen-driven byte miss"
+— the first half was wrong and the second did not happen; the banner now records what
+was measured instead.

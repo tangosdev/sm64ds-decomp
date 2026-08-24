@@ -20,25 +20,25 @@
 
 struct StarSwitch : dBgActor_c {
     u8  pad_31e[0x2];
-    s32 mDrawScaleX;                      /* 0x320 */
-    s32 mDrawScaleY;                      /* 0x324 */
-    s32 mDrawScaleZ;                      /* 0x328 */
+    s32 mDrawScaleX;             /* 0x320 */
+    s32 mDrawScaleY;             /* 0x324 */
+    s32 mDrawScaleZ;             /* 0x328 */
     u8  pad_32c[0x8];
-    s32 mMusicVolume;                      /* 0x334 */
-    u16 mTimer;                      /* 0x338 */
-    u16 mTimeLimit;                      /* 0x33a */
-    s32 mSwitchType;                      /* 0x33c */
-    s32 unk_340;                      /* 0x340 */
-    u32 mTargetActorID;               /* 0x344 */
-    s32 mTargetActor;                      /* 0x348 */
-    u8 mResourceIdx;                       /* 0x34c */
-    u8 mMusicFadeDone;                       /* 0x34d */
-    u8 mEventBit;                       /* 0x34e */
-    u8 unk_34f;                       /* 0x34f */
-    u8 unk_350;                       /* 0x350 */
-    u8 unk_351;                       /* 0x351 */
+    s32 mMusicVolume;            /* 0x334 */
+    u16 mTimer;                  /* 0x338 */
+    u16 mTimeLimit;              /* 0x33a */
+    s32 mSwitchType;             /* 0x33c */
+    s32 unk_340;                 /* 0x340 */
+    u32 mTargetActorID;          /* 0x344 */
+    s32 mTargetActor;            /* 0x348 */
+    u8 mResourceIdx;             /* 0x34c */
+    u8 mMusicFadeDone;           /* 0x34d */
+    u8 mEventBit;                /* 0x34e */
+    u8 unk_34f;                  /* 0x34f */
+    u8 unk_350;                  /* 0x350 */
+    u8 unk_351;                  /* 0x351 */
     u8  pad_352[0x1];
-    s8 mHomeAreaId;                       /* 0x353 */
+    s8 mHomeAreaId;              /* 0x353 */
 
     /* --- vtable --- */
     virtual ~StarSwitch();
@@ -59,8 +59,8 @@ typedef char StarSwitch_size_must_be_0x354[sizeof(StarSwitch) == 0x354 ? 1 : -1]
    can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct StarSwitch {
     u8  pad_000[0x8];
-    u32 mParam;            /* 0x008 */
-    u16 mActorID;            /* 0x00c */
+    u32 mParam;                  /* 0x008 */
+    u16 mActorID;                /* 0x00c */
     u8  pad_00e[0x52];
     /* 0x060..0x08e is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
@@ -76,7 +76,7 @@ struct StarSwitch {
     s32 mScaleY;                 /* 0x084 */
     s32 mScaleZ;                 /* 0x088 */
     s16 mAngleX;                 /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
+    s16 mAngleY;                 /* 0x08e */
     u8  pad_090[0x20];
     /* 0x0b0..0x0cc is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
@@ -87,35 +87,35 @@ struct StarSwitch {
     s32 unk_0c0;                 /* 0x0c0 */
     u8  unk_0c4;                 /* 0x0c4 */
     u8  pad_0c5[0x7];
-    u8  mAreaId;            /* 0x0cc */
+    u8  mAreaId;                 /* 0x0cc */
     u8  pad_0cd[0x7];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x0d4 */
+    Model mModel;                /* 0x0d4 */
     /* dBgW_KcMbg member. The cartridge's own ~StarSwitch calls _ZN10dBgW_KcMbgD1Ev at
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg mMeshCollider;            /* 0x124 */
+    dBgW_KcMbg mMeshCollider;    /* 0x124 */
     u8  pad_2ec[0x34];
-    s32 mDrawScaleX;            /* 0x320 */
-    s32 mDrawScaleY;            /* 0x324 */
-    s32 mDrawScaleZ;            /* 0x328 */
+    s32 mDrawScaleX;             /* 0x320 */
+    s32 mDrawScaleY;             /* 0x324 */
+    s32 mDrawScaleZ;             /* 0x328 */
     u8  pad_32c[0x8];
     s32 mMusicVolume;            /* 0x334 */
-    u16 mTimer;            /* 0x338 */
-    u16 mTimeLimit;            /* 0x33a */
-    s32 mSwitchType;            /* 0x33c */
-    s32 unk_340;            /* 0x340 */
-    u32 mTargetActorID;            /* 0x344 */
+    u16 mTimer;                  /* 0x338 */
+    u16 mTimeLimit;              /* 0x33a */
+    s32 mSwitchType;             /* 0x33c */
+    s32 unk_340;                 /* 0x340 */
+    u32 mTargetActorID;          /* 0x344 */
     s32 mTargetActor;            /* 0x348 */
     u8  mResourceIdx;            /* 0x34c */
-    u8  mMusicFadeDone;            /* 0x34d */
-    u8  mEventBit;            /* 0x34e */
-    u8  unk_34f;            /* 0x34f */
-    u8  unk_350;            /* 0x350 */
-    u8  unk_351;            /* 0x351 */
+    u8  mMusicFadeDone;          /* 0x34d */
+    u8  mEventBit;               /* 0x34e */
+    u8  unk_34f;                 /* 0x34f */
+    u8  unk_350;                 /* 0x350 */
+    u8  unk_351;                 /* 0x351 */
     u8  pad_352[0x1];
-    s8  mHomeAreaId;            /* 0x353 */
+    s8  mHomeAreaId;             /* 0x353 */
 };
 
 #endif /* __cplusplus */
