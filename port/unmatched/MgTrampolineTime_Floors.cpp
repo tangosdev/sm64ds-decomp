@@ -132,7 +132,13 @@
 
 extern "C" {
 
-static unsigned g_hittest_020d0c38, g_floor_020cf2fc, g_floor_020d01e0;
+/* g_hittest_020d0c38 is GONE with its trap: run mg12 lane TRM decompiled
+   func_ov006_020d0c38 and src/func_ov006_020d0c38.c is a slice line in BOTH
+   slice_tti.txt and slice_tte.txt now, so a second definition here would be
+   the LNK2005 the mg11 merge already paid for once. The accessors keep their
+   exact shapes and report the hit-test slot as 0 -- see the note above them
+   before reading that zero as "never asked". */
+static unsigned g_floor_020cf2fc, g_floor_020d01e0;
 
 /* ROM 0x020cf2fc, 0x45c, UNDECOMPILED.  Arity from the call site. */
 void func_ov006_020cf2fc(char *)
@@ -152,26 +158,18 @@ void func_ov006_020d01e0(short *, short *, short *)
     ++g_floor_020d01e0;
 }
 
-/* ROM 0x020d0c38, 0x3ac, UNDECOMPILED.  The stylus hit test.  Returns the MISS
-   arm -- see the header: a trap that guessed HIT would fabricate a game
-   event. */
-int func_ov006_020d0c38(unsigned short *, unsigned short *)
-{
-    if (!g_hittest_020d0c38)
-        std::fprintf(stderr, "  [mg384/385] FLOOR func_ov006_020d0c38 (0x3ac, "
-                     "no src, no delinks block) wanted -- the stroke-connected "
-                     "test slot 23 asks; returning 0 takes the MISS arm every "
-                     "time\n");
-    ++g_hittest_020d0c38;
-    return 0;
-}
-
-/* lane TTI's census (hal/scene_mg_trampoline.cpp) */
-unsigned port_mg_tti_hittest_calls(void) { return g_hittest_020d0c38; }
+/* THE HIT-TEST SLOT IS RETIRED, NOT SILENT.  Every accessor below still takes
+   and fills the same arguments it did in run mg11, because two seat files and
+   two censuses read them and neither was touched for this; what changed is that
+   the 020d0c38 slot can no longer be anything but 0, since the body it counted
+   is real code now.  A reader who sees 0 there must read it as RETIRED -- it is
+   not "the stroke was never judged" any more, and the evidence to read instead
+   is the trampoline-record readout both censuses print. */
+unsigned port_mg_tti_hittest_calls(void) { return 0; }
 
 void port_mg_tti_floor_counts(unsigned *hit, unsigned *f2fc, unsigned *f1e0)
 {
-    *hit  = g_hittest_020d0c38;
+    *hit  = 0;                  /* RETIRED, see above */
     *f2fc = g_floor_020cf2fc;
     *f1e0 = g_floor_020d01e0;
 }
@@ -182,7 +180,7 @@ void port_mg_shared_trap_counts(unsigned *f2fc, unsigned *f1e0, unsigned *fc38)
 {
     if (f2fc) *f2fc = g_floor_020cf2fc;
     if (f1e0) *f1e0 = g_floor_020d01e0;
-    if (fc38) *fc38 = g_hittest_020d0c38;
+    if (fc38) *fc38 = 0;        /* RETIRED, see above */
 }
 
 }  /* extern "C" */

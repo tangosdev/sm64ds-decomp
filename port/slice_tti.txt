@@ -583,6 +583,7 @@ src/func_ov006_020d0ac0.c
 src/func_ov006_020d0b04.c
 src/func_ov006_020d0b2c.cpp
 src/func_ov006_020d0bd8.c
+src/func_ov006_020d0c38.c
 src/func_ov006_020e6cac.c
 src/func_ov006_020e6d24.cpp
 src/func_ov006_020e6da4.c

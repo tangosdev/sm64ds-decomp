@@ -309,6 +309,11 @@ void *MgTrampolineTime_Spawn(void);
 unsigned port_mg_tti_state_hits(void);
 /* the floor file's witness, unmatched/MgTrampolineTime_Floors.cpp */
 unsigned port_mg_tti_hittest_calls(void);
+/* The DIRECT evidence that a stylus stroke was judged, now that the hit test is
+   real code and its trap counter is retired: the three trampoline records
+   func_ov006_020d0c38 writes when it accepts a stroke. Defined once in
+   hal/trampoline_records.cpp and read by BOTH scenes' censuses. */
+void     port_mg_trampoline_record_report(void);
 void     port_mg_tti_floor_counts(unsigned *hit, unsigned *f2fc,
                                   unsigned *f1e0);
 unsigned port_mg_tti_floor_hits(void);
@@ -709,20 +714,21 @@ extern "C" void port_scene_trampoline_hits(void)
         std::printf("[scene] dScMgTrampoline_c state floor: NONE. All five "
                     "addresses in the chain reach a matched src TU and none "
                     "carries a NONMATCHING banner\n");
-        std::printf("[scene] dScMgTrampoline_c ONE floor, one level "
-                    "down: func_ov006_020d0c38 (the stylus hit test, "
-                    "no src in the decomp) trapped %u time(s); it "
-                    "decides hit sound vs miss sound and nothing "
-                    "else\n", port_mg_tti_hittest_calls());
+        std::printf("[scene] dScMgTrampoline_c hit test: func_ov006_020d0c38 "
+                    "is DECOMPILED AND SEATED as of run mg12 lane TRM. The "
+                    "retired trap counter reads %u and can only ever read 0 "
+                    "now -- the evidence is the record readout below, not "
+                    "this number\n", port_mg_tti_hittest_calls());
         {
             unsigned h = 0, f2 = 0, f1 = 0;
             port_mg_tti_floor_counts(&h, &f2, &f1);
-            std::printf("[scene] dScMgTrampoline_c closure floors: "
-                        "020d0c38 (hit test) x%u, 020cf2fc (0x45c) x%u, "
-                        "020d01e0 (0x800) x%u -- three ov006 bodies with "
-                        "no decompilation anywhere, trapped "
-                        "count-and-return\n", h, f2, f1);
+            std::printf("[scene] dScMgTrampoline_c closure floors REMAINING: "
+                        "020cf2fc (0x45c) x%u, 020d01e0 (0x800) x%u -- two "
+                        "ov006 bodies still with no decompilation, trapped "
+                        "count-and-return. 020d0c38 is retired (its slot "
+                        "reads %u)\n", f2, f1, h);
         }
+        port_mg_trampoline_record_report();
     }
 
     /* The member pointer itself, at the offset disassembled in
@@ -737,6 +743,22 @@ extern "C" void port_scene_trampoline_hits(void)
                     *(unsigned *)(g_tti_self + 0x5004),
                     *(int *)(g_tti_self + 0x5008),
                     g_tti_mode18, g_tti_mode19);
+
+    /* THE STYLUS CHAIN. This class's object is 0x5dc8 bytes and its stroke
+       block sits at +0x5db0..+0x5db6 rather than 0x181's +0x7b9c..+0x7ba2 --
+       src/func_ov006_0212101c.c (this class's slot 23) is what says so, and it
+       is the caller that hands the two Vec2s to the hit test. The release latch
+       it keys on is +0x5dc4/+0x5dc5, which slot 23 clears on both arms. */
+    if (g_tti_self)
+        std::printf("[scene] dScMgTrampoline_c stylus chain: +0x5dc4=%u, "
+                    "+0x5dc5=%u, stroke block +0x5db0..+0x5db6 = "
+                    "(%d,%d)->(%d,%d)\n",
+                    (unsigned)*(const unsigned char *)(g_tti_self + 0x5dc4),
+                    (unsigned)*(const unsigned char *)(g_tti_self + 0x5dc5),
+                    (int)*(const short *)(g_tti_self + 0x5db0),
+                    (int)*(const short *)(g_tti_self + 0x5db2),
+                    (int)*(const short *)(g_tti_self + 0x5db4),
+                    (int)*(const short *)(g_tti_self + 0x5db6));
 
     /* THE THREE FACTORY ARRAYS, because a run that draws nothing and a run that
        has nothing to draw read the same on every other line -- run mg7 lane

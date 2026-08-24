@@ -115,11 +115,15 @@
 // section-1 scan is what says so), so there is no second level and no host copy
 // beyond this one.
 //
-// ---- 4. THE TWO FLOORS ARE REAL AND THEY ARE NAMED -----------------------
+// ---- 4. THE TWO FLOORS WERE REAL; RUN mg12 LANE TRM RETIRED BOTH ---------
 //
-// Two bodies on this class's live path have NO src file and NO delinks block in
-// config/arm9/overlays/ov006/delinks.txt.  They are trapped below, count-and-
-// return, and they are the honest gaps in this seat:
+// This section is kept as the RECORD of what was trapped here in run mg11 and
+// how it was established, because the four callees it names below are exactly
+// the lines the retirement cost and a later reader needs that accounting. As of
+// run mg12 both bodies have src files and both are slice_tte.txt lines:
+// func_ov006_02123938 BYTE-MATCHES at 2004/b56 and is enrolled in ov006's
+// delinks; func_ov006_02123428 is an honest NONMATCHING seat. What follows,
+// down to the trap note, is how run mg11 found them:
 //
 //   func_ov006_02123938  0x1e8  called by slot 6 on EVERY tick.  Its own calls
 //                        are func_ov004_020ae5c4 (the family's line rasteriser,
@@ -134,10 +138,10 @@
 //
 // A trap-shaped floor HIDES its callees from static closure -- the run law's
 // warning -- so the four own bodies 0x021238d0, 0x0212382c, 0x021237c8 and
-// 0x0212373c are reachable ONLY through 02123428 and are deliberately NOT in
-// port/slice_tte.txt: nothing would call them and /OPT:REF would drop them
-// anyway.  They are listed here so whoever retires the floor knows the four
-// lines the retirement costs.
+// 0x0212373c were reachable ONLY through 02123428 and were deliberately NOT in
+// port/slice_tte.txt: nothing would have called them and /OPT:REF would have
+// dropped them anyway.  THE PREDICTION HELD EXACTLY: retiring 02123428 in run
+// mg12 cost those four slice lines and no others.
 
 #include <cstdio>
 
@@ -176,7 +180,9 @@ void  _Z14ApproachLinearRiii(int &v, int a, int b);
    unmatched/MgMemory2_FieldPmf.cpp gives data_ov006_0212b890. */
 extern int data_ov006_02140830;
 
-/* the two bodiless floors, defined below */
+/* Formerly the two bodiless floors; both are decompiled and seated as of run
+   mg12 lane TRM, so these are ordinary forward declarations of slice bodies
+   (src/func_ov006_02123938.c and src/func_ov006_02123428.c) now. */
 void func_ov006_02123938(void *self);
 void func_ov006_02123428(char *c);
 
@@ -184,29 +190,21 @@ void func_ov006_02123428(char *c);
 
 // ---- the floors -------------------------------------------------------------
 
-static unsigned g_tte_floor_02123938, g_tte_floor_02123428;
+/* BOTH TRAPS ARE RETIRED.  Run mg12 lane TRM decompiled both bodies:
+   src/func_ov006_02123938.c BYTE-MATCHES at 2004/b56 (link-verified, 0 blind,
+   and enrolled in config/arm9/overlays/ov006/delinks.txt), and
+   src/func_ov006_02123428.c is an honest NONMATCHING seat whose banner carries
+   its three measured divergences.  Both are slice_tte.txt lines now, so a trap
+   body here would be a duplicate definition rather than a stand-in.
 
-extern "C" void func_ov006_02123938(void *)
-{
-    if (!g_tte_floor_02123938)
-        std::fprintf(stderr, "  [mg385] FLOOR func_ov006_02123938 (0x1e8, no "
-                     "src, no delinks block) wanted -- this scene's per-frame "
-                     "line draw does not happen in the port\n");
-    ++g_tte_floor_02123938;
-}
-
-extern "C" void func_ov006_02123428(char *)
-{
-    if (!g_tte_floor_02123428)
-        std::fprintf(stderr, "  [mg385] FLOOR func_ov006_02123428 (0x314, no "
-                     "src, no delinks block) wanted from the play state\n");
-    ++g_tte_floor_02123428;
-}
-
+   The accessor keeps its exact shape because hal/scene_mg_trampoline2.cpp reads
+   it and that file was not touched for this; it can only report 0 now, and the
+   census text says RETIRED rather than printing a want count that would read as
+   "never called" when the truth is the opposite. */
 extern "C" void port_mg_tte_floor_counts(unsigned *a, unsigned *b)
 {
-    if (a) *a = g_tte_floor_02123938;
-    if (b) *b = g_tte_floor_02123428;
+    if (a) *a = 0;              /* 02123938 RETIRED -- seated, byte-matched */
+    if (b) *b = 0;              /* 02123428 RETIRED -- seated, NONMATCHING  */
 }
 
 // ---- the field switch -------------------------------------------------------

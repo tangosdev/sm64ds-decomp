@@ -211,6 +211,11 @@
 
 extern "C" {
 
+/* The trampoline RECORD READOUT, hal/trampoline_records.cpp. It replaces the
+   hit test's want count as this scene's stroke evidence, now that the body is
+   seated and that count is retired. Read by BOTH trampoline scenes. */
+void port_mg_trampoline_record_report(void);
+
 /* the seam into hal/scene_mg.cpp -- mounts, arm9 fill, dScMgBase_c's faces */
 unsigned port_scene_mg_fill_shared(void **vt, unsigned n);
 void     port_scene_mg_prepare(int id);
@@ -742,17 +747,22 @@ extern "C" void port_scene_trampoline2_hits(void)
     {
         unsigned f938 = 0, f428 = 0;
         port_mg_tte_floor_counts(&f938, &f428);
-        std::printf("[scene] dScMgTrampoline2_c FLOORS: func_ov006_02123938 "
-                    "wanted %u time(s) (per-tick draw), func_ov006_02123428 "
-                    "wanted %u time(s) (play-state worker). Both have no src "
-                    "and no delinks block\n", f938, f428);
+        std::printf("[scene] dScMgTrampoline2_c FLOORS RETIRED by run mg12 "
+                    "lane TRM: func_ov006_02123938 (the per-tick draw) is "
+                    "BYTE-MATCHED at 2004/b56 and enrolled in ov006's delinks; "
+                    "func_ov006_02123428 (the play-state worker) is an honest "
+                    "NONMATCHING seat. Both are slice_tte.txt lines and both "
+                    "run as real code -- the retired counters read %u and %u "
+                    "and can only read 0\n", f938, f428);
         unsigned t1 = 0, t2 = 0, t3 = 0, t4 = 0;
         port_mg_tte_trap_counts(&t1, &t2, &t3, &t4);
-        std::printf("[scene] dScMgTrampoline2_c CLOSURE FLOORS: "
+        std::printf("[scene] dScMgTrampoline2_c CLOSURE FLOORS REMAINING: "
                     "func_ov006_020cf2fc %u, func_ov006_020d01e0 %u, "
-                    "func_ov006_020d0c38 %u (the stroke-connected test "
-                    "slot 23 asks; a trapped 0 takes the MISS arm), "
-                    "func_ov006_020cfc74 %u\n", t1, t2, t3, t4);
+                    "func_ov006_020cfc74 %u. func_ov006_020d0c38 (the "
+                    "stroke-connected test slot 23 asks) is RETIRED -- it is "
+                    "seated and its slot reads %u; the record readout below is "
+                    "what says whether a stroke was judged\n", t1, t2, t4, t3);
+        port_mg_trampoline_record_report();
     }
 
     /* The live object: the member pointer the ROM dispatches, the frame counter
@@ -773,6 +783,26 @@ extern "C" void port_scene_trampoline2_hits(void)
                     "(the word past 0x180's vtable; slot 23 reads and writes "
                     "it, so a 37-slot fill of SCENE_MG_TRAMPOLINE would "
                     "clobber it)\n", data_ov006_0213fbc4);
+        /* THE STYLUS CHAIN, END TO END, in the five object fields that carry
+           it. func_ov006_02123938 (seated this run) is the only writer of all
+           five: +0x7ba4 is the play state's stylus enable, set by
+           src/func_ov006_02124040.c; +0x7baa is "a stroke is in progress";
+           +0x7b9c/+0x7b9e is the stroke's CURRENT point and +0x7ba0/+0x7ba2
+           its FIRST; +0x7bab is the RELEASE latch, and it is the exact word
+           slot 23 keys on (src/func_ov006_02122f24.c reads it first and clears
+           it last). Nothing else in this closure writes +0x7bab, so a 1 here
+           is func_ov006_02123938's own release arm having fired. */
+        std::printf("[scene] dScMgTrampoline2_c stylus chain: enable +0x7ba4=%d, "
+                    "drawing +0x7baa=%u, release latch +0x7bab=%u, first point "
+                    "+0x7ba0/+0x7ba2=(%d,%d), current point +0x7b9c/+0x7b9e="
+                    "(%d,%d)\n",
+                    (int)*(const short *)(g_tte_self + 0x7ba4),
+                    (unsigned)*(const unsigned char *)(g_tte_self + 0x7baa),
+                    (unsigned)*(const unsigned char *)(g_tte_self + 0x7bab),
+                    (int)*(const short *)(g_tte_self + 0x7ba0),
+                    (int)*(const short *)(g_tte_self + 0x7ba2),
+                    (int)*(const short *)(g_tte_self + 0x7b9c),
+                    (int)*(const short *)(g_tte_self + 0x7b9e));
     }
 
     /* The save record.  ov005 row 32 is the only row for this id: its param is
