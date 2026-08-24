@@ -3,8 +3,8 @@
  * rather than called -- same pattern as every sibling. Then a three-way
  * state machine gated by two level-indexed byte tables (data_020a0de8/de9)
  * and driven by two fixed-point tables (data_020a0dea/deb): trigger sets
- * unk_031 and latches unk_034/unk_038/unk_03c/unk_040; active recomputes
- * and clamps unk_040 each call and plays a sound on change; release clears
+ * unk_031 and latches unk_034/mDriveBase/unk_03c/mDriveNow; active recomputes
+ * and clamps mDriveNow each call and plays a sound on change; release clears
  * unk_031, or -- if neither holds -- eases mCurrent1 back toward baseline.
  * See cMgSmartball_spring_c.h for the field-by-field evidence.
  *
@@ -47,25 +47,25 @@ void cMgSmartball_spring_c::SaveSnapshot()
         unk_024 = 0;
         unk_03c = data_020a0dea[data_020a0e40 * 4] << 12;
         unk_034 = unk_03c;
-        unk_040 = data_020a0deb[data_020a0e40 * 4] << 12;
-        unk_038 = unk_040;
+        mDriveNow = data_020a0deb[data_020a0e40 * 4] << 12;
+        mDriveBase = mDriveNow;
         if (mCurrent1 <= 0xa0000)
             return;
-        unk_038 -= (mCurrent1 - 0xa0000);
+        mDriveBase -= (mCurrent1 - 0xa0000);
         return;
     }
 
     if (unk_031 == 1 && de8v != 0) {
-        unk_040 = data_020a0deb[lvl * 4] << 12;
-        d = unk_040 - unk_038;
+        mDriveNow = data_020a0deb[lvl * 4] << 12;
+        d = mDriveNow - mDriveBase;
         if (d >= 0x38000)
-            unk_040 = unk_038 + 0x38000;
-        else if (unk_040 < unk_038)
-            unk_040 = unk_038;
-        mCurrent1 = unk_040 - unk_038 + 0xa0000;
+            mDriveNow = mDriveBase + 0x38000;
+        else if (mDriveNow < mDriveBase)
+            mDriveNow = mDriveBase;
+        mCurrent1 = mDriveNow - mDriveBase + 0xa0000;
         if (mSnapshot1 == mCurrent1)
             return;
-        unk_044 = Sound_PlayIfNotActive(unk_044, 2, 0x16c, 0);
+        mSoundHandle = Sound_PlayIfNotActive(mSoundHandle, 2, 0x16c, 0);
         return;
     }
 

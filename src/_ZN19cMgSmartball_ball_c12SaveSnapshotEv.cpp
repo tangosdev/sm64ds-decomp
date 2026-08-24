@@ -46,27 +46,27 @@ void cMgSmartball_ball_c::SaveSnapshot()
         soundTimer -= 1;
     if (unk_030 == 0)
         return;
-    if (unk_040 > 0) {
-        unk_040 -= 1;
-        if (unk_040 <= 0) {
+    if (mExpireTimer > 0) {
+        mExpireTimer -= 1;
+        if (mExpireTimer <= 0) {
             unk_030 = 0;
             return;
         }
     }
-    if (unk_110 == 1) {
-        mCurrent0 = unk_108;
-        mCurrent1 = unk_10c;
+    if (mIsFrozen == 1) {
+        mCurrent0 = mFrozenPos0;
+        mCurrent1 = mFrozenPos1;
         unk_020 = 0;
         unk_024 = 0;
         return;
     }
     if (mCurrent0 >= 0x8000 && mCurrent0 < 0xd8000 &&
         mCurrent1 >= 0x74000 && mCurrent1 < 0x7c000) {
-        if (unk_03c < 0x1e) {
-            unk_03c += 1;
-        } else if (unk_03c < 0x12c) {
+        if (mZoneDwell < 0x1e) {
+            mZoneDwell += 1;
+        } else if (mZoneDwell < 0x12c) {
             state3b = 1;
-            unk_03c += 1;
+            mZoneDwell += 1;
         } else {
             state3b = 1;
             if (func_ov006_02111dcc((char *)this, 1) != 0) {
@@ -75,41 +75,41 @@ void cMgSmartball_ball_c::SaveSnapshot()
             }
         }
     } else {
-        unk_03c = 0;
+        mZoneDwell = 0;
     }
     if (unk_02c == *(int *)((char *)unk_004 + 0x4664)) {
-        if (unk_121 != 0)
-            unk_100 = 0;
+        if (mInPlay != 0)
+            mIsWaiting = 0;
     }
     mSnapshot0 = mCurrent0;
     mSnapshot1 = mCurrent1;
     if (mCurrent0 < 0 || mCurrent0 >= 0x100000 ||
         mCurrent1 < -0xf0000 || mCurrent1 >= 0xc0000) {
-        unk_11c += 1;
+        mStuckFrames += 1;
     } else {
         if ((*(int *)((char *)unk_004 + 8) & 0xff) != 0) {
-            Vec2_Sub(&d1, (V2 *)&mCurrent0, (V2 *)&unk_114);
+            Vec2_Sub(&d1, (V2 *)&mCurrent0, (V2 *)&mLastPos0);
             t = Vec2_Len(&d1) < 0x8000;
             if (t != 0) {
-                unk_11c += 1;
+                mStuckFrames += 1;
                 goto after2;
             }
         }
-        unk_11c = 0;
-        unk_114 = mCurrent0;
-        unk_118 = mCurrent1;
+        mStuckFrames = 0;
+        mLastPos0 = mCurrent0;
+        mLastPos1 = mCurrent1;
     }
 after2:
     if (unk_0fc > 0)
         unk_0fc -= 1;
-    if (unk_034 > 0)
-        unk_034 -= 1;
+    if (mZoneCooldown > 0)
+        mZoneCooldown -= 1;
     if (state3a != 1) {
-        if (unk_038 == 0) {
+        if (mUpperWallSolid == 0) {
             if (mCurrent0 >= 0xe8000 && mCurrent0 < 0xf0000 &&
                 mCurrent1 >= 0x78000 && mCurrent1 < 0xa8000) {
-                if (unk_034 <= 0) {
-                    unk_038 = 1;
+                if (mZoneCooldown <= 0) {
+                    mUpperWallSolid = 1;
                     unk_039 = 0;
                     state3a = 0;
                 }
@@ -154,11 +154,11 @@ bounce:
     }
     mCurrent0 += unk_020;
     mCurrent1 += unk_024;
-    if (unk_100 == 1) {
+    if (mIsWaiting == 1) {
         func_ov006_021128fc((char *)this);
     } else {
         func_ov006_02112ad8((char *)this);
-        if (unk_129 == 0) {
+        if (mExitGateOpen == 0) {
             vc.x = 0x20000;
             vc.z = -0x8000;
             func_0203d480(&v5c, &vc);
@@ -169,7 +169,7 @@ bounce:
                 vd.z = dz;
             }
             if (func_0203d524(&vc, &vd) < -unk_028)
-                unk_129 = 1;
+                mExitGateOpen = 1;
         }
     }
     mag = Vec2_Len((V2 *)&unk_020);

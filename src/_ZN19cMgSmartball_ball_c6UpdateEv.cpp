@@ -13,7 +13,7 @@ void cMgSmartball_ball_c::Update()
     int r2;
     if (unk_030 == 0)
         return;
-    if (unk_121 == 0)
+    if (mInPlay == 0)
         return;
     r2 = 1;
     if (state3a == 1)

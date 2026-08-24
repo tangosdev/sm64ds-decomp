@@ -61,7 +61,7 @@ int StarMarker::InitResources()
     }
     _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, ((char *)this));
     if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0)
-        unk_1c8 = *(s32 *)((char *)&rg + (0x80 - 0x3c));
+        mGroundY = *(s32 *)((char *)&rg + (0x80 - 0x3c));
 
     r3 = 0;
     mStarID = (u8)(mParam & 0xf);
@@ -134,12 +134,12 @@ int StarMarker::InitResources()
         *p = *p | 1;
     }
     r3 = 0;
-    unk_1bc = mPosX;
-    unk_1c0 = mPosY;
-    unk_1c4 = mPosZ;
-    unk_1cc = r3;
-    unk_1d6 = -1;
-    unk_1d0 = r3;
+    mSpawnPosX = mPosX;
+    mSpawnPosY = mPosY;
+    mSpawnPosZ = mPosZ;
+    mSpawnedActorID = r3;
+    mSpawnedDeathTableID = -1;
+    mHitActor = r3;
 
     if (data_0209f2d8 == 1)
         r3 = 1;
