@@ -2388,6 +2388,20 @@ void port_scene_fill_slot3(void);
 extern unsigned char MgBounceAndPounce_SpawnInfo[];
 void *port_mg_jump_spawn(void);
 void port_scene_fill_jump(void);
+/* run mg11 lane BNT: dScMgJump2_c, actor id 0x175, scene 373, the "Bounce and
+   Trounce" minigame. The spawn symbol is MgBounceAndTrounce and the ROM's own
+   RTTI -- reached through the type_info the word BEFORE the vtable points at,
+   0x0213ccf8 -> 0x0213cca4 -> +4 -> 0x0213ccbc -- reads "12dScMgJump2_c", so
+   the row is named for the class the way SCENE_MG_CURLING, SCENE_MG_LUIGI and
+   SCENE_MG_PANEL are. Its intermediate base is dScMgD3DBase_c, which 0x174,
+   0x180 and 0x181 also derive from; port/slice_bnt.txt sections 3 and 7 are
+   the attribution and the merge consequences. Same reads_sublevel reasoning as
+   every minigame row above, re-checked for this class rather than copied: no
+   relocation anywhere in ov006 lands on data_02092110 and no TU in this
+   class's closure names it. */
+extern unsigned char MgBounceAndTrounce_SpawnInfo[];
+void *port_mg_jump2_spawn(void);
+void port_scene_fill_jump2(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2869,6 +2883,35 @@ static const PortSceneClass port_scene_classes[] = {
        in this class's closure names it. A minigame is not about a course. */
     {372, "SCENE_MG_JUMP", MgBounceAndPounce_SpawnInfo, port_mg_jump_spawn,
      port_scene_fill_jump, 0},
+    /* APPENDED AFTER EVERY EXISTING ROW, run mg11 lane BNT. 373 is 0x175,
+       spelled in decimal for the two reasons every row above is: the others
+       are, and port/tools/battery.py reads its hosted-scene set out of this
+       table. The position is load-bearing twice for this class, the way it is
+       for the memory2 and lucky-stars rows.
+
+       The first is the once-per-process constructor gate section 11 of
+       port/mg_fanout_costs.txt derives: this function walks the table in order
+       and calls every row's fill on every boot, while port_scene_mg_overlay_load
+       runs the thirty-five overlay constructors ONCE PER PROCESS at the tail of
+       the FIRST minigame row's fill, so appending means the constructors have
+       already run against clean ROM words when this fill starts. Nothing in
+       this class's fill writes outside its own 36-slot tables -- both widths
+       are checked in port/slice_bnt.txt section 4 -- so appending is a rule
+       this lane obeys rather than a hazard it needs.
+
+       The second is dScMgD3DBase_c, the intermediate base at
+       data_ov006_0213c62c (which the config misnames _ZTV17MgBounceAndPounce).
+       FOUR ids derive from it -- 0x174, 0x175, 0x180 and 0x181 -- and this
+       wave seats the other three concurrently. Each seat defines its own
+       seventeen-row array over the same seventeen DS words; jump2_apply keys
+       on a DS address, so the fill that runs FIRST claims the middle table and
+       the ones after it write nothing there. Appending after 0x174's row (which
+       merges first, in id order) means that row keeps the middle table and this
+       seat owns only its own derived table. hal/scene_mg_jump2.cpp section 3 is
+       the argument, and the seat PRINTS the claimed count so the split is
+       measured rather than assumed. */
+    {373, "SCENE_MG_JUMP2", MgBounceAndTrounce_SpawnInfo, port_mg_jump2_spawn,
+     port_scene_fill_jump2, 0},
     {0, 0, 0, 0, 0, 0},
 };
 

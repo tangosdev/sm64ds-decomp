@@ -248,7 +248,9 @@
    One body, two spellings, and the caller has the one the config retired. */
 #pragma comment(linker, "/alternatename:_func_ov006_020e6df0=_Sound_PlayBank1Panned")
 #pragma comment(linker, "/alternatename:?LoadFile@Animation@@SAPAUBCA_File@@AAUSharedFilePtr@@@Z=__ZN9Animation8LoadFileER13SharedFilePtr")
-#pragma comment(linker, "/alternatename:?SetAnim@ModelAnim@@QAEHPAUBCA_File@@HHI@Z=?SetAnim@ModelAnim@@QAEXPAUBCA_File@@HHI@Z")
+/* The int-spelled ModelAnim::SetAnim alias that used to sit here MOVED to the
+   ROM-faithful int chain at the mg11 merge (unmatched/MgJump2_Faces.cpp): the
+   void mapping was safe only while every caller discarded the result. */
 
 #include "hal/screen_gap.h"
 

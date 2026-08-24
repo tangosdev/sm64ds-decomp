@@ -145,6 +145,11 @@ NAMED = [
     # is correct for a scalar read and would NOT be correct for anything doing
     # pointer arithmetic between the two symbols; nothing in the tree does.
     # No relocations land in the span (config/arm9/relocs.txt), so it is data.
+    # run mg11 lane BNT: dScMgJump2_c's InitResources (func_ov006_020ef834)
+    # loads 0x02082614 and reads a SIGNED HALFWORD out of it at 0x020ef8c8
+    # (ldrsh r1,[r1]) before calling func_02053258. 0x100 bytes, the delta to
+    # data_02082714 above it, and no relocations in the span -- pure data,
+    # byte-hosted the same as every table here.
     "data_02082614",
     # gate 32: the coin tables Actor::GivePlayerCoins indexes (id and amount),
     # and the per-character cap-model constant data_0208a0e0 sits beside them.

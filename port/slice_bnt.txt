@@ -1,0 +1,605 @@
+# Lane BNT, run mg11: dScMgJump2_c, actor id 0x175 (scene 373) -- the
+# "Bounce and Trounce" minigame, and the twenty-second ov006 minigame class the
+# port seats.  The FIRST under dScMgD3DBase_c, which three other classes in
+# this same wave also derive from.
+#
+# ---- 1. THE IDENTITY, DERIVED FRESH FROM THE ROM -------------------------
+#
+# Every address below was derived by this lane out of
+# extracted/overlays/overlay_0006.bin at base 0x020bfec0 (the shipped image,
+# never a dsd export) by the mechanical route port/mg_fanout_costs.txt
+# section 3 prescribes.
+#
+#   THE SPAWNINFO.  The doubled-id word 0x01750175 occurs EXACTLY ONCE in the
+#   whole overlay, at 0x0213cc80, which puts the eight-byte SpawnInfo record at
+#   0x0213cc7c -- config/arm9/overlays/ov006/symbols.txt's
+#   MgBounceAndTrounce_SpawnInfo -- with the factory in the word before the id:
+#   0x020efaf0.  There is no second candidate to choose between.
+#
+#   THE FACTORY'S OWN RELOCATION CONFIRMS THE VTABLE:
+#       from:0x020efbdc kind:load to:0x0213ccfc module:overlay(6)
+#   and 0x020efbdc is inside the factory's literal pool (0x020efaf0 + 0xec).
+#   The only other two load relocations that reach 0x0213ccfc in the whole
+#   overlay are the two destructors' pools, from:0x020eec78 (slot 16, D2) and
+#   from:0x020eed3c (slot 17, D0).  There are no others.
+#
+#   THE CLASS NAME IS THE ROM'S, through the type_info the word BEFORE the
+#   vtable points at -- lane PPP's chain, which beats a src spelling because a
+#   per-TU placeholder can be wrong and a relocation cannot:
+#       0x0213ccf8 -> 0x0213cca4, whose +4 is 0x0213ccbc = "12dScMgJump2_c"
+#       and whose +8 is 0x0213c5c8, whose +4 is 0x0213c5d4
+#                                     = "14dScMgD3DBase_c"
+#   and dScMgD3DBase_c's own +8 is 0x020bbf6c, ov004's "11dScMgBase_c".
+#
+#   THE PLAYER-FACING TITLE IS "BOUNCE AND TROUNCE" and this lane takes it from
+#   the config's own spawn symbol, MgBounceAndTrounce, the way lane WIG took
+#   "Which Wiggler" from MgWhichWiggler.  No derivation is owed: run mg11's
+#   worklist records all nine of this wave's titles as already derived through
+#   run mg9's BMG chain, and this row is one of the ids the ROM gives a NAMED
+#   spawn symbol.  The ov005 row's name-text index is section 2.
+#
+# ---- 2. THE ov005 ROW, RECORD AND TEXT -----------------------------------
+#
+# port/mg_fanout_costs.txt section 17 requires a lane to VERIFY that its
+# scene's spawn-param row resolves rather than assume the plumbing feeds it.
+# Read out of extracted/overlays/overlay_0005.bin at file offset 0x2618, 36
+# rows of 0x34 bytes:
+#
+#     row 20   id 0x0175   param 0x001c1c01
+#              -> save record  (param >> 8)  & 0xff = 28
+#              -> name text    (param >> 16) & 0xff = 28
+#              -> slot-35 byte  param        & 0xff = 1
+#
+# 0x175 APPEARS EXACTLY ONCE in the 36-row table, so port_mg_scene_spawn_param's
+# first-match rule (six ids are on two rows because the ROM's menu selects by
+# POSITION) has nothing to choose between for this scene.
+#
+# data_ov004_020bc070[28] = 576, READ OUT OF THE TABLE AND NOT COMPUTED.  Run
+# mg9 lane S364's correction is live here: the name-text table is arithmetic
+# (548 + i) only for indices 0..23, and 24..35 are an explicit list -- 24 -> 588,
+# 26 -> 586, 30 -> 585, 31 -> 589, 33 -> 587 all break the pattern.  Index 28
+# happens to land on 576 = 548 + 28, and that coincidence is exactly why the
+# figure here is a table read.
+#
+# The seat prints the resolved param, the live record index and the object's
+# own +0x465e on every scene-373 run, so the row is measured rather than
+# asserted.
+#
+# ---- 3. THE SIBLING TRAP, AND WHY THIS LANE IS NOT IN IT -----------------
+#
+# 0x174 (MgBounceAndPounce, dScMgJump_c) is being seated CONCURRENTLY by lane
+# BNP, and run mg9's Memory Match precedent is that address adjacency
+# over-attributes across siblings.  This class's five member-pointer records
+# are told apart from 0x174's seven BY THEIR RELOCATIONS, and the trap is real:
+#
+#     0x0213cc74 is the word IMMEDIATELY PAST the end of 0x174's vtable
+#     (0x0213cbe4 + 36*4 = 0x0213cc74) and the word IMMEDIATELY BEFORE this
+#     class's SpawnInfo.  Adjacency gives it to 0x174.  The relocation gives it
+#     to func_ov006_020ef4ec, one of THIS class's states.
+#
+#   MINE -- five records, each with EXACTLY ONE relocation in the overlay, all
+#   from literal pools inside this class's own code (0x020ef4e8..0x020ef830):
+#
+#     0213cc74  {0x020ef47c, 0}   from:0x020ef4e8   writer func_ov006_020ef480
+#     0213cc84  {0x020ef5ac, 0}   from:0x020ef790   writer func_ov006_020ef768
+#     0213cc8c  {0x020ef480, 0}   from:0x020ef57c   writer func_ov006_020ef4ec
+#     0213cc94  {0x020ef794, 0}   from:0x020ef830   writer func_ov006_020ef7f8
+#     0213cc9c  {0x020ef4ec, 0}   from:0x020ef5a8   writer func_ov006_020ef580
+#
+#   0x174's -- seven records, DELIBERATELY LEFT ALONE by this lane, each loaded
+#   only from 0x020ee3b8..0x020ee68c, which is inside 0x174's own code:
+#
+#     0213cb4c {0x020ee3ec,0}  0213cb54 {0x020ee5b8,0}  0213cb5c {0x020ee44c,0}
+#     0213cb6c {0x020ee2c4,0}  0213cb74 {0x020ee2c0,0}  0213cb7c {0x020ee2c0,0}
+#     0213cb84 {0x020ee508,0}
+#
+# WHICH __sinit RANGE IS MINE: NONE, AND THAT IS THE ANSWER, NOT A GAP.  The
+# brief asks a lane to name the sinit range it owns and the one it leaves to
+# its sibling.  Neither class has one.  No __sinit_ov006_* block in src/ names
+# any of the twelve records above, and relocs.txt carries no relocation from
+# any .init block to any of them -- every record has exactly one relocation and
+# every one of those is a literal-pool load inside a state writer.  This family
+# does not build state TABLES at all; it writes a member pointer straight into
+# an object field.  Section 5 is the shape.
+#
+# THE CONSEQUENCE FOR THE MERGE is that the two lanes share no constructor and
+# no table, so there is nothing for the sinit-attribution ruling to arbitrate.
+# What they DO share is the middle vtable and its seventeen bodies, section 7.
+#
+# ---- 4. THE WIDTH IS 36 ON BOTH TABLES, AND ONE SPAN CHECK REFUSES -------
+#
+# 0x175 is one of the TWELVE rows port/mg_fanout_costs.txt section 11 corrected
+# from 37 to 36, so the checks were re-run here before a word was written.
+#
+#   DERIVED TABLE 0x0213ccfc
+#     1. SPAN.  Next config symbol is data_ov006_0213cd8c; 0x90 = 36 words.
+#     2. TERMINAL SLOT.  Slot 35 = 0x020ad660, which every dScMgBase_c-derived
+#        table holds.
+#     3. WHAT THE WORD IS.  Slot 36 would be 0x020f15ac and the word after it
+#        is 0x00000000 -- an mwcc {code, adjustment} PAIR, live data belonging
+#        to another class.  A 37-slot fill writes a host thunk over the code
+#        half of somebody else's state, which is section 11's exact hazard.
+#     4. RELOCATION SET.  36 contiguous load relocations at a four-byte stride
+#        from 0x0213ccfc to 0x0213cd88, then the eight-byte pair stride.  This
+#        is the run mg9 lane LKY check, used as CONFIRMATION only: section 11's
+#        recalibration is that it fails in the granting direction and only the
+#        span may refuse.  Here it agrees with the span.
+#
+#   MIDDLE TABLE 0x0213c62c -- THE SPAN CHECK REFUSES AND THE CONFIG IS WRONG
+#     port/tools/vtablerows.py --vtable 0x0213c62c --width 36 answers
+#     "width 36 does not fit ... the next config symbol is 20 words on".  That
+#     next symbol is data_ov006_0213c67c, and the word AT that address is
+#     0x020b2990, which is dScMgBase_c's own slot-20 body -- i.e. a vtable slot,
+#     not the first word of another object.  The config has an EXTRA symbol
+#     INSIDE the table, which is the other side of the hole section 11's own
+#     wording names ("or the config is missing a symbol").
+#
+#     The width was NOT taken by overriding the tool.  Two ROM checks decide it:
+#       * slot 35 = 0x020ad660, the terminal slot;
+#       * the word past slot 35 is 0x6f6d6168 0x0000006e = the ASCII string
+#         "hamon", which is curling's own control shape ("/MG/" at its own
+#         index 36) and cannot be a virtual.
+#     Both say 36, and section 11's own argument is that a check which refuses
+#     is safe while one that grants is not -- so this is recorded as a CONFIG
+#     DEFECT and routed in section 9 rather than papered over.
+#
+# ---- 5. THE STATE MACHINE IS A FIELD, NOT A TABLE ------------------------
+#
+# Vtable slot 6 (func_ov006_020ef3e0) dispatches a member pointer held at
+# this+0x5004.  There is no table, no .bss array and nothing for
+# port/tools/stategen.py to read.  That is dScMg3DEsp_c's FIELD shape (run mg9
+# lane PSY) as a class's whole state machine rather than as an eighth
+# dispatcher beside seven table ones.
+#
+# THE FIELD HAS NO NULL GUARD, so the seed matters and it was traced:
+#   slot 0  (func_ov006_020ef834) ends with
+#           `ldr r2,[r0] / mvn r1,#0 / ldr r2,[r2,#0x48] / blx r2` at
+#           0x020efa2c..0x020efa38 -- SLOT 18 dispatched through the object's
+#           own vtable with the argument -1;
+#   slot 18 (func_ov006_020efaa8) ends with func_ov006_020ef7f8(this), the
+#           writer of 0x0213cc94 = {0x020ef794, 0}.
+# So the field is seeded on the InitResources path before Behavior ever runs,
+# and 0x020ef794 is this class's FIRST state.
+#
+# FIVE STATES, ALL WITH A MATCHED src TU AND NO NONMATCHING BANNER, so this
+# class has NO state floor:
+#     0x020ef47c (4 bytes, a bare `bx lr` -- the idle body)
+#     0x020ef480   0x020ef4ec   0x020ef5ac   0x020ef794
+#
+# ---- 6. THE PMF WALL IS THREE DISPATCHERS, FOUND BY TWO DETECTORS --------
+#
+# Both prescribed detectors were run over this lane's whole 230-body closure,
+# not over its vtable, and they AGREE EXACTLY:
+#
+#   * THE ENCODING SCAN (run mg9 lane LKY's detector, blind to spelling) finds
+#     THREE ARM Itanium five-instruction dispatch sites in the closure:
+#     0x020ef450 (slot 6), 0x020c4cec and 0x020c789c.
+#   * THE `::*` SOURCE SWEEP finds FOUR: src/func_ov004_020b87e0.cpp (the
+#     framework state setter, already host-copied in
+#     unmatched/MgBase_StateSetter.cpp and excluded from every minigame slice),
+#     src/func_ov006_020c4cd8.cpp, src/func_ov006_020c7860.cpp and
+#     src/func_ov006_020ef3e0.cpp.
+#
+# The two sub-object dispatchers are NOT shared with the three sibling classes,
+# which was checked rather than assumed: each has exactly ONE caller in the
+# overlay (func_ov006_020c42bc -> 0x020c4cd8 at 0x020c42e8, func_ov006_020c712c
+# -> 0x020c7860 at 0x020c7168) and neither caller nor callee appears in 0x174's
+# closure (71 bodies), 0x180's (92) or 0x181's (109), all three walked from
+# their own vtable overrides and factories for this check.
+#
+# ---- 7. WHAT THE FOUR SIBLINGS SHARE, FOR THE MERGE ----------------------
+#
+# dScMgD3DBase_c (0x0213c62c) is the intermediate base of FOUR ids and THREE of
+# them are being seated in this same wave: 0x174 (lane BNP), 0x180 (TTI) and
+# 0x181 (TTE).  Their type_info records all link to 0x0213c5c8 (relocations at
+# 0x0213cba0, 0x0213ccac, 0x0213fad8 and 0x0213fc0c).  What that means at merge:
+#
+#   * THE MIDDLE TABLE'S SEVENTEEN BODIES are in all four lanes' slices.  That
+#     is SAFE: port/CMakeLists.txt appends every slice list to the same targets
+#     and dedupes identical absolute paths, so the TUs compile once.
+#   * THE MIDDLE TABLE'S FACE ARRAY is per-lane and address-keyed, so the fill
+#     that runs FIRST claims it and the others write nothing.  Row order in
+#     port_scene_classes[] decides which, and every row in this wave is
+#     APPENDED, so on a merged tree 0x174's row (merged first, in id order)
+#     claims it and this seat's middle-table witness reads ZERO.  The seat
+#     prints that number rather than assuming it.
+#   * FOUR OF THE SEVENTEEN ARE REAL C++ METHODS in src
+#     (MgBounceAndPounce::BeforeInitResources, ::AfterCleanupResources,
+#     ::BeforeBehavior, ::AfterRender).  This lane calls them through
+#     include/MgBounceAndPounce.h from its own STATIC thunks and defines NO
+#     C-linkage face for them, precisely so it does not define a symbol the
+#     other three lanes also define.  A merge that finds a
+#     _ZN17MgBounceAndPounce19BeforeInitResourcesEv face in some other lane's
+#     file should keep exactly one; this lane contributes none.
+#   * unmatched/MgJump2_FieldPmf.cpp defines only bodies this class alone
+#     reaches (section 6), and hal/scene_mg_jump2.cpp is a per-class file.
+#   * THE "NOTHING ELSE IS SHARED" THIS BULLET USED TO OPEN WITH WAS WRONG, and
+#     the mg11 merge is what disproved it.  The two sub-object ticks this lane
+#     put in unmatched/MgJump2_SubDispatch.cpp -- func_ov006_020c4cd8 and
+#     func_ov006_020c7860 -- are ALSO reached by 0x174, and lane BNP host-copied
+#     the same two symbols into unmatched/MgD3DBase_ObjStateDispatch.cpp.  The
+#     filenames differed, so git saw no add/add and the collision surfaced only
+#     as an LNK2005 at the merge.  The two are UNIFIED into the base-named file,
+#     which now carries both lanes' census APIs; this lane's file is gone.  See
+#     that file's section 0.  The check this lane ran was for the other lanes'
+#     FILENAMES; the check it owed was for its own SYMBOLS.
+#
+# ---- 8. THE FACTORY, AND A SECOND CONFIG DEFECT --------------------------
+#
+# config/arm9/overlays/ov006/symbols.txt names 0x020efaf0
+# `_ZN8PathLift17BaseInitResourcesEv`.  That is ov002's name for the same
+# ADDRESS in a different overlay -- ov002's own symbols.txt has
+# func_ov002_020efaf0 (size 0xec) there, and src/func_ov002_020efaf0.cpp is a
+# path-following body with nothing to do with a minigame.  The ov006 body at
+# that address, size 0x118, is this class's factory:
+#
+#     020efaf0  push {r4,lr} / sub sp,#8
+#     020efaf8  ldr r0 = 0x00005a78 / bl 0x02043444   ActorBase::operator new
+#     020efb00  movs r4,r0 / beq 0x020efbbc           the allocation test
+#     020efb08  bl 0x020b2adc                         the base constructor,
+#                                                     WITH r0 still the object
+#     020efb0c  ldr r0 = 0x0213c62c / str r0,[r4]     dScMgD3DBase_c's vtable
+#     ...       three func_020733a8 array constructions at +0x500c (3 x 0xb8),
+#               +0x5234 (6 x 0xf0) and +0x57d4 (0x10 x 0x24)
+#     020efb48  ldr r1 = 0x0213ccfc / str r1,[r4]     dScMgJump2_c's vtable
+#     020efbb0  ldr r0 = 0x00005a14 / bl 0x02016d58   the Model at +0x5a14
+#     55 instructions plus a 15-word pool = 70 = 0x118/4.
+#
+# NO DISPLACEMENT RULING IS OWED.  port/mg_fanout_costs.txt section 12 grants
+# one to 0x169 because its factory calls func_ov004_020b2adc with NO argument
+# and rides r0 through; here r0 still holds the allocation at the bl and
+# src/_ZN8PathLift17BaseInitResourcesEv.c spells func_ov004_020b2adc(p) WITH
+# its argument.  The factory is LINKED from this slice, not host-copied.
+#
+# THE MISNAME IS ALSO WHY THE SEAT SPELLS THE MIDDLE TABLE
+# `_ZTV17MgBounceAndPounce`: that is what the ov006 mount defines, and the seat
+# uses the tree's own spelling rather than inventing one.
+#
+# ---- 9. WHAT THIS LANE ROUTES TO THE DECOMP SIDE -------------------------
+#
+# Nothing in src/ or config/ is edited by this lane.  Three findings belong to
+# the decomp side and are recorded here so the merge can route them:
+#
+#   (a) ov006's symbols.txt calls 0x0213c62c `_ZTV17MgBounceAndPounce` while
+#       the ROM's own type_info calls it dScMgD3DBase_c, and four distinct
+#       classes inherit it.
+#   (b) ov006's symbols.txt calls 0x020efaf0
+#       `_ZN8PathLift17BaseInitResourcesEv`, which is ov002's name for that
+#       address.  The ov006 body is MgBounceAndTrounce_Spawn.
+#   (c) data_ov006_0213c67c is a config symbol INSIDE dScMgD3DBase_c's vtable
+#       (its slot 20), and it makes port/tools/vtablerows.py refuse a correct
+#       width.  Section 4.
+#
+#   And one observation that is not a defect: the "recovered from vtable slot
+#   identity" NAMES on the middle table's bodies disagree with each other --
+#   func_ov006_020e6e54 says dScMgJump2_c_OnPushed while func_ov006_020e6e4c
+#   two words earlier says dScMgTrampoline2_c_OnHitByCannonBlastedChar.  Both
+#   are the same shared base's bodies, and the recovery walked whichever
+#   derived class's table it reached first.  It is a reason to trust the
+#   marker's ADDRESS and never its class name, which is what
+#   port/tools/inferred_stub_adjudicated.txt's rulings do.
+#
+# ---- 10. THE FIFTEEN ROM ADJUDICATIONS ----------------------------------
+#
+# All fifteen marker-carrying override bodies were disassembled out of
+# extracted/overlays/overlay_0006.bin at base 0x020bfec0 and compared
+# instruction for instruction with src/ before a word of the seat was written.
+# RESULT: 15 REAL DECOMP, 0 genuine guesses, 0 unverifiable.  Every row carries
+# the arithmetic (instructions + literal-pool words = size/4) and all fifteen
+# balance.  The per-body evidence is appended to
+# port/tools/inferred_stub_adjudicated.txt.
+#
+#   this class's seven   slots 0, 3, 6, 9, 17, 18, 19
+#   the middle base's eight  slots 24, 25, 26, 27, 28, 29, 30, 31
+#
+# Slot 16 (func_ov006_020eebe8) carries no marker and is therefore not ruled on.
+# THE EIGHT MIDDLE-BASE ROWS WILL BE RE-DERIVED BY THE THREE SIBLING LANES; if
+# the merge finds duplicate rows for them, keeping one per body is right and
+# the verdicts should agree.  Disagreement is the thing to stop on.
+#
+# ---- 11. THE CLOSURE, AND THE TWENTY-FOUR TUs LEFT OUT ------------------
+#
+# EVERY TERM BELOW WAS RE-DERIVED MECHANICALLY for the lane review, by ONE
+# authoritative walk over all FIFTY-NINE roots -- the factory, the eight own
+# vtable overrides, the seventeen middle-base overrides, the five class field
+# states, the twenty-five sub-object states and the three element-vtable
+# bodies -- with each bucket printed as a MEMBERSHIP LIST rather than a count,
+# so a wrong term shows up as a wrong list.  The earlier version of this
+# section had two wrong terms and a stale intermediate closure size in its
+# prose; the defect shape was appending to a list without re-counting it.
+#
+# THE WALK HAD TO BE RUN FOUR TIMES and that is the finding, not a process
+# note: a pointer-to-member state is invisible to a bl walk, so each round of
+# states pulls in writers that install more states.  172 bodies with the
+# vtable and class field states as roots, 207 once the first ten sub-object
+# states were added, 223 once the rest of the twenty-two then known were, and
+# 230 from the authoritative walk above.  ONLY THE 230 IS A MEASUREMENT; the
+# three before it are under-counts, and the states the middle rounds missed
+# were named by a RUN, not by a scan (section 6).
+#
+#     230 = 64 already active in another slice
+#         + 20 whose symbol a host file ALSO defines
+#         +  4 routed around by a port_-named repair
+#         +  1 with no src at all
+#         + 141 NEW, which is 141 of the 144 lines below
+#
+# AND THE SLICE IS THREE LINES LONGER THAN THE CLOSURE:
+#
+#     144 slice lines = 141 from the walk (all ov006)
+#                     +   3 arm9 TUs the LINK named, which an ov004/ov006
+#                         closure walker cannot see because it never opens
+#                         arm9: src/func_02053ea0.c, src/func_02053eb0.c and
+#                         src/func_02054748.c
+#
+# THE +144 LINKAGE HEADLINE RESTS ON THAT 144 and reconciles with it exactly:
+# base 98a4c0e8f 7121/11293, tip 7265/11293.
+#
+# THE ONE WITH NO SRC is func_ov004_020ae858, and it is not a new floor: it is
+# ALREADY TRAPPED in hal/scene_mg_faces.cpp, where seven ov006 TUs across this
+# family already reach it.  This lane adds no trap and retires none.
+#
+# ---- 11a. THE TWENTY WHOSE SYMBOL A HOST FILE ALSO DEFINES --------------
+#
+# NINETEEN OF THE TWENTY would be an LNK2005 if listed: a port host file
+# defines the same symbol.  THE TWENTIETH IS NOT, and the sentence used to say
+# it was -- src/func_ov004_020afdd0.cpp is already a PLAIN line in
+# slice_mg1.txt and port/CMakeLists.txt renames its symbol to
+# func_ov004_020afdd0__rom through COMPILE_DEFINITIONS (the OAM::Render router
+# pair), so the src TU and hal/screen_gap.cpp's definition are different
+# symbols and both link.  It is out of this slice because it is already in a
+# built one, not because it would collide.  SIX are this lane's own:
+#
+#   src/func_ov006_020ef3e0.cpp   unmatched/MgJump2_FieldPmf.cpp   (slot 6)
+#   src/func_ov006_020c4cd8.cpp   unmatched/MgD3DBase_ObjStateDispatch.cpp
+#   src/func_ov006_020c7860.cpp   unmatched/MgD3DBase_ObjStateDispatch.cpp
+#                                 (this lane wrote both as
+#                                 MgJump2_SubDispatch.cpp; unified with lane
+#                                 BNP's copies at the mg11 merge)
+#   src/func_ov006_020e6e78.cpp   unmatched/MgD3DBase_DeclConflict.cpp
+#                                 (slot 24, the decl_common.h C2733)
+#   src/func_ov006_020c4c54.cpp   unmatched/MgD3DBase_ModelAnimRender.cpp
+#   src/func_ov006_020c7734.cpp   unmatched/MgD3DBase_ModelAnimRender.cpp
+#                                 -- both dispatch a six-virtual SHADOW's m5
+#                                 (ROM slot 5) on a plain ModelAnim, which MSVC
+#                                 sends to Virtual18. The second one FAULTED a
+#                                 rendered 300-frame run -- the archived log is
+#                                 out/BNT/evidence/fault_modelanim_render_020c7734.log
+#
+# FOURTEEN are the framework's, and the SYMBOL-LEVEL scan is what found them
+# all -- a line-match against the other slices finds only some:
+#
+#   src/func_ov004_020add88.cpp   unmatched/MgBase_StateDispatch.cpp
+#   src/func_ov004_020adf2c.cpp   unmatched/MgBase_StateDispatch.cpp
+#   src/func_ov004_020aeed8.cpp   unmatched/MgBase_DeclConflict.cpp
+#   src/func_ov004_020af094.cpp   unmatched/MgBase_DeclConflict.cpp
+#   src/func_ov004_020afdd0.cpp   hal/screen_gap.cpp
+#   src/func_ov004_020b0620.cpp   unmatched/MgBase_Slot7.cpp
+#   src/func_ov004_020b0840.c     unmatched/MgBase_Slot5.cpp
+#   src/func_ov004_020b0930.cpp   unmatched/MgBase_Slot1.cpp
+#   src/func_ov004_020b2cb8.c     unmatched/MgBase_LangTable.cpp
+#   src/func_ov004_020b31b4.cpp   unmatched/MgBase_StateDispatch.cpp
+#   src/func_ov004_020b321c.cpp   unmatched/MgBase_StateDispatch.cpp
+#   src/func_ov004_020b8714.cpp   unmatched/MgBase_StateDispatch.cpp
+#   src/func_ov004_020b8778.cpp   unmatched/MgBase_StateDispatch.cpp
+#   src/func_ov004_020b87e0.cpp   unmatched/MgBase_StateSetter.cpp
+#
+# THE SCAN IS THE POINT, and the number is FOUR rather than the seven this
+# paragraph used to claim -- re-measured entry by entry rather than adjusted.
+# A line-match against the other slices FINDS ten of the fourteen: eight on a
+# HOST-COPIED line (_020add88, _020adf2c, _020b0840, _020b2cb8, _020b31b4,
+# _020b321c, _020b8714, _020b8778) and two as plain src lines (_020afdd0 in
+# slice_mg1.txt, _020b0620 in slice_mga361.txt, which is a reference slice no
+# CMake target reads).  It MISSES exactly four, each named only inside prose:
+# _020aeed8, _020af094, _020b0930 and _020b87e0.  Those four are why the scan
+# is symbol-level; listing any of them here is an LNK2005.
+#
+# ---- 11b. THE FOUR ROUTED AROUND, WHICH ARE NOT AN LNK2005 --------------
+#
+# AN EARLIER VERSION OF THIS SECTION PUT THESE FOUR IN THE LIST ABOVE AND
+# CLAIMED THE SAME REASON FOR THEM.  THE REASON WAS WRONG.  No file in the
+# tree defines their symbols: unmatched/MgD3DBase_Slots.cpp defines
+# port_mg_d3dbase_after_init, _before_render, _slot27 and _slot28 -- NEW names
+# -- so listing the four src TUs would link cleanly and produce no duplicate
+# symbol at all.  The outcome is unchanged (the link is green either way) but
+# the argument was not, and a wrong argument in a slice header is how the next
+# lane inherits a wrong rule.
+#
+#   src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp   slot 2
+#   src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp         slot 10
+#   src/func_ov006_020e6d98.c                              slot 27
+#   src/func_ov006_020e6d8c.c                              slot 28
+#
+# THE REAL REASON IS THE ONE port/unmatched/MgFlower_Slot2.cpp GIVES: the seat
+# calls the port_-named repair instead, so the src symbol would be compiled,
+# referenced by nothing, and dropped by /OPT:REF -- and the map would carry a
+# decompilation the build does not use.  They are left out so nothing claims
+# one.  Section 5 of this file is what each repair changes and why.
+#
+# ---- 11c. ONE STATE IS DEAD ON THIS TREE, AND IT IS NOT A MISSING LINE ---
+#
+# `case 0x020c814cu` in port/unmatched/MgD3DBase_ObjStateDispatch.cpp (this
+# lane wrote it in MgJump2_SubDispatch.cpp, unified at the mg11 merge) CANNOT
+# FIRE in a scene-373 build, and the lane review is right that shipping it
+# silently was the defect. It DOES fire on a scene-372 build, which after the
+# merge is the same binary. The finding, floor-style:
+#
+#   THE STATE       0x020c814c, src/func_ov006_020c814c.cpp, matched, no
+#                   NONMATCHING banner. It is a real body.
+#   THE RECORD      0x0213b080 {0x020c814c, 0}, in the +0x3c run, ONE
+#                   relocation, from func_ov006_020c81e0.
+#   THE INSTALLER   func_ov006_020c81e0, size 0x90, HAS src
+#                   (src/func_ov006_020c81e0.c) and HAS its own delink block
+#                   (.text start:0x020c81e0 end:0x020c8270). So this is NOT a
+#                   decomp floor: nothing is undecompiled.
+#   WHY IT IS DEAD  The installer is reachable only from 0x174's own state
+#                   machine. The chain is
+#                       func_ov006_020ee508   (one of 0x174's five field states)
+#                     -> func_ov006_020ee3bc  (its only caller, 0x020ee580)
+#                     -> func_ov006_020c7418  (its only caller, 0x020c7454)
+#                     -> func_ov006_020c81e0
+#                   and NONE of those four is in this lane's 230-body closure,
+#                   while ALL of them appear in 0x174's closure once its five
+#                   field states are used as roots (104 bodies). Both checks
+#                   were run; neither is inferred.
+#   THE RULING      It stays OUT of this slice -- a scene-373 build cannot
+#                   reach it, and listing it would put a body in the map that
+#                   nothing calls -- and the switch KEEPS the case, because
+#                   0x174 and 0x175 drive the SAME two shared sub-object
+#                   families through the same code, so the case goes live the
+#                   moment lane BNP seats 0x174 into the same process. An
+#                   address-keyed switch cannot mis-route in the meantime.
+#   FOR LANE BNP    src/func_ov006_020c81e0.c and src/func_ov006_020c7418.c
+#                   belong in slice_bnp.txt, not here.
+#
+# THE SLICE IS THE DELTA ONLY.  slice_mg1.txt already carries the ov004
+# framework, the thirty-five overlay constructors and the arm9 waves under
+# them; CMake appends every list to the same targets and dedupes identical
+# absolute paths, so nothing is compiled twice.  144 lines follow: 141 ov006
+# from the closure walk plus the 3 arm9 TUs section 11 accounts for.
+
+
+
+src/func_02053ea0.c
+src/func_02053eb0.c
+src/func_02054748.c
+src/func_ov006_020bfec0.cpp
+src/func_ov006_020bfff8.cpp
+src/func_ov006_020c4048.c
+src/func_ov006_020c4060.c
+src/func_ov006_020c40e8.c
+src/func_ov006_020c4148.c
+src/func_ov006_020c425c.c
+src/func_ov006_020c42bc.c
+src/func_ov006_020c44b4.c
+src/func_ov006_020c4684.c
+src/func_ov006_020c4710.c
+src/func_ov006_020c47d4.c
+src/func_ov006_020c49d8.c
+src/func_ov006_020c4c00.c
+src/func_ov006_020c4d1c.c
+src/func_ov006_020c4d20.c
+src/func_ov006_020c4d3c.c
+src/func_ov006_020c4e8c.c
+src/func_ov006_020c4f68.c
+src/func_ov006_020c4fa4.cpp
+src/func_ov006_020c5370.c
+src/func_ov006_020c53f8.c
+src/func_ov006_020c54f4.c
+src/func_ov006_020c5530.c
+src/func_ov006_020c561c.c
+src/func_ov006_020c5658.c
+src/func_ov006_020c57d4.c
+src/func_ov006_020c5928.c
+src/func_ov006_020c5aa4.c
+src/func_ov006_020c5bf8.c
+src/func_ov006_020c5cf4.c
+src/func_ov006_020c5d28.c
+src/func_ov006_020c5ec8.c
+src/func_ov006_020c6088.c
+src/func_ov006_020c6188.c
+src/func_ov006_020c61c4.c
+src/func_ov006_020c6248.c
+src/func_ov006_020c627c.c
+src/func_ov006_020c6348.c
+src/func_ov006_020c6378.c
+src/func_ov006_020c63dc.c
+src/func_ov006_020c6400.c
+src/func_ov006_020c64e4.c
+src/func_ov006_020c66bc.c
+src/func_ov006_020c68f4.c
+src/func_ov006_020c6a9c.c
+src/func_ov006_020c6ca4.c
+src/func_ov006_020c6e4c.cpp
+src/func_ov006_020c6f3c.c
+src/func_ov006_020c6f70.c
+src/func_ov006_020c6f8c.c
+src/func_ov006_020c70d0.c
+src/func_ov006_020c712c.c
+src/func_ov006_020c719c.c
+src/func_ov006_020c72b4.c
+src/func_ov006_020c7300.c
+src/func_ov006_020c7388.c
+src/func_ov006_020c7490.c
+src/func_ov006_020c7574.c
+src/func_ov006_020c762c.c
+src/func_ov006_020c78ec.cpp
+src/func_ov006_020c7a30.c
+src/func_ov006_020c8768.c
+src/func_ov006_020c8c78.c
+src/func_ov006_020c76d0.c
+src/func_ov006_020c76d8.c
+src/func_ov006_020c76e0.cpp
+src/func_ov006_020c79a8.cpp
+src/func_ov006_020c7ba4.c
+src/func_ov006_020c7c68.c
+src/func_ov006_020c802c.c
+src/func_ov006_020c8048.c
+src/func_ov006_020c8084.cpp
+src/func_ov006_020c814c.cpp
+src/func_ov006_020c8270.c
+src/func_ov006_020c833c.c
+src/func_ov006_020c85a0.c
+src/func_ov006_020c85bc.cpp
+src/func_ov006_020c862c.c
+src/func_ov006_020c864c.c
+src/func_ov006_020c8658.c
+src/func_ov006_020c8680.c
+src/func_ov006_020c87d0.cpp
+src/func_ov006_020c893c.cpp
+src/func_ov006_020c8a04.c
+src/func_ov006_020c8a30.c
+src/func_ov006_020c8a64.c
+src/func_ov006_020c8a9c.c
+src/func_ov006_020c8af4.c
+src/func_ov006_020c8ba8.cpp
+src/func_ov006_020c8c6c.c
+src/_ZN17MgBounceAndPounceD1Ev.cpp
+src/_ZN17MgBounceAndPounceD0Ev.cpp
+src/func_ov006_020e6cac.c
+src/func_ov006_020e6d24.cpp
+src/func_ov006_020e6da4.c
+src/Sound_PlayBank1Panned.cpp
+src/func_ov006_020e6e3c.c
+src/func_ov006_020e6e4c.c
+src/func_ov006_020e6e54.c
+src/_ZN17MgBounceAndPounce21AfterCleanupResourcesEj.cpp
+src/_ZN17MgBounceAndPounce11AfterRenderEj.cpp
+src/_ZN17MgBounceAndPounce14BeforeBehaviorEv.cpp
+src/_ZN17MgBounceAndPounce19BeforeInitResourcesEv.cpp
+src/func_ov006_020e7110.c
+src/func_ov006_020e7124.c
+src/func_ov006_020e72c0.c
+src/func_ov006_020e73c4.cpp
+src/func_ov006_020e740c.c
+src/func_ov006_020e7428.c
+src/func_ov006_020e7508.cpp
+src/func_ov006_020e759c.c
+src/func_ov006_020eebe8.cpp
+src/func_ov006_020eec9c.cpp
+src/func_ov006_020eed64.c
+src/func_ov006_020eed68.c
+src/func_ov006_020eedc8.c
+src/func_ov006_020eee3c.c
+src/func_ov006_020eeef4.c
+src/func_ov006_020eef40.c
+src/func_ov006_020eef58.c
+src/func_ov006_020eef90.c
+src/func_ov006_020eeff0.c
+src/func_ov006_020ef05c.c
+src/func_ov006_020ef0d4.c
+src/func_ov006_020ef110.c
+src/func_ov006_020ef148.c
+src/func_ov006_020ef2b8.c
+src/func_ov006_020ef47c.c
+src/func_ov006_020ef480.c
+src/func_ov006_020ef4ec.c
+src/func_ov006_020ef580.c
+src/func_ov006_020ef5ac.c
+src/func_ov006_020ef768.c
+src/func_ov006_020ef794.c
+src/func_ov006_020ef7f8.c
+src/func_ov006_020ef834.cpp
+src/func_ov006_020efa84.c
+src/func_ov006_020efaa8.c
+src/_ZN8PathLift17BaseInitResourcesEv.c
+src/func_ov006_020efc08.c
