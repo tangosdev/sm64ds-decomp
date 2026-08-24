@@ -105,7 +105,7 @@ void  func_020733a8(void *base, int n, int stride, void *ctor, void *dtor);
 
 /* the six CONSTRUCTORS, in the ROM's r3 column */
 void func_ov006_020ca78c(void);   /* 0x500c, symbolised _ZN6Player29Try... */
-void _ZN6Player29TryExitCharacterDoorWithIntroEv(void);
+int *_ZN6Player29TryExitCharacterDoorWithIntroEv(int *);  /* matches the src definition; address-only use below */
 void func_ov006_020d100c(void);   /* 0x5458 */
 void func_ov006_021248a8(void);   /* 0x5ddc */
 void func_ov006_020efc08(void);   /* 0x6ffc */
