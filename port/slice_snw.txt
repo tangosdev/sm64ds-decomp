@@ -676,3 +676,75 @@ src/func_ov006_02126b4c.c
 src/func_ov006_021259d8.c
 src/func_ov006_02125bbc.c
 src/func_ov006_02125cdc.c
+
+# ---- 18. THE GOAL CRITERION WAS A PRE-SEAT RESULT, AND IS RE-SCOPED --------
+#
+# Run mg12's merge gate could not reproduce "the snowball reaches the goal" on
+# the merged tip, and the adjudication that followed found the reason: the goal
+# was never reached on a tree with these three floors seated.  Section 17's
+# seats are what changed it, and they changed it correctly.
+#
+# THE PROVENANCE, from the logs' own census line.  A build with the floors
+# trapped prints
+#
+#   [scene] dScMgSnowball_c CLOSURE floors (trapped, count-and-return): ...
+#
+# and a build with them seated does not print it at all.  Every log that
+# reports the goal carries that line:
+#
+#   runs/rubmax377.log        trapped: 3772 / 1 / 127196 calls   phase 3, scroll 0
+#   reviewer b_goal2.log      trapped: same counts               phase 3, scroll 0
+#   reviewer b_goalLANE.log   trapped: same counts               phase 3, scroll 0
+#
+# and every log from a seated build does not, and none of them reaches it:
+#
+#   runs/z_max.log            no trapped line                    phase 5, scroll 2235
+#   reviewer m_WIDE.log       no trapped line                    phase 5, scroll 2238
+#
+# The three floors are the obstacle and collision pass, the course layout
+# generator and the BG2 tile writer.  Trapped, they count and return, so the
+# course carries no rocks and the ball rolls the whole length unimpeded.  The
+# goal runs were measuring an empty course.  This is not a regression and it is
+# not the merge: the merge gate reproduced BOTH certified seated plans digit for
+# digit -- the lane's rub377_max at scroll 2235 / delta 3316, and the reviewer's
+# WIDE at scroll 2238 / delta 3313.
+#
+# WHY A STRAIGHT RUB CANNOT GET PAST THE ROCK NOW.  The seated obstacle pass
+# takes its steering delta from the stroke's OWN latched origin at +0xab70 /
+# +0xab74, not from a screen-absolute position, so moving the rub to a different
+# x does not aim the ball anywhere different.  Every straight-line rub therefore
+# arrives at the same rock, and one contact costs most of the velocity: the
+# contact arm of src/func_ov006_02125f68.c keeps v/8 of the incoming speed and
+# adds a quarter of the table-scaled term back.  Twelve full-width strokes still
+# stop at scroll 2235.
+#
+# THE SEATED CRITERION, and it is the one this class is now held to.  All four
+# elements measured on the mg12 merge tip, 4000 frames, SM64DS_FAULTS_FATAL=1,
+# SM64DS_SNW_TRACE=1, with the reviewer's banked stroke generator
+# (runs/mg12/out/SNO/reviewer/):
+#
+#   1. THE COURSE IS BUILT.  2351 of 6016 grid cells nonzero over 376 rows x 16
+#      columns, 19 distinct tile ids, 10 snowball slots and 101 scenery slots.
+#      A zero here would mean the layout generator ran and wrote nothing.
+#
+#   2. THE BALL ANSWERS THE STYLUS, DIRECTIONALLY.  A six-stroke UP rub moves
+#      the scroll 5552 -> 2686, delta 2865.  The matched-length six-stroke DOWN
+#      rub, same 114 probe entries, moves it 5552 -> 5552, delta 0.
+#
+#   3. THE REFUSAL IS A REFUSAL, NOT A MISSED TOUCH.  The DOWN arm latches a
+#      stroke origin of 140/176, so the stylus arrived and the body declined to
+#      convert it.  Arrival and refusal are separately witnessed.
+#
+#   4. THE COURSE PUSHES BACK.  A full-power twelve-stroke rub records one
+#      obstacle contact and stops at scroll 2238.  On the pre-seat build there
+#      was nothing to contact.
+#
+# WHAT IS STILL OPEN, stated plainly rather than left to be rediscovered:
+# reaching the goal on the seated course needs steering around the rock, and no
+# script in this run attempted it -- every banked plan is a straight vertical
+# rub, and section 18's own point is that straight rubs cannot steer.  Whether a
+# human playing with a real stylus can round the rock is Tango's test, not a
+# census question, and it is the honest open item for this class.  The lane's
+# own EVIDENCE_ROLLS.txt sections 6 and 7 already scoped the post-seat result
+# correctly, including "because it hit a rock"; what was missing was the
+# provenance of the goal logs, which is now written down here.
