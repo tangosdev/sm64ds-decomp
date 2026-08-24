@@ -604,7 +604,7 @@ src/func_ov006_0212a3c0.c
 # promises are no longer an expected gap.
 #
 #   src/func_ov006_02125f68.c   0x9e0  the obstacle and collision pass
-#   src/func_ov006_02126ee4.c   0xacc  the course layout generator
+#   src/func_ov006_02126ee4.cpp  0xacc  the course layout generator
 #   src/func_ov006_02126b4c.c   0x398  the BG2 course-row tile writer
 #
 # ONE MATCHES AND TWO ARE HONEST NONMATCHING SEATS, and each banner carries its

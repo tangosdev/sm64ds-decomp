@@ -50,12 +50,15 @@
 // rather than left beside the real bodies where both could define the symbol:
 //
 //   func_ov006_02125f68   0x9e0  -> src/func_ov006_02125f68.c
-//   func_ov006_02126ee4   0xacc  -> src/func_ov006_02126ee4.c
+//   func_ov006_02126ee4   0xacc  -> src/func_ov006_02126ee4.cpp
 //   func_ov006_02126b4c   0x398  -> src/func_ov006_02126b4c.c
 //
-// All three are honest NONMATCHING seats and each carries its measured
-// residual in its own banner; slice_snw.txt section 17 carries the summary and
-// the mechanical "register names only" proof for two of them.
+// ONE OF THE THREE MATCHES and the other two are honest seats that carry their
+// measured residual in their own banners: func_ov006_02126ee4 matches at
+// mwccarm 2004/b56, func_ov006_02125f68 stands at 9 words of 632 and
+// func_ov006_02126b4c at 64 of 230, both of those a pure per-block register
+// renaming. slice_snw.txt section 17 carries the summary and the mechanical
+// "register names only" proof for the two.
 //
 // WHAT THE TRAPS COST WHILE THEY STOOD, now that it can be stated from the
 // decompiled bodies rather than guessed: the layout generator writes the whole

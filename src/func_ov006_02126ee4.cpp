@@ -2,30 +2,34 @@
 // @symbol func_ov006_02126ee4
 // MATCHING at mwccarm 2004/b56.
 //
-// It was NONMATCHING by 9 words of 691 until the virtual call below was spelled
-// as a real C++ virtual call. Those nine were all one idiom: the ROM reads the
-// vtable pointer through the argument copy (mov r0,this; ldr r1,[r0]) at all
-// three call sites, which is what the C++ front end emits for this->vf(), while
-// a C function-pointer call reads it straight from the object register.
+// dScMgSnowball_c course-layout generator (scene 377, "Snowball Slalom").
+// Called from vtable slot 0 (InitResources, 0x0212953c) and slot 18 (0x02129250).
+// Lays out the whole course into the u16 tile grid at +0x4f38 (16 columns x 0x2e0
+// rows, column-major, 0x5c0 bytes per column), seeds the snowball table at
+// +0xac58/+0xacd8, seeds the scenery table at +0xb358/+0xb3d8/+0xb5d8, and stores
+// the starting X at +0xab5c.
 //
-// THE LANGUAGE MODE ALONE IS NOT THE LEVER, measured rather than assumed:
-// compiling the C spelling with -lang c++ is BITWISE IDENTICAL, still 9 of 691.
-// What closes it is the CALL, not the compiler front end -- and the same change
-// is also the port-side correctness fix, because the host's face for this slot
-// takes its receiver in ecx. See the struct below.
-// @symbol func_ov006_02126ee4
-/* dScMgSnowball_c course-layout generator (scene 377, "Snowball Slalom").
-   Called from vtable slot 0 (InitResources, 0x0212953c) and slot 18 (0x02129250).
-   Lays out the whole course into the u16 tile grid at +0x4f38 (16 columns x 0x2e0
-   rows, column-major, 0x5c0 bytes per column), seeds the snowball table at
-   +0xac58/+0xacd8, seeds the scenery table at +0xb358/+0xb3d8/+0xb5d8, and stores
-   the starting X at +0xab5c.
-
-   NONMATCHING: 9 words of 691 differ, all one idiom -- the ROM loads the vtable
-   pointer through the argument copy (mov r0,this; ldr r1,[r0]), which is what the
-   C++ front end emits for this->vf(); the C front end here loads it straight from
-   the object register. Everything else -- size, frame, every stack slot, every
-   callee-saved register, all control flow -- is byte-identical. */
+// HISTORY, SUPERSEDED AND KEPT ONLY AS A LEVER NOTE -- this file matches today
+// and nothing below describes its current state. The body first landed with a
+// residual of 9 words in 691, all one idiom: the ROM reads the vtable pointer
+// through the argument copy (mov r0,this; ldr r1,[r0]) at all three call sites,
+// which is what the C++ front end emits for this->vf(), while a C
+// function-pointer call reads it straight from the object register. Two things
+// closed it at once, and they are the same edit -- see the struct below, which
+// is also the port-side correctness fix because the host's face for this slot
+// takes its receiver in ecx.
+//
+// MEASURED NEGATIVE, kept so the lever is not retried: the language mode alone
+// does nothing. Compiling the C spelling with -lang c++ is BITWISE IDENTICAL,
+// residual unchanged at 9 of 691. What closes it is the CALL, not the front end.
+//
+// THE WORD THIS BANNER DELIBERATELY DOES NOT USE. tools/progress.py:84,
+// tools/enroll.py:146, tools/ledger.py:270 and tools/chaos_db_ci.py:347 all
+// classify a src file by searching its FIRST 200 CHARACTERS for the hatch token,
+// so a matched file that mentions that token while describing its own history
+// classifies as unmatched and drops out of progress, the chaos DB, the treemap
+// and rom-stats. This file therefore says "residual" throughout and never spells
+// the token, in the head or anywhere else.
 #include "types.h"
 
 /* THE VIRTUAL CALL HAS TO BE A VIRTUAL CALL, and this is the established
