@@ -39,7 +39,7 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_Lin &ray)
 {
     Vector3 start, end, worldPos;
 
-    func_0203aa74(this, (const Vector3 *)&ray.unk_038, &start);
+    func_0203aa74(this, &ray.start, &start);
     func_0203aa74(this, &ray.lineEnd, &end);
 
     u8 hadClsn = ray.hasClsn;
@@ -54,7 +54,8 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_Lin &ray)
         func_0203aa10(this, &data_020a0d60, &worldPos);
         func_020375ec((int *)&ray, (const int *)&worldPos);
         ray.clsnDist = dist;
-        _ZN5dBgPiaSERKS_((dBgPi *)&ray.unk_010, &data_020a0d1c);
+        /* the dBgPi base sub-object, at +0x10 */
+        _ZN5dBgPiaSERKS_((dBgPi *)((char *)&ray + 0x10), &data_020a0d1c);
         ray.hasClsn = 1;
     }
     return hit;

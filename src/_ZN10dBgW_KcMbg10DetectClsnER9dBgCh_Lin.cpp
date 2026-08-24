@@ -33,7 +33,7 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Lin & ray_)
   int sp0[3];
   int sp0xc[3];
   int sp0x18[3];
-  func_02039e48(this, &ray->unk_038, sp0);
+  func_02039e48(this, &ray->start, sp0);
   func_02039e48(this, &ray->lineEnd, sp0xc);
   unsigned char f50 = ray->hasClsn;
   _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(data_020a0d0c, sp0, sp0xc, 0);
@@ -45,7 +45,8 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Lin & ray_)
     func_02039e30(this, data_020a0d60, sp0x18);
     func_020375ec((int*)ray, sp0x18);
     ray->clsnDist = saved;
-    _ZN5dBgPiaSERKS_(&ray->unk_010, data_020a0d1c);
+    /* the dBgPi base sub-object, at +0x10 */
+    _ZN5dBgPiaSERKS_((char *)ray + 0x10, data_020a0d1c);
     ray->hasClsn = 1;
   }
   return r;

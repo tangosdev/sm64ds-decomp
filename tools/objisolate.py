@@ -213,13 +213,19 @@ def plan(raw, keep_symbol):
                 # The predicted case above, now real: an INLINE BASE DESTRUCTOR.
                 # `Scene::~Scene()` inlines ~ActorDerived, so the object stores
                 # _ZTV12ActorDerived without ever defining it -- UNDEF from the
-                # start, addend 8, never a candidate for externalisation. The
-                # correction is the same arithmetic the externalise path uses, and
-                # it is verified the same way: rombuild byte-compares the linked
-                # module, which is the only thing that caught the original 8-high
-                # vptr bug. A different addend is still refused.
+                # start, addend 8, never a candidate for externalisation. A
+                # constructor-only TU of an MI class stores its SECONDARY vptr
+                # the same way: UNDEF _ZTV<C>, addend 24 = 8 preamble + 0x10
+                # into the secondary block, which must land on the ROM's
+                # separately named thunk table. That is exactly the
+                # externalise case's arithmetic, whose enrolled instance
+                # (ModelAnim: 44 - 8 = +0x24 = VTable_Animation_ModelAnimThunk)
+                # is the verification the original refusal asked for, and
+                # rombuild's module byte-compare still checks every landing.
+                # Non-_ZTV RTTI addends stay refused, and so does any _ZTV
+                # addend below the preamble: no surveyed shape produces one.
                 if addend and not (sym.name.startswith("_ZTV")
-                                   and addend == VTABLE_PREAMBLE):
+                                   and addend >= VTABLE_PREAMBLE):
                     return {"error": f"{sym.name}: undefined RTTI reference with "
                                      f"addend {addend}; the ROM symbol is already the "
                                      f"slot array, so this would land {addend} past it"}
