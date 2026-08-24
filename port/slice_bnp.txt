@@ -499,6 +499,7 @@ src/func_ov006_020c4060.c
 src/func_ov006_020c40e8.c
 src/func_ov006_020c425c.c
 src/func_ov006_020c42bc.c
+src/func_ov006_020c44b4.c
 src/func_ov006_020c4684.c
 src/func_ov006_020c4710.c
 src/func_ov006_020c47d4.c
@@ -540,6 +541,9 @@ src/func_ov006_020c6f3c.c
 src/func_ov006_020c6f70.c
 src/func_ov006_020c70d0.c
 src/func_ov006_020c712c.c
+src/func_ov006_020c719c.c
+src/func_ov006_020c72b4.c
+src/func_ov006_020c72c8.c
 src/func_ov006_020c72dc.c
 src/func_ov006_020c7300.c
 src/func_ov006_020c7388.c
@@ -607,6 +611,7 @@ src/func_ov006_020ee5b8.c
 src/func_ov006_020ee658.c
 src/func_ov006_020ee690.cpp
 src/func_ov006_020ee8dc.cpp
+src/func_ov006_020ee994.c
 src/func_ov006_020eee3c.c
 src/func_ov006_020eef40.c
 src/func_ov006_020ef05c.c
