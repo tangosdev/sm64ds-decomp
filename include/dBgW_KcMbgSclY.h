@@ -43,6 +43,11 @@ struct dBgW_KcMbgSclY : dBgW_KcMbg {
     virtual int DetectClsn(dBgCh_Lin &ray);             /* slot 7 - free def */
     virtual int DetectClsn(dBgCh_SphCrr &sphere);           /* slot 8 - free def */
 
+    /* DECLARED, never defined as a method here -- src/_ZN14dBgW_KcMbgSclYC1Ev.cpp
+       owns C1; the C2 variant has no ROM counterpart because nothing derives
+       from SclY (notes/ctor-migration.md section 2). */
+    dBgW_KcMbgSclY();
+
     /* --- non-virtual --- */
     void SetFile(KCL_File *file, const Matrix4x3 &mat, Fix12<int> scale,
                  s16 angY, CLPS_Block &clps);             /* free def, wall 6az */
