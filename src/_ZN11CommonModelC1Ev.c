@@ -21,11 +21,11 @@ struct CommonModel {
 
 extern u32 _ZTV11CommonModel[];
 extern struct Matrix4x3 data_02082128;
-extern void _ZN9ModelBaseC1Ev(struct ModelBase *thiz);
+extern void _ZN9ModelBaseC2Ev(struct ModelBase *thiz);
 
 struct CommonModel *_ZN11CommonModelC1Ev(struct CommonModel *thiz)
 {
-    _ZN9ModelBaseC1Ev((struct ModelBase *)thiz);
+    _ZN9ModelBaseC2Ev((struct ModelBase *)thiz);
     thiz->vtable = _ZTV11CommonModel;
     thiz->data = 0;
     thiz->mat4x3 = data_02082128;

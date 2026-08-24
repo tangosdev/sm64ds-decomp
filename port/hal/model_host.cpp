@@ -141,7 +141,7 @@ int data_02099f24[4];
 int data_0209cefc[3 * 64];  /* 64 records x 0xc */
 int data_0209cef8[1];       /* record count */
 int data_0208e738[1] = { 1 };   /* nonzero: upload textures on registration */
-int data_0208e87c[8];       /* ModelBase vtable storage; never dispatched */
+int _ZTV9ModelBase[8];       /* ModelBase vtable storage; never dispatched */
 int data_0209b3ec[12];      /* camera Matrix4x3 the render walk composes */
 
 // Model's Itanium vtable storage: installed by the C ctor. The gates call

@@ -6,11 +6,11 @@ struct ModelBase {
     void *vtable; /* 0x00 */
     void *res;    /* 0x04 */
 };
-extern void *data_0208e87c[];
+extern void *_ZTV9ModelBase[];
 extern void Deallocate(void *res); /* 0x02018144 */
 struct ModelBase *_ZN9ModelBaseD1Ev(struct ModelBase *thiz)
 {
-    thiz->vtable = (void *)data_0208e87c;
+    thiz->vtable = (void *)_ZTV9ModelBase;
     if (thiz->res != 0) {
         Deallocate(thiz->res);
     }

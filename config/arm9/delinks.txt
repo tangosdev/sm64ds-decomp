@@ -2332,7 +2332,7 @@ src/_ZN5ModelD0Ev.c:
     complete
     .text start:0x02016ce0 end:0x02016d20
 
-src/_ZN5ModelC1Ev.c:
+src/_ZN5ModelC1Ev.cpp:
     complete
     .text start:0x02016d58 end:0x02016da8
 
@@ -2376,7 +2376,7 @@ src/_ZN9ModelBaseD1Ev.c:
     complete
     .text start:0x02017120 end:0x02017150
 
-src/_ZN9ModelBaseC1Ev.c:
+src/_ZN9ModelBaseC2Ev.cpp:
     complete
     .text start:0x02017150 end:0x02017168
 

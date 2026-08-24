@@ -5,11 +5,11 @@
 #include "BMD_File.h"
 #include "math/Matrix.h"
 
-/* The root of the model hierarchy, vtable at 0x0208e87c (data_0208e87c).
+/* The root of the model hierarchy, vtable at 0x0208e87c (_ZTV9ModelBase).
  *
  * The chain is ModelBase -> Model -> (the ModelAnim family), with CommonModel
  * and ShadowModel as further ModelBase-derived siblings. Model derives from
- * ModelBase DIRECTLY: Model::C2 calls ModelBase::C1 and then stores its own
+ * ModelBase DIRECTLY: Model::C2 calls ModelBase::C2 and then stores its own
  * vptr, one intermediate store, no more.
  *
  * VTABLE is read out of the ROM at 0x0208e87c:
@@ -47,7 +47,7 @@
  * What has NOT changed is the declaration order. The destructor stays first,
  * because for a root class vtable slot order IS declaration order.
  *
- * LAYOUT evidence: ModelBase::C1 stores the vptr at +0x0 and zeroes +0x4;
+ * LAYOUT evidence: ModelBase::C2 stores the vptr at +0x0 and zeroes +0x4;
  * the destructors Deallocate +0x4 when set; Model::LoadAndSetFile stores the
  * loaded file at +0x4. The base ENDS at 0x8. Each derived class puts its
  * view of the components at +0x8 -- Model EMBEDS a ModelComponents there,
@@ -83,6 +83,15 @@ extern "C" void _ZN6Memory16operator_delete2EPv(void *);
 struct ModelBase {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
     BMD_File *modelFile;    /* 0x04 - owned; the destructors Deallocate it */
+
+    /* DECLARED, NEVER DEFINED HERE, and that is the point -- same key-function
+       reasoning as Model (include/Model.h). Left undeclared, the compiler
+       synthesises this constructor and INLINES it into every derived
+       constructor, emitting the vptr store + zero of modelFile straight into
+       the caller. The ROM calls _ZN9ModelBaseC2Ev (0x02017150) out of line
+       instead, so the declaration is what makes a derived constructor
+       reproduce. */
+    ModelBase();
 
     /* --- vtable, in ROM order at 0x0208e87c. Do not reorder. --- */
     virtual ~ModelBase();                            /* slots 0 (D1), 1 (D0) */
