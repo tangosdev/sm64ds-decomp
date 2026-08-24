@@ -49,7 +49,13 @@ struct SlidingPlatformWf {
     u8  pad_31f[0x1];
     s16 mMoveTimer;            /* 0x320 */
     u8  mVariant;            /* 0x322 */
+    u8  pad_323[0x1];
+    s32 mBasePosX;            /* 0x324 */
+    s32 mBasePosY;            /* 0x328 */
+    s32 mBasePosZ;            /* 0x32c */
 };
+
+typedef char SlidingPlatformWf_C_size_must_be_0x330[sizeof(struct SlidingPlatformWf) == 0x330 ? 1 : -1];
 
 #endif /* __cplusplus */
 

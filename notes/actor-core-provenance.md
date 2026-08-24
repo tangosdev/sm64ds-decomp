@@ -44,7 +44,7 @@ primitives this class calls. Different translation unit; not part of the run abo
 `fBase_c::fBase_c` stores its vptr with `str r1, [r4]`, so the vptr is at `0x0`.
 The same constructor does `add r5, r4, #0x14` and passes r5 to
 `SceneNode::SceneNode`, then writes an owner back-pointer with `str r4, [r5, #0x10]`
--- which pins `mSceneNode` at `0x14` and makes it `0x14` bytes, not the `0x10`
+-- which pins `sceneNode` at `0x14` and makes it `0x14` bytes, not the `0x10`
 that `include/ActorBase__SceneNode.h` describes. It then initialises two identical
 `0x10`-byte nodes at `r5+0x14` (`0x28`) and `r5+0x24` (`0x38`), the two the
 destructor tears down in reverse order.
@@ -194,7 +194,7 @@ Named from matched bodies only. See `include/dActor_c.h` for the short form.
 | --- | --- | --- |
 | `0x050` | `mListPrev` | `dActor_c::dActor_c` passes `this + 0x50` to `func_0203b244`, the append primitive, with the global actor list `data_0209b468`; that primitive's node layout is `{prev@0, next@4}`. `~dActor_c` passes the same address to `func_0203b27c` (unlink). |
 | `0x054` | `mListNext` | `dActor_c::Next(const dActor_c *)` reads `self->0x54` to get the next NODE, then dereferences `node + 8` to recover that node's actor. Forward link, therefore, is `+4`. |
-| `0x058` | `mListOwner` | the constructor stores `this` there; `Next` reads `node + 8` and returns it as a `dActor_c *`. Same owner-back-pointer shape as `fBase_c::mSceneNode.mOwner` at `0x24`. |
+| `0x058` | `mListOwner` | the constructor stores `this` there; `Next` reads `node + 8` and returns it as a `dActor_c *`. Same owner-back-pointer shape as `fBase_c::sceneNode.owner` at `0x24`. |
 | `0x068`/`0x06c`/`0x070` | `mPrevPosX/Y/Z` | `dActor_c::BeforeBehavior` ends by copying `mPosX/Y/Z` into them, on every path that lets the actor think. |
 | `0x0b4` | `mClipOffsetY` | `BeforeBehavior` builds the point it hands to the camera transform as `(mPosX, mPosY + 0xb4, mPosZ) >> 3` -- a vertical offset from the actor's origin to the centre of its clip volume. It is the one of the four `SetRanges` arguments stored WITHOUT the `>> 3`, i.e. it is in position units, not clip units. `Platform.cpp` adds it to a `Vector3`'s `y` for the same purpose. |
 | `0x0b8` | `mClipRadius` | passed as `Clipper::Func_020150E8`'s radius argument; zero skips the camera transform entirely ("no clip volume"). `Platform.cpp` reads it back `<< 3`. |

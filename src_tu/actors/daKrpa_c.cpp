@@ -140,7 +140,7 @@ extern void func_ov070_02121310(char* c);
 extern void _ZN9dBgCh_GndD1Ev(struct RG* rg);
 }
 
-extern struct Blk data_02082128;
+extern struct Blk IDENTITY_MATRIX4X3;
 
 int daKrpa_c::InitResources()
 {
@@ -169,7 +169,7 @@ int daKrpa_c::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    *(struct Blk*)((char*)&unk_35c) = data_02082128;
+    *(struct Blk*)((char*)&unk_35c) = IDENTITY_MATRIX4X3;
 
     _ZN9dBgCh_GndC1Ev(&rg);
     _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, (struct Vector3*)((char*)&mPosX), ((char*)this));

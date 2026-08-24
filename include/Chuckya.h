@@ -42,6 +42,12 @@ struct Chuckya : dEnemyBase_c {
     s32                          mHomePosY;             /* 0x3c4 */
     s32                          mHomePosZ;             /* 0x3c8 */
     u8  pad_3cc[0xc];
+    /* SHADOWS dActor_c::mPrevPos{X,Y,Z} at 0x068..0x070, which is a different
+       field: the base's copy is written by dActor_c::BeforeBehavior every frame,
+       these three are Chuckya's own. Both spellings are right for their own class,
+       so an unqualified mPrevPosX inside Chuckya means THESE -- reach the base's as
+       dActor_c::mPrevPosX. Renaming either side needs evidence for what Chuckya's
+       three actually track, which no matched body supplies yet. */
     s32                          mPrevPosX;             /* 0x3d8 */
     s32                          mPrevPosY;             /* 0x3dc */
     s32                          mPrevPosZ;             /* 0x3e0 */
