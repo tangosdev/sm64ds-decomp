@@ -3812,3 +3812,82 @@ all of them originate inside, zero from outside - and the ROM still does not hoi
 "reducible implies hoisted" holds for mwccarm 2004/b56 but is not a property of the
 ROM's own compiler, and an unhoisted invariant inside a reducible ROM loop is not by
 itself evidence that the source was irreducible.
+
+## 6bp. Two levers off the trampoline per-frame draw, and one that did nothing (func_ov006_02123938 MATCHED, 2026-08-24)
+
+Run mg12, lane TRM. `func_ov006_02123938` (ov006, 0x1e8) went from 53 differing
+words to a byte match on two source spellings, and a third lever that pret's
+idiom predicts would work was measured to do nothing on a much bigger body in
+the same family. All three were scored with `tools/match.py --version 2004/b56`
+against `extracted/overlays/overlay_0006.bin` at base 0x020bfec0.
+
+**Lever 1: an unsigned cast in an array subscript stops mwcc parking the scaled
+index in a callee-saved register.** The body reads four parallel byte arrays at
+the same index, `data_020a0e40 * 4`. Written that way at all four sites, mwcc
+computes the product once, keeps it in r5 across the whole block, and addresses
+every array as `[base, r5]`. The ROM keeps the RAW index in r0 and re-derives
+the scale in the addressing mode -- `[base, r0, lsl #2]` -- at three of the four
+sites, materialising `lsl r2, r0, #2` only for the one site that reads a
+different array. Casting the index at the two sites the ROM addresses inline:
+
+    *(short *)(c + 0x7b9c) = data_020a0dea[(unsigned int)data_020a0e40 * 4];
+
+makes the expression trees differ, kills the common subexpression, and takes the
+count from 29 to 7. The whole register assignment of the surrounding block falls
+into place with it -- the ROM's `ldrsh r5` temporary gets r5 back, and the
+`add r1, r4, #0x7b00` / `add r2, r4, #0x7000` pair lands on the ROM's registers.
+
+THIS IS NOT A GUESS ABOUT THE ORIGINAL SOURCE. `src/TouchArea_Update.c` is a
+byte match over the same four arrays and it carries exactly this asymmetry:
+`data_020a0de8[a1 * 4]` beside `data_020a0de9[(unsigned int)a1 * 4]`, and its
+listing shows the same split -- inline scaling for the plain spelling, and the
+unsigned one distinct from it. The idiom is in the corpus already.
+
+**Lever 2: an `&&` assigned to a variable materialises only when the assignment
+needs a CONVERSION. The type is the whole lever; control flow is not.** The tail
+computes `(touched == 0 && tapped != 0)` and the ROM keeps it as a value: `bne`
+to a shared `mov r0,#0`, `movne r0,#1` on the other path, then `cmp r0,#0` and a
+predicated store. `int w = A && B;` folds instead, into short-circuit branches,
+and comes out THREE WORDS SHORT (0x1dc against 0x1e8).
+
+THIS ENTRY FIRST CLAIMED THE LEVER WAS AN EARLY `return`, AND AN EXPERIMENT
+DISPROVED IT. The claim was that ending the draw arm with `return;` and dropping
+the `else` is what unfolds the boolean. It is not. The two forms were compiled
+against each other over six flag types, and the form does not appear in the
+result at all -- what appears is the type:
+
+    flag type        `... return; }` form      `} else { ... }` form
+    int              0x1dc, three words short   0x1dc, three words short
+    unsigned         MATCH                      MATCH
+    unsigned int     MATCH                      MATCH
+    unsigned long    MATCH                      MATCH
+    long             MATCH                      MATCH
+    unsigned char    size right, 1 word differs size right, 1 word differs
+    short            0x1ec, one word long       0x1ec, one word long
+
+`long` matching where `int` does not is the tell for the mechanism, since both
+are 32-bit signed here: the `&&` operator yields `int`, so `int w = A && B` needs
+no conversion node and mwcc folds it into the branch that consumes it, while ANY
+type that makes the assignment a conversion forces the value to exist first. For
+the 32-bit conversions the conversion itself is free, so they byte-match; the
+narrowing ones cost the extra truncate (`unsigned char`) or sign-extend (`short`)
+and miss by exactly that.
+
+src/func_ov006_02123938.c ships the `return;` spelling because that is what was
+written first, NOT because it is required -- the `else` form byte-matches too.
+The rule to carry is only this: an `&&` whose consumer is the very next `if` gets
+folded, and what unfolds it is assigning it to a variable whose type differs from
+`int`.
+
+**And one that did nothing.** `func_ov006_020d01e0` (0x800, same family, not
+seated) has twelve `Vec3` locals. Reordering the declarations into the ROM's own
+observed stack order -- v0, v1, bestA, bestB, tmpA, tmpB, sum, mid, dv, nrm, up,
+crs, read straight off the `[sp, #N]` operands -- moved the count by TWO words
+out of 457 and did not move any of the twelve to its ROM address. (457 is words
+differing over the common 512-word prefix, the candidate being four words long
+at 0x810; see the figure note in unmatched/MgTrampolineTime_Floors.cpp.)
+Declaration
+order is documented in this file as controlling regalloc; it does not control
+FRAME LAYOUT here. What actually shifts every stack reference in that body is
+the scalar block below the vectors coming out 0x14 bytes wider than the ROM's,
+and no reordering of the vectors touches that.
