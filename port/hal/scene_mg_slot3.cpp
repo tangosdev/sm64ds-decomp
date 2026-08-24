@@ -202,12 +202,12 @@
 //
 // ---- 9. WHAT THIS SEAT DOES NOT CLAIM -------------------------------------
 //
-//   - THE CLASS HAS ONE FLOOR AND IT IS ON THE PLAY PATH. State 2 of
-//     data_ov006_02142bdc is 0x0210adac, which has no src body in any module.
-//     It is the face-evaluation step after the third reel stops.
-//     port/unmatched/MgSlot3_StateDispatch.cpp section 3 has the derivation
-//     and the census below prints the count. An unattended boot never reaches
-//     it, so the boot proofs are clean for an honest reason.
+//   - THE CLASS'S ONE FLOOR IS RETIRED (run mg12, lane MAM). State 2 of
+//     data_ov006_02142bdc is 0x0210adac, the face-evaluation step after the
+//     third reel stops; it now has a byte-matched src/func_ov006_0210adac.c and
+//     the dispatcher calls it. port/unmatched/MgSlot3_StateDispatch.cpp
+//     section 3 has the derivation and what changed. The former floor counter
+//     in the census below reads 0 for a structural reason now.
 //   - NOBODY HAS LOOKED AT A FRAME NEXT TO A DS. The census reports what the
 //     class does; it cannot say the picture is right.
 //   - THE SAVE RECORD IS THE PORT'S USUAL GAP. Slot 18 seeds +0xbc from
@@ -604,9 +604,9 @@ extern "C" void port_scene_slot3_hits(void)
         port_mg_dispatch_counts(&calls, &unknown);
         port_mg_slot3_state_slots(slots);
         std::printf("[scene] dScMgSlot3_c state dispatch: %u call(s) through "
-                    "the address switch, %u to the BODILESS state 2 "
-                    "(0x0210adac); %u framework call(s), %u UNHANDLED "
-                    "address(es)\n",
+                    "the address switch, %u to the RETIRED floor at state 2 "
+                    "(0x0210adac, matched, expect 0); %u framework call(s), "
+                    "%u UNHANDLED address(es)\n",
                     port_mg_slot3_state_hits(), port_mg_slot3_floor_hits(),
                     calls, unknown);
         std::printf("[scene] dScMgSlot3_c state slots (table order):");

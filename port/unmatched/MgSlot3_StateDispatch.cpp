@@ -79,14 +79,23 @@
 // second dispatcher, no field-held member pointer and no open-coded site in
 // this class, and that is a measurement rather than an absence of evidence.
 //
-// ---- 3. SLOT 2 HAS NO BODY. IT IS A FLOOR AND IT IS ON THE PLAY PATH -------
+// ---- 3. SLOT 2 WAS THE CLASS'S ONE FLOOR. IT IS RETIRED --------------------
 //
-// 0x0210adac has a config symbol (`kind:function(arm,size=0x1b8)`), no delink
-// block in config/arm9/overlays/ov006/delinks.txt, and no src file in any
-// extension. It is the ONLY body in this class's code block without one, and
-// port/mg_fanout_costs.txt section 3's nosrc column reads 0 for this row
-// because that column is computed over the VTABLE and this address is in a
-// STATE table. A seat lane that trusted the column would not have looked.
+// RUN mg12, LANE MAM MATCHED IT. src/func_ov006_0210adac.c byte-reproduces
+// 0x0210adac under mwccarm 2004/b56 (and 1.2/base, 1.2/sp2, 1.2/sp2p3), it has
+// a delink block in config/arm9/overlays/ov006/delinks.txt covering
+// 0x0210adac..0x0210af64, linkcheck reports VERIFIED with zero blind slots, and
+// port/slice_mug.txt lists it, so the switch below CALLS it. Everything from
+// here to the end of this section is the mg11 seat lane's reading of the state,
+// kept because it is what the match was checked against; the paragraphs that
+// said "no body" are rewritten, not deleted, so the two runs can be compared.
+//
+// WHAT IT WAS. 0x0210adac had a config symbol (`kind:function(arm,size=0x1b8)`)
+// and neither a delink block nor a src file in any extension. It was the ONLY
+// body in this class's code block without one, and port/mg_fanout_costs.txt
+// section 3's nosrc column reads 0 for this row because that column is computed
+// over the VTABLE and this address is in a STATE table. A seat lane that
+// trusted the column would not have looked.
 //
 // WHAT IT COSTS THE PLAYER, derived rather than guessed. The state index at
 // +0x5000 moves like this:
@@ -102,47 +111,43 @@
 //
 // So state 2 is the FACE-EVALUATION step between "all three reels stopped" and
 // "the payout is tallied": the ROM body reads the three visible symbols out of
-// +0x5031, divides by 5 (its literal pool at 0x0210af60 is 0x66666667, the
-// signed divide-by-five magic) and decides what the player won. With no body,
-// a Mix-a-Mug round on this port plays up to the third reel stopping and then
-// stops advancing. NOTHING IN AN UNATTENDED BOOT REACHES IT -- stopping a reel
-// takes a stylus tap -- so the boot proofs in port/slice_mug.txt are clean for
-// the honest reason and not because the hole is small.
+// +0x5031, turns each reel's angle into a row, and decides what the player won.
+// (mg11 read the divisor as 5 off the literal pool at 0x0210af60. The pool word
+// 0x66666667 IS the signed divide-by-five magic, but the shift that follows the
+// smull is `asr #5`, not `asr #1`, so the divisor is 5 << 4 = 80. The matched
+// source divides by 80 and the byte gate agrees.) While it had no
+// body a Mix-a-Mug round on this port played up to the third reel stopping and
+// then stopped advancing. NOTHING IN AN UNATTENDED BOOT REACHED IT -- stopping
+// a reel takes a stylus tap -- so the mg11 boot proofs in port/slice_mug.txt
+// were clean for the honest reason and not because the hole was small.
 //
-// IT IS HANDLED HERE RATHER THAN LEFT TO THE FRAMEWORK, and the difference
-// matters to a reader of a run log. Falling through would reach
-// MgBase_StateDispatch.cpp's mg_unhandled and print "UNHANDLED", which is the
-// report for an address nobody has accounted for. This one is accounted for:
-// it is named, counted separately, and reported once with what the player
-// sees. The UNHANDLED counter stays meaning "a dispatch this port cannot
-// explain".
+// The matched body confirms that reading line for line: it copies the three
+// visible faces out of +0x5031 into a three-byte local, and for each row i it
+// walks reels 1 and 2 (j = 1, 2) asking whether the same face id sits at
+// ((i + (reel j's angle at +0x4fe4 + 4*j >> 12) / 80) % the face count at
+// +0x503a) of reel j's five-byte strip at +0x501c + 5*j. A row that disagrees
+// on either reel has its face replaced with the sentinel 5, so it can only pay
+// if the paying face at +0x503b is itself 5. The first row that still matches
+// +0x503b wins and the scan stops there: row 1 pays 6, rows 0 and 2 pay 3, the
+// winning row index goes to +0x5010 and the payout to +0x5014.
 //
+// WHILE IT WAS A FLOOR IT WAS HANDLED HERE RATHER THAN LEFT TO THE FRAMEWORK,
+// and the difference mattered to a reader of a run log. Falling through would
+// have reached MgBase_StateDispatch.cpp's mg_unhandled and printed "UNHANDLED",
+// which is the report for an address nobody has accounted for. The UNHANDLED
+// counter keeps meaning "a dispatch this port cannot explain".
 //
-// AND IT IS NOT AN UNTOUCHED BODY: THERE IS A NEAR-MISS ROW FOR IT. The
-// per-item near-miss check this lane's review ordered turned one up --
-// nearmiss/db.jsonl line 45, name func_ov006_0210adac, size 440 (= 0x1b8),
-// lang c, from run `fable-hardmatch-20260801` -- carrying a full candidate
-// c_source and this verdict, quoted rather than summarised:
-//
-//     "struct-2D-sym form; equal=101/110 falign; sole real divergence = SR
-//      init add r6,sl,#5 rematerialized per outer iter in ROM vs
-//      hoisted+spilled [sp,#4] by mwcc (frame 0x14 vs 0xc); tried: row ptr,
-//      register, do-while, outer do-while, u64 launder, (int)c grouping,
-//      subscript, 5*(j-1), pragmas loop_invariants/propagation/
-//      strength_reduction/lifetimes, C++, int param, manual hoists - all
-//      fail; SR-off fixes init placement but kills LICM hoists of divisor/1/5
-//      and buf ptr walks"
-//
-// NOTHING ABOUT THE SEAT CHANGES. "No delink block and no src file in any
-// module" is still exactly true -- there is no src/func_ov006_0210adac.c or
-// .cpp, which is what decides whether this dispatch site can name a body --
-// and a near-miss row is a candidate, not a definition. What changes is the
-// PRICE the floor wave should put on it: this is a 101-of-110 near-miss with
-// one characterised divergence and a documented list of fifteen failed
-// levers, not a body nobody has looked at. The candidate ALSO independently
-// confirms this file's reading of what state 2 does: it walks the three
-// visible symbols at +0x5031, compares them across the reels and writes the
-// win index to +0x5010.
+// HOW THE MATCH WAS GOT, because the source carries one token that looks like
+// noise and is not. nearmiss/db.jsonl line 45 (run `fable-hardmatch-20260801`)
+// held a 101-of-110 candidate whose one divergence was that the ROM initialises
+// the strength-reduced row base INSIDE the outer loop (`add r6,sl,#5`) where
+// mwcc hoists it into the prologue and spills it. All 25 installed mwccarm
+// builds hoist it; 60 opt pragmas, every declaration order, the whole flag
+// range and 400-odd source shapes do not move it. A redundant `(int)` cast on
+// the left operand of the sum inside the modulo does: it changes the expression
+// tree mwcc builds and the initialiser stays put. That cast is load-bearing and
+// src/func_ov006_0210adac.c says so at the top. The near-miss row was retired
+// with the match.
 //
 // IT HAS TWO EXITS AND THIS PARAGRAPH USED TO NAME ONLY ONE. On the PAY path
 // (total > 0) it writes the payout to +0x5014, sets the state index to 3,
@@ -162,18 +167,16 @@
 // counter in this file charges slot 3 for both, and why the switch below has
 // one arm for the two slots.
 //
-// NO BODY IS INVENTED FOR IT. unmatched/MgCurling_State_020e1854.cpp is the
-// precedent for TRANSCRIBING such a state from the ROM, and it is the right
-// next step for this address -- but a transcription is a decompilation and
-// this is a seat lane. The address, the size, the adjudication arithmetic
+// NO BODY WAS EVER INVENTED FOR IT, and none is now: the file the switch calls
+// is a byte match, not a transcription. The mg11 adjudication arithmetic
 // (108 instructions plus a two-word pool = 110 = 0x1b8/4) and the five callees
 // (DecIfAbove0_Byte 0x0203add4, the ITCM divide helper 0x01ffabe4,
-// func_02012790 twice, func_ov004_020adb1c) are in port/slice_mug.txt so the
-// floor wave starts where this lane stopped.
+// func_02012790 twice, func_ov004_020adb1c) held exactly: the matched object is
+// 0x1b8 bytes with the same two pool words and the same five relocations.
 //
-// ---- 4. THE OTHER SEVEN ALL HAVE MATCHED src TUs --------------------------
+// ---- 4. ALL EIGHT NOW HAVE MATCHED src TUs --------------------------------
 //
-// All seven resolve to a src file with a delink block, and none carries a
+// All eight resolve to a src file with a delink block, and none carries a
 // NONMATCHING banner. Two of them -- 0x0210ab90 and 0x0210ab94's neighbour
 // 0x0210ac38 -- are four-byte `bx lr` bodies whose src spells `(void)`, which
 // is checked against the ROM here rather than inferred from the src: both are
@@ -192,10 +195,11 @@ extern "C" {
 /* the framework's entry point; see MgBase_StateDispatch.cpp */
 void port_mg_call0(void *self, unsigned code, int adj);
 
-/* the seven routed state bodies, each declared with the parameter list ITS OWN
+/* the eight routed state bodies, each declared with the parameter list ITS OWN
    src TU defines */
 void func_ov006_0210b1fc(char *p);            /* slot 0 */
 void func_ov006_0210af64(char *c);            /* slot 1 */
+void func_ov006_0210adac(char *c);            /* slot 2 */
 void func_ov006_0210ac3c(char *c);            /* slots 3 and 4 */
 void func_ov006_0210ac38(void);               /* slot 5, bx lr body */
 void func_ov006_0210ab94(char *c);            /* slot 6 */
@@ -218,33 +222,16 @@ extern unsigned char data_0209d45c;
 // ---- the class's address switch --------------------------------------------
 
 static unsigned g_slot3_state_hits;
-/* THE BODILESS-STATE COUNTER, AND FOR THIS CLASS IT IS NOT STRUCTURALLY ZERO.
-   Section 3: slot 2 is 0x0210adac, which has no src body anywhere. A nonzero
-   reading here is the class reaching its face-evaluation state and finding
-   nothing to run; it is the number the floor wave will want. */
+/* THE FORMER BODILESS-STATE COUNTER. Run mg12 lane MAM matched slot 2's body,
+   so this reads 0 for a structural reason now: there is no bodiless state left
+   in this class. It is kept, and kept printed, because the census line and the
+   slice's banked runs are written in terms of it -- a reader comparing an
+   mg11 log with an mg12 log needs the same field to go 598 -> 0. */
 static unsigned g_slot3_floor_hits;
 /* per-slot, so a run can say WHICH states the machine visited rather than only
    how many times it dispatched. Indexed by the TABLE slot, which is the
    constructor's order and not the address order. */
 static unsigned g_slot3_state_slot[8];
-
-static void slot3_floor(void)
-{
-    static int said;
-    ++g_slot3_floor_hits;
-    ++g_slot3_state_slot[2];
-    if (said)
-        return;
-    said = 1;
-    std::fprintf(stderr,
-                 "  [scene] dScMgSlot3_c STATE 2 HAS NO BODY: DS address "
-                 "0x0210adac (0x1b8, config symbol, no delink block, no src "
-                 "in any module). It is the face-evaluation step between the "
-                 "third reel stopping and the payout, so a Mix-a-Mug round "
-                 "stops advancing here. Nothing was called. "
-                 "port/unmatched/MgSlot3_StateDispatch.cpp section 3\n");
-    std::fflush(stderr);
-}
 
 static int slot3_try_0(void *self, unsigned code)
 {
@@ -252,8 +239,8 @@ static int slot3_try_0(void *self, unsigned code)
     switch (code) {
     case 0x0210b1fcu: ++g_slot3_state_slot[0]; func_ov006_0210b1fc(c); return 1;
     case 0x0210af64u: ++g_slot3_state_slot[1]; func_ov006_0210af64(c); return 1;
-    /* slot 2 -- see section 3 */
-    case 0x0210adacu: slot3_floor();                                   return 1;
+    /* slot 2 -- the face evaluation, matched by run mg12 lane MAM; section 3 */
+    case 0x0210adacu: ++g_slot3_state_slot[2]; func_ov006_0210adac(c); return 1;
     /* slots 3 AND 4 are the same body; the per-slot counter cannot tell them
        apart from the code word alone, so this arm charges slot 3 and the
        census says so rather than implying two distinct states ran. */
