@@ -306,6 +306,56 @@
 # fewer at all -- only the compiler's own $LNnn labels -- so the slice adds
 # nothing to that closure.
 #
+# ---- RUN mg12 LANE CRD: SLOT 19 IS ENTERED, AND THE ROUND COMPLETES -------
+#
+# The section above says slot 19 is never entered on an unattended boot and
+# that the zero is honest -- "the round cannot END without a pick, not that the
+# code is unreachable". Run mg11's triage read the same zero on a TAPPED run
+# and recorded scene 381 as a NEW BUG parking at state 3. It does not park.
+# Nothing here drove a pick that could clear a pair.
+#
+# THE BYTE GATE FIRST, because it settles what a run cannot. tools/match.py at
+# 2004/b56 with STRICT RELOCS against the ROM's own bytes
+#
+#     --bin extracted/overlays/overlay_0006.bin --base 0x020bfec0 --module ov006
+#
+# over EVERY body in this class's code block 0x020f7634..0x020f8ef4:
+# TWENTY-FIVE OF TWENTY-FIVE MATCH. A matching body cannot be wrong about the
+# ROM, and strict-reloc mode proves every call and global destination too, so
+# there is no wrong-twin callee and no dropped argument to find. A `bl` sweep
+# over both blocks confirms it independently: five call targets are not spelled
+# by name in their src, and all five are ordinary C++ spellings -- two
+# ~SysTracker() destructor calls, one GXS::LoadOBJPltt, and the two
+# ApproachLinear alias rows hal/scene_mg_mcarlo2.cpp already documents.
+#
+# THEN THE ROUND, PLAYED END TO END. hal/scene_mg_mcarlo.cpp now carries
+# SM64DS_MC_TRACE, the sibling of SM64DS_MC2_TRACE, and _work/solve.py reads the
+# board out of it and appends the next tap pair -- the scene is deterministic,
+# so a plan is a prefix of a longer plan. EIGHTEEN clears took the 6x6 ladder
+# rung from 36 cards to 2 and the round ended. On the 3600-frame proof run,
+# SM64DS_FAULTS_FATAL=1, exit 0, clean:
+#
+#     slot19            131 entries   -- states 4 to 8, first time in any run
+#     state-reset       2             -- the round ENDED and a second was dealt
+#     +0xb4 level       0 -> 1
+#     +0xb8 best        0 -> 1
+#     +0xa8 score       10 -> 15
+#     save record       data_0209caf4(5) = 15, 1, 0, 0, 0   -- it WRITES
+#     framework         251 state-dispatch calls, 0 UNHANDLED
+#     traps             0 of 24 and 0 of 7 entered
+#
+# The four ov004 rows this file added for the round tally -- func_ov004_020b5e40
+# and the three under it -- are what those 251 framework calls are, so the
+# closure this slice paid for is exercised rather than merely linked.
+#
+# WHAT THE TAP GEOMETRY IS, since the triage's probe is what actually failed.
+# The card sprite goes to Hud_RenderSprite at x+0x18, y+0x18 and the hit test
+# accepts x+8..x+39 by y+1..y+48, so the hot box IS the drawn card. The triage
+# swept a blind five-by-five grid in column order; consecutive taps land on
+# adjacent cards, a pair only clears when the two faces MATCH, and its fifty
+# taps never once hit a matching adjacent pair. A select followed by a deselect
+# leaves every census number in this file unchanged, so the run read as dead.
+#
 # ---- WHAT IS NOT IN THIS SLICE AND WHY ------------------------------------
 #
 # HOST-COPIED ELSEWHERE, and listing any of them here would be an LNK2005
