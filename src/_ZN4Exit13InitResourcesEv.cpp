@@ -48,7 +48,7 @@ int Exit::InitResources()
         if (IsStarCollectedInLevel(8, 1) != 0) return 0;
     }
 
-    if ((unsigned char)((unsigned int)mParam >> 24) == 0x12) {
+    if ((unsigned char)((unsigned int)param1 >> 24) == 0x12) {
         if (IsStarCollectedInLevel(0x12, 1) != 0) {
             mPosX += 0x802000;
         }
@@ -61,8 +61,8 @@ int Exit::InitResources()
         mScaleX = 0x3e80000;
         mScaleY = 0x3e80000;
     } else {
-        mScaleX = (unsigned int)(((mParam & 0xf) + 1) * 0x64000) >> 1;
-        mScaleY = ((((unsigned int)mParam >> 4) & 0xf) + 1) * 0x64000;
+        mScaleX = (unsigned int)(((param1 & 0xf) + 1) * 0x64000) >> 1;
+        mScaleY = ((((unsigned int)param1 >> 4) & 0xf) + 1) * 0x64000;
     }
 
     if (mAngleX == 0) {

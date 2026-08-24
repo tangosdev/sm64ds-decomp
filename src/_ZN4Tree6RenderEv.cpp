@@ -13,7 +13,10 @@ extern int _ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(void *a, 
 extern void _ZN9ModelBase12ApplyOpacityEj(void *self, unsigned int op, int z);
 }
 
-struct ModelBase {
+/* renamed from 'ModelBase' to avoid colliding with the real ModelBase class,
+   now pulled in transitively via Tree.h -> Model.h since Tree.h gained real
+   inheritance (see notes in Tree.h and src_tu/actors/Tree.cpp). */
+struct ModelBaseVProbe {
     virtual void v0();
     virtual void v1();
     virtual void v2();
@@ -54,7 +57,7 @@ int Tree::Render()
                 *(int *)(r8 + 0x24) = sb[0];
                 *(int *)(r8 + 0x28) = sb[1] - 0x1e000;
                 *(int *)(r8 + 0x2c) = sb[2];
-                ((ModelBase *)r0)->m(z4);
+                ((ModelBaseVProbe *)r0)->m(z4);
             }
             sb = (int *)sb[0x12];
         }

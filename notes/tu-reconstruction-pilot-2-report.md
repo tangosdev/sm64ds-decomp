@@ -593,7 +593,7 @@ order, no data, no vtable, and 8 bytes of surplus.
 
 ## 10. Repository invariants checked
 
-* `git status src/ config/` reports only `config/tu_manifest.json`. The seventeen
+* `git status src/ config/` reports only `config/tu_manifest.d/`. The seventeen
   legacy files are byte-identical to their committed state and still `complete`
   in `config/arm9/overlays/ov002/delinks.txt`.
 * No file under `include/` was edited. `tools/affected_src.py include/LVL_Overlay.h`
@@ -608,7 +608,7 @@ order, no data, no vtable, and 8 bytes of surplus.
 While this pilot ran, **another session was working in the same worktree** and
 added, as untracked files, `tools/tubuild.py` (a real implementation of plan §7),
 `tools/test_tubuild.py`, and `src_tu/actors/FallBlockBfs.c` — and appended an
-`ov045/FallBlockBfs` entry to `config/tu_manifest.json`.
+`ov045/FallBlockBfs` entry to `config/tu_manifest.d/`.
 
 This pilot's manifest entry was therefore **spliced in textually** ahead of the
 closing bracket rather than written by re-serialising the file, so that entry and
@@ -628,7 +628,7 @@ efforts will need reconciling — a useful first test for it would be whether
 | Path | |
 | --- | --- |
 | `src_tu/stage/LevelObjects.cpp` | new — the shadow TU, not enrolled |
-| `config/tu_manifest.json` | modified — one entry appended, `ov002/LevelObjects`, status `text-verified` |
+| `config/tu_manifest.d/` | modified — one entry appended, `ov002/LevelObjects`, status `text-verified` |
 | `notes/tu-reconstruction-pilot-2-report.md` | new — this file |
 
 Untracked build output at `build/tu/ov002-LevelObjects/` is gitignored, per §13

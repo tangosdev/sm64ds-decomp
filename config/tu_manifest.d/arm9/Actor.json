@@ -1,0 +1,915 @@
+{
+  "id": "arm9/Actor",
+  "module": "arm9",
+  "source": "src_tu/actors/Actor.cpp",
+  "promoted_source": "src/actors/Actor.cpp",
+  "status": "link-verified",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "CONTIGUOUS AND EXHAUSTIVE: 0x0200f658..0x02011654 is covered by exactly 97 config/arm9/symbols.txt function symbols with NO gap and no overlap, and all 97 carry `complete` in config/arm9/delinks.txt with a .text section and nothing else.",
+    "NOT FROM tu_map.py: tools/tu_map.py reports the arm9 main module as under-segmented and emits ONE unit, 0x20049f0..0x20707a4, 2984 functions, 70+ class labels. There is no candidate id for this range; the unit below was assembled by hand and this evidence list replaces the generator's.",
+    "EMISSION ORDER, and this is the strongest single item. mwccarm 2004/b56 emits one .text section per function in the REVERSE of source order, so the ROM's HIGHEST address is the source file's FIRST function. Read that way this range is a canonical hand-written .cpp: Actor::Actor (0x0201150c/0x020113c0) first, then ~Actor, then BeforeInitResources/AfterInitResources, BeforeCleanupResources/AfterCleanupResources, BeforeBehavior/AfterBehavior, BeforeRender/AfterRender, then the finders, the movement helpers, the player-proximity group, the coin/star helpers, the twelve empty virtual stubs in one run, the dust workers, the death-table trio, and DetectRaycastClsn last. Under any other segmentation of this range that ordering is coincidence.",
+    "DESTRUCTOR VARIANT GROUP IN COMPILER ORDER: the ROM holds _ZN8dActor_cD2Ev (0x020112c8), _ZN8dActor_cD0Ev (0x02011314), _ZN8dActor_cD1Ev (0x02011374) in exactly the D2/D0/D1 order mwcc emits a single destructor definition's variant group in (notes/tu-reconstruction-pilot-report.md sec 3). One definition produced all three, so all three are one object's.",
+    "VAGUE-LINKAGE BODY BRACKETED BY THIS TU'S OWN: _ZN8Vector3sD1Ev (0x02011508, 4 bytes) sits BETWEEN _ZN8dActor_cC1Ev (0x020113c0) and _ZN8dActor_cC2Ev (0x0201150c). A vague-linkage copy of an inline destructor is emitted by the object that instantiates it; being interleaved with the constructor's own variant pair, it cannot have come from a different object.",
+    "NEIGHBOURS ARE A DIFFERENT SUBJECT: below, Initialise3dGraphics (0x0200f558..0x0200f658) writes 0x4000060/0x4000580/0x400044c and calls G3X/G3i - 3D hardware setup, no Actor anywhere. Above, func_02011654 and func_02011698 (0x02011654..0x020116c4) are the unlink/link pair of an intrusive hash-bucket list at +0x508, a matched pair of their own.",
+    "IT COMPILES AS ONE OBJECT: all 97 members reproduce the cartridge byte-for-byte from a single compile of a single source file. That is not proof of the boundary on its own -- a smaller TU would too -- but no member had to be excluded to get it, which is what a WRONG merge produces (0 of 159 >=10-member merges compiled under all-or-nothing)."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0200f658",
+      "end": "0x02011654"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b",
+      "address": "0x0200f658",
+      "size": "0x000000b4",
+      "legacy_source": "src/_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE",
+      "address": "0x0200f70c",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_0200f760",
+      "address": "0x0200f760",
+      "size": "0x00000048",
+      "legacy_source": "src/func_0200f760.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c",
+      "address": "0x0200f7a8",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_0200f7f0",
+      "address": "0x0200f7f0",
+      "size": "0x00000084",
+      "legacy_source": "src/func_0200f7f0.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt",
+      "address": "0x0200f874",
+      "size": "0x00000084",
+      "legacy_source": "src/_ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN5Sound15PlaySecretSoundEP8dActor_cPt",
+      "address": "0x0200f8f8",
+      "size": "0x00000084",
+      "legacy_source": "src/_ZN5Sound15PlaySecretSoundEP8dActor_cPt.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN8dActor_c13SpawnSoundObjEj",
+      "address": "0x0200f97c",
+      "size": "0x0000003c",
+      "legacy_source": "src/_ZN8dActor_c13SpawnSoundObjEj.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN8dActor_c24KillAndTrackInDeathTableEv",
+      "address": "0x0200f9b8",
+      "size": "0x0000001c",
+      "legacy_source": "src/_ZN8dActor_c24KillAndTrackInDeathTableEv.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN8dActor_c19UntrackInDeathTableEv",
+      "address": "0x0200f9d4",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN8dActor_c19UntrackInDeathTableEv.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN8dActor_c17TrackInDeathTableEv",
+      "address": "0x0200f9e4",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN8dActor_c17TrackInDeathTableEv.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN8dActor_c18GetBitInDeathTableEv",
+      "address": "0x0200f9f4",
+      "size": "0x00000010",
+      "legacy_source": "src/_ZN8dActor_c18GetBitInDeathTableEv.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_0200fa04",
+      "address": "0x0200fa04",
+      "size": "0x00000088",
+      "legacy_source": "src/func_0200fa04.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_0200fa8c",
+      "address": "0x0200fa8c",
+      "size": "0x00000038",
+      "legacy_source": "src/func_0200fa8c.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN8dActor_c13LandingDustAtER7Vector3b",
+      "address": "0x0200fac4",
+      "size": "0x00000088",
+      "legacy_source": "src/_ZN8dActor_c13LandingDustAtER7Vector3b.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN8dActor_c15HugeLandingDustEb",
+      "address": "0x0200fb4c",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN8dActor_c15HugeLandingDustEb.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN8dActor_c17HugeLandingDustAtER7Vector3b",
+      "address": "0x0200fb84",
+      "size": "0x00000088",
+      "legacy_source": "src/_ZN8dActor_c17HugeLandingDustAtER7Vector3b.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN8dActor_c11LandingDustEb",
+      "address": "0x0200fc0c",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN8dActor_c11LandingDustEb.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_0200fc44",
+      "address": "0x0200fc44",
+      "size": "0x00000088",
+      "legacy_source": "src/func_0200fc44.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_0200fccc",
+      "address": "0x0200fccc",
+      "size": "0x00000038",
+      "legacy_source": "src/func_0200fccc.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN8dActor_c19DisappearPoofDustAtERK7Vector3",
+      "address": "0x0200fd04",
+      "size": "0x0000003c",
+      "legacy_source": "src/_ZN8dActor_c19DisappearPoofDustAtERK7Vector3.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN8dActor_c13SmallPoofDustEv",
+      "address": "0x0200fd40",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN8dActor_c13SmallPoofDustEv.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN8dActor_c16TriplePoofDustAtERK7Vector3",
+      "address": "0x0200fd74",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN8dActor_c16TriplePoofDustAtERK7Vector3.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZN8dActor_c14TriplePoofDustEv",
+      "address": "0x0200fdc8",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN8dActor_c14TriplePoofDustEv.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN8dActor_c10PoofDustAtERK7Vector3",
+      "address": "0x0200fdfc",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN8dActor_c10PoofDustAtERK7Vector3.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN8dActor_c8PoofDustEv",
+      "address": "0x0200fe3c",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN8dActor_c8PoofDustEv.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "UnloadBlueCoinModel",
+      "address": "0x0200fe70",
+      "size": "0x0000002c",
+      "legacy_source": "src/UnloadBlueCoinModel.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "LoadBlueCoinModel",
+      "address": "0x0200fe9c",
+      "size": "0x0000002c",
+      "legacy_source": "src/LoadBlueCoinModel.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "_ZN8dActor_c17GetWaterHeightWDWEv",
+      "address": "0x0200fec8",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN8dActor_c17GetWaterHeightWDWEv.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h",
+      "address": "0x0200ff14",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp",
+      "ordinal": 29
+    },
+    {
+      "symbol": "_ZN8dActor_c11UntrackStarERa",
+      "address": "0x0200ff60",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN8dActor_c11UntrackStarERa.cpp",
+      "ordinal": 30
+    },
+    {
+      "symbol": "_ZN8dActor_c9TrackStarEjj",
+      "address": "0x0200ff94",
+      "size": "0x000000b0",
+      "legacy_source": "src/_ZN8dActor_c9TrackStarEjj.cpp",
+      "ordinal": 31
+    },
+    {
+      "symbol": "_ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_",
+      "address": "0x02010044",
+      "size": "0x00000098",
+      "legacy_source": "src/_ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_.cpp",
+      "ordinal": 32
+    },
+    {
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "address": "0x020100dc",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+      "ordinal": 33
+    },
+    {
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "address": "0x02010124",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN8dActor_c16OnAimedAtWithEggEv.cpp",
+      "ordinal": 34
+    },
+    {
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "address": "0x0201012c",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN8dActor_c19OnHitFromUnderneathERS_.cpp",
+      "ordinal": 35
+    },
+    {
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "address": "0x02010130",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN8dActor_c15OnHitByMegaCharER6Player.cpp",
+      "ordinal": 36
+    },
+    {
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "address": "0x02010134",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN8dActor_c24OnHitByCannonBlastedCharERS_.cpp",
+      "ordinal": 37
+    },
+    {
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "address": "0x02010138",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN8dActor_c8OnPushedERS_.cpp",
+      "ordinal": 38
+    },
+    {
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "address": "0x0201013c",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN8dActor_c8OnKickedERS_.cpp",
+      "ordinal": 39
+    },
+    {
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "address": "0x02010140",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN8dActor_c11OnAttacked2ERS_.cpp",
+      "ordinal": 40
+    },
+    {
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "address": "0x02010144",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN8dActor_c11OnAttacked1ERS_.cpp",
+      "ordinal": 41
+    },
+    {
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "address": "0x02010148",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN8dActor_c15OnGroundPoundedERS_.cpp",
+      "ordinal": 42
+    },
+    {
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "address": "0x0201014c",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN8dActor_c9Virtual50Ev.cpp",
+      "ordinal": 43
+    },
+    {
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "address": "0x02010154",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN8dActor_c13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 44
+    },
+    {
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "address": "0x02010160",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN8dActor_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 45
+    },
+    {
+      "symbol": "_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE",
+      "address": "0x02010168",
+      "size": "0x00000018",
+      "legacy_source": "src/_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE.cpp",
+      "ordinal": 46
+    },
+    {
+      "symbol": "_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3",
+      "address": "0x02010180",
+      "size": "0x00000130",
+      "legacy_source": "src/_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3.cpp",
+      "ordinal": 47
+    },
+    {
+      "symbol": "_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j",
+      "address": "0x020102b0",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.c",
+      "ordinal": 48
+    },
+    {
+      "symbol": "func_02010304",
+      "address": "0x02010304",
+      "size": "0x00000070",
+      "legacy_source": "src/func_02010304.cpp",
+      "ordinal": 49
+    },
+    {
+      "symbol": "_ZN8dActor_c18FindExplosionActorER5dCc_c",
+      "address": "0x02010374",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN8dActor_c18FindExplosionActorER5dCc_c.cpp",
+      "ordinal": 50
+    },
+    {
+      "symbol": "_ZN8dActor_c7FindEggER5dCc_c",
+      "address": "0x020103b4",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN8dActor_c7FindEggER5dCc_c.cpp",
+      "ordinal": 51
+    },
+    {
+      "symbol": "_ZN8dActor_c14GetSubtractionEss",
+      "address": "0x020103f4",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN8dActor_c14GetSubtractionEss.cpp",
+      "ordinal": 52
+    },
+    {
+      "symbol": "_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s",
+      "address": "0x02010428",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s.c",
+      "ordinal": 53
+    },
+    {
+      "symbol": "_ZN8dActor_c15IsPlayerInRangeERK7Vector3i",
+      "address": "0x0201045c",
+      "size": "0x0000003c",
+      "legacy_source": "src/_ZN8dActor_c15IsPlayerInRangeERK7Vector3i.cpp",
+      "ordinal": 54
+    },
+    {
+      "symbol": "_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i",
+      "address": "0x02010498",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.c",
+      "ordinal": 55
+    },
+    {
+      "symbol": "_ZN8dActor_c15IsPlayerInRangeEi",
+      "address": "0x020104dc",
+      "size": "0x0000003c",
+      "legacy_source": "src/_ZN8dActor_c15IsPlayerInRangeEi.cpp",
+      "ordinal": 56
+    },
+    {
+      "symbol": "_ZN8dActor_c24BumpedUnderneathByPlayerER6Player",
+      "address": "0x02010518",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN8dActor_c24BumpedUnderneathByPlayerER6Player.cpp",
+      "ordinal": 57
+    },
+    {
+      "symbol": "_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player",
+      "address": "0x0201054c",
+      "size": "0x00000080",
+      "legacy_source": "src/_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player.cpp",
+      "ordinal": 58
+    },
+    {
+      "symbol": "func_020105cc",
+      "address": "0x020105cc",
+      "size": "0x00000050",
+      "legacy_source": "src/func_020105cc.c",
+      "ordinal": 59
+    },
+    {
+      "symbol": "_ZN8dActor_c15GivePlayerCoinsER6Playerhj",
+      "address": "0x0201061c",
+      "size": "0x000000f8",
+      "legacy_source": "src/_ZN8dActor_c15GivePlayerCoinsER6Playerhj.cpp",
+      "ordinal": 60
+    },
+    {
+      "symbol": "_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs",
+      "address": "0x02010714",
+      "size": "0x00000130",
+      "legacy_source": "src/_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs.c",
+      "ordinal": 61
+    },
+    {
+      "symbol": "func_02010844",
+      "address": "0x02010844",
+      "size": "0x00000080",
+      "legacy_source": "src/func_02010844.c",
+      "ordinal": 62
+    },
+    {
+      "symbol": "_ZN8dActor_c18ClosestWithActorIDEj",
+      "address": "0x020108c4",
+      "size": "0x00000068",
+      "legacy_source": "src/_ZN8dActor_c18ClosestWithActorIDEj.cpp",
+      "ordinal": 63
+    },
+    {
+      "symbol": "_ZN8dActor_c18HorzAngleToFPlayerEv",
+      "address": "0x0201092c",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN8dActor_c18HorzAngleToFPlayerEv.cpp",
+      "ordinal": 64
+    },
+    {
+      "symbol": "_ZN8dActor_c14FarthestPlayerEv",
+      "address": "0x02010958",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN8dActor_c14FarthestPlayerEv.cpp",
+      "ordinal": 65
+    },
+    {
+      "symbol": "_ZN8dActor_c23HorzAngleToCPlayerOrAngEv",
+      "address": "0x0201097c",
+      "size": "0x0000003c",
+      "legacy_source": "src/_ZN8dActor_c23HorzAngleToCPlayerOrAngEv.cpp",
+      "ordinal": 66
+    },
+    {
+      "symbol": "_ZN8dActor_c18HorzAngleToCPlayerEv",
+      "address": "0x020109b8",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN8dActor_c18HorzAngleToCPlayerEv.cpp",
+      "ordinal": 67
+    },
+    {
+      "symbol": "_ZN8dActor_c13DistToCPlayerEv",
+      "address": "0x020109e4",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN8dActor_c13DistToCPlayerEv.cpp",
+      "ordinal": 68
+    },
+    {
+      "symbol": "_ZN8dActor_c22ClosestNonVanishPlayerEv",
+      "address": "0x02010a08",
+      "size": "0x000000d0",
+      "legacy_source": "src/_ZN8dActor_c22ClosestNonVanishPlayerEv.cpp",
+      "ordinal": 69
+    },
+    {
+      "symbol": "_ZN8dActor_c13ClosestPlayerEv",
+      "address": "0x02010ad8",
+      "size": "0x000000c4",
+      "legacy_source": "src/_ZN8dActor_c13ClosestPlayerEv.cpp",
+      "ordinal": 70
+    },
+    {
+      "symbol": "_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j",
+      "address": "0x02010b9c",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.c",
+      "ordinal": 71
+    },
+    {
+      "symbol": "_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j",
+      "address": "0x02010be8",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c",
+      "ordinal": 72
+    },
+    {
+      "symbol": "_ZN8dActor_c9UpdatePosEP5dCc_c",
+      "address": "0x02010c30",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN8dActor_c9UpdatePosEP5dCc_c.cpp",
+      "ordinal": 73
+    },
+    {
+      "symbol": "_ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv",
+      "address": "0x02010c5c",
+      "size": "0x000000e4",
+      "legacy_source": "src/_ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv.cpp",
+      "ordinal": 74
+    },
+    {
+      "symbol": "_ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c",
+      "address": "0x02010d40",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c.cpp",
+      "ordinal": 75
+    },
+    {
+      "symbol": "func_02010da4",
+      "address": "0x02010da4",
+      "size": "0x00000064",
+      "legacy_source": "src/func_02010da4.c",
+      "ordinal": 76
+    },
+    {
+      "symbol": "_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_",
+      "address": "0x02010e08",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_.cpp",
+      "ordinal": 77
+    },
+    {
+      "symbol": "_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as",
+      "address": "0x02010e2c",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as.cpp",
+      "ordinal": 78
+    },
+    {
+      "symbol": "func_02010e78",
+      "address": "0x02010e78",
+      "size": "0x00000054",
+      "legacy_source": "src/func_02010e78.c",
+      "ordinal": 79
+    },
+    {
+      "symbol": "_ZN8dActor_c4NextEPKS_",
+      "address": "0x02010ecc",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN8dActor_c4NextEPKS_.cpp",
+      "ordinal": 80
+    },
+    {
+      "symbol": "_ZN8dActor_c15FindWithActorIDEjPS_",
+      "address": "0x02010ef0",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN8dActor_c15FindWithActorIDEjPS_.cpp",
+      "ordinal": 81
+    },
+    {
+      "symbol": "_ZN8dActor_c10FindWithIDEj",
+      "address": "0x02010f3c",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN8dActor_c10FindWithIDEj.cpp",
+      "ordinal": 82
+    },
+    {
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "address": "0x02010f6c",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN8dActor_c11AfterRenderEj.cpp",
+      "ordinal": 83
+    },
+    {
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "address": "0x02010f78",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN8dActor_c12BeforeRenderEv.cpp",
+      "ordinal": 84
+    },
+    {
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "address": "0x02010fc8",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN8dActor_c13AfterBehaviorEj.cpp",
+      "ordinal": 85
+    },
+    {
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "address": "0x02010fd4",
+      "size": "0x00000240",
+      "legacy_source": "src/_ZN8dActor_c14BeforeBehaviorEv.cpp",
+      "ordinal": 86
+    },
+    {
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "address": "0x02011214",
+      "size": "0x0000000c",
+      "legacy_source": "src/_ZN8dActor_c21AfterCleanupResourcesEj.cpp",
+      "ordinal": 87
+    },
+    {
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "address": "0x02011220",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN8dActor_c22BeforeCleanupResourcesEv.cpp",
+      "ordinal": 88
+    },
+    {
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "address": "0x02011244",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN8dActor_c18AfterInitResourcesEj.cpp",
+      "ordinal": 89
+    },
+    {
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "address": "0x02011268",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN8dActor_c19BeforeInitResourcesEv.cpp",
+      "ordinal": 90
+    },
+    {
+      "symbol": "_ZN8dActor_cD2Ev",
+      "address": "0x020112c8",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN8dActor_cD2Ev.cpp",
+      "ordinal": 91
+    },
+    {
+      "symbol": "_ZN8dActor_cD0Ev",
+      "address": "0x02011314",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN8dActor_cD0Ev.c",
+      "ordinal": 92
+    },
+    {
+      "symbol": "_ZN8dActor_cD1Ev",
+      "address": "0x02011374",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN8dActor_cD1Ev.cpp",
+      "ordinal": 93
+    },
+    {
+      "symbol": "_ZN8dActor_cC1Ev",
+      "address": "0x020113c0",
+      "size": "0x00000148",
+      "legacy_source": "src/_ZN8dActor_cC1Ev.cpp",
+      "ordinal": 94
+    },
+    {
+      "symbol": "_ZN8Vector3sD1Ev",
+      "address": "0x02011508",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN8Vector3sD1Ev.cpp",
+      "ordinal": 95
+    },
+    {
+      "symbol": "_ZN8dActor_cC2Ev",
+      "address": "0x0201150c",
+      "size": "0x00000148",
+      "legacy_source": "src/_ZN8dActor_cC2Ev.cpp",
+      "ordinal": 96
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "HAND-ASSEMBLED. tu_map.py has no candidate for this range (see boundary_evidence item 2), so `tubuild.py create` could not be used; the schema still comes from tubuild.build_manifest_entry.",
+    "Reconciliation is documented in the source file's own header comment. Summary: 9 shadow type names dropped in favour of real headers, 9 globals/prototypes given one spelling each, one local type renamed, and a handful of casts and field renames that follow from those. Nothing changes what a function does.",
+    "include/Actor.h gained `struct Matrix4x3;`, `void UntrackInDeathTable();` and `Matrix4x3 *UpdateCarry(Player &, const Vector3 &);` -- all non-virtual, so the 0xd0 size assertion and the 31 vtable slots are unchanged and ~Actor() is still the key function.",
+    "Actor::~Actor is deliberately NOT defined as a method here. include/Actor.h's own comment states the invariant: the key function must never be defined as a real method or the TU emits _ZTV8dActor_c and collides with the gap object's copy. D0, D1 and D2 keep their extern \"C\" free-function form.",
+    "This TU also owns, and this round neither declares nor verifies, _ZTV8dActor_c (0x0208e3a4, 31 slots), _ZTI8dActor_c/_ZTS8dActor_c and whatever .data/.bss the range's globals live in. Nothing here is enrolled; config/arm9/delinks.txt is untouched and the 97 one-function sources under src/ remain the owners of the range.",
+    "LINK-VERIFIED, whole range, from ONE object: `tubuild.py linkcheck arm9/Actor` reports the .text range 0x0200f658..0x02011654 (8,188 bytes) IDENTICAL, module fidelity 106/106 exact at 100.000000%, 10,905/10,905 source-built functions reproducing with 0 mismatching, `dsd check modules --fail` PASS, and a ROM whose sha256 is d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8 -- the SAME hash `linkcheck --baseline` produces with no substitution at all.",
+    "`dsd check symbols --fail` is NOT green and is not reported as such: it fails on data_020ad524 and data_020ad560. The baseline control emits those same two, and linkcheck reports `0 NEW, 0 resolved` against it, so they are the tree's and not this TU's -- but the check is red.",
+    "ONE unlicensed .text body remains: _ZN7Vector3D1Ev, 4 bytes, STB_LOPROC, already defined at arm9:0x020072c0. The audit classes it COLLIDES-SRC, tolerated only while both definitions are vague-linkage, which they are. It is emitted because include/types.h gives Vector3 an inline empty destructor and this TU instantiates Vector3 arrays; the same body comes out of the legacy per-function objects today. Promotion is still refused on it.",
+    "THE ONE DELIBERATE DEPARTURE FROM THE LEGACY SOURCE, and it is the whole reason the whole-range link passes. Ordinal 95, _ZN8Vector3sD1Ev at 0x02011508, spells its mangled ROM symbol directly (`extern \"C\" void _ZN8Vector3sD1Ev(void *) {}`) rather than going through src/_ZN8Vector3sD1Ev.cpp's Vector3s_ForceDestructor scaffold. types.h defines ~Vector3s() INLINE, so an out-of-line copy can only be forced by making the compiler destroy an ARRAY of it -- and that scaffold is 0x50 of STB_GLOBAL .text (D1 and D2, 0x28 each) that no symbols.txt anywhere names. Per-function objisolate strips it; a merged object cannot, `-nodead` keeps it, and it lands INSIDE the span. Measured with the scaffold in place: TU range 506 bytes DIFFER from 0x0200f670 on, 15/106 modules exact, 540,285 module bytes differing. Measured without it: range IDENTICAL, 106/106 exact. Same four bytes either way.",
+    "COST OF THAT DEPARTURE, stated rather than hidden: the object-level partial-isolation axis drops to 96/97. The one miss is _ZN8Vector3sD1Ev and it is a symbol BINDING difference on four byte-identical bytes -- production STB_LOPROC (vague linkage, which is what the scaffold produces) vs derived STB_GLOBAL (a strong definition, which is what the ROM's single copy at 0x02011508 actually is). `linkcheck --partial` still builds the identical ROM hash and 106/106 exact modules with it. With the scaffold instead, partial isolation is 97/97 and the whole-range link fails; the two cannot both be had, and link-verified is the higher rung.",
+    "The pre-scaffold-removal measurements are reproducible: put the Vector3s_ForceDestructor form back for ordinal 95 and the object audit reports 97 LICENSED / 1 COLLIDES-SRC / 2 HOMELESS with the PREDICTION that the two STB_GLOBAL bodies cannot be deadstripped under -nodead.",
+    "include/Actor.h's three new declarations were re-verified against the tree, not assumed safe: all 1,126 src/ files that transitively include Actor.h were rebuilt under build_pin.verify. 1,124 reproduce; the 2 that do not (_ZN15daObjMarioCap_c13InitResourcesEv, _ZN15RollingIronBall13InitResourcesEv) fail identically with the header reverted to HEAD~1 and carry no `complete` marker, so they are neither enrolled nor this change's.",
+    "STILL NOT DONE, and not claimed: `promoted`. config/**/delinks.txt is untouched, the 97 one-function sources under src/ remain the enrolled owners of the range, and this TU's data side -- _ZTV8dActor_c (0x0208e3a4, 31 slots), _ZTI8dActor_c/_ZTS8dActor_c and whatever .data/.bss its globals live in -- is neither declared nor verified here."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-Actor/Actor.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 97,
+    "functions_declared": 97,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s); see unlicensed_output_observed",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "link-verified",
+      "scratch": "build/tu/arm9-Actor/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0200f658",
+        "end": "0x02011654",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 97,
+          "COLLIDES-SRC": 1
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [
+          "COLLIDES-SRC _ZN7Vector3D1Ev STB_LOPROC .text size=0x4 already at arm9:0x020072c0"
+        ],
+        "unlicensedSections": []
+      },
+      "symbolCheckNewVsBaseline": [],
+      "linkerOutput": null
+    }
+  },
+  "partial_isolation": {
+    "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+    "derivedObjects": 97,
+    "contributionEquivalent": "96/97",
+    "comparedFields": [
+      "keptSection",
+      "keptBytes",
+      "relocs",
+      "defined",
+      "mapping",
+      "live",
+      "undefReferenced"
+    ],
+    "legacyEntriesComplete": "97/97",
+    "extraInertImports": 199,
+    "extraImportsWithNoHome": [],
+    "artefacts": "build/tu/arm9-Actor/partial/partial.json (gitignored)",
+    "state": "derived",
+    "stateMeaning": "N per-function objects were extracted from one compiled TU object; their equivalence to the production objects was not established",
+    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
+    "delinksChanged": false,
+    "substitutedObjectPaths": [
+      "src/_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b.cpp",
+      "src/_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE.cpp",
+      "src/func_0200f760.c",
+      "src/_ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c.cpp",
+      "src/func_0200f7f0.c",
+      "src/_ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt.cpp",
+      "src/_ZN5Sound15PlaySecretSoundEP8dActor_cPt.cpp",
+      "src/_ZN8dActor_c13SpawnSoundObjEj.cpp",
+      "src/_ZN8dActor_c24KillAndTrackInDeathTableEv.cpp",
+      "src/_ZN8dActor_c19UntrackInDeathTableEv.cpp",
+      "src/_ZN8dActor_c17TrackInDeathTableEv.cpp",
+      "src/_ZN8dActor_c18GetBitInDeathTableEv.cpp",
+      "src/func_0200fa04.c",
+      "src/func_0200fa8c.c",
+      "src/_ZN8dActor_c13LandingDustAtER7Vector3b.cpp",
+      "src/_ZN8dActor_c15HugeLandingDustEb.cpp",
+      "src/_ZN8dActor_c17HugeLandingDustAtER7Vector3b.cpp",
+      "src/_ZN8dActor_c11LandingDustEb.cpp",
+      "src/func_0200fc44.c",
+      "src/func_0200fccc.c",
+      "src/_ZN8dActor_c19DisappearPoofDustAtERK7Vector3.cpp",
+      "src/_ZN8dActor_c13SmallPoofDustEv.cpp",
+      "src/_ZN8dActor_c16TriplePoofDustAtERK7Vector3.cpp",
+      "src/_ZN8dActor_c14TriplePoofDustEv.cpp",
+      "src/_ZN8dActor_c10PoofDustAtERK7Vector3.cpp",
+      "src/_ZN8dActor_c8PoofDustEv.cpp",
+      "src/UnloadBlueCoinModel.c",
+      "src/LoadBlueCoinModel.c",
+      "src/_ZN8dActor_c17GetWaterHeightWDWEv.cpp",
+      "src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp",
+      "src/_ZN8dActor_c11UntrackStarERa.cpp",
+      "src/_ZN8dActor_c9TrackStarEjj.cpp",
+      "src/_ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_.cpp",
+      "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+      "src/_ZN8dActor_c16OnAimedAtWithEggEv.cpp",
+      "src/_ZN8dActor_c19OnHitFromUnderneathERS_.cpp",
+      "src/_ZN8dActor_c15OnHitByMegaCharER6Player.cpp",
+      "src/_ZN8dActor_c24OnHitByCannonBlastedCharERS_.cpp",
+      "src/_ZN8dActor_c8OnPushedERS_.cpp",
+      "src/_ZN8dActor_c8OnKickedERS_.cpp",
+      "src/_ZN8dActor_c11OnAttacked2ERS_.cpp",
+      "src/_ZN8dActor_c11OnAttacked1ERS_.cpp",
+      "src/_ZN8dActor_c15OnGroundPoundedERS_.cpp",
+      "src/_ZN8dActor_c9Virtual50Ev.cpp",
+      "src/_ZN8dActor_c13OnTurnIntoEggER6Player.cpp",
+      "src/_ZN8dActor_c13OnYoshiTryEatEv.cpp",
+      "src/_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE.cpp",
+      "src/_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3.cpp",
+      "src/_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.c",
+      "src/func_02010304.cpp",
+      "src/_ZN8dActor_c18FindExplosionActorER5dCc_c.cpp",
+      "src/_ZN8dActor_c7FindEggER5dCc_c.cpp",
+      "src/_ZN8dActor_c14GetSubtractionEss.cpp",
+      "src/_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s.c",
+      "src/_ZN8dActor_c15IsPlayerInRangeERK7Vector3i.cpp",
+      "src/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.c",
+      "src/_ZN8dActor_c15IsPlayerInRangeEi.cpp",
+      "src/_ZN8dActor_c24BumpedUnderneathByPlayerER6Player.cpp",
+      "src/_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player.cpp",
+      "src/func_020105cc.c",
+      "src/_ZN8dActor_c15GivePlayerCoinsER6Playerhj.cpp",
+      "src/_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs.c",
+      "src/func_02010844.c",
+      "src/_ZN8dActor_c18ClosestWithActorIDEj.cpp",
+      "src/_ZN8dActor_c18HorzAngleToFPlayerEv.cpp",
+      "src/_ZN8dActor_c14FarthestPlayerEv.cpp",
+      "src/_ZN8dActor_c23HorzAngleToCPlayerOrAngEv.cpp",
+      "src/_ZN8dActor_c18HorzAngleToCPlayerEv.cpp",
+      "src/_ZN8dActor_c13DistToCPlayerEv.cpp",
+      "src/_ZN8dActor_c22ClosestNonVanishPlayerEv.cpp",
+      "src/_ZN8dActor_c13ClosestPlayerEv.cpp",
+      "src/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.c",
+      "src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c",
+      "src/_ZN8dActor_c9UpdatePosEP5dCc_c.cpp",
+      "src/_ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv.cpp",
+      "src/_ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c.cpp",
+      "src/func_02010da4.c",
+      "src/_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_.cpp",
+      "src/_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as.cpp",
+      "src/func_02010e78.c",
+      "src/_ZN8dActor_c4NextEPKS_.cpp",
+      "src/_ZN8dActor_c15FindWithActorIDEjPS_.cpp",
+      "src/_ZN8dActor_c10FindWithIDEj.cpp",
+      "src/_ZN8dActor_c11AfterRenderEj.cpp",
+      "src/_ZN8dActor_c12BeforeRenderEv.cpp",
+      "src/_ZN8dActor_c13AfterBehaviorEj.cpp",
+      "src/_ZN8dActor_c14BeforeBehaviorEv.cpp",
+      "src/_ZN8dActor_c21AfterCleanupResourcesEj.cpp",
+      "src/_ZN8dActor_c22BeforeCleanupResourcesEv.cpp",
+      "src/_ZN8dActor_c18AfterInitResourcesEj.cpp",
+      "src/_ZN8dActor_c19BeforeInitResourcesEv.cpp",
+      "src/_ZN8dActor_cD2Ev.cpp",
+      "src/_ZN8dActor_cD0Ev.c",
+      "src/_ZN8dActor_cD1Ev.cpp",
+      "src/_ZN8dActor_cC1Ev.cpp",
+      "src/_ZN8Vector3sD1Ev.cpp",
+      "src/_ZN8dActor_cC2Ev.cpp"
+    ],
+    "result": "failed",
+    "phases": {
+      "delink": true,
+      "lcf": true,
+      "compile": true,
+      "link": true,
+      "checkModules": true,
+      "checkSymbols": false,
+      "rom": true
+    },
+    "tuRange": {
+      "start": "0x0200f658",
+      "end": "0x02011654",
+      "differingBytes": 0,
+      "firstDiff": null
+    },
+    "moduleFidelityPassed": true,
+    "symbolCheckNewVsBaseline": [],
+    "rom": {
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+    },
+    "scratch": "build/tu/arm9-Actor/link-partial (gitignored)"
+  }
+}

@@ -104,7 +104,7 @@ The externalization recipe (which RTTI to externalize, and to what address) must
 For ov010 the manifest entries are only `text-verified` with empty `data`, so the recipe
 isn't recorded yet. Two ways forward:
 1. Establish it first with `tubuild.py linkcheck ov010/<TU> --partitioned` (the scratch
-   ladder), record the `data`/`externalized_output` policy in `config/tu_manifest.json`,
+   ladder), record the `data`/`externalized_output` policy in `config/tu_manifest.d/`,
    then have rombuild consume it. (Reuses the proven ladder; scratch-only today.)
 2. Compute it in rombuild: detect emitted `_ZTI/_ZTS` whose canonical home is another
    module/TU and externalize to that address automatically. (No manifest dependency, but

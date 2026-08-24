@@ -486,6 +486,10 @@
    "ref": "tools/rebuild_ledger"
   },
   {
+   "file": "tools/restack_tu_pr.py",
+   "ref": "config/tu_manifest.json"
+  },
+  {
    "file": "tools/romdata_check.py",
    "ref": "src/a.cpp"
   },
@@ -532,6 +536,10 @@
   {
    "file": "tools/trace/actors.py",
    "ref": "src/_ZN5ActorC2Ev.cpp"
+  },
+  {
+   "file": "tools/tu_manifest.py",
+   "ref": "config/tu_manifest.json"
   },
   {
    "file": "tools/tubuild.py",

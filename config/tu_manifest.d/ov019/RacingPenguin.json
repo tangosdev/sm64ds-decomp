@@ -1,0 +1,292 @@
+{
+  "id": "ov019/RacingPenguin",
+  "module": "ov019",
+  "source": "src_tu/actors/RacingPenguin.cpp",
+  "promoted_source": "src/actors/RacingPenguin.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x21111a0..0x211261c, 30 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): RacingPenguin",
+    "module sinit corroboration: 2 sinit(s) / 2 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021111a0",
+      "end": "0x0211261c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN13RacingPenguinD1Ev",
+      "address": "0x021111a0",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN13RacingPenguinD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN13RacingPenguinD0Ev",
+      "address": "0x021111f0",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN13RacingPenguinD0Ev.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov019_02111254",
+      "address": "0x02111254",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov019_02111254.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov019_0211127c",
+      "address": "0x0211127c",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov019_0211127c.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov019_021112b8",
+      "address": "0x021112b8",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov019_021112b8.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov019_0211131c",
+      "address": "0x0211131c",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov019_0211131c.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov019_021113b0",
+      "address": "0x021113b0",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov019_021113b0.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov019_0211140c",
+      "address": "0x0211140c",
+      "size": "0x000000e0",
+      "legacy_source": "src/func_ov019_0211140c.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov019_021114ec",
+      "address": "0x021114ec",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov019_021114ec.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov019_02111558",
+      "address": "0x02111558",
+      "size": "0x000001fc",
+      "legacy_source": "src/func_ov019_02111558.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov019_02111754",
+      "address": "0x02111754",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov019_02111754.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov019_021117a8",
+      "address": "0x021117a8",
+      "size": "0x0000015c",
+      "legacy_source": "src/func_ov019_021117a8.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov019_02111904",
+      "address": "0x02111904",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov019_02111904.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov019_0211197c",
+      "address": "0x0211197c",
+      "size": "0x000003dc",
+      "legacy_source": "src/func_ov019_0211197c.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov019_02111d58",
+      "address": "0x02111d58",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov019_02111d58.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov019_02111dec",
+      "address": "0x02111dec",
+      "size": "0x00000168",
+      "legacy_source": "src/func_ov019_02111dec.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov019_02111f54",
+      "address": "0x02111f54",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov019_02111f54.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov019_02111fec",
+      "address": "0x02111fec",
+      "size": "0x00000150",
+      "legacy_source": "src/func_ov019_02111fec.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov019_0211213c",
+      "address": "0x0211213c",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov019_0211213c.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov019_02112168",
+      "address": "0x02112168",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov019_02112168.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov019_021121f8",
+      "address": "0x021121f8",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov019_021121f8.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov019_02112268",
+      "address": "0x02112268",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov019_02112268.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov019_021122a4",
+      "address": "0x021122a4",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov019_021122a4.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov019_021122dc",
+      "address": "0x021122dc",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov019_021122dc.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN13RacingPenguin16CleanupResourcesEv",
+      "address": "0x021122f8",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN13RacingPenguin16CleanupResourcesEv.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN13RacingPenguin16OnPendingDestroyEv",
+      "address": "0x0211235c",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN13RacingPenguin16OnPendingDestroyEv.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZN13RacingPenguin6RenderEv",
+      "address": "0x02112360",
+      "size": "0x00000034",
+      "legacy_source": "src/_ZN13RacingPenguin6RenderEv.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN13RacingPenguin8BehaviorEv",
+      "address": "0x02112394",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN13RacingPenguin8BehaviorEv.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "_ZN13RacingPenguin13InitResourcesEv",
+      "address": "0x021123d4",
+      "size": "0x000001e8",
+      "legacy_source": "src/_ZN13RacingPenguin13InitResourcesEv.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "RacingPenguin_Spawn",
+      "address": "0x021125bc",
+      "size": "0x00000060",
+      "legacy_source": "src/RacingPenguin_Spawn.c",
+      "ordinal": 29
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov019_0211140c.cpp (func_ov019_0211140c) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov019_021114ec.cpp (func_ov019_021114ec) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov019_02111754.cpp (func_ov019_02111754) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/_ZN13RacingPenguin16CleanupResourcesEv.cpp (_ZN13RacingPenguin16CleanupResourcesEv) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: CONFLICT: macro 'LB' differs between the legacy file that used to hold func_ov019_02111558 and the one that held func_ov019_0211197c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZNK7PathPtr7GetNodeER7Vector3j' differs between the legacy file that used to hold func_ov019_0211131c and the one that held func_ov019_021113b0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov019_0211131c and the one that held func_ov019_021113b0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov019_021113b0 and the one that held func_ov019_02111558; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov019_0211131c and the one that held func_ov019_02111558; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZNK7PathPtr7GetNodeER7Vector3j' differs between the legacy file that used to hold func_ov019_0211131c and the one that held func_ov019_021117a8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov019_021113b0 and the one that held func_ov019_021117a8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov019_0211131c and the one that held func_ov019_021117a8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold func_ov019_02111558 and the one that held func_ov019_021117a8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov019_02111558 and the one that held func_ov019_021117a8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov019_02111558 and the one that held func_ov019_02111904; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov019_02111904 and the one that held func_ov019_0211197c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c9UpdatePosEP5dCc_c' differs between the legacy file that used to hold func_ov019_021117a8 and the one that held func_ov019_0211197c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov019_0211140c' differs between the legacy file that used to hold func_ov019_021117a8 and the one that held func_ov019_0211197c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZNK7PathPtr8NumNodesEv' differs between the legacy file that used to hold func_ov019_021117a8 and the one that held func_ov019_0211197c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov019_021113b0 and the one that held func_ov019_0211197c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov019_021122dc' differs between the legacy file that used to hold func_ov019_021117a8 and the one that held func_ov019_0211197c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov019_02111558 and the one that held func_ov019_02111d58; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_Z11UpdateAngleRssis' differs between the legacy file that used to hold func_ov019_0211131c and the one that held func_ov019_02111dec; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov019_02111904 and the one that held func_ov019_02111dec; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov019_0211197c and the one that held func_ov019_02111dec; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN6Player12GetTalkStateEv' differs between the legacy file that used to hold func_ov019_02111558 and the one that held func_ov019_02111dec; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov019_02111558 and the one that held func_ov019_02111dec; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov019_02111904 and the one that held func_ov019_02111f54; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN5Sound7PlaySubEjjj5Fix12IiEb' differs between the legacy file that used to hold func_ov019_02111dec and the one that held func_ov019_02111f54; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov019_02111558 and the one that held func_ov019_02111f54; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov019_02111558 and the one that held func_ov019_0211213c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov019_021113b0 and the one that held func_ov019_02112168; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN6Player9StartTalkER7fBase_cb' differs between the legacy file that used to hold func_ov019_02111558 and the one that held func_ov019_02112168; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov019_021122dc' differs between the legacy file that used to hold func_ov019_021117a8 and the one that held func_ov019_02112168; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov019_02111558 and the one that held func_ov019_021121f8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZNK7PathPtr7GetNodeER7Vector3j' differs between the legacy file that used to hold func_ov019_0211131c and the one that held _ZN13RacingPenguin13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold func_ov019_02112268 and the one that held func_ov019_02112268; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold func_ov019_02112268 and the one that held func_ov019_021122a4; kept the first, the other is commented out for review",
+    "30/30 MATCH, objisolate clean, reloc-destinations clean. Generated by the repaired create (typedef-name fix in this same PR kept its anonymous typedefs apart). #pragma opt_common_subs off carried WHOLE-TU (file-global last-wins per the ov020 measurement); all 30 members byte-verify under CSE-off. The merger's forward-decl-vs-full-definition false conflict on struct C restored by hand (second create follow-up of this family). TU-local C++ class per the WaterDiamond recipe reproduces the deleting destructor."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov019-RacingPenguin/RacingPenguin.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 30,
+    "functions_declared": 30,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 7 unlicensed section/symbol(s); see unlicensed_output_observed",
+      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

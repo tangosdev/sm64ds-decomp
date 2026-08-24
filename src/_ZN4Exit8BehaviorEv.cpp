@@ -117,7 +117,7 @@ int Exit::Behavior()
                                             func_02012790(0x19);
                                         }
                                     } else {
-                                        int t = (signed char)(int)(((unsigned int)mParam >> 0x18));
+                                        int t = (signed char)(int)(((unsigned int)param1 >> 0x18));
                                         if (t == 0x1b || t == 0x12) {
                                             func_ov002_020b0a0c(this);
                                             _ZN8dScene_c20SetAndStopColorFaderEv();

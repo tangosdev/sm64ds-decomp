@@ -81,7 +81,7 @@ partition to add to the migrated and unmigrated rows.
 
 Manifest statuses: `link-verified` 6, `text-verified` 45.
 
-`config/tu_manifest.json` records reconstruction evidence and licensed ranges. It does
+`config/tu_manifest.d/` records reconstruction evidence and licensed ranges. It does
 not enroll a TU. The production number above counts an entry as promoted only when every
 manifest function is owned by that entry's tracked `promoted_source` in live delinks.
 
@@ -103,7 +103,7 @@ Current policy/metric gaps: `eligible`, `tiers`, `langmode_audit`, `attribution`
 | How much matching is done? | `progress.synced_from_src() over committed config + src`; display with `python tools/progress.py --bar --from-src` |
 | How much source is strictly readable? | `tiers.converted(src)` |
 | Which source does the ROM build compile? | `config/**/symbols.txt + sibling delinks.txt` |
-| What TU evidence has been recovered? | `config/tu_manifest.json` |
+| What TU evidence has been recovered? | `config/tu_manifest.d` |
 | Can one production source safely own two functions? | `python tools/cpp_tu_compat.py` |
 | Is C++ source semantically migrated? | `langmode_audit.audit()`; inspect with `python tools/langmode_audit.py` |
 | Did a move/merge strand the PC port? | `python tools/port_refcheck.py` |

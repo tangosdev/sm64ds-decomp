@@ -444,7 +444,7 @@ committed state and still `complete` in `config/arm9/overlays/ov045/delinks.txt`
 | Path | |
 | --- | --- |
 | `src_tu/actors/PoleLift.cpp` | new — the shadow TU, not enrolled |
-| `config/tu_manifest.json` | new — one entry, `ov045/PoleLift`, status `text-verified` |
+| `config/tu_manifest.d/` | new — one entry, `ov045/PoleLift`, status `text-verified` |
 | `notes/tu-reconstruction-pilot-report.md` | new — this file |
 
 Untracked build output at `build/tu/ov045-PoleLift/` (`PoleLift.o`,
