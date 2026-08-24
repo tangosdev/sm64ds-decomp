@@ -18,11 +18,13 @@ int UpDownLiftBbh::Behavior()
     *(void**)((char*)&mClosestPlayer) = _ZN8dActor_c13ClosestPlayerEv(((char*)this));
     old = mState;
     (((Plat*)((char*)this))->*data_ov095_02137910[old])();
-    *(u16*)(((int)((char*)this) + 0x344)) += 1;
-    if (old != mState) *(u16*)(((char*)&unk_300) + 0x44) = 0;
+    mStateTimer += 1;
+    if (old != mState) mStateTimer = 0;
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0) != 0)
         _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
+    /* Waiting at either end, or on the way back: once the rider has landed
+       somewhere else, forget them and arm the trigger again. */
     if (mState == 0 || (unsigned)(mState - 3) <= 1) {
         void* pl = *(void**)((char*)&mRider);
         if (pl != 0) {

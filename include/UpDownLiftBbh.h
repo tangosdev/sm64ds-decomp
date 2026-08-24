@@ -6,7 +6,7 @@
 
 struct UpDownLiftBbh {
     u8  pad_000[0xc];
-    u16 unk_00c;                 /* 0x00c */
+    u16 actorID;                 /* 0x00c */
     u8  aliveState;              /* 0x00e */
     u8  shouldBeKilled;          /* 0x00f */
     u8  unk_010;                 /* 0x010 */
@@ -17,7 +17,7 @@ struct UpDownLiftBbh {
     u8  behavNode[0x10];               /* 0x028 */
     u8  renderNode[0x10];              /* 0x038 */
     u8  pad_048[0x18];
-    s32 unk_060;                 /* 0x060 */
+    s32 mPosY;                 /* 0x060 */
     s32 mPosZ;                   /* 0x064 */
     s32 unk_068;                 /* 0x068 */
     s32 unk_06c;                 /* 0x06c */
@@ -29,7 +29,7 @@ struct UpDownLiftBbh {
     s32 mScaleY;                 /* 0x084 */
     s32 mScaleZ;                 /* 0x088 */
     s16 mAngleX;                 /* 0x08c */
-    s16 unk_08e;                 /* 0x08e */
+    s16 mAngleY;                 /* 0x08e */
     s16 mAngleZ;                 /* 0x090 */
     s16 unk_092;                 /* 0x092 */
     s16 mPrevAngleY;             /* 0x094 */
@@ -61,14 +61,13 @@ struct UpDownLiftBbh {
     s32 mVariant;            /* 0x328 */
     s32 mState;            /* 0x32c */
     s32 mPlayerPosY;            /* 0x330 */
-    u8  mTopY;            /* 0x334 */
-    u8  pad_335[0x3];
-    u8  mBottomY;            /* 0x338 */
-    u8  pad_339[0x3];
-    u8  mMiddleY;            /* 0x33c */
-    u8  pad_33d[0x3];
-    u8  mSoundHandle;            /* 0x340 */
-    u8  pad_341[0x5];
+    /* The heights the lift works between. Every access in the ROM is a 32-bit
+       one; the generated header spelled these u8 plus padding. */
+    s32 mTopY;            /* 0x334 */
+    s32 mBottomY;            /* 0x338 */
+    s32 mMiddleY;            /* 0x33c */
+    u32 mSoundHandle;            /* 0x340 */
+    u16 mStateTimer;            /* 0x344 */
     u8  unk_346;            /* 0x346 */
     u8  mIsArmed;            /* 0x347 */
     u8  mIsRidden;            /* 0x348 */

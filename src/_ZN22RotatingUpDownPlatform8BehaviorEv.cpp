@@ -25,28 +25,34 @@ typedef void (dBgActor_c::*PMF)();
 struct PmfRow { PMF pmf; };
 extern "C" PmfRow data_ov091_021354e0[];
 
+/* How far the platform gives under a load, and how fast it gets there. */
+static const int cSinkDepth = 0x1e000;
+static const int cSinkRate  = 0x5000;
+
 int RotatingUpDownPlatform::Behavior()
 {
     char *s = (char*)((dBgActor_c *)this);
-    int old = *(int*)(s + 0x320);
+    int old = mState;
     (((dBgActor_c *)this)->*data_ov091_021354e0[old].pmf)();
-    *(unsigned short*)(((int)s + 0x354)) += 1;
-    if (old != *(int*)(s + 0x320)) {
-        *(short*)(s + 0x354) = 0;
+    mStateTimer += 1;
+    /* Restart the clock on a state change, and stop feeding the collider a
+       velocity while the state is switching over. */
+    if (old != mState) {
+        mStateTimer = 0;
         func_020393d4(s + 0x124, 0);
     } else {
         func_020393d4(s + 0x124, (void*)&_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     }
-    if (*(unsigned char*)(s + 0x352) == 0) {
-        int rate = 0x5000;
-        int saved = *(int*)(s + 0x60);
-        _Z14ApproachLinearRiii((int*)(s + 0x34c), (*(unsigned char*)(s + 0x356) != 0) ? 0x1e000 : 0, rate);
-        *(int*)(((int)s + 0x60)) -= *(int*)(s + 0x34c);
-        *(int*)(s + 0x60) = saved;
+    if (mVariant == 0) {
+        int rate = cSinkRate;
+        int saved = mPosY;
+        _Z14ApproachLinearRiii(&mSinkOffsetY, mIsPressed ? cSinkDepth : 0, rate);
+        *(int*)(((int)s + 0x60)) -= mSinkOffsetY;
+        mPosY = saved;
     }
     ((dBgActor_c *)this)->UpdateModelPosAndRotY();
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0)
         ((dBgActor_c *)this)->UpdateClsnPosAndRot();
-    *(unsigned char*)(s + 0x356) = 0;
+    mIsPressed = 0;
     return 1;
 }

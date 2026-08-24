@@ -169,6 +169,9 @@ Field roles, from `InitResources` (ov091) and `Behavior`:
 | offset | name | evidence |
 |---|---|---|
 | 0x31e | `mPauseTimer` | `DecIfAbove0_Byte`; set to 0xf at each turnaround, and movement only runs once it reaches 0 |
+| 0x324 | `mBasePosX` | `InitResources` copies the actor's position into 0x324/0x328/0x32c, which is also what closes the header on the factories' 0x330 |
+| 0x328 | `mBasePosY` | as above |
+| 0x32c | `mBasePosZ` | as above |
 | 0x320 | `mMoveTimer`  | `DecIfAbove0_Short`; reloaded from `data_ov091_02134504[mVariant]` and the yaw flips by 0x8000 when it expires |
 | 0x322 | `mVariant`    | set 0..6 by a switch on `actorID`; indexes the model, collider and CLPS tables (stride 0xc) and the two `data_ov091_021345xx` tables |
 
@@ -178,18 +181,20 @@ Still a flat generated struct. Own fields start at 0x320.
 
 | offset | name | evidence |
 |---|---|---|
-| 0x320 | (state, in pad) | `Behavior` dispatches `data_ov091_021354e0[*(int*)(this+0x320)]` as a pointer-to-member; `func_ov091_02132000` sets it to 1 |
+| 0x320 | `mState` | `Behavior` dispatches `data_ov091_021354e0[mState]` as a pointer-to-member; `func_ov091_02132000` sets it to 1 |
 | 0x324 | `mNodeCount` | `= PathPtr::NumNodes()` |
 | 0x328 | `mNodeIndex` | `= 0`, passed to `PathPtr::GetNode(…, idx)`, incremented when the first node equals the start position |
 | 0x32c | `mBasePosX` | `= mPosX` in `InitResources`; `Vec3_Equal(this+0x338, this+0x32c)` reads 0x32c as a `Vector3` |
 | 0x330 | `mBasePosY` | `= mPosY` |
 | 0x334 | `mBasePosZ` | `= mPosZ` |
-| 0x338 | (target node position, in `pad_338[0xc]`) | `PathPtr::GetNode` writes a `Vector3` here; `func_ov091_02132000` reads 0x338/0x33c/0x340 as one |
+| 0x338 | `mTargetPosX` | `PathPtr::GetNode` writes a `Vector3` over 0x338/0x33c/0x340; `func_ov091_02132000` reads all three back as one |
+| 0x33c | `mTargetPosY` | as above |
+| 0x340 | `mTargetPosZ` | as above |
 | 0x344 | `mPathPtr` | `PathPtr::FromID(this+0x344, param & 0xf)` |
 | 0x34c | `mSinkOffsetY` | `ApproachLinear(&this[0x34c], mIsPressed ? 0x1e000 : 0, 0x5000)`, then subtracted from `mPosY` |
 | 0x350 | `mBaseAngleY` | `= mAngleY` in `InitResources` |
 | 0x352 | `mVariant` | `= (param1 >> 8) & 0xff`; indexes the model / collider / CLPS tables |
-| 0x354 | (state timer, in pad) | incremented every `Behavior`, zeroed on a state change; `func_ov091_02132000` gates on `<= 0x14` |
+| 0x354 | `mStateTimer` | incremented every `Behavior`, zeroed on a state change; `func_ov091_02132000` gates on `<= 0x14` |
 | 0x356 | `mIsPressed` | cleared at the end of every `Behavior`; `func_ov091_02132360` sets it from a collision callback when the toucher's actorID is 0xbf; when set, `mSinkOffsetY` approaches 0x1e000 and `func_ov091_02132000` advances the state |
 
 `mIsPressed` names the *observed role* (something is bearing on the platform), not
@@ -276,7 +281,7 @@ Still a flat generated struct (ov095). Own fields start at 0x320.
 | 0x338 | `mBottomY` | `= mTopY - (spawn word << 12)` |
 | 0x33c | `mMiddleY` | `= (mTopY + mBottomY) / 2` |
 | 0x340 | `mSoundHandle` | `= Sound::PlayLong(mSoundHandle, 3, 0x82, …)` in the state functions |
-| 0x344 | (state timer, in pad) | incremented every `Behavior`, zeroed on a state change |
+| 0x344 | `mStateTimer` | incremented every `Behavior`, zeroed on a state change |
 | 0x347 | `mIsArmed` | 1 at init; `func_ov095_02136368` only starts the lift while it is 1 and clears it on trigger; `Behavior` re-arms it when the rider leaves |
 | 0x348 | `mIsRidden` | set by the collider callback `func_ov095_02136764`, read once and cleared at the end of every `Behavior` |
 
@@ -292,8 +297,16 @@ Left as `unk_`, honestly:
   it is genuinely its own field and its role is not settled. Do not "fix" the
   comparison — the bytes are the bytes.
 
-Nothing below 0x320 was renamed: those are `fBase_c`'s and `dActor_c`'s fields
-restated by `gen_header.py`.
+Below 0x320 only three fields were named, and each from this class's own
+bodies: `actorID` at 0x00c (switched on to pick the variant, and the same field
+the sibling flat headers already call `actorID`), `mPosY` at 0x060 (copied to
+`mTopY`) and `mAngleY` at 0x08e (handed to `dBgW_KcMbg::SetFile` as its yaw, and
+sitting between the header's existing `mAngleX` and `mAngleZ`). Everything else
+below 0x320 is `fBase_c`'s and `dActor_c`'s, restated by `gen_header.py`.
+
+`mTopY` / `mBottomY` / `mMiddleY` / `mSoundHandle` were spelled `u8` plus three
+bytes of padding by the generated header; every access in the ROM is 32-bit, so
+they are `s32` / `u32` now. Same offsets, same size, byte-verified.
 
 ## `include/daObjSm_Lift_c.h` (SkiLift)
 
@@ -401,3 +414,28 @@ A donut lift: stands still until ridden, then shakes, falls and respawns.
 field ends at 0x31e and its size rounds to 0x320, and the Itanium ABI lets a
 derived class place members in a non-POD base's tail padding. `Behavior` reads
 `this+0x31e` and reproduces the ROM, which is what confirms the placement.
+
+---
+
+## Second pass: bodies
+
+Four functions were re-spelled to use the new member names instead of raw offset
+arithmetic. Each was checked with `build_pin.verify` against its delink range
+before and after; all four still reproduce under 2004/b56, and the whole tree
+still builds 106/106.
+
+| function | module / range | what changed |
+|---|---|---|
+| `SlidingPlatformWf::InitResources` | ov091 0x021325d4 +0x214 | `*(u8 *)(c+0x322)` → `mVariant` throughout, `c+0x320` → `mMoveTimer`, `c+0x324..0x32c` → `mBasePos{X,Y,Z}` |
+| `RotatingUpDownPlatform::Behavior` | ov091 0x02132108 +0x104 | `s+0x320` → `mState`, `s+0x354` → `mStateTimer`, `s+0x352` → `mVariant`, `s+0x356` → `mIsPressed`, `s+0x34c` → `mSinkOffsetY`; the two sink magic numbers become `cSinkDepth` / `cSinkRate` |
+| `RotatingUpDownPlatform::InitResources` | ov091 0x0213220c +0x154 | `this+0x344` → `&mPathPtr`, `this+0x338` → `&mTargetPosX`, `this+0x32c` → `&mBasePosX` |
+| `UpDownLiftBbh::InitResources` and `::Behavior` | ov095 0x021365d8 +0x18c, 0x021364d8 +0x100 | the `*((int *)((char *)&mTopY))` cast wrappers drop away now that the fields are `s32`; `this+0x344` and `(&unk_300)+0x44` both become `mStateTimer` |
+
+One thing that did NOT hold: `*(int *)(s + 0x60) -= mSinkOffsetY;` in
+`RotatingUpDownPlatform::Behavior` is followed by `mPosY = saved;`, so the
+subtraction is dead as the tree spells it. That is what reproduces, and it was
+left exactly as it is — do not "fix" it into something that reads better.
+
+`build_pin.verify` reports a wrong `size` argument as `999 word(s) differ`, the
+same string it uses for a real mismatch. Check the delink range before believing
+a 999.

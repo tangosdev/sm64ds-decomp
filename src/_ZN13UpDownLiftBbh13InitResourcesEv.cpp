@@ -30,7 +30,7 @@ int UpDownLiftBbh::InitResources()
   u16 t;
   int b;
   *((u8 *) ((char *)&unk_349)) = 0;
-  t = *((u16 *) ((char *)&unk_00c));
+  t = *((u16 *) ((char *)&actorID));
   b = (int) (t == 0x20);
   if (b != 0)
   {
@@ -58,24 +58,26 @@ int UpDownLiftBbh::InitResources()
   new_var = &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
   _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
   idx = *((int *) ((char *)&mVariant));
-  _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char *)this) + 0x124, _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov095_02136f74[idx]), ((char *)this) + 0x2ec, 0x199, *((s16 *) ((char *)&unk_08e)), data_ov095_021375a4[idx]);
+  _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char *)this) + 0x124, _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov095_02136f74[idx]), ((char *)this) + 0x2ec, 0x199, *((s16 *) ((char *)&mAngleY)), data_ov095_021375a4[idx]);
   func_020393d4(((char *)this) + 0x124, new_var);
   func_020393c4(((char *)this) + 0x124, &func_ov095_02136788);
   *((int *) ((char *)&mRider)) = 0;
   *((int *) ((char *)&mState)) = 0;
+  /* Top of the shaft is where it was placed; the spawn word says how far down
+     it travels, and it stops halfway on the way back up. */
   if ((*((u8 *) ((char *)&unk_349))) == 2)
   {
-    *((int *) ((char *)&mTopY)) = (*((int *) ((char *)&unk_060))) + ((*((u16 *) ((char *)&unk_096))) << 12);
+    mTopY = mPosY + ((*((u16 *) ((char *)&unk_096))) << 12);
   }
   else
   {
-    *((int *) ((char *)&mTopY)) = *((int *) ((char *)&unk_060));
+    mTopY = mPosY;
   }
-  *((int *) ((char *)&mBottomY)) = (*((int *) ((char *)&mTopY))) - ((*((u16 *) ((char *)&unk_092))) << 12);
-  *((int *) ((char *)&mMiddleY)) = ((*((int *) ((char *)&mTopY))) + (*((int *) ((char *)&mBottomY)))) / 2;
+  mBottomY = mTopY - ((*((u16 *) ((char *)&unk_092))) << 12);
+  mMiddleY = (mTopY + mBottomY) / 2;
   *((u8 *) ((char *)&unk_346)) = 0;
   *((u8 *) ((char *)&mIsArmed)) = 1;
   *((u8 *) ((char *)&mIsRidden)) = 0;
-  *((int *) ((char *)&mSoundHandle)) = 0;
+  mSoundHandle = 0;
   return 1;
 }
