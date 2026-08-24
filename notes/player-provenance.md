@@ -101,6 +101,61 @@ countdown block. Where a row cites "Behavior" that is the file meant.
   them into real arrays is the right fix and is a structural change, not a
   rename, so it is left for a pass that can byte-verify each indexing site.
 
+## The six shadow-class files
+
+Six Player method sources did not include `Player.h` at all. Each carried its
+own one-method stand-in:
+
+```
+class Player {
+public:
+    int St_Climb_Init();
+    int IsAnim(unsigned int anim);
+    void SetAnim(unsigned int animID, int a, int b, unsigned int c);
+};
+```
+
+so every field access in them had to be spelt as a raw offset off a
+`char *self = (char *)this`, and none of the naming work above reached them.
+All six now include the real header, and 94 of their offset pokes are named
+member accesses.
+
+The reason they had stand-ins is real and is preserved: the ROM's
+`Player::SetAnim` takes a by-value `Fix12<int>`, which mwccarm passes
+differently from an `int`, so declaring the true signature breaks the byte
+match (notes/mwccarm-codegen.md 6az). That is why `SetAnim` is still called
+through `extern "C" _ZN6Player7SetAnimEji5Fix12IiEj` and is still not declared
+in `Player.h`. What the stand-ins did NOT need was to hide the fields.
+
+Six method declarations were added to `Player.h` for this -- `St_Climb_Init`,
+`St_Fly_Main`, `St_Land_Init`, `St_WindCarry_Main`, `St_CrazedCrate_Main` and
+`St_DizzyStars_Cleanup`, each the missing half of a pair the header already
+declared. All six are non-virtual, so none of them can become the key function
+(the destructor is declared first and holds that role); `build/eligible-names.txt`
+is byte-identical across the change.
+
+## When a rename stops being byte-neutral
+
+Five sites in this pass had to be reverted, all the same shape:
+
+```
+*(u8 *)(((int)((char *)this) + 0x6e3)) = *(u8 *)(((int)((char *)this) + 0x6e3)) + 1;
+```
+
+Written as `mStateStep = mStateStep + 1;` mwcc common-subexpressions the field
+address across the load and the store, drops an instruction, and the function
+changes size -- `build_pin` reports `999 word(s) differ`, which is its way of
+saying the sizes do not match. It is per-site, not per-function: the same file
+keeps every other collapsed access.
+
+The five: `St_LedgeHang_Main` and `St_SlideKick_Main` (0x6e3), 
+`St_StuckInGround_Main` (0x6e5), and `St_Fly_Main` twice (`mHorzSpeed += 0xe00`
+at 0x098 and `mStateArg + 1` at 0x70c).
+
+So the rule for this lever is not "naming is free". Naming is free; *deleting a
+cast* is not, and collapsing a poke deletes casts on both sides of a
+read-modify-write.
+
 ## Bowser
 
 Five matched functions only, so the evidence is thin and most of the header is

@@ -513,10 +513,12 @@ struct Player : dActor_c {
     int St_CeilingGrate_Init();
     int St_CeilingGrate_Main();
     int St_Climb_Cleanup();
+    int St_Climb_Init();
     int St_Climb_Main();
     int St_Crawl_Init();
     int St_Crawl_Main();
     int St_CrazedCrate_Init();
+    int St_CrazedCrate_Main();
     int St_Crouch_Init();
     int St_Crouch_Main();
     int St_DeadHit_Init();
@@ -528,6 +530,7 @@ struct Player : dActor_c {
     int St_Dive_Init();
     int St_DizzyStars_Init();
     int St_DizzyStars_Main();
+    int St_DizzyStars_Cleanup();
     int St_Electrocute_Init();
     int St_Electrocute_Main();
     int St_EndingFly_Init();
@@ -537,6 +540,7 @@ struct Player : dActor_c {
     int St_Fall_Init();
     int St_Fall_Main();
     int St_Fly_Init();
+    int St_Fly_Main();
     int St_GrabBowserTail_Cleanup();
     int St_GrabBowserTail_Init();
     int St_GrabBowserTail_Main();
@@ -570,6 +574,7 @@ struct Player : dActor_c {
     int St_Jump_Init();
     int St_Jump_Main();
     int St_Land_Main();
+    int St_Land_Init();
     /* ov002 0x020cac30, size 0x8: `return 1` and nothing else. Reached from
        ov002's State pointer-to-member table -- see the relocation note below. */
     int St_Null_Init();
@@ -659,6 +664,7 @@ struct Player : dActor_c {
     int St_WallSlide_Main();
     int St_WaterJump_Init();
     int St_WindCarry_Init();
+    int St_WindCarry_Main();
     int St_YoshiPower_Cleanup();
     int St_YoshiPower_Init();
     int St_YoshiPower_Main();
