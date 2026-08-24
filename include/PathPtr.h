@@ -18,8 +18,8 @@ struct PathDef {
 /* A handle on one path. FromID builds it by indexing the definition table;
    everything else reads through def. */
 struct PathPtr {
-    const struct PathDef *def;  /* 0x000 */
-    s32 unk_004;                /* 0x004 */
+    struct PathDef *def;    /* 0x000 */
+    s32 unk_004;            /* 0x004 */
 #ifdef __cplusplus
     /* Declared here and defined out of line in src/_ZN7PathPtrC1Ev.cpp. The ROM
        calls the constructor instead of inlining it, which it only does while no
