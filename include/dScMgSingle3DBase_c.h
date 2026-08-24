@@ -99,14 +99,24 @@ struct dScMgSingle3DBase_c : dScMgBase_c {
      * precompute cannot parse the namespaced mSysTracker line and stops at
      * the last field it CAN parse, which silently undercounts every derived
      * class's field offsets. MEASURED -- see notes/minigame-provenance.md. */
+    /* 0x4660..0x471c IS ONE MINIGAME CAMERA, 0xbc bytes, and three readings
+     * agree. src/Camera_UpdateMatrices.c -- the ov006 routine both
+     * dScMgRoulette_c::Render and dScMg3DEsp_c::Render call as
+     * Camera_UpdateMatrices(this + 0x4660) -- carries the layout outright:
+     * view matrix at +0x00, projection at +0x60, `eye` at +0xa0, `target` at
+     * +0xac, `angle` at +0xb8, and it computes the view direction as
+     * eye - target. Those three land on 0x4700 / 0x470c / 0x4718 here. And
+     * 0x4660 + 0xbc = 0x471c, which is exactly where mSysTracker starts.
+     * The head of the object stays a pad: nothing in this family reads a
+     * matrix element individually. */
     u8  pad_4660[0xa0];
-    s32 unk_4700; /* offset 0x4700 */
-    s32 unk_4704; /* offset 0x4704 */
-    s32 unk_4708; /* offset 0x4708 */
-    s32 unk_470c; /* offset 0x470c */
-    s32 unk_4710; /* offset 0x4710 */
-    s32 unk_4714; /* offset 0x4714 */
-    s16 unk_4718; /* offset 0x4718 */
+    s32 mCameraEyeX; /* offset 0x4700 */
+    s32 mCameraEyeY; /* offset 0x4704 */
+    s32 mCameraEyeZ; /* offset 0x4708 */
+    s32 mCameraTargetX; /* offset 0x470c */
+    s32 mCameraTargetY; /* offset 0x4710 */
+    s32 mCameraTargetZ; /* offset 0x4714 */
+    s16 mCameraAngle; /* offset 0x4718 */
     u8  pad_471a[0x2];
     Particle::SysTracker mSysTracker; /* 0x471c */
 };

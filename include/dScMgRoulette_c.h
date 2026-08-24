@@ -69,14 +69,24 @@ struct dScMgRoulette_c : dScMgSingle3DBase_c {
     u8    mModel1[0x50];    /* 0x531c -- Model, raw bytes, see file banner */
     u8    mModel2[0x50];    /* 0x536c -- Model, raw bytes, see file banner */
     u8    pad_53bc[0x8];     /* 0x53bc */
-    s32   unk_53c4;          /* 0x53c4 */
+    s32   unk_53c4;          /* 0x53c4 -- while it is 0 the board is idle:
+                                Render draws the tile cursor and phase 3 runs */
     u8    pad_53c8[0xe];
-    s16   unk_53d6;          /* 0x53d6 */
+    s16   mSelectedTile;     /* 0x53d6 -- Render draws the cursor at that tile's
+                                coordinates in data_ov006_02142ab4/ab8; Behavior
+                                scores every racer against it */
     u8    pad_53d8[0x8];
     s32   unk_53e0;          /* 0x53e0 */
-    s16   unk_53e4;          /* 0x53e4 */
-    s16   unk_53e6;          /* 0x53e6 */
-    s16   unk_53e8;          /* 0x53e8 */
+    s16   mCameraPreset;     /* 0x53e4 -- Render copies row n of the camera
+                                tables (data_ov006_0213e34c / _0213e370 at stride
+                                0xc, and _0213e2e0 for the angle) into
+                                mCameraEye/mCameraTarget/mCameraAngle, then calls
+                                Camera_UpdateMatrices. 0 leaves the camera alone */
+    s16   mPhase;            /* 0x53e6 -- 1 deals the racers out, 2 runs the
+                                countdown and reads the board, 3 pays out per
+                                landed tile, 4 announces the result */
+    s16   mPhaseTimer;       /* 0x53e8 -- counted down in every phase; each
+                                phase reloads it on entry */
     s16   unk_53ea;          /* 0x53ea */
     u8    unk_53ec;          /* 0x53ec */
     u8    unk_53ed;          /* 0x53ed */
@@ -84,11 +94,15 @@ struct dScMgRoulette_c : dScMgSingle3DBase_c {
     u8    unk_53ef;          /* 0x53ef */
     u8    unk_53f0;          /* 0x53f0 */
     u8    pad_53f1[0x1];
-    s16   unk_53f2;          /* 0x53f2 */
+    s16   mScore;            /* 0x53f2 -- the payout summed over the racers;
+                                phase 4 compares it against mTargetScore */
     u8    pad_53f4[0x2];
-    s16   unk_53f6;          /* 0x53f6 */
-    s32   unk_53f8;          /* 0x53f8 */
-    s32   unk_53fc;          /* 0x53fc */
+    s16   mTargetScore;      /* 0x53f6 -- one per racer that missed the winning
+                                tile; the bar mScore has to beat */
+    s32   mDealIndex;        /* 0x53f8 -- how many racers have been dealt out;
+                                also reused as a loop cursor between phases */
+    s32   mRacerCount;       /* 0x53fc -- the bound of every per-racer loop in
+                                Behavior and Render */
 };
 
 typedef char dScMgRoulette_c_size_must_be_0x5400[sizeof(dScMgRoulette_c) == 0x5400 ? 1 : -1];
