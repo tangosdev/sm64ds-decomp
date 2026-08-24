@@ -1,6 +1,7 @@
 //cpp
 // @symbol _ZN3Amp13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
+#include "common.h"
 #include "Amp.h"
 #include "TextureSequence.h"
 struct SharedFilePtr;
@@ -24,7 +25,6 @@ extern BTA_File data_ov070_021231f4;
 extern Vector3 data_ov070_0212365c;
 extern char IDENTITY_MATRIX4X3;
 
-struct M48 { int w[12]; };
 
 int Amp::InitResources()
 {
@@ -62,7 +62,7 @@ int Amp::InitResources()
     mTerminalVelocity = 0;
     func_ov070_02120da8(this, 1);
 
-    *(M48 *)&mMat4x3 = *(M48 *)&IDENTITY_MATRIX4X3;
+    *(Matrix4x3 *)&mMat4x3 = *(Matrix4x3 *)&IDENTITY_MATRIX4X3;
 
     func_ov070_02120724(this);
     return 1;

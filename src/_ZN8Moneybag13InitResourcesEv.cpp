@@ -18,10 +18,9 @@ extern "C" void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* self
 extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* self);
 extern "C" void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);
 
-struct Block48 { int w[12]; };
 
 extern int data_ov002_0210d9b8[];
-extern Block48 IDENTITY_MATRIX4X3;
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 int Moneybag::InitResources()
 {
@@ -62,7 +61,7 @@ int Moneybag::InitResources()
     unk_3d4 = mPosY;
     unk_3d8 = mPosZ;
     unk_3f0 = 1;
-    *(Block48*)((char*)&unk_3a0) = IDENTITY_MATRIX4X3;
+    *(Matrix4x3*)((char*)&unk_3a0) = IDENTITY_MATRIX4X3;
     func_ov081_02126a20(((char*)this));
     _ZN9dBgCh_GndD1Ev(&rc);
     return 1;

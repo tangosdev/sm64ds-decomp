@@ -1,4 +1,5 @@
 //cpp
+#include "common.h"
 #include "types.h"
 // @symbol _ZN8BookShot13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
@@ -24,8 +25,7 @@ extern SharedFilePtr data_ov020_02114ab0;
 
 #define LDR(p) (p)
 
-struct M48 { int w[12]; };
-extern struct M48 IDENTITY_MATRIX4X3;
+extern struct Matrix4x3 IDENTITY_MATRIX4X3;
 
 int BookShot::InitResources()
 {
@@ -57,7 +57,7 @@ int BookShot::InitResources()
     if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x174, (struct BMD_File*)((int*)&data_ov020_02114ab8)[1], 1, -1) == 0)
         return 0;
 
-    *(struct M48*)((char*)&unk_1ec) = IDENTITY_MATRIX4X3;
+    *(struct Matrix4x3*)((char*)&unk_1ec) = IDENTITY_MATRIX4X3;
     unk_450 = 0;
     *(short*)(int)LDR((char*)&mAngleY) = *(short*)(int)LDR((char*)&mAngleY) + 0x8000;
     unk_44c = 0x800;
