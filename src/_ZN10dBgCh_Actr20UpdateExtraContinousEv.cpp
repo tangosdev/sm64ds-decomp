@@ -7,8 +7,7 @@ typedef short s16;
 typedef unsigned char u8;
 
 #include "SurfaceInfo.h"
-struct dBgCh_Lin { Vector3 GetClsnPos(); };
-struct dBgPi
+struct dBgPiLoc
 {
     u32 *vt;
     SurfaceInfo si;
@@ -34,26 +33,26 @@ extern u32 data_02099368[];
 int  func_020355a0(void *);
 void *func_02037938(void *);
 void func_02038324(void *, Vector3 *, void *, void *);
-void _ZN5dBgPiC1Ev(dBgPi *);
-void _ZN5dBgPiD1Ev(dBgPi *);
+void _ZN5dBgPiC1Ev(dBgPiLoc *);
+void _ZN5dBgPiD1Ev(dBgPiLoc *);
 void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *, const Vector3 *, const Vector3 *, void *);
 int  func_0203859c(void *);
 void _ZN9dBgCh_Lin10GetClsnPosEv(Vector3 *, void *);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo *, Vector3 *);
 int  _ZN9dBgCh_Lin10DetectClsnEv(void *);
 int  func_02039794(s32);
-void _ZNK5dBgPi6CopyToERS_(const dBgPi *, dBgPi *);
+void _ZNK5dBgPi6CopyToERS_(const dBgPiLoc *, dBgPiLoc *);
 Vector3 *func_02037dc4(SurfaceInfo *);
 void _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(void *, const Vector3 *, s32, void *);
 int  func_02035764(void *);
-void _ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi(void *, const dBgPi *);
-void _ZN5dBgPiaSERKS_(dBgPi *, const dBgPi *);
+void _ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi(void *, const dBgPiLoc *);
+void _ZN5dBgPiaSERKS_(dBgPiLoc *, const dBgPiLoc *);
 void func_020371b0(void *, s32);
-void func_02037888(void *, const dBgPi *);
-void func_0203782c(void *, const dBgPi *);
+void func_02037888(void *, const dBgPiLoc *);
+void func_0203782c(void *, const dBgPiLoc *);
 int  _ZN12dBgCh_SphCrr10DetectClsnEv(void *);
 int  func_020355dc(void *);
-dBgPi *func_020378dc(void *);
+dBgPiLoc *func_020378dc(void *);
 void func_020356d4(void *);
 
 }  /* end extern "C" -- the definition below is a member, not a C symbol */
@@ -74,13 +73,13 @@ void dBgCh_Actr::UpdateExtraContinous()
                       *(void **)(t + 0x12c), *(void **)(t + 0x130));
 
     {
-        dBgPi res0;
+        dBgPiLoc res0;
         f0 = 0;
         _ZN5dBgPiC1Ev(&res0);
-        dBgPi res1;
+        dBgPiLoc res1;
         f1 = 0;
         _ZN5dBgPiC1Ev(&res1);
-        dBgPi res2;
+        dBgPiLoc res2;
         f2 = 0;
         _ZN5dBgPiC1Ev(&res2);
 
@@ -119,17 +118,17 @@ void dBgCh_Actr::UpdateExtraContinous()
             if (kind == 1)
             {
                 f1 = 1;
-                _ZNK5dBgPi6CopyToERS_((dBgPi *)(t + 0x144), &res1);
+                _ZNK5dBgPi6CopyToERS_((dBgPiLoc *)(t + 0x144), &res1);
             }
             else if (kind == 2)
             {
                 f2 = 1;
-                _ZNK5dBgPi6CopyToERS_((dBgPi *)(t + 0x144), &res2);
+                _ZNK5dBgPi6CopyToERS_((dBgPiLoc *)(t + 0x144), &res2);
             }
             else if (kind == 0)
             {
                 f0 = 1;
-                _ZNK5dBgPi6CopyToERS_((dBgPi *)(t + 0x144), &res0);
+                _ZNK5dBgPi6CopyToERS_((dBgPiLoc *)(t + 0x144), &res0);
             }
 
             Vector3 vb8;
@@ -153,7 +152,7 @@ void dBgCh_Actr::UpdateExtraContinous()
                 if (func_02039794(ve8.y) == 0)
                 {
                     f0 = 1;
-                    _ZNK5dBgPi6CopyToERS_((dBgPi *)(t + 0x144), &res0);
+                    _ZNK5dBgPi6CopyToERS_((dBgPiLoc *)(t + 0x144), &res0);
                 }
                 vdc.x = vdc.x + (ve8.x << 2);
                 vdc.y = vdc.y + (ve8.y << 2);
@@ -227,7 +226,7 @@ void dBgCh_Actr::UpdateExtraContinous()
             FLAGP |= 4;
             _ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi(t + 0x20, &res0);
             FLAGQ |= 1;
-            _ZN5dBgPiaSERKS_((dBgPi *)(t + 0x30), &res0);
+            _ZN5dBgPiaSERKS_((dBgPiLoc *)(t + 0x30), &res0);
             func_020371b0(t, wasOnGround);
             didHit = 1;
         }
@@ -236,14 +235,14 @@ void dBgCh_Actr::UpdateExtraContinous()
             FLAGP |= 8;
             func_02037888(t + 0x20, &res1);
             FLAGQ |= 1;
-            _ZN5dBgPiaSERKS_((dBgPi *)(t + 0x30), &res1);
+            _ZN5dBgPiaSERKS_((dBgPiLoc *)(t + 0x30), &res1);
         }
         if (f2)
         {
             FLAGP |= 0x10;
             func_0203782c(t + 0x20, &res2);
             FLAGQ |= 1;
-            _ZN5dBgPiaSERKS_((dBgPi *)(t + 0x30), &res2);
+            _ZN5dBgPiaSERKS_((dBgPiLoc *)(t + 0x30), &res2);
         }
 
         if (_ZN12dBgCh_SphCrr10DetectClsnEv(t + 0x20))
@@ -281,8 +280,8 @@ void dBgCh_Actr::UpdateExtraContinous()
             s32 fl; fl = *(u8 *)(t + 0x90);
             if (!(fl & 4) && (fl & 8))
             {
-                dBgPi tmp;
-                dBgPi *src = func_020378dc(t + 0x20);
+                dBgPiLoc tmp;
+                dBgPiLoc *src = func_020378dc(t + 0x20);
                 SurfaceInfo *dsi = &tmp.si;
                 {
                     s32 c0, c1;
@@ -320,29 +319,29 @@ void dBgCh_Actr::UpdateExtraContinous()
                         s32 k3; k3 = func_02039794(n->y);
                         if (k3 == 1 && !(*(u8 *)(t + 0x90) & 8))
                         {
-                            dBgPi *lr = (dBgPi *)(t + 0x144);
+                            dBgPiLoc *lr = (dBgPiLoc *)(t + 0x144);
                             FLAGP |= 8;
                             func_02037888(t + 0x20, lr);
                             FLAGQ |= 1;
-                            _ZN5dBgPiaSERKS_((dBgPi *)(t + 0x30), lr);
+                            _ZN5dBgPiaSERKS_((dBgPiLoc *)(t + 0x30), lr);
                         }
                         else if (k3 == 0 && !(*(u8 *)(t + 0x90) & 4))
                         {
-                            dBgPi *lr = (dBgPi *)(t + 0x144);
+                            dBgPiLoc *lr = (dBgPiLoc *)(t + 0x144);
                             FLAGP |= 4;
                             _ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi(t + 0x20, lr);
                             FLAGQ |= 1;
-                            _ZN5dBgPiaSERKS_((dBgPi *)(t + 0x30), lr);
+                            _ZN5dBgPiaSERKS_((dBgPiLoc *)(t + 0x30), lr);
                             if (didHit == 0)
                                 func_020371b0(t, wasOnGround);
                         }
                         else if (k3 == 2 && !(*(u8 *)(t + 0x90) & 0x10))
                         {
-                            dBgPi *lr = (dBgPi *)(t + 0x144);
+                            dBgPiLoc *lr = (dBgPiLoc *)(t + 0x144);
                             FLAGP |= 0x10;
                             func_0203782c(t + 0x20, lr);
                             FLAGQ |= 1;
-                            _ZN5dBgPiaSERKS_((dBgPi *)(t + 0x30), lr);
+                            _ZN5dBgPiaSERKS_((dBgPiLoc *)(t + 0x30), lr);
                         }
                     }
                 }

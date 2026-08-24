@@ -10,5 +10,5 @@
 
 s32 dBgCh_Actr::GetResultFlag1() const
 {
-    return mClsnFlags & 0x1;
+    return mSphereClsn.flags & 0x1;
 }

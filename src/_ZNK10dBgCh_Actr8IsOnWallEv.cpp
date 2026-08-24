@@ -9,5 +9,5 @@
 
 s32 dBgCh_Actr::IsOnWall() const
 {
-    return mClsnFlags & 0x8;
+    return mSphereClsn.flags & 0x8;
 }

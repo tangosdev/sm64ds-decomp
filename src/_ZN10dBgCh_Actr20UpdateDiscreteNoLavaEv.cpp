@@ -29,7 +29,7 @@ void dBgCh_Actr::UpdateDiscreteNoLava()
     if (_ZNK10dBgCh_Actr10IsOnGroundEv(((char *)this)) && func_020355a0(((char *)this))
         && _ZNK10dBgCh_Actr15ShouldUpdatePosEv(((char *)this))) {
         func_02038324((void *)func_02037938((int)((char *)&mSphereClsn)), (int)src,
-                      unk_12c, unk_130);
+                      mSphereClsn.unk_10c, unk_130);
     }
     onGround = _ZNK10dBgCh_Actr10IsOnGroundEv(((char *)this));
     _ZN10dBgCh_Actr19ClearAllGroundFlagsEv(((char *)this));
@@ -40,13 +40,13 @@ void dBgCh_Actr::UpdateDiscreteNoLava()
     v.y = sy + unk_01c;
     _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(((char *)this) + 0x20, &v,
         unk_018, *(void **)((char *)&mActor));
-    unk_128 = unk_1b8;
+    mSphereClsn.unk_108 = unk_1b8;
     if (src->y - p68->y > 0) {
-        *(unsigned char *)((char *)&mClsnFlags) |= 0x20;
+        *(unsigned char *)((char *)&mSphereClsn.flags) |= 0x20;
     }
     if (_ZN12dBgCh_SphCrr10DetectClsnEv((char *)&mSphereClsn)) {
-        p6c = (struct Vector3 *)((char *)&unk_06c);
-        if (mClsnFlags & 4) {
+        p6c = (struct Vector3 *)((char *)&mSphereClsn.disp);
+        if (mSphereClsn.flags & 4) {
             func_020371b0(((char *)this), onGround);
         }
         if (_ZNK10dBgCh_Actr15ShouldUpdatePosEv(((char *)this))) {

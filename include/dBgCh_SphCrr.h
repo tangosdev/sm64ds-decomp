@@ -38,7 +38,11 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
        frame, and scales 0x048 by the collider's uniform scale before passing it
        as the `Fix12<int> radius` argument of dBgCh_SphCrr::SetObjAndSphere -- so
        0x03c is twelve bytes of centre and 0x048 is the radius that follows it. */
-    u8  pad_04c[0x24];
+    /* A Vector3 DISPLACEMENT. dBgCh_Actr's Update* methods read these three
+       words (their Actr +0x6c) as a Vector3 and feed them to the movement
+       helpers; named when Actr's flat blob was typed out. */
+    Vector3 disp;           /* 0x04c */
+    u8  pad_058[0x18];      /* through 0x06f */
     /* Result flags, read and OR-ed a bit at a time by the same function:
        1 = any hit, 4 = floor, 8 = wall, 0x10 = from underneath. Each bit gates
        copying the matching dBgPi below it. */
@@ -56,10 +60,14 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
        a payload that starts at 0x0fc. What the payload is is not settled here. */
     s32 unk_0fc;            /* 0x0fc */
     s32 unk_100;            /* 0x100 */
-    u8  pad_104[0x4];       /* through 0x10b; the stand-in in KcMbg's DetectClsn
-                               spans 0x110, so one more word may belong here --
-                               unsettled, and nothing depends on it yet */
-    s32 unk_108;            /* 0x108 */
+    u8  pad_104[0x4];       /* through 0x10b */
+    s32 unk_108;            /* 0x108 - dBgCh_Actr's Update* copy its tail word
+                               (Actr +0x128) here each update */
+    s32 unk_10c;            /* 0x10c - named 2026-08-24 when the size pin
+                               landed: dBgCh_Actr::Init stores its fourth
+                               argument, a Vector3_16 *, at Actr +0x12c = this
+                               +0x10c, and UpdateContinuous forwards both it
+                               and the next word to func_02038324 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     /* DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the key-function
@@ -80,6 +88,14 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
     void SetObjAndSphere(const Vector3 &pos, Fix12<int> radius, dActor_c *actor);
 };
 
+/* SIZE PINNED AT 0x110 by dBgW_KcMbg::DetectClsn(dBgCh_SphCrr&): the ROM gives
+   that function's local query object an exact 0x110 stack slot, and compiling
+   it against a 0x10c declaration came out one word short of the frame. That
+   measurement is what let the byte stand-in there stay honest; growing this
+   class is what will eventually let the stand-in become the real type. */
+typedef char dBgCh_SphCrr_size_must_be_0x110[
+    sizeof(dBgCh_SphCrr) == 0x110 ? 1 : -1];
+
 #else
 
 struct dBgCh_SphCrr {
@@ -91,7 +107,8 @@ struct dBgCh_SphCrr {
     Vector3 pos;            /* 0x03c */
     Fix12i radius;          /* 0x048 */
     u8  pad_04c[0x24];
-    u8  flags;              /* 0x070 */
+    u8  flags;              /* 0x070 - see the C++ branch; Actr's accessors
+                               call this byte their mClsnFlags home */
     u8  pad_071[0x3];
     struct dBgPi mClsnResult1; /* 0x074 */
     struct dBgPi mClsnResult2; /* 0x09c */
@@ -102,9 +119,15 @@ struct dBgCh_SphCrr {
     s32 unk_100;            /* 0x100 */
     u8  pad_104[0x4];
     s32 unk_108;            /* 0x108 */
+    s32 unk_10c;            /* 0x10c - see the C++ branch: Init's Vector3_16 * */
 };
 
 typedef struct dBgCh_SphCrr dBgCh_SphCrr;
+
+/* Same pin on the C view -- the two branches must agree while anything can
+   still substitute one for the other. */
+typedef char dBgCh_SphCrr_c_size_must_be_0x110[
+    sizeof(struct dBgCh_SphCrr) == 0x110 ? 1 : -1];
 
 #endif /* __cplusplus */
 
