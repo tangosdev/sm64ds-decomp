@@ -2086,7 +2086,7 @@ extern void func_0203abd4(int*, int*, int);
 extern void _ZN8dM3dGSphD2Ev(void*);
 extern void func_0203ac50(void*);
 extern void _ZN8dM3dGSphC1Ev(void*);
-extern void func_0203ac70(int*);
+extern void _ZN8dM3dGSphC2Ev(void*);
 extern void func_0203aca0(int, int);
 extern void func_0203accc(int);
 extern void func_0203b27c(int, int);

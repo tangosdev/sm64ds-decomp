@@ -334,10 +334,12 @@ contiguous range in the right order; nothing can currently *bind* it.
 
 - **33 are undecided** — callers split evenly, or none of them is a named
   ctor/dtor. They are reported as undecided rather than assigned.
-- **`func_0203ac60` and `func_0203ac70` both propose `dM3dGSph`'s C2.** They cannot
-  both be right. The adjacent `0x10`-size pair is most likely one class's C2/C1 —
-  the constructor mirror of the D2/D0/D1 grouping — which would also validate the
-  C2 half of the discovery method. Cheap to settle, unresolved here.
+- **SETTLED 2026-08-23: `func_0203ac60`/`func_0203ac70` are dM3dGSph's C1/C2 pair**,
+  exactly the "adjacent 0x10-size pair" this note predicted. The caller scan
+  decided it: ac70's only ROM caller is dBgCh_SphCrr's constructor building the
+  dM3dGSph BASE subobject at +0x38 (C2), ac60's only caller builds a complete-
+  object MEMBER in dBgCh_Lin (C1). Renamed to `_ZN8dM3dGSphC1Ev` /
+  `_ZN8dM3dGSphC2Ev`; see notes/ctor-migration.md section 4/4b for the method.
 - **The ratchet blocks truth-increasing renames.** Naming `func_02017838` to its
   correct D2 symbol raises `unmigrated_total`, so a rename that makes the symbol
   table *more* true fails a gate designed to stop the symbol table getting less
