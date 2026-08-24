@@ -116,7 +116,7 @@ int main(void)
             RayS ray;
             memset(&ray, 0, sizeof ray);
             ray.head[4] = 1;    /* the dBgCh "collide with ordinary surfaces"
-                                   default (func_02035514 sets it; the pass-
+                                   default (_ZN5dBgChC2Ev sets it; the pass-
                                    through predicate reads head[4] & 1) */
             ray.sx = cx + gx * sx_step; ray.sy = top; ray.sz = cz + gz * sz_step;
             ray.ex = ray.sx;            ray.ey = bot; ray.ez = ray.sz;

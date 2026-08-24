@@ -35,7 +35,7 @@ Two derived findings fall out of the same member map and are reported separately
 
   * a marker that lands INSIDE an already-typed member is not an unknown object at all,
     it is the header naming an interior word of a member it already has;
-  * a marker whose address goes to an UNNAMED function (`func_0203819c`) stays
+  * a marker whose address goes to an UNNAMED function (`_ZN5dBgPiC2Ev`) stays
     undecided, but two markers handing their offsets to the SAME unnamed function have
     the same type -- three undecidables collapse to one.
 
@@ -581,7 +581,7 @@ def this_bases(code, stem, cls_last):
 # 5. evidence extraction
 # ===========================================================================
 
-# `func_0203819c(this + 0x10)` names no class, but two different classes handing
+# `_ZN5dBgPiC2Ev(this + 0x10)` names no class, but two different classes handing
 # their own offset to the SAME unnamed function have the same type there.  That turns
 # a pair of undecidables into one undecidable, which is worth recording.
 _CALL = re.compile(r"(?<![\w>.:])(?P<callee>_Z[A-Za-z0-9_]+|func_[A-Za-z0-9_]+)\s*\(")
