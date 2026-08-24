@@ -104,3 +104,71 @@ back, so a name like "mMotherPenguin" would be a claim the bytes do not make.
 
 Deliberately left `unk_`: 0x360 (zeroed, never read); 0x36c (set to 0x384 every
 frame the penguin is near the player, never read).
+
+## Lakitu -- include/Lakitu.h
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x3c0 | `mMatrix` | `*(Matrix4x3*)&unk_3c0 = IDENTITY_MATRIX4X3` in `src/_ZN6Lakitu13InitResourcesEv.cpp`. The pad after it runs to 0x3f3, four bytes past the matrix's own 0x30. |
+| 0x3f4 | `mState` | `src/_ZN6Lakitu6RenderEv.cpp` draws the second `Model` only when this is 1. |
+| 0x3f8 | `mSpawnPosX` | `InitResources` copies `this + 0x5c` (`mPosX`) in. |
+| 0x3fc | `mSpawnPosY` | same, `this + 0x60` (`mPosY`). |
+| 0x400 | `mSpawnPosZ` | same, `this + 0x64` (`mPosZ`); this is the only one of the three spelt as a member, the other two are raw `this + 0xNN` stores. |
+
+Deliberately left `unk_`: 0x410 (zeroed, never read).
+
+## Moneybag -- include/Moneybag.h
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x3a0 | `mMatrix` | `*(Matrix4x3*)&unk_3a0 = IDENTITY_MATRIX4X3`; 0x3a0..0x3cf is exactly 0x30 bytes. |
+| 0x3d0 | `mSpawnPosX` | `src/_ZN8Moneybag13InitResourcesEv.cpp` copies `mPosX` in. |
+| 0x3d4 | `mSpawnPosY` | same, `mPosY`. |
+| 0x3d8 | `mSpawnPosZ` | same, `mPosZ`. |
+| 0x3f0 | `mState` | set to 1 by `InitResources`; `src/_ZN8Moneybag6RenderEv.cpp` draws the `ModelAnim` only above 1 and the `Model` only at or below 0x1f. |
+
+## Coin -- include/Coin.h
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x3ab | `mSpawnFilter` | `param1` bits 4..6 for a red (0x121) or blue (0x122) coin, 0xff otherwise. The same three-bit value `LoadObjects` compares against `data_0209f220` to decide whether an object belongs to the entrance the level was started from (`src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp`). A red coin claims a star-marker slot only when it matches (or `SublevelToLevel` is 0x13); a blue coin whose filter is under 8 clears bit 0 of `mCoinFlags`. |
+| 0x3ae | `mCoinFlags` | the flag byte `src/_ZN4Coin13InitResourcesEv.cpp` already documented as such: bit 0 gates `Render` outright, `Behavior` tests bits 0 and 1. Named `mCoinFlags` and NOT `mFlags`, which is `dActor_c`'s own field 0x0b0. |
+
+The read-modify-write sites keep their raw `*(u8*)((int)c + 0x3ae)` spelling --
+that launder is measured and per-site, and the existing note in
+`src/_ZN4Coin13InitResourcesEv.cpp` explains why.
+
+## PowerFlower -- include/PowerFlower.h
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x3bc | `mGroundY` | `src/_ZN11PowerFlower13InitResourcesEv.cpp` raycasts a `dBgCh_Gnd` from `mPos` with Y + 0x14000 and stores the hit height (`ray + 0x44`), falling back to the probe's own Y when `DetectClsn` finds nothing. |
+| 0x3c0 | `mState` | `src/_ZN11PowerFlower6RenderEv.cpp` switches on it: 0 draws `mModel1`, 1 and 2 draw `mModel2`. |
+| 0x3ca | `mLifeTimer` | seeded 0xb4 (180 frames) in `InitResources`; `Render` skips drawing on odd values once it is below 0x2d, so the flower blinks through its last 45 frames. |
+
+## Number -- include/Number.h
+
+The floating score popup, actor 0x14a -- `dActor_c::SpawnNumber` is what puts
+one up, and its parameter list is half the evidence here.
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x138 | `mOwnerUniqueID` | `src/_ZN6Number8BehaviorEv.cpp` resolves it through `dActor_c::FindWithID` and, when the actor still exists, takes the popup's draw position from that actor's own `mPos` triple. 0 means "not following anything" -- the `owner` argument of `SpawnNumber`. |
+| 0x13c | `mStartPosX` | copied from `mPosX` in `src/_ZN6Number13InitResourcesEv.cpp`, alongside the already-named `mStartPosY` at 0x140. |
+| 0x144 | `mStartPosZ` | same, `mPosZ`. |
+| 0x148 | `mFollowOffsetY` | added to `mPosY - mStartPosY` -- how far the popup has risen -- when the position is taken from the owner. |
+| 0x14c | `mDelay` | the `delay` argument of `SpawnNumber`: while nonzero `Behavior` returns immediately and `Render` decrements it and draws nothing. |
+| 0x14e | `mState` | the bounce. 0: rising, and the first frame back below `mStartPosY` snaps to that floor, sets `mVertSpeed` 0xf000 and advances to 1. 1: the next fall below the floor emits particle 0xd2 and marks the popup for destruction. |
+
+## CrazedCrate, MontyMole, BowserShockwaves -- nothing named
+
+Listed so the next reader does not repeat the search.
+
+- `CrazedCrate` 0x374: zeroed in `src/_ZN11CrazedCrate13InitResourcesEv.cpp`, never read.
+- `MontyMole` 0x17c/0x180..0x184/0x188 and the 16 bytes from 0x16c: all written
+  in `src/_ZN9MontyMole13InitResourcesEv.cpp` -- 0x180 is `param1 & 0xf`, 0x182
+  is `(param1 >> 4) & 0xf`, 0x181 is 1 when 0x180 is 0 and `(param1 >> 8) & 1`
+  otherwise -- and none of them is read by any enrolled body. Which nibble means
+  what is a guess until the class's other functions are enrolled.
+- `BowserShockwaves` 0x214: zeroed in
+  `src/_ZN16BowserShockwaves13InitResourcesEv.cpp`, never read.

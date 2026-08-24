@@ -55,10 +55,10 @@ int PowerFlower::InitResources()
     pos.y += 0x14000;
     _ZN9dBgCh_GndC1Ev(ray);
     _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(ray, &pos, 0);
-    unk_3bc = pos.y;
+    mGroundY = pos.y;
     if (_ZN9dBgCh_Gnd10DetectClsnEv(ray))
-        unk_3bc = *(int *)(ray + 0x44);
-    unk_3ca = 0xb4;
+        mGroundY = *(int *)(ray + 0x44);
+    mLifeTimer = 0xb4;
 
     if (param1 == 0xffff) {
         if (*(int *)((char *)_ZN8dActor_c13ClosestPlayerEv(((char *)this)) + 8) == 1 && _ZN8SaveData16HasPlayerLostCapEv() == 0) {

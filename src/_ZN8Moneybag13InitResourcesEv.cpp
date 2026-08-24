@@ -57,11 +57,11 @@ int Moneybag::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    unk_3d0 = mPosX;
-    unk_3d4 = mPosY;
-    unk_3d8 = mPosZ;
-    unk_3f0 = 1;
-    *(Matrix4x3*)((char*)&unk_3a0) = IDENTITY_MATRIX4X3;
+    mSpawnPosX = mPosX;
+    mSpawnPosY = mPosY;
+    mSpawnPosZ = mPosZ;
+    mState = 1;
+    *(Matrix4x3*)((char*)&mMatrix) = IDENTITY_MATRIX4X3;
     func_ov081_02126a20(((char*)this));
     _ZN9dBgCh_GndD1Ev(&rc);
     return 1;
