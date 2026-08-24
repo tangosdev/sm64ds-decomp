@@ -1,55 +1,7 @@
-/* class cMgSmartball_ball_c, real ROM name confirmed by tools/rtti_extract.py
- * (build/rtti.json). Own vtable ov006:0x0213ec98, RTTI ov006:0x0213ebec
- * (_ZTI19cMgSmartball_ball_c), _ZTS19cMgSmartball_ball_c ov006:0x0213edc0.
- * One of eleven direct children of cMgSmartball_object_c -- see that header
- * for the family's shape (a root, three slots, no virtual destructor).
- *
- * SIZE 0x12c, from _Znwj(0x12c) in func_ov006_02115b0c. Base ends at 0x34,
- * so this class adds 0xf8 bytes -- the densest of the eleven children.
- *
- * FIELD EVIDENCE. All fields below 0x34 belong to the base and are reached
- * through inherited members (unk_004, mCurrent0/1, unk_020/024/028/02c,
- * unk_030); this class's own four functions never touch the base's
- * 0x31-0x33 region, so no raw cast is needed anywhere here.
- *
- * Most of the 0x34+ fields are both declared AND zeroed by this class's own
- * RestoreInitial, which is exhaustive -- it is the strongest single source
- * of the layout below (every array length and every scalar width comes
- * from that function's own loop bounds and store widths, not a guess).
- * SaveSnapshot and Update corroborate roughly half of the same offsets.
- *
- * SEVERAL NAMES ARE BORROWED, NOT INVENTED. func_ov006_02112ad8.c and
- * func_ov006_021128fc.c -- two out-of-scope helpers this class's own
- * SaveSnapshot calls with `this` -- each reinterpret the pointer through
- * their own local Obj-style struct cast and name a number of these exact
- * offsets (hit/hitA/hitB/hitC, anyHit, specialHit, nearby, targetIndex,
- * soundTimer, soundPlayed, state3a, state3b). Every one of those offsets is
- * ALSO independently touched by this class's own RestoreInitial, so the
- * width and existence of each field is evidenced in-scope; only the
- * spelling is borrowed. Everything else that lacks that corroboration
- * keeps an unk_ name.
- *
- * ONE GAP IS A DELIBERATE PAD DESPITE THAT SAME EVIDENCE: offsets 0x44-0x4b
- * are hitX/hitZ in func_ov006_02112ad8.c's own naming, but neither of THIS
- * class's own four functions (SaveSnapshot/Update/RestoreInitial/ctor)
- * touches them at all -- so, per the wing_c precedent, this header leaves
- * them an explicit pad rather than exposing named fields this migration's
- * own evidence does not reach. UNMODELLED, NOT UNREAD.
- *
- * pad_0e7[0x11] (0xe7-0xf7) is a genuine gap: RestoreInitial's own
- * exhaustive zero pass skips straight over it (nearby[] ends at 0xe6,
- * targetIndex starts at 0xf8), and func_ov006_02112ad8.c's Obj cast also
- * treats it as padding. Two independent callers agreeing it's unused is
- * as close to "confirmed empty" as this migration gets.
- *
- * pad_101/pad_111/pad_122/pad_12a are pure alignment gaps between adjacent
- * int fields (house style: explicit pads over implicit compiler-inserted
- * ones).
- *
- * CONSTRUCTED BY func_ov006_02114548, left a free function per the recipe
- * (this tree has migrated zero constructors). It calls the base constructor
- * and writes only this vtable and the base's unk_028 = 0x8000; it touches
- * nothing at or past 0x34, so it adds no evidence to the field list. */
+/* The ball in the Smartball minigame -- one of eleven direct children of
+ * cMgSmartball_object_c. Size 0x12c. The layout
+ * below comes from this class's own RestoreInitial, which zeroes every field
+ * exhaustively; see notes/minigame-provenance.md. */
 #ifndef CMGSMARTBALL_BALL_C_H
 #define CMGSMARTBALL_BALL_C_H
 #include "types.h"
@@ -76,7 +28,8 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
                           restart it while positive, and its expiry clears
                           the base's unk_030 flag */
 
-    /* UNMODELLED, NOT UNREAD -- see the header comment. */
+    /* hitX/hitZ per func_ov006_02112ad8, but nothing in this class reads
+       them -- unmodelled, not unread. */
     u8  pad_044[0x8]; /* 0x044-0x04b */
 
     u8  hit[0x20];      /* 0x04c */
@@ -87,8 +40,8 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
     u8  specialHit;       /* 0x0cd -- SaveSnapshot bails out early while set */
     u8  nearby[0x19];    /* 0x0ce */
 
-    /* Genuine gap -- see the header comment. */
-    u8  pad_0e7[0x11]; /* 0x0e7-0x0f7 */
+    u8  pad_0e7[0x11]; /* 0x0e7-0x0f7 -- genuine gap; RestoreInitial's
+                          exhaustive zero pass skips straight over it */
 
     s32 targetIndex;  /* 0x0f8 -- set to -1 by RestoreInitial */
     s32 unk_0fc;      /* 0x0fc -- countdown, decremented while >0 by

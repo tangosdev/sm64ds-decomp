@@ -1,92 +1,26 @@
-/* Banner claims tools/deepen_rtti.py generated this file. That tool has never
- * existed in this repo (git log --all --diff-filter=A -- '*deepen_rtti*' is
- * empty; see notes/runbook-type-reconstruction.md section 2) -- so treat every
- * field below except the one this comment documents as an unverified
- * placeholder, not as machine-checked evidence.
- *
- * class dScMgBase_c, recovered from ROM RTTI + vtable slot identity.
- * Offsets/widths are observed. Names are placeholders.
- *
- * dScMgBase_c : dScene_c, confirmed by tools/rtti_extract.py (single base,
- * dScMgBase_c's __si_class_type_info at ov004:0x020bbf6c points at dScene_c
- * arm9:0x020914d4, offset 0) -- same edge include/dScene_c.h's own census
- * documents. dScMgBase_c is ALSO a second hierarchy root: 15 direct RTTI
- * children, 32 transitive descendants (the minigame family --
- * notes/dscene-c-siblings-census.md section 2). Its own fields therefore
- * start at file-relative offset 0 == ROM offset 0x50 (sizeof(dScene_c)), same
- * as every other dScene_c child.
- *
- * THE DESTRUCTOR CASCADES ONE MORE LEVEL, same shape as dScene_c's own fix
- * (include/dScene_c.h's KEY FUNCTION note). dScMgBase_c has 32 descendants, so
- * its own D2/D1 must be DEFINED INLINE for them to inline it the way Stage
- * inlines dScene_c's -- a merely declared destructor can't be. Its own copy of
- * operator delete is for the same reason: mwcc only inlines a D0 route
- * through the class itself or its IMMEDIATE base, and for dScMgBase_c's
- * children that immediate base is dScMgBase_c, not dScene_c -- dScene_c's own copy
- * (which already covers dScMgBase_c's own D0, dScene_c being ITS immediate
- * base) is out of reach two levels down. See include/dActor_c.h and
- * include/dScene_c.h for the full mechanics; this is the same rule applied one
- * level further from the root.
- *
- * 0x0f4 IS hand-verified, from _ZN11dScMgBase_cD2Ev (src/_ZN11dScMgBase_cD2Ev.cpp):
- * it calls func_ov004_020b929c(c + 0xf4), which is
- *     __destroy_arr(p, count=8, elem_size=0x24, func_ov004_020b9280)
- * (0x0207328c is __destroy_arr / __cxa_vec_cleanup, config/arm9/symbols.txt:3050-3051).
- * The per-element destructor func_ov004_020b9280 writes two vtables into [r0+0]
- * back to back with no further calls -- 0x020bca7c then 0x020ad494 -- which
- * build/rtti.json identifies as _ZTVN10dMgPsOpt_c11TouchIcon_cE (ov004:0x020bca68,
- * "dMgPsOpt_c::TouchIcon_c") and _ZTV9dThIcon_c (ov001:0x020ad478, "dThIcon_c",
- * a root class) respectively -- i.e. TouchIcon_c : dThIcon_c, single inheritance,
- * offset 0, and both destructors are trivial enough to fully inline into vtable
- * writes. So 0x0f4 is 8 contiguous dMgPsOpt_c::TouchIcon_c, each 0x24 bytes,
- * spanning 0x0f4..0x214. Neither TouchIcon_c nor dThIcon_c has a header yet, so
- * the array stays raw bytes rather than an unverified struct type -- the
- * destructor below calls func_ov004_020b929c on it explicitly instead of
- * relying on member-wise auto-destruction, which is exactly what the ROM's
- * own D2 does and keeps this slice from having to invent two more classes'
- * worth of vtables to get dScMgBase_c's own destructor byte-correct.
- * 0x214..0x21c (8 bytes) has no matched access yet and stays padding.
- *
- * data_ov004_020beb68 is a global singleton pointer to the active
- * dScMgBase_c instance -- 60+ files across ov004/ov006 read it, each having
- * invented its own local type (Base*, Obj*, G*, char*, void*...). Retyping
- * it tree-wide is its own slice; this file only clears it, matching the D2's
- * own `*(int*)data_ov004_020beb68 = 0`, which -- since that file declared it
- * `extern int data_ov004_020beb68[]` -- writes 0 into the GLOBAL'S OWN
- * storage (arrays decay to their own address), not through a pointer it
- * holds. i.e. it is a plain global pointer being nulled, not a target being
- * zeroed through it. */
+/* Base class for every minigame scene -- 15 direct RTTI children, 32
+ * descendants. Field names and widths were recovered from matched bodies;
+ * see notes/minigame-provenance.md for the evidence behind each one, and for
+ * why the destructor is declared here but defined out of line. */
 #ifndef DSCMGBASE_C_H
 #define DSCMGBASE_C_H
 #include "dScene_c.h"
 
-/* Returns its argument. The ROM parks the pointer in r4 across the
-   __destroy_arr call and hands it straight back -- 0x020b92ac `mov r4, r0`,
-   0x020b92b4 `mov r0, r4`, 0x020b92b8 `pop {r4, lr}` -- and the tree's own
-   definition (src/func_ov004_020b929c.c) already says `void *`. All three
-   call sites discard the result, so this only makes the two agree. */
+/* Destroys the touch-icon array; returns its argument. */
 extern "C" void *func_ov004_020b929c(void *);
 extern "C" void *data_ov004_020beb68;
 
 struct dScMgBase_c : dScene_c {
-    /* Declared first, deliberately -- see include/dScene_c.h's KEY FUNCTION
-       note for why. Overrides slots 16 (D1) and 17 (D0).
-       NOT DEFINED INLINE -- unlike dScene_c's, which is trivial (an empty
-       body) and unconditionally inlined by every child. This body has
-       real work (a global write, a function call), and measured against
-       dScMgD3DBase_c -- the first real descendant -- mwcc does NOT
-       inline it: the ROM's own dScMgD3DBase_c D1 (0x38 bytes) calls
-       `_ZN11dScMgBase_cD2Ev` as a real `bl`, not a fully-inlined 0x84-byte
-       body (measured directly: compiling dScMgD3DBase_c's destructor
-       against an INLINE-defined dScMgBase_c dtor produced exactly 0x84
-       bytes, `999 word(s) differ` against the ROM's 0x38). Defined for
-       real in src/_ZN11dScMgBase_cD1Ev.cpp and .../_D0Ev.cpp instead --
-       same shape Stage.h documents for a leaf, except dScMgBase_c is not
-       a leaf; its descendants simply don't inline a body this size. */
+    /* Declared first (key function), and deliberately NOT defined inline:
+       descendants call _ZN11dScMgBase_cD2Ev as a real `bl`, and an inline
+       body makes every one of them miss. Defined in
+       src/_ZN11dScMgBase_cD1Ev.cpp and .../_D0Ev.cpp.
+       MEASURED -- do not move the body up here. */
     virtual ~dScMgBase_c();
 
-    /* dScMgBase_c's own copy, for the same reason dScene_c has one -- see the
-       file banner. Unlocks D0 for all 32 descendants below. */
+    /* Own copy, deliberately: mwcc only inlines a D0 route through the class
+       itself or its immediate base, so descendants cannot reach dScene_c's.
+       Removing this breaks D0 for all 32 of them. */
     void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
 
     /* --- overrides of dScene_c's own virtuals, same signature, in _ZTV order.
@@ -101,84 +35,56 @@ struct dScMgBase_c : dScene_c {
     virtual int  BeforeRender();                       /* slot 10 */
     virtual void OnPendingDestroy();                   /* slot 12 */
 
-    /* Slots 18-35: eighteen further virtuals new at this class, same shape
-       as dActor_c's own 13 new slots over fBase_c. All 18 target addresses
-       are already matched source (func_ov004_* under arm9/ov004) -- see
-       notes/dscene-c-siblings-census.md section 2 -- but their signatures
-       are not yet reconstructed from the bodies, so they are left
-       undeclared here rather than guessed. Naming a subset is fine. */
+    /* Slots 18-35 are eighteen further virtuals new at this class; their
+       signatures are not reconstructed yet, so they stay undeclared. */
 
     u8  pad_050[0xc];
     s32 unk_05c;            /* 0x05c */
     u8  pad_060[0x40];
-    s32 unk_0a0;            /* 0x0a0 -- real matched access, dScMgTrampoline2_c's
-                                own AfterRender (src/func_ov006_020e6cac.c); split
-                                out of the former pad_060[0x44] */
+    s32 unk_0a0;            /* 0x0a0 */
     s32 unk_0a4;            /* 0x0a4 */
     s32 unk_0a8;            /* 0x0a8 */
-    s32 unk_0ac;            /* 0x0ac -- real matched access, e.g. dScMgCard_c's own
-                                InitResources (src/func_ov006_020dbaf0.cpp) and
-                                dScMgMCarlo2_c's own (func_ov006_020fa56c.cpp) both
-                                write `self->unk_0ac = self->unk_0a8;` */
+    s32 unk_0ac;            /* 0x0ac */
     u8  pad_0b0[0x4];
     s32 unk_0b4;            /* 0x0b4 */
     s32 unk_0b8;            /* 0x0b8 */
-    u32 unk_0bc;            /* 0x0bc -- real matched access, dScMg3DEsp_c's own
-                                OnYoshiTryEat (src/func_ov006_020e9c20.c) reads
-                                and writes it as a 4-byte int */
-    u16 unk_0c0;            /* 0x0c0 -- a 16-bit counter. WIDTH AND SIGNEDNESS come
-                                from this class's OWN render path, not from a
-                                descendant: src/_ZN11dScMgBase_c12BeforeRenderEv.cpp
-                                passes `this` to func_ov004_020b0de0, which
-                                increments it and compares it UNSIGNED against 0x30
-                                and 0x18. Split out of the former pad_0c0[0x3]. */
+    u32 unk_0bc;            /* 0x0bc */
+    u16 mPromptBlinkTimer;  /* 0x0c0 -- free-runs 0..0x2f; the prompt shows
+                                during the first 0x18 frames of each cycle */
     u8  pad_0c2[0x1];
-    u8  unk_0c3;            /* 0x0c3 */
-    u8  unk_0c4;            /* 0x0c4 -- a 1-byte counter, compared `< 4U` in that
-                                same base render path. Split out of the former
-                                pad_0c4[0x4]. */
+    u8  mPromptEnabled;     /* 0x0c3 -- nothing is drawn while this is 0 */
+    u8  mPromptBlinkCount;  /* 0x0c4 -- after 4 blink cycles the per-language
+                                prompt sprite stays up every frame */
     u8  pad_0c5[0x3];
-    /* Both were already spelled by raw offset in roughly 25 pre-existing ov006
-       files -- dScMgFlower_c's, dScMgSnowball_c's and dScMgMCarlo_c's own
-       Behaviors all carry the identical `if (0xc4 == 0) { 0xc3 = 1; 0xc4 = 1;
-       *(s16*)0xc0 = 0; }` idiom. Naming them here is what lets those files stop
-       spelling raw offsets; it is not a discovery, and an earlier draft of this
-       comment wrongly called dScMgFlower_c "the first descendant to touch it". */
     s32 unk_0c8;            /* 0x0c8 */
     u8  pad_0cc[0x24];
     s32 unk_0f0;            /* 0x0f0 */
-    u8  touchIcon_0f4[8][0x24]; /* 0x0f4 -- 8x dMgPsOpt_c::TouchIcon_c : dThIcon_c,
-                                    destroyed via __destroy_arr in dScMgBase_c's D2;
-                                    see the file banner. */
-    u8  pad_214[0x8];       /* 0x214 -- unaccounted for, no matched access yet */
+    u8  touchIcon_0f4[8][0x24]; /* 0x0f4 -- 8x dMgPsOpt_c::TouchIcon_c */
+    u8  pad_214[0x8];       /* 0x214 */
     u32 unk_21c;            /* 0x21c */
     u32 unk_220;            /* 0x220 */
     u32 unk_224;            /* 0x224 */
     u8  pad_228[0x4400];
-    s32 unk_4628;           /* 0x4628 */
+    s32 mMenuOpen;          /* 0x4628 -- the three-item overlay menu is up;
+                                BeforeRender skips the normal render pass and
+                                draws that instead */
     s32 unk_462c;           /* 0x462c */
     s32 unk_4630;           /* 0x4630 */
-    s16 unk_4634;           /* 0x4634 */
-    s16 unk_4636;           /* 0x4636 */
-    s16 unk_4638;           /* 0x4638 */
-    s16 unk_463a;           /* 0x463a */
-    s16 unk_463c;           /* 0x463c */
-    s16 unk_463e;           /* 0x463e */
-    s32 unk_4640;           /* 0x4640 */
+    s16 mMenuItem0X;        /* 0x4634 */
+    s16 mMenuItem0Y;        /* 0x4636 */
+    s16 mMenuItem1X;        /* 0x4638 */
+    s16 mMenuItem1Y;        /* 0x463a */
+    s16 mMenuItem2X;        /* 0x463c */
+    s16 mMenuItem2Y;        /* 0x463e */
+    s32 mMenuCursorPhase;   /* 0x4640 -- drives the highlighted item's pulse */
     u8  pad_4644[0x2];
-    s16 unk_4646;           /* 0x4646 */
+    s16 mMenuCursor;        /* 0x4646 -- highlighted item, -1 for none */
     u8  pad_4648[0x14];
     u8  unk_465c;           /* 0x465c */
 };
 
-/* NOT a claim that the object ends here -- dScMgBase_c has 32 RTTI
-   descendants (notes/dscene-c-siblings-census.md), and dScMgD3DBase_c
-   (one of them) is the first to need a number to start its own fields at. 0x465c is the last field any matched
-   function has observed; asserting its rounded size (0x4660, 4-byte
-   alignment) is the minimum claim that unblocks a derived class -- if it
-   is short, dScMgD3DBase_c's own fields would land on the wrong bytes
-   and build_pin would catch it immediately, the same safety net
-   check_header_offsets.py's own DATA_SIZE comment describes. */
+/* A floor, not a claim the object ends here: 0x465c is the last field any
+   matched body has observed. See notes/minigame-provenance.md. */
 typedef char dScMgBase_c_size_must_be_0x4660[sizeof(dScMgBase_c) == 0x4660 ? 1 : -1];
 
 #endif

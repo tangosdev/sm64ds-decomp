@@ -18,7 +18,7 @@
  * func_ov006_020c3288 own that object's shape, and nothing in this tree has
  * recovered it.
  *
- * unk_0c0, unk_0c3 and unk_0c4 are dScMgBase_c's, and read as inherited
+ * mPromptBlinkTimer, mPromptEnabled and mPromptBlinkCount are dScMgBase_c's, and read as inherited
  * members. The pre-migration file wrote all three as `*(u8 *)(c + 0xc3)` and
  * could not have said whose they were.
  *
@@ -46,10 +46,10 @@ s32 dScMgSound_c::Behavior()
             (*(u16 *)(int)(c + 0x5618))--;
             if (*(u16 *)(c + 0x5618) == 0) {
                 FreeGfxSlotsById(0x1d);
-                if (unk_0c4 == 0) {
-                    unk_0c3 = 1;
-                    unk_0c4 = 1;
-                    unk_0c0 = 0;
+                if (mPromptBlinkCount == 0) {
+                    mPromptEnabled = 1;
+                    mPromptBlinkCount = 1;
+                    mPromptBlinkTimer = 0;
                 }
             }
         }
@@ -83,7 +83,7 @@ s32 dScMgSound_c::Behavior()
                                             ? *(int *)((char *)data_ov004_020beb68 + 0xb4) : 0);
                     func_ov006_02119ba4(c);
                     func_ov006_02119a88(c);
-                    unk_0c3 = 0;
+                    mPromptEnabled = 0;
                 } else {
                     *(int *)(c + 0x5608) = 3;
                     *(u16 *)(c + 0x5616) = 0x20;
@@ -104,7 +104,7 @@ s32 dScMgSound_c::Behavior()
                 *(int *)(c + 0x50e0) = 0;
                 func_ov006_020c2440((char *)mTable);
                 func_ov004_020b0a54(0x12);
-                unk_0c3 = 0;
+                mPromptEnabled = 0;
                 *(u16 *)(c + 0x5616) = 0;
             }
         }

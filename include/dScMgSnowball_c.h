@@ -51,7 +51,7 @@
  * So the field span and the `operator new` literal now AGREE for this
  * class. The size does not rest on the literal alone.
  *
- * unk_4628, which the old auto-generated header declared, is dScMgBase_c's
+ * mMenuOpen, which the old auto-generated header declared, is dScMgBase_c's
  * own and is already declared there; it is dropped from this file, not
  * lost. src/func_ov006_02128fb8.c reads it through this class and keeps
  * working because it inherits it.
