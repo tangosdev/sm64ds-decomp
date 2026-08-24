@@ -5385,12 +5385,10 @@ set(SLICE_SNW_SOURCES hal/scene_mg_snowball.cpp
                       unmatched/MgSnowball_StateDispatch.cpp
                       # The one /alternatename row the first link asked for
                       # (this class's vtable declared at C++ linkage in the
-                      # constructor), plus the TWO closure floors: two large
-                      # ov006 bodies with no src TU anywhere in the tree, whose
-                      # complete caller sets are this class's own slots 0, 6
-                      # and 18.  Trapped in this lane's file rather than the
-                      # shared hal/scene_mg_faces.cpp precisely because nothing
-                      # else in the overlay reaches them.
+                      # constructor).  It used to carry three trapped closure
+                      # floors as well; run mg12 lane SNO decompiled and seated
+                      # all three through slice_snw.txt section 17, so this
+                      # file is now the alias row and its marker only.
                       unmatched/MgSnowball_Faces.cpp
                       # Vtable SLOT 9, Render.  Not a pointer-to-member TU --
                       # the Itanium scan finds no site in it -- but it carries

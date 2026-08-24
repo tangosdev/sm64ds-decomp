@@ -595,3 +595,49 @@ src/func_ov006_0212a3c0.c
 # only then ask scene 377 the question.
 #
 # runs/mg11/out/SNW/EVIDENCE_NOTE.txt carries both runs and the control.
+#
+# ---- 17. RUN mg12 LANE SNO: THE THREE CLOSURE FLOORS, RETIRED ------------
+#
+# Section 12 and section 13 trapped three bodies with no src TU anywhere in the
+# tree.  All three are decompiled now and seated here, so the trap in
+# port/unmatched/MgSnowball_Faces.cpp is gone and the rocks message 554
+# promises are no longer an expected gap.
+#
+#   src/func_ov006_02125f68.c   0x9e0  the obstacle and collision pass
+#   src/func_ov006_02126ee4.c   0xacc  the course layout generator
+#   src/func_ov006_02126b4c.c   0x398  the BG2 course-row tile writer
+#
+# ALL THREE ARE HONEST NONMATCHING SEATS, and each banner carries the measured
+# residual rather than a promise:
+#
+#   02125f68   9 of 632 words   a pure r6<->r8 register transposition
+#   02126ee4   9 of 691 words   one idiom, the vtable pointer read through the
+#                               argument copy instead of the object register
+#   02126b4c  64 of 230 words   register allocation, two independently coloured
+#                               arms (a 2-cycle and a six-way permutation)
+#
+# THE FIRST AND THIRD ARE PROVEN "REGISTER NAMES ONLY" MECHANICALLY, not by
+# reading a long diff: a checker decodes both sides, refuses unless every
+# divergent word carries the same mnemonic AND the same operand shape, and
+# additionally requires the register substitution to be a consistent BIJECTION
+# per independently-coloured block.  Both report 0 shape divergences.  So what
+# ships is the ROM's own instruction sequence under a different callee-saved
+# assignment.
+#
+# AND SECTION 13'S OWN RULE FIRED AGAIN, EXACTLY AS IT PREDICTS.  "Budget an
+# extra wave per trap": retiring the traps exposed three more bodies that were
+# in NO slice in the tree, because the only thing that reached them was the
+# trapped obstacle pass.  They are its three probe callees, they call nothing
+# themselves, and they are the whole of the new wave -- the closure closes here.
+#
+#   src/func_ov006_021259d8.c   the hole / special-surface probe
+#   src/func_ov006_02125bbc.c   the obstacle probe, reads the snowball table at
+#                               +0xac58/+0xacd8 that func_ov006_02126ee4 fills
+#   src/func_ov006_02125cdc.c   the course-geometry (wall) probe
+#
+src/func_ov006_02125f68.c
+src/func_ov006_02126ee4.c
+src/func_ov006_02126b4c.c
+src/func_ov006_021259d8.c
+src/func_ov006_02125bbc.c
+src/func_ov006_02125cdc.c

@@ -250,9 +250,10 @@ unsigned port_mg_snowball_live(void);
 void     port_mg_snowball_sel_range(int *lo, int *hi);
 void     port_mg_snowball_slot_hits(const unsigned **v, unsigned *n);
 
-/* unmatched/MgSnowball_Faces.cpp's two trapped closure floors. */
-void     port_mg_snowball_floor_counts(unsigned *obstacles, unsigned *layout,
-                                       unsigned *tiles);
+/* unmatched/MgSnowball_Faces.cpp used to declare a counter accessor for three
+   trapped closure floors here.  Run mg12 lane SNO decompiled and seated all
+   three (slice_snw.txt section 17), so the traps and the accessor are gone and
+   the census below measures what the real bodies WROTE instead. */
 
 /* unmatched/MgBase_StateDispatch.cpp's framework census. */
 void     port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
@@ -548,22 +549,51 @@ extern "C" void port_scene_snowball_hits(void)
                     "fourteen are distinct, and none carries a NONMATCHING "
                     "banner\n");
 
-        /* THE CLOSURE FLOORS ARE A DIFFERENT THING FROM THE STATE FLOOR AND
-           THE SEAT SAYS BOTH.  Zero state-table floors does not mean zero
-           gaps: two large bodies this class's own slots CALL have no src TU
-           anywhere in the tree, and they are trapped in
-           unmatched/MgSnowball_Faces.cpp.  A nonzero count here is the
-           measured size of the player-facing gap, not a fault. */
-        {
-            unsigned obst = 0, layout = 0, tiles = 0;
-            port_mg_snowball_floor_counts(&obst, &layout, &tiles);
-            std::printf("[scene] dScMgSnowball_c CLOSURE floors (trapped, "
-                        "count-and-return): func_ov006_02125f68 the obstacle "
-                        "pass %u call(s), func_ov006_02126ee4 the course "
-                        "layout %u call(s), func_ov006_02126b4c the BG2 tile "
-                        "writer %u call(s). None has a src TU; the rocks "
-                        "message 554 promises are the expected gap\n",
-                        obst, layout, tiles);
+        /* THE CLOSURE FLOORS ARE RETIRED (run mg12, lane SNO), and what
+           replaces the old call counters is a measurement of their EFFECT
+           rather than of their invocation.
+
+           A call counter on a trap answers "was the gap reached".  Once the
+           bodies are real that question is worthless -- they are called from
+           slots 0, 6 and 18 on every boot, so the counter can only say yes --
+           while the question that is actually open is whether the seated
+           bodies DO anything.  So this counts what they wrote:
+
+             the course tile grid at +0x4f38, [16][0x2e0] u16 column-major
+             with a 0x5c0 byte stride, which func_ov006_02126ee4 fills and
+             func_ov006_02126b4c paints into both screens' BG2;
+             the snowball table's in-use flags at +0xac58[0x80] and the
+             scenery table's at +0xb358[0x80], both seeded by the layout.
+
+           Bounded by the course length the scene actually booted with
+           (+0xba08 rows), not by the array's full extent, so a short course
+           does not read as a half-empty grid. */
+        if (g_snw_self) {
+            const int rows = *(const int *)(g_snw_self + 0xba08);
+            const int n = rows > 0 && rows <= 0x2e0 ? rows : 0x2e0;
+            unsigned tiles = 0, distinct[64] = {0}, kinds = 0;
+            for (int col = 0; col < 16; ++col) {
+                const unsigned short *g = (const unsigned short *)
+                    (g_snw_self + 0x4f38 + col * 0x5c0);
+                for (int r = 0; r < n; ++r)
+                    if (g[r]) {
+                        ++tiles;
+                        if (g[r] < 64 && !distinct[g[r]]++) ++kinds;
+                    }
+            }
+            unsigned balls = 0, scen = 0;
+            for (int i = 0; i < 0x80; ++i) {
+                balls += *(const unsigned char *)(g_snw_self + 0xac58 + i) != 0;
+                scen  += *(const unsigned char *)(g_snw_self + 0xb358 + i) != 0;
+            }
+            std::printf("[scene] dScMgSnowball_c course: %u of %d grid cell(s) "
+                        "nonzero over %d row(s) x 16 column(s), %u distinct "
+                        "tile id(s); %u snowball slot(s) and %u scenery slot(s) "
+                        "in use. The three CLOSURE floors are retired and "
+                        "seated (src/func_ov006_02125f68.c, _02126ee4.c, "
+                        "_02126b4c.c); a zero here would mean the layout ran "
+                        "and wrote nothing\n",
+                        tiles, n * 16, n, kinds, balls, scen);
         }
     }
 
