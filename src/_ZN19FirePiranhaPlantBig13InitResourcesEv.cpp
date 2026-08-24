@@ -74,9 +74,9 @@ int FirePiranhaPlantBig::InitResources()
     id = actorID;
     cond = (id == 0xfc);
     if (cond != 0) {
-        unk_208 = 0x3c;
-        unk_20c = 0xaa;
-        unk_210 = 0x800;
+        mClsnRadiusFactor = 0x3c;
+        mClsnHeightFactor = 0xaa;
+        mMaxScale = 0x800;
         unk_214 = 0x52;
         mState = 1;
         /* The add sits INSIDE the integer cast, which is load-bearing: this is
@@ -86,22 +86,22 @@ int FirePiranhaPlantBig::InitResources()
     } else {
         cond = (id == 0xfd);
         if (cond != 0) {
-            unk_208 = 0x28;
-            unk_20c = 0xaa;
-            unk_210 = 0x1000;
+            mClsnRadiusFactor = 0x28;
+            mClsnHeightFactor = 0xaa;
+            mMaxScale = 0x1000;
             unk_214 = 0xa4;
             mState = 1;
         } else {
-            unk_208 = 0x28;
-            unk_20c = 0x96;
-            unk_210 = 0x2000;
+            mClsnRadiusFactor = 0x28;
+            mClsnHeightFactor = 0x96;
+            mMaxScale = 0x2000;
             unk_214 = 0x147;
             mdCcAcPos_c.radius = 0x64000;
             mdCcAcPos_c.height = 0x64000;
             if (GetBitInDeathTable() != 0)
-                unk_220 = 0;
+                mAlive = 0;
             else
-                unk_220 = 1;
+                mAlive = 1;
         }
     }
 

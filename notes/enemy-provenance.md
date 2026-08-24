@@ -122,3 +122,53 @@ corresponding raw `c + 0xNNN` pokes in `Behavior`.
 | 0x370 | `mState` | `src/_ZN5Shark8BehaviorEv.cpp` reads it as a `SharkBehaviorState *` and calls the pointer-to-member-function at `+8` through `this`; `func_ov090_021338b4(this, data_ov090_021345cc)` at the end of `InitResources` is the setter. |
 | 0x374 | `Vector3 mClsnOffset` | `InitResources` zeroes all three words and then passes `&mClsnOffset` as the `const Vector3 &` argument of `dCcAcPos_c::Init` — the collider's offset from the actor. |
 | 0x38c | `mPathNodeCount` | `InitResources`: `= PathPtr::NumNodes()`. `Behavior` wraps `mPathNodeIdx` to 0 when it reaches this value. |
+
+---
+
+## `PiranhaPlant` (`include/PiranhaPlant.h`, ov084)
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x428 | `Vector3 mPipeScale` | `src/_ZN12PiranhaPlant6RenderEv.cpp` passes `&mPipeScale` as the `Vector3 *` argument of `mModel.Render` — the same slot `mModelAnim.Render` gets `&mScaleX` in. Twelve bytes of what used to be `u8 unk_428` plus `pad_429[0xb]`. |
+| 0x434 | `Vector3 mFirePos` | `InitResources`' tail computes it: `0xe0` along the facing angle out of the shared sin/cos table `data_02082214`, plus `0x37800` above the spawn Y. The file's own header comment already called it "where the plant's fire comes from". |
+| 0x440 | `Vector3 mSpawnPos` | `InitResources` writes `mPosX/Y/Z` into it; `Behavior` passes `&mSpawnPos` to `dCcAcPos_c::SetPosRelativeToActor`. |
+| 0x44c | `Vector3 mHomePos` | copied wholesale from `mSpawnPos` in `InitResources`; `Behavior` restores `mPosX/Y/Z` from it when `UpdateKillByInvincibleChar` returns 2 (the plant zeroes its scale and goes home). Two separate copies of the spawn point, distinguished by which one is read back into the position. |
+| 0x45c | `mClsnEnabled` | zeroed in `InitResources`; its only read in `Behavior` gates `dCc_c::Update` on all three colliders (the `Clear` calls above it are unconditional). |
+| 0x468 | `mInitAngleY` | `InitResources`: `= mPrevAngleY`. |
+
+Left `unk_`:
+
+- **0x45d** (set to 1), **0x460** (0), **0x464** (`0x7fffffff`), **0x46c** (0),
+  **0x470**/**0x474** (0) — written in `InitResources`, never read in a matched body.
+- **0x478** — zeroed in `InitResources` and again whenever `mState` changes, alongside the
+  `dEnemyBase_c` counter at 0x100. A per-state something, but nothing reads it.
+
+Byte-neutral source cleanups: `&mWithMeshClsn`, `&mModelAnim`, `&mdCcAc_c1`,
+`&mdCcAcPos_c` and `&mSpawnPos` replaced the corresponding `((char*)this) + 0xNNN`
+arguments in `Behavior`. `InitResources`' `Vector3 *home = (Vector3 *)((int)this + 0x440)`
+stays as it is — the file already documents that the add must sit inside the integer cast.
+
+---
+
+## `FirePiranhaPlantBig` (`include/FirePiranhaPlantBig.h`, ov084)
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x1f8 | `Vector3 mClsnOffset` | `Behavior` passes `&mClsnOffset` as the `const Vector3 &` of `dCcAcPos_c::SetPosRelativeToActor`. Twelve bytes of what used to be `pad_1f8[0xc]`. |
+| 0x208 | `mClsnRadiusFactor` | `Behavior`: `mdCcAc_c.radius = mScale * mClsnRadiusFactor`. `InitResources` sets it per variant (0x3c for actor 0xfc, 0x28 otherwise). |
+| 0x20c | `mClsnHeightFactor` | `Behavior`: `mdCcAc_c.height = mScale * mClsnHeightFactor`. |
+| 0x210 | `mMaxScale` | `Behavior` enables the position collider only once `mScale == mMaxScale`, i.e. the plant is fully grown. Its per-variant values 0x800 / 0x1000 / 0x2000 are Fix12 0.5 / 1.0 / 2.0. |
+| 0x220 | `mAlive` | `InitResources`, free-standing variant only: `mAlive = (GetBitInDeathTable() == 0)`. |
+
+Left `unk_`:
+
+- **0x1e8, 0x1f0, 0x1f4, 0x224, 0x228** — zeroed in `InitResources`, never read.
+- **0x214** — set per variant to 0x52 / 0xa4 / 0x147 and never read; it parallels the three
+  collision factors above but nothing in a matched body says what it scales.
+- **0x21a..0x21e** — five bytes set to 0/0/0/0/1, never read.
+- **0x21f** — `param1 & 0xf`. Provenance without meaning: no matched body reads it.
+
+Byte-neutral source cleanups: `(char *)&mdCcAc_c`, `(char *)&mdCcAcPos_c` and
+`(char *)&mClsnOffset` replaced the `((char *)this) + 0xNNN` arguments in `Behavior`.
+`InitResources`' `*(int *)((int)this + 0x190) |= 0x8000` stays as it is — the file already
+documents that the add must sit inside the integer cast.
