@@ -4306,7 +4306,7 @@ data_02099068 kind:data(any) addr:0x02099068
 data_020990f8 kind:data(any) addr:0x020990f8
 _ZTS5dBgCh kind:data(any) addr:0x020991c0
 _ZTI5dBgCh kind:data(any) addr:0x020991c8
-data_020991d8 kind:data(any) addr:0x020991d8
+_ZTV5dBgCh kind:data(any) addr:0x020991d8
 _ZTI10dBgCh_Actr kind:data(any) addr:0x020991e0
 _ZTS10dBgCh_Actr kind:data(any) addr:0x020991ec
 data_02099204 kind:data(any) addr:0x02099204
