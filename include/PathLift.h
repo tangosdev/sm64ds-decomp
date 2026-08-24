@@ -24,8 +24,8 @@ struct PathLift : dBgActor_c {
     u8  pad_31e[0x2];
     Model mModels[3];                     /* 0x320 */
     u8  pad_410[0x1a];
-    u8  unk_42a;                          /* 0x42a */
-    u8  unk_42b;                          /* 0x42b */
+    u8  mAfterClsnRan;                    /* 0x42a -- set by AfterClsn, cleared by the last statement of BaseBehavior */
+    u8  mTriggerDelay;                    /* 0x42b -- DecIfAbove0_Byte; AfterClsn only fires the state change at 0 */
     u8  pad_42c[0x20];
     s32 mState;                          /* 0x44c */
 
@@ -44,7 +44,7 @@ typedef char PathLift_size_must_be_0x450[sizeof(PathLift) == 0x450 ? 1 : -1];
 /* The same object for a C translation unit, flat. */
 struct PathLift {
     u8  pad_000[0xc];
-    u16 unk_00c;            /* 0x00c */
+    u16 actorID;            /* 0x00c */
     u8  pad_00e[0xc6];
     /* Model member. The cartridge's own ~PathLift calls _ZN5ModelD1Ev at +0x0d4
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
@@ -55,8 +55,8 @@ struct PathLift {
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x13e];
-    u8  unk_42a;            /* 0x42a */
-    u8  unk_42b;            /* 0x42b */
+    u8  mAfterClsnRan;            /* 0x42a */
+    u8  mTriggerDelay;            /* 0x42b */
     u8  pad_42c[0x20];
     s32 mState;            /* 0x44c */
 };

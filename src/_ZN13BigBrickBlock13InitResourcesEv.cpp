@@ -100,7 +100,7 @@ int BigBrickBlock::InitResources()
     if (is13 != 0)
         mEventID = *(s32 *)(c + 8) & 0xf;
     }
-    unk_31f = _ZN5Event6GetBitEj(mEventID);
+    mPrevEventBit = _ZN5Event6GetBitEj(mEventID);
 
     {
     Player *pl = ClosestPlayer();

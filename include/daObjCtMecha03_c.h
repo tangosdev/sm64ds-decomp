@@ -30,12 +30,17 @@
 #include "ShadowModel.h"
 
 struct daObjCtMecha03_c : dBgActor_c {
-    s16 unk_31e;                      /* 0x31e */
-    s16 unk_320;                      /* 0x320 */
-    s16 unk_322;                      /* 0x322 */
-    s16 unk_324;                      /* 0x324 -- read/written by Behavior */
-    s16 unk_326;                      /* 0x326 -- read/written by Behavior */
-    s16 unk_328;                      /* 0x328 -- read/written by Behavior */
+    /* A pendulum, in the four fields the ROM's own Behavior integrates:
+       mSwingDir is the sign of the restoring acceleration and flips whenever
+       it agrees in sign with mSwingAngle; mSwingAccel is its magnitude;
+       mSwingSpeed accumulates mSwingAccel * mSwingDir; mSwingAngle accumulates
+       mSwingSpeed and is copied straight into dActor_c::mAngleZ. */
+    s16 mSwingDir;                    /* 0x31e -- 1 at InitResources */
+    s16 mSwingAccel;                  /* 0x320 -- data_ov065_0211c0b0[setting], re-rolled to 0xd/0x2a under setting 2 */
+    s16 mSwingAngle;                  /* 0x322 -- 0x1964 at InitResources */
+    s16 mSwingSpeed;                  /* 0x324 */
+    s16 mSoundTimer;                  /* 0x326 -- DecIfAbove0_Short; at 0 plays bank-3 sound 0x38, reloaded as mPauseTimer + 0xf */
+    s16 mPauseTimer;                  /* 0x328 -- DecIfAbove0_Short; gates the whole swing update */
     u8  pad_32a[0x6];
     ShadowModel mShadowModel;         /* 0x330 */
 

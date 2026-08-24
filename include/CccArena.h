@@ -29,8 +29,11 @@ struct CccArena : dBgActor_c {
        which the ROM disagrees with (Behavior reads [this, #0x320]).
        Claiming it explicitly here forces unk_320 to its real offset. */
     u8  pad_31e[0x2];
-    u8  unk_320;            /* 0x320 */
-    u8  pad_321[0xf];
+    u8  mState;             /* 0x320 -- read as a pointer to the current state descriptor */
+    u8  pad_321[0xb];
+    u8  mVariant;           /* 0x32c -- 0/1/2 from actorID 0xaa/0xab/0xac; indexes the three ov073 file tables */
+    u8  mSpawnIndex;        /* 0x32d -- the per-variant global counter's value at spawn */
+    u8  pad_32e[0x2];
     u16 unk_330;            /* 0x330 */
     u8  pad_332[0x2];
     s32 unk_334;            /* 0x334 */
@@ -80,8 +83,11 @@ struct CccArena {
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x34];
-    u8  unk_320;            /* 0x320 */
-    u8  pad_321[0xf];
+    u8  mState;             /* 0x320 -- read as a pointer to the current state descriptor */
+    u8  pad_321[0xb];
+    u8  mVariant;           /* 0x32c -- 0/1/2 from actorID 0xaa/0xab/0xac; indexes the three ov073 file tables */
+    u8  mSpawnIndex;        /* 0x32d -- the per-variant global counter's value at spawn */
+    u8  pad_32e[0x2];
     u16 unk_330;            /* 0x330 */
     u8  pad_332[0x2];
     s32 unk_334;            /* 0x334 */

@@ -79,13 +79,13 @@ typedef char Trap_size_must_be_0x3b0[sizeof(Trap) == 0x3b0 ? 1 : -1];
    (DonutBlock.h, BigBrickBlock.h, MetalNet.h, PyramidStep.h). */
 struct Trap {
     u8  pad_000[0x5c];
-    s32 unk_05c;            /* 0x05c */
-    s32 unk_060;            /* 0x060 */
-    s32 unk_064;            /* 0x064 */
+    s32 mPosX;            /* 0x05c */
+    s32 mPosY;            /* 0x060 */
+    s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x26];
-    u16 unk_08e;            /* 0x08e */
+    u16 mAngleY;            /* 0x08e */
     u8  pad_090[0x3c];
-    s8  unk_0cc;            /* 0x0cc */
+    s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x2d3];
     s32 mState;            /* 0x3a0 */
     s32 mPlayerDist;            /* 0x3a4 */

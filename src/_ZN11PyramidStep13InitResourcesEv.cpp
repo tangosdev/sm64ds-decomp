@@ -28,7 +28,7 @@ int PyramidStep::InitResources()
     {
         struct KCL_File *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov025_02113ab0);
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            &mMeshCollider, kcl, *(struct Matrix4x3 *)((char *)&unk_374), 0x1000,
+            &mMeshCollider, kcl, *(struct Matrix4x3 *)((char *)&mClsnMat2), 0x1000,
             mAngleY, data_ov025_02112ce8);
     }
     func_020393d4((int *)((char *)&(*(u8 *)&mMeshCollider)), (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);

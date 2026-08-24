@@ -11,7 +11,7 @@ int SeesawBob::CleanupResources()
 {
   if(((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
     ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
-  ((SharedFilePtr *)(*(void**)(data_ov095_021374a0 + (unsigned char)((char *)this)[0x31e]*0xc)))->Release();
-  ((SharedFilePtr *)(*(void**)(data_ov095_021374a4 + (unsigned char)((char *)this)[0x31e]*0xc)))->Release();
+  ((SharedFilePtr *)(*(void**)(data_ov095_021374a0 + mVariant*0xc)))->Release();
+  ((SharedFilePtr *)(*(void**)(data_ov095_021374a4 + mVariant*0xc)))->Release();
   return 1;
 }

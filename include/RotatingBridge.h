@@ -19,9 +19,9 @@
 #include "dBgActor_c.h"
 
 struct RotatingBridge : dBgActor_c {
-    s8 unk_31e;                       /* 0x31e */
+    s8  mPauseTimer;                  /* 0x31e -- 0x3c at InitResources and again on each 0x8000 boundary; DecIfAbove0_Byte gates the turn */
     u8  pad_31f[0x1];
-    s32 unk_320;                      /* 0x320 */
+    s32 mTurnSound;                   /* 0x320 -- recycled Sound::PlayLong handle for the turning noise */
 
     /* --- vtable --- */
     virtual ~RotatingBridge();
@@ -43,16 +43,16 @@ struct RotatingBridge {
     u8  pad_000[0x74];
     /* 0x074..0x08e is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
-    s32 unk_074;                 /* 0x074 */
+    s32 mCamSpacePosX;           /* 0x074 */
     s32 mCamSpacePosY;           /* 0x078 */
     s32 mCamSpacePosZ;           /* 0x07c */
     s32 mScaleX;                 /* 0x080 */
     s32 mScaleY;                 /* 0x084 */
     s32 mScaleZ;                 /* 0x088 */
     s16 mAngleX;                 /* 0x08c */
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x4];
-    s16 unk_094;            /* 0x094 */
+    s16 mPrevAngleY;        /* 0x094 */
     u8  pad_096[0x3e];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
@@ -62,9 +62,9 @@ struct RotatingBridge {
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x32];
-    s8  unk_31e;            /* 0x31e */
+    s8  mPauseTimer;            /* 0x31e */
     u8  pad_31f[0x1];
-    s32 unk_320;            /* 0x320 */
+    s32 mTurnSound;            /* 0x320 */
 };
 
 #endif /* __cplusplus */

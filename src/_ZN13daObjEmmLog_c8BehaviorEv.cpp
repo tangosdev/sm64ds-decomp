@@ -2,7 +2,7 @@
 // @symbol _ZN13daObjEmmLog_c8BehaviorEv
 /* daObjEmmLog_c::Behavior -- vtable slot 6. The rolling log of Tiny-Huge
  * Island: it spins at a fixed rate and rides up and down on a sine of its own
- * spin angle, unk_324 being the amplitude and unk_320 the centre height.
+ * spin angle, mBobAmplitude being the amplitude and mBasePosY the centre height.
  *
  * THE HALFWORD AT 0x31e IS NOT NAMED BY ANY HEADER. It is the spin angle: read
  * here as the index into the sine table and written back 0x200 larger every
@@ -31,8 +31,8 @@ int daObjEmmLog_c::Behavior()
     short *p = (short *)(c + 0x300);
     int idx = (unsigned short)p[0xf] >> 4;
     int s = *(short *)((char *)data_02082214 + (idx << 2));
-    int m = (int)(((long long)unk_324 * s + 0x800) >> 12);
-    mPosY = unk_320 + m;
+    int m = (int)(((long long)mBobAmplitude * s + 0x800) >> 12);
+    mPosY = mBasePosY + m;
 
     short *q = (short *)(((int)c + 0x31e));
     *q = (short)(*q + 0x200);

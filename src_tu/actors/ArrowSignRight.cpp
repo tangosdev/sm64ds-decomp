@@ -41,7 +41,7 @@
 #include "decl_ShadowModel.h"
 
 /* This class's own field access is real member syntax throughout (mModel,
- * mMeshCollider, unk_37c -- ArrowSignRight.h); no shadow struct stands in for
+ * mMeshCollider, mVariant -- ArrowSignRight.h); no shadow struct stands in for
  * a real project class. The one local type below is genuine ROM-table
  * recovery, not a workaround. */
 /* shadow struct 'ArrowSignFileColumn' */
@@ -107,12 +107,12 @@ int ArrowSignRight::InitResources()
     u16 id = actorID;
     if (id != 0x12b) {
         if (id == 0x12c)
-            unk_37c = 1;
+            mVariant = 1;
     } else {
-        unk_37c = 0;
+        mVariant = 0;
     }
 
-    u32 modelIndex = unk_37c;
+    u32 modelIndex = mVariant;
     void *model = _ZN5Model8LoadFileER13SharedFilePtr(data_ov098_0213c380[modelIndex].value);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, model, 1, -1);
     mShadowModel.InitCuboid();
@@ -120,7 +120,7 @@ int ArrowSignRight::InitResources()
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(this);
     func_ov098_02137c8c((char *)this);
 
-    u32 collisionIndex = unk_37c;
+    u32 collisionIndex = mVariant;
     void *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov098_0213c384[collisionIndex].value);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY,
@@ -140,7 +140,7 @@ int ArrowSignRight::Behavior()
     func_02039394((int*)((char*)&(*(u8 *)&mMeshCollider)), 0xc0000);
     func_020393a4((int*)((char*)&(*(u8 *)&mMeshCollider)), 0xe0000);
     _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
-        ((char*)this), (void*)((char*)&mShadowModel), (void*)((char*)&unk_348), 0x10e000, 0x64000, 0x46000, 0xf);
+        ((char*)this), (void*)((char*)&mShadowModel), (void*)((char*)&mShadowMat), 0x10e000, 0x64000, 0x46000, 0xf);
     _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(((char*)this), 0x600000, 0);
     return 1;
 }
@@ -166,8 +166,8 @@ int ArrowSignRight::CleanupResources()
 {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    ((SharedFilePtr *)data_ov098_0213c380[unk_37c].value)->Release();
-    ((SharedFilePtr *)data_ov098_0213c384[unk_37c].value)->Release();
+    ((SharedFilePtr *)data_ov098_0213c380[mVariant].value)->Release();
+    ((SharedFilePtr *)data_ov098_0213c384[mVariant].value)->Release();
     return 1;
 }
 

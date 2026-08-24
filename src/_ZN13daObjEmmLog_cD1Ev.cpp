@@ -6,7 +6,7 @@
  * `struct daObjEmmLog_c : dBgActor_c`: its own vptr, then dBgActor_c's --
  * inlined, because dBgActor_c's destructor is defined in its class body --
  * then dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This class
- * adds no member with a destructor of its own (unk_320/unk_324 are plain
+ * adds no member with a destructor of its own (mBasePosY/mBobAmplitude are plain
  * s32).
  */
 #include "daObjEmmLog_c.h"

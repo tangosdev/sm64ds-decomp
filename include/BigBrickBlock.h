@@ -40,8 +40,12 @@
 #include "dBgActor_c.h"
 
 struct BigBrickBlock : dBgActor_c {
-    u8 unk_31e;                       /* 0x31e */
-    u8 unk_31f;                       /* 0x31f */
+    /* Kill sets it on the switch-activated variant instead of destroying the
+       block; Render draws nothing and Behavior runs the broken path while it is
+       set, and Behavior clears it the frame Event::GetBit(mEventID) disagrees
+       with mPrevEventBit. */
+    u8 mBroken;                       /* 0x31e */
+    u8 mPrevEventBit;                 /* 0x31f -- Event::GetBit(mEventID) as InitResources last saw it */
     u8 mEventID;                      /* 0x320 */
     u8  pad_321[0x1];
     /* The star this block holds, low byte of param1, clamped: InitResources
@@ -56,7 +60,7 @@ struct BigBrickBlock : dBgActor_c {
     /* An dActor_c *, and func_ov002_020b363c is the evidence: it loads this word
        and reads actorID at +0xc off it, then writes +0x3b0 or +0xd6. Kill only
        tests it against null. */
-    dActor_c *unk_328;                   /* 0x328 */
+    dActor_c *mLinkedActor;                   /* 0x328 */
     /* THE VARIANT INDEX, out of the padding at last. InitResources derives it
        from actorID (0xf/0x10/0x13 -> 0, 0x11 -> 1, 0x2e -> 2, 0x12 leaves it),
        and then uses it as the row index into all three 0xc-stride resource
@@ -130,8 +134,8 @@ struct BigBrickBlock {
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x32];
-    u8  unk_31e;            /* 0x31e */
-    u8  unk_31f;            /* 0x31f */
+    u8  mBroken;            /* 0x31e */
+    u8  mPrevEventBit;            /* 0x31f */
     u8  mEventID;            /* 0x320 */
     u8  pad_321[0x1];
     u8  mStarID;            /* 0x322 */
@@ -141,7 +145,7 @@ struct BigBrickBlock {
        says nothing about the rest of the marker's span, which stays explicit padding. Was
        a u8 marker. */
     dActor_c *mSwitch;            /* 0x324 */
-    dActor_c *unk_328;            /* 0x328 */
+    dActor_c *mLinkedActor;            /* 0x328 */
     u8  pad_32c[0x4];
 };
 

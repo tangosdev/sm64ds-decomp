@@ -22,10 +22,10 @@
  *         Its poof rides 0x96000 -- 150 20.12 units -- up instead of 0x64000,
  *         and uses particle 0xf.
  *   0x0f  and 0x11 when the star path did not fire: three coins, but only when
- *         unk_328 is null. That word is the linked actor func_ov002_020b363c
+ *         mLinkedActor is null. That word is the linked actor func_ov002_020b363c
  *         notifies just below.
  *   0x2e  particle 0x48 rather than 0xa.
- *   0x13  the switch-activated one: it sets unk_31e and returns WITHOUT
+ *   0x13  the switch-activated one: it sets mBroken and returns WITHOUT
  *         destroying itself, because Behavior re-enables it from the event bit.
  *         Every other id falls through to MarkForDestruction.
  *
@@ -55,7 +55,7 @@ extern "C" void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(
     void *self, const Vector3 &pos, u32 count, s32 speed, s16 delay);
 
 /* Two of this class's own methods, still unnamed and still under their
-   func_ov002_ symbols. 0x020b363c pokes the actor in unk_328; 0x020b36a0 is
+   func_ov002_ symbols. 0x020b363c pokes the actor in mLinkedActor; 0x020b36a0 is
    `mAngleX != 0`. */
 extern "C" void func_ov002_020b363c(void *self);
 extern "C" int  func_ov002_020b36a0(void *self);
@@ -82,7 +82,7 @@ void BigBrickBlock::Kill()
     } else {
         int isF = (actorID == 0xf);
         if (isF || is11) {
-            if (unk_328 == 0) {
+            if (mLinkedActor == 0) {
                 coinPos.x = mPosX;
                 coinPos.y = mPosY;
                 coinPos.z = mPosZ;
@@ -123,7 +123,7 @@ void BigBrickBlock::Kill()
 
     int f13 = (actorID == 0x13);
     if (f13) {
-        unk_31e = 1;
+        mBroken = 1;
         return;
     }
 

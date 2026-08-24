@@ -22,9 +22,13 @@
 struct ArrowSignRight : dBgActor_c {
     u8  pad_31e[0x2];
     ShadowModel mShadowModel;         /* 0x320 */
-    u8 unk_348;                       /* 0x348 */
+    /* Behavior passes `&mShadowMat' as the `Matrix4x3 &' argument of
+       dActor_c::DropShadowScaleXYZ, with mShadowModel as the argument before
+       it. A Matrix4x3 is 0x30 bytes and 0x348 + 0x30 = 0x378. Left a u8
+       marker, the idiom this family's C twins already use. */
+    u8  mShadowMat;                   /* 0x348 */
     u8  pad_349[0x33];
-    u8 unk_37c;                       /* 0x37c */
+    u8  mVariant;                     /* 0x37c -- 0/1 from actorID; indexes all three ov098 resource columns */
 
     /* --- vtable --- */
     virtual ~ArrowSignRight();
@@ -54,9 +58,9 @@ typedef char ArrowSignRight_size_must_be_0x380[sizeof(ArrowSignRight) == 0x380 ?
    can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct ArrowSignRight {
     u8  pad_000[0xc];
-    u16 unk_00c;            /* 0x00c */
+    u16 actorID;            /* 0x00c */
     u8  pad_00e[0x80];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x44];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
@@ -70,9 +74,9 @@ struct ArrowSignRight {
        ShadowModel's D1 at +0x320 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN14ArrowSignRightD1Ev.c] */
     ShadowModel mShadowModel;            /* 0x320 */
-    u8  unk_348;            /* 0x348 */
+    u8  mShadowMat;         /* 0x348 */
     u8  pad_349[0x33];
-    u8  unk_37c;            /* 0x37c */
+    u8  mVariant;           /* 0x37c */
 };
 
 #endif /* __cplusplus */
