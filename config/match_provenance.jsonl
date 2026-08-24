@@ -429,3 +429,4 @@
 {"id":"arm9:0x02037ee8","module":"arm9","addr":33783528,"name":"_ZN5dBgPcD1Ev","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"tangosdev","srcPath":"src/_ZN5dBgPcD1Ev.cpp"}
 {"id":"arm9:0x0203816c","module":"arm9","addr":33784172,"name":"_ZN5dBgPiC1Ev","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"tangosdev","srcPath":"src/_ZN5dBgPiC1Ev.cpp"}
 {"id":"arm9:0x02038144","module":"arm9","addr":33784132,"name":"_ZN5dBgPiD1Ev","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"tangosdev","srcPath":"src/_ZN5dBgPiD1Ev.cpp"}
+{"id":"arm9:0x0203ac50","module":"arm9","addr":33795152,"name":"_ZN8dM3dGSphD1Ev","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"tangosdev","srcPath":"src/_ZN8dM3dGSphD1Ev.cpp"}

@@ -74,7 +74,7 @@ struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
        Proven three ways, all matched code:
          C1            constructs it -- _ZN8dM3dGSphC1Ev(thiz + 0x64) stores
                        _ZTV8dM3dGSph
-         D1            destroys it   -- func_0203ac50(&self->unk_064)
+         D1            destroys it   -- dM3dGSph::~dM3dGSph(&self->unk_064)
          SetObjAndLine fills it      -- func_0203abd4(thiz + 0x64, &midpoint,
                        (clsnDist >> 1) + 0x1000)
        and dBgCh_Lin::DetectClsn culls candidate colliders against it, reading

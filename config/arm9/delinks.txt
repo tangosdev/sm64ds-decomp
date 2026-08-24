@@ -5803,11 +5803,11 @@ src/_ZN8dM3dGSphD2Ev.c:
     complete
     .text start:0x0203ac1c end:0x0203ac2c
 
-src/func_0203ac2c.c:
+src/_ZN8dM3dGSphD0Ev.c:
     complete
     .text start:0x0203ac2c end:0x0203ac50
 
-src/func_0203ac50.c:
+src/_ZN8dM3dGSphD1Ev.cpp:
     complete
     .text start:0x0203ac50 end:0x0203ac60
 
