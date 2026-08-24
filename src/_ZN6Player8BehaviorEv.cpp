@@ -119,42 +119,42 @@ after_player_slot:
     if (func_ov002_020c4188(((char *)this)) != 0)
         return 1;
 
-    DecIfAbove0_Short((u16 *)((char *)&mStateTimer));
-    DecIfAbove0_Short((u16 *)((char *)&mStateWaitTimer));
-    DecIfAbove0_Short((u16 *)((char *)&mInvincibleTimer));
-    DecIfAbove0_Short((u16 *)((char *)&mJumpComboTimer));
-    DecIfAbove0_Short((u16 *)((char *)&mPunchKickCooldown));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6ac));
-    DecIfAbove0_Short((u16 *)((char *)&mCrouchTimer));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6b2));
-    DecIfAbove0_Short((u16 *)((char *)&mHoldHeavyTimer));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6b6));
-    DecIfAbove0_Short((u16 *)((char *)&mWalkTimer));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6ba));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6bc));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6c4));
-    DecIfAbove0_Short((u16 *)((char *)&mTeleportTimer));
+    DecIfAbove0_Short(&mStateTimer);
+    DecIfAbove0_Short(&mStateWaitTimer);
+    DecIfAbove0_Short(&mInvincibleTimer);
+    DecIfAbove0_Short(&mJumpComboTimer);
+    DecIfAbove0_Short(&mPunchKickCooldown);
+    DecIfAbove0_Short(&unk_6ac);
+    DecIfAbove0_Short(&mCrouchTimer);
+    DecIfAbove0_Short(&unk_6b2);
+    DecIfAbove0_Short(&mHoldHeavyTimer);
+    DecIfAbove0_Short(&unk_6b6);
+    DecIfAbove0_Short(&mWalkTimer);
+    DecIfAbove0_Short(&unk_6ba);
+    DecIfAbove0_Short(&unk_6bc);
+    DecIfAbove0_Short(&unk_6c4);
+    DecIfAbove0_Short(&mTeleportTimer);
 
     if (mTeleportTimer == 1)
         data_0209f284 = 0;
 
     if (mIsControlDisabled == 0) {
-        DecIfAbove0_Short((u16 *)((char *)&mBalloonTimer));
-        if (DecIfAbove0_Short((u16 *)((char *)&unk_6be)) == 0)
+        DecIfAbove0_Short(&mBalloonTimer);
+        if (DecIfAbove0_Short(&unk_6be) == 0)
             func_ov002_020d80d0(((char *)this));
-        if (DecIfAbove0_Short((u16 *)((char *)&mPowerupTimer)) == 0) {
+        if (DecIfAbove0_Short(&mPowerupTimer) == 0) {
             func_ov002_020e032c(((char *)this));
             func_ov002_020bdef0(((char *)this));
             func_ov002_020bdd9c(((char *)this));
         }
-        if (DecIfAbove0_Short((u16 *)((char *)&unk_6c2)) == 0)
+        if (DecIfAbove0_Short(&unk_6c2) == 0)
             func_ov002_020bdd2c(((char *)this));
 
         if (mPrevAreaId != mAreaId) {
             mPrevAreaId = mAreaId;
             mMouthHoldTimer = 0;
         }
-        if (DecIfAbove0_Short((u16 *)((char *)&mMouthHoldTimer)) == 0 && mObjInMouth != 0)
+        if (DecIfAbove0_Short(&mMouthHoldTimer) == 0 && mObjInMouth != 0)
             func_ov002_020d6790(((char *)this));
     }
 
