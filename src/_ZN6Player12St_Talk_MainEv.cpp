@@ -34,7 +34,7 @@ int Player::St_Talk_Main()
         char* p = *(char**)((char*)&mTalkActor);
         if (p != 0)
             *(u32*)(((int)p + 0xb0)) |= 0x800000;
-        *(u32*)(((int)((char*)this) + 0xb0)) |= 0x800000;
+        mFlags |= 0x800000;
         data_0209b454 |= 0x800000;
         mNoCtrlKind = 1;
     }

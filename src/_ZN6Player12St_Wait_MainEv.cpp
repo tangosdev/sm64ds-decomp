@@ -95,7 +95,7 @@ int Player::St_Wait_Main()
     }
 
     case 10: {
-        if (mIsMetal!=0 || unk_6fb!=0) {
+        if (mIsMetal!=0 || mIsVanish!=0) {
             mStateStep = 0;
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x47, 0, 0x1000, 0);
             mStateTimer = 0x384;
@@ -241,7 +241,7 @@ int Player::St_Wait_Main()
     }
 
     case 4: {
-        if (unk_6e6 == 0) {
+        if (mStatePhase == 0) {
             func_ov002_020d2f24(((char*)this));
             if (unk_723==0 &&
                 _ZNK9Animation12WillHitFrameEi((char*)(*(void**)(((char*)this)+(_ZNK6Player14GetBodyModelIDEjb(((char*)this),param1&0xff,0)<<2)+0xdc))+0x50, 0xd)) {

@@ -7,6 +7,6 @@
 int Player::St_CameraZoom_Cleanup()
 {
     *(unsigned short *)((char *)&mStateFlags) &= ~4;
-    unk_715 = 0;
+    mUseFarCamera = 0;
     return 1;
 }

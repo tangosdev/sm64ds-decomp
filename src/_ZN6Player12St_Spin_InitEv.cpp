@@ -21,7 +21,7 @@ int Player::St_Spin_Init()
   mLandSoundPlayed = 0;
   _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x5f, 0, 0x1000, 0);
   mTerminalVelocity = -0x10000;
-  if (unk_6e6) {
+  if (mStatePhase) {
     mVertSpeed = 0x50000;
     func_ov002_020e25f0(((char*)this), 2);
   }

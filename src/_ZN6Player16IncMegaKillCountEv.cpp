@@ -28,7 +28,7 @@ void Player::IncMegaKillCount()
   {
     return;
   }
-  ++(*((unsigned short *) (((int) ((char *)&unk_6d0)))));
+  ++mMegaKillCount;
   new_var3 = -1;
   st = ((char *)this);
   st = st + 0x600;
@@ -44,7 +44,7 @@ void Player::IncMegaKillCount()
   new_var = ((char *)this);
   v.z = *((int *) (new_var + 0x64));
   v.y = y + 0x190000;
-  new_var2 = (char *) _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x14b, *((unsigned short *) (((char *)&unk_600) + 0xd0)), &v, 0, *((signed char *) ((char *)&mAreaId)), new_var3);
+  new_var2 = (char *) _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x14b, mMegaKillCount, &v, 0, *((signed char *) ((char *)&mAreaId)), new_var3);
   a = new_var2;
   if (a == 0)
   {

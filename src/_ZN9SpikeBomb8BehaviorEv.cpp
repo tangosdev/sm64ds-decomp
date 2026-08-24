@@ -13,7 +13,7 @@ struct V3 { int x,y,z; };
 
 int SpikeBomb::Behavior()
 {
-  int idx = unk_170;
+  int idx = mStateIndex;
   char* ent = (char*)&data_ov060_0211b1d8[idx*2];
   int adj = *(int*)(ent+4);
   char* self = ((char*)this) + (adj>>1);

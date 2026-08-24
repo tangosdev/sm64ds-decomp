@@ -18,12 +18,12 @@ int Player::St_SlideKick_Init()
     _ZN5Sound13PlayCharVoiceEjjRK7Vector3(p[0x6d9], data_ov002_020ff130[(r >> 4) & 1], *(Vector3*)(p + 0x74));
     _ZN6Player7SetAnimEji5Fix12IiEj(((void*)this), 0x67, 0x40000000, 0x1000, 0);
     int* yv = (int*)(((int)p + 0x98));
-    *(int*)(p + 0xa8) = 0x14000;
+    mVertSpeed = 0x14000;
     yv[0] += 0xf000;
-    if (*(int*)(p + 0x98) > 0x28000) *(int*)(p + 0x98) = 0x28000;
-    *(unsigned char*)(p + 0x6e5) = 0;
-    *(unsigned char*)(p + 0x6e4) = 0;
-    *(unsigned char*)(p + 0x6de) = 1;
-    *(unsigned char*)(p + 0x6df) = 0;
+    if (mHorzSpeed > 0x28000) mHorzSpeed = 0x28000;
+    mStateWork = 0;
+    mIsSlidingOnGround = 0;
+    mIsAirborne = 1;
+    mLandSoundPlayed = 0;
     return 1;
 }

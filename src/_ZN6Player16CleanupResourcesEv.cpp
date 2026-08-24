@@ -231,7 +231,7 @@ int Player::CleanupResources()
     if (mLoadedResourceFlags & 0x40) {
         u32 idx = mHatCharacter;
         if (idx == (u32)param1)
-            idx = unk_6dc;
+            idx = mPrevCharacter;
         ((SharedFilePtr *)(data_ov002_020ff480[mCharFileBase + idx]))->Release();
     }
     return 1;

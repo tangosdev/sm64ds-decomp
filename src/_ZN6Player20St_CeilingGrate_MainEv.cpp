@@ -29,9 +29,9 @@ int Player::St_CeilingGrate_Main()
 
     r4 = func_ov002_020cf20c(((char*)this));
     if (r4 == 0x80000000) {
-        mPosX = unk_548;
-        mPosY = unk_54c;
-        mPosZ = unk_550;
+        mPosX = mPreClsnPosX;
+        mPosY = mPreClsnPosY;
+        mPosZ = mPreClsnPosZ;
         r4 = mPosY + 0x90000;
     }
 
@@ -70,7 +70,7 @@ int Player::St_CeilingGrate_Main()
     case 1:
         func_ov002_020cf384(((char*)this));
         if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
-            *(u8*)((int)((char*)this) + 0x6e5) ^= 1;
+            mStateWork ^= 1;
             mStateStep = 2;
             spd = mHorzSpeed >> 3;
             if (spd < 0x800)
@@ -90,7 +90,7 @@ int Player::St_CeilingGrate_Main()
         if (_ZN6Player12FinishedAnimEv(((char*)this)) != 0) {
             _ZN5Sound9PlayBank0EjRK7Vector3(0xb2, ((char*)this) + 0x74);
             if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
-                *(u8*)((int)((char*)this) + 0x6e5) ^= 1;
+                mStateWork ^= 1;
                 _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), data_ov002_0210a60c[(mStateWork & 1) + 2], 0x40000000, 0x1000, 0);
             } else {
                 mStateStep = 1;

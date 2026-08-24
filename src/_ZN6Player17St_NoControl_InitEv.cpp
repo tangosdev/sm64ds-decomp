@@ -12,12 +12,12 @@ extern struct PMF data_ov002_02110884[];
 int Player::St_NoControl_Init()
 {
   mIsControlDisabled=1;
-  unk_6e6=0;
+  mStatePhase=0;
   Player_DisableInteraction(((char*)this));
   Player_ReleaseHeldActor(((char*)this));
   mRidingShell=0;
   mHeldObj=0;
-  unk_35c=0;
+  mGrabbedByActor=0;
   mIsOpeningBigDoor=0;
   unsigned idx = mNoCtrlKind;
   struct PMF* m=&data_ov002_02110884[idx];

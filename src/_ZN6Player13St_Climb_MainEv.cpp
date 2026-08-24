@@ -58,7 +58,7 @@ int Player::St_Climb_Main()
     char* c = (char*)this;
     s32 vbuf[6];
 
-    *(s32*)(c + 0x684) = *(s32*)(c + 0x60);
+    mPeakY = mPosY;
 
     {
         char* gr = *(char**)(c + 0x37c);
@@ -73,31 +73,31 @@ int Player::St_Climb_Main()
         vbuf[3] = 0;
         vbuf[5] = -0x10000;
         gr = *(char**)(c + 0x37c);
-        Vec3_RotateYAndTranslate(&vbuf[0], (*(GroundPosFn*)(*(char**)gr + 8))(gr), *(s16*)(c + 0x8e), &vbuf[3]);
+        Vec3_RotateYAndTranslate(&vbuf[0], (*(GroundPosFn*)(*(char**)gr + 8))(gr), mAngleY, &vbuf[3]);
     }
-    *(s32*)(c + 0x5c) = vbuf[0];
-    *(s32*)(c + 0x64) = vbuf[2];
+    mPosX = vbuf[0];
+    mPosZ = vbuf[2];
 
     {
         void* cam = data_0209f318;
         if (*(u32*)(*(char**)(c + 0x37c) + 0x18) & 0x1000000) {
-            func_0200d5c0(cam, *(u8*)(c + 0x6d8));
+            func_0200d5c0(cam, mPlayerNo);
         } else {
             s32 v = (s32)(((s64)(*(s32*)(*(char**)(c + 0x37c) + 8)) * 0xb33 + 0x800) >> 12);
-            if (v <= *(s32*)(c + 0x688)) {
-                func_0200d5c0(cam, *(u8*)(c + 0x6d8));
+            if (v <= mAttachOffsetY) {
+                func_0200d5c0(cam, mPlayerNo);
             } else {
-                func_0200d5fc(cam, *(u8*)(c + 0x6d8));
+                func_0200d5fc(cam, mPlayerNo);
             }
         }
     }
 
-    switch (*(u8*)(c + 0x6e3)) {
+    switch (mStateStep) {
     case 0:
         ApproachAngle((s16*)(c + 0x69c), 0, 8, 0x2000, 0x200);
         if (FinishedAnim()) {
             _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x26, 0, 0x1000, 0);
-            *(u8*)(c + 0x6e3) = 1;
+            mStateStep = 1;
         }
         goto tail;
 
@@ -107,13 +107,13 @@ int Player::St_Climb_Main()
         u16 flagsE = *(u16*)((char*)data_0209f49e + idx);
         u16 flagsC = *(u16*)((char*)data_0209f49c + idx);
         if (flagsE & 0x400) {
-            s16 ang = (s16)(*(s16*)(c + 0x8e) + 0x8000);
+            s16 ang = (s16)(mAngleY + 0x8000);
             s32 t = (u16)ang;
             s32 ti = (t >> 4) * 2;
             s16 cosv = data_02082214[ti];
-            *(s32*)(c + 0x5c) += (s32)(((s64)cosv * 0x64000 + 0x800) >> 12);
+            mPosX += (s32)(((s64)cosv * 0x64000 + 0x800) >> 12);
             s16 sinv = data_02082214[ti + 1];
-            *(s32*)(c + 0x64) += (s32)(((s64)sinv * 0x64000 + 0x800) >> 12);
+            mPosZ += (s32)(((s64)sinv * 0x64000 + 0x800) >> 12);
             _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_021101b4);
             return 1;
         }
@@ -122,17 +122,17 @@ int Player::St_Climb_Main()
             v = *(s16*)((char*)data_0209f4a4 + idx);
             if (v < -0x400) {
                 func_ov002_020cb354(c);
-                *(s16*)(c + 0x69c) = 0;
-                _Z14ApproachLinearRsss((s16*)(c + 0x8e), GetAngleToCamera(*(u8*)(c + 0x6d8)), 0x200);
-                if (*(s32*)(*(char**)(c + 0x37c) + 8) <= *(s32*)(c + 0x688)) {
+                mAngleYSpeed = 0;
+                _Z14ApproachLinearRsss((s16*)(c + 0x8e), GetAngleToCamera(mPlayerNo), 0x200);
+                if (*(s32*)(*(char**)(c + 0x37c) + 8) <= mAttachOffsetY) {
                     if ((*(u32*)(*(char**)(c + 0x37c) + 0x18) & 0x2000000) &&
-                        *(s32*)(c + 0xa8) == 0 &&
+                        mVertSpeed == 0 &&
                         (s32)(*(s16*)((char*)data_0209f4a4 + (u32)data_020a0e40 * 0x18)) < -0xc00 &&
-                        *(u8*)(c + 0x6e5) == 1) {
+                        mStateWork == 1) {
                         _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_021106f4);
                     }
-                    *(s32*)(c + 0x688) = *(s32*)(*(char**)(c + 0x37c) + 8);
-                    *(s32*)(c + 0xa8) = 0;
+                    mAttachOffsetY = *(s32*)(*(char**)(c + 0x37c) + 8);
+                    mVertSpeed = 0;
                 } else {
                     u32 idx2 = (u32)data_020a0e40 * 0x18;
                     s32 mag;
@@ -153,7 +153,7 @@ int Player::St_Climb_Main()
                         char* p2 = (char*)((long long)(int)(*(char**)(c + modelIdx * 4 + 0xdc) + 0x50));
                         *(s32*)(p2 + 0xc) = fx2;
                     }
-                    *(u8*)(c + 0x6e5) = 0;
+                    mStateWork = 0;
                 }
                 goto end;
             } else if (v > 0x200) {
@@ -171,25 +171,25 @@ int Player::St_Climb_Main()
                     s32 fx = (s32)(((s64)mag * val + 0x800) >> 12);
                     func_ov002_020bf340(c, (s32*)(c + 0xa8), -0x800, fx);
                 }
-                *(s16*)(c + 0x69c) -= 0x40;
+                mAngleYSpeed -= 0x40;
                 {
                     u32 idx4 = (u32)data_020a0e40 * 0x18;
                     s16 av = *(s16*)((char*)data_0209f4a4 + idx4);
                     if (av < 0) av = -av;
-                    if (*(s16*)(c + 0x69c) <= av) av = *(s16*)(c + 0x69c);
-                    *(s16*)(c + 0x69c) = av;
+                    if (mAngleYSpeed <= av) av = mAngleYSpeed;
+                    mAngleYSpeed = av;
                 }
                 if (!IsAnim(0x25)) {
                     _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x25, 0, 0x1000, 0);
                 }
-                if (*(s32*)(c + 0x688) < -0x64000) {
+                if (mAttachOffsetY < -0x64000) {
                     _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_021101b4);
                     return 1;
                 }
                 goto end;
             } else {
                 *(s16*)(c + 0x6a4) = 0x1e;
-                *(s32*)(c + 0xa8) = 0;
+                mVertSpeed = 0;
                 func_ov002_020cc05c(c, flagsC);
                 if (!IsAnim(0x26)) {
                     _ZN6Player7SetAnimEji5Fix12IiEj(c, 0x26, 0, 0x1000, 0);
@@ -204,12 +204,12 @@ int Player::St_Climb_Main()
     }
 
 end:
-    if (*(u8*)(c + 0x6de) == 0) {
+    if (mIsAirborne == 0) {
         _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211013c);
         return 1;
     }
     if (*(u16*)((char*)data_0209f49e + (u32)data_020a0e40 * 0x18) & 2) {
-        *(s16*)(c + 0x94) = *(s16*)(c + 0x8e);
+        mPrevAngleY = mAngleY;
         _ZN6Player11ChangeStateERNS_5StateE(c, data_ov002_0211070c);
         return 1;
     }
@@ -219,29 +219,29 @@ tail:
         char* gr = *(char**)(c + 0x37c);
         s32* p3 = (*(GroundPosFn*)(*(char**)gr + 8))(gr);
         s32 y = p3[1];
-        if ((*(s32*)(c + 0x60) - y) < -0x64000) {
-            *(s32*)(c + 0x60) = y - 0x64000;
+        if ((mPosY - y) < -0x64000) {
+            mPosY = y - 0x64000;
         }
     }
-    if (*(s32*)(c + 0x688) < -0x64000) {
-        *(s32*)(c + 0x688) = -0x64000;
+    if (mAttachOffsetY < -0x64000) {
+        mAttachOffsetY = -0x64000;
     }
     {
         s32 t2 = *(s32*)(*(char**)(c + 0x37c) + 8);
-        if (t2 <= *(s32*)(c + 0x688)) {
-            *(s32*)(c + 0x688) = t2;
+        if (t2 <= mAttachOffsetY) {
+            mAttachOffsetY = t2;
         }
     }
-    if (*(u16*)(c + 0x6a8) != 0 || (*(s32*)(c + 0xa8) != 0 && *(u8*)(c + 0x6e3) == 1)) {
+    if (mJumpComboTimer != 0 || (mVertSpeed != 0 && mStateStep == 1)) {
         func_ov002_020cb474(c);
     }
     {
         s16* p8e = (s16*)(c + 0x8e);
-        *p8e = (s16)(*p8e + *(s16*)(c + 0x69c));
+        *p8e = (s16)(*p8e + mAngleYSpeed);
     }
     {
         s32* p688 = (s32*)(c + 0x688);
-        *p688 += *(s32*)(c + 0xa8);
+        *p688 += mVertSpeed;
     }
     if (func_ov002_020cbea8(c)) {
         return 1;
@@ -249,10 +249,10 @@ tail:
     {
         char* gr = *(char**)(c + 0x37c);
         s32* p4 = (*(GroundPosFn*)(*(char**)gr + 8))(gr);
-        *(s32*)(c + 0x60) = *(s32*)(c + 0x688) + p4[1];
+        mPosY = mAttachOffsetY + p4[1];
     }
     if (*(s16*)((char*)data_0209f4a4 + (u32)data_020a0e40 * 0x18) == 0) {
-        *(u8*)(c + 0x6e5) = 1;
+        mStateWork = 1;
     }
     Player_AdvanceAnims(c);
     return 1;

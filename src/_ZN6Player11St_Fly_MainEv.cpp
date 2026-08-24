@@ -1,15 +1,8 @@
 //cpp
+#include "Player.h"
 #include "types.h"
 struct State;
 
-struct Player {
-    int St_Fly_Main();
-    void ChangeState(State &);
-    void SetAnim(unsigned int, int, int, unsigned int);
-    int IsAnim(unsigned int);
-    int FinishedAnim();
-    unsigned char GetBodyModelID(unsigned int, bool) const;
-};
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
@@ -45,7 +38,7 @@ struct Vec32 { s32 x, y, z; };
 
 int Player::St_Fly_Main()
 {
-    *(s32 *)(c + 0x684) = *(s32 *)(c + 0x60);
+    mPeakY = mPosY;
 
     if ((*(u16 *)((char *)&data_0209f49e + (&data_020a0e40)[0] * 0x18) & 0x400) == 0) {
         goto skip;
@@ -58,37 +51,37 @@ int Player::St_Fly_Main()
     return 1;
 
 skip:
-    if (*(u8 *)(c + 0x6ff) == 0) {
+    if (mHasWings == 0) {
         _ZN6Player11ChangeStateERNS_5StateE(this, data_ov002_021101b4);
         return 1;
     }
-    if (*(u8 *)(c + 0x6de) == 0) {
+    if (mIsAirborne == 0) {
         func_ov002_020c2f64(c);
         _ZN6Player11ChangeStateERNS_5StateE(this, data_ov002_021105bc);
         _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x43, 0x40000000, 0x1000, 0);
-        *(s32 *)(c + 0xa8) = 0;
+        mVertSpeed = 0;
         return 1;
     }
 
     if (this->IsAnim(0x4a) != 0) {
-        if (*(s32 *)(c + 0xa8) > 0x20000) {
-            *(s32 *)(c + 0x9c) = -0x3400;
-            if (*(s32 *)(c + 0xa8) >= 0) {
+        if (mVertSpeed > 0x20000) {
+            mVertAccel = -0x3400;
+            if (mVertSpeed >= 0) {
                 if ((*(u16 *)((char *)&data_0209f49c + (&data_020a0e40)[0] * 0x18) & 2) == 0) {
-                    *(s32 *)(c + 0x9c) = -0x8000;
+                    mVertAccel = -0x8000;
                 }
             } else {
-                *(s32 *)(c + 0x9c) = -0x2000;
+                mVertAccel = -0x2000;
                 *(s32 *)(((int)c + 0x98)) = *(s32 *)(((int)c + 0x98)) + 0xe00;
             }
             if (this->FinishedAnim() != 0) {
-                *(s32 *)(c + 0x9c) = 0;
-                *(s32 *)(c + 0xa0) = -0x4b000;
+                mVertAccel = 0;
+                mTerminalVelocity = -0x4b000;
                 _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x49, 0, 0x1000, 0);
             }
         } else {
-            *(s32 *)(c + 0x9c) = 0;
-            *(s32 *)(c + 0xa0) = -0x4b000;
+            mVertAccel = 0;
+            mTerminalVelocity = -0x4b000;
             func_ov002_020df8f0(c);
         }
     } else {
@@ -113,14 +106,14 @@ skip:
         sp10 = (s16)(((s64)r0 * t2 + 0x800) >> 0xc);
     }
 
-    if (*(s32 *)(c + 0x640) >= 0x28000) {
-        *(s32 *)(c + 0x628) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            *(u32 *)(c + 0x628), 0xd1, *(s32 *)(c + 0x5c), *(s32 *)(c + 0x60), *(s32 *)(c + 0x64), &vec16, 0);
+    if (mPrevVertSpeed >= 0x28000) {
+        mParticle1 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            *(u32 *)(c + 0x628), 0xd1, mPosX, mPosY, mPosZ, &vec16, 0);
     }
 
-    if (*(s32 *)(c + 0x640) >= 0x30000) {
-        if (*(s16 *)(c + 0x92) > 0x800) {
-            if (*(u8 *)(c + 0x70c) == 0) {
+    if (mPrevVertSpeed >= 0x30000) {
+        if (mPrevAngleX > 0x800) {
+            if (mStateArg == 0) {
                 _ZN5Sound9PlayBank0EjRK7Vector3(0xb9, c + 0x74);
                 func_ov002_020e25f0(c, 2);
                 *(u8 *)(((int)c + 0x70c)) = *(u8 *)(((int)c + 0x70c)) + 1;
@@ -131,7 +124,7 @@ skip:
                 char *m2 = *(char **)(c + this->GetBodyModelID(*(u32 *)(c + 8) & 0xff, 0) * 4 + 0xdc);
                 MulVec3Mat4x3((void *)(r5 + 0x24), m2 + 0x1c, &vec32);
                 Vec3_MulScalarInPlace(&vec32.x, 0x8000);
-                *(s32 *)(c + 0x62c) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+                mParticle2 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
                     *(u32 *)(c + 0x62c), 0xd0, sp14, sp18, sp1C, &vec16, 0);
             }
             {
@@ -140,21 +133,21 @@ skip:
                 char *m2 = *(char **)(c + this->GetBodyModelID(*(u32 *)(c + 8) & 0xff, 0) * 4 + 0xdc);
                 MulVec3Mat4x3((void *)(r5 + 0x24), m2 + 0x1c, &vec32);
                 Vec3_MulScalarInPlace(&vec32.x, 0x8000);
-                *(s32 *)(c + 0x630) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+                mParticle3 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
                     *(u32 *)(c + 0x630), 0xd0, sp14, sp18, sp1C, &vec16, 0);
             }
         }
     } else {
-        *(u8 *)(c + 0x70c) = 0;
+        mStateArg = 0;
     }
 
     {
-        s32 v = *(s32 *)(c + 0x640);
+        s32 v = mPrevVertSpeed;
         s32 r1 = (v / 0x1000) * 3;
         if (r1 >= 0x100) {
             r1 = 0x100;
         }
-        *(s32 *)(c + 0x620) = func_02012194(*(char **)(c + 0x620), 0, 0x104, 3, r1, c + 0x74, 0);
+        mLoopingSoundHandle = func_02012194(*(char **)(c + 0x620), 0, 0x104, 3, r1, c + 0x74, 0);
     }
     Player_AdvanceAnims(c);
     return 1;

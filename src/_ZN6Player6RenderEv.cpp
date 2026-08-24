@@ -58,7 +58,7 @@ int Player::Render()
     if (!(mFlags & 0x10)) {
         char* bodyMdl;
         int i;
-        bodyMdl = *(char**)(((char*)this) + 0xdc + _ZNK6Player14GetBodyModelIDEjb(((char*)this), unk_6db, 1) * 4);
+        bodyMdl = *(char**)(((char*)this) + 0xdc + _ZNK6Player14GetBodyModelIDEjb(((char*)this), mBodyModelId, 1) * 4);
         if (mIsBalloon == 0) {
             _ZN9ModelBase12ApplyOpacityEj(bodyMdl, mOpacity, 0);
             {
@@ -79,12 +79,12 @@ int Player::Render()
             _ZN5Model6RenderEPK7Vector3(bodyMdl, ((char*)this) + 0x80);
             if (param1 == 1) {
                 _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this) + 0x254, *(char**)((char*)&unk_0e0) + 8);
-                mTexSeqPlayer[0].currFrame = unk_6fc << 12;
+                mTexSeqPlayer[0].currFrame = mPlayerTexFrame << 12;
             }
             func_ov002_020e3e00(bodyMdl, ((char*)this) + 0x80, mOpacity);
             if (unk_700 != 0) {
                 _ZN9ModelBase12ApplyOpacityEj(((char*)this) + 0x174, mOpacity, 0);
-                if (unk_6db == 3) {
+                if (mBodyModelId == 3) {
                     Matrix4x3_FromTranslation(&data_020a0e68, -0x1b33, -0x666, 0);
                     Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, 0x4000);
                     MulMat4x3Mat4x3(&data_020a0e68, *(char**)(bodyMdl + 0x14) + 0x180, &data_020a0e68);
@@ -97,7 +97,7 @@ int Player::Render()
             _ZN9ModelBase12ApplyOpacityEj(((char*)this) + 0xf0, mOpacity, 0);
             ((VObj*)((char*)&mModelAnim3))->m14((char*)&mScaleX);
         }
-        i = func_ov002_020becf4(((char*)this), unk_6db, 1);
+        i = func_ov002_020becf4(((char*)this), mBodyModelId, 1);
         {
             char* mdl4 = *(char**)(((char*)this) + 0x154 + i * 4);
             if (mdl4 != 0 && i != 9 && i != 8) {
@@ -128,10 +128,10 @@ int Player::Render()
                 }
                 if (param1 == 1) {
                     _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this) + 0x268, *(char**)((char*)&unk_158) + 8);
-                    mTexSeqPlayer[1].currFrame = unk_6fc << 12;
+                    mTexSeqPlayer[1].currFrame = mPlayerTexFrame << 12;
                 }
                 if (func_ov002_020bea7c(((char*)this)) == 0) {
-                    _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this) + 0x1dc + unk_6db * 0x14, *(char**)(((char*)this) + 0x154 + i * 4) + 8);
+                    _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this) + 0x1dc + mBodyModelId * 0x14, *(char**)(((char*)this) + 0x154 + i * 4) + 8);
                 }
                 func_ov002_020e3e00(*(char**)(((char*)this) + 0x154 + i * 4), ((char*)this) + 0x80, mOpacity);
                 if (func_ov002_020d225c(((char*)this))) {

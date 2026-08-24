@@ -91,9 +91,9 @@ int Bowser::InitResources()
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         &this->mdCcAcPos_c, this, &pos, 0x78000, 0x118000, 0x200004, 0);
 
-    this->unk_3b0 = this->mPosX;
-    this->unk_3b4 = this->mPosY;
-    this->unk_3b8 = this->mPosZ;
+    this->mHomePosX = this->mPosX;
+    this->mHomePosY = this->mPosY;
+    this->mHomePosZ = this->mPosZ;
     this->mVertAccel = -0x2000;
     this->mTerminalVelocity = -0x3c000;
     this->mTargetPlayer = 0;
@@ -111,7 +111,7 @@ int Bowser::InitResources()
     this->mScaleX = 0x1000;
     this->mScaleY = 0x1000;
     this->mScaleZ = 0x1000;
-    this->unk_3f8 = 0x1000;
+    this->mAnimSpeed = 0x1000;
     this->unk_429 = 1;
     func_ov060_021123dc(this);
 

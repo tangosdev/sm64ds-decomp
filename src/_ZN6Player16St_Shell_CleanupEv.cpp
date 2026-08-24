@@ -12,7 +12,7 @@ int Player::St_Shell_Cleanup()
   if (p != 0) {
     *(int*)(p + 0x3c0) = 0;
     mRidingShell = 0;
-    *(int*)(((int)((char*)this) + 0x60)) += 0x46000;
+    mPosY += 0x46000;
     mIsAirborne = 1;
     mLandSoundPlayed = 0;
     func_ov002_020bd8c0(((char*)this), 0x33);

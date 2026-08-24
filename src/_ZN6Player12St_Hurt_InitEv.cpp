@@ -22,7 +22,7 @@ int Player::St_Hurt_Init()
     m = *(char**)(((char*)this) + mid*4 + 0xdc);
     m = (char*)(((unsigned int)m + 0x50) & 0xFFFFFFFFU);
     *(int*)(m + 8) = 0;
-    unk_6e6 = 0;
+    mStatePhase = 0;
     old = mStateWork;
     mStateWork = 0;
     if ((mStateStep & 0xf0) == 0x10) mStateWork = old << 4;

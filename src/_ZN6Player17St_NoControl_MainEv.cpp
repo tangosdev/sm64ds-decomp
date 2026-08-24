@@ -111,7 +111,7 @@ int Player::St_NoControl_Main()
         int id = _ZNK6Player14GetBodyModelIDEjb(((char*)this), param1 & 0xff, 0);
         char* anim = (char*)((int*)((char*)&mBodyModels))[id] + 0x50;
         if (_ZNK9Animation12WillHitFrameEi(anim, 0x1c))
-            unk_71a = 0;
+            mHasNoCap = 0;
         if (_ZN6Player12FinishedAnimEv(((char*)this)))
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
         break;
