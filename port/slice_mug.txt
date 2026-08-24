@@ -227,11 +227,14 @@
 #   two classes go through (this class's Behavior calls func_ov006_020c2144,
 #   which is a four-instruction veneer onto BlendModelAnim::Advance).
 #
-#   SECTION 3's nosrc COLUMN READS 0 FOR THIS ROW AND THE CLASS HAS A FLOOR.
-#   The column is computed over the VTABLE; the floor is in the STATE table.
-#   func_ov006_0210adac (0x1b8, config symbol, no delink block, no src in any
-#   module) is slot 2, the face-evaluation step between the third reel stopping
-#   and the payout. A seat lane that trusted the column would not have looked.
+#   SECTION 3's nosrc COLUMN READ 0 FOR THIS ROW AND THE CLASS HAD A FLOOR.
+#   The column is computed over the VTABLE; the floor was in the STATE table.
+#   func_ov006_0210adac (0x1b8) is slot 2, the face-evaluation step between the
+#   third reel stopping and the payout. A seat lane that trusted the column
+#   would not have looked. RUN mg12 LANE MAM MATCHED IT: there is now a
+#   src/func_ov006_0210adac.c that byte-reproduces it under 2004/b56, a delink
+#   block covering 0x0210adac..0x0210af64, a linkcheck VERIFIED with zero blind
+#   slots, and a line for it in the slice below, so the dispatcher calls it.
 #   Adjudication arithmetic: 108 instructions plus a two-word literal pool
 #   (0x0000503e at 0x0210af5c, 0x66666667 at 0x0210af60 -- the signed
 #   divide-by-five magic, which is the strip length 5 the class's own +0x503a
@@ -239,18 +242,20 @@
 #   DecIfAbove0_Byte (0x0203add4), the ITCM divide helper (0x01ffabe4),
 #   func_02012790 twice, func_ov004_020adb1c.
 #
-#   AND THE FLOOR IS NOT AN UNTOUCHED BODY. The near-miss check this lane's
-#   review ordered found a row for it: nearmiss/db.jsonl line 45,
-#   func_ov006_0210adac, size 440 = 0x1b8, lang c, run
-#   `fable-hardmatch-20260801`, carrying a complete candidate c_source and
+#   THE FLOOR WAS NOT AN UNTOUCHED BODY AND THAT IS WHAT CLOSED IT. The
+#   near-miss check this lane's review ordered found a row for it:
+#   nearmiss/db.jsonl line 45, func_ov006_0210adac, size 440 = 0x1b8, lang c,
+#   run `fable-hardmatch-20260801`, carrying a complete candidate c_source and
 #   "equal=101/110 falign; sole real divergence = SR init add r6,sl,#5
 #   rematerialized per outer iter in ROM vs hoisted+spilled [sp,#4] by mwcc",
-#   with fifteen levers listed as tried and failed. The seat is unaffected --
-#   there is still no src/func_ov006_0210adac.* and still no delink block, which
-#   is what decides whether the dispatch site can name a body -- but the floor
-#   wave should price this as a 101-of-110 near-miss with one characterised
-#   divergence rather than as untouched work. The candidate also independently
-#   confirms what this lane derived state 2 DOES from the neighbouring states:
+#   with fifteen levers listed as tried and failed. Run mg12 lane MAM started
+#   there, re-measured the divergence as TWO (the hoist, plus a reschedule of
+#   the /80 magic sequence that the hoist drags with it), and closed both with
+#   one token: a redundant `(int)` cast on the left operand of the sum inside
+#   the modulo. See the src file's own header and
+#   config/match_provenance.jsonl. The row was retired with the match.
+#   The candidate also independently confirmed what this lane derived state 2
+#   DOES from the neighbouring states:
 #   it compares the three visible symbols at +0x5031 across the reels and
 #   writes the win index to +0x5010. IT HAS TWO EXITS AND THIS FILE USED TO
 #   NAME ONLY ONE. On the PAY path (total > 0) it writes the payout to +0x5014,
@@ -265,9 +270,9 @@
 #   data_ov006_02142bdc are both func_ov006_0210ac3c, which is why one payout
 #   state serves a win and a loss and why the dispatcher's per-slot counter
 #   charges slot 3 for both.
-#   NO src ROW IS OWED BY THIS LANE and none is written: this lane changed no
-#   src/ file at all (git diff --stat over src/ is empty against the base), so
-#   there is no banner to re-snapshot and nothing to ingest.
+#   NO src ROW WAS OWED BY THE mg11 SEAT LANE and none was written: it changed
+#   no src/ file at all. Run mg12 lane MAM adds exactly one,
+#   src/func_ov006_0210adac.c, and it is a byte match with no banner.
 #
 # ---- SLOT 18 TAKES A REAL ARGUMENT ----------------------------------------
 #
@@ -354,11 +359,11 @@
 #     function this seat pays, and section "THE SHADOW-CLASS FAULT" below is
 #     the measurement.
 #
-# NO BODY IS INVENTED FOR THE FLOOR. unmatched/MgCurling_State_020e1854.cpp is
-# the precedent for transcribing such a state from the ROM and it is the right
-# next step for 0x0210adac -- but a transcription is a decompilation and this
-# is a seat lane. The dispatch site names it, counts it and reports what the
-# player loses.
+# NO BODY WAS EVER INVENTED FOR THE FLOOR, and the mg11 seat lane left it to a
+# decompilation rather than a transcription. That is what it got: run mg12 lane
+# MAM byte-matched 0x0210adac, so the dispatch site calls the real body and
+# unmatched/MgCurling_State_020e1854.cpp's transcription precedent was not
+# needed here.
 #
 # ---- THE SHADOW-CLASS FAULT, PREDICTED IN WRITING AND THEN MEASURED -------
 #
@@ -549,14 +554,72 @@
 #                   name on stderr and counted separately
 #     UNHANDLED     0, and the run still exits 0
 #
-# THAT IS THE WHOLE CLAIM AND ITS WHOLE LIMIT. The round plays: the reels
-# spin, the stylus stops them one at a time, the machine advances 0 -> 1 -> 2.
-# It then stops, because state 2 has no body. 598 frames of a 1200-frame run
-# sat in a state that does nothing, and the player would see three stopped
-# reels and no payout. The UNHANDLED counter stays 0 because the address is
-# accounted for, not because nothing is missing -- section 16's distinction
-# between the zeros that are honest and the zeros that are not, applied to
-# this lane's own instrument.
+# THAT WAS THE WHOLE CLAIM AND ITS WHOLE LIMIT, AT mg11. The round played: the
+# reels spun, the stylus stopped them one at a time, the machine advanced
+# 0 -> 1 -> 2. It then stopped, because state 2 had no body. 598 frames of a
+# 1200-frame run sat in a state that does nothing, and the player would see
+# three stopped reels and no payout. The UNHANDLED counter stayed 0 because the
+# address was accounted for, not because nothing was missing -- section 16's
+# distinction between the zeros that are honest and the zeros that are not,
+# applied to that lane's own instrument.
+#
+# ---- RUN mg12, LANE MAM: THE SAME PROBE AFTER THE FLOOR WAS MATCHED --------
+#
+# The numbers above are left exactly as mg11 measured them, because the point
+# of this section is the comparison. Same recipe, same 1200 frames, same three
+# taps, on a build carrying src/func_ov006_0210adac.c:
+#
+#     state slots   0(x120) 1(x923) 2(x30) 3(x80) 4(x0) 5(x0) 6(x0) 7(x0)
+#     state index   +0x5000 = 1 at the end, reels stopped +0x503d = 0,
+#                   reels +0x4fe4 = { 0xc000, 0x48000, 0x94000 } -- SPINNING
+#                   AGAIN, so the round finished and the next one started
+#     floor         0. The counter is kept and kept printed so this line and
+#                   mg11's compare field for field.
+#     UNHANDLED     0, exit 0
+#
+# State 2 runs 30 times and not 598, and 30 is the number the ROM asks for:
+# src/func_ov006_0210af64.c's tail sets the +0x503e hold to 0x1e before it
+# writes the index, and the matched body's first statement is
+# DecIfAbove0_Byte(c + 0x503e), which returns early while the hold is running.
+# So it idles exactly through the hold, evaluates once, and hands off to slot
+# 3 -- func_ov006_0210ac3c, the body BOTH the pay exit (index 3) and the no-win
+# exit (index 4) land on, which is why slot 4 still reads 0 and why that 0 is
+# an instrument property rather than an unreached state (the mg11 review's
+# ruling, unchanged).
+#
+# AND THE PAY PATH IS EXERCISED, which the 1200-frame run does not reach.
+# 6000 frames with the same three taps repeated every 800:
+#
+#     state slots   0(x440) 1(x3593) 2(x180) 3(x455) 6(x120) 7(x1165)
+#                   -- states 6 and 7 are the end-of-round pair, and neither
+#                   had ever run on this port before
+#     progress      +0xb4 score 0 -> 1, +0xbc best = 1
+#     save record   data_0209caf4[20] = { 1, 0, 0, 0, 0 }
+#     slot-18 arg   round-start(3/0x12) 1, round-advance(4) 1, respin(5) 4
+#     +0x503a       3 -> 4 symbols per reel: the level advanced on the win
+#     UNHANDLED     0, exit 0
+#
+# So a line came up, the matched body wrote the payout to +0x5014, set the
+# index to 3, and passed the incremented score to func_ov004_020adb1c, which
+# is the award. Mix-a-Mug plays a round end to end.
+#
+# THE REST OF THE GATES ON THE SAME BUILD:
+#
+#     build          port/build-port.cmd exit 0, every guard OK (dsstate,
+#                    alternatename 1897 scanned / 0 new defeats, gxband layout,
+#                    tailjump 97 assertions)
+#     canary 374     32557 / 32557 / 0 EXACT, exit 0
+#     battery        ALL GREEN -- 32 hosted scenes, 46 levels, all 20 smoke
+#                    binaries, ptr_audit 0 unhosted code pointers
+#     linkage        7654 (67.8%) MEASURED on this tree. The base was not
+#                    re-measured, so no delta is claimed here; the only
+#                    linkage-relevant change this lane makes is the one added
+#                    TU, src/func_ov006_0210adac.c.
+#
+# All of the above are on the binary this lane ships. The two scene-365 runs
+# and the canary were re-run after the last comment edit and reproduce
+# number for number, and the battery output is byte-identical across the two
+# builds.
 #
 # THE FRAMES CAPTURED FOR TANGO, and what the capture does and does not say.
 # Three frame counts, top screen and stacked, from ONE build:
@@ -589,8 +652,9 @@
 #
 # ---- THE DELTA -------------------------------------------------------------
 #
-# This class's own sixteen bodies (its whole code block minus the host-copied
-# slot 6 and minus the bodiless floor), then the nine ov006 bodies of the
+# This class's own seventeen bodies (its whole code block minus the host-copied
+# slot 6; the seventeenth is 0x0210adac, the state-2 floor mg11 could not seat
+# and run mg12 lane MAM matched), then the nine ov006 bodies of the
 # shared +0x4f38 / +0x4660 sub-object family that no earlier minigame slice
 # reached -- the BlendModelAnim + SharedFilePtr block the factory constructs
 # and the camera preset the Render and InitResources call -- then whatever the
@@ -612,6 +676,7 @@ src/func_ov006_0210ab90.c
 src/func_ov006_0210ab94.c
 src/func_ov006_0210ac38.c
 src/func_ov006_0210ac3c.cpp
+src/func_ov006_0210adac.c
 src/func_ov006_0210af64.c
 src/func_ov006_0210b1fc.c
 src/func_ov006_0210b314.c

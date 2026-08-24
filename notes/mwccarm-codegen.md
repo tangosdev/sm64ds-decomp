@@ -3544,3 +3544,107 @@ residue there is the two scratch temps transposed (r0/r1 vs the ROM's
 r1/r0), which is register identity, not the schedule. Reach for the
 pointer-arith + named-successor spelling whenever a copy loop's loads
 and stores interleave in the ROM instead of pairing up.
+
+## 6bo. A no-op cast inside an index expression moves a STRENGTH-REDUCTION initialiser's LICM level (func_ov006_0210adac MATCHED, 2026-08-24)
+
+(Numbered 6bo because two other mg12 lanes are landing sections in the same
+wave: the sorter lane's statement-order lever as 6bm and the ignition lane's
+irreducible-loop lever as 6bn. If all three land, the merge renumbers; nothing
+in any of them depends on the letter.)
+
+6bj settled how to place a loop-invariant address that has a *source statement*: the
+statement's own position sets the LICM level, and neither
+`opt_moveinvariantsinaddressexpr off` nor `opt_loop_invariants off` nor the
+`(long long)(int)` launder moves it. This section is the case where there is no
+statement to move, because the invariant is the initialiser mwcc's own
+strength-reduction pass invents for a nested loop.
+
+**The shape.** A nested loop where the inner loop indexes a 2-D array by the inner
+counter and the ROM re-derives the row base every outer iteration:
+
+```
+0210AE10  add   r6, sl, #5           <- inner loop's SR init, INSIDE the outer loop
+0210AE14  add   r0, sl, r8, lsl #2   <- inner loop head
+   ...
+0210AE40  add   r0, r6, r1
+0210AE60  add   r6, r6, #5           <- the SR step
+```
+
+Written the obvious way (`((Grid *)c)->sym[j][rem]`, j from 1) mwcc folds `c` into the
+induction variable exactly as the ROM does, then hoists `c + 5` to the function
+prologue and **spills it**, because eight callee-saved registers are already committed:
+two extra instructions, an 8-byte bigger frame, and every `[sp, #K]` in the function
+shifted. That is the near-miss the banked row
+(nearmiss/db.jsonl, run `fable-hardmatch-20260801`) sat on at 101/110.
+
+**Everything placement-shaped is inert on it,** and this was measured rather than
+assumed (a bogus pragma name as the 6as control, and four pragmas that DO move the
+output as the positive control): all ~60 `opt_*` pragmas on and off, all 24
+declaration orders, all 25 installed mwccarm builds, the whole `-O`/`-opt` flag range,
+a 378-variant loop/access/dividend grid, 23 further access spellings, the explicit
+hand-written row pointer in three initialiser spellings, and the u64 launder in six.
+
+**Why they are inert.** The decision is not LICM's. A controlled pair - the same
+function with only the struct pad and the inner loop's start index changed - shows it:
+
+```
+SR initialiser c + 5   ->  add r0,sl,#5 ; str r0,[sp,#4]   in the PROLOGUE
+                           ldr r6,[sp,#4]                  in the loop
+SR initialiser c + 0   ->  mov r6,sl                       in the loop, nothing hoisted
+```
+
+mwcc leaves an SR initialiser where the pass put it when it is a plain register copy
+and lifts it out of the enclosing loop when it is a computation. No pragma reaches
+that, because it happens before the passes the pragmas gate.
+
+**THE LEVER: a redundant cast on ONE OPERAND of the sum feeding the index.**
+
+```c
+/* hoisted + spilled */
+int rem = (i + (((int *)(c + 0x4fe4))[j] >> 12) / 80) % *(unsigned char *)(c + 0x503a);
+/* initialiser stays in the loop -- byte MATCH */
+int rem = ((int)i + (((int *)(c + 0x4fe4))[j] >> 12) / 80) % *(unsigned char *)(c + 0x503a);
+```
+
+`i` is already `int`, so the cast is a no-op to the language and changes the tree mwcc
+builds for the sum, which is enough to keep the SR initialiser in the inner loop's
+preheader. It also fixed a second divergence the same instant - the `/80` magic
+sequence's schedule (`smull; asr; lsr; add` in the ROM against `smull; lsr; asr; add`)
+- so the two divergences the near-miss row recorded as separate had one cause.
+
+**It is specific about WHERE.** `(long)i` and `(long)` on the shift expression work
+identically. `(int)` on the *quotient*, on the *whole sum*, or on the *load* does not,
+and parentheses alone do not. So try the cast on each operand of the sum in turn; it is
+four compiles, not a search.
+
+**When to reach for it.** falign shows a `ldr rX,[sp,#K]` where the ROM has an
+`add rX, base, #K` at the top of an outer loop body, plus a frame two words too big and
+every `[sp,#K]` shifted by the same amount. That whole picture is ONE defect. Found by
+seeding the in-tree permuter (`tools/permuter/import_func.py`) with the banked
+near-miss and then reducing its winner to the single token by hand - the permuter's own
+score barely separated the two (1490 vs 1525 on a 3-instruction gap), so read its
+outputs with `tools/falign.py` rather than trusting its ranking.
+
+**It is a THIRD axis, and that is the general point.** The decl-order axis (6k, 6bf,
+6bg) and the statement-order axis (6bj, and mg12's sorter lane) both move where a value
+lives or when it is computed. This one moves neither: the statements and the
+declarations are untouched, only the shape of one expression changes, and the pass that
+reads that shape runs before either of the other two axes has a say. When a near-miss
+survives a full decl-order sweep AND a statement-order sweep, the expression tree is
+the axis left to try, and a no-op cast is its cheapest probe.
+
+**Cross-check against the irreducible-loop lever, measured on this body.** mg12's
+ignition lane found that mwccarm hoists loop invariants out of a reducible loop and
+never out of an irreducible one. Probed here - a second entry edge into the outer loop
+body, semantics deliberately broken, a mechanism probe and not a candidate - the hoist
+does disappear: `add r7,sl,#5` lands inside the loop and the frame drops from 0x14
+bytes to 4. So the two levers reach the same decision from opposite ends and either
+would have unstuck this divergence. The cast is the one that could SHIP: the second
+entry costs a load, a compare and two branches this ROM body does not have.
+
+**And it bounds that lever's stated rule.** This function's loops are reducible in the
+ROM - every branch edge into either loop body was enumerated from the disassembly and
+all of them originate inside, zero from outside - and the ROM still does not hoist. So
+"reducible implies hoisted" holds for mwccarm 2004/b56 but is not a property of the
+ROM's own compiler, and an unhoisted invariant inside a reducible ROM loop is not by
+itself evidence that the source was irreducible.

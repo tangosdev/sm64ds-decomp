@@ -7736,12 +7736,14 @@ set(SCENE_MG_SLOT1_SOURCES hal/scene_mg_slot1.cpp)
 # exactly THREE Itanium-sequence instructions and all three are in that one
 # body, so there is no second dispatcher and no open-coded third shape.
 #
-# ONE STATE HAS NO BODY. func_ov006_0210adac (slot 2, 0x1b8) has a config
-# symbol, no delink block and no src in any module, so it is not in the slice
-# and no definition is invented for it. The dispatch site names it, counts it
-# and reports what the player loses (the face-evaluation step after the third
-# reel stops). That is the port/tools/inferred_stub_guard discipline applied to
-# a state rather than a vtable slot.
+# THE ONE BODILESS STATE IS RETIRED (run mg12, lane MAM). func_ov006_0210adac
+# (slot 2, 0x1b8, the face-evaluation step after the third reel stops) had a
+# config symbol, no delink block and no src in any module, so mg11 left it out
+# of the slice and invented no definition for it. It is now byte-matched:
+# src/func_ov006_0210adac.c is in slice_mug.txt, the delink block covers
+# 0x0210adac..0x0210af64, and unmatched/MgSlot3_StateDispatch.cpp calls it. The
+# per-slot census still prints the former floor counter so an mg11 log and an
+# mg12 log compare field for field.
 #
 # NO HOSTGEN SUBSTITUTION, for the reason the S381 block above gives: the two
 # bodies in this class that dereference a 0x04xxxxxx literal

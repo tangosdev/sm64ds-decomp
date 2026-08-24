@@ -7,10 +7,11 @@
  * c + 0x503e   the shared hold-down counter. DecIfAbove0_Byte decrements it and
  *              returns nonzero while it is still running, so the body is a
  *              no-op until the reels have finished settling.
- * c + 0x5031   the three visible face ids, one per reel, read into buf[].
- * c + 0x4fe4   the three reel angles; (angle >> 12) / 80 is the reel's row.
+ * c + 0x5031   the three faces reel 0 is showing, one per row, read into buf[].
+ * c + 0x4fe4   the three reel angles, one int per reel; (angle >> 12) / 80 is
+ *              how many rows that reel has turned past its origin.
  * c + 0x503a   the number of faces on a reel (the modulus).
- * c + 0x501c   the 3 x 5 face grid, one five-entry row per reel.
+ * c + 0x501c   the face grid, one five-byte strip per reel at + 5 * reel.
  * c + 0x503b   the face id that pays.
  * c + 0x5010   the winning row index, or -1.
  * c + 0x5014   the payout.
@@ -18,8 +19,9 @@
  *              func_ov006_0210ac3c, which tells the two apart by the index it
  *              was entered on.
  *
- * A face that does not agree across all three reels is replaced with 5, which
- * is off the end of a five-entry row and so can never match c + 0x503b.
+ * So row i pays when reels 1 and 2 both show reel 0's face at that row. A row
+ * that disagrees on either has its face replaced with the sentinel 5, which can
+ * only pay if the paying face at c + 0x503b is itself 5.
  *
  * THE `(int)` ON `i` IS LOAD-BEARING. It is a no-op on an `int`, but it changes
  * the shape mwccarm builds for the sum, and with it the strength-reduced row
