@@ -41,7 +41,7 @@ int Player::St_WallSlide_Main()
       char *p = ((char *)this) + 0x600;
       if (*((unsigned short *) (p + 0xa4)))
       {
-        *((short *) ((char *)&mAngleY)) = *((short *) (((char *)&unk_600) + 0x9c));
+        mAngleY = mAngleYSpeed;
       }
       _ZN6Player11ChangeStateERNS_5StateE(((char *)this), &data_ov002_021103dc);
     }

@@ -279,20 +279,15 @@ struct Player : dActor_c {
        parameter widths in dActor_c.h: a declared type nothing had checked. */
     u16 mJumpComboTimer;            /* 0x6a8 */
     u16 mPunchKickCooldown;            /* 0x6aa */
-    u8  unk_6ac;            /* 0x6ac */
-    u8  pad_6ad[0x1];
+    u16 unk_6ac;            /* 0x6ac */
     u16 mPowerupTimer;            /* 0x6ae */
     u16 mCrouchTimer;            /* 0x6b0 */
-    u8  unk_6b2;            /* 0x6b2 */
-    u8  pad_6b3[0x1];
+    u16 unk_6b2;            /* 0x6b2 */
     u16 mHoldHeavyTimer;            /* 0x6b4 */
-    u8  unk_6b6;            /* 0x6b6 */
-    u8  pad_6b7[0x1];
-    s16 mWalkTimer;            /* 0x6b8 */
-    u8  unk_6ba;            /* 0x6ba */
-    u8  pad_6bb[0x1];
-    u8  unk_6bc;            /* 0x6bc */
-    u8  pad_6bd[0x1];
+    u16 unk_6b6;            /* 0x6b6 */
+    u16 mWalkTimer;            /* 0x6b8 */
+    u16 unk_6ba;            /* 0x6ba */
+    u16 unk_6bc;            /* 0x6bc */
     u16 unk_6be;            /* 0x6be */
     /* u16, not s16: every READ of this slot in the ROM is an ldrh --
        func_ov002_020e4bb8 tests `< 0x3f` and `& 1`, Behavior passes it to
@@ -303,17 +298,14 @@ struct Player : dActor_c {
        Behavior counts it down, St_Balloon_Main exits when it reaches 0, and
        020e4bb8 blinks the balloon below 0x3f. */
     u16 mBalloonTimer;            /* 0x6c0 */
-    u8  unk_6c2;            /* 0x6c2 */
-    u8  pad_6c3[0x1];
-    u8  unk_6c4;            /* 0x6c4 */
-    u8  pad_6c5[0x1];
+    u16 unk_6c2;            /* 0x6c2 */
+    u16 unk_6c4;            /* 0x6c4 */
     u16 mMouthHoldTimer;            /* 0x6c6 */
     u16 mTeleportTimer;            /* 0x6c8 */
     u8  pad_6ca[0x2];
     u16 unk_6cc;            /* 0x6cc */
     u16 mStateFlags;            /* 0x6ce */
-    u8  mMegaKillCount;            /* 0x6d0 */
-    u8  pad_6d1[0x1];
+    u16 mMegaKillCount;            /* 0x6d0 */
     s16 mDesiredAngleY;            /* 0x6d2 */
     s16 mPrevDesiredAngleY;            /* 0x6d4 */
     s16 mPreClsnAngleY;            /* 0x6d6 */
