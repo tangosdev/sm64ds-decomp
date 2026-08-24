@@ -72,18 +72,19 @@ class CppTuStateTests(unittest.TestCase):
             "    .text start:0x00001020 end:0x00001030\n",
             encoding="utf-8",
         )
-        (repo / "config" / "tu_manifest.json").write_text(
+        manifest_d = repo / "config" / "tu_manifest.d"
+        manifest_d.mkdir(parents=True, exist_ok=True)
+        (manifest_d / "_meta.json").write_text(
+            json.dumps({"schema_version": 1}), encoding="utf-8")
+        (manifest_d / "arm9-Together.json").write_text(
             json.dumps({
-                "schema_version": 1,
-                "entries": [{
-                    "id": "arm9/Together",
-                    "module": "arm9",
-                    "source": "src_tu/Future.cpp",
-                    "promoted_source": "src/Together.cpp",
-                    "status": "promoted",
-                    "sections": [{"name": ".text", "start": "0x1000", "end": "0x1020"}],
-                    "functions": [{"symbol": "One"}, {"symbol": "Two"}],
-                }],
+                "id": "arm9/Together",
+                "module": "arm9",
+                "source": "src_tu/Future.cpp",
+                "promoted_source": "src/Together.cpp",
+                "status": "promoted",
+                "sections": [{"name": ".text", "start": "0x1000", "end": "0x1020"}],
+                "functions": [{"symbol": "One"}, {"symbol": "Two"}],
             }),
             encoding="utf-8",
         )

@@ -34,7 +34,7 @@ def _toolchain():
 def _run(*args, manifest=None, timeout=180):
     # `verify`/`create` write their result back into the manifest they're given.
     # Tests that exercise those must pass `manifest=` (a scratch copy) so the
-    # real, tracked config/tu_manifest.json is never mutated by running the test
+    # real, tracked config/tu_manifest.d/ is never mutated by running the test
     # suite -- `--manifest` is a top-level flag, so it has to precede the
     # subcommand on the argv line, not follow it.
     prefix = ["--manifest", str(manifest)] if manifest is not None else []
@@ -54,7 +54,12 @@ def _scratch_manifest():
     import os
     os.close(fd)
     tmp = pathlib.Path(path)
-    shutil.copyfile(REPO / "config" / "tu_manifest.json", tmp)
+    # A single .json is still a legal manifest root -- tu_manifest.save writes
+    # one file when the root has a .json suffix -- so the scratch copy stays a
+    # single file even though the tracked manifest is now a directory.
+    sys.path.insert(0, str(TOOLS))
+    import tu_manifest as TUM
+    TUM.save(TUM.load(), tmp)
     return tmp
 
 
@@ -276,7 +281,7 @@ def test_splice_refuses_a_span_whose_legacy_entries_are_not_complete():
     sys.path.insert(0, str(TOOLS))
     import tubuild as T
 
-    manifest = json.loads((REPO / "config" / "tu_manifest.json").read_text(encoding="utf-8"))
+    manifest = T.load_manifest()
     entry = next(e for e in manifest["entries"] if e["id"] == "ov045/FallBlockBfs")
     sec = next(s for s in entry["sections"] if s["name"] == ".text")
     start, end = int(sec["start"], 16), int(sec["end"], 16)
@@ -314,7 +319,7 @@ def test_splice_refuses_a_span_it_cannot_tile_exactly():
     sys.path.insert(0, str(TOOLS))
     import tubuild as T
 
-    manifest = json.loads((REPO / "config" / "tu_manifest.json").read_text(encoding="utf-8"))
+    manifest = T.load_manifest()
     entry = next(e for e in manifest["entries"] if e["id"] == "ov002/LevelObjects")
     sec = next(s for s in entry["sections"] if s["name"] == ".text")
     start, end = int(sec["start"], 16), int(sec["end"], 16)

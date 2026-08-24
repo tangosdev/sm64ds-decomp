@@ -24,7 +24,7 @@ Subcommands:
 This tool never touches src/, config/**/delinks.txt, or runs real
 `eligible.py` / `rombuild.py`. It only reads production state (the
 committed config/, the extracted ROM, the pinned mwccarm) and writes to
-src_tu/, config/tu_manifest.json, and build/tu/ (gitignored, see .gitignore's
+src_tu/, config/tu_manifest.d/, and build/tu/ (gitignored, see .gitignore's
 bare `build/` entry).
 
 Every byte/relocation comparison is delegated to the tree's existing gates --
@@ -67,11 +67,12 @@ import rombuild_cache as RBK    # noqa: E402
 import rombuild_check as RBC    # noqa: E402
 import rombuild_profile as RP   # noqa: E402
 import srcpath as SP            # noqa: E402
+import tu_manifest as TUM      # noqa: E402  the manifest's on-disk shape
 import tu_map as TM             # noqa: E402
 
 TU_MAP = REPO / "build" / "tu_map.json"
 BASELINE_LINK = REPO / "build" / "tu" / "_baseline" / "link"
-MANIFEST = REPO / "config" / "tu_manifest.json"
+MANIFEST = TUM.DEFAULT_ROOT
 SRC_TU = REPO / "src_tu"
 BUILD_TU = REPO / "build" / "tu"
 CFG_ARM9 = REPO / "config" / "arm9"
@@ -295,18 +296,14 @@ def unit_functions(module, unit):
 # ============================================================================ manifest I/O
 
 def load_manifest():
-    if not MANIFEST.is_file():
-        return {"schema_version": 1,
-                "about": ("Recovered translation-unit membership and licensed ranges. "
-                          "See notes/translation-unit-reconstruction-plan.md section 6 "
-                          "for the entry schema. Nothing here is enrolled."),
-                "entries": []}
-    return json.loads(MANIFEST.read_text(encoding="utf-8"))
+    # MANIFEST is normally the config/tu_manifest.d/ directory (one file per
+    # entry, so TU PRs stop conflicting on a shared list); `--manifest` may
+    # point it at a single scratch .json, which tu_manifest handles too.
+    return TUM.load(MANIFEST)
 
 
 def save_manifest(data):
-    MANIFEST.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n",
-                        encoding="utf-8", newline="\n")
+    TUM.save(data, MANIFEST)
 
 
 def manifest_entry(data, tu_id):
@@ -984,7 +981,7 @@ def cmd_create(args):
 
     print(f"wrote {out_path.relative_to(REPO).as_posix()}  ({len(ord_rows)} function(s))")
     print(f"manifest entry {entry['id']} -> status=shadow "
-         f"({MANIFEST.relative_to(REPO).as_posix()})")
+         f"({TUM.describe(MANIFEST)})")
     if warnings:
         print(f"\n{len(warnings)} item(s) need human review before compiling:")
         for w in warnings:
@@ -1116,7 +1113,7 @@ def cmd_compile(args):
     entry = manifest_entry(data, args.id)
     if entry is None:
         raise SystemExit(f"no manifest entry for {args.id!r} in "
-                         f"{MANIFEST.relative_to(REPO).as_posix()}; run `create` first, or "
+                         f"{TUM.describe(MANIFEST)}; run `create` first, or "
                          f"add one by hand (see notes/tu-reconstruction-pilot-report.md)")
 
     obj_bytes, version, flags, build_dir, obj_path = _compile_tu(entry, args.version)
@@ -3325,7 +3322,7 @@ def cmd_partial(args):
     entry = manifest_entry(data, args.id)
     if entry is None:
         raise SystemExit(f"no manifest entry for {args.id!r} in "
-                         f"{MANIFEST.relative_to(REPO).as_posix()}")
+                         f"{TUM.describe(MANIFEST)}")
 
     print(f"=== tubuild partial {entry['id']} (plan sec 9 / phase D) ===")
     print("Nothing under config/ or src/ is read-write here; the only writes are under "
@@ -3521,7 +3518,7 @@ def cmd_linkcheck(args):
     entry = manifest_entry(data, args.id) if args.id else None
     if args.id and entry is None:
         raise SystemExit(f"no manifest entry for {args.id!r} in "
-                         f"{MANIFEST.relative_to(REPO).as_posix()}")
+                         f"{TUM.describe(MANIFEST)}")
     baseline = bool(args.baseline)
     partial = bool(getattr(args, "partial", False))
     partitioned = bool(getattr(args, "partitioned", False))
@@ -4762,7 +4759,7 @@ def cmd_promote(args):
           "changes that derivation -- a vtable rename must move atomically with it.")
 
     print("\n-- 5. manifest")
-    print(f"   {MANIFEST.relative_to(REPO).as_posix()}: entry {entry['id']} "
+    print(f"   {TUM.describe(MANIFEST)}: entry {entry['id']} "
           f"status {status} -> promoted, source -> {dest_rel}")
 
     print("\n-- 6. validation a real promotion would then run")
@@ -4782,7 +4779,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--manifest", type=pathlib.Path, default=None,
-                    help="override config/tu_manifest.json -- point this at a scratch copy "
+                    help="override config/tu_manifest.d/ -- point this at a scratch copy "
                          "for tests or exploratory runs so `verify`/`create` don't write back "
                          "into the tracked file (defaults to the real committed manifest)")
     sub = ap.add_subparsers(dest="cmd", required=True)

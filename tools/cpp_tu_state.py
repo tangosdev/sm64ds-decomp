@@ -8,7 +8,7 @@ the inputs that the build and TU workflow actually consume:
 * ``tiers.converted`` and ``langmode_audit.audit`` (readability and semantic C++),
 * git's tracked ``src/**/*.c|cpp`` set (physical source inventory),
 * ``config/**/symbols.txt`` plus sibling ``delinks.txt`` files (production ownership),
-* ``config/tu_manifest.json`` (shadow/reconstruction evidence),
+* ``config/tu_manifest.d/`` (shadow/reconstruction evidence),
 * ``cpp_tu_compat.audit`` (behavior-backed production readiness).
 
 The checked-in note is a cheap agent bootstrap, not a second database.  Regenerate it
@@ -34,6 +34,7 @@ import langmode_audit as LANGMODE  # noqa: E402
 import progress as PROGRESS  # noqa: E402
 import tiers as TIERS  # noqa: E402
 import cpp_tu_compat as TU_COMPAT  # noqa: E402
+import tu_manifest as TUM  # noqa: E402
 
 SOURCE_SUFFIXES = (".c", ".cpp")
 FUNC_RE = re.compile(
@@ -249,13 +250,13 @@ def collect(repo: pathlib.Path = REPO, *, progress_reader=None,
         if path.endswith(".cpp") and _first_line(repo / path) != "//cpp"
     )
 
-    manifest_path = repo / "config" / "tu_manifest.json"
-    if not manifest_path.is_file():
-        raise StateError("config/tu_manifest.json is missing")
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest_root = repo / "config" / "tu_manifest.d"
+    if not TUM.exists(manifest_root):
+        raise StateError("config/tu_manifest.d/ is missing")
+    manifest = TUM.load(manifest_root)
     entries = manifest.get("entries")
     if not isinstance(entries, list):
-        raise StateError("config/tu_manifest.json has no entries list")
+        raise StateError("config/tu_manifest.d/ has no entries")
 
     statuses = collections.Counter()
     modules = set()
@@ -303,7 +304,7 @@ def collect(repo: pathlib.Path = REPO, *, progress_reader=None,
             "semantic_language_mode": "langmode_audit.audit()",
             "tracked_sources": "git ls-files -- src src_tu",
             "production_ownership": "config/**/symbols.txt + sibling delinks.txt",
-            "tu_evidence": "config/tu_manifest.json",
+            "tu_evidence": "config/tu_manifest.d",
         },
         "matching_progress": _matching_progress(progress_reader),
         "converted_tier": _converted_tier(converted_reader),
@@ -461,7 +462,7 @@ def render_markdown(report: dict) -> str:
         "",
         f"Manifest statuses: {status or '(none)'}.",
         "",
-        "`config/tu_manifest.json` records reconstruction evidence and licensed ranges. It does",
+        "`config/tu_manifest.d/` records reconstruction evidence and licensed ranges. It does",
         "not enroll a TU. The production number above counts an entry as promoted only when every",
         "manifest function is owned by that entry's tracked `promoted_source` in live delinks.",
         "",

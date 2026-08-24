@@ -9,7 +9,7 @@ workflow without relying on chat history. It is an operational companion to:
 - [`tu-reconstruction-pilot-report.md`](tu-reconstruction-pilot-report.md) for the
   original text-only `PoleLift` experiment;
 - [`dtor-migration.md`](dtor-migration.md) for destructor-specific codegen traps;
-- `ov002/daObjAbuku_c` in [`config/tu_manifest.json`](../config/tu_manifest.json)
+- `ov002/daObjAbuku_c` in [`config/tu_manifest.d/`](../config/tu_manifest.d/)
   for the first landed partitioned text-plus-data proof.
 
 The older plan begins with a historical statement that the tooling was only proposed.
@@ -38,7 +38,7 @@ Read first:
 - notes/tu-boundaries.md
 - notes/translation-unit-reconstruction-plan.md
 - notes/dtor-migration.md when the TU emits destructors
-- the ov002/daObjAbuku_c entry in config/tu_manifest.json
+- the ov002/daObjAbuku_c entry in config/tu_manifest.d/
 
 Rules:
 - Fetch and inspect current origin/main; do not trust old worktree or chat state.
@@ -81,7 +81,7 @@ code, data, relocations, RTTI, vtables, and compiler helpers.
 - `src/` is production source. Its delinks entries decide what contributes to the ROM.
 - `src_tu/` is a shadow/incubator tree. It contributes only when `tubuild.py` constructs
   an isolated scratch experiment.
-- `config/tu_manifest.json` licenses exact artifacts and address ranges. It does not
+- `config/tu_manifest.d/` licenses exact artifacts and address ranges. It does not
   enroll a file by itself.
 - `build/tu/` contains generated objects and reports and is never committed.
 
@@ -341,7 +341,7 @@ earn the strict status.
 13. No file escapes the scratch tree or changes shared build output.
 
 The persistent `partitioned_link` record keeps compact hashes and evidence in
-`config/tu_manifest.json`; the complete report remains under the ignored
+`config/tu_manifest.d/`; the complete report remains under the ignored
 `build/tu/<id>/link-partitioned/linkcheck.json`.
 
 Known-good control after Abuku landed:
