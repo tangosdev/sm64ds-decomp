@@ -1,3 +1,3 @@
-void func_02037ee4(void)
+void _ZN5dBgPcD2Ev(void)
 {
 }

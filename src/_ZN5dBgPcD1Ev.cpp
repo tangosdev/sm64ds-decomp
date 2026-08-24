@@ -1,3 +1,7 @@
-void func_02037ee8(void)
+//cpp
+// @symbol _ZN5dBgPcD1Ev
+#include "dBgPc.h"
+
+dBgPc::~dBgPc()
 {
 }

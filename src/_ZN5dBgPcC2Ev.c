@@ -1,8 +1,10 @@
-void func_02037f18(int *c)
+#include "dBgPc.h"
+
+void _ZN5dBgPcC2Ev(struct dBgPc *self)
 {
-    c[0] = 0xfc0;
-    c[1] = 0xff;
-    c[4] = 0;
-    c[3] = c[4];
-    c[2] = c[3];
+    self->surface.clps.w0 = 0xfc0;
+    self->surface.clps.w1 = 0xff;
+    self->surface.normal.z = 0;
+    self->surface.normal.y = self->surface.normal.z;
+    self->surface.normal.x = self->surface.normal.y;
 }

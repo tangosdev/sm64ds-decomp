@@ -4,13 +4,16 @@
 
 dBgPi &dBgPi::operator=(const dBgPi &other)
 {
-    unk_004 = other.unk_004;
-    unk_00c = other.unk_00c;
-    unk_010 = other.unk_010;
-    unk_014 = other.unk_014;
-    unk_018 = other.unk_018;
-    unk_01a = other.unk_01a;
-    unk_01c = other.unk_01c;
+    /* CLPS is one 64-bit record. This spelling also preserves its two loads
+       before either store when source and destination might overlap. */
+    *reinterpret_cast<u64 *>(&surface.clps) =
+        *reinterpret_cast<const u64 *>(&other.surface.clps);
+    surface.normal.x = other.surface.normal.x;
+    surface.normal.y = other.surface.normal.y;
+    surface.normal.z = other.surface.normal.z;
+    triangleID = other.triangleID;
+    flags = other.flags;
+    clsnID = other.clsnID;
     unk_020 = other.unk_020;
     unk_024 = other.unk_024;
     return *this;
