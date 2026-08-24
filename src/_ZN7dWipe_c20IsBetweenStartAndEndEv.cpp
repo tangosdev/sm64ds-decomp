@@ -12,14 +12,14 @@ struct FaderBrightness {
     virtual int  m14();      /* vtable 0x14 */
     virtual int  m18();      /* vtable 0x18 */
     int pad[4];
-    int field_14;            /* 0x14 */
+    int type;            /* 0x14 */
 };
 
 extern "C" int _ZN15FaderBrightness20IsBetweenStartAndEndEv(struct FaderBrightness *thiz);
 
 extern "C" int _ZN7dWipe_c20IsBetweenStartAndEndEv(struct FaderBrightness *thiz)
 {
-    if (thiz->field_14 == 1)
+    if (thiz->type == 1)
         return _ZN15FaderBrightness20IsBetweenStartAndEndEv(thiz);
     if (!thiz->m14()) {
         if (thiz->m18() == 0)

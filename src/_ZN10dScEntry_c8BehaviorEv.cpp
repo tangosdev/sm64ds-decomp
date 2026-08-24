@@ -4,10 +4,11 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* dScEntry_c::Behavior() -- vtable slot 6. extern "C" carries the literal
- * mangled name unmangled; local `Self` models the fields this function
- * touches (f283/f284/f285, pmf@0x5c, the icon_c[9] array @0x70) rather than
- * including the shared header, matching the family convention -- see
- * include/dScEntry_c.h. */
+ * mangled name unmangled. Runs the sub-screen fade-out if one is in flight,
+ * then the per-frame callback, then every live icon. The local `Self` models
+ * only the fields this function touches -- pmf at 0x5c and the icon_c[9] array
+ * at 0x70 -- rather than including the shared header, matching the family
+ * convention; see include/dScEntry_c.h. */
 extern "C" {
     void func_020551f0(void *s, int v);
     int func_ov075_02119dc4(void *c, void *arg);
@@ -32,31 +33,31 @@ struct Self {
     u8 pad0[0x5c];
     PMF pmf;
     u8 pad64[0x280 - 0x64];
-    u8 cnt280;
+    u8 iconCount;
     u8 pad281[2];
-    u8 f283;
-    u8 f284;
-    u8 f285;
+    u8 fadeBrightness;
+    u8 fadeTick;
+    u8 isFading;
 };
 
 extern "C" int _ZN10dScEntry_c8BehaviorEv(Self *c)
 {
     char *cc = (char *)c;
 
-    if (c->f285 != 0) {
-        (*(u8 *)(cc + 0x284))++;
-        if ((c->f284 & 1) == 0) {
-            (*(u8 *)(cc + 0x283))--;
-            func_020551f0((void *)0x4001050, c->f283);
-            if (c->f283 == 0) {
+    if (c->isFading != 0) {
+        c->fadeTick++;
+        if ((c->fadeTick & 1) == 0) {
+            c->fadeBrightness--;
+            func_020551f0((void *)0x4001050, c->fadeBrightness);
+            if (c->fadeBrightness == 0) {
                 *(u16 *)0x4001050 = 0;
-                c->f283 = 0;
-                c->f285 = 0;
+                c->fadeBrightness = 0;
+                c->isFading = 0;
             }
         }
     }
 
-    if (data_0209f5bc->v5() == 0 || c->f285 != 0)
+    if (data_0209f5bc->v5() == 0 || c->isFading != 0)
         return 1;
 
     if (data_0209fc68 != 0) {
@@ -72,14 +73,14 @@ extern "C" int _ZN10dScEntry_c8BehaviorEv(Self *c)
 
     {
         int i = 0;
-        int n = c->cnt280;
+        int n = c->iconCount;
         if (n > 0) {
             Poly0 *o = (Poly0 *)(cc + 0x70);
             do {
                 o->v0();
                 i++;
                 o = (Poly0 *)((char *)o + 0x24);
-            } while (i < c->cnt280);
+            } while (i < c->iconCount);
         }
     }
     return 1;

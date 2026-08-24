@@ -9,11 +9,11 @@
 int dWipe_c::IsAtEnd()
 {
     int result;
-    if (unk_014 == 1)
+    if (type == 1)
         return FaderBrightness::IsAtEnd();
-    if (unk_010 == 0)
+    if (state == 0)
         goto ret1;
-    if (unk_01c > 0)
+    if (wipeInterp > 0)
         goto ret0;
 ret1:
     result = 1;
