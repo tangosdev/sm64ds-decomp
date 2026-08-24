@@ -95,7 +95,36 @@
 // seating 0x175, 0x180 and 0x181 will find it already claimed, which is
 // correct and is why their own base-table claim counts will read zero.
 //
-// ---- 4. THE ONE FLOOR, AND WHAT IT COSTS ON SCREEN -------------------------
+// ---- 4. THE ONE FLOOR -- RETIRED. WHAT IT WAS AND WHAT IT COST -------------
+//
+// RUN mg12, LANE IGN RETIRED THIS FLOOR. src/func_ov006_020ee994.c now exists,
+// the seat routes the real body at slot 18 (bnp_v18 below), and everything
+// this section describes as "does not happen" NOW HAPPENS. The section is kept
+// as written, in the past tense where it matters, because it is the derivation
+// the decomp was written from and because the four hidden callees it names are
+// the four slice lines the retirement cost. The TU is an honest NONMATCHING --
+// 0x164 against the ROM's 0x168, ONE codegen divergence (three loop-invariant
+// constants the ROM rematerialises per iteration and every mwccarm hoists),
+// logic verified instruction for instruction. Its own banner carries the
+// decomposition and the full list of levers tried.
+//
+// vtablerows STILL REPORTS `0x174 ... nosrc 1` AND THAT IS NOT A STALE SEAT.
+// Its nosrc column is measured through Sources(config/arm9/delinks.txt), so it
+// asks "does a DELINK BLOCK own this word", not "does a src file exist".
+// Retiring this floor added src/func_ov006_020ee994.c and did not add a delink
+// block, so the column cannot move and the reconstruction stays EXACT at
+// 30/30. This is lane PGO's mg11 correction seen from the other side -- there,
+// a nosrc row turned out to have a usable src TU; here, a row with a usable
+// src TU keeps reading nosrc. Do not read that 1 at the merge as evidence that
+// slot 18 is still trapped; the seat's own witness line below is the evidence.
+//
+// THE MEASURED CONSEQUENCE, both ends, same binary, scene 372 unattended:
+// with the trap, the state word at self+0x5004 stayed 0x00000000 for the whole
+// run and slot 6 asked with code 0 every tick. With the ignition live it
+// installs 0x020ee5b8 (the opening countdown) on the first tick and the chain
+// walks. The witness at the bottom of this file prints both halves.
+//
+// WHAT WAS TRUE WHILE IT WAS A FLOOR:
 //
 // Vtable slot 18 is func_ov006_020ee994: a config symbol with a size
 // (0x168 bytes), NO delink block -- the block before it ends at 0x020ee994 and
@@ -153,21 +182,27 @@
 // are not in port/slice_bnp.txt and retiring the floor costs four slice lines
 // plus the transcription. All four have src files today.
 //
-// ---- 5. THE DIAGNOSTIC, AND EXACTLY WHERE ITS BOUNDARY IS ------------------
+// ---- 5. THE DIAGNOSTIC THAT STOOD IN FOR IT, NOW REMOVED -------------------
 //
-// SM64DS_BNP_START_STATE=1 makes the trap, after counting, ALSO call
-// func_ov006_020ee658 -- the ROM's own state-0 installer, a decompiled, sliced
-// TU that this seat links anyway -- and nothing else the floor would have done.
-// It is OFF unless the variable is set and it announces itself when on.
+// SM64DS_BNP_START_STATE=1 used to make the trap, after counting, ALSO call
+// func_ov006_020ee658 -- the ROM's own state-0 installer -- and nothing else
+// the floor would have done. It was a DIAGNOSTIC and not a repair: with it on
+// the state machine started at the countdown and walked, so the address switch
+// could be shown to route, while the round counter, the difficulty ladder, the
+// random draw and the two placement calls all stayed unrun.
 //
-// IT IS A DIAGNOSTIC AND NOT A REPAIR, and the difference is the whole of the
-// list in section 4: with it on, the state machine starts at the countdown and
-// walks, so the address switch can be shown to route; the round counter, the
-// difficulty ladder, the random draw and the two placement calls STILL never
-// run. A run with this set is evidence about the DISPATCH half and about
-// nothing else, and the witness below prints whether it was on so no reading of
-// the numbers can forget that. The shape is lane WIG's SM64DS_WIG_LEVEL: seed
-// the ROM's own input, then report what the ROM made of it.
+// IT IS GONE, and removing it was not tidying. The real body ends with that
+// same call, so leaving the variable wired would have installed the state pair
+// a SECOND time after the ignition already installed it -- a diagnostic that
+// used to substitute for the floor becomes a corruption of it the moment the
+// floor is retired. Any run recipe still passing SM64DS_BNP_START_STATE=1 gets
+// no effect and no warning from the environment; it is named here so a reader
+// of an older banked log knows what that line meant.
+//
+// EVERY MEASUREMENT BANKED UNDER THAT VARIABLE REMAINS VALID AS WHAT IT SAID
+// IT WAS -- evidence about the dispatch half only. Run mg11's 1153/1153 routed
+// and its five-in-order states were taken that way, and lane IGN's proofs
+// reproduce them with no variable set at all.
 
 // ---- 6. THE LINKER ROWS THIS SEAT OWES, AND WHY EACH ONE EXISTS -----------
 //
@@ -308,7 +343,14 @@ int   func_ov006_020ee27c(void *self);          /* slot 6  Behavior, HOST COPY *
 int   func_ov006_020ee034(void *self);          /* slot 9  Render */
 void *func_ov006_020edec0(void *self);          /* slot 16 D2 */
 void *func_ov006_020edf54(void *self);          /* slot 17 D0 */
-/*    slot 18 is func_ov006_020ee994 and is THE FLOOR -- trapped below */
+/* slot 18 is func_ov006_020ee994, THE IGNITION. It was this class's one floor
+   and run mg12's lane IGN retired it: src/func_ov006_020ee994.c is an honest
+   NONMATCHING TU (one codegen divergence, logic verified instruction for
+   instruction) and this seat now routes the real body. The ROM sets no return
+   value of its own -- it falls out of the tail call to func_ov006_020ee658 --
+   and slot 0 declares m48 void, so the thunk below reports 1 the way every
+   other void face in this file does. */
+void  func_ov006_020ee994(void *self, int sel);
 int   func_ov006_020ee8dc(void *self, int sel); /* slot 19, READS arg2 */
 
 /* ---- dScMgD3DBase_c's fifteen, shared with ids 0x175, 0x180 and 0x181 ----
@@ -356,7 +398,9 @@ extern int   data_ov006_02140304;
 extern int   data_ov006_02140418[];
 extern char *data_ov006_02140420[];
 
-/* the ROM's own state-0 installer, called only by the section-5 diagnostic */
+/* The ROM's own state-0 installer. This seat no longer calls it: the section-5
+   diagnostic that did is gone, and the ignition at slot 18 reaches it the way
+   the ROM does. Kept declared because the witness prose names it. */
 void  func_ov006_020ee658(void *self);
 
 /* the factory */
@@ -515,35 +559,30 @@ static void *__fastcall bnp_d0(void *s, void *)
 static int __fastcall bnp_v19(void *s, void *, int sel)
 { BNP(19); return func_ov006_020ee8dc(s, sel); }
 
-// ---- the floor -------------------------------------------------------------
+// ---- the ignition, formerly the floor --------------------------------------
 //
-// A NAMED COUNTING TRAP for func_ov006_020ee994. It counts, records the
-// argument it was called with, and returns 1. Section 4 is what it costs and
-// section 5 is the diagnostic's boundary.
+// THE COUNTERS SURVIVE THE FLOOR THEY WERE BUILT FOR, deliberately. They were
+// the trap's instrument; they are now the ignition's witness, and they answer
+// a question the slot-18 hit count alone cannot: WHICH ARGUMENT the class
+// ignited with. Slot 0 passes -1, so a run that reports anything else is
+// reporting a second ignition from somewhere this seat has not accounted for.
+//
+// SM64DS_BNP_START_STATE IS GONE. It called func_ov006_020ee658 -- the ROM's
+// state-0 installer -- BEHIND the trap, so the dispatch half could be shown to
+// route while the round counter, the difficulty ladder, the random draw and
+// the two placement calls all stayed unrun. The real body does all five, and
+// leaving the diagnostic wired would install the state pair a second time
+// after the ignition already installed it. Section 5 records what it was.
 
 static unsigned g_bnp_floor_calls;
 static int      g_bnp_floor_last_arg = -0x7fffffff;
-static int      g_bnp_start_state = -2;
 
-static int __fastcall bnp_slot18_trap(void *s, void *, int st)
+static int __fastcall bnp_v18(void *s, void *, int st)
 {
     BNP(18);
     ++g_bnp_floor_calls;
     g_bnp_floor_last_arg = st;
-    if (g_bnp_start_state == -2) {
-        const char *e = std::getenv("SM64DS_BNP_START_STATE");
-        g_bnp_start_state = (e && e[0] == '1') ? 1 : 0;
-        if (g_bnp_start_state)
-            std::fprintf(stderr, "  [scene] SM64DS_BNP_START_STATE=1: after the "
-                         "slot-18 trap counts, calling the ROM's own state-0 "
-                         "installer func_ov006_020ee658 so the dispatch half can "
-                         "be exercised. THIS IS A DIAGNOSTIC. The floor's round "
-                         "counter, difficulty ladder, random draw and two "
-                         "placement calls still do not run; see section 4 of "
-                         "hal/scene_mg_jump.cpp.\n");
-    }
-    if (g_bnp_start_state == 1)
-        func_ov006_020ee658(s);
+    func_ov006_020ee994(s, st);
     return 1;
 }
 
@@ -636,7 +675,7 @@ static const BnpFace kJumpFaces[] = {
     {0x020ee690u, (void *)bnp_init},   {0x020edffcu, (void *)bnp_clean},
     {0x020ee27cu, (void *)bnp_beh},    {0x020ee034u, (void *)bnp_render},
     {0x020edec0u, (void *)bnp_d2},     {0x020edf54u, (void *)bnp_d0},
-    {0x020ee994u, (void *)bnp_slot18_trap},
+    {0x020ee994u, (void *)bnp_v18},
     {0x020ee8dcu, (void *)bnp_v19},
     /* dScMgD3DBase_c's fifteen, shared with 0x175, 0x180 and 0x181 */
     {0x020e70e4u, (void *)bnp_v1},     {0x020e70c0u, (void *)bnp_v2},
@@ -793,7 +832,7 @@ extern "C" void *port_mg_jump_spawn(void)
 extern "C" void port_scene_jump_hits(void)
 {
     std::printf("[scene] dScMgJump_c slot hits: init %u, cleanup %u, behavior "
-                "%u, render %u, D2 %u, D0 %u, slot18-FLOOR %u, slot19 %u\n",
+                "%u, render %u, D2 %u, D0 %u, slot18-IGNITION %u, slot19 %u\n",
                 g_bnp_hits[0], g_bnp_hits[3], g_bnp_hits[6], g_bnp_hits[9],
                 g_bnp_hits[16], g_bnp_hits[17], g_bnp_hits[18], g_bnp_hits[19]);
     std::printf("[scene] dScMgD3DBase_c slot hits (shared with 0x175/0x180/"
@@ -818,10 +857,17 @@ extern "C" void port_scene_jump_hits(void)
         unsigned mine = 0, hits = 0, nullpmf = 0;
         port_mg_dispatch_counts(&calls, &unknown);
         port_mg_jump_counts(&mine, &hits, &nullpmf);
+        /* THE PARENTHETICAL USED TO SAY "the floor never installed one", which
+           was the whole reading while slot 18 was trapped. The ignition is
+           routed now, so a nonzero here means the opposite thing: the class
+           dispatched before the ignition ran, or a pair got cleared under it.
+           Naming what a nonzero WOULD mean is the point of printing it. */
         std::printf("[scene] dScMgJump_c state dispatch: %u reached this "
-                    "class's switch, %u routed, %u with a NULL pair (the floor "
-                    "never installed one), %u framework call(s), %u UNHANDLED "
-                    "address(es)\n", mine, hits, nullpmf, calls, unknown);
+                    "class's switch, %u routed, %u with a NULL pair (with the "
+                    "ignition live this must be 0 -- a nonzero is a dispatch "
+                    "that beat func_ov006_020ee994), %u framework call(s), %u "
+                    "UNHANDLED address(es)\n", mine, hits, nullpmf, calls,
+                    unknown);
     }
     /* THE PER-ADDRESS CENSUS. A routed total and a zero UNHANDLED say every
        address the class asked for was one this seat owns; they do not say which
@@ -866,25 +912,22 @@ extern "C" void port_scene_jump_hits(void)
     for (unsigned i = 0; i < g_bnp_state_nseen; ++i)
         std::printf(" 0x%08x", g_bnp_state_seen[i]);
     std::printf(" (last code slot 6 saw: 0x%08x)\n", port_mg_jump_state_last());
-    /* THE FLOOR, reported as a floor rather than as a slot count. */
-    std::printf("[scene] dScMgJump_c FLOOR func_ov006_020ee994 (vtable slot 18, "
-                "0x168 bytes, no delink block, no src): trapped, entered %u "
-                "time(s), last argument %d. Section 4 of hal/scene_mg_jump.cpp "
-                "lists everything it did not do. SM64DS_BNP_START_STATE was "
-                "%s.\n",
+    /* THE IGNITION, reported with the argument it ignited with. */
+    std::printf("[scene] dScMgJump_c IGNITION func_ov006_020ee994 (vtable slot "
+                "18, 0x168 bytes): ROUTED TO THE REAL BODY, entered %u time(s), "
+                "last argument %d (slot 0 passes -1). Retired as a floor by run "
+                "mg12 lane IGN; SM64DS_BNP_START_STATE is gone with it.\n",
                 g_bnp_floor_calls,
-                g_bnp_floor_calls ? g_bnp_floor_last_arg : 0,
-                g_bnp_start_state == 1 ? "SET (the state machine was started by "
-                                         "the ROM's own installer -- a "
-                                         "DIAGNOSTIC, not the round)"
-                                       : "not set");
+                g_bnp_floor_calls ? g_bnp_floor_last_arg : 0);
     if (g_bnp_self)
         std::printf("[scene] dScMgJump_c object at %p, state pair {0x%08x, %d}, "
-                    "round counter +0xbc = %d, difficulty global "
-                    "data_ov006_02140328 unread by this seat\n",
+                    "round counter +0xbc = %d; difficulty ladder "
+                    "data_ov006_02140328 = %d, remaining-target counter "
+                    "data_ov006_02140304 = %d\n",
                     (void *)g_bnp_self,
                     *(unsigned *)(g_bnp_self + 0x5004),
                     *(int *)(g_bnp_self + 0x5008),
-                    *(int *)(g_bnp_self + 0xbc));
+                    *(int *)(g_bnp_self + 0xbc),
+                    data_ov006_02140328, data_ov006_02140304);
     std::fflush(stdout);
 }

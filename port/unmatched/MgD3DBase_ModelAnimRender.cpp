@@ -50,6 +50,22 @@
  *
  *   WITH this file, the same three runs  ->  exit 0, 3 of 3
  *
+ *   THAT RECIPE NO LONGER REPRODUCES AS WRITTEN, and it fails SILENTLY, which
+ *   is why this paragraph exists. SM64DS_BNP_START_STATE was the run mg11
+ *   diagnostic that started the state machine while vtable slot 18 was a
+ *   trapped floor; run mg12's lane IGN decompiled that floor
+ *   (src/func_ov006_020ee994.c) and DELETED the variable with it. Setting it
+ *   today does nothing and warns about nothing, so anyone re-running the line
+ *   above verbatim would get a scene that starts anyway -- for the right
+ *   reason -- and would have no way to tell the variable had stopped meaning
+ *   anything. DROP THE VARIABLE: the ignition now starts the machine
+ *   unattended, which is what the recipe needed it for, so
+ *     SM64DS_SCENE=372 SM64DS_FAULTS_FATAL=1
+ *   at the same three frame counts is the current form. The A/B itself is
+ *   untouched by any of this -- it is about THIS file being in the source list
+ *   or not, and the fault below is a render-path argument mismatch that has
+ *   nothing to do with how the machine was started.
+ *
  * The fault record from the reverted build:
  *
  *   FAULT code c0000005 at +0xffc00000 accessing 00000000
