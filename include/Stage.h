@@ -15,7 +15,8 @@ struct LVL_Overlay;
  * change with its own blast radius. See notes/scene-provenance.md, and
  * notes/system-provenance.md for what each field below is and how it is known.
  * This copy and include/Particle.h are kept identical by hand;
- * include/Particle__SysTracker.h is the third shadow and still says unk_.
+ * include/Particle__SysTracker.h is the third shadow and now carries the same
+ * names and types as the other two.
  *
  * The destructor is declared, never defined -- src/_ZN8Particle10SysTrackerD1Ev.cpp
  * supplies it as an extern "C" free function, and this declaration only lets
