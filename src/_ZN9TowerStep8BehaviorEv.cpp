@@ -66,7 +66,7 @@ int TowerStep::Behavior()
         UpdateModelPosAndRotY();
         if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, 0x150000, 0x1000) != 0)
             UpdateClsnPosAndRot();
-        if (Vec3_Dist(&mPosX, &unk_068) != 0) {
+        if (Vec3_Dist(&mPosX, &mPrevPosX) != 0) {
             unsigned z = 0;
             unsigned r = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                 (unsigned)mSoundID, 3, 0x82, &mCamSpacePosX, (s16)z);

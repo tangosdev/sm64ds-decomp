@@ -81,9 +81,9 @@ int Spindrift::Behavior()
     _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char *)this), ((char *)this) + 0x1d0, 0);
 
     if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(((char *)this), ((char *)this) + 0x1d0, 0x3c000, 0x2888, 1, 1, 0x32000) != 0) {
-        mPosX = unk_068;
-        mPosY = unk_06c;
-        mPosZ = unk_070;
+        mPosX = mPrevPosX;
+        mPosY = mPrevPosY;
+        mPosZ = mPrevPosZ;
     }
     func_ov081_02123b20(((char *)this));
     _ZN5dCc_c5ClearEv((char *)&mdCcAc_c);
