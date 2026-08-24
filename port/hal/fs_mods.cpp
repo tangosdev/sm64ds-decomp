@@ -1736,10 +1736,18 @@ u32 palette_filter(unsigned fileID, u8 **data, u32 size)
    THE EYES COME ALONG, AND THAT IS CORRECT HERE. Recoloring Yoshi's skin
    moves his eye colors too, because they share the palette. For these four
    built-ins that is not a risk but the point: the colors being copied are
-   the ROM's own authored rows, and the ROM keeps indices 4, 5, 6 and 12..15
-   identical across all four rows precisely so the eyes and the whites do not
-   move. An AUTHORED .pal has no such guarantee, which is why a hand-written
-   Yoshi palette is worth looking at twice. */
+   the ROM's own authored rows, and the ROM moves only SEVEN of the sixteen
+   slots between rows -- 0..3 (skin), 7 and 8, and 11. The other nine, 4, 5,
+   6, 9, 10 and 12..15, are byte-identical in all four rows, and they are
+   exactly the eye and white colors: near-black 0x0002, the eye yellow
+   0x04bd, the dark red 0x0862 and the four greys and whites. Copying a whole
+   ROM row therefore cannot move an eye color, because the ROM authored the
+   rows so it would not.
+
+   AN AUTHORED .pal HAS NO SUCH GUARANTEE. A hand-written Yoshi palette
+   writes all sixteen slots, so it moves the eyes along with the skin unless
+   whoever wrote it left those nine alone. That is worth checking on every
+   Yoshi change, and it is the one thing the four built-ins are free of. */
 
 enum { PC_MARIO = 0, PC_LUIGI = 1, PC_WARIO = 2, PC_YOSHI = 3,
        PC_COUNT = 4, PC_MAX_FILES = 5 };
