@@ -5855,7 +5855,7 @@ src/func_0203ad6c.c:
     complete
     .text start:0x0203ad6c end:0x0203ad74
 
-src/_ZN7PathPtrC1Ev.c:
+src/_ZN7PathPtrC1Ev.cpp:
     complete
     .text start:0x0203ad74 end:0x0203ad84
 
