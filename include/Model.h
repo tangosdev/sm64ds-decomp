@@ -22,7 +22,7 @@
  * D0/D1/D2 bodies stay C files so no TU ever emits _ZTV5Model, which the
  * module's gap object already supplies from ROM data.
  *
- * LAYOUT evidence: Model::C2 calls ModelBase::C1, stores _ZTV5Model, copies
+ * LAYOUT evidence: Model::C2 calls ModelBase::C2, stores _ZTV5Model, copies
  * mat4x3 from data_02082128 and zeroes +0x4c. Model::DoSetFile allocates
  * transformsBuf with Memory::operator_new2 and the destructors operator
  * delete it. Model::Render multiplies mat4x3 into a stack temp before

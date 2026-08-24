@@ -25,11 +25,11 @@ struct ShadowModel {
 };
 
 extern u32 _ZTV11ShadowModel[];
-extern void _ZN9ModelBaseC1Ev(struct ModelBase *thiz);
+extern void _ZN9ModelBaseC2Ev(struct ModelBase *thiz);
 
 struct ShadowModel *_ZN11ShadowModelC1Ev(struct ShadowModel *thiz)
 {
-    _ZN9ModelBaseC1Ev((struct ModelBase *)thiz);
+    _ZN9ModelBaseC2Ev((struct ModelBase *)thiz);
     thiz->vtable = _ZTV11ShadowModel;
     thiz->matPtr = 0;
     thiz->prev = 0;

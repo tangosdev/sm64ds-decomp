@@ -618,7 +618,7 @@ func_02017060 kind:function(arm,size=0x58) addr:0x02017060
 _ZN9ModelBaseD2Ev kind:function(arm,size=0x30) addr:0x020170b8
 _ZN9ModelBaseD0Ev kind:function(arm,size=0x38) addr:0x020170e8
 _ZN9ModelBaseD1Ev kind:function(arm,size=0x30) addr:0x02017120
-_ZN9ModelBaseC1Ev kind:function(arm,size=0x18) addr:0x02017150
+_ZN9ModelBaseC2Ev kind:function(arm,size=0x18) addr:0x02017150
 _ZThn80_N9ModelAnimD0Ev kind:function(arm,size=0x10) addr:0x02017168
 _ZThn80_N9ModelAnimD1Ev kind:function(arm,size=0x10) addr:0x02017178
 _ZThn80_N14BlendModelAnimD0Ev kind:function(arm,size=0x10) addr:0x02017188
@@ -3609,7 +3609,7 @@ _ZTS15dExtAnmTexPat_c kind:data(any) addr:0x0208e824
 _ZTS15dExtAnm2Model_c kind:data(any) addr:0x0208e838
 _ZTS15dExtFrameCtrl_c kind:data(any) addr:0x0208e84c
 _ZTV11ShadowModel kind:data(any) addr:0x0208e868
-data_0208e87c kind:data(any) addr:0x0208e87c
+_ZTV9ModelBase kind:data(any) addr:0x0208e87c
 _ZTS17dExtShadowModel_c kind:data(any) addr:0x0208e888
 _ZTV11CommonModel kind:data(any) addr:0x0208e8a4
 _ZTS17dExtCommonModel_c kind:data(any) addr:0x0208e8b0

@@ -24,7 +24,7 @@
  * D1 carries the unlink logic and is now the only place it is written.
  * D0 and D2 stay C files.
  *
- * LAYOUT evidence: C1 calls ModelBase::C1, stores the vptr, zeroes mat,
+ * LAYOUT evidence: C1 calls ModelBase::C2, stores the vptr, zeroes mat,
  * prev and next; InitModel fills mat/scale/opacity and links; the D1
  * unlink pins prev at 0x20 and next at 0x24.
  *

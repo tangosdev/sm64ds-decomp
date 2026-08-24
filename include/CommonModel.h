@@ -21,7 +21,7 @@
  * key-function arrangement from include/ModelBase.h, and the objisolate
  * exemption to it recorded there. D0 and D2 stay C files.
  *
- * LAYOUT evidence: C1 calls ModelBase::C1, stores the vptr, zeroes the
+ * LAYOUT evidence: C1 calls ModelBase::C2, stores the vptr, zeroes the
  * data pointer at +0x8 and copies mat4x3 from data_02082128 to +0xc. The
  * mat4x3 landing at +0xc is what pins the components as a pointer here and
  * rules the embedded struct out of ModelBase.
