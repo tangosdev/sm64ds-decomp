@@ -206,21 +206,21 @@ void _ZN5dCc_c6UpdateEv(void* self);
 
 int ChainChomp::Behavior()
 {
-    unk_61c = 0;
+    mIsOnGround = 0;
     {
-        int v = unk_5f0 + 0xc8000;
+        int v = mSpawnPosY + 0xc8000;
         if (mPosY <= v) {
             mPosY = v;
-            if (unk_61d == 0) {
+            if (mWasOnGround == 0) {
                 func_ov014_02111fb8(((char*)this));
             }
-            unk_61c = 1;
+            mIsOnGround = 1;
         }
     }
-    unk_61d = unk_61c;
-    if (unk_60c == 0) {
+    mWasOnGround = mIsOnGround;
+    if (mFenceUniqueID == 0) {
         char* r = _ZN8dActor_c15FindWithActorIDEjPS_(0x29, 0);
-        unk_60c = *(int*)(r + 4);
+        mFenceUniqueID = *(int*)(r + 4);
     }
     func_ov014_02111f08(((char*)this));
     _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), ((char*)this) + 0x110);

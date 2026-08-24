@@ -85,3 +85,45 @@ Byte-neutral cleanups (each re-verified, `2004/b56`):
 `src/_ZN8Goomboss13InitResourcesEv.cpp` is left alone: it is an `extern "C"`
 function over a bare `char *self` that never includes the header at all, so its
 offsets are not member accesses to collapse.
+
+---
+
+## ChainChomp (`include/ChainChomp.h`, ov014)
+
+Bodies read: `src/_ZN10ChainChomp8BehaviorEv.cpp`,
+`src/_ZN10ChainChomp13InitResourcesEv.cpp`, `src/_ZN10ChainChomp6RenderEv.cpp`,
+and the merged `src_tu/actors/ChainChomp.cpp`.
+
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x524 | `mLinkPos[7]` (`Vector3`) | `InitResources` walks a seven-iteration loop writing `mPosX/mPosY/mPosZ` into `self+0x524 + i*0xc`. Seven is the chain-link count this whole header is built around (`Model mLinkModels[7]`, `ShadowModel mLinkShadows[7]`). |
+| 0x5ec | `mSpawnPosX` | `InitResources` copies `self+0x5c/0x60/0x64` into `self+0x5ec/0x5f0/0x5f4` and then adds `0xc8000` to each of the live position words, so these three are where the actor started. |
+| 0x5f0 | `mSpawnPosY` | as above, and `Behavior` clamps `mPosY` up to `mSpawnPosY + 0xc8000` every frame — the rest height the chomp hangs at. |
+| 0x5f4 | `mSpawnPosZ` | as above. |
+| 0x608 | `mStumpUniqueID` | `InitResources` calls `dActor_c::Spawn(0x1b, 0x11, &mPosX, ...)` and stores `spawned + 4` here. `fBase_c + 0x04` is `uniqueID` (`include/fBase_c.h`). ACTOR_SPAWN_TABLE at 0x02090864, entry 0x1b, points at 0x02135298 = `Stump_SpawnInfo`; and the very next line writes `spawned + 0x320`, which `include/Stump.h` declares as `Stump::mBusy`. Two independent witnesses for the same class. |
+| 0x60c | `mFenceUniqueID` | `Behavior` lazily fills it with `dActor_c::FindWithActorID(0x29, 0)->uniqueID`. ACTOR_SPAWN_TABLE entry 0x29 points at 0x0211488c = `ChainChompFence_SpawnInfo`, in this same overlay. |
+| 0x61c | `mIsOnGround` | `Behavior` clears it at the top of the frame and sets it to 1 in exactly the branch that had to clamp `mPosY` up to the rest height. |
+| 0x61d | `mWasOnGround` | last statement of that block is `mWasOnGround = mIsOnGround`, and `func_ov014_02111fb8` fires only when the clamp happens *and* `mWasOnGround == 0` — a rising-edge one-shot. |
+
+Left `unk_`:
+
+* **0x578** — a second `Vector3[7]` immediately after `mLinkPos`. The header's
+  prose calls both "the per-link positions", but nothing matched reads or writes
+  this one, so which role it plays (previous-position history is the obvious
+  guess) is not evidenced. Naming it would be guessing.
+* **0x5f8** — `InitResources` stores `0x50000` and nothing reads it back. Promoted
+  out of padding so the offset is at least visible, but not named.
+* **0x605** — gates three `Behavior` helper calls; no writer anywhere in the tree,
+  so it is a mode flag of unknown meaning.
+
+C twin: `unk_0b4..unk_0ce` were `dActor_c`'s clip volume and death-table index,
+renamed to the base header's own spellings (see the shared table at the top).
+
+Byte-neutral cleanups (each re-verified, `2004/b56`):
+
+* `Behavior` — two `((char*)this) + 0x110` became `&mdCcAcPos_c`.
+* `Render` — `((char *)this) + 0x1dc` became `(char *)mLinkModels`.
+
+`src_tu/actors/ChainChomp.cpp` carries the same renames and still compiles
+(`match.compile_c`, 2004/b56) — the merged TU is not in the default rombuild
+profile, so a stale spelling there would not have been caught by any green gate.
