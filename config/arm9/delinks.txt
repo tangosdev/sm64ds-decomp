@@ -5197,7 +5197,7 @@ src/_ZN12dBgCh_SphCrrD1Ev.c:
     complete
     .text start:0x02037cb0 end:0x02037d18
 
-src/_ZN12dBgCh_SphCrrC1Ev.c:
+src/_ZN12dBgCh_SphCrrC1Ev.cpp:
     complete
     .text start:0x02037d18 end:0x02037d84
 
