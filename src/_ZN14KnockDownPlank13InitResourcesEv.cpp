@@ -32,7 +32,10 @@ extern unsigned char data_0209f220;
 #pragma opt_propagation off
 int KnockDownPlank::InitResources()
 {
-    dBgCh_Gnd rg;
+    /* Dumb word storage, not a typed local: a dBgCh_Gnd local now
+       synthesizes its constructor at the declaration, but the ROM constructs
+       it after model setup -- so keep raw words and hand-call below. */
+    u32 rg[sizeof(dBgCh_Gnd) / sizeof(u32)];
     Vector3 a, b, c, d;
     int zero, one;
 
@@ -59,11 +62,11 @@ int KnockDownPlank::InitResources()
     MulVec3Mat4x3(&a, &data_020a0e68, &b);
     Vec3_Add(&c, &b, (Vector3 *)&mPosX);
     c.y += 0x14000;
-    _ZN9dBgCh_GndC1Ev(&rg);
-    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &c, 0);
+    _ZN9dBgCh_GndC1Ev((dBgCh_Gnd *)rg);
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c((dBgCh_Gnd *)rg, &c, 0);
     mFrontFloorY = c.y;
-    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0)
-        mFrontFloorY = rg.clsnY;
+    if (_ZN9dBgCh_Gnd10DetectClsnEv((dBgCh_Gnd *)rg) != 0)
+        mFrontFloorY = ((dBgCh_Gnd *)rg)->clsnY;
 
     zero = 0;
     a.z = 0x32000; a.x = zero; a.y = zero; b.x = zero; b.y = zero; b.z = zero;
@@ -82,9 +85,9 @@ int KnockDownPlank::InitResources()
     if (data_0209f2f8 == 7 && (data_0209f220 == 1 || IsStarCollectedInCurLevel(one) == 0)
         && mPosY >= 0xdac000)
     {
-        _ZN9dBgCh_GndD1Ev(&rg);
+        _ZN9dBgCh_GndD1Ev((dBgCh_Gnd *)rg);
         return 0;
     }
-    _ZN9dBgCh_GndD1Ev(&rg);
+    _ZN9dBgCh_GndD1Ev((dBgCh_Gnd *)rg);
     return 1;
 }

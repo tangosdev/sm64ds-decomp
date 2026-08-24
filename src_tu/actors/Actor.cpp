@@ -97,7 +97,7 @@ extern s16* data_0209b45c;
 extern s16 data_0208e378;
 extern int* data_020a4bb8;
 extern unsigned char data_0209f2d8;
-void _ZN7fBase_cC1Ev(void* self);
+void _ZN7fBase_cC2Ev(void* self);
 int func_0203b244(void* l, void* n);
 void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(struct dActor_c *self, int a, int b, int c, int d);
 }
@@ -105,7 +105,7 @@ extern "C" void* _ZN8dActor_cC2Ev(struct dActor_c *self) {
     int* entry;
     int b;
     int r3;
-    _ZN7fBase_cC1Ev(((char*)self));
+    _ZN7fBase_cC2Ev(((char*)self));
     *(void**)((char*)self) = &data_0208e4b8;
     *(void**)((char*)self) = &data_0208e3a4;
     self->unk_050 = 0;
@@ -164,7 +164,7 @@ extern "C" void _ZN8Vector3sD1Ev(void *self) {}
 /* ROM ordinal 94 -- _ZN8dActor_cC1Ev
  * 0x020113c0  size 0x148   legacy src/_ZN8dActor_cC1Ev.cpp */
 extern "C" void* _ZN8dActor_cC1Ev(struct dActor_c *self) {
-  _ZN7fBase_cC1Ev(((char*)self));
+  _ZN7fBase_cC2Ev(((char*)self));
   *(void**)((char*)self) = &data_0208e4b8;
   *(void**)((char*)self) = &data_0208e3a4;
   self->unk_050 = 0;

@@ -17,11 +17,10 @@ void func_020393d4(void *collider, void *callback);
 void func_ov002_020efaf0(daObjPathLift_c *self);
 int func_ov100_0214700c(daObjPathLift_c *self);
 
-/* dBgCh_Gnd's lifecycle remains explicit because adding constructors to its
- * shared header would silently add calls to every automatic consumer. */
-void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *self);
+/* dBgCh_Gnd is a real class now (notes/ctor-migration.md item 9): `ground`
+ * below is constructed at its declaration and destroyed at the closing brace,
+ * both calls synthesized. */
 int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *self);
-void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *self);
 
 extern SharedFilePtr data_ov002_0210d9f0;
 extern SharedFilePtr data_ov100_02148a54;
@@ -58,7 +57,6 @@ int daObjPathLift_c::InitResources()
     {
         dBgCh_Gnd ground;
         int debugMode;
-        _ZN9dBgCh_GndC1Ev(&ground);
         ground.SetObjAndPos(pos, 0);
         unk_4ac = pos.y;
         if (_ZN9dBgCh_Gnd10DetectClsnEv(&ground) != 0)
@@ -67,7 +65,7 @@ int daObjPathLift_c::InitResources()
         debugMode = (data_0209f2d8 == 1);
         if (debugMode)
             unk_4b0 = 0xb4;
-        _ZN9dBgCh_GndD1Ev(&ground);
+        /* ground's destructor is synthesized at this brace */
     }
     return 1;
 }
