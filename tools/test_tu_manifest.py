@@ -178,5 +178,35 @@ class TrackedManifestTests(unittest.TestCase):
             self.assertEqual(before[name], after[name], f"{name} would be rewritten")
 
 
+class ConsumersAcceptADirectoryRootTests(unittest.TestCase):
+    """Every consumer must go through tu_manifest, not read the root as a file.
+
+    check_src_tu_compiles had two manifest accesses and only one was converted;
+    the survivor did `manifest_path.read_text()`, which against a directory
+    raises PermissionError on Windows and IsADirectoryError elsewhere. No
+    workflow runs that tool -- src-tu-refs.yml runs the refs half and leaves the
+    compile half to pre-push and the build box -- so CI stayed green on a tool
+    that could not start. This is the cheap guard for that shape.
+    """
+
+    def test_check_src_tu_compiles_reads_the_directory_root(self):
+        import check_src_tu_compiles as CSTC
+
+        # only=() a name no entry has: the manifest still has to be read and
+        # filtered, which is the line that used to blow up, but nothing compiles
+        # so this needs no toolchain.
+        report = CSTC.check(TUM.DEFAULT_ROOT, only=("no/such/entry",))
+        self.assertEqual(report["checked"]["units"], 0)
+        self.assertTrue(any("no manifest entry" in f.get("message", "")
+                            for f in report["failures"]),
+                        f"expected the unknown-id failure, got {report['failures']}")
+
+    def test_cpp_tu_state_reads_the_directory_root(self):
+        import cpp_tu_state as STATE
+
+        self.assertTrue(TUM.exists(REPO / "config" / "tu_manifest.d"))
+        self.assertTrue(callable(STATE.collect))
+
+
 if __name__ == "__main__":
     unittest.main()

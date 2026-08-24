@@ -161,7 +161,7 @@ def check(manifest_path=MANIFEST, root=None, only=(), version_override=None,
                               "mwccarm licence file is missing -- every compile below "
                               "will fail for that reason and not for a source defect"))
 
-    entries = json.loads(manifest_path.read_text(encoding="utf-8"))["entries"]
+    entries = TUM.load(manifest_path)["entries"]
     if only:
         want = set(only)
         unknown = sorted(want - {e["id"] for e in entries})
