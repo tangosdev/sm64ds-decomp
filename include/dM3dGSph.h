@@ -9,7 +9,7 @@
  *
  * 0x14 BYTES, every offset pinned by a one-line matched function:
  *
- *   func_0203ac60   p[0] = data_020994cc      the vptr at 0x00
+ *   _ZN8dM3dGSphC1Ev   p[0] = data_020994cc      the vptr at 0x00
  *   func_0203ac00   d[1..3] = s[0..2]         the centre  at 0x04
  *   func_0203abcc   p[4] = v                  the radius  at 0x10
  *   func_0203abd4   calls both of the above   -- SetCentreAndRadius

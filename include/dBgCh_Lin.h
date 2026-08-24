@@ -67,7 +67,7 @@ struct dBgCh_Lin {
     Fix12i clsnDist;        /* 0x060 */
     /* The segment's BOUNDING SPHERE, and the struct does not end at 0x65.
        Proven three ways, all matched code:
-         C1            constructs it -- func_0203ac60(thiz + 0x64) stores
+         C1            constructs it -- _ZN8dM3dGSphC1Ev(thiz + 0x64) stores
                        data_020994cc
          D1            destroys it   -- func_0203ac50(&self->unk_064)
          SetObjAndLine fills it      -- func_0203abd4(thiz + 0x64, &midpoint,
