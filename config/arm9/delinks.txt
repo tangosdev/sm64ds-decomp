@@ -1964,7 +1964,7 @@ src/_ZN7ClipperD1Ev.c:
     complete
     .text start:0x02015720 end:0x02015730
 
-src/_ZN7ClipperC1Ev.c:
+src/_ZN7ClipperC1Ev.cpp:
     complete
     .text start:0x02015730 end:0x0201577c
 
