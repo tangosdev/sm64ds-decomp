@@ -3348,3 +3348,332 @@ WHAT THIS SECTION DOES NOT KNOW.
   - THE ROUND RAN WITH ONE WALKER. +0x46c8 is 1 on this seat, so the many-walker
     arm of this tick and the many-walker arm of the round setup are both
     exercised only in their single-walker form.
+
+
+23. THE SEQUEL'S TABLE IS NOT ITS NEIGHBOUR'S, run mg11 lane PGO
+--------------------------------------------------------------------------------
+
+Worktree C:/tmp/mBa, branch mg11-pgo, base 98a4c0e8f, private build
+C:/tmp/mBa/build/port, CMAKE_HOME_DIRECTORY verified C:/tmp/mBa/port.
+
+dScMgMCarlo2_c, actor id 0x17e = scene 382, "Pair-a-Gone And On" -- the
+ENDLESS-MODE sequel to the Pair-a-Gone run mg9 lane S381 seated at 0x17d.
+Section 3's row 36 / 14 / 11 / 1 is confirmed exactly and its nosrc column is
+explained rather than paid.
+
+THIS SECTION IS APPENDED AT THE FILE'S END ON PURPOSE. Its one entry for
+section 20's routing list is written out below rather than inserted up there,
+because nine mg11 lanes run against this file at once and a mid-file insertion
+is the merge conflict every one of them would take. The merge gate should move
+routing item 5 into section 20 when it lands, or leave it here and say so.
+
+(1) THE ATTRIBUTION FINDING, AND IT IS THE SAME TRAP LKY CAUGHT ONE CLASS OVER
+
+A run of TWENTY-FIVE mwcc {code, 0} pairs starts at 0x0213d878, the word
+IMMEDIATELY after this class's vtable ends, and __sinit_ov006_02131a38 copies
+all twenty-five into five .bss dispatch tables: 0x02142604 (4 pairs),
+0x02142624 (4), 0x02142644 (5), 0x0214266c (5) and 0x02142694 (7). Read by
+address adjacency that is a fourteen-override minigame's state machine sitting
+exactly where a state machine sits for eleven other seated classes.
+
+IT BELONGS TO MgBobOmbSquad, actor 0x170, and four measurements say so:
+
+  - every code word in the pairs lies in 0x020fa9c8..0x020fea54, PAST this
+    class's code block, which runs 0x020f8ef4..0x020fa75c;
+  - the five .bss tables are read from 0x020fad8c, 0x020fb66c, 0x020fc840,
+    0x020fdaec and 0x020fe2b8 -- five dispatchers, every one in that later
+    block;
+  - MgBobOmbSquad's own vtable 0x0213d9cc holds 0x020fa75c and 0x020fa780 in
+    slots 16 and 17, which places the start of ITS code block on the exact byte
+    where this class's ends;
+  - and the one that settles it: NO relocation anywhere in ov006 whose source
+    lies in .init (0x0212f4c4..0x0213356c) targets this class's code block at
+    all. The only ELEVEN .data relocations pointing into it are the SpawnInfo
+    word (0x0213d70c), the element vtable's two (0x0213d728, 0x0213d72c) and
+    the scene vtable's eight.
+
+THE RUN CONTAINS A PHANTOM OF ITS OWN, which is why the count is 25 and not 26:
+0x0213d910 holds {0x020ff3ec, 0x01700170}, MgBobOmbSquad's SpawnInfo record
+sitting INSIDE the pair run. That is run mg9 lane WIG's hazard met from the
+other direction -- WIG found a SpawnInfo inside a pair run it owned; this lane
+found one inside a pair run it does not. The sinit skips the hole and so does
+the relocation set, and a naive stride-8 sweep from 0x0213d878 counts 26.
+
+SO THE STANDING RULE HOLDS AND GETS A SECOND WITNESS: sinit is ground truth for
+slot ownership, the CODE BLOCK is ground truth for class ownership, and address
+order is ground truth for neither. A lane that took these pairs would have
+host-copied another minigame's five dispatchers.
+
+(2) THE WIDTH CHECK THAT FAILS TO REFUSE, AND WHY THERE ARE FIVE OF THEM
+
+Section 11's third check -- what the word past the end IS -- is FOOLED by this
+class. Index 36 of 0x0213d7e8 reads 0x020fb4e0, a real code address in ov006,
+because it is the code half of the first of those twenty-five pairs. The other
+four checks all refuse a 37th slot on the same boundary:
+
+  1. SPAN. Next config symbol after data_ov006_0213d7e8 is data_ov006_0213d878.
+     0x90 = 36 words.
+  2. TERMINAL SLOT. Slot 35 holds 0x020ad660, the family terminator.
+  3. THE WORD PAST THE END. 0x020fb4e0 -- FAILS TO REFUSE.
+  4. RELOCATION COUNT. Exactly 36 load relocations inside
+     0x0213d7e8..0x0213d878, sources complete from 0x0213d7e8 to 0x0213d874
+     with no gap, and none on index 36's second word.
+  5. RELOCATION STRIDE (lane LKY's). Sources step by 4 for exactly 36 words,
+     then jump to 8 at 0x0213d878.
+
+A 37-slot fill would have written a host thunk over the first state of
+MgBobOmbSquad. This is the second class in the family (after 0x16f, section 3's
+0x0213f844 row) whose phantom has a NAMED victim, and the first where check 3
+is the one that breaks.
+
+(3) THE nosrc COLUMN IS A DELINKS FACT, NOT A MISSING BODY
+
+Section 3 gives this row `nosrc 1` and port/tools/vtablerows.py reports slot 19
+(func_ov006_020fa3d0) as "NO SOURCE (no delinks block owns this address)". BOTH
+ARE ACCURATE AND NEITHER MEANS THE BODY IS MISSING.
+
+config/arm9/overlays/ov006/delinks.txt has a GAP at 0x020fa3d0..0x020fa4d4 --
+src/func_ov006_020fa13c.c ends at 0x020fa3d0 and the next block starts 0x104
+bytes later. src/func_ov006_020fa3d0.c EXISTS and is a NONMATCHING TU, which is
+what a delinks gap in this tree means: 45 such gaps exist in ov006 and
+slice_boo.txt, slice_flw.txt and slice_ccn.txt each already carry a body out of
+one (51 NONMATCHING TUs sit in seated slices tree-wide).
+
+The body was compared with the ROM instruction for instruction before it was
+sliced: 0x104 = 65 words = 59 instructions + 6 pool words (0x4f38, 0x5928,
+0x020a0e40, 0x020a0de8, 0x020a0de9, 0x592a). Case 4 calls
+func_ov006_020c1718(self+0x4f38) and bumps +0x5928; case 5 tests
+data_020a0de8[idx*4] and data_020a0de9[idx*4] with idx = data_020a0e40[0], then
+plays 0x62, sets +0x592a = 0x1e, calls func_ov006_020f94f4 and bumps +0x5928;
+the default arm calls ApproachLinear2(+0x592a, 0, 1) and returns 1 if it is
+done. Every instruction, constant, offset and branch target in the ROM appears
+in the src, and the src has nothing the ROM does not.
+
+TRAPPING IT WOULD HAVE LEFT STATES 4, 5 AND 6 DEAD on a class whose whole round
+END lives in them. The brief for this lane expected a trap; the measurement said
+seat it, so it is seated and this paragraph is why.
+
+ROUTING ITEM 5, FOR SECTION 20's LIST. src/func_ov006_020fa3d0.c is bannered
+"NONMATCHING: missing logic (ROM does more) (div=33)" and its logic is NOT
+missing -- the divergence is codegen, and one of the 33 is mwcc's dead
+`cmp r0,#6` (0xe3500006) before an unconditional branch 0xea000024, its spelling
+of `case 6: default:`. This is the OPPOSITE polarity of routing item 1: item 1
+is a banner that claims more than the body earns, this is a banner that claims
+less. Both are unfalsifiable by the byte gate, and this one costs the tree a
+real body every time somebody reads the banner and traps the slot instead of
+seating it. The correction is one banner line and belongs to the decomp side;
+the port takes nothing.
+
+(4) THE ELEMENT TABLE, WITH BOTH SLOTS WITNESSED
+
+Section 3's ovr/mark/nosrc columns are computed over the SCENE vtable and cannot
+see an element class. Lane S381 turned that into a family rule -- ask what the
+ROM parks in the first word of every object the factory builds -- and this is
+its second instance, one better than the first because BOTH slots are live here:
+
+  MgPairAGoneAndOn_Spawn (0x020fa6ac) calls func_020733a8(this+0x51a8, 0x28,
+  0x30, func_ov006_020fa740, func_ov006_020f8ff0). FORTY records of 0x30 bytes,
+  and the element constructor's whole body is
+  `p[0] = &data_ov006_0213d728; p[1] = 0; p[2] = 0;`.
+
+  data_ov006_0213d728 is dMgMCarlo2CardObj_c's vtable (typeinfo 0x0213d704 via
+  the word at 0x0213d724, name string "19dMgMCarlo2CardObj_c" at 0x0213d758),
+  TWO slots: {0x020f98dc the draw, 0x020f9994 the update}.
+
+  SLOT 0 is dispatched by Render (src/func_ov006_020f9ffc.cpp) with
+  `ldr r1,[r0] / ldr r1,[r1] / blx r1` at 0x020fa0b4 and 0x020fa0f4, over two
+  0x14-bounded walks of the list at data_ov006_02142578.
+  SLOT 1 is dispatched by the PAIR MATCHER func_ov006_020f9000, which slot 6
+  calls every frame, with `ldr r2,[r0] / ldr r2,[r2,#4] / blx r2` at 0x020f9400
+  and 0x020f948c.
+
+  Only two relocations in all of ov006 name 0x0213d728, and they are this
+  class's element constructor pool (0x020fa758) and element reset pool
+  (0x020f8ffc). Nothing else builds one.
+
+THE TWO PATHS SEPARATE UNDER SM64DS_SCENE_NO_RENDER=1, which is what makes the
+counters evidence rather than decoration: draws fall to 0 while updates stay at
+1280 and behavior stays at 253. A single combined counter would have shown one
+number and proved nothing about either.
+
+(5) WHAT THE TITLE CHAIN GAVE AND WHAT IT COST TO READ IT PROPERLY
+
+ov005 row 25 is the ONLY row whose id word is 0x17e. Its param is 0x00191901 ->
+save record 25, name-text 25, mode byte 1. data_ov004_020bc070[25] = 573 and
+message 573 of msg_data_eng.bin is "Pair-a-Gone And On / This game of
+Pair-a-Gone goes on forever! / Test your skill and see how many cards you can
+clear. / Go for the record!"
+
+Run mg9 lane S364's table correction was OBEYED rather than sidestepped:
+data_ov004_020bc070 is arithmetic (548 + i) only for indices 0..23, and 24..35
+are an explicit list reading 588, 573, 586, 575, 576, 577, 585, 589, 580, 587,
+582, 583. Index 25 is IN the explicit half and its value happens to equal
+548 + 25, so computing it would have been right BY LUCK here. It was read out of
+the ROM, and index 24 (588, not 572) is the control that shows why that matters.
+
+THE MESSAGE IS WHAT MAKES THE CLASS'S NUMBERS MAKE SENSE. Forty card records
+against the sibling's eighty, and no board ladder: the sibling's
+func_ov006_020f7c10 picks 6x6 / 8x7 / 10x8 off the saved clear count, and this
+one deals a fixed board forever.
+
+(6) WHAT THE SEAT MEASURED, on this tree, both ends
+
+LINKAGE  7121 / 11293 (63.1%)  ->  7146 / 11293 (63.3%)   +25
+  which is the slice's line count EXACTLY, all 25 of them, and lane PPP's rule
+  holding again. By module: ov006 1181 -> 1206 (+25) and NOTHING ELSE MOVED --
+  arm9 stayed at 1880, ov004 and every other module unchanged. Both ends were
+  built in this worktree, base first.
+
+  ONE HONEST NOTE ON THE DENOMINATOR. port/tools/linkage.py's "matched TUs in
+  src/" counts every .c/.cpp under src/, NONMATCHING banners included, so the
+  slot-19 body at 0x020fa3d0 is one of the 25 and one of the 11293. The +25 is
+  exact under that definition; it is not 25 newly BYTE-MATCHED functions.
+
+THE BOOT, SM64DS_FAULTS_FATAL=1 with nothing switched off:
+
+    frames    5      init 1, behavior    0, render    5, state-reset 1, slot19 0
+    frames   30      init 1, behavior    0, render   30, state-reset 1, slot19 0
+    frames   60      init 1, behavior   13, render   60, state-reset 1, slot19 0
+    frames  120      init 1, behavior   73, render  120, state-reset 1, slot19 0
+    frames  300      init 1, behavior  253, render  300, state-reset 1, slot19 0
+    frames 1200      init 1, behavior 1153, render 1200, state-reset 1, slot19 0
+    exit 0 and ZERO bytes of stderr on all six.
+
+    state index +0x5928     1, 1, 2, 2, 3, 3 across those six counts. Slot 18
+                            sets it to 1 and slot 6 walks it to 3. THE SWEEP IS
+                            THE POINT: a single 300-frame reading of "3" cannot
+                            tell a machine that ran from one that was born at 3.
+    fill claims             middle table 0, derived table 14 of 8 + 8 face rows,
+                            card table 2 of 2. The 14 is this class's own eight
+                            plus six of the middle base's eight; the two that do
+                            not land are that base's D2 and D0 (0x0210a4b0 and
+                            0x0210a4e8), which slots 16 and 17 override.
+    card draws              100 / 600 / 1200 / 2400 / 6000 / 24000 -- EXACTLY 20
+                            a frame from the first frame, which is the render's
+                            own 0x14 bound and also the number of cards the
+                            capture shows on the board.
+    card updates            0 / 0 / 0 / 0 / 1280 / 19280 -- zero until the class
+                            reaches state 3, because the update is the pair
+                            matcher's and the matcher only runs in the play
+                            state. Two dispatch paths, two different shapes.
+    card array              40 of 40 records hold a vptr on every run.
+    UNHANDLED               0 on all six.
+    spawn param             0x00191901 -> save record 25, name text 25, which is
+                            what the ov005 table says and is the row this seat
+                            verified rather than assumed.
+
+SLOT 19 IS NEVER ENTERED ON AN UNATTENDED BOOT AND THAT IS HONEST RATHER THAN A
+GAP -- section 16's distinction. It handles states 4, 5 and 6, and slot 6's case
+3 only advances into them when func_ov006_020c16b4 reports a stylus pick.
+Nothing here drives one. SLOT 3 (CleanupResources), D2 and D0 are zero for the
+same class of reason: a run that ends by exiting the process never tears the
+scene down.
+
+CANARIES.
+    sibling 381   CLEAN, and byte-identical to what port/slice_s381.txt records:
+                  init 1, behavior 253, render 300, state-reset 1, slot19 0;
+                  fill claims middle 0, derived 13, card 2 of 2; card
+                  dispatches 6000 draws / 1280 updates; state index +0x60a8 = 3;
+                  80 of 80 records. Its element-card discovery still routes with
+                  this seat's fifth copy of kSingle3DFaces in the table.
+    curling 374   32557 call(s) through the address switch, 32557 routed to a
+                  dScMgCurling_c state, 0 UNHANDLED. EXACT.
+    battery       ALL GREEN. 46 levels, 24 hosted scenes (23 + this one), every
+                  smoke, linkage 7146, ptr_audit 0 unhosted code pointers.
+    vtablerows    reconstruction EXACT, 29/29, totals 353/264/4.
+    alias_audit   LIVE, no linked TU contradicts its binding.
+    aritycheck    receiver 166/166/0 NEW, plain-name 117/117/0 NEW.
+    COFF scan     26 objects, 148 undefined externals, THREE short names and all
+                  three are the C runtime (atexit, fflush, getenv). No bare
+                  VT/HEAP/G0 row is owed by this slice.
+    run_checks    one red and it is section 18's KNOWN FALSE RED. vtspan --fills
+                  names 21 fills short, TWENTY OF WHICH EXIST AT THE BASE COMMIT
+                  and none of which is in vtspan_fills_baseline.txt -- so the
+                  check was already red before this seat added the twenty-first
+                  name. The baseline was NOT appended. Twelfth instance.
+
+EIGHTEEN NAME-SPELLING ALIASES, ALL READ OFF THE LINK. Sixteen data spellings
+and TWO FUNCTION ones, which is a shape no earlier minigame lane recorded:
+src/func_ov006_020f9000.cpp declares `void ApproachLinear(int&, int, int)` and
+`void ApproachLinear2(short&, short, short)` at namespace scope while the port
+defines both as extern "C" bodies under their mwcc names that RETURN int. The
+disagreement is the return type and the reference-versus-pointer spelling,
+neither of which changes a byte of the 32-bit cdecl frame -- and all four call
+sites discard the result, which was checked rather than assumed. The sixteen
+data rows are each address-only and none is a member pointer; the six
+`struct Node *` spellings are section 10's @@3PAU shape with S381's answer (a
+single word holding a pointer, not a strided table).
+
+WHAT THIS SECTION DOES NOT KNOW.
+  - WHETHER THE PICTURE IS RIGHT. Eight BMPs are captured -- 512x384 and stacked
+    512x832 at 300, 600 and 1200 frames, plus the sibling for comparison -- and
+    the bottom screen shows a dealt 5x4 board whose twenty cards match the
+    twenty draws a frame the counter reports. NOBODY HAS HELD ONE NEXT TO A DS
+    and this lane does not judge them.
+  - WHAT THE MODE BYTE DOES. The ov005 param's low byte is 1 here and 0 on the
+    sibling. dScMgBase_c's constructor keeps it in field 8, and no body in this
+    class's twenty-five reads field 8 -- every `[rX,#8]` in the block is a
+    Node's `next`. Whether anything else in the family reads it is not measured.
+  - TOUCH IS UNMEASURED. The class is a stylus card game and states 4, 5 and 6
+    are reachable only through a pick. Nothing here drove one, so the round has
+    never ENDED in this tree.
+  - THE SAVE RECORD IS THE PORT'S USUAL GAP. Record 25 reads {0,0,0,0,0} on
+    every boot because the port has no backup cart. Section 17's gap, unchanged.
+
+(7) THE BRACKET TRAP IS REAL AND THE STANDING RULE OVERSTATES IT
+
+port/slice_s381.txt states the rule as "an UNMATCHED open bracket in any line
+swallows every line AFTER IT into that one list element", and run mg9 lane S364
+ate the same trap independently. This lane scanned all 150 slice_*.txt files for
+lines whose `[` and `]` counts disagree, found exactly one file that is not its
+own -- port/slice_gate21.txt lines 119 and 120, a `[D1, D0, GetPos,` /
+`GetOwnerID],` range split across two lines with THIRTEEN src rows after it --
+and then had to decide whether that file has been silently dropping thirteen
+functions since it landed. IT HAS NOT: all thirteen have objects in all three
+targets on this build.
+
+RATHER THAN LEAVE THAT AS A CONTRADICTION, the mechanism was pinned with a
+four-file CMake fixture (file(STRINGS) over the same shapes, list length and
+elements printed):
+
+    shape                                        list length   effect
+    no bracket at all                                      3   baseline
+    `[` and `]` on ADJACENT lines                          3   those two lines
+                                                               merge; everything
+                                                               after survives
+    `[[` and `]]` on adjacent lines                        3   same
+    `[` with NO `]` anywhere in the file                   1   the whole rest of
+                                                               the file collapses
+    `[` whose `]` comes several lines LATER, past src rows 2   every line from the
+                                                               open to the close
+                                                               becomes ONE element
+                                                               -- the src rows
+                                                               INSIDE are lost;
+                                                               only rows after the
+                                                               close survive
+
+SO THE CORRECT RULE IS "AN OPEN `[` SWALLOWS EVERYTHING UP TO ITS MATCHING `]`",
+not "everything after it". The two differ exactly where it matters: a range that
+closes on the next line is HARMLESS (slice_gate21's is, and so are the four
+`ldr r1,[r0]` quotations in slice_s381 and the twenty-odd in other slices), and
+a bracket that never closes -- or that closes below the source rows -- is fatal.
+S381's own broken version must have been the never-closing kind, which is why
+its list came back 94 long for a 246-line file with every kept line a comment.
+
+The 0xAAAA..0xBBBB spelling convention stays exactly as it is; this only stops
+the next lane from spending an hour on a two-line range that was never a
+problem, and tells it which shape to actually look for.
+
+THE SCOPE FIGURE IN THE PARAGRAPH ABOVE WAS WRONG ON ITS FIRST WRITING, AND THE
+CAUSE IS WORTH MORE THAN THE DIGIT. It read 141; the count is 150 (149 tracked
+port/slice_*.txt at base 98a4c0e8f plus this lane's own slice_pgo.txt), and the
+lane reviewer caught it. The scan itself was real and its conclusion is
+unaffected -- it globbed `port/slice_*.txt` and reported every line whose bracket
+counts disagree -- but IT NEVER PRINTED A TOTAL. Only the offending lines were
+printed, so the "141" was written from memory beside a measurement that did not
+include it. That is a worse shape than a stale number, because a stale number
+was once true: a scope figure standing next to real evidence borrows the
+evidence's credibility without ever having been measured. A scan whose scope a
+sentence quotes must PRINT its scope, and this one now has `git ls-tree -r
+--name-only <rev> -- port/ | grep -c '^port/slice_.*\.txt$'` behind it at both
+ends.

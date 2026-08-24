@@ -2440,6 +2440,24 @@ void port_scene_fill_snowball(void);
 extern unsigned char MgPicturePoker_SpawnInfo[];
 void *port_mg_card_spawn(void);
 void port_scene_fill_card(void);
+/* run mg11 lane PGO: dScMgMCarlo2_c, actor id 0x17e = scene 382, the
+   "Pair-a-Gone And On" endless-mode card minigame -- the sequel to scene 381's
+   Pair-a-Gone, which run mg9 lane S381 seated. This id DOES have a spawn
+   symbol, unlike its sibling: MgPairAGoneAndOn_SpawnInfo at 0x0213d70c, whose
+   second word is the doubled id 0x017e017e. The class name comes out of the
+   ROM's own type_info at 0x0213d714, reached through the word before the
+   vtable, whose name pointer 0x0213d730 reads "14dScMgMCarlo2_c"; the player
+   title comes out of the ov005 launch table's only row for this scene
+   (row 25, name-text 25 -> data_ov004_020bc070[25] = message 573 =
+   "Pair-a-Gone And On"). port/slice_pgo.txt carries both derivations, the five
+   width checks and the attribution finding that keeps the 25 member-pointer
+   pairs after this vtable with their real owner, MgBobOmbSquad;
+   hal/scene_mg_mcarlo2.cpp is the seat. Same reads_sublevel reasoning as every
+   minigame row above, re-derived rather than copied: no relocation anywhere in
+   ov006 lands on data_02092110 and no TU in this class's closure names it. */
+extern unsigned char MgPairAGoneAndOn_SpawnInfo[];
+void *port_mg_mcarlo2_spawn(void);
+void port_scene_fill_mcarlo2(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -3014,6 +3032,38 @@ static const PortSceneClass port_scene_classes[] = {
        in this class's closure names it. A minigame is not about a course. */
     {379, "SCENE_MG_CARD", MgPicturePoker_SpawnInfo, port_mg_card_spawn,
      port_scene_fill_card, 0},
+    /* 382 is 0x17e, spelled in decimal for the two reasons every row above
+       gives: the others are, and port/tools/battery.py reads its hosted-scene
+       set out of this table. APPENDED AFTER EVERY EXISTING ROW, run mg11 lane
+       PGO, and appending matters twice for this class rather than once.
+
+       It is the latent-safe direction port/mg_fanout_costs.txt section 11
+       derives from the once-per-process constructor gate: this function walks
+       the table in order and calls every row's fill on every boot, while
+       port_scene_mg_overlay_load runs the thirty-five overlay constructors
+       ONCE PER PROCESS at the tail of the FIRST minigame row's fill. And this
+       class is the SIXTH to sit under dScMgSingle3DBase_c (0x0213e448), after
+       the flower, memory2, luckystars, memory and mcarlo rows above, so running
+       after them means the flower's fill keeps claiming the middle table and
+       every earlier witness keeps counting exactly what it counted before this
+       seat existed. hal/scene_mg_mcarlo2.cpp section 3 measures it: this seat's
+       middle copy reports 0 claimed slots and its derived copy reports 14 --
+       this class's own eight plus six of the middle base's eight, the other two
+       being that base's D2 and D0, which slots 16 and 17 of the derived table
+       override with bodies of this class's own.
+
+       THE ROW ORDER IS BELT AND BRACES HERE AND THE WIDTH IS THE REAL GUARD.
+       Zero relocations leave ov006's .init (0x0212f4c4..0x0213356c) for this
+       class's code block (0x020f8ef4..0x020fa75c), so no constructor reads a
+       word this fill writes -- but the twenty-five member-pointer pairs that
+       .init DOES copy begin at 0x0213d878, the word immediately past this
+       table, and they belong to MgBobOmbSquad. The width is 36 by five
+       independent checks in port/slice_pgo.txt, of which the third (what the
+       word past the end is) is FOOLED for this class: index 36 reads
+       0x020fb4e0, a real code address. A 37-slot fill would have put a host
+       thunk over the first state of a different minigame. */
+    {382, "SCENE_MG_MCARLO2", MgPairAGoneAndOn_SpawnInfo, port_mg_mcarlo2_spawn,
+     port_scene_fill_mcarlo2, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
