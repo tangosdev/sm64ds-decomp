@@ -278,3 +278,107 @@ re-verified. Two were rejected by the ROM and are documented in place:
 * `Behavior` reaches `mDustCounter` a second time through `c + 0x400` and then
   `+ 0xd4`; that two-step materialisation is the ROM's own and spelling it away is not
   free.
+
+---
+
+## PushBlock (`include/PushBlock.h`, ov002, size 0x4f4)
+
+Bodies read: `src/_ZN9PushBlock13InitResourcesEv.cpp`,
+`src/_ZN9PushBlock8BehaviorEv.c`, `src/_ZN9PushBlock6RenderEv.cpp`,
+`src/_ZN9PushBlock8OnPushedER8dActor_c.cpp`, `src/_ZN9PushBlock4KillEv.cpp`,
+`src/_ZN9PushBlock15OnHitByMegaCharER6Player.cpp`.
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x4dc/0x4e0/0x4e4 | `mHomePosX/Y/Z` | `InitResources` copies `mPosX/mPosY/mPosZ` into them once; `Behavior` measures `Vec3_HorzDist(&mHomePosX, &mPosX) >= 0x12c000` to decide the block has been pushed far enough, and then writes the triple back into the linked actor's own position. |
+| 0x4e8 | `mGroundY` | `InitResources` raycasts down from `mPosY + 0x14000` and stores the hit height here (falling back to the raised point). `Behavior` re-raycasts ahead of the block each frame and stops the slide the moment the hit height differs from this — a step, a ledge or a hole. |
+| 0x4ec | `mSlideSound` | `Behavior` passes it as the first argument of `Sound::PlayLong(u32, 3, 0x97, …)` and stores the result back: a recycled long-sound handle for the sliding noise. |
+| 0x4f0 | `mLinkedActor` | `Behavior` treats it as an actor pointer: it reads `+0xc` (`dActor_c::actorID`) and compares against `0x149`, then writes `+0x5c/+0x60/+0x64` (that actor's position) with the block's own home position and clears the field. |
+
+In the `#else` C twin, eight offsets already named at exactly those offsets in
+`include/dActor_c.h` were repointed to those names — `mPosX/Y/Z`, `mAngleY`,
+`mPrevAngleY`, `mHorzSpeed`, `mVertAccel`, `mTerminalVelocity`. The file's own banner
+already asserted two of them (`mPrevAngleY 0x94, mHorzSpeed 0x98`) from a migration
+experiment. Six more were added to the twin out of the 0x438-byte pad the header
+carried: `mPrevPosX/Y/Z` (0x068) and `mCamSpacePosX/Y/Z` (0x074), both of which
+`Behavior` passes as `Vector3 *`, and `dBgActor_c`'s own `mMeshCollider` (0x124),
+`mClsnMat` (0x2ec) and `mWithMeshClsn` (0x320) as `u8` markers, which is the idiom the
+other twins in this family use.
+
+`src/_ZN9PushBlock13InitResourcesEv.cpp` was an `extern "C"` free function over a raw
+`char *self`; it is a real `int PushBlock::InitResources()` now, byte-exact, with all
+fourteen hand offsets on named members. `tools/eligible.py` is unchanged by it.
+
+`Behavior` stays a `.c` file for the reason its own banner records (the C++ form emits
+two extra literal-pool words), but ten of its raw offsets now go through the named C
+twin. One did not survive: the single `q = *(char **)(c + 0x4f0);` read costs the
+function its size when spelled `(char *)self->mLinkedActor`, while the three sites
+around it are free. The measurement is in a comment at the site.
+
+---
+
+## BlueCoinSwitch (`include/BlueCoinSwitch.h`, ov002, size 0x330)
+
+This header already carried a full prose account of every offset; the names below just
+make the code say what the prose said. Bodies read:
+`src/_ZN14BlueCoinSwitch13InitResourcesEv.cpp`,
+`src/_ZN14BlueCoinSwitch8BehaviorEv.cpp`, `src/_ZN14BlueCoinSwitch6RenderEv.cpp`,
+`src/_ZN14BlueCoinSwitch16CleanupResourcesEv.cpp`.
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x320 | `mStopPosY` | `InitResources` sets `mPosY - 0x64000`; `Behavior` walks `mPosY` down 0x14000 a frame and snaps to it; `Render` draws only while `mPosY > mStopPosY`. |
+| 0x324 | `mTickSound` | fed back into `func_02012310(mTickSound, 0x39 or 0x38, 0)` and overwritten with the result, and zeroed on the frame the count crosses 0x2d — a recycled sound handle whose id changes with 45 frames left. |
+| 0x328 | `mCoinTimer` | armed from `mCoinTimerSeed` when the switch bottoms out, run down by `DecIfAbove0_Short`, and parked at `1` rather than `0` on expiry so it stays latched. |
+| 0x32a | `mCoinTimerSeed` | `(param1 >> 8) & 0xff`, then `* 10`, or `0xfa` when that byte is `0` or `0xff`. The spawn word carries tenths. |
+| 0x32c | `mPressed` | zeroed by `InitResources`; every branch of `Behavior` is under `mPressed == 1`. |
+| 0x32d | `mEventBit` | `param1 & 0xf`, passed straight to `Event::SetBit(u32)`. |
+| 0x32e | `mHomeAreaId` | `InitResources` copies `mAreaId` here before `Behavior` sets `mAreaId = -1`, and `Behavior` passes it to `IsAreaShowing`. |
+
+The rename carried into `src_tu/actors/BlueCoinSwitch.cpp` as well as `src/` — the
+shadow TU builds only under a `tuModules` profile, so a stale spelling there compiles
+nowhere and no normal gate would have caught it. `tools/check_src_tu_compiles.py`
+(72/72) and `tools/check_src_tu.py` were run after.
+
+---
+
+## MovingBar (`include/MovingBar.h`, ov015, size 0x338)
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x320/0x324/0x328 | `mHomePosX/Y/Z` | `InitResources` copies `mPosX/mPosY/mPosZ` into them as its last act before installing state 5. |
+
+`mVariant` (0x32c) and `mState` (0x330) were already named. `mState` was missing from
+the `#else` C twin entirely and is added, because `Behavior`'s state dispatch indexes
+`data_ov015_021149ec` by exactly that word — the local `struct C { char pad[0x330];
+int idx; }` shadow existed only to reach it, and the index now reads `mState`. The
+pointer-to-member call itself still goes through that shadow: a PMF's representation
+is not the same for a polymorphic class.
+
+In the C twin, six `dActor_c` offsets were repointed to the names
+`include/dActor_c.h` gives them: `mPosX/Y/Z` (0x05c) and `mPrevPosX/Y/Z` (0x068).
+
+Raw-offset collapses in `InitResources` (the `*(int *)((char *)&member)` double
+indirection on `mVariant`, `actorID` and the three home-position stores) and in
+`Render`, whose `struct Derived { char pad[0xd4]; Base base; }` shadow of the whole
+object is gone — the call goes through `&mModel`.
+
+---
+
+## CannonHatch (`include/CannonHatch.h`, ov002, size 0x330)
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x320/0x324/0x328 | `mHomePosX/Y/Z` | `InitResources` copies `mPosX/mPosY/mPosZ`; `Behavior` restores the actor's position from them once the cannon is open, and passes `&mHomePosX` as a `Vector3 *` to `Vec3_Dist` and `Vec3_HorzDist` to measure how far the hatch has slid. |
+| 0x32c | `mOpening` | gates the entire slide block in `Behavior`; nothing else reads it. |
+| 0x32d | `mOpenPhase` | picks the direction of the slide — `0` moves the hatch down (`-0x1000` in Y), `1` moves it forward (`+0x2000` in Z) — and `Behavior` flips it to `1` once the hatch is more than `0xa000` from home. A two-step animation, not a flag. |
+| 0x32e | `mCannonOpen` | `InitResources` sets it from `IsCannonOpenInCurLevel()`. `Render` refuses to draw while it is set, and `Behavior` parks the hatch at its home position with the collider disabled. `Behavior` also walks every actor of id `0xe` and sets THEIR copy when this hatch finishes sliding — so it is the level-wide "the cannon is open" fact, not a per-hatch animation flag. |
+
+In the C twin, the `u8` marker at `0x2ec` became `mClsnMat`, the name
+`include/dBgActor_c.h` gives that offset and what `InitResources` passes to
+`dBgW_KcMbg::SetFile`.
+
+The rename carried into `src_tu/actors/CannonHatch.cpp`, along with the same
+raw-offset collapses: `Render`'s whole-object `struct Obj { char pad[0xd4]; Sub sub; }`
+shadow is gone in favour of `&mModel`, and `InitResources` reaches `mModel`,
+`mMeshCollider` and `mClsnMat` by name.
