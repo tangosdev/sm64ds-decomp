@@ -375,16 +375,12 @@ bl func_020380c0(this)
 ```
 
 func_02037f18 stores five words at +0x04..+0x14 (`0xfc0, 0xff, 0, 0, 0`) and
-NO vtable — so whatever it constructs at +0x04 is non-polymorphic, yet its
-call sits before the derived vptr store, which only a BASE step can. The
-original source therefore had a base class whose storage begins at +0x04,
-under a vptr at +0x00 — an arrangement a single-inheritance header cannot
-spell (a base lands at +0x00, not +0x04). Most likely true shape: an empty
-polymorphic primary base holding just the +0x00 vptr, with the five-word
-non-polymorphic base second. That needs its own probe before anyone touches
-dBgPi.h's field section; until then both definitions stay hand shells
-(`src/_ZN5dBgPiC1Ev.c` / `_ZN5dBgPiC2Ev.c`) while the DECLARATION in
-include/dBgPi.h keeps serving every child's synthesized base step.
+no vtable. An ABI probe settles the shape: dBgPi introduces the virtual
+destructor and derives from the non-polymorphic dBgPc. With no dynamic primary
+base, the compiler places dBgPi's own vptr at +0x00 and its dBgPc base at +0x04.
+The generated C2 sequence therefore constructs dBgPc at +0x04 before storing
+dBgPi's vptr. C1 now lives in `src/_ZN5dBgPiC1Ev.cpp` as real C++; the separately
+enrolled C2 ABI variant remains in `src/_ZN5dBgPiC2Ev.c`.
 
 ## 6. The recipe, condensed
 
