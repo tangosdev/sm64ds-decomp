@@ -76,9 +76,10 @@ sys.path.insert(0, str(REPO / "tools"))
 
 import build_pin as BP          # noqa: E402
 import match as M               # noqa: E402
+import tu_manifest as TUM       # noqa: E402
 import tubuild as TU            # noqa: E402
 
-MANIFEST = REPO / "config" / "tu_manifest.json"
+MANIFEST = TUM.DEFAULT_ROOT
 SOURCE_SUFFIXES = (".c", ".cpp")
 
 
@@ -144,7 +145,7 @@ def check(manifest_path=MANIFEST, root=None, only=(), version_override=None,
     root = pathlib.Path(root) if root else REPO / "src_tu"
     failures, results = [], []
 
-    if not manifest_path.is_file():
+    if not TUM.exists(manifest_path):
         return {"schemaVersion": 1, "ok": False,
                 "checked": {"units": 0, "compiled": 0},
                 "failed": 1,
@@ -160,7 +161,7 @@ def check(manifest_path=MANIFEST, root=None, only=(), version_override=None,
                               "mwccarm licence file is missing -- every compile below "
                               "will fail for that reason and not for a source defect"))
 
-    entries = json.loads(manifest_path.read_text(encoding="utf-8"))["entries"]
+    entries = TUM.load(manifest_path)["entries"]
     if only:
         want = set(only)
         unknown = sorted(want - {e["id"] for e in entries})
@@ -220,7 +221,7 @@ def main(argv=None):
     ap.add_argument("--root", default="src_tu",
                     help="directory of translation units (default: src_tu)")
     ap.add_argument("--manifest", default=None,
-                    help="TU manifest (default: config/tu_manifest.json)")
+                    help="TU manifest (default: config/tu_manifest.d/)")
     ap.add_argument("--id", action="append", default=[], metavar="TU_ID",
                     help="compile only this TU; repeatable")
     ap.add_argument("--version", default=None,

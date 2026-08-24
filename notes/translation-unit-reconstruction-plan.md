@@ -1,7 +1,7 @@
 # Translation-unit reconstruction and consolidation plan
 
 > **Status: active design history with shadow tooling implemented.** `tools/tubuild.py`,
-> `src_tu/`, and `config/tu_manifest.json` now exercise candidate translation units,
+> `src_tu/`, and `config/tu_manifest.d/` now exercise candidate translation units,
 > but manifest entries still do not control the normal ROM build and production
 > promotion remains dry-run only. The current `config/**/delinks.txt` enrollment is
 > authoritative until a candidate passes the gates below and is promoted. Use
@@ -128,8 +128,12 @@ sm64ds-decomp/
 │   └── overlays/
 ├── include/                     # Shared headers; no duplicate include tree
 ├── config/
-│   └── tu_manifest.json         # Recovered TU membership and licensed ranges
+│   └── tu_manifest.d/           # Recovered TU membership and licensed ranges;
+│       ├── _meta.json           #   one file per entry, under its module, so
+│       └── ov002/               #   two TU PRs never touch the same file
+│           └── CameraTag.json
 ├── tools/
+│   ├── tu_manifest.py           # The manifest's only on-disk-shape reader/writer
 │   └── tubuild.py               # TU create/compile/verify/link/promote entry point
 └── build/
     └── tu/                      # Generated objects and reports; gitignored
@@ -523,7 +527,7 @@ The second pilot should deliberately contain two interleaved related classes in 
 
 ### Phase A — Manifest and reporting
 
-- Define and validate `config/tu_manifest.json`.
+- Define and validate `config/tu_manifest.d/`.
 - Convert selected `tu_map.json` records into reviewable candidates.
 - Implement `tubuild.py list` and `inspect`.
 - Add overlap, membership, order, and legacy-path gates.

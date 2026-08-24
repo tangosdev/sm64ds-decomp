@@ -1,0 +1,93 @@
+{
+  "id": "ov036/daObjRc_Dorifu_c",
+  "module": "ov036",
+  "source": "src_tu/actors/daObjRc_Dorifu_c.cpp",
+  "promoted_source": "src/actors/daObjRc_Dorifu_c.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2111f8c..0x21120c8, 4 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjRc_Dorifu_c",
+    "module sinit corroboration: 7 sinit(s) / 7 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02111f8c",
+      "end": "0x021120c8"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN16daObjRc_Dorifu_cD1Ev",
+      "address": "0x02111f8c",
+      "size": "0x00000080",
+      "legacy_source": "src/_ZN16daObjRc_Dorifu_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16daObjRc_Dorifu_cD0Ev",
+      "address": "0x0211200c",
+      "size": "0x00000094",
+      "legacy_source": "src/_ZN16daObjRc_Dorifu_cD0Ev.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN16daObjRc_Dorifu_c16CleanupResourcesEv",
+      "address": "0x021120a0",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN16daObjRc_Dorifu_c16CleanupResourcesEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN16daObjRc_Dorifu_c13InitResourcesEv",
+      "address": "0x021120b4",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN16daObjRc_Dorifu_c13InitResourcesEv.cpp",
+      "ordinal": 3
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Manually curated against include/daObjRc_Dorifu_c.h; the class TU contains real member definitions and one empty destructor definition rather than the legacy C D0 body.",
+    "STRICT PARTIAL-ISOLATION BOUNDARY: D1, InitResources, and CleanupResources are contribution-identical. Compiler-generated D0 calls __cxa_vec_cleanup while the legacy C object names the configured same-address alias __destroy_arr (both arm9 0x0207328c), so symbolic object equivalence is conservatively 3/4 and no partial-link claim is made."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov036-daObjRc_Dorifu_c/daObjRc_Dorifu_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 4,
+    "functions_declared": 4,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- raw object also emits compiler-only D2 plus 13 unlicensed RTTI/type-name/vtable definitions",
+      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "partial_isolation": {
+    "round": "tools/tubuild.py partial -- one compile of the consolidated source, objisolate.derive per licensed function, compared against rombuild.compile_one + objisolate.isolate of each legacy source",
+    "derivedObjects": 4,
+    "contributionEquivalent": "3/4",
+    "comparedFields": [
+      "keptSection",
+      "keptBytes",
+      "relocs",
+      "defined",
+      "mapping",
+      "live",
+      "undefReferenced"
+    ],
+    "legacyEntriesComplete": "4/4",
+    "extraInertImports": 59,
+    "extraImportsWithNoHome": [],
+    "artefacts": "build/tu/ov036-daObjRc_Dorifu_c/partial/partial.json (gitignored)",
+    "state": "derived",
+    "stateMeaning": "N per-function objects were extracted from one compiled TU object; their equivalence to the production objects was not established",
+    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+  }
+}

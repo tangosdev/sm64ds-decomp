@@ -93,6 +93,7 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 import enroll as EN          # noqa: E402  read_delinks: header / `complete` marks
 import modules as MOD        # noqa: E402
+import tu_manifest as TUM    # noqa: E402  the TU manifest's on-disk shape
 import tu_map as TM          # noqa: E402  sections/symbols/relocs/analyse
 import tubuild as TB         # noqa: E402  parse_delinks_file/entry_sections
 
@@ -437,7 +438,7 @@ def _self_module_token(name):
 def tu_source_path(module, tu, manifest_by_span):
     """The path a TU entry is filed under.
 
-    Prefer the recovered source config/tu_manifest.json already names for this
+    Prefer the recovered source config/tu_manifest.d/ already names for this
     exact span, so a TU that has a real reconstructed file keeps its identity.
     Otherwise derive one -- the entry is rom-bytes, so dsd never opens it, but a
     stable readable name is what makes the objdiff unit list legible."""
@@ -449,11 +450,11 @@ def tu_source_path(module, tu, manifest_by_span):
     return f"src_tu/{module}/{stem}.cpp"
 
 
-def manifest_spans(path=REPO / "config" / "tu_manifest.json"):
+def manifest_spans(path=None):
     out = {}
-    if not path.is_file():
+    if not TUM.exists(path):
         return out
-    for e in json.loads(path.read_text(encoding="utf-8")).get("entries", []):
+    for e in TUM.load(path).get("entries", []):
         for s in e.get("sections", []):
             if s.get("name") == ".text":
                 out[(e["module"], int(s["start"], 16), int(s["end"], 16))] = e["source"]

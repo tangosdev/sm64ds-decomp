@@ -52,7 +52,7 @@ python tools/tubuild.py linkcheck ov002/LevelObjects
 python tools/tubuild.py promote  ov045/PoleLift   # --dry-run only
 ```
 
-`tubuild.py` writes **only** `src_tu/`, `config/tu_manifest.json`, and `build/tu/`. It
+`tubuild.py` writes **only** `src_tu/`, `config/tu_manifest.d/`, and `build/tu/`. It
 never touches `src/` or `config/**/delinks.txt` and — in its own words — never runs real
 `eligible.py` / `rombuild.py`, though it imports both as libraries. Keep it that
 way. It delegates every byte and relocation check to

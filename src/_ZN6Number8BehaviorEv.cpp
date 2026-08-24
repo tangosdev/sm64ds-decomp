@@ -18,9 +18,9 @@ int Number::Behavior()
 
     if (unk_14c != 0) return 1;
 
-    *(int *)((int)((char *)&mVertSpeed)) += unk_09c;
-    if (mVertSpeed < unk_0a0)
-        mVertSpeed = unk_0a0;
+    *(int *)((int)((char *)&mVertSpeed)) += mVertAccel;
+    if (mVertSpeed < mTerminalVelocity)
+        mVertSpeed = mTerminalVelocity;
     *(int *)((int)((char *)&mPosY)) += mVertSpeed;
 
     switch (unk_14e) {

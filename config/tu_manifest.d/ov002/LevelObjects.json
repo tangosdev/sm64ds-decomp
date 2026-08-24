@@ -1,0 +1,351 @@
+{
+  "id": "ov002/LevelObjects",
+  "module": "ov002",
+  "source": "src_tu/stage/LevelObjects.cpp",
+  "promoted_source": "src/stage/LevelObjects.cpp",
+  "status": "link-verified",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x020fe190..0x020fea4c, seventeen functions abutting exactly with no foreign symbol inside the span",
+    "OWNED DISPATCH TABLE (the decisive evidence): the .data table at ov002:0x0210cbb8 holds exactly fifteen function pointers, and its fifteen targets are exactly the fifteen Load*Objects functions in this span -- no sixteenth entry, and no entry pointing outside it. CORRECTED (adversarial review, was originally claimed as 'the only references'): a full sweep of config/arm9/overlays/ov002/relocs.txt finds 18 total references into/onto the span -- the 15 table loads, 2 intra-span calls to LoadObjects (both from inside Stage::LoadClsnAndObjects, so the single-caller claim below still holds), and 1 external call from arm9:0x0202d2b8 into the TU's public entry point. All three extra references support the boundary rather than contradict it.",
+    "single caller chain: _Z11LoadObjects is referenced by exactly one function in the ROM, _ZN5Stage18LoadClsnAndObjects, which is the function immediately below it in address order; nothing outside the span calls either",
+    "shared signature: fifteen of the seventeen are _Z-mangled FREE functions (no class component) whose parameter list is identical -- (LVL_Overlay::ObjSubTable&, int, unsigned) -- because LoadObjects calls them all through the one table",
+    "left boundary: _ZN3HUDC1Ev ends exactly at 0x020fe190 and is the last function of the HUD class TU (a D1/D0/C1-bearing object, plainly a different translation unit)",
+    "right boundary: the four functions at 0x020fea4c..0x020feabc are a dBgCh_Lin group, not part of this TU -- func_ov002_020fea4c and func_ov002_020fea68 copy a Vector3 out of offsets 0x0c and 0x00 of the very struct _ZN8dM3dGLin3SetERK7Vector3S2_ writes at 0x020fea84, and all four are called from one main function at 0x02037624..0x02037788. build/tu_map.json cuts at 0x020fea84 instead; this entry's cut is the corrected one.",
+    "source-order corroboration (independent of everything above): mwccarm's section order is the reverse of source order, so the original file's reading order was the reverse of the ROM's addresses. Read that way the file is exactly define-before-use -- fifteen loaders, then the dispatcher, then the public entry point -- and the loaders after LoadSimpleObjects fall in ascending handler-table index 0,1,2,3,4,6,7,8,9,10,11,12,13,14."
+  ],
+  "boundary_caveats": [
+    "NOT sinit-corroborated, and that is structural rather than an oversight: this pilot established that ZERO destructor-free TUs exist in any sinit-corroborated module of this ROM (36 corroborated modules, every one of their TUs contains a D1/D0 pair). A TU with no class cannot be constructed by a static initialiser, so the sinit gate has nothing to say about it.",
+    "ov002 as a whole is NOT sinit-corroborated (26 sinits vs 79 candidate TUs) and is not in tu_map.json's under-segmented list either.",
+    "The membership of _ZN5Stage18LoadClsnAndObjects is the one INFERENCE in this list rather than a fact. It rests on contiguity, on being LoadObjects' only caller, and on the define-before-use reading; it is externally linked, so nothing forces it into this TU the way internal linkage would. The alternative reading is a one-function TU sandwiched between HUD's object and the loader's, which is possible and is not refuted here. Dropping it leaves the other sixteen unchanged."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020fe190",
+      "end": "0x020fea4c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc",
+      "address": "0x020fe190",
+      "size": "0x000001ac",
+      "legacy_source": "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij",
+      "address": "0x020fe33c",
+      "size": "0x00000090",
+      "legacy_source": "src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij",
+      "address": "0x020fe3cc",
+      "size": "0x00000018",
+      "legacy_source": "src/_Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEij",
+      "address": "0x020fe3e4",
+      "size": "0x00000014",
+      "legacy_source": "src/_Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_Z23LoadMinimapScaleObjectsRN11LVL_Overlay11ObjSubTableEij",
+      "address": "0x020fe3f8",
+      "size": "0x00000014",
+      "legacy_source": "src/_Z23LoadMinimapScaleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_Z22LoadMinimapTileObjectsRN11LVL_Overlay11ObjSubTableEij",
+      "address": "0x020fe40c",
+      "size": "0x00000014",
+      "legacy_source": "src/_Z22LoadMinimapTileObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_Z15LoadExitObjectsRN11LVL_Overlay11ObjSubTableEij",
+      "address": "0x020fe420",
+      "size": "0x000000d0",
+      "legacy_source": "src/_Z15LoadExitObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_Z15LoadDoorObjectsRN11LVL_Overlay11ObjSubTableEij",
+      "address": "0x020fe4f0",
+      "size": "0x000000dc",
+      "legacy_source": "src/_Z15LoadDoorObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_Z14LoadFogObjectsRN11LVL_Overlay11ObjSubTableEij",
+      "address": "0x020fe5cc",
+      "size": "0x00000014",
+      "legacy_source": "src/_Z14LoadFogObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_Z23LoadTeleportDestObjectsRN11LVL_Overlay11ObjSubTableEij",
+      "address": "0x020fe5e0",
+      "size": "0x00000014",
+      "legacy_source": "src/_Z23LoadTeleportDestObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_Z25LoadTeleportSourceObjectsRN11LVL_Overlay11ObjSubTableEij",
+      "address": "0x020fe5f4",
+      "size": "0x0000009c",
+      "legacy_source": "src/_Z25LoadTeleportSourceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_Z15LoadViewObjectsRN11LVL_Overlay11ObjSubTableEij",
+      "address": "0x020fe690",
+      "size": "0x00000014",
+      "legacy_source": "src/_Z15LoadViewObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_Z15LoadPathObjectsRN11LVL_Overlay11ObjSubTableEij",
+      "address": "0x020fe6a4",
+      "size": "0x00000014",
+      "legacy_source": "src/_Z15LoadPathObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij",
+      "address": "0x020fe6b8",
+      "size": "0x00000010",
+      "legacy_source": "src/_Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij",
+      "address": "0x020fe6c8",
+      "size": "0x000001e4",
+      "legacy_source": "src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij",
+      "address": "0x020fe8ac",
+      "size": "0x000000b4",
+      "legacy_source": "src/_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij",
+      "address": "0x020fe960",
+      "size": "0x000000ec",
+      "legacy_source": "src/_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "ordinal": 16
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-LevelObjects/LevelObjects.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 17,
+    "functions_declared": 17,
+    "baseline_control": "all seventeen legacy one-function sources re-verified OK under tools/build_pin.verify before and after, so a green merged result cannot be an environment artefact",
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_correct_size": "PASS -- all seventeen emitted sizes equal the symbols.txt sizes exactly",
+      "every_declared_function_bytes_match": "PASS -- 17/17 under tools/match.compare",
+      "relocation_type_and_addend": "PASS -- objisolate.plan() returns error=None for all seventeen",
+      "relocation_destinations_verified": "PASS -- reloc_audit.check_destinations(): 57 relocations, 57 OK, 0 WRONG-DEST, 0 missing",
+      "functions_occur_in_expected_order": "PASS -- all seventeen .text sections come out in exact ROM address order, with no intra-definition group to disturb it",
+      "no_constructor_or_destructor_variants": "PASS -- no D0/D1/D2 of any class this TU defines; there is no such class",
+      "no_vtable_or_rtti_emission": "PASS -- zero _ZTV, _ZTI, _ZTS symbols; zero .data, .rodata, .bss, .init, .ctor sections",
+      "no_pragma_opt_workarounds": "PASS -- no #pragma of any kind in the seventeen legacy sources or in the consolidated file",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- the object defines two .text symbols beyond the manifest, _ZN7Vector3D1Ev and _ZN8Vector3sD1Ev (4 bytes each, STB_LOPROC). Both are PRE-EXISTING, not caused by consolidation: five of the seventeen legacy objects already emit _ZN7Vector3D1Ev and one also emits _ZN8Vector3sD1Ev. Merging reduces six copies to two. See unlicensed_output_observed.",
+      "all_content_sections_licensed": "PARTIAL -- every content section is .text and every byte is accounted for (2244 emitted = 2236 licensed + 8 vague-linkage), but those 8 bytes are not licensed by this manifest",
+      "symbol_addresses_match": "NOT RUN",
+      "module_reproduces": "NOT RUN",
+      "rom_build_passes": "NOT RUN"
+    },
+    "negative_controls": {
+      "swap_two_ordinals": "DETECTED -- swapping LoadFogObjects and LoadTeleportDestObjects in the source moves the emitted section order; first divergence at ordinal 8",
+      "add_an_unexpected_helper": "DETECTED -- an extra _Z30LevelObjects_unexpected_helperi .text section appears",
+      "omit_a_declared_function": "DETECTED -- LoadViewObjects absent from the emitted set",
+      "note": "run on copies in a scratch directory; src_tu/ was never mutated"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "link-verified",
+      "scratch": "build/tu/ov002-LevelObjects/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020fe190",
+        "end": "0x020fea4c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 17,
+          "COLLIDES-SRC": 2
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [
+          "COLLIDES-SRC _ZN8Vector3sD1Ev STB_LOPROC .text size=0x4 already at arm9:0x02011508",
+          "COLLIDES-SRC _ZN7Vector3D1Ev STB_LOPROC .text size=0x4 already at arm9:0x020072c0"
+        ],
+        "unlicensedSections": []
+      },
+      "symbolCheckNewVsBaseline": [],
+      "linkerOutput": null
+    }
+  },
+  "unlicensed_output_observed": {
+    "note": "Present in the compiled object, inventoried, not licensed, not verified. Unlike pilot #1's, none of this is a consequence of owning a class: this TU owns none.",
+    "text": [
+      {
+        "symbol": "_ZN7Vector3D1Ev",
+        "size": "0x4",
+        "binding": "STB_LOPROC",
+        "in_rom": false,
+        "note": "vague-linkage out-of-line copy of the inline ~Vector3 declared in include/types.h, emitted because the loaders build Vector3 temporaries. Emitted today by five of the seventeen legacy objects on their own."
+      },
+      {
+        "symbol": "_ZN8Vector3sD1Ev",
+        "size": "0x4",
+        "binding": "STB_LOPROC",
+        "in_rom": false,
+        "note": "same, for Vector3s; emitted today by the LoadExitObjects legacy object on its own."
+      }
+    ],
+    "data": [],
+    "bss": [],
+    "init": [],
+    "rodata": [],
+    "ctor": []
+  },
+  "tu_owned_but_out_of_scope": {
+    "note": "Believed to belong to this TU in the ROM. Not declared, not compiled from source, not verified.",
+    "data": [
+      {
+        "symbol": "data_ov002_0210cbb8",
+        "address": "0x0210cbb8",
+        "size": "0x3c",
+        "evidence": "fifteen function pointers, targets exactly the fifteen Load*Objects in this span and nothing else"
+      },
+      {
+        "symbol": "data_ov002_0210cbf4",
+        "address": "0x0210cbf4",
+        "note": "actor-id table indexed by StandardEntry.raw / SimpleEntry.raw; ownership not established"
+      },
+      {
+        "symbol": "data_ov002_0210cb5c",
+        "address": "0x0210cb5c",
+        "note": "read only by LoadEntranceObjects; ownership not established"
+      },
+      {
+        "symbol": "data_ov002_0210cb70",
+        "address": "0x0210cb70",
+        "note": "read only by LoadDoorObjects; ownership not established"
+      },
+      {
+        "symbol": "data_ov002_0210cb88",
+        "address": "0x0210cb88",
+        "note": "read only by LoadDoorObjects; ownership not established"
+      }
+    ],
+    "bss": [
+      {
+        "symbol": "data_ov002_0211118c",
+        "address": "0x0211118c",
+        "note": "the spawn-order / death-table counter; written by Stage::LoadClsnAndObjects, LoadStandardObjects and LoadSimpleObjects, all inside this TU"
+      }
+    ],
+    "init": []
+  },
+  "notes": [
+    "Pilot #2 for notes/translation-unit-reconstruction-plan.md section 18. Report: notes/tu-reconstruction-pilot-2-report.md. Deliberately the opposite shape from pilot #1 (ov045/PoleLift): no class, therefore no destructor group and no vtable/RTTI, which is what this round exists to isolate.",
+    "All seventeen functions reproduce their ROM bytes when compiled together. The legacy one-function sources under src/ are untouched and remain the enrolled owners of this range.",
+    "SEVENTEEN functions, not the plan's 'approximately 5-15'. The evidence puts the boundary where it is; splitting it to hit the count would have been an invented cut.",
+    "Consolidation forced FOUR declaration conflicts that per-file compilation had been hiding, where pilot #1 found none: data_0209caa0's element type (int[] vs u8[]), data_0209f5c0's type (ActorBase* vs void*), Actor::Spawn's spelling (real static method vs hand-spelled extern \"C\" alias, with four mutually inconsistent copies of the alias), and func_0203accc's ARITY (decl_common.h's 1 argument vs a local 3-argument declaration -- the one no cast could reconcile). All four resolutions are byte-free; see the report.",
+    "Promotion is refused. Requires: a licensed home for the two vague-linkage Vector3 destructors, a scratch link proving the whole 0x020fe190..0x020fea4c range, and the .data phase for the dispatch table."
+  ],
+  "partial_isolation": {
+    "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+    "delinksChanged": false,
+    "derivedObjects": 17,
+    "contributionEquivalent": "17/17",
+    "comparedFields": [
+      "keptSection",
+      "keptBytes",
+      "relocs",
+      "defined",
+      "mapping",
+      "live",
+      "undefReferenced"
+    ],
+    "substitutedObjectPaths": [
+      "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp",
+      "src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp",
+      "src/_Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/_Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/_Z23LoadMinimapScaleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/_Z22LoadMinimapTileObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/_Z15LoadExitObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/_Z15LoadDoorObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/_Z14LoadFogObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/_Z23LoadTeleportDestObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/_Z25LoadTeleportSourceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/_Z15LoadViewObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/_Z15LoadPathObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/_Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp"
+    ],
+    "extraInertImports": 58,
+    "extraImportsWithNoHome": [],
+    "result": "partial-link-verified",
+    "phases": {
+      "delink": true,
+      "lcf": true,
+      "compile": true,
+      "link": true,
+      "checkModules": true,
+      "checkSymbols": false,
+      "rom": true
+    },
+    "tuRange": {
+      "start": "0x020fe190",
+      "end": "0x020fea4c",
+      "differingBytes": 0,
+      "firstDiff": null
+    },
+    "moduleFidelityPassed": true,
+    "symbolCheckNewVsBaseline": [],
+    "rom": {
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "matchesStockRom": true
+    },
+    "scratch": "build/tu/ov002-LevelObjects/link-partial (gitignored)",
+    "state": "partial-link-verified",
+    "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
+    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+  }
+}

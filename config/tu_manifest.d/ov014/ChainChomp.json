@@ -1,0 +1,248 @@
+{
+  "id": "ov014/ChainChomp",
+  "module": "ov014",
+  "source": "src_tu/actors/ChainChomp.cpp",
+  "promoted_source": "src/actors/ChainChomp.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2111308..0x2112e0c, 29 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): ChainChomp",
+    "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02111308",
+      "end": "0x02112e0c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN10ChainChompD1Ev",
+      "address": "0x02111308",
+      "size": "0x000000b4",
+      "legacy_source": "src/_ZN10ChainChompD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN10ChainChompD0Ev",
+      "address": "0x021113bc",
+      "size": "0x000000c8",
+      "legacy_source": "src/_ZN10ChainChompD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov014_02111484",
+      "address": "0x02111484",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov014_02111484.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov014_021114d8",
+      "address": "0x021114d8",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov014_021114d8.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov014_0211150c",
+      "address": "0x0211150c",
+      "size": "0x000000b4",
+      "legacy_source": "src/func_ov014_0211150c.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov014_021115c0",
+      "address": "0x021115c0",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov014_021115c0.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov014_021115ec",
+      "address": "0x021115ec",
+      "size": "0x00000480",
+      "legacy_source": "src/func_ov014_021115ec.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov014_02111a6c",
+      "address": "0x02111a6c",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov014_02111a6c.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov014_02111af0",
+      "address": "0x02111af0",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov014_02111af0.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov014_02111b70",
+      "address": "0x02111b70",
+      "size": "0x00000138",
+      "legacy_source": "src/func_ov014_02111b70.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov014_02111ca8",
+      "address": "0x02111ca8",
+      "size": "0x0000011c",
+      "legacy_source": "src/func_ov014_02111ca8.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov014_02111dc4",
+      "address": "0x02111dc4",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov014_02111dc4.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov014_02111e14",
+      "address": "0x02111e14",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov014_02111e14.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov014_02111e74",
+      "address": "0x02111e74",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov014_02111e74.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov014_02111ebc",
+      "address": "0x02111ebc",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov014_02111ebc.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov014_02111f08",
+      "address": "0x02111f08",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov014_02111f08.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov014_02111f54",
+      "address": "0x02111f54",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov014_02111f54.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov014_02111fb8",
+      "address": "0x02111fb8",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov014_02111fb8.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov014_02111fe0",
+      "address": "0x02111fe0",
+      "size": "0x00000134",
+      "legacy_source": "src/func_ov014_02111fe0.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov014_02112114",
+      "address": "0x02112114",
+      "size": "0x000001c8",
+      "legacy_source": "src/func_ov014_02112114.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov014_021122dc",
+      "address": "0x021122dc",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov014_021122dc.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov014_0211236c",
+      "address": "0x0211236c",
+      "size": "0x000001a0",
+      "legacy_source": "src/func_ov014_0211236c.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov014_0211250c",
+      "address": "0x0211250c",
+      "size": "0x0000027c",
+      "legacy_source": "src/func_ov014_0211250c.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov014_02112788",
+      "address": "0x02112788",
+      "size": "0x000001c4",
+      "legacy_source": "src/func_ov014_02112788.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN10ChainChomp16CleanupResourcesEv",
+      "address": "0x0211294c",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN10ChainChomp16CleanupResourcesEv.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN10ChainChomp6RenderEv",
+      "address": "0x02112994",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN10ChainChomp6RenderEv.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZN10ChainChomp8BehaviorEv",
+      "address": "0x021129ec",
+      "size": "0x00000128",
+      "legacy_source": "src/_ZN10ChainChomp8BehaviorEv.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN10ChainChomp13InitResourcesEv",
+      "address": "0x02112b14",
+      "size": "0x00000208",
+      "legacy_source": "src/_ZN10ChainChomp13InitResourcesEv.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "ChainChomp_Spawn",
+      "address": "0x02112d1c",
+      "size": "0x000000f0",
+      "legacy_source": "src/ChainChomp_Spawn.cpp",
+      "ordinal": 28
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: hand-assembled: raw concatenation in reverse ROM order; tubuild create refused this TU (extern \"C\"-wrapped legacy bodies)",
+    "29/29 MATCH, objisolate clean, reloc-destinations clean. Hand-assembled. The state table data_ov014_0211476c has TWO honest views (pmf at +0 and at +8) -- the +0 view lives in namespace ent0; a member byte-requires a THREE-argument call to func_0201267c (namespaced view); func_ov014_021115ec's entire declaration battery moved to block scope (its parameter widths diverge from the TU's canonical views and are byte-load-bearing). One ~ChainChomp() emits D0+D1; Spawn stores &_ZTV10ChainChomp[2]."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov014-ChainChomp/ChainChomp.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 29,
+    "functions_declared": 29,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 13 unlicensed section/symbol(s); see unlicensed_output_observed",
+      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

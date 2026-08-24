@@ -12,7 +12,7 @@ extern int data_ov002_0210d9e8[];
 
 int Number::CleanupResources()
 {
-  if(mParam & 0x10){
+  if(param1 & 0x10){
     ((SharedFilePtr *)(data_ov002_0210da28))->Release();
     ((SharedFilePtr *)(data_ov002_0210da08))->Release();
   } else {

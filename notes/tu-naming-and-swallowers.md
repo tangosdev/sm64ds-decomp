@@ -158,7 +158,7 @@ mangled name and is not part of that illustration, so that passage stands.
 
 ## 5. Pilot cross-check
 
-Against the three `config/tu_manifest.json` entries:
+Against the three `config/tu_manifest.d/` entries:
 
 | entry | status | result |
 | --- | --- | --- |
