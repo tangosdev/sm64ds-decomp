@@ -12,13 +12,14 @@
 
 void dBgCh_SphCrr::SetFloorResult(const dBgPi &src_)
 {
-    mClsnResult1.unk_004 = src_.unk_004;
-    mClsnResult1.unk_00c = src_.unk_00c;
-    mClsnResult1.unk_010 = src_.unk_010;
-    mClsnResult1.unk_014 = src_.unk_014;
-    mClsnResult1.unk_018 = src_.unk_018;
-    mClsnResult1.unk_01a = src_.unk_01a;
-    mClsnResult1.unk_01c = src_.unk_01c;
+    *reinterpret_cast<u64 *>(&mClsnResult1.surface.clps) =
+        *reinterpret_cast<const u64 *>(&src_.surface.clps);
+    mClsnResult1.surface.normal.x = src_.surface.normal.x;
+    mClsnResult1.surface.normal.y = src_.surface.normal.y;
+    mClsnResult1.surface.normal.z = src_.surface.normal.z;
+    mClsnResult1.triangleID = src_.triangleID;
+    mClsnResult1.flags = src_.flags;
+    mClsnResult1.clsnID = src_.clsnID;
     mClsnResult1.unk_020 = src_.unk_020;
     mClsnResult1.unk_024 = src_.unk_024;
 }

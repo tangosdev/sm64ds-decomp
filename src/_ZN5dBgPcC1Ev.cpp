@@ -1,8 +1,12 @@
-void func_02037eec(int *c)
+//cpp
+// @symbol _ZN5dBgPcC1Ev
+#include "dBgPc.h"
+
+dBgPc::dBgPc()
 {
-    c[0] = 0xfc0;
-    c[1] = 0xff;
-    c[4] = 0;
-    c[3] = c[4];
-    c[2] = c[3];
+    surface.clps.w0 = 0xfc0;
+    surface.clps.w1 = 0xff;
+    surface.normal.z = 0;
+    surface.normal.y = surface.normal.z;
+    surface.normal.x = surface.normal.y;
 }

@@ -5271,19 +5271,19 @@ src/func_02037eb0.c:
     complete
     .text start:0x02037eb0 end:0x02037ee4
 
-src/func_02037ee4.c:
+src/_ZN5dBgPcD2Ev.c:
     complete
     .text start:0x02037ee4 end:0x02037ee8
 
-src/func_02037ee8.c:
+src/_ZN5dBgPcD1Ev.cpp:
     complete
     .text start:0x02037ee8 end:0x02037eec
 
-src/func_02037eec.c:
+src/_ZN5dBgPcC1Ev.cpp:
     complete
     .text start:0x02037eec end:0x02037f18
 
-src/func_02037f18.c:
+src/_ZN5dBgPcC2Ev.c:
     complete
     .text start:0x02037f18 end:0x02037f44
 
@@ -5339,15 +5339,15 @@ src/_ZN5dBgPiD2Ev.c:
     complete
     .text start:0x020380ec end:0x02038114
 
-src/func_02038114.c:
+src/_ZN5dBgPiD0Ev.c:
     complete
     .text start:0x02038114 end:0x02038144
 
-src/_ZN5dBgPiD1Ev.c:
+src/_ZN5dBgPiD1Ev.cpp:
     complete
     .text start:0x02038144 end:0x0203816c
 
-src/_ZN5dBgPiC1Ev.c:
+src/_ZN5dBgPiC1Ev.cpp:
     complete
     .text start:0x0203816c end:0x0203819c
 

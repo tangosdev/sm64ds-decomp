@@ -33,8 +33,8 @@ struct dBgCh_Lin {
 extern "C" {
 int  func_020397dc(s32 x);
 int  func_020397b8(s32 x);
-void func_02037eec(SurfaceInfo *info);
-void func_02037ee8(SurfaceInfo *info);
+void _ZN5dBgPcC1Ev(SurfaceInfo *info);
+void _ZN5dBgPcD1Ev(SurfaceInfo *info);
 void func_02037fd4(dBgPi *res, s16 triIdx, SurfaceInfo *info);
 void func_020375ec(dBgCh_Lin *ray, Vector3 *pos);
 u32  func_020396dc(dBgW_Kc *self, KCL_Tri *prism);
@@ -214,7 +214,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
                     dist = Vec3_Dist(&hit, &s) >> 6;
                     if (bestDist <= dist) { ++g_walk_dbg[11]; continue; }
 
-                    func_02037eec(&info);
+                    _ZN5dBgPcC1Ev(&info);
                     triIdx = func_020396dc(this, prism);
                     /* the ROM dispatches this virtually (notes/itcm.md, the
                        one lever); the port calls it direct -- same target,
@@ -230,7 +230,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
                         func_02037fd4(&ray.result, triIdx, &info);
                         found = 1;
                     } else ++g_walk_dbg[12];
-                    func_02037ee8(&info);
+                    _ZN5dBgPcD1Ev(&info);
                 }
             }
             prevLeaf = rowLeaf;

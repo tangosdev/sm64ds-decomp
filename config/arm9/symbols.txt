@@ -1353,10 +1353,10 @@ func_02037e84 kind:function(arm,size=0xc) addr:0x02037e84
 func_02037e90 kind:function(arm,size=0xc) addr:0x02037e90
 func_02037e9c kind:function(arm,size=0x14) addr:0x02037e9c
 func_02037eb0 kind:function(arm,size=0x34) addr:0x02037eb0
-func_02037ee4 kind:function(arm,size=0x4) addr:0x02037ee4
-func_02037ee8 kind:function(arm,size=0x4) addr:0x02037ee8
-func_02037eec kind:function(arm,size=0x2c) addr:0x02037eec
-func_02037f18 kind:function(arm,size=0x2c) addr:0x02037f18
+_ZN5dBgPcD2Ev kind:function(arm,size=0x4) addr:0x02037ee4
+_ZN5dBgPcD1Ev kind:function(arm,size=0x4) addr:0x02037ee8
+_ZN5dBgPcC1Ev kind:function(arm,size=0x2c) addr:0x02037eec
+_ZN5dBgPcC2Ev kind:function(arm,size=0x2c) addr:0x02037f18
 func_02037f44 kind:function(arm,size=0x8) addr:0x02037f44
 _ZNK5dBgPi9GetClsnIDEv kind:function(arm,size=0x8) addr:0x02037f4c
 func_02037f54 kind:function(arm,size=0x8) addr:0x02037f54
@@ -1370,7 +1370,7 @@ _ZN5dBgPiaSERKS_ kind:function(arm,size=0x54) addr:0x02038018
 _ZNK5dBgPi6CopyToERS_ kind:function(arm,size=0x54) addr:0x0203806c
 func_020380c0 kind:function(arm,size=0x2c) addr:0x020380c0
 _ZN5dBgPiD2Ev kind:function(arm,size=0x28) addr:0x020380ec
-func_02038114 kind:function(arm,size=0x30) addr:0x02038114
+_ZN5dBgPiD0Ev kind:function(arm,size=0x30) addr:0x02038114
 _ZN5dBgPiD1Ev kind:function(arm,size=0x28) addr:0x02038144
 _ZN5dBgPiC1Ev kind:function(arm,size=0x30) addr:0x0203816c
 _ZN5dBgPiC2Ev kind:function(arm,size=0x30) addr:0x0203819c
@@ -4337,6 +4337,7 @@ VTable_dBgPi_dBgCh_SphCrrThunk kind:data(any) addr:0x02099348
 data_02099358 kind:data(any) addr:0x02099358
 VTable_dM3dGSph_dBgCh_SphCrrThunk kind:data(any) addr:0x02099358
 data_02099368 kind:data(any) addr:0x02099368
+_ZTV5dBgPi kind:data(any) addr:0x02099368
 _ZTS4dBgW kind:data(any) addr:0x02099370
 _ZTI4dBgW kind:data(any) addr:0x02099378
 _ZTV4dBgW kind:data(any) addr:0x02099388
