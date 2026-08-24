@@ -108,6 +108,16 @@
 // logic verified instruction for instruction. Its own banner carries the
 // decomposition and the full list of levers tried.
 //
+// vtablerows STILL REPORTS `0x174 ... nosrc 1` AND THAT IS NOT A STALE SEAT.
+// Its nosrc column is measured through Sources(config/arm9/delinks.txt), so it
+// asks "does a DELINK BLOCK own this word", not "does a src file exist".
+// Retiring this floor added src/func_ov006_020ee994.c and did not add a delink
+// block, so the column cannot move and the reconstruction stays EXACT at
+// 30/30. This is lane PGO's mg11 correction seen from the other side -- there,
+// a nosrc row turned out to have a usable src TU; here, a row with a usable
+// src TU keeps reading nosrc. Do not read that 1 at the merge as evidence that
+// slot 18 is still trapped; the seat's own witness line below is the evidence.
+//
 // THE MEASURED CONSEQUENCE, both ends, same binary, scene 372 unattended:
 // with the trap, the state word at self+0x5004 stayed 0x00000000 for the whole
 // run and slot 6 asked with code 0 every tick. With the ignition live it
