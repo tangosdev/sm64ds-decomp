@@ -11,7 +11,7 @@ extern struct VtEntry data_ov100_0214867c[];
 
 int RollingIronBall::Behavior()
 {
-    unsigned char idx = *(unsigned char*)((char*)&unk_3d0);
+    unsigned char idx = mVariant;
     struct VtEntry* e = (struct VtEntry*)((char*)data_ov100_0214867c + ((int)idx << 3));
     int f1 = e->field1;
     void* obj = (void*)((char*)((void*)this) + (f1 >> 1));

@@ -84,8 +84,11 @@ struct KoopaShell {
     u8  pad_068[0x2c];
     s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x6];
-    s32 mSpeed;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    /* dActor_c's own 0x09c/0x0a0 -- gravity and terminal velocity. This twin
+       used to call 0x09c "mSpeed", which contradicts include/dActor_c.h and the
+       C++ branch above; InitResources writes -0x2000 and -0x32000 here. */
+    s32 mVertAccel;            /* 0x09c */
+    s32 mTerminalVelocity;     /* 0x0a0 */
     u8  pad_0a4[0x4];
     s32 mVertSpeed;            /* 0x0a8 */
     u8  pad_0ac[0x4];

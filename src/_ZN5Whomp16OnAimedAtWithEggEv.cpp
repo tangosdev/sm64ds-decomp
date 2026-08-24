@@ -9,12 +9,11 @@ extern short data_02082214[];
 }
 
 s32 Whomp::OnAimedAtWithEgg() {
-    char* c = (char*)this;
     int idx;
-    if(*(unsigned char*)(c+0x414)!=0){
-        idx = ((int)*(unsigned short*)(c+0x8c) >> 4);
+    if(mIsKing!=0){
+        idx = ((int)(unsigned short)mAngleX >> 4);
         return data_02082214[idx*2+1] * 0x11d + 0x4b000;
     }
-    idx = ((int)*(unsigned short*)(c+0x8c) >> 4);
+    idx = ((int)(unsigned short)mAngleX >> 4);
     return data_02082214[idx*2+1] * 0x90 + 0x24000;
 }
