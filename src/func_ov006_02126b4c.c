@@ -7,9 +7,15 @@
 // independently:
 //     arm which==1  [+0x000,+0x1c4)  14 words, a 2-cycle  r8<->sl
 //     arm else      [+0x1c4,+0x398)  50 words, a six-way permutation
-// Declaration order, scope depth, use-count boosters and coalescing copies are
-// all inert here (2187 scope/order configurations measured, bitwise identical),
-// which is the signature of an allocator decision the source cannot address.
+// Declaration order, scope depth, use-count boosters, coalescing copies, loop
+// form, pointer retyping and every live optimizer pragma are inert here: they do
+// not merely fail to help, they return BITWISE IDENTICAL output. That is the
+// signature of an allocator decision the source cannot address, and it is why
+// this is banked as a wall rather than as an unfinished attempt. The per-family
+// sweep counts behind that sentence are the fan-out's measurement and live with
+// the near-miss row (nearmiss/db.jsonl, ov006 0x02126b4c); what is verified here
+// is the RESULT above -- the score and the two register maps -- which is checked
+// mechanically on every read rather than quoted.
 // Counts as decompiled, not matched.
 #include "types.h"
 
