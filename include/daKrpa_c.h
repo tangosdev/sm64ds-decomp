@@ -35,9 +35,15 @@ struct daKrpa_c : dActor_c {
     ShadowModel               mShadowModel;                  /* 0x138 */
     dCcAcPos_c mdCcAcPos_c;    /* 0x160 */
     dBgCh_Actr              mWithMeshClsn;                 /* 0x1a0 */
-    u8                        unk_35c;                       /* 0x35c */
+    /* InitResources assigns IDENTITY_MATRIX4X3 into this slot, so it begins a
+       Matrix4x3. Still spelt u8 + pad so the header need not pull in
+       math/Matrix.h. [_ZN8daKrpa_c13InitResourcesEv.cpp] */
+    u8                        mMatrix;                       /* 0x35c */
     u8                        pad_35d[0x4b];
-    s32                       unk_3a8;                       /* 0x3a8 */
+    /* InitResources raycasts a dBgCh_Gnd straight down from mPos and stores
+       (mPosY - hit height) + 0x1e000, or the constant 0x1f4000 when nothing is
+       hit. [_ZN8daKrpa_c13InitResourcesEv.cpp] */
+    s32                       mHeightAboveGnd;                       /* 0x3a8 */
     u8                        pad_3ac[0x4];
 
     /* Declared first on purpose, same reasoning as dActor_c.h: the key

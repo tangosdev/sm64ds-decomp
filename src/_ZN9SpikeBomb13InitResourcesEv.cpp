@@ -38,7 +38,7 @@ int SpikeBomb::InitResources()
     z.z = 0;
     Vec3_HorzAngle(&z, (const Vector3 *)((char *)&mPosX));
     p178 = (int *)((char *)&mHomePosY);
-    unk_184 = 0x2ee000;
+    mHomeYOffset = 0x2ee000;
     t = mPosX;
     /* materialize r0 = ((char *)this)+0x5c between load and store */
     {
@@ -48,8 +48,8 @@ int SpikeBomb::InitResources()
     mHomePosX = t;
     mHomePosY = mPosY;
     mHomePosZ = mPosZ;
-    *p178 = *p178 + (unk_184 >> 3);
-    unk_180 = Vec3_HorzLen((const Vector3 *)((char *)&mPosX));
+    *p178 = *p178 + (mHomeYOffset >> 3);
+    mHomeHorzDist = Vec3_HorzLen((const Vector3 *)((char *)&mPosX));
     mStateIndex = 0;
     mSlotIndex = AddSpikeBomb(((char *)this));
     return 1;

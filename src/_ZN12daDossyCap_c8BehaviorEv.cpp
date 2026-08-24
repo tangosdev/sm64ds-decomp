@@ -12,7 +12,7 @@ extern "C" void _ZN5dCc_c6UpdateEv(void* self);
 
 int daDossyCap_c::Behavior()
 {
-  char* p = *(char**)((char*)&unk_174);
+  char* p = *(char**)((char*)&mCarrier);
   if(p == 0) return 1;
   int b = (mFlags & 0x20000) != 0;
   if(b != 0){
@@ -34,8 +34,8 @@ int daDossyCap_c::Behavior()
   mPosX = *(int*)p;
   mPosY = *(int*)(p+4);
   mPosZ = *(int*)(p+8);
-  mAngleX = *(short*)(*(char**)((char*)&unk_174)+0xe4);
-  mAngleY = *(short*)(*(char**)((char*)&unk_174)+0x8e);
+  mAngleX = *(short*)(*(char**)((char*)&mCarrier)+0xe4);
+  mAngleY = *(short*)(*(char**)((char*)&mCarrier)+0x8e);
   if(((unsigned int)mCapIcon.mFlags << 30) >> 31){
     func_ov065_02118c4c(((char*)this));
     if(func_ov065_021180d4(((char*)this)) != 0){

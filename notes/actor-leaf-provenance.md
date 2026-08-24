@@ -172,3 +172,164 @@ Listed so the next reader does not repeat the search.
   what is a guess until the class's other functions are enrolled.
 - `BowserShockwaves` 0x214: zeroed in
   `src/_ZN16BowserShockwaves13InitResourcesEv.cpp`, never read.
+
+## Three shapes that repeat across these leaves
+
+Worth naming once here rather than thirteen times below.
+
+- **The identity matrix.** `*(Matrix4x3*)&unk_NNN = IDENTITY_MATRIX4X3` in
+  `InitResources`, over a slot whose pad runs 0x30 bytes. That is a `Matrix4x3`
+  member and it is named `mMatrix`. It stays spelt `u8` + pad rather than given
+  the real type, because typing it would drag `math/Matrix.h` into every
+  includer -- a change with its own risk and no byte to gain.
+- **The life timer.** A byte or halfword seeded with a round frame count in
+  `InitResources`, run through `DecIfAbove0_Byte`/`DecIfAbove0_Short` once a
+  frame, and destroying the actor at 0. Where `Render` additionally skips
+  drawing on odd values below some threshold, the actor blinks before it goes --
+  `PowerFlower` and `WingFeather` both do exactly that at 0xb4 down to 0x2d.
+- **The particle handle.** `mParticle = Particle::System::New(mParticle, effect,
+  pos...)` -- last frame's handle goes back in as the first argument and the
+  result is stored again, so one effect is kept alive rather than a new one
+  spawned each frame.
+
+## SpikeBomb -- include/SpikeBomb.h
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x180 | `mHomeHorzDist` | `Vec3_HorzLen` of the spawn position -- how far out in XZ the bomb starts from the world origin. |
+| 0x184 | `mHomeYOffset` | the constant 0x2ee000; `mHomePosY` is raised by `mHomeYOffset >> 3` immediately after the home triple is copied. |
+
+Source: `src/_ZN9SpikeBomb13InitResourcesEv.cpp`. Both branches of the header
+carry the rename.
+
+## HealingHeart -- include/HealingHeart.h
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x16c | `mAnimSpeed` | seeded 0x1000 (1.0), eased toward 0x8000 while the heal cooldown is above 0x2d and back toward 0x1000 otherwise, then copied into `mModelAnim.speed`. The heart spins slowly while idle and fast just after it heals. |
+| 0x171 | `mWasTouched` | edge detector on the collider: latched to 1 (and `mHealTimer` zeroed, so the heal fires that frame) the first frame the `dCcAc_c` reports an occupant, cleared the frame it reports none. |
+
+Sources: `src/_ZN12HealingHeart13InitResourcesEv.cpp`,
+`src/_ZN12HealingHeart8BehaviorEv.cpp`, and `src_tu/actors/HealingHeart.cpp`.
+
+## WingFeather -- include/WingFeather.h
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x378 | `mDriftSpeed` | eased toward 0x10000 every frame; multiplied by a `data_02082214` sine entry to produce `mHorzSpeed`. |
+| 0x37c | `mSwayAngle` | advances 0x400 per airborne frame, eased back to 0 on the ground; `(mSwayAngle >> 4) * 2` indexes the same sine table for `mAngleX` and `mAngleZ`. |
+| 0x380 | `mParticle` | the particle-handle shape above, effect 0x4a. |
+| 0x384 | `mLifeTimer` | 0xb4 at init, counted down only while on the ground, destroys at 0, blinks below 0x2d. |
+
+Sources: `src/_ZN11WingFeather13InitResourcesEv.cpp`,
+`src/_ZN11WingFeather8BehaviorEv.cpp`, `src/_ZN11WingFeather6RenderEv.cpp`,
+`src_tu/actors/WingFeather.cpp`.
+
+## daObjAbuku_c -- include/daObjAbuku_c.h
+
+The bubble runs the same float as `WingFeather`, one class earlier in the
+overlay.
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x108 | `mDriftSpeed` | eased toward 0x6000; times a `data_02082214` sine entry is `mHorzSpeed`. |
+| 0x10c | `mSwayAngle` | `+= 0x400` a frame, `(mSwayAngle >> 4) * 2 + 1` indexes the sine table. |
+| 0x10e | `mLifeTimer` | 0x12c (300 frames) at init, `DecIfAbove0_Short`, pops at 0. |
+| 0x110 | `mParticle` | particle-handle shape, effect 1. |
+
+Sources: `src/_ZN12daObjAbuku_c13InitResourcesEv.cpp`,
+`src_tu/actors/daObjAbuku_c.cpp`.
+
+## daEyBm_c -- include/daEyBm_c.h
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x2f8 | `mMatrix` | identity-matrix shape; this one was already TYPED `Matrix4x3`, only the name was missing. |
+| 0x328 | `mParticle1` | particle-handle shape, effect 0x46, re-issued every `Render`. |
+| 0x32c | `mParticle2` | same, effect 0x47. |
+| 0x330 | `mLifeTimer` | 0x96 (150 frames) at init, `DecIfAbove0_Short` in `Behavior`. |
+
+Sources: `src/_ZN8daEyBm_c13InitResourcesEv.cpp`,
+`src/_ZN8daEyBm_c6RenderEv.cpp`, `src/_ZN8daEyBm_c8BehaviorEv.cpp`.
+
+## daKpFr_c -- include/daKpFr_c.h
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x2ec | `mMatrix` | identity-matrix shape. |
+| 0x324 | `mParticle1` | particle-handle shape, effect 0x7f, emitted at `mPosY + 0x4b000`. |
+| 0x328 | `mParticle2` | same, effect 0x80. |
+
+Sources: `src/_ZN8daKpFr_c13InitResourcesEv.cpp`,
+`src/_ZN8daKpFr_c6RenderEv.cpp`, `src_tu/actors/daKpFr_c.cpp`.
+
+## daKrpa_c -- include/daKrpa_c.h
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x35c | `mMatrix` | identity-matrix shape. |
+| 0x3a8 | `mHeightAboveGnd` | `InitResources` raycasts a `dBgCh_Gnd` down from `mPos` and stores `(mPosY - hit height) + 0x1e000`, or the constant 0x1f4000 when nothing is hit. |
+
+Sources: `src/_ZN8daKrpa_c13InitResourcesEv.cpp`, `src_tu/actors/daKrpa_c.cpp`.
+
+## Spiny -- include/Spiny.h
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x3a0 | `mMatrix` | identity-matrix shape. |
+| 0x3d8 | `mState` | `Render` draws the still `Model` in states 0 and 4 and the `ModelAnim` otherwise; `Behavior` treats 1 (once on the ground), 4 and 5 as states that must keep running whatever the distance to the player. |
+| 0x3e9 | `mDespawnTimer` | 0x2c (44 frames) at init, counted down ONLY on the frames Spiny is too far from the player to behave, destroys at 0. Not a plain life timer -- being near the player refills nothing but stops the count. |
+
+Sources: `src/_ZN5Spiny13InitResourcesEv.cpp`, `src/_ZN5Spiny6RenderEv.cpp`,
+`src/_ZN5Spiny8BehaviorEv.cpp`, `src_tu/actors/Spiny.cpp`.
+
+## EnemySwitchTag -- include/EnemySwitchTag.h
+
+The tag sets an `Event` bit while something stands in its collider.
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x108 | `mHoldDuration` | the spawn rotation Z word, or 0x96 (150 frames) when that is not positive. |
+| 0x10a | `mHoldTimer` | counts `mHoldDuration` down; at 0 it clears the collider flag and `Event::ClearBit(mEventID)`. |
+| 0x10c | `mIsReusable` | bit 5 of `param1`. Set: the tag re-arms by reloading `mHoldTimer` from `mHoldDuration`. Clear: it marks itself for destruction after firing once. |
+
+Sources: `src/_ZN14EnemySwitchTag13InitResourcesEv.cpp`,
+`src/_ZN14EnemySwitchTag8BehaviorEv.cpp`,
+`src_tu/actors/EnemySpawner+EnemySwitchTag.cpp`.
+
+## daDossyCap_c -- include/daDossyCap_c.h
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x174 | `mCarrier` | the actor the cap is riding, a pointer spelt `s32`. `Behavior` returns immediately when it is null; otherwise it copies the cap position out of that actor 0x0d8 triple and its two angles out of that actor +0xe4 and `dActor_c::mAngleY`. |
+
+Source: `src/_ZN12daDossyCap_c8BehaviorEv.cpp`.
+
+## Scuttlebug -- include/Scuttlebug.h
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x3a8 | `mTimer` | counted down once per frame at the top of `Behavior` with `DecIfAbove0_Short` -- as a HALFWORD, though the generated header typed the slot `u8`. The result is discarded there, so the name says "a timer" and no more. |
+
+Source: `src/_ZN10Scuttlebug8BehaviorEv.cpp`.
+
+## BowserTail -- include/BowserTail.h
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x108 | `mBowserUniqueID` | `Behavior` resolves it with `dActor_c::FindWithID` and parks the tail 0x8c units out from Bowser's position along his facing angle. The file already said so in prose. |
+
+Source: `src/_ZN10BowserTail8BehaviorEv.cpp`.
+
+## More leaves searched, nothing named
+
+- `BobOmbBuddy` 0x198: zeroed in `src/_ZN11BobOmbBuddy13InitResourcesEv.cpp`,
+  never read.
+- `CameraTag` 0x0d0 and `daBgSnwmn_c` 0x0d0: four opaque bytes each, touched by
+  no enrolled body. `daBgSnwmn_c` already carries a note saying its 0x0cc read
+  is the inherited `mAreaId`, not a field of its own.
+- `SoundObject` 0x0e0: filled from `data_ov002_0210c08a + param1 * 0xc`, the
+  same twelve-byte table row that fills `mLevelID`, `mTimerThreshold` and
+  `mTimerReset` -- so it is the fourth column of the sound table, but nothing
+  enrolled reads it, and which column is which is not something the table
+  itself says. [`src/_ZN11SoundObject13InitResourcesEv.cpp`]

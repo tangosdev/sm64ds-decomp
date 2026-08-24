@@ -45,7 +45,7 @@ int daEyBm_c::Behavior()
         func_ov071_02121c6c(((char*)this));
         _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c);
         _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c);
-        if (DecIfAbove0_Short((unsigned short*)((char*)&unk_330)) == 0)
+        if (DecIfAbove0_Short((unsigned short*)((char*)&mLifeTimer)) == 0)
             func_ov071_02121b08(((char*)this));
     } else {
         func_ov071_02121c6c(((char*)this));

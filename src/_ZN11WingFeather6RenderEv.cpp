@@ -12,7 +12,7 @@ struct Sub {
 
 int WingFeather::Render()
 {
-    unsigned char b = *(unsigned char*)((char*)&unk_384);
+    unsigned char b = *(unsigned char*)((char*)&mLifeTimer);
     if (b < 0x2d) {
         if (b & 1) return 1;
     }

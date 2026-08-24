@@ -7,7 +7,7 @@
  * own size assertion, once by closing exactly on the next named field:
  *
  *     dActor_c               0x000 + 0x0d0 = 0x0d0   -> pad_0d0
- *     dCcAc_c  0x0d4 + 0x034 = 0x108   -> unk_108
+ *     dCcAc_c  0x0d4 + 0x034 = 0x108   -> mBowserUniqueID
  *
  * sizeof is 0x118, which is not inferred from the fields: BowserTail_Spawn asks
  * fBase_c::operator new for 280 bytes.
@@ -32,7 +32,10 @@ struct BowserTail : dActor_c {
     /* Named by the class's own destructor calling dCcAc_c's D1 at
        +0x0d4 -- a relocation the ROM build checks. */
     dCcAc_c mdCcAc_c;     /* 0x0d4 */
-    u32 unk_108;                                /* 0x108 */
+    /* Bowser's fBase_c::uniqueID. Behavior resolves it with
+       dActor_c::FindWithID and parks the tail 0x8c units out from his position
+       along his facing angle. [_ZN10BowserTail8BehaviorEv.cpp] */
+    u32 mBowserUniqueID;                                /* 0x108 */
     u8  pad_10c[0xc];
 
     /* --- vtable, in ROM order. Do not reorder. --- */
@@ -59,7 +62,7 @@ struct BowserTail {
        dCcAc_c's D1 at +0x0d4 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10BowserTailD0Ev.c] */
     dCcAc_c mdCcAc_c;            /* 0x0d4 */
-    u32 unk_108;            /* 0x108 */
+    u32 mBowserUniqueID;            /* 0x108 */
     u8  pad_10c[0xc];
 };
 
