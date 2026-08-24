@@ -5807,7 +5807,7 @@ src/func_0203ac50.c:
     complete
     .text start:0x0203ac50 end:0x0203ac60
 
-src/func_0203ac60.c:
+src/_ZN8dM3dGSphC1Ev.c:
     complete
     .text start:0x0203ac60 end:0x0203ac70
 
