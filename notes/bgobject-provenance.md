@@ -148,3 +148,50 @@ named swing fields. Byte-exact under 2004/b56. The file's old banner claimed the
 "nothing to gain by converting the body and a real risk of a codegen-driven byte miss"
 — the first half was wrong and the second did not happen; the banner now records what
 was measured instead.
+
+---
+
+## SignPost (`include/SignPost.h`, ov002, size 0x5a4)
+
+Bodies read: `src/_ZN8SignPost13InitResourcesEv.cpp`,
+`src/_ZN8SignPost8BehaviorEv.cpp`, `src/_ZN8SignPost6RenderEv.cpp`,
+`src/_ZN8SignPost16CleanupResourcesEv.cpp`, `src/_ZN8SignPost4KillEv.cpp`,
+`src/_ZN8SignPost15OnGroundPoundedER8dActor_c.cpp`,
+`src/_ZN8SignPost11OnAttacked1ER8dActor_c.cpp`,
+`src/_ZN8SignPost15OnHitByMegaCharER6Player.cpp`.
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x354 | `mClsnResult` | `Behavior` reads this word immediately after `dCc_c::Clear` and `dCc_c::Update` on `mdCcAc_c` (which ends at exactly 0x354) and branches on `== 3` and `<= 1`. The collider's result code. Was inside `pad_354`. |
+| 0x380 | `mShadowMat` | `Behavior` passes it as the `Matrix4x3 &` argument of `dActor_c::DropShadowScaleXYZ(ShadowModel &, Matrix4x3 &, …)`, with `mShadowModel` as the argument before it. A `Matrix4x3` is 0x30 bytes and closes exactly on 0x3b0, the next evidenced field. Was `pad_380[0x30]`. |
+| 0x3b0/0x3b4/0x3b8 | `mHomePosX/Y/Z` | `InitResources` copies `mPosX/mPosY/mPosZ` into them once, after the ground-raycast has already settled `mPosY`; `Behavior` restores `mPosY = mHomePosY` when the sign respawns. |
+| 0x3bc/0x3be/0x3c0 | `mHomeAngleX/Y/Z` | `InitResources` copies `mAngleX/mAngleY/mAngleZ` in the same run. |
+| 0x584 | `mParticleHandle1` | `Behavior` passes it as the first argument of `Particle::System::New` and stores the result back — a recycled handle. Effect `0x13a`. Was inside `pad_584`. |
+| 0x588 | `mParticleHandle2` | same shape through `Particle::System::NewUnkCallback818`, effect `0x13b`. Was inside `pad_584`. |
+| 0x58c | `mBreakTimer` | `Behavior` runs the whole break sequence under `if (0x58c != 0)`: disable the mesh collider, `DecIfAbove0_Byte` once a frame trailing the two particles, and on the frame it hits zero poof the dust and hand off to the class's reset routine `func_ov002_020bae9c`. The same shape `Crate` uses at its own 0x606. Was inside `pad_584`. |
+| 0x58e | `mPoundsLeft` | `InitResources` sets `2`. `OnGroundPounded` either sinks the sign by `(mPoundsLeft * 0x2d) << 12` and zeroes it (a hard pound), or by one `0x2d000` step and decrements it. `Behavior` respawns the sign when it is `0`, setting it back to `2`, and only drops the shadow while it is still `2`. A remaining-steps count, not a state. |
+| 0x58f | `mPoundCooldown` | `OnGroundPounded` sets `0xf` on the soft-pound branch and returns early whenever it is nonzero; `Behavior` runs it down with `DecIfAbove0_Byte` once a frame. The gap between two successive pounds. |
+| 0x590 | `mHidden` | `Render` returns without drawing while it is nonzero; `Behavior` skips the collision-range check while it is nonzero and clears it under the same "player is far away" condition that respawns a pounded-in sign. |
+| 0x591 | `mRespawnDelay` | `OnGroundPounded` sets `0x1e` on both branches; `Behavior` requires `DecIfAbove0_Byte(&mRespawnDelay) == 0` **and** `DistToCPlayer > 0x7d0000` before it will restore the sign or clear `mHidden`. |
+| 0x59c | `mHoldingPlayer` | already typed `Player *`; `Behavior` calls `Player::DropActor()` on it through a pause, and `Behavior`/`Render` both read `player + 0xc8` through it. Same shape as `Crate`'s 0x5e4. |
+
+In the `#else` C twin only: `0x09c` → `mVertAccel` and `0x0a0` →
+`mTerminalVelocity` (`InitResources` writes `-0x2000` / `-0x3c000` to them through the
+inherited names), `0x0b0` → `mFlags`, and the `u8` marker at `0x2ec` → `mClsnMat`,
+which is what `include/dBgActor_c.h` calls that offset and what `InitResources` passes
+to `dBgW_KcMbg::SetFile`. The marker stays `u8`, the idiom the twin already uses for
+`mdCcAc_c` and `mShadowModel`.
+
+`src/_ZN8SignPost8BehaviorEv.cpp` was an `extern "C"` free function over a raw
+`char *c` with 30 literal offsets and a local one-word `Vector3`; it is now a real
+`int SignPost::Behavior()`. That conversion is what turned 0x354, 0x380, 0x584, 0x588
+and 0x58c from padding into evidenced fields. It needed one declaration added to the
+header — `int Behavior();`, placed **after** `virtual void Kill()` so that Kill stays
+this class's key function. `tools/eligible.py` gains exactly one name,
+`_ZN8SignPost8BehaviorEv`, and loses none.
+
+Raw-offset collapses, each re-verified byte-exact: `Render`'s
+`*(void **)((char *)&unk_59c)` and `(Sub041 *)((char *)&mModel)`,
+`CleanupResources`'s `((dBgW *)((char *)&mMeshCollider))`, and `InitResources`'
+`(char *)&mWithMeshClsn` plus the `((dBgCh_Actr *)((char *)&mWithMeshClsn))->` cast,
+which is now just `mWithMeshClsn.StartDetectingWater()`.
