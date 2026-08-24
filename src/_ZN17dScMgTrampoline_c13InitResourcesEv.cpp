@@ -47,8 +47,8 @@ s32 dScMgTrampoline_c::InitResources()
     char *base = (char *)this;
     s32 fov;
 
-    this->unk_5d94 = 0x20;
-    this->unk_5d98 = this->unk_5d94;
+    this->mScrollY = 0x20;
+    this->mScrollTargetY = this->mScrollY;
     func_ov006_0212231c(base);
     data_0209d45c = 0x1d;
     _ZN3G3X6SetFogEbiii(0, 0, 2, 0x1000);
