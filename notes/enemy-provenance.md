@@ -65,3 +65,60 @@ Left `unk_`:
   of hit points, which is exactly why it is not being named on a suggestion.
 - **0x424/0x428/0x42c/0x42d** — zeroed by a two-iteration loop in `InitResources` and
   otherwise untouched.
+
+---
+
+## `BowserFire` (`include/BowserFire.h`, ov060)
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x35c | `mVariant` | `src/_ZN10BowserFire13InitResourcesEv.cpp`: `mVariant = param1 & 7`. It is then the index into both behaviour tables — `data_ov060_0211af74[mVariant]` (called once at init) and `data_ov060_0211afb4[mVariant].pmf` (called every frame in `Behavior`) — and `mVariant == 0` is what disables the collider by setting `mdCcAc_c.flags \|= 1`. |
+| 0x364 | `mGroundY` | `InitResources` casts a `dBgCh_Gnd` ray down from the actor's position and stores `rc.clsnY` on a hit, `mPosY` on a miss. |
+| 0x374 | `mFrameCount` (`u16`) | zeroed in `InitResources`, incremented by 1 at the top of every `Behavior`. Widened from `s16` to `u16` to match the `unsigned short` the ROM's read-modify-write used, which is now spelled `mFrameCount += 1;`. |
+
+Left `unk_`:
+
+- **0x2cc, 0x37c, 0x380, 0x384, 0x388** — written to 0 (or copied from each other) in
+  `InitResources` and never read in a matched body.
+- **0x360** — set to `0x2000` and never read.
+- **0x370** — an `s32` incremented once per `Behavior`, alongside `mFrameCount`. Two
+  free-running counters in one class, and nothing reads either, so there is no evidence
+  for which is which; the raw poke stays rather than pick a name at random.
+- **0x378** — `(param1 >> 4) & 3`. Provenance without meaning: no matched body reads it.
+- **0x379** — set to `mVariant != 0`. Same: written, never read.
+
+---
+
+## `MrBlizzard` (`include/MrBlizzard.h`, ov081)
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x3f8 | `void *mState` | `src/_ZN10MrBlizzard8BehaviorEv.cpp`'s local shadow places `PMF *pp` at 0x3f8, calls the pointer-to-member-function at `pp[1]` through `this`, and compares the word against four ov081 state tables (`data_ov081_02128e24 / _02128e64 / _02128e84 / _02128e94`). `func_ov081_02125488(this, ...)` in `InitResources` is the setter. Previously unnamed inside `pad_398`. |
+| 0x400 | `mCapUniqueID` | `Behavior` spawns actor `0x10d` only when `SaveData::HasPlayerLostCap()` and this word is 0, then stores the spawned actor's unique id (`*(int*)(spawned + 4)`, the same `+4` `Unagi` uses for `mStarUniqueID`) into it. `src/_ZN10MrBlizzard6RenderEv.cpp` hides material 2 when it is non-zero — the head is bare once the cap actor exists. |
+| 0x414 | `mInitAngleY` | `InitResources`, immediately after `mAngleY = mPrevAngleY`: `mInitAngleY = mAngleY`. |
+| 0x420 | `mPathNodeCount` | `InitResources` (`mType == 0` branch): `= PathPtr::NumNodes()`. |
+| 0x424 | `mPathNodeIndex` | passed to `PathPtr::GetNode(pos, index)` and then set to 1 in the same branch. |
+| 0x44c | `Vector3 mHomePos` | `InitResources` writes `mPosX/Y/Z` into it at spawn; both it and `Behavior` then pass `&mHomePos` as the spawn position of actor `0xdf`. |
+
+Left `unk_`:
+
+- **0x3fc** — zeroed in `InitResources`, never read.
+- **0x468** — a byte guarding one `func_02012694(0x166, &mCamSpacePos)` call in the death
+  path, cleared afterwards. Nothing writes it in a matched body.
+- **0x469** — a 0/1/2 machine in the `mType == 3` branch of `Behavior`, driven entirely by
+  `HasPlayerLostCap()`, whose only effect is to flip `mType` to 2. Clearly cap-related and
+  clearly a state, but three values with no name attached is not enough to pick one.
+
+Byte-neutral source cleanups: `mType`, `mCapUniqueID`, `&mHomePos` and
+`mModelAnim.speed = 0x1000` (offset 0x30c + 0x5c = 0x368, `ModelAnim::speed`) replaced the
+corresponding raw `c + 0xNNN` pokes in `Behavior`.
+
+---
+
+## `Shark` (`include/Shark.h`, ov090)
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x370 | `mState` | `src/_ZN5Shark8BehaviorEv.cpp` reads it as a `SharkBehaviorState *` and calls the pointer-to-member-function at `+8` through `this`; `func_ov090_021338b4(this, data_ov090_021345cc)` at the end of `InitResources` is the setter. |
+| 0x374 | `Vector3 mClsnOffset` | `InitResources` zeroes all three words and then passes `&mClsnOffset` as the `const Vector3 &` argument of `dCcAcPos_c::Init` — the collider's offset from the actor. |
+| 0x38c | `mPathNodeCount` | `InitResources`: `= PathPtr::NumNodes()`. `Behavior` wraps `mPathNodeIdx` to 0 when it reaches this value. |
