@@ -2350,6 +2350,22 @@ void port_scene_fill_luckystars(void);
 extern unsigned char MgPsycheOut_SpawnInfo[];
 void *port_mg_esp3d_spawn(void);
 void port_scene_fill_esp3d(void);
+/* run mg11 lane MUG: dScMgSlot3_c, actor id 0x16d = scene 365, the "Mix-a-Mug"
+   slot machine. Its SpawnInfo is spelled as the raw config symbol because the
+   ROM gives this id no spawn symbol -- no naming pass has ever resolved it,
+   and a config-wide sweep for the address finds only
+   symbols/actor_renames_report.txt's own UNRESOLVED line. The class name is
+   the ROM's own type_info, reached the way the rows above reach theirs: the
+   word BEFORE data_ov006_0213eaa8 points at 0x0213e588 and that record's name
+   pointer is 0x0213e5ac, which reads "12dScMgSlot3_c". port/slice_mug.txt has
+   the title derivation (ov005 row 31 -> name text 27 -> BMG message 575 ->
+   "Mix-a-Mug") and the 25-of-25 control that decides which byte of the param
+   is the name-text index. Same reads_sublevel reasoning as every row above,
+   re-checked for this class: no relocation in ov006 lands on data_02092110 and
+   no TU in this class's closure names it. */
+extern unsigned char data_ov006_0213e508[];
+void *port_mg_slot3_spawn(void);
+void port_scene_fill_slot3(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2754,6 +2770,49 @@ static const PortSceneClass port_scene_classes[] = {
        in this class's closure names it. A minigame is not about a course. */
     {389, "SCENE_MG_ESP3D", MgPsycheOut_SpawnInfo, port_mg_esp3d_spawn,
      port_scene_fill_esp3d, 0},
+    /* 365 is 0x16d, spelled in decimal for the two reasons every row above
+       gives: the others are, and port/tools/battery.py reads its hosted-scene
+       set out of this table. APPENDED AFTER EVERY EXISTING ROW, run mg11 lane
+       MUG, and for this class the position is load-bearing twice.
+
+       ONE: it is the latent-safe direction port/mg_fanout_costs.txt section 11
+       derives from the once-per-process constructor gate.
+       port_scene_registry_install walks this table in TABLE ORDER and calls
+       every row's fill on every boot, while port_scene_mg_overlay_load runs
+       the thirty-five overlay constructors ONCE PER PROCESS at the tail of the
+       FIRST minigame row's fill. Appending means the constructors have already
+       run against clean ROM words when this fill starts -- and for THIS class
+       one of those constructors is its own: __sinit_ov006_02132894 copies the
+       eight member-pointer pairs of its state machine out of the .data span
+       0x0213e4e0..0x0213e588 into data_ov006_02142bdc. Nothing this fill
+       writes is inside that span; its whole reach is [0x0213eaa8, 0x0213eb38).
+
+       TWO: this class is the NINTH seated under dScMgSingle3DBase_c
+       (0x0213e448). EIGHT were seated at base -- the 361, 362, 363, 367, 381,
+       388, 389 and 390 rows -- so running last means the earlier fill keeps
+       the middle table and every earlier seat's middle-table witness keeps
+       counting exactly what it counted before this row existed. (The count is
+       measured in port/slice_mug.txt by sweeping every ov006 vtable's typeinfo
+       base word, not inherited from a neighbour's header; this comment said
+       FIFTH until review and was wrong by four.) hal/scene_mg_slot3.cpp
+       section 3 is the
+       argument and this seat prints its claimed counts so the split is
+       measured rather than assumed.
+
+       SECTION 11's HAZARD IS LIVE FOR THIS CLASS AND IS MEASURED ABSENT. The
+       span from data_ov006_0213eaa8 to the next config symbol is THIRTY-EIGHT
+       words, not 36, and the two extra words are the {0, &typeinfo} RTTI
+       header of data_ov006_0213eb40 -- dScMgSlot1_c's vtable, the
+       SCENE_MG_SLOT1 row twelve lines above, which ships today. A 38-slot fill
+       would write a host thunk over scene 364's typeinfo pointer. The fill is
+       called with 36 and FIVE independent checks agree on that width
+       (port/slice_mug.txt); this lane's sibling canary is a scene-364 boot.
+
+       reads_sublevel is 0 for the curling row's reason, re-derived rather than
+       copied: no relocation anywhere in ov006 lands on data_02092110 and no TU
+       in this class's closure names it. A minigame is not about a course. */
+    {365, "SCENE_MG_SLOT3", data_ov006_0213e508, port_mg_slot3_spawn,
+     port_scene_fill_slot3, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
