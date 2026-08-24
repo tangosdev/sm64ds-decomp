@@ -13,7 +13,7 @@ extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(char *thiz, char *
 
 int FirePiranhaPlantBig::Behavior()
 {
-    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char *)this), ((char *)this) + 0x174);
+    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char *)this), (char *)&mdCcAc_c);
     int b = (mFlags & 0x60000) != 0;
     if (b != 0) {
         func_ov084_0212d564(((char *)this));
@@ -46,15 +46,15 @@ int FirePiranhaPlantBig::Behavior()
     func_ov084_0212d86c(((char *)this));
     func_ov084_0212d564(((char *)this));
     _ZN5dCc_c5ClearEv((char *)&mdCcAc_c);
-    mdCcAc_c.radius = mScale * unk_208;
-    mdCcAc_c.height = mScale * unk_20c;
+    mdCcAc_c.radius = mScale * mClsnRadiusFactor;
+    mdCcAc_c.height = mScale * mClsnHeightFactor;
     _ZN5dCc_c6UpdateEv((char *)&mdCcAc_c);
     _ZN5dCc_c5ClearEv((char *)&mdCcAcPos_c);
     int b2 = actorID == 0xfc;
     if (b2 == 0
         && (unsigned int)(mState - 2) <= 1
-        && mScale == unk_210) {
-        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char *)this) + 0x1a8, ((char *)this) + 0x1f8);
+        && mScale == mMaxScale) {
+        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3((char *)&mdCcAcPos_c, (char *)&mClsnOffset);
         _ZN5dCc_c6UpdateEv((char *)&mdCcAcPos_c);
     }
     return 1;

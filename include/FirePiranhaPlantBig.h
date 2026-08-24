@@ -41,11 +41,11 @@ struct FirePiranhaPlantBig : dEnemyBase_c {
     s32                          mState;                /* 0x1ec */
     s32                          unk_1f0;               /* 0x1f0 */
     s32                          unk_1f4;               /* 0x1f4 */
-    u8  pad_1f8[0xc];
+    Vector3                      mClsnOffset;           /* 0x1f8 */
     s32                          mScale;                /* 0x204 */
-    s32                          unk_208;               /* 0x208 */
-    s32                          unk_20c;               /* 0x20c */
-    s32                          unk_210;               /* 0x210 */
+    s32                          mClsnRadiusFactor;     /* 0x208 */
+    s32                          mClsnHeightFactor;     /* 0x20c */
+    s32                          mMaxScale;             /* 0x210 */
     s32                          unk_214;               /* 0x214 */
     u8  pad_218[0x2];
     u8                           unk_21a;               /* 0x21a */
@@ -54,7 +54,7 @@ struct FirePiranhaPlantBig : dEnemyBase_c {
     u8                           unk_21d;               /* 0x21d */
     u8                           unk_21e;               /* 0x21e */
     u8                           unk_21f;               /* 0x21f */
-    u8                           unk_220;               /* 0x220 */
+    u8                           mAlive;                /* 0x220 */
     u8  pad_221[0x3];
     s32                          unk_224;               /* 0x224 */
     s32                          unk_228;               /* 0x228 */

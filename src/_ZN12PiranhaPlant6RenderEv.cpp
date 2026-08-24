@@ -21,6 +21,6 @@ int PiranhaPlant::Render()
         return 1;
     mModelAnim.Render((Vector3 *)&mScaleX);
     if ((int)mModelAnim.file == data_ov084_02130df4.w[1])
-        mModel.Render((Vector3 *)&unk_428);
+        mModel.Render(&mPipeScale);
     return 1;
 }
