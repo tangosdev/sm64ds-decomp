@@ -49,7 +49,7 @@ struct BasementWater {
     u8  pad_064[0x10];
     /* 0x074..0x08e is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
-    s32 unk_074;                 /* 0x074 */
+    s32 mCamSpacePosX;                 /* 0x074 */
     s32 mCamSpacePosY;           /* 0x078 */
     s32 mCamSpacePosZ;           /* 0x07c */
     s32 mScaleX;                 /* 0x080 */

@@ -182,15 +182,15 @@ void func_ov010_0211184c(char* c, char* arg2) {
  * included only for the flat, non-C++ half of that header, which still
  * spells this object's fields as `struct Trap` for exactly this reason. */
 /* The flat C spelling of the object from include/Trap.h's non-C++ half, under a
- * TU-local name: the C++ Trap (with real base fields named mAngleY etc.) is in
- * scope here, and this unconverted member still reads by the flat unk_ names. */
+ * TU-local name: the C++ Trap (with the same base fields) is in scope here, and
+ * this unconverted member still reads the object flat. */
 struct TrapFlat {
     u8  pad_000[0x5c];
-    s32 unk_05c, unk_060, unk_064;
+    s32 mPosX, mPosY, mPosZ;
     u8  pad_068[0x26];
-    u16 unk_08e;
+    u16 mAngleY;
     u8  pad_090[0x3c];
-    s8  unk_0cc;
+    s8  mAreaId;
     u8  pad_0cd[0x2d3];
     s32 mState, mPlayerDist;
     u16 mOpenSpeed;
@@ -214,28 +214,28 @@ int _ZN4Trap13InitResourcesEv(char* c)
         self->mIsSpawner = 1;
         self->mPlayerDist = 0;
 
-        idx = ((int)(self->unk_08e) >> 4) * 2;
+        idx = ((int)(self->mAngleY) >> 4) * 2;
         sx = data_02082214[idx + 1];
         sz = data_02082214[idx];
-        z = self->unk_064 + sz * 0x15d;
-        x = self->unk_05c - sx * 0x15d;
-        y = self->unk_060;
+        z = self->mPosZ + sz * 0x15d;
+        x = self->mPosX - sx * 0x15d;
+        y = self->mPosY;
         v.x = x;
         v.y = y;
         v.z = z;
-        sp = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x24, 0, &v, c + 0x8c, self->unk_0cc, -1);
+        sp = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x24, 0, &v, c + 0x8c, self->mAreaId, -1);
         *(int*)((char*)sp + 0x3ac) = *(int*)(c + 4);
 
-        idx = ((int)(self->unk_08e) >> 4) * 2;
+        idx = ((int)(self->mAngleY) >> 4) * 2;
         sz = data_02082214[idx];
         sx = data_02082214[idx + 1];
-        z = self->unk_064 - sz * 0x15d;
-        x = sx * 0x15d + self->unk_05c;
-        y = self->unk_060;
+        z = self->mPosZ - sz * 0x15d;
+        x = sx * 0x15d + self->mPosX;
+        y = self->mPosY;
         v.x = x;
         v.y = y;
         v.z = z;
-        sp = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x24, 1, &v, c + 0x8c, self->unk_0cc, -1);
+        sp = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x24, 1, &v, c + 0x8c, self->mAreaId, -1);
         *(int*)((char*)sp + 0x3ac) = *(int*)(c + 4);
 
         return 1;
@@ -250,7 +250,7 @@ int _ZN4Trap13InitResourcesEv(char* c)
     func_ov010_021113f0(c);
     {
         void* f = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov010_02112d00);
-        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x124, f, c + 0x370, 0x1000, self->unk_08e, &data_ov010_021122f8);
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x124, f, c + 0x370, 0x1000, self->mAngleY, &data_ov010_021122f8);
     }
     func_020393c4((int*)(c + 0x124), (int)func_ov010_02111984);
     _ZN4dBgW6EnableEP8dActor_c(c + 0x124, c);

@@ -28,6 +28,6 @@ int LavaPlank::InitResources()
   _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY, data_ov064_0211ba6c);
   func_020393d4(&mMeshCollider, &_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
   mOriginalPosY = mPosY;
-  unk_324 = mAngleX;
+  mPhaseAngle = mAngleX;
   return 1;
 }

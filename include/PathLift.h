@@ -44,7 +44,7 @@ typedef char PathLift_size_must_be_0x450[sizeof(PathLift) == 0x450 ? 1 : -1];
 /* The same object for a C translation unit, flat. */
 struct PathLift {
     u8  pad_000[0xc];
-    u16 unk_00c;            /* 0x00c */
+    u16 actorID;            /* 0x00c */
     u8  pad_00e[0xc6];
     /* Model member. The cartridge's own ~PathLift calls _ZN5ModelD1Ev at +0x0d4
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.

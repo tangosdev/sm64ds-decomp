@@ -140,7 +140,7 @@ int ChainChompFence::InitResources()
 /* recovered: named members + shared header, real C++ method */
 int ChainChompFence::Behavior()
 {
-    if (*(unsigned char*)((char*)&unk_31e) != 0) return 1;
+    if (*(unsigned char*)((char*)&mDisabled) != 0) return 1;
     _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((void *)this), 0, 0);
     return 1;
 }
@@ -152,7 +152,7 @@ int ChainChompFence::Behavior()
 /* recovered: named members + shared header, real C++ method */
 int ChainChompFence::Render()
 {
-    if (*(unsigned char*)((char*)&unk_31e) != 0) return 1;
+    if (*(unsigned char*)((char*)&mDisabled) != 0) return 1;
     ((Obj *)this)->sub.vfunc(0);
     return 1;
 }

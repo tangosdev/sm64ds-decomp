@@ -51,7 +51,7 @@ typedef char PyramidStep_size_must_be_0x3a4[sizeof(PyramidStep) == 0x3a4 ? 1 : -
    can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct PyramidStep {
     u8  pad_000[0x8];
-    s32 unk_008;            /* 0x008 */
+    s32 param1;            /* 0x008 */
     u8  pad_00c[0x82];
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x18];

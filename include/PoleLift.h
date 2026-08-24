@@ -42,9 +42,9 @@ typedef char PoleLift_size_must_be_0x358[sizeof(PoleLift) == 0x358 ? 1 : -1];
    can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct PoleLift {
     u8  pad_000[0x8];
-    s32 unk_008;            /* 0x008 */
+    s32 param1;            /* 0x008 */
     u8  pad_00c[0x82];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x44];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */

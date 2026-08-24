@@ -55,7 +55,7 @@ struct SlidingIce {
     u8  pad_090[0x4];
     s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x2];
-    s32 unk_098;            /* 0x098 */
+    s32 mHorzSpeed;            /* 0x098 */
     u8  pad_09c[0x30];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];

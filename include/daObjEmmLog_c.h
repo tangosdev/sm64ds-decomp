@@ -40,7 +40,7 @@ typedef char daObjEmmLog_c_size_must_be_0x328[sizeof(daObjEmmLog_c) == 0x328 ? 1
 /* The same object for a C translation unit, flat. */
 struct daObjEmmLog_c {
     u8  pad_000[0x60];
-    s32 unk_060;            /* 0x060 */
+    s32 mPosY;            /* 0x060 */
     u8  pad_064[0x2bc];
     s32 mBasePosY;          /* 0x320 -- InitResources copies mPosY; Behavior computes mPosY = mBasePosY + sine * mBobAmplitude */
     s32 mBobAmplitude;      /* 0x324 -- 0x64000, or the spawn byte * 0xa000 */

@@ -11,7 +11,7 @@ int TTC_MovingBar::CleanupResources()
 {
   if(((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
     ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
-  ((SharedFilePtr *)(*(void**)(data_ov065_0211d35c + (unsigned char)((char *)this)[0x31e]*0xc)))->Release();
-  ((SharedFilePtr *)(*(void**)(data_ov065_0211d360 + (unsigned char)((char *)this)[0x31e]*0xc)))->Release();
+  ((SharedFilePtr *)(*(void**)(data_ov065_0211d35c + mVariant*0xc)))->Release();
+  ((SharedFilePtr *)(*(void**)(data_ov065_0211d360 + mVariant*0xc)))->Release();
   return 1;
 }
