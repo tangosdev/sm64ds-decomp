@@ -195,6 +195,62 @@ int host_setting_mouse_capture(void);
    hal/fs_mods.cpp. */
 int host_setting_custom_palette(void);
 
+/* ---- THE PER-CHARACTER PALETTE PICKER ----------------------------------
+   Four keys, one per playable character: PaletteMario, PaletteLuigi,
+   PaletteWario, PaletteYoshi. Absent or "" is the ROM's colors, and the
+   ROM is the default, exactly like every other Mods key.
+
+   WHAT A VALUE NAMES. Any other value is the BASENAME of a palette file,
+   palettes/<value>.pal, looked for in the same three places a combo file
+   is: beside the exe, then the asset root, then the working directory.
+   The file is a palmod v2 blob, the same format CustomPalette reads, so
+   one file can carry records for several characters and the Studio needs
+   no second compiler.
+
+   ONLY THAT CHARACTER'S RECORDS ARE APPLIED. A .pal file names target
+   files by path; a key applies only the records whose target is one of
+   THAT character's own player files -- body, head with cap, head without
+   cap, and for Luigi the two texture-swap files his body and capped head
+   are driven by. Records aimed at anybody else in the same file are
+   skipped in silence, which is what lets one authored file serve four
+   keys with four different answers. Applied records keep every rule
+   CustomPalette already has: the palette is found by ITS OWN name in the
+   served file's table, the color count must match exactly, and any
+   disagreement refuses out loud and serves the ROM's colors.
+
+   PaletteYoshi ALSO TAKES FOUR BUILT-IN VALUES, "yoshi:green",
+   "yoshi:red", "yoshi:blue" and "yoshi:yellow", which need no file at
+   all: they are the ROM's own four VS colors, taken out of the player's
+   extraction. Yoshi's body palette is four stacked 16-color rows and
+   adventure mode renders row 0; the built-ins put the row VS would have
+   selected where row 0 is. "yoshi:green" IS row 0, so it is the ROM.
+   hal/fs_mods.cpp carries the derivation, including why the head files
+   get the same row rather than being left alone.
+
+   BOOT-LATCHED, like every Mods key, because the file layer caches what
+   it serves. Each active key says one plain-words line on stderr.
+
+   THEY REPLACE CustomPalette WHEN SET. The old single-combo key still
+   works on its own, but a file that sets even one of these four turns it
+   off entirely, with one line saying so -- two mods writing colors into
+   the same palettes would make what a player sees depend on which ran
+   last, and no setting should mean that.
+
+   character is 0 Mario, 1 Luigi, 2 Wario, 3 Yoshi. The accessor never
+   returns null; "" is the ROM.
+
+   host_setting_yoshi_builtin_row is 0..3 when PaletteYoshi named one of the
+   built-in colors, in the order the rows are stacked (green, red, blue,
+   yellow), and -1 when the key names a file instead. The four spellings are
+   owned by host_settings.cpp, the same way LovesMeCharacter's are, so the
+   word-to-index step and the mechanism that consumes the index live in one
+   file each and cannot drift. A "yoshi:" value this build does not know is
+   a typo -- no file system here allows a colon in a name -- so it reads as
+   the ROM and says so once. */
+const char *host_setting_character_palette(int character);
+int host_setting_character_palette_any(void);
+int host_setting_yoshi_builtin_row(void);
+
 /* ---- THE LIVE RE-READ -------------------------------------------------
    host_settings_poll: call once per frame from the host loop. Internally it
    looks at the file's write time only every 30th call, so its steady-state
