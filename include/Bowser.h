@@ -49,16 +49,16 @@ struct Bowser : dActor_c {
     u8  pad_3a4[0x4];
     s32 unk_3a8;            /* 0x3a8 */
     u8  pad_3ac[0x4];
-    s32 unk_3b0;            /* 0x3b0 */
-    s32 unk_3b4;            /* 0x3b4 */
-    s32 unk_3b8;            /* 0x3b8 */
+    s32 mHomePosX;            /* 0x3b0 */
+    s32 mHomePosY;            /* 0x3b4 */
+    s32 mHomePosZ;            /* 0x3b8 */
     u8  pad_3bc[0x30];
-    s32 unk_3ec;            /* 0x3ec */
+    s32 mDistToTarget;            /* 0x3ec */
     u8  pad_3f0[0x8];
-    s32 unk_3f8;            /* 0x3f8 */
+    s32 mAnimSpeed;            /* 0x3f8 */
     s16 unk_3fc;            /* 0x3fc */
     u8  pad_3fe[0x8];
-    s16 unk_406;            /* 0x406 */
+    s16 mAngleToTarget;            /* 0x406 */
     u8  pad_408[0x4];
     s32 unk_40c;            /* 0x40c */
     u8  pad_410[0x4];
@@ -137,16 +137,16 @@ struct Bowser {
     u8  pad_3a4[0x4];
     s32 unk_3a8;            /* 0x3a8 */
     u8  pad_3ac[0x4];
-    s32 unk_3b0;            /* 0x3b0 */
-    s32 unk_3b4;            /* 0x3b4 */
-    s32 unk_3b8;            /* 0x3b8 */
+    s32 mHomePosX;            /* 0x3b0 */
+    s32 mHomePosY;            /* 0x3b4 */
+    s32 mHomePosZ;            /* 0x3b8 */
     u8  pad_3bc[0x30];
-    s32 unk_3ec;            /* 0x3ec */
+    s32 mDistToTarget;            /* 0x3ec */
     u8  pad_3f0[0x8];
-    s32 unk_3f8;            /* 0x3f8 */
+    s32 mAnimSpeed;            /* 0x3f8 */
     s16 unk_3fc;            /* 0x3fc */
     u8  pad_3fe[0x8];
-    s16 unk_406;            /* 0x406 */
+    s16 mAngleToTarget;            /* 0x406 */
     u8  pad_408[0x4];
     s32 unk_40c;            /* 0x40c */
     u8  pad_410[0x4];

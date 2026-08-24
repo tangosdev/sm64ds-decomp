@@ -103,8 +103,49 @@ countdown block. Where a row cites "Behavior" that is the file meant.
 
 ## Bowser
 
-Not reached this pass.
+Five matched functions only, so the evidence is thin and most of the header is
+still `unk_`. Both halves of `Bowser.h` carry every rename: the file has a
+`#else` C twin that spells the whole layout flat, and a name changed in only one
+half is a spelling that compiles nowhere and that no gate reports.
+
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x3b0 | `mHomePosX` | `Bowser::InitResources` copies `mPosX/Y/Z` into 0x3b0/0x3b4/0x3b8 once, in the same block that sets `mVertAccel` and `mTerminalVelocity`. Saved-at-spawn position. |
+| 0x3b4 | `mHomePosY` | as above. |
+| 0x3b8 | `mHomePosZ` | as above. |
+| 0x3ec | `mDistToTarget` | `Behavior`: `mDistToTarget = Vec3_HorzDist(&mPosX, &target->mPosX)` when `ClosestPlayer()` returned something, and `~0x80000000` (INT_MAX, "infinitely far") when it did not. |
+| 0x3f8 | `mAnimSpeed` | `InitResources` sets 0x1000 alongside the three unit scales; `Behavior` copies it into `mModelAnim.speed` every frame before `Advance()`. |
+| 0x406 | `mAngleToTarget` | `Behavior`: `Vec3_HorzAngle(&mPosX, &target->mPosX)`, falling back to `mAngleY` when there is no target -- the same if/else arms as `mDistToTarget`. |
+
+Left `unk_` in Bowser, with the reason:
+
+- **0x3a8** -- `InitResources` stores word +4 of the actor it spawns with id
+  0x116. Offset 4 of an `fBase_c` has no name in the tree either, so naming this
+  would be naming the same unknown twice.
+- **0x414, 0x416** -- `param1 & 3` and `(param1 >> 2) & 1`. Configuration bits
+  read off the spawn parameter, but no matched body consumes either, so which
+  configuration is a guess.
+- **0x41c** -- `Bowser::Render` early-outs on `< 8`, the same guard SpikeBomb's
+  `mOpacity` gets. That is suggestive and it is not evidence: nothing matched
+  writes 0x41c, so unlike SpikeBomb there is no 0xff to confirm it.
+- **0x42b** -- `Behavior` clears it once `dActor_c::FindWithActorID(0x10d, 0)`
+  stops finding anything. A latch tied to actor 0x10d; what it gates is not in
+  matched code.
+- **0x423..0x42a, 0x444..0x450, 0x3fc, 0x40c** -- written once each by
+  `InitResources` and read by nothing matched.
 
 ## SpikeBomb
 
-Not reached this pass.
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x170 | `mStateIndex` | `InitResources` zeroes it; `Behavior` uses it as `data_ov060_0211b1d8[mStateIndex * 2]` -- a stride-8 `{ptr, adj}` pointer-to-member table, dispatched with the same ARM/Itanium pmf sequence `Player::ChangeState` uses. An index into a state table, not a flag. `Render` also early-outs while it is non-zero. |
+| 0x174 | `mHomePosX` | `InitResources` copies `mPosX/Y/Z` into 0x174/0x178/0x17c, then raises the Y copy by `unk_184 >> 3`. Saved-at-spawn position with a vertical offset. |
+| 0x178 | `mHomePosY` | as above; it is the one the `>> 3` term is added to. |
+| 0x17c | `mHomePosZ` | as above. |
+| 0x1a8 | `mSlotIndex` | `InitResources`: `mSlotIndex = AddSpikeBomb(this)`, and `src/AddSpikeBomb.c` returns the index of the first free slot in the eight-entry global `data_0209f3a4` (or -1). `src/ClearSpikeBomb.c` takes that index back. |
+| 0x1ae | `mOpacity` | `InitResources` sets 0xff; `SpikeBomb::Render` returns early on `< 8`. Full alpha at spawn plus a "too faint to bother drawing" guard is an opacity byte, and 0xff is not a plausible state id or counter. |
+
+Left `unk_` in SpikeBomb: **0x180** (`Vec3_HorzLen` of the spawn position, i.e. a
+distance from the world origin -- plausibly an orbit radius, but nothing matched
+reads it back) and **0x184** (`0x2ee000`, whose only use is the `>> 3` term added
+to `mHomePosY`).

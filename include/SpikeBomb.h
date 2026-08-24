@@ -8,14 +8,14 @@
  *
  *     dActor_c                      0x000 + 0x0d0 = 0x0d0   -> pad_0d0
  *     Model                      0x0d4 + 0x050 = 0x124   -> mdCcAcPos_c
- *     dCcAcPos_c  0x124 + 0x040 = 0x164   -> padding, then unk_170
+ *     dCcAcPos_c  0x124 + 0x040 = 0x164   -> padding, then mStateIndex
  *
  * mdCcAcPos_c was a `u8` marker with 0x4b bytes of pad behind it.
  * The pad was the object: the class's own destructor calls
  * dCcAcPos_c's D1 at +0x124, and 0x40 lands exactly where the next
  * declared field starts.
  *
- * sizeof is 0x1b0, and it IS the field span: the last field unk_1ae ends at 0x1af.
+ * sizeof is 0x1b0, and it IS the field span: the last field mOpacity ends at 0x1af.
  *
  * It used to say 0x32c, "not inferred from the fields", on the authority of
  * BowserSkyPlatform_Spawn -- a DIFFERENT CLASS's factory. That is the pair-by-name
@@ -42,16 +42,16 @@ struct SpikeBomb : dActor_c {
     Model mModel;                                               /* 0x0d4 */
     dCcAcPos_c mdCcAcPos_c;       /* 0x124 */
     u8  pad_164[0xc];
-    s32 unk_170;            /* 0x170 */
-    s32 unk_174;            /* 0x174 */
-    s32 unk_178;            /* 0x178 */
-    s32 unk_17c;            /* 0x17c */
+    s32 mStateIndex;            /* 0x170 */
+    s32 mHomePosX;            /* 0x174 */
+    s32 mHomePosY;            /* 0x178 */
+    s32 mHomePosZ;            /* 0x17c */
     s32 unk_180;            /* 0x180 */
     s32 unk_184;            /* 0x184 */
     u8  pad_188[0x20];
-    s32 unk_1a8;            /* 0x1a8 */
+    s32 mSlotIndex;            /* 0x1a8 */
     u8  pad_1ac[0x2];
-    u8  unk_1ae;            /* 0x1ae */
+    u8  mOpacity;            /* 0x1ae */
     u8  pad_1af[0x1];       /* 0x1af, closing on the ROM's 0x1b0 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
@@ -84,16 +84,16 @@ struct SpikeBomb {
     Model mModel;            /* 0x0d4 */
     dCcAcPos_c mdCcAcPos_c;       /* 0x124 */
     u8  pad_164[0xc];
-    s32 unk_170;            /* 0x170 */
-    s32 unk_174;            /* 0x174 */
-    s32 unk_178;            /* 0x178 */
-    s32 unk_17c;            /* 0x17c */
+    s32 mStateIndex;            /* 0x170 */
+    s32 mHomePosX;            /* 0x174 */
+    s32 mHomePosY;            /* 0x178 */
+    s32 mHomePosZ;            /* 0x17c */
     s32 unk_180;            /* 0x180 */
     s32 unk_184;            /* 0x184 */
     u8  pad_188[0x20];
-    s32 unk_1a8;            /* 0x1a8 */
+    s32 mSlotIndex;            /* 0x1a8 */
     u8  pad_1ac[0x2];
-    u8  unk_1ae;            /* 0x1ae */
+    u8  mOpacity;            /* 0x1ae */
     u8  pad_1af[0x1];       /* 0x1af, closing on the ROM's 0x1b0 */
 };
 
