@@ -14,7 +14,7 @@ struct VBase {
 int BobOmb::Render()
 {
     int result = 1;
-    if (unk_3f3 != 0) {
+    if (mShouldRender != 0) {
         int flags = mFlags;
         int b = (flags & 0x40000) != 0;
         if (!b) {

@@ -20,7 +20,7 @@ struct VObj {
 
 int Rabbit::Render()
 {
-    if (unk_428 == 1) return 1;
+    if (mIsDisabled == 1) return 1;
 
     {
         int b = (mFlags & 0x40000) != 0;
@@ -36,7 +36,7 @@ int Rabbit::Render()
         int* r3 = base[0];
         char* r1 = (char*)base[1];
         for (unsigned int i = 0; i < *(unsigned int*)((char*)r3 + 0x24); i++) {
-            *(int*)(r1 + 0x20) = unk_468;
+            *(int*)(r1 + 0x20) = mMaterialColor;
             r1 += 0x30;
         }
     }
