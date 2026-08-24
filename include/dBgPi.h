@@ -42,6 +42,7 @@ struct dBgPi {
     dBgPi();
 
     /* methods */
+    dBgPi &operator=(const dBgPi &other);
     void CopyTo(dBgPi &dst) const;
     u32 GetClsnID() const;
 };
