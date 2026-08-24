@@ -38,30 +38,53 @@ struct Rabbit : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     ModelAnim                    mModelAnim;            /* 0x300 */
-    s32                          unk_364;               /* 0x364 */
+    /* The current animation-state descriptor. Behavior compares it by ADDRESS
+       against four file-scope ov085 objects (0213068c / 021306ac / 021306bc /
+       021306dc) and reads a pointer-to-member sequence out of it at +0x08, so it
+       is a pointer with no recovered type; func_ov085_0212bc78(this, record)
+       assigns it. */
+    s32                          mState;                /* 0x364 */
     ShadowModel                  mShadowModel1;         /* 0x368 */
     u8  pad_390[0x30];
     ShadowModel                  mShadowModel2;         /* 0x3c0 */
     u8  pad_3e8[0x38];
     s32                          mColorVariant;         /* 0x420 */
     u8  pad_424[0x2];
-    u8                           unk_426;               /* 0x426 */
-    u8                           unk_427;               /* 0x427 */
-    u8                           unk_428;               /* 0x428 */
-    u8                           unk_429;               /* 0x429 */
-    u8                           unk_42a;               /* 0x42a */
+    u8                           unk_426;               /* 0x426 -- set to 2 the frame Yoshi eats it;
+                                                            read only as `!= 0`, to force the idle
+                                                            state and zero mHorzSpeed */
+    /* The talk sequence: 0 offers the message, 1 waits for the player's talk
+       state to end, 2 is done. Behavior walks it in exactly that order. */
+    u8                           mTalkState;            /* 0x427 */
+    /* Latches the rabbit out of the level: while it is 1 Behavior returns
+       immediately and Render draws nothing. */
+    u8                           mIsDisabled;           /* 0x428 */
+    /* The rare glowing rabbit. InitResources sets it when mColorVariant lands on
+       5; Behavior then spawns the glow particle every frame and picks the
+       "you found a glowing one" message instead of the ordinary line. */
+    u8                           mIsGlowing;            /* 0x429 */
+    /* Counted up while dEnemyBase_c's unk_107 reads 1 (inside the Yoshi-eat
+       branch) and reset together with it once it passes 0x96. */
+    u8                           mEatenTimer;           /* 0x42a */
     u8  pad_42b[0xd];
-    s32                          unk_438;               /* 0x438 */
+    s32                          mPathId;               /* 0x438 -- param1 & 0xff, handed to PathPtr::FromID */
     s32                          mRabbitId;             /* 0x43c */
     s32                          mCharacterId;          /* 0x440 */
-    s32                          unk_444;               /* 0x444 */
-    s32                          unk_448;               /* 0x448 */
+    s32                          mNumPathNodes;         /* 0x444 -- PathPtr::NumNodes() */
+    s32                          mPathNodeIndex;        /* 0x448 -- the index handed to PathPtr::GetNode */
     u8  pad_44c[0x10];
-    s32                          unk_45c;               /* 0x45c */
+    /* A Player *. Assigned dActor_c::ClosestPlayer() and then passed to
+       Player::ShowMessage, Player::GetTalkState and Player::DropActor. */
+    s32                          mTalkingPlayer;        /* 0x45c */
     u8  pad_460[0x8];
-    s32                          unk_468;               /* 0x468 */
+    /* (mColorVariant << 1) + the material record's own +0x20 word. Render writes
+       it back into +0x20 of EVERY material of the model, which is how the six
+       rabbit colours come out of one model file. */
+    s32                          mMaterialColor;        /* 0x468 */
     u8  pad_46c[0x4];
-    s32                          unk_470;               /* 0x470 */
+    /* The glow particle's handle: Behavior passes the old value straight back
+       into Particle::System::New and stores the result. Glowing rabbits only. */
+    s32                          mGlowParticle;         /* 0x470 */
 
     /* --- vtable --- */
     virtual ~Rabbit();
