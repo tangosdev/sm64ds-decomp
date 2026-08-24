@@ -40,11 +40,11 @@ int Player::St_InYoshiMouth_Main()
             t = *(u16 *)(r4 + 0x6c6);
             if (*(u8 *)(r4 + 0x709) == 0 && *(u8 *)(r4 + 0x708) == 0) {
                 t = (u16)(t - d);
-                *(u8 *)((char *)&unk_6e6) += d;
+                *(u8 *)((char *)&mStatePhase) += d;
                 if ((s16)t < 0)
                     t = 0;
             }
-            if (t <= 1 && unk_6e6 >= 0x1e) {
+            if (t <= 1 && mStatePhase >= 0x1e) {
                 Vector3 res;
                 Vector3 addv;
                 Vector3 hv;

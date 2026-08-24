@@ -70,7 +70,7 @@ int Player::St_HoldHeavy_Main()
         if (mIsAirborne != 0) {
             func_ov002_020da9d4(((char*)this));
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_021101b4);
-            unk_6b4 = 0xa;
+            mHoldHeavyTimer = 0xa;
             return 1;
         }
 

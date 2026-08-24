@@ -13,7 +13,7 @@ int Player::St_Squish_Init()
   Player_ReleaseHeldActor(((void*)this));
   _ZN6Player7SetAnimEji5Fix12IiEj(((void*)this), 0x47, 0, 0x1000, 0);
   *(unsigned char*)((char*)&mStateWork) = 0;
-  *(unsigned char*)((char*)&unk_6e6) = 0;
+  *(unsigned char*)((char*)&mStatePhase) = 0;
   *(int*)((char*)&mHorzSpeed) = 0;
   *(int*)((char*)&mVertSpeed) = 0;
   *(int*)((char*)&mVertAccel) = 0;

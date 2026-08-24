@@ -106,7 +106,7 @@ int Player::St_Swim_Main()
         pos[2] = z;
         y = y + 0x32000;
         pos[1] = y;
-        *(unsigned int*)&unk_630 = func_02022d44(*(volatile unsigned int*)(&unk_630), eid, pos[0], pos[1], z, 0);
+        *(unsigned int*)&mParticle3 = func_02022d44(*(volatile unsigned int*)(&mParticle3), eid, pos[0], pos[1], z, 0);
     }
 
     if (mPrevVertSpeed == 0 && _ZNK10dBgCh_Actr10IsOnGroundEv(&mMeshClsn) != 0) {
@@ -114,7 +114,7 @@ int Player::St_Swim_Main()
         ang = fr[1];
         if (ang < 0x720 && ang > 0x400 && mPosY >= unk_64c - 0xc8000) {
             int at;
-            mPosY = unk_54c - 0x8000;
+            mPosY = mPreClsnPosY - 0x8000;
             at = _ZN4cstd5atan2E5Fix12IiES1_(fr[0], fr[2]);
             vec[0] = 0;
             vec[1] = 0;

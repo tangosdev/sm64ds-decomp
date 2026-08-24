@@ -19,7 +19,7 @@ int Player::St_Grabbed_Main()
     char* model;
 
     mPeakY = mPosY;
-    grab = *(char**)((char*)&unk_35c);
+    grab = *(char**)((char*)&mGrabbedByActor);
     if (grab != 0) {
         int isBob = (*(u16*)(grab + 0xc) == 0xbf);
         if (isBob != 0) {
@@ -29,7 +29,7 @@ int Player::St_Grabbed_Main()
                 *p = (u8)(*p + ret);
                 mStateTimer = 6;
                 if ((s16)(mStateStep - ret) < 0) {
-                    _ZN6Player9DropActorEv(*(char**)((char*)&unk_35c));
+                    _ZN6Player9DropActorEv(*(char**)((char*)&mGrabbedByActor));
                     func_ov002_020db54c(((char*)this), 0x10000, 0x10000, mAngleY);
                     return 1;
                 }

@@ -25,10 +25,10 @@ void Player::InitMetalWario()
         if (b != 2)
             return;
         _ZN6Player18TurnOffToonShadingEj(((char *)this), b);
-        _ZN6Player18TurnOffToonShadingEj(((char *)this), unk_6dc);
-        unk_73c = 0;
+        _ZN6Player18TurnOffToonShadingEj(((char *)this), mPrevCharacter);
+        mCapFlags = 0;
         param1 = mHatCharacter;
-        unk_71a = 0;
+        mHasNoCap = 0;
     }
 
     mIsMetal = 1;
@@ -41,7 +41,7 @@ void Player::InitMetalWario()
         *(char **)((char *)data_ov002_020ff480[mCharFileBase + v] + 4),
         0);
 
-    unk_6ae = 0x258;
+    mPowerupTimer = 0x258;
     func_ov002_020bd9ec(((char *)this), 0x34);
     func_ov002_020c43c4(((char *)this), 4);
 }

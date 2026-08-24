@@ -11,7 +11,7 @@ int Player::St_SwingPlayer_Init()
   mHorzSpeed = 0;
   _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x6c, 0x40000000, 0x1000, 0);
   mStateStep = 0;
-  mAngleYSpeed = mAngleY - unk_6d6;
+  mAngleYSpeed = mAngleY - mPreClsnAngleY;
   {
     void* obj = *(void**)((char*)&mHeldObj);
     if (obj != 0)

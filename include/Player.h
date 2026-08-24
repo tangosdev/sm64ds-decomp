@@ -160,7 +160,7 @@ struct Player : dActor_c {
     dCcAcPos_c mAttackClsn;            /* 0x314 */
     s32 mRidingShell;            /* 0x354 */
     s32 mHeldObj;            /* 0x358 */
-    s32 unk_35c;            /* 0x35c */
+    s32 mGrabbedByActor;            /* 0x35c */
     s32 mObjInMouth;            /* 0x360 */
     s32 mAttachedActor;            /* 0x364 */
     u8  mTalkActor;            /* 0x368 */
@@ -188,9 +188,9 @@ struct Player : dActor_c {
     s32 mSpawnPosX;            /* 0x53c */
     s32 mSpawnPosY;            /* 0x540 */
     s32 mSpawnPosZ;            /* 0x544 */
-    s32 unk_548;            /* 0x548 */
-    s32 unk_54c;            /* 0x54c */
-    s32 unk_550;            /* 0x550 */
+    s32 mPreClsnPosX;            /* 0x548 */
+    s32 mPreClsnPosY;            /* 0x54c */
+    s32 mPreClsnPosZ;            /* 0x550 */
     /* Floor normal, fx12 (1.0 == 0x1000 -- already rescaled from KCL's 0x400).
      * Stored as three consecutive words by Player::SetFloorSurfaceInfo
      * (func_ov002_020c16ec) at 0x020c1768 / 0x020c1770 / 0x020c1778, sourced
@@ -217,9 +217,9 @@ struct Player : dActor_c {
     s32 unk_61c;            /* 0x61c */
     s32 mLoopingSoundHandle;            /* 0x620 */
     u8  pad_624[0x4];
-    s32 unk_628;            /* 0x628 */
+    s32 mParticle1;            /* 0x628 */
     s32 mParticle2;            /* 0x62c */
-    s32 unk_630;            /* 0x630 */
+    s32 mParticle3;            /* 0x630 */
     u8  pad_634[0x8];
     u32 mCharFileBase;            /* 0x63c */
     s32 mPrevVertSpeed;            /* 0x640 */
@@ -268,7 +268,7 @@ struct Player : dActor_c {
     s16 mAngleYSpeed;            /* 0x69c */
     s16 unk_69e;            /* 0x69e */
     u16 mInvincibleTimer;            /* 0x6a0 */
-    u16 unk_6a2;            /* 0x6a2 */
+    u16 mPrevAreaId;            /* 0x6a2 */
     u16 mStateTimer;            /* 0x6a4 */
     u16 mStateWaitTimer;            /* 0x6a6 */
     /* u16, not s16: every load of this slot in the ROM is an ldrh. Declared
@@ -278,17 +278,17 @@ struct Player : dActor_c {
        Behavior's DecIfAbove0_Short(u16*)). Same defect class as the imported
        parameter widths in dActor_c.h: a declared type nothing had checked. */
     u16 mJumpComboTimer;            /* 0x6a8 */
-    u16 unk_6aa;            /* 0x6aa */
+    u16 mPunchKickCooldown;            /* 0x6aa */
     u8  unk_6ac;            /* 0x6ac */
     u8  pad_6ad[0x1];
-    u16 unk_6ae;            /* 0x6ae */
-    u16 unk_6b0;            /* 0x6b0 */
+    u16 mPowerupTimer;            /* 0x6ae */
+    u16 mCrouchTimer;            /* 0x6b0 */
     u8  unk_6b2;            /* 0x6b2 */
     u8  pad_6b3[0x1];
-    u16 unk_6b4;            /* 0x6b4 */
+    u16 mHoldHeavyTimer;            /* 0x6b4 */
     u8  unk_6b6;            /* 0x6b6 */
     u8  pad_6b7[0x1];
-    s16 unk_6b8;            /* 0x6b8 */
+    s16 mWalkTimer;            /* 0x6b8 */
     u8  unk_6ba;            /* 0x6ba */
     u8  pad_6bb[0x1];
     u8  unk_6bc;            /* 0x6bc */
@@ -307,21 +307,21 @@ struct Player : dActor_c {
     u8  pad_6c3[0x1];
     u8  unk_6c4;            /* 0x6c4 */
     u8  pad_6c5[0x1];
-    u16 unk_6c6;            /* 0x6c6 */
-    u16 unk_6c8;            /* 0x6c8 */
+    u16 mMouthHoldTimer;            /* 0x6c6 */
+    u16 mTeleportTimer;            /* 0x6c8 */
     u8  pad_6ca[0x2];
     u16 unk_6cc;            /* 0x6cc */
     u16 mStateFlags;            /* 0x6ce */
-    u8  unk_6d0;            /* 0x6d0 */
+    u8  mMegaKillCount;            /* 0x6d0 */
     u8  pad_6d1[0x1];
     s16 mDesiredAngleY;            /* 0x6d2 */
-    s16 unk_6d4;            /* 0x6d4 */
-    s16 unk_6d6;            /* 0x6d6 */
+    s16 mPrevDesiredAngleY;            /* 0x6d4 */
+    s16 mPreClsnAngleY;            /* 0x6d6 */
     u8  mPlayerNo;            /* 0x6d8 */
     u8  mCharacter;            /* 0x6d9 */
     u8  pad_6da[0x1];
-    u8  unk_6db;            /* 0x6db */
-    u8  unk_6dc;            /* 0x6dc */
+    u8  mBodyModelId;            /* 0x6db */
+    u8  mPrevCharacter;            /* 0x6dc */
     u8  mHatCharacter;            /* 0x6dd */
     u8  mIsAirborne;            /* 0x6de */
     u8  mLandSoundPlayed;            /* 0x6df */
@@ -331,9 +331,9 @@ struct Player : dActor_c {
     u8  mStateStep;            /* 0x6e3 */
     u8  mIsSlidingOnGround;            /* 0x6e4 */
     u8  mStateWork;            /* 0x6e5 */
-    u8  unk_6e6;            /* 0x6e6 */
+    u8  mStatePhase;            /* 0x6e6 */
     u8  mSlideStoppedTimer;            /* 0x6e7 */
-    u8  unk_6e8;            /* 0x6e8 */
+    u8  mTeleportId;            /* 0x6e8 */
     u8  mClsnFlags;            /* 0x6e9 */
     u8  pad_6ea[0x2];
     u8  unk_6ec;            /* 0x6ec */
@@ -349,8 +349,8 @@ struct Player : dActor_c {
     u8  pad_6f8[0x1];
     u8  mIsMetal;            /* 0x6f9 */
     u8  unk_6fa;            /* 0x6fa */
-    u8  unk_6fb;            /* 0x6fb */
-    u8  unk_6fc;            /* 0x6fc */
+    u8  mIsVanish;            /* 0x6fb */
+    u8  mPlayerTexFrame;            /* 0x6fc */
     u8  mIsBalloon;            /* 0x6fd */
     u8  pad_6fe[0x1];
     u8  mHasWings;            /* 0x6ff */
@@ -374,12 +374,12 @@ struct Player : dActor_c {
     u8  mIsInAirState;            /* 0x712 */
     u8  mIsBodyClsnEnabled;            /* 0x713 */
     u8  mUseAltBodyModel;            /* 0x714 */
-    u8  unk_715;            /* 0x715 */
+    u8  mUseFarCamera;            /* 0x715 */
     u8  unk_716;            /* 0x716 */
     u8  unk_717;            /* 0x717 */
     u8  mLoadedResourceFlags;            /* 0x718 */
     s8  unk_719;            /* 0x719 */
-    u8  unk_71a;            /* 0x71a */
+    u8  mHasNoCap;            /* 0x71a */
     u8  mJumpedFromQuicksand;            /* 0x71b */
     u8  pad_71c[0x5];
     u8  mSleepStage;            /* 0x721 */
@@ -391,7 +391,7 @@ struct Player : dActor_c {
     u8  unk_727;            /* 0x727 */
     u8  unk_728;            /* 0x728 */
     u8  pad_729[0x13];
-    u16 unk_73c;            /* 0x73c */
+    u16 mCapFlags;            /* 0x73c */
     u8  pad_73e[0x4];
     u8  unk_742;            /* 0x742 */
     u8  unk_743;            /* 0x743 */

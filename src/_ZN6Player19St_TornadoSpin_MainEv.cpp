@@ -45,7 +45,7 @@ int Player::St_TornadoSpin_Main()
     /* +0xdc on the tornado is past sizeof(dActor_c); it belongs to whatever
        concrete actor class this is, which nothing here evidences. */
     if (mAttachOffsetY > *(int*)((char*)mAttachedActor + 0xdc) || (mClsnFlags & 4) != 0) {
-        unk_6e6 = 0;
+        mStatePhase = 0;
         _ZN6Player11ChangeStateERNS_5StateE(this, (int)data_ov002_02110454);
         if (mVertSpeed < 0x14000)
             mVertSpeed = 0x14000;

@@ -32,6 +32,6 @@ int Player::St_LedgeHang_Init()
     off.z = z3.z;
     _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char*)this)+0x2d4, &off);
   }
-  unk_6e6 = 0;
+  mStatePhase = 0;
   return 1;
 }

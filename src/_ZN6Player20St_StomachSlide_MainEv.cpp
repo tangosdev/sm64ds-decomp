@@ -44,7 +44,7 @@ int Player::St_StomachSlide_Main()
         *p |= 0x4000;
     }
 
-    switch (unk_6e6) {
+    switch (mStatePhase) {
     case 0:
         func_ov002_020bf90c(((char*)this));
         if (mIsAirborne == 0) {
@@ -70,7 +70,7 @@ int Player::St_StomachSlide_Main()
         if (mHorzSpeed == 0) {
             if (mSlideType == 0) {
                 mStateStep = 0;
-                unk_6e6 = 2;
+                mStatePhase = 2;
                 goto end;
             }
             {
@@ -79,7 +79,7 @@ int Player::St_StomachSlide_Main()
             }
             if (mSlideStoppedTimer >= 0x1e) {
                 mStateStep = 0;
-                unk_6e6 = 2;
+                mStatePhase = 2;
                 goto end;
             }
         } else {
@@ -104,7 +104,7 @@ int Player::St_StomachSlide_Main()
             func_ov002_020c18b0(((char*)this), 0);
         } else {
             if (_ZN6Player7IsStateERNS_5StateE(((char*)this), data_ov002_0211031c)) {
-                unk_6e6 = 1;
+                mStatePhase = 1;
                 mStateStep = 0;
                 if (*(int*)((char*)&data_0209ee90 + 0x244) != 0) {
                     if ((mStateArg | mSlideType) != 0) {
@@ -125,7 +125,7 @@ int Player::St_StomachSlide_Main()
         _ZN5dCc_c5ClearEv((char*)&mAttackClsn);
         _ZN5dCc_c6UpdateEv((char*)&mAttackClsn);
         if (mIsAirborne == 0) {
-            unk_6e6 = 0;
+            mStatePhase = 0;
             mVertSpeed = 0;
             mStateStep = 0;
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x43, 0x40000000, 0x1000, 0);

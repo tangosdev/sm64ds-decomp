@@ -65,9 +65,9 @@ int Player::ChangeState(State &state) {
     }
 
     mLoopingSoundHandle = 0;
-    unk_630 = 0;
-    mParticle2 = unk_630;
-    unk_628 = mParticle2;
+    mParticle3 = 0;
+    mParticle2 = mParticle3;
+    mParticle1 = mParticle2;
 
     mPrevState = mState;
     mState = newState;

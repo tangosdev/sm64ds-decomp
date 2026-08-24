@@ -9,7 +9,7 @@
  * 0x35c is itself a Player. Kept as an extern "C" call rather than a method
  * call so the source does not assert a type this function cannot evidence.
  *
- * 0x35c is unk_35c, NOT mHeldObj at 0x358 -- those are different slots; the
+ * 0x35c is mGrabbedByActor, NOT mHeldObj at 0x358 -- those are different slots; the
  * object the player holds and the actor holding the player.
  */
 #include "Player.h"
@@ -21,12 +21,12 @@ int Player::St_Grabbed_Cleanup()
 {
     void* a;
     *(u32*)&mdCcAcPos_c.flags &= ~2;
-    a = (void*)unk_35c;
+    a = (void*)mGrabbedByActor;
     if (a) {
         int isBob = *(u16*)((char*)a + 0xc) == 0xbf;
         if (isBob) {
             _ZN6Player9DropActorEv(a);
-            unk_35c = 0;
+            mGrabbedByActor = 0;
         }
     }
     return 1;

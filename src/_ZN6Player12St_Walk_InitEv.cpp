@@ -79,11 +79,11 @@ merge:
 
     mRidingShell = 0;
     mHeldObj = 0;
-    unk_35c = 0;
+    mGrabbedByActor = 0;
     mStateStep = 0;
     mEatingPlayer = 0;
     if (func_ov002_020e3078(((char *)this), data_ov002_02110154) != 0) {
-        unk_6b8 = 0x10;
+        mWalkTimer = 0x10;
         if (*(short *)((char *)&data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
             mPrevAngleY = mDesiredAngleY;
             mAngleY = mPrevAngleY;
