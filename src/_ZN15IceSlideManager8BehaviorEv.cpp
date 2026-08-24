@@ -11,7 +11,7 @@ extern int _ZN8dActor_c24KillAndTrackInDeathTableEv(void*);
 
 int IceSlideManager::Behavior()
 {
-  switch (unk_0d6) {
+  switch (mState) {
   case 0:
     if (_ZN8dActor_c13DistToCPlayerEv(((char*)this)) < 0x180000) {
       unsigned char* p = (unsigned char*)(((int)((char*)this) + 0xd6));
@@ -20,7 +20,7 @@ int IceSlideManager::Behavior()
     }
     break;
   case 1:
-    if (DecIfAbove0_Short((char*)&unk_0d4) == 0) {
+    if (DecIfAbove0_Short((char*)&mKillTimer) == 0) {
       _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, 0x7f, 0, 0x15666, 0);
       _ZN8dActor_c24KillAndTrackInDeathTableEv(((char*)this));
     }

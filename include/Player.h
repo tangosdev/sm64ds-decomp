@@ -218,9 +218,19 @@ struct Player : dActor_c {
     s32 mFloorNormalX;            /* 0x554 */
     s32 mFloorNormalY;            /* 0x558 */
     s32 mFloorNormalZ;            /* 0x55c */
-    s32 unk_560;            /* 0x560 */
-    u8  pad_564[0x4];
-    s32 unk_568;            /* 0x568 */
+    /* Wall normal, fx12, and the exact counterpart of the floor normal above.
+     * func_ov002_020c25a8 writes all three from
+     * SurfaceInfo::CopyNormalTo(dBgCh_Actr::GetWallResult(&mMeshClsn) + 4, &wn)
+     * -- the same helper, the same shape, one surface over. It then pushes the
+     * actor out along it (`mPosX -= mWallNormalX * 2`, `mPosZ -= mWallNormalZ * 2`).
+     * Seven bodies read the pair back as `cstd::atan2(mWallNormalX, mWallNormalZ)`
+     * to get the wall's facing: St_Shell_Main, St_OnWall_Main (twice),
+     * St_Balloon_Main, St_CrazedCrate_Main, func_ov002_020c2138,
+     * func_ov002_020dd2f4 and func_ov002_020e28d4. 0x564 was marked padding until
+     * that store was disassembled, exactly as 0x554/0x55c were. */
+    s32 mWallNormalX;            /* 0x560 */
+    s32 mWallNormalY;            /* 0x564 */
+    s32 mWallNormalZ;            /* 0x568 */
     s32 unk_56c;            /* 0x56c */
     s32 unk_570;            /* 0x570 */
     s32 unk_574;            /* 0x574 */
@@ -354,7 +364,7 @@ struct Player : dActor_c {
     u8  unk_6f4;            /* 0x6f4 */
     u8  mOpacity;            /* 0x6f5 */
     u8  mIsControlDisabled;            /* 0x6f6 */
-    u8  unk_6f7;            /* 0x6f7 */
+    u8  mSwimMusicPushed;            /* 0x6f7 */
     u8  pad_6f8[0x1];
     u8  mIsMetal;            /* 0x6f9 */
     u8  unk_6fa;            /* 0x6fa */
@@ -387,7 +397,7 @@ struct Player : dActor_c {
     u8  unk_716;            /* 0x716 */
     u8  unk_717;            /* 0x717 */
     u8  mLoadedResourceFlags;            /* 0x718 */
-    s8  unk_719;            /* 0x719 */
+    s8  mKeyModelId;            /* 0x719 */
     u8  mHasNoCap;            /* 0x71a */
     u8  mJumpedFromQuicksand;            /* 0x71b */
     u8  pad_71c[0x5];

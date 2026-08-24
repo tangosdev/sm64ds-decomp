@@ -216,7 +216,7 @@ int Player::CleanupResources()
     if (mLoadedResourceFlags & 8)
         ((SharedFilePtr *)(data_ov002_0210d9c0))->Release();
     if (mLoadedResourceFlags & 0x10)
-        UnloadKeyModels(unk_719);
+        UnloadKeyModels(mKeyModelId);
     b = data_0209f2d8;
     b = b == 1;
     if (b == false_) {

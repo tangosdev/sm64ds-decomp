@@ -27,7 +27,7 @@ int Player::St_CrazedCrate_Main() {
     func_ov002_020e28d4(self, 0x1000, 0x1800);
 
     if (mClsnFlags & 2) {
-        int atan = _ZN4cstd5atan2E5Fix12IiES1_(unk_560, *(int*)(self + 0x568));
+        int atan = _ZN4cstd5atan2E5Fix12IiES1_(mWallNormalX, *(int*)(self + 0x568));
         int diff = AngleDiff(atan, *(s16*)(self + 0x8e));
         if (diff >= 0x6000) {
             int t = (s16)(2 * atan - *(s16*)(self + 0x8e));

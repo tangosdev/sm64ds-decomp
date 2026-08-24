@@ -308,3 +308,65 @@ Left `unk_` in SpikeBomb: **0x180** (`Vec3_HorzLen` of the spawn position, i.e. 
 distance from the world origin -- plausibly an orbit radius, but nothing matched
 reads it back) and **0x184** (`0x2ee000`, whose only use is the `>> 3` term added
 to `mHomePosY`).
+
+## Player -- named in the structural pass
+
+Three more, all found while chasing the arrays.
+
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x560/0x564/0x568 | `mWallNormalX/Y/Z` | The exact counterpart of `mFloorNormal*` three words earlier, and written the same way: `func_ov002_020c25a8` calls `SurfaceInfo::CopyNormalTo(dBgCh_Actr::GetWallResult(&mMeshClsn) + 4, &wn)` and stores `wn.x/y/z` into the three slots, then pushes the actor back out along it (`mPosX -= mWallNormalX * 2`, `mPosZ -= mWallNormalZ * 2`). Seven bodies read the X/Z pair back as `cstd::atan2(mWallNormalX, mWallNormalZ)` to recover the wall's facing -- `St_Shell_Main`, `St_OnWall_Main` (twice), `St_Balloon_Main`, `St_CrazedCrate_Main`, `func_ov002_020c2138`, `func_ov002_020dd2f4`, `func_ov002_020e28d4`. 0x564 was declared padding until that middle store was disassembled, which is exactly how 0x554 and 0x55c got here. |
+| 0x719 | `mKeyModelId` | `CleanupResources` passes it to `UnloadKeyModels(i)` under `mLoadedResourceFlags & 0x10`, and that function (`src/UnloadKeyModels.cpp`) indexes two eight-entry `SharedFilePtr` tables with it and releases both. `St_LevelEnter_Init` seeds it with -1, which `UnloadKeyModels`'s `if (i >= 8) return` treats as "nothing loaded". The same argument slot is `mState` in `Key::CleanupResources` and `v - 7` in `Door::CleanupResources`, so it selects WHICH key model, not how many. |
+| 0x6f7 | `mSwimMusicPushed` | A latch on a music push. `St_Swim_Main` sets it to 1 immediately after `func_ov002_020bd928(this, 0x33)` and clears it immediately after `func_ov002_020bd8c0(this, 0x33)`; `St_Swim_Cleanup` does nothing unless it is set, and then clears it and calls `func_ov002_020bd8c0(this, 0x33)`. The two helpers are `Sound::SetMusic` / `Sound::EndMusic` wrappers around the track words at 0x678/0x67c/0x680, so what is latched is "this state has a temporary track pushed and still owes the pop". Only the Swim states touch it. |
+
+## IceSlideManager
+
+Fourteen `unk_` down to two, and the split is worth stating plainly because it is
+two different kinds of naming.
+
+`0x000..0x0d4` is `dActor_c`'s layout written out FLAT -- `IceSlideManager` does
+not derive from `dActor_c`, it mirrors it. So `mPosX/Y/Z`, `mPrevPosX/Y/Z`,
+`mClipOffsetY`, `mClipRadius`, `mClipDistance`, `mFarDistance`, `mClipResult` and
+`mDeathTableID` are **copied from `include/dActor_c.h` at the matching offset**,
+not independently evidenced here. That is a weaker claim than the rest of this
+file and the header now says so. It is also why none of them can shadow anything:
+there is no base class to shadow.
+
+Only two slots are the actor's own, and both are witnessed:
+
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x0d4 | `mKillTimer` | `InitResources` seeds it with 0x78 (120 frames) and nothing else arms it; `Behavior`'s state 1 runs it down with `DecIfAbove0_Short` and, at zero, plays one more sound and calls `dActor_c::KillAndTrackInDeathTable`. Armed once, expires once, and its expiry IS the kill. |
+| 0x0d6 | `mState` | `Behavior` switches on it over exactly `{0, 1}`. State 0 waits for `DistToCPlayer() < 0x180000`, plays a sound and increments it; state 1 is the countdown above. A two-state machine, not a flag -- and the increment is spelt through a byte pointer at `this + 0xd6`, which is why the slot is `u8`. |
+
+The rename carried into `src_tu/actors/IceSlideManager.cpp`, which keeps its own
+TU-local shadow `dActor_c`; `check_src_tu_compiles` is green on all 72.
+
+## UpDownLiftBbh
+
+The same shape: `0x000..0x0d4` is the flat `fBase_c -> dBase_c -> dActor_c`
+layout, so `pauseFlags` came from `include/fBase_c.h` and `mPrevPosX/Y/Z`,
+`mClipOffsetY`, `mClipRadius`, `mClipDistance`, `mFarDistance`, `mClipResult` and
+`mDeathTableID` came from `include/dActor_c.h`, at the matching offset. Ten
+names, no independent evidence, and the header says so.
+
+Four slots inside that range stay `unk_`, and one of the reasons is not the usual
+one:
+
+- **0x010, 0x011, 0x012** -- `fBase_c` does not name them either. Copying across
+  would be inventing a name, not importing one.
+- **0x092, 0x096** -- these are `dActor_c`'s `mPrevAngleX` and `mPrevAngleZ`
+  slots, and `InitResources` reads them as UNSIGNED shaft measurements:
+  `mBottomY = mTopY - (unk_092 << 12)` and, on the one variant,
+  `mTopY = mPosY + (unk_096 << 12)`. Nothing matched WRITES either slot, so
+  whether they hold the base's angle snapshot or an actor-specific reuse of the
+  same words is not settled by anything that reproduces the cartridge. Naming
+  them either way picks a side on no evidence.
+
+Two of the actor's own stay `unk_` for the ordinary reason (write-only in matched
+code), but **0x349 carries an observation that should not be lost**:
+`InitResources` stores only 0 or 1 into it -- 1 for `actorID == 0x83` -- and then,
+four statements later, tests it for `== 2`. The branch that raises `mTopY` by
+`unk_096` is unreachable in the shipped ROM. It is reproduced as written because
+the cartridge contains it, and the header now records that so nobody "fixes" the
+comparison.
