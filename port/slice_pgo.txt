@@ -297,10 +297,21 @@
 #
 # AND THE GAME PLAYS. _work/solve.py reads the board out of the trace and
 # appends the next tap pair, which works because the scene is deterministic and
-# a plan is a prefix of a longer plan. FORTY consecutive clears ran with no
-# fault, no UNHANDLED address and exit 0. Endless mode is endless: its only
-# round end is a board with no adjacent same-face pair left, which is why
-# slot 19 is still unentered here and is entered 131 times on the sibling.
+# a plan is a prefix of a longer plan. FORTY consecutive clears ran over 6700
+# frames with no fault, no UNHANDLED address, none of the 24 or the 7 trapping
+# sites entered, and exit 0. The cleared-card counter on the top screen reads 2
+# at frame 600 and 80 at frame 6600, which is two a clear and is the score.
+#
+# SLOT 19 IS STILL UNENTERED HERE AND THAT IS THE HONEST KIND OF ZERO, for a
+# reason this class's own message text states: "This game of Pair-a-Gone goes on
+# forever". State 3 advances to 4 in exactly one place -- the else arm, when
+# func_ov006_020f96e0 finds NO adjacent same-face pair left -- and the board is
+# always twenty cards on a five-by-four grid, which is about sixty adjacent
+# positions drawn from eight or more faces. A stuck board is a rare tail event
+# by construction, not a state the game walks into, and the mode's end for a
+# player is leaving the minigame rather than finishing it. The sibling's round
+# DOES end, and lane CRD's proof of these states therefore lives on scene 381,
+# where slot 19 is entered 131 times through the same shapes.
 #
 # ---- WHAT IS NOT IN THIS SLICE AND WHY ------------------------------------
 #
