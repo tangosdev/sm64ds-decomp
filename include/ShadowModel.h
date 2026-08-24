@@ -53,6 +53,12 @@ struct ShadowModel : ModelBase {
     ShadowModel *prev;         /* 0x20 */
     ShadowModel *next;         /* 0x24 */
 
+    /* DECLARED, NEVER DEFINED HERE -- same reasoning as Model (include/Model.h)
+       and ModelBase: undeclared, the compiler synthesises this constructor and
+       INLINES it into every holder; the ROM calls _ZN11ShadowModelC1Ev
+       (0x02016068) out of line instead. */
+    ShadowModel();
+
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~ShadowModel();                           /* slots 0 (D1), 1 (D0) */
     virtual int DoSetFile(char *file, int a, int b);  /* slot 2 */

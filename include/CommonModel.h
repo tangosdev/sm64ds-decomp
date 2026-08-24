@@ -39,6 +39,12 @@ struct CommonModel : ModelBase {
     ModelComponents *data;     /* 0x08 - pool entry from func_02016e70 */
     Matrix4x3 mat4x3;          /* 0x0c */
 
+    /* DECLARED, NEVER DEFINED HERE -- same reasoning as Model (include/Model.h)
+       and ModelBase: undeclared, the compiler synthesises this constructor and
+       INLINES it into every holder; the ROM calls _ZN11CommonModelC1Ev
+       (0x02016204) out of line instead. */
+    CommonModel();
+
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~CommonModel();                           /* slots 0 (D1), 1 (D0) */
     virtual int DoSetFile(char *file, int a, int b);  /* slot 2 */
