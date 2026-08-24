@@ -10,20 +10,20 @@ s32 daSCoin_c::Behavior()
 {
     char *c = (char *)this;
     daSCoin_c *self = this;
-    if (self->unk_113) {
+    if (self->mDeathTimer) {
         if (DecIfAbove0_Byte((unsigned char *)(c + 0x113)) == 0) {
             func_ov002_020f05f4(c);
             ((fBase_c *)c)->MarkForDestruction();
         }
         return 1;
     }
-    if (self->unk_10f == 0) {
-        unsigned char st = self->unk_10e;
+    if (self->mGroupRole == 0) {
+        unsigned char st = self->mGroupId;
         if (st == 0 || st == 0xf) {
             {
                 dActor_c *o = 0;
-                self->unk_10f = 1;
-                self->unk_108 = *(int *)(c + 4);
+                self->mGroupRole = 1;
+                self->mLeaderUniqueID = *(int *)(c + 4);
                 for (;;) {
                     o = dActor_c::FindWithActorID(0x149, o);
                     if (o == 0) break;
@@ -35,7 +35,7 @@ s32 daSCoin_c::Behavior()
             }
         }
     }
-    if (self->unk_10f == 1 && self->unk_110 == 5) {
+    if (self->mGroupRole == 1 && self->mCollectedCount == 5) {
         ((fBase_c *)c)->MarkForDestruction();
         return 1;
     }
@@ -44,7 +44,7 @@ s32 daSCoin_c::Behavior()
         func_ov002_020f0438(c);
     }
     ((dCc_c *)(c + 0xd4))->Clear();
-    if (self->unk_111 == 0) {
+    if (self->mClsnDisabled == 0) {
         ((dCc_c *)(c + 0xd4))->Update();
     }
     return 1;

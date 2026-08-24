@@ -11,7 +11,7 @@ extern void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void *c, void *cyl);
 
 int Pokey::Behavior()
 {
-    int s = unk_38c;
+    int s = mState;
     if (s != 2 && s != 5) {
         if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char *)this), 0x5dc000)) return 1;
     }

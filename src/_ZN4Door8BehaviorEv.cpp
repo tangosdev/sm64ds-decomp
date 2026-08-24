@@ -6,7 +6,7 @@
  * override declared in include/Door.h rather than a free function that only
  * borrows the method's mangled symbol.
  *
- * FOLDED ONTO include/Door.h alongside the rest of the class: `unk_140`
+ * FOLDED ONTO include/Door.h alongside the rest of the class: `mCallbackNode`
  * rather than a raw `c + 0x140`. Byte-exact under the pinned 2004/b56 before
  * and after.
  *
@@ -38,7 +38,7 @@ extern int func_ov100_02145370(Door *self);
 }
 int Door::Behavior() {
     int res = func_ov100_02145370(this);
-    CallbackNode *node = (CallbackNode *)unk_140;
+    CallbackNode *node = (CallbackNode *)mCallbackNode;
     if (*(int*)&node->callback != 0) {
         (this->*(node->callback))(res);
     }
