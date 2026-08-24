@@ -41,109 +41,39 @@
 
 #pragma comment(linker, "/alternatename:?data_ov006_0214000c@@3PAXA=_data_ov006_0214000c")
 
-// ---- 2. THREE CLOSURE FLOORS, TRAPPED HONESTLY ---------------------------
+// ---- 2. THE THREE CLOSURE FLOORS ARE RETIRED (run mg12, lane SNO) --------
 //
-// The vtable's nosrc column is ZERO: all sixteen override slots resolve to a
-// matched src TU.  These three are not vtable slots.  They are bodies this
-// class's own closure CALLS, and none has a src TU under any naming
-// convention -- the whole of src/ contains no file for any of the three
-// addresses.
+// Run mg11 lane SNW trapped three bodies here with count-and-return stubs,
+// because no src TU existed for any of the three addresses anywhere in the
+// tree.  All three are decompiled now and seated through port/slice_snw.txt
+// section 17, so the stubs and their counter accessor are GONE from this file
+// rather than left beside the real bodies where both could define the symbol:
 //
-//   func_ov006_02125f68   0x9e0, 617 instructions plus a 15-word pool = 632
-//   func_ov006_02126ee4   0xacc, 688 instructions plus a  3-word pool = 691
-//   func_ov006_02126b4c   0x398, 227 instructions plus a  3-word pool = 230
+//   func_ov006_02125f68   0x9e0  -> src/func_ov006_02125f68.c
+//   func_ov006_02126ee4   0xacc  -> src/func_ov006_02126ee4.cpp
+//   func_ov006_02126b4c   0x398  -> src/func_ov006_02126b4c.c
 //
-// ALL THREE ARE THIS CLASS'S ALONE, which is why they are trapped in this
-// lane's own file rather than in the shared hal/scene_mg_faces.cpp.  Their
-// complete caller sets in ov006 are:
+// ONE OF THE THREE MATCHES and the other two are honest seats that carry their
+// measured residual in their own banners: func_ov006_02126ee4 matches at
+// mwccarm 2004/b56, func_ov006_02125f68 stands at 9 words of 632 and
+// func_ov006_02126b4c at 64 of 230, both of those a pure per-block register
+// renaming. slice_snw.txt section 17 carries the summary and the mechanical
+// "register names only" proof for the two.
 //
-//   0x02125f68  from:0x021286d8 and from:0x02128b24, both inside
-//               func_ov006_021283a4 (vtable slot 6), in two different arms of
-//               its six-arm phase switch.
-//   0x02126ee4  from:0x02129250 inside func_ov006_0212921c (vtable slot 18,
-//               only past its argument == 0x13 test) and from:0x0212953c
-//               inside func_ov006_02129268 (vtable slot 0, InitResources).
-//   0x02126b4c  from:0x02126ad4 and from:0x02126b30, both inside
-//               func_ov006_02126a98, which slots 0, 9 and 18 all call.
+// WHAT THE TRAPS COST WHILE THEY STOOD, now that it can be stated from the
+// decompiled bodies rather than guessed: the layout generator writes the whole
+// course tile grid at +0x4f38 and seeds the snowball and scenery tables at
+// +0xac58/+0xacd8 and +0xb358/+0xb5d8, the tile writer paints those rows into
+// both screens' BG2, and the obstacle pass is what pushes the ball out of
+// geometry, reflects its velocity off a contact normal and applies drag.  With
+// the three trapped, the course had no tiles, no rocks and no walls.
 //
-// Nothing else in the overlay reaches any of them, so no other lane's merge
-// has an opinion about where they live and the mg9 BOO/S371 LNK2005 shape
-// cannot repeat here.
-//
-// THE THIRD ONE ARRIVED IN WAVE 2 AND THAT IS THE TRAP RULE FIRING.
-// port/mg_fanout_costs.txt records that a trap-shaped floor HIDES ITS CALLEES
-// FROM STATIC CLOSURE.  func_ov006_02126b4c is not called by any vtable slot:
-// it is called by func_ov006_02126a98, which wave 1 pulled into the slice, and
-// it only became visible to the link once that body was compiling.  A lane
-// that budgets one wave should expect a second when it traps anything.
-//
-// WHAT THEY ARE, from the ROM, so the trap names are not invented:
-//
-//   func_ov006_02126ee4 CALLS EXACTLY ONE THING, ELEVEN TIMES: 0x0203b990,
-//   RandomIntInternal.  Nothing else.  Called once from InitResources and once
-//   from the state reset, it is the course layout -- eleven random draws and
-//   the writes that place them.
-//
-//   func_ov006_02125f68 opens by clearing three per-element byte arrays at
-//   this+0xabf8, this+0xac18 and this+0xac38 in a counted loop, then runs the
-//   fixed-point and vector helpers 0x0203d614 (x4), 0x0203d388 (x4),
-//   0x0203d434 (x3) and 0x0203d630 (x2), the particle entry points 0x02022e68
-//   and 0x02022d80 (x2 each), the sound call 0x02012718 (x3) and two of this
-//   class's own bodies (0x02125bbc, 0x02125cdc, 0x021259d8).  It is the
-//   obstacle/collision pass slot 6 runs in two of its phases.
-//
-//   func_ov006_02126b4c takes (object, int, int) -- its caller's src spells it
-//   that way and the ROM tests r2 against 1 on its second instruction -- and
-//   calls exactly three things: MultiStore16 (0x0205a448) sixteen times, and
-//   G2::GetBG2ScrPtr (0x020550bc) and G2S::GetBG2ScrPtr (0x0205503c) eight
-//   times each.  It writes tilemap entries into BOTH screens' BG2 screen
-//   blocks, which is this class's 2D digit and tile writer.
-//
-// A TRAP COUNTS AND RETURNS.  It does not guess a body, and
-// port/mg_fanout_costs.txt's rule that a trap-shaped floor HIDES ITS CALLEES
-// FROM STATIC CLOSURE applies to all three: the three ov006 bodies 0x02125f68
-// calls (0x021259d8, 0x02125bbc, 0x02125cdc) are not in this seat's slice
-// because nothing else asks for them, and a future decomp of it will need
-// them.
-//
-// WHAT THE PLAYER SEES.  These are the three honest gaps in this seat.  The
-// course is laid out by a floor, the obstacle pass is a floor, and the 2D tile
-// writer is a floor, so scene 377 is expected to boot, run its state machine
-// and draw its 3D, with the rocks message 554 promises and part of the 2D
-// layer missing or inert.  That is stated here rather than discovered by eye.
-
-#include <cstdio>
-
-static unsigned g_snw_floor_02125f68;
-static unsigned g_snw_floor_02126ee4;
-static unsigned g_snw_floor_02126b4c;
-
-extern "C" void func_ov006_02125f68(char *c)
-{
-    (void)c;
-    ++g_snw_floor_02125f68;
-}
-
-extern "C" void func_ov006_02126ee4(void *c)
-{
-    (void)c;
-    ++g_snw_floor_02126ee4;
-}
-
-extern "C" void func_ov006_02126b4c(char *c, int a, int b)
-{
-    (void)c; (void)a; (void)b;
-    ++g_snw_floor_02126b4c;
-}
-
-extern "C" void port_mg_snowball_floor_counts(unsigned *obstacles,
-                                              unsigned *layout,
-                                              unsigned *tiles)
-{
-    if (obstacles) *obstacles = g_snw_floor_02125f68;
-    if (layout)    *layout    = g_snw_floor_02126ee4;
-    if (tiles)     *tiles     = g_snw_floor_02126b4c;
-}
+// WHAT THEY NEVER COST, and this is the correction to the open question
+// slice_snw.txt section 16 left standing: NONE of them advances the course.
+// func_ov006_02125f68 references the scroll word +0xab6c exactly once in 617
+// instructions and it is a READ (ldr r2,[r0,#0xb6c] at 0x02126388, zero stores
+// anywhere in the body).  The advance is slot 6's own already-matched body at
+// 0x0212870c.  See runs/mg12/out/SNO/EVIDENCE_ROLLS.txt.
 
 /* This symbol exists so a reader grepping for who owns the alias above finds a
    definition rather than only a comment. */
