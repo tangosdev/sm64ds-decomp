@@ -218,3 +218,49 @@ Byte-neutral cleanups (each re-verified, `2004/b56`):
 once per frame and resets it to 0 the moment the state handler changes `mState`.
 That is a state-elapsed frame counter, which fits the 28 subclasses that declare
 the offset better than `unk_100` does.
+
+---
+
+## RollingIronBall (`include/RollingIronBall.h`, ov100)
+
+Bodies read: `src/_ZN15RollingIronBall13InitResourcesEv.cpp`,
+`src/_ZN15RollingIronBall8BehaviorEv.cpp`,
+`src/_ZN15RollingIronBall6RenderEv.cpp`.
+
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x3ac | `mDrawScaleX` | `Render` passes `&unk_3ac` as the scale argument of the model's render slot — the same call every sibling in this family makes with `&mScaleX`. `InitResources` writes 1.0 (0x1000) to all three, or 0.5 (0x800) in the one level that uses the small ball. |
+| 0x3b0 | `mDrawScaleY` | as above. |
+| 0x3b4 | `mDrawScaleZ` | as above. |
+| 0x3d0 | `mVariant` | `InitResources` sets it to `param1 & 0xf`, shifts `param1` down by four (so the next nibble is the path ID) and switches on it: 0 the static ball, 1 the free-rolling one, 2 and 4 the path followers. `Behavior` indexes its handler table with it and `Render` skips 0. |
+| 0x3d4 | `mNumPathNodes` | assigned `PathPtr::NumNodes()`. |
+| 0x3d8 | `mPathNodeIndex` | zeroed, then passed as the index argument to `PathPtr::GetNode`, then incremented and passed again. |
+| 0x3dc | `mSpawnPosX` | `InitResources` copies `mPosX/mPosY/mPosZ` into 0x3dc/0x3e0/0x3e4 once, on the path-follower paths only. |
+| 0x3e0 | `mSpawnPosY` | as above. |
+| 0x3e4 | `mSpawnPosZ` | as above. |
+| 0x3e8 | `mNextNodePosX` | the out-parameter `PathPtr::GetNode` writes the node into; `Vec3_Equal(&mPosX, &mNextNodePosX)` then decides whether to skip ahead a node. Promoted out of `pad_3e8[0xc]`. |
+| 0x3ec | `mNextNodePosY` | as above. |
+| 0x3f0 | `mNextNodePosZ` | as above. |
+
+Left `unk_`:
+
+* **0x3a8, 0x3cc, 0x3d2** — zeroed by `InitResources`, no reader.
+* **0x3ba** — an `s16` that `func_ov100_0214233c` fills and `InitResources`
+  immediately copies into `mPrevAngleY`. It is an angle, but which one (heading to
+  the next node is the obvious guess) the matched code does not say.
+* **0x3c0, 0x3c4, 0x3c8** — per-level constants selected by `data_0209f2f8`
+  (the level ID). 0x3c0/0x3c4 look like a near/far distance pair and 0x3c8 is
+  seeded from `data_02092138`, but nothing in the tree reads any of them back.
+
+Byte-neutral cleanups: six `((char *)this) + 0xNNN` member addresses in
+`InitResources` collapsed to `&mModel`, `&mPathPtr`, `&mdCcAc_c`,
+`&mWithMeshClsn`, `&mPosX` and `&mNextNodePosX`; `Behavior`'s
+`*(unsigned char*)((char*)&unk_3d0)` became `mVariant`.
+
+**Tooling note.** `build_pin.verify` reports `999 word(s) differ` for
+`_ZN15RollingIronBall13InitResourcesEv` — *including on the untouched `HEAD`
+version of the file*, checked by restoring both the header and the body from
+`HEAD` and re-running. `match.extract_func` returns a 2-byte body for that
+symbol, so the isolated-compile path cannot see this function at all; it is the
+pre-existing false negative `notes/` already records, not a regression. The
+whole-ROM build is the authority here and it is green.
