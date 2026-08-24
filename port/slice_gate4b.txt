@@ -4,7 +4,7 @@
 # everything here compiles as-is.
 
 # Model
-src/_ZN5ModelC1Ev.c
+src/_ZN5ModelC1Ev.cpp
 src/_ZN5ModelC2Ev.c
 src/_ZN5Model8LoadFileER13SharedFilePtr.cpp
 src/_ZN5Model9DoSetFileEPcii.cpp
@@ -39,7 +39,7 @@ src/func_02045178.c
 src/func_02048234.c
 src/func_02046008.c
 src/MulMat3x3Mat3x3.c
-src/_ZN9ModelBaseC2Ev.c
+src/_ZN9ModelBaseC2Ev.cpp
 src/DMASyncWordTransfer.c
 src/func_02059fd0.c
 src/func_0203cc0c.c
