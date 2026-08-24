@@ -11,18 +11,18 @@ void cMgSmartball_slot_c::RestoreInitial()
 {
     cMgSmartball_object_c::RestoreInitial();
     for (int i = 0; i < 3; i++) {
-        unk_034[i].a = 0;
-        unk_034[i].b = 0;
-        unk_04c[i].a = 0;
-        unk_04c[i].b = 0;
-        unk_064[i] = 0;
-        unk_070[i] = 0;
+        mReelOffset[i].x = 0;
+        mReelOffset[i].y = 0;
+        mReelVel[i].x = 0;
+        mReelVel[i].y = 0;
+        mReelStopCount[i] = 0;
+        mReelStopping[i] = 0;
     }
-    unk_073 = 0;
-    unk_074 = 0;
-    unk_075 = 0;
-    unk_078 = 0;
-    unk_07c = 0;
-    unk_080 = 0;
-    unk_084 = 0;
+    mIsSpinning = 0;
+    mIsSpeedingUp = 0;
+    mIsSlowingDown = 0;
+    mSpinsQueued = 0;
+    mSpinCooldown = 0;
+    mSpinTimer = 0;
+    mSoundHandle = 0;
 }

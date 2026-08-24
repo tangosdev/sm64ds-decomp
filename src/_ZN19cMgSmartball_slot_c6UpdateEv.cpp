@@ -1,7 +1,7 @@
 //cpp
 /* Slot 1. First loop draws three copies of one sprite in a row (index i is
  * computed but never read -- only the running x offset matters). Second
- * loop, over the same three unk_034[i] pairs, draws a stack of four more
+ * loop, over the same three mReelOffset[i] pairs, draws a stack of four more
  * sprites per element with descending y. Kept byte-for-byte identical to
  * the pre-migration matched source, including the `if (1) {}` no-op, the
  * (x - 0x18) & 0xFFFFFFFFFFFFFFFF mask, and the goto-based second loop --
@@ -35,10 +35,10 @@ void cMgSmartball_slot_c::Update()
 second_loop:
     {
         xo = (x - 0x18) & 0xFFFFFFFFFFFFFFFF;
-        func_ov004_020afdd0(data_ov006_021379e8, inline_fn(inline_fn(mCurrent0 >> 12, unk_034[i].a >> 12), xo), inline_fn(mCurrent1 >> 12, unk_034[i].b >> 12), -1, 3);
-        func_ov004_020afdd0(data_ov006_02137a00, inline_fn(inline_fn(mCurrent0 >> 12, unk_034[i].a >> 12), xo), inline_fn(mCurrent1 >> 12, unk_034[i].b >> 12) - 0x10, -1, 3);
-        func_ov004_020afdd0(data_ov006_021379f4, inline_fn(inline_fn(mCurrent0 >> 12, unk_034[i].a >> 12), xo), inline_fn(mCurrent1 >> 12, unk_034[i].b >> 12) - 0x20, -1, 3);
-        func_ov004_020afdd0(data_ov006_021379e8, inline_fn(inline_fn(mCurrent0 >> 12, unk_034[i].a >> 12), xo), inline_fn(mCurrent1 >> 12, unk_034[i].b >> 12) - 0x30, -1, 3);
+        func_ov004_020afdd0(data_ov006_021379e8, inline_fn(inline_fn(mCurrent0 >> 12, mReelOffset[i].x >> 12), xo), inline_fn(mCurrent1 >> 12, mReelOffset[i].y >> 12), -1, 3);
+        func_ov004_020afdd0(data_ov006_02137a00, inline_fn(inline_fn(mCurrent0 >> 12, mReelOffset[i].x >> 12), xo), inline_fn(mCurrent1 >> 12, mReelOffset[i].y >> 12) - 0x10, -1, 3);
+        func_ov004_020afdd0(data_ov006_021379f4, inline_fn(inline_fn(mCurrent0 >> 12, mReelOffset[i].x >> 12), xo), inline_fn(mCurrent1 >> 12, mReelOffset[i].y >> 12) - 0x20, -1, 3);
+        func_ov004_020afdd0(data_ov006_021379e8, inline_fn(inline_fn(mCurrent0 >> 12, mReelOffset[i].x >> 12), xo), inline_fn(mCurrent1 >> 12, mReelOffset[i].y >> 12) - 0x30, -1, 3);
         x += 0x18;
         i++;
         if (i < 3)

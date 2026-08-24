@@ -1,17 +1,17 @@
 //cpp
 /* Slot 1. Draws the board. Three passes:
  *
- * 1. The eight lines (unk_06c timers / unk_08c flags). A line is drawn while
+ * 1. The eight lines (mLineTimer timers / mLineScored flags). A line is drawn while
  *    its timer is running, or once the manager's 0x4660 flag is up and the
  *    line's own flag is set. The banner sprite is picked by GetOwnerLanguage,
  *    which is why the same five-way chain repeats four times. Each case also
- *    lights that line's three cells in unk_060, and those triples are what
+ *    lights that line's three cells in mCellHighlight, and those triples are what
  *    prove the indexing: 0-2 are the columns {i, i+3, i+6}, 3-5 the rows
  *    {3(i-3)..3(i-3)+2}, 6 the diagonal {0,4,8} and 7 the antidiagonal
  *    {2,4,6}.
  *
- * 2. The nine cells. A cell's angle in unk_03c picks its face sprite (past
- *    0x4000 it has flipped), a lit cell blinks on bit 0x20 of unk_094, and a
+ * 2. The nine cells. A cell's angle in mCellFlipAngle picks its face sprite (past
+ *    0x4000 it has flipped), a lit cell blinks on bit 0x20 of mFanfareTimer, and a
  *    cell mid-flip is sheared with a matrix built from the shared sine table
  *    data_02082214 -- edge-on at +-0x4000 it degenerates to the flat sprite.
  *
@@ -45,7 +45,7 @@ void cMgSmartball_board_c::Update()
     s32 k;
 
     for (i = 0; i < 8; i++) {
-        if (unk_06c[i] > 0 || (*(s32 *)((u8 *)unk_004 + 0x4660) != 0 && unk_08c[i] == 1)) {
+        if (mLineTimer[i] > 0 || (*(s32 *)((u8 *)unk_004 + 0x4660) != 0 && mLineScored[i] == 1)) {
             switch (i) {
             case 0:
             case 1:
@@ -60,9 +60,9 @@ void cMgSmartball_board_c::Update()
                     func_ov004_020afdd0(data_ov006_02138110[0], (i - 1) * 0x18 + (mCurrent0 >> 12), mCurrent1 >> 12, -1, 1);
                 else
                     func_ov004_020afdd0(data_ov006_021380a0[0], (i - 1) * 0x18 + (mCurrent0 >> 12), mCurrent1 >> 12, -1, 1);
-                unk_060[i] = 1;
-                unk_060[i + 3] = 1;
-                unk_060[i + 6] = 1;
+                mCellHighlight[i] = 1;
+                mCellHighlight[i + 3] = 1;
+                mCellHighlight[i + 6] = 1;
                 break;
             case 3:
             case 4:
@@ -77,9 +77,9 @@ void cMgSmartball_board_c::Update()
                     func_ov004_020afdd0(data_ov006_02138110[1], mCurrent0 >> 12, (i - 4) * 0x18 + (mCurrent1 >> 12), -1, 1);
                 else
                     func_ov004_020afdd0(data_ov006_021380a0[1], mCurrent0 >> 12, (i - 4) * 0x18 + (mCurrent1 >> 12), -1, 1);
-                unk_060[(i - 3) * 3] = 1;
-                unk_060[(i - 3) * 3 + 1] = 1;
-                unk_060[(i - 3) * 3 + 2] = 1;
+                mCellHighlight[(i - 3) * 3] = 1;
+                mCellHighlight[(i - 3) * 3 + 1] = 1;
+                mCellHighlight[(i - 3) * 3 + 2] = 1;
                 break;
             case 6:
                 if (GetOwnerLanguage() == 5)
@@ -92,9 +92,9 @@ void cMgSmartball_board_c::Update()
                     func_ov004_020afdd0(data_ov006_02138110[2], mCurrent0 >> 12, mCurrent1 >> 12, -1, 1);
                 else
                     func_ov004_020afdd0(data_ov006_021380a0[2], mCurrent0 >> 12, mCurrent1 >> 12, -1, 1);
-                unk_060[0] = 1;
-                unk_060[4] = 1;
-                unk_060[8] = 1;
+                mCellHighlight[0] = 1;
+                mCellHighlight[4] = 1;
+                mCellHighlight[8] = 1;
                 break;
             case 7:
                 if (GetOwnerLanguage() == 5)
@@ -107,21 +107,21 @@ void cMgSmartball_board_c::Update()
                     func_ov004_020afdd0(data_ov006_02138110[3], mCurrent0 >> 12, mCurrent1 >> 12, -1, 1);
                 else
                     func_ov004_020afdd0(data_ov006_021380a0[3], mCurrent0 >> 12, mCurrent1 >> 12, -1, 1);
-                unk_060[2] = 1;
-                unk_060[4] = 1;
-                unk_060[6] = 1;
+                mCellHighlight[2] = 1;
+                mCellHighlight[4] = 1;
+                mCellHighlight[6] = 1;
                 break;
             }
         }
     }
 
     for (j = 0; j < 9; j++) {
-        s32 ang = unk_03c[j];
+        s32 ang = mCellFlipAngle[j];
         s32 idx;
 
         if (ang < 0x4000)
             idx = j + 0xb;
-        else if (unk_060[j] == 1 && (unk_094 & 0x3c) >= 0x1e)
+        else if (mCellHighlight[j] == 1 && (mFanfareTimer & 0x3c) >= 0x1e)
             idx = j + 0x16;
         else
             idx = j + 2;
