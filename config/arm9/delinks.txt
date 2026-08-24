@@ -2116,7 +2116,7 @@ src/_ZN11ShadowModelD1Ev.cpp:
     complete
     .text start:0x02015ff8 end:0x02016068
 
-src/_ZN11ShadowModelC1Ev.c:
+src/_ZN11ShadowModelC1Ev.cpp:
     complete
     .text start:0x02016068 end:0x0201609c
 
@@ -2144,7 +2144,7 @@ src/_ZN11CommonModelD1Ev.cpp:
     complete
     .text start:0x020161e0 end:0x02016204
 
-src/_ZN11CommonModelC1Ev.c:
+src/_ZN11CommonModelC1Ev.cpp:
     complete
     .text start:0x02016204 end:0x02016254
 
