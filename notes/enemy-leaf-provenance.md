@@ -164,3 +164,57 @@ Byte-neutral cleanup (re-verified, `2004/b56`):
 "reward the player" gate; `BobOmb::InitResources` sets `unk_108` to 0 for the two
 inert variants and 1 otherwise. That reads like an "active / can be interacted
 with" flag rather than a counter.
+
+---
+
+## Whomp (`include/Whomp.h`, ov079)
+
+Bodies read: `src/_ZN5Whomp13InitResourcesEv.cpp`,
+`src/_ZN5Whomp8BehaviorEv.cpp`, `src/_ZN5Whomp6RenderEv.cpp`,
+`src/_ZN5Whomp16OnAimedAtWithEggEv.cpp`,
+`src/_ZN5Whomp15OnHitByMegaCharER6Player.cpp`.
+
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x3b0 | `mState` | `Behavior` uses it as the index into `data_ov079_02128280`, a table of pointer-to-member handlers, and calls the one it selects; the king's camera-target update is skipped while it reads 9. |
+| 0x3bc | `mSpawnPosX` | `InitResources` copies `mPosX/mPosY/mPosZ` into 0x3bc/0x3c0/0x3c4 once. |
+| 0x3c0 | `mSpawnPosY` | as above. |
+| 0x3c4 | `mSpawnPosZ` | as above. |
+| 0x3d4 | `mSafePosX` | `Behavior` writes `mPos*` into 0x3d4/0x3d8/0x3dc every frame, EXCEPT when `dEnemyBase_c::IsGoingOffCliff` returns true — then it restores `mPos*` FROM them. A last-known-safe ground position, and the only thing that keeps a walking Whomp on its ledge. |
+| 0x3d8 | `mSafePosY` | as above. |
+| 0x3dc | `mSafePosZ` | as above. |
+| 0x404 | `mShouldRender` | `Render` is `if (unk_404 == 0) return 1;` before anything is drawn; `InitResources` sets it to 1. |
+| 0x409 | `mStarID` | `InitResources` (king branch only) sets it to `param1 & 0xf` and passes it straight to `dActor_c::TrackStar(mStarID, 2)`. |
+
+Left `unk_`:
+
+* **0x39c[4]** — `InitResources` zeroes four words and then refills up to
+  `data_0209f21c` of them from `data_0209f394`. Promoted out of padding so the
+  `struct WithArr { char pad[0x39c]; s32 arr[8]; }` stand-in could be deleted, but
+  what the globals hold is not evidenced here.
+* **0x401, 0x406** — both are set to one value for the king and another for the
+  plain Whomp (3/1 and 4/6) and read nowhere in the tree.
+* **0x402, 0x407, 0x40b, 0x410** — written once as 0, no reader.
+* **0x403** — cleared by `InitResources` *and* by the last statement of every
+  `Behavior` frame, so it is a one-frame event flag that the per-state handlers
+  set; which event is not evidenced.
+* **0x408** — holds `dActor_c::TrackStar(mStarID, 2)`'s return value; nothing
+  reads it back.
+* **0x40c** — cleared on init and again whenever the state index changes, so it is
+  per-state scratch, but no handler in this branch reads it.
+
+Byte-neutral cleanups (each re-verified, `2004/b56`):
+
+* `Behavior` — the whole body worked a `char *c` through raw offsets; 0x414,
+  0x3b0, 0x98, 0x110, 0x5c/0x60/0x64, 0x3d4/0x3d8/0x3dc, 0x100, 0x40c and 0x403
+  are all named fields now and the `char *c` is gone.
+* `InitResources` — dropped the `struct Sub18` and `struct WithArr` stand-ins;
+  seven `((char *)this) + 0xNNN` member addresses collapsed.
+* `Render` — `+0x330` / `+0x2d4` became `&mTextureSequence` / `&mModelAnim.data`.
+* `OnAimedAtWithEgg` — `*(unsigned char*)(c+0x414)` and `*(unsigned short*)(c+0x8c)`
+  became `mIsKing` and `(unsigned short)mAngleX`.
+
+**For the `dEnemyBase_c` owner:** `Whomp::Behavior` increments `unk_100` (as `u16`)
+once per frame and resets it to 0 the moment the state handler changes `mState`.
+That is a state-elapsed frame counter, which fits the 28 subclasses that declare
+the offset better than `unk_100` does.
