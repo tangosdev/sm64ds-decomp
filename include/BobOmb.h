@@ -46,7 +46,7 @@ struct BobOmb : dEnemyBase_c {
     u8  pad_38c[0x4];
     /* Everything from here down was reachable only through the `struct Obj`
        shadow InitResources used to carry, so the generated header never had
-       it. unk_394 is a 0x30-byte block copied wholesale from data_02082128. */
+       it. unk_394 is a 0x30-byte block copied wholesale from IDENTITY_MATRIX4X3. */
     u32                          unk_390;               /* 0x390 */
     s32                          unk_394[12];           /* 0x394 */
     s32                          mHomePosX;             /* 0x3c4 */

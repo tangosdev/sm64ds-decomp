@@ -25,7 +25,7 @@ struct Amp : dActor_c {
     dCcAcPos_c mdCcAcPos_c;    /* 0x1d8 */
     dBgCh_Actr              mWithMeshClsn;                 /* 0x218 */
     /* Matrix4x3, on three witnesses: InitResources block-copies the identity
-       matrix data_02082128 (0x30 bytes) into it; the state handlers write the
+       matrix IDENTITY_MATRIX4X3 (0x30 bytes) into it; the state handlers write the
        position (>>3) at +0x24/+0x28/+0x2c -- exactly the translation row; and
        func_ov070_021206b0-family passes &this->0x3d4 as the matrix argument of
        the shadow call. Same role as Lakitu's 0x3f8 translation words. */

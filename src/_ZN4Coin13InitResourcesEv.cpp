@@ -18,7 +18,7 @@
  *   *(u16*)(c + 0x3a8) = 0xffffu  -- the same field the s16 reads reach as
  *       mDisappearTimer, but this one store only reproduces through the raw
  *       unsigned spelling.
- *   *(Blob48*)(c + 0x368) = data_02082128  -- this is mShadowMat, a Matrix4x3.
+ *   *(Blob48*)(c + 0x368) = IDENTITY_MATRIX4X3  -- this is mShadowMat, a Matrix4x3.
  *       As a struct assignment C++ scalarizes the copy and the function changes
  *       size; as a 48-byte blob copy it is the memcpy the ROM has.
  *   *(s32*)(((int)c + 0x190))  -- inside the dCcAc_c sub-object at 0x178, whose
@@ -46,7 +46,7 @@ extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* th
 extern void _ZN10dBgCh_Actr13SetLimMovFlagEv(void* thiz);
 extern void _ZN10dBgCh_Actr19StartDetectingWaterEv(void* thiz);
 
-extern Blob48 data_02082128;
+extern Blob48 IDENTITY_MATRIX4X3;
 extern s8 data_0209f2f8;
 extern u8 data_0209f220;
 extern s32 data_0209f40c[];
@@ -118,7 +118,7 @@ case17:
     }
 shared140:;
 
-    *(Blob48*)(c + 0x368) = data_02082128;
+    *(Blob48*)(c + 0x368) = IDENTITY_MATRIX4X3;
 
     mTrackStarID = -1;
     unk_3ab = 0xff;

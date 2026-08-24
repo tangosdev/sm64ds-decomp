@@ -2,13 +2,13 @@
 extern "C" {
 extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* thiz);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* thiz, void* sm, void* mtx, int f, int g, unsigned int h);
-extern int data_02082128[];
+extern int IDENTITY_MATRIX4X3[];
 
 typedef struct { int w[12]; } M48;
 
 void func_ov100_02142264(char* c)
 {
-    *(M48*)(c + 0x2e8) = *(M48*)data_02082128;
+    *(M48*)(c + 0x2e8) = *(M48*)IDENTITY_MATRIX4X3;
     *(int*)(c + 0x30c) = *(int*)(c + 0x5c) >> 3;
     *(int*)(c + 0x310) = *(int*)(c + 0x60) >> 3;
     *(int*)(c + 0x314) = *(int*)(c + 0x64) >> 3;

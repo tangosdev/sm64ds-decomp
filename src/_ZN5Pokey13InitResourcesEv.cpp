@@ -19,7 +19,7 @@ extern void* data_ov096_02137b28;
 
 struct Block48 { int w[12]; };
 struct Block3 { int w[3]; };
-extern Block48 data_02082128;
+extern Block48 IDENTITY_MATRIX4X3;
 
 int Pokey::InitResources()
 {
@@ -79,7 +79,7 @@ int Pokey::InitResources()
     }
 
     func_ov096_02136928(((char*)this), 1);
-    *(Block48*)((char*)&unk_33c) = data_02082128;
+    *(Block48*)((char*)&unk_33c) = IDENTITY_MATRIX4X3;
     func_ov096_02135efc(((char*)this));
     return 1;
 }

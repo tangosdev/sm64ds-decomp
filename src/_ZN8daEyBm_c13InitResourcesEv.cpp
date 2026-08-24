@@ -13,7 +13,7 @@ extern void func_ov071_02121c6c(char *c);
 }
 extern void *data_ov071_021230b8;
 struct M48 { int w[12]; };
-extern struct M48 data_02082128;
+extern struct M48 IDENTITY_MATRIX4X3;
 
 int daEyBm_c::InitResources()
 {
@@ -27,7 +27,7 @@ int daEyBm_c::InitResources()
     mTerminalVelocity = 0;
     mHorzSpeed = 0xa000;
     unk_330 = 0x96;
-    *(struct M48*)((char *)&unk_2f8) = data_02082128;
+    *(struct M48*)((char *)&unk_2f8) = IDENTITY_MATRIX4X3;
     func_ov071_02121c6c(((char *)this));
     return 1;
 }

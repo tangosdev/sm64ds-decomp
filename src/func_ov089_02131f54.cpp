@@ -7,7 +7,7 @@ void Matrix4x3_FromRotationY(void* m, short angle);
 void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* a, void* sm, void* mtx, int rad, int h, unsigned int x);
 
 
-extern Matrix4x3 data_02082128;
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern char data_ov089_021328b4[];
 extern int data_ov002_02110964;
 
@@ -23,7 +23,7 @@ void func_ov089_02131f54(void* c){
     *(int*)(r4+0x1bc)=(*(int*)(r4+0x60)+0x64000)>>3;
     *(int*)(r4+0x1c0)=*(int*)(r4+0x64)>>3;
   }
-  *(Matrix4x3*)(r4+0x1f0)=data_02082128;
+  *(Matrix4x3*)(r4+0x1f0)=IDENTITY_MATRIX4X3;
   *(int*)(r4+0x214)=*(int*)(r4+0x5c)>>3;
   *(int*)(r4+0x218)=*(int*)(r4+0x60)>>3;
   *(int*)(r4+0x21c)=*(int*)(r4+0x64)>>3;

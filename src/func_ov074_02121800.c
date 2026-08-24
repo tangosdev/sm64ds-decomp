@@ -1,6 +1,6 @@
 typedef long long s64;
 struct Matrix4x3 { int m[12]; };
-extern struct Matrix4x3 data_02082128;
+extern struct Matrix4x3 IDENTITY_MATRIX4X3;
 void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, void *sm, void *mtx, int a, int b, unsigned int c);
 
@@ -13,7 +13,7 @@ void func_ov074_02121800(char *c)
     if (*(unsigned char *)(c + 0x608) != 0)
         return;
 
-    mtx = data_02082128;
+    mtx = IDENTITY_MATRIX4X3;
     self = c;
     src = c;
     m = c + 0x2ec;

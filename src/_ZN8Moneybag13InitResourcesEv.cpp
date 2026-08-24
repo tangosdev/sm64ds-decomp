@@ -21,7 +21,7 @@ extern "C" void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);
 struct Block48 { int w[12]; };
 
 extern int data_ov002_0210d9b8[];
-extern Block48 data_02082128;
+extern Block48 IDENTITY_MATRIX4X3;
 
 int Moneybag::InitResources()
 {
@@ -62,7 +62,7 @@ int Moneybag::InitResources()
     unk_3d4 = mPosY;
     unk_3d8 = mPosZ;
     unk_3f0 = 1;
-    *(Block48*)((char*)&unk_3a0) = data_02082128;
+    *(Block48*)((char*)&unk_3a0) = IDENTITY_MATRIX4X3;
     func_ov081_02126a20(((char*)this));
     _ZN9dBgCh_GndD1Ev(&rc);
     return 1;
