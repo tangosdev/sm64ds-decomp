@@ -26,6 +26,10 @@
 struct dM3dGLin {
     Vector3 start;          /* 0x00 */
     Vector3 end;            /* 0x0c */
+
+#ifdef __cplusplus
+    void Set(const Vector3 &start, const Vector3 &end);
+#endif
 };
 
 /* In C the tag alone is not a type name; this makes both spellings work. */
