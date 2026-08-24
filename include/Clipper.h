@@ -12,7 +12,16 @@ struct Matrix4x3;
 #endif
 
 struct Clipper {
-    u8  pad_000[0x4];
+#ifdef __cplusplus
+    /* 0x00 is the vptr, placed implicitly by the first virtual declaration.
+       Vtable _ZTV7Clipper lives at 0x0208e730 (named in symbols.txt). The lone
+       instance, data_0209f43c in bss, is constructed explicitly by
+       __sinit_02074e84 -- which carries its own extern declaration of the
+       constructor and never includes this header, so promoting the class does
+       not touch that translation unit. */
+#else
+    u8  pad_000[0x4];       /* 0x00 - the vtable, written out for C */
+#endif
     /* The four clip-plane normals, written as a run by Func_0201559C: it builds
        the frustum's four corner vectors on the stack, cross-multiplies adjacent
        pairs into 0x004/0x010/0x01c/0x028 and normalises each in place. Four
@@ -27,6 +36,20 @@ struct Clipper {
     u16 unk_058;            /* 0x058 */
 #ifdef __cplusplus
     /* methods */
+
+    /* THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the
+       key-function arrangement from include/ModelBase.h: no TU emits the
+       vtable or the D2 variant, and D0/D1 stay self-contained C files. */
+    virtual ~Clipper();     /* slots 0 (D1), 1 (D0) */
+
+    /* DECLARED, never defined as a method here -- src/_ZN7ClipperC1Ev.cpp owns
+       C1 (notes/ctor-migration.md section 2). Its body calls the shared init
+       helper, whose definition keeps its extern "C" spelling: the ROM symbol
+       ends in Ev because it is enrolled under that literal name, not because
+       the source had zero parameters, so a real member declaration would
+       mangle differently and cannot be used. */
+    Clipper();
+
     void Func_0201559C();
 
     /* Methods whose mangled names carry a by-value class parameter (5Fix12IiE)

@@ -59,6 +59,11 @@ struct dBgW_KcMbg : dBgW_Kc {
     virtual s16 GetAngularVelY();                         /* slot 11 */
     virtual void GetVelocity(Vector3 &res);               /* slot 12 */
 
+    /* DECLARED, never defined as a method here -- src/_ZN10dBgW_KcMbgC1Ev.cpp
+       owns C1 and src/_ZN10dBgW_KcMbgC2Ev.c the base-subobject variant
+       (notes/ctor-migration.md section 2). */
+    dBgW_KcMbg();
+
     /* --- non-virtual --- */
     void SetFile(KCL_File *file, const Matrix4x3 &mat, Fix12<int> scale,
                  s16 angY, CLPS_Block &clps);             /* free def, wall 6az */

@@ -1,6 +1,9 @@
+/* _ZN7dBgW_KcC2Ev - dBgW_Kc's base-subobject constructor at 0x020398c8,
+ * renamed from func_020398c8 (2026-08-24). Byte-for-byte the C1 body, and
+ * every ROM caller is a derived base step (inside dBgW_KcMbg's ctor pair),
+ * so the variant label is C2 -- the section 4 rule in notes/ctor-migration.md.
+ */
 #include "types.h"
-// dBgW_Kc::dBgW_Kc() - C1 constructor returning this
-// Address: 0x020398c8
 struct dBgW {
     void* vtable;             // 0x00
     void* actor;              // 0x04
@@ -24,7 +27,7 @@ extern void func_02038228(void** ptr);
 extern void* _ZTV7dBgW_Kc;
 
 // dBgW_Kc C1 constructor - returns this
-struct dBgW_Kc* func_020398c8(struct dBgW_Kc* self) {
+struct dBgW_Kc* _ZN7dBgW_KcC2Ev(struct dBgW_Kc* self) {
     _ZN4dBgWC2Ev(&self->base);
     self->base.vtable = &_ZTV7dBgW_Kc;
     func_02038228(&self->clpsBlock);

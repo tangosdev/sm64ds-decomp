@@ -15,7 +15,7 @@ src/func_0203b438.c
 src/func_02043810.c
 src/_ZN7fBase_cnwEj.cpp
 src/_ZN11ShadowModelC1Ev.cpp
-src/_ZN10dBgW_KcMbgC1Ev.c
+src/_ZN10dBgW_KcMbgC1Ev.cpp
 src/_ZN4dBgW7DisableEv.cpp
 src/_ZN4dBgW9IsEnabledEv.cpp
 src/_ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block.c
@@ -32,7 +32,7 @@ src/func_02039404.c
 src/InvMat4x3.c
 src/func_02039e18.c
 src/func_02053200.c
-src/func_020398c8.c
+src/_ZN7dBgW_KcC2Ev.c
 src/_ZN10dBgW_KcMbg9TransformERK9Matrix4x3s.cpp
 src/func_0203b244.c
 src/LenVec3.c

@@ -530,6 +530,18 @@
     "src/actors/Boo/_ZN3Boo16OnAimedAtWithEggEv.cpp": "tangosdev",
     "src/actors/Boo/_ZN3Boo13OnYoshiTryEatEv.c": "tangosdev",
     "src/actors/Boo/_ZN3Boo13OnYoshiTryEatEv.cpp": "tangosdev",
-    "src/actors/daTrs_c/_ZN7daTrs_c8BehaviorEv.cpp": "andrewboudreau"
+    "src/actors/daTrs_c/_ZN7daTrs_c8BehaviorEv.cpp": "andrewboudreau",
+    "src/_ZN9ModelBaseC1Ev.c": "tangosdev",
+    "src/_ZN9ModelBaseC2Ev.cpp": "tangosdev",
+    "src/func_0203819c.c": "tangosdev",
+    "src/_ZN5dBgPiC2Ev.c": "tangosdev",
+    "src/func_0203ac60.c": "tangosdev",
+    "src/_ZN8dM3dGSphC1Ev.cpp": "tangosdev",
+    "src/func_0203ac70.c": "tangosdev",
+    "src/_ZN8dM3dGSphC2Ev.c": "tangosdev",
+    "src/func_02035514.c": "tangosdev",
+    "src/_ZN5dBgChC2Ev.cpp": "tangosdev",
+    "src/func_0203a4b8.c": "tangosdev",
+    "src/_ZN10dBgW_KcMbgC2Ev.c": "tangosdev"
   }
 }

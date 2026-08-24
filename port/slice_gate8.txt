@@ -3,7 +3,7 @@
 # port/unmatched adoption (see the file header); everything else is matched.
 
 port/unmatched/MeshCollider_DetectClsn_RaycastLine.cpp
-src/_ZN7dBgW_KcC1Ev.c
+src/_ZN7dBgW_KcC1Ev.cpp
 src/_ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block.cpp
 src/_ZN7dBgW_Kc17UpdateFileOffsetsER8KCL_File.cpp
 src/_ZN7dBgW_Kc8LoadFileER13SharedFilePtr.cpp
@@ -25,7 +25,7 @@ src/func_02037eb0.c
 src/Vec3_Dist.c
 src/_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b.cpp
 src/_ZNK11SurfaceInfo12CopyNormalToER7Vector3.cpp
-src/_ZN4dBgWC2Ev.c
+src/_ZN4dBgWC2Ev.cpp
 src/func_02038228.c
 src/SurfaceInfo_TestFlag0x20.c
 src/func_020353d4.c
