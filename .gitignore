@@ -105,6 +105,12 @@ _glmwork/
 # These are pixels the game drew from Nintendo's assets - same rule as the ROM.
 /frames/
 /playlog/
+# ...and anywhere else walk_window is launched from. Run mg11 lane TTI: a
+# proof script with port/ as its working directory made the recorder write
+# port/playlog/, which the root-anchored pattern above does not reach, and a
+# git add -A committed eight of them. The unanchored pattern covers every
+# working directory the exe can be launched from.
+playlog/
 *.bmp
 
 # session run records live outside the repo (the orchestration dir), never in it

@@ -104,6 +104,18 @@ NAMED = [
     # spelled as a C literal for the reason every other row here exists: the
     # port does not write Nintendo's bytes down, it reads them.
     "data_0209a048",
+    # Run mg11 lane TTI: the one s16 dScMgTrampoline_c's InitResources divides
+    # by. src/func_ov006_02122198.cpp reads it as `(s32)data_02082414` and the
+    # ROM does `ldrsh r1,[r1]` at 0x02122210 with the pool word 0x02082414,
+    # feeding cstd::fdiv(0xc0000, that) -- the scene's field of view. It is an
+    # INTERIOR ADDRESS of the trig SPAN already hosted above
+    # ((0x02082214, 0x4000, "short")), 0x200 bytes in, and /alternatename
+    # cannot express an offset from a symbol, so the name is hosted here in its
+    # own right. The duplication is safe and cannot drift: the span is a
+    # read-only table (this file's own opening line says so) and both copies
+    # come from the same extracted image on every build. ROM span 0x200, the
+    # delta to the next config symbol data_02082614.
+    "data_02082414",
     # Run link60 lane FDR2: the two BG palette words the dWipe_c time setters
     # push through GX/GXS::LoadBGPltt. func_0202f708 loads data_020926c8 and
     # func_0202f928 loads data_020926cc, each with a length of 2, on the
