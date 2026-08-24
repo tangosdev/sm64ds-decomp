@@ -52,7 +52,11 @@ struct daDossyCap_c : dActor_c {
     CapIcon            mCapIcon;                /* 0x0d4 */
     Model              mModel;                  /* 0x0f0 */
     dCcAc_c mdCcAc_c;     /* 0x140 */
-    s32                unk_174;                 /* 0x174 */
+    /* The actor this cap is riding, a pointer spelt s32. Behavior bails out
+       when it is null, and otherwise copies the cap position out of that actor
+       0x0d8 triple and its two angles out of the actor +0xe4 and
+       dActor_c::mAngleY. [_ZN12daDossyCap_c8BehaviorEv.cpp] */
+    s32                mCarrier;                 /* 0x174 */
     u8                 pad_178[0xc];
 
     /* Declared first on purpose, same reasoning as dActor_c.h: the key

@@ -14,7 +14,7 @@ extern void func_ov071_0211f524(char* c);
 
 int Scuttlebug::Behavior()
 {
-  DecIfAbove0_Short((char*)&unk_3a8);
+  DecIfAbove0_Short((char*)&mTimer);
   func_ov071_02120278(((char*)this));
   _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char*)this), ((char*)this)+0x160);
   if(_ZNK10dBgCh_Actr14GetResultFlag1Ev((char*)&mWithMeshClsn) && _ZNK10dBgCh_Actr12TouchesWaterEv((char*)&mWithMeshClsn)){

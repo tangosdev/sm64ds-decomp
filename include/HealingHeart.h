@@ -33,9 +33,19 @@ struct HealingHeart : dActor_c {
        stopped short of the object, so the member also takes over unk_15c
        (+0x24 = dCc_c::otherOwner), which the header declared separately inside it. */
     dCcAc_c mdCcAc_c;            /* 0x138 */
-    s32 unk_16c;            /* 0x16c */
+    /* Seeded 0x1000 (1.0) in InitResources; Behavior eases it toward 0x8000
+       while the heal cooldown is above 0x2d and back toward 0x1000 otherwise,
+       through Math_Function_0203b14c, then copies it into mModelAnim.speed. So
+       the heart spins slowly while idle and fast just after it heals.
+       [_ZN12HealingHeart13InitResourcesEv.cpp,
+        _ZN12HealingHeart8BehaviorEv.cpp] */
+    s32 mAnimSpeed;            /* 0x16c */
     u8  mHealTimer;            /* 0x170 */
-    u8  unk_171;            /* 0x171 */
+    /* Edge detector on the collider. Latched to 1 (and mHealTimer zeroed, so
+       the heal fires that same frame) the first frame the dCcAc_c reports an
+       occupant, cleared to 0 the frame it reports none.
+       [_ZN12HealingHeart8BehaviorEv.cpp] */
+    u8  mWasTouched;            /* 0x171 */
 
     virtual ~HealingHeart();
     virtual s32 InitResources();       /* slot  0 */

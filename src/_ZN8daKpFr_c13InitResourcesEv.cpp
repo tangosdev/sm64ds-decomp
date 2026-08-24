@@ -23,6 +23,6 @@ int daKpFr_c::InitResources()
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     func_ov070_02122044(((char*)this), 0);
-    *(struct Matrix4x3*)((char*)&unk_2ec) = *(struct Matrix4x3*)IDENTITY_MATRIX4X3;
+    *(struct Matrix4x3*)((char*)&mMatrix) = *(struct Matrix4x3*)IDENTITY_MATRIX4X3;
     return 1;
 }

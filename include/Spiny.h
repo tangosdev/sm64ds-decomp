@@ -28,11 +28,22 @@ struct Spiny : dActor_c {
     ShadowModel mShadowModel;                /* 0x188 */
     dCcAc_c mdCcAc_c;  /* 0x1b0 */
     dBgCh_Actr mWithMeshClsn;              /* 0x1e4 */
-    u8  unk_3a0;            /* 0x3a0 */
+    /* InitResources assigns IDENTITY_MATRIX4X3 into this slot, so it begins a
+       Matrix4x3. Still spelt u8 + pad so the header need not pull in
+       math/Matrix.h. [_ZN5Spiny13InitResourcesEv.cpp] */
+    u8  mMatrix;            /* 0x3a0 */
     u8  pad_3a1[0x37];
-    s32 unk_3d8;            /* 0x3d8 */
+    /* Render draws the still Model in states 0 and 4 and the ModelAnim
+       otherwise; Behavior treats 1 (only once on the ground), 4 and 5 as states
+       that must keep running whatever the distance to the player.
+       [_ZN5Spiny6RenderEv.cpp, _ZN5Spiny8BehaviorEv.cpp] */
+    s32 mState;            /* 0x3d8 */
     u8  pad_3dc[0xd];
-    u8  unk_3e9;            /* 0x3e9 */
+    /* Seeded 0x2c (44 frames) in InitResources and counted down ONLY on the
+       frames Spiny is too far from the player to behave; at 0 it marks itself
+       for destruction. [_ZN5Spiny13InitResourcesEv.cpp,
+        _ZN5Spiny8BehaviorEv.cpp] */
+    u8  mDespawnTimer;            /* 0x3e9 */
     u8  pad_3ea[0x2];
 
     virtual ~Spiny();            /* slots 16 (D1), 17 (D0) */

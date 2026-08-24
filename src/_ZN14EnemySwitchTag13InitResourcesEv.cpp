@@ -18,16 +18,16 @@ int EnemySwitchTag::InitResources()
         2, 0x400000);
 
     mEventID = *(u32 *)(a + 8) & 0x1f;
-    unk_10c = (*(u32 *)(a + 8) >> 5) & 1;
+    mIsReusable = (*(u32 *)(a + 8) >> 5) & 1;
 
     {
         s16 t = *(s16 *)(a + 0x90);
         if (t <= 0)
-            unk_108 = 0x96;
+            mHoldDuration = 0x96;
         else
-            unk_108 = t;
+            mHoldDuration = t;
     }
-    unk_10a = 0;
+    mHoldTimer = 0;
 
     _ZN5Event8ClearBitEj(mEventID);
     return 1;

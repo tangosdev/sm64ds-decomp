@@ -21,7 +21,7 @@ int HealingHeart::InitResources()
   _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210e104), 1, -1);
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char*)this)+0xd4, _ZN9Animation8LoadFileER13SharedFilePtr(data_ov002_0210e0fc), 0, 0x1000, 0);
   _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this)+0x138, ((char*)this), 0x3c000, 0x78000, 0x100002, 0x8000);
-  unk_16c = 0x1000;
+  mAnimSpeed = 0x1000;
   func_ov002_020bc664(((char*)this));
   return 1;
 }

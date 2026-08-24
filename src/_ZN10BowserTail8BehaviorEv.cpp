@@ -2,7 +2,7 @@
 // @symbol _ZN10BowserTail8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header
  *
- * The tail follows Bowser: find him by the uniqueID stashed in unk_108, then park
+ * The tail follows Bowser: find him by the uniqueID stashed in mBowserUniqueID, then park
  * this actor 0x8c units out from his position along his facing angle.
  * data_02082214 is a sin/cos table indexed by angle>>4, two shorts per entry.
  *
@@ -24,7 +24,7 @@ extern short data_02082214[];
 
 int BowserTail::Behavior()
 {
-    dActor_c* a = dActor_c::FindWithID(unk_108);
+    dActor_c* a = dActor_c::FindWithID(mBowserUniqueID);
     if (!a) return 1;
 
     int ang = *(short*)((char*)a + 0x94);        /* dActor_c::mPrevAngleY */

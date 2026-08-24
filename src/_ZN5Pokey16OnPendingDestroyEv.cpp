@@ -10,7 +10,7 @@ void Pokey::OnPendingDestroy()
     int r1 = *(unsigned short *)((char *)&actorID);
     r1 = (r1 == 0xf1);
     if (r1) return;
-    void *p = *(void **)((char *)&unk_394);
+    void *p = *(void **)((char *)&mNextSegment);
     if (!p) return;
     do {
         func_ov096_0213585c(p);

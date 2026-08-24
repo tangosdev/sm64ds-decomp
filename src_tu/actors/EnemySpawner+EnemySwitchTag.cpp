@@ -123,16 +123,16 @@ int EnemySwitchTag::InitResources()
         2, 0x400000);
 
     mEventID = *(u32 *)(a + 8) & 0x1f;
-    unk_10c = (*(u32 *)(a + 8) >> 5) & 1;
+    mIsReusable = (*(u32 *)(a + 8) >> 5) & 1;
 
     {
         s16 t = *(s16 *)(a + 0x90);
         if (t <= 0)
-            unk_108 = 0x96;
+            mHoldDuration = 0x96;
         else
-            unk_108 = t;
+            mHoldDuration = t;
     }
-    unk_10a = 0;
+    mHoldTimer = 0;
 
     _ZN5Event8ClearBitEj(mEventID);
     return 1;
@@ -169,9 +169,9 @@ int EnemySpawner::CleanupResources()
 /* recovered: named members + shared header, real C++ method */
 int EnemySwitchTag::Behavior()
 {
-    if (unk_10a != 0) {
+    if (mHoldTimer != 0) {
         *(u16*)((int)((char*)this) + 0x10a) -= 1;
-        if (unk_10a == 0) {
+        if (mHoldTimer == 0) {
             *(u32*)((int)((char*)this) + 0xec) &= ~1;
             _ZN5Event8ClearBitEj(mEventID);
         }
@@ -182,8 +182,8 @@ int EnemySwitchTag::Behavior()
     if (mdCcAc_c.otherOwner != 0) {
         *(u32*)((char*)&mdCcAc_c.flags) |= 1;
         _ZN5Event6SetBitEj(mEventID);
-        if (unk_10c != 0) {
-            unk_10a = unk_108;
+        if (mIsReusable != 0) {
+            mHoldTimer = mHoldDuration;
         } else {
             _ZN7fBase_c18MarkForDestructionEv(((char*)this));
         }
