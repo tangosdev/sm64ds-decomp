@@ -607,14 +607,27 @@ src/func_ov006_0212a3c0.c
 #   src/func_ov006_02126ee4.c   0xacc  the course layout generator
 #   src/func_ov006_02126b4c.c   0x398  the BG2 course-row tile writer
 #
-# ALL THREE ARE HONEST NONMATCHING SEATS, and each banner carries the measured
-# residual rather than a promise:
+# ONE MATCHES AND TWO ARE HONEST NONMATCHING SEATS, and each banner carries its
+# measured residual rather than a promise:
 #
+#   02126ee4  MATCHING at 2004/b56
 #   02125f68   9 of 632 words   a pure r6<->r8 register transposition
-#   02126ee4   9 of 691 words   one idiom, the vtable pointer read through the
-#                               argument copy instead of the object register
 #   02126b4c  64 of 230 words   register allocation, two independently coloured
 #                               arms (a 2-cycle and a six-way permutation)
+#
+# 02126ee4 MATCHED ONLY AFTER A DEFECT A RUN FOUND, and the two are the same
+# change. It stood at 9 of 691 -- one idiom, the ROM reading the vtable pointer
+# through the argument copy at all three virtual-call sites -- and the seat
+# FAULTED on the first boot of scene 377 under SM64DS_FAULTS_FATAL=1: ecx = 0
+# inside func_ov004_020ad660 reading [0+8], because the port's face for that
+# slot is `static int __fastcall mb_v35(void *s, void *)` and a C
+# function-pointer call leaves the receiver on the stack. Spelling it as a real
+# C++ virtual call through a dummy-vtable struct -- the spelling
+# src/func_ov006_021063a0.cpp, _02106168.cpp and _021057f0.cpp already use for
+# this same slot -- fixes the convention AND closes all nine words, because the
+# ROM's idiom IS the C++ virtual call. The language mode alone is not the lever:
+# compiling the C spelling with -lang c++ is bitwise identical, still 9 of 691.
+# So the TU is src/func_ov006_02126ee4.cpp, //cpp-marked.
 #
 # THE FIRST AND THIRD ARE PROVEN "REGISTER NAMES ONLY" MECHANICALLY, not by
 # reading a long diff: a checker decodes both sides, refuses unless every
@@ -636,7 +649,7 @@ src/func_ov006_0212a3c0.c
 #   src/func_ov006_02125cdc.c   the course-geometry (wall) probe
 #
 src/func_ov006_02125f68.c
-src/func_ov006_02126ee4.c
+src/func_ov006_02126ee4.cpp
 src/func_ov006_02126b4c.c
 src/func_ov006_021259d8.c
 src/func_ov006_02125bbc.c

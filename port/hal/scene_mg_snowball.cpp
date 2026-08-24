@@ -314,8 +314,72 @@ static int  __fastcall snw_init(void *s, void *)
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall snw_clean(void *s, void *)
 { SNW(3);  return func_ov006_021291f8(s); }
+/* ---- SM64DS_SNW_TRACE: the ROLL CHAIN, link by link ---------------------
+ *
+ * A scroll-word census answers "did the number move" and NOTHING ELSE, and a
+ * single output word cannot tell a game that will not respond apart from a
+ * game that was driven badly.  Run mg12 lane CRD's finding is the reason this
+ * exists: two card games were called deadlocked on a dispatch census when the
+ * scripted taps had simply never made a legal move.
+ *
+ * So this samples every link of scene 377's chain once per Behavior tick, in
+ * the order the ROM computes them, and the census prints the whole chain:
+ *
+ *   the stylus record  ->  +0xab70/+0xab74 the latched stroke origin
+ *                      ->  +0xab60/+0xab64 velocity
+ *                      ->  +0xab38/+0xab3c ball position
+ *                      ->  +0xab6c         BG scroll
+ *
+ * plus +0xb9e4, the byte func_ov006_02125f68 sets when the obstacle pass finds
+ * the ball touching something.  That one is the check on the SEAT rather than
+ * on the input: with the floors trapped it could never be set, so a run where
+ * it stays zero is a run where the rocks and walls were never reached, and
+ * "the ball travelled the same distance as before the seat" means something
+ * completely different depending on which way it reads.
+ *
+ * Off unless the variable is set, sampled read-only, and host state - nothing
+ * here is in .dsstate and nothing writes the object. */
+static int      g_snw_trace;
+static unsigned g_snw_t_ticks, g_snw_t_moving, g_snw_t_contact, g_snw_t_hole;
+static int      g_snw_t_vxmax, g_snw_t_vymax;
+static int      g_snw_t_scroll0 = -1, g_snw_t_scrollmin, g_snw_t_ymin;
+/* PUSH-BACK, which is the only way to see a WALL from outside the object.
+   func_ov006_02125f68 sets +0xb9e4 only on an OBSTACLE contact; its wall arm
+   is the `+0xb9e4 != 1` branch and sets nothing, so a wall collision is
+   invisible to that byte.  What both arms DO is move the ball backwards --
+   `pos -= push` -- so a tick whose Y rose while the ball was under forward
+   velocity is a tick the seated obstacle pass pushed it out of geometry.
+   Counting those is what turns "the ball stopped" from an inference into a
+   measurement. */
+static int      g_snw_t_ylast = -1;
+static unsigned g_snw_t_back;
+
 static int  __fastcall snw_beh(void *s, void *)
-{ SNW(6);  return func_ov006_021283a4((char *)s); }
+{
+    SNW(6);
+    const int r = func_ov006_021283a4((char *)s);
+    if (g_snw_trace > 0 && s) {
+        const char *c = (const char *)s;
+        const int vx = *(const int *)(c + 0xab60);
+        const int vy = *(const int *)(c + 0xab64);
+        const int y  = *(const int *)(c + 0xab3c);
+        const int sc = *(const int *)(c + 0xab6c);
+        ++g_snw_t_ticks;
+        if (vx || vy) ++g_snw_t_moving;
+        if (*(const unsigned char *)(c + 0xb9e4)) ++g_snw_t_contact;
+        if (*(const unsigned char *)(c + 0xb9e5)) ++g_snw_t_hole;
+        if (vx > g_snw_t_vxmax) g_snw_t_vxmax = vx;
+        if (vy < g_snw_t_vymax) g_snw_t_vymax = vy;   /* forward is NEGATIVE */
+        if (g_snw_t_scroll0 < 0) {
+            g_snw_t_scroll0 = sc; g_snw_t_scrollmin = sc; g_snw_t_ymin = y;
+        }
+        if (sc < g_snw_t_scrollmin) g_snw_t_scrollmin = sc;
+        if (y  < g_snw_t_ymin)      g_snw_t_ymin = y;
+        if (g_snw_t_ylast >= 0 && y > g_snw_t_ylast && vy < 0) ++g_snw_t_back;
+        g_snw_t_ylast = y;
+    }
+    return r;
+}
 static int  __fastcall snw_render(void *s, void *)
 { SNW(9);  return func_ov006_02127d10((char *)s); }
 static void *__fastcall snw_d2(void *s, void *)
@@ -470,10 +534,38 @@ extern "C" void port_scene_fill_snowball(void)
    the object without the registry table growing a second column. */
 static char *g_snw_self;
 
+/* THE CORRIDOR AT THE BALL'S OWN ROW, read out of the grid the seated layout
+   generator wrote.  Tile id 1 is the solid fill outside the corridor (the
+   layout paints 1 outside, a wall pair at each edge and 0 between), so the
+   first and last non-1 column bound the drivable span.  This is what turns
+   "the ball stopped" into "the ball stopped ON something" or "the ball
+   stopped in clear space", which are different findings. */
+static int snw_corridor_edge(int want_hi)
+{
+    if (!g_snw_self) return -1;
+    const int row = (*(const int *)(g_snw_self + 0xab3c) >> 12) / 16;
+    const int len = *(const int *)(g_snw_self + 0xba08);
+    if (row < 0 || row >= (len > 0 && len <= 0x2e0 ? len : 0x2e0)) return -1;
+    int found = -1;
+    for (int i = 0; i < 16; ++i) {
+        const int col = want_hi ? 15 - i : i;
+        const unsigned short t =
+            ((const unsigned short *)(g_snw_self + col * 0x5c0 + 0x4f38))[row];
+        if (t != 1) { found = col; break; }
+    }
+    return found;
+}
+static int snw_corridor_lo(void) { return snw_corridor_edge(0); }
+static int snw_corridor_hi(void) { return snw_corridor_edge(1); }
+
+
 extern "C" void *port_mg_snowball_spawn(void)
 {
     void *p = MgSnowballSlalom_Spawn();
     g_snw_self = (char *)p;
+    /* Read once, at the spawn, so the per-tick sampler is a plain int test and
+       an unset variable costs the Behavior face nothing. */
+    g_snw_trace = std::getenv("SM64DS_SNW_TRACE") ? 1 : 0;
     return p;
 }
 
@@ -590,7 +682,7 @@ extern "C" void port_scene_snowball_hits(void)
                         "nonzero over %d row(s) x 16 column(s), %u distinct "
                         "tile id(s); %u snowball slot(s) and %u scenery slot(s) "
                         "in use. The three CLOSURE floors are retired and "
-                        "seated (src/func_ov006_02125f68.c, _02126ee4.c, "
+                        "seated (src/func_ov006_02125f68.c, _02126ee4.cpp, "
                         "_02126b4c.c); a zero here would mean the layout ran "
                         "and wrote nothing\n",
                         tiles, n * 16, n, kinds, balls, scen);
@@ -613,6 +705,32 @@ extern "C" void port_scene_snowball_hits(void)
                     (unsigned)*(const unsigned char *)(g_snw_self + 0xb9f8),
                     *(const int *)(g_snw_self + 0xab6c) >> 12,
                     g_snw_mode18, port_mg_snowball_record_index());
+
+    /* THE ROLL CHAIN, link by link, when SM64DS_SNW_TRACE asked for it. */
+    if (g_snw_trace > 0 && g_snw_self)
+        std::printf("[scene] dScMgSnowball_c ROLL CHAIN over %u Behavior "
+                    "tick(s): %u with a nonzero velocity, peak vx %d peak "
+                    "forward vy %d (forward is negative); ball Y ends %d, "
+                    "reached a minimum of %d; "
+                    "scroll %d -> min %d (delta %d); obstacle-contact byte "
+                    "+0xb9e4 set on %u tick(s), hole byte +0xb9e5 on %u; "
+                    "PUSHED BACK (Y rose under forward velocity, so the "
+                    "obstacle pass moved it out of geometry) on %u tick(s); "
+                    "stroke origin +0xab70/+0xab74 = %d/%d; ball X %d, and on "
+                    "the ball's own row the corridor runs columns %d..%d "
+                    "(tile 1 is solid, so a ball outside that span is against "
+                    "course geometry)\n",
+                    g_snw_t_ticks, g_snw_t_moving, g_snw_t_vxmax,
+                    g_snw_t_vymax,
+                    *(const int *)(g_snw_self + 0xab3c) >> 12,
+                    g_snw_t_ymin >> 12,
+                    g_snw_t_scroll0 >> 12, g_snw_t_scrollmin >> 12,
+                    (g_snw_t_scroll0 - g_snw_t_scrollmin) >> 12,
+                    g_snw_t_contact, g_snw_t_hole, g_snw_t_back,
+                    *(const int *)(g_snw_self + 0xab70),
+                    *(const int *)(g_snw_self + 0xab74),
+                    *(const int *)(g_snw_self + 0xab38) >> 12,
+                    snw_corridor_lo(), snw_corridor_hi());
 
     /* THE FIFTY ELEMENTS, so "the machine ran" and "the machine did something"
        are different lines.  Each element is 0x24 bytes from +0xbe94: the live

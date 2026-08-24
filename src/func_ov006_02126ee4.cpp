@@ -1,15 +1,18 @@
+//cpp
 // @symbol func_ov006_02126ee4
-// NONMATCHING: one codegen idiom (div=9 of 691 words), everything else
-// byte-identical -- size, frame, every stack slot, every callee-saved register,
-// all control flow, all three pool words. The ROM reads the vtable pointer
-// through the argument copy (mov r0,this; ldr r1,[r0]) at all three virtual-call
-// sites; this source reads it straight from the object register (ldr r1,[sl]),
-// which drags the scratch register at +0x40/+0x50 and the store order at
-// +0x5c..+0x68 with it. r0 == sl at every one of those points, so the two are
-// semantically identical. MEASURED NEGATIVE, so the next reader does not repeat
-// it: compiling this same body as C++ (-lang c++, tools/match.py --flags) is
-// BITWISE IDENTICAL -- the language mode is not the lever.
-// Counts as decompiled, not matched.
+// MATCHING at mwccarm 2004/b56.
+//
+// It was NONMATCHING by 9 words of 691 until the virtual call below was spelled
+// as a real C++ virtual call. Those nine were all one idiom: the ROM reads the
+// vtable pointer through the argument copy (mov r0,this; ldr r1,[r0]) at all
+// three call sites, which is what the C++ front end emits for this->vf(), while
+// a C function-pointer call reads it straight from the object register.
+//
+// THE LANGUAGE MODE ALONE IS NOT THE LEVER, measured rather than assumed:
+// compiling the C spelling with -lang c++ is BITWISE IDENTICAL, still 9 of 691.
+// What closes it is the CALL, not the compiler front end -- and the same change
+// is also the port-side correctness fix, because the host's face for this slot
+// takes its receiver in ecx. See the struct below.
 // @symbol func_ov006_02126ee4
 /* dScMgSnowball_c course-layout generator (scene 377, "Snowball Slalom").
    Called from vtable slot 0 (InitResources, 0x0212953c) and slot 18 (0x02129250).
@@ -25,7 +28,33 @@
    callee-saved register, all control flow -- is byte-identical. */
 #include "types.h"
 
-typedef int (*VBool)(char *);
+/* THE VIRTUAL CALL HAS TO BE A VIRTUAL CALL, and this is the established
+   spelling in this tree rather than a new one: src/func_ov006_021063a0.cpp,
+   _02106168.cpp and _021057f0.cpp are the three other bodies that dispatch this
+   same slot, and all three declare exactly this dummy-vtable struct and call
+   through it. The port's face for slot 35 is
+   `static int __fastcall mb_v35(void *s, void *)` in hal/scene_mg.cpp, which
+   takes the receiver in ecx; a C function-pointer call through
+   (*(int (*)(char *))(*(char **)c + 0x8c))(c) pushes it on the stack instead and
+   leaves ecx holding whatever was there. That is the mg10 invisible-defect class
+   -- no unresolved symbol, no arity row, no member-pointer encoding for either
+   checker to see -- and it is what slice_snw.txt section 14 already records one
+   slot over. Measured here: the C spelling faults on the first boot of scene 377
+   with ecx = 0 inside func_ov004_020ad660 reading [0+8]. */
+struct O {
+  virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
+  virtual void v04(); virtual void v05(); virtual void v06(); virtual void v07();
+  virtual void v08(); virtual void v09(); virtual void v10(); virtual void v11();
+  virtual void v12(); virtual void v13(); virtual void v14(); virtual void v15();
+  virtual void v16(); virtual void v17(); virtual void v18(); virtual void v19();
+  virtual void v20(); virtual void v21(); virtual void v22(); virtual void v23();
+  virtual void v24(); virtual void v25(); virtual void v26(); virtual void v27();
+  virtual void v28(); virtual void v29(); virtual void v30(); virtual void v31();
+  virtual void v32(); virtual void v33(); virtual void v34();
+  virtual int m8c();
+};
+
+extern "C" {
 
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
@@ -65,7 +94,7 @@ void func_ov006_02126ee4(char *c)
     }
     *(int *)(c + 0xab5c) = 0;
 
-    if ((*(VBool *)(*(char **)c + 0x8c))(c)) {
+    if (((O *)c)->m8c()) {
         b = 0xb;
         d = 0xe;
         a = 6;
@@ -239,7 +268,7 @@ void func_ov006_02126ee4(char *c)
             if (row > *(int *)(c + 0xba04) / 16 + 0x11) {
                 if (cnt > 0) {
                     cnt--;
-                } else if ((*(VBool *)(*(char **)c + 0x8c))(c)
+                } else if (((O *)c)->m8c()
                            && row < *(int *)(c + 0xba08) / 2) {
                     if (right - left >= 0xd && RAND(8) == 0) {
                         int col;
@@ -293,7 +322,7 @@ void func_ov006_02126ee4(char *c)
         } while (row >= 0);
     }
 
-    if ((*(VBool *)(*(char **)c + 0x8c))(c)) {
+    if (((O *)c)->m8c()) {
         for (i = 0; i < 0x80; i++) {
             if (*(u8 *)(c + i + 0xac58) == 1) {
                 if (RAND(2) == 0) {
@@ -348,4 +377,6 @@ void func_ov006_02126ee4(char *c)
             row2--;
         } while (row2 >= 0);
     }
+}
+
 }
