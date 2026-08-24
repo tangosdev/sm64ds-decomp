@@ -43,14 +43,14 @@ typedef char MontyMoleRock_size_must_be_0x354[sizeof(MontyMoleRock) == 0x354 ? 1
    can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct MontyMoleRock {
     u8  pad_000[0x8];
-    s32 unk_008;            /* 0x008 */
+    s32 param1;            /* 0x008 */
     u8  pad_00c[0x74];
-    s32 unk_080;            /* 0x080 */
-    s32 unk_084;            /* 0x084 */
-    s32 unk_088;            /* 0x088 */
+    s32 mScaleX;            /* 0x080 */
+    s32 mScaleY;            /* 0x084 */
+    s32 mScaleZ;            /* 0x088 */
     u8  pad_08c[0x10];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mVertAccel;            /* 0x09c */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     u8  pad_0a4[0x6c];
     /* Model member, named by _ZN5ModelD1Ev at +0x110 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */

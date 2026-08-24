@@ -113,7 +113,7 @@ typedef char Bowser_size_must_be_0x454[sizeof(Bowser) == 0x454 ? 1 : -1];
    rather than a parse error. */
 struct Bowser {
     u8  pad_000[0x4];
-    s32 unk_004;            /* 0x004 */
+    s32 uniqueID;            /* 0x004 */
     s32 mParam;            /* 0x008 */
     u8  pad_00c[0x50];
     s32 mPosX;            /* 0x05c */
@@ -128,10 +128,10 @@ struct Bowser {
     u8  pad_090[0x4];
     s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x6];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mVertAccel;            /* 0x09c */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     u8  pad_0a4[0x28];
-    s8  unk_0cc;            /* 0x0cc */
+    s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];
     ModelAnim mModelAnim;                                   /* 0x0d4 */
     TextureSequence mTextureSequence;                       /* 0x138 */

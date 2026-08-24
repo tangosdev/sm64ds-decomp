@@ -49,13 +49,13 @@ typedef char daObjPathLift_c_size_must_be_0x4b4[sizeof(daObjPathLift_c) == 0x4b4
 /* The same object for a C translation unit, flat. */
 struct daObjPathLift_c {
     u8  pad_000[0x5c];
-    s32 unk_05c;            /* 0x05c */
-    s32 unk_060;            /* 0x060 */
-    s32 unk_064;            /* 0x064 */
+    s32 mPosX;            /* 0x05c */
+    s32 mPosY;            /* 0x060 */
+    s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x26];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x8];
-    s32 unk_098;            /* 0x098 */
+    s32 mHorzSpeed;            /* 0x098 */
     u8  pad_09c[0x38c];
     u16 unk_428;            /* 0x428 */
     u8  pad_42a[0x2];

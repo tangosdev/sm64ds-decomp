@@ -75,10 +75,10 @@ struct BowserFire {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x34];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mVertAccel;            /* 0x09c */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     u8  pad_0a4[0x4];
-    s32 unk_0a8;            /* 0x0a8 */
+    s32 mVertSpeed;            /* 0x0a8 */
     u8  pad_0ac[0x64];
     u8  mWithMeshClsn;            /* 0x110 */
     u8  pad_111[0x1bb];

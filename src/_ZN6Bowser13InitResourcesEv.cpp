@@ -16,10 +16,10 @@
  * here, which is layout-identical (Fix12i is s32) and costs nothing.
  *
  * The fields this used to spell as unk_ are the base classes' and are named now:
- * unk_09c / unk_0a0 are dActor_c::mVertAccel and dActor_c::mTerminalVelocity -- and the
+ * mVertAccel / mTerminalVelocity are dActor_c::mVertAccel and dActor_c::mTerminalVelocity -- and the
  * values written here, -0x2000 and -0x3c000, are fix12 gravity and terminal
  * velocity, which is the same evidence dActor_c.h cites from BooCage and MadPiano.
- * mParam is fBase_c::param1, unk_004 is fBase_c::uniqueID, and unk_0cc is
+ * mParam is fBase_c::param1, uniqueID is fBase_c::uniqueID, and mAreaId is
  * dActor_c::mAreaId -- which is why it is read as a signed char and handed straight
  * to dActor_c::Spawn's areaID parameter.
  *

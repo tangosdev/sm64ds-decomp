@@ -86,21 +86,21 @@ struct KingBobOmb {
     u8  pad_068[0x26];
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0xc];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mVertAccel;            /* 0x09c */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     u8  pad_0a4[0xc];
     /* 0x0b0..0x110 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
-    u32 unk_0b0;                 /* 0x0b0 */
-    s32 unk_0b4;                 /* 0x0b4 */
-    s32 unk_0b8;                 /* 0x0b8 */
-    s32 unk_0bc;                 /* 0x0bc */
-    s32 unk_0c0;                 /* 0x0c0 */
-    u8  unk_0c4;                 /* 0x0c4 */
+    u32 mFlags;                 /* 0x0b0 */
+    s32 mClipOffsetY;                 /* 0x0b4 */
+    s32 mClipRadius;                 /* 0x0b8 */
+    s32 mClipDistance;                 /* 0x0bc */
+    s32 mFarDistance;                 /* 0x0c0 */
+    u8  mClipResult;                 /* 0x0c4 */
     u8  pad_0c5[0x7];
     s8  mAreaId;                 /* 0x0cc */
     u8  pad_0cd[0x1];
-    s16 unk_0ce;                 /* 0x0ce */
+    s16 mDeathTableID;                 /* 0x0ce */
     u8  pad_0d0[0x40];
     /* dBgCh_Actr member, named by the class's own destructor calling
        dBgCh_Actr's D1 at +0x110 -- a relocation the ROM build

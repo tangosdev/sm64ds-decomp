@@ -83,11 +83,11 @@ struct dBgActor_c {
     u8  pad_090[0x4];
     s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x2];
-    s32 unk_098;            /* 0x098 */
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mHorzSpeed;            /* 0x098 */
+    s32 mVertAccel;            /* 0x09c */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     u8  pad_0a4[0x4];
-    s32 unk_0a8;            /* 0x0a8 */
+    s32 mVertSpeed;            /* 0x0a8 */
     u8  pad_0ac[0x4];
     u32 mFlags;             /* 0x0b0 */
     s32 mClipOffsetY;       /* 0x0b4 */

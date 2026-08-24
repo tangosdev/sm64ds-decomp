@@ -61,12 +61,12 @@ struct Shark {
     u8  pad_00c[0x50];
     /* 0x05c..0x08c is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
-    s32 unk_05c;                 /* 0x05c */
+    s32 mPosX;                 /* 0x05c */
     s32 mPosY;                   /* 0x060 */
     s32 mPosZ;                   /* 0x064 */
-    s32 unk_068;                 /* 0x068 */
-    s32 unk_06c;                 /* 0x06c */
-    s32 unk_070;                 /* 0x070 */
+    s32 mPrevPosX;                 /* 0x068 */
+    s32 mPrevPosY;                 /* 0x06c */
+    s32 mPrevPosZ;                 /* 0x070 */
     s32 mCamSpacePosX;           /* 0x074 */
     s32 mCamSpacePosY;           /* 0x078 */
     s32 mCamSpacePosZ;           /* 0x07c */
@@ -80,11 +80,11 @@ struct Shark {
     s16 mPrevAngleY;            /* 0x094 */
     s16 mPrevAngleZ;            /* 0x096 */
     u8  pad_098[0x4];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mVertAccel;            /* 0x09c */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     u8  unk_0a4;            /* 0x0a4 */
     u8  pad_0a5[0x3];
-    s32 unk_0a8;            /* 0x0a8 */
+    s32 mVertSpeed;            /* 0x0a8 */
     s32 unk_0ac;            /* 0x0ac */
     u8  pad_0b0[0x50];
     u8  mStateTimer;            /* 0x100 */

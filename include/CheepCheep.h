@@ -60,7 +60,7 @@ struct CheepCheep {
     u8  pad_090[0x4];
     s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x1a];
-    u32 unk_0b0;            /* 0x0b0 */
+    u32 mFlags;            /* 0x0b0 */
     u8  pad_0b4[0x5c];
     /* dCcAcPos_c member, named by the class's own destructor calling
        dCcAcPos_c's D1 at +0x110 -- a relocation the ROM build
