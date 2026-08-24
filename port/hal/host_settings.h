@@ -237,9 +237,19 @@ int host_setting_custom_palette(void);
    last, and no setting should mean that.
 
    character is 0 Mario, 1 Luigi, 2 Wario, 3 Yoshi. The accessor never
-   returns null; "" is the ROM. */
+   returns null; "" is the ROM.
+
+   host_setting_yoshi_builtin_row is 0..3 when PaletteYoshi named one of the
+   built-in colors, in the order the rows are stacked (green, red, blue,
+   yellow), and -1 when the key names a file instead. The four spellings are
+   owned by host_settings.cpp, the same way LovesMeCharacter's are, so the
+   word-to-index step and the mechanism that consumes the index live in one
+   file each and cannot drift. A "yoshi:" value this build does not know is
+   a typo -- no file system here allows a colon in a name -- so it reads as
+   the ROM and says so once. */
 const char *host_setting_character_palette(int character);
 int host_setting_character_palette_any(void);
+int host_setting_yoshi_builtin_row(void);
 
 /* ---- THE LIVE RE-READ -------------------------------------------------
    host_settings_poll: call once per frame from the host loop. Internally it

@@ -536,6 +536,21 @@ const char *const PALETTE_KEY[4] = {
 const char *const PALETTE_WHO[4] = { "Mario", "Luigi", "Wario", "Yoshi" };
 char g_char_palette[4][96];          /* all "" by default, and "" is the ROM */
 
+/* PaletteYoshi's four built-in spellings, the ROM's own four-player colors,
+   in the order the rows are stacked in yoshi_all_16p_pl. The SPELLINGS live
+   here and the mechanism lives in hal/fs_mods.cpp, which is the same split
+   LovesMeCharacter has: this file turns a word into an index and that file
+   knows what the index means. One owner, so the two cannot drift.
+
+   A "yoshi:" value that is NOT one of these four is a typo rather than a
+   file name -- no file system this program runs on allows a colon in one --
+   so it reads as the default, the ROM, and says so. That is the same rule
+   LovesMeCharacter states for a spelling this build does not know. */
+const char *const YOSHI_ROW_KEY[4] = {
+    "yoshi:green", "yoshi:red", "yoshi:blue", "yoshi:yellow",
+};
+int g_yoshi_row = -1;                /* -1 = not a built-in row */
+
 /* Volume, 0..100, or -1 while the file has never named one. The launcher owns
    this key and also passes it as SM64DS_VOLUME at launch; the file copy exists
    so the live re-read below can move it while the game is running. */
@@ -593,6 +608,7 @@ void load_once(void)
     g_mouse_capture = 0;
     g_custom_palette = 0;
     for (int i = 0; i < 4; ++i) g_char_palette[i][0] = '\0';
+    g_yoshi_row = -1;
 
     char path[1024];
     if (!find_settings(path, sizeof path)) return;
@@ -653,6 +669,24 @@ void load_once(void)
         for (int i = 0; i < 4; ++i)
             json_str(text, PALETTE_KEY[i], g_char_palette[i],
                      sizeof g_char_palette[i]);
+        /* PaletteYoshi's built-in rows, resolved once here so no other file
+           has to carry the spellings. A "yoshi:" value this build does not
+           know reads as the default and is emptied, so the file layer never
+           goes looking for a file that cannot exist. */
+        {
+            char *y = g_char_palette[3];
+            for (int i = 0; i < 4; ++i)
+                if (strlen(y) == strlen(YOSHI_ROW_KEY[i]) &&
+                    ieq(y, YOSHI_ROW_KEY[i], strlen(y)))
+                    g_yoshi_row = i;
+            if (g_yoshi_row < 0 && strlen(y) > 6 && ieq(y, "yoshi:", 6)) {
+                fprintf(stderr, "[settings] PaletteYoshi %s is not a color "
+                                "this build knows (yoshi:green, yoshi:red, "
+                                "yoshi:blue, yoshi:yellow); Yoshi keeps the "
+                                "ROM's colors\n", y);
+                y[0] = '\0';
+            }
+        }
         {
             char mode[16];
             if (json_str(text, "GapFillMode", mode, sizeof mode)) {
@@ -734,7 +768,7 @@ void load_once(void)
     for (int i = 0; i < 4; ++i) {
         const char *v = g_char_palette[i];
         if (!*v) continue;
-        if (i == 3 && strlen(v) > 6 && ieq(v, "yoshi:", 6))
+        if (i == 3 && g_yoshi_row >= 0)
             fprintf(stderr, "[settings] PaletteYoshi %s -- Yoshi wears one "
                             "of the game's own four-player colors in the "
                             "adventure. This is a mod, not the game. (%s)\n",
@@ -912,6 +946,16 @@ extern "C" int host_setting_character_palette_any(void)
     for (int i = 0; i < 4; ++i)
         if (g_char_palette[i][0]) return 1;
     return 0;
+}
+
+/* Which of the ROM's four-player rows PaletteYoshi named, 0..3 in the order
+   they are stacked in yoshi_all_16p_pl (green, red, blue, yellow), or -1
+   when the key names a file instead. The spellings live in this file and
+   the meaning of the row lives in hal/fs_mods.cpp; see YOSHI_ROW_KEY. */
+extern "C" int host_setting_yoshi_builtin_row(void)
+{
+    load_once();
+    return g_yoshi_row;
 }
 
 extern "C" int host_setting_volume(void)

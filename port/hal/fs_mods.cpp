@@ -94,6 +94,7 @@ extern "C" int host_setting_lovesme_character(void);   /* hal/host_settings.cpp 
 extern "C" int host_setting_custom_palette(void);      /* hal/host_settings.cpp */
 extern "C" const char *host_setting_character_palette(int); /* host_settings */
 extern "C" int host_setting_character_palette_any(void);    /* host_settings */
+extern "C" int host_setting_yoshi_builtin_row(void);        /* host_settings */
 extern "C" const char *port_fs_catalog_path(unsigned); /* hal/fs.cpp */
 extern "C" unsigned port_fs_interior_id(const char *); /* hal/fs.cpp */
 /* romdata.py's host-shaped copy of the ROM's mount table: which runtime id
@@ -1770,9 +1771,6 @@ const char *const PC_FILES[PC_COUNT][PC_MAX_FILES] = {
       "data/player/yoshi_head_fill.bmd", 0, 0 },
 };
 
-const char *const YOSHI_ROW_KEY[4] = {
-    "yoshi:green", "yoshi:red", "yoshi:blue", "yoshi:yellow",
-};
 const char *const YOSHI_BODY = "data/player/yoshi_model.bmd";
 const char *const YOSHI_HEAD = "data/player/yoshi_head.bmd";
 const char *const YOSHI_FILL = "data/player/yoshi_head_fill.bmd";
@@ -1808,15 +1806,6 @@ int pc_owner(unsigned fileID)
         for (int k = 0; k < PC_MAX_FILES; ++k)
             if (g_pc_owned[c][k] && g_pc_owned[c][k] == fileID)
                 return c;
-    return -1;
-}
-
-/* 0..3 for a built-in Yoshi row spelling, else -1. */
-int pc_yoshi_builtin(const char *v)
-{
-    for (int r = 0; r < 4; ++r)
-        if (strcmp(v, YOSHI_ROW_KEY[r]) == 0)
-            return r;
     return -1;
 }
 
@@ -1910,7 +1899,9 @@ void pc_load(void)
             continue;
 
         if (c == PC_YOSHI) {
-            const int row = pc_yoshi_builtin(v);
+            /* host_settings.cpp owns the four spellings and hands over the
+               row; a key that names a file answers -1 and falls through */
+            const int row = host_setting_yoshi_builtin_row();
             if (row >= 0) {
                 const char *why = "?";
                 if (pc_build_yoshi(row, &why)) {
