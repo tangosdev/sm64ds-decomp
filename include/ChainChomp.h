@@ -34,17 +34,33 @@ struct ChainChomp : dEnemyBase_c {
     ShadowModel mShadowModel;                              /* 0x1b4 */
     Model mLinkModels[7];                                  /* 0x1dc */
     ShadowModel mLinkShadows[7];                           /* 0x40c */
-    Vector3 unk_524[7];                                    /* 0x524 */
+    /* InitResources seeds all seven with the chomp's own position, one per link;
+       unk_578 is a second seven-element run of the same shape that nothing
+       matched writes, so which of the two is the chain's previous-position
+       history is unevidenced and it keeps its unk_ name. */
+    Vector3 mLinkPos[7];                                   /* 0x524 */
     Vector3 unk_578[7];                                    /* 0x578 */
-    u8  pad_5cc[0x24];
-    s32 unk_5f0;            /* 0x5f0 */
-    u8  pad_5f4[0x11];
-    u8  unk_605;            /* 0x605 */
-    u8  pad_606[0x6];
-    s32 unk_60c;            /* 0x60c */
+    u8  pad_5cc[0x20];
+    /* InitResources copies mPosX/mPosY/mPosZ here and then moves the actor itself
+       by +200.0 on each axis, so this is where it started. Behavior clamps
+       mPosY up to mSpawnPosY + 0xc8000 every frame. */
+    s32 mSpawnPosX;         /* 0x5ec */
+    s32 mSpawnPosY;         /* 0x5f0 */
+    s32 mSpawnPosZ;         /* 0x5f4 */
+    s32 unk_5f8;            /* 0x5f8 -- InitResources stores 0x50000; no reader in the tree */
+    u8  pad_5fc[0x9];
+    u8  unk_605;            /* 0x605 -- gates three Behavior helpers; nothing writes it */
+    u8  pad_606[0x2];
+    /* uniqueIDs (fBase_c +0x04) of two other actors. 0x1b and 0x29 are resolved
+       through ACTOR_SPAWN_TABLE at 0x02090864 -- see notes/enemy-leaf-provenance.md. */
+    s32 mStumpUniqueID;     /* 0x608 -- the actor 0x1b InitResources spawns */
+    s32 mFenceUniqueID;     /* 0x60c -- actor 0x29, found lazily by Behavior */
     u8  pad_610[0xc];
-    u8  unk_61c;            /* 0x61c */
-    u8  unk_61d;            /* 0x61d */
+    /* Set when this frame's position had to be clamped up to the rest height,
+       and last frame's copy of it. Behavior fires func_ov014_02111fb8 only on
+       the rising edge, which is what a landing one-shot looks like. */
+    u8  mIsOnGround;        /* 0x61c */
+    u8  mWasOnGround;       /* 0x61d */
 
     virtual ~ChainChomp();
 
@@ -81,15 +97,15 @@ struct ChainChomp {
     s32 mVertSpeed;              /* 0x0a8 */
     u8  pad_0ac[0x4];
     u32 mFlags;                  /* 0x0b0 */
-    s32 unk_0b4;                 /* 0x0b4 */
-    s32 unk_0b8;                 /* 0x0b8 */
-    s32 unk_0bc;                 /* 0x0bc */
-    s32 unk_0c0;                 /* 0x0c0 */
-    u8  unk_0c4;                 /* 0x0c4 */
+    s32 mClipOffsetY;            /* 0x0b4 */
+    s32 mClipRadius;             /* 0x0b8 */
+    s32 mClipDistance;           /* 0x0bc */
+    s32 mFarDistance;            /* 0x0c0 */
+    u8  mClipResult;             /* 0x0c4 */
     u8  pad_0c5[0x7];
     s8  mAreaId;                 /* 0x0cc */
     u8  pad_0cd[0x1];
-    s16 unk_0ce;                 /* 0x0ce */
+    s16 mDeathTableID;           /* 0x0ce */
     u8  pad_0d0[0x40];
     u8  mdCcAcPos_c;            /* 0x110 */
     u8  pad_111[0x3f];
@@ -97,15 +113,21 @@ struct ChainChomp {
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     u8  mModelAnim[0x64];            /* 0x150 */
     u8  mShadowModel;            /* 0x1b4 */
-    u8  pad_1b5[0x43b];
-    s32 unk_5f0;            /* 0x5f0 */
-    u8  pad_5f4[0x11];
+    u8  pad_1b5[0x36f];
+    s32 mLinkPos[21];       /* 0x524 -- the C++ branch's Vector3 mLinkPos[7], flat */
+    u8  pad_578[0x74];
+    s32 mSpawnPosX;         /* 0x5ec */
+    s32 mSpawnPosY;         /* 0x5f0 */
+    s32 mSpawnPosZ;         /* 0x5f4 */
+    s32 unk_5f8;            /* 0x5f8 */
+    u8  pad_5fc[0x9];
     u8  unk_605;            /* 0x605 */
-    u8  pad_606[0x6];
-    s32 unk_60c;            /* 0x60c */
+    u8  pad_606[0x2];
+    s32 mStumpUniqueID;     /* 0x608 */
+    s32 mFenceUniqueID;     /* 0x60c */
     u8  pad_610[0xc];
-    u8  unk_61c;            /* 0x61c */
-    u8  unk_61d;            /* 0x61d */
+    u8  mIsOnGround;        /* 0x61c */
+    u8  mWasOnGround;       /* 0x61d */
 };
 
 #endif /* __cplusplus */
