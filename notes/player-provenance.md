@@ -100,6 +100,86 @@ countdown block. Where a row cites "Behavior" that is the file meant.
   0x28c runs) and `Render` and `TurnOffToonShading` index the same runs. Turning
   them into real arrays is the right fix and is a structural change, not a
   rename, so it is left for a pass that can byte-verify each indexing site.
+  **DONE -- see "The four arrays" below.** Six of the seven are gone; 0x0ec is
+  not part of any of them and is still a scalar.
+
+## The four arrays -- the structural half, and it IS byte-neutral
+
+The previous pass handed this on as "the right fix, left for a pass that can
+byte-verify each indexing site". Every site was verified individually. **All of
+it is byte-neutral**, so the measurement to record is a positive one: on this
+compiler, indexing a real member array of pointers emits the same code as
+hand-written `*(T **)((char *)this + base + i * 4)`, in a loop and out of it.
+
+Four runs, and each one's length is pinned by two independent witnesses -- the
+`CleanupResources` walk and the padding that had to be deleted to make room:
+
+| offset | declaration | length is pinned by |
+| --- | --- | --- |
+| 0x0dc | `ModelAnim *mBodyModels[4]` | `CleanupResources` `i < 4`; closes at 0x0ec, the standalone pointer that was already there |
+| 0x154 | `ModelAnim *unk_154[8]` | `CleanupResources` `i < 4` **and** `i + 4`; closes exactly at `mModelAnim4` (0x174) |
+| 0x27c | `s32 unk_27c[4]` | `i < 4`; closes exactly at 0x28c |
+| 0x28c | `s32 unk_28c[8]` | `i < 4` **and** `i + 4`; closes exactly at `mShadowModel` (0x2ac) |
+
+The element type of the two model runs is `ModelAnim`, and the matched bodies pin
+every part of that claim rather than just the size: they reach `+0x08` (Model's
+`ModelComponents`, handed to `TextureSequence::Update`), `+0x14` (`Model::mat4x3`),
+`+0x50` (the `Animation` base, handed to `Animation::Advance`) and `+0x58` (that
+base's `currFrame`); they call `Model::SetPolygonMode` and `Model::Render` on the
+same pointer; and they call vtable slots `+0x14` and `+0x18`, which in
+`_ZTV9ModelAnim` are `Render` and `Virtual18`. `CleanupResources` calls slot 1 --
+the deleting destructor -- on each element.
+
+The two `s32` runs are parallel to the model runs, one word per model, and that
+pairing is witnessed rather than inferred: `TurnOffToonShading` passes
+`unk_27c[j]` with `mBodyModels[...]`, `unk_28c[j]` with `unk_154[j]` and
+`unk_28c[j + 4]` with `unk_154[j + 4]`, all three to `func_ov002_020e6b74`, which
+walks the model's material records writing one word of the array into each
+record's `+0x1c`. So each element is an allocated per-material word buffer owned
+by the model at the same index -- `CleanupResources` frees them with
+`func_0203cbc0` over the same `i` / `i + 4` pattern. **They are still `unk_`**:
+nothing matched allocates or fills either run, so what the word means is unread.
+Naming the shape was possible; naming the meaning was not.
+
+`unk_154`'s index range has one wrinkle worth writing down before someone
+"fixes" it. `Render` indexes it with `func_ov002_020becf4(mBodyModelId, 1)`, and
+that helper can return 8 or 9 -- the "no model" sentinels. `Render` loads the slot
+*first* and only then tests `i != 9 && i != 8`, so the ROM itself reads one or two
+words past the array, into `mModelAnim4`, and discards the result. That is
+reproduced as written; it is what the cartridge does.
+
+Verified byte-for-byte with `build_pin`, one call per function, all
+`(True, '2004/b56')`:
+
+```
+_ZN6Player16CleanupResourcesEv    _ZN6Player6RenderEv     _ZN6Player18TurnOffToonShadingEj
+_ZN6Player18St_YoshiPower_MainEv  _ZN6Player15St_DeadHit_MainEv
+_ZN6Player13St_Crawl_MainEv       _ZN6Player17St_NoControl_MainEv
+_ZN6Player16St_BurnFire_MainEv    _ZN6Player18St_CameraZoom_MainEv
+```
+
+Two sites were deliberately NOT collapsed:
+
+- `St_CameraZoom_Main` reads the run through `*(volatile int *)((char *)&mBodyModels
+  + id * 4)`. The `volatile` is load-bearing there (it is the round-trip lever, see
+  the "When a rename stops being byte-neutral" section) and `&mBodyModels` still
+  compiles unchanged against the array, so it was left exactly as it was.
+- 0x0ec and 0x1d8 stay scalars. `CleanupResources` destroys them in their own
+  block, outside the `i < 4` loop, and they sit one on each side of a `ModelAnim`
+  member (`mModelAnim3` at 0x0f0, `mModelAnim4` at 0x174) rather than inside a run.
+  Both are `ModelAnim *` by the same slot-1/slot-5 evidence, but neither is part
+  of an array and neither was retyped this pass.
+
+`build/eligible-names.txt` is byte-identical across the whole change (11,065
+lines both sides), `check_header_offsets` reports `0 mismatched, 0 unparsed,
+struct spans 0x768` and the full `rombuild` stays at 11,059 reproducing / 0
+mismatching / 106-106 exact.
+
+One number does move and it is expected: `check_header_offsets` counts 173
+commented fields in `Player.h` where it counted 176. Three of the fields it used
+to check -- `unk_0e0`, `unk_158`, `unk_160` -- are now interior elements of
+`mBodyModels` and `unk_154` and have no offset comment of their own. The file did
+not fall out of the gate: the struct still spans 0x768 and nothing is unparsed.
 
 ## The six shadow-class files
 
@@ -171,6 +251,30 @@ half is a spelling that compiles nowhere and that no gate reports.
 | 0x3ec | `mDistToTarget` | `Behavior`: `mDistToTarget = Vec3_HorzDist(&mPosX, &target->mPosX)` when `ClosestPlayer()` returned something, and `~0x80000000` (INT_MAX, "infinitely far") when it did not. |
 | 0x3f8 | `mAnimSpeed` | `InitResources` sets 0x1000 alongside the three unit scales; `Behavior` copies it into `mModelAnim.speed` every frame before `Advance()`. |
 | 0x406 | `mAngleToTarget` | `Behavior`: `Vec3_HorzAngle(&mPosX, &target->mPosX)`, falling back to `mAngleY` when there is no target -- the same if/else arms as `mDistToTarget`. |
+
+### mTargetPlayer is a pointer, and typing it is byte-neutral
+
+`mTargetPlayer` (0x3a0) was declared `s32` and every read of it was spelt
+`*(dActor_c **)((char *)&mTargetPlayer)` -- three of those in `Behavior`, on top of
+an `(int)` cast on the store. It is now `dActor_c *`, and
+`_ZN6Bowser8BehaviorEv` still reproduces byte-for-byte under 2004/b56, as does
+`_ZN6Bowser13InitResourcesEv`, which zeroes it. So a pointer-typed member does
+*not* change how mwcc loads it here; the four casts were pure noise and are gone,
+and `Vec3_HorzAngle` / `Vec3_HorzDist` now take `(Vector3 *)&mTargetPlayer->mPosX`
+instead of `(char *) ... + 0x5c`.
+
+Two details that are not free and are worth copying:
+
+- It is `dActor_c *`, not `Player *`, even though `dActor_c::ClosestPlayer()`
+  returns `Player *`. `Bowser.h` cannot include `Player.h`, so `Player` is only
+  forward-declared, and mwcc rejects the implicit `Player *` -> `dActor_c *`
+  conversion outright ("illegal implicit conversion") because it cannot see the
+  derivation. The store therefore keeps ONE cast, `(dActor_c *)ClosestPlayer()`,
+  which is exact: `dActor_c` is the base at offset 0, so no adjustment is
+  involved.
+- The `#else` C twin of `Bowser.h` has no `dActor_c` declaration in scope, so
+  there the slot is `void *` -- same width, same offset, and the two halves still
+  agree.
 
 Left `unk_` in Bowser, with the reason:
 

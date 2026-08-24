@@ -35,10 +35,10 @@ extern char* data_0209f318;
 int Bowser::Behavior()
 {
     RandomIntInternal(&data_0209e650);
-    mTargetPlayer = (int)ClosestPlayer();
-    if (*(dActor_c**)((char*)&mTargetPlayer) != 0) {
-        mAngleToTarget = Vec3_HorzAngle((Vector3*)((char*)&mPosX), (Vector3*)((char*)*(dActor_c**)((char*)&mTargetPlayer) + 0x5c));
-        mDistToTarget = Vec3_HorzDist((Vector3*)((char*)&mPosX), (Vector3*)((char*)*(dActor_c**)((char*)&mTargetPlayer) + 0x5c));
+    mTargetPlayer = (dActor_c *)ClosestPlayer();
+    if (mTargetPlayer != 0) {
+        mAngleToTarget = Vec3_HorzAngle((Vector3*)((char*)&mPosX), (Vector3*)&mTargetPlayer->mPosX);
+        mDistToTarget = Vec3_HorzDist((Vector3*)((char*)&mPosX), (Vector3*)&mTargetPlayer->mPosX);
     } else {
         mAngleToTarget = mAngleY;
         mDistToTarget = ~0x80000000;

@@ -53,30 +53,30 @@ int Player::CleanupResources()
     func_ov002_020e032c(((char *)this));
     for (i = 0; i < 4; i++) {
         int j;
-        VB *p = *(VB **)(((char *)this) + i * 4 + 0xdc);
+        VB *p = (VB *)mBodyModels[i];
         if (p != 0) {
             if (p != 0)
                 p->v1();
         }
-        p = *(VB **)(((char *)this) + i * 4 + 0x154);
+        p = (VB *)unk_154[i];
         if (p != 0) {
             if (p != 0)
                 p->v1();
         }
         j = i + 4;
-        p = *(VB **)(((char *)this) + j * 4 + 0x154);
+        p = (VB *)unk_154[j];
         if (p != 0) {
             if (p != 0)
                 p->v1();
         }
         {
-            int q = *(int *)(((char *)this) + i * 4 + 0x27c);
+            int q = unk_27c[i];
             if (q != 0)
                 func_0203cbc0(q);
-            q = *(int *)(((char *)this) + i * 4 + 0x28c);
+            q = unk_28c[i];
             if (q != 0)
                 func_0203cbc0(q);
-            q = *(int *)(((char *)this) + j * 4 + 0x28c);
+            q = unk_28c[j];
             if (q != 0)
                 func_0203cbc0(q);
         }

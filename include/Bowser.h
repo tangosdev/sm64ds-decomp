@@ -45,7 +45,13 @@ struct Bowser : dActor_c {
     ShadowModel mShadowModel;                               /* 0x308 */
     u8  pad_330[0x30];
     dCcAcPos_c mdCcAcPos_c;   /* 0x360 */
-    s32 mTargetPlayer;      /* 0x3a0 */
+    /* A POINTER, not an s32. Bowser::Behavior assigns it straight from
+       dActor_c::ClosestPlayer() and then re-spelt every read of the slot as
+       `*(dActor_c **)((char *)&mTargetPlayer)`; typing it here deletes all three
+       of those casts. Declared dActor_c* rather than Player* on purpose --
+       Player.h is not includable here, and dActor_c is the base at offset 0, so
+       the ClosestPlayer() result converts with no adjustment. */
+    dActor_c *mTargetPlayer;      /* 0x3a0 */
     u8  pad_3a4[0x4];
     s32 unk_3a8;            /* 0x3a8 */
     u8  pad_3ac[0x4];
@@ -133,7 +139,9 @@ struct Bowser {
     ShadowModel mShadowModel;                               /* 0x308 */
     u8  pad_330[0x30];
     dCcAcPos_c mdCcAcPos_c;   /* 0x360 */
-    s32 mTargetPlayer;            /* 0x3a0 */
+    /* The C++ half types this dActor_c*; C translation units have no dActor_c
+       declaration in scope here, so it is spelt void* -- same width, same slot. */
+    void *mTargetPlayer;            /* 0x3a0 */
     u8  pad_3a4[0x4];
     s32 unk_3a8;            /* 0x3a8 */
     u8  pad_3ac[0x4];
