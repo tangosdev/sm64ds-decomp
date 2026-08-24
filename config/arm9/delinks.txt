@@ -5071,7 +5071,7 @@ src/_ZN9dBgCh_GndD1Ev.c:
     complete
     .text start:0x02037534 end:0x02037570
 
-src/_ZN9dBgCh_GndC1Ev.c:
+src/_ZN9dBgCh_GndC1Ev.cpp:
     complete
     .text start:0x02037570 end:0x020375b0
 

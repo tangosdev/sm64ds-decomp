@@ -43,16 +43,14 @@ extern "C" {
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int a, int b, unsigned int c, unsigned int d);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v, int c);
-extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *self);
+
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *self);
-extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *self);
 }
 
 extern ActorFn data_ov060_0211af74[];
 
 int BowserFire::InitResources()
 {
-    dBgCh_Gnd rc;
     Vector3 pos;
 
     if (_ZN11ShadowModel12InitCylinderEv(&this->mShadowModel) == 0)
@@ -80,7 +78,9 @@ int BowserFire::InitResources()
     this->unk_37c = this->unk_380;
     this->unk_2cc = 0;
 
-    _ZN9dBgCh_GndC1Ev(&rc);
+    /* constructed here (not at function top: the ROM constructs after the
+       collider setup), destroyed at the single exit below -- both synthesized */
+    dBgCh_Gnd rc;
     {
         int p60;
         pos.x = this->mPosX;
@@ -99,6 +99,5 @@ int BowserFire::InitResources()
 
     this->unk_384 = 0;
     this->unk_388 = 0;
-    _ZN9dBgCh_GndD1Ev(&rc);
     return 1;
 }
