@@ -54,7 +54,7 @@ int RotatingUpDownPlatformUtm::Behavior()
     int fd;
     void *r8;
 
-    if (unk_3a0 != 0) {
+    if (mIsDead != 0) {
         return 1;
     }
 
@@ -108,8 +108,8 @@ int RotatingUpDownPlatformUtm::Behavior()
             }
         }
         if (r4 != 0) {
-            unk_378 = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-                unk_378, 3, 0x8d, (Vec3 *)((char *)&mCamSpacePosX), 0);
+            mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
+                mSoundHandle, 3, 0x8d, (Vec3 *)((char *)&mCamSpacePosX), 0);
         }
         return 1;
     }
@@ -128,9 +128,9 @@ int RotatingUpDownPlatformUtm::Behavior()
     }
     _ZN9dBgCh_GndC1Ev(&rc);
     _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rc, &pos, 0);
-    unk_37c = pos.y;
+    mGroundY = pos.y;
     if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc) != 0) {
-        unk_37c = *(int *)((char *)&rc + 0x44);
+        mGroundY = *(int *)((char *)&rc + 0x44);
     }
 
     r6 = 0;
@@ -144,7 +144,7 @@ int RotatingUpDownPlatformUtm::Behavior()
                   data_020a0e68, &sp10);
     MulVec3Mat4x3(data_ov091_02134cdc + mVariant * 0x78 + r4 * 0xc,
                   data_020a0e68, &sp1C);
-    Vec3_Add(&sp34, (Vec3 *)((char *)&mBasePos), &sp10);
+    Vec3_Add(&sp34, (Vec3 *)((char *)&mBasePosX), &sp10);
     Vec3_Sub(&sp28, (Vec3 *)((char *)&mPosX), &sp34);
     Vec3_Sub(&sp40, &sp10, &sp1C);
     len1 = LenVec3(&sp40);
@@ -158,12 +158,12 @@ int RotatingUpDownPlatformUtm::Behavior()
     }
 
     if (len2 == 0 || len2 <= r5) {
-        Vec3_Add(&sp4C, (Vec3 *)((char *)&mBasePos), &sp10);
+        Vec3_Add(&sp4C, (Vec3 *)((char *)&mBasePosX), &sp10);
         mPosX = sp4C.x;
         mPosY = sp4C.y;
         mPosZ = sp4C.z;
         {
-            s16 *r2 = (s16 *)((char *)&unk_3a2);
+            s16 *r2 = (s16 *)((char *)&mPitchBase);
             s16 *b300 = (s16 *)((char *)this + 0x300);
             r6 = 1;
             *r2 = (s16)(*r2 + *(s16 *)((char *)b300 + 0xa4));
@@ -180,9 +180,9 @@ int RotatingUpDownPlatformUtm::Behavior()
             mWaypointIndex = 0;
         }
         if ((u32)mWaypointIndex > 3 && (u32)mWaypointIndex < 8) {
-            unk_3a4 = 0x2000;
+            mPitchStep = 0x2000;
         } else {
-            unk_3a4 = 0;
+            mPitchStep = 0;
         }
     }
 

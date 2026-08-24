@@ -61,21 +61,21 @@ int UpDownLiftBbh::InitResources()
   _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char *)this) + 0x124, _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov095_02136f74[idx]), ((char *)this) + 0x2ec, 0x199, *((s16 *) ((char *)&unk_08e)), data_ov095_021375a4[idx]);
   func_020393d4(((char *)this) + 0x124, new_var);
   func_020393c4(((char *)this) + 0x124, &func_ov095_02136788);
-  *((int *) ((char *)&unk_320)) = 0;
+  *((int *) ((char *)&mRider)) = 0;
   *((int *) ((char *)&mState)) = 0;
   if ((*((u8 *) ((char *)&unk_349))) == 2)
   {
-    *((int *) ((char *)&unk_334)) = (*((int *) ((char *)&unk_060))) + ((*((u16 *) ((char *)&unk_096))) << 12);
+    *((int *) ((char *)&mTopY)) = (*((int *) ((char *)&unk_060))) + ((*((u16 *) ((char *)&unk_096))) << 12);
   }
   else
   {
-    *((int *) ((char *)&unk_334)) = *((int *) ((char *)&unk_060));
+    *((int *) ((char *)&mTopY)) = *((int *) ((char *)&unk_060));
   }
-  *((int *) ((char *)&unk_338)) = (*((int *) ((char *)&unk_334))) - ((*((u16 *) ((char *)&unk_092))) << 12);
-  *((int *) ((char *)&unk_33c)) = ((*((int *) ((char *)&unk_334))) + (*((int *) ((char *)&unk_338)))) / 2;
+  *((int *) ((char *)&mBottomY)) = (*((int *) ((char *)&mTopY))) - ((*((u16 *) ((char *)&unk_092))) << 12);
+  *((int *) ((char *)&mMiddleY)) = ((*((int *) ((char *)&mTopY))) + (*((int *) ((char *)&mBottomY)))) / 2;
   *((u8 *) ((char *)&unk_346)) = 0;
-  *((u8 *) ((char *)&unk_347)) = 1;
-  *((u8 *) ((char *)&unk_348)) = 0;
-  *((int *) ((char *)&unk_340)) = 0;
+  *((u8 *) ((char *)&mIsArmed)) = 1;
+  *((u8 *) ((char *)&mIsRidden)) = 0;
+  *((int *) ((char *)&mSoundHandle)) = 0;
   return 1;
 }
