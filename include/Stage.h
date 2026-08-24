@@ -101,16 +101,9 @@ struct Stage : dScene_c {
     Model mModel;             /* 0x86c */
     u8  pad_8bc[0x60];       /* Model ends 0x8bc; dBgW_Kc does not start until 0x91c */
     dBgW_Kc mMeshCollider; /* 0x91c */
-    Fog unk_96c;       /* 0x96c */
-    u8  pad_992[0x2];
-    u8  unk_994;            /* 0x994 */
-    u8  pad_995[0x1f];
-    u8  unk_9b4;            /* 0x9b4 */
-    u8  unk_9b5;            /* 0x9b5 */
-    u8  unk_9b6;            /* 0x9b6 */
-    u8  pad_9b7[0x1];
-    u8  unk_9b8;            /* 0x9b8 */
-    u8  pad_9b9[0x3];
+    /* Two fog setups, 0x28 apart: LoadFog fills both by hand and then walks
+       this array with `dst += 0x28` per level fog record. */
+    Fog mFog[2];            /* 0x96c */
     /* Allocated by LoadSkybox, destroyed through its vtable by CleanupResources. */
     Model *skyboxModel;     /* 0x9bc */
 

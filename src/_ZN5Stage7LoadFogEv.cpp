@@ -4,8 +4,11 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Stage.h"
+/* Stage::LoadFog. Lays down two default ramps -- a shallow one in mFog[0] and
+   a steeper one in mFog[1] -- then lets the level's own fog records, if it has
+   any, overwrite them through Fog::Init. */
 extern "C" {
-extern void _ZN3Fog4InitEt5Fix12IiES1_(char *self, unsigned short color, int nearv, int farv);
+extern void _ZN3Fog4InitEt5Fix12IiES1_(Fog *self, unsigned short color, int nearv, int farv);
 }
 
 void Stage::LoadFog()
@@ -15,29 +18,29 @@ void Stage::LoadFog()
   int i;
   for (i = 0; i < 0x20; i++)
   {
-    *((unsigned char *) (((char *)&unk_96c) + i)) = a;
-    *((unsigned char *) (((char *)&unk_994) + i)) = b;
+    mFog[0].mDensity[i] = a;
+    mFog[1].mDensity[i] = b;
     a += 4;
     b += 2;
   }
-  *((unsigned char *) ((char *)&unk_96c.unk_020)) = 0;
-  *((unsigned char *) ((char *)&unk_9b4)) = 1;
-  *((unsigned char *) ((char *)&unk_9b5)) = 6;
-  *((unsigned short *) ((char *)&unk_9b6)) = 0;
-  *((unsigned short *) ((char *)&unk_9b8)) = 0x6000;
+  mFog[0].mEnabled = 0;
+  mFog[1].mEnabled = 1;
+  mFog[1].mShift = 6;
+  mFog[1].mOffset = 0;
+  mFog[1].mColor = 0x6000;
   if (data_0209f258 == 0)
   {
     return;
   }
   {
     unsigned char *src = (unsigned char *) data_0209f31c;
-    char *dst = ((char *)this) + 0x96c;
+    Fog *dst = mFog;
     int j;
     for (j = 0; j < data_0209f258; j++)
     {
       if (src[0] != 1)
       {
-        *((unsigned char *) (dst + 0x20)) = 0;
+        dst->mEnabled = 0;
       }
       else
       {
@@ -45,7 +48,7 @@ void Stage::LoadFog()
         _ZN3Fog4InitEt5Fix12IiES1_(dst, color, *((unsigned short *) (src + 4)), *((unsigned short *) (src + 6)));
       }
       src += 8;
-      dst += 0x28;
+      dst++;
     }
   }
 }

@@ -361,3 +361,28 @@ unused local, no `type` local at all, and reading `state` directly. `const s32 t
 does not compile (assigned later). The rest of the function is byte-identical in every
 variant — only the colouring differs. Re-open only with a lever that makes r2 live at
 *entry* without emitting an instruction; source spelling alone does not reach it.
+
+---
+
+## Stage's fog array (`include/Fog.h`, `Stage::LoadFog`)
+
+`Stage.h` used to model 0x96c..0x9bc as one `Fog` (0x26 bytes) followed by five
+loose `unk_` bytes at 0x994, 0x9b4, 0x9b5, 0x9b6 and 0x9b8. Those five are the
+*second element of a two-element `Fog` array*, and `Stage::LoadFog` is what shows
+it: its second loop starts at `this + 0x96c` and advances `dst += 0x28` once per
+level fog record, handing each `dst` to `Fog::Init`. 0x994 = 0x96c + 0x28 is
+`mFog[1]`'s density ramp; 0x9b4/0x9b5/0x9b6/0x9b8 are `mFog[1]`'s
+`mEnabled`/`mShift`/`mOffset`/`mColor` at +0x20/0x21/0x22/0x24. The array ends at
+0x9bc, exactly where `skyboxModel` begins.
+
+So `Fog`'s size is 0x28, not the 0x26 its field span alone suggests — the stride
+is the witness, and the old header's "independently, Stage.h places Fog at 0x96c
+with its next real field at 0x994" was reading the next array element as a
+neighbouring field. `Fog` is now `Fog mFog[2];` in `Stage.h`, and `LoadFog` reads
+as two hand-written default ramps followed by the level's own records.
+
+**Dead lever, recorded so it is not retried.** In `Fog::Init` the density ramp is
+walked with a running `char *p`, not `self->mDensity[i]`. Swapping to the indexed
+spelling (and dropping `p`) changes the function's size — `build_pin.verify`
+returns `999 word(s) differ`, the size-mismatch signature. Reverted; the pointer
+walk stays, with a short warning in the file.
