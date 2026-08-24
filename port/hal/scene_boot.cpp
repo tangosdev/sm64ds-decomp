@@ -2423,6 +2423,23 @@ void port_scene_fill_jump2(void);
 extern unsigned char MgSnowballSlalom_SpawnInfo[];
 void *port_mg_snowball_spawn(void);
 void port_scene_fill_snowball(void);
+/* run mg11 lane PKR: dScMgCard_c, actor id 0x17b = scene 379, the "Picture
+   Poker" minigame. The spawn symbol is MgPicturePoker and the ROM's own RTTI --
+   reached through the type_info the word BEFORE the vtable points at,
+   0x0213bdb0 -> 0x0213bc70 -> +4 -> 0x0213bc7c -- reads "11dScMgCard_c", so the
+   row is named for the class the way SCENE_MG_CURLING, SCENE_MG_LUIGI and
+   SCENE_MG_PANEL are. The player title comes out of the ov005 launch table's
+   only row for this id (row 9, param 0x00050900 -> name text 5 ->
+   data_ov004_020bc070[5] = message 553 = "Picture Poker"), decoded from
+   NitroFS file 643 by this lane rather than cited. port/slice_pkr.txt carries
+   both derivations, the five width checks, the dScMgCoin_c attribution ruling
+   and the one floor; hal/scene_mg_card.cpp is the seat. Same reads_sublevel
+   reasoning as every minigame row above, re-checked for this class rather than
+   copied: no relocation in ov006 lands on data_02092110 and no TU in this
+   class's closure names it. */
+extern unsigned char MgPicturePoker_SpawnInfo[];
+void *port_mg_card_spawn(void);
+void port_scene_fill_card(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2964,6 +2981,39 @@ static const PortSceneClass port_scene_classes[] = {
        the third class -- is still not the thing to take mid-fan-out. */
     {377, "SCENE_MG_SNOWBALL", MgSnowballSlalom_SpawnInfo,
      port_mg_snowball_spawn, port_scene_fill_snowball, 0},
+    /* APPENDED AFTER EVERY EXISTING ROW, run mg11 lane PKR. 379 is 0x17b,
+       spelled in decimal for the two reasons every row above gives: the others
+       are, and port/tools/battery.py reads its hosted-scene set out of this
+       table. Appending matters twice for this class, the way it does for the
+       memory2, luckystars and psycheout rows.
+
+       The first is port/mg_fanout_costs.txt section 11's latent-safe direction:
+       port_scene_registry_install walks this table in order and calls every
+       row's fill on every boot, while port_scene_mg_overlay_load runs the
+       thirty-five overlay constructors ONCE PER PROCESS at the tail of the
+       FIRST minigame row's fill, so a row placed earlier would have its fill
+       run before those constructors read the mounted .data.
+
+       The second is dScMgSingle3DBase_c. This is the FOURTH class the port
+       seats under data_ov006_0213e448, after the flower, memory2 and
+       luckystars rows, and all four define their own face array over the same
+       eight DS words. card_apply keys on a DS address, so the fill that runs
+       FIRST claims the middle table and the ones after it write nothing there.
+       Appending after all three means the flower keeps that table and its
+       witness is unchanged, and this seat owns only its own derived table --
+       plus the two ELEMENT vtables at 0x0213bccc and 0x0213bcf4, which are this
+       class's alone and which no other row touches.
+
+       Nothing in this class's fill writes outside its own 36-slot table: the
+       width is checked FIVE ways in port/slice_pkr.txt, and the word a
+       thirty-seventh slot would take is dScMgCoin_c's live state pair -- the
+       SEATED scene-378 row eight lines up this file.
+
+       reads_sublevel is 0 for the curling row's reason, re-derived rather than
+       copied: no relocation anywhere in ov006 lands on data_02092110 and no TU
+       in this class's closure names it. A minigame is not about a course. */
+    {379, "SCENE_MG_CARD", MgPicturePoker_SpawnInfo, port_mg_card_spawn,
+     port_scene_fill_card, 0},
     {0, 0, 0, 0, 0, 0},
 };
 

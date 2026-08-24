@@ -1,0 +1,354 @@
+# Lane PKR of run mg11: dScMgCard_c, the "Picture Poker" minigame.
+#
+# actor id 0x17b (scene 379), spawn symbol MgPicturePoker_Spawn (0x020dbd54,
+# size 0xc0), SpawnInfo 0x0213bc50, vtable data_ov006_0213bdb4.  Every one of
+# those was re-read out of the ROM by this lane rather than taken from the
+# handover.  The doubled-id word 0x017b017b sits at 0x0213bc54, which puts the
+# record at 0x0213bc50 with the factory in the word before it:
+#
+#     0213bc50  54 bd 0d 02   0x020dbd54   the factory
+#               7b 01 7b 01   379, 379     the id, twice
+#
+# ---- 1. THE CLASS NAME IS THE ROM'S OWN RTTI, NOT A src SPELLING ----------
+#
+# The word IMMEDIATELY BEFORE a class's vtable is its type_info, that record's
+# second word is the name pointer and its THIRD is the base's type_info.  Read
+# out of extracted/overlays/overlay_0006.bin at base 0x020bfec0:
+#
+#     0x0213bdb0 -> 0x0213bc70              the type_info
+#     0x0213bc70 +4 -> 0x0213bc7c           "11dScMgCard_c"
+#     0x0213bc70 +8 -> 0x0213bc64 +4 ->     "19dScMgSingle3DBase_c"
+#                      0x0213bc64 +8 -> 0x020bbf6c  (ov004, dScMgBase_c's)
+#
+# So the class is dScMgCard_c and the spawn symbol is MgPicturePoker -- the same
+# spawn-symbol/class-name split port/mg_fanout_costs.txt section 2 records for
+# curling (MgShuffleShell / dScMgCurling_c).  Every recovered src header in the
+# closure agrees (src/func_ov006_020db6ec.c and its siblings include
+# "dScMgCard_c.h") and is the weaker witness, because a per-TU placeholder can
+# be wrong and a relocation cannot.
+#
+# ---- 2. THE HIERARCHY IS THREE DEEP -------------------------------------
+#
+#     Scene -> dScMgBase_c         data_ov004_020bc0c0  36  (the framework's)
+#           -> dScMgSingle3DBase_c data_ov006_0213e448  36  ovr 8,  mark 6
+#           -> dScMgCard_c         data_ov006_0213bdb4  36  ovr 15, mark 13
+#
+# This is the FOURTH class the port seats under that middle table (the flower
+# 0x186, Memory Master 0x16b and Lucky Stars 0x184 are the other three).
+# port/mg_fanout_costs.txt section 3 lists one vtable for 0x17b and says nothing
+# about an intermediate base, so a seat that filled one derived table would have
+# left SIX of its own slots (2, 5, 7, 10, 26, 33) holding raw DS words.  Section
+# 13's CORRECTION 1 predicted this would keep firing and it does.
+#
+# Both edges are read off code as well as off the RTTI:
+#
+#   src/MgPicturePoker_Spawn.cpp calls func_ov004_020b2adc(p), writes
+#   data_ov006_0213e448 into p[0], constructs Particle::SysTracker at +0x471c,
+#   then writes data_ov006_0213bdb4 over it.
+#   src/func_ov006_020d9638.cpp (slot 17, D0) unwinds in the opposite order,
+#   0x0213bdb4 first and 0x0213e448 second; src/func_ov006_020d95a4.cpp
+#   (slot 16, D2) does the same without the Memory::Deallocate.
+#
+# THE OVERRIDE SPLIT, computed word by word against both base tables:
+#
+#   15 overrides vs dScMgBase_c  =  9 OWN + 6 MIDDLE-BASE
+#     own     slots 0, 3, 6, 9, 16, 17, 18, 19, 21
+#     middle  slots 2, 5, 7, 10, 26, 33
+#
+# which is dScMgBSC_c's split plus SLOT 3, CleanupResources.  Run mg9 lane WIG
+# recorded slot 3 as new to the family; this is the second class to carry it,
+# and here it is three global counters being zeroed
+# (src/func_ov006_020da994.c, data_ov006_0214176c / _02141768 / _02141770).
+#
+# ---- 3. THE ATTRIBUTION TRAP, AND IT IS THE BIGGEST FINDING IN THIS FILE --
+#
+# THE FIVE STATE TABLES THAT SIT IMMEDIATELY AFTER THIS CLASS'S VTABLE ARE NOT
+# THIS CLASS'S.  src/__sinit_ov006_0213014c.c copies twenty-four mwcc member-
+# pointer pairs out of the run 0x0213be44..0x0213bf04 -- the words directly
+# after data_ov006_0213bdb4 ends -- into
+#
+#     data_ov006_021417b0  3 slots     data_ov006_02141810  6 slots
+#     data_ov006_021417c8  4 slots     data_ov006_02141840  6 slots
+#     data_ov006_021417e8  5 slots
+#
+# and every one of those tables, every one of those twenty-four states and that
+# whole constructor belong to dScMgCoin_c, actor id 0x17a, scene 378, WHICH
+# THIS PORT HAS SHIPPED AS SCENE_MG_COIN SINCE RUN mg5.  The proof is not
+# adjacency, it is the dispatchers: 0x02141810 is loaded by func_ov006_020de69c,
+# which is SLOT 6 of the vtable at 0x0213bf50, and 0x0213bf50 is 0x17a's.
+# port/unmatched/MgCoin_StateDispatch.cpp has carried all five since mg5.
+#
+# This is run mg9 lane LKY's self-caught error arriving at a lane that was
+# warned about it: address adjacency in .data is not attribution, and the sinit
+# plus the dispatcher's own vtable is.  A lane that host-copied those five
+# dispatchers here would have produced a second, competing address switch over a
+# SEATED class's live tables.
+#
+# THE SAME RUN CARRIES A PHANTOM 25th PAIR AND THE CONSTRUCTOR REFUSES IT.
+# The stride-8 sequence from 0x0213be44 to 0x0213bf04 is twenty-FIVE slots; the
+# sinit names twenty-four.  The one it skips is 0x0213bedc, which holds
+# {0x020de940, 0x017a017a} -- MgCoincentration_SpawnInfo, the factory word and
+# the id twice, exactly the shape port/mg_fanout_costs.txt section 4 warns about
+# for curling (0x0213c214) and run mg9 lane WIG hit inside its pair run.  A
+# sweep of the address range would have found a twenty-fifth "state" at
+# 0x020de940 whose adjustment word is 0x017a017a, and nothing downstream would
+# have said otherwise.
+#
+# ---- 4. THE WIDTH IS 36, CHECKED FIVE WAYS ------------------------------
+#
+#   1. SPAN.  0x0213bdb4 to the next symbol in
+#      config/arm9/overlays/ov006/symbols.txt, data_ov006_0213be44, is 0x90,
+#      which is 36 words.
+#   2. TERMINAL SLOT.  Slot 35 (0x0213be40) holds 0x020ad660, dScMgBase_c's own
+#      `return (this[2] & 0xff) != 0`, which every class in this family ends on.
+#   3. WHAT THE WORD PAST THE END IS.  0x0213be44 holds 0x020dc294, followed by
+#      a zero.  It is not padding and it is not a coincidence: it is the code
+#      word of the mwcc pair the sinit above copies into data_ov006_021417c8[0]
+#      -- state slot 0 of the SEATED dScMgCoin_c.  A 37-slot fill of this table
+#      would write a host thunk over a live neighbour's state, which is section
+#      11's whole warning with a named victim.
+#   4. RELOCATION COMPLETENESS -- WHICH IS NOT A BOUND ON THE END, AND AN
+#      EARLIER VERSION OF THIS LINE PRETENDED IT WAS.  It read "36 CONTIGUOUS
+#      load relocations at a four-byte stride from 0x0213bdb4 to 0x0213be40, one
+#      per slot", which invited the reading that the stride-4 run STOPS at slot
+#      35.  It does not: measured over ov006's relocs.txt the contiguous
+#      four-byte run starting at 0x0213bdb4 is THIRTY-SEVEN relocations long and
+#      its last is 0x0213be44, because the first word of the member-pointer pair
+#      that follows the table is an address too and therefore carries a
+#      relocation of its own at exactly +4.  What this check really measures is
+#      COMPLETENESS: all 36 slots carry a load relocation, none is missing, so
+#      the fill is keying on a table the ROM relocates in full rather than on a
+#      run with holes in it.  WHERE THE TABLE ENDS IS FIXED BY CHECKS 2, 3 AND 5
+#      AND BY NOTHING IN THIS ONE.
+#   5. RELOCATION STRIDE (run mg9 lane LKY's fifth check).  From 0x0213be44 on
+#      the stride is EIGHT: be44, be4c, be54, be5c, ...  A vtable is relocated
+#      every word; an mwcc member-pointer table every other word.  The stride
+#      change is where the table ends and it needs no symbol to say so.
+#
+# port/tools/vtablerows.py --vtable 0x0213bdb4 --width 36 reports
+# "ovr 15, mark 13, nosrc 0", which is section 3's row on every column.
+#
+# ---- 5. TWO ELEMENT VTABLES, AND ALL SIX SLOTS ARE DISPATCHED ------------
+#
+# Run mg9 lane S381's element-vtable law: factory-built record objects carry
+# their OWN vtable in word 0.  src/MgPicturePoker_Spawn.cpp builds two
+# five-element arrays through the MSL array constructor func_020733a8:
+#
+#     +0x51a8[5] x 0x30   element ctor func_ov006_020dbe30 writes 0x0213bccc
+#     +0x5298[5] x 0x30   element ctor func_ov006_020dbe14 writes 0x0213bccc
+#                         and then 0x0213bcf4 over it (base then derived)
+#
+#     data_ov006_0213bccc  dMgCardObj_c       3 slots  020d9bdc 020d9c5c 020d9bd0
+#     data_ov006_0213bcf4  dMgDilarCardObj_c  3 slots  020d970c 020d978c 020d9998
+#
+# with the RTTI at 0x0213bc48 ("12dMgCardObj_c") and 0x0213bc58
+# ("17dMgDilarCardObj_c", base 0x0213bc48) saying the same thing the two ctors
+# do.  The ROM's own message 553 says who the second hand belongs to: "Get a
+# better hand than Luigi to win!".
+#
+# ---- 6. THE TWO DETECTORS, AND WHAT THEY FOUND --------------------------
+#
+# THE ARM-ITANIUM ENCODING SCAN, body by body, each taken at its own start and
+# size out of ov006's symbols.txt (never over an address range -- run mg9 lane
+# LKY's correction, where a span read 0x4d34 bytes into the neighbour and picked
+# up four of its dispatch sites):
+#
+#     this class's 37 bodies, 0x020d95a4..0x020dbe40      0 dispatch sites
+#     dScMgCoin_c's 80 bodies, 0x020dbe40..0x020df030     7 dispatch sites
+#
+# The control half is the point.  The same scan over the block next door returns
+# exactly the seven sites port/unmatched/MgCoin_StateDispatch.cpp has host-
+# copied since mg5, one per known dispatching TU, so the zero above is the
+# instrument working and not the instrument blind.  (The two `add ..., asr #12`
+# hits inside this class -- 0x020d9750 and 0x020d9c20 -- are ordinary 20.12
+# fixed-point shifts and carry neither the `ands #1` nor the `blx`.)
+#
+# THE `::*` SOURCE SWEEP AGREES, AND IT WAS RUN OVER THE BODIES RATHER THAN
+# OVER THE SLICE.  Sweeping a SLICE for `::*` is vacuous for any class whose
+# dispatchers are already host-copied, because the slice is exactly the file
+# list with those TUs removed: run over port/slice_ccn.txt the sweep returns
+# ZERO for dScMgCoin_c, a class with seven of them.  Run over the seven src TUs
+# themselves it returns seven of seven.  Over this class's 36 src bodies --
+# every body in its code block except the floor, none of them excluded from
+# anything -- it returns ZERO.  So all three prescribed detectors agree here:
+# the link names no member-pointer-mangled symbol, the source sweep finds no
+# `::*`, and the encoding scan finds no dispatch.
+#
+# THIS CLASS HAS NO POINTER-TO-MEMBER WALL.  Its state machine is an ordinary
+# 14-arm ARM jump table in src/func_ov006_020dac34.c:
+#
+#     020dac44  ldrsh r0,[r1,#0x88]     the state, at +0x5388
+#     020dac48  cmp   r0,#0xd
+#     020dac4c  addls pc,pc,r0,lsl #2
+#
+# the shape run mg9 lane S364 found for Mario Slot.  The only member pointer
+# anywhere in the closure is the +0x4f38 sub-object's FIELD-held one, already
+# host-copied family-wide in port/unmatched/MgMemory2_FieldPmf.cpp, and nothing
+# in this slice re-copies it.
+#
+# NOTHING HERE REWRITES THE STORED PAIR EITHER, and this class supplies a second
+# witness for why that rule exists.  src/func_ov006_020c0f0c.c, which state 1
+# calls every frame, compares the object's stored pair BY VALUE against the idle
+# sentinels data_ov006_0213acb0 and _0213aca8.  A host address never equals a DS
+# address, so a seat that wrote host words over the pair would leave that test
+# permanently false while the dispatch itself looked fine.
+#
+# THE WORD-BY-WORD `blx Rm` SWEEP (run mg9 lane BOX's instrument) over the same
+# 37 bodies finds NINE indirect call sites, and every one is accounted for:
+#
+#     020dab40, 020daba4   func_ov006_020da9c4  `ldr r1,[r0] / ldr r1,[r1]`
+#                          ELEMENT SLOT 0, five elements of each array
+#     020db640, 020db650   func_ov006_020dac34  `ldr r1,[r1,#4]`
+#                          ELEMENT SLOT 1, five of each array, EVERY FRAME
+#     020d9854, 020d9de0   the two element ticks, `ldr r1,[r1,#8]`
+#     020da030, 020da0e4   the two element seeders, same
+#                          ELEMENT SLOT 2
+#     020dbd0c             func_ov006_020dbaf0 -- THIS CLASS'S OWN SLOT 18,
+#                          dispatched with one argument, value -1.  The address
+#                          in this column is the blx ITSELF, which is what the
+#                          sweep reports; the four-instruction sequence it ends
+#                          runs 0x020dbd00..0x020dbd0c and is
+#                          `ldr r2,[r0] / mvn r1,#0 / ldr r2,[r2,#0x48] / blx r2`
+#
+# An offset match is a candidate; a blx on the loaded word is the finding, and
+# all nine are the second kind.  hal/scene_mg_card.cpp fills all four tables.
+#
+# SLOTS 18 AND 19 TAKE THE STACK ARGUMENT AND THIS CLASS IGNORES IT, WITNESSED
+# RATHER THAN ASSUMED.  Run mg9 lane LKY found a class whose slot-18 and slot-19
+# bodies BRANCH on the value and relayed "witness, don't assume".  Here the ROM
+# says the opposite: func_ov006_020db9dc overwrites r1 with a literal load at
+# 0x020db9f4 before ever reading it, and func_ov006_020db720's first act is a
+# five-arm jump table on the state at +0x5388.  So the parameter exists only so
+# __fastcall cleans the four bytes the ROM's callers push, which is what every
+# seated class before dScMgBSC_c needed.  Both thunks take it and record it.
+#
+# ---- 7. THE ONE FLOOR, AND IT IS ON THE CRITICAL PATH -------------------
+#
+# func_ov006_020da174, 0x2ac bytes.  symbols.txt names it; delinks.txt runs
+# `.text start:0x020da154 end:0x020da174` and resumes past it; there is no src
+# TU in either extension.  port/unmatched/MgCard_Traps.cpp is the named trap and
+# carries the full ROM characterisation -- it is the HAND SORTER (a six-entry
+# face histogram, a largest/second-largest scan, a permutation, and five calls
+# to func_ov006_020d99ec(card, i) which is the only writer of a card's slide
+# target and the only thing that puts a card into state 7).
+#
+# THE CONSEQUENCE IS A STALL AND THIS FILE STATES IT RATHER THAN DISCOVERING IT
+# IN A RUN.  State 10 of the machine waits for all five cards of BOTH hands to
+# reach state 8.  State 8 has TWO writers, one per element class, and BOTH sit
+# inside a `state == 7` arm -- src/func_ov006_020d9c5c.cpp:67 (dMgCardObj_c's
+# tick) and src/func_ov006_020d978c.cpp:53 (dMgDilarCardObj_c's tick).  AN
+# EARLIER VERSION OF THIS SENTENCE SAID "src/func_ov006_020d9c5c.cpp promotes
+# 7 -> 8 and nothing else does", which is false: it named the player's card
+# class and missed the dealer's, the same one-of-two blind spot the element
+# vtables themselves are about.  The conclusion is unchanged and rests on the
+# other end of the chain -- state 7 has exactly ONE feeder, and it is behind
+# this floor -- so with the trap standing the machine reaches state 10 and stays
+# there.  Retiring it is a DECOMP (a delink block plus a matched src TU), not a port
+# fix.  port/mg_fanout_costs.txt section 3's nosrc column reads 0 for this id
+# and is still right: that column counts VTABLE SLOTS, and this is a state.
+#
+# src/func_ov006_020d99ec.c is in the list below and will not link, because
+# /OPT:REF drops a body nothing references and the only reference was the one
+# the trap replaced.  Run mg9 lane S364's lesson: being in a slice means
+# COMPILED; the linker decides LINKED.  The line stays so the day the floor is
+# decompiled nothing else has to change.
+#
+# ---- 8. THE PLAYER TITLE, DERIVED INDEPENDENTLY -------------------------
+#
+# The ov005 launch table (hal/scene_mg_sound.cpp's port_mg_sound_rows, the
+# ROM's own 36 x 0x34 rows) has exactly ONE row for 0x017b: row 9, whose +0x04
+# word is 0x00050900.  dScMgBase_c's constructor unpacks that word two ways:
+#
+#     (param >> 8)  & 0xff = 9    the row of data_0209caf4, the persistent
+#                                 per-minigame save record
+#     (param >> 16) & 0xff = 5    the row of data_ov004_020bc070, the name-text
+#                                 index
+#
+# and for indices 0..23 the name-text table is arithmetic (run mg9 lane S364's
+# correction: 24..35 are an explicit list), so text 5 is message 548 + 5 = 553.
+# This lane decoded the bank itself rather than citing the chain: NitroFS file
+# 643 (data/message/msg_data_eng.bin) pulled out of the ROM through the FAT at
+# 0x1e5224 and run through tools/message_bank.py gives
+#
+#     553  "Picture Poker\n\nGet a better hand than Luigi\nto win! If you're
+#           confident\nyour hand is best, increase\nthe number of coins you
+#           \nbet!"
+#
+# with 548 "Mario's Slides", 561 "Pair-a-Gone" and 588 "Connect the Characters"
+# reproducing runs mg9 S371's and S381's readings as controls.  The body text is
+# a second, independent confirmation of section 5: the dealer is Luigi, which is
+# what dMgDilarCardObj_c's five cards at +0x5298 are.
+#
+# ---- 9. THE SLICE -------------------------------------------------------
+#
+# THE DELTA ONLY.  slice_mg1.txt already carries the ov004 framework, the
+# thirty-five overlay constructors (this class's dScMgCoin_c neighbour's among
+# them) and the arm9 waves under them; CMake appends every list to the same
+# targets and dedupes identical absolute paths, so nothing is compiled twice.
+# The ov004 delta is ONE line and the shared-sub-object delta is ONE.
+#
+# port/tools/closure.py over this list against the baseline map named exactly
+# five unresolved symbols: the two /alternatename rows in
+# port/unmatched/MgCard_Faces.cpp, the two slice lines below that are not this
+# class's own bodies, and the floor.  Nothing else.
+#
+# The 36 bodies of dScMgCard_c and its two element classes, 0x020d95a4 ..
+# 0x020dbe40, in address order.  The 37th body in that range is the floor and
+# is deliberately absent.
+src/func_ov006_020d95a4.cpp
+src/func_ov006_020d9638.cpp
+src/func_ov006_020d96e0.c
+src/func_ov006_020d96f0.c
+src/func_ov006_020d970c.c
+src/func_ov006_020d978c.cpp
+src/func_ov006_020d9998.c
+src/func_ov006_020d99a4.c
+src/func_ov006_020d99ec.c
+src/func_ov006_020d9a14.c
+src/func_ov006_020d9bd0.c
+src/func_ov006_020d9bdc.c
+src/func_ov006_020d9c5c.cpp
+src/func_ov006_020da00c.cpp
+src/func_ov006_020da0ac.cpp
+src/func_ov006_020da154.c
+src/func_ov006_020da420.c
+src/func_ov006_020da4ac.c
+src/func_ov006_020da5e8.c
+src/func_ov006_020da834.c
+src/func_ov006_020da860.c
+src/func_ov006_020da88c.c
+src/func_ov006_020da8b8.c
+src/func_ov006_020da8e4.c
+src/func_ov006_020da974.c
+src/func_ov006_020da994.c
+src/func_ov006_020da9c4.cpp
+src/func_ov006_020dabec.c
+src/func_ov006_020dac34.c
+src/func_ov006_020db6ec.c
+src/func_ov006_020db720.c
+src/func_ov006_020db9dc.c
+src/func_ov006_020dbaf0.cpp
+src/MgPicturePoker_Spawn.cpp
+src/func_ov006_020dbe14.c
+src/func_ov006_020dbe30.c
+# The ov004 delta: func_ov004_020b5d74 arms the framework's end-of-round timer
+# and is called from src/func_ov006_020db720.c (vtable slot 19).  No wired slice
+# reached it before this lane.
+src/func_ov004_020b5d74.c
+# and its own callee, wave two: func_ov004_020b5768 is the routine 020b5d74
+# installs into the framework's per-frame hook word data_ov004_020bfa20. The
+# link named it, which is the ordinary one-wave shape run mg9 lane LKY budgets
+# for; port/tools/closure.py cannot see it because it reports what THIS slice
+# leaves unresolved rather than walking the callee graph.
+src/func_ov004_020b5768.cpp
+# and ITS callee, wave three and the last: func_ov004_020b4cc4 re-seeds one
+# 0x24-byte record of the framework's data_ov004_020bfa34 array. The ov004
+# arm_call closure from these three seeds is exactly these three -- walked
+# over config/arm9/overlays/ov004/relocs.txt rather than discovered one
+# LNK2019 at a time, after the second wave made the shape obvious.
+src/func_ov004_020b4cc4.c
+# The shared +0x4f38 sub-object delta: func_ov006_020c0f0c is the idle-sentinel
+# comparator state 1 asks every frame.  It spells the stored pair as TWO INTS,
+# which is the safe side of section 4's rulebook corollary, so it is an ordinary
+# slice line rather than a host copy.
+src/func_ov006_020c0f0c.c
