@@ -1,6 +1,6 @@
 //cpp
-extern "C" void func_02035514(void *c);
-extern "C" int *func_0203819c(void *t);
+extern "C" void _ZN5dBgChC2Ev(void *c);
+extern "C" int *_ZN5dBgPiC2Ev(void *t);
 extern "C" void func_0203ac60(void *p);
 extern void *data_020992a4;
 extern void *data_020992b4;
@@ -9,8 +9,8 @@ extern "C" void *_ZN9dBgCh_LinC1Ev(char *thiz);
 
 void *_ZN9dBgCh_LinC1Ev(char *thiz)
 {
-    func_02035514(thiz);
-    func_0203819c(thiz + 0x10);
+    _ZN5dBgChC2Ev(thiz);
+    _ZN5dBgPiC2Ev(thiz + 0x10);
     *(void **)thiz = &data_020992a4;
     *(void **)(thiz + 0x10) = &data_020992b4;
     func_0203ac60(thiz + 0x64);

@@ -4807,7 +4807,7 @@ src/func_02035504.c:
     complete
     .text start:0x02035504 end:0x02035514
 
-src/func_02035514.c:
+src/_ZN5dBgChC2Ev.c:
     complete
     .text start:0x02035514 end:0x0203553c
 
@@ -5347,7 +5347,7 @@ src/_ZN5dBgPiC1Ev.c:
     complete
     .text start:0x0203816c end:0x0203819c
 
-src/func_0203819c.c:
+src/_ZN5dBgPiC2Ev.c:
     complete
     .text start:0x0203819c end:0x020381cc
 
