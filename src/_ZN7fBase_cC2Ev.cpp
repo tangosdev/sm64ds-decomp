@@ -4,7 +4,7 @@
 // epilog - no C-inexpressible instruction), so the asm-primitive policy does not apply;
 // does NOT count as matched. Reverts to a draft until someone reproduces the bytes from
 // real C++ (fBase_c::fBase_c() - the inheritance chain and callees are already known).
-// @symbol _ZN7fBase_cC1Ev
+// @symbol _ZN7fBase_cC2Ev
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
@@ -16,7 +16,7 @@ int func_02043810(void);
 extern int data_020a4bb8;
 }
 
-extern "C" asm void* _ZN7fBase_cC1Ev(void* self) {
+extern "C" asm void* _ZN7fBase_cC2Ev(void* self) {
     stmdb sp!, {r4, r5, lr}
     sub sp, sp, #4
     mov r4, r0

@@ -58,7 +58,9 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Gnd & ray_)
   int r = dBgW_Kc::DetectClsn(*(dBgCh_Lin*)data_020a0d0c);
   if (r) {
     func_02039e30(this, data_020a0d60, sp0x30);
-    _ZN5dBgPiaSERKS_(&ray->unk_010, data_020a0d1c);
+    /* through the REFERENCE: a pointer-level upcast makes mwcc emit the
+       null-checked MI adjustment (movs/addne), the ROM's is unconditional */
+    _ZN5dBgPiaSERKS_(&(dBgPi &)*ray, data_020a0d1c);
     ray->clsnY = sp0x30[1];
     ray->hasClsn = 1;
   }

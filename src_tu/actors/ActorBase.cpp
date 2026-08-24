@@ -15,7 +15,7 @@
  *                                      discusses it. It is 0x50 bytes BELOW the
  *                                      old start, which excluded it.
  *   0x02043e04  is not a function boundary at all. It falls 0x18 bytes INSIDE
- *               _ZN7fBase_cC1Ev (0x02043dec, size 0x160), so the old end cut
+ *               _ZN7fBase_cC2Ev (0x02043dec, size 0x160), so the old end cut
  *               the constructor in half.
  *   0x02043f4c  is where the run really ends -- the byte after the constructor,
  *               and the address of func_02043f4c, the next unrelated function.
@@ -66,10 +66,10 @@
  * all, no _ZTV, no _ZTI, no _ZTS.
  *
  * LICENSED SPAN 0x02043444..0x02043dec, 24 of the run's 25 functions. The
- * missing one is `_ZN7fBase_cC1Ev` (0x02043dec, 0x160), and it belongs to
+ * missing one is `_ZN7fBase_cC2Ev` (0x02043dec, 0x160), and it belongs to
  * this TU by every boundary test -- it is inside the contiguous run, it carries
  * the class's own name, and nothing else claims it. It is left out because the
- * tree has no C++ for it: src/_ZN7fBase_cC1Ev.cpp is a whole-function
+ * tree has no C++ for it: src/_ZN7fBase_cC2Ev.cpp is a whole-function
  * hand-written `asm` transcription, its own banner says "NONMATCHING ... does
  * NOT count as matched", and config/arm9/delinks.txt has no entry for it at all
  * -- it is neither compiled nor enrolled today. Admitting asm here would let
