@@ -63,11 +63,24 @@
 # the namer walked the derived classes in address order and gave the shared
 # base's bodies to the first one it saw.
 #
-# THREE COMMITTED PLACES IN THIS LANE SAID EIGHT, and the line all three
-# dropped is the FIRST one: `ov006:0x213c62c ... (vtable alloc=?)`.  The eight
-# that were counted are the eight BODIES; the ninth is the TABLE, and it is
-# the one that matters most, because it is the row that put the
-# MgBounceAndPounce name on dScMgD3DBase_c's vtable in the first place.
+# FOUR COMMITTED PLACES IN THIS LANE SAID EIGHT, and the line all four dropped
+# is the FIRST one: `ov006:0x213c62c ... (vtable alloc=?)`.  The eight that
+# were counted are the eight BODIES; the ninth is the TABLE, and it is the one
+# that matters most, because it is the row that put the MgBounceAndPounce name
+# on dScMgD3DBase_c's vtable in the first place.
+#
+# THIS PARAGRAPH SAID THREE AND FIXED THREE, AND THERE WERE FOUR.  The fourth
+# was port/tools/inferred_stub_adjudicated.txt, and it survived a round of
+# corrections because the sweep that found the other three was run over a
+# hand-written list of this lane's files that did not include it -- the
+# adjudication file is where this lane's RULINGS live, so it did not read as
+# prose to be swept.  A CORRECTION THAT STATES ITS OWN SCOPE HAS TO SWEEP THAT
+# SCOPE: "n committed places" is a measurement, and it needs the same grep
+# over the same tree that the number it is correcting needed.  This is the
+# third time in this lane that a sweep scoped narrower than its claim missed
+# something real -- the first was the element-vtable check that stopped at the
+# class's own bodies, the second was the cross-module sweep scoped to this
+# slice while a third instance sat in src/.
 # THIS LANE DOES NOT RENAME CONFIG.  config is not this lane's file and three
 # sibling lanes are live on the same base in this run; the correction is
 # recorded here for the decomp side to route.

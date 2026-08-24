@@ -48,11 +48,15 @@
 // symbols/actor_renames_report.txt already records the consequence as NINE
 // "SKIP MgTrampolineTime: ... already claimed by MgBounceAndPounce" lines, and
 // nine more for MgTrampolineTerror: the namer walked the derived classes in
-// address order and gave the FIRST one the shared base's bodies.  Three
+// address order and gave the FIRST one the shared base's bodies.  FOUR
 // committed places in this lane said eight; the dropped line is the first,
-// `ov006:0x213c62c ... (vtable alloc=?)`, the TABLE rather than a body in it.  This lane does not rename anything -- config is not
-// this lane's file and three sibling lanes are live on the same base in the
-// same run -- it records the correction so the decomp side can route it.
+// `ov006:0x213c62c ... (vtable alloc=?)`, the TABLE rather than a body in it.
+// The first correction said three and fixed three -- the fourth was
+// port/tools/inferred_stub_adjudicated.txt.
+//
+// This lane does not rename anything -- config is not this lane's file and
+// three sibling lanes are live on the same base in the same run -- it records
+// the correction so the decomp side can route it.
 //
 // ---- 3. THE WALL IS ONE TU AND IT IS NOT A TABLE ---------------------------
 //

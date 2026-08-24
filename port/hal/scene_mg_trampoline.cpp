@@ -54,10 +54,14 @@
 // THIS class (0x180) and dScMgTrampoline2_c (0x181).
 // symbols/actor_renames_report.txt already records the consequence as NINE
 // "already claimed by MgBounceAndPounce" SKIP lines, and nine more for
-// MgTrampolineTerror.  Three committed places in this lane said eight; the one
-// all three dropped is the FIRST, `ov006:0x213c62c ... (vtable alloc=?)`,
+// MgTrampolineTerror.  FOUR committed places in this lane said eight; the one
+// all four dropped is the FIRST, `ov006:0x213c62c ... (vtable alloc=?)`,
 // which is the TABLE rather than a body in it -- the row that put the
-// MgBounceAndPounce name on dScMgD3DBase_c's vtable in the first place.  This
+// MgBounceAndPounce name on dScMgD3DBase_c's vtable in the first place.  The
+// first correction of this said THREE and fixed three; the fourth was
+// port/tools/inferred_stub_adjudicated.txt and it took a second review to
+// find, because the sweep behind the word "three" was a file list rather
+// than a grep over the tree.  This
 // lane does not rename config -- three sibling lanes are live on the same base
 // in this run -- it records the correction for the decomp side to route.
 //
