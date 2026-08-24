@@ -13,10 +13,10 @@ extern "C" void func_ov102_02149da8(void *self, int state);
  * helper notes. */
 int QuestionBlock::OnAttacked1(dActor_c &other)
 {
-    int v = unk_3e8;
+    int v = mState;
     if (v == 1) return;
     if (func_ov102_02149078(this)) return;
     int val = other.param1;
-    unk_3f2 = val;
+    mHitterParam = val;
     func_ov102_02149da8(this, 1);
 }

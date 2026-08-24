@@ -382,3 +382,35 @@ The rename carried into `src_tu/actors/CannonHatch.cpp`, along with the same
 raw-offset collapses: `Render`'s whole-object `struct Obj { char pad[0xd4]; Sub sub; }`
 shadow is gone in favour of `&mModel`, and `InitResources` reaches `mModel`,
 `mMeshCollider` and `mClsnMat` by name.
+
+---
+
+## QuestionBlock (`include/QuestionBlock.h`, ov102, size 0x3f8)
+
+Bodies read: `src/_ZN13QuestionBlock13InitResourcesEv.cpp`,
+`src/_ZN13QuestionBlock8BehaviorEv.cpp`, `src/_ZN13QuestionBlock6RenderEv.cpp`,
+`src/_ZN13QuestionBlock16CleanupResourcesEv.cpp`,
+`src/_ZN13QuestionBlock15OnGroundPoundedER8dActor_c.cpp`,
+`src/_ZN13QuestionBlock11OnAttacked1ER8dActor_c.cpp`,
+`src/_ZN13QuestionBlock8OnKickedER8dActor_c.cpp`,
+`src/_ZN13QuestionBlock15OnHitByMegaCharER6Player.cpp`,
+`src/_ZN13QuestionBlock19OnHitFromUnderneathER8dActor_c.cpp`.
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x3ac | `mShadowMat` | `InitResources` copies the 0x30 bytes at `mModel + 0x1c` (`Model`'s own matrix) here, and 0x3ac is exactly where `mShadowModel` ends — the `ShadowModel` / `Matrix4x3` pairing `dActor_c::DropShadowScaleXYZ` takes. `0x3ac + 0x30 = 0x3dc`. It was `u8 unk_3ac` followed by `u8 pad_3ad[0x33]`. |
+| 0x3e0 | `mHomePosY` | `InitResources` sets it from `mPosY`; `Behavior` walks the block back down and clamps `if (mPosY <= mHomePosY) mPosY = mHomePosY;`. |
+| 0x3e8 | `mState` | every one of the five combat callbacks returns early on `mState == 1`, `Render` skips the model on `mState == 2`, and `Behavior` branches on `!= 2` then `!= 0`. It is also the key of the `data_ov102_0214e890` dispatch the callbacks jump into. |
+| 0x3f0 | `mStarTracked` | holds what `dActor_c::TrackStar(this, mStarId, 2)` returned. |
+| 0x3f1 | `mStarId` | `(param1 >> 8) & 0xff`, `0xff` read as 0, and passed as the star index of that `TrackStar` call — read only when `mContentType == 1`. |
+| 0x3f2 | `mHitterParam` | written (truncated from the caller's word) by all five combat-callback overrides, always immediately before `func_ov102_02149da8(this, 1)`. Was `u8 pad_3f2[0x1]` in the C twin. |
+| 0x3f3 | `mContentType` | `param1 & 0xff` with `0xff` read as 0; `InitResources` switches on it to pick what the block holds, and `CleanupResources` switches on it again to release the matching files. `1` is the star case, which is the only one that reads `mStarId`. |
+
+In the `#else` C twin, `0x0a0` was repointed to `mTerminalVelocity`, the name
+`include/dActor_c.h` gives that offset, and the twin gained `mShadowMat` and
+`mHitterParam` at the offsets above.
+
+Raw-offset collapses: `InitResources`'s shadow-matrix copy now spells both sides as
+members (`&mShadowMat` and `&mModel + 0x1c`); `Behavior`'s two
+`((char*)&(*(u8 *)&mMeshCollider))` casts are `&mMeshCollider`; `Render`'s two
+whole-object shadow casts are `&mModelAnim` and `&mModel`.
