@@ -5583,7 +5583,7 @@ src/_ZN4dBgWD1Ev.c:
     complete
     .text start:0x0203968c end:0x0203969c
 
-src/_ZN4dBgWC2Ev.c:
+src/_ZN4dBgWC2Ev.cpp:
     complete
     .text start:0x0203969c end:0x020396c0
 
@@ -5635,11 +5635,11 @@ src/_ZN7dBgW_KcD1Ev.cpp:
     complete
     .text start:0x02039864 end:0x02039894
 
-src/_ZN7dBgW_KcC1Ev.c:
+src/_ZN7dBgW_KcC1Ev.cpp:
     complete
     .text start:0x02039894 end:0x020398c8
 
-src/func_020398c8.c:
+src/_ZN7dBgW_KcC2Ev.c:
     complete
     .text start:0x020398c8 end:0x020398fc
 
@@ -5719,11 +5719,11 @@ src/_ZN10dBgW_KcMbgD1Ev.cpp:
     complete
     .text start:0x0203a470 end:0x0203a494
 
-src/_ZN10dBgW_KcMbgC1Ev.c:
+src/_ZN10dBgW_KcMbgC1Ev.cpp:
     complete
     .text start:0x0203a494 end:0x0203a4b8
 
-src/func_0203a4b8.c:
+src/_ZN10dBgW_KcMbgC2Ev.c:
     complete
     .text start:0x0203a4b8 end:0x0203a4dc
 
@@ -5775,7 +5775,7 @@ src/_ZN14dBgW_KcMbgSclYD1Ev.cpp:
     complete
     .text start:0x0203ab68 end:0x0203ab8c
 
-src/_ZN14dBgW_KcMbgSclYC1Ev.c:
+src/_ZN14dBgW_KcMbgSclYC1Ev.cpp:
     complete
     .text start:0x0203ab8c end:0x0203abb0
 

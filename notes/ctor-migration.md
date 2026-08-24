@@ -357,6 +357,35 @@ None of this unblocks the factory itself (§5d), but it names two more links
 of the hierarchy for every FUTURE constructor migration on the chain, and it
 corrects the leaf-single plan below.
 
+### 5f. dBgPi's own pair: a base subobject at +0x04 the flat header cannot spell
+
+The probe behind §2 and §6 (build/probe_dbgpi1.cpp) measured mwcc's
+constructor emission order for a polymorphic class with an out-of-line ctor:
+**base-subobject calls first, then the derived vptr store, then member
+constructors, then body statements.** That order is what makes §2 work, and
+it also dates ROM bodies: any call BEFORE the vptr store is base work;
+everything after it is members or body.
+
+dBgPi's ROM pair (C1 0x0203816c / C2 0x0203819c) reads:
+
+```text
+bl func_02037f18(this + 0x04)
+vptr = _ZTV5dBgPi (data_02099368)
+bl func_020380c0(this)
+```
+
+func_02037f18 stores five words at +0x04..+0x14 (`0xfc0, 0xff, 0, 0, 0`) and
+NO vtable — so whatever it constructs at +0x04 is non-polymorphic, yet its
+call sits before the derived vptr store, which only a BASE step can. The
+original source therefore had a base class whose storage begins at +0x04,
+under a vptr at +0x00 — an arrangement a single-inheritance header cannot
+spell (a base lands at +0x00, not +0x04). Most likely true shape: an empty
+polymorphic primary base holding just the +0x00 vptr, with the five-word
+non-polymorphic base second. That needs its own probe before anyone touches
+dBgPi.h's field section; until then both definitions stay hand shells
+(`src/_ZN5dBgPiC1Ev.c` / `_ZN5dBgPiC2Ev.c`) while the DECLARATION in
+include/dBgPi.h keeps serving every child's synthesized base step.
+
 ## 6. The recipe, condensed
 
 ```cpp
@@ -373,6 +402,13 @@ Class::Class() : member(0)      // init list = every store the ROM makes
     mat4x3 = data_……;
 }
 ```
+
+The compiler's own ordering, measured once and relied on everywhere
+(build/probe_dbgpi1.cpp): **base-subobject calls → derived vptr store →
+member constructors → body statements.** A call that precedes the vptr
+store is base work; anything after it is members or body. That is why §2
+works, why an empty-body derived ctor reproduces its ROM twin exactly, and
+how a ROM ctor is dated from its `bl` order alone.
 
 Verify with the strict bar, then the whole-ROM gate:
 
