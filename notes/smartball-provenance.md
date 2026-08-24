@@ -181,7 +181,15 @@ load-bearing. `Update` and `RestoreInitial` are unaffected -- see the header.
 | 0x040 | `mDriveNow` | `data_020a0deb[level*4] << 12`, re-read every active frame and clamped to `[mDriveBase, mDriveBase + 0x38000]` before it sets the height. |
 | 0x044 | `mSoundHandle` | `mSoundHandle = Sound_PlayIfNotActive(mSoundHandle, 2, 0x16c, 0)` -- the handle fed back in as its own first argument. The only field this class's `RestoreInitial` zeroes. |
 
-Left `unk_`, deliberately: 0x034 and 0x03c. `SaveSnapshot` sets `unk_03c` from
+Left `unk_`, deliberately: 0x034 and 0x03c, and the outside-the-class search
+was redone for both after it turned up readers for two ball fields that had
+been written off. The spring is the object at `mgr+0x4684`, and every file that
+reaches that slot was read: `src/_ZN16dScMgSmartball_c8BehaviorEv.cpp` and
+`src/_ZN16dScMgSmartball_c6RenderEv.cpp` only call its virtuals,
+`src/func_ov006_02115b0c.c` and
+`src/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp` only build and free it,
+and `src/func_ov006_0211248c.c` only reads its position. None of them touches
+0x34 or 0x3c. `SaveSnapshot` sets `unk_03c` from
 `data_020a0dea[level*4] << 12` in the trigger branch and copies it to
 `unk_034`; nothing in the tree ever reads either back. Their width and their
 one write are evidenced, their meaning is not.
@@ -227,3 +235,26 @@ Left `unk_`, deliberately:
 which records why three children read the same three bytes three incompatible
 ways. The three fields with names in the first pass (`mCurrent0/1`,
 `mSnapshot0/1`, `mInitial0/1`) are unchanged.
+
+
+## What is still `unk_`, and why, in one place
+
+Nine `unk_` fields across the family, plus two unmodelled pad ranges. Every
+one of the nine has had the outside-the-class search applied -- the search that
+found readers for `cMgSmartball_ball_c`'s 0x0fc and 0x120 after both had been
+written off. The two pad ranges are a different case and are listed with them
+so the table is the whole picture.
+
+| class | offsets | why |
+| --- | --- | --- |
+| `cMgSmartball_object_c` | 0x031, 0x032, 0x033 | Not missing evidence -- too much of it. Three children read the same three bytes three incompatible ways (a flag, a byte of a 16-bit angle whose two readers disagree on signedness, a cell of a nine-byte board array). No one name is right for all of them. |
+| `cMgSmartball_ball_c` | 0x039 | Cleared beside `mUpperWallSolid` and by `RestoreInitial`. No reader anywhere in the smartball function range. |
+| `cMgSmartball_wing_c` | 0x034, 0x038, 0x03c | All three written by `src/func_ov006_0210d8bc.c` on the call that bumps `mTriggerCount`, all three zeroed by `RestoreInitial`, none read back. |
+| `cMgSmartball_spring_c` | 0x034, 0x03c | Latched together once in the trigger branch and never read; every file reaching the spring's slot at `mgr+0x4684` was checked. |
+| `cMgSmartball_propeller_c` | 0x038..0x077 | A pad, and unmodelled rather than unread: `src/func_ov006_02110e28.c` read-modify-writes eight `(x, y)` pairs there through its own shadow struct. Naming them is that helper's job, not this header's. |
+| `cMgSmartball_wing_c` | 0x045..0x087 | The same shape, with `src/func_ov006_0210d93c.c` as the helper. |
+
+`cMgSmartball_slot_c`, `cMgSmartball_board_c`, `cMgSmartball_kinoko_c`,
+`cMgSmartball_pakkun_c`, `cMgSmartball_pushswitch_c` and `cMgSmartball_ana_c`
+have no `unk_` fields left. `cMgSmartball_dokan_c` never had any -- it adds no
+fields at all.
