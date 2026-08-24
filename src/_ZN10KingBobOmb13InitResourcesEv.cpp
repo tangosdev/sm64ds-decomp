@@ -79,7 +79,7 @@ int KingBobOmb::InitResources()
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x110, (dActor_c*)((char*)this), 0x190000, 0x190000, 0, 0);
     func_02035550((char*)&(*(dBgCh_Actr *)&mWithMeshClsn));
     mAnimSpeed = 1;
-    unk_500 = 3;
+    mHealth = 3;
     mStarID = (*(s32 *)&param1) & 0xf;
     mStarTracked = _ZN8dActor_c9TrackStarEjj(((char*)this), mStarID, 2);
 #pragma opt_strength_reduction off

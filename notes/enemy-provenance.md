@@ -61,8 +61,10 @@ Left `unk_`:
 - **0x499** — `Behavior` compares it against 1; nothing writes it in matched code.
 - **0x4a0** — `InitResources` sets it to `((rand >> 0x1e) & 1) + 1`, so 1 or 2, and no
   matched body reads it.
-- **0x500** — set to 3 in `InitResources` and never read. "3" next to a boss is suggestive
-  of hit points, which is exactly why it is not being named on a suggestion.
+- **0x500** — `mHealth`. Set to 3 in `InitResources`; `func_ov078_021243c0` decrements it
+  by one in the same body that plays the stagger anim and applies the knockback speeds,
+  and then latches `+0xb0` when it reaches 0; `func_ov078_021240a0` gates the whole
+  chase-the-player branch on `<= 0`. Three throws, exactly as the fight plays.
 - **0x424/0x428/0x42c/0x42d** — zeroed by a two-iteration loop in `InitResources` and
   otherwise untouched.
 
@@ -162,11 +164,23 @@ stays as it is — the file already documents that the add must sit inside the i
 
 Left `unk_`:
 
-- **0x1e8, 0x1f0, 0x1f4, 0x224, 0x228** — zeroed in `InitResources`, never read.
-- **0x214** — set per variant to 0x52 / 0xa4 / 0x147 and never read; it parallels the three
-  collision factors above but nothing in a matched body says what it scales.
-- **0x21a..0x21e** — five bytes set to 0/0/0/0/1, never read.
-- **0x21f** — `param1 & 0xf`. Provenance without meaning: no matched body reads it.
+- **0x1e8** — `mRespawnMode`. `func_ov084_0212e010` kills the plant outright unless this
+  is 1, in which case it calls `TrackInDeathTable` and sets `mState` to 4 instead.
+- **0x1f0** — `mGroupLeaderID`. Handed straight to `dActor_c::FindWithID`; the actor it
+  returns carries the group's two tallies (0x21a/0x21b) that this plant's death updates.
+- **0x1f4, 0x224, 0x228** — zeroed in `InitResources`; still no reader, including in the
+  ov084 handlers.
+- **0x214** — `mScaleRate`. `func_ov084_0212e010` passes it as the step to
+  `ApproachLinear(&mScale, 0, rate)`, so the per-variant 0x52 / 0xa4 / 0x147 are how fast
+  each size of plant shrinks away.
+- **0x21a** — `mGroupAliveCount`, and **0x21b** — `mGroupDefeatedCount`: a dying plant
+  decrements 0x21a and increments 0x21b *on the group leader*, and when the leader's
+  0x21b reaches 5 the star spawns and both actors are killed.
+- **0x21c, 0x21d** — still no reader.
+- **0x21e** — `mSuppressDeathReward`. Non-zero returns early from both death paths,
+  before the group tally, the coin drop and the star.
+- **0x21f** — `mStarID`. `func_ov084_0212e010` passes it to `IsStarCollectedInCurLevel`
+  and ORs it with 0x40 as the spawn parameter of actor 0xb2, the star.
 
 Byte-neutral source cleanups: `(char *)&mdCcAc_c`, `(char *)&mdCcAcPos_c` and
 `(char *)&mClsnOffset` replaced the `((char *)this) + 0xNNN` arguments in `Behavior`.

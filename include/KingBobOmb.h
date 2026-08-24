@@ -49,7 +49,7 @@ struct KingBobOmb : dEnemyBase_c {
     s16 mInitAngleY;                  /* 0x4f8 */
     u8  pad_4fa[0x2];
     s32 mAnimSpeed;                   /* 0x4fc */
-    s32 unk_500;                      /* 0x500 */
+    s32 mHealth;                      /* 0x500 */
     u8 mTimer504;                     /* 0x504 */
     u8 mTimer505;                     /* 0x505 */
     u8  pad_506[0x1];
@@ -140,7 +140,7 @@ struct KingBobOmb {
     s16 mInitAngleY;            /* 0x4f8 */
     u8  pad_4fa[0x2];
     s32 mAnimSpeed;            /* 0x4fc */
-    s32 unk_500;            /* 0x500 */
+    s32 mHealth;            /* 0x500 */
     u8  mTimer504;            /* 0x504 */
     u8  mTimer505;            /* 0x505 */
     u8  pad_506[0x1];

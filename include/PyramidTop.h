@@ -21,7 +21,10 @@
 
 struct PyramidTop : dBgActor_c {
     u8  pad_31e[0x2];
-    Model mModel;                     /* 0x320 */
+    /* The class's own model. NOT "mModel": dBgActor_c's inherited
+       Model at 0xd4 already owns that name, and the flat C twin below
+       restates both. */
+    Model mTopModel;                 /* 0x320 */
     /* The second collision matrix: InitResources passes `this + 0x370' as the
        `const Matrix4x3 &' argument of dBgW_KcMbg::SetFile, and 0x370 + 0x30
        lands exactly on mHomePosX. Left a u8 marker, the idiom this family's
@@ -73,7 +76,7 @@ struct PyramidTop {
     /* Model member, named by the class's own destructor calling
        Model's D1 at +0x0d4 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10PyramidTopD1Ev.c] */
-    Model mModel1;            /* 0x0d4 */
+    Model mModel;             /* 0x0d4 - dBgActor_c's, restated flat */
     /* dBgW_KcMbg member. The cartridge's own ~PyramidTop calls _ZN10dBgW_KcMbgD1Ev at
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
@@ -83,7 +86,7 @@ struct PyramidTop {
        D1 and not D2, so it is this type and not an inlined base. The marker's pad ran 0x30
        bytes PAST the end of the object; that space is not evidenced and stays explicit
        padding rather than being folded into the member. */
-    Model mModel2;            /* 0x320 */
+    Model mTopModel;             /* 0x320 */
     u8  mClsnMat2[0x30];    /* 0x370 */
     s32 mHomePosX;            /* 0x3a0 */
     s32 mHomePosY;            /* 0x3a4 */
