@@ -16,8 +16,8 @@ extern void _ZN13SharedFilePtr7ReleaseEv(void *);
 
 int BlueCoinSwitch::CleanupResources()
 {
-    if (_ZN4dBgW9IsEnabledEv(&(*(u8 *)&mMeshCollider))) {
-        _ZN4dBgW7DisableEv(&(*(u8 *)&mMeshCollider));
+    if (_ZN4dBgW9IsEnabledEv(&mMeshCollider)) {
+        _ZN4dBgW7DisableEv(&mMeshCollider);
     }
     _ZN13SharedFilePtr7ReleaseEv(BlueCoinSwitch_ModelFile);
     _ZN13SharedFilePtr7ReleaseEv(BlueCoinSwitch_ClsnFile);
