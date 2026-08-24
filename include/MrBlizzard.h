@@ -31,7 +31,7 @@ struct MrBlizzard : dEnemyBase_c {
        pointer-to-member-function at +8 through it and compares it against the
        ov081 state tables _02128e24 / _02128e64 / _02128e84 / _02128e94. */
     void *mState;                     /* 0x3f8 */
-    s32 unk_3fc;                      /* 0x3fc */
+    s32 mUniqueID_3fc;                /* 0x3fc */
     s32 mCapUniqueID;                 /* 0x400 */
     u8  pad_404[0x10];
     s16 mInitAngleY;                  /* 0x414 */
@@ -109,7 +109,7 @@ struct MrBlizzard {
     u8  mShadowModel;            /* 0x370 */
     u8  pad_371[0x87];
     void *mState;            /* 0x3f8 */
-    s32 unk_3fc;            /* 0x3fc */
+    s32 mUniqueID_3fc;      /* 0x3fc */
     s32 mCapUniqueID;            /* 0x400 */
     u8  pad_404[0x10];
     s16 mInitAngleY;            /* 0x414 */

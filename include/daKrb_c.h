@@ -96,7 +96,7 @@ struct daKrb_c : dCapEnemy_c {
     s8  mStarTracked;            /* 0x465 */
     u8  mStarID;            /* 0x466 */
     u8  unk_467;            /* 0x467 */
-    u8  unk_468;            /* 0x468 */
+    u8  mSoundLatchFlags;   /* 0x468 */
     u8  pad_469[0xf];
 
     virtual ~daKrb_c();

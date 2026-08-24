@@ -111,8 +111,10 @@ Left `unk_`:
   prose calls both "the per-link positions", but nothing matched reads or writes
   this one, so which role it plays (previous-position history is the obvious
   guess) is not evidenced. Naming it would be guessing.
-* **0x5f8** — `InitResources` stores `0x50000` and nothing reads it back. Promoted
-  out of padding so the offset is at least visible, but not named.
+* **0x5f8** — `mChainExtension`. `func_ov014_02111fe0` builds the leash limit as
+  `this * 7 + 0xc8000` and pulls the chomp back onto that radius around `mSpawnPos`
+  whenever it strays outside; a second branch zeroes both speeds once it reaches
+  `0x64000`. So the stored `0x50000` is the chain's slack, and 0x64000 its maximum.
 * **0x605** — gates three `Behavior` helper calls; no writer anywhere in the tree,
   so it is a mode flag of unknown meaning.
 

@@ -47,7 +47,7 @@ struct ChainChomp : dEnemyBase_c {
     s32 mSpawnPosX;         /* 0x5ec */
     s32 mSpawnPosY;         /* 0x5f0 */
     s32 mSpawnPosZ;         /* 0x5f4 */
-    s32 unk_5f8;            /* 0x5f8 -- InitResources stores 0x50000; no reader in the tree */
+    s32 mChainExtension;    /* 0x5f8 */
     u8  pad_5fc[0x9];
     u8  unk_605;            /* 0x605 -- gates three Behavior helpers; nothing writes it */
     u8  pad_606[0x2];
@@ -119,7 +119,7 @@ struct ChainChomp {
     s32 mSpawnPosX;         /* 0x5ec */
     s32 mSpawnPosY;         /* 0x5f0 */
     s32 mSpawnPosZ;         /* 0x5f4 */
-    s32 unk_5f8;            /* 0x5f8 */
+    s32 mChainExtension;    /* 0x5f8 */
     u8  pad_5fc[0x9];
     u8  unk_605;            /* 0x605 */
     u8  pad_606[0x2];

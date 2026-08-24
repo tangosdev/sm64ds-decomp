@@ -38,7 +38,7 @@ struct BowserFire : dEnemyBase_c {
     ShadowModel mShadowModel;                   /* 0x304 */
     u8  pad_32c[0x30];
     s32 mVariant;            /* 0x35c */
-    s32 unk_360;            /* 0x360 */
+    s32 mShadowRadiusScale; /* 0x360 */
     s32 mGroundY;            /* 0x364 */
     u8  pad_368[0x4];
     s32 unk_36c;            /* 0x36c */
@@ -46,7 +46,7 @@ struct BowserFire : dEnemyBase_c {
     u16 mFrameCount;            /* 0x374 */
     u8  pad_376[0x2];
     u8  unk_378;            /* 0x378 */
-    u8  unk_379;            /* 0x379 */
+    u8  mDropsShadow;       /* 0x379 */
     u8  pad_37a[0x2];
     s32 unk_37c;            /* 0x37c */
     s32 unk_380;            /* 0x380 */
@@ -88,7 +88,7 @@ struct BowserFire {
     u8  mShadowModel;            /* 0x304 */
     u8  pad_305[0x57];
     s32 mVariant;            /* 0x35c */
-    s32 unk_360;            /* 0x360 */
+    s32 mShadowRadiusScale; /* 0x360 */
     s32 mGroundY;            /* 0x364 */
     u8  pad_368[0x4];
     s32 unk_36c;            /* 0x36c */
@@ -96,7 +96,7 @@ struct BowserFire {
     u16 mFrameCount;            /* 0x374 */
     u8  pad_376[0x2];
     u8  unk_378;            /* 0x378 */
-    u8  unk_379;            /* 0x379 */
+    u8  mDropsShadow;       /* 0x379 */
     u8  pad_37a[0x2];
     s32 unk_37c;            /* 0x37c */
     s32 unk_380;            /* 0x380 */

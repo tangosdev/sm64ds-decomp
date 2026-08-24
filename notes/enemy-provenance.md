@@ -82,12 +82,16 @@ Left `unk_`:
 
 - **0x2cc, 0x37c, 0x380, 0x384, 0x388** — written to 0 (or copied from each other) in
   `InitResources` and never read in a matched body.
-- **0x360** — set to `0x2000` and never read.
+- **0x360** — `mShadowRadiusScale`. `func_ov060_02117624` passes `*(0x368) * this`
+  as the radius argument of `dActor_c::DropShadowRadHeight`, so the 0x2000 is a
+  Fix12 2.0 multiplier on the shadow's base radius.
 - **0x370** — an `s32` incremented once per `Behavior`, alongside `mFrameCount`. Two
   free-running counters in one class, and nothing reads either, so there is no evidence
   for which is which; the raw poke stays rather than pick a name at random.
 - **0x378** — `(param1 >> 4) & 3`. Provenance without meaning: no matched body reads it.
-- **0x379** — set to `mVariant != 0`. Same: written, never read.
+- **0x379** — `mDropsShadow`. `func_ov060_02117624` returns immediately when it is 0,
+  before it drops the shadow at all, so `mVariant != 0` is deciding which variants
+  cast one.
 
 ---
 
@@ -104,7 +108,11 @@ Left `unk_`:
 
 Left `unk_`:
 
-- **0x3fc** — zeroed in `InitResources`, never read.
+- **0x3fc** — `mUniqueID_3fc`. Not a plain scalar: `func_ov081_02124134` hands it to
+  `dActor_c::FindWithID`, shoves the actor it finds (`+0x9c = -0x2000`,
+  `+0xa0 = -0x28000`) and then clears it -- exactly what it does one field later with
+  `mCapUniqueID`. Which actor it tracks is not evidenced, so the offset stands in for
+  the role while the type does not.
 - **0x468** — a byte guarding one `func_02012694(0x166, &mCamSpacePos)` call in the death
   path, cleared afterwards. Nothing writes it in a matched body.
 - **0x469** — a 0/1/2 machine in the `mType == 3` branch of `Behavior`, driven entirely by
@@ -218,8 +226,12 @@ remaining `unk_` fields resolve; the header's own prose already described two of
 
 Left `unk_`:
 
-- **0x438, 0x43c, 0x450, 0x454, 0x467, 0x468** — zeroed in `InitResources` and never read
-  in a matched body.
+- **0x468** — `mSoundLatchFlags`. `func_ov084_0212934c` reads bit 1 of it through a
+  two-bit bitfield, plays sound 0xd0 only when that bit is clear, sets it, and clears
+  it again as soon as the surface type underfoot leaves the matching range -- a latch
+  that stops the sound retriggering every frame.
+- **0x438, 0x43c, 0x450, 0x454, 0x467** — zeroed in `InitResources` and never read
+  in a matched body, including in the ov084 handlers.
 - **0x440** — set to `0x7fffffff` and never read.
 - **0x444** — `InitResources` loads `data_ov084_02130228[mGoombaType]` into it, and
   `Behavior`'s only read tests whether it is *still* that same table entry, choosing

@@ -66,14 +66,14 @@ int BowserFire::InitResources()
     this->mVariant = this->param1 & 7;
     this->mFrameCount = 0;
     if (this->mVariant == 0)
-        this->unk_379 = 0;
+        this->mDropsShadow = 0;
     else
-        this->unk_379 = 1;
+        this->mDropsShadow = 1;
     this->unk_36c = 0;
     this->unk_378 = ((unsigned int)this->param1 >> 4) & 3;
     if (this->mVariant == 0)
         this->mdCcAc_c.flags |= 1;
-    this->unk_360 = 0x2000;
+    this->mShadowRadiusScale = 0x2000;
     this->unk_380 = 0;
     this->unk_37c = this->unk_380;
     this->unk_2cc = 0;
