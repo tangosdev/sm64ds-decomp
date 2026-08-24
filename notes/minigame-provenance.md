@@ -474,3 +474,50 @@ name is not), 0xab7a / 0xab80 (the middle angle of the three-angle block, never
 read in scope), 0xabf4 (the loaded BMD file pointer, already documented),
 0xb9e4/0xb9e5/0xb9e6 and 0xb9f0 (four flags inside `pad_b9e4`, only one of which
 any matched body reads).
+
+## dScMgSlot3_c field names
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x4fe4 | `mReelPos[3]` | InitResources seeds each entry with `(random % mStripLength) * 0x50000`; Render divides `n >> 12` by 0x50 to get the top stop and the pixel remainder, i.e. 0x50 screen pixels per symbol. |
+| 0x4ff4 | `mReelWinPos[3]` | Read exactly the way `mReelPos` is, but only in the `mState == 6` win-line pass. Split out of the former `pad_4ff4[0xc]`, which was three words wide. |
+| 0x5000 | `mState` | Behavior's whole body is `(self->*data_ov006_02142bdc[n])()` -- it is the index into that pointer-to-member table. Render tests it against 3, 4, 6 and 7 to pick which pass to draw. |
+| 0x500c | `mReelDrawY` | While positive the two marker rows are drawn at `n + 0x10` and `n + 0x60`; at 0 or below a single row is drawn at 0x60. |
+| 0x5010 | `mWinColumn` | Used as `n * 0x50 + 0x20/0x30/0x40` for the payout caption's x, against the same 0x50 column pitch the reels use; a negative value selects the "no win" caption instead. |
+| 0x5018 | `mLamp1Angle` / `mLamp2Angle` (0x501a) | u16 each. Behavior subtracts 0x200 and 0x400 a tick while `mState == 1`; Render hands each to `func_ov004_020afb20` in its rotation argument. InitResources zeroes both. |
+| 0x501c | `mReelStrip[3][5]` | Render walks it as `*(u8*)(p + row + 0x501c)` with `p` advancing 5 a reel and `row` taken modulo `mStripLength` -- three reels of five stops. |
+| 0x502e | `mLineActive[3]` | Three bytes gating both the payout-marker pass and the win chime. |
+| 0x5031 | `mResultSymbols[3][3]` | The same walk with `p` advancing 3 a reel, indexed 0..2 -- the 3x3 window the reels stopped on, compared against `mWinSymbol`. |
+| 0x503a | `mStripLength` | The modulus of that `row` walk, i.e. the number of stops per reel. |
+| 0x503b | `mWinSymbol` | Drawn as the marker row (`data_ov006_0213e9a4[n * 3 + i]`) and compared against `mResultSymbols` to decide a win. InitResources seeds it from 0x503c. |
+| 0x503f | `mFrameCounter` | u8. Behavior increments it unconditionally; Render gates the marker pass on `n & 0x20` and fires the win chime exactly once per cycle on `(n & 0x3f) == 0x20`. |
+
+Left `unk_`: 0x4ff0, 0x5004 (copied out of dScMgBase_c's own 0xbc, but nothing
+in scope reads it back), 0x5014, 0x503c (the second marker row's symbol),
+0x503d, 0x503e, 0x5040..0x5042.
+
+## dScMgFlower_c field names
+
+The minigame is petal-plucking: `mArray` at 0x4f38 is the 0x16-entry petal
+table (its element type is still not reconstructed, so Behavior keeps reaching
+into it by raw offset).
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x5fb8 | `mCursorX` / `mCursorY` (0x5fbc) | Behavior loads the touch sample `data_020a0dea` / `data_020a0deb` and shifts it left 12; the nearest-petal test is `Vec2_Len` of the difference against this pair. |
+| 0x5fc0 | `mPrevCursorX` / `mPrevCursorY` (0x5fc4) | Copied from the pair above at the top of state 0; the drag applied to the held petal is the difference between the two. |
+| 0x5fc8 | `mHeldPetal` | The `mArray` index the search loops store on a hit and read back to move that element; -1 means nothing is held, and the drop path restores it to -1. |
+| 0x5fcc | `mPetalToggle` | u8, flipped on every completed pull. One value plays sound 0x103 with banner 0x10, the other 0x104 with banner 0x13 -- the "loves me / loves me not" alternation. |
+| 0x5fd0 | `mHintTimer` | Held at 0x3c for as long as a petal is held, counted down otherwise; draining it while petals remain sets the face sprite. |
+| 0x5fd4 | `mResultTimer` | Loaded with 0x3c after each outcome and counted down before the next pull is accepted; reaching 0 with no petals left moves to state 1. |
+| 0x5fd8 | `mPetalsLeft` | Decremented once per pull, gates every "still playing" branch on `>= 1`, and is the bound of the loop that finishes off the remaining petals when the round times out. |
+| 0x5fdc | `mWinStreak` | Incremented on the `mPetalToggle == 1` outcome and zeroed by the other; at 3 it swaps in banner 0x12 and adds 3 to `mScore` instead of 1. |
+| 0x5fe0 | `mLoseStreak` | The mirror counter on the other outcome; at 3 it swaps in banner 0x11. It never touches the score. |
+| 0x5fe4 | `mHoldTimer` | src/func_ov006_0212aa74.c increments it while `<= 0x14` and otherwise resets it to 0; Behavior treats `> 0x14` as "held long enough". InitResources zeroes it. |
+| 0x5fe8 | `mState` | Behavior's `switch`: 0 plays, 1 is over (it stops the prompt and only ticks the 0x51f8 object). |
+| 0x5fec | `mFaceSprite` | Render's only use is `data_ov006_0213ab94[n]` drawn at the screen centre; Behavior sets it to 0..4 on each outcome. |
+| 0x5ff0 | `mScore` | Incremented by 1 or 3 per winning pull and clamped to 0x270f -- the same 9999 cap dScMgAmida_c and dScMgSnowball_c use. |
+| 0x5ff4 | `mBgScrollPhase` | u16. Render adds 0xc0 a frame and feeds `>> 4` into `data_02082214` for both background layers -- the same idiom as dScMgAmida_c's own. |
+
+Left `unk_`: 0x5fcd, a second gate on the between-rounds branch that nothing in
+scope ever writes.
