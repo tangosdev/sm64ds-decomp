@@ -545,3 +545,99 @@ Left `unk_`: 0x5dba (an s16 with its own getter/setter pair,
 src/func_ov006_02121750.c and _02121768.c, but no reader that says what it
 means), 0x5dbc..0x5dc2 (four s16 counters inside src/func_ov006_021218fc.c's
 banner-blink logic).
+
+## The minigame camera, and the base fields it explains
+
+`src/Camera_UpdateMatrices.c` is the ov006 routine every 3D minigame scene
+calls once a frame, and the local struct it already carries is the whole story:
+
+```
+struct Camera {           /* 0xbc */
+    Matrix4x3 viewMat;    /* 0x00 */
+    char      pad30[0x30];
+    Matrix4x3 projMat;    /* 0x60 */
+    char      pad90[0x10];
+    Vector3   eye;        /* 0xa0 */
+    Vector3   target;     /* 0xac */
+    short     angle;      /* 0xb8 */
+};
+```
+
+It computes the view direction as `eye - target`, so which vector is which is
+settled rather than assumed. (This is NOT `include/Camera.h`'s `Camera`, the
+0x1a8-byte gameplay camera whose `lookAt`/`pos` sit at 0x80/0x8c. Two different
+types, one English word.)
+
+**dScMgSingle3DBase_c** embeds one at 0x4660. Three readings agree:
+`dScMgRoulette_c::Render` and `dScMg3DEsp_c::Render` both call
+`Camera_UpdateMatrices(this + 0x4660)` immediately after writing 0x4700,
+0x470c and 0x4718, which are +0xa0, +0xac and +0xb8 of that object; and
+`0x4660 + 0xbc = 0x471c`, exactly where `mSysTracker` begins. So the seven
+fields the previous round split out of `pad_4660` are that camera's `eye`,
+`target` and `angle`, and they are named `mCameraEyeX/Y/Z`,
+`mCameraTargetX/Y/Z` and `mCameraAngle`.
+
+**dScMgD3DBase_c** embeds two, at 0x466c and 0x4728. Its header had already
+established the 0xbc stride from all four factories' construction loops and
+noticed that 0x470c..0x4724 and 0x47c8..0x47e0 are "the SAME seven offsets
+within each element"; `dScMgJump_c::InitResources` names the two element bases
+outright by calling `Camera_UpdateMatrices(this + 0x466c)` and
+`Camera_UpdateMatrices(this + 0x4728)`. The fourteen fields become
+`mCamera0EyeX/Y/Z`, `mCamera0TargetX/Y/Z`, `mCamera0Angle` and the same six
+plus one for camera 1.
+
+Both blocks stay flat scalars rather than becoming a real `Vector3` or a real
+`Camera[2]`, for the reason dScMgD3DBase_c.h already gives: eight files spell
+them this way, and typing them is its own change with its own blast radius.
+
+## dScMgBase_c field names
+
+Only the fields several descendants corroborate are named here; this class has
+32 descendants and a wrong name in it is a wrong name in all of them.
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x0b4 | `mHudScore` | `dScMgBase_c::BeforeInitResources` zeroes it. `func_ov004_020adb1c` -- the routine that writes the HUD counter word at scene+0x464c -- is handed it directly by src/func_ov006_02125364.cpp and src/func_ov006_020ea3d0.c; dScMgMemory_c and dScMgSound_c seed it in their own InitResources; dScMgCard_c::Render keeps its own high-water mark of it; dScMgAmida_c::Behavior copies its round score into it. Deliberately NOT called `mScore`: five leaves already have a field of their own by that name, and naming the base's the same would silently shadow every one of them (see the round-2 `mPrevPosX` incident). |
+| 0x21c | `mSavedMainBgBits` | src/func_ov004_020af094.cpp stores `data_0209d45c` here; src/func_ov004_020aeed8.cpp restores it from here. |
+| 0x220 | `mSavedSubBgBits` | The same save/restore pair for `data_0209d454`. |
+| 0x224 | `mSavedScreenSwap` | Saved as `(POWCNT1 & 0x8000) >> 15` and restored as `n << 15` by that same pair. |
+
+Deliberately left `unk_`: 0x0a8/0x0ac (a pair every leaf seeds together and
+`func_ov004_020ad79c` checks against `func_ov004_020ad8b8`, but nothing in the
+tree says what it counts -- dScMgRoulette_c reads it through the singleton as a
+bonus added to its payout), 0x0bc (clamped to 0x270e, taken modulo 5, and used
+to scale difficulty in four different leaves -- a progression counter of some
+kind, but nothing in scope increments it), 0x0b8, 0x0c8, 0x0f0, 0x05c,
+0x462c/0x4630, 0x465c.
+
+## dScMgRoulette_c field names
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x53d6 | `mSelectedTile` | Render draws the cursor sprite at `data_ov006_02142ab4[n]` / `_02142ab8[n]` (the tile coordinate tables, stride 8); Behavior hands the same value to `func_ov006_02108b90` once per racer to score the board. |
+| 0x53e4 | `mCameraPreset` | Render copies row `n` of `data_ov006_0213e34c` and `_0213e370` (stride 0xc) into the base's `mCameraTarget` and `mCameraEye`, takes the angle from `data_ov006_0213e2e0 + n*2`, and then calls `Camera_UpdateMatrices`. 0 leaves the camera alone. Behavior sets it to 1 as the deal starts and clears it at the end. |
+| 0x53e6 | `mPhase` | Behavior's `switch`: 1 deals the racers out one at a time, 2 runs the countdown and reads the board, 3 pays out per landed tile, 4 announces win/lose/draw. src/func_ov006_021095cc.cpp starts it at 1. |
+| 0x53e8 | `mPhaseTimer` | Counted down in every phase and reloaded on each transition (8, 0x258, 1, 0x5a); Render also renders the countdown digits from it while `mPhase == 2`. |
+| 0x53f2 | `mScore` | Phase 3 sums each racer's payout into it and phase 4 compares it against `mTargetScore` to pick the win, lose or draw banner. Zeroed by the reset. |
+| 0x53f6 | `mTargetScore` | One per racer that did NOT land on the winning tile; the bar `mScore` has to beat. |
+| 0x53f8 | `mDealIndex` | How many racers have been dealt; the deal advances one per 8 frames until it reaches `mRacerCount`, then reuses the field as a loop cursor. |
+| 0x53fc | `mRacerCount` | The bound of every per-racer loop in Behavior and Render; the reset seeds it from the party size. |
+
+Left `unk_`: 0x53c4 (an "idle" gate Render's own local variable already calls
+that, but nothing in scope writes it), 0x53e0, 0x53ea, 0x53ec..0x53f0 (five
+bytes the reset zeroes and nothing reads).
+
+## dScMgCard_c field names
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x5388 | `mState` | src/func_ov006_020dac34.cpp is one long `switch` on it that mostly `++`s it; src/func_ov006_020db720.c switches on the same field; the reset in src/func_ov006_020db9dc.cpp starts it at 1. |
+| 0x538a | `mStateTimer` | Reloaded with 0x10, 0x14, 0x1e, 0x3c or 0x5a on each step and run down to 0 (by `--` or `ApproachLinear2`) before `mState` advances. |
+| 0x5396 | `mFrameCounter` | `dScMgCard_c::Behavior`'s only own statement is `+= 1`; Render blinks the highlighted cards on bit 3. |
+| 0x5398 | `mScore` | Render keeps it as a high-water mark of the base's `mHudScore` and pushes it back out through `func_ov004_020adb1c` every frame. |
+
+Left `unk_`: 0x538c, and the two highlight pairs 0x538e/0x5390 and
+0x5392/0x5394. Their mechanics are now in the header (Render blinks the card
+whose config byte matches either member of a pair, 6 means none, and the second
+member is cleared back to 6 when the two banks disagree) but which of the two
+is "picked" and which is "still lit" is not settled by anything in the tree.
