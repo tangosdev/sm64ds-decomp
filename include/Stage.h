@@ -9,28 +9,15 @@
 struct SceneRelated;
 struct LVL_Overlay;
 
-/* Particle::SysTracker, embedded at Stage+0x50. Not its own header yet --
- * include/Particle.h and include/Particle__SysTracker.h are two SEPARATE
- * gen_header.py shadows of this SAME class (confirmed by
- * src/_ZN8Particle10SysTrackerC1Ev.c, which writes fields through
- * `struct Particle *self` up to unk_818, and
- * src/_ZN8Particle10SysTracker10InitialiseEv.cpp / 6UpdateEv.c, which read
- * unk_004/unk_008 through `struct Particle__SysTracker *self` -- the same
- * offsets Particle.h also carries). Their union is what is declared here:
- * Particle.h's full 34-field layout, last field unk_818 (1 byte, ends
- * 0x819), padded to 0x81c for 4-byte alignment -- which is exactly the gap
- * Stage's own D1/D0 give this member (0x50..0x86c). Declared locally
- * rather than merging the two real headers because neither Stage source
- * file includes them and a merge is its own change with its own blast
- * radius across every other file that already casts through one shadow or
- * the other.
+/* Particle::SysTracker, embedded at Stage+0x50. Declared locally rather than
+ * pulled from include/Particle.h / include/Particle__SysTracker.h, which are
+ * two separate generated shadows of this same class; merging them is its own
+ * change with its own blast radius. See notes/scene-provenance.md.
  *
- * The destructor is declared, never defined here -- src/_ZN8Particle10SysTrackerD1Ev.cpp
- * already supplies _ZN8Particle10SysTrackerD1Ev as an extern "C" free
- * function; this declaration only lets Stage's implicit destructor find it
- * by name. Not virtual: dtor_variant_audit.py already established
- * Particle::SysTracker has no RTTI record and no _ZTV, so it is not
- * polymorphic and must not gain a vtable pointer here. */
+ * The destructor is declared, never defined -- src/_ZN8Particle10SysTrackerD1Ev.cpp
+ * supplies it as an extern "C" free function, and this declaration only lets
+ * Stage's implicit destructor find it by name. NOT virtual: the class has no
+ * RTTI record and no _ZTV in the ROM, so it must not gain a vtable pointer. */
 namespace Particle {
 struct SysTracker {
     u8  pad_000[0x4];
@@ -94,59 +81,20 @@ struct SysTracker {
 };
 
 /* Deterministic from the field list above (0x819 + the explicit 3-byte pad),
-   not from compiler struct-alignment rounding -- and it is also exactly the
-   gap Stage's own D1/D0 give this member, a second independent check on the
-   same number. */
+   and it is also exactly the gap Stage's own D1/D0 give this member. */
 typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1];
 }
 
-/* The playable level: fBase_c -> dBase_c -> dScene_c -> Stage.
+/* The playable level: fBase_c -> dBase_c -> dScene_c -> Stage (dScStage_c in
+ * the ROM's own type graph). A leaf; it adds no virtual of its own and
+ * overrides six of dScene_c's, plus the destructor pair.
  *
- * The generated header this replaces named no base and re-declared the whole of
- * fBase_c inline -- uniqueID at 0x004, actorID at 0x00c, the three list nodes,
- * a pad to 0x050 -- so `Stage` and `dScene_c` were unrelated types even though the
- * ROM has one derived from the other. Everything below 0x050 is gone from this
- * file now; it comes from the base chain, which owns it.
+ * The destructor is declared first, deliberately: that makes ~Stage the key
+ * function rather than InitResources. Derivation, vtable census and the field
+ * evidence: notes/scene-provenance.md.
  *
- * DERIVATION. The ROM's type graph (tools/rtti_extract.py) has dScStage_c at
- * 0x02092158, vtable 0x020921c0 -- which is _ZTV5Stage -- and its single base is
- * dScene_c. It is a leaf: no record in the image names dScStage_c as a base.
- *
- * VTABLE. _ZTV5Stage is 18 slots, the same shape dScene_c and fBase_c have, and
- * Stage adds no virtual of its own. It overrides six functionally --
- *
- *     0  InitResources        3  CleanupResources     6  Behavior
- *     9  Render              12  OnPendingDestroy     1  BeforeInitResources
- *
- * -- plus the destructor pair at 16/17. The remaining ten still point at dScene_c's
- * Before/After hooks or at fBase_c.
- *
- * KEY FUNCTION. Slot 0 is Stage::InitResources, so declaration order matters
- * here in the way include/dActor_c.h warns about: whichever non-inline virtual is
- * declared first is the key function, and CW 1.2 emits the vtable group into the
- * TU that DEFINES it -- colliding with the copy the module's gap object supplies
- * from ROM data. The destructor is declared first, which is free for a derived
- * class (an override takes its base's slot wherever it is written) and pins the
- * role to ~Stage. tools/objisolate.py makes that TU eligible anyway (see
- * include/dBase_c.h and include/dScene_c.h), so ~Stage is now a real method,
- * defined identically -- `Stage::~Stage() {}` -- in both src/_ZN5StageD1Ev.cpp
- * and src/_ZN5StageD0Ev.cpp. Unlike dScene_c, Stage does NOT need to define it
- * inline in the class body: Stage is a leaf (no record in the image names
- * dScStage_c as a base, per DERIVATION above), so nothing derives from it that
- * would need to inline ITS destructor in turn. Stage's own destructor inlining
- * dScene_c's (and dScene_c inlining dBase_c's) is what required dScene_c.h's move;
- * see the note there.
- *
- * SIZE IS DELIBERATELY NOT ASSERTED, unlike the three headers above this one.
- * The last field here is the last one any matched function has been observed to
- * touch, which is not the same as the last field the object has; asserting a
- * size would turn "we have not seen past 0x9bc" into "the object ends at 0x9bc".
- * Nothing needs the number either -- dScStage_c is a leaf, so no derived header
- * has to start its own fields after it. The offsets below ARE checked:
+ * Field NAMES cannot change codegen. Offsets and widths are observed, and
  * tools/check_header_offsets.py walks them from dScene_c's asserted 0x50.
- *
- * Field NAMES are placeholders and cannot change codegen. Offsets and widths are
- * observed.
  */
 struct Stage : dScene_c {
     Particle::SysTracker mSysTracker;  /* 0x050 */
@@ -163,14 +111,10 @@ struct Stage : dScene_c {
     u8  pad_9b7[0x1];
     u8  unk_9b8;            /* 0x9b8 */
     u8  pad_9b9[0x3];
-    /* 0x9bc. Typed, not guessed, and evidenced from both ends: LoadSkybox
-       `new`s 0x50 bytes, runs Model::Model on them and stores the result here;
-       CleanupResources loads it back and destroys it through its vtable. The
-       generated header called it `u8 unk_9bc`, so both files that use it had to
-       cast a pointer out of a byte to reach it. */
+    /* Allocated by LoadSkybox, destroyed through its vtable by CleanupResources. */
     Model *skyboxModel;     /* 0x9bc */
 
-    /* Declared first, deliberately -- see KEY FUNCTION above. */
+    /* Declared first, deliberately: makes ~Stage the key function. */
     virtual ~Stage();
 
     /* --- overrides, in _ZTV5Stage order --- */
@@ -190,10 +134,6 @@ struct Stage : dScene_c {
     void RenderModel();
     void RenderModelTransparent();
 
-    /* Reached from LoadSkybox with r0 still holding `this` and no argument set
-       up, which is a member call. Its body reads the level record through a
-       global rather than through a field, so the bytes alone cannot confirm the
-       `this`; the call site is what decides it. */
     int GetSkyboxID();
 
     /* --- static: reached with no object. The pause-screen and menu group all
@@ -206,20 +146,8 @@ struct Stage : dScene_c {
     static void VE_Init();
     static void VE_Update();
     static void LC_Render();
-    /* PS_Init is deliberately NOT declared here, even though it is now real
-       C++: src/_ZN5Stage7PS_InitEv.cpp defines Stage::PS_Init() and is
-       byte-verified and enrolled. It uses its own LOCAL shadow `class Stage`
-       (the same pattern src/_ZN5Stage8BehaviorEv.cpp already used) instead of
-       including this header, on purpose -- a once-real landmine lived at this
-       exact filename: an untracked, un-enrolled second .cpp for this symbol
-       whose private `struct G2x` declared SetBlendBrightness's middle
-       parameter as `int`, mangling to _ZN3G2x18SetBlendBrightnessEPVtis,
-       which resolves to nothing and would silently NOT be what byte-matches.
-       The surviving file never declares a G2x type at all -- it calls the
-       correctly-mangled _ZN3G2x18SetBlendBrightnessEPVtts symbol directly, as
-       the .c file it replaced did -- so the landmine cannot recur through it.
-       Wiring PS_Init to this header instead is a separate, low-risk change
-       that does not need to happen in the same slice that fixed D0/D1. */
+    /* PS_Init is deliberately NOT declared here; it uses its own local shadow
+       of Stage instead. See notes/scene-provenance.md before wiring it up. */
     static void PS_Cleanup();
     static void PS_UpdateSaveMenu(bool held);
     static void UpdateMenuButtons(bool held);
@@ -227,16 +155,13 @@ struct Stage : dScene_c {
     static void ResetMeshColliders();
     static int  IsPauseDisabled();
     static int  CanPause();
-    /* Scene-graph hooks: vtable slots 1/2 of dScStage_c::graphCallback_c
-       (RTTI si-child of dGraph_c::callback_c -- see dGraph_c.h). Virtual
-       and nullary in the ROM: dispatchers call through the object's vptr
-       with r0 = the callback object and no other argument; GraphCallback2
-       reads its fields (fixed-point matrix at +0x4) through `this`. Members
-       of Stage only as the family's legacy scope for dScStage_c; non-static
-       because slot 2 needs `this`, non-virtual to keep their TUs from
-       emitting a vtable the delink ranges do not own. */
-    /* trailing extent the ROM's `new Stage` literal proves; see tools/opnew_sizes.py */
+    /* Trailing extent the ROM's `new Stage` size literal proves; see
+       tools/opnew_sizes.py. */
     u8 pad_9c0[0x8];
+
+    /* Scene-graph hooks: vtable slots 1/2 of dScStage_c::graphCallback_c.
+       Non-virtual on purpose -- declaring them virtual would make this TU emit
+       a vtable the delink ranges do not own. */
     int  GraphCallback1();
     int  GraphCallback2();
 };
