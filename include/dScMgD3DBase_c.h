@@ -114,22 +114,28 @@ struct dScMgD3DBase_c : dScMgBase_c {
        (+0xa0..+0xb8), and all four children reference all fourteen. Kept as
        flat names for now because the eight files that read them spell them
        this way; typing it as a real array is its own change. */
-    u8   pad_466c[0xa0];              /* 0x466c -- element 0, head */
-    s32  unk_470c;                    /* 0x470c */
-    s32  unk_4710;                    /* 0x4710 */
-    s32  unk_4714;                    /* 0x4714 */
-    s32  unk_4718;                    /* 0x4718 */
-    s32  unk_471c;                    /* 0x471c */
-    s32  unk_4720;                    /* 0x4720 */
-    u16  unk_4724;                    /* 0x4724 */
-    u8   pad_4726[0xa2];              /* 0x4726 -- element 1, head */
-    s32  unk_47c8;                    /* 0x47c8 */
-    s32  unk_47cc;                    /* 0x47cc */
-    s32  unk_47d0;                    /* 0x47d0 */
-    s32  unk_47d4;                    /* 0x47d4 */
-    s32  unk_47d8;                    /* 0x47d8 */
-    s32  unk_47dc;                    /* 0x47dc */
-    u16  unk_47e0;                    /* 0x47e0 */
+    /* AND EACH ELEMENT IS A MINIGAME CAMERA. src/Camera_UpdateMatrices.c
+       carries the 0xbc layout: matrices in the head, `eye` at +0xa0, `target`
+       at +0xac and `angle` at +0xb8. dScMgJump_c::InitResources settles which
+       element is which by calling Camera_UpdateMatrices(this + 0x466c) and
+       Camera_UpdateMatrices(this + 0x4728) -- the two element bases -- so the
+       fourteen fields below are those three members of each. */
+    u8   pad_466c[0xa0];              /* 0x466c -- camera 0, matrices */
+    s32  mCamera0EyeX;                /* 0x470c */
+    s32  mCamera0EyeY;                /* 0x4710 */
+    s32  mCamera0EyeZ;                /* 0x4714 */
+    s32  mCamera0TargetX;             /* 0x4718 */
+    s32  mCamera0TargetY;             /* 0x471c */
+    s32  mCamera0TargetZ;             /* 0x4720 */
+    u16  mCamera0Angle;               /* 0x4724 */
+    u8   pad_4726[0xa2];              /* 0x4726 -- camera 1, matrices */
+    s32  mCamera1EyeX;                /* 0x47c8 */
+    s32  mCamera1EyeY;                /* 0x47cc */
+    s32  mCamera1EyeZ;                /* 0x47d0 */
+    s32  mCamera1TargetX;             /* 0x47d4 */
+    s32  mCamera1TargetY;             /* 0x47d8 */
+    s32  mCamera1TargetZ;             /* 0x47dc */
+    u16  mCamera1Angle;               /* 0x47e0 */
     u8   pad_47e2[0x2];               /* 0x47e2 */
     Particle::SysTracker mSysTracker; /* 0x47e4 -- AfterInitResources initialises
                                           it, BeforeBehavior updates it, and all

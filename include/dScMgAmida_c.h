@@ -51,41 +51,58 @@ struct dScMgAmida_c : dScMgBase_c {
     u8  pad_465d[0x3];
     u8  unk_4660[4][8];      /* 0x4660 -- only ever passed around whole */
     u8  pad_4680[0x50];
-    s32 unk_46d0;             /* 0x46d0 -- Behavior's state switch */
-    u8  unk_46d4;             /* 0x46d4 */
+    s32 mState;               /* 0x46d0 -- Behavior's state switch: 0 setup,
+                                 1 playing, 2 result wait, 3 finale */
+    u8  mFinished;            /* 0x46d4 -- set when mRoundCount reaches 5;
+                                 never cleared except by a full reset */
     u8  unk_46d5;             /* 0x46d5 */
     u8  pad_46d6[0x2];
     u8  pad_46d8[0x28];       /* 0x46d8 -- slot 34's digit-drawing state */
-    s32 unk_4700;             /* 0x4700 */
+    s32 mLineEndY;            /* 0x4700 -- 0x78 or 0x98; the y2 argument of
+                                 the four vertical ghost-leg line draws */
     u8  pad_4704[0x8];        /* 0x4704 -- slot 34's flag bytes */
-    u8 *unk_470c;             /* 0x470c -- 0x15800-byte buffer */
-    u8 *unk_4710;             /* 0x4710 -- 0x15800-byte buffer */
+    u8 *unk_470c;             /* 0x470c -- 0x100 rows x 0x158 bytes, cleared
+                                 row-wise; slot 34 indexes it as y*0x158 */
+    u8 *unk_4710;             /* 0x4710 -- second buffer of the same shape */
     s32 unk_4714[4];          /* 0x4714 */
-    s32 arr4724[4][2];        /* 0x4724 -- {x,y} pairs */
-    s32 arr4744[4][2];        /* 0x4744 -- {dx,dy} added into arr4724 each tick */
+    s32 mLanePos[4][2];       /* 0x4724 -- Fix12 {x,y} of the four lane
+                                 markers; seeded to x=0x20+0x40*i, y=0xb0 */
+    s32 mLaneVel[4][2];       /* 0x4744 -- Fix12 {dx,dy} added into mLanePos
+                                 each tick; dy loses 0x100 per tick (gravity) */
     s32 unk_4764;             /* 0x4764 */
-    dScMgAmida_c_Piece arr4768[0x80]; /* 0x4768 */
-    s32 unk_5368;              /* 0x5368 */
-    s32 unk_536c;              /* 0x536c */
+    dScMgAmida_c_Piece mPieces[0x80]; /* 0x4768 */
+    s32 mScrollSpeed;          /* 0x5368 -- per-tick scroll step, from the
+                                 pattern table and clamped to 0x64 */
+    s32 mScrollAccum;          /* 0x536c -- mScrollSpeed accumulates here;
+                                 the high bits become the step count, low 4 kept */
     u8  pad_5370[0x4];
-    s32 unk_5374;              /* 0x5374 */
+    s32 mRoundCount;           /* 0x5374 -- zeroed on reset; below 5 the scene
+                                 replays, at 5 it finishes */
     u8  pad_5378[0x24];
-    s32 unk_539c[4];           /* 0x539c -- Render-only counters */
-    s32 unk_53ac[4];           /* 0x53ac -- Render-only counters */
-    u16 unk_53bc;              /* 0x53bc -- Render's BG2 scroll-offset index */
+    s32 mLaneAnimTimer[4];     /* 0x539c -- per lane; wraps on the per-lane
+                                 period in data_ov006_0213b880 */
+    s32 mLaneAnimFrame[4];     /* 0x53ac -- per lane, cycles 0..0xd into the
+                                 sprite table data_ov006_0213a458 */
+    u16 mBgScrollPhase;        /* 0x53bc -- += 0xc0 a frame; indexes the sine
+                                 table for the sub-screen BG2 offset */
     u8  pad_53be[0x2];
-    s32 unk_53c0;               /* 0x53c0 */
-    s32 unk_53c4;               /* 0x53c4 */
+    s32 mResultWaitTimer;       /* 0x53c0 -- 0x3c frames of state 2 */
+    s32 mStartBannerTimer;      /* 0x53c4 -- 0x3c; on expiry gfx slot 0xd (the
+                                 start banner) is freed and the prompt blinks */
     u8  pad_53c8[0x8];
-    s32 unk_53d0;               /* 0x53d0 */
-    s32 unk_53d4;               /* 0x53d4 */
+    s32 mEndDelayTimer;         /* 0x53d0 -- 0xb4; Render holds the play field
+                                 until it drains, then draws the finale */
+    s32 mPatternIndex;          /* 0x53d4 -- selects the ghost-leg pattern;
+                                 indexes five 0x1c-stride tables in ov006 */
     u8  pad_53d8[0x4];
     u8  unk_53dc;                /* 0x53dc */
     u8  unk_53dd;                /* 0x53dd */
     u8  pad_53de[0x2];
-    s32 unk_53e0;                /* 0x53e0 */
+    s32 mRoundTimer;             /* 0x53e0 -- counts down; expiry ends the
+                                 round and picks replay or finish */
     s32 unk_53e4;                /* 0x53e4 */
-    s32 unk_53e8;                /* 0x53e8 */
+    s32 mScore;                  /* 0x53e8 -- mLevel * 5, clamped to 9999;
+                                 pushed to the HUD every Behavior tick */
     u8  pad_53ec[0x10];          /* tail padding to the 0x53fc allocation */
 };
 

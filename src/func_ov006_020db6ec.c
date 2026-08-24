@@ -11,7 +11,7 @@
 extern "C" int func_ov006_020db6ec(void *thisPtr);
 int func_ov006_020db6ec(void *thisPtr) {
     struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)thisPtr;
-    int x = self->unk_0b4;
+    int x = self->mHudScore;
     int v;
     if (x < 5) {
         v = 1;

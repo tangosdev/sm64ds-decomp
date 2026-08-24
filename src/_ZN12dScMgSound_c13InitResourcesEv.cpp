@@ -18,7 +18,7 @@
  * this class -- 0x50e0, 0x5608, 0x5618 and 0x5626 all fall in the 0x6f4 the
  * ctor/dtor pair func_ov006_020c33dc/020c3288 owns.
  *
- * unk_0b4 is dScMgBase_c's, and reads as an inherited member; the
+ * mHudScore is dScMgBase_c's, and reads as an inherited member; the
  * pre-migration file wrote it as `*(int *)(r7 + 0xb4)`.
  *
  * The GX/G2S/GXS entry points keep their mangled spellings INSIDE extern "C",
@@ -87,6 +87,6 @@ s32 dScMgSound_c::InitResources()
     *(u16 *)(r7 + 0x5600 + 0x18) = 0x20;
     func_ov004_020b6808();
     func_ov004_020b0cac(0xd, 0x80, 0xa8, 1, -1, 0xd);
-    unk_0b4 = 0;
+    mHudScore = 0;
     return 1;
 }

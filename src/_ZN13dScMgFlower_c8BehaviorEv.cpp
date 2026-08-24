@@ -65,39 +65,39 @@ s32 dScMgFlower_c::Behavior()
         self->mPromptBlinkCount = 1;
         self->mPromptBlinkTimer = 0;
     }
-    if (self->unk_5fd0 > 0) {
-        if (self->unk_5fc8 == -1) {
+    if (self->mHintTimer > 0) {
+        if (self->mHeldPetal == -1) {
             *(int *)LA(c + 0x5fd0) -= 1;
-            if (self->unk_5fd0 <= 0) {
-                if (self->unk_5fd8 >= 1)
-                    self->unk_5fec = 2;
+            if (self->mHintTimer <= 0) {
+                if (self->mPetalsLeft >= 1)
+                    self->mFaceSprite = 2;
             }
         } else {
-            self->unk_5fd0 = 0x3c;
+            self->mHintTimer = 0x3c;
         }
     }
-    switch (self->unk_5fe8) {
+    switch (self->mState) {
     case 0:
-        self->unk_5fc0 = self->unk_5fb8;
-        self->unk_5fc4 = self->unk_5fbc;
+        self->mPrevCursorX = self->mCursorX;
+        self->mPrevCursorY = self->mCursorY;
         k = data_020a0e40[0];
         if (data_020a0de8[k * 4] != 0) {
             int b = data_020a0deb[k * 4];
             int a = data_020a0dea[k * 4];
-            self->unk_5fb8 = (b ? a : a) << 12;
-            self->unk_5fbc = b << 12;
+            self->mCursorX = (b ? a : a) << 12;
+            self->mCursorY = b << 12;
         }
-        if (self->unk_5fe4 > 0x14) {
-            if (self->unk_5fd8 > 0) {
-                for (i = 0; i < self->unk_5fd8; i++) {
+        if (self->mHoldTimer > 0x14) {
+            if (self->mPetalsLeft > 0) {
+                for (i = 0; i < self->mPetalsLeft; i++) {
                     *(u8 *)(c + i * 0x20 + 0x4f39) = 1;
                     *(u8 *)(c + i * 0x20 + 0x4f3b) = 1;
                 }
-                self->unk_5fd8 = 0;
+                self->mPetalsLeft = 0;
                 _ZN5Sound12PlayBank2_2DEj(0x10d);
                 FreeGfxSlotsById(0x1d);
             }
-        } else if (self->unk_5fc8 < 0) {
+        } else if (self->mHeldPetal < 0) {
             int t;
             if (data_020a0de8[k * 4] != 0 && data_020a0de9[k * 4] != 0)
                 t = 1;
@@ -118,17 +118,17 @@ s32 dScMgFlower_c::Behavior()
                             *(u8 *)(c + ii * 0x20 + 0x4f3a) = 1;
                             *(int *)(c + ii * 0x20 + 0x4f44) = 0;
                             *(int *)(c + ii * 0x20 + 0x4f48) = 0;
-                            self->unk_5fc8 = ii;
-                            *(int *)(c + ii * 0x20 + 0x4f4c) = self->unk_5fb8;
-                            *(int *)(c + ii * 0x20 + 0x4f50) = self->unk_5fbc;
+                            self->mHeldPetal = ii;
+                            *(int *)(c + ii * 0x20 + 0x4f4c) = self->mCursorX;
+                            *(int *)(c + ii * 0x20 + 0x4f50) = self->mCursorY;
                             FreeGfxSlotsById(0x1d);
-                            self->unk_5fec = 2;
+                            self->mFaceSprite = 2;
                             break;
                         }
                     }
                     q = (V2 *)((char *)q + 0x20);
                 }
-                if (self->unk_5fc8 < 0) {
+                if (self->mHeldPetal < 0) {
                     int i2;
                     V2 *q2 = (V2 *)(c + 0x4f3c);
                     for (i2 = 0; i2 < 0x16; i2++) {
@@ -141,9 +141,9 @@ s32 dScMgFlower_c::Behavior()
                                 *(u8 *)(c + i2 * 0x20 + 0x4f3a) = 1;
                                 *(int *)(c + i2 * 0x20 + 0x4f44) = 0;
                                 *(int *)(c + i2 * 0x20 + 0x4f48) = 0;
-                                self->unk_5fc8 = i2;
-                                *(int *)(c + i2 * 0x20 + 0x4f4c) = self->unk_5fb8;
-                                *(int *)(c + i2 * 0x20 + 0x4f50) = self->unk_5fbc;
+                                self->mHeldPetal = i2;
+                                *(int *)(c + i2 * 0x20 + 0x4f4c) = self->mCursorX;
+                                *(int *)(c + i2 * 0x20 + 0x4f50) = self->mCursorY;
                                 break;
                             }
                         }
@@ -158,87 +158,87 @@ s32 dScMgFlower_c::Behavior()
                 int j;
                 Vec2_Sub(&d3, (V2 *)(c + 0x5fb8), (V2 *)(c + 0x5fc0));
                 cells = (Cell *)(c + 0x4f3c);
-                j = self->unk_5fc8;
+                j = self->mHeldPetal;
                 cells[j].x += d3.x;
                 *(int *)LB((char *)cells + j * 0x20 + 4) += d3.z;
             } else {
-                if (*(u8 *)(c + self->unk_5fc8 * 0x20 + 0x4f39) == 0) {
-                    *(u8 *)(c + self->unk_5fc8 * 0x20 + 0x4f39) = 1;
-                    if (*(u8 *)(c + self->unk_5fc8 * 0x20 + 0x4f3b) == 0) {
+                if (*(u8 *)(c + self->mHeldPetal * 0x20 + 0x4f39) == 0) {
+                    *(u8 *)(c + self->mHeldPetal * 0x20 + 0x4f39) = 1;
+                    if (*(u8 *)(c + self->mHeldPetal * 0x20 + 0x4f3b) == 0) {
                         t = 1;
-                        *(u8 *)(c + self->unk_5fc8 * 0x20 + 0x4f3b) = 1;
+                        *(u8 *)(c + self->mHeldPetal * 0x20 + 0x4f3b) = 1;
                         func_ov006_020c3990(c + 0x51f8);
                     }
                 }
-                *(u8 *)(c + self->unk_5fc8 * 0x20 + 0x4f3a) = 0;
-                self->unk_5fc8 = -1;
+                *(u8 *)(c + self->mHeldPetal * 0x20 + 0x4f3a) = 0;
+                self->mHeldPetal = -1;
             }
             if (t != 0) {
                 *(int *)LA(c + 0x5fd8) -= 1;
-                if (self->unk_5fcc == 1) {
-                    self->unk_5fcc = 0;
-                    if (self->unk_5fd8 >= 1) {
+                if (self->mPetalToggle == 1) {
+                    self->mPetalToggle = 0;
+                    if (self->mPetalsLeft >= 1) {
                         FreeGfxSlotsById(0x1d);
                         func_ov004_020b0cac(0x13, 0x80, 0x18, 0, -1, 0xd);
-                        self->unk_5fec = 3;
+                        self->mFaceSprite = 3;
                         _ZN5Sound12PlayBank2_2DEj(0x104);
                     }
                 } else {
-                    self->unk_5fcc = 1;
-                    if (self->unk_5fd8 >= 1) {
+                    self->mPetalToggle = 1;
+                    if (self->mPetalsLeft >= 1) {
                         FreeGfxSlotsById(0x1d);
                         func_ov004_020b0cac(0x10, 0x80, 0x18, 0, -1, 0xd);
-                        self->unk_5fec = 1;
+                        self->mFaceSprite = 1;
                         _ZN5Sound12PlayBank2_2DEj(0x103);
                     }
                 }
-                self->unk_5fd0 = 0x3c;
+                self->mHintTimer = 0x3c;
             }
         }
-        if (self->unk_5fd8 <= 0 && self->unk_5fcd == 1) {
-            if (self->unk_5fd4 > 0) {
+        if (self->mPetalsLeft <= 0 && self->unk_5fcd == 1) {
+            if (self->mResultTimer > 0) {
                 *(int *)LA(c + 0x5fd4) -= 1;
-                if (self->unk_5fd4 <= 0) {
-                    self->unk_5fe8 = 1;
+                if (self->mResultTimer <= 0) {
+                    self->mState = 1;
                     func_ov004_020b0a54(0xc);
                 }
                 if (func_ov006_020c3b80(c + 0x51f8) != 0) {
-                    if (self->unk_5fcc == 1)
+                    if (self->mPetalToggle == 1)
                         func_ov006_020c3908(c + 0x51f8);
                     else
                         func_ov006_020c38b0(c + 0x51f8);
                 }
             } else {
                 FreeGfxSlotsById(0x1d);
-                if (self->unk_5fe4 > 0x14) {
+                if (self->mHoldTimer > 0x14) {
                     if (self->unk_5fcd == 1) {
                         _ZN5Sound12PlayBank2_2DEj(0x106);
-                        self->unk_5fec = 4;
-                        self->unk_5fd4 = 0x3c;
+                        self->mFaceSprite = 4;
+                        self->mResultTimer = 0x3c;
                     }
                 } else {
-                if (self->unk_5fcc == 1) {
-                    self->unk_5fec = 0;
+                if (self->mPetalToggle == 1) {
+                    self->mFaceSprite = 0;
                     *(int *)LA(c + 0x5fdc) += 1;
-                    self->unk_5fe0 = 0;
-                    if (self->unk_5fdc >= 3) {
+                    self->mLoseStreak = 0;
+                    if (self->mWinStreak >= 3) {
                         func_ov004_020b0cac(0x12, 0x80, 0x18, 0, -1, 0xd);
                         _ZN5Sound12PlayBank2_2DEj(0x107);
                         *(int *)LA(c + 0x5ff0) += 3;
-                        if (self->unk_5ff0 > 0x270f)
-                            self->unk_5ff0 = 0x270f;
+                        if (self->mScore > 0x270f)
+                            self->mScore = 0x270f;
                     } else {
                         func_ov004_020b0cac(0x10, 0x80, 0x18, 0, -1, 0xd);
                         _ZN5Sound12PlayBank2_2DEj(0x108);
                         *(int *)LA(c + 0x5ff0) += 1;
-                        if (self->unk_5ff0 > 0x270f)
-                            self->unk_5ff0 = 0x270f;
+                        if (self->mScore > 0x270f)
+                            self->mScore = 0x270f;
                     }
                 } else {
-                    self->unk_5fec = 4;
+                    self->mFaceSprite = 4;
                     *(int *)LA(c + 0x5fe0) += 1;
-                    self->unk_5fdc = 0;
-                    if (self->unk_5fe0 >= 3) {
+                    self->mWinStreak = 0;
+                    if (self->mLoseStreak >= 3) {
                         func_ov004_020b0cac(0x11, 0x80, 0x18, 0, -1, 0xd);
                         _ZN5Sound12PlayBank2_2DEj(0x105);
                     } else {
@@ -246,7 +246,7 @@ s32 dScMgFlower_c::Behavior()
                         _ZN5Sound12PlayBank2_2DEj(0x106);
                     }
                 }
-                self->unk_5fd4 = 0x3c;
+                self->mResultTimer = 0x3c;
                 }
             }
         }
@@ -254,7 +254,7 @@ s32 dScMgFlower_c::Behavior()
         break;
     case 1:
         if (func_ov006_020c3b80(c + 0x51f8) != 0) {
-            if (self->unk_5fcc == 1)
+            if (self->mPetalToggle == 1)
                 func_ov006_020c3908(c + 0x51f8);
             else
                 func_ov006_020c38b0(c + 0x51f8);

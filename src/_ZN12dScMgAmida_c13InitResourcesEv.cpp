@@ -88,10 +88,10 @@ s32 dScMgAmida_c::InitResources()
     unk_4710 = (u8 *)_ZN6Memory8AllocateEj(0x15800);
 
     if (c->v90() != 0) {
-        unk_4700 = 0x78;
+        mLineEndY = 0x78;
         unk_53e4 = 2;
     } else {
-        unk_4700 = 0x98;
+        mLineEndY = 0x98;
         unk_53e4 = 2;
     }
 
@@ -197,8 +197,8 @@ s32 dScMgAmida_c::InitResources()
         Deallocate(f);
     }
 
-    unk_53d4 = 0;
-    unk_53e8 = *(int *)((char *)this + 0xbc) * 5;
+    mPatternIndex = 0;
+    mScore = *(int *)((char *)this + 0xbc) * 5;
     func_ov006_020d3ba0((char *)this);
     return 1;
 }

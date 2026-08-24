@@ -11,7 +11,7 @@
  *
  * Draws the three reels -- the win-line pass at state 6 and the scrolling pass
  * otherwise -- then the payout markers, the HUD, and the two swinging lamps whose
- * angles are unk_5018/unk_501a.
+ * angles are mLamp1Angle/mLamp2Angle.
  *
  * The pragma is load-bearing, not tidying; the `(int)` launder on the two indexed
  * reads at 0x4fe4/0x4ff4 is there for the same reason. Only the receiver changed:
@@ -43,21 +43,21 @@ s32 dScMgSlot3_c::Render()
     func_ov006_020c1eb4(c + 0x4660);
     func_ov006_020c201c(c + 0x4f38);
 
-    if (self->unk_500c > 0) {
+    if (self->mReelDrawY > 0) {
         for (i = 0; i < 3; i++) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov006_0213e9a4[self->unk_503b * 3 + i], 0x80, self->unk_500c + 0x10, -1, 2, 0x1000, 0x1000, 0, 1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov006_0213e9a4[self->mWinSymbol * 3 + i], 0x80, self->mReelDrawY + 0x10, -1, 2, 0x1000, 0x1000, 0, 1);
         }
         for (i = 0; i < 3; i++) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov006_0213e9a4[self->unk_503c * 3 + i], 0x80, self->unk_500c + 0x60, -1, 2, 0x1000, 0x1000, 0, 1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov006_0213e9a4[self->unk_503c * 3 + i], 0x80, self->mReelDrawY + 0x60, -1, 2, 0x1000, 0x1000, 0, 1);
         }
     } else {
         for (i = 0; i < 3; i++) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov006_0213e9a4[self->unk_503b * 3 + i], 0x80, 0x60, -1, 2, 0x1000, 0x1000, 0, 1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov006_0213e9a4[self->mWinSymbol * 3 + i], 0x80, 0x60, -1, 2, 0x1000, 0x1000, 0, 1);
         }
     }
 
-    if (self->unk_5000 != 7) {
-        if (self->unk_5000 == 6) {
+    if (self->mState != 7) {
+        if (self->mState == 6) {
             int i2, j2;
             char *p = c;
             for (i2 = 0; i2 < 3; i2++) {
@@ -81,7 +81,7 @@ s32 dScMgSlot3_c::Render()
                 for (j2 = 0, y = 0x30; j2 < 4; j2++) {
                     Hud_RenderSprite(data_ov006_0213e9a4[*(u8 *)(p + row + 0x501c) * 3 + i2],
                                         y - rem, 0x60, -1, -1);
-                    row = (row + 1) % self->unk_503a;
+                    row = (row + 1) % self->mStripLength;
                     y += 0x50;
                 }
                 p += 5;
@@ -89,7 +89,7 @@ s32 dScMgSlot3_c::Render()
         }
     }
 
-    if (self->unk_503d < 3 && (self->unk_503f & 0x20)) {
+    if (self->unk_503d < 3 && (self->mFrameCounter & 0x20)) {
         int slot = 3;
         int ok = 1;
         int i3, j3;
@@ -97,10 +97,10 @@ s32 dScMgSlot3_c::Render()
         for (i3 = 0; i3 < 3; i3++) {
             if (*(u8 *)(c + i3 + 0x502e) != 0) {
                 if (slot < 3) {
-                    if (self->unk_503b != *(u8 *)(p + slot + 0x5031))
+                    if (self->mWinSymbol != *(u8 *)(p + slot + 0x5031))
                         ok = 0;
                 } else {
-                    u8 t = self->unk_503b;
+                    u8 t = self->mWinSymbol;
                     for (j3 = 0; j3 < 3; j3++) {
                         if (t == *(u8 *)(p + j3 + 0x5031)) {
                             slot = j3;
@@ -126,7 +126,7 @@ s32 dScMgSlot3_c::Render()
                 }
                 y += 0x18;
             }
-            if ((self->unk_503f & 0x3f) == 0x20) {
+            if ((self->mFrameCounter & 0x3f) == 0x20) {
                 _ZN5Sound12PlayBank2_2DEj(count > 1 ? 0x1ac : 0x1ab);
             }
         }
@@ -135,22 +135,22 @@ s32 dScMgSlot3_c::Render()
     func_ov004_020b1bc8(c, 0xc, 0xc, 0);
     func_ov004_020b1e34(c, 0xe0, 0x14, 1);
 
-    if (self->unk_5000 == 3 && self->unk_5010 >= 0) {
-        func_ov004_020af948(*(void **)(data_ov006_0213e5ec[GetGameLanguage()] + 8), self->unk_5010 * 0x50 + 0x20, 0x28, 0);
-        func_ov004_020af948(*(void **)(data_ov006_0213e5ec[GetGameLanguage()] + 0x34), self->unk_5010 * 0x50 + 0x30, 0x28, 0);
-        if (self->unk_5010 == 1) {
-            func_ov004_020b2444(self->unk_5010 * 0x50 + 0x40, 0x28, 6, 0, 0, 0, 0x14);
+    if (self->mState == 3 && self->mWinColumn >= 0) {
+        func_ov004_020af948(*(void **)(data_ov006_0213e5ec[GetGameLanguage()] + 8), self->mWinColumn * 0x50 + 0x20, 0x28, 0);
+        func_ov004_020af948(*(void **)(data_ov006_0213e5ec[GetGameLanguage()] + 0x34), self->mWinColumn * 0x50 + 0x30, 0x28, 0);
+        if (self->mWinColumn == 1) {
+            func_ov004_020b2444(self->mWinColumn * 0x50 + 0x40, 0x28, 6, 0, 0, 0, 0x14);
         } else {
-            func_ov004_020b2444(self->unk_5010 * 0x50 + 0x40, 0x28, 3, 0, 0, 0, 0x14);
+            func_ov004_020b2444(self->mWinColumn * 0x50 + 0x40, 0x28, 3, 0, 0, 0, 0x14);
         }
-    } else if (self->unk_5000 == 4 && self->unk_5010 < 0) {
+    } else if (self->mState == 4 && self->mWinColumn < 0) {
         func_ov004_020af948(*(void **)(data_ov006_0213e5ec[GetGameLanguage()] + 8), 0x70, 0x28, 0);
         func_ov004_020af948(*(void **)(data_ov006_0213e5ec[GetGameLanguage()] + 0x38), 0x80, 0x28, 0);
         func_ov004_020b2444(0x90, 0x28, 3, 0, 0, 0, 0x28);
     }
 
-    func_ov004_020afb20(data_ov006_0213ac30, 0x18, 0x30, -1, 0, 0x1000, self->unk_5018);
-    func_ov004_020afb20(data_ov006_0213ac3c, 0x40, 0x10, -1, 0, 0x1000, self->unk_501a);
+    func_ov004_020afb20(data_ov006_0213ac30, 0x18, 0x30, -1, 0, 0x1000, self->mLamp1Angle);
+    func_ov004_020afb20(data_ov006_0213ac3c, 0x40, 0x10, -1, 0, 0x1000, self->mLamp2Angle);
 
     return 1;
 }

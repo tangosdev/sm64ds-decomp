@@ -160,7 +160,7 @@ bool dScMgBase_c::BeforeInitResources()
         data_ov004_020beb60 = _ZN6Memory13operator_new2Ej(0x4000);
     if (data_ov004_020beb68 != 0)
         *(int*)((char*)data_ov004_020beb68 + 0xb0) = 0;
-    self->unk_0b4 = 0;
+    self->mHudScore = 0;
     self->unk_0b8 = 0;
     self->unk_465c = 0;
     func_ov004_020b8a8c(c + 0x4000);
