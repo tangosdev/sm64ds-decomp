@@ -3,7 +3,7 @@
 **Written 2026-08-23**, branch `worktree-ctor-frontier`. Companion to
 `dtor-migration.md`, which this mirrors. Before this week the tree recorded
 **0 constructors migrated, ever** (`notes/dtor-variant-audit.md`,
-`plan-cpp-language-mode.md` Phase 5); it now records **eight**, all verified
+`plan-cpp-language-mode.md` Phase 5); it now records **nine**, all verified
 under 2004/b56 with the full ROM rebuilding 106/106 exact:
 
 | file | function | ROM |
@@ -16,6 +16,7 @@ under 2004/b56 with the full ROM rebuilding 106/106 exact:
 | `src/_ZN8dM3dGSphC1Ev.cpp` | `dM3dGSph::dM3dGSph()` | 0x0203ac60, 0x10 |
 | `src/_ZN9dBgCh_LinC1Ev.cpp` | `dBgCh_Lin::dBgCh_Lin()` | 0x020377b0, 0x5c |
 | `src/_ZN12dBgCh_SphCrrC1Ev.cpp` | `dBgCh_SphCrr::dBgCh_SphCrr()` | 0x02037d18, 0x6c |
+| `src/_ZN9dBgCh_GndC1Ev.cpp` | `dBgCh_Gnd::dBgCh_Gnd()` | 0x02037570, 0x40 |
 
 The seventh is the tree's **first multiple-inheritance constructor**: its
 header declares `dBgCh_Lin : dBgCh, dBgPi, dM3dGLin` straight out of the
@@ -63,6 +64,48 @@ and the KcMbg overload now reach interiors by real base names —
 `sphere.centre` through dM3dGSph, `&(dBgPi &)sphere` for the dBgPi
 sub-object — replacing the last flat `unk_010`/`unk_038`/`pos` spellings in
 their C++ TUs.
+
+The ninth (`dBgCh_Gnd`, two polymorphic bases) matched on the first compile —
+`bl dBgChC2`, `bl dBgPiC2` at +0x10, both vptr stores (`_ZTV9dBgCh_Gnd` and
+the newly named `VTable_dBgPi_dBgCh_GndThunk`; same pre-link symbol-path
+mismatch as every MI ctor, resolved by the same objisolate rebinding), and
+`unk_04c = 0x1f4000`. The ROM keeps no C2 sibling: nothing derives from it,
+so this is the first landed ctor whose TU's C2 output has no ROM counterpart
+at all. The slice's real content was §2's blast radius, now measured on a
+class with ~55 consumers: declaring `dBgCh_Gnd();` flipped every TU holding
+a typed local of the REAL class (five of them; the other fifty define their
+own dumb shadow structs and never see it) from hand-managed lifecycle to
+implicit synthesis. Two kept the moved declaration and are byte-exact as
+synthesized (BowserFire, daObjPathLift_c — the latter already shaped right);
+one tried the move and gave it back (Toad: the synthesized pair scheduled one
+instruction differently at the tail); and two are truly interleaved
+from the start. daTrs_c::Behavior has rc2 constructed only on some paths,
+with gotos into the middle of its lifetime, so it keeps **named word arrays**
+— `u32 rc1[sizeof(dBgCh_Gnd) / sizeof(u32)];` with every call site casting
+`(dBgCh_Gnd *)rc1`, which costs exactly the sp-relative add the old POD local
+spelled. The tempting alias form (`dBgCh_Gnd *const rc1 = (dBgCh_Gnd
+*)&storage;`) is measured wrong: it perturbs register allocation and cost
+Behavior +32 bytes. KnockDownPlank (+8) and Toad (+4) both showed that the
+moved-declaration synthesis reproduces construction/destruction but not
+always their exact scheduling; both restored hand C1/D1 calls over a `u32`
+array. The old comment in
+daObjPathLift_c that warned "adding constructors to its shared header would
+silently add calls to every automatic consumer" described exactly this
+hazard and is now obsolete by design.
+
+The slice also produced the session's most expensive lesson, about the ROM
+layout rather than C++ form: **overlay load addresses cascade**. Two small
+growths (+32 Behavior, +8 Plank) inside one overlay shifted every later-loaded
+overlay's base, and the byte analysis lit up **1,588 mismatching functions in
+32 modules** — relocation and literal-pool bindings corrupting across dozens
+of files that no one touched. The diagnosis path is worth recording because
+the symptom lies: module-image byte comparison showed only ov063.bin grew,
+and a word-level delta survey over 400 failures showed ±imm deltas pointing
+at resolved retail targets — i.e. pure address shift, not codegen regressions.
+A baseline worktree at the pre-slice commit rebuilding 106/106 exact proved
+every failure belonged to the slice. Rule of thumb: when failures explode
+across many modules at once, diff module SIZES first — one growing module
+names the real offenders, and per-function spelunking is wasted motion.
 
 The census this attacks (`tools/langmode_audit.py --by-class`): **C1 41,
 C2 10, C3 2 unmigrated**, against 397 plain methods and 65 D1s — though §5c

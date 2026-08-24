@@ -186,7 +186,10 @@ int dBgW_Kc::DetectClsn(dBgCh_Gnd &ray)
 
             bestY = dy + vtx[1];
             found = tri;
-            func_02037fd4(&ray.unk_010, func_020396dc(this, tri), &data_020a0cec);
+            /* through the REFERENCE: a pointer-level upcast makes mwcc emit
+               the null-checked MI adjustment (movs/addne), the ROM's is
+               unconditional */
+            func_02037fd4(&(dBgPi &)ray, func_020396dc(this, tri), &data_020a0cec);
         }
 
         /* Snap to the bottom of the node just tested and drop one cell. */

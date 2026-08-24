@@ -4316,8 +4316,8 @@ _ZTI5dBgPc kind:data(any) addr:0x0209921c
 _ZTS9dBgCh_Gnd kind:data(any) addr:0x02099224
 _ZTI5dBgPi kind:data(any) addr:0x02099230
 _ZTI9dBgCh_Gnd kind:data(any) addr:0x0209923c
-data_02099264 kind:data(any) addr:0x02099264
-data_02099274 kind:data(any) addr:0x02099274
+_ZTV9dBgCh_Gnd kind:data(any) addr:0x02099264
+VTable_dBgPi_dBgCh_GndThunk kind:data(any) addr:0x02099274
 _ZTI8dM3dGLin kind:data(any) addr:0x0209927c
 _ZTS8dM3dGLin kind:data(any) addr:0x02099284
 _ZTS9dBgCh_Lin kind:data(any) addr:0x02099290
