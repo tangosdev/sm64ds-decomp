@@ -127,3 +127,40 @@ Byte-neutral cleanups (each re-verified, `2004/b56`):
 `src_tu/actors/ChainChomp.cpp` carries the same renames and still compiles
 (`match.compile_c`, 2004/b56) — the merged TU is not in the default rombuild
 profile, so a stale spelling there would not have been caught by any green gate.
+
+---
+
+## BobOmb (`include/BobOmb.h`, ov102)
+
+Bodies read: `src/_ZN6BobOmb13InitResourcesEv.cpp`,
+`src/_ZN6BobOmb8BehaviorEv.cpp`, `src/_ZN6BobOmb6RenderEv.cpp`,
+`src/_ZN6BobOmb13OnYoshiTryEatEv.cpp`,
+`src/_ZN6BobOmb13OnTurnIntoEggER6Player.cpp`.
+
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x394 | `mMatrix[12]` | `InitResources` does `*(Matrix4x3 *)unk_394 = IDENTITY_MATRIX4X3;` — a 0x30-byte copy of the identity matrix. Kept as twelve words rather than typed `Matrix4x3`: several includers of this header do not pull `common.h`. |
+| 0x3dc | `mState` | `Behavior` branches on it three times and only on equality — `!= 5` guards the whole main body, `== 4` selects the egg/Chuckya hand-off, `== 0` allows the wall bounce. |
+| 0x3f0 | `mHomeAngleY` | `InitResources`' last statement, `unk_3f0 = mAngleY`, sitting beside the `mHomePosX/Y/Z = mPos*` snapshot a few lines up. |
+| 0x3f3 | `mShouldRender` | `Render` is `if (unk_3f3 != 0) { ...draw... }` and nothing else; `InitResources` sets it to 1. Same role and same spelling as `Goomboss::mShouldRender`. |
+| 0x3f5 | `mVariant` | `InitResources` sets it to `param1 & 7` and immediately switches on it: 2 starts inert (sets the collision volume's hit bit, clears `mFlags` bit 0), 4 starts clear, anything else starts live. This header's own prose already called it the variant. |
+
+Left `unk_`:
+
+* **0x390, 0x3e0, 0x3e8, 0x3ea, 0x3ec, 0x3f2** — written once by `InitResources`
+  (0, 2, 0, 0, 0x2000, 0) and never read anywhere in the tree.
+* **0x3ee, 0x3f4** — no reader and no writer in any matched body.
+* **0x3f6** — a latch: while non-zero `Behavior` calls `func_ov102_0214ae1c` and
+  returns, doing nothing else. `InitResources` clears it and nothing matched sets
+  it, so the diversion is evidenced but its meaning is not.
+
+Byte-neutral cleanup (re-verified, `2004/b56`):
+
+* `OnYoshiTryEat` — `unsigned char *p = (unsigned char *)this; return p[263] == 0;`
+  became `return unk_107 == 0;` (263 == 0x107, `dEnemyBase_c`'s own byte).
+
+**For the `dEnemyBase_c` owner:** `BobOmb::OnYoshiTryEat` reads `unk_107` as the
+"can Yoshi eat me" gate, and `BobOmb::OnTurnIntoEgg` reads `unk_108 == 1` as the
+"reward the player" gate; `BobOmb::InitResources` sets `unk_108` to 0 for the two
+inert variants and 1 otherwise. That reads like an "active / can be interacted
+with" flag rather than a counter.
