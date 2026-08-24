@@ -11,7 +11,7 @@
  * The odd one out of this family. It plays the sound FIRST, spawns particle
  * 0x121 at the wall's own position with no vertical offset, and does NOT call
  * PoofDustAt at all. Then it branches on the actor id: id 0x30 is the breakable
- * fortress wall (src/FortressWallBreakable_Spawn.c), which only sets unk_321 and
+ * fortress wall (src/FortressWallBreakable_Spawn.c), which only sets mBroken and
  * stays alive; every other id falls through to MarkForDestruction.
  *
  * THE `int b` INTERMEDIATE IS LOAD-BEARING, the same way it is in
@@ -34,7 +34,7 @@ void FortressWall::Kill()
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x121, mPosX, mPosY, mPosZ);
     int isBreakable = (actorID == 0x30);
     if (isBreakable) {
-        unk_321 = 1;
+        mBroken = 1;
         return;
     }
     MarkForDestruction();

@@ -414,3 +414,37 @@ Raw-offset collapses: `InitResources`'s shadow-matrix copy now spells both sides
 members (`&mShadowMat` and `&mModel + 0x1c`); `Behavior`'s two
 `((char*)&(*(u8 *)&mMeshCollider))` casts are `&mMeshCollider`; `Render`'s two
 whole-object shadow casts are `&mModelAnim` and `&mModel`.
+
+---
+
+## FortressWall (`include/FortressWall.h`, ov079, size 0x324)
+
+Bodies read: `src/_ZN12FortressWall13InitResourcesEv.cpp`,
+`src/_ZN12FortressWall8BehaviorEv.cpp`, `src/_ZN12FortressWall6RenderEv.cpp`,
+`src/_ZN12FortressWall4KillEv.cpp`,
+`src/_ZN12FortressWall16CleanupResourcesEv.cpp`,
+`src/_ZN12FortressWall24OnHitByCannonBlastedCharER8dActor_c.cpp`,
+`src/FortressWall_Spawn.c`, `src/FortressWallBreakable_Spawn.c`.
+
+Two actors share this class: `FortressWallBreakable_Spawn` (actorID 0x30) and
+`FortressWall_Spawn`. Every field is about telling those two apart.
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x31e | `mVariant` | `InitResources` sets 0 when `actorID == 0x30` and 1 otherwise, then uses it to index all three ov079 file tables — `data_ov079_02128058` (model), `data_ov079_0212805c` (KCL), `data_ov079_02128060` (CLPS block). `CleanupResources` indexes the first two again to `Release()` them. |
+| 0x31f | `mStarId` | `param1 & 0xff`, with `0xff` read as 0. `Behavior` passes it as `dActor_c::Spawn(0xb2, mStarId \| 0x40, …)`; actor 0xb2 is the star and its spawn word is `starID \| (howToSpawnStar << 4)` (`src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp`), so the low nibble this contributes is a star index and the `0x40` is that call's spawn style. |
+| 0x321 | `mBroken` | `Kill()` sets it on actorID 0x30 *instead of* calling `MarkForDestruction` — the breakable wall survives its own Kill. `Render` draws nothing while it is set, and `Behavior` runs the break sequence (disable the collider, wait for the sound, spawn the star, destroy) only while it is set. |
+| 0x322 | `mBreakSoundState` | `Behavior` passes `&mBreakSoundState` as the `u16 *state` argument of `Sound::PlaySecretSound(dActor_c *, u16 *)` and spawns the star on the frame that returns nonzero. **Declared `u16`, not the `u8` the header had**: the parameter type is `u16 *`, and the byte at 0x323 was the struct's tail padding, so the field span now lands exactly on the ROM's 0x324 instead of being rounded up to it. |
+
+Nothing is left `unk_` in this class.
+
+In the `#else` C twin, six offsets already named at exactly those offsets in
+`include/dActor_c.h` were repointed to those names — `mPosX/Y/Z` (0x05c) and
+`mPrevPosX/Y/Z` (0x068) — and `dBgActor_c`'s `mClsnMat` (0x2ec) was split out of
+`pad_2ec` as a `u8` marker, the idiom the other twins in this family use.
+
+Raw-offset collapses: `CleanupResources` reaches `mMeshCollider` directly and reads
+`mVariant` by name instead of `((char *)this)[0x31e]`; `Render`'s whole-object
+`struct Obj { char pad[0xd4]; Base sub; }` shadow is gone in favour of `&mModel`;
+`Behavior`'s `(u16 *)&mBreakSoundState` cast is no longer needed now that the field
+carries its real type.
