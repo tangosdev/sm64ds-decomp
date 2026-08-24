@@ -156,7 +156,7 @@ int WDW_Water::Behavior()
         }
     }
 
-    if (mPosY != unk_06c) {
+    if (mPosY != mPrevPosY) {
         mSoundID = _ZN5Sound8PlayLongEjjjRK7Vector3s(
             *(unsigned *)((u8 *)&mSoundID), 3, 0x96, ((u8 *)this) + 0x74, 0);
     }
