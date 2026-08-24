@@ -113,11 +113,24 @@
 // guard fires on every tick, and the honest reading of a zero here is "the
 // state machine was never started", not "the class does not dispatch".
 //
-// hal/scene_mg_jump.cpp's SM64DS_BNP_START_STATE diagnostic is the only thing
-// that changes that, it is OFF unless the variable is set, and what it does is
-// call the ROM's OWN state installer -- func_ov006_020ee658, a decompiled,
-// sliced, byte-matched TU -- and nothing else the floor would have done. That
-// file states the boundary in full.
+// ALL THREE PARAGRAPHS ABOVE ARE PAST TENSE NOW. Run mg12's lane IGN
+// decompiled func_ov006_020ee994 and this seat routes the real body, so the
+// field is written on the first tick, the null-pmf guard stops firing, and an
+// unattended scene 372 routes 1153 of 1153 with zero null pairs and walks five
+// distinct states in ROM order. The section is kept because it is the
+// derivation of WHY a zero here used to be honest, and because a nonzero
+// null-pmf count now means the opposite thing -- a dispatch that beat the
+// ignition.
+//
+// hal/scene_mg_jump.cpp's SM64DS_BNP_START_STATE diagnostic used to be the
+// only thing that changed that: it was OFF unless the variable was set, and
+// what it did was call the ROM's OWN state installer -- func_ov006_020ee658, a
+// decompiled, sliced, byte-matched TU -- and nothing else the floor would have
+// done. IT IS GONE, removed with the floor, because the real body ends with
+// that same call and leaving the variable wired would install the state pair a
+// second time after the ignition already installed it. Setting it today does
+// nothing and warns about nothing. Section 5 of that file records what it
+// meant so older banked logs stay readable.
 
 #include <cstdio>
 #include <cstdlib>

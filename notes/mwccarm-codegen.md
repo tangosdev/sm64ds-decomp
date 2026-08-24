@@ -3605,9 +3605,22 @@ exclusive from C**: +2 with the right frame, +0 in size with the wrong one.
   pragma that raises no warning is not evidence that it did anything; hash the object.
 - **Register pressure.** Adding live locals makes mwccarm reach for r9/r10/r11. It
   spills before it un-hoists.
-- **Compiler version and optimisation level.** All 25 installed mwccarm builds give
-  0x164. So do -O4,p / -O4,s / -O4 / -O3,p / -O2,p (-O1 gives 0x184). This is not a
-  version wall and not a level knob.
+- **Compiler version and optimisation level.** NO installed mwccarm build reaches the
+  ROM's 0x168, and none of them stops hoisting. Measured one build at a time:
+  **0x164 from eleven** (2004/b56 and all ten 2.0/\*), **0x160 from three**
+  (1.2/base, 1.2/sp2, 1.2/sp2p3), **0x15c from two** (1.2/sp3, 1.2/sp4), **0x158
+  from the nine dsi/\***. Every one is SHORT; the spread is how much else each
+  generation folds. At 2004/b56, -O4,p / -O4,s / -O4 / -O3,p / -O2,p all give 0x164
+  (-O1 gives 0x184). Not a version wall and not a level knob.
+
+  **Instrument trap, and it is worth a line of its own because this note's first
+  draft fell into it.** `match.py --all --brief` prints the identical sentinel
+  `999 word(s) differ` for EVERY version whose candidate differs in SIZE from the
+  target, and prints an actual size only for the one `closest:` version at the end.
+  Twenty-five identical summary lines therefore say nothing about whether the
+  twenty-five sizes agree — here they do not, they span four values. **Never read a
+  `--all` sweep's summary column as a per-version measurement of anything but
+  pass/fail; compile per version and measure the size yourself.**
 - `volatile` on either global or both, the seed as an array or as a local pointer, a
   signed compare, `10 * x` operand order, a temporary for the shifted value, dropping
   the inner parentheses. A `long long` launder on the multiply makes it worse (0x180).

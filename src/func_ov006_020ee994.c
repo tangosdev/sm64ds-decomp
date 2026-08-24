@@ -74,7 +74,18 @@
 // 8-byte alignment (and the matching `add sp,sp,#4`), and the receiver colours
 // r6 where the ROM colours r5, the draw r5 where the ROM colours r4. Net
 // 0x164 vs 0x168. Every other instruction is the same opcode with the same
-// operands in the same order, and the five pool words are in the ROM's order.
+// operands, and the five pool words are in the ROM's order. ORDER IS EXACT
+// EVERYWHERE EXCEPT ONE ADJACENT PAIR INSIDE THE LOOP, which is a knock-on of
+// the same hoist: the ROM issues the shift BEFORE it loads the word it will
+// compare against, filling the gap after its pool load, while this candidate
+// -- whose address is already sitting in a register, so there is no pool load
+// to schedule around -- loads first and shifts second.
+//
+//     ROM   020EEA5C  ldr r0,[pc,#0x90]   ; &data_ov006_0213cb48
+//           020EEA60  asr r4, r2, #0xc    <- shift, then load
+//           020EEA64  ldr r1,[r0]
+//     ours            ldr r0,[r8]         <- load, then shift
+//                     asr r5, r1, #0xc
 //
 // ---- THE MECHANISM IS KNOWN, AND IT IS WHY THE MATCH IS OUT OF REACH ------
 //
@@ -124,10 +135,24 @@
 // function has only one level for it to land above. Dead-code entries do not
 // work either: `if (0) goto mid`, an unreachable `goto mid` after a return,
 // after the guard's own goto, and after the loop all get deleted before the
-// decision is made (0x164 each). Not a compiler-version question -- match.py
-// --all over ALL TWENTY-FIVE installed mwccarm builds returns 0x164 from every
-// one. Not an optimisation-level question -- -O4,p, -O4,s, -O4, -O3,p and
-// -O2,p all give 0x164 (-O1 gives 0x184). And the pragma family the near-miss
+// decision is made (0x164 each). Not a compiler-version question -- NO
+// INSTALLED mwccarm BUILD REACHES 0x168. Sizes measured one build at a time
+// (an earlier draft of this banner said all twenty-five return 0x164, which is
+// FALSE -- see the instrument note below): 0x164 from ELEVEN (2004/b56 and all
+// ten 2.0/*), 0x160 from THREE (1.2/base, 1.2/sp2, 1.2/sp2p3), 0x15c from TWO
+// (1.2/sp3, 1.2/sp4) and 0x158 from the NINE dsi/* builds. Every one of the
+// twenty-five is SHORT of the target and none of them stops hoisting; the
+// spread is how much else each generation folds, and the conclusion -- no
+// version matches, no version even reaches the ROM's length -- is unchanged.
+//   INSTRUMENT NOTE, because this is easy to repeat: `match.py --all --brief`
+//   prints the SAME sentinel line, "999 word(s) differ", for every version
+//   whose candidate is a different SIZE from the target, and names a size only
+//   for the single closest version. Reading twenty-five identical summary
+//   lines as twenty-five identical sizes is the error this banner made. Size
+//   per version has to be compiled and measured per version.
+// Not an optimisation-level question either -- at 2004/b56, -O4,p, -O4,s,
+// -O4, -O3,p and -O2,p all give 0x164 (-O1 gives 0x184). And the pragma family
+// the near-miss
 // database names for this shape (nearmiss row 44, the Mix-a-Mug floor's
 // "rematerialised per outer iter in ROM vs hoisted" divergence) IS INERT HERE:
 // opt_loop_invariants, opt_moveinvariantsinaddressexpr, opt_propagation,

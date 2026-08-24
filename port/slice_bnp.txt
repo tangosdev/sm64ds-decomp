@@ -306,13 +306,27 @@
 # func_ov006_020ee658, the state-0 installer. Nothing else in ov006 writes
 # self+0x5004. hal/scene_mg_jump.cpp section 4 lists everything else the body
 # does, disassembled, and section 5 states the boundary of the
-# SM64DS_BNP_START_STATE diagnostic.
+# SM64DS_BNP_START_STATE diagnostic -- which run mg12's lane IGN REMOVED along
+# with the floor. The variable no longer exists and setting it does nothing;
+# section 5 of that file now records what it meant, so an older banked log that
+# quotes it stays readable.
 #
-# THE TRAP HIDES FOUR CALLEES from static closure: func_ov006_020c72b4,
+# THE TRAP HID FOUR CALLEES from static closure: func_ov006_020c72b4,
 # func_ov006_020c72c8, func_ov006_020c719c and func_ov006_020c44b4 are reached
-# only from this body in this class's closure, so they are NOT in the list
-# below. All four have src files today, so retiring the floor costs four slice
-# lines and one transcription.
+# only from this body in this class's closure, so while slot 18 was trapped
+# they were NOT in the list below. Run mg12's lane IGN retired the floor and
+# ADDED ALL FOUR TO THAT LIST, together with src/func_ov006_020ee994.c itself:
+# five lines, and the sentence that used to end this paragraph -- "so they are
+# NOT in the list below" -- was left standing in the same commit that put them
+# there. It is corrected here rather than deleted, because the closure fact it
+# records is still true and is why the four had to be added.
+#
+# THE LINKAGE DELTA IS NOT FOUR. Retiring the floor cost four slice lines, but
+# measured on lane IGN's own before and after builds the binary gained only TWO
+# TUs (7653 -> 7655): three of these four were ALREADY reachable through
+# port/slice_bnt.txt, so only one was new to the image. The slice count and the
+# linkage count are different questions and this paragraph used to imply one
+# answered the other.
 #
 # ---- 9. THE HOST COPIES, AND WHY EACH ONE IS OWED -------------------------
 #
