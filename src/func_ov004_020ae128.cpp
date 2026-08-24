@@ -11,5 +11,5 @@
 
 extern "C" int func_ov004_020ae128(void *c) {
     struct dScMgBase_c *self = (struct dScMgBase_c *)(void *)c;
-    return self->unk_4628 == 0;
+    return self->mMenuOpen == 0;
 }

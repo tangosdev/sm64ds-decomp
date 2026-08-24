@@ -17,7 +17,7 @@ extern int func_ov004_020ae140(char *self);
 int func_ov006_02128fb8(char *c)
 {
     struct dScMgSnowball_c *self = (struct dScMgSnowball_c *)(void *)c;
-    if (self->unk_4628 == 0) {
+    if (self->mMenuOpen == 0) {
         if (self->unk_b9f8 == 0) {
             *(volatile unsigned short *)0x4000304 |= 0x8000;
             SetBg2Offset(0, V);
