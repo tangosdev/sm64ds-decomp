@@ -20,7 +20,7 @@ extern void _ZN5dCc_c6UpdateEv(void *p);
 
 extern unsigned char data_0209f208;
 extern unsigned char *data_0209f344;
-extern Mtx data_02082128;
+extern Mtx IDENTITY_MATRIX4X3;
 }
 
 int StarMarker::Behavior()
@@ -61,7 +61,7 @@ int StarMarker::Behavior()
         mModel.mat4x3.t.z = mPosZ >> 3;
     }
     if ((unsigned int)(mFlags << 0x1e) >> 0x1f) {
-        *(Mtx *)((char *)&unk_18c) = data_02082128;
+        *(Mtx *)((char *)&unk_18c) = IDENTITY_MATRIX4X3;
         unk_1b0 = mPosX >> 3;
         unk_1b4 = mPosY >> 3;
         unk_1b8 = mPosZ >> 3;

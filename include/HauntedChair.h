@@ -24,7 +24,7 @@ struct HauntedChair {
        checks. Was a u8 marker. [_ZN12HauntedChairD0Ev.c] */
     ShadowModel mShadowModel;            /* 0x124 */
     /* Matrix4x3: InitResources block-copies the 48-byte identity at
-       data_02082128 over this range in one go, and 0x14c + 0x30 lands exactly
+       IDENTITY_MATRIX4X3 over this range in one go, and 0x14c + 0x30 lands exactly
        on the dCcAcPos_c below -- the ShadowModel + shadow matrix pair this
        family uses everywhere. Was a u8 marker plus its pad. */
     Matrix4x3 mShadowMat;            /* 0x14c */

@@ -118,7 +118,7 @@ but the gate for the check is the full `rombuild -j16`, not per-file verify.
 ## 3. Struct-copy spelling decides the mat4x3 block move
 
 `Model::Model` and `CommonModel::CommonModel` copy a 0x30-byte matrix from
-`data_02082128`. Under the structured spelling from `math/Matrix.h`
+`IDENTITY_MATRIX4X3`. Under the structured spelling from `math/Matrix.h`
 (`Matrix4x3 { Matrix3x3 r; Vector3 t; }`) the copy splits into a subobject
 copy of `r` plus field-by-field stores of `t`: **+28 bytes over the ROM**.
 Including `common.h` FIRST flips the whole TU to the flat spelling

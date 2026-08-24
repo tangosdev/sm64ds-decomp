@@ -29,9 +29,9 @@
 #include "common.h"
 #include "Model.h"
 
-extern Matrix4x3 data_02082128;
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 Model::Model() : transformsBuf(0)
 {
-    mat4x3 = data_02082128;
+    mat4x3 = IDENTITY_MATRIX4X3;
 }

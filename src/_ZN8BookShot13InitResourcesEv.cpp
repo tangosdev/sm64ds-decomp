@@ -25,7 +25,7 @@ extern SharedFilePtr data_ov020_02114ab0;
 #define LDR(p) (p)
 
 struct M48 { int w[12]; };
-extern struct M48 data_02082128;
+extern struct M48 IDENTITY_MATRIX4X3;
 
 int BookShot::InitResources()
 {
@@ -57,7 +57,7 @@ int BookShot::InitResources()
     if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x174, (struct BMD_File*)((int*)&data_ov020_02114ab8)[1], 1, -1) == 0)
         return 0;
 
-    *(struct M48*)((char*)&unk_1ec) = data_02082128;
+    *(struct M48*)((char*)&unk_1ec) = IDENTITY_MATRIX4X3;
     unk_450 = 0;
     *(short*)(int)LDR((char*)&mAngleY) = *(short*)(int)LDR((char*)&mAngleY) + 0x8000;
     unk_44c = 0x800;

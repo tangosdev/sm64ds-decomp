@@ -11,7 +11,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z)
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *self, void *sm, void *mtx, int a, int b, unsigned int g);
 
 extern struct Matrix4x3 data_020a0e68;
-extern struct Matrix4x3 data_02082128;
+extern struct Matrix4x3 IDENTITY_MATRIX4X3;
 
 void func_ov085_021295bc(char *c)
 {
@@ -58,7 +58,7 @@ void func_ov085_021295bc(char *c)
         }
     }
 
-    *(struct Matrix4x3*)(c + 0x1c4) = data_02082128;
+    *(struct Matrix4x3*)(c + 0x1c4) = IDENTITY_MATRIX4X3;
     *(int*)(c + 0x1e8) = *(int*)(c + 0x5c) >> 3;
     *(int*)(c + 0x1ec) = (*(int*)(c + 0x60) - 0x8000) >> 3;
     *(int*)(c + 0x1f0) = *(int*)(c + 0x64) >> 3;

@@ -29,7 +29,7 @@ struct Model {
 };
 
 extern u32 _ZTV5Model[];
-extern struct Matrix4x3 data_02082128;
+extern struct Matrix4x3 IDENTITY_MATRIX4X3;
 extern void _ZN9ModelBaseC2Ev(struct ModelBase *thiz);
 
 struct Model *_ZN5ModelC2Ev(struct Model *thiz)
@@ -37,6 +37,6 @@ struct Model *_ZN5ModelC2Ev(struct Model *thiz)
     _ZN9ModelBaseC2Ev((struct ModelBase *)thiz);
     thiz->vtable = _ZTV5Model;
     thiz->unkMatPtr = 0;
-    thiz->mat4x3 = data_02082128;
+    thiz->mat4x3 = IDENTITY_MATRIX4X3;
     return thiz;
 }

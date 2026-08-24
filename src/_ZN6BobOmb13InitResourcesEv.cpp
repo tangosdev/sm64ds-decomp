@@ -31,7 +31,7 @@ extern SharedFilePtr data_ov102_0214e9c8;
 extern SharedFilePtr data_ov002_0210d9e0;
 
 struct S48 { int a[12]; };
-extern S48 data_02082128;
+extern S48 IDENTITY_MATRIX4X3;
 
 int BobOmb::InitResources()
 {
@@ -67,7 +67,7 @@ int BobOmb::InitResources()
     mHomePosX = mPosX;
     mHomePosY = mPosY;
     mHomePosZ = mPosZ;
-    *(S48 *)unk_394 = data_02082128;
+    *(S48 *)unk_394 = IDENTITY_MATRIX4X3;
     unk_3e8 = 0;
     unk_3ea = 0;
     mScaleX = 0x1000;
