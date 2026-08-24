@@ -1420,3 +1420,45 @@ func_ov006_021211bc  REAL_DECOMP  port/slice_tti.txt  lane TTI. slot 25, 0x24, 9
 # down), and a slot dispatched in that window would otherwise read a raw DS
 # word. Both are also CALLED DIRECTLY by this class's own slots 24 and 25, which
 # chain to them.
+# run mg11 (lane TTE), 2026-08-23.
+#
+# dScMgTrampoline2_c, actor id 0x181 = scene 385, "Trampoline Terror". All
+# SEVENTEEN marker-carrying bodies this seat installs a face over were
+# disassembled out of extracted/overlays/overlay_0006.bin at base 0x020bfec0 --
+# the shipped image, deliberately not a dsd export, whose relocated words would
+# make literals read as live pointers -- and compared instruction for
+# instruction against src/, INCLUDING every literal-pool word against the
+# constant the src names. RESULT: 17 REAL DECOMP, 0 genuine guesses, 0
+# unverifiable. No constant, offset, branch target or instruction count differs
+# in any of the seventeen.
+#
+# FIFTEEN are the derived table's (port/tools/vtablerows.py --vtable 0x0213fc7c
+# --width 36 prints ovr 25, mark 15, nosrc 0) and TWO more -- func_ov006_020e6e78
+# and func_ov006_020e6e54 -- are slots 24 and 25 of the MIDDLE table
+# 0x0213c62c, which this seat also fills and which the derived table overrides.
+#
+# THE "recovered name" COMMENTS ON THE SHARED BODIES ARE NAMING ARTIFACTS AND
+# NOT ATTRIBUTION. The eight bodies at 0x020e6xxx/0x020e7xxx belong to
+# dScMgD3DBase_c (the ROM's RTTI at 0x0213c5c8), which four classes derive from
+# -- 0x174, 0x175, 0x180 and 0x181. src calls six of them
+# dScMgTrampoline2_c_Something and two dScMgJump2_c_Something; both spellings
+# are the naming pass picking one derived class out of four.
+#
+# Full per-body evidence: port/slice_tte.txt sections 5 and 7 (the derivation
+# this file abbreviates), runs/mg11/status/TTE.md, and the banked run logs in
+# runs/mg11/out/TTE/. THIS LINE USED TO CITE runs/mg11/out/TTE/report.md, WHICH
+# DOES NOT EXIST: the lane harness refuses subagent-written report files, so
+# that path was never created and the citation pointed at nothing for the whole
+# run. A reference is evidence only if a reader can open it.
+#
+# ---- dScMgD3DBase_c's shared bodies, seated on both tables by this lane ----
+# ---- dScMgTrampoline2_c's own ---------------------------------------------
+func_ov006_021243ec  REAL_DECOMP  TTE.md#0x181  slot 0 InitResources: 0x1bc, 99 instructions plus a twelve-word pool = 111 = 0x1bc/4. 021245a8, data_0209d45c = 0x1d, G3X::SetFog(0,0,2,0x1000), the 0x04000060 and 0x04000008 masks, fdiv(0xc0000, data_02082414), two Camera_UpdateMatrices on +0x466c and +0x4728, the 020cae9c gate, five array initialisers, and the tail VIRTUAL DISPATCH ldr r2,[r0] / mvn r1,#0 / ldr r2,[r2,#0x48] / blx r2 -- slot 18 with mode -1, which is what makes the state machine start. All twelve pool words match src
+func_ov006_0212318c  REAL_DECOMP  TTE.md#0x181  slot 3 CleanupResources: 0x20, 8 instructions and no pool = 8 = 0x20/4. func_ov006_020ceedc then ov004 020ad90c, return 1
+func_ov006_021231ac  REAL_DECOMP  TTE.md#0x181  slot 9 Render: 0x194, 91 instructions plus a ten-word pool = 101 = 0x194/4. The 0xfffff008 vector through func_0203cd80(-0x4000), the 0x040004c8 and 0x040004cc writes, the +0x4664 == 1 gate, the 0x6e / 0x12 three-sprite loop with the GetOwnerLanguage 5-or-4 minus-four adjust, func_ov004_020b1a5c(data_ov006_02140830, 6), the +0x7ba8 == 0 arm. All ten pool words (fffff008, 3ff, 040004c8, 7fff, 040004cc, 40007fff, 0213b0f0, 02134ecc, 0213fc48, 02140830) match src
+func_ov006_021226b0  REAL_DECOMP  TTE.md#0x181  slot 17 D0: 0x118, 54 instructions plus a sixteen-word pool = 70 = 0x118/4. Writes 0x0213fc7c -- this class's OWN vtable -- then six __destroy_arr in exact reverse of the factory's six func_020733a8 (0x7ad0/5/0x24, 0x7164/0x14/0x78, 0x6ffc/0xa/0x24, 0x5ddc/0xa/0x1d0, 0x5458/3/0x32c, 0x500c/5/0xdc), then writes 0x0213c62c -- the BASE dScMgD3DBase_c -- then SysTracker::D1 at +0x47e4, func_ov004_020b29c0, Memory::Deallocate(this, the word at data_020a0eac). All sixteen pool words match. THE DTOR COLUMN HERE IS WHAT CONVICTS THE FACTORY: it is the ROM's own statement of which of func_020733a8's two function arguments is the destructor, and src/MgTrampolineTerror_Spawn.c disagrees with it at all six sites
+func_ov006_021242cc  REAL_DECOMP  TTE.md#0x181  slot 18 state reset: 0x120, 67 instructions plus a five-word pool = 72 = 0x120/4. G2x::SetBlendAlpha(0x04000050,1,0x2e,0x10,0x10), the four data_020a0dbc shorts into +0x7ba0/a2/9c/9e, the +0xbc clamp at 0x270e, 020cad3c(0x1000), 020cac9c, data_ov006_021405bc = 1, 020d0b04, 020cee5c, 020eeff0, 02122b24, 02120ca0, 020c8a9c(0, data_ov006_0213fc20[lang]), six field zeroes, +0x7ac8 = 0x14000, the MultiStore16 0x6000 clear, tail-call 02124228. All five pool words match. r1 is NEVER read in the 0x120 bytes, so the seat's thunk declares the parameter only to keep the host convention cleaning four bytes
+func_ov006_02124298  REAL_DECOMP  TTE.md#0x181  slot 19: 0x34, 12 instructions plus a one-word pool = 13 = 0x34/4. 020c8a9c(0, data_ov006_0213fc20[GetGameLanguage()]) then return 1; the one pool word 0x0213fc20 matches. r1 is never read here either, and the SAME stack-parameter reasoning as slot 18 applies -- see port/slice_tte.txt section 10 for what a two-parameter thunk cost
+func_ov006_02122f24  REAL_DECOMP  TTE.md#0x181  slot 23 OnAttacked2: 0x1a0, 101 instructions plus a three-word pool = 104 = 0x1a0/4. The ov004 020ae1a0 guard, the two virtual probes on data_0209f5bc through slots 0x14 and 0x1c that write data_ov006_0213fbc4, the +0x4628 gate, the +0x7bab arm with the 0x18 / 0xe8 corner tests, func_ov006_020d0c38 on the four packed shorts, func_02012718(0x1af, sum << 11) against func_02012790(0xe), the MultiStore16 0x6000 clear and the two byte clears. All three pool words (0209f5bc, 0213fbc4, 1af) match. data_ov006_0213fbc4 is the word past 0x180's vtable, which is why this body is 0x180's width victim
+func_ov006_021230e8  REAL_DECOMP  TTE.md#0x181  slot 24 OnKicked: 0xa4, 39 instructions plus a two-word pool = 41 = 0xa4/4. Guard func_ov006_020e6e78, the +0x4628 test, then the +0x4664 split writing data_0209d45c bit 3 and SetBg2Offset(0,0) / (0,0xc0) with 0x04000018 set to 0 or 0xc00000. Both pool words (0209d45c, 04000018) match src
+func_ov006_021230c4  REAL_DECOMP  TTE.md#0x181  slot 25 OnPushed: 0x24, 9 instructions and no pool = 9 = 0x24/4. bl 020e6e54 then normalise to 0/1, the same two conditional moves as the base body it wraps

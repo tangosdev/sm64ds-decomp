@@ -127,6 +127,24 @@ NAMED = [
     # 0x020926dc above, so nothing inside either span relocates. They are the
     # cartridge's own colours and are read here rather than written down.
     "data_020926c8", "data_020926cc",
+    # run mg11 lane TTE: the fov divisor dScMgTrampoline2_c's and
+    # dScMgTrampoline_c's InitResources read. Both do
+    # `fdiv(0xc0000, (s32)data_02082414)` and the ROM is `ldrsh r1,[r1]` on that
+    # exact address, so it is a single signed halfword and decl_common.h:1662
+    # declares it `extern s16 data_02082414;`. It is an INTERIOR ADDRESS of the
+    # trig table TABLES already emits at 0x02082214 (0x4000 bytes), 0x100
+    # halfwords in; the span to the next symbol is 0x200 and nothing inside it
+    # relocates (config/arm9/relocs.txt has no `from:` row in 0x02082414..
+    # 0x02082614). Emitting it by name duplicates 0x200 read-only bytes that
+    # already sit inside the trig table object, which is the cost of giving the
+    # decomp's own symbol name a definition; the alternative was a synthesised
+    # host global with no ROM provenance, which this file exists to avoid.
+    #
+    # THE ROW ITSELF IS ABOVE, NOT HERE. Two mg11 lanes needed this symbol and
+    # each added it with its own derivation; the merge keeps ONE row and BOTH
+    # notes, because the two lanes checked different things (that one reasons
+    # from the /alternatename limitation, this one from relocs.txt) and neither
+    # reading is redundant. A second entry would emit the 0x200 bytes twice.
     "data_02082178", "data_02090e80", "data_020914a0",
     "data_02092584", "data_02092654", "data_02092668", "data_0208e500", "data_02086a58", "data_0208e430", "data_02086b58",
     "data_0208e434", "data_0208e438", "data_0208e43c", "data_0208e440",

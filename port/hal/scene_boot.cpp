@@ -2489,6 +2489,20 @@ void port_scene_fill_roulette(void);
 extern unsigned char MgTrampolineTime_SpawnInfo[];
 void *port_mg_trampoline_spawn(void);
 void port_scene_fill_trampoline(void);
+/* run mg11 lane TTE: dScMgTrampoline2_c, actor id 0x181 = scene 385, the
+   "Trampoline Terror" minigame. The spawn symbol is MgTrampolineTerror and the
+   ROM's own RTTI -- reached through the type_info the word BEFORE the vtable
+   points at, 0x0213fc78 -> 0x0213fc04 -> 0x0213fc5c -- reads
+   "18dScMgTrampoline2_c", so the row is named for the class the way
+   SCENE_MG_CURLING, SCENE_MG_LUIGI and SCENE_MG_PANEL are. The player title is
+   the ov005 launch table's only row for this id (row 32, param 0x00202001 ->
+   name-text 32 -> data_ov004_020bc070[32] = message 580 = "Trampoline Terror").
+   Same reads_sublevel reasoning as every minigame row above, re-derived rather
+   than copied: no relocation in ov006 lands on data_02092110 and no TU in this
+   class's closure names it. */
+extern unsigned char MgTrampolineTerror_SpawnInfo[];
+void *port_mg_trampoline2_spawn(void);
+void port_scene_fill_trampoline2(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -3175,6 +3189,49 @@ static const PortSceneClass port_scene_classes[] = {
        data_02092110 and no TU in this class's closure names it. */
     {384, "SCENE_MG_TRAMPOLINE", MgTrampolineTime_SpawnInfo,
      port_mg_trampoline_spawn, port_scene_fill_trampoline, 0},
+    /* 385 is 0x181, spelled in decimal for the same two reasons every row above
+       is: the others are, and port/tools/battery.py reads its hosted-scene set
+       out of this table. APPENDED AFTER EVERY EXISTING ROW, run mg11 lane TTE,
+       and for this class the ordering rule earns its keep twice.
+
+       FIRST, the rule itself: port_scene_registry_install walks this table in
+       TABLE ORDER and calls every row's fill on every boot, while
+       port_scene_mg_overlay_load runs the thirty-five overlay constructors ONCE
+       PER PROCESS at the tail of the FIRST minigame row's fill. Appending means
+       the constructors have already run against clean ROM words when this fill
+       starts, which is the latent-safe direction port/mg_fanout_costs.txt
+       section 11 derives.
+
+       AND FOR THIS CLASS THE HAZARD IS MEASURED ABSENT RATHER THAN INHERITED.
+       dScMgTrampoline2_c HAS NO OVERLAY CONSTRUCTOR: zero relocations whose
+       source lies in ov006's .init block (0x0212f4c4..0x02133600) land anywhere
+       in its whole .data span 0x0213fbc8..0x0213fd0c. Its five state pairs are
+       reached from literal pools inside its own bodies, not copied into a .bss
+       table by a __sinit, so there is no constructor of its own for a fill to
+       race. hal/scene_mg_trampoline2.cpp section 6 is the measurement.
+
+       SECOND, this is the FIRST class the port seats under dScMgD3DBase_c, the
+       middle base at 0x0213c62c that config/arm9/overlays/ov006/symbols.txt
+       names _ZTV17MgBounceAndPounce after actor 0x174's spawn symbol. Four
+       classes hold it -- 0x174, 0x175, 0x180 and this one -- and the fill keys
+       on a DS address, so the row that runs FIRST claims that table. On this
+       branch that is this row; when run mg11's other three land ahead of it in
+       id order the 0x174 row claims it instead and this seat owns only its own
+       derived table. The census prints its own middle-table claim count so the
+       change is measured rather than assumed.
+
+       THE WIDTH IS 36 BY FIVE CHECKS and the victim of a 37th is named and
+       SHIPPING: index 36 of data_ov006_0213fc7c is 0x02124ae4, which is the
+       code half of data_ov006_0213fd0c -- the FIRST of dScMgBSC_c's fourteen
+       state pairs, the class the SCENE_MG_LUCKYSTARS row above seats. A 37-slot
+       fill here would write a host thunk over a live state of scene 388.
+       port/slice_tte.txt section 3 carries all five checks.
+
+       reads_sublevel is 0 for the curling row's reason, re-derived rather than
+       copied: no relocation anywhere in ov006 lands on data_02092110 and no TU
+       in this class's closure names it. A minigame is not about a course. */
+    {385, "SCENE_MG_TRAMPOLINE2", MgTrampolineTerror_SpawnInfo,
+     port_mg_trampoline2_spawn, port_scene_fill_trampoline2, 0},
     {0, 0, 0, 0, 0, 0},
 };
 

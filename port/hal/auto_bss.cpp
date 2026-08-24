@@ -117,6 +117,14 @@ int data_0209fc68[8];
 int data_020a0d84[8];
 int data_020a0d88[8];
 int data_020a0db0[8];
+/* run mg11 lane TTE: the two shorts dScMgTrampoline2_c's and
+   dScMgTrampoline_c's slot 18 seed their stroke endpoints from
+   (src/func_ov006_021242cc.cpp and src/func_ov006_02121fa4.c both read
+   data_020a0dbc[0] and [1] with ldrsh, and src/__sinit_02075054.c is what
+   writes them). SIZED BY ROM SPAN rather than by the generous default above:
+   config/arm9/symbols.txt puts the next symbol at 0x020a0dc0, four bytes on,
+   which is exactly the two halfwords the three TUs read. */
+short data_020a0dbc[2];
 /* ---- THE STYLUS RECORD, 0x020a0de8 .. 0x020a0df7 -------------------------
    ONE 16-byte block, not three independent arrays.
 

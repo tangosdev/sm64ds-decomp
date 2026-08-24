@@ -106,14 +106,37 @@
 
 #include "hal/dsstate_seg.h"
 
-DSSTATE_BEGIN
-extern "C" {
+/* THE DEFINITION IS NOT HERE ANY MORE, AND THE PARAGRAPH ABOVE IS WHY.
 
-/* arm9 .bss, ROM span 0x020a0dbc..0x020a0dc0 -- section 4. */
-int data_020a0dbc[8];
+   This lane declared `int data_020a0dbc[8]` -- 32 bytes -- reasoning that a
+   host object LONGER than the ROM span is the safe direction and that matching
+   hal/auto_bss.cpp's generous-default rows was the tidier choice.  Lane TTE
+   hosted the same symbol in hal/auto_bss.cpp as `short data_020a0dbc[2]`, and
+   the mg11 merge found the two colliding.  TTE's is correct and this one was
+   not, on four independent readings:
 
-}
-DSSTATE_END
+     src/func_ov006_021242cc.cpp:34  extern volatile s16 data_020a0dbc[];
+                                     reads [0] and [1] with ldrsh
+     src/__sinit_02075054.c:2        extern short data_020a0dbc[];
+                                     writes [0] and [1], and passes
+                                     data_020a0dc0 as a SEPARATE symbol
+     config/arm9/symbols.txt:4928    data_020a0dbc at 0x020a0dbc; the NEXT
+                                     symbol is data_020a0dc0 -- a 4-byte span
+     the paragraph above                'the ROM span is FOUR bytes and the two
+                                     shorts the source reads fill it exactly'
+
+   The fourth reading is this lane's own, one line above the declaration it
+   contradicted.  Eight ints do not merely over-reserve: they cover
+   data_020a0dc0 and the seven symbols after it, and any TU that took ITS
+   indexing from this declaration would read [1] at +4 where the ROM's ldrsh
+   reads +2.  No TU did -- every reader carries its own s16 declaration -- so
+   this was a latent span defect rather than a live misread, which is exactly
+   the class the sized-by-ROM-span rule exists to catch.
+
+   Save-state capture is unaffected: auto_bss.cpp's rows sit inside its own
+   DSSTATE bracket (hal/auto_bss.cpp:12..419), so the symbol is still
+   captured.  Section 4 above is kept for its derivation of WHY the port needs
+   the symbol at all. */
 
 /* ---- 1. the thirteen SharedFilePtr rows ---------------------------------- */
 #pragma comment(linker, "/alternatename:?data_ov006_021405d0@@3USharedFilePtr@@A=_data_ov006_021405d0")

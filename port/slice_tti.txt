@@ -570,7 +570,14 @@ src/func_ov006_020cd62c.c
 src/func_ov006_020cd658.c
 src/func_ov006_020cd720.c
 src/func_ov006_020cd72c.c
-src/func_ov006_020cf758.cpp
+# src/func_ov006_020cf758.cpp is OUT at the mg11 merge. Lane TTE host-copies
+# this body in unmatched/MgTrampolineTerror_MarioDispatch.cpp: its one
+# statement IS an mwcc member-pointer dispatch, (c->*(c->pmf))(), which the
+# host cannot compile -- the ROM's pair is eight bytes where MSVC strides
+# four. Compiling the src TU here linked it beside TTE's host copy (LNK2005)
+# and, if it had won, would have restored the stride bug. The host copy wins.
+# Symmetric with slice_tte.txt's 020cb16c line, and the same root cause:
+# both lanes checked the other's FILENAMES, not its SYMBOLS.
 src/func_ov006_020d09e0.c
 src/func_ov006_020d0ac0.c
 src/func_ov006_020d0b04.c

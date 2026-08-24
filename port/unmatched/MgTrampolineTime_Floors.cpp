@@ -89,41 +89,100 @@
 
 #include <cstdio>
 
+/* ---- THE MERGE MADE THIS FILE THE ONE DEFINER OF ALL THREE -----------------
+ *
+ * Lane TTE trapped the SAME THREE BODIES in
+ * unmatched/MgTrampolineTerror_Faces.cpp, because 0x180 and 0x181 share this
+ * machinery.  Different filenames, so git saw no add/add and the mg11 merge
+ * found them at link (LNK2005 x3).  ONE definition each survives, here, and
+ * BOTH lanes' censuses read it.
+ *
+ * THE TWO LANES AGREED ON EVERYTHING THAT IS A RULING.  Both established all
+ * three the same way -- the symbol and size are in
+ * config/arm9/overlays/ov006/symbols.txt, delinks.txt has no block over the
+ * body, no file in src/ defines it -- and both recorded the same sizes
+ * (0x45c, 0x800, 0x3ac) and the same verdict, UNDECOMPILED.  Nothing was
+ * adjudicated twice with two answers.
+ *
+ * THE SIGNATURES BELOW ARE TTE'S, AND THAT IS THE ONE THING THAT CHANGED.
+ * This lane spelled the first two `int f(void)` -- placeholders, because a
+ * count-and-return trap does not read its arguments and the arity was never
+ * derived.  TTE derived all three from the ROM CALL SITES that name them
+ * (src/func_ov006_0212101c.c and src/func_ov006_02122f24.c for 020d0c38,
+ * which agree with each other), so its spellings are evidenced where this
+ * lane's were merely sufficient.  On a cdecl host the two behave identically
+ * -- the caller cleans the stack and the callee ignores what it was passed --
+ * so this is not a behaviour change; it is a record that stops claiming an
+ * arity the ROM contradicts.  The return of 020d0c38 stays int and stays 0,
+ * the MISS arm, for the reason the header gives.
+ *
+ * ONE COUNTER SET, TWO ACCESSORS.  Both lanes' entry points survive with their
+ * exact names: port_mg_tti_hittest_calls and port_mg_tti_floor_counts are read
+ * by hal/scene_mg_trampoline.cpp, and port_mg_shared_trap_counts is what
+ * unmatched/MgTrampolineTerror_Faces.cpp's port_mg_tte_trap_counts now reads
+ * for its first three of four.  Neither seat file was touched.  Separate
+ * counter sets would have been equivalent and are not worth the duplication:
+ * one scene runs per process, so scene 384 reads its accessor and scene 385
+ * reads its own, and neither can see the other's ticks.
+ *
+ * TTE's FOURTH trap, func_ov006_020cfc74, is NOT here -- it is behind one of
+ * that class's 3D-Mario states and only 0x181 reaches it, so it stays in
+ * TTE's file with its own counter.
+ */
+
 extern "C" {
 
-static unsigned g_tti_hittest_calls;
+static unsigned g_hittest_020d0c38, g_floor_020cf2fc, g_floor_020d01e0;
 
-/* ROM 0x020d0c38, 0x3ac, UNDECOMPILED.  Two Vec2s in, a hit/miss predicate
-   out.  Returns the MISS arm; see the header. */
-int func_ov006_020d0c38(void * /*a*/, void * /*b*/)
+/* ROM 0x020cf2fc, 0x45c, UNDECOMPILED.  Arity from the call site. */
+void func_ov006_020cf2fc(char *)
 {
-    ++g_tti_hittest_calls;
+    if (!g_floor_020cf2fc)
+        std::fprintf(stderr, "  [mg384/385] FLOOR func_ov006_020cf2fc (0x45c, "
+                     "no src, no delinks block) wanted\n");
+    ++g_floor_020cf2fc;
+}
+
+/* ROM 0x020d01e0, 0x800, UNDECOMPILED.  Arity from the call sites. */
+void func_ov006_020d01e0(short *, short *, short *)
+{
+    if (!g_floor_020d01e0)
+        std::fprintf(stderr, "  [mg384/385] FLOOR func_ov006_020d01e0 (0x800, "
+                     "no src, no delinks block) wanted\n");
+    ++g_floor_020d01e0;
+}
+
+/* ROM 0x020d0c38, 0x3ac, UNDECOMPILED.  The stylus hit test.  Returns the MISS
+   arm -- see the header: a trap that guessed HIT would fabricate a game
+   event. */
+int func_ov006_020d0c38(unsigned short *, unsigned short *)
+{
+    if (!g_hittest_020d0c38)
+        std::fprintf(stderr, "  [mg384/385] FLOOR func_ov006_020d0c38 (0x3ac, "
+                     "no src, no delinks block) wanted -- the stroke-connected "
+                     "test slot 23 asks; returning 0 takes the MISS arm every "
+                     "time\n");
+    ++g_hittest_020d0c38;
     return 0;
 }
 
-unsigned port_mg_tti_hittest_calls(void) { return g_tti_hittest_calls; }
-
-static unsigned g_tti_floor_020cf2fc, g_tti_floor_020d01e0;
-
-/* ROM 0x020cf2fc, 0x45c, UNDECOMPILED. */
-int func_ov006_020cf2fc(void)
-{
-    ++g_tti_floor_020cf2fc;
-    return 0;
-}
-
-/* ROM 0x020d01e0, 0x800, UNDECOMPILED. */
-int func_ov006_020d01e0(void)
-{
-    ++g_tti_floor_020d01e0;
-    return 0;
-}
+/* lane TTI's census (hal/scene_mg_trampoline.cpp) */
+unsigned port_mg_tti_hittest_calls(void) { return g_hittest_020d0c38; }
 
 void port_mg_tti_floor_counts(unsigned *hit, unsigned *f2fc, unsigned *f1e0)
 {
-    *hit  = g_tti_hittest_calls;
-    *f2fc = g_tti_floor_020cf2fc;
-    *f1e0 = g_tti_floor_020d01e0;
+    *hit  = g_hittest_020d0c38;
+    *f2fc = g_floor_020cf2fc;
+    *f1e0 = g_floor_020d01e0;
+}
+
+/* lane TTE's census reads its first three of four through this
+   (unmatched/MgTrampolineTerror_Faces.cpp) */
+void port_mg_shared_trap_counts(unsigned *f2fc, unsigned *f1e0, unsigned *fc38)
+{
+    if (f2fc) *f2fc = g_floor_020cf2fc;
+    if (f1e0) *f1e0 = g_floor_020d01e0;
+    if (fc38) *fc38 = g_hittest_020d0c38;
 }
 
 }  /* extern "C" */
