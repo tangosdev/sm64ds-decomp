@@ -294,3 +294,4 @@
 {"id":"ov006:0x020c7c68","module":"ov006","addr":34372712,"name":"func_ov006_020c7c68","matchProvenance":{"kind":"ai","model":"grok-4.5","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/func_ov006_020c7c68.c"}
 {"id":"ov006:0x020c94e0","module":"ov006","addr":34378976,"name":"func_ov006_020c94e0","matchProvenance":{"kind":"ai","model":"grok-4.5","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/func_ov006_020c94e0.cpp"}
 {"id":"ov006:0x0210adac","module":"ov006","addr":34647468,"name":"func_ov006_0210adac","matchProvenance":{"kind":"ai","model":"claude-opus-5","reasoning":"high","harness":"claude-code"},"author":"tangosdev","srcPath":"src/func_ov006_0210adac.c"}
+{"id":"ov006:0x020da174","module":"ov006","addr":34447732,"name":"func_ov006_020da174","matchProvenance":{"kind":"ai","model":"claude-opus-5","reasoning":"high","harness":"claude-code"},"author":"tangosdev","srcPath":"src/func_ov006_020da174.c"}

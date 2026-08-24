@@ -5458,17 +5458,16 @@ set(SLICE_PKR_SOURCES hal/scene_mg_card.cpp
                       # No trap and no stand-in body: both are DATA declared at
                       # C++ linkage in a //cpp src TU against the mount's plain
                       # C name.
-                      unmatched/MgCard_Faces.cpp
-                      # THE ONE FLOOR. func_ov006_020da174 (0x2ac) has a symbol,
-                      # no delink block and no src TU. Named trap, count and
-                      # return, with the ROM characterisation in the file. It is
-                      # on the CRITICAL PATH -- it is the only caller of
-                      # src/func_ov006_020d99ec.c, which is the only writer of a
-                      # card's slide target, and state 10 waits for every card
-                      # to arrive. The seat prints the entry count and the state
-                      # index on every run so the stall is measured, not
-                      # discovered.
-                      unmatched/MgCard_Traps.cpp)
+                      unmatched/MgCard_Faces.cpp)
+# NO TRAP. Run mg11 seated this class with ONE floor, func_ov006_020da174
+# (0x2ac, the hand sorter), behind unmatched/MgCard_Traps.cpp -- and it was on
+# the CRITICAL PATH: the only caller of src/func_ov006_020d99ec.c, which is the
+# only writer of a card's slide target, with state 10 waiting for every card to
+# arrive. Run mg12 lane SRT decompiled it (byte-identical at 2004/b56) and the
+# trap file is gone; src/func_ov006_020da174.c is an ordinary line in
+# slice_pkr.txt and the delink block for 0x020da174..0x020da420 is enrolled.
+# slice_pkr.txt section 7 is the retirement record, including why that block is
+# NOT marked `complete`.
 foreach(line IN LISTS SLICE_PKR_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")

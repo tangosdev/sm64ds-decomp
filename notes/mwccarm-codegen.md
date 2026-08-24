@@ -3545,6 +3545,79 @@ r1/r0), which is register identity, not the schedule. Reach for the
 pointer-arith + named-successor spelling whenever a copy loop's loads
 and stores interleave in the ROM instead of pairing up.
 
+## 6bm. A decl-order sweep's floor is only valid for the statement order it ran on (func_ov006_020da174 MATCHED, div 166 -> 0, 2026-08-24)
+
+Run mg12 lane SRT, Picture Poker's hand sorter (0x2ac, 170 instructions + one
+pool word). The first draft was already instruction-for-instruction correct and
+one `mov` short; everything after that was colouring. The path down was
+166 -> 84 -> 71 -> 33 -> 9 -> 0, and the interesting step is 71 -> 33.
+
+**6bg's warning, applied, and it changed the plan.** A full 720-permutation
+sweep of the six long-lived locals floored at div 71. Rather than read that as
+"decl order is exhausted", the parameter's home register was measured directly
+across all 720 -- the destination of the prologue's `mov rD, r0`:
+
+    ORIGINAL statement order:  fp=720   (720 of 720, no other register)
+
+The ROM wants that web in **r6**. So no permutation of the decl list could ever
+have reached the target, and the 71 floor was a property of the statement order,
+not of the decl list. Two statement-order corrections, both read straight off the
+ROM and neither about the parameter:
+
+- **Comparison operand order is a lever.** `if (face1 == f)` emits
+  `cmp face1, f`; `if (f == face1)` emits `cmp f, face1`. mwcc does not
+  canonicalise the operands of an equality test, so write the comparison with the
+  ROM's LEFT operand on the left. Two words on its own.
+- **Interleave the load pairs the way the ROM emits them.** The inner sort loop
+  reads two array elements and dereferences each. Declaring
+  `a; ka = load(a); b; kb = load(b)` reproduces the ROM's schedule; the natural
+  `a; b; ka = load(a); kb = load(b)` defers both loads and reschedules the block.
+
+With those two in place the SAME 720-permutation sweep floored at div 33, and the
+parameter measurement flipped:
+
+    CORRECTED statement order: r6=720   (720 of 720, no other register)
+
+Both histograms are ONE register wide. The parameter's home is decided entirely
+by statement order on this function and is completely INSENSITIVE to declaration
+order -- 1440 compiles, two values, no overlap. Declaration order still moved the
+other six webs (the divergence count ranged 33..167 across the second sweep); it
+just had no vote on this one.
+
+**Rule.** When a decl-order sweep floors, do not bank the floor. Measure the
+register identity of the web you actually care about first (6bg), and if no
+permutation reaches the ROM's register, the lever is statement order, not decl
+order -- and every earlier sweep result is stale the moment the statements move.
+Re-run the sweep after any statement change; 71 -> 33 here came from re-running an
+"exhausted" sweep.
+
+### Three smaller levers from the same function
+
+- **`for (i = 0, p = c; i < n; i++)` orders two independent entry `mov`s.** The
+  ROM emitted `mov r8, r5` (the counter's zero) before `mov r7, r6` (the pointer
+  copy); a plain `p = c;` statement ahead of the loop emits them the other way
+  round. The comma operator in the for-init is what puts the counter first.
+- **A block-scope index for ONE loop re-colours a LATER loop.** The last nine
+  divergent words were a counter/pointer transposition in a loop near the end of
+  the function. Giving an EARLIER loop (the tie-break scan) its own block-scope
+  `int m` instead of reusing the function-scope counter fixed them, without
+  touching the loop that was wrong. Loop indices are not interchangeable even
+  when their live ranges do not overlap.
+- **The `short *h = (short *)((int)arr)` launder (020da420's idiom) is still the
+  way to get six individual `strh` zero stores** instead of a fill; the histogram
+  is then written through the plain array name, and mwcc CSEs the two base
+  computations by itself.
+
+### The pool word was the whole `complete` question
+
+One literal-pool word, relocating to a 5-int `{0,1,2,3,4}` template the body
+copies into a local array. That means the TU emits a second non-empty section
+(.data, 0x14), which is exactly what notes/rom-build.md's M2b eligibility rule
+excludes from a `complete` delink entry. Zero of ov006's 1672 `complete` entries
+has a non-zero local aggregate initializer, so a matched body with one takes the
+rom-bytes side of the switch. Worth checking before enrolling any match whose
+source has an initialized local array.
+
 ## 6bn. mwccarm hoists loop constants unconditionally out of a SINGLE-ENTRY loop, and the only lever is irreducibility -- which is never free (func_ov006_020ee994, div: size 0x164 vs 0x168, 2026-08-24)
 
 Bounce and Pounce's ignition (ov006 slot 18, scene 372) transcribes to an
