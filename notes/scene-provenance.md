@@ -167,7 +167,7 @@ not the same as the last field the object has. The trailing `pad_9c0[0x8]` and t
 `include/Particle.h` and `include/Particle__SysTracker.h` are two *separate*
 `gen_header.py` shadows of this same class. `src/_ZN8Particle10SysTrackerC1Ev.c` writes
 fields through `struct Particle *self` up to `unk_818`, while
-`src/_ZN8Particle10SysTracker10InitialiseEv.cpp` and `6UpdateEv.c` read `unk_004`/`unk_008`
+`src/_ZN8Particle10SysTracker10InitialiseEv.cpp` and `6UpdateEv.c` read `mManager`/`mContents`
 through `struct Particle__SysTracker *self` — the same offsets `Particle.h` also
 carries. Their union is what `Stage.h` declares locally: `Particle.h`'s full 34-field
 layout, last field `unk_818` (1 byte, ends 0x819), padded to 0x81c for 4-byte

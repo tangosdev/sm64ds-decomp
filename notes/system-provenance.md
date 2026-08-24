@@ -99,13 +99,38 @@ and reached the callback's own `s16` as `&self->unk_004`. That was never a
 `SysTracker`: it is a `Particle::SimpleCallback`, and the two only agreed
 because both objects start with a pointer-sized word. It now takes `char *`.
 
+### The third shadow — collapsed onto the real names
+
+`include/Particle__SysTracker.h` is a *third* declaration of this class, and it
+is what `src/_ZN8Particle10SysTracker10InitialiseEv.cpp` and
+`src/_ZN8Particle10SysTracker6UpdateEv.c` include. A later pass that owned the
+file finished it: its three fields now read `mResourceFile` / `mManager` /
+`mContents`, with the same types `include/Particle.h` carries, so all three
+declarations of the class spell the head identically.
+
+Only the head is declared there, and that is deliberate — the two including
+functions touch 0x000, 0x004 and 0x008 and nothing else, so a 0x747-byte tail
+would be a claim neither of them backs.
+
+The same change collapsed the raw pokes in both bodies. `Initialise` reached
+the manager eleven times as `*(char**)((char*)&self->unk_004)` and the resource
+file seven times as `*(char**)((char*)self)`; both are now plain
+`self->mManager` / `self->mResourceFile`, and `Update`'s two accesses likewise.
+Both functions still reproduce byte-exact under 2004/b56 (checked per function
+with `build_pin`'s `verify`, from `tools/build_pin.py`).
+
+What is still NOT merged is the three *declarations* into one. `include/Stage.h`
+must keep its own copy because `Stage` embeds the object by value and needs the
+declared-never-defined destructor, and
+`src/_ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE.cpp` opens
+`namespace Particle { ... }`, so a header declaring a struct of that name
+collides there. Those two reasons are unchanged by this pass; only the names
+converged. `include/Stage.h`'s own header comment still describes the third
+shadow as spelling `unk_`, which is now out of date — that file was frozen for
+the pass that made this change.
+
 ### Deliberately left alone
 
-* `include/Particle__SysTracker.h` is a *third* shadow of this same class and is
-  what `SysTracker::Initialise` and `SysTracker::Update` include. It still
-  spells `unk_004` / `unk_008`. Merging the three shadows is its own change
-  with its own blast radius, and this pass owns only `include/Particle.h` and
-  `include/Stage.h`.
 * Seven of the ten `mSystemID_*` slots and eleven of the `mCallback_*`
   subobjects keep their offset in the name. The evidence proves what they
   *are*; nothing surviving in the tree says which effect each one drives.
@@ -252,8 +277,9 @@ conservative name stands.
 the thirty this pass was pointed at all belonged to the `Particle::SysTracker`
 embedded at 0x50, which is the same class as `include/Particle.h` and is
 covered by the table at the top of this file. The two copies are kept identical
-by hand. (`include/Particle__SysTracker.h` is a third copy and still says
-`unk_`; nothing in this pass owns it.)
+by hand. (`include/Particle__SysTracker.h` is a third copy; it spelled `unk_`
+until a later pass that owned it collapsed its three fields onto these same
+names -- see "The third shadow" above.)
 
 What was left here was *padding* rather than `unk_`, and two runs of it turned
 out to be real structure.
