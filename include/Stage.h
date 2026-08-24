@@ -12,7 +12,10 @@ struct LVL_Overlay;
 /* Particle::SysTracker, embedded at Stage+0x50. Declared locally rather than
  * pulled from include/Particle.h / include/Particle__SysTracker.h, which are
  * two separate generated shadows of this same class; merging them is its own
- * change with its own blast radius. See notes/scene-provenance.md.
+ * change with its own blast radius. See notes/scene-provenance.md, and
+ * notes/system-provenance.md for what each field below is and how it is known.
+ * This copy and include/Particle.h are kept identical by hand;
+ * include/Particle__SysTracker.h is the third shadow and still says unk_.
  *
  * The destructor is declared, never defined -- src/_ZN8Particle10SysTrackerD1Ev.cpp
  * supplies it as an extern "C" free function, and this declaration only lets
@@ -20,61 +23,61 @@ struct LVL_Overlay;
  * RTTI record and no _ZTV in the ROM, so it must not gain a vtable pointer. */
 namespace Particle {
 struct SysTracker {
-    u8  pad_000[0x4];
-    s32 unk_004;            /* 0x004 */
-    u8  unk_008;            /* 0x008 */
+    void *mResourceFile;    /* 0x000 */
+    void *mManager;         /* 0x004 */
+    u8  mContents;          /* 0x008 */
     u8  pad_009[0x747];
-    s32 unk_750;            /* 0x750 */
-    u8  mParticle1;          /* 0x754 */
+    s32 mRunningSlidingDustSystemID;  /* 0x750 */
+    u8  mRunningSlidingDustCallback;  /* 0x754 */
     u8  pad_755[0x7];
-    s32 unk_75c;            /* 0x75c */
-    u8  mParticle2;          /* 0x760 */
+    s32 mSystemID_75c;      /* 0x75c */
+    u8  mCallback_760;      /* 0x760 */
     u8  pad_761[0x7];
-    s32 unk_768;            /* 0x768 */
-    u8  unk_76c;            /* 0x76c */
+    s32 mBigSplashSystemID; /* 0x768 */
+    u8  mBigSplashCallback; /* 0x76c */
     u8  pad_76d[0x7];
-    s32 unk_774;            /* 0x774 */
-    u8  unk_778;            /* 0x778 */
+    s32 mSystemID_774;      /* 0x774 */
+    u8  mCallback_778;      /* 0x778 */
     u8  pad_779[0x7];
-    s32 unk_780;            /* 0x780 */
-    u8  unk_784;            /* 0x784 */
+    s32 mSystemID_780;      /* 0x780 */
+    u8  mCallback_784;      /* 0x784 */
     u8  pad_785[0x7];
-    s32 unk_78c;            /* 0x78c */
-    u8  unk_790;            /* 0x790 */
+    s32 mRippleSystemID;    /* 0x78c */
+    u8  mRippleCallback;    /* 0x790 */
     u8  pad_791[0x7];
-    s32 unk_798;            /* 0x798 */
-    u8  mParticle3;          /* 0x79c */
+    s32 mSystemID_798;      /* 0x798 */
+    u8  mCallback_79c;      /* 0x79c */
     u8  pad_79d[0x7];
-    s32 unk_7a4;            /* 0x7a4 */
-    u8  mParticle4;          /* 0x7a8 */
+    s32 mSystemID_7a4;      /* 0x7a4 */
+    u8  mCallback_7a8;      /* 0x7a8 */
     u8  pad_7a9[0x7];
-    s32 unk_7b0;            /* 0x7b0 */
-    u8  unk_7b4;            /* 0x7b4 */
+    s32 mSystemID_7b0;      /* 0x7b0 */
+    u8  mCallback_7b4;      /* 0x7b4 */
     u8  pad_7b5[0xb];
-    s32 unk_7c0;            /* 0x7c0 */
-    u8  unk_7c4;            /* 0x7c4 */
+    s32 mSystemID_7c0;      /* 0x7c0 */
+    u8  mCallback_7c4;      /* 0x7c4 */
     u8  pad_7c5[0xf];
-    u8  unk_7d4;            /* 0x7d4 */
+    u8  mCallback_7d4;      /* 0x7d4 */
     u8  pad_7d5[0xf];
-    u8  unk_7e4;            /* 0x7e4 */
+    u8  mCallback_7e4;      /* 0x7e4 */
     u8  pad_7e5[0xb];
-    u8  unk_7f0;            /* 0x7f0 */
+    u8  mCallback_7f0;      /* 0x7f0 */
     u8  pad_7f1[0x3];
-    u8  unk_7f4;            /* 0x7f4 */
+    u8  mCallback_7f4;      /* 0x7f4 */
     u8  pad_7f5[0x3];
-    u8  unk_7f8;            /* 0x7f8 */
+    u8  mCallback_7f8;      /* 0x7f8 */
     u8  pad_7f9[0x3];
-    s32 unk_7fc;            /* 0x7fc */
-    u8  unk_800;            /* 0x800 */
+    s32 mCallbackParam_7fc; /* 0x7fc */
+    u8  mCallback_800;      /* 0x800 */
     u8  pad_801[0x3];
-    s32 unk_804;            /* 0x804 */
-    u8  unk_808;            /* 0x808 */
+    s32 mCallbackParam_804; /* 0x804 */
+    u8  mCallback_808;      /* 0x808 */
     u8  pad_809[0x7];
-    u8  unk_810;            /* 0x810 */
+    u8  mWeatherCallback;   /* 0x810 */
     u8  pad_811[0x3];
-    u8  unk_814;            /* 0x814 */
+    u8  mWeatherCallbackCount; /* 0x814 */
     u8  pad_815[0x3];
-    u8  unk_818;            /* 0x818 */
+    u8  mCallback_818;      /* 0x818 */
     u8  pad_819[0x3];       /* rounds 0x819 up to the 0x81c alignment boundary */
 
     ~SysTracker();
@@ -84,6 +87,24 @@ struct SysTracker {
    and it is also exactly the gap Stage's own D1/D0 give this member. */
 typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1];
 }
+
+/* One per level texture animation, eight slots' worth at Stage+0x8bc.
+ * Stage::LoadTextureTransformers fills them: for each entry of the level's
+ * animation table (data_0209f340) that carries a BTA file it news a 0x14-byte
+ * TextureTransformer, constructs it, and stores it in the slot, striding 0xc.
+ * Stage::Render advances the transformer when the flag at +0x04 is set;
+ * Stage::RenderModelTransparent reads the same flag to decide whether that
+ * part's materials get the transparent bit; Stage::CleanupResources destroys
+ * the transformer through its vtable and then walks the list at +0x08, whose
+ * next pointer is at +0x0c, freeing every block. */
+struct StageTexAnimSlot {
+    void *mTransformer;     /* 0x00 - TextureTransformer, 0x14 bytes, heap */
+    u8  mActive;            /* 0x04 */
+    u8  pad_05[0x3];
+    void *mBlockList;       /* 0x08 - singly linked, next pointer at +0x0c */
+};
+
+typedef char StageTexAnimSlot_size_must_be_0xc[sizeof(struct StageTexAnimSlot) == 0xc ? 1 : -1];
 
 /* The playable level: fBase_c -> dBase_c -> dScene_c -> Stage (dScStage_c in
  * the ROM's own type graph). A leaf; it adds no virtual of its own and
@@ -99,13 +120,14 @@ typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1]
 struct Stage : dScene_c {
     Particle::SysTracker mSysTracker;  /* 0x050 */
     Model mModel;             /* 0x86c */
-    u8  pad_8bc[0x60];       /* Model ends 0x8bc; dBgW_Kc does not start until 0x91c */
+    StageTexAnimSlot mTexAnimSlots[8];  /* 0x8bc - Model ends here, and dBgW_Kc
+                                           does not start until 0x91c */
     dBgW_Kc mMeshCollider; /* 0x91c */
     /* Two fog setups, 0x28 apart: LoadFog fills both by hand and then walks
        this array with `dst += 0x28` per level fog record. */
     Fog mFog[2];            /* 0x96c */
     /* Allocated by LoadSkybox, destroyed through its vtable by CleanupResources. */
-    Model *skyboxModel;     /* 0x9bc */
+    Model *mSkyboxModel;    /* 0x9bc */
 
     /* Declared first, deliberately: makes ~Stage the key function. */
     virtual ~Stage();
@@ -150,7 +172,12 @@ struct Stage : dScene_c {
     static int  CanPause();
     /* Trailing extent the ROM's `new Stage` size literal proves; see
        tools/opnew_sizes.py. */
-    u8 pad_9c0[0x8];
+    u8  pad_9c0[0x4];
+    /* Latches the two-phase level load. InitResources runs its whole first
+       block only while this is zero, sets it when data_0209fc68 says a wait is
+       needed, and from then on returns -1 -- "call me again" -- until
+       func_020308a8 reports the load finished. */
+    s32 mWaitingForLoad;    /* 0x9c4 */
 
     /* Scene-graph hooks: vtable slots 1/2 of dScStage_c::graphCallback_c.
        Non-virtual on purpose -- declaring them virtual would make this TU emit

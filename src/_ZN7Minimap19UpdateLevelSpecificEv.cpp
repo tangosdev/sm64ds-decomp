@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "Minimap.h"
 extern "C" {
 extern s8 data_0209f2f8;
 extern u8 data_0209f220;
@@ -14,10 +15,6 @@ namespace G2S {
 
 struct Event {
     static int GetBit(unsigned int bit);
-};
-
-struct Minimap {
-    static void UpdateLevelSpecific();
 };
 
 void Minimap::UpdateLevelSpecific()

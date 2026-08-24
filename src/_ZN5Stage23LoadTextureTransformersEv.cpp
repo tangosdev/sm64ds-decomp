@@ -16,7 +16,7 @@ extern void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void* self, vo
 void Stage::LoadTextureTransformers()
 {
   struct Entry* e = data_0209f340->entries;
-  void** slot = (void**)((char*)pad_8bc);
+  void** slot = (void**)mTexAnimSlots;
   void* bmd = *(void**)((char*)&mModel.data);
   int i;
   for(i=0;i<(int)data_0209f340->count;i++){
