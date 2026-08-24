@@ -9,7 +9,7 @@
  *     dEnemyBase_c                     ends 0x110
  *     dCcAcPos_c 0x110 + 0x040 = 0x150  -> the second one
  *     dCcAcPos_c 0x150 + 0x040 = 0x190  -> dBgCh_Actr
- *     dBgCh_Actr              0x190 + 0x1bc = 0x34c  -> unk_34c
+ *     dBgCh_Actr              0x190 + 0x1bc = 0x34c  -> mState
  *     BlendModelAnim            0x350 + 0x070 = 0x3c0
  *     Vector3[7]                0x448 + 0x054 = 0x49c  -> mStarUniqueID
  *
@@ -33,32 +33,27 @@ struct Unagi : dEnemyBase_c {
     dCcAcPos_c mdCcAcPos_c1;  /* 0x110 */
     dCcAcPos_c mdCcAcPos_c2;  /* 0x150 */
     dBgCh_Actr mWithMeshClsn;                             /* 0x190 */
-    s32 unk_34c;                                            /* 0x34c */
+    s32 mState;                                             /* 0x34c */
     BlendModelAnim mBlendModelAnim;                         /* 0x350 */
     s32 unk_3c0;                                            /* 0x3c0 */
     u8  pad_3c4[0x2c];
-    s32 unk_3f0;                                            /* 0x3f0 */
-    s32 unk_3f4;                                            /* 0x3f4 */
-    s32 unk_3f8;                                            /* 0x3f8 */
+    s32 mHomePosX;                                          /* 0x3f0 */
+    s32 mHomePosY;                                          /* 0x3f4 */
+    s32 mHomePosZ;                                          /* 0x3f8 */
     u8  pad_3fc[0x8];
     s32 mPathID;                                            /* 0x404 */
     s32 mVariant;                                           /* 0x408 */
-    s32 unk_40c;                                            /* 0x40c */
-    s32 unk_410;                                            /* 0x410 */
-    u8  unk_414;                                            /* 0x414 */
+    s32 mPathNodeCount;                                     /* 0x40c */
+    s32 mPathNodeIndex;                                     /* 0x410 */
+    u8  mStarParam;                                         /* 0x414 */
     u8  pad_415[0x3];
-    u8  unk_418;                                            /* 0x418 */
-    u8  pad_419[0xd];
-    u8  unk_426;                                            /* 0x426 */
-    u8  pad_427[0x1];
-    s16 unk_428;                                            /* 0x428 */
-    s16 unk_42a;                                            /* 0x42a */
-    s16 unk_42c;                                            /* 0x42c */
+    s16 mSegmentAngle[8];                                   /* 0x418 */
+    s16 mInitAngleX;                                        /* 0x428 */
+    s16 mInitAngleY;                                        /* 0x42a */
+    s16 mInitAngleZ;                                        /* 0x42c */
     u8  pad_42e[0xe];
-    s32 unk_43c;                                            /* 0x43c */
-    s32 unk_440;                                            /* 0x440 */
-    s32 unk_444;                                            /* 0x444 */
-    Vector3 unk_448[7];                                     /* 0x448 */
+    Vector3 mStarPos;                                       /* 0x43c */
+    Vector3 mSegmentPos[7];                                 /* 0x448 */
     s32 mStarUniqueID;                                      /* 0x49c */
     /* trailing extent the ROM's `new Unagi` literal proves; see tools/opnew_sizes.py */
     u8 pad_4a0[0x10];
@@ -106,7 +101,7 @@ struct Unagi {
     u8  pad_151[0x3f];
     u8  mWithMeshClsn;            /* 0x190 */
     u8  pad_191[0x1bb];
-    s32 unk_34c;            /* 0x34c */
+    s32 mState;            /* 0x34c */
     u8  mBlendModelAnim;            /* 0x350 */
     u8  pad_351[0xf];
     s32 unk_360;            /* 0x360 */
@@ -115,27 +110,24 @@ struct Unagi {
     u8  pad_3b0[0x4];
     s32 unk_3b4;            /* 0x3b4 */
     u8  pad_3b8[0x38];
-    s32 unk_3f0;            /* 0x3f0 */
-    s32 unk_3f4;            /* 0x3f4 */
-    s32 unk_3f8;            /* 0x3f8 */
+    s32 mHomePosX;            /* 0x3f0 */
+    s32 mHomePosY;            /* 0x3f4 */
+    s32 mHomePosZ;            /* 0x3f8 */
     u8  pad_3fc[0x8];
     s32 mPathID;            /* 0x404 */
     s32 mVariant;            /* 0x408 */
-    s32 unk_40c;            /* 0x40c */
-    s32 unk_410;            /* 0x410 */
-    u8  unk_414;            /* 0x414 */
+    s32 mPathNodeCount;            /* 0x40c */
+    s32 mPathNodeIndex;            /* 0x410 */
+    u8  mStarParam;            /* 0x414 */
     u8  pad_415[0x3];
-    u8  unk_418;            /* 0x418 */
-    u8  pad_419[0xd];
-    u8  unk_426;            /* 0x426 */
-    u8  pad_427[0x1];
-    s16 unk_428;            /* 0x428 */
-    s16 unk_42a;            /* 0x42a */
-    s16 unk_42c;            /* 0x42c */
+    s16 mSegmentAngle[8];            /* 0x418 */
+    s16 mInitAngleX;            /* 0x428 */
+    s16 mInitAngleY;            /* 0x42a */
+    s16 mInitAngleZ;            /* 0x42c */
     u8  pad_42e[0xe];
-    s32 unk_43c;            /* 0x43c */
-    s32 unk_440;            /* 0x440 */
-    s32 unk_444;            /* 0x444 */
+    s32 mStarPosX;            /* 0x43c */
+    s32 mStarPosY;            /* 0x440 */
+    s32 mStarPosZ;            /* 0x444 */
     u8  pad_448[0x54];
     s32 mStarUniqueID;            /* 0x49c */
     /* trailing extent the ROM's `new Unagi` literal proves; see tools/opnew_sizes.py */

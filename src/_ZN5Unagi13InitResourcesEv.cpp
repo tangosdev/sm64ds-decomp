@@ -36,7 +36,6 @@ int Unagi::InitResources()
     V3 v1;
     V3 v2;
     int i;
-    char* r3;
     void* f;
     char* spawned;
 
@@ -48,7 +47,7 @@ int Unagi::InitResources()
 
     mPathID = param1 & 0xff;
     mVariant = (param1 >> 8) & 0xf;
-    unk_414 = (param1 >> 0xc) & 0xf;
+    mStarParam = (param1 >> 0xc) & 0xf;
     if (mVariant == 0xff)
         mVariant = 0;
     if (mPathID < 0)
@@ -56,11 +55,11 @@ int Unagi::InitResources()
 
     _ZN7PathPtrC1Ev(&path1);
     _ZN7PathPtr6FromIDEj(&path1, mPathID);
-    unk_40c = _ZNK7PathPtr8NumNodesEv(&path1);
+    mPathNodeCount = _ZNK7PathPtr8NumNodesEv(&path1);
 
-    unk_3f0 = mPosX;
-    unk_3f4 = mPosY;
-    unk_3f8 = mPosZ;
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
     mTerminalVelocity = -0x1e000;
     v1 = data_ov016_02114d4c;
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
@@ -71,9 +70,9 @@ int Unagi::InitResources()
 
     _ZN7PathPtrC1Ev(&path2);
     _ZN7PathPtr6FromIDEj(&path2, mPathID);
-    unk_410 = 1;
+    mPathNodeIndex = 1;
     mStarUniqueID = 0;
-    (*(s32 *)((char *)&mBlendModelAnim + 0x5c)) = 0x1000;
+    mBlendModelAnim.speed = 0x1000;
 
     if (data_0209f220 == 1)
         goto check_param2;
@@ -85,10 +84,10 @@ check_param2:
         goto ret0_a;
     /* u64-mask forces add r2,r4,#0x3f4 materialization (ROM shape) */
     *(int*)(((int)((char*)this) + 0x3f4)) -= 0x80000;
-    unk_410 = 8;
-    if (unk_410 >= unk_40c)
-        unk_410 = 4;
-    mPosY = unk_3f4;
+    mPathNodeIndex = 8;
+    if (mPathNodeIndex >= mPathNodeCount)
+        mPathNodeIndex = 4;
+    mPosY = mHomePosY;
     func_ov016_02111bf0(((char*)this), &data_ov016_02114d8c);
     goto tail;
 ret0_a:
@@ -104,7 +103,7 @@ check_param1:
     if (mVariant != 1)
         goto ret0_b;
     spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-        0xb2, unk_414 | 0x50, ((char*)this) + 0x5c, 0,
+        0xb2, mStarParam | 0x50, ((char*)this) + 0x5c, 0,
         mAreaId, -1);
     if (spawned != 0) {
         mStarUniqueID = *(int*)(spawned + 4);
@@ -131,18 +130,16 @@ ret0_c:
     return 0;
 
 tail:
-    r3 = ((char*)this);
     for (i = 0; i < 7; i++) {
         /* array index form -> add r0,r4,ip,lsl#1 (not strength-reduced i*2) */
-        ((short*)((char*)&unk_418))[i] = 0;
-        ((short*)((char*)&unk_426))[0] = 0;
-        *(int*)(r3 + 0x448) = mPosX;
-        *(int*)(r3 + 0x44c) = mPosY;
-        *(int*)(r3 + 0x450) = mPosZ;
-        r3 += 0xc;
+        mSegmentAngle[i] = 0;
+        mSegmentAngle[7] = 0;
+        mSegmentPos[i].x = mPosX;
+        mSegmentPos[i].y = mPosY;
+        mSegmentPos[i].z = mPosZ;
     }
-    unk_428 = mAngleX;
-    unk_42a = mAngleY;
-    unk_42c = mAngleZ;
+    mInitAngleX = mAngleX;
+    mInitAngleY = mAngleY;
+    mInitAngleZ = mAngleZ;
     return 1;
 }

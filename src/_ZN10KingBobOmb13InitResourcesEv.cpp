@@ -70,18 +70,18 @@ int KingBobOmb::InitResources()
     v1.z = data_ov078_02126e00.z;
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this)+0x37c, (dActor_c*)((char*)this), &v1, 0xc8000, 0xc8000, 0x200000, 0x207000);
     unk_498 = 0x1f;
-    unk_4e0 = mPosX;
-    unk_4e4 = mPosY;
-    unk_4e8 = mPosZ;
-    unk_4d4 = 0xb1d000;
-    unk_4d8 = 0x1060000;
-    unk_4dc = 0xfee15000;
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
+    mArenaPosX = 0xb1d000;
+    mArenaPosY = 0x1060000;
+    mArenaPosZ = 0xfee15000;
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x110, (dActor_c*)((char*)this), 0x190000, 0x190000, 0, 0);
     func_02035550((char*)&(*(dBgCh_Actr *)&mWithMeshClsn));
-    unk_4fc = 1;
+    mAnimSpeed = 1;
     unk_500 = 3;
-    unk_509 = (*(s32 *)&param1) & 0xf;
-    unk_507 = _ZN8dActor_c9TrackStarEjj(((char*)this), unk_509, 2);
+    mStarID = (*(s32 *)&param1) & 0xf;
+    mStarTracked = _ZN8dActor_c9TrackStarEjj(((char*)this), mStarID, 2);
 #pragma opt_strength_reduction off
     {
     int z = 0;
@@ -95,7 +95,7 @@ int KingBobOmb::InitResources()
         int *p = (int*)((char*)&unk_4a0);
         *p = *p + 1;
     }
-    *(short*)(((char*)this)+0x400+0xf8) = mAngleY;
+    mInitAngleY = mAngleY;
     KingBobOmb_SetState(((char*)this), &data_ov078_0212710c);
     return 1;
 }

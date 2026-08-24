@@ -27,7 +27,7 @@ s32 Unagi::Render()
     bone = (char *)mBlendModelAnim.data.bones + 0x34;
     step = data_ov016_02114908;
     for (i = 1; i < 7; i++) {
-        s16 movement = ((s16 *)&unk_418)[i];
+        s16 movement = mSegmentAngle[i];
         u16 *angle = (u16 *)(bone + 0x1e);
         *angle = *angle + (u16)(s16)(movement * step->angleScale);
         step++;

@@ -33,7 +33,7 @@ int Unagi::Behavior()
 
     DecIfAbove0_Short((u16*)((char*)&unk_100));
     {
-        Disp* d = *(Disp**)((char*)&unk_34c);
+        Disp* d = *(Disp**)((char*)&mState);
         if (d->pmf) {
             (((C*)((char*)this))->*(d->pmf))();
         }
@@ -52,16 +52,14 @@ int Unagi::Behavior()
         if (mVariant == 1) {
             void* cp = _ZN8dActor_c13ClosestPlayerEv(((char*)this));
             if (cp != 0) {
-                int off43c = 0x43c;
-                if (Vec3_Dist(((char*)this) + off43c, (char*)cp + 0x5c) < 0xfa000) {
+                if (Vec3_Dist(&mStarPos, (char*)cp + 0x5c) < 0xfa000) {
                     _ZN7fBase_c18MarkForDestructionEv(found);
                     {
                         int param = mAreaId;
                         int m1 = -1;
-                        int off = 0x43c;
                         _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                            0xb2, unk_414 | 0x40,
-                            *(Vector3*)(((char*)this) + off), (Vector3_16*)0,
+                            0xb2, mStarParam | 0x40,
+                            mStarPos, (Vector3_16*)0,
                             param, m1);
                     }
                     mStarUniqueID = 0;
@@ -75,12 +73,12 @@ int Unagi::Behavior()
     after_first:
         if (mStarUniqueID != 0) {
 
-        int x = unk_43c;
+        int x = mStarPos.x;
         int off = 0x416;
         *(int*)((char*)found + 0x5c) = x;
         short* r = (short*)LA(((char*)this) + off);
-        *(int*)((char*)found + 0x60) = unk_440;
-        *(int*)((char*)found + 0x64) = unk_444;
+        *(int*)((char*)found + 0x60) = mStarPos.y;
+        *(int*)((char*)found + 0x64) = mStarPos.z;
         *r += 0x1000;
 
         }
@@ -89,7 +87,7 @@ int Unagi::Behavior()
     func_ov016_02111284(((char*)this));
     _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c1);
     _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c1);
-    if (data_0209f220 == 1 && *(void**)((char*)&unk_34c) != &data_ov016_02114dbc) {
+    if (data_0209f220 == 1 && *(void**)((char*)&mState) != &data_ov016_02114dbc) {
         _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c2);
         _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c2);
     }
