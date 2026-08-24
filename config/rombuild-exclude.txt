@@ -45,7 +45,6 @@ _ZN15RecRoomCupboardD1Ev
 _ZN15RecRoomCupboardD0Ev
 _ZN14BlendModelAnimD1Ev
 _ZN5ModelD2Ev
-_ZN5ModelD1Ev
 CleanCommonModelDataArr
 func_020313d8
 
