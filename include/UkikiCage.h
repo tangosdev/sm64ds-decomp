@@ -35,7 +35,7 @@ struct dActor_c;
 
 struct UkikiCage : dBgActor_c {
     dBgCh_Actr mWithMeshClsn;       /* 0x320 */
-    s32 unk_4dc;                      /* 0x4dc */
+    s32 mStarActor;                 /* 0x4dc -- the dActor_c * that InitResources' Spawn(0xb2, ...) returned */
 
     /* --- vtable --- */
     virtual ~UkikiCage();
@@ -56,23 +56,23 @@ typedef char UkikiCage_size_must_be_0x4e0[sizeof(UkikiCage) == 0x4e0 ? 1 : -1];
    Trap.h). */
 struct UkikiCage {
     u8  pad_000[0x5c];
-    s32 unk_05c;            /* 0x05c */
-    s32 unk_060;            /* 0x060 */
-    s32 unk_064;            /* 0x064 */
+    s32 mPosX;              /* 0x05c */
+    s32 mPosY;              /* 0x060 */
+    s32 mPosZ;              /* 0x064 */
     u8  pad_068[0x18];
-    s32 unk_080;            /* 0x080 */
-    s32 unk_084;            /* 0x084 */
-    s32 unk_088;            /* 0x088 */
+    s32 mScaleX;            /* 0x080 */
+    s32 mScaleY;            /* 0x084 */
+    s32 mScaleZ;            /* 0x088 */
     u8  pad_08c[0x2];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x8];
-    s32 unk_098;            /* 0x098 */
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mHorzSpeed;         /* 0x098 */
+    s32 mVertAccel;         /* 0x09c */
+    s32 mTerminalVelocity;  /* 0x0a0 */
     u8  pad_0a4[0x28];
-    s8  unk_0cc;            /* 0x0cc */
+    s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x40f];
-    s32 unk_4dc;            /* 0x4dc */
+    s32 mStarActor;         /* 0x4dc */
 };
 
 #endif /* __cplusplus */

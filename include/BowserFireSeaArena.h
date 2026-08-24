@@ -36,9 +36,9 @@ struct BowserFireSeaArena : dBgActor_c {
     /* THIS CLASS'S OWN, not dBgActor_c's -- dBgActor_c ends at 0x31e. They are what
        push mModel2 from 0x320 to 0x324, and the first two sit in the base's
        tail padding. */
-    s16 unk_31e;                                /* 0x31e */
-    s16 unk_320;                                /* 0x320 */
-    s16 unk_322;                                /* 0x322 */
+    s16 mAngleXSpeed;                           /* 0x31e -- Behavior adds it to mAngleX every frame */
+    s16 mAngleYSpeed;                           /* 0x320 -- ... to mAngleY */
+    s16 mAngleZSpeed;                           /* 0x322 -- ... to mAngleZ */
     Model mModel2;                              /* 0x324 */
     dBgW_KcMbg mMovingMeshCollider2;    /* 0x374 */
     u8  pad_53c[0x30];
@@ -63,7 +63,7 @@ typedef char BowserFireSeaArena_size_must_be_0x570[
    dBgActor_c's and dActor_c's fields from and so spells the whole layout flat. */
 struct BowserFireSeaArena {
     u8  pad_000[0x8e];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x44];
     /* Model member, named by the class's own destructor calling
        Model's D1 at +0x0d4 -- a relocation the ROM build
@@ -71,9 +71,9 @@ struct BowserFireSeaArena {
     Model mModel1;            /* 0x0d4 */
     dBgW_KcMbg mMovingMeshCollider1;    /* 0x124 */
     u8  pad_2ec[0x32];
-    s16 unk_31e;            /* 0x31e */
-    s16 unk_320;            /* 0x320 */
-    s16 unk_322;            /* 0x322 */
+    s16 mAngleXSpeed;       /* 0x31e */
+    s16 mAngleYSpeed;       /* 0x320 */
+    s16 mAngleZSpeed;       /* 0x322 */
     /* Model member, named by _ZN5ModelD1Ev at +0x324 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel2;            /* 0x324 */

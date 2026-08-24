@@ -12,7 +12,7 @@
  * include/UkikiCage.h declares a real class (its members are the base
  * dActor_c/dBgActor_c fields, not restated here), so the same offsets --
  * mAngleY/mHorzSpeed/mVertAccel at 0x8e/0x98/0x9c (include/dActor_c.h) and
- * this class's own unk_060/0x064/0x05c/0x4dc -- are read by hand offset
+ * this class's own mPosX/Y/Z and mStarActor (0x4dc) -- are read by hand offset
  * instead, unconverted from the pre-migration bytes. */
 #include "decl_common.h"
 extern "C" int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(char *c, int a, int b);

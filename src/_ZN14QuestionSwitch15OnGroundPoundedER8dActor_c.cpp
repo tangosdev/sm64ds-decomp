@@ -7,5 +7,5 @@
 
 void QuestionSwitch::OnGroundPounded(dActor_c &other)
 {
-    unk_718 = 0;
+    mPressTimer = 0;
 }

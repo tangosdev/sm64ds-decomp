@@ -9,7 +9,7 @@
  * src/QuestionSwitch_Spawn.c constructing both and src/_ZN14QuestionSwitchD1Ev.cpp
  * destroying both before chaining to dBgActor_c), then a ModelAnim at 0x6b4
  * (0x64 bytes, ends exactly at 0x718). Field names below keep what
- * src/_ZN14QuestionSwitch*.cpp already call them (unk_324, mMovingMeshCollider)
+ * src/_ZN14QuestionSwitch*.cpp already call them (mStaticMeshCollider, mMovingMeshCollider)
  * to avoid touching working call sites; only the TYPE changes, from a u8
  * marker to the real member. */
 #ifndef QUESTIONSWITCH_H
@@ -25,17 +25,20 @@
 
 struct QuestionSwitch : dBgActor_c {
     s32 mActiveMeshCollider;            /* 0x320 -- points at whichever MMC below is live */
-    dBgW_KcMbg unk_324;         /* 0x324 */
+    /* The switch owns two colliders. mActiveMeshCollider points at this one
+       until the switch fires, at whichever one InitResources picked from the
+       saved bit, and at mMovingMeshCollider afterwards. */
+    dBgW_KcMbg mStaticMeshCollider;         /* 0x324 */
     dBgW_KcMbg mMovingMeshCollider;    /* 0x4ec */
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x6b4 -- a relocation
        the ROM build checks. D1 and not D2, so it is this type and not an
        inlined base. */
     ModelAnim mModelAnim;               /* 0x6b4 */
-    s8  unk_718;            /* 0x718 */
+    s8  mPressTimer;        /* 0x718 -- counts down while mPressedThisFrame is set; at 0 the switch fires */
     u8  pad_719[0x1];
-    u8  unk_71a;            /* 0x71a */
-    u8  unk_71b;            /* 0x71b */
-    u16 unk_71c;            /* 0x71c */
+    u8  mPressedThisFrame;  /* 0x71a -- cleared by the last statement of every Behavior */
+    u8  mTalking;           /* 0x71b -- gates the whole Player::StartTalk/ShowMessage/EndTalk block */
+    u16 mSoundDelay;        /* 0x71c -- 0x4b at talk start, run down by DecIfAbove0_Short */
     u8  pad_71e[0x2];
     s32 mTalkingPlayer;            /* 0x720 */
 
@@ -78,19 +81,19 @@ struct QuestionSwitch {
     /* dBgW_KcMbg member. The cartridge's own ~QuestionSwitch calls _ZN10dBgW_KcMbgD1Ev
        at +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg unk_124;            /* 0x124 */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x34];
     s32 mActiveMeshCollider;            /* 0x320 */
-    u8  unk_324;            /* 0x324 */
+    u8  mStaticMeshCollider;            /* 0x324 */
     u8  pad_325[0x1c7];
     u8  mMovingMeshCollider;            /* 0x4ec */
     u8  pad_4ed[0x1c7];
     u8  mModelAnim[0x64];            /* 0x6b4 */
-    s8  unk_718;            /* 0x718 */
+    s8  mPressTimer;        /* 0x718 -- counts down while mPressedThisFrame is set; at 0 the switch fires */
     u8  pad_719[0x1];
-    u8  unk_71a;            /* 0x71a */
-    u8  unk_71b;            /* 0x71b */
-    u16 unk_71c;            /* 0x71c */
+    u8  mPressedThisFrame;  /* 0x71a -- cleared by the last statement of every Behavior */
+    u8  mTalking;           /* 0x71b -- gates the whole Player::StartTalk/ShowMessage/EndTalk block */
+    u16 mSoundDelay;        /* 0x71c -- 0x4b at talk start, run down by DecIfAbove0_Short */
     u8  pad_71e[0x2];
     s32 mTalkingPlayer;            /* 0x720 */
 };
