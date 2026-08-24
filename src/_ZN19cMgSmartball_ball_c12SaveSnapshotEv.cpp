@@ -44,20 +44,20 @@ void cMgSmartball_ball_c::SaveSnapshot()
 
     if (soundTimer > 0)
         soundTimer -= 1;
-    if (unk_030 == 0)
+    if (mIsActive == 0)
         return;
     if (mExpireTimer > 0) {
         mExpireTimer -= 1;
         if (mExpireTimer <= 0) {
-            unk_030 = 0;
+            mIsActive = 0;
             return;
         }
     }
     if (mIsFrozen == 1) {
         mCurrent0 = mFrozenPos0;
         mCurrent1 = mFrozenPos1;
-        unk_020 = 0;
-        unk_024 = 0;
+        mVel0 = 0;
+        mVel1 = 0;
         return;
     }
     if (mCurrent0 >= 0x8000 && mCurrent0 < 0xd8000 &&
@@ -77,7 +77,7 @@ void cMgSmartball_ball_c::SaveSnapshot()
     } else {
         mZoneDwell = 0;
     }
-    if (unk_02c == *(int *)((char *)unk_004 + 0x4664)) {
+    if (mIndex == *(int *)((char *)mpManager + 0x4664)) {
         if (mInPlay != 0)
             mIsWaiting = 0;
     }
@@ -87,7 +87,7 @@ void cMgSmartball_ball_c::SaveSnapshot()
         mCurrent1 < -0xf0000 || mCurrent1 >= 0xc0000) {
         mStuckFrames += 1;
     } else {
-        if ((*(int *)((char *)unk_004 + 8) & 0xff) != 0) {
+        if ((*(int *)((char *)mpManager + 8) & 0xff) != 0) {
             Vec2_Sub(&d1, (V2 *)&mCurrent0, (V2 *)&mLastPos0);
             t = Vec2_Len(&d1) < 0x8000;
             if (t != 0) {
@@ -137,23 +137,23 @@ after2:
         ph.z = 0x9e000;
         if (func_ov006_02114590((char *)this, &pe, &pf, &pg, &ph) != 0) {
 bounce:
-            unk_020 += 0x80;
-            if (unk_020 >= 0x2000)
-                unk_020 = 0x2000;
-            unk_024 += 0x80;
+            mVel0 += 0x80;
+            if (mVel0 >= 0x2000)
+                mVel0 = 0x2000;
+            mVel1 += 0x80;
         } else {
-            unk_024 += 0x100;
+            mVel1 += 0x100;
         }
     }
-    if (unk_020 != 0 || unk_024 != 0) {
-        spd = Vec2_Len((V2 *)&unk_020);
+    if (mVel0 != 0 || mVel1 != 0) {
+        spd = Vec2_Len((V2 *)&mVel0);
         if (spd >= 0x8000)
             spd = 0x8000;
-        if (func_0203d434((V2 *)&unk_020) != 0)
-            func_0203d630((V2 *)&unk_020, spd);
+        if (func_0203d434((V2 *)&mVel0) != 0)
+            func_0203d630((V2 *)&mVel0, spd);
     }
-    mCurrent0 += unk_020;
-    mCurrent1 += unk_024;
+    mCurrent0 += mVel0;
+    mCurrent1 += mVel1;
     if (mIsWaiting == 1) {
         func_ov006_021128fc((char *)this);
     } else {
@@ -168,11 +168,11 @@ bounce:
                 vd.x = dx;
                 vd.z = dz;
             }
-            if (func_0203d524(&vc, &vd) < -unk_028)
+            if (func_0203d524(&vc, &vd) < -mRadius)
                 mExitGateOpen = 1;
         }
     }
-    mag = Vec2_Len((V2 *)&unk_020);
+    mag = Vec2_Len((V2 *)&mVel0);
     Vec2_Sub(&d2, (V2 *)&mCurrent0, (V2 *)&mSnapshot0);
     dist = Vec2_Len(&d2);
     if (specialHit != 0)
@@ -181,7 +181,7 @@ bounce:
         return;
     if (mag < 0x800)
         return;
-    if (func_0203d434((V2 *)&unk_020) == 0)
+    if (func_0203d434((V2 *)&mVel0) == 0)
         return;
-    func_0203d630((V2 *)&unk_020, dist);
+    func_0203d630((V2 *)&mVel0, dist);
 }

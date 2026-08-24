@@ -32,7 +32,7 @@ void cMgSmartball_spring_c::SaveSnapshot()
 
     mSnapshot0 = mCurrent0;
     mSnapshot1 = mCurrent1;
-    if (*(u8 *)((char *)unk_004 + 0x595d) != 0)
+    if (*(u8 *)((char *)mpManager + 0x595d) != 0)
         return;
 
     de8v = data_020a0de8[data_020a0e40 * 4];
@@ -43,8 +43,8 @@ void cMgSmartball_spring_c::SaveSnapshot()
 
     if (flag != 0) {
         unk_031 = 1;
-        unk_020 = 0;
-        unk_024 = 0;
+        mVel0 = 0;
+        mVel1 = 0;
         unk_03c = data_020a0dea[data_020a0e40 * 4] << 12;
         unk_034 = unk_03c;
         mDriveNow = data_020a0deb[data_020a0e40 * 4] << 12;
@@ -77,16 +77,16 @@ void cMgSmartball_spring_c::SaveSnapshot()
             m = 0;
         if (m != 0) {
             unk_031 = 0;
-            unk_020 = 0;
-            unk_024 = 0;
+            mVel0 = 0;
+            mVel1 = 0;
             return;
         }
     }
 
-    unk_024 -= (mCurrent1 - 0xa0000) / 16;
-    mCurrent1 += unk_024;
+    mVel1 -= (mCurrent1 - 0xa0000) / 16;
+    mCurrent1 += mVel1;
     if (mCurrent1 < 0xa0000) {
         mCurrent1 = 0xa0000;
-        unk_024 = 0;
+        mVel1 = 0;
     }
 }

@@ -34,7 +34,7 @@
  * positive and, in its last four frames, sweeps the manager's ball table at
  * mgr+0x4688 for a live ball within 0x11000 of this mushroom -- if one is
  * still resting on it, the timer is re-armed to 4 and it stays down. Its
- * value is also what drives the base's unk_028 for a variant-1 mushroom:
+ * value is also what drives the base's mRadius for a variant-1 mushroom:
  * eased down by 0x1000 a frame to 0 while the timer runs, back up to 0x7000
  * once it drains, which is the squash Update turns into a render scale.
  * RestoreInitial zeroes it; the constructor does not touch it -- both mWasHit
@@ -51,7 +51,7 @@
  *
  * CONSTRUCTED BY func_ov006_02111b40, left a free function per the recipe
  * (this tree has migrated zero constructors), with only its vtable-symbol
- * reference renamed. It sets the base's unk_028 to 0x7000 and mVariant to 2;
+ * reference renamed. It sets the base's mRadius to 0x7000 and mVariant to 2;
  * it does not touch mWasHit or mHitTimer. */
 #ifndef CMGSMARTBALL_KINOKO_C_H
 #define CMGSMARTBALL_KINOKO_C_H

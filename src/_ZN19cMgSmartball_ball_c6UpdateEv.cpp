@@ -11,14 +11,14 @@ extern "C" void *data_ov006_021382f8;
 void cMgSmartball_ball_c::Update()
 {
     int r2;
-    if (unk_030 == 0)
+    if (mIsActive == 0)
         return;
     if (mInPlay == 0)
         return;
     r2 = 1;
     if (state3a == 1)
         r2 = 3;
-    if ((*(int *)((char *)unk_004 + 8) & 0xff) == 0) {
+    if ((*(int *)((char *)mpManager + 8) & 0xff) == 0) {
         int x = mCurrent0;
         int y = mCurrent1;
         func_ov004_020afdd0(*(void **)&data_ov006_021382e0, (x + 0x800) >> 12, (y + 0x800) >> 12, -1, r2);

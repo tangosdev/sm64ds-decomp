@@ -26,7 +26,7 @@
  * CONSTRUCTED BY func_ov006_0210e480, left a free function per the recipe
  * (this tree has migrated zero constructors), with only its vtable-symbol
  * reference renamed. It calls the base constructor, stores this vtable, and
- * sets the base's unk_028 to 0x8000 -- the per-child constant every sibling
+ * sets the base's mRadius to 0x8000 -- the per-child constant every sibling
  * constructor also writes, each with its own value. It does not touch
  * unk_034; the field carries whatever the allocator left there until the
  * first RestoreInitial call. */

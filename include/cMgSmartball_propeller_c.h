@@ -40,7 +40,7 @@
  *
  * CONSTRUCTED BY func_ov006_02111220, left a free function for the same
  * reason the base's is (this tree has migrated zero constructors). It calls
- * the base constructor, stores this vtable, and sets the base's unk_028 to
+ * the base constructor, stores this vtable, and sets the base's mRadius to
  * 0x20000 -- the per-child constant every sibling's constructor also
  * writes, each with its own value. It does not touch 0x34/0x36 itself; they
  * carry whatever the allocator left there until RestoreInitial first sets

@@ -6,7 +6,7 @@
  * is still counting down, decrements it and, once it drops under 4, scans a
  * fixed actor list for anything within a fixed-point distance of 0x11000,
  * arming mHitTimer back to 4 on a hit. Always ends by easing the base's
- * unk_028 toward 0x7000 or 0, depending on mVariant and whether mHitTimer has
+ * mRadius toward 0x7000 or 0, depending on mVariant and whether mHitTimer has
  * drained. */
 #include "cMgSmartball_kinoko_c.h"
 
@@ -35,8 +35,8 @@ void cMgSmartball_kinoko_c::SaveSnapshot()
         if (mHitTimer == 0) {
             pair.x = mCurrent0;
             pair.y = mCurrent1;
-            func_ov006_02115598((void *)unk_004, (int *)&pair, 0x12c, 0, 1);
-            func_ov006_02115008((void *)unk_004);
+            func_ov006_02115598((void *)mpManager, (int *)&pair, 0x12c, 0, 1);
+            func_ov006_02115008((void *)mpManager);
             func_02012718((void *)0x19f, mCurrent0);
         }
         mWasHit = 0;
@@ -47,7 +47,7 @@ void cMgSmartball_kinoko_c::SaveSnapshot()
     } else if (mHitTimer > 0) {
         mHitTimer -= 1;
         if (mHitTimer < 4) {
-            obj = (char *)unk_004;
+            obj = (char *)mpManager;
             i = 0;
             if (*(int *)(obj + 0x4668) > 0) {
                 do {
@@ -63,7 +63,7 @@ void cMgSmartball_kinoko_c::SaveSnapshot()
                             goto done;
                         }
                     }
-                    obj = (char *)unk_004;
+                    obj = (char *)mpManager;
                     i++;
                 } while (i < *(int *)(obj + 0x4668));
             }
@@ -73,13 +73,13 @@ void cMgSmartball_kinoko_c::SaveSnapshot()
 done:
     if (mVariant == 1) {
         if (mHitTimer <= 0) {
-            unk_028 += 0x1000;
-            if (unk_028 > 0x7000)
-                unk_028 = 0x7000;
+            mRadius += 0x1000;
+            if (mRadius > 0x7000)
+                mRadius = 0x7000;
         } else {
-            unk_028 -= 0x1000;
-            if (unk_028 < 0)
-                unk_028 = 0;
+            mRadius -= 0x1000;
+            if (mRadius < 0)
+                mRadius = 0;
         }
     }
 }

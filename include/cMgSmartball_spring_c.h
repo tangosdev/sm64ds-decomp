@@ -21,7 +21,7 @@
  * byte tables (data_020a0de8/de9) and driven by two more (data_020a0dea/
  * deb, both shifted left 12 to become fixed-point):
  *   - "trigger" (a new flag byte set): sets the base's unk_031, zeroes the
- *     base's unk_020/unk_024, latches unk_03c/mDriveNow from the tables and
+ *     base's mVel0/mVel1, latches unk_03c/mDriveNow from the tables and
  *     mirrors each into unk_034/mDriveBase -- then, only if mCurrent1 is above
  *     the 0xa0000 baseline, pulls mDriveBase down by the excess.
  *   - "active" (unk_031 already 1): recomputes mDriveNow from the table each
@@ -29,9 +29,9 @@
  *     mCurrent1 from mDriveNow - mDriveBase + 0xa0000, and plays a sound via
  *     Sound_PlayIfNotActive (stored back into mSoundHandle) whenever that new
  *     mCurrent1 differs from the snapshot mSnapshot1.
- *   - "release": clears the base's unk_031/unk_020/unk_024, OR (if neither
+ *   - "release": clears the base's unk_031/mVel0/mVel1, OR (if neither
  *     the trigger nor the release condition holds) eases mCurrent1 back
- *     toward the 0xa0000 baseline using the base's unk_024 as velocity.
+ *     toward the 0xa0000 baseline using the base's mVel1 as velocity.
  *
  * The original spelled three of these updates through a raw pointer cast
  * that reads and writes the SAME address twice -- `int *p = (int *)(c +
@@ -57,7 +57,7 @@
  * reference renamed. Unlike every sibling, its only caller is the unmatched
  * func_ov006_02118b70 -- func_ov006_02115b0c.c never allocates a spring --
  * so this migration has fewer literal call sites to rename than usual. It
- * sets the base's unk_028 to 0x20000, the per-child constant every sibling
+ * sets the base's mRadius to 0x20000, the per-child constant every sibling
  * constructor also writes; it does not touch anything from 0x34 to 0x44. */
 #ifndef CMGSMARTBALL_SPRING_C_H
 #define CMGSMARTBALL_SPRING_C_H

@@ -1,7 +1,7 @@
 //cpp
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
  * rather than called -- same idiom as every sibling. If the base's flag at
- * (char*)unk_004 + 0x595d is set, it returns before touching anything else.
+ * (char*)mpManager + 0x595d is set, it returns before touching anything else.
  * Otherwise it steps the rotation speed (unk_036) by +-8 toward the target
  * (unk_034), clamping once it crosses, adds the stepped speed onto the
  * base's own angle at 0x32 (raw cast -- see cMgSmartball_propeller_c.h on

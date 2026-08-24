@@ -81,12 +81,12 @@ void cMgSmartball_board_c::SaveSnapshot()
         if (mLineTimer[i] > 0)
             mLineTimer[i]--;
     }
-    for (n = 0; n < *(int *)((char *)unk_004 + 0x4668); n++) {
-        if (*(u8 *)((char *)unk_004 + 0x595c) != 0)
+    for (n = 0; n < *(int *)((char *)mpManager + 0x4668); n++) {
+        if (*(u8 *)((char *)mpManager + 0x595c) != 0)
             break;
-        if (GetObj((char *)unk_004, n)[0x30] == 0)
+        if (GetObj((char *)mpManager, n)[0x30] == 0)
             continue;
-        func_ov006_0211470c((int *)&t, (int *)GetObj((char *)unk_004, n));
+        func_ov006_0211470c((int *)&t, (int *)GetObj((char *)mpManager, n));
         /* COMPILER STEER, and the only one in this file. `v = t;` is what the
            ROM does and it is what the pre-migration C said -- but mwcc
            scalarizes a whole-struct assignment in C++ where it kept it in
@@ -106,17 +106,17 @@ void cMgSmartball_board_c::SaveSnapshot()
         for (j = 0, lo = 0xc000, hi = 0x14000; j < 9; j++) {
             int slot = data_ov006_02142c1c[j];
             if (v.x >= lo && v.x < hi) {
-                if (func_ov006_02111dcc((char *)GetObj((char *)unk_004, n), 0x14)) {
+                if (func_ov006_02111dcc((char *)GetObj((char *)mpManager, n), 0x14)) {
                     if ((&unk_031)[slot] == 0) {
                         SetV2(&a, mCurrent0 + ((data_ov006_02142c1c[j] % 3 - 1) * 0x18 << 12),
                               mCurrent1 + ((data_ov006_02142c1c[j] / 3 - 1) * 0x18 << 12));
-                        func_ov006_02114800((char *)unk_004, (int *)&a, 0);
+                        func_ov006_02114800((char *)mpManager, (int *)&a, 0);
                         SetV2(&b, (j * 0x18 + 0x10) << 12, 0x78000);
-                        func_ov006_02114800((char *)unk_004, (int *)&b, 0);
+                        func_ov006_02114800((char *)mpManager, (int *)&b, 0);
                         func_02012718((void *)0x1be, j * 0x18000 + 0x10000);
                     } else {
                         SetV2(&d, (j * 0x18 + 0x10) << 12, 0x78000);
-                        func_ov006_02114800((char *)unk_004, (int *)&d, 1);
+                        func_ov006_02114800((char *)mpManager, (int *)&d, 1);
                         func_02012718((void *)0x17a, j * 0x18000 + 0x10000);
                     }
                     func_ov006_0210ef48(this, j);

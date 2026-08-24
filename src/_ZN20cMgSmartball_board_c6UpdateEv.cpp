@@ -45,7 +45,7 @@ void cMgSmartball_board_c::Update()
     s32 k;
 
     for (i = 0; i < 8; i++) {
-        if (mLineTimer[i] > 0 || (*(s32 *)((u8 *)unk_004 + 0x4660) != 0 && mLineScored[i] == 1)) {
+        if (mLineTimer[i] > 0 || (*(s32 *)((u8 *)mpManager + 0x4660) != 0 && mLineScored[i] == 1)) {
             switch (i) {
             case 0:
             case 1:

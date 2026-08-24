@@ -11,8 +11,11 @@ cartridge under 2004/b56, checked per function with `build_pin`'s `verify`
 (the tool lives in `tools/build_pin.py`) and then with a whole-ROM
 `tools/rombuild.py` run.
 
-The shared base `cMgSmartball_object_c` is NOT renamed here -- see the last
-section for why, and for the evidence a later pass should use.
+The shared base `cMgSmartball_object_c` was deliberately left alone in the
+first pass, because renaming it forces matching edits into six sibling headers
+that pass did not own. A later pass that owned the whole family finished it --
+see "The base" below, which now records a rename that has landed rather than
+one that is proposed.
 
 
 ## What the minigame is
@@ -22,13 +25,13 @@ over in the classes below, so they are named once here:
 
 | manager offset | what it is | proof |
 | --- | --- | --- |
-| `mgr+0x4664` | index of the ball currently in play | `func_ov006_021128fc` compares each ball's own `unk_02c` against it |
+| `mgr+0x4664` | index of the ball currently in play | `func_ov006_021128fc` compares each ball's own `mIndex` against it |
 | `mgr+0x4668` / `mgr+0x4688[13]` | count and table of the tracked balls | swept by `cMgSmartball_board_c::SaveSnapshot` and `cMgSmartball_kinoko_c::SaveSnapshot` |
 | `mgr+0x4670` / `mgr+0x46bc[]` | count and table of the spawned kinoko | written by `src/func_ov006_02115b0c.c`, read by `src/func_ov006_02112190.c` |
 
-Each object's own `unk_004` is the manager pointer and its own `unk_02c` is its
-index into those tables. Both are base fields, so both keep their `unk_` names
-for now (last section).
+Each object's own `mpManager` is the manager pointer and its own `mIndex` is
+its index into those tables. Both are base fields; both are named now (last
+section).
 
 
 ## cMgSmartball_ball_c (`include/cMgSmartball_ball_c.h`)
@@ -40,7 +43,7 @@ for now (last section).
 | 0x034 | `mZoneCooldown` | `src/_ZN19cMgSmartball_ball_c12SaveSnapshotEv.cpp` decrements it while >0 and refuses to re-latch `mUpperWallSolid` until it reads <= 0. A cooldown, not a lifetime: `RestoreInitial` zeroes it. |
 | 0x038 | `mUpperWallSolid` | Set to 1 by `SaveSnapshot` when the ball is inside x [0xe8000,0xf0000) z [0x78000,0xa8000). Its only reader is `src/func_ov006_021126b4.c`, the out-of-bounds predicate, where a non-zero value makes it report z >= 0x78000 in the x band [0xd8000,0xe0000) as blocked. |
 | 0x03c | `mZoneDwell` | `SaveSnapshot` counts it up while the ball is inside x [0x8000,0xd8000) z [0x74000,0x7c000), sets `state3b` past 0x1e, saturates at 0x12c, and resets it to 0 on the frame the ball leaves. A dwell counter, not a countdown. |
-| 0x040 | `mExpireTimer` | Armed by `src/func_ov006_02111dcc.c`, which refuses to re-arm it while it is positive. `SaveSnapshot` ages it and, on expiry, clears the base's `unk_030`; after that both `SaveSnapshot` and `Update` return immediately. |
+| 0x040 | `mExpireTimer` | Armed by `src/func_ov006_02111dcc.c`, which refuses to re-arm it while it is positive. `SaveSnapshot` ages it and, on expiry, clears the base's `mIsActive`; after that both `SaveSnapshot` and `Update` return immediately. |
 | 0x100 | `mIsWaiting` | 1 = still queued. `RestoreInitial` sets it; `SaveSnapshot` clears it once this ball's index equals `mgr+0x4664` and `mInPlay` is up. While set, `SaveSnapshot` runs `src/func_ov006_021128fc.c` (line up behind the predecessor in `mgr+0x4688`); once clear it runs the physics path `src/func_ov006_02112ad8.c`. |
 | 0x104 | `mQueueGap` | `src/func_ov006_021128fc.c` writes it twice, both times as `(this ball's index - mgr[0x4664]) * 0xf`. Nothing reads it back -- the name records the arithmetic, which is unambiguous, not a use. |
 | 0x108 | `mFrozenPos0` | Written only by `src/func_ov006_02111d4c.c`, which copies `mCurrent0` here. |
@@ -50,7 +53,7 @@ for now (last section).
 | 0x118 | `mLastPos1` | Same, the z half. |
 | 0x11c | `mStuckFrames` | Incremented by `SaveSnapshot` when the ball is out of bounds or has not moved 0x8000; reset to 0 on a refresh. `src/func_ov006_02111df4.c` reports the ball as needing a rescue once it reaches 0x78 -- 120 frames, two seconds. |
 | 0x121 | `mInPlay` | `src/_ZN19cMgSmartball_ball_c6UpdateEv.cpp` draws nothing while it is 0; `src/func_ov006_02111df4.c` reports a ball with it clear as finished; `src/func_ov006_021128fc.c` tests it on both this ball and its predecessor; `src/func_ov006_02111e7c.c` raises it. `RestoreInitial` clears it only for slot indices >= 9 on the second board. |
-| 0x129 | `mExitGateOpen` | `SaveSnapshot` latches it once the ball has crossed the plane through the corner (0xd8000, -0x80000) by more than the base's `unk_028`. Until then `src/func_ov006_021126b4.c` reports z < -0x80000 as out of bounds, and `src/func_ov006_021122e0.c` gates its bottom-right exit test on it. |
+| 0x129 | `mExitGateOpen` | `SaveSnapshot` latches it once the ball has crossed the plane through the corner (0xd8000, -0x80000) by more than the base's `mRadius`. Until then `src/func_ov006_021126b4.c` reports z < -0x80000 as out of bounds, and `src/func_ov006_021122e0.c` gates its bottom-right exit test on it. |
 
 Left `unk_`, deliberately:
 
@@ -104,7 +107,7 @@ helpers are what say so.
 | --- | --- | --- |
 | 0x034 | `mVariant` | Written exactly twice in the tree, both by the spawner `src/func_ov006_02115b0c.c`: objects built from the first tilemap layer get 0, those from the second get 1. The constructor `src/func_ov006_02111b40.c` leaves 2, which is the value `Update`'s switch has no case for. Never assigned at runtime, so it is a kind, not a state. |
 | 0x038 | `mWasHit` | Raised by `src/func_ov006_02112190.c`, the ball-vs-kinoko proximity test, on the object it hit (reached through `mgr+0x46bc`). `SaveSnapshot` consumes it: fires the effect and sound, clears the flag and re-arms `mHitTimer`. |
-| 0x03c | `mHitTimer` | `SaveSnapshot` ages it and, in its last four frames, sweeps `mgr+0x4688` for a live ball within 0x11000 -- re-arming to 4 while one is still resting on the mushroom. For a variant-1 mushroom it also drives the base's `unk_028` down by 0x1000 a frame while it runs and back to 0x7000 once it drains, which is the squash `Update` turns into a render scale. |
+| 0x03c | `mHitTimer` | `SaveSnapshot` ages it and, in its last four frames, sweeps `mgr+0x4688` for a live ball within 0x11000 -- re-arming to 4 while one is still resting on the mushroom. For a variant-1 mushroom it also drives the base's `mRadius` down by 0x1000 a frame while it runs and back to 0x7000 once it drains, which is the squash `Update` turns into a render scale. |
 
 
 ## cMgSmartball_spring_c (`include/cMgSmartball_spring_c.h`)
@@ -123,29 +126,43 @@ Left `unk_`, deliberately: 0x034 and 0x03c. `SaveSnapshot` sets `unk_03c` from
 one write are evidenced, their meaning is not.
 
 
-## The base, cMgSmartball_object_c -- deliberately NOT renamed
+## The base, cMgSmartball_object_c -- renamed
 
-The base's nine `unk_` fields were read and the evidence is recorded here, but
-no rename was made this round. Renaming them would force matching edits into
-`include/cMgSmartball_ana_c.h`, `include/cMgSmartball_dokan_c.h`,
-`include/cMgSmartball_pakkun_c.h`, `include/cMgSmartball_propeller_c.h`,
-`include/cMgSmartball_pushswitch_c.h` and `include/cMgSmartball_wing_c.h`,
-which cite the old spellings in their own prose -- and those six headers belong
-to other owners. A rename that leaves half the family spelling the field the
-old way is exactly the failure the readability brief warns about, so it waits
-for a pass that owns the whole family at once.
+6 of 9 named. The rename landed in one commit across the base header, all
+eleven child headers and the fifteen `.cpp` bodies that reach these fields by
+name; the whole ROM still reproduces (11,059 / 11,059, module fidelity
+106/106).
 
-What a later pass should use:
+Nothing outside `src/` spells these fields: the family has no `src_tu/` or
+`port/` presence, and every `.c` file in it (the eleven constructors and the
+free helpers) reaches the object by raw offset off a `char *`, so a rename
+cannot reach them. That was checked by grep before the rename, not assumed.
 
-| offset | proposed | evidence |
+Before using any of these names again, note that `cMgSmartball_object_c` is a
+ROOT -- it has no base whose members a derived name could shadow. The check
+that mattered here was the other direction: none of the eleven children
+already declared any of the six identifiers (grep over
+`include/cMgSmartball_*.h` returned nothing), so no child field was silently
+rebound.
+
+| offset | name | evidence |
 | --- | --- | --- |
-| 0x004 | `mpManager` | Every child dereferences it as the `dScMgSmartball_c` that owns the object: `mgr+0x4664`, `mgr+0x4668`, `mgr+0x4670`, `mgr+0x4688`, `mgr+0x46bc`, `mgr+0x595c`, `mgr+0x595d`. |
-| 0x020 | `mVel0` | `cMgSmartball_ball_c::SaveSnapshot` does `mCurrent0 += unk_020; mCurrent1 += unk_024;` -- and passes `&unk_020` to `Vec2_Len` as a 2-vector. |
+| 0x004 | `mpManager` | Every child dereferences it as the `dScMgSmartball_c` that owns the object: `mgr+0x4664`, `mgr+0x4668`, `mgr+0x4670`, `mgr+0x4688`, `mgr+0x46bc`, `mgr+0x595c`, `mgr+0x595d`. Kept declared `s32`: the manager has no header in this tree and each of the fifteen readers writes its own cast, so widening the declaration to a pointer would state more than the evidence does. |
+| 0x020 | `mVel0` | `cMgSmartball_ball_c::SaveSnapshot` does `mCurrent0 += mVel0; mCurrent1 += mVel1;` -- and passes `&mVel0` to `Vec2_Len` as a 2-vector, i.e. the pair is contiguous and is a velocity, not two unrelated scalars. |
 | 0x024 | `mVel1` | Same statement; also the value `cMgSmartball_spring_c::SaveSnapshot` eases `mCurrent1` back to rest with. |
-| 0x028 | `mRadius` | Each child's constructor writes its own constant (0x8000 ball, 0x20000 spring, 0x18000 board, 0x7000 kinoko) and both readers use it as a distance: `cMgSmartball_ball_c::SaveSnapshot` compares a signed plane distance against `-unk_028`, and `cMgSmartball_kinoko_c` eases it to 0 and back to 0x7000 as the mushroom squashes, with `Update` turning it into a render scale. |
+| 0x028 | `mRadius` | Each child's constructor writes its own constant (0x8000 ball, 0x14000 pakkun, 0x18000 board, 0x20000 dokan/propeller/spring, 0x7000 kinoko) and both readers use it as a distance: `cMgSmartball_ball_c::SaveSnapshot` compares a signed plane distance against `-mRadius`, and `cMgSmartball_kinoko_c` eases it to 0 and back to 0x7000 as the mushroom squashes, with `Update` turning it into a render scale. |
 | 0x02c | `mIndex` | `src/func_ov006_021128fc.c` compares it against `mgr+0x4664` and indexes `mgr+0x4688` with it minus one. |
 | 0x030 | `mIsActive` | The constructor sets it to 1. `cMgSmartball_ball_c::SaveSnapshot` and `::Update` return immediately while it is 0, `src/func_ov006_02111dcc.c` refuses to arm an expiry on an object with it clear, and both `cMgSmartball_board_c::SaveSnapshot` and `cMgSmartball_kinoko_c::SaveSnapshot` skip a tracked ball whose byte at 0x30 is 0. |
 
-0x031/0x032/0x033 should stay as three `u8`s -- see `include/cMgSmartball_object_c.h`,
+Left `unk_`, deliberately:
+
+| offset | why |
+| --- | --- |
+| 0x031 | A 0/1 flag to eight readers, an array index to `cMgSmartball_pushswitch_c::Update`, and the FIRST CELL of `cMgSmartball_board_c`'s nine-byte cell array. No one name covers those three. |
+| 0x032 | The low byte of a 16-bit angle to wing (signed) and propeller (unsigned), an independent flag to ana, a board cell to board. Same problem, and the two angle readers disagree with each other on signedness. |
+| 0x033 | The high byte of that angle; a board cell. |
+
+0x031/0x032/0x033 stay three `u8`s -- see `include/cMgSmartball_object_c.h`,
 which records why three children read the same three bytes three incompatible
-ways.
+ways. The three fields with names in the first pass (`mCurrent0/1`,
+`mSnapshot0/1`, `mInitial0/1`) are unchanged.

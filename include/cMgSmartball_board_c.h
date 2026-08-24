@@ -54,7 +54,7 @@
  *
  * CONSTRUCTED BY func_ov006_0210f9f8, left a free function per the recipe
  * (this tree has migrated zero constructors), with only its vtable-symbol
- * reference renamed. It writes this vtable and sets the base's unk_028 to
+ * reference renamed. It writes this vtable and sets the base's mRadius to
  * 0x18000 -- the per-child constant every sibling's constructor also writes,
  * each with its own value. */
 #ifndef CMGSMARTBALL_BOARD_C_H

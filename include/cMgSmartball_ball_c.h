@@ -42,7 +42,7 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
     s32 mExpireTimer;    /* 0x040 -- despawn countdown. func_ov006_02111dcc arms
                              it (and refuses to re-arm while it is positive);
                              SaveSnapshot ages it and, on expiry, clears the
-                             base's unk_030 -- after which every SaveSnapshot
+                             base's mIsActive -- after which every SaveSnapshot
                              and Update returns immediately. */
 
     /* hitX/hitZ per func_ov006_02112ad8, but nothing in this class reads
@@ -67,7 +67,7 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
                           left unk_ deliberately. */
     u8  mIsWaiting;      /* 0x100 -- 1 while this ball is still queued behind the
                              one in play. RestoreInitial sets it; SaveSnapshot
-                             clears it once the base's unk_02c (this ball's own
+                             clears it once the base's mIndex (this ball's own
                              slot index) equals the manager's current index at
                              mgr+0x4664 and mInPlay is up. While set,
                              SaveSnapshot runs func_ov006_021128fc, which lines
@@ -119,7 +119,7 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
     u8  mExitGateOpen;   /* 0x129 -- one-shot latch. SaveSnapshot raises it once
                              the ball has crossed the plane through the corner
                              (0xd8000, -0x80000) by more than the base's
-                             unk_028. Until then func_ov006_021126b4 reports
+                             mRadius. Until then func_ov006_021126b4 reports
                              z < -0x80000 as out of bounds, so the ball cannot
                              leave that way; func_ov006_021122e0 likewise gates
                              its bottom-right exit test on it. */

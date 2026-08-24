@@ -20,6 +20,6 @@ void cMgSmartball_ana_c::SaveSnapshot()
     unk_034 = unk_034 - 1;
     if (unk_034 > 0)
         return;
-    func_ov006_02114ec0((void *)unk_004);
+    func_ov006_02114ec0((void *)mpManager);
     unk_032 = 1;
 }

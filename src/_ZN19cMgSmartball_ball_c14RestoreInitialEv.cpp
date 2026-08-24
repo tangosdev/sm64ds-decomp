@@ -13,8 +13,8 @@ void cMgSmartball_ball_c::RestoreInitial()
     cMgSmartball_object_c::RestoreInitial();
     mLastPos0 = mCurrent0;
     mLastPos1 = mCurrent1;
-    unk_020 = 0;
-    unk_024 = 0;
+    mVel0 = 0;
+    mVel1 = 0;
     for (i = 0; i < 0x20; i++) {
         hit[i] = 0;
         hitA[i] = 0;
@@ -41,7 +41,7 @@ void cMgSmartball_ball_c::RestoreInitial()
     mStuckFrames = 0;
     unk_120 = 0;
     mInPlay = 1;
-    if ((*(int *)((char *)unk_004 + 8) & 0xff) && unk_02c >= 9)
+    if ((*(int *)((char *)mpManager + 8) & 0xff) && mIndex >= 9)
         mInPlay = 0;
     else
         mInPlay = 1;
