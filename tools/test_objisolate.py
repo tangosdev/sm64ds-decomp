@@ -703,6 +703,28 @@ class Isolate(unittest.TestCase):
         self.assertEqual(after, [a - 8 for a in before])
         self.assertIn(0, after)          # the primary landed on the slot array
 
+    def test_corrects_ctor_only_mi_secondary_vptr(self):
+        """A constructor-only TU of an MI class stores its secondary vptr UNDEF.
+
+        The vtable's key function is the destructor, so an MI class's
+        constructor-only TU references `_ZTV1M` without defining it -- twice:
+        addend 8 for the primary store, and 24 (8 preamble + 0x10 into the
+        secondary block) for the secondary. The secondary used to be refused
+        on the UNDEF path while no enrolled instance verified the arithmetic;
+        ModelAnim's externalised 44 - 8 = +0x24 thunk landing is that
+        verification, and dBgCh_Lin's constructor is the first enrolled
+        function to walk this exact path."""
+        obj = self.build("struct B1 { int p[4]; virtual ~B1(){} };\n"
+                         "struct B2 { int q[4]; virtual ~B2(){} };\n"
+                         "struct M : B1, B2 { M(); virtual ~M(); };\n"
+                         "M::M(){}\n")
+        self.assertIsNone(OI.plan(obj.read_bytes(), "_ZN1MC1Ev")["error"])
+        before = sorted(set(self._vtable_addends(obj, "_ZN1MC1Ev")))
+        self.assertEqual(before, [8, 24])
+        OI.isolate(obj, "_ZN1MC1Ev")
+        after = sorted(set(self._vtable_addends(obj, "_ZN1MC1Ev")))
+        self.assertEqual(after, [0, 16])
+
     def test_still_refuses_a_vtable_addend_below_the_preamble(self):
         """Correctable means "past the preamble". An addend under it is not.
 

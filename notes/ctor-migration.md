@@ -15,6 +15,36 @@ the full ROM rebuilding 106/106 exact:
 | `src/_ZN11ShadowModelC1Ev.cpp` | `ShadowModel::ShadowModel()` | 0x02016068, 0x34 |
 | `src/_ZN7PathPtrC1Ev.cpp` | `PathPtr::PathPtr()` | 0x0203ad74, 0x10 |
 | `src/_ZN8dM3dGSphC1Ev.cpp` | `dM3dGSph::dM3dGSph()` | 0x0203ac60, 0x10 |
+| `src/_ZN9dBgCh_LinC1Ev.cpp` | `dBgCh_Lin::dBgCh_Lin()` | 0x020377b0, 0x5c |
+
+The seventh is the tree's **first multiple-inheritance constructor**: its
+header declares `dBgCh_Lin : dBgCh, dBgPi, dM3dGLin` straight out of the
+ROM's own `__vmi_class_type_info`, and the compiler synthesises everything
+the hand-written form spelled by hand — both base steps, **both vptr
+stores** (primary to `_ZTV9dBgCh_Lin`, secondary landing on the separately
+named `VTable_dBgPi_dBgCh_LinThunk`), and the `mBoundSphere` member step.
+What made that possible mechanically was an objisolate extension: a
+constructor-only TU references the class vtable UNDEF (the key function is
+the destructor, defined nowhere), and the secondary store arrives as UNDEF
+`_ZTV9dBgCh_Lin` with **addend 24** — 8 preamble + 0x10 into the secondary
+block. The UNDEF path used to refuse any addend but 8; ModelAnim's already-
+enrolled externalise case (44 − 8 = +0x24 =
+`VTable_Animation_ModelAnimThunk`) is the verification the original refusal
+asked for, so the same subtraction is now accepted there, with a probe test
+(`test_corrects_ctor_only_mi_secondary_vptr`) pinning the shape. Two local
+helpers came out of the same compile — `_ZN7Vector3D1Ev` (Vector3's inline
+empty destructor, emitted because the TU odr-uses it) and the trivial
+`_ZN8dM3dGLinD2Ev` — both stripped like the C2 sibling.
+
+The body itself needed one non-obvious spelling. The ROM zeroes `lineEnd`
+through a load-store chain (`[z]=0`, `[y]=[z]`, `[x]=[y]`) instead of three
+immediate stores, and plain constant propagation would have folded that —
+except Vector3 carries a user-declared (empty) destructor, making it
+non-POD, and across those member accesses mwcc refuses to forward the
+constant. Writing the chain literally — `lineEnd.z = 0;
+lineEnd.y = lineEnd.z; lineEnd.x = lineEnd.y; clsnDist = 0;` — reproduced
+the schedule byte-for-byte, including the scheduler parking
+`add r0,r4,#0x64` between the two vptr stores, on the first attempt.
 
 The census this attacks (`tools/langmode_audit.py --by-class`): **C1 41,
 C2 10, C3 2 unmigrated**, against 397 plain methods and 65 D1s — though §5c
@@ -145,26 +175,21 @@ name instead of a placeholder extern.
 
 ## 5. What does NOT generalise yet — the measured walls
 
-### 5a. MI hierarchies are declared flat, so their ctors cannot go real
+### 5a. MI hierarchies are declared flat, so their ctors cannot go real — dBgCh_Lin is no longer one of them
 
 `dBgCh_SphCrr : dBgCh @0, dBgPi @16, dM3dGSph @56` (the RTTI record states
 this outright) still declares `struct dBgCh_SphCrr {` with pad bytes where
 its bases belong, and its constructor's vptr stores at +0/+0x10/+0x38 are
-spelled by hand — though the base steps themselves are now named real
-symbols (`_ZN5dBgChC2Ev`, `_ZN5dBgPiC2Ev`, `_ZN8dM3dGSphC1Ev`, all migrated
-or relabelled 2026-08-23), so what remains is purely the header work:
-un-flatten `dBgCh_SphCrr` and `dBgCh_Lin` into real `: dBgCh, dBgPi`
-declarations and their constructors become §6 applications. A real C++
-ctor needs the compiler to synthesise those base steps from declarations,
-and until the headers state them it cannot.
-
-Progress within this item: **dM3dGSph is fully promoted** (polymorphic
-header with declared dtor-first/declared ctor, size assert; its vtable
-named `_ZTV8dM3dGSph` so objisolate rebinds the vptr store) and its
-constructor is the sixth landed above. Its header promotion touched no
-other TU — only `include/dBgCh_Lin.h` includes it, and nothing includes
-that yet — which is why the §2 blast-radius question had a one-file answer
-here. It will not be that quiet for dBgCh itself.
+spelled by hand — though the base steps themselves are named real symbols
+(`_ZN5dBgChC2Ev`, `_ZN5dBgPiC2Ev`, `_ZN8dM3dGSphC1Ev`), so what remains for
+it is purely header work. **dBgCh_Lin already crossed this line** (2026-08-23):
+its header declares all three bases (`dBgPi` promoted to a polymorphic C++
+branch, `dM3dGLin` rewritten to its true two-Vector3 shape after the
+generated header had modelled `start` as padding), and its constructor is
+the seventh landed above — see the MI notes under the table for the
+objisolate secondary-vptr extension that made it linkable. The remaining
+collision-family ctors (dBgCh_Gnd, dBgCh_SphCrr, dBgW_Kc*) are now straight
+§6 applications of the same recipe.
 
 **The ordering this imposes: name the base constructors first** (the audit's
 C2-vs-D2 discrimination method applies directly), declare them in real
@@ -305,12 +330,12 @@ keep it when it defines the sibling variant (§1).
    inheritance (§5e facts), then dActor_c's pair becomes a §6 application —
    its own ctor is still nonmatching asm until someone reproduces it from
    real C++.
-2. **dBgCh/dBgPi/dM3dG collision family**: base ctors are NAMED
-   (`_ZN5dBgChC2Ev`, `_ZN5dBgPiC2Ev` C1+C2 pair, `_ZN8dM3dGSphC1Ev` — the
-   sixth landed ctor) and dM3dGSph's header is promoted. Remaining:
-   declare `dBgCh();`/`dBgPi();` in their headers, promote `dBgCh_Lin`
-   (first MI test — objisolate's secondary-vptr rebinding is unproven),
-   then dBgCh_Gnd / dBgCh_SphCrr / dBgW_Kc* follow.
+2. **dBgCh/dBgPi/dM3dG collision family**: base ctors NAMED, `dM3dGSph` and
+   `dBgCh_Lin` PROMOTED AND MIGRATED (seventh landed; first MI — see the
+   table notes for the objisolate UNDEF-addend extension). Remaining:
+   un-flatten dBgCh_Gnd and dBgCh_SphCrr headers (their base steps are
+   already real symbols), then their ctors plus the dBgW_Kc* family follow
+   as §6 applications.
 3. **Leaf singles** (`Minimap`, `HUD`, `PathPtr`, `Clipper`,
    `TextureSequence`, …) — with one new gate learned the hard way:
    **shape-check before attempting**. Disassemble the candidate first; if it

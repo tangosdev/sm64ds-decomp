@@ -68,6 +68,13 @@ struct dBgCh {
     virtual ~dBgCh();        /* slots 0 (D1), 1 (D0) */
 
     /* --- non-virtual --- */
+    /* DECLARED, never defined in this header; the definition lives in the
+       hand-written src/_ZN5dBgChC2Ev.c (the ROM kept only that variant --
+       nothing constructs a standalone dBgCh). Declaring it is what makes
+       derived constructors emit `bl _ZN5dBgChC2Ev' instead of synthesising
+       the base step inline -- notes/ctor-migration.md section 2. */
+    dBgCh();
+
     /* STATIC -- see the header note above: four parameters in r0-r3 and no
        stack argument is what settles it, not the mangled name.
 
