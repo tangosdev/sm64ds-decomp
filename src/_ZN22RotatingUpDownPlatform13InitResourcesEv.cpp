@@ -41,18 +41,19 @@ int RotatingUpDownPlatform::InitResources()
     func_020393d4(((char*)this) + 0x124, &_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     func_020393c4(((char*)this) + 0x124, &func_ov091_02132380);
 
-    _ZN7PathPtr6FromIDEj(((char*)this) + 0x344, *(unsigned*)((char*)&mParam) & 0xf);
+    _ZN7PathPtr6FromIDEj(&mPathPtr, *(unsigned*)((char*)&mParam) & 0xf);
     mNodeCount = _ZNK7PathPtr8NumNodesEv((char*)&mPathPtr);
     mNodeIndex = 0;
     mBasePosX = mPosX;
     mBasePosY = mPosY;
     mBasePosZ = mPosZ;
-    _ZNK7PathPtr7GetNodeER7Vector3j(((char*)this) + 0x344, ((char*)this) + 0x338, *(unsigned*)((char*)&mNodeIndex));
+    _ZNK7PathPtr7GetNodeER7Vector3j(&mPathPtr, &mTargetPosX, *(unsigned*)((char*)&mNodeIndex));
 
-    if (Vec3_Equal(((char*)this) + 0x338, ((char*)this) + 0x32c)) {
+    /* The first node is usually where we are standing; head for the next one. */
+    if (Vec3_Equal(&mTargetPosX, &mBasePosX)) {
         int* p = (int*)(((int)((char*)this) + 0x328));
         *p = *p + 1;
-        _ZNK7PathPtr7GetNodeER7Vector3j(((char*)this) + 0x344, ((char*)this) + 0x338, *(unsigned*)((char*)&mNodeIndex));
+        _ZNK7PathPtr7GetNodeER7Vector3j(&mPathPtr, &mTargetPosX, *(unsigned*)((char*)&mNodeIndex));
     }
 
     mBaseAngleY = mAngleY;

@@ -25,10 +25,13 @@ struct SlidingPlatformWf : dBgActor_c {
     int InitResources();
     int Render();
 
-    /* Tail padding. The field span stops short of the real size: SlidingPlatformBdw_Spawn and SlidingPlatformBfsRectangle_Spawn
-       call fBase_c::operator new(0x330), read off the retail
-       instruction. A span is only a LOWER BOUND. */
-    u8 pad_324[0xc];      /* 0x324, to the ROM's 0x330 */
+    /* Where it started; InitResources copies the actor's position in here.
+       MEASURED SIZE, do not shrink to the field span: the two factories call
+       fBase_c::operator new(0x330), read off the retail instruction, and a span
+       is only a lower bound. These three close it exactly. */
+    s32 mBasePosX;                    /* 0x324 */
+    s32 mBasePosY;                    /* 0x328 */
+    s32 mBasePosZ;                    /* 0x32c */
 };
 
 typedef char SlidingPlatformWf_size_must_be_0x330[sizeof(SlidingPlatformWf) == 0x330 ? 1 : -1];

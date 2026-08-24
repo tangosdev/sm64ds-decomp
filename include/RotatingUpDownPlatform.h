@@ -26,19 +26,23 @@ struct RotatingUpDownPlatform {
     u8  pad_090[0x44];
     Model mModel;            /* 0x0d4 */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  pad_2ec[0x38];
+    u8  pad_2ec[0x34];
+    s32 mState;            /* 0x320 */
     s32 mNodeCount;            /* 0x324 */
     s32 mNodeIndex;            /* 0x328 */
     s32 mBasePosX;            /* 0x32c */
     s32 mBasePosY;            /* 0x330 */
     s32 mBasePosZ;            /* 0x334 */
-    u8  pad_338[0xc];
+    s32 mTargetPosX;            /* 0x338 */
+    s32 mTargetPosY;            /* 0x33c */
+    s32 mTargetPosZ;            /* 0x340 */
     u8  mPathPtr;            /* 0x344 */
     u8  pad_345[0x7];
     s32 mSinkOffsetY;            /* 0x34c */
     s16 mBaseAngleY;            /* 0x350 */
     u8  mVariant;            /* 0x352 */
-    u8  pad_353[0x3];
+    u8  pad_353[0x1];
+    u16 mStateTimer;            /* 0x354 */
     u8  mIsPressed;            /* 0x356 */
 #ifdef __cplusplus
     /* methods */
