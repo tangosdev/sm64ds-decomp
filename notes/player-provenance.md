@@ -321,8 +321,8 @@ Three more, all found while chasing the arrays.
 
 ## IceSlideManager
 
-Fourteen `unk_` down to two, and the split is worth stating plainly because it is
-two different kinds of naming.
+All fourteen `unk_` are gone, but the split between them is worth stating plainly,
+because they are two different kinds of naming and only one of them is evidence.
 
 `0x000..0x0d4` is `dActor_c`'s layout written out FLAT -- `IceSlideManager` does
 not derive from `dActor_c`, it mirrors it. So `mPosX/Y/Z`, `mPrevPosX/Y/Z`,
