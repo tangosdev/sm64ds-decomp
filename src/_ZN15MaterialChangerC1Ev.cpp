@@ -1,0 +1,14 @@
+//cpp
+// @symbol _ZN15MaterialChangerC1Ev
+/* recovered: real C++ constructor -- the base step (bl _ZN9AnimationC2Ev)
+ * and the vptr store are synthesized from the declared Animation()/~X()
+ * in the header; the single body statement zeroes the Bx?_File pointer at
+ * +0x10. The C2 sibling this TU also emits is stripped by objisolate --
+ * section 1 of notes/ctor-migration.md.
+ */
+#include "MaterialChanger.h"
+
+MaterialChanger::MaterialChanger()
+{
+    file = 0;
+}

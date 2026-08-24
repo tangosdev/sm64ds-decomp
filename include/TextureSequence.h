@@ -62,6 +62,10 @@ struct TextureSequence : Animation {
     /* --- vtable: the destructor pair only. --- */
     virtual ~TextureSequence();                       /* slots 0 (D1), 1 (D0) */
 
+    /* DECLARED, never defined as a method here -- src/_ZN15TextureSequenceC1Ev.cpp
+       owns C1 (notes/ctor-migration.md section 2). */
+    TextureSequence();
+
     /* --- non-virtual --- */
     void Update(ModelComponents &model);
     void SetFile(BTP_File &animFile, int flags, Fix12<int> speed,
