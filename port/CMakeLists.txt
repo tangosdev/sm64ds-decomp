@@ -5118,6 +5118,76 @@ endforeach()
 # absolute paths, so nothing is compiled twice -- which is also what makes the
 # seventeen dScMgD3DBase_c bodies safe to list in all four of this wave's
 # sibling slices.
+#
+# ONE TU IN THIS SLICE REACHES THE GEOMETRY REGISTERS, so it builds from a
+# hostgen-emitted copy the way every other MMIO-touching src/ file in this tree
+# does -- src/ itself is never edited.  It is the SAME defect the flower block
+# above records at func_ov006_0210a708, on a different body.
+#
+# func_ov006_020ef2b8 is this scene's LIGHT SETUP.  Its only caller is
+# src/func_ov006_020ef148.c, dScMgJump2_c vtable slot 9 (Render), which calls
+# it as its third statement -- so it runs on EVERY rendered frame, before any
+# model is drawn.  Read straight off extracted/overlays/overlay_0006.bin at
+# base 0x020bfec0 (0x020ef2b8..0x020ef3bc, pool at 0x020ef3c0) it is six
+# literal stores and nothing else:
+#
+#     0x040004cc = 0x7fff             LIGHT_COLOR, light 0 white
+#     0x040004cc = 0x40007fff         LIGHT_COLOR, light 1 white
+#     0x040004c8 = pack(v)            LIGHT_VECTOR, light 0
+#     0x04000440 = 2                  MTX_MODE, position
+#     0x04000454 = 0                  MTX_IDENTITY
+#     0x040004c8 = pack(w)|1<<30      LIGHT_VECTOR, light 1
+#
+# Compiled straight from src/ all six land in the real memory ntr maps across
+# the I/O window and stop there: the geometry engine is never told.  Both
+# lights keep direction (0,0,0) and colour (0,0,0), and ntr/gx.cpp resolves a
+# lit vertex as emission + SUM over the enabled lights of (diffuse * lightcol *
+# dot + ambient * lightcol), so a zero light colour kills the ambient term too.
+# Every material this scene submits enables light 0 or light 1 (POLYGON_ATTR
+# 001f8081 and 001f8082) and every SPE_EMI word it writes is 00000000, so every
+# lit vertex in the scene resolves to BLACK.  Mario's model still draws, at
+# emission, over the 3D clear colour -- which is the scene-373 report this line
+# answers: "a blank screen with glitch textures, and a shadow of mario".  The
+# shadow IS the model.
+#
+# MEASURED in this tree (SM64DS_MAT_LOG=1 SM64DS_SCENE=373), before this line:
+#
+#     [mat] LIGHT_VECTOR commands executed: 0   LIGHT_COLOR: 0
+#     [mat] I/O LATCH  LIGHT_VECTOR(4c8)=6965a400 LIGHT_COLOR(4cc)=40007fff
+#
+# 0x6965a400 carries bit 30, which is this body's light-1 store: the body RAN
+# and its writes arrived nowhere.  Control on the same binary, scene 382, which
+# reaches its lights through a body that is already substituted:
+#
+#     [mat] LIGHT_VECTOR commands executed: 2   LIGHT_COLOR: 2
+#
+# THE MATRIX PAIR MATTERS TOO and is not incidental.  MTX_MODE and MTX_IDENTITY
+# sit BETWEEN the two light vectors because the geometry engine transforms a
+# light vector by the current position matrix as it consumes it.  Latching them
+# silently would leave light 1 rotated by whatever matrix the previous draw
+# left behind even if the two LIGHT_VECTOR writes were fixed on their own, so
+# the substitution has to cover the whole body rather than the two registers
+# the symptom names.
+set(BNT_HOSTGEN_SYMS func_ov006_020ef2b8)
+set(BNT_HOSTGEN_GEN "")
+set(BNT_HOSTGEN_SKIP "")
+foreach(sym IN LISTS BNT_HOSTGEN_SYMS)
+    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        list(APPEND BNT_HOSTGEN_SKIP "src/${sym}.c")
+    else()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+        list(APPEND BNT_HOSTGEN_SKIP "src/${sym}.cpp")
+    endif()
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND BNT_HOSTGEN_GEN "${sym_out}")
+endforeach()
+
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_bnt.txt" SLICE_BNT_LINES)
 set(SLICE_BNT_SOURCES hal/scene_mg_jump2.cpp
                       # The class's own pointer-to-member wall: vtable SLOT 6,
@@ -5164,13 +5234,35 @@ set(SLICE_BNT_SOURCES hal/scene_mg_jump2.cpp
                       # func_-prefixed name for an ov004 bss word, and three
                       # C++ method spellings of Itanium-named bodies already in
                       # the build. All named by a link, none predicted.
-                      unmatched/MgJump2_Faces.cpp)
+                      unmatched/MgJump2_Faces.cpp
+                      ${BNT_HOSTGEN_GEN})
 foreach(line IN LISTS SLICE_BNT_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
         continue()
     endif()
+    # The hostgen'd copy stands in for the src/ one; taking both would be a
+    # duplicate symbol, and taking neither would drop the body silently.
+    if(line IN_LIST BNT_HOSTGEN_SKIP)
+        continue()
+    endif()
     list(APPEND SLICE_BNT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# A slice line that stops matching (a rename, a .c that becomes a .cpp) would
+# silently take the src/ copy back and put the defect back with it, so the
+# substitution asserts rather than hopes.
+list(LENGTH BNT_HOSTGEN_SYMS bnt_hg_want)
+list(LENGTH BNT_HOSTGEN_GEN bnt_hg_have)
+if(NOT bnt_hg_want EQUAL bnt_hg_have)
+    message(FATAL_ERROR "slice_bnt hostgen substitution incomplete: "
+            "${bnt_hg_have} of ${bnt_hg_want} generated")
+endif()
+foreach(skip IN LISTS BNT_HOSTGEN_SKIP)
+    if(NOT skip IN_LIST SLICE_BNT_LINES)
+        message(FATAL_ERROR "slice_bnt.txt no longer lists ${skip}; the "
+                "hostgen substitution for it is now dead and the geometry "
+                "register writes in it would go back to latching silently")
+    endif()
 endforeach()
 
 # Lane SNW of run mg11: dScMgSnowball_c, actor id 0x179, scene 377, "Snowball
