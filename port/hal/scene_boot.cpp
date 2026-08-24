@@ -2366,6 +2366,28 @@ void port_scene_fill_esp3d(void);
 extern unsigned char data_ov006_0213e508[];
 void *port_mg_slot3_spawn(void);
 void port_scene_fill_slot3(void);
+/* run mg11 lane BNP: dScMgJump_c, actor id 0x174 = scene 372, the "Bounce and
+   Pounce" minigame. The spawn symbol MgBounceAndPounce carries the ROM's own
+   English title through the ov005 launch table (row 4, param 0x00040400 ->
+   name-text 4 -> data_ov004_020bc070[4] = 552 -> BMG message 552 = "Bounce and
+   Pounce"), and the ROM's own RTTI -- reached through the type_info the word
+   BEFORE the vtable points at, 0x0213cbe0 -> 0x0213cb98 -> 0x0213cba4 -- reads
+   "11dScMgJump_c", so the row below is named for the class the way
+   SCENE_MG_CURLING, SCENE_MG_LUIGI and SCENE_MG_PANEL are.
+
+   THE SPAWNINFO IS SPELLED BY ITS SYMBOL AND THE VTABLE IS NOT, and the
+   difference matters. config/arm9/overlays/ov006/symbols.txt gives the name
+   _ZTV17MgBounceAndPounce to 0x0213c62c, which is the BASE class
+   dScMgD3DBase_c's table, not this class's; this class's own table is only
+   ever spelled data_ov006_0213cbe4. port/slice_bnp.txt section 4 is the
+   derivation and hal/scene_mg_jump.cpp fills both.
+
+   Same reads_sublevel reasoning as every minigame row above, re-derived rather
+   than copied: no relocation anywhere in ov006 lands on data_02092110 and no
+   TU in this class's closure names it. A minigame is not about a course. */
+extern unsigned char MgBounceAndPounce_SpawnInfo[];
+void *port_mg_jump_spawn(void);
+void port_scene_fill_jump(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2813,6 +2835,40 @@ static const PortSceneClass port_scene_classes[] = {
        in this class's closure names it. A minigame is not about a course. */
     {365, "SCENE_MG_SLOT3", data_ov006_0213e508, port_mg_slot3_spawn,
      port_scene_fill_slot3, 0},
+    /* 372 is 0x174, spelled in decimal for the same two reasons every row above
+       is: the others are, and port/tools/battery.py reads its hosted-scene set
+       out of this table. APPENDED AFTER EVERY EXISTING ROW, run mg11 lane BNP,
+       and for this class the ordering rule earns its keep twice.
+
+       FIRST, the rule itself: port_scene_registry_install walks this table in
+       order and calls every row's fill on every boot, while
+       port_scene_mg_overlay_load runs the thirty-five overlay constructors ONCE
+       PER PROCESS at the tail of the FIRST minigame row's fill. Appending means
+       the constructors have already run against clean ROM words when this fill
+       starts, which is the latent-safe direction port/mg_fanout_costs.txt
+       section 11 derives. For this class the hazard is measured ABSENT rather
+       than assumed: ZERO relocations leave ov006's .init range
+       (0x0212f4c4..0x0213356c) for this class's data span
+       (0x0213cb48..0x0213cc74), so this class has no overlay constructor at all
+       and there is no word here for a fill to clobber ahead of a copy. The
+       width is 36 by all five checks in port/slice_bnp.txt, so the fill cannot
+       reach past its own table either -- which matters more than usual here,
+       because the word past the end is id 0x175's FIRST STATE PAIR.
+
+       SECOND, this is the FIRST of the four dScMgD3DBase_c classes the port has
+       hosted. hal/scene_mg_jump.cpp fills the shared base table at 0x0213c62c
+       as well as this class's own, mg_apply keys on a DS address, and the fill
+       that runs first claims that table. So this row claims it and the seats
+       for 0x175, 0x180 and 0x181 will find it already claimed -- which is
+       correct, and their base-table claim counts reading zero is the evidence
+       that nothing was filled twice. The seat prints both claim counts so the
+       split is measured rather than assumed.
+
+       reads_sublevel is 0 for the curling row's reason, re-derived rather than
+       copied: no relocation anywhere in ov006 lands on data_02092110 and no TU
+       in this class's closure names it. A minigame is not about a course. */
+    {372, "SCENE_MG_JUMP", MgBounceAndPounce_SpawnInfo, port_mg_jump_spawn,
+     port_scene_fill_jump, 0},
     {0, 0, 0, 0, 0, 0},
 };
 

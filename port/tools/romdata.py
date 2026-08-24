@@ -135,6 +135,17 @@ NAMED = [
     # state helper) reads a s16 out of at +0x56. No relocations in it -- pure
     # data, byte-hosted the same as every table above.
     "data_02082714",
+    # run mg11 lane BNP: the 0x100 bytes at 0x02082614, which
+    # src/func_ov006_020ee690.cpp (dScMgJump_c::InitResources, id 0x174) reads
+    # ONE s16 out of, as the divisor of cstd::fdiv(0xc0000, data_02082614) --
+    # the projection constant it parks in the scene's two camera records. It is
+    # an INTERIOR address of the TABLES entry above (data_02082214, the s16 trig
+    # table), exactly as data_02082714 already is, so this row duplicates those
+    # bytes into a second host array rather than aliasing into the first. That
+    # is correct for a scalar read and would NOT be correct for anything doing
+    # pointer arithmetic between the two symbols; nothing in the tree does.
+    # No relocations land in the span (config/arm9/relocs.txt), so it is data.
+    "data_02082614",
     # gate 32: the coin tables Actor::GivePlayerCoins indexes (id and amount),
     # and the per-character cap-model constant data_0208a0e0 sits beside them.
     "data_02075230", "data_02075238",
