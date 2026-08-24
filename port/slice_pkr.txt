@@ -312,9 +312,15 @@
 # port/tools/closure.py over this list against the baseline map named exactly
 # five unresolved symbols when run mg11 wrote it: the two /alternatename rows in
 # port/unmatched/MgCard_Faces.cpp, the two slice lines below that are not this
-# class's own bodies, and the floor.  Nothing else.  Run mg12 lane SRT seated the
-# floor as src/func_ov006_020da174.c, so that fifth name is now resolved by a
-# slice line rather than by a trap and the count is four.
+# class's own bodies, and the floor.  Nothing else.
+#
+# Run mg12 lane SRT seated the floor as src/func_ov006_020da174.c, so the list is
+# 41 TUs rather than 40 and the fifth of those names is resolved by a slice line
+# instead of by a trap.  THE "four" THAT WOULD FOLLOW IS NOT WRITTEN HERE AS A
+# NUMBER, because reproducing it needs the BASELINE map and this lane built only
+# the seated tree.  What this lane did measure, closure.py over this slice
+# against its own tip's walk_window.map: 0 unresolved, 41 already in the image
+# from their own TUs, 0 FOREIGN-object LNK2005 candidates.
 #
 # The 37 bodies of dScMgCard_c and its two element classes, 0x020d95a4 ..
 # 0x020dbe40, in address order.  The 37th is func_ov006_020da174, the hand
