@@ -170,7 +170,9 @@
 # ZERO for dScMgCoin_c, a class with seven of them.  Run over the seven src TUs
 # themselves it returns seven of seven.  Over this class's 36 src bodies --
 # every body in its code block except the floor, none of them excluded from
-# anything -- it returns ZERO.  So all three prescribed detectors agree here:
+# anything -- it returns ZERO.  (Run mg12 lane SRT decompiled the 37th; it is a
+# plain C TU with no `::*` either, so the reading is unchanged at 37 of 37.)
+# So all three prescribed detectors agree here:
 # the link names no member-pointer-mangled symbol, the source sweep finds no
 # `::*`, and the encoding scan finds no dispatch.
 #
@@ -222,36 +224,56 @@
 # __fastcall cleans the four bytes the ROM's callers push, which is what every
 # seated class before dScMgBSC_c needed.  Both thunks take it and record it.
 #
-# ---- 7. THE ONE FLOOR, AND IT IS ON THE CRITICAL PATH -------------------
+# ---- 7. THE ONE FLOOR, RETIRED (run mg12 lane SRT) ----------------------
 #
-# func_ov006_020da174, 0x2ac bytes.  symbols.txt names it; delinks.txt runs
-# `.text start:0x020da154 end:0x020da174` and resumes past it; there is no src
-# TU in either extension.  port/unmatched/MgCard_Traps.cpp is the named trap and
-# carries the full ROM characterisation -- it is the HAND SORTER (a six-entry
-# face histogram, a largest/second-largest scan, a permutation, and five calls
-# to func_ov006_020d99ec(card, i) which is the only writer of a card's slide
-# target and the only thing that puts a card into state 7).
+# func_ov006_020da174, 0x2ac bytes, was this seat's only floor and it was on the
+# critical path.  It is now DECOMPILED, which is exactly the retirement run mg11
+# said it would take: a delink block plus a matched src TU, not a port fix.
 #
-# THE CONSEQUENCE IS A STALL AND THIS FILE STATES IT RATHER THAN DISCOVERING IT
-# IN A RUN.  State 10 of the machine waits for all five cards of BOTH hands to
-# reach state 8.  State 8 has TWO writers, one per element class, and BOTH sit
-# inside a `state == 7` arm -- src/func_ov006_020d9c5c.cpp:67 (dMgCardObj_c's
-# tick) and src/func_ov006_020d978c.cpp:53 (dMgDilarCardObj_c's tick).  AN
-# EARLIER VERSION OF THIS SENTENCE SAID "src/func_ov006_020d9c5c.cpp promotes
-# 7 -> 8 and nothing else does", which is false: it named the player's card
-# class and missed the dealer's, the same one-of-two blind spot the element
-# vtables themselves are about.  The conclusion is unchanged and rests on the
-# other end of the chain -- state 7 has exactly ONE feeder, and it is behind
-# this floor -- so with the trap standing the machine reaches state 10 and stays
-# there.  Retiring it is a DECOMP (a delink block plus a matched src TU), not a port
-# fix.  port/mg_fanout_costs.txt section 3's nosrc column reads 0 for this id
-# and is still right: that column counts VTABLE SLOTS, and this is a state.
+#     src/func_ov006_020da174.c        byte-identical at mwccarm 2004/b56
+#     config/arm9/overlays/ov006/delinks.txt
+#                                      .text start:0x020da174 end:0x020da420
 #
-# src/func_ov006_020d99ec.c is in the list below and will not link, because
-# /OPT:REF drops a body nothing references and the only reference was the one
-# the trap replaced.  Run mg9 lane S364's lesson: being in a slice means
-# COMPILED; the linker decides LINKED.  The line stays so the day the floor is
-# decompiled nothing else has to change.
+# The gap the earlier text described -- delinks running `.text start:0x020da154
+# end:0x020da174` and resuming at 0x020da420 -- was an exact fit for the body:
+# 0x020da174 + 0x2ac = 0x020da420, which is where the next entry already starts.
+# The block is deliberately NOT marked `complete`.  The TU emits a SECOND
+# non-empty section: a 0x14-byte .data template, the five-int identity
+# permutation the body copies in, which the ROM keeps at 0x0213bcd8 and which is
+# the destination of the body's ONE pool word (relocs.txt: `from:0x020da41c
+# kind:load to:0x0213bcd8`).  notes/rom-build.md's M2b eligibility rule is
+# "exactly one non-empty section, named .text", and a `complete` mark generates a
+# `File.o(.text)` selector that would place the code and leave that template
+# unplaced.  No `complete` entry anywhere in ov006's 1672 has a non-zero local
+# aggregate initializer, so this is the first of its shape and takes the
+# rom-bytes side of the switch rather than inventing a precedent.
+#
+# WHAT THE BODY IS.  The HAND SORTER, and the reading run mg11 lane PKR wrote
+# from the disassembly survived the decompilation unchanged: a six-entry face
+# histogram zeroed at sp+8, five `ldrb card->face` iterations, a largest and
+# second-largest scan, a tie-break swap, a five-int identity permutation copied
+# from data_ov006_0213bcd8 and bubble-sorted on a rank key (-2 for a card in the
+# largest group, -1 for the second, 0 otherwise), a `+0x2d` group flag written
+# per card, five calls to func_ov006_020d99ec(card, i), and a return of 1 if any
+# card moved.  The caller's use is `if (a || b) Sound::PlayBank2_2D(0x152)`.
+#
+# WHAT IT UNBLOCKS.  State 10 waits for all five cards of BOTH hands to reach
+# state 8.  State 8 has TWO writers, one per element class, and BOTH sit inside a
+# `state == 7` arm -- src/func_ov006_020d9c5c.cpp:67 (dMgCardObj_c's tick) and
+# src/func_ov006_020d978c.cpp:53 (dMgDilarCardObj_c's tick).  State 7 has exactly
+# ONE feeder, func_ov006_020d99ec, and the sorter was its only caller.  With the
+# trap standing the machine reached state 10 and stopped; with the body seated
+# the ten cards get slide targets and the machine walks on into the payout states
+# 0x0e..0x12, which were adjudicated by lane PKR but never once exercised.
+#
+# port/mg_fanout_costs.txt section 3's nosrc column reads 0 for this id and was
+# always right: that column counts VTABLE SLOTS, and this is a state.
+#
+# src/func_ov006_020d99ec.c is in the list below and NOW LINKS.  /OPT:REF used to
+# drop it because the only reference was the one the trap replaced; the seated
+# body restores that reference.  Run mg9 lane S364's lesson still holds -- being
+# in a slice means COMPILED, the linker decides LINKED -- so this is checked in
+# the map rather than assumed.
 #
 # ---- 8. THE PLAYER TITLE, DERIVED INDEPENDENTLY -------------------------
 #
@@ -288,13 +310,15 @@
 # The ov004 delta is ONE line and the shared-sub-object delta is ONE.
 #
 # port/tools/closure.py over this list against the baseline map named exactly
-# five unresolved symbols: the two /alternatename rows in
+# five unresolved symbols when run mg11 wrote it: the two /alternatename rows in
 # port/unmatched/MgCard_Faces.cpp, the two slice lines below that are not this
-# class's own bodies, and the floor.  Nothing else.
+# class's own bodies, and the floor.  Nothing else.  Run mg12 lane SRT seated the
+# floor as src/func_ov006_020da174.c, so that fifth name is now resolved by a
+# slice line rather than by a trap and the count is four.
 #
-# The 36 bodies of dScMgCard_c and its two element classes, 0x020d95a4 ..
-# 0x020dbe40, in address order.  The 37th body in that range is the floor and
-# is deliberately absent.
+# The 37 bodies of dScMgCard_c and its two element classes, 0x020d95a4 ..
+# 0x020dbe40, in address order.  The 37th is func_ov006_020da174, the hand
+# sorter run mg11 had to trap and run mg12 lane SRT decompiled; section 7.
 src/func_ov006_020d95a4.cpp
 src/func_ov006_020d9638.cpp
 src/func_ov006_020d96e0.c
@@ -311,6 +335,7 @@ src/func_ov006_020d9c5c.cpp
 src/func_ov006_020da00c.cpp
 src/func_ov006_020da0ac.cpp
 src/func_ov006_020da154.c
+src/func_ov006_020da174.c
 src/func_ov006_020da420.c
 src/func_ov006_020da4ac.c
 src/func_ov006_020da5e8.c

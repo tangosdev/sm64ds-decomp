@@ -144,16 +144,23 @@
 //
 // ---- 7. WHAT THIS SEAT DOES NOT CLAIM -------------------------------------
 //
-// ONE FLOOR, AND IT IS ON THE CRITICAL PATH.  func_ov006_020da174 (0x2ac at
-// 0x020da174) has no src TU in either extension and no delink block --
-// ov006's delinks run `.text start:0x020da154 end:0x020da174` and resume past
-// it.  port/unmatched/MgCard_Traps.cpp is the named trap and carries the ROM
-// characterisation.  State 9 calls it on both hands; it is the only caller of
+// NO FLOOR ANY MORE, AND THAT IS THE ONLY THING THAT CHANGED HERE.  Run mg11
+// seated this class with one, func_ov006_020da174 (0x2ac at 0x020da174, the
+// hand sorter), behind port/unmatched/MgCard_Traps.cpp, and it sat on the
+// critical path: state 9 calls it on both hands, it is the only caller of
 // src/func_ov006_020d99ec.c, which is what puts every card into state 7 with a
 // slide target, and state 10 will not advance until all ten cards reach state
-// 8.  So the port reaches state 10 and stays there.  That is printed by the
-// census below on every run, zero or not, because a census that measures only
-// dispatch cannot see a machine that stopped.
+// 8.  So the port reached state 10 and stayed there.  Run mg12 lane SRT
+// decompiled the body -- src/func_ov006_020da174.c, byte-identical at mwccarm
+// 2004/b56, with the delink block for 0x020da174..0x020da420 enrolled -- and
+// the trap is deleted.  port/slice_pkr.txt section 7 is the record.
+//
+// THE WITNESS MOVED WITH IT.  A count of trap entries is meaningless once there
+// is no trap, so this file does not print one; what stands in its place is the
+// evidence that only works if the sorter really ran: the state index at +0x5388
+// reaching the payout arms 0x0e..0x12, and the ten per-card `state` bytes below
+// leaving state 7 for state 8.  Both were already printed and neither could
+// move while the trap stood.
 //
 // The state machine is proven to run by the numbers this file prints, not by
 // this comment.  A run that reports slot hits and a state index that never
@@ -223,8 +230,6 @@ int   func_ov006_020d9998(void);              /* dMgDilarCardObj_c slot 2 */
 /* the factory */
 void *MgPicturePoker_Spawn(void);
 
-/* the trap's witness, from unmatched/MgCard_Traps.cpp */
-unsigned port_mg_card_floor_hits(void);
 /* the framework's, from unmatched/MgBase_StateDispatch.cpp */
 void     port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
 /* the +0x4f38 sub-object's FIELD-held member pointer, from
@@ -589,13 +594,14 @@ extern "C" void port_scene_card_hits(void)
         std::printf("[scene] dScMgCard_c state machine: no member-pointer table"
                     " (14-arm ARM jump table at 0x020dac4c); %u framework "
                     "call(s), %u UNHANDLED address(es)\n", calls, unknown);
-        std::printf("[scene] dScMgCard_c state FLOOR func_ov006_020da174: %u "
-                    "entry(ies) counted and returned. It is the ONLY caller of "
+        std::printf("[scene] dScMgCard_c hand sorter func_ov006_020da174: "
+                    "SEATED (src/func_ov006_020da174.c, run mg12 lane SRT; run "
+                    "mg11 had to trap it). It is the ONLY caller of "
                     "src/func_ov006_020d99ec.c, which is what puts all ten "
                     "cards into state 7 with a slide target, and state 10 waits"
-                    " for every card to reach state 8 -- so a nonzero count "
-                    "here is the machine ARRIVING at its floor, not passing "
-                    "it\n", port_mg_card_floor_hits());
+                    " for every card to reach state 8 -- so the card `state` "
+                    "bytes below and a state index past 0x0a are what say it "
+                    "ran; there is no trap counter left to print\n");
     }
 
     /* THE SUB-OBJECT'S MACHINE, because THREE of this class's fourteen states
