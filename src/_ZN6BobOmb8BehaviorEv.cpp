@@ -77,7 +77,7 @@ int BobOmb::Behavior()
     }
 
     func_ov102_0214b03c(this);
-    if (unk_3dc != 5) {
+    if (mState != 5) {
         if (mVertAccel != 0) {
             if ((*(int*)(&mdCc_c.hitFlags) & 0x10) != 0) {
                 short v[3];
@@ -108,7 +108,7 @@ int BobOmb::Behavior()
                     func_ov102_0214ae1c(this);
                     return 1;
                 }
-                if (_ZNK10dBgCh_Actr8IsOnWallEv((char *)&mWithMeshClsn) && unk_3dc == 0) {
+                if (_ZNK10dBgCh_Actr8IsOnWallEv((char *)&mWithMeshClsn) && mState == 0) {
                     func_ov102_0214beb4(this);
                 }
             }
@@ -123,8 +123,8 @@ int BobOmb::Behavior()
             if ((*(int*)(&mdCc_c.hitFlags) & 0x4000) != 0) {
                 func_ov102_0214b384(this, 4);
             }
-            if (unk_3dc == 4) {
-                unsigned char b = unk_3f5;
+            if (mState == 4) {
+                unsigned char b = mVariant;
                 if (b == 2 || b == 3) {
                     other = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(&mdCc_c.otherOwner));
                     if (other != 0) {
