@@ -6,7 +6,7 @@
 int fBase_c::BeforeBehavior()
 {
   if(shouldBeKilled!=0) goto ret0;
-  if((unk_013&2)==0) goto ret1;
+  if((pauseFlags&2)==0) goto ret1;
 ret0:
   return 0;
 ret1:

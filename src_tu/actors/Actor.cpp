@@ -37,7 +37,7 @@
  *  - Shadow types dropped for the real header's: dActor_c, Vector3, Vector3_16,
  *    Matrix4x3, dCc_c, Player, Sound, Heap, and `typedef int Fix12`
  *    (types.h has a Fix12<T> TEMPLATE, so that typedef is not even legal here).
- *    Field names follow: deathTableId -> unk_0ce, flags -> mFlags, camSpacePos
+ *    Field names follow: deathTableId -> mDeathTableID, flags -> mFlags, camSpacePos
  *    -> mCamSpacePosX, pos -> mPosX, speed -> unk_0a4, areaID -> mAreaId.
  *  - One spelling per global, chosen for what the ROM's use of it supports:
  *    data_0209b468 is an ADDRESS (`extern int []`), not a value -- declared as a
@@ -64,7 +64,7 @@
  *    the span and shifts every later function, which is the one thing that
  *    stood between this file and a whole-range link. Same four bytes either way.
  *  - D0's two `thiz + 0x50` arguments are spelled differently (`((int)thiz)+0x50`
- *    and `&thiz->unk_050`), exactly as D1 and D2 spell them. Written identically
+ *    and `&thiz->mListPrev`), exactly as D1 and D2 spell them. Written identically
  *    under decl_common.h's (int) prototypes, mwcc commons them into a fourth
  *    register and D0 comes out 0xc long.
  *
@@ -108,9 +108,9 @@ extern "C" void* _ZN8dActor_cC2Ev(struct dActor_c *self) {
     _ZN7fBase_cC1Ev(((char*)self));
     *(void**)((char*)self) = &data_0208e4b8;
     *(void**)((char*)self) = &data_0208e3a4;
-    self->unk_050 = 0;
-    self->unk_054 = 0;
-    *(char**)((char*)&self->unk_058) = ((char*)self);
+    self->mListPrev = 0;
+    self->mListNext = 0;
+    *(char**)((char*)&self->mListOwner) = ((char*)self);
     func_0203b244((void*)&data_0209b468, ((char*)self) + 0x50);
     {
         s16* p = data_0209b460;
@@ -135,7 +135,7 @@ extern "C" void* _ZN8dActor_cC2Ev(struct dActor_c *self) {
         }
     }
     self->mAreaId = data_0209b44c;
-    self->unk_0ce = data_0208e378;
+    self->mDeathTableID = data_0208e378;
     entry = (int*)(((int**)data_020a4bb8)[self->actorID]);
     self->mFlags = entry[2];
     b = (data_0209f2d8 == 2);
@@ -167,9 +167,9 @@ extern "C" void* _ZN8dActor_cC1Ev(struct dActor_c *self) {
   _ZN7fBase_cC1Ev(((char*)self));
   *(void**)((char*)self) = &data_0208e4b8;
   *(void**)((char*)self) = &data_0208e3a4;
-  self->unk_050 = 0;
-  self->unk_054 = 0;
-  *(void**)((char*)&self->unk_058) = ((char*)self);
+  self->mListPrev = 0;
+  self->mListNext = 0;
+  *(void**)((char*)&self->mListOwner) = ((char*)self);
   func_0203b244(&data_0209b468, ((char*)self)+0x50);
   {
     int* p = (int*)data_0209b460;
@@ -192,7 +192,7 @@ extern "C" void* _ZN8dActor_cC1Ev(struct dActor_c *self) {
     }
   }
   self->mAreaId = data_0209b44c;
-  self->unk_0ce = data_0208e378;
+  self->mDeathTableID = data_0208e378;
   {
     void** base = *(void***)&data_020a4bb8;
     int idx = self->actorID;
@@ -222,7 +222,7 @@ extern "C" {
 int _ZN8dActor_cD1Ev(struct dActor_c *self) {
   *(int*)((int)self) = (int)_ZTV8dActor_c;
   func_0203b27c((int)data_0209b468, ((int)self)+0x50);
-  func_02044104((int)&self->unk_050);
+  func_02044104((int)&self->mListPrev);
   *(int*)((int)self) = (int)_ZTV7dBase_c;
   _ZN7fBase_cD2Ev(((int)self));
   return ((int)self);
@@ -236,7 +236,7 @@ extern "C" struct dActor_c *_ZN8dActor_cD0Ev(struct dActor_c *thiz)
 {
     *(void **)thiz = (void *)_ZTV8dActor_c;
     func_0203b27c((int)data_0209b468, ((int)thiz) + 0x50);
-    func_02044104((int)&thiz->unk_050);
+    func_02044104((int)&thiz->mListPrev);
     *(void **)thiz = (void *)_ZTV7dBase_c;
     _ZN7fBase_cD2Ev((int)thiz);
     _ZN6Memory10DeallocateEPvP4Heap(thiz, data_020a0eac);
@@ -250,7 +250,7 @@ extern "C" {
 int _ZN8dActor_cD2Ev(struct dActor_c *self) {
   *(int*)((int)self) = (int)_ZTV8dActor_c;
   func_0203b27c((int)data_0209b468, ((int)self)+0x50);
-  func_02044104((int)&self->unk_050);
+  func_02044104((int)&self->mListPrev);
   *(int*)((int)self) = (int)_ZTV7dBase_c;
   _ZN7fBase_cD2Ev(((int)self));
   return ((int)self);
@@ -344,10 +344,10 @@ int dActor_c::BeforeBehavior()
         if (data_0209fc68 == 0 || (mFlags & 0x10000))
             return 0;
     } else {
-        if (unk_0b8 != 0) {
+        if (mClipRadius != 0) {
             Vector3 tmp;
             tmp.x = mPosX >> 3;
-            tmp.y = (mPosY + unk_0b4) >> 3;
+            tmp.y = (mPosY + mClipOffsetY) >> 3;
             tmp.z = mPosZ >> 3;
             MulVec3Mat4x3(&tmp, &data_0209b3ec, (Vector3 *)&mCamSpacePosX);
         }
@@ -355,9 +355,9 @@ int dActor_c::BeforeBehavior()
             int r = _ZN7Clipper13Func_020150E8ER7Vector35Fix12IiEPh(
                         &data_0209f43c,
                         (Vector3 *)&mCamSpacePosX,
-                        unk_0b8,
-                        &unk_0c4);
-            int thresh = unk_0bc;
+                        mClipRadius,
+                        &mClipResult);
+            int thresh = mClipDistance;
             if (data_0209f274)
                 thresh <<= 1;
             if (r > thresh) {
@@ -367,7 +367,7 @@ int dActor_c::BeforeBehavior()
             } else {
                 u32 *p = &mFlags;
                 *p &= ~0x38;
-                if (r > unk_0c0)
+                if (r > mFarDistance)
                     *p |= 0x10;
             }
         } else {
@@ -385,9 +385,9 @@ int dActor_c::BeforeBehavior()
     return 0;
 
 do_copy:
-    unk_068 = mPosX;
-    unk_06c = mPosY;
-    unk_070 = mPosZ;
+    mPrevPosX = mPosX;
+    mPrevPosY = mPosY;
+    mPrevPosZ = mPosZ;
     return 1;
 }
 
@@ -462,7 +462,7 @@ dActor_c *dActor_c::FindWithActorID(u32 j, dActor_c *after) {
 extern "C" {
 struct dActor_c* _ZN8dActor_c4NextEPKS_(struct dActor_c *self) {
   struct dActor_c* p;
-  if(((struct dActor_c*)self)) p = *(struct dActor_c**)((char*)&self->unk_054);
+  if(((struct dActor_c*)self)) p = *(struct dActor_c**)((char*)&self->mListNext);
   else  p = *(struct dActor_c**)&data_0209b468;
   if(p) return *(struct dActor_c**)((char*)p+8);
   return 0;
@@ -500,10 +500,10 @@ dActor_c *dActor_c::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
  * 0x02010e08  size 0x24   legacy src/_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_.cpp */
 extern "C" {
 void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(struct dActor_c *self, int a, int b, int c, int d) {
-self->unk_0b4=a;
-self->unk_0b8=b>>3;
-self->unk_0bc=c>>3;
-self->unk_0c0=d>>3;
+self->mClipOffsetY=a;
+self->mClipRadius=b>>3;
+self->mClipDistance=c>>3;
+self->mFarDistance=d>>3;
 }
 }
 
@@ -1571,7 +1571,7 @@ int DeathTable_GetBit(int id);
 }
 int dActor_c::GetBitInDeathTable()
 {
-    return DeathTable_GetBit(unk_0ce);
+    return DeathTable_GetBit(mDeathTableID);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1582,7 +1582,7 @@ void DeathTable_SetBit(int id);
 }
 void dActor_c::TrackInDeathTable()
 {
-    DeathTable_SetBit(unk_0ce);
+    DeathTable_SetBit(mDeathTableID);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1593,7 +1593,7 @@ void DeathTable_ClearBit(int id);
 }
 void dActor_c::UntrackInDeathTable()
 {
-    DeathTable_ClearBit(unk_0ce);
+    DeathTable_ClearBit(mDeathTableID);
 }
 
 /* -------------------------------------------------------------------------- */

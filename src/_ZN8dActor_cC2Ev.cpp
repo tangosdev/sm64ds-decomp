@@ -6,61 +6,72 @@
 /* recovered: named members + shared header */
 #include "dActor_c.h"
 extern "C" {
-extern int data_0208e4b8;
-extern int data_0208e3a4;
-extern int data_0209b468;
-extern s16* data_0209b460;
-extern s16* data_0209b45c;
-extern s16 data_0208e378;
-extern int* data_020a4bb8;
-extern unsigned char data_0209f2d8;
+extern int data_0208e4b8;           /* dBase_c vtable  */
+extern int data_0208e3a4;           /* dActor_c vtable */
+extern int data_0209b468;           /* the global actor list */
+extern s16* data_0209b460;          /* spawn position, or null to leave it at 0 */
+extern s16* data_0209b45c;          /* spawn rotation, or null */
+extern s16 data_0208e378;           /* spawn death-table id */
+extern int* data_020a4bb8;          /* actor info table, indexed by actorID */
+extern unsigned char data_0209f2d8; /* game mode; 2 pushes the clip distance out */
 void _ZN7fBase_cC2Ev(void* self);
 int func_0203b244(void* l, void* n);
 void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void* self, int a, int b, int c, int d);
 }
 
+/* Base-object constructor. Chains fBase_c, links the actor into the global list,
+   and seeds position/rotation/area/death-table id from the globals the spawner
+   parked them in. Not a real dActor_c::dActor_c(): defining it as a method would
+   make some TU the key function and emit a second copy of the class vtable. */
 extern "C" void* _ZN8dActor_cC2Ev(struct dActor_c *self) {
-    int* entry;
-    int b;
-    int r3;
-    _ZN7fBase_cC2Ev(((char*)self));
-    *(void**)((char*)self) = &data_0208e4b8;
-    *(void**)((char*)self) = &data_0208e3a4;
-    self->unk_050 = 0;
-    self->unk_054 = 0;
-    *(char**)((char*)&self->unk_058) = ((char*)self);
-    func_0203b244((void*)&data_0209b468, ((char*)self) + 0x50);
+    int* info;
+    int isMode2;
+    int clipDistance;
+
+    _ZN7fBase_cC2Ev(self);
+    /* dBase_c's constructor is inlined here, which is why its vptr is stored and
+       then immediately overwritten. Both stores are in the ROM; keep them. */
+    *(void**)self = &data_0208e4b8;
+    *(void**)self = &data_0208e3a4;
+
+    self->mListPrev = 0;
+    self->mListNext = 0;
+    self->mListOwner = self;
+    func_0203b244((void*)&data_0209b468, &self->mListPrev);
+
     {
-        s16* p = data_0209b460;
-        if (p != 0) {
-            self->mPosX = ((int*)p)[0];
-            self->mPosY = ((int*)p)[1];
-            self->mPosZ = ((int*)p)[2];
+        int* spawnPos = (int*)data_0209b460;
+        if (spawnPos != 0) {
+            self->mPosX = spawnPos[0];
+            self->mPosY = spawnPos[1];
+            self->mPosZ = spawnPos[2];
         }
     }
     {
-        s16* q = data_0209b45c;
-        if (q != 0) {
-            self->mAngleX = q[0];
-            self->mAngleY = q[1];
-            self->mAngleZ = q[2];
-            {
-                s16* q2 = data_0209b45c;
-                self->mPrevAngleX = q2[0];
-                self->mPrevAngleY = q2[1];
-                self->mPrevAngleZ = q2[2];
-            }
+        s16* spawnRot = data_0209b45c;
+        if (spawnRot != 0) {
+            self->mAngleX = spawnRot[0];
+            self->mAngleY = spawnRot[1];
+            self->mAngleZ = spawnRot[2];
+            /* Re-read of the same global, and the ROM does re-issue the load --
+               fold it into one pointer and the second group loses an ldr. */
+            spawnRot = data_0209b45c;
+            self->mPrevAngleX = spawnRot[0];
+            self->mPrevAngleY = spawnRot[1];
+            self->mPrevAngleZ = spawnRot[2];
         }
     }
+
     self->mAreaId = data_0209b44c;
-    self->unk_0ce = data_0208e378;
-    entry = (int*)(((int**)data_020a4bb8)[self->actorID]);
-    self->mFlags = entry[2];
-    b = (data_0209f2d8 == 2);
-    if (b != 0)
-        r3 = entry[5] + 0x7d0000;
+    self->mDeathTableID = data_0208e378;
+
+    info = (int*)(((int**)data_020a4bb8)[self->actorID]);
+    self->mFlags = info[2];
+    isMode2 = (data_0209f2d8 == 2);
+    if (isMode2 != 0)
+        clipDistance = info[5] + 0x7d0000;
     else
-        r3 = entry[5];
-    _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(((char*)self), entry[3], entry[4], r3, entry[6]);
-    return ((char*)self);
+        clipDistance = info[5];
+    _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(self, info[3], info[4], clipDistance, info[6]);
+    return self;
 }

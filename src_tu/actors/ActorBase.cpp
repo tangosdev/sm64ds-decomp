@@ -378,7 +378,7 @@ int fBase_c::BeforeBehavior()
 {
     if (shouldBeKilled != 0)
         goto ret0;
-    if ((unk_013 & 2) == 0)
+    if ((pauseFlags & 2) == 0)
         goto ret1;
 ret0:
     return 0;
@@ -412,7 +412,7 @@ int fBase_c::BeforeRender()
 {
     if (shouldBeKilled != 0)
         goto ret0;
-    if ((unk_013 & 8) == 0)
+    if ((pauseFlags & 8) == 0)
         goto ret1;
 ret0:
     return 0;
@@ -461,7 +461,7 @@ void fBase_c::OnPendingDestroy()
  * is supposed to retire, here is what `Obj` maps onto in include/fBase_c.h --
  * so the next pass can try the real members one at a time and measure:
  *     0x0e state  = aliveState        0x12 pad12 = unk_012
- *     0x0f dirty  = shouldBeKilled    0x13 flags = unk_013
+ *     0x0f dirty  = shouldBeKilled    0x13 flags = pauseFlags
  *     0x10 f10    = unk_010           0x18 list  = sceneNode.unk_004, i.e. the
  *     0x11 f11    = unk_011                 scene node's first child
  * and `LNode` is ActorBase_SceneNode seen through its 0x0c nextSibling and 0x10

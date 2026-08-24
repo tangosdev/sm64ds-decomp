@@ -183,9 +183,9 @@ int ChiefChilly::Behavior()
             unk_4f0 = mPosY;
             unk_4f4 = mPosZ;
             if ((char *)c->pp != data_ov073_021233a0) {
-                mPosX = unk_068;
-                mPosY = unk_06c;
-                mPosZ = unk_070;
+                mPosX = mPrevPosX;
+                mPosY = mPrevPosY;
+                mPosZ = mPrevPosZ;
                 mHorzSpeed = 0;
             }
         } else {

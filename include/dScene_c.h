@@ -99,7 +99,7 @@
  *
  * First, no dScene_c method reads or writes anything past fBase_c's own members.
  * The only this-relative access in the entire class, across all 23 functions, is
- * `this->unk_013` in BeforeBehavior at 0x13; the destructors touch the vptr at
+ * `this->pauseFlags` in BeforeBehavior at 0x13; the destructors touch the vptr at
  * 0x0; everything else either passes `this` straight through or never sees it.
  *
  * Second -- and this is the half that actually rules out a hidden field -- Stage

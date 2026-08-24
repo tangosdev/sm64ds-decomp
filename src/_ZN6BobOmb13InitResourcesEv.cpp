@@ -78,7 +78,7 @@ int BobOmb::InitResources()
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
     unk_3f3 = 1;
-    /* dActor_c does not name 0xc8 yet -- it is padding between unk_0c4 and
+    /* dActor_c does not name 0xc8 yet -- it is padding between mClipResult and
        mAreaId -- so this one stays an offset rather than growing a field on a
        header 200+ files include. */
     *(int *)((char *)this + 0xc8) = 0;

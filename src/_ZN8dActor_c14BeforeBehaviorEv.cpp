@@ -15,11 +15,11 @@
  *   3. If the actor is bound to an area (mAreaId >= 0) that is not the showing
  *      one, force it off screen: set 0x38, push camera-space position to
  *      INT_MAX so nothing can consider it near, and stop.
- *   4. Otherwise project into camera space -- but only when unk_0b8, the clip
+ *   4. Otherwise project into camera space -- but only when mClipRadius, the clip
  *      radius, is nonzero. A zero radius means "no clip volume", and the
  *      transform is skipped entirely rather than computed and ignored.
  *   5. Run the clipper and set/clear the visibility bits from its answer.
- *   6. Snapshot mPos into unk_068..unk_070 so the next frame can see where the
+ *   6. Snapshot mPos into mPrevPosX..mPrevPosZ so the next frame can see where the
  *      actor was.
  *
  * FLAG BITS, as this function uses them:
@@ -99,10 +99,10 @@ int dActor_c::BeforeBehavior()
         if (data_0209fc68 == 0 || (mFlags & 0x10000))
             return 0;
     } else {
-        if (unk_0b8 != 0) {
+        if (mClipRadius != 0) {
             Vector3 tmp;
             tmp.x = mPosX >> 3;
-            tmp.y = (mPosY + unk_0b4) >> 3;
+            tmp.y = (mPosY + mClipOffsetY) >> 3;
             tmp.z = mPosZ >> 3;
             MulVec3Mat4x3(&tmp, &data_0209b3ec, (Vector3 *)&mCamSpacePosX);
         }
@@ -110,9 +110,9 @@ int dActor_c::BeforeBehavior()
             int r = _ZN7Clipper13Func_020150E8ER7Vector35Fix12IiEPh(
                         &data_0209f43c,
                         (Vector3 *)&mCamSpacePosX,
-                        unk_0b8,
-                        &unk_0c4);
-            int thresh = unk_0bc;
+                        mClipRadius,
+                        &mClipResult);
+            int thresh = mClipDistance;
             if (data_0209f274)
                 thresh <<= 1;
             if (r > thresh) {
@@ -122,7 +122,7 @@ int dActor_c::BeforeBehavior()
             } else {
                 u32 *p = &mFlags;
                 *p &= ~0x38;
-                if (r > unk_0c0)
+                if (r > mFarDistance)
                     *p |= 0x10;
             }
         } else {
@@ -140,8 +140,8 @@ int dActor_c::BeforeBehavior()
     return 0;
 
 do_copy:
-    unk_068 = mPosX;
-    unk_06c = mPosY;
-    unk_070 = mPosZ;
+    mPrevPosX = mPosX;
+    mPrevPosY = mPosY;
+    mPrevPosZ = mPosZ;
     return 1;
 }
