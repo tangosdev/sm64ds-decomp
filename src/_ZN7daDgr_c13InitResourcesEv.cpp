@@ -9,7 +9,7 @@
  * (This used to be an extern "C" free function over a raw `char *` with every
  * field reached by literal offset. Converting it to a real method and naming
  * the fields is byte-exact under the pinned 2004/b56 -- checked with
- * tools/build_pin.verify.)
+ * build_pin.verify in tools/build_pin.py.)
  *
  * The two func_ov025_* helpers still take a `char *`: decl_common.h spells them
  * that way and this file does not own that header. */

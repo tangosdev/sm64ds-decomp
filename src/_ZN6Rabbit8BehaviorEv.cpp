@@ -176,16 +176,16 @@ int Rabbit::Behavior()
 
     if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(c, &mWithMeshClsn) != 0) {
         _ZN5dCc_c5ClearEv(&mdCcAc_c);
-        if (unk_107 != 0) {
+        if (mEatenByYoshi != 0) {
             if (unk_104 == 5)
                 mHorzSpeed = 0;
             if (unk_104 == 0)
                 _ZN5dCc_c6UpdateEv(&mdCcAc_c);
         }
-        if (unk_107 == 1) {
+        if (mEatenByYoshi == 1) {
             *(u8*)((long long)(int)(c + 0x42a)) = *(u8*)((long long)(int)(c + 0x42a)) + 1;
             if (mEatenTimer > 0x96) {
-                unk_107 = 0;
+                mEatenByYoshi = 0;
                 mEatenTimer = 0;
             }
         }

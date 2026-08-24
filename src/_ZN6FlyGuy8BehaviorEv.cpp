@@ -21,7 +21,7 @@ int FlyGuy::Behavior()
 {
     if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(this, &mWithMeshClsn) != 0) {
         mdCcAc_c.Clear();
-        if (unk_107 != 0) {
+        if (mEatenByYoshi != 0) {
             if (unk_104 == 0) {
                 mdCcAc_c.Update();
             }

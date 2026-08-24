@@ -4,5 +4,5 @@
 /* recovered: renamed to Class_Method */
 s32 BobOmb::OnYoshiTryEat() {
     /* 263 == 0x107, dEnemyBase_c's own byte at that offset. */
-    return unk_107 == 0;
+    return mEatenByYoshi == 0;
 }

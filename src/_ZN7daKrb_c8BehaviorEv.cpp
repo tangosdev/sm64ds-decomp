@@ -50,7 +50,7 @@ int daKrb_c::Behavior()
         _ZN8dActor_c8PoofDustEv(((char*)this));
     }
     if (mGoombaType != 3 && mState != 3 &&
-        unk_107 == 0 && mDeathState == 0 &&
+        mEatenByYoshi == 0 && mDeathState == 0 &&
         _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char*)this), 0x5dc000) != 0)
     {
         _ZN11dCapEnemy_c12Unk_02005d94Ev(((char*)this));

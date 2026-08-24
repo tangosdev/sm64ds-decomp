@@ -2,9 +2,9 @@
 // @symbol _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c
 /* recovered: named members + shared header, real C++ method
  *
- * While unk_107 is set, a cylinder collision against anything other than actor
+ * While mEatenByYoshi is set, a cylinder collision against anything other than actor
  * IDs 0x120/0x121 spawns the mega-character particles; otherwise bit 0x20000
- * on the collision is raised. Clearing unk_107 clears that bit instead.
+ * on the collision is raised. Clearing mEatenByYoshi clears that bit instead.
  *
  * The clsn offsets stay raw: dCc_c has no header here, and +0x18 and
  * +0x24 are the only two slots this function evidences.
@@ -19,7 +19,7 @@ int dEnemyBase_c::SpawnParticlesIfHitOtherObj(dCc_c & clsn_)
 {
     char* clsn = (char*)&clsn_;
     int* f;
-    if (unk_107 != 0) {
+    if (mEatenByYoshi != 0) {
         unsigned int id = *(unsigned int*)(clsn+0x24);
         if (id != 0) {
             void* a = _ZN8dActor_c10FindWithIDEj(id);

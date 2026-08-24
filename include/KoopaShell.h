@@ -96,7 +96,7 @@ struct KoopaShell {
     u8  pad_0b4[0x4c];
     s16 mStateTimer;            /* 0x100 */
     u8  pad_102[0x5];
-    u8  unk_107;            /* 0x107 */
+    u8  mEatenByYoshi;            /* 0x107 */
     u8  pad_108[0x8];
     /* Sub-objects, kept as byte markers: their sizes are fixed by the NEXT
        marker's offset, which is what the ROM evidences, and none of the five

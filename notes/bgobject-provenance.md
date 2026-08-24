@@ -8,7 +8,7 @@ survive as `unk_NNN` are listed too, with the reason the evidence was not enough
 Convention: instance members `mFoo`, statics `sFoo`, constants `cFoo`.
 
 Renames are byte-neutral by construction. Every class in this file was re-verified with
-`tools/build_pin.verify` against the ROM-pinned compiler (2004/b56) after the rename,
+`build_pin.verify` (`tools/build_pin.py`) against the ROM-pinned compiler (2004/b56) after the rename,
 and again after each raw-offset collapse.
 
 ---
