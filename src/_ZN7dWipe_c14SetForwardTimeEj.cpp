@@ -20,25 +20,25 @@ void _ZN3IRQ10EnableIRQsEj(unsigned int irq);
 
 int dWipe_c::SetForwardTime(u32 frames)
 {
-    if (unk_010 == 0 || unk_010 == 2) {
+    if (state == 0 || state == 2) {
         int t;
         u16 saved;
 
-        if (unk_014 == 1) {
+        if (type == 1) {
             return FaderBrightness::SetForwardTime(frames);
         }
 
         if (frames == 0) {
-            unk_020 = -0x200000;
-            unk_024 = 0;
+            wipeSpeed = -0x200000;
+            wipeAccel = 0;
         } else {
-            t = (unk_014 == 0) ? 0x2d : 0x3c;
-            unk_020 = -0x200000 / t;
-            unk_024 = (-unk_020 << 1) / t;
-            unk_020 = unk_020 << 1;
+            t = (type == 0) ? 0x2d : 0x3c;
+            wipeSpeed = -0x200000 / t;
+            wipeAccel = (-wipeSpeed << 1) / t;
+            wipeSpeed = wipeSpeed << 1;
         }
 
-        if (unk_014 == 2) {
+        if (type == 2) {
             _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)data_0209f600, 2);
             _ZN2GX10LoadBGPlttEPKvjj(data_0209f600, 0, 2);
             _ZN3GXS10LoadBGPlttEPKvjj(data_0209f600, 0, 2);
@@ -48,7 +48,7 @@ int dWipe_c::SetForwardTime(u32 frames)
             _ZN3GXS10LoadBGPlttEPKvjj(data_020926c8, 0, 2);
         }
 
-        unk_01c = 0x200000;
+        wipeInterp = 0x200000;
         *(volatile u16 *)0x4000040 = 0x7f;
         *(volatile u16 *)0x4000044 = 0xc0;
         *(volatile u16 *)0x4001040 = 0x7f;
@@ -58,7 +58,7 @@ int dWipe_c::SetForwardTime(u32 frames)
         *(volatile u16 *)0x4001042 = 0x80ff;
         *(volatile u16 *)0x4001046 = 0xc0;
 
-        unk_010 = 3;
+        state = 3;
         func_0202f58c(this);
 
         saved = *(volatile u16 *)0x4000208;
@@ -71,13 +71,13 @@ int dWipe_c::SetForwardTime(u32 frames)
             *(volatile u16 *)0x4000208 = 1;
         }
 
-        unk_00f = 1;
+        needsCleanup = 1;
         return 0;
     } else {
-        if (unk_010 == 4) {
+        if (state == 4) {
             return 1;
         }
-        unk_010 = 3;
+        state = 3;
         return 0;
     }
 }

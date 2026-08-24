@@ -9,11 +9,11 @@
 int dWipe_c::IsAtStart()
 {
     int result;
-    if (unk_014 == 1)
+    if (type == 1)
         return FaderBrightness::IsAtStart();
-    if (unk_010 == 0)
+    if (state == 0)
         goto ret1;
-    if (unk_01c < 0x200000)
+    if (wipeInterp < 0x200000)
         goto ret0;
 ret1:
     result = 1;
