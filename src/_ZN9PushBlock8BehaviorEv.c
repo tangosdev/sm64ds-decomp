@@ -55,57 +55,60 @@ int _ZN9PushBlock8BehaviorEv(char *c)
         return 1;
     }
 
-    if (self->unk_098 != 0) {
+    if (self->mHorzSpeed != 0) {
         v.x = 0;
         dst.x = 0;
         dst.y = 0;
         dst.z = 0;
         v.y = 0x96000;
         v.z = 0x96000;
-        Matrix4x3_FromRotationY(&data_020a0e68, self->unk_094);
+        Matrix4x3_FromRotationY(&data_020a0e68, self->mPrevAngleY);
         MulVec3Mat4x3(&v, &data_020a0e68, &dst);
-        AddVec3(&dst, (Vector3 *)(c + 0x5c), &dst);
+        AddVec3(&dst, (Vector3 *)&self->mPosX, &dst);
         _ZN9dBgCh_GndC1Ev(ray);
         _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(ray, &dst, 0);
         if (_ZN9dBgCh_Gnd10DetectClsnEv(ray) != 0) {
-            if (self->unk_4e8 != *(int *)(ray + 0x44)) {
-                self->unk_098 = 0;
+            if (self->mGroundY != *(int *)(ray + 0x44)) {
+                self->mHorzSpeed = 0;
             }
         } else {
-            self->unk_098 = 0;
+            self->mHorzSpeed = 0;
         }
         _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
-        dBgCh_Actr_UpdateContinuous_Veneer(c + 0x320);
+        dBgCh_Actr_UpdateContinuous_Veneer(&self->mWithMeshClsn);
         _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
         _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
         _ZN9dBgCh_GndD1Ev(ray);
     }
 
-    func_020393a4((int *)(c + 0x124), 0x12c000);
-    func_02039394((int *)(c + 0x124), 0x96000);
+    func_020393a4((int *)&self->mMeshCollider, 0x12c000);
+    func_02039394((int *)&self->mMeshCollider, 0x96000);
     _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0x3e8000, 0x96000);
 
-    if (self->unk_098 != 0 && Vec3_Dist((Vector3 *)(c + 0x5c), (Vector3 *)(c + 0x68)) != 0) {
-        self->unk_4ec = _ZN5Sound8PlayLongEjjjRK7Vector3s(self->unk_4ec, 3, 0x97, (Vector3 *)(c + 0x74), 0);
+    if (self->mHorzSpeed != 0 && Vec3_Dist((Vector3 *)&self->mPosX, (Vector3 *)&self->mPrevPosX) != 0) {
+        self->mSlideSound = _ZN5Sound8PlayLongEjjjRK7Vector3s(self->mSlideSound, 3, 0x97, (Vector3 *)&self->mCamSpacePosX, 0);
     }
 
-    if (Vec3_HorzDist((Vector3 *)(c + 0x4dc), (Vector3 *)(c + 0x5c)) >= 0x12c000) {
-        if (self->unk_4f0 != 0) {
-            if (*(unsigned short *)(self->unk_4f0 + 0xc) == 0x149) {
-                pos.x = self->unk_4dc;
-                pos.y = self->unk_4e0;
-                pos.z = self->unk_4e4;
-                pos.y = self->unk_4e0 + 0x96000;
+    if (Vec3_HorzDist((Vector3 *)&self->mHomePosX, (Vector3 *)&self->mPosX) >= 0x12c000) {
+        if (self->mLinkedActor != 0) {
+            if (*(unsigned short *)(self->mLinkedActor + 0xc) == 0x149) {
+                pos.x = self->mHomePosX;
+                pos.y = self->mHomePosY;
+                pos.z = self->mHomePosZ;
+                pos.y = self->mHomePosY + 0x96000;
+                /* This ONE read of mLinkedActor stays raw: spelling it
+                   `(char *)self->mLinkedActor` like the three sites around it
+                   costs the function its size -- measured, per site. */
                 q = *(char **)(c + 0x4f0);
-                *(int *)(q + 0x5c) = self->unk_4dc;
+                *(int *)(q + 0x5c) = self->mHomePosX;
                 *(int *)(q + 0x60) = pos.y;
                 *(int *)(q + 0x64) = pos.z;
-                func_ov002_020f0438(*(void **)(c + 0x4f0));
+                func_ov002_020f0438((void *)self->mLinkedActor);
             }
-            *(void **)(c + 0x4f0) = 0;
+            self->mLinkedActor = 0;
         }
     }
 
-    self->unk_098 = 0;
+    self->mHorzSpeed = 0;
     return 1;
 }

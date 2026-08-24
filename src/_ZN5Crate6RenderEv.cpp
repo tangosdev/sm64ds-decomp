@@ -13,12 +13,12 @@ struct Sub {
 
 int Crate::Render()
 {
-  if(unk_560 == 6) return 1;
+  if(mState == 6) return 1;
   {
     int b = (int)((mFlags & 0x40000) != 0);
     if(b) return 1;
   }
-  Sub* o = (Sub*)((char*)&mModel);
+  Sub* o = (Sub*)&mModel;
   o->m5(0);
   return 1;
 }

@@ -19,12 +19,12 @@
 
 struct CannonHatch : dBgActor_c {
     u8  pad_31e[0x2];
-    s32 unk_320;                      /* 0x320 */
-    s32 unk_324;                      /* 0x324 */
-    s32 unk_328;                      /* 0x328 */
-    u8 unk_32c;                       /* 0x32c */
-    u8 unk_32d;                       /* 0x32d */
-    u8 unk_32e;                       /* 0x32e */
+    s32 mHomePosX;                      /* 0x320 */
+    s32 mHomePosY;                      /* 0x324 */
+    s32 mHomePosZ;                      /* 0x328 */
+    u8 mOpening;                       /* 0x32c */
+    u8 mOpenPhase;                       /* 0x32d */
+    u8 mCannonOpen;                       /* 0x32e */
 
     /* --- vtable --- */
     virtual ~CannonHatch();
@@ -71,14 +71,14 @@ struct CannonHatch {
        dBgW_KcMbg's D1 at +0x124 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN11CannonHatchD1Ev.c] */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  unk_2ec;            /* 0x2ec */
+    u8  mClsnMat;            /* 0x2ec */
     u8  pad_2ed[0x33];
-    s32 unk_320;            /* 0x320 */
-    s32 unk_324;            /* 0x324 */
-    s32 unk_328;            /* 0x328 */
-    u8  unk_32c;            /* 0x32c */
-    u8  unk_32d;            /* 0x32d */
-    u8  unk_32e;            /* 0x32e */
+    s32 mHomePosX;            /* 0x320 */
+    s32 mHomePosY;            /* 0x324 */
+    s32 mHomePosZ;            /* 0x328 */
+    u8  mOpening;            /* 0x32c */
+    u8  mOpenPhase;            /* 0x32d */
+    u8  mCannonOpen;            /* 0x32e */
 };
 
 #endif /* __cplusplus */

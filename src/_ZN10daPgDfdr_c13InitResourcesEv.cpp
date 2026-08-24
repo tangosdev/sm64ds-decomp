@@ -1,14 +1,27 @@
 //cpp
 // @symbol _ZN10daPgDfdr_c13InitResourcesEv
-/* daPgDfdr_c::InitResources -- vtable slot 0. Extern "C" free function under
-   the mangled name, the same convention include/fBase_c.h's own
-   InitResources note documents; see src/_ZN7daDgr_c13InitResourcesEv.cpp for
-   the fuller rationale -- no caller in the tree invokes this slot as a
-   method, so there is nothing to gain by converting the body. */
+/* daPgDfdr_c::InitResources -- vtable slot 0. Real C++ method over the shared
+ * header. Was an extern "C" free function over a raw `char *` with every field
+ * reached by literal offset; converting it and naming the members is byte-exact
+ * under the pinned 2004/b56.
+ *
+ * It loads the model into mModelAnim, its three animations and its BTP texture
+ * sequence, hard-codes the object's world position and facing, hangs the KCL on
+ * the mesh collider with dBgW::UpdatePosAndAngs as the update hook, disables
+ * gravity (mVertAccel and mTerminalVelocity both zero), starts the actor
+ * collider, and finally drops the object onto whatever ground a raycast 0x14000
+ * above it finds -- falling back to that raised point when nothing is hit.
+ *
+ * dBgW_KcMbg::SetFile, TextureSequence::SetFile and dCcAc_c::Init all carry
+ * Fix12<int> BY VALUE in their mangled names (wall 6az), so all three keep
+ * scalar extern "C" declarations rather than becoming callable methods. */
+#include "daPgDfdr_c.h"
 #include "decl_common.h"
 #include "TextureSequence.h"
+
 struct BMD_File;
 struct BTP_File;
+
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *o, void *f, int a, int b);
@@ -29,20 +42,21 @@ extern char data_ov027_02113c7c;
 extern char data_ov027_02113c94;
 extern char data_ov027_02113c6c;
 extern void _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_(void);
+}
 
+/* dBgCh_Gnd, by size only: the raycast result word this reads sits at +0x44 and
+   the object is 0x54 bytes. Its real header is not pulled in here. */
 struct RG { char pad[0x54]; };
 
-int _ZN10daPgDfdr_c13InitResourcesEv(void *cc)
+s32 daPgDfdr_c::InitResources()
 {
-    char *c = (char*)cc;
     int i;
     void *f;
     RG rg;
     int v[3];
-    char *act;
 
     f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov027_02113c7c);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x320, f, 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, f, 1, -1);
 
     for (i = 0; i < 3; i++)
         _ZN9Animation8LoadFileER13SharedFilePtr(data_ov027_02112ca4[i]);
@@ -50,39 +64,38 @@ int _ZN10daPgDfdr_c13InitResourcesEv(void *cc)
     _ZN15TextureSequence8LoadFileER13SharedFilePtr(&data_ov027_02113c94);
     TextureSequence::Prepare(**(BMD_File**)(&data_ov027_02113c7c + 4),
                              **(BTP_File**)(&data_ov027_02113c94 + 4));
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c + 0x384, *(void**)(&data_ov027_02113c94 + 4), 0, 0x1000, 0);
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, *(void**)(&data_ov027_02113c94 + 4), 0, 0x1000, 0);
 
-    *(short*)(c + 0x8e) = (short)0xdd30;
-    *(short*)(c + 0x94) = *(short*)(c + 0x8e);
-    *(int*)(c + 0x5c) = 0x6c4000;
-    *(int*)(c + 0x60) = 0xcb2000;
-    *(int*)(c + 0x64) = 0x182bb8;
-    func_ov027_02111994(c);
+    mAngleY = (short)0xdd30;
+    mPrevAngleY = mAngleY;
+    mPosX = 0x6c4000;
+    mPosY = 0xcb2000;
+    mPosZ = 0x182bb8;
+    func_ov027_02111994(this);
 
     f = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov027_02113c6c);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        c + 0x124, f, c + 0x2ec, 0x199, *(short*)(c + 0x8e), &data_ov027_021130e8);
-    func_020393d4(c + 0x124, (int)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+        &mMeshCollider, f, &mClsnMat, 0x199, mAngleY, &data_ov027_021130e8);
+    func_020393d4(&mMeshCollider, (int)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
 
-    *(int*)(c + 0x9c) = 0;
-    *(int*)(c + 0xa0) = 0;
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(c + 0x398, c, 0x82000, 0xc8000, 0x800004, 0);
-    func_ov027_02111d70(c, 1);
+    mVertAccel = 0;
+    mTerminalVelocity = 0;
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x82000, 0xc8000, 0x800004, 0);
+    func_ov027_02111d70((char*)this, 1);
 
-    v[0] = *(int*)(c + 0x5c);
-    v[1] = *(int*)(c + 0x60);
-    v[2] = *(int*)(c + 0x64);
+    v[0] = mPosX;
+    v[1] = mPosY;
+    v[2] = mPosZ;
     v[1] = v[1] + 0x14000;
     _ZN9dBgCh_GndC1Ev(&rg);
     _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, v, 0);
     if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg))
-        *(int*)(c + 0x60) = *(int*)((char*)&rg + 0x44);
+        mPosY = *(int*)((char*)&rg + 0x44);
     else
-        *(int*)(c + 0x60) = v[1];
-    *(int*)(c + 0x80) = 0x1000;
-    *(int*)(c + 0x84) = 0x1000;
-    *(int*)(c + 0x88) = 0x1000;
+        mPosY = v[1];
+    mScaleX = 0x1000;
+    mScaleY = 0x1000;
+    mScaleZ = 0x1000;
     _ZN9dBgCh_GndD1Ev(&rg);
     return 1;
-}
 }

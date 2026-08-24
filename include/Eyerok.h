@@ -18,18 +18,23 @@
  *     ShadowModel                0x420 + 0x28 = 0x448
  *     TextureSequence            0x448 + 0x14 = 0x45c
  *
- * 0x45c..0x4d6 is a run of individually evidenced scalars (unchanged from
- * the AUTO-GENERATED header). At 0x4dc, Vector3[0x14] (0xc == sizeof(Vector3))
- * -- destroyed with __destroy_arr(ptr, 0x14, 0xc, _ZN7Vector3D1Ev), same
- * evidence shape as include/Unagi.h's mStarUniqueID -- ends at 0x5cc, then
- * 0xa8 more unevidenced bytes (only raw `this + 0x4dc` / `+ 0x4e0` /
- * `+ 0x4e4` -- one Vector3 -- are indexed by name in src/, so the array's
- * OWN span is trusted from the destructor call, not the padding after it)
- * before 0x674, a second, class-owned dBgW_KcMbg (named by
- * _ZN10dBgW_KcMbgD1Ev in the destructor), distinct from
- * dBgActor_c's own at 0x124. The last 0x38 bytes (0x83c..0x874) are unused
- * tail: SIZE IS 0x874, the literal src/Eyerok_Spawn.cpp passes to operator
- * new, not the field span -- same rule as BigBrickBlock.
+ * 0x45c..0x4d6 is a run of individually evidenced scalars. At 0x4dc,
+ * Vector3[0x14] (0xc == sizeof(Vector3)) -- destroyed with
+ * __destroy_arr(ptr, 0x14, 0xc, _ZN7Vector3D1Ev), same evidence shape as
+ * include/Unagi.h's mStarUniqueID -- ends at 0x5cc.
+ *
+ * THE CLASS NOW CLOSES ON ITS OWN SIZE. Reading Behavior and InitResources as
+ * named members (see notes/bgobject-provenance.md) turned every remaining pad
+ * in this class into an evidenced field: the 0xa8 bytes after the Vector3
+ * array are two 0x14-entry particle-handle arrays plus the star id/tracked
+ * pair the ROM writes at 0x672/0x673, and the "unused tail" at 0x83c is the
+ * Matrix4x3 InitResources passes to dBgW_KcMbg::SetFile followed by the two
+ * uniqueIDs of the hands it spawns. 0x870 + 4 = 0x874, which is exactly the
+ * literal src/Eyerok_Spawn.cpp passes to operator new -- the size is now
+ * corroborated by the field span rather than merely asserted over it.
+ *
+ * 0x674 is a second, class-owned dBgW_KcMbg (named by _ZN10dBgW_KcMbgD1Ev in
+ * the destructor), distinct from dBgActor_c's own at 0x124.
  */
 #ifndef EYEROK_H
 #define EYEROK_H
@@ -52,32 +57,56 @@ struct Eyerok : dBgActor_c {
     ShadowModel mShadowModel;                               /* 0x420 */
     TextureSequence mTextureSequence;                       /* 0x448 */
     u8  unk_45c[0x30];
-    u8  unk_48c;            /* 0x48c */
-    u8  pad_48d[0xf];
-    s32 unk_49c;            /* 0x49c */
-    u8  pad_4a0[0x8];
-    s32 unk_4a8;            /* 0x4a8 */
-    u8  pad_4ac[0x8];
-    s32 unk_4b4;            /* 0x4b4 */
-    u8  pad_4b8[0x18];
-    u8  unk_4d0;            /* 0x4d0 */
-    u8  pad_4d1[0x1];
-    s16 unk_4d2;            /* 0x4d2 */
-    u16 unk_4d4;            /* 0x4d4 */
-    u8  pad_4d6[0x6];
+    /* Behavior loads this word and calls through the pointer-to-member at
+       +8 of what it points at, and compares it against &data_ov066_0211b07c --
+       so it is a pointer to the current state descriptor, not a byte.
+       func_ov066_02119454 is what installs one. */
+    void *mState;                                           /* 0x48c */
+    u8  pad_490[0xc];
+    s32 mPartIdx;                                           /* 0x49c */
+    u8  pad_4a0[0x4];
+    /* The part's rest position: InitResources seeds it from the actor position
+       and then offsets it (a hand goes -+0x31f000 in X, -0x32000 in Z), and
+       Behavior re-derives its Y from mSpawnPosY every frame. */
+    s32 mRestPosX;                                          /* 0x4a4 */
+    s32 mRestPosY;                                          /* 0x4a8 */
+    s32 mRestPosZ;                                          /* 0x4ac */
+    /* The unmoved spawn position, snapshotted only on the two hands. */
+    s32 mSpawnPosX;                                         /* 0x4b0 */
+    s32 mSpawnPosY;                                         /* 0x4b4 */
+    s32 mSpawnPosZ;                                         /* 0x4b8 */
+    u8  pad_4bc[0x14];
+    /* Both are counted down once a frame by DecIfAbove0_Short, which takes a
+       u16 * -- 0x4d0 was declared u8 + 1 byte of padding until that was read. */
+    u16 mTimer1;                                            /* 0x4d0 */
+    u16 mTimer2;                                            /* 0x4d2 */
+    u16 mDustCounter;                                       /* 0x4d4 */
+    u8  pad_4d6[0x2];
+    s8  unk_4d8;                                            /* 0x4d8 */
+    u8  pad_4d9[0x3];
     /* The ROM destroys this with __destroy_arr(this + 0x4dc, 0x14, 0xc,
        _ZN7Vector3D1Ev) -- 0x14 elements, 0xc == sizeof(Vector3), same
        evidence shape as include/Unagi.h's mStarUniqueID. Only raw
        `this + 0x4dc` / `+ 0x4e0` / `+ 0x4e4` offsets are read elsewhere
        (one Vector3), so the count is trusted from the destructor call, not
        from any indexed access. */
-    Vector3 mUnkVectors[0x14];    /* 0x4dc */
-    u8  pad_5cc[0xa8];
-    dBgW_KcMbg unk_674;            /* 0x674 -- this class's own, not dBgActor_c's */
-    /* 0x83c..0x874: unused tail, never read or written by any matched
-       function; SIZE IS 0x874, the literal src/Eyerok_Spawn.cpp passes to
-       operator new, not the field span -- same rule as BigBrickBlock. */
-    u8  pad_83c[0x38];
+    Vector3 mDustPos[0x14];                                 /* 0x4dc */
+    /* One recycled Particle::System handle per mDustPos slot, per effect id.
+       Behavior walks all 0x14 slots and reissues both. Was pad_5cc. */
+    u32 mDustParticle1[0x14];                               /* 0x5cc */
+    u32 mDustParticle2[0x14];                               /* 0x61c */
+    u8  pad_66c[0x6];
+    u8  mStarId;                                            /* 0x672 */
+    u8  mStarTracked;                                       /* 0x673 */
+    dBgW_KcMbg mMeshCollider2;                              /* 0x674 -- this class's own, not dBgActor_c's */
+    /* NOT unused tail. InitResources passes `this + 0x83c` as the Matrix4x3 &
+       argument of dBgW_KcMbg::SetFile on every path, and writes the two words
+       after it with the uniqueIDs of the two hands it spawns. 0x83c + 0x30 =
+       0x86c, and 0x870 + 4 = 0x874, the literal src/Eyerok_Spawn.cpp passes to
+       operator new -- so the class now closes on its own size. */
+    Matrix4x3 mClsnMat2;                                    /* 0x83c */
+    s32 mHandUniqueID1;                                     /* 0x86c */
+    s32 mHandUniqueID2;                                     /* 0x870 */
 
     /* --- vtable --- */
     virtual ~Eyerok();
@@ -117,13 +146,13 @@ struct Eyerok {
     /* dBgW_KcMbg member. The cartridge's own ~Eyerok calls _ZN10dBgW_KcMbgD1Ev at
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg unk_124;            /* 0x124 */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x34];
     u8  mdCcAcPos_c;            /* 0x320 */
     u8  pad_321[0x33];
-    s32 unk_354;            /* 0x354 */
-    s32 unk_358;            /* 0x358 */
-    s32 unk_35c;            /* 0x35c */
+    s32 mdCcAcPos_c_posX;            /* 0x354 */
+    s32 mdCcAcPos_c_posY;            /* 0x358 */
+    s32 mdCcAcPos_c_posZ;            /* 0x35c */
     u8  mBlendModelAnim;            /* 0x360 */
     u8  pad_361[0x6f];
     Model mModel2;            /* 0x3d0 */
@@ -131,23 +160,36 @@ struct Eyerok {
     u8  pad_421[0x27];
     u8  mTextureSequence;            /* 0x448 */
     u8  pad_449[0x43];
-    u8  unk_48c;            /* 0x48c */
-    u8  pad_48d[0xf];
-    s32 unk_49c;            /* 0x49c */
-    u8  pad_4a0[0x8];
-    s32 unk_4a8;            /* 0x4a8 */
-    u8  pad_4ac[0x8];
-    s32 unk_4b4;            /* 0x4b4 */
-    u8  pad_4b8[0x18];
-    u8  unk_4d0;            /* 0x4d0 */
-    u8  pad_4d1[0x1];
-    s16 unk_4d2;            /* 0x4d2 */
-    u16 unk_4d4;            /* 0x4d4 */
-    u8  pad_4d6[0x19e];
+    void *mState;            /* 0x48c */
+    u8  pad_490[0xc];
+    s32 mPartIdx;            /* 0x49c */
+    u8  pad_4a0[0x4];
+    s32 mRestPosX;            /* 0x4a4 */
+    s32 mRestPosY;            /* 0x4a8 */
+    s32 mRestPosZ;            /* 0x4ac */
+    s32 mSpawnPosX;            /* 0x4b0 */
+    s32 mSpawnPosY;            /* 0x4b4 */
+    s32 mSpawnPosZ;            /* 0x4b8 */
+    u8  pad_4bc[0x14];
+    u16 mTimer1;            /* 0x4d0 */
+    u16 mTimer2;            /* 0x4d2 */
+    u16 mDustCounter;            /* 0x4d4 */
+    u8  pad_4d6[0x2];
+    s8  unk_4d8;            /* 0x4d8 */
+    u8  pad_4d9[0x3];
+    struct Vector3 mDustPos[0x14];    /* 0x4dc */
+    u32 mDustParticle1[0x14];        /* 0x5cc */
+    u32 mDustParticle2[0x14];        /* 0x61c */
+    u8  pad_66c[0x6];
+    u8  mStarId;            /* 0x672 */
+    u8  mStarTracked;            /* 0x673 */
     /* dBgW_KcMbg member. The cartridge's own ~Eyerok calls _ZN10dBgW_KcMbgD1Ev at
        +0x674 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg unk_674;            /* 0x674 */
+    dBgW_KcMbg mMeshCollider2;            /* 0x674 */
+    struct Matrix4x3 mClsnMat2;    /* 0x83c */
+    s32 mHandUniqueID1;            /* 0x86c */
+    s32 mHandUniqueID2;            /* 0x870 */
 };
 
 #endif /* __cplusplus */

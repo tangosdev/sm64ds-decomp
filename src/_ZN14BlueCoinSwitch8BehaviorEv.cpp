@@ -2,17 +2,17 @@
 // @symbol _ZN14BlueCoinSwitch8BehaviorEv
 /* recovered: named members + shared header, real C++ method
  *
- * The switch's whole life, and none of it runs until unk_32c says it has been
+ * The switch's whole life, and none of it runs until mPressed says it has been
  * pressed.
  *
  * Once pressed: mAreaId is set to -1 (the switch stops claiming its area, which
- * is why init stashed the original in unk_32e), the music ducks, and mPosY
- * walks down 0x14000 a frame toward unk_320. On arrival it snaps exactly to
- * unk_320, sets its event bit, arms the countdown from unk_32a, disables the
+ * is why init stashed the original in mHomeAreaId), the music ducks, and mPosY
+ * walks down 0x14000 a frame toward mStopPosY. On arrival it snaps exactly to
+ * mStopPosY, sets its event bit, arms the countdown from mCoinTimerSeed, disables the
  * collider and poofs -- so the sinking animation and the "switch is now on"
  * moment are the same event.
  *
- * unk_328 is both timer and state: non-zero means running, and expiry parks it
+ * mCoinTimer is both timer and state: non-zero means running, and expiry parks it
  * at 1 rather than 0 so it stays latched. Two things end it -- the count
  * reaching zero, or every blue coin (actor 0x122) being gone, which is checked
  * each frame and short-circuits the timer.
@@ -56,38 +56,38 @@ s32 BlueCoinSwitch::Behavior()
     char *c = (char *)this;
     u16 t;
 
-    if (unk_32c == 1) {
+    if (mPressed == 1) {
         mAreaId = -1;
-        if (IsAreaShowing((s8)unk_32e) == 0)
+        if (IsAreaShowing((s8)mHomeAreaId) == 0)
             _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0x3f000);
     }
-    if (unk_32c == 1) {
-        if (mPosY > unk_320) {
+    if (mPressed == 1) {
+        if (mPosY > mStopPosY) {
             mPosY = mPosY - 0x14000;
-            if (mPosY <= unk_320) {
-                mPosY = unk_320;
-                _ZN5Event6SetBitEj(unk_32d);
-                unk_328 = unk_32a;
-                _ZN4dBgW7DisableEv(&(*(u8 *)&mMeshCollider));
+            if (mPosY <= mStopPosY) {
+                mPosY = mStopPosY;
+                _ZN5Event6SetBitEj(mEventBit);
+                mCoinTimer = mCoinTimerSeed;
+                _ZN4dBgW7DisableEv(&mMeshCollider);
                 _ZN8dActor_c8PoofDustEv(c);
             }
         }
-        if (unk_328 != 0) {
-            if (DecIfAbove0_Short(&unk_328) == 0) {
-                unk_328 = 1;
+        if (mCoinTimer != 0) {
+            if (DecIfAbove0_Short(&mCoinTimer) == 0) {
+                mCoinTimer = 1;
                 if (_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0x64cc) != 0)
                     _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
             } else {
-                t = unk_328;
+                t = mCoinTimer;
                 if (t == 0x2d)
-                    unk_324 = 0;
+                    mTickSound = 0;
                 else if (t < 0x2d)
-                    unk_324 = func_02012310(unk_324, 0x39, 0);
+                    mTickSound = func_02012310(mTickSound, 0x39, 0);
                 else
-                    unk_324 = func_02012310(unk_324, 0x38, 0);
+                    mTickSound = func_02012310(mTickSound, 0x38, 0);
                 _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x40, 0xc999);
                 if (_ZN8dActor_c15FindWithActorIDEjPS_(0x122, 0) == 0)
-                    unk_328 = 1;
+                    mCoinTimer = 1;
             }
         }
     }

@@ -18,7 +18,7 @@ struct C {
 
 int MovingBar::Behavior()
 {
-    (((C *)this)->*(data_ov015_021149ec[((C *)this)->idx].pmf))();
+    (((C *)this)->*(data_ov015_021149ec[mState].pmf))();
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((C *)this));
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((C *)this), 0, 0))
         _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((C *)this));

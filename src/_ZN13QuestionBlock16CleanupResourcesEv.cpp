@@ -39,7 +39,7 @@ int QuestionBlock::CleanupResources()
     b3 = (int)(actorID == 0x15);
     if (b3) {
     dosw:
-        switch (unk_3f3) {
+        switch (mContentType) {
         case 1:
             _ZN8dActor_c11UntrackStarERa(((char *)this), ((char *)this) + 0x3f0);
             break;

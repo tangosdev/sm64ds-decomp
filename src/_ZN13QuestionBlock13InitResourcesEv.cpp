@@ -66,26 +66,26 @@ int QuestionBlock::InitResources()
     mScaleZ = 0x1000;
     func_ov102_02149ff0((char *)this);
     func_ov102_02149e38((char *)this);
-    *(struct M12 *)((char *)this + 0x3ac) = *(struct M12 *)((char *)this + 0xf0);
+    *(struct M12 *)&mShadowMat = *(struct M12 *)((char *)&mModel + 0x1c);
     {
         void *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov102_0214e7d0);
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((char *)&mMeshCollider, kcl, (char *)&mClsnMat, 0x199, mAngleY, &data_ov002_0210d954);
     }
-    unk_3e0 = mPosY;
-    unk_3f3 = (unsigned char)param1;
-    if (unk_3f3 == 0xff)
-        unk_3f3 = 0;
-    if (unk_3f3 == 1) {
-        unk_3f1 = (unsigned char)(param1 >> 8);
-        if (unk_3f1 == 0xff)
-            unk_3f1 = 0;
-        unk_3f0 = _ZN8dActor_c9TrackStarEjj((char *)this, unk_3f1, 2);
+    mHomePosY = mPosY;
+    mContentType = (unsigned char)param1;
+    if (mContentType == 0xff)
+        mContentType = 0;
+    if (mContentType == 1) {
+        mStarId = (unsigned char)(param1 >> 8);
+        if (mStarId == 0xff)
+            mStarId = 0;
+        mStarTracked = _ZN8dActor_c9TrackStarEjj((char *)this, mStarId, 2);
     }
 
     {
         int b16 = !(actorID != 0x16);
         if (b16 != 0) {
-            unk_3f3 = 0;
+            mContentType = 0;
             _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da58);
         }
     }
@@ -99,7 +99,7 @@ int QuestionBlock::InitResources()
         }
     }
 
-    switch (unk_3f3) {
+    switch (mContentType) {
     case 0:
     case 1:
         break;

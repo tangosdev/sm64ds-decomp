@@ -30,28 +30,28 @@ int Crate::Behavior()
     int x, y, z;
 
     b1 = (enum Bool)((mFlags & 0x4000000) != 0);
-    if (b1 != FALSE && (data_0209b454 & 0x4000000) && *(void**)((char*)&unk_5e4)) {
-        _ZN6Player9DropActorEv(*(void**)((char*)&unk_5e4));
+    if (b1 != FALSE && (data_0209b454 & 0x4000000) && mHoldingPlayer) {
+        _ZN6Player9DropActorEv(mHoldingPlayer);
     }
 
     b2 = (enum Bool)((mFlags & 8) != 0);
     if (b2 != FALSE
-          && Vec3_HorzDist((struct Vector3*)((char*)&mPosX), (const struct Vector3*)((char*)&unk_4e8))
+          && Vec3_HorzDist((struct Vector3*)&mPosX, (const struct Vector3*)&mHomePosX)
           && _ZN8dActor_c13DistToCPlayerEv(((char*)this)) > 0x7d0000) {
         Crate_SetState(((char*)this), 6);
         return 1;
     }
 
-    if (unk_606 != 0) {
+    if (mBreakTimer != 0) {
         x = mPosX;
         z = mPosZ;
         y = mPosY + 0x50000;
         ((int*)&v)[0] = x;
         ((int*)&v)[1] = y;
         ((int*)&v)[2] = z;
-        if (DecIfAbove0_Byte((u8*)((char*)&unk_606))) {
-            *(void**)((char*)&unk_5fc) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unk_5fc, 0x13a, v.x, v.y, v.z, 0, 0);
-            *(void**)((char*)&unk_600) = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(unk_600, 0x13b, v.x, v.y, v.z, 0);
+        if (DecIfAbove0_Byte(&mBreakTimer)) {
+            mParticleHandle1 = (u32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(mParticleHandle1, 0x13a, v.x, v.y, v.z, 0, 0);
+            mParticleHandle2 = (u32)_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(mParticleHandle2, 0x13b, v.x, v.y, v.z, 0);
             goto done;
         }
         func_ov098_02138e08(((char*)this));
@@ -73,7 +73,7 @@ done:
     ((int*)&t)[0] = mPosX;
     ((int*)&t)[1] = mPosY;
     ((int*)&t)[2] = mPosZ;
-    ((int*)&t)[1] = t.y - unk_5f4;
+    ((int*)&t)[1] = t.y - mClsnYOffset;
     mdCcAcPos_c1.pos.x = t.x;
     mdCcAcPos_c1.pos.y = t.y;
     mdCcAcPos_c1.pos.z = t.z;

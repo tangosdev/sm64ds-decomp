@@ -11,15 +11,15 @@ extern "C" void func_ov102_02149da8(void *self, int state);
  * corrected from `int` by Stump::OnGroundPounded (include/Stump.h);
  * re-verified here rather than assumed.
  *
- * unk_3e8/unk_3f2 are this class's own fields (include/QuestionBlock.h).
+ * mState/mHitterParam are this class's own fields (include/QuestionBlock.h).
  * func_ov102_02149078 and func_ov102_02149da8 are unmigrated helpers shared
  * by all five of this class's combat callbacks; still called by their
  * func_ov102_ names, same as the pre-migration recovery. */
 void QuestionBlock::OnGroundPounded(dActor_c &other)
 {
-    if (unk_3e8 == 1) return;
+    if (mState == 1) return;
     int r = func_ov102_02149078(this);
     if (r != 0) return;
-    unk_3f2 = other.param1;
+    mHitterParam = other.param1;
     func_ov102_02149da8(this, 1);
 }
