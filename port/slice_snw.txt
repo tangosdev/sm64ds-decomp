@@ -637,6 +637,28 @@ src/func_ov006_0212a3c0.c
 # ships is the ROM's own instruction sequence under a different callee-saved
 # assignment.
 #
+# WHY 02126b4c SHIPS AT 64 WHEN 30 EXISTS, because the next reader will find
+# the near-miss row and wonder.  Two fan-outs drove it 76 -> 64 -> 30, all
+# size-exact, and the rungs are banked in nearmiss/db.jsonl.  64 is the ONLY
+# rung that is a pure per-block renaming: 0 shape divergences, every divergent
+# word the same mnemonic and operand shape under a consistent bijection.  Every
+# rung below it reorders the preheader (3-4 shape divergences), and the last two
+# need constructs that are search artifacts rather than ROM-faithful spelling
+# (a byte count spelled as `char *two = (char *)2;`, and a no-op self-select
+# inside the loop).  THE DB WANTS THE CLOSEST CANDIDATE AND A SHIPPED TU WANTS
+# THE MOST VERIFIABLE ONE, and here those are two different files, so both are
+# kept and each is labelled for what it is.
+#
+# ONE METHOD CORRECTION IS WORTH MORE THAN THE EIGHT WORDS IT BOUGHT.  The first
+# fan-out reported declaration order as completely inert on this body across all
+# 720 permutations.  It is not.  The divergence count SATURATES at 50 -- every
+# callee-saved web being wrong costs exactly 50 words -- so every wrong
+# permutation reads 50 and they all look identical.  Reading the allocated
+# REGISTER PER WEB instead of the count shows declaration order moving those webs
+# freely, and that is what unlocked the whole ladder.  A saturating metric reads
+# as a wall; when a lever family looks perfectly flat, check whether the metric
+# can still move before believing it.
+#
 # AND SECTION 13'S OWN RULE FIRED AGAIN, EXACTLY AS IT PREDICTS.  "Budget an
 # extra wave per trap": retiring the traps exposed three more bodies that were
 # in NO slice in the tree, because the only thing that reached them was the
