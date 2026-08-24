@@ -2057,11 +2057,25 @@ foreach(line IN LISTS SLICE_W1L1_LINES)
     endif()
     list(APPEND SLICE_W1L1_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# EXPERIMENT (LIGHTS lane): route Scene::Initialise3dGraphics through hostgen.
+set(SCN3D_HOSTGEN_SKIP "src/_ZN5Scene20Initialise3dGraphicsEv.c")
+set(SCN3D_HOSTGEN_GEN
+    "${CMAKE_BINARY_DIR}/host-src/src/_ZN5Scene20Initialise3dGraphicsEv.cpp")
+add_custom_command(OUTPUT "${SCN3D_HOSTGEN_GEN}"
+    COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            --out "${CMAKE_BINARY_DIR}/host-src" _ZN5Scene20Initialise3dGraphicsEv
+    DEPENDS "${PORT_REPO_ROOT_ABS}/src/_ZN5Scene20Initialise3dGraphicsEv.c"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+    COMMENT "hostgen _ZN5Scene20Initialise3dGraphicsEv")
+
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w1l2.txt" SLICE_W1L2_LINES)
-set(SLICE_W1L2_SOURCES "")
+set(SLICE_W1L2_SOURCES ${SCN3D_HOSTGEN_GEN})
 foreach(line IN LISTS SLICE_W1L2_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    if(line IN_LIST SCN3D_HOSTGEN_SKIP)
         continue()
     endif()
     list(APPEND SLICE_W1L2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
@@ -6401,8 +6415,11 @@ endforeach()
 # The block above is kept as written because the measurement in it is the
 # reason this one could be short.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_s4_slot0.txt" SLICE_S4_SLOT0_LINES)
-set(SLICE_S4_SLOT0_SOURCES "")
+set(SLICE_S4_SLOT0_SOURCES ${SCN3D_HOSTGEN_GEN})
 foreach(line IN LISTS SLICE_S4_SLOT0_LINES)
+    if(line IN_LIST SCN3D_HOSTGEN_SKIP)
+        continue()
+    endif()
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
         continue()
