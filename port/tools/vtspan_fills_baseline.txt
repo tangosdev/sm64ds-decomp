@@ -40,3 +40,84 @@ port_scene_fill_curling        # data_ov004_020bc0c0, 36 slots
 # --- could not be resolved to a ROM table: a GAP in the check, not a pass ---
 hal_fill_seaweed_vtable        # _ZTV13daObjWakame_c is a host-only name
 hal_fill_fall_block_lll_vtable # _ZTV20daObjFl_Fall_Block_c is a host-only name
+
+
+# --- ADJUDICATED FALSE RED: the address-keyed minigame scene fills -----------
+#
+# Appended 2026-08-24 by the run mg12 merge gate. Unlike the rows above, these
+# ARE adjudicated, and the adjudication is that vtspan cannot see what they do.
+#
+# THE SYMPTOM. `vtspan.py . --fills` reported all 29 as short, and it reported
+# them identically: every one resolves to the SAME ROM table, data_ov004_020bc0c0,
+# 36 slots, "never written: 0,1,2,3,..." with EVERY slot unwritten. Twenty-nine
+# independent defects do not present as one repeated line. One checker blind
+# spot hitting twenty-nine identical call sites does.
+#
+# THE MECHANISM, from the source rather than the naming. --fills looks for
+# INDEXED writes -- `vt[7] = ...` -- and counts the slot numbers it sees. These
+# fills do not write by slot number. Each one calls port_scene_mg_fill_shared()
+# or port_scene_fill_rom() and then its own applier (slot3_apply, snw_apply,
+# tti_apply, ...), and those key on the ROM WORD a slot holds, not on its
+# index. port/hal/scene_mg_slot3.cpp:46 says so in as many words, and the row
+# type is `struct S3Face { unsigned ds; void *host; }` -- `ds` is the DS
+# address. A fill that never names a slot number writes every slot it should
+# and shows the checker nothing. Verified mechanically over all 29: every one
+# reaches an address-keyed applier, none is missing.
+#
+# THE ONE THING THAT LOOKS LIKE AN INDEXED WRITE. 28 of the 29 do contain a
+# `vt[0] = ...` / `vt[9] = ...` pair. Those are the SM64DS_SCENE_SLOT0 and
+# SM64DS_SCENE_SLOT9 diagnostic overrides, env-gated off by default, and they
+# write the DERIVED table, not the data_ov004_020bc0c0 the report names. They
+# are not seating and they are not the reason for the red.
+#
+# WHY THIS IS NOT A REGRESSION. port_scene_fill_curling is already frozen above
+# with the identical note -- "data_ov004_020bc0c0, 36 slots" -- adjudicated at
+# link60. It is the same shape as these 29; it was simply the only one seated
+# when the baseline was cut. Run mg12's CRD lane proved the rest pre-existing by
+# rebuilding the check at the merge base with every mg12 lane file reverted and
+# getting the same red. The seats span runs mg5 to mg11, scenes 361-390 (374 is
+# curling, already above), so the gate has been red since long before this wave.
+#
+# WHY BASELINE THEM RATHER THAN LEAVE THE GATE RED. A gate that is red for a
+# reason nobody is acting on stops being read, and a NEW short fill -- a real
+# one, from a fill that does write by index and misses a slot -- would land
+# invisibly inside a 29-line red. Freezing the known class is what makes the
+# next one alarm. The list may only shrink: the real fix is teaching --fills to
+# follow an address-keyed applier, at which point these rows retire.
+#
+# PROVENANCE. Scene number and registry name are read from the
+# port_scene_classes[] table in port/hal/scene_boot.cpp. The commit is the one
+# that introduced the fill, found by `git log -G <name> -- port/hal`. The run
+# and lane tag is read from the registry's own nearest preceding comment, so
+# treat it as the seat's own label rather than an independently measured fact;
+# the commit hash is the measured half.
+#
+port_scene_fill_cup            # scene 361 cup          seated mg9 lane CUP, commit 61d53e3e4
+port_scene_fill_memory1        # scene 362 memory1      seated mg9 lane MMT, commit 004ca2bf7
+port_scene_fill_memory2        # scene 363 memory2      seated mg6 lane MEM, commit 4992799c9
+port_scene_fill_slot1          # scene 364 slot1        seated mg9 lane S364, commit a4eee93d9
+port_scene_fill_slot3          # scene 365 slot3        seated mg11 lane MUG, commit 9ecc373a9
+port_scene_fill_luigi          # scene 366 luigi        seated mg5 lane LUI, commit 121dd980f
+port_scene_fill_boombox        # scene 367 boombox      seated mg9 lane BOX, commit 8e9f94bda
+port_scene_fill_pachinko       # scene 368 pachinko     seated mg5 lane LUI, commit 16aa08f88
+port_scene_fill_pachinko2      # scene 369 pachinko2    seated mg6 lane LKT, commit c4574edd2
+port_scene_fill_bomroom        # scene 370 bomroom      seated mg6 lane SOS, commit afa1bdd3d
+port_scene_fill_amida          # scene 371 amida        seated mg9 lane S371, commit 66e35f0a3
+port_scene_fill_jump           # scene 372 jump         seated mg11 lane BNP, commit 66d5e6249
+port_scene_fill_jump2          # scene 373 jump2        seated mg11 lane BNT, commit 6dbaa8170
+port_scene_fill_curling2       # scene 375 curling2     seated mg6 lane S75, commit ebfb84eb1
+port_scene_fill_smartball      # scene 376 smartball    seated mg5 lane LUI, commit 55951b1f8
+port_scene_fill_snowball       # scene 377 snowball     seated mg11 lane SNW, commit e57eadb44
+port_scene_fill_coin           # scene 378 coin         seated mg5 lane CCN, commit 51dc94331
+port_scene_fill_card           # scene 379 card         seated mg11 lane PKR, commit bb63faa76
+port_scene_fill_panel          # scene 380 panel        seated mg6 lane S75, commit 918b3541b
+port_scene_fill_mcarlo         # scene 381 mcarlo       seated mg9 lane S381, commit 48b8d319d
+port_scene_fill_mcarlo2        # scene 382 mcarlo2      seated mg11 lane PGO, commit 6d2564540
+port_scene_fill_roulette       # scene 383 roulette     seated mg11 lane RLT, commit f9c548fc9
+port_scene_fill_trampoline     # scene 384 trampoline   seated mg11 lane TTI, commit 1dd84bfbd
+port_scene_fill_trampoline2    # scene 385 trampoline2  seated mg11 lane TTE, commit c245ddaa1
+port_scene_fill_wiggler        # scene 386 wiggler      seated mg9 lane WIG, commit f77cfbd2a
+port_scene_fill_booseek        # scene 387 booseek      seated mg9 lane WIG, commit f67de7d1d
+port_scene_fill_luckystars     # scene 388 luckystars   seated mg9 lane LKY, commit 035242666
+port_scene_fill_esp3d          # scene 389 esp3d        seated mg9 lane PSY, commit ae320216b
+port_scene_fill_flower         # scene 390 flower       seated mg5 lane CCN, commit 01020361a

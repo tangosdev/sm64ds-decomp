@@ -237,8 +237,16 @@
 #   slots, and a line for it in the slice below, so the dispatcher calls it.
 #   Adjudication arithmetic: 108 instructions plus a two-word literal pool
 #   (0x0000503e at 0x0210af5c, 0x66666667 at 0x0210af60 -- the signed
-#   divide-by-five magic, which is the strip length 5 the class's own +0x503a
-#   holds) = 110 = 0x1b8/4. Its five callees, for the floor wave that takes it:
+#   divide-by-EIGHTY magic, NOT divide-by-five: 0x66666667 is 2/5 scaled by
+#   2^32, and the ROM pairs it with `mov r3, r3, asr #5` at 0x0210ae2c, so the
+#   divisor is 0x50. It turns a reel angle into a face step, which is what the
+#   matched src spells as `(angle >> 12) / 80`. The strip length the class's
+#   own +0x503a holds is the separate MODULUS applied right after it, and
+#   mistaking one for the other is where the old reading's 5 came from. The
+#   same magic with `asr #1` really is a divide by five -- that is the LKY row
+#   at port/tools/inferred_stub_adjudicated.txt:1082, which is correct and
+#   stays as it is) = 110 = 0x1b8/4. Its five callees, for the floor wave that
+#   takes it:
 #   DecIfAbove0_Byte (0x0203add4), the ITCM divide helper (0x01ffabe4),
 #   func_02012790 twice, func_ov004_020adb1c.
 #
