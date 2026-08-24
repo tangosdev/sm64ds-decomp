@@ -195,3 +195,86 @@ Raw-offset collapses, each re-verified byte-exact: `Render`'s
 `CleanupResources`'s `((dBgW *)((char *)&mMeshCollider))`, and `InitResources`'
 `(char *)&mWithMeshClsn` plus the `((dBgCh_Actr *)((char *)&mWithMeshClsn))->` cast,
 which is now just `mWithMeshClsn.StartDetectingWater()`.
+
+---
+
+## daPgDfdr_c (`include/daPgDfdr_c.h`, ov027, size 0x3dc)
+
+Only two of this class's own six trailing fields are named. The other four are
+described in the header from a read of the un-decompiled `func_ov027_*` state
+machine, and "a flag" / "an index" / "a table index" does not say what a field holds,
+so they stay `unk_`.
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x3cc | `mStateTable` | `func_ov027_02111d70` writes `&data_ov027_02113ce4[idx]` into it and `func_ov027_02111d38` / `02111cfc` read `*(p)` and `*(p + 1)` as function pointers and call them through `this`. Left a raw `void *` — the callee's exact function-pointer type is not proven. |
+| 0x3d8 | `mTimer` | `func_ov027_02111ca8` sets `0x14`; `func_ov027_02111c48` runs it down through `DecIfAbove0_Byte`. |
+
+Left `unk_`: `0x3d0` (set to 0 or 1, no reader identified), `0x3d4` (an index into
+`data_ov027_02113a1c` keyed by `0x3d9`), `0x3d9` (0..9, reset above 9). In the C twin,
+`0x31c` / `0x31d` are `dBgActor_c`'s and stay `unk_` there too.
+
+In the `#else` C twin only, eight `dActor_c` offsets already named at exactly those
+offsets in `include/dActor_c.h` were repointed to those names: `mCamSpacePosX`,
+`mHorzSpeed`, `mVertAccel`, `mTerminalVelocity`, `mVertSpeed`, `mFlags`,
+`mClipOffsetY`, `mClipRadius`.
+
+Both `src/_ZN10daPgDfdr_c13InitResourcesEv.cpp` and
+`src/_ZN10daPgDfdr_c8BehaviorEv.cpp` were `extern "C"` free functions over a raw
+`char *`; both are real methods now, byte-exact. The header already declared both
+virtual, so `tools/eligible.py` is unchanged by this. The conversion made one thing
+readable that the offsets hid: `Behavior`'s two `Animation::Advance` calls are the
+same call on two different sub-objects — `this + 0x370` is the **Animation base of
+mModelAnim** (0x320 + 0x50, the multiple-inheritance offset `include/ModelAnim.h`
+documents) and `this + 0x384` is `mTextureSequence`, whose `Animation` base is at
+offset 0. Both are spelled `static_cast<Animation *>(&member)` now.
+`Render`'s `this + 0x328` was `mModelAnim.data`, `Model`'s own `ModelComponents`.
+
+---
+
+## Eyerok (`include/Eyerok.h`, ov066, size 0x874)
+
+The largest recovery in this pass: reading `InitResources` and `Behavior` as named
+members turned **every remaining `pad_` run in the class** into an evidenced field,
+and the class now closes on 0x874 by field span instead of only by the factory's
+`operator new` literal.
+
+Bodies read: `src/_ZN6Eyerok13InitResourcesEv.cpp`, `src/_ZN6Eyerok8BehaviorEv.cpp`,
+`src/_ZN6Eyerok6RenderEv.cpp`, `src/_ZN6Eyerok16CleanupResourcesEv.cpp`,
+`src/_ZN6Eyerok16OnAimedAtWithEggEv.cpp`, `src/Eyerok_Spawn.cpp`.
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x48c | `mState` | `Behavior` loads the WORD here, tests `*(p + 8)`, and calls the pointer-to-member at `p + 8` through `this`; it also compares the word against `&data_ov066_0211b07c`. A pointer to the current state descriptor. It was declared `u8` plus 0xf bytes of padding. |
+| 0x49c | `mPartIdx` | `InitResources` sets it from `param1 & 0xff` (`0xff` becomes 0, `> 2` becomes 0) and switches on 0/1/2 to pick the model, the BTP sequences and the KCL. Case 0 is the body: it spawns two more actors of the same actorID `0xb0` with params 1 and 2. Cases 1 and 2 are those two, mirrored `-/+0x31f000` in X. So the field is which part of the boss this actor is. |
+| 0x4a4/0x4a8/0x4ac | `mRestPosX/Y/Z` | seeded from the actor position on every path, then offset — a hand gets `+/-0x31f000` in X and `-0x32000` in Z. `Behavior` re-derives `mRestPosY = mSpawnPosY + 0x8000` every frame. Was two named scalars inside padding. |
+| 0x4b0/0x4b4/0x4b8 | `mSpawnPosX/Y/Z` | the unmoved position, snapshotted only on the two hands and never written again. |
+| 0x4d0 | `mTimer1` | `Behavior`'s first statement is `DecIfAbove0_Short(&0x4d0)`, and that helper takes a `u16 *`. The header declared `u8` plus one byte of padding; the ROM says `u16`. |
+| 0x4d2 | `mTimer2` | second `DecIfAbove0_Short`; `InitResources` seeds it with `0x64` on the body part only. |
+| 0x4d4 | `mDustCounter` | gates the whole dust-cloud block, is incremented once a frame, is halved into the `mDustPos` slot index (`(v >> 1) * 0xc`), only emits a new point on even values, and the array is cleared when it passes `0x26`. |
+| 0x4dc | `mDustPos[0x14]` | was `mUnkVectors`. `Behavior` fills each entry with the actor position plus a randomised offset and feeds it straight to `Particle::System::New`. The count and element size still come from the destructor's `__destroy_arr(ptr, 0x14, 0xc, _ZN7Vector3D1Ev)`. |
+| 0x5cc | `mDustParticle1[0x14]` | `Behavior` walks all 0x14 slots and passes `[i]` as the first argument of `Particle::System::New(…, 0x13a, …)`, storing the result back. One recycled handle per dust point. Was inside `pad_5cc[0xa8]`. |
+| 0x61c | `mDustParticle2[0x14]` | the same, effect `0x13b`. Was inside `pad_5cc[0xa8]`. |
+| 0x672 | `mStarId` | `InitResources` sets `(param1 >> 12) & 0xf` and passes it as the star index of `dActor_c::TrackStar`. Was inside `pad_5cc[0xa8]`. |
+| 0x673 | `mStarTracked` | holds what that `dActor_c::TrackStar(this, mStarId, 2)` call returned. Was inside `pad_5cc[0xa8]`. |
+| 0x674 | `mMeshCollider2` | already evidenced as a second, class-owned `dBgW_KcMbg`; renamed off `unk_674` because `InitResources` gives it a KCL and enables it exactly the way `dBgActor_c` treats its own at 0x124. |
+| 0x83c | `mClsnMat2` | `InitResources` passes `this + 0x83c` as the `const Matrix4x3 &` argument of `dBgW_KcMbg::SetFile` on all three paths. `0x83c + 0x30 = 0x86c`. Was the front of the header's declared "unused tail". |
+| 0x86c | `mHandUniqueID1` | `InitResources` spawns actor `0xb0` param 1 and, if it succeeds, stores `*(s32 *)(spawned + 4)` here — and `+4` is `dActor_c::uniqueID` (`include/dActor_c.h`). |
+| 0x870 | `mHandUniqueID2` | the same for param 2. `0x870 + 4 = 0x874`, the factory's literal. |
+
+In the `#else` C twin only: `unk_124` becomes `mMeshCollider` (`dBgActor_c`'s own name
+for that member) and `0x354/0x358/0x35c` become `mdCcAcPos_c_posX/Y/Z`, which is what
+`Behavior` writes through the C++ member spelling (`0x320 + 0x34`).
+
+Left `unk_`: `0x45c..0x48c` (a 0x30 blob no matched body touches) and `0x4d8`, which
+`InitResources` sets to `3` on the two hands and nothing matched reads.
+
+Raw-offset collapses: about fifty in `InitResources` and thirty in `Behavior`, each
+re-verified. Two were rejected by the ROM and are documented in place:
+
+* the `mDustPos` clearing loop in `InitResources` must stay a running `char *` with
+  three literal offsets — rewriting it as `Vector3 *p = mDustPos; p->x = 0; … p += 1;`
+  changes the function's SIZE (`999 word(s) differ`).
+* `Behavior` reaches `mDustCounter` a second time through `c + 0x400` and then
+  `+ 0xd4`; that two-step materialisation is the ROM's own and spelling it away is not
+  free.

@@ -31,9 +31,9 @@ extern char data_ov066_0211ae34[];
 
 int Eyerok::CleanupResources()
 {
-  if(((dBgW *)((char *)&unk_674))->IsEnabled())
-    ((dBgW *)((char *)&unk_674))->Disable();
-  if(unk_49c==0){
+  if(((dBgW *)&mMeshCollider2)->IsEnabled())
+    ((dBgW *)&mMeshCollider2)->Disable();
+  if(mPartIdx==0){
     ((SharedFilePtr *)(data_ov066_0211ae6c))->Release();
     ((SharedFilePtr *)(data_ov066_0211ae4c))->Release();
     ((SharedFilePtr *)(data_ov066_0211aeb4))->Release();
