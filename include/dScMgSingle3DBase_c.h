@@ -6,63 +6,71 @@
 #define DSCMGSINGLE3DBASE_C_H
 #include "dScMgBase_c.h"
 
+/* The FOURTH shadow of Particle::SysTracker in this tree, alongside
+ * include/Particle.h, include/Particle__SysTracker.h and the copy in
+ * include/Stage.h. Every field below is spelled exactly as Stage.h spells it,
+ * because two headers describing one class under two sets of names is a trap
+ * for whoever reads them next -- this copy used to call 0x754/0x760/0x79c/0x7a8
+ * mParticle1..4 and leave the head three fields unk_. Only D0/D1 files include
+ * this header and none of them touch these members, so the alignment is free.
+ * Merging the four into one definition is still its own change. */
 namespace Particle {
 struct SysTracker {
-    u8  pad_000[0x4];
-    s32 unk_004;            /* 0x004 */
-    u8  unk_008;            /* 0x008 */
+    void *mResourceFile;    /* 0x000 */
+    void *mManager;         /* 0x004 */
+    u8  mContents;          /* 0x008 */
     u8  pad_009[0x747];
-    s32 unk_750;            /* 0x750 */
-    u8  mParticle1;          /* 0x754 */
+    s32 mRunningSlidingDustSystemID;  /* 0x750 */
+    u8  mRunningSlidingDustCallback;  /* 0x754 */
     u8  pad_755[0x7];
-    s32 unk_75c;            /* 0x75c */
-    u8  mParticle2;          /* 0x760 */
+    s32 mSystemID_75c;      /* 0x75c */
+    u8  mCallback_760;      /* 0x760 */
     u8  pad_761[0x7];
-    s32 unk_768;            /* 0x768 */
-    u8  unk_76c;            /* 0x76c */
+    s32 mBigSplashSystemID; /* 0x768 */
+    u8  mBigSplashCallback; /* 0x76c */
     u8  pad_76d[0x7];
-    s32 unk_774;            /* 0x774 */
-    u8  unk_778;            /* 0x778 */
+    s32 mSystemID_774;      /* 0x774 */
+    u8  mCallback_778;      /* 0x778 */
     u8  pad_779[0x7];
-    s32 unk_780;            /* 0x780 */
-    u8  unk_784;            /* 0x784 */
+    s32 mSystemID_780;      /* 0x780 */
+    u8  mCallback_784;      /* 0x784 */
     u8  pad_785[0x7];
-    s32 unk_78c;            /* 0x78c */
-    u8  unk_790;            /* 0x790 */
+    s32 mRippleSystemID;    /* 0x78c */
+    u8  mRippleCallback;    /* 0x790 */
     u8  pad_791[0x7];
-    s32 unk_798;            /* 0x798 */
-    u8  mParticle3;          /* 0x79c */
+    s32 mSystemID_798;      /* 0x798 */
+    u8  mCallback_79c;      /* 0x79c */
     u8  pad_79d[0x7];
-    s32 unk_7a4;            /* 0x7a4 */
-    u8  mParticle4;          /* 0x7a8 */
+    s32 mSystemID_7a4;      /* 0x7a4 */
+    u8  mCallback_7a8;      /* 0x7a8 */
     u8  pad_7a9[0x7];
-    s32 unk_7b0;            /* 0x7b0 */
-    u8  unk_7b4;            /* 0x7b4 */
+    s32 mSystemID_7b0;      /* 0x7b0 */
+    u8  mCallback_7b4;      /* 0x7b4 */
     u8  pad_7b5[0xb];
-    s32 unk_7c0;            /* 0x7c0 */
-    u8  unk_7c4;            /* 0x7c4 */
+    s32 mSystemID_7c0;      /* 0x7c0 */
+    u8  mCallback_7c4;      /* 0x7c4 */
     u8  pad_7c5[0xf];
-    u8  unk_7d4;            /* 0x7d4 */
+    u8  mCallback_7d4;      /* 0x7d4 */
     u8  pad_7d5[0xf];
-    u8  unk_7e4;            /* 0x7e4 */
+    u8  mCallback_7e4;      /* 0x7e4 */
     u8  pad_7e5[0xb];
-    u8  unk_7f0;            /* 0x7f0 */
+    u8  mCallback_7f0;      /* 0x7f0 */
     u8  pad_7f1[0x3];
-    u8  unk_7f4;            /* 0x7f4 */
+    u8  mCallback_7f4;      /* 0x7f4 */
     u8  pad_7f5[0x3];
-    u8  unk_7f8;            /* 0x7f8 */
+    u8  mCallback_7f8;      /* 0x7f8 */
     u8  pad_7f9[0x3];
-    s32 unk_7fc;            /* 0x7fc */
-    u8  unk_800;            /* 0x800 */
+    s32 mCallbackParam_7fc; /* 0x7fc */
+    u8  mCallback_800;      /* 0x800 */
     u8  pad_801[0x3];
-    s32 unk_804;            /* 0x804 */
-    u8  unk_808;            /* 0x808 */
+    s32 mCallbackParam_804; /* 0x804 */
+    u8  mCallback_808;      /* 0x808 */
     u8  pad_809[0x7];
-    u8  unk_810;            /* 0x810 */
+    u8  mWeatherCallback;   /* 0x810 */
     u8  pad_811[0x3];
-    u8  unk_814;            /* 0x814 */
+    u8  mWeatherCallbackCount; /* 0x814 */
     u8  pad_815[0x3];
-    u8  unk_818;            /* 0x818 */
+    u8  mCallback_818;      /* 0x818 */
     u8  pad_819[0x3];       /* rounds 0x819 up to the 0x81c alignment boundary */
 
     /* Non-virtual: declaring them changes no layout. */

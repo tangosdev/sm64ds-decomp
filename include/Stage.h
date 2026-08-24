@@ -14,9 +14,9 @@ struct LVL_Overlay;
  * two separate generated shadows of this same class; merging them is its own
  * change with its own blast radius. See notes/scene-provenance.md, and
  * notes/system-provenance.md for what each field below is and how it is known.
- * This copy and include/Particle.h are kept identical by hand;
- * include/Particle__SysTracker.h is the third shadow and now carries the same
- * names and types as the other two.
+ * There are FOUR shadows, not three: this copy, include/Particle.h,
+ * include/Particle__SysTracker.h and the one in include/dScMgSingle3DBase_c.h.
+ * All four now carry the same names and types for the fields they share.
  *
  * The destructor is declared, never defined -- src/_ZN8Particle10SysTrackerD1Ev.cpp
  * supplies it as an extern "C" free function, and this declaration only lets
