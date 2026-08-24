@@ -22,15 +22,15 @@ int SeesawBob::Behavior()
         }
         return 1;
     }
-    if (unk_326 == 0) {
+    if (mPoundedThisFrame == 0) {
         func_ov095_021358cc(((char*)this), ((char*)this) + 0x8c, ((char*)this) + 0x324, 0, 6, 3, 3);
     }
     {
-        int s = unk_324;
+        int s = mAngleXSpeed;
         if (s < 0) s = (short)-s;
         if (s > 0xa) {
-            unk_320 = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-                unk_320, 3, 0x8b, ((char*)this) + 0x74, 0);
+            mTiltSound = _ZN5Sound8PlayLongEjjjRK7Vector3s(
+                mTiltSound, 3, 0x8b, ((char*)this) + 0x74, 0);
         }
     }
     if (mAngleX > 0x2000) mAngleX = 0x2000;
@@ -39,6 +39,6 @@ int SeesawBob::Behavior()
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0)) {
         _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     }
-    unk_326 = 0;
+    mPoundedThisFrame = 0;
     return 1;
 }

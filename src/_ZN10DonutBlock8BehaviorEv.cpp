@@ -35,9 +35,9 @@ int DonutBlock::Behavior()
         }
         _ZN8dActor_c14TriplePoofDustEv(((char*)this));
         if (((dBgW *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0) ((dBgW *)((char*)&(*(u8 *)&mMeshCollider)))->Disable();
-        mPosX = unk_4dc;
-        mPosY = unk_4e0;
-        mPosZ = unk_4e4;
+        mPosX = mHomePosX;
+        mPosY = mHomePosY;
+        mPosZ = mHomePosZ;
         mState = 2;
         break;
     case 2: {

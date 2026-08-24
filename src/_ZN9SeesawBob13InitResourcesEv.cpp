@@ -21,21 +21,21 @@ int SeesawBob::InitResources()
     unsigned char idx;
     int f;
     switch (actorID) {
-        case 0x1c: ((char *)this)[0x31e] = 0; break;
-        case 0x27: ((char *)this)[0x31e] = 1; break;
-        case 0x85: ((char *)this)[0x31e] = 2; break;
-        case 0x8f: ((char *)this)[0x31e] = 3; break;
-        case 0x95: ((char *)this)[0x31e] = 4; break;
-        case 0x96: ((char *)this)[0x31e] = 5; break;
-        case 0x80: ((char *)this)[0x31e] = 6; break;
+        case 0x1c: mVariant = 0; break;
+        case 0x27: mVariant = 1; break;
+        case 0x85: mVariant = 2; break;
+        case 0x8f: mVariant = 3; break;
+        case 0x95: mVariant = 4; break;
+        case 0x96: mVariant = 5; break;
+        case 0x80: mVariant = 6; break;
     }
-    idx = (unsigned char)((char *)this)[0x31e];
+    idx = mVariant;
     f = _ZN5Model8LoadFileER13SharedFilePtr(*(int*)(data_ov095_021374a0 + idx*0xc));
     _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, f, 1, -1);
     func_ov095_0213597c(((char *)this));
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
     {
-        unsigned char i = (unsigned char)((char *)this)[0x31e];
+        unsigned char i = mVariant;
         f = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(int*)(data_ov095_021374a4 + i*0xc));
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             &mMeshCollider, f, &mClsnMat, 0x1000, mAngleY, *(int*)(data_ov095_021374a8 + i*0xc));

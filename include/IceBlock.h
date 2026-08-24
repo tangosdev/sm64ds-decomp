@@ -24,12 +24,12 @@ struct Player;
 struct IceBlock : dBgActor_c {
     u8  pad_31e[0x2];
     dCcAc_c mdCcAc_c;/* 0x320 */
-    u8 unk_354;                       /* 0x354 */
+    u8  mMeltTimer;                   /* 0x354 -- 0x1e on the hit; drives mScale down through cstd::fdiv and destroys the block at 0 */
     u8  pad_355[0x3];
     s32 mScale;                       /* 0x358 */
-    u32 unk_35c;                      /* 0x35c */
-    u32 unk_360;                      /* 0x360 */
-    u8 unk_364;                       /* 0x364 */
+    u32 mParticleHandle1;             /* 0x35c -- recycled Particle::System::New handle, effect 0x77 */
+    u32 mParticleHandle2;             /* 0x360 -- the same, effect 0x78 */
+    u8  mContainedActor;              /* 0x364 -- read as an actor pointer; +0xc compared against actorID 0xb2 */
 
     /* --- vtable --- */
     virtual ~IceBlock();
@@ -75,15 +75,15 @@ struct IceBlock {
     u8  pad_2ec[0x34];
     u8  mdCcAc_c;            /* 0x320 */
     u8  pad_321[0x1f];
-    s32 unk_340;            /* 0x340 */
-    s32 unk_344;            /* 0x344 */
+    u32 mdCcAc_c_hitFlags;  /* 0x340 -- 0x320 + 0x20, dCc_c::hitFlags */
+    u32 mdCcAc_c_otherOwner; /* 0x344 -- 0x320 + 0x24 */
     u8  pad_348[0xc];
-    u8  unk_354;            /* 0x354 */
+    u8  mMeltTimer;            /* 0x354 */
     u8  pad_355[0x3];
     s32 mScale;            /* 0x358 */
-    u32 unk_35c;            /* 0x35c */
-    u32 unk_360;            /* 0x360 */
-    u8  unk_364;            /* 0x364 */
+    u32 mParticleHandle1;            /* 0x35c */
+    u32 mParticleHandle2;            /* 0x360 */
+    u8  mContainedActor;            /* 0x364 */
 };
 
 #endif /* __cplusplus */

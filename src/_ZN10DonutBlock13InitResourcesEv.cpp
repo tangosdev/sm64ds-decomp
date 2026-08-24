@@ -30,8 +30,8 @@ int DonutBlock::InitResources()
   _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x320, ((char*)this), 0x32000, 0x64000, 0, 0);
   mTerminalVelocity = -0x1e000;
   mVertAccel = ~0x198;
-  unk_4dc = mPosX;
-  unk_4e0 = mPosY;
-  unk_4e4 = mPosZ;
+  mHomePosX = mPosX;
+  mHomePosY = mPosY;
+  mHomePosZ = mPosZ;
   return 1;
 }

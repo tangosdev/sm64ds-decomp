@@ -19,10 +19,11 @@
 #include "dBgActor_c.h"
 
 struct SeesawBob : dBgActor_c {
-    u8  pad_31e[0x2];
-    s32 unk_320;                      /* 0x320 */
-    s16 unk_324;                      /* 0x324 */
-    u8 unk_326;                       /* 0x326 */
+    u8  mVariant;                     /* 0x31e -- 0..6 from actorID; indexes all three ov095 file tables */
+    u8  pad_31f[0x1];
+    s32 mTiltSound;                   /* 0x320 -- recycled Sound::PlayLong handle, replayed while |mAngleXSpeed| > 0xa */
+    s16 mAngleXSpeed;                 /* 0x324 -- the tilt speed func_ov095_021358cc integrates into mAngleX */
+    u8  mPoundedThisFrame;            /* 0x326 -- set by OnGroundPounded, cleared by the last statement of Behavior */
 
     /* --- vtable --- */
     virtual ~SeesawBob();
@@ -43,12 +44,12 @@ typedef char SeesawBob_size_must_be_0x328[sizeof(SeesawBob) == 0x328 ? 1 : -1];
    can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct SeesawBob {
     u8  pad_000[0xc];
-    u16 unk_00c;            /* 0x00c */
+    u16 actorID;            /* 0x00c */
     u8  pad_00e[0x7e];
-    s16 unk_08c;            /* 0x08c */
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleX;            /* 0x08c */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x20];
-    s32 unk_0b0;            /* 0x0b0 */
+    u32 mFlags;             /* 0x0b0 */
     u8  pad_0b4[0x20];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
@@ -57,10 +58,12 @@ struct SeesawBob {
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  pad_2ec[0x34];
-    s32 unk_320;            /* 0x320 */
-    s16 unk_324;            /* 0x324 */
-    u8  unk_326;            /* 0x326 */
+    u8  pad_2ec[0x32];
+    u8  mVariant;           /* 0x31e */
+    u8  pad_31f[0x1];
+    s32 mTiltSound;         /* 0x320 */
+    s16 mAngleXSpeed;       /* 0x324 */
+    u8  mPoundedThisFrame;  /* 0x326 */
 };
 
 #endif /* __cplusplus */
