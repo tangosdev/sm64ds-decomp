@@ -11,14 +11,33 @@ from) was hand-derived once, for all thirty, by MG1. Its first nosrc
 column was WRONG because a name-shaped lookup missed src files not named
 after their symbol, and review re-derived it by hand through the delink
 records. This tool does the delink-keyed join from the start, and its
-acceptance was a RECONSTRUCTION: run over all twenty-nine resolved
-vtables, it reproduces section 3's reviewed ovr/mark/nosrc columns
-row for row, 29 of 29, and those rows sum to 353/264/4 (the one
+acceptance was a RECONSTRUCTION: run over the twenty-nine resolved
+vtables, it reproduced section 3's reviewed ovr/mark/nosrc columns row
+for row, 29 of 29, and those rows summed to 353/264/4 (the one
 divergence in the first reconstruction run was a transcription typo in
 the CHECKER's own copy of the hand table, which is the point of the
 exercise). This line and the totals print used to quote 353/263/6,
 which was section 3's SUMMARY LINE and never the sum of its own rows;
 run mg6's merge corrected both ends to the rows.
+
+IT IS THIRTY ROWS NOW, NOT TWENTY-NINE, and the thirtieth is the one
+this tool could never have produced on its own. Section 3's row for
+0x179 read "NOT FOUND -- see below" because no load relocation inside
+MgSnowballSlalom_Spawn points at any signature table: that factory
+allocates and DELEGATES, and func_ov006_021295ac is the body that
+writes the vtable. Run mg11 lane SNW derived data_ov006_0214000c and
+its width 36 BY HAND out of the ROM and filled the row. What this tool
+does with it is the useful half and the honest division of labour:
+given a vtable and a width it MEASURES ovr/mark/nosrc from the image,
+so the hand row 16/14/0 is checked on every build exactly like the
+other twenty-nine. The tool still cannot RESOLVE that vtable; it can
+and does reconstruct the row. The totals moved to 369/278/4 with the
+row, and the twenty-nine that always resolved still sum to 353/264/4.
+The unclaimed-table count printed by --reconstruct drops from three to
+TWO, and those two are shared bases rather than any id's vtable:
+data_ov006_0213e448 (dScMgSingle3DBase_c, 41 load relocations from
+fourteen classes) and data_ov006_0213c62c (the bounce/trampoline
+family's base, 14 from five).
 
 WHAT IT READS, all of it produced by something that is not this tool:
 
@@ -44,7 +63,7 @@ via the delinks join, marker status, and the exact-address symbol name.
 --census lists every ActorBase-signature table in ov006's .data (slots
 13/14/15 == 0x0204357c/0x0204349c/0x02043494, the spacing no pair run
 or file table imitates) plus the base-table uniqueness check in ov004.
---reconstruct re-derives all twenty-nine hand rows and exits nonzero on
+--reconstruct re-derives all THIRTY hand rows and exits nonzero on
 any divergence, printed as a CONTRADICTION TO INVESTIGATE -- either
 side could be the wrong one; the first run's divergence was the
 checker's, not the doc's.
@@ -450,18 +469,23 @@ def cmd_reconstruct(root):
     ov4, ov6, sources, syms, base_slots = real_setup(root)
     doc = pathlib.Path(root) / "port" / "mg_fanout_costs.txt"
     rows = parse_doc_table(doc)
-    if len(rows) != 29:
+    if len(rows) != 30:
         sys.exit("vtablerows: parsed %d rows out of %s section 3, expected "
-                 "29 -- the doc's table shape moved, re-pin DOC_ROW before "
-                 "trusting a reconstruction" % (len(rows), doc))
+                 "30 -- the doc's table shape moved, re-pin DOC_ROW before "
+                 "trusting a reconstruction. It was 29 until run mg11 lane "
+                 "SNW filled 0x179's row by hand; a reader seeing 29 here "
+                 "has lost that row rather than found an older doc"
+                 % (len(rows), doc))
     hits = set(find_tables(ov6))
     missing = [vt for _, vt, *_ in rows if vt not in hits]
     if missing:
         sys.exit("vtablerows: hand vtables %s are not in the signature "
                  "census -- wrong image or wrong doc, refusing"
                  % ["0x%08x" % v for v in missing])
-    print("signature census: %d tables, all 29 hand vtables among them, "
-          "%d unclaimed" % (len(hits), len(hits) - 29))
+    print("signature census: %d tables, all 30 hand vtables among them, "
+          "%d unclaimed (both shared bases: dScMgSingle3DBase_c at "
+          "0x0213e448 and the bounce/trampoline base at 0x0213c62c)"
+          % (len(hits), len(hits) - 30))
     diverged = []
     tot = [0, 0, 0]
     for cid, vt, width, h_ovr, h_mark, h_nosrc in rows:
@@ -477,15 +501,15 @@ def cmd_reconstruct(root):
             diverged.append(cid)
         print("  0x%03x  vt 0x%08x  w%d  ovr %2d  mark %2d  nosrc %d%s"
               % (cid, vt, width, n_ovr, n_mark, n_nosrc, tag))
-    print("totals ovr/mark/nosrc: %d/%d/%d (section 3's table: 353/264/4)"
-          % tuple(tot))
+    print("totals ovr/mark/nosrc: %d/%d/%d (section 3's table: 369/278/4; "
+          "the 29 that always resolved are 353/264/4)" % tuple(tot))
     if diverged:
         print("vtablerows: %d row(s) DIVERGE. A divergence is a "
               "CONTRADICTION TO INVESTIGATE, not automatically the doc's "
               "error -- the first reconstruction's divergence was the "
               "checker's own transcription." % len(diverged))
         return 1
-    print("reconstruction EXACT, 29/29")
+    print("reconstruction EXACT, 30/30")
     return 0
 
 

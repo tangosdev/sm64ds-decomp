@@ -198,19 +198,33 @@ matched src TU at all and will need a named trap or a decomp.
   0x175  MgBounceAndTrounce          0213ccfc      36   23    15      0
   0x181  MgTrampolineTerror          0213fc7c      36   25    15      0
   0x180  MgTrampolineTime            0213fb34      36   25    16      0
-  0x179  MgSnowballSlalom            NOT FOUND -- see below
+  0x179  MgSnowballSlalom            0214000c      36   16    14      0
 
-    totals   353 override slots, 264 of them marker-carrying, 4 with no src
+    totals   369 override slots, 278 of them marker-carrying, 4 with no src
+      (the twenty-nine rows that always resolved:  353 / 264 / 4)
+
+  THE TABLE IS THIRTY ROWS NOW. 0x179's row read "NOT FOUND -- see below"
+  until run mg11 lane SNW derived it by hand; the paragraph further down that
+  explains WHY it did is kept and amended rather than deleted, because the
+  reason is a shape the next reader can hit again. port/tools/vtablerows.py
+  --reconstruct now measures all THIRTY rows out of
+  extracted/overlays/overlay_0006.bin and reports 369/278/4, reconstruction
+  EXACT 30/30, with the twenty-nine that always resolved still summing to
+  353/264/4 -- so the new row moved the totals by exactly its own 16/14/0 and
+  nothing else moved.
 
   THE TOTALS LINE USED TO READ 263 AND 6, run mg6 merge. It disagreed with the
-  twenty-nine rows directly above it, which sum to 353/264/4, and with
-  port/tools/vtablerows.py --reconstruct, which reads the same three columns
-  out of extracted/overlays/overlay_0006.bin and reports 353/264/4 while
-  reconstructing all 29 rows EXACT. The table won because the tool and the
-  table agree against the summary, not because the tool is the newer artifact.
+  twenty-nine rows above it, which sum to 353/264/4, and with
+  port/tools/vtablerows.py --reconstruct, which read the same three columns out
+  of the same image and reported 353/264/4 while reconstructing all 29 rows
+  EXACT. The table won because the tool and the table agree against the
+  summary, not because the tool is the newer artifact.
   The nosrc column is the whole of the difference: exactly four rows carry one
   each (0x16c, 0x178, 0x17e, 0x174) and the stale 6 is where the paragraph
-  below got its retired "0x170 carries one nosrc body" from.
+  below got its retired "0x170 carries one nosrc body" from. 0x179's row adds
+  no fifth: its sixteen override slots all resolve to a matched src TU. Its
+  two gaps are CLOSURE floors -- bodies its slots call -- and the nosrc column
+  has never counted those for any row.
 
 0x16b IS DERIVED IN FULL AND NOT SEATED, run link60 lane MGB
 --------------------------------------------------------------
@@ -319,13 +333,44 @@ through a computed address would leave no relocation either. A lane seating
 than pick one, which is why stategen refuses this constructor at the arity
 step rather than emitting a switch.
 
-ONE ID DOES NOT RESOLVE AND IT IS NOT A TOOL FAILURE TO WAVE AWAY.
+ONE ID DID NOT RESOLVE AND IT WAS NOT A TOOL FAILURE TO WAVE AWAY.
 MgSnowballSlalom (0x179) has a SpawnInfo at 0x0213ffb8 and a factory, and no
 load relocation inside that factory points at any of the thirty-two signature
 tables. Either its factory reaches its vtable through an indirection the other
 twenty-nine do not use, or its class is one of the three signature tables no id
-claims. Whoever takes 0x179 derives it by hand first; the row is left blank
-rather than guessed, and the totals above exclude it.
+claims. Whoever takes 0x179 derives it by hand first; the row was left blank
+rather than guessed, and the totals above excluded it.
+
+RUN mg11 LANE SNW DERIVED IT AND THE FIRST HYPOTHESIS IS THE RIGHT ONE. The
+indirection is ONE DELEGATED CONSTRUCTOR: src/MgSnowballSlalom_Spawn.cpp writes
+no vtable at all. It allocates 0xc59c and calls func_ov006_021295ac, and THAT
+body writes data_ov006_0213e448 and then data_ov006_0214000c into the object's
+first word -- so 0x179 is a fourth class under dScMgSingle3DBase_c, its vtable
+is data_ov006_0214000c, and the row above now reads 36 / 16 / 14 / 0.
+
+THE ATTRIBUTION CLOSES ON ITSELF RATHER THAN RESTING ON THAT ONE READ.
+MgSnowballSlalom_Spawn is the constructor's ONLY caller in the overlay, and the
+only other two references to 0x0214000c anywhere in ov006 are SLOTS 16 AND 17
+OF THE TABLE ITSELF -- func_ov006_0212568c and func_ov006_0212573c, the D2 and
+the D0 -- which write 0x0214000c on entry and 0x0213e448 on the way out. The
+vtable names its own destructors and its own destructors write the vtable.
+
+THE SECOND HYPOTHESIS IS RULED OUT, not merely unused. The three tables no id
+claimed were 0x0213e448, 0x0213c62c and 0x0214000c, and the first two are not
+candidates for ANY single id: 0x0213e448 carries 41 load relocations from
+fourteen different classes' constructors and destructors (it is
+dScMgSingle3DBase_c), and 0x0213c62c carries 14 from five (the
+bounce/trampoline family's base, whose own name-carrying slots are
+MgBounceAndPounce's methods). A table five classes write is not one class's
+vtable. Two unclaimed tables remain and --reconstruct prints both by name.
+
+WHAT THE NEXT READER SHOULD TAKE FROM IT is not the answer but the shape:
+THE FACTORY IS NOT ALWAYS THE WRITER. Twenty-nine of thirty factories load
+their own vtable, so a load relocation inside the factory is a good detector
+and a bad definition. The general question is which body writes the object's
+first word, and a delegating factory answers it one call further on.
+port/slice_snw.txt is the full derivation, including five width checks and the
+four-site pointer-to-member wall behind a vtable slot 6 that decodes nothing.
 
 SEVEN CLASSES ARE AT SIX OVERRIDES, and after lane MGA's width correction
 (section 11) TWO OF THEM ARE CHEAPER THAN THE PATHFINDER WAS. 0x170 needs four

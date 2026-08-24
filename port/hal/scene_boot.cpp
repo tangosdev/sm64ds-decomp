@@ -2402,6 +2402,27 @@ void port_scene_fill_jump(void);
 extern unsigned char MgBounceAndTrounce_SpawnInfo[];
 void *port_mg_jump2_spawn(void);
 void port_scene_fill_jump2(void);
+/* run mg11 lane SNW: dScMgSnowball_c, actor id 0x179 = scene 377, "Snowball
+   Slalom".  The spawn symbol is MgSnowballSlalom and the ROM's own RTTI --
+   reached through the type_info the word BEFORE the vtable points at,
+   relocs.txt from:0x02140008 to:0x0213ffd0, whose name pointer 0x0213ffdc
+   reads "15dScMgSnowball_c" -- names the class, so the row is named for the
+   class the way SCENE_MG_CURLING, SCENE_MG_LUIGI and SCENE_MG_PANEL are.
+
+   THIS IS THE ONE ROW port/mg_fanout_costs.txt SECTION 3 LEFT BLANK.  Its
+   vtable resolves through no load relocation in its own factory, because
+   src/MgSnowballSlalom_Spawn.cpp writes no vtable at all: it allocates 0xc59c
+   and calls func_ov006_021295ac, which writes data_ov006_0213e448 and then
+   data_ov006_0214000c.  port/slice_snw.txt is the hand derivation, including
+   the five width checks, the ruling-out of the two alternative signature
+   tables and the four-site pointer-to-member wall.
+
+   Same reads_sublevel reasoning as every minigame row above, re-derived rather
+   than copied: no relocation anywhere in ov006 lands on data_02092110 and no
+   TU in this class's closure names it.  A minigame is not about a course. */
+extern unsigned char MgSnowballSlalom_SpawnInfo[];
+void *port_mg_snowball_spawn(void);
+void port_scene_fill_snowball(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2912,6 +2933,37 @@ static const PortSceneClass port_scene_classes[] = {
        measured rather than assumed. */
     {373, "SCENE_MG_JUMP2", MgBounceAndTrounce_SpawnInfo, port_mg_jump2_spawn,
      port_scene_fill_jump2, 0},
+    /* 377 is 0x179, spelled in decimal for the same two reasons every row above
+       is: the others are, and port/tools/battery.py reads its hosted-scene set
+       out of this table.  APPENDED AFTER EVERY EXISTING ROW, run mg11 lane SNW,
+       and the position is load-bearing twice, the dScMgBSC_c case one class
+       further on.
+
+       FIRST, the rule itself: port_scene_registry_install walks this table in
+       order and calls every row's fill on every boot, while
+       port_scene_mg_overlay_load runs the thirty-five overlay constructors ONCE
+       PER PROCESS at the tail of the FIRST minigame row's fill.  Appending
+       means the constructors have already run against clean ROM words when this
+       fill starts, which is the latent-safe direction
+       port/mg_fanout_costs.txt section 11 derives.  Nothing in this class's
+       fill writes outside its own 36-slot table -- the width is checked FIVE
+       ways in port/slice_snw.txt, and the word a thirty-seventh slot would take
+       is the filename string this class's own InitResources loads -- so this
+       row obeys the rule rather than relying on it.
+
+       SECOND, this class is the FOURTH to sit under dScMgSingle3DBase_c
+       (data_ov006_0213e448), after the flower row, the memory2 row and the
+       luckystars row.  All four files define their own face array over the same
+       eight DS words and the fill keys on a DS address, so the row that runs
+       FIRST claims the middle table and the later ones find nothing left to
+       write.  Appending means the flower keeps it and all three earlier
+       witnesses keep counting exactly what they counted before this seat
+       existed; hal/scene_mg_snowball.cpp section 6 prints this seat's own
+       middle-table claim count so the zero is measured rather than assumed.
+       That file also records why the kSingle3DFaces seam promotion -- due since
+       the third class -- is still not the thing to take mid-fan-out. */
+    {377, "SCENE_MG_SNOWBALL", MgSnowballSlalom_SpawnInfo,
+     port_mg_snowball_spawn, port_scene_fill_snowball, 0},
     {0, 0, 0, 0, 0, 0},
 };
 

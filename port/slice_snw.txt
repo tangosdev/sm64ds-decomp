@@ -1,0 +1,597 @@
+# port/slice_snw.txt -- run mg11 lane SNW.
+#
+# dScMgSnowball_c, actor id 0x179 = scene 377, "Snowball Slalom".  The
+# derivation, the five width checks, the wall and the slice delta.
+# hal/scene_mg_snowball.cpp is the seat; port/unmatched/MgSnowball_State-
+# Dispatch.cpp is the pointer-to-member wall.
+#
+# ---- 1. THE ROW port/mg_fanout_costs.txt SECTION 3 LEFT BLANK -------------
+#
+# Twenty-nine of the thirty minigame ids resolve to a vtable through a load
+# relocation inside their own factory.  This one does not, and the file said so
+# rather than guessing:
+#
+#   "MgSnowballSlalom (0x179) has a SpawnInfo at 0x0213ffb8 and a factory, and
+#    no load relocation inside that factory points at any of the thirty-two
+#    signature tables.  Either its factory reaches its vtable through an
+#    indirection the other twenty-nine do not use, or its class is one of the
+#    three signature tables no id claims.  Whoever takes 0x179 derives it by
+#    hand first; the row is left blank rather than guessed."
+#
+# BOTH HYPOTHESES WERE TESTED.  The first is right, the second is ruled out,
+# and neither verdict rests on the handover run mg9 lane LKY left (section 8).
+#
+# ---- 2. THE FACTORY DELEGATES, AND THE DELEGATE IS THE WRITER ------------
+#
+# Disassembled from extracted/overlays/overlay_0006.bin at base 0x020bfec0 --
+# the shipped image, never a dsd export, whose relocated words would make
+# literals read as live pointers.
+#
+# MgSnowballSlalom_Spawn, 0x0212a520, size 0x34 = 12 instructions plus a
+# ONE-word pool = 13 = 0x34/4:
+#
+#   0x0212a520  stmdb sp!,{lr}
+#   0x0212a524  sub   sp,sp,#4
+#   0x0212a528  ldr   r0,[pc,#0x20]      ; pool 0x0212a550 = 0x0000c59c
+#   0x0212a52c  bl    0x02043444         ; allocate 0xc59c
+#   0x0212a530  cmp   r0,#0
+#   0x0212a534  addeq sp,sp,#4           ; null -> return it unchanged
+#   0x0212a538  ldmeq sp!,{lr}
+#   0x0212a53c  bxeq  lr
+#   0x0212a540  bl    0x021295ac         ; THE CONSTRUCTOR
+#   0x0212a544  add   sp,sp,#4
+#   0x0212a548  ldm   sp!,{lr}
+#   0x0212a54c  bx    lr
+#
+# THE HANDOVER CALLED THIS A TAIL CALL AND IT IS A BL.  Run mg9 lane LKY's note
+# says the factory "tail-calls a writer".  The effect is what LKY described --
+# the factory writes no vtable and the callee's r0 is the factory's return
+# value -- but the instruction at 0x0212a540 is a bl followed by a three-
+# instruction epilogue, not a b or a bx.  The distinction matters to nothing
+# here and is recorded because the next reader will disassemble it.
+#
+# func_ov006_021295ac, 0xe0 = 45 instructions plus an ELEVEN-word pool = 56 =
+# 0xe0/4.  Pool: 0x0000471c, 0x0213e448, 0x0000aba4, 0x0214000c, 0x0000acd8,
+# 0x0203d47c, 0x0203d738, 0x0000b5d8, 0x02125800, 0x0000ba14, 0x0212968c.
+# Two vtable stores into the object's first word, in inheritance order:
+#
+#   0x021295c8  str r1,[r4]     r1 loaded from 0x02129664 = 0x0213e448
+#   0x021295dc  str r1,[r4]     r1 loaded from 0x0212966c = 0x0214000c
+#
+# with func_ov004_020b2adc (the base constructor) called FIRST at 0x021295b8
+# with the object in r0, then Particle::SysTracker::Initialise at this+0x471c,
+# ModelBase at this+0xaba4, and three func_020733a8 sub-object builds at
+# +0xacd8, +0xb5d8 and +0xba14.
+#
+# So the object MgSnowballSlalom_Spawn produces carries data_ov006_0214000c,
+# and the indirection section 3 hypothesised is ONE DELEGATED CONSTRUCTOR.
+#
+# ---- 3. THE ATTRIBUTION CLOSES ON ITSELF ---------------------------------
+#
+# "An offset match is a candidate; a blx on the loaded word is the finding."
+# Four readings of the relocation set, and the last one is a ring:
+#
+#   a. MgSnowballSlalom_Spawn is the ONLY caller of func_ov006_021295ac in the
+#      whole overlay -- one arm_call, from:0x0212a540.  Nothing else builds
+#      this object.
+#   b. func_ov006_021295ac is the only body that writes 0x0214000c into an
+#      object it constructs.
+#   c. 0x0214000c has exactly THREE load relocations in all of ov006:
+#         from:0x0212966c  in func_ov006_021295ac+0xc0   the constructor
+#         from:0x0212571c  in func_ov006_0212568c+0x90   D2
+#         from:0x021257dc  in func_ov006_0212573c+0xa0   D0
+#   d. AND SLOTS 16 AND 17 OF THE TABLE ARE THOSE TWO DESTRUCTORS.  The vtable
+#      names its own destructors and its own destructors write the vtable.
+#      Both also write 0x0213e448 back on the way out -- 0x02125738 and
+#      0x021257f4 -- which is the base half of the same unwind.
+#
+# The two destructors' literal pools hold the SAME five member offsets the
+# constructor's does (0x471c, 0xaba4, 0xacd8, 0xb5d8, 0xba14), so all three are
+# reading one object layout.  0x0212573c carries one extra pool word,
+# 0x020a0eac, and one extra call, 0x0203c1e8 with r1 = *(0x020a0eac) -- the
+# deallocate that makes it the D0 rather than the D2.
+#
+# ---- 4. THE OTHER HYPOTHESIS, RULED OUT WITH THE RELOCATION SET ----------
+#
+# port/tools/vtablerows.py --census finds 32 ActorBase-signature tables in
+# ov006.  Section 3's table names 29 of them.  The three no id claims are:
+#
+#   0x0213e448   41 load relocations, from at least FOURTEEN different classes'
+#                constructors and destructors: MgPicturePoker_Spawn,
+#                MgPsycheOut_Spawn, MgMemoryMatch_Spawn, MgMemoryMaster_Spawn,
+#                MgPairAGoneAndOn_Spawn, MgMushroomRoulette_Spawn,
+#                MgBoomBox_Spawn, MgLuckyStars_Spawn, func_ov006_021295ac
+#                (this class) and their destructor pairs.
+#                It is dScMgSingle3DBase_c, the shared middle base.
+#   0x0213c62c   14 load relocations, from MgBounceAndPounce_Spawn,
+#                MgTrampolineTime_Spawn, MgTrampolineTerror_Spawn,
+#                _ZN8PathLift17BaseInitResourcesEv, the MgBounceAndPounce
+#                destructor pair and four more constructor/destructor groups.
+#                Its own name-carrying slots are MgBounceAndPounce's methods,
+#                so it is that family's shared base.
+#   0x0214000c   THREE load relocations, all three this class's own bodies.
+#
+# A TABLE FIVE CLASSES WRITE IS NOT ONE CLASS'S VTABLE.  The two alternatives
+# are shared bases by measurement, not by assumption, so they were never
+# candidates for id 0x179 and the first hypothesis is the only one left.
+#
+# ---- 5. FIVE WIDTH CHECKS ------------------------------------------------
+#
+# The table is THIRTY-SIX words, 0x0214000c..0x0214009c.
+#
+#   1. SPAN.  The next object begins at 0x0214009c.  0x90 / 4 = 36.
+#   2. TERMINAL SLOT.  Slot 35 at 0x02140098 holds 0x020ad660, the word every
+#      class in this family ends on.
+#   3. WHAT THE WORD PAST THE END IS.  0x0214009c reads 0x2f474d2f, which is
+#      ASCII "/MG/" little-endian and the head of the NUL-terminated string
+#      "/MG/d_2d_mg_bg_yukidama_ncl.bin".  Not a code address, not in any
+#      module's text range, and port/tools/vtablerows.py agrees on its own:
+#      "slot 36 word (CANDIDATE only, width says it is not a slot):
+#      0x2f474d2f".
+#   4. RELOCATION COUNT.  36 load relocations inside the span, and ZERO in the
+#      0x40 bytes after it.  A 37th slot would be an unrelocated word.
+#   5. RELOCATION STRIDE.  Those 36 sit at a uniform stride of 4 from
+#      0x0214000c to 0x02140098 with no gap, so no word inside the span is a
+#      plain constant and the count cannot be short at either end.
+#
+#      The stride check REFUSES AND CONFIRMS ONLY.  Run mg9 corrected it twice
+#      (lanes MMT and BOX): it counts gaps, it is not self-calibrating, and it
+#      cannot by itself establish a width.  It is the fifth check because it
+#      would have caught an over-read, not because it derives the 36.
+#
+# THE WIDTH WORD IS ALSO AN IDENTITY WITNESS.  The string a 37th slot would
+# have eaten is a file THIS CLASS LOADS: src/func_ov006_02129268 (slot 0,
+# InitResources) calls func_020adc74(&data_ov006_0214009c).  Three more follow
+# it in the same run of strings, and all four are read by that one body:
+#
+#   0x0214009c  "/MG/d_2d_mg_bg_yukidama_ncl.bin"   BG palette
+#   0x021400bc  "/MG/d_2d_mg_yukidama_ncg.bin"      tiles
+#   0x021400dc  "/MG/d_2d_mg_yukidama_ncl.bin"      palette
+#   0x021400fc  "/MG/snowman_head.bmd"              the 3D model
+#
+# yukidama is Japanese for snowball, and message 554 says the player rolls
+# "the snowman's head to the goal".
+#
+# ---- 6. THE IDENTITY, FIVE WAYS -----------------------------------------
+#
+#   1. RTTI.  The word BEFORE the vtable, 0x02140008, is a load relocation to
+#      0x0213ffd0.  That record's +4 is 0x0213ffdc, which reads
+#      "15dScMgSnowball_c".  Its +8 is 0x0213bc64, the base link.
+#   2. THE SpawnInfo.  0x0213ffb8 holds {0x0212a520, 0x01790179}: the factory
+#      word and the actor id TWICE.  port_scene_registry_install reads the
+#      halfword at info+4 and refuses a row whose id disagrees, so the seat's
+#      377 is checked against the ROM on every boot.
+#   3. The config's recovered names -- dScMgSnowball_c_InitResources,
+#      _CleanupResources, _Behavior, _OnKicked, _OnPushed, _OnAttacked2 -- and
+#      a generated header dScMgSnowball_c.h that src/func_ov006_02128fb8.c
+#      includes.
+#   4. The four ROM strings in section 5.
+#   5. The ov005 launch table and the BMG chain (section 7).
+#
+# ---- 7. TWO PLAYER TITLES ON ONE ID -------------------------------------
+#
+# The ov005 launch table has TWO rows for 0x179, the dScMgPanel_c and
+# dScMgAmida_c shape:
+#
+#   row  6   param 0x00060a00   record 10   text 6   low byte 0x00
+#   row 34   param 0x00082201   record 34   text 8   low byte 0x01
+#
+#     text 6 -> data_ov004_020bc070[6] = message 554  "Snowball Slalom"
+#     text 8 -> data_ov004_020bc070[8] = message 556  "Giant Snowball Slalom"
+#
+#     554  "Rub the Touch Screen to roll the snowman's head to the goal before
+#           time runs out! Rocks will slow you down, as will touching his
+#           head!"
+#     556  "Roll the snowball over a longer course! As before, avoid rocks
+#           because they'll slow you down."
+#
+# THE ROWS CORROBORATE "A LONGER COURSE" WITHOUT GOING NEAR THE TEXT.  Each
+# ov005 row carries a five-entry array at +0x14.  Row 6 reads 0x000004b0 =
+# 1200 five times; row 34 reads 0x00000960 = 2400 five times.  The second row
+# is the same course at exactly double the distance, which is a prediction the
+# chain could have failed and did not.
+#
+# port/slice_s371.txt's 25-row control derived this chain first and decoded
+# this id as "Snowball Slalom".  IT LISTS ONE OF THIS ID'S TWO TITLES.  That is
+# an omission and not a disagreement: its control was one row per config name,
+# and its own compound section already carries the same two-row shape for
+# MgBingoBallSlotsShot, MgPuzzlePanelPuzzlePanic and MgCoincentration.  This
+# class joins MgCoincentration's variety of it -- one config name, two rows,
+# the second a bigger version of the first.  The decode was re-run here from
+# the ROM (NitroFS file 643, LZ77 then the BMG glyph index) rather than
+# quoted, and it reproduces S371's reading for every id checked.
+#
+# port_mg_scene_spawn_param takes the FIRST matching row, so scene 377 boots as
+# ROW 6: save record 10, name text 6, "Snowball Slalom".
+#
+# ---- 8. SIXTEEN OVERRIDES, FOURTEEN MARKERS, ZERO WITHOUT A SOURCE ------
+#
+# port/tools/vtablerows.py --vtable 0x0214000c --width 36 prints ovr 16, mark
+# 14, nosrc 0.  That is the blank row filled:
+#
+#   id     spawn symbol                vtable     width  ovr  mark  nosrc
+#   0x179  MgSnowballSlalom            0214000c      36   16    14      0
+#
+# SIX OF THE SIXTEEN ARE THE MIDDLE BASE'S, not this class's.  Diffing all 36
+# words against data_ov006_0213e448 word by word: slots 2, 5, 7, 10, 26 and 33
+# hold the same address the middle base holds, so they are inherited from
+# dScMgSingle3DBase_c and only appear as overrides because vtablerows measures
+# against dScMgBase_c at 0x020bc0c0.  TEN are this class's own:
+#
+#   slot  0  0x02129268  InitResources
+#   slot  3  0x021291f8  CleanupResources
+#   slot  6  0x021283a4  Behavior
+#   slot  9  0x02127d10  Render
+#   slot 16  0x0212568c  D2
+#   slot 17  0x0212573c  D0
+#   slot 18  0x0212921c  state reset  -- READS ITS SECOND ARGUMENT
+#   slot 23  0x021291d4
+#   slot 24  0x02128fb8
+#   slot 25  0x021291b0
+#
+# ALL FOURTEEN MARKERS WERE DISASSEMBLED AND RULED BEFORE A WORD WAS SEATED,
+# with the evidence appended to port/tools/inferred_stub_adjudicated.txt.
+# RESULT: 14 REAL_DECOMP, 0 guesses.  Five of the fourteen are the middle
+# base's shared glue and already carried rows from run link60 lane MGB and run
+# mg9 lanes LKY, MMT and PSY; they are RE-READ here and this lane's arithmetic
+# agrees with all of theirs.  Slots 16 and 33 carry no marker and are therefore
+# not ruled on.
+#
+# WHAT THE GUARD COUNTS IS SEATED, NOT RULED, AND THE TWO DIVERGE BY ONE HERE.
+# port/tools/inferred_stub_guard.py counts marker-carrying bodies the SLICE
+# seats; this file adds FOURTEEN rulings but the guard's figure moves by EIGHT:
+#
+#   base 98a4c0e8f   194 seated inferred stubs live, 149 ROM-ADJUDICATED
+#   SNW tip          202 seated inferred stubs live, 157 ROM-ADJUDICATED
+#   delta                    +8                             +8
+#
+# NINE of the fourteen are this class's own, so the naive expectation is +9.
+# The ninth is func_ov006_02127d10, vtable slot 9, and section 14 HOST-COPIES
+# it: its src TU leaves the slice, so the guard stops counting it as seated
+# while its ruling stays true and stays needed.  That is the same standing the
+# five middle-base rows have -- ruled here, linked from somewhere else or not
+# at all -- and it is why an adjudication row is evidence about a ROM BODY
+# rather than a licence for a slice line.
+#
+# A DRAFT OF THIS LANE'S REPORT QUOTED 158 AND +9, which was true at the build
+# before the host copy landed and went stale the moment it did.  Review caught
+# it.  The figure lives here now, measured at the tip, so the next reader gets
+# it from the file that owns it rather than from a number typed once.
+#
+# SLOT 18 READS ITS SECOND ARGUMENT AND THE THUNK FORWARDS IT.  This is the
+# second class to do it -- run mg9 lane LKY found the first, in dScMgBSC_c, and
+# relayed it as "witness, don't assume".  func_ov006_0212921c saves r1 into r4
+# at 0x0212922c and compares it against 0x13 at 0x0212923c; only on a match
+# does it run func_ov006_02126ee4 and func_ov006_02126a98.  A thunk that merely
+# popped the argument would hand the body stack litter and let that arm fire at
+# random, and nothing would diagnose it.  hal/scene_mg_snowball.cpp forwards it
+# and prints the value.
+#
+# ---- 9. THE WALL IS FOUR SITES, THREE TUs, TWO LEVELS -------------------
+#
+# EXCLUDED and host-copied in port/unmatched/MgSnowball_StateDispatch.cpp:
+#
+#     src/func_ov006_0212a2e0.cpp   first level,  data_ov006_02143038
+#     src/func_ov006_0212a224.cpp   second level, data_ov006_02143050
+#     src/func_ov006_02129d94.cpp   second level, data_ov006_02143070
+#                                                 AND data_ov006_02143020
+#
+# THIS CLASS'S VTABLE SLOT 6 IS NOT ONE OF THEM, and that is the finding.  The
+# slot every seat wires by name, func_ov006_021283a4, contains ZERO decode
+# sites.  It reaches the machine by CALLING func_ov006_0212a2e0 at 0x02128f04,
+# and it is that body's only caller anywhere in ov006.  A lane that priced this
+# class by reading slot 6 would have priced its wall at zero.
+#
+# AND THE MACHINE IS TWO LEVELS DEEP.  Slots 1 and 2 of data_ov006_02143038
+# are func_ov006_0212a224 and func_ov006_02129d94, the second-level
+# dispatchers.  NEITHER HAS AN arm_call ANYWHERE IN ov006: their only
+# references in the whole overlay are the .data pair words at 0x0213ffb0 and
+# 0x0213ff78.  A static closure walk over the call graph from slot 6 does not
+# reach either of them.
+#
+# THE DETECTOR IS THE ROM AND THE SCAN IS BODY BY BODY.  The two prescribed
+# detectors (a link, a `::*` sweep) are a floor rather than a census because
+# the plain-int third shape defeats both.  This lane scanned the overlay image
+# for the five-instruction encoding itself --
+#     add Rd,Rn,Rm,asr #1   then   ands Rx,Ry,#1
+# -- which is blind to spelling.  Each body is taken at its OWN start and size
+# from config/arm9/overlays/ov006/symbols.txt, never over an address range:
+#
+#   this class's 27 OWN bodies (10 vtable overrides, 14 state       4 sites
+#     bodies, the first-level dispatcher, the constructor,          in 3 bodies
+#     the factory)
+#   the 6 INHERITED dScMgSingle3DBase_c bodies                      0 sites
+#
+#   0x02129dc0  func_ov006_02129d94   decodes data_ov006_02143070
+#   0x02129df8  func_ov006_02129d94   AND    data_ov006_02143020
+#   0x0212a248  func_ov006_0212a224   decodes data_ov006_02143050
+#   0x0212a324  func_ov006_0212a2e0   decodes data_ov006_02143038
+#
+# THE DETECTOR WAS CONTROLLED THREE WAYS BEFORE IT WAS TRUSTED, because it was
+# written fresh here rather than inherited:
+#
+#   over all of ov006, body by body            114 sites   (LKY's figure)
+#   over func_ov006_021254c0 (LKY's slot 6)      1 site    at 0x021254dc
+#   over the span 0x02124908..0x0212a3c0         5 sites   (LKY's corrected
+#     -- the address range LKY's review retired            reading, which is
+#                                                          this class's four
+#                                                          plus LKY's one)
+#
+# All three reproduce digit for digit, so the four sites above are this lane's
+# measurement and not an adopted claim.
+#
+# THE FOUR TABLES' SLOT NUMBERS COME FROM THE CONSTRUCTOR.  Reading the pair
+# run in address order gives fourteen wrong slot numbers, and the run is not
+# even pairs throughout: MgSnowballSlalom_SpawnInfo sits INSIDE it at
+# 0x0213ffb8 as {0x0212a520, 0x01790179} and a sweep would read it as a
+# fifteenth pair with a nonzero adjustment.  src/__sinit_ov006_021333e0.c is
+# the ground truth and its own order is:
+#
+#   data_ov006_02143038 (3)  <- 0x0213ff88, 0x0213ffb0, 0x0213ff78
+#   data_ov006_02143050 (4)  <- 0x0213ff90, 0x0213ff98, 0x0213ff80, 0x0213ff70
+#   data_ov006_02143070 (4)  <- 0x0213ffa0, 0x0213ff68, 0x0213ff60, 0x0213ff58
+#   data_ov006_02143020 (3)  <- 0x0213ffc8, 0x0213ffa8, 0x0213ffc0
+#
+# FOURTEEN SLOTS, FOURTEEN DISTINCT BODIES, ALL ARITY 1, ALL WITH A MATCHED
+# SRC TU AND NO NONMATCHING BANNER.  There is NO STATE FLOOR in this class.
+# Every src spells its body `void f(char *self, int idx)`, so the states route
+# through port_mg_call1 rather than port_mg_call0.  Every adjustment word reads
+# zero, checked in the image.
+#
+# BOTH SPELLING SHAPES APPEAR IN ONE CLASS, which is why all three TUs are
+# replaced rather than only the ones a link complains about:
+#   src/func_ov006_0212a2e0.cpp and src/func_ov006_0212a224.cpp declare their
+#     tables inside extern "C" -- the SILENT shape.  The link is satisfied by
+#     the ov006 mount's plain C symbol, the compile is clean, and MSVC strides
+#     an eight-byte table by four from slot 1 on.
+#   src/func_ov006_02129d94.cpp declares its two at C++ linkage -- the LOUD
+#     shape, which fails the link with LNK2019.
+#
+# ---- 10. THE SLICE IS THE DELTA ONLY ------------------------------------
+#
+# port/slice_mg1.txt already carries the ov004 framework, the thirty-five
+# overlay constructors (this class's __sinit_ov006_021333e0 among them) and the
+# arm9 waves under them.  CMake appends every list to the same targets and
+# dedupes identical absolute paths, so nothing is compiled twice.
+#
+# THE DELTA IS TAKEN AGAINST SLICES port/CMakeLists.txt ACTUALLY READS.  Eight
+# port/slice_*.txt files are not read by it at all -- port/slice_mga361.txt
+# among them -- and counting an unwired slice as coverage hides TUs a seat
+# genuinely needs.  Run mg9 lane LKY banked that trap; this lane obeyed it.
+#
+# The method is the documented one: seed with this class's own TUs, link, and
+# add exactly what LNK2019 names.  A static closure walk over the ROM's
+# arm_call graph is NOT the method -- LKY abandoned one that reached 539 TUs
+# and did not build, because a relocation graph measures what the ROM calls
+# while a slice has to list what the HOST LINKER still wants, and hand-written
+# mwcc `asm void` primitives and host seams are the difference.
+#
+# THE COUNT IS CHECKED AGAINST THE HEADLINE.  port/tools/linkage.py is read
+# before and after this seat and the delta must equal the number of src lines
+# below, because every slice line moves the headline by exactly one.  An equal
+# delta is also the proof that CMake read every line: a line lost to a stray
+# bracket in this file shows up as a short delta.  SECTION 15 carries the
+# numbers.
+#
+# THAT SENTENCE USED TO POINT AT SECTION 12, WHICH IS THE WAVE-1 LIST AND HAS
+# NEVER CARRIED A LINKAGE FIGURE.  Review caught it: the check had been run and
+# passed, and the file promised a record of it that was never written.  A slice
+# that says "the numbers are over there" and has no over-there is worse than
+# one that says nothing, because a reader stops looking.
+#
+# ---- 11. THE SLICE ------------------------------------------------------
+#
+# The seed: this class's own twenty-four compilable TUs.  Three more are its
+# own and are NOT here because port/unmatched/MgSnowball_StateDispatch.cpp
+# host-copies them -- src/func_ov006_0212a2e0.cpp, src/func_ov006_0212a224.cpp
+# and src/func_ov006_02129d94.cpp, the three pointer-to-member TUs of section
+# 9.  Both of this class's overlay constructors are already in
+# port/slice_mg1.txt as part of the thirty-five, so neither is listed here.
+#
+# NO INLINE COMMENTS ON A SLICE LINE.  The reader skips only lines that START
+# with #, so a trailing comment kills the line silently and the linkage delta
+# comes up short.  Run mg9 lane PSY banked that one.
+#
+src/MgSnowballSlalom_Spawn.cpp
+src/func_ov006_021295ac.cpp
+src/func_ov006_02129268.c
+src/func_ov006_021291f8.c
+src/func_ov006_021283a4.c
+src/func_ov006_0212568c.cpp
+src/func_ov006_0212573c.cpp
+src/func_ov006_0212921c.c
+src/func_ov006_021291d4.c
+src/func_ov006_02128fb8.c
+src/func_ov006_021291b0.c
+src/func_ov006_0212a274.c
+src/func_ov006_0212a110.c
+src/func_ov006_0212a000.c
+src/func_ov006_02129eec.c
+src/func_ov006_02129e28.c
+src/func_ov006_02129cb0.c
+src/func_ov006_02129b74.c
+src/func_ov006_02129a34.c
+src/func_ov006_0212992c.c
+src/func_ov006_02129894.cpp
+src/func_ov006_021297c0.c
+src/func_ov006_0212972c.c
+#
+# ---- 12. WAVE 1: WHAT THE LINK ASKED FOR --------------------------------
+#
+# The first link of this seat named ELEVEN symbols and they split three ways.
+#
+# ONE is an /alternatename row, in port/unmatched/MgSnowball_Faces.cpp: the
+# constructor's src declares this class's vtable at C++ linkage, so the
+# reference mangles as ?data_ov006_0214000c@@3PAXA against the mount's plain
+# _data_ov006_0214000c.  It did NOT ask for the middle base's twin, because an
+# earlier seat under dScMgSingle3DBase_c already stands that row.
+#
+# TWO are FLOORS with no src TU anywhere in the tree, trapped in the same file
+# and counted rather than guessed:
+#     func_ov006_02125f68   0x9e0, called twice from vtable slot 6
+#     func_ov006_02126ee4   0xacc, called from vtable slot 18 and slot 0
+# Both are this class's alone -- their complete caller sets in ov006 are those
+# four sites -- so they are trapped in this lane's own file rather than in the
+# shared hal/scene_mg_faces.cpp, and the mg9 BOO/S371 LNK2005 collision shape
+# cannot repeat.  func_ov006_02126ee4 calls RandomIntInternal eleven times and
+# nothing else: it is the course layout.  func_ov006_02125f68 is the obstacle
+# and collision pass.  SO THE ROCKS message 554 promises are the expected
+# player-facing gap in this seat, stated up front rather than found by eye.
+#
+# EIGHT are ordinary slice lines and are appended below.  Section 14 of
+# port/mg_fanout_costs.txt says to budget ONE wave plus its own alias row;
+# this class took one wave, one alias and two traps.
+#
+src/func_ov006_02125800.c
+src/func_ov006_02125804.c
+src/func_ov006_02125890.c
+src/func_ov006_02126948.c
+src/func_ov006_02126a98.c
+src/func_ov006_021279b0.cpp
+src/func_ov006_0212968c.c
+src/func_ov006_02129690.c
+#
+# ---- 13. WAVE 2: THE TRAP RULE FIRING -----------------------------------
+#
+# The second link named FOUR symbols and three of them are the trap rule doing
+# exactly what port/mg_fanout_costs.txt says it does: A TRAP-SHAPED FLOOR HIDES
+# ITS CALLEES FROM STATIC CLOSURE.  None of the four is reachable from a vtable
+# slot; all four hang off bodies wave 1 pulled in.
+#
+#   src/func_ov006_02125994.c   called by func_ov006_021279b0
+#   src/func_ov006_0212a3c0.c   called by func_ov006_021279b0
+#   func_ov006_02126b4c         NO SRC -- a THIRD floor, 0x398, called twice
+#                               by func_ov006_02126a98.  Trapped beside the
+#                               other two in port/unmatched/MgSnowball_Faces.cpp.
+#                               It writes tilemap entries into both screens'
+#                               BG2 blocks: MultiStore16 sixteen times and the
+#                               two GetBG2ScrPtr getters eight times each.
+#   data_02082314               an arm9 s16 the class reads BY NAME.  It is
+#                               0x100 bytes into the trig table
+#                               port/tools/romdata.py already emits, and the
+#                               ROM read is `ldrsh r1,[r1]` off a pool word
+#                               holding that address, so the fix is one more
+#                               two-byte row in romdata.py's TABLES -- ROM
+#                               bytes for a ROM address, the same deliberate
+#                               overlap the two OBJ tables in that list
+#                               already carry.
+#
+# So the budget for this class was TWO waves, one alias row and THREE traps,
+# against section 14's "one wave plus its own alias row".  The trap rule is the
+# whole of the difference and it is predictable: budget an extra wave per trap.
+#
+src/func_ov006_02125994.c
+src/func_ov006_0212a3c0.c
+#
+# ---- 14. WAVE 3: A DEFECT ONLY A RUN COULD FIND -------------------------
+#
+# EXCLUDED and host-copied in port/unmatched/MgSnowball_ModelRender.cpp:
+#
+#     src/func_ov006_02127d10.c   vtable SLOT 9, Render
+#
+# It is not a pointer-to-member TU and the Itanium scan is right to find no
+# site in it.  It carries the OTHER shadow-dispatch shape, the one
+# port/unmatched/Door_Render.cpp and MgFlower_ModelRender_020c3bf4.cpp name and
+# the one run mg10 called the invisible-defect class: a C FUNCTION POINTER read
+# out of a model's vtable and called with the C calling convention.
+#
+#     void *self = (void*)(c + 0xaba4);
+#     void (*fn)(void*, int*) =
+#         *(void(**)(void*, int*))((char*)(*(void**)self) + 0x14);
+#     fn(self, vecArr);
+#
+# THE VTABLE READ IS FINE AND THAT WAS MEASURED RATHER THAN ASSUMED.
+# hal/cxxname_bridge.cpp dual-fills _ZTV5Model[4] and [5] with mv_render for
+# exactly this shape, and a probe in this seat's render thunk printed the live
+# table on scene 377's first Render: vptr 0x00CBD6B0 = __ZTV5Model, word 5 =
+# 0x004281A0 = ?mv_render@@YIXPAX0PBX@Z.  Byte +0x14 resolves to the right
+# function.
+#
+# THE CALLING CONVENTION IS WHAT BREAKS.  mv_render is __fastcall (receiver in
+# ecx, a dummy in edx, the scale on the stack, callee cleans four); the src's
+# fn is cdecl (both on the stack, caller cleans eight).  So the thunk read a
+# stale ecx as its receiver and got the model pointer as its scale, and the
+# stack came back four bytes short.  The fault is the return, not the call:
+#
+#     FAULT code c0000005 at +0x303f3a64 accessing 307f3a64
+#       walker node 307F3A9C actor 307F3A64 id 0x179
+#       eip 307f3a64   -- the actor's OWN address, returned into
+#
+# NEITHER PRESCRIBED DETECTOR CAN SEE IT.  There is no unresolved symbol (the
+# call is through a local variable), no arity row (the pointer type and the
+# call agree with each other), and no Itanium encoding (it is not a member
+# pointer).  What found it was a RUN with SM64DS_FAULTS_FATAL=1, and the A/B
+# that localised it needed no patch at all: SM64DS_SCENE_SLOT9=0 and
+# SM64DS_SCENE_NO_RENDER=1 both exit 0 on the same 300 frames.
+#
+# THE COST OF THE HOST COPY IS ONE LINE PAIR.  The `fn` read and its call
+# become `((Model *)(c + 0xaba4))->Render((const Vector3 *)vecArr)` -- still
+# virtual, and safe to type as Model because this class's own constructor
+# builds that sub-object with _ZN5ModelC1Ev.  Everything else in the 167-line
+# body is transcribed unchanged.
+#
+# The slice line for src/func_ov006_02127d10.c is REMOVED from section 11
+# rather than left in beside the host copy, so the two cannot both define the
+# symbol.  The headline delta in SECTION 15 counts 33 slice lines, not 34, for
+# that reason -- this line used to say "the delta below" with nothing below it.
+#
+# ---- 15. THE LINKAGE DELTA, MEASURED ON BOTH ENDS -----------------------
+#
+# port/tools/linkage.py, read on this same tree at the base commit and at this
+# lane's tip, both built here rather than one of them quoted:
+#
+#   base 98a4c0e8f   linked into walk_window : 7121  (63.1%)
+#   SNW tip          linked into walk_window : 7154  (63.3%)
+#   delta                                      +33
+#
+# and sections 11, 12 and 13 carry exactly THIRTY-THREE src/ lines between
+# them.  Every slice line moves the headline by exactly one, banner or no
+# banner, so an equal delta is also the proof that CMake read every line: a
+# line lost to a stray bracket in this file would show up as a short delta.
+#
+# THE BASE BINARY WAS VERIFIED PRE-SEAT RATHER THAN ASSUMED, which is the
+# stale-artifact discipline this tree keeps learning:
+#
+#   $ grep -c "port_scene_fill_snowball\|MgSnowball_StateDispatch" #         build/port/walk_window.map
+#   0
+#
+# BOTH DIRECTIONS RECONCILE, and the intermediate reading is kept because it is
+# the check.  The wave-1 and wave-2 build read 34 src/ lines and measured 7155,
+# +34.  Wave 3 removed src/func_ov006_02127d10.c in favour of
+# port/unmatched/MgSnowball_ModelRender.cpp, and the headline moved to 7154 --
+# down by exactly the one line that left.  A slice line and a headline point
+# are the same thing in both directions.
+#
+# ---- 16. WHAT THIS SEAT DOES NOT CLAIM ABOUT INPUT ----------------------
+#
+# MEASURED AND SOLID: the scroll word at +0xab6c reads 5552 on every run this
+# lane made -- 300, 800, 1200 and 3000 frames, render on and off.  The snowball
+# does not roll on any unattended run.
+#
+# NOT ESTABLISHED, AND AN EARLIER DRAFT OF THIS FILE'S LANE REPORT SAID IT WAS:
+# why it does not roll.  That draft read a zero from SM64DS_TOUCH_PROBE and
+# concluded "the scripted stylus does not reach the scene path, so forward
+# motion can only be tested with a real mouse".  A CONTROL DISPROVED THE
+# INSTRUMENT.  Run mg11's other lanes drove their machines with the same
+# mechanism (PKR advanced a state 4 -> 10, MUG stopped three reels), so this
+# lane re-ran a rub in MUG's shape -- 48 short frame windows walking x --
+# and then pointed the SAME invocation and the SAME binary at SCENE 363,
+# Memory Master, which run mg8 lane MMD is on record driving this way:
+#
+#   scene 377, 48-window rub, 1200 frames   EXIT 0, [touch] lines: 0
+#   scene 363, MMD's own probe string,      EXIT 0, [touch] lines: 0
+#     "200-202:120:70,400-402:120:95,600-602:120:120", 800 frames
+#
+# A KNOWN-DRIVABLE SCENE READS ZERO TOO, so the zero is a property of this
+# lane's invocation or build shape and says nothing about scene 377.  The
+# reading was a broken instrument, not a measurement, and the conclusion drawn
+# from it is withdrawn.
+#
+# SO THE OPEN QUESTION IS WHY THE BALL DOES NOT MOVE, and there are two live
+# candidates this lane cannot separate: the input never arrives, or
+# func_ov006_02125f68 -- the obstacle and collision pass, trapped in section 12
+# because it has no src TU -- is what advances it.  Whoever picks this up
+# should get the stylus working against scene 363 as the control FIRST, and
+# only then ask scene 377 the question.
+#
+# runs/mg11/out/SNW/EVIDENCE_NOTE.txt carries both runs and the control.
