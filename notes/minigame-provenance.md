@@ -392,3 +392,41 @@ __destroy_arr(p, count, elemSize, dtor) idiom dScMgBase_c's own D1/D0 use
 for touchIcon_0f4 (see dScMgBase_c.h's file banner and
 src/_ZN11dScMgBase_cD1Ev.cpp) -- declared here, not per-destructor-file,
 matching dScMgHanachan_c.h's own placement.
+
+---
+
+# Round-3 readability pass: field names
+
+The `dScMg*` family's `unk_NNN` fields, named from what the matched bodies do
+with them. One table per class; every row cites the file that settles it. Where
+no matched body does anything characteristic with a field it keeps its `unk_`
+name -- a wrong name is a claim the next reader will trust.
+
+## dScMgAmida_c field names
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x46d0 | `mState` | The subject of `Behavior`'s own `switch` (src/_ZN12dScMgAmida_c8BehaviorEv.cpp): 0 sets the board up and falls into 1, 1 runs the lottery, 2 waits out the result, 3 is the finale. src/func_ov006_020d3ba0.cpp leaves it at 1. |
+| 0x46d4 | `mFinished` | u8. src/func_ov006_020d3ba0.cpp zeroes it; Behavior sets it only on the branch that fires when `mRoundCount` reaches 5, and every later read takes the celebration path (`func_ov004_020b0a54(0)` instead of `0x12`, and Render's confetti pass). |
+| 0x4700 | `mLineEndY` | InitResources stores 0x78 or 0x98 here; src/func_ov006_020d3ba0.cpp passes it as the y2 argument of four `func_ov004_020ae5c4` line draws whose other three arguments are literal screen coordinates (x = 0x20/0x60/0xa0/0xe0, y1 = -0xb4 or -0xd4). |
+| 0x4724 | `mLanePos[4][2]` | src/func_ov006_020d3ba0.cpp seeds `{ (0x20 + 0x40*i) << 12, 0xb0 << 12 }`; Behavior adds `mLaneVel` into it; Render draws the lane sprite at `>> 12`. |
+| 0x4744 | `mLaneVel[4][2]` | Added into `mLanePos` once a tick, and its y component loses a fixed 0x100 every tick -- a velocity under gravity. Zeroed by the same reset. |
+| 0x4768 | `mPieces[0x80]` | Renamed from `arr4768`; the element layout is unchanged (see the section above). |
+| 0x5368 | `mScrollSpeed` | src/func_ov006_020d3ba0.cpp computes it from the pattern table `data_ov006_0212e1b0 + mPatternIndex * 0x1c`, biases it by the inherited 0xbc, and clamps it to 0x64. |
+| 0x536c | `mScrollAccum` | Behavior adds `mScrollSpeed` into it, keeps the low four bits (`&= 0xf`) and runs `func_ov006_020d27dc` once per 16 accumulated -- a fixed-point step accumulator. |
+| 0x5374 | `mRoundCount` | Zeroed by the reset; Behavior replays the board while it is below 5 and finishes at 5, and scales the fast-forward speed by `n * 5 + 0x20`. |
+| 0x539c | `mLaneAnimTimer[4]` | Render bumps entry `i` each frame and wraps it on the per-lane period it copies out of `data_ov006_0213b880`. |
+| 0x53ac | `mLaneAnimFrame[4]` | Bumped when the timer above wraps, cycles 0..0xd, and indexes the sprite table `data_ov006_0213a458`. |
+| 0x53bc | `mBgScrollPhase` | u16. Render adds 0xc0 a frame and feeds `>> 4` into the shared sine table `data_02082214` to get the sub-screen BG2 offset. The 16-bit width comes from the reset's own `*(s16*)` store. |
+| 0x53c0 | `mResultWaitTimer` | Loaded with 0x3c on entry to state 2 and counted down there; at 0 the scene clears `mPromptEnabled` and moves to state 3. |
+| 0x53c4 | `mStartBannerTimer` | Reset to 0x3c right after `func_ov004_020b0cac(0xd, 0x80, 0x60, ...)` puts banner 0xd on screen; Behavior counts it down and calls `FreeGfxSlotsById(0xd)` on expiry. |
+| 0x53d0 | `mEndDelayTimer` | Set to 0xb4 when state 3 begins; Render keeps drawing the play field until it and `mState == 3` agree, then switches to the finale. |
+| 0x53d4 | `mPatternIndex` | src/func_ov006_020d3ba0.cpp picks it (clamped, or randomised for the harder variant) and then uses it as the row index into five different 0x1c-stride tables in ov006. |
+| 0x53e0 | `mRoundTimer` | Behavior counts it down inside state 1; reaching 0 is what ends the round and chooses between another board and the finale. |
+| 0x53e8 | `mScore` | InitResources seeds it from the inherited 0xbc times 5; src/func_ov006_020d3ba0.cpp clamps it to 0x270f (9999); Behavior pushes it to the HUD counter `func_ov004_020adb1c` every tick. |
+
+Left `unk_`: 0x46d5 (a second reset flag, only ever zeroed and compared against
+1), 0x470c/0x4710 (two 0x100 x 0x158 byte buffers -- the shape is now in the
+header comment, the role is not settled), 0x4714 (a per-lane gate read by both
+Behavior and Render, but nothing in scope writes it), 0x4764, 0x53dc/0x53dd
+(two speed-modifier flags), 0x53e4 (a constant 2 handed to every line draw).
