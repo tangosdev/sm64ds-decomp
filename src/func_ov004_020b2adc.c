@@ -1,4 +1,4 @@
-extern void _ZN7fBase_cC1Ev(void *self);
+extern void _ZN7fBase_cC2Ev(void *self);
 extern void func_ov004_020b8a70(unsigned char *p);
 extern char *func_ov004_020b92c4(char *c);
 extern int func_ov004_020adc3c(void *c);
@@ -14,7 +14,7 @@ extern short data_ov004_020bc070[];
 
 void *func_ov004_020b2adc(char *self)
 {
-    _ZN7fBase_cC1Ev(self);
+    _ZN7fBase_cC2Ev(self);
     *(void **)self = &data_0208e4b8;
     *(void **)self = &_ZTV8dScene_c;
     {

@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned int sz);
-extern void _ZN7fBase_cC1Ev(void* p);
+extern void _ZN7fBase_cC2Ev(void* p);
 extern void _ZN8Particle10SysTrackerC1Ev(void* p);
 extern void _ZN5ModelC1Ev(void* p);
 extern void _ZN9ModelAnimC1Ev(void* p);
@@ -15,7 +15,7 @@ extern "C" char* UnknownVsEntry_Spawn(void);
 extern "C" char* UnknownVsEntry_Spawn(void){
   char* p = (char*)_ZN7fBase_cnwEj(0xf48);
   if (p) {
-    _ZN7fBase_cC1Ev(p);
+    _ZN7fBase_cC2Ev(p);
     *(void**)p = &data_0208e4b8;
     *(void**)p = &_ZTV14UnknownVsEntry;
     _ZN8Particle10SysTrackerC1Ev(p + 0x50);
