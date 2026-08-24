@@ -28,25 +28,34 @@ struct KingBobOmb : dEnemyBase_c {
     dCcAcPos_c mdCcAcPos_c_37c;/* 0x37c */
     CommonModel mCommonModel;         /* 0x3bc */
     ShadowModel mShadowModel;         /* 0x3f8 */
-    u8  pad_420[0x74];
+    /* The state pointer. KingBobOmb_SetState writes it and immediately calls
+       through it, and Behavior compares it against the ov078 state tables
+       (data_ov078_0212703c / _0212707c / _021270bc / _021270fc) -- see
+       src/KingBobOmb_SetState.cpp and src/_ZN10KingBobOmb8BehaviorEv.cpp. */
+    void *mState;                     /* 0x420 */
+    u8  pad_424[0x70];
     s32 unk_494;                      /* 0x494 */
     u8 unk_498;                       /* 0x498 */
     u8  pad_499[0x7];
     s32 unk_4a0;                      /* 0x4a0 */
     u8  pad_4a4[0x30];
-    s32 unk_4d4;                      /* 0x4d4 */
-    s32 unk_4d8;                      /* 0x4d8 */
-    s32 unk_4dc;                      /* 0x4dc */
-    s32 unk_4e0;                      /* 0x4e0 */
-    s32 unk_4e4;                      /* 0x4e4 */
-    s32 unk_4e8;                      /* 0x4e8 */
-    u8  pad_4ec[0x10];
-    s32 unk_4fc;                      /* 0x4fc */
+    s32 mArenaPosX;                   /* 0x4d4 */
+    s32 mArenaPosY;                   /* 0x4d8 */
+    s32 mArenaPosZ;                   /* 0x4dc */
+    s32 mHomePosX;                    /* 0x4e0 */
+    s32 mHomePosY;                    /* 0x4e4 */
+    s32 mHomePosZ;                    /* 0x4e8 */
+    u8  pad_4ec[0xc];
+    s16 mInitAngleY;                  /* 0x4f8 */
+    u8  pad_4fa[0x2];
+    s32 mAnimSpeed;                   /* 0x4fc */
     s32 unk_500;                      /* 0x500 */
-    u8  pad_504[0x3];
-    u8 unk_507;                       /* 0x507 */
+    u8 mTimer504;                     /* 0x504 */
+    u8 mTimer505;                     /* 0x505 */
+    u8  pad_506[0x1];
+    u8 mStarTracked;                  /* 0x507 */
     u8  pad_508[0x1];
-    u8 unk_509;                       /* 0x509 */
+    u8 mStarID;                       /* 0x509 */
 
     /* --- vtable --- */
     virtual ~KingBobOmb();
@@ -113,25 +122,31 @@ struct KingBobOmb {
        checks. Was a u8 marker. [_ZN10KingBobOmbD1Ev.c] */
     CommonModel mCommonModel;            /* 0x3bc */
     u8  mShadowModel;            /* 0x3f8 */
-    u8  pad_3f9[0x9b];
+    u8  pad_3f9[0x27];
+    void *mState;            /* 0x420 */
+    u8  pad_424[0x70];
     s32 unk_494;            /* 0x494 */
     u8  unk_498;            /* 0x498 */
     u8  pad_499[0x7];
     s32 unk_4a0;            /* 0x4a0 */
     u8  pad_4a4[0x30];
-    s32 unk_4d4;            /* 0x4d4 */
-    s32 unk_4d8;            /* 0x4d8 */
-    s32 unk_4dc;            /* 0x4dc */
-    s32 unk_4e0;            /* 0x4e0 */
-    s32 unk_4e4;            /* 0x4e4 */
-    s32 unk_4e8;            /* 0x4e8 */
-    u8  pad_4ec[0x10];
-    s32 unk_4fc;            /* 0x4fc */
+    s32 mArenaPosX;            /* 0x4d4 */
+    s32 mArenaPosY;            /* 0x4d8 */
+    s32 mArenaPosZ;            /* 0x4dc */
+    s32 mHomePosX;            /* 0x4e0 */
+    s32 mHomePosY;            /* 0x4e4 */
+    s32 mHomePosZ;            /* 0x4e8 */
+    u8  pad_4ec[0xc];
+    s16 mInitAngleY;            /* 0x4f8 */
+    u8  pad_4fa[0x2];
+    s32 mAnimSpeed;            /* 0x4fc */
     s32 unk_500;            /* 0x500 */
-    u8  pad_504[0x3];
-    u8  unk_507;            /* 0x507 */
+    u8  mTimer504;            /* 0x504 */
+    u8  mTimer505;            /* 0x505 */
+    u8  pad_506[0x1];
+    u8  mStarTracked;            /* 0x507 */
     u8  pad_508[0x1];
-    u8  unk_509;            /* 0x509 */
+    u8  mStarID;            /* 0x509 */
 };
 
 #endif /* __cplusplus */
