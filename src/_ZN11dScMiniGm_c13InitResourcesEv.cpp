@@ -3,8 +3,8 @@
 /* recovered: named members + real C++ method */
 /* dScMiniGm_c::InitResources() -- vtable slot 0. Builds the minigame menu:
  * loads the per-language art onto both engines, walks the two minigame tables
- * to seed each entry's unlock state, then zeroes the whole unk_054..unk_0ac
- * field block Behavior() and Render() drive. */
+ * to seed each entry's unlock state, then zeroes the whole
+ * mPageFlipped..mExiting field block Behavior() and Render() drive. */
 #include "dScMiniGm_c.h"
 #include "decl_Scene.h"
 #include "decl_common.h"
@@ -102,9 +102,9 @@ s32 dScMiniGm_c::InitResources()
     }
 
     if (data_0209b304 == 1) {
-        unk_050 = 0xb0;
+        mSubBgScrollX = 0xb0;
     } else {
-        unk_050 = 0;
+        mSubBgScrollX = 0;
     }
     unk_064 = 0;
 
@@ -183,8 +183,8 @@ s32 dScMiniGm_c::InitResources()
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x4604;
     *(volatile u16 *)0x400100e &= ~0x40;
-    *(volatile u32 *)0x400101c = unk_050 & 0x1ff;
-    SetSubBg3Offset(unk_050, 0);
+    *(volatile u32 *)0x400101c = mSubBgScrollX & 0x1ff;
+    SetSubBg3Offset(mSubBgScrollX, 0);
 
     f = LoadFile(0x53);
     DecompressLZ16(f, _ZN3G2S13GetBG2CharPtrEv());
@@ -198,8 +198,8 @@ s32 dScMiniGm_c::InitResources()
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 2;
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x6010;
     *(volatile u16 *)0x4001008 &= ~0x40;
-    *(volatile u32 *)0x4001010 = unk_050 & 0x1ff;
-    SetSubBg0Offset(unk_050, 0);
+    *(volatile u32 *)0x4001010 = mSubBgScrollX & 0x1ff;
+    SetSubBg0Offset(mSubBgScrollX, 0);
 
     dst = (char *)_ZN3G2S13GetBG0CharPtrEv();
     sp0 = 0;
@@ -229,19 +229,19 @@ s32 dScMiniGm_c::InitResources()
     _ZN3GXS11LoadOBJPlttEPKvjj((const void *)f, 0, 0x100);
     Deallocate((void *)f);
 
-    unk_054 = 0;
-    unk_08c = 0;
-    unk_090 = 0;
-    unk_094 = 0;
-    unk_098 = 0;
-    unk_09c = 0;
+    mPageFlipped = 0;
+    mArrowBobPhase = 0;
+    mPrevPageTimer = 0;
+    mNextPageTimer = 0;
+    mExitTimer = 0;
+    mIconBlinkPhase = 0;
     unk_05c = 0;
     unk_060 = 0;
     unk_0a4 = 0;
     unk_0a8 = 0;
-    unk_0a0 = 0;
-    unk_058 = data_0208a170;
-    unk_0ac = 0;
+    mScrollDelay = 0;
+    mGroupBase = data_0208a170;
+    mExiting = 0;
 
     if (data_0209b300 == 1) {
         data_0209f1d8 = 1;

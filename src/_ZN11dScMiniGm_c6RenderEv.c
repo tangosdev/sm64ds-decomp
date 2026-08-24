@@ -5,15 +5,15 @@
 // See include/dScMiniGm_c.h.
 struct Obj {
     char pad0[0x54];
-    unsigned char unk54;
+    unsigned char mPageFlipped;
     char pad1[3];
-    int unk58;
+    int mGroupBase;
     char pad2[0x8c - 0x5c];
-    int unk8C;
-    int unk90;
-    int unk94;
-    int unk98;
-    int unk9C;
+    int mArrowBobPhase;
+    int mPrevPageTimer;
+    int mNextPageTimer;
+    int mExitTimer;
+    int mIconBlinkPhase;
 };
 
 extern unsigned char data_0209b300;
@@ -35,7 +35,7 @@ extern int func_ov005_020c00e4(void *);
 extern void func_ov005_020c1130(void *);
 extern void func_ov005_020c0f38(void *);
 
-int _ZN11dScMiniGm_c6RenderEv(struct Obj *arg0)
+int _ZN11dScMiniGm_c6RenderEv(struct Obj *self)
 {
     volatile int v[10];
     int sb, fp, r8, r7, r6, r5, r4;
@@ -62,14 +62,14 @@ int _ZN11dScMiniGm_c6RenderEv(struct Obj *arg0)
         r7 = v[4];
         r8 = sb;
         r5 = r7;
-        if (arg0->unk9C >= 0x20)
+        if (self->mIconBlinkPhase >= 0x20)
             v[0] = v[2];
         else
             v[0] = v[3];
         r4 = data_ov005_020c2250[sb];
         r6 = r4;
         do {
-            if (func_ov005_020c00b4(arg0, r6) != 0 && func_ov005_020c007c(arg0, r5 + r4) != 0) {
+            if (func_ov005_020c00b4(self, r6) != 0 && func_ov005_020c007c(self, r5 + r4) != 0) {
                 _ZN3OAM9RenderSubEP7OamAttriiii(data_ov005_020c2f60[v[0]], v[6], fp, v[7], v[5]);
                 break;
             }
@@ -77,7 +77,7 @@ int _ZN11dScMiniGm_c6RenderEv(struct Obj *arg0)
             r5 += 4;
             r7 += 1;
         } while (r7 < 9);
-        if (arg0->unk58 != r4)
+        if (self->mGroupBase != r4)
             r8 += 4;
         _ZN3OAM9RenderSubEP7OamAttriiii(data_ov005_020c2c28[r8], v[9], v[1], v[7], v[8]);
         sb += 1;
@@ -85,29 +85,29 @@ int _ZN11dScMiniGm_c6RenderEv(struct Obj *arg0)
         v[1] += 0x30;
     } while (sb < 4);
 
-    if (arg0->unk54 == 0) {
+    if (self->mPageFlipped == 0) {
         if (data_0209b304 != 0) {
-            t = arg0->unk90;
+            t = self->mPrevPageTimer;
             if (t < 0xA)
                 scale = 0x1000;
             else if (t < 0xE)
                 scale = (((t - 0xA) << 0xC) / 16) + 0x1000;
             else
                 scale = (((0x12 - t) << 0xC) / 16) + 0x1000;
-            t2 = arg0->unk8C;
+            t2 = self->mArrowBobPhase;
             if (t2 < 0x20)
                 _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(1, data_ov005_020c2ea4[0], 0x50 - t2 / 2, 0x60, -1, 0, scale, 0);
             else
                 _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(1, data_ov005_020c2ea4[0], 0x50 - (0x40 - t2) / 2, 0x60, -1, 0, scale, 0);
-        } else if (func_ov005_020c00e4(arg0) != 0) {
-            t = arg0->unk94;
+        } else if (func_ov005_020c00e4(self) != 0) {
+            t = self->mNextPageTimer;
             if (t < 0xA)
                 scale = 0x1000;
             else if (t < 0xE)
                 scale = (((t - 0xA) << 0xC) / 16) + 0x1000;
             else
                 scale = (((0x12 - t) << 0xC) / 16) + 0x1000;
-            t2 = arg0->unk8C;
+            t2 = self->mArrowBobPhase;
             if (t2 < 0x20)
                 _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(1, data_ov005_020c2ea4[1], t2 / 2 + 0xE0, 0x60, -1, 0, scale, 0);
             else
@@ -115,10 +115,10 @@ int _ZN11dScMiniGm_c6RenderEv(struct Obj *arg0)
         }
     }
 
-    func_ov005_020c1130(arg0);
-    func_ov005_020c0f38(arg0);
+    func_ov005_020c1130(self);
+    func_ov005_020c0f38(self);
 
-    t = arg0->unk98;
+    t = self->mExitTimer;
     if (t < 0x14)
         scale = 0x1000;
     else if (t < 0x18)
