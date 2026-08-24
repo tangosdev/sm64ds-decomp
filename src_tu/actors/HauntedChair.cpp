@@ -185,7 +185,7 @@ extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(char* self, struct BMD_File* f, in
 extern void _ZN11ShadowModel12InitCylinderEv(char* self);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* self, struct dActor_c* a, int r, int h, struct Vector3_16* rot, int f);
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* self, struct dActor_c* a, struct Vector3* pos, int r, int h, u32 f1, u32 f2);
-extern struct M48 data_02082128;
+extern struct M48 IDENTITY_MATRIX4X3;
 /* TUBUILD CONFLICT -- alternate declaration of func_ov020_02113148, from the legacy file for func_ov020_02112b00, NOT applied: extern void func_ov020_02113148(void *, void *, void *, int, int, int, int); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov020_02112e94, NOT applied: extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c13ClosestPlayerEv, from the legacy file for func_ov020_02112e94, NOT applied: extern void *_ZN8dActor_c13ClosestPlayerEv(void *self); */
@@ -236,7 +236,7 @@ int HauntedChair::InitResources()
     unk_380 = mPosX;
     unk_384 = mPosY;
     unk_388 = mPosZ;
-    *(struct M48*)((char*)&unk_14c) = data_02082128;
+    *(struct M48*)((char*)&unk_14c) = IDENTITY_MATRIX4X3;
     return 1;
 }
 

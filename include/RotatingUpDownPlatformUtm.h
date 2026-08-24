@@ -88,7 +88,7 @@ struct RotatingUpDownPlatformUtm {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0xc];
-    s32 unk_074;                 /* 0x074 */
+    s32 mCamSpacePosX;           /* 0x074 */
     s32 mCamSpacePosY;           /* 0x078 */
     s32 mCamSpacePosZ;           /* 0x07c */
     s32 mScaleX;                 /* 0x080 */
@@ -98,7 +98,7 @@ struct RotatingUpDownPlatformUtm {
     s16 mAngleY;            /* 0x08e */
     s16 mAngleZ;            /* 0x090 */
     u8  pad_092[0x1e];
-    s32 unk_0b0;            /* 0x0b0 */
+    u32 mFlags;             /* 0x0b0 */
     u8  pad_0b4[0x18];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];

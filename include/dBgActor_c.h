@@ -72,7 +72,7 @@ struct dBgActor_c {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0xc];
-    s32 unk_074;                 /* 0x074 */
+    s32 mCamSpacePosX;           /* 0x074 */
     s32 mCamSpacePosY;           /* 0x078 */
     s32 mCamSpacePosZ;           /* 0x07c */
     s32 mScaleX;                 /* 0x080 */
@@ -89,9 +89,9 @@ struct dBgActor_c {
     u8  pad_0a4[0x4];
     s32 unk_0a8;            /* 0x0a8 */
     u8  pad_0ac[0x4];
-    s32 unk_0b0;            /* 0x0b0 */
-    s32 unk_0b4;            /* 0x0b4 */
-    s32 unk_0b8;            /* 0x0b8 */
+    u32 mFlags;             /* 0x0b0 */
+    s32 mClipOffsetY;       /* 0x0b4 */
+    s32 mClipRadius;        /* 0x0b8 */
     u8  pad_0bc[0x18];
     u8  mModel;            /* 0x0d4 */
     u8  pad_0d5[0x1b];

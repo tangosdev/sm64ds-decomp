@@ -213,7 +213,7 @@ void dScMgBase_c::AfterCleanupResources(u32 arg)
             func_0203cbc0();
             data_ov004_020beb60 = 0;
         }
-        if (unk_4628 != 0) {
+        if (mMenuOpen != 0) {
             func_02012e1c();
             _ZN5Sound22StopLoadedMusic_Layer1Ej(1);
         }
@@ -332,7 +332,7 @@ int dScMgBase_c::BeforeRender()
     if (dScene_c::BeforeRender() == 0)
         return 0;
 
-    if (unk_4628 != 0) {
+    if (mMenuOpen != 0) {
         func_ov004_020ae858(c);
         return 0;
     }
