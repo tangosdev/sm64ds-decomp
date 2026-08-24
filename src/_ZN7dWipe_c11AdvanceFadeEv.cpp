@@ -14,37 +14,37 @@ extern "C" void _ZN3G2x18SetBlendBrightnessEPVtts(unsigned short *p, unsigned sh
 
 void dWipe_c::AdvanceFade()
 {
-    if (unk_014 == 1) {
+    if (type == 1) {
         FaderColor::AdvanceFade();
         return;
     }
-    switch (unk_010) {
+    switch (state) {
     case 0:
         return;
     case 1:
-        unk_01c += unk_020;
-        unk_020 += unk_024;
-        if (unk_01c >= 0x200000) {
-            unk_01c = 0x200000;
-            unk_00f = 0;
+        wipeInterp += wipeSpeed;
+        wipeSpeed += wipeAccel;
+        if (wipeInterp >= 0x200000) {
+            wipeInterp = 0x200000;
+            needsCleanup = 0;
             func_0202fb30(this);
-            unk_010 = 2;
+            state = 2;
         }
         break;
     case 2:
         return;
     case 3:
-        unk_01c += unk_020;
-        unk_020 += unk_024;
-        if (unk_01c <= 0) {
+        wipeInterp += wipeSpeed;
+        wipeSpeed += wipeAccel;
+        if (wipeInterp <= 0) {
             int b;
-            unk_01c = 0;
-            unk_00f = 0;
-            b = (unk_014 == 0) ? 0x10 : -0x10;
+            wipeInterp = 0;
+            needsCleanup = 0;
+            b = (type == 0) ? 0x10 : -0x10;
             _ZN3G2x18SetBlendBrightnessEPVtts((unsigned short *)0x4000050, 0x3f, b);
             _ZN3G2x18SetBlendBrightnessEPVtts((unsigned short *)0x4001050, 0x3f, b);
             func_0202fb30(this);
-            unk_010 = 4;
+            state = 4;
         }
         break;
     case 4:

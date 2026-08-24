@@ -2,26 +2,15 @@
 // @symbol _ZN7dWipe_c15SetBackwardTimeEj
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* dWipe_c::SetBackwardTime(u32 frames) -- vtable slot 3. Plain C function
- * carrying the literal mangled name (this codebase's C files, absent a
- * "//cpp" marker, compile as plain C99, so this is never re-mangled --
- * see include/dWipe_c.h). */
-/* The third parameter (param_2) is load-bearing: it arrives in r2 and is
- * forwarded to the guard call with zero instructions, which keeps r2 live
- * from entry to the call and forces the cached `type` into r3 as in the ROM.
- * Without it every spelling colors `type` to r2 (3-word regperm miss).
+/* dWipe_c::SetBackwardTime(u32 frames) -- vtable slot 3. Starts the opening
+ * half of a wipe; the mirror of SetForwardTime.
  *
- * THIS IS WHY THE FILE IS STILL PLAIN C while its six siblings became real
- * dWipe_c:: methods. As a real method the mangled name fixes the arity at one
- * (`Ej`), so the r2-holding parameter cannot exist, and the miss is exactly the
- * three words this note predicts: `ldr r3,[r4,#0x14]` / `cmp r3,#1` / `cmp r3,#0`
- * become r2. Measured 2026-08-22, eleven spellings, all 3 words: declaration
- * order (both ways), separate vs combined decls, init-at-decl, int vs s32 vs
- * u32, a third unused local, no `type` local at all, and reading `unk_010`
- * directly. `const s32 type` does not compile (assigned later). The rest of the
- * function is byte-identical in every variant -- only the colouring differs.
- * Re-open this only with a lever that makes r2 live at ENTRY without emitting
- * an instruction; source spelling alone does not reach it. */
+ * DO NOT REMOVE `param_2', AND DO NOT MAKE THIS A REAL dWipe_c:: METHOD.
+ * MEASURED: the extra parameter arrives in r2 and is forwarded to the guard
+ * call with zero instructions, which is what keeps the cached `type' in r3 as
+ * in the ROM. A real method fixes the arity at one (`Ej'), the parameter cannot
+ * exist, and three words miss. Eleven spellings tried; full record in
+ * notes/scene-provenance.md. */
 struct FaderBrightness;
 extern int _ZN15FaderBrightness15SetBackwardTimeEj(struct FaderBrightness *self, u32 time, u32 c);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 a, u32 b);
@@ -32,38 +21,38 @@ extern void _ZN3IRQ10EnableIRQsEj(u32 irqBits);
 extern void func_0202f58c(void *self);
 
 
-struct MyFader {
+struct dWipe_c {
     u32 unk00;
     u32 unk04;
     u32 unk08;
     u32 unk0c;
-    s32 unk10;      /* 0x10 */
+    s32 state;      /* 0x10 */
     s32 type;       /* 0x14 */
     u32 unk18;      /* 0x18 */
-    s32 interpVal;  /* 0x1c */
-    u32 unk20;      /* 0x20 */
-    u32 unk24;      /* 0x24 */
+    s32 wipeInterp; /* 0x1c */
+    u32 wipeSpeed;  /* 0x20 */
+    u32 wipeAccel;  /* 0x24 */
 };
 
-int _ZN7dWipe_c15SetBackwardTimeEj(struct MyFader *self, u32 param_1, u32 param_2)
+int _ZN7dWipe_c15SetBackwardTimeEj(struct dWipe_c *self, u32 param_1, u32 param_2)
 {
-    s32 type, unk10;
+    s32 type, state;
 
     type = self->type;
     if (type == 1) {
         return _ZN15FaderBrightness15SetBackwardTimeEj((struct FaderBrightness *)self, param_1, param_2);
     }
 
-    unk10 = self->unk10;
-    if (unk10 == 0 || unk10 == 4) {
+    state = self->state;
+    if (state == 0 || state == 4) {
         if (param_1 == 0) {
-            self->unk20 = 0x200000;
-            self->unk24 = 0;
+            self->wipeSpeed = 0x200000;
+            self->wipeAccel = 0;
         } else {
             type = (type == 0) ? 0x2d : 0x3c;
-            self->unk20 = 0x200000 / type;
-            self->unk24 = ((s32)self->unk20 << 1) / type;
-            self->unk20 = 0;
+            self->wipeSpeed = 0x200000 / type;
+            self->wipeAccel = ((s32)self->wipeSpeed << 1) / type;
+            self->wipeSpeed = 0;
         }
 
         if (self->type == 2) {
@@ -76,7 +65,7 @@ int _ZN7dWipe_c15SetBackwardTimeEj(struct MyFader *self, u32 param_1, u32 param_
             _ZN3GXS10LoadBGPlttEPKvjj(data_020926cc, 0, 2);
         }
 
-        self->interpVal = 0;
+        self->wipeInterp = 0;
 
         *(volatile u16 *)0x4000040 = 0x7f7f;
         *(volatile u16 *)0x4000044 = 0xc0;
@@ -87,7 +76,7 @@ int _ZN7dWipe_c15SetBackwardTimeEj(struct MyFader *self, u32 param_1, u32 param_
         *(volatile u16 *)0x4001042 = 0x8080;
         *(volatile u16 *)0x4001046 = 0xc0;
 
-        self->unk10 = 1;
+        self->state = 1;
         func_0202f58c(self);
 
         {
@@ -106,10 +95,10 @@ int _ZN7dWipe_c15SetBackwardTimeEj(struct MyFader *self, u32 param_1, u32 param_
         *((u8 *)self + 0xf) = 1;
         return 0;
     } else {
-        if (unk10 == 2) {
+        if (state == 2) {
             return 1;
         }
-        self->unk10 = 1;
+        self->state = 1;
         return 0;
     }
 }

@@ -9,16 +9,8 @@
  * fade through func_0201a244.
  *
  * The register writes stay as literal volatile stores to the ARM7/9 I/O block:
- * this tree has no register header, and the read-modify-write masks are the ROM's
- * own.
- *
- * MIGRATED DESPITE include/BootScene.h's "NOT CONVERTED" note. That note offered
- * two reasons -- the destructor being declared first, and neither override ever
- * being defined as a real method -- and only the FIRST is the mechanism. The key
- * function is the first non-inline virtual DECLARED, which is ~BootScene, defined
- * out of line in _ZN9BootSceneD1Ev.cpp; where InitResources is defined cannot
- * move that. The eligible name-list bracket is the proof, and it came back
- * byte-identical.
+ * this tree has no register header, and the read-modify-write masks are the
+ * ROM's own.
  */
 #include "BootScene.h"
 #include "decl_common.h"
@@ -99,10 +91,10 @@ s32 BootScene::InitResources()
     *(volatile u32 *)0x4000000 = (*(volatile u32 *)0x4000000 & ~0x1f00) | 0x100;
     *(volatile u32 *)0x4001000 = (*(volatile u32 *)0x4001000 & ~0x1f00) | 0x400;
 
-    unk_050 = 0x3c;
-    unk_052 = 0;
-    unk_054 = 0;
-    unk_055 = 0;
+    mFadeTimer = 0x3c;
+    mState = 0;
+    mButtonFlashTimer = 0;
+    mInputLockTimer = 0;
     *(int *)(&data_0208ee44) = 1;
     func_020233f4();
 
