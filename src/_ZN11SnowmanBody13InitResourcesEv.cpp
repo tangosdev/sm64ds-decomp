@@ -18,9 +18,8 @@ extern "C" void func_ov072_0211f3e4(char* self);
 extern "C" void _ZN7PathPtr6FromIDEj(void* self, unsigned int id);
 extern "C" void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);
 
-struct Block48 { int w[12]; };
 
-extern Block48 IDENTITY_MATRIX4X3;
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 int SnowmanBody::InitResources()
 {
@@ -55,7 +54,7 @@ int SnowmanBody::InitResources()
     unk_3a4 = 0x5a;
     func_ov072_0211fcb0(((char*)this), 0);
     unk_390 = 0;
-    *(Block48*)((char*)&unk_350) = IDENTITY_MATRIX4X3;
+    *(Matrix4x3*)((char*)&unk_350) = IDENTITY_MATRIX4X3;
     func_ov072_0211f3e4(((char*)this));
     _ZN7PathPtr6FromIDEj(((char*)this) + 0x380, mParam & 0xff);
     _ZN9dBgCh_GndD1Ev(&rc);

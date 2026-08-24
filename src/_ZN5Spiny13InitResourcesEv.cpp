@@ -24,7 +24,6 @@ extern SharedFilePtr data_ov077_02127b38;
 extern SharedFilePtr data_ov077_02127c14;
 extern char IDENTITY_MATRIX4X3;
 
-struct M48 { int w[12]; };
 
 int Spiny::InitResources()
 {
@@ -44,7 +43,7 @@ int Spiny::InitResources()
     mScaleZ = 0x1000;
     unk_3e9 = 0x2c;
     func_ov077_02125e94(((char *)this), 0, 0x2c);
-    *(M48 *)((char *)&unk_3a0) = *(M48 *)&IDENTITY_MATRIX4X3;
+    *(Matrix4x3 *)((char *)&unk_3a0) = *(Matrix4x3 *)&IDENTITY_MATRIX4X3;
     func_ov077_02125304(((char *)this));
     return 1;
 }

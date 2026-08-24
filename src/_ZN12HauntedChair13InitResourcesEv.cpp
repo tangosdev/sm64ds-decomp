@@ -13,8 +13,7 @@ extern void _ZN11ShadowModel12InitCylinderEv(char* self);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* self, struct dActor_c* a, int r, int h, struct Vector3_16* rot, int f);
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* self, struct dActor_c* a, struct Vector3* pos, int r, int h, u32 f1, u32 f2);
 }
-struct M48 { int w[12]; };
-extern struct M48 IDENTITY_MATRIX4X3;
+extern struct Matrix4x3 IDENTITY_MATRIX4X3;
 
 int HauntedChair::InitResources()
 {
@@ -30,6 +29,6 @@ int HauntedChair::InitResources()
     unk_380 = mPosX;
     unk_384 = mPosY;
     unk_388 = mPosZ;
-    *(struct M48*)((char*)&mShadowMat) = IDENTITY_MATRIX4X3;
+    *(struct Matrix4x3*)((char*)&mShadowMat) = IDENTITY_MATRIX4X3;
     return 1;
 }

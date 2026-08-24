@@ -17,8 +17,7 @@ extern void func_ov077_02123d40(void *c);
 extern int data_ov077_02127b38[];
 extern int data_ov077_02127b48[];
 extern int data_ov077_02127b88[];
-struct M48 { int w[12]; };
-extern M48 IDENTITY_MATRIX4X3;
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
 
 int Lakitu::InitResources()
@@ -49,7 +48,7 @@ int Lakitu::InitResources()
     unk_410 = 0;
 
     func_ov077_0212478c(((char *)this));
-    *(M48 *)((char *)&unk_3c0) = IDENTITY_MATRIX4X3;
+    *(Matrix4x3 *)((char *)&unk_3c0) = IDENTITY_MATRIX4X3;
     func_ov077_02123d40(((char *)this));
     return 1;
 }
