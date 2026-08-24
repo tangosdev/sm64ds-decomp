@@ -42,21 +42,21 @@ int RotatingUpDownPlatform::InitResources()
     func_020393c4(((char*)this) + 0x124, &func_ov091_02132380);
 
     _ZN7PathPtr6FromIDEj(((char*)this) + 0x344, *(unsigned*)((char*)&mParam) & 0xf);
-    unk_324 = _ZNK7PathPtr8NumNodesEv((char*)&mPathPtr);
-    unk_328 = 0;
-    unk_32c = mPosX;
-    unk_330 = mPosY;
-    unk_334 = mPosZ;
-    _ZNK7PathPtr7GetNodeER7Vector3j(((char*)this) + 0x344, ((char*)this) + 0x338, *(unsigned*)((char*)&unk_328));
+    mNodeCount = _ZNK7PathPtr8NumNodesEv((char*)&mPathPtr);
+    mNodeIndex = 0;
+    mBasePosX = mPosX;
+    mBasePosY = mPosY;
+    mBasePosZ = mPosZ;
+    _ZNK7PathPtr7GetNodeER7Vector3j(((char*)this) + 0x344, ((char*)this) + 0x338, *(unsigned*)((char*)&mNodeIndex));
 
     if (Vec3_Equal(((char*)this) + 0x338, ((char*)this) + 0x32c)) {
         int* p = (int*)(((int)((char*)this) + 0x328));
         *p = *p + 1;
-        _ZNK7PathPtr7GetNodeER7Vector3j(((char*)this) + 0x344, ((char*)this) + 0x338, *(unsigned*)((char*)&unk_328));
+        _ZNK7PathPtr7GetNodeER7Vector3j(((char*)this) + 0x344, ((char*)this) + 0x338, *(unsigned*)((char*)&mNodeIndex));
     }
 
-    unk_350 = mAngleY;
-    unk_34c = 0;
-    unk_356 = 0;
+    mBaseAngleY = mAngleY;
+    mSinkOffsetY = 0;
+    mIsPressed = 0;
     return 1;
 }

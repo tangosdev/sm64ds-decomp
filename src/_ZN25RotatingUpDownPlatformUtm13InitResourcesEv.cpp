@@ -52,9 +52,9 @@ int RotatingUpDownPlatformUtm::InitResources()
         return 1;
     }
 
-    mBasePos = mPosX;
-    unk_38c = mPosY;
-    unk_390 = mPosZ;
+    mBasePosX = mPosX;
+    mBasePosY = mPosY;
+    mBasePosZ = mPosZ;
     _ZN11ShadowModel10InitCuboidEv((char *)&mShadowModel);
 
     {
@@ -74,7 +74,7 @@ int RotatingUpDownPlatformUtm::InitResources()
         char *tbl = data_ov091_02134cdc;
         int s = 0x78;
         int i = (unsigned char)((char *)this)[0x395];
-        Vec3_Add(&v, (Vector3*)((char *)&mBasePos), (Vector3*)(tbl + i * s));
+        Vec3_Add(&v, (Vector3*)((char *)&mBasePosX), (Vector3*)(tbl + i * s));
         i = (unsigned char)((char *)this)[0x395];
         v.y += *(int*)(data_ov091_02134d1c + i * s);
         _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x1d, 0xffff, &v, 0, mAreaId, -1);
@@ -90,7 +90,7 @@ int RotatingUpDownPlatformUtm::InitResources()
         MulVec3Mat4x3((Vector3*)(tbl + i * s + idx394 * 0xc), &data_020a0e68, &rotated);
     }
 
-    Vec3_Add(&v2, (Vector3*)((char *)&mBasePos), &rotated);
+    Vec3_Add(&v2, (Vector3*)((char *)&mBasePosX), &rotated);
 
     mPosX = v2.x;
     mPosY = v2.y;
@@ -118,13 +118,13 @@ int RotatingUpDownPlatformUtm::InitResources()
 
     _ZN9dBgCh_GndC1Ev(&rg);
     _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &posVec, 0);
-    unk_37c = posVec.y;
+    mGroundY = posVec.y;
     if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg))
-        unk_37c = rg.f44;
+        mGroundY = rg.f44;
 
-    unk_380 = mAngleX;
-    unk_382 = mAngleY;
-    unk_384 = mAngleZ;
+    mSpawnAngleX = mAngleX;
+    mSpawnAngleY = mAngleY;
+    mSpawnAngleZ = mAngleZ;
 
     _ZN9dBgCh_GndD1Ev(&rg);
     return 1;
