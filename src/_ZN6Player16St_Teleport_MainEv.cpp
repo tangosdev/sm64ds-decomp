@@ -38,7 +38,7 @@ int Player::St_Teleport_Main()
         }
         (*(u8*)(((int)((char*)this) + 0x6e5)))++;
         if (mStateWork >= 0x10) {
-            Obj* obj = GetTeleportDestObj((u8)(unk_6e8 - 1));
+            Obj* obj = GetTeleportDestObj((u8)(mTeleportId - 1));
             int tx = obj->x << 12;
             int tz = obj->z << 12;
             int ty = obj->y << 12;
@@ -94,7 +94,7 @@ int Player::St_Teleport_Main()
             else
                 _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
             data_0209f284 = 1;
-            unk_6c8 = 0x3c;
+            mTeleportTimer = 0x3c;
             func_02012790(0x24);
         }
         break;

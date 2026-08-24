@@ -60,7 +60,7 @@ s32 daBakubaku_c::Behavior()
     mHeadClsn.Clear();
 
     Player *p = ClosestPlayer();
-    if (p != 0 && p->unk_6fb == 0) {
+    if (p != 0 && p->mIsVanish == 0) {
         mBodyClsn.Update();
         mHeadClsn.Update();
     }

@@ -33,7 +33,7 @@ int Player::St_PunchKick_Main()
             func_ov002_020dd5ec(((char*)this));
         }
     } else {
-        if (unk_6aa == 0) {
+        if (mPunchKickCooldown == 0) {
             u8 idx = data_020a0e40;
             u16 flags = *(u16*)((char*)data_0209f49e + idx * 0x18);
             if ((flags & 1) != 0 && mPunchKickStep < 2) {
@@ -49,8 +49,8 @@ int Player::St_PunchKick_Main()
         if (mIsAirborne != 0)
             goto end;
 
-        if (mPunchKickStep == 2 && unk_6e6 == 0) {
-            unk_6e6 = 1;
+        if (mPunchKickStep == 2 && mStatePhase == 0) {
+            mStatePhase = 1;
             if (func_ov002_020e2c84(((char*)this)) != 0)
                 return 1;
         }
@@ -65,7 +65,7 @@ int Player::St_PunchKick_Main()
 
         if (_ZN6Player12FinishedAnimEv(((char*)this)) || mPunchKickStep == 2) {
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
-            unk_6aa = 0x10;
+            mPunchKickCooldown = 0x10;
 
             if (mPunchKickStep != 2)
                 mHorzSpeed = 0;

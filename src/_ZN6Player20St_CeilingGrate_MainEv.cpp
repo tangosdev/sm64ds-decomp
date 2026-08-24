@@ -29,9 +29,9 @@ int Player::St_CeilingGrate_Main()
 
     r4 = func_ov002_020cf20c(((char*)this));
     if (r4 == 0x80000000) {
-        mPosX = unk_548;
-        mPosY = unk_54c;
-        mPosZ = unk_550;
+        mPosX = mPreClsnPosX;
+        mPosY = mPreClsnPosY;
+        mPosZ = mPreClsnPosZ;
         r4 = mPosY + 0x90000;
     }
 

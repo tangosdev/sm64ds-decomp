@@ -169,7 +169,7 @@ int Player::St_YoshiPower_Main()
                 if (func_ov002_020e0ccc(c, *(void**)(&mObjInMouth)) != 0) {
                     return 1;
                 }
-                unk_6c6 = 0x5a;
+                mMouthHoldTimer = 0x5a;
             }
             if (mIsAirborne != 0) {
                 _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_021101b4);
@@ -265,7 +265,7 @@ int Player::St_YoshiPower_Main()
                 dir.x = data_02082214[(*(unsigned short*)&mAngleY >> 4) * 2];
                 dir.y = 0;
                 dir.z = data_02082214[(*(unsigned short*)&mAngleY >> 4) * 2 + 1];
-                *(void**)(&unk_628) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(void**)(&unk_628), 0x13c, pos.x, pos.y, pos.z, (Vec3s*)((int)&dir), 0);
+                *(void**)(&mParticle1) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(void**)(&mParticle1), 0x13c, pos.x, pos.y, pos.z, (Vec3s*)((int)&dir), 0);
                 *(void**)(&mParticle2) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(void**)(&mParticle2), 0x13d, pos.x, pos.y, pos.z, &dir, 0);
                 func_ov002_020dc09c(c);
                 _ZN5dCc_c5ClearEv(&mAttackClsn);

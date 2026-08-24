@@ -28,7 +28,7 @@ void Player::IncMegaKillCount()
   {
     return;
   }
-  ++(*((unsigned short *) (((int) ((char *)&unk_6d0)))));
+  ++(*((unsigned short *) (((int) ((char *)&mMegaKillCount)))));
   new_var3 = -1;
   st = ((char *)this);
   st = st + 0x600;

@@ -28,7 +28,7 @@ extern int data_ov002_0211013c[];
 
 int Player::St_ButtSlide_Main()
 {
-    switch (unk_6e6) {
+    switch (mStatePhase) {
     case 0:
         func_ov002_020bf90c(((char*)this));
         if (mIsAirborne == 0) {
@@ -38,13 +38,13 @@ int Player::St_ButtSlide_Main()
         }
         if (mHorzSpeed == 0) {
             if (mSlideType == 0) {
-                unk_6e6 = 2;
+                mStatePhase = 2;
                 mStateWork = 0;
                 break;
             }
             (*(u8*)(((int)((char*)this) + 0x6e7)))++;
             if (mSlideStoppedTimer >= 0x1e) {
-                unk_6e6 = 2;
+                mStatePhase = 2;
                 mStateWork = 0;
                 break;
             }
@@ -61,7 +61,7 @@ int Player::St_ButtSlide_Main()
             mLoopingSoundHandle = func_0201226c(mLoopingSoundHandle, 0, mGroundSoundType + 0xe2, ((char*)this) + 0x74, mHorzSpeed, 0);
         } else {
             mStateStep = 0;
-            unk_6e6 = 1;
+            mStatePhase = 1;
             mStateWork = 0;
             if ((mStateArg | mSlideType) != 0)
                 mVertSpeed = 0x15000;
@@ -85,7 +85,7 @@ int Player::St_ButtSlide_Main()
                 mVertSpeed = -mPrevVertSpeed / 2;
                 (*(u8*)(((int)((char*)this) + 0x6e5)))++;
             } else {
-                unk_6e6 = 0;
+                mStatePhase = 0;
                 mVertSpeed = 0;
                 break;
             }
