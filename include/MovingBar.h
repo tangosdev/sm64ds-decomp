@@ -56,7 +56,7 @@ struct MovingBar {
     u8  pad_000[0xc];
     /* 0x00c..0x05c is fBase_c's, and fBase_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
-    u16 unk_00c;                 /* 0x00c */
+    u16 mActorID;                 /* 0x00c */
     u8  aliveState;              /* 0x00e */
     u8  shouldBeKilled;          /* 0x00f */
     u8  unk_010;                 /* 0x010 */

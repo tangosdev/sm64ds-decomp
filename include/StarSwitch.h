@@ -64,11 +64,11 @@ struct StarSwitch {
     u8  pad_00e[0x52];
     /* 0x060..0x08e is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
-    s32 unk_060;                 /* 0x060 */
+    s32 mPosY;                 /* 0x060 */
     s32 mPosZ;                   /* 0x064 */
-    s32 unk_068;                 /* 0x068 */
-    s32 unk_06c;                 /* 0x06c */
-    s32 unk_070;                 /* 0x070 */
+    s32 mPrevPosX;                 /* 0x068 */
+    s32 mPrevPosY;                 /* 0x06c */
+    s32 mPrevPosZ;                 /* 0x070 */
     s32 mCamSpacePosX;           /* 0x074 */
     s32 mCamSpacePosY;           /* 0x078 */
     s32 mCamSpacePosZ;           /* 0x07c */
@@ -80,12 +80,12 @@ struct StarSwitch {
     u8  pad_090[0x20];
     /* 0x0b0..0x0cc is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
-    u32 unk_0b0;                 /* 0x0b0 */
-    s32 unk_0b4;                 /* 0x0b4 */
-    s32 unk_0b8;                 /* 0x0b8 */
-    s32 unk_0bc;                 /* 0x0bc */
-    s32 unk_0c0;                 /* 0x0c0 */
-    u8  unk_0c4;                 /* 0x0c4 */
+    u32 mFlags;                 /* 0x0b0 */
+    s32 mClipOffsetY;                 /* 0x0b4 */
+    s32 mClipRadius;                 /* 0x0b8 */
+    s32 mClipDistance;                 /* 0x0bc */
+    s32 mFarDistance;                 /* 0x0c0 */
+    u8  mClipResult;                 /* 0x0c4 */
     u8  pad_0c5[0x7];
     u8  mAreaId;                 /* 0x0cc */
     u8  pad_0cd[0x7];
