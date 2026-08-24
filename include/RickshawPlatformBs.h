@@ -46,19 +46,11 @@ typedef char RickshawPlatformBs_size_must_be_0xdcc[sizeof(RickshawPlatformBs) ==
 
 #else
 
-/* The C spelling of the same object, flat. Kept because the D0 file is a C
-   translation unit that reads these fields, and D0 is compiler-generated so it
-   can never be migrated. Same arrangement as include/dBgActor_c.h. */
+/* The same object spelled flat, for the compiler-generated destructor, which
+   lives in a C translation unit and can never be migrated. */
 struct RickshawPlatformBs {
     u8  pad_000[0xd4];
-    /* Model member. The cartridge's own ~RickshawPlatformBs calls _ZN5ModelD1Ev at
-       +0x0d4 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     Model mModel;            /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~RickshawPlatformBs calls
-       _ZN10dBgW_KcMbgD1Ev at +0x124 (D0/D1), a relocation the ROM build checks;
-       recovered by tools/dtor_members.py. D1 and not D2, so it is this type and not an
-       inlined base. */
     dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
 };
 

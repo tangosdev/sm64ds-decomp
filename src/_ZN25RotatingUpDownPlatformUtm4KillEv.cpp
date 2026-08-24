@@ -24,7 +24,7 @@ void RotatingUpDownPlatformUtm::Kill()
     Vector3 v = { mPosX, mPosY, mPosZ };
     PoofDustAt(v);
     Sound::PlayBank3(0xf, *(Vector3*)&mCamSpacePosX);
-    unk_3a0 = 1;
+    mIsDead = 1;
     unk_31c = 0;
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
