@@ -4349,7 +4349,7 @@ _ZTV10dBgW_KcMbg kind:data(any) addr:0x02099434
 _ZTI14dBgW_KcMbgSclY kind:data(any) addr:0x02099468
 _ZTS14dBgW_KcMbgSclY kind:data(any) addr:0x02099474
 _ZTV14dBgW_KcMbgSclY kind:data(any) addr:0x02099490
-data_020994cc kind:data(any) addr:0x020994cc
+_ZTV8dM3dGSph kind:data(any) addr:0x020994cc
 data_020994d4 kind:data(any) addr:0x020994d4
 data_020994e0 kind:data(any) addr:0x020994e0
 _ZTIN5mHeap6Heap_tE kind:data(any) addr:0x02099ce4

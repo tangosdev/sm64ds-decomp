@@ -1,2 +1,2 @@
-extern int data_020994cc[];
-void _ZN8dM3dGSphD2Ev(int *p) { p[0] = (int)data_020994cc; }
+extern int _ZTV8dM3dGSph[];
+void _ZN8dM3dGSphD2Ev(int *p) { p[0] = (int)_ZTV8dM3dGSph; }

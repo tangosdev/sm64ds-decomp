@@ -14,6 +14,7 @@ the full ROM rebuilding 106/106 exact:
 | `src/_ZN11CommonModelC1Ev.cpp` | `CommonModel::CommonModel()` | 0x02016204, 0x50 |
 | `src/_ZN11ShadowModelC1Ev.cpp` | `ShadowModel::ShadowModel()` | 0x02016068, 0x34 |
 | `src/_ZN7PathPtrC1Ev.cpp` | `PathPtr::PathPtr()` | 0x0203ad74, 0x10 |
+| `src/_ZN8dM3dGSphC1Ev.cpp` | `dM3dGSph::dM3dGSph()` | 0x0203ac60, 0x10 |
 
 The census this attacks (`tools/langmode_audit.py --by-class`): **C1 41,
 C2 10, C3 2 unmigrated**, against 397 plain methods and 65 D1s — though §5c
@@ -148,11 +149,22 @@ name instead of a placeholder extern.
 
 `dBgCh_SphCrr : dBgCh @0, dBgPi @16, dM3dGSph @56` (the RTTI record states
 this outright) still declares `struct dBgCh_SphCrr {` with pad bytes where
-its bases belong, and its constructor's three vptr stores at +0/+0x10/+0x38
-are spelled by hand against placeholder-named callees
-(`func_02035514` is dBgCh's C2 per the dtor-variant audit's constructor
-population). A real C++ ctor would need the compiler to synthesise those
-base steps from declarations that do not exist yet.
+its bases belong, and its constructor's vptr stores at +0/+0x10/+0x38 are
+spelled by hand — though the base steps themselves are now named real
+symbols (`_ZN5dBgChC2Ev`, `_ZN5dBgPiC2Ev`, `_ZN8dM3dGSphC1Ev`, all migrated
+or relabelled 2026-08-23), so what remains is purely the header work:
+un-flatten `dBgCh_SphCrr` and `dBgCh_Lin` into real `: dBgCh, dBgPi`
+declarations and their constructors become §6 applications. A real C++
+ctor needs the compiler to synthesise those base steps from declarations,
+and until the headers state them it cannot.
+
+Progress within this item: **dM3dGSph is fully promoted** (polymorphic
+header with declared dtor-first/declared ctor, size assert; its vtable
+named `_ZTV8dM3dGSph` so objisolate rebinds the vptr store) and its
+constructor is the sixth landed above. Its header promotion touched no
+other TU — only `include/dBgCh_Lin.h` includes it, and nothing includes
+that yet — which is why the §2 blast-radius question had a one-file answer
+here. It will not be that quiet for dBgCh itself.
 
 **The ordering this imposes: name the base constructors first** (the audit's
 C2-vs-D2 discrimination method applies directly), declare them in real
@@ -293,9 +305,12 @@ keep it when it defines the sibling variant (§1).
    inheritance (§5e facts), then dActor_c's pair becomes a §6 application —
    its own ctor is still nonmatching asm until someone reproduces it from
    real C++.
-2. **dBgCh/dBgPi/dM3dG collision family**: name the base ctors the audit
-   already identified, un-flatten the MI headers, then dBgCh_Gnd /
-   dBgCh_SphCrr / dBgW_Kc* ctors follow.
+2. **dBgCh/dBgPi/dM3dG collision family**: base ctors are NAMED
+   (`_ZN5dBgChC2Ev`, `_ZN5dBgPiC2Ev` C1+C2 pair, `_ZN8dM3dGSphC1Ev` — the
+   sixth landed ctor) and dM3dGSph's header is promoted. Remaining:
+   declare `dBgCh();`/`dBgPi();` in their headers, promote `dBgCh_Lin`
+   (first MI test — objisolate's secondary-vptr rebinding is unproven),
+   then dBgCh_Gnd / dBgCh_SphCrr / dBgW_Kc* follow.
 3. **Leaf singles** (`Minimap`, `HUD`, `PathPtr`, `Clipper`,
    `TextureSequence`, …) — with one new gate learned the hard way:
    **shape-check before attempting**. Disassemble the candidate first; if it
