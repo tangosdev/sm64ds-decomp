@@ -36,6 +36,6 @@ int Player::SetNoControlState(unsigned char a_, int b, unsigned char c_)
     mNoCtrlKind = a;
     mAttachOffsetY = b;
     _ZN6Player11ChangeStateERNS_5StateE(((char*)this), &data_ov002_0211022c);
-    unk_6e6 = flag;
+    mStatePhase = flag;
     return 1;
 }

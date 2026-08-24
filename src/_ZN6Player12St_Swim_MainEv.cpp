@@ -106,7 +106,7 @@ int Player::St_Swim_Main()
         pos[2] = z;
         y = y + 0x32000;
         pos[1] = y;
-        *(unsigned int*)&unk_630 = func_02022d44(*(volatile unsigned int*)(&unk_630), eid, pos[0], pos[1], z, 0);
+        *(unsigned int*)&mParticle3 = func_02022d44(*(volatile unsigned int*)(&mParticle3), eid, pos[0], pos[1], z, 0);
     }
 
     if (mPrevVertSpeed == 0 && _ZNK10dBgCh_Actr10IsOnGroundEv(&mMeshClsn) != 0) {
@@ -114,7 +114,7 @@ int Player::St_Swim_Main()
         ang = fr[1];
         if (ang < 0x720 && ang > 0x400 && mPosY >= unk_64c - 0xc8000) {
             int at;
-            mPosY = unk_54c - 0x8000;
+            mPosY = mPreClsnPosY - 0x8000;
             at = _ZN4cstd5atan2E5Fix12IiES1_(fr[0], fr[2]);
             vec[0] = 0;
             vec[1] = 0;
@@ -186,7 +186,7 @@ int Player::St_Swim_Main()
         else var_r6 = 0;
         _Z14ApproachLinearRiii((int*)(&mPrevVertSpeed), func_ov002_020cedb0(this, 0x10000), var_r6);
         if (mStateTimer < 0xa && t4 == 0) {
-            *(unsigned char*)((unsigned int)(char*)this + 0x6e5) |= 1;
+            mStateWork |= 1;
         }
         if (mStateTimer == 0 && _ZN6Player6IsAnimEj(this, 0xa9) != 0 && _ZN6Player12FinishedAnimEv(this) != 0) {
             if (!(mStateWork & 1)) {

@@ -37,16 +37,16 @@ int Bowser::Behavior()
     RandomIntInternal(&data_0209e650);
     mTargetPlayer = (int)ClosestPlayer();
     if (*(dActor_c**)((char*)&mTargetPlayer) != 0) {
-        unk_406 = Vec3_HorzAngle((Vector3*)((char*)&mPosX), (Vector3*)((char*)*(dActor_c**)((char*)&mTargetPlayer) + 0x5c));
-        unk_3ec = Vec3_HorzDist((Vector3*)((char*)&mPosX), (Vector3*)((char*)*(dActor_c**)((char*)&mTargetPlayer) + 0x5c));
+        mAngleToTarget = Vec3_HorzAngle((Vector3*)((char*)&mPosX), (Vector3*)((char*)*(dActor_c**)((char*)&mTargetPlayer) + 0x5c));
+        mDistToTarget = Vec3_HorzDist((Vector3*)((char*)&mPosX), (Vector3*)((char*)*(dActor_c**)((char*)&mTargetPlayer) + 0x5c));
     } else {
-        unk_406 = mAngleY;
-        unk_3ec = ~0x80000000;
+        mAngleToTarget = mAngleY;
+        mDistToTarget = ~0x80000000;
     }
     func_ov060_02112434(((char*)this));
     func_ov060_02111a28(((char*)this));
     mPrevAngleY = mAngleY;
-    mModelAnim.speed = unk_3f8;
+    mModelAnim.speed = mAnimSpeed;
     mModelAnim.Advance();
     func_ov060_0211577c(((char*)this));
     *(char**)(data_0209f318 + 0x114) = ((char*)this);

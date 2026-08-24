@@ -48,9 +48,9 @@ int Player::St_Electrocute_Main()
         y = yadjraw;
     }
 
-    unk_628 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(volatile u32*)&unk_628, 0xc1, x, y, z, 0, 0);
+    mParticle1 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(volatile u32*)&mParticle1, 0xc1, x, y, z, 0, 0);
     mParticle2 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(volatile u32*)&mParticle2, 0xc2, x, y, zvar, 0, 0);
-    unk_630 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unk_630, 0xc3, x, y, zvar, 0, 0);
+    mParticle3 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(mParticle3, 0xc3, x, y, zvar, 0, 0);
 
     if (mStateTimer == 0) {
         u8 flags = mStateWork;

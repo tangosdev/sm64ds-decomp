@@ -29,7 +29,7 @@ int Player::St_Squish_Main()
                 mScaleY = (r << 12) / 160;
                 if (r >= 0x20)
                     break;
-                if (unk_6e6 != 2)
+                if (mStatePhase != 2)
                     break;
                 _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 7, ((char *)this) + 0x74);
                 mScaleY = 0x100;
