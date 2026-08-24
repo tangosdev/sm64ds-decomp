@@ -173,3 +173,73 @@ and `*(u8*)((int)this + 0x256) += 1` is `mStarKeyBlinkTimer += 1`.
 `InitResources`, and no matched function reads any of them. 0x090 sits between
 the player-icon arrays and the star-icon arrays and 0x1ec between the two
 Vector3s, so a shape can be guessed for both — but a guess is what it would be.
+
+---
+
+## BMD_File — `include/BMD_File.h`
+
+A file-format header, so the evidence is a different shape: nothing has methods
+or state, and a field is named by what a loader *reads at a fixed offset and
+then does with the result*. Two behaviours carry almost everything here.
+
+**A count that bounds a loop.** `Model::UpdateFileOffsets` walks the header
+with `for (i = 0; i < file.X; i++)` over `file.Y + i`, which is what pins each
+count/array pair — `numBones`/`bones`, `numTextures`/`textures`,
+`numPalettes`/`palettes`, `numMaterials`/`materials`, and now
+`numDisplayListGroups`/`displayListGroups`. It also fixes the stride, because
+`file.Y + i` is pointer arithmetic on a struct the ROM's own indexing sizes.
+
+**An offset added to a base pointer.** Every field the same function rewrites
+as `field += (int)&file` is a file-relative offset, i.e. a pointer, and every
+field it leaves alone is not. That is the entire "is a pointer" evidence in
+this header, including for the slots still named `unk_*`.
+
+### The display-list chain, 0x0c/0x10
+
+`UpdateFileOffsets` walks it three levels deep, and the shape falls straight
+out of the walk: a count at 0x0c, a table at 0x10 of 8-byte records
+`{count, pointer}`, and under each of those a run of 0x10-byte records whose
+`+0x04` and `+0x0c` are both rebased. Those are now two real types,
+`BMD_DisplayListGroup` and `BMD_DisplayList`, and the function reaches them by
+name instead of with `*(int *)(m + 4)`-style pokes. Byte-identical.
+
+The host port supplies the role: `port/ntr/bmd.cpp` reads `+0x08` of the
+0x10-byte record as a byte size and hands the bytes at `+0x0c` straight to the
+geometry engine, which is why they are `size` and `data`. `+0x00` and `+0x04`
+stay `unk_`.
+
+### Three names that are not from matched ARM
+
+`BMD_Material::name` / `textureId` / `paletteId`, and the matching
+`BMD_Texture::name` and `BMD_Palette::name`, are *empirical*, and the
+distinction is worth keeping straight. No matched function in the tree reads
+any of them — the BMD parse itself is still `func_02046564` / `func_020462d0`.
+What matched code proves is only that the word at `+0x00` of each record is a
+file-relative pointer, because `UpdateFileOffsets` rebases it.
+
+The role comes from `port/ntr/bmd.cpp`, which parses these offsets and renders
+Mario correctly out of them: it reads `+0x00` as a name string and gets
+`mat_bm_body` / `mat_bm_eye` / `mat_bm_head` / `mat_bm_head_c`, and indexes
+`textures` with `+0x04` and `palettes` with `+0x08` to get `mario_body` /
+`mario_eye_1` / `mario_head`. Rendering the right pixels out of the real
+cartridge data is good evidence, but it is a different kind of evidence from
+reading the ROM's instructions, and a later reader should know which one they
+have. `textureId` and `paletteId` were flat `pad_04[0x20]` before.
+
+`flags` at 0x24 stays as it is. `Model::HideMaterial` ORs bit 31 in and
+`ShowMaterial` clears it, so the field is at least partly a flag word; the port
+reads the same word as the DS specular/emission material colour. Both can be
+true of one register-shaped word, and neither reading is complete, so the
+conservative name stands.
+
+### Deliberately left `unk_`
+
+| Field | What is actually known |
+| --- | --- |
+| `BMD_File::unk_2c` | Rebased unconditionally. A pointer, to nothing named. |
+| `BMD_File::unk_30` | Guards the block below: `if (file.unk_30 == 0) return;`. A count or a flag; the code never distinguishes. |
+| `BMD_File::unk_34` | Rebased, and then its first four words are each rebased. A block of exactly four pointers — nothing says to what. |
+| `BMD_Bone::unk_00`, `unk_3c` | Never rebased and never read by a matched function. Not pointers; that is all. |
+| `BMD_Bone::unk_04`, `unk_38` | Rebased, so pointers. Only `materialIds` at 0x34 has a reader (`Model::HideMaterial` / `ShowMaterial`). |
+| `BMD_Texture::unk_0c` | Not rebased, not read. |
+| `BMD_DisplayList::unk_00`, `unk_04` | `unk_04` is rebased, so a pointer; `unk_00` is not. |
