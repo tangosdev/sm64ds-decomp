@@ -264,3 +264,63 @@ version of the file*, checked by restoring both the header and the body from
 symbol, so the isolated-compile path cannot see this function at all; it is the
 pre-existing false negative `notes/` already records, not a regression. The
 whole-ROM build is the authority here and it is green.
+
+---
+
+## KoopaShell (`include/KoopaShell.h`, ov102)
+
+This header was already largely named. One correction and one collapse:
+
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x09c | `mVertAccel` (C twin) | The twin called it `mSpeed`, which contradicts `include/dActor_c.h` and the C++ branch above it. `InitResources` writes -0x2000 there and -0x32000 at 0x0a0, the gravity/terminal-velocity pair every sibling writes. |
+| 0x0a0 | `mTerminalVelocity` (C twin) | as above. |
+
+Left `unk_`:
+
+* **0x3c0** — zeroed by `InitResources`, no reader.
+* **0x3c5** — `(param1 >> 4) & 1`, stored beside `mModelIndex` (`param1 & 1`).
+  Nothing in the tree reads it, so calling it a variant selector would be an
+  inference from the spawn-word decode alone, not from a use. Left alone.
+* **0x3c8, 0x3cc, 0x3d0, 0x3d4** — four consecutive words zeroed together in one
+  chained assignment at the end of `InitResources` and read nowhere.
+
+Byte-neutral cleanup: `Behavior`'s
+`*(u32 *)(int)((char *)&mFlags) &= ~0x80000;` became `mFlags &= ~0x80000u;`.
+
+---
+
+## Klepto (`include/Klepto.h`, ov062)
+
+Bodies read: `src/_ZN6Klepto13InitResourcesEv.cpp`,
+`src/_ZN6Klepto8BehaviorEv.cpp`, `src/_ZN6Klepto6RenderEv.cpp`.
+
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x42c | `mState` (`void *`) | `Behavior` reads the word as a pointer, calls the pointer-to-member at its `+0x08` on `this` every frame, and compares it against the file-scope records `data_ov062_0211e14c` / `_0211e15c` / `_0211e17c` **by address**. `func_ov062_0211c658(this, record)` is the setter. |
+| 0x430 | `mPathNodePosX` | `PathPtr::GetNode(path, &unk_430, mPathNodeIndex)` writes the node here, and the star-carrying branch then does `mPosX = unk_430; mPosY = unk_434; mPosZ = unk_438;`. |
+| 0x434 | `mPathNodePosY` | as above. |
+| 0x438 | `mPathNodePosZ` | as above. |
+| 0x444 | `mTimer` | `DecIfAbove0_Short` on it at the top of every frame, and reloaded with 0x1e the moment the carried actor is lost — in the same block as the state switch back to `data_ov062_0211e17c`. (`Behavior` reached it as `((char *)this) + 0x400 + 0x44`, which is this field.) |
+| 0x450 | `mHeldPosX` | `Behavior` writes these three into the held actor's own `mPosX/mPosY/mPosZ` (`p + 0x5c/0x60/0x64`) every frame. |
+| 0x454 | `mHeldPosY` | as above. |
+| 0x458 | `mHeldPosZ` | as above. |
+| 0x46c | `mHeldItemParam` | `(param1 >> 12) & 0xf`, used for exactly one thing: OR-ed with 0x50 to build the spawn parameter of the actor Klepto carries. |
+| 0x474 | `mPathNodeIndex` | the index argument of `PathPtr::GetNode`. |
+| 0x484 | `mSpawnPosX` | `InitResources` copies `mPosX/mPosY/mPosZ` here once, before any movement. |
+| 0x488 | `mSpawnPosY` | as above. |
+| 0x48c | `mSpawnPosZ` | as above. |
+
+Left `unk_`:
+
+* **0x448** — set to 2 when the spawn word's item field reads 2 (which then forces
+  `mCarriedItem` to 1), and read back only as `!= 2`. It marks *something* about
+  that variant, but the two reads only pick between two spawn calls.
+* **0x44a** — `Vec3_HorzAngle(&mPosX, &mSpawnPosX)`, taken at a point where those
+  two are still the same position, and read nowhere in the tree.
+* **0x470** — `InitResources` stores 4; no reader.
+
+Byte-neutral cleanups (each re-verified, `2004/b56`): the `struct Derived { char
+pad[0x334]; Base base; }` stand-in in `Render` collapsed onto `&mBlendModelAnim`;
+seventeen `((char *)this) + 0xNNN` and `(T *)((char *)&member)` launders across
+`Behavior` and `InitResources` collapsed to plain member references.
