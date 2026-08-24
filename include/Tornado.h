@@ -1,7 +1,28 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Tornado: 5 matched functions, 25 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* Started life AUTO-GENERATED from matched-function evidence by
+ * tools/gen_header.py; the field names below have since been recovered from
+ * the bodies. Offsets/widths are observed, not guessed. Gaps are explicit
+ * padding. Renaming cannot change codegen.
+ *
+ * A THREE-STATE MACHINE. Tornado::Behavior switches on mState and calls one
+ * of three free functions, all of which live in this class's own address
+ * range and are really its states:
+ *   0  src/func_ov096_021372c0.cpp -- dormant at home. Holds the scale at 0
+ *      until a player comes within 0x5dc000, then spins up over 0x3c frames
+ *      and hands over to state 1.
+ *   1  src/func_ov096_02137088.cpp -- hunting. Steers mPrevAngleY toward the
+ *      player while the player is within mChaseRange of home, toward home
+ *      otherwise, runs the two particle emitters, and drops to state 2 when
+ *      it gets home, loses the player, or mChaseTimer reaches 0x384.
+ *   2  src/func_ov096_02136fd4.c -- winding down. Shrinks over 0x3c frames,
+ *      drops mCaughtActor and returns to state 0.
+ * Behavior counts mStateTimer up every frame and zeroes it, along with
+ * mTriggerCount, whenever the state changed.
+ *
+ * 0x080..0x0a0 IS dActor_c's OWN LAYOUT, not this class's, and is named from
+ * include/dActor_c.h by offset -- the range comment below already said so for
+ * the first eight fields, and mVertAccel/mTerminalVelocity are the last two.
+ *
+ * Provenance table: notes/butterfly-tornado-provenance.md. */
 #ifndef TORNADO_H
 #define TORNADO_H
 #include "types.h"
@@ -30,8 +51,8 @@ struct Tornado {
     s16 mPrevAngleY;             /* 0x094 */
     s16 mPrevAngleZ;             /* 0x096 */
     s32 mHorzSpeed;              /* 0x098 */
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mVertAccel;              /* 0x09c -- InitResources sets -0x1000 */
+    s32 mTerminalVelocity;       /* 0x0a0 -- InitResources sets -0x1e000 */
     u8  pad_0a4[0x30];
     /* dCcAc_c member, named by the class's own destructor calling
        dCcAc_c's D1 at +0x0d4 -- a relocation the ROM build
@@ -52,23 +73,65 @@ struct Tornado {
        TextureTransformer's D1 at +0x328 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN7TornadoD0Ev.c] */
     TextureTransformer mTextureTransformer;            /* 0x328 */
-    s32 unk_33c;            /* 0x33c */
-    s32 unk_340;            /* 0x340 */
-    s32 unk_344;            /* 0x344 */
-    s32 unk_348;            /* 0x348 */
-    s32 unk_34c;            /* 0x34c */
-    u16 unk_350;            /* 0x350 */
-    u8  pad_352[0x8];
-    s16 unk_35a;            /* 0x35a */
-    s32 unk_35c;            /* 0x35c */
-    u8  unk_360;            /* 0x360 */
+    /* A dActor_c*, but declared s32 because Behavior stores through a cast
+       (`*(void **)&mCaughtActor = o`) and reads it the same way. Set to the
+       actor that hit this tornado -- found from mdCcAc_c.otherOwner -- once
+       func_ov002_020de33c approves it; src/func_ov096_02136fd4.c clears it as
+       the tornado winds down. */
+    s32 mCaughtActor;            /* 0x33c */
+    /* Where the tornado belongs. InitResources copies mPos here; state 0 snaps
+       mPos back to it after mChaseTimer runs out, and both other states
+       measure their distances from it rather than from where the tornado
+       currently is. */
+    s32 mHomePosX;               /* 0x340 */
+    s32 mHomePosY;               /* 0x344 */
+    s32 mHomePosZ;               /* 0x348 */
+    s32 mChaseRange;             /* 0x34c -- how far from home the player may
+                                     be and still be chased. InitResources
+                                     builds it out of mParam's low byte:
+                                     (byte * 0x64000), or 0x5dc000 when the
+                                     byte is 0xff. */
+    u16 mStateTimer;             /* 0x350 -- frames in the current state.
+                                     Behavior counts it up and zeroes it when
+                                     mState changed. State 0 spins up over its
+                                     first 0x3c, state 2 shrinks over its own
+                                     0x3c and gives up at 0x168. */
+    u16 unk_352;                 /* 0x352 -- zeroed by state 0 and read
+                                     nowhere in the tree. No evidence, so no
+                                     name. */
+    u16 mChaseTimer;             /* 0x354 -- frames since the tornado woke,
+                                     counted up by state 1 only. At 0x384 the
+                                     chase is over: state 1 drops to state 2
+                                     and state 0 uses the same threshold to
+                                     decide it must teleport home. */
+    s16 mAngleToHome;            /* 0x356 -- Vec3_HorzAngle(mPos, mHomePos),
+                                     recomputed by state 1 every frame and
+                                     steered toward when not chasing. */
+    s16 mAngleToPlayer;          /* 0x358 -- the same angle to the closest
+                                     player, steered toward while chasing. */
+    s16 unk_35a;                 /* 0x35a -- zeroed by InitResources, read
+                                     nowhere. No evidence, so no name. */
+    s32 mState;                  /* 0x35c -- 0/1/2, the switch in Behavior;
+                                     see the header comment. */
+    u8  mTriggerCount;           /* 0x360 -- an event counter both live states
+                                     use as a latch, zeroed by Behavior on any
+                                     state change. State 0 bumps it when a
+                                     player comes within 0x5dc000 and only
+                                     spins up while it is non-zero; state 1
+                                     bumps it when mCaughtActor satisfies
+                                     func_ov002_020de328 and stops chasing the
+                                     player once it is non-zero. */
     u8  pad_361[0x3];
-    s32 unk_364;            /* 0x364 */
-    s32 unk_368;            /* 0x368 */
-    /* Trailing remainder, 4 bytes. The one marker is typed and the last field
-       the five recovered functions touch ends at 0x36c; Tornado_Spawn
-       allocates 0x370. */
-    u8  pad_36c[0x4];
+    s32 mParticleHandle0;        /* 0x364 -- the handle Particle::System::New
+                                     returns for effect 0x11f, fed back in as
+                                     its own first argument by state 1 so the
+                                     emitter is not restarted. */
+    s32 mParticleHandle1;        /* 0x368 -- the same for effect 0x120. */
+    s32 mSoundHandle;            /* 0x36c -- the handle Sound::PlayLong returns
+                                     for sound 0x85, fed back in the same way
+                                     by states 0 and 1. Was the header's
+                                     trailing pad; Tornado_Spawn allocates
+                                     0x370, so this is the last word. */
 #ifdef __cplusplus
     /* methods */
     int Behavior();
