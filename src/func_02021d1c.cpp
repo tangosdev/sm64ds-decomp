@@ -5,9 +5,10 @@ struct Callback {
 
 typedef struct { short x, y, z; } Vec3s;
 
+#include "Particle.h"
 extern "C" {
 extern void *_ZN8Particle7Manager9AddSystemEiR7Vector3(void *thiz, int id, void *pos);
-extern void *data_0209ee74;
+extern Particle *data_0209ee74;
 int func_02021d1c(char *self, int a1, int id, void *pos, Vec3s *p5, Callback *p6);
 }
 
@@ -19,10 +20,10 @@ struct Bf74 {
 
 int func_02021d1c(char *self, int a1, int id, void *pos, Vec3s *p5, Callback *p6)
 {
-    void *sys = *(void **)((char *)*(void **)((char *)*(void **)((char *)data_0209ee74 + 4) + 0x1c) + (id << 5));
+    void *sys = *(void **)((char *)*(void **)((char *)data_0209ee74->mManager + 0x1c) + (id << 5));
     *(int *)sys = *(int *)sys & ~0x4000;
     *(void **)(self + 0xc) = _ZN8Particle7Manager9AddSystemEiR7Vector3(
-        *(void **)((char *)data_0209ee74 + 4), id, pos);
+        data_0209ee74->mManager, id, pos);
     void *e = *(void **)(self + 0xc);
     if (e == 0)
         return 0;
