@@ -1951,7 +1951,7 @@ overstatement the review caught. The frame was captured with SM64DS_SCENE_BMP
 and lives OUTSIDE the repo, with the run's other artefacts, at
 
     <run status dir>/link60/status/mr1-scene1-title-rendered.bmp
-    (today: C:\Users\bmanu\.claude\orchestration\runs\link60\status\)
+    (today: the link60 run private status dir)
     512x384, 24bpp, 589878 bytes, taken at .dsstate base [0xbae000, 0xc982e8)
 
 and it decomposes, by histogram and bounding box off the file itself, into
@@ -2258,7 +2258,7 @@ Every number is 5f's, to the trap. The frame was captured with SM64DS_SCENE_BMP
 and lives OUTSIDE the repo with the run's other artefacts, at
 
     <run status dir>/link60/status/sv1-scene1-savefix.bmp
-    (today: C:\Users\bmanu\.claude\orchestration\runs\link60\status\)
+    (today: the link60 run private status dir)
     512x384, 24bpp, 589878 bytes, taken at .dsstate base [0xbb0000, 0xc9a2e0)
 
 and its histogram is 5f's, exactly:

@@ -115,3 +115,4 @@ playlog/
 
 # session run records live outside the repo (the orchestration dir), never in it
 runs/
+tmpdir/

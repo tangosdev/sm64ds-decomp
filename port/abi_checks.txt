@@ -1301,7 +1301,7 @@ PROPOSED, STAGED IN THEIR OWN COMMIT SO IT CAN BE DROPPED WHOLE:
   ONE OF THEM IS NOT AS INERT AS IT LOOKS, AND THIS IS THE PART TO READ. The
   usual claim for a tracked hook is that it does nothing until somebody runs
   install_hooks.sh. THAT IS FALSE HERE. The sm64ds-decomp clone at
-  C:/Users/bmanu/Documents/sm64ds-decomp already has
+  the main checkout already has
 
       core.hooksPath = .githooks
 

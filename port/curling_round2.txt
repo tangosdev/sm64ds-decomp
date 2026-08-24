@@ -8,7 +8,7 @@ THE REPORT, VERBATIM: "No music, no light blue filter over the shadow, and no
 collision against each other on the shells."
 
 THE SESSION LOG IS BANKED AT
-  C:\Users\bmanu\.claude\orchestration\runs\link60\status\tango-curling-review.log
+  the link60 run curling review log (private run dir)
 and it is a flight-recorder playlog from the shipped kit (SM64DSPort_v0.1.1 on
 the Desktop), not a battery run. That matters twice over below: the kit boots
 the whole game and reaches states the scene selftest never does, and the

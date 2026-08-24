@@ -13,7 +13,7 @@
 // that the owner's 2026-08-15 curling session walked into:
 //     [scene] UNMATCHED ov004/ov006 body entered: func_ov006_020e1dc8
 // banked at
-//     C:\Users\bmanu\.claude\orchestration\runs\link60\status\tango-curling-review.log
+//     the link60 run curling review log (private run dir)
 // with the report "no collision against each other on the shells". Both faces
 // are that one defect; see port/curling_round2.txt.
 //
