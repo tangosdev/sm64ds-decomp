@@ -13,10 +13,24 @@ the full ROM rebuilding 106/106 exact:
 | `src/_ZN5ModelC1Ev.cpp` | `Model::Model()` | 0x02016d58, 0x50 |
 | `src/_ZN11CommonModelC1Ev.cpp` | `CommonModel::CommonModel()` | 0x02016204, 0x50 |
 | `src/_ZN11ShadowModelC1Ev.cpp` | `ShadowModel::ShadowModel()` | 0x02016068, 0x34 |
+| `src/_ZN7PathPtrC1Ev.cpp` | `PathPtr::PathPtr()` | 0x0203ad74, 0x10 |
 
 The census this attacks (`tools/langmode_audit.py --by-class`): **C1 41,
-C2 10, C3 2 unmigrated**, against 397 plain methods and 65 D1s. D0 is out of
+C2 10, C3 2 unmigrated**, against 397 plain methods and 65 D1s — though §5c
+reclassifies the two "C3"s and at least three C1s (Camera, Minimap, HUD) as
+factories that no source form can express, so the true migratable backlog is
+smaller than the raw census. D0 is out of
 backlog forever; constructors were the last symbol kind with no playbook.
+
+PathPtr also supplied the first live sighting of §2's blast radius: the
+moment `PathPtr();` appeared in its header, every typed local of that class
+in every TU grew an implicit construction call. `Shark::InitResources`
+holds two such locals and constructs them BY HAND at interleaved ROM
+positions — each double-constructed, Shark went four words long, and
+eligible.py caught it before anything linked. Its locals are now raw `u32`
+storage with a comment explaining why they must stay dumb. When you declare
+a constructor on a widely-embedded class, grep for typed locals of it
+first; the full-ROM gate is the backstop, not the first line of defence.
 
 ## 1. One definition emits both C1 and C2
 
