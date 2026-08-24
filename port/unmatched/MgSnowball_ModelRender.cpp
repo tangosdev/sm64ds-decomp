@@ -94,12 +94,34 @@
  * matrix and a scale; neither reading survives a uniform triple.
  *
  * WHAT CHANGED FROM src, so it can be checked line by line: the local `fn`
- * read and its call are replaced by that method call, and the includes and
- * externs are re-spelled for C++.  Every other statement, constant, offset,
- * loop bound and branch is the matched source's, transcribed unchanged --
- * including the raw store of the packed light vector to 0x040004c8, both
- * 0x80-iteration passes with their +0xac58/+0xb358 gates, the 0x258/0x276
- * timer bands and the two GetGameLanguage lookups into data_ov006_0213fff0.
+ * read and its call are replaced by that method call, the two geometry-register
+ * stores go through NTR_MMIO (see below), and the includes and externs are
+ * re-spelled for C++.  Every other statement, constant, offset, loop bound and
+ * branch is the matched source's, transcribed unchanged -- both 0x80-iteration
+ * passes with their +0xac58/+0xb358 gates, the 0x258/0x276 timer bands and the
+ * two GetGameLanguage lookups into data_ov006_0213fff0.
+ *
+ * THE LIGHT STORES, AND WHY THEY ARE NOT TRANSCRIBED RAW.  This paragraph used
+ * to say the packed light vector was stored "unchanged", and that was the bug:
+ * this is a HOST COPY, so tools/hostgen.py never sees it, and a plain store to
+ * 0x040004c8 or 0x040004cc lands in the real memory ntr maps across the I/O
+ * window and stops there -- the geometry engine is never told.  ntr/gx.cpp
+ * resolves a lit vertex as emission + SUM over the enabled lights of (diffuse *
+ * lightcol * dot + ambient * lightcol), so a light that never arrives leaves
+ * direction (0,0,0) and colour (0,0,0) and kills the ambient term with it.
+ *
+ * MEASURED on this scene (SM64DS_MAT_LOG=1 SM64DS_SCENE=377) before the change:
+ *
+ *     [mat] LIGHT_VECTOR commands executed: 0   LIGHT_COLOR: 2
+ *     [mat] I/O LATCH  LIGHT_VECTOR(4c8)=296a5800 LIGHT_COLOR(4cc)=00007fff
+ *
+ * The scene's one POLYGON_ATTR is 001f8081 -- light 0 enabled -- over SPE_EMI
+ * 00000000, so every lit vertex resolved to black.  BOTH stores were raw, not
+ * one: the LIGHT_COLOR line below is spelled `*(int *)` with no `volatile`,
+ * which is why a sweep for `volatile` shapes missed it while the three sibling
+ * host copies (MgFlower_ModelRender_020c3bf4, MgMemory2_ModelRender_020c1804,
+ * MgShared4f38_ModelRender_020c29dc) were being repaired.  The stored WORDS are
+ * the matched source's, unchanged; only the path they take to the engine is.
  */
 
 // PORT_HOST_ABI: mwcc virtual-shadow dispatch (MSVC thiscall vs the slice's cdecl).
@@ -107,6 +129,7 @@
 #include "types.h"
 #include "Model.h"
 #include "dScMgSnowball_c.h"
+#include "ntr/mmio.h"      /* NTR_MMIO -- see the light stores below */
 
 extern "C" {
 extern void func_ov004_020afdd0(void *a0, int a1, int a2, int a3, int a4);
@@ -153,11 +176,13 @@ extern "C" int func_ov006_02127d10(char *c)
     m[1] = 0;
     m[0] = 0;
     func_0203cd80(m, -0x2000);
-    *(volatile int *)0x040004c8 =
-        (((short)m[0] >> 3) & 0x3ff) |
-        ((((short)m[1] >> 3) & 0x3ff) << 10) |
-        ((((short)m[2] >> 3) & 0x3ff) << 20);
-    *(int *)0x040004cc = 0x7fff;
+    /* LIGHT_VECTOR then LIGHT_COLOR, light 0. Both go through the proxy for
+       the reason the header gives; the words are src's. */
+    NTR_MMIO(unsigned int, 0x40004c8) =
+        (unsigned int)((((short)m[0] >> 3) & 0x3ff) |
+                       ((((short)m[1] >> 3) & 0x3ff) << 10) |
+                       ((((short)m[2] >> 3) & 0x3ff) << 20));
+    NTR_MMIO(unsigned int, 0x40004cc) = 0x7fffu;
 
     {
         int v = self->unk_aba0;

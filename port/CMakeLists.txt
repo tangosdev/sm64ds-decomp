@@ -5059,6 +5059,58 @@ endforeach()
 # hal/scene_boot.cpp's port_scene_classes table carries the scene-372 row, so
 # every target that compiles scene_boot.cpp references port_mg_jump_spawn and
 # port_scene_fill_jump by name.
+#
+# ONE TU IN THIS SLICE REACHES THE GEOMETRY REGISTERS, so it builds from a
+# hostgen-emitted copy the way the flower block's func_ov006_0210a708 and the
+# BNT block's func_ov006_020ef2b8 already do -- src/ itself is never edited.
+#
+# func_ov006_020ee034 is dScMgJump_c::Render, vtable SLOT 9 (the row the slice
+# header prints at 020b04ec), so it runs before every drawn frame of scene 372.
+# Its second half is this scene's LIGHT SETUP and it is the same six-store
+# shape scene 373 carries one class over:
+#
+#     0x040004c8 = pack(v)            LIGHT_VECTOR, light 0
+#     0x040004cc = 0x7fff             LIGHT_COLOR, light 0 white
+#     0x040004cc = 0x40007fff         LIGHT_COLOR, light 1 white
+#     0x040004c8 = pack(w)|1<<30      LIGHT_VECTOR, light 1
+#
+# where v and w are both (0,0,-0x0ff8) turned -0x2000 by func_0203cd80, a 45
+# degree tilt.  Compiled straight from src/ all four land in the real memory
+# ntr maps across the I/O window and stop there: the geometry engine is never
+# told.  Both lights keep direction (0,0,0) and colour (0,0,0), and ntr/gx.cpp
+# resolves a lit vertex as emission + SUM over the enabled lights of (diffuse *
+# lightcol * dot + ambient * lightcol), so a zero light colour kills the
+# ambient term too.  The one POLYGON_ATTR this scene submits is 001f8081 --
+# light 0 enabled -- and its SPE_EMI is 00000000, so every lit vertex resolves
+# to BLACK.
+#
+# MEASURED in this tree (SM64DS_MAT_LOG=1 SM64DS_SCENE=372), before this line:
+#
+#     [mat] LIGHT_VECTOR commands executed: 0   LIGHT_COLOR: 0
+#     [mat] POLYGON_ATTR 001f8081 lights=1000, SPE_EMI 00000000
+#
+# Control on the same binary, scene 373, whose light body is already
+# substituted: LIGHT_VECTOR 2, LIGHT_COLOR 2.
+set(BNP_HOSTGEN_SYMS func_ov006_020ee034)
+set(BNP_HOSTGEN_GEN "")
+set(BNP_HOSTGEN_SKIP "")
+foreach(sym IN LISTS BNP_HOSTGEN_SYMS)
+    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        list(APPEND BNP_HOSTGEN_SKIP "src/${sym}.c")
+    else()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+        list(APPEND BNP_HOSTGEN_SKIP "src/${sym}.cpp")
+    endif()
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND BNP_HOSTGEN_GEN "${sym_out}")
+endforeach()
+
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_bnp.txt" SLICE_BNP_LINES)
 set(SLICE_BNP_SOURCES hal/scene_mg_jump.cpp
                       # This class's own pointer-to-member wall: vtable SLOT 6.
@@ -5069,13 +5121,35 @@ set(SLICE_BNP_SOURCES hal/scene_mg_jump.cpp
                       unmatched/MgD3DBase_Slots.cpp
                       unmatched/MgD3DBase_DeclConflict.cpp
                       unmatched/MgD3DBase_ModelAnimRender.cpp
-                      unmatched/MgD3DBase_ObjStateDispatch.cpp)
+                      unmatched/MgD3DBase_ObjStateDispatch.cpp
+                      ${BNP_HOSTGEN_GEN})
 foreach(line IN LISTS SLICE_BNP_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
         continue()
     endif()
+    # The hostgen'd copy stands in for the src/ one; taking both would be a
+    # duplicate symbol, and taking neither would drop the body silently.
+    if(line IN_LIST BNP_HOSTGEN_SKIP)
+        continue()
+    endif()
     list(APPEND SLICE_BNP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# A slice line that stops matching (a rename, a .c that becomes a .cpp) would
+# silently take the src/ copy back and put the defect back with it, so the
+# substitution asserts rather than hopes.
+list(LENGTH BNP_HOSTGEN_SYMS bnp_hg_want)
+list(LENGTH BNP_HOSTGEN_GEN bnp_hg_have)
+if(NOT bnp_hg_want EQUAL bnp_hg_have)
+    message(FATAL_ERROR "slice_bnp hostgen substitution incomplete: "
+            "${bnp_hg_have} of ${bnp_hg_want} generated")
+endif()
+foreach(skip IN LISTS BNP_HOSTGEN_SKIP)
+    if(NOT skip IN_LIST SLICE_BNP_LINES)
+        message(FATAL_ERROR "slice_bnp.txt no longer lists ${skip}; the "
+                "hostgen substitution for it is now dead and the geometry "
+                "register writes in it would go back to latching silently")
+    endif()
 endforeach()
 foreach(dup IN ITEMS src/func_ov006_020ee27c.cpp
                      src/func_ov006_020c4cd8.cpp
@@ -5409,6 +5483,94 @@ endforeach()
 # framework, the thirty-five overlay constructors and the arm9 waves under
 # them; CMake appends every list to the same targets and dedupes identical
 # absolute paths, so nothing is compiled twice.
+#
+# ================= THE TRAMPOLINE PAIR'S SHARED LIGHT BODY =================
+#
+# func_ov006_020d09e0 IS LISTED IN BOTH slice_tti.txt AND slice_tte.txt, and it
+# is one of the geometry-register bodies both scenes need substituted.  That
+# makes it the one shape the per-slice hostgen blocks above cannot express, so
+# it gets ONE arrangement here rather than a copy in each block.
+#
+# WHY A PER-SLICE COPY WOULD NOT WORK, precisely, because the failure is not
+# the obvious one.  Both blocks would emit to the SAME output path --
+# ${CMAKE_BINARY_DIR}/host-src/src/func_ov006_020d09e0.cpp is derived from the
+# symbol, not from the slice -- so the second add_custom_command(OUTPUT ...)
+# is a hard CMake error ("multiple rules generate"), not a duplicate symbol.
+# The duplicate-symbol version is the NEXT failure, the one that appears if
+# somebody works around the first by giving the two copies different output
+# paths: two TUs, one body, one link error.  And a third arrangement --
+# hostgen in one slice, plain src/ line in the other -- links fine, takes the
+# src/ copy, and puts the defect silently back for whichever scene lost the
+# race.  All three are avoided by emitting once and letting BOTH slices point
+# at the single output; CMake dedupes the identical absolute path when the two
+# lists are appended to the same target.
+#
+# WHAT THE BODY IS.  func_ov006_020d09e0 is the trampoline family's shared
+# light setup, called by scene 385's Render (func_ov006_021231ac, below) and
+# reached in scene 384 through its own slice.  It is
+#
+#     0x04000440 = 2                  MTX_MODE, position
+#     0x040004c8 = pack(s)|1<<30      LIGHT_VECTOR, light 1
+#     0x040004cc = 0x40007fff         LIGHT_COLOR, light 1 white
+#
+# around a func_020553a4 call and the four-element draw walk over
+# data_ov006_02140990.  THE MTX_MODE STORE IS PART OF THE BODY and not
+# incidental: the geometry engine transforms a light vector by the current
+# position matrix as it consumes it, so latching MTX_MODE silently would leave
+# light 1 rotated by whatever matrix the previous draw left behind even if the
+# LIGHT_VECTOR write alone were fixed.  The substitution covers the whole body
+# for the reason the BNT block gives for its MTX_MODE/MTX_IDENTITY pair.
+set(TT_SHARED_HOSTGEN_SYMS func_ov006_020d09e0)
+set(TT_SHARED_HOSTGEN_GEN "")
+set(TT_SHARED_HOSTGEN_SKIP "")
+foreach(sym IN LISTS TT_SHARED_HOSTGEN_SYMS)
+    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        list(APPEND TT_SHARED_HOSTGEN_SKIP "src/${sym}.c")
+    else()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+        list(APPEND TT_SHARED_HOSTGEN_SKIP "src/${sym}.cpp")
+    endif()
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND TT_SHARED_HOSTGEN_GEN "${sym_out}")
+endforeach()
+
+# TTI's own geometry-register body, on top of the shared one above.
+#
+# func_ov006_020cd270 is scene 384's light setup: two LIGHT_VECTOR stores,
+# light 0 from (0,0,-0x0ff8) turned 0x2000 by func_0203cd80 and then 0 by
+# func_0203ccd4, light 1 from the same vector turned -0x2000, before the
+# data_ov006_02140550 draw walk.  Compiled from src/ both land in the mapped
+# I/O window and stop there; the scene's one POLYGON_ATTR is 001f8081 (light 0
+# enabled) over SPE_EMI 00000000, so every lit vertex resolves to black.
+#
+# MEASURED (SM64DS_MAT_LOG=1 SM64DS_SCENE=384), before these lines:
+#     [mat] LIGHT_VECTOR commands executed: 0   LIGHT_COLOR: 0
+set(TTI_HOSTGEN_SYMS func_ov006_020cd270)
+set(TTI_HOSTGEN_GEN "")
+set(TTI_HOSTGEN_SKIP "")
+foreach(sym IN LISTS TTI_HOSTGEN_SYMS)
+    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        list(APPEND TTI_HOSTGEN_SKIP "src/${sym}.c")
+    else()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+        list(APPEND TTI_HOSTGEN_SKIP "src/${sym}.cpp")
+    endif()
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND TTI_HOSTGEN_GEN "${sym_out}")
+endforeach()
+
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_tti.txt" SLICE_TTI_LINES)
 set(SLICE_TTI_SOURCES hal/scene_mg_trampoline.cpp
                       # The one pointer-to-member host copy: vtable SLOT 6.
@@ -5460,13 +5622,42 @@ set(SLICE_TTI_SOURCES hal/scene_mg_trampoline.cpp
                       # the element's per-frame model draw: the local-shadow
                       # slot-numbering defect Door_Render.cpp and the flower's
                       # ModelRender file already carry, one class over
-                      unmatched/MgTrmpln3DMario_ModelRender.cpp)
+                      unmatched/MgTrmpln3DMario_ModelRender.cpp
+                      # This slice's own light body plus the one it shares with
+                      # slice_tte. The shared path is listed by BOTH slices on
+                      # purpose -- CMake dedupes the identical absolute path,
+                      # and pointing only one slice at it would leave the other
+                      # taking the src/ copy back.
+                      ${TTI_HOSTGEN_GEN}
+                      ${TT_SHARED_HOSTGEN_GEN})
 foreach(line IN LISTS SLICE_TTI_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
         continue()
     endif()
+    # The hostgen'd copy stands in for the src/ one; taking both would be a
+    # duplicate symbol, and taking neither would drop the body silently. Both
+    # sets are consulted because the shared body is a slice_tti line too.
+    if(line IN_LIST TTI_HOSTGEN_SKIP OR line IN_LIST TT_SHARED_HOSTGEN_SKIP)
+        continue()
+    endif()
     list(APPEND SLICE_TTI_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# A slice line that stops matching (a rename, a .c that becomes a .cpp) would
+# silently take the src/ copy back and put the defect back with it, so the
+# substitution asserts rather than hopes.
+list(LENGTH TTI_HOSTGEN_SYMS tti_hg_want)
+list(LENGTH TTI_HOSTGEN_GEN tti_hg_have)
+if(NOT tti_hg_want EQUAL tti_hg_have)
+    message(FATAL_ERROR "slice_tti hostgen substitution incomplete: "
+            "${tti_hg_have} of ${tti_hg_want} generated")
+endif()
+foreach(skip IN LISTS TTI_HOSTGEN_SKIP TT_SHARED_HOSTGEN_SKIP)
+    if(NOT skip IN_LIST SLICE_TTI_LINES)
+        message(FATAL_ERROR "slice_tti.txt no longer lists ${skip}; the "
+                "hostgen substitution for it is now dead and the geometry "
+                "register writes in it would go back to latching silently")
+    endif()
 endforeach()
 
 # FIVE OF THIS SLICE'S 98 .c FILES ARE REALLY C++ -- a //cpp marker and a
@@ -5519,6 +5710,47 @@ set_source_files_properties(
 # framework, the thirty-five overlay constructors and the arm9 waves under
 # them; CMake appends every list to the same targets and dedupes identical
 # absolute paths, so nothing is compiled twice.
+#
+# TWO GEOMETRY-REGISTER BODIES OF ITS OWN, on top of func_ov006_020d09e0 which
+# it shares with slice_tti and which is emitted once by the TT_SHARED block
+# above -- see the hazard note there for why it is not a copy in each slice.
+#
+# func_ov006_021231ac is dScMgTrampoline2_c::Render, so it runs before every
+# drawn frame of scene 385, and it is BOTH a light setup and the caller of the
+# other two.  Its own stores are LIGHT_VECTOR light 0 from (0,0,-0x0ff8) turned
+# -0x4000 by func_0203cd80, then LIGHT_COLOR 0x7fff and 0x40007fff; and when
+# the field at +0x7ba8 is zero it goes on to call func_ov006_020caadc and
+# func_ov006_020d09e0, which are the other two.  All three have to be
+# substituted together: leaving any one on the src/ path leaves the register it
+# writes latched, and because they run in sequence over the same two lights the
+# surviving raw body would simply be the last writer of a dead word.
+#
+# func_ov006_020caadc is the second: light 0 from (0,0,-0x0ff8) turned -0x2000
+# and then -0x3000, light 1 from the same vector turned -0x2000, then
+# LIGHT_COLOR 0x7fff and 0x40007fff, before the data_ov006_02140554 walk.
+#
+# MEASURED (SM64DS_MAT_LOG=1 SM64DS_SCENE=385), before these lines:
+#     [mat] LIGHT_VECTOR commands executed: 0   LIGHT_COLOR: 0
+set(TTE_HOSTGEN_SYMS func_ov006_020caadc func_ov006_021231ac)
+set(TTE_HOSTGEN_GEN "")
+set(TTE_HOSTGEN_SKIP "")
+foreach(sym IN LISTS TTE_HOSTGEN_SYMS)
+    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        list(APPEND TTE_HOSTGEN_SKIP "src/${sym}.c")
+    else()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+        list(APPEND TTE_HOSTGEN_SKIP "src/${sym}.cpp")
+    endif()
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND TTE_HOSTGEN_GEN "${sym_out}")
+endforeach()
+
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_tte.txt" SLICE_TTE_LINES)
 set(SLICE_TTE_SOURCES hal/scene_mg_trampoline2.cpp
                       # The one pointer-to-member host copy: vtable SLOT 6.
@@ -5562,13 +5794,59 @@ set(SLICE_TTE_SOURCES hal/scene_mg_trampoline2.cpp
                       # The family's two mwcc virtual-shadow dispatches onto
                       # ModelAnim's ROM slot 5. Same non-lane-scoped naming
                       # rule as the file above.
-                      unmatched/MgD3DBase_ModelAnimRender.cpp)
+                      unmatched/MgD3DBase_ModelAnimRender.cpp
+                      # This slice's own two light bodies plus the one it
+                      # shares with slice_tti. The shared path is listed by
+                      # BOTH slices on purpose -- CMake dedupes the identical
+                      # absolute path, and pointing only one slice at it would
+                      # leave the other taking the src/ copy back.
+                      ${TTE_HOSTGEN_GEN}
+                      ${TT_SHARED_HOSTGEN_GEN})
 foreach(line IN LISTS SLICE_TTE_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
         continue()
     endif()
+    # The hostgen'd copy stands in for the src/ one; taking both would be a
+    # duplicate symbol, and taking neither would drop the body silently. Both
+    # sets are consulted because the shared body is a slice_tte line too.
+    if(line IN_LIST TTE_HOSTGEN_SKIP OR line IN_LIST TT_SHARED_HOSTGEN_SKIP)
+        continue()
+    endif()
     list(APPEND SLICE_TTE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# A slice line that stops matching (a rename, a .c that becomes a .cpp) would
+# silently take the src/ copy back and put the defect back with it, so the
+# substitution asserts rather than hopes.
+list(LENGTH TTE_HOSTGEN_SYMS tte_hg_want)
+list(LENGTH TTE_HOSTGEN_GEN tte_hg_have)
+if(NOT tte_hg_want EQUAL tte_hg_have)
+    message(FATAL_ERROR "slice_tte hostgen substitution incomplete: "
+            "${tte_hg_have} of ${tte_hg_want} generated")
+endif()
+foreach(skip IN LISTS TTE_HOSTGEN_SKIP TT_SHARED_HOSTGEN_SKIP)
+    if(NOT skip IN_LIST SLICE_TTE_LINES)
+        message(FATAL_ERROR "slice_tte.txt no longer lists ${skip}; the "
+                "hostgen substitution for it is now dead and the geometry "
+                "register writes in it would go back to latching silently")
+    endif()
+endforeach()
+# THE SHARED BODY'S OWN GATE, and it is the one this arrangement exists for.
+# The two per-slice loops above each assert that their OWN slice still lists
+# the shared line, so between them they already cover both files -- but only
+# while both blocks keep consulting TT_SHARED_HOSTGEN_SKIP. This asserts the
+# sharing itself: the body must be a line in BOTH slices, because that is the
+# condition that makes one emitted TU the right answer. If a future slice edit
+# drops it from one of the two, the single generated copy is still compiled
+# into the target and still correct, but the arrangement is no longer shared
+# and the comment above it is no longer true -- and a shared block nobody
+# re-reads is how the src/ copy comes back.
+foreach(skip IN LISTS TT_SHARED_HOSTGEN_SKIP)
+    if(NOT skip IN_LIST SLICE_TTI_LINES OR NOT skip IN_LIST SLICE_TTE_LINES)
+        message(FATAL_ERROR "${skip} is the slice_tti/slice_tte SHARED hostgen "
+                "body but is no longer listed by both slices; re-read the "
+                "TT_SHARED block before changing it")
+    endif()
 endforeach()
 
 # FOUR .c FILES IN THIS SLICE ARE REALLY C++ -- a //cpp marker and a top-level
