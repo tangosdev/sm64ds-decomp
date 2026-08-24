@@ -186,7 +186,7 @@ int Player::St_Swim_Main()
         else var_r6 = 0;
         _Z14ApproachLinearRiii((int*)(&mPrevVertSpeed), func_ov002_020cedb0(this, 0x10000), var_r6);
         if (mStateTimer < 0xa && t4 == 0) {
-            *(unsigned char*)((unsigned int)(char*)this + 0x6e5) |= 1;
+            mStateWork |= 1;
         }
         if (mStateTimer == 0 && _ZN6Player6IsAnimEj(this, 0xa9) != 0 && _ZN6Player12FinishedAnimEv(this) != 0) {
             if (!(mStateWork & 1)) {

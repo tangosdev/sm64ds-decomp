@@ -234,7 +234,7 @@ int Player::St_YoshiPower_Main()
                 int cond3 = (*(unsigned short*)((char*)obj0+0xc) == 0xbf);
                 if (cond3 != 0) {
                     func_ov002_020d5cec(obj0);
-                    *(unsigned short*)((int)c + 0x6ce) &= ~2;
+                    mStateFlags &= ~2;
                 } else {
                     *(int*)((int)obj0 + 0xb0) |= 0x80000;
                     *(int*)((int)*(void**)(&mObjInMouth) + 0xb0) &= ~0x40000;

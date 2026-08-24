@@ -17,17 +17,17 @@ int Player::St_Dive_Init()
     unsigned int r = (unsigned int)RandomIntInternal(&data_ov002_0210e160);
     _ZN5Sound13PlayCharVoiceEjjRK7Vector3(p[0x6d9], data_ov002_020ff100[(r >> 4) & 1], *(Vector3*)(p + 0x74));
     _ZN6Player7SetAnimEji5Fix12IiEj(((void*)this), 0x40, 0x40000000, 0x1000, 0);
-    *(unsigned char*)(p + 0x6e3) = 0;
+    mStateStep = 0;
     int* yv = (int*)(p + 0x98);
-    *(int*)(p + 0xa8) = 0x1e000;
+    mVertSpeed = 0x1e000;
     yv[0] += 0xf000;
-    if (*(int*)(p + 0x98) > 0x28000) *(int*)(p + 0x98) = 0x28000;
-    *(unsigned char*)(p + 0x6de) = 1;
-    *(unsigned char*)(p + 0x6df) = 0;
-    *(unsigned char*)(p + 0x6e5) = 0;
-    *(unsigned char*)(p + 0x6e6) = 0;
-    *(unsigned char*)(p + 0x6e7) = 0;
-    *(unsigned char*)(p + 0x6e4) = 0;
-    *(unsigned char*)(p + 0x70c) = *(unsigned char*)(p + 0x70e);
+    if (mHorzSpeed > 0x28000) mHorzSpeed = 0x28000;
+    mIsAirborne = 1;
+    mLandSoundPlayed = 0;
+    mStateWork = 0;
+    mStatePhase = 0;
+    mSlideStoppedTimer = 0;
+    mIsSlidingOnGround = 0;
+    mStateArg = mSlideType;
     return 1;
 }

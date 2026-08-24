@@ -70,7 +70,7 @@ int Player::St_GrabBowserTail_Main()
                     r3 = ((mDesiredAngleY - mPrevDesiredAngleY) << 9) >> 16;
                 if (r3 < -0x80) r3 = -0x80;
                 if (r3 > 0x80) r3 = 0x80;
-                *(s16*)(((int)((char*)this) + 0x69c)) += r3;
+                mAngleYSpeed += r3;
                 if (mAngleYSpeed > 0x1000) mAngleYSpeed = 0x1000;
                 if (mAngleYSpeed < -0x1000) mAngleYSpeed = -0x1000;
             }
@@ -80,7 +80,7 @@ int Player::St_GrabBowserTail_Main()
         }
         {
             s16 before = mAngleY;
-            *(s16*)(((int)((char*)this) + 0x8e)) += mAngleYSpeed;
+            mAngleY += mAngleYSpeed;
             if ((mAngleYSpeed <= -0x100 && before < mAngleY) ||
                 (mAngleYSpeed >= 0x100 && before > mAngleY))
                 func_02012694(0xb4, ((char*)this) + 0x74);

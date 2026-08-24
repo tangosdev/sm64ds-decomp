@@ -31,7 +31,7 @@ int Player::St_InYoshiMouth_Cleanup()
     unsigned int *p = (unsigned int *)&mdCcAcPos_c.flags;
     *p &= ~0x2000;
     *p &= ~2;
-    *(unsigned char *)((char *)this + 0x713) = 1;
-    *(unsigned char *)((char *)this + 0x6f5) = 0x1f;
+    mIsBodyClsnEnabled = 1;
+    mOpacity = 0x1f;
     return 1;
 }
