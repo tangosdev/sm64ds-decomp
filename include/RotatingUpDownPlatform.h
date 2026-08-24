@@ -1,7 +1,3 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class RotatingUpDownPlatform: 6 matched functions, 17 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef ROTATINGUPDOWNPLATFORM_H
 #define ROTATINGUPDOWNPLATFORM_H
 #include "types.h"
@@ -10,8 +6,6 @@
 
 struct RotatingUpDownPlatform {
     u8  pad_000[0x8];
-    /* 0x008..0x05c is fBase_c's, and fBase_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
     u32 mParam;                  /* 0x008 */
     u16 actorID;                 /* 0x00c */
     u8  aliveState;              /* 0x00e */
@@ -30,28 +24,26 @@ struct RotatingUpDownPlatform {
     u8  pad_068[0x26];
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x44];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel;            /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~RotatingUpDownPlatform calls
-       _ZN10dBgW_KcMbgD1Ev at +0x124 (D0/D1), a relocation the ROM build checks;
-       recovered by tools/dtor_members.py. D1 and not D2, so it is this type and not an
-       inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  pad_2ec[0x38];
-    s32 unk_324;            /* 0x324 */
-    s32 unk_328;            /* 0x328 */
-    s32 unk_32c;            /* 0x32c */
-    s32 unk_330;            /* 0x330 */
-    s32 unk_334;            /* 0x334 */
-    u8  pad_338[0xc];
+    u8  pad_2ec[0x34];
+    s32 mState;            /* 0x320 */
+    s32 mNodeCount;            /* 0x324 */
+    s32 mNodeIndex;            /* 0x328 */
+    s32 mBasePosX;            /* 0x32c */
+    s32 mBasePosY;            /* 0x330 */
+    s32 mBasePosZ;            /* 0x334 */
+    s32 mTargetPosX;            /* 0x338 */
+    s32 mTargetPosY;            /* 0x33c */
+    s32 mTargetPosZ;            /* 0x340 */
     u8  mPathPtr;            /* 0x344 */
     u8  pad_345[0x7];
-    s32 unk_34c;            /* 0x34c */
-    s16 unk_350;            /* 0x350 */
+    s32 mSinkOffsetY;            /* 0x34c */
+    s16 mBaseAngleY;            /* 0x350 */
     u8  mVariant;            /* 0x352 */
-    u8  pad_353[0x3];
-    u8  unk_356;            /* 0x356 */
+    u8  pad_353[0x1];
+    u16 mStateTimer;            /* 0x354 */
+    u8  mIsPressed;            /* 0x356 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();
