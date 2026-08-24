@@ -7,7 +7,7 @@
 /* dScMgRoulette_c::OnTurnIntoEgg - recovered from vtable slot identity */
 extern void FreeGfxSlotsById(int a);
 extern int func_ov006_020c1718(char *c);
-extern void func_ov004_020b56c8(void);
+extern void func_ov004_020b56c8(int coins);
 extern u16 data_ov004_020bf9e4;
 
 int func_ov006_021096c8(char *self)
@@ -29,7 +29,7 @@ int func_ov006_021096c8(char *self)
         (*(s16 *)(((long long)(int)(self + 0x53e8))))--;
         if (*(s16 *)(self + 0x53e8) == 0) {
             if (*(s16 *)(self + 0x53f2) != 0)
-                func_ov004_020b56c8();
+                func_ov004_020b56c8(*(s16 *)(self + 0x53f2));
             (*(s16 *)(((long long)(int)(self + 0x53e6))))++;
         }
         break;

@@ -404,14 +404,21 @@
 #
 #   - HOW MANY MUSHROOMS THE PLAYER SHOULD GET. Slot 18 sets the active record
 #     count at +0x53fc from data_ov004_020beb68's +0xa8, clamped to 5, and slot
-#     0 seeds +0xa8 from func_ov004_020ad8b8(), which is
-#     data_0209caf4 row 13 field 1 -- the persistent per-minigame LEVEL. The
-#     port has no backup cart, so SaveData::SetDefaultValuesMg zeroes record 13
-#     on every boot and every run above reports "spawned 0 of 5". All five
-#     records ARE initialised by slot 18's loop; none is made active. That is
-#     the save-medium gap port/mg_fanout_costs.txt section 17 documents,
-#     observed here on a second class, and it is not a minigame gap. What a DS
-#     player sees at level 0 is not something a headless run can say.
+#     0 seeds +0xa8 from func_ov004_020ad8b8().
+#
+#     THE SENTENCE THAT USED TO CONTINUE "...which is data_0209caf4 row 13
+#     field 1 -- the persistent per-minigame LEVEL" WAS WRONG, and run mg11
+#     lane PAYOUT retracts it. func_ov004_020ad8b8 reads the HUD PANEL's
+#     field 0 -- func_02013580(func_ov004_020adc3c(data_ov004_020beb68), 0),
+#     falling back to data_0209b308[5] when that reads zero -- so +0xa8 is the
+#     player's CURRENT COIN COUNT and the stake is min(coins, 5). Nothing on
+#     this class's payout chain reads the save level at all. The lane's own
+#     runs did report "spawned 0 of 5", but that line prints +0x53f8 (how many
+#     have been spawned SO FAR) beside +0x53fc, and case 2 of slot 6 zeroes
+#     +0x53f8 at the resolve -- so the "0" was the reset counter, not the
+#     stake. Measured on the same tree with the count printed on its own:
+#     +0x53fc = 5, five mushrooms, on a boot with the save record zeroed.
+#     There is no level-0 payout question to answer.
 #   - WHETHER THE PICTURE IS RIGHT, only that there is one and that it changes.
 #   - TOUCH IS UNMEASURED. The ROM's own rules text for this game is "Guess
 #     where the ball will land on the roulette wheel", so the guess is an input

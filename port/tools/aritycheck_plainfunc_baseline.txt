@@ -132,7 +132,6 @@ func_ov002_020e7d84|src/func_ov002_020e930c.c
 func_ov002_020e8abc|src/func_ov002_020e8c34.c
 func_ov002_020e8e80|include/decl_common.h
 func_ov002_020f2630|src/func_ov002_020f26d4.c
-func_ov004_020adc3c|src/func_ov004_020ad8b8.c
 func_ov004_020adfc4|src/func_ov004_020b39a4.c
 func_ov004_020adfc4|src/func_ov004_020b484c.c
 func_ov004_020adfc4|src/func_ov006_020dd658.c
@@ -145,12 +144,10 @@ func_ov004_020b2adc|src/MgMushroomRoulette_Spawn.cpp
 func_ov004_020b2adc|src/func_ov006_020e0574.cpp
 func_ov004_020b42c0|port/unmatched/MgBase_StateDispatch.cpp
 func_ov004_020b42c0|src/func_ov004_020b31b4.cpp
-func_ov004_020b56c8|src/func_ov006_021096c8.c
 func_ov004_020b743c|src/func_ov004_020b7460.c
 func_ov005_020c0030|include/decl_common.h
 func_ov005_020c007c|src/func_ov005_020c0030.c
 func_ov006_020fbb2c|src/func_ov006_020fb7e0.c
-func_ov006_02108650|src/func_ov006_02108d28.c
 func_ov006_02114738|src/func_ov006_02110bb4.c
 func_ov006_02115b0c|src/func_ov006_02118a8c.cpp
 func_ov006_0211fb1c|src/func_ov006_0211f9fc.c

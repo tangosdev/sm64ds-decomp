@@ -277,6 +277,20 @@ void  port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
    rather than to imply this seat routed it. */
 void  port_mg_memory2_field_counts(unsigned *calls, unsigned *hits);
 
+/* THE PAYOUT. func_ov006_02108b90 is the whole of it: it reads a record's bet
+   type at +0x2c, compares it against the pocket the ball settled in, and
+   writes the multiplier back at +0x2e. Slot 6 case 3 sums those into +0x53f2
+   and slot 19 case 7 hands that sum to func_ov004_020b56c8, which is the coin
+   shower. Declared here so the census can both READ the per-record result and
+   SWEEP the rule -- see port_mg_roulette_payout_selfcheck. */
+int   func_ov006_02108b90(void *record, int pocket);
+extern int data_ov004_020bf9f8;               /* coins handed to the shower  */
+extern unsigned char data_ov006_0212edb8[];   /* 17 pair rows, stride 4      */
+extern unsigned char data_ov006_0212ed88[];   /*  6 quad rows, stride 8      */
+extern int           data_ov006_021428c8;     /* the "a record is grabbed"   */
+extern unsigned char data_020a0de8[];         /* TouchInfo[4], stride 4      */
+extern unsigned char data_020a0e40[];         /* the live TouchInfo index    */
+
 /* The persistent minigame record. Nothing new is defined here: the storage is
    hal/level_boot.cpp's .dsstate$savblk0004 and the index function is
    src/func_ov004_020adc3c.c. */
@@ -331,8 +345,96 @@ static int  __fastcall rlt_init(void *s, void *)
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall rlt_clean(void *s, void *)
 { RLT(3);  return func_ov006_0210980c((char *)s); }
+/* THE PAYOUT LATCH. The class plays round after round and slot 18 wipes the
+   board between them, so an atexit census can only ever see whichever round
+   the frame budget happened to stop inside -- which is why every earlier run
+   on this scene reported a payout of zero and nobody could tell "lost" from
+   "never adjudicated". State 3 is the pay state and it runs exactly once per
+   round, on the frame the wheel's target at +0x53c4 finally reads 0, so the
+   3 -> 4 edge is the one frame where the numbers are complete. Latch there,
+   report at exit, and the round that paid is the round that gets printed. */
+static int  g_rlt_pay_round;        /* how many rounds reached the pay state */
+static int  g_rlt_pay_frame = -1;   /* the behavior tick the FIRST one landed */
+static short g_rlt_pay_pocket, g_rlt_pay_sum, g_rlt_pay_surv;
+static int  g_rlt_pay_count, g_rlt_pay_shower;
+static short g_rlt_pay_type[5], g_rlt_pay_mult[5];
+static int  g_rlt_shower_first = -1, g_rlt_shower_tick = -1;
+
+/* SM64DS_RLT_BETLOG=1: one line per stylus press, listing what the five
+   records looked like when func_ov006_02108d28 was offered the grab. The two
+   grab paths disagree about which record they want -- func_ov006_02108e24
+   takes the one within 8 pixels of the stylus and func_ov006_02108d28 takes
+   the first unplaced one on any board cell -- and both are gated by the same
+   data_ov006_021428c8 latch, so a press that does nothing has several possible
+   causes and only the record states separate them. */
+static void rlt_betlog(const char *c)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_RLT_BETLOG");
+        on = (e && e[0] && e[0] != '0') ? 1 : 0;
+    }
+    if (!on) return;
+    const unsigned idx = data_020a0e40[0];
+    static unsigned char was;
+    const unsigned char now = data_020a0de8[idx * 4];
+    const int edge = (now != was);
+    was = now;
+    if (!edge) return;
+    std::printf("[bet] tick %u %s at (%d,%d) b1=%d grab-latch=%08x state=%d :",
+                g_rlt_hits[6], now ? "PRESS" : "release",
+                data_020a0de8[idx * 4 + 2], data_020a0de8[idx * 4 + 3],
+                data_020a0de8[idx * 4 + 1],
+                (unsigned)data_ov006_021428c8,
+                *(const short *)(c + 0x53e6));
+    for (int i = 0; i < 5; ++i) {
+        const char *const r = c + 0x51a8 + i * 0x34;
+        std::printf(" [%d] st=%d ty=0x%02x at(%d,%d)", i,
+                    (unsigned)*(const unsigned char *)(r + 0x32),
+                    (unsigned)(*(const short *)(r + 0x2c) & 0xffff),
+                    *(const int *)(r + 0x00) >> 12,
+                    *(const int *)(r + 0x04) >> 12);
+    }
+    std::printf("\n");
+}
+
 static int  __fastcall rlt_beh(void *s, void *)
-{ RLT(6);  return func_ov006_02109aac((char *)s); }
+{
+    RLT(6);
+    const char *const c = (const char *)s;
+    rlt_betlog(c);
+    /* THE HANDOFF, which is the far end of the payout and a separate claim
+       from the sum. Slot 19 state 7 calls func_ov004_020b56c8 with the sum at
+       +0x53f2 and that callee's only job is to store it in
+       data_ov004_020bf9f8 and install func_ov004_020b556c as the per-frame
+       ticker -- the coin shower, up to twenty coins. The sum being right does
+       not prove the number ARRIVED: the call site declared the callee with no
+       parameters at all, so on the host it stored an unwritten stack slot. */
+    if (g_rlt_shower_first < 0 && data_ov004_020bf9f8 != 0) {
+        g_rlt_shower_first = data_ov004_020bf9f8;
+        g_rlt_shower_tick  = (int)g_rlt_hits[6];
+    }
+    const short before = *(const short *)(c + 0x53e6);
+    const int r = func_ov006_02109aac((char *)s);
+    const short after = *(const short *)(c + 0x53e6);
+    if (before == 3 && after == 4) {
+        ++g_rlt_pay_round;
+        if (g_rlt_pay_frame < 0) {
+            g_rlt_pay_frame = (int)g_rlt_hits[6];
+            g_rlt_pay_pocket = *(const short *)(c + 0x53d6);
+            g_rlt_pay_sum    = *(const short *)(c + 0x53f2);
+            g_rlt_pay_surv   = *(const short *)(c + 0x53f6);
+            g_rlt_pay_count  = *(const int *)(c + 0x53fc);
+            g_rlt_pay_shower = data_ov004_020bf9f8;
+            for (int i = 0; i < 5; ++i) {
+                const char *const rec = c + 0x51a8 + i * 0x34;
+                g_rlt_pay_type[i] = *(const short *)(rec + 0x2c);
+                g_rlt_pay_mult[i] = *(const short *)(rec + 0x2e);
+            }
+        }
+    }
+    return r;
+}
 static int  __fastcall rlt_render(void *s, void *)
 { RLT(9);  return func_ov006_02109834((char *)s); }
 static void *__fastcall rlt_d2(void *s, void *)
@@ -603,6 +705,115 @@ extern "C" void port_scene_roulette_hits(void)
                     *(const int *)(g_rlt_self + 0x51a8 + 0x04),
                     *(const int *)(g_rlt_self + 0x51a8 + 0x34),
                     *(const int *)(g_rlt_self + 0x51a8 + 0x38));
+    }
+
+    /* THE PAYOUT, WHICH NO EARLIER CENSUS ON THIS CLASS COULD SEE. Run mg11
+       lane RLT could not reach it: the resolve frame faulted before it, so
+       every number below was unobservable and the seat printed the wheel
+       instead. It is printed per record because the sum at +0x53f2 is the only
+       thing slot 19 tests, and a sum of zero has two completely different
+       causes -- no bet was placed, or every bet was adjudicated a loss. Only
+       the per-record row separates them.
+
+         +0x2c  the bet type func_ov006_02108650 classified the record's
+                position into: 0x00..0x0b a single pocket, 0x0c..0x1c a pair,
+                0x1d..0x22 a quad, 0x23 the TOP half, 0x24 the BOTTOM half,
+                0x25 "not on the board at all"
+         +0x2e  the multiplier func_ov006_02108b90 wrote back
+         +0x32  the record's own state byte */
+    if (g_rlt_self) {
+        const char *c = g_rlt_self;
+        const int n = *(const int *)(c + 0x53fc);
+        std::printf("[scene] dScMgRoulette_c PAYOUT: winning pocket +0x53d6 = "
+                    "%d, sum +0x53f2 = %d, survivors +0x53f6 = %d, active "
+                    "records +0x53fc = %d, coins handed to the shower "
+                    "(data_ov004_020bf9f8) = %d\n",
+                    *(const short *)(c + 0x53d6), *(const short *)(c + 0x53f2),
+                    *(const short *)(c + 0x53f6), n, data_ov004_020bf9f8);
+        for (int i = 0; i < 5; ++i) {
+            const char *r = c + 0x51a8 + i * 0x34;
+            std::printf("[scene]   record[%d]%s bet type +0x2c = 0x%02x, "
+                        "multiplier +0x2e = %d, state +0x32 = %d\n", i,
+                        i < n ? " ACTIVE " : "        ",
+                        (unsigned)(*(const short *)(r + 0x2c) & 0xffff),
+                        *(const short *)(r + 0x2e),
+                        (unsigned)*(const unsigned char *)(r + 0x32));
+        }
+    }
+
+    /* THE ROUND THAT ACTUALLY PAID, latched on the 3 -> 4 edge above rather
+       than read off whatever the frame budget stopped inside. */
+    if (g_rlt_pay_frame < 0) {
+        std::printf("[scene] dScMgRoulette_c PAY STATE: never reached in this "
+                    "run -- state 3 waits on the wheel's target at +0x53c4 "
+                    "(the ball still settling), so no round was adjudicated\n");
+    } else {
+        std::printf("[scene] dScMgRoulette_c PAY STATE reached %d time(s); "
+                    "first at behavior tick %d: winning pocket %d, stake %d "
+                    "record(s), payout sum +0x53f2 = %d, survivors +0x53f6 = "
+                    "%d, coins handed to func_ov004_020b56c8 = %d\n",
+                    g_rlt_pay_round, g_rlt_pay_frame, g_rlt_pay_pocket,
+                    g_rlt_pay_count, g_rlt_pay_sum, g_rlt_pay_surv,
+                    g_rlt_pay_shower);
+        for (int i = 0; i < 5; ++i)
+            std::printf("[scene]   at pay: record[%d] bet type 0x%02x paid "
+                        "%d\n", i, (unsigned)(g_rlt_pay_type[i] & 0xffff),
+                        g_rlt_pay_mult[i]);
+        if (g_rlt_shower_first < 0)
+            std::printf("[scene]   the coin shower never started: "
+                        "data_ov004_020bf9f8 stayed 0 for the whole run\n");
+        else
+            std::printf("[scene]   coin shower armed at behavior tick %d with "
+                        "data_ov004_020bf9f8 = %d (must equal the payout sum "
+                        "above; func_ov004_020b56c8 is the only writer)\n",
+                        g_rlt_shower_tick, g_rlt_shower_first);
+    }
+
+    /* THE RULE ITSELF, SWEPT RATHER THAN TRUSTED. func_ov006_02108b90 is
+       NONMATCHING -- the byte gate cannot score it, so for the life of this
+       seat the only thing standing behind its arithmetic was a header comment
+       that said "logic verified correct vs ROM" and was WRONG about one arm:
+       the 0x23 half paid on `pocket >= 6` where the ROM's blt at 0x02108c84
+       pays on `pocket < 6`, so a winning bet on the top half of the board paid
+       nothing. This sweep is the instrument that comment was standing in for.
+       The expectation below is transcribed from the ROM at 0x02108b90, not
+       from the C body it is checking, and the pair and quad tables are read
+       out of the mounted ROM data rather than restated. */
+    {
+        const short *pairs = (const short *)data_ov006_0212edb8;
+        const short *quads = (const short *)data_ov006_0212ed88;
+        int recbuf[0x34 / 4];             /* word-aligned: +0x2c is a short */
+        char *const rec = (char *)recbuf;
+        unsigned bad = 0;
+        for (int type = 0; type <= 0x25; ++type) {
+            for (int pocket = 0; pocket < 12; ++pocket) {
+                int want = 0;
+                if (type <= 0x0b)                   want = (type == pocket) ? 0xc : 0;
+                else if (type <= 0x1c) {
+                    const short *row = pairs + (type - 0x0c) * 2;
+                    want = (pocket == row[0] || pocket == row[1]) ? 6 : 0;
+                } else if (type <= 0x22) {
+                    const short *row = quads + (type - 0x1d) * 4;
+                    want = (pocket == row[0] || pocket == row[1] ||
+                            pocket == row[2] || pocket == row[3]) ? 3 : 0;
+                } else if (type == 0x23)            want = (pocket <  6) ? 2 : 0;
+                else if (type == 0x24)              want = (pocket >= 6) ? 2 : 0;
+                for (unsigned k = 0; k < sizeof recbuf / sizeof recbuf[0]; ++k)
+                    recbuf[k] = 0;
+                *(short *)(rec + 0x2c) = (short)type;
+                const int got = func_ov006_02108b90(rec, pocket);
+                if (got != want) {
+                    if (bad < 8)
+                        std::printf("[scene]   PAYOUT RULE BROKEN: bet type "
+                                    "0x%02x on pocket %d pays %d, ROM says "
+                                    "%d\n", type, pocket, got, want);
+                    ++bad;
+                }
+            }
+        }
+        std::printf("[scene] dScMgRoulette_c payout rule sweep: %d bet type(s) "
+                    "x 12 pocket(s) = %d combination(s), %u disagree with the "
+                    "ROM\n", 0x26, 0x26 * 12, bad);
     }
 
     /* The two dispatch chains this class runs through that other seats own.
