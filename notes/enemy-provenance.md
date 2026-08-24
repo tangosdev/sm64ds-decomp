@@ -172,3 +172,47 @@ Byte-neutral source cleanups: `(char *)&mdCcAc_c`, `(char *)&mdCcAcPos_c` and
 `(char *)&mClsnOffset` replaced the `((char *)this) + 0xNNN` arguments in `Behavior`.
 `InitResources`' `*(int *)((int)this + 0x190) |= 0x8000` stays as it is — the file already
 documents that the add must sit inside the integer cast.
+
+---
+
+## `dCapEnemy_c` (`include/dCapEnemy_c.h`, arm9)
+
+The shared base for the cap-wearing enemies (`daKrb_c`, `daTrs_c`). All three of its
+remaining `unk_` fields resolve; the header's own prose already described two of them.
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x110 | `mCapBank` | `src/_ZN11dCapEnemy_c6AddCapEj.cpp` sets it to 1 when the six-way cap selector is `>= 3` and to 0 otherwise. `src/_ZN11dCapEnemy_c10ReleaseCapERK7Vector3.cpp` picks marker bit 3 vs bit 7 of `mCapId` by it, and `src/_ZN11dCapEnemy_c16GetCapEatenOffItERK7Vector3.cpp` re-binds the model only for bank 0. |
+| 0x111 | `mIsDormant` | `src/_ZN11dCapEnemy_c15RespawnIfHasCapEv.cpp` sets it to 1 on the *replacement* actor it spawns; `AddCap` clears it. `src/_ZN11dCapEnemy_c11GetCapStateEv.cpp` returns 2 while it is clear (the ordinary enemy path), and while it is set returns 0 — or, once the cap's release bit is up, clears it, restores `mFlags` from field 0xf4, and returns 1. `src/_ZN7daKrb_c6RenderEv.cpp` draws nothing while it is set, and `daKrb_c::Behavior` treats `GetCapState() == 1` as the wake-up (poof dust + flag). |
+| 0x112 | `mHadBank1Cap` | `AddCap` latches it to 1 the first time it selects bank 1 and never clears it; it is passed as the fourth argument of `func_ov001_020ab228`, the cap-icon setup. |
+
+---
+
+## `daKrb_c` (`include/daKrb_c.h`, ov084 — derives from `dCapEnemy_c`, not `dEnemyBase_c`)
+
+| offset | new name | evidence |
+| --- | --- | --- |
+| 0x410 | `Vector3 mSafePos` | `src/_ZN7daKrb_c8BehaviorEv.cpp`: when `dEnemyBase_c::IsGoingOffCliff` reports true the actor's position is restored from it, and otherwise the current position is written into it. The last position known not to be over a ledge. |
+| 0x41c | `Vector3 mHomePos` | written from `mPosX/Y/Z` in `InitResources`; `Behavior` restores `mPosX/Y/Z` from it on both respawn paths — after `UpdateKillByInvincibleChar` returns 2, and after the stuck timer expires — each immediately before `dCapEnemy_c::RespawnIfHasCap`. |
+| 0x428 | `Vector3 mStuckCheckPos` | written from `mPosX/Y/Z` in `InitResources`; `Behavior` compares `Vec3_Dist(&mPosX, &mStuckCheckPos) < 0xa000` and, while the enemy stays inside that radius, ticks the already-named `mStuckTimer`; the moment it leaves, the timer is zeroed and this field is re-recorded from the current position. |
+| 0x44c | `mSavedParam` | last statement of `InitResources`: a copy of `param1`, taken *after* the earlier `param1 &= 0xf0ff` masking. Named for what it holds; no matched body reads it back. |
+| 0x458 | `mTimer458` | `InitResources` zeroes it; `Behavior` sets it to `0x5a` when `mStuckTimer` hits 0x1e on a capped goomba, and both the release path (`mStuckTimer >= 0x12c && mTimer458 == 0`) and the fall-through (`if (mTimer458 == 0) mStuckTimer = 0`) gate on it reaching 0. Nothing in a matched body decrements it, so "a timer" is the whole of the evidence and the offset stays in the name. |
+| 0x45a | `mInitAngleY` | `InitResources`: `= mPrevAngleY`. Same shape as `Unagi`, `MrBlizzard`, `KingBobOmb` and `PiranhaPlant`. |
+| 0x464 | `mRewardType` | `InitResources`: `= (param1 >> 4) & 0xf`. Value 1 calls `dActor_c::TrackStar` and loads the silver-star assets; value 2 loads the silver-star assets only; anything else does neither. It selects what this goomba is worth. |
+| 0x465 | `mStarTracked` | `InitResources` presets it to -1 and, when `mRewardType == 1`, assigns `dActor_c::TrackStar(mStarID, 1)` into it. Same call and same role as `KingBobOmb`'s 0x507. |
+| 0x466 | `mStarID` | `InitResources`: `= (param1 >> 0xc) & 0xf`, and it is the star-id argument of `TrackStar`. Same as `KingBobOmb`'s 0x509. |
+
+Left `unk_`:
+
+- **0x438, 0x43c, 0x450, 0x454, 0x467, 0x468** — zeroed in `InitResources` and never read
+  in a matched body.
+- **0x440** — set to `0x7fffffff` and never read.
+- **0x444** — `InitResources` loads `data_ov084_02130228[mGoombaType]` into it, and
+  `Behavior`'s only read tests whether it is *still* that same table entry, choosing
+  `UpdateWMClsn` flag 3 over flag 2. Naming it would mean naming the table, and nothing
+  in a matched body says what the table holds.
+
+Note: `src/_ZN7daKrb_c13InitResourcesEv.cpp` is a NONMATCHING `extern "C"` free function
+working raw `char *c` offsets (916 bytes against the ROM's 912 — a pre-existing four-byte
+near-miss, documented at the top of the file). It names no fields, so the renames above do
+not reach it; every citation to it above is a citation to a raw offset in that file.

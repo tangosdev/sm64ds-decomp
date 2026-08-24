@@ -6,9 +6,9 @@
  * marker bits.
  *
  * The parameter is a SIX-way selector folded into two banks of three. `% 3`
- * picks the model, `>= 3` picks the bank (unk_110), and anything >= 6 means
+ * picks the model, `>= 3` picks the bank (mCapBank), and anything >= 6 means
  * "no cap" -- written as mCapId = 6, the same sentinel a failed SetFile falls
- * back to. unk_112 latches to 1 the first time a bank-1 cap is added and is
+ * back to. mHadBank1Cap latches to 1 the first time a bank-1 cap is added and is
  * never cleared.
  *
  * The failure path is worth noting: on a SetFile failure it sets mCapId = 6
@@ -28,7 +28,7 @@ extern void *data_ov002_020ff028[];
 
 int dCapEnemy_c::AddCap(unsigned int param)
 {
-    unk_111 = 0;
+    mIsDormant = 0;
     if (param >= 6) {
         mCapId = 6;
         return 6;
@@ -37,10 +37,10 @@ int dCapEnemy_c::AddCap(unsigned int param)
     mCapId = (int)param % 3;
 
     if (param >= 3) {
-        unk_110 = 1;
-        if (unk_112 == 0) unk_112 = 1;
+        mCapBank = 1;
+        if (mHadBank1Cap == 0) mHadBank1Cap = 1;
     } else {
-        unk_110 = 0;
+        mCapBank = 0;
     }
 
     void *file = _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_020ff028[mCapId]);
@@ -51,7 +51,7 @@ int dCapEnemy_c::AddCap(unsigned int param)
     }
 
     *(int *)(((long long)(int)((char *)this + 0xb0))) &= ~1;
-    func_ov001_020ab228((char *)&mCapIcon, (char *)this, mCapId, unk_112, unk_110 != 0);
+    func_ov001_020ab228((char *)&mCapIcon, (char *)this, mCapId, mHadBank1Cap, mCapBank != 0);
 
     int result = func_02005e28((unsigned char *)this);
     if (result != 0) {

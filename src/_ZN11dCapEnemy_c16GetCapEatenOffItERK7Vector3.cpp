@@ -13,7 +13,7 @@
  * reference at +0x360 is repointed at it, and flag 0x20000 moves across too --
  * the cap is now the thing being eaten, and this enemy is not.
  *
- * The model is only re-bound for bank-0 caps (unk_110 == 0).
+ * The model is only re-bound for bank-0 caps (mCapBank == 0).
  */
 #include "dCapEnemy_c.h"
 
@@ -40,7 +40,7 @@ int dCapEnemy_c::GetCapEatenOffIt(const Vector3 & v_)
         *(int *)(((int)p + 0xb0)) |= 0x20000;
         *(int *)(((int)c + 0xb0)) &= ~0x20000;
         mEatingPlayer = 0;
-        if (unk_110 == 0) {
+        if (mCapBank == 0) {
             idx = mCapId & 7;
             func_ov001_020ab228((unsigned char *)&mCapIcon, c, idx, 0, 0);
         }

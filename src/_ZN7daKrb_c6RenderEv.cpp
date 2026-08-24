@@ -26,7 +26,7 @@ int daKrb_c::Render()
     volatile Vector3 backup;
 
     locked = (mFlags & 0x40000) != 0;
-    if (locked || unk_111 != 0) return 1;
+    if (locked || mIsDormant != 0) return 1;
 
     backup.x = mScaleX;
     backup.y = mScaleY;
