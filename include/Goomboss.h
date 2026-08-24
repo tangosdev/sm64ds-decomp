@@ -18,11 +18,14 @@
  *     TextureTransformer           0x3f8 +   0x14 = 0x40c  -> dBgCh_Actr
  *     dBgCh_Actr                 0x40c +  0x1bc = 0x5c8
  *
- * SIX OF THE GENERATED FIELDS WERE THE Vector3 ARRAY'S OWN COMPONENTS.
- * unk_3b8/3bc/3c0 are element 1's x/y/z and unk_3c4/3c8/3cc are element 2's --
- * the header had split a Vector3[3] into nine scalars and named six of them.
- * unk_3d8 and unk_3f0 are likewise inside the MaterialChanger and the
- * TextureSequence.
+ * SIX OF THE GENERATED FIELDS WERE THE Vector3 ARRAY'S OWN COMPONENTS: the
+ * header had split a Vector3[3] at 0x3ac into nine scalars and named six of
+ * them (elements 1 and 2). Both branches spell the array now. Two more former
+ * unknowns sat inside embedded animations rather than in Goomboss at all --
+ * 0x3d8 is the MaterialChanger's Animation cursor (+0x08) and 0x3f0 is the
+ * TextureSequence's playback speed (+0x0c); see include/Animation.h.
+ *
+ * Field provenance: notes/enemy-leaf-provenance.md.
  */
 
 #ifdef __cplusplus
@@ -48,9 +51,11 @@ struct Goomboss : dEnemyBase_c {
     dBgCh_Actr mWithMeshClsn;                   /* 0x40c */
     u8  pad_5c8[0x4];
     s32 mState;            /* 0x5cc */
-    s32 unk_5d0;            /* 0x5d0 */
-    s32 unk_5d4;            /* 0x5d4 */
-    s32 unk_5d8;            /* 0x5d8 */
+    /* InitResources copies mPosX/mPosY/mPosZ into these three once, right after
+       the collision cylinders are sized, and nothing writes them again. */
+    s32 mSpawnPosX;         /* 0x5d0 */
+    s32 mSpawnPosY;         /* 0x5d4 */
+    s32 mSpawnPosZ;         /* 0x5d8 */
     s32 mMegaMushroomID;            /* 0x5dc */
     u8  pad_5e0[0x4];
     s32 mCurrentScale;            /* 0x5e4 */
@@ -105,33 +110,36 @@ struct Goomboss {
     s16 mPrevAngleY;             /* 0x094 */
     s16 mPrevAngleZ;             /* 0x096 */
     s32 mHorzSpeed;              /* 0x098 */
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mVertAccel;              /* 0x09c -- dActor_c's; InitResources sets -0xa000 */
+    s32 mTerminalVelocity;       /* 0x0a0 -- dActor_c's; InitResources sets -0x3c000 */
     u8  pad_0a4[0x16c];
     ModelAnim mModelAnim;     /* 0x210 */
-    u8  pad_274[0x144];
-    s32 unk_3b8;            /* 0x3b8 */
-    s32 unk_3bc;            /* 0x3bc */
-    s32 unk_3c0;            /* 0x3c0 */
-    s32 unk_3c4;            /* 0x3c4 */
-    s32 unk_3c8;            /* 0x3c8 */
-    s32 unk_3cc;            /* 0x3cc */
+    u8  pad_274[0x138];
+    /* The C++ branch's Vector3 mCylClsnPos[3], flat -- the six scalars that used
+       to sit here as unk_3b8..unk_3cc were elements 1 and 2 of it. */
+    s32 mCylClsnPos[9];              /* 0x3ac */
     u8  mMaterialChanger;            /* 0x3d0 */
     u8  pad_3d1[0x7];
-    s32 unk_3d8;            /* 0x3d8 */
+    /* mMaterialChanger's Animation base +0x08, the 20.12 playback cursor.
+       InitResources sets it to data_ov074_02122e04[mSizeIndex] << 12. */
+    s32 mMaterialChangerFrame;       /* 0x3d8 */
     u8  pad_3dc[0x8];
     u8  mTextureSequence;            /* 0x3e4 */
     u8  pad_3e5[0xb];
-    s32 unk_3f0;            /* 0x3f0 */
+    /* mTextureSequence's Animation base +0x0c, the playback speed. InitResources
+       calls SetFile with 0x1000 and then zeroes this, freezing the sequence. */
+    s32 mTextureSequenceSpeed;       /* 0x3f0 */
     u8  pad_3f4[0x4];
     u8  mTextureTransformer;            /* 0x3f8 */
     u8  pad_3f9[0x13];
     struct dBgCh_Actr mWithMeshClsn; /* 0x40c */
     u8  pad_5c8[0x4];
     s32 mState;            /* 0x5cc */
-    s32 unk_5d0;            /* 0x5d0 */
-    s32 unk_5d4;            /* 0x5d4 */
-    s32 unk_5d8;            /* 0x5d8 */
+    /* InitResources copies mPosX/mPosY/mPosZ into these three once, right after
+       the collision cylinders are sized, and nothing writes them again. */
+    s32 mSpawnPosX;         /* 0x5d0 */
+    s32 mSpawnPosY;         /* 0x5d4 */
+    s32 mSpawnPosZ;         /* 0x5d8 */
     s32 mMegaMushroomID;            /* 0x5dc */
     u8  pad_5e0[0x4];
     s32 mCurrentScale;            /* 0x5e4 */
