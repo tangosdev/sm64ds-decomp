@@ -13,7 +13,7 @@ struct daBDonketu_c {
     u8  pad_068[0x30];
     s32 unk_098;            /* 0x098 */
     u8  pad_09c[0x64];
-    u16 unk_100;            /* 0x100 */
+    u16 mStateTimer;            /* 0x100 */
     u8  pad_102[0x2fa];
     u8  unk_3fc;            /* 0x3fc */
 };

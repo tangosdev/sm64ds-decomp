@@ -48,7 +48,7 @@ int KoopaShell::InitResources()
     mSpawnPosZ = mPosZ;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
-    unk_100 = 0x14;
+    mStateTimer = 0x14;
     unk_3c0 = 0;
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((dBgCh_Actr*)&mMeshClsn, (dActor_c*)this, 0x28000, 0x28000, 0, 0);
     ((dBgCh_Actr*)&mMeshClsn)->StartDetectingWater();

@@ -61,7 +61,7 @@ int PiranhaPlant::InitResources()
     unk_460 = 0;
     mClsnEnabled = 0;
     unk_45d = 1;
-    unk_100 = 0;
+    mStateTimer = 0;
     unk_108 = 3;
     unk_46c = 0;
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x64000, 0x64000, 0, 0);

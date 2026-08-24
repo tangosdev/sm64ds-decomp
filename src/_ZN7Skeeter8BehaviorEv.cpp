@@ -119,7 +119,7 @@ int Skeeter::Behavior()
 
     _ZN8dActor_c9UpdatePosEP5dCc_c(c, &mdCcAcPos_c);
     func_ov090_02131378(c);
-    DecIfAbove0_Short((u16 *)&unk_100);
+    DecIfAbove0_Short((u16 *)&mStateTimer);
     DecIfAbove0_Short(&unk_394);
     DecIfAbove0_Short(&unk_396);
     DecIfAbove0_Short(&unk_398);

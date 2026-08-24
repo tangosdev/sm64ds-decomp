@@ -44,7 +44,7 @@ int LavaBubble::Behavior()
         return 1;
     }
 
-    DecIfAbove0_Short((unsigned short*)((char*)&unk_100));
+    DecIfAbove0_Short((unsigned short*)((char*)&mStateTimer));
 
     {
         unsigned int id = mdCcAc_c.otherOwner;

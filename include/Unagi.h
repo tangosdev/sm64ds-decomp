@@ -93,7 +93,7 @@ struct Unagi {
     u8  pad_0a4[0x28];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x33];
-    u8  unk_100;            /* 0x100 */
+    u8  mStateTimer;            /* 0x100 */
     u8  pad_101[0xf];
     u8  mdCcAcPos_c1;            /* 0x110 */
     u8  pad_111[0x3f];

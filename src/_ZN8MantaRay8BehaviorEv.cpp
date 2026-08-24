@@ -52,7 +52,7 @@ void ApproachLinear(short& v, short target, short step);
 int MantaRay::Behavior()
 {
     char* c = (char*)this;
-    DecIfAbove0_Short((unsigned short*)&unk_100);
+    DecIfAbove0_Short((unsigned short*)&mStateTimer);
     {
         Obj* o = *(Obj**)&unk_370;
         if (*(int*)((char*)o + 8) != 0) {

@@ -52,7 +52,16 @@ struct dEnemyBase_c : dActor_c {
     s16 mSpinRateY;               /* 0x0ee */
     s16 mSpinRateZ;               /* 0x0f0 */
     u8  pad_0f2[0xe];
-    s16 unk_100;                  /* 0x100 -- 28 subclasses */
+    /* 0x100 -- 28 subclasses. Frames spent in the current mState: the state
+       handlers zero it the instant they change mState, and some count it up
+       while others count it down through DecIfAbove0_Short. Derived
+       independently by two passes over disjoint subclass sets (Unagi,
+       MrBlizzard, Shark, PiranhaPlant, FirePiranhaPlantBig, daKrb_c) and
+       (Whomp) -- see notes/enemy-provenance.md and
+       notes/enemy-leaf-provenance.md. Named mStateTimer, not mTimer, because
+       Klepto already owns an unrelated mTimer and the shorter name silently
+       rebinds it. */
+    s16 mStateTimer;              /* 0x100 */
     u16 mDeathTimer;              /* 0x102 */
     u16 unk_104;                  /* 0x104 -- 5 subclasses */
     u8 unk_106;                   /* 0x106 */

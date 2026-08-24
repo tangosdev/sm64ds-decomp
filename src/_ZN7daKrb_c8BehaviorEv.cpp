@@ -117,7 +117,7 @@ int daKrb_c::Behavior()
     }
 
     {
-        u16* hp = (u16*)((char*)&unk_100);
+        u16* hp = (u16*)((char*)&mStateTimer);
         *hp += 1;
         if (st != mState)
             *hp = 0;

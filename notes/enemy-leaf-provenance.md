@@ -214,7 +214,7 @@ Byte-neutral cleanups (each re-verified, `2004/b56`):
 * `OnAimedAtWithEgg` — `*(unsigned char*)(c+0x414)` and `*(unsigned short*)(c+0x8c)`
   became `mIsKing` and `(unsigned short)mAngleX`.
 
-**For the `dEnemyBase_c` owner:** `Whomp::Behavior` increments `unk_100` (as `u16`)
+**Landed as `dEnemyBase_c::mStateTimer`.** `Whomp::Behavior` increments it (as `u16`)
 once per frame and resets it to 0 the moment the state handler changes `mState`.
 That is a state-elapsed frame counter, which fits the 28 subclasses that declare
 the offset better than `unk_100` does.

@@ -200,7 +200,7 @@ int FlyGuy::Behavior()
     }
 
     if (mCurrentState != (State *)data_ov070_021235cc) {
-        DecIfAbove0_Short((unsigned short *)&unk_100);
+        DecIfAbove0_Short((unsigned short *)&mStateTimer);
     }
     DecIfAbove0_Short(&unk_3cc);
 

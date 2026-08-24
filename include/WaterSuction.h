@@ -52,7 +52,7 @@ struct WaterSuction {
     s16 unk_094;            /* 0x094 */
     s16 unk_096;            /* 0x096 */
     u8  pad_098[0x68];
-    u8  unk_100;            /* 0x100 */
+    u8  mStateTimer;            /* 0x100 */
     u8  pad_101[0xf];
     /* dCcAcPos_c member, named by the class's own destructor calling
        dCcAcPos_c's D1 at +0x110 -- a relocation the ROM build

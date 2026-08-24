@@ -208,7 +208,7 @@ int Rabbit::Behavior()
         mHorzSpeed = 0;
     }
 
-    DecIfAbove0_Short(&unk_100);
+    DecIfAbove0_Short(&mStateTimer);
 
     {
         int* p = *(int**)&mState;

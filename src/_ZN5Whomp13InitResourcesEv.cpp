@@ -178,7 +178,7 @@ int Whomp::InitResources()
     mShouldRender = 1;
     unk_407 = 0;
     unk_40b = 0;
-    unk_100 = 0;
+    mStateTimer = 0;
 
     i = 0;
     do {

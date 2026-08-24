@@ -16,7 +16,7 @@ int Fireball::InitResources()
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, ((char*)this), 0x28000, 0x50000, 0x200002, 0);
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, ((char*)this), 0x32000, 0x32000, 0, 0);
     _ZN10dBgCh_Actr19StartDetectingWaterEv((char*)&mWithMeshClsn);
-    unk_100 = 0;
+    mStateTimer = 0;
     unk_36a = 0;
     unk_360 = 0;
     unk_364 = 0x5dc000;

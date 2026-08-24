@@ -17,7 +17,7 @@ extern "C" void _ZN5dCc_c6UpdateEv(dCc_c *self);
 
 int Snowball::Behavior()
 {
-    DecIfAbove0_Short((unsigned short *)((char *)&unk_100));
+    DecIfAbove0_Short((unsigned short *)((char *)&mStateTimer));
     M *m = *(M **)((char *)&unk_378);
     if (m->pmf != 0)
         (((Klass *)((char *)this))->*(m->pmf))();

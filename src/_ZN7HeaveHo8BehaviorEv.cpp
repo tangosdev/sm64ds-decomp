@@ -40,7 +40,7 @@ int HeaveHo::Behavior()
         return 1;
     }
 
-    DecIfAbove0_Short((unsigned short *)((char *)&unk_100));
+    DecIfAbove0_Short((unsigned short *)((char *)&mStateTimer));
     DecIfAbove0_Short((unsigned short *)((char *)&unk_426));
 
     m = *(M **)((char *)&unk_3fc);

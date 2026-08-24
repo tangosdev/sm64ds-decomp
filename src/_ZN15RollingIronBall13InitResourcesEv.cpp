@@ -114,7 +114,7 @@ int RollingIronBall::InitResources()
     }
 
 end:
-    unk_100 = 0;
+    mStateTimer = 0;
     unk_108 = 0;
     unk_3cc = 0;
     unk_3a8 = 0;

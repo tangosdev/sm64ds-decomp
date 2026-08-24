@@ -46,7 +46,7 @@ int Swoop::Behavior()
         func_ov065_02117994((char *)this);
         return 1;
     }
-    DecIfAbove0_Short((unsigned short *)&unk_100);
+    DecIfAbove0_Short((unsigned short *)&mStateTimer);
     {
         State *q = mCurrentState;
         /* Reads the handler's pointer word directly rather than as `&q->mMain`:

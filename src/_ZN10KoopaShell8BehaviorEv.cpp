@@ -87,7 +87,7 @@ int KoopaShell::Behavior()
         mDespawnTimer = 0;
     }
 
-    DecIfAbove0_Short((char *)&unk_100);
+    DecIfAbove0_Short((char *)&mStateTimer);
 
     {
         EState *st = (EState *)mState;

@@ -90,12 +90,12 @@ int Koopa::Behavior()
             int ang = mPrevAngleY;
             mAngleY = (s16)ang;
             {
-                u16 *p100 = (u16 *)((char *)&unk_100);
+                u16 *p100 = (u16 *)((char *)&mStateTimer);
                 *p100 = (u16)(*p100 + 1);
             }
         }
         if (state != mState || kind != mKoopaVariant) {
-            unk_100 = 0;
+            mStateTimer = 0;
             mWalkState = 0;
         }
         func_ov062_02117c98(((char *)this));

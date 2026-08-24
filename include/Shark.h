@@ -87,7 +87,7 @@ struct Shark {
     s32 unk_0a8;            /* 0x0a8 */
     s32 unk_0ac;            /* 0x0ac */
     u8  pad_0b0[0x50];
-    u8  unk_100;            /* 0x100 */
+    u8  mStateTimer;            /* 0x100 */
     u8  pad_101[0xf];
     /* dCcAcPos_c member, named by the class's own destructor calling
        dCcAcPos_c's D1 at +0x110 -- a relocation the ROM build

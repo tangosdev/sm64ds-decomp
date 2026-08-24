@@ -94,7 +94,7 @@ struct KoopaShell {
     u8  pad_0ac[0x4];
     u32 mFlags;            /* 0x0b0 */
     u8  pad_0b4[0x4c];
-    s16 unk_100;            /* 0x100 */
+    s16 mStateTimer;            /* 0x100 */
     u8  pad_102[0x5];
     u8  unk_107;            /* 0x107 */
     u8  pad_108[0x8];
