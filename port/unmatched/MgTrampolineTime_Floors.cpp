@@ -85,6 +85,85 @@
  * honest reading and is the one the picture should be judged against.
  *
  * SAME WARNING, THREE TIMES OVER: whatever these two call is not in the slice.
+ *
+ * ---- RUN mg12 LANE TRM, PHASE 2: BOTH REMAINING FLOORS ARE DERIVED --------
+ *
+ * Neither is decompiled yet and neither is guessed at any more. Both were read
+ * instruction by instruction out of extracted/overlays/overlay_0006.bin at base
+ * 0x020bfec0; the full listings are banked as p2_disasm_020d01e0.txt and
+ * p2_disasm_020cf2fc.txt. What follows is what they DO, so the next attempt
+ * starts from a map instead of a hex dump.
+ *
+ * func_ov006_020d01e0 (0x800 = 503 instructions + 9 pool words) IS THE
+ * INSTALLER, and it is what writes the render gate at +0x328 that
+ * hal/trampoline_records.cpp reports on. Given the record and the two stroke
+ * endpoints it: stores the raw endpoints at +0x50/+0x54; shifts both by -0x80
+ * in x and negates y; swaps them if a.x > b.x; builds the midpoint into +0x08
+ * and the along-stroke vector into +0x20; takes the cross product with world up
+ * into +0x14 and flips it if its y is negative; writes the two draw vectors at
+ * +0x38 and +0x44; measures the stroke with Vec3_Dist, keeps half of it at
+ * +0x58 and a third of it as the row pitch; then fills a 4x4 grid of Fix12
+ * vertices at +0x5c and copies it to +0x11c, with the row/column weights
+ * running -0x180..+0x180 in steps of 0x100 and the along-stroke parameter
+ * 0..0xfff in steps of 0x555. It then walks the five element records in
+ * data_ov006_0214097c, asks each one three virtuals, and keeps the one whose
+ * projections fall inside the stroke's own extents; on a hit it writes the
+ * record's fields, plays 0x1b1 or 0x1ae through func_ov006_020e6db4 with a
+ * blend of data_ov006_0213b2f8/2fc/300/304, and SETS +0x328 = 3. With no hit it
+ * writes 0x258 at +0x31c and sets +0x328 = 1. Either way the gate goes nonzero,
+ * which is what lets src/func_ov006_020d09e0.c and src/func_ov006_020d0ac0.c
+ * look at the record at all.
+ *
+ * THE READING IS CORROBORATED, NOT JUST ASSERTED. nearmiss/db.jsonl already
+ * carried an independent attempt at this body (source fanout-fable) and it
+ * agrees on every adjudicated constant -- +0x329 = 0x1f, the three accept tests
+ * (d3 < 0x100, d2 <= best, d2 > -0x24000), the 0x400000 branch, +0x328 = 3 on a
+ * hit and 1 without one, and the 0x180/0x555 grid steps. Two separate readings,
+ * no disagreement.
+ *
+ * IT IS NOT SEATED AND THE WALL IS CODEGEN, NOT SEMANTICS. Two candidates were
+ * measured against the ROM with tools/match.py at 2004/b56: this lane's draft
+ * comes out 0x810 (four words long) with 459 of 512 words differing, and the
+ * banked fanout-fable row 0x81c with 395. Neither is close enough to seat
+ * honestly -- the residual is structural, not register naming, so no banner
+ * could truthfully call it scheduling. The draft is banked beside the listing
+ * as p2_draft_020d01e0.c rather than put in src/, because src/ is for matches
+ * and for NONMATCHING seats whose divergences can be stated, and this one's
+ * cannot be yet.
+ *
+ * A NEGATIVE LEVER WORTH KNOWING: reordering the twelve Vec3 locals into the
+ * ROM's own stack order (v0, v1, bestA, bestB, tmpA, tmpB, sum, mid, dv, nrm,
+ * up, crs) moved the count by two words. Declaration order does not decide
+ * frame layout in this body the way pret's idiom predicts; the scalar block
+ * below the vectors is 0x14 bytes wider than the ROM's and that is what shifts
+ * every stack reference in the function.
+ *
+ * ONE OF ITS CALLS IS DEAD IN THE ROM. The fourth DotVec3 in the element loop
+ * (0x020d0798, rec+0x20 against the second point) has its result read by
+ * nothing. It is in the listing and any candidate has to emit it.
+ *
+ * func_ov006_020cf2fc (0x45c = 258 instructions + 21 pool words) IS THE MESH
+ * DRAW for the grid the installer builds, and it is the reason the two loops in
+ * src/func_ov006_020d09e0.c gate on +0x328. It loads the record's translation
+ * from +0x08 and its scale from +0x2c into data_020a0e68, multiplies through
+ * data_0209b3ec twice and pushes both matrices with func_020553a4, then writes
+ * the geometry engine directly: 0x04000440 (matrix mode), 0x0400046c, 0x04000454,
+ * 0x040004a8 and 0x040004ac (texture image and palette base, from
+ * data_ov006_02140844 and data_ov006_02140814), 0x040004a4 (the polygon
+ * attribute, built from the record's +0x31e and +0x329), 0x040004c0 (the two
+ * halves of data_ov006_0212e060 and data_ov006_0212e068 indexed by +0x326),
+ * 0x040004c4, and then a pair of double loops that each open a strip with
+ * 0x04000500 = 2 and emit, per vertex, a normal word from
+ * data_ov006_0212e0b0, a texture coordinate from the record's +0x2dc array
+ * (negated and masked with 0xc0000000), and the position as two 0x0400048c
+ * writes packing three (v << 8) >> 16 halfwords. Rows run 0..2 and columns
+ * 0..3 over the 4x4 grid, twice: once from +0x5c and once from the +0x11c copy.
+ *
+ * THAT ONE ALSO NEEDS HOSTGEN ON THE PORT SIDE, and the pattern is already in
+ * this tree: every one of those stores is a raw MMIO write, which is exactly
+ * the class run mg11's R373 lane found latching silently in memory and fixed
+ * CMakeLists-only through the FLW_HOSTGEN/TT_SHARED_HOSTGEN blocks. Seating it
+ * without that would draw nothing and look like a decompilation bug.
  */
 
 #include <cstdio>

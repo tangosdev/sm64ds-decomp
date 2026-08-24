@@ -3544,3 +3544,69 @@ residue there is the two scratch temps transposed (r0/r1 vs the ROM's
 r1/r0), which is register identity, not the schedule. Reach for the
 pointer-arith + named-successor spelling whenever a copy loop's loads
 and stores interleave in the ROM instead of pairing up.
+
+## 6bo. Two levers off the trampoline per-frame draw, and one that did nothing (func_ov006_02123938 MATCHED, 2026-08-24)
+
+Run mg12, lane TRM. `func_ov006_02123938` (ov006, 0x1e8) went from 53 differing
+words to a byte match on two source spellings, and a third lever that pret's
+idiom predicts would work was measured to do nothing on a much bigger body in
+the same family. All three were scored with `tools/match.py --version 2004/b56`
+against `extracted/overlays/overlay_0006.bin` at base 0x020bfec0.
+
+**Lever 1: an unsigned cast in an array subscript stops mwcc parking the scaled
+index in a callee-saved register.** The body reads four parallel byte arrays at
+the same index, `data_020a0e40 * 4`. Written that way at all four sites, mwcc
+computes the product once, keeps it in r5 across the whole block, and addresses
+every array as `[base, r5]`. The ROM keeps the RAW index in r0 and re-derives
+the scale in the addressing mode -- `[base, r0, lsl #2]` -- at three of the four
+sites, materialising `lsl r2, r0, #2` only for the one site that reads a
+different array. Casting the index at the two sites the ROM addresses inline:
+
+    *(short *)(c + 0x7b9c) = data_020a0dea[(unsigned int)data_020a0e40 * 4];
+
+makes the expression trees differ, kills the common subexpression, and takes the
+count from 29 to 7. The whole register assignment of the surrounding block falls
+into place with it -- the ROM's `ldrsh r5` temporary gets r5 back, and the
+`add r1, r4, #0x7b00` / `add r2, r4, #0x7000` pair lands on the ROM's registers.
+
+THIS IS NOT A GUESS ABOUT THE ORIGINAL SOURCE. `src/TouchArea_Update.c` is a
+byte match over the same four arrays and it carries exactly this asymmetry:
+`data_020a0de8[a1 * 4]` beside `data_020a0de9[(unsigned int)a1 * 4]`, and its
+listing shows the same split -- inline scaling for the plain spelling, and the
+unsigned one distinct from it. The idiom is in the corpus already.
+
+**Lever 2: a boolean only materialises into a register if the arm before it
+RETURNS.** The tail computes `(touched == 0 && tapped != 0)` and the ROM keeps
+it as a value: `bne` to a shared `mov r0,#0`, `movne r0,#1` on the other path,
+then `cmp r0,#0` and a predicated store. Every spelling that leaves the
+preceding block falling through -- `} else if (A && B)`, `} else { w = ...; }`,
+`(A && B) ? 1 : 0`, a nested ternary, `w = A ? B : 0`, and both `if (w)` and
+`if (w != 0)` consumers -- folds the boolean into short-circuit branches and
+comes out three words SHORT. What produces the ROM's shape is ending the draw
+arm with an explicit `return;`, dropping the `else`, and giving the flag
+UNSIGNED type at function scope:
+
+    if (data_020a0de8[data_020a0e40 * 4] != 0) {
+        ... the draw ...
+        return;
+    }
+    w = data_020a0de8[data_020a0e40 * 4] == 0
+        && data_020a0de9[data_020a0e40 * 4] != 0;
+    if (w != 0)
+        *(u8 *)(c + 0x7bab) = 1;
+
+`int w` with the same shape is one word off; `unsigned char` is one word off the
+other way; `short` misses the size entirely. 33 spellings were swept and this is
+the only one that matches. The rule to carry: an `&&` whose consumer is the very
+next `if` gets folded, and what unfolds it is the block above it ending in a
+`return` so the value has to survive a join.
+
+**And one that did nothing.** `func_ov006_020d01e0` (0x800, same family, not
+seated) has twelve `Vec3` locals. Reordering the declarations into the ROM's own
+observed stack order -- v0, v1, bestA, bestB, tmpA, tmpB, sum, mid, dv, nrm, up,
+crs, read straight off the `[sp, #N]` operands -- moved the count by TWO words
+out of 459 and did not move any of the twelve to its ROM address. Declaration
+order is documented in this file as controlling regalloc; it does not control
+FRAME LAYOUT here. What actually shifts every stack reference in that body is
+the scalar block below the vectors coming out 0x14 bytes wider than the ROM's,
+and no reordering of the vectors touches that.

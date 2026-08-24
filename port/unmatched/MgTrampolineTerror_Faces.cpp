@@ -276,7 +276,19 @@ static unsigned g_tte_trap_020cfc74;
    src/func_ov006_020cfa44.c, which is one of the fourteen 3D-Mario states
    unmatched/MgTrampolineTerror_MarioDispatch.cpp routes -- so this floor is
    BEHIND a state and only wants when that state is entered.  Its arity comes
-   from the one call site that names it, `func_ov006_020cfc74(o)`. */
+   from the one call site that names it, `func_ov006_020cfc74(o)`.
+
+   RUN mg12 LANE TRM READ IT, AND IT IS THE BOUNCE.  Not decompiled, but no
+   longer a bare size: the full listing is banked as p2_disasm_020cfc74.txt
+   (347 words) and its call census is Vec2_Sub x6, DotVec3 x6, func_0203d524 x4,
+   Vec3_Sub, Vec3_MulScalar, SubVec3, func_ov006_020e6db4 x2 and
+   func_ov006_020cfa28.  Six dot products against six 2D differences is the
+   shape of testing a moving point against a segment from both ends, and the
+   tail calls the SAME state-setter func_ov006_020cfa28 that the installer
+   func_ov006_020d01e0 calls when it accepts an element -- so this body is the
+   3D-Mario side of the same contact the installer sets up, and the two sound
+   calls through func_ov006_020e6db4 are the bounce.  It is the last of the six
+   this lane was given and the only one with no candidate written at all. */
 extern "C" void func_ov006_020cfc74(char *)
 {
     if (!g_tte_trap_020cfc74)
