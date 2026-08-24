@@ -40,13 +40,13 @@ int Goomboss::Behavior()
     func_ov074_0212199c(((char *)this));
     func_ov074_0212042c(((char *)this));
     _ZN8dActor_c9UpdatePosEP5dCc_c(((char *)this), 0);
-    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char *)this), ((char *)this) + 0x40c, 0);
+    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char *)this), &mWithMeshClsn, 0);
     func_ov074_02120d74(((char *)this));
     func_ov074_02121380(((char *)this));
 
     {
         int i;
-        char *p = ((char *)this) + 0x110;
+        char *p = (char *)mdCc_cs;
         for (i = 0; i < 4; i++) {
             _ZN5dCc_c5ClearEv(p);
             _ZN5dCc_c6UpdateEv(p);
@@ -71,7 +71,7 @@ int Goomboss::Behavior()
                 v.z = mCylClsnPos[2].z;
                 _ZN8dActor_c13LandingDustAtER7Vector3b(((char *)this), &v, 1);
             }
-            func_02012694(0x15e, ((char *)this) + 0x74);
+            func_02012694(0x15e, &mCamSpacePosX);
             {
                 Vector3 v;
                 v.x = mCylClsnPos[2].x;
@@ -95,7 +95,7 @@ int Goomboss::Behavior()
                 v.z = mCylClsnPos[1].z;
                 _ZN8dActor_c13LandingDustAtER7Vector3b(((char *)this), &v, 1);
             }
-            func_02012694(0x15e, ((char *)this) + 0x74);
+            func_02012694(0x15e, &mCamSpacePosX);
             {
                 Vector3 v;
                 v.x = mCylClsnPos[1].x;
