@@ -122,9 +122,18 @@
  * no disagreement.
  *
  * IT IS NOT SEATED AND THE WALL IS CODEGEN, NOT SEMANTICS. Two candidates were
- * measured against the ROM with tools/match.py at 2004/b56: this lane's draft
- * comes out 0x810 (four words long) with 459 of 512 words differing, and the
- * banked fanout-fable row 0x81c with 395. Neither is close enough to seat
+ * measured against the ROM with tools/match.py's own compile at 2004/b56, and
+ * NEITHER MATCHES THE SIZE, so a plain word-diff count is not defined for
+ * either: this lane's draft comes out 0x810, four words LONG, and the banked
+ * fanout-fable row 0x81c, seven words long. Compared over the common 512-word
+ * prefix with reloc slots wildcarded -- which is the only figure the sizes
+ * allow, and the instrument is stated because the number means nothing without
+ * it -- 457 words differ for the draft and 393 for the banked row.
+ * nearmiss/db.jsonl scores that same banked row 277 by ITS own scorer, which is
+ * a different instrument again and not comparable with either figure above.
+ * (An earlier version of this paragraph said 459 and 395. Those came from a
+ * side-by-side that padded the shorter side and counted the pad rows, so each
+ * was overstated by exactly the length difference.) Neither is close enough to seat
  * honestly -- the residual is structural, not register naming, so no banner
  * could truthfully call it scheduling. The draft is banked beside the listing
  * as p2_draft_020d01e0.c rather than put in src/, because src/ is for matches

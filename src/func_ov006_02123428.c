@@ -4,10 +4,14 @@
 // four calls to RandomIntInternal (0x0203b990), one each to func_ov006_021238d0,
 // _Z14ApproachLinearRiii (0x0203ae58), func_ov006_021237c8, func_ov006_0212373c,
 // func_0203cc28 and func_ov006_020cefa4, four to func_ov006_0212382c, and the
-// two pool words data_0209e650 and data_ov006_0212f328. FOURTEEN of the fifteen
-// call sites also land at the ROM's own byte offset; the fifteenth is at +0x198
-// against the ROM's +0x19c, displaced one word by divergence 3 below and nothing
-// else. Logic verified instruction by instruction against the ROM at 0x02123428.
+// two pool words data_0209e650 and data_ov006_0212f328. THE ROM HAS FOURTEEN
+// CALL SITES IN THIS BODY, NOT FIFTEEN -- counted by disassembling all 197 words
+// and keeping the `bl` instructions, which are all fourteen external (this body
+// makes no internal calls). THIRTEEN of the fourteen also land at the ROM's own
+// byte offset; the fourteenth is at +0x198 against the ROM's +0x19c, displaced
+// one word by divergence 3 below and nothing else. An earlier version of this
+// paragraph said "fourteen of the fifteen", which counted a call site the ROM
+// does not have. Logic verified instruction by instruction against the ROM at 0x02123428.
 // Run mg12, lane TRM.
 //
 // THE THREE DIVERGENCES, ALL MEASURED, NONE OF THEM SEMANTIC:

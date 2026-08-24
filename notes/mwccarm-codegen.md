@@ -3575,37 +3575,50 @@ byte match over the same four arrays and it carries exactly this asymmetry:
 listing shows the same split -- inline scaling for the plain spelling, and the
 unsigned one distinct from it. The idiom is in the corpus already.
 
-**Lever 2: a boolean only materialises into a register if the arm before it
-RETURNS.** The tail computes `(touched == 0 && tapped != 0)` and the ROM keeps
-it as a value: `bne` to a shared `mov r0,#0`, `movne r0,#1` on the other path,
-then `cmp r0,#0` and a predicated store. Every spelling that leaves the
-preceding block falling through -- `} else if (A && B)`, `} else { w = ...; }`,
-`(A && B) ? 1 : 0`, a nested ternary, `w = A ? B : 0`, and both `if (w)` and
-`if (w != 0)` consumers -- folds the boolean into short-circuit branches and
-comes out three words SHORT. What produces the ROM's shape is ending the draw
-arm with an explicit `return;`, dropping the `else`, and giving the flag
-UNSIGNED type at function scope:
+**Lever 2: an `&&` assigned to a variable materialises only when the assignment
+needs a CONVERSION. The type is the whole lever; control flow is not.** The tail
+computes `(touched == 0 && tapped != 0)` and the ROM keeps it as a value: `bne`
+to a shared `mov r0,#0`, `movne r0,#1` on the other path, then `cmp r0,#0` and a
+predicated store. `int w = A && B;` folds instead, into short-circuit branches,
+and comes out THREE WORDS SHORT (0x1dc against 0x1e8).
 
-    if (data_020a0de8[data_020a0e40 * 4] != 0) {
-        ... the draw ...
-        return;
-    }
-    w = data_020a0de8[data_020a0e40 * 4] == 0
-        && data_020a0de9[data_020a0e40 * 4] != 0;
-    if (w != 0)
-        *(u8 *)(c + 0x7bab) = 1;
+THIS ENTRY FIRST CLAIMED THE LEVER WAS AN EARLY `return`, AND AN EXPERIMENT
+DISPROVED IT. The claim was that ending the draw arm with `return;` and dropping
+the `else` is what unfolds the boolean. It is not. The two forms were compiled
+against each other over six flag types, and the form does not appear in the
+result at all -- what appears is the type:
 
-`int w` with the same shape is one word off; `unsigned char` is one word off the
-other way; `short` misses the size entirely. 33 spellings were swept and this is
-the only one that matches. The rule to carry: an `&&` whose consumer is the very
-next `if` gets folded, and what unfolds it is the block above it ending in a
-`return` so the value has to survive a join.
+    flag type        `... return; }` form      `} else { ... }` form
+    int              0x1dc, three words short   0x1dc, three words short
+    unsigned         MATCH                      MATCH
+    unsigned int     MATCH                      MATCH
+    unsigned long    MATCH                      MATCH
+    long             MATCH                      MATCH
+    unsigned char    size right, 1 word differs size right, 1 word differs
+    short            0x1ec, one word long       0x1ec, one word long
+
+`long` matching where `int` does not is the tell for the mechanism, since both
+are 32-bit signed here: the `&&` operator yields `int`, so `int w = A && B` needs
+no conversion node and mwcc folds it into the branch that consumes it, while ANY
+type that makes the assignment a conversion forces the value to exist first. For
+the 32-bit conversions the conversion itself is free, so they byte-match; the
+narrowing ones cost the extra truncate (`unsigned char`) or sign-extend (`short`)
+and miss by exactly that.
+
+src/func_ov006_02123938.c ships the `return;` spelling because that is what was
+written first, NOT because it is required -- the `else` form byte-matches too.
+The rule to carry is only this: an `&&` whose consumer is the very next `if` gets
+folded, and what unfolds it is assigning it to a variable whose type differs from
+`int`.
 
 **And one that did nothing.** `func_ov006_020d01e0` (0x800, same family, not
 seated) has twelve `Vec3` locals. Reordering the declarations into the ROM's own
 observed stack order -- v0, v1, bestA, bestB, tmpA, tmpB, sum, mid, dv, nrm, up,
 crs, read straight off the `[sp, #N]` operands -- moved the count by TWO words
-out of 459 and did not move any of the twelve to its ROM address. Declaration
+out of 457 and did not move any of the twelve to its ROM address. (457 is words
+differing over the common 512-word prefix, the candidate being four words long
+at 0x810; see the figure note in unmatched/MgTrampolineTime_Floors.cpp.)
+Declaration
 order is documented in this file as controlling regalloc; it does not control
 FRAME LAYOUT here. What actually shifts every stack reference in that body is
 the scalar block below the vectors coming out 0x14 bytes wider than the ROM's,
