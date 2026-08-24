@@ -118,12 +118,22 @@
 //   0213fec8    0213ff58, 0x90 = 36    020ad660    0x0212992c
 //   0213e448    0213e4d8, 0x90 = 36    020ad660    0x050a0a0f
 //
-//   4. RELOCATION STRIDE.  ov006's relocs.txt carries 36 CONTIGUOUS load
-//      relocations at a four-byte stride from 0x0213fec8 to 0x0213ff54, one per
-//      slot, and then the stride JUMPS TO EIGHT from 0x0213ff58 on.  A vtable
-//      is relocated every word; an mwcc member-pointer table is relocated every
-//      other word.  The stride change is where the table ends, and it needs no
-//      symbol to say so.
+//   4. RELOCATION COMPLETENESS -- WHICH IS NOT A BOUND ON THE END, AND THIS
+//      LINE USED TO PRETEND IT WAS.  It read "36 CONTIGUOUS load relocations at
+//      a four-byte stride from 0x0213fec8 to 0x0213ff54, one per slot, and then
+//      the stride JUMPS TO EIGHT from 0x0213ff58 on", which invited the reading
+//      that the stride-4 run STOPS at slot 35.  It does not: measured over
+//      ov006's relocs.txt the contiguous four-byte run starting at 0x0213fec8
+//      is THIRTY-SEVEN relocations long and its last is 0x0213ff58, because the
+//      first word of the mwcc pair that follows the table is an address too and
+//      carries a relocation of its own at exactly +4.  The stride-8 run begins
+//      at 0x0213ff60.  What this check really measures is COMPLETENESS: all 36
+//      slots carry a load relocation, none is missing, so the fill keys on a
+//      table the ROM relocates in full rather than on a run with holes in it.
+//      WHERE THE TABLE ENDS IS FIXED BY THE TERMINAL-SLOT CHECK ABOVE
+//      (0x020ad660 at index 35) AND BY NOTHING IN THIS ONE.  Measured by lane
+//      PKR of run mg11, which hit the same wording on its own table, and
+//      re-measured at the mg11 merge.
 //
 // THE WORD PAST THE END IS A LIVE CODE ADDRESS HERE, which is section 11's
 // "where the word happens to look like a code address is exactly where the eye

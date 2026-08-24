@@ -186,19 +186,19 @@ matched src TU at all and will need a named trap or a decomp.
   0x169  (data_ov006_0213c020)       0213c154      36   13     9      0
   0x16f  MgBoomBox                   0213f844      36   13    11      0
   0x17d  (data_ov006_0213d580)       0213d664      36   13    11      0
-  0x17e  MgPairAGoneAndOn            0213d7e8      36   14    11      1
-  0x17f  MgMushroomRoulette          0213e39c      36   14    11      0
+  0x17e  MgPairAGoneAndOn            0213d7e8      36   14    11      1   DONE
+  0x17f  MgMushroomRoulette          0213e39c      36   14    11      0   DONE
   0x16a  MgMemoryMatch               0213d1b8      36   14    12      0
   0x16b  MgMemoryMaster              0213d4d4      36   14    12      0   DONE
   0x184  MgLuckyStars                0213fec8      36   14    12      0
   0x185  MgPsycheOut                 0213c8c4      36   14    12      0
-  0x16d  (data_ov006_0213e508)       0213eaa8      36   15    13      0
-  0x17b  MgPicturePoker              0213bdb4      36   15    13      0
-  0x174  MgBounceAndPounce           0213cbe4      36   23    14      1
-  0x175  MgBounceAndTrounce          0213ccfc      36   23    15      0
-  0x181  MgTrampolineTerror          0213fc7c      36   25    15      0
-  0x180  MgTrampolineTime            0213fb34      36   25    16      0
-  0x179  MgSnowballSlalom            0214000c      36   16    14      0
+  0x16d  (data_ov006_0213e508)       0213eaa8      36   15    13      0   DONE
+  0x17b  MgPicturePoker              0213bdb4      36   15    13      0   DONE
+  0x174  MgBounceAndPounce           0213cbe4      36   23    14      1   DONE
+  0x175  MgBounceAndTrounce          0213ccfc      36   23    15      0   DONE
+  0x181  MgTrampolineTerror          0213fc7c      36   25    15      0   DONE
+  0x180  MgTrampolineTime            0213fb34      36   25    16      0   DONE
+  0x179  MgSnowballSlalom            0214000c      36   16    14      0   DONE
 
     totals   369 override slots, 278 of them marker-carrying, 4 with no src
       (the twenty-nine rows that always resolved:  353 / 264 / 4)
@@ -2816,6 +2816,20 @@ this repo checks a banner.
      port/unmatched/MgBase_LangTable.cpp performs the copy the ROM performs;
      the src TU does not, and the byte gate is content either way.
 
+  5. THE BANNER THAT CLAIMS TOO LITTLE. src/func_ov006_020fa3d0.c is bannered
+     "NONMATCHING: missing logic (ROM does more) (div=33)" and its logic is
+     NOT missing -- the divergence is codegen, and one of the 33 is mwcc's
+     dead `cmp r0,#6` (0xe3500006) before an unconditional branch 0xea000024,
+     its spelling of `case 6: default:`. This is the OPPOSITE polarity of
+     item 1: item 1 is a banner that claims MORE than the body earns, this is
+     a banner that claims LESS. Both are unfalsifiable by the byte gate, and
+     this one costs the tree a real body every time somebody reads the banner
+     and traps the slot instead of seating it. The correction is one banner
+     line and belongs to the decomp side; the port takes nothing. Found by
+     run mg11 lane PGO, which wrote it at the file's end to avoid nine
+     concurrent lanes conflicting mid-file, and moved here at the mg11 merge
+     as that section asked.
+
 HOW TO RETIRE A ROW. Correct the src TU and its banner on the decomp side,
 then delete the port's host copy and put the src line back in its slice. Each
 of these costs the port one LINKED function today, so retiring them moves the
@@ -3453,16 +3467,8 @@ TRAPPING IT WOULD HAVE LEFT STATES 4, 5 AND 6 DEAD on a class whose whole round
 END lives in them. The brief for this lane expected a trap; the measurement said
 seat it, so it is seated and this paragraph is why.
 
-ROUTING ITEM 5, FOR SECTION 20's LIST. src/func_ov006_020fa3d0.c is bannered
-"NONMATCHING: missing logic (ROM does more) (div=33)" and its logic is NOT
-missing -- the divergence is codegen, and one of the 33 is mwcc's dead
-`cmp r0,#6` (0xe3500006) before an unconditional branch 0xea000024, its spelling
-of `case 6: default:`. This is the OPPOSITE polarity of routing item 1: item 1
-is a banner that claims more than the body earns, this is a banner that claims
-less. Both are unfalsifiable by the byte gate, and this one costs the tree a
-real body every time somebody reads the banner and traps the slot instead of
-seating it. The correction is one banner line and belongs to the decomp side;
-the port takes nothing.
+ROUTING ITEM 5 HAS MOVED. It is now item 5 of section 20, where this section
+asked the merge gate to put it. Nothing else from here moved.
 
 (4) THE ELEMENT TABLE, WITH BOTH SLOTS WITNESSED
 

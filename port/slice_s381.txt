@@ -54,8 +54,27 @@
 #      over the ROM returns nothing. tools/message_bank.py already decodes it
 #      (its BASIC_CHARS table is exactly that mapping), which is what made this
 #      a five-minute derivation rather than a hand decode. Run mg9's lane S371
-#      reached the same chain independently and controlled it on 25 of 25 ids;
-#      this lane's reading of row 5 agrees with it.
+#      reached the same chain independently and controlled it against the
+#      config's spawn symbols; this lane's reading of row 5 agrees with it.
+#
+#      THAT CONTROL'S DENOMINATOR USED TO READ "25 of 25" HERE AND IT WAS NEVER
+#      COUNTED. Run mg11 lane MUG re-ran the control against this tree and
+#      measured 28 ROWS / 24 DISTINCT SYMBOLS, with agreement total -- 28 of 28
+#      -- for the (param >> 16) & 0xff reading. The denominator is stated with
+#      its definition because it moves by one depending on where a "config spawn
+#      symbol" may come from: config/arm9/overlays/ov006/symbols.txt alone gives
+#      27 rows / 23 symbols, and adding symbols/actor_renames.tsv gives 28 / 24.
+#      The row that moves is row 28, scene 375 (id 0x177), whose SpawnInfo
+#      0x0213c434 is unnamed in ov006's symbols.txt and is named
+#      MgShellSmash_SpawnInfo by actor_renames.tsv line 2126. Agreement is total
+#      under either denominator, so the conclusion this section draws is
+#      untouched; only the ratio was wrong.
+#
+#      THE 25 CAME FROM HERE AND TRAVELLED. Lane MUG carried it into its own
+#      seat before its review caught it (port/slice_mug.txt records that), which
+#      is why the correction lands in this file too rather than only in MUG's:
+#      a figure quoted from a neighbour is a claim about the tree and needs
+#      measuring like any other. Both halves of a ratio are claims.
 #
 # SO THE TITLE IS "Pair-a-Gone" AND IT IS NOT PROVISIONAL. The config-wide
 # address sweep the Shell Smash lesson prescribes was run first and found one

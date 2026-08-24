@@ -72,12 +72,22 @@
 #      IS a live ov006 code address -- section 11's "where the word happens to
 #      look like a code address is exactly where the eye fails". Section 4
 #      below says whose it is. Index 36 of 0x0213e448 reads 0x050a0a0f.
-#   4. RELOCATION STRIDE, which this lane adds because it needs no symbol and
-#      no judgment. ov006's relocs.txt carries 36 CONTIGUOUS load relocations at
-#      a FOUR-byte stride from 0x0213fec8 to 0x0213ff54 -- one per slot -- and
-#      then the stride JUMPS TO EIGHT from 0x0213ff58 on. A vtable is relocated
-#      every word; an mwcc member-pointer table is relocated every other word.
-#      The stride change is where the table ends.
+#   4. RELOCATION COMPLETENESS -- NOT A BOUND ON THE END, though this line used
+#      to read as one. It said "36 CONTIGUOUS load relocations at a FOUR-byte
+#      stride from 0x0213fec8 to 0x0213ff54 -- one per slot -- and then the
+#      stride JUMPS TO EIGHT from 0x0213ff58 on", which invites the reading that
+#      the stride-4 run STOPS at slot 35. It does not. Measured over ov006's
+#      relocs.txt, the contiguous four-byte run starting at 0x0213fec8 is
+#      THIRTY-SEVEN long and its last is 0x0213ff58: the first word of the mwcc
+#      pair after the table is an address too and carries its own relocation at
+#      exactly +4. The stride-8 run begins at 0x0213ff60.
+#
+#      What the check measures is COMPLETENESS -- all 36 slots carry a load
+#      relocation, none missing, so the fill keys on a table the ROM relocates
+#      in full rather than on a run with holes. THE END IS FIXED BY THE
+#      TERMINAL-SLOT CHECK (0x020ad660 at index 35), not by this one. Found by
+#      lane PKR of run mg11 against its own table, verified by its reviewer,
+#      re-measured at the mg11 merge and corrected here in the same words.
 #
 # ---- 4. WHOSE BYTES A 37TH SLOT WOULD TAKE, NAMED --------------------------
 #
