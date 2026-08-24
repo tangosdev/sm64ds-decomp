@@ -5,7 +5,7 @@ extern void _ZN5Sound12PlayBank2_2DEj(unsigned int a);
 extern void func_ov006_020c1764(char *c);
 extern short func_ov006_02108650(int a, int b);
 extern void func_ov006_02109530(char *out, int *a, int scale);
-extern void func_ov006_0210935c(char *a);
+extern void func_ov006_0210935c(char *a, int idx);
 extern void func_ov006_021092e8(char *self);
 extern void func_ov004_020ad79c(int a, int b);
 extern int func_ov006_02108b90(char *a, int b);
@@ -113,7 +113,7 @@ int func_ov006_02109aac(char *c)
                         func_ov006_02109530(p2, (int *)&data_ov006_02142ab4[type * 8], 0x100);
                         goto labnext;
                     lab35c:
-                        func_ov006_0210935c(p2);
+                        func_ov006_0210935c(p2, type);
                     labnext:
                         i++;
                         p1 += 0x34;

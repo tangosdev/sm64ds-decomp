@@ -151,7 +151,6 @@ func_ov005_020c0030|include/decl_common.h
 func_ov005_020c007c|src/func_ov005_020c0030.c
 func_ov006_020fbb2c|src/func_ov006_020fb7e0.c
 func_ov006_02108650|src/func_ov006_02108d28.c
-func_ov006_0210935c|src/func_ov006_02109aac.c
 func_ov006_02114738|src/func_ov006_02110bb4.c
 func_ov006_02115b0c|src/func_ov006_02118a8c.cpp
 func_ov006_0211fb1c|src/func_ov006_0211f9fc.c
