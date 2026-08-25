@@ -39,7 +39,14 @@ struct BlendModelAnim : ModelAnim {
     virtual void Render(const Vector3 *scale);            /* slot 5 */
     virtual void Virtual18(u32 mat, const Vector3 *scale);/* slot 6 */
 
+    /* DECLARED, defined out of line in src/_ZN14BlendModelAnimC1Ev.cpp as
+     * real C++ -- complete-object context for every ROM caller (it is a
+     * member subobject in ChiefChilly/Eyerok/Klepto/Unagi...), hence C1.
+     * Body is empty; blendWeight and unk_6c are initialised through the init
+     * list so their stores land where the ROM has them. */
+
     /* --- non-virtual --- */
+    BlendModelAnim();
     void Advance();
     void SetAnim(BCA_File &animFile, int numBlendFrames, int flags,
                  Fix12<int> speed, u16 startFrame);  /* free function, wall 6az */
