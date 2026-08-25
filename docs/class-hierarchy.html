@@ -126,7 +126,7 @@ footer{margin-top:72px; padding-top:18px; border-top:1.5px solid var(--ink);
 <dl class="fields">
 <div class="f"><dt>Source</dt><dd>retail ROM, ARM9 + 103 overlays</dd></div>
 <div class="f"><dt>Classes</dt><dd>429 named by the ROM</dd></div>
-<div class="f"><dt>Edges</dt><dd>413 proven · 61 inferred</dd></div>
+<div class="f"><dt>Edges</dt><dd>413 proven · 57 inferred</dd></div>
 <div class="f"><dt>Deepest chain</dt><dd>5 levels</dd></div>
 <div class="f"><dt>Generated</dt><dd>tools/rtti_hierarchy_page.py</dd></div>
 </dl></div>
@@ -140,9 +140,9 @@ footer{margin-top:72px; padding-top:18px; border-top:1.5px solid var(--ink);
 <div class="scroll"><table><thead><tr><th>Tier</th><th>Count</th><th>What makes it true</th><th>Can it be wrong?</th></tr></thead><tbody>
 <tr><td><strong>Proven</strong></td><td class="m">413 edges</td><td>The class's <code>type_info</code> record holds a pointer to its base's record. The compiler wrote it; this is read, not inferred.</td><td>Only if the pointer was misread. 0 of 413 are unresolved.</td></tr>
 <tr><td><strong>Proven root</strong></td><td class="m">24 classes</td><td>A <code>__class_type_info</code> record — the ABI's own encoding for “no base”.</td><td>No. The record kind is the statement.</td></tr>
-<tr><td><strong>Inferred</strong></td><td class="m">61 classes</td><td>No <code>type_info</code> exists, so the base comes from vptr stores in the constructor/destructor chain.</td><td>Yes. A shim or an inlined base constructor can mislead it.</td></tr>
+<tr><td><strong>Inferred</strong></td><td class="m">57 classes</td><td>No <code>type_info</code> exists, so the base comes from vptr stores in the constructor/destructor chain.</td><td>Yes. A shim or an inlined base constructor can mislead it.</td></tr>
 <tr><td><strong>Contradicted</strong></td><td class="m">0 classes</td><td>The repo's header names a real ancestor, but not the immediate base. The ROM names the immediate one.</td><td>The ROM is right by construction; the header is the error.</td></tr>
-<tr><td><strong>Unplaced</strong></td><td class="m">6 classes</td><td>Known to the repo, no <code>type_info</code>, and no vptr chain placed it.</td><td>Nothing is claimed, so nothing can be wrong.</td></tr>
+<tr><td><strong>Unplaced</strong></td><td class="m">3 classes</td><td>Known to the repo, no <code>type_info</code>, and no vptr chain placed it.</td><td>Nothing is claimed, so nothing can be wrong.</td></tr>
 </tbody></table></div>
 <div class="note">The ROM stores 429 type_info records and 413 base pointers, and <strong>every one of those pointers resolves</strong> — 293 of them across an overlay boundary. Where this page is silent it is because the ROM is silent, not because the reading was hard.</div>
 </section><section><div class="sec-h"><span class="sec-n">§2</span><h2>The spine</h2></div>
@@ -445,14 +445,14 @@ footer{margin-top:72px; padding-top:18px; border-top:1.5px solid var(--ink);
 </section><section><div class="sec-h"><span class="sec-n">§5</span><h2>Where the repo's headers are wrong</h2></div>
 <p><strong>Nowhere.</strong> Every class the repo both names and holds a belief about names the <em>immediate</em> base the ROM records. Not one header names a class absent from the ROM's ancestor chain, and — the weaker failure this section was built to catch — not one names a genuine ancestor further up the chain than the real parent.</p>
 <p>The chain-flattening this section reports comes from modelling a class's grandparent as its parent, which happens when the intermediate has no header and the evidence for the edge is a destructor vptr store that skips it. It is therefore retired by writing the intermediate down, not by correcting the children.</p>
-<div class="note">Empty because the finding was acted on, not because the test was relaxed: the same comparison still runs against all 429 records. 248 of them are parented by a hand-written <code>struct D : B</code> in a de-bannered header rather than by a base pointer the ROM supplied, and those are the only rows that <em>can</em> disagree with the ROM. None does.</div>
+<div class="note">Empty because the finding was acted on, not because the test was relaxed: the same comparison still runs against all 429 records. 260 of them are parented by a hand-written <code>struct D : B</code> in a de-bannered header rather than by a base pointer the ROM supplied, and those are the only rows that <em>can</em> disagree with the ROM. None does.</div>
 </section><section><div class="sec-h"><span class="sec-n">§6</span><h2>What is still guessed</h2></div>
-<p>67 classes the repo knows have no <code>type_info</code> record at all. They are not polymorphic, or their vtable was never emitted, so RTTI cannot speak to them and their placement rests entirely on constructor evidence. 61 of them have an inferred base; 6 have none.</p>
+<p>60 classes the repo knows have no <code>type_info</code> record at all. They are not polymorphic, or their vtable was never emitted, so RTTI cannot speak to them and their placement rests entirely on constructor evidence. 57 of them have an inferred base; 3 have none.</p>
 <div class="scroll"><table><thead><tr><th>Status</th><th>Count</th><th>Classes</th></tr></thead><tbody>
-<tr><td style="color:var(--inferred)"><strong>Inferred base</strong></td><td class="n">61</td><td class="m">BlueFlame, BooCage, BowserFireSeaArena, Bullet, Chuckya, Clam, ClockPaintingHandShort, Cloud, DorrieCap, EnemySwitchTag, Fireball, Flag, FlyGuy, Fwoosh, HugeWater, IceBlock, JetStream, Key, LakituBro, LightBeam, MansionSteps, MegaMushroomCreateTag, MetalNet, MontyMole, MotherPenguin, Number, OneUpLogo, PoleLift, PowerStar, RabbitKey, RacingPenguin, RotatingUpDownPlatform, RotatingUpDownPlatformUtm, ShipWater, ShipWing, SignPost, SlideDecorationSilverStar, Snowball, Snufit, Spindrift, StarDoor, SwitchActivatedPlank, Swoop, Toad, TowerStep, TreasureChest, TtcConveyorBeltLarge, WDW_Water, WallSign, WaterBomb, WaterRing, Whirlpool, dScEntry_c, dScMB_c, daBgSnwmn_c, daDsnBase_c, daObjFallBlock_c, daObjMaruta_c, daObjPathLift_c, daObjWlPolelift_c, daOts_c</td></tr>
-<tr><td><strong>No placement</strong></td><td class="n">6</td><td class="m">FaderBrightness, FaderColor, RaycastGround, WithMeshClsn, dFdDummy_c, dWipe_c</td></tr>
+<tr><td style="color:var(--inferred)"><strong>Inferred base</strong></td><td class="n">57</td><td class="m">BlueFlame, BooCage, BowserFireSeaArena, Bullet, Chuckya, Clam, ClockPaintingHandShort, Cloud, EnemySwitchTag, Fireball, Flag, FlyGuy, Fwoosh, HugeWater, IceBlock, JetStream, Key, LakituBro, LightBeam, MansionSteps, MegaMushroomCreateTag, MetalNet, MontyMole, MotherPenguin, Number, OneUpLogo, PoleLift, PowerStar, RabbitKey, RacingPenguin, RotatingUpDownPlatform, RotatingUpDownPlatformUtm, ShipWater, ShipWing, SignPost, SlideDecorationSilverStar, Snowball, Snufit, Spindrift, StarDoor, SwitchActivatedPlank, Swoop, Toad, TowerStep, TreasureChest, TtcConveyorBeltLarge, WDW_Water, WallSign, WaterBomb, WaterRing, Whirlpool, dScEntry_c, daDsnBase_c, daObjFallBlock_c, daObjMaruta_c, daObjPathLift_c, daOts_c</td></tr>
+<tr><td><strong>No placement</strong></td><td class="n">3</td><td class="m">FaderBrightness, FaderColor, dWipe_c</td></tr>
 </tbody></table></div>
-<p>Separately, 64 ROM classes have no name in the repo at all — the ROM knows them, the project has never given them a header. They are proven within this graph and invisible outside it.</p>
+<p>Separately, 54 ROM classes have no name in the repo at all — the ROM knows them, the project has never given them a header. They are proven within this graph and invisible outside it.</p>
 </section><section><div class="sec-h"><span class="sec-n">§7</span><h2>What this document cannot tell you</h2></div>
 <p>The ROM's RTTI carries class <em>names</em> and base <em>pointers</em>. That is all it carries. Specifically:</p>
 <div class="scroll"><table><thead><tr><th>Not available</th><th>Why</th></tr></thead><tbody>
@@ -460,7 +460,7 @@ footer{margin-top:72px; padding-top:18px; border-top:1.5px solid var(--ink);
 <tr><td><strong>Parameter types</strong></td><td>The <code>type_info</code> kinds that encode a signature (<code>__function_type_info</code>, <code>__pointer_type_info</code>) were never linked in — this program never does <code>typeid</code> on a function type.</td></tr>
 <tr><td><strong>Field names or layouts</strong></td><td>RTTI records a base's <em>offset</em>, never its members. Sizes come from the <code>operator new</code> literal at each call site instead.</td></tr>
 <tr><td><strong>Original filenames</strong></td><td>Exactly one <code>__FILE__</code> string survives ROM-wide — <code>isdoverlay.c</code>, Nintendo's debugger SDK. Game code was built with asserts stripped.</td></tr>
-<tr><td><strong>Non-polymorphic classes</strong></td><td>A class with no virtual function gets no vtable and no record. The 67 inferred classes in §6 are exactly this population.</td></tr>
+<tr><td><strong>Non-polymorphic classes</strong></td><td>A class with no virtual function gets no vtable and no record. The 60 inferred classes in §6 are exactly this population.</td></tr>
 </tbody></table></div></section>
 <footer>Generated by <code>tools/rtti_hierarchy_page.py</code> from <code>build/rtti.json</code>, <code>build/rtti_reconcile.json</code> and <code>build/evidence_hierarchy.json</code>. Every count, edge and offset on this page is joined at generation time; nothing is typed by hand. Re-run <code>tools/rtti_extract.py --check</code> to re-prove the census before trusting a number here.</footer>
 </div>
