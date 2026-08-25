@@ -475,5 +475,38 @@ class ModuleFidelityDetail(unittest.TestCase):
         self.assertIn("range outside built or retail module", out)
 
 
+class RomFailureDetailTest(unittest.TestCase):
+    """A failed ROM build must reach the author as the compiler said it, not as
+    the phase name alone -- "mwccarm failed" is unactionable, and when the box
+    and the author disagree it is the only evidence there is."""
+
+    def test_failure_output_is_rendered_with_phase_and_exit_code(self):
+        out = "\n".join(VM._rom_failure_detail({"failure": {
+            "phase": "mwccarm", "returncode": 1,
+            "output": "the file 'Clipper.h' cannot be opened"}}))
+        self.assertIn("the file 'Clipper.h' cannot be opened", out)
+        self.assertIn("mwccarm failed", out)
+        self.assertIn("exit 1", out)
+        self.assertIn("<details>", out)
+
+    def test_a_successful_build_renders_nothing(self):
+        self.assertEqual(VM._rom_failure_detail({"analysis": {}}), [])
+        self.assertEqual(VM._rom_failure_detail(None), [])
+
+    def test_a_failure_that_captured_no_output_renders_nothing(self):
+        # Better the bare table row than an empty code fence.
+        self.assertEqual(
+            VM._rom_failure_detail({"failure": {"phase": "mwldarm", "output": "   "}}), [])
+        self.assertEqual(
+            VM._rom_failure_detail({"failure": {"phase": "mwldarm"}}), [])
+
+    def test_long_output_keeps_the_tail_where_the_error_is(self):
+        noisy = ("compiling something" + chr(10)) * 500 + "FATAL: the real error"
+        out = "\n".join(VM._rom_failure_detail(
+            {"failure": {"phase": "mwccarm", "returncode": 1, "output": noisy}}))
+        self.assertIn("FATAL: the real error", out)
+        self.assertIn("trimmed", out)
+
+
 if __name__ == "__main__":
     unittest.main()

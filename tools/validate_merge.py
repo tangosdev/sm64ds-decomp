@@ -840,12 +840,42 @@ def render_markdown(r):
                       f"with the ROM's own bytes. Both together are the "
                       f"{h['matchedFunctions']:,} this project calls matched."]
     lines += _module_fidelity_detail(head_rom)
+    lines += _rom_failure_detail(head_rom)
     if r["warnings"]:
         lines += ["", "Warnings: " + "; ".join(r["warnings"]) + "."]
     return "\n".join(lines)
 
 
 SHOWN = 12
+
+
+def _rom_failure_detail(head_rom):
+    """Print the compiler's own words when the ROM build dies, not just the phase name.
+
+    rombuild.py already captures up to 4000 chars of the failing phase's output into
+    failure["output"] (rombuild.py:799), and the summary table rendered only
+    failure["phase"] -- so a build that died on one bad #include reached the author as
+    the four words "mwccarm failed" and nothing else. That is unactionable from the PR
+    page and actively misleading when the box and the author's machine disagree: the
+    author sees a clean local build and has no way to learn what the box saw. Same
+    defect and same remedy as _module_fidelity_detail above.
+
+    Returns markdown lines, or [] when the build did not fail or said nothing.
+    """
+    failure = (head_rom or {}).get("failure")
+    if not failure:
+        return []
+    out = (failure.get("output") or "").strip()
+    if not out:
+        return []
+    LIMIT = 3000
+    if len(out) > LIMIT:
+        out = "[... earlier output trimmed, showing the last " + str(LIMIT) + " chars ...]" + chr(10) + out[-LIMIT:]
+    phase = failure.get("phase")
+    code = failure.get("returncode")
+    return ["",
+            "<details><summary>Full ROM build output (%s failed, exit %s)</summary>" % (phase, code),
+            "", "```", out, "```", "", "</details>"]
 
 
 def _module_fidelity_detail(head_rom):

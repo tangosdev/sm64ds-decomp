@@ -41,3 +41,14 @@ config/converted-backslide-exceptions.jsonl merge=union
 # A patch file must keep LF endings: core.autocrlf=true would give the working copy
 # CRLF, and `git apply` of a CRLF patch against LF sources fails every hunk.
 *.patch -text
+
+# The TU manifest is written by tools/tu_manifest.py with newline="\n" and read back
+# byte-for-byte: TrackedManifestTests.test_rewriting_the_tracked_manifest_is_a_no_op
+# asserts that re-saving what was just loaded rewrites nothing. Under core.autocrlf=true
+# a checkout hands the working copy CRLF while tu_manifest.save writes LF, so every entry
+# file looks rewritten -- the test fails on any Windows clone, and a tubuild run that
+# saves the manifest shows a whole-tree diff on entries it never touched. Observed after
+# #1724-#1737: 13 entry files arrived through git's checkout filter (CRLF in the worktree)
+# while 60 were written directly by tu_manifest.save (LF). Every committed blob was LF;
+# only the working copy diverged. Pin the endings so the two writers agree.
+config/tu_manifest.d/**/*.json text eol=lf
