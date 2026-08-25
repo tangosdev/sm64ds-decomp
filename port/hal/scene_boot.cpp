@@ -434,6 +434,8 @@ void hal_sub_screen_init_hw(void *hwnd, int zoom);
 void hal_sub_screen_probe(void);
 void hal_sub_screen_frame_begin(void);
 void hal_sub_screen_present(unsigned int *dst, int w, int h);
+/* engine B's own raster, written without re-scanning; see its note */
+int hal_sub_screen_write_bmp(const char *path);
 /* THE STACKED LAYOUT (hal/sub_screen.cpp, run link60 lane DSL1): both DS
    screens full size, top above bottom, which is what a touchscreen game needs
    and the corner panel cannot give it. This file is where a run learns whether
@@ -1071,15 +1073,20 @@ L2_UNMATCHED(func_ov007_020b8fd4)
    visible; guessing bodies for them would not be.
      func_01ffaa34  ITCM, config/arm9/itcm/symbols.txt names it and no src
                     defines it. Reached from func_ov007_020c5c14.
-     func_02054c80  reached from func_02054430; no arm9 symbol at that address
-                    at all, so dsd's name is a guess about an address, not a
-                    function the config knows.
+     (func_02054c80 WAS IN THIS LIST AND IS RETIRED. The note said "no arm9
+      symbol at that address at all, so dsd's name is a guess about an
+      address", and that was wrong: config/arm9/symbols.txt names
+      `Vram__Map kind:function(arm,size=0xb8) addr:0x02054c80`, the matched
+      body is src/Vram__Map.c, slice_gate10.txt carries it and it is in the
+      link already. The trap was shadowing a body the binary contained under
+      its other name, so every func_02054430 call -- which is how the VRAM
+      banks are put back into LCDC mode -- returned 0 and mapped nothing.
+      It is a name-spelling face now; see section 4(b).)
      func_0211d9c0  reached from func_0201a458 (the heap-for-the-next-scene
      func_02140d80  helper). Both are addresses in overlays this build does
                     not host, and ov007 is not co-resident with either. */
 #define L2_UNMATCHED(sym)                                                          extern "C" int sym(void);                                                      extern "C" int sym(void) { l2_trap(#sym); return 0; }
 L2_UNMATCHED(func_01ffaa34)
-L2_UNMATCHED(func_02054c80)
 L2_UNMATCHED(func_0211d9c0)
 L2_UNMATCHED(func_02140d80)
 #undef L2_UNMATCHED
@@ -1130,6 +1137,19 @@ L2_UNMATCHED(func_02140d80)
 #pragma comment(linker, "/alternatename:_func_0203c280=__ZN4Heap11_DeallocateEPv")
 #pragma comment(linker, "/alternatename:_func_0203c28c=__ZN4Heap8AllocateEj")
 #pragma comment(linker, "/alternatename:_func_02055574=__ZN3G3X13SetClearColorEtiiib")
+//     AND A SIXTH, ADDED BY THE DUALSCREEN LANE AND RETIRED OUT OF THE
+//     UNMATCHED-TRAP CENSUS ABOVE: 0x02054c80 is `Vram__Map`, the function
+//     that puts each bank named in a mask back into LCDC mode by writing 0x80
+//     to its VRAMCNT byte. src/Vram__Map.c is matched and slice_gate10.txt
+//     links it; the port had a trap on the address instead, so func_02054430 --
+//     the ONE caller, `*p |= arg; return func_02054c80(arg, p)` -- returned 0
+//     and no bank ever moved. The two spellings disagree about arity: the
+//     caller's declaration is `(int, unsigned short *)` and the body is
+//     `(int)`. That is a difference of one SPURIOUS cdecl argument and nothing
+//     else -- the ROM passes the mask in r0 for both, the caller pushes the
+//     extra word and pops it itself, and both call sites in the D3D family
+//     (func_ov006_020e7508 and _020e759c) ignore the return.
+#pragma comment(linker, "/alternatename:_func_02054c80=_Vram__Map")
 //
 // (c) THE _ZN6Player17St_EndingFly_MainEv NAMING TRAP, which the 2d map warns
 //     about in its section 1 and which this slice is the first build to hit.
@@ -3911,6 +3931,34 @@ extern "C" int port_scene_finish(int frames_run)
            the top engine draws into them, and calling them a gap in a capture
            line would put a gap-on word on the one picture that has none. */
         const int shift = hal_sub_screen_stacked_obj_shift();
+        /* AND WHICH ENGINE IS IN WHICH HALF, because on a scene that drives
+           POWCNT1 bit 15 the answer is a property of the LAST FRAME and not of
+           the program. A capture from one of those scenes read without this
+           line is a capture whose halves cannot be attributed. */
+        std::fprintf(stderr, "  [scene] stacked capture: POWCNT1 %04x, so the "
+                     "upper half is engine %c and the lower half engine %c\n",
+                     *(volatile unsigned short *)0x04000304,
+                     (*(volatile unsigned short *)0x04000304 & 0x8000) ? 'A' : 'B',
+                     (*(volatile unsigned short *)0x04000304 & 0x8000) ? 'B' : 'A');
+        /* THE SUB FRAMEBUFFER ON ITS OWN, beside the stacked image and under
+           the same switch. Engine B's raster is 256x192 and is the ONE thing a
+           stacked capture cannot be read back to when the halves can swap: the
+           lower half is engine A on half the frames of a D3D minigame. Writing
+           it separately is what makes "engine B produced this" a measurement.
+           Named off the stacked path with _subB before the extension. */
+        if (bmp_stacked) {
+            char sub_path[512];
+            std::snprintf(sub_path, sizeof sub_path, "%s", bmp_stacked);
+            char *dot = std::strrchr(sub_path, '.');
+            if (dot && (size_t)(dot - sub_path) + 10 < sizeof sub_path) {
+                std::memmove(dot + 5, dot, std::strlen(dot) + 1);
+                std::memcpy(dot, "_subB", 5);
+                if (hal_sub_screen_write_bmp(sub_path))
+                    std::printf("[scene] wrote %s, %dx%d: engine B's own "
+                                "raster, whichever screen it is driving\n",
+                                sub_path, ntr::SUB_W, ntr::SUB_H);
+            }
+        }
         if (img && ntr::ppu_write_bmp_px(bmp_stacked, img, iw, ih))
             std::printf("[scene] wrote %s, %dx%d: the top screen over the "
                         "bottom screen, each %dx%d, with %d row(s) of headroom "

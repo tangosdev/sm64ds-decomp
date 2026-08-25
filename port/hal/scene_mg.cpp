@@ -804,6 +804,124 @@ static unsigned mg_raw_left(void **vt, unsigned n)
    SPLIT FROM THE CONSTRUCTORS DELIBERATELY. The constructors are NOT safe on
    every boot and the header block says why; keeping them in a separate
    function is what makes the difference visible rather than a comment. */
+/* ---- THE MINIGAME GRAPHICS BLOCK, SEATED ------------------------------------
+ *
+ * Every VBlank, IRQ::VBlankHandler runs func_02019144, whose FIRST beat
+ * dispatches the CURRENT GRAPHICS BLOCK's vtable slot 2 and returns before the
+ * rest of the function when it answers 0. hal/scene_boot.cpp's
+ * port_graph_block_beat is the port's copy of that beat, and it only dispatches
+ * a block whose vtable the port has SEATED -- every other block still holds raw
+ * DS code addresses, and calling one would be a wild jump.
+ *
+ * Until this, exactly one block was seated: the title screen's
+ * (scene_boot.cpp's one port_graph_block_register call). Every minigame parks
+ * dScMgBase_c::graphCallback_c -- ov004's data_ov004_020beb74 -- in
+ * data_0209d4a8 through its slot 33, and that block's vtable is
+ * data_ov004_020bc03c, four words which the generated mount left as the ROM
+ * wrote them:
+ *
+ *     {0x020ae0d4, 0x020ae0a4, 0x020ae06c, 0x020ae03c}
+ *
+ * so the beat refused it and slot 2 never ran. All four are FORWARDERS into the
+ * scene's own 36-slot table, and the port had none of them compiled:
+ *
+ *     word 0  func_ov004_020ae0d4 -> scene vtable +0x5c, slot 23
+ *     word 1  func_ov004_020ae0a4 -> +0x58, slot 22
+ *     word 2  func_ov004_020ae06c -> +0x60, slot 24, AND RETURNS ITS ANSWER
+ *     word 3  func_ov004_020ae03c -> +0x64, slot 25
+ *
+ * WHAT SLOT 24 IS. For the dScMgD3DBase_c family (372, 373, 384, 385) it is the
+ * SCREEN SELECTOR, func_ov006_020e6e78: it toggles the live camera between the
+ * two screens every frame, flips POWCNT1 bit 15 with it, arms the display
+ * capture unit at alternating VRAM banks and moves those banks between LCDC and
+ * engine B. That whole path is dark while this beat refuses the block.
+ *
+ * AND IT IS NOT ONLY THE FLIP. Slot 24 is also the only post-boot updater of
+ * the four BG-offset shadows, so with it dead the beat's tail republished FROZEN
+ * BOOT VALUES every frame -- measured on 377, whose BG registers sat at HOFS 256
+ * / VOFS 432 while its scroll word moved through a whole run.
+ *
+ * THE ADAPTERS BELOW ARE CALLING-CONVENTION ONLY. Each is one line and calls the
+ * ROM's own matched body; not one of them reimplements a forwarder. The port
+ * dispatches a graphics-block word as __fastcall (this in ecx), which is what
+ * scene_boot.cpp's ti_gc0..ti_gc3 are and what its Slot2 typedef says, while the
+ * four src TUs are ordinary cdecl functions taking the block as their argument.
+ * That is the whole of the difference and the whole of what these bridge.
+ *
+ * BLAST RADIUS, and it is why this is the last part of the feature to land.
+ * Seating the block gates func_02019144's tail on slot 24's answer for EVERY
+ * dScMgBase_c descendant at once -- ALL THIRTY of them, not the four this
+ * feature is about -- because the block is installed by slot 33 and every
+ * minigame runs slot 33. Scenes that never install the block are untouched:
+ * installation is slot 33's act, not this function's.
+ *
+ * WHO ACTUALLY OVERRIDES SLOT 24, counted out of the ROM rather than argued.
+ * Word 24 (byte +0x60) of all THIRTY-TWO ov006 ActorBase-signature tables, read
+ * straight from extracted/overlays/overlay_0006.bin at base 0x020bfec0:
+ *
+ *     26 tables INHERIT func_ov004_020ae140, dScMgBase_c's own
+ *      6 tables OVERRIDE it --
+ *          0x0213c62c, 0x0213cbe4, 0x0213ccfc -> 0x020e6e78  (dScMgD3DBase_c
+ *              itself plus 372 and 373; the base class is one of the three and
+ *              no scene instantiates it)
+ *          0x0213fb34 -> 0x021211e0  (384, dScMgTrampoline_c::OnKicked)
+ *          0x0213fc7c -> 0x021230e8  (385, dScMgTrampoline2_c::OnKicked)
+ *          0x0214000c -> 0x02128fb8  (377, dScMgSnowball_c)
+ *
+ * So the live overriding scenes are exactly the five this feature touches, and
+ * the other twenty-six inherit.
+ *
+ * AND THE INHERITED BODY IS NOT SIDE-EFFECT FREE, which an earlier version of
+ * this note got wrong by saying it "returns 1 on every path -- so their tail is
+ * unchanged by construction". The RETURN is 1 on every path, so the tail's gate
+ * is unchanged by construction and that half stands. But the body also compares
+ * self+0x4628 against self+0x462c and, when they differ, dispatches slot 30 or
+ * slot 29 -- func_ov004_020aeed8 and func_ov004_020af094, the display
+ * save/restore pair, both of which write POWCNT1 -- and then syncs the two
+ * words. On the inheriting scenes that path is simply not taken.
+ *
+ * MEASURED rather than asserted: all 32 hosted scenes captured at 300 frames on
+ * this build and on a from-scratch build of the lane's base commit, 26 are
+ * BYTE-IDENTICAL and the six that move are 372, 373, 377, 384, 385 -- the five
+ * above -- and scene 1, which is not a minigame at all and moves for part 2's
+ * reason rather than this one (src/func_ov007_020b7138.c clears POWCNT1 bit 15
+ * itself, so the title screen has been presented with its halves exchanged and
+ * now is not).
+ */
+extern "C" void port_graph_block_register(void *vt);
+extern "C" unsigned char data_ov004_020bc03c[];
+extern "C" int func_ov004_020ae0d4(char *c);
+extern "C" int func_ov004_020ae0a4(char *c);
+extern "C" int func_ov004_020ae06c(char *c);
+extern "C" int func_ov004_020ae03c(char *c);
+
+namespace {
+int __fastcall mg_gc0(void *c, void *) { return func_ov004_020ae0d4((char *)c); }
+int __fastcall mg_gc1(void *c, void *) { return func_ov004_020ae0a4((char *)c); }
+int __fastcall mg_gc2(void *c, void *) { return func_ov004_020ae06c((char *)c); }
+int __fastcall mg_gc3(void *c, void *) { return func_ov004_020ae03c((char *)c); }
+}  // namespace
+
+static void port_scene_mg_gc_seat(void)
+{
+    void **vt = (void **)data_ov004_020bc03c;
+    /* SAID ONCE, WITH THE WORDS IT REPLACED, because a seat that silently
+       overwrites four pointers is indistinguishable from a seat that
+       overwrote the wrong four. The `was` values are the ROM's own addresses
+       and a reader can check them against the mount. */
+    std::fprintf(stderr,
+                 "  [scene] minigame graphics block seated: "
+                 "data_ov004_020bc03c at %p was {%08X,%08X,%08X,%08X}\n",
+                 (void *)vt, (unsigned)(size_t)vt[0], (unsigned)(size_t)vt[1],
+                 (unsigned)(size_t)vt[2], (unsigned)(size_t)vt[3]);
+    vt[0] = (void *)mg_gc0;
+    vt[1] = (void *)mg_gc1;
+    vt[2] = (void *)mg_gc2;
+    vt[3] = (void *)mg_gc3;
+    port_graph_block_register(vt);
+    std::fflush(stderr);
+}
+
 static void port_scene_mg_mounts(void)
 {
     static int done;
@@ -814,6 +932,11 @@ static void port_scene_mg_mounts(void)
     port_ov004_syms_patch();
     port_ov006_pack_check();
     port_ov006_syms_patch();
+    /* AFTER THE MOUNT PATCHES AND NOT BEFORE. port_ov004_syms_patch rebases the
+       mount's own data->data pointers, and it walks the same storage this
+       writes host code addresses into; seating first would hand it four
+       pointers that are not DS addresses and are not meant to be rebased. */
+    port_scene_mg_gc_seat();
 }
 
 extern "C" void port_scene_mg_overlay_load(void)

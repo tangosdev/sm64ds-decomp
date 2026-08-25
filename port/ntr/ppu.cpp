@@ -371,4 +371,199 @@ bool ppu_write_bmp(const char *path, const Framebuffer &fb) {
     return ppu_write_bmp_px(path, &fb.px[0][0], SCREEN_W, SCREEN_H);
 }
 
+// ---- THE DISPLAY CAPTURE UNIT ----------------------------------------------
+//
+// See ntr/ppu.h for the register decode and for what is and is not modelled.
+// Everything here is GBATEK's DISPCAPCNT and VRAM control tables.
+
+namespace {
+
+constexpr uint32_t kDispCapCnt = 0x04000064u;
+constexpr uint32_t kVramCnt = 0x04000240u;   // A..G at +0..+6, H at +7, I at +8
+constexpr uint32_t kLcdcBase = 0x06800000u;  // block N at +N*0x20000
+constexpr uint32_t kBankSize = 0x20000u;     // 128 KB, banks A..D
+
+// What the last capture put in each block, so ppu_vram_publish knows the one
+// range worth carrying. `len` 0 means this block has never been captured into,
+// which is every block in every scene that never programs the unit.
+struct CapRegion {
+    uint32_t off;    // bytes from the start of the bank
+    uint32_t len;    // bytes written
+};
+CapRegion g_cap[4];
+
+// The home each captured block was last seen at, so a change can be noticed.
+// 0 is "not established yet" and the first publish pass only records.
+uint32_t g_home[4];
+int g_home_have[4];
+
+// One-shot refusals. A picture that quietly comes out of an unmodelled corner
+// is worse than one that does not come out at all, so each corner says its
+// piece once and then stops.
+int g_said_srcb, g_said_notlcdc;
+
+/* THE BLOCK'S OWN STORAGE. The capture unit has its own port into VRAM and
+   writes the BLOCK, not a mapping of it, so the destination is the LCDC-space
+   address whatever the bank's VRAMCNT currently says. */
+inline uint32_t lcdc_addr(unsigned block) {
+    return kLcdcBase + (uint32_t)block * kBankSize;
+}
+
+/* WHERE A BANK IS VISIBLE RIGHT NOW, per GBATEK's VRAM control table, for the
+   two banks the capture path uses and the two MSTs it uses them in. Returns 0
+   for "nowhere a reader in this program looks", which covers a disabled bank,
+   an ARM7 allocation and a texture slot alike -- all three are correct answers
+   of the same kind: nothing here reads that. */
+uint32_t bank_home(unsigned block, uint8_t cnt) {
+    if (!(cnt & 0x80)) return 0;             // disabled
+    const unsigned mst = cnt & 7;
+    if (mst == 0) return lcdc_addr(block);   // LCDC, every bank
+    if (block == 2 && mst == 4) return 0x06200000u;   // VRAM-C -> engine B BG
+    if (block == 3 && mst == 4) return 0x06600000u;   // VRAM-D -> engine B OBJ
+    /* Every other MST is a real answer of the same kind -- an ARM7 allocation,
+       a texture slot, an engine A window -- and no reader on the capture path
+       looks at any of them. Silent, because there is nothing wrong with it: a
+       captured block sitting where nothing reads it is the ordinary state of
+       three blocks out of four. */
+    return 0;
+}
+
+}  // namespace
+
+void ppu_vram_publish(void) {
+    for (unsigned b = 0; b < 4; ++b) {
+        if (!g_cap[b].len) continue;         // never captured into
+        const uint8_t cnt = *reinterpret_cast<volatile uint8_t *>(kVramCnt + b);
+        const uint32_t home = bank_home(b, cnt);
+        if (!g_home_have[b]) {
+            /* THE FIRST PASS ONLY RECORDS. The capture that made this block
+               interesting has just landed at the LCDC address, which is where
+               a reader would find it anyway while the bank is still there, so
+               there is nothing to carry yet. */
+            g_home_have[b] = 1;
+            g_home[b] = home;
+            continue;
+        }
+        if (home == g_home[b]) continue;
+        g_home[b] = home;
+        if (!home) continue;                 // nowhere this program reads
+        if (home == lcdc_addr(b)) continue;  // the bytes are already there
+        std::memcpy(reinterpret_cast<void *>(home + g_cap[b].off),
+                    reinterpret_cast<const void *>(lcdc_addr(b) + g_cap[b].off),
+                    g_cap[b].len);
+    }
+}
+
+void ppu_display_capture(const uint32_t *src, int w, int h) {
+    volatile uint32_t *reg = reinterpret_cast<volatile uint32_t *>(kDispCapCnt);
+    const uint32_t cap = *reg;
+    if (!(cap & 0x80000000u)) return;
+
+    /* THE ENABLE BIT IS CLEARED HERE AND UNCONDITIONALLY, before any decision
+       about whether the capture can be performed. The hardware clears it at the
+       end of the captured frame whatever it captured, and a unit that only
+       cleared it on the paths it understood would spin on the ones it did
+       not. */
+    *reg = cap & ~0x80000000u;
+
+    const unsigned source = (cap >> 29) & 3;
+    if (source != 0) {
+        if (!g_said_srcb) {
+            g_said_srcb = 1;
+            std::fprintf(stderr,
+                         "  [capture] DISPCAPCNT %08x selects capture source "
+                         "%u (B, or A and B blended). Only source A -- engine "
+                         "A's own output -- is modelled, because it is the only "
+                         "one anything in this game programs. Nothing is "
+                         "captured this frame.\n", cap, source);
+            std::fflush(stderr);
+        }
+        return;
+    }
+    if (!src || w <= 0 || h <= 0) return;
+
+    const unsigned block = (cap >> 16) & 3;
+
+    /* ---- THE DESTINATION HAS TO BE A BLOCK ---------------------------------
+     *
+     * The capture unit writes a VRAM BLOCK, and a bank is only reachable as a
+     * block while it is allocated to LCDC; once its VRAMCNT hands it to an
+     * engine or to the texture unit it is that unit's memory. Every capture
+     * this game asks for on purpose arranges exactly that first: both
+     * dScMgD3DBase_c arms call func_02054430 -- which is Vram__Map, writing
+     * VRAMCNT = 0x80 -- on the destination bank in the same breath as they arm
+     * the register.
+     *
+     * THE ONE WRITE THAT DOES NOT is Scene::ResetHardwareRegisters', and it is
+     * why this is a test rather than a note. It writes DISPCAPCNT = 0x80000000
+     * -- the enable bit with every field zero, so a 128x128 capture into block
+     * 0 at offset 0 -- and it runs at the top of every scene in the game. Block
+     * 0 is VRAM-A, and this port maps TEXTURE SLOT 0 at 0x06800000
+     * (ntr/gx.cpp's TEX_SLOT_BASE), so honouring it unconditionally writes
+     * 32 KB of downsampled framebuffer over the first texture slot on the first
+     * frame of every scene.
+     *
+     * HONEST SCOPING, because this is the one corner of the unit that is not
+     * simply transcribed. The field layout, the auto-clear and the source
+     * selection are GBATEK's and are reproduced as written. Whether the
+     * hardware performs a capture into a bank that is NOT in LCDC is a question
+     * GBATEK did not settle for this lane. The conservative reading is taken --
+     * the destination must be a block -- for three reasons: it is what the
+     * doc's own framing of a "VRAM write block" says; nothing in this ROM ever
+     * asks for the other behaviour deliberately; and the two readings differ
+     * observably in exactly one place, a 32 KB corruption of texture memory
+     * that no ROM can have been written to rely on. Said once on stderr so the
+     * choice is visible in any run that meets it. */
+    const uint8_t dcnt = *reinterpret_cast<volatile uint8_t *>(kVramCnt + block);
+    if ((dcnt & 0x87) != 0x80) {
+        if (!g_said_notlcdc) {
+            g_said_notlcdc = 1;
+            std::fprintf(stderr,
+                         "  [capture] DISPCAPCNT %08x names VRAM block %u, "
+                         "whose VRAMCNT is %02x: it is not allocated to LCDC, "
+                         "so it is not a block right now and nothing is "
+                         "captured into it. (Scene::ResetHardwareRegisters "
+                         "writes 0x80000000 at every scene boot; that names "
+                         "block 0, where this port maps texture slot 0.)\n",
+                         cap, block, dcnt);
+            std::fflush(stderr);
+        }
+        return;
+    }
+
+    /* bits 20-21. Width is 256 except at size 0, which is the square one. */
+    static const int kW[4] = {128, 256, 256, 256};
+    static const int kH[4] = {128, 64, 128, 192};
+    const unsigned size = (cap >> 20) & 3;
+    const int cw = kW[size], ch = kH[size];
+
+    const uint32_t off = ((cap >> 18) & 3) * 0x8000u;
+    const uint32_t need = (uint32_t)cw * (uint32_t)ch * 2u;
+    if (off + need > kBankSize) return;      // would run off the end of the bank
+
+    /* NEAREST, not averaged; see the note in ntr/ppu.h. The ratio is a whole
+       number at every tier the port builds. */
+    const int rx = w / SUB_W, ry = h / SUB_H;
+    uint16_t *dst = reinterpret_cast<uint16_t *>(lcdc_addr(block) + off);
+    for (int y = 0; y < ch; ++y) {
+        const int sy = ry > 0 ? y * ry : (y * h) / SUB_H;
+        const uint32_t *row = src + (size_t)(sy < h ? sy : h - 1) * (size_t)w;
+        for (int x = 0; x < cw; ++x) {
+            const int sx = rx > 0 ? x * rx : (x * w) / SUB_W;
+            const uint32_t p = row[sx < w ? sx : w - 1];
+            /* ARGB8888 -> BGR555, and BIT 15 SET. On hardware the captured
+               alpha bit says "this pixel was opaque"; engine A's finished
+               framebuffer is opaque everywhere -- it starts from the scene's
+               own clear colour -- so the bit is 1 for every captured pixel
+               rather than derived from a channel the host framebuffer does not
+               carry a meaning for. */
+            dst[(size_t)y * cw + x] =
+                (uint16_t)(0x8000u | (((p >> 3) & 0x1Fu) << 10) |
+                           (((p >> 11) & 0x1Fu) << 5) | ((p >> 19) & 0x1Fu));
+        }
+    }
+    g_cap[block].off = off;
+    g_cap[block].len = need;
+}
+
 }  // namespace ntr

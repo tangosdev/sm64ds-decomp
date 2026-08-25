@@ -50,7 +50,17 @@
 //     brightness this file applies. Applying mode 2/3 here too would double the
 //     fade, so this unit recognises them and defers. The game only ever writes
 //     mode 2/3 for fades and mode 1 (alpha) for effects, so the split is clean.
-//   - no bitmap OBJs (OBJ mode 3), no bitmap BGs, no mosaic.
+//   - EXTENDED AFFINE BITMAP BGs, both arms: 256-colour and DIRECT COLOUR.
+//     BGxCNT bit 7 in an extended-affine slot means bitmap rather than 256
+//     colours, and this file used to refuse the whole arm. It is how the
+//     display capture unit's frame reaches the bottom screen in the
+//     dScMgD3DBase_c family: BG2CNT_B 0x4284, direct colour, bitmap base
+//     0x8000, which is exactly where DISPCAPCNT 0x80360010 put the frame.
+//   - BITMAP OBJs, OBJ mode 3, direct colour, both mapping arms. They are
+//     the other half of the dual-screen 3D path: on the frames engine B
+//     drives the UPPER screen the captured frame comes back as twelve
+//     64x64 direct-colour sprites rather than as a BG.
+//   - no mosaic.
 //
 // The OBJ window used to be listed here as missing, and the line said "mode 3
 // sprites are skipped". BOTH halves were wrong: the OBJ window is mode 2, mode
@@ -119,7 +129,16 @@ inline uint32_t bgr555(uint16_t c) {
 
 // ---- backgrounds ------------------------------------------------------------
 
-enum BgKind { BG_OFF, BG_TEXT, BG_AFFINE, BG_EXT_AFFINE };
+/* BG_BITMAP_* are the two shapes an EXTENDED AFFINE BG takes when BGxCNT
+   bit 7 is set. GBATEK: in an extended-affine slot bit 7 chooses between
+   16-bit bgmap entries (bit 7 = 0, the minimap's mode) and a BITMAP
+   (bit 7 = 1), and inside the bitmap arm bit 2 chooses 256-colour (8 bits
+   per pixel through the standard palette) from DIRECT COLOUR (16 bits per
+   pixel, BGR555, bit 15 = opaque). Both go through the same affine matrix
+   the map-based extended BG does; the only thing that changes is how a
+   sampled (px, py) turns into a colour. */
+enum BgKind { BG_OFF, BG_TEXT, BG_AFFINE, BG_EXT_AFFINE, BG_BITMAP_256,
+              BG_BITMAP_DIRECT };
 
 struct BgLayer {
     BgKind kind;
@@ -166,9 +185,43 @@ void read_bg(BgLayer &c, int bg, uint32_t dispcnt) {
     c.screen = kVramBase + (((cnt & 0x1f00) >> 8) << 11);
 
     const int sz = (cnt >> 14) & 3;
+    /* THE BITMAP ARM. `c.bpp8` is BGxCNT bit 7, which in an extended-affine
+       slot does not mean "256 colours" at all -- it means BITMAP -- and this
+       used to refuse the whole arm ("selects a bitmap, which is not hosted").
+       It is hosted now, because it is how the display capture unit's frame
+       reaches the screen: the dScMgD3DBase_c family points BG2-B at the block
+       it captured into last frame, with BG2CNT_B 0x4284 (bit 7 bitmap, bit 2
+       direct colour, screen base 2, size 1).
+
+       THE BASE IS THE SCREEN BASE IN 16K UNITS, not the 2K units a map-based
+       BG uses. The arithmetic is what makes the whole reading of this path
+       check out: 2 x 0x4000 is 0x8000, and DISPCAPCNT 0x80360010's destination
+       is bank C offset 1, which is 0x8000 bytes into bank C -- the same bytes,
+       once bank C is mapped to engine B's BG. Two registers written by two
+       different functions agreeing to the byte is not a coincidence a reader
+       gets to ignore.
+
+       The sizes are the bitmap set, not the map set: 128x128, 256x256, 512x256
+       and 512x512 pixels. */
     if (kind == BG_EXT_AFFINE && c.bpp8) {
-        // bit 7 set in an extended BG selects a bitmap, which is not hosted.
-        c.kind = BG_OFF;
+        static const short kBmpW[4] = {128, 256, 512, 512};
+        static const short kBmpH[4] = {128, 256, 256, 512};
+        c.kind = (cnt & 0x04) ? BG_BITMAP_DIRECT : BG_BITMAP_256;
+        c.screen = kVramBase + (((cnt & 0x1f00) >> 8) << 14);
+        c.map_w = kBmpW[sz];
+        c.map_h = kBmpH[sz];
+        c.wrap = (cnt >> 13) & 1;
+        const uint32_t ab = kRegBase + 0x20 + (bg - 2) * 0x10;
+        c.pa = (int16_t)rd16(ab + 0);
+        c.pb = (int16_t)rd16(ab + 2);
+        c.pc = (int16_t)rd16(ab + 4);
+        c.pd = (int16_t)rd16(ab + 6);
+        c.refx = (int)(rd32(ab + 8) << 4) >> 4;
+        c.refy = (int)(rd32(ab + 12) << 4) >> 4;
+        /* NO EXTENDED PALETTE. DISPCNT bit 30 arms them for 256-colour
+           TILE BGs; a bitmap has no per-tile palette field to select a slot
+           with, and the direct-colour arm has no palette at all. */
+        c.ext = 0;
         return;
     }
     if (kind == BG_TEXT) {
@@ -216,6 +269,43 @@ bool sample_bg(const BgLayer &c, int x, int y, uint32_t &out) {
     int px, py;
     uint16_t se;
     int tile, fx, fy;
+
+    /* ---- THE BITMAP ARMS, and they leave before any tile arithmetic ------
+     *
+     * A bitmap BG has no tiles, no map and no flip bits: the affine transform
+     * lands directly on a pixel. Same matrix, same 8.8 fixed point, same
+     * display-area-overflow rule as the map-based affine BGs above, so the
+     * coordinate half is spelled once here and only the fetch differs. */
+    if (c.kind == BG_BITMAP_256 || c.kind == BG_BITMAP_DIRECT) {
+        px = (c.refx + c.pa * x + c.pb * y) >> 8;
+        py = (c.refy + c.pc * x + c.pd * y) >> 8;
+        if (c.wrap) {
+            px &= c.map_w - 1;
+            py &= c.map_h - 1;
+        } else if (px < 0 || px >= c.map_w || py < 0 || py >= c.map_h) {
+            return false;
+        }
+        const uint32_t at = (uint32_t)py * (uint32_t)c.map_w + (uint32_t)px;
+        if (c.kind == BG_BITMAP_DIRECT) {
+            /* BIT 15 IS THE ALPHA and it is a HARD transparency, not a blend
+               factor: a direct-colour bitmap pixel with bit 15 clear is not
+               drawn at all and whatever is behind it shows. The display
+               capture unit sets the bit on every pixel it writes, so a
+               captured frame is opaque everywhere -- which is what makes a
+               captured screen look like a screen and not like a stencil. */
+            const uint16_t v = rd16(c.screen + at * 2);
+            if (!(v & 0x8000)) return false;
+            out = bgr555(v);
+            return true;
+        }
+        /* 256-colour bitmap: index 0 is transparent, the same rule every other
+           paletted layer in this file follows, and there is no per-tile
+           palette to offset it by. */
+        const uint8_t i8 = rd8(c.screen + at);
+        if (!i8) return false;
+        out = bgr555(rd16(kPlttBase + (uint32_t)i8 * 2));
+        return true;
+    }
 
     if (c.kind == BG_TEXT) {
         px = (x + c.hofs) & (c.map_w * 8 - 1);
@@ -385,7 +475,20 @@ void raster_obj(uint32_t dispcnt) {
         // ordinary opaque sprite. See the note over ppu.cpp's OBJ layer for
         // where the field position is pinned from the decomp's own OAM::Render.
         const unsigned objmode = (a0 >> 10) & 3;
-        if (objmode == 3) continue;                     // bitmap OBJ: not hosted
+        /* MODE 3 IS THE BITMAP SPRITE, and it used to be skipped as "not
+           hosted". It is how the display capture unit's frame reaches the
+           screen ENGINE B IS DRIVING ON THE OTHER HALF OF THE FLIP: the
+           dScMgD3DBase_c family's sel==1 arm maps the bank it captured into
+           last frame to engine B's OBJ VRAM, turns BG2 off and OBJ on, and
+           the frame comes back as TWELVE 64x64 direct-colour sprites --
+           4 x 3 of them, which is 256x192, which is 0x18000 bytes, which is
+           the capture's own size to the byte. Measured on scene 384 with the
+           block seated: 98299 of 131072 bytes nonzero in engine B's OBJ VRAM
+           and exactly 12 placed entries in its OAM.
+           Without this the upper screen is the white backdrop on every
+           second frame, which is a 30 Hz flicker rather than a missing
+           feature. */
+        const bool is_bmp = objmode == 3;
         const bool is_win = objmode == 2;
         const int shape = (a0 >> 14) & 3;
         if (shape == 3) continue;
@@ -433,6 +536,107 @@ void raster_obj(uint32_t dispcnt) {
                 // Where this 8x8 cell lives, in 32-byte tile slots from the
                 // sprite's base. 1D: consecutive. 2D: a 32-slot-wide matrix,
                 // and a 256-colour cell is two slots wide.
+                /* ---- THE BITMAP SPRITE, and it leaves before the tile
+                   arithmetic below because it has no tiles at all -- the
+                   sprite IS a rectangle of 16-bit pixels.
+
+                   GBATEK. The rows are addressed by DISPCNT bit 5, the
+                   BITMAP OBJ mapping bit, which is a different bit from the
+                   tile mapping bit 4 this file reads into map1d:
+
+                     1D (bit 5 set): the sprite's pixels are consecutive and
+                        attr2's tile number steps in units of the boundary
+                        DISPCNT bit 22 selects, 128 bytes or 256.
+                     2D (bit 5 clear): OBJ VRAM is one wide bitmap and the
+                        sprite is a window onto it. Bit 6 chooses the width,
+                        128 dots or 256, and the tile number splits into a
+                        column part and a row part accordingly.
+
+                   Engine B reads DISPCNT_B 0x00011025 on the frames that
+                   use this: bit 5 SET and bit 6 CLEAR, which is 2D mapping
+                   at a 256-dot width. Both arms are implemented anyway -- a
+                   reader that only does the arm the one scene uses is a
+                   reader that lies the first time another scene does not --
+                   but only the 2D arm is exercised and only it is proved.
+
+                   ALPHA. attr2 bits 12-15 are the sprite's alpha, and ZERO
+                   MEANS THE SPRITE IS NOT DISPLAYED -- the field is not a
+                   palette bank here. Per pixel, bit 15 of the colour is the
+                   opacity, the same rule the direct-colour bitmap BG uses.
+                   The 1..15 blend levels are NOT applied: this file's alpha
+                   path is BLDALPHA's EVA/EVB, a bitmap sprite's own alpha
+                   is a third mechanism, and nothing in this game asks for a
+                   value between -- the family submits its twelve at 15,
+                   fully opaque. A sprite that asked for one would draw
+                   opaque here, which is the honest failure: visible and in
+                   the right place, rather than absent. */
+                if (is_bmp) {
+                    const unsigned alpha = (a2 >> 12) & 0xF;
+                    if (!alpha) continue;
+                    uint32_t at;
+                    /* BIT 6 SELECTS THE MAPPING, BIT 5 THE 2D DIMENSION, and
+                       an earlier version of this block had the two jobs the
+                       other way round -- it chose the arm on bit 5 and took the
+                       2D width from bit 6. GBATEK's NDS DISPCNT:
+
+                         bit 5   Bitmap OBJ 2D-Dimension
+                                 (0 = 128x512 dots, 1 = 256x256 dots)
+                         bit 6   Bitmap OBJ Mapping  (0 = 2D, 1 = 1D)
+                         bit 22  Bitmap OBJ 1D-Boundary (0 = 128, 1 = 256 bytes)
+
+                       It is bit 4 that is the mapping bit for TILE OBJs, and
+                       reading the bitmap pair as if it followed that layout is
+                       how the two got swapped. */
+                    if ((dispcnt >> 6) & 1) {
+                        /* 1D: the sprite's pixels are consecutive and attr2's
+                           number steps in boundary units. NOT the arm this game
+                           uses -- see below -- and untested by anything in the
+                           tree, so it is written from the doc and left labelled
+                           as such rather than claimed. */
+                        const uint32_t bnd = ((dispcnt >> 22) & 1) ? 256u : 128u;
+                        at = tile * bnd + (uint32_t)(ty * w + tx) * 2u;
+                    } else {
+                        /* 2D: OBJ VRAM is ONE bitmap `wide` dots across and the
+                           sprite is a window onto it, so attr2 is a (column,
+                           row) pair rather than a linear offset -- low bits X in
+                           8-dot units, upper bits Y -- and the within-sprite row
+                           stride is the BITMAP's width, not the sprite's.
+
+                           THE ROM SETTLES WHICH ARM THIS IS, in one statement.
+                           src/func_ov006_020e7428.c, the family's own sprite
+                           builder (matched, and in all four family slices),
+                           opens with
+
+                               *(u32 *)0x4001000 = (reg & 0xffbfff9f) | 0x20;
+
+                           and 0xffbfff9f clears bits 5, 6 AND 22 before ORing
+                           bit 5 alone back in: mapping 2D, dimension 256x256,
+                           1D boundary deliberately zeroed because it is not in
+                           use. The same function then writes
+
+                               attr2 = (tx + (ty << 5)) | 0xf000
+
+                           with tx stepping 0,8,16,24 across and ty 0,8,16 down,
+                           which IS this encoding and is not a linear multiple of
+                           any boundary. Under it the twelve 64x64 sprites tile
+                           the 256x192 capture exactly: tile 8 -> byte 0x80 =
+                           pixel (64,0), tile 256 -> 0x8000 = (0,64), tile 536 ->
+                           0x10180 = (192,128). */
+                        const uint32_t wide = ((dispcnt >> 5) & 1) ? 256u : 128u;
+                        const uint32_t mask = (wide >> 3) - 1u;   /* 0x1F or 0x0F */
+                        at = ((tile & mask) * 0x10u + (tile & ~mask) * 0x80u) +
+                             ((uint32_t)ty * wide + (uint32_t)tx) * 2u;
+                    }
+                    const uint16_t v = rd16(kObjVram + at);
+                    if (!(v & 0x8000)) continue;
+                    if (g_obj[py][px].hit && prio > g_obj[py][px].prio)
+                        continue;
+                    g_obj[py][px].color = bgr555(v);
+                    g_obj[py][px].prio = prio;
+                    g_obj[py][px].hit = 1;
+                    g_obj[py][px].semi = 0;
+                    continue;
+                }
                 const uint32_t slot =
                     map1d ? (c256 ? (uint32_t)(trow * (w / 8) + tcol) * 2u
                                   : (uint32_t)(trow * (w / 8) + tcol))
@@ -1091,16 +1295,19 @@ void amb_trace_list(const char *name, const RGB *v)
  * this feature ships with is exactly a second implementation re-deriving the
  * band from the captured edge rows and diffing it. Every divide here is a
  * truncating integer divide and the checker does the same ones. */
-void band_edge_obj_masks(uint8_t *mtop, uint8_t *mbot);  /* defined after the
-    band raster below; the masks say which DS columns of the two edge rows an
-    OBJ covers, so the wash can sample the background alone */
+void band_edge_obj_masks(uint8_t *mtop, uint8_t *mbot, int main_lower);
+    /* defined after the band raster below; the masks say which DS columns of
+       the two edge rows an OBJ covers, so the wash can sample the background
+       alone. main_lower is POWCNT1 bit 15 clear: the two ENGINES exchange, the
+       two edge rows do not, because mtop is the upper screen's last row and
+       mbot the lower screen's first whichever engine is feeding each. */
 
 void band_fill_ambient(uint32_t *dst, int dst_w, const StackLayout &lay)
 {
     const uint32_t *top_edge = dst + (size_t)(lay.band_y - 1) * dst_w;
     const uint32_t *bot_edge = dst + (size_t)lay.bottom_y * dst_w;
     uint8_t mtop[256], mbot[256];
-    band_edge_obj_masks(mtop, mbot);
+    band_edge_obj_masks(mtop, mbot, lay.main_lower);
     RGB tops[kAmbCols], bots[kAmbCols];
     RGB raw_t[kAmbCols], raw_b[kAmbCols];
     int centre[kAmbCols];
@@ -1462,6 +1669,74 @@ struct BandEngine {
 inline int band_row_of(const BandEngine &e, int slot, int y)
 {
     return y + e.row_bias + (e.resid ? (int)e.resid[slot] : 0);
+}
+
+/* ---- WHICH SIDE OF THE BAND AN ENGINE IS ON ---------------------------------
+ *
+ * `row_bias` was never a property of an engine. It is a statement about which
+ * of the two screens that engine is DRIVING, and every binding below spelled it
+ * as a literal because until POWCNT1 was read the answer could not change.
+ *
+ * The engine on the UPPER screen has the band BELOW its own rows: its engine
+ * row 192 is band row 0, so the bias is -192. The engine on the LOWER screen
+ * has the band ABOVE its rows: its engine row -gap_ds is band row 0, so the
+ * bias is +gap_ds. POWCNT1 bit 15 decides which engine is which and nothing
+ * else about either binding moves -- the register base, the OAM, the VRAM and
+ * the palettes all still belong to the engine that owns them.
+ *
+ * WITH THE BIT SET (lay.main_lower == 0) these return exactly the literals the
+ * bindings carried before this existed, which is the whole of the zero-change
+ * guarantee for every scene that never writes the register. */
+inline int band_bias_a(const StackLayout &lay)
+{
+    return lay.main_lower ? lay.gap_ds : -192;
+}
+
+inline int band_bias_b(const StackLayout &lay)
+{
+    return lay.main_lower ? -192 : lay.gap_ds;
+}
+
+/* ---- THE PASSES THAT ARE ENGINE A's BY CONSTRUCTION, UNDER A SWAP ----------
+ *
+ * Three of the passes below are not "the upper screen's engine" but ENGINE A's
+ * specifically: the headroom strip, the hinge and the two seam passes all read
+ * g_oam_a_shown, the per-entry residual marks, or engine A's own submission
+ * geometry, and every one of those is a fact about the MAIN engine rather than
+ * about a screen position. Re-pointing them at engine B would not be a swap, it
+ * would be reading marks that describe a different engine's OAM.
+ *
+ * So under a swap they REFUSE rather than draw. That is a real behaviour
+ * choice and it is made this way because drawing the wrong rows is worse than
+ * drawing none: each of these passes exists to fill rows the engines could not
+ * address, and a pass that fills them off the wrong engine's geometry puts
+ * invented content into the picture.
+ *
+ * NO SCENE IN THE PROGRAM REACHES THIS TODAY. All four are gated on the
+ * GaplessMinigames mod or its headroom (hal/screen_gap.cpp's kGaplessScenes:
+ * 368, 374, 378, 366, 390), and none of those five writes POWCNT1 bit 15 --
+ * the writers are the dScMgD3DBase_c family (372, 373, 384, 385) and 377.
+ * The refusal is therefore unreachable, and it is here so that the day someone
+ * adds a gapless row for a swapping scene the picture says so instead of
+ * quietly gaining a wrong band.
+ *
+ * SAID ONCE PER PASS PER PROCESS, on stderr, because a silent refusal is the
+ * thing this file's own notes keep calling a hazard. */
+int swap_refuses(const StackLayout &lay, int which, const char *pass)
+{
+    static int said[4];
+    if (!lay.main_lower) return 0;
+    if (which >= 0 && which < 4 && !said[which]) {
+        said[which] = 1;
+        std::fprintf(stderr, "  [screens] %s STANDS DOWN: POWCNT1 bit 15 is "
+                     "clear, so engine A is driving the LOWER screen, and this "
+                     "pass is bound to engine A's own submission geometry "
+                     "rather than to a screen position. It draws nothing this "
+                     "frame rather than drawing engine A's rows in the wrong "
+                     "half.\n", pass);
+        std::fflush(stderr);
+    }
+    return 1;
 }
 
 /* THE PER ENTRY CORRECTION IN DS ROWS, spelled once. The band's world rows and
@@ -1892,19 +2167,30 @@ void band_continuity(BandPixel *band, int gap_ds, const BandEngine &ea,
    the two engines' own OAM exactly the way the band passes do -- engine A's
    screen row 191 is band index 0 under a bias of -191, engine B's row 0 under
    a bias of 0 -- so "an OBJ covers this column" is the same answer the screens
-   themselves drew, not a guess from pixel colours. */
-void band_edge_obj_masks(uint8_t *mtop, uint8_t *mbot)
+   themselves drew, not a guess from pixel colours.
+
+   THE BIASES BELONG TO THE ROWS AND THE REGISTERS BELONG TO THE ENGINES, and
+   POWCNT1's swap moves only the second half. mtop is the UPPER screen's last
+   row whatever is feeding it, so it always wants bias -191; what changes is
+   whether that row came out of engine A or engine B. */
+void band_edge_obj_masks(uint8_t *mtop, uint8_t *mbot, int main_lower)
 {
     static BandPixel rowbuf[256];
-    const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
-                           -191, 0, "A", 0};
+    const BandEngine a_upper = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
+                                -191, 0, "A", 0};
+    const BandEngine a_lower = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
+                                0, 0, "A", 0};
+    const BandEngine b_upper = {kRegBase, kOamBase, kObjVram, kObjPltt,
+                                kObjExtPltt, -191, 1, "B", 0};
+    const BandEngine b_lower = {kRegBase, kOamBase, kObjVram, kObjPltt,
+                                kObjExtPltt, 0, 1, "B", 0};
+    const BandEngine &up = main_lower ? b_upper : a_upper;
+    const BandEngine &lo = main_lower ? a_lower : b_lower;
     std::memset(rowbuf, 0, sizeof rowbuf);
-    band_raster_engine(rowbuf, 1, ea);
+    band_raster_engine(rowbuf, 1, up);
     for (int x = 0; x < 256; ++x) mtop[x] = rowbuf[x].hit;
-    const BandEngine eb = {kRegBase, kOamBase, kObjVram, kObjPltt, kObjExtPltt,
-                           0, 1, "B", 0};
     std::memset(rowbuf, 0, sizeof rowbuf);
-    band_raster_engine(rowbuf, 1, eb);
+    band_raster_engine(rowbuf, 1, lo);
     for (int x = 0; x < 256; ++x) mbot[x] = rowbuf[x].hit;
 }
 
@@ -1935,10 +2221,13 @@ void band_ghost(uint32_t *dst, int dst_w, const StackLayout &lay)
         if (!band || !acc) return;
     }
     std::memset(band, 0, sizeof(BandPixel) * (size_t)lay.gap_ds * 256);
+    /* the biases come from band_bias_a/b so the swap moves them together with
+       every other band pass; with bit 15 set they are -192 and +gap_ds, which
+       is the pair this shipped with */
     const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
-                           -192, 0, "A", 0};
+                           band_bias_a(lay), 0, "A", 0};
     const BandEngine eb = {kRegBase, kOamBase, kObjVram, kObjPltt, kObjExtPltt,
-                           lay.gap_ds, 1, "B", 0};
+                           band_bias_b(lay), 1, "B", 0};
     band_raster_engine(band, lay.gap_ds, ea);
     band_raster_engine(band, lay.gap_ds, eb);
     band_continuity(band, lay.gap_ds, ea, eb);
@@ -2051,17 +2340,29 @@ void band_peek(uint32_t *dst, int dst_w, const StackLayout &lay)
     std::memset(band, 0, sizeof(BandPixel) * (size_t)lay.gap_ds * 256);
     ++g_peek_frame;
 
-    /* ENGINE A FIRST. Its band rows are engine rows 192..191+G, so the bias
-       that turns an engine row into a band index is -192. Engine A's OBJ
-       extended palette store is not modelled anywhere in this program, so it
-       passes 0 and a 256-colour engine-A sprite reads the standard palette --
-       the same answer ntr/ppu.cpp's own engine-A raster gives. */
+    /* ENGINE A FIRST. On the upper screen its band rows are engine rows
+       192..191+G, so the bias that turns an engine row into a band index is
+       -192; under POWCNT1's swap it is the lower screen's engine and the bias
+       is +G. band_bias_a carries that and nothing else about this binding
+       moves. Engine A's OBJ extended palette store is not modelled anywhere in
+       this program, so it passes 0 and a 256-colour engine-A sprite reads the
+       standard palette -- the same answer ntr/ppu.cpp's own engine-A raster
+       gives. */
     const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
-                           -192, 0, "A", 0};
+                           band_bias_a(lay), 0, "A", 0};
     /* ENGINE B SECOND, so it wins where both drew; see the header note. Its
-       band rows are engine rows -G..-1, so the bias is +G. */
+       band rows are engine rows -G..-1 on the lower screen, so the bias is +G,
+       and -192 when the swap puts it on the upper one.
+
+       THE DRAW ORDER IS NOT SWAPPED WITH THE BIASES, deliberately. "B second"
+       is about the sub engine's rows being the ones a player is looking at
+       through the stylus, which is a statement about the physical bottom screen
+       and about the OWNER's judgment of the picture, not about which engine
+       feeds it. No scene that swaps also has a band with both engines drawing
+       into it today, so no picture in the program depends on this either way;
+       when one does, it is the owner's call and not a derivation. */
     const BandEngine eb = {kRegBase, kOamBase, kObjVram, kObjPltt, kObjExtPltt,
-                           lay.gap_ds, 1, "B", 0};
+                           band_bias_b(lay), 1, "B", 0};
     band_raster_engine(band, lay.gap_ds, ea);
     band_raster_engine(band, lay.gap_ds, eb);
     /* AND THE DEAD ZONE LAST, so "did an engine draw this pixel" is asked of
@@ -2148,6 +2449,7 @@ unsigned g_hinge_frame;
 void hinge_paint(uint32_t *dst, int dst_w, const StackLayout &lay)
 {
     if (lay.obj_shift_ds <= 0 || lay.band_h <= 0) return;
+    if (swap_refuses(lay, 0, "hinge_paint")) return;
     if (!g_oam_a_have) return;
     /* GAP_DS_MAX rows of 256 DS pixels, allocated on the first hinge frame and
        never freed: band_peek's trade, for band_peek's reason. */
@@ -2384,6 +2686,7 @@ uint32_t head_lerp(uint32_t c0, uint32_t c1, int u, int span)
 void head_paint(uint32_t *dst, int dst_w, const StackLayout &lay)
 {
     if (lay.head_h <= 0 || lay.head_ds <= 0) return;
+    if (swap_refuses(lay, 1, "head_paint")) return;
     /* GAP_DS_MAX + SUB_H rows of 256 DS pixels, allocated on the first headroom
        frame and never freed: band_peek's trade, for band_peek's reason. As a
        file-scope array it would be host .bss in EVERY binary that links this
@@ -3013,6 +3316,7 @@ void seam_snow(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
                int to_white)
 {
     if (!lay.seam) return;
+    if (swap_refuses(lay, 2, "seam_snow")) return;
     int n_attr = 0;
     const unsigned short *attrs = g_ghost_attr_fn ? g_ghost_attr_fn(&n_attr) : 0;
     if (!attrs || n_attr <= 0) {
@@ -3126,6 +3430,7 @@ void seam_straddle(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
        different hole and is still open. The two never write the same pixel: a
        completion is only ever drawn on the side its own half cannot address. */
     if (!lay.seam || (lay.gap_ds && !lay.obj_shift_ds)) return;
+    if (swap_refuses(lay, 3, "seam_straddle")) return;
     ++g_seam_frame;
     /* the same two bindings the band's passes use, with engine B's row bias at
        the gapless G: engine row -> world row is -192 for A and 0 for B */
@@ -3220,6 +3525,12 @@ StackLayout stack_layout(int gap_ds, int head_ds, int obj_shift_ds,
        band cannot carry one, and dropping it here means no consumer has to ask
        the question twice. */
     l.art = gap_ds ? art : 0;
+    /* NOT AN INPUT HERE, for the reason the seam flag is not: POWCNT1's display
+       swap is a per-FRAME fact and this is a per-scene latch. Zero is "engine A
+       on the upper screen", which is what every layout in the program carried
+       before the bit was read at all, so a layout nobody tells composes exactly
+       the way it always did. hal/screen_gap.cpp sets it every frame. */
+    l.main_lower = 0;
     return l;
 }
 
@@ -3346,27 +3657,46 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
     if (evy < 0) evy = 0;
     if (evy > 16) evy = 16;
 
-    // the top half, verbatim: it is already faded and already carries the F3
-    // overlay, because it is the framebuffer the caller finished with.
-    // AT top_y RATHER THAN AT ROW ZERO, which is the one word the headroom
-    // changes here: with a headroom the top screen starts head_h rows down and
-    // with none top_y is 0 and this is the memcpy it always was.
-    std::memcpy(dst + (size_t)lay.top_y * dst_w, top,
-                (size_t)SCREEN_W * SCREEN_H * 4);
-    /* THE HEADROOM, here because it reads the row the memcpy above just wrote
-       and nothing else in the image. With no headroom head_h is 0 and this
-       returns immediately, so a layout without one is byte-for-byte what it
-       was before this existed. */
-    head_paint(dst, dst_w, lay);
+    /* ---- WHICH ENGINE GOES IN WHICH HALF ---------------------------------
+     *
+     * POWCNT1 (0x04000304) bit 15 is the DS's display swap: set sends engine A
+     * to the upper LCD, clear sends it to the lower one. It changes NOTHING
+     * about either engine's rendering -- both scan out exactly what they
+     * already scanned out -- so the whole of it lives here, in the two
+     * destinations below.
+     *
+     * lay.main_lower is that bit, inverted, read live by hal/screen_gap.cpp
+     * every frame. With it 0 these two are lay.top_y and lay.bottom_y, which
+     * is the unconditional pair this function shipped with, so every scene
+     * that leaves the bit alone composes byte for byte the way it did.
+     *
+     * THE IMAGE ROWS DO NOT MOVE, and that is the point of naming them this
+     * way round: top_y is the UPPER PHYSICAL SCREEN and bottom_y the LOWER one,
+     * in the window and in the BMP and under the stylus mapper, whichever
+     * engine happens to be feeding each. The DS's touchscreen is the lower
+     * panel and stays the lower panel across a swap, so hal's touch mapping
+     * needs no term here -- which is also the answer to "dragging on the bottom
+     * half draws at the top": the drag was landing on the right panel all
+     * along and the port was showing that panel's engine in the wrong half. */
+    const int a_y = lay.main_lower ? lay.bottom_y : lay.top_y;
+    const int b_y = lay.main_lower ? lay.top_y : lay.bottom_y;
 
-    /* The bottom half. The ratio is a whole number at every tier the port
+    // ENGINE A, verbatim: it is already faded and already carries the F3
+    // overlay, because it is the framebuffer the caller finished with.
+    // AT a_y RATHER THAN AT ROW ZERO, which is the one word the headroom
+    // changes here: with a headroom the upper screen starts head_h rows down
+    // and with none top_y is 0 and this is the memcpy it always was.
+    std::memcpy(dst + (size_t)a_y * dst_w, top,
+                (size_t)SCREEN_W * SCREEN_H * 4);
+
+    /* ENGINE B. The ratio is a whole number at every tier the port
        builds (1, 2 and 4), and a SHIFT rather than a divide would be wrong the
        day a tier is not a power of two, so it stays a divide. */
     const int rx = SCREEN_W / SUB_W, ry = SCREEN_H / SUB_H;
     for (int y = 0; y < SCREEN_H; ++y) {
         const int sy = ry > 0 ? y / ry : (y * SUB_H) / SCREEN_H;
         const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
-        uint32_t *out = dst + (size_t)(lay.bottom_y + y) * dst_w;
+        uint32_t *out = dst + (size_t)(b_y + y) * dst_w;
         for (int x = 0; x < SCREEN_W; ++x) {
             const int sx = rx > 0 ? x / rx : (x * SUB_W) / SCREEN_W;
             uint32_t p = src[sx < SUB_W ? sx : SUB_W - 1];
@@ -3405,6 +3735,17 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
             out[x] = p;
         }
     }
+
+    /* THE HEADROOM, here because it reads the first row of the UPPER screen and
+       nothing else in the image, and under a swap that row is written by the
+       second of the two blits above rather than the first. It used to sit
+       between them, which was the same thing while engine A was always the
+       upper screen; the move is byte-for-byte neutral with the bit set, because
+       with no swap the two blits write disjoint rows and head_paint reads only
+       the ones the first of them wrote. With no headroom head_h is 0 and this
+       returns immediately, so a layout without one is byte-for-byte what it was
+       before this existed. */
+    head_paint(dst, dst_w, lay);
 
     /* THE BAND LAST, because the ambient fill reads the two rows the loops
        above just wrote -- the top screen's bottom row and the bottom screen's

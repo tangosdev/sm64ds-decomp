@@ -1061,10 +1061,109 @@ void hal_sub_screen_frame_begin(void)
     hal_touch_client_probe();
 }
 
+/* ---- THE DISPLAY-ROUTING PROBE, default off --------------------------------
+ *
+ * SM64DS_SCREENS_PROBE=1 prints the registers that decide WHICH ENGINE'S OUTPUT
+ * LANDS ON WHICH PHYSICAL SCREEN, and it prints them the only way a
+ * per-frame-toggling register can honestly be reported: once at the first
+ * frame, again on every CHANGE to the tuple, and a census at the end of the
+ * run. A sample taken at one frame of a scene whose slot 24 flips the bit every
+ * frame is not a measurement of anything.
+ *
+ * The four registers, all GBATEK:
+ *   POWCNT1   0x04000304  bit 15 = display swap (1 = engine A to the UPPER
+ *                         screen, 0 = to the lower one)
+ *   DISPCAPCNT 0x04000064 the display capture unit: bit 31 enable (the
+ *                         hardware clears it itself at the end of the captured
+ *                         frame), bits 16-17 destination VRAM block, 18-19
+ *                         destination offset in 0x8000-byte units, 20-21 size
+ *                         and 29-30 source
+ *   DISPCNT_B 0x04001000  engine B's mode and layer enables, which is what says
+ *                         whether the captured frame has a layer to show
+ *                         through
+ *   BG2CNT_B  0x0400100c  the bitmap BG's own word when it has one
+ *
+ * NOTHING HERE CHANGES A PIXEL. It reads four registers and writes stderr.
+ */
+void hal_screens_probe(void)
+{
+    static int on = -1;
+    if (on < 0) on = env_flag("SM64DS_SCREENS_PROBE", 0);
+    if (!on) return;
+    static unsigned long frame;
+    static unsigned long swaps;      /* frames whose bit 15 differed from the last */
+    static unsigned long lower;      /* frames with engine A on the lower screen */
+    static unsigned long cap_armed;  /* frames that entered with capture enabled */
+    static unsigned last_key = ~0u;
+    static int last_bit = -1;
+
+    const unsigned pow1 = *(volatile unsigned short *)0x04000304;
+    const unsigned cap = *(volatile unsigned *)0x04000064;
+    const unsigned dispb = *(volatile unsigned *)0x04001000;
+    const unsigned bg2b = *(volatile unsigned short *)0x0400100c;
+    const int bit = (pow1 >> 15) & 1;
+
+    ++frame;
+    if (!bit) ++lower;
+    if (cap & 0x80000000u) ++cap_armed;
+    if (last_bit >= 0 && bit != last_bit) ++swaps;
+    last_bit = bit;
+
+    /* the two banks the capture path moves, C and D, and their VRAMCNT bytes:
+       bit 7 enable, bits 0-2 MST, bits 3-4 OFS. 0x84 is the value both arms
+       write -- enabled, MST 4, which is engine B BG for C and engine B OBJ for
+       D -- and 0x80 is Vram__Map's "back to LCDC". */
+    const unsigned vc = *(volatile unsigned char *)0x04000242;
+    const unsigned vd = *(volatile unsigned char *)0x04000243;
+
+    const unsigned key = (unsigned)bit | (cap & 0xF0FF0000u) |
+                         ((dispb & 0x1F07u) << 1) | (vc << 20) | (vd << 12);
+    if (key != last_key) {
+        last_key = key;
+        std::fprintf(stderr,
+                     "  [screens] f%-6lu POWCNT1 %04x (engine A -> %s) "
+                     "DISPCAPCNT %08x (%s block %u ofs %u size %u src %u) "
+                     "DISPCNT_B %08x mode %u BG %c%c%c%c OBJ %c BG2CNT_B %04x "
+                     "VRAMCNT_C %02x VRAMCNT_D %02x\n",
+                     frame - 1, pow1, bit ? "UPPER" : "LOWER", cap,
+                     (cap & 0x80000000u) ? "ARMED" : "idle",
+                     (cap >> 16) & 3, (cap >> 18) & 3, (cap >> 20) & 3,
+                     (cap >> 29) & 3, dispb, dispb & 7,
+                     (dispb & 0x0100) ? '0' : '-', (dispb & 0x0200) ? '1' : '-',
+                     (dispb & 0x0400) ? '2' : '-', (dispb & 0x0800) ? '3' : '-',
+                     (dispb & 0x1000) ? 'y' : '-', bg2b, vc, vd);
+        std::fflush(stderr);
+    }
+    /* the census, every 300 frames: the numbers a per-frame flip is actually
+       read off, which no single sample can carry */
+    if (frame % 300 == 0) {
+        /* AND THE FOUR BG-OFFSET SHADOWS WITH IT. func_02019144's tail is the
+           only thing that publishes them, and its FIRST beat is the graphics
+           block's slot 2 -- so with the block unseated the tail republished
+           frozen boot values every frame while the scene's scroll word moved.
+           Sampling them beside the display registers is what makes "the
+           offsets follow the game" a reading rather than an inference: on a
+           scrolling scene these move between censuses and on a still one they
+           do not. */
+        std::fprintf(stderr,
+                     "  [screens] census f%lu: %lu frame(s) with engine A on "
+                     "the LOWER screen, %lu bit-15 change(s), %lu frame(s) "
+                     "entered with DISPCAPCNT armed; BG2 offsets A %u,%u "
+                     "B %u,%u\n",
+                     frame, lower, swaps, cap_armed,
+                     *(volatile unsigned short *)0x04000018,
+                     *(volatile unsigned short *)0x0400001a,
+                     *(volatile unsigned short *)0x04001018,
+                     *(volatile unsigned short *)0x0400101a);
+        std::fflush(stderr);
+    }
+}
+
 /* Bottom of the frame: upload the shadows the game filled, rasterise engine B,
    drop it into the corner. With the panel off nothing here writes a pixel. */
 void hal_sub_screen_present(unsigned int *dst, int w, int h)
 {
+    hal_screens_probe();
     /* SM64DS_SUB_SCALE is a divisor: 1 = full DS size (a quarter of the 2x
        window, Tango's "super in the way"), 2 = half size (1/16 of the
        window, the default), up to 4. */
@@ -1186,6 +1285,27 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
         /* nothing scanned when the panel is off, but the upload and its mark
            still have to happen -- they are the frame's, not the panel's */
     }
+    /* ---- THE DISPLAY CAPTURE UNIT, in the hardware's own order --------------
+     *
+     * PUBLISH FIRST, then capture, then rasterise engine B. That is the order
+     * the DS runs them in and each step depends on the one before it: the VRAM
+     * bank mapping is programmed in VBlank (which for this program is
+     * func_02019144's slot-24 beat, several statements ago), the capture happens
+     * during the frame that mapping applies to, and the scan-out below reads
+     * whatever the mapping made visible.
+     *
+     * `dst` is engine A's FINISHED framebuffer -- gx_render and
+     * port_message_composite_engine_a both ran on it before this function was
+     * called, in both frame loops -- and it is the composed graphics screen
+     * DISPCAPCNT's source A names. Read, never written: the capture writes VRAM.
+     *
+     * BOTH ARE INERT UNTIL A GAME PROGRAMS THE UNIT. ppu_display_capture returns
+     * on its first test when DISPCAPCNT's enable bit is clear, and
+     * ppu_vram_publish skips every block that has never been captured into,
+     * which is all four in every scene that never writes 0x04000064. */
+    ntr::ppu_vram_publish();
+    ntr::ppu_display_capture(dst, w, h);
+
     if (g_on) ntr::ppu_scanout_sub(g_sub);
     if (run_tail) {
         ntr::ppu_seam_oam_mark();
@@ -1748,6 +1868,19 @@ void hal_sub_screen_dump(const char *path)
 {
     ntr::ppu_scanout_sub(g_sub);
     ntr::ppu_write_bmp_sub(path, g_sub);
+}
+
+/* THE SAME PICTURE WITHOUT RE-SCANNING, and the difference matters. The dump
+   above rasterises engine B again before writing, which is right for a debug
+   hook asked for out of nowhere and WRONG for a capture taken beside a stacked
+   image: a second scan-out reads the registers as they stand now, and on a
+   scene whose slot 24 rewrites DISPCNT_B every frame that is a different frame's
+   configuration. This writes the buffer the frame actually presented.
+   Returns 0 when no frame has been scanned out yet. */
+int hal_sub_screen_write_bmp(const char *path)
+{
+    if (!g_ready) return 0;
+    return ntr::ppu_write_bmp_sub(path, g_sub) ? 1 : 0;
 }
 
 /* What engine B is actually configured to do, printed once. The bottom screen

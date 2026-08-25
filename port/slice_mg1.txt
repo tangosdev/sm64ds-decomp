@@ -248,6 +248,16 @@ src/func_ov004_020adc68.c
 src/func_ov004_020adc74.c
 # HOST-COPIED (MG2): src/func_ov004_020add88.cpp
 # HOST-COPIED (MG2): src/func_ov004_020adf2c.cpp
+# The graphics block's four forwarders, added by the DUALSCREEN lane. They
+# are data_ov004_020bc03c's words 0..3 -- dScMgBase_c::graphCallback_c's
+# vtable -- and each forwards into the scene's own table at +0x5c, +0x58,
+# +0x60 and +0x64 (slots 23, 22, 24 and 25). Nothing referenced them before
+# because the port never dispatched the block; hal/scene_mg.cpp's
+# port_scene_mg_gc_seat does now, through four calling-convention adapters.
+src/func_ov004_020ae03c.c
+src/func_ov004_020ae06c.c
+src/func_ov004_020ae0a4.c
+src/func_ov004_020ae0d4.c
 src/func_ov004_020ae128.c
 src/func_ov004_020ae140.cpp
 src/func_ov004_020ae198.c
