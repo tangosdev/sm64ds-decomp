@@ -206,6 +206,10 @@ int ModelAnimFace::SetAnim(BCA_File *animFile, int flags, int speed,
 // is ALREADY TRAPPED in hal/scene_mg_faces.cpp where seven ov006 TUs across
 // this family already reach it.  port/slice_bnt.txt section 11 is the
 // accounting.
+//
+// AMENDED, run mg12 lane PANEL: that body now HAS a src file and is NOT trapped.
+// src/func_ov004_020ae858.cpp is the results panel's label renderer, seated off
+// port/slice_mg1.txt; the closure statement above is otherwise unchanged.
 
 /* MSVC emits nothing for a TU that is only pragmas, and an empty object still
    carries the linker directives. This symbol exists so a reader grepping for

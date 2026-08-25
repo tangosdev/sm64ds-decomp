@@ -109,6 +109,10 @@
 // ov006 TUs across the family call it, so a per-lane copy of that trap would
 // be a duplicate symbol the day a second lane reaches it.
 //
+// AMENDED, run mg12 lane PANEL: neither body is a floor any more and neither is
+// trapped. func_ov004_020ae5c4 was seated by run mg10 lane F371 and
+// func_ov004_020ae858 by this run; hal/scene_mg_faces.cpp holds no ov004 trap now.
+//
 // ---- 6. THE TWO ALIAS ROWS ------------------------------------------------
 //
 // ROW 1, THE VTABLE UNDER ITS C++ SPELLING. src/MgHideAndBooSeek_Spawn.c

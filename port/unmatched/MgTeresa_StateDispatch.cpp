@@ -114,6 +114,10 @@
 // floor, and still gets its trap in hal/scene_mg_faces.cpp beside
 // func_ov004_020ae858; seven ov006 TUs across the family reach it, so it is
 // not this class's to retire.
+//
+// AMENDED, run mg12 lane PANEL: both have since been retired by the lanes that
+// owned them -- func_ov004_020ae5c4 by run mg10 lane F371, func_ov004_020ae858 by
+// this run. hal/scene_mg_faces.cpp carries no ov004 trap any more.
 
 /* <cstdio> was included here for the floor's one-shot report; with the floor
    retired this file prints nothing at all and the seat owns the whole report. */

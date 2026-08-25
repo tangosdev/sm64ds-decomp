@@ -146,6 +146,10 @@
 # ov004 func_ov004_020ae858 is the same class of hole and is already named by
 # port/slice_mg1.txt.
 #
+# AMENDED, run mg12 lane PANEL: it is no longer a hole of that class. It has a src
+# TU now (src/func_ov004_020ae858.cpp, NONMATCHING at 10 of 118 words). It is still
+# true that no delink block covers it.
+#
 # THREE ADDRESSES HAVE A src FILE BUT NO DELINK BLOCK, which is a join miss and
 # not a floor -- the distinction stategen.py started making after run link60
 # lane MGB. They are ordinary slice lines and are IN the list below:

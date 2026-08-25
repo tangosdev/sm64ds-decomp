@@ -1,5 +1,11 @@
 //cpp
 // @symbol func_ov004_020ae858
+// NONMATCHING: base materialization / addressing, 10 of 118 words at 2004/b56.
+// This line is FIRST on purpose. tools/progress.py, tools/validate_merge.py and
+// tools/pr_linkcheck.py all test for the marker in the first 200 characters of the
+// file, so a marker below a paragraph of prose is a marker the repo cannot see: the
+// public matched count would rise by one and credit THIS body, and validate_merge
+// would publish matched:true for a function differing in ten words.
 /* recovered: renamed to Class_Method, RTTI class fields named */
 //
 // dScMgBase_c's results-panel LABEL RENDERER: the three buttons a minigame's
@@ -7,14 +13,18 @@
 // (func_ov004_020b04f4 / dScMgBase_c::BeforeRender hands it the whole frame
 // when self->unk_4628 != 0).
 //
-// NONMATCHING: base materialization / addressing + the register-coloring swap it
-// carries. 10 of 118 words differ at mwccarm 2004/b56 (closest of all 25 installed
-// builds; 1.2/base, 1.2/sp2 and 1.2/sp2p3 all sit at 12). Logic verified against the
+// THE NON-MATCH IN FULL: base materialization / addressing plus the register-coloring
+// swap it carries. 10 of 118 words differ at mwccarm 2004/b56 (closest of all 25
+// installed builds; 1.2/base, 1.2/sp2 and 1.2/sp2p3 all sit at 12). Logic verified against the
 // ROM instruction by instruction, and every other word is identical -- including all
 // FOURTEEN relocated words (nine arm_call, five load; config/arm9/overlays/ov004/
 // relocs.txt lines 122-135) and the whole nine-word literal pool. Not one of the ten
-// is a different OPERATION: each is the same instruction reached through a different
-// base register. Counts as decompiled, not matched.
+// is a different OPERATION and none changes what the function computes. Six of the ten
+// are one instruction reached through a different base register (the r5/r6 identity
+// swap); the other four are the SAME four zero-stores over the SAME four addresses,
+// emitted in order 0,3,1,2 off sp instead of 0,1,2,3 off the hoisted base -- a
+// permutation within one group, not four different instructions. Detail below.
+// Counts as decompiled, not matched.
 //
 // THE RESIDUAL, exactly: the ROM hoists &mtx into r6 and &pos[0] into r5 and writes the
 // four matrix zero-stores through the hoisted base in index order

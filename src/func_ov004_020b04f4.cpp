@@ -7,15 +7,25 @@
 // recovered name: dScMgBase_c_BeforeRender
 /* recovered: renamed to Class_Method */
 /* dScMgBase_c::BeforeRender - recovered from vtable slot identity */
-// MATCHED. This banner used to read "NONMATCHING: register allocation (div=17)
-// ... not byte-matchable from C at mwccarm 1.2/sp2p3" and that is STALE: measured
-// on 2026-08-25 by run mg12 lane PANEL, this file byte-matches at FOUR of the 25
-// installed builds -- 2004/b56 (the canonical pin), 1.2/base, 1.2/sp2 and the very
-// version the old banner named, 1.2/sp2p3. Nothing in the body changed to make that
-// true; the banner simply outlived the fix. Re-measured with the caller declaration
-// both ways (decl_common.h had func_ov004_020ae858 as int and now has it as void,
-// its ROM shape) and it matches under both, so the verdict does not depend on that
-// edit either.
+// MATCHED at 2004/b56, 1.2/base, 1.2/sp2 and 1.2/sp2p3 -- four of the 25 installed
+// builds, with clean reloc destinations. This banner previously declared a non-match
+// at div=17 and said the file could not be byte-matched at 1.2/sp2p3; both halves were
+// STALE, and 1.2/sp2p3 is one of the four it matches at. Measured 2026-08-25 by run
+// mg12 lane PANEL and re-measured by that run's independent reviewer against the tree
+// state BEFORE the lane touched it, so the verdict is not an artifact of this branch.
+// Nothing in the body changed to make it true; the banner simply outlived the fix.
+//
+// THE OLD MARKER TOKEN IS DELIBERATELY NOT QUOTED HERE. Spelling it, even inside a
+// sentence retiring it, puts the literal string back in the file, and
+// validate_merge.py's candidate filter is a whole-file `git grep -F` for exactly that
+// token -- it would flag this genuinely matched TU as a draft candidate and rely on
+// the separate 200-character test to clear it again. Right by luck is not right.
+//
+// THIS CORRECTION MOVES NO COUNT. The old marker sat at byte 412, past both the
+// 200-character window progress.py and validate_merge.py read and the 400-character
+// window nearmiss_db.py reads, so every counter in the repo ALREADY treated this
+// function as matched -- which is very likely why the wrong banner survived so long.
+// The correction is to the record, not to the total: +0 at both windows, measured.
 typedef short s16;
 
 struct Scene;

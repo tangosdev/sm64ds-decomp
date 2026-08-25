@@ -338,6 +338,12 @@
 # ALREADY TRAPPED in hal/scene_mg_faces.cpp, where seven ov006 TUs across this
 # family already reach it.  This lane adds no trap and retires none.
 #
+# AMENDED, run mg12 lane PANEL: BOTH HALVES OF THAT ARE NOW FALSE.
+# func_ov004_020ae858 HAS a src file -- src/func_ov004_020ae858.cpp, off
+# port/slice_mg1.txt, the results panel's label renderer, honestly NONMATCHING at
+# 10 of 118 words -- and its trap in hal/scene_mg_faces.cpp is DELETED. What stays
+# true is the delink hole: config covers nothing between 0x020ae5c4 and 0x020aea30.
+#
 # ---- 11a. THE TWENTY WHOSE SYMBOL A HOST FILE ALSO DEFINES --------------
 #
 # NINETEEN OF THE TWENTY would be an LNK2005 if listed: a port host file
