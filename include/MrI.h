@@ -48,16 +48,16 @@ struct MrI {
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
        D1 and not D2, so it is this type and not an inlined base. */
     dCcAcPos_c mdCcAcPos_c;            /* 0x174 */
-    u8  unk_1b4;            /* 0x1b4 */
+    u8  mShadowMat;            /* 0x1b4 */
     u8  pad_1b5[0x37];
     s32 unk_1ec;            /* 0x1ec */
-    s32 unk_1f0;            /* 0x1f0 */
+    s32 mShadowRadiusScale;            /* 0x1f0 */
     u8  pad_1f4[0xc];
-    s32 unk_200;            /* 0x200 */
+    s32 mShadowHeight;            /* 0x200 */
     u8  pad_204[0x8];
-    s16 unk_20c;            /* 0x20c */
+    s16 mTurnRefAngleY;            /* 0x20c */
     u8  pad_20e[0x8];
-    u8  unk_216;            /* 0x216 */
+    u8  mTimer;            /* 0x216 */
     u8  unk_217;            /* 0x217 */
 #ifdef __cplusplus
     /* methods */

@@ -60,7 +60,7 @@ void dBgCh_Actr::UpdateContinuousNoLava()
     wallFlag = 0;
     _ZN5dBgPiC1Ev(&res1);
 
-    height = unk_01c;
+    height = mHeight;
     {
         int tx = prev[0];
         int tz = prev[2];
@@ -121,8 +121,8 @@ void dBgCh_Actr::UpdateContinuousNoLava()
     sphere.y = pos[1];
     sphere.z = pos[2];
     sphere.y += height;
-    _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(((char*)this) + 0x20, &sphere, unk_018, *(void**)((char*)&mActor));
-    unk_128 = unk_1b8;
+    _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(((char*)this) + 0x20, &sphere, mRadius, *(void**)((char*)&mActor));
+    mClsnScale = mScale;
     if (pos[1] - prev[1] > 0)
         *(u8*)AT(((char*)this), 0x90) |= 0x20;
     if (floorFlag != 0) {
@@ -140,7 +140,7 @@ void dBgCh_Actr::UpdateContinuousNoLava()
         _ZN5dBgPiaSERKS_(((char*)this) + 0x30, &res1);
     }
     if (func_02038a38((char*)&mSphereClsn)) {
-        prev = (int*)((char*)&unk_06c);
+        prev = (int*)((char*)&mDisplacement);
         if ((mClsnFlags & 4) && handled == 0)
             func_020371b0(((char*)this), onGround);
         if (ShouldUpdatePos()) {

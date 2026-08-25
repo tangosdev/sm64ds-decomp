@@ -28,15 +28,15 @@ void dBgCh_Actr::UpdateDiscreteNoLava_2()
     sy = src->y;
     v.y = sy;
     v.z = src->z;
-    v.y = sy + unk_01c;
+    v.y = sy + mHeight;
     _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(((char *)this) + 0x20, &v,
-        unk_018, *(void **)((char *)&mActor));
-    unk_128 = unk_1b8;
+        mRadius, *(void **)((char *)&mActor));
+    mClsnScale = mScale;
     if (src->y - *(int *)(obj + 0x6c) > 0) {
         *(unsigned char *)((char *)&mClsnFlags) |= 0x20;
     }
     if (func_02038a38((char *)&mSphereClsn)) {
-        p6c = (struct Vector3 *)((char *)&unk_06c);
+        p6c = (struct Vector3 *)((char *)&mDisplacement);
         if (mClsnFlags & 4) {
             func_020371b0(((char *)this), onGround);
         }

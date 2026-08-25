@@ -53,7 +53,7 @@ int SnowmanBreath::Behavior()
             if (func_ov027_02112618(((char *)this)) == 0) {
                 break;
             }
-            if (_ZN6Player9StartTalkER7fBase_cb(*(void **)((char *)&unk_13c4), ((char *)this), 1) == 0) {
+            if (_ZN6Player9StartTalkER7fBase_cb(*(void **)((char *)&mTalkPlayer), ((char *)this), 1) == 0) {
                 break;
             }
             {
@@ -68,7 +68,7 @@ int SnowmanBreath::Behavior()
             pos.z = mPosZ;
             pos.y = pos.y + 0x12c000;
             if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
-                    *(void **)((char *)&unk_13c4), ((char *)this), 0xbb, &pos, zero, zero) == 0) {
+                    *(void **)((char *)&mTalkPlayer), ((char *)this), 0xbb, &pos, zero, zero) == 0) {
                 break;
             }
             {
@@ -77,8 +77,8 @@ int SnowmanBreath::Behavior()
             }
             break;
         case 2:
-            if (_ZN6Player12GetTalkStateEv(*(void **)((char *)&unk_13c4)) == -1) {
-                _ZN6Player18HasFinishedTalkingEv(*(void **)((char *)&unk_13c4));
+            if (_ZN6Player12GetTalkStateEv(*(void **)((char *)&mTalkPlayer)) == -1) {
+                _ZN6Player18HasFinishedTalkingEv(*(void **)((char *)&mTalkPlayer));
                 unk_13d0 = 1;
             }
             break;
@@ -98,8 +98,8 @@ int SnowmanBreath::Behavior()
                     *idx = *idx % 0x32;
                 } while (b == 0);
             }
-            unk_13cc =
-                _ZN5Sound8PlayLongEjjjRK7Vector3s(unk_13cc, 3, 0x184,
+            mSoundHandle =
+                _ZN5Sound8PlayLongEjjjRK7Vector3s(mSoundHandle, 3, 0x184,
                                                   ((char *)this) + 0x74, 0);
         }
     }

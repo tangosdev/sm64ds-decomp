@@ -30,9 +30,9 @@
 struct daObjPathLift_c : PathLift {
     ShadowModel mShadowModel;   /* 0x450 */
     u8  pad_478[0x30];
-    u32 unk_4a8;                /* 0x4a8 */
-    s32 unk_4ac;                /* 0x4ac */
-    u8  unk_4b0;                /* 0x4b0 */
+    u32 mSoundHandle;                /* 0x4a8 */
+    s32 mGroundY;                /* 0x4ac */
+    u8  mTimer;                /* 0x4b0 */
 
     virtual ~daObjPathLift_c();
 
@@ -64,9 +64,9 @@ struct daObjPathLift_c {
     s32 unk_43c;            /* 0x43c */
     s32 unk_440;            /* 0x440 */
     u8  pad_444[0x64];
-    u32 unk_4a8;            /* 0x4a8 */
-    s32 unk_4ac;            /* 0x4ac */
-    u8  unk_4b0;            /* 0x4b0 */
+    u32 mSoundHandle;            /* 0x4a8 */
+    s32 mGroundY;            /* 0x4ac */
+    u8  mTimer;            /* 0x4b0 */
 };
 
 #endif /* __cplusplus */
