@@ -804,12 +804,15 @@ def render(rtti, vt, gl, rec, ovl, join, fidelity):
         cls = "" if depth == 0 else " class='collapsed'"
         # Searchable on the ROM name, the repo's name for it, AND the module -- somebody
         # looking for "Bully" is not going to type daDonketu_c, and "ov015" is how you ask
-        # "what lives in Whomp's Fortress".
+        # "what lives in Whomp's Fortress".  Deduped: as classes adopt their cartridge
+        # name the tree name converges on the ROM name, and the pair would otherwise be
+        # emitted twice ("dakrb_c dakrb_c ov084").
         A("<li%s data-n='%s' data-s='%s'>"
           % (cls, e(n),
-             e(" ".join(x for x in (n, r.get("tree_name") or "",
-                                    by_name[n]["module"] if n in by_name else "")
-                        if x).lower())))
+             e(" ".join(dict.fromkeys(
+                 x.lower() for x in (n, r.get("tree_name") or "",
+                                     by_name[n]["module"] if n in by_name else "")
+                 if x)))))
         A("<span class='row'>")
         A("<span class='tog%s'>%s</span>"
           % ("" if ch else " leaf", "▾" if depth == 0 and ch else "▸"))
