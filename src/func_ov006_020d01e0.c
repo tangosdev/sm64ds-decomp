@@ -17,8 +17,9 @@
 //
 // THE DIVERGENCES, and the 49 are ACCOUNTED FOR IN FULL below -- the five named
 // ranges hold 42, and the remaining 7 are the already-stated length delta (-24
-// bytes, which walks four branch displacements and the four call sites after
-// +0x698), the one extra frame slot at sp+0x34, and the +0x53c spill named in
+// bytes, which walks five branch displacements and the six call sites after
+// +0x698 -- the call sites contribute zero edits), the one extra frame slot at
+// sp+0x34, and the +0x53c spill named in
 // divergence 1. Measured, not eyeballed:
 //
 //  1. THE 24-BYTE COPY (+0x5f4..+0x628, ~13 words). The ROM issues six ldr then
