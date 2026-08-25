@@ -420,6 +420,8 @@ void port_scene_mg_seed_rng(int id, int windowed);
 void port_graph_block_register(void *vt);
 extern "C" int port_graph_block_beat(void);
 extern "C" int port_graph_block_verdict(void);
+/* func_02019390 phase 2's head: the same block's WORD 0, scene slot 23 */
+extern "C" int port_graph_block_word0(void);
 
 
 /* the frame: the same calls, in the same order, that walk_window's own loop
@@ -1913,25 +1915,108 @@ void port_graph_block_register(void *vt)
 /* 1 = run func_02019144's tail, which is what the port's two publish sites
    and its OAM::Load already do. 0 = the block handled the display sync
    itself and the tail must NOT also run. */
-extern "C" int port_graph_block_beat(void)
+/* THE BLOCK POINTER, AT FILE SCOPE AND WITH C LINKAGE, and both halves of that
+   are load-bearing. hal/w8a_stage_storage.cpp defines it inside an extern "C"
+   block, so the symbol is _data_0209d4a8. This declaration used to sit at BLOCK
+   scope inside port_graph_block_beat, which is itself extern "C", so it
+   inherited C linkage from its enclosing function and resolved. Lifted into a
+   plain static helper it inherited C++ linkage instead and the link failed with
+   LNK1120 on ?data_0209d4a8@@3HA -- and a block-scope `extern "C"` is not a
+   repair, MSVC rejects it outright (C2598, linkage specification must be at
+   global scope). So it lives here. Measured twice, both failures, before this
+   line was written. */
+extern "C" unsigned char data_0209d4a8[4];
+
+/* THE ONE DISPATCH, shared by every beat that has one. `word` is the block
+   vtable's own index, which is also the ROM's: func_02019100 takes vt[3],
+   func_02019144 takes vt[2], func_02019390 takes vt[0] and func_02019404 takes
+   vt[1]. Answers 1 -- "carry on with the rest of the beat" -- for a block this
+   port has not seated and for no block at all, which is the ROM's own null
+   test in every one of the four. */
+static int graph_block_word(unsigned word)
 {
     static int off = -1;
     if (off < 0) off = std::getenv("SM64DS_GRAPH_BLOCK_OFF") ? 1 : 0;
-    g_gc_verdict = 1;
     if (off) return 1;
     /* hal/w8a_stage_storage.cpp hosts the pointer; four bytes there, and the
-       ROM's own null test is the first thing func_02019144 does. */
-    extern unsigned char data_0209d4a8[4];
+       ROM's own null test is the first thing every one of the four does. The
+       declaration is at file scope above; see its note. */
     void *p = *(void **)data_0209d4a8;
     if (!p) return 1;
     void **vt = *(void ***)p;
     for (unsigned i = 0; i < g_gc_seated_n; ++i) {
         if (g_gc_seated[i] != (void *)vt) continue;
-        typedef int(__fastcall * Slot2)(void *, void *);
-        g_gc_verdict = ((Slot2)vt[2])(p, 0);
-        return g_gc_verdict;
+        typedef int(__fastcall * Word)(void *, void *);
+        return ((Word)vt[word])(p, 0);
     }
     return 1;
+}
+
+extern "C" int port_graph_block_beat(void)
+{
+    g_gc_verdict = graph_block_word(2);
+    return g_gc_verdict;
+}
+
+/* ---- func_02019390's FIRST BEAT, and the reason a drawn line did nothing ----
+ *
+ * THE ROM'S FRAME LOOP DISPATCHES THE BLOCK AT FOUR SEPARATE POSITIONS, not
+ * one, and this port ran exactly one of them. Every reference to
+ * data_0209d4a8 in the whole arm9 image was swept (nine literal loads, word
+ * aligned, resolved through their pools); four of them dispatch:
+ *
+ *   func_02019100  ldr r1,[r1,#0xc]  vt[3]  func_ov004_020ae03c  scene slot 25
+ *   func_02019144  ldr r1,[r1,#8]    vt[2]  func_ov004_020ae06c  scene slot 24
+ *   func_02019390  ldr r1,[r1]       vt[0]  func_ov004_020ae0d4  scene slot 23
+ *   func_02019404  ldr r1,[r1,#4]    vt[1]  func_ov004_020ae0a4  scene slot 22
+ *
+ * and the other five are plain stores that clear or set the pointer
+ * (func_02019440, func_02034d70, func_0203506c and two in the 0x0202Cxxx pair).
+ *
+ * WHERE WORD 0 IS CALLED FROM: src/func_020197b8.c, the ROM's frame loop, at
+ * PHASE 2 -- `data_0209d50c = 2; func_02019390();`. This port has that position
+ * already; it is where port_fader_advance() is called from, because
+ * func_02019390's TAIL is the two fade advances hal/fader_wipes.cpp
+ * reproduces. What the port never had was func_02019390's HEAD, which is this.
+ *
+ * WHAT IT UNBLOCKS. Scene slot 23 is the stylus stroke-connected test's
+ * dispatcher, and its ONLY dispatch site in the entire ROM is word 0. With the
+ * beat missing the trampoline scenes recorded a stroke, drew the line, and then
+ * nothing: measured on 384 with a scripted 31-frame drag, `slot23 0` and the
+ * two stroke flags at +0x5dc4/+0x5dc5 still SET at exit, which only slot 23
+ * clears. func_ov006_020d0c38 -- decompiled and seated by run mg12 lane TRM --
+ * was never called at all.
+ *
+ * THE BLAST RADIUS IS THREE SCENES, counted out of the ROM rather than argued.
+ * Word 0's forwarder func_ov004_020ae0d4 returns 1 unconditionally -- unlike
+ * word 2's, which returns the scene's own answer and gates func_02019144's
+ * tail -- so seating this cannot change what runs after it for anybody. And
+ * byte +0x5c of all THIRTY-TWO ov006 ActorBase-signature tables, read from
+ * extracted/overlays/overlay_0006.bin at base 0x020bfec0:
+ *
+ *     29 tables INHERIT func_ov004_020ae1a0, whose entire body is `return 1;`
+ *      3 tables OVERRIDE
+ *          0x0213fb34 -> 0x0212101c   384, dScMgTrampoline_c
+ *          0x0213fc7c -> 0x02122f24   385, dScMgTrampoline2_c
+ *          0x0214000c -> 0x021291d4   377, dScMgSnowball_c
+ *
+ * So for twenty-nine of the thirty-two this call is a function that returns 1,
+ * and the three it reaches are the three whose stylus this unblocks.
+ *
+ * WORD 1 IS DEAD, AND IT IS DEAD ON THE DS TOO. Byte +0x58 of the same thirty-
+ * two tables is func_ov004_020ae198 -- also `return 1;` -- in ALL THIRTY-TWO.
+ * Nothing overrides slot 22, so func_02019404's dispatch reaches no scene body
+ * in this game. It is not seated here because there is nothing to seat.
+ *
+ * WORD 3 IS A REAL GAP AND IT IS NOT THIS ONE. func_02019100 dispatches it and
+ * then clears data_0209d464, the latch slot 24 gates its display swap on; 25 of
+ * the 32 inherit func_ov004_020ae128 (`return unk_4628 == 0`, whose answer
+ * func_02019100 discards) and SEVEN override, including the whole D3D family.
+ * That is a separate census and a separate proof and it is queued, not taken.
+ */
+extern "C" int port_graph_block_word0(void)
+{
+    return graph_block_word(0);
 }
 
 /* What the beat answered THIS frame, for the second half of the tail. The
@@ -3833,6 +3918,21 @@ extern "C" void port_scene_tick(int frame, int tick_game)
                that includes the only visual difference between a SELECTED
                Pair-a-Gone card and an idle one. */
             port_frame_clock_tick();
+            /* PHASE 2's HEAD, AHEAD OF ITS TAIL, which is the ROM's own order:
+               func_02019390 dispatches the graphics block's word 0 first and
+               only then reaches the two fade advances port_fader_advance
+               stands in for.
+
+               THE ANSWER IS DISCARDED, and that is a statement rather than an
+               oversight. On the DS a 0 here skips OAM::Reset, func_0200f468
+               and func_02018ec0 and still runs func_02018efc -- so inside what
+               this port reproduces, the whole difference between the two arms
+               is the SECOND fade advance. Word 0's forwarder
+               func_ov004_020ae0d4 returns 1 on every path with no branch in it,
+               and it is what every one of the thirty-two ov006 blocks reaches,
+               so no scene in this game can take the 0 arm. If one ever does,
+               this is the line that has to grow the split. */
+            port_graph_block_word0();
             port_fader_advance();
             /* SM64DS_MG_RESULTS_PROBE=<frame> (hal/scene_mg.cpp): raise the
                minigame framework's results panel through the ROM's own slot 27

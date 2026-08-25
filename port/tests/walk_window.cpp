@@ -782,6 +782,10 @@ void port_actor_tick(void);          /* phases 4/2/3: cleanup, init, behaviour *
    readers were dead -- three of them `& 1` sites that test non-zero and so had
    never executed at all. Read that file's banner before moving this call. */
 void port_frame_clock_tick(void);
+/* func_020197b8 PHASE 2's head (hal/scene_boot.cpp): the current scene's
+   graphics block, word 0, which is scene slot 23's only dispatch site in the
+   whole ROM. Answers 1 for a block this port has not seated. */
+int port_graph_block_word0(void);
 /* gate 31: the level handoff (hal/level_change.cpp). port_level_change_poll
    sits where Scene::SpawnIfNecessary sits in func_020197b8 -- after input,
    before the actor phases -- and returns 1 on the frame a new level came up,
@@ -7944,6 +7948,20 @@ int main(void)
            every blink in the game hangs off this one counter. */
         if (game_ticked)
             port_frame_clock_tick();
+        /* PHASE 2's HEAD, the graphics block's word 0 (hal/scene_boot.cpp).
+           The ROM's func_02019390 dispatches it before the fade advances below,
+           and slot 23 -- the stylus stroke test -- has no other dispatch site in
+           the game. GATED ON THE TICK, unlike the fade under it: a fade must
+           keep moving while the debug menu holds the world still, and a stylus
+           stroke must not be accepted by a paused game.
+
+           IT CANNOT REACH ANYTHING ON THIS PATH TODAY and it is here anyway.
+           The seated blocks are the minigame block and the title block, both
+           installed on the scene path, so on a level the registry check misses
+           and this returns 1 without dispatching. Leaving the level loop
+           without the beat is the same half-wiring that cost 384 its stylus. */
+        if (game_ticked)
+            port_graph_block_word0();
         /* THE FADE STEPS HERE, and it steps every frame -- even with the menu
            open and the game tick skipped -- because a fade transition must not
            freeze while it is on screen. This is func_02018ec0's job in the
