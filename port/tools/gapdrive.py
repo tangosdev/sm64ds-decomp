@@ -28,6 +28,15 @@ def selftest():
     env["SM64DS_LEVEL"] = "1"
     env["SM64DS_FAULTS_FATAL"] = "1"
     env["SM64DS_WINDOW_SELFTEST"] = "300"
+    # SM64DS_NO_FOCUS: the two lines above are the arm that OPENS A GAME WINDOW
+    # (a level selftest goes through main's window path), so this spawner needs
+    # the same treatment battery.py's selftest_env gets. CREATE_NO_WINDOW below
+    # only suppresses the console; without this line the game window still took
+    # the desk. Measured invisible to the artifact this function prints: the
+    # flag is WS_EX_NOACTIVATE plus SW_SHOWNOACTIVATE, and level 1 at 300 frames
+    # gives a byte-identical walk_window_selftest.bmp with it off and on, which
+    # is the md5 this function reports.
+    env["SM64DS_NO_FOCUS"] = "1"
     G.clear_settings()
     # CREATE_NO_WINDOW: walk_window is a console-subsystem exe, so a run
     # launched from something with no console of its own gets a NEW CONSOLE

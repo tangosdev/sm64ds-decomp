@@ -143,10 +143,15 @@ and getattr(subprocess, "CREATE_NO_WINDOW", 0) is a no-op off Windows.
 
 NOT CHANGED, and named so the next lane does not have to re-derive the list:
 
-    port/tools/kit_smoke.py       4 spawns, and it validates the SHIPPED bundle.
-                                  Changing how it launches changes what it
-                                  proves, which is a release question, not this
-                                  lane's.
+    port/tools/kit_smoke.py       4 spawns, and kit_smoke.py:303 sets
+                                  SM64DS_WINDOW_SELFTEST, so it DOES open a game
+                                  window. It is the ONE known remaining
+                                  window-opener in the tree and it is left that
+                                  way BY DECISION, not by oversight: it
+                                  validates the SHIPPED bundle, so how that exe
+                                  launches is part of what the smoke proves. A
+                                  release lane can flag it; this one should not
+                                  quietly change what a shipping check measures.
     gate.py (5 spawns), host_frontier.py (2), msvc_undname.py (2),
     abi_prove.py, closure.py, facegen.py, romblob_verify.py, romextract.py,
     run_checks.py (1 each) -- these spawn python and dumpbin, not the game, so
@@ -339,7 +344,86 @@ There is no other SetForegroundWindow, SetActiveWindow, BringWindowToTop or
 ShowWindow anywhere under port/.
 
 
-8. THE STANDING RULE THIS LANE ASKS FOR
+8. WHAT THE INDEPENDENT REVIEW FOUND
+====================================
+
+Verdict PASS, from a reviewer who rebuilt from scratch on its own worktree,
+re-derived every B1 figure exactly (19 smokes / 46 levels / 32 scenes, linkage
+7675, ALL GREEN), reproduced the level-1 flagged BMP hash character for
+character from a different tree, and read WS_EX_NOACTIVATE off all forty-six
+battery level windows with a live prober, zero foreground hits. The
+no-regression check on the player path passed too: with nofocus 0 the two
+expressions give back the pre-lane literals exactly, and play.bat takes that
+branch. Full verdict in runs\mg12\review\QOL.md.
+
+8a. THE REQUIRED FIX, AND IT WAS A REAL LEAK
+
+port/tools/gapdrive.py and port/tools/savestate_soak.py had been given
+CREATE_NO_WINDOW but NOT SM64DS_NO_FOCUS, and both set SM64DS_LEVEL together
+with SM64DS_WINDOW_SELFTEST=300 -- which is exactly the arm that opens a game
+window. So both had the console half of the fix and not the window half: the
+terminal stopped appearing and the game window went on taking the desk, which is
+the failure that looks like success. Fixed in both spawners.
+
+AND THE SWEEP FOR THE REST OF THAT CLASS FOUND A THIRD SITE the two-file list
+did not reach. It is worth writing down how it hides.
+
+gapproof.py's scene_run READS AS HEADLESS: it pops SM64DS_SCENE_WINDOW from the
+environment a dozen lines before the spawn, which is what an earlier pass of
+this lane took as proof that it never opens a window. It does. The pop runs
+BEFORE `env.update(extra_env)`, so a caller that passes SM64DS_SCENE_WINDOW=1 in
+extra_env gets it straight back, and four call sites pass exactly that:
+headroom.py:79 and objshift.py:108 both set it under their own `windowed`
+argument, reached from headroom.py:133, headroom.py:188, objshift.py:309 and
+perentry.py:424.
+
+That also corrects this lane's earlier claim that headroom.py and objshift.py
+"open a game window but spawn nothing themselves, so the run law covers them".
+They spawn through gapproof, and the run law was never going to reach them.
+Fixed at scene_run, which is the one door all four callers funnel through, and
+set before the extra_env update so a caller could still override it.
+
+The class this belongs to: CREATE_NO_WINDOW and SM64DS_NO_FOCUS are two halves
+and a site can have one without the other. The console half is easy to spot
+because the terminal stops appearing; the window half is easy to miss for
+exactly the same reason. Anything that sets SM64DS_WINDOW_SELFTEST or can end up
+with SM64DS_SCENE_WINDOW=1 needs both, and "it pops the knob" is not proof it
+cannot end up with it.
+
+8b. B1's FOCUS HALF WAS NOT SELF-PROVING AS BANKED
+
+Recorded because the next reader will otherwise trust the wrong file.
+out\QOL\logs\fgwatch_across_B1.log holds a start line, four change lines and
+nothing else: no heartbeat, no end marker -- the same sampler writes one, and an
+earlier log from this lane has it -- and out\QOL\logs\battery_B1.log carries no
+clock on any line. So the two files cannot be cross-referenced, and neither of
+them shows the sampler was still alive when the battery finished. A sampler that
+died at 10:55 would have produced exactly the same log as one that ran clean to
+11:01.
+
+THE CONCLUSION STANDS; THE ORIGINAL PAIR IS NOT WHAT MAKES IT STAND. The
+reviewer reran the whole thing on its own tree with liveness heartbeats and a
+live window prober and reproduced it, and that is the evidence to cite:
+runs\mg12\review\QOL_rerun\. Anyone re-deriving the desk-unmoved claim should
+read the reviewer's logs rather than this lane's.
+
+8c. THE REVIEWER'S NON-FINDINGS, for the next reader
+
+None of these is a defect. They are the three things that look like one.
+
+  * nofocus_mode's SM64DS_CLICK_TEST override does not consult g_selftest.
+    Harmless: the click driver already refuses to arm under a selftest, and no
+    path that sets SM64DS_NO_FOCUS reaches the combination.
+  * scene_env in battery.py does not pop this knob the way it pops the other
+    five. Harmless: the scene selftests are headless, so there is no window for
+    an inherited flag to change.
+  * A RUN UNDER THE FLAG STILL SHOWS ITS WINDOW. The flag makes windows
+    non-activating, not invisible -- 53 of them appeared during the review
+    itself. Anyone expecting a silent desktop wants SM64DS_NO_FOCUS together
+    with a minimized launch (section 3), which composes to SW_SHOWMINNOACTIVE.
+
+
+9. THE STANDING RULE THIS LANE ASKS FOR
 =======================================
 
   Every scripted walk_window run sets SM64DS_NO_FOCUS=1 and spawns with
