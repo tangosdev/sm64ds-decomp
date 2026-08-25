@@ -1,16 +1,16 @@
-// func_ov006_020dbe9c: dScMgCoin_c per-face rotated-sprite render, the 6th call of
-// dScMgCoin_c::Render (src/_ZN11dScMgCoin_c6RenderEv.cpp). When the face's active flag
-// (s[0x1bd]) is set, it builds a 2x2 rotation matrix {cos,sin,-sin,cos} from the shared
-// sin/cos table data_02082214 (indexed by (idx_h>>4)*2, idx_h read from 0x51b8) and submits
-// the face's OAM object data_ov006_02134b4c[idx_l] at screen (xr>>12, yr>>12) via the OAM
-// render helper func_ov004_020b023c.
-//
 // NONMATCHING: mwccarm extracts the sin/cos fixed-point results ry-before-rx, whereas the
 // ROM extracts rx first (which also parks idx_l in r6 rather than lr); div=7, all inside the
 // +0x80..+0x94 scheduling window. Logic verified byte-exact outside that window. The order is
 // an mwccarm list-scheduler tie-break not reachable by C statement reordering, type, or pragma
 // at 2004/b56 (every hand lever floors at 7; the permuter could not beat it either). Counts as
 // decompiled, not matched.
+//
+// func_ov006_020dbe9c: dScMgCoin_c per-face rotated-sprite render, the 6th call of
+// dScMgCoin_c::Render (src/_ZN11dScMgCoin_c6RenderEv.cpp). When the face's active flag
+// (s[0x1bd]) is set, it builds a 2x2 rotation matrix {cos,sin,-sin,cos} from the shared
+// sin/cos table data_02082214 (indexed by (idx_h>>4)*2, idx_h read from 0x51b8) and submits
+// the face's OAM object data_ov006_02134b4c[idx_l] at screen (xr>>12, yr>>12) via the OAM
+// render helper func_ov004_020b023c.
 #pragma opt_propagation off
 #include "common.h"
 extern s16 data_02082214[];

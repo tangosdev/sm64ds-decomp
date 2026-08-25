@@ -1,13 +1,13 @@
 // @symbol func_ov091_021339fc
+// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
+// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
+// to a draft until someone reproduces the bytes from real C.
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_Enemy.h"
 #include "decl_Player.h"
 #include "decl_SaveData.h"
 /* recovered: shared common types */
 #include "common.h"
-// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
-// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
-// to a draft until someone reproduces the bytes from real C.
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
