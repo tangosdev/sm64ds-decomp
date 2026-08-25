@@ -202,7 +202,7 @@ void func_ov002_020f0e54(char *a, char *b)
 // @symbol _ZN9OneUpLogoD0Ev
 /* Deleted: both legacy files independently reconstructed a real out-of-line
    OneUpLogo::~OneUpLogo(){} -- the D0/D1 collapse artifact (plain
-   redefinition, not the mwcc ICE; same shape as CannonHatch/#1730 and
+   redefinition, not the mwcc ICE; same shape as daObjCannonShutter_c/#1730 and
    VirtualDoor/#1725). Keeping D1's body below; the compiler emits both
    variants from the one definition. */
 

@@ -137,13 +137,13 @@ ov002	0x020bc6d4	func_ov002_020bc6d4	_ZN7Seaweed6RenderEv	vtable slot 9
 ov002	0x020bc6fc	func_ov002_020bc6fc	_ZN7Seaweed8BehaviorEv	vtable slot 6
 ov002	0x020bc81c	func_ov002_020bc81c	_ZN7Seaweed13InitResourcesEv	vtable slot 0
 ov002	0x020bc8b4	func_ov002_020bc8b4	HealingHeart_Spawn	spawnfunc
-ov002	0x020bc8f4	func_ov002_020bc8f4	_ZN11CannonHatchD1Ev	vtable slot 16
-ov002	0x020bc938	func_ov002_020bc938	_ZN11CannonHatchD0Ev	vtable slot 17
-ov002	0x020bc9b0	func_ov002_020bc9b0	_ZN11CannonHatch16CleanupResourcesEv	vtable slot 3
-ov002	0x020bc9f4	func_ov002_020bc9f4	_ZN11CannonHatch6RenderEv	vtable slot 9
-ov002	0x020bca78	func_ov002_020bca78	_ZN11CannonHatch8BehaviorEv	vtable slot 6
-ov002	0x020bcc20	func_ov002_020bcc20	_ZN11CannonHatch13InitResourcesEv	vtable slot 0
-ov002	0x020bcccc	func_ov002_020bcccc	CannonHatch_Spawn	spawnfunc
+ov002	0x020bc8f4	func_ov002_020bc8f4	_ZN20daObjCannonShutter_cD1Ev	vtable slot 16
+ov002	0x020bc938	func_ov002_020bc938	_ZN20daObjCannonShutter_cD0Ev	vtable slot 17
+ov002	0x020bc9b0	func_ov002_020bc9b0	_ZN20daObjCannonShutter_c16CleanupResourcesEv	vtable slot 3
+ov002	0x020bc9f4	func_ov002_020bc9f4	_ZN20daObjCannonShutter_c6RenderEv	vtable slot 9
+ov002	0x020bca78	func_ov002_020bca78	_ZN20daObjCannonShutter_c8BehaviorEv	vtable slot 6
+ov002	0x020bcc20	func_ov002_020bcc20	_ZN20daObjCannonShutter_c13InitResourcesEv	vtable slot 0
+ov002	0x020bcccc	func_ov002_020bcccc	daObjCannonShutter_c_Spawn	spawnfunc
 ov002	0x020e6c40	func_ov002_020e6c40	_ZN9PowerStarD1Ev	vtable slot 16
 ov002	0x020e6c90	func_ov002_020e6c90	_ZN9PowerStarD0Ev	vtable slot 17
 ov002	0x020e6cf4	func_ov002_020e6cf4	_ZN10StarMarkerD1Ev	vtable slot 16
@@ -296,8 +296,8 @@ ov002	0x02109af8	data_ov002_02109af8	_ZTV8SignPost	vtable alloc=?
 ov002	0x02109b94	data_ov002_02109b94	Seaweed_SpawnInfo	spawninfo
 ov002	0x02109c50	data_ov002_02109c50	HealingHeart_SpawnInfo	spawninfo
 ov002	0x02109c74	data_ov002_02109c74	_ZTV7Seaweed	vtable alloc=0x138
-ov002	0x02109d14	data_ov002_02109d14	CannonHatch_SpawnInfo	spawninfo
-ov002	0x02109d38	data_ov002_02109d38	_ZTV11CannonHatch	vtable alloc=0x1
+ov002	0x02109d14	data_ov002_02109d14	daObjCannonShutter_c_SpawnInfo	spawninfo
+ov002	0x02109d38	data_ov002_02109d38	_ZTV20daObjCannonShutter_c	vtable alloc=0x1
 ov002	0x0210a704	data_ov002_0210a704	Player_SpawnInfo	spawninfo
 ov002	0x0210aa40	data_ov002_0210aa40	PowerStar_SpawnInfo	spawninfo
 ov002	0x0210aa5c	data_ov002_0210aa5c	SilverStar_SpawnInfo	spawninfo

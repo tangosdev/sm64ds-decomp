@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(sm64ds-port C CXX)
+include(CTest)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MAP")
 add_compile_options(/Oy-)
 
@@ -8,6 +9,20 @@ add_compile_options(/Oy-)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
+
+# The matching toolchain selects C++ by an exact first-line //cpp marker even
+# when a source keeps its historical .c path. Teach the host build the same
+# rule so a verified language-mode migration cannot silently break a slice.
+function(sm64ds_honor_cpp_markers source_var)
+    foreach(source IN LISTS ${source_var})
+        if(source MATCHES "\\.c$")
+            file(STRINGS "${source}" first_line LIMIT_COUNT 1)
+            if(first_line STREQUAL "//cpp")
+                set_source_files_properties("${source}" PROPERTIES LANGUAGE CXX)
+            endif()
+        endif()
+    endforeach()
+endfunction()
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate1.txt" SLICE_LINES)
 set(SLICE_SOURCES "")
@@ -18,6 +33,7 @@ foreach(line IN LISTS SLICE_LINES)
     endif()
     list(APPEND SLICE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+sm64ds_honor_cpp_markers(SLICE_SOURCES)
 
 add_executable(smoke
     tests/smoke.cpp
@@ -48,6 +64,7 @@ foreach(line IN LISTS SLICE2_LINES)
     endif()
     list(APPEND SLICE2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+sm64ds_honor_cpp_markers(SLICE2_SOURCES)
 
 add_executable(smoke_heap tests/smoke_heap.cpp hal/heap_globals.cpp ${SLICE2_SOURCES})
 target_include_directories(smoke_heap PRIVATE
@@ -68,6 +85,7 @@ foreach(line IN LISTS SLICE3A_LINES)
     endif()
     list(APPEND SLICE3A_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+sm64ds_honor_cpp_markers(SLICE3A_SOURCES)
 
 add_executable(smoke_roots tests/smoke_roots.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp
@@ -101,6 +119,7 @@ foreach(line IN LISTS SLICE3B_LINES)
     endif()
     list(APPEND SLICE3B_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+sm64ds_honor_cpp_markers(SLICE3B_SOURCES)
 
 get_filename_component(PORT_REPO_ROOT_ABS "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
 
@@ -166,6 +185,7 @@ foreach(line IN LISTS SLICE4B_LINES)
     endif()
     list(APPEND SLICE4B_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+sm64ds_honor_cpp_markers(SLICE4B_SOURCES)
 
 # ROM constants (sine table, default matrices): generated locally from the
 # extracted arm9 image so Nintendo bytes never enter the repo.
@@ -177,7 +197,7 @@ add_custom_command(OUTPUT "${ROMDATA_C}"
 
 add_executable(smoke_model tests/smoke_model.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${GATE4A_GEN} ${GATE4B_GEN} "${ROMDATA_C}")
 target_include_directories(smoke_model PRIVATE
@@ -193,7 +213,7 @@ endif()
 # Gate 5: the fiber frame loop -- game-shaped frames, host-rastered.
 add_executable(smoke_frames tests/smoke_frames.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${GATE4A_GEN} ${GATE4B_GEN} "${ROMDATA_C}")
 target_include_directories(smoke_frames PRIVATE
@@ -209,7 +229,7 @@ endif()
 # Gate 4d: the catalog soak -- every model through the game pipeline.
 add_executable(smoke_soak tests/smoke_soak.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${GATE4A_GEN} ${GATE4B_GEN} "${ROMDATA_C}")
 target_include_directories(smoke_soak PRIVATE
@@ -251,11 +271,12 @@ foreach(line IN LISTS SLICE8_LINES)
     endif()
     list(APPEND SLICE8_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+sm64ds_honor_cpp_markers(SLICE8_SOURCES)
 
 add_executable(smoke_clsn tests/smoke_clsn.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
-    hal/clsn_vtable.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp hal/cstd_div.c
+    hal/clsn_vtable.cpp hal/bg_ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE8_SOURCES} ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} "${ROMDATA_C}")
 target_include_directories(smoke_clsn PRIVATE
@@ -278,10 +299,11 @@ foreach(line IN LISTS SLICE7_LINES)
     endif()
     list(APPEND SLICE7_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+sm64ds_honor_cpp_markers(SLICE7_SOURCES)
 
 add_executable(smoke_modelanim tests/smoke_modelanim.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/anim_bridge.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp hal/anim_bridge.cpp hal/anim_ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE7_SOURCES} ${GATE4A_GEN} ${GATE4B_GEN} "${ROMDATA_C}")
 target_include_directories(smoke_modelanim PRIVATE
@@ -325,10 +347,11 @@ foreach(line IN LISTS SLICE6_LINES)
     endif()
     list(APPEND SLICE6_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+sm64ds_honor_cpp_markers(SLICE6_SOURCES)
 
 add_executable(smoke_oam tests/smoke_oam.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp hal/oam_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE6_SOURCES} ${GATE4A_GEN} ${GATE4B_GEN} ${GATE6_GEN} "${ROMDATA_C}")
 target_include_directories(smoke_oam PRIVATE
@@ -344,7 +367,7 @@ endif()
 # Gate 5b: the animation soak -- every compatible model+BCA pair.
 add_executable(smoke_soak_anim tests/smoke_soak_anim.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${GATE4A_GEN} ${GATE4B_GEN} "${ROMDATA_C}")
 target_include_directories(smoke_soak_anim PRIVATE
@@ -361,7 +384,7 @@ endif()
 # different driver: the piano posed by its BCA through the game's walk.
 add_executable(smoke_anim tests/smoke_anim.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${GATE4A_GEN} ${GATE4B_GEN} "${ROMDATA_C}")
 target_include_directories(smoke_anim PRIVATE
@@ -415,11 +438,12 @@ foreach(line IN LISTS SLICE9_LINES)
     endif()
     list(APPEND SLICE9_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+sm64ds_honor_cpp_markers(SLICE9_SOURCES)
 
 add_executable(smoke_actor tests/smoke_actor.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
-    hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp hal/cstd_div.c
+    hal/clsn_vtable.cpp hal/bg_ctor_bridge.cpp hal/actor_vtables.cpp hal/actor_ctor_bridge.cpp hal/anim_bridge.cpp hal/anim_ctor_bridge.cpp
     hal/cxxname_bridge.cpp hal/megachar_stub.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE7_SOURCES} ${SLICE8_SOURCES} ${SLICE9_SOURCES}
@@ -432,4 +456,27 @@ target_compile_definitions(smoke_actor PRIVATE SM64DS_PLATFORM_PC
     PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
 if(MSVC)
     target_compile_options(smoke_actor PRIVATE /wd4311 /wd4312 /wd4068)
+endif()
+
+if(BUILD_TESTING)
+    set(PORT_SMOKE_TARGETS
+        smoke
+        smoke_heap
+        smoke_roots
+        smoke_gx
+        smoke_model
+        smoke_frames
+        smoke_soak
+        smoke_clsn
+        smoke_modelanim
+        smoke_oam
+        smoke_soak_anim
+        smoke_anim
+        smoke_fs
+        smoke_actor)
+    foreach(smoke_target IN LISTS PORT_SMOKE_TARGETS)
+        add_test(NAME ${smoke_target} COMMAND $<TARGET_FILE:${smoke_target}>)
+        set_tests_properties(${smoke_target} PROPERTIES
+            WORKING_DIRECTORY "${PORT_REPO_ROOT_ABS}")
+    endforeach()
 endif()

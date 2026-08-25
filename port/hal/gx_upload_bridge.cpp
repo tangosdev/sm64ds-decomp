@@ -8,6 +8,18 @@
 // spellings mangle differently on MSVC; none of them add behavior.
 typedef unsigned int u32;
 typedef unsigned short u16;
+#include "SharedFilePtr.h"
+#include "ModelBase.h"
+
+// Three older callers still declare LoadFile as void. MSVC encodes return
+// types, unlike Itanium here; the call ABI is otherwise identical and all three
+// callers discard the real pointer result.
+#pragma comment(linker, "/alternatename:?LoadFile@SharedFilePtr@@QAEXXZ=?LoadFile@SharedFilePtr@@QAEPAXXZ")
+#pragma comment(linker, "/alternatename:__ZN2GX11LoadTexPlttEPKvjj=?LoadTexPltt@GX@@YAXPBXII@Z")
+#pragma comment(linker, "/alternatename:?data_020a60b0@@3IA=_data_020a60b0")
+
+namespace cstd { int abs(int); }
+extern "C" int _ZN4cstd3absEi(int value) { return cstd::abs(value); }
 
 extern "C" {
 void _ZN2GX12BeginLoadTexEv(void);
@@ -16,8 +28,6 @@ void _ZN2GX16BeginLoadTexPlttEv(void);
 void _ZN2GX14EndLoadTexPlttEv(void);
 void _ZN2GX7LoadTexEPKvjj(const void *, u32, u32);
 void _ZN2GX11LoadTexPlttEPKvjj(const void *, u32, u32);
-void _ZN13SharedFilePtr8LoadFileEv(void *);
-void _ZN15ModelComponents21UpdateVertsUsingBonesEv(void *);
 }
 
 struct GX {
@@ -35,28 +45,17 @@ void GX::EndLoadTexPltt() { _ZN2GX14EndLoadTexPlttEv(); }
 void GX::LoadTex(const void *s, u32 o, u32 z) { _ZN2GX7LoadTexEPKvjj(s, o, z); }
 void GX::LoadTexPltt(const void *s, u32 a, u32 z) { _ZN2GX11LoadTexPlttEPKvjj(s, a, z); }
 
-struct SharedFilePtr {
-    void LoadFile();
-    void ReallocateModelFile();
-};
-void SharedFilePtr::LoadFile() { _ZN13SharedFilePtr8LoadFileEv(this); }
 // Shrinks the file image to its post-parse size on the DS (a heap-space
 // optimization). Skipped on host: the image simply stays at load size.
 void SharedFilePtr::ReallocateModelFile() {}
 
-struct BCA_File;
-struct ModelComponents {
-    void UpdateVertsUsingBones();
-    void UpdateBones(BCA_File *file, int frame);
-};
-void ModelComponents::UpdateVertsUsingBones()
-{
-    _ZN15ModelComponents21UpdateVertsUsingBonesEv(this);
-}
-extern "C" void _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(void *, void *, int);
-void ModelComponents::UpdateBones(BCA_File *file, int frame)
-{
-    _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(this, file, frame);
+// Historical C-name callers -> methods that are now real C++ definitions.
+extern "C" {
+void _ZN15ModelComponents21UpdateVertsUsingBonesEv(ModelComponents *self)
+{ self->ModelComponents::UpdateVertsUsingBones(); }
+void _ZN15ModelComponents11UpdateBonesEP8BCA_Filei(
+    ModelComponents *self, BCA_File *file, int frame)
+{ self->ModelComponents::UpdateBones(file, frame); }
 }
 
 
