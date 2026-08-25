@@ -139,10 +139,42 @@ def rel_section_for(elf, shndx):
     return None
 
 
-def object_reloc_dests(obj, func, name_index):
+# objisolate.VTABLE_PREAMBLE; kept a literal so this module stays import-light.
+# mwcc's own `_ZTV<C>` symbol addresses the vtable OBJECT -- offset-to-top,
+# typeinfo, then the slot array -- while symbols.txt's `_ZTV<C>` IS the slot
+# array. The 8-byte gap is exactly what objisolate subtracts when it rewrites a
+# vptr store's addend for the ROM link.
+_VT_PREAMBLE = 8
+
+
+def object_reloc_dests(obj, func, name_index, vt_form="raw"):
     """[(offset, symname, resolved_module, resolved_addr)] for relocs inside func.
 
-    Returns (None, reason) if the function symbol isn't in the object."""
+    Returns (None, reason) if the function symbol isn't in the object.
+
+    Everything is resolved by symbol NAME alone except `_ZTV<C>` data relocs,
+    which are ADDEND-AWARE. A synthesized vptr store names the class's one
+    `_ZTV` symbol for every block it stores -- primary AND each inherited
+    secondary -- and encodes which block in the RELA addend: 8 for the primary
+    (the preamble) plus 0x10 per secondary block past it. Resolving those by
+    name alone sends every block to the same address and reports WRONG-DEST on
+    an object whose linked form is exact (measured on _ZN9dBgCh_LinC1Ev:
+    addends 8/0x18 against _ZTV9dBgCh_Lin 0x020992a4, config destinations
+    0x020992a4/0x020992b4). The destination the build links is
+    sym + addend - _VT_PREAMBLE.
+
+    Branch relocs keep name-only resolution: their nonzero addends are PC-bias
+    encoding (-8), not addressing, and must not be added on.
+
+    vt_form says which side of objisolate's rewrite `obj` sits on, because the
+    flag cannot be inferred from the object: a raw object's secondary store
+    carries 0x18 while an isolated one carries 0x10, and both are >= the
+    preamble.
+      "raw"      straight from mwccarm (match.py, build_pin.py, bank_harvest,
+                 nearmiss_db, symscope); the preamble is still in the addend
+      "isolated" post-objisolate (reloc_audit's winning_object path);
+                 objisolate already subtracted it
+    """
     elf = ELFFile(io.BytesIO(obj))
     symtab = elf.get_section_by_name(".symtab")
     syms = list(symtab.iter_symbols())
@@ -153,6 +185,7 @@ def object_reloc_dests(obj, func, name_index):
     rel = rel_section_for(elf, sym["st_shndx"])
     dests = []
     if rel is not None:
+        is_rela = rel.header["sh_type"] == "SHT_RELA"
         for r in rel.iter_relocations():
             o = r["r_offset"] - start
             if not (0 <= o < size):
@@ -160,6 +193,12 @@ def object_reloc_dests(obj, func, name_index):
             tsym = syms[r["r_info_sym"]]
             res = resolve_candidate(tsym.name, name_index)
             mod, addr = (res if res else (None, None))
+            if is_rela and res is not None and tsym.name.startswith("_ZTV"):
+                addend = r["r_addend"]
+                if vt_form == "isolated":
+                    addr += addend
+                elif addend >= _VT_PREAMBLE:
+                    addr += addend - _VT_PREAMBLE
             dests.append((o & ~3, tsym.name, mod, addr))
     return dests, size
 
@@ -351,9 +390,14 @@ def known_modules():
     return {m for m, _path in R.iter_reloc_files(include_itcm_dtcm=True)}
 
 
-def check_destinations(obj, sym, addr, size, mod, name_index, config_relocs, sym_index):
+def check_destinations(obj, sym, addr, size, mod, name_index, config_relocs, sym_index,
+                       vt_form="raw"):
     """Per-reloc destination verdicts for an in-hand object. Shared by the audit
     and the match gate (match.py --strict-relocs).
+
+    vt_form passes through to object_reloc_dests: which side of objisolate's
+    vtable-addend rewrite `obj` sits on. The audit feeds isolated objects
+    (winning_object), every other caller compiles fresh and feeds raw.
 
     Returns (rows, missing) where rows is a list of dicts (one per object reloc in
     the function) and missing is the count of config relocs the candidate lacks.
@@ -370,7 +414,7 @@ def check_destinations(obj, sym, addr, size, mod, name_index, config_relocs, sym
     if normalized not in known_modules():
         return None, (f"unknown module {mod!r} (normalizes to {normalized!r}); "
                       f"expected one of arm9, itcm, dtcm, ovNNN")
-    dests, size_or_reason = object_reloc_dests(obj, sym, name_index)
+    dests, size_or_reason = object_reloc_dests(obj, sym, name_index, vt_form)
     if dests is None:
         return None, size_or_reason
     cfgmap = config_relocs.get(normalized, {})
@@ -407,14 +451,16 @@ def warm_gate_index():
     return _GATE_IDX
 
 
-def gate_wrong_dests(obj, sym, addr, size, mod):
+def gate_wrong_dests(obj, sym, addr, size, mod, vt_form="raw"):
     """Bank-gate wrapper around check_destinations: WRONG-DEST rows only, with the
     three config indexes built once and cached for the process. Returns [] when the
     object's reloc destinations agree with config, None when the symbol is absent
-    from the object (callers treat that as a verification failure)."""
+    from the object (callers treat that as a verification failure). vt_form passes
+    through to check_destinations/object_reloc_dests."""
     name_index, config_relocs, sym_index = warm_gate_index()
     rows, _missing = check_destinations(obj, sym, addr, size, mod,
-                                        name_index, config_relocs, sym_index)
+                                        name_index, config_relocs, sym_index,
+                                        vt_form)
     if rows is None:
         return None
     return [r for r in rows if r["verdict"] == "WRONG-DEST"]
@@ -430,7 +476,8 @@ def audit_entry(entry, name_index, config_relocs, sym_index):
         return {"name": name, "module": mod, "addr": f"0x{addr:08x}",
                 "verdict": "NO-REPRO", "reason": err, "relocs": []}
     rows, missing = check_destinations(obj, sym, addr, size, mod,
-                                       name_index, config_relocs, sym_index)
+                                       name_index, config_relocs, sym_index,
+                                       vt_form="isolated")
     if rows is None:
         return {"name": name, "module": mod, "addr": f"0x{addr:08x}",
                 "verdict": "NO-SYM", "reason": missing, "relocs": []}
