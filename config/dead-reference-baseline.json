@@ -14,6 +14,10 @@
    "ref": "tools/claims_key.txt"
   },
   {
+   "file": "notes/actor-leaf-provenance.md",
+   "ref": "src_tu/actors/EnemySpawner"
+  },
+  {
    "file": "notes/actor-naming.md",
    "ref": "include/List/ActorList.h"
   },
@@ -254,6 +258,10 @@
    "ref": "tools/deepen_rtti.py"
   },
   {
+   "file": "notes/smartball-provenance.md",
+   "ref": "include/cMgSmartball_"
+  },
+  {
    "file": "notes/translation-unit-reconstruction-plan.md",
    "ref": "src/actors/Chuckya.cpp"
   },
@@ -484,6 +492,10 @@
   {
    "file": "tools/rebuild_ledger.py",
    "ref": "tools/rebuild_ledger"
+  },
+  {
+   "file": "tools/residue_reaudit.py",
+   "ref": "src/_ZN"
   },
   {
    "file": "tools/restack_tu_pr.py",
