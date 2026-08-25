@@ -3698,7 +3698,7 @@ src/_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_.c:
     complete
     .text start:0x02022e98 end:0x02022ee0
 
-src/_ZN8Particle9RenderAllEv.c:
+src/_ZN8Particle9RenderAllEv.cpp:
     complete
     .text start:0x02022ee0 end:0x02022f20
 
