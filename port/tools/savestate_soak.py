@@ -42,16 +42,28 @@ TIMEOUT = 600
 
 
 def run(exe, build, env):
+    # SM64DS_NO_FOCUS: SM64DS_WINDOW_SELFTEST is the arm that OPENS A GAME
+    # WINDOW, and a soak opens one per run over five levels, so this spawner
+    # needs what battery.py's selftest_env gets. CREATE_NO_WINDOW below only
+    # suppresses the console. In the BASE dict rather than after the update, so
+    # a caller that genuinely wants the foreground can still say so through
+    # `env` -- nothing in the tree does.
     e = dict(os.environ, SM64DS_FAULTS_FATAL="1",
-             SM64DS_WINDOW_SELFTEST=FRAMES)
+             SM64DS_WINDOW_SELFTEST=FRAMES,
+             SM64DS_NO_FOCUS="1")
     # never let an inherited knob decide what a soak run tests
     for k in ("SM64DS_SKIP_CLASS", "SM64DS_SCENE", "SM64DS_SS_DISKLOAD",
               "SM64DS_SS_DISK"):
         e.pop(k, None)
     e.update(env)
     try:
+        # CREATE_NO_WINDOW: see battery.py's NO_CONSOLE. A console-subsystem
+        # child launched with no console to inherit makes one, and a soak makes
+        # a lot of children; capture_output already pipes all three handles.
         return subprocess.run([exe], cwd=build, env=e, timeout=TIMEOUT,
-                              capture_output=True, text=True)
+                              capture_output=True, text=True,
+                              creationflags=getattr(subprocess,
+                                                    "CREATE_NO_WINDOW", 0))
     except subprocess.TimeoutExpired:
         return None
 

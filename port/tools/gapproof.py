@@ -316,15 +316,32 @@ def scene_run(scene, frames, out_bmp, settings=None, extra_env=None):
     env["SM64DS_FAULTS_FATAL"] = "1"
     env["SM64DS_SCENE_BMP_STACKED"] = out_bmp
     env["SM64DS_NO_PLAYLOG"] = "1"
+    # SM64DS_NO_FOCUS. This function LOOKS headless -- it pops
+    # SM64DS_SCENE_WINDOW a few lines up -- and on its own runs it is. But the
+    # pop happens BEFORE the extra_env update below, so a caller that passes
+    # SM64DS_SCENE_WINDOW=1 gets it back and opens a real window, and four call
+    # sites do exactly that: headroom.run and objshift.run both set it under
+    # their `windowed` argument (headroom.py:79, objshift.py:108), and
+    # perentry.py:424 goes through the same door. Set here rather than in those
+    # callers because this is the one place all of them funnel through, and
+    # BEFORE the update so a caller that genuinely wants the foreground can
+    # still say so -- nothing in the tree does.
+    env["SM64DS_NO_FOCUS"] = "1"
     if extra_env:
         env.update(extra_env)
     clear_settings()
     if settings is not None:
         write_settings(**settings)
     try:
+        # CREATE_NO_WINDOW: see battery.py's NO_CONSOLE. walk_window is a
+        # console-subsystem exe, so a run launched with no console to inherit
+        # gets a new console window on the desk; capture_output already pipes
+        # every handle, so nothing is lost by not making one.
         r = subprocess.run([os.path.join(BUILD, "walk_window.exe")], cwd=BUILD,
                            env=env, capture_output=True, text=True,
-                           errors="replace", timeout=600)
+                           errors="replace", timeout=600,
+                           creationflags=getattr(subprocess,
+                                                 "CREATE_NO_WINDOW", 0))
     finally:
         clear_settings()
     return r
