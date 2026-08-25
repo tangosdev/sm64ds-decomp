@@ -69,7 +69,10 @@ def main():
         # MSVC decorates a C symbol with a leading underscore and a C++ one with
         # its type, and callers of both spellings have to reach the same bytes,
         # so each alias is emitted in both decorations.
-        for alias in (rest[0] if rest else []):
+        # The datum's own name needs the C++ decoration too: a TU that declares
+        # it as a Matrix4x3 rather than an int array decorates the reference by
+        # type, and has to reach these same bytes.
+        for alias in [name] + list(rest[0] if rest else []):
             for dec in (f'_{alias}', f'?{alias}@@3UMatrix4x3@@A'):
                 lines.append(
                     f'#pragma comment(linker, "/alternatename:{dec}=_{name}")')

@@ -5047,7 +5047,7 @@ src/_ZN10dBgCh_ActrD1Ev.c:
     complete
     .text start:0x020373f8 end:0x02037430
 
-src/_ZN10dBgCh_ActrC1Ev.c:
+src/_ZN10dBgCh_ActrC1Ev.cpp:
     complete
     .text start:0x02037430 end:0x02037464
 

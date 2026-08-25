@@ -31,13 +31,13 @@ void dBgCh_Actr::UpdateDiscreteNoLava_2()
     v.y = sy + unk_01c;
     _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(((char *)this) + 0x20, &v,
         unk_018, *(void **)((char *)&mActor));
-    unk_128 = unk_1b8;
+    mSphereClsn.unk_108 = unk_1b8;
     if (src->y - *(int *)(obj + 0x6c) > 0) {
-        *(unsigned char *)((char *)&mClsnFlags) |= 0x20;
+        *(unsigned char *)((char *)&mSphereClsn.flags) |= 0x20;
     }
     if (func_02038a38((char *)&mSphereClsn)) {
-        p6c = (struct Vector3 *)((char *)&unk_06c);
-        if (mClsnFlags & 4) {
+        p6c = (struct Vector3 *)((char *)&mSphereClsn.disp);
+        if (mSphereClsn.flags & 4) {
             func_020371b0(((char *)this), onGround);
         }
         if (_ZNK10dBgCh_Actr15ShouldUpdatePosEv(((char *)this))) {

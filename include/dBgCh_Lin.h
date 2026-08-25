@@ -82,6 +82,18 @@ struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
        member alone carries the struct to 0x78. */
     dM3dGSph mBoundSphere;  /* 0x064 */
 
+    u8  pad_078[0xc];       /* 0x078 through 0x083. PINNED AT 0x84 by the
+                               embedding: dBgCh_Actr holds this class at 0x134
+                               and its next word at 0x1b8, which is treated as
+                               Actr's own field (Init sets 0x1000 there; the
+                               alternative reading -- that 0x1b8 is this
+                               class's last member, size 0x88 -- is byte-safe
+                               either way because every access to that word
+                               today goes through Actr). The standalone stack
+                               footprints measured in ov029 (0x7c) and the
+                               hand shadows elsewhere are slot-sharing
+                               artefacts, not sizeof evidence. */
+
     /* --- vtable, in ROM order. Do not reorder. --- */
     /* DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the key-function
      * arrangement from include/ModelBase.h / include/dBgCh.h. With MI this is
@@ -133,17 +145,18 @@ struct dBgCh_Lin {
                                check_header_offsets cannot size a struct-typed
                                member and goes UNPARSED, which blinds it to the
                                rest of the header. */
+    u8  pad_078[0xc];       /* 0x078 - same pin as the C++ branch; no member
+                               offsets above this move */
 };
 
 #endif /* __cplusplus */
 
-/* NO SIZE ASSERT ON PURPOSE. 0x78 is the proven floor, not the settled end.
-   dBgCh_Actr embeds a dBgCh_Lin at 0x134 and its next named field is at 0x1b8,
-   which puts the real end at 0x84 -- unless that 0x1b8 word is itself the last
-   member of dBgCh_Lin, in which case it is 0x88. Nothing in src/ distinguishes
-   those two readings yet, and dBgCh_Actr models the region as a flat blob, so
-   no layout depends on the answer. What would settle it: a function that reads
-   or writes dBgCh_Lin + 0x78..0x87 through a dBgCh_Lin pointer rather than
-   through dBgCh_Actr. Do not add an assert until one is found. */
+/* SIZE PINNED AT 0x84 on the C++ branch (see pad_078 above). The C branch
+   still ends at mBoundSphere because .c translation units reach into these
+   interiors by the old member names; it may only trail while nothing embeds
+   the class by value through the C view. Spelled struct-tag-style so the
+   assert holds in both languages. */
+typedef char dBgCh_Lin_size_must_be_0x84[
+    sizeof(struct dBgCh_Lin) == 0x84 ? 1 : -1];
 
-#endif
+#endif /* DBGCH_LIN_H */

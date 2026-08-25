@@ -4309,7 +4309,7 @@ _ZTI5dBgCh kind:data(any) addr:0x020991c8
 _ZTV5dBgCh kind:data(any) addr:0x020991d8
 _ZTI10dBgCh_Actr kind:data(any) addr:0x020991e0
 _ZTS10dBgCh_Actr kind:data(any) addr:0x020991ec
-data_02099204 kind:data(any) addr:0x02099204
+_ZTV10dBgCh_Actr kind:data(any) addr:0x02099204
 _ZTS5dBgPi kind:data(any) addr:0x0209920c
 _ZTS5dBgPc kind:data(any) addr:0x02099214
 _ZTI5dBgPc kind:data(any) addr:0x0209921c
