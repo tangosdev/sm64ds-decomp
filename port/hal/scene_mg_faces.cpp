@@ -475,17 +475,19 @@ extern "C" unsigned port_mg_trap_hits(void) { return g_mg_trap_hits; }
  * frame, and only when SM64DS_MG_RESULTS_PROBE is set. Unset, this is one getenv
  * at exit and nothing else.
  *
- * THAT VARIABLE IS NOT DEFINED ON THIS BRANCH, DELIBERATELY. The probe that reads
- * it and raises the panel through the ROM's own slot 27 belongs to run mg12 lane
- * OVERLAY and lives in hal/scene_mg.cpp on their branch, which is the canonical
- * line of that work. This lane carried a cherry-pick of it for a while and DROPPED
- * it: a trial merge showed the duplicate conflicts with OVERLAY's later fixes, and
- * resolving that conflict in this lane's favour would have silently deleted one of
- * them. So this readout is INERT until the two branches meet, and that is the
- * correct state for it - it is a reader, not a driver, and it must not grow its own
- * copy of somebody else's instrument. The game's own progression to this panel is
- * still blocked at the unseated func_ov006_020d01e0 installer, so a capture cannot
- * reach it without OVERLAY's probe.
+ * The probe that reads it and raises the panel through the ROM's own slot 27 is
+ * OVERLAY's instrument in hal/scene_mg.cpp; this readout is a reader, not a
+ * driver, and must not grow its own copy of it. (On the pre-merge mg12-panel
+ * branch that made this readout inert by construction: the lane dropped its
+ * byte-identical cherry-pick of the probe after a trial merge showed it
+ * conflicting with OVERLAY's later fixes. Both branches are merged now, the
+ * probe is live here, and func_ov006_020d01e0 is seated - the mg12 burst drove
+ * this readout on the merged tree and it printed. What still stands between the
+ * panel and visible pixels at that measurement: the renderer runs and writes all
+ * 128 sub-OAM slots, but the three button centres compute off the 256x192 screen
+ * ((-128,48), (384,96), (128,224)) and the +0x4640 animation counter stays 0
+ * three hundred frames after the raise, so every sprite parks on the hide row.
+ * The next floor is whatever fills +0x4634..+0x463e and steps +0x4640.)
  */
 extern "C" { extern void *data_ov004_020beb68; }
 
