@@ -273,7 +273,42 @@ SM64DS_PAD_TEST and SM64DS_PROBE_INPUT OR bits into the in-process pad, and the
 SELFTEST_* probes write the stick and the buttons by hand. Not one of them asks
 about focus.
 
-6f. THE LAUNCHER'S REQUEST, with NO env flag set at all, launched with
+6f. THE FIRST REAL DEPLOYMENT -- the full battery, under the lane's own flag
+
+port/tools/battery.py over this tree, with a foreground sampler running the
+whole time from its own process. This is the check and the demonstration at
+once: battery.py now sets SM64DS_NO_FOCUS for its level selftests and spawns
+every child CREATE_NO_WINDOW, so if the flag were going to fail anywhere it
+would fail here, forty-six windows in a row.
+
+  build          green (every pre- and post-link guard)
+  smokes         19/19 ok, including smoke_player "Mario walks on the castle
+                 grounds", smoke_soak 455 models / 0 faulted, smoke_soak_anim
+                 473 pairs / 0 faulted, smoke_savestate byte-exact restore
+  levels         46 mounted, 46 selftests, 0 not-ok, 0 skips
+  scenes         32 hosted, 32 selftests, 0 not-ok, 0 skips
+  linkage        7675 (67.9%)
+  ptr_audit      0 unhosted code pointers
+  VERDICT        battery: ALL GREEN   (exit 0)
+
+AND THE DESK NEVER MOVED. The sampler logs one line per CHANGE of foreground
+window. Across the entire run -- 46 level windows, 32 scene runs, 19 smokes --
+it recorded FOUR transitions, all of them in the first 37 seconds and none of
+them this program:
+
+  10:54:06  League of Legends
+  10:54:40  explorer
+  10:54:40  claude
+  10:54:42  League of Legends
+  (nothing further for the remainder of the run)
+
+walk_window foreground events: ZERO. The last transition is at 10:54:42 and the
+battery ran until ~11:01, so the foreground did not change AT ALL while the
+forty-six windows were opening and closing. Before this lane every one of those
+windows would have been a grab at whatever the owner of the machine was typing
+into.
+
+6g. THE LAUNCHER'S REQUEST, with NO env flag set at all, launched with
 PowerShell's -WindowStyle Minimized:
 
   [win] shown with SW_SHOWMINNOACTIVE (the launcher's own STARTUPINFO asked for
