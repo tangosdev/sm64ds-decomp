@@ -1,12 +1,22 @@
+//cpp
 // @symbol _ZN8Particle9RenderAllEv
-#include "Particle.h"
-extern void func_02049ee8(void* manager, void* b);
-extern struct Particle* data_0209ee74;
-extern int data_0209b3ec;
+#include "Particle__SysTracker.h"
 
-void _ZN8Particle9RenderAllEv(void)
+extern "C" {
+void func_02049ee8(void* manager, void* renderState);
+extern Particle__SysTracker* data_0209ee74;
+extern int data_0209b3ec;
+}
+
+namespace Particle {
+
+void RenderAll()
 {
-    struct Particle* tracker = data_0209ee74;
-    if (tracker == 0) return;
+    Particle__SysTracker* tracker = data_0209ee74;
+    if (!tracker)
+        return;
+
     func_02049ee8(tracker->mManager, &data_0209b3ec);
+}
+
 }
