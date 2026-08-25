@@ -449,17 +449,25 @@ asm transcription, or absent.
    `ModelAnim2C1Ev` 0x020163a0 · `BlendModelAnimC1Ev` 0x020166d4.
    (`Model::C2` stays hand-written until someone wants it real; nothing
    calls it as a complete object.)
-6. **dCc response family**: `dCcPos_cC1Ev` 0x02014878 ·
-   `dCcAc_cC1/C2Ev` 0x020149c8/f4 · `dCcAcPos_cC1Ev` 0x02014a84 ·
-   `dCc_cC2Ev` 0x020150cc. Small bodies; blocked only on their headers
-   declaring bases.
+6. ~~**dCc response family**~~ DONE (2026-08-24): `dCcPos_cC1Ev`,
+   `dCcAc_cC1/C2Ev` and `dCcAcPos_cC1Ev` are real C++ -- empty bodies over
+   declared base steps, `dCcAc_c`'s `owner(0)` in the init list. `dCc_cC2Ev`
+   stays hand-written extern "C" (its vtable data symbol is spelt
+   `data_0208e6ec`), and declaring `dCc_c()` in the header is what lets the
+   derived ones emit the base step by name. `dBgPcC2Ev` landed the same day:
+   byte-identical to its C1 sibling, same five stores.
 7. **Hierarchy-rooted, hardest last**: `fBase_c9SceneNodeC1Ev` 0x0203b4c4
    (nested class, independent of the chain — try early if 3–6 stall);
    `fBase_cC2Ev` 0x02043dec is a 0x160 NONMATCHING asm transcription today —
    reproducing it from real C++ needs the `dBase_c` intermediate declared
    (§5b/§5e facts) and is the root of everything below it:
    `dActor_cC1/C2Ev` 0x020113c0/0x0201150c · `dEnemyBase_cC2Ev` 0x020aed98 ·
-   `dBgActor_cC2Ev` 0x020eea50.
+   ~~`dBgActor_cC2Ev` 0x020eea50~~ DONE (2026-08-24): real and empty-bodied
+   once `dActor_c()` was DECLARED in include/dActor_c.h -- the declaration
+   points at the hand-spelt extern "C" C1/C2 pair (not the key function, so
+   no TU coins a vtable), and the derived constructor emits
+   `bl _ZN8dActor_cC2Ev` instead of inlining the base. The remaining two are
+   rich bodies that still need that treatment one level down.
 8. **Overlays**: `PlayerC1Ev` 0x020e68f4 · `MinimapC1Ev` 0x020fb8bc ·
    `HUDC1Ev` 0x020fe154. Minimap and HUD looked like genuine receive-`this`
    ctors during the §4b caller sweep — shape-check, then §6.
