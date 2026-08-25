@@ -9,9 +9,10 @@
 // carries the same seven relocated symbols and the same fourteen constants
 // (0x04000440, 0x0400046c, 0x04000454, 0x8da70000, 0x040004a8, 0x040004ac,
 // 0x04000484, 0x040004a4, 0x040004c0, 0x040004c4, 0x04000488, 0x0400048c,
-// 0x04000500, 0x04000504); four of the constant slots sit one place apart
-// from the ROM's, which is a consequence of the extra word below and not a
-// value difference. BOTH of loop two's vertex packs (+0x31c..+0x360 and
+// 0x04000500, 0x04000504); seven of the pool slots sit displaced from the
+// ROM's positions -- three of them relocated symbols, and 0x0400048c moves
+// seven places -- with the same values in both pools. A layout difference
+// whose cause is not established, not a value difference. BOTH of loop two's vertex packs (+0x31c..+0x360 and
 // +0x380..+0x3c4) match the ROM instruction for instruction. Every adjudicated
 // constant is the ROM's: the three MTX_SCALE writes of 0x100000, the mode
 // sequence 2 / 1 / 3, the identity write, the
@@ -85,11 +86,16 @@
 // literal pool excluded. The frame is NOT normalised out of the figure; it
 // happens to be exact. Re-scored under that one instrument on one clean tree
 // at 2004/b56, the near-miss row banked in nearmiss/db.jsonl before this run
-// is 61 (76.4%) and this body is 25 (90.7%).
+// is 61 (76.4%) and this body is 25 (90.7%). THE POOL HOLE FLATTERS THAT
+// FIGURE: resolving pc-relative pool values instead of holing them costs
+// five more divergences, so the honest headline with the pool counted is
+// 30 of 258 (88.8%). Both figures are the same body under two hole choices;
+// the review measured both.
 //
 // THE NEAR-MISS DB STILL HOLDS THE OTHER ROW ON PURPOSE. Its own metric keeps
-// register names, and by that measure the older row is 190 and this body 194,
-// so nearmiss_db.py ingest declined the swap. The two instruments disagree
+// register names, and by that measure the older row is 190 and this body 202
+// (194 was the pre-lever body's number; the committed body measures 202, both
+// re-run at review), so nearmiss_db.py ingest declined the swap. The two instruments disagree
 // because the older row is nearer in raw instruction text and this one is
 // nearer in structure; both readings are recorded rather than one being
 // quietly preferred. (The ingest also tripped the known duplicate-key bug --

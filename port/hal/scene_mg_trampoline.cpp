@@ -722,11 +722,12 @@ extern "C" void port_scene_trampoline_hits(void)
         {
             unsigned h = 0, f2 = 0, f1 = 0;
             port_mg_tti_floor_counts(&h, &f2, &f1);
-            std::printf("[scene] dScMgTrampoline_c closure floors REMAINING: "
-                        "020cf2fc (0x45c) x%u, 020d01e0 (0x800) x%u -- two "
-                        "ov006 bodies still with no decompilation, trapped "
-                        "count-and-return. 020d0c38 is retired (its slot "
-                        "reads %u)\n", f2, f1, h);
+            std::printf("[scene] dScMgTrampoline_c closure floors: "
+                        "020cf2fc x%u, 020d01e0 x%u -- BOTH SEATED (the "
+                        "installer in mg12, the mesh draw in mg13), their "
+                        "traps retired, so these counters are hardwired 0 "
+                        "and are not measurements. 020d0c38 also retired "
+                        "(its slot reads %u)\n", f2, f1, h);
         }
         port_mg_trampoline_record_report();
     }
