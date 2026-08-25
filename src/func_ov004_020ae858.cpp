@@ -10,8 +10,11 @@
 // NONMATCHING: base materialization / addressing + the register-coloring swap it
 // carries. 10 of 118 words differ at mwccarm 2004/b56 (closest of all 25 installed
 // builds; 1.2/base, 1.2/sp2 and 1.2/sp2p3 all sit at 12). Logic verified against the
-// ROM instruction by instruction; every other word, including all four relocs and the
-// whole literal pool, is identical. Counts as decompiled, not matched.
+// ROM instruction by instruction, and every other word is identical -- including all
+// FOURTEEN relocated words (nine arm_call, five load; config/arm9/overlays/ov004/
+// relocs.txt lines 122-135) and the whole nine-word literal pool. Not one of the ten
+// is a different OPERATION: each is the same instruction reached through a different
+// base register. Counts as decompiled, not matched.
 //
 // THE RESIDUAL, exactly: the ROM hoists &mtx into r6 and &pos[0] into r5 and writes the
 // four matrix zero-stores through the hoisted base in index order
