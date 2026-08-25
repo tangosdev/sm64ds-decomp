@@ -61,7 +61,7 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
     s32 unk_0fc;            /* 0x0fc */
     s32 unk_100;            /* 0x100 */
     u8  pad_104[0x4];       /* through 0x10b */
-    s32 mClsnScale;            /* 0x108 - dBgCh_Actr's Update* copy its tail word
+    s32 mScale;            /* 0x108 - dBgCh_Actr's Update* copy its tail word
                                (Actr +0x128) here each update */
     s32 unk_10c;            /* 0x10c - named 2026-08-24 when the size pin
                                landed: dBgCh_Actr::Init stores its fourth
@@ -118,7 +118,7 @@ struct dBgCh_SphCrr {
     s32 unk_0fc;            /* 0x0fc */
     s32 unk_100;            /* 0x100 */
     u8  pad_104[0x4];
-    s32 mClsnScale;            /* 0x108 */
+    s32 mScale;            /* 0x108 */
     s32 unk_10c;            /* 0x10c - see the C++ branch: Init's Vector3_16 * */
 };
 
