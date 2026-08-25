@@ -48,9 +48,9 @@ int CheepCheep::InitResources()
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         (void *)((char *)&(*(dCcAcPos_c *)&mdCcAcPos_c)), (struct dActor_c *)((char *)this), v, 0x32000, 0x3c000, 0x200004, 0x8000);
 
-    unk_374 = mPosX;
-    unk_378 = mPosY;
-    unk_37c = mPosZ;
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
     mAngleY = mPrevAngleY;
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         (void *)((char *)&(*(dBgCh_Actr *)&mWithMeshClsn)), (struct dActor_c *)((char *)this), 0x1e000, 0x1e000, 0, 0);

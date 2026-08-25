@@ -46,9 +46,9 @@ struct MotherPenguin {
        dBgCh_Actr's D1 at +0x1a8 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN13MotherPenguinD0Ev.c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x1a8 */
-    s32 unk_364;            /* 0x364 */
-    s32 unk_368;            /* 0x368 */
-    s32 unk_36c;            /* 0x36c */
+    s32 mHomePosX;            /* 0x364 */
+    s32 mHomePosY;            /* 0x368 */
+    s32 mHomePosZ;            /* 0x36c */
     u8  pad_370[0x4];
     s32 unk_374;            /* 0x374 */
     /* Trailing remainder, 0x14 bytes. Every marker is already typed and the

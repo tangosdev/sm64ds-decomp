@@ -24,9 +24,9 @@ struct CheepCheep : dEnemyBase_c {
     dBgCh_Actr mWithMeshClsn;       /* 0x150 */
     ModelAnim mModelAnim;             /* 0x30c */
     u8  pad_370[0x4];
-    s32 unk_374;                      /* 0x374 */
-    s32 unk_378;                      /* 0x378 */
-    s32 unk_37c;                      /* 0x37c */
+    s32 mHomePosX;                      /* 0x374 */
+    s32 mHomePosY;                      /* 0x378 */
+    s32 mHomePosZ;                      /* 0x37c */
 
     /* --- vtable --- */
     virtual ~CheepCheep();
@@ -72,9 +72,9 @@ struct CheepCheep {
     dBgCh_Actr mWithMeshClsn;            /* 0x150 */
     u8  mModelAnim;            /* 0x30c */
     u8  pad_30d[0x67];
-    s32 unk_374;            /* 0x374 */
-    s32 unk_378;            /* 0x378 */
-    s32 unk_37c;            /* 0x37c */
+    s32 mHomePosX;            /* 0x374 */
+    s32 mHomePosY;            /* 0x378 */
+    s32 mHomePosZ;            /* 0x37c */
 };
 
 #endif /* __cplusplus */

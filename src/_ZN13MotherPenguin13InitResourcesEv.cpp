@@ -54,9 +54,9 @@ int MotherPenguin::InitResources()
         mPosY = *(int*)(rg+0x44);
     else
         mPosY = v[1];
-    unk_364 = mPosX;
-    unk_368 = mPosY;
-    unk_36c = mPosZ;
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
     unk_374 = 0;
     func_ov018_02111d28(((char *)this), 0);
     _ZN9dBgCh_GndD1Ev(rg);
