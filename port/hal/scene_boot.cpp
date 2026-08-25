@@ -1920,9 +1920,14 @@ void port_graph_block_register(void *vt)
    block, so the symbol is _data_0209d4a8. This declaration used to sit at BLOCK
    scope inside port_graph_block_beat, which is itself extern "C", so it
    inherited C linkage from its enclosing function and resolved. Lifted into a
-   plain static helper it inherited C++ linkage instead and the link failed with
-   LNK1120 on ?data_0209d4a8@@3HA -- and a block-scope `extern "C"` is not a
-   repair, MSVC rejects it outright (C2598, linkage specification must be at
+   plain static helper it inherited C++ linkage instead, and MSVC mangled THIS
+   declaration's own type: `unsigned char[4]` comes out ?data_0209d4a8@@3PAEA.
+   The /alternatename pragma this file already carries aliases only the `int`
+   spelling, ?data_0209d4a8@@3HA (line 1404, for the TU that declares it int),
+   so the array spelling had no alias at all and the link failed with LNK1120 --
+   which is why the error names both the int alias and _data_0209d4a8 while the
+   thing it cannot find is neither. A block-scope `extern "C"` is not the
+   repair: MSVC rejects it outright (C2598, linkage specification must be at
    global scope). So it lives here. Measured twice, both failures, before this
    line was written. */
 extern "C" unsigned char data_0209d4a8[4];

@@ -2375,6 +2375,18 @@ static const char *const PORT_RELAUNCH_CLEAR[] = {
        for SM64DS_PAD_TEST's reason -- an inherited one opens a menu in a
        child nobody asked to have one */
     "SM64DS_STACK_BMP",    "SM64DS_SCENE_MENU",
+    /* AND THE RESULTS PROBE, which belongs here more than either of them and
+       was missed on the round that added the other two. SM64DS_MG_RESULTS_PROBE
+       does not print: it DISPATCHES the ROM's slot 27 on the live scene object,
+       which raises the results panel, stops slot 24's display swap and halts the
+       scene's behavior and render. An inherited one would do all of that to a
+       child the picker started, and the child is the process a player is about
+       to play. Same class as SM64DS_PAD_TEST and strictly more state-mutating.
+       Unset -- which is every run but a lane's own -- the entry costs one
+       string in a table the relaunch path walks and nothing else: the clear
+       loop only ever removes names, so a variable that was never set is
+       removed from an environment that never had it. */
+    "SM64DS_MG_RESULTS_PROBE",
     "SM64DS_CLICK_TEST",   "SM64DS_WINDOW_SELFTEST", "SM64DS_SCENE_TRACE",
     "SM64DS_SCENE_SLOT9",  "SM64DS_SCENE_SUBLEVEL",
     /* the third injected-input knob; unlike the two above it has no selftest
