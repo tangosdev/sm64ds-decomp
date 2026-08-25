@@ -598,8 +598,9 @@ src/func_ov006_020d01e0.c
 # the host. The generated copy is what the target compiles; this line exists so
 # the substitution has something to replace, and CMakeLists asserts that it did.
 #
-# An honest NONMATCHING seat -- 37 divergences against 258 ROM code words, frame
-# and all six call offsets exact -- and the banner in the file states every one.
+# An honest NONMATCHING seat -- 25 divergences against 258 ROM code words, frame
+# and all six call offsets exact, both of loop two's vertex packs matching the ROM
+# instruction for instruction -- and the banner in the file states every one.
 src/func_ov006_020cf2fc.c
 # THE INSTALLER'S OWN THREE CALLEES, and none of them was in ANY slice before it
 # was seated -- the trap was hiding all three, and the first link with the real

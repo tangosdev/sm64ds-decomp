@@ -242,7 +242,7 @@ extern "C" {
    src/func_ov006_020cf2fc.c is a line in both trampoline slices now -- as a
    TT_SHARED_HOSTGEN symbol, because all thirty-two of its geometry-engine
    stores are raw MMIO and the src/ copy would latch every one of them into
-   mapped memory. It is an honest NONMATCHING seat (37 divergences against 258
+   mapped memory. It is an honest NONMATCHING seat (25 divergences against 258
    ROM code words; the 0x7c frame and all six call offsets are the ROM's) and
    its banner states every divergence.
 
