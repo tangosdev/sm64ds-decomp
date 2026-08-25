@@ -91,18 +91,64 @@ def parse():
     return occ
 
 
-def ancestor_names(occ, hier, cls):
-    """offset -> field, from the class's ancestors. Nearest ancestor wins."""
+SHADOW_CAST = re.compile(r"struct\s+(\w+)\s*\*\s*\w+\s*=\s*\(\s*struct\s+(\w+)\s*\*\s*\)"
+                         r"\s*\(\s*void\s*\*\s*\)\s*c\b")
+THIS_C = re.compile(r"\bc\s*=\s*\(\s*char\s*\*\s*\)\s*this\b")
+
+
+def shadow_pairs():
+    """shadow struct -> the class it restates, evidenced by the cast site.
+
+    A recovered body writes `char *c = (char *)this;` and then
+    `struct daKpa3Bg_c *self = (struct daKpa3Bg_c *)(void *)c;` inside
+    BowserSkyPlatform::CleanupResources. Casting `this` at offset zero to the
+    shadow type IS the identity claim: daKpa3Bg_c is what the ROM's RTTI calls
+    the class this tree named BowserSkyPlatform, restated flat so a C body can
+    reach its fields by name. Such a shadow has no hierarchy entry of its own --
+    the RTTI name never reaches build/rtti.json -- but it inherits exactly what
+    the class it shadows inherits.
+
+    A shadow cast from two different classes is dropped: the pairing has to be
+    unambiguous to carry names.
+    """
+    seen = collections.defaultdict(collections.Counter)
+    for p in (REPO / "src").rglob("*"):
+        if p.suffix not in (".c", ".cpp"):
+            continue
+        m = re.match(r"_ZN(\d+)", p.name)
+        if not m:
+            continue
+        real = p.name[len(m.group(0)):][:int(m.group(1))]
+        t = p.read_text(encoding="utf-8", errors="replace")
+        if not THIS_C.search(t):
+            continue
+        for a, b in SHADOW_CAST.findall(t):
+            if a == b and a != real:
+                seen[a][real] += 1
+    return {s: next(iter(r)) for s, r in seen.items() if len(r) == 1}
+
+
+def ancestor_names(occ, hier, cls, shadows):
+    """offset -> field, from whatever the class inherits. Nearest source wins."""
     entry = hier.get(cls)
-    if not entry or entry.get("confidence") != "high":
-        return {}, None
+    if entry and entry.get("confidence") == "high":
+        sources, chain = list(reversed(entry["chain"])), entry["chain"]
+    else:
+        real = shadows.get(cls)
+        entry = hier.get(real) if real else None
+        if not entry or entry.get("confidence") != "high":
+            return {}, None
+        # The shadow restates the WHOLE object, so the class it shadows supplies
+        # names too -- and being nearest, its own fields win over its bases'.
+        sources = list(reversed(entry["chain"])) + [real]
+        chain = entry["chain"]
     out = {}
-    for anc in reversed(entry["chain"]):
+    for anc in sources:
         for e in occ.get(anc, []):
             for f in e["fields"]:
                 if not f["name"].startswith(PLACEHOLDER):
                     out[f["off"]] = dict(f, owner=anc)
-    return out, entry["chain"]
+    return out, chain
 
 
 def compatible(f, base):
@@ -119,9 +165,10 @@ def compatible(f, base):
 
 
 def drifted(occ, hier):
+    shadows = shadow_pairs()
     rows = []
     for cls, entries in occ.items():
-        cmap, chain = ancestor_names(occ, hier, cls)
+        cmap, chain = ancestor_names(occ, hier, cls, shadows)
         if not cmap:
             continue
         for e in entries:

@@ -32,11 +32,11 @@ s32 FireSeaElevator::InitResources() {
   _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
   f = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov045_02113180);
   _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    c+0x124, f, c+0x2ec, 0x199, self->unk_08e, data_ov045_021125d0);
+    c+0x124, f, c+0x2ec, 0x199, self->mAngleY, data_ov045_021125d0);
   func_020393d4(c+0x124, (int)_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
   func_020393c4(c+0x124, (int)func_ov045_021114c8);
   *(short*)(c+0x300+0x24) = 0;
   self->unk_327 = 0;
-  self->unk_320 = self->unk_060;
+  self->unk_320 = self->mPosY;
   return 1;
 }

@@ -111,7 +111,7 @@ s32 Painting::InitResources() {
         unsigned int f = *(unsigned int*)(c + 8);
         if ((unsigned char)((f >> 8) & 0x1f) == 7) {
             if ((unsigned char)((f >> 0xd) & 3) == 1) {
-                self->unk_1b0 = self->unk_05c;
+                self->unk_1b0 = self->mPosX;
                 if (data_0209caa0[2] & 0x40000) {
                     int* p = (int*)(((int)c + 0x5c));
                     *p = *p + 0x802000;

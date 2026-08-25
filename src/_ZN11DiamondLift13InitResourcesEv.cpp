@@ -30,10 +30,10 @@ s32 DiamondLift::InitResources() {
   _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
   f = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov043_021125e0);
   _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    c+0x124, f, c+0x2ec, 0x199, self->unk_08e, data_ov043_02111c00);
+    c+0x124, f, c+0x2ec, 0x199, self->mAngleY, data_ov043_02111c00);
   func_020393d4(c+0x124, (int)_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
-  self->unk_094 = self->unk_08e;
-  self->unk_098 = 0xa000;
+  self->mPrevAngleY = self->mAngleY;
+  self->mHorzSpeed = 0xa000;
   self->unk_31e = 0x3c;
   return 1;
 }

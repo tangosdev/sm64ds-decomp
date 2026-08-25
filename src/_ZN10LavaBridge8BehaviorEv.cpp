@@ -19,32 +19,32 @@ s32 LavaBridge::Behavior() {
     char* c = (char*)this;
     struct daObjFl_London_c *self = (struct daObjFl_London_c *)(void *)c;
     if (DecIfAbove0_Byte((unsigned char*)c + 0x31e) == 0) {
-        if (self->unk_31f == 0) {
+        if (self->mFlag == 0) {
             short* p = (short*)(c + 0x96);
             *p = *p - 0x100;
-            if (self->unk_096 <= -0x2000) {
-                self->unk_096 = -0x2000;
-                self->unk_31e = 0xf;
-                self->unk_31f = 1;
+            if (self->mPrevAngleZ <= -0x2000) {
+                self->mPrevAngleZ = -0x2000;
+                self->mCooldown = 0xf;
+                self->mFlag = 1;
             }
         } else {
             short* p = (short*)(c + 0x96);
             *p = *p + 0x100;
-            if (self->unk_096 >= 0) {
-                self->unk_096 = 0;
-                self->unk_31e = 0xf;
-                self->unk_31f = 0;
+            if (self->mPrevAngleZ >= 0) {
+                self->mPrevAngleZ = 0;
+                self->mCooldown = 0xf;
+                self->mFlag = 0;
             }
         }
     } else {
-        if (self->unk_31e == 1) {
-            if (self->unk_31f == 0)
+        if (self->mCooldown == 1) {
+            if (self->mFlag == 0)
                 _ZN5Sound9PlayBank3EjRK7Vector3(0x34, c + 0x74);
             else
                 _ZN5Sound9PlayBank3EjRK7Vector3(0x35, c + 0x74);
         }
     }
-    self->unk_090 = self->unk_096;
+    self->mAngleZ = self->mPrevAngleZ;
     func_ov022_02111a1c(c);
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0))
         _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
