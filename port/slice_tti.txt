@@ -578,6 +578,31 @@ src/func_ov006_020cd72c.c
 # and, if it had won, would have restored the stride bug. The host copy wins.
 # Symmetric with slice_tte.txt's 020cb16c line, and the same root cause:
 # both lanes checked the other's FILENAMES, not its SYMBOLS.
+# The 0x800 STROKE INSTALLER, seated by run mg12 lane INST and listed in BOTH
+# trampoline slices (it is reached from src/func_ov006_020d0b78.c on 385's side
+# and from src/func_ov006_020d0c38.c on both). It replaces the trap that lived
+# in unmatched/MgTrampolineTime_Floors.cpp, so that file no longer defines it
+# and its floor counter now reads a retired 0. An honest NONMATCHING seat; the
+# banner in the file states its four divergences.
+src/func_ov006_020d01e0.c
+# THE INSTALLER'S OWN THREE CALLEES, and none of them was in ANY slice before it
+# was seated -- the trap was hiding all three, and the first link with the real
+# body failed with exactly three LNK2019s. All three are matched src TUs with
+# delinks blocks. 020cf040 is the record fill the installer calls twice; the
+# other two are its success and reject state-setters, one statement each,
+# copying a stored mwcc pair into the record's first two words. They are NOT the
+# pair the port host-copies -- that is 020cf758 / 020cea2c, whose src TUs stay
+# out (LNK2005) and are listed as OUT above.
+#
+# unmatched/MgTrampolineTerror_MarioDispatch.cpp section 2 is CORRECT and is not
+# the reason these were missing. It says the fourteen distinct CODE WORDS are
+# slice lines, and they are. 020cfa28 and 020cfc58 appear in that section as two
+# of the SIXTEEN WRITERS -- the bodies that copy a pair -- which is a different
+# set from the fourteen code words the pairs point AT. Nothing over there needed
+# changing and nothing over there was changed.
+src/func_ov006_020cf040.c
+src/func_ov006_020cfa28.c
+src/func_ov006_020cfc58.c
 src/func_ov006_020d09e0.c
 src/func_ov006_020d0ac0.c
 src/func_ov006_020d0b04.c
