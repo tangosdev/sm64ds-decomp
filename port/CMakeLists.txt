@@ -5616,9 +5616,12 @@ set(SLICE_TTI_SOURCES hal/scene_mg_trampoline.cpp
                       unmatched/MgTrampolineTime_Faces.cpp
                       # the class's undecompiled bodies, count-and-return. Run
                       # mg12 lane TRM retired the stylus hit test out of this
-                      # file (src/func_ov006_020d0c38.c is a slice line in BOTH
-                      # trampoline slices now); 020cf2fc and 020d01e0 are still
-                      # trapped here and both lanes' counter APIs are unchanged.
+                      # file and lane INST retired the 0x800 installer the same
+                      # way (src/func_ov006_020d0c38.c and
+                      # src/func_ov006_020d01e0.c are slice lines in BOTH
+                      # trampoline slices now); only 020cf2fc is still trapped
+                      # here, and both lanes' counter APIs are unchanged -- the
+                      # two retired slots report a fixed 0.
                       unmatched/MgTrampolineTime_Floors.cpp
                       # The trampoline RECORD READOUT that replaced the retired
                       # hit-test want count as the stroke evidence. Listed ONCE,

@@ -617,6 +617,10 @@ src/func_ov006_020cf790.c
 src/func_ov006_020cf804.c
 src/func_ov006_020cf820.c
 src/func_ov006_020cfa44.c
+# The 0x800 STROKE INSTALLER, seated by run mg12 lane INST. Listed in BOTH
+# trampoline slices; see the note beside it in slice_tti.txt. It replaces the
+# trap in unmatched/MgTrampolineTime_Floors.cpp, which no longer defines it.
+src/func_ov006_020d01e0.c
 src/func_ov006_020d09e0.c
 src/func_ov006_020d0ac0.c
 src/func_ov006_020d0b04.c

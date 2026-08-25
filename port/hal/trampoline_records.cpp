@@ -57,12 +57,19 @@
 // the floor's.
 //
 // READ THE GATE HONESTLY.  +0x328 is NOT written by the hit test.  It is
-// written inside func_ov006_020d01e0, the 0x800 installer, which is still a
-// trapped floor -- so on this build the gate stays 0, the two render loops skip
-// every record, and a LIVE record with a zeroed gate is the exact, expected
-// picture of "the stroke was accepted and the trampoline was not built yet".
-// That is a partial result and this readout is worded so it cannot be mistaken
-// for a whole one.
+// written inside func_ov006_020d01e0, the 0x800 installer.
+//
+// THAT SENTENCE USED TO END "which is still a trapped floor -- so on this build
+// the gate stays 0". IT NO LONGER DOES. Run mg12 lane INST decompiled the
+// installer and seated it (src/func_ov006_020d01e0.c, an honest NONMATCHING
+// seat with its divergences in its banner), and the trap in
+// unmatched/MgTrampolineTime_Floors.cpp is retired with it. So the gate is a
+// LIVE MEASUREMENT now, not a known floor: 3 means the installer accepted an
+// element and built the trampoline, 1 means it ran and found none, and 0 after
+// a stroke means the installer was never reached -- which is a finding to chase,
+// not the expected shape of the build. The endpoints at +0x50/+0x54 come off
+// the same side of that wall and are live for the same reason: they are stored
+// by the installer, so (0,0)->(0,0) on a live record is now evidence too.
 
 #include <cstdio>
 
@@ -119,8 +126,10 @@ void port_mg_trampoline_record_report(void)
                 "starting trampoline from func_ov006_020d0b78) is set, %d of 4 "
                 "render-gated. Record 3 being live is a boot fact and NOT "
                 "stylus evidence. The gate at +0x328 is written inside "
-                "func_ov006_020d01e0, which is STILL A TRAPPED FLOOR, so "
-                "gated==0 is the expected shape of this build: a stroke can be "
-                "judged and accepted, and the trampoline is not built yet\n",
+                "func_ov006_020d01e0, which run mg12 lane INST DECOMPILED AND "
+                "SEATED, so the gate is a live measurement: 3 = an element was "
+                "accepted and the trampoline is built, 1 = the installer ran "
+                "and found none, 0 after a stroke = the installer was never "
+                "reached and that is a finding, not this build's floor\n",
                 strokes, setup, gated);
 }

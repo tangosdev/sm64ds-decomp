@@ -225,8 +225,19 @@ extern "C" {
    slice_tti.txt and slice_tte.txt now, so a second definition here would be
    the LNK2005 the mg11 merge already paid for once. The accessors keep their
    exact shapes and report the hit-test slot as 0 -- see the note above them
-   before reading that zero as "never asked". */
-static unsigned g_floor_020cf2fc, g_floor_020d01e0;
+   before reading that zero as "never asked".
+
+   g_floor_020d01e0 IS GONE THE SAME WAY, and it is the bigger of the two: run
+   mg12 lane INST decompiled func_ov006_020d01e0, the 0x800 INSTALLER, and
+   src/func_ov006_020d01e0.c is a slice line in both slices now. It is an honest
+   NONMATCHING seat (49 of 503 code words, frame exact, every call present with
+   the ROM's destination) and its divergences are stated in its own banner.
+   THE CONSEQUENCE FOR EVERY READER OF THIS FILE: the render gate at +0x328 is
+   written inside that body, so "gated == 0 is the expected shape of this build"
+   -- which the record readout and both censuses said, correctly, while the body
+   was trapped -- is NO LONGER TRUE. A zero gate after a stroke is now a
+   finding, not the floor. */
+static unsigned g_floor_020cf2fc;
 
 /* ROM 0x020cf2fc, 0x45c, UNDECOMPILED.  Arity from the call site. */
 void func_ov006_020cf2fc(char *)
@@ -237,29 +248,22 @@ void func_ov006_020cf2fc(char *)
     ++g_floor_020cf2fc;
 }
 
-/* ROM 0x020d01e0, 0x800, UNDECOMPILED.  Arity from the call sites. */
-void func_ov006_020d01e0(short *, short *, short *)
-{
-    if (!g_floor_020d01e0)
-        std::fprintf(stderr, "  [mg384/385] FLOOR func_ov006_020d01e0 (0x800, "
-                     "no src, no delinks block) wanted\n");
-    ++g_floor_020d01e0;
-}
-
-/* THE HIT-TEST SLOT IS RETIRED, NOT SILENT.  Every accessor below still takes
-   and fills the same arguments it did in run mg11, because two seat files and
-   two censuses read them and neither was touched for this; what changed is that
-   the 020d0c38 slot can no longer be anything but 0, since the body it counted
-   is real code now.  A reader who sees 0 there must read it as RETIRED -- it is
-   not "the stroke was never judged" any more, and the evidence to read instead
-   is the trampoline-record readout both censuses print. */
+/* TWO SLOTS ARE RETIRED NOW, NOT SILENT.  Every accessor below still takes and
+   fills the same arguments it did in run mg11, because two seat files and two
+   censuses read them and neither was touched for this; what changed is that the
+   020d0c38 slot and the 020d01e0 slot can no longer be anything but 0, since
+   both bodies are real code now.  A reader who sees 0 in either must read it as
+   RETIRED -- it is not "the stroke was never judged" or "the installer was
+   never reached" any more, and the evidence to read instead is the
+   trampoline-record readout both censuses print, whose RENDER GATE is now a
+   live measurement rather than a known floor. */
 unsigned port_mg_tti_hittest_calls(void) { return 0; }
 
 void port_mg_tti_floor_counts(unsigned *hit, unsigned *f2fc, unsigned *f1e0)
 {
     *hit  = 0;                  /* RETIRED, see above */
     *f2fc = g_floor_020cf2fc;
-    *f1e0 = g_floor_020d01e0;
+    *f1e0 = 0;                  /* RETIRED, see above */
 }
 
 /* lane TTE's census reads its first three of four through this
@@ -267,7 +271,7 @@ void port_mg_tti_floor_counts(unsigned *hit, unsigned *f2fc, unsigned *f1e0)
 void port_mg_shared_trap_counts(unsigned *f2fc, unsigned *f1e0, unsigned *fc38)
 {
     if (f2fc) *f2fc = g_floor_020cf2fc;
-    if (f1e0) *f1e0 = g_floor_020d01e0;
+    if (f1e0) *f1e0 = 0;        /* RETIRED, see above */
     if (fc38) *fc38 = 0;        /* RETIRED, see above */
 }
 

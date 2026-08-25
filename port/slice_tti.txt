@@ -578,6 +578,13 @@ src/func_ov006_020cd72c.c
 # and, if it had won, would have restored the stride bug. The host copy wins.
 # Symmetric with slice_tte.txt's 020cb16c line, and the same root cause:
 # both lanes checked the other's FILENAMES, not its SYMBOLS.
+# The 0x800 STROKE INSTALLER, seated by run mg12 lane INST and listed in BOTH
+# trampoline slices (it is reached from src/func_ov006_020d0b78.c on 385's side
+# and from src/func_ov006_020d0c38.c on both). It replaces the trap that lived
+# in unmatched/MgTrampolineTime_Floors.cpp, so that file no longer defines it
+# and its floor counter now reads a retired 0. An honest NONMATCHING seat; the
+# banner in the file states its four divergences.
+src/func_ov006_020d01e0.c
 src/func_ov006_020d09e0.c
 src/func_ov006_020d0ac0.c
 src/func_ov006_020d0b04.c
