@@ -69,20 +69,20 @@ int Stage::CleanupResources()
         /* Was `*(void ***)((char *)&unk_9bc)` -- reading a pointer back out of
            a field the header declared as one byte. include/Stage.h types it now;
            this read and LoadSkybox's store are the two ends of the evidence. */
-        void **o = (void **)skyboxModel;
+        void **o = (void **)mSkyboxModel;
         if (o)
             DestroyVirt(o);
     }
 
     {
-        char *e = ((char *)this) + 0x8bc;
+        StageTexAnimSlot *e = mTexAnimSlots;
         int j;
-        for (j = 0; j < *(u8 *)(data_0209f340 + 0x14); j++, e += 0xc) {
-            void **o = *(void ***)e;
+        for (j = 0; j < *(u8 *)(data_0209f340 + 0x14); j++, e++) {
+            void **o = (void **)e->mTransformer;
             if (o)
                 DestroyVirt(o);
             {
-                char *p = *(char **)(e + 8);
+                char *p = (char *)e->mBlockList;
                 while (p) {
                     char *next = *(char **)(p + 0xc);
                     _ZN6Memory16operator_delete2EPv(p);

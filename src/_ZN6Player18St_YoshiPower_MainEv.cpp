@@ -79,7 +79,7 @@ int Player::St_YoshiPower_Main()
     switch (mStateStep) {
     case 0: {
         if (mStateArg == 0) {
-            int t4 = (*(int*)((char*)*(void**)(&unk_160) + 0x58) >> 0xc) << 0x10;
+            int t4 = (*(int*)((char*)unk_154[3] + 0x58) >> 0xc) << 0x10;
             int id0 = _ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c+8) & 0xff, 0);
             dp = (char*)*(void**)(c + (id0<<2) + 0xdc);
             dp = (char*)(dp + 0x50);
@@ -224,7 +224,7 @@ int Player::St_YoshiPower_Main()
             if (mUseAltBodyModel == 0) {
                 int id6 = _ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c+8) & 0xff, z);
                 int* a50c = (int*)((long long)(int)((char*)*(void**)(c + (id6<<2) + 0xdc) + 0x50));
-                _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(*(void**)(&unk_160), (void*)data_ov002_0210e3d8[1], 0x40000000, 0x1000, (unsigned int)(a50c[2] << 4) >> 0x10);
+                _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(unk_154[3], (void*)data_ov002_0210e3d8[1], 0x40000000, 0x1000, (unsigned int)(a50c[2] << 4) >> 0x10);
             }
         }
         int id7 = _ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c+8) & 0xff, 0);
@@ -275,7 +275,7 @@ int Player::St_YoshiPower_Main()
                     mUseAltBodyModel = z2;
                     int id9 = _ZNK6Player14GetBodyModelIDEjb(c, *(unsigned int*)(c+8) & 0xff, z2);
                     int* a50e = (int*)((long long)(int)((char*)*(void**)(c + (id9<<2) + 0xdc) + 0x50));
-                    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(*(void**)(&unk_160), (void*)data_ov002_0210e3d8[1], 0x40000000, 0x1000, (unsigned int)(a50e[2] << 4) >> 0x10);
+                    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(unk_154[3], (void*)data_ov002_0210e3d8[1], 0x40000000, 0x1000, (unsigned int)(a50e[2] << 4) >> 0x10);
                 }
                 return 1;
             }
@@ -310,7 +310,7 @@ int Player::St_YoshiPower_Main()
     common_tail:
         Player_AdvanceAnims(c);
         if (mUseAltBodyModel == 0 && mStateStep != 6) {
-            _ZN9Animation7AdvanceEv((char*)*(void**)(&unk_160) + 0x50);
+            _ZN9Animation7AdvanceEv((char*)unk_154[3] + 0x50);
         }
         return 1;
     }

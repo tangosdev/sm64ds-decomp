@@ -92,11 +92,11 @@ int ChiefChilly::Behavior()
     int line[0x1f];
 
     *(C **)((char *)data_0209f318 + 0x114) = c;
-    /* dEnemyBase_c declares unk_100 as s16 -- 28 of its subclasses' generated headers
+    /* dEnemyBase_c declares mStateTimer as s16 -- 28 of its subclasses' generated headers
        say so -- while this file's own extern for the helper says u16*. Both are
        recovered guesses and nothing here settles which; the cast reproduces the
        ROM without asserting either. */
-    DecIfAbove0_Short((unsigned short *)&unk_100);
+    DecIfAbove0_Short((unsigned short *)&mStateTimer);
 
     if (*(void **)((char *)c->pp + 8) != 0) {
         PMF *p = c->pp + 1;

@@ -16,7 +16,7 @@ struct MrI {
     u16 mActorID;            /* 0x00c */
     u8  pad_00e[0x4e];
     /* dActor_c::mPosX -- dActor_c.h declares s32 here, and it is de-bannered (hand-reconstructed). */
-    s32 unk_05c;            /* 0x05c */
+    s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
     u8  pad_064[0x1c];
     s32 mScaleX;            /* 0x080 */
@@ -25,8 +25,8 @@ struct MrI {
     u8  pad_08c[0x2];
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0xc];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mVertAccel;            /* 0x09c */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     u8  pad_0a4[0x30];
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build
        checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
@@ -48,16 +48,16 @@ struct MrI {
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
        D1 and not D2, so it is this type and not an inlined base. */
     dCcAcPos_c mdCcAcPos_c;            /* 0x174 */
-    u8  unk_1b4;            /* 0x1b4 */
+    u8  mShadowMat;            /* 0x1b4 */
     u8  pad_1b5[0x37];
     s32 unk_1ec;            /* 0x1ec */
-    s32 unk_1f0;            /* 0x1f0 */
+    s32 mShadowRadiusScale;            /* 0x1f0 */
     u8  pad_1f4[0xc];
-    s32 unk_200;            /* 0x200 */
+    s32 mShadowHeight;            /* 0x200 */
     u8  pad_204[0x8];
-    s16 unk_20c;            /* 0x20c */
+    s16 mTurnRefAngleY;            /* 0x20c */
     u8  pad_20e[0x8];
-    u8  unk_216;            /* 0x216 */
+    u8  mTimer;            /* 0x216 */
     u8  unk_217;            /* 0x217 */
 #ifdef __cplusplus
     /* methods */

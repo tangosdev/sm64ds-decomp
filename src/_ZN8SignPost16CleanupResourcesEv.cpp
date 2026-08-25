@@ -11,8 +11,8 @@ extern int SignPost_ModelFile[];
 
 int SignPost::CleanupResources()
 {
-    if (((dBgW *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((dBgW *)((char *)&mMeshCollider))->Disable();
+    if (((dBgW *)&mMeshCollider)->IsEnabled()) {
+        ((dBgW *)&mMeshCollider)->Disable();
     }
     ((SharedFilePtr *)(SignPost_ModelFile))->Release();
     ((SharedFilePtr *)(SignPost_ClsnFile))->Release();

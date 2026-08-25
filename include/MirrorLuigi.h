@@ -27,15 +27,15 @@ struct MirrorLuigi {
        at +0x188 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     ShadowModel mShadowModel;            /* 0x188 */
-    u8  unk_1b0;            /* 0x1b0 */
+    u8  mAnimTexSeq;            /* 0x1b0 */
     u8  pad_1b1[0x7];
     s32 unk_1b8;            /* 0x1b8 */
     u8  pad_1bc[0x8];
-    u8  unk_1c4;            /* 0x1c4 */
+    u8  mModelTexSeq;            /* 0x1c4 */
     u8  pad_1c5[0x7];
     s32 unk_1cc;            /* 0x1cc */
     u8  pad_1d0[0x8];
-    u8  unk_1d8;            /* 0x1d8 */
+    u8  mNode;            /* 0x1d8 */
     /* trailing extent the ROM's `new MirrorLuigi` literal proves; see tools/opnew_sizes.py */
     u8 pad_1dc[0x30];
 #ifdef __cplusplus

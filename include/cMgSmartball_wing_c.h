@@ -6,10 +6,29 @@
  * SIZE 0x88, from _Znwj(0x88) in func_ov006_02115b0c. Base ends at 0x34, so
  * this class adds 0x54 bytes.
  *
- * offsets 0x34, 0x38, 0x3c, 0x40 and 0x44 are all zeroed by RestoreInitial
- * and read back by SaveSnapshot/Update to gate the wing's flap/angle-ease
- * behaviour; nothing beyond "state used for that gating" is evidenced, so
- * they keep unk_ names.
+ * FIVE FIELDS, TWO OF THEM NAMED. All five are zeroed by RestoreInitial, but
+ * only two are ever READ, and neither reader is in this class:
+ *
+ *   - 0x40 mTriggerCount is incremented by func_ov006_0210d8bc, which
+ *     cMgSmartball_pakkun_c::SaveSnapshot calls on this object (reached as
+ *     mgr+0x4780) each time the piranha takes a ball. Three readers agree it
+ *     is a count and not a flag: this class's SaveSnapshot eases the angle
+ *     only while it is > 0, this class's Update draws the two extra base
+ *     sprites only while it is <= 1, and func_ov006_0210dbb0 -- the wing's
+ *     collision routine -- runs its body test only while it is <= 1.
+ *     func_ov006_0210d8bc itself branches on the value reaching exactly 1,
+ *     playing sound 0x1a1 the first time and 0x1a2 after.
+ *   - 0x44 mAngleSettled is raised by func_ov006_021156f8, the manager's
+ *     "is the table at rest" check, once func_ov006_0210d898 reports this
+ *     wing done -- which means either it was never triggered or its angle has
+ *     reached its 0x3000 limit. Its one reader is this class's SaveSnapshot,
+ *     which stops easing the angle while it is set.
+ *
+ * The other three (0x34, 0x38, 0x3c) are WRITTEN by func_ov006_0210d8bc on
+ * the same call that bumps mTriggerCount -- 0x34 to 0x14 the first time and 0
+ * after, 0x3c to 1, 0x38 to 0 -- and zeroed by RestoreInitial. NOTHING IN THE
+ * TREE READS THEM BACK, so they keep unk_ names: the shape suggests a timer,
+ * a flag and a counter, but a suggestion is not evidence.
  *
  * ONE FIELD DOES NOT APPEAR BELOW: offset 0x32, a 16-bit angle eased toward
  * 0x3000 by SaveSnapshot and zeroed by RestoreInitial and the constructor,
@@ -42,13 +61,18 @@ struct cMgSmartball_wing_c : cMgSmartball_object_c {
     virtual void Update();         /* slot 1 */
     virtual void RestoreInitial(); /* slot 2 */
 
-    s32 unk_034;
-    s32 unk_038;
-    u8  unk_03c;
+    s32 unk_034;       /* 0x034 -- set to 0x14 on the first trigger and 0 on
+                           every later one by func_ov006_0210d8bc; no reader */
+    s32 unk_038;       /* 0x038 -- zeroed by the same call; no reader */
+    u8  unk_03c;       /* 0x03c -- set to 1 by the same call; no reader */
     u8  pad_03d[0x3];  /* explicit: the compiler inserts this either way, but
                           an implicit gap is a gap nobody has looked at */
-    s32 unk_040;
-    u8  unk_044;
+    s32 mTriggerCount; /* 0x040 -- how many times the piranha has fed this
+                           wing; see the header comment for its three
+                           readers */
+    u8  mAngleSettled; /* 0x044 -- the angle has finished easing. Raised by
+                           func_ov006_021156f8; while set, SaveSnapshot leaves
+                           the angle alone */
     u8  pad_045[0x43]; /* 0x45..0x87 -- unmodelled, not unread; see above */
 };
 

@@ -34,8 +34,8 @@ int Number::Render()
         }
     }
 
-    if (unk_14c != 0) {
-        u16* p = (u16*)(int)((char*)&unk_14c);
+    if (mDelay != 0) {
+        u16* p = (u16*)(int)((char*)&mDelay);
         *p = *p - 1;
         return 1;
     }

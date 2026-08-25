@@ -625,9 +625,9 @@ int dEnemyBase_c::AngleAwayFromWallOrCliff(dBgCh_Actr & clsn_, short & outAngle_
 /* ROM ordinal 3 -- _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c     */
 /* 0x020addc0, size 0xb8                                                      */
 /* -------------------------------------------------------------------------- */
-/* While unk_107 is set, a cylinder collision against anything other than actor
+/* While mEatenByYoshi is set, a cylinder collision against anything other than actor
    IDs 0x120/0x121 spawns the mega-character particles; otherwise bit 0x20000 on
-   the collision is raised. Clearing unk_107 clears that bit instead. */
+   the collision is raised. Clearing mEatenByYoshi clears that bit instead. */
 extern "C" {
 extern void* _ZN8dActor_c10FindWithIDEj(unsigned int);
 }
@@ -636,7 +636,7 @@ int dEnemyBase_c::SpawnParticlesIfHitOtherObj(dCc_c & clsn_)
 {
     char* clsn = (char*)&clsn_;
     int* f;
-    if (unk_107 != 0) {
+    if (mEatenByYoshi != 0) {
         unsigned int id = *(unsigned int*)(clsn+0x24);
         if (id != 0) {
             void* a = _ZN8dActor_c10FindWithIDEj(id);

@@ -52,11 +52,27 @@ struct dEnemyBase_c : dActor_c {
     s16 mSpinRateY;               /* 0x0ee */
     s16 mSpinRateZ;               /* 0x0f0 */
     u8  pad_0f2[0xe];
-    s16 unk_100;                  /* 0x100 -- 28 subclasses */
+    /* 0x100 -- 28 subclasses. Frames spent in the current mState: the state
+       handlers zero it the instant they change mState, and some count it up
+       while others count it down through DecIfAbove0_Short. Derived
+       independently by two passes over disjoint subclass sets (Unagi,
+       MrBlizzard, Shark, PiranhaPlant, FirePiranhaPlantBig, daKrb_c) and
+       (Whomp) -- see notes/enemy-provenance.md and
+       notes/enemy-leaf-provenance.md. Named mStateTimer, not mTimer, because
+       Klepto already owns an unrelated mTimer and the shorter name silently
+       rebinds it. */
+    s16 mStateTimer;              /* 0x100 */
     u16 mDeathTimer;              /* 0x102 */
     u16 unk_104;                  /* 0x104 -- 5 subclasses */
     u8 unk_106;                   /* 0x106 */
-    u8 unk_107;                   /* 0x107 */
+    /* 0x107 -- set while Yoshi has this enemy in his mouth. Both matched
+       OnYoshiTryEat overrides refuse the bite while it is non-zero (BobOmb
+       returns mEatenByYoshi == 0; Rabbit returns 0 when it is set), Rabbit's
+       own mEatenTimer counts up only while it reads 1, and
+       dEnemyBase_c::SpawnParticlesIfHitOtherObj changes how a cylinder
+       collision is reported while it is set. Eight subclass Behaviors clear it
+       on release. */
+    u8 mEatenByYoshi;             /* 0x107 */
     u8  unk_108;                  /* 0x108 -- 10 subclasses */
     u8  pad_109[0x1];
     u8  unk_10a;                  /* 0x10a -- 5 subclasses */

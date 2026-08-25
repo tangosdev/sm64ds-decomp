@@ -36,12 +36,12 @@ struct Player;
 
 struct PushBlock : dBgActor_c {
     dBgCh_Actr mWithMeshClsn;       /* 0x320 */
-    s32 unk_4dc;                      /* 0x4dc */
-    s32 unk_4e0;                      /* 0x4e0 */
-    s32 unk_4e4;                      /* 0x4e4 */
-    s32 unk_4e8;                      /* 0x4e8 */
-    u32 unk_4ec;                      /* 0x4ec */
-    s32 unk_4f0;                      /* 0x4f0 */
+    s32 mHomePosX;                      /* 0x4dc */
+    s32 mHomePosY;                      /* 0x4e0 */
+    s32 mHomePosZ;                      /* 0x4e4 */
+    s32 mGroundY;                      /* 0x4e8 */
+    u32 mSlideSound;                      /* 0x4ec */
+    s32 mLinkedActor;                      /* 0x4f0 */
 
     /* --- vtable --- */
     virtual ~PushBlock();
@@ -83,24 +83,40 @@ typedef char PushBlock_size_must_be_0x4f4[sizeof(PushBlock) == 0x4f4 ? 1 : -1];
    other members of this family (DonutBlock.h, BigBrickBlock.h, MetalNet.h). */
 struct PushBlock {
     u8  pad_000[0x5c];
-    s32 unk_05c;            /* 0x05c */
-    s32 unk_060;            /* 0x060 */
-    s32 unk_064;            /* 0x064 */
-    u8  pad_068[0x26];
-    s16 unk_08e;            /* 0x08e */
+    s32 mPosX;            /* 0x05c */
+    s32 mPosY;            /* 0x060 */
+    s32 mPosZ;            /* 0x064 */
+    /* dActor_c's own names at these offsets (include/dActor_c.h); Behavior
+       passes both triples to Vec3_Dist and Sound::PlayLong as Vector3 *. */
+    s32 mPrevPosX;            /* 0x068 */
+    s32 mPrevPosY;            /* 0x06c */
+    s32 mPrevPosZ;            /* 0x070 */
+    s32 mCamSpacePosX;            /* 0x074 */
+    s32 mCamSpacePosY;            /* 0x078 */
+    s32 mCamSpacePosZ;            /* 0x07c */
+    u8  pad_080[0xe];
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x4];
-    s16 unk_094;            /* 0x094 */
+    s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x2];
-    s32 unk_098;            /* 0x098 */
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0x438];
-    s32 unk_4dc;            /* 0x4dc */
-    s32 unk_4e0;            /* 0x4e0 */
-    s32 unk_4e4;            /* 0x4e4 */
-    s32 unk_4e8;            /* 0x4e8 */
-    u32 unk_4ec;            /* 0x4ec */
-    s32 unk_4f0;            /* 0x4f0 */
+    s32 mHorzSpeed;            /* 0x098 */
+    s32 mVertAccel;            /* 0x09c */
+    s32 mTerminalVelocity;            /* 0x0a0 */
+    u8  pad_0a4[0x80];
+    /* dBgActor_c's own members, by the names include/dBgActor_c.h gives them.
+       u8 markers: their real types are C++-only headers. */
+    u8  mMeshCollider;            /* 0x124 */
+    u8  pad_125[0x1c7];
+    u8  mClsnMat;            /* 0x2ec */
+    u8  pad_2ed[0x33];
+    u8  mWithMeshClsn;            /* 0x320 */
+    u8  pad_321[0x1bb];
+    s32 mHomePosX;            /* 0x4dc */
+    s32 mHomePosY;            /* 0x4e0 */
+    s32 mHomePosZ;            /* 0x4e4 */
+    s32 mGroundY;            /* 0x4e8 */
+    u32 mSlideSound;            /* 0x4ec */
+    s32 mLinkedActor;            /* 0x4f0 */
 };
 
 #endif /* __cplusplus */

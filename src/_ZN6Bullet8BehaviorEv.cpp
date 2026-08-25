@@ -16,7 +16,7 @@ extern unsigned short DecIfAbove0_Short(unsigned short* p);
 
 int Bullet::Behavior()
 {
-    DecIfAbove0_Short((unsigned short*)&unk_100);
+    DecIfAbove0_Short((unsigned short*)&mStateTimer);
     State* h = mCurrentState;
     /* Reads the handler's pointer word directly rather than as `&h->mMain`:
        taking the ADDRESS of a pointer-to-member makes mwcc materialise the

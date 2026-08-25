@@ -10,6 +10,6 @@ int RacingPenguin::Render()
 {
     _ZN15TextureSequence6UpdateER15ModelComponents(((char *)this) + 0x138, ((char *)this) + 0xdc);
     Sub *s = (Sub *)((char *)&mModelAnim);
-    s->m((char *)&unk_080);
+    s->m((char *)&mScaleX);
     return 1;
 }

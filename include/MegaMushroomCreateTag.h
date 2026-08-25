@@ -9,7 +9,7 @@
 
 struct MegaMushroomCreateTag {
     u8  pad_000[0x8];
-    s32 unk_008;            /* 0x008 */
+    s32 param1;            /* 0x008 */
     u8  pad_00c[0xc8];
     /* dCcAc_c member, named by the class's own destructor calling
        dCcAc_c's D1 at +0x0d4 -- a relocation the ROM build

@@ -51,10 +51,10 @@ int Door::Render() {
         ModelAnim *body = &mModel;
         Model *key;
         body->Render(0);
-        key = unk_138;
+        key = mKeyModel;
         if (key == 0) goto done;
         key->Virtual10(*mModel.data.transforms);
-        unk_138->Render(0);
+        mKeyModel->Render(0);
     }
 done:
     return 1;

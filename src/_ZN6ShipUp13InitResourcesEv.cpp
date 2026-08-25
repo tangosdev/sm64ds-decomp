@@ -25,7 +25,7 @@ int ShipUp::InitResources()
     int b;
     sp8[0] = data_ov016_021149d4[0];
     sp8[1] = data_ov016_021149d4[1];
-    b = (int)(unk_00c == 0x39);
+    b = (int)(actorID == 0x39);
     if (b != 0) mModelIndex = 0;
     else mModelIndex = 1;
     idx = mModelIndex;
@@ -35,7 +35,7 @@ int ShipUp::InitResources()
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     idx = mModelIndex;
     f = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov016_021136dc[idx]);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, f, ((char*)this)+0x2ec, 0x1000, unk_08e, sp8[idx]);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, f, ((char*)this)+0x2ec, 0x1000, mAngleY, sp8[idx]);
     if (mModelIndex == 0) {
         func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     }

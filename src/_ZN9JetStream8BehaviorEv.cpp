@@ -15,7 +15,7 @@ void func_ov064_0211987c(void* c);
 
 s32 JetStream::Behavior()
 {
-  DecIfAbove0_Short((unsigned short*)&unk_100);
+  DecIfAbove0_Short((unsigned short*)&mStateTimer);
   State* h = mState;
   /* Reads the handler's pointer word directly rather than as `&h->mMain`:
      taking the ADDRESS of a pointer-to-member makes mwcc materialise the whole

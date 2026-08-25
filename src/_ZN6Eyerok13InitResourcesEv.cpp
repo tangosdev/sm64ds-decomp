@@ -59,17 +59,17 @@ int Eyerok::InitResources()
     Vector3 v;
     Vector3 w;
 
-    *(s32*)(c + 0x49C) = *(s32*)(c + 8) & 0xFF;
-    if (*(s32*)(c + 0x49C) == 0xFF)
-        *(s32*)(c + 0x49C) = 0;
-    *(u8*)(c + 0x672) = (*(u32*)(c + 8) >> 0xC) & 0xF;
-    *(u8*)(c + 0x673) = _ZN8dActor_c9TrackStarEjj(c, *(u8*)(c + 0x672), 2);
-    if (*(s32*)(c + 0x49C) > 2)
-        *(s32*)(c + 0x49C) = 0;
+    mPartIdx = (s32)param1 & 0xFF;
+    if (mPartIdx == 0xFF)
+        mPartIdx = 0;
+    mStarId = (param1 >> 0xC) & 0xF;
+    mStarTracked = _ZN8dActor_c9TrackStarEjj(c, mStarId, 2);
+    if (mPartIdx > 2)
+        mPartIdx = 0;
 
-    switch (*(s32*)(c + 0x49C)) {
+    switch (mPartIdx) {
     case 0:
-        _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x3D0, _ZN5Model8LoadFileER13SharedFilePtr(data_ov066_0211ae6c), 1, -1);
+        _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel2, _ZN5Model8LoadFileER13SharedFilePtr(data_ov066_0211ae6c), 1, -1);
         _ZN5Model8LoadFileER13SharedFilePtr(data_ov066_0211ae4c);
         _ZN5Model8LoadFileER13SharedFilePtr(data_ov066_0211aeb4);
         _ZN15TextureSequence8LoadFileER13SharedFilePtr(data_ov066_0211aebc);
@@ -93,28 +93,31 @@ int Eyerok::InitResources()
         _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov066_0211ae34);
         break;
     case 1:
-        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x360, (void*)data_ov066_0211ae4c[1], 1, -1) == 0)
+        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mBlendModelAnim, (void*)data_ov066_0211ae4c[1], 1, -1) == 0)
             return 0;
         TextureSequence::Prepare(*(BMD_File*)data_ov066_0211ae4c[1], *(BTP_File*)data_ov066_0211aebc[1]);
         TextureSequence::Prepare(*(BMD_File*)data_ov066_0211ae4c[1], *(BTP_File*)data_ov066_0211ae9c[1]);
         break;
     case 2:
-        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x360, (void*)data_ov066_0211aeb4[1], 1, -1) == 0)
+        if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mBlendModelAnim, (void*)data_ov066_0211aeb4[1], 1, -1) == 0)
             return 0;
         TextureSequence::Prepare(*(BMD_File*)data_ov066_0211aeb4[1], *(BTP_File*)data_ov066_0211ae3c[1]);
         TextureSequence::Prepare(*(BMD_File*)data_ov066_0211aeb4[1], *(BTP_File*)data_ov066_0211ae2c[1]);
         break;
     }
 
-    if (*(s32*)(c + 0x49C) != 0) {
-        _ZN11ShadowModel12InitCylinderEv(c + 0x420);
+    if (mPartIdx != 0) {
+        _ZN11ShadowModel12InitCylinderEv(&mShadowModel);
         w.x = data_ov066_0211ad18[0];
         w.y = data_ov066_0211ad18[1];
         w.z = data_ov066_0211ad18[2];
-        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x320, c, &w, 0x64000, 0x64000, 0x200002, 0);
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, c, &w, 0x64000, 0x64000, 0x200002, 0);
     }
 
     {
+        /* NOT mDustPos[i]: the ROM walks a running char* and re-derives the
+           three stores from it. Spelling this as `Vector3 *p = mDustPos; p->x
+           = 0; ... p += 1;` costs the function its size -- measured. */
         int i = 0;
         char* p = c;
         do {
@@ -126,59 +129,59 @@ int Eyerok::InitResources()
         } while (i < 0x14);
     }
 
-    *(s32*)(c + 0xA0) = -0x64000;
-    *(s32*)(c + 0x86C) = 0;
-    *(s32*)(c + 0x870) = 0;
+    mTerminalVelocity = -0x64000;
+    mHandUniqueID1 = 0;
+    mHandUniqueID2 = 0;
 
-    if (*(s32*)(c + 0x49C) == 0) {
+    if (mPartIdx == 0) {
         void* r;
-        *(s32*)(((int)c + 0x64)) -= 0x7C000;
-        *(s32*)(c + 0x4A4) = *(s32*)(c + 0x5C);
-        *(s32*)(c + 0x4A8) = *(s32*)(c + 0x60);
-        *(s32*)(c + 0x4AC) = *(s32*)(c + 0x64);
-        v.x = *(s32*)(c + 0x5C);
-        v.y = *(s32*)(c + 0x60);
-        v.z = *(s32*)(c + 0x64);
+        mPosZ -= 0x7C000;
+        mRestPosX = mPosX;
+        mRestPosY = mPosY;
+        mRestPosZ = mPosZ;
+        v.x = mPosX;
+        v.y = mPosY;
+        v.z = mPosZ;
         v.x += 0x193000;
-        r = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xB0, 1, &v, 0, *(s8*)(c + 0xCC), -1);
+        r = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xB0, 1, &v, 0, mAreaId, -1);
         if (r != 0)
-            *(s32*)(c + 0x86C) = *(s32*)((char*)r + 4);
-        v.x = *(s32*)(c + 0x5C);
+            mHandUniqueID1 = *(s32*)((char*)r + 4);
+        v.x = mPosX;
         v.x -= 0x18C000;
-        r = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xB0, 2, &v, 0, *(s8*)(c + 0xCC), -1);
+        r = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xB0, 2, &v, 0, mAreaId, -1);
         if (r != 0)
-            *(s32*)(c + 0x870) = *(s32*)((char*)r + 4);
+            mHandUniqueID2 = *(s32*)((char*)r + 4);
         data_ov066_0211ae10 = 0;
         data_ov066_0211ae08 = 0;
         data_ov066_0211ae0c = 0;
         data_ov066_0211abe4 = 1;
         data_ov066_0211ae04 = 1;
         data_ov066_0211abe0 = 3;
-        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, data_ov066_0211ae24[1], c + 0x83C, 0x199, *(s16*)(c + 0x8E), &func_02112ca8);
-        func_020393d4(c + 0x674, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
-        func_020393c4(c + 0x674, &func_ov066_0211a35c);
-        ((dBgW *)(c + 0x674))->Enable((dActor_c *)(c));
-        *(s16*)(c + 0x4D2) = 0x64;
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider2, data_ov066_0211ae24[1], &mClsnMat2, 0x199, mAngleY, &func_02112ca8);
+        func_020393d4(&mMeshCollider2, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+        func_020393c4(&mMeshCollider2, &func_ov066_0211a35c);
+        ((dBgW *)&mMeshCollider2)->Enable(this);
+        mTimer2 = 0x64;
         func_ov066_02119454(c, data_ov066_0211b09c);
     } else {
-        *(s32*)(c + 0x4A4) = *(s32*)(c + 0x5C);
-        *(s32*)(c + 0x4A8) = *(s32*)(c + 0x60);
-        *(s32*)(c + 0x4AC) = *(s32*)(c + 0x64);
-        *(s32*)(c + 0x4B0) = *(s32*)(c + 0x5C);
-        *(s32*)(c + 0x4B4) = *(s32*)(c + 0x60);
-        *(s32*)(c + 0x4B8) = *(s32*)(c + 0x64);
-        if (*(s32*)(c + 0x49C) == 1) {
-            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, data_ov066_0211ae14[1], c + 0x83C, 0x199, *(s16*)(c + 0x8E), &func_02112c08);
-            *(s32*)(((int)c + 0x4A4)) -= 0x31F000;
+        mRestPosX = mPosX;
+        mRestPosY = mPosY;
+        mRestPosZ = mPosZ;
+        mSpawnPosX = mPosX;
+        mSpawnPosY = mPosY;
+        mSpawnPosZ = mPosZ;
+        if (mPartIdx == 1) {
+            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider2, data_ov066_0211ae14[1], &mClsnMat2, 0x199, mAngleY, &func_02112c08);
+            mRestPosX -= 0x31F000;
         } else {
-            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, data_ov066_0211aeac[1], c + 0x83C, 0x199, *(s16*)(c + 0x8E), &func_02112d48);
-            *(s32*)(((int)c + 0x4A4)) += 0x31F000;
+            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider2, data_ov066_0211aeac[1], &mClsnMat2, 0x199, mAngleY, &func_02112d48);
+            mRestPosX += 0x31F000;
         }
-        func_020393d4(c + 0x674, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
-        func_020393c4(c + 0x674, &func_ov066_0211a35c);
-        func_020398fc(c + 0x674);
-        *(s32*)(((int)c + 0x4AC)) -= 0x32000;
-        *(s8*)(c + 0x4D8) = 3;
+        func_020393d4(&mMeshCollider2, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+        func_020393c4(&mMeshCollider2, &func_ov066_0211a35c);
+        func_020398fc(&mMeshCollider2);
+        mRestPosZ -= 0x32000;
+        unk_4d8 = 3;
         data_ov066_0211ae00 = 0;
         func_ov066_02119454(c, data_ov066_0211b05c);
     }

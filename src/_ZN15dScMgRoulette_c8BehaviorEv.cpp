@@ -7,7 +7,7 @@
  * _ZTV15dScMgRoulette_c holds where its base's table holds something else, so
  * it is this class's own override of the virtual fBase_c declares.
  *
- * The race's five phases, selected by unk_53e6: 1 deals the racers out one at
+ * The race's five phases, selected by mPhase: 1 deals the racers out one at
  * a time, 2 runs the countdown and scores the board, 3 pays out per landed
  * tile, 4 announces win/lose/draw, then the per-racer update loops run every
  * frame regardless of phase.

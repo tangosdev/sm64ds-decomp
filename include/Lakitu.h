@@ -30,16 +30,25 @@ struct Lakitu : dActor_c {
     TextureSequence mTextureSequence;                    /* 0x1b0 */
     dCcAcPos_c mdCcAcPos_c; /* 0x1c4 */
     dBgCh_Actr mWithMeshClsn;                          /* 0x204 */
-    u8  unk_3c0;            /* 0x3c0 */
+    /* InitResources assigns IDENTITY_MATRIX4X3 straight into this slot, so
+       0x3c0 begins a Matrix4x3 (0x30 bytes, through 0x3ef); the pad below runs
+       four bytes further, to 0x3f3. Still spelt u8 + pad so the header need not
+       pull in math/Matrix.h. [_ZN6Lakitu13InitResourcesEv.cpp] */
+    u8  mMatrix;            /* 0x3c0 */
     u8  pad_3c1[0x33];
-    s32 unk_3f4;            /* 0x3f4 */
+    /* Render draws the second Model only when this is 1 (and then only for a
+       window of the animation frame at 0x12c). [_ZN6Lakitu6RenderEv.cpp] */
+    s32 mState;            /* 0x3f4 */
     /* Was declared as a u8 marker; InitResources writes/reads it as a full
-       word (a copy of mPosX), and it directly abuts unk_3fc with no gap. */
-    s32 unk_3f8;            /* 0x3f8 */
+       word (a copy of mPosX), and it directly abuts mSpawnPosY with no gap. */
+    /* Copy of mPosX/Y/Z taken once at the end of InitResources; the first two
+       are written through raw `this + 0x3f8` / `+ 0x3fc` stores there, which is
+       why only the third reads as a member. [_ZN6Lakitu13InitResourcesEv.cpp] */
+    s32 mSpawnPosX;            /* 0x3f8 */
     /* Was declared as a u8 marker; InitResources writes/reads it as a full
-       word (a copy of mPosY), and it directly abuts unk_400 with no gap. */
-    s32 unk_3fc;            /* 0x3fc */
-    s32 unk_400;            /* 0x400 */
+       word (a copy of mPosY), and it directly abuts mSpawnPosZ with no gap. */
+    s32 mSpawnPosY;            /* 0x3fc */
+    s32 mSpawnPosZ;            /* 0x400 */
     u8  pad_404[0xc];
     s32 unk_410;            /* 0x410 */
     u8  pad_414[0xc];

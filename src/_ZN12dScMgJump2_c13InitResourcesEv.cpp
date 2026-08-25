@@ -74,22 +74,22 @@ s32 dScMgJump2_c::InitResources()
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
     fov = _ZN4cstd4fdivEii(0xc0000, (s32)data_02082614);
 
-    this->unk_470c = 0;
-    this->unk_4710 = -0x64000;
-    this->unk_4714 = 0;
-    this->unk_4718 = 0;
-    this->unk_471c = 0;
-    this->unk_4720 = fov;
-    this->unk_4724 = 0x800;
+    this->mCamera0EyeX = 0;
+    this->mCamera0EyeY = -0x64000;
+    this->mCamera0EyeZ = 0;
+    this->mCamera0TargetX = 0;
+    this->mCamera0TargetY = 0;
+    this->mCamera0TargetZ = fov;
+    this->mCamera0Angle = 0x800;
     Camera_UpdateMatrices(base + 0x466c);
 
-    this->unk_47c8 = 0;
-    this->unk_47cc = 0x82000;
-    this->unk_47d0 = 0;
-    this->unk_47d4 = 0;
-    this->unk_47d8 = 0;
-    this->unk_47dc = fov;
-    this->unk_47e0 = 0x800;
+    this->mCamera1EyeX = 0;
+    this->mCamera1EyeY = 0x82000;
+    this->mCamera1EyeZ = 0;
+    this->mCamera1TargetX = 0;
+    this->mCamera1TargetY = 0;
+    this->mCamera1TargetZ = fov;
+    this->mCamera1Angle = 0x800;
     Camera_UpdateMatrices(base + 0x4728);
 
     if (func_ov006_020c4684(base + 0x5234, 6) == 0)

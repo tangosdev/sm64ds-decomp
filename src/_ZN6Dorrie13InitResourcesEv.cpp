@@ -83,9 +83,9 @@ int Dorrie::InitResources()
             ((char*)this) + 0x1140, ((char*)this), v, 0x60000, 0x1b0000, 2, 0x400000);
     }
     {
-        unk_1180 = mPosX;
-        unk_1184 = mPosY;
-        unk_1188 = mPosZ;
+        mHomePosX = mPosX;
+        mHomePosY = mPosY;
+        mHomePosZ = mPosZ;
         mStateTimer = 0;
         mClsnState = 0;
         mClsnPlayer = 0;

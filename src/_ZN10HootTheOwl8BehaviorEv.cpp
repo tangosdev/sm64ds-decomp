@@ -19,7 +19,7 @@ extern void func_ov094_021357a4(void*);
 
 int HootTheOwl::Behavior()
 {
-    DecIfAbove0_Short(&unk_100);
+    DecIfAbove0_Short(&mStateTimer);
     {
         State *o = mCurrentState;
         /* Reads the handler's pointer word directly rather than as

@@ -392,3 +392,252 @@ __destroy_arr(p, count, elemSize, dtor) idiom dScMgBase_c's own D1/D0 use
 for touchIcon_0f4 (see dScMgBase_c.h's file banner and
 src/_ZN11dScMgBase_cD1Ev.cpp) -- declared here, not per-destructor-file,
 matching dScMgHanachan_c.h's own placement.
+
+---
+
+# Round-3 readability pass: field names
+
+The `dScMg*` family's `unk_NNN` fields, named from what the matched bodies do
+with them. One table per class; every row cites the file that settles it. Where
+no matched body does anything characteristic with a field it keeps its `unk_`
+name -- a wrong name is a claim the next reader will trust.
+
+## dScMgAmida_c field names
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x46d0 | `mState` | The subject of `Behavior`'s own `switch` (src/_ZN12dScMgAmida_c8BehaviorEv.cpp): 0 sets the board up and falls into 1, 1 runs the lottery, 2 waits out the result, 3 is the finale. src/func_ov006_020d3ba0.cpp leaves it at 1. |
+| 0x46d4 | `mFinished` | u8. src/func_ov006_020d3ba0.cpp zeroes it; Behavior sets it only on the branch that fires when `mRoundCount` reaches 5, and every later read takes the celebration path (`func_ov004_020b0a54(0)` instead of `0x12`, and Render's confetti pass). |
+| 0x4700 | `mLineEndY` | InitResources stores 0x78 or 0x98 here; src/func_ov006_020d3ba0.cpp passes it as the y2 argument of four `func_ov004_020ae5c4` line draws whose other three arguments are literal screen coordinates (x = 0x20/0x60/0xa0/0xe0, y1 = -0xb4 or -0xd4). |
+| 0x4724 | `mLanePos[4][2]` | src/func_ov006_020d3ba0.cpp seeds `{ (0x20 + 0x40*i) << 12, 0xb0 << 12 }`; Behavior adds `mLaneVel` into it; Render draws the lane sprite at `>> 12`. |
+| 0x4744 | `mLaneVel[4][2]` | Added into `mLanePos` once a tick, and its y component loses a fixed 0x100 every tick -- a velocity under gravity. Zeroed by the same reset. |
+| 0x4768 | `mPieces[0x80]` | Renamed from `arr4768`; the element layout is unchanged (see the section above). |
+| 0x5368 | `mScrollSpeed` | src/func_ov006_020d3ba0.cpp computes it from the pattern table `data_ov006_0212e1b0 + mPatternIndex * 0x1c`, biases it by the inherited 0xbc, and clamps it to 0x64. |
+| 0x536c | `mScrollAccum` | Behavior adds `mScrollSpeed` into it, keeps the low four bits (`&= 0xf`) and runs `func_ov006_020d27dc` once per 16 accumulated -- a fixed-point step accumulator. |
+| 0x5374 | `mRoundCount` | Zeroed by the reset; Behavior replays the board while it is below 5 and finishes at 5, and scales the fast-forward speed by `n * 5 + 0x20`. |
+| 0x539c | `mLaneAnimTimer[4]` | Render bumps entry `i` each frame and wraps it on the per-lane period it copies out of `data_ov006_0213b880`. |
+| 0x53ac | `mLaneAnimFrame[4]` | Bumped when the timer above wraps, cycles 0..0xd, and indexes the sprite table `data_ov006_0213a458`. |
+| 0x53bc | `mBgScrollPhase` | u16. Render adds 0xc0 a frame and feeds `>> 4` into the shared sine table `data_02082214` to get the sub-screen BG2 offset. The 16-bit width comes from the reset's own `*(s16*)` store. |
+| 0x53c0 | `mResultWaitTimer` | Loaded with 0x3c on entry to state 2 and counted down there; at 0 the scene clears `mPromptEnabled` and moves to state 3. |
+| 0x53c4 | `mStartBannerTimer` | Reset to 0x3c right after `func_ov004_020b0cac(0xd, 0x80, 0x60, ...)` puts banner 0xd on screen; Behavior counts it down and calls `FreeGfxSlotsById(0xd)` on expiry. |
+| 0x53d0 | `mEndDelayTimer` | Set to 0xb4 when state 3 begins; Render keeps drawing the play field until it and `mState == 3` agree, then switches to the finale. |
+| 0x53d4 | `mPatternIndex` | src/func_ov006_020d3ba0.cpp picks it (clamped, or randomised for the harder variant) and then uses it as the row index into five different 0x1c-stride tables in ov006. |
+| 0x53e0 | `mRoundTimer` | Behavior counts it down inside state 1; reaching 0 is what ends the round and chooses between another board and the finale. |
+| 0x53e8 | `mScore` | InitResources seeds it from the inherited 0xbc times 5; src/func_ov006_020d3ba0.cpp clamps it to 0x270f (9999); Behavior pushes it to the HUD counter `func_ov004_020adb1c` every tick. |
+
+Left `unk_`: 0x46d5 (a second reset flag, only ever zeroed and compared against
+1), 0x470c/0x4710 (two 0x100 x 0x158 byte buffers -- the shape is now in the
+header comment, the role is not settled), 0x4714 (a per-lane gate read by both
+Behavior and Render, but nothing in scope writes it), 0x4764, 0x53dc/0x53dd
+(two speed-modifier flags), 0x53e4 (a constant 2 handed to every line draw).
+
+## dScMgSnowball_c field names
+
+The slalom's own state lives in two clusters: a movement block at 0xab38 that
+the previous header held as four pads, and a run/HUD block at 0xb9d8.
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0xab38 | `mPosX` / `mPosY` (0xab3c) | src/func_ov006_021279b0.cpp seeds `mPosX = 0x80000` and `mPosY = mStartY << 12`; Behavior adds the velocity into both; Render's progress bar reads `mPosY >> 12`. |
+| 0xab40 | `mPrevPosX` / `mPrevPosY` (0xab44) | Behavior's first act each tick is to copy 0xab38/0xab3c here, and the climb term is `mPosY - mPrevPosY`. |
+| 0xab48 | `mDrawPosX` / `mDrawPosY` (0xab4c) | Render draws the ball sprite `data_ov006_02139c38` at `(n - mScrollX) >> 12`, the same transform every world object gets. |
+| 0xab50 | `mSoundPosX` / `mSoundPosY` (0xab54) | Behavior fires a rolling sound whenever the position has moved 0x30000 from these two, then copies the position in. |
+| 0xab60 | `mVelX` / `mVelY` (0xab64) | `Vec2_Len` of the pair is the speed, `atan2` of it is the heading, and it is added into `mPos` each tick. Capped at 0x8000. |
+| 0xab68 | `mScrollX` | Subtracted from every world X before drawing; src/func_ov006_021279b0.cpp zeroes it. |
+| 0xab6c | `mScrollY` | `mPosY - 0x190000`, clamped to `[0, mScrollLimit]`; drives all four `SetBg*Offset` calls and the four hardware scroll registers in src/func_ov006_02128fb8.c. |
+| 0xab70 | `mTouchX` / `mTouchY` (0xab74) | Behavior stores the raw touch sample (`data_020a0dea` / `data_020a0deb`) here and steers off the difference from the previous one. |
+| 0xab78 | `mRollAngle` | u16. `+= speed * 0x2710 / mBallSize` -- an angle that advances faster the smaller the ball. |
+| 0xab7c | `mHeadingAngle` | u16. `atan2(mVelX, mVelY)`, approached linearly while rolling and set outright while crashing. |
+| 0xab7e | `mPrevRollAngle` / `mPrevHeadingAngle` (0xab82) | Behavior's prologue copies 0xab78..0xab7c into 0xab7e..0xab82 verbatim. |
+| 0xab84 | `mSpinAxis[3]` | src/func_ov006_021279b0.cpp seeds it from a `(0, 0x1000, 0)` Vector3 and passes it to `Quaternion_FromVector3`. |
+| 0xab90 | `mSpinQuat[4]` | The destination of that same `Quaternion_FromVector3`, then `Quaternion_Normalize`. Four words. |
+| 0xaba0 | `mBallSize` | Seeded 0x4000; grows by the uphill distance, capped at 0x37000; Render scales mModel by `n/2 + n*4`; the melt state subtracts 0x1000 a tick until it reaches 0. |
+| 0xac58 | `mArray1Active[0x80]` | Render skips an mArray1 slot unless this byte is 1. |
+| 0xb0d8 | `mArray1Kind[0x80]` | 1 picks the eight-frame animated sprite table, anything else the single static sprite. |
+| 0xb2d8 | `mArray1Hit[0x80]` | src/func_ov006_02125bbc.c sets it to 1 on contact; Render then adds 8 to the sprite frame. |
+| 0xb358 | `mArray2Active[0x80]` | The same gate for mArray2. |
+| 0xb3d8 | `mArray2Kind[0x80]` | Render's `switch`: 0..2 draw one sprite, 3 picks between two by X. |
+| 0xb9d8 | `mAnimCounter` | Render bumps it and wraps it at 0x20; the obstacle frame is `(n / 4) & 7`. |
+| 0xb9dc | `mTimeLeft` | Frames. Seeded 0x960 or 0x4b0 by variant; Behavior counts it down and plays a tick sound at 60/30/15-frame intervals as it shortens; Render formats it as seconds and centiseconds; 0 ends the run. |
+| 0xb9e0 | `mScore` | Zeroed by the reset, +1 a tick while rolling, handed to the HUD counter `func_ov004_020adb1c` at the crash -- the same sink dScMgAmida_c's score uses. |
+| 0xb9f4 | `mState` | Behavior's `switch`: 0 count-in, 1 rolling, 2/3 crash, 4 melt, 5 over. |
+| 0xb9f8 | `mScreensSwapped` | u8. Behavior sets it from `mPosY >= 0xe8000`; src/func_ov006_02128fb8.c uses it to flip the POWCNT1 display-swap bit at 0x4000304 and exchange the main/sub BG offsets. |
+| 0xb9fc | `mCountdownTimer` | Seeded 0xf1; state 0 counts it down, plays a beep at 0xf0/0xb4/0x78 and starts the run at 0x3c; Render draws the 3-2-1 banner from `n / 60`. |
+| 0xba00 | `mStartY` | 0x2dc0 or 0x1740 by variant; `mPosY` starts at `mStartY << 12` and the progress bar uses it as one end. |
+| 0xba04 | `mGoalY` | The other end of that bar, and the line `mPosY - mBallSize` must cross to end the run. |
+| 0xba08 | `mScrollLimit` | `mScrollY` is clamped to `(n << 16) - 0x1d0000`. |
+| 0xba0c | `mCrashTimer` | Counts up through states 2 and 4 and gates each of their phase changes (0x3c, 0x5a). |
+| 0xba10 | `mEndDelayTimer` | 0xb4 frames of state 3, cut short by a touch. |
+
+Left `unk_`: 0xab58 (the climb/descent debt term -- its arithmetic is clear, its
+name is not), 0xab7a / 0xab80 (the middle angle of the three-angle block, never
+read in scope), 0xabf4 (the loaded BMD file pointer, already documented),
+0xb9e4/0xb9e5/0xb9e6 and 0xb9f0 (four flags inside `pad_b9e4`, only one of which
+any matched body reads).
+
+## dScMgSlot3_c field names
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x4fe4 | `mReelPos[3]` | InitResources seeds each entry with `(random % mStripLength) * 0x50000`; Render divides `n >> 12` by 0x50 to get the top stop and the pixel remainder, i.e. 0x50 screen pixels per symbol. |
+| 0x4ff4 | `mReelWinPos[3]` | Read exactly the way `mReelPos` is, but only in the `mState == 6` win-line pass. Split out of the former `pad_4ff4[0xc]`, which was three words wide. |
+| 0x5000 | `mState` | Behavior's whole body is `(self->*data_ov006_02142bdc[n])()` -- it is the index into that pointer-to-member table. Render tests it against 3, 4, 6 and 7 to pick which pass to draw. |
+| 0x500c | `mReelDrawY` | While positive the two marker rows are drawn at `n + 0x10` and `n + 0x60`; at 0 or below a single row is drawn at 0x60. |
+| 0x5010 | `mWinColumn` | Used as `n * 0x50 + 0x20/0x30/0x40` for the payout caption's x, against the same 0x50 column pitch the reels use; a negative value selects the "no win" caption instead. |
+| 0x5018 | `mLamp1Angle` / `mLamp2Angle` (0x501a) | u16 each. Behavior subtracts 0x200 and 0x400 a tick while `mState == 1`; Render hands each to `func_ov004_020afb20` in its rotation argument. InitResources zeroes both. |
+| 0x501c | `mReelStrip[3][5]` | Render walks it as `*(u8*)(p + row + 0x501c)` with `p` advancing 5 a reel and `row` taken modulo `mStripLength` -- three reels of five stops. |
+| 0x502e | `mLineActive[3]` | Three bytes gating both the payout-marker pass and the win chime. |
+| 0x5031 | `mResultSymbols[3][3]` | The same walk with `p` advancing 3 a reel, indexed 0..2 -- the 3x3 window the reels stopped on, compared against `mWinSymbol`. |
+| 0x503a | `mStripLength` | The modulus of that `row` walk, i.e. the number of stops per reel. |
+| 0x503b | `mWinSymbol` | Drawn as the marker row (`data_ov006_0213e9a4[n * 3 + i]`) and compared against `mResultSymbols` to decide a win. InitResources seeds it from 0x503c. |
+| 0x503f | `mFrameCounter` | u8. Behavior increments it unconditionally; Render gates the marker pass on `n & 0x20` and fires the win chime exactly once per cycle on `(n & 0x3f) == 0x20`. |
+
+Left `unk_`: 0x4ff0, 0x5004 (copied out of dScMgBase_c's own 0xbc, but nothing
+in scope reads it back), 0x5014, 0x503c (the second marker row's symbol),
+0x503d, 0x503e, 0x5040..0x5042.
+
+## dScMgFlower_c field names
+
+The minigame is petal-plucking: `mArray` at 0x4f38 is the 0x16-entry petal
+table (its element type is still not reconstructed, so Behavior keeps reaching
+into it by raw offset).
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x5fb8 | `mCursorX` / `mCursorY` (0x5fbc) | Behavior loads the touch sample `data_020a0dea` / `data_020a0deb` and shifts it left 12; the nearest-petal test is `Vec2_Len` of the difference against this pair. |
+| 0x5fc0 | `mPrevCursorX` / `mPrevCursorY` (0x5fc4) | Copied from the pair above at the top of state 0; the drag applied to the held petal is the difference between the two. |
+| 0x5fc8 | `mHeldPetal` | The `mArray` index the search loops store on a hit and read back to move that element; -1 means nothing is held, and the drop path restores it to -1. |
+| 0x5fcc | `mPetalToggle` | u8, flipped on every completed pull. One value plays sound 0x103 with banner 0x10, the other 0x104 with banner 0x13 -- the "loves me / loves me not" alternation. |
+| 0x5fd0 | `mHintTimer` | Held at 0x3c for as long as a petal is held, counted down otherwise; draining it while petals remain sets the face sprite. |
+| 0x5fd4 | `mResultTimer` | Loaded with 0x3c after each outcome and counted down before the next pull is accepted; reaching 0 with no petals left moves to state 1. |
+| 0x5fd8 | `mPetalsLeft` | Decremented once per pull, gates every "still playing" branch on `>= 1`, and is the bound of the loop that finishes off the remaining petals when the round times out. |
+| 0x5fdc | `mWinStreak` | Incremented on the `mPetalToggle == 1` outcome and zeroed by the other; at 3 it swaps in banner 0x12 and adds 3 to `mScore` instead of 1. |
+| 0x5fe0 | `mLoseStreak` | The mirror counter on the other outcome; at 3 it swaps in banner 0x11. It never touches the score. |
+| 0x5fe4 | `mHoldTimer` | src/func_ov006_0212aa74.c increments it while `<= 0x14` and otherwise resets it to 0; Behavior treats `> 0x14` as "held long enough". InitResources zeroes it. |
+| 0x5fe8 | `mState` | Behavior's `switch`: 0 plays, 1 is over (it stops the prompt and only ticks the 0x51f8 object). |
+| 0x5fec | `mFaceSprite` | Render's only use is `data_ov006_0213ab94[n]` drawn at the screen centre; Behavior sets it to 0..4 on each outcome. |
+| 0x5ff0 | `mScore` | Incremented by 1 or 3 per winning pull and clamped to 0x270f -- the same 9999 cap dScMgAmida_c and dScMgSnowball_c use. |
+| 0x5ff4 | `mBgScrollPhase` | u16. Render adds 0xc0 a frame and feeds `>> 4` into `data_02082214` for both background layers -- the same idiom as dScMgAmida_c's own. |
+
+Left `unk_`: 0x5fcd, a second gate on the between-rounds branch that nothing in
+scope ever writes.
+
+## dScMgTrampoline_c field names
+
+Almost everything this class does with its own tail happens in the ov006
+helper files its pointer-to-member state machine dispatches to, not in the
+four vtable methods; the citations below name those files.
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x5d94 | `mScrollY` | src/func_ov006_02121bc8.cpp approaches it toward `mScrollTargetY` by 2 a tick; src/func_ov006_021211e0.cpp and Render both use `mScrollY + mScrollOffsetY` as the BG2 offset and as the hardware scroll register value. InitResources seeds it to 0x20. |
+| 0x5d98 | `mScrollTargetY` | The other argument of that `ApproachLinear`; recomputed as `(q << 3) + 0x20` once the scroll has caught up. InitResources seeds it from `mScrollY`. |
+| 0x5d9c | `mScrollHoldTimer` | Loaded with 0x78 and run down to 0 by `ApproachLinear(..., 0, 1)`; the target may not move again until it reaches 0. |
+| 0x5da0 | `mScrollOffsetY` | Added to `mScrollY` at every one of its uses, and zeroed once the scroll settles. |
+| 0x5da4 | `mArrow1X` / `mArrow2X` (0x5da8) | src/func_ov006_021218fc.c drives the pair in opposition (`ApproachLinear` one toward 0 while the other goes toward 0x20); Render draws sprite `data_ov006_02134f08` at `n + 0xf0` for each. |
+| 0x5db0 | `mTouchX` / `mTouchY` (0x5db2) | src/func_ov006_0212157c.c refreshes them from the touch sample `data_020a0dea` / `data_020a0deb` every tick a drag is live, and draws the drag segment from them. |
+| 0x5db4 | `mTouchStartX` / `mTouchStartY` (0x5db6) | Copied from the pair above on the press edge and then left alone; src/func_ov006_0212101c.c measures the swipe as start-to-current and only accepts it if the two ends sit on opposite sides of the screen. |
+| 0x5db8 | `mInputEnabled` | s16. src/func_ov006_0212157c.c clears `mTouching` and returns immediately while it is 0. |
+| 0x5dc4 | `mTouching` | u8, set on the press edge and cleared when input is disabled; the drag body runs only while it is 1. |
+| 0x5dc5 | `mTouchReleased` | u8, set on the release edge by the same file; src/func_ov006_0212101c.c is the only reader and clears it after scoring the swipe. |
+
+Left `unk_`: 0x5dba (an s16 with its own getter/setter pair,
+src/func_ov006_02121750.c and _02121768.c, but no reader that says what it
+means), 0x5dbc..0x5dc2 (four s16 counters inside src/func_ov006_021218fc.c's
+banner-blink logic).
+
+## The minigame camera, and the base fields it explains
+
+`src/Camera_UpdateMatrices.c` is the ov006 routine every 3D minigame scene
+calls once a frame, and the local struct it already carries is the whole story:
+
+```
+struct Camera {           /* 0xbc */
+    Matrix4x3 viewMat;    /* 0x00 */
+    char      pad30[0x30];
+    Matrix4x3 projMat;    /* 0x60 */
+    char      pad90[0x10];
+    Vector3   eye;        /* 0xa0 */
+    Vector3   target;     /* 0xac */
+    short     angle;      /* 0xb8 */
+};
+```
+
+It computes the view direction as `eye - target`, so which vector is which is
+settled rather than assumed. (This is NOT `include/Camera.h`'s `Camera`, the
+0x1a8-byte gameplay camera whose `lookAt`/`pos` sit at 0x80/0x8c. Two different
+types, one English word.)
+
+**dScMgSingle3DBase_c** embeds one at 0x4660. Three readings agree:
+`dScMgRoulette_c::Render` and `dScMg3DEsp_c::Render` both call
+`Camera_UpdateMatrices(this + 0x4660)` immediately after writing 0x4700,
+0x470c and 0x4718, which are +0xa0, +0xac and +0xb8 of that object; and
+`0x4660 + 0xbc = 0x471c`, exactly where `mSysTracker` begins. So the seven
+fields the previous round split out of `pad_4660` are that camera's `eye`,
+`target` and `angle`, and they are named `mCameraEyeX/Y/Z`,
+`mCameraTargetX/Y/Z` and `mCameraAngle`.
+
+**dScMgD3DBase_c** embeds two, at 0x466c and 0x4728. Its header had already
+established the 0xbc stride from all four factories' construction loops and
+noticed that 0x470c..0x4724 and 0x47c8..0x47e0 are "the SAME seven offsets
+within each element"; `dScMgJump_c::InitResources` names the two element bases
+outright by calling `Camera_UpdateMatrices(this + 0x466c)` and
+`Camera_UpdateMatrices(this + 0x4728)`. The fourteen fields become
+`mCamera0EyeX/Y/Z`, `mCamera0TargetX/Y/Z`, `mCamera0Angle` and the same six
+plus one for camera 1.
+
+Both blocks stay flat scalars rather than becoming a real `Vector3` or a real
+`Camera[2]`, for the reason dScMgD3DBase_c.h already gives: eight files spell
+them this way, and typing them is its own change with its own blast radius.
+
+## dScMgBase_c field names
+
+Only the fields several descendants corroborate are named here; this class has
+32 descendants and a wrong name in it is a wrong name in all of them.
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x0b4 | `mHudScore` | `dScMgBase_c::BeforeInitResources` zeroes it. `func_ov004_020adb1c` -- the routine that writes the HUD counter word at scene+0x464c -- is handed it directly by src/func_ov006_02125364.cpp and src/func_ov006_020ea3d0.c; dScMgMemory_c and dScMgSound_c seed it in their own InitResources; dScMgCard_c::Render keeps its own high-water mark of it; dScMgAmida_c::Behavior copies its round score into it. Deliberately NOT called `mScore`: five leaves already have a field of their own by that name, and naming the base's the same would silently shadow every one of them (see the round-2 `mPrevPosX` incident). |
+| 0x21c | `mSavedMainBgBits` | src/func_ov004_020af094.cpp stores `data_0209d45c` here; src/func_ov004_020aeed8.cpp restores it from here. |
+| 0x220 | `mSavedSubBgBits` | The same save/restore pair for `data_0209d454`. |
+| 0x224 | `mSavedScreenSwap` | Saved as `(POWCNT1 & 0x8000) >> 15` and restored as `n << 15` by that same pair. |
+
+Deliberately left `unk_`: 0x0a8/0x0ac (a pair every leaf seeds together and
+`func_ov004_020ad79c` checks against `func_ov004_020ad8b8`, but nothing in the
+tree says what it counts -- dScMgRoulette_c reads it through the singleton as a
+bonus added to its payout), 0x0bc (clamped to 0x270e, taken modulo 5, and used
+to scale difficulty in four different leaves -- a progression counter of some
+kind, but nothing in scope increments it), 0x0b8, 0x0c8, 0x0f0, 0x05c,
+0x462c/0x4630, 0x465c.
+
+## dScMgRoulette_c field names
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x53d6 | `mSelectedTile` | Render draws the cursor sprite at `data_ov006_02142ab4[n]` / `_02142ab8[n]` (the tile coordinate tables, stride 8); Behavior hands the same value to `func_ov006_02108b90` once per racer to score the board. |
+| 0x53e4 | `mCameraPreset` | Render copies row `n` of `data_ov006_0213e34c` and `_0213e370` (stride 0xc) into the base's `mCameraTarget` and `mCameraEye`, takes the angle from `data_ov006_0213e2e0 + n*2`, and then calls `Camera_UpdateMatrices`. 0 leaves the camera alone. Behavior sets it to 1 as the deal starts and clears it at the end. |
+| 0x53e6 | `mPhase` | Behavior's `switch`: 1 deals the racers out one at a time, 2 runs the countdown and reads the board, 3 pays out per landed tile, 4 announces win/lose/draw. src/func_ov006_021095cc.cpp starts it at 1. |
+| 0x53e8 | `mPhaseTimer` | Counted down in every phase and reloaded on each transition (8, 0x258, 1, 0x5a); Render also renders the countdown digits from it while `mPhase == 2`. |
+| 0x53f2 | `mScore` | Phase 3 sums each racer's payout into it and phase 4 compares it against `mTargetScore` to pick the win, lose or draw banner. Zeroed by the reset. |
+| 0x53f6 | `mTargetScore` | One per racer that did NOT land on the winning tile; the bar `mScore` has to beat. |
+| 0x53f8 | `mDealIndex` | How many racers have been dealt; the deal advances one per 8 frames until it reaches `mRacerCount`, then reuses the field as a loop cursor. |
+| 0x53fc | `mRacerCount` | The bound of every per-racer loop in Behavior and Render; the reset seeds it from the party size. |
+
+Left `unk_`: 0x53c4 (an "idle" gate Render's own local variable already calls
+that, but nothing in scope writes it), 0x53e0, 0x53ea, 0x53ec..0x53f0 (five
+bytes the reset zeroes and nothing reads).
+
+## dScMgCard_c field names
+
+| Offset | Name | Evidence |
+| --- | --- | --- |
+| 0x5388 | `mState` | src/func_ov006_020dac34.cpp is one long `switch` on it that mostly `++`s it; src/func_ov006_020db720.c switches on the same field; the reset in src/func_ov006_020db9dc.cpp starts it at 1. |
+| 0x538a | `mStateTimer` | Reloaded with 0x10, 0x14, 0x1e, 0x3c or 0x5a on each step and run down to 0 (by `--` or `ApproachLinear2`) before `mState` advances. |
+| 0x5396 | `mFrameCounter` | `dScMgCard_c::Behavior`'s only own statement is `+= 1`; Render blinks the highlighted cards on bit 3. |
+| 0x5398 | `mScore` | Render keeps it as a high-water mark of the base's `mHudScore` and pushes it back out through `func_ov004_020adb1c` every frame. |
+
+Left `unk_`: 0x538c, and the two highlight pairs 0x538e/0x5390 and
+0x5392/0x5394. Their mechanics are now in the header (Render blinks the card
+whose config byte matches either member of a pair, 6 means none, and the second
+member is cleared back to 6 when the two banks disagree) but which of the two
+is "picked" and which is "still lit" is not settled by anything in the tree.

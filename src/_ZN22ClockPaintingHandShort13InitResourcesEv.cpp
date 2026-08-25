@@ -12,7 +12,7 @@ extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, int, int, int);
 
 int ClockPaintingHandShort::InitResources()
 {
-    int eq = (int)(*(unsigned short*)((char*)&unk_00c) == 0x125);
+    int eq = (int)(*(unsigned short*)((char*)&actorID) == 0x125);
     if (eq != 0)
         *(unsigned char*)((char*)&mHandIndex) = 0;
     else

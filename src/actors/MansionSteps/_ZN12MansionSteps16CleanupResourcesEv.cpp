@@ -10,9 +10,9 @@
 int MansionSteps::CleanupResources()
 {
     ((dBgW *)((char *)&mMovingMeshCollider))->Disable();
-    int idx = *(int*)((char*)&unk_140);
+    int idx = *(int*)((char*)&mIndex);
     ((SharedFilePtr *)((void*)(data_ov063_0211e27c[idx])))->Release();
-    idx = *(int*)((char*)&unk_140);
+    idx = *(int*)((char*)&mIndex);
     ((SharedFilePtr *)((void*)(data_ov063_0211e28c[idx])))->Release();
     return 1;
 }

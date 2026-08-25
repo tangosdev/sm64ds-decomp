@@ -37,23 +37,23 @@ struct FirePiranhaPlantBig : dEnemyBase_c {
     ModelAnim                    mModelAnim;            /* 0x110 */
     dCcAc_c           mdCcAc_c;   /* 0x174 */
     dCcAcPos_c    mdCcAcPos_c; /* 0x1a8 */
-    s32                          unk_1e8;               /* 0x1e8 */
+    s32                          mRespawnMode;          /* 0x1e8 */
     s32                          mState;                /* 0x1ec */
-    s32                          unk_1f0;               /* 0x1f0 */
+    s32                          mGroupLeaderID;        /* 0x1f0 */
     s32                          unk_1f4;               /* 0x1f4 */
     Vector3                      mClsnOffset;           /* 0x1f8 */
     s32                          mScale;                /* 0x204 */
     s32                          mClsnRadiusFactor;     /* 0x208 */
     s32                          mClsnHeightFactor;     /* 0x20c */
     s32                          mMaxScale;             /* 0x210 */
-    s32                          unk_214;               /* 0x214 */
+    s32                          mScaleRate;            /* 0x214 */
     u8  pad_218[0x2];
-    u8                           unk_21a;               /* 0x21a */
-    u8                           unk_21b;               /* 0x21b */
+    u8                           mGroupAliveCount;      /* 0x21a */
+    u8                           mGroupDefeatedCount;   /* 0x21b */
     u8                           unk_21c;               /* 0x21c */
     u8                           unk_21d;               /* 0x21d */
-    u8                           unk_21e;               /* 0x21e */
-    u8                           unk_21f;               /* 0x21f */
+    u8                           mSuppressDeathReward;  /* 0x21e */
+    u8                           mStarID;               /* 0x21f */
     u8                           mAlive;                /* 0x220 */
     u8  pad_221[0x3];
     s32                          unk_224;               /* 0x224 */

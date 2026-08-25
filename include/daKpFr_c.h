@@ -33,10 +33,16 @@ struct daKpFr_c : dActor_c {
     ShadowModel        mShadowModel;           /* 0x0d4 */
     dCcAc_c mdCcAc_c;    /* 0x0fc */
     dBgCh_Actr       mWithMeshClsn;          /* 0x130 */
-    u8                 unk_2ec;                /* 0x2ec */
+    /* InitResources assigns IDENTITY_MATRIX4X3 into this slot, so it begins a
+       Matrix4x3. Still spelt u8 + pad so the header need not pull in
+       math/Matrix.h. [_ZN8daKpFr_c13InitResourcesEv.cpp] */
+    u8                 mMatrix;                /* 0x2ec */
     u8                 pad_2ed[0x37];
-    s32                unk_324;                /* 0x324 */
-    s32                unk_328;                /* 0x328 */
+    /* Two particle handles, effects 0x7f and 0x80, both fed back into
+       Particle::System::NewUnkCallback818 every Render, at mPosY + 0x4b000.
+       [_ZN8daKpFr_c6RenderEv.cpp] */
+    s32                mParticle1;                /* 0x324 */
+    s32                mParticle2;                /* 0x328 */
     u8                 pad_32c[0x4];
 
     /* Declared first on purpose, same reasoning as dActor_c.h: the key

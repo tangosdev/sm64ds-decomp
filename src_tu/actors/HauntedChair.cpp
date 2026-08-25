@@ -84,9 +84,9 @@ struct HauntedChair : dActor_c {   /* real member types at the evidenced offsets
     u8  pad_14d[0x2f];
     dCcAcPos_c mdCcAcPos_c;        /* 0x17c */
     dBgCh_Actr mWithMeshClsn;      /* 0x1bc */
-    s32 unk_378;
+    s32 mState;
     u8  pad_37c[0x4];
-    s32 unk_380, unk_384, unk_388, unk_38c, unk_390, unk_394;
+    s32 mHomePosX, mHomePosY, mHomePosZ, mClsnOffsetX, mClsnOffsetY, mClsnOffsetZ;
     virtual ~HauntedChair();
     int Behavior();
     int InitResources();
@@ -228,14 +228,14 @@ int HauntedChair::InitResources()
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, f, 1, -1);
     _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel);
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x1bc, (struct dActor_c*)((char*)this), 0x32000, 0x64000, 0, 0);
-    unk_38c = 0;
-    unk_390 = 0;
-    unk_394 = 0;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this)+0x17c, (struct dActor_c*)((char*)this), (struct Vector3*)((char*)&unk_38c), 0x32000, 0x64000, 0x200004, 0);
-    unk_378 = 0;
-    unk_380 = mPosX;
-    unk_384 = mPosY;
-    unk_388 = mPosZ;
+    mClsnOffsetX = 0;
+    mClsnOffsetY = 0;
+    mClsnOffsetZ = 0;
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this)+0x17c, (struct dActor_c*)((char*)this), (struct Vector3*)((char*)&mClsnOffsetX), 0x32000, 0x64000, 0x200004, 0);
+    mState = 0;
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
     *(struct M48*)((char*)&unk_14c) = IDENTITY_MATRIX4X3;
     return 1;
 }
@@ -249,7 +249,7 @@ int HauntedChair::InitResources()
 int HauntedChair::Behavior()
 {
   func_0200f760(((char*)this), ((char*)this) + 0x17c);
-  switch (unk_378) {
+  switch (mState) {
   case 0: func_ov020_021130c8(((char*)this)); break;
   case 1: func_ov020_02112e94(((char*)this)); break;
   case 2: func_ov020_02112b00(((char*)this)); break;

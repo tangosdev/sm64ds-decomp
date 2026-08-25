@@ -43,7 +43,7 @@ int WingFeather::InitResources()
     if (!b) {
         mAngleY = ((Sub *)(data_0209f318 + 0x100))->f7c + 0x4000;
     }
-    unk_384 = 0xb4;
+    mLifeTimer = 0xb4;
     mVertSpeed = 0x3000;
     return 1;
 }

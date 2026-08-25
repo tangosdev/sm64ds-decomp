@@ -13,7 +13,7 @@ struct TtcRotatingCube {
     u8  pad_000[0x90];
     /* 0x090..0x0a8 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
-    s16 unk_090;                 /* 0x090 */
+    s16 mAngleZ;                 /* 0x090 */
     s16 mPrevAngleX;             /* 0x092 */
     s16 mPrevAngleY;             /* 0x094 */
     s16 mPrevAngleZ;             /* 0x096 */
@@ -21,9 +21,9 @@ struct TtcRotatingCube {
     s32 mVertAccel;              /* 0x09c */
     s32 mTerminalVelocity;       /* 0x0a0 */
     u8  pad_0a4[0x4];
-    s32 unk_0a8;            /* 0x0a8 */
+    s32 mVertSpeed;            /* 0x0a8 */
     u8  pad_0ac[0x4];
-    s32 unk_0b0;            /* 0x0b0 */
+    s32 mFlags;            /* 0x0b0 */
     u8  pad_0b4[0x20];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */

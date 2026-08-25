@@ -11,9 +11,9 @@ extern char data_ov079_0212805c[];
 
 int FortressWall::CleanupResources()
 {
-  if(((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
-    ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
-  ((SharedFilePtr *)(*(void**)(data_ov079_02128058 + (unsigned char)((char *)this)[0x31e]*0xc)))->Release();
-  ((SharedFilePtr *)(*(void**)(data_ov079_0212805c + (unsigned char)((char *)this)[0x31e]*0xc)))->Release();
+  if(((dBgW *)&mMeshCollider)->IsEnabled())
+    ((dBgW *)&mMeshCollider)->Disable();
+  ((SharedFilePtr *)(*(void**)(data_ov079_02128058 + mVariant*0xc)))->Release();
+  ((SharedFilePtr *)(*(void**)(data_ov079_0212805c + mVariant*0xc)))->Release();
   return 1;
 }

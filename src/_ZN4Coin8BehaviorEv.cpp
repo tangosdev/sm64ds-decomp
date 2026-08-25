@@ -23,12 +23,12 @@ extern void _ZN5dCc_c6UpdateEv(char *c);
 
 int Coin::Behavior()
 {
-    if ((unsigned int)(unk_3ae << 0x1e) >> 0x1f) {
+    if ((unsigned int)(mCoinFlags << 0x1e) >> 0x1f) {
         *(unsigned char *)(((int)((char *)this) + 0x3ae)) &= ~2;
         _ZN5Sound9PlayBank3EjRK7Vector3(0x30, ((char *)this) + 0x74);
     }
     if ((int)(actorID == 0x122) != 0) {
-        if ((unsigned int)(unk_3ae << 0x1f) >> 0x1f)
+        if ((unsigned int)(mCoinFlags << 0x1f) >> 0x1f)
             mAreaId = -1;
     }
     if (func_ov002_020b10a0(((char *)this)) != 0) return 1;

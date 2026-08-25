@@ -138,7 +138,7 @@ extern "C" AbukuSpawnInfo Bubble_SpawnInfo = {
 int daObjAbuku_c::InitResources() {
   _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
       &mdCcAc_c, this, 0x96000, 0x96000, 0x100002, 0);
-  unk_10e = 0x12c;
+  mLifeTimer = 0x12c;
   return 1;
 }
 
@@ -151,12 +151,12 @@ int daObjAbuku_c::InitResources() {
 /* daObjAbuku_c::Behavior - recovered from vtable slot identity */
 int daObjAbuku_c::Behavior()
 {
-    unk_10c += 0x400;
-    int v = *(volatile unsigned short*)(&unk_10c);
+    mSwayAngle += 0x400;
+    int v = *(volatile unsigned short*)(&mSwayAngle);
     int x = v >> 4;
     short tv = data_02082214[2*x + 1];
-    mHorzSpeed = (int)(((s64)unk_108 * tv + 0x800) >> 12);
-    _Z14ApproachLinearRiii(&unk_108, 0x6000, 0x332);
+    mHorzSpeed = (int)(((s64)mDriftSpeed * tv + 0x800) >> 12);
+    _Z14ApproachLinearRiii(&mDriftSpeed, 0x6000, 0x332);
     /* The ROM passes a null collision pointer here; the separately owned
      * dCcAc_c is cleared/updated below, not passed to UpdatePos. */
     UpdatePos((dCc_c *)0);
@@ -171,11 +171,11 @@ int daObjAbuku_c::Behavior()
             }
         }
     }
-    if (DecIfAbove0_Short((unsigned short*)(&unk_10e)) == 0 || func_ov002_020b3344(this)) {
+    if (DecIfAbove0_Short((unsigned short*)(&mLifeTimer)) == 0 || func_ov002_020b3344(this)) {
         func_ov002_020b330c(this);
     }
-    unk_110 = (int)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        unk_110, 1, mPosX, mPosY, mPosZ, 0, 0);
+    mParticle = (int)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        mParticle, 1, mPosX, mPosY, mPosZ, 0, 0);
     mdCcAc_c.Clear();
     mdCcAc_c.Update();
     return 1;

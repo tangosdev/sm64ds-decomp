@@ -13,7 +13,7 @@ extern "C" void func_ov004_020afdd0(void *a0, int a1, int a2, int a3, int a4);
 
 void cMgSmartball_pakkun_c::Update()
 {
-    if (unk_030 == 0) return;
+    if (mIsActive == 0) return;
     {
         int f38 = mActionTimer;
         if (f38 > 0) {

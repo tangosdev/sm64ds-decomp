@@ -23,8 +23,8 @@ extern "C" void func_ov006_021095cc(char *c)
     func_ov006_02107b14();
     func_ov006_020c0e8c((int *)(c + 0x4f38));
 
-    self->unk_53f2 = 0;
-    self->unk_53e8 = 0xa;
+    self->mScore = 0;
+    self->mPhaseTimer = 0xa;
 
     e = (int *)(c + 0x51a8);
     for (i = 0; i < 5; i++) {
@@ -32,17 +32,17 @@ extern "C" void func_ov006_021095cc(char *c)
         e = (int *)((char *)e + 0x34);
     }
 
-    self->unk_53f8 = 0;
-    self->unk_53f6 = 0;
+    self->mDealIndex = 0;
+    self->mTargetScore = 0;
     n = 0;
     if (data_ov004_020beb68 != 0) n = ((int *)data_ov004_020beb68)[0xa8 / 4];
     if (n >= 5) n = 5;
-    self->unk_53fc = n;
+    self->mRacerCount = n;
 
     func_ov006_02108524(c + 0x530c);
 
     data_ov006_021428c8 = 0;
-    self->unk_53e4 = 0;
+    self->mCameraPreset = 0;
     self->unk_53e0 = 0x100;
     self->unk_53ea = 0;
     self->unk_53ec = 0;
@@ -50,7 +50,7 @@ extern "C" void func_ov006_021095cc(char *c)
     self->unk_53ee = 0;
     self->unk_53ef = 0;
     self->unk_53f0 = 0;
-    self->unk_53e6 = 1;
+    self->mPhase = 1;
 
     func_ov004_020b66d4();
     data_ov004_020bc7d4 = 1;

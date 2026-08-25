@@ -11,7 +11,7 @@
  *       dCcAc_c member below.
  *   _ZN12daObjAbuku_cD0Ev  the same member destroyed, then ~dActor_c.
  *
- * SIZE 0x114 is the factory's own literal; unk_110 (4 bytes, 0x110) closes
+ * SIZE 0x114 is the factory's own literal; mParticle (4 bytes, 0x110) closes
  * exactly on it.
  *
  * RENAMED FROM "Bubble": each overlay's relocs.txt shows this class's own vtable
@@ -32,7 +32,7 @@
  * a field of this class, so no field is declared for it here. The old
  * header also padded 0x10c..0x10e as unevidenced, but
  * daObjAbuku_c_Behavior reads and writes it as a live 16-bit counter, so it
- * is a real field (unk_10c) here.
+ * is a real field (mSwayAngle) here.
  *
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c: only slot 0
  * (InitResources) and slot 6 (Behavior) differ, both still fBase_c's own
@@ -51,10 +51,18 @@ struct daObjAbuku_c : dActor_c {
        and the class's own destructors' D1 call at +0xd4.
        [daObjAbuku_c_Spawn.c, _ZN12daObjAbuku_cD1Ev.c, _ZN12daObjAbuku_cD0Ev.c] */
     dCcAc_c mdCcAc_c;            /* 0x0d4 */
-    s32 unk_108;            /* 0x108 */
-    s16 unk_10c;            /* 0x10c */
-    s16 unk_10e;            /* 0x10e */
-    s32 unk_110;            /* 0x110 */
+    /* The same float WingFeather has, one bubble at a time: mSwayAngle
+       advances 0x400 a frame, (mSwayAngle >> 4) * 2 + 1 indexes the sin/cos
+       table at data_02082214, and that times mDriftSpeed is mHorzSpeed.
+       mDriftSpeed eases toward 0x6000. mLifeTimer starts at 0x12c (300 frames)
+       and pops the bubble at 0; mParticle is the handle
+       Particle::System::New is fed and re-stores.
+       [src_tu/actors/daObjAbuku_c.cpp,
+        _ZN12daObjAbuku_c13InitResourcesEv.cpp] */
+    s32 mDriftSpeed;            /* 0x108 */
+    s16 mSwayAngle;            /* 0x10c */
+    s16 mLifeTimer;            /* 0x10e */
+    s32 mParticle;            /* 0x110 */
 
     virtual ~daObjAbuku_c();            /* slots 16 (D1), 17 (D0) */
 

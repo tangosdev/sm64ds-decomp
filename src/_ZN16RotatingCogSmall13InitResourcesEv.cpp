@@ -59,10 +59,9 @@ int RotatingCogSmall::InitResources()
 
     {
         int st = mRotationState;
-        char *r = ((char *)this) + 0x300;
-        *(s16*)(r + 0x1e) = data_ov035_02111ef4[st][data_0209f2c0[0]];
-        *(s16*)(r + 0x24) = data_ov035_02111ef0[mRotationState];
-        *(s16*)(r + 0x26) = data_ov035_02111ef0[mRotationState];
+        mStepTimer = data_ov035_02111ef4[st][data_0209f2c0[0]];
+        mAngleYStep = data_ov035_02111ef0[mRotationState];
+        unk_326 = data_ov035_02111ef0[mRotationState];
     }
     return 1;
 }

@@ -15,7 +15,7 @@ extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char *c);
 s32 SwingingPlatform::Behavior() {
     char * c = (char *)this;
     struct daObjRcBuranko_c *self = (struct daObjRcBuranko_c *)(void *)c;
-    if (self->unk_090 < 0) {
+    if (self->mAngleZ < 0) {
         short *p = (short *)(((int)c + 0x31e));
         *p = *p + 4;
     } else {

@@ -11,7 +11,7 @@ extern "C" int *data_ov006_0213ec04[];
 void cMgSmartball_dokan_c::Update()
 {
     int flag = 0;
-    if (*(int *)((char *)unk_004 + 0x4660))
+    if (*(int *)((char *)mpManager + 0x4660))
         flag = 1;
     func_ov004_020afdd0(data_ov006_0213ec04[0], mCurrent0 >> 12, (mCurrent1 >> 12) - 0x40, -1, flag);
     func_ov004_020afdd0(data_ov006_0213ec04[1], mCurrent0 >> 12, (mCurrent1 >> 12) - 0x30, -1, flag);

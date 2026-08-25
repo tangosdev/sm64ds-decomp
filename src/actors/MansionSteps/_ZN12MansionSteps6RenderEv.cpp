@@ -17,7 +17,7 @@ struct Obj {
 
 int MansionSteps::Render()
 {
-    if (*(unsigned char*)((char*)&unk_156) == 0) return 1;
+    if (*(unsigned char*)((char*)&mVisible) == 0) return 1;
     ((Obj *)this)->sub.vfunc(0);
     return 1;
 }

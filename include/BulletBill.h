@@ -78,7 +78,7 @@ struct BulletBill {
     s16 mPrevAngleY;            /* 0x094 */
     s16 mPrevAngleZ;            /* 0x096 */
     u8  pad_098[0x68];
-    s16 unk_100;            /* 0x100 */
+    s16 mStateTimer;            /* 0x100 */
     u8  pad_102[0xe];
     u8  mdCcAcPos_c;            /* 0x110 */
     u8  pad_111[0x1f];

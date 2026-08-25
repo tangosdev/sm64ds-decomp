@@ -67,7 +67,7 @@ int Koopa::InitResources()
 
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, (dActor_c*)((char*)this), r, h, 0x200000, 0xb6efe0);
 
-    unk_100 = 0;
+    mStateTimer = 0;
     *(short*)(((char*)this) + 0x300 + 0xc4) = 0;
     mState = 1;
     func_ov062_02117994(((char*)this), 0);

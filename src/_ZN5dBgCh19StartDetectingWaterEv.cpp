@@ -6,5 +6,5 @@
 
 void dBgCh::StartDetectingWater()
 {
-    *(unsigned char *)((char *)&unk_004) |= 2;
+    *(unsigned char *)((char *)&mDetectFlags) |= 2;
 }

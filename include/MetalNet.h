@@ -39,9 +39,9 @@ typedef char MetalNet_size_must_be_0x320[sizeof(MetalNet) == 0x320 ? 1 : -1];
    can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct MetalNet {
     u8  pad_000[0x8];
-    s32 unk_008;            /* 0x008 */
+    s32 param1;            /* 0x008 */
     u8  pad_00c[0x82];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x44];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
@@ -50,7 +50,7 @@ struct MetalNet {
        dBgW_KcMbg's D1 at +0x124 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN8MetalNetD1Ev.c] */
     dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
-    u8  unk_2ec;            /* 0x2ec */
+    u8  mClsnMat;            /* 0x2ec */
 };
 
 #endif /* __cplusplus */

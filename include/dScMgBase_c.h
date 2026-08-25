@@ -46,7 +46,10 @@ struct dScMgBase_c : dScene_c {
     s32 unk_0a8;            /* 0x0a8 */
     s32 unk_0ac;            /* 0x0ac */
     u8  pad_0b0[0x4];
-    s32 unk_0b4;            /* 0x0b4 */
+    s32 mHudScore;          /* 0x0b4 -- zeroed by BeforeInitResources; the
+                                value func_ov004_020adb1c writes into the HUD
+                                counter word. Leaves keep their own tallies and
+                                copy the result here */
     s32 unk_0b8;            /* 0x0b8 */
     u32 unk_0bc;            /* 0x0bc */
     u16 mPromptBlinkTimer;  /* 0x0c0 -- free-runs 0..0x2f; the prompt shows
@@ -61,9 +64,11 @@ struct dScMgBase_c : dScene_c {
     s32 unk_0f0;            /* 0x0f0 */
     u8  touchIcon_0f4[8][0x24]; /* 0x0f4 -- 8x dMgPsOpt_c::TouchIcon_c */
     u8  pad_214[0x8];       /* 0x214 */
-    u32 unk_21c;            /* 0x21c */
-    u32 unk_220;            /* 0x220 */
-    u32 unk_224;            /* 0x224 */
+    u32 mSavedMainBgBits;   /* 0x21c -- func_ov004_020af094 saves data_0209d45c
+                                here and func_ov004_020aeed8 restores it */
+    u32 mSavedSubBgBits;    /* 0x220 -- the same pair for data_0209d454 */
+    u32 mSavedScreenSwap;   /* 0x224 -- bit 15 of POWCNT1 (0x4000304), saved and
+                                restored by the same two functions */
     u8  pad_228[0x4400];
     s32 mMenuOpen;          /* 0x4628 -- the three-item overlay menu is up;
                                 BeforeRender skips the normal render pass and

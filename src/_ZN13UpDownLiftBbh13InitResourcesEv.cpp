@@ -67,13 +67,13 @@ int UpDownLiftBbh::InitResources()
      it travels, and it stops halfway on the way back up. */
   if ((*((u8 *) ((char *)&unk_349))) == 2)
   {
-    mTopY = mPosY + ((*((u16 *) ((char *)&unk_096))) << 12);
+    mTopY = mPosY + ((*((u16 *) ((char *)&mPrevAngleZ))) << 12);
   }
   else
   {
     mTopY = mPosY;
   }
-  mBottomY = mTopY - ((*((u16 *) ((char *)&unk_092))) << 12);
+  mBottomY = mTopY - ((*((u16 *) ((char *)&mPrevAngleX))) << 12);
   mMiddleY = (mTopY + mBottomY) / 2;
   *((u8 *) ((char *)&unk_346)) = 0;
   *((u8 *) ((char *)&mIsArmed)) = 1;

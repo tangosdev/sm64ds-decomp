@@ -22,9 +22,9 @@ int StarSwitch::Behavior()
     int id344;
     int v;
 
-    if (IsAreaShowing(unk_353) == 0) {
-        (*(u8 *)&mAreaId) = unk_353;
-        unk_338 = 1;
+    if (IsAreaShowing(mHomeAreaId) == 0) {
+        mAreaId = mHomeAreaId;
+        mTimer = 1;
         func_ov002_020ba01c(((char *)this), 2, 1, 0x333, 0x1000);
         func_ov002_020ba4d8(((char *)this), 0);
         a = _ZN8dActor_c10FindWithIDEj(mTargetActorID);
@@ -39,7 +39,7 @@ int StarSwitch::Behavior()
             if (func_ov002_020b9f00(((char *)this)) != 0) {
                 a = _ZN8dActor_c10FindWithIDEj(mTargetActorID);
                 if (a != 0) {
-                    *(void **)((char *)&unk_348) = a;
+                    mTargetActor = (s32)a;
                 }
             }
         }
@@ -57,14 +57,13 @@ int StarSwitch::Behavior()
         }
         if (_ZN8dActor_c10FindWithIDEj(id344) == 0) {
             mTargetActorID = 0;
-            (*(u8 *)&mAreaId) = unk_353;
+            mAreaId = mHomeAreaId;
             return 1;
         }
     }
 
     if ((data_0209b454 & 0x4000000) == 0) {
-        unsigned short *p = (unsigned short *)((char *)&unk_338);
-        *p = *p + 1;
+        mTimer++;
     }
     func_ov002_020ba520(((char *)this));
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char *)this));
@@ -72,17 +71,17 @@ int StarSwitch::Behavior()
         func_ov002_020b9f80(((char *)this));
     }
 
-    if (unk_33c == 2) {
-        if (unk_34d == 0) {
-            v = unk_334;
+    if (mSwitchType == 2) {
+        if (mMusicFadeDone == 0) {
+            v = mMusicVolume;
             if (v != 0x40) {
                 if (v == 0x7f) {
                     if ((data_0209b454 & 0x4000000) == 0) {
-                        unk_34d = _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(v, 0x64cc);
+                        mMusicFadeDone = _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(v, 0x64cc);
                     }
                 }
             } else {
-                unk_34d = _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(v, 0xc999);
+                mMusicFadeDone = _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(v, 0xc999);
             }
         }
     }

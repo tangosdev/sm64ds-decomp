@@ -40,9 +40,9 @@ typedef char RotatingFirebar_size_must_be_0x540[sizeof(RotatingFirebar) == 0x540
 /* The same object for a C translation unit, flat. */
 struct RotatingFirebar {
     u8  pad_000[0x8e];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x20];
-    s32 unk_0b0;            /* 0x0b0 */
+    s32 mFlags;            /* 0x0b0 */
     u8  pad_0b4[0x20];
     /* Model member. The cartridge's own ~RotatingFirebar calls _ZN5ModelD1Ev at +0x0d4
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.

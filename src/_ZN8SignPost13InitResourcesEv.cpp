@@ -84,19 +84,19 @@ int SignPost::InitResources()
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
         &mdCcAc_c, (dActor_c*)((char *)this), 0x64000, 0x64000, 0x4800002, 0x41000);
 
-    unk_58e = 2;
-    unk_3b0 = mPosX;
-    unk_3b4 = mPosY;
-    unk_3b8 = mPosZ;
-    unk_3bc = mAngleX;
-    unk_3be = mAngleY;
-    unk_3c0 = mAngleZ;
+    mPoundsLeft = 2;
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
+    mHomeAngleX = mAngleX;
+    mHomeAngleY = mAngleY;
+    mHomeAngleZ = mAngleZ;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
 
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        (char *)&mWithMeshClsn, (dActor_c*)((char *)this), 0x28000, 0x28000, 0, 0);
-    ((dBgCh_Actr*)((char *)&mWithMeshClsn))->StartDetectingWater();
+        &mWithMeshClsn, (dActor_c*)((char *)this), 0x28000, 0x28000, 0, 0);
+    mWithMeshClsn.StartDetectingWater();
 
     return 1;
 }

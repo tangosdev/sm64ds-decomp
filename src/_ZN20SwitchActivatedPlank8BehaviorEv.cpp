@@ -28,7 +28,7 @@ int _ZN20SwitchActivatedPlank8BehaviorEv(struct SwitchActivatedPlank *self) {
 
         ((dBgW *)(((char*)self)+0x124))->Enable((dActor_c *)(((char*)self)));
         func_ov029_021126dc(((char*)self));
-        _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(((char*)self)+0x124, ((char*)self)+0x370, self->unk_08e);
+        _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(((char*)self)+0x124, ((char*)self)+0x370, self->mAngleY);
         break;
 
     case 1: {

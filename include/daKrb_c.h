@@ -79,14 +79,14 @@ struct daKrb_c : dCapEnemy_c {
     Vector3 mStuckCheckPos; /* 0x428 */
     s32 mState;            /* 0x434 */
     s32 unk_438;            /* 0x438 */
-    s32 unk_43c;            /* 0x43c */
-    s32 unk_440;            /* 0x440 */
+    s32 mTargetUniqueID;    /* 0x43c */
+    s32 mDistToPlayer;      /* 0x440 */
     s32 unk_444;            /* 0x444 */
     u8  pad_448[0x4];
     s32 mSavedParam;            /* 0x44c */
-    s16 unk_450;            /* 0x450 */
+    s16 mHeadingHoldTimer;  /* 0x450 */
     u8  pad_452[0x2];
-    s16 unk_454;            /* 0x454 */
+    s16 mWanderRerollTimer; /* 0x454 */
     u16 mStuckTimer;            /* 0x456 */
     u16 mTimer458;            /* 0x458 */
     s16 mInitAngleY;            /* 0x45a */
@@ -96,7 +96,7 @@ struct daKrb_c : dCapEnemy_c {
     s8  mStarTracked;            /* 0x465 */
     u8  mStarID;            /* 0x466 */
     u8  unk_467;            /* 0x467 */
-    u8  unk_468;            /* 0x468 */
+    u8  mSoundLatchFlags;   /* 0x468 */
     u8  pad_469[0xf];
 
     virtual ~daKrb_c();

@@ -26,8 +26,8 @@ int SlidingBox::InitResources()
         ((char*)this) + 0x124, mc, ((char*)this) + 0x2ec, 0x199, mAngleY, data_ov016_02113bac);
     func_020393d4(((char*)this) + 0x124, (void*)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x324, ((char*)this), 0x14000, 0x14000, 0, 0);
-    unk_09c = -0x2000;
-    unk_0a0 = -0x14000;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x14000;
     mShip = 0;
     mState = 0;
     mSoundID = 0;

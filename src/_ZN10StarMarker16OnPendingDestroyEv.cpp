@@ -10,8 +10,8 @@ extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 
 void StarMarker::OnPendingDestroy()
 {
-    char* a = (char*)_ZN8dActor_c10FindWithIDEj(unk_1cc);
+    char* a = (char*)_ZN8dActor_c10FindWithIDEj(mSpawnedActorID);
     if (a == 0) return;
     if (*(short*)(a + 0xce) >= 0) return;
-    DeathTable_ClearBit(unk_1d6);
+    DeathTable_ClearBit(mSpawnedDeathTableID);
 }

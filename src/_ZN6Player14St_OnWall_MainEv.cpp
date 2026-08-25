@@ -52,7 +52,7 @@ int Player::St_OnWall_Main()
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
             return 1;
         }
-        int a = _ZN4cstd5atan2E5Fix12IiES1_(unk_560, unk_568) + 0x8000;
+        int a = _ZN4cstd5atan2E5Fix12IiES1_(mWallNormalX, mWallNormalZ) + 0x8000;
         int d = AngleDiff((s16)a, mDesiredAngleY);
         if (d >= 0x4000) {
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
@@ -71,7 +71,7 @@ int Player::St_OnWall_Main()
         func_ov002_020eee3c(((char*)this) + 0x380, ((char*)this));
     } else {
         if (*(s16*)((char*)data_0209f4a0 + data_020a0e40 * 0x18) != 0) {
-            int ang = _ZN4cstd5atan2E5Fix12IiES1_(unk_560, unk_568);
+            int ang = _ZN4cstd5atan2E5Fix12IiES1_(mWallNormalX, mWallNormalZ);
             int d = AngleDiff((s16)(ang + 0x8000), mDesiredAngleY);
             if (d >= 0x4000) {
                 _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);

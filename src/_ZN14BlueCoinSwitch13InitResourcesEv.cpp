@@ -12,10 +12,10 @@
  * -- it is multiplied by 10 here -- and a byte of 0 or 0xff means "use the
  * default 0xfa" instead.
  *
- * unk_320 is just mPosY - 0x64000, so the switch always sinks the same distance
+ * mStopPosY is just mPosY - 0x64000, so the switch always sinks the same distance
  * from wherever it was placed rather than to a fixed height.
  *
- * mAreaId is copied into unk_32e before Behavior sets mAreaId to -1, which is
+ * mAreaId is copied into mHomeAreaId before Behavior sets mAreaId to -1, which is
  * how the switch still knows which area it belongs to after it stops claiming
  * membership.
  *
@@ -63,29 +63,29 @@ int BlueCoinSwitch::InitResources()
     unsigned short* p;
 
     bmd = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_02110acc);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(&(*(u8 *)&mModel), bmd, 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, bmd, 1, -1);
 
-    unk_32d = (int)param1 & 0xf;
+    mEventBit = (int)param1 & 0xf;
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
 
     kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov002_02110ac4);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &(*(u8 *)&mMeshCollider), kcl, &mClsnMat, 0x199, mAngleY,
+        &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY,
         &data_ov002_0210d6f4);
 
-    func_020393c4(&(*(u8 *)&mMeshCollider), (void*)&func_ov002_020f15b8);
+    func_020393c4(&mMeshCollider, (void*)&func_ov002_020f15b8);
 
-    unk_32c = 0;
+    mPressed = 0;
 
     /* Keep p out of the mid-block so y colors r1 and c+0x300 colors r0,
        and so set_fa rematerializes add r0,r4,#0x300 after ldrh clobbers r0. */
     y = mPosY;
-    unk_320 = y - 0x64000;
+    mStopPosY = y - 0x64000;
     x = param1;
-    unk_32a = (x >> 8) & 0xff;
-    unk_32e = mAreaId;
-    val = unk_32a;
+    mCoinTimerSeed = (x >> 8) & 0xff;
+    mHomeAreaId = mAreaId;
+    val = mCoinTimerSeed;
     p = (unsigned short*)(c + 0x300);
 
     /* ROM: if (val==0xff || val==0) store 0xfa; else *= 10 */

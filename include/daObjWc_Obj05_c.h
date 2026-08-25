@@ -7,9 +7,9 @@
 
 struct daObjWc_Obj05_c {
     u8  pad_000[0x60];
-    s32 unk_060;            /* 0x060 */
+    s32 mPosY;            /* 0x060 */
     u8  pad_064[0x2a];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x290];
     s32 unk_320;            /* 0x320 */
     s32 unk_324;            /* 0x324 */

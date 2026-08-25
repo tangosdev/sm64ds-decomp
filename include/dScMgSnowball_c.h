@@ -81,37 +81,72 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     virtual s32 Behavior();          /* slot 6 -- ov006 0x021283a4 */
     virtual s32 Render();            /* slot 9 -- ov006 0x02127d10 */
 
-    u8    pad_4f38[0x5c04]; /* 0x4f38 -- no matched access */
-    s32   unk_ab3c;         /* 0xab3c */
-    u8    pad_ab40[0x8];    /* 0xab40 */
-    s32   unk_ab48;         /* 0xab48 */
-    s32   unk_ab4c;         /* 0xab4c */
-    u8    pad_ab50[0x18];   /* 0xab50 */
-    s32   unk_ab68;         /* 0xab68 */
-    s32   unk_ab6c;         /* 0xab6c */
-    u8    pad_ab70[0x30];   /* 0xab70 */
-    s32   unk_aba0;         /* 0xaba0 */
+    u8    pad_4f38[0x5c00]; /* 0x4f38 -- no matched access */
+    s32   mPosX;            /* 0xab38 -- Fix12 world position of the ball */
+    s32   mPosY;            /* 0xab3c */
+    s32   mPrevPosX;        /* 0xab40 -- Behavior's copy of mPos at tick start */
+    s32   mPrevPosY;        /* 0xab44 */
+    s32   mDrawPosX;        /* 0xab48 -- where Render puts the ball sprite */
+    s32   mDrawPosY;        /* 0xab4c */
+    s32   mSoundPosX;       /* 0xab50 -- position of the last roll sound; a new
+                                one fires every 0x30000 of travel */
+    s32   mSoundPosY;       /* 0xab54 */
+    s32   unk_ab58;         /* 0xab58 -- downhill/uphill debt; while it is 0 the
+                                climb feeds mBallSize instead */
+    u8    pad_ab5c[0x4];    /* 0xab5c */
+    s32   mVelX;            /* 0xab60 -- Fix12, capped at 0x8000 */
+    s32   mVelY;            /* 0xab64 */
+    s32   mScrollX;         /* 0xab68 -- subtracted from every world X to draw */
+    s32   mScrollY;         /* 0xab6c -- mPosY - 0x190000, clamped; drives all
+                                four BG offsets */
+    s32   mTouchX;          /* 0xab70 -- last stylus sample */
+    s32   mTouchY;          /* 0xab74 */
+    u16   mRollAngle;       /* 0xab78 -- += speed * 0x2710 / mBallSize */
+    u16   unk_ab7a;         /* 0xab7a */
+    u16   mHeadingAngle;    /* 0xab7c -- atan2 of the velocity */
+    u16   mPrevRollAngle;   /* 0xab7e -- Behavior copies 0xab78..0xab7c here */
+    u16   unk_ab80;         /* 0xab80 */
+    u16   mPrevHeadingAngle;/* 0xab82 */
+    s32   mSpinAxis[3];     /* 0xab84 -- Vector3, seeded (0, 0x1000, 0) */
+    s32   mSpinQuat[4];     /* 0xab90 -- Quaternion_FromVector3 of mSpinAxis */
+    s32   mBallSize;        /* 0xaba0 -- grows with the climb, capped 0x37000,
+                                shrinks by 0x1000 a tick while melting */
     Model mModel;           /* 0xaba4 -- 0x50, see file banner */
     s32   unk_abf4;         /* 0xabf4 -- the constructor's own `= 0` write */
-    u8    pad_abf8[0xe0];   /* 0xabf8 */
-    u8    mArray1[0x400];   /* 0xacd8 -- 0x80 * 8, elem dtor NullDestructor_0203d47c */
-    s32   unk_b0d8[0x80];   /* 0xb0d8 -- parallel array, see file banner */
-    u8    unk_b2d8[0x80];   /* 0xb2d8 */
-    u8    unk_b358[0x80];   /* 0xb358 */
-    s32   unk_b3d8[0x80];   /* 0xb3d8 */
-    u8    mArray2[0x400];   /* 0xb5d8 -- 0x80 * 8, elem dtor NullDestructor_0203d47c */
-    s32   unk_b9d8;         /* 0xb9d8 */
-    s32   unk_b9dc;         /* 0xb9dc */
-    u8    pad_b9e0[0x14];   /* 0xb9e0 */
-    s32   unk_b9f4;         /* 0xb9f4 */
-    u8    unk_b9f8;         /* 0xb9f8 */
+    u8    pad_abf8[0x60];   /* 0xabf8 */
+    u8    mArray1Active[0x80]; /* 0xac58 -- 1 = this mArray1 slot is live */
+    u8    mArray1[0x400];   /* 0xacd8 -- 0x80 * 8, elem dtor NullDestructor_0203d47c;
+                               each element is a Fix12 {x,y} the ROM's own
+                               Render indexes as i*8 + 0 / i*8 + 4 */
+    s32   mArray1Kind[0x80]; /* 0xb0d8 -- 1 picks the 8-frame animated sprite
+                                table, anything else the static one */
+    u8    mArray1Hit[0x80]; /* 0xb2d8 -- src/func_ov006_02125bbc.c sets it on
+                               contact; Render then offsets the frame by 8 */
+    u8    mArray2Active[0x80]; /* 0xb358 -- 1 = this mArray2 slot is live */
+    s32   mArray2Kind[0x80]; /* 0xb3d8 -- Render switches 0..2 against 3 to
+                                pick the sprite */
+    u8    mArray2[0x400];   /* 0xb5d8 -- 0x80 * 8, elem dtor NullDestructor_0203d47c;
+                               same Fix12 {x,y} element shape as mArray1 */
+    s32   mAnimCounter;     /* 0xb9d8 -- Render bumps it, wraps at 0x20; the
+                                obstacle sprite frame is (n / 4) & 7 */
+    s32   mTimeLeft;        /* 0xb9dc -- frames; Render draws it as
+                                seconds.centiseconds, 0 ends the run */
+    s32   mScore;           /* 0xb9e0 -- +1 a tick while rolling; handed to the
+                                HUD counter func_ov004_020adb1c on the crash */
+    u8    pad_b9e4[0x10];   /* 0xb9e4 */
+    s32   mState;           /* 0xb9f4 -- 0 count-in, 1 rolling, 2/3 crash,
+                                4 melt, 5 over */
+    u8    mScreensSwapped;  /* 0xb9f8 -- set once mPosY passes 0xe8000; swaps
+                                which physical screen shows the upper half */
     u8    pad_b9f9[0x3];    /* 0xb9f9 */
-    s32   unk_b9fc;         /* 0xb9fc */
-    s32   unk_ba00;         /* 0xba00 */
-    s32   unk_ba04;         /* 0xba04 */
-    u8    pad_ba08[0x4];    /* 0xba08 */
-    s32   unk_ba0c;         /* 0xba0c */
-    s32   unk_ba10;         /* 0xba10 */
+    s32   mCountdownTimer;  /* 0xb9fc -- 0xf1 down to 0x3c; Render draws the
+                                3-2-1 banner from it */
+    s32   mStartY;          /* 0xba00 -- mPosY starts here (<< 12) */
+    s32   mGoalY;           /* 0xba04 -- the finish; also the progress bar's
+                                other end */
+    s32   mScrollLimit;     /* 0xba08 -- mScrollY stops at (n << 16) - 0x1d0000 */
+    s32   mCrashTimer;      /* 0xba0c -- counts up through states 2 and 4 */
+    s32   mEndDelayTimer;   /* 0xba10 -- 0xb4 frames of state 3 */
     u8    mArray3[0x480];   /* 0xba14 -- 0x20 * 0x24, elem dtor func_ov006_02125800 */
     u8    mArray4[0x708];   /* 0xbe94 -- 50 * 0x24, trivial elements, see file banner */
 };

@@ -16,7 +16,7 @@ typedef void (C::*PMF)();
 
 int WaterRing::Behavior()
 {
-  DecIfAbove0_Short((unsigned short*)((char*)&unk_100));
+  DecIfAbove0_Short((unsigned short*)((char*)&mStateTimer));
   char* obj = *(char**)((char*)&unk_370);
   if (*(int*)(obj + 8) != 0) {
     PMF* p = (PMF*)(obj + 8);

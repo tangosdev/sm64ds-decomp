@@ -59,7 +59,7 @@ int daKrpa_c::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    *(struct Matrix4x3*)((char*)&unk_35c) = IDENTITY_MATRIX4X3;
+    *(struct Matrix4x3*)((char*)&mMatrix) = IDENTITY_MATRIX4X3;
 
     _ZN9dBgCh_GndC1Ev(&rg);
     _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, (struct Vector3*)((char*)&mPosX), ((char*)this));
@@ -67,7 +67,7 @@ int daKrpa_c::InitResources()
         t = (mPosY - rg.f44) + 0x1e000;
     else
         t = 0x1f4000;
-    unk_3a8 = t;
+    mHeightAboveGnd = t;
     func_ov070_02121310(((char*)this));
     _ZN9dBgCh_GndD1Ev(&rg);
     return 1;

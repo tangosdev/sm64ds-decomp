@@ -11,7 +11,7 @@
  *       dCcAc_c member below.
  *   _ZN9daSCoin_cD0Ev  the same member destroyed, then ~dActor_c.
  *
- * SIZE 0x114 is the factory's own literal; unk_113 (1 byte, 0x113) closes
+ * SIZE 0x114 is the factory's own literal; mDeathTimer (1 byte, 0x113) closes
  * exactly on it.
  *
  * RENAMED FROM "InvisibleSecret" -- the same defect and the same fix as
@@ -51,15 +51,36 @@ struct daSCoin_c : dActor_c {
        the class's own destructors' D1 call at +0xd4.
        [daSCoin_c_Spawn.c, _ZN9daSCoin_cD1Ev.c, _ZN9daSCoin_cD0Ev.c] */
     dCcAc_c mdCcAc_c;            /* 0x0d4 */
-    s32 unk_108;            /* 0x108 */
+    /* THE GROUP. Silver coins (actor 0x149) act as one set: exactly one of them
+       elects itself leader and stamps the rest, so the fifth collection can
+       destroy the set from a single place.
+
+       Behavior's election: a coin whose mGroupRole is still 0 and whose
+       mGroupId nibble is 0 or 0xf claims mGroupRole 1 (leader), records its own
+       fBase_c::uniqueID in mLeaderUniqueID, then walks
+       dActor_c::FindWithActorID(0x149, ...) and writes mGroupRole 2 (follower)
+       plus that same uniqueID into every OTHER silver coin. The leader destroys
+       itself once mCollectedCount reaches 5 -- the five silver coins of a
+       mission.
+
+       mGroupId and unk_10d are both nibbles of fBase_c::param1, taken in
+       InitResources as `(param1 >> 8) & 0xf` and `param1 & 0xf`. Only the first
+       is ever read back, which is why the other keeps its unk_ name.
+       [_ZN9daSCoin_c13InitResourcesEv.cpp, _ZN9daSCoin_c8BehaviorEv.cpp] */
+    s32 mLeaderUniqueID;            /* 0x108 */
     u8  pad_10c[0x1];
     u8  unk_10d;            /* 0x10d */
-    u8  unk_10e;            /* 0x10e */
-    u8  unk_10f;            /* 0x10f */
-    u8  unk_110;            /* 0x110 */
-    u8  unk_111;            /* 0x111 */
+    u8  mGroupId;            /* 0x10e */
+    u8  mGroupRole;            /* 0x10f -- 0 unassigned, 1 leader, 2 follower */
+    u8  mCollectedCount;            /* 0x110 */
+    /* Nonzero suppresses the dCcAc_c member's per-frame Update(); its Clear()
+       runs either way. [_ZN9daSCoin_c8BehaviorEv.cpp] */
+    u8  mClsnDisabled;            /* 0x111 */
     u8  unk_112;            /* 0x112 -- read/written by the class's own (unenrolled) func_ov002_020f051c.c */
-    u8  unk_113;            /* 0x113 */
+    /* Counted down once per frame while nonzero (DecIfAbove0_Byte); the frame
+       it reaches 0 the coin runs func_ov002_020f05f4 and marks itself for
+       destruction. Zero means "not dying". [_ZN9daSCoin_c8BehaviorEv.cpp] */
+    u8  mDeathTimer;            /* 0x113 */
 
     virtual ~daSCoin_c();            /* slots 16 (D1), 17 (D0) */
 

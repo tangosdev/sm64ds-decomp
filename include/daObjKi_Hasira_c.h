@@ -7,16 +7,16 @@
 
 struct daObjKi_Hasira_c {
     u8  pad_000[0x5c];
-    s32 unk_05c;            /* 0x05c */
-    s32 unk_060;            /* 0x060 */
-    s32 unk_064;            /* 0x064 */
+    s32 mPosX;            /* 0x05c */
+    s32 mPosY;            /* 0x060 */
+    s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x24];
-    s16 unk_08c;            /* 0x08c */
-    u16 unk_08e;            /* 0x08e */
+    s16 mAngleX;            /* 0x08c */
+    u16 mAngleY;            /* 0x08e */
     u8  pad_090[0x20];
-    s32 unk_0b0;            /* 0x0b0 */
+    s32 mFlags;            /* 0x0b0 */
     u8  pad_0b4[0x18];
-    s8  unk_0cc;            /* 0x0cc */
+    s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x251];
     u8  unk_31e;            /* 0x31e */
     u8  unk_31f;            /* 0x31f */

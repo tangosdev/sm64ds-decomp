@@ -43,25 +43,31 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
     u8  mArray2[0x984];   /* 0x534c -- 3 * 0x32c, elem dtor func_ov006_020d1008 */
     u8  mArray3[0xb4];    /* 0x5cd0 -- 5 * 0x24,  elem dtor func_ov006_02120938 */
     u8  pad_5d84[0x10];   /* 0x5d84 */
-    s32 unk_5d94;         /* 0x5d94 */
-    s32 unk_5d98;         /* 0x5d98 */
-    s32 unk_5d9c;         /* 0x5d9c */
-    s32 unk_5da0;         /* 0x5da0 */
-    s32 unk_5da4;         /* 0x5da4 */
-    s32 unk_5da8;         /* 0x5da8 */
-    u8  pad_5dac[0x4];    /* 0x5dac */
-    s16 unk_5db0;         /* 0x5db0 */
-    s16 unk_5db2;         /* 0x5db2 */
-    s16 unk_5db4;         /* 0x5db4 */
-    s16 unk_5db6;         /* 0x5db6 */
-    s16 unk_5db8;         /* 0x5db8 */
+    s32 mScrollY;         /* 0x5d94 -- approached toward mScrollTargetY by 2 a
+                             tick; the BG2 offset is mScrollY + mScrollOffsetY */
+    s32 mScrollTargetY;   /* 0x5d98 */
+    s32 mScrollHoldTimer; /* 0x5d9c -- 0x78, run down to 0 before the target
+                             may move again */
+    s32 mScrollOffsetY;   /* 0x5da0 -- added to mScrollY everywhere it is used */
+    s32 mArrow1X;         /* 0x5da4 -- the two guide arrows Render draws at
+                             n + 0xf0; each slides between 0 and 0x20 */
+    s32 mArrow2X;         /* 0x5da8 */
+    u8  pad_5dac[0x4];    /* 0x5dac -- the drag sound handle */
+    s16 mTouchX;          /* 0x5db0 -- the current stylus sample */
+    s16 mTouchY;          /* 0x5db2 */
+    s16 mTouchStartX;     /* 0x5db4 -- copied from mTouch on the press edge and
+                             left alone; the swipe is measured against it */
+    s16 mTouchStartY;     /* 0x5db6 */
+    s16 mInputEnabled;    /* 0x5db8 -- while 0 the touch handler clears
+                             mTouching and returns at once */
     s16 unk_5dba;         /* 0x5dba */
     s16 unk_5dbc;         /* 0x5dbc */
     s16 unk_5dbe;         /* 0x5dbe */
     s16 unk_5dc0;         /* 0x5dc0 */
     s16 unk_5dc2;         /* 0x5dc2 */
-    u8  unk_5dc4;         /* 0x5dc4 */
-    u8  unk_5dc5;         /* 0x5dc5 */
+    u8  mTouching;        /* 0x5dc4 -- a drag is in progress */
+    u8  mTouchReleased;   /* 0x5dc5 -- set on the release edge; the swipe test
+                             in src/func_ov006_0212101c.c consumes and clears it */
     u8  pad_5dc6[0x2];    /* 0x5dc6 -- rounds up to the 0x5dc8 boundary */
 };
 

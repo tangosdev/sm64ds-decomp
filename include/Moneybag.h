@@ -28,13 +28,23 @@ struct Moneybag : dActor_c {
     ShadowModel mShadowModel;                /* 0x188 */
     dCcAc_c mdCcAc_c;  /* 0x1b0 */
     dBgCh_Actr mWithMeshClsn;              /* 0x1e4 */
-    u8  unk_3a0;            /* 0x3a0 */
+    /* InitResources assigns IDENTITY_MATRIX4X3 into this slot, and
+       0x3a0..0x3cf is exactly the 0x30 bytes a Matrix4x3 occupies. Still spelt
+       u8 + pad so the header need not pull in math/Matrix.h.
+       [_ZN8Moneybag13InitResourcesEv.cpp] */
+    u8  mMatrix;            /* 0x3a0 */
     u8  pad_3a1[0x2f];
-    s32 unk_3d0;            /* 0x3d0 */
-    s32 unk_3d4;            /* 0x3d4 */
-    s32 unk_3d8;            /* 0x3d8 */
+    /* Copy of mPosX/Y/Z taken once in InitResources.
+       [_ZN8Moneybag13InitResourcesEv.cpp] */
+    s32 mSpawnPosX;            /* 0x3d0 */
+    s32 mSpawnPosY;            /* 0x3d4 */
+    s32 mSpawnPosZ;            /* 0x3d8 */
     u8  pad_3dc[0x14];
-    u8  unk_3f0;            /* 0x3f0 */
+    /* Set to 1 by InitResources. Render draws the ModelAnim only above 1 and
+       the Model only at or below 0x1f, so the two overlap for 2..0x1f and the
+       high values are a state in which neither is drawn.
+       [_ZN8Moneybag13InitResourcesEv.cpp, _ZN8Moneybag6RenderEv.cpp] */
+    u8  mState;            /* 0x3f0 */
     u8  pad_3f1[0x3];
 
     virtual ~Moneybag();            /* slots 16 (D1), 17 (D0) */

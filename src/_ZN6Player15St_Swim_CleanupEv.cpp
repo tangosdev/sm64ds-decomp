@@ -8,8 +8,8 @@ extern int func_ov002_020bd8c0(void*,int);
 
 int Player::St_Swim_Cleanup()
 {
-  if(unk_6f7!=0){
-    unk_6f7=0;
+  if(mSwimMusicPushed!=0){
+    mSwimMusicPushed=0;
     func_ov002_020bd8c0(((char*)this),0x33);
   }
   return 1;

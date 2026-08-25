@@ -61,7 +61,7 @@ int PiranhaPlant::InitResources()
     unk_460 = 0;
     mClsnEnabled = 0;
     unk_45d = 1;
-    unk_100 = 0;
+    mStateTimer = 0;
     unk_108 = 3;
     unk_46c = 0;
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x64000, 0x64000, 0, 0);
@@ -90,7 +90,7 @@ int PiranhaPlant::InitResources()
         mFirePos.z = z;
     }
     unk_474 = 0;
-    unk_470 = unk_474;
+    mParticleHandle = unk_474;
     unk_478 = 0;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov084_02130df4.file, 0, 0x1000, 0);
     return 1;

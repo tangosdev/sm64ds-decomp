@@ -32,7 +32,7 @@ int UnknownVsEntry::Render()
         i++;
         p += 0x158;
     } while (i < 4);
-    if (unk_f40) {
+    if (mAnimActive) {
         Sub* s2 = (Sub*)((char*)&mModelAnim);
         s2->m(0);
     }

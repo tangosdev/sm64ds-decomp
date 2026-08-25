@@ -19,8 +19,8 @@ int Fish::CleanupResources()
     _ZN13SharedFilePtr7ReleaseEv(&data_ov100_021489cc);
     _ZN13SharedFilePtr7ReleaseEv(data_ov100_021473a4[mModelIndex]);
     _ZN13SharedFilePtr7ReleaseEv(data_ov100_021473b0[mModelIndex]);
-    if (unk_159 == 0) {
-        if (_ZN8dActor_c10FindWithIDEj(unk_13c))
+    if (mHidden == 0) {
+        if (_ZN8dActor_c10FindWithIDEj(mUniqueID_13c))
             func_ov100_02146280();
     }
     return 1;

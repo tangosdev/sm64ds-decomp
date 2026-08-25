@@ -51,7 +51,7 @@ int WaterBomb::Behavior()
         _ZN5dCc_c5ClearEv((char*)&mdCcAc_c);
         _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c);
     } else {
-        DecIfAbove0_Short((unsigned short*)((char*)&unk_100));
+        DecIfAbove0_Short((unsigned short*)((char*)&mStateTimer));
     }
     return 1;
 }

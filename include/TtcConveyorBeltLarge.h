@@ -20,7 +20,7 @@ struct TtcConveyorBeltLarge {
     u8  pad_068[0x26];
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x20];
-    s32 unk_0b0;            /* 0x0b0 */
+    s32 mFlags;            /* 0x0b0 */
     u8  pad_0b4[0x20];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. The marker's pad stopped

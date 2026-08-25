@@ -258,7 +258,7 @@ int Player::St_Swim_Main()
             p = (int*)(mHeldObj + 0xb0);
             *p |= 0x4000;
             func_ov002_020bd928(this, 0x33);
-            unk_6f7 = 1;
+            mSwimMusicPushed = 1;
         }
         break;
     case 8:
@@ -276,7 +276,7 @@ int Player::St_Swim_Main()
             Player_ReleaseHeldActor(this);
             func_ov002_020cd2c4(this);
             func_ov002_020bd8c0(this, 0x33);
-            unk_6f7 = 0;
+            mSwimMusicPushed = 0;
         }
         if (_ZNK9Animation12WillHitFrameEi((void*)(*(int*)((char*)this + _ZNK6Player14GetBodyModelIDEjb(this, (unsigned char)*(int*)&param1, 0)*4 + 0xdc) + 0x50), 0) != 0) {
             _ZN5Sound9PlayBank0EjRK7Vector3(0x15, &mCamSpacePosX);

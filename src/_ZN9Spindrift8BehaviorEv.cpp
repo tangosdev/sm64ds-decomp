@@ -37,7 +37,7 @@ int Spindrift::Behavior()
             func_ov081_021237ec(((char *)this));
         func_ov081_02123b20(((char *)this));
         _ZN5dCc_c5ClearEv((char *)&mdCcAc_c);
-        if (unk_107 != 0 && unk_104 == 0) {
+        if (mEatenByYoshi != 0 && unk_104 == 0) {
             _ZN5dCc_c6UpdateEv((char *)&mdCcAc_c);
         }
         return 1;

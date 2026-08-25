@@ -91,19 +91,19 @@ extern "C" void *data_020a0eac;
 
 struct dActor_c {   /* shadow base: vptr at 0, evidenced fields, size 0xd4 */
     char pad0[0x7c];
-    s32 unk_080, mScaleY, mScaleZ;
+    s32 mScaleX, mScaleY, mScaleZ;
     s16 mAngleX, mAngleY, mAngleZ, mPrevAngleX, mPrevAngleY, mPrevAngleZ;
     s32 mHorzSpeed, mVertAccel, mTerminalVelocity;
     u8  pad_0a4[0x4];
     s32 mVertSpeed;
     u8  pad_0ac[0x4];
     u32 mFlags;
-    s32 unk_0b4, unk_0b8, unk_0bc, unk_0c0;
-    u8  unk_0c4;
+    s32 mClipOffsetY, mClipRadius, mClipDistance, mFarDistance;
+    u8  mClipResult;
     u8  pad_0c5[0x7];
     s8  mAreaId;
     u8  pad_0cd[0x1];
-    s16 unk_0ce;
+    s16 mDeathTableID;
     u8  pad_0d0[0x4];
     virtual ~dActor_c();
     void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
@@ -365,7 +365,7 @@ int RacingPenguin::Render()
 {
     _ZN15TextureSequence6UpdateER15ModelComponents(((char *)this) + 0x138, ((char *)this) + 0xdc);
     Sub *s = (Sub *)((char *)&mModelAnim);
-    s->m((char *)&unk_080);
+    s->m((char *)&mScaleX);
     return 1;
 }
 

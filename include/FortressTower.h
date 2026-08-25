@@ -39,7 +39,7 @@ typedef char FortressTower_size_must_be_0x320[sizeof(FortressTower) == 0x320 ? 1
    can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct FortressTower {
     u8  pad_000[0xc];
-    u16 unk_00c;            /* 0x00c */
+    u16 actorID;            /* 0x00c */
     u8  pad_00e[0xc6];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */

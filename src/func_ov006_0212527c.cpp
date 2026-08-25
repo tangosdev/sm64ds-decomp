@@ -38,7 +38,7 @@ extern "C" int func_ov006_0212527c(char* c, int mode)
     return 0;
 do1:
     if (st == 0xc && fl == 1) {
-        func_ov004_020ad79c(self->unk_0a8, self->unk_0b4);
+        func_ov004_020ad79c(self->unk_0a8, self->mHudScore);
     }
     return 1;
 }

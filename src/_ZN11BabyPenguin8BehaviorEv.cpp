@@ -14,8 +14,8 @@ int BabyPenguin::Behavior()
     if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(this, 0x7d0000) && mWithMeshClsn.IsOnGround()) {
         func_ov072_02120d04(this);
     } else {
-        if (unk_364 == 0)
-            unk_364 = (s32)FindWithActorID(0x101, 0);
+        if (mCachedActor == 0)
+            mCachedActor = (s32)FindWithActorID(0x101, 0);
         unk_36c = 0x384;
         func_ov072_02121cdc(this);
         func_ov072_021210c4(this);

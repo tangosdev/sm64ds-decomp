@@ -24,25 +24,25 @@ int RotatingCogSmall::Behavior()
         return 1;
     }
 
-    if (_Z14ApproachLinearRsss((short*)((char*)&mAngleY), unk_322, 0xc8) != 0 &&
-        DecIfAbove0_Short((unsigned short*)((char*)&unk_31e)) == 0) {
+    if (_Z14ApproachLinearRsss((short*)((char*)&mAngleY), mTargetAngleY, 0xc8) != 0 &&
+        DecIfAbove0_Short((unsigned short*)((char*)&mStepTimer)) == 0) {
         short* p = (short*)(((int)((char*)this) + 0x322));
-        *p = *p + unk_324;
+        *p = *p + mAngleYStep;
         unsigned char k = data_0209f2c0[0];
-        unk_31e = data_ov035_02111ef4[mRotationState][k];
+        mStepTimer = data_ov035_02111ef4[mRotationState][k];
         if (k == 2) {
             int rnd = RandomIntInternal(data_0209e650);
-            if (DecIfAbove0_Short((unsigned short*)((char*)&unk_320)) == 0) {
+            if (DecIfAbove0_Short((unsigned short*)((char*)&mDirTimer)) == 0) {
                 if ((unsigned int)rnd % 3 != 0) {
                     int r2 = (rnd & 3) * 0x3c;
-                    unk_324 = data_ov035_02111ef0[mRotationState];
-                    unk_320 = r2 + 0x5a;
+                    mAngleYStep = data_ov035_02111ef0[mRotationState];
+                    mDirTimer = r2 + 0x5a;
                 } else {
-                    unk_324 = -data_ov035_02111ef0[mRotationState];
-                    unk_320 = ((unsigned int)rnd % 3 + 1) * 0x1e;
+                    mAngleYStep = -data_ov035_02111ef0[mRotationState];
+                    mDirTimer = ((unsigned int)rnd % 3 + 1) * 0x1e;
                 }
             }
-            unk_31e = (unsigned int)rnd % 3 * 0x14 + 0xa;
+            mStepTimer = (unsigned int)rnd % 3 * 0x14 + 0xa;
         }
     }
 

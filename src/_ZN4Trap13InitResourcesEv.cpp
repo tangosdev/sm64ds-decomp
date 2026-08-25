@@ -90,7 +90,7 @@ int Trap::InitResources()
     }
 
     mIsSpawner = 0;
-    mModel.SetFile((BMD_File *)Model::LoadFile(data_ov010_02112d08), 1, -1);
+    mDoorModel.SetFile((BMD_File *)Model::LoadFile(data_ov010_02112d08), 1, -1);
     func_ov010_0211146c(this);
     func_ov010_021113f0(this);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(

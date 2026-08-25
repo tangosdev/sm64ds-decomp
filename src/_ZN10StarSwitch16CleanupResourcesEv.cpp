@@ -17,11 +17,11 @@ extern char data_ov002_0211092c;
 int StarSwitch::CleanupResources()
 {
     int t;
-    if (((dBgW *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
-        ((dBgW *)((char*)&(*(u8 *)&mMeshCollider)))->Disable();
+    if (((dBgW *)&mMeshCollider)->IsEnabled()) {
+        ((dBgW *)&mMeshCollider)->Disable();
     }
-    ((SharedFilePtr *)(*(void**)(&data_ov002_021098e8 + unk_34c * 0xc)))->Release();
-    ((SharedFilePtr *)(*(void**)(&data_ov002_021098ec + unk_34c * 0xc)))->Release();
+    ((SharedFilePtr *)(*(void**)(&data_ov002_021098e8 + mResourceIdx * 0xc)))->Release();
+    ((SharedFilePtr *)(*(void**)(&data_ov002_021098ec + mResourceIdx * 0xc)))->Release();
     t = actorID == 0xc;
     if (t != false) {
         UnloadSilverStarAndNumber();

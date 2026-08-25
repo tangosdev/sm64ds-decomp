@@ -40,7 +40,7 @@
  * func_ov027_02111d38/02111cfc, and OnGroundHit-family helpers
  * func_ov027_02111a28/02111b2c/02111c48/02111ca8:
  *
- *   0x3cc  void*  -- a pointer to a state-callback table; func_ov027_02111d70
+ *   0x3cc  mStateTable -- a pointer to a state-callback table; func_ov027_02111d70
  *                     writes `&data_ov027_02113ce4[idx]`, and the two callers
  *                     func_ov027_02111d38 / 02111cfc read *(p) and *(p+1) as
  *                     function pointers and call through `this`. Left as a
@@ -49,26 +49,29 @@
  *   0x3d0  s32    -- set to 0 or 1 by func_ov027_02111ca8/02111b2c; a flag.
  *   0x3d4  s32    -- an index/lookup value into `data_ov027_02113a1c` and
  *                     friends, keyed by the byte at 0x3d9.
- *   0x3d8  u8     -- a countdown byte; func_ov027_02111ca8 sets it to 0x14
+ *   0x3d8  mTimer -- a countdown byte; func_ov027_02111ca8 sets it to 0x14
  *                     (20), func_ov027_02111c48 decrements it through
  *                     DecIfAbove0_Byte.
  *   0x3d9  u8     -- a table index, 0..9, reset to 0 above 9.
  *   0x3da  --     -- never dereferenced anywhere in the class; 2 bytes of
  *                     padding closing the class to 0x3dc.
  *
- * Field NAMES below are placeholders (unk_/pad_); types are proven from the
- * accesses above, not guessed.
+ * Types are proven from the accesses above, not guessed. Only the two offsets
+ * whose USE is unambiguous are named -- the state-callback table pointer and the
+ * countdown byte; 0x3d0, 0x3d4 and 0x3d9 stay unk_ because "a flag", "an index"
+ * and "a table index" do not say what they hold. See
+ * notes/bgobject-provenance.md.
  */
 
 struct daPgDfdr_c : dBgActor_c {
     ModelAnim mModelAnim;                  /* 0x320 */
     TextureSequence mTextureSequence;      /* 0x384 */
-    dCcAc_c mdCcAc_c; /* 0x398 */
-    void *unk_3cc;
-    s32   unk_3d0;
-    s32   unk_3d4;
-    u8    unk_3d8;
-    u8    unk_3d9;
+    dCcAc_c mdCcAc_c;                      /* 0x398 */
+    void *mStateTable;                     /* 0x3cc */
+    s32   unk_3d0;                         /* 0x3d0 */
+    s32   unk_3d4;                         /* 0x3d4 */
+    u8    mTimer;                          /* 0x3d8 */
+    u8    unk_3d9;                         /* 0x3d9 */
     u8    pad_3da[0x2];
 
     /* --- vtable, in ROM order. Do not reorder. ---
@@ -110,7 +113,7 @@ struct daPgDfdr_c {
     s32 mPosY;                   /* 0x060 */
     s32 mPosZ;                   /* 0x064 */
     u8  pad_068[0xc];
-    s32 unk_074;                 /* 0x074 */
+    s32 mCamSpacePosX;                 /* 0x074 */
     s32 mCamSpacePosY;           /* 0x078 */
     s32 mCamSpacePosZ;           /* 0x07c */
     s32 mScaleX;                 /* 0x080 */
@@ -121,15 +124,15 @@ struct daPgDfdr_c {
     u8  pad_090[0x4];
     s16 mPrevAngleY;             /* 0x094 */
     u8  pad_096[0x2];
-    s32 unk_098;                 /* 0x098 */
-    s32 unk_09c;                 /* 0x09c */
-    s32 unk_0a0;                 /* 0x0a0 */
+    s32 mHorzSpeed;                 /* 0x098 */
+    s32 mVertAccel;                 /* 0x09c */
+    s32 mTerminalVelocity;                 /* 0x0a0 */
     u8  pad_0a4[0x4];
-    s32 unk_0a8;                 /* 0x0a8 */
+    s32 mVertSpeed;                 /* 0x0a8 */
     u8  pad_0ac[0x4];
-    s32 unk_0b0;                 /* 0x0b0 */
-    s32 unk_0b4;                 /* 0x0b4 */
-    s32 unk_0b8;                 /* 0x0b8 */
+    s32 mFlags;                 /* 0x0b0 */
+    s32 mClipOffsetY;                 /* 0x0b4 */
+    s32 mClipRadius;                 /* 0x0b8 */
     u8  pad_0bc[0x18];
     /* Model member. The cartridge's own ~daPgDfdr_c calls _ZN5ModelD1Ev at +0x0d4
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
@@ -149,10 +152,10 @@ struct daPgDfdr_c {
     u8  mModelAnim[0x64];             /* 0x320 */
     u8  mTextureSequence[0x14];       /* 0x384 */
     u8  mdCcAc_c[0x34];    /* 0x398 */
-    void *unk_3cc;                    /* 0x3cc */
+    void *mStateTable;                    /* 0x3cc */
     s32   unk_3d0;                    /* 0x3d0 */
     s32   unk_3d4;                    /* 0x3d4 */
-    u8    unk_3d8;                    /* 0x3d8 */
+    u8    mTimer;                    /* 0x3d8 */
     u8    unk_3d9;                    /* 0x3d9 */
     u8    pad_3da[0x2];
 };

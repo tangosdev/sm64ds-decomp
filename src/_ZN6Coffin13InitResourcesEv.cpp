@@ -48,8 +48,8 @@ extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vect
 int Coffin::InitResources()
 {
     ((ModelBase*)((char*)&mModel))->SetFile((BMD_File*)Model::LoadFile(data_ov071_021230d0), 1, -1);
-    unk_09c = -0x2000;
-    unk_0a0 = -0x3c000;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
     Vector3 in;
     Vector3 out;
     in.x = 0;

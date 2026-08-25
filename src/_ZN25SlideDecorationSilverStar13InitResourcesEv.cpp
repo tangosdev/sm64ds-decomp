@@ -11,7 +11,7 @@ extern int* data_ov031_02111424[];
 
 int SlideDecorationSilverStar::InitResources()
 {
-  unsigned short type = unk_00c;
+  unsigned short type = actorID;
   switch(type){
     case 0x12e: mVariant=0; break;
     case 0x12f: mVariant=1; break;

@@ -29,13 +29,28 @@ struct Number : dActor_c {
        recovered by tools/dtor_members.py. D1 and not D2, so it is this type and not an
        inlined base. */
     TextureSequence mTextureSequence;            /* 0x124 */
-    s32 unk_138;            /* 0x138 */
-    s32 unk_13c;            /* 0x13c */
+    /* The score popup follows an owner. Behavior resolves this
+       fBase_c::uniqueID through dActor_c::FindWithID and, when it still exists,
+       takes the popup's draw position from that actor's own mPos triple plus
+       mFollowOffsetY and however far the popup has risen (mPosY - mStartPosY).
+       0 means "not following anything". [_ZN6Number8BehaviorEv.cpp] */
+    s32 mOwnerUniqueID;            /* 0x138 */
+    /* Copy of mPos taken in InitResources; mStartPosY is the floor the popup
+       bounces off in Behavior. [_ZN6Number13InitResourcesEv.cpp] */
+    s32 mStartPosX;            /* 0x13c */
     s32 mStartPosY;            /* 0x140 */
-    s32 unk_144;            /* 0x144 */
-    s32 unk_148;            /* 0x148 */
-    u16 unk_14c;            /* 0x14c */
-    u8  unk_14e;            /* 0x14e */
+    s32 mStartPosZ;            /* 0x144 */
+    s32 mFollowOffsetY;            /* 0x148 */
+    /* The delay dActor_c::SpawnNumber takes: while nonzero Behavior returns
+       immediately and Render decrements it and draws nothing, so the popup
+       simply does not exist yet. [_ZN6Number8BehaviorEv.cpp,
+       _ZN6Number6RenderEv.cpp] */
+    u16 mDelay;            /* 0x14c */
+    /* The bounce. 0: rising, and on the first frame back below mStartPosY it
+       is snapped to that floor, given mVertSpeed 0xf000 and advanced to 1.
+       1: on the next fall back below the floor it emits particle 0xd2 and marks
+       itself for destruction. [_ZN6Number8BehaviorEv.cpp] */
+    u8  mState;            /* 0x14e */
 
     virtual ~Number();
 

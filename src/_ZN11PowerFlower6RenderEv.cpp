@@ -8,9 +8,9 @@ int PowerFlower::Render()
 {
   int f = (int)((mFlags & 0x40000) != 0);
   if (f != 0) return 1;
-  unsigned char st = unk_3ca;
+  unsigned char st = mLifeTimer;
   if (st < 0x2d && (st & 1)) return 1;
-  switch (unk_3c0) {
+  switch (mState) {
   case 0: ((Sub*)((char*)&mModel1))->g5((char*)&mScaleX); break;
   case 1: ((Sub*)((char*)&mModel2))->g5((char*)&mScaleX); break;
   case 2: ((Sub*)((char*)&mModel2))->g5((char*)&mScaleX); break;

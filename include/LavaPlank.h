@@ -21,7 +21,7 @@
 struct LavaPlank : dBgActor_c {
     u8  pad_31e[0x2];
     s32 mOriginalPosY;                      /* 0x320 */
-    s16 unk_324;                      /* 0x324 */
+    s16 mPhaseAngle;                  /* 0x324 -- seeded from mAngleX, += 0x400 per Behavior; (>>4) indexes the sine table */
 
     /* --- vtable --- */
     virtual ~LavaPlank();
@@ -55,7 +55,7 @@ struct LavaPlank {
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x34];
     s32 mOriginalPosY;            /* 0x320 */
-    s16 unk_324;            /* 0x324 */
+    s16 mPhaseAngle;            /* 0x324 */
 };
 
 #endif /* __cplusplus */

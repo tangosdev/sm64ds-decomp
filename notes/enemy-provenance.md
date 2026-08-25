@@ -22,7 +22,7 @@ Convention: instance members `mFoo`.
 | 0x410 | `mPathNodeIndex` | `InitResources` sets it to 1, then to 8, and clamps it to 4 when `mPathNodeIndex >= mPathNodeCount`. Only meaning consistent with being bounded by the node count. |
 | 0x414 | `mStarParam` | `InitResources`: `mStarParam = (param1 >> 0xc) & 0xf`. Its only two reads are `mStarParam \| 0x50` (`InitResources`) and `mStarParam \| 0x40` (`Behavior`), each the spawn parameter of actor `0xb2`, the star. |
 | 0x418..0x426 | `s16 mSegmentAngle[8]` | `InitResources` zeroes indices 0..6 through the base of 0x418 and then element 7 at 0x426 explicitly; `src/_ZN5Unagi6RenderEv.cpp` reads elements 1..6, multiplies each by `data_ov016_02114908[i].angleScale` and adds the result into the bone's rotation word at `bone + 0x1e`. Eight `s16`s, driving one bone angle each. |
-| 0x428/0x42a/0x42c | `mInitAngleX/Y/Z` | last three statements of `InitResources`: copied verbatim from `mAngleX/Y/Z`. Named for the capture, not for a use: no matched body reads them back. |
+| 0x428/0x42a/0x42c | `mInitAngleX/Y/Z` | last three statements of `InitResources`: copied verbatim from `mAngleX/Y/Z`. Named for the capture, and `func_ov016_02111534` does read all three back, restoring them into `mPrevAngleX/Y/Z`. |
 | 0x43c | `Vector3 mStarPos` | `Behavior` passes `&mStarPos` to `Vec3_Dist` against the closest player's `+0x5c` (a position), passes `mStarPos` by reference as the spawn position of actor `0xb2`, and every frame copies its three words into the tracked star's `+0x5c/+0x60/+0x64`. Three consecutive words used only as a world position, and only ever the star's. |
 | 0x448 | `Vector3 mSegmentPos[7]` | already typed `Vector3[7]` — the ROM destroys it with `__destroy_arr(ptr, 7, 0xc, Vector3::~Vector3)`. `InitResources`' tail loop writes the actor's position into all seven. Renamed from `unk_448` to match `mSegmentAngle`; the loop's `char*` walker was replaced with `mSegmentPos[i].x/y/z`, byte-neutral. |
 
@@ -45,7 +45,7 @@ were dropped in favour of `mStarPos`.
 | offset | new name | evidence |
 | --- | --- | --- |
 | 0x420 | `void *mState` | `src/KingBobOmb_SetState.cpp` is exactly `c->pp = p; if (*c->pp) return (c->**c->pp)();` with `pp` at 0x420, and `src/_ZN10KingBobOmb8BehaviorEv.cpp` compares the same word against four ov078 state tables (`data_ov078_0212703c`, `_0212707c`, `_021270bc`, `_021270fc`) to pick its per-state path. Previously unnamed inside `pad_420`. |
-| 0x4d4/0x4d8/0x4dc | `mArenaPosX/Y/Z` | `InitResources` stores the Fix12 triple `0xb1d000 / 0x1060000 / 0xfee15000` — a fixed world point. `Behavior`'s only read is `(mArenaPosY - 0x28000) > mPosY`, which forces `SetState(data_ov078_021270bc)`, the same state that switches position updates to `UpdatePosWithOnlySpeed`: a "fell below the arena floor" test. X and Z are written and never read in matched code; they are named for the shape of the triple. |
+| 0x4d4/0x4d8/0x4dc | `mArenaPosX/Y/Z` | `InitResources` stores the Fix12 triple `0xb1d000 / 0x1060000 / 0xfee15000` — a fixed world point. `Behavior`'s only read is `(mArenaPosY - 0x28000) > mPosY`, which forces `SetState(data_ov078_021270bc)`, the same state that switches position updates to `UpdatePosWithOnlySpeed`: a "fell below the arena floor" test. The ov078 handlers read the whole triple: `func_ov078_02123d3c` loads all three into a `Vector3`, and `func_ov078_021240a0`/`_021243c0` pass `&mArenaPosX` to `Vec3_Dist` and `Vec3_HorzAngle` against `mPos`. |
 | 0x4e0/0x4e4/0x4e8 | `mHomePosX/Y/Z` | `InitResources` writes them from `mPosX/mPosY/mPosZ` at spawn. |
 | 0x4f8 | `mInitAngleY` | `InitResources`' `*(short*)(this + 0x400 + 0xf8) = mAngleY;`, now spelled `mInitAngleY = mAngleY;`. Previously unnamed inside `pad_4ec`. |
 | 0x4fc | `mAnimSpeed` | `Behavior`'s only read is `mBlendModelAnim.speed = mAnimSpeed << 0xc`, i.e. it is the animation speed in whole units, converted to Fix12 on the way in. `BlendModelAnim`'s `speed` is at +0x5c (`include/BlendModelAnim.h`), and 0x2cc + 0x5c = 0x328, the address the raw poke used. `InitResources` sets it to 1. |
@@ -61,8 +61,10 @@ Left `unk_`:
 - **0x499** — `Behavior` compares it against 1; nothing writes it in matched code.
 - **0x4a0** — `InitResources` sets it to `((rand >> 0x1e) & 1) + 1`, so 1 or 2, and no
   matched body reads it.
-- **0x500** — set to 3 in `InitResources` and never read. "3" next to a boss is suggestive
-  of hit points, which is exactly why it is not being named on a suggestion.
+- **0x500** — `mHealth`. Set to 3 in `InitResources`; `func_ov078_021243c0` decrements it
+  by one in the same body that plays the stagger anim and applies the knockback speeds,
+  and then latches `+0xb0` when it reaches 0; `func_ov078_021240a0` gates the whole
+  chase-the-player branch on `<= 0`. Three throws, exactly as the fight plays.
 - **0x424/0x428/0x42c/0x42d** — zeroed by a two-iteration loop in `InitResources` and
   otherwise untouched.
 
@@ -80,12 +82,16 @@ Left `unk_`:
 
 - **0x2cc, 0x37c, 0x380, 0x384, 0x388** — written to 0 (or copied from each other) in
   `InitResources` and never read in a matched body.
-- **0x360** — set to `0x2000` and never read.
+- **0x360** — `mShadowRadiusScale`. `func_ov060_02117624` passes `*(0x368) * this`
+  as the radius argument of `dActor_c::DropShadowRadHeight`, so the 0x2000 is a
+  Fix12 2.0 multiplier on the shadow's base radius.
 - **0x370** — an `s32` incremented once per `Behavior`, alongside `mFrameCount`. Two
   free-running counters in one class, and nothing reads either, so there is no evidence
   for which is which; the raw poke stays rather than pick a name at random.
 - **0x378** — `(param1 >> 4) & 3`. Provenance without meaning: no matched body reads it.
-- **0x379** — set to `mVariant != 0`. Same: written, never read.
+- **0x379** — `mDropsShadow`. `func_ov060_02117624` returns immediately when it is 0,
+  before it drops the shadow at all, so `mVariant != 0` is deciding which variants
+  cast one.
 
 ---
 
@@ -102,7 +108,11 @@ Left `unk_`:
 
 Left `unk_`:
 
-- **0x3fc** — zeroed in `InitResources`, never read.
+- **0x3fc** — `mUniqueID_3fc`. Not a plain scalar: `func_ov081_02124134` hands it to
+  `dActor_c::FindWithID`, shoves the actor it finds (`+0x9c = -0x2000`,
+  `+0xa0 = -0x28000`) and then clears it -- exactly what it does one field later with
+  `mCapUniqueID`. Which actor it tracks is not evidenced, so the offset stands in for
+  the role while the type does not.
 - **0x468** — a byte guarding one `func_02012694(0x166, &mCamSpacePos)` call in the death
   path, cleared afterwards. Nothing writes it in a matched body.
 - **0x469** — a 0/1/2 machine in the `mType == 3` branch of `Behavior`, driven entirely by
@@ -138,8 +148,11 @@ corresponding raw `c + 0xNNN` pokes in `Behavior`.
 
 Left `unk_`:
 
+- **0x470** — `mParticleHandle`. `func_ov084_0212f460` stores `Particle::System::New`'s
+  return in it and reads it straight back as the `slot` argument of the next call.
 - **0x45d** (set to 1), **0x460** (0), **0x464** (`0x7fffffff`), **0x46c** (0),
-  **0x470**/**0x474** (0) — written in `InitResources`, never read in a matched body.
+  **0x474** (0) — written in `InitResources`, never read in a matched body, including
+  in the ov084 handlers.
 - **0x478** — zeroed in `InitResources` and again whenever `mState` changes, alongside the
   `dEnemyBase_c` counter at 0x100. A per-state something, but nothing reads it.
 
@@ -162,11 +175,23 @@ stays as it is — the file already documents that the add must sit inside the i
 
 Left `unk_`:
 
-- **0x1e8, 0x1f0, 0x1f4, 0x224, 0x228** — zeroed in `InitResources`, never read.
-- **0x214** — set per variant to 0x52 / 0xa4 / 0x147 and never read; it parallels the three
-  collision factors above but nothing in a matched body says what it scales.
-- **0x21a..0x21e** — five bytes set to 0/0/0/0/1, never read.
-- **0x21f** — `param1 & 0xf`. Provenance without meaning: no matched body reads it.
+- **0x1e8** — `mRespawnMode`. `func_ov084_0212e010` kills the plant outright unless this
+  is 1, in which case it calls `TrackInDeathTable` and sets `mState` to 4 instead.
+- **0x1f0** — `mGroupLeaderID`. Handed straight to `dActor_c::FindWithID`; the actor it
+  returns carries the group's two tallies (0x21a/0x21b) that this plant's death updates.
+- **0x1f4, 0x224, 0x228** — zeroed in `InitResources`; still no reader, including in the
+  ov084 handlers.
+- **0x214** — `mScaleRate`. `func_ov084_0212e010` passes it as the step to
+  `ApproachLinear(&mScale, 0, rate)`, so the per-variant 0x52 / 0xa4 / 0x147 are how fast
+  each size of plant shrinks away.
+- **0x21a** — `mGroupAliveCount`, and **0x21b** — `mGroupDefeatedCount`: a dying plant
+  decrements 0x21a and increments 0x21b *on the group leader*, and when the leader's
+  0x21b reaches 5 the star spawns and both actors are killed.
+- **0x21c, 0x21d** — still no reader.
+- **0x21e** — `mSuppressDeathReward`. Non-zero returns early from both death paths,
+  before the group tally, the coin drop and the star.
+- **0x21f** — `mStarID`. `func_ov084_0212e010` passes it to `IsStarCollectedInCurLevel`
+  and ORs it with 0x40 as the spawn parameter of actor 0xb2, the star.
 
 Byte-neutral source cleanups: `(char *)&mdCcAc_c`, `(char *)&mdCcAcPos_c` and
 `(char *)&mClsnOffset` replaced the `((char *)this) + 0xNNN` arguments in `Behavior`.
@@ -204,8 +229,23 @@ remaining `unk_` fields resolve; the header's own prose already described two of
 
 Left `unk_`:
 
-- **0x438, 0x43c, 0x450, 0x454, 0x467, 0x468** — zeroed in `InitResources` and never read
-  in a matched body.
+- **0x468** — `mSoundLatchFlags`. `func_ov084_0212934c` reads bit 1 of it through a
+  two-bit bitfield, plays sound 0xd0 only when that bit is clear, sets it, and clears
+  it again as soon as the surface type underfoot leaves the matching range -- a latch
+  that stops the sound retriggering every frame.
+- **0x43c** — `mTargetUniqueID`. `daKrb_c::CleanupResources` already read it as an
+  `unsigned int id`, and `func_ov084_0212af74` hands the same word to
+  `dActor_c::FindWithID` and bails to state 1 when it is 0.
+- **0x450** — `mHeadingHoldTimer`. `func_ov084_0212abd4` seeds it (0x19 when the
+  player is out of range, 0x64 after a fresh heading) and counts it down; only at 0
+  does it pick a new target heading into 0x45c.
+- **0x454** — `mWanderRerollTimer`. `func_ov084_0212af74` runs it through
+  `DecIfAbove0_Short` and, at 0, reseeds it to `(rand >> 0x1b) + 0x1e` -- 30 to 61
+  frames -- while writing a fresh random heading into 0x45a.
+- **0x440** — `mDistToPlayer`. `func_ov084_0212abd4` tests it against 0x61a8000, the
+  sentinel the same overlay stores when there is no reachable player.
+- **0x438, 0x467** — still no reader. Both are only ASSIGNED in the ov084 handlers
+  that mention them, which is not the same as being read.
 - **0x440** — set to `0x7fffffff` and never read.
 - **0x444** — `InitResources` loads `data_ov084_02130228[mGoombaType]` into it, and
   `Behavior`'s only read tests whether it is *still* that same table entry, choosing

@@ -13,9 +13,9 @@ extern void _ZN5dCc_c6UpdateEv(void* p);
 
 int EnemySwitchTag::Behavior()
 {
-    if (unk_10a != 0) {
+    if (mHoldTimer != 0) {
         *(u16*)((int)((char*)this) + 0x10a) -= 1;
-        if (unk_10a == 0) {
+        if (mHoldTimer == 0) {
             *(u32*)((int)((char*)this) + 0xec) &= ~1;
             _ZN5Event8ClearBitEj(mEventID);
         }
@@ -26,8 +26,8 @@ int EnemySwitchTag::Behavior()
     if (mdCcAc_c.otherOwner != 0) {
         *(u32*)((char*)&mdCcAc_c.flags) |= 1;
         _ZN5Event6SetBitEj(mEventID);
-        if (unk_10c != 0) {
-            unk_10a = unk_108;
+        if (mIsReusable != 0) {
+            mHoldTimer = mHoldDuration;
         } else {
             _ZN7fBase_c18MarkForDestructionEv(((char*)this));
         }

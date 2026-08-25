@@ -35,10 +35,15 @@ struct daEyBm_c : dActor_c {
     ShadowModel               mShadowModel;                  /* 0x0d4 */
     dCcAcPos_c mdCcAcPos_c;    /* 0x0fc */
     dBgCh_Actr              mWithMeshClsn;                 /* 0x13c */
-    Matrix4x3 unk_2f8;        /* 0x2f8 */
-    s32                       unk_328;                       /* 0x328 */
-    s32                       unk_32c;                       /* 0x32c */
-    s16                       unk_330;                       /* 0x330 */
+    Matrix4x3 mMatrix;        /* 0x2f8 */
+    /* Two particle handles, effects 0x46 and 0x47, both fed back into
+       Particle::System::NewUnkCallback818 every Render. mLifeTimer starts at
+       0x96 (150 frames) and is counted down by Behavior.
+       [_ZN8daEyBm_c6RenderEv.cpp, _ZN8daEyBm_c8BehaviorEv.cpp,
+        _ZN8daEyBm_c13InitResourcesEv.cpp] */
+    s32                       mParticle1;                       /* 0x328 */
+    s32                       mParticle2;                       /* 0x32c */
+    s16                       mLifeTimer;                       /* 0x330 */
     u8                        pad_332[0x2];
 
     /* Declared first on purpose, same reasoning as dActor_c.h: the key

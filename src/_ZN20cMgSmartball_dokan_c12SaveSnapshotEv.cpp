@@ -26,12 +26,12 @@ void cMgSmartball_dokan_c::SaveSnapshot()
 
     mSnapshot0 = mCurrent0;
     mSnapshot1 = mCurrent1;
-    for (i = 0; i < *(int *)((char *)unk_004 + 0x4668); i++) {
-        if (GetObj((char *)unk_004, i)[0x30] == 0)
+    for (i = 0; i < *(int *)((char *)mpManager + 0x4668); i++) {
+        if (GetObj((char *)mpManager, i)[0x30] == 0)
             continue;
-        if (GetObj((char *)unk_004, i)[0x120] == 1)
+        if (GetObj((char *)mpManager, i)[0x120] == 1)
             continue;
-        func_ov006_0211470c((int *)&s.v, (int *)GetObj((char *)unk_004, i));
+        func_ov006_0211470c((int *)&s.v, (int *)GetObj((char *)mpManager, i));
         s.d = s.v;
         s.d.x = s.d.x - mCurrent0;
         s.d.y = s.d.y - mCurrent1;
@@ -45,9 +45,9 @@ void cMgSmartball_dokan_c::SaveSnapshot()
             continue;
         s.e.x = mCurrent0;
         s.e.y = -0x40000;
-        func_ov006_02115598((void *)unk_004, (int *)&s.e, 0xbb8, 0, 1);
-        func_ov006_02114fd0((char *)unk_004);
-        GetObj((char *)unk_004, i)[0x120] = 1;
+        func_ov006_02115598((void *)mpManager, (int *)&s.e, 0xbb8, 0, 1);
+        func_ov006_02114fd0((char *)mpManager);
+        GetObj((char *)mpManager, i)[0x120] = 1;
         Sound::PlayBank2_2D(0x16);
     }
 }

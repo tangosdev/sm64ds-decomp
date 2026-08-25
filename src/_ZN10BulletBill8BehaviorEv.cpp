@@ -13,7 +13,7 @@
  *   otherwise the target is looked up, and ONLY a Player (actor ID 0xbf) that
  *             is not already in state +0x6fb gets hurt -- same state 1, same cue
  *
- * unk_100 is a per-state frame counter, incremented every frame and reset to 0
+ * mStateTimer is a per-state frame counter, incremented every frame and reset to 0
  * whenever the state changed during THIS frame -- which is why the old value is
  * kept in a local across the whole body rather than re-read.
  *
@@ -111,7 +111,7 @@ int BulletBill::Behavior()
     }
 
     {
-        u16 *h = (u16 *)&unk_100;
+        u16 *h = (u16 *)&mStateTimer;
         *h = *h + 1;
         if (which != (u32)mState) {
             *h = 0;

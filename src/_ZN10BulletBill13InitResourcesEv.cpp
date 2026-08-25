@@ -46,7 +46,7 @@ int BulletBill::InitResources()
         _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj((char*)&mdCcAcPos_c, (struct dActor_c*)c, &v, 0x78000, 0xa0000, 0x200005, 0x3c0);
     }
     mState = 0;
-    unk_100 = 0;
+    mStateTimer = 0;
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((char*)&mWithMeshClsn, (struct dActor_c*)c, 0x32000, 0, 0, 0);
     unk_3d8 = 0;
     return 1;

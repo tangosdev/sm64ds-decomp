@@ -23,9 +23,12 @@ struct KnockDownPlank : dBgActor_c {
     u8  pad_31e[0x2];
     ShadowModel mShadowModel;         /* 0x320 */
     u8  pad_348[0x30];
-    s32 unk_378;                      /* 0x378 */
-    s32 unk_37c;                      /* 0x37c */
-    s32 unk_380;                      /* 0x380 */
+    /* The point 0x32000 units in front of the plank: InitResources rotates
+       (0, 0, 0x32000) by mAngleY through data_020a0e68 and adds the plank's own
+       position. mFrontFloorY below is the ground height under it. */
+    s32 mFrontPosX;                   /* 0x378 */
+    s32 mFrontPosY;                      /* 0x37c */
+    s32 mFrontPosZ;                      /* 0x380 */
     s32 mFrontFloorY;                      /* 0x384 */
     s32 mOriginalPosY;                      /* 0x388 */
     s32 mJumpSpeed;                      /* 0x38c */
@@ -77,9 +80,9 @@ struct KnockDownPlank {
     u8  pad_2ec[0x34];
     ShadowModel mShadowModel; /* 0x320 */
     u8  pad_348[0x30];
-    s32 unk_378;            /* 0x378 */
-    s32 unk_37c;            /* 0x37c */
-    s32 unk_380;            /* 0x380 */
+    s32 mFrontPosX;            /* 0x378 */
+    s32 mFrontPosY;            /* 0x37c */
+    s32 mFrontPosZ;            /* 0x380 */
     s32 mFrontFloorY;            /* 0x384 */
     s32 mOriginalPosY;            /* 0x388 */
     s32 mJumpSpeed;            /* 0x38c */

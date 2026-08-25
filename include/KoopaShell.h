@@ -38,20 +38,20 @@ struct KoopaShell : dEnemyBase_c {
     s32 mSpawnPosZ;            /* 0x3b8 */
     s16 mSpawnAngleY;            /* 0x3bc */
     u8  pad_3be[0x2];
-    s32 unk_3c0;            /* 0x3c0 */
+    s32 mCarrier;            /* 0x3c0 */
     /* Model index, 0 or 1, off bit 0 of mSpawnParam. Behavior gives index 0 a
        per-frame call the other does not get. */
     u8  mModelIndex;            /* 0x3c4 */
-    u8  unk_3c5;            /* 0x3c5 */
+    u8  mVariant;            /* 0x3c5 */
     /* Despawn countdown, and it only runs in one state. Render blinks the
        shell while it is below 0x2d by skipping odd values, so the shell
        flashes out rather than vanishing. */
     u8  mDespawnTimer;            /* 0x3c6 */
     u8  pad_3c7[0x1];
-    s32 unk_3c8;            /* 0x3c8 */
-    s32 unk_3cc;            /* 0x3cc */
-    s32 unk_3d0;            /* 0x3d0 */
-    s32 unk_3d4;            /* 0x3d4 */
+    s32 mParticleHandle_3c8;            /* 0x3c8 */
+    s32 mParticleHandle_3cc;            /* 0x3cc */
+    s32 mParticleHandle_3d0;            /* 0x3d0 */
+    s32 mParticleHandle_3d4;            /* 0x3d4 */
     /* Trailing remainder, 8 bytes. Every sub-object is typed and every field
        the eight recovered functions touch ends at 0x3d8; KoopaShell_Spawn
        allocates 0x3e0. */
@@ -74,7 +74,7 @@ struct KoopaShell : dEnemyBase_c {
 struct KoopaShell {
     u8  pad_000[0x8];
     /* Spawn parameter word. InitResources takes bit 0 as the model index into
-       data_ov102_0214d70c and bit 4 as unk_3c5 -- so one spawn word selects
+       data_ov102_0214d70c and bit 4 as mVariant -- so one spawn word selects
        both the shell's artwork and a behaviour variant. */
     u32 mSpawnParam;            /* 0x008 */
     u8  pad_00c[0x50];
@@ -94,9 +94,9 @@ struct KoopaShell {
     u8  pad_0ac[0x4];
     u32 mFlags;            /* 0x0b0 */
     u8  pad_0b4[0x4c];
-    s16 unk_100;            /* 0x100 */
+    s16 mStateTimer;            /* 0x100 */
     u8  pad_102[0x5];
-    u8  unk_107;            /* 0x107 */
+    u8  mEatenByYoshi;            /* 0x107 */
     u8  pad_108[0x8];
     /* Sub-objects, kept as byte markers: their sizes are fixed by the NEXT
        marker's offset, which is what the ROM evidences, and none of the five
@@ -123,20 +123,20 @@ struct KoopaShell {
     s32 mSpawnPosZ;            /* 0x3b8 */
     s16 mSpawnAngleY;            /* 0x3bc */
     u8  pad_3be[0x2];
-    s32 unk_3c0;            /* 0x3c0 */
+    s32 mCarrier;            /* 0x3c0 */
     /* Model index, 0 or 1, off bit 0 of mSpawnParam. Behavior gives index 0 a
        per-frame call the other does not get. */
     u8  mModelIndex;            /* 0x3c4 */
-    u8  unk_3c5;            /* 0x3c5 */
+    u8  mVariant;            /* 0x3c5 */
     /* Despawn countdown, and it only runs in one state. Render blinks the
        shell while it is below 0x2d by skipping odd values, so the shell
        flashes out rather than vanishing. */
     u8  mDespawnTimer;            /* 0x3c6 */
     u8  pad_3c7[0x1];
-    s32 unk_3c8;            /* 0x3c8 */
-    s32 unk_3cc;            /* 0x3cc */
-    s32 unk_3d0;            /* 0x3d0 */
-    s32 unk_3d4;            /* 0x3d4 */
+    s32 mParticleHandle_3c8;            /* 0x3c8 */
+    s32 mParticleHandle_3cc;            /* 0x3cc */
+    s32 mParticleHandle_3d0;            /* 0x3d0 */
+    s32 mParticleHandle_3d4;            /* 0x3d4 */
     /* Trailing remainder, 8 bytes. Every sub-object is typed and every field
        the eight recovered functions touch ends at 0x3d8; KoopaShell_Spawn
        allocates 0x3e0. */

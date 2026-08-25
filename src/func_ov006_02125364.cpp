@@ -14,8 +14,8 @@ extern "C" void func_ov004_020b66d4(void);
 extern "C" void func_ov006_02125364(char* c, int mode){
     dScMgBSC_c *self = (dScMgBSC_c *)(void *)c;
   if(mode != 4 && mode != 5 && mode == 3){
-    self->unk_0b4 = func_ov004_020ad878();
-    func_ov004_020adb1c(self->unk_0b4);
+    self->mHudScore = func_ov004_020ad878();
+    func_ov004_020adb1c(self->mHudScore);
   }
   func_ov004_020b66d4();
   data_ov004_020bc7d4 = 1;

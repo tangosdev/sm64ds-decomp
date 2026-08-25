@@ -21,7 +21,7 @@ int ExtendingPlatform::InitResources()
   func_ov045_021118f8(((char*)this));
   func_ov045_021118c4(((char*)this));
   kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov045_021131d0);
-  _ZN14dBgW_KcMbgSclY7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x158, kcl, ((char*)this)+0x128, 0x1000, unk_08e, data_ov045_021125b0);
+  _ZN14dBgW_KcMbgSclY7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x158, kcl, ((char*)this)+0x128, 0x1000, mAngleY, data_ov045_021125b0);
   func_020396c0(((char*)this)+0x158, 4);
   mCollider.unk_4d = 1;
   ((dBgW *)(((char*)this)+0x158))->Enable((dActor_c *)(((char*)this)));

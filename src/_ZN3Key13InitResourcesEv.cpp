@@ -86,7 +86,7 @@ int Key::InitResources()
     unk_41c = mPosX;
     unk_420 = mPosY;
     unk_424 = mPosZ;
-    unk_100 = 0;
+    mStateTimer = 0;
     unk_442 = 0;
     unk_443 = 0;
     mTerminalVelocity = -0x32000;

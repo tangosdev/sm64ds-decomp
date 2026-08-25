@@ -91,7 +91,7 @@ struct JetStream {
     u8  pad_0cd[0x1];
     s16 mDeathTableID;           /* 0x0ce */
     u8  pad_0d0[0x30];
-    u8  unk_100;            /* 0x100 */
+    u8  mStateTimer;            /* 0x100 */
     u8  pad_101[0xf];
     u8  mdCcAc_c;            /* 0x110 */
     u8  pad_111[0x33];

@@ -38,16 +38,16 @@ struct Player;
 
 struct Trap : dBgActor_c {
     /* Bare Model, not dBgCh_Actr -- Trap_Spawn.c calls
-       _ZN5ModelC1Ev((char*)p + 0x320) directly, no dBgCh_Actr wrapper. Named
-       "mModel" (not "mModel2") because dBgActor_c's own Model at 0xd4 is
-       inherited, not restated here -- this is the only Model this struct
-       declares. Matches the established convention for this exact shape: see
-       include/PyramidStep.h, whose derived-class half names its own 0x320
-       Model "mModel" for the identical reason (its flat C half, which DOES
-       restate dBgActor_c's fields, calls the two "mModel1"/"mModel2" -- the
-       numbered pair is a flat-struct-only convention). */
-    Model mModel;                     /* 0x320 */
-    /* A Matrix4x3, and the fit is exact from both sides: mModel above ends at
+       _ZN5ModelC1Ev((char*)p + 0x320) directly, no dBgCh_Actr wrapper. This is
+       the door's own model and it is NOT the only one the object carries:
+       dBgActor_c's inherited Model at 0xd4 is live too -- ~Trap destroys both,
+       Model::D1 at +0x320 and again at +0xd4 (see src/_ZN4TrapD1Ev.cpp). So it
+       must not be called "mModel": that name is already the base's, and an
+       unqualified mModel inside a Trap method would silently bind to 0x320
+       while a reader collapsing a +0xd4 poke would expect 0xd4. Named for the
+       role InitResources and Render give it, beside mDoorMat below. */
+    Model mDoorModel;                 /* 0x320 */
+    /* A Matrix4x3, and the fit is exact from both sides: mDoorModel above ends at
        0x370 and mState below starts at 0x3a0, which is 0x30 -- sizeof(Matrix4x3)
        -- and InitResources hands this address to dBgW_KcMbg::SetFile, whose
        second parameter is `const Matrix4x3 &'. dBgActor_c's own mClsnMat at
@@ -79,13 +79,13 @@ typedef char Trap_size_must_be_0x3b0[sizeof(Trap) == 0x3b0 ? 1 : -1];
    (DonutBlock.h, BigBrickBlock.h, MetalNet.h, PyramidStep.h). */
 struct Trap {
     u8  pad_000[0x5c];
-    s32 unk_05c;            /* 0x05c */
-    s32 unk_060;            /* 0x060 */
-    s32 unk_064;            /* 0x064 */
+    s32 mPosX;            /* 0x05c */
+    s32 mPosY;            /* 0x060 */
+    s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x26];
-    u16 unk_08e;            /* 0x08e */
+    u16 mAngleY;            /* 0x08e */
     u8  pad_090[0x3c];
-    s8  unk_0cc;            /* 0x0cc */
+    s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x2d3];
     s32 mState;            /* 0x3a0 */
     s32 mPlayerDist;            /* 0x3a4 */

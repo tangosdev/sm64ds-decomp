@@ -10,7 +10,7 @@
 
 struct SwitchActivatedPlank {
     u8  pad_000[0x8e];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x44];
     /* Model member, named by the class's own destructor calling
        Model's D1 at +0x0d4 -- a relocation the ROM build
