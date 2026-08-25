@@ -472,10 +472,20 @@ extern "C" unsigned port_mg_trap_hits(void) { return g_mg_trap_hits; }
  * other rather than being asserted separately.
  *
  * Printed at exit rather than per frame so it cannot flood a log or perturb a
- * frame, and only when SM64DS_MG_RESULTS_PROBE is set, which is the only way a
- * capture can raise this panel at all (the game's own progression to it is
- * still blocked at the unseated func_ov006_020d01e0 installer). Unset, this is
- * one getenv at exit and nothing else.
+ * frame, and only when SM64DS_MG_RESULTS_PROBE is set. Unset, this is one getenv
+ * at exit and nothing else.
+ *
+ * THAT VARIABLE IS NOT DEFINED ON THIS BRANCH, DELIBERATELY. The probe that reads
+ * it and raises the panel through the ROM's own slot 27 belongs to run mg12 lane
+ * OVERLAY and lives in hal/scene_mg.cpp on their branch, which is the canonical
+ * line of that work. This lane carried a cherry-pick of it for a while and DROPPED
+ * it: a trial merge showed the duplicate conflicts with OVERLAY's later fixes, and
+ * resolving that conflict in this lane's favour would have silently deleted one of
+ * them. So this readout is INERT until the two branches meet, and that is the
+ * correct state for it - it is a reader, not a driver, and it must not grow its own
+ * copy of somebody else's instrument. The game's own progression to this panel is
+ * still blocked at the unseated func_ov006_020d01e0 installer, so a capture cannot
+ * reach it without OVERLAY's probe.
  */
 extern "C" { extern void *data_ov004_020beb68; }
 
