@@ -850,11 +850,43 @@ static unsigned mg_raw_left(void **vt, unsigned n)
  *
  * BLAST RADIUS, and it is why this is the last part of the feature to land.
  * Seating the block gates func_02019144's tail on slot 24's answer for EVERY
- * dScMgBase_c descendant at once, because the block is installed by slot 33
- * which every minigame runs. Non-D3D minigames inherit dScMgBase_c's own slot
- * 24, func_ov004_020ae140, which returns 1 on every path -- so their tail is
- * unchanged by construction rather than by hope. Scenes that never install the
- * block are untouched: installation is slot 33's act, not this function's.
+ * dScMgBase_c descendant at once -- ALL THIRTY of them, not the four this
+ * feature is about -- because the block is installed by slot 33 and every
+ * minigame runs slot 33. Scenes that never install the block are untouched:
+ * installation is slot 33's act, not this function's.
+ *
+ * WHO ACTUALLY OVERRIDES SLOT 24, counted out of the ROM rather than argued.
+ * Word 24 (byte +0x60) of all THIRTY-TWO ov006 ActorBase-signature tables, read
+ * straight from extracted/overlays/overlay_0006.bin at base 0x020bfec0:
+ *
+ *     26 tables INHERIT func_ov004_020ae140, dScMgBase_c's own
+ *      6 tables OVERRIDE it --
+ *          0x0213c62c, 0x0213cbe4, 0x0213ccfc -> 0x020e6e78  (dScMgD3DBase_c
+ *              itself plus 372 and 373; the base class is one of the three and
+ *              no scene instantiates it)
+ *          0x0213fb34 -> 0x021211e0  (384, dScMgTrampoline_c::OnKicked)
+ *          0x0213fc7c -> 0x021230e8  (385, dScMgTrampoline2_c::OnKicked)
+ *          0x0214000c -> 0x02128fb8  (377, dScMgSnowball_c)
+ *
+ * So the live overriding scenes are exactly the five this feature touches, and
+ * the other twenty-six inherit.
+ *
+ * AND THE INHERITED BODY IS NOT SIDE-EFFECT FREE, which an earlier version of
+ * this note got wrong by saying it "returns 1 on every path -- so their tail is
+ * unchanged by construction". The RETURN is 1 on every path, so the tail's gate
+ * is unchanged by construction and that half stands. But the body also compares
+ * self+0x4628 against self+0x462c and, when they differ, dispatches slot 30 or
+ * slot 29 -- func_ov004_020aeed8 and func_ov004_020af094, the display
+ * save/restore pair, both of which write POWCNT1 -- and then syncs the two
+ * words. On the inheriting scenes that path is simply not taken.
+ *
+ * MEASURED rather than asserted: all 32 hosted scenes captured at 300 frames on
+ * this build and on a from-scratch build of the lane's base commit, 26 are
+ * BYTE-IDENTICAL and the six that move are 372, 373, 377, 384, 385 -- the five
+ * above -- and scene 1, which is not a minigame at all and moves for part 2's
+ * reason rather than this one (src/func_ov007_020b7138.c clears POWCNT1 bit 15
+ * itself, so the title screen has been presented with its halves exchanged and
+ * now is not).
  */
 extern "C" void port_graph_block_register(void *vt);
 extern "C" unsigned char data_ov004_020bc03c[];
