@@ -565,4 +565,80 @@ int port_fader_blend_state(int *evy, int *toWhite)
     if (toWhite) *toWhite = (mode == 2);
     return 1;
 }
+
+/* ---- THE FRAME CLOCK, data_020a0db0 (run mg12 lane SELECT) ----------------
+ *
+ * WHAT IT IS. One int at 0x020a0db0, incremented once per frame by the ROM's
+ * own main loop -- src/func_020197b8.c, between phase 5 (func_02019404) and
+ * the render phases:
+ *
+ *     data_0209d50c = 5; func_02019404();
+ *     data_0209d50c = 6;
+ *     data_020a0db0 = data_020a0db0 + 1;      <- this line
+ *
+ * It is the game's BLINK CLOCK. Nothing reads its value; everything reads one
+ * of its low bits and uses the alternation. Fourteen readers are linked into
+ * this program today, and every one of them is a blink, a two-phase alternation
+ * or a rotation driven off the count:
+ *
+ *   src/func_ov006_020f7e2c.c      & 8     Pair-a-Gone's card draw
+ *   src/func_ov006_020f98dc.c      & 8     Pair-a-Gone And On's card draw
+ *   src/func_ov006_02107b94.c      & 8     Mushroom Roulette's frame pick
+ *   src/_ZN7Minimap6RenderEv.cpp   & 8
+ *   src/_ZN3HUD15RenderStarCountEv.cpp     & 0x18
+ *   src/func_ov004_020b6430.c      & 0x10  the minigame name plate
+ *   src/_ZN5Stage20RenderBouncingArrowsEv.cpp  & 0x10
+ *   src/_ZN7Message6UpdateEv.cpp   & (0x10 / data_0208ee44)   the text cursor
+ *   src/func_020326ac.c            & (0x10 / data_0208ee44)   (four sites)
+ *   src/func_ov002_020f20f4.c      & 1
+ *   src/func_ov002_020f23f0.c      & 1     (two sites)
+ *   src/_ZN17MgBounceAndPounce14BeforeBehaviorEv.cpp   & 1
+ *   src/func_ov003_020ae6f4.cpp    * 0x300 fed to a Y rotation
+ *
+ * WHY IT NEEDED A DRIVER. func_020197b8 is the ROM's main loop and this port
+ * does not run it -- both host loops (tests/walk_window.cpp's level loop and
+ * hal/scene_boot.cpp's port_scene_tick) are their own frame. So the counter
+ * sat at its BSS zero for the life of every process, and all fourteen readers
+ * above were dead: `& n` is false forever, `& 1` is true forever. Same shape
+ * and same cause as port_fader_advance above, which is phase 2 of the same loop
+ * and needed the same six lines -- which is why the two drivers share a file.
+ *
+ * WHAT IT COST, measured rather than argued (run mg12, lane SELECT). In
+ * Pair-a-Gone (scene 381) the ONLY difference between a selected card and an
+ * idle one is this blink: func_ov006_020f7e2c draws state 3 exactly as it
+ * draws state 2 except that it skips the draw while bit 3 is set. With the
+ * clock frozen the skip never fires, so tapping a card played its sound,
+ * moved the state machine and changed NOTHING on screen. Two stacked captures
+ * eight frames apart with card 1 held selected came back byte-identical over
+ * the whole bottom screen. A player cannot see what he has picked, and the
+ * mismatch rule then deselects it silently -- which is what "something is
+ * wrong with the way you select cards" is from the other side of the glass.
+ *
+ * WHERE IT IS CALLED. Both loops, at the ROM's own position: after the actor
+ * phases and before the render, inside the game-tick gate. Gated rather than
+ * free-running on purpose -- with the debug menu open the world holds still
+ * and the picture keeps being drawn, and a blink that kept running would be
+ * the one thing still moving in a frozen frame. The DS has no pause, so the
+ * gate is a port decision and this is the same decision port_actor_tick makes.
+ *
+ * data_020a0db0 IS HOSTED AS int[8] in hal/auto_bss.cpp and every matched TU
+ * reads it as a plain int, which is the first word. func_0203b684 (the ROM's
+ * own reset) zeroes it and data_020a0db4 with it; nothing here touches that.
+ *
+ * SM64DS_NO_FRAME_CLOCK=1 PUTS THE FROZEN CLOCK BACK on this same binary, the
+ * same shape SM64DS_IRQ2_OFF and SM64DS_NO_KUPPA_TICK have and for the same
+ * reason: this wakes fourteen readers at once, so the A/B that says which of
+ * them moved has to be runnable without a second build. It is a diagnostic and
+ * not a setting -- nothing in port/ or in a bundle sets it. */
+extern int data_020a0db0[8];
+
+void port_frame_clock_tick(void)
+{
+    static int off = -1;
+    if (off < 0)
+        off = std::getenv("SM64DS_NO_FRAME_CLOCK") ? 1 : 0;
+    if (off)
+        return;
+    data_020a0db0[0] = data_020a0db0[0] + 1;
+}
 }  /* extern "C" */

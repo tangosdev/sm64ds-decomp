@@ -776,6 +776,11 @@ static void ss_flag_dump(const char *when)
 }
 /* the actor registry and the ROM's own processing lists (hal/actor_registry) */
 void port_actor_tick(void);          /* phases 4/2/3: cleanup, init, behaviour */
+/* phase 6, the frame clock (hal/fader_wipes.cpp): data_020a0db0, the one counter
+   every blink in the game hangs off. func_020197b8 steps it once per frame and
+   this port does not run func_020197b8, so it sat at zero and every blink was
+   dead. Read that file's banner before moving this call. */
+void port_frame_clock_tick(void);
 /* gate 31: the level handoff (hal/level_change.cpp). port_level_change_poll
    sits where Scene::SpawnIfNecessary sits in func_020197b8 -- after input,
    before the actor phases -- and returns 1 on the frame a new level came up,
@@ -7773,6 +7778,15 @@ int main(void)
         } else {
             hal_player_st_wait_main(player);
         }
+        /* THE FRAME CLOCK, func_020197b8 phase 6 (hal/fader_wipes.cpp): after the
+           actor phases the branch above ran, before the render below. Gated on
+           game_ticked -- the ROM has no pause, so a frozen frame holding its
+           blinks still is this port's decision and the same one port_actor_tick
+           makes. hal/scene_boot.cpp's port_scene_tick calls it at the matching
+           point on the scene path. Read that file's banner before moving it:
+           every blink in the game hangs off this one counter. */
+        if (game_ticked)
+            port_frame_clock_tick();
         /* THE FADE STEPS HERE, and it steps every frame -- even with the menu
            open and the game tick skipped -- because a fade transition must not
            freeze while it is on screen. This is func_02018ec0's job in the
