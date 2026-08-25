@@ -9,4 +9,3 @@
 # Regenerate with:
 #   python tools/rombuild_check.py --out build/bad.txt
 #   python tools/rombuild_versions.py build/bad.txt --write
-_ZN11dScMgCard_c13InitResourcesEv 1.2/base
