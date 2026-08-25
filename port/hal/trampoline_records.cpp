@@ -39,10 +39,22 @@
 //
 // The record base itself,
 // data_ov006_02140990 (stride 0x32c, four records), carries the two stroke
-// endpoints the test wrote at +0x50 and +0x54 before it called the installer,
-// and the RENDER GATE at +0x328 which decides whether func_ov006_020cf2fc and
-// func_ov006_020cf758 ever look at the record (src/func_ov006_020d09e0.c and
-// src/func_ov006_020d0ac0.c are the two loops that read it).
+// endpoints at +0x50 and +0x54, and the RENDER GATE at +0x328 which decides
+// whether func_ov006_020cf2fc and func_ov006_020cf758 ever look at the record
+// (src/func_ov006_020d09e0.c and src/func_ov006_020d0ac0.c are the two loops
+// that read it).
+//
+// A CORRECTION, MEASURED. What stood here said the endpoints were written by
+// the TEST, "before it called the installer". They are not: the test PASSES
+// them (func_ov006_020d01e0(g, a, b), the call at +0x344 of the seat) and the
+// installer is what stores them. Run mg12 lane OVERLAY wired slot 23's missing
+// beat and drew a scripted line on 384; record 0 came up live=1, +0x326=0,
+// index=0 -- the seat's own three-store success tail at +0x34c..+0x36c, exactly
+// as its banner describes -- with the endpoints still (0,0)->(0,0) because the
+// installer is still trapped. So +0x50/+0x54 belong on the SAME side of the
+// wall as the render gate, and a reader must not take zeros there as evidence
+// that no stroke was accepted. The live flag is the evidence; these two are
+// the floor's.
 //
 // READ THE GATE HONESTLY.  +0x328 is NOT written by the hit test.  It is
 // written inside func_ov006_020d01e0, the 0x800 installer, which is still a
