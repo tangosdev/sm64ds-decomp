@@ -621,6 +621,11 @@ src/func_ov006_020cfa44.c
 # trampoline slices; see the note beside it in slice_tti.txt. It replaces the
 # trap in unmatched/MgTrampolineTime_Floors.cpp, which no longer defines it.
 src/func_ov006_020d01e0.c
+# the installer's own three callees; see the note beside them in slice_tti.txt.
+# None was in any slice before the installer was seated.
+src/func_ov006_020cf040.c
+src/func_ov006_020cfa28.c
+src/func_ov006_020cfc58.c
 src/func_ov006_020d09e0.c
 src/func_ov006_020d0ac0.c
 src/func_ov006_020d0b04.c

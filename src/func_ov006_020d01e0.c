@@ -15,7 +15,11 @@
 // d2 > -0x24000), the -half < d1 < half extent test, the 0x400000 branch,
 // 0x1b1 / 0x1ae, and the 0x180 / 0x100 / 0x555 grid steps.
 //
-// THE DIVERGENCES, all four of them, measured rather than eyeballed:
+// THE DIVERGENCES, and the 49 are ACCOUNTED FOR IN FULL below -- the five named
+// ranges hold 42, and the remaining 7 are the already-stated length delta (-24
+// bytes, which walks four branch displacements and the four call sites after
+// +0x698), the one extra frame slot at sp+0x34, and the +0x53c spill named in
+// divergence 1. Measured, not eyeballed:
 //
 //  1. THE 24-BYTE COPY (+0x5f4..+0x628, ~13 words). The ROM issues six ldr then
 //     six str to move relPos/rawDir into bestRel/bestDir. A whole-struct
@@ -42,9 +46,20 @@
 //  4. THE va SETUP (+0x08c..+0x0a4, 4 words). The order of the two ldrsh/str
 //     pairs.
 //
+//  5. THE OUTER-LOOP SPILL SLOT (+0x290..+0x294, 2 words). The ROM parks the
+//     inner counter's reload in sp+0x18 and this body uses sp+0x20:
+//         ROM   str r0, [sp, #0x18]  /  ldr r8, [sp, #0x18]
+//         here  str r0, [sp, #0x20]  /  ldr r5, [sp, #0x20]
+//     Same two instructions, same value, one slot apart. It is the tail of the
+//     scalar-region shift that the extra sp+0x34 slot causes -- the ROM's
+//     compiler-hoisted temps land at 0x14/0x18/0x1c and this body needs a fourth,
+//     so p2, flag and p1 all ride up with it. Whatever puts a live 14th scalar at
+//     sp+0x34 closes this at the same time; nineteen spellings were measured
+//     against that slot and every one was inert.
+//
 // NOT REGISTER NAMING, AND THE BANNER DOES NOT CLAIM IT IS. 76 further
 // instructions line up but differ in register names or pool offsets; those are
-// downstream of the four above and are not counted in the 49.
+// downstream of the five above and are not counted in the 49.
 //
 // HOW THE 49 WAS MEASURED, BECAUSE THE NUMBER MEANS NOTHING WITHOUT IT. The
 // sizes differ (0x7e8 against 0x800), so match.py's compare() returns its 999
@@ -57,8 +72,16 @@
 // state rather than codegen -- the byte gate wildcards them for the same
 // reason), intra-function branches compared by DISTANCE, and the literal pool
 // excluded. Re-scored under that one instrument on one tree at 2004/b56, the
-// banked fanout-fable near-miss row is 200 and lane TRM's phase-2 draft 210.
-// The frame is NOT normalised out of the figure; a frame difference is real.
+// banked fanout-fable near-miss row is 195 (61.2%) and lane TRM's phase-2 draft
+// 205 (59.2%). The frame is NOT normalised out of the figure; a frame difference
+// is real.
+//
+// (An earlier version of this banner said 200 and 210. Those two were measured
+// before the literal-pool exclusion was added to the scorer and never re-run
+// after, so they were pool-INCLUDED figures being compared against this body's
+// pool-EXCLUDED 49 -- five words of unresolved data relocs each, flattering this
+// seat by the same five. Both drafts were re-run with the shipped scorer to get
+// the pair above. The comparison is like-for-like now.)
 //
 // WHAT MOVED IT, so the next lane does not re-derive it: p1/p2 kept as
 // UNROUNDED s64 across the rounding; rowAbs/f3 computed inside the inner loop
@@ -108,6 +131,12 @@
 //
 // ONE OF ITS CALLS IS DEAD IN THE ROM: the fourth DotVec3 in the element loop
 // (+0x5b8) has its result discarded. It is kept because the ROM keeps it.
+//
+// THE `volatile` IN THE SWAP TEST IS LOAD-BEARING, not leftover noise. The ROM
+// re-reads both shorts from memory at +0x05c/+0x060, after the four stores just
+// above; without the volatile casts mwccarm keeps them in registers and the body
+// comes out two words SHORT and two edits worse (measured both ways, plain casts
+// and bare shorts). Do not tidy it away.
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
