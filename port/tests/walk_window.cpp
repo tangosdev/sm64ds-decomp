@@ -914,8 +914,11 @@ int hal_present_client_to_sub(int cx, int cy, int *dsx, int *dsy);
    port/hal/screen_gap.h. Everything in this file that used to spell
    ntr::STACK_H reads one of those instead. */
 int hal_sub_screen_stacked(void);
-const unsigned int *hal_sub_screen_stacked_image(const unsigned int *top);
+unsigned int *hal_sub_screen_stacked_image(const unsigned int *top);
 void hal_sub_screen_stacked_size(int *w, int *h);
+/* THE UPPER PHYSICAL SCREEN'S first row inside that image, whichever engine is
+   feeding it this frame (hal/sub_screen.cpp) */
+int hal_sub_screen_stacked_top_y(void);
 unsigned hal_sub_screen_stacked_generation(void);
 /* the focus gate (hal/sub_screen.cpp): 1 when this window is the foreground
    one, so an interactive key read can be trusted to be meant for this program */
@@ -2298,6 +2301,11 @@ static int mg_row(void)
 static const char *const PORT_RELAUNCH_CLEAR[] = {
     "SM64DS_SCENE_FRAMES", "SM64DS_SCENE_WINDOW",  "SM64DS_SCENE_NO_RENDER",
     "SM64DS_SCENE_BMP",    "SM64DS_SCENE_BMP_STACKED", "SM64DS_PAD_TEST",
+    /* the presented-image capture, for SCENE_BMP's reason exactly: two
+       processes writing one file is not a capture; and the scripted menu,
+       for SM64DS_PAD_TEST's reason -- an inherited one opens a menu in a
+       child nobody asked to have one */
+    "SM64DS_STACK_BMP",    "SM64DS_SCENE_MENU",
     "SM64DS_CLICK_TEST",   "SM64DS_WINDOW_SELFTEST", "SM64DS_SCENE_TRACE",
     "SM64DS_SCENE_SLOT9",  "SM64DS_SCENE_SUBLEVEL",
     /* the third injected-input knob; unlike the two above it has no selftest
@@ -4332,8 +4340,55 @@ static HWND host_window_open(int stacked, HDC *out_hdc, const char *title)
  */
 static unsigned g_stack_gen = ~0u;
 
+/* SM64DS_STACK_BMP=<path>[,<frame>]: WRITE THE IMAGE THIS PROGRAM IS ABOUT TO
+   PRESENT, once, at the named frame (default 0).
+ *
+ * The one thing no capture in the tree could show. SM64DS_SCENE_BMP writes the
+ * 512x384 framebuffer; SM64DS_SCENE_BMP_STACKED writes an image that
+ * port_scene_finish RE-COMPOSES from that framebuffer after the run. Both of
+ * them are pictures of engine A plus engine B, and neither is a picture of what
+ * the window showed -- which is the only thing that can settle where a HOST
+ * overlay landed, because an overlay is not in either engine.
+ *
+ * Off unless the variable is set, and then it fires once and never again: the
+ * frame count is part of the probe on a scene whose two screens exchange every
+ * frame, and a capture that could not name its frame would be unreadable there.
+ */
+static void stack_capture(const uint32_t *img)
+{
+    static int at = -2;
+    static int done;
+    static char path[512];
+    static unsigned long frame;
+    if (at == -2) {
+        at = -1;
+        if (const char *e = getenv("SM64DS_STACK_BMP")) {
+            const char *comma = strrchr(e, ',');
+            size_t n = comma ? (size_t)(comma - e) : strlen(e);
+            if (n >= sizeof path) n = sizeof path - 1;
+            memcpy(path, e, n);
+            path[n] = 0;
+            at = comma ? atoi(comma + 1) : 0;
+            if (at < 0) at = 0;
+        }
+    }
+    const unsigned long f = frame++;
+    if (at < 0 || done || !img || (long)f < (long)at) return;
+    done = 1;
+    int w = 0, h = 0;
+    hal_sub_screen_stacked_size(&w, &h);
+    if (ntr::ppu_write_bmp_px(path, img, w, h))
+        fprintf(stderr, "  [stack] wrote %s at frame %lu, %dx%d: THE PRESENTED "
+                "IMAGE, host overlays included, upper screen at row %d\n",
+                path, f, w, h, hal_sub_screen_stacked_top_y());
+    else
+        fprintf(stderr, "  [stack] could not write %s\n", path);
+    fflush(stderr);
+}
+
 static void stack_present_arm(const uint32_t *img, HWND hwnd)
 {
+    stack_capture(img);
     if (!img) return;
     const unsigned gen = hal_sub_screen_stacked_generation();
     if (gen != g_stack_gen) {
@@ -4675,10 +4730,33 @@ static int scene_window_run(void)
             budget ? "frame budget set" : "runs until the window closes");
     fflush(stderr);
 
+    /* SM64DS_SCENE_MENU=<frame>: open the debug menu on this path, at that
+       frame, without a hand on F5.
+     *
+     * SM64DS_MENU is read in main() and main() is the LEVEL path; a scene run
+     * hands over before it, so the documented "boot with the menu open" knob
+     * has never reached the one path where the menu's own screen bug lives.
+     * A FRAME rather than a plain flag because opening it at 0 would freeze
+     * the scene before it had booted -- menu_on pauses the game tick -- and a
+     * capture of a scene that never ran is a capture of nothing.
+     *
+     * WHAT IT DOES NOT PAUSE is the display, and that is why the flashing is
+     * reproducible under it: slot 24 rides the RENDER path, not the behavior
+     * one, so POWCNT1 bit 15 keeps toggling while the menu holds the world
+     * still. Measured -- scene 384, 900 frames: behavior 853, slot24 900. */
+    int scene_menu_at = -1;
+    if (const char *e = getenv("SM64DS_SCENE_MENU")) {
+        scene_menu_at = atoi(e);
+        if (scene_menu_at < 0) scene_menu_at = 0;
+        fprintf(stderr, "[scene] SM64DS_SCENE_MENU: the debug menu opens at "
+                "frame %d\n", scene_menu_at);
+    }
+
     int frame = 0, focus_was = 1, quit = 0;
     MSG msg;
     static XPad pad;
     while (!quit) {
+        if (scene_menu_at >= 0 && frame == scene_menu_at) menu_on = 1;
         while (W.PeekMessageA_(&msg, 0, 0, 0, PM_REMOVE)) {
             if (msg.message == WM_QUIT) { quit = 1; break; }
             W.TranslateMessage_(&msg);

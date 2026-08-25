@@ -3730,3 +3730,64 @@ extern "C" void port_scene_mg_panel_hits(void)
     }
     std::fflush(stdout);
 }
+
+/* ---- SM64DS_MG_RESULTS_PROBE=<frame> ---------------------------------------
+ *
+ * RAISE THE MINIGAME FRAMEWORK'S RESULTS PANEL AT A CHOSEN FRAME, so the
+ * "which screen does the play-again button land on" question can be measured
+ * instead of played for. Off unless the variable is set, and then it fires
+ * ONCE, on the named frame, and never again.
+ *
+ * WHAT IT ACTUALLY DOES, and it is the ROM's own entry point rather than a
+ * poke: it dispatches dScMgBase_c SLOT 27, func_ov004_020af27c, on the live
+ * scene object data_ov004_020beb68. That is the function the game itself calls
+ * when a minigame ends -- it seeds the three button centres at +0x4634/+0x4638/
+ * +0x463c, clears the selection at +0x4646 and sets +0x4628 to 1. Everything
+ * downstream is then the ROM's: func_ov004_020ae140 sees +0x4628 differ from
+ * +0x462c and dispatches slot 29, which for the dScMgD3DBase_c family is
+ * func_ov006_020e6d24 (dual OAM back on, sub banks re-pointed, then
+ * func_ov004_020af094, which SAVES POWCNT1 bit 15 and forces it SET), and slot
+ * 24's per-frame display swap stands down for as long as +0x4628 is nonzero.
+ *
+ * WHY A PROBE AT ALL. A headless scene run of 384 never reaches the panel: the
+ * game's own progression is blocked at func_ov006_020d01e0, the unseated 0x800
+ * installer, so no trampoline is ever built and no round is ever completed.
+ * 12000 frames measured, 11999 bit-15 changes, score 0 and level 0 throughout.
+ * The panel is reachable in real play and not in a capture, which is exactly
+ * the gap an instrument is for.
+ *
+ * IT IS NOT A SHIPPING PATH AND IT IS NOT IN ANY BATTERY ROW. Unset, this is
+ * one getenv on the first frame of a scene and two integer compares after it.
+ */
+extern "C" void port_mg_d3dbase_slot27(void *c);
+
+extern "C" void port_mg_results_probe(int frame)
+{
+    static int at = -2;
+    static int fired;
+    if (at == -2) {
+        const char *e = std::getenv("SM64DS_MG_RESULTS_PROBE");
+        at = (e && e[0]) ? std::atoi(e) : -1;
+    }
+    if (at < 0 || fired || frame < at) return;
+    if (!data_ov004_020beb68) {
+        std::fprintf(stderr, "  [results] SM64DS_MG_RESULTS_PROBE=%d: no live "
+                     "dScMgBase_c at frame %d; nothing dispatched\n", at, frame);
+        fired = 1;
+        return;
+    }
+    fired = 1;
+    char *g = (char *)data_ov004_020beb68;
+    std::fprintf(stderr, "  [results] f%d: dispatching slot 27 "
+                 "(func_ov004_020af27c) on %p; +0x4628 was %d, POWCNT1 %04x\n",
+                 frame, (void *)g, *(int *)(g + 0x4628),
+                 *(volatile unsigned short *)0x04000304);
+    port_mg_d3dbase_slot27(g);
+    std::fprintf(stderr, "  [results] f%d: +0x4628 is now %d, +0x4646 %d, "
+                 "buttons (%d,%d) (%d,%d) (%d,%d)\n",
+                 frame, *(int *)(g + 0x4628), (int)*(short *)(g + 0x4646),
+                 (int)*(short *)(g + 0x4634), (int)*(short *)(g + 0x4636),
+                 (int)*(short *)(g + 0x4638), (int)*(short *)(g + 0x463a),
+                 (int)*(short *)(g + 0x463c), (int)*(short *)(g + 0x463e));
+    std::fflush(stderr);
+}

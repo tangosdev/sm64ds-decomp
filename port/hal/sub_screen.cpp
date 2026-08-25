@@ -1410,8 +1410,16 @@ void hal_sub_screen_set_stacked(int on)
  * This file's rather than the caller's because there are two callers (the
  * window's frame loop and the scene runner) and a buffer each would be the
  * same 1.5 MB twice.
+ *
+ * THE RETURN IS NOT CONST, and it used to be. The buffer handed back is this
+ * file's own and every frame's compose rewrites the whole of it, so the const
+ * was never protecting anything from anybody; what it did do was stop the one
+ * caller that legitimately has to WRITE on the finished image -- the host's own
+ * debug overlays in tests/walk_window.cpp, which must land on a fixed PHYSICAL
+ * half and therefore cannot be painted into a framebuffer whose half moves.
+ * See hal_sub_screen_stacked_top_y below. Nothing in the GAME writes here.
  */
-const unsigned int *hal_sub_screen_stacked_image(const unsigned int *top)
+unsigned int *hal_sub_screen_stacked_image(const unsigned int *top)
 {
     static unsigned int *px;
     static size_t cap;
@@ -1463,6 +1471,27 @@ void hal_sub_screen_stacked_size(int *w, int *h)
 int hal_sub_screen_stacked_headroom(void)
 {
     return hal_screen_layout()->head_h;
+}
+
+/* THE FIRST IMAGE ROW OF THE UPPER PHYSICAL SCREEN, for the host's overlays.
+ *
+ * ppu_compose_stacked names its two destinations top_y and bottom_y for the
+ * PHYSICAL screens and picks which ENGINE goes in each off POWCNT1 bit 15, so
+ * top_y is the upper LCD's first row whichever engine is feeding it that frame.
+ * That is exactly the guarantee an overlay needs: the F3 stats, the F5 menu and
+ * the save-state toast are HOST UI, not ROM content, and they belong on one
+ * screen and one screen only. Painted into engine A's framebuffer instead they
+ * inherit the ENGINE's affinity and follow it across the swap -- which is the
+ * defect this exists to close (372/373/384/385 toggle the bit every frame, 377
+ * clears it and leaves it clear).
+ *
+ * It is head_h today and it is read off the layout rather than spelled as one,
+ * because a headroom is not the only thing that could ever sit above the upper
+ * screen and a second reader of the same number is how the two fall out of
+ * step. Pure: it reads the layout and nothing else. */
+int hal_sub_screen_stacked_top_y(void)
+{
+    return hal_screen_layout()->top_y;
 }
 
 /* And whether the rows BETWEEN the halves are a hinge or the world's own rows,

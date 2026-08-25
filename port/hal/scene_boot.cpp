@@ -430,6 +430,8 @@ void port_actor_render(void);        /* phase 5 */
 void port_actor_scene_pass(void);    /* phase 1 */
 void port_fader_advance(void);
 void port_frame_clock_tick(void);    /* phase 6: data_020a0db0 (hal/fader_wipes.cpp) */
+/* SM64DS_MG_RESULTS_PROBE (hal/scene_mg.cpp), off unless the variable is set */
+void port_mg_results_probe(int frame);
 void hal_sub_screen_init_hw(void *hwnd, int zoom);
 void hal_sub_screen_probe(void);
 void hal_sub_screen_frame_begin(void);
@@ -442,7 +444,7 @@ int hal_sub_screen_write_bmp(const char *path);
    it is a minigame, so this file is what proposes the mode. */
 void hal_sub_screen_set_stacked(int on);
 int hal_sub_screen_stacked(void);
-const unsigned int *hal_sub_screen_stacked_image(const unsigned int *top);
+unsigned int *hal_sub_screen_stacked_image(const unsigned int *top);
 /* the stacked image's live size, which the screen gap makes a variable */
 void hal_sub_screen_stacked_size(int *w, int *h);
 /* and how many of its rows are the gapless headroom above the top screen */
@@ -3832,6 +3834,12 @@ extern "C" void port_scene_tick(int frame, int tick_game)
                Pair-a-Gone card and an idle one. */
             port_frame_clock_tick();
             port_fader_advance();
+            /* SM64DS_MG_RESULTS_PROBE=<frame> (hal/scene_mg.cpp): raise the
+               minigame framework's results panel through the ROM's own slot 27
+               at a chosen frame, so the play-again prompt can be captured on a
+               scene that cannot be played to its end headless. Unset, this is
+               two integer compares. */
+            port_mg_results_probe(frame);
         }
         /* THE DISPLAY SCAN-OUT, which is where IRQ 2 lives. The DS raises the
            HBlank edge once per scanline while the picture is being drawn, and
