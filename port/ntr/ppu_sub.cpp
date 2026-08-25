@@ -552,13 +552,12 @@ void raster_obj(uint32_t dispcnt) {
                         128 dots or 256, and the tile number splits into a
                         column part and a row part accordingly.
 
-                   Engine B reads 0x...25 here on the frames that use this,
-                   so bit 5 is set (1D) and bit 22 is clear (128 bytes),
-                   which puts the twelve 64x64 sprites at tile numbers 64
-                   apart -- 8192 bytes each, back to back over the whole
-                   0x18000 the capture wrote. Both arms are here anyway: a
-                   reader that only implements the arm the one scene uses is
-                   a reader that lies the first time another scene does not.
+                   Engine B reads DISPCNT_B 0x00011025 on the frames that
+                   use this: bit 5 SET and bit 6 CLEAR, which is 2D mapping
+                   at a 256-dot width. Both arms are implemented anyway -- a
+                   reader that only does the arm the one scene uses is a
+                   reader that lies the first time another scene does not --
+                   but only the 2D arm is exercised and only it is proved.
 
                    ALPHA. attr2 bits 12-15 are the sprite's alpha, and ZERO
                    MEANS THE SPRITE IS NOT DISPLAYED -- the field is not a
@@ -575,11 +574,55 @@ void raster_obj(uint32_t dispcnt) {
                     const unsigned alpha = (a2 >> 12) & 0xF;
                     if (!alpha) continue;
                     uint32_t at;
-                    if ((dispcnt >> 5) & 1) {
+                    /* BIT 6 SELECTS THE MAPPING, BIT 5 THE 2D DIMENSION, and
+                       an earlier version of this block had the two jobs the
+                       other way round -- it chose the arm on bit 5 and took the
+                       2D width from bit 6. GBATEK's NDS DISPCNT:
+
+                         bit 5   Bitmap OBJ 2D-Dimension
+                                 (0 = 128x512 dots, 1 = 256x256 dots)
+                         bit 6   Bitmap OBJ Mapping  (0 = 2D, 1 = 1D)
+                         bit 22  Bitmap OBJ 1D-Boundary (0 = 128, 1 = 256 bytes)
+
+                       It is bit 4 that is the mapping bit for TILE OBJs, and
+                       reading the bitmap pair as if it followed that layout is
+                       how the two got swapped. */
+                    if ((dispcnt >> 6) & 1) {
+                        /* 1D: the sprite's pixels are consecutive and attr2's
+                           number steps in boundary units. NOT the arm this game
+                           uses -- see below -- and untested by anything in the
+                           tree, so it is written from the doc and left labelled
+                           as such rather than claimed. */
                         const uint32_t bnd = ((dispcnt >> 22) & 1) ? 256u : 128u;
                         at = tile * bnd + (uint32_t)(ty * w + tx) * 2u;
                     } else {
-                        const uint32_t wide = ((dispcnt >> 6) & 1) ? 256u : 128u;
+                        /* 2D: OBJ VRAM is ONE bitmap `wide` dots across and the
+                           sprite is a window onto it, so attr2 is a (column,
+                           row) pair rather than a linear offset -- low bits X in
+                           8-dot units, upper bits Y -- and the within-sprite row
+                           stride is the BITMAP's width, not the sprite's.
+
+                           THE ROM SETTLES WHICH ARM THIS IS, in one statement.
+                           src/func_ov006_020e7428.c, the family's own sprite
+                           builder (matched, and in all four family slices),
+                           opens with
+
+                               *(u32 *)0x4001000 = (reg & 0xffbfff9f) | 0x20;
+
+                           and 0xffbfff9f clears bits 5, 6 AND 22 before ORing
+                           bit 5 alone back in: mapping 2D, dimension 256x256,
+                           1D boundary deliberately zeroed because it is not in
+                           use. The same function then writes
+
+                               attr2 = (tx + (ty << 5)) | 0xf000
+
+                           with tx stepping 0,8,16,24 across and ty 0,8,16 down,
+                           which IS this encoding and is not a linear multiple of
+                           any boundary. Under it the twelve 64x64 sprites tile
+                           the 256x192 capture exactly: tile 8 -> byte 0x80 =
+                           pixel (64,0), tile 256 -> 0x8000 = (0,64), tile 536 ->
+                           0x10180 = (192,128). */
+                        const uint32_t wide = ((dispcnt >> 5) & 1) ? 256u : 128u;
                         const uint32_t mask = (wide >> 3) - 1u;   /* 0x1F or 0x0F */
                         at = ((tile & mask) * 0x10u + (tile & ~mask) * 0x80u) +
                              ((uint32_t)ty * wide + (uint32_t)tx) * 2u;
