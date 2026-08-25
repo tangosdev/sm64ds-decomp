@@ -175,7 +175,6 @@
  * without that would draw nothing and look like a decompilation bug.
  */
 
-#include <cstdio>
 
 /* ---- THE MERGE MADE THIS FILE THE ONE DEFINER OF ALL THREE -----------------
  *
@@ -236,19 +235,23 @@ extern "C" {
    written inside that body, so "gated == 0 is the expected shape of this build"
    -- which the record readout and both censuses said, correctly, while the body
    was trapped -- is NO LONGER TRUE. A zero gate after a stroke is now a
-   finding, not the floor. */
-static unsigned g_floor_020cf2fc;
+   finding, not the floor.
 
-/* ROM 0x020cf2fc, 0x45c, UNDECOMPILED.  Arity from the call site. */
-void func_ov006_020cf2fc(char *)
-{
-    if (!g_floor_020cf2fc)
-        std::fprintf(stderr, "  [mg384/385] FLOOR func_ov006_020cf2fc (0x45c, "
-                     "no src, no delinks block) wanted\n");
-    ++g_floor_020cf2fc;
-}
+   g_floor_020cf2fc IS GONE TOO, AND WITH IT THIS FILE'S LAST TRAP. Run mg13
+   lane TRAMP decompiled func_ov006_020cf2fc, THE MESH DRAW, and
+   src/func_ov006_020cf2fc.c is a line in both trampoline slices now -- as a
+   TT_SHARED_HOSTGEN symbol, because all thirty-two of its geometry-engine
+   stores are raw MMIO and the src/ copy would latch every one of them into
+   mapped memory. It is an honest NONMATCHING seat (25 divergences against 258
+   ROM code words; the 0x7c frame and all six call offsets are the ROM's) and
+   its banner states every divergence.
 
-/* TWO SLOTS ARE RETIRED NOW, NOT SILENT.  Every accessor below still takes and
+   WHAT THAT CHANGES FOR A READER OF THE CENSUS: with the installer AND the mesh
+   draw both real, a stroke that reaches the gate now has a body to draw it.
+   "The trampoline is built but nothing appears" is no longer explainable by a
+   floor in this file -- there are none left in it. */
+
+/* ALL THREE SLOTS ARE RETIRED NOW, NOT SILENT.  Every accessor below still takes and
    fills the same arguments it did in run mg11, because two seat files and two
    censuses read them and neither was touched for this; what changed is that the
    020d0c38 slot and the 020d01e0 slot can no longer be anything but 0, since
@@ -262,7 +265,7 @@ unsigned port_mg_tti_hittest_calls(void) { return 0; }
 void port_mg_tti_floor_counts(unsigned *hit, unsigned *f2fc, unsigned *f1e0)
 {
     *hit  = 0;                  /* RETIRED, see above */
-    *f2fc = g_floor_020cf2fc;
+    *f2fc = 0;                  /* RETIRED, see above */
     *f1e0 = 0;                  /* RETIRED, see above */
 }
 
@@ -270,7 +273,7 @@ void port_mg_tti_floor_counts(unsigned *hit, unsigned *f2fc, unsigned *f1e0)
    (unmatched/MgTrampolineTerror_Faces.cpp) */
 void port_mg_shared_trap_counts(unsigned *f2fc, unsigned *f1e0, unsigned *fc38)
 {
-    if (f2fc) *f2fc = g_floor_020cf2fc;
+    if (f2fc) *f2fc = 0;        /* RETIRED, see above */
     if (f1e0) *f1e0 = 0;        /* RETIRED, see above */
     if (fc38) *fc38 = 0;        /* RETIRED, see above */
 }
