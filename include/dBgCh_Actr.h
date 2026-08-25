@@ -79,8 +79,8 @@ struct Vector3_16;   /* pointers only; see the note above */
 struct dBgCh_Actr : dBgCh {
     u32 mFlags;                 /* 0x010 - word, see above */
     dActor_c *mActor;              /* 0x014 - Init arg 1 */
-    Fix12i unk_018;             /* 0x018 - Init arg 2, the sphere radius */
-    Fix12i unk_01c;             /* 0x01c - Init arg 3, a height */
+    Fix12i mRadius;             /* 0x018 - Init arg 2, the sphere radius */
+    Fix12i mHeight;             /* 0x01c - Init arg 3, a height */
 
     /* THE TWO SUB-OBJECTS, now typed as themselves. Both classes carry real,
        out-of-line constructors, which is what lets this class's constructor
@@ -94,7 +94,7 @@ struct dBgCh_Actr : dBgCh {
     dBgCh_SphCrr mSphereClsn;   /* 0x020 - spans [0x20,0x130) */
     s32 unk_130;                /* 0x130 - Init stores its Vector3_16 * arg 5 */
     dBgCh_Lin mRaycastLine;     /* 0x134 - spans [0x134,0x1b8) */
-    Fix12i unk_1b8;             /* 0x1b8 - (?) Init sets 0x1000 */
+    Fix12i mScale;              /* 0x1b8 - (?) Init sets 0x1000 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     /* DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the key-function

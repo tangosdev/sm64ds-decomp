@@ -121,8 +121,8 @@ void dBgCh_Actr::UpdateContinuousNoLava()
     sphere.y = pos[1];
     sphere.z = pos[2];
     sphere.y += height;
-    _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(((char*)this) + 0x20, &sphere, unk_018, *(void**)((char*)&mActor));
-    mSphereClsn.unk_108 = unk_1b8;
+    _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(((char*)this) + 0x20, &sphere, mRadius, *(void**)((char*)&mActor));
+    mSphereClsn.unk_108 = mScale;
     if (pos[1] - prev[1] > 0)
         *(u8*)AT(((char*)this), 0x90) |= 0x20;
     if (floorFlag != 0) {

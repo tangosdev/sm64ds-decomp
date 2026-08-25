@@ -39,8 +39,8 @@ void dBgCh_Actr::UpdateDiscreteNoLava()
     v.z = src->z;
     v.y = sy + mHeight;
     _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(((char *)this) + 0x20, &v,
-        unk_018, *(void **)((char *)&mActor));
-    mSphereClsn.unk_108 = unk_1b8;
+        mRadius, *(void **)((char *)&mActor));
+    mSphereClsn.unk_108 = mScale;
     if (src->y - p68->y > 0) {
         *(unsigned char *)((char *)&mSphereClsn.flags) |= 0x20;
     }

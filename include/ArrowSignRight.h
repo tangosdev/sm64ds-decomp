@@ -42,9 +42,9 @@ struct ArrowSignRight {
     Matrix4x3 mClsnMat;                /* 0x2ec */
     u8  pad_31c[0x4];
     ShadowModel mShadowModel;          /* 0x320 */
-    u8 unk_348;                        /* 0x348 */
+    u8 mShadowMat;                        /* 0x348 */
     u8  pad_349[0x33];
-    u8 unk_37c;                        /* 0x37c */
+    u8 mVariant;                        /* 0x37c */
     u8  pad_37d[0x3];
 
     ~ArrowSignRight();
@@ -63,8 +63,8 @@ static_assert(offsetof(ArrowSignRight, mModel) == 0x0d4, "ArrowSignRight mModel"
 static_assert(offsetof(ArrowSignRight, mMeshCollider) == 0x124, "ArrowSignRight collider");
 static_assert(offsetof(ArrowSignRight, mClsnMat) == 0x2ec, "ArrowSignRight matrix");
 static_assert(offsetof(ArrowSignRight, mShadowModel) == 0x320, "ArrowSignRight shadow");
-static_assert(offsetof(ArrowSignRight, unk_348) == 0x348, "ArrowSignRight +0x348");
-static_assert(offsetof(ArrowSignRight, unk_37c) == 0x37c, "ArrowSignRight +0x37c");
+static_assert(offsetof(ArrowSignRight, mShadowMat) == 0x348, "ArrowSignRight +0x348");
+static_assert(offsetof(ArrowSignRight, mVariant) == 0x37c, "ArrowSignRight +0x37c");
 static_assert(sizeof(ArrowSignRight) == 0x380, "ArrowSignRight host size");
 
 #else

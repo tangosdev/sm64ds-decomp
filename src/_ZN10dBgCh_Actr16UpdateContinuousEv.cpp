@@ -132,7 +132,7 @@ void dBgCh_Actr::UpdateContinuous()
     _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(((char*)this) + 0x20, &sphere, mRadius, *(void**)((char*)&mActor));
     if (func_0203553c(((char*)this)) == 0)
         *(u8*)AT(((char*)this), 0x90) |= 0x40;
-    mSphereClsn.unk_108 = unk_1b8;
+    mSphereClsn.unk_108 = mScale;
     if (pos[1] - prev[1] > 0)
         *(u8*)AT(((char*)this), 0x90) |= 0x20;
     if (floorFlag != 0) {
