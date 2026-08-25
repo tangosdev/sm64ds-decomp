@@ -113,7 +113,3 @@ ModelBase::~ModelBase()
 // target routes through the Memory layer here -- matching how _Znwj is
 // handled in hal/cxxname_bridge.cpp.
 extern "C" void _ZdlPv(void *p) { _ZN6Memory10DeallocateEPv(p); }
-
-// src/_ZN9ModelBaseD2Ev.c calls a bare `Deallocate` at 0x02018144 -- the flat
-// spelling that predates modelling Memory as a class. Same destination.
-extern "C" void Deallocate(void *p) { _ZN6Memory10DeallocateEPv(p); }

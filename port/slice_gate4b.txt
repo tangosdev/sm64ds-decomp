@@ -64,4 +64,3 @@ src/_ZN5Model11UpdateVertsEv.cpp
 src/_ZN5Model9Virtual10ER9Matrix4x3.cpp
 src/_ZN5ModelD1Ev.cpp
 src/func_0203cbc0.c
-src/_ZN9ModelBaseD2Ev.c

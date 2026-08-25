@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "dBgPc.h"
 #include "dBgW.h"
 #include "dBgW_Kc.h"
 #include "dBgPc.h"
@@ -78,6 +79,8 @@ static_assert(sizeof(dBgWHeir) == sizeof(dBgW), "dBgW heir changed the layout");
 extern "C" {
 void _ZN4dBgWC2Ev(void *self)    { ::new (self) dBgWHeir(); }
 void _ZN7dBgW_KcC1Ev(void *self) { ::new (self) dBgW_Kc(); }
+void _ZN5dBgPcC1Ev(void *self)   { ::new (self) dBgPc(); }
+void _ZN5dBgPcD1Ev(void *self)   { ((dBgPc *)self)->~dBgPc(); }
 }
 
 // dBgW_Kc inherits three DetectClsn overloads; gate 8 dispatches the dBgCh_Lin
