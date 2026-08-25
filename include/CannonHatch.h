@@ -53,7 +53,7 @@ struct CannonHatch {
     u8  unk_010;                 /* 0x010 */
     u8  unk_011;                 /* 0x011 */
     u8  unk_012;                 /* 0x012 */
-    u8  unk_013;                 /* 0x013 */
+    u8  pauseFlags;                 /* 0x013 */
     u8  sceneNode[0x14];               /* 0x014 */
     u8  behavNode[0x10];               /* 0x028 */
     u8  renderNode[0x10];              /* 0x038 */

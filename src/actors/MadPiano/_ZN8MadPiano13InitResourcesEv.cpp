@@ -32,8 +32,8 @@ int MadPiano::InitResources()
     _ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel3);
     f = _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov063_0211ef90);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char *)this) + 0x320, f, 0, 0x1000, 0);
-    unk_09c = -0x2000;
-    unk_0a0 = -0x3c000;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
     unk_6d4 = mPosX;
     unk_6d8 = mPosY;
     unk_6dc = mPosZ;

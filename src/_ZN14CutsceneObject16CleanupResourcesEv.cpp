@@ -10,7 +10,7 @@ struct Obj { virtual void v00(); virtual void m04(); };
 
 int CutsceneObject::CleanupResources()
 {
-  int r1 = unk_008;
+  int r1 = param1;
   if (r1 == 0x2e) return func_ov002_020f63a0(((char*)this));
   if (r1 == 0x2f) return func_ov002_020f23d0(((char*)this));
   Obj* a = *(Obj**)((char*)&mModel);

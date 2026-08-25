@@ -21,11 +21,11 @@ struct SlidingBox {
     u8  pad_092[0x2];
     s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x2];
-    s32 unk_098;            /* 0x098 */
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mHorzSpeed;            /* 0x098 */
+    s32 mVertAccel;            /* 0x09c */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     s32 unk_0a4;            /* 0x0a4 */
-    s32 unk_0a8;            /* 0x0a8 */
+    s32 mVertSpeed;            /* 0x0a8 */
     s32 unk_0ac;            /* 0x0ac */
     u8  pad_0b0[0x24];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.

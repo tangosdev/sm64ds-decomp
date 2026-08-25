@@ -27,7 +27,7 @@ int PyramidLift::Behavior()
         mPosY = unk_374 + d;
         if (mShakeTimer == 8) {
             mState = 2;
-            unk_0a8 = -0xa000;
+            mVertSpeed = -0xa000;
         }
         {
             unsigned short *pa = (unsigned short*)(((int)((char*)this) + 0x3f4));
@@ -46,7 +46,7 @@ int PyramidLift::Behavior()
         }
         {
             int *py = (int*)(((int)((char*)this) + 0x60));
-            *py = *py + unk_0a8;
+            *py = *py + mVertSpeed;
         }
         if (mPosY < 0x80000) {
             mPosY = 0x80000;
@@ -66,7 +66,7 @@ int PyramidLift::Behavior()
         {
             unsigned short *pa = (unsigned short*)(((int)((char*)this) + 0x3f4));
             if (mShakeTimer >= 8) {
-                unk_0a8 = z;
+                mVertSpeed = z;
                 mPosY = 0x80000;
             }
             *pa = *pa + 1;

@@ -6,7 +6,7 @@
 
 struct ExtendingPlatform {
     u8  pad_000[0x8e];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x44];
     s8  mGrowing;            /* 0x0d4 */
     u8  pad_0d5[0x3];

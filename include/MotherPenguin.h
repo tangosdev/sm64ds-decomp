@@ -21,8 +21,8 @@ struct MotherPenguin {
     s32 mScaleY;            /* 0x084 */
     s32 mScaleZ;            /* 0x088 */
     u8  pad_08c[0x10];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mVertAccel;            /* 0x09c */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     u8  pad_0a4[0x30];
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build
        checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad

@@ -8,8 +8,8 @@
 
 struct BrickBlock {
     u8  pad_000[0x8];
-    s32 unk_008;            /* 0x008 */
-    u16 unk_00c;            /* 0x00c */
+    s32 param1;            /* 0x008 */
+    u16 actorID;            /* 0x00c */
     u8  pad_00e[0xc6];
     s8  unk_0d4;            /* 0x0d4 */
     u8  unk_0d5;            /* 0x0d5 */

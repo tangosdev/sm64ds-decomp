@@ -48,7 +48,7 @@ int Flamethrower::InitResources()
         in.z = data_ov095_02136fb0[i];
         MulVec3Mat4x3(&in, ((char *)this) + 0x434, &dst);
         if (im1 < 0) {
-            Vec3_Add(&sum, (struct Vec3 *)((char *)&unk_05c), &dst);
+            Vec3_Add(&sum, (struct Vec3 *)((char *)&mPosX), &dst);
             *(int *)(p6 + 0x3a4) = sum.x;
             *(int *)(p6 + 0x3a8) = sum.y;
             *(int *)(p6 + 0x3ac) = sum.z;

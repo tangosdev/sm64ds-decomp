@@ -34,9 +34,9 @@ int MadPiano::Behavior()
   func_ov063_0211ddf4(((char*)this));
   ((struct dActor_c*)((char*)this))->UpdatePos(0);
   if (Vec3_HorzDist((struct Vector3*)((char*)&unk_6d4), (struct Vector3*)((char*)&mPosX)) > 0x180000) {
-    mPosX = unk_068;
-    mPosY = unk_06c;
-    mPosZ = unk_070;
+    mPosX = mPrevPosX;
+    mPosY = mPrevPosY;
+    mPosZ = mPrevPosZ;
   }
   {
     int r1 = unk_6cc;

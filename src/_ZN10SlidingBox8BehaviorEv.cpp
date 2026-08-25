@@ -51,8 +51,8 @@ int SlidingBox::Behavior()
         mAngleY = src[1];
         mAngleZ = src[2];
         mPrevAngleY = mAngleY;
-        unk_098 = data_02082214[((u16)mAngleX >> 4) * 2] * 0x8c;
-        mHorzPos += unk_098;
+        mHorzSpeed = data_02082214[((u16)mAngleX >> 4) * 2] * 0x8c;
+        mHorzPos += mHorzSpeed;
         spd = mHorzPos;
         if (spd >= 0x4ff000)
             mHorzPos = 0x4ff000;
@@ -60,21 +60,21 @@ int SlidingBox::Behavior()
             mHorzPos = -0x32000;
         mPosX = unk_4e0 + (int)(((long long)mHorzPos * data_02082214[((u16)mAngleY >> 4) * 2] + 0x800) >> 12);
         mPosZ = unk_4e8 + (int)(((long long)mHorzPos * data_02082214[((u16)mAngleY >> 4) * 2 + 1] + 0x800) >> 12);
-        unk_098 = 0;
+        mHorzSpeed = 0;
         _ZN8dActor_c9UpdatePosEP5dCc_c((char *)this, 0);
         dBgCh_Actr_UpdateContinuous_Veneer((char *)&mWithMeshClsn);
         if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mWithMeshClsn)) {
             void *fr = _ZNK10dBgCh_Actr14GetFloorResultEv((char *)&mWithMeshClsn);
             _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)fr + 4, &normal);
             if (normal.y != 0) {
-                unk_0a8 = -(_ZN4cstd4fdivEii(
+                mVertSpeed = -(_ZN4cstd4fdivEii(
                     (int)(((long long)normal.x * unk_0a4 + 0x800) >> 12)
                   + (int)(((long long)normal.z * unk_0ac + 0x800) >> 12),
                     normal.y) + 0x8000);
             }
         }
         if (_ZN8dActor_c13DistToCPlayerEv((char *)this) < 0x7d0000) {
-            int vel = unk_098;
+            int vel = mHorzSpeed;
             if (vel < 0)
                 vel = -vel;
             if (vel > 0x3000) {
