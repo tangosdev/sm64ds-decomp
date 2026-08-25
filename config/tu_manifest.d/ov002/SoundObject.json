@@ -29,7 +29,7 @@
       "symbol": "_ZN11SoundObjectD0Ev",
       "address": "0x020f9370",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN11SoundObjectD0Ev.c",
+      "legacy_source": "src/_ZN11SoundObjectD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -109,7 +109,7 @@
     ],
     "substitutedObjectPaths": [
       "src/_ZN11SoundObjectD1Ev.cpp",
-      "src/_ZN11SoundObjectD0Ev.c",
+      "src/_ZN11SoundObjectD0Ev.cpp",
       "src/func_ov002_020f93a8.cpp",
       "src/func_ov002_020f9468.c",
       "src/_ZN11SoundObject8BehaviorEv.cpp",

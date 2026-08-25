@@ -156,7 +156,7 @@ src/_ZN23FloatOnWaterPlatformJrbD1Ev.cpp:
     complete
     .text start:0x02112ef4 end:0x02112f44
 
-src/_ZN23FloatOnWaterPlatformJrbD0Ev.c:
+src/_ZN23FloatOnWaterPlatformJrbD0Ev.cpp:
     complete
     .text start:0x02112f44 end:0x02112fa8
 

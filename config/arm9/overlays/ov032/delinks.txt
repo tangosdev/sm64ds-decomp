@@ -8,7 +8,7 @@ src/_ZN12daBakubaku_cD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111f0
 
-src/_ZN12daBakubaku_cD0Ev.c:
+src/_ZN12daBakubaku_cD0Ev.cpp:
     complete
     .text start:0x021111f0 end:0x02111254
 
@@ -104,7 +104,7 @@ src/_ZN9HugeCoverD1Ev.cpp:
     complete
     .text start:0x021124a8 end:0x021124ec
 
-src/_ZN9HugeCoverD0Ev.c:
+src/_ZN9HugeCoverD0Ev.cpp:
     complete
     .text start:0x021124ec end:0x02112544
 

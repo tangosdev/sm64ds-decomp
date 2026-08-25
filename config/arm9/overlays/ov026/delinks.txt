@@ -8,7 +8,7 @@ src/_ZN17daObjWlPolelift_cD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111e0
 
-src/_ZN17daObjWlPolelift_cD0Ev.c:
+src/_ZN17daObjWlPolelift_cD0Ev.cpp:
     complete
     .text start:0x021111e0 end:0x02111234
 
@@ -72,7 +72,7 @@ src/_ZN9SubmarineD1Ev.cpp:
     complete
     .text start:0x021118b8 end:0x021118fc
 
-src/_ZN9SubmarineD0Ev.c:
+src/_ZN9SubmarineD0Ev.cpp:
     complete
     .text start:0x021118fc end:0x02111954
 

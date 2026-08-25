@@ -35,7 +35,7 @@ src/_ZN11RickshawBdwD1Ev.cpp:
     complete
     .text start:0x021113fc end:0x0211144c
 
-src/_ZN11RickshawBdwD0Ev.c:
+src/_ZN11RickshawBdwD0Ev.cpp:
     complete
     .text start:0x0211144c end:0x021114b0
 
@@ -55,7 +55,7 @@ src/_ZN19RickshawPlatformBdwD1Ev.cpp:
     complete
     .text start:0x02111518 end:0x02111568
 
-src/_ZN19RickshawPlatformBdwD0Ev.c:
+src/_ZN19RickshawPlatformBdwD0Ev.cpp:
     complete
     .text start:0x02111568 end:0x021115cc
 
@@ -75,7 +75,7 @@ src/_ZN17daObjKm1_Dorifu_cD1Ev.cpp:
     complete
     .text start:0x02111630 end:0x021116b0
 
-src/_ZN17daObjKm1_Dorifu_cD0Ev.c:
+src/_ZN17daObjKm1_Dorifu_cD0Ev.cpp:
     complete
     .text start:0x021116b0 end:0x02111744
 

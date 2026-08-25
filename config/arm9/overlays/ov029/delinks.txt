@@ -8,7 +8,7 @@ src/_ZN29FloatOnWaterPlatformWdwSquareD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111f0
 
-src/_ZN29FloatOnWaterPlatformWdwSquareD0Ev.c:
+src/_ZN29FloatOnWaterPlatformWdwSquareD0Ev.cpp:
     complete
     .text start:0x021111f0 end:0x02111254
 
@@ -136,7 +136,7 @@ src/_ZN32FloatOnWaterPlatformWdwRectangleD1Ev.cpp:
     complete
     .text start:0x02111ea4 end:0x02111ef4
 
-src/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.c:
+src/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.cpp:
     complete
     .text start:0x02111ef4 end:0x02111f58
 
@@ -152,7 +152,7 @@ src/_ZN19RotatingPlatformWdwD1Ev.cpp:
     complete
     .text start:0x02112080 end:0x021120d0
 
-src/_ZN19RotatingPlatformWdwD0Ev.c:
+src/_ZN19RotatingPlatformWdwD0Ev.cpp:
     complete
     .text start:0x021120d0 end:0x02112134
 

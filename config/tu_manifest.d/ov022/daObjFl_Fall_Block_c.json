@@ -29,7 +29,7 @@
       "symbol": "_ZN20daObjFl_Fall_Block_cD0Ev",
       "address": "0x021123d0",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN20daObjFl_Fall_Block_cD0Ev.c",
+      "legacy_source": "src/_ZN20daObjFl_Fall_Block_cD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -91,7 +91,7 @@
     "delinksChanged": false,
     "substitutedObjectPaths": [
       "src/_ZN20daObjFl_Fall_Block_cD1Ev.cpp",
-      "src/_ZN20daObjFl_Fall_Block_cD0Ev.c",
+      "src/_ZN20daObjFl_Fall_Block_cD0Ev.cpp",
       "src/_ZN20daObjFl_Fall_Block_c16CleanupResourcesEv.cpp",
       "src/_ZN20daObjFl_Fall_Block_c13InitResourcesEv.cpp"
     ],

@@ -203,7 +203,7 @@ src/_ZN4DoorD1Ev.cpp:
     complete
     .text start:0x021443f4 end:0x02144424
 
-src/_ZN4DoorD0Ev.c:
+src/_ZN4DoorD0Ev.cpp:
     complete
     .text start:0x02144424 end:0x02144468
 

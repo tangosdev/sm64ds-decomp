@@ -27,14 +27,14 @@
       "symbol": "_ZN12daObjAbuku_cD1Ev",
       "address": "0x020b3298",
       "size": "0x00000030",
-      "legacy_source": "src/_ZN12daObjAbuku_cD1Ev.c",
+      "legacy_source": "src/_ZN12daObjAbuku_cD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN12daObjAbuku_cD0Ev",
       "address": "0x020b32c8",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN12daObjAbuku_cD0Ev.c",
+      "legacy_source": "src/_ZN12daObjAbuku_cD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -750,8 +750,8 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN12daObjAbuku_cD1Ev.c",
-      "src/_ZN12daObjAbuku_cD0Ev.c",
+      "src/_ZN12daObjAbuku_cD1Ev.cpp",
+      "src/_ZN12daObjAbuku_cD0Ev.cpp",
       "src/func_ov002_020b330c.cpp",
       "src/func_ov002_020b3344.c",
       "src/_ZN12daObjAbuku_c8BehaviorEv.cpp",
@@ -805,8 +805,8 @@
         "mergedBytes": 7576,
         "contributionEquivalent": "7/7",
         "substitutedObjectPaths": [
-          "src/_ZN12daObjAbuku_cD1Ev.c",
-          "src/_ZN12daObjAbuku_cD0Ev.c",
+          "src/_ZN12daObjAbuku_cD1Ev.cpp",
+          "src/_ZN12daObjAbuku_cD0Ev.cpp",
           "src/func_ov002_020b330c.cpp",
           "src/func_ov002_020b3344.c",
           "src/_ZN12daObjAbuku_c8BehaviorEv.cpp",
@@ -1183,8 +1183,8 @@
         "mergedBytes": 7576,
         "contributionEquivalent": "7/7",
         "substitutedObjectPaths": [
-          "src/_ZN12daObjAbuku_cD1Ev.c",
-          "src/_ZN12daObjAbuku_cD0Ev.c",
+          "src/_ZN12daObjAbuku_cD1Ev.cpp",
+          "src/_ZN12daObjAbuku_cD0Ev.cpp",
           "src/func_ov002_020b330c.cpp",
           "src/func_ov002_020b3344.c",
           "src/_ZN12daObjAbuku_c8BehaviorEv.cpp",

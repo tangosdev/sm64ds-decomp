@@ -29,7 +29,7 @@
       "symbol": "_ZN17daObjKm1_Dorifu_cD0Ev",
       "address": "0x021116b0",
       "size": "0x00000094",
-      "legacy_source": "src/_ZN17daObjKm1_Dorifu_cD0Ev.c",
+      "legacy_source": "src/_ZN17daObjKm1_Dorifu_cD0Ev.cpp",
       "ordinal": 1
     },
     {

@@ -204,7 +204,7 @@ src/_ZN11daBgSnwmn_cD1Ev.cpp:
     complete
     .text start:0x02120824 end:0x02120874
 
-src/_ZN11daBgSnwmn_cD0Ev.c:
+src/_ZN11daBgSnwmn_cD0Ev.cpp:
     complete
     .text start:0x02120874 end:0x021208d8
 

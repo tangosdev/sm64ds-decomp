@@ -8,7 +8,7 @@ src/_ZN13PoleBillboardD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111d0
 
-src/_ZN13PoleBillboardD0Ev.c:
+src/_ZN13PoleBillboardD0Ev.cpp:
     complete
     .text start:0x021111d0 end:0x02111214
 
@@ -260,7 +260,7 @@ src/_ZN18RotatingPlatformWfD1Ev.cpp:
     complete
     .text start:0x02112bd0 end:0x02112c20
 
-src/_ZN18RotatingPlatformWfD0Ev.c:
+src/_ZN18RotatingPlatformWfD0Ev.cpp:
     complete
     .text start:0x02112c20 end:0x02112c84
 
@@ -280,7 +280,7 @@ src/_ZN11FallBlockWfD1Ev.cpp:
     complete
     .text start:0x02112cf4 end:0x02112d44
 
-src/_ZN11FallBlockWfD0Ev.c:
+src/_ZN11FallBlockWfD0Ev.cpp:
     complete
     .text start:0x02112d44 end:0x02112da8
 

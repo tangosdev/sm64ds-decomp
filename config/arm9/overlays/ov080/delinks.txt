@@ -8,7 +8,7 @@ src/_ZN9MontyMoleD1Ev.cpp:
     complete
     .text start:0x02123740 end:0x02123778
 
-src/_ZN9MontyMoleD0Ev.c:
+src/_ZN9MontyMoleD0Ev.cpp:
     complete
     .text start:0x02123778 end:0x021237c4
 

@@ -248,7 +248,7 @@ src/_ZN5StumpD1Ev.cpp:
     complete
     .text start:0x021333fc end:0x02133440
 
-src/_ZN5StumpD0Ev.c:
+src/_ZN5StumpD0Ev.cpp:
     complete
     .text start:0x02133440 end:0x02133498
 

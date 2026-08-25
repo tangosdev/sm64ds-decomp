@@ -8,7 +8,7 @@ src/_ZN8BookShotD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111f0
 
-src/_ZN8BookShotD0Ev.c:
+src/_ZN8BookShotD0Ev.cpp:
     complete
     .text start:0x021111f0 end:0x02111254
 

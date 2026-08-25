@@ -8,7 +8,7 @@ src/_ZN8GoombossD1Ev.cpp:
     complete
     .text start:0x0211f000 end:0x0211f0a0
 
-src/_ZN8GoombossD0Ev.c:
+src/_ZN8GoombossD0Ev.cpp:
     complete
     .text start:0x0211f0a0 end:0x0211f154
 

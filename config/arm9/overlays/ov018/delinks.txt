@@ -8,7 +8,7 @@ src/_ZN7SkiLiftD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111e4
 
-src/_ZN7SkiLiftD0Ev.c:
+src/_ZN7SkiLiftD0Ev.cpp:
     complete
     .text start:0x021111e4 end:0x0211123c
 
@@ -144,7 +144,7 @@ src/_ZN15PowerStarCreateD1Ev.cpp:
     complete
     .text start:0x021126d4 end:0x021126f8
 
-src/_ZN15PowerStarCreateD0Ev.c:
+src/_ZN15PowerStarCreateD0Ev.cpp:
     complete
     .text start:0x021126f8 end:0x02112730
 
