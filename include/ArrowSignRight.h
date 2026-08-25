@@ -4,6 +4,8 @@
 #include "types.h"
 #include "dBgW_KcMbg.h"
 
+struct Player;
+
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
  * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
@@ -16,8 +18,58 @@
 
 #ifdef __cplusplus
 
-#include "dBgActor_c.h"
+#include "common.h"
+#include "Model.h"
 #include "ShadowModel.h"
+
+#if defined(SM64DS_PLATFORM_PC) && defined(_MSC_VER)
+#include <stddef.h>
+/* mwccarm reuses dBgActor_c's two bytes of tail padding, placing this class's
+   first derived storage at 0x31e. MSVC starts after sizeof(dBgActor_c)==0x320,
+   which shifts the derived fields and grows the object to 0x384 even though
+   ArrowSignRight_Spawn allocates exactly 0x380. The port supplies its vtable
+   manually, so use a flat host view with every exercised field pinned to the
+   ROM offset. The matching build below retains the real inheritance. */
+struct ArrowSignRight {
+    void *vtable;                      /* 0x000 */
+    u8  pad_004[0x8];
+    u16 actorID;                       /* 0x00c */
+    u8  pad_00e[0x80];
+    s16 mAngleY;                       /* 0x08e */
+    u8  pad_090[0x44];
+    Model mModel;                      /* 0x0d4 */
+    dBgW_KcMbg mMeshCollider;          /* 0x124 */
+    Matrix4x3 mClsnMat;                /* 0x2ec */
+    u8  pad_31c[0x4];
+    ShadowModel mShadowModel;          /* 0x320 */
+    u8 unk_348;                        /* 0x348 */
+    u8  pad_349[0x33];
+    u8 unk_37c;                        /* 0x37c */
+    u8  pad_37d[0x3];
+
+    ~ArrowSignRight();
+    int Behavior();
+    int CleanupResources();
+    int InitResources();
+    int Render();
+    int OnAttacked1(dActor_c &other);
+    void OnHitByMegaChar(Player &player);
+    void Kill();
+};
+
+static_assert(offsetof(ArrowSignRight, actorID) == 0x00c, "ArrowSignRight actorID");
+static_assert(offsetof(ArrowSignRight, mAngleY) == 0x08e, "ArrowSignRight mAngleY");
+static_assert(offsetof(ArrowSignRight, mModel) == 0x0d4, "ArrowSignRight mModel");
+static_assert(offsetof(ArrowSignRight, mMeshCollider) == 0x124, "ArrowSignRight collider");
+static_assert(offsetof(ArrowSignRight, mClsnMat) == 0x2ec, "ArrowSignRight matrix");
+static_assert(offsetof(ArrowSignRight, mShadowModel) == 0x320, "ArrowSignRight shadow");
+static_assert(offsetof(ArrowSignRight, unk_348) == 0x348, "ArrowSignRight +0x348");
+static_assert(offsetof(ArrowSignRight, unk_37c) == 0x37c, "ArrowSignRight +0x37c");
+static_assert(sizeof(ArrowSignRight) == 0x380, "ArrowSignRight host size");
+
+#else
+
+#include "dBgActor_c.h"
 
 struct ArrowSignRight : dBgActor_c {
     u8  pad_31e[0x2];
@@ -46,6 +98,8 @@ struct ArrowSignRight : dBgActor_c {
 };
 
 typedef char ArrowSignRight_size_must_be_0x380[sizeof(ArrowSignRight) == 0x380 ? 1 : -1];
+
+#endif /* SM64DS_PLATFORM_PC && _MSC_VER */
 
 #else
 

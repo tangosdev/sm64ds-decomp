@@ -164,9 +164,20 @@ class TrackedManifestTests(unittest.TestCase):
 
     def test_rewriting_the_tracked_manifest_is_a_no_op(self):
         """Saving what was just loaded must not churn the tree -- otherwise every
-        tubuild run would show spurious diffs on entries it never touched."""
+        tubuild run would show spurious diffs on entries it never touched.
+
+        Line endings are normalised before comparing, and deliberately so: this
+        asserts a property of the CONTENT, and the working copy's endings are not
+        content. Under core.autocrlf=true git's checkout filter hands some entry
+        files back as CRLF while tu_manifest.save writes LF, which made this fail
+        on Windows for a tree whose committed blobs were all LF -- a false red
+        about the checkout, not about the manifest. .gitattributes now pins
+        `config/tu_manifest.d/**/*.json text eol=lf`, and the LF-writing half of
+        the property is asserted directly by test_dump_writes_lf below.
+        """
         def snap(root):
-            return {p.relative_to(root).as_posix(): p.read_bytes()
+            return {p.relative_to(root).as_posix():
+                    p.read_bytes().replace(b"\r\n", b"\n")
                     for p in root.rglob("*.json")}
         before = snap(TUM.DEFAULT_ROOT)
         with tempfile.TemporaryDirectory() as td:
@@ -176,6 +187,21 @@ class TrackedManifestTests(unittest.TestCase):
         self.assertEqual(sorted(before), sorted(after))
         for name in before:
             self.assertEqual(before[name], after[name], f"{name} would be rewritten")
+
+    def test_dump_writes_lf(self):
+        """The other half of the property above: what tu_manifest writes is LF.
+
+        Normalising in the comparison would otherwise hide a real regression here
+        -- e.g. dropping newline="\\n" from _dump, which on Windows silently turns
+        every manifest write into a whole-file diff.
+        """
+        with tempfile.TemporaryDirectory() as td:
+            root = pathlib.Path(td) / "tu_manifest.d"
+            TUM.save({"entries": [_entry("ov1/A")]}, root)
+            for path in root.rglob("*.json"):
+                raw = path.read_bytes()
+                self.assertIn(b"\n", raw, f"{path.name} has no newline at all")
+                self.assertNotIn(b"\r\n", raw, f"{path.name} was written with CRLF")
 
 
 class ConsumersAcceptADirectoryRootTests(unittest.TestCase):
