@@ -7,7 +7,7 @@ src/_ZN14ArrowSignRight13InitResourcesEv.cpp
 src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp
 src/_ZN14ArrowSignRight8BehaviorEv.cpp
 src/_ZN14ArrowSignRight6RenderEv.cpp
-src/_ZN10dBgActor_cC2Ev.c
+src/_ZN10dBgActor_cC2Ev.cpp
 src/_ZN8dActor_cC2Ev.cpp
 # ActorBase C1 is hand-asm; the HAL carries the transcription
 src/_ZN7fBase_c9SceneNodeC1Ev.c
