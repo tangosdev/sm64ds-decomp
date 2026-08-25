@@ -778,8 +778,9 @@ static void ss_flag_dump(const char *when)
 void port_actor_tick(void);          /* phases 4/2/3: cleanup, init, behaviour */
 /* phase 6, the frame clock (hal/fader_wipes.cpp): data_020a0db0, the one counter
    every blink in the game hangs off. func_020197b8 steps it once per frame and
-   this port does not run func_020197b8, so it sat at zero and every blink was
-   dead. Read that file's banner before moving this call. */
+   this port does not run func_020197b8, so it sat at zero and THIRTEEN linked
+   readers were dead -- three of them `& 1` sites that test non-zero and so had
+   never executed at all. Read that file's banner before moving this call. */
 void port_frame_clock_tick(void);
 /* gate 31: the level handoff (hal/level_change.cpp). port_level_change_poll
    sits where Scene::SpawnIfNecessary sits in func_020197b8 -- after input,
@@ -7778,8 +7779,12 @@ int main(void)
         } else {
             hal_player_st_wait_main(player);
         }
-        /* THE FRAME CLOCK, func_020197b8 phase 6 (hal/fader_wipes.cpp): after the
-           actor phases the branch above ran, before the render below. Gated on
+        /* THE FRAME CLOCK, func_020197b8 phase 6 (hal/fader_wipes.cpp): after
+           the actor phases the branch above ran, before the render below. ONE
+           PHASE EARLY against the ROM, which steps it at phase 6 -- after phase
+           5, and so after its phase 2 fade advance -- where this sits before
+           port_fader_advance. Nothing between the two reads the word, so no
+           linked reader can tell; the banner carries the argument. Gated on
            game_ticked -- the ROM has no pause, so a frozen frame holding its
            blinks still is this port's decision and the same one port_actor_tick
            makes. hal/scene_boot.cpp's port_scene_tick calls it at the matching

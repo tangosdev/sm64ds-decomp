@@ -577,31 +577,77 @@ int port_fader_blend_state(int *evy, int *toWhite)
  *     data_020a0db0 = data_020a0db0 + 1;      <- this line
  *
  * It is the game's BLINK CLOCK. Nothing reads its value; everything reads one
- * of its low bits and uses the alternation. Fourteen readers are linked into
- * this program today, and every one of them is a blink, a two-phase alternation
- * or a rotation driven off the count:
+ * of its low bits and uses the alternation.
+ *
+ * THE READER CENSUS, AND THE INSTRUMENTS THAT TOOK IT. The ROM materialises
+ * this address EIGHTEEN times: `grep -r "to:0x020a0db0" config/arm9/` returns
+ * 18 relocations, every one kind:load, which is one literal-pool load per body
+ * that touches it. Eighteen bodies, eighteen TUs in src/, and they split
+ * SIXTEEN readers to TWO writers. Both writers are src/func_020197b8.c (the
+ * increment above) and src/func_0203b684.c (the reset that zeroes it and
+ * data_020a0db4 together), and NEITHER IS LINKED into this program -- which is
+ * the whole of why the counter never moved.
+ *
+ * THIRTEEN of the sixteen readers are linked. "Linked" is measured, not
+ * assumed, by two instruments that agree file for file: (1) the object file for
+ * the TU exists under build/port/CMakeFiles/walk_window.dir/, and (2) the same
+ * object name carries symbol lines in build/port/walk_window.map. Both answer
+ * for the same thirteen and both refuse the same three. Re-run them before
+ * editing this list; an earlier version of it was written from a source grep,
+ * which cannot tell a compiled TU from an uncompiled one, and got six rows
+ * wrong in both directions.
  *
  *   src/func_ov006_020f7e2c.c      & 8     Pair-a-Gone's card draw
  *   src/func_ov006_020f98dc.c      & 8     Pair-a-Gone And On's card draw
- *   src/func_ov006_02107b94.c      & 8     Mushroom Roulette's frame pick
+ *   src/func_ov006_02107b94.c      & 8     Roulette's five bet markers: the bit
+ *                                          steps the sprite frame by one
+ *   src/func_ov006_02109834.c      & 8     Roulette's BALL sprite, drawn only
+ *                                          while the bit is set (named off the
+ *                                          Hud_RenderSprite call, not off a
+ *                                          slice title -- it is not a banner)
  *   src/_ZN7Minimap6RenderEv.cpp   & 8
- *   src/_ZN3HUD15RenderStarCountEv.cpp     & 0x18
+ *   src/_ZN3HUD15RenderStarCountEv.cpp     & 0x18   (see THE STAR COUNT below)
  *   src/func_ov004_020b6430.c      & 0x10  the minigame name plate
- *   src/_ZN5Stage20RenderBouncingArrowsEv.cpp  & 0x10
+ *   src/_ZN5Stage20RenderBouncingArrowsEv.cpp  & 0x10 and & 8 (two sites)
  *   src/_ZN7Message6UpdateEv.cpp   & (0x10 / data_0208ee44)   the text cursor
- *   src/func_020326ac.c            & (0x10 / data_0208ee44)   (four sites)
- *   src/func_ov002_020f20f4.c      & 1
- *   src/func_ov002_020f23f0.c      & 1     (two sites)
- *   src/_ZN17MgBounceAndPounce14BeforeBehaviorEv.cpp   & 1
+ *                                          (four sites)
  *   src/func_ov003_020ae6f4.cpp    * 0x300 fed to a Y rotation
+ *   src/_ZN17MgBounceAndPounce14BeforeBehaviorEv.cpp   & 1
+ *   src/func_ov006_0210a698.cpp    & 1     dScMgFlower_c::BeforeBehavior
+ *   src/func_ov006_020cf820.c      & 1     Trampoline Terror's countdown
+ *
+ * NOT LINKED, and listed so the next reader does not re-add them:
+ * src/func_020326ac.c (four sites), src/func_ov002_020f20f4.c and
+ * src/func_ov002_020f23f0.c (two sites). They are readers in the ROM and they
+ * are not in this binary, so this change cannot reach them.
  *
  * WHY IT NEEDED A DRIVER. func_020197b8 is the ROM's main loop and this port
  * does not run it -- both host loops (tests/walk_window.cpp's level loop and
  * hal/scene_boot.cpp's port_scene_tick) are their own frame. So the counter
- * sat at its BSS zero for the life of every process, and all fourteen readers
- * above were dead: `& n` is false forever, `& 1` is true forever. Same shape
- * and same cause as port_fader_advance above, which is phase 2 of the same loop
- * and needed the same six lines -- which is why the two drivers share a file.
+ * sat at its BSS zero for the life of every process. Same shape and same cause
+ * as port_fader_advance above, which is phase 2 of the same loop and needed the
+ * same six lines -- which is why the two drivers share a file.
+ *
+ * WHICH DIRECTION THE RISK RUNS, and this is the half that is easy to get
+ * backwards. With the counter frozen at zero, `& n` is FALSE for every mask in
+ * the list -- including `& 1`, because all three linked `& 1` sites test the
+ * result against zero and take the branch when it is NON-zero. So those three
+ * paths NEVER EXECUTED ONCE in this port, and turning the clock on RUNS THEM
+ * FOR THE FIRST TIME. That is the real hazard here, and it is not a rate
+ * change: nothing was running double and is now running half. The three are
+ * two Particle::SysTracker::Update calls (Bounce and Pounce's and the Flower
+ * class's BeforeBehavior) and the ApproachLinear2 countdown in
+ * func_ov006_020cf820 that clears the byte at +0x328. All three were exercised
+ * under review on their own scenes, entered rather than merely reachable, and
+ * came back clean.
+ *
+ * THE STAR COUNT is the one site where the frozen zero HID something rather
+ * than merely holding it still. _ZN3HUD15RenderStarCountEv returns early --
+ * drawing nothing -- when data_0209f2d4 == 3 and (data_020a0db0 & 0x18) == 0.
+ * At zero that test is true on every frame, so on those levels the star count
+ * was suppressed ENTIRELY. With the clock running the mask is zero for eight
+ * frames in thirty-two, which is the blink the ROM intends. This one gets
+ * looked at on a level rather than a scene.
  *
  * WHAT IT COST, measured rather than argued (run mg12, lane SELECT). In
  * Pair-a-Gone (scene 381) the ONLY difference between a selected card and an
@@ -614,22 +660,41 @@ int port_fader_blend_state(int *evy, int *toWhite)
  * mismatch rule then deselects it silently -- which is what "something is
  * wrong with the way you select cards" is from the other side of the glass.
  *
- * WHERE IT IS CALLED. Both loops, at the ROM's own position: after the actor
- * phases and before the render, inside the game-tick gate. Gated rather than
- * free-running on purpose -- with the debug menu open the world holds still
- * and the picture keeps being drawn, and a blink that kept running would be
- * the one thing still moving in a frozen frame. The DS has no pause, so the
- * gate is a port decision and this is the same decision port_actor_tick makes.
+ * WHERE IT IS CALLED, and it sits ONE PHASE EARLY -- said plainly rather than
+ * claimed to be exact. The ROM increments at phase 6, AFTER phase 5
+ * (func_02019404) and therefore after its phase 2 fade advance. This port calls
+ * it from both loops immediately BEFORE port_fader_advance, which is the stand-
+ * in for phase 2, so by the ROM's own numbering the step happens earlier in the
+ * frame than the ROM puts it. No linked reader can tell: every one of the
+ * thirteen runs either inside the actor tick, which precedes the step in both
+ * orders, or inside the render, which follows it in both, and nothing between
+ * the step and the fade advance touches the word. The residue is where the
+ * phase sits in the frame, not what any reader sees.
+ *
+ * Gated on the game tick rather than free-running -- with the debug menu open
+ * the world holds still and the picture keeps being drawn, and a blink that
+ * kept running would be the one thing still moving in a frozen frame. The DS
+ * has no pause, so the gate is a port decision and this is the same decision
+ * port_actor_tick makes.
  *
  * data_020a0db0 IS HOSTED AS int[8] in hal/auto_bss.cpp and every matched TU
- * reads it as a plain int, which is the first word. func_0203b684 (the ROM's
- * own reset) zeroes it and data_020a0db4 with it; nothing here touches that.
+ * reads it as a plain int, which is the first word.
  *
  * SM64DS_NO_FRAME_CLOCK=1 PUTS THE FROZEN CLOCK BACK on this same binary, the
  * same shape SM64DS_IRQ2_OFF and SM64DS_NO_KUPPA_TICK have and for the same
- * reason: this wakes fourteen readers at once, so the A/B that says which of
+ * reason: this wakes thirteen readers at once, so the A/B that says which of
  * them moved has to be runnable without a second build. It is a diagnostic and
- * not a setting -- nothing in port/ or in a bundle sets it. */
+ * not a setting -- nothing in port/ or in a bundle sets it.
+ *
+ * WHAT THAT A/B ACTUALLY SHOWS on lane CRD's two banked play plans, one binary,
+ * clock off against clock on. EXACTLY ONE census line moves in each run, and it
+ * is the same line: dScMgSingle3DBase_c slot 26, the per-card draw dispatch.
+ * Scene 381 over 3600 frames goes 65462 -> 64659, down 803. Scene 382 over 7800
+ * frames goes 178184 -> 175953, down 2231. Those are the draws skipped while a
+ * selected card is blinked out, so the drop IS the fix working and a run that
+ * showed no drop would be the failure. Every other figure in both censuses is
+ * unchanged, which is the sense in which the proofs replay: identical outcomes,
+ * one moving counter, and it is the counter this change exists to move. */
 extern int data_020a0db0[8];
 
 void port_frame_clock_tick(void)
