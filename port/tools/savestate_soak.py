@@ -50,8 +50,13 @@ def run(exe, build, env):
         e.pop(k, None)
     e.update(env)
     try:
+        # CREATE_NO_WINDOW: see battery.py's NO_CONSOLE. A console-subsystem
+        # child launched with no console to inherit makes one, and a soak makes
+        # a lot of children; capture_output already pipes all three handles.
         return subprocess.run([exe], cwd=build, env=e, timeout=TIMEOUT,
-                              capture_output=True, text=True)
+                              capture_output=True, text=True,
+                              creationflags=getattr(subprocess,
+                                                    "CREATE_NO_WINDOW", 0))
     except subprocess.TimeoutExpired:
         return None
 

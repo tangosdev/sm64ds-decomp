@@ -541,9 +541,26 @@ def hosted_scenes(root):
     return tuple(sorted(ids))
 
 
+# CREATE_NO_WINDOW. Every exe this battery runs is a CONSOLE-subsystem binary
+# (measured: walk_window.exe's PE subsystem is 3), so when the battery is
+# launched by something that has no console of its own -- a lane agent, a
+# scheduled task, an editor's run button -- Windows makes a NEW CONSOLE WINDOW
+# for each child, and each of those windows appears on the desk and competes for
+# the foreground. Roughly a hundred of them over one battery run.
+#
+# capture_output=True already pipes all three handles, so no child here has any
+# use for a console. This flag is therefore a pure removal of windows nobody was
+# reading. It is ignored on non-Windows, where the attribute does not exist.
+#
+# This is the CONSOLE half of the focus problem. The GAME WINDOW half is
+# SM64DS_NO_FOCUS, set in selftest_env below.
+NO_CONSOLE = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+
+
 def run(cmd, cwd, env=None, timeout=STEP_TIMEOUT):
     return subprocess.run(cmd, cwd=cwd, env=env, timeout=timeout,
-                          capture_output=True, text=True)
+                          capture_output=True, text=True,
+                          creationflags=NO_CONSOLE)
 
 
 def selftest_env(lvl, skip=None):
@@ -581,6 +598,22 @@ def selftest_env(lvl, skip=None):
     # flaky, only wrong in a stable way, which is the harder kind to notice.
     # Dropped in both env builders for the reason the four above it are.
     env.pop("SM64DS_RNG_MENU_FRAMES", None)
+    # SM64DS_NO_FOCUS: the level selftests are the only step in this battery
+    # that opens a game window, and a battery run opens one per mounted level.
+    # Each of those took the foreground off whoever was using the machine, which
+    # on the shared box is the owner, mid-sentence, once per level.
+    #
+    # The battery DECIDES this rather than inheriting it, the same way it decides
+    # the four knobs popped above -- and for the stronger reason that this one
+    # must be provably invisible to the artifact this step compares. The flag is
+    # presentation OF THE WINDOW: WS_EX_NOACTIVATE plus SW_SHOWNOACTIVATE, no
+    # pixel and no frame touched. Measured before it was wired here, level 1 at
+    # SELFTEST_FRAMES, flag off vs on: walk_window_selftest.bmp byte-identical.
+    #
+    # A lane that needs the real foreground -- anything driving SM64DS_CLICK_TEST
+    # -- does not go through this battery, and walk_window overrides the flag by
+    # itself when that driver is armed.
+    env["SM64DS_NO_FOCUS"] = "1"
     return env
 
 

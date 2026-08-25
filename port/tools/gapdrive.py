@@ -29,9 +29,15 @@ def selftest():
     env["SM64DS_FAULTS_FATAL"] = "1"
     env["SM64DS_WINDOW_SELFTEST"] = "300"
     G.clear_settings()
+    # CREATE_NO_WINDOW: walk_window is a console-subsystem exe, so a run
+    # launched from something with no console of its own gets a NEW CONSOLE
+    # WINDOW on the desk. capture_output already pipes all three handles, so
+    # nothing here reads it. Same one-liner and same reason as battery.py's
+    # NO_CONSOLE; the game window's half is SM64DS_NO_FOCUS.
     r = subprocess.run([os.path.join(G.BUILD, "walk_window.exe")], cwd=G.BUILD,
                        env=env, capture_output=True, text=True,
-                       errors="replace", timeout=1800)
+                       errors="replace", timeout=1800,
+                       creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
     bmp = os.path.join(G.BUILD, "walk_window_selftest.bmp")
     print("selftest rc=%d md5=%s" % (r.returncode, G.md5(bmp)))
     for ln in r.stdout.splitlines():

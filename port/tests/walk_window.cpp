@@ -149,6 +149,33 @@
 //                           the gate. Nothing in the tree sets it. It is here
 //                           so a harness that genuinely wants background key
 //                           reads has a documented switch instead of a patch.
+//      SM64DS_NO_FOCUS=1    (=0 turns it off; this one is read with atoi, not
+//                           as a presence test, because it is meant to be set
+//                           broadly and opted out of per run)
+//                           open the window WITHOUT taking the foreground, so
+//                           a scripted run does not yank the keyboard out of
+//                           whatever the owner of the desk is typing into. See
+//                           nofocus_mode() below for what it does and what it
+//                           refuses to do. NOT the same knob as
+//                           SM64DS_INPUT_NOFOCUSGATE above and close to its
+//                           opposite: that one reads keys with the window in
+//                           the background, this one PUTS the window in the
+//                           background. Setting both is a scripted run that
+//                           reads the owner's keystrokes, which is why they are
+//                           named apart here rather than only in the code.
+//      SM64DS_WINDOW_POS=x,y  put the window's top-left corner at that virtual
+//                           screen point instead of centring it, so a run under
+//                           SM64DS_NO_FOCUS can be parked in a corner. Independent
+//                           of that flag; either works without the other.
+//
+//   AND THE LAUNCHER'S OWN SHOW REQUEST, which is not an env var. `start /min`
+//   and PowerShell's -WindowStyle Minimized put a wShowWindow in STARTUPINFO,
+//   and until this lane the game window IGNORED it (it was created WS_VISIBLE,
+//   so CreateWindowExA showed it and nothing ever read the request). Only the
+//   console the OS makes for this exe was minimized, which looked like the whole
+//   thing working. host_show_mode() below now honours the minimize and
+//   no-activate spellings; SW_HIDE is deliberately still ignored, and every
+//   ordinary show is unchanged.
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -167,6 +194,13 @@ struct WinApi {
     ATOM(WINAPI *RegisterClassA_)(const WNDCLASSA *);
     HWND(WINAPI *CreateWindowExA_)(DWORD, LPCSTR, LPCSTR, DWORD, int, int,
                                    int, int, HWND, HMENU, HINSTANCE, LPVOID);
+    /* SM64DS_NO_FOCUS's other half. The window is created without WS_VISIBLE
+       under that flag and shown with SW_SHOWNOACTIVATE here, because
+       WS_EX_NOACTIVATE alone is a claim about what a CLICK does to the window
+       and this is the call that decides whether the SHOW activates it. Loaded
+       in every build: a show is not an input driver (port/release_hardening.txt
+       gates the SendInput family, not this). */
+    BOOL(WINAPI *ShowWindow_)(HWND, int);
     LRESULT(WINAPI *DefWindowProcA_)(HWND, UINT, WPARAM, LPARAM);
     BOOL(WINAPI *PeekMessageA_)(MSG *, HWND, UINT, UINT, UINT);
     BOOL(WINAPI *TranslateMessage_)(const MSG *);
@@ -261,6 +295,7 @@ static bool winapi_load(void)
     if (!u || !g) return false;
     W.RegisterClassA_ = (decltype(W.RegisterClassA_))GetProcAddress(u, "RegisterClassA");
     W.CreateWindowExA_ = (decltype(W.CreateWindowExA_))GetProcAddress(u, "CreateWindowExA");
+    W.ShowWindow_ = (decltype(W.ShowWindow_))GetProcAddress(u, "ShowWindow");
     W.DefWindowProcA_ = (decltype(W.DefWindowProcA_))GetProcAddress(u, "DefWindowProcA");
     W.PeekMessageA_ = (decltype(W.PeekMessageA_))GetProcAddress(u, "PeekMessageA");
     W.TranslateMessage_ = (decltype(W.TranslateMessage_))GetProcAddress(u, "TranslateMessage");
@@ -3261,7 +3296,14 @@ static void click_test_apply(HWND h, int frame)
             /* the window has to be the foreground one or the WndProc half of
                the press is delivered somewhere else entirely. poll_touch would
                still see it (GetAsyncKeyState is machine-global) which is
-               exactly the kind of half-green this driver exists to refuse. */
+               exactly the kind of half-green this driver exists to refuse.
+
+               THIS IS WHY SM64DS_NO_FOCUS SWITCHES ITSELF OFF when this driver
+               is armed. A WS_EX_NOACTIVATE window cannot be brought to the
+               foreground at all, so under both flags at once this call would
+               fail and every press below would be refused by the pid gate.
+               nofocus_mode() makes that decision, out loud, before the window
+               is created; nothing here has to check. */
             W.SetForegroundWindow_(h);
             /* and it has to be top of the z-order too: WindowFromPoint reads
                z-order, so on a busy desktop the pid gate refuses every press
@@ -3612,7 +3654,16 @@ static void present(void)
 
    The restore is a saved WINDOWPLACEMENT plus the saved style, so a window
    that was maximised before F12 comes back maximised and one that was at
-   some hand-dragged size comes back at that size. */
+   some hand-dragged size comes back at that size.
+
+   ITS SetWindowPos DOES FRONT THE WINDOW (HWND_TOP, no SWP_NOACTIVATE) and is
+   left that way under SM64DS_NO_FOCUS, because it cannot run under it: the
+   only caller is the F12/F11 edge in the two frame loops, read through
+   key_live, and key_live returns released whenever hal_window_focused() is
+   false -- which a window that never reaches the foreground always is. A
+   person pressing F12 has focus by definition and should get the fullscreen
+   they asked for. Named here so a future caller that is not a keypress knows
+   it is fronting. */
 static int g_fullscreen;
 static WINDOWPLACEMENT g_fs_placement;
 static LONG g_fs_style;
@@ -4178,6 +4229,185 @@ static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
 static BITMAPINFO g_bi;
 static BITMAPINFO g_bi_stack;
 
+/* ---- SM64DS_NO_FOCUS: A WINDOW THAT DOES NOT TAKE THE DESK (port mod) -------
+ *
+ * WHY. Every scripted run of this exe -- a battery selftest, a BMP probe, a
+ * scene census -- opens a real window, and a real window opened the ordinary
+ * way becomes the foreground one. On a shared machine that means the owner's
+ * keystroke lands in Mario instead of in whatever he was typing into, once per
+ * proof run, and there have been days with dozens of them. The window itself is
+ * wanted (the scene path needs one for the stylus and the present loop, see
+ * scene_window_run); it is the ACTIVATION that is not.
+ *
+ * WHAT IT DOES, in the two places a window can take the foreground:
+ *
+ *   at creation   WS_EX_NOACTIVATE in the extended style, and WS_VISIBLE taken
+ *                 OUT of the ordinary style so CreateWindowExA does not do the
+ *                 implicit activating show. The window is then shown with
+ *                 ShowWindow(SW_SHOWNOACTIVATE).
+ *   afterwards    the one automatic SetWindowPos on the frame path
+ *                 (stack_present_arm's grow) takes SWP_NOACTIVATE.
+ *
+ * BOTH HALVES, not either. WS_EX_NOACTIVATE governs what a later click does and
+ * SW_SHOWNOACTIVATE governs what THIS show does, and a window created
+ * WS_VISIBLE has already been shown by the time any ShowWindow could speak.
+ *
+ * WHAT IT DELIBERATELY DOES NOT DO. It does not hide the window, does not make
+ * it topmost, does not move it (SM64DS_WINDOW_POS is a separate knob) and does
+ * not touch a single pixel of what is drawn. A run under this flag composes,
+ * presents and captures exactly the frames the same run composes without it;
+ * that is the claim the BMP floor checks.
+ *
+ * WHAT IT COSTS, stated rather than discovered. Two things, and the second is
+ * the one that surprises people.
+ *
+ *   THE INTERACTIVE KEYBOARD IS DEAD for the run. A window that is never the
+ *   foreground one is never focused, so hal_window_focused() is false the whole
+ *   time and key_live returns released -- which is the same state the window is
+ *   in today the moment you alt-tab away from it, not a new one. Right for a
+ *   scripted run, wrong for a person, so this flag is for harnesses and the
+ *   launcher bundle does not set it.
+ *
+ *   AND WS_EX_NOACTIVATE KEEPS THE WINDOW OFF THE TASKBAR, which Windows does
+ *   on its own and this file cannot ask it not to without giving the activation
+ *   back. So a run under this flag is not alt-tabbable and has no taskbar
+ *   button. It is still a perfectly ordinary window otherwise: it has its title
+ *   bar, it can be dragged, and its close button works -- a click on a
+ *   WS_EX_NOACTIVATE window is delivered, it simply does not activate. A
+ *   scripted run that hangs is closed with its X or with taskkill on the exe
+ *   path, not by alt-tabbing to it.
+ *
+ * THE SCRIPTED INPUT PATHS ARE UNAFFECTED, and that is the whole reason this is
+ * safe. SM64DS_PAD_TEST ORs bits into an in-process pad struct after
+ * XInputGetState; SM64DS_PROBE_INPUT ORs into the pad mirror; the fifteen
+ * SM64DS_SELFTEST_* probes write the stick and the buttons by hand;
+ * SM64DS_TOUCH_PROBE pokes the DS touch record in memory. None of them reads
+ * the OS, none of them asks hal_window_focused, and poll_touch's live branch is
+ * gated on g_headless and GetAsyncKeyState -- which is machine-global -- rather
+ * than on focus. Nothing in that list can tell the difference.
+ *
+ * SM64DS_CLICK_TEST IS THE ONE THING THAT CAN, and it OVERRIDES the flag out
+ * loud instead of failing quietly. That driver moves the real pointer and
+ * pushes a real button edge through the OS input queue, so the window has to be
+ * the foreground one or the WndProc half of the press is delivered somewhere
+ * else entirely (see click_test_apply). A WS_EX_NOACTIVATE window cannot be
+ * brought to the foreground, so its SetForegroundWindow would fail and the run
+ * would read as a grid of refusals -- exactly the half-green that driver's pid
+ * gate exists to refuse. Under PORT_ROM_CLEAN the driver is not compiled in at
+ * all, so there the variable is only a name and the override is gone with it.
+ *
+ * READ ONCE, like every other env in this file, so nothing can change the
+ * window's shape halfway through a run. */
+static int nofocus_mode(void)
+{
+    static int v = -1;
+    if (v >= 0)
+        return v;
+    /* ATOI, NOT A NULL TEST, and the difference matters more here than it does
+       for the other flags in this file. This one is meant to be set BROADLY --
+       by a harness over a whole battery, by a run law over every scripted
+       launch -- so the thing somebody will reach for to opt one run back out is
+       SM64DS_NO_FOCUS=0. Under the `getenv() != 0` shape the rest of the file
+       uses, that spelling would turn the flag ON and the run would look broken
+       in the one direction nobody checks. =0 means off. */
+    const char *e = getenv("SM64DS_NO_FOCUS");
+    v = e ? (atoi(e) != 0) : 0;
+#ifndef PORT_ROM_CLEAN
+    if (v && getenv("SM64DS_CLICK_TEST")) {
+        v = 0;
+        fprintf(stderr, "[win] SM64DS_NO_FOCUS is OVERRIDDEN by "
+                "SM64DS_CLICK_TEST: that driver pushes a real button edge "
+                "through the OS and needs the foreground window. This run "
+                "takes focus.\n");
+        fflush(stderr);
+    }
+#endif
+    if (v && !W.ShowWindow_) {
+        /* Never on Windows, but the whole user32 surface here is loaded by
+           name and a window created without WS_VISIBLE and never shown would
+           be an invisible run that still wrote its BMP -- the worst possible
+           way for this to fail. Fail back to the ordinary window. */
+        v = 0;
+        fprintf(stderr, "[win] SM64DS_NO_FOCUS asked for, but ShowWindow did "
+                        "not resolve; opening the ordinary window instead.\n");
+        fflush(stderr);
+    }
+    return v;
+}
+
+/* ---- WHAT SHOW THIS WINDOW GETS (port mod) ----------------------------------
+ *
+ * MEASURED FIRST, BECAUSE THE ANSWER WAS NO. Until this lane, the window was
+ * created WS_VISIBLE, which means CreateWindowExA shows it itself and the
+ * launcher's STARTUPINFO -- the wShowWindow that carries `start /min` and
+ * PowerShell's -WindowStyle Minimized -- was NEVER CONSULTED for it. Anyone
+ * launching a harness run minimized got a minimized CONSOLE (that one the OS
+ * creates from the same STARTUPINFO, and walk_window is a console-subsystem
+ * exe) and a perfectly normal, perfectly foreground-hungry game window beside
+ * it. Half the request was being honoured and it looked like all of it.
+ *
+ * SO IT IS HONOURED NOW, for the shows that mean "stay out of my way":
+ *
+ *   SW_SHOWMINIMIZED / SW_MINIMIZE / SW_SHOWMINNOACTIVE -> SW_SHOWMINNOACTIVE
+ *   SW_SHOWNOACTIVATE / SW_SHOWNA                       -> SW_SHOWNOACTIVATE
+ *
+ * The minimised ones are mapped to the NOACTIVE spelling deliberately: a
+ * launcher that asked for minimised was asking not to be interrupted, and
+ * SW_SHOWMINIMIZED activates the window on the way down.
+ *
+ * SW_HIDE IS NOT HONOURED, and that is a decision rather than an oversight.
+ * -WindowStyle Hidden is the ordinary way to hide a CONSOLE, so honouring it
+ * here would turn a routine "don't show me the terminal" into a run that
+ * composes frames, writes a BMP and shows nothing -- a real capture from a run
+ * nobody could watch, which is the stale-artifact shape wearing a different
+ * hat. A run that wants to stay out of the way asks with SM64DS_NO_FOCUS.
+ *
+ * EVERY OTHER wShowWindow, and any launcher that does not set
+ * STARTF_USESHOWWINDOW at all, returns -1 and gets the historical path: the
+ * window keeps WS_VISIBLE and no ShowWindow is called. That covers SW_SHOWNORMAL
+ * and SW_SHOWDEFAULT, which is what PowerShell's Start-Process sends by default
+ * and what the kit's play.bat produces, so no ordinary launch changes.
+ *
+ * GetStartupInfoA is kernel32, called directly rather than through W: kernel32
+ * is already this file's one static import (GetModuleHandleA, GetLastError) and
+ * port/release_hardening.txt's kit property is "KERNEL32.dll only", which this
+ * keeps. */
+static int host_show_mode(int nofocus)
+{
+    int want = -1;
+    if (!W.ShowWindow_)
+        return -1;      /* no show call available; keep WS_VISIBLE */
+    STARTUPINFOA si;
+    memset(&si, 0, sizeof si);
+    si.cb = sizeof si;
+    GetStartupInfoA(&si);
+    if (si.dwFlags & STARTF_USESHOWWINDOW) {
+        switch (si.wShowWindow) {
+        case SW_SHOWMINIMIZED:
+        case SW_MINIMIZE:
+        case SW_SHOWMINNOACTIVE:
+            want = SW_SHOWMINNOACTIVE;
+            break;
+        case SW_SHOWNOACTIVATE:
+        case SW_SHOWNA:
+            want = SW_SHOWNOACTIVATE;
+            break;
+        default:
+            break;
+        }
+    }
+    if (nofocus) {
+        /* THE TWO COMPOSE rather than one winning. A minimized request under
+           SM64DS_NO_FOCUS is minimized AND not activated, which is the quietest
+           run this program can do; the flag alone is a visible window that does
+           not take the desk. */
+        if (want == SW_SHOWMINNOACTIVE)
+            return SW_SHOWMINNOACTIVE;
+        return SW_SHOWNOACTIVATE;
+    }
+    return want;
+}
+
 static HWND host_window_open(int stacked, HDC *out_hdc, const char *title)
 {
     /* Registered once. Two windows are never open at the same time in this
@@ -4276,16 +4506,64 @@ static HWND host_window_open(int stacked, HDC *out_hdc, const char *title)
             fprintf(stderr, "[win] no monitor info; leaving the placement to "
                             "Windows (the pre-centring behaviour)\n");
         }
+        /* SM64DS_WINDOW_POS=x,y OVERRIDES THE CENTRE, and it is the last word
+           on purpose: a harness that says where the window goes has said
+           something more specific than "the monitor under the cursor". Virtual
+           screen coordinates, the same ones CreateWindowExA takes, so a
+           negative x parks it on a left-hand second monitor. Nothing is
+           clamped -- a run that asks to be off screen has asked for that, and
+           the clamp above exists for the CENTRING's own arithmetic rather than
+           as a policy about where windows may be. SIZE IS NOT TOUCHED; this
+           moves the same rect the block above sized. */
+        if (const char *wp = getenv("SM64DS_WINDOW_POS")) {
+            int px = 0, py = 0;
+            if (sscanf(wp, "%d,%d", &px, &py) == 2) {
+                wx = px;
+                wy = py;
+                fprintf(stderr, "[win] SM64DS_WINDOW_POS put the frame at "
+                        "%d,%d\n", wx, wy);
+            } else {
+                fprintf(stderr, "[win] SM64DS_WINDOW_POS=\"%s\" is not x,y; "
+                                "keeping the placement above\n", wp);
+            }
+        }
     }
-    HWND hwnd = W.CreateWindowExA_(0, "sm64ds_walk", title,
+    /* SM64DS_NO_FOCUS (see nofocus_mode above) and the launcher's own show
+       request (host_show_mode above). Dropping WS_VISIBLE is what stops
+       CreateWindowExA doing its implicit activating show before any ShowWindow
+       can speak, so it comes out whenever there is a show to make by hand.
+
+       WITH NEITHER ASKED FOR, show is -1 and both expressions are the constants
+       that were written here before -- 0 and WS_OVERLAPPEDWINDOW | WS_VISIBLE
+       -- and no ShowWindow is called at all. */
+    const int nofocus = nofocus_mode();
+    const int show = host_show_mode(nofocus);
+    HWND hwnd = W.CreateWindowExA_(nofocus ? WS_EX_NOACTIVATE : 0,
+                                   "sm64ds_walk", title,
                                    /* the sizing border is here, not in the
                                       AdjustWindowRect above; see that note */
-                                   WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+                                   show >= 0 ? (WS_OVERLAPPEDWINDOW)
+                                             : (WS_OVERLAPPEDWINDOW | WS_VISIBLE),
                                    wx, wy,
                                    r.right - r.left, r.bottom - r.top, 0, 0,
                                    GetModuleHandleA(0), 0);
     if (!hwnd)
         return 0;
+    if (show >= 0) {
+        /* The show the style above withheld. Neither of the two spellings that
+           reach here activates the window, so the foreground stays where it
+           was, which is the entire ask. */
+        W.ShowWindow_(hwnd, show);
+        fprintf(stderr, "[win] shown with %s%s; this window does not take the "
+                "foreground%s\n",
+                show == SW_SHOWMINNOACTIVE ? "SW_SHOWMINNOACTIVE"
+                                           : "SW_SHOWNOACTIVATE",
+                nofocus ? " and WS_EX_NOACTIVATE (SM64DS_NO_FOCUS)"
+                        : " (the launcher's own STARTUPINFO asked for it)",
+                nofocus ? " and the interactive keyboard is off for the run "
+                          "(the scripted input paths are unaffected)"
+                        : "");
+    }
     *out_hdc = W.GetDC_(hwnd);
     memset(&g_bi, 0, sizeof g_bi);
     g_bi.bmiHeader.biSize = sizeof g_bi.bmiHeader;
@@ -4375,9 +4653,22 @@ static void stack_present_arm(const uint32_t *img, HWND hwnd)
                 W.AdjustWindowRect_(&want, (DWORD)style, FALSE);
                 /* SWP_NOMOVE and SWP_NOZORDER: the top-left corner stays put,
                    so the window grows downward from where the player left it
-                   rather than re-centring itself mid-game. */
+                   rather than re-centring itself mid-game.
+
+                   AND SWP_NOACTIVATE (0x0010) UNDER SM64DS_NO_FOCUS. This is
+                   the one SetWindowPos on the frame path that fires by itself,
+                   a few frames into every minigame, and SetWindowPos without
+                   that bit activates the window as part of the z-order work.
+                   WS_EX_NOACTIVATE should already refuse it; both are named
+                   because the flag's whole promise is that nothing on the frame
+                   path takes the desk, and a promise resting on one API's
+                   refusal is a promise resting on a reading of the docs. Added
+                   only under the flag, so an ordinary run gets the same three
+                   bits it always got. */
                 W.SetWindowPos_(hwnd, 0, 0, 0, want.right - want.left,
-                                want.bottom - want.top, 0x0002u | 0x0004u);
+                                want.bottom - want.top,
+                                0x0002u | 0x0004u |
+                                    (nofocus_mode() ? 0x0010u : 0u));
                 fprintf(stderr, "[gap] the stacked image grew %d -> %d rows; "
                         "the window client area follows (%dx%d)\n", was_h, h,
                         cw, ch + (h - was_h));

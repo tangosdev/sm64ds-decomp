@@ -1,0 +1,313 @@
+run mg12 lane QOL -- A WINDOW THAT DOES NOT TAKE THE DESK
+
+WHAT THIS IS FOR
+================
+
+Tango, on a machine he is working on while the port is being worked on:
+"possible to make the test runs not take focus from what im doing".
+
+Every scripted run of walk_window.exe opens a real window. A real window opened
+the ordinary way takes the keyboard off whoever is using the machine, and a
+battery run opens one per mounted level. This lane makes that optional.
+
+Nothing here changes a pixel. The flag is presentation OF THE WINDOW; the
+frames, the captures and the censuses are the same bytes with it on and off,
+and section 5 is the measurement that says so rather than the claim that it
+should be.
+
+
+1. THERE WERE THREE STEALERS, NOT ONE
+=====================================
+
+The ask reads as one problem and measured as three. All three are fixed.
+
+1a. THE GAME WINDOW ACTIVATES ITSELF
+
+host_window_open created the window WS_OVERLAPPEDWINDOW | WS_VISIBLE, and
+WS_VISIBLE means CreateWindowExA does the show itself -- an activating one.
+
+1b. THE LAUNCHER'S REQUEST WAS BEING HALF-HONOURED, WHICH IS WORSE THAN NOT
+
+`start /min` and PowerShell's -WindowStyle Minimized put a wShowWindow in
+STARTUPINFO. Because the window carried WS_VISIBLE, NOTHING IN THIS FILE EVER
+READ IT. What did get minimized was the CONSOLE the OS creates for the process
+-- walk_window.exe is a console-subsystem binary, measured, PE subsystem 3 --
+so a minimized launch produced a minimized terminal beside a perfectly normal
+game window, and looked from the outside like the switch working.
+
+Anyone told "minimize it as an interim for builds that predate the flag" was
+getting half the effect. That is now true rather than half true: see section 3.
+
+1c. THE CONSOLE ITSELF
+
+Same fact from the other end. A console-subsystem child launched by a parent
+that has NO console of its own -- a lane agent, a scheduled task, an editor's
+run button -- makes Windows allocate a NEW CONSOLE WINDOW, on the desk, per
+child. WS_EX_NOACTIVATE has nothing to say about those. Section 4.
+
+
+2. SM64DS_NO_FOCUS
+==================
+
+    SM64DS_NO_FOCUS=1     the window does not take the foreground
+    SM64DS_NO_FOCUS=0     off
+
+READ WITH atoi, NOT AS A PRESENCE TEST, unlike most flags in walk_window.cpp.
+This one is meant to be set BROADLY -- by battery.py over a whole run, by the
+run law over every scripted launch -- so the spelling somebody will reach for to
+opt one run back out is =0. Under the presence-test shape that would have turned
+it ON, and the run would have looked broken in the one direction nobody checks.
+
+WHAT IT DOES, at the two places a window can take the desk:
+
+    at creation   WS_EX_NOACTIVATE in the extended style, WS_VISIBLE taken OUT
+                  of the ordinary style, and the show made by hand with
+                  ShowWindow(SW_SHOWNOACTIVATE).
+    afterwards    stack_present_arm's automatic grow -- the ONE SetWindowPos on
+                  the frame path that fires by itself, a few frames into every
+                  minigame -- takes SWP_NOACTIVATE.
+
+Both halves, not either: WS_EX_NOACTIVATE governs what a later CLICK does, and
+a window created WS_VISIBLE has already been shown by the time any ShowWindow
+could speak.
+
+WHAT IT COSTS, stated rather than discovered:
+
+    the interactive keyboard is dead for the run. A window that is never the
+    foreground one is never focused, hal_window_focused() is false, and key_live
+    returns released. That is the state the window is already in the moment you
+    alt-tab away from it, not a new one. Right for a scripted run, wrong for a
+    person -- so the launcher bundle does not set it and nothing in
+    tools/portable_kit does.
+
+    WS_EX_NOACTIVATE also keeps the window off the taskbar, which Windows does
+    on its own and which cannot be asked away without giving the activation
+    back. A run under the flag is not alt-tabbable. It is an ordinary window
+    otherwise: title bar, draggable, and its close button works, because a click
+    on a WS_EX_NOACTIVATE window is delivered, it just does not activate.
+
+SM64DS_CLICK_TEST OVERRIDES IT, out loud on stderr, rather than composing into a
+silent failure. That driver pushes a real button edge through the OS input queue
+and needs the foreground window, and a WS_EX_NOACTIVATE window cannot be brought
+to the foreground -- so both flags at once would be a grid of pid-gate refusals,
+which is the exact half-green that driver was built to refuse. The override is
+itself #ifndef PORT_ROM_CLEAN, because that is where the driver lives: in a kit
+build the variable is only a name and there is nothing to override.
+
+AND THE FLAG FAILS BACK, out loud, if ShowWindow does not resolve by name. A
+window created without WS_VISIBLE and then never shown would be an invisible run
+that still writes its BMP, which is the worst way for this to break.
+
+
+3. THE LAUNCHER'S SHOW REQUEST IS HONOURED NOW
+==============================================
+
+host_show_mode() reads GetStartupInfoA and maps the shows that mean "stay out of
+my way":
+
+    SW_SHOWMINIMIZED / SW_MINIMIZE / SW_SHOWMINNOACTIVE  ->  SW_SHOWMINNOACTIVE
+    SW_SHOWNOACTIVATE / SW_SHOWNA                        ->  SW_SHOWNOACTIVATE
+
+The minimized spellings are mapped to the NOACTIVE one deliberately: a launcher
+that asked for minimized was asking not to be interrupted, and SW_SHOWMINIMIZED
+activates the window on the way down.
+
+SW_HIDE IS NOT HONOURED, on purpose. -WindowStyle Hidden is the ordinary way to
+hide a CONSOLE, so honouring it here would turn a routine "don't show me the
+terminal" into a run that composes frames, writes a BMP and shows nothing --
+a real capture from a run nobody could watch. A run that wants to be quiet asks
+with SM64DS_NO_FOCUS.
+
+EVERY OTHER SHOW IS UNCHANGED. SW_SHOWNORMAL and SW_SHOWDEFAULT fall through, as
+does any launcher that never sets STARTF_USESHOWWINDOW, and those cover
+PowerShell's Start-Process default and the kit's play.bat. The flag and the
+request COMPOSE: minimized under SM64DS_NO_FOCUS is SW_SHOWMINNOACTIVE, the
+quietest run this program can do.
+
+GetStartupInfoA is called directly rather than through W. kernel32 is already
+this file's one static import and port/release_hardening.txt's kit property is
+"KERNEL32.dll only", which this keeps.
+
+
+4. THE CONSOLE HALF: CREATE_NO_WINDOW
+=====================================
+
+capture_output=True already pipes all three handles, so none of these children
+has any use for a console. The flag is a pure removal of windows nobody reads,
+and getattr(subprocess, "CREATE_NO_WINDOW", 0) is a no-op off Windows.
+
+    port/tools/battery.py         NO_CONSOLE on the one run() every step uses
+    port/tools/gapdrive.py        its one walk_window spawn
+    port/tools/gapproof.py        its one walk_window spawn
+    port/tools/savestate_soak.py  its one walk_window spawn
+
+NOT CHANGED, and named so the next lane does not have to re-derive the list:
+
+    port/tools/kit_smoke.py       4 spawns, and it validates the SHIPPED bundle.
+                                  Changing how it launches changes what it
+                                  proves, which is a release question, not this
+                                  lane's.
+    gate.py (5 spawns), host_frontier.py (2), msvc_undname.py (2),
+    abi_prove.py, closure.py, facegen.py, romblob_verify.py, romextract.py,
+    run_checks.py (1 each) -- these spawn python and dumpbin, not the game, so
+    they can flash a console but never a game window.
+    headroom.py and objshift.py open a game window but spawn nothing themselves;
+    they are driven by hand, so the discipline for them is the run law, not a
+    code change.
+
+battery.py also SETS SM64DS_NO_FOCUS=1 in selftest_env. The battery decides this
+rather than inheriting it, the same way it pops the four knobs above it, and for
+the stronger reason that it has to be provably invisible to the artifact that
+step compares -- section 5. scene_env deliberately does NOT set it: the scene
+selftests are headless and have no window to not-activate.
+
+
+5. SM64DS_WINDOW_POS
+====================
+
+    SM64DS_WINDOW_POS=x,y
+
+Overrides the centring with a virtual-screen point; the SIZE is untouched, and
+nothing is clamped, because a run that asks to be off screen has asked for that.
+Independent of SM64DS_NO_FOCUS; either works without the other.
+
+It is in this lane because it is what made the lane's own proof runs safe to
+take on a machine somebody was using: poll_touch's LIVE branch is machine-global
+(GetAsyncKeyState(VK_LBUTTON)) and the window centres on the monitor UNDER THE
+CURSOR, so an unparked proof window opens where the owner's hand already is. One
+control run in this lane was closed by ambient desktop input after 14 frames
+before the windows were being parked.
+
+
+6. WHAT WAS MEASURED
+====================
+
+Tree: worktree off cons 0b2640a33, private build, inputs deep-copied from cons
+and verified identical (extracted 2308 files / 21282467 bytes, tools\mwccarm 250
+files / 114774658 bytes, compiler SHA256 C6AAFC21..F0B7, dsd A9DD4DC6..C3AD, 0
+reparse points).
+
+6a. THE BUILD AND THE CANARY
+
+port/build-port.cmd green three times, every pre- and post-link guard included
+(closestplayer, inferred_stub, closure, facegen, mapdiff, vtablerows selftest +
+29/29 reconstruct, stategen selftest + reconstruct, alternatename, gxband,
+tailjump). Toolchain canary EXACT:
+
+  tools/match.py func_ov006_020cb030 @0x020cb030 0x104  ->  MATCHING VERSIONS: 2004/b56
+  dsd  ds-decomp-cli 0.11.0
+
+6b. THE MECHANISM, read off the live window by an external process that finds it
+by class ("sm64ds_walk"):
+
+  flag off   GWL_EXSTYLE 0x00000100   WS_EX_NOACTIVATE False   visible True
+  flag on    GWL_EXSTYLE 0x08000100   WS_EX_NOACTIVATE True    visible True
+
+Same GWL_STYLE both ways (0x14cf0000) -- the sizing border, CS_OWNDC and the
+rest are untouched; the difference is entirely in the extended style and in who
+made the show.
+
+6c. THE BEHAVIOUR, three control/flagged pairs, scene 374, 300-frame budget,
+another application holding the desk throughout (named per run by the probe:
+League of Legends, plus explorer / WindowsTerminal / claude on one):
+
+  run   flag  samples  system foreground on  keyboard focus on  closed early
+  1     off   284      0                     284 (all)          no
+  1     on    285      0                     245 (= 285 - 40)   no
+  2     off    24      2                      24 (all)          YES
+  2     on    291      0                     251 (= 291 - 40)   no
+  3     off   293      0                     293 (all)          no
+  3     on     99      0                      59 (=  99 - 40)   no
+
+READ IT AS THE ASYMMETRY IT IS. Every control window holds the keyboard from the
+FIRST sample. Every flagged window holds it on exactly (samples - 40), and 40 is
+the sample at which the probe itself calls SetForegroundWindow on the window --
+so the flagged windows held the keyboard on ZERO samples until the probe poked
+them, and the 40 is the probe's own footprint, not the run's.
+
+The system-foreground column is 0 for the flagged runs across all 675 samples,
+and nonzero for a control run. It is 0 for two control runs as well, and that is
+Windows' foreground LOCK denying the desk to a window whose launcher had no
+foreground rights -- which is why the keyboard column, not this one, is the
+discriminator that does not depend on who started the run.
+
+Control run 2 is the whole complaint in one row: it took the desk for two
+samples and was CLOSED BY AMBIENT DESKTOP INPUT after 14 frames. A window that
+is not receiving the desk's input cannot be closed that way. No flagged run in
+this lane has ever been closed early.
+
+6d. THE BMP FLOOR -- the flag is not allowed to move a pixel
+
+walk_window_selftest.bmp, level 1, 300 frames, flag off vs on:
+
+  off  9129CE6CF3A229D4EB650927C5A68E6F8AF3C2CD4AF5CFBF8A134C063E4771F4
+  on   9129CE6CF3A229D4EB650927C5A68E6F8AF3C2CD4AF5CFBF8A134C063E4771F4
+
+Byte-identical, and the whole of stdout is byte-identical with it. stderr differs
+in three places and no others: the new [win] line, the boot millisecond count,
+and the audio ring's refill/starve counts -- two wall-clock figures and one log
+line. This is the measurement battery.py's own comment rests on.
+
+6e. THE PROBE-DRIVEN SCENE RUN -- the internal input paths cannot tell
+
+Scene 374, 150 frames, SM64DS_TOUCH_PROBE driving five scripted gestures, both
+runs parked with SM64DS_WINDOW_POS, both completing the full budget:
+
+  ctl.bmp                 5ba4d10882127bb7875d363114450940...
+  nofx.bmp                5ba4d10882127bb7875d363114450940...   identical
+  ctl_stacked.bmp         952afc113afe1068a5751aa653b85978...
+  nofx_stacked.bmp        952afc113afe1068a5751aa653b85978...   identical
+  ctl_stacked_subB.bmp    8939478b5ef450217798b167545da326...
+  nofx_stacked_subB.bmp   8939478b5ef450217798b167545da326...   identical
+
+The whole stdout census is identical with the capture filenames normalised --
+slot hits, the 36-slot table, the state dispatch count, the irq2 witness, the
+sub-screen probe, all of it. All 17 scripted [touch] poke lines are identical,
+pre and post blocks included.
+
+WHY THAT WAS NEVER IN DOUBT, derived before it was measured: hal_window_focused()
+gates the INTERACTIVE keyboard and the TAB panel latch and nothing else.
+poll_touch's live branch is gated on g_headless and GetAsyncKeyState, which is
+machine-global. SM64DS_TOUCH_PROBE pokes the DS touch record in memory,
+SM64DS_PAD_TEST and SM64DS_PROBE_INPUT OR bits into the in-process pad, and the
+SELFTEST_* probes write the stick and the buttons by hand. Not one of them asks
+about focus.
+
+6f. THE LAUNCHER'S REQUEST, with NO env flag set at all, launched with
+PowerShell's -WindowStyle Minimized:
+
+  [win] shown with SW_SHOWMINNOACTIVE (the launcher's own STARTUPINFO asked for
+        it); this window does not take the foreground
+
+which before this lane printed nothing and showed a normal window.
+
+
+7. THE FRONTING SWEEP
+=====================
+
+Every place in port/ that can put a window in front, and what it does now:
+
+  host_window_open      the one CreateWindowExA in the tree. Flagged.
+  stack_present_arm     the only SetWindowPos on the frame path that fires by
+                        itself. Takes SWP_NOACTIVATE under the flag.
+  click_test_apply      SetForegroundWindow + HWND_TOPMOST. SM64DS_CLICK_TEST
+                        only, and that flag forces no-focus off, so the two
+                        cannot both be live.
+  fullscreen_toggle     SetWindowPos HWND_TOP, no SWP_NOACTIVATE. LEFT ALONE and
+                        named in its banner: its only caller is the F12/F11 edge
+                        read through key_live, which returns released whenever
+                        hal_window_focused() is false -- so it cannot run under
+                        the flag, and a person pressing F12 has focus by
+                        definition and should get what they asked for.
+
+There is no other SetForegroundWindow, SetActiveWindow, BringWindowToTop or
+ShowWindow anywhere under port/.
+
+
+8. THE STANDING RULE THIS LANE ASKS FOR
+=======================================
+
+  Every scripted walk_window run sets SM64DS_NO_FOCUS=1 and spawns with
+  CREATE_NO_WINDOW (no `start`, no new-console Start-Process) unless it drives
+  real OS input with SM64DS_CLICK_TEST, which overrides the flag and takes the
+  foreground by design.

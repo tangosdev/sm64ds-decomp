@@ -322,9 +322,15 @@ def scene_run(scene, frames, out_bmp, settings=None, extra_env=None):
     if settings is not None:
         write_settings(**settings)
     try:
+        # CREATE_NO_WINDOW: see battery.py's NO_CONSOLE. walk_window is a
+        # console-subsystem exe, so a run launched with no console to inherit
+        # gets a new console window on the desk; capture_output already pipes
+        # every handle, so nothing is lost by not making one.
         r = subprocess.run([os.path.join(BUILD, "walk_window.exe")], cwd=BUILD,
                            env=env, capture_output=True, text=True,
-                           errors="replace", timeout=600)
+                           errors="replace", timeout=600,
+                           creationflags=getattr(subprocess,
+                                                 "CREATE_NO_WINDOW", 0))
     finally:
         clear_settings()
     return r
