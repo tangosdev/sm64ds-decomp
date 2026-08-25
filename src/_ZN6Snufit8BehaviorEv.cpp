@@ -28,7 +28,7 @@ int Snufit::Behavior()
 {
     if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(this, &mWithMeshClsn) != 0) {
         mdCcAc_c.Clear();
-        if (unk_107 != 0) {
+        if (mEatenByYoshi != 0) {
             if (unk_104 == 0) {
                 mdCcAc_c.Update();
             }
@@ -49,7 +49,7 @@ int Snufit::Behavior()
         func_ov065_0211696c((char *)this);
         return 1;
     }
-    DecIfAbove0_Short((unsigned short *)&unk_100);
+    DecIfAbove0_Short((unsigned short *)&mStateTimer);
     {
         State *q = mCurrentState;
         /* Reads the handler's pointer word directly rather than as `&q->mMain`:

@@ -3,6 +3,8 @@
 **Written 2026-08-23**, branch `worktree-ctor-frontier`. Companion to
 `dtor-migration.md`, which this mirrors. Before this week the tree recorded
 **0 constructors migrated, ever** (`notes/dtor-variant-audit.md`,
+`plan-cpp-language-mode.md` Phase 5); it now records **nine**, all verified
+under 2004/b56 with the full ROM rebuilding 106/106 exact:
 `plan-cpp-language-mode.md` Phase 5); the table below is the first nine, all
 verified under 2004/b56 with the full ROM rebuilding 106/106 exact. The
 waves that followed through 2026-08-24 are recorded in §8 — **twenty** now:
@@ -166,6 +168,7 @@ but the gate for the check is the full `rombuild -j16`, not per-file verify.
 ## 3. Struct-copy spelling decides the mat4x3 block move
 
 `Model::Model` and `CommonModel::CommonModel` copy a 0x30-byte matrix from
+`IDENTITY_MATRIX4X3`. Under the structured spelling from `math/Matrix.h`
 `data_02082128`. Under the structured spelling from `math/Matrix.h`
 (`Matrix4x3 { Matrix3x3 r; Vector3 t; }`) the copy splits into a subobject
 copy of `r` plus field-by-field stores of `t`: **+28 bytes over the ROM**.
@@ -241,6 +244,21 @@ name instead of a placeholder extern.
 
 ## 5. What does NOT generalise yet — the measured walls
 
+### 5a. MI hierarchies are declared flat, so their ctors cannot go real — dBgCh_Lin is no longer one of them
+
+`dBgCh_SphCrr : dBgCh @0, dBgPi @16, dM3dGSph @56` (the RTTI record states
+this outright) still declares `struct dBgCh_SphCrr {` with pad bytes where
+its bases belong, and its constructor's vptr stores at +0/+0x10/+0x38 are
+spelled by hand — though the base steps themselves are named real symbols
+(`_ZN5dBgChC2Ev`, `_ZN5dBgPiC2Ev`, `_ZN8dM3dGSphC1Ev`), so what remains for
+it is purely header work. **dBgCh_Lin already crossed this line** (2026-08-23):
+its header declares all three bases (`dBgPi` promoted to a polymorphic C++
+branch, `dM3dGLin` rewritten to its true two-Vector3 shape after the
+generated header had modelled `start` as padding), and its constructor is
+the seventh landed above — see the MI notes under the table for the
+objisolate secondary-vptr extension that made it linkable. The remaining
+collision-family ctors (dBgCh_Gnd, dBgCh_SphCrr, dBgW_Kc*) are now straight
+§6 applications of the same recipe.
 ### 5a. MI hierarchies are declared flat, so their ctors cannot go real — none of them are any more
 
 ~~`dBgCh_SphCrr ... still declares struct with pad bytes where its bases
@@ -431,6 +449,17 @@ asm transcription, or absent.
 1. ~~**fBase_c / dActor_c chain**~~ DONE as a naming step (2026-08-23):
    `_ZN7fBase_cC1Ev` renamed C2 per §4b, 17 callers audited, ROM green.
 2. ~~**dBgCh_Gnd**~~ DONE (ninth, above).
+3. **Collision family, continued** — the natural next slice; each is one §6
+   application once its header un-flattens:
+   `dBgCh_C2Ev` 0x02035514 · `dBgCh_ActrC1Ev` 0x02037430 · `dBgPiC1/C2Ev`
+   0x0203816c/9c · `dBgWC2Ev` 0x0203969c · `dBgW_KcC1Ev` 0x02039894 ·
+   `dBgW_KcMbgC1Ev` 0x0203a494 · `dBgW_KcMbgSclYC1Ev` 0x0203ab8c. The Kc*
+   trio inherits through dBgW/dBgCh like Gnd does; dBgPi's own pair becoming
+   real is what lets every child TU spell base steps by name.
+4. **Leaf singles, config module**: `ClipperC1Ev` 0x02015730 ·
+   `MaterialChangerC1Ev` 0x02015850 · `TextureTransformerC1Ev` 0x02015950 ·
+   `TextureSequenceC1Ev` 0x02015a50 · `AnimationC1/C2Ev` 0x02015cf8/18 ·
+   `Particle14SimpleCallbackC2Ev` 0x02022680 ·
 3. ~~**Collision family, continued**~~ mostly DONE (§8: dBgW C2, Kc, KcMbg,
    KcMbgSclY, Actr). Still open: `dBgCh_C2Ev` 0x02035514 (base step, small)
    and `dBgPiC1/C2Ev` 0x0203816c/9c — the pair §5f walls until its +0x04

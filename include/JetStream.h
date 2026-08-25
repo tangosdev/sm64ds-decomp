@@ -19,9 +19,23 @@
 #include "dBgCh_Actr.h"
 
 struct JetStream : dEnemyBase_c {
+    /* What mState points at. Behavior calls the handler at +0x08 through it and
+       nothing else in the tree reads the rest, so only that field is evidenced.
+       Same shape as Bullet::State -- see include/Bullet.h. */
+    struct State {
+        u8  pad_00[0x8];
+        void (JetStream::*mMain)();   /* 0x08 */
+    };
+
     dCcAc_c mdCcAc_c;/* 0x110 */
     dBgCh_Actr mWithMeshClsn;       /* 0x144 */
-    u8  pad_300[0x14];
+    State *mState;                  /* 0x300 -- run every frame by Behavior */
+    u8  pad_304[0x10];
+    /* Both are decoded out of the spawn word (fBase_c::param1) by InitResources
+       and never read back anywhere in the tree, so what they select is unknown:
+       0x314 takes nibble 3 (param1 >> 12 & 0xf), 0x318 takes bit 0 but only when
+       the low nibble is 0 or 1. Deliberately left unk_ -- see
+       notes/enemy-leaf-provenance.md. */
     s32 unk_314;                      /* 0x314 */
     s32 unk_318;                      /* 0x318 */
 
@@ -49,21 +63,17 @@ typedef char JetStream_size_must_be_0x378[sizeof(JetStream) == 0x378 ? 1 : -1];
    can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct JetStream {
     u8  pad_000[0x8];
-    u32 unk_008;            /* 0x008 */
+    u32 param1;            /* 0x008 */
     u8  pad_00c[0x80];
-    /* dActor_c::mAngleX -- dActor_c.h declares s16 here, and it is de-bannered (hand-reconstructed). */
-    s16 unk_08c;            /* 0x08c */
-    /* dActor_c::mAngleY -- dActor_c.h declares s16 here, and it is de-bannered (hand-reconstructed). */
-    s16 unk_08e;            /* 0x08e */
-    /* dActor_c::mAngleZ -- dActor_c.h declares s16 here, and it is de-bannered (hand-reconstructed). */
-    s16 unk_090;            /* 0x090 */
-    /* dActor_c::mPrevAngleX -- dActor_c.h declares s16 here, and it is de-bannered (hand-reconstructed). */
-    s16 unk_092;            /* 0x092 */
-    /* dActor_c::mPrevAngleY -- dActor_c.h declares s16 here, and it is de-bannered (hand-reconstructed). */
-    s16 unk_094;            /* 0x094 */
-    /* 0x096..0x100 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s16 unk_096;                 /* 0x096 */
+    /* 0x008..0x10f is the fBase_c/dBase_c/dActor_c/dEnemyBase_c chain restated flat.
+       Every name below is dActor_c.h's own (fBase_c.h's for param1); nothing here
+       is an independent claim, and the C++ branch above inherits them properly. */
+    s16 mAngleX;                 /* 0x08c */
+    s16 mAngleY;                 /* 0x08e */
+    s16 mAngleZ;                 /* 0x090 */
+    s16 mPrevAngleX;             /* 0x092 */
+    s16 mPrevAngleY;             /* 0x094 */
+    s16 mPrevAngleZ;             /* 0x096 */
     s32 mHorzSpeed;              /* 0x098 */
     s32 mVertAccel;              /* 0x09c */
     s32 mTerminalVelocity;       /* 0x0a0 */
@@ -71,22 +81,24 @@ struct JetStream {
     s32 mVertSpeed;              /* 0x0a8 */
     u8  pad_0ac[0x4];
     u32 mFlags;                  /* 0x0b0 */
-    s32 unk_0b4;                 /* 0x0b4 */
-    s32 unk_0b8;                 /* 0x0b8 */
-    s32 unk_0bc;                 /* 0x0bc */
-    s32 unk_0c0;                 /* 0x0c0 */
-    u8  unk_0c4;                 /* 0x0c4 */
+    s32 mClipOffsetY;            /* 0x0b4 */
+    s32 mClipRadius;             /* 0x0b8 */
+    s32 mClipDistance;           /* 0x0bc */
+    s32 mFarDistance;            /* 0x0c0 */
+    u8  mClipResult;             /* 0x0c4 */
     u8  pad_0c5[0x7];
     s8  mAreaId;                 /* 0x0cc */
     u8  pad_0cd[0x1];
-    s16 unk_0ce;                 /* 0x0ce */
+    s16 mDeathTableID;           /* 0x0ce */
     u8  pad_0d0[0x30];
-    u8  unk_100;            /* 0x100 */
+    u8  mStateTimer;            /* 0x100 */
     u8  pad_101[0xf];
     u8  mdCcAc_c;            /* 0x110 */
     u8  pad_111[0x33];
     u8  mWithMeshClsn;            /* 0x144 */
-    u8  pad_145[0x1cf];
+    u8  pad_145[0x1bb];
+    void *mState;                /* 0x300 */
+    u8  pad_304[0x10];
     s32 unk_314;            /* 0x314 */
     s32 unk_318;            /* 0x318 */
 };

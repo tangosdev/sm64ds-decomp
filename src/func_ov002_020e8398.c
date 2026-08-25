@@ -6,7 +6,7 @@ enum { false, true };
 struct ShadowModel;
 struct Matrix4x3;
 
-extern struct Matrix4x3 data_02082128;
+extern struct Matrix4x3 IDENTITY_MATRIX4X3;
 extern int _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(char *self, struct ShadowModel *sm, struct Matrix4x3 *m, int fix, int t, u32 f);
 
 #pragma opt_common_subs off
@@ -48,7 +48,7 @@ void func_ov002_020e8398(char *c)
 
     t = delta + 0x28000;
 
-    *(struct Matrix4x3 *)(c + 0x3fc) = data_02082128;
+    *(struct Matrix4x3 *)(c + 0x3fc) = IDENTITY_MATRIX4X3;
 
     *(int *)(c + 0x420) = *(int *)(c + 0x5c) >> 3;
     *(int *)(c + 0x424) = *(int *)(c + 0x60) >> 3;

@@ -20,7 +20,7 @@ extern void _ZN5dCc_c6UpdateEv(void *p);
 
 extern unsigned char data_0209f208;
 extern unsigned char *data_0209f344;
-extern Mtx data_02082128;
+extern Mtx IDENTITY_MATRIX4X3;
 }
 
 int StarMarker::Behavior()
@@ -61,12 +61,12 @@ int StarMarker::Behavior()
         mModel.mat4x3.t.z = mPosZ >> 3;
     }
     if ((unsigned int)(mFlags << 0x1e) >> 0x1f) {
-        *(Mtx *)((char *)&unk_18c) = data_02082128;
-        unk_1b0 = mPosX >> 3;
-        unk_1b4 = mPosY >> 3;
-        unk_1b8 = mPosZ >> 3;
+        *(Mtx *)((char *)&mShadowMtx) = IDENTITY_MATRIX4X3;
+        mShadowMtxTX = mPosX >> 3;
+        mShadowMtxTY = mPosY >> 3;
+        mShadowMtxTZ = mPosZ >> 3;
         {
-            int d = mPosY - unk_1c8;
+            int d = mPosY - mGroundY;
             int rad = 0xa0000;
             if (mState != 0)
                 rad = 0xc8000;
@@ -83,7 +83,7 @@ int StarMarker::Behavior()
                 char *a = _ZN8dActor_c10FindWithIDEj(mdCcAcPos_c.otherOwner);
                 if (a != 0) {
                     if ((mdCcAcPos_c.hitFlags & 0x408000) != 0) {
-                        unk_1d0 = (int)a;
+                        mHitActor = (int)a;
                         func_ov002_020e7d84(((char *)this));
                         return 1;
                     }

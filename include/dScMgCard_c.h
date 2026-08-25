@@ -58,15 +58,25 @@ struct dScMgCard_c : dScMgSingle3DBase_c {
     u8  pad_5120[0x88];     /* 0x5120 -- rest of shared table (ends 0x51a8) */
     u8  mArray1[0xf0];      /* 0x51a8 -- 5 * 0x30, dtor func_ov006_020d96e0 */
     u8  mArray2[0xf0];      /* 0x5298 -- 5 * 0x30, dtor func_ov006_020d96f0 */
-    s16 unk_5388;            /* 0x5388 */
-    s16 unk_538a;            /* 0x538a */
+    s16 mState;              /* 0x5388 -- the round's step counter; the state
+                                machine in src/func_ov006_020dac34.cpp is one
+                                long switch on it and mostly just `++`s it */
+    s16 mStateTimer;         /* 0x538a -- reloaded (0x10, 0x14, 0x1e, 0x3c,
+                                0x5a) on each step and run down to 0 before
+                                mState advances */
     s16 unk_538c;            /* 0x538c */
-    s16 unk_538e;            /* 0x538e */
-    s16 unk_5390;            /* 0x5390 */
-    s16 unk_5392;            /* 0x5392 */
+    s16 unk_538e;            /* 0x538e -- the mArray1 (0x51a8) highlight pair:
+                                Render blinks the card whose config byte equals
+                                either of the two, and draws every other card
+                                every frame. 6 means "none" */
+    s16 unk_5390;            /* 0x5390 -- cleared back to 6 when the two banks
+                                disagree, while unk_538e keeps its value */
+    s16 unk_5392;            /* 0x5392 -- the same pair for mArray2 (0x5298) */
     s16 unk_5394;            /* 0x5394 */
-    s16 unk_5396;            /* 0x5396 */
-    s16 unk_5398;            /* 0x5398 */
+    s16 mFrameCounter;       /* 0x5396 -- Behavior's only own statement is
+                                `+= 1`; Render blinks on bit 3 */
+    s16 mScore;              /* 0x5398 -- a high-water mark of dScMgBase_c's own
+                                0xb4, pushed to the HUD counter every frame */
     s8  unk_539a;             /* 0x539a */
     u8  pad_539b[0x1];        /* 0x539b */
 };

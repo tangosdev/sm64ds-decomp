@@ -48,19 +48,19 @@ int ChiefChilly::InitResources()
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov073_021232b8);
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da30);
     f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov073_02123298);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x30c, f, 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mBlendModelAnim, f, 1, -1);
     _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel);
     mVertAccel = -0x3000;
     mTerminalVelocity = -0x3c000;
     v.x = data_ov073_02123040.x;
     v.y = data_ov073_02123040.y;
     v.z = data_ov073_02123040.z;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this)+0x110, (dActor_c*)((char*)this), &v, 0xa4000, 0x1e4000, 0x200000, 0x567f0);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, (dActor_c*)((char*)this), &v, 0xa4000, 0x1e4000, 0x200000, 0x567f0);
     mBlendModelAnim.speed = 0x2000;
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x150, (dActor_c*)((char*)this), 0x96000, 0x94000, 0, 0);
-    unk_3d8 = mPosX;
-    unk_3dc = mPosY;
-    unk_3e0 = mPosZ;
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, (dActor_c*)((char*)this), 0x96000, 0x94000, 0, 0);
+    mSpawnPosX = mPosX;
+    mSpawnPosY = mPosY;
+    mSpawnPosZ = mPosZ;
     {
         char* p;
         for (i = 0, p = ((char*)this); i < 8; i++) {
@@ -78,7 +78,7 @@ int ChiefChilly::InitResources()
     mAngleY = mPrevAngleY;
     *(short*)(((char*)this)+0x400+0xc6) = mAngleY;
     unk_4bc = 2;
-    unk_4cb = 3;
+    mHitsRemaining = 3;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;

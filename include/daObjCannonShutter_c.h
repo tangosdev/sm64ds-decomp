@@ -19,12 +19,12 @@
 
 struct daObjCannonShutter_c : dBgActor_c {
     u8  pad_31e[0x2];
-    s32 unk_320;                      /* 0x320 */
-    s32 unk_324;                      /* 0x324 */
-    s32 unk_328;                      /* 0x328 */
-    u8 unk_32c;                       /* 0x32c */
-    u8 unk_32d;                       /* 0x32d */
-    u8 unk_32e;                       /* 0x32e */
+    s32 mHomePosX;                      /* 0x320 */
+    s32 mHomePosY;                      /* 0x324 */
+    s32 mHomePosZ;                      /* 0x328 */
+    u8 mOpening;                       /* 0x32c */
+    u8 mOpenPhase;                       /* 0x32d */
+    u8 mCannonOpen;                       /* 0x32e */
 
     /* --- vtable --- */
     virtual ~daObjCannonShutter_c();
@@ -53,7 +53,7 @@ struct daObjCannonShutter_c {
     u8  unk_010;                 /* 0x010 */
     u8  unk_011;                 /* 0x011 */
     u8  unk_012;                 /* 0x012 */
-    u8  unk_013;                 /* 0x013 */
+    u8  pauseFlags;                 /* 0x013 */
     u8  sceneNode[0x14];               /* 0x014 */
     u8  behavNode[0x10];               /* 0x028 */
     u8  renderNode[0x10];              /* 0x038 */
@@ -71,14 +71,14 @@ struct daObjCannonShutter_c {
        dBgW_KcMbg's D1 at +0x124 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN20daObjCannonShutter_cD1Ev.c] */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  unk_2ec;            /* 0x2ec */
+    u8  mClsnMat;            /* 0x2ec */
     u8  pad_2ed[0x33];
-    s32 unk_320;            /* 0x320 */
-    s32 unk_324;            /* 0x324 */
-    s32 unk_328;            /* 0x328 */
-    u8  unk_32c;            /* 0x32c */
-    u8  unk_32d;            /* 0x32d */
-    u8  unk_32e;            /* 0x32e */
+    s32 mHomePosX;            /* 0x320 */
+    s32 mHomePosY;            /* 0x324 */
+    s32 mHomePosZ;            /* 0x328 */
+    u8  mOpening;            /* 0x32c */
+    u8  mOpenPhase;            /* 0x32d */
+    u8  mCannonOpen;            /* 0x32e */
 };
 
 #endif /* __cplusplus */

@@ -56,24 +56,24 @@ int PiranhaPlant::InitResources()
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     mState = 0;
-    unk_468 = mPrevAngleY;
+    mInitAngleY = mPrevAngleY;
     unk_464 = 0x7fffffff;
     unk_460 = 0;
-    unk_45c = 0;
+    mClsnEnabled = 0;
     unk_45d = 1;
-    unk_100 = 0;
+    mStateTimer = 0;
     unk_108 = 3;
     unk_46c = 0;
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x64000, 0x64000, 0, 0);
-    unk_440 = mPosX;
-    unk_444 = mPosY;
-    unk_448 = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
     {
         s16 *tbl = data_02082214;
         /* The add sits INSIDE the integer cast, which is load-bearing here:
-           not interchangeable with `(Vector3 *)&unk_440`. */
+           not interchangeable with `&mSpawnPos`. */
         Vector3* home = (Vector3*)(((int)this + 0x440));
-        *(Vector3*)&unk_44c = *home;
+        mHomePos = *home;
         /* The shift must be LOGICAL so the angle wraps -- on the signed s16 it
            would index the wrong table entry for negative angles. */
         unsigned short angh = *(unsigned short*)&mAngleY;
@@ -85,12 +85,12 @@ int PiranhaPlant::InitResources()
         int z = cosv * 0xe0 + z0;
         int y = y0 + 0x37800;
         int x = sinv * 0xe0 + mPosX;
-        unk_434 = x;
-        unk_438 = y;
-        unk_43c = z;
+        mFirePos.x = x;
+        mFirePos.y = y;
+        mFirePos.z = z;
     }
     unk_474 = 0;
-    unk_470 = unk_474;
+    mParticleHandle = unk_474;
     unk_478 = 0;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov084_02130df4.file, 0, 0x1000, 0);
     return 1;

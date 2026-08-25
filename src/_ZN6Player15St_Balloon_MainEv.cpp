@@ -73,7 +73,7 @@ s32 Player::St_Balloon_Main()
     }
 
     if (mClsnFlags & 2) {
-        s16 ang = _ZN4cstd5atan2E5Fix12IiES1_(unk_560, unk_568);
+        s16 ang = _ZN4cstd5atan2E5Fix12IiES1_(mWallNormalX, mWallNormalZ);
         s16 diff = AngleDiff(ang, mPrevAngleY);
         if ((s32)diff > 0x4000) {
             func_ov002_020de428(this);

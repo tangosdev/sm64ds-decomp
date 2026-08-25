@@ -23,7 +23,7 @@ int Player::St_DeadPit_Init()
         int b = (*(u16*)(*(char**)((char*)&mObjInMouth) + 0xc) == 0xbf);
         if (b) {
             func_ov002_020d5cec(*(char**)((char*)&mObjInMouth));
-            *(u16*)(((int)((char*)this) + 0x6ce)) &= ~2;
+            mStateFlags &= ~2;
             *(int*)(*(char**)((char*)&mObjInMouth) + 0xd0) = 0;
         }
         mUseAltBodyModel = 0;
@@ -55,7 +55,7 @@ int Player::St_DeadPit_Init()
         case 2:
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 7, 0x40000000, 0x1000, t);
             mVertSpeed = 0xa000;
-            *(int*)(((int)((char*)this) + 0x98)) >>= 1;
+            mHorzSpeed >>= 1;
             mIsAirborne = 1;
             mLandSoundPlayed = 0;
             _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0xb, ((char*)this) + 0x74);

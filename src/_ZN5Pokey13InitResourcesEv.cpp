@@ -1,6 +1,7 @@
 //cpp
 // @symbol _ZN5Pokey13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
+#include "common.h"
 #include "Pokey.h"
 extern "C" {
 void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
@@ -17,9 +18,8 @@ void func_ov096_02135efc(void* self);
 extern void* data_ov096_02137b20;
 extern void* data_ov096_02137b28;
 
-struct Block48 { int w[12]; };
 struct Block3 { int w[3]; };
-extern Block48 data_02082128;
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 int Pokey::InitResources()
 {
@@ -53,33 +53,33 @@ int Pokey::InitResources()
 
     t = (actorID == 0xf0);
     if (t != false) {
-        unk_36c = mPosX;
-        unk_370 = mPosY;
-        unk_374 = mPosZ;
+        mRootPosX = mPosX;
+        mRootPosY = mPosY;
+        mRootPosZ = mPosZ;
         mScaleX = 0x1000;
         mScaleY = 0x1000;
         mScaleZ = 0x1000;
-        unk_390 = 0;
-        unk_394 = 0;
+        mHead = 0;
+        mNextSegment = 0;
     } else {
         t = (actorID == 0xf1);
         if (t != false) {
             mScaleX = 0;
             mScaleY = 0;
             mScaleZ = 0;
-            *(void**)((char*)&unk_390) = _ZN8dActor_c10FindWithIDEj(param1);
-            unk_394 = 0;
+            *(void**)((char*)&mHead) = _ZN8dActor_c10FindWithIDEj(param1);
+            mNextSegment = 0;
             {
-                int* p = (int*)(((int)*(char**)((char*)&unk_390) + 0x36c));
-                unk_36c = p[0];
-                unk_370 = p[1];
-                unk_374 = p[2];
+                int* p = (int*)(((int)*(char**)((char*)&mHead) + 0x36c));
+                mRootPosX = p[0];
+                mRootPosY = p[1];
+                mRootPosZ = p[2];
             }
         }
     }
 
     func_ov096_02136928(((char*)this), 1);
-    *(Block48*)((char*)&unk_33c) = data_02082128;
+    *(Matrix4x3*)((char*)&mMatrix) = IDENTITY_MATRIX4X3;
     func_ov096_02135efc(((char*)this));
     return 1;
 }

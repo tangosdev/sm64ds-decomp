@@ -7,18 +7,18 @@
 
 struct daObjBC_Switch_c {
     u8  pad_000[0x60];
-    s32 unk_060;            /* 0x060 */
+    s32 mPosY;            /* 0x060 */
     u8  pad_064[0x2a];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x3c];
-    s8  unk_0cc;            /* 0x0cc */
+    s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x253];
-    s32 unk_320;            /* 0x320 */
+    s32 mStopPosY;            /* 0x320 */
     u8  pad_324[0x6];
-    u16 unk_32a;            /* 0x32a */
-    u8  unk_32c;            /* 0x32c */
-    u8  unk_32d;            /* 0x32d */
-    u8  unk_32e;            /* 0x32e */
+    u16 mCoinTimerSeed;            /* 0x32a */
+    u8  mPressed;            /* 0x32c */
+    u8  mEventBit;            /* 0x32d */
+    u8  mHomeAreaId;            /* 0x32e */
 };
 
 #endif

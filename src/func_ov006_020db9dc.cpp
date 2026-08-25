@@ -51,5 +51,5 @@ extern "C" void func_ov006_020db9dc(char *c)
     data_ov006_02141770 = 0;
     self->unk_539a = 0;
     data_ov006_0213bc44 = 1;
-    self->unk_5388 = 1;
+    self->mState = 1;
 }

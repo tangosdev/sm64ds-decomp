@@ -3,7 +3,11 @@
  *
  * class SignPost: 5 matched functions, 24 evidenced fields. Offsets and widths
  * below 0x320 are gone from this header and inherited now; the rest are still
- * observed, with gaps as explicit padding. Field NAMES are placeholders.
+ * observed, with gaps as explicit padding. Field names come from what the
+ * matched bodies do with each offset -- the per-offset citations are in
+ * notes/bgobject-provenance.md -- and reading Behavior as a real method turned
+ * four of the remaining `pad_` runs into real fields (0x354, 0x380, and
+ * 0x584/0x588/0x58c).
  *
  * THE BASE IS dBgActor_c, and the destructor says so outright. _ZN8SignPostD1Ev
  * (ov002 0x020badd0) stores exactly two vtables -- _ZTV15daObjTatefuda_c, then
@@ -58,32 +62,43 @@ typedef struct Player Player;
 #include "ShadowModel.h"
 
 struct SignPost : dBgActor_c {
-    dCcAc_c mdCcAc_c;  /* 0x320 */
-    u8  pad_354[0x4];
-    ShadowModel mShadowModel;   /* 0x358 */
-    u8  pad_380[0x30];
-    s32 unk_3b0;                /* 0x3b0 */
-    s32 unk_3b4;                /* 0x3b4 */
-    s32 unk_3b8;                /* 0x3b8 */
-    s16 unk_3bc;                /* 0x3bc */
-    s16 unk_3be;                /* 0x3be */
-    s16 unk_3c0;                /* 0x3c0 */
+    dCcAc_c mdCcAc_c;                /* 0x320 */
+    /* Behavior reads this word right after dCc_c::Clear/Update on mdCcAc_c and
+       branches on == 3 and <= 1, so it is that collider's result code. It sat
+       inside pad_354 until Behavior was read. */
+    s32 mClsnResult;                 /* 0x354 */
+    ShadowModel mShadowModel;        /* 0x358 */
+    /* Behavior hands this to dActor_c::DropShadowScaleXYZ as its Matrix4x3 &
+       argument, right after mShadowModel -- the drop shadow's own matrix. A
+       Matrix4x3 is 0x30 bytes and closes exactly on 0x3b0. Was pad_380. */
+    Matrix4x3 mShadowMat;            /* 0x380 */
+    s32 mHomePosX;                   /* 0x3b0 */
+    s32 mHomePosY;                   /* 0x3b4 */
+    s32 mHomePosZ;                   /* 0x3b8 */
+    s16 mHomeAngleX;                 /* 0x3bc */
+    s16 mHomeAngleY;                 /* 0x3be */
+    s16 mHomeAngleZ;                 /* 0x3c0 */
     u8  pad_3c2[0x6];
     /* dBgCh_Actr member. The cartridge's own ~SignPost calls _ZN10dBgCh_ActrD1Ev at
        +0x3c8 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgCh_Actr mWithMeshClsn;            /* 0x3c8 */
-    u8  pad_584[0xa];
-    u8  unk_58e;                /* 0x58e */
-    u8  unk_58f;                /* 0x58f */
-    u8  unk_590;                /* 0x590 */
-    u8  unk_591;                /* 0x591 */
+    dBgCh_Actr mWithMeshClsn;        /* 0x3c8 */
+    /* The three below sat inside pad_584 until Behavior was read: two recycled
+       Particle::System handles and the break countdown that consumes them. */
+    u32 mParticleHandle1;            /* 0x584 */
+    u32 mParticleHandle2;            /* 0x588 */
+    u8  mBreakTimer;                 /* 0x58c */
+    u8  pad_58d[0x1];
+    u8  mPoundsLeft;                 /* 0x58e */
+    u8  mPoundCooldown;              /* 0x58f */
+    u8  mHidden;                     /* 0x590 */
+    u8  mRespawnDelay;               /* 0x591 */
     u8  pad_592[0xa];
     /* Player * -- the ROM loads this WORD and passes it to _ZN6Player9DropActorEv as that
        function's `this`, which is an object address, so the word is a Player *. It says
        nothing about the rest of the marker's span, which stays explicit padding. Was a u8
        marker. */
-    Player *unk_59c;            /* 0x59c */
+    Player *mHoldingPlayer;          /* 0x59c */
     u8  pad_5a0[0x4];
 
     /* --- vtable --- */
@@ -110,7 +125,11 @@ struct SignPost : dBgActor_c {
        eligible.py and rombuild.py judge it -- checked, not assumed. */
     virtual void Kill();        /* slot 31 */
 
-    /* --- non-virtual --- */
+    /* --- overrides of inherited fBase_c slots, each declared under its base's
+           own signature. Declared AFTER Kill on purpose: Kill is this class's
+           key function (the destructor above is inline), and the first
+           out-of-line virtual declared is what the ABI picks. --- */
+    int Behavior();
     int CleanupResources();
     int InitResources();
     int Render();
@@ -129,51 +148,56 @@ typedef char SignPost_size_must_be_0x5a4[sizeof(SignPost) == 0x5a4 ? 1 : -1];
    arrangement as include/dBgActor_c.h. */
 struct SignPost {
     u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
+    s32 mPosX;                       /* 0x05c */
+    s32 mPosY;                       /* 0x060 */
+    s32 mPosZ;                       /* 0x064 */
     u8  pad_068[0x24];
-    s16 mAngleX;            /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    s16 mAngleZ;            /* 0x090 */
+    s16 mAngleX;                     /* 0x08c */
+    s16 mAngleY;                     /* 0x08e */
+    s16 mAngleZ;                     /* 0x090 */
     u8  pad_092[0xa];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mVertAccel;                  /* 0x09c */
+    s32 mTerminalVelocity;           /* 0x0a0 */
     u8  pad_0a4[0xc];
-    s32 unk_0b0;            /* 0x0b0 */
+    s32 mFlags;                      /* 0x0b0 */
     u8  pad_0b4[0x20];
     /* Model member. The cartridge's own ~SignPost calls _ZN5ModelD1Ev at +0x0d4
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
        D1 and not D2, so it is this type and not an inlined base. */
-    Model mModel;            /* 0x0d4 */
+    Model mModel;                    /* 0x0d4 */
     /* dBgW_KcMbg member. The cartridge's own ~SignPost calls _ZN10dBgW_KcMbgD1Ev at
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  unk_2ec;            /* 0x2ec */
+    dBgW_KcMbg mMeshCollider;        /* 0x124 */
+    u8  mClsnMat;                    /* 0x2ec */
     u8  pad_2ed[0x33];
-    u8  mdCcAc_c;            /* 0x320 */
-    u8  pad_321[0x37];
-    u8  mShadowModel;            /* 0x358 */
-    u8  pad_359[0x57];
-    s32 unk_3b0;            /* 0x3b0 */
-    s32 unk_3b4;            /* 0x3b4 */
-    s32 unk_3b8;            /* 0x3b8 */
-    s16 unk_3bc;            /* 0x3bc */
-    s16 unk_3be;            /* 0x3be */
-    s16 unk_3c0;            /* 0x3c0 */
+    u8  mdCcAc_c;                    /* 0x320 */
+    u8  pad_321[0x33];
+    s32 mClsnResult;                 /* 0x354 */
+    u8  mShadowModel;                /* 0x358 */
+    u8  pad_359[0x27];
+    struct Matrix4x3 mShadowMat;     /* 0x380 */
+    s32 mHomePosX;                   /* 0x3b0 */
+    s32 mHomePosY;                   /* 0x3b4 */
+    s32 mHomePosZ;                   /* 0x3b8 */
+    s16 mHomeAngleX;                 /* 0x3bc */
+    s16 mHomeAngleY;                 /* 0x3be */
+    s16 mHomeAngleZ;                 /* 0x3c0 */
     u8  pad_3c2[0x6];
     /* dBgCh_Actr member. The cartridge's own ~SignPost calls _ZN10dBgCh_ActrD1Ev at
        +0x3c8 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgCh_Actr mWithMeshClsn;            /* 0x3c8 */
-    u8  pad_584[0xa];
-    u8  unk_58e;            /* 0x58e */
-    u8  unk_58f;            /* 0x58f */
-    u8  unk_590;            /* 0x590 */
-    u8  unk_591;            /* 0x591 */
+    dBgCh_Actr mWithMeshClsn;        /* 0x3c8 */
+    u32 mParticleHandle1;            /* 0x584 */
+    u32 mParticleHandle2;            /* 0x588 */
+    u8  mBreakTimer;                 /* 0x58c */
+    u8  pad_58d[0x1];
+    u8  mPoundsLeft;                 /* 0x58e */
+    u8  mPoundCooldown;              /* 0x58f */
+    u8  mHidden;                     /* 0x590 */
+    u8  mRespawnDelay;               /* 0x591 */
     u8  pad_592[0xa];
-    Player *unk_59c;            /* 0x59c */
+    Player *mHoldingPlayer;          /* 0x59c */
     u8  pad_5a0[0x4];
 };
 

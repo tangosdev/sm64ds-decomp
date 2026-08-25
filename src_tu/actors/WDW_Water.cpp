@@ -79,8 +79,8 @@ int WDW_Water::InitResources()
     _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(data_ov029_021142fc[1], &data_ov029_02112fb8);
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(((char *)this) + 0x320, &data_ov029_02112fb8, 0, 0x1000, 0);
 
-    unk_338 = (u8)((*(s32 *)&param1) & 1);
-    if (unk_338 == 0) {
+    mUseSpawnPosY = (u8)((*(s32 *)&param1) & 1);
+    if (mUseSpawnPosY == 0) {
         unsigned int idx = data_0209f2c0[0];
         if (idx >= 3) idx = 2;
         mPosY = data_ov029_02112b2c[idx];
@@ -156,7 +156,7 @@ int WDW_Water::Behavior()
         }
     }
 
-    if (mPosY != unk_06c) {
+    if (mPosY != mPrevPosY) {
         mSoundID = _ZN5Sound8PlayLongEjjjRK7Vector3s(
             *(unsigned *)((u8 *)&mSoundID), 3, 0x96, ((u8 *)this) + 0x74, 0);
     }

@@ -11,8 +11,8 @@ int Player::St_EndingFly_Init()
 {
   Player_DisableInteraction(((char*)this));
   mIsControlDisabled=1;
-  unk_6e6=0;
-  mStateWork=unk_6e6;
+  mStatePhase=0;
+  mStateWork=mStatePhase;
   _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this),0x54,0x40000000,0x1000,0);
   return 1;
 }

@@ -153,7 +153,7 @@ extern int _ZN11ShadowModel12InitCylinderEv(char* self);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* self, struct dActor_c* a, int r, int h, struct Vector3_16* rot, int f);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(char* self, struct BMD_File* f, int a, int b);
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* self, struct dActor_c* a, struct Vector3* pos, int r, int h, u32 f1, u32 f2);
-extern struct M48 data_02082128;
+extern struct M48 IDENTITY_MATRIX4X3;
 extern int data_ov020_02114ab8[];
 extern int data_ov020_02114aa0[];
 /* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov020_021115ac, NOT applied: extern void *_ZN8dActor_c10FindWithIDEj(u32 id); */
@@ -344,7 +344,7 @@ int BookShot::InitResources()
     if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x174, (struct BMD_File*)((int*)&data_ov020_02114ab8)[1], 1, -1) == 0)
         return 0;
 
-    *(struct M48*)((char*)&unk_1ec) = data_02082128;
+    *(struct M48*)((char*)&unk_1ec) = IDENTITY_MATRIX4X3;
     unk_450 = 0;
     *(short*)(int)LDR((char*)&mAngleY) = *(short*)(int)LDR((char*)&mAngleY) + 0x8000;
     unk_44c = 0x800;
@@ -435,10 +435,10 @@ int BookShot::Behavior()
 {
     func_0200f760(((char*)this), ((char*)this) + 0x21c);
     if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(((char*)this), ((char*)this) + 0x25c) != 0) {
-        if (unk_107 != 0 && unk_104 == 5) {
+        if (mEatenByYoshi != 0 && unk_104 == 5) {
             unk_428 = mState;
             mState = 5;
-            unk_107 = 0;
+            mEatenByYoshi = 0;
             mVertSpeed = 0;
             mHorzSpeed = 0x8000;
         }

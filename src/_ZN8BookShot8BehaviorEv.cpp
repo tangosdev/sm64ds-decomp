@@ -16,10 +16,10 @@ int BookShot::Behavior()
 {
     func_0200f760(((char*)this), ((char*)this) + 0x21c);
     if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(((char*)this), ((char*)this) + 0x25c) != 0) {
-        if (unk_107 != 0 && unk_104 == 5) {
+        if (mEatenByYoshi != 0 && unk_104 == 5) {
             unk_428 = mState;
             mState = 5;
-            unk_107 = 0;
+            mEatenByYoshi = 0;
             mVertSpeed = 0;
             mHorzSpeed = 0x8000;
         }

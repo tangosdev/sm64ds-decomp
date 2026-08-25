@@ -3,6 +3,6 @@
 #include "BobOmb.h"
 /* recovered: renamed to Class_Method */
 s32 BobOmb::OnYoshiTryEat() {
-    unsigned char * p = (unsigned char *)this;
-    return p[263] == 0;
+    /* 263 == 0x107, dEnemyBase_c's own byte at that offset. */
+    return mEatenByYoshi == 0;
 }

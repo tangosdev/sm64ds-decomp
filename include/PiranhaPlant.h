@@ -40,27 +40,20 @@ struct PiranhaPlant : dEnemyBase_c {
     dCcAc_c           mdCcAc_c1;  /* 0x380 */
     dCcAc_c           mdCcAc_c2;  /* 0x3b4 */
     dCcAcPos_c    mdCcAcPos_c; /* 0x3e8 */
-    u8                           unk_428;               /* 0x428 */
-    u8  pad_429[0xb];
-    s32                          unk_434;               /* 0x434 */
-    s32                          unk_438;               /* 0x438 */
-    s32                          unk_43c;               /* 0x43c */
-    s32                          unk_440;               /* 0x440 */
-    s32                          unk_444;               /* 0x444 */
-    s32                          unk_448;               /* 0x448 */
-    s32                          unk_44c;               /* 0x44c */
-    s32                          unk_450;               /* 0x450 */
-    s32                          unk_454;               /* 0x454 */
+    Vector3                      mPipeScale;            /* 0x428 */
+    Vector3                      mFirePos;              /* 0x434 */
+    Vector3                      mSpawnPos;             /* 0x440 */
+    Vector3                      mHomePos;              /* 0x44c */
     s32                          mState;                /* 0x458 */
-    u8                           unk_45c;               /* 0x45c */
+    u8                           mClsnEnabled;          /* 0x45c */
     u8                           unk_45d;               /* 0x45d */
     u8  pad_45e[0x2];
     s32                          unk_460;               /* 0x460 */
     s32                          unk_464;               /* 0x464 */
-    s16                          unk_468;               /* 0x468 */
+    s16                          mInitAngleY;           /* 0x468 */
     u8  pad_46a[0x2];
     s32                          unk_46c;               /* 0x46c */
-    s32                          unk_470;               /* 0x470 */
+    s32                          mParticleHandle;       /* 0x470 */
     s32                          unk_474;               /* 0x474 */
     s32                          unk_478;               /* 0x478 */
 

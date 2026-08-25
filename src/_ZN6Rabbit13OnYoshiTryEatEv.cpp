@@ -3,8 +3,7 @@
 #include "Rabbit.h"
 /* recovered: renamed to Class_Method */
 s32 Rabbit::OnYoshiTryEat() {
-    unsigned char * c = (unsigned char *)this;
-  unsigned char v = c[0x107];
+  unsigned char v = mEatenByYoshi;
   if (v != 0) return 0;
   return 7;
 }

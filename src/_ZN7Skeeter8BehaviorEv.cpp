@@ -58,7 +58,7 @@ int Skeeter::Behavior()
 
     if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(c, &mWithMeshClsn)) {
         _ZN5dCc_c5ClearEv(&mdCcAcPos_c);
-        if (unk_107 != 0 && unk_104 == 0)
+        if (mEatenByYoshi != 0 && unk_104 == 0)
             _ZN5dCc_c6UpdateEv(&mdCcAcPos_c);
         func_ov090_02131e50(c);
         return 1;
@@ -119,7 +119,7 @@ int Skeeter::Behavior()
 
     _ZN8dActor_c9UpdatePosEP5dCc_c(c, &mdCcAcPos_c);
     func_ov090_02131378(c);
-    DecIfAbove0_Short((u16 *)&unk_100);
+    DecIfAbove0_Short((u16 *)&mStateTimer);
     DecIfAbove0_Short(&unk_394);
     DecIfAbove0_Short(&unk_396);
     DecIfAbove0_Short(&unk_398);

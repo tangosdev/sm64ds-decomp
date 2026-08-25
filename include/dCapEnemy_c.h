@@ -32,11 +32,16 @@ struct dCapEnemy_c : dEnemyBase_c {
     /* Which BANK of caps this enemy draws from. AddCap sets it when the spawn
        param is >= 3, and both ReleaseCap and GetCapEatenOffIt branch on it --
        a set flag releases the cap differently and skips the model re-bind. */
-    u8  unk_110;                  /* 0x110 */
-    u8  unk_111;                  /* 0x111 */
+    u8  mCapBank;                 /* 0x110 */
+    /* Dormant marker. RespawnIfHasCap sets it to 1 on the REPLACEMENT actor it
+       spawns; AddCap clears it; GetCapState returns 2 while it is clear (the
+       ordinary enemy), and when it is set it returns 0 or -- once the cap's
+       release bit is up -- clears it, restores mFlags from field 0xf4 and
+       returns 1. daKrb_c::Render draws nothing while it is set. */
+    u8  mIsDormant;               /* 0x111 */
     /* Latched to 1 the first time a bank-1 cap is added, and never cleared;
        passed straight through to func_ov001_020ab228. */
-    u8  unk_112;                  /* 0x112 */
+    u8  mHadBank1Cap;             /* 0x112 */
     /* The cap, packed. Low 3 bits index the six-entry model table and 6 means
        "no cap" -- AddCap writes param % 3 and falls back to 6 on any failure,
        and UnloadCapModel/ReleaseCap both mask with & 7 before indexing.

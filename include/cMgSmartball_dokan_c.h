@@ -11,7 +11,7 @@
  *
  * CONSTRUCTED BY func_ov006_02110bc0, left a free function for the same
  * reason the base's is (this tree has migrated zero constructors). It calls
- * the base constructor, stores this vtable, and sets the base's unk_028 to
+ * the base constructor, stores this vtable, and sets the base's mRadius to
  * 0x20000 -- the per-child constant every sibling's constructor also writes,
  * each with its own value. */
 #ifndef CMGSMARTBALL_DOKAN_C_H

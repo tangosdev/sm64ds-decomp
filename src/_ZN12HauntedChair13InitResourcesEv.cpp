@@ -13,8 +13,7 @@ extern void _ZN11ShadowModel12InitCylinderEv(char* self);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* self, struct dActor_c* a, int r, int h, struct Vector3_16* rot, int f);
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* self, struct dActor_c* a, struct Vector3* pos, int r, int h, u32 f1, u32 f2);
 }
-struct M48 { int w[12]; };
-extern struct M48 data_02082128;
+extern struct Matrix4x3 IDENTITY_MATRIX4X3;
 
 int HauntedChair::InitResources()
 {
@@ -22,14 +21,14 @@ int HauntedChair::InitResources()
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, f, 1, -1);
     _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel);
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x1bc, (struct dActor_c*)((char*)this), 0x32000, 0x64000, 0, 0);
-    unk_38c = 0;
-    unk_390 = 0;
-    unk_394 = 0;
-    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this)+0x17c, (struct dActor_c*)((char*)this), (struct Vector3*)((char*)&unk_38c), 0x32000, 0x64000, 0x200004, 0);
-    unk_378 = 0;
-    unk_380 = mPosX;
-    unk_384 = mPosY;
-    unk_388 = mPosZ;
-    *(struct M48*)((char*)&mShadowMat) = data_02082128;
+    mClsnOffsetX = 0;
+    mClsnOffsetY = 0;
+    mClsnOffsetZ = 0;
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this)+0x17c, (struct dActor_c*)((char*)this), (struct Vector3*)((char*)&mClsnOffsetX), 0x32000, 0x64000, 0x200004, 0);
+    mState = 0;
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
+    *(struct Matrix4x3*)((char*)&mShadowMat) = IDENTITY_MATRIX4X3;
     return 1;
 }

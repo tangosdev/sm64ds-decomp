@@ -2,11 +2,11 @@
 // @symbol _ZN11dScMiniGm_c8BehaviorEv
 /* recovered: named members + real C++ method */
 /* dScMiniGm_c::Behavior() -- vtable slot 6. Runs the minigame-menu frame: a
- * touch anywhere plays the click, an active minigame (data_0209b300 == 1) takes
- * the whole frame, and otherwise three countdowns run in priority order --
- * unk_090 and unk_094 each flip the page direction when they expire, unk_098
- * closes the menu entirely. With none pending, unk_08c and unk_09c free-run as
- * 0..0x3f animation phases. */
+ * touch anywhere plays the click, an active minigame (data_0209b300 == 1)
+ * takes the whole frame, and otherwise three countdowns run in priority
+ * order -- mPrevPageTimer and mNextPageTimer each flip the page when they
+ * expire, mExitTimer closes the menu. With none pending, mArrowBobPhase and
+ * mIconBlinkPhase free-run as 0..0x3f animation phases. */
 #include "dScMiniGm_c.h"
 #include "decl_Scene.h"
 #include "decl_common.h"
@@ -35,32 +35,32 @@ s32 dScMiniGm_c::Behavior()
     RandomIntInternal(&data_0209d4b8);
     RandomIntInternal(&data_0209e650);
 
-    if (unk_090 > 0) {
-        unk_090 -= 1;
-        if (unk_090 == 0) {
+    if (mPrevPageTimer > 0) {
+        mPrevPageTimer -= 1;
+        if (mPrevPageTimer == 0) {
             data_0209b304 = 0;
-            unk_054 = 1;
+            mPageFlipped = 1;
         }
-    } else if (unk_094 > 0) {
-        unk_094 -= 1;
-        if (unk_094 == 0) {
+    } else if (mNextPageTimer > 0) {
+        mNextPageTimer -= 1;
+        if (mNextPageTimer == 0) {
             data_0209b304 = 1;
-            unk_054 = 1;
+            mPageFlipped = 1;
         }
-    } else if (unk_098 > 1) {
-        unk_098 -= 1;
-        if (unk_098 == 1) {
+    } else if (mExitTimer > 1) {
+        mExitTimer -= 1;
+        if (mExitTimer == 1) {
             _ZN8dScene_c20SetAndStopColorFaderEv();
             ExitMinigameMenu();
             _ZN5Sound22StopLoadedMusic_Layer1Ej(0x1e);
-            unk_0ac = 1;
+            mExiting = 1;
             return 1;
         }
     } else {
-        unk_08c += 1;
-        if (unk_08c >= 0x40) unk_08c = 0;
-        unk_09c += 1;
-        if (unk_09c >= 0x40) unk_09c = 0;
+        mArrowBobPhase += 1;
+        if (mArrowBobPhase >= 0x40) mArrowBobPhase = 0;
+        mIconBlinkPhase += 1;
+        if (mIconBlinkPhase >= 0x40) mIconBlinkPhase = 0;
     }
     func_ov005_020c0878((char *)this);
     func_ov005_020c06cc((char *)this);

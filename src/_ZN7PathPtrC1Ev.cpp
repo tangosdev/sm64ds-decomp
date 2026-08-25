@@ -12,4 +12,4 @@
  */
 #include "PathPtr.h"
 
-PathPtr::PathPtr() : unk_000(0), unk_004(0) {}
+PathPtr::PathPtr() : def(0), unk_004(0) {}

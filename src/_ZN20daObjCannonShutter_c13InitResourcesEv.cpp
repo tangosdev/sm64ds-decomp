@@ -21,20 +21,20 @@ int IsCannonOpenInCurLevel(void);
 int daObjCannonShutter_c::InitResources()
 {
     struct BMD_File *bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210e12c);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((unsigned char *)this) + 0xd4, bmd, 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii((unsigned char *)&mModel, bmd, 1, -1);
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((unsigned char *)this));
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((unsigned char *)this));
     {
         struct KCL_File *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov002_0210e124);
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            ((unsigned char *)this) + 0x124, kcl, *(struct Matrix4x3 *)((unsigned char *)&(*(u8 *)&mClsnMat)), 0x199,
+            (unsigned char *)&mMeshCollider, kcl, *(struct Matrix4x3 *)&mClsnMat, 0x199,
             mAngleY, data_ov002_0210d7f4);
     }
-    unk_320 = mPosX;
-    unk_324 = mPosY;
-    unk_328 = mPosZ;
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
     if (IsCannonOpenInCurLevel() != 0) {
-        unk_32e = 1;
+        mCannonOpen = 1;
     }
     return 1;
 }

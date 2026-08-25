@@ -38,9 +38,8 @@ extern SharedFilePtr *data_ov071_021226a4[2];
 extern SharedFilePtr data_ov071_021226a0;
 extern SharedFilePtr data_ov071_02123048;
 extern SharedFilePtr data_ov071_02123038;
-extern char data_02082128;
+extern char IDENTITY_MATRIX4X3;
 
-struct M48 { int w[12]; };
 
 extern "C" int _ZN3MrI13InitResourcesEv(char *c)
 {
@@ -109,7 +108,7 @@ extern "C" int _ZN3MrI13InitResourcesEv(char *c)
     *(int *)(c + 0x1ec) = 0;
     *(unsigned char *)(c + 0x216) = 0x2e;
 
-    *(M48 *)(c + 0x1b4) = *(M48 *)&data_02082128;
+    *(Matrix4x3 *)(c + 0x1b4) = *(Matrix4x3 *)&IDENTITY_MATRIX4X3;
 
     char rg[0x50];
     _ZN9dBgCh_GndC1Ev(rg);

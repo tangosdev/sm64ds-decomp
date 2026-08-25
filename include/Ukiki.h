@@ -54,22 +54,36 @@ struct Ukiki : dActor_c {
        [UkikiThief_Spawn.c, _ZN5UkikiD0Ev.c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x194 */
     u8  pad_350[0x30];
+    /* Second position triple, also seeded from mPos in InitResources, but with
+       0x64000 (100.0) added to Y immediately after -- a point a hundred units
+       above the spawn. Nothing in a matched body reads it back, so what it is
+       FOR is unevidenced and these keep unk_ names.
+       [_ZN5Ukiki13InitResourcesEv.cpp] */
     s32 unk_380;            /* 0x380 */
     s32 unk_384;            /* 0x384 */
     s32 unk_388;            /* 0x388 */
-    s32 unk_38c;            /* 0x38c */
-    s32 unk_390;            /* 0x390 */
-    s32 unk_394;            /* 0x394 */
+    /* Exact copy of mPosX/Y/Z, taken once in InitResources and never written
+       again. [_ZN5Ukiki13InitResourcesEv.cpp] */
+    s32 mSpawnPosX;            /* 0x38c */
+    s32 mSpawnPosY;            /* 0x390 */
+    s32 mSpawnPosZ;            /* 0x394 */
     /* PathPtr member, named by UkikiThief_Spawn/UkikiStar_Spawn's own C1
        call at +0x398. Trivial (no dtor), so _ZN5UkikiD0Ev does not destroy
        it. */
     PathPtr mPathPtr;            /* 0x398 */
     u8  pad_3a0[0x8];
     s32 unk_3a8;            /* 0x3a8 */
-    s32 unk_3ac;            /* 0x3ac */
-    u32 unk_3b0;            /* 0x3b0 */
+    /* The cap-thief group. Only actor 0x10b (UkikiThief) runs it: it reads the
+       closest player's fBase_c::param1 (the character number, guarded < 3) into
+       mCapPlayerNo, spawns actor 0x10d -- Mario's lost cap -- with
+       (mCapPlayerNo << 8) | 2 as its spawn parameter, keeps the spawned actor's
+       fBase_c::uniqueID in mCapUniqueID, and latches mHasSpawnedCap so it never
+       spawns a second one. Behavior runs the same block again from raw offsets.
+       [_ZN5Ukiki13InitResourcesEv.cpp, _ZN5Ukiki8BehaviorEv.cpp] */
+    s32 mCapUniqueID;            /* 0x3ac */
+    u32 mCapPlayerNo;            /* 0x3b0 */
     u8  pad_3b4[0x14];
-    u8  unk_3c8;            /* 0x3c8 */
+    u8  mHasSpawnedCap;            /* 0x3c8 */
     u8  pad_3c9[0x2];
     u8  unk_3cb;            /* 0x3cb */
 

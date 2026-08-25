@@ -42,16 +42,16 @@ struct SnowmanBody {
        +0x180 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgCh_Actr mWithMeshClsn;            /* 0x180 */
-    s32 unk_33c;            /* 0x33c */
-    s32 unk_340;            /* 0x340 */
-    s32 unk_344;            /* 0x344 */
-    s16 unk_348;            /* 0x348 */
-    s16 unk_34a;            /* 0x34a */
-    s16 unk_34c;            /* 0x34c */
+    s32 mHomePosX;            /* 0x33c */
+    s32 mHomePosY;            /* 0x340 */
+    s32 mHomePosZ;            /* 0x344 */
+    s16 mHomeAngleX;            /* 0x348 */
+    s16 mHomeAngleY;            /* 0x34a */
+    s16 mHomeAngleZ;            /* 0x34c */
     u8  pad_34e[0x2];
-    u8  unk_350;            /* 0x350 */
+    u8  mShadowMat;            /* 0x350 */
     u8  pad_351[0x3f];
-    s32 unk_390;            /* 0x390 */
+    s32 mTalkPlayer;            /* 0x390 */
     u8  pad_394[0x10];
     u8  unk_3a4;            /* 0x3a4 */
 #ifdef __cplusplus

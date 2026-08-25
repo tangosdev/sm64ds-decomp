@@ -16,17 +16,17 @@ extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *, int a, int b)
 int FortressWall::Behavior()
 {
     int ok = (actorID == 0x30);
-    if (ok != 0 && unk_321 != 0) {
+    if (ok != 0 && mBroken != 0) {
         if (mMeshCollider.IsEnabled() != 0) {
             mMeshCollider.Disable();
         }
-        if (Sound::PlaySecretSound(this, (u16 *)&unk_322) != 0) {
+        if (Sound::PlaySecretSound(this, &mBreakSoundState) != 0) {
             Vector3 pos;
             pos.x = mPosX;
             pos.y = mPosY;
             pos.z = mPosZ;
             pos.y += 0xc8000;
-            dActor_c::Spawn(0xb2, unk_31f | 0x40, pos, (Vector3_16 *)0, mAreaId, -1);
+            dActor_c::Spawn(0xb2, mStarId | 0x40, pos, (Vector3_16 *)0, mAreaId, -1);
             MarkForDestruction();
         }
         return 1;

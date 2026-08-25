@@ -13,13 +13,13 @@ extern "C" void func_ov102_02149da8(void *self, int state);
  * already named there -- this override resets the block's own vertical
  * physics to a fixed pop before running the shared combat-callback body
  * (see src/_ZN13QuestionBlock15OnGroundPoundedER8dActor_c.cpp for the
- * unk_3e8/unk_3f2/helper notes). */
+ * mState/mHitterParam/helper notes). */
 int QuestionBlock::OnHitFromUnderneath(dActor_c &other)
 {
-    if (unk_3e8 == 1) return;
+    if (mState == 1) return;
     mVertAccel = -0x8000;
     mVertSpeed = 0x1e000;
     if (func_ov102_02149078(this)) return;
-    unk_3f2 = other.param1;
+    mHitterParam = other.param1;
     func_ov102_02149da8(this, 1);
 }

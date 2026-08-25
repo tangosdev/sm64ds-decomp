@@ -48,27 +48,42 @@ struct RollingIronBall : dEnemyBase_c {
     ShadowModel                  mShadowModel;          /* 0x31c */
     u8  pad_344[0x30];
     dCcAc_c           mdCcAc_c;   /* 0x374 */
-    s32                          unk_3a8;               /* 0x3a8 */
-    s32                          unk_3ac;               /* 0x3ac */
-    s32                          unk_3b0;               /* 0x3b0 */
-    s32                          unk_3b4;               /* 0x3b4 */
+    s32                          unk_3a8;               /* 0x3a8 -- zeroed by InitResources; no reader */
+    /* The scale Render hands to the model: it passes &mDrawScaleX as the scale
+       argument, where the rest of this family passes dActor_c's own &mScaleX.
+       InitResources writes 0x1000 (1.0) to all three, or 0x800 (0.5) in the one
+       level that uses the small ball. */
+    s32                          mDrawScaleX;           /* 0x3ac */
+    s32                          mDrawScaleY;           /* 0x3b0 */
+    s32                          mDrawScaleZ;           /* 0x3b4 */
     u8  pad_3b8[0x2];
-    s16                          unk_3ba;               /* 0x3ba */
+    s16                          unk_3ba;               /* 0x3ba -- an angle: func_ov100_0214233c
+                                                            fills it and InitResources copies it
+                                                            straight into mPrevAngleY */
     u8  pad_3bc[0x4];
-    s32                          unk_3c0;               /* 0x3c0 */
-    s32                          unk_3c4;               /* 0x3c4 */
-    s32                          unk_3c8;               /* 0x3c8 */
-    s32                          unk_3cc;               /* 0x3cc */
-    u8                           unk_3d0;               /* 0x3d0 */
+    s32                          unk_3c0;               /* 0x3c0 -- per-level distance, kind 0 only */
+    s32                          unk_3c4;               /* 0x3c4 -- per-level distance, kind 0 only */
+    s32                          unk_3c8;               /* 0x3c8 -- per-level, seeded from data_02092138 */
+    s32                          unk_3cc;               /* 0x3cc -- zeroed by InitResources */
+    /* param1's low nibble, consumed immediately (param1 is then shifted down by
+       four so the next nibble is the path ID). InitResources switches on it --
+       0 is the static ball, 1 the free-rolling one, 2 and 4 the path followers --
+       Behavior indexes its handler table with it, and Render skips kind 0. */
+    u8                           mVariant;              /* 0x3d0 */
     u8  pad_3d1[0x1];
-    u8                           unk_3d2;               /* 0x3d2 */
+    u8                           unk_3d2;               /* 0x3d2 -- zeroed by InitResources */
     u8  pad_3d3[0x1];
-    s32                          unk_3d4;               /* 0x3d4 */
-    s32                          unk_3d8;               /* 0x3d8 */
-    s32                          unk_3dc;               /* 0x3dc */
-    s32                          unk_3e0;               /* 0x3e0 */
-    s32                          unk_3e4;               /* 0x3e4 */
-    u8  pad_3e8[0xc];
+    s32                          mNumPathNodes;         /* 0x3d4 -- PathPtr::NumNodes() */
+    s32                          mPathNodeIndex;        /* 0x3d8 -- index passed to PathPtr::GetNode */
+    s32                          mSpawnPosX;            /* 0x3dc */
+    s32                          mSpawnPosY;            /* 0x3e0 */
+    s32                          mSpawnPosZ;            /* 0x3e4 */
+    /* Where PathPtr::GetNode writes the node it was asked for; InitResources
+       compares it against the actor's own position to decide whether to skip
+       ahead one node. */
+    s32                          mNextNodePosX;         /* 0x3e8 */
+    s32                          mNextNodePosY;         /* 0x3ec */
+    s32                          mNextNodePosZ;         /* 0x3f0 */
     PathPtr                      mPathPtr;              /* 0x3f4 */
 
     /* --- vtable --- */

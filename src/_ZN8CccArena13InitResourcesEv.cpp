@@ -33,23 +33,23 @@ int CccArena::InitResources()
     switch (actorID) {
         case 0xaa:
             unk_330 = 3;
-            ((char *)this)[0x32c] = 0;
+            mVariant = 0;
             break;
         case 0xab:
             unk_330 = 3;
-            ((char *)this)[0x32d] = data_ov073_02123424[0];
+            mSpawnIndex = data_ov073_02123424[0];
             data_ov073_02123424[0]++;
-            ((char *)this)[0x32c] = 1;
+            mVariant = 1;
             break;
         case 0xac:
             unk_330 = 3;
-            ((char *)this)[0x32d] = data_ov073_02123420[0];
+            mSpawnIndex = data_ov073_02123420[0];
             data_ov073_02123420[0]++;
-            ((char *)this)[0x32c] = 2;
+            mVariant = 2;
             break;
     }
 
-    idx = (unsigned char)((char *)this)[0x32c];
+    idx = mVariant;
     f = _ZN5Model8LoadFileER13SharedFilePtr(*(int*)(data_ov073_021231bc + idx * 0xc));
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, f, 1, -1);
     Matrix4x3_FromRotationXYZExt(((char *)this) + 0xf0, mAngleX, mAngleY, mAngleZ);
@@ -59,7 +59,7 @@ int CccArena::InitResources()
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
 
     {
-        unsigned char i = (unsigned char)((char *)this)[0x32c];
+        unsigned char i = mVariant;
         f = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(int*)(data_ov073_021231c0 + i * 0xc));
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             ((char *)this) + 0x124, f, ((char *)this) + 0x2ec, 0x1000, mAngleY, *(int*)(data_ov073_021231c4 + i * 0xc));

@@ -54,7 +54,7 @@ int Player::St_LevelEnter_Init()
         }
     }
 
-    unk_719 = -1;
+    mKeyModelId = -1;
     Player_DisableInteraction(((char*)this));
     mJumpComboStage = 0;
     mHorzSpeed = 0;

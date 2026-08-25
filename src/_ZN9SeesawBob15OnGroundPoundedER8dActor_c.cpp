@@ -22,7 +22,7 @@ void SeesawBob::OnGroundPounded(dActor_c &other)
     s16 angle = Vec3_HorzAngle(a + 0x5c, b5c);
     int n, d, idx, prod, cur, v;
     s16 *p;
-    a[0x326] = 1;
+    mPoundedThisFrame = 1;
     n = func_ov095_0213579c(a, b);
     d = AngleDiff(angle, *(s16 *)(a + 0x8e));
     idx = ((u16)(s16)d >> 4) << 1;

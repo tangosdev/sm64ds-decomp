@@ -16,7 +16,7 @@ extern int data_ov002_0210da30[];
 int MegaMushroomCreateTag::InitResources()
 {
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, (char *)this, 0x12c000, 0x32000, 0x800002, 0x20);
-    unk_109 = unk_008;
+    unk_109 = param1;
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da30);
     return 1;
 }

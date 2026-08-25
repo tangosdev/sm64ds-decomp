@@ -45,19 +45,19 @@ int Eyerok::Behavior()
 {
     char *c = (char *)this;
 
-    DecIfAbove0_Short((u16 *)(c + 0x4d0));
-    DecIfAbove0_Short((u16 *)(c + 0x4d2));
+    DecIfAbove0_Short(&mTimer1);
+    DecIfAbove0_Short(&mTimer2);
 
     {
-        State *st = *(State **)(c + 0x48c);
+        State *st = *(State **)&mState;
         if (*(int *)((char *)st + 8) != 0)
             (((C *)c)->*(st->fn))();
     }
 
-    if (*(u16 *)(c + 0x4d4) != 0) {
-        if ((*(u16 *)(c + 0x4d4) & 1) == 0) {
+    if (mDustCounter != 0) {
+        if ((mDustCounter & 1) == 0) {
             int rnd = RandomIntInternal(&data_0209e650);
-            int off = (*(u16 *)(c + 0x4d4) >> 1) * 0xc;
+            int off = (mDustCounter >> 1) * 0xc;
             int base_dc = 0x4dc;
             int base_e4 = 0x4e4;
             char *bx = c + base_dc;
@@ -69,9 +69,9 @@ int Eyerok::Behavior()
             int zero;
             EVec3 vin;
             EVec3 vout;
-            *(int *)(bx + off) = *(int *)(c + 0x5c);
-            *(int *)(by + off) = *(int *)(c + 0x60);
-            *(int *)(bz + off) = *(int *)(c + 0x64);
+            *(int *)(bx + off) = mPosX;
+            *(int *)(by + off) = mPosY;
+            *(int *)(bz + off) = mPosZ;
             px = (int *)(bx + off);
             py = (int *)(by + off);
             pz = (int *)(bz + off);
@@ -82,10 +82,10 @@ int Eyerok::Behavior()
             vout.x = zero;
             vout.y = zero;
             vout.z = zero;
-            if (*(void **)(c + 0x48c) != (void *)&data_ov066_0211b07c) {
-                if (*(s16 *)(c + 0x8e) != 0) {
+            if (mState != (void *)&data_ov066_0211b07c) {
+                if (mAngleY != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
-                    Matrix4x3_FromRotationY(data_020a0e68, (s16)(*(s16 *)(c + 0x8e) - 0x4000));
+                    Matrix4x3_FromRotationY(data_020a0e68, (s16)(mAngleY - 0x4000));
                     MulVec3Mat4x3(&vin, data_020a0e68, &vout);
                     *px += vout.x;
                     *pz += vout.z;
@@ -96,11 +96,11 @@ int Eyerok::Behavior()
                         *px -= (((rnd >> 8) & 3) * 0x28) << 12;
                     *pz += 0x19000;
                 }
-                *py += ((*(u16 *)(c + 0x4d4) * 0xa) + 0x23) << 12;
+                *py += ((mDustCounter * 0xa) + 0x23) << 12;
             } else {
-                if (*(s16 *)(c + 0x8e) != 0) {
+                if (mAngleY != 0) {
                     vin.z = (0x7e - (((rnd >> 8) & 0x3f) << 2)) << 12;
-                    Matrix4x3_FromRotationY(data_020a0e68, (s16)(*(s16 *)(c + 0x8e) - 0x4000));
+                    Matrix4x3_FromRotationY(data_020a0e68, (s16)(mAngleY - 0x4000));
                     MulVec3Mat4x3(&vin, data_020a0e68, &vout);
                     *px += vout.x;
                     *pz += vout.z;
@@ -123,14 +123,14 @@ int Eyerok::Behavior()
             int z0 = 0;
             for (; i < 0x14; i++) {
                 if (*(int *)(cur + 0x4dc) != 0 || *(int *)(cur + 0x4e0) != 0 || *(int *)(cur + 0x4e4) != 0) {
-                    *(u32 *)(c + 0x5cc + (i << 2)) =
+                    mDustParticle1[i] =
                         _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                            *(u32 *)(c + 0x5cc + (i << 2)), id0,
+                            mDustParticle1[i], id0,
                             *(int *)(cur + 0x4dc), *(int *)(cur + 0x4e0), *(int *)(cur + 0x4e4),
                             (void *)z0, (void *)z0);
-                    *(u32 *)(c + 0x61c + (i << 2)) =
+                    mDustParticle2[i] =
                         _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                            *(u32 *)(c + 0x61c + (i << 2)), id1,
+                            mDustParticle2[i], id1,
                             *(int *)(cur + 0x4dc), *(int *)(cur + 0x4e0), *(int *)(cur + 0x4e4),
                             (void *)z0, (void *)z0);
                 }
@@ -139,8 +139,11 @@ int Eyerok::Behavior()
         }
 
         {
+            /* c400 + 0xd4 is mDustCounter reached the long way round -- the
+               ROM materialises c + 0x400 first and offsets from it, and
+               spelling that step away is not free. */
             int o4d4 = 0x4d4;
-            u16 *p = (u16 *)(c + o4d4);
+            u16 *p = &mDustCounter;
             u16 v = *p;
             char *c400 = c + 0x400;
             *p = (u16)(v + 1);
@@ -158,31 +161,31 @@ int Eyerok::Behavior()
         }
     }
 
-    if (*(int *)(c + 0x49c) == 0) {
+    if (mPartIdx == 0) {
         func_ov066_021194fc(c);
-        if (_ZN4dBgW9IsEnabledEv(c + 0x674) != 0)
+        if (_ZN4dBgW9IsEnabledEv((char *)&mMeshCollider2) != 0)
             func_ov066_021194a4(c);
         return 1;
     }
 
     {
         EVec3 vrel;
-        *(int *)(c + 0x4a8) = *(int *)(c + 0x4b4) + 0x8000;
+        mRestPosY = mSpawnPosY + 0x8000;
         _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
-        *(int *)(c + 0x354) = *(int *)(c + 0x5c);
-        *(int *)(c + 0x358) = *(int *)(c + 0x60);
-        *(int *)(c + 0x35c) = *(int *)(c + 0x64);
+        mdCcAcPos_c.pos.x = mPosX;
+        mdCcAcPos_c.pos.y = mPosY;
+        mdCcAcPos_c.pos.z = mPosZ;
         vrel.x = data_ov066_0211ad18[0];
         vrel.y = data_ov066_0211ad18[1];
         vrel.z = data_ov066_0211ad18[2];
-        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x320, &vrel);
+        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3((char *)&mdCcAcPos_c, &vrel);
         func_ov066_021194fc(c);
-        if (_ZN4dBgW9IsEnabledEv(c + 0x674) != 0)
+        if (_ZN4dBgW9IsEnabledEv((char *)&mMeshCollider2) != 0)
             func_ov066_021194a4(c);
-        _ZN5dCc_c5ClearEv(c + 0x320);
-        _ZN5dCc_c6UpdateEv(c + 0x320);
-        _ZN14BlendModelAnim7AdvanceEv(c + 0x360);
-        _ZN9Animation7AdvanceEv(c + 0x448);
+        _ZN5dCc_c5ClearEv((char *)&mdCcAcPos_c);
+        _ZN5dCc_c6UpdateEv((char *)&mdCcAcPos_c);
+        _ZN14BlendModelAnim7AdvanceEv((char *)&mBlendModelAnim);
+        _ZN9Animation7AdvanceEv((char *)&mTextureSequence);
     }
     return 1;
 }

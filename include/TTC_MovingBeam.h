@@ -25,7 +25,7 @@ struct TTC_MovingBeam : dBgActor_c {
     s32 mEndPosY;                      /* 0x324 */
     u8 mDirection;                       /* 0x328 */
     u8  pad_329[0x7];
-    s32 unk_330;                      /* 0x330 */
+    s32 mGroundY;                     /* 0x330 -- InitResources' dBgCh_Gnd raycast result, falling back to the probe height */
     ShadowModel mShadowModel;         /* 0x334 */
 
     /* --- vtable --- */
@@ -58,9 +58,9 @@ struct TTC_MovingBeam {
     u8  pad_068[0x26];
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x10];
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     u8  pad_0a4[0x4];
-    s32 unk_0a8;            /* 0x0a8 */
+    s32 mVertSpeed;            /* 0x0a8 */
     u8  pad_0ac[0x28];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
@@ -69,13 +69,13 @@ struct TTC_MovingBeam {
        dBgW_KcMbg's D1 at +0x124 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN14TTC_MovingBeamD1Ev.c] */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  unk_2ec;            /* 0x2ec */
+    u8  mClsnMat;            /* 0x2ec */
     u8  pad_2ed[0x33];
     s32 mStartPosY;            /* 0x320 */
     s32 mEndPosY;            /* 0x324 */
     u8  mDirection;            /* 0x328 */
     u8  pad_329[0x7];
-    s32 unk_330;            /* 0x330 */
+    s32 mGroundY;            /* 0x330 */
     ShadowModel mShadowModel; /* 0x334 */
 };
 

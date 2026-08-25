@@ -75,7 +75,14 @@ struct daTrs_c : dCapEnemy_c {
     dCcAcPos_c mdCcAcPos_c;  /* 0x184 */
     dBgCh_Actr               mWithMeshClsn;               /* 0x1c4 */
     ModelAnim                  mModelAnim;                  /* 0x380 */
-    Model                      mModel;                      /* 0x3e4 */
+    /* Not "mModel": dCapEnemy_c's own Model at 0x114 is inherited, and calling
+       this one mModel shadows it -- which is exactly what the three bodies below
+       were relying on. Renaming it to mModel_3e4 without touching them moved
+       Render and the destructor pair onto 0x114 and cost three functions
+       (ov063 daTrs_c D1/D0/Render), so the shadow was load-bearing, not cosmetic.
+       This is the Boo's own body model: Render draws it at unk_510 and both
+       destructors run Model::D1 over it. */
+    Model                      mBodyModel;                  /* 0x3e4 */
     ShadowModel                mShadowModel1;               /* 0x434 */
     ShadowModel                mShadowModel2;               /* 0x45c */
     u8  pad_484[0x8c];

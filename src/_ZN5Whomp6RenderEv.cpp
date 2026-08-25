@@ -9,9 +9,9 @@ struct Sub { virtual int g0(); virtual int g1(); virtual int g2(); virtual int g
 
 int Whomp::Render()
 {
-  if(unk_404==0) return 1;
+  if(mShouldRender==0) return 1;
   if(mIsKing!=0)
-    _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this)+0x330, ((char*)this)+0x2d4);
+    _ZN15TextureSequence6UpdateER15ModelComponents(&mTextureSequence, &mModelAnim.data);
   ((Sub*)((char*)&mModelAnim))->g5(0);
   return 1;
 }

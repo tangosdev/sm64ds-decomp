@@ -1,6 +1,7 @@
 //cpp
 // @symbol _ZN8daEyBm_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
+#include "common.h"
 #include "daEyBm_c.h"
 /* was `typedef int Fix12;` -- collides with the real Fix12<> template, which
    daEyBm_c.h now reaches via dActor_c.h. The typedef WAS int, so
@@ -12,8 +13,7 @@ extern int _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *sel
 extern void func_ov071_02121c6c(char *c);
 }
 extern void *data_ov071_021230b8;
-struct M48 { int w[12]; };
-extern struct M48 data_02082128;
+extern struct Matrix4x3 IDENTITY_MATRIX4X3;
 
 int daEyBm_c::InitResources()
 {
@@ -26,8 +26,8 @@ int daEyBm_c::InitResources()
     mVertAccel = 0;
     mTerminalVelocity = 0;
     mHorzSpeed = 0xa000;
-    unk_330 = 0x96;
-    *(struct M48*)((char *)&unk_2f8) = data_02082128;
+    mLifeTimer = 0x96;
+    *(struct Matrix4x3*)((char *)&mMatrix) = IDENTITY_MATRIX4X3;
     func_ov071_02121c6c(((char *)this));
     return 1;
 }

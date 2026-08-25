@@ -15,7 +15,7 @@ void cMgSmartball_wing_c::RestoreInitial()
     unk_034 = 0;
     unk_03c = 0;
     unk_038 = 0;
-    unk_040 = 0;
-    unk_044 = 0;
+    mTriggerCount = 0;
+    mAngleSettled = 0;
     func_ov006_0210d93c(this);
 }

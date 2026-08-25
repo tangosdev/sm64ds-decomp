@@ -27,7 +27,7 @@ extern int func_ov002_020c38a0(char *c);
 
 int Player::St_EndingFly_Main()
 {
-    switch (*(unsigned char *)((char *)this + 0x6e6)) {
+    switch (mStatePhase) {
     case 0:
         func_ov002_020c3bdc((char *)this);
         break;

@@ -1,9 +1,5 @@
 //cpp
-typedef int Fix12i;
-
-struct Vector3 {
-    int x, y, z;
-};
+#include "Player.h"
 
 extern "C" {
 extern int Player_ReleaseHeldActor(char*);
@@ -13,11 +9,6 @@ extern int func_ov002_020e3078(void*, void*);
 }
 extern char data_ov002_021106f4[];
 
-class Player {
-public:
-    int St_Climb_Init();
-};
-
 int Player::St_Climb_Init() {
     char* self = (char*)this;
     Player_ReleaseHeldActor(self);
@@ -26,17 +17,17 @@ int Player::St_Climb_Init() {
     *bitfield |= 4;
     *bitfield &= ~8;
 
-    if (*(int*)(self + 0x98) <= 0xa000) {
-        *(short*)(self + 0x69c) = 0;
+    if (mHorzSpeed <= 0xa000) {
+        mAngleYSpeed = 0;
         _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x26, 0, (Fix12i)0x1000, 0);
-        *(unsigned char*)(self + 0x6e3) = 1;
+        mStateStep = 1;
     } else {
-        int val = *(int*)(self + 0x98) / 16;
-        *(short*)(self + 0x69c) = (short)val;
-        if (*(short*)(self + 0x69c) >= 0x3000)
-            *(short*)(self + 0x69c) = 0x3000;
+        int val = mHorzSpeed / 16;
+        mAngleYSpeed = (short)val;
+        if (mAngleYSpeed >= 0x3000)
+            mAngleYSpeed = 0x3000;
         _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x27, 0x40000000, (Fix12i)0x1000, 0);
-        *(unsigned char*)(self + 0x6e3) = 0;
+        mStateStep = 0;
     }
 
     void* base = *(void**)(self + 0x37c);
@@ -44,20 +35,20 @@ int Player::St_Climb_Init() {
     void* (*func)(void*) = *(void* (**)(void*))((char*)vtable + 8);
     void* res = func(base);
 
-    *(int*)(self + 0x5c) = *(int*)res;
-    *(int*)(self + 0x64) = *(int*)((char*)res + 8);
-    *(int*)(self + 0x688) = *(int*)(self + 0x60) - *(int*)((char*)res + 4);
-    *(int*)(self + 0x9c) = 0;
-    *(int*)(self + 0x98) = 0;
-    *(int*)(self + 0xa8) = 0;
+    mPosX = *(int*)res;
+    mPosZ = *(int*)((char*)res + 8);
+    mAttachOffsetY = mPosY - *(int*)((char*)res + 4);
+    mVertAccel = 0;
+    mHorzSpeed = 0;
+    mVertSpeed = 0;
 
-    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(*(unsigned char*)(self + 0x6d9), 0xd,
+    _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0xd,
                                            *(Vector3*)(self + 0x74));
 
-    *(unsigned char*)(self + 0x6e5) = 0;
+    mStateWork = 0;
     *(short*)(self + 0x6b8) = 3;
     *(int*)(self + 0x2dc) = 0x5a000;
-    *(unsigned char*)(self + 0x717) = 1;
+    unk_717 = 1;
 
     {
         char* b = *(char**)(self + 0x37c);

@@ -25,27 +25,27 @@ int RollingIronBall::InitResources()
     int kind;
     int d;
 
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x2cc,
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel,
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov100_02148668), 1, -1);
     if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0)
         return 0;
     mVertAccel = -0x4000;
     mTerminalVelocity = -0x46000;
-    unk_3d0 = param1 & 0xf;
+    mVariant = param1 & 0xf;
     param1 = param1 >> 4;
-    kind = unk_3d0;
+    kind = mVariant;
 
     if (kind == 2 || kind == 4) {
-        _ZN7PathPtr6FromIDEj(((char *)this) + 0x3f4, param1 & 0xf);
-        unk_3d4 = _ZNK7PathPtr8NumNodesEv((char *)&mPathPtr);
-        unk_3d8 = 0;
-        unk_3dc = mPosX;
-        unk_3e0 = mPosY;
-        unk_3e4 = mPosZ;
-        _ZNK7PathPtr7GetNodeER7Vector3j(((char *)this) + 0x3f4, ((char *)this) + 0x3e8, unk_3d8);
-        if (Vec3_Equal(((char *)this) + 0x5c, ((char *)this) + 0x3e8)) {
+        _ZN7PathPtr6FromIDEj(&mPathPtr, param1 & 0xf);
+        mNumPathNodes = _ZNK7PathPtr8NumNodesEv((char *)&mPathPtr);
+        mPathNodeIndex = 0;
+        mSpawnPosX = mPosX;
+        mSpawnPosY = mPosY;
+        mSpawnPosZ = mPosZ;
+        _ZNK7PathPtr7GetNodeER7Vector3j(&mPathPtr, &mNextNodePosX, mPathNodeIndex);
+        if (Vec3_Equal(&mPosX, &mNextNodePosX)) {
             *(int *)(((int)((char *)this) + 0x3d8) & 0xFFFFFFFFFFFFFFFFLL) += 1;
-            _ZNK7PathPtr7GetNodeER7Vector3j(((char *)this) + 0x3f4, ((char *)this) + 0x3e8, unk_3d8);
+            _ZNK7PathPtr7GetNodeER7Vector3j(&mPathPtr, &mNextNodePosX, mPathNodeIndex);
         }
         func_ov100_0214233c(((char *)this));
         mPrevAngleY = unk_3ba;
@@ -53,18 +53,18 @@ int RollingIronBall::InitResources()
         d = *(signed char *)&data_0209f2f8;
         if (d == 0x19) {
             mHorzSpeed = 0xa000;
-            unk_3ac = 0x800;
-            unk_3b0 = 0x800;
-            unk_3b4 = 0x800;
-            _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x374, ((char *)this), 0x1e000, 0x1e000, 0x200004, 0x3c0);
-            _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x110, ((char *)this), 0x1e000, 0x1e000, 0, 0);
+            mDrawScaleX = 0x800;
+            mDrawScaleY = 0x800;
+            mDrawScaleZ = 0x800;
+            _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, ((char *)this), 0x1e000, 0x1e000, 0x200004, 0x3c0);
+            _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, ((char *)this), 0x1e000, 0x1e000, 0, 0);
             unk_3c8 = -0x640000;
         } else {
-            unk_3ac = 0x1000;
-            unk_3b0 = 0x1000;
-            unk_3b4 = 0x1000;
-            _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x374, ((char *)this), 0x64000, 0x64000, 0x200004, 0x3c0);
-            _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x110, ((char *)this), 0x64000, 0x64000, 0, 0);
+            mDrawScaleX = 0x1000;
+            mDrawScaleY = 0x1000;
+            mDrawScaleZ = 0x1000;
+            _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, ((char *)this), 0x64000, 0x64000, 0x200004, 0x3c0);
+            _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, ((char *)this), 0x64000, 0x64000, 0, 0);
             d = *(volatile signed char *)&data_0209f2f8;
             if (d == 0x18) {
                 mHorzSpeed = 0x19000;
@@ -86,11 +86,11 @@ int RollingIronBall::InitResources()
 
     if (kind == 1) {
         *(unsigned int *)(((int)((char *)this) + 0xb0) & 0xFFFFFFFFFFFFFFFFLL) |= 1;
-        unk_3ac = 0x1000;
-        unk_3b0 = 0x1000;
-        unk_3b4 = 0x1000;
-        _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x374, ((char *)this), 0x64000, 0x64000, 0x200004, 0x3c0);
-        _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x110, ((char *)this), 0x64000, 0x64000, 0, 0);
+        mDrawScaleX = 0x1000;
+        mDrawScaleY = 0x1000;
+        mDrawScaleZ = 0x1000;
+        _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, ((char *)this), 0x64000, 0x64000, 0x200004, 0x3c0);
+        _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, ((char *)this), 0x64000, 0x64000, 0, 0);
         _ZN10dBgCh_Actr13SetLimMovFlagEv((char *)&mWithMeshClsn);
         goto end;
     }
@@ -114,7 +114,7 @@ int RollingIronBall::InitResources()
     }
 
 end:
-    unk_100 = 0;
+    mStateTimer = 0;
     unk_108 = 0;
     unk_3cc = 0;
     unk_3a8 = 0;

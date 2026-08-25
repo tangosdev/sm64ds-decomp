@@ -70,9 +70,9 @@ int MirrorLuigi::Render()
     _ZN5Model6RenderEPK7Vector3((void*)((char*)&mModelAnim), 0);
     *(Mtx*)(*(char**)((char*)&mModel.data.transforms)) =
         *(Mtx*)(*(char**)((char*)&mModelAnim.data.transforms) + 0x2d0);
-    _ZN15TextureSequence6UpdateER15ModelComponents((void*)((char*)&unk_1b0), (void*)((char*)&mModelAnim.data));
+    _ZN15TextureSequence6UpdateER15ModelComponents((void*)((char*)&mAnimTexSeq), (void*)((char*)&mModelAnim.data));
     unk_1b8 = (int)(*(unsigned char*)(player + 0x6fb)) << 12;
-    _ZN15TextureSequence6UpdateER15ModelComponents((void*)((char*)&unk_1c4), (void*)((char*)&mModel.data));
+    _ZN15TextureSequence6UpdateER15ModelComponents((void*)((char*)&mModelTexSeq), (void*)((char*)&mModel.data));
     unk_1cc = (int)(*(unsigned char*)(player + 0x6fb)) << 12;
     ((Sub*)((char*)&mModel))->m5(0);
     return 1;

@@ -20,7 +20,7 @@ int PiranhaPlant::Behavior()
     int r;
     int old;
     int cur;
-    r = _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(((char*)this), ((char*)this) + 0x1c4, ((char*)this) + 0x110, 1);
+    r = _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(((char*)this), &mWithMeshClsn, &mModelAnim, 1);
     if (r != 0) {
         if (r == 2) {
             unk_108 = 0;
@@ -28,19 +28,19 @@ int PiranhaPlant::Behavior()
             mScaleX = 0;
             mScaleY = 0;
             mScaleZ = 0;
-            mPosX = unk_44c;
-            mPosY = unk_450;
-            mPosZ = unk_454;
+            mPosX = mHomePos.x;
+            mPosY = mHomePos.y;
+            mPosZ = mHomePos.z;
         }
         return 1;
     }
-    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char*)this), ((char*)this) + 0x380);
+    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char*)this), &mdCcAc_c1);
     mModelAnim.Advance();
     func_ov084_0212f204(((char*)this));
     old = mState;
     (((Cls*)((char*)this))->*data_ov084_02130e80[old])();
     {
-        unsigned short* p100 = (unsigned short*)((char*)&unk_100);
+        unsigned short* p100 = (unsigned short*)((char*)&mStateTimer);
         *p100 = (unsigned short)(*p100 + 1);
     }
     cur = mState;
@@ -49,18 +49,18 @@ int PiranhaPlant::Behavior()
             int* pb0 = (int*)((char*)&mFlags);
             *pb0 = *pb0 & ~0x10000000;
         }
-        unk_100 = 0;
+        mStateTimer = 0;
         unk_478 = 0;
     }
     func_ov084_0212ec60(((char*)this));
     _ZN5dCc_c5ClearEv((char*)&mdCcAc_c1);
     _ZN5dCc_c5ClearEv((char*)&mdCcAc_c2);
     _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c);
-    if (unk_45c != 0) {
+    if (mClsnEnabled != 0) {
         _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c1);
         _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c2);
         if (mState == 2) {
-            _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x3e8, ((char*)this) + 0x440);
+            _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(&mdCcAcPos_c, &mSpawnPos);
             _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c);
         }
     }

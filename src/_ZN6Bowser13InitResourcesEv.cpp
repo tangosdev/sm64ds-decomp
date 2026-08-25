@@ -16,10 +16,10 @@
  * here, which is layout-identical (Fix12i is s32) and costs nothing.
  *
  * The fields this used to spell as unk_ are the base classes' and are named now:
- * unk_09c / unk_0a0 are dActor_c::mVertAccel and dActor_c::mTerminalVelocity -- and the
+ * mVertAccel / mTerminalVelocity are dActor_c::mVertAccel and dActor_c::mTerminalVelocity -- and the
  * values written here, -0x2000 and -0x3c000, are fix12 gravity and terminal
  * velocity, which is the same evidence dActor_c.h cites from BooCage and MadPiano.
- * mParam is fBase_c::param1, unk_004 is fBase_c::uniqueID, and unk_0cc is
+ * mParam is fBase_c::param1, uniqueID is fBase_c::uniqueID, and mAreaId is
  * dActor_c::mAreaId -- which is why it is read as a signed char and handed straight
  * to dActor_c::Spawn's areaID parameter.
  *
@@ -91,9 +91,9 @@ int Bowser::InitResources()
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         &this->mdCcAcPos_c, this, &pos, 0x78000, 0x118000, 0x200004, 0);
 
-    this->unk_3b0 = this->mPosX;
-    this->unk_3b4 = this->mPosY;
-    this->unk_3b8 = this->mPosZ;
+    this->mHomePosX = this->mPosX;
+    this->mHomePosY = this->mPosY;
+    this->mHomePosZ = this->mPosZ;
     this->mVertAccel = -0x2000;
     this->mTerminalVelocity = -0x3c000;
     this->mTargetPlayer = 0;
@@ -101,22 +101,22 @@ int Bowser::InitResources()
         &this->mWithMeshClsn, this, 0x50000, 0x50000, 0, 0);
     _ZN10dBgCh_Actr13SetLimMovFlagEv(&this->mWithMeshClsn);
 
-    this->unk_40c = 0;
-    this->unk_414 = (char)(this->param1 & 3);
+    this->mState = 0;
+    this->mVariantID = (char)(this->param1 & 3);
     this->unk_416 = (char)(((unsigned int)this->param1 >> 2) & 1);
-    this->unk_3fc = 0;
+    this->mTimer = 0;
     this->unk_423 = 0;
-    this->unk_426 = 1;
-    this->unk_427 = 0;
+    this->mDropsShadow = 1;
+    this->mBounceOnLand = 0;
     this->mScaleX = 0x1000;
     this->mScaleY = 0x1000;
     this->mScaleZ = 0x1000;
-    this->unk_3f8 = 0x1000;
+    this->mAnimSpeed = 0x1000;
     this->unk_429 = 1;
     func_ov060_021123dc(this);
 
-    this->unk_424 = 0;
-    this->unk_444 = 0;
+    this->mTalkStep = 0;
+    this->mCutsceneStep = 0;
 
     a1 = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
         0x118, 0, &this->mPosX, 0, this->mAreaId, -1);
@@ -124,14 +124,14 @@ int Bowser::InitResources()
 
     a2 = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
         0x116, 0, &this->mPosX, 0, this->mAreaId, -1);
-    this->unk_3a8 = *(int *)((char *)a2 + 4);
+    this->mUniqueID_3a8 = *(int *)((char *)a2 + 4);
     *(int *)((char *)a2 + 0x108) = this->uniqueID;
     this->unk_42a = 5;
-    this->unk_42b = 0;
-    this->unk_448 = 0;
-    this->unk_446 = 0;
-    this->unk_44c = 0;
-    this->unk_450 = 0;
+    this->mCapActorAlive = 0;
+    this->mParticleHandle = 0;
+    this->mStompFxLatch = 0;
+    this->mSoundHandle = 0;
+    this->mSoundID = 0;
     func_02011d50(a2);
     return 1;
 }

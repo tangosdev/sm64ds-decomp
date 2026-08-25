@@ -47,15 +47,15 @@ int Number::InitResources()
         mTextureSequence.currFrame = (int)((((unsigned int)(param1 & 0xf) % 10) << 16) >> 4);
     }
 
-    unk_14e = 0;
-    unk_13c = mPosX;
+    mState = 0;
+    mStartPosX = mPosX;
     mStartPosY = mPosY;
-    unk_144 = mPosZ;
+    mStartPosZ = mPosZ;
     mVertSpeed = 0x14000;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
     *(short*)(((char*)this) + 0x100 + 0x4c) = 0;
-    unk_138 = 0;
-    unk_148 = 0;
+    mOwnerUniqueID = 0;
+    mFollowOffsetY = 0;
     return 1;
 }

@@ -29,11 +29,11 @@ s32 dScMgCard_c::Render()
 
     func_ov006_020c0aa8(c + 0x4660);
 
-    v = this->unk_5388;
+    v = this->mState;
     if (v > 3 && v < 0x11) {
         skip = -1;
         if (v > 0xe) {
-            if (this->unk_5396 & 8) {
+            if (this->mFrameCounter & 8) {
                 if (func_ov006_020da5e8(c + 0x51a8, c + 0x5298) == 1) {
                     skip = 6 - func_ov006_020da4ac(c + 0x51a8, 0);
                 }
@@ -54,9 +54,9 @@ s32 dScMgCard_c::Render()
     func_ov004_020b1bc8(c, 0xc, 0xc, 0);
     func_ov004_020b1e34(c, 0xe0, 0x14, 1);
 
-    if (this->unk_5398 < this->unk_0b4)
-        this->unk_5398 = this->unk_0b4;
-    func_ov004_020adb1c(this->unk_5398);
+    if (this->mScore < this->mHudScore)
+        this->mScore = this->mHudScore;
+    func_ov004_020adb1c(this->mScore);
 
     func_ov004_020b6430();
 
@@ -74,7 +74,7 @@ s32 dScMgCard_c::Render()
             if (this->unk_5390 != cfg)
                 goto docall1;
         chk1:
-            if (!(this->unk_5396 & 8))
+            if (!(this->mFrameCounter & 8))
                 goto skip1;
         docall1:
             node->m0();
@@ -96,7 +96,7 @@ s32 dScMgCard_c::Render()
             if (this->unk_5394 != cfg)
                 goto docall2;
         chk2:
-            if (!(this->unk_5396 & 8))
+            if (!(this->mFrameCounter & 8))
                 goto skip2;
         docall2:
             node->m0();

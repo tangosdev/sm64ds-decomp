@@ -39,7 +39,7 @@ int MirrorLuigi::Behavior()
         data_ov055_02111b64 = (data_ov055_02111b64 & ~0x20000) + (0x1ffff - data_ov055_02111b6c);
     }
     val = data_0209f394[data_0209f250];
-    node = *(Node **)((char *)&unk_1d8);
+    node = *(Node **)((char *)&mNode);
     if (*(int *)&node->fn != 0)
         (((C5 *)((char *)this))->*node->fn)(val);
     Matrix4x3_FromTranslation(((char *)this) + 0x1dc, mPosX >> 3, mPosY >> 3, mPosZ >> 3);

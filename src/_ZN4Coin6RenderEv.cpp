@@ -9,7 +9,7 @@ int Coin::Render()
 {
   int f;
   int b;
-  if (!((struct Flags*)((char*)&unk_3ae))->b0) return 1;
+  if (!((struct Flags*)((char*)&mCoinFlags))->b0) return 1;
   f = mFlags;
   b = (f & 0x40000) != 0;
   if (b) return 1;

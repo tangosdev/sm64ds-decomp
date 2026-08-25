@@ -7,7 +7,7 @@
  * that class's own static assertion, so the offsets below are checked twice --
  * once by the assert, once by closing exactly on the next named field:
  *
- *     dBgCh_Actr        0x110 + 0x1bc = 0x2cc   -> unk_2cc
+ *     dBgCh_Actr        0x110 + 0x1bc = 0x2cc   -> mUniqueID_2cc
  *     dCcAc_c  0x2d0 + 0x034 = 0x304   -> mShadowModel
  *     ShadowModel         0x304 + 0x028 = 0x32c   -> padding
  *
@@ -33,25 +33,25 @@
 
 struct BowserFire : dEnemyBase_c {
     dBgCh_Actr mWithMeshClsn;                 /* 0x110 */
-    s32 unk_2cc;                                /* 0x2cc */
+    s32 mUniqueID_2cc;                                /* 0x2cc */
     dCcAc_c mdCcAc_c;     /* 0x2d0 */
     ShadowModel mShadowModel;                   /* 0x304 */
     u8  pad_32c[0x30];
-    s32 unk_35c;            /* 0x35c */
-    s32 unk_360;            /* 0x360 */
-    s32 unk_364;            /* 0x364 */
+    s32 mVariant;            /* 0x35c */
+    s32 mShadowRadiusScale; /* 0x360 */
+    s32 mGroundY;            /* 0x364 */
     u8  pad_368[0x4];
-    s32 unk_36c;            /* 0x36c */
+    s32 mTimer;            /* 0x36c */
     u8  pad_370[0x4];
-    s16 unk_374;            /* 0x374 */
+    u16 mFrameCount;            /* 0x374 */
     u8  pad_376[0x2];
-    u8  unk_378;            /* 0x378 */
-    u8  unk_379;            /* 0x379 */
+    u8  mVariant_378;            /* 0x378 */
+    u8  mDropsShadow;       /* 0x379 */
     u8  pad_37a[0x2];
-    s32 unk_37c;            /* 0x37c */
-    s32 unk_380;            /* 0x380 */
-    s32 unk_384;            /* 0x384 */
-    s32 unk_388;            /* 0x388 */
+    s32 mParticleHandle_37c;            /* 0x37c */
+    s32 mParticleHandle_380;            /* 0x380 */
+    s32 mSoundHandle;            /* 0x384 */
+    s32 mSoundID;            /* 0x388 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~BowserFire();              /* slots 0 (D1), 1 (D0) */
@@ -75,33 +75,33 @@ struct BowserFire {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x34];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mVertAccel;            /* 0x09c */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     u8  pad_0a4[0x4];
-    s32 unk_0a8;            /* 0x0a8 */
+    s32 mVertSpeed;            /* 0x0a8 */
     u8  pad_0ac[0x64];
     u8  mWithMeshClsn;            /* 0x110 */
     u8  pad_111[0x1bb];
-    s32 unk_2cc;            /* 0x2cc */
+    s32 mUniqueID_2cc;            /* 0x2cc */
     u8  mdCcAc_c;            /* 0x2d0 */
     u8  pad_2d1[0x33];
     u8  mShadowModel;            /* 0x304 */
     u8  pad_305[0x57];
-    s32 unk_35c;            /* 0x35c */
-    s32 unk_360;            /* 0x360 */
-    s32 unk_364;            /* 0x364 */
+    s32 mVariant;            /* 0x35c */
+    s32 mShadowRadiusScale; /* 0x360 */
+    s32 mGroundY;            /* 0x364 */
     u8  pad_368[0x4];
-    s32 unk_36c;            /* 0x36c */
+    s32 mTimer;            /* 0x36c */
     u8  pad_370[0x4];
-    s16 unk_374;            /* 0x374 */
+    u16 mFrameCount;            /* 0x374 */
     u8  pad_376[0x2];
-    u8  unk_378;            /* 0x378 */
-    u8  unk_379;            /* 0x379 */
+    u8  mVariant_378;            /* 0x378 */
+    u8  mDropsShadow;       /* 0x379 */
     u8  pad_37a[0x2];
-    s32 unk_37c;            /* 0x37c */
-    s32 unk_380;            /* 0x380 */
-    s32 unk_384;            /* 0x384 */
-    s32 unk_388;            /* 0x388 */
+    s32 mParticleHandle_37c;            /* 0x37c */
+    s32 mParticleHandle_380;            /* 0x380 */
+    s32 mSoundHandle;            /* 0x384 */
+    s32 mSoundID;            /* 0x388 */
 };
 
 #endif /* __cplusplus */

@@ -13,7 +13,7 @@ struct Sub {
 
 int Cannon::Render()
 {
-  if(unk_180 == 3){
+  if(mState == 3){
     if(unk_185 >= 3) return 1;
   }
   Sub* o = (Sub*)((char*)&mModel);

@@ -4,24 +4,24 @@
  *
  * The glowing-rabbit chase, and it is mostly a conversation.
  *
- * The opening gate depends on the mode. Normally unk_428 latches the rabbit
+ * The opening gate depends on the mode. Normally mIsDisabled latches the rabbit
  * out of the level until data_0209caa0[2] clears bit 0x20000; in mode 0x32 the
  * test inverts -- the rabbit runs only for the player whose character id
  * matches mCharacterId and latches itself off for everyone else, which is what
  * makes one actor behave differently per player.
  *
- * The talk sequence is unk_427: 0 offers the message, 1 waits for the player's
+ * The talk sequence is mTalkState: 0 offers the message, 1 waits for the player's
  * talk state to end, 2 is done. Which message depends on mRabbitId, on whether
  * this rabbit has already been caught, and -- for the last one -- on whether
  * SaveData says all seven are found, which is the "you got them all" line.
  *
- * unk_364 is the current animation descriptor. It is compared against four
+ * mState is the current animation descriptor. It is compared against four
  * ov085 objects rather than dereferenced as a type, so it stays an s32 and
  * those four comparisons are what identify the states.
  *
  * The block before Animation::Advance is the ARM/Itanium pointer-to-member
  * sequence written out -- adjustment word, virtual bit, vtable index or direct
- * address -- run on whatever unk_364 points at. It is kept verbatim because
+ * address -- run on whatever mState points at. It is kept verbatim because
  * there is no recovered type for the descriptor to call a member through.
  *
  * TWO SPELLINGS HERE ARE LOAD-BEARING, both measured against the pre-image
@@ -33,14 +33,14 @@
  *   sub-object's ADDRESS is not the same as offsetting from `this`; the same
  *   distinction cost Skeeter::Behavior a match once already.
  *
- *   The `(long long)(int)` round-trip on unk_42a stays. Removing it changes
+ *   The `(long long)(int)` round-trip on mEatenTimer stays. Removing it changes
  *   the size. Every other round-trip and every other offset in this function
  *   came out free -- the idiom is per-site, not per-function.
  *
  * NOT DONE HERE, but the evidence is now in the header: mModelAnim is almost
  * certainly a real ModelAnim. ModelAnim::SetAnim is called on +0x300, its
  * Animation base is used at +0x350 = +0x50, and 0x300 + sizeof(ModelAnim) is
- * 0x364 -- exactly where unk_364 begins. Typing it would absorb mModelAnim.data.modelFile,
+ * 0x364 -- exactly where mState begins. Typing it would absorb mModelAnim.data.modelFile,
  * mModelAnim.data.materials and mModelAnim.speed, which Rabbit::Render and Rabbit::InitResources use, so
  * it wants its own slice.
  */
@@ -95,9 +95,9 @@ int Rabbit::Behavior()
     void* r0p;
 
     if (data_0209f2f8 != 0x32) {
-        if (unk_428 == 1) {
+        if (mIsDisabled == 1) {
             if (data_0209caa0[2] & 0x20000)
-                unk_428 = 0;
+                mIsDisabled = 0;
             return 1;
         }
     } else {
@@ -105,31 +105,31 @@ int Rabbit::Behavior()
         if (r0p == 0)
             return 1;
         if (!(data_0209caa0[2] & 0x20000) || mCharacterId != *(u8*)((char*)r0p + 0x6d9)) {
-            unk_428 = 1;
+            mIsDisabled = 1;
             return 1;
         }
-        unk_428 = 0;
+        mIsDisabled = 0;
     }
 
     if (mRabbitId == 7 && !(data_0209caa0[1] & 0x40))
         data_0209f33c = c;
 
-    if (unk_429 != 0) {
+    if (mIsGlowing != 0) {
         Vec3Scratch pv;
         pv.x = mPosX;
         pv.y = mPosY;
         pv.z = mPosZ;
         pv.y = mPosY + 0x3c000;
-        *(void**)&unk_470 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            *(volatile u32*)&unk_470, 0x10d, pv.x, pv.y, mPosZ, 0, 0);
+        *(void**)&mGlowParticle = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            *(volatile u32*)&mGlowParticle, 0x10d, pv.x, pv.y, mPosZ, 0, 0);
     }
 
     {
-        u32 temp_r1 = unk_427;
+        u32 temp_r1 = mTalkState;
         if (temp_r1 < 2) {
             int v = (mFlags & 0x40000) ? 1 : 0;
             if (v == 1) {
-                void* temp_r4 = *(void**)&unk_45c;
+                void* temp_r4 = *(void**)&mTalkingPlayer;
                 if (temp_r4 != 0) {
                     if (temp_r1 == 0) {
                         Vec3Scratch pos;
@@ -146,7 +146,7 @@ int Rabbit::Behavior()
                                 _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x27, 0x12, 0x7f, 0x15ccc, 0);
                                 if (mRabbitId != 6) { var_r6 = 0x162; var_r2 = 0x11e; }
                                 else { var_r6 = 0x160; var_r2 = 0x126; }
-                            } else if (unk_429 == 0) {
+                            } else if (mIsGlowing == 0) {
                                 _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x26, 0x12, 0x7f, 0x15ccc, 0);
                                 if (mRabbitId != 6) { var_r6 = 0x162; var_r2 = 0x122; }
                                 else { var_r6 = 0x160; var_r2 = 0x12a; }
@@ -162,11 +162,11 @@ int Rabbit::Behavior()
                         pos.y += 0x64000;
                         if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(temp_r4, c, var_r2, 0, 0, 0) == 1) {
                             func_02012694(var_r6, &mCamSpacePosX);
-                            unk_427 = 1;
+                            mTalkState = 1;
                         }
                     } else if (temp_r1 == 1 && _ZN6Player12GetTalkStateEv(temp_r4) == -1) {
                         _ZN6Player9DropActorEv(temp_r4);
-                        unk_427 = 2;
+                        mTalkState = 2;
                         *(u16*)((char*)temp_r4 + 0x6ce) |= 0x800;
                     }
                 }
@@ -176,30 +176,30 @@ int Rabbit::Behavior()
 
     if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(c, &mWithMeshClsn) != 0) {
         _ZN5dCc_c5ClearEv(&mdCcAc_c);
-        if (unk_107 != 0) {
+        if (mEatenByYoshi != 0) {
             if (unk_104 == 5)
                 mHorzSpeed = 0;
             if (unk_104 == 0)
                 _ZN5dCc_c6UpdateEv(&mdCcAc_c);
         }
-        if (unk_107 == 1) {
+        if (mEatenByYoshi == 1) {
             *(u8*)((long long)(int)(c + 0x42a)) = *(u8*)((long long)(int)(c + 0x42a)) + 1;
-            if (unk_42a > 0x96) {
-                unk_107 = 0;
-                unk_42a = 0;
+            if (mEatenTimer > 0x96) {
+                mEatenByYoshi = 0;
+                mEatenTimer = 0;
             }
         }
         func_ov085_0212bcc8(c);
         unk_426 = 2;
         func_ov085_0212bc78(c, &data_ov085_021306ac);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(void**)((char*)&data_ov085_021305c0 + 4), 0, 0x1000, 0);
-        if (*(void**)&unk_45c == 0)
-            *(void**)&unk_45c = _ZN8dActor_c13ClosestPlayerEv(c);
+        if (*(void**)&mTalkingPlayer == 0)
+            *(void**)&mTalkingPlayer = _ZN8dActor_c13ClosestPlayerEv(c);
         return 1;
     }
 
     if (unk_426 != 0) {
-        void* p = *(void**)&unk_364;
+        void* p = *(void**)&mState;
         if (p != (void*)&data_ov085_021306ac && p != (void*)&data_ov085_0213068c &&
             p != (void*)&data_ov085_021306bc && p != (void*)&data_ov085_021306dc) {
             func_ov085_0212bc78(c, &data_ov085_021306ac);
@@ -208,10 +208,10 @@ int Rabbit::Behavior()
         mHorzSpeed = 0;
     }
 
-    DecIfAbove0_Short(&unk_100);
+    DecIfAbove0_Short(&mStateTimer);
 
     {
-        int* p = *(int**)&unk_364;
+        int* p = *(int**)&mState;
         if (p[2] != 0) {
             int* q = p + 2;
             int adj = q[1];
@@ -241,18 +241,18 @@ int Rabbit::Behavior()
     {
         int v = (mFlags & 0x4000) ? 1 : 0;
         if (v == 0) {
-            if (*(void**)&unk_364 != (void*)&data_ov085_021306ac || unk_426 != 0)
+            if (*(void**)&mState != (void*)&data_ov085_021306ac || unk_426 != 0)
                 _ZN8dActor_c9UpdatePosEP5dCc_c(c, &mdCcAc_c);
             mAngleX = mPrevAngleX;
             mAngleY = mPrevAngleY;
             mAngleZ = mPrevAngleZ;
             _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, &mWithMeshClsn, 0);
-            if (*(void**)&unk_364 != (void*)&data_ov085_021306ac)
+            if (*(void**)&mState != (void*)&data_ov085_021306ac)
                 func_ov085_0212a828(c);
         }
     }
 
-    if (*(void**)&unk_364 != (void*)&data_ov085_021306ac) {
+    if (*(void**)&mState != (void*)&data_ov085_021306ac) {
         _ZN5dCc_c5ClearEv(&mdCcAc_c);
         _ZN5dCc_c6UpdateEv(&mdCcAc_c);
     }

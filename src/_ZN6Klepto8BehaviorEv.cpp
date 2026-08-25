@@ -27,10 +27,10 @@ int Klepto::Behavior()
     M *m;
     int b;
 
-    DecIfAbove0_Short((unsigned short *)((char *)&unk_100));
-    DecIfAbove0_Short((unsigned short *)((char *)&unk_444));
+    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short((unsigned short *)&mTimer);
 
-    m = *(M **)((char *)&unk_42c);
+    m = (M *)mState;
     if (m->pmf != 0)
         (((Klass *)((char *)this))->*(m->pmf))();
 
@@ -45,8 +45,8 @@ int Klepto::Behavior()
         mVertSpeed = lim;
         unk_0ac = t;
     }
-    _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(((char *)this), (dCc_c *)((char *)&mdCcAc_c1));
-    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char *)this), (dBgCh_Actr *)((char *)&mWithMeshClsn), 0);
+    _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(((char *)this), (dCc_c *)&mdCcAc_c1);
+    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char *)this), (dBgCh_Actr *)&mWithMeshClsn, 0);
 
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
@@ -58,26 +58,26 @@ int Klepto::Behavior()
         void *p = _ZN8dActor_c10FindWithIDEj(actorId);
         if (p != 0) {
             if (mCarriedItem == 1) {
-                *(int *)((char *)p + 0x5c) = unk_450;
-                *(int *)((char *)p + 0x60) = unk_454;
-                *(int *)((char *)p + 0x64) = unk_458;
+                *(int *)((char *)p + 0x5c) = mHeldPosX;
+                *(int *)((char *)p + 0x60) = mHeldPosY;
+                *(int *)((char *)p + 0x64) = mHeldPosZ;
                 goto skip_destroy;
             } else if (*(unsigned char *)((char *)p + 0x403) == 0) {
-                *(int *)((char *)p + 0x5c) = unk_450;
-                *(int *)((char *)p + 0x60) = unk_454;
-                *(int *)((char *)p + 0x64) = unk_458;
+                *(int *)((char *)p + 0x5c) = mHeldPosX;
+                *(int *)((char *)p + 0x60) = mHeldPosY;
+                *(int *)((char *)p + 0x64) = mHeldPosZ;
                 goto skip_destroy;
             } else {
                 mHeldActorID = 0;
                 func_02012790(0xa, 0);
-                *(unsigned short *)(((char *)this) + 0x400 + 0x44) = 0x1e;
+                mTimer = 0x1e;
                 func_ov062_0211c658(((char *)this), (PMF *)data_ov062_0211e17c);
                 goto skip_destroy;
             }
         } else {
             mHeldActorID = 0;
             func_02012790(0xa, 0);
-            *(unsigned short *)(((char *)this) + 0x400 + 0x44) = 0x1e;
+            mTimer = 0x1e;
             func_ov062_0211c658(((char *)this), (PMF *)data_ov062_0211e17c);
             goto skip_destroy;
         }
@@ -91,14 +91,14 @@ int Klepto::Behavior()
     }
 skip_destroy:
     mBlendModelAnim.Advance();
-    if (*(void **)((char *)&unk_42c) != (void *)data_ov062_0211e14c) {
+    if (mState != (void *)data_ov062_0211e14c) {
         func_ov062_0211b51c(((char *)this));
     }
 
-    _ZN5dCc_c5ClearEv((dCc_c *)((char *)&mdCcAc_c1));
-    _ZN5dCc_c6UpdateEv((dCc_c *)((char *)&mdCcAc_c1));
-    _ZN5dCc_c5ClearEv((dCc_c *)((char *)&mdCcAc_c2));
-    _ZN5dCc_c6UpdateEv((dCc_c *)((char *)&mdCcAc_c2));
+    _ZN5dCc_c5ClearEv((dCc_c *)&mdCcAc_c1);
+    _ZN5dCc_c6UpdateEv((dCc_c *)&mdCcAc_c1);
+    _ZN5dCc_c5ClearEv((dCc_c *)&mdCcAc_c2);
+    _ZN5dCc_c6UpdateEv((dCc_c *)&mdCcAc_c2);
 
     return 1;
 }

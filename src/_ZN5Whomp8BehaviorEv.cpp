@@ -23,9 +23,7 @@ extern PMF data_ov079_02128280[];
 
 int Whomp::Behavior()
 {
-    char* c = (char*)((dActor_c*)this);
-
-    if (*(unsigned char*)(c + 0x414) != 0 && *(int*)(c + 0x3b0) != 9) {
+    if (mIsKing != 0 && mState != 9) {
         if (_ZN8dActor_c13DistToCPlayerEv(((dActor_c*)this)) < 0x1770000) {
             *(int*)(*(int*)&data_0209f318 + 0x114) = (int)((dActor_c*)this);
         }
@@ -34,35 +32,38 @@ int Whomp::Behavior()
     func_ov079_02123f34(((dActor_c*)this));
     _ZN8dActor_c9UpdatePosEP5dCc_c(((dActor_c*)this), 0);
 
-    if (*(int*)(c + 0x98) != 0) {
-        if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(((dActor_c*)this), (dBgCh_Actr*)(c + 0x110), 0x3c000, (short)0x2888, 0, 0, (void*)0x32000)) {
-            *(int*)(c + 0x5c) = *(int*)(c + 0x3d4);
-            *(int*)(c + 0x60) = *(int*)(c + 0x3d8);
-            *(int*)(c + 0x64) = *(int*)(c + 0x3dc);
+    if (mHorzSpeed != 0) {
+        if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(((dActor_c*)this), &mWithMeshClsn, 0x3c000, (short)0x2888, 0, 0, (void*)0x32000)) {
+            /* The step would leave the ledge: rewind to last frame's position. */
+            mPosX = mSafePosX;
+            mPosY = mSafePosY;
+            mPosZ = mSafePosZ;
         } else {
-            *(int*)(c + 0x3d4) = *(int*)(c + 0x5c);
-            *(int*)(c + 0x3d8) = *(int*)(c + 0x60);
-            *(int*)(c + 0x3dc) = *(int*)(c + 0x64);
+            mSafePosX = mPosX;
+            mSafePosY = mPosY;
+            mSafePosZ = mPosZ;
         }
     } else {
-        *(int*)(c + 0x3d4) = *(int*)(c + 0x5c);
-        *(int*)(c + 0x3d8) = *(int*)(c + 0x60);
-        *(int*)(c + 0x3dc) = *(int*)(c + 0x64);
+        mSafePosX = mPosX;
+        mSafePosY = mPosY;
+        mSafePosZ = mPosZ;
     }
 
-    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((dActor_c*)this), (dBgCh_Actr*)(c + 0x110), 0);
+    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((dActor_c*)this), &mWithMeshClsn, 0);
 
     {
-        int idx = *(int*)(c + 0x3b0);
+        int idx = mState;
         PMF* pmf = &data_ov079_02128280[idx];
         (((dActor_c*)this)->**pmf)();
 
         {
-            unsigned short* ctr = (unsigned short*)(c + 0x100);
+            /* dEnemyBase_c's 0x100 counts frames spent in the current state: it is
+               incremented here and reset the moment the handler changed mState. */
+            unsigned short* ctr = (unsigned short*)&mStateTimer;
             *ctr = *ctr + 1;
-            if (idx != *(int*)(c + 0x3b0)) {
+            if (idx != mState) {
                 *ctr = 0;
-                *(unsigned char*)(c + 0x40c) = 0;
+                unk_40c = 0;
             }
         }
     }
@@ -73,6 +74,6 @@ int Whomp::Behavior()
         func_ov079_02124008(((dActor_c*)this));
     }
 
-    *(unsigned char*)(c + 0x403) = 0;
+    unk_403 = 0;
     return 1;
 }

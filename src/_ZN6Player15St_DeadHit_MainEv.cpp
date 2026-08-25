@@ -43,7 +43,7 @@ int Player::St_DeadHit_Main()
     switch (mStateWork) {
     case 0:
         if (_ZNK9Animation12WillHitFrameEi(
-                (void *)(((s32 *)((char *)&mBodyModels))[_ZNK6Player14GetBodyModelIDEjb(((char *)this), param1 & 0xff, 0)] + 0x50),
+                (void *)((char *)mBodyModels[_ZNK6Player14GetBodyModelIDEjb(((char *)this), param1 & 0xff, 0)] + 0x50),
                 data_ov002_02109db8[mStateStep & 1]) != 0)
             mStateWork = 1;
         break;

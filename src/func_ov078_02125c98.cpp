@@ -22,7 +22,7 @@ extern "C" {
 int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
 void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int fix, int t, unsigned int j);
 }
-extern Matrix4x3 data_02082128;
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 extern "C" void func_ov078_02125c98(char* c) {
   int h = *(int*)(c+0x60);
@@ -44,7 +44,7 @@ extern "C" void func_ov078_02125c98(char* c) {
   int r8 = 0x15e000 - (int)(((long long)ip * 0x180 + 0x800) >> 12);
   if (r8 < 0xa000)
     r8 = 0xa000;
-  *(Matrix4x3*)(c+0x434) = data_02082128;
+  *(Matrix4x3*)(c+0x434) = IDENTITY_MATRIX4X3;
   *(int*)(c+0x458) = *(int*)(c+0x5c) >> 3;
   *(int*)(c+0x45c) = *(int*)(c+0x60) >> 3;
   *(int*)(c+0x460) = *(int*)(c+0x64) >> 3;

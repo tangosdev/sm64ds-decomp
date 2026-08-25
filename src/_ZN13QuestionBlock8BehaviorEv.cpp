@@ -19,17 +19,17 @@ extern signed char data_0209f2f8;
 int QuestionBlock::Behavior()
 {
     func_ov102_02149df0(((char*)this));
-    if (unk_3e8 != 2) {
+    if (mState != 2) {
         _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), 0);
-        if (mPosY <= unk_3e0) mPosY = unk_3e0;
+        if (mPosY <= mHomePosY) mPosY = mHomePosY;
         func_ov102_02149ff0(((char*)this));
         func_ov102_02149ea4(((char*)this));
     }
-    func_020393a4((int*)((char*)&(*(u8 *)&mMeshCollider)), 0x8c000);
-    func_02039394((int*)((char*)&(*(u8 *)&mMeshCollider)), 0x46000);
-    if (unk_3e8 != 0) {
-        if (((dBgW *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0) {
-            ((dBgW *)((char*)&(*(u8 *)&mMeshCollider)))->Disable();
+    func_020393a4((int*)&mMeshCollider, 0x8c000);
+    func_02039394((int*)&mMeshCollider, 0x46000);
+    if (mState != 0) {
+        if (((dBgW *)&mMeshCollider)->IsEnabled() != 0) {
+            ((dBgW *)&mMeshCollider)->Disable();
         }
         goto end;
     }
@@ -37,8 +37,8 @@ int QuestionBlock::Behavior()
         int b = (int)(actorID == 0x14);
         if (b != 0) {
             _ZN9Animation7AdvanceEv((char*)(Animation *)&mModelAnim);
-            if (((dBgW *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0) {
-                ((dBgW *)((char*)&(*(u8 *)&mMeshCollider)))->Disable();
+            if (((dBgW *)&mMeshCollider)->IsEnabled() != 0) {
+                ((dBgW *)&mMeshCollider)->Disable();
             }
             goto end;
         }
@@ -46,7 +46,7 @@ int QuestionBlock::Behavior()
     {
         int b = (int)(data_0209f2d8 == 1);
         if (b != 0) {
-            if (((dBgW *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled() == 0) {
+            if (((dBgW *)&mMeshCollider)->IsEnabled() == 0) {
                 ((dBgW *)(&mMeshCollider))->Enable((dActor_c *)(((char*)this)));
             }
             goto end;

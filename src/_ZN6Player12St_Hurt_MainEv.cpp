@@ -2,7 +2,7 @@
 // @symbol _ZN6Player12St_Hurt_MainEv
 /* recovered: named members + shared header, real C++ method
  *
- * Three-phase hurt state, sequenced by unk_6e6: 0 lands the hit (sound, voice,
+ * Three-phase hurt state, sequenced by mStatePhase: 0 lands the hit (sound, voice,
  * knockback), 1 waits for horizontal speed to bleed off, 2 runs out the timer
  * and then hands back to the swimming or walking state depending on
  * mIsUnderwater. mStateWork is used as two nibbles here -- the high one
@@ -33,7 +33,7 @@ int Player::St_Hurt_Main()
         mIsBodyClsnEnabled = 0;
     }
 
-    switch (unk_6e6) {
+    switch (mStatePhase) {
     case 0:
         func_ov002_020d9a4c(this);
         func_ov002_020d99a4((unsigned char*)this);
@@ -54,7 +54,7 @@ int Player::St_Hurt_Main()
         if (mIsInShallowWater == 0) {
             func_ov002_020bf9d4(this);
         }
-        unk_6e6 = 1;
+        mStatePhase = 1;
         break;
 
     case 1:
@@ -63,7 +63,7 @@ int Player::St_Hurt_Main()
         if (mIsAirborne != 0) break;
         func_ov002_020d9aac(this);
         if (mHorzSpeed != 0) break;
-        unk_6e6 = 2;
+        mStatePhase = 2;
         if ((mStateWork >> 4) == 2) {
             mStateTimer = 0x5a;
         }

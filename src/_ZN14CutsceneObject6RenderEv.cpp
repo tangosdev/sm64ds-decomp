@@ -17,7 +17,7 @@ struct ModelBase {
 
 int CutsceneObject::Render()
 {
-  if (unk_008 == 0x19){
+  if (param1 == 0x19){
     struct { char* p; char* cur; M48* src; } s;
     s.src = &data_0209b41c;
     s.p = *(char**)((char*)&mModel) + 0x1c;
@@ -43,14 +43,14 @@ int CutsceneObject::Render()
     if (a != 0){
       a = (void*)((int)a);
       _ZN9ModelBase12ApplyOpacityEj(a, op, 0);
-      ((ModelBase*)*(void**)((char*)&mModel))->m((int)((char*)&unk_080));
+      ((ModelBase*)*(void**)((char*)&mModel))->m((int)((char*)&mScaleX));
     } else {
       void* b = *(void**)((char*)&unk_0e0);
       if (b != 0){
         b = (void*)((int)b);
         func_ov002_020f65b8(b);
         _ZN9ModelBase12ApplyOpacityEj(*(void**)((char*)&unk_0e0), unk_102, 0);
-        ((ModelBase*)*(void**)((char*)&unk_0e0))->m((int)((char*)&unk_080));
+        ((ModelBase*)*(void**)((char*)&unk_0e0))->m((int)((char*)&mScaleX));
       }
     }
   }

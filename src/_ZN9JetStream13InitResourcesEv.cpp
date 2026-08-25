@@ -32,7 +32,7 @@ s32 JetStream::InitResources()
     if (data_0209f2f8 == 8 && (data_0209f220 == 1 || IsStarCollected(SublevelToLevel(8), 1) == 0)) {
         return 0;
     }
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj((dCcAc_c*)((char*)&(*(u8 *)&mdCcAc_c)), (dActor_c*)((char*)this), 0xc8000, 0x190000, 0x800004, 0);
-    func_ov064_0211982c(((char*)this), &data_ov064_0211c934);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, (dActor_c*)this, 0xc8000, 0x190000, 0x800004, 0);
+    func_ov064_0211982c((char*)this, &data_ov064_0211c934);
     return 1;
 }

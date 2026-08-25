@@ -47,7 +47,7 @@ int KingBobOmb::Behavior()
 
     {
         Base *b = &((Derived *)self)->base;
-        *(int *)(self + 0x328) = *(int *)(self + 0x4fc) << 0xc;
+        mBlendModelAnim.speed = mAnimSpeed << 0xc;
         b->v3();
     }
     _ZN14BlendModelAnim7AdvanceEv(self + 0x2cc);
@@ -68,8 +68,8 @@ int KingBobOmb::Behavior()
     }
 
     DecIfAbove0_Short((unsigned short *)(self + 0x100));
-    DecIfAbove0_Byte((unsigned char *)(self + 0x505));
-    DecIfAbove0_Byte((unsigned char *)(self + 0x504));
+    DecIfAbove0_Byte(&mTimer505);
+    DecIfAbove0_Byte(&mTimer504);
 
     if ((char *)((C *)this)->pp != data_ov078_021270bc) {
         _ZN8dActor_c9UpdatePosEP5dCc_c(self, self + 0x33c);
@@ -84,7 +84,7 @@ int KingBobOmb::Behavior()
     if ((char *)((C *)this)->pp == data_ov078_0212703c || (char *)((C *)this)->pp == data_ov078_021270fc) {
         if (_ZNK10dBgCh_Actr8IsOnWallEv(self + 0x110) != 0
             || _ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x110) == 0
-            || (*(int *)(self + 0x4d8) - 0x28000) > *(int *)(self + 0x60)) {
+            || (mArenaPosY - 0x28000) > mPosY) {
             KingBobOmb_SetState(self, data_ov078_021270bc);
         }
     }

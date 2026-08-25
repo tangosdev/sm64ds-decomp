@@ -40,13 +40,13 @@ int Rabbit::InitResources()
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov085_021305c8);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov085_021305c0);
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_021305d8);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0x300, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_021305e0), 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_021305e0), 1, -1);
     _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel1);
     _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel2);
 
-    unk_438 = param1 & 0xff;
-    if (unk_438 == 0xff)
-        unk_438 = 0;
+    mPathId = param1 & 0xff;
+    if (mPathId == 0xff)
+        mPathId = 0;
 
     /* dActor_c declares param1 u32, but the ROM shifts these two with ASR, not
        LSR -- so this call site reads it signed. Without the casts the function
@@ -82,15 +82,15 @@ check18:
 skip17:
     mVertAccel = -0x1000;
     mTerminalVelocity = -0x1e000;
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, ((char*)this), 0x50000, 0x64000, 0xb00004, 0x9000);
-    unk_45c = 0;
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, ((char*)this), 0x50000, 0x64000, 0xb00004, 0x9000);
+    mTalkingPlayer = 0;
     mModelAnim.speed = 0x1000;
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, ((char*)this), 0x28000, 0x28000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, ((char*)this), 0x28000, 0x28000, 0, 0);
     _ZN7PathPtrC1Ev(sp8);
-    _ZN7PathPtr6FromIDEj(sp8, unk_438);
-    unk_448 = 1;
-    _ZNK7PathPtr7GetNodeER7Vector3j(sp8, ((char*)this) + 0x5c, unk_448);
-    unk_444 = _ZNK7PathPtr8NumNodesEv(sp8);
+    _ZN7PathPtr6FromIDEj(sp8, mPathId);
+    mPathNodeIndex = 1;
+    _ZNK7PathPtr7GetNodeER7Vector3j(sp8, &mPosX, mPathNodeIndex);
+    mNumPathNodes = _ZNK7PathPtr8NumNodesEv(sp8);
     func_ov085_0212bcc8(((char*)this));
     mEatingPlayer = 0;
     mScaleX = 0x1000;
@@ -100,7 +100,7 @@ skip17:
     if (mRabbitId == 7) {
         if (data_0209caa0[1] & 0x40)
             return 0;
-        unk_428 = 1;
+        mIsDisabled = 1;
         goto block_26;
     }
 
@@ -152,7 +152,7 @@ block_26:
             }
             if (mColorVariant == 5) {
                 data_ov085_021305ac += 1;
-                unk_429 = 1;
+                mIsGlowing = 1;
             }
         }
     }
@@ -162,7 +162,7 @@ block_out:
         if (mAreaId == 3)
             mFlags = 0x8280;
     }
-    unk_468 = (mColorVariant << 1) + *(s32*)((char*)mModelAnim.data.materials + 0x20);
+    mMaterialColor = (mColorVariant << 1) + *(s32*)((char*)mModelAnim.data.materials + 0x20);
     func_ov085_0212bc78(((char*)this), &data_ov085_021306cc);
     return 1;
 }

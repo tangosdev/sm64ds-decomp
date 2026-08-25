@@ -13,7 +13,7 @@
  *                     "was already released" with one pointer compare.
  *   otherwise         returns the new cap actor
  *
- * Which marker bit goes into mCapId depends on unk_110 -- bit 3 for the second
+ * Which marker bit goes into mCapId depends on mCapBank -- bit 3 for the second
  * bank, bit 7 for the first.
  *
  * The spawn's second argument packs mCapId into bits 8+ of 0x1012, so one
@@ -47,7 +47,7 @@ struct dActor_c *dCapEnemy_c::ReleaseCap(const Vector3 & v_)
                 0x10d, 0x1012 | (mCapId << 8), &out,
                 (const struct Vector3_16 *)&mAngleX,
                 mAreaId, -1);
-            if (unk_110 != 0) {
+            if (mCapBank != 0) {
                 *(unsigned char *)((int)c + 0x113) |= 8;
             } else {
                 *(unsigned char *)((int)c + 0x113) |= 0x80;

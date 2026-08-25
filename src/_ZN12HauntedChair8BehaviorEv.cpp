@@ -14,7 +14,7 @@ extern void _ZN5dCc_c6UpdateEv(char* c);
 int HauntedChair::Behavior()
 {
   func_0200f760(((char*)this), ((char*)this) + 0x17c);
-  switch (unk_378) {
+  switch (mState) {
   case 0: func_ov020_021130c8(((char*)this)); break;
   case 1: func_ov020_02112e94(((char*)this)); break;
   case 2: func_ov020_02112b00(((char*)this)); break;

@@ -133,10 +133,10 @@ void func_ov002_020f1578(char* c, char* arg){
  * -- it is multiplied by 10 here -- and a byte of 0 or 0xff means "use the
  * default 0xfa" instead.
  *
- * unk_320 is just mPosY - 0x64000, so the switch always sinks the same distance
+ * mStopPosY is just mPosY - 0x64000, so the switch always sinks the same distance
  * from wherever it was placed rather than to a fixed height.
  *
- * mAreaId is copied into unk_32e before Behavior sets mAreaId to -1, which is
+ * mAreaId is copied into mHomeAreaId before Behavior sets mAreaId to -1, which is
  * how the switch still knows which area it belongs to after it stops claiming
  * membership.
  *
@@ -167,29 +167,29 @@ int BlueCoinSwitch::InitResources()
     unsigned short* p;
 
     bmd = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_02110acc);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(&(*(u8 *)&mModel), bmd, 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, bmd, 1, -1);
 
-    unk_32d = (int)param1 & 0xf;
+    mEventBit = (int)param1 & 0xf;
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
 
     kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov002_02110ac4);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &(*(u8 *)&mMeshCollider), kcl, &mClsnMat, 0x199, mAngleY,
+        &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY,
         &data_ov002_0210d6f4);
 
-    func_020393c4(&(*(u8 *)&mMeshCollider), (void*)&func_ov002_020f15b8);
+    func_020393c4(&mMeshCollider, (void*)&func_ov002_020f15b8);
 
-    unk_32c = 0;
+    mPressed = 0;
 
     /* Keep p out of the mid-block so y colors r1 and c+0x300 colors r0,
        and so set_fa rematerializes add r0,r4,#0x300 after ldrh clobbers r0. */
     y = mPosY;
-    unk_320 = y - 0x64000;
+    mStopPosY = y - 0x64000;
     x = param1;
-    unk_32a = (x >> 8) & 0xff;
-    unk_32e = mAreaId;
-    val = unk_32a;
+    mCoinTimerSeed = (x >> 8) & 0xff;
+    mHomeAreaId = mAreaId;
+    val = mCoinTimerSeed;
     p = (unsigned short*)(c + 0x300);
 
     /* ROM: if (val==0xff || val==0) store 0xfa; else *= 10 */
@@ -218,17 +218,17 @@ done:
 // @symbol _ZN14BlueCoinSwitch8BehaviorEv
 /* recovered: named members + shared header, real C++ method
  *
- * The switch's whole life, and none of it runs until unk_32c says it has been
+ * The switch's whole life, and none of it runs until mPressed says it has been
  * pressed.
  *
  * Once pressed: mAreaId is set to -1 (the switch stops claiming its area, which
- * is why init stashed the original in unk_32e), the music ducks, and mPosY
- * walks down 0x14000 a frame toward unk_320. On arrival it snaps exactly to
- * unk_320, sets its event bit, arms the countdown from unk_32a, disables the
+ * is why init stashed the original in mHomeAreaId), the music ducks, and mPosY
+ * walks down 0x14000 a frame toward mStopPosY. On arrival it snaps exactly to
+ * mStopPosY, sets its event bit, arms the countdown from mCoinTimerSeed, disables the
  * collider and poofs -- so the sinking animation and the "switch is now on"
  * moment are the same event.
  *
- * unk_328 is both timer and state: non-zero means running, and expiry parks it
+ * mCoinTimer is both timer and state: non-zero means running, and expiry parks it
  * at 1 rather than 0 so it stays latched. Two things end it -- the count
  * reaching zero, or every blue coin (actor 0x122) being gone, which is checked
  * each frame and short-circuits the timer.
@@ -256,38 +256,38 @@ s32 BlueCoinSwitch::Behavior()
     char *c = (char *)this;
     u16 t;
 
-    if (unk_32c == 1) {
+    if (mPressed == 1) {
         mAreaId = -1;
-        if (IsAreaShowing((s8)unk_32e) == 0)
+        if (IsAreaShowing((s8)mHomeAreaId) == 0)
             _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0x3f000);
     }
-    if (unk_32c == 1) {
-        if (mPosY > unk_320) {
+    if (mPressed == 1) {
+        if (mPosY > mStopPosY) {
             mPosY = mPosY - 0x14000;
-            if (mPosY <= unk_320) {
-                mPosY = unk_320;
-                _ZN5Event6SetBitEj(unk_32d);
-                unk_328 = unk_32a;
-                _ZN4dBgW7DisableEv(&(*(u8 *)&mMeshCollider));
+            if (mPosY <= mStopPosY) {
+                mPosY = mStopPosY;
+                _ZN5Event6SetBitEj(mEventBit);
+                mCoinTimer = mCoinTimerSeed;
+                _ZN4dBgW7DisableEv(&mMeshCollider);
                 _ZN8dActor_c8PoofDustEv(c);
             }
         }
-        if (unk_328 != 0) {
-            if (DecIfAbove0_Short(&unk_328) == 0) {
-                unk_328 = 1;
+        if (mCoinTimer != 0) {
+            if (DecIfAbove0_Short(&mCoinTimer) == 0) {
+                mCoinTimer = 1;
                 if (_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0x64cc) != 0)
                     _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
             } else {
-                t = unk_328;
+                t = mCoinTimer;
                 if (t == 0x2d)
-                    unk_324 = 0;
+                    mTickSound = 0;
                 else if (t < 0x2d)
-                    unk_324 = func_02012310(unk_324, 0x39, 0);
+                    mTickSound = func_02012310(mTickSound, 0x39, 0);
                 else
-                    unk_324 = func_02012310(unk_324, 0x38, 0);
+                    mTickSound = func_02012310(mTickSound, 0x38, 0);
                 _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x40, 0xc999);
                 if (_ZN8dActor_c15FindWithActorIDEjPS_(0x122, 0) == 0)
-                    unk_328 = 1;
+                    mCoinTimer = 1;
             }
         }
     }
@@ -304,13 +304,13 @@ s32 BlueCoinSwitch::Behavior()
 /* recovered: named members + shared header, real C++ method
  *
  * Draws the switch only while it is still above its stop. Behavior sinks mPosY
- * toward unk_320 once pressed, so this comparison IS the visibility rule --
+ * toward mStopPosY once pressed, so this comparison IS the visibility rule --
  * the switch vanishes exactly when it bottoms out, with no separate flag.
  */
 int BlueCoinSwitch::Render()
 {
-    if (mPosY > unk_320) {
-        Base *bp = (Base *)&(*(u8 *)&mModel);
+    if (mPosY > mStopPosY) {
+        Base *bp = (Base *)&mModel;
         bp->m(0);
     }
     return 1;
@@ -327,8 +327,8 @@ int BlueCoinSwitch::Render()
  */
 int BlueCoinSwitch::CleanupResources()
 {
-    if (_ZN4dBgW9IsEnabledEv(&(*(u8 *)&mMeshCollider))) {
-        _ZN4dBgW7DisableEv(&(*(u8 *)&mMeshCollider));
+    if (_ZN4dBgW9IsEnabledEv(&mMeshCollider)) {
+        _ZN4dBgW7DisableEv(&mMeshCollider);
     }
     _ZN13SharedFilePtr7ReleaseEv(BlueCoinSwitch_ModelFile);
     _ZN13SharedFilePtr7ReleaseEv(BlueCoinSwitch_ClsnFile);

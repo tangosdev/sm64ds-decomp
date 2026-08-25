@@ -17,10 +17,10 @@
  *   two states         get an extra per-frame call
  *
  * THE GROUND RAY IS A FALL-THROUGH GUARD. It casts from 0x78000 above the boss
- * along its heading (reach doubles once unk_4cb > 1) and, when it finds
+ * along its heading (reach doubles once mHitsRemaining > 1) and, when it finds
  * NOTHING, saves the current position into unk_4ec and rewinds mPos to the
  * triple at 0x068 -- so the boss cannot leave the arena by falling off it. A
- * hit clears unk_4c9; a miss while descending faster than 0xa000 sets it.
+ * hit clears mNoGroundAhead; a miss while descending faster than 0xa000 sets it.
  *
  * The first thing it does is publish itself into the camera at +0x114, so the
  * camera follows the boss without the boss being asked.
@@ -92,11 +92,11 @@ int ChiefChilly::Behavior()
     int line[0x1f];
 
     *(C **)((char *)data_0209f318 + 0x114) = c;
-    /* dEnemyBase_c declares unk_100 as s16 -- 28 of its subclasses' generated headers
+    /* dEnemyBase_c declares mStateTimer as s16 -- 28 of its subclasses' generated headers
        say so -- while this file's own extern for the helper says u16*. Both are
        recovered guesses and nothing here settles which; the cast reproduces the
        ROM without asserting either. */
-    DecIfAbove0_Short((unsigned short *)&unk_100);
+    DecIfAbove0_Short((unsigned short *)&mStateTimer);
 
     if (*(void **)((char *)c->pp + 8) != 0) {
         PMF *p = c->pp + 1;
@@ -151,7 +151,7 @@ int ChiefChilly::Behavior()
             rp.start.y = y;
             rp.start.z = mPosZ;
             rp.start.y = y + 0x78000;
-            if (unk_4cb > 1)
+            if (mHitsRemaining > 1)
                 rp.in.z = 0x258000;
             else
                 rp.in.z = 0x12c000;
@@ -177,19 +177,19 @@ int ChiefChilly::Behavior()
         _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(line, &rp.start, &rp.end, self);
         if (_ZN9dBgCh_Lin10DetectClsnEv(line) == 0) {
             if (mHorzSpeed > 0xa000) {
-                unk_4c9 = 1;
+                mNoGroundAhead = 1;
             }
             unk_4ec = mPosX;
             unk_4f0 = mPosY;
             unk_4f4 = mPosZ;
             if ((char *)c->pp != data_ov073_021233a0) {
-                mPosX = unk_068;
-                mPosY = unk_06c;
-                mPosZ = unk_070;
+                mPosX = mPrevPosX;
+                mPosY = mPrevPosY;
+                mPosZ = mPrevPosZ;
                 mHorzSpeed = 0;
             }
         } else {
-            unk_4c9 = 0;
+            mNoGroundAhead = 0;
         }
         _ZN9dBgCh_LinD1Ev(line);
     }

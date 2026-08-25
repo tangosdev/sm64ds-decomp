@@ -55,16 +55,6 @@ extern s32 data_0209f394[];
 extern signed char data_0209f2f8;
 extern u8 data_0209f220;
 
-struct Sub18 {
-    char pad[0x39c];
-    s32 unk39c;
-};
-
-struct WithArr {
-    char pad[0x39c];
-    s32 arr[8];
-};
-
 int Whomp::InitResources()
 {
     u16 id;
@@ -80,7 +70,7 @@ int Whomp::InitResources()
     if (b) {
         mIsKing = 1;
         bmd = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov079_02128168);
-        _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x2cc, bmd, 1, -1);
+        _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, bmd, 1, -1);
         r6 = 0;
         do {
             anim = data_ov079_02127600[r6];
@@ -91,7 +81,7 @@ int Whomp::InitResources()
     } else {
         mIsKing = 0;
         bmd = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov079_02128170);
-        _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x2cc, bmd, 1, -1);
+        _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, bmd, 1, -1);
         r6 = 0;
         do {
             anim = data_ov079_021275ec[r6];
@@ -113,12 +103,12 @@ int Whomp::InitResources()
         TextureSequence::Prepare(*(BMD_File *)data_ov079_02128168.unk4,
                                  *(BTP_File *)data_ov079_02128178.unk4);
         _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-            ((char *)this) + 0x330, data_ov079_02128178.unk4, 0, 0x1000, 0);
-        _ZN9Animation8SetFlagsEi(((char *)this) + 0x330, 0x40000000);
+            &mTextureSequence, data_ov079_02128178.unk4, 0, 0x1000, 0);
+        _ZN9Animation8SetFlagsEi(&mTextureSequence, 0x40000000);
         mTextureSequence.speed = 0x1000;
         mTextureSequence.currFrame = 0;
-        unk_409 = (u8)(param1 & 0xf);
-        unk_408 = _ZN8dActor_c9TrackStarEjj(((char *)this), unk_409, 2);
+        mStarID = (u8)(param1 & 0xf);
+        unk_408 = _ZN8dActor_c9TrackStarEjj(((char *)this), mStarID, 2);
     } else {
         unk_401 = 1;
     }
@@ -129,16 +119,16 @@ int Whomp::InitResources()
     idx = mIsKing;
     if (idx == 0) {
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            ((char *)this) + 0x418, *(void **)((char *)data_ov079_02127bf0[idx] + 4), ((char *)this) + 0x5e0,
+            &mMovingMeshCollider, *(void **)((char *)data_ov079_02127bf0[idx] + 4), ((char *)this) + 0x5e0,
             0x199, mAngleY, &data_ov079_02127ba0);
     } else {
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            ((char *)this) + 0x418, *(void **)((char *)data_ov079_02127bf0[idx] + 4), ((char *)this) + 0x5e0,
+            &mMovingMeshCollider, *(void **)((char *)data_ov079_02127bf0[idx] + 4), ((char *)this) + 0x5e0,
             0x1000, mAngleY, &func_021135d4);
     }
 
     func_01ffb0bc((char *)&mMovingMeshCollider);
-    func_020393d4(((char *)this) + 0x418, (void *)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+    func_020393d4(&mMovingMeshCollider, (void *)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
 
     {
         s32 sp[3];
@@ -150,20 +140,20 @@ int Whomp::InitResources()
 
     func_020396d0((int *)&mMovingMeshCollider, 0xb50);
 
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x110, ((char *)this), 0x32000, 0x32000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, ((char *)this), 0x32000, 0x32000, 0, 0);
 
-    unk_3b0 = 0;
+    mState = 0;
     *(s16 *)(((char *)this) + 0x300 + 0xb8) = mPrevAngleY;
     unk_40c = 0;
     *(s16 *)(((char *)this) + 0x300 + 0xfc) = 0;
 
     idx = mIsKing;
     anim = *(void **)((char *)data_ov079_021275ec[idx * 5 + 3] + 4);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char *)this) + 0x2cc, anim, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, anim, 0, 0x1000, 0);
 
-    unk_3bc = mPosX;
-    unk_3c0 = mPosY;
-    unk_3c4 = mPosZ;
+    mSpawnPosX = mPosX;
+    mSpawnPosY = mPosY;
+    mSpawnPosZ = mPosZ;
     *(s16 *)(((char *)this) + 0x300 + 0xe6) = mAngleX;
     *(s16 *)(((char *)this) + 0x300 + 0xe8) = mAngleY;
     *(s16 *)(((char *)this) + 0x300 + 0xea) = mAngleZ;
@@ -185,14 +175,14 @@ int Whomp::InitResources()
     }
 
     unk_410 = 0;
-    unk_404 = 1;
+    mShouldRender = 1;
     unk_407 = 0;
     unk_40b = 0;
-    unk_100 = 0;
+    mStateTimer = 0;
 
     i = 0;
     do {
-        ((WithArr *)((char *)this))->arr[i] = 0;
+        unk_39c[i] = 0;
         i += 1;
     } while (i < 4);
 
@@ -202,7 +192,7 @@ int Whomp::InitResources()
             i = 0;
             do {
                 s32 v = data_0209f394[i];
-                ((WithArr *)((char *)this))->arr[i] = v;
+                unk_39c[i] = v;
                 i += 1;
             } while (i < cnt);
         }

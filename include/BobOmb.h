@@ -46,25 +46,39 @@ struct BobOmb : dEnemyBase_c {
     u8  pad_38c[0x4];
     /* Everything from here down was reachable only through the `struct Obj`
        shadow InitResources used to carry, so the generated header never had
-       it. unk_394 is a 0x30-byte block copied wholesale from data_02082128. */
-    u32                          unk_390;               /* 0x390 */
-    s32                          unk_394[12];           /* 0x394 */
+       it. mMatrix is a 0x30-byte block copied wholesale from IDENTITY_MATRIX4X3. */
+    u32                          unk_390;               /* 0x390 -- InitResources zeroes it; no reader */
+    /* A Matrix4x3, copied wholesale from IDENTITY_MATRIX4X3 by InitResources.
+       Left as twelve words rather than typed: BobOmb.h is included by files that
+       do not pull common.h, and embedding the real type would force it on them. */
+    s32                          mMatrix[12];           /* 0x394 */
     s32                          mHomePosX;             /* 0x3c4 */
     s32                          mHomePosY;             /* 0x3c8 */
     s32                          mHomePosZ;             /* 0x3cc */
     u8  pad_3d0[0xc];
-    s32                          unk_3dc;               /* 0x3dc */
-    s32                          unk_3e0;               /* 0x3e0 */
+    /* Behavior's state selector: it branches on == 5 (skip almost everything),
+       == 4 (the egg/Chuckya hand-off) and == 0 (allow the wall bounce). */
+    s32                          mState;                /* 0x3dc */
+    s32                          unk_3e0;               /* 0x3e0 -- InitResources stores 2; no reader */
     u8  pad_3e4[0x4];
-    u16                          unk_3e8;               /* 0x3e8 */
-    u16                          unk_3ea;               /* 0x3ea */
-    u16                          unk_3ec;               /* 0x3ec */
+    u16                          unk_3e8;               /* 0x3e8 -- zeroed by InitResources */
+    u16                          unk_3ea;               /* 0x3ea -- zeroed by InitResources */
+    u16                          unk_3ec;               /* 0x3ec -- InitResources stores 0x2000 */
     u16                          unk_3ee;               /* 0x3ee */
-    u16                          unk_3f0;               /* 0x3f0 */
-    u8                           unk_3f2;               /* 0x3f2 */
-    u8                           unk_3f3;               /* 0x3f3 */
+    /* InitResources' last statement: a snapshot of mAngleY taken next to the
+       mHomePos* snapshot of the position. */
+    u16                          mHomeAngleY;           /* 0x3f0 */
+    u8                           unk_3f2;               /* 0x3f2 -- zeroed by InitResources */
+    /* Render draws nothing at all while this is 0; InitResources sets it to 1. */
+    u8                           mShouldRender;         /* 0x3f3 */
     u8                           unk_3f4;               /* 0x3f4 */
-    u8                           unk_3f5;               /* 0x3f5 */
+    /* param1 & 7. InitResources switches on it: 2 starts inert (sets the
+       collision volume's hit bit and clears mFlags bit 0), 4 starts clear,
+       anything else starts live. Behavior reads it again for the egg path. */
+    u8                           mVariant;              /* 0x3f5 */
+    /* A latch: while non-zero Behavior does nothing but call func_ov102_0214ae1c
+       and return. InitResources clears it, and nothing matched sets it, so what
+       the latch MEANS is not evidenced -- only that it diverts the whole frame. */
     u8                           unk_3f6;               /* 0x3f6 */
     u8  pad_3f7[0x9];
 

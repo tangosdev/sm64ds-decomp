@@ -71,7 +71,7 @@ extern "C" {
 extern int _ZN11ShadowModel12InitCylinderEv(void* thiz);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* actor, int fix12, int t, unsigned int a, unsigned int b);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, int fix12, int t, void* vec, int last);
-extern int data_02082128[];
+extern int IDENTITY_MATRIX4X3[];
 }
 
 int daKpFr_c::InitResources()
@@ -86,7 +86,7 @@ int daKpFr_c::InitResources()
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     func_ov070_02122044(((char*)this), 0);
-    *(struct M48*)((char*)&unk_2ec) = *(struct M48*)data_02082128;
+    *(struct M48*)((char*)&mMatrix) = *(struct M48*)IDENTITY_MATRIX4X3;
     return 1;
 }
 
@@ -120,10 +120,10 @@ int daKpFr_c::Render()
 {
   int b = (mFlags & 0x40000) != 0;
   if (b) return 1;
-  unk_324 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-      unk_324, 0x7f, mPosX, mPosY + 0x4b000, mPosZ, 0);
-  unk_328 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-      unk_328, 0x80, mPosX, mPosY + 0x4b000, mPosZ, 0);
+  mParticle1 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+      mParticle1, 0x7f, mPosX, mPosY + 0x4b000, mPosZ, 0);
+  mParticle2 = _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
+      mParticle2, 0x80, mPosX, mPosY + 0x4b000, mPosZ, 0);
   return 1;
 }
 

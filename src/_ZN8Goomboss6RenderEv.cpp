@@ -20,8 +20,8 @@ int Goomboss::Render()
   if(mShouldRender==0) return 1;
   Sub* s = (Sub*)((char*)&mModelAnim);
   s->m((char*)&mScaleX);
-  _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this)+0x3e4, ((char*)this)+0x218);
-  _ZN15MaterialChanger6UpdateER15ModelComponents(((char*)this)+0x3d0, ((char*)this)+0x218);
-  _ZN18TextureTransformer6UpdateER15ModelComponents(((char*)this)+0x3f8, ((char*)this)+0x218);
+  _ZN15TextureSequence6UpdateER15ModelComponents(&mTextureSequence, &mModelAnim.data);
+  _ZN15MaterialChanger6UpdateER15ModelComponents(&mMaterialChanger, &mModelAnim.data);
+  _ZN18TextureTransformer6UpdateER15ModelComponents(&mTextureTransformer, &mModelAnim.data);
   return 1;
 }

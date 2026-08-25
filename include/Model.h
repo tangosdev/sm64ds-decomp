@@ -23,7 +23,7 @@
  * module's gap object already supplies from ROM data.
  *
  * LAYOUT evidence: Model::C2 calls ModelBase::C2, stores _ZTV5Model, copies
- * mat4x3 from data_02082128 and zeroes +0x4c. Model::DoSetFile allocates
+ * mat4x3 from IDENTITY_MATRIX4X3 and zeroes +0x4c. Model::DoSetFile allocates
  * transformsBuf with Memory::operator_new2 and the destructors operator
  * delete it. Model::Render multiplies mat4x3 into a stack temp before
  * handing it to ModelComponents::Render.

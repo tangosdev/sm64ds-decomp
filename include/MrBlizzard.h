@@ -25,20 +25,23 @@ struct MrBlizzard : dEnemyBase_c {
     dBgCh_Actr mWithMeshClsn;       /* 0x150 */
     ModelAnim mModelAnim;             /* 0x30c */
     ShadowModel mShadowModel;         /* 0x370 */
-    u8  pad_398[0x64];
-    s32 unk_3fc;                      /* 0x3fc */
-    s32 unk_400;                      /* 0x400 */
+    u8  pad_398[0x60];
+    /* The state pointer. func_ov081_02125488 sets it (InitResources passes
+       data_ov081_02128e54 / _02128e84), and Behavior calls the
+       pointer-to-member-function at +8 through it and compares it against the
+       ov081 state tables _02128e24 / _02128e64 / _02128e84 / _02128e94. */
+    void *mState;                     /* 0x3f8 */
+    s32 mUniqueID_3fc;                /* 0x3fc */
+    s32 mCapUniqueID;                 /* 0x400 */
     u8  pad_404[0x10];
-    s16 unk_414;                      /* 0x414 */
+    s16 mInitAngleY;                  /* 0x414 */
     u8  pad_416[0x2];
     s32 mPathId;                      /* 0x418 */
     s32 mType;                        /* 0x41c */
-    s32 unk_420;                      /* 0x420 */
-    s32 unk_424;                      /* 0x424 */
+    s32 mPathNodeCount;               /* 0x420 */
+    s32 mPathNodeIndex;               /* 0x424 */
     u8  pad_428[0x24];
-    s32 unk_44c;                      /* 0x44c */
-    s32 unk_450;                      /* 0x450 */
-    s32 unk_454;                      /* 0x454 */
+    Vector3 mHomePos;                 /* 0x44c */
 
     /* --- vtable --- */
     virtual ~MrBlizzard();
@@ -80,10 +83,10 @@ struct MrBlizzard {
     u8  pad_090[0x4];
     s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x6];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mVertAccel;            /* 0x09c */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     u8  pad_0a4[0xc];
-    s32 unk_0b0;            /* 0x0b0 */
+    s32 mFlags;            /* 0x0b0 */
     u8  pad_0b4[0x18];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x3b];
@@ -104,20 +107,21 @@ struct MrBlizzard {
        checks. Was a u8 marker. [_ZN10MrBlizzardD1Ev.c] */
     ModelAnim mModelAnim;            /* 0x30c */
     u8  mShadowModel;            /* 0x370 */
-    u8  pad_371[0x8b];
-    s32 unk_3fc;            /* 0x3fc */
-    s32 unk_400;            /* 0x400 */
+    u8  pad_371[0x87];
+    void *mState;            /* 0x3f8 */
+    s32 mUniqueID_3fc;      /* 0x3fc */
+    s32 mCapUniqueID;            /* 0x400 */
     u8  pad_404[0x10];
-    s16 unk_414;            /* 0x414 */
+    s16 mInitAngleY;            /* 0x414 */
     u8  pad_416[0x2];
     s32 mPathId;            /* 0x418 */
     s32 mType;            /* 0x41c */
-    s32 unk_420;            /* 0x420 */
-    s32 unk_424;            /* 0x424 */
+    s32 mPathNodeCount;            /* 0x420 */
+    s32 mPathNodeIndex;            /* 0x424 */
     u8  pad_428[0x24];
-    s32 unk_44c;            /* 0x44c */
-    s32 unk_450;            /* 0x450 */
-    s32 unk_454;            /* 0x454 */
+    s32 mHomePosX;            /* 0x44c */
+    s32 mHomePosY;            /* 0x450 */
+    s32 mHomePosZ;            /* 0x454 */
 };
 
 #endif /* __cplusplus */

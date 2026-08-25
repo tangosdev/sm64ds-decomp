@@ -13,15 +13,15 @@ struct Sub041 {
 
 int SignPost::Render()
 {
-  if (unk_590 != 0) return 1;
-  void* r = *(void**)((char*)&unk_59c);
+  if (mHidden != 0) return 1;
+  void* r = mHoldingPlayer;
   if (r != 0) {
     int b = (mFlags & 0x4000) != 0;
     if (b && *(int*)((char*)r+0xc8) != 0) {
       func_ov002_020bb060(((char*)this));
     }
   }
-  Sub041* s = (Sub041*)((char*)&mModel);
+  Sub041* s = (Sub041*)&mModel;
   s->v5(0);
   return 1;
 }

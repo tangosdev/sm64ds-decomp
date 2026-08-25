@@ -25,11 +25,11 @@ int TtcRotatingCube::Behavior()
                 break;
             _ZN5Sound9PlayBank3EjRK7Vector3(0x5b, ((char *)this) + 0x74);
             (*(u8 *)(((int)((char *)this) + 0x376)))++;
-            unk_0a8 = -0x5000;
+            mVertSpeed = -0x5000;
             break;
         case 1:
             *(int *)(((int)((char *)this) + 0xa8)) += 0x800;
-            *(int *)(((int)((char *)this) + 0x370)) += unk_0a8;
+            *(int *)(((int)((char *)this) + 0x370)) += mVertSpeed;
             if (unk_370 < 0)
                 break;
             unk_370 = 0;
@@ -39,7 +39,7 @@ int TtcRotatingCube::Behavior()
         case 2:
             if (DecIfAbove0_Short((u16 *)((char *)&mWaitTimer)) != 0)
                 break;
-            if (_Z14ApproachLinearRsss((s16 *)((char *)&unk_090), unk_378, 0x4b0) == 0)
+            if (_Z14ApproachLinearRsss((s16 *)((char *)&mAngleZ), unk_378, 0x4b0) == 0)
                 break;
             _ZN5Sound9PlayBank3EjRK7Vector3(0x40, ((char *)this) + 0x74);
             unk_376 = 0;

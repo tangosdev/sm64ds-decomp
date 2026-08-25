@@ -51,7 +51,7 @@ struct SquarePathLift {
     u8  pad_068[0x26];
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x8];
-    s32 mMoveSpeed;            /* 0x098 */
+    s32 mHorzSpeed;            /* 0x098 - dActor_c's, restated flat */
     u8  pad_09c[0x38];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */

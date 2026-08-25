@@ -52,7 +52,7 @@ int Player::St_Shell_Main()
     }
 
     if (_ZNK10dBgCh_Actr8IsOnWallEv((void*)((char*)&mMeshClsn))) {
-        int ang = _ZN4cstd5atan2E5Fix12IiES1_(unk_560, unk_568);
+        int ang = _ZN4cstd5atan2E5Fix12IiES1_(mWallNormalX, mWallNormalZ);
         if (AngleDiff(ang, mPrevAngleY) > 0x6000) {
             if (func_02037e58((u32*)((char*)_ZNK10dBgCh_Actr13GetWallResultEv((void*)((char*)&mMeshClsn)) + 4)) != 1) {
                 flag = 1;

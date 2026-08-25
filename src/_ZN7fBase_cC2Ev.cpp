@@ -17,6 +17,7 @@ extern int data_020a4bb8;
 }
 
 extern "C" asm void* _ZN7fBase_cC2Ev(void* self) {
+    // r4 = this, r5 = &sceneNode (this + 0x14).
     stmdb sp!, {r4, r5, lr}
     sub sp, sp, #4
     mov r4, r0

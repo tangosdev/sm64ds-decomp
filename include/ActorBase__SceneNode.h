@@ -1,7 +1,17 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class fBase_c::SceneNode: 1 matched functions, 4 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* fBase_c::SceneNode, as much of it as src/_ZN7fBase_c9SceneNode5ResetEv.c
+ * needs: the four words Reset() clears.
+ *
+ * include/fBase_c.h has the fuller spelling, `ActorBase_SceneNode` (one
+ * underscore), which adds the owner back-pointer at 0x10 that fBase_c's
+ * constructor writes and Reset() deliberately leaves alone -- that fifth field
+ * is what makes the real object 0x14 bytes rather than the 0x10 below. Prefer
+ * that one in new code; see notes/actor-core-provenance.md.
+ *
+ * Field names are placeholders: nothing in the tree does anything with these
+ * four words except zero them.
+ *
+ * Originally emitted by tools/gen_header.py from matched-function evidence.
+ */
 #ifndef ACTORBASE__SCENENODE_H
 #define ACTORBASE__SCENENODE_H
 #include "types.h"

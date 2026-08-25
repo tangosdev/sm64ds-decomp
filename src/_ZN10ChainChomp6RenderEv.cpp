@@ -18,7 +18,7 @@ int ChainChomp::Render()
     b->m5((A*)((char *)&mScaleX));
     
     int j = 0;
-    char *p2 = ((char *)this) + 0x1dc;
+    char *p2 = (char *)mLinkModels;
     for (;;) {
         B *b2 = (B*)p2;
         b2->m5((A*)0);

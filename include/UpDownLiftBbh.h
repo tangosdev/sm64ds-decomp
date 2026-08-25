@@ -1,7 +1,34 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class UpDownLiftBbh: 6 matched functions, 21 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* class UpDownLiftBbh: 4 matched functions.
+ *
+ * 0x000..0x0d4 is the fBase_c -> dBase_c -> dActor_c layout written out flat --
+ * this struct does not derive from any of them -- so the names in that range are
+ * COPIED from include/fBase_c.h and include/dActor_c.h at the matching offset,
+ * not independently evidenced here. Nothing can shadow: there is no base class.
+ *
+ * FOUR SLOTS IN THAT RANGE ARE DELIBERATELY STILL unk_, and the reason is worth
+ * reading before someone "finishes the job":
+ *
+ *   0x010, 0x011, 0x012   fBase_c does not name them either. Copying a name
+ *                         across would be inventing one, not importing one.
+ *   0x092, 0x096          These are dActor_c's mPrevAngleX and mPrevAngleZ
+ *                         slots, and this actor reads them as UNSIGNED shaft
+ *                         measurements in InitResources:
+ *                           mBottomY = mTopY - (unk_092 << 12)
+ *                           mTopY    = mPosY + (unk_096 << 12)   (variant only)
+ *                         Nothing matched WRITES either slot, so which of the
+ *                         two readings is right -- the base's snapshot, or an
+ *                         actor-specific reuse of the same words -- is not
+ *                         settled by any body that reproduces the cartridge.
+ *                         Naming them either way would pick a side on no
+ *                         evidence, so they keep the offset name.
+ *
+ * unk_346 and unk_349 are the actor's own and are still unk_ for the ordinary
+ * reason (write-only in matched code), but unk_349 carries one observation that
+ * should not be lost: InitResources stores only 0 or 1 into it -- 1 for
+ * actorID 0x83 -- and then, four statements later, tests it for `== 2`. That
+ * branch (the one that raises mTopY by unk_096) is unreachable in the shipped
+ * ROM. It is reproduced as written because the cartridge contains it.
+ */
 #ifndef UPDOWNLIFTBBH_H
 #define UPDOWNLIFTBBH_H
 #include "types.h"
@@ -10,26 +37,22 @@
 
 struct UpDownLiftBbh {
     u8  pad_000[0xc];
-    /* 0x00c..0x060 is fBase_c's, and fBase_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    u16 unk_00c;                 /* 0x00c */
+    u16 actorID;                 /* 0x00c */
     u8  aliveState;              /* 0x00e */
     u8  shouldBeKilled;          /* 0x00f */
     u8  unk_010;                 /* 0x010 */
     u8  unk_011;                 /* 0x011 */
     u8  unk_012;                 /* 0x012 */
-    u8  unk_013;                 /* 0x013 */
+    u8  pauseFlags;                 /* 0x013 */
     u8  sceneNode[0x14];               /* 0x014 */
     u8  behavNode[0x10];               /* 0x028 */
     u8  renderNode[0x10];              /* 0x038 */
     u8  pad_048[0x18];
-    /* 0x060..0x08e is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s32 unk_060;                 /* 0x060 */
+    s32 mPosY;                 /* 0x060 */
     s32 mPosZ;                   /* 0x064 */
-    s32 unk_068;                 /* 0x068 */
-    s32 unk_06c;                 /* 0x06c */
-    s32 unk_070;                 /* 0x070 */
+    s32 mPrevPosX;                 /* 0x068 */
+    s32 mPrevPosY;                 /* 0x06c */
+    s32 mPrevPosZ;                 /* 0x070 */
     s32 mCamSpacePosX;           /* 0x074 */
     s32 mCamSpacePosY;           /* 0x078 */
     s32 mCamSpacePosZ;           /* 0x07c */
@@ -37,17 +60,11 @@ struct UpDownLiftBbh {
     s32 mScaleY;                 /* 0x084 */
     s32 mScaleZ;                 /* 0x088 */
     s16 mAngleX;                 /* 0x08c */
-    /* 0x08e..0x092 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s16 unk_08e;                 /* 0x08e */
+    s16 mAngleY;                 /* 0x08e */
     s16 mAngleZ;                 /* 0x090 */
-    /* 0x092..0x096 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s16 unk_092;                 /* 0x092 */
+    s16 mPrevAngleX;                 /* 0x092 */
     s16 mPrevAngleY;             /* 0x094 */
-    /* 0x096..0x0d4 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s16 unk_096;                 /* 0x096 */
+    s16 mPrevAngleZ;                 /* 0x096 */
     s32 mHorzSpeed;              /* 0x098 */
     s32 mVertAccel;              /* 0x09c */
     s32 mTerminalVelocity;       /* 0x0a0 */
@@ -55,42 +72,36 @@ struct UpDownLiftBbh {
     s32 mVertSpeed;              /* 0x0a8 */
     u8  pad_0ac[0x4];
     u32 mFlags;                  /* 0x0b0 */
-    s32 unk_0b4;                 /* 0x0b4 */
-    s32 unk_0b8;                 /* 0x0b8 */
-    s32 unk_0bc;                 /* 0x0bc */
-    s32 unk_0c0;                 /* 0x0c0 */
-    u8  unk_0c4;                 /* 0x0c4 */
+    s32 mClipOffsetY;                 /* 0x0b4 */
+    s32 mClipRadius;                 /* 0x0b8 */
+    s32 mClipDistance;                 /* 0x0bc */
+    s32 mFarDistance;                 /* 0x0c0 */
+    u8  mClipResult;                 /* 0x0c4 */
     u8  pad_0c5[0x7];
     s8  mAreaId;                 /* 0x0cc */
     u8  pad_0cd[0x1];
-    s16 unk_0ce;                 /* 0x0ce */
+    s16 mDeathTableID;                 /* 0x0ce */
     u8  pad_0d0[0x4];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel;            /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~UpDownLiftBbh calls _ZN10dBgW_KcMbgD1Ev
-       at +0x124 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x14];
     u16 unk_300;            /* 0x300 */
     u8  pad_302[0x1e];
-    s32 unk_320;            /* 0x320 */
-    s32 unk_324;            /* 0x324 */
+    s32 mRider;            /* 0x320 */
+    s32 mClosestPlayer;            /* 0x324 */
     s32 mVariant;            /* 0x328 */
     s32 mState;            /* 0x32c */
-    s32 unk_330;            /* 0x330 */
-    u8  unk_334;            /* 0x334 */
-    u8  pad_335[0x3];
-    u8  unk_338;            /* 0x338 */
-    u8  pad_339[0x3];
-    u8  unk_33c;            /* 0x33c */
-    u8  pad_33d[0x3];
-    u8  unk_340;            /* 0x340 */
-    u8  pad_341[0x5];
+    s32 mPlayerPosY;            /* 0x330 */
+    /* The heights the lift works between. Every access in the ROM is a 32-bit
+       one; the generated header spelled these u8 plus padding. */
+    s32 mTopY;            /* 0x334 */
+    s32 mBottomY;            /* 0x338 */
+    s32 mMiddleY;            /* 0x33c */
+    u32 mSoundHandle;            /* 0x340 */
+    u16 mStateTimer;            /* 0x344 */
     u8  unk_346;            /* 0x346 */
-    u8  unk_347;            /* 0x347 */
-    u8  unk_348;            /* 0x348 */
+    u8  mIsArmed;            /* 0x347 */
+    u8  mIsRidden;            /* 0x348 */
     u8  unk_349;            /* 0x349 */
 #ifdef __cplusplus
     /* methods */

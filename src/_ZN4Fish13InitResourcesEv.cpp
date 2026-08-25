@@ -20,15 +20,15 @@ int Fish::InitResources()
   mModelIndex = (mParam >> 4) & 7;
   v = mModelIndex;
   if (v > 2) {
-    if (v < 6) unk_15c = v - 2;
+    if (v < 6) mVariant = v - 2;
     mModelIndex = 0;
   }
   _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, _ZN5Model8LoadFileER13SharedFilePtr(data_ov100_021473a4[mModelIndex]), 1, -1);
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char*)this)+0xd4, _ZN9Animation8LoadFileER13SharedFilePtr(data_ov100_021473b0[mModelIndex]), 0, 0x1000, 0);
-  unk_159 = 1;
-  unk_13c = unk_004;
-  unk_14c = 0;
-  unk_140 = mPosY + 0xc8000;
+  mHidden = 1;
+  mUniqueID_13c = uniqueID;
+  mState = 0;
+  mTopY = mPosY + 0xc8000;
   unk_150 = 0;
   return 1;
 }

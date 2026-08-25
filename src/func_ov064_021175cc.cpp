@@ -16,11 +16,11 @@ int func_ov064_021175cc(char* c){
   if(r==0) return r;
   _ZN8dActor_c14TriplePoofDustEv(c);
   int v[3];
-  v[0]=self->unk_05c;
-  v[1]=self->unk_060;
-  v[2]=self->unk_064;
+  v[0]=self->mPosX;
+  v[1]=self->mPosY;
+  v[2]=self->mPosZ;
   v[1]+=0x64000;
   _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(
-    c, c+0x3fd, (self->unk_3fc|0x40)&0xff, v, 4);
+    c, c+0x3fd, (self->mStarID|0x40)&0xff, v, 4);
 }
 }

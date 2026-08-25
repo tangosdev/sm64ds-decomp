@@ -29,10 +29,10 @@ int daObjPathLift_c::Behavior()
 {
     func_ov002_020efcf4(this);
     BaseBehavior();
-    if (Vec3_Dist((Vector3 *)&mPosX, (Vector3 *)&unk_068) != 0) {
-        if (DecIfAbove0_Byte(&unk_4b0) == 0) {
-            unk_4a8 = Sound::PlayLong(
-                unk_4a8, 3, 0x82, *(Vector3 *)&mCamSpacePosX, 0);
+    if (Vec3_Dist((Vector3 *)&mPosX, (Vector3 *)&mPrevPosX) != 0) {
+        if (DecIfAbove0_Byte(&mTimer) == 0) {
+            mSoundHandle = Sound::PlayLong(
+                mSoundHandle, 3, 0x82, *(Vector3 *)&mCamSpacePosX, 0);
         }
     }
 

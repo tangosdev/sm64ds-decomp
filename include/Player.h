@@ -109,10 +109,15 @@ struct Player : dActor_c {
 
     s32 mEatingPlayer;            /* 0x0d0 */
     u8  pad_0d4[0x8];
-    u8  mBodyModels;            /* 0x0dc */
-    u8  pad_0dd[0x3];
-    u8  unk_0e0;            /* 0x0e0 */
-    u8  pad_0e1[0xb];
+    /* FOUR body models, not one pointer plus padding. Player::CleanupResources
+       walks this run as `*(this + i * 4 + 0xdc)` for `i < 4` and calls each
+       element's deleting destructor; Player::Render indexes it with
+       GetBodyModelID(mBodyModelId, 1) and TurnOffToonShading with
+       GetBodyModelID(j, 0). The element type is ModelAnim, and the matched
+       bodies pin every part of it: they reach +0x08 (Model's ModelComponents),
+       +0x14 (Model::mat4x3), +0x50 (the Animation base) and +0x58 (its
+       currFrame), and they call vtable slots 5 (Render) and 6 (Virtual18). */
+    ModelAnim *mBodyModels[4];            /* 0x0dc */
     u8  unk_0ec;            /* 0x0ec */
     u8  pad_0ed[0x3];
     /* ~Player calls _ZN9ModelAnimD1Ev on this LAST of the two, and ModelAnim
@@ -121,12 +126,15 @@ struct Player : dActor_c {
        Animation base (+0x50) and unk_148 at 0x148 was that base's currFrame
        (+0x58). Both are reachable through the member now. */
     ModelAnim mModelAnim3;            /* 0x0f0 */
-    u8  unk_154;            /* 0x154 */
-    u8  pad_155[0x3];
-    u8  unk_158;            /* 0x158 */
-    u8  pad_159[0x7];
-    u8  unk_160;            /* 0x160 */
-    u8  pad_161[0x13];
+    /* EIGHT more models, same element type and the same evidence: CleanupResources
+       destroys `i < 4` and then `i + 4` over this one base, TurnOffToonShading
+       indexes it at `j` and `j + 4`, and Render indexes it with
+       func_ov002_020becf4(mBodyModelId, 1). That helper can also return 8 or 9,
+       which are "no model" sentinels -- Render loads the slot FIRST and only then
+       tests `i != 9 && i != 8`, so the ROM itself reads one word past this run in
+       those two cases. Kept as written; the read lands in mModelAnim4 below and
+       its result is discarded. */
+    ModelAnim *unk_154[8];            /* 0x154 */
     /* The other ModelAnim, destroyed FIRST of the two. 0x174..0x1d8, closing
        exactly at unk_1d8; mAnimation2 at 0x1c4 was its Animation base. */
     ModelAnim mModelAnim4;            /* 0x174 */
@@ -139,10 +147,19 @@ struct Player : dActor_c {
     TextureSequence mTexSeqBody[4];            /* 0x1dc */
     MaterialChanger mMatChanger[2];            /* 0x22c */
     TextureSequence mTexSeqPlayer[2];            /* 0x254 */
-    u8  unk_27c;            /* 0x27c */
-    u8  pad_27d[0xf];
-    u8  unk_28c;            /* 0x28c */
-    u8  pad_28d[0x1f];
+    /* Two more runs, one per model array and the same lengths: 4 words parallel
+       to mBodyModels, 8 words parallel to unk_154. CleanupResources frees each
+       non-null element with func_0203cbc0 over exactly the same i / i+4 pattern,
+       and TurnOffToonShading hands element [j] of the first run to
+       func_ov002_020e6b74 together with mBodyModels[...], and elements [j] and
+       [j + 4] of the second together with unk_154[j] and unk_154[j + 4]. That
+       helper walks the model's material records writing one word of the array
+       into each record's +0x1c, so each element is an allocated per-material
+       word buffer belonging to the model at the same index. What the word MEANS
+       is not witnessed -- nothing matched allocates or fills either run -- so
+       the pairing is expressed and the name is not. */
+    s32 unk_27c[4];            /* 0x27c */
+    s32 unk_28c[8];            /* 0x28c */
     /* ~Player calls _ZN11ShadowModelD1Ev on this, and ShadowModel asserts
        0x28 -- which closes exactly at mdCcAcPos_c. */
     ShadowModel mShadowModel;            /* 0x2ac */
@@ -160,7 +177,7 @@ struct Player : dActor_c {
     dCcAcPos_c mAttackClsn;            /* 0x314 */
     s32 mRidingShell;            /* 0x354 */
     s32 mHeldObj;            /* 0x358 */
-    s32 unk_35c;            /* 0x35c */
+    s32 mGrabbedByActor;            /* 0x35c */
     s32 mObjInMouth;            /* 0x360 */
     s32 mAttachedActor;            /* 0x364 */
     u8  mTalkActor;            /* 0x368 */
@@ -188,9 +205,9 @@ struct Player : dActor_c {
     s32 mSpawnPosX;            /* 0x53c */
     s32 mSpawnPosY;            /* 0x540 */
     s32 mSpawnPosZ;            /* 0x544 */
-    s32 unk_548;            /* 0x548 */
-    s32 unk_54c;            /* 0x54c */
-    s32 unk_550;            /* 0x550 */
+    s32 mPreClsnPosX;            /* 0x548 */
+    s32 mPreClsnPosY;            /* 0x54c */
+    s32 mPreClsnPosZ;            /* 0x550 */
     /* Floor normal, fx12 (1.0 == 0x1000 -- already rescaled from KCL's 0x400).
      * Stored as three consecutive words by Player::SetFloorSurfaceInfo
      * (func_ov002_020c16ec) at 0x020c1768 / 0x020c1770 / 0x020c1778, sourced
@@ -201,9 +218,19 @@ struct Player : dActor_c {
     s32 mFloorNormalX;            /* 0x554 */
     s32 mFloorNormalY;            /* 0x558 */
     s32 mFloorNormalZ;            /* 0x55c */
-    s32 unk_560;            /* 0x560 */
-    u8  pad_564[0x4];
-    s32 unk_568;            /* 0x568 */
+    /* Wall normal, fx12, and the exact counterpart of the floor normal above.
+     * func_ov002_020c25a8 writes all three from
+     * SurfaceInfo::CopyNormalTo(dBgCh_Actr::GetWallResult(&mMeshClsn) + 4, &wn)
+     * -- the same helper, the same shape, one surface over. It then pushes the
+     * actor out along it (`mPosX -= mWallNormalX * 2`, `mPosZ -= mWallNormalZ * 2`).
+     * Seven bodies read the pair back as `cstd::atan2(mWallNormalX, mWallNormalZ)`
+     * to get the wall's facing: St_Shell_Main, St_OnWall_Main (twice),
+     * St_Balloon_Main, St_CrazedCrate_Main, func_ov002_020c2138,
+     * func_ov002_020dd2f4 and func_ov002_020e28d4. 0x564 was marked padding until
+     * that store was disassembled, exactly as 0x554/0x55c were. */
+    s32 mWallNormalX;            /* 0x560 */
+    s32 mWallNormalY;            /* 0x564 */
+    s32 mWallNormalZ;            /* 0x568 */
     s32 unk_56c;            /* 0x56c */
     s32 unk_570;            /* 0x570 */
     s32 unk_574;            /* 0x574 */
@@ -217,9 +244,9 @@ struct Player : dActor_c {
     s32 unk_61c;            /* 0x61c */
     s32 mLoopingSoundHandle;            /* 0x620 */
     u8  pad_624[0x4];
-    s32 unk_628;            /* 0x628 */
+    s32 mParticle1;            /* 0x628 */
     s32 mParticle2;            /* 0x62c */
-    s32 unk_630;            /* 0x630 */
+    s32 mParticle3;            /* 0x630 */
     u8  pad_634[0x8];
     u32 mCharFileBase;            /* 0x63c */
     s32 mPrevVertSpeed;            /* 0x640 */
@@ -268,7 +295,7 @@ struct Player : dActor_c {
     s16 mAngleYSpeed;            /* 0x69c */
     s16 unk_69e;            /* 0x69e */
     u16 mInvincibleTimer;            /* 0x6a0 */
-    u16 unk_6a2;            /* 0x6a2 */
+    u16 mPrevAreaId;            /* 0x6a2 */
     u16 mStateTimer;            /* 0x6a4 */
     u16 mStateWaitTimer;            /* 0x6a6 */
     /* u16, not s16: every load of this slot in the ROM is an ldrh. Declared
@@ -278,21 +305,16 @@ struct Player : dActor_c {
        Behavior's DecIfAbove0_Short(u16*)). Same defect class as the imported
        parameter widths in dActor_c.h: a declared type nothing had checked. */
     u16 mJumpComboTimer;            /* 0x6a8 */
-    u16 unk_6aa;            /* 0x6aa */
-    u8  unk_6ac;            /* 0x6ac */
-    u8  pad_6ad[0x1];
-    u16 unk_6ae;            /* 0x6ae */
-    u16 unk_6b0;            /* 0x6b0 */
-    u8  unk_6b2;            /* 0x6b2 */
-    u8  pad_6b3[0x1];
-    u16 unk_6b4;            /* 0x6b4 */
-    u8  unk_6b6;            /* 0x6b6 */
-    u8  pad_6b7[0x1];
-    s16 unk_6b8;            /* 0x6b8 */
-    u8  unk_6ba;            /* 0x6ba */
-    u8  pad_6bb[0x1];
-    u8  unk_6bc;            /* 0x6bc */
-    u8  pad_6bd[0x1];
+    u16 mPunchKickCooldown;            /* 0x6aa */
+    u16 unk_6ac;            /* 0x6ac */
+    u16 mPowerupTimer;            /* 0x6ae */
+    u16 mCrouchTimer;            /* 0x6b0 */
+    u16 unk_6b2;            /* 0x6b2 */
+    u16 mHoldHeavyTimer;            /* 0x6b4 */
+    u16 unk_6b6;            /* 0x6b6 */
+    u16 mWalkTimer;            /* 0x6b8 */
+    u16 unk_6ba;            /* 0x6ba */
+    u16 unk_6bc;            /* 0x6bc */
     u16 unk_6be;            /* 0x6be */
     /* u16, not s16: every READ of this slot in the ROM is an ldrh --
        func_ov002_020e4bb8 tests `< 0x3f` and `& 1`, Behavior passes it to
@@ -303,25 +325,22 @@ struct Player : dActor_c {
        Behavior counts it down, St_Balloon_Main exits when it reaches 0, and
        020e4bb8 blinks the balloon below 0x3f. */
     u16 mBalloonTimer;            /* 0x6c0 */
-    u8  unk_6c2;            /* 0x6c2 */
-    u8  pad_6c3[0x1];
-    u8  unk_6c4;            /* 0x6c4 */
-    u8  pad_6c5[0x1];
-    u16 unk_6c6;            /* 0x6c6 */
-    u16 unk_6c8;            /* 0x6c8 */
+    u16 unk_6c2;            /* 0x6c2 */
+    u16 unk_6c4;            /* 0x6c4 */
+    u16 mMouthHoldTimer;            /* 0x6c6 */
+    u16 mTeleportTimer;            /* 0x6c8 */
     u8  pad_6ca[0x2];
     u16 unk_6cc;            /* 0x6cc */
     u16 mStateFlags;            /* 0x6ce */
-    u8  unk_6d0;            /* 0x6d0 */
-    u8  pad_6d1[0x1];
+    u16 mMegaKillCount;            /* 0x6d0 */
     s16 mDesiredAngleY;            /* 0x6d2 */
-    s16 unk_6d4;            /* 0x6d4 */
-    s16 unk_6d6;            /* 0x6d6 */
+    s16 mPrevDesiredAngleY;            /* 0x6d4 */
+    s16 mPreClsnAngleY;            /* 0x6d6 */
     u8  mPlayerNo;            /* 0x6d8 */
     u8  mCharacter;            /* 0x6d9 */
     u8  pad_6da[0x1];
-    u8  unk_6db;            /* 0x6db */
-    u8  unk_6dc;            /* 0x6dc */
+    u8  mBodyModelId;            /* 0x6db */
+    u8  mPrevCharacter;            /* 0x6dc */
     u8  mHatCharacter;            /* 0x6dd */
     u8  mIsAirborne;            /* 0x6de */
     u8  mLandSoundPlayed;            /* 0x6df */
@@ -331,9 +350,9 @@ struct Player : dActor_c {
     u8  mStateStep;            /* 0x6e3 */
     u8  mIsSlidingOnGround;            /* 0x6e4 */
     u8  mStateWork;            /* 0x6e5 */
-    u8  unk_6e6;            /* 0x6e6 */
+    u8  mStatePhase;            /* 0x6e6 */
     u8  mSlideStoppedTimer;            /* 0x6e7 */
-    u8  unk_6e8;            /* 0x6e8 */
+    u8  mTeleportId;            /* 0x6e8 */
     u8  mClsnFlags;            /* 0x6e9 */
     u8  pad_6ea[0x2];
     u8  unk_6ec;            /* 0x6ec */
@@ -345,12 +364,12 @@ struct Player : dActor_c {
     u8  unk_6f4;            /* 0x6f4 */
     u8  mOpacity;            /* 0x6f5 */
     u8  mIsControlDisabled;            /* 0x6f6 */
-    u8  unk_6f7;            /* 0x6f7 */
+    u8  mSwimMusicPushed;            /* 0x6f7 */
     u8  pad_6f8[0x1];
     u8  mIsMetal;            /* 0x6f9 */
     u8  unk_6fa;            /* 0x6fa */
-    u8  unk_6fb;            /* 0x6fb */
-    u8  unk_6fc;            /* 0x6fc */
+    u8  mIsVanish;            /* 0x6fb */
+    u8  mPlayerTexFrame;            /* 0x6fc */
     u8  mIsBalloon;            /* 0x6fd */
     u8  pad_6fe[0x1];
     u8  mHasWings;            /* 0x6ff */
@@ -374,12 +393,12 @@ struct Player : dActor_c {
     u8  mIsInAirState;            /* 0x712 */
     u8  mIsBodyClsnEnabled;            /* 0x713 */
     u8  mUseAltBodyModel;            /* 0x714 */
-    u8  unk_715;            /* 0x715 */
+    u8  mUseFarCamera;            /* 0x715 */
     u8  unk_716;            /* 0x716 */
     u8  unk_717;            /* 0x717 */
     u8  mLoadedResourceFlags;            /* 0x718 */
-    s8  unk_719;            /* 0x719 */
-    u8  unk_71a;            /* 0x71a */
+    s8  mKeyModelId;            /* 0x719 */
+    u8  mHasNoCap;            /* 0x71a */
     u8  mJumpedFromQuicksand;            /* 0x71b */
     u8  pad_71c[0x5];
     u8  mSleepStage;            /* 0x721 */
@@ -391,7 +410,7 @@ struct Player : dActor_c {
     u8  unk_727;            /* 0x727 */
     u8  unk_728;            /* 0x728 */
     u8  pad_729[0x13];
-    u16 unk_73c;            /* 0x73c */
+    u16 mCapFlags;            /* 0x73c */
     u8  pad_73e[0x4];
     u8  unk_742;            /* 0x742 */
     u8  unk_743;            /* 0x743 */
@@ -521,10 +540,12 @@ struct Player : dActor_c {
     int St_CeilingGrate_Init();
     int St_CeilingGrate_Main();
     int St_Climb_Cleanup();
+    int St_Climb_Init();
     int St_Climb_Main();
     int St_Crawl_Init();
     int St_Crawl_Main();
     int St_CrazedCrate_Init();
+    int St_CrazedCrate_Main();
     int St_Crouch_Init();
     int St_Crouch_Main();
     int St_DeadHit_Init();
@@ -536,6 +557,7 @@ struct Player : dActor_c {
     int St_Dive_Init();
     int St_DizzyStars_Init();
     int St_DizzyStars_Main();
+    int St_DizzyStars_Cleanup();
     int St_Electrocute_Init();
     int St_Electrocute_Main();
     int St_EndingFly_Init();
@@ -545,6 +567,7 @@ struct Player : dActor_c {
     int St_Fall_Init();
     int St_Fall_Main();
     int St_Fly_Init();
+    int St_Fly_Main();
     int St_GrabBowserTail_Cleanup();
     int St_GrabBowserTail_Init();
     int St_GrabBowserTail_Main();
@@ -578,6 +601,7 @@ struct Player : dActor_c {
     int St_Jump_Init();
     int St_Jump_Main();
     int St_Land_Main();
+    int St_Land_Init();
     /* ov002 0x020cac30, size 0x8: `return 1` and nothing else. Reached from
        ov002's State pointer-to-member table -- see the relocation note below. */
     int St_Null_Init();
@@ -667,6 +691,7 @@ struct Player : dActor_c {
     int St_WallSlide_Main();
     int St_WaterJump_Init();
     int St_WindCarry_Init();
+    int St_WindCarry_Main();
     int St_YoshiPower_Cleanup();
     int St_YoshiPower_Init();
     int St_YoshiPower_Main();

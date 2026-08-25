@@ -34,7 +34,7 @@
  *   str  r1,[r0,#0xc]   = 0
  *   mvn  r1,#0 / str    [r0,#8] = -1
  *
- * unk_004 keeps its placeholder name because the four matched dBgCh bodies in
+ * mDetectFlags keeps its placeholder name because the four matched dBgCh bodies in
  * src/ spell it, and this pass changes no bodies. StartDetectingWater ORs
  * bit 1 into it; the toxic and ordinary calls work the same byte.
  *
@@ -59,7 +59,7 @@ struct CLPS;
 
 struct dBgCh {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
-    u8 unk_004;             /* 0x04 - detect-flag bitmask, ctor sets it to 1 */
+    u8 mDetectFlags;             /* 0x04 - detect-flag bitmask, ctor sets it to 1 */
     u8 pad_005[0x3];
     s32 unk_008;            /* 0x08 - ctor sets -1 */
     s32 unk_00c;            /* 0x0c - ctor sets 0 */
@@ -97,7 +97,7 @@ typedef char dBgCh_size_must_be_0x10[sizeof(dBgCh) == 0x10 ? 1 : -1];
 
 struct dBgCh {
     void **vtable;          /* 0x00 */
-    u8 unk_004;             /* 0x04 */
+    u8 mDetectFlags;             /* 0x04 */
     u8 pad_005[0x3];
     s32 unk_008;            /* 0x08 */
     s32 unk_00c;            /* 0x0c */

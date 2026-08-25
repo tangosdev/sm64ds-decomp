@@ -100,7 +100,7 @@ int HealingHeart::InitResources()
   _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210e104), 1, -1);
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char*)this)+0xd4, _ZN9Animation8LoadFileER13SharedFilePtr(data_ov002_0210e0fc), 0, 0x1000, 0);
   _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this)+0x138, ((char*)this), 0x3c000, 0x78000, 0x100002, 0x8000);
-  unk_16c = 0x1000;
+  mAnimSpeed = 0x1000;
   func_ov002_020bc664(((char*)this));
   return 1;
 }
@@ -128,8 +128,8 @@ int HealingHeart::Behavior()
     DecIfAbove0_Byte(&mHealTimer);
 
     if (mdCcAc_c.otherOwner != 0) {
-        if (unk_171 == 0) {
-            unk_171 = 1;
+        if (mWasTouched == 0) {
+            mWasTouched = 1;
             mHealTimer = 0;
         }
         if (mHealTimer == 0) {
@@ -150,13 +150,13 @@ int HealingHeart::Behavior()
             mHealTimer = 0x5a;
         }
     } else {
-        unk_171 = 0;
+        mWasTouched = 0;
     }
 
     if (mHealTimer > 0x2d)
         spin = 0x8000;
-    Math_Function_0203b14c(&unk_16c, spin, 0x400, 0x2000, 0x80);
-    mModelAnim.speed = unk_16c;
+    Math_Function_0203b14c(&mAnimSpeed, spin, 0x400, 0x2000, 0x80);
+    mModelAnim.speed = mAnimSpeed;
     mModelAnim.Advance();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();

@@ -26,13 +26,13 @@ struct Cannon {
     s32 mSpawnPosZ;            /* 0x164 */
     u8  pad_168[0xc];
     s32 unk_174;            /* 0x174 */
-    s16 unk_178;            /* 0x178 */
-    s16 unk_17a;            /* 0x17a */
-    s16 unk_17c;            /* 0x17c */
+    s16 mAimTimer;            /* 0x178 */
+    s16 mTargetAngleY;            /* 0x17a */
+    s16 mHomeAngleY;            /* 0x17c */
     u8  pad_17e[0x2];
-    /* State index. Behavior calls data_ov098_0213c8fc[unk_180] as a
+    /* State index. Behavior calls data_ov098_0213c8fc[mState] as a
        pointer-to-member on `this`. */
-    s32 unk_180;            /* 0x180 */
+    s32 mState;            /* 0x180 */
     /* Cannon variant, the low two bits of the spawn word. */
     u8  unk_184;            /* 0x184 */
     u8  unk_185;            /* 0x185 */

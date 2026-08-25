@@ -64,7 +64,7 @@ int Chuckya::Behavior()
     if (_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(c, &mMeshClsn, &mModel, 3))
         return 1;
 
-    DecIfAbove0_Short((unsigned short *)&unk_100);
+    DecIfAbove0_Short((unsigned short *)&mStateTimer);
     DecIfAbove0_Short(&unk_3e6);
     DecIfAbove0_Short(&unk_3e8);
 

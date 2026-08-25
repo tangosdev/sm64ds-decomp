@@ -21,11 +21,11 @@ struct SlidingBox {
     u8  pad_092[0x2];
     s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x2];
-    s32 unk_098;            /* 0x098 */
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mHorzSpeed;            /* 0x098 */
+    s32 mVertAccel;            /* 0x09c */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     s32 unk_0a4;            /* 0x0a4 */
-    s32 unk_0a8;            /* 0x0a8 */
+    s32 mVertSpeed;            /* 0x0a8 */
     s32 unk_0ac;            /* 0x0ac */
     u8  pad_0b0[0x24];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
@@ -41,9 +41,9 @@ struct SlidingBox {
        dBgCh_Actr's D1 at +0x324 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10SlidingBoxD1Ev.c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x324 */
-    s32 unk_4e0;            /* 0x4e0 */
-    s32 unk_4e4;            /* 0x4e4 */
-    s32 unk_4e8;            /* 0x4e8 */
+    s32 mBasePosX;            /* 0x4e0 */
+    s32 mBasePosY;            /* 0x4e4 */
+    s32 mBasePosZ;            /* 0x4e8 */
     s32 mHorzPos;            /* 0x4ec */
     s32 mSoundID;            /* 0x4f0 */
     u8  mState;            /* 0x4f4 */

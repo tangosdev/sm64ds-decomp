@@ -6,5 +6,5 @@
 
 void dBgCh::StartDetectingToxic()
 {
-    *(unsigned char *)((char *)&unk_004) |= 8;
+    *(unsigned char *)((char *)&mDetectFlags) |= 8;
 }

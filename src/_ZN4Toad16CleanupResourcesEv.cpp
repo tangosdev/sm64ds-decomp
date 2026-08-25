@@ -12,7 +12,7 @@ extern int data_ov085_02130480[];
 
 int Toad::CleanupResources()
 {
-    if (*(unsigned char *)((char *)&unk_20b) == 1) {
+    if (*(unsigned char *)((char *)&mVariant) == 1) {
         ((SharedFilePtr *)(data_ov002_0210da40))->Release();
         ((SharedFilePtr *)(data_ov002_0210d9a0))->Release();
         ((SharedFilePtr *)(data_ov002_0210d9c0))->Release();

@@ -41,7 +41,7 @@ extern "C" void *data_020a0eac;
 
 struct dActor_c {   /* shadow base: vptr at 0, evidenced fields, size 0xd4 */
     char pad0[0x58];
-    s32 unk_05c, unk_060, unk_064, unk_068, unk_06c, unk_070;
+    s32 mPosX, mPosY, mPosZ, mPrevPosX, mPrevPosY, mPrevPosZ;
     s32 mCamSpacePosX, mCamSpacePosY, mCamSpacePosZ;
     s32 mScaleX, mScaleY, mScaleZ;
     s16 mAngleX, mAngleY, mAngleZ, mPrevAngleX, mPrevAngleY, mPrevAngleZ;
@@ -50,19 +50,19 @@ struct dActor_c {   /* shadow base: vptr at 0, evidenced fields, size 0xd4 */
     s32 mVertSpeed;
     u8  pad_0ac[0x4];
     u32 mFlags;
-    s32 unk_0b4, unk_0b8, unk_0bc, unk_0c0;
-    u8  unk_0c4;
+    s32 mClipOffsetY, mClipRadius, mClipDistance, mFarDistance;
+    u8  mClipResult;
     u8  pad_0c5[0x7];
     s8  mAreaId;
     u8  pad_0cd[0x1];
-    s16 unk_0ce;
+    s16 mDeathTableID;
     u8  pad_0d0[0x4];
     virtual ~dActor_c();
     void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
 };
 struct IceSlideManager : dActor_c {
-    s16 unk_0d4;   /* 0x0d4 */
-    u8  unk_0d6;   /* 0x0d6 */
+    s16 mKillTimer;   /* 0x0d4 */
+    u8  mState;   /* 0x0d6 */
     virtual ~IceSlideManager();
     int Behavior();
     int InitResources();
@@ -104,10 +104,10 @@ int *IceSlideManager_Spawn(void)
 /* recovered: named members + shared header, real C++ method */
 int IceSlideManager::InitResources()
 {
-    *(int*)((char*)&unk_05c) = data_ov019_021135d8.w0;
-    *(int*)((char*)&unk_060) = data_ov019_021135d8.w1;
-    *(int*)((char*)&unk_064) = data_ov019_021135d8.w2;
-    *(short*)((char*)&unk_0d4) = 0x78;
+    *(int*)((char*)&mPosX) = data_ov019_021135d8.w0;
+    *(int*)((char*)&mPosY) = data_ov019_021135d8.w1;
+    *(int*)((char*)&mPosZ) = data_ov019_021135d8.w2;
+    *(short*)((char*)&mKillTimer) = 0x78;
     return 1;
 }
 
@@ -118,7 +118,7 @@ int IceSlideManager::InitResources()
 /* recovered: named members + shared header, real C++ method */
 int IceSlideManager::Behavior()
 {
-  switch (unk_0d6) {
+  switch (mState) {
   case 0:
     if (_ZN8dActor_c13DistToCPlayerEv(((char*)this)) < 0x180000) {
       unsigned char* p = (unsigned char*)(((int)((char*)this) + 0xd6));
@@ -127,7 +127,7 @@ int IceSlideManager::Behavior()
     }
     break;
   case 1:
-    if (DecIfAbove0_Short((char*)&unk_0d4) == 0) {
+    if (DecIfAbove0_Short((char*)&mKillTimer) == 0) {
       _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, 0x7f, 0, 0x15666, 0);
       _ZN8dActor_c24KillAndTrackInDeathTableEv(((char*)this));
     }

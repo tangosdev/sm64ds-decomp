@@ -14,7 +14,7 @@ extern "C" void _ZN9Animation7AdvanceEv(void *thiz);
 
 int Tornado::Behavior()
 {
-    int s = unk_35c;
+    int s = mState;
     switch (s) {
     case 0: func_ov096_021372c0(); break;
     case 1: func_ov096_02137088(); break;
@@ -24,9 +24,9 @@ int Tornado::Behavior()
         unsigned short *p = (unsigned short*)(((int)((char *)this) + 0x350));
         *p = *p + 1;
     }
-    if (s != unk_35c) {
-        unk_350 = 0;
-        unk_360 = 0;
+    if (s != mState) {
+        mStateTimer = 0;
+        mTriggerCount = 0;
     }
     unsigned int id = mdCcAc_c.otherOwner;
     if (id != 0 && (mdCcAc_c.hitFlags & 0x400000) != 0) {
@@ -35,7 +35,7 @@ int Tornado::Behavior()
             void *closest = _ZN8dActor_c18ClosestWithActorIDEj(((char *)this), 0x135);
             if (closest == 0 || Vec3_Dist((char*)o + 0x5c, (char*)closest + 0x5c) > 0x118000) {
                 if (func_ov002_020de33c((char*)o, (int)((char *)this)) != 0) {
-                    *(void**)((char *)&unk_33c) = o;
+                    *(void**)((char *)&mCaughtActor) = o;
                 }
             }
         }

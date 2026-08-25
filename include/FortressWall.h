@@ -19,11 +19,27 @@
 #include "dBgActor_c.h"
 
 struct FortressWall : dBgActor_c {
-    u8 unk_31e;                       /* 0x31e */
-    u8 unk_31f;                       /* 0x31f */
+    /* Which of the two file sets this wall uses: 0 for the breakable fortress
+       wall (actorID 0x30), 1 for every other id. It indexes the three ov079
+       SharedFilePtr tables -- model, KCL and CLPS block -- in InitResources,
+       and the first two again in CleanupResources. */
+    u8 mVariant;                      /* 0x31e */
+    /* param1 & 0xff, with 0xff read as 0. Behavior hands it to
+       dActor_c::Spawn(0xb2, mStarId | 0x40, ...); actor 0xb2 is the star and its
+       spawn word is starID | (howToSpawnStar << 4)
+       (src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp), so the low
+       nibble this contributes is a star index. */
+    u8 mStarId;                       /* 0x31f */
     u8  pad_320[0x1];
-    u8 unk_321;                       /* 0x321 */
-    u8 unk_322;                       /* 0x322 */
+    /* Kill() sets this on the breakable wall instead of destroying it. Render
+       draws nothing while it is set, and Behavior runs the break-and-spawn
+       sequence only while it is set. */
+    u8 mBroken;                       /* 0x321 */
+    /* The state cell Sound::PlaySecretSound(dActor_c *, u16 *) advances; Behavior
+       spawns the star and marks the wall for destruction on the frame that call
+       returns nonzero. u16 because that is the parameter type -- 0x323 was the
+       struct's tail padding. */
+    u16 mBreakSoundState;             /* 0x322 */
 
     /* --- vtable --- */
     virtual ~FortressWall();
@@ -52,15 +68,15 @@ struct FortressWall {
     u16 mActorID;            /* 0x00c */
     u8  pad_00e[0x4e];
     /* dActor_c::mPosX -- dActor_c.h declares s32 here, and it is de-bannered (hand-reconstructed). */
-    s32 unk_05c;            /* 0x05c */
+    s32 mPosX;            /* 0x05c */
     /* dActor_c::mPosY -- dActor_c.h declares s32 here, and it is de-bannered (hand-reconstructed). */
-    s32 unk_060;            /* 0x060 */
+    s32 mPosY;            /* 0x060 */
     /* 0x064..0x08e is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
-    s32 unk_064;                 /* 0x064 */
-    s32 unk_068;                 /* 0x068 */
-    s32 unk_06c;                 /* 0x06c */
-    s32 unk_070;                 /* 0x070 */
+    s32 mPosZ;                 /* 0x064 */
+    s32 mPrevPosX;                 /* 0x068 */
+    s32 mPrevPosY;                 /* 0x06c */
+    s32 mPrevPosZ;                 /* 0x070 */
     s32 mCamSpacePosX;           /* 0x074 */
     s32 mCamSpacePosY;           /* 0x078 */
     s32 mCamSpacePosZ;           /* 0x07c */
@@ -79,12 +95,16 @@ struct FortressWall {
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  pad_2ec[0x32];
-    u8  unk_31e;            /* 0x31e */
-    u8  unk_31f;            /* 0x31f */
+    /* dBgActor_c's own collision matrix, the Matrix4x3 InitResources passes to
+       dBgW_KcMbg::SetFile. A u8 marker, the idiom the other twins in this family
+       use for a member whose type this flat spelling does not need. */
+    u8  mClsnMat;            /* 0x2ec */
+    u8  pad_2ed[0x31];
+    u8  mVariant;            /* 0x31e */
+    u8  mStarId;            /* 0x31f */
     u8  pad_320[0x1];
-    u8  unk_321;            /* 0x321 */
-    u8  unk_322;            /* 0x322 */
+    u8  mBroken;            /* 0x321 */
+    u16 mBreakSoundState;            /* 0x322 */
 };
 
 #endif /* __cplusplus */

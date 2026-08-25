@@ -61,32 +61,32 @@ int MrBlizzard::InitResources()
     if (mType == 0xff)
         mType = 0;
 
-    unk_44c = mPosX;
-    unk_450 = mPosY;
-    unk_454 = mPosZ;
+    mHomePos.x = mPosX;
+    mHomePos.y = mPosY;
+    mHomePos.z = mPosZ;
 
     if (_ZN8dActor_c18GetBitInDeathTableEv(((char *)this)) != 0) {
         if (mType == 2) {
             if (_ZN8SaveData16HasPlayerLostCapEv() != 0) {
                 _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xdf, 0x200,
-                    ((char *)this) + 0x44c, 0, mAreaId, -1);
+                    &mHomePos, 0, mAreaId, -1);
             } else {
                 _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xdf, 0x300,
-                    ((char *)this) + 0x44c, 0, mAreaId, -1);
+                    &mHomePos, 0, mAreaId, -1);
             }
         }
         if (mType != 3)
             return 0;
     }
 
-    unk_3fc = 0;
-    unk_400 = 0;
+    mUniqueID_3fc = 0;
+    mCapUniqueID = 0;
 
     if (mType == 0) {
         char pp[8];
         _ZN7PathPtrC1Ev(pp);
         _ZN7PathPtr6FromIDEj(pp, mPathId);
-        unk_420 = _ZNK7PathPtr8NumNodesEv(pp);
+        mPathNodeCount = _ZNK7PathPtr8NumNodesEv(pp);
     }
 
     mScaleX = 0x1000;
@@ -101,7 +101,7 @@ int MrBlizzard::InitResources()
         ((char *)this) + 0x110, ((char *)this), &v, 0x3c000, 0x96000, 0x200004, 0x42050);
 
     mAngleY = mPrevAngleY;
-    unk_414 = mAngleY;
+    mInitAngleY = mAngleY;
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         ((char *)this) + 0x150, ((char *)this), 0x14000, 0xf000, 0, 0);
 
@@ -112,8 +112,8 @@ int MrBlizzard::InitResources()
         char pp[8];
         _ZN7PathPtrC1Ev(pp);
         _ZN7PathPtr6FromIDEj(pp, mPathId);
-        _ZNK7PathPtr7GetNodeER7Vector3j(pp, ((char *)this) + 0x5c, unk_424);
-        unk_424 = 1;
+        _ZNK7PathPtr7GetNodeER7Vector3j(pp, ((char *)this) + 0x5c, mPathNodeIndex);
+        mPathNodeIndex = 1;
         mVertAccel = -0x2000;
         (*(s32 *)&mFlags) = 0x10000000;
         func_ov081_02125488(((char *)this), &data_ov081_02128e54);

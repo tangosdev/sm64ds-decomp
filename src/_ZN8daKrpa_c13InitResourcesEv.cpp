@@ -8,7 +8,6 @@
    daKrpa_c.h now reaches via Model.h. The typedef WAS int, so spelling it
    int below is byte-neutral. */
 struct RG { char pad[0x44]; int f44; char pad2[8]; };
-struct Blk { int w[12]; };
 
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* f);
@@ -31,7 +30,7 @@ extern void func_ov070_02121310(void* c);
 extern void _ZN9dBgCh_GndD1Ev(struct RG* rg);
 }
 
-extern struct Blk data_02082128;
+extern struct Matrix4x3 IDENTITY_MATRIX4X3;
 
 int daKrpa_c::InitResources()
 {
@@ -60,7 +59,7 @@ int daKrpa_c::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    *(struct Blk*)((char*)&unk_35c) = data_02082128;
+    *(struct Matrix4x3*)((char*)&mMatrix) = IDENTITY_MATRIX4X3;
 
     _ZN9dBgCh_GndC1Ev(&rg);
     _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, (struct Vector3*)((char*)&mPosX), ((char*)this));
@@ -68,7 +67,7 @@ int daKrpa_c::InitResources()
         t = (mPosY - rg.f44) + 0x1e000;
     else
         t = 0x1f4000;
-    unk_3a8 = t;
+    mHeightAboveGnd = t;
     func_ov070_02121310(((char*)this));
     _ZN9dBgCh_GndD1Ev(&rg);
     return 1;

@@ -17,7 +17,7 @@ int MrI::Behavior()
 {
     func_ov071_021215c0(((char *)this));
     func_0200f760(((char *)this), ((char *)this) + 0x174);
-    unk_20c = mAngleY;
+    mTurnRefAngleY = mAngleY;
     ((dCc_c*)((char *)&mdCcAcPos_c))->Clear();
     ((dCc_c*)((char *)&mdCcAcPos_c))->Update();
     func_ov071_02120c90(((char *)this));

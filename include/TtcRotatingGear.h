@@ -20,10 +20,10 @@
 
 struct TtcRotatingGear : dBgActor_c {
     u8  pad_31e[0x2];
-    s32 unk_320;                      /* 0x320 */
-    s32 unk_324;                      /* 0x324 */
-    s32 unk_328;                      /* 0x328 */
-    u16 unk_32c;                      /* 0x32c */
+    s32 mHomePosX;                    /* 0x320 -- InitResources copies mPosX/Y/Z here */
+    s32 mHomePosY;                    /* 0x324 -- Behavior clamps mPosY to [mHomePosY, mHomePosY + 0x14a000] */
+    s32 mHomePosZ;                    /* 0x328 */
+    u16 mMoveTimer;                   /* 0x32c -- DecIfAbove0_Short'ed; reloaded from the per-setting table on expiry */
     u8 mMoveDir;                      /* 0x32e */
 
     /* --- vtable --- */
@@ -50,9 +50,9 @@ struct TtcRotatingGear {
     u8  pad_068[0x26];
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x10];
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mTerminalVelocity;  /* 0x0a0 */
     u8  pad_0a4[0x4];
-    s32 unk_0a8;            /* 0x0a8 */
+    s32 mVertSpeed;         /* 0x0a8 */
     u8  pad_0ac[0x28];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
@@ -62,10 +62,10 @@ struct TtcRotatingGear {
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x34];
-    s32 unk_320;            /* 0x320 */
-    s32 unk_324;            /* 0x324 */
-    s32 unk_328;            /* 0x328 */
-    u16 unk_32c;            /* 0x32c */
+    s32 mHomePosX;            /* 0x320 */
+    s32 mHomePosY;            /* 0x324 */
+    s32 mHomePosZ;            /* 0x328 */
+    u16 mMoveTimer;            /* 0x32c */
     u8  mMoveDir;            /* 0x32e */
 };
 

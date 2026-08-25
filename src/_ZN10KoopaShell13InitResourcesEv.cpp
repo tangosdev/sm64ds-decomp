@@ -7,7 +7,7 @@
  *
  * One spawn word does double duty. param1 bit 0 picks which of the two
  * shared model files to load and is kept in mModelIndex so CleanupResources
- * can release the same one; bit 4 goes to unk_3c5 as a behaviour variant.
+ * can release the same one; bit 4 goes to mVariant as a behaviour variant.
  *
  * mPos is copied into mSpawnPos here, which is what makes the spawn point
  * recoverable later.
@@ -36,7 +36,7 @@ int KoopaShell::InitResources()
 {
     BMD_File* bmd;
     mModelIndex = (unsigned char)(param1 & 1);
-    unk_3c5 = (unsigned char)((param1 >> 4) & 1);
+    mVariant = (unsigned char)((param1 >> 4) & 1);
     bmd = (BMD_File *)Model::LoadFile(*data_ov102_0214d70c[mModelIndex]);
     if (((ModelBase*)&mModel)->SetFile(bmd, 1, 1) == 0)
         return 0;
@@ -48,14 +48,14 @@ int KoopaShell::InitResources()
     mSpawnPosZ = mPosZ;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
-    unk_100 = 0x14;
-    unk_3c0 = 0;
+    mStateTimer = 0x14;
+    mCarrier = 0;
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((dBgCh_Actr*)&mMeshClsn, (dActor_c*)this, 0x28000, 0x28000, 0, 0);
     ((dBgCh_Actr*)&mMeshClsn)->StartDetectingWater();
     func_ov102_0214d1f8(this, &data_ov102_0214ea68);
-    unk_3d4 = 0;
-    unk_3d0 = unk_3d4;
-    unk_3cc = unk_3d0;
-    unk_3c8 = unk_3cc;
+    mParticleHandle_3d4 = 0;
+    mParticleHandle_3d0 = mParticleHandle_3d4;
+    mParticleHandle_3cc = mParticleHandle_3d0;
+    mParticleHandle_3c8 = mParticleHandle_3cc;
     return 1;
 }

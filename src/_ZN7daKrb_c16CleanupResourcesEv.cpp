@@ -21,11 +21,11 @@ int daKrb_c::CleanupResources()
   ((SharedFilePtr *)(data_ov084_02130cf8))->Release();
   for (i = 0; i < 7; ++i)
     ((SharedFilePtr *)(data_ov084_02130278[i]))->Release();
-  if ((unsigned char)(unk_464 + 0xff) <= 1)
+  if ((unsigned char)(mRewardType + 0xff) <= 1)
     UnloadSilverStarAndNumber();
   _ZN11dCapEnemy_c14UnloadCapModelEv(((char*)this));
   if (mGoombaType == 3) {
-    unsigned int id = unk_43c;
+    unsigned int id = mTargetUniqueID;
     if (id != 0) {
       char* a = _ZN8dActor_c10FindWithIDEj(id);
       if (a != 0) {

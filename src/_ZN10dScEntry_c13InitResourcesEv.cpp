@@ -86,9 +86,9 @@ extern "C" int _ZN10dScEntry_c13InitResourcesEv(char* c)
     SetSubBg3Offset(0, 0);
     data_0209d454 = 0x18;
 
-    self->unk_283 = 0;
-    self->unk_284 = 0;
-    self->unk_285 = 0;
+    self->mFadeBrightness = 0;
+    self->mFadeTick = 0;
+    self->mIsFading = 0;
 
     if (data_0209b2e8 != 0) {
         Deallocate(data_0209b2e8);

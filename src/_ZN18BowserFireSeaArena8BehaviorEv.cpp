@@ -10,12 +10,12 @@ int BowserFireSeaArena::Behavior()
     short *a = (short *)(((int)((char *)this) + 0x8c));
     short *b = (short *)(((int)((char *)this) + 0x8e));
 
-    *a = *a + unk_31e;
-    *b = *b + unk_320;
+    *a = *a + mAngleXSpeed;
+    *b = *b + mAngleYSpeed;
 
     {
         short *d = (short *)(((int)((char *)this) + 0x90));
-        *d = *d + unk_322;
+        *d = *d + mAngleZSpeed;
     }
 
     func_ov060_02117ae0(((char *)this));

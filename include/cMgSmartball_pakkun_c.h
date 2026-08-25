@@ -9,7 +9,7 @@
  *
  * CONSTRUCTED BY func_ov006_02110874, left a free function for the same
  * reason the base's is (this tree has migrated zero constructors). It calls
- * the base constructor, stores this vtable, and sets the base's unk_028 to
+ * the base constructor, stores this vtable, and sets the base's mRadius to
  * 0x14000 -- the per-child constant every sibling's constructor also writes,
  * each with its own value. It does not touch mIdleTimer/mActionTimer; they
  * carry whatever the allocator left there until RestoreInitial first zeroes
@@ -50,7 +50,7 @@ struct cMgSmartball_pakkun_c : cMgSmartball_object_c {
     s32 mActionTimer; /* 0x038 -- SaveSnapshot sets it to 0x61 when a target
                           is found; while it is counting down (>0), each
                           later SaveSnapshot call just decrements it instead
-                          of scanning, clearing the base's unk_030 active
+                          of scanning, clearing the base's mIsActive active
                           flag when it reaches 0. Update reads it as the
                           countdown driving the rotate/scale render.
                           RestoreInitial zeroes it. */

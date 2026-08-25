@@ -17,7 +17,7 @@ int *_ZN7daTrs_cD0Ev(struct daTrs_c *self) {
     *((int *)self) = (int)_ZTV7daTrs_c;
     _ZN11ShadowModelD1Ev((char *)&self->mShadowModel2);
     _ZN11ShadowModelD1Ev((char *)&self->mShadowModel1);
-    _ZN5ModelD1Ev((char *)&self->mModel);
+    _ZN5ModelD1Ev((char *)&self->mBodyModel);
     _ZN9ModelAnimD1Ev((char *)&self->mModelAnim);
     _ZN10dBgCh_ActrD1Ev((char *)&self->mWithMeshClsn);
     _ZN10dCcAcPos_cD1Ev((char *)&self->mdCcAcPos_c);

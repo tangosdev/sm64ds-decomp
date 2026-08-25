@@ -18,9 +18,9 @@ extern "C" void func_ov102_02149da8(void *self, int state);
  * helper notes. */
 void QuestionBlock::OnHitByMegaChar(Player &player)
 {
-    if (unk_3e8 == 1) return;
+    if (mState == 1) return;
     if (func_ov102_02149078(this) != 0) return;
     player.IncMegaKillCount();
-    unk_3f2 = player.param1;
+    mHitterParam = player.param1;
     func_ov102_02149da8(this, 1);
 }

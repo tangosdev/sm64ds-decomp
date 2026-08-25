@@ -148,7 +148,7 @@ Ld0:
     unk_650 = 0x80000000;
     mOpacity = 0x1f;
     mClpsWord1Lo = 0xff;
-    *(s16*)&unk_6a2 = mAreaId;
+    *(s16*)&mPrevAreaId = mAreaId;
     f254 = data_0209f254;
     if (f254 != 0) {
         if (*(int*)(c + 8) == 3) {
@@ -181,7 +181,7 @@ Ld0:
         data_0209211c = 2;
         data_0209f200 = 0xe;
     }
-    if (StartWithFarCamera() != 0) unk_715 = 1;
+    if (StartWithFarCamera() != 0) mUseFarCamera = 1;
     mPeakY = mPosY;
     _ZN9dBgCh_GndD1Ev(rc);
     return 1;

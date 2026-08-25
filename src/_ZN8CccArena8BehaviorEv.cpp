@@ -18,7 +18,7 @@ extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* c);
 
 int CccArena::Behavior()
 {
-  void* o = *(void**)((char*)&unk_320);
+  void* o = *(void**)&mState;
   if(*(int*)((char*)o+8)){
     char* base = (char*)o+8;
     int adj = *(int*)(base+4);

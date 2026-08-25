@@ -25,21 +25,25 @@ struct QuestionBlock : dBgActor_c {
     u8  pad_31e[0x2];
     ModelAnim mModelAnim;             /* 0x320 */
     ShadowModel mShadowModel;         /* 0x384 */
-    u8 unk_3ac;                       /* 0x3ac */
-    u8  pad_3ad[0x33];
-    s32 unk_3e0;                      /* 0x3e0 */
+    /* InitResources copies the 0x30 bytes at mModel + 0x1c (Model's own
+       mat4x3) into this offset, which is exactly where mShadowModel ends --
+       the same ShadowModel/Matrix4x3 pairing dActor_c::DropShadowScaleXYZ
+       takes. 0x3ac + 0x30 = 0x3dc. */
+    Matrix4x3 mShadowMat;             /* 0x3ac */
+    u8  pad_3dc[0x4];
+    s32 mHomePosY;                      /* 0x3e0 */
     u8  pad_3e4[0x4];
-    s32 unk_3e8;                      /* 0x3e8 */
+    s32 mState;                      /* 0x3e8 */
     u8  pad_3ec[0x4];
-    u8 unk_3f0;                       /* 0x3f0 */
-    u8 unk_3f1;                       /* 0x3f1 */
+    u8 mStarTracked;                       /* 0x3f0 */
+    u8 mStarId;                       /* 0x3f1 */
     /* Written (truncated from the caller's u32 param1/actorID-ish word) by
        every one of this class's five combat-callback overrides below, always
        immediately before func_ov102_02149da8(this, 1) -- a state-machine
-       dispatch through data_ov102_0214e890 keyed on unk_3e8. Was a u8
+       dispatch through data_ov102_0214e890 keyed on mState. Was a u8
        marker. */
-    u8 unk_3f2;                       /* 0x3f2 */
-    u8 unk_3f3;                       /* 0x3f3 */
+    u8 mHitterParam;                       /* 0x3f2 */
+    u8 mContentType;                       /* 0x3f3 */
 
     /* --- vtable --- */
     virtual ~QuestionBlock();
@@ -96,7 +100,7 @@ struct QuestionBlock {
     u8  pad_08c[0x2];
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x10];
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     u8  pad_0a4[0x30];
     /* Model member. The cartridge's own ~QuestionBlock calls _ZN5ModelD1Ev at +0x0d4
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
@@ -118,16 +122,16 @@ struct QuestionBlock {
        ShadowModel's D1 at +0x384 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN13QuestionBlockD1Ev.c] */
     ShadowModel mShadowModel;            /* 0x384 */
-    u8  unk_3ac;            /* 0x3ac */
-    u8  pad_3ad[0x33];
-    s32 unk_3e0;            /* 0x3e0 */
+    struct Matrix4x3 mShadowMat;    /* 0x3ac */
+    u8  pad_3dc[0x4];
+    s32 mHomePosY;            /* 0x3e0 */
     u8  pad_3e4[0x4];
-    s32 unk_3e8;            /* 0x3e8 */
+    s32 mState;            /* 0x3e8 */
     u8  pad_3ec[0x4];
-    u8  unk_3f0;            /* 0x3f0 */
-    u8  unk_3f1;            /* 0x3f1 */
-    u8  pad_3f2[0x1];
-    u8  unk_3f3;            /* 0x3f3 */
+    u8  mStarTracked;            /* 0x3f0 */
+    u8  mStarId;            /* 0x3f1 */
+    u8  mHitterParam;            /* 0x3f2 */
+    u8  mContentType;            /* 0x3f3 */
 };
 
 #endif /* __cplusplus */

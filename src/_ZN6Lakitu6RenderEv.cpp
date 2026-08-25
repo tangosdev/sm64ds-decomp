@@ -11,7 +11,7 @@ int Lakitu::Render()
         return 1;
     mTextureSequence.Update(*(ModelComponents *)((char *)this + 0xdc));
     mModelAnim.Render(0);
-    if (unk_3f4 == 1) {
+    if (mState == 1) {
         unsigned int v = ((unsigned int)(*(s32 *)((char *)this + 0x12c) << 4)) >> 0x10;
         if (v >= 0x19 && v <= 0x3a)
             mModel.Render(0);

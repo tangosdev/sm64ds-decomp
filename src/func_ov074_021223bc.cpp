@@ -28,7 +28,7 @@ extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, dCc_c *cc);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, dBgCh_Actr *wm, unsigned int j);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, ShadowModel *sm, Matrix4x3 *mtx, Fix12i h, Fix12i g, unsigned int u);
-extern struct Blob48 { int w[12]; } data_02082128;
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 
 int func_ov074_021223bc(char *c)
 {
@@ -95,7 +95,7 @@ int func_ov074_021223bc(char *c)
         *(s16 *)AT(c, 0x8c) = *(s16 *)AT(c, 0x8c) + 0x1800;
     }
 
-    *(Blob48 *)(c + 0x2ec) = data_02082128;
+    *(Matrix4x3 *)(c + 0x2ec) = IDENTITY_MATRIX4X3;
 
     *(int *)(c + 0x310) = *(int *)(c + 0x5c) >> 3;
     *(int *)(c + 0x314) = *(int *)(c + 0x60) >> 3;

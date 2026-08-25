@@ -2,7 +2,7 @@
 // @symbol _ZN4Coin13InitResourcesEv
 /* Coin::InitResources -- vtable slot 0. Sets up one coin from its spawn
  * parameter: mBehaviorType is the low nibble of param1 and selects the physics
- * (bounce height, gravity, terminal velocity) and the flag bits in unk_3ae; the
+ * (bounce height, gravity, terminal velocity) and the flag bits in mCoinFlags; the
  * actor ID then selects which of the three coin types it is (0x121 red, 0x122
  * blue, else yellow), which decides the models loaded and, for a red coin,
  * whether it claims a star-tracking slot. The last third builds the two models,
@@ -11,14 +11,14 @@
  *
  * FOUR SITES KEEP RAW OFFSETS, and each one is measured, not left over:
  *
- *   unk_3ae through `(int)c`  -- every read-modify-write of the flag byte is
+ *   mCoinFlags through `(int)c`  -- every read-modify-write of the flag byte is
  *       spelled `*(u8*)(((int)c + 0x3ae))` in the ROM's codegen. Spelled as the
  *       member, the function changes size. The plain `*(u8*)(c + 0x3ae)` sites
  *       DO convert, and have; the launder is per-site, not per-field.
  *   *(u16*)(c + 0x3a8) = 0xffffu  -- the same field the s16 reads reach as
  *       mDisappearTimer, but this one store only reproduces through the raw
  *       unsigned spelling.
- *   *(Blob48*)(c + 0x368) = data_02082128  -- this is mShadowMat, a Matrix4x3.
+ *   *(Matrix4x3*)(c + 0x368) = IDENTITY_MATRIX4X3  -- this is mShadowMat, a Matrix4x3.
  *       As a struct assignment C++ scalarizes the copy and the function changes
  *       size; as a 48-byte blob copy it is the memcpy the ROM has.
  *   *(s32*)(((int)c + 0x190))  -- inside the dCcAc_c sub-object at 0x178, whose
@@ -26,6 +26,7 @@
  *
  * `#pragma opt_common_subs off` is inherited from the C form and still load-
  * bearing: the ROM re-issues loads this compiler would otherwise CSE. */
+#include "common.h"
 #include "Coin.h"
 #pragma opt_common_subs off
 
@@ -34,7 +35,6 @@
 
 extern "C" {
 typedef struct { void* sfp; void* bmd; } FileEntry;
-typedef struct { u32 w[12]; } Blob48;
 
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
 extern int SublevelToLevel(int i);
@@ -46,7 +46,7 @@ extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* th
 extern void _ZN10dBgCh_Actr13SetLimMovFlagEv(void* thiz);
 extern void _ZN10dBgCh_Actr19StartDetectingWaterEv(void* thiz);
 
-extern Blob48 data_02082128;
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern s8 data_0209f2f8;
 extern u8 data_0209f220;
 extern s32 data_0209f40c[];
@@ -65,7 +65,7 @@ s32 Coin::InitResources()
     s8 i;
     s32 j;
 
-    unk_3ae = 0;
+    mCoinFlags = 0;
     r5 = 0x64000;
     t = (s32)param1 & 0xf;
     mBehaviorType = t;
@@ -118,10 +118,10 @@ case17:
     }
 shared140:;
 
-    *(Blob48*)(c + 0x368) = data_02082128;
+    *(Matrix4x3*)(c + 0x368) = IDENTITY_MATRIX4X3;
 
     mTrackStarID = -1;
-    unk_3ab = 0xff;
+    mSpawnFilter = 0xff;
 
     {
         u16 h;
@@ -130,11 +130,11 @@ shared140:;
         b = h;
         b = (b == 0x121);
         if (b) {
-            unk_3ab = (u8)((param1 >> 4) & 7);
+            mSpawnFilter = (u8)((param1 >> 4) & 7);
             _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9a8);
             mCoinType = 1;
             if (SublevelToLevel(data_0209f2f8) == 0x13 ||
-                unk_3ab == data_0209f220) {
+                mSpawnFilter == data_0209f220) {
                 if (GetBitInDeathTable() == 0) {
                     for (i = 0; i < 0xc; i = (s8)(i + 1)) {
                         if (data_0209f40c[i] == 0) {
@@ -150,7 +150,7 @@ shared140:;
             b2 = h;
             b2 = (b2 == 0x122);
             if (b2) {
-                unk_3ab = (u8)((param1 >> 4) & 7);
+                mSpawnFilter = (u8)((param1 >> 4) & 7);
                 mCoinType = 2;
             } else {
                 mCoinType = 0;
@@ -220,7 +220,7 @@ shared140:;
     goto switch2end;
 case17b:
     mNoClsnTimer = 0;
-    if (mCoinType == 2 && (u32)unk_3ab < 8) {
+    if (mCoinType == 2 && (u32)mSpawnFilter < 8) {
         *(u8*)(((int)c + 0x3ae)) &= ~1;
         *(s32*)(((int)c + 0x190)) |= 1;
     }

@@ -76,8 +76,8 @@ int Player::St_BurnFire_Main()
         info.vec[1] = 0;
         info.vec[2] = data_02082214[(*(u16 *)&mAngleY >> 4) * 2 + 1];
 
-        unk_628 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            unk_628, 0xbd, info.pos[0], info.pos[1], info.pos[2], info.vec, 0);
+        mParticle1 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            mParticle1, 0xbd, info.pos[0], info.pos[1], info.pos[2], info.vec, 0);
         mParticle2 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
             mParticle2, 0xbe, info.pos[0], info.pos[1], info.pos[2], info.vec, 0);
         mLoopingSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
@@ -99,7 +99,7 @@ int Player::St_BurnFire_Main()
             mStateStep = 1;
             _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x3f, 0, 0x1000, 0);
             {
-                char *anim = (char *)(*(char **)((char *)&mBodyModels + (_ZNK6Player14GetBodyModelIDEjb(this, param1 & 0xff, 0) << 2)) + 0x50);
+                char *anim = (char *)((char *)mBodyModels[_ZNK6Player14GetBodyModelIDEjb(this, param1 & 0xff, 0)] + 0x50);
                 *(int *)(anim + 0xc) = 0x4000;
             }
         }
@@ -125,7 +125,7 @@ int Player::St_BurnFire_Main()
         }
         _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x3f, 0, 0x1000, 0);
         {
-            char *anim = (char *)(*(char **)((char *)&mBodyModels + (_ZNK6Player14GetBodyModelIDEjb(this, param1 & 0xff, 0) << 2)) + 0x50);
+            char *anim = (char *)((char *)mBodyModels[_ZNK6Player14GetBodyModelIDEjb(this, param1 & 0xff, 0)] + 0x50);
             *(int *)(anim + 0xc) = 0x4000;
         }
         {

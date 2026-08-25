@@ -17,9 +17,9 @@ extern "C" void func_ov102_02149da8(void *self, int state);
  * helper notes. */
 void QuestionBlock::OnKicked(dActor_c &other)
 {
-    if (unk_3e8 == 1) return;
+    if (mState == 1) return;
     int r = func_ov102_02149078(this);
     if (r != 0) return;
-    unk_3f2 = other.param1;
+    mHitterParam = other.param1;
     func_ov102_02149da8(this, 1);
 }

@@ -200,7 +200,7 @@ We have the same problem plus in-place 32-bit fixup written back into loaded fil
 ```c
 /* src/_ZN5Model17UpdateFileOffsetsER8BMD_File.cpp */
 int base = (int)&file;
-if (*(int *)(m + 4)) *(int *)(m + 4) += base;
+if (g->lists) g->lists = (BMD_DisplayList *)((int)g->lists + base);
 ```
 
 **The first draft proposed a low-2GB arena so truncating casts round-trip. That is right

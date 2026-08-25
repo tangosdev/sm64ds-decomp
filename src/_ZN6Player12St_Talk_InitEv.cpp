@@ -19,9 +19,9 @@ int Player::St_Talk_Init()
   mVertAccel=mVertSpeed;
   unk_716=1;
   mIsBodyClsnEnabled=0;
-  mPosX=unk_548;
-  mPosY=unk_54c;
-  mPosZ=unk_550;
+  mPosX=mPreClsnPosX;
+  mPosY=mPreClsnPosY;
+  mPosZ=mPreClsnPosZ;
   mStateWork=0;
   mIsOpeningBigDoor=0;
   return 1;

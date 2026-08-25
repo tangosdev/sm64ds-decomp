@@ -16,8 +16,8 @@ int BigBrickBlock::Behavior()
 {
     int is13 = (int)(actorID == 0x13);
     if (is13 != 0) {
-        if (unk_31f != _ZN5Event6GetBitEj(mEventID))
-            unk_31e = 0;
+        if (mPrevEventBit != _ZN5Event6GetBitEj(mEventID))
+            mBroken = 0;
 
         if (*(void **)((char *)&mSwitch) == 0) {
             unsigned int id = 0xb;
@@ -28,7 +28,7 @@ int BigBrickBlock::Behavior()
             } while (p == 0 || mEventID != *(u8 *)(p + 0x34e));
         }
 
-        if (_ZN5Event6GetBitEj(mEventID) == 0 || unk_31e != 0) {
+        if (_ZN5Event6GetBitEj(mEventID) == 0 || mBroken != 0) {
             if (((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0)
                 ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
         } else {
@@ -37,7 +37,7 @@ int BigBrickBlock::Behavior()
             _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(((char *)this), 0x150000, 0);
         }
 
-        unk_31f = _ZN5Event6GetBitEj(mEventID);
+        mPrevEventBit = _ZN5Event6GetBitEj(mEventID);
     } else {
         int v1 = 0x15e000;
         int v5 = 0x64000;

@@ -1,11 +1,12 @@
-extern void *data_0209ee74;
+#include "Particle.h"
+extern struct Particle *data_0209ee74;
 
 void func_02021cd4(char *self)
 {
     int idx = *(int *)(self + 4);
     unsigned short val = *(unsigned short *)(self + 8);
 
-    char *a = *(char **)((char *)data_0209ee74 + 4);
+    char *a = (char *)data_0209ee74->mManager;
     char *b = *(char **)(a + 0x1c);
     char *elem = *(char **)(b + idx * 32);
     *(unsigned short *)(elem + 0x28) = val;

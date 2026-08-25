@@ -160,7 +160,7 @@ bool dScMgBase_c::BeforeInitResources()
         data_ov004_020beb60 = _ZN6Memory13operator_new2Ej(0x4000);
     if (data_ov004_020beb68 != 0)
         *(int*)((char*)data_ov004_020beb68 + 0xb0) = 0;
-    self->unk_0b4 = 0;
+    self->mHudScore = 0;
     self->unk_0b8 = 0;
     self->unk_465c = 0;
     func_ov004_020b8a8c(c + 0x4000);
@@ -213,7 +213,7 @@ void dScMgBase_c::AfterCleanupResources(u32 arg)
             func_0203cbc0();
             data_ov004_020beb60 = 0;
         }
-        if (unk_4628 != 0) {
+        if (mMenuOpen != 0) {
             func_02012e1c();
             _ZN5Sound22StopLoadedMusic_Layer1Ej(1);
         }
@@ -332,7 +332,7 @@ int dScMgBase_c::BeforeRender()
     if (dScene_c::BeforeRender() == 0)
         return 0;
 
-    if (unk_4628 != 0) {
+    if (mMenuOpen != 0) {
         func_ov004_020ae858(c);
         return 0;
     }

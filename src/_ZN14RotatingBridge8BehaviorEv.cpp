@@ -13,12 +13,12 @@ extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 
 int RotatingBridge::Behavior()
 {
-  if (DecIfAbove0_Byte((char*)&unk_31e) == 0) {
+  if (DecIfAbove0_Byte((char*)&mPauseTimer) == 0) {
     short* p = (short*)(((int)((char*)this) + 0x94));
     *p = *p + 0x100;
     mAngleY = mPrevAngleY;
-    unk_320 = _ZN5Sound8PlayLongEjjjRK7Vector3s(unk_320, 3, 0x88, (void*)((char*)&mCamSpacePosX), 0);
-    if ((mPrevAngleY & 0x7fff) == 0) unk_31e = 0x3c;
+    mTurnSound = _ZN5Sound8PlayLongEjjjRK7Vector3s(mTurnSound, 3, 0x88, (void*)((char*)&mCamSpacePosX), 0);
+    if ((mPrevAngleY & 0x7fff) == 0) mPauseTimer = 0x3c;
   }
   _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
   func_020393a4((int*)((char*)&(*(u8 *)&mMeshCollider)), 0x320000);

@@ -35,10 +35,10 @@ int daObjCtMecha05_c::Behavior()
            read would emit -- matching the ROM exactly even though mPrevAngleY
            itself is signed (dActor_c.h, evidenced elsewhere). */
         ang = *(u16 *)(c + 0x94);
-        mPosX = unk_320 +
+        mPosX = mHomePosX +
             (int)(((long long)data_02082214[(ang >> 4) << 1] * 0xfa000 + 0x800) >> 12);
         ang = *(u16 *)(c + 0x94);
-        mPosZ = unk_328 +
+        mPosZ = mHomePosZ +
             (int)(((long long)data_02082214[((ang >> 4) << 1) + 1] * 0xfa000 + 0x800) >> 12);
         UpdateModelPosAndRotY();
         func_ov065_0211ac0c(c);
@@ -47,16 +47,16 @@ int daObjCtMecha05_c::Behavior()
         return 1;
     }
 
-    unk_330 = unk_32c;
+    mPrevTravel = mTravel;
     I32(0x32c) += mHorzSpeed;
 
-    switch (unk_336) {
+    switch (mState) {
     case 0:
         if (DecIfAbove0_Short((u16 *)(c + 0x334)) != 0) goto Lend;
         if (data_0209f2c0 == 2) {
             int v = (u16)((unsigned)RandomIntInternal(&data_0209e650) >> 16);
             if (v % 2 == 0) {
-                unk_334 = v % 100 + 20;
+                mStateTimer = v % 100 + 20;
             }
         }
         I8(0x336)++;
@@ -76,9 +76,9 @@ int daObjCtMecha05_c::Behavior()
         goto Lend;
 
     case 2: {
-        int d = unk_32c;
+        int d = mTravel;
         if (d != 0xfa000) {
-            int val = (int)(((long long)(0xfa000 - d) * (0xfa000 - unk_330) + 0x800) >> 12);
+            int val = (int)(((long long)(0xfa000 - d) * (0xfa000 - mPrevTravel) + 0x800) >> 12);
             if (val >= 0) goto L280;
         }
         {
@@ -87,12 +87,12 @@ int daObjCtMecha05_c::Behavior()
             if (sp >= 0x8000) goto L280;
             I8(0x336)++;
             mHorzSpeed = 0;
-            unk_334 = 0x1e;
+            mStateTimer = 0x1e;
             goto Lend;
         }
       L280:
         {
-            int m = (unk_32c < 0xfa000) ? 0x6666 : -0x6666;
+            int m = (mTravel < 0xfa000) ? 0x6666 : -0x6666;
             int sp = mHorzSpeed;
             int delta;
             if ((int)(((long long)sp * m + 0x800) >> 12) >= 0)
@@ -102,7 +102,7 @@ int daObjCtMecha05_c::Behavior()
             I32(0x98) += delta;
             if (data_0209f2c0 != 2) goto Lend;
         }
-        if ((int)(((long long)unk_32c * unk_330 + 0x800) >> 12) >= 0) goto Lend;
+        if ((int)(((long long)mTravel * mPrevTravel + 0x800) >> 12) >= 0) goto Lend;
         if ((RandomIntInternal(&data_0209e650) & 3) != 0) goto Lend;
         func_ov065_0211ad70(c);
         goto Lend;
@@ -111,7 +111,7 @@ int daObjCtMecha05_c::Behavior()
     case 3:
         if (DecIfAbove0_Short((u16 *)(c + 0x334)) != 0) goto Lend;
         mHorzSpeed = -0x5000;
-        if (unk_32c < 0)
+        if (mTravel < 0)
             func_ov065_0211ad70(c);
         goto Lend;
     }

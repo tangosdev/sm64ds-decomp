@@ -15,7 +15,7 @@ int func_ov018_021122ec(char* c){
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char*)c+0xd4, data_ov018_02113bf0[1], 0, 0x1000, 0);
   self->unk_130=0x1000;
   _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj((char*)c+0x138, data_ov018_02113be8[1], 0, 0x1000, 0);
-  self->unk_098=0;
+  self->mHorzSpeed=0;
   self->unk_374=0;
   self->unk_37c=0;
   return 1;

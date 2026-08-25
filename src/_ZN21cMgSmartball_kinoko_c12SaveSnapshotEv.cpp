@@ -1,12 +1,12 @@
 //cpp
 /* Slot 0. Opens with the base's own SaveSnapshot body written out inline
- * rather than called -- same idiom as every sibling. While unk_038 is set,
- * runs a one-shot transition (an effect/sound trigger, gated on unk_03c
- * still being 0) and reloads unk_03c from unk_034; otherwise, while unk_03c
+ * rather than called -- same idiom as every sibling. While mWasHit is set,
+ * runs a one-shot transition (an effect/sound trigger, gated on mHitTimer
+ * still being 0) and reloads mHitTimer from mVariant; otherwise, while mHitTimer
  * is still counting down, decrements it and, once it drops under 4, scans a
  * fixed actor list for anything within a fixed-point distance of 0x11000,
- * arming unk_03c back to 4 on a hit. Always ends by easing the base's
- * unk_028 toward 0x7000 or 0, depending on unk_034 and whether unk_03c has
+ * arming mHitTimer back to 4 on a hit. Always ends by easing the base's
+ * mRadius toward 0x7000 or 0, depending on mVariant and whether mHitTimer has
  * drained. */
 #include "cMgSmartball_kinoko_c.h"
 
@@ -31,23 +31,23 @@ void cMgSmartball_kinoko_c::SaveSnapshot()
     mSnapshot0 = mCurrent0;
     mSnapshot1 = mCurrent1;
 
-    if (unk_038 == 1) {
-        if (unk_03c == 0) {
+    if (mWasHit == 1) {
+        if (mHitTimer == 0) {
             pair.x = mCurrent0;
             pair.y = mCurrent1;
-            func_ov006_02115598((void *)unk_004, (int *)&pair, 0x12c, 0, 1);
-            func_ov006_02115008((void *)unk_004);
+            func_ov006_02115598((void *)mpManager, (int *)&pair, 0x12c, 0, 1);
+            func_ov006_02115008((void *)mpManager);
             func_02012718((void *)0x19f, mCurrent0);
         }
-        unk_038 = 0;
-        if (unk_034 == 1)
-            unk_03c = 0x100;
+        mWasHit = 0;
+        if (mVariant == 1)
+            mHitTimer = 0x100;
         else
-            unk_03c = 4;
-    } else if (unk_03c > 0) {
-        unk_03c -= 1;
-        if (unk_03c < 4) {
-            obj = (char *)unk_004;
+            mHitTimer = 4;
+    } else if (mHitTimer > 0) {
+        mHitTimer -= 1;
+        if (mHitTimer < 4) {
+            obj = (char *)mpManager;
             i = 0;
             if (*(int *)(obj + 0x4668) > 0) {
                 do {
@@ -59,11 +59,11 @@ void cMgSmartball_kinoko_c::SaveSnapshot()
                         Vec2_Sub((int *)&bufB, &mCurrent0, (int *)&bufA);
                         hit = Vec2_Len((void *)&bufB) < 0x11000;
                         if (hit != 0) {
-                            unk_03c = 4;
+                            mHitTimer = 4;
                             goto done;
                         }
                     }
-                    obj = (char *)unk_004;
+                    obj = (char *)mpManager;
                     i++;
                 } while (i < *(int *)(obj + 0x4668));
             }
@@ -71,15 +71,15 @@ void cMgSmartball_kinoko_c::SaveSnapshot()
     }
 
 done:
-    if (unk_034 == 1) {
-        if (unk_03c <= 0) {
-            unk_028 += 0x1000;
-            if (unk_028 > 0x7000)
-                unk_028 = 0x7000;
+    if (mVariant == 1) {
+        if (mHitTimer <= 0) {
+            mRadius += 0x1000;
+            if (mRadius > 0x7000)
+                mRadius = 0x7000;
         } else {
-            unk_028 -= 0x1000;
-            if (unk_028 < 0)
-                unk_028 = 0;
+            mRadius -= 0x1000;
+            if (mRadius < 0)
+                mRadius = 0;
         }
     }
 }

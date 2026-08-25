@@ -27,7 +27,7 @@
  * is not one. 0x2d0 + 0x18 lands inside mdCcAc_c, and
  * dCc_c::flags is at 0x18, documented as "bit 0 makes Update bail" --
  * which is precisely what setting bit 0 does, and precisely what this branch
- * wants when unk_35c is zero. Same mistake, and same correction, as Player's
+ * wants when mVariant is zero. Same mistake, and same correction, as Player's
  * `mBodyClsnFlags`.
  *
  * The doubled write to pos.y is the ROM's own shape and is kept verbatim: the
@@ -63,20 +63,20 @@ int BowserFire::InitResources()
 
     this->mVertAccel = -0x4000;
     this->mTerminalVelocity = -0x1e000;
-    this->unk_35c = this->param1 & 7;
-    this->unk_374 = 0;
-    if (this->unk_35c == 0)
-        this->unk_379 = 0;
+    this->mVariant = this->param1 & 7;
+    this->mFrameCount = 0;
+    if (this->mVariant == 0)
+        this->mDropsShadow = 0;
     else
-        this->unk_379 = 1;
-    this->unk_36c = 0;
-    this->unk_378 = ((unsigned int)this->param1 >> 4) & 3;
-    if (this->unk_35c == 0)
+        this->mDropsShadow = 1;
+    this->mTimer = 0;
+    this->mVariant_378 = ((unsigned int)this->param1 >> 4) & 3;
+    if (this->mVariant == 0)
         this->mdCcAc_c.flags |= 1;
-    this->unk_360 = 0x2000;
-    this->unk_380 = 0;
-    this->unk_37c = this->unk_380;
-    this->unk_2cc = 0;
+    this->mShadowRadiusScale = 0x2000;
+    this->mParticleHandle_380 = 0;
+    this->mParticleHandle_37c = this->mParticleHandle_380;
+    this->mUniqueID_2cc = 0;
 
     /* constructed here (not at function top: the ROM constructs after the
        collider setup), destroyed at the single exit below -- both synthesized */
@@ -91,13 +91,13 @@ int BowserFire::InitResources()
     }
     rc.SetObjAndPos(pos, 0);
     if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc))
-        this->unk_364 = rc.clsnY;
+        this->mGroundY = rc.clsnY;
     else
-        this->unk_364 = this->mPosY;
+        this->mGroundY = this->mPosY;
 
-    (((dActor_c *)this)->*data_ov060_0211af74[this->unk_35c])();
+    (((dActor_c *)this)->*data_ov060_0211af74[this->mVariant])();
 
-    this->unk_384 = 0;
-    this->unk_388 = 0;
+    this->mSoundHandle = 0;
+    this->mSoundID = 0;
     return 1;
 }

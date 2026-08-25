@@ -35,7 +35,7 @@ void Player::SetRealCharacter(unsigned int chr_)
     _ZN9Animation8LoadFileER13SharedFilePtr(*data_ov002_020ff480[mCharFileBase + (param1 & 3)]);
     func_ov002_020e6330(((char *)this));
     _ZN6Player4HealEi(((char *)this), 0x880);
-    unk_73c = 0;
+    mCapFlags = 0;
 
     m1 = _ZNK6Player14GetBodyModelIDEjb(((char *)this), chr, 0);
     m2 = _ZNK6Player14GetBodyModelIDEjb(((char *)this), param1 & 0xff, 0);

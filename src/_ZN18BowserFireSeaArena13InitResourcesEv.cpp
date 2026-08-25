@@ -36,9 +36,9 @@ int BowserFireSeaArena::InitResources()
   _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMovingMeshCollider2, kcl, &mClsnMat, 0x1000, mAngleY, &func_021115bc);
   func_020393d4(&mMovingMeshCollider2, &_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
   ((dBgW *)&mMovingMeshCollider2)->Enable((dActor_c *)(((char*)this)));
-  unk_31e = 0;
-  unk_320 = 0;
-  unk_322 = 0;
+  mAngleXSpeed = 0;
+  mAngleYSpeed = 0;
+  mAngleZSpeed = 0;
   unk_56c = 0;
   return 1;
 }

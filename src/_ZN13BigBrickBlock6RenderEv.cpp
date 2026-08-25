@@ -20,7 +20,7 @@ int BigBrickBlock::Render()
 {
   int b = (actorID == 0x13);
   if (b != 0) {
-    if (!(_ZN5Event6GetBitEj(mEventID) != 0 && unk_31e == 0)) {
+    if (!(_ZN5Event6GetBitEj(mEventID) != 0 && mBroken == 0)) {
       return 1;
     } else {
       char* o = *(char**)((char*)&mSwitch);

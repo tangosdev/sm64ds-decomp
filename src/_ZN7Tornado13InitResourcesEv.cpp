@@ -26,22 +26,22 @@ int Tornado::InitResources()
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0xd4, ((char*)this), 0, 0, 0x200002, 0);
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x108, ((char*)this), 0x50000, 0x50000, 0, 0);
 
-    unk_340 = mPosX;
-    unk_344 = mPosY;
-    unk_348 = mPosZ;
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
     unk_35a = 0;
-    unk_35c = 0;
-    unk_360 = 0;
-    unk_09c = -0x1000;
-    unk_0a0 = -0x1e000;
+    mState = 0;
+    mTriggerCount = 0;
+    mVertAccel = -0x1000;
+    mTerminalVelocity = -0x1e000;
     {
         unsigned int t = mParam & 0xff;
         if (t == 0xff)
-            unk_34c = 0x5dc000;
+            mChaseRange = 0x5dc000;
         else
-            unk_34c = t * 0x64000;
+            mChaseRange = t * 0x64000;
     }
-    unk_364 = 0;
-    unk_368 = 0;
+    mParticleHandle0 = 0;
+    mParticleHandle1 = 0;
     return 1;
 }

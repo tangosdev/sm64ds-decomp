@@ -4,12 +4,11 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "daKpFr_c.h"
-struct M48 { int w[12]; };
 extern "C" {
 extern int _ZN11ShadowModel12InitCylinderEv(void* thiz);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* actor, int fix12, int t, unsigned int a, unsigned int b);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, int fix12, int t, void* vec, int last);
-extern int data_02082128[];
+extern int IDENTITY_MATRIX4X3[];
 }
 
 int daKpFr_c::InitResources()
@@ -24,6 +23,6 @@ int daKpFr_c::InitResources()
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     func_ov070_02122044(((char*)this), 0);
-    *(struct M48*)((char*)&unk_2ec) = *(struct M48*)data_02082128;
+    *(struct Matrix4x3*)((char*)&mMatrix) = *(struct Matrix4x3*)IDENTITY_MATRIX4X3;
     return 1;
 }

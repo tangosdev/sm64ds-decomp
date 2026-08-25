@@ -19,11 +19,12 @@
 #include "dBgActor_c.h"
 
 struct RotatingCogSmall : dBgActor_c {
-    s16 unk_31e;                      /* 0x31e */
-    s16 unk_320;                      /* 0x320 */
-    s16 unk_322;                      /* 0x322 */
-    s16 unk_324;                      /* 0x324 */
-    u8  pad_326[0x6];
+    s16 mStepTimer;                   /* 0x31e -- DecIfAbove0_Short; reloaded from data_ov035_02111ef4[mRotationState][setting] */
+    s16 mDirTimer;                    /* 0x320 -- second countdown; gates the direction re-roll under clock setting 2 */
+    s16 mTargetAngleY;                /* 0x322 -- ApproachLinear target for mAngleY; stepped by mAngleYStep */
+    s16 mAngleYStep;                  /* 0x324 -- +/- data_ov035_02111ef0[mRotationState] */
+    s16 unk_326;                      /* 0x326 -- InitResources gives it the same table value as mAngleYStep; no matched reader */
+    u8  pad_328[0x4];
     s32 mRotationState;               /* 0x32c */
 
     /* --- vtable --- */
@@ -44,9 +45,9 @@ typedef char RotatingCogSmall_size_must_be_0x330[sizeof(RotatingCogSmall) == 0x3
    can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct RotatingCogSmall {
     u8  pad_000[0xc];
-    u16 unk_00c;            /* 0x00c */
+    u16 actorID;            /* 0x00c */
     u8  pad_00e[0x80];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x44];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
@@ -57,11 +58,12 @@ struct RotatingCogSmall {
        inlined base. */
     dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x32];
-    s16 unk_31e;            /* 0x31e */
-    s16 unk_320;            /* 0x320 */
-    s16 unk_322;            /* 0x322 */
-    s16 unk_324;            /* 0x324 */
-    u8  pad_326[0x6];
+    s16 mStepTimer;         /* 0x31e */
+    s16 mDirTimer;          /* 0x320 */
+    s16 mTargetAngleY;      /* 0x322 */
+    s16 mAngleYStep;        /* 0x324 */
+    s16 unk_326;            /* 0x326 */
+    u8  pad_328[0x4];
     s32 mRotationState;            /* 0x32c */
 };
 

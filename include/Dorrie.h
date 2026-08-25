@@ -50,9 +50,9 @@ struct Dorrie {
        dCcAcPos_c's D1 at +0x1140 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN6DorrieD1Ev.cpp] */
     dCcAcPos_c mCylClsn2;           /* 0x1140 */
-    s32 unk_1180;           /* 0x1180 */
-    s32 unk_1184;           /* 0x1184 */
-    s32 unk_1188;           /* 0x1188 */
+    s32 mHomePosX;           /* 0x1180 */
+    s32 mHomePosY;           /* 0x1184 */
+    s32 mHomePosZ;           /* 0x1188 */
     s32 mClsnPlayer;           /* 0x118c */
     s32 mRider;           /* 0x1190 */
     s32 unk_1194;           /* 0x1194 */

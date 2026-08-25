@@ -19,8 +19,7 @@ extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
 extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);
 extern "C" char data_ov071_02122f88;
-struct Blob48 { int w[12]; };
-extern "C" Blob48 data_02082128;
+extern "C" Matrix4x3 IDENTITY_MATRIX4X3;
 extern "C" void Scuttlebug_SetState(dActor_c *self, int type);
 extern "C" int func_ov071_0211f524(char *c);
 
@@ -56,7 +55,7 @@ int Scuttlebug::InitResources()
     *(int*)(s + 0x88) = 0x1000;
     *(int*)(s + 0xd0) = 0;
     *(short*)(s + 0x3a8) = 0x3c;
-    *(Blob48*)(s + 0x350) = data_02082128;
+    *(Matrix4x3*)(s + 0x350) = IDENTITY_MATRIX4X3;
     func_ov071_0211f524(s);
     return 1;
 }

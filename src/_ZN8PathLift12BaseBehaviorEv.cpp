@@ -15,5 +15,5 @@ void PathLift::BaseBehavior()
 {
     PathLiftState &state = data_ov002_0210af2c[mState];
     (this->*state.behavior)();
-    unk_42a = 0;
+    mAfterClsnRan = 0;
 }
