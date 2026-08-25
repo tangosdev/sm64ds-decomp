@@ -3603,6 +3603,34 @@ void ppu_seam_oam_mark(void)
     g_obj_routed_last = -1;
 }
 
+/* THE SAME SNAPSHOT, TAKEN AFTER A ROM-ORDERED UPLOAD. See ntr/ppu.h.
+   The copy above is upload N-1 because it is taken BEFORE the upload; this one
+   is taken after it, so kOamBaseA already holds upload N -- which is the block
+   both OBJ rasters read when func_02019144's upload runs at the head of the
+   display path instead of at its foot. The marks that describe upload N are the
+   SHADOW's, because the shadow IS upload N now; there is no intermediate frame
+   for LIVE to hold, so both stages take the shadow's marks in one statement and
+   the shadow starts clean. Everything else -- the two 1 KB copies, the have
+   flags, the fill detector -- is ppu_seam_oam_mark's, unchanged. */
+void ppu_seam_oam_mark_uploaded(void)
+{
+    for (int i = 0; i < 1024; ++i)
+        g_oam_a_shown[i] = rd8(kOamBaseA + (unsigned)i);
+    g_oam_a_have = 1;
+    for (int i = 0; i < 1024; ++i)
+        g_oam_b_shown[i] = rd8(kOamBase + (unsigned)i);
+    g_oam_b_have = 1;
+    for (int i = 0; i < 128; ++i) {
+        g_obj_resid_live[i] = g_obj_resid_shadow[i];
+        g_obj_routed_live[i] = g_obj_routed_shadow[i];
+        g_obj_resid_shown[i] = g_obj_resid_shadow[i];
+        g_obj_routed_shown[i] = g_obj_routed_shadow[i];
+        g_obj_resid_shadow[i] = 0;
+        g_obj_routed_shadow[i] = 0;
+    }
+    g_obj_routed_last = -1;
+}
+
 void ppu_obj_routed_shadow_reset(void)
 {
     for (int i = 0; i < 128; ++i) {
