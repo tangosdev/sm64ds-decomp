@@ -3626,6 +3626,312 @@ extern "C" const void *port_scene_framebuffer(void)
     return &scn_fb;
 }
 
+/* TITLE LANE DIAGNOSTIC, run mg12: the two boot-chain entry points the knobs
+   in port_scene_begin call. Declared at file scope inside a linkage block
+   because a declaration in a function BODY does not inherit the enclosing
+   function's extern "C" -- only a declaration inside `extern "C" { }` does --
+   and the mangled name would not resolve. */
+extern "C" {
+void _ZN4Heap18InitializeGameHeapEjPS_(unsigned size, void *root);
+void LoadFont(unsigned char arg);
+extern void *data_020a0eac_c;
+extern char *data_ov007_0210342c;
+/* the LOCAL comms record's fields, hosted one grouped section each in
+   hal/camera_bridges.cpp at ROM spacing, with hal_camera_check_layout
+   asserting the spacing at bring-up on this path (port_scene_a2_seat ->
+   port_a2_seat_body). Written by name rather than by offset off
+   data_020a1040, so this file makes no contiguity assumption of its own. */
+extern unsigned char data_020a1044[2];   /* 0x020a1044  stylus x        */
+extern unsigned char data_020a1046[2];   /* 0x020a1046  stylus y        */
+extern unsigned char data_020a1048[4];   /* 0x020a1048  touch, validity */
+extern unsigned char data_020a104c[2];   /* 0x020a104c  flag word       */
+extern unsigned char data_020a104e[2];   /* 0x020a104e  key word        */
+extern unsigned char data_020a0de8[4];   /* TouchInfo[0], poll_touch's  */
+extern unsigned char data_020a1154[];    /* the four per-player records */
+extern int data_020a0f10[];              /* the comms slot index        */
+void func_0203e0ac(void);
+int func_ov007_020c1da0(int i);
+}
+
+/* ---- THE STYLUS, ON THE SCENE PATH ---------------------------------------
+ *
+ * Run mg12, lane TITLE. THE TITLE SCREEN AND THE PORT WERE READING DIFFERENT
+ * RECORDS, and that is the whole of "touch to start does nothing".
+ *
+ * The DS has two live spellings of the stylus and both are the ROM's:
+ *
+ *   TouchInfo[4] at data_020a0de8   {u8 touched, u8 edge, u8 x, u8 y}
+ *       what TouchArea_Update, Stage::CheckInput, Message::Update and every
+ *       minigame read. hal/sub_screen.cpp's poll_touch fills it from the
+ *       mouse, and that is the record the LEVEL path runs on.
+ *   the LOCAL COMMS RECORD at data_020a1040  {..., u16 x, u16 y, u16 touch,
+ *       u16 validity, u16 flags, u16 keys}
+ *       filled on the DS by src/func_0203df40.c and broadcast by
+ *       src/func_0203e0ac.c into the four per-player records at
+ *       data_020a1154 (slot 3 first, then cascaded 3 -> 2 -> 1 -> 0).
+ *
+ * dScDSMT_c reads the SECOND one and nothing else. src/func_ov007_020cc2cc.c
+ * lines 28-35 are its only input read in the whole scene: func_0203da9c() for
+ * the slot index, func_0203dabc() for the stylus quad and func_0203dae4() for
+ * the keys. The touch-to-start gate itself is src/func_ov007_020b1cf0.c lines
+ * 52-60, a touch-DOWN EDGE on that record -- touched now, not touched last
+ * frame, released for at least one frame -- and every frame of it is matched,
+ * linked ROM code that has been running correctly over an all-zero record.
+ * NOT ONE ov007 TU names data_020a0de8; that was checked across the whole
+ * slice, both ways, so the negative is a measurement.
+ *
+ * func_0203df40, the ROM's filler, is in no slice. func_0203e0ac, the
+ * broadcast, IS linked (port/slice_gate13.txt) and is already correct -- it is
+ * called once per frame on the LEVEL path from tests/walk_window.cpp, inside
+ * `if (real_camera)`, and never on a scene run. So the port already has the
+ * second half of the chain and was missing the first.
+ *
+ * THIS IS THE FIRST HALF, AND IT IS ON THE SCENE PATH ONLY. The level loop
+ * keeps its own single func_0203e0ac() call and gains no new writer, so the
+ * 46-level battery cannot move: nothing here executes on it.
+ *
+ * THE QUAD'S ENCODING IS THE ROM'S, read off src/func_0203b9bc.c rather than
+ * guessed. Its idle branch writes c = 0, a = b = 0xff, d = 0, and its accept
+ * branches copy a ring entry whose d is zero. d is a VALIDITY MASK and
+ * src/func_ov007_020c1db0.c lines 46-57 is what reads it: bit 0 means "x is
+ * out of range, substitute the previous one", bit 1 the same for y, and with
+ * no previous touch either bit CANCELS the touch outright. So a live touch
+ * must publish d = 0 or the title drops it.
+ *
+ * THE KEY WORD IS PUBLISHED AS ZERO AND THAT IS DELIBERATE. The ROM computes
+ * it as ((KEYINPUT | SHARED_PAD) ^ 0x2fff) & 0x2fff, and the DS's KEYINPUT is
+ * ACTIVE LOW. The port's hosted KEYINPUT reads 0 on every frame of a scene run
+ * (measured: ppu_audit's touch-hardware table prints KEYINPUT nonzero=0 over
+ * 900 samples), and 0 through that formula is 0x2fff -- every button held. A
+ * literal transcription would hand the title a stuck controller. Zero is the
+ * honest answer while nothing drives the pad on this path, and it changes
+ * nothing today either way: func_ov007_020c20b8, the key tracker the title
+ * hands that word to, is one of the fifteen unmatched ov007 bodies and returns
+ * 0, so the button half of the title is dead for a reason this cannot fix.
+ *
+ * SM64DS_SCENE_NO_TOUCH=1 puts the old behaviour back on the SAME binary, so a
+ * before/after is one build at one .dsstate base, which is what
+ * notes/port-selftest-bmp-gate.md requires before two captures may be compared
+ * at all.
+ */
+static void port_scene_comms_publish(void)
+{
+    static int off = -1;
+    if (off < 0) off = std::getenv("SM64DS_SCENE_NO_TOUCH") ? 1 : 0;
+    if (off) return;
+
+    const unsigned down = data_020a0de8[0];
+    const unsigned sx   = data_020a0de8[2];
+    const unsigned sy   = data_020a0de8[3];
+
+    /* func_0203b9bc's two states, and no third one. */
+    *(unsigned short *)data_020a1044 = (unsigned short)(down ? sx : 0xff);
+    *(unsigned short *)data_020a1046 = (unsigned short)(down ? sy : 0xff);
+    *(unsigned short *)data_020a1048 = (unsigned short)(down ? 1u : 0u);
+    *(unsigned short *)(data_020a1048 + 2) = 0;      /* validity: in range */
+    *(unsigned short *)data_020a104e = 0;            /* keys: see above    */
+    /* func_0203df40's own last statement on the record. func_0203e0ac masks
+       it straight back off, so it is faithfulness rather than a signal. */
+    *(unsigned short *)data_020a104c |= 0x8000;
+
+    func_0203e0ac();
+
+    /* SM64DS_SCENE_TOUCH_TRACE=1: the whole chain in one line per frame, from
+       what poll_touch left to what the title's own stylus tracker made of it.
+       DEFAULT OFF. It exists because "the picture did not change" has three
+       causes -- the record never arrives, it arrives and the tracker rejects
+       it, or the tracker accepts it and the state machine is somewhere that
+       does not care -- and a capture separates none of them. The tracker
+       fields are the ones src/func_ov007_020b1cf0.c:52-60 tests. */
+    static int trace = -1;
+    if (trace < 0) trace = std::getenv("SM64DS_SCENE_TOUCH_TRACE") ? 1 : 0;
+    if (trace) {
+        const unsigned short *s0 = (const unsigned short *)(data_020a1154 + 4);
+        char *g = data_ov007_0210342c;
+        const char *trk = g ? *(const char **)(g + 0x50) : 0;
+        std::fprintf(stderr,
+                     "[t-comms] de8=%u xy=(%u,%u) idx=%d slot0={%u,%u,%u,%u}",
+                     down, sx, sy, data_020a0f10[0],
+                     s0[0], s0[1], s0[2], s0[3]);
+        if (trk)
+            std::fprintf(stderr, "  trk now=%u prev=%u released=%d",
+                         *(const unsigned short *)(trk + 0x0c),
+                         *(const unsigned short *)(trk + 0x14),
+                         *(const int *)(trk + 0x24));
+        if (g) {
+            std::fprintf(stderr, "  f10=%d f14=%d f20=%d",
+                         *(const int *)(g + 0x10), *(const int *)(g + 0x14),
+                         *(const int *)(g + 0x20));
+            /* THE TWO GATES IN FRONT OF THE TOUCH BRANCH, and they are what
+               decides whether the edge is even looked at.
+               src/func_ov007_020b1cf0.c reads
+                   *(int *)(**(char ***)(g + 0x130) + 0x10) == 0x1000
+                && func_ov007_020c1da0(0) == 0
+               before it tests the tracker at all, and func_ov007_020b0548
+               only calls that function when the state at **(short**)(g + 8)
+               is 0. An edge that arrives while any of the three disagrees is
+               dropped, and the frame is unchanged for a reason that has
+               nothing to do with the stylus. */
+            const char *st = *(const char **)(g + 8);
+            const char *p130 = *(const char **)(g + 0x130);
+            const char *p130o = p130 ? *(const char **)p130 : 0;
+            std::fprintf(stderr, "  state=%d st0c=%d anim=%d c1da0=%d",
+                         st ? (int)*(const short *)st : -999,
+                         st ? *(const int *)(st + 0xc) : -999,
+                         p130o ? *(const int *)(p130o + 0x10) : -999,
+                         func_ov007_020c1da0(0));
+            /* STATE 11 IS THE ATTRACT/OPENING STATE and it leaves on its own
+               animation. src/func_ov007_020b0a20.c reads e = g->unk100->unk4
+               and then e->unk18->{unkC, unk10, unk12}: unkC == -1 is "no
+               animation bound", and both the natural end (unk10 == unk12 - 6)
+               and the touch/button SKIP (unk10 <= unk12 - 0x1f, with unkC
+               != -1) are gated on the same object. A title that never leaves
+               state 11 never reaches state 0, which is where the
+               touch-to-start handler lives, so these three numbers say whether
+               the stylus was ever going to be looked at. */
+            const char *p100 = *(const char **)(g + 0x100);
+            const char *e = p100 ? *(const char **)(p100 + 4) : 0;
+            const char *e18 = e ? *(const char **)(e + 0x18) : 0;
+            if (e18)
+                std::fprintf(stderr, "  anim{c=%d f=%u n=%u}",
+                             (int)*(const short *)(e18 + 0x0c),
+                             (unsigned)*(const unsigned short *)(e18 + 0x10),
+                             (unsigned)*(const unsigned short *)(e18 + 0x12));
+            else
+                std::fprintf(stderr, "  anim{NO OBJECT}");
+        }
+        std::fprintf(stderr, "\n");
+        std::fflush(stderr);
+    }
+}
+
+/* TITLE LANE DIAGNOSTIC, run mg12. SM64DS_SCENE_TITLE_ALLOC=1 prints the title
+   screen's own allocation map once, at the end of the run, and answers ONE
+   question with addresses instead of inference: do the two 0x400 OAM shadow
+   buffers (func_ov007_020b7594's p[4] and p[5], the buffers
+   func_ov007_020b7384 uploads WHOLE to 0x07000000 and 0x07000400) overlap
+   anything else the title allocated? The three 0x44-byte palette-blend objects
+   at data_ov007_0210342c + 0x44/0x48/0x4c are the ones under suspicion:
+   func_ov007_020c940c copies 0x40 bytes into each at +4, and the ROM's own
+   32-entry grey ramp data_ov007_02102f28 is what ends up in them.
+   DEFAULT OFF; prints nothing otherwise. */
+static void title_alloc_report(void)
+{
+    if (!std::getenv("SM64DS_SCENE_TITLE_ALLOC"))
+        return;
+    char *g = data_ov007_0210342c;
+    if (!g) { std::fprintf(stderr, "  [title-alloc] object null\n"); return; }
+    char *c   = *(char **)(g + 0x74);
+    char *p4  = c ? *(char **)(c + 0x10) : 0;
+    char *p5  = c ? *(char **)(c + 0x14) : 0;
+    char *o44 = *(char **)(g + 0x44);
+    char *o48 = *(char **)(g + 0x48);
+    char *o4c = *(char **)(g + 0x4c);
+    std::fprintf(stderr,
+                 "  [title-alloc] gfx obj %p  OAM-A shadow %p +0x400  "
+                 "OAM-B shadow %p +0x400\n"
+                 "  [title-alloc] pal objs +0x44 %p  +0x48 %p  +0x4c %p "
+                 "(0x44 bytes each, palette at +4)\n",
+                 (void *)c, (void *)p4, (void *)p5,
+                 (void *)o44, (void *)o48, (void *)o4c);
+    /* EVERY POINTER SLOT THE TITLE'S OWN INITIALISER FILLS, not just the three
+       palette objects: src/func_ov007_020b6d40.c parks nine objects at +0xa4
+       and eight more at +0xc8, and src/func_ov007_020b69c4.c parks one at
+       +0x40 and the three at +0x44/+0x48/+0x4c. Any of them landing inside a
+       shadow buffer is the answer, and checking three of twenty-one and
+       calling it "no overlap" is exactly the shape of a vacuous clean. */
+    struct Slot { char name[16]; char *p; };
+    Slot slot[64];
+    int n = 0;
+    static const struct { unsigned off; const char *nm; } fixed[] = {
+        {0x40, "+0x40"}, {0x44, "+0x44"}, {0x48, "+0x48"}, {0x4c, "+0x4c"}};
+    for (unsigned k = 0; k < 4; ++k) {
+        std::snprintf(slot[n].name, sizeof slot[n].name, "%s", fixed[k].nm);
+        slot[n++].p = *(char **)(g + fixed[k].off);
+    }
+    for (int i = 0; i < 9; ++i) {
+        std::snprintf(slot[n].name, sizeof slot[n].name, "+0x%02x", 0xa4 + i * 4);
+        slot[n++].p = *(char **)(g + 0xa4 + i * 4);
+    }
+    for (int i = 0; i < 8; ++i) {
+        std::snprintf(slot[n].name, sizeof slot[n].name, "+0x%02x", 0xc8 + i * 4);
+        slot[n++].p = *(char **)(g + 0xc8 + i * 4);
+    }
+    for (int i = 0; i < n; ++i)
+        std::fprintf(stderr, "  [title-alloc] obj %-7s %p\n",
+                     slot[i].name, (void *)slot[i].p);
+    char *buf[2] = {p4, p5};
+    const char *bn[2] = {"OAM-A shadow", "OAM-B shadow"};
+    int found = 0;
+    for (int b = 0; b < 2; ++b) {
+        if (!buf[b]) continue;
+        for (int i = 0; i < n; ++i) {
+            if (!slot[i].p) continue;
+            if (slot[i].p >= buf[b] && slot[i].p < buf[b] + 0x400) {
+                ++found;
+                std::fprintf(stderr, "  [title-alloc] OVERLAP: object %s (%p) "
+                             "lies inside %s (%p..%p), at buffer offset "
+                             "0x%03x = OAM entry %u\n", slot[i].name,
+                             (void *)slot[i].p, bn[b], (void *)buf[b],
+                             (void *)(buf[b] + 0x400),
+                             (unsigned)(slot[i].p - buf[b]),
+                             (unsigned)((slot[i].p - buf[b]) / 8));
+            }
+        }
+    }
+    if (!found)
+        std::fprintf(stderr, "  [title-alloc] no tracked object lies inside "
+                     "either shadow buffer (%d checked)\n", n);
+    std::fflush(stderr);
+}
+
+/* TITLE LANE DIAGNOSTIC, run mg12, and it is an EXPERIMENT rather than a fix.
+   SM64DS_SCENE_OAM_TAIL_ZERO=<n> holds OAM shadow entries n..127 of BOTH of the
+   title's buffers at the zero func_ov007_020c0354 put there at InitResources,
+   once per frame, BEFORE the frame's own OAM build runs. It is self-
+   interpreting either way:
+     - if the picture changes, the title's own builder does NOT write those
+       entries and something else is leaving data in them;
+     - if the picture does not change, the builder writes them itself and the
+       entries are the ROM's.
+   DEFAULT OFF; with the variable unset this function is two loads and a
+   compare. It is NOT a repair: a repair has to stop the write, not paper over
+   it, and nothing here knows yet what the write is. */
+static void title_oam_tail_zero(void)
+{
+    static int n = -2;
+    if (n == -2) {
+        const char *e = std::getenv("SM64DS_SCENE_OAM_TAIL_ZERO");
+        n = (e && *e) ? std::atoi(e) : -1;
+        if (n >= 0 && n < 128)
+            std::fprintf(stderr, "  [title-oam] holding shadow entries "
+                         "%d..127 at zero on both engines\n", n);
+    }
+    if (n < 0 || n >= 128)
+        return;
+    char *g = data_ov007_0210342c;
+    if (!g) return;
+    char *c = *(char **)(g + 0x74);
+    if (!c) return;
+    for (int b = 0; b < 2; ++b) {
+        char *p = *(char **)(c + 0x10 + b * 4);
+        if (!p) continue;
+        /* SAY WHETHER THERE WAS ANYTHING TO ZERO, once per engine. Without this
+           a clean picture cannot be told from a tail that was already zero when
+           this ran, and those are opposite answers. */
+        static int said[2];
+        if (!said[b]) {
+            unsigned nz = 0;
+            for (int i = n * 8; i < 128 * 8; ++i) nz += (p[i] != 0);
+            std::fprintf(stderr, "  [title-oam] engine %c shadow tail carried "
+                         "%u nonzero byte(s) AFTER the build, before the "
+                         "upload\n", b ? 'B' : 'A', nz);
+            said[b] = 1;
+        }
+        std::memset(p + n * 8, 0, (size_t)(128 - n) * 8);
+    }
+}
+
 /* THE BRING-UP AND THE SPAWN. Returns 0, or the process exit code to die with.
    `hwnd` is the window this run will be presented into, or null for a headless
    one: hal_sub_screen_init_hw keys g_headless off exactly that, so passing a
@@ -3912,6 +4218,14 @@ extern "C" void port_scene_tick(int frame, int tick_game)
        function" rather than reflowing three dozen lines nobody changed. */
     {
         hal_sub_screen_frame_begin();
+        /* IMMEDIATELY AFTER poll_touch AND BEFORE THE GAME WORK.
+           hal_sub_screen_frame_begin is what runs poll_touch, so TouchInfo is
+           this frame's by the time this reads it, and dScDSMT_c::Behavior --
+           which is the only reader of the record this publishes -- runs inside
+           port_actor_tick below. Same order the DS has: func_0203df40 fills
+           the record from the ring, func_0203e0ac broadcasts it, and the
+           scene's Behavior reads the broadcast, all in one frame. */
+        port_scene_comms_publish();
         if (tick_game) {
             port_actor_tick();
             /* THE FRAME CLOCK, func_020197b8 phase 6 (hal/fader_wipes.cpp).

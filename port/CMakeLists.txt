@@ -3010,6 +3010,30 @@ foreach(line IN LISTS SLICE_OV007_LINES)
     endif()
     list(APPEND SLICE_OV007_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# run mg12 lane TITLE: THE TWO COMMS SLOT-INDEX FRAMES, displaced for the arity
+# ride-through that port/tools/aritycheck_plainfunc_baseline.txt lines 80 and
+# 81 already carry. include/decl_common.h declares func_0203dabc and
+# func_0203dae4 as (void); their matched definitions take the comms slot index,
+# which the ROM leaves in r0 from the func_0203da9c() call immediately before.
+# On x86 the callee reads the caller's stack instead, and indexes
+# data_020a1154 at stride 0x24 with it -- every frame the title screen runs,
+# because src/func_ov007_020cc2cc.c is the ONE linked caller of either address.
+# The other two callers in the tree (src/func_0203bb60.c, src/func_0203bc7c.c)
+# declare their own int parameter and are in NO slice, so the face cannot
+# mis-serve them; if either is ever linked, the header is the fix and these two
+# lines come out.
+#
+# THE CUT IS HERE AND NOT IN THE SLICE FILE, which is this block's own rule
+# above: the slice line is the only thing that puts the matched TU in the
+# build, so cutting it in the file and adding the host copy here would be two
+# facts that can drift into an LNK2005 or an undefined symbol.
+foreach(displaced "src/func_0203dabc.c" "src/func_0203dae4.c")
+    list(REMOVE_ITEM SLICE_OV007_SOURCES
+         "${CMAKE_CURRENT_SOURCE_DIR}/../${displaced}")
+endforeach()
+list(APPEND SLICE_OV007_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Comms_SlotIndex_0203dabc.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Comms_SlotIndex_0203dae4.cpp")
 if(AE1_ADD3C_DISPLACED)
     list(APPEND SLICE_OV007_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov007_ImplicitR0_020add3c.cpp")
