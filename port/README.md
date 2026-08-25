@@ -16,6 +16,27 @@ build that never touches the byte-matching pipeline.
 - **32-bit host first.** The recovered ABI assumes 4-byte pointers. x64 comes
   after struct recovery makes layout host-independent.
 
+## Build locally on Windows
+
+The current port is a suite of native smoke executables, not yet a standalone
+playable game. It requires Visual Studio with the **Desktop development with
+C++** workload and its x86 tools, plus CMake, Ninja, Python, and the normal local
+ROM setup described in the repository README.
+
+Generate the gitignored asset catalog once from your own cartridge dump, then
+build and run every gate:
+
+```powershell
+python tools/asset_catalog.py generate sm64.nds
+port\build-port.cmd
+```
+
+`build-port.cmd` discovers current Community or Build Tools installations of
+Visual Studio instead of assuming a version-specific path. It configures a
+32-bit Release build under `build\port\`, builds all smoke runners, and runs all
+of them through CTest. A successful exit therefore proves both link closure and
+the runtime assertions listed below.
+
 ## Gate ledger
 
 Each gate is a slice manifest + a smoke binary that proves one seam with
@@ -30,9 +51,9 @@ game data. `build-port.cmd` builds all of them into `build\port\`.
 | 4a | `smoke_gx` | the interrupt-driven display-list pump, byte-equal vs harness |
 | 4b | `smoke_model` | the whole Model pipeline: load, rebase, VRAM upload, materials, render (Mario, textured) |
 | 4c | `smoke_anim` | Animation/UpdateBones recursion (the Mad Piano, posed) |
-| 4d | `smoke_soak` | every catalog model: 448/448 loadable render, zero faults |
+| 4d | `smoke_soak` | every compatible catalog model loads and renders with zero faults |
 | 5 | `smoke_frames` | the fiber frame loop: game-shaped frames, the piano attack in motion |
-| 5b | `smoke_soak_anim` | every compatible model+BCA pair: 472/473 animate, zero faults |
+| 5b | `smoke_soak_anim` | every compatible model+BCA pair animates and renders with zero faults |
 | 6 | `smoke_oam` | the 2D sprite engine: OAM emit, affine params, upload to mapped OAM |
 | 6b | `smoke_oam` | OBJ scan-out: the game's sprite placements become pixels |
 | 7 | `smoke_modelanim` | ModelAnim: the game owns frame progression (speed, loop wrap) |

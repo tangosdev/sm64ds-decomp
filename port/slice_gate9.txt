@@ -16,8 +16,6 @@ src/func_02043810.c
 src/_ZN7fBase_cnwEj.cpp
 src/_ZN11ShadowModelC1Ev.cpp
 src/_ZN10dBgW_KcMbgC1Ev.cpp
-src/_ZN4dBgW7DisableEv.cpp
-src/_ZN4dBgW9IsEnabledEv.cpp
 src/_ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block.c
 src/_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_.cpp
 src/_ZN10dBgActor_c19UpdateClsnPosAndRotEv.cpp
@@ -37,7 +35,6 @@ src/_ZN10dBgW_KcMbg9TransformERK9Matrix4x3s.cpp
 src/func_0203b244.c
 src/LenVec3.c
 src/func_020396d0.c
-src/_ZN4dBgW6EnableEP8dActor_c.cpp
 src/_ZN8dActor_c13ClosestPlayerEv.cpp
 src/_ZN7fBase_c9SceneNode5ResetEv.c
 src/Matrix4x3_FromRotationY.c
@@ -67,4 +64,15 @@ src/MulVec3Mat4x3.c
 src/func_0203b2ec.c
 src/func_02044284.cpp
 src/func_0203b20c.c
-src/_ZN5Model11UpdateVertsEv.cpp
+
+# Virtuals the host now needs as real methods: migrating a constructor to
+# real C++ makes its TU the vtable's key function on MSVC too, and MSVC
+# emits the vtable there -- which requires every virtual to be defined, not
+# just the ones a gate happens to exercise. These already existed in src/;
+# they were simply never sliced.
+
+# dBgW's non-virtual accessors: these were always sliced here. They are not
+# part of the vtable and have nothing to do with the constructor migration.
+src/_ZN4dBgW7DisableEv.cpp
+src/_ZN4dBgW9IsEnabledEv.cpp
+src/_ZN4dBgW6EnableEP8dActor_c.cpp

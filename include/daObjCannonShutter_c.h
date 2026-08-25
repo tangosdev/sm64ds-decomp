@@ -1,5 +1,5 @@
-#ifndef CANNONHATCH_H
-#define CANNONHATCH_H
+#ifndef DAOBJCANNONSHUTTER_C_H
+#define DAOBJCANNONSHUTTER_C_H
 
 #include "types.h"
 
@@ -17,7 +17,7 @@
 
 #include "dBgActor_c.h"
 
-struct CannonHatch : dBgActor_c {
+struct daObjCannonShutter_c : dBgActor_c {
     u8  pad_31e[0x2];
     s32 mHomePosX;                      /* 0x320 */
     s32 mHomePosY;                      /* 0x324 */
@@ -27,7 +27,7 @@ struct CannonHatch : dBgActor_c {
     u8 mCannonOpen;                       /* 0x32e */
 
     /* --- vtable --- */
-    virtual ~CannonHatch();
+    virtual ~daObjCannonShutter_c();
 
     int Behavior();
     int CleanupResources();
@@ -35,14 +35,14 @@ struct CannonHatch : dBgActor_c {
     int Render();
 };
 
-typedef char CannonHatch_size_must_be_0x330[sizeof(CannonHatch) == 0x330 ? 1 : -1];
+typedef char daObjCannonShutter_c_size_must_be_0x330[sizeof(daObjCannonShutter_c) == 0x330 ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct CannonHatch {
+struct daObjCannonShutter_c {
     u8  pad_000[0x8];
     /* 0x008..0x05c is fBase_c's, and fBase_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
@@ -69,7 +69,7 @@ struct CannonHatch {
     Model mModel;            /* 0x0d4 */
     /* dBgW_KcMbg member, named by the class's own destructor calling
        dBgW_KcMbg's D1 at +0x124 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11CannonHatchD1Ev.c] */
+       checks. Was a u8 marker. [_ZN20daObjCannonShutter_cD1Ev.c] */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  mClsnMat;            /* 0x2ec */
     u8  pad_2ed[0x33];
@@ -83,4 +83,4 @@ struct CannonHatch {
 
 #endif /* __cplusplus */
 
-#endif /* CANNONHATCH_H */
+#endif /* DAOBJCANNONSHUTTER_C_H */

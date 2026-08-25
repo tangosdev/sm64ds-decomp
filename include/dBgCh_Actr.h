@@ -34,16 +34,13 @@ struct dActor_c;
  * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the
  * key-function arrangement from include/ModelBase.h.
  *
- * WHY THE FIELD LIST IS FLAT. Two members are whole sub-objects: a
- * dBgCh_SphCrr at 0x20 (C1 does `add r0,r4,#0x20' then dBgCh_SphCrr's C1) and a
- * dBgCh_Lin at 0x134 (`add r0,r4,#0x134' then dBgCh_Lin's C1). They are
- * NOT typed as such here, because a dozen already-matched bodies reach into
- * their interiors by absolute offset -- self+0x30, +0x34, +0x90, +0x144,
- * +0x148 -- and dBgCh_SphCrr.h / dBgCh_Lin.h are still auto-generated
- * placeholders whose sizeof cannot be trusted. Typing the members would
- * rewrite those bodies for no byte benefit. Interior offsets worth knowing:
- * 0x30 sphere.result, 0x34 its SurfaceInfo, 0x6c a Vector3 displacement,
- * 0x90 the result-flag byte, 0x144 line.result, 0x148 its SurfaceInfo.
+ * THE TWO MEMBERS ARE TYPED SUB-OBJECTS (2026-08-24; they were flat blobs for
+ * a long time because a dozen already-matched bodies reached into their
+ * interiors by absolute offset -- self+0x30, +0x34, +0x90, +0x144, +0x148 --
+ * while both sub-headers were auto-generated placeholders whose sizeof could
+ * not be trusted). Both headers are now promoted and size-pinned: 0x30 is
+ * mSphereClsn's query-sphere pos, 0x34 its radius, 0x6c mSphereClsn.disp,
+ * 0x90 mSphereClsn.flags, 0x144 mRaycastLine's lineEnd.x, 0x148 .y.
  *
  * mFlags IS A WORD, NOT A BYTE. The placeholder had it as u8 and that was
  * wrong: every accessor does a full-word load/store, e.g. SetGroundFlag is
@@ -55,19 +52,20 @@ struct dActor_c;
  *
  * INFERRED, not pinned:
  *   - 0x12c / 0x130 receive Init's two Vector3_16 * parameters (the mangled
- *     name spells P10Vector3_16S5_), but they are left as s32 here. Whether
- *     the FIELDS are pointer-typed is a separate question from what Init
- *     stores, and UpdateDiscreteNoLava passes them straight on to
- *     func_02038324, which takes ints. They could also formally be the
- *     dBgCh_SphCrr's tail; no dBgCh_SphCrr-side access to them exists, so they
- *     are treated as ours.
- *   - 0x1b8 likewise sits at the dBgCh_Lin boundary.
+ *     name spells P10Vector3_16S5_). 0x12c is mSphereClsn.unk_10c; 0x130 is
+ *     our own field, since sizeof(dBgCh_SphCrr) is pinned at 0x110. The FIELDS
+ *     stay s32: whether they are pointer-typed is a separate question from
+ *     what Init stores, and UpdateDiscreteNoLava passes them straight on to
+ *     func_02038324, which takes ints.
  *   - The 0x1bc size is convergent evidence, not a single instruction: some
  *     forty embedding actor headers place their next field at exactly
  *     mWithMeshClsn + 0x1bc. Nothing in matched code allocates by sizeof.
  */
 
 #ifdef __cplusplus
+
+#include "dBgCh_SphCrr.h"
+#include "dBgCh_Lin.h"
 
 struct dActor_c;
 
@@ -81,23 +79,34 @@ struct Vector3_16;   /* pointers only; see the note above */
 struct dBgCh_Actr : dBgCh {
     u32 mFlags;                 /* 0x010 - word, see above */
     dActor_c *mActor;              /* 0x014 - Init arg 1 */
-    Fix12i mRadius;             /* 0x018 - Init arg 2, the sphere radius */
-    Fix12i mHeight;             /* 0x01c - Init arg 3, a height */
-    u8  mSphereClsn;            /* 0x020 - dBgCh_SphCrr sub-object starts here */
-    u8  pad_021[0x4b];
-    u8  mDisplacement;                /* 0x06c - a Vector3 displacement */
-    u8  pad_06d[0x23];
-    u8  mClsnFlags;             /* 0x090 - result-flag byte, ldrb/strb */
-    u8  pad_091[0x97];
-    s32 mClsnScale;                /* 0x128 - copied from mScale each update */
-    s32 unk_12c;                /* 0x12c - Init stores its Vector3_16 * arg 4 */
+    Fix12i unk_018;             /* 0x018 - Init arg 2, the sphere radius */
+    Fix12i unk_01c;             /* 0x01c - Init arg 3, a height */
+
+    /* THE TWO SUB-OBJECTS, now typed as themselves. Both classes carry real,
+       out-of-line constructors, which is what lets this class's constructor
+       be written with an empty body: base step, vptr store and both member
+       constructions are synthesised, in exactly the ROM's order. Interior
+       offsets that used to be spelled on this flat list moved home with
+       their bytes: 0x6c was mSphereClsn.disp (+0x4c), 0x90 is
+       mSphereClsn.flags (+0x70), 0x128/0x12c are mSphereClsn.unk_108 /
+       .unk_10c. 0x130 stays ours -- sizeof(dBgCh_SphCrr) is pinned at
+       0x110, so 0x130 falls outside the sub-object (include/dBgCh_SphCrr.h). */
+    dBgCh_SphCrr mSphereClsn;   /* 0x020 - spans [0x20,0x130) */
     s32 unk_130;                /* 0x130 - Init stores its Vector3_16 * arg 5 */
-    u8  mRaycastLine;           /* 0x134 - dBgCh_Lin sub-object starts here */
-    u8  pad_135[0x83];
-    Fix12i mScale;             /* 0x1b8 - (?) Init sets 0x1000 */
+    dBgCh_Lin mRaycastLine;     /* 0x134 - spans [0x134,0x1b8) */
+    Fix12i unk_1b8;             /* 0x1b8 - (?) Init sets 0x1000 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
+    /* DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the key-function
+       arrangement from include/ModelBase.h; nothing derives from this class,
+       and D1/D0/C1 keep their own translation units. */
     virtual ~dBgCh_Actr();    /* slots 0 (D1), 1 (D0) */
+
+    /* DECLARED, never defined as a method here -- src/_ZN10dBgCh_ActrC1Ev.cpp
+       owns C1 (notes/ctor-migration.md section 2). Empty body: both member
+       classes have real out-of-line ctors, so synthesis emits base step +
+       vptr + both constructions in the ROM's order by itself. */
+    dBgCh_Actr();
 
     /* --- non-virtual --- */
     void Init(dActor_c *actor, Fix12i radius, Fix12i height,
@@ -133,8 +142,9 @@ struct dBgCh_Actr : dBgCh {
        the whole difference between the two shapes, and it is visible.
 
        The first five read mFlags (word, 0x10) except GetResultFlag1 and
-       IsOnWall, which read mClsnFlags with `ldrb` at 0x90 -- the byte inside
-       the dBgCh_SphCrr sub-object, not a field of our own. --- */
+       IsOnWall, which read the result byte at 0x90 with `ldrb' --
+       mSphereClsn.flags, the byte inside the dBgCh_SphCrr sub-object, not a
+       field of our own. --- */
     s32 GetResultFlag1() const;    /* mClsnFlags & 0x01 -- collision exists */
     s32 IsOnWall() const;          /* mClsnFlags & 0x08 */
     s32 GetLimMovFlag() const;     /* mFlags & 0x80 -- limited movement */

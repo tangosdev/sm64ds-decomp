@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN11CannonHatch6RenderEv
+// @symbol _ZN20daObjCannonShutter_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "CannonHatch.h"
+#include "daObjCannonShutter_c.h"
 extern signed char data_0209f2f8;
 extern unsigned char data_0209f220;
 struct Sub {
@@ -9,7 +9,7 @@ struct Sub {
   virtual void v10(); virtual void m14(int arg);
 };
 
-int CannonHatch::Render()
+int daObjCannonShutter_c::Render()
 {
   if (data_0209f2f8 == 6 && data_0209f220 == 1 && (int)(param1 & 0xff) == 1)
     return 1;

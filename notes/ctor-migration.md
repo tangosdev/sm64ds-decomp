@@ -5,6 +5,11 @@
 **0 constructors migrated, ever** (`notes/dtor-variant-audit.md`,
 `plan-cpp-language-mode.md` Phase 5); it now records **nine**, all verified
 under 2004/b56 with the full ROM rebuilding 106/106 exact:
+`plan-cpp-language-mode.md` Phase 5); the table below is the first nine, all
+verified under 2004/b56 with the full ROM rebuilding 106/106 exact. The
+waves that followed through 2026-08-24 are recorded in §8 — **twenty** now:
+the dBgW family, the Animation-family leaves, Clipper, and the first
+typed-subobject constructor (dBgCh_Actr).
 
 | file | function | ROM |
 |---|---|---|
@@ -164,6 +169,7 @@ but the gate for the check is the full `rombuild -j16`, not per-file verify.
 
 `Model::Model` and `CommonModel::CommonModel` copy a 0x30-byte matrix from
 `IDENTITY_MATRIX4X3`. Under the structured spelling from `math/Matrix.h`
+`data_02082128`. Under the structured spelling from `math/Matrix.h`
 (`Matrix4x3 { Matrix3x3 r; Vector3 t; }`) the copy splits into a subobject
 copy of `r` plus field-by-field stores of `t`: **+28 bytes over the ROM**.
 Including `common.h` FIRST flips the whole TU to the flat spelling
@@ -253,6 +259,17 @@ the seventh landed above — see the MI notes under the table for the
 objisolate secondary-vptr extension that made it linkable. The remaining
 collision-family ctors (dBgCh_Gnd, dBgCh_SphCrr, dBgW_Kc*) are now straight
 §6 applications of the same recipe.
+### 5a. MI hierarchies are declared flat, so their ctors cannot go real — none of them are any more
+
+~~`dBgCh_SphCrr ... still declares struct with pad bytes where its bases
+belong`~~ **crossed 2026-08-24** (§8): promoted to the real three-base
+declaration and its constructor re-emitted empty-body. So were **dBgCh_Lin**
+(2026-08-23: all three bases declared — `dBgPi` promoted to a polymorphic
+C++ branch, `dM3dGLin` rewritten to its true two-Vector3 shape after the
+generated header had modelled `start` as padding) and every member of the
+**dBgW family** through KcMbgSclY. What still stands from this section is
+the method — name the base constructors first, promote the headers, let
+synthesis do the rest — and exactly one flat wall: dBgPi's own pair (§5f).
 
 **The ordering this imposes: name the base constructors first** (the audit's
 C2-vs-D2 discrimination method applies directly), declare them in real
@@ -443,6 +460,13 @@ asm transcription, or absent.
    `MaterialChangerC1Ev` 0x02015850 · `TextureTransformerC1Ev` 0x02015950 ·
    `TextureSequenceC1Ev` 0x02015a50 · `AnimationC1/C2Ev` 0x02015cf8/18 ·
    `Particle14SimpleCallbackC2Ev` 0x02022680 ·
+3. ~~**Collision family, continued**~~ mostly DONE (§8: dBgW C2, Kc, KcMbg,
+   KcMbgSclY, Actr). Still open: `dBgCh_C2Ev` 0x02035514 (base step, small)
+   and `dBgPiC1/C2Ev` 0x0203816c/9c — the pair §5f walls until its +0x04
+   base is probed.
+4. ~~**Leaf singles, config module**: Clipper, MaterialChanger,
+   TextureTransformer, TextureSequence, Animation C1/C2~~ DONE (§8).
+   Remaining: `Particle14SimpleCallbackC2Ev` 0x02022680 ·
    `Particle10SysTrackerC1Ev` 0x02023204 (0x1d0 — the biggest body on the
    list; expect member-ctor synthesis work). Shape-check before attempting:
    if the disassembly starts `operator new` → null-check, it is a factory
@@ -469,3 +493,68 @@ asm transcription, or absent.
    ctors during the §4b caller sweep — shape-check, then §6.
 9. **Settled, do not retry** (the §5c factory wall): `PlayerC3Ev`,
    `StageC3Ev`, `CameraC1Ev`.
+
+## 8. Waves two through four — the dBgW family, the leaves, and the first typed-subobject ctor (2026-08-24)
+
+Eleven more constructors landed after this note was written, taking the tree
+from nine to twenty: **dBgW C2, dBgW_Kc C1, dBgW_KcMbg C1,
+dBgW_KcMbgSclY C1** (the Kc trio inherits through dBgW/dBgCh exactly like
+Gnd); the five config-module leaves **Animation C1/C2, MaterialChanger,
+TextureTransformer, TextureSequence**; **Clipper**; and **dBgCh_Actr**,
+the first constructor whose class holds typed sub-objects. Three lessons
+from those waves that §1–7 do not already carry:
+
+**Typed members are what make a derived ctor free.** dBgCh_Actr's ROM
+constructor is four synthesized steps (`bl dBgChC2`, vptr store, `bl
+dBgCh_SphCrrC1` at +0x20, `bl dBgCh_LinC1` at +0x134) and its source is now
+literally `dBgCh_Actr::dBgCh_Actr() {}`. That only compiles once the header
+declares the two members AS THEMSELVES (`dBgCh_SphCrr mSphereClsn;
+dBgCh_Lin mRaycastLine;`) instead of flat byte blobs — an empty body
+synthesizes base step, vptr store and every member construction in the ROM's
+order (§6's measured sequence) whenever the member classes have declared
+out-of-line ctors. The cost is not the .cpp; it is the blast radius: a dozen
+already-matched consumers reached into those interiors by absolute offset
+and had to be rewritten to named paths (`mSphereClsn.disp`, `.flags`,
+`.unk_108`, `.unk_10c`) before anything matched again. Budget the consumers,
+not the constructor.
+
+**Size-pin both language branches before promoting a header.** The two
+sub-object sizes were settled by embedding evidence, not standalone
+footprints: `sizeof(dBgCh_SphCrr)` = **0x110** (KcMbg::DetectClsn gives its
+local query an exact 0x110 stack slot; compiling against 0x110 vs 0x10c
+differs by a word), and `sizeof(dBgCh_Lin)` = **0x84** (Actr embeds it at
+0x134 with Actr's own next word at 0x1b8). Standalone stack-slot footprints
+(0x78/0x7c for Lin locals) are UNRELIABLE — mwcc lifetime-shares stack slots
+across unrelated locals, so a footprint measures the frame, not the type.
+The asserts are spelled `typedef char X_size_must_be_0xNNN[sizeof(struct X)
+== 0xNNN ? 1 : -1];` AFTER the `#endif /* __cplusplus */`, struct-tag style,
+so one line pins BOTH branches — and each branch must independently have the
+bytes to reach the pinned size, or the .c TUs break first.
+
+**Local shadow structs collide with promoted headers.** Consumer TUs that
+predate a promotion often declare dumb local shadows of OTHER classes
+(`typedef struct { char pad[0x28]; } dBgPi;`-shaped things). Once the real
+header enters the include chain these are redefinitions, and "fixing" them by
+using the real type silently changes codegen — a real-typed local auto-invokes
+the newly declared ctor/dtor. The working fix is RENAME, not retype:
+`dBgPiLoc` / `dBgCh_LinLoc` keep the bytes identical while clearing the name.
+Grep the consumer's own file for shadow definitions of every class your
+promoted header pulls in BEFORE compiling.
+
+**The strict-reloc gate needed one more MI extension.** After the Lin/SphCrr
+promotions, per-file `match.py --strict-relocs` began reporting "bytes match
+but 1 reloc destination(s) WRONG" on their constructors — including on
+pristine HEAD sources, so not a regression but a gate blind spot exposed by
+the third `_ZTV` block. `reloc_audit.object_reloc_dests` resolved every
+relocation by SYMBOL NAME alone and ignored addends entirely; a synthesized
+secondary-vptr store names the SAME `_ZTV<C>` symbol as the primary store and
+distinguishes blocks only by RELA addend (8 primary, +0x10 per secondary).
+The fix makes `_ZTV`-named data relocs addend-aware — destination =
+sym + addend − 8 for raw objects, sym + addend post-objisolate — selected by
+an explicit `vt_form="raw"|"isolated"` parameter threaded through
+check_destinations/gate_wrong_dests, because the two forms carry different
+addends and no local test can tell them apart. Branch relocs keep name-only
+resolution (their −8 is PC bias, not addressing). Measured on all four shapes
+in-tree: three-block SphCrr, two-block Lin, single-inheritance Clipper,
+no-base Animation, plus ModelAnim2 D0 (the documented 44-addend case) — all
+MATCH under strict relocs now, where the MI ones could never pass before.

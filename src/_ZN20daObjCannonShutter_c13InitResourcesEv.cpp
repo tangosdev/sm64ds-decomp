@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN11CannonHatch13InitResourcesEv
+// @symbol _ZN20daObjCannonShutter_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "CannonHatch.h"
+#include "daObjCannonShutter_c.h"
 typedef short s16;
 struct SharedFilePtr; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
 extern struct SharedFilePtr data_ov002_0210e12c;
@@ -18,7 +18,7 @@ void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
 int IsCannonOpenInCurLevel(void);
 }
 
-int CannonHatch::InitResources()
+int daObjCannonShutter_c::InitResources()
 {
     struct BMD_File *bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210e12c);
     _ZN9ModelBase7SetFileEP8BMD_Fileii((unsigned char *)&mModel, bmd, 1, -1);
