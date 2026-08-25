@@ -585,6 +585,22 @@ src/func_ov006_020cd72c.c
 # and its floor counter now reads a retired 0. An honest NONMATCHING seat; the
 # banner in the file states its four divergences.
 src/func_ov006_020d01e0.c
+# THE MESH DRAW, seated by run mg13 lane TRAMP, and the last thing between a
+# drawn stroke and a trampoline the player can see. src/func_ov006_020d09e0.c
+# calls it once per record whose +0x328 gate the installer above set, so with
+# the installer seated and this one still trapped the gate went 0 -> 1 and
+# nothing was drawn. Listed in BOTH trampoline slices for the same reason
+# 020d09e0 is. It replaces the LAST trap in
+# unmatched/MgTrampolineTime_Floors.cpp, which is now counters only.
+#
+# IT IS A TT_SHARED_HOSTGEN SYMBOL, not a plain slice line: all thirty-two of
+# its geometry-engine writes are raw MMIO and would latch into mapped memory on
+# the host. The generated copy is what the target compiles; this line exists so
+# the substitution has something to replace, and CMakeLists asserts that it did.
+#
+# An honest NONMATCHING seat -- 37 divergences against 258 ROM code words, frame
+# and all six call offsets exact -- and the banner in the file states every one.
+src/func_ov006_020cf2fc.c
 # THE INSTALLER'S OWN THREE CALLEES, and none of them was in ANY slice before it
 # was seated -- the trap was hiding all three, and the first link with the real
 # body failed with exactly three LNK2019s. All three are matched src TUs with

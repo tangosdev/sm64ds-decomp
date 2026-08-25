@@ -5555,7 +5555,16 @@ endforeach()
 # light 1 rotated by whatever matrix the previous draw left behind even if the
 # LIGHT_VECTOR write alone were fixed.  The substitution covers the whole body
 # for the reason the BNT block gives for its MTX_MODE/MTX_IDENTITY pair.
-set(TT_SHARED_HOSTGEN_SYMS func_ov006_020d09e0)
+# func_ov006_020cf2fc JOINS IT FOR THE SAME REASON, run mg13 lane TRAMP.  It is
+# THE MESH DRAW -- the body 020d09e0's loop calls once per record whose +0x328
+# gate the stroke installer set -- and it is listed in BOTH slices too, so the
+# emit-once arrangement above is the only one that expresses it.  Thirty-two raw
+# MMIO writes: MTX_MODE and MTX_SCALE, TEXIMAGE_PARAM and PLTT_BASE, POLYGON_ATTR,
+# DIF_AMB and SPE_EMI, then BEGIN_VTXS / TEXCOORD / NORMAL / VTX_16 / END_VTXS
+# through two double loops.  Compiled from src/ every one of them lands in the
+# mapped I/O window and stops there, which is a trampoline that is built, gated
+# on, walked, and invisible -- exactly the shape Tango reported.
+set(TT_SHARED_HOSTGEN_SYMS func_ov006_020d09e0 func_ov006_020cf2fc)
 set(TT_SHARED_HOSTGEN_GEN "")
 set(TT_SHARED_HOSTGEN_SKIP "")
 foreach(sym IN LISTS TT_SHARED_HOSTGEN_SYMS)
