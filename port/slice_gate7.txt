@@ -2,7 +2,7 @@
 # Animation::Advance owns frame progression (speed, loop/clamp mode bits)
 # instead of a harness counter. Sits on the gate-4/5 stack.
 
-src/_ZN9ModelAnimC1Ev.c
+src/_ZN9ModelAnimC1Ev.cpp
 src/_ZN9ModelAnimC2Ev.c
 src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c
 src/_ZN9ModelAnim11UpdateVertsEv.cpp
@@ -19,3 +19,10 @@ src/_ZN9Animation7AdvanceEv.cpp
 src/_ZN9Animation8FinishedEv.cpp
 src/_ZN9Animation8GetFlagsEv.cpp
 src/_ZN9AnimationD1Ev.c
+
+# ModelAnim comes across whole now that its constructor is real C++: the TU
+# is the vtable's key function for MSVC too, so every virtual has to be
+# defined. Virtual18 and the destructor were the two the gate never
+# exercised and so never sliced.
+src/_ZN9ModelAnim9Virtual18EjPK7Vector3.cpp
+src/_ZN9ModelAnimD1Ev.cpp
