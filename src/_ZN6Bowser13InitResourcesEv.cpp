@@ -101,13 +101,13 @@ int Bowser::InitResources()
         &this->mWithMeshClsn, this, 0x50000, 0x50000, 0, 0);
     _ZN10dBgCh_Actr13SetLimMovFlagEv(&this->mWithMeshClsn);
 
-    this->unk_40c = 0;
-    this->unk_414 = (char)(this->param1 & 3);
+    this->mState = 0;
+    this->mVariantID = (char)(this->param1 & 3);
     this->unk_416 = (char)(((unsigned int)this->param1 >> 2) & 1);
-    this->unk_3fc = 0;
+    this->mTimer = 0;
     this->unk_423 = 0;
-    this->unk_426 = 1;
-    this->unk_427 = 0;
+    this->mDropsShadow = 1;
+    this->mBounceOnLand = 0;
     this->mScaleX = 0x1000;
     this->mScaleY = 0x1000;
     this->mScaleZ = 0x1000;
@@ -115,8 +115,8 @@ int Bowser::InitResources()
     this->unk_429 = 1;
     func_ov060_021123dc(this);
 
-    this->unk_424 = 0;
-    this->unk_444 = 0;
+    this->mTalkStep = 0;
+    this->mCutsceneStep = 0;
 
     a1 = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
         0x118, 0, &this->mPosX, 0, this->mAreaId, -1);
@@ -124,14 +124,14 @@ int Bowser::InitResources()
 
     a2 = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
         0x116, 0, &this->mPosX, 0, this->mAreaId, -1);
-    this->unk_3a8 = *(int *)((char *)a2 + 4);
+    this->mUniqueID_3a8 = *(int *)((char *)a2 + 4);
     *(int *)((char *)a2 + 0x108) = this->uniqueID;
     this->unk_42a = 5;
-    this->unk_42b = 0;
-    this->unk_448 = 0;
-    this->unk_446 = 0;
-    this->unk_44c = 0;
-    this->unk_450 = 0;
+    this->mCapActorAlive = 0;
+    this->mParticleHandle = 0;
+    this->mStompFxLatch = 0;
+    this->mSoundHandle = 0;
+    this->mSoundID = 0;
     func_02011d50(a2);
     return 1;
 }

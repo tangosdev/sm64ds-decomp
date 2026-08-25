@@ -20,7 +20,7 @@
  * Same shape as Player's two ModelAnims.
  *
  * sizeof is 0x454, which is not inferred from the fields: Bowser_Spawn asks
- * fBase_c::operator new for 1108 bytes -- and the last declared field, unk_450,
+ * fBase_c::operator new for 1108 bytes -- and the last declared field, mSoundID,
  * happens to end there too.
  *
  * Field NAMES for the unk_ entries are placeholders. */
@@ -53,7 +53,7 @@ struct Bowser : dActor_c {
        the ClosestPlayer() result converts with no adjustment. */
     dActor_c *mTargetPlayer;      /* 0x3a0 */
     u8  pad_3a4[0x4];
-    s32 unk_3a8;            /* 0x3a8 */
+    s32 mUniqueID_3a8;            /* 0x3a8 */
     u8  pad_3ac[0x4];
     s32 mHomePosX;            /* 0x3b0 */
     s32 mHomePosY;            /* 0x3b4 */
@@ -62,35 +62,35 @@ struct Bowser : dActor_c {
     s32 mDistToTarget;            /* 0x3ec */
     u8  pad_3f0[0x8];
     s32 mAnimSpeed;            /* 0x3f8 */
-    s16 unk_3fc;            /* 0x3fc */
+    s16 mTimer;            /* 0x3fc */
     u8  pad_3fe[0x8];
     s16 mAngleToTarget;            /* 0x406 */
     u8  pad_408[0x4];
-    s32 unk_40c;            /* 0x40c */
+    s32 mState;            /* 0x40c */
     u8  pad_410[0x4];
-    s8  unk_414;            /* 0x414 */
+    s8  mVariantID;            /* 0x414 */
     u8  pad_415[0x1];
     s8  unk_416;            /* 0x416 */
     u8  pad_417[0x5];
-    u8  unk_41c;            /* 0x41c */
+    u8  mOpacity;            /* 0x41c */
     u8  pad_41d[0x6];
     s8  unk_423;            /* 0x423 */
-    s8  unk_424;            /* 0x424 */
+    s8  mTalkStep;            /* 0x424 */
     u8  pad_425[0x1];
-    s8  unk_426;            /* 0x426 */
-    s8  unk_427;            /* 0x427 */
+    s8  mDropsShadow;            /* 0x426 */
+    s8  mBounceOnLand;            /* 0x427 */
     u8  pad_428[0x1];
     s8  unk_429;            /* 0x429 */
     s8  unk_42a;            /* 0x42a */
-    u8  unk_42b;            /* 0x42b */
+    u8  mCapActorAlive;            /* 0x42b */
     u8  pad_42c[0x18];
-    s8  unk_444;            /* 0x444 */
+    s8  mCutsceneStep;            /* 0x444 */
     u8  pad_445[0x1];
-    s8  unk_446;            /* 0x446 */
+    s8  mStompFxLatch;            /* 0x446 */
     u8  pad_447[0x1];
-    s32 unk_448;            /* 0x448 */
-    s32 unk_44c;            /* 0x44c */
-    s32 unk_450;            /* 0x450 */
+    s32 mParticleHandle;            /* 0x448 */
+    s32 mSoundHandle;            /* 0x44c */
+    s32 mSoundID;            /* 0x450 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~Bowser();                  /* slots 16 (D1), 17 (D0) */
@@ -143,7 +143,7 @@ struct Bowser {
        declaration in scope here, so it is spelt void* -- same width, same slot. */
     void *mTargetPlayer;            /* 0x3a0 */
     u8  pad_3a4[0x4];
-    s32 unk_3a8;            /* 0x3a8 */
+    s32 mUniqueID_3a8;            /* 0x3a8 */
     u8  pad_3ac[0x4];
     s32 mHomePosX;            /* 0x3b0 */
     s32 mHomePosY;            /* 0x3b4 */
@@ -152,35 +152,35 @@ struct Bowser {
     s32 mDistToTarget;            /* 0x3ec */
     u8  pad_3f0[0x8];
     s32 mAnimSpeed;            /* 0x3f8 */
-    s16 unk_3fc;            /* 0x3fc */
+    s16 mTimer;            /* 0x3fc */
     u8  pad_3fe[0x8];
     s16 mAngleToTarget;            /* 0x406 */
     u8  pad_408[0x4];
-    s32 unk_40c;            /* 0x40c */
+    s32 mState;            /* 0x40c */
     u8  pad_410[0x4];
-    s8  unk_414;            /* 0x414 */
+    s8  mVariantID;            /* 0x414 */
     u8  pad_415[0x1];
     s8  unk_416;            /* 0x416 */
     u8  pad_417[0x5];
-    u8  unk_41c;            /* 0x41c */
+    u8  mOpacity;            /* 0x41c */
     u8  pad_41d[0x6];
     s8  unk_423;            /* 0x423 */
-    s8  unk_424;            /* 0x424 */
+    s8  mTalkStep;            /* 0x424 */
     u8  pad_425[0x1];
-    s8  unk_426;            /* 0x426 */
-    s8  unk_427;            /* 0x427 */
+    s8  mDropsShadow;            /* 0x426 */
+    s8  mBounceOnLand;            /* 0x427 */
     u8  pad_428[0x1];
     s8  unk_429;            /* 0x429 */
     s8  unk_42a;            /* 0x42a */
-    u8  unk_42b;            /* 0x42b */
+    u8  mCapActorAlive;            /* 0x42b */
     u8  pad_42c[0x18];
-    s8  unk_444;            /* 0x444 */
+    s8  mCutsceneStep;            /* 0x444 */
     u8  pad_445[0x1];
-    s8  unk_446;            /* 0x446 */
+    s8  mStompFxLatch;            /* 0x446 */
     u8  pad_447[0x1];
-    s32 unk_448;            /* 0x448 */
-    s32 unk_44c;            /* 0x44c */
-    s32 unk_450;            /* 0x450 */
+    s32 mParticleHandle;            /* 0x448 */
+    s32 mSoundHandle;            /* 0x44c */
+    s32 mSoundID;            /* 0x450 */
 };
 
 #endif /* __cplusplus */

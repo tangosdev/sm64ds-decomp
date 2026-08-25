@@ -276,22 +276,41 @@ Two details that are not free and are worth copying:
   there the slot is `void *` -- same width, same offset, and the two halves still
   agree.
 
-Left `unk_` in Bowser, with the reason:
+Every "read by nothing matched" reason below was withdrawn on 2026-08-24. They
+were all decided by searching Bowser's own mangled methods, which is three files;
+Bowser's behaviour is in ov060, dispatched through the pointer-to-member table
+`data_ov060_0211aeb4[*(int *)(this + 0x410)]` that `func_ov060_02112434` calls.
+A data-table dispatch names no caller, so the call graph never reaches those
+state functions -- but `tools/handler_owner.py` attributes ~30 ov060 handlers to
+Bowser decisively, and they read almost all of it. Named from that evidence:
 
-- **0x3a8** -- `InitResources` stores word +4 of the actor it spawns with id
-  0x116. Offset 4 of an `fBase_c` has no name in the tree either, so naming this
-  would be naming the same unknown twice.
-- **0x414, 0x416** -- `param1 & 3` and `(param1 >> 2) & 1`. Configuration bits
-  read off the spawn parameter, but no matched body consumes either, so which
-  configuration is a guess.
-- **0x41c** -- `Bowser::Render` early-outs on `< 8`, the same guard SpikeBomb's
-  `mOpacity` gets. That is suggestive and it is not evidence: nothing matched
-  writes 0x41c, so unlike SpikeBomb there is no 0xff to confirm it.
-- **0x42b** -- `Behavior` clears it once `dActor_c::FindWithActorID(0x10d, 0)`
-  stops finding anything. A latch tied to actor 0x10d; what it gates is not in
-  matched code.
-- **0x423..0x42a, 0x444..0x450, 0x3fc, 0x40c** -- written once each by
-  `InitResources` and read by nothing matched.
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x3a8 | `mUniqueID_3a8` | `InitResources` stores word +4 of the actor it spawns with id 0x116; a state handler passes that word to `dActor_c::FindWithID`. So it is an actor unique id, which is what `fBase_c +4` is called everywhere else -- `uniqueID`. Offset-suffixed because the *kind* is settled and the role of actor 0x116 is not. |
+| 0x3fc | `mTimer` | incremented as a `u16`, tested `== 0`, and `& 1` for alternate-frame work. |
+| 0x40c | `mState` | assigned 0, 1, 5, 0xd and 0x13 by different state handlers and compared against 4. An enum-like state word, distinct from the pmf index at 0x410. |
+| 0x414 | `mVariantID` | `param1 & 3`, wrapped by `if (== 3) = 0`, then used to index `data_ov060_02119264` for the byte at 0x41e. A variant selector that picks per-instance configuration -- which is exactly the part the old note called a guess. |
+| 0x41c | `mOpacity` | the missing `0xff` exists: `func_ov060_021123dc` writes `0xff` here and to 0x41d, and `func_ov060_02112434` steps 0x41c toward 0x41d by 0x14 a frame, clamping at 0xff and 0, while another handler passes `*(u8 *)(this + 0x41c) >> 3` to `ModelBase::ApplyOpacity` -- 0..255 scaled to the DS's 5-bit alpha. `Render`'s `< 8` early-out is the invisible case. |
+| 0x424 | `mTalkStep` | `switch` on it: case 0 calls `Player::StartTalk`, case 1 waits for `Player::GetTalkState() == 0` then `Player::ShowMessage`, each case incrementing it. |
+| 0x426 | `mDropsShadow` | gates the `dBgCh_Gnd` raycast that projects Bowser onto the ground and writes the shadow matrix at 0x330 -- the same role `BowserFire::mDropsShadow` was named for. |
+| 0x427 | `mBounceOnLand` | while set, `dBgCh_Actr::JustHitGround()` reflects the vertical speed at -60% (clamped to 0x14000); cleared once he settles. |
+| 0x42b | `mCapActorAlive` | actor 0x10d is the lost cap -- `MrBlizzard` spawns it under `SaveData::HasPlayerLostCap()` and stores its unique id as `mCapUniqueID`. This is the latch saying that actor still exists. |
+| 0x444 | `mCutsceneStep` | `switch` on it drives the camera: `Camera::SetFlag_3`, `Camera::SetLookAt`, and the computed eye position at 0x438/0x43c. |
+| 0x446 | `mStompFxLatch` | `func_ov060_02111a28` matches the animation frame at 0x12c against per-animation windows and, on the rising edge only, emits landing dust from the left foot (0x3d4) or right (0x3e0), plays sound 0xb0 and calls `dActor_c::Earthquake`. This is the edge-detect latch that makes it fire once per window. |
+| 0x448 | `mParticleHandle` | stores the result of `Particle::System::New`. |
+| 0x44c | `mSoundHandle` | stores the result of `Sound::PlayLong`, and passes it back as that call's first argument. |
+| 0x450 | `mSoundID` | set to 0xba, compared against 0xba, and passed to `Sound::PlayLong` as the sound id. |
+
+Still `unk_` in Bowser, with the reason:
+
+- **0x416** -- `(param1 >> 2) & 1`. Unlike 0x414 this one really is consumed by
+  nothing, in the methods or in any handler attributed to Bowser.
+- **0x423** -- a counter, reset beside `dBgCh_Actr::ClearGroundFlag` and
+  incremented both when he settles on the ground and when a handler launches him
+  upward. Nothing compares it, so whether it counts bounces, throws or landings
+  is not decided by the code.
+- **0x429, 0x42a** -- written once by `InitResources` (1 and 5) and read nowhere,
+  including in the ov060 handlers.
 
 ## SpikeBomb
 

@@ -57,9 +57,9 @@ int Bowser::Behavior()
     v.y = 0;
     mdCcAcPos_c.SetPosRelativeToActor(v);
     mdCcAcPos_c.Update();
-    if (unk_42b != 0) {
+    if (mCapActorAlive != 0) {
         dActor_c* f = dActor_c::FindWithActorID(0x10d, 0);
-        if (f == 0) unk_42b = 0;
+        if (f == 0) mCapActorAlive = 0;
     }
     return 1;
 }
