@@ -200,11 +200,11 @@ src/Crate_Spawn.cpp:
     complete
     .text start:0x02139f04 end:0x02139f70
 
-src/_ZN16daObjFallBlock_cD0Ev.c:
+src/_ZN16daObjFallBlock_cD0Ev.cpp:
     complete
     .text start:0x02139f70 end:0x02139fc8
 
-src/_ZN16daObjFallBlock_cD1Ev.c:
+src/_ZN16daObjFallBlock_cD1Ev.cpp:
     complete
     .text start:0x02139fc8 end:0x0213a00c
 

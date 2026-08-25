@@ -124,6 +124,24 @@ is a tree-wide convention change affecting every base class in the hierarchy, an
 wants its own PR and a human's opinion on the idiom. **Roughly 60 unmigrated D1 files
 have the two-vtable-store shape**, so that is the size of the prize.
 
+**2026-08-25: the idiom landed, and its D0 twin was found.** Nine files over five
+classes (SignPost, daDsnBase_c, daObjMaruta_c, daObjFallBlock_c, daOts_c) replaced
+their hand-spelt D1/D0 `.c` shells without touching the inline definitions the
+derived classes rely on:
+
+- **D1** is the forcing call above, one per file, named `_force_<Class>D1`.
+- **D0** has no source expression that names it, but the vtable needs it as a
+  symbol, and the vtable is emitted by the TU defining the class's key
+  function. Defining that key function in the D0 file (body irrelevant --
+  objisolate discards the duplicate `.text` and the `.data`) makes mwcc emit
+  the destructor variants alongside the vtable, and the file binds to D0.
+  SignPost's `Kill`, daObjMaruta_c's `OnHitByMegaChar`, daObjFallBlock_c's
+  `Kill` and daOts_c's `CleanupResources` all verified plain and strict.
+- **A class with no key function has no D0 path.** daDsnBase_c declares no
+  non-inline virtual, so nothing can force its vtable out of a TU; explicit
+  instantiation (`template class daDsnBase_c;`) is rejected by b56 as
+  illegal. Its D0 stays a `.c` shell -- the only one of the ten attempted.
+
 ## 4. objisolate cannot yet isolate a multiple-inheritance destructor
 
 `ModelAnim : Model, Animation` and its derivatives fail eligibility with:
