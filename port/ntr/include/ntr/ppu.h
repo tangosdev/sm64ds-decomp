@@ -539,6 +539,18 @@ int ppu_seam_snow_owns(uint16_t a2);
 // guesses.
 void ppu_seam_oam_mark(void);
 
+// THE SAME SNAPSHOT FOR THE ROM-ORDERED UPLOAD. func_02019144 uploads the OAM
+// and only then is the frame scanned out, so when this program runs the upload
+// where the ROM runs it -- at the head of the display path, ahead of BOTH OBJ
+// rasters -- the block the screens draw from is the one that was JUST uploaded,
+// not the one before it. Call this immediately AFTER that upload. The copy is
+// then the block both rasters will read, and the routed marks that describe it
+// are the shadow's, so the shadow's marks land in SHOWN and LIVE together
+// instead of walking through LIVE over two frames. See THE OBJ/POWCNT1 PARITY
+// in hal/sub_screen.cpp for why the upload moved, and ppu_seam_oam_mark above
+// for the late-upload rotation this replaces one for one.
+void ppu_seam_oam_mark_uploaded(void);
+
 // ---- WHICH OAM ENTRIES THE FRAMEWORK'S ROUTER PLACED ------------------------
 //
 // WHY THIS EXISTS AT ALL. The per-entry correction has to know, at the raster,

@@ -1159,11 +1159,195 @@ void hal_screens_probe(void)
     }
 }
 
+/* ---- THE OBJ/POWCNT1 PARITY PROBE, default off -----------------------------
+ *
+ * SM64DS_OBJ_PARITY=1 prints, once a frame, the three facts a claim about WHICH
+ * SCREEN A SPRITE LANDED ON has to be made of, all sampled at the one moment in
+ * the frame where all three are simultaneously true:
+ *
+ *   POWCNT1 bit 15   the arm the engine-A OBJ raster ran under THIS frame. The
+ *                    raster is in hal/message_compositor.cpp, it ran a few
+ *                    statements before this function was entered, and
+ *                    func_02019144's slot-24 beat -- which writes this register
+ *                    -- ran immediately before it. So this is the arm that
+ *                    raster used, not a later one.
+ *   HW OAM           0x07000000, which is what that raster read: the shadow
+ *                    OAM::Load uploaded at the END of the PREVIOUS frame.
+ *   THE SHADOW       data_0209e674 / data_0209e664, which is what the game
+ *                    wrote during THIS frame's Render and what OAM::Load is
+ *                    about to upload at the foot of this function.
+ *
+ * AND THE FRAMEWORK'S sel WORD, data_ov004_020beb68 + 0x4664. The slot-24 beat
+ * has already flipped it by this point, so the value printed is the one the
+ * raster's arm was derived from, and the shadow beside it was written under the
+ * OTHER one. That is the whole measurement: on the dScMgD3DBase_c family the
+ * ROM's own routers pick a sprite's screen mapping off sel, so a shadow written
+ * under sel=s belongs to the arm the NEXT beat sets, and printing both says
+ * whether this program pairs them the way the DS does.
+ *
+ * NOTHING HERE CHANGES A PIXEL. It reads two register words and two tables. */
+extern "C" {
+extern int data_0209e664;                    /* the main shadow's counter */
+extern unsigned short data_0209e674[];       /* the main shadow itself */
+extern unsigned char data_ov004_020beb68[4]; /* the framework's scene pointer */
+}
+/* which frame order this binary is running; defined with the upload below */
+static int oam_load_late(void);
+void hal_obj_parity_probe(void)
+{
+    static int on = -1;
+    if (on < 0) on = env_flag("SM64DS_OBJ_PARITY", 0);
+    if (!on) return;
+    static int upto = -1;
+    if (upto < 0) upto = env_flag("SM64DS_OBJ_PARITY_FRAMES", 40);
+    static unsigned long frame;
+    const unsigned long f = frame++;
+    if ((long)f >= (long)upto) return;
+
+    const int bit = (*(volatile unsigned short *)0x04000304 >> 15) & 1;
+    unsigned g = (unsigned)data_ov004_020beb68[0]
+               | ((unsigned)data_ov004_020beb68[1] << 8)
+               | ((unsigned)data_ov004_020beb68[2] << 16)
+               | ((unsigned)data_ov004_020beb68[3] << 24);
+    int sel = -1;
+    if (g) sel = (int)*(unsigned short *)(g + 0x4664);
+
+    /* PARKED ENTRIES ARE NOT SPRITES. OAM::Reset leaves the unused slots at
+       y = 0xc0 with tile 0, which is one row past the bottom of a 192-row
+       screen and draws nothing; counting them would bury the handful of real
+       entries under 116 blanks. Reported separately rather than dropped. */
+    char hw[512];
+    int hn = 0, hc = 0, hpark = 0;
+    hw[0] = 0;
+    for (int i = 0; i < 128; ++i) {
+        const unsigned short a0 = *(volatile unsigned short *)(0x07000000u + i * 8u);
+        const unsigned short a1 = *(volatile unsigned short *)(0x07000000u + i * 8u + 2);
+        const unsigned short a2 = *(volatile unsigned short *)(0x07000000u + i * 8u + 4);
+        if (!(a0 & 0x100) && (a0 & 0x200)) continue;   /* disabled */
+        if (!a0 && !a1 && !a2) continue;
+        if ((a0 & 0xFF) == 0xC0 && !a1 && !a2) { ++hpark; continue; }
+        ++hc;
+        if ((size_t)hn < sizeof hw - 32)
+            hn += std::snprintf(hw + hn, sizeof hw - (size_t)hn,
+                                " %d:(%d,%d,t%u)", i, (int)(a1 & 0x1FF),
+                                (int)(a0 & 0xFF), (unsigned)(a2 & 0x3FF));
+    }
+
+    char sh[512];
+    int sn = 0;
+    sh[0] = 0;
+    const int scount = data_0209e664;
+    for (int i = 0; i < scount && i < 128; ++i) {
+        const unsigned short a0 = data_0209e674[i * 4 + 0];
+        const unsigned short a1 = data_0209e674[i * 4 + 1];
+        const unsigned short a2 = data_0209e674[i * 4 + 2];
+        if ((size_t)sn < sizeof sh - 32)
+            sn += std::snprintf(sh + sn, sizeof sh - (size_t)sn,
+                                " %d:(%d,%d,t%u)", i, (int)(a1 & 0x1FF),
+                                (int)(a0 & 0xFF), (unsigned)(a2 & 0x3FF));
+    }
+
+    /* WHICH sel THE DISPLAYED BLOCK WAS SUBMITTED UNDER, and it depends on
+       where the upload is. With the ROM-ordered upload the hardware OAM IS the
+       shadow this frame's Render just wrote, and that Render ran before the
+       beat, so it saw the PREVIOUS sel. With the late upload the hardware OAM
+       is the block written one frame earlier still, which on a period-2
+       alternation is the sel the beat has just set -- the defect. */
+    const int shadow_sel = sel < 0 ? -1 : 1 - sel;
+    const int shown_sel = oam_load_late() ? sel : shadow_sel;
+    std::fprintf(stderr,
+                 "[objparity] f%-4lu arm=%s sel=%d upload=%s | DISPLAYED "
+                 "(hw oam, %d live + %d parked, submitted under sel=%d):%s | "
+                 "SHADOW (written this frame under sel=%d, %d entr(y|ies)):%s\n",
+                 f, bit ? "UPPER" : "LOWER", sel,
+                 oam_load_late() ? "LATE" : "ROM", hc, hpark, shown_sel,
+                 hw[0] ? hw : " -", shadow_sel, scount,
+                 sh[0] ? sh : " -");
+    std::fflush(stderr);
+}
+
+/* ---- THE OBJ/POWCNT1 PARITY: func_02019144's OAM UPLOAD, AT THE ROM'S PLACE --
+ *
+ * WHAT WAS WRONG, and it is a frame-order fact about this program rather than
+ * anything in the game's code.
+ *
+ * src/func_02019144.c is the DS's once-per-frame display sync and its order is
+ * fixed: dispatch the current graphics block's slot 2 (which for every minigame
+ * reaches the scene's slot 24, and for the dScMgD3DBase_c family that slot is
+ * what writes POWCNT1's display-swap bit), then OAM::Flush, then OAM::Load,
+ * then the two DISPCNT layer-mask publishes, then the eight BG offsets. It runs
+ * in VBLANK, so the frame it configures is scanned out AFTER it: the sprites on
+ * screen during a frame are the ones the upload at the head of that frame put
+ * in the hardware OAM, and the game wrote them during the frame BEFORE.
+ *
+ * This program ran the beat and the engine-A publish at the head of the display
+ * path (hal/message_compositor.cpp) and then rasterised engine A's OBJ -- but
+ * the upload was at the FOOT of this function, below both rasters. So both
+ * screens drew from upload N-1 while the arm they were placed under came from
+ * beat N, and the game code that wrote upload N-1 had run one beat earlier
+ * still. Two beats between the submission and the arm; on a family whose arm
+ * alternates EVERY frame, two beats is the same parity as none, and every
+ * sprite landed on the opposite screen from the one the ROM puts it on.
+ *
+ * THE ROM SAYS WHICH SCREEN, three independent ways, all in matched src:
+ *
+ *   src/Hud_RenderSprite.cpp        its dScMgD3DBase_c arm draws ONLY while
+ *                                   sel (scene + 0x4664) is 0, and its ordinary
+ *                                   arm is OAM::RenderSub -- the SUB engine,
+ *                                   which is the bottom screen.
+ *   src/RenderOamMainScreen.cpp     its D3D arm draws ONLY while sel is 1, and
+ *                                   its ordinary arm is OAM::Render(draw=0) --
+ *                                   the MAIN engine, the top screen.
+ *   src/RenderOamBothScreens.cpp    its D3D arm submits at y + 0xc0 + G while
+ *                                   sel is 1 and at y while sel is 0, and 0xc0
+ *                                   + G is exactly the offset its ordinary arm
+ *                                   uses for the TOP screen's copy.
+ *
+ * All three agree: a submission made while sel == 1 belongs on the top screen
+ * and one made while sel == 0 belongs on the bottom. src/func_ov006_020e6e78.c
+ * -- slot 24 -- sets POWCNT1 the other way round on the same frame (sel == 1
+ * clears bit 15, which sends engine A to the LOWER screen), so on the DS a
+ * submission is displayed under the arm the NEXT beat sets. That is not a
+ * coincidence to be worked around; it is the double buffering, and putting the
+ * upload back where func_02019144 has it reproduces it exactly.
+ *
+ * MEASURED BOTH WAYS with SM64DS_OBJ_PARITY=1 above, scene 372.
+ *
+ * SM64DS_OAM_LOAD_LATE=1 puts the old foot-of-the-frame upload back on this
+ * same binary, so a before/after is one build and one asset base -- which is
+ * what notes/port-selftest-bmp-gate.md requires before two captures may be
+ * compared at all.
+ *
+ * WHAT DOES NOT CHANGE. Both engines still read ONE upload, which is the whole
+ * of the split-sprite cure the late position was reached for: the two halves of
+ * a sprite straddling the gapless seam still draw from the same block, it is
+ * simply the block the ROM would have them draw from. OAM::Flush is NOT added
+ * here -- it is CP15 cache maintenance (src/_ZN3OAM5FlushEv.c) with nothing to
+ * do on a host, and this program has never called it. */
+static int oam_load_late(void)
+{
+    static int v = -1;
+    if (v < 0) v = env_flag("SM64DS_OAM_LOAD_LATE", 0);
+    return v;
+}
+
+/* Called from hal/message_compositor.cpp between func_02019144's slot-2 beat
+   and its engine-A layer publish, which is the line the ROM has it on, and
+   therefore ahead of both OBJ rasters. The caller has already asked the beat
+   for its verdict and only calls this when the beat said to run the tail. */
+extern "C" void port_frame_oam_upload(void)
+{
+    if (oam_load_late()) return;
+    _ZN3OAM4LoadEv();
+    ntr::ppu_seam_oam_mark_uploaded();
+}
+
 /* Bottom of the frame: upload the shadows the game filled, rasterise engine B,
    drop it into the corner. With the panel off nothing here writes a pixel. */
 void hal_sub_screen_present(unsigned int *dst, int w, int h)
 {
     hal_screens_probe();
+    hal_obj_parity_probe();
     /* SM64DS_SUB_SCALE is a divisor: 1 = full DS size (a quarter of the 2x
        window, Tango's "super in the way"), 2 = half size (1/16 of the
        window, the default), up to 4. */
@@ -1307,7 +1491,11 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
     ntr::ppu_display_capture(dst, w, h);
 
     if (g_on) ntr::ppu_scanout_sub(g_sub);
-    if (run_tail) {
+    /* THE LATE UPLOAD, and it is now the OPT-IN arm. port_frame_oam_upload
+       above already ran this frame's OAM::Load at func_02019144's own line,
+       ahead of both rasters; this block is what SM64DS_OAM_LOAD_LATE=1 gets
+       back, unchanged, so the two frame orders are one binary apart. */
+    if (run_tail && oam_load_late()) {
         ntr::ppu_seam_oam_mark();
         _ZN3OAM4LoadEv();
     }

@@ -1578,6 +1578,11 @@ struct BandPixel {
  * it, so the top screen is upload N-1 and the bottom screen is upload N.
  * ppu_seam_oam_mark copies engine A's OAM immediately before the upload, which
  * makes this copy the state the top screen was really drawn from.
+ * [The sentence above describes SM64DS_OAM_LOAD_LATE=1. By default the upload
+ * is at func_02019144's own line, ahead of both rasters, both screens are
+ * upload N, and ppu_seam_oam_mark_uploaded takes the same copy from after the
+ * upload. Either way this holds what the top half was really drawn from, which
+ * is the only property the two passes below need. Run mg13 lane BNP.]
  *
  * The seam straddle pass reads it to decide what the top half has. hinge_paint
  * reads it because the band rows it draws are the top screen's own picture
@@ -2409,7 +2414,11 @@ void band_peek(uint32_t *dst, int dst_w, const StackLayout &lay)
  *
  * READ OUT OF THE SNAPSHOT, NOT THE LIVE OAM, and that is not a detail. These
  * rows are the top screen's picture continued, and the top screen is upload
- * N-1 (see THE TWO SCREENS ARE ONE FRAME APART below). Reading the live OAM
+ * N-1 (see THE TWO SCREENS ARE ONE FRAME APART below, and its bracketed
+ * correction: by default the upload is at func_02019144's own line now, so
+ * both screens are upload N and the snapshot IS the live OAM. The binding
+ * below is right either way and is what keeps it right under
+ * SM64DS_OAM_LOAD_LATE=1). Reading the live OAM
  * would put a continuation one frame ahead of the thing it continues, so an
  * object leaving the top screen would jump forward as it crossed the join. The
  * shadow binding is what BandEngine::shadow is for, and it carries into the
@@ -2809,6 +2818,28 @@ unsigned g_seam_frame;
  * engine A holds NOW would put rows on the bottom screen for a ball whose top
  * half is not in the picture yet -- a new artifact, not a fix -- so the entry
  * engine A's half of the picture was really drawn from is kept here.
+ *
+ * [THAT CHANGE HAPPENED, run mg13 lane BNP, and the block above is kept as
+ * written because it is still exactly true under SM64DS_OAM_LOAD_LATE=1 and
+ * because it is the derivation the move was made from. WHAT IS TRUE BY DEFAULT
+ * NOW: hal/sub_screen.cpp uploads at func_02019144's own line, between the
+ * block's slot 2 and the layer publishes, which is ahead of BOTH rasters, so
+ *
+ *     top screen = bottom screen = upload N
+ *
+ * and the one frame between the halves is gone. It had to go: on the
+ * dScMgD3DBase_c family the engine A arm alternates every frame, so a top
+ * screen a frame behind its own arm put every routed sprite on the wrong
+ * physical screen -- Tango's "the blue arrows are in the wrong spot" on scene
+ * 372. See THE OBJ/POWCNT1 PARITY in hal/sub_screen.cpp for the ROM
+ * derivation and the measurement.
+ *
+ * THIS PASS IS UNCHANGED AND STILL CORRECT. The snapshot it reads is still the
+ * OAM the top half was drawn from -- ppu_seam_oam_mark_uploaded takes it from
+ * the other side of the upload, which is where that block now is -- and
+ * kSeamLag below is an upper bound on how far apart the two halves may be, so
+ * a lag of zero sits well inside it. What retires is the NEED for the
+ * allowance, not the allowance.]
  *
  * TAKEN AT THE UPLOAD, NOT AT THE COMPOSE, and that is the difference between
  * a snapshot that is right and one that is usually right. hal/sub_screen.cpp
@@ -3597,6 +3628,34 @@ void ppu_seam_oam_mark(void)
         g_obj_routed_shown[i] = g_obj_routed_live[i];
         g_obj_resid_live[i] = g_obj_resid_shadow[i];
         g_obj_routed_live[i] = g_obj_routed_shadow[i];
+        g_obj_resid_shadow[i] = 0;
+        g_obj_routed_shadow[i] = 0;
+    }
+    g_obj_routed_last = -1;
+}
+
+/* THE SAME SNAPSHOT, TAKEN AFTER A ROM-ORDERED UPLOAD. See ntr/ppu.h.
+   The copy above is upload N-1 because it is taken BEFORE the upload; this one
+   is taken after it, so kOamBaseA already holds upload N -- which is the block
+   both OBJ rasters read when func_02019144's upload runs at the head of the
+   display path instead of at its foot. The marks that describe upload N are the
+   SHADOW's, because the shadow IS upload N now; there is no intermediate frame
+   for LIVE to hold, so both stages take the shadow's marks in one statement and
+   the shadow starts clean. Everything else -- the two 1 KB copies, the have
+   flags, the fill detector -- is ppu_seam_oam_mark's, unchanged. */
+void ppu_seam_oam_mark_uploaded(void)
+{
+    for (int i = 0; i < 1024; ++i)
+        g_oam_a_shown[i] = rd8(kOamBaseA + (unsigned)i);
+    g_oam_a_have = 1;
+    for (int i = 0; i < 1024; ++i)
+        g_oam_b_shown[i] = rd8(kOamBase + (unsigned)i);
+    g_oam_b_have = 1;
+    for (int i = 0; i < 128; ++i) {
+        g_obj_resid_live[i] = g_obj_resid_shadow[i];
+        g_obj_routed_live[i] = g_obj_routed_shadow[i];
+        g_obj_resid_shown[i] = g_obj_resid_shadow[i];
+        g_obj_routed_shown[i] = g_obj_routed_shadow[i];
         g_obj_resid_shadow[i] = 0;
         g_obj_routed_shadow[i] = 0;
     }
