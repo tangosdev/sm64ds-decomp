@@ -50,7 +50,13 @@
 //     brightness this file applies. Applying mode 2/3 here too would double the
 //     fade, so this unit recognises them and defers. The game only ever writes
 //     mode 2/3 for fades and mode 1 (alpha) for effects, so the split is clean.
-//   - no bitmap OBJs (OBJ mode 3), no bitmap BGs, no mosaic.
+//   - EXTENDED AFFINE BITMAP BGs, both arms: 256-colour and DIRECT COLOUR.
+//     BGxCNT bit 7 in an extended-affine slot means bitmap rather than 256
+//     colours, and this file used to refuse the whole arm. It is how the
+//     display capture unit's frame reaches the bottom screen in the
+//     dScMgD3DBase_c family: BG2CNT_B 0x4284, direct colour, bitmap base
+//     0x8000, which is exactly where DISPCAPCNT 0x80360010 put the frame.
+//   - no bitmap OBJs (OBJ mode 3), no mosaic.
 //
 // The OBJ window used to be listed here as missing, and the line said "mode 3
 // sprites are skipped". BOTH halves were wrong: the OBJ window is mode 2, mode
@@ -119,7 +125,16 @@ inline uint32_t bgr555(uint16_t c) {
 
 // ---- backgrounds ------------------------------------------------------------
 
-enum BgKind { BG_OFF, BG_TEXT, BG_AFFINE, BG_EXT_AFFINE };
+/* BG_BITMAP_* are the two shapes an EXTENDED AFFINE BG takes when BGxCNT
+   bit 7 is set. GBATEK: in an extended-affine slot bit 7 chooses between
+   16-bit bgmap entries (bit 7 = 0, the minimap's mode) and a BITMAP
+   (bit 7 = 1), and inside the bitmap arm bit 2 chooses 256-colour (8 bits
+   per pixel through the standard palette) from DIRECT COLOUR (16 bits per
+   pixel, BGR555, bit 15 = opaque). Both go through the same affine matrix
+   the map-based extended BG does; the only thing that changes is how a
+   sampled (px, py) turns into a colour. */
+enum BgKind { BG_OFF, BG_TEXT, BG_AFFINE, BG_EXT_AFFINE, BG_BITMAP_256,
+              BG_BITMAP_DIRECT };
 
 struct BgLayer {
     BgKind kind;
@@ -166,9 +181,43 @@ void read_bg(BgLayer &c, int bg, uint32_t dispcnt) {
     c.screen = kVramBase + (((cnt & 0x1f00) >> 8) << 11);
 
     const int sz = (cnt >> 14) & 3;
+    /* THE BITMAP ARM. `c.bpp8` is BGxCNT bit 7, which in an extended-affine
+       slot does not mean "256 colours" at all -- it means BITMAP -- and this
+       used to refuse the whole arm ("selects a bitmap, which is not hosted").
+       It is hosted now, because it is how the display capture unit's frame
+       reaches the screen: the dScMgD3DBase_c family points BG2-B at the block
+       it captured into last frame, with BG2CNT_B 0x4284 (bit 7 bitmap, bit 2
+       direct colour, screen base 2, size 1).
+
+       THE BASE IS THE SCREEN BASE IN 16K UNITS, not the 2K units a map-based
+       BG uses. The arithmetic is what makes the whole reading of this path
+       check out: 2 x 0x4000 is 0x8000, and DISPCAPCNT 0x80360010's destination
+       is bank C offset 1, which is 0x8000 bytes into bank C -- the same bytes,
+       once bank C is mapped to engine B's BG. Two registers written by two
+       different functions agreeing to the byte is not a coincidence a reader
+       gets to ignore.
+
+       The sizes are the bitmap set, not the map set: 128x128, 256x256, 512x256
+       and 512x512 pixels. */
     if (kind == BG_EXT_AFFINE && c.bpp8) {
-        // bit 7 set in an extended BG selects a bitmap, which is not hosted.
-        c.kind = BG_OFF;
+        static const short kBmpW[4] = {128, 256, 512, 512};
+        static const short kBmpH[4] = {128, 256, 256, 512};
+        c.kind = (cnt & 0x04) ? BG_BITMAP_DIRECT : BG_BITMAP_256;
+        c.screen = kVramBase + (((cnt & 0x1f00) >> 8) << 14);
+        c.map_w = kBmpW[sz];
+        c.map_h = kBmpH[sz];
+        c.wrap = (cnt >> 13) & 1;
+        const uint32_t ab = kRegBase + 0x20 + (bg - 2) * 0x10;
+        c.pa = (int16_t)rd16(ab + 0);
+        c.pb = (int16_t)rd16(ab + 2);
+        c.pc = (int16_t)rd16(ab + 4);
+        c.pd = (int16_t)rd16(ab + 6);
+        c.refx = (int)(rd32(ab + 8) << 4) >> 4;
+        c.refy = (int)(rd32(ab + 12) << 4) >> 4;
+        /* NO EXTENDED PALETTE. DISPCNT bit 30 arms them for 256-colour
+           TILE BGs; a bitmap has no per-tile palette field to select a slot
+           with, and the direct-colour arm has no palette at all. */
+        c.ext = 0;
         return;
     }
     if (kind == BG_TEXT) {
@@ -216,6 +265,43 @@ bool sample_bg(const BgLayer &c, int x, int y, uint32_t &out) {
     int px, py;
     uint16_t se;
     int tile, fx, fy;
+
+    /* ---- THE BITMAP ARMS, and they leave before any tile arithmetic ------
+     *
+     * A bitmap BG has no tiles, no map and no flip bits: the affine transform
+     * lands directly on a pixel. Same matrix, same 8.8 fixed point, same
+     * display-area-overflow rule as the map-based affine BGs above, so the
+     * coordinate half is spelled once here and only the fetch differs. */
+    if (c.kind == BG_BITMAP_256 || c.kind == BG_BITMAP_DIRECT) {
+        px = (c.refx + c.pa * x + c.pb * y) >> 8;
+        py = (c.refy + c.pc * x + c.pd * y) >> 8;
+        if (c.wrap) {
+            px &= c.map_w - 1;
+            py &= c.map_h - 1;
+        } else if (px < 0 || px >= c.map_w || py < 0 || py >= c.map_h) {
+            return false;
+        }
+        const uint32_t at = (uint32_t)py * (uint32_t)c.map_w + (uint32_t)px;
+        if (c.kind == BG_BITMAP_DIRECT) {
+            /* BIT 15 IS THE ALPHA and it is a HARD transparency, not a blend
+               factor: a direct-colour bitmap pixel with bit 15 clear is not
+               drawn at all and whatever is behind it shows. The display
+               capture unit sets the bit on every pixel it writes, so a
+               captured frame is opaque everywhere -- which is what makes a
+               captured screen look like a screen and not like a stencil. */
+            const uint16_t v = rd16(c.screen + at * 2);
+            if (!(v & 0x8000)) return false;
+            out = bgr555(v);
+            return true;
+        }
+        /* 256-colour bitmap: index 0 is transparent, the same rule every other
+           paletted layer in this file follows, and there is no per-tile
+           palette to offset it by. */
+        const uint8_t i8 = rd8(c.screen + at);
+        if (!i8) return false;
+        out = bgr555(rd16(kPlttBase + (uint32_t)i8 * 2));
+        return true;
+    }
 
     if (c.kind == BG_TEXT) {
         px = (x + c.hofs) & (c.map_w * 8 - 1);

@@ -78,6 +78,73 @@ void ppu_scanout_sub(SubFramebuffer &fb);
 
 bool ppu_write_bmp_sub(const char *path, const SubFramebuffer &fb);
 
+// ---- THE DISPLAY CAPTURE UNIT, and the two VRAM banks it makes move ---------
+//
+// GBATEK, DISPCAPCNT (0x04000064). The DS can write one frame of engine A's
+// output into a VRAM block instead of only sending it to a screen, and that is
+// the whole basis of the "3D on both screens" trick four minigames use: engine
+// A renders ONE of two camera views live each frame onto whichever panel
+// POWCNT1 names, the capture unit copies that frame into VRAM, and the OTHER
+// panel shows the PREVIOUS frame's capture. Each screen ends up refreshing at
+// 30 Hz and both look continuous.
+//
+// The register, as this unit reads it:
+//
+//   bits 16-17  destination VRAM block, 0..3 = banks A..D
+//   bits 18-19  destination offset within that bank, in 0x8000-byte units
+//   bits 20-21  size: 0 = 128x128, 1 = 256x64, 2 = 256x128, 3 = 256x192
+//   bit 24      source A: 0 = the composed graphics screen, 1 = 3D only
+//   bits 29-30  capture source: 0 = A, 1 = B, 2/3 = A and B blended
+//   bit 31      enable, and THE HARDWARE CLEARS IT ITSELF at the end of the
+//               captured frame. So does this: a capture is one frame's act and
+//               a unit that left the bit set would capture forever off one
+//               write.
+//
+// WHAT IS IMPLEMENTED AND WHAT IS NOT. Capture source A off the composed engine
+// A output, at every one of the four sizes, into any block and offset. NOT
+// source B (the display FIFO / VRAM read path) and NOT the A+B blend: nothing
+// in this game programs either -- the only three writers in the link are
+// Scene::ResetHardwareRegisters (0x80000000), func_ov006_020e759c (0x80330010)
+// and func_ov006_020e7508 (0x80360010), and all three select source A. A
+// request for source B is reported once and then ignored rather than guessed
+// at, because inventing a second source would be inventing a picture.
+//
+// `src` is the FINISHED engine A framebuffer, SCREEN_W x SCREEN_H row major.
+// It is sampled down to DS resolution by taking every scale'th pixel rather
+// than by averaging, which is the same decision the sub screen's own blit
+// makes and for the same reason: every tier's ratio is a whole number and a
+// filter would invent pixels nobody drew.
+void ppu_display_capture(const uint32_t *src, int w, int h);
+
+// ---- WHERE A CAPTURED BANK GOES NEXT ----------------------------------------
+//
+// A DS VRAM bank is 128 KB of SRAM that appears at exactly ONE cpu address at a
+// time, chosen by its VRAMCNT byte; the port maps VRAM as one flat 9 MB region
+// with no bank indirection at all, so a bank's contents do not follow it. That
+// does not matter for data the game uploads -- it writes through whatever window
+// is live and the bytes stay there -- but it is fatal for a capture, because the
+// capture unit always writes to the block's LCDC address while the game reads it
+// through the window the bank is mapped to on the FOLLOWING frame.
+//
+// So this carries exactly the captured region across, and nothing else. It
+// remembers, per block, the byte range the last capture wrote; when that block's
+// VRAMCNT names a different home than it did last frame, it copies THAT RANGE
+// from the LCDC address to the same offset in the new home. No other byte of the
+// bank is read or written, so a bank that has never been captured into is
+// untouched, and a captured bank's other 32 KB are left exactly where the flat
+// mapping already had them.
+//
+// The homes it decodes are the ones this path uses, per GBATEK's VRAM control
+// table: bank C MST 4 = engine B BG at 0x06200000, bank D MST 4 = engine B OBJ
+// at 0x06600000, MST 0 = LCDC for both, and a disabled bank has no home. Any
+// other MST on a captured block is reported once and left alone.
+//
+// Called once per frame, BEFORE the capture and before engine B rasterises, in
+// that order, because that is the hardware's: the mapping is programmed in
+// VBlank, the capture happens during the frame, and the scan-out reads what the
+// mapping made visible.
+void ppu_vram_publish(void);
+
 // Blit the bottom screen 1:1 into the bottom-right corner of a dst_w x dst_h
 // ARGB buffer, `margin` pixels in from both edges, with a one-pixel frame.
 /* div: integer downscale of the panel (1 = 1:1 DS pixels, 2 = half size).

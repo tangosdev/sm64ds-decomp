@@ -1109,21 +1109,29 @@ void hal_screens_probe(void)
     if (last_bit >= 0 && bit != last_bit) ++swaps;
     last_bit = bit;
 
+    /* the two banks the capture path moves, C and D, and their VRAMCNT bytes:
+       bit 7 enable, bits 0-2 MST, bits 3-4 OFS. 0x84 is the value both arms
+       write -- enabled, MST 4, which is engine B BG for C and engine B OBJ for
+       D -- and 0x80 is Vram__Map's "back to LCDC". */
+    const unsigned vc = *(volatile unsigned char *)0x04000242;
+    const unsigned vd = *(volatile unsigned char *)0x04000243;
+
     const unsigned key = (unsigned)bit | (cap & 0xF0FF0000u) |
-                         ((dispb & 0x1F07u) << 1);
+                         ((dispb & 0x1F07u) << 1) | (vc << 20) | (vd << 12);
     if (key != last_key) {
         last_key = key;
         std::fprintf(stderr,
                      "  [screens] f%-6lu POWCNT1 %04x (engine A -> %s) "
                      "DISPCAPCNT %08x (%s block %u ofs %u size %u src %u) "
-                     "DISPCNT_B %08x mode %u BG %c%c%c%c OBJ %c BG2CNT_B %04x\n",
+                     "DISPCNT_B %08x mode %u BG %c%c%c%c OBJ %c BG2CNT_B %04x "
+                     "VRAMCNT_C %02x VRAMCNT_D %02x\n",
                      frame - 1, pow1, bit ? "UPPER" : "LOWER", cap,
                      (cap & 0x80000000u) ? "ARMED" : "idle",
                      (cap >> 16) & 3, (cap >> 18) & 3, (cap >> 20) & 3,
                      (cap >> 29) & 3, dispb, dispb & 7,
                      (dispb & 0x0100) ? '0' : '-', (dispb & 0x0200) ? '1' : '-',
                      (dispb & 0x0400) ? '2' : '-', (dispb & 0x0800) ? '3' : '-',
-                     (dispb & 0x1000) ? 'y' : '-', bg2b);
+                     (dispb & 0x1000) ? 'y' : '-', bg2b, vc, vd);
         std::fflush(stderr);
     }
     /* the census, every 300 frames: the numbers a per-frame flip is actually
@@ -1264,6 +1272,27 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
         /* nothing scanned when the panel is off, but the upload and its mark
            still have to happen -- they are the frame's, not the panel's */
     }
+    /* ---- THE DISPLAY CAPTURE UNIT, in the hardware's own order --------------
+     *
+     * PUBLISH FIRST, then capture, then rasterise engine B. That is the order
+     * the DS runs them in and each step depends on the one before it: the VRAM
+     * bank mapping is programmed in VBlank (which for this program is
+     * func_02019144's slot-24 beat, several statements ago), the capture happens
+     * during the frame that mapping applies to, and the scan-out below reads
+     * whatever the mapping made visible.
+     *
+     * `dst` is engine A's FINISHED framebuffer -- gx_render and
+     * port_message_composite_engine_a both ran on it before this function was
+     * called, in both frame loops -- and it is the composed graphics screen
+     * DISPCAPCNT's source A names. Read, never written: the capture writes VRAM.
+     *
+     * BOTH ARE INERT UNTIL A GAME PROGRAMS THE UNIT. ppu_display_capture returns
+     * on its first test when DISPCAPCNT's enable bit is clear, and
+     * ppu_vram_publish skips every block that has never been captured into,
+     * which is all four in every scene that never writes 0x04000064. */
+    ntr::ppu_vram_publish();
+    ntr::ppu_display_capture(dst, w, h);
+
     if (g_on) ntr::ppu_scanout_sub(g_sub);
     if (run_tail) {
         ntr::ppu_seam_oam_mark();
