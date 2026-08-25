@@ -7,9 +7,15 @@
 // recovered name: dScMgBase_c_BeforeRender
 /* recovered: renamed to Class_Method */
 /* dScMgBase_c::BeforeRender - recovered from vtable slot identity */
-// NONMATCHING: register allocation (div=17). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+// MATCHED. This banner used to read "NONMATCHING: register allocation (div=17)
+// ... not byte-matchable from C at mwccarm 1.2/sp2p3" and that is STALE: measured
+// on 2026-08-25 by run mg12 lane PANEL, this file byte-matches at FOUR of the 25
+// installed builds -- 2004/b56 (the canonical pin), 1.2/base, 1.2/sp2 and the very
+// version the old banner named, 1.2/sp2p3. Nothing in the body changed to make that
+// true; the banner simply outlived the fix. Re-measured with the caller declaration
+// both ways (decl_common.h had func_ov004_020ae858 as int and now has it as void,
+// its ROM shape) and it matches under both, so the verdict does not depend on that
+// edit either.
 typedef short s16;
 
 struct Scene;

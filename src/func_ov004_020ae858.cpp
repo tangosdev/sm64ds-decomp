@@ -51,8 +51,9 @@ extern void **data_ov004_020bbfd0[];     /* button 2's label, per language */
 extern void *data_ov006_021346bc;        /* the shared plate drawn under every button */
 }
 
-extern "C" void func_ov004_020ae858(char *self)
+extern "C" void func_ov004_020ae858(void *self_)
 {
+    char *self = (char *)self_;
     void *lbl[3];
     Pos *pos[3];
     void *m0;

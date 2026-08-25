@@ -468,8 +468,40 @@ void port_mg_curling_collide_020e20bc(char *self, int idx);
 void port_mg_hud_scaled_number_020b2220(int x, int y, int num, int a3, int a4,
                                         int scale, int angle);
 
-/* no delink block and no src in their own overlay's config */
-int func_ov004_020ae858(void *)             { mg_trap("func_ov004_020ae858"); return 0; }
+/* ---- SEATED, run mg12 lane PANEL ---------------------------------------
+ *
+ * THE LAST ov004 TRAP IN THIS FILE IS GONE, and it was the RESULTS PANEL's
+ * label renderer. func_ov004_020ae858 draws the three buttons a minigame's
+ * results screen offers -- the play-again row -- and returning 0 from it is
+ * exactly the defect the owner reported as the play-again buttons never
+ * appearing: dScMgBase_c::BeforeRender (src/func_ov004_020b04f4.cpp) hands the
+ * WHOLE frame to this body while the panel is up and returns, so with a stub
+ * behind it nothing submits the labels to either engine.
+ *
+ * THE MEASUREMENT THAT PROVED IT was run mg12 lane OVERLAY's: raising the panel
+ * through the ROM's own slot 27 on scene 384 and holding it for 300 frames gave
+ * 300 entries into this body, exactly one per frame, with OAM engine A 0 placed,
+ * OAM engine B 0 placed and the whole bottom half a black backdrop.
+ *
+ * THE SIGNATURE CHANGED WITH THE SEAT, and as with the bodies below that is not
+ * cosmetic: the trap returned int where the ROM returns VOID. No path in the ROM
+ * body sets r0 on the fall-through -- the early-out is `if (pred) return;` and
+ * the tail is a bare epilogue -- so the int was never the ROM's. The one caller
+ * discards it, which is why nothing ever caught it. include/decl_common.h is
+ * corrected in the same commit.
+ *
+ * IT IS A REAL DECOMPILATION, honestly NONMATCHING. src/func_ov004_020ae858.cpp
+ * differs in 10 of 118 words at mwccarm 2004/b56, the closest of all 25 installed
+ * builds, on the base-materialization/addressing floor; every reloc and the whole
+ * literal pool are identical and its banner carries the measurement. The symbol
+ * comes from port/slice_mg1.txt, so this line is simply deleted.
+ *
+ * WHAT IT STILL GETS NO SYMBOL FOR: nothing changes about the decomp hole.
+ * config/arm9/overlays/ov004/delinks.txt still covers no part of 0x020ae858 --
+ * the blocks run to 0x020ae5c4 and resume at 0x020aea30, and 0x020ae5c4 + 0x294
+ * + 0x1d8 is exactly that gap, so this body and the line rasteriser above fill it
+ * between them. 0x020ae858 remains open delink work.
+ */
 
 /* ---- SEATED, run mg10 lane F371 ----------------------------------------
  *
@@ -511,7 +543,8 @@ int func_ov004_020ae858(void *)             { mg_trap("func_ov004_020ae858"); re
  * to route to and no port_ name to spell: the symbol comes from
  * port/slice_mg1.txt and this line is simply deleted. Two of the six bodies
  * that file's header calls unmatched are real decompilations now, which
- * leaves func_ov004_020ae858 as the last ov004 trap in this file.
+ * left func_ov004_020ae858 as the last ov004 trap in this file, and run mg12
+ * lane PANEL has now seated that one too.
  */
 
 /* ---- SEATED, run mg5 lane WTIMER ----------------------------------------
