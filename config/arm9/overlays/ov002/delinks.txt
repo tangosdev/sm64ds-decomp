@@ -1455,11 +1455,11 @@ src/func_ov002_020bad10.c:
     complete
     .text start:0x020bad10 end:0x020badd0
 
-src/_ZN8SignPostD1Ev.c:
+src/_ZN8SignPostD1Ev.cpp:
     complete
     .text start:0x020badd0 end:0x020bae2c
 
-src/_ZN8SignPostD0Ev.c:
+src/_ZN8SignPostD0Ev.cpp:
     complete
     .text start:0x020bae2c end:0x020bae9c
 

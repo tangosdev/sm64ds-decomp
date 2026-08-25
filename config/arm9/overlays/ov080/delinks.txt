@@ -304,11 +304,11 @@ src/Painting_Spawn.c:
     complete
     .text start:0x02126f8c end:0x02126fbc
 
-src/_ZN13daObjMaruta_cD0Ev.c:
+src/_ZN13daObjMaruta_cD0Ev.cpp:
     complete
     .text start:0x02126fbc end:0x02127014
 
-src/_ZN13daObjMaruta_cD1Ev.c:
+src/_ZN13daObjMaruta_cD1Ev.cpp:
     complete
     .text start:0x02127014 end:0x02127058
 
