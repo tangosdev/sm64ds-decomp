@@ -1412,7 +1412,7 @@ src/func_0201251c.c:
     complete
     .text start:0x0201251c end:0x02012590
 
-src/_ZN5Sound4PlayEjjRK7Vector3.c:
+src/_ZN5Sound4PlayEjjRK7Vector3.cpp:
     complete
     .text start:0x02012590 end:0x0201264c
 
@@ -4241,7 +4241,7 @@ src/GetSoundGroupID.c:
     complete
     .text start:0x0202de24 end:0x0202de64
 
-src/_Z19UnloadLevelOverlaysi.c:
+src/_Z19UnloadLevelOverlaysi.cpp:
     complete
     .text start:0x0202de64 end:0x0202deac
 
@@ -6098,7 +6098,7 @@ src/_ZN6Memory10DeallocateEPvP4Heap.cpp:
     complete
     .text start:0x0203c1e8 end:0x0203c210
 
-src/_ZN6Memory8AllocateEjiP4Heap.c:
+src/_ZN6Memory8AllocateEjiP4Heap.cpp:
     complete
     .text start:0x0203c210 end:0x0203c24c
 
@@ -7265,7 +7265,7 @@ src/func_02044f74.c:
     complete
     .text start:0x02044f74 end:0x0204504c
 
-src/_ZN15ModelComponents21UpdateVertsUsingBonesEv.c:
+src/_ZN15ModelComponents21UpdateVertsUsingBonesEv.cpp:
     complete
     .text start:0x0204504c end:0x02045074
 

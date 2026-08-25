@@ -14,7 +14,7 @@ src/_ZN13ExpandingHeap7VSizeofEPv.cpp
 src/_ZN13ExpandingHeap11VMemoryLeftEv.cpp
 src/_ZN6Memory8AllocateEj.cpp
 src/_ZN6Memory8AllocateEji.cpp
-src/_ZN6Memory8AllocateEjiP4Heap.c
+src/_ZN6Memory8AllocateEjiP4Heap.cpp
 src/_ZN6Memory10DeallocateEPv.cpp
 src/_ZN6Memory10DeallocateEPvP4Heap.cpp
 src/_ZN4Heap8AllocateEji.cpp
