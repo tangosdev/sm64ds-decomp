@@ -209,6 +209,11 @@ def enrolment_index():
     return _enrolment()[0]
 
 
+def source_ownership_index():
+    """Repo-relative source path -> owned symbols in ROM address order."""
+    return {path: list(symbols) for path, symbols in _enrolment()[1].items()}
+
+
 def enrolled_path_for(symbol):
     """The file the ROM build compiles for ``symbol``, or None if it is not enrolled.
 

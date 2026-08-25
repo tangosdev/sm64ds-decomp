@@ -18,11 +18,11 @@ Reporting only MATCHED overstates how finished the project is, which is the
 whole reason this file exists.
 
 Denominators differ and that is not a bug. MATCHED counts functions against the
-dsd config's function universe. CONVERTED counts source FILES, because
-readability is a property of a file. The tree is close to one function per file
-(11,282 files against 11,394 functions), so the two read on the same scale
-without adjusting, but they are not the same denominator and the JSON says so.
-LINKED counts matched translation units, not all functions.
+dsd config's function universe. CONVERTED counts source-owned FUNCTIONS. Most
+physical files still own one function, but reconstructed translation units own
+several; weighting by their enrolled symbols keeps the metric invariant when the
+same readable behavior is consolidated into its original file. LINKED counts
+matched translation units, not all functions.
 
 Usage:
     python tools/tiers.py                 # human-readable table
@@ -44,6 +44,7 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 import delaunder  # noqa: E402  (code_mask only -- no compiler, no ROM; see _code_only)
 import demangle  # noqa: E402  (pure string work, no compiler, no ROM; see _reader_name)
+import srcpath  # noqa: E402  (enrolled source -> function ownership)
 
 SRC = REPO / "src"
 README = REPO / "README.md"
@@ -214,6 +215,11 @@ def _reader_name(path, text):
     an adjustment offset, so it is not a name a reader benefits from.
     """
     sym = _defined_symbol(path, text)
+    return _reader_name_for_symbol(sym)
+
+
+def _reader_name_for_symbol(sym):
+    """The reader-visible name for one symbol owned by a source file."""
     d = demangle.demangle(sym)
     if d is None:
         return sym, not sym.startswith("_Z")
@@ -222,6 +228,14 @@ def _reader_name(path, text):
 
 def _real_name(path, text):
     name, ok = _reader_name(path, text)
+    if not ok or not name:
+        return False
+    return all(not PLACEHOLDER_PART.match(part.lstrip("~").strip())
+               for part in name.split("::") if part.strip())
+
+
+def _real_name_for_symbol(sym):
+    name, ok = _reader_name_for_symbol(sym)
     if not ok or not name:
         return False
     return all(not PLACEHOLDER_PART.match(part.lstrip("~").strip())
@@ -243,10 +257,12 @@ def score_file(path, text):
 
 
 def converted(src_root=None):
-    """Score every source file. Returns the CONVERTED tier plus its breakdown.
+    """Score every source-owned function. Returns CONVERTED plus its breakdown.
 
     Reads committed source only - no ROM, no build, no local state - so it
-    reproduces on a fresh checkout, which is what CI needs.
+    reproduces on a fresh checkout, which is what CI needs. File-wide criteria are
+    applied to every function the enrollment table assigns to that source; the name
+    criterion is evaluated per symbol.
     """
     root = pathlib.Path(src_root or SRC)
     files = sorted(str(p) for p in root.rglob("*")
@@ -254,24 +270,45 @@ def converted(src_root=None):
     counts = dict.fromkeys(list(CRITERIA) + ["shared_header"], 0)
     passes_hist = {}
     readable = core = 0
+    ownership = srcpath.source_ownership_index()
+    repo_root = srcpath.REPO.absolute()
 
+    source_readable = 0
+    total = 0
     for p in files:
         with open(p, errors="replace") as f:
-            s = score_file(p, f.read())
-        for k in counts:
-            counts[k] += s[k]
-        n_pass = sum(s[k] for k in CRITERIA)
-        passes_hist[n_pass] = passes_hist.get(n_pass, 0) + 1
-        if n_pass == len(CRITERIA):
-            readable += 1
-        # The two criteria that genuinely block a reader, reported as context
-        # for how strict the headline is.
-        if s["real_name"] and s["no_raw_offset"]:
-            core += 1
+            text = f.read()
+        file_score = score_file(p, text)
+        path = pathlib.Path(p)
+        try:
+            rel = path.absolute().relative_to(repo_root).as_posix()
+        except ValueError:
+            rel = None
+        members = ownership.get(rel) or [path.stem]
+        all_readable = True
+        for sym in members:
+            s = dict(file_score)
+            s["real_name"] = _real_name_for_symbol(sym)
+            total += 1
+            for k in counts:
+                counts[k] += s[k]
+            n_pass = sum(s[k] for k in CRITERIA)
+            passes_hist[n_pass] = passes_hist.get(n_pass, 0) + 1
+            if n_pass == len(CRITERIA):
+                readable += 1
+            else:
+                all_readable = False
+            # The two criteria that genuinely block a reader, reported as context
+            # for how strict the headline is.
+            if s["real_name"] and s["no_raw_offset"]:
+                core += 1
+        if members and all_readable:
+            source_readable += 1
 
-    total = len(files)
     return {
-        "files": total,
+        "functions": total,
+        "source_files": len(files),
+        "converted_source_files": source_readable,
         "converted": readable,
         "pct": round(100.0 * readable / total, 2) if total else 0.0,
         "criteria": {k: counts[k] for k in CRITERIA},
@@ -366,15 +403,20 @@ def bar(done, tot, width=30):
     return "█" * filled + "░" * (width - filled)
 
 
-def bar_block(t):
+def bar_block(t, preserved_matched=None):
     """The fenced block shown under the README "## The three tiers" heading."""
     rows = []
     m, c, k = t["matched"], t["converted"], t["linked"]
     if m:
         rows.append(f"MATCHED    {bar(m['matched'], m['functions'])}  "
                     f"{m['pct']:4.1f}%   {m['matched']:,} / {m['functions']:,} functions")
-    rows.append(f"CONVERTED  {bar(c['converted'], c['files'])}  "
-                f"{c['pct']:4.1f}%   {c['converted']:,} / {c['files']:,} files")
+    elif preserved_matched:
+        # A worktree may have the ROM inputs needed for CONVERTED/LINKED but not
+        # chaos-db.json, which supplies MATCHED.  Updating the live rows must not
+        # silently erase the last independently generated MATCHED measurement.
+        rows.append(preserved_matched)
+    rows.append(f"CONVERTED  {bar(c['converted'], c['functions'])}  "
+                f"{c['pct']:4.1f}%   {c['converted']:,} / {c['functions']:,} functions")
     if k:
         rows.append(f"LINKED     {bar(k['linked'], k['matchedTus'])}  "
                     f"{k['pct']:4.1f}%   {k['linked']:,} / {k['matchedTus']:,} matched TUs")
@@ -385,7 +427,13 @@ def write_readme(t):
     text = README.read_text(encoding="utf-8")
     start = text.index(README_START) + len(README_START)
     end = text.index(README_END)
-    new_text = text[:start] + "\n" + bar_block(t) + "\n" + text[end:]
+    current = text[start:end]
+    preserved_matched = next(
+        (line.strip() for line in current.splitlines()
+         if line.strip().startswith("MATCHED")),
+        None,
+    )
+    new_text = text[:start] + "\n" + bar_block(t, preserved_matched) + "\n" + text[end:]
     if new_text != text:
         README.write_text(new_text, encoding="utf-8")
         return True
@@ -400,7 +448,8 @@ def report(t):
                    f"{m['pct']:.1f}%   ({m['bytePct']:.1f}% by code bytes)")
     else:
         out.append("MATCHED    (no chaos-db.json; run tools/chaos_db_ci.py first)")
-    out.append(f"CONVERTED  {c['converted']:,} / {c['files']:,} files      {c['pct']:.1f}%")
+    out.append(f"CONVERTED  {c['converted']:,} / {c['functions']:,} functions  "
+               f"{c['pct']:.1f}%   ({c['source_files']:,} physical source files)")
     if k:
         flag = "  STALE" if k["stale"] else ""
         out.append(f"LINKED     {k['linked']:,} / {k['matchedTus']:,} matched TUs  "
@@ -413,19 +462,19 @@ def report(t):
     out.append("CONVERTED breaks down as:")
     for key in CRITERIA:
         n = c["criteria"][key]
-        out.append(f"  {CRITERION_LABEL[key]:<52} {n:>6,}  {100.0*n/c['files']:5.1f}%")
+        out.append(f"  {CRITERION_LABEL[key]:<52} {n:>6,}  {100.0*n/c['functions']:5.1f}%")
     out.append(f"  {'ALL FIVE':<52} {c['converted']:>6,}  {c['pct']:5.1f}%")
     out.append("")
     out.append("Criteria passed, distribution:")
     for i in range(len(CRITERIA) + 1):
         n = c["distribution"][str(i)]
-        out.append(f"  {i}/5 : {n:>6,}  ({100.0*n/c['files']:.1f}%)")
+        out.append(f"  {i}/5 : {n:>6,}  ({100.0*n/c['functions']:.1f}%)")
     out.append("")
     out.append("Other readings of the same tree, for context on how strict the bar is:")
     out.append(f"  name + no raw offsets only : {c['alt_core_two']:>6,}  "
-               f"({100.0*c['alt_core_two']/c['files']:.1f}%)")
+               f"({100.0*c['alt_core_two']/c['functions']:.1f}%)")
     out.append(f"  includes a shared header   : {c['alt_shared_header']:>6,}  "
-               f"({100.0*c['alt_shared_header']/c['files']:.1f}%)")
+               f"({100.0*c['alt_shared_header']/c['functions']:.1f}%)")
     return "\n".join(out)
 
 

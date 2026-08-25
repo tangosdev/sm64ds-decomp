@@ -32,6 +32,11 @@ Usage:
 
 Writes build/rombuild-eligibility.json (per-file verdict + reason) and
 build/eligible-names.txt (the pass list, for `enroll.py --complete-list`).
+
+For a source owning several functions, the report calls the placement mode
+``derived``: each member is proven after fail-closed object isolation, and rombuild
+places the matching derived sections together.  That is deliberately distinct from
+an intact-object or partitioned text+data proof.
 """
 import argparse
 import collections
@@ -62,6 +67,14 @@ from rombuild import CFLAGS  # noqa: E402
 
 ANYSYM = re.compile(r"^(\S+)\s+kind:")
 IGNORE_SECTIONS = (".comment", ".debug", ".line", ".note")
+
+
+def placement_mode(symbols, isolate=True):
+    """Name the object evidence being classified for one enrolled source."""
+    symbols = list(symbols)
+    if not isolate:
+        return "raw"
+    return "derived" if len(symbols) > 1 else "isolated"
 
 
 def module_label(module_dir):
@@ -277,6 +290,9 @@ def main():
     # disambiguator already carried through classify().
     identities = {(rel, name): (module_label(d), addr)
                   for (d, name, rel, addr, _size, _sec) in cands}
+    members_by_source = collections.defaultdict(list)
+    for _d, name, rel, _addr, _size, _sec in cands:
+        members_by_source[rel].append(name)
     print(f"classifying {len(jobs)} enrolled functions with -j{args.jobs} ...")
 
     results, reasons = [], collections.Counter()
@@ -286,7 +302,10 @@ def main():
             module, addr = identities[(rel, name)]
             results.append({"file": rel, "name": name, "module": module,
                             "addr": f"0x{addr:08x}", "reason": reason,
-                            "missing": missing})
+                            "missing": missing,
+                            "objectMode": placement_mode(
+                                members_by_source[rel], not args.no_isolate),
+                            "sourceMembers": members_by_source[rel]})
             reasons["ELIGIBLE" if reason is None else reason.split(":")[0]] += 1
             done += 1
             if done % 2000 == 0:

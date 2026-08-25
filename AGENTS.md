@@ -113,7 +113,7 @@ So:
 
 `port/` builds its own MSVC host executable that points into `src/` by literal path and
 symbol name: `slice_gate*.txt` manifests list `src/` files to compile, `CMakeLists.txt`
-hardcodes hostgen symbol lists resolved against `src/<sym>.c`/`.cpp`, and `port/hal/*.cpp`
+resolves hostgen symbol lists through `tools/srcpath.py`, and `port/hal/*.cpp`
 bridges MSVC linkage onto `func_XXXXXXXX`/`data_XXXXXXXX` names via `#pragma alternatename`
 and `extern "C"`. None of that is compiled by the normal decomp toolchain or `tools/cpp_rename.py`,
 so a rename, a `.c`-to-`.cpp` migration, or a file move can silently strand a `port/`
@@ -125,6 +125,16 @@ python tools/port_refcheck.py
 
 It checks references only (no compiler, no ROM — runs in about a second) and is also
 wired into `tools/hooks/pre-push`.
+
+### Promoted translation units
+
+One-function-per-file remains the intake format for new matches. A reconstructed C++
+class may later be promoted into one production translation unit only when its TU
+manifest is partitioned-link verified, `python tools/cpp_tu_compat.py --require-ready`
+passes, and every enrolled symbol keeps its original credit through a `path#symbol`
+override in `config/attribution.json`. Keep compatibility/tooling changes in a separate
+PR from the source promotion, and run the full ROM, link, attribution, and `port/`
+gates on the promotion.
 
 ## Match logging (WHO / HOW / tries)
 

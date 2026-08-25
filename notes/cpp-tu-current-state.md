@@ -20,29 +20,31 @@ python tools/cpp_tu_state.py --check-note
 | --- | ---: |
 | MATCHED functions | 11230 / 11401 (98.50%) |
 | MATCHED code bytes | 2116772 / 2238108 (94.58%) |
-| Strict CONVERTED source files | 1871 / 11303 (16.55%) |
+| Strict CONVERTED source functions | 2111 / 11308 (18.67%) |
+| Physical production source files | 11303 |
 
 MATCHED is recomputed from committed config symbols and `src/` through
 `progress.synced_from_src()`; no ambient or gitignored chaos database is accepted.
-CONVERTED is the strict five-criterion result from `tiers.converted(src)`.
+CONVERTED is the strict five-criterion result from `tiers.converted(src)`,
+weighted by enrolled function ownership so TU consolidation does not move it.
 
 ## Production source and enrollment
 
 | Measure | Live value |
 | --- | ---: |
 | Tracked production source files | 11303 |
-| Tracked `.c` files | 6909 |
-| Tracked `.cpp` files | 4394 |
-| `.cpp` files missing first-line `//cpp` | 11 |
-| Mangled-symbol source files | 3318 |
-| Genuinely migrated C++ symbol files | 2758 |
-| Not semantically migrated | 558 |
-| `.cpp` files still hand-spelling their symbol | 195 |
+| Tracked `.c` files | 6753 |
+| Tracked `.cpp` files | 4550 |
+| `.cpp` files missing first-line `//cpp` | 10 |
+| Mangled-symbol source files | 3331 |
+| Genuinely migrated C++ symbol files | 2954 |
+| Not semantically migrated | 375 |
+| `.cpp` files still hand-spelling their symbol | 155 |
 | Nonmatching C++-symbol drafts | 14 |
-| Delinks path-owned function-symbol records | 11191 |
+| Delinks path-owned function-symbol records | 11192 |
 | Path-owned records still supplied from ROM bytes | 128 |
-| Source-built (`complete`) function-symbol records | 11063 |
-| Source-built (`complete`) source files | 11058 |
+| Source-built (`complete`) function-symbol records | 11064 |
+| Source-built (`complete`) source files | 11059 |
 | Complete sources owning more than one function | 1 |
 | Source-built records inside multi-function sources | 6 |
 | Largest function-symbol-records-per-source count | 6 |
@@ -69,17 +71,17 @@ partition to add to the migrated and unmigrated rows.
 
 | Measure | Live value |
 | --- | ---: |
-| Tracked `src_tu/` source files | 51 |
-| Manifest entries | 51 |
-| Functions named by manifest entries | 749 |
-| Unique functions named by the manifest | 749 |
-| Modules represented | 17 |
-| Manifest shadow sources present in git | 51 |
+| Tracked `src_tu/` source files | 72 |
+| Manifest entries | 72 |
+| Functions named by manifest entries | 923 |
+| Unique functions named by the manifest | 923 |
+| Modules represented | 22 |
+| Manifest shadow sources present in git | 72 |
 | Entries licensing non-text sections | 3 |
 | Entries actually production-enrolled at `promoted_source` | 0 |
 | Existing promotion paths that disagree with delinks | 0 |
 
-Manifest statuses: `link-verified` 6, `text-verified` 45.
+Manifest statuses: `link-verified` 6, `text-verified` 66.
 
 `config/tu_manifest.d/` records reconstruction evidence and licensed ranges. It does
 not enroll a TU. The production number above counts an entry as promoted only when every
@@ -87,14 +89,14 @@ manifest function is owned by that entry's tracked `promoted_source` in live del
 
 ## Production TU compatibility
 
-All surfaces ready: **NO**.
+All surfaces ready: **YES**.
 
 This is a behavior-backed result from a disposable source containing two C++
 methods, not a checklist copied from prose. Run
 `python tools/cpp_tu_compat.py` for the per-surface
-evidence. Current ready surfaces: `srcpath`, `enroll`, `rombuild`, `validate_merge`.
-Current hard production blockers: `port_refcheck`.
-Current policy/metric gaps: `eligible`, `tiers`, `langmode_audit`, `attribution`.
+evidence. Current ready surfaces: `srcpath`, `enroll`, `eligible`, `rombuild`, `validate_merge`, `tiers`, `langmode_audit`, `attribution`, `port_refcheck`.
+Current hard production blockers: none.
+Current policy/metric gaps: none.
 
 ## Which source answers which question
 

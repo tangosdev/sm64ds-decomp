@@ -44,14 +44,15 @@ here, and they move independently.
 <!-- tiers:start -->
 ```
 MATCHED    ██████████████████████████████  98.5%   11,230 / 11,401 functions
-CONVERTED  ██████░░░░░░░░░░░░░░░░░░░░░░░░  18.7%   2,110 / 11,303 files
+CONVERTED  ██████░░░░░░░░░░░░░░░░░░░░░░░░  18.7%   2,111 / 11,308 functions
 LINKED     ████████████████░░░░░░░░░░░░░░  51.8%   5,831 / 11,250 matched TUs
 ```
 <!-- tiers:end -->
 
 - **MATCHED** is byte-exact C, verified against the ROM. This is the bar above and
   the treemap.
-- **CONVERTED** is code a person can read without the ROM open beside them. Matching
+- **CONVERTED** is source-owned code a person can read without the ROM open beside
+  them. Matching
   does not require readable code, so this tier does not move on its own and is by far
   the furthest behind.
 - **LINKED** is matched code that actually reaches the [PC port](port/)'s binary,
@@ -60,12 +61,14 @@ LINKED     ████████████████░░░░░░░
 They are not stages of one pipeline. A function can be matched and linked while still
 being unreadable, and converting a file never changes its matched bytes.
 
-CONVERTED is strict on purpose. A file counts only if it passes all five of: a real
+CONVERTED is strict on purpose. A function counts only if its source passes all five of: a real
 function name, no raw offset arithmetic, no `unk_<off>` fields, no codegen tricks, and
-no calls through mangled names. Most of the tree is partway there rather than nowhere
-near it, which the headline alone hides: 31% of files pass three of the five, and 32%
-pass four. Run `python tools/tiers.py` for the full breakdown and two softer readings
-of the same tree.
+no calls through mangled names. A merged translation unit contributes one unit per
+enrolled function, so restoring original file boundaries cannot change progress by
+itself. Most of the tree is partway there rather than nowhere near it, which the
+headline alone hides: roughly 31% of functions pass three of the five, and 32% pass
+four. Run `python tools/tiers.py` for the full breakdown and two softer readings of
+the same tree.
 
 The name criterion reads the name a *reader* sees, not the linker symbol. For a C++
 method those differ — the ROM's `KoopaShell::OnYoshiTryEat` can only ever link as

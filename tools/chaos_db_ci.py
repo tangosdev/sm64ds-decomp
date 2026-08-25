@@ -154,7 +154,8 @@ def tier_stats():
         return None
     out = {
         "converted": c["converted"],
-        "convertedOf": c["files"],
+        "convertedOf": c["functions"],
+        "convertedSourceFiles": c["source_files"],
         "convertedPct": c["pct"],
     }
     if k:
