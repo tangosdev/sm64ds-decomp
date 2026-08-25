@@ -183,7 +183,7 @@ def check_file(path, idx, ledger):
 
     WHICH SYMBOLS THE FILE OWNS is `srcpath.symbols_for`, not `Path.stem`. For a legacy
     one-function source those are the same string. For a merged translation unit
-    they are not: `src_tu/actors/ActorBase_SceneNode.cpp` holds two functions and is named
+    they are not: `src/actors/ActorBase_SceneNode.cpp` holds two functions and is named
     after neither, so the stem resolved to nothing and the whole file was reported
     `unresolved` with `0` slots checked -- a file the PR comment listed as examined and
     that nothing had looked at. It could not fall through to the passenger loop either,
