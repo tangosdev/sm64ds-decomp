@@ -644,10 +644,28 @@ int port_fader_blend_state(int *evy, int *toWhite)
  * THE STAR COUNT is the one site where the frozen zero HID something rather
  * than merely holding it still. _ZN3HUD15RenderStarCountEv returns early --
  * drawing nothing -- when data_0209f2d4 == 3 and (data_020a0db0 & 0x18) == 0.
- * At zero that test is true on every frame, so on those levels the star count
- * was suppressed ENTIRELY. With the clock running the mask is zero for eight
- * frames in thirty-two, which is the blink the ROM intends. This one gets
- * looked at on a level rather than a scene.
+ *
+ * Those two are the innermost pair and NOT the whole condition; an earlier
+ * wording stopped there and so overstated how often the suppression happened.
+ * Read out of src/_ZN3HUD15RenderStarCountEv.cpp in full, the early return is
+ * reached only when all of these hold:
+ *
+ *     data_0209f2d8 != 1                    (else the top branch draws and
+ *                                            returns before any of this)
+ *     (data_0209f2fc != 2 && data_ov002_02111178 == 4)
+ *       || (data_0209f2fc == 1 && data_ov002_02111178 >= 3
+ *                              && data_ov002_02111178 < 6)
+ *     data_0209f2ac != 0
+ *     data_0209f2d4 == 3 && (data_020a0db0 & 0x18) == 0
+ *
+ * Miss any one of them and the function falls through to a draw. So this is a
+ * particular HUD mode on particular levels, not every level.
+ *
+ * The claim that matters survives intact: WHEREVER that path is live, a frozen
+ * zero made the innermost test true on every frame, so the star count was
+ * suppressed ENTIRELY rather than blinking. With the clock running the mask is
+ * zero for eight frames in thirty-two, which is the blink the ROM intends. This
+ * one gets looked at on a level rather than a scene.
  *
  * WHAT IT COST, measured rather than argued (run mg12, lane SELECT). In
  * Pair-a-Gone (scene 381) the ONLY difference between a selected card and an
@@ -665,11 +683,23 @@ int port_fader_blend_state(int *evy, int *toWhite)
  * (func_02019404) and therefore after its phase 2 fade advance. This port calls
  * it from both loops immediately BEFORE port_fader_advance, which is the stand-
  * in for phase 2, so by the ROM's own numbering the step happens earlier in the
- * frame than the ROM puts it. No linked reader can tell: every one of the
- * thirteen runs either inside the actor tick, which precedes the step in both
- * orders, or inside the render, which follows it in both, and nothing between
- * the step and the fade advance touches the word. The residue is where the
- * phase sits in the frame, not what any reader sees.
+ * frame than the ROM puts it.
+ *
+ * State the consequence exactly, because an earlier wording of this paragraph
+ * got it wrong. It said the render "follows the step in both orders". It does
+ * not: in the ROM the render is phase 5 and the step is phase 6, so WITHIN ONE
+ * ITERATION the render PRECEDES the step. Saying it follows is only true if you
+ * read the loop cyclically, which is true of any cyclic order and therefore
+ * proves nothing. The accurate statement is about values, not order: in the ROM
+ * the actor tick and the render both see N; in this port the actor tick sees N
+ * and the render sees N+1.
+ *
+ * The conclusion is unchanged, and it is that no linked reader can tell. Not one
+ * of the thirteen couples a behaviour-phase read to a render-phase read in the
+ * same frame, so none of them can observe the two values disagreeing, and a
+ * uniform one-frame offset in a blink is invisible by construction. Nothing
+ * between the step and the fade advance touches the word. The residue is where
+ * the phase sits in the frame, not what any reader sees.
  *
  * Gated on the game tick rather than free-running -- with the debug menu open
  * the world holds still and the picture keeps being drawn, and a blink that
