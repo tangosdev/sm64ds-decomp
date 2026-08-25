@@ -1334,6 +1334,9 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
 /* func_02019144's FIRST beat, hal/scene_boot.cpp. 1 = run that function's
    tail, 0 = the current graphics block did the display sync itself. */
 extern "C" int port_graph_block_beat(void);
+/* func_02019144's OAM upload, at the ROM's line in the frame; the body and the
+   whole derivation are in hal/sub_screen.cpp, which owns OAM::Load's wiring. */
+extern "C" void port_frame_oam_upload(void);
 
 // Rasterise engine A's 2D layers into the DS 256x192 hit buffer, then composite
 // the covered pixels over the host 3D framebuffer (scaled by integer factor).
@@ -1422,6 +1425,20 @@ extern "C" void port_message_composite_engine_a(void *fbp)
        wrote, and the beat writes DISPCNT, BGxCNT and OAM. The engine B half
        of the tail reads the same verdict inside hal_sub_screen_present. */
     const bool run_tail = port_graph_block_beat() != 0;
+    /* func_02019144 LINES 44-45, THE OAM UPLOAD, and it belongs HERE.
+       The ROM's order is slot-2 beat, OAM::Flush, OAM::Load, and only then the
+       two layer publishes -- all of it in VBlank, so the frame it configures is
+       scanned out afterwards and the sprites on screen are the ones this upload
+       just placed. This program used to upload at the FOOT of
+       hal_sub_screen_present, below both OBJ rasters, which left every sprite
+       two beats behind the POWCNT1 arm it was submitted for and put the whole
+       dScMgD3DBase_c family's 2D on the wrong screen. See THE OBJ/POWCNT1
+       PARITY in hal/sub_screen.cpp for the ROM derivation, the measurement and
+       the SM64DS_OAM_LOAD_LATE kill switch. Under the beat's own verdict for
+       func_02019144's own reason: with the block answering 0 the ROM returns
+       before reaching this line. */
+    if (run_tail)
+        port_frame_oam_upload();
     {
         extern unsigned char data_0209d45c;
         if (!publish_off && run_tail)
