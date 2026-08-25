@@ -45,6 +45,17 @@
 # any of them. The four host copies carry port_ names precisely so that this
 # paragraph stays true.
 #
+# AMENDED AGAIN, run mg12 lane PANEL. THE SENTENCE ABOVE IS NOW WRONG ABOUT ONE
+# OF THE SIX and this is the correction rather than a rewrite. func_ov004_020ae858
+# HAS a src file defining it -- src/func_ov004_020ae858.cpp, at the bottom of this
+# slice -- and it is a real decompilation off the ROM, honestly NONMATCHING at 10
+# of 118 words. It is still true of that body that NO DELINK BLOCK COVERS IT:
+# config/arm9/overlays/ov004/delinks.txt runs to 0x020ae5c4 and resumes at
+# 0x020aea30, and the line rasteriser plus this renderer fill that gap exactly.
+# So the count now reads: of the six, ONE has a matched-tier src TU of its own
+# (this one, NONMATCHING), FOUR have host copies under port_ names, and
+# func_ov006_020e1854 is still the live pointer-to-member state target.
+#
 # FOUR LINES BELOW ALSO APPEAR IN ANOTHER SLICE, and that is correct rather
 # than a mistake to clean up. src/func_ov004_020adc4c.c is in slice_2d1.txt
 # (the LoadFont wedge, the one ov004 body the port could already reach), and

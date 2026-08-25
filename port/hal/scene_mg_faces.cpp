@@ -139,6 +139,7 @@
 // over a class that could not advance.
 
 #include <cstdio>
+#include <cstdlib>
 #include "dsstate_seg.h"
 
 /* EVERY HOSTED DS GLOBAL IN THIS FILE IS INSIDE THE SAVE-STATE SPAN, and it
@@ -457,6 +458,52 @@ static void mg_trap(const char *name)
 }
 
 extern "C" unsigned port_mg_trap_hits(void) { return g_mg_trap_hits; }
+
+/* ---- lane PANEL's end-of-run readout of the results panel ----------------
+ *
+ * The seat above draws the three buttons. Whether the player can USE them is a
+ * different claim and it needs a different number, because the two halves of
+ * the panel live in different files: src/func_ov004_020ae858.cpp DRAWS off
+ * self+0x4646, and src/func_ov004_020aeb24.cpp (matched, untouched) is the
+ * STYLUS HIT TEST that WRITES it -- it boxes the stylus point against the three
+ * button centres and on a hit stores the button's index there and 0x10 at
+ * +0x4644. So +0x4646 moving from -1 to 0/1/2 is the hit test accepting a tap,
+ * read off the same field the renderer reads, and the two halves check each
+ * other rather than being asserted separately.
+ *
+ * Printed at exit rather than per frame so it cannot flood a log or perturb a
+ * frame, and only when SM64DS_MG_RESULTS_PROBE is set, which is the only way a
+ * capture can raise this panel at all (the game's own progression to it is
+ * still blocked at the unseated func_ov006_020d01e0 installer). Unset, this is
+ * one getenv at exit and nothing else.
+ */
+extern "C" { extern void *data_ov004_020beb68; }
+
+static void panel_end_readout(void)
+{
+    const char *e = std::getenv("SM64DS_MG_RESULTS_PROBE");
+    if (!e || !e[0])
+        return;
+    char *g = (char *)data_ov004_020beb68;
+    if (!g) {
+        std::printf("[panel-end] no live dScMgBase_c\n");
+        std::fflush(stdout);
+        return;
+    }
+    std::printf("[panel-end] up=%d selected=%d hold=%d anim=%u "
+                "buttons (%d,%d) (%d,%d) (%d,%d)\n",
+                *(int *)(g + 0x4628), (int)*(short *)(g + 0x4646),
+                (int)*(short *)(g + 0x4644), *(unsigned *)(g + 0x4640),
+                (int)*(short *)(g + 0x4634), (int)*(short *)(g + 0x4636),
+                (int)*(short *)(g + 0x4638), (int)*(short *)(g + 0x463a),
+                (int)*(short *)(g + 0x463c), (int)*(short *)(g + 0x463e));
+    std::fflush(stdout);
+}
+
+namespace {
+struct PanelEndReg { PanelEndReg() { std::atexit(panel_end_readout); } };
+PanelEndReg g_panel_end_reg;
+}
 
 extern "C" {
 
