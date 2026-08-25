@@ -916,8 +916,10 @@ int hal_present_client_to_sub(int cx, int cy, int *dsx, int *dsy);
 int hal_sub_screen_stacked(void);
 unsigned int *hal_sub_screen_stacked_image(const unsigned int *top);
 void hal_sub_screen_stacked_size(int *w, int *h);
-/* THE UPPER PHYSICAL SCREEN'S first row inside that image, whichever engine is
-   feeding it this frame (hal/sub_screen.cpp) */
+/* THE UPPER PHYSICAL SCREEN'S first row inside that image. The host overlays
+   below paint there rather than into the framebuffer, because ppu_compose_
+   stacked picks which ENGINE feeds which screen off POWCNT1 bit 15 and an
+   overlay painted into engine A's buffer moves with the engine. */
 int hal_sub_screen_stacked_top_y(void);
 unsigned hal_sub_screen_stacked_generation(void);
 /* the focus gate (hal/sub_screen.cpp): 1 when this window is the foreground
@@ -1233,25 +1235,88 @@ static void frame_pace(void)
      pixels, outside gx entirely.
 
    Default OFF, so a plain selftest dump is unchanged. SM64DS_OVERLAY=1 boots
-   with it on. */
+   with it on.
+
+   ---- AND WHICH SURFACE IT PAINTS ON, which is not always the framebuffer ----
+
+   THE OVERLAYS ARE HOST UI AND THEY BELONG TO A SCREEN, NOT TO AN ENGINE. The
+   framebuffer is engine A's, and since ntr::ppu_compose_stacked started reading
+   POWCNT1 bit 15 the stacked layout puts engine A in whichever half the DS's
+   display-swap bit names -- so "paint into fb" stopped meaning "paint on the
+   top screen". Three of the game's scenes make that visible:
+
+     372, 373, 384, 385   dScMgD3DBase_c's slot 24 TOGGLES bit 15 EVERY FRAME,
+                          so an overlay in fb ping-pongs between the halves at
+                          60 Hz. Tango's report: "when f5 debug is opened it
+                          rapidly flashes between both top and bottom screen".
+     377                  Snowball Slalom CLEARS the bit once and leaves it
+                          clear, so an overlay in fb sits on the bottom screen
+                          for the whole minigame. Tango's report: "f5 debug
+                          being on bottom screen".
+
+   So the painters below take an OvlSurface -- a pointer and a stride -- instead
+   of the framebuffer, and the frame loops hand them the UPPER PHYSICAL SCREEN's
+   rows of the composed stacked image (hal_sub_screen_stacked_top_y) when there
+   is one, and the framebuffer when there is not. The arithmetic inside them is
+   unchanged: an overlay covers ONE DS screen at the host tier in either layout,
+   so ntr::SCREEN_W/H are still the clip bounds and every coordinate in every
+   caller still means what it meant.
+
+   THE INSET LAYOUT IS UNTOUCHED, and deliberately. There the window IS engine
+   A's framebuffer at full size with the other screen as a corner panel inside
+   it; there is no "upper half" to prefer, and the overlay goes where it always
+   went. Nothing about a level changes. */
 static const int OVL_SCALE = ntr::SCREEN_W >= 1024 ? 2 : 1;
 static const int OVL_LINE = (OVL_GLYPH_H + 2) * OVL_SCALE;
 
-static void ovl_shade(ntr::Framebuffer &fb, int x0, int y0, int w, int h)
+/* WHERE AN OVERLAY PAINTS: one DS screen's worth of 0xAARRGGBB pixels, at
+   `stride` words per row. `px` is that screen's top-left. Deliberately not a
+   width and a height as well -- an overlay is always exactly one DS screen at
+   this binary's tier, in both layouts, and carrying the size would invite a
+   caller to pass a different one and quietly re-scale the font. */
+struct OvlSurface {
+    uint32_t *px;
+    int stride;
+};
+
+static OvlSurface ovl_surface(ntr::Framebuffer &fb)
+{
+    OvlSurface s;
+    s.px = &fb.px[0][0];
+    s.stride = ntr::SCREEN_W;
+    return s;
+}
+
+/* The composed stacked image's UPPER half. Null image -> the framebuffer, which
+   is the same fallback present() takes: with no stacked image there is nothing
+   else on screen to be wrong about. */
+static OvlSurface ovl_surface_stacked(uint32_t *img, ntr::Framebuffer &fb)
+{
+    if (!img) return ovl_surface(fb);
+    int iw = 0, ih = 0;
+    hal_sub_screen_stacked_size(&iw, &ih);
+    OvlSurface s;
+    s.px = img + (size_t)hal_sub_screen_stacked_top_y() * (size_t)iw;
+    s.stride = iw;
+    return s;
+}
+
+static void ovl_shade(const OvlSurface &fb, int x0, int y0, int w, int h)
 {
     /* half-strength darken of what is already there, so the text reads over
        sky and over stone without hiding the frame behind it */
     for (int y = y0; y < y0 + h; ++y) {
         if (y < 0 || y >= ntr::SCREEN_H) continue;
+        uint32_t *row = fb.px + (size_t)y * (size_t)fb.stride;
         for (int x = x0; x < x0 + w; ++x) {
             if (x < 0 || x >= ntr::SCREEN_W) continue;
-            const uint32_t p = fb.px[y][x];
-            fb.px[y][x] = 0xFF000000u | ((p >> 1) & 0x007F7F7Fu);
+            const uint32_t p = row[x];
+            row[x] = 0xFF000000u | ((p >> 1) & 0x007F7F7Fu);
         }
     }
 }
 
-static int ovl_text(ntr::Framebuffer &fb, int x0, int y0, const char *s,
+static int ovl_text(const OvlSurface &fb, int x0, int y0, const char *s,
                     uint32_t rgb)
 {
     int x = x0;
@@ -1271,7 +1336,7 @@ static int ovl_text(ntr::Framebuffer &fb, int x0, int y0, const char *s,
                         if (fx < 0 || fx >= ntr::SCREEN_W || fy < 0 ||
                             fy >= ntr::SCREEN_H)
                             continue;
-                        fb.px[fy][fx] = rgb;
+                        fb.px[(size_t)fy * (size_t)fb.stride + fx] = rgb;
                     }
             }
         }
@@ -1326,7 +1391,7 @@ struct OvlStats {
     int menu_paused;
 };
 
-static void ovl_draw(ntr::Framebuffer &fb, const OvlStats &s)
+static void ovl_draw(const OvlSurface &fb, const OvlStats &s)
 {
     char ln[10][96];
     int n = 0;
@@ -2382,7 +2447,7 @@ struct MenuHost {
 };
 static MenuHost g_menu_host;
 
-static void menu_draw(ntr::Framebuffer &fb)
+static void menu_draw(const OvlSurface &fb)
 {
     /* 96, not 72: the level-select row now carries a name as well as the row,
        id, entrance, overlay and mount state, and at 72 the unmounted form of
@@ -3442,7 +3507,7 @@ static unsigned short host_ds_buttons(int pad_live, const XPad *pad)
 /* The save-state toast, over everything, bottom-left, and decremented as it is
    drawn rather than in the tick so a menu's pause does not freeze it. Shared
    by both loops because it is the only channel the menu's refusals have. */
-static void toast_draw(ntr::Framebuffer &fb)
+static void toast_draw(const OvlSurface &fb)
 {
     if (ss_toast_left <= 0)
         return;
@@ -4837,18 +4902,27 @@ static int scene_window_run(void)
            same switch the level loop's game_ticked is */
         port_scene_tick(frame, !menu_on);
 
-        if (menu_on) menu_draw(fb);
-        toast_draw(fb);
+        /* THE STACKED IMAGE IS BUILT BEFORE THE OVERLAYS, and the order is the
+           whole of this lane's change on this path. Every line ABOVE this one
+           that writes a pixel writes it into fb -- the raster, the engine-A
+           composite -- and the stacked image is a copy of the finished fb with
+           the bottom screen under it, so the compose still runs on a finished
+           frame. What moved is the MENU and the TOAST: they are host UI and
+           they belong to the UPPER PHYSICAL SCREEN, and painting them into fb
+           gave them engine A's affinity instead, which the display swap then
+           carried into the wrong half. Nothing happens in the inset layout; the
+           compose returns 0, the surface falls back to fb and present() keeps
+           reading fb, exactly as before. */
+        uint32_t *stack_img = stacked
+                ? hal_sub_screen_stacked_image(&fb.px[0][0]) : 0;
+        const OvlSurface surf =
+            stacked ? ovl_surface_stacked(stack_img, fb) : ovl_surface(fb);
 
-        /* THE STACKED IMAGE IS BUILT LAST, and last is load-bearing for the
-           same reason it is in the level loop: every line above this one that
-           writes a pixel writes it into fb -- the raster, the engine-A
-           composite, the menu, the toast -- and the stacked image is a copy of
-           the finished fb with the bottom screen under it. Nothing happens in
-           the inset layout; the compose returns 0 and present() keeps reading
-           fb. */
+        if (menu_on) menu_draw(surf);
+        toast_draw(surf);
+
         if (stacked)
-            stack_present_arm(hal_sub_screen_stacked_image(&fb.px[0][0]), hwnd);
+            stack_present_arm(stack_img, hwnd);
         present();
         /* the click flag is true for exactly the frame it landed on; the hold
            in g_mouse_left_down is what outlives it */
@@ -8874,6 +8948,36 @@ int main(void)
             }
         }
 
+        /* THE STACKED IMAGE IS BUILT HERE, ahead of the overlays, and that is
+           this lane's one change to the order. Every line ABOVE this one that
+           writes a pixel writes it into fb -- the raster, the engine-A
+           composite, the fade -- so the compose still reads a finished frame
+           and composes exactly the picture it composed before.
+
+           WHAT MOVED, AND WHY. The F3 overlay, the F5 menu and the save-state
+           toast used to be painted into fb and copied up with it. fb is ENGINE
+           A's framebuffer, and since ppu_compose_stacked started honouring
+           POWCNT1 bit 15 engine A is not always the top screen: the four
+           dScMgD3DBase_c scenes toggle the bit every frame and Snowball Slalom
+           clears it for the whole minigame, so the overlays flashed between the
+           halves on one and sat on the bottom screen on the other. They are
+           host UI, they belong to a SCREEN, and they now paint on the composed
+           image's upper half -- which is the upper physical LCD whichever
+           engine is feeding it.
+
+           THE INSET LAYOUT IS UNCHANGED: `stacked` is 0, the surface is fb, and
+           every line below is the line that was here. THE SELFTEST DUMP IS
+           UNCHANGED TOO on every run that has an overlay to lose, because it
+           has none: no tool in port/tools sets SM64DS_OVERLAY or SM64DS_MENU,
+           and the toast needs a save-state keypress. What a stacked run with
+           SM64DS_OVERLAY=1 loses is the overlay inside the 512x384 fb BMP; it
+           is in the STACKED capture instead, which is the picture that run is
+           actually presenting. */
+        uint32_t *stack_img = stacked
+                ? hal_sub_screen_stacked_image(&fb.px[0][0]) : 0;
+        const OvlSurface surf =
+            stacked ? ovl_surface_stacked(stack_img, fb) : ovl_surface(fb);
+
         /* THE OVERLAY GOES HERE: after the raster owns the frame and before
            the blit hands it to GDI, so it is in the pixels rather than over
            the window, and the selftest BMP carries it. */
@@ -8900,24 +9004,15 @@ int main(void)
             os.cam_name = cam_mode_name(cam_mode);
             os.mem_kb = ovl_mem_kb;
             os.menu_paused = !game_ticked;
-            ovl_draw(fb, os);
+            ovl_draw(surf, os);
         }
-        if (menu_on) menu_draw(fb);
+        if (menu_on) menu_draw(surf);
         /* the save-state toast, over everything, bottom-left; at file scope
            now so the windowed scene loop can show the menu's refusals too */
-        toast_draw(fb);
+        toast_draw(surf);
 
-        /* THE STACKED IMAGE IS BUILT LAST, and last is load-bearing. Every
-           line above this one that writes a pixel writes it into fb -- the
-           raster, the engine-A composite, the fade, the F3 overlay, the menu,
-           the toast -- and the stacked image is a copy of the finished fb with
-           the bottom screen under it. Building it here rather than earlier is
-           what lets the selftest dump below keep writing the same 512x384 fb
-           in both layouts: the mode adds a downstream consumer and moves
-           nothing upstream of it. Nothing happens in the inset layout; the
-           compose returns 0 and present() keeps reading fb. */
         if (stacked)
-            stack_present_arm(hal_sub_screen_stacked_image(&fb.px[0][0]), hwnd);
+            stack_present_arm(stack_img, hwnd);
 
         ph_begin(&t_phase);
         present();
