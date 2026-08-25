@@ -270,7 +270,7 @@ def converted(src_root=None):
     counts = dict.fromkeys(list(CRITERIA) + ["shared_header"], 0)
     passes_hist = {}
     readable = core = 0
-    ownership = srcpath.source_ownership_index()
+    ownership = srcpath.source_definition_index()
     repo_root = srcpath.REPO.absolute()
 
     source_readable = 0

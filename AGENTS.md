@@ -132,7 +132,7 @@ One-function-per-file remains the intake format for new matches. A reconstructed
 class may later be promoted into one production translation unit only when its TU
 manifest is partitioned-link verified, `python tools/cpp_tu_compat.py --require-ready`
 passes, and every enrolled symbol keeps its original credit through a `path#symbol`
-override in `config/attribution.json`. Keep compatibility/tooling changes in a separate
+override in `attribution.json`. Keep compatibility/tooling changes in a separate
 PR from the source promotion, and run the full ROM, link, attribution, and `port/`
 gates on the promotion.
 
