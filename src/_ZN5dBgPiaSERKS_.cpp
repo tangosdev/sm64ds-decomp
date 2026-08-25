@@ -1,16 +1,20 @@
 //cpp
 // @symbol _ZN5dBgPiaSERKS_
-/* recovered: named members + shared header */
 #include "dBgPi.h"
-extern "C" char *_ZN5dBgPiaSERKS_(struct dBgPi *self, const char *o) {
-    self->unk_004 = *(const long long *)(o + 4);
-    self->unk_00c = *(const int *)(o + 0xc);
-    self->unk_010 = *(const int *)(o + 0x10);
-    self->unk_014 = *(const int *)(o + 0x14);
-    self->unk_018 = *(const unsigned short *)(o + 0x18);
-    self->unk_01a = *(const unsigned short *)(o + 0x1a);
-    self->unk_01c = *(const int *)(o + 0x1c);
-    self->unk_020 = *(const int *)(o + 0x20);
-    self->unk_024 = *(const int *)(o + 0x24);
-    return ((char *)self);
+
+dBgPi &dBgPi::operator=(const dBgPi &other)
+{
+    /* CLPS is one 64-bit record. This spelling also preserves its two loads
+       before either store when source and destination might overlap. */
+    *reinterpret_cast<u64 *>(&surface.clps) =
+        *reinterpret_cast<const u64 *>(&other.surface.clps);
+    surface.normal.x = other.surface.normal.x;
+    surface.normal.y = other.surface.normal.y;
+    surface.normal.z = other.surface.normal.z;
+    triangleID = other.triangleID;
+    flags = other.flags;
+    clsnID = other.clsnID;
+    unk_020 = other.unk_020;
+    unk_024 = other.unk_024;
+    return *this;
 }

@@ -89,13 +89,6 @@ void _ZN6Memory16operator_delete2EPv(void *p) { _ZN6Memory10DeallocateEPv(p); }
 
 }
 
-// Model's destructor is still a flat extern "C" Itanium function in src/, and
-// its class now has a real constructor, so MSVC emits the vtable and wants a
-// real ~Model() for slot 0. This reaches the ROM body; it returns `this`,
-// which a destructor discards.
-extern "C" void *_ZN5ModelD1Ev(void *self);
-Model::~Model() { _ZN5ModelD1Ev(this); }
-
 // ModelBase's destructor is not sliced for the host: the ROM body releases
 // resources through the collision layer, and slicing it pulls that whole tree
 // in. MSVC still needs the destructor defined to emit the vtable, so it takes
@@ -115,7 +108,3 @@ ModelBase::~ModelBase()
 // target routes through the Memory layer here -- matching how _Znwj is
 // handled in hal/cxxname_bridge.cpp.
 extern "C" void _ZdlPv(void *p) { _ZN6Memory10DeallocateEPv(p); }
-
-// src/_ZN9ModelBaseD2Ev.c calls a bare `Deallocate` at 0x02018144 -- the flat
-// spelling that predates modelling Memory as a class. Same destination.
-extern "C" void Deallocate(void *p) { _ZN6Memory10DeallocateEPv(p); }

@@ -2332,6 +2332,10 @@ src/_ZN5ModelD0Ev.c:
     complete
     .text start:0x02016ce0 end:0x02016d20
 
+src/_ZN5ModelD1Ev.cpp:
+    complete
+    .text start:0x02016d20 end:0x02016d58
+
 src/_ZN5ModelC1Ev.cpp:
     complete
     .text start:0x02016d58 end:0x02016da8
@@ -5267,19 +5271,19 @@ src/func_02037eb0.c:
     complete
     .text start:0x02037eb0 end:0x02037ee4
 
-src/func_02037ee4.c:
+src/_ZN5dBgPcD2Ev.c:
     complete
     .text start:0x02037ee4 end:0x02037ee8
 
-src/func_02037ee8.c:
+src/_ZN5dBgPcD1Ev.cpp:
     complete
     .text start:0x02037ee8 end:0x02037eec
 
-src/func_02037eec.c:
+src/_ZN5dBgPcC1Ev.cpp:
     complete
     .text start:0x02037eec end:0x02037f18
 
-src/func_02037f18.c:
+src/_ZN5dBgPcC2Ev.c:
     complete
     .text start:0x02037f18 end:0x02037f44
 
@@ -5335,15 +5339,15 @@ src/_ZN5dBgPiD2Ev.c:
     complete
     .text start:0x020380ec end:0x02038114
 
-src/func_02038114.c:
+src/_ZN5dBgPiD0Ev.c:
     complete
     .text start:0x02038114 end:0x02038144
 
-src/_ZN5dBgPiD1Ev.c:
+src/_ZN5dBgPiD1Ev.cpp:
     complete
     .text start:0x02038144 end:0x0203816c
 
-src/_ZN5dBgPiC1Ev.c:
+src/_ZN5dBgPiC1Ev.cpp:
     complete
     .text start:0x0203816c end:0x0203819c
 
@@ -5799,11 +5803,11 @@ src/_ZN8dM3dGSphD2Ev.c:
     complete
     .text start:0x0203ac1c end:0x0203ac2c
 
-src/func_0203ac2c.c:
+src/_ZN8dM3dGSphD0Ev.c:
     complete
     .text start:0x0203ac2c end:0x0203ac50
 
-src/func_0203ac50.c:
+src/_ZN8dM3dGSphD1Ev.cpp:
     complete
     .text start:0x0203ac50 end:0x0203ac60
 
@@ -5811,7 +5815,7 @@ src/_ZN8dM3dGSphC1Ev.cpp:
     complete
     .text start:0x0203ac60 end:0x0203ac70
 
-src/_ZN8dM3dGSphC2Ev.c:
+src/_ZN8dM3dGSphC2Ev.cpp:
     complete
     .text start:0x0203ac70 end:0x0203ac80
 

@@ -8,7 +8,7 @@ extern int VTable_dBgPi_dBgCh_LinThunk[];
 int *_ZN9dBgCh_LinD1Ev(struct dBgCh_Lin *self) {
     ((int *)self)[0] = (int)_ZTV9dBgCh_Lin;
     *(int *)((char *)&self->unk_010) = (int)VTable_dBgPi_dBgCh_LinThunk;
-    func_0203ac50((char *)&self->mBoundSphere);
+    _ZN8dM3dGSphD1Ev((char *)&self->mBoundSphere);
     func_ov002_020feab8((char *)&self->unk_038);
     _ZN5dBgPiD2Ev((char *)&self->unk_010);
     func_020354d0(((int *)self));

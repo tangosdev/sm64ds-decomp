@@ -5345,19 +5345,19 @@ matched: yes</title></rect><rect x="140.03" y="464.60" width="26.20" height="1.3
 module: arm9
 addr: 0x02037eb0
 size: 52 bytes
-matched: yes</title></rect><rect x="166.24" y="464.60" width="2.02" height="1.33" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02037ee4
+matched: yes</title></rect><rect x="166.24" y="464.60" width="2.02" height="1.33" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5dBgPcD2Ev
 module: arm9
 addr: 0x02037ee4
 size: 4 bytes
-matched: yes</title></rect><rect x="168.25" y="464.60" width="2.02" height="1.33" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02037ee8
+matched: yes</title></rect><rect x="168.25" y="464.60" width="2.02" height="1.33" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5dBgPcD1Ev
 module: arm9
 addr: 0x02037ee8
 size: 4 bytes
-matched: yes</title></rect><rect x="170.27" y="464.60" width="22.17" height="1.33" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02037eec
+matched: yes</title></rect><rect x="170.27" y="464.60" width="22.17" height="1.33" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5dBgPcC1Ev
 module: arm9
 addr: 0x02037eec
 size: 44 bytes
-matched: yes</title></rect><rect x="192.44" y="464.60" width="22.17" height="1.33" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02037f18
+matched: yes</title></rect><rect x="192.44" y="464.60" width="22.17" height="1.33" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5dBgPcC2Ev
 module: arm9
 addr: 0x02037f18
 size: 44 bytes
@@ -5413,7 +5413,7 @@ matched: yes</title></rect><rect x="69.25" y="465.93" width="12.12" height="2.21
 module: arm9
 addr: 0x020380ec
 size: 40 bytes
-matched: yes</title></rect><rect x="81.38" y="465.93" width="14.55" height="2.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02038114
+matched: yes</title></rect><rect x="81.38" y="465.93" width="14.55" height="2.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN5dBgPiD0Ev
 module: arm9
 addr: 0x02038114
 size: 48 bytes
@@ -5877,11 +5877,11 @@ matched: yes</title></rect><rect x="113.51" y="488.71" width="3.31" height="3.24
 module: arm9
 addr: 0x0203ac1c
 size: 16 bytes
-matched: yes</title></rect><rect x="116.83" y="488.71" width="7.46" height="3.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0203ac2c
+matched: yes</title></rect><rect x="116.83" y="488.71" width="7.46" height="3.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8dM3dGSphD0Ev
 module: arm9
 addr: 0x0203ac2c
 size: 36 bytes
-matched: yes</title></rect><rect x="124.28" y="488.71" width="3.31" height="3.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0203ac50
+matched: yes</title></rect><rect x="124.28" y="488.71" width="3.31" height="3.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8dM3dGSphD1Ev
 module: arm9
 addr: 0x0203ac50
 size: 16 bytes

@@ -8,12 +8,12 @@
  * subobject) -- so the variant label is C2. See notes/ctor-migration.md
  * section 4/4b.
  */
-extern void func_02037f18(void *);
+extern void _ZN5dBgPcC2Ev(void *);
 extern void func_020380c0(void *);
 extern int data_02099368[];
 int *_ZN5dBgPiC2Ev(int *t)
 {
-    func_02037f18((char *)t + 0x4);
+    _ZN5dBgPcC2Ev((char *)t + 0x4);
     t[0] = (int)data_02099368;
     func_020380c0(t);
     return t;

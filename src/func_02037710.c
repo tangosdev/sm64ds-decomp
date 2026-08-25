@@ -1,4 +1,4 @@
-extern void func_0203ac50(void *);
+extern void _ZN8dM3dGSphD1Ev(void *);
 extern void func_ov002_020feab8(void *);
 extern void _ZN5dBgPiD2Ev(void *);
 extern void func_020354d0(void *);
@@ -9,7 +9,7 @@ int *func_02037710(int *t)
 {
     t[0] = (int)data_020992a4;
     *(int *)((char *)t + 0x10) = (int)data_020992b4;
-    func_0203ac50((char *)t + 0x64);
+    _ZN8dM3dGSphD1Ev((char *)t + 0x64);
     func_ov002_020feab8((char *)t + 0x38);
     _ZN5dBgPiD2Ev((char *)t + 0x10);
     func_020354d0(t);

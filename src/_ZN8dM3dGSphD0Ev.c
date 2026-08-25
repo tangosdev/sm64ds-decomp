@@ -5,7 +5,7 @@ extern void _ZN6Memory16operator_delete2EPv(void *ptr);
 
 struct Obj { void *vtable; };
 
-void *func_0203ac2c(struct Obj *self)
+void *_ZN8dM3dGSphD0Ev(struct Obj *self)
 {
     self->vtable = &_ZTV8dM3dGSph;
     _ZN6Memory16operator_delete2EPv(self);
