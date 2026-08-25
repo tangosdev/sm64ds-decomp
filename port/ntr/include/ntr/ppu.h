@@ -317,6 +317,37 @@ struct StackLayout {
     // values it was handed, and every consumer that has to agree with it
     // reads the same struct.
     const uint32_t *art;
+    // WHICH PHYSICAL SCREEN ENGINE A IS DRIVING. 0 = the upper one, which is
+    // POWCNT1 bit 15 set and what every layout carried before this existed.
+    // 1 = the LOWER one, which is bit 15 clear.
+    //
+    // GBATEK, POWCNT1 (0x04000304) bit 15: "NDS Display Swap (0=Send Display A
+    // to Lower Screen, 1=Send Display A to Upper Screen)". It is a DISPLAY
+    // routing bit and nothing else -- neither engine's rendering changes, only
+    // which LCD receives which engine's scan-out -- so the honest place to read
+    // it is the presentation, which is what this field carries it to.
+    //
+    // NOT LATCHED WITH THE REST OF THE LAYOUT, and it must not be. Two of the
+    // scenes that drive it TOGGLE IT EVERY FRAME (the dScMgD3DBase_c family's
+    // slot 24 alternates the live camera between the two screens), so a value
+    // cached at the scene's G-latch would be one frame's answer serving the
+    // whole minigame. hal/screen_gap.cpp sets it on both paths out of
+    // hal_screen_layout() beside `seam`, for exactly that reason.
+    //
+    // ZERO FROM stack_layout(), which is the whole of the zero-change
+    // guarantee: a layout nobody tells about POWCNT1 composes the way it always
+    // did, and every scene that leaves bit 15 set composes byte-for-byte the
+    // way it always did whether or not it was told.
+    //
+    // WHAT MOVES WITH IT. The two blits, obviously; and the band's ENGINE
+    // BINDINGS, because `row_bias` in BandEngine is not a property of an engine
+    // but a statement about which side of the band that engine's rows are on.
+    // See ppu_compose_stacked and band_biases in ntr/ppu_sub.cpp. What does NOT
+    // move: every image-row expression (top_y, band_y, bottom_y, head_h, the
+    // ambient fill's two edge rows, the stylus mappers), because those name
+    // PHYSICAL screens and the physical screens do not move -- only the engine
+    // feeding each one does.
+    int main_lower;
 };
 
 enum { GAP_FILL_SOLID = 0, GAP_FILL_AMBIENT = 1, GAP_FILL_CUSTOM = 2 };

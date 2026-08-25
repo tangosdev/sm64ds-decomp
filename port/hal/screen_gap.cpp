@@ -393,6 +393,24 @@ const ntr::StackLayout *hal_screen_layout(void)
        shape of defect a "latch it with everything else" reading produces and
        nothing downstream would report. It is one int and it costs a call. */
     const int seam = hal_gapless_engaged() ? 1 : 0;
+    /* POWCNT1's DISPLAY SWAP, read live and set on both paths out of here for
+       exactly the reason the seam flag is: it is not in the latch key, and it
+       is not a per-scene fact at all. GBATEK, POWCNT1 (0x04000304) bit 15:
+       0 sends display A to the LOWER screen, 1 to the upper one.
+
+       PER FRAME AND NOT PER SCENE. The dScMgD3DBase_c family's slot 24
+       (func_ov006_020e6e78) TOGGLES this bit every frame -- one camera view
+       rendered live on the screen the bit names, the other showing the display
+       capture unit's copy of the previous frame -- so a value cached at the
+       G-latch would be one frame's answer serving a whole minigame. Scene 377
+       (Snowball Slalom) clears it once at InitResources and leaves it clear;
+       both shapes fall out of reading it here.
+
+       EVERY OTHER SCENE LEAVES IT SET, and hal/sub_screen.cpp's bring-up sets
+       it, so this reads 0 for them and ntr::ppu_compose_stacked composes
+       exactly what it composed before the bit was read at all. */
+    const int main_lower =
+        (*(volatile unsigned short *)0x04000304 & 0x8000) ? 0 : 1;
     /* THE SEAM'S FRAME ALIGNMENT, set every frame for the same reason the
        seam flag is: it must die with the scene. With the mod engaged the two
        screens are one picture, so the top screen reads the game's WORKING
@@ -416,6 +434,7 @@ const ntr::StackLayout *hal_screen_layout(void)
         g_lay.seam = seam;
         g_lay.world_band = (hal_gapless_world() || hal_gapless_world_rows()) ? 1 : 0;
         g_lay.obj_raster_ds = raster ? g_lay.obj_shift_ds : 0;
+        g_lay.main_lower = main_lower;
         return &g_lay;
     }
 
@@ -451,6 +470,7 @@ const ntr::StackLayout *hal_screen_layout(void)
     g_lay.seam = seam;
     g_lay.world_band = (hal_gapless_world() || hal_gapless_world_rows()) ? 1 : 0;
     g_lay.obj_raster_ds = raster ? g_lay.obj_shift_ds : 0;
+    g_lay.main_lower = main_lower;
     /* and the band's per-scene continuity reader, installed at the same moment
        for the same reason: it is per scene, and installing clears the cached
        OAM attributes so nothing crosses from the last minigame into this one */

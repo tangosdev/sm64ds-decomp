@@ -1061,10 +1061,88 @@ void hal_sub_screen_frame_begin(void)
     hal_touch_client_probe();
 }
 
+/* ---- THE DISPLAY-ROUTING PROBE, default off --------------------------------
+ *
+ * SM64DS_SCREENS_PROBE=1 prints the registers that decide WHICH ENGINE'S OUTPUT
+ * LANDS ON WHICH PHYSICAL SCREEN, and it prints them the only way a
+ * per-frame-toggling register can honestly be reported: once at the first
+ * frame, again on every CHANGE to the tuple, and a census at the end of the
+ * run. A sample taken at one frame of a scene whose slot 24 flips the bit every
+ * frame is not a measurement of anything.
+ *
+ * The four registers, all GBATEK:
+ *   POWCNT1   0x04000304  bit 15 = display swap (1 = engine A to the UPPER
+ *                         screen, 0 = to the lower one)
+ *   DISPCAPCNT 0x04000064 the display capture unit: bit 31 enable (the
+ *                         hardware clears it itself at the end of the captured
+ *                         frame), bits 16-17 destination VRAM block, 18-19
+ *                         destination offset in 0x8000-byte units, 20-21 size
+ *                         and 29-30 source
+ *   DISPCNT_B 0x04001000  engine B's mode and layer enables, which is what says
+ *                         whether the captured frame has a layer to show
+ *                         through
+ *   BG2CNT_B  0x0400100c  the bitmap BG's own word when it has one
+ *
+ * NOTHING HERE CHANGES A PIXEL. It reads four registers and writes stderr.
+ */
+void hal_screens_probe(void)
+{
+    static int on = -1;
+    if (on < 0) on = env_flag("SM64DS_SCREENS_PROBE", 0);
+    if (!on) return;
+    static unsigned long frame;
+    static unsigned long swaps;      /* frames whose bit 15 differed from the last */
+    static unsigned long lower;      /* frames with engine A on the lower screen */
+    static unsigned long cap_armed;  /* frames that entered with capture enabled */
+    static unsigned last_key = ~0u;
+    static int last_bit = -1;
+
+    const unsigned pow1 = *(volatile unsigned short *)0x04000304;
+    const unsigned cap = *(volatile unsigned *)0x04000064;
+    const unsigned dispb = *(volatile unsigned *)0x04001000;
+    const unsigned bg2b = *(volatile unsigned short *)0x0400100c;
+    const int bit = (pow1 >> 15) & 1;
+
+    ++frame;
+    if (!bit) ++lower;
+    if (cap & 0x80000000u) ++cap_armed;
+    if (last_bit >= 0 && bit != last_bit) ++swaps;
+    last_bit = bit;
+
+    const unsigned key = (unsigned)bit | (cap & 0xF0FF0000u) |
+                         ((dispb & 0x1F07u) << 1);
+    if (key != last_key) {
+        last_key = key;
+        std::fprintf(stderr,
+                     "  [screens] f%-6lu POWCNT1 %04x (engine A -> %s) "
+                     "DISPCAPCNT %08x (%s block %u ofs %u size %u src %u) "
+                     "DISPCNT_B %08x mode %u BG %c%c%c%c OBJ %c BG2CNT_B %04x\n",
+                     frame - 1, pow1, bit ? "UPPER" : "LOWER", cap,
+                     (cap & 0x80000000u) ? "ARMED" : "idle",
+                     (cap >> 16) & 3, (cap >> 18) & 3, (cap >> 20) & 3,
+                     (cap >> 29) & 3, dispb, dispb & 7,
+                     (dispb & 0x0100) ? '0' : '-', (dispb & 0x0200) ? '1' : '-',
+                     (dispb & 0x0400) ? '2' : '-', (dispb & 0x0800) ? '3' : '-',
+                     (dispb & 0x1000) ? 'y' : '-', bg2b);
+        std::fflush(stderr);
+    }
+    /* the census, every 300 frames: the numbers a per-frame flip is actually
+       read off, which no single sample can carry */
+    if (frame % 300 == 0) {
+        std::fprintf(stderr,
+                     "  [screens] census f%lu: %lu frame(s) with engine A on "
+                     "the LOWER screen, %lu bit-15 change(s), %lu frame(s) "
+                     "entered with DISPCAPCNT armed\n",
+                     frame, lower, swaps, cap_armed);
+        std::fflush(stderr);
+    }
+}
+
 /* Bottom of the frame: upload the shadows the game filled, rasterise engine B,
    drop it into the corner. With the panel off nothing here writes a pixel. */
 void hal_sub_screen_present(unsigned int *dst, int w, int h)
 {
+    hal_screens_probe();
     /* SM64DS_SUB_SCALE is a divisor: 1 = full DS size (a quarter of the 2x
        window, Tango's "super in the way"), 2 = half size (1/16 of the
        window, the default), up to 4. */

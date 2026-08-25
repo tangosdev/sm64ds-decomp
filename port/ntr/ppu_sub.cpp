@@ -1091,16 +1091,19 @@ void amb_trace_list(const char *name, const RGB *v)
  * this feature ships with is exactly a second implementation re-deriving the
  * band from the captured edge rows and diffing it. Every divide here is a
  * truncating integer divide and the checker does the same ones. */
-void band_edge_obj_masks(uint8_t *mtop, uint8_t *mbot);  /* defined after the
-    band raster below; the masks say which DS columns of the two edge rows an
-    OBJ covers, so the wash can sample the background alone */
+void band_edge_obj_masks(uint8_t *mtop, uint8_t *mbot, int main_lower);
+    /* defined after the band raster below; the masks say which DS columns of
+       the two edge rows an OBJ covers, so the wash can sample the background
+       alone. main_lower is POWCNT1 bit 15 clear: the two ENGINES exchange, the
+       two edge rows do not, because mtop is the upper screen's last row and
+       mbot the lower screen's first whichever engine is feeding each. */
 
 void band_fill_ambient(uint32_t *dst, int dst_w, const StackLayout &lay)
 {
     const uint32_t *top_edge = dst + (size_t)(lay.band_y - 1) * dst_w;
     const uint32_t *bot_edge = dst + (size_t)lay.bottom_y * dst_w;
     uint8_t mtop[256], mbot[256];
-    band_edge_obj_masks(mtop, mbot);
+    band_edge_obj_masks(mtop, mbot, lay.main_lower);
     RGB tops[kAmbCols], bots[kAmbCols];
     RGB raw_t[kAmbCols], raw_b[kAmbCols];
     int centre[kAmbCols];
@@ -1462,6 +1465,74 @@ struct BandEngine {
 inline int band_row_of(const BandEngine &e, int slot, int y)
 {
     return y + e.row_bias + (e.resid ? (int)e.resid[slot] : 0);
+}
+
+/* ---- WHICH SIDE OF THE BAND AN ENGINE IS ON ---------------------------------
+ *
+ * `row_bias` was never a property of an engine. It is a statement about which
+ * of the two screens that engine is DRIVING, and every binding below spelled it
+ * as a literal because until POWCNT1 was read the answer could not change.
+ *
+ * The engine on the UPPER screen has the band BELOW its own rows: its engine
+ * row 192 is band row 0, so the bias is -192. The engine on the LOWER screen
+ * has the band ABOVE its rows: its engine row -gap_ds is band row 0, so the
+ * bias is +gap_ds. POWCNT1 bit 15 decides which engine is which and nothing
+ * else about either binding moves -- the register base, the OAM, the VRAM and
+ * the palettes all still belong to the engine that owns them.
+ *
+ * WITH THE BIT SET (lay.main_lower == 0) these return exactly the literals the
+ * bindings carried before this existed, which is the whole of the zero-change
+ * guarantee for every scene that never writes the register. */
+inline int band_bias_a(const StackLayout &lay)
+{
+    return lay.main_lower ? lay.gap_ds : -192;
+}
+
+inline int band_bias_b(const StackLayout &lay)
+{
+    return lay.main_lower ? -192 : lay.gap_ds;
+}
+
+/* ---- THE PASSES THAT ARE ENGINE A's BY CONSTRUCTION, UNDER A SWAP ----------
+ *
+ * Three of the passes below are not "the upper screen's engine" but ENGINE A's
+ * specifically: the headroom strip, the hinge and the two seam passes all read
+ * g_oam_a_shown, the per-entry residual marks, or engine A's own submission
+ * geometry, and every one of those is a fact about the MAIN engine rather than
+ * about a screen position. Re-pointing them at engine B would not be a swap, it
+ * would be reading marks that describe a different engine's OAM.
+ *
+ * So under a swap they REFUSE rather than draw. That is a real behaviour
+ * choice and it is made this way because drawing the wrong rows is worse than
+ * drawing none: each of these passes exists to fill rows the engines could not
+ * address, and a pass that fills them off the wrong engine's geometry puts
+ * invented content into the picture.
+ *
+ * NO SCENE IN THE PROGRAM REACHES THIS TODAY. All four are gated on the
+ * GaplessMinigames mod or its headroom (hal/screen_gap.cpp's kGaplessScenes:
+ * 368, 374, 378, 366, 390), and none of those five writes POWCNT1 bit 15 --
+ * the writers are the dScMgD3DBase_c family (372, 373, 384, 385) and 377.
+ * The refusal is therefore unreachable, and it is here so that the day someone
+ * adds a gapless row for a swapping scene the picture says so instead of
+ * quietly gaining a wrong band.
+ *
+ * SAID ONCE PER PASS PER PROCESS, on stderr, because a silent refusal is the
+ * thing this file's own notes keep calling a hazard. */
+int swap_refuses(const StackLayout &lay, int which, const char *pass)
+{
+    static int said[4];
+    if (!lay.main_lower) return 0;
+    if (which >= 0 && which < 4 && !said[which]) {
+        said[which] = 1;
+        std::fprintf(stderr, "  [screens] %s STANDS DOWN: POWCNT1 bit 15 is "
+                     "clear, so engine A is driving the LOWER screen, and this "
+                     "pass is bound to engine A's own submission geometry "
+                     "rather than to a screen position. It draws nothing this "
+                     "frame rather than drawing engine A's rows in the wrong "
+                     "half.\n", pass);
+        std::fflush(stderr);
+    }
+    return 1;
 }
 
 /* THE PER ENTRY CORRECTION IN DS ROWS, spelled once. The band's world rows and
@@ -1892,19 +1963,30 @@ void band_continuity(BandPixel *band, int gap_ds, const BandEngine &ea,
    the two engines' own OAM exactly the way the band passes do -- engine A's
    screen row 191 is band index 0 under a bias of -191, engine B's row 0 under
    a bias of 0 -- so "an OBJ covers this column" is the same answer the screens
-   themselves drew, not a guess from pixel colours. */
-void band_edge_obj_masks(uint8_t *mtop, uint8_t *mbot)
+   themselves drew, not a guess from pixel colours.
+
+   THE BIASES BELONG TO THE ROWS AND THE REGISTERS BELONG TO THE ENGINES, and
+   POWCNT1's swap moves only the second half. mtop is the UPPER screen's last
+   row whatever is feeding it, so it always wants bias -191; what changes is
+   whether that row came out of engine A or engine B. */
+void band_edge_obj_masks(uint8_t *mtop, uint8_t *mbot, int main_lower)
 {
     static BandPixel rowbuf[256];
-    const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
-                           -191, 0, "A", 0};
+    const BandEngine a_upper = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
+                                -191, 0, "A", 0};
+    const BandEngine a_lower = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
+                                0, 0, "A", 0};
+    const BandEngine b_upper = {kRegBase, kOamBase, kObjVram, kObjPltt,
+                                kObjExtPltt, -191, 1, "B", 0};
+    const BandEngine b_lower = {kRegBase, kOamBase, kObjVram, kObjPltt,
+                                kObjExtPltt, 0, 1, "B", 0};
+    const BandEngine &up = main_lower ? b_upper : a_upper;
+    const BandEngine &lo = main_lower ? a_lower : b_lower;
     std::memset(rowbuf, 0, sizeof rowbuf);
-    band_raster_engine(rowbuf, 1, ea);
+    band_raster_engine(rowbuf, 1, up);
     for (int x = 0; x < 256; ++x) mtop[x] = rowbuf[x].hit;
-    const BandEngine eb = {kRegBase, kOamBase, kObjVram, kObjPltt, kObjExtPltt,
-                           0, 1, "B", 0};
     std::memset(rowbuf, 0, sizeof rowbuf);
-    band_raster_engine(rowbuf, 1, eb);
+    band_raster_engine(rowbuf, 1, lo);
     for (int x = 0; x < 256; ++x) mbot[x] = rowbuf[x].hit;
 }
 
@@ -1935,10 +2017,13 @@ void band_ghost(uint32_t *dst, int dst_w, const StackLayout &lay)
         if (!band || !acc) return;
     }
     std::memset(band, 0, sizeof(BandPixel) * (size_t)lay.gap_ds * 256);
+    /* the biases come from band_bias_a/b so the swap moves them together with
+       every other band pass; with bit 15 set they are -192 and +gap_ds, which
+       is the pair this shipped with */
     const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
-                           -192, 0, "A", 0};
+                           band_bias_a(lay), 0, "A", 0};
     const BandEngine eb = {kRegBase, kOamBase, kObjVram, kObjPltt, kObjExtPltt,
-                           lay.gap_ds, 1, "B", 0};
+                           band_bias_b(lay), 1, "B", 0};
     band_raster_engine(band, lay.gap_ds, ea);
     band_raster_engine(band, lay.gap_ds, eb);
     band_continuity(band, lay.gap_ds, ea, eb);
@@ -2051,17 +2136,29 @@ void band_peek(uint32_t *dst, int dst_w, const StackLayout &lay)
     std::memset(band, 0, sizeof(BandPixel) * (size_t)lay.gap_ds * 256);
     ++g_peek_frame;
 
-    /* ENGINE A FIRST. Its band rows are engine rows 192..191+G, so the bias
-       that turns an engine row into a band index is -192. Engine A's OBJ
-       extended palette store is not modelled anywhere in this program, so it
-       passes 0 and a 256-colour engine-A sprite reads the standard palette --
-       the same answer ntr/ppu.cpp's own engine-A raster gives. */
+    /* ENGINE A FIRST. On the upper screen its band rows are engine rows
+       192..191+G, so the bias that turns an engine row into a band index is
+       -192; under POWCNT1's swap it is the lower screen's engine and the bias
+       is +G. band_bias_a carries that and nothing else about this binding
+       moves. Engine A's OBJ extended palette store is not modelled anywhere in
+       this program, so it passes 0 and a 256-colour engine-A sprite reads the
+       standard palette -- the same answer ntr/ppu.cpp's own engine-A raster
+       gives. */
     const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
-                           -192, 0, "A", 0};
+                           band_bias_a(lay), 0, "A", 0};
     /* ENGINE B SECOND, so it wins where both drew; see the header note. Its
-       band rows are engine rows -G..-1, so the bias is +G. */
+       band rows are engine rows -G..-1 on the lower screen, so the bias is +G,
+       and -192 when the swap puts it on the upper one.
+
+       THE DRAW ORDER IS NOT SWAPPED WITH THE BIASES, deliberately. "B second"
+       is about the sub engine's rows being the ones a player is looking at
+       through the stylus, which is a statement about the physical bottom screen
+       and about the OWNER's judgment of the picture, not about which engine
+       feeds it. No scene that swaps also has a band with both engines drawing
+       into it today, so no picture in the program depends on this either way;
+       when one does, it is the owner's call and not a derivation. */
     const BandEngine eb = {kRegBase, kOamBase, kObjVram, kObjPltt, kObjExtPltt,
-                           lay.gap_ds, 1, "B", 0};
+                           band_bias_b(lay), 1, "B", 0};
     band_raster_engine(band, lay.gap_ds, ea);
     band_raster_engine(band, lay.gap_ds, eb);
     /* AND THE DEAD ZONE LAST, so "did an engine draw this pixel" is asked of
@@ -2148,6 +2245,7 @@ unsigned g_hinge_frame;
 void hinge_paint(uint32_t *dst, int dst_w, const StackLayout &lay)
 {
     if (lay.obj_shift_ds <= 0 || lay.band_h <= 0) return;
+    if (swap_refuses(lay, 0, "hinge_paint")) return;
     if (!g_oam_a_have) return;
     /* GAP_DS_MAX rows of 256 DS pixels, allocated on the first hinge frame and
        never freed: band_peek's trade, for band_peek's reason. */
@@ -2384,6 +2482,7 @@ uint32_t head_lerp(uint32_t c0, uint32_t c1, int u, int span)
 void head_paint(uint32_t *dst, int dst_w, const StackLayout &lay)
 {
     if (lay.head_h <= 0 || lay.head_ds <= 0) return;
+    if (swap_refuses(lay, 1, "head_paint")) return;
     /* GAP_DS_MAX + SUB_H rows of 256 DS pixels, allocated on the first headroom
        frame and never freed: band_peek's trade, for band_peek's reason. As a
        file-scope array it would be host .bss in EVERY binary that links this
@@ -3013,6 +3112,7 @@ void seam_snow(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
                int to_white)
 {
     if (!lay.seam) return;
+    if (swap_refuses(lay, 2, "seam_snow")) return;
     int n_attr = 0;
     const unsigned short *attrs = g_ghost_attr_fn ? g_ghost_attr_fn(&n_attr) : 0;
     if (!attrs || n_attr <= 0) {
@@ -3126,6 +3226,7 @@ void seam_straddle(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
        different hole and is still open. The two never write the same pixel: a
        completion is only ever drawn on the side its own half cannot address. */
     if (!lay.seam || (lay.gap_ds && !lay.obj_shift_ds)) return;
+    if (swap_refuses(lay, 3, "seam_straddle")) return;
     ++g_seam_frame;
     /* the same two bindings the band's passes use, with engine B's row bias at
        the gapless G: engine row -> world row is -192 for A and 0 for B */
@@ -3220,6 +3321,12 @@ StackLayout stack_layout(int gap_ds, int head_ds, int obj_shift_ds,
        band cannot carry one, and dropping it here means no consumer has to ask
        the question twice. */
     l.art = gap_ds ? art : 0;
+    /* NOT AN INPUT HERE, for the reason the seam flag is not: POWCNT1's display
+       swap is a per-FRAME fact and this is a per-scene latch. Zero is "engine A
+       on the upper screen", which is what every layout in the program carried
+       before the bit was read at all, so a layout nobody tells composes exactly
+       the way it always did. hal/screen_gap.cpp sets it every frame. */
+    l.main_lower = 0;
     return l;
 }
 
@@ -3346,27 +3453,46 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
     if (evy < 0) evy = 0;
     if (evy > 16) evy = 16;
 
-    // the top half, verbatim: it is already faded and already carries the F3
-    // overlay, because it is the framebuffer the caller finished with.
-    // AT top_y RATHER THAN AT ROW ZERO, which is the one word the headroom
-    // changes here: with a headroom the top screen starts head_h rows down and
-    // with none top_y is 0 and this is the memcpy it always was.
-    std::memcpy(dst + (size_t)lay.top_y * dst_w, top,
-                (size_t)SCREEN_W * SCREEN_H * 4);
-    /* THE HEADROOM, here because it reads the row the memcpy above just wrote
-       and nothing else in the image. With no headroom head_h is 0 and this
-       returns immediately, so a layout without one is byte-for-byte what it
-       was before this existed. */
-    head_paint(dst, dst_w, lay);
+    /* ---- WHICH ENGINE GOES IN WHICH HALF ---------------------------------
+     *
+     * POWCNT1 (0x04000304) bit 15 is the DS's display swap: set sends engine A
+     * to the upper LCD, clear sends it to the lower one. It changes NOTHING
+     * about either engine's rendering -- both scan out exactly what they
+     * already scanned out -- so the whole of it lives here, in the two
+     * destinations below.
+     *
+     * lay.main_lower is that bit, inverted, read live by hal/screen_gap.cpp
+     * every frame. With it 0 these two are lay.top_y and lay.bottom_y, which
+     * is the unconditional pair this function shipped with, so every scene
+     * that leaves the bit alone composes byte for byte the way it did.
+     *
+     * THE IMAGE ROWS DO NOT MOVE, and that is the point of naming them this
+     * way round: top_y is the UPPER PHYSICAL SCREEN and bottom_y the LOWER one,
+     * in the window and in the BMP and under the stylus mapper, whichever
+     * engine happens to be feeding each. The DS's touchscreen is the lower
+     * panel and stays the lower panel across a swap, so hal's touch mapping
+     * needs no term here -- which is also the answer to "dragging on the bottom
+     * half draws at the top": the drag was landing on the right panel all
+     * along and the port was showing that panel's engine in the wrong half. */
+    const int a_y = lay.main_lower ? lay.bottom_y : lay.top_y;
+    const int b_y = lay.main_lower ? lay.top_y : lay.bottom_y;
 
-    /* The bottom half. The ratio is a whole number at every tier the port
+    // ENGINE A, verbatim: it is already faded and already carries the F3
+    // overlay, because it is the framebuffer the caller finished with.
+    // AT a_y RATHER THAN AT ROW ZERO, which is the one word the headroom
+    // changes here: with a headroom the upper screen starts head_h rows down
+    // and with none top_y is 0 and this is the memcpy it always was.
+    std::memcpy(dst + (size_t)a_y * dst_w, top,
+                (size_t)SCREEN_W * SCREEN_H * 4);
+
+    /* ENGINE B. The ratio is a whole number at every tier the port
        builds (1, 2 and 4), and a SHIFT rather than a divide would be wrong the
        day a tier is not a power of two, so it stays a divide. */
     const int rx = SCREEN_W / SUB_W, ry = SCREEN_H / SUB_H;
     for (int y = 0; y < SCREEN_H; ++y) {
         const int sy = ry > 0 ? y / ry : (y * SUB_H) / SCREEN_H;
         const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
-        uint32_t *out = dst + (size_t)(lay.bottom_y + y) * dst_w;
+        uint32_t *out = dst + (size_t)(b_y + y) * dst_w;
         for (int x = 0; x < SCREEN_W; ++x) {
             const int sx = rx > 0 ? x / rx : (x * SUB_W) / SCREEN_W;
             uint32_t p = src[sx < SUB_W ? sx : SUB_W - 1];
@@ -3405,6 +3531,17 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
             out[x] = p;
         }
     }
+
+    /* THE HEADROOM, here because it reads the first row of the UPPER screen and
+       nothing else in the image, and under a swap that row is written by the
+       second of the two blits above rather than the first. It used to sit
+       between them, which was the same thing while engine A was always the
+       upper screen; the move is byte-for-byte neutral with the bit set, because
+       with no swap the two blits write disjoint rows and head_paint reads only
+       the ones the first of them wrote. With no headroom head_h is 0 and this
+       returns immediately, so a layout without one is byte-for-byte what it was
+       before this existed. */
+    head_paint(dst, dst_w, lay);
 
     /* THE BAND LAST, because the ambient fill reads the two rows the loops
        above just wrote -- the top screen's bottom row and the bottom screen's
