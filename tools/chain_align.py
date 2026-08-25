@@ -94,9 +94,12 @@ def parse():
 SHADOW_CAST = re.compile(r"struct\s+(\w+)\s*\*\s*\w+\s*=\s*\(\s*struct\s+(\w+)\s*\*\s*\)"
                          r"\s*\(\s*void\s*\*\s*\)\s*c\b")
 THIS_C = re.compile(r"\bc\s*=\s*\(\s*char\s*\*\s*\)\s*this\b")
+RECOVERED = re.compile(r"^\s*(?://|/\*)\s*(?:recovered name:\s*(\w+?)_(\w+)"
+                       r"|(\w+)::\w+\s*-+\s*recovered from vtable slot identity)",
+                       re.M)
 
 
-def shadow_pairs():
+def shadow_pairs(known):
     """shadow struct -> the class it restates, evidenced by the cast site.
 
     A recovered body writes `char *c = (char *)this;` and then
@@ -108,7 +111,18 @@ def shadow_pairs():
     the RTTI name never reaches build/rtti.json -- but it inherits exactly what
     the class it shadows inherits.
 
-    A shadow cast from two different classes is dropped: the pairing has to be
+    Where no body casts, the recovery pass still left the claim in prose: inside
+    _ZN5Stump16CleanupResourcesEv.cpp it wrote
+
+        // recovered name: daObjPile_c_CleanupResources
+        /* daObjPile_c::CleanupResources - recovered from vtable slot identity */
+
+    The ROM function filling Stump's vtable slot was recovered under daObjPile_c's
+    name, which says the two are one class just as the cast does. Only names that
+    are actually declared as a struct somewhere are accepted, so a stray comment
+    cannot invent a pairing.
+
+    A shadow paired with two different classes is dropped: the pairing has to be
     unambiguous to carry names.
     """
     seen = collections.defaultdict(collections.Counter)
@@ -120,11 +134,14 @@ def shadow_pairs():
             continue
         real = p.name[len(m.group(0)):][:int(m.group(1))]
         t = p.read_text(encoding="utf-8", errors="replace")
-        if not THIS_C.search(t):
-            continue
-        for a, b in SHADOW_CAST.findall(t):
-            if a == b and a != real:
-                seen[a][real] += 1
+        if THIS_C.search(t):
+            for a, b in SHADOW_CAST.findall(t):
+                if a == b and a != real:
+                    seen[a][real] += 1
+        for a, _meth, b in RECOVERED.findall(t):
+            cand = a or b
+            if cand and cand != real and cand in known:
+                seen[cand][real] += 1
     return {s: next(iter(r)) for s, r in seen.items() if len(r) == 1}
 
 
@@ -165,7 +182,7 @@ def compatible(f, base):
 
 
 def drifted(occ, hier):
-    shadows = shadow_pairs()
+    shadows = shadow_pairs(set(occ))
     rows = []
     for cls, entries in occ.items():
         cmap, chain = ancestor_names(occ, hier, cls, shadows)
