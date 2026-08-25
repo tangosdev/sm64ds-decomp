@@ -2208,7 +2208,7 @@ src/_ZN14BlendModelAnim9DoSetFileEPcii.cpp:
     complete
     .text start:0x02016604 end:0x02016644
 
-src/_ZN14BlendModelAnimD0Ev.c:
+src/_ZN14BlendModelAnimD0Ev.cpp:
     complete
     .text start:0x02016644 end:0x02016690
 
@@ -2248,7 +2248,7 @@ src/_ZN9ModelAnimD2Ev.c:
     complete
     .text start:0x0201689c end:0x020168d8
 
-src/_ZN9ModelAnimD0Ev.c:
+src/_ZN9ModelAnimD0Ev.cpp:
     complete
     .text start:0x020168d8 end:0x0201691c
 
