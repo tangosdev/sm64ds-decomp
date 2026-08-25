@@ -592,6 +592,10 @@
     "src/_ZN12dBgCh_SphCrrC1Ev.c": "tangosdev",
     "src/_ZN12dBgCh_SphCrrC1Ev.cpp": "tangosdev",
     "src/_ZN15TextureSequenceC1Ev.c": "tangosdev",
-    "src/_ZN15TextureSequenceC1Ev.cpp": "tangosdev"
+    "src/_ZN15TextureSequenceC1Ev.cpp": "tangosdev",
+    "src/_ZN5ModelD1Ev.c": "tangosdev",
+    "src/_ZN5ModelD1Ev.cpp": "tangosdev",
+    "src/_ZN8dM3dGLin3SetERK7Vector3S2_.c": "tangosdev",
+    "src/_ZN8dM3dGLin3SetERK7Vector3S2_.cpp": "tangosdev"
   }
 }

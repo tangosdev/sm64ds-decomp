@@ -32,7 +32,6 @@
 #include "dBgPc.h"
 #include "dBgW.h"
 #include "dBgW_Kc.h"
-#include "dBgPc.h"
 
 static void bg_trap(const char *who)
 {
@@ -88,15 +87,3 @@ void _ZN5dBgPcD1Ev(void *self)   { ((dBgPc *)self)->~dBgPc(); }
 // in dBgCh_SphCrr and dBgPi, so they take the same shape as the rest here.
 BG_TRAP(int dBgW_Kc::DetectClsn(dBgCh_Gnd &), "dBgW_Kc::DetectClsn(dBgCh_Gnd&)")
 BG_TRAP(int dBgW_Kc::DetectClsn(dBgCh_SphCrr &), "dBgW_Kc::DetectClsn(dBgCh_SphCrr&)")
-
-// dBgPc's constructor/destructor pair are real C++ on this branch, so the two
-// raw Itanium spellings that gate 8's collision code still calls -- it reaches
-// them through the flat `dBgPc_Construct` / `dBgPc_Destroy` macros in
-// include/dBgPc.h -- no longer resolve on MSVC, which mangles a real method its
-// own way and has one constructor symbol where Itanium has C1 and C2. Forward
-// them; they are cdecl with `this` as an ordinary argument, so this has to be a
-// call and not an /alternatename alias.
-extern "C" {
-void _ZN5dBgPcC1Ev(void *self) { ::new (self) dBgPc(); }
-void _ZN5dBgPcD1Ev(void *self) { ((dBgPc *)self)->~dBgPc(); }
-}
