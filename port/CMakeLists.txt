@@ -197,7 +197,7 @@ add_custom_command(OUTPUT "${ROMDATA_C}"
 
 add_executable(smoke_model tests/smoke_model.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${GATE4A_GEN} ${GATE4B_GEN} "${ROMDATA_C}")
 target_include_directories(smoke_model PRIVATE
@@ -213,7 +213,7 @@ endif()
 # Gate 5: the fiber frame loop -- game-shaped frames, host-rastered.
 add_executable(smoke_frames tests/smoke_frames.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${GATE4A_GEN} ${GATE4B_GEN} "${ROMDATA_C}")
 target_include_directories(smoke_frames PRIVATE
@@ -229,7 +229,7 @@ endif()
 # Gate 4d: the catalog soak -- every model through the game pipeline.
 add_executable(smoke_soak tests/smoke_soak.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${GATE4A_GEN} ${GATE4B_GEN} "${ROMDATA_C}")
 target_include_directories(smoke_soak PRIVATE
@@ -275,8 +275,8 @@ sm64ds_honor_cpp_markers(SLICE8_SOURCES)
 
 add_executable(smoke_clsn tests/smoke_clsn.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
-    hal/clsn_vtable.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp hal/cstd_div.c
+    hal/clsn_vtable.cpp hal/bg_ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE8_SOURCES} ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} "${ROMDATA_C}")
 target_include_directories(smoke_clsn PRIVATE
@@ -303,7 +303,7 @@ sm64ds_honor_cpp_markers(SLICE7_SOURCES)
 
 add_executable(smoke_modelanim tests/smoke_modelanim.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/anim_bridge.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp hal/anim_bridge.cpp hal/anim_ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE7_SOURCES} ${GATE4A_GEN} ${GATE4B_GEN} "${ROMDATA_C}")
 target_include_directories(smoke_modelanim PRIVATE
@@ -351,7 +351,7 @@ sm64ds_honor_cpp_markers(SLICE6_SOURCES)
 
 add_executable(smoke_oam tests/smoke_oam.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/oam_bridge.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp hal/oam_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE6_SOURCES} ${GATE4A_GEN} ${GATE4B_GEN} ${GATE6_GEN} "${ROMDATA_C}")
 target_include_directories(smoke_oam PRIVATE
@@ -367,7 +367,7 @@ endif()
 # Gate 5b: the animation soak -- every compatible model+BCA pair.
 add_executable(smoke_soak_anim tests/smoke_soak_anim.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${GATE4A_GEN} ${GATE4B_GEN} "${ROMDATA_C}")
 target_include_directories(smoke_soak_anim PRIVATE
@@ -384,7 +384,7 @@ endif()
 # different driver: the piano posed by its BCA through the game's walk.
 add_executable(smoke_anim tests/smoke_anim.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${GATE4A_GEN} ${GATE4B_GEN} "${ROMDATA_C}")
 target_include_directories(smoke_anim PRIVATE
@@ -442,8 +442,8 @@ sm64ds_honor_cpp_markers(SLICE9_SOURCES)
 
 add_executable(smoke_actor tests/smoke_actor.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
-    hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/ctor_bridge.cpp hal/cstd_div.c
+    hal/clsn_vtable.cpp hal/bg_ctor_bridge.cpp hal/actor_vtables.cpp hal/actor_ctor_bridge.cpp hal/anim_bridge.cpp hal/anim_ctor_bridge.cpp
     hal/cxxname_bridge.cpp hal/megachar_stub.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE7_SOURCES} ${SLICE8_SOURCES} ${SLICE9_SOURCES}

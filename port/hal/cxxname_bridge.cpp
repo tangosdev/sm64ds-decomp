@@ -161,5 +161,7 @@ void *func_0203cc0c(unsigned size);
 void _ZN6Memory10DeallocateEPv(void *p);
 /* the DS global operator new/delete route through the Memory layer */
 void *_Znwj(unsigned size) { return func_0203cc0c(size); }
-void _ZN6Memory16operator_delete2EPv(void *p) { _ZN6Memory10DeallocateEPv(p); }
+/* _ZN6Memory16operator_delete2EPv now lives in hal/ctor_bridge.cpp:
+   every target that builds a migrated model-family constructor needs
+   it, not just the ones that link this file. */
 }
