@@ -39,9 +39,9 @@ int SlidingBox::Behavior()
         dBgCh_Actr_UpdateContinuous_Veneer((char *)&mWithMeshClsn);
         if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mWithMeshClsn)) {
             mState++;
-            unk_4e0 = mPosX;
-            unk_4e4 = mPosY;
-            unk_4e8 = mPosZ;
+            mBasePosX = mPosX;
+            mBasePosY = mPosY;
+            mBasePosZ = mPosZ;
         }
         break;
     case 2: {
@@ -58,8 +58,8 @@ int SlidingBox::Behavior()
             mHorzPos = 0x4ff000;
         else if (spd < -0x32000)
             mHorzPos = -0x32000;
-        mPosX = unk_4e0 + (int)(((long long)mHorzPos * data_02082214[((u16)mAngleY >> 4) * 2] + 0x800) >> 12);
-        mPosZ = unk_4e8 + (int)(((long long)mHorzPos * data_02082214[((u16)mAngleY >> 4) * 2 + 1] + 0x800) >> 12);
+        mPosX = mBasePosX + (int)(((long long)mHorzPos * data_02082214[((u16)mAngleY >> 4) * 2] + 0x800) >> 12);
+        mPosZ = mBasePosZ + (int)(((long long)mHorzPos * data_02082214[((u16)mAngleY >> 4) * 2 + 1] + 0x800) >> 12);
         mHorzSpeed = 0;
         _ZN8dActor_c9UpdatePosEP5dCc_c((char *)this, 0);
         dBgCh_Actr_UpdateContinuous_Veneer((char *)&mWithMeshClsn);

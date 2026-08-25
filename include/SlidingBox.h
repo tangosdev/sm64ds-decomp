@@ -41,9 +41,9 @@ struct SlidingBox {
        dBgCh_Actr's D1 at +0x324 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10SlidingBoxD1Ev.c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x324 */
-    s32 unk_4e0;            /* 0x4e0 */
-    s32 unk_4e4;            /* 0x4e4 */
-    s32 unk_4e8;            /* 0x4e8 */
+    s32 mBasePosX;            /* 0x4e0 */
+    s32 mBasePosY;            /* 0x4e4 */
+    s32 mBasePosZ;            /* 0x4e8 */
     s32 mHorzPos;            /* 0x4ec */
     s32 mSoundID;            /* 0x4f0 */
     u8  mState;            /* 0x4f4 */
