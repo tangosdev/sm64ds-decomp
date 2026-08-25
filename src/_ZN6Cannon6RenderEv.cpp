@@ -14,7 +14,7 @@ struct Sub {
 int Cannon::Render()
 {
   if(mState == 3){
-    if(unk_185 >= 3) return 1;
+    if(mFireStep >= 3) return 1;
   }
   Sub* o = (Sub*)((char*)&mModel);
   o->m3();

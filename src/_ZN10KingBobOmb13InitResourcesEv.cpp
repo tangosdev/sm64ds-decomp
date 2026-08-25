@@ -90,9 +90,9 @@ int KingBobOmb::InitResources()
         *(unsigned char*)(((char*)this)+0x42c+i) = (unsigned char)z;
     }
     }
-    unk_4a0 = ((unsigned int)RandomIntInternal(&data_0209e650) >> 0x1e) & 1;
+    mPhase = ((unsigned int)RandomIntInternal(&data_0209e650) >> 0x1e) & 1;
     {
-        int *p = (int*)((char*)&unk_4a0);
+        int *p = (int*)((char*)&mPhase);
         *p = *p + 1;
     }
     mInitAngleY = mAngleY;

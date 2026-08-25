@@ -225,11 +225,11 @@ int ChainChomp::Behavior()
     func_ov014_02111f08(((char*)this));
     _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), ((char*)this) + 0x110);
     func_ov014_02112114(((char*)this));
-    if (unk_605 == 0) {
+    if (mChainBroken == 0) {
         func_ov014_02111fe0(((char*)this));
     }
     func_ov014_0211250c(((char*)this));
-    if (unk_605 == 0) {
+    if (mChainBroken == 0) {
         func_ov014_0211236c(((char*)this));
         func_ov014_021122dc(((char*)this));
     }

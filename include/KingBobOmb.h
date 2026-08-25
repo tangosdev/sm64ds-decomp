@@ -34,10 +34,10 @@ struct KingBobOmb : dEnemyBase_c {
        src/KingBobOmb_SetState.cpp and src/_ZN10KingBobOmb8BehaviorEv.cpp. */
     void *mState;                     /* 0x420 */
     u8  pad_424[0x70];
-    s32 unk_494;                      /* 0x494 */
+    s32 mHeldActor;                      /* 0x494 */
     u8 unk_498;                       /* 0x498 */
     u8  pad_499[0x7];
-    s32 unk_4a0;                      /* 0x4a0 */
+    s32 mPhase;                      /* 0x4a0 */
     u8  pad_4a4[0x30];
     s32 mArenaPosX;                   /* 0x4d4 */
     s32 mArenaPosY;                   /* 0x4d8 */
@@ -125,10 +125,10 @@ struct KingBobOmb {
     u8  pad_3f9[0x27];
     void *mState;            /* 0x420 */
     u8  pad_424[0x70];
-    s32 unk_494;            /* 0x494 */
+    s32 mHeldActor;            /* 0x494 */
     u8  unk_498;            /* 0x498 */
     u8  pad_499[0x7];
-    s32 unk_4a0;            /* 0x4a0 */
+    s32 mPhase;            /* 0x4a0 */
     u8  pad_4a4[0x30];
     s32 mArenaPosX;            /* 0x4d4 */
     s32 mArenaPosY;            /* 0x4d8 */

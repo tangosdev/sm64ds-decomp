@@ -49,7 +49,7 @@ struct ChainChomp : dEnemyBase_c {
     s32 mSpawnPosZ;         /* 0x5f4 */
     s32 mChainExtension;    /* 0x5f8 */
     u8  pad_5fc[0x9];
-    u8  unk_605;            /* 0x605 -- gates three Behavior helpers; nothing writes it */
+    u8  mChainBroken;            /* 0x605 -- gates three Behavior helpers; nothing writes it */
     u8  pad_606[0x2];
     /* uniqueIDs (fBase_c +0x04) of two other actors. 0x1b and 0x29 are resolved
        through ACTOR_SPAWN_TABLE at 0x02090864 -- see notes/enemy-leaf-provenance.md. */
@@ -121,7 +121,7 @@ struct ChainChomp {
     s32 mSpawnPosZ;         /* 0x5f4 */
     s32 mChainExtension;    /* 0x5f8 */
     u8  pad_5fc[0x9];
-    u8  unk_605;            /* 0x605 */
+    u8  mChainBroken;            /* 0x605 */
     u8  pad_606[0x2];
     s32 mStumpUniqueID;     /* 0x608 */
     s32 mFenceUniqueID;     /* 0x60c */

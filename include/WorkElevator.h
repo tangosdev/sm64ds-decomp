@@ -24,15 +24,15 @@ struct WorkElevator {
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  unk_2ec;            /* 0x2ec */
+    u8  mClsnMat;            /* 0x2ec */
     u8  pad_2ed[0x233];
-    u8  unk_520;            /* 0x520 */
+    u8  mPlatformClsn0;            /* 0x520 */
     u8  pad_521[0x1c7];
-    u8  unk_6e8;            /* 0x6e8 */
+    u8  mPlatformClsn1;            /* 0x6e8 */
     u8  pad_6e9[0x1c7];
-    u8  unk_8b0;            /* 0x8b0 */
+    u8  mPlatformClsn2;            /* 0x8b0 */
     u8  pad_8b1[0x1c7];
-    u8  unk_a78;            /* 0xa78 */
+    u8  mPlatformClsn3;            /* 0xa78 */
     u8  pad_a79[0x1c7];
     s32 unk_c40;            /* 0xc40 */
     s32 unk_c44;            /* 0xc44 */
@@ -40,7 +40,7 @@ struct WorkElevator {
     u8  pad_c4c[0x20];
     s32 unk_c6c;            /* 0xc6c */
     u8  pad_c70[0xa];
-    s8  unk_c7a;            /* 0xc7a */
+    s8  mLoweredPlatform;            /* 0xc7a */
     /* trailing extent the ROM's `new WorkElevator` literal proves; see tools/opnew_sizes.py */
     u8 pad_c7c[0x4];
 #ifdef __cplusplus

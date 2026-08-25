@@ -69,9 +69,9 @@ struct daPgDfdr_c : dBgActor_c {
     dCcAc_c mdCcAc_c;                      /* 0x398 */
     void *mStateTable;                     /* 0x3cc */
     s32   unk_3d0;                         /* 0x3d0 */
-    s32   unk_3d4;                         /* 0x3d4 */
+    s32   mDistanceLeft;                         /* 0x3d4 */
     u8    mTimer;                          /* 0x3d8 */
-    u8    unk_3d9;                         /* 0x3d9 */
+    u8    mStepIndex;                         /* 0x3d9 */
     u8    pad_3da[0x2];
 
     /* --- vtable, in ROM order. Do not reorder. ---
@@ -154,9 +154,9 @@ struct daPgDfdr_c {
     u8  mdCcAc_c[0x34];    /* 0x398 */
     void *mStateTable;                    /* 0x3cc */
     s32   unk_3d0;                    /* 0x3d0 */
-    s32   unk_3d4;                    /* 0x3d4 */
+    s32   mDistanceLeft;                    /* 0x3d4 */
     u8    mTimer;                    /* 0x3d8 */
-    u8    unk_3d9;                    /* 0x3d9 */
+    u8    mStepIndex;                    /* 0x3d9 */
     u8    pad_3da[0x2];
 };
 

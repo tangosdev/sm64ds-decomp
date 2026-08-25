@@ -30,7 +30,7 @@ struct PrincessPeach {
        checks. Was a u8 marker. [_ZN13PrincessPeachD0Ev.c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x194 */
     u8  pad_350[0x4];
-    s32 unk_354;            /* 0x354 */
+    s32 mState;            /* 0x354 */
     /* Trailing remainder, 0x14 bytes. All three markers are typed and the last
        field the five recovered functions touch ends at 0x358;
        PrincessPeach_Spawn allocates 0x36c. The reference does not document

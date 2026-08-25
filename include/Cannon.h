@@ -35,7 +35,7 @@ struct Cannon {
     s32 mState;            /* 0x180 */
     /* Cannon variant, the low two bits of the spawn word. */
     u8  unk_184;            /* 0x184 */
-    u8  unk_185;            /* 0x185 */
+    u8  mFireStep;            /* 0x185 */
     u8  pad_186[0xe];
     /* Read out of *(*(this + 0xe4) + 0x58) by InitResources -- the last field
        of the object, and what closes the 0x198 Cannon_Spawn allocates. */
