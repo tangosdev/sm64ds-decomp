@@ -103,12 +103,33 @@ struct Door : dActor_c {
        mModel. */
     ModelAnim mModel;        /* 0x0d4 */
 
-    /* This class's own storage, 0x138..0x147 -- see SIZE above. NAMES here
-       are still placeholders; the TYPE of 0x138 is not (see SIZE). */
-    Model *unk_138;          /* 0x138 -- owned, see SIZE above */
-    void *unk_13c;           /* 0x13c -- released through SharedFilePtr */
-    void *unk_140;           /* 0x140 -- callback-node pointer, see SIZE above */
-    s8   unk_144;            /* 0x144 -- key-model index */
+    /* This class's own storage, 0x138..0x147 -- see SIZE above.
+       The decoration group. A door variant may hang a second model off itself:
+       the key hanging on a locked door, or the star on a star door. Only
+       InitResources fills it and only when data_ov100_02148204[param1] carries
+       a second file (`e->sfp2`).
+         mKeyModel  -- `new Model` + ModelBase::SetFile in InitResources,
+                       Model::Virtual10(mModel.data.transforms) + Render in
+                       Render (the local there is literally called `key`), and
+                       `delete key` through Model's vtable slot 1 in
+                       CleanupResources. Owned by this class.
+         mKeyFile   -- the SharedFilePtr that model's file came from, handed to
+                       Model::LoadFile and Release()d in CleanupResources. Three
+                       sources: data_ov002_0211094c when the entry's b8 is
+                       positive, func_02132894[mKeyModelIdx + 1] for the
+                       param1 9..0xd (keyed-door) range, else
+                       data_ov089_02132c50.
+         mKeyModelIdx -- param1 - 8 for that same 9..0xd range, re-zeroed for
+                       param1 0xc; indexes LoadKeyModels/func_02132894.
+       [_ZN4Door13InitResourcesEv.c, _ZN4Door6RenderEv.cpp,
+        _ZN4Door16CleanupResourcesEv.cpp] */
+    Model *mKeyModel;          /* 0x138 -- owned, see SIZE above */
+    void *mKeyFile;           /* 0x13c -- released through SharedFilePtr */
+    /* Behavior casts this to a node whose +0x8 is a `void (Door::*)(int)` and
+       calls it on this Door; written by src/func_ov100_021453d8.cpp.
+       [_ZN4Door8BehaviorEv.cpp] */
+    void *mCallbackNode;           /* 0x140 -- callback-node pointer, see SIZE above */
+    s8   mKeyModelIdx;            /* 0x144 -- key-model index */
     u8   pad_145[0x3];
 
     /* --- vtable. Declared first, deliberately -- it is already the key
@@ -150,16 +171,16 @@ typedef char Door_size_must_be_0x148[sizeof(Door) == 0x148 ? 1 : -1];
    Every field daDoor_c.h named has a home: 0x05c/0x060/0x064 are
    base.mPosX/Y/Z, 0x080/0x084/0x088 base.mScaleX/Y/Z, 0x08c/0x08e/0x090
    base.mAngleX/Y/Z, 0x0a4/0x0a8/0x0ac base.unk_0a4/mVertSpeed/unk_0ac,
-   0x0e8 mModel.data.transforms, and unk_144 is this class's own and keeps
+   0x0e8 mModel.data.transforms, and mKeyModelIdx is this class's own and keeps
    its name. */
 struct Door {
     struct dActor_c base;    /* 0x000..0x0cf */
     u8  pad_0d0[0x4];
     ModelAnim mModel;        /* 0x0d4..0x137 */
-    Model *unk_138;          /* 0x138 -- owned, see SIZE above */
-    void *unk_13c;           /* 0x13c -- released through SharedFilePtr */
-    void *unk_140;           /* 0x140 -- callback-node pointer, see SIZE above */
-    s8   unk_144;            /* 0x144 -- key-model index */
+    Model *mKeyModel;          /* 0x138 -- owned, see SIZE above */
+    void *mKeyFile;           /* 0x13c -- released through SharedFilePtr */
+    void *mCallbackNode;           /* 0x140 -- callback-node pointer, see SIZE above */
+    s8   mKeyModelIdx;            /* 0x144 -- key-model index */
     u8   pad_145[0x3];
 };
 

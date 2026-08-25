@@ -124,21 +124,21 @@ int _ZN4Door13InitResourcesEv(struct Door *self)
     b = b == 0;
     if (b != false) {
         if (e->b8 > 0) {
-            self->unk_13c = &data_ov002_0211094c;
+            self->mKeyFile = &data_ov002_0211094c;
         } else if (e->b9 >= 0) {
             unsigned int t = self->base.param1;
             if (t >= 9 && t <= 0xd) {
-                self->unk_144 = (signed char)(t - 8);
-                LoadKeyModels(self->unk_144 + 1);
-                self->unk_13c = func_02132894[self->unk_144 + 1];
+                self->mKeyModelIdx = (signed char)(t - 8);
+                LoadKeyModels(self->mKeyModelIdx + 1);
+                self->mKeyFile = func_02132894[self->mKeyModelIdx + 1];
                 if (self->base.param1 == 0xc)
-                    self->unk_144 = 0;
+                    self->mKeyModelIdx = 0;
             } else {
-                self->unk_13c = &data_ov089_02132c50;
+                self->mKeyFile = &data_ov089_02132c50;
             }
         }
-        if (self->unk_13c != 0)
-            _ZN5Model8LoadFileER13SharedFilePtr(self->unk_13c);
+        if (self->mKeyFile != 0)
+            _ZN5Model8LoadFileER13SharedFilePtr(self->mKeyFile);
     }
 
     an = _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov100_02148744);
@@ -153,10 +153,10 @@ int _ZN4Door13InitResourcesEv(struct Door *self)
         m = _Znwj(0x50);
         if (m != 0)
             m = _ZN5ModelC1Ev(m);
-        self->unk_138 = m;
+        self->mKeyModel = m;
         f = _ZN5Model8LoadFileER13SharedFilePtr(e->sfp2);
-        _ZN9ModelBase7SetFileEP8BMD_Fileii(self->unk_138, f, 1, -1);
-        self->unk_138->mat4x3 = data_020a0e68;
+        _ZN9ModelBase7SetFileEP8BMD_Fileii(self->mKeyModel, f, 1, -1);
+        self->mKeyModel->mat4x3 = data_020a0e68;
     }
 
     {

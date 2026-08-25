@@ -4,6 +4,6 @@
 /* recovered: named members + shared header */
 #include "Particle__SysTracker.h"
 void _ZN8Particle10SysTracker6UpdateEv(struct Particle__SysTracker *self) {
-    func_02021bec((char*)&self->unk_008);
-    func_02049f58(*(void**)((char*)&self->unk_004));
+    func_02021bec((char*)&self->mContents);
+    func_02049f58(self->mManager);
 }

@@ -40,15 +40,15 @@
 #include "ShadowModel.h"
 
 struct daObjCtMecha05_c : dBgActor_c {
-    s32 unk_320;                      /* 0x320 -- snapshot of mPosX at InitResources */
-    s32 unk_324;                      /* 0x324 -- snapshot of mPosY at InitResources */
-    s32 unk_328;                      /* 0x328 -- snapshot of mPosZ at InitResources */
-    s32 unk_32c;                      /* 0x32c -- accumulates by mHorzSpeed each Behavior tick */
-    s32 unk_330;                      /* 0x330 -- previous tick's unk_32c */
-    s16 unk_334;                      /* 0x334 -- countdown timer */
-    u8  unk_336;                      /* 0x336 -- Behavior state index */
+    s32 mHomePosX;                      /* 0x320 -- snapshot of mPosX at InitResources */
+    s32 mHomePosY;                      /* 0x324 -- snapshot of mPosY at InitResources */
+    s32 mHomePosZ;                      /* 0x328 -- snapshot of mPosZ at InitResources */
+    s32 mTravel;                      /* 0x32c -- distance travelled along the path; += mHorzSpeed each tick, compared against 0xfa000 */
+    s32 mPrevTravel;                      /* 0x330 -- previous tick's mTravel; their product's sign is the turn test */
+    s16 mStateTimer;                      /* 0x334 -- DecIfAbove0_Short countdown, seeded from data_ov065_0211c0c8[setting] */
+    u8  mState;                      /* 0x336 -- Behavior's switch key, 0..3, incremented in place */
     u8  pad_337[0x1];
-    s32 unk_338;                      /* 0x338 -- ground height from InitResources' raycast */
+    s32 mGroundY;                      /* 0x338 -- ground height from InitResources' dBgCh_Gnd raycast */
     ShadowModel mShadowModel;         /* 0x33c */
 
     /* --- vtable --- */

@@ -25,7 +25,7 @@ int daKrb_c::CleanupResources()
     UnloadSilverStarAndNumber();
   _ZN11dCapEnemy_c14UnloadCapModelEv(((char*)this));
   if (mGoombaType == 3) {
-    unsigned int id = unk_43c;
+    unsigned int id = mTargetUniqueID;
     if (id != 0) {
       char* a = _ZN8dActor_c10FindWithIDEj(id);
       if (a != 0) {

@@ -106,28 +106,28 @@ int UnknownVsEntry::InitResources()
     } while (i < 4);
 
     data_ov075_0211d380 = -1;
-    unk_f40 = 0;
+    mAnimActive = 0;
 
     if (mParam == 2) {
         int v = func_0203da9c();
         func_ov075_02115098(((char*)this), v);
     }
 
-    unk_f34 = 0;
-    unk_f28 = unk_f34;
-    unk_f38 = 0x14000;
-    unk_f2c = unk_f38;
-    unk_f30 = 0x50000;
-    unk_f3c = -0x8000;
+    mCamTargetX = 0;
+    mCamPosX = mCamTargetX;
+    mCamTargetY = 0x14000;
+    mCamPosY = mCamTargetY;
+    mCamPosZ = 0x50000;
+    mCamTargetZ = -0x8000;
 
     func_ov075_021152d4(((char*)this));
 
-    unk_f44 = 0;
-    unk_f41 = 0;
-    unk_f42 = 0;
-    unk_f43 = data_0209fc50;
-    if (unk_f43 < 1)
-        unk_f43 = 1;
+    mSuspended = 0;
+    mState = 0;
+    mFocusedPlayer = 0;
+    mPlayerCount = data_0209fc50;
+    if (mPlayerCount < 1)
+        mPlayerCount = 1;
 
     return 1;
 }

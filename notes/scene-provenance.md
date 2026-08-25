@@ -167,7 +167,7 @@ not the same as the last field the object has. The trailing `pad_9c0[0x8]` and t
 `include/Particle.h` and `include/Particle__SysTracker.h` are two *separate*
 `gen_header.py` shadows of this same class. `src/_ZN8Particle10SysTrackerC1Ev.c` writes
 fields through `struct Particle *self` up to `unk_818`, while
-`src/_ZN8Particle10SysTracker10InitialiseEv.cpp` and `6UpdateEv.c` read `unk_004`/`unk_008`
+`src/_ZN8Particle10SysTracker10InitialiseEv.cpp` and `6UpdateEv.c` read `mManager`/`mContents`
 through `struct Particle__SysTracker *self` — the same offsets `Particle.h` also
 carries. Their union is what `Stage.h` declares locally: `Particle.h`'s full 34-field
 layout, last field `unk_818` (1 byte, ends 0x819), padded to 0x81c for 4-byte
@@ -182,7 +182,7 @@ declaration only lets `Stage`'s implicit destructor find it by name. Not virtual
 `dtor_variant_audit.py` established `Particle::SysTracker` has no RTTI record and no
 `_ZTV`, so it is not polymorphic and must not gain a vtable pointer.
 
-**`skyboxModel` at 0x9bc** is typed, not guessed, and evidenced from both ends:
+**`mSkyboxModel` at 0x9bc** is typed, not guessed, and evidenced from both ends:
 `LoadSkybox` `new`s 0x50 bytes, runs `Model::Model` on them and stores the result here;
 `CleanupResources` loads it back and destroys it through its vtable. The generated
 header called it `u8 unk_9bc`, so both files that use it had to cast a pointer out of a
@@ -373,7 +373,7 @@ it: its second loop starts at `this + 0x96c` and advances `dst += 0x28` once per
 level fog record, handing each `dst` to `Fog::Init`. 0x994 = 0x96c + 0x28 is
 `mFog[1]`'s density ramp; 0x9b4/0x9b5/0x9b6/0x9b8 are `mFog[1]`'s
 `mEnabled`/`mShift`/`mOffset`/`mColor` at +0x20/0x21/0x22/0x24. The array ends at
-0x9bc, exactly where `skyboxModel` begins.
+0x9bc, exactly where `mSkyboxModel` begins.
 
 So `Fog`'s size is 0x28, not the 0x26 its field span alone suggests — the stride
 is the witness, and the old header's "independently, Stage.h places Fog at 0x96c

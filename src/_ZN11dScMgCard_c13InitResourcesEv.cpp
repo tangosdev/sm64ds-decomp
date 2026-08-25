@@ -121,8 +121,8 @@ s32 dScMgCard_c::InitResources()
         }
     }
 
-    self->unk_5388 = 0;
-    self->unk_538a = 0;
+    self->mState = 0;
+    self->mStateTimer = 0;
     *(int *)(c + 0xa8) = func_ov004_020ad8b8();
     *(int *)(c + 0xac) = *(int *)(c + 0xa8);
     {
@@ -130,7 +130,7 @@ s32 dScMgCard_c::InitResources()
         if (data_ov004_020beb68 != 0)
             *(int *)((char *)data_ov004_020beb68 + 0xb4) = r;
     }
-    self->unk_5398 = 0;
+    self->mScore = 0;
     func_ov004_020b682c();
     ((VtObj *)c)->m18(-1);
     return 1;

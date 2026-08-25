@@ -30,12 +30,12 @@ int ArrowSignRight::InitResources()
     u16 id = actorID;
     if (id != 0x12b) {
         if (id == 0x12c)
-            unk_37c = 1;
+            mVariant = 1;
     } else {
-        unk_37c = 0;
+        mVariant = 0;
     }
 
-    u32 modelIndex = unk_37c;
+    u32 modelIndex = mVariant;
     void *model = _ZN5Model8LoadFileER13SharedFilePtr(data_ov098_0213c380[modelIndex].value);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, model, 1, -1);
     mShadowModel.InitCuboid();
@@ -43,7 +43,7 @@ int ArrowSignRight::InitResources()
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(this);
     func_ov098_02137c8c((char *)this);
 
-    u32 collisionIndex = unk_37c;
+    u32 collisionIndex = mVariant;
     void *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov098_0213c384[collisionIndex].value);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY,

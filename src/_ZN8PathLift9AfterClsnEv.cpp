@@ -13,12 +13,12 @@ void PathLift::AfterClsn()
 {
     if (func_ov002_020efedc(((char *)this)) != 0 &&
         mState == 0 &&
-        DecIfAbove0_Byte((char *)&unk_42b) == 0) {
+        DecIfAbove0_Byte((char *)&mTriggerDelay) == 0) {
         int b = actorID == 0x1f;
         if (b) {
             func_02012694(0x6f, ((char *)this) + 0x74);
         }
         func_ov002_020efa54(((char *)this), 1);
     }
-    unk_42a = 1;
+    mAfterClsnRan = 1;
 }

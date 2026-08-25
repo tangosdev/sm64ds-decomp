@@ -59,7 +59,7 @@ int Whomp::Behavior()
         {
             /* dEnemyBase_c's 0x100 counts frames spent in the current state: it is
                incremented here and reset the moment the handler changed mState. */
-            unsigned short* ctr = (unsigned short*)&unk_100;
+            unsigned short* ctr = (unsigned short*)&mStateTimer;
             *ctr = *ctr + 1;
             if (idx != mState) {
                 *ctr = 0;

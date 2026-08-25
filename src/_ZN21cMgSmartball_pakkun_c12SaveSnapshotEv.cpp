@@ -30,23 +30,23 @@ void cMgSmartball_pakkun_c::SaveSnapshot()
     int i;
     int b;
 
-    if (unk_030 == 0) return;
+    if (mIsActive == 0) return;
     mSnapshot0 = mCurrent0;
     mSnapshot1 = mCurrent1;
     if (mActionTimer > 0) {
         mActionTimer -= 1;
-        if (mActionTimer == 0) unk_030 = 0;
+        if (mActionTimer == 0) mIsActive = 0;
         return;
     }
-    for (i = 0; i < *(int *)((char *)unk_004 + 0x4668); i++) {
-        func_ov006_0211470c(&s[0], GetObj((char *)unk_004, i));
+    for (i = 0; i < *(int *)((char *)mpManager + 0x4668); i++) {
+        func_ov006_0211470c(&s[0], GetObj((char *)mpManager, i));
         Vec2_Sub(&s[2], &mCurrent0, &s[0]);
         b = Vec2_Len(&s[2]) < 0x4000;
         if (b) {
             mActionTimer = 0x61;
             unk_031 = 0;
-            func_ov006_0210d8bc(*(char **)((char *)unk_004 + 0x4780));
-            *((char *)GetObj((char *)unk_004, i) + 0x30) = 0;
+            func_ov006_0210d8bc(*(char **)((char *)mpManager + 0x4780));
+            *((char *)GetObj((char *)mpManager, i) + 0x30) = 0;
             func_02012718((void *)0x1a0, mCurrent0);
             return;
         }

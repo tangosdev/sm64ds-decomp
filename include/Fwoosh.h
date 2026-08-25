@@ -49,11 +49,11 @@ typedef char Fwoosh_size_must_be_0x378[sizeof(Fwoosh) == 0x378 ? 1 : -1];
    can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct Fwoosh {
     u8  pad_000[0x8];
-    s32 unk_008;            /* 0x008 */
+    s32 param1;            /* 0x008 */
     u8  pad_00c[0x94];
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     u8  pad_0a4[0xc];
-    s32 unk_0b0;            /* 0x0b0 */
+    s32 mFlags;            /* 0x0b0 */
     u8  pad_0b4[0x5c];
     /* dCcAc_c member, named by the class's own destructor calling
        dCcAc_c's D1 at +0x110 -- a relocation the ROM build

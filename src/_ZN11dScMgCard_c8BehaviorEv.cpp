@@ -8,7 +8,7 @@
  * holds where its base's table holds something else, so it is this class's
  * own override of the virtual fBase_c declares.
  *
- * unk_5396 is the frame counter the header's "own tail" note lists among the
+ * mFrameCounter is the frame counter the header's "own tail" note lists among the
  * nine fields five of this class's methods already touch; pad_4f38 is the
  * start of the 0x270-byte table six classes in this family share, which
  * func_ov006_020c19d0 steps. */
@@ -20,7 +20,7 @@ void func_ov004_020b65e4(void *p);
 
 s32 dScMgCard_c::Behavior()
 {
-    unk_5396 += 1;
+    mFrameCounter += 1;
     func_ov006_020c19d0(pad_4f38);
     func_ov004_020b65e4(func_ov006_020dac34(this));
     return 1;

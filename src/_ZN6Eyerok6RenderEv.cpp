@@ -10,14 +10,14 @@ struct Sub { virtual int g0(); virtual int g1(); virtual int g2(); virtual int g
 
 int Eyerok::Render()
 {
-  if (unk_49c == 0) {
+  if (mPartIdx == 0) {
     if (data_ov066_0211ae04 == 1) {
-      ((Sub*)((char*)&mModel2))->g5(0);
+      ((Sub*)&mModel2)->g5(0);
     }
     return 1;
   }
   if (data_ov066_0211ae04 == 1) return 1;
-  _ZN15TextureSequence6UpdateER15ModelComponents(((char*)this) + 0x448, ((char*)this) + 0x368);
-  ((Sub*)((char*)&mBlendModelAnim))->g5(0);
+  _ZN15TextureSequence6UpdateER15ModelComponents(&mTextureSequence, &mBlendModelAnim.data);
+  ((Sub*)&mBlendModelAnim)->g5(0);
   return 1;
 }

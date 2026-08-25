@@ -11,7 +11,7 @@ extern char data_ov002_0210da18[];
 
 int BrickBlock::CleanupResources()
 {
-  int v = unk_00c;
+  int v = actorID;
   switch(v){
   case 0x141: ((SharedFilePtr *)(data_ov002_0210d9d8))->Release(); break;
   case 0x142: ((SharedFilePtr *)(data_ov002_0210da30))->Release(); break;

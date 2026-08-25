@@ -7,8 +7,8 @@
 
 struct daObjRcBuranko_c {
     u8  pad_000[0x8e];
-    s16 unk_08e;            /* 0x08e */
-    s16 unk_090;            /* 0x090 */
+    s16 mAngleY;            /* 0x08e */
+    s16 mAngleZ;            /* 0x090 */
 };
 
 #endif

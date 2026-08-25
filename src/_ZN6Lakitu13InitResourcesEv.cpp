@@ -44,11 +44,11 @@ int Lakitu::InitResources()
     mScaleZ = 0x1000;
     *(int *)(((int)((char *)this + 0x3f8)) & 0xFFFFFFFFFFFFFFFFLL) = *(int *)(((int)((char *)this + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
     *(int *)(((int)((char *)this + 0x3fc)) & 0xFFFFFFFFFFFFFFFFLL) = *(int *)(((int)((char *)this + 0x60)) & 0xFFFFFFFFFFFFFFFFLL);
-    unk_400 = *(int *)(((int)((char *)this + 0x64)) & 0xFFFFFFFFFFFFFFFFLL);
+    mSpawnPosZ = *(int *)(((int)((char *)this + 0x64)) & 0xFFFFFFFFFFFFFFFFLL);
     unk_410 = 0;
 
     func_ov077_0212478c(((char *)this));
-    *(Matrix4x3 *)((char *)&unk_3c0) = IDENTITY_MATRIX4X3;
+    *(Matrix4x3 *)((char *)&mMatrix) = IDENTITY_MATRIX4X3;
     func_ov077_02123d40(((char *)this));
     return 1;
 }

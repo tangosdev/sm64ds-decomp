@@ -28,7 +28,7 @@ int LavaBubble::InitResources()
         mVertAccel = -0x4000;
         mTerminalVelocity = -0x3c000;
     }
-    unk_100 = 0;
+    mStateTimer = 0;
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, ((char*)this), 0x32000, 0x32000, 0, 0);
     _ZN10dBgCh_Actr13SetLimMovFlagEv((char*)&mWithMeshClsn);
     if (unk_310 != 0) {

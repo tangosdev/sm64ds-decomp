@@ -156,13 +156,13 @@ int daObjPathLift_c::InitResources() {
     dBgCh_Gnd rg;
     int b;
     rg.SetObjAndPos(pos, 0);
-    unk_4ac = pos.y;
+    mGroundY = pos.y;
     if (rg.DetectClsn() != 0)
-      unk_4ac = rg.result;
+      mGroundY = rg.result;
     *(u8*)(c + 0x42c) = 1;
     b = (data_0209f2d8 == 1);
     if (b)
-      unk_4b0 = 0xb4;
+      mTimer = 0xb4;
   }
   return 1;
 }
@@ -207,7 +207,7 @@ int daObjPathLift_c::Behavior()
     BaseBehavior();
     if (Vec3_Dist((Vector3*)(c + 0x5c), (Vector3*)(c + 0x68)) != 0) {
         if (DecIfAbove0_Byte((unsigned char*)(c + 0x4b0)) == 0) {
-            unk_4a8 = Sound::PlayLong(unk_4a8, 3, 0x82, *(Vector3*)(c + 0x74), 0);
+            mSoundHandle = Sound::PlayLong(mSoundHandle, 3, 0x82, *(Vector3*)(c + 0x74), 0);
         }
     }
     func_ov100_0214700c(c);

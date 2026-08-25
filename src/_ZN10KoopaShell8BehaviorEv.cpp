@@ -66,11 +66,11 @@ int KoopaShell::Behavior()
         return 1;
 
     if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(c, (char *)&mMeshClsn) != 0) {
-        if (unk_107 != 0) {
+        if (mEatenByYoshi != 0) {
             mSpawnAngleY = mPrevAngleY;
             func_ov102_0214d1f8(c, &data_ov102_0214ea78);
             mFlags &= ~0x80000u;
-            unk_107 = 0;
+            mEatenByYoshi = 0;
         }
         func_ov102_0214ce60(c);
         _ZN5dCc_c5ClearEv((char *)&mdCc_c);
@@ -87,7 +87,7 @@ int KoopaShell::Behavior()
         mDespawnTimer = 0;
     }
 
-    DecIfAbove0_Short((char *)&unk_100);
+    DecIfAbove0_Short((char *)&mStateTimer);
 
     {
         EState *st = (EState *)mState;

@@ -10,7 +10,7 @@ struct Obj {
 int Spiny::Render()
 {
   if((mFlags & 0x40000) ? 1 : 0) return 1;
-  int s=unk_3d8;
+  int s=mState;
   if(s==0 || s==4) ((Obj*)((char *)&mModel))->doit(0);
   else ((Obj*)((char *)&mModelAnim))->doit(0);
   return 1;

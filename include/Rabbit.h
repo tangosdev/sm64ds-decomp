@@ -63,7 +63,7 @@ struct Rabbit : dEnemyBase_c {
        5; Behavior then spawns the glow particle every frame and picks the
        "you found a glowing one" message instead of the ordinary line. */
     u8                           mIsGlowing;            /* 0x429 */
-    /* Counted up while dEnemyBase_c's unk_107 reads 1 (inside the Yoshi-eat
+    /* Counted up while dEnemyBase_c's mEatenByYoshi reads 1 (inside the Yoshi-eat
        branch) and reset together with it once it passes 0x96. */
     u8                           mEatenTimer;           /* 0x42a */
     u8  pad_42b[0xd];

@@ -46,32 +46,32 @@ int ToxBox::InitResources()
     _ZN10dBgCh_Actr13SetLimMovFlagEv((char *)&mWithMeshClsn);
 
     idx = mParam & 3;
-    unk_574 = (unsigned char)idx;
-    idx = unk_574;
+    mMoveKind = (unsigned char)idx;
+    idx = mMoveKind;
     if (idx != 3) {
         int v = ((int *)&data_ov092_02132294)[idx];
-        unk_56c = v;
-        unk_570 = 0;
-        unk_568 = *(int *)unk_56c;
+        mMoveSeq = v;
+        mMoveSeqIndex = 0;
+        mMoveDir = *(int *)mMoveSeq;
     } else {
         _ZN7PathPtr6FromIDEj((char *)this + 0x58c, ((unsigned int)mParam >> 8) & 0xf);
-        unk_578 = _ZNK7PathPtr8NumNodesEv((char *)this + 0x58c);
-        unk_57c = 0;
-        _ZNK7PathPtr7GetNodeER7Vector3j((char *)this + 0x58c, (char *)this + 0x580, unk_57c);
+        mPathNodeCount = _ZNK7PathPtr8NumNodesEv((char *)this + 0x58c);
+        mPathNodeIndex = 0;
+        _ZNK7PathPtr7GetNodeER7Vector3j((char *)this + 0x58c, (char *)this + 0x580, mPathNodeIndex);
         func_ov092_021313b0((char *)this);
     }
 
     {
         mPosY += 0xfa000;
-        unk_558 = mPosX;
-        unk_55c = mPosY;
-        unk_560 = mPosZ;
+        mRestPosX = mPosX;
+        mRestPosY = mPosY;
+        mRestPosZ = mPosZ;
         Vec3_Asr(&tmp, (Vec3 *)&mPosX, 3);
     }
 
     Matrix4x3_FromTranslation(&data_020a0e68, tmp.x, tmp.y, tmp.z);
     *(Mtx43 *)((char *)this + 0xf0) = data_020a0e68;
-    *(Mtx43 *)&unk_528 = *(Mtx43 *)((char *)this + 0xf0);
+    *(Mtx43 *)&mBaseMtx = *(Mtx43 *)((char *)this + 0xf0);
 
     func_ov092_02131a88((char *)this);
 
@@ -80,9 +80,9 @@ int ToxBox::InitResources()
         (char *)&mMeshCollider, f, (char *)this + 0x2ec, 0x1000, mAngleY, &data_ov092_02132220);
     func_020393d4((char *)&mMeshCollider, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
 
-    unk_575 = (unsigned char)((mAngleX >> 0xe) & 3);
+    mOrientBits = (unsigned char)((mAngleX >> 0xe) & 3);
     {
-        unsigned char *b = (unsigned char *)LA(&unk_575);
+        unsigned char *b = (unsigned char *)LA(&mOrientBits);
         *b = (unsigned char)(*b | ((mAngleY >> 0xc) & 0xc));
         *b = (unsigned char)(*b | ((mAngleZ >> 0xa) & 0x30));
     }
@@ -96,6 +96,6 @@ int ToxBox::InitResources()
             (char *)&mdCcAcPos_c, (char *)this, (void *)&stk[0], 0xc8000, 0x190000, 2, 0x6003c0);
     }
 
-    unk_320 = 0;
+    mPlayerActor = 0;
     return 1;
 }

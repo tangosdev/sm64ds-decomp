@@ -143,11 +143,11 @@ int Lakitu::InitResources()
     mScaleZ = 0x1000;
     *(int *)(((int)((char *)this + 0x3f8)) & 0xFFFFFFFFFFFFFFFFLL) = *(int *)(((int)((char *)this + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
     *(int *)(((int)((char *)this + 0x3fc)) & 0xFFFFFFFFFFFFFFFFLL) = *(int *)(((int)((char *)this + 0x60)) & 0xFFFFFFFFFFFFFFFFLL);
-    unk_400 = *(int *)(((int)((char *)this + 0x64)) & 0xFFFFFFFFFFFFFFFFLL);
+    mSpawnPosZ = *(int *)(((int)((char *)this + 0x64)) & 0xFFFFFFFFFFFFFFFFLL);
     unk_410 = 0;
 
     func_ov077_0212478c(((char *)this));
-    *(M48 *)((char *)&unk_3c0) = IDENTITY_MATRIX4X3;
+    *(M48 *)((char *)&mMatrix) = IDENTITY_MATRIX4X3;
     func_ov077_02123d40(((char *)this));
     return 1;
 }
@@ -189,7 +189,7 @@ int Lakitu::Render()
         return 1;
     mTextureSequence.Update(*(ModelComponents *)((char *)this + 0xdc));
     mModelAnim.Render(0);
-    if (unk_3f4 == 1) {
+    if (mState == 1) {
         unsigned int v = ((unsigned int)(*(s32 *)((char *)this + 0x12c) << 4)) >> 0x10;
         if (v >= 0x19 && v <= 0x3a)
             mModel.Render(0);

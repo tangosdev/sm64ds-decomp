@@ -1,5 +1,5 @@
 //cpp
-/* Slot 1. While unk_040 is 0 or 1, draws two extra base sprites under the
+/* Slot 1. While mTriggerCount is 0 or 1, draws two extra base sprites under the
  * main pair; then four OAM::Render calls draw a mirrored quad using the
  * eased angle at offset 0x32 (a BASE field -- see the header) to
  * spread each half away from vertical. */
@@ -19,7 +19,7 @@ extern "C" void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
 
 void cMgSmartball_wing_c::Update()
 {
-    if (unk_040 <= 1) {
+    if (mTriggerCount <= 1) {
         func_ov004_020afdd0(data_ov006_02137994[0],
             mCurrent0 >> 12, mCurrent1 >> 12, -1, 1);
         func_ov004_020afdd0(data_ov006_02137994[1],

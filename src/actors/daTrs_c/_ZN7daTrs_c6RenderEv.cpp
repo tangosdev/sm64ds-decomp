@@ -38,7 +38,7 @@ int daTrs_c::Render()
         if (!mFlags_5d4.b3)
             return 1;
         if (mFlags_5d4.b1) {
-            ((ModelVT *)((char *)&mModel))->Render((const Vector3 *)((char *)&unk_510));
+            ((ModelVT *)((char *)&mBodyModel))->Render((const Vector3 *)((char *)&unk_510));
         }
         _ZN11dCapEnemy_c14RenderCapModelEPK7Vector3(((char *)this), 0);
     }

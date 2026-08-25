@@ -13,7 +13,7 @@ extern int data_ov002_0210dd50[];
 
 int QuestionSwitch::CleanupResources()
 {
-    if (((dBgW *)((char *)&unk_324))->IsEnabled()) ((dBgW *)((char *)&unk_324))->Disable();
+    if (((dBgW *)((char *)&mStaticMeshCollider))->IsEnabled()) ((dBgW *)((char *)&mStaticMeshCollider))->Disable();
     if (((dBgW *)((char *)&mMovingMeshCollider))->IsEnabled()) ((dBgW *)((char *)&mMovingMeshCollider))->Disable();
     ((SharedFilePtr *)(data_ov002_0210dd60))->Release();
     ((SharedFilePtr *)(data_ov002_0210dd68))->Release();

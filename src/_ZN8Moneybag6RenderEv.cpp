@@ -8,7 +8,7 @@ int Moneybag::Render()
 {
   bool b = mFlags & 0x40000;
   if(b != 0) return 1;
-  if(unk_3f0 > 1){ ((Sub*)((char*)&mModelAnim))->m(0); }
-  if(unk_3f0 <= 0x1f){ ((Sub*)((char*)&mModel))->m(0); }
+  if(mState > 1){ ((Sub*)((char*)&mModelAnim))->m(0); }
+  if(mState <= 0x1f){ ((Sub*)((char*)&mModel))->m(0); }
   return 1;
 }

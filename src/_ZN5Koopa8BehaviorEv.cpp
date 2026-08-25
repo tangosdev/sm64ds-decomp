@@ -41,11 +41,11 @@ int Koopa::Behavior()
             func_ov062_021179e4(((char *)this));
             _ZN8dActor_c24KillAndTrackInDeathTableEv(((char *)this));
         }
-        if (unk_107 != 0)
+        if (mEatenByYoshi != 0)
             func_ov062_02117570(((char *)this));
         func_ov062_02118334(((char *)this));
         _ZN5dCc_c5ClearEv((char *)&mdCc_c);
-        if (unk_107 != 0 && unk_104 == 0)
+        if (mEatenByYoshi != 0 && unk_104 == 0)
             _ZN5dCc_c6UpdateEv((char *)&mdCc_c);
         if (mKoopaVariant == 1)
             mState = 4;
@@ -90,12 +90,12 @@ int Koopa::Behavior()
             int ang = mPrevAngleY;
             mAngleY = (s16)ang;
             {
-                u16 *p100 = (u16 *)((char *)&unk_100);
+                u16 *p100 = (u16 *)((char *)&mStateTimer);
                 *p100 = (u16)(*p100 + 1);
             }
         }
         if (state != mState || kind != mKoopaVariant) {
-            unk_100 = 0;
+            mStateTimer = 0;
             mWalkState = 0;
         }
         func_ov062_02117c98(((char *)this));

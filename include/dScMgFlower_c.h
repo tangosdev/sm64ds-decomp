@@ -68,24 +68,32 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
 
     u8  mArray[0x2c0];     /* 0x4f38 -- 0x16 * 0x20, elem dtor func_ov006_0212a650 */
     u8  pad_51f8[0xdc0];   /* 0x51f8 -- opaque object, see file banner */
-    s32 unk_5fb8;          /* 0x5fb8 */
-    s32 unk_5fbc;          /* 0x5fbc */
-    s32 unk_5fc0;          /* 0x5fc0 */
-    s32 unk_5fc4;          /* 0x5fc4 */
-    s32 unk_5fc8;          /* 0x5fc8 */
-    u8  unk_5fcc;          /* 0x5fcc */
+    s32 mCursorX;          /* 0x5fb8 -- Fix12 stylus position, from the touch
+                              sample data_020a0dea/deb << 12 */
+    s32 mCursorY;          /* 0x5fbc */
+    s32 mPrevCursorX;      /* 0x5fc0 -- last tick's mCursor; the drag delta */
+    s32 mPrevCursorY;      /* 0x5fc4 */
+    s32 mHeldPetal;        /* 0x5fc8 -- mArray index being dragged, -1 for none */
+    u8  mPetalToggle;      /* 0x5fcc -- flips on every petal pulled; picks the
+                              "loves me" or "loves me not" banner and sound */
     u8  unk_5fcd;          /* 0x5fcd */
     u8  pad_5fce[0x2];     /* 0x5fce */
-    s32 unk_5fd0;          /* 0x5fd0 */
-    s32 unk_5fd4;          /* 0x5fd4 */
-    s32 unk_5fd8;          /* 0x5fd8 */
-    s32 unk_5fdc;          /* 0x5fdc */
-    s32 unk_5fe0;          /* 0x5fe0 */
-    s32 unk_5fe4;          /* 0x5fe4 */
-    s32 unk_5fe8;          /* 0x5fe8 */
-    s32 unk_5fec;          /* 0x5fec */
-    s32 unk_5ff0;          /* 0x5ff0 */
-    u16 unk_5ff4;          /* 0x5ff4 */
+    s32 mHintTimer;        /* 0x5fd0 -- held at 0x3c while a petal is dragged,
+                              counts down otherwise */
+    s32 mResultTimer;      /* 0x5fd4 -- 0x3c frames the banner stays up */
+    s32 mPetalsLeft;       /* 0x5fd8 -- petals still on the flower; one goes on
+                              each pull, 0 ends the round */
+    s32 mWinStreak;        /* 0x5fdc -- consecutive "loves me" petals; at 3 the
+                              payout is 3 points instead of 1 */
+    s32 mLoseStreak;       /* 0x5fe0 -- the mirror count, pays nothing */
+    s32 mHoldTimer;        /* 0x5fe4 -- src/func_ov006_0212aa74.c counts it up to
+                              0x15 and resets; above 0x14 means "held" */
+    s32 mState;            /* 0x5fe8 -- 0 playing, 1 over */
+    s32 mFaceSprite;       /* 0x5fec -- index into data_ov006_0213ab94, the
+                              flower's face */
+    s32 mScore;            /* 0x5ff0 -- clamped to 9999 */
+    u16 mBgScrollPhase;    /* 0x5ff4 -- += 0xc0 a frame; indexes the sine table
+                              for both background layers */
     u8  pad_5ff6[0x2];     /* 0x5ff6 -- rounds up to the 0x5ff8 boundary */
 };
 

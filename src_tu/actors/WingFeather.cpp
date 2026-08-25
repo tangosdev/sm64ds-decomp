@@ -186,7 +186,7 @@ int WingFeather::InitResources()
     if (!b) {
         mAngleY = ((F318Probe *)(data_0209f318 + 0x100))->f7c + 0x4000;
     }
-    unk_384 = 0xb4;
+    mLifeTimer = 0xb4;
     mVertSpeed = 0x3000;
     return 1;
 }
@@ -210,21 +210,21 @@ int WingFeather::Behavior()
         }
     }
 
-    unk_380 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        unk_380, 0x4a, mPosX, mPosY, mPosZ, 0, 0);
+    mParticle = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        mParticle, 0x4a, mPosX, mPosY, mPosZ, 0, 0);
 
     _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), 0);
     dBgCh_Actr_UpdateContinuous_Veneer((char*)&mWithMeshClsn);
 
     if (_ZNK10dBgCh_Actr10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
-        _Z15ApproachLinear2Rsss((short*)((char*)&unk_37c), 0, 0x50);
+        _Z15ApproachLinear2Rsss((short*)((char*)&mSwayAngle), 0, 0x50);
         _Z14ApproachLinearRiii((int*)((char*)&mHorzSpeed), 0, 0x555);
-        if (DecIfAbove0_Byte((u8*)((char*)&unk_384)) == 0) {
+        if (DecIfAbove0_Byte((u8*)((char*)&mLifeTimer)) == 0) {
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, mPosX, mPosY, mPosZ);
             _ZN7fBase_c18MarkForDestructionEv(((char*)this));
         }
     } else {
-        short* angp = (short*)((((s64)((char*)&unk_37c))));
+        short* angp = (short*)((((s64)((char*)&mSwayAngle))));
         short old_ang = *angp;
         *angp = old_ang + 0x400;
         /* 0x300 is +0x1a8 inside the dBgCh_Actr at 0x158, which the cartridge's own
@@ -232,15 +232,15 @@ int WingFeather::Behavior()
            dBgCh_Actr's pad_135 -- so the offset is spelled out. */
         u16 newv = *(u16*)((char*)((char*)&mWithMeshClsn + 0x1a8) + 0x7c);
         int idx = ((newv >> 4) << 1) + 1;
-        mHorzSpeed = (int)(((s64)unk_378 * data_02082214[idx] + 0x800) >> 12);
+        mHorzSpeed = (int)(((s64)mDriftSpeed * data_02082214[idx] + 0x800) >> 12);
     }
 
-    _Z14ApproachLinearRiii((int*)((char*)&unk_378), 0x10000, 0x332);
+    _Z14ApproachLinearRiii((int*)((char*)&mDriftSpeed), 0x10000, 0x332);
 
     {
-        int idx2 = (unk_37c >> 4) << 1;
+        int idx2 = (mSwayAngle >> 4) << 1;
         mAngleX = data_02082214[idx2] + 0x4000;
-        int idx3 = ((unk_37c >> 4) << 1) + 1;
+        int idx3 = ((mSwayAngle >> 4) << 1) + 1;
         mAngleZ = data_02082214[idx3] * 2 - 0x6000;
     }
 
@@ -279,7 +279,7 @@ int WingFeather::Behavior()
 /* recovered: named members + shared header, real C++ method */
 int WingFeather::Render()
 {
-    unsigned char b = *(unsigned char*)((char*)&unk_384);
+    unsigned char b = *(unsigned char*)((char*)&mLifeTimer);
     if (b < 0x2d) {
         if (b & 1) return 1;
     }

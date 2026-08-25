@@ -29,8 +29,8 @@ s32 FireSeaElevator::Behavior() {
             *(int*)(((int)c + 0x60)) =
                 *(int*)(((int)c + 0x60)) + 0xa000;
             lim = self->unk_320 + 0x5dc000;
-            if (self->unk_060 >= lim) {
-                self->unk_060 = lim;
+            if (self->mPosY >= lim) {
+                self->mPosY = lim;
                 *(unsigned char*)(((int)c + 0x327)) =
                     *(unsigned char*)(((int)c + 0x327)) + 1;
                 self->unk_324 = 0;
@@ -46,8 +46,8 @@ s32 FireSeaElevator::Behavior() {
             *(int*)(((int)c + 0x60)) =
                 *(int*)(((int)c + 0x60)) - 0xa000;
             lim = self->unk_320;
-            if (self->unk_060 <= lim) {
-                self->unk_060 = lim;
+            if (self->mPosY <= lim) {
+                self->mPosY = lim;
                 self->unk_327 = 0;
                 self->unk_324 = 0;
             }

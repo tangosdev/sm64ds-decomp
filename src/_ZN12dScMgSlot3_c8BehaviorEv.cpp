@@ -16,8 +16,8 @@
  * `Obj` stays a bare non-polymorphic stand-in rather than dScMgSlot3_c: a PMF on a
  * polymorphic class is a different representation, so the shape here is codegen and
  * not decoration -- the same reason src/_ZN15daObjMarioCap_c8BehaviorEv.cpp keeps
- * its own. Its `idx` at 0x5000 is the header's unk_5000, h5018/h501a the header's
- * unk_5018/unk_501a, and c503f its unk_503f.
+ * its own. Its `idx` at 0x5000 is the header's mState, h5018/h501a the header's
+ * mLamp1Angle/mLamp2Angle, and c503f its mFrameCounter.
  *
  * The three globals stay outside `extern "C"`, exactly as the pre-migration file
  * had them: a variable at global namespace scope is not mangled, so the spelling

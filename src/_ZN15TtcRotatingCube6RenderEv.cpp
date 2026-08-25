@@ -15,7 +15,7 @@ int TtcRotatingCube::Render()
 {
     int flags;
     int b;
-    flags = unk_0b0;
+    flags = mFlags;
     b = flags & 8;
     b = (b != 0);
     if (!b) {

@@ -53,7 +53,7 @@ struct PiranhaPlant : dEnemyBase_c {
     s16                          mInitAngleY;           /* 0x468 */
     u8  pad_46a[0x2];
     s32                          unk_46c;               /* 0x46c */
-    s32                          unk_470;               /* 0x470 */
+    s32                          mParticleHandle;       /* 0x470 */
     s32                          unk_474;               /* 0x474 */
     s32                          unk_478;               /* 0x478 */
 

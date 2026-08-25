@@ -19,7 +19,7 @@
 
 dBgCh::dBgCh()
 {
-    unk_004 = 1;
+    mDetectFlags = 1;
     unk_00c = 0;
     unk_008 = -1;
 }

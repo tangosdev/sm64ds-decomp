@@ -26,9 +26,9 @@ int PyramidTop::InitResources()
         ((char*)this) + 0x124, mc, ((char*)this) + 0x370, 0x199, mAngleY, data_ov024_021129f0);
     func_020393d4(((char*)this) + 0x124, (void*)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     ((dBgW *)(((char*)this) + 0x124))->Enable((dActor_c *)(((char*)this)));
-    unk_3a0 = mPosX;
-    unk_3a4 = mPosY;
-    unk_3a8 = mPosZ;
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
     mAngVelY = 0;
     mNumTagsTriggered = 0;
     mState = 0;

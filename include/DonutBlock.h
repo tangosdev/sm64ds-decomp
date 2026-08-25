@@ -22,9 +22,9 @@
 struct DonutBlock : dBgActor_c {
     u8  pad_31e[0x2];
     dBgCh_Actr mWithMeshClsn;       /* 0x320 */
-    s32 unk_4dc;                      /* 0x4dc */
-    s32 unk_4e0;                      /* 0x4e0 */
-    s32 unk_4e4;                      /* 0x4e4 */
+    s32 mHomePosX;                    /* 0x4dc -- InitResources copies mPosX/Y/Z; state 1 restores the block from them */
+    s32 mHomePosY;                    /* 0x4e0 */
+    s32 mHomePosZ;                    /* 0x4e4 */
     u8 mHadClsn;                       /* 0x4e8 */
     u8 mClsnTimer;                       /* 0x4e9 */
     u8 mState;                        /* 0x4ea */
@@ -54,10 +54,10 @@ struct DonutBlock {
     u8  pad_068[0x26];
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0xc];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mVertAccel;         /* 0x09c */
+    s32 mTerminalVelocity;  /* 0x0a0 */
     u8  pad_0a4[0x4];
-    s32 unk_0a8;            /* 0x0a8 */
+    s32 mVertSpeed;         /* 0x0a8 */
     u8  pad_0ac[0x28];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
@@ -71,9 +71,9 @@ struct DonutBlock {
        dBgCh_Actr's D1 at +0x320 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10DonutBlockD1Ev.c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x320 */
-    s32 unk_4dc;            /* 0x4dc */
-    s32 unk_4e0;            /* 0x4e0 */
-    s32 unk_4e4;            /* 0x4e4 */
+    s32 mHomePosX;            /* 0x4dc */
+    s32 mHomePosY;            /* 0x4e0 */
+    s32 mHomePosZ;            /* 0x4e4 */
     u8  mHadClsn;            /* 0x4e8 */
     u8  mClsnTimer;            /* 0x4e9 */
     u8  mState;            /* 0x4ea */

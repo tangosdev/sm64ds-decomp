@@ -59,15 +59,15 @@ int FirePiranhaPlantBig::InitResources()
         &mdCcAcPos_c, this, &v, 0x4b000, 0x64000, 0x200002, 0x66fe0);
 
     mScale = 0;
-    unk_1e8 = 0;
+    mRespawnMode = 0;
     mState = 0;
-    unk_1f0 = 0;
+    mGroupLeaderID = 0;
     unk_1f4 = 0;
-    unk_21a = 0;
-    unk_21b = 0;
+    mGroupAliveCount = 0;
+    mGroupDefeatedCount = 0;
     unk_21c = 0;
     unk_21d = 0;
-    unk_21e = 1;
+    mSuppressDeathReward = 1;
     unk_228 = 0;
     unk_224 = unk_228;
 
@@ -77,7 +77,7 @@ int FirePiranhaPlantBig::InitResources()
         mClsnRadiusFactor = 0x3c;
         mClsnHeightFactor = 0xaa;
         mMaxScale = 0x800;
-        unk_214 = 0x52;
+        mScaleRate = 0x52;
         mState = 1;
         /* The add sits INSIDE the integer cast, which is load-bearing: this is
            not interchangeable with `mdCcAc_c.vulnFlags |= 0x8000`
@@ -89,13 +89,13 @@ int FirePiranhaPlantBig::InitResources()
             mClsnRadiusFactor = 0x28;
             mClsnHeightFactor = 0xaa;
             mMaxScale = 0x1000;
-            unk_214 = 0xa4;
+            mScaleRate = 0xa4;
             mState = 1;
         } else {
             mClsnRadiusFactor = 0x28;
             mClsnHeightFactor = 0x96;
             mMaxScale = 0x2000;
-            unk_214 = 0x147;
+            mScaleRate = 0x147;
             mdCcAcPos_c.radius = 0x64000;
             mdCcAcPos_c.height = 0x64000;
             if (GetBitInDeathTable() != 0)
@@ -105,6 +105,6 @@ int FirePiranhaPlantBig::InitResources()
         }
     }
 
-    unk_21f = (unsigned char)(param1 & 0xf);
+    mStarID = (unsigned char)(param1 & 0xf);
     return 1;
 }

@@ -31,7 +31,7 @@ struct MrBlizzard : dEnemyBase_c {
        pointer-to-member-function at +8 through it and compares it against the
        ov081 state tables _02128e24 / _02128e64 / _02128e84 / _02128e94. */
     void *mState;                     /* 0x3f8 */
-    s32 unk_3fc;                      /* 0x3fc */
+    s32 mUniqueID_3fc;                /* 0x3fc */
     s32 mCapUniqueID;                 /* 0x400 */
     u8  pad_404[0x10];
     s16 mInitAngleY;                  /* 0x414 */
@@ -83,10 +83,10 @@ struct MrBlizzard {
     u8  pad_090[0x4];
     s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x6];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mVertAccel;            /* 0x09c */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     u8  pad_0a4[0xc];
-    s32 unk_0b0;            /* 0x0b0 */
+    s32 mFlags;            /* 0x0b0 */
     u8  pad_0b4[0x18];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x3b];
@@ -109,7 +109,7 @@ struct MrBlizzard {
     u8  mShadowModel;            /* 0x370 */
     u8  pad_371[0x87];
     void *mState;            /* 0x3f8 */
-    s32 unk_3fc;            /* 0x3fc */
+    s32 mUniqueID_3fc;      /* 0x3fc */
     s32 mCapUniqueID;            /* 0x400 */
     u8  pad_404[0x10];
     s16 mInitAngleY;            /* 0x414 */

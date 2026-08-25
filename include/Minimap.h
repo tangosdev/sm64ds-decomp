@@ -16,10 +16,16 @@
 #ifdef __cplusplus
 
 struct Minimap : dBase_c {
-    s32 unk_050;                      /* 0x050 */
-    s32 unk_054;                      /* 0x054 */
-    s32 unk_058;                      /* 0x058 */
-    s32 mPosX;                        /* 0x05c */
+    /* The BG's 2x2 affine matrix, in the order the hardware wants it:
+       Behavior fills A and B from the sin/cos table data_02082214 scaled by
+       mInvScale, then sets C = -B and D = A -- a rotate-and-scale -- and hands
+       &mBgMatrixA to UpdateMinimap as the four-word block. Seeded 1,0,0,1 in
+       Fix12 by InitResources. D was called mPosX, which the `mBgMatrixD =
+       mBgMatrixA` in Behavior makes untenable. */
+    s32 mBgMatrixA;                      /* 0x050 */
+    s32 mBgMatrixB;                      /* 0x054 */
+    s32 mBgMatrixC;                      /* 0x058 */
+    s32 mBgMatrixD;                        /* 0x05c */
     s32 mMapCenterX;                      /* 0x060 */
     s32 mMapCenterY;                      /* 0x064 */
     u8  pad_068[0x8];
@@ -42,25 +48,43 @@ struct Minimap : dBase_c {
     s32 mScale;                      /* 0x1d4 */
     s32 mMapWidth;                      /* 0x1d8 */
     s32 mMapCenterOffset;                      /* 0x1dc */
-    s32 unk_1e0;                      /* 0x1e0 */
-    s32 unk_1e4;                      /* 0x1e4 */
-    s32 unk_1e8;                      /* 0x1e8 */
+    /* Where the level wants its map centred, in world coordinates. A per-level
+       constant: InitResources picks 0x258000/0/0x64000 for one level group,
+       -0x2bc000/0/-0x2bc000 for another and zero otherwise, and nothing else
+       writes it. Behavior copies it into mMapCenterWorld* each frame. */
+    s32 mMapOriginX;                      /* 0x1e0 */
+    s32 mMapOriginY;                      /* 0x1e4 */
+    s32 mMapOriginZ;                      /* 0x1e8 */
     s32 unk_1ec;                      /* 0x1ec */
     s32 mCurrentScale;                      /* 0x1f0 */
-    s32 unk_1f4;                      /* 0x1f4 */
-    s32 unk_1f8;                      /* 0x1f8 */
-    s32 unk_1fc;                      /* 0x1fc */
-    s32 unk_200;                      /* 0x200 */
-    s32 unk_204;                      /* 0x204 */
-    s32 unk_208;                      /* 0x208 */
-    s32 unk_20c;                      /* 0x20c */
+    /* The map centre actually used this frame, in world coordinates. Behavior
+       seeds it from mMapOrigin*, converts the player's position through
+       Minimap::GetPosOnMinimap, clamps the icon inside the visible window,
+       converts back with Minimap::GetPosFromMinimapPos and adds the difference
+       here -- so the map scrolls only as far as it must to keep the player on
+       screen. Every icon on the map is projected relative to it. */
+    s32 mMapCenterWorldX;                      /* 0x1f4 */
+    s32 mMapCenterWorldY;                      /* 0x1f8 */
+    s32 mMapCenterWorldZ;                      /* 0x1fc */
+    /* The direction arrow's 2x2 OAM matrix, same four-word shape as
+       mBgMatrix*: Render fills A and B from data_02082214 scaled by
+       mArrowScale and sets C = -B, D = A, in both the VS and single-player
+       branches, immediately before drawing OAM::MM_ARROW. */
+    s32 mArrowMatrixA;                      /* 0x200 */
+    s32 mArrowMatrixB;                      /* 0x204 */
+    s32 mArrowMatrixC;                      /* 0x208 */
+    s32 mArrowMatrixD;                      /* 0x20c */
     s32 mArrowScale;                      /* 0x210 */
     s32 mTargetInvScale;                      /* 0x214 */
     s32 mInvScale;                      /* 0x218 */
     u16 mAngle;                      /* 0x21c */
     s8 mPlayerMapIDs[4];                    /* 0x21e */
     s8 mStarMapIDs[12];                   /* 0x222 */
-    u8  pad_22e[0xc];
+    /* Per-star animation cursor. Render advances entry i by data_0208ee44,
+       wraps it at 12, and uses `% 12 > 4` to pick between the two frames of a
+       star marker; it is reset to 0 for any star not on the current map. Was
+       flat padding. */
+    u8 mStarIconAnimFrame[12];             /* 0x22e */
     s8 mCapMapIDs[9];                    /* 0x23a */
     u8  pad_243[0x5];
     s8 mStarKeyMapID;                       /* 0x248 */
@@ -69,13 +93,19 @@ struct Minimap : dBase_c {
     u8  pad_252[0x2];
     u8 mTouchCircleTimer;                       /* 0x254 */
     u8 mInIntroCutscene;                       /* 0x255 */
+    /* Render increments it, wraps it at 5 and draws the star key's first
+       frame while it is under 2 -- a blink. The header did not reach this far;
+       Render's own shadow of the class did. */
+    u8 mStarKeyBlinkTimer;                     /* 0x256 */
 
     /* --- vtable --- */
     virtual ~Minimap();
 
     int Behavior();
     static void FixTHIPaintingRoomPos(Vector3 & v_);
+    static void UpdateLevelSpecific();
     int InitResources();
+    int Render();
     s32 CleanupResources();
     void OnPendingDestroy();
 };
@@ -89,10 +119,11 @@ typedef char Minimap_size_must_be_0x258[sizeof(Minimap) == 0x258 ? 1 : -1];
    can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct Minimap {
     u8  pad_000[0x50];
-    s32 unk_050;            /* 0x050 */
-    s32 unk_054;            /* 0x054 */
-    s32 unk_058;            /* 0x058 */
-    s32 mPosX;            /* 0x05c */
+    /* Rotate-and-scale 2x2 for the minimap BG; see the C++ spelling above. */
+    s32 mBgMatrixA;            /* 0x050 */
+    s32 mBgMatrixB;            /* 0x054 */
+    s32 mBgMatrixC;            /* 0x058 */
+    s32 mBgMatrixD;            /* 0x05c */
     s32 mMapCenterX;            /* 0x060 */
     s32 mMapCenterY;            /* 0x064 */
     u8  pad_068[0x8];
@@ -122,19 +153,19 @@ struct Minimap {
     /* 0x1e0 and 0x1f4 are each a Vector3 in the shadow -- three consecutive
        words handed to Vec3 helpers as one object. Kept as scalars here so the
        header does not assert a type the other eight matched functions never
-       see, and taken as `*(Vector3*)&unk_1e0` at the two sites that need it. */
-    s32 unk_1e0;            /* 0x1e0 */
-    s32 unk_1e4;            /* 0x1e4 */
-    s32 unk_1e8;            /* 0x1e8 */
+       see, and taken as `*(Vector3*)&mMapOriginX` at the two sites that need it. */
+    s32 mMapOriginX;            /* 0x1e0 */
+    s32 mMapOriginY;            /* 0x1e4 */
+    s32 mMapOriginZ;            /* 0x1e8 */
     s32 unk_1ec;            /* 0x1ec */
     s32 mCurrentScale;            /* 0x1f0 */
-    s32 unk_1f4;            /* 0x1f4 */
-    s32 unk_1f8;            /* 0x1f8 */
-    s32 unk_1fc;            /* 0x1fc */
-    s32 unk_200;            /* 0x200 */
-    s32 unk_204;            /* 0x204 */
-    s32 unk_208;            /* 0x208 */
-    s32 unk_20c;            /* 0x20c */
+    s32 mMapCenterWorldX;            /* 0x1f4 */
+    s32 mMapCenterWorldY;            /* 0x1f8 */
+    s32 mMapCenterWorldZ;            /* 0x1fc */
+    s32 mArrowMatrixA;            /* 0x200 */
+    s32 mArrowMatrixB;            /* 0x204 */
+    s32 mArrowMatrixC;            /* 0x208 */
+    s32 mArrowMatrixD;            /* 0x20c */
     s32 mArrowScale;            /* 0x210 */
     s32 mTargetInvScale;            /* 0x214 */
     s32 mInvScale;            /* 0x218 */
@@ -144,7 +175,11 @@ struct Minimap {
     u16 mAngle;            /* 0x21c */
     s8  mPlayerMapIDs[4];            /* 0x21e */
     s8  mStarMapIDs[12];            /* 0x222 */
-    u8  pad_22e[0xc];
+    /* Per-star animation cursor. Render advances entry i by data_0208ee44,
+       wraps it at 12, and uses `% 12 > 4` to pick between the two frames of a
+       star marker; it is reset to 0 for any star not on the current map. Was
+       flat padding. */
+    u8 mStarIconAnimFrame[12];             /* 0x22e */
     s8  mCapMapIDs[9];            /* 0x23a */
     u8  pad_243[0x5];
     s8  mStarKeyMapID;            /* 0x248 */
@@ -153,6 +188,7 @@ struct Minimap {
     u8  pad_252[0x2];
     u8  mTouchCircleTimer;            /* 0x254 */
     u8  mInIntroCutscene;            /* 0x255 */
+    u8  mStarKeyBlinkTimer;          /* 0x256 */
 };
 
 #endif /* __cplusplus */

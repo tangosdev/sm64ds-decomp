@@ -13,7 +13,7 @@
  *
  * The nine cell bytes are reached as (&unk_031)[i] -- pointer arithmetic off
  * the BASE's first cell byte, running through unk_032/unk_033 and on into
- * this class's unk_034[6]. No member can name that array: it begins three
+ * this class's mCellsTail[6]. No member can name that array: it begins three
  * bytes inside the base and a member cannot straddle the boundary. This is
  * the only spelling that reproduces; five others were measured and every one
  * of them compiled the wrong addressing mode or let strength reduction build
@@ -32,13 +32,13 @@ void cMgSmartball_board_c::RestoreInitial()
     func_ov006_0210f998();
     for (i = 0; i < 9; i++) {
         (&unk_031)[i] = 0;
-        unk_03c[i] = 0;
-        unk_060[i] = 0;
+        mCellFlipAngle[i] = 0;
+        mCellHighlight[i] = 0;
     }
     for (i = 0; i < 8; i++) {
-        unk_06c[i] = 0;
-        unk_08c[i] = 0;
+        mLineTimer[i] = 0;
+        mLineScored[i] = 0;
     }
-    unk_094 = 0;
-    unk_098 = 0;
+    mFanfareTimer = 0;
+    mLinesScored = 0;
 }

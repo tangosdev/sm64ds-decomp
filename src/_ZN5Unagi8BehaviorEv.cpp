@@ -31,7 +31,7 @@ int Unagi::Behavior()
     void* found;
     unsigned id;
 
-    DecIfAbove0_Short((u16*)((char*)&unk_100));
+    DecIfAbove0_Short((u16*)((char*)&mStateTimer));
     {
         Disp* d = *(Disp**)((char*)&mState);
         if (d->pmf) {

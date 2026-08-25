@@ -20,9 +20,9 @@
 #include "ShadowModel.h"
 
 struct TTC_MovingBar : dBgActor_c {
-    u8 unk_31e;                       /* 0x31e */
+    u8  mVariant;                     /* 0x31e -- indexes both ov065 file tables, in InitResources and CleanupResources */
     u8  pad_31f[0x1];
-    s32 unk_320;                      /* 0x320 */
+    s32 mGroundY;                     /* 0x320 -- InitResources' raycast result, falling back to the probe height */
     ShadowModel mShadowModel;         /* 0x324 */
 
     /* --- vtable --- */
@@ -63,9 +63,9 @@ struct TTC_MovingBar {
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x32];
-    u8  unk_31e;            /* 0x31e */
+    u8  mVariant;            /* 0x31e */
     u8  pad_31f[0x1];
-    s32 unk_320;            /* 0x320 */
+    s32 mGroundY;            /* 0x320 */
     u8  mShadowModel;            /* 0x324 */
 };
 

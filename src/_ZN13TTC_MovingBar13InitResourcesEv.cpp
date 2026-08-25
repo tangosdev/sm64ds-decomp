@@ -36,12 +36,12 @@ int TTC_MovingBar::InitResources()
 
     if (actorID != 0x72) {
         if (actorID == 0x73)
-            unk_31e = 1;
+            mVariant = 1;
     } else {
-        unk_31e = 0;
+        mVariant = 0;
     }
 
-    i = unk_31e;
+    i = mVariant;
     _ZN9ModelBase7SetFileEP8BMD_Fileii(
         &mModel,
         _ZN5Model8LoadFileER13SharedFilePtr(*(void **)(data_ov065_0211d35c + i * 0xc)),
@@ -51,7 +51,7 @@ int TTC_MovingBar::InitResources()
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char *)this));
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
 
-    i = unk_31e;
+    i = mVariant;
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider,
         _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(void **)(data_ov065_0211d360 + i * 0xc)),
@@ -69,9 +69,9 @@ int TTC_MovingBar::InitResources()
 
     _ZN9dBgCh_GndC1Ev(raycast);
     _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(raycast, &pos, (void *)0);
-    unk_320 = pos.y;
+    mGroundY = pos.y;
     if (_ZN9dBgCh_Gnd10DetectClsnEv(raycast))
-        unk_320 = *(int *)(raycast + 0x44);
+        mGroundY = *(int *)(raycast + 0x44);
     _ZN9dBgCh_GndD1Ev(raycast);
 
     return 1;

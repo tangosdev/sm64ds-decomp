@@ -152,16 +152,16 @@ int Number::InitResources()
         mTextureSequence.currFrame = (int)((((unsigned int)(param1 & 0xf) % 10) << 16) >> 4);
     }
 
-    unk_14e = 0;
-    unk_13c = mPosX;
+    mState = 0;
+    mStartPosX = mPosX;
     mStartPosY = mPosY;
-    unk_144 = mPosZ;
+    mStartPosZ = mPosZ;
     mVertSpeed = 0x14000;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
     *(short*)(((char*)this) + 0x100 + 0x4c) = 0;
-    unk_138 = 0;
-    unk_148 = 0;
+    mOwnerUniqueID = 0;
+    mFollowOffsetY = 0;
     return 1;
 }
 }
@@ -175,19 +175,19 @@ int Number::Behavior()
 {
     struct V3 pos;
 
-    if (unk_14c != 0) return 1;
+    if (mDelay != 0) return 1;
 
     *(int *)((int)((char *)&mVertSpeed)) += mVertAccel;
     if (mVertSpeed < mTerminalVelocity)
         mVertSpeed = mTerminalVelocity;
     *(int *)((int)((char *)&mPosY)) += mVertSpeed;
 
-    switch (unk_14e) {
+    switch (mState) {
     case 0:
         if (mPosY < mStartPosY) {
             mPosY = mStartPosY;
             mVertSpeed = 0xf000;
-            (*(u8 *)((int)((char *)&unk_14e)))++;
+            (*(u8 *)((int)((char *)&mState)))++;
         }
         break;
     case 1:
@@ -201,15 +201,15 @@ int Number::Behavior()
     pos.x = mPosX;
     pos.y = mPosY;
     pos.z = mPosZ;
-    if (unk_138 != 0) {
-        char *other = _ZN8dActor_c10FindWithIDEj(unk_138);
+    if (mOwnerUniqueID != 0) {
+        char *other = _ZN8dActor_c10FindWithIDEj(mOwnerUniqueID);
         if (other != 0) {
             struct V3 *op = (struct V3 *)((int)(other + 0x5c));
             int oy;
             pos.x = op->x;
             pos.y = oy = op->y;
             pos.z = op->z;
-            pos.y = oy + (unk_148 + (mPosY - mStartPosY));
+            pos.y = oy + (mFollowOffsetY + (mPosY - mStartPosY));
         }
     }
     /* 0x0f0 is +0x1c inside the Model at 0x0d4 -- its mat4x3. The cartridge's own
@@ -238,8 +238,8 @@ int Number::Render()
         }
     }
 
-    if (unk_14c != 0) {
-        u16* p = (u16*)(int)((char*)&unk_14c);
+    if (mDelay != 0) {
+        u16* p = (u16*)(int)((char*)&mDelay);
         *p = *p - 1;
         return 1;
     }

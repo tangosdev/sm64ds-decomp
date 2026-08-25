@@ -65,11 +65,11 @@ struct TowerStep {
     u8  pad_090[0x4];
     s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x2];
-    s32 unk_098;            /* 0x098 */
+    s32 mHorzSpeed;            /* 0x098 */
     u8  pad_09c[0x4];
-    s32 unk_0a0;            /* 0x0a0 */
+    s32 mTerminalVelocity;            /* 0x0a0 */
     u8  pad_0a4[0x4];
-    s32 unk_0a8;            /* 0x0a8 */
+    s32 mVertSpeed;            /* 0x0a8 */
     u8  pad_0ac[0x28];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */

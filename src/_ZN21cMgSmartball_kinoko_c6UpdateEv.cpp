@@ -1,7 +1,7 @@
 //cpp
-/* Slot 1. Switches on unk_034 (see the header): state 0 draws two base
+/* Slot 1. Switches on mVariant (see the header): state 0 draws two base
  * sprites via func_ov004_020afdd0; state 1 computes an ease vector from the
- * base's unk_028 (bails out once unk_028 < 0x1000) and draws two mirrored
+ * base's mRadius (bails out once mRadius < 0x1000) and draws two mirrored
  * sprites via RenderOamBothScreens; there is no case for state 2, so
  * nothing renders. */
 #include "cMgSmartball_kinoko_c.h"
@@ -15,7 +15,7 @@ extern "C" int _ZN4cstd4fdivEii(int, int);
 
 void cMgSmartball_kinoko_c::Update()
 {
-    switch (unk_034) {
+    switch (mVariant) {
     case 0:
         func_ov004_020afdd0(data_ov006_0213765c[0], mCurrent0 >> 12, mCurrent1 >> 12, -1, 1);
         func_ov004_020afdd0(data_ov006_0213765c[1], mCurrent0 >> 12, (mCurrent1 >> 12) + 5, -1, 2);
@@ -25,8 +25,8 @@ void cMgSmartball_kinoko_c::Update()
             int d;
             int b, a;
             int vec[4];
-            if (unk_028 < 0x1000) return;
-            d = _ZN4cstd4fdivEii(0x7000, unk_028);
+            if (mRadius < 0x1000) return;
+            d = _ZN4cstd4fdivEii(0x7000, mRadius);
             b = (int)(((long long)data_02082214[1] * d + 0x800) >> 12);
             a = (int)(((long long)data_02082214[0] * d + 0x800) >> 12);
             vec[0] = b;

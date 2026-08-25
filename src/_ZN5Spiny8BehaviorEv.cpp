@@ -19,11 +19,11 @@ extern signed char data_0209f2f8;
 
 int Spiny::Behavior()
 {
-    int s = unk_3d8;
+    int s = mState;
     if (s != 1 || _ZNK10dBgCh_Actr10IsOnGroundEv((char*)&mWithMeshClsn)) {
-        s = unk_3d8;
+        s = mState;
         if (s != 4 && s != 5 && _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char*)this), 0x5dc000)) {
-            if (DecIfAbove0_Byte((unsigned char*)((char*)&unk_3e9)) == 0) {
+            if (DecIfAbove0_Byte((unsigned char*)((char*)&mDespawnTimer)) == 0) {
                 _ZN7fBase_c18MarkForDestructionEv(((char*)this));
                 return 1;
             }

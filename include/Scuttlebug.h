@@ -27,7 +27,12 @@ struct Scuttlebug : dActor_c {
     dCcAc_c mdCcAc_c;  /* 0x160 */
     dBgCh_Actr mWithMeshClsn;              /* 0x194 */
     u8  pad_350[0x58];
-    u8  unk_3a8;                             /* 0x3a8 */
+    /* Counted down once per frame at the top of Behavior with
+       DecIfAbove0_Short -- as a HALFWORD, though the generated header typed the
+       slot u8; the result is discarded there, so what expiring means is up to
+       the not-yet-enrolled helpers of this class.
+       [_ZN10Scuttlebug8BehaviorEv.cpp] */
+    u8  mTimer;                             /* 0x3a8 */
     u8  pad_3a9[0x3];
 
     virtual ~Scuttlebug();            /* slots 16 (D1), 17 (D0) */

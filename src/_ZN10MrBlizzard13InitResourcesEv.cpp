@@ -79,7 +79,7 @@ int MrBlizzard::InitResources()
             return 0;
     }
 
-    unk_3fc = 0;
+    mUniqueID_3fc = 0;
     mCapUniqueID = 0;
 
     if (mType == 0) {

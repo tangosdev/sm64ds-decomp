@@ -40,11 +40,11 @@ int IceBlock::Behavior()
 
     _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(((char*)this), 0, 0);
 
-    if (unk_354 != 0) {
-        mScale = _ZN4cstd4fdivEii(unk_354 << 12, 0x1e000);
+    if (mMeltTimer != 0) {
+        mScale = _ZN4cstd4fdivEii(mMeltTimer << 12, 0x1e000);
 
-        if (DecIfAbove0_Byte((unsigned char*)((char*)&unk_354)) == 0) {
-            p = *(char**)((char*)&unk_364);
+        if (DecIfAbove0_Byte((unsigned char*)((char*)&mMeltTimer)) == 0) {
+            p = *(char**)((char*)&mContainedActor);
             if (p != 0) {
                 if (*(unsigned short*)(p + 0xc) == 0xb2)
                     *(unsigned char*)(p + 0x49f) = 0;
@@ -57,18 +57,18 @@ int IceBlock::Behavior()
             yo = (int)(((long long)mScale * 0x96000 + 0x800) >> 12);
             ((int*)&v)[1] = v.y + yo;
 
-            unk_35c = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                unk_35c, 0x77, v.x, v.y, v.z, 0, 0);
-            unk_360 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                unk_360, 0x78, v.x, v.y, v.z, 0, 0);
+            mParticleHandle1 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+                mParticleHandle1, 0x77, v.x, v.y, v.z, 0, 0);
+            mParticleHandle2 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+                mParticleHandle2, 0x78, v.x, v.y, v.z, 0, 0);
 
-            id = unk_35c;
+            id = mParticleHandle1;
             if (id != 0) {
                 s = _ZN8Particle6System12FromUniqueIDEj(id);
                 if (s != 0)
                     *(int*)((char*)s + 0x44) = mScale * 0xf;
             }
-            id = unk_360;
+            id = mParticleHandle2;
             if (id != 0) {
                 s = _ZN8Particle6System12FromUniqueIDEj(id);
                 if (s != 0)
@@ -78,13 +78,13 @@ int IceBlock::Behavior()
         return 1;
     }
 
-    if ((*(s32 *)((char *)&mdCcAc_c + 0x24)) != 0) {
-        if (((*(s32 *)((char *)&mdCcAc_c + 0x20)) & 0x40000) != 0) {
-            unk_354 = 0x1e;
+    if (mdCcAc_c.otherOwner != 0) {
+        if ((mdCcAc_c.hitFlags & 0x40000) != 0) {
+            mMeltTimer = 0x1e;
             func_02012694(0x7a, ((char*)this) + 0x74);
             func_ov081_02127be0(((char*)this));
         }
-        if (((*(s32 *)((char *)&mdCcAc_c + 0x20)) & 0x4000) != 0) {
+        if ((mdCcAc_c.hitFlags & 0x4000) != 0) {
             ((VObj*)((char*)this))->OnHit();
         }
     }

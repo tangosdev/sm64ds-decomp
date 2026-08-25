@@ -100,6 +100,86 @@ countdown block. Where a row cites "Behavior" that is the file meant.
   0x28c runs) and `Render` and `TurnOffToonShading` index the same runs. Turning
   them into real arrays is the right fix and is a structural change, not a
   rename, so it is left for a pass that can byte-verify each indexing site.
+  **DONE -- see "The four arrays" below.** Six of the seven are gone; 0x0ec is
+  not part of any of them and is still a scalar.
+
+## The four arrays -- the structural half, and it IS byte-neutral
+
+The previous pass handed this on as "the right fix, left for a pass that can
+byte-verify each indexing site". Every site was verified individually. **All of
+it is byte-neutral**, so the measurement to record is a positive one: on this
+compiler, indexing a real member array of pointers emits the same code as
+hand-written `*(T **)((char *)this + base + i * 4)`, in a loop and out of it.
+
+Four runs, and each one's length is pinned by two independent witnesses -- the
+`CleanupResources` walk and the padding that had to be deleted to make room:
+
+| offset | declaration | length is pinned by |
+| --- | --- | --- |
+| 0x0dc | `ModelAnim *mBodyModels[4]` | `CleanupResources` `i < 4`; closes at 0x0ec, the standalone pointer that was already there |
+| 0x154 | `ModelAnim *unk_154[8]` | `CleanupResources` `i < 4` **and** `i + 4`; closes exactly at `mModelAnim4` (0x174) |
+| 0x27c | `s32 unk_27c[4]` | `i < 4`; closes exactly at 0x28c |
+| 0x28c | `s32 unk_28c[8]` | `i < 4` **and** `i + 4`; closes exactly at `mShadowModel` (0x2ac) |
+
+The element type of the two model runs is `ModelAnim`, and the matched bodies pin
+every part of that claim rather than just the size: they reach `+0x08` (Model's
+`ModelComponents`, handed to `TextureSequence::Update`), `+0x14` (`Model::mat4x3`),
+`+0x50` (the `Animation` base, handed to `Animation::Advance`) and `+0x58` (that
+base's `currFrame`); they call `Model::SetPolygonMode` and `Model::Render` on the
+same pointer; and they call vtable slots `+0x14` and `+0x18`, which in
+`_ZTV9ModelAnim` are `Render` and `Virtual18`. `CleanupResources` calls slot 1 --
+the deleting destructor -- on each element.
+
+The two `s32` runs are parallel to the model runs, one word per model, and that
+pairing is witnessed rather than inferred: `TurnOffToonShading` passes
+`unk_27c[j]` with `mBodyModels[...]`, `unk_28c[j]` with `unk_154[j]` and
+`unk_28c[j + 4]` with `unk_154[j + 4]`, all three to `func_ov002_020e6b74`, which
+walks the model's material records writing one word of the array into each
+record's `+0x1c`. So each element is an allocated per-material word buffer owned
+by the model at the same index -- `CleanupResources` frees them with
+`func_0203cbc0` over the same `i` / `i + 4` pattern. **They are still `unk_`**:
+nothing matched allocates or fills either run, so what the word means is unread.
+Naming the shape was possible; naming the meaning was not.
+
+`unk_154`'s index range has one wrinkle worth writing down before someone
+"fixes" it. `Render` indexes it with `func_ov002_020becf4(mBodyModelId, 1)`, and
+that helper can return 8 or 9 -- the "no model" sentinels. `Render` loads the slot
+*first* and only then tests `i != 9 && i != 8`, so the ROM itself reads one or two
+words past the array, into `mModelAnim4`, and discards the result. That is
+reproduced as written; it is what the cartridge does.
+
+Verified byte-for-byte with `build_pin`, one call per function, all
+`(True, '2004/b56')`:
+
+```
+_ZN6Player16CleanupResourcesEv    _ZN6Player6RenderEv     _ZN6Player18TurnOffToonShadingEj
+_ZN6Player18St_YoshiPower_MainEv  _ZN6Player15St_DeadHit_MainEv
+_ZN6Player13St_Crawl_MainEv       _ZN6Player17St_NoControl_MainEv
+_ZN6Player16St_BurnFire_MainEv    _ZN6Player18St_CameraZoom_MainEv
+```
+
+Two sites were deliberately NOT collapsed:
+
+- `St_CameraZoom_Main` reads the run through `*(volatile int *)((char *)&mBodyModels
+  + id * 4)`. The `volatile` is load-bearing there (it is the round-trip lever, see
+  the "When a rename stops being byte-neutral" section) and `&mBodyModels` still
+  compiles unchanged against the array, so it was left exactly as it was.
+- 0x0ec and 0x1d8 stay scalars. `CleanupResources` destroys them in their own
+  block, outside the `i < 4` loop, and they sit one on each side of a `ModelAnim`
+  member (`mModelAnim3` at 0x0f0, `mModelAnim4` at 0x174) rather than inside a run.
+  Both are `ModelAnim *` by the same slot-1/slot-5 evidence, but neither is part
+  of an array and neither was retyped this pass.
+
+`build/eligible-names.txt` is byte-identical across the whole change (11,065
+lines both sides), `check_header_offsets` reports `0 mismatched, 0 unparsed,
+struct spans 0x768` and the full `rombuild` stays at 11,059 reproducing / 0
+mismatching / 106-106 exact.
+
+One number does move and it is expected: `check_header_offsets` counts 173
+commented fields in `Player.h` where it counted 176. Three of the fields it used
+to check -- `unk_0e0`, `unk_158`, `unk_160` -- are now interior elements of
+`mBodyModels` and `unk_154` and have no offset comment of their own. The file did
+not fall out of the gate: the struct still spans 0x768 and nothing is unparsed.
 
 ## The six shadow-class files
 
@@ -172,22 +252,65 @@ half is a spelling that compiles nowhere and that no gate reports.
 | 0x3f8 | `mAnimSpeed` | `InitResources` sets 0x1000 alongside the three unit scales; `Behavior` copies it into `mModelAnim.speed` every frame before `Advance()`. |
 | 0x406 | `mAngleToTarget` | `Behavior`: `Vec3_HorzAngle(&mPosX, &target->mPosX)`, falling back to `mAngleY` when there is no target -- the same if/else arms as `mDistToTarget`. |
 
-Left `unk_` in Bowser, with the reason:
+### mTargetPlayer is a pointer, and typing it is byte-neutral
 
-- **0x3a8** -- `InitResources` stores word +4 of the actor it spawns with id
-  0x116. Offset 4 of an `fBase_c` has no name in the tree either, so naming this
-  would be naming the same unknown twice.
-- **0x414, 0x416** -- `param1 & 3` and `(param1 >> 2) & 1`. Configuration bits
-  read off the spawn parameter, but no matched body consumes either, so which
-  configuration is a guess.
-- **0x41c** -- `Bowser::Render` early-outs on `< 8`, the same guard SpikeBomb's
-  `mOpacity` gets. That is suggestive and it is not evidence: nothing matched
-  writes 0x41c, so unlike SpikeBomb there is no 0xff to confirm it.
-- **0x42b** -- `Behavior` clears it once `dActor_c::FindWithActorID(0x10d, 0)`
-  stops finding anything. A latch tied to actor 0x10d; what it gates is not in
-  matched code.
-- **0x423..0x42a, 0x444..0x450, 0x3fc, 0x40c** -- written once each by
-  `InitResources` and read by nothing matched.
+`mTargetPlayer` (0x3a0) was declared `s32` and every read of it was spelt
+`*(dActor_c **)((char *)&mTargetPlayer)` -- three of those in `Behavior`, on top of
+an `(int)` cast on the store. It is now `dActor_c *`, and
+`_ZN6Bowser8BehaviorEv` still reproduces byte-for-byte under 2004/b56, as does
+`_ZN6Bowser13InitResourcesEv`, which zeroes it. So a pointer-typed member does
+*not* change how mwcc loads it here; the four casts were pure noise and are gone,
+and `Vec3_HorzAngle` / `Vec3_HorzDist` now take `(Vector3 *)&mTargetPlayer->mPosX`
+instead of `(char *) ... + 0x5c`.
+
+Two details that are not free and are worth copying:
+
+- It is `dActor_c *`, not `Player *`, even though `dActor_c::ClosestPlayer()`
+  returns `Player *`. `Bowser.h` cannot include `Player.h`, so `Player` is only
+  forward-declared, and mwcc rejects the implicit `Player *` -> `dActor_c *`
+  conversion outright ("illegal implicit conversion") because it cannot see the
+  derivation. The store therefore keeps ONE cast, `(dActor_c *)ClosestPlayer()`,
+  which is exact: `dActor_c` is the base at offset 0, so no adjustment is
+  involved.
+- The `#else` C twin of `Bowser.h` has no `dActor_c` declaration in scope, so
+  there the slot is `void *` -- same width, same offset, and the two halves still
+  agree.
+
+Every "read by nothing matched" reason below was withdrawn on 2026-08-24. They
+were all decided by searching Bowser's own mangled methods, which is three files;
+Bowser's behaviour is in ov060, dispatched through the pointer-to-member table
+`data_ov060_0211aeb4[*(int *)(this + 0x410)]` that `func_ov060_02112434` calls.
+A data-table dispatch names no caller, so the call graph never reaches those
+state functions -- but `tools/handler_owner.py` attributes ~30 ov060 handlers to
+Bowser decisively, and they read almost all of it. Named from that evidence:
+
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x3a8 | `mUniqueID_3a8` | `InitResources` stores word +4 of the actor it spawns with id 0x116; a state handler passes that word to `dActor_c::FindWithID`. So it is an actor unique id, which is what `fBase_c +4` is called everywhere else -- `uniqueID`. Offset-suffixed because the *kind* is settled and the role of actor 0x116 is not. |
+| 0x3fc | `mTimer` | incremented as a `u16`, tested `== 0`, and `& 1` for alternate-frame work. |
+| 0x40c | `mState` | assigned 0, 1, 5, 0xd and 0x13 by different state handlers and compared against 4. An enum-like state word, distinct from the pmf index at 0x410. |
+| 0x414 | `mVariantID` | `param1 & 3`, wrapped by `if (== 3) = 0`, then used to index `data_ov060_02119264` for the byte at 0x41e. A variant selector that picks per-instance configuration -- which is exactly the part the old note called a guess. |
+| 0x41c | `mOpacity` | the missing `0xff` exists: `func_ov060_021123dc` writes `0xff` here and to 0x41d, and `func_ov060_02112434` steps 0x41c toward 0x41d by 0x14 a frame, clamping at 0xff and 0, while another handler passes `*(u8 *)(this + 0x41c) >> 3` to `ModelBase::ApplyOpacity` -- 0..255 scaled to the DS's 5-bit alpha. `Render`'s `< 8` early-out is the invisible case. |
+| 0x424 | `mTalkStep` | `switch` on it: case 0 calls `Player::StartTalk`, case 1 waits for `Player::GetTalkState() == 0` then `Player::ShowMessage`, each case incrementing it. |
+| 0x426 | `mDropsShadow` | gates the `dBgCh_Gnd` raycast that projects Bowser onto the ground and writes the shadow matrix at 0x330 -- the same role `BowserFire::mDropsShadow` was named for. |
+| 0x427 | `mBounceOnLand` | while set, `dBgCh_Actr::JustHitGround()` reflects the vertical speed at -60% (clamped to 0x14000); cleared once he settles. |
+| 0x42b | `mCapActorAlive` | actor 0x10d is the lost cap -- `MrBlizzard` spawns it under `SaveData::HasPlayerLostCap()` and stores its unique id as `mCapUniqueID`. This is the latch saying that actor still exists. |
+| 0x444 | `mCutsceneStep` | `switch` on it drives the camera: `Camera::SetFlag_3`, `Camera::SetLookAt`, and the computed eye position at 0x438/0x43c. |
+| 0x446 | `mStompFxLatch` | `func_ov060_02111a28` matches the animation frame at 0x12c against per-animation windows and, on the rising edge only, emits landing dust from the left foot (0x3d4) or right (0x3e0), plays sound 0xb0 and calls `dActor_c::Earthquake`. This is the edge-detect latch that makes it fire once per window. |
+| 0x448 | `mParticleHandle` | stores the result of `Particle::System::New`. |
+| 0x44c | `mSoundHandle` | stores the result of `Sound::PlayLong`, and passes it back as that call's first argument. |
+| 0x450 | `mSoundID` | set to 0xba, compared against 0xba, and passed to `Sound::PlayLong` as the sound id. |
+
+Still `unk_` in Bowser, with the reason:
+
+- **0x416** -- `(param1 >> 2) & 1`. Unlike 0x414 this one really is consumed by
+  nothing, in the methods or in any handler attributed to Bowser.
+- **0x423** -- a counter, reset beside `dBgCh_Actr::ClearGroundFlag` and
+  incremented both when he settles on the ground and when a handler launches him
+  upward. Nothing compares it, so whether it counts bounces, throws or landings
+  is not decided by the code.
+- **0x429, 0x42a** -- written once by `InitResources` (1 and 5) and read nowhere,
+  including in the ov060 handlers.
 
 ## SpikeBomb
 
@@ -204,3 +327,65 @@ Left `unk_` in SpikeBomb: **0x180** (`Vec3_HorzLen` of the spawn position, i.e. 
 distance from the world origin -- plausibly an orbit radius, but nothing matched
 reads it back) and **0x184** (`0x2ee000`, whose only use is the `>> 3` term added
 to `mHomePosY`).
+
+## Player -- named in the structural pass
+
+Three more, all found while chasing the arrays.
+
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x560/0x564/0x568 | `mWallNormalX/Y/Z` | The exact counterpart of `mFloorNormal*` three words earlier, and written the same way: `func_ov002_020c25a8` calls `SurfaceInfo::CopyNormalTo(dBgCh_Actr::GetWallResult(&mMeshClsn) + 4, &wn)` and stores `wn.x/y/z` into the three slots, then pushes the actor back out along it (`mPosX -= mWallNormalX * 2`, `mPosZ -= mWallNormalZ * 2`). Seven bodies read the X/Z pair back as `cstd::atan2(mWallNormalX, mWallNormalZ)` to recover the wall's facing -- `St_Shell_Main`, `St_OnWall_Main` (twice), `St_Balloon_Main`, `St_CrazedCrate_Main`, `func_ov002_020c2138`, `func_ov002_020dd2f4`, `func_ov002_020e28d4`. 0x564 was declared padding until that middle store was disassembled, which is exactly how 0x554 and 0x55c got here. |
+| 0x719 | `mKeyModelId` | `CleanupResources` passes it to `UnloadKeyModels(i)` under `mLoadedResourceFlags & 0x10`, and that function (`src/UnloadKeyModels.cpp`) indexes two eight-entry `SharedFilePtr` tables with it and releases both. `St_LevelEnter_Init` seeds it with -1, which `UnloadKeyModels`'s `if (i >= 8) return` treats as "nothing loaded". The same argument slot is `mState` in `Key::CleanupResources` and `v - 7` in `Door::CleanupResources`, so it selects WHICH key model, not how many. |
+| 0x6f7 | `mSwimMusicPushed` | A latch on a music push. `St_Swim_Main` sets it to 1 immediately after `func_ov002_020bd928(this, 0x33)` and clears it immediately after `func_ov002_020bd8c0(this, 0x33)`; `St_Swim_Cleanup` does nothing unless it is set, and then clears it and calls `func_ov002_020bd8c0(this, 0x33)`. The two helpers are `Sound::SetMusic` / `Sound::EndMusic` wrappers around the track words at 0x678/0x67c/0x680, so what is latched is "this state has a temporary track pushed and still owes the pop". Only the Swim states touch it. |
+
+## IceSlideManager
+
+All fourteen `unk_` are gone, but the split between them is worth stating plainly,
+because they are two different kinds of naming and only one of them is evidence.
+
+`0x000..0x0d4` is `dActor_c`'s layout written out FLAT -- `IceSlideManager` does
+not derive from `dActor_c`, it mirrors it. So `mPosX/Y/Z`, `mPrevPosX/Y/Z`,
+`mClipOffsetY`, `mClipRadius`, `mClipDistance`, `mFarDistance`, `mClipResult` and
+`mDeathTableID` are **copied from `include/dActor_c.h` at the matching offset**,
+not independently evidenced here. That is a weaker claim than the rest of this
+file and the header now says so. It is also why none of them can shadow anything:
+there is no base class to shadow.
+
+Only two slots are the actor's own, and both are witnessed:
+
+| offset | name | evidence |
+| --- | --- | --- |
+| 0x0d4 | `mKillTimer` | `InitResources` seeds it with 0x78 (120 frames) and nothing else arms it; `Behavior`'s state 1 runs it down with `DecIfAbove0_Short` and, at zero, plays one more sound and calls `dActor_c::KillAndTrackInDeathTable`. Armed once, expires once, and its expiry IS the kill. |
+| 0x0d6 | `mState` | `Behavior` switches on it over exactly `{0, 1}`. State 0 waits for `DistToCPlayer() < 0x180000`, plays a sound and increments it; state 1 is the countdown above. A two-state machine, not a flag -- and the increment is spelt through a byte pointer at `this + 0xd6`, which is why the slot is `u8`. |
+
+The rename carried into `src_tu/actors/IceSlideManager.cpp`, which keeps its own
+TU-local shadow `dActor_c`; `check_src_tu_compiles` is green on all 72.
+
+## UpDownLiftBbh
+
+The same shape: `0x000..0x0d4` is the flat `fBase_c -> dBase_c -> dActor_c`
+layout, so `pauseFlags` came from `include/fBase_c.h` and `mPrevPosX/Y/Z`,
+`mClipOffsetY`, `mClipRadius`, `mClipDistance`, `mFarDistance`, `mClipResult` and
+`mDeathTableID` came from `include/dActor_c.h`, at the matching offset. Ten
+names, no independent evidence, and the header says so.
+
+Four slots inside that range stay `unk_`, and one of the reasons is not the usual
+one:
+
+- **0x010, 0x011, 0x012** -- `fBase_c` does not name them either. Copying across
+  would be inventing a name, not importing one.
+- **0x092, 0x096** -- these are `dActor_c`'s `mPrevAngleX` and `mPrevAngleZ`
+  slots, and `InitResources` reads them as UNSIGNED shaft measurements:
+  `mBottomY = mTopY - (unk_092 << 12)` and, on the one variant,
+  `mTopY = mPosY + (unk_096 << 12)`. Nothing matched WRITES either slot, so
+  whether they hold the base's angle snapshot or an actor-specific reuse of the
+  same words is not settled by anything that reproduces the cartridge. Naming
+  them either way picks a side on no evidence.
+
+Two of the actor's own stay `unk_` for the ordinary reason (write-only in matched
+code), but **0x349 carries an observation that should not be lost**:
+`InitResources` stores only 0 or 1 into it -- 1 for `actorID == 0x83` -- and then,
+four statements later, tests it for `== 2`. The branch that raises `mTopY` by
+`unk_096` is unreachable in the shipped ROM. It is reproduced as written because
+the cartridge contains it, and the header now records that so nobody "fixes" the
+comparison.

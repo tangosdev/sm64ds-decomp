@@ -22,7 +22,7 @@ struct C {
 int WaterSuction::Behavior()
 {
     C* c = (C*)((char*)this);
-    DecIfAbove0_Short((unsigned short*)((char*)&(*(u8 *)&unk_100)));
+    DecIfAbove0_Short((unsigned short*)((char*)&(*(u8 *)&mStateTimer)));
     Obj* o = c->obj;
     if (*(int*)((char*)o + 8) != 0) {
         (c->*(o->pmf))();

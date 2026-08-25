@@ -28,7 +28,7 @@ s32 CageLift::InitResources() {
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     void* mc = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov029_02114284);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        c + 0x124, mc, c + 0x2ec, 0x1000, self->unk_08e, data_ov029_0211306c);
+        c + 0x124, mc, c + 0x2ec, 0x1000, self->mAngleY, data_ov029_0211306c);
     func_020393d4(c + 0x124, (void*)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     func_020393c4(c + 0x124, (void*)&func_ov029_02111e60);
     self->unk_32b = 0;
@@ -38,7 +38,7 @@ s32 CageLift::InitResources() {
         self->unk_32c = 3;
     else
         self->unk_32c = 0;
-    self->unk_320 = self->unk_060;
+    self->unk_320 = self->mPosY;
     return 1;
 }
 }

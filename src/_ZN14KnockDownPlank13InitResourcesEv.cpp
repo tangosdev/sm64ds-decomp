@@ -76,9 +76,9 @@ int KnockDownPlank::InitResources()
     Vec3_Add(&d, &b, (Vector3 *)&mPosX);
 
     one = 1;
-    unk_378 = d.x;
-    unk_37c = d.y;
-    unk_380 = d.z;
+    mFrontPosX = d.x;
+    mFrontPosY = d.y;
+    mFrontPosZ = d.z;
     mOriginalPosY = mPosY;
     mKnockDir = (s8)one;
 

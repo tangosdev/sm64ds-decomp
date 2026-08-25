@@ -51,14 +51,14 @@ int Ukiki::InitResources()
     unk_384 = mPosY;
     unk_388 = mPosZ;
     *py += 0x64000;
-    unk_38c = mPosX;
-    unk_390 = mPosY;
-    unk_394 = mPosZ;
+    mSpawnPosX = mPosX;
+    mSpawnPosY = mPosY;
+    mSpawnPosZ = mPosZ;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     unk_3a8 = 0;
-    unk_3ac = 0;
+    mCapUniqueID = 0;
     unk_3cb = 0x96;
     h = actorID;
     b = 0;
@@ -71,10 +71,10 @@ int Ukiki::InitResources()
                 goto ov030_no_spawn;
             {
                 char *spawned;
-                unk_3b0 = *(u32 *)(player + 8);
-                spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x10d, (unk_3b0 << 8) | 2, ((char *)this) + 0x5c, 0, mAreaId, -1);
-                unk_3ac = *(int *)(spawned + 4);
-                unk_3c8 = 1;
+                mCapPlayerNo = *(u32 *)(player + 8);
+                spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x10d, (mCapPlayerNo << 8) | 2, ((char *)this) + 0x5c, 0, mAreaId, -1);
+                mCapUniqueID = *(int *)(spawned + 4);
+                mHasSpawnedCap = 1;
                 func_ov030_021141a8(((char *)this), 1);
                 goto ov030_cap_done;
             }

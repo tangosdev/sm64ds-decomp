@@ -53,33 +53,33 @@ int Pokey::InitResources()
 
     t = (actorID == 0xf0);
     if (t != false) {
-        unk_36c = mPosX;
-        unk_370 = mPosY;
-        unk_374 = mPosZ;
+        mRootPosX = mPosX;
+        mRootPosY = mPosY;
+        mRootPosZ = mPosZ;
         mScaleX = 0x1000;
         mScaleY = 0x1000;
         mScaleZ = 0x1000;
-        unk_390 = 0;
-        unk_394 = 0;
+        mHead = 0;
+        mNextSegment = 0;
     } else {
         t = (actorID == 0xf1);
         if (t != false) {
             mScaleX = 0;
             mScaleY = 0;
             mScaleZ = 0;
-            *(void**)((char*)&unk_390) = _ZN8dActor_c10FindWithIDEj(param1);
-            unk_394 = 0;
+            *(void**)((char*)&mHead) = _ZN8dActor_c10FindWithIDEj(param1);
+            mNextSegment = 0;
             {
-                int* p = (int*)(((int)*(char**)((char*)&unk_390) + 0x36c));
-                unk_36c = p[0];
-                unk_370 = p[1];
-                unk_374 = p[2];
+                int* p = (int*)(((int)*(char**)((char*)&mHead) + 0x36c));
+                mRootPosX = p[0];
+                mRootPosY = p[1];
+                mRootPosZ = p[2];
             }
         }
     }
 
     func_ov096_02136928(((char*)this), 1);
-    *(Matrix4x3*)((char*)&unk_33c) = IDENTITY_MATRIX4X3;
+    *(Matrix4x3*)((char*)&mMatrix) = IDENTITY_MATRIX4X3;
     func_ov096_02135efc(((char*)this));
     return 1;
 }

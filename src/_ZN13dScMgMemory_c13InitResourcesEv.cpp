@@ -9,7 +9,7 @@
  * its slot 0 relocates here. The signature is include/fBase_c.h's own slot
  * 0, `virtual s32 InitResources()`.
  *
- * unk_0a8, unk_0ac and unk_0b4 ARE dScMgBase_c'S, not this class's, which is
+ * unk_0a8, unk_0ac and mHudScore ARE dScMgBase_c'S, not this class's, which is
  * what include/dScMgMemory_c.h's banner says about the three fields the old
  * auto-generated header declared below 0x4f38. They read as inherited members
  * here, which is the point of the migration: the pre-migration file wrote all
@@ -67,7 +67,7 @@ s32 dScMgMemory_c::InitResources()
         return 0;
     unk_0a8 = func_ov004_020ad8b8();
     unk_0ac = unk_0a8;
-    unk_0b4 = func_ov004_020ad878();
+    mHudScore = func_ov004_020ad878();
     func_ov004_020b66d4();
     data_ov004_020bc7d4 = 1;
     unk_533b = 3;

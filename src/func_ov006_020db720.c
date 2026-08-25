@@ -27,14 +27,14 @@ extern "C" int func_ov006_020db720(char* c);
 int func_ov006_020db720(char* c)
 {
     struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)c;
-    switch (self->unk_5388) {
+    switch (self->mState) {
     case 0xe: {
         int r = func_ov006_020da5e8(c + 0x51a8, c + 0x5298);
         if (r == -1)
             FreeGfxSlotsById(0xa);
         else if (r == 1)
             FreeGfxSlotsById(9);
-        self->unk_538a = 0;
+        self->mStateTimer = 0;
         *(s16*)(((int)c + 0x5388)) += 1;
         break;
     }
@@ -43,14 +43,14 @@ int func_ov006_020db720(char* c)
             int r = func_ov006_020da5e8(c + 0x51a8, c + 0x5298);
             if (r == -1) {
                 func_ov004_020b5ed0();
-                self->unk_538a = 0;
+                self->mStateTimer = 0;
             } else if (r == 1) {
                 int v = data_ov006_0213bd48[func_ov006_020da4ac(c + 0x51a8, 0)];
                 func_ov004_020b56c8(v * data_ov004_020bfa18);
-                self->unk_538a = 0;
+                self->mStateTimer = 0;
             } else {
                 func_ov004_020b5d74();
-                self->unk_538a = 0x1e;
+                self->mStateTimer = 0x1e;
             }
             *(s16*)(((int)c + 0x5388)) += 1;
         }
@@ -84,7 +84,7 @@ int func_ov006_020db720(char* c)
             a += 0x30;
             b += 0x30;
         }
-        self->unk_538a = 0x3c;
+        self->mStateTimer = 0x3c;
         *(s16*)(((int)c + 0x5388)) += 1;
         break;
     }

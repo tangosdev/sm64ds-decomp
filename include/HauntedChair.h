@@ -36,14 +36,14 @@ struct HauntedChair {
        dBgCh_Actr's D1 at +0x1bc -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN12HauntedChairD0Ev.c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x1bc */
-    s32 unk_378;            /* 0x378 */
+    s32 mState;            /* 0x378 */
     u8  pad_37c[0x4];
-    s32 unk_380;            /* 0x380 */
-    s32 unk_384;            /* 0x384 */
-    s32 unk_388;            /* 0x388 */
-    s32 unk_38c;            /* 0x38c */
-    s32 unk_390;            /* 0x390 */
-    s32 unk_394;            /* 0x394 */
+    s32 mHomePosX;            /* 0x380 */
+    s32 mHomePosY;            /* 0x384 */
+    s32 mHomePosZ;            /* 0x388 */
+    s32 mClsnOffsetX;            /* 0x38c */
+    s32 mClsnOffsetY;            /* 0x390 */
+    s32 mClsnOffsetZ;            /* 0x394 */
     /* Trailing remainder, 0x10 bytes. Every marker is typed and the last field
        the five recovered functions touch ends at 0x398; HauntedChair_Spawn
        allocates 0x3a8. The reference does not document this class's members. */

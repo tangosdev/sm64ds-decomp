@@ -17,7 +17,7 @@ struct Obj {
 
 int ChainChompFence::Render()
 {
-    if (*(unsigned char*)((char*)&unk_31e) != 0) return 1;
+    if (*(unsigned char*)((char*)&mDisabled) != 0) return 1;
     ((Obj *)this)->sub.vfunc(0);
     return 1;
 }

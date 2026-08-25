@@ -23,7 +23,7 @@ struct WDW_Water : dBgActor_c {
     u8  pad_31e[0x2];
     TextureTransformer mTextureTransformer;/* 0x320 */
     s32 mTargetPosY;                  /* 0x334 */
-    u8 unk_338;                       /* 0x338 */
+    u8 mUseSpawnPosY;                 /* 0x338 -- param1 & 1; when clear InitResources overrides mPosY from data_ov029_02112b2c[setting] */
     u8  pad_339[0x3];
     s32 mSoundID;                      /* 0x33c */
     u8 mTrueAreaID;                       /* 0x340 */
@@ -52,7 +52,7 @@ struct WDW_Water {
     u8  pad_00c[0x54];
     s32 mPosY;            /* 0x060 */
     u8  pad_064[0x8];
-    s32 unk_06c;            /* 0x06c */
+    s32 mPrevPosY;            /* 0x06c */
     u8  pad_070[0x1e];
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x3c];
@@ -70,7 +70,7 @@ struct WDW_Water {
     u8  pad_2ec[0x34];
     TextureTransformer mTextureTransformer; /* 0x320 */
     s32 mTargetPosY;            /* 0x334 */
-    u8  unk_338;            /* 0x338 */
+    u8  mUseSpawnPosY;            /* 0x338 */
     u8  pad_339[0x3];
     s32 mSoundID;            /* 0x33c */
     u8  mTrueAreaID;            /* 0x340 */

@@ -29,8 +29,8 @@ int HealingHeart::Behavior()
     DecIfAbove0_Byte(&mHealTimer);
 
     if (mdCcAc_c.otherOwner != 0) {
-        if (unk_171 == 0) {
-            unk_171 = 1;
+        if (mWasTouched == 0) {
+            mWasTouched = 1;
             mHealTimer = 0;
         }
         if (mHealTimer == 0) {
@@ -51,13 +51,13 @@ int HealingHeart::Behavior()
             mHealTimer = 0x5a;
         }
     } else {
-        unk_171 = 0;
+        mWasTouched = 0;
     }
 
     if (mHealTimer > 0x2d)
         spin = 0x8000;
-    Math_Function_0203b14c(&unk_16c, spin, 0x400, 0x2000, 0x80);
-    mModelAnim.speed = unk_16c;
+    Math_Function_0203b14c(&mAnimSpeed, spin, 0x400, 0x2000, 0x80);
+    mModelAnim.speed = mAnimSpeed;
     mModelAnim.Advance();
     mdCcAc_c.Clear();
     mdCcAc_c.Update();

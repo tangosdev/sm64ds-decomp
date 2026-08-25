@@ -36,7 +36,7 @@ void ApproachLinear(s16 &value, s16 target, s16 step);
 
 int Shark::Behavior()
 {
-    DecIfAbove0_Short((u16 *)&unk_100);
+    DecIfAbove0_Short((u16 *)&mStateTimer);
     {
         SharkBehaviorState *state = *(SharkBehaviorState **)&mState;
         if (state->callback != 0) {

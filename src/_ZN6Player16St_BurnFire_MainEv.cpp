@@ -99,7 +99,7 @@ int Player::St_BurnFire_Main()
             mStateStep = 1;
             _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x3f, 0, 0x1000, 0);
             {
-                char *anim = (char *)(*(char **)((char *)&mBodyModels + (_ZNK6Player14GetBodyModelIDEjb(this, param1 & 0xff, 0) << 2)) + 0x50);
+                char *anim = (char *)((char *)mBodyModels[_ZNK6Player14GetBodyModelIDEjb(this, param1 & 0xff, 0)] + 0x50);
                 *(int *)(anim + 0xc) = 0x4000;
             }
         }
@@ -125,7 +125,7 @@ int Player::St_BurnFire_Main()
         }
         _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x3f, 0, 0x1000, 0);
         {
-            char *anim = (char *)(*(char **)((char *)&mBodyModels + (_ZNK6Player14GetBodyModelIDEjb(this, param1 & 0xff, 0) << 2)) + 0x50);
+            char *anim = (char *)((char *)mBodyModels[_ZNK6Player14GetBodyModelIDEjb(this, param1 & 0xff, 0)] + 0x50);
             *(int *)(anim + 0xc) = 0x4000;
         }
         {

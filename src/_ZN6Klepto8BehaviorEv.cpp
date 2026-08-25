@@ -27,7 +27,7 @@ int Klepto::Behavior()
     M *m;
     int b;
 
-    DecIfAbove0_Short((unsigned short *)&unk_100);
+    DecIfAbove0_Short((unsigned short *)&mStateTimer);
     DecIfAbove0_Short((unsigned short *)&mTimer);
 
     m = (M *)mState;

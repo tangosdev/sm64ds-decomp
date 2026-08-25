@@ -46,12 +46,19 @@ struct BabyPenguin : dActor_c {
     /* dBgCh_Actr member, named by the class's own destructor calling
        dBgCh_Actr's D1 at +0x194. [_ZN11BabyPenguinD0Ev.c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x194 */
-    s32 unk_350;            /* 0x350 */
-    s32 unk_354;            /* 0x354 */
-    s32 unk_358;            /* 0x358 */
+    /* Copy of mPosX/Y/Z taken once in InitResources and never written again.
+       [_ZN11BabyPenguin13InitResourcesEv.cpp] */
+    s32 mSpawnPosX;            /* 0x350 */
+    s32 mSpawnPosY;            /* 0x354 */
+    s32 mSpawnPosZ;            /* 0x358 */
     u8  pad_35c[0x4];
     s32 unk_360;            /* 0x360 */
-    s32 unk_364;            /* 0x364 */
+    /* Lazily filled the first frame the penguin is near the player, and never
+       cleared: `if (mCachedActor == 0) mCachedActor = FindWithActorID(0x101, 0)`.
+       A dActor_c* spelt s32. What actor 0x101 IS has no evidence in the tree --
+       nothing names it and no enrolled body reads this pointer back -- so the
+       name says only what the bytes say. [_ZN11BabyPenguin8BehaviorEv.cpp] */
+    s32 mCachedActor;            /* 0x364 */
     u8  pad_368[0x4];
     s16 unk_36c;            /* 0x36c */
 

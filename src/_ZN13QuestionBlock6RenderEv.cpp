@@ -17,18 +17,18 @@ struct Sub {
 
 int QuestionBlock::Render()
 {
-    if (unk_3e8 == 2)
+    if (mState == 2)
         goto done;
     if ((*(int*)((char*)&data_0209caa0 + 4) & 0x80000000) == 0) {
         int b = (actorID == 0x14);
         if (b != 0) {
-            Sub* s = (Sub*)((char*)&mModelAnim);
+            Sub* s = (Sub*)&mModelAnim;
             s->m(0);
             goto done;
         }
     }
     {
-        Sub* s2 = (Sub*)((char*)&(*(u8 *)&mModel));
+        Sub* s2 = (Sub*)&mModel;
         s2->m((int)((char*)&mScaleX));
     }
 done:

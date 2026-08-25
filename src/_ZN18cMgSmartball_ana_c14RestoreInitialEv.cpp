@@ -14,5 +14,5 @@ void cMgSmartball_ana_c::RestoreInitial()
     cMgSmartball_object_c::RestoreInitial();
     unk_031 = 0;
     unk_032 = 0;
-    unk_034 = 0;
+    mRespawnTimer = 0;
 }

@@ -4,7 +4,7 @@
  *
  * data_0209f2c0 is the level's clock hand setting. 3 ("random") pins the lift
  * at the top of its travel; otherwise it runs on a timer, and each time the
- * timer expires the gear clamps itself back inside [unk_324, unk_324 +
+ * timer expires the gear clamps itself back inside [mHomePosY, mHomePosY +
  * 0x14a000], flips mMoveDir, and reloads speed and timer from the two 16-byte
  * per-setting tables. Setting 2 overrides the timer with a random multiple of
  * 0x14 in [0xa, 0x6e].
@@ -32,18 +32,18 @@ int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int a, int b);
 int TtcRotatingGear::Behavior()
 {
     if (data_0209f2c0 == 3) {
-        mPosY = unk_324 + 0x14a000;
+        mPosY = mHomePosY + 0x14a000;
         UpdateModelPosAndRotY();
         if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0)
             UpdateClsnPosAndRot();
         goto ret1;
     }
 
-    if (DecIfAbove0_Short(&unk_32c) == 0) {
+    if (DecIfAbove0_Short(&mMoveTimer) == 0) {
 
         s32 lower, upper, y, in;
         UpdatePos(0);
-        lower = unk_324;
+        lower = mHomePosY;
         y = mPosY;
         upper = lower + 0x14a000;
         if (y < lower)
@@ -81,14 +81,14 @@ Lchk:
             {
                 int idx = data_0209f2c0;
                 u8 t = mMoveDir;
-                unk_32c = *(u16 *)(&data_ov065_0211c0d4[idx * 16] + t * 8);
+                mMoveTimer = *(u16 *)(&data_ov065_0211c0d4[idx * 16] + t * 8);
                 t = mMoveDir;
                 mVertSpeed = *(s32 *)(&data_ov065_0211c0d0[idx * 16] + t * 8);
                 if (data_0209f2c0 != 2)
                     goto tail;
                 {
                     u32 r = (u32)RandomIntInternal(&data_0209e650);
-                    unk_32c = (u16)((r % 6) * 0x14 + 0xa);
+                    mMoveTimer = (u16)((r % 6) * 0x14 + 0xa);
                 }
             }
         }

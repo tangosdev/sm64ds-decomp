@@ -55,7 +55,7 @@ struct Squasher {
     u8  pad_068[0xc];
     /* 0x074..0x08c is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
-    s32 unk_074;                 /* 0x074 */
+    s32 mCamSpacePosX;                 /* 0x074 */
     s32 mCamSpacePosY;           /* 0x078 */
     s32 mCamSpacePosZ;           /* 0x07c */
     s32 mScaleX;                 /* 0x080 */
@@ -71,7 +71,7 @@ struct Squasher {
        dBgW_KcMbg's D1 at +0x124 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN8SquasherD1Ev.c] */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  unk_2ec;            /* 0x2ec */
+    u8  mClsnMat;            /* 0x2ec */
     u8  pad_2ed[0x31];
     s16 mAngVelX;            /* 0x31e */
     s16 mStateTimer;            /* 0x320 */

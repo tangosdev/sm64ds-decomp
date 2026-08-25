@@ -21,18 +21,18 @@ int Crate::InitResources()
     char* f = 0;
     if (actorID == 0xc2) f = data_ov098_0213c4c8;
     if (f == 0) return 0;
-    unk_4e8 = mPosX;
-    unk_4ec = mPosY;
-    unk_4f0 = mPosZ;
-    unk_500 = mAngleX;
-    unk_502 = mAngleY;
-    unk_504 = mAngleZ;
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, _ZN5Model8LoadFileER13SharedFilePtr(*(char**)(f)), 1, -1);
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
+    mHomeAngleX = mAngleX;
+    mHomeAngleY = mAngleY;
+    mHomeAngleZ = mAngleZ;
+    _ZN9ModelBase7SetFileEP8BMD_Fileii((char*)&mModel, _ZN5Model8LoadFileER13SharedFilePtr(*(char**)(f)), 1, -1);
     _ZN11ShadowModel10InitCuboidEv((char*)&mShadowModel);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char*)this) + 0x124, _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(char**)(f + 4)),
-        ((char*)this) + 0x2ec, 0x199, mAngleY, *(int*)(f + 8));
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x320, ((char*)this), 0x28000, 0x28000, 0, 0);
+        (char*)&mMeshCollider, _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(char**)(f + 4)),
+        (char*)&mClsnMat, 0x199, mAngleY, *(int*)(f + 8));
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((char*)&mWithMeshClsn, ((char*)this), 0x28000, 0x28000, 0, 0);
     _ZN10dBgCh_Actr19StartDetectingWaterEv((char*)&mWithMeshClsn);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;

@@ -13,7 +13,7 @@ struct Base {
 
 int Fish::Render()
 {
-    if (unk_159 == 0) {
+    if (mHidden == 0) {
         Base *b = (Base*)((char *)&mModelAnim);
         b->m(0);
     }

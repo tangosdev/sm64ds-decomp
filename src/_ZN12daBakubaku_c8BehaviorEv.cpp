@@ -34,7 +34,7 @@ s32 daBakubaku_c::Behavior()
     if (UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 3) != 0)
         return 1;
 
-    DecIfAbove0_Short((unsigned short *)&unk_100);
+    DecIfAbove0_Short((unsigned short *)&mStateTimer);
     DecIfAbove0_Short(&unk_42a);
 
     StateEntry *state = (StateEntry *)mState;

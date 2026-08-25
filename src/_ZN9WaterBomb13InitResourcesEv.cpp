@@ -76,7 +76,7 @@ int WaterBomb::InitResources()
         }
     }
 
-    unk_100 = 0;
+    mStateTimer = 0;
     unk_3b6 = 0;
     unk_3b4 = 0;
     unk_3a8 = mPosX;

@@ -26,10 +26,10 @@ void func_ov006_02121fa4(char *o)
 
     _ZN3G2x13SetBlendAlphaEPVttttt((volatile void *)0x4000050, 1, 0x3e, 0x10, 0x10);
 
-    self->unk_5db4 = data_020a0dbc[0];
-    self->unk_5db6 = data_020a0dbc[1];
-    self->unk_5db0 = data_020a0dbc[0];
-    self->unk_5db2 = data_020a0dbc[1];
+    self->mTouchStartX = data_020a0dbc[0];
+    self->mTouchStartY = data_020a0dbc[1];
+    self->mTouchX = data_020a0dbc[0];
+    self->mTouchY = data_020a0dbc[1];
 
     data_ov006_02142f60 = 0;
     self->unk_0bc = 0;
@@ -40,12 +40,12 @@ void func_ov006_02121fa4(char *o)
        reads the field SIGNED, which is what this header used to declare
        locally. Cast at the use site rather than retype the shared base. */
     q = ((((s32)self->unk_0bc % 5) << 12)) / 4;
-    self->unk_5d94 =
+    self->mScrollY =
         (int)(((long long)(0x1000 - q) * 0x20 + 0x800) >> 12) +
         (int)(((long long)q * 0x50 + 0x800) >> 12);
-    self->unk_5d98 = self->unk_5d94;
-    self->unk_5d9c = 0;
-    func_ov006_020cd424(self->unk_0bc, self->unk_5d94);
+    self->mScrollTargetY = self->mScrollY;
+    self->mScrollHoldTimer = 0;
+    func_ov006_020cd424(self->unk_0bc, self->mScrollY);
 
     func_ov006_020d0b04(self->unk_0bc);
     func_ov006_02120ca0();
@@ -53,15 +53,15 @@ void func_ov006_02121fa4(char *o)
 
     func_ov006_02120a44(o + 0x5d84);
 
-    self->unk_5db8 = 0;
+    self->mInputEnabled = 0;
     self->unk_5dc2 = 0;
     self->unk_5dbc =
         (((int)(((unsigned int)RandomIntInternal(&data_0209e650) & 0x7fffffff) >> 0x13)
             * 0x2d0) >> 12) + 0x2d0;
     self->unk_5dbe = 0;
     self->unk_5dc0 = 1;
-    self->unk_5da4 = 0;
-    self->unk_5da8 = 0;
+    self->mArrow1X = 0;
+    self->mArrow2X = 0;
 
     func_ov006_02121750(o, 0);
 

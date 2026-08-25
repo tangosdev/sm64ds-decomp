@@ -58,13 +58,13 @@ int daObjPathLift_c::InitResources()
         dBgCh_Gnd ground;
         int debugMode;
         ground.SetObjAndPos(pos, 0);
-        unk_4ac = pos.y;
+        mGroundY = pos.y;
         if (_ZN9dBgCh_Gnd10DetectClsnEv(&ground) != 0)
-            unk_4ac = ground.clsnY;
+            mGroundY = ground.clsnY;
         *(u8 *)((char *)this + 0x42c) = 1;
         debugMode = (data_0209f2d8 == 1);
         if (debugMode)
-            unk_4b0 = 0xb4;
+            mTimer = 0xb4;
         /* ground's destructor is synthesized at this brace */
     }
     return 1;

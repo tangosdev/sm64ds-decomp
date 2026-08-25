@@ -15,7 +15,7 @@
  *   _ZN11PowerFlowerD0Ev  the same five members destroyed in reverse,
  *       then ~dActor_c.
  *
- * SIZE 0x3cc is the factory's own literal; unk_3ca (1 byte, 0x3ca) closes
+ * SIZE 0x3cc is the factory's own literal; mLifeTimer (1 byte, 0x3ca) closes
  * exactly on it under 4-byte alignment.
  *
  * Everything below 0x0d0 duplicated dActor_c's own fields under placeholder
@@ -54,10 +54,20 @@ struct PowerFlower : dActor_c {
     /* dBgCh_Actr member, named by the class's own destructor calling
        dBgCh_Actr's D1 at +0x200. [_ZN11PowerFlowerD0Ev.c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x200 */
-    s32 unk_3bc;            /* 0x3bc */
-    s32 unk_3c0;            /* 0x3c0 */
+    /* The ground height under the flower: InitResources raycasts a dBgCh_Gnd
+       from (mPos with Y + 0x14000) and stores the hit height (+0x44 of the
+       ground object), falling back to that probe Y when nothing is hit.
+       [_ZN11PowerFlower13InitResourcesEv.cpp] */
+    s32 mGroundY;            /* 0x3bc */
+    /* Render switches on it to pick which model to draw: 0 -> mModel1,
+       1 and 2 -> mModel2. [_ZN11PowerFlower6RenderEv.cpp] */
+    s32 mState;            /* 0x3c0 */
     u8  pad_3c4[0x6];
-    u8  unk_3ca;            /* 0x3ca */
+    /* Seeded 0xb4 (180 frames, three seconds) in InitResources. Render skips
+       drawing on odd values once it is below 0x2d, so the flower blinks through
+       its last 45 frames -- the standard "about to disappear" tell.
+       [_ZN11PowerFlower13InitResourcesEv.cpp, _ZN11PowerFlower6RenderEv.cpp] */
+    u8  mLifeTimer;            /* 0x3ca */
 
     virtual ~PowerFlower();            /* slots 16 (D1), 17 (D0) */
 

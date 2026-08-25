@@ -9,7 +9,7 @@ extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void* a, void* b);
 
 int RabbitKey::Behavior()
 {
-  DecIfAbove0_Short((unsigned short*)((char*)&unk_100));
+  DecIfAbove0_Short((unsigned short*)((char*)&mStateTimer));
   void* o = *(void**)((char*)&unk_188);
   if(*(int*)((char*)o+8)){
     char* base = (char*)o+8;

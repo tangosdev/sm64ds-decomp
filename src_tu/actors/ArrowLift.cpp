@@ -195,14 +195,14 @@ int ArrowLift::Behavior()
                 *p = *p + 1;
             }
         }
-        unk_098 = 0xa000;
+        mHorzSpeed = 0xa000;
         break;
     case 1:
     case 3:
         _ZN8dActor_c9UpdatePosEP5dCc_c(((u8*)this), 0);
         {
             int* p = (int*)(((int)((u8*)this) + 0x320));
-            *p = *p + unk_098;
+            *p = *p + mHorzSpeed;
         }
         if (unk_320 >= 0x177000) {
             unk_320 = 0;

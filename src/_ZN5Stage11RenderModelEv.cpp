@@ -30,12 +30,6 @@ struct LocalModelComponents {
     Component *components;   // offset 0x4
 };
 
-struct Slot {
-    void *transformer;       // 0x0
-    u8 flag;                  // 0x4
-    char pad[7];
-};
-
 /* Local view of Model's own vtable shape (six slots: D1, D0, DoSetFile,
    UpdateVerts, Virtual10, Render), named to avoid colliding with the real
    ModelBase (which has only three) now visible via Stage.h -> Model.h. */
@@ -56,11 +50,11 @@ void Stage::RenderModel()
 {
     LocalModelComponents *mc = (LocalModelComponents *)((char *)&mModel.data);
     Inner *inner = *(Inner **)((char *)mc->sub + 8);
-    Slot *slot = (Slot *)((char *)pad_8bc);
+    StageTexAnimSlot *slot = mTexAnimSlots;
     int i;
 
     for (i = 0; i < data_0209f340->count; i++) {
-        u8 flag = slot->flag;
+        u8 flag = slot->mActive;
         u8 *idx = inner->ids;
 
         if (flag != 0) {
@@ -78,8 +72,8 @@ void Stage::RenderModel()
                     *p |= 0x80000000;
                 }
             }
-            if (slot->transformer != 0)
-                _ZN18TextureTransformer6UpdateER15ModelComponents(slot->transformer, mModel.data);
+            if (slot->mTransformer != 0)
+                _ZN18TextureTransformer6UpdateER15ModelComponents(slot->mTransformer, mModel.data);
         } else {
             u16 j;
             for (j = 0; j < inner->count; j++) {
@@ -90,7 +84,7 @@ void Stage::RenderModel()
             }
         }
 
-        slot = (Slot *)((char *)slot + 0xc);
+        slot = (StageTexAnimSlot *)((char *)slot + 0xc);
         inner = (Inner *)((char *)inner + 0x40);
     }
 

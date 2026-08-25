@@ -58,7 +58,7 @@ extern "C" void func_ov004_020aeed8(char* c)
 
     *(u32*)0x4000000 &= ~0x1f00;
     *(u32*)0x4001000 &= ~0x1f00;
-    *(u16*)0x4000304 = (self->unk_224 << 15) | (*(u16*)0x4000304 & ~0x8000);
+    *(u16*)0x4000304 = (self->mSavedScreenSwap << 15) | (*(u16*)0x4000304 & ~0x8000);
     *(u32*)0x4000000 = (*(u32*)0x4000000 & ~0xe000) | ((u32)data_0209d460 << 13);
     *(u32*)0x4001000 = (*(u32*)0x4001000 & ~0xe000) | ((u32)data_0209d458 << 13);
 
@@ -74,8 +74,8 @@ extern "C" void func_ov004_020aeed8(char* c)
         MultiCopy_Int((int*)(c + 0x2228), (int*)src, 0x2000);
     }
 
-    data_0209d45c = (u8)self->unk_21c;
-    data_0209d454 = (u8)self->unk_220;
+    data_0209d45c = (u8)self->mSavedMainBgBits;
+    data_0209d454 = (u8)self->mSavedSubBgBits;
 
     if (o->f68() == 2)
         return;

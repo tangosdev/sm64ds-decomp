@@ -23,7 +23,7 @@ int Whirlpool::Behavior()
     volatile int v[3];
     int x, y, z;
 
-    DecIfAbove0_Short((unsigned short*)((char*)&unk_100));
+    DecIfAbove0_Short((unsigned short*)((char*)&mStateTimer));
     {
         char* obj = *(char**)((char*)&unk_110);
         if (*(int*)(obj + 8) != 0) {

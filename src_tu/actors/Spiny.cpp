@@ -140,9 +140,9 @@ int Spiny::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    unk_3e9 = 0x2c;
+    mDespawnTimer = 0x2c;
     three_arg_e94::func_ov077_02125e94(((char *)this), 0, 0x2c);
-    *(M48 *)((char *)&unk_3a0) = *(M48 *)&IDENTITY_MATRIX4X3;
+    *(M48 *)((char *)&mMatrix) = *(M48 *)&IDENTITY_MATRIX4X3;
     func_ov077_02125304(((char *)this));
     return 1;
 }
@@ -170,11 +170,11 @@ extern signed char data_0209f2f8;
 
 int Spiny::Behavior()
 {
-    int s = unk_3d8;
+    int s = mState;
     if (s != 1 || _ZNK10dBgCh_Actr10IsOnGroundEv((char*)&mWithMeshClsn)) {
-        s = unk_3d8;
+        s = mState;
         if (s != 4 && s != 5 && _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char*)this), 0x5dc000)) {
-            if (DecIfAbove0_Byte((unsigned char*)((char*)&unk_3e9)) == 0) {
+            if (DecIfAbove0_Byte((unsigned char*)((char*)&mDespawnTimer)) == 0) {
                 _ZN7fBase_c18MarkForDestructionEv(((char*)this));
                 return 1;
             }
@@ -208,7 +208,7 @@ struct Obj {
 int Spiny::Render()
 {
   if((mFlags & 0x40000) ? 1 : 0) return 1;
-  int s=unk_3d8;
+  int s=mState;
   if(s==0 || s==4) ((Obj*)((char *)&mModel))->doit(0);
   else ((Obj*)((char *)&mModelAnim))->doit(0);
   return 1;

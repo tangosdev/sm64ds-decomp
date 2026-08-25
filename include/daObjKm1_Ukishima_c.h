@@ -7,11 +7,11 @@
 
 struct daObjKm1_Ukishima_c {
     u8  pad_000[0x8e];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x4];
-    s16 unk_094;            /* 0x094 */
+    s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x2];
-    s32 unk_098;            /* 0x098 */
+    s32 mHorzSpeed;            /* 0x098 */
     u8  pad_09c[0x282];
     u8  unk_31e;            /* 0x31e */
 };

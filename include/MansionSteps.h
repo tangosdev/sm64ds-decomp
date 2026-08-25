@@ -15,11 +15,11 @@ struct MansionSteps {
     Model mModel;            /* 0x0d4 */
     s32 unk_124;            /* 0x124 */
     u8  pad_128[0x18];
-    s32 unk_140;            /* 0x140 */
+    s32 mIndex;            /* 0x140 */
     u8  pad_144[0xc];
-    u8  unk_150;            /* 0x150 */
+    u8  mState;            /* 0x150 */
     u8  pad_151[0x5];
-    u8  unk_156;            /* 0x156 */
+    u8  mVisible;            /* 0x156 */
     u8  pad_157[0x5];
     /* dBgW_KcMbg member, named by the class's own destructor calling
        dBgW_KcMbg's D1 at +0x15c -- a relocation the ROM build

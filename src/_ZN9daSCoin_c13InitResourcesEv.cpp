@@ -12,11 +12,11 @@ s32 daSCoin_c::InitResources(){
     char* c = (char*)this;
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(c + 0xd4, c, 0x64000, 0x40000, 0x800002, 0);
     unk_10d = *(unsigned int*)(c + 8) & 0xf;
-    unk_10e = (*(unsigned int*)(c + 8) >> 8) & 0xf;
-    unk_10f = 0;
-    unk_108 = 0;
-    unk_110 = 0;
-    unk_113 = 0;
+    mGroupId = (*(unsigned int*)(c + 8) >> 8) & 0xf;
+    mGroupRole = 0;
+    mLeaderUniqueID = 0;
+    mCollectedCount = 0;
+    mDeathTimer = 0;
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9a8);
     return 1;
 }

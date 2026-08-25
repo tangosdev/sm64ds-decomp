@@ -19,21 +19,21 @@ int FortressWall::InitResources()
 {
     int b = (int)(actorID == 0x30);
     if (b != 0) {
-        unk_31e = 0;
-        unk_31f = (unsigned char)(*(s32 *)&param1);
-        if (unk_31f == 0xff)
-            unk_31f = 0;
+        mVariant = 0;
+        mStarId = (unsigned char)(*(s32 *)&param1);
+        if (mStarId == 0xff)
+            mStarId = 0;
     } else {
-        unk_31e = 1;
+        mVariant = 1;
     }
     {
-        int idx = unk_31e;
+        int idx = mVariant;
         void *mdl = _ZN5Model8LoadFileER13SharedFilePtr(data_ov079_02128058[idx].p);
         _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, mdl, 1, -1);
-        _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char *)this));
-        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
+        _ZN10dBgActor_c21UpdateModelPosAndRotYEv(this);
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(this);
         {
-            int idx2 = unk_31e;
+            int idx2 = mVariant;
             void *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov079_0212805c[idx2].p);
             _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY, data_ov079_02128060[idx2].p);
         }

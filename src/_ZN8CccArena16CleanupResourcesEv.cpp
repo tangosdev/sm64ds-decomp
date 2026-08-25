@@ -11,7 +11,7 @@ int CccArena::CleanupResources()
 {
   if(((dBgW *)((char *)&mMeshCollider))->IsEnabled())
     ((dBgW *)((char *)&mMeshCollider))->Disable();
-  ((SharedFilePtr *)(*(void**)(data_ov073_021231bc + (unsigned char)((char *)this)[0x32c]*0xc)))->Release();
-  ((SharedFilePtr *)(*(void**)(data_ov073_021231c0 + (unsigned char)((char *)this)[0x32c]*0xc)))->Release();
+  ((SharedFilePtr *)(*(void**)(data_ov073_021231bc + mVariant*0xc)))->Release();
+  ((SharedFilePtr *)(*(void**)(data_ov073_021231c0 + mVariant*0xc)))->Release();
   return 1;
 }

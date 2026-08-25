@@ -31,6 +31,6 @@ int SnowmanBreath::InitResources()
     Matrix4x3_FromTranslation(data_020a0e68, v.x, v.y, v.z);
     Matrix4x3_ApplyInPlaceToRotationY(data_020a0e68, mAngleY);
     InvMat4x3(data_020a0e68, data_020a0e68);
-    *(M48*)((char*)&unk_1394) = *(M48*)data_020a0e68;
+    *(M48*)((char*)&mMat) = *(M48*)data_020a0e68;
     return 1;
 }

@@ -109,10 +109,15 @@ struct Player : dActor_c {
 
     s32 mEatingPlayer;            /* 0x0d0 */
     u8  pad_0d4[0x8];
-    u8  mBodyModels;            /* 0x0dc */
-    u8  pad_0dd[0x3];
-    u8  unk_0e0;            /* 0x0e0 */
-    u8  pad_0e1[0xb];
+    /* FOUR body models, not one pointer plus padding. Player::CleanupResources
+       walks this run as `*(this + i * 4 + 0xdc)` for `i < 4` and calls each
+       element's deleting destructor; Player::Render indexes it with
+       GetBodyModelID(mBodyModelId, 1) and TurnOffToonShading with
+       GetBodyModelID(j, 0). The element type is ModelAnim, and the matched
+       bodies pin every part of it: they reach +0x08 (Model's ModelComponents),
+       +0x14 (Model::mat4x3), +0x50 (the Animation base) and +0x58 (its
+       currFrame), and they call vtable slots 5 (Render) and 6 (Virtual18). */
+    ModelAnim *mBodyModels[4];            /* 0x0dc */
     u8  unk_0ec;            /* 0x0ec */
     u8  pad_0ed[0x3];
     /* ~Player calls _ZN9ModelAnimD1Ev on this LAST of the two, and ModelAnim
@@ -121,12 +126,15 @@ struct Player : dActor_c {
        Animation base (+0x50) and unk_148 at 0x148 was that base's currFrame
        (+0x58). Both are reachable through the member now. */
     ModelAnim mModelAnim3;            /* 0x0f0 */
-    u8  unk_154;            /* 0x154 */
-    u8  pad_155[0x3];
-    u8  unk_158;            /* 0x158 */
-    u8  pad_159[0x7];
-    u8  unk_160;            /* 0x160 */
-    u8  pad_161[0x13];
+    /* EIGHT more models, same element type and the same evidence: CleanupResources
+       destroys `i < 4` and then `i + 4` over this one base, TurnOffToonShading
+       indexes it at `j` and `j + 4`, and Render indexes it with
+       func_ov002_020becf4(mBodyModelId, 1). That helper can also return 8 or 9,
+       which are "no model" sentinels -- Render loads the slot FIRST and only then
+       tests `i != 9 && i != 8`, so the ROM itself reads one word past this run in
+       those two cases. Kept as written; the read lands in mModelAnim4 below and
+       its result is discarded. */
+    ModelAnim *unk_154[8];            /* 0x154 */
     /* The other ModelAnim, destroyed FIRST of the two. 0x174..0x1d8, closing
        exactly at unk_1d8; mAnimation2 at 0x1c4 was its Animation base. */
     ModelAnim mModelAnim4;            /* 0x174 */
@@ -139,10 +147,19 @@ struct Player : dActor_c {
     TextureSequence mTexSeqBody[4];            /* 0x1dc */
     MaterialChanger mMatChanger[2];            /* 0x22c */
     TextureSequence mTexSeqPlayer[2];            /* 0x254 */
-    u8  unk_27c;            /* 0x27c */
-    u8  pad_27d[0xf];
-    u8  unk_28c;            /* 0x28c */
-    u8  pad_28d[0x1f];
+    /* Two more runs, one per model array and the same lengths: 4 words parallel
+       to mBodyModels, 8 words parallel to unk_154. CleanupResources frees each
+       non-null element with func_0203cbc0 over exactly the same i / i+4 pattern,
+       and TurnOffToonShading hands element [j] of the first run to
+       func_ov002_020e6b74 together with mBodyModels[...], and elements [j] and
+       [j + 4] of the second together with unk_154[j] and unk_154[j + 4]. That
+       helper walks the model's material records writing one word of the array
+       into each record's +0x1c, so each element is an allocated per-material
+       word buffer belonging to the model at the same index. What the word MEANS
+       is not witnessed -- nothing matched allocates or fills either run -- so
+       the pairing is expressed and the name is not. */
+    s32 unk_27c[4];            /* 0x27c */
+    s32 unk_28c[8];            /* 0x28c */
     /* ~Player calls _ZN11ShadowModelD1Ev on this, and ShadowModel asserts
        0x28 -- which closes exactly at mdCcAcPos_c. */
     ShadowModel mShadowModel;            /* 0x2ac */
@@ -201,9 +218,19 @@ struct Player : dActor_c {
     s32 mFloorNormalX;            /* 0x554 */
     s32 mFloorNormalY;            /* 0x558 */
     s32 mFloorNormalZ;            /* 0x55c */
-    s32 unk_560;            /* 0x560 */
-    u8  pad_564[0x4];
-    s32 unk_568;            /* 0x568 */
+    /* Wall normal, fx12, and the exact counterpart of the floor normal above.
+     * func_ov002_020c25a8 writes all three from
+     * SurfaceInfo::CopyNormalTo(dBgCh_Actr::GetWallResult(&mMeshClsn) + 4, &wn)
+     * -- the same helper, the same shape, one surface over. It then pushes the
+     * actor out along it (`mPosX -= mWallNormalX * 2`, `mPosZ -= mWallNormalZ * 2`).
+     * Seven bodies read the pair back as `cstd::atan2(mWallNormalX, mWallNormalZ)`
+     * to get the wall's facing: St_Shell_Main, St_OnWall_Main (twice),
+     * St_Balloon_Main, St_CrazedCrate_Main, func_ov002_020c2138,
+     * func_ov002_020dd2f4 and func_ov002_020e28d4. 0x564 was marked padding until
+     * that store was disassembled, exactly as 0x554/0x55c were. */
+    s32 mWallNormalX;            /* 0x560 */
+    s32 mWallNormalY;            /* 0x564 */
+    s32 mWallNormalZ;            /* 0x568 */
     s32 unk_56c;            /* 0x56c */
     s32 unk_570;            /* 0x570 */
     s32 unk_574;            /* 0x574 */
@@ -337,7 +364,7 @@ struct Player : dActor_c {
     u8  unk_6f4;            /* 0x6f4 */
     u8  mOpacity;            /* 0x6f5 */
     u8  mIsControlDisabled;            /* 0x6f6 */
-    u8  unk_6f7;            /* 0x6f7 */
+    u8  mSwimMusicPushed;            /* 0x6f7 */
     u8  pad_6f8[0x1];
     u8  mIsMetal;            /* 0x6f9 */
     u8  unk_6fa;            /* 0x6fa */
@@ -370,7 +397,7 @@ struct Player : dActor_c {
     u8  unk_716;            /* 0x716 */
     u8  unk_717;            /* 0x717 */
     u8  mLoadedResourceFlags;            /* 0x718 */
-    s8  unk_719;            /* 0x719 */
+    s8  mKeyModelId;            /* 0x719 */
     u8  mHasNoCap;            /* 0x71a */
     u8  mJumpedFromQuicksand;            /* 0x71b */
     u8  pad_71c[0x5];

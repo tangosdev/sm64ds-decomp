@@ -26,8 +26,8 @@ int daEyBm_c::InitResources()
     mVertAccel = 0;
     mTerminalVelocity = 0;
     mHorzSpeed = 0xa000;
-    unk_330 = 0x96;
-    *(struct Matrix4x3*)((char *)&unk_2f8) = IDENTITY_MATRIX4X3;
+    mLifeTimer = 0x96;
+    *(struct Matrix4x3*)((char *)&mMatrix) = IDENTITY_MATRIX4X3;
     func_ov071_02121c6c(((char *)this));
     return 1;
 }

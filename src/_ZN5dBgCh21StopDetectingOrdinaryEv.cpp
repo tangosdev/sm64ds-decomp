@@ -6,5 +6,5 @@
 
 void dBgCh::StopDetectingOrdinary()
 {
-    *(unsigned char *)((char *)&unk_004) &= ~1;
+    *(unsigned char *)((char *)&mDetectFlags) &= ~1;
 }

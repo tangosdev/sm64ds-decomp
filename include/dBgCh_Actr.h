@@ -79,8 +79,8 @@ struct Vector3_16;   /* pointers only; see the note above */
 struct dBgCh_Actr : dBgCh {
     u32 mFlags;                 /* 0x010 - word, see above */
     dActor_c *mActor;              /* 0x014 - Init arg 1 */
-    Fix12i unk_018;             /* 0x018 - Init arg 2, the sphere radius */
-    Fix12i unk_01c;             /* 0x01c - Init arg 3, a height */
+    Fix12i mRadius;             /* 0x018 - Init arg 2, the sphere radius */
+    Fix12i mHeight;             /* 0x01c - Init arg 3, a height */
 
     /* THE TWO SUB-OBJECTS, now typed as themselves. Both classes carry real,
        out-of-line constructors, which is what lets this class's constructor
@@ -94,7 +94,7 @@ struct dBgCh_Actr : dBgCh {
     dBgCh_SphCrr mSphereClsn;   /* 0x020 - spans [0x20,0x130) */
     s32 unk_130;                /* 0x130 - Init stores its Vector3_16 * arg 5 */
     dBgCh_Lin mRaycastLine;     /* 0x134 - spans [0x134,0x1b8) */
-    Fix12i unk_1b8;             /* 0x1b8 - (?) Init sets 0x1000 */
+    Fix12i mScale;              /* 0x1b8 - (?) Init sets 0x1000 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     /* DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the key-function
@@ -171,20 +171,20 @@ struct dBgCh_Actr {
     u8  pad_000[0x10];      /* dBgCh base */
     u32 mFlags;               /* 0x010 */
     struct dActor_c * mActor; /* 0x014 */
-    s32 unk_018;            /* 0x018 */
-    s32 unk_01c;            /* 0x01c */
+    s32 mRadius;            /* 0x018 */
+    s32 mHeight;            /* 0x01c */
     u8  mSphereClsn;        /* 0x020 */
     u8  pad_021[0x4b];
-    u8  unk_06c;            /* 0x06c */
+    u8  mDisplacement;            /* 0x06c */
     u8  pad_06d[0x23];
     u8  mClsnFlags;         /* 0x090 */
     u8  pad_091[0x97];
-    s32 unk_128;            /* 0x128 */
+    s32 mClsnScale;            /* 0x128 */
     s32 unk_12c;            /* 0x12c */
     s32 unk_130;            /* 0x130 */
     u8  mRaycastLine;       /* 0x134 */
     u8  pad_135[0x83];
-    s32 unk_1b8;            /* 0x1b8 */
+    s32 mScale;            /* 0x1b8 */
 };
 
 /* In C the tag alone is not a type name, so an owner header that embeds a

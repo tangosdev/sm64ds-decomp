@@ -49,7 +49,7 @@ s32 dScMgRoulette_c::Render()
     func_ov004_020b6430();
 
     {
-        int i = self->unk_53fc - 1;
+        int i = self->mRacerCount - 1;
         for (; i >= 0; i--)
             func_ov006_02108cc0(((Obj9 *)c)->racers[i].b);
     }
@@ -59,9 +59,9 @@ s32 dScMgRoulette_c::Render()
     {
         int idle = (int)(((long long)(self->unk_53c4 == 0)));
         if (idle != 0) {
-            if (self->unk_53e6 < 8) {
+            if (self->mPhase < 8) {
                 if (data_020a0db0 & 8) {
-                    s16 idx = self->unk_53d6;
+                    s16 idx = self->mSelectedTile;
                     Hud_RenderSprite(data_ov006_02138c18,
                                         *(int *)(data_ov006_02142ab4 + idx * 8) >> 12,
                                         *(int *)(data_ov006_02142ab8 + idx * 8) >> 12,
@@ -71,8 +71,8 @@ s32 dScMgRoulette_c::Render()
         }
     }
 
-    if (self->unk_53e6 == 2) {
-        int t = self->unk_53e8;
+    if (self->mPhase == 2) {
+        int t = self->mPhaseTimer;
         if (t <= 0xb4) {
             int u = t + 0x3b;
             s16 rem = u % 60;
@@ -85,7 +85,7 @@ s32 dScMgRoulette_c::Render()
     }
 
     {
-        s16 k = self->unk_53e4;
+        s16 k = self->mCameraPreset;
         if (k != 0) {
             int off = k * 0xc;
             s16 hval = *(s16 *)(data_ov006_0213e2e0 + k * 2);
@@ -93,19 +93,19 @@ s32 dScMgRoulette_c::Render()
                 int d1 = *(int *)(data_ov006_0213e354 + off);
                 int b1 = *(int *)(data_ov006_0213e350 + off);
                 int a1 = *(int *)(data_ov006_0213e34c + off);
-                self->unk_470c = a1;
-                self->unk_4710 = b1;
-                self->unk_4714 = d1;
+                self->mCameraTargetX = a1;
+                self->mCameraTargetY = b1;
+                self->mCameraTargetZ = d1;
             }
             {
                 int f2 = *(int *)(data_ov006_0213e378 + off);
                 int e2 = *(int *)(data_ov006_0213e374 + off);
                 int d2 = *(int *)(data_ov006_0213e370 + off);
-                self->unk_4700 = d2;
-                self->unk_4704 = e2;
-                self->unk_4708 = f2;
+                self->mCameraEyeX = d2;
+                self->mCameraEyeY = e2;
+                self->mCameraEyeZ = f2;
             }
-            self->unk_4718 = hval;
+            self->mCameraAngle = hval;
             Camera_UpdateMatrices(c + 0x4660);
         } else {
             func_ov006_020c0aa8(c + 0x4660);

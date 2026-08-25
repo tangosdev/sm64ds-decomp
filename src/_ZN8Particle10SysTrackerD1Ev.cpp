@@ -9,7 +9,7 @@ extern void *data_0209ee74;
 
 extern "C" void *_ZN8Particle10SysTrackerD1Ev(struct Particle *self) {
     if (data_0209ee80 != 0) {
-        func_02021b98((char *)&self->unk_008);
+        func_02021b98((char *)&self->mContents);
         func_0203cbc0(data_0209ee80);
         data_0209ee80 = 0;
     }

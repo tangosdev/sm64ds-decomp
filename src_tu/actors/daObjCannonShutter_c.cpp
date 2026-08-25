@@ -46,10 +46,6 @@ struct Sub {
 };
 
 /* shadow struct 'Obj' */
-struct Obj {
-  char pad[0xd4];
-  Sub sub;
-};
 
 /* shadow typedef 's16' */
 typedef short s16;
@@ -107,20 +103,20 @@ int *daObjCannonShutter_c_Spawn(void)
 int daObjCannonShutter_c::InitResources()
 {
     struct BMD_File *bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210e12c);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((unsigned char *)this) + 0xd4, bmd, 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii((unsigned char *)&mModel, bmd, 1, -1);
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((unsigned char *)this));
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((unsigned char *)this));
     {
         struct KCL_File *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov002_0210e124);
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            ((unsigned char *)this) + 0x124, kcl, *(struct Matrix4x3 *)((unsigned char *)&(*(u8 *)&mClsnMat)), 0x199,
+            (unsigned char *)&mMeshCollider, kcl, *(struct Matrix4x3 *)&mClsnMat, 0x199,
             mAngleY, data_ov002_0210d7f4);
     }
-    unk_320 = mPosX;
-    unk_324 = mPosY;
-    unk_328 = mPosZ;
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
     if (IsCannonOpenInCurLevel() != 0) {
-        unk_32e = 1;
+        mCannonOpen = 1;
     }
     return 1;
 }
@@ -130,11 +126,11 @@ int daObjCannonShutter_c::InitResources()
 /* -------------------------------------------------------------------------- */
 int daObjCannonShutter_c::Behavior()
 {
-    if (unk_32e != 0) {
+    if (mCannonOpen != 0) {
         if (*(u8 *)(_ZN8dActor_c13ClosestPlayerEv((char *)this) + 0x703) != 0) {
-            mPosX = unk_320;
-            mPosY = unk_324;
-            mPosZ = unk_328;
+            mPosX = mHomePosX;
+            mPosY = mHomePosY;
+            mPosZ = mHomePosZ;
             if (_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(this, 0, 0)) {
                 _ZN10dBgActor_c21UpdateModelPosAndRotYEv(this);
                 _ZN10dBgActor_c19UpdateClsnPosAndRotEv(this);
@@ -146,7 +142,7 @@ int daObjCannonShutter_c::Behavior()
         }
         return 1;
     }
-    if (unk_32c != 0) {
+    if (mOpening != 0) {
         Vector3 in;
         Vector3 out;
         in.x = 0;
@@ -155,21 +151,21 @@ int daObjCannonShutter_c::Behavior()
         out.x = 0;
         out.y = 0;
         out.z = 0;
-        if (unk_32d != 0) {
-            if (unk_32d == 1) in.z = 0x2000;
+        if (mOpenPhase != 0) {
+            if (mOpenPhase == 1) in.z = 0x2000;
         } else {
             in.y = -0x1000;
         }
         Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
         MulVec3Mat4x3(&in, &data_020a0e68, &out);
         AddVec3((Vector3 *)&mPosX, &out, (Vector3 *)&mPosX);
-        if (Vec3_Dist(&unk_320, &mPosX) > 0xa000) {
-            unk_32d = 1;
+        if (Vec3_Dist(&mHomePosX, &mPosX) > 0xa000) {
+            mOpenPhase = 1;
         }
-        if (Vec3_HorzDist(&unk_320, &mPosX) > 0xc8000) {
+        if (Vec3_HorzDist(&mHomePosX, &mPosX) > 0xc8000) {
             daObjCannonShutter_c *a = _ZN8dActor_c15FindWithActorIDEjPS_(0xe, 0);
             while (a != 0) {
-                a->unk_32e = 1;
+                a->mCannonOpen = 1;
                 a = _ZN8dActor_c15FindWithActorIDEjPS_(0xe, a);
             }
         }
@@ -188,11 +184,11 @@ int daObjCannonShutter_c::Behavior()
 /* recovered: named members + shared header, real C++ method */
 int daObjCannonShutter_c::Render()
 {
-  if (data_0209f2f8 == 6 && data_0209f220 == 1 && (*(int*)((char*)&param1) & 0xff) == 1)
+  if (data_0209f2f8 == 6 && data_0209f220 == 1 && (int)(param1 & 0xff) == 1)
     return 1;
-  if (*(unsigned char*)((char*)&unk_32e) != 0)
+  if (mCannonOpen != 0)
     return 1;
-  Sub* b = &((Obj*)this)->sub;
+  Sub* b = (Sub*)&mModel;
   b->m14(0);
   return 1;
 }

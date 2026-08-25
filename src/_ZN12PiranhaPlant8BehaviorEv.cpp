@@ -40,7 +40,7 @@ int PiranhaPlant::Behavior()
     old = mState;
     (((Cls*)((char*)this))->*data_ov084_02130e80[old])();
     {
-        unsigned short* p100 = (unsigned short*)((char*)&unk_100);
+        unsigned short* p100 = (unsigned short*)((char*)&mStateTimer);
         *p100 = (unsigned short)(*p100 + 1);
     }
     cur = mState;
@@ -49,7 +49,7 @@ int PiranhaPlant::Behavior()
             int* pb0 = (int*)((char*)&mFlags);
             *pb0 = *pb0 & ~0x10000000;
         }
-        unk_100 = 0;
+        mStateTimer = 0;
         unk_478 = 0;
     }
     func_ov084_0212ec60(((char*)this));

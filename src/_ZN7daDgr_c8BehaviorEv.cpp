@@ -2,12 +2,12 @@
 // @symbol _ZN7daDgr_c8BehaviorEv
 /* daDgr_c::Behavior -- vtable slot 6, ov025 0x021113f0.
  *
- * A swinging platform. unk_326 is the phase counter, unk_328 the stage counter
- * (-1 is the "hold at the end" sentinel), unk_329 the direction flag. The swing
- * speed comes from `10 - unk_328' folded to a magnitude and bucketed to 1/2/4,
- * so the platform eases in and out; unk_320 holds the resting height that the
+ * A swinging platform. mPhaseTimer is the phase counter, mSwingStage the stage counter
+ * (-1 is the "hold at the end" sentinel), mSwingDir the direction flag. The swing
+ * speed comes from `10 - mSwingStage' folded to a magnitude and bucketed to 1/2/4,
+ * so the platform eases in and out; mBasePosY holds the resting height that the
  * sine offset from data_02082214 is added to. Two dust particle systems
- * (unk_32c, unk_330) trail either end, and the last frame of each swing shakes
+ * (mDustParticle1, mDustParticle2) trail either end, and the last frame of each swing shakes
  * the ground.
  *
  * IsClsnInRange, Earthquake and Particle::System::New all carry Fix12<int> by
@@ -17,14 +17,14 @@
  * LAUNDER() is a no-op macro the legacy file used to MARK its read-modify-write
  * sites. It is kept, with its name, so the marking survives -- it emits nothing
  * and it is not the reason those sites take an address. Every one of them now
- * names the member: `(s8 *)LAUNDER(&unk_328)', not `(s8 *)LAUNDER(self + 0x328)'.
+ * names the member: `(s8 *)LAUNDER(&mSwingStage)', not `(s8 *)LAUNDER(self + 0x328)'.
  *
  * Swept greedily against build_pin.verify -- 33 substitutions, 33 kept once the
  * three real obstacles were fixed: `mAngleY' is read UNSIGNED at the table-index
  * sites (an s16 read costs four words, the same finding Trap::InitResources
  * produced), the three func_ov025_* helpers are declared `char *' in
  * decl_common.h so `this' needs a cast, and the two-step `b = self + 0x300;
- * b + 0x28' was just unk_328 reached the long way round.
+ * b + 0x28' was just mSwingStage reached the long way round.
  */
 #include "daDgr_c.h"
 #include "decl_common.h"
@@ -49,15 +49,15 @@ s32 daDgr_c::Behavior()
     s32 n;
     s32 m;
 
-    if (unk_328 == -1) {
-        if (unk_326 == 0x20) {
-            unk_328 = 0;
-            unk_326 = 0;
+    if (mSwingStage == -1) {
+        if (mPhaseTimer == 0x20) {
+            mSwingStage = 0;
+            mPhaseTimer = 0;
         } else {
-            u16 *cnt = (u16 *)LAUNDER(&unk_326);
+            u16 *cnt = (u16 *)LAUNDER(&mPhaseTimer);
             (*cnt)++;
             unk_0ac = 0;
-            unk_324 = 0;
+            mAngleXSpeed = 0;
             func_ov025_02111344((char *)this);
             if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0)) {
                 func_ov025_021112e0((char *)this);
@@ -66,7 +66,7 @@ s32 daDgr_c::Behavior()
         }
     }
 
-    n = 10 - unk_328;
+    n = 10 - mSwingStage;
     if (n < 0) {
         s32 neg = -1;
         n = n * neg;
@@ -75,15 +75,15 @@ s32 daDgr_c::Behavior()
     if (n < 0)
         n = 0;
 
-    if (unk_326 == n + 8) {
+    if (mPhaseTimer == n + 8) {
         s8 *p;
-        unk_326 = 0;
-        p = (s8 *)LAUNDER(&unk_328);
+        mPhaseTimer = 0;
+        p = (s8 *)LAUNDER(&mSwingStage);
         *p = (s8)(*p + 1);
-        if (unk_328 == 0x14) {
-            u8 *pd = (u8 *)LAUNDER(&unk_329);
+        if (mSwingStage == 0x14) {
+            u8 *pd = (u8 *)LAUNDER(&mSwingDir);
             *pd = (u8)(*pd ^ 1);
-            unk_328 = -1;
+            mSwingStage = -1;
         }
     }
 
@@ -97,22 +97,22 @@ s32 daDgr_c::Behavior()
 
     m = n << 3;
 
-    if (unk_326 < m) {
-        if (unk_329 == 0) {
+    if (mPhaseTimer < m) {
+        if (mSwingDir == 0) {
             unk_0ac = 0x14000 / n;
-            unk_324 = (s16)(0x400 / n);
+            mAngleXSpeed = (s16)(0x400 / n);
         } else {
             unk_0ac = (-0x14000) / n;
-            unk_324 = (s16)((-0x400) / n);
+            mAngleXSpeed = (s16)((-0x400) / n);
         }
 
         {
             s32 *pz = (s32 *)LAUNDER(&mPosZ);
             s16 *pr = (s16 *)LAUNDER(&mAngleX);
             *pz = *pz + unk_0ac;
-            *pr = (s16)(*pr + unk_324);
+            *pr = (s16)(*pr + mAngleXSpeed);
             if ((mAngleX & 0x1fff) < 0x320) {
-                if (unk_324 != 0)
+                if (mAngleXSpeed != 0)
                     func_02012694(0x65, (char *)&mCamSpacePosX);
             }
         }
@@ -125,10 +125,10 @@ s32 daDgr_c::Behavior()
                 s32 neg = -1;
                 prod = prod * neg;
             }
-            mPosY = unk_320 + prod;
+            mPosY = mBasePosY + prod;
         }
 
-        if (unk_326 == m - 1) {
+        if (mPhaseTimer == m - 1) {
             loc[3] = mPosX;
             loc[4] = mPosY;
             loc[5] = mPosZ;
@@ -144,11 +144,11 @@ s32 daDgr_c::Behavior()
             s32 c;
             c = data_02082214[((u16)mAngleY >> 4) * 2 + 1];
             loc[0] = c * scale + mPosX;
-            loc[1] = unk_320 - 0xb9000;
+            loc[1] = mBasePosY - 0xb9000;
             c = data_02082214[((u16)mAngleY >> 4) * 2];
             loc[2] = c * scale + mPosZ;
-            unk_32c = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                unk_32c, 0x2d, loc[0], loc[1], loc[2], (void *)zero, (void *)zero);
+            mDustParticle1 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+                mDustParticle1, 0x2d, loc[0], loc[1], loc[2], (void *)zero, (void *)zero);
         }
         {
             s32 scale = 100;
@@ -158,8 +158,8 @@ s32 daDgr_c::Behavior()
             loc[0] = mPosX - c * scale;
             c = data_02082214[((u16)mAngleY >> 4) * 2];
             loc[2] = mPosZ - c * scale;
-            unk_330 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                unk_330, 0x2d, loc[0], loc[1], loc[2], (void *)zero, (void *)zero);
+            mDustParticle2 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+                mDustParticle2, 0x2d, loc[0], loc[1], loc[2], (void *)zero, (void *)zero);
         }
     }
 
@@ -169,7 +169,7 @@ s32 daDgr_c::Behavior()
     }
 
     {
-        u16 *cnt = (u16 *)LAUNDER(&unk_326);
+        u16 *cnt = (u16 *)LAUNDER(&mPhaseTimer);
         (*cnt)++;
     }
     return 1;

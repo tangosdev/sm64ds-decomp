@@ -10,7 +10,7 @@ struct daObjSm_Lift_c {
     u8  pad_068[0x26];
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x4];
-    s16 unk_094;            /* 0x094 */
+    s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x2];
     s32 mHorzSpeed;            /* 0x098 */
     u8  pad_09c[0x94];

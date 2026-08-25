@@ -33,15 +33,15 @@ int Door::CleanupResources() {
   Model* key;
   ((SharedFilePtr *)(e->a))->Release();
   ((SharedFilePtr *)(&data_ov100_02148744))->Release();
-  key = unk_138;
+  key = mKeyModel;
   if (key != 0) {
     delete key;
     ((SharedFilePtr *)(e->b))->Release();
   }
-  if (unk_13c != 0) {
+  if (mKeyFile != 0) {
     unsigned int v = param1;
     if (v >= 9 && v <= 0xd) UnloadKeyModels(v - 7);
-    ((SharedFilePtr *)(unk_13c))->Release();
+    ((SharedFilePtr *)(mKeyFile))->Release();
   }
   return 1;
 }
