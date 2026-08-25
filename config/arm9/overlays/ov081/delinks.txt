@@ -8,7 +8,7 @@ src/_ZN9SpindriftD1Ev.cpp:
     complete
     .text start:0x02123740 end:0x02123788
 
-src/_ZN9SpindriftD0Ev.c:
+src/_ZN9SpindriftD0Ev.cpp:
     complete
     .text start:0x02123788 end:0x021237e4
 
@@ -252,7 +252,7 @@ src/_ZN8MoneybagD1Ev.cpp:
     complete
     .text start:0x02126504 end:0x02126554
 
-src/_ZN8MoneybagD0Ev.c:
+src/_ZN8MoneybagD0Ev.cpp:
     complete
     .text start:0x02126554 end:0x021265b8
 

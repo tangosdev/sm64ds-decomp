@@ -29,7 +29,7 @@
       "symbol": "_ZN7SeaweedD0Ev",
       "address": "0x020bc444",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN7SeaweedD0Ev.c",
+      "legacy_source": "src/_ZN7SeaweedD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -115,7 +115,7 @@
     ],
     "substitutedObjectPaths": [
       "src/_ZN7SeaweedD1Ev.cpp",
-      "src/_ZN7SeaweedD0Ev.c",
+      "src/_ZN7SeaweedD0Ev.cpp",
       "src/func_ov002_020bc488.c",
       "src/_ZN7Seaweed16CleanupResourcesEv.cpp",
       "src/_ZN7Seaweed6RenderEv.cpp",

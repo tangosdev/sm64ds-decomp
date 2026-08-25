@@ -29,7 +29,7 @@
       "symbol": "_ZN12HealingHeartD0Ev",
       "address": "0x020bc618",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN12HealingHeartD0Ev.c",
+      "legacy_source": "src/_ZN12HealingHeartD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -114,7 +114,7 @@
     ],
     "substitutedObjectPaths": [
       "src/_ZN12HealingHeartD1Ev.cpp",
-      "src/_ZN12HealingHeartD0Ev.c",
+      "src/_ZN12HealingHeartD0Ev.cpp",
       "src/func_ov002_020bc664.c",
       "src/_ZN12HealingHeart16CleanupResourcesEv.cpp",
       "src/_ZN12HealingHeart6RenderEv.cpp",

@@ -29,7 +29,7 @@
       "symbol": "_ZN11WingFeatherD0Ev",
       "address": "0x020b2be8",
       "size": "0x0000005c",
-      "legacy_source": "src/_ZN11WingFeatherD0Ev.c",
+      "legacy_source": "src/_ZN11WingFeatherD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -117,7 +117,7 @@
     ],
     "substitutedObjectPaths": [
       "src/_ZN11WingFeatherD1Ev.cpp",
-      "src/_ZN11WingFeatherD0Ev.c",
+      "src/_ZN11WingFeatherD0Ev.cpp",
       "src/func_ov002_020b2c44.cpp",
       "src/_ZN11WingFeather16CleanupResourcesEv.cpp",
       "src/_ZN11WingFeather6RenderEv.cpp",

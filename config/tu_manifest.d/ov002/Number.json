@@ -29,7 +29,7 @@
       "symbol": "_ZN6NumberD0Ev",
       "address": "0x020f08cc",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN6NumberD0Ev.c",
+      "legacy_source": "src/_ZN6NumberD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -114,7 +114,7 @@
     ],
     "substitutedObjectPaths": [
       "src/_ZN6NumberD1Ev.cpp",
-      "src/_ZN6NumberD0Ev.c",
+      "src/_ZN6NumberD0Ev.cpp",
       "src/func_ov002_020f0918.c",
       "src/_ZN6Number16CleanupResourcesEv.cpp",
       "src/_ZN6Number6RenderEv.cpp",

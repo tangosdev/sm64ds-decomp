@@ -29,7 +29,7 @@
       "symbol": "_ZN15PowerStarCreateD0Ev",
       "address": "0x021126f8",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN15PowerStarCreateD0Ev.c",
+      "legacy_source": "src/_ZN15PowerStarCreateD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -163,7 +163,7 @@
     "delinksChanged": false,
     "substitutedObjectPaths": [
       "src/_ZN15PowerStarCreateD1Ev.cpp",
-      "src/_ZN15PowerStarCreateD0Ev.c",
+      "src/_ZN15PowerStarCreateD0Ev.cpp",
       "src/_ZN15PowerStarCreate8BehaviorEv.cpp",
       "src/PowerStarCreate_Spawn.c"
     ],

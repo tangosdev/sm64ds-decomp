@@ -29,7 +29,7 @@
       "symbol": "_ZN9CameraTagD0Ev",
       "address": "0x020b076c",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN9CameraTagD0Ev.c",
+      "legacy_source": "src/_ZN9CameraTagD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -263,7 +263,7 @@
     ],
     "substitutedObjectPaths": [
       "src/_ZN9CameraTagD1Ev.cpp",
-      "src/_ZN9CameraTagD0Ev.c",
+      "src/_ZN9CameraTagD0Ev.cpp",
       "src/_ZN9CameraTag16CleanupResourcesEv.cpp",
       "src/_ZN9CameraTag16OnPendingDestroyEv.cpp",
       "src/_ZN9CameraTag6RenderEv.cpp",

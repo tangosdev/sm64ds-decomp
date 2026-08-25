@@ -29,7 +29,7 @@
       "symbol": "_ZN12SwitchPillarD0Ev",
       "address": "0x021111e4",
       "size": "0x00000058",
-      "legacy_source": "src/_ZN12SwitchPillarD0Ev.c",
+      "legacy_source": "src/_ZN12SwitchPillarD0Ev.cpp",
       "ordinal": 1
     },
     {

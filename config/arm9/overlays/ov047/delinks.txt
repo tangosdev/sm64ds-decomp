@@ -7,7 +7,7 @@ src/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111f0
 
-src/_ZN21daObjKm3_Kurumajiku_cD0Ev.c:
+src/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp:
     complete
     .text start:0x021111f0 end:0x02111254
 
@@ -27,7 +27,7 @@ src/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp:
     complete
     .text start:0x021112bc end:0x0211130c
 
-src/_ZN20daObjKm3_Kaitendai_cD0Ev.c:
+src/_ZN20daObjKm3_Kaitendai_cD0Ev.cpp:
     complete
     .text start:0x0211130c end:0x02111370
 
@@ -47,7 +47,7 @@ src/_ZN17daObjKm3_Kuruma_cD1Ev.cpp:
     complete
     .text start:0x021113f8 end:0x02111448
 
-src/_ZN17daObjKm3_Kuruma_cD0Ev.c:
+src/_ZN17daObjKm3_Kuruma_cD0Ev.cpp:
     complete
     .text start:0x02111448 end:0x021114ac
 
@@ -67,7 +67,7 @@ src/_ZN18RickshawPlatformBsD1Ev.cpp:
     complete
     .text start:0x02111510 end:0x02111590
 
-src/_ZN18RickshawPlatformBsD0Ev.c:
+src/_ZN18RickshawPlatformBsD0Ev.cpp:
     complete
     .text start:0x02111590 end:0x02111624
 

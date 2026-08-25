@@ -140,7 +140,7 @@ src/_ZN13OneUpMushroomD1Ev.cpp:
     complete
     .text start:0x020aee40 end:0x020aee88
 
-src/_ZN13OneUpMushroomD0Ev.c:
+src/_ZN13OneUpMushroomD0Ev.cpp:
     complete
     .text start:0x020aee88 end:0x020aeee4
 
@@ -292,7 +292,7 @@ src/_ZN13InvisiblePoleD1Ev.cpp:
     complete
     .text start:0x020b05d0 end:0x020b0600
 
-src/_ZN13InvisiblePoleD0Ev.c:
+src/_ZN13InvisiblePoleD0Ev.cpp:
     complete
     .text start:0x020b0600 end:0x020b0644
 
@@ -324,7 +324,7 @@ src/_ZN9CameraTagD1Ev.cpp:
     complete
     .text start:0x020b0748 end:0x020b076c
 
-src/_ZN9CameraTagD0Ev.c:
+src/_ZN9CameraTagD0Ev.cpp:
     complete
     .text start:0x020b076c end:0x020b07a4
 
@@ -388,7 +388,7 @@ src/_ZN4ExitD1Ev.cpp:
     complete
     .text start:0x020b09b0 end:0x020b09d4
 
-src/_ZN4ExitD0Ev.c:
+src/_ZN4ExitD0Ev.cpp:
     complete
     .text start:0x020b09d4 end:0x020b0a0c
 
@@ -548,7 +548,7 @@ src/_ZN11WingFeatherD1Ev.cpp:
     complete
     .text start:0x020b2ba0 end:0x020b2be8
 
-src/_ZN11WingFeatherD0Ev.c:
+src/_ZN11WingFeatherD0Ev.cpp:
     complete
     .text start:0x020b2be8 end:0x020b2c44
 
@@ -576,11 +576,11 @@ src/WingFeather_Spawn.c:
     complete
     .text start:0x020b3248 end:0x020b3298
 
-src/_ZN12daObjAbuku_cD1Ev.c:
+src/_ZN12daObjAbuku_cD1Ev.cpp:
     complete
     .text start:0x020b3298 end:0x020b32c8
 
-src/_ZN12daObjAbuku_cD0Ev.c:
+src/_ZN12daObjAbuku_cD0Ev.cpp:
     complete
     .text start:0x020b32c8 end:0x020b330c
 
@@ -852,7 +852,7 @@ src/_ZN9BlueFlameD1Ev.cpp:
     complete
     .text start:0x020b5734 end:0x020b5764
 
-src/_ZN9BlueFlameD0Ev.c:
+src/_ZN9BlueFlameD0Ev.cpp:
     complete
     .text start:0x020b5764 end:0x020b57a8
 
@@ -1060,7 +1060,7 @@ src/_ZN18PoppingLavaBubblesD1Ev.cpp:
     complete
     .text start:0x020b6d28 end:0x020b6d4c
 
-src/_ZN18PoppingLavaBubblesD0Ev.c:
+src/_ZN18PoppingLavaBubblesD0Ev.cpp:
     complete
     .text start:0x020b6d4c end:0x020b6d84
 
@@ -1263,7 +1263,7 @@ src/_ZN11PowerFlowerD1Ev.cpp:
     complete
     .text start:0x020b9148 end:0x020b9198
 
-src/_ZN11PowerFlowerD0Ev.c:
+src/_ZN11PowerFlowerD0Ev.cpp:
     complete
     .text start:0x020b9198 end:0x020b91fc
 
@@ -1571,7 +1571,7 @@ src/_ZN7SeaweedD1Ev.cpp:
     complete
     .text start:0x020bc414 end:0x020bc444
 
-src/_ZN7SeaweedD0Ev.c:
+src/_ZN7SeaweedD0Ev.cpp:
     complete
     .text start:0x020bc444 end:0x020bc488
 
@@ -1603,7 +1603,7 @@ src/_ZN12HealingHeartD1Ev.cpp:
     complete
     .text start:0x020bc5e0 end:0x020bc618
 
-src/_ZN12HealingHeartD0Ev.c:
+src/_ZN12HealingHeartD0Ev.cpp:
     complete
     .text start:0x020bc618 end:0x020bc664
 
@@ -4528,7 +4528,7 @@ src/_ZN8YoshiEggD1Ev.cpp:
     complete
     .text start:0x020ec56c end:0x020ec5b4
 
-src/_ZN8YoshiEggD0Ev.c:
+src/_ZN8YoshiEggD0Ev.cpp:
     complete
     .text start:0x020ec5b4 end:0x020ec610
 
@@ -4843,7 +4843,7 @@ src/_ZN9daSCoin_cD1Ev.cpp:
     complete
     .text start:0x020f03c4 end:0x020f03f4
 
-src/_ZN9daSCoin_cD0Ev.c:
+src/_ZN9daSCoin_cD0Ev.cpp:
     complete
     .text start:0x020f03f4 end:0x020f0438
 
@@ -4878,7 +4878,7 @@ src/_ZN6NumberD1Ev.cpp:
     complete
     .text start:0x020f0894 end:0x020f08cc
 
-src/_ZN6NumberD0Ev.c:
+src/_ZN6NumberD0Ev.cpp:
     complete
     .text start:0x020f08cc end:0x020f0918
 
@@ -4978,7 +4978,7 @@ src/_ZN14EnemySwitchTagD1Ev.cpp:
     complete
     .text start:0x020f15fc end:0x020f162c
 
-src/_ZN14EnemySwitchTagD0Ev.c:
+src/_ZN14EnemySwitchTagD0Ev.cpp:
     complete
     .text start:0x020f162c end:0x020f1670
 
@@ -5703,7 +5703,7 @@ src/_ZN11SoundObjectD1Ev.cpp:
     complete
     .text start:0x020f934c end:0x020f9370
 
-src/_ZN11SoundObjectD0Ev.c:
+src/_ZN11SoundObjectD0Ev.cpp:
     complete
     .text start:0x020f9370 end:0x020f93a8
 

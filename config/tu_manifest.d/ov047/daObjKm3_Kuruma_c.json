@@ -29,7 +29,7 @@
       "symbol": "_ZN17daObjKm3_Kuruma_cD0Ev",
       "address": "0x02111448",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN17daObjKm3_Kuruma_cD0Ev.c",
+      "legacy_source": "src/_ZN17daObjKm3_Kuruma_cD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -91,7 +91,7 @@
     "delinksChanged": false,
     "substitutedObjectPaths": [
       "src/_ZN17daObjKm3_Kuruma_cD1Ev.cpp",
-      "src/_ZN17daObjKm3_Kuruma_cD0Ev.c",
+      "src/_ZN17daObjKm3_Kuruma_cD0Ev.cpp",
       "src/_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv.cpp",
       "src/_ZN17daObjKm3_Kuruma_c13InitResourcesEv.cpp"
     ],

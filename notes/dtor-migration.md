@@ -6,6 +6,28 @@
 > the current method; `python tools/langmode_audit.py` and
 > [`cpp-tu-current-state.md`](cpp-tu-current-state.md) provide live status. The failure
 > analysis below remains useful unless a section is explicitly marked superseded.
+>
+> **2026-08-24 sweep:** `d0_migrate.py` landed 73 more D0s in one pass; the nine it
+> could not keep are each blocked by something named below -- five by the §3
+> inline-base-dtor convention (SignPost, daDsnBase_c, daObjMaruta_c, daObjFallBlock_c,
+> daOts_c -- their headers define `~Class() {}` so derived destructors inline it, and
+> the tool's out-of-line definition is a redefinition), one by member arrays
+> (dScEntry_c, two `__destroy_arr` calls), one by a member whose type's destructor is
+> still a `func_` shell (dCapEnemy_c, daDossyCap_c, daObjMarioCap_c -- the CapIcon
+> ordering documented in include/daDossyCap_c.h), and one by a conditional body no
+> empty destructor reproduces (dWipe_c's needsCleanup test). daObjAbuku_c's D1 landed
+> the same day through `dtor_probe.py`.
+>
+> **The link caught what verify could not, twice more.** dFdDummy_c's D0 and
+> daKrb_c's D0+D1 all returned `(True, '2004/b56')` from `build_pin.verify` and then
+> mismatched the real relink by 1-3 words -- the §5 lesson repeated: a byte check
+> wildcards relocated words, so a `bl` resolving to the wrong variant compares equal
+> in isolation. daKrb_c derives from dCapEnemy_c, whose own D0 stays hand-written for
+> the operator-delete reason its D2 file records; the same wall reaches the child.
+> All three files were reverted to their hand-written `.c` after `rombuild -j16`
+> reported 104/106, and the build returned to 106/106 exact. **`build_pin.verify`
+> passing is not sufficient evidence a destructor migration lands; only the full
+> relink is.**
 
 **Scope:** what actually blocks a `D1` file from becoming `Class::~Class()`, measured
 rather than assumed. Companion to `runbook-type-reconstruction.md` §7, which recorded

@@ -7,7 +7,7 @@ src/_ZN16SwingingPlatformD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111e4
 
-src/_ZN16SwingingPlatformD0Ev.c:
+src/_ZN16SwingingPlatformD0Ev.cpp:
     complete
     .text start:0x021111e4 end:0x0211123c
 
@@ -39,7 +39,7 @@ src/_ZN18RotatingPlatformRrD1Ev.cpp:
     complete
     .text start:0x02111444 end:0x02111494
 
-src/_ZN18RotatingPlatformRrD0Ev.c:
+src/_ZN18RotatingPlatformRrD0Ev.cpp:
     complete
     .text start:0x02111494 end:0x021114f8
 
@@ -159,7 +159,7 @@ src/_ZN16daObjRc_Dorifu_cD1Ev.cpp:
     complete
     .text start:0x02111f8c end:0x0211200c
 
-src/_ZN16daObjRc_Dorifu_cD0Ev.c:
+src/_ZN16daObjRc_Dorifu_cD0Ev.cpp:
     complete
     .text start:0x0211200c end:0x021120a0
 

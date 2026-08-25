@@ -29,7 +29,7 @@
       "symbol": "_ZN32FloatOnWaterPlatformWdwRectangleD0Ev",
       "address": "0x02111ef4",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.c",
+      "legacy_source": "src/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.cpp",
       "ordinal": 1
     },
     {

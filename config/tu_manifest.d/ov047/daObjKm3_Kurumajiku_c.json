@@ -34,7 +34,7 @@
       "symbol": "_ZN21daObjKm3_Kurumajiku_cD0Ev",
       "address": "0x021111f0",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN21daObjKm3_Kurumajiku_cD0Ev.c",
+      "legacy_source": "src/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -797,7 +797,7 @@
     ],
     "substitutedObjectPaths": [
       "src/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp",
-      "src/_ZN21daObjKm3_Kurumajiku_cD0Ev.c",
+      "src/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp",
       "src/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp",
       "src/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp",
       "src/RickshawBs_Spawn.c"
@@ -846,7 +846,7 @@
         "contributionEquivalent": "5/5",
         "substitutedObjectPaths": [
           "src/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp",
-          "src/_ZN21daObjKm3_Kurumajiku_cD0Ev.c",
+          "src/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp",
           "src/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp",
           "src/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp",
           "src/RickshawBs_Spawn.c"
@@ -1208,7 +1208,7 @@
         "contributionEquivalent": "5/5",
         "substitutedObjectPaths": [
           "src/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp",
-          "src/_ZN21daObjKm3_Kurumajiku_cD0Ev.c",
+          "src/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp",
           "src/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp",
           "src/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp",
           "src/RickshawBs_Spawn.c"

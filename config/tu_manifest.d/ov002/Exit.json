@@ -29,7 +29,7 @@
       "symbol": "_ZN4ExitD0Ev",
       "address": "0x020b09d4",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN4ExitD0Ev.c",
+      "legacy_source": "src/_ZN4ExitD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -271,7 +271,7 @@
     ],
     "substitutedObjectPaths": [
       "src/_ZN4ExitD1Ev.cpp",
-      "src/_ZN4ExitD0Ev.c",
+      "src/_ZN4ExitD0Ev.cpp",
       "src/func_ov002_020b0a0c.c",
       "src/_ZN4Exit16CleanupResourcesEv.cpp",
       "src/_ZN4Exit16OnPendingDestroyEv.cpp",

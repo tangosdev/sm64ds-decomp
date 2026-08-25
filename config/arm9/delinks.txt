@@ -4680,7 +4680,7 @@ src/_ZN7dScMB_cD1Ev.cpp:
     complete
     .text start:0x02034a78 end:0x02034ac0
 
-src/_ZN7dScMB_cD0Ev.c:
+src/_ZN7dScMB_cD0Ev.cpp:
     complete
     .text start:0x02034ac0 end:0x02034b1c
 
