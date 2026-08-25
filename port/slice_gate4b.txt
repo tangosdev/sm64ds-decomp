@@ -19,7 +19,7 @@ src/_ZN5Model6RenderEPK7Vector3.cpp
 # ModelComponents::Render: HOST copy in port/unmatched -- the matched TU
 # passes the material index by leaving it in r1 (see the file header there).
 port/unmatched/ModelComponents_Render.cpp
-src/_ZN15ModelComponents21UpdateVertsUsingBonesEv.c
+src/_ZN15ModelComponents21UpdateVertsUsingBonesEv.cpp
 
 # GX upload path (no textual MMIO; VRAM windows come from HAL globals)
 src/_ZN2GX7LoadTexEPKvjj.cpp
