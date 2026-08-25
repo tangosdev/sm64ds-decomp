@@ -171,7 +171,13 @@ constexpr uint32_t kOamBase  = 0x07000000u;
    everywhere else. */
 inline uint32_t oam_a(void) { return kOamBase; }  /* see hal/sub_screen.cpp:
     the two screens are aligned by upload order now, not by a source swap --
-    the shadow is empty at this raster's moment, measured 2026-08-20 */
+    the shadow is empty at this raster's moment, measured 2026-08-20.
+    [Run mg13 lane BNP: the upload moved AGAIN, to func_02019144's own line,
+    which is a few statements above this raster. So the hardware OAM this reads
+    is now THIS frame's block rather than the previous one, and it is still the
+    same block engine B scans out. Reading 0x07000000 is what makes both of
+    those true without a source swap, which is why the function is still this
+    one line. THE OBJ/POWCNT1 PARITY in hal/sub_screen.cpp is the derivation.] */
 constexpr uint32_t kObjVram  = 0x06400000u;
 
 inline uint16_t rd16(uint32_t a) { return *reinterpret_cast<volatile uint16_t *>(a); }
