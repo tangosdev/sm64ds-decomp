@@ -30,6 +30,14 @@ struct ModelAnim2 : ModelAnim {
     /* --- vtable order. Do not reorder. --- */
     virtual ~ModelAnim2();                     /* slots 0 (D1), 1 (D0) */
 
+    /* DECLARED, defined out of line in src/_ZN10ModelAnim2C1Ev.cpp as real
+     * C++ -- complete-object context, hence C1. Init list `: otherFile(0)`
+     * puts the scalar store BEFORE otherAnim's implicit construction, which
+     * is the ROM's schedule; a body statement would come one call too late
+     * (mem-initialisers run in declaration order, ahead of nothing here --
+     * both stores are initialisation, not body). */
+    ModelAnim2();
+
     /* --- non-virtual --- */
     void Copy(const ModelAnim2 &src, char *newFile, u32 newOtherFile);
     void Func_020162C4(u32 animFile, int flags, Fix12<int> speed,
