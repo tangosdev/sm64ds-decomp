@@ -15,6 +15,17 @@
  * The final `((VtObj *)c)->m18(-1)` is a self-dispatch through this class's own
  * vtable slot 18 -- left as a raw vtable-shim call, same shape the pre-migration
  * file used, just through `this` instead of a `char *c` parameter. */
+/* One OAM attribute-template entry: the list is a u32 attr word, then the two
+ * 16-bit attrs, then an 8-byte stride. Spelled as a struct rather than as casts
+ * off a u32* because the ROM addresses all three off ONE base register at
+ * displacements 0/4/6; `*((u16 *)e + 2)` makes b56 materialise a second base
+ * (`add r2, r3, #4`), and that one extra instruction moves the literal pool. */
+typedef struct OamAttrTmpl {
+    u32 attr0; /* 0x0 */
+    u16 attr2; /* 0x4 */
+    u16 attr3; /* 0x6 */
+} OamAttrTmpl;
+
 typedef struct Slot6 {
     char b[0x30];
 } Slot6;
@@ -92,13 +103,20 @@ s32 dScMgCard_c::InitResources()
     *(volatile u16 *)0x04001050 = 0;
 
     {
-        u32 *e = data_ov006_02134028;
+        OamAttrTmpl *e = (OamAttrTmpl *)data_ov006_02134028;
         u16 last;
         do {
-            e[0] = (e[0] & ~0xc00) | 0x400;
-            *((u16 *)e + 2) &= ~0xf000;
-            last = *((u16 *)e + 3);
-            e += 2;
+            e->attr0 = (e->attr0 & ~0xc00) | 0x400;
+            /* NOT `e->attr2 &= ~0xf000;`. Compound assignment makes b56 CSE the
+             * field's address and materialise it (`add r2, r3, #4`), then reach
+             * attr3 at +2 off that; the ROM keeps ONE base and uses +4 / +6.
+             * The extra instruction moves the literal pool and shifts every
+             * pc-relative load in the function -- it is the whole 4-byte size
+             * difference that kept this file pinned to 1.2/base. */
+            u16 a2 = e->attr2;
+            e->attr2 = (u16)(a2 & ~0xf000);
+            last = e->attr3;
+            e++;
         } while (last != 0xffff);
     }
 
