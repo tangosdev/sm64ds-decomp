@@ -1631,11 +1631,11 @@ src/HealingHeart_Spawn.c:
     complete
     .text start:0x020bc8b4 end:0x020bc8f4
 
-src/_ZN11CannonHatchD1Ev.cpp:
+src/_ZN20daObjCannonShutter_cD1Ev.cpp:
     complete
     .text start:0x020bc8f4 end:0x020bc938
 
-src/_ZN11CannonHatchD0Ev.cpp:
+src/_ZN20daObjCannonShutter_cD0Ev.cpp:
     complete
     .text start:0x020bc938 end:0x020bc990
 
@@ -1643,23 +1643,23 @@ src/func_ov002_020bc990.c:
     complete
     .text start:0x020bc990 end:0x020bc9b0
 
-src/_ZN11CannonHatch16CleanupResourcesEv.cpp:
+src/_ZN20daObjCannonShutter_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020bc9b0 end:0x020bc9f4
 
-src/_ZN11CannonHatch6RenderEv.cpp:
+src/_ZN20daObjCannonShutter_c6RenderEv.cpp:
     complete
     .text start:0x020bc9f4 end:0x020bca78
 
-src/_ZN11CannonHatch8BehaviorEv.cpp:
+src/_ZN20daObjCannonShutter_c8BehaviorEv.cpp:
     complete
     .text start:0x020bca78 end:0x020bcc20
 
-src/_ZN11CannonHatch13InitResourcesEv.cpp:
+src/_ZN20daObjCannonShutter_c13InitResourcesEv.cpp:
     complete
     .text start:0x020bcc20 end:0x020bcccc
 
-src/CannonHatch_Spawn.c:
+src/daObjCannonShutter_c_Spawn.c:
     complete
     .text start:0x020bcccc end:0x020bccfc
 

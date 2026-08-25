@@ -14,9 +14,9 @@
 #include "ArrowSignRight.h"
 
 // The lifecycle definitions are MSVC methods (ArrowSignRight.h/fBase_c.h
-// real classes); InitResources alone is a C-named free function. Every shim
-// calls QUALIFIED -- never virtual.
-extern "C" int _ZN14ArrowSignRight13InitResourcesEv(char *self);
+// real classes). Every shim calls QUALIFIED -- never virtual.
+extern "C" int _ZN14ArrowSignRight13InitResourcesEv(char *self)
+{ return ((ArrowSignRight *)self)->ArrowSignRight::InitResources(); }
 
 static int __fastcall sl_init(void *self, void *)
 { return _ZN14ArrowSignRight13InitResourcesEv((char *)self); }
@@ -152,14 +152,6 @@ void *_ZTV11ShadowModel[8];
 void *data_ov098_0213c380[6];
 } /* extern "C" */
 
-// The extern "C" side of the cxxname bridges (see hal/cxxname_bridge.cpp).
-extern "C" {
-void _ZN13SharedFilePtr7ReleaseEv(void *self);
-void hal_fileptr_release(void *self) { _ZN13SharedFilePtr7ReleaseEv(self); }
-}
-
-
-
 extern "C" {
 /* asm primitive: plain 48-byte block copy (with writeback, unlike the
    FIFO-fixed variant) */
@@ -172,6 +164,12 @@ signed char data_0209b44c_c;
 int data_0209b468[4];      /* actor list head the ctor links into */
 }
 #pragma comment(linker, "/alternatename:?data_0209b44c@@3CA=_data_0209b44c_c")
+#pragma comment(linker, "/alternatename:_data_0209b44c=_data_0209b44c_c")
+
+// The C base constructor stores this address before the derived spawn replaces
+// it with ArrowSignRight's manual host vtable. No base virtual dispatch occurs
+// during that interval, but the storage must exist for the raw relocation.
+extern "C" void *_ZTV10dBgActor_c[32] = {};
 
 extern "C" {
 unsigned char data_0209f2d8_c;   /* mega-char state byte: none */

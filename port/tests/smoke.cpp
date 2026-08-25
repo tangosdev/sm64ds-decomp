@@ -14,7 +14,8 @@ static_assert(sizeof(u8) == 1 && sizeof(u16) == 2 && sizeof(u32) == 4, "int widt
 static_assert(sizeof(s64) == 8, "s64");
 static_assert(sizeof(void *) == 4, "32-bit host (see port/platform.h)");
 static_assert(sizeof(Fix12i) == 4, "Fix12i is a 32-bit 20.12 scalar");
-static_assert(offsetof(Timer, unk_004) == 4, "Timer +0x4");
+static_assert(offsetof(Timer, unk_000) == 0, "Timer +0x0");
+static_assert(sizeof(((Timer *)0)->unk_000) == 8, "Timer tick count is s64");
 static_assert(offsetof(Timer, mIsRunning) == 8, "Timer +0x8");
 // Fader's evidence header pins currInterp at +0x4 with the vptr at +0x0.
 // This only holds if the host vptr is exactly 4 bytes -- x86-32 MSVC -- which
@@ -62,7 +63,7 @@ static void test_timer(void)
 {
     Timer t;
     t.ResetTimer();
-    CHECK(t.mIsRunning == 0 && t.unk_000 == 0 && t.unk_004 == 0);
+    CHECK(t.mIsRunning == 0 && t.unk_000 == 0);
     CHECK(t.GetTime() == 0);
 
     t.StartTimer();

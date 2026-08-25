@@ -10,7 +10,7 @@
 #define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 
 typedef struct Vec3 { int x, y, z; } Vec3;
-typedef struct dBgPi { char pad[0x28]; } dBgPi;
+typedef struct dBgPiLoc { char pad[0x28]; } dBgPiLoc;
 
 /* extern "C" is required now this file is C++: these are already mangled ROM
    symbols, and without C linkage each would mangle a SECOND time and name
@@ -19,18 +19,18 @@ typedef struct dBgPi { char pad[0x28]; } dBgPi;
 extern "C" {
 extern int func_02037938(void* p);
 extern void func_02038324(int a, int* b, int c, int d);
-extern void _ZN5dBgPiC1Ev(dBgPi* r);
+extern void _ZN5dBgPiC1Ev(dBgPiLoc* r);
 extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, Vec3* a, Vec3* b, void* actor);
 extern int _ZN9dBgCh_Lin10DetectClsnEv(void* self);
 extern void _ZN9dBgCh_Lin10GetClsnPosEv(Vec3* out, void* self);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vec3* out);
-extern void _ZNK5dBgPi6CopyToERS_(void* self, dBgPi* dst);
+extern void _ZNK5dBgPi6CopyToERS_(void* self, dBgPiLoc* dst);
 extern void _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(void* self, Vec3* v, int rad, void* actor);
-extern void _ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi(void* self, dBgPi* r);
-extern void _ZN5dBgPiaSERKS_(void* self, dBgPi* r);
-extern void func_02037888(void* dst, dBgPi* src);
+extern void _ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi(void* self, dBgPiLoc* r);
+extern void _ZN5dBgPiaSERKS_(void* self, dBgPiLoc* r);
+extern void func_02037888(void* dst, dBgPiLoc* src);
 extern void func_020356d4(void* self);
-extern void _ZN5dBgPiD1Ev(dBgPi* r);
+extern void _ZN5dBgPiD1Ev(dBgPiLoc* r);
 }
 
 #pragma opt_common_subs off
@@ -44,8 +44,8 @@ void dBgCh_Actr::UpdateContinuous()
     int* pos;
     int* prev;
     int handled;
-    dBgPi res0;
-    dBgPi res1;
+    dBgPiLoc res0;
+    dBgPiLoc res1;
     Vec3 lineStart, lineEnd;
     Vec3 clsnPos, normal;
     Vec3 newStart, newEnd;
@@ -58,7 +58,7 @@ void dBgCh_Actr::UpdateContinuous()
     prev = (int*)(a + 0x68);
 
     if (IsOnGround() && func_020355a0(((char*)this)) && ShouldUpdatePos())
-        func_02038324(func_02037938((char*)&mSphereClsn), pos, unk_12c, unk_130);
+        func_02038324(func_02037938((char*)&mSphereClsn), pos, mSphereClsn.unk_10c, unk_130);
 
     floorFlag = 0;
     _ZN5dBgPiC1Ev(&res0);
@@ -132,7 +132,7 @@ void dBgCh_Actr::UpdateContinuous()
     _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(((char*)this) + 0x20, &sphere, unk_018, *(void**)((char*)&mActor));
     if (func_0203553c(((char*)this)) == 0)
         *(u8*)AT(((char*)this), 0x90) |= 0x40;
-    unk_128 = unk_1b8;
+    mSphereClsn.unk_108 = unk_1b8;
     if (pos[1] - prev[1] > 0)
         *(u8*)AT(((char*)this), 0x90) |= 0x20;
     if (floorFlag != 0) {
@@ -150,8 +150,8 @@ void dBgCh_Actr::UpdateContinuous()
         _ZN5dBgPiaSERKS_(((char*)this) + 0x30, &res1);
     }
     if (_ZN12dBgCh_SphCrr10DetectClsnEv((char*)&mSphereClsn)) {
-        prev = (int*)((char*)&unk_06c);
-        if ((mClsnFlags & 4) && handled == 0)
+        prev = (int*)((char*)&mSphereClsn.disp);
+        if ((mSphereClsn.flags & 4) && handled == 0)
             func_020371b0(((char*)this), onGround);
         if (ShouldUpdatePos()) {
             pos[0] += prev[0];

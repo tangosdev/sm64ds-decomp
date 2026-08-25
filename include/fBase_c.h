@@ -18,6 +18,14 @@
  * whichever TU defines it -- colliding with the copy the module's gap object
  * supplies from ROM. Do not "fix" that file into a real method, and do not
  * remove this declaration: removing it deletes slot 0 and shifts all 18.
+ *   0x02043444  is the real start: _ZN7fBase_cnwEj, this class's own
+ *               operator new (size 0x50, discussed further down this file).
+ *               The old 0x02043494 began at OnHeapCreated and excluded it.
+ *   0x02043f4c  is the real end -- the byte after _ZN7fBase_cC2Ev, and the
+ *               address of func_02043f4c, the next unrelated function.
+ *   0x02043e04  was not a function boundary at all. It falls 0x18 bytes INSIDE
+ *               the constructor (_ZN7fBase_cC2Ev, 0x02043dec, size 0x160), so
+ *               the old end cut that function in half.
  *
  * Offsets, widths and vtable slots are pinned by the bytes; field names are not
  * and are safe to improve. Provenance for all of it, including how the 0x14-byte
