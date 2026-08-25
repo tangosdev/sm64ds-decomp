@@ -19,16 +19,16 @@ struct Fish {
        D1 and not D2, so it is this type and not an inlined base. */
     ModelAnim mModelAnim;            /* 0x0d4 */
     u8  pad_138[0x4];
-    s32 unk_13c;            /* 0x13c */
-    s32 unk_140;            /* 0x140 */
+    s32 mUniqueID_13c;            /* 0x13c */
+    s32 mTopY;            /* 0x140 */
     u8  pad_144[0x8];
-    s32 unk_14c;            /* 0x14c */
+    s32 mState;            /* 0x14c */
     s32 unk_150;            /* 0x150 */
     u8  pad_154[0x5];
-    u8  unk_159;            /* 0x159 */
+    u8  mHidden;            /* 0x159 */
     u8  pad_15a[0x1];
     u8  mModelIndex;            /* 0x15b */
-    u8  unk_15c;            /* 0x15c */
+    u8  mVariant;            /* 0x15c */
 #ifdef __cplusplus
     /* methods */
     int Behavior();

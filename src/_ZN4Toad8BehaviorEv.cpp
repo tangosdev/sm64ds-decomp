@@ -18,7 +18,7 @@
  * mAngleY is his facing, and the ApproachLinear on it in that one branch is
  * the only place the body turns.
  *
- * The opacity ramp is the other half: unk_20e is the target and unk_20d the
+ * The opacity ramp is the other half: mTargetOpacity is the target and mOpacity the
  * current value, stepped by 6 a frame, and the model's opacity is that value
  * shifted right by 3. Anything that should keep him visible -- being close,
  * having a live tracked actor, or the 0x32 mode -- writes 0xff into the
@@ -76,9 +76,9 @@ int Toad::Behavior()
         s16 va = Vec3_VertAngle(&mPosX, &v2);
 
         if (hd < 0x190000)
-            unk_20e = 0xff;
+            mTargetOpacity = 0xff;
         else
-            unk_20e = 0x3c;
+            mTargetOpacity = 0x3c;
 
         if (hd < threshold && AngleDiff(ha, mAngleY) < 0x3000) {
             mHeadYawTarget = (s16)(ha - mAngleY);
@@ -92,24 +92,24 @@ int Toad::Behavior()
             mHeadPitchTarget = 0;
         }
     } else {
-        unk_20e = 0x3c;
+        mTargetOpacity = 0x3c;
     }
 
     {
-        u32 id = unk_1f4;
+        u32 id = mCapUniqueID;
         if (id != 0) {
             if (_ZN8dActor_c10FindWithIDEj(id) != 0)
-                unk_20e = 0xff;
+                mTargetOpacity = 0xff;
         }
     }
 
     if (data_0209f2f8 == 0x32)
-        unk_20e = 0xff;
+        mTargetOpacity = 0xff;
 
     _Z14ApproachLinearRsss(&mHeadYaw, mHeadYawTarget, 0x250);
     _Z14ApproachLinearRsss(&mHeadPitch, mHeadPitchTarget, 0x100);
 
-    _Z15ApproachLinear2Riii((s32 *)&unk_20d, unk_20e, 6);
+    _Z15ApproachLinear2Riii((s32 *)&mOpacity, mTargetOpacity, 6);
 
     mModelAnim.Advance();
 
@@ -117,7 +117,7 @@ int Toad::Behavior()
 
     mModelAnim.speed = 0x1000;
 
-    _ZN9ModelBase12ApplyOpacityEj(&mModelAnim, (u32)(u8)(unk_20d >> 3), 1);
+    _ZN9ModelBase12ApplyOpacityEj(&mModelAnim, (u32)(u8)(mOpacity >> 3), 1);
 
     ((dCc_c *)&mdCcAc_c)->Clear();
     ((dCc_c *)&mdCcAc_c)->Update();

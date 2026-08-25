@@ -45,16 +45,16 @@ int SnowmanBody::InitResources()
         mPosY = rc.floor[(0x44 - 0x14) / 4];
     else
         mPosY = pos.y;
-    unk_33c = mPosX;
-    unk_340 = mPosY;
-    unk_344 = mPosZ;
-    unk_348 = mAngleX;
-    unk_34a = mAngleY;
-    unk_34c = mAngleZ;
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
+    mHomeAngleX = mAngleX;
+    mHomeAngleY = mAngleY;
+    mHomeAngleZ = mAngleZ;
     unk_3a4 = 0x5a;
     func_ov072_0211fcb0(((char*)this), 0);
-    unk_390 = 0;
-    *(Matrix4x3*)((char*)&unk_350) = IDENTITY_MATRIX4X3;
+    mTalkPlayer = 0;
+    *(Matrix4x3*)((char*)&mShadowMat) = IDENTITY_MATRIX4X3;
     func_ov072_0211f3e4(((char*)this));
     _ZN7PathPtr6FromIDEj(((char*)this) + 0x380, mParam & 0xff);
     _ZN9dBgCh_GndD1Ev(&rc);

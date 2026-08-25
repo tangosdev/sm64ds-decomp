@@ -13,7 +13,7 @@ extern u8 data_0209fc5c;
 
 int UnknownVsEntry::Behavior()
 {
-    if (unk_f44 == 0) {
+    if (mSuspended == 0) {
         int i;
         char* base;
         char* p;
@@ -42,7 +42,7 @@ int UnknownVsEntry::Behavior()
             }
         }
 
-        if (unk_f41 == 1 && fp != 0) {
+        if (mState == 1 && fp != 0) {
             int j = 0;
             u8* g2 = &data_0209fc5c;
             char* b2 = ((char*)this) + 0x920;
@@ -50,13 +50,13 @@ int UnknownVsEntry::Behavior()
                 if (*g2) func_ov075_02114894(b2);
                 g2 += 1; b2 += 0x158;
             }
-            unk_f41 = 2;
+            mState = 2;
         }
-        if (unk_f41 != 0) {
-            if (func_ov075_02114ac4(((char*)this) + 0x920 + unk_f42 * 0x158, ((char*)this) + 0xf34, ((char*)this) + 0xf28) != 0)
+        if (mState != 0) {
+            if (func_ov075_02114ac4(((char*)this) + 0x920 + mFocusedPlayer * 0x158, ((char*)this) + 0xf34, ((char*)this) + 0xf28) != 0)
                 func_ov075_021152d4(((char*)this));
         }
-        if (unk_f40) {
+        if (mAnimActive) {
             int r = func_0203da9c();
             func_ov075_021151b4(((char*)this), r);
             /* 0x90c is +0x50 inside the ModelAnim at 0x8bc -- its Animation base,

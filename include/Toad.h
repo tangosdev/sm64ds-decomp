@@ -36,7 +36,7 @@ struct Toad {
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     ShadowModel mShadowModel;            /* 0x16c */
     u8  pad_194[0x60];
-    s32 unk_1f4;            /* 0x1f4 */
+    s32 mCapUniqueID;            /* 0x1f4 */
     u8  pad_1f8[0x8];
     /* Two ApproachLinear pairs: 0x200 chases 0x202 and 0x204 chases 0x206,
        at different rates. The targets are written from the player's
@@ -46,13 +46,13 @@ struct Toad {
     s16 mHeadYawTarget;            /* 0x202 */
     s16 mHeadPitch;            /* 0x204 */
     s16 mHeadPitchTarget;            /* 0x206 */
-    u16 unk_208;            /* 0x208 */
+    u16 mMessageID;            /* 0x208 */
     u8  pad_20a[0x1];
-    u8  unk_20b;            /* 0x20b */
-    u8  unk_20c;            /* 0x20c */
-    u8  unk_20d;            /* 0x20d */
-    u8  unk_20e;            /* 0x20e */
-    u8  unk_20f;            /* 0x20f */
+    u8  mVariant;            /* 0x20b */
+    u8  mStarID;            /* 0x20c */
+    u8  mOpacity;            /* 0x20d */
+    u8  mTargetOpacity;            /* 0x20e */
+    u8  mStarReqIndex;            /* 0x20f */
 #ifdef __cplusplus
     /* methods */
     int InitResources();
