@@ -78,6 +78,33 @@ class ValidateMerge(unittest.TestCase):
         self.assertEqual(VM.function_snapshot(self.base)["stats"]["matchedFunctions"], 1)
         self.assertEqual(VM.function_snapshot(head)["stats"]["matchedFunctions"], 0)
 
+    def test_marker_deep_in_the_leading_comment_block_still_counts_as_draft(self):
+        # The rule is the header REGION, not a byte window: the recovery prose above a
+        # banner grows without bound and must not push the marker out of sight.
+        prose = "".join(f"// recovery note line {i}: tried and rejected\n"
+                        for i in range(12))
+        (self.repo / "src" / "Example.c").write_text(
+            prose + "// NONMATCHING: register allocation differs\n"
+            "int Example(void) { return 0; }\n", encoding="utf-8")
+        head = commit(self.repo, "draft with a long preamble", "bob")
+        self.assertEqual(VM.function_snapshot(head)["stats"]["matchedFunctions"], 0)
+
+    def test_a_stranded_nonmatching_marker_fails_the_gate(self):
+        # A marker below the first line of code is invisible to every counter, so the
+        # file would publish as MATCHED against its author's own written claim. The
+        # gate names the file instead of letting that inversion land.
+        (self.repo / "src" / "Example.c").write_text(
+            "int Example(void) { return 0; }\n"
+            "// NONMATCHING: register allocation differs\n", encoding="utf-8")
+        head = commit(self.repo, "stranded marker", "bob")
+        # The misread the gate exists for: the counters still see a match.
+        self.assertEqual(VM.function_snapshot(head)["stats"]["matchedFunctions"], 1)
+        report = VM.build_report(self.base, head)
+        self.assertEqual(report["status"], "Failed")
+        self.assertEqual(report["asmPolicy"]["strandedMarkers"], ["src/Example.c"])
+        self.assertTrue(any("outside the leading comment block" in r
+                            for r in report["reasons"]))
+
     def test_require_merge_commit_rejects_an_uncommitted_merge_shape(self):
         with self.assertRaisesRegex(RuntimeError, "not a committed merge"):
             VM.build_report(self.base, "HEAD", require_merge_commit=True)
@@ -315,7 +342,8 @@ class ValidateMerge(unittest.TestCase):
         self.assertTrue(snap["functions"]["arm9:0x02000004"]["matched"])
         report = VM.build_report(base, head)
         self.assertEqual(report["status"], "Passed")
-        self.assertEqual(report["asmPolicy"], {"transcribed": [], "unbanneredAsm": []})
+        self.assertEqual(report["asmPolicy"], {"transcribed": [], "unbanneredAsm": [],
+                                               "strandedMarkers": []})
 
     def _claim_without_enrolling(self, name):
         """A symbol with a src/ file and NO `complete` delinks entry: matched by the

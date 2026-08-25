@@ -98,10 +98,10 @@ def _already_matched(repo, name):
     if path is None:
         return False
     try:
-        head = path.read_text(encoding='utf-8', errors='ignore')[:400]
+        text = path.read_text(encoding='utf-8', errors='ignore')
     except OSError:
         return False
-    return 'NONMATCHING' not in head
+    return not asm_policy.has_draft_banner(text)
 
 
 def matched_sources(repo):

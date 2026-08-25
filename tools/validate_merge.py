@@ -151,7 +151,8 @@ def function_snapshot(rev):
     candidates = {line.split(":", 1)[1] if ":" in line else line
                   for line in grep.splitlines()}
     # Match progress.py and the rest of the repo's established hatch rule: the
-    # marker is a source header and is recognized in the first 200 characters.
+    # marker is a source header, recognized anywhere in the file's leading comment
+    # block (asm_policy.has_draft_banner -- the one rule every consumer shares).
     nonmatching = {path for path in candidates
                    if AP.has_draft_banner(git_text(rev, path))}
     # An unbannered dcd transcription byte-matches vacuously (it IS the ROM words
@@ -508,9 +509,18 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     changed_src = [row["path"] for row in diff["files"]
                    if row["status"][:1] in ("A", "M") and row.get("path", "")
                    .endswith(SOURCE_SUFFIXES)]
-    changed_cls = {p: AP.classify(git_text(head_sha, p)) for p in sorted(changed_src)}
+    changed_text = {p: git_text(head_sha, p) for p in sorted(changed_src)}
+    changed_cls = {p: AP.classify(t) for p, t in changed_text.items()}
     new_transcribed = [p for p, c in changed_cls.items() if c == "transcribed"]
     new_unbannered = [p for p, c in changed_cls.items() if c == "unbannered-asm"]
+    # A marker the counters cannot see inverts the file's own claim: every consumer
+    # recognizes NONMATCHING only inside the leading comment block
+    # (asm_policy.has_draft_banner), so a marker that sits below the first line of
+    # code leaves the file counted as MATCHED while its author believes it is
+    # bannered. Scoped like the transcription gate: only sources this merge adds or
+    # modifies, so a historical stray cannot fail an unrelated PR.
+    stranded_markers = [p for p, t in changed_text.items()
+                        if AP.DRAFT_BANNER in t and not AP.has_draft_banner(t)]
 
     base_keys, head_keys = set(bf["matched"]), set(hf["matched"])
     bc, hc = ba["byFunction"], ha["byFunction"]
@@ -603,6 +613,11 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         reasons.append(f"{len(new_transcribed)} asm-transcription file(s) with no "
                        f"HAND-ASM PRIMITIVE or NONMATCHING banner: "
                        + ", ".join(new_transcribed))
+    if stranded_markers:
+        reasons.append(f"{len(stranded_markers)} file(s) say NONMATCHING outside the "
+                       "leading comment block, where no counter or gate recognizes it "
+                       "-- move the marker into the file header, or reword prose that "
+                       "quotes the bare word: " + ", ".join(stranded_markers))
     if link["blocking"]:
         reasons.append(f"{len(link['blocking'])} blocking relocation verdict(s)")
     if port.get("available") and not port["passed"]:
@@ -735,7 +750,8 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
                         "added": added_credit, "changed": credit_changes,
                         "lost": lost_credit, "overridden": allow_attribution_change},
         "diff": diff,
-        "asmPolicy": {"transcribed": new_transcribed, "unbanneredAsm": new_unbannered},
+        "asmPolicy": {"transcribed": new_transcribed, "unbanneredAsm": new_unbannered,
+                      "strandedMarkers": stranded_markers},
         "matchedWithdrawn": withdrawn,
         "linkcheck": link,
         "portRefcheck": port,

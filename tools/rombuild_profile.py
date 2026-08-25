@@ -23,6 +23,7 @@ SOURCE_CONFIG = REPO / "config" / "arm9"
 CONFIG_TU = REPO / "config_tu" / "arm9"
 BUILD = REPO / "build"
 sys.path.insert(0, str(REPO / "tools"))
+import asm_policy  # noqa: E402
 import srcpath as SP  # noqa: E402
 
 PROFILES = ("stock", "mods")
@@ -118,8 +119,8 @@ def _stock_delinks(generated_root, repo):
                     name = pathlib.PurePosixPath(mod_rel).stem
                     src = SP.path_for(name)
                     verified = (src is not None and
-                                "NONMATCHING" not in src.read_text(
-                                    encoding="utf-8", errors="ignore")[:200])
+                                not asm_policy.has_draft_banner(src.read_text(
+                                    encoding="utf-8", errors="ignore")))
                     if verified:
                         src_rel = src.relative_to(repo).as_posix()
                         line = f"{src_rel}:"

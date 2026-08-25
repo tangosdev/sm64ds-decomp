@@ -100,7 +100,9 @@ def is_policy_done(src):
     sibling examples, since the body is assembly rather than recovered C."""
     if not src:
         return False
-    head = src[:600]
+    # The tags live in the banner, and banners drift downward as recovery prose grows
+    # above them -- the leading comment block, never a fixed byte window.
+    head = asm_policy.header_region(src)
     low = head.lower()
     if _OWES_C in low:                      # explicitly still owes a C decompilation
         return False

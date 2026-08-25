@@ -8,8 +8,8 @@ burning tokens re-deriving committed work.
 
 This reconciles the local ledger with what is actually on disk, using the exact same
 definition of "matched" as chaos_db_ci.py (the CI truth generator): a config symbol
-whose src/<name>.{c,cpp} exists and is not marked "// NONMATCHING" in its first 200
-chars. Run it once right after entering a fresh worktree, and again after any large
+whose src/<name>.{c,cpp} exists and carries no NONMATCHING marker in its leading
+comment block. Run it once right after entering a fresh worktree, and again after any large
 `git pull`/merge that brings in new src matches.
 
     python tools/rebuild_ledger.py

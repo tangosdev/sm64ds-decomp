@@ -67,6 +67,7 @@ import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
+import asm_policy  # noqa: E402
 import delaunder  # noqa: E402
 import demangle as D  # noqa: E402
 
@@ -118,7 +119,7 @@ def is_nonmatching(path):
         t = (REPO / path).read_text(errors="ignore")
     except OSError:
         return False
-    return "NONMATCHING" in t
+    return asm_policy.has_draft_banner(t)
 
 
 # A local struct/class body, e.g. `struct Actor { char pad[0xd0]; ... };`

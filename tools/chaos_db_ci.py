@@ -403,14 +403,19 @@ def match_finishers(rev="HEAD") -> dict[str, str]:
             size = int(header.rsplit(" ", 1)[1])
         except (IndexError, ValueError):
             break
-        # Clamp the banner window to THIS blob. `data` is one concatenated cat-file batch
-        # response, so a fixed 200-byte read runs past any blob shorter than that and into
-        # the next one's header and content. A clean blob followed by a drafted one was
-        # therefore misread as drafted and never recorded a finisher -- and since `want` is
-        # sorted by commit SHA, which side of that boundary a blob landed on varied between
-        # runs. Same history, different credit.
-        state[want[idx]] = ("draft" if b"// NONMATCHING" in data[pos:pos + min(200, size)]
-                            else "clean")
+        # Clamp to THIS blob. `data` is one concatenated cat-file batch response, so a
+        # fixed-width read runs past any blob shorter than that and into the next one's
+        # header and content. A clean blob followed by a drafted one was therefore
+        # misread as drafted and never recorded a finisher -- and since `want` is
+        # sorted by commit SHA, which side of that boundary a blob landed on varied
+        # between runs. Same history, different credit.
+        #
+        # The draft test is asm_policy.has_draft_banner -- the same rule the live count
+        # uses -- not a fixed head window: src/func_ov091_021339fc.c carried its marker
+        # at byte 246 for months, so a 200-byte read judged every drafted state of that
+        # file "clean" and handed the finisher's credit to the drafter.
+        blob = data[pos:pos + size].decode("utf-8", "replace")
+        state[want[idx]] = "draft" if asm_policy.has_draft_banner(blob) else "clean"
         pos += size + 1
         idx += 1
 
@@ -539,7 +544,10 @@ def main():
             f = SP.path_for(name)
             src_path = f.relative_to(REPO).as_posix() if f else None
             text = f.read_text(errors="ignore") if f else ""
-            head = text[:200]
+            # The settled tag lives in the banner, and banners drift downward as the
+            # recovery prose above them grows -- so the leading comment block, never a
+            # fixed byte window.
+            head = asm_policy.header_region(text)
             cls = asm_policy.classify(text) if src_path else None
             # Policy D (Tango's ruling on audit/enrollment_report.md section 6): a file
             # that exists is not evidence if the byte gate cannot get a verdict out of
