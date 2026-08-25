@@ -1832,7 +1832,7 @@ src/_ZN8dCcPos_cD1Ev.cpp:
     complete
     .text start:0x02014854 end:0x02014878
 
-src/_ZN8dCcPos_cC1Ev.c:
+src/_ZN8dCcPos_cC1Ev.cpp:
     complete
     .text start:0x02014878 end:0x0201489c
 
@@ -1868,11 +1868,11 @@ src/_ZN7dCcAc_cD1Ev.cpp:
     complete
     .text start:0x020149a4 end:0x020149c8
 
-src/_ZN7dCcAc_cC1Ev.c:
+src/_ZN7dCcAc_cC1Ev.cpp:
     complete
     .text start:0x020149c8 end:0x020149f4
 
-src/_ZN7dCcAc_cC2Ev.c:
+src/_ZN7dCcAc_cC2Ev.cpp:
     complete
     .text start:0x020149f4 end:0x02014a20
 
@@ -1892,7 +1892,7 @@ src/_ZN10dCcAcPos_cD1Ev.cpp:
     complete
     .text start:0x02014a60 end:0x02014a84
 
-src/_ZN10dCcAcPos_cC1Ev.c:
+src/_ZN10dCcAcPos_cC1Ev.cpp:
     complete
     .text start:0x02014a84 end:0x02014aa8
 
@@ -5283,7 +5283,7 @@ src/_ZN5dBgPcC1Ev.cpp:
     complete
     .text start:0x02037eec end:0x02037f18
 
-src/_ZN5dBgPcC2Ev.c:
+src/_ZN5dBgPcC2Ev.cpp:
     complete
     .text start:0x02037f18 end:0x02037f44
 

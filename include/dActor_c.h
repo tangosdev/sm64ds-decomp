@@ -101,6 +101,15 @@ struct dActor_c : dBase_c {
            16 (D1) and 17 (D0); position here does not affect that. --- */
     virtual ~dActor_c();
 
+    /* DECLARED, never defined as a method -- src/_ZN8dActor_cC1Ev.cpp and
+       src/_ZN8dActor_cC2Ev.cpp provide the symbol as hand-spelt extern "C"
+       bodies (the rich spawn-seeding logic needs exact frame-slot control).
+       Declaring it is what lets a real derived constructor emit
+       `bl _ZN8dActor_cC2Ev` instead of inlining the implicit base
+       construction (notes/ctor-migration.md section 2); it is not the key
+       function, so no TU gains a vtable from this. */
+    dActor_c();
+
     /* --- overrides of inherited slots. Each takes its base's index. --- */
     virtual bool BeforeInitResources();                /* slot  1 */
     virtual void AfterInitResources(u32 vfSuccess);    /* slot  2 */

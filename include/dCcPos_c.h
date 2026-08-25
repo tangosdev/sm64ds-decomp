@@ -42,6 +42,11 @@ struct dCcPos_c : dCc_c {
     virtual Vector3 &GetPos();          /* slot 2 */
     virtual u32 GetOwnerID();           /* slot 3 - always 0 */
 
+    /* DECLARED, defined out of line in src/_ZN8dCcPos_cC1Ev.cpp as real C++
+     * -- the body is empty; the base step and the vptr store are the whole
+     * ROM function. */
+    dCcPos_c();
+
     /* --- non-virtual --- */
     void Init(const Vector3 &pos, Fix12<int> radius, Fix12<int> height, u32 flags, u32 vulnFlags);
 };

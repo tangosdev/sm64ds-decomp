@@ -69,6 +69,12 @@ struct dCc_c {
     virtual Vector3 &GetPos() = 0;      /* slot 2 - null in the ROM table */
     virtual u32 GetOwnerID() = 0;       /* slot 3 - null in the ROM table */
 
+    /* DECLARED, never defined here -- src/_ZN5dCc_cC2Ev.cpp provides the base
+     * step every derived constructor calls. Declaring it is what makes a real
+     * derived constructor emit `bl _ZN5dCc_cC2Ev` instead of synthesising the
+     * base inline (notes/ctor-migration.md section 2). */
+    dCc_c();
+
     /* --- non-virtual --- */
     void Init(Fix12i radius, Fix12i height, u32 flags, u32 vulnFlags);
     void Clear();

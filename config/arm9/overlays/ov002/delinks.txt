@@ -4695,7 +4695,7 @@ src/_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_.cpp:
     complete
     .text start:0x020ee934 end:0x020eea50
 
-src/_ZN10dBgActor_cC2Ev.c:
+src/_ZN10dBgActor_cC2Ev.cpp:
     complete
     .text start:0x020eea50 end:0x020eea84
 
