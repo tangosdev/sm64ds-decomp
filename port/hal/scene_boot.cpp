@@ -429,6 +429,7 @@ void port_actor_tick(void);          /* phases 4/2/3 */
 void port_actor_render(void);        /* phase 5 */
 void port_actor_scene_pass(void);    /* phase 1 */
 void port_fader_advance(void);
+void port_frame_clock_tick(void);    /* phase 6: data_020a0db0 (hal/fader_wipes.cpp) */
 void hal_sub_screen_init_hw(void *hwnd, int zoom);
 void hal_sub_screen_probe(void);
 void hal_sub_screen_frame_begin(void);
@@ -3801,6 +3802,15 @@ extern "C" void port_scene_tick(int frame, int tick_game)
         hal_sub_screen_frame_begin();
         if (tick_game) {
             port_actor_tick();
+            /* THE FRAME CLOCK, func_020197b8 phase 6 (hal/fader_wipes.cpp).
+               After the actor phases and before the render. NOT the ROM's exact
+               slot: the ROM steps it at phase 6, after phase 5 and so after its
+               phase 2 fade advance, while this sits before port_fader_advance --
+               one phase early, with nothing in between that reads the word.
+               Every blink in the game hangs off this counter, and on this path
+               that includes the only visual difference between a SELECTED
+               Pair-a-Gone card and an idle one. */
+            port_frame_clock_tick();
             port_fader_advance();
         }
         /* THE DISPLAY SCAN-OUT, which is where IRQ 2 lives. The DS raises the

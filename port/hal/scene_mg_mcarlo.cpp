@@ -291,6 +291,12 @@ extern unsigned char data_020a0de9[];
 extern unsigned char data_020a0dea[];
 extern unsigned char data_020a0deb[];
 extern int           data_020a0e40[];
+/* THE BLINK CLOCK. src/func_ov006_020f7e2c.c -- the card draw -- skips a
+   SELECTED card (state 3) on every frame this counter has bit 3 set, and that
+   blink is the ONLY visual difference between a selected card and an idle one.
+   Printed here because a frozen clock makes the selection invisible while every
+   other number in this trace stays correct. */
+extern int           data_020a0db0;
 int  func_ov006_020f7a90(void);               /* "the board has settled"     */
 int  func_ov006_020f7b90(void);               /* "a matching pair exists"    */
 
@@ -367,7 +373,7 @@ static void mca_trace(const char *when, const char *self)
     std::printf("[mc1] %-3s tick %u state %d step %d sweep %d (%d) "
                 "h570 %d left56c %d armed564 %d clr24f4 %d timer24ec %d "
                 "sel %p/%p head %p settled %d pair %d "
-                "touch %u/%u @%u,%u\n",
+                "touch %u/%u @%u,%u blink %d/%d\n",
                 when, g_mca_hits[6],
                 self ? *(const short *)(self + 0x60a8) : -1,
                 self ? *(const short *)(self + 0x60ae) : -1,
@@ -379,7 +385,8 @@ static void mca_trace(const char *when, const char *self)
                 (void *)data_ov006_02142500,
                 func_ov006_020f7a90(), func_ov006_020f7b90(),
                 (unsigned)data_020a0de8[idx * 4], (unsigned)data_020a0de9[idx * 4],
-                (unsigned)data_020a0dea[idx * 4], (unsigned)data_020a0deb[idx * 4]);
+                (unsigned)data_020a0dea[idx * 4], (unsigned)data_020a0deb[idx * 4],
+                data_020a0db0, data_020a0db0 & 8);
     if (self && when[0] == 'i' && (g_mca_hits[6] % 5) == 0) {
         for (int i = 0; i < 0x50; ++i) {
             const char *r = self + 0x51a8 + i * 0x30;
