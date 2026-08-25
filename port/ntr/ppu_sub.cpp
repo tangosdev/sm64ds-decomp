@@ -56,7 +56,11 @@
 //     display capture unit's frame reaches the bottom screen in the
 //     dScMgD3DBase_c family: BG2CNT_B 0x4284, direct colour, bitmap base
 //     0x8000, which is exactly where DISPCAPCNT 0x80360010 put the frame.
-//   - no bitmap OBJs (OBJ mode 3), no mosaic.
+//   - BITMAP OBJs, OBJ mode 3, direct colour, both mapping arms. They are
+//     the other half of the dual-screen 3D path: on the frames engine B
+//     drives the UPPER screen the captured frame comes back as twelve
+//     64x64 direct-colour sprites rather than as a BG.
+//   - no mosaic.
 //
 // The OBJ window used to be listed here as missing, and the line said "mode 3
 // sprites are skipped". BOTH halves were wrong: the OBJ window is mode 2, mode
@@ -471,7 +475,20 @@ void raster_obj(uint32_t dispcnt) {
         // ordinary opaque sprite. See the note over ppu.cpp's OBJ layer for
         // where the field position is pinned from the decomp's own OAM::Render.
         const unsigned objmode = (a0 >> 10) & 3;
-        if (objmode == 3) continue;                     // bitmap OBJ: not hosted
+        /* MODE 3 IS THE BITMAP SPRITE, and it used to be skipped as "not
+           hosted". It is how the display capture unit's frame reaches the
+           screen ENGINE B IS DRIVING ON THE OTHER HALF OF THE FLIP: the
+           dScMgD3DBase_c family's sel==1 arm maps the bank it captured into
+           last frame to engine B's OBJ VRAM, turns BG2 off and OBJ on, and
+           the frame comes back as TWELVE 64x64 direct-colour sprites --
+           4 x 3 of them, which is 256x192, which is 0x18000 bytes, which is
+           the capture's own size to the byte. Measured on scene 384 with the
+           block seated: 98299 of 131072 bytes nonzero in engine B's OBJ VRAM
+           and exactly 12 placed entries in its OAM.
+           Without this the upper screen is the white backdrop on every
+           second frame, which is a 30 Hz flicker rather than a missing
+           feature. */
+        const bool is_bmp = objmode == 3;
         const bool is_win = objmode == 2;
         const int shape = (a0 >> 14) & 3;
         if (shape == 3) continue;
@@ -519,6 +536,64 @@ void raster_obj(uint32_t dispcnt) {
                 // Where this 8x8 cell lives, in 32-byte tile slots from the
                 // sprite's base. 1D: consecutive. 2D: a 32-slot-wide matrix,
                 // and a 256-colour cell is two slots wide.
+                /* ---- THE BITMAP SPRITE, and it leaves before the tile
+                   arithmetic below because it has no tiles at all -- the
+                   sprite IS a rectangle of 16-bit pixels.
+
+                   GBATEK. The rows are addressed by DISPCNT bit 5, the
+                   BITMAP OBJ mapping bit, which is a different bit from the
+                   tile mapping bit 4 this file reads into map1d:
+
+                     1D (bit 5 set): the sprite's pixels are consecutive and
+                        attr2's tile number steps in units of the boundary
+                        DISPCNT bit 22 selects, 128 bytes or 256.
+                     2D (bit 5 clear): OBJ VRAM is one wide bitmap and the
+                        sprite is a window onto it. Bit 6 chooses the width,
+                        128 dots or 256, and the tile number splits into a
+                        column part and a row part accordingly.
+
+                   Engine B reads 0x...25 here on the frames that use this,
+                   so bit 5 is set (1D) and bit 22 is clear (128 bytes),
+                   which puts the twelve 64x64 sprites at tile numbers 64
+                   apart -- 8192 bytes each, back to back over the whole
+                   0x18000 the capture wrote. Both arms are here anyway: a
+                   reader that only implements the arm the one scene uses is
+                   a reader that lies the first time another scene does not.
+
+                   ALPHA. attr2 bits 12-15 are the sprite's alpha, and ZERO
+                   MEANS THE SPRITE IS NOT DISPLAYED -- the field is not a
+                   palette bank here. Per pixel, bit 15 of the colour is the
+                   opacity, the same rule the direct-colour bitmap BG uses.
+                   The 1..15 blend levels are NOT applied: this file's alpha
+                   path is BLDALPHA's EVA/EVB, a bitmap sprite's own alpha
+                   is a third mechanism, and nothing in this game asks for a
+                   value between -- the family submits its twelve at 15,
+                   fully opaque. A sprite that asked for one would draw
+                   opaque here, which is the honest failure: visible and in
+                   the right place, rather than absent. */
+                if (is_bmp) {
+                    const unsigned alpha = (a2 >> 12) & 0xF;
+                    if (!alpha) continue;
+                    uint32_t at;
+                    if ((dispcnt >> 5) & 1) {
+                        const uint32_t bnd = ((dispcnt >> 22) & 1) ? 256u : 128u;
+                        at = tile * bnd + (uint32_t)(ty * w + tx) * 2u;
+                    } else {
+                        const uint32_t wide = ((dispcnt >> 6) & 1) ? 256u : 128u;
+                        const uint32_t mask = (wide >> 3) - 1u;   /* 0x1F or 0x0F */
+                        at = ((tile & mask) * 0x10u + (tile & ~mask) * 0x80u) +
+                             ((uint32_t)ty * wide + (uint32_t)tx) * 2u;
+                    }
+                    const uint16_t v = rd16(kObjVram + at);
+                    if (!(v & 0x8000)) continue;
+                    if (g_obj[py][px].hit && prio > g_obj[py][px].prio)
+                        continue;
+                    g_obj[py][px].color = bgr555(v);
+                    g_obj[py][px].prio = prio;
+                    g_obj[py][px].hit = 1;
+                    g_obj[py][px].semi = 0;
+                    continue;
+                }
                 const uint32_t slot =
                     map1d ? (c256 ? (uint32_t)(trow * (w / 8) + tcol) * 2u
                                   : (uint32_t)(trow * (w / 8) + tcol))

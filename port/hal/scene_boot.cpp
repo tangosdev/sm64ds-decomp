@@ -433,6 +433,8 @@ void hal_sub_screen_init_hw(void *hwnd, int zoom);
 void hal_sub_screen_probe(void);
 void hal_sub_screen_frame_begin(void);
 void hal_sub_screen_present(unsigned int *dst, int w, int h);
+/* engine B's own raster, written without re-scanning; see its note */
+int hal_sub_screen_write_bmp(const char *path);
 /* THE STACKED LAYOUT (hal/sub_screen.cpp, run link60 lane DSL1): both DS
    screens full size, top above bottom, which is what a touchscreen game needs
    and the corner panel cannot give it. This file is where a run learns whether
@@ -3919,6 +3921,34 @@ extern "C" int port_scene_finish(int frames_run)
            the top engine draws into them, and calling them a gap in a capture
            line would put a gap-on word on the one picture that has none. */
         const int shift = hal_sub_screen_stacked_obj_shift();
+        /* AND WHICH ENGINE IS IN WHICH HALF, because on a scene that drives
+           POWCNT1 bit 15 the answer is a property of the LAST FRAME and not of
+           the program. A capture from one of those scenes read without this
+           line is a capture whose halves cannot be attributed. */
+        std::fprintf(stderr, "  [scene] stacked capture: POWCNT1 %04x, so the "
+                     "upper half is engine %c and the lower half engine %c\n",
+                     *(volatile unsigned short *)0x04000304,
+                     (*(volatile unsigned short *)0x04000304 & 0x8000) ? 'A' : 'B',
+                     (*(volatile unsigned short *)0x04000304 & 0x8000) ? 'B' : 'A');
+        /* THE SUB FRAMEBUFFER ON ITS OWN, beside the stacked image and under
+           the same switch. Engine B's raster is 256x192 and is the ONE thing a
+           stacked capture cannot be read back to when the halves can swap: the
+           lower half is engine A on half the frames of a D3D minigame. Writing
+           it separately is what makes "engine B produced this" a measurement.
+           Named off the stacked path with _subB before the extension. */
+        if (bmp_stacked) {
+            char sub_path[512];
+            std::snprintf(sub_path, sizeof sub_path, "%s", bmp_stacked);
+            char *dot = std::strrchr(sub_path, '.');
+            if (dot && (size_t)(dot - sub_path) + 10 < sizeof sub_path) {
+                std::memmove(dot + 5, dot, std::strlen(dot) + 1);
+                std::memcpy(dot, "_subB", 5);
+                if (hal_sub_screen_write_bmp(sub_path))
+                    std::printf("[scene] wrote %s, %dx%d: engine B's own "
+                                "raster, whichever screen it is driving\n",
+                                sub_path, ntr::SUB_W, ntr::SUB_H);
+            }
+        }
         if (img && ntr::ppu_write_bmp_px(bmp_stacked, img, iw, ih))
             std::printf("[scene] wrote %s, %dx%d: the top screen over the "
                         "bottom screen, each %dx%d, with %d row(s) of headroom "

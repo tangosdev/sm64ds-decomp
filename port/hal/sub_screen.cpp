@@ -1137,11 +1137,24 @@ void hal_screens_probe(void)
     /* the census, every 300 frames: the numbers a per-frame flip is actually
        read off, which no single sample can carry */
     if (frame % 300 == 0) {
+        /* AND THE FOUR BG-OFFSET SHADOWS WITH IT. func_02019144's tail is the
+           only thing that publishes them, and its FIRST beat is the graphics
+           block's slot 2 -- so with the block unseated the tail republished
+           frozen boot values every frame while the scene's scroll word moved.
+           Sampling them beside the display registers is what makes "the
+           offsets follow the game" a reading rather than an inference: on a
+           scrolling scene these move between censuses and on a still one they
+           do not. */
         std::fprintf(stderr,
                      "  [screens] census f%lu: %lu frame(s) with engine A on "
                      "the LOWER screen, %lu bit-15 change(s), %lu frame(s) "
-                     "entered with DISPCAPCNT armed\n",
-                     frame, lower, swaps, cap_armed);
+                     "entered with DISPCAPCNT armed; BG2 offsets A %u,%u "
+                     "B %u,%u\n",
+                     frame, lower, swaps, cap_armed,
+                     *(volatile unsigned short *)0x04000018,
+                     *(volatile unsigned short *)0x0400001a,
+                     *(volatile unsigned short *)0x04001018,
+                     *(volatile unsigned short *)0x0400101a);
         std::fflush(stderr);
     }
 }
@@ -1855,6 +1868,19 @@ void hal_sub_screen_dump(const char *path)
 {
     ntr::ppu_scanout_sub(g_sub);
     ntr::ppu_write_bmp_sub(path, g_sub);
+}
+
+/* THE SAME PICTURE WITHOUT RE-SCANNING, and the difference matters. The dump
+   above rasterises engine B again before writing, which is right for a debug
+   hook asked for out of nowhere and WRONG for a capture taken beside a stacked
+   image: a second scan-out reads the registers as they stand now, and on a
+   scene whose slot 24 rewrites DISPCNT_B every frame that is a different frame's
+   configuration. This writes the buffer the frame actually presented.
+   Returns 0 when no frame has been scanned out yet. */
+int hal_sub_screen_write_bmp(const char *path)
+{
+    if (!g_ready) return 0;
+    return ntr::ppu_write_bmp_sub(path, g_sub) ? 1 : 0;
 }
 
 /* What engine B is actually configured to do, printed once. The bottom screen
