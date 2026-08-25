@@ -1,5 +1,5 @@
-#include "TextureSequence.h"
 //cpp
+#include "TextureSequence.h"
 // NONMATCHING: constant / value (div=6). Logic verified correct vs ROM; not
 // byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
 // Counts as decompiled, not matched.
@@ -7,7 +7,10 @@ struct BMD_File;
 struct BTP_File;
 struct BCA_File;
 struct dActor_c;
-struct Vector3 { int x, y, z; };
+/* Vector3 comes from types.h through TextureSequence.h; the local shadow
+   `struct Vector3 { int x, y, z; }` collided with it and this file has not
+   compiled since. Fix12i is `s32`, so the header type is layout- and
+   value-identical -- the Q12 literals below are unchanged. */
 struct SharedFilePtr { void *hdr; void *ptr; };
 
 struct BMD_File;
