@@ -55,11 +55,11 @@ struct MadPiano {
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgCh_Actr mWithMeshClsn;            /* 0x50c */
     u8  pad_6c8[0x4];
-    s32 unk_6cc;            /* 0x6cc */
+    s32 mMinPosY;            /* 0x6cc */
     u8  pad_6d0[0x4];
-    s32 unk_6d4;            /* 0x6d4 */
-    s32 unk_6d8;            /* 0x6d8 */
-    s32 unk_6dc;            /* 0x6dc */
+    s32 mHomePosX;            /* 0x6d4 */
+    s32 mHomePosY;            /* 0x6d8 */
+    s32 mHomePosZ;            /* 0x6dc */
     /* trailing extent the ROM's `new MadPiano` literal proves; see tools/opnew_sizes.py */
     u8 pad_6e0[0x4];
 #ifdef __cplusplus

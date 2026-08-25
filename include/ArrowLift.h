@@ -20,7 +20,7 @@ struct ArrowLift {
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x34];
-    s32 unk_320;            /* 0x320 */
+    s32 mTravelDist;            /* 0x320 */
     /* trailing extent the ROM's `new ArrowLift` literal proves; see tools/opnew_sizes.py */
     u8 pad_324[0x4];
 #ifdef __cplusplus

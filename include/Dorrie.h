@@ -55,9 +55,9 @@ struct Dorrie {
     s32 mHomePosZ;           /* 0x1188 */
     s32 mClsnPlayer;           /* 0x118c */
     s32 mRider;           /* 0x1190 */
-    s32 unk_1194;           /* 0x1194 */
-    s32 unk_1198;           /* 0x1198 */
-    s32 unk_119c;           /* 0x119c */
+    s32 mSpawnPosX;           /* 0x1194 */
+    s32 mSpawnPosY;           /* 0x1198 */
+    s32 mSpawnPosZ;           /* 0x119c */
     u8  pad_11a0[0x8];
     s32 mPushDownHeight;           /* 0x11a8 */
     s32 mSinkHeight;           /* 0x11ac */

@@ -1,7 +1,7 @@
 //cpp
 // @symbol _ZN18NestedHeapIterator19RecursiveFindNestedEPv
 /* NestedHeapIterator::RecursiveFindNested -- walk this list and, for the first
- * node whose [unk_018, unk_01c) range contains addr, recurse into that node's
+ * node whose [mStart, mEnd) range contains addr, recurse into that node's
  * own nested list before falling back to the node itself.
  *
  * The recursion target is `(char *)cur + 0xc', a NestedHeapIterator embedded in
@@ -21,7 +21,7 @@ void *NestedHeapIterator::RecursiveFindNested(void *addr)
 {
     HeapAllocator *cur = (HeapAllocator *)Next(0);
     while (cur != 0) {
-        if (cur->unk_018 <= addr && addr < cur->unk_01c) {
+        if (cur->mStart <= addr && addr < cur->mEnd) {
             void *r = ((NestedHeapIterator *)((char *)cur + 0xc))->RecursiveFindNested(addr);
             if (r == 0) r = cur;
             return r;

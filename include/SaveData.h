@@ -37,7 +37,7 @@ struct SaveData {
        +0x8. The u8 was the marker the generator emitted, not the width. */
     s32 flags2;
     u8  pad_00c[0x35];
-    u8  unk_041;            /* 0x041 -- current character */
+    u8  mCharacter;            /* 0x041 -- current character */
     u8  unk_042;            /* 0x042 */
 #ifdef __cplusplus
     /* methods */

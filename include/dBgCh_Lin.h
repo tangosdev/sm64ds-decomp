@@ -117,7 +117,7 @@ struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
 
 struct dBgCh_Lin {
     u8  pad_000[0x10];
-    u8  unk_010;            /* 0x010 - the dBgPi base starts here */
+    u8  mBgPiBase;            /* 0x010 - the dBgPi base starts here */
     u8  pad_011[0x27];
     /* NOT a bare Vector3, despite DetectClsn reading three words here: the
        destructor destroys something at 0x38 via func_ov002_020feab8, so a
@@ -134,7 +134,7 @@ struct dBgCh_Lin {
        Its two accessors are named BACKWARDS in some notes. Read the bodies:
          func_ov002_020fea4c  a[0..2] = b[3..5]  -> reads 0x44  -> GetEnd
          func_ov002_020fea68  a[0..2] = b[0..2]  -> reads 0x38  -> GetStart */
-    u8  unk_038;            /* 0x038 -- dM3dGLin base: start 0x38, end 0x44 */
+    u8  mLineBase;            /* 0x038 -- dM3dGLin base: start 0x38, end 0x44 */
     u8  pad_039[0x17];
     u8  hasClsn;            /* 0x050 */
     u8  pad_051[0x3];

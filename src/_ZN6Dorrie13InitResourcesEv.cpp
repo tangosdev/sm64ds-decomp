@@ -64,9 +64,9 @@ int Dorrie::InitResources()
     }
 
     {
-        unk_1194 = mPosX;
-        unk_1198 = mPosY;
-        unk_119c = mPosZ;
+        mSpawnPosX = mPosX;
+        mSpawnPosY = mPosY;
+        mSpawnPosZ = mPosZ;
         /* cast launder: materialize add r2,sl,#0x5c; ldr/str [r2] */
         *(int*)(((int)((char*)this) + 0x5c)) += 0x7d0000;
     }

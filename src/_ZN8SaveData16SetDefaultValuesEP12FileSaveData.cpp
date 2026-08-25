@@ -26,7 +26,7 @@ void SaveData::SetDefaultValues(FileSaveData* fsd_)
 {
     func_0205a588(((void*)this), 0, 0x44);
     *(int*)((void*)this) = 0x30303038;      /* magic8000, via `this` */
-    *(unsigned char*)((char*)&unk_041) = 3;
+    *(unsigned char*)((char*)&mCharacter) = 3;
     *(int*)((char*)&flags2) |= 8;
     *(unsigned char*)((char*)&unk_042) = 0;
 }

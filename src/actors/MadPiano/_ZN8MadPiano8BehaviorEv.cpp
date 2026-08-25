@@ -33,13 +33,13 @@ int MadPiano::Behavior()
 {
   func_ov063_0211ddf4(((char*)this));
   ((struct dActor_c*)((char*)this))->UpdatePos(0);
-  if (Vec3_HorzDist((struct Vector3*)((char*)&unk_6d4), (struct Vector3*)((char*)&mPosX)) > 0x180000) {
+  if (Vec3_HorzDist((struct Vector3*)((char*)&mHomePosX), (struct Vector3*)((char*)&mPosX)) > 0x180000) {
     mPosX = mPrevPosX;
     mPosY = mPrevPosY;
     mPosZ = mPrevPosZ;
   }
   {
-    int r1 = unk_6cc;
+    int r1 = mMinPosY;
     if (mPosY <= r1) mPosY = r1;
   }
   dBgCh_Actr_UpdateContinuous_Veneer((char*)&mWithMeshClsn);

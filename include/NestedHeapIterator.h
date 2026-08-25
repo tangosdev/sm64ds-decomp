@@ -15,7 +15,7 @@ struct node_;
 struct NestedHeapIterator {
     u8  pad_000[0x4];
     s32 mLast;            /* 0x004 */
-    u8  unk_008;            /* 0x008 */
+    u8  mCount;            /* 0x008 */
     u8  pad_009[0x1];
     u16 mLinkOffset;            /* 0x00a */
 #ifdef __cplusplus

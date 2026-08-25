@@ -7,10 +7,10 @@ extern int _ZTV9dBgCh_Lin[];
 extern int VTable_dBgPi_dBgCh_LinThunk[];
 int *_ZN9dBgCh_LinD1Ev(struct dBgCh_Lin *self) {
     ((int *)self)[0] = (int)_ZTV9dBgCh_Lin;
-    *(int *)((char *)&self->unk_010) = (int)VTable_dBgPi_dBgCh_LinThunk;
+    *(int *)((char *)&self->mBgPiBase) = (int)VTable_dBgPi_dBgCh_LinThunk;
     _ZN8dM3dGSphD1Ev((char *)&self->mBoundSphere);
-    func_ov002_020feab8((char *)&self->unk_038);
-    _ZN5dBgPiD2Ev((char *)&self->unk_010);
+    func_ov002_020feab8((char *)&self->mLineBase);
+    _ZN5dBgPiD2Ev((char *)&self->mBgPiBase);
     func_020354d0(((int *)self));
     return ((int *)self);
 }

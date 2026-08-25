@@ -15,8 +15,8 @@ int TtcRotatingCube::CleanupResources()
     if (((dBgW *)((char*)&mMovingMeshCollider))->IsEnabled()) {
         ((dBgW *)((char*)&mMovingMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(data_ov065_0211c0a8[unk_377]))->Release();
-    ((SharedFilePtr *)(data_ov065_0211cfd0[unk_377].p))->Release();
-    ((SharedFilePtr *)(data_ov065_0211cfd4[unk_377].p))->Release();
+    ((SharedFilePtr *)(data_ov065_0211c0a8[mVariant]))->Release();
+    ((SharedFilePtr *)(data_ov065_0211cfd0[mVariant].p))->Release();
+    ((SharedFilePtr *)(data_ov065_0211cfd4[mVariant].p))->Release();
     return 1;
 }

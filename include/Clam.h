@@ -29,7 +29,7 @@ struct Clam {
     u8  mState;            /* 0x16c */
     u8  pad_16d[0x1];
     u16 mStateTimer;            /* 0x16e */
-    u16 unk_170;            /* 0x170 */
+    u16 mShutTimer;            /* 0x170 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();

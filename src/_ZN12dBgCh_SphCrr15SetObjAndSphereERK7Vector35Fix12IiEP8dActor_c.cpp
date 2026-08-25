@@ -16,5 +16,5 @@ extern "C" void _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c
     func_0203abd4((int *)&(dM3dGSph &)*self, (int *)pos, radius);
     func_020353b0((char *)self, actor);
     func_02037b5c((char *)self);
-    self->unk_108 = 0x1000;
+    self->mScale = 0x1000;
 }

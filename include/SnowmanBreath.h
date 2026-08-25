@@ -32,9 +32,9 @@ struct SnowmanBreath {
     Player *mTalkPlayer;           /* 0x13c4 */
     u8  pad_13c8[0x4];
     s32 mSoundHandle;           /* 0x13cc */
-    u8  unk_13d0;           /* 0x13d0 */
+    u8  mTalkDone;           /* 0x13d0 */
     u8  pad_13d1[0x1];
-    u8  unk_13d2;           /* 0x13d2 */
+    u8  mState;           /* 0x13d2 */
     u8  unk_13d3;           /* 0x13d3 */
 #ifdef __cplusplus
     /* methods */

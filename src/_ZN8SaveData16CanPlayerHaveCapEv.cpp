@@ -7,7 +7,7 @@
  * True when the current character can wear a cap at all: character 3 (Wario)
  * never can, and a second global at 0x0209f2d8 gates it besides. Both are read
  * as raw globals because neither has a friendly symbol yet; the byte at +0x41
- * of the save block is the current character, which SaveData.h names unk_041.
+ * of the save block is the current character, which SaveData.h names mCharacter.
  */
 extern "C" {
 extern unsigned char data_0209caa0[];

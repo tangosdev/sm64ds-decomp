@@ -26,7 +26,7 @@ struct Coffin {
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  unk_2ec;            /* 0x2ec */
+    u8  mClsnMat;            /* 0x2ec */
     /* trailing extent the ROM's `new Coffin` literal proves; see tools/opnew_sizes.py */
     u8 pad_2f0[0x3c];
 #ifdef __cplusplus

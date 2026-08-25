@@ -14,5 +14,5 @@ void NestedHeapIterator::Init(HeapAllocator * a_)
   *((int *) new_var) = 0;
   *((int *) ((char *)this)) = (int) a;
   *((int *) ((char *)&mLast)) = (int) a;
-  *(unsigned short *)((char *)&unk_008) += 1;
+  *(unsigned short *)((char *)&mCount) += 1;
 }

@@ -31,7 +31,7 @@ void BowserPuzzlePiece::InitResources()
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         ((char*)this) + 0x124,
         _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov064_0211c800),
-        *(const Matrix4x3*)((char*)&unk_2ec), 0x1000, mAngleY, data_ov064_0211baac);
+        *(const Matrix4x3*)((char*)&mClsnMat), 0x1000, mAngleY, data_ov064_0211baac);
     func_020393c4((int*)((char*)&mMovingMeshCollider), (int)&func_ov064_021192bc);
     mStateInfo = data_ov064_0211c198[mType];
     mStateIndex = 0;

@@ -23,7 +23,7 @@ struct MontyMoleRock : dEnemyBase_c {
     Model mModel;                     /* 0x110 */
     dCcAc_c mdCcAc_c;/* 0x160 */
     dBgCh_Actr mWithMeshClsn;       /* 0x194 */
-    u8 unk_350;                       /* 0x350 */
+    u8 mIsSmall;                       /* 0x350 */
 
     /* --- vtable --- */
     virtual ~MontyMoleRock();
@@ -63,7 +63,7 @@ struct MontyMoleRock {
        dBgCh_Actr's D1 at +0x194 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN13MontyMoleRockD1Ev.c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x194 */
-    u8  unk_350;            /* 0x350 */
+    u8  mIsSmall;            /* 0x350 */
 };
 
 #endif /* __cplusplus */

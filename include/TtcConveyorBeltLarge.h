@@ -32,7 +32,7 @@ struct TtcConveyorBeltLarge {
        recovered by tools/dtor_members.py. D1 and not D2, so it is this type and not an
        inlined base. */
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  unk_2ec;            /* 0x2ec */
+    u8  mClsnMat;            /* 0x2ec */
     u8  pad_2ed[0x33];
     /* TextureTransformer member. The cartridge's own ~TtcConveyorBeltLarge calls
        _ZN18TextureTransformerD1Ev at +0x320 (D0/D1), a relocation the ROM build checks;
@@ -47,9 +47,9 @@ struct TtcConveyorBeltLarge {
     u8  pad_35c[0x30];
     s32 mBeltSpeed;            /* 0x38c */
     s32 mTargetBeltSpeed;            /* 0x390 */
-    s32 unk_394;            /* 0x394 */
-    s32 unk_398;            /* 0x398 */
-    s16 unk_39c;            /* 0x39c */
+    s32 mGroundY;            /* 0x394 */
+    s32 mSoundHandle;            /* 0x398 */
+    s16 mDirectionTimer;            /* 0x39c */
     u8  mVariant;            /* 0x39e */
 #ifdef __cplusplus
     /* methods */

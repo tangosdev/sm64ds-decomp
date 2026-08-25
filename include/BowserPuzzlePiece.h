@@ -21,7 +21,7 @@ struct BowserPuzzlePiece {
        dBgW_KcMbg's D1 at +0x124 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN17BowserPuzzlePieceD1Ev.c] */
     dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
-    u8  unk_2ec;            /* 0x2ec */
+    u8  mClsnMat;            /* 0x2ec */
     u8  pad_2ed[0x37];
     s32 mStateInfo;            /* 0x324 */
     u8  mStateIndex;            /* 0x328 */

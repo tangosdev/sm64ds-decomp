@@ -7,7 +7,7 @@
  * frame, and the scratch dBgCh_Lin at 0x020a0d0c is aimed between them, so
  * the base dBgW_Kc::DetectClsn(dBgCh_Lin&) does the work.
  *
- * How far down to look is the interesting part. It starts at unk_04c, the
+ * How far down to look is the interesting part. It starts at mProbeHeight, the
  * caller's search depth; but if the caller already HAS a hit (hasClsn), the
  * drop to that existing hit bounds the search instead, whenever that is
  * shorter. So a collider can only improve on the caller's best floor, never
@@ -45,7 +45,7 @@ int dBgW_KcMbg::DetectClsn(dBgCh_Gnd & ray_)
   sp0x24[0] = sp0xc[0];
   sp0x24[1] = sp0xc[1];
   sp0x24[2] = sp0xc[2];
-  int b4c = ray->unk_04c;
+  int b4c = ray->mProbeHeight;
   if (ray->hasClsn != 0) {
     int diff = *(volatile int*)&sp0xc[1] - *(int*)&ray->clsnY;
     if (diff < b4c) b4c = diff;

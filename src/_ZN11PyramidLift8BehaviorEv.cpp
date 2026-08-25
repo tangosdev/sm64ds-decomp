@@ -24,7 +24,7 @@ int PyramidLift::Behavior()
         int idx = t >> 4;
         int s = *(short*)((char*)data_02082214 + (idx << 2));
         int d = (int)(((long long)s * 0xa + 0x800) >> 0xc);
-        mPosY = unk_374 + d;
+        mPosY = mBasePosY + d;
         if (mShakeTimer == 8) {
             mState = 2;
             mVertSpeed = -0xa000;

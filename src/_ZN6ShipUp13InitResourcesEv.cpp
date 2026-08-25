@@ -40,7 +40,7 @@ int ShipUp::InitResources()
         func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     }
     ((dBgW *)(((char*)this)+0x124))->Enable((dActor_c *)(((char*)this)));
-    unk_324 = 0;
+    mSoundHandle = 0;
     unk_328 = 0;
     if (data_0209f220 > 1) {
         if (IsStarCollected(SublevelToLevel(8), 1) != 0) {

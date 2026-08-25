@@ -34,7 +34,7 @@
 
 struct SolidHeapAllocator {
     u8  pad_000[0x18];
-    s32 unk_018;            /* 0x018 */
+    s32 mStart;            /* 0x018 */
     s32 mEnd;               /* 0x01c */
     s32 unk_020;            /* 0x020 */
     u8  mFreeRegion;        /* 0x024 -- really a {begin, end, tail} triple; the

@@ -13,7 +13,7 @@ void* _ZN18SolidHeapAllocatorC1EPvj(struct SolidHeapAllocator *self, void* ptr, 
     fl = (struct FreeList *)((char *)&self->mFreeRegion);
     _ZN13HeapAllocatorC1EjPvPvj(((void*)self), 0x46524d48, (char *)fl + 0xc, ptr, size);
     *(void **)(fl) =
-        *(void **)((char *)&self->unk_018);
+        *(void **)((char *)&self->mStart);
     fl->end = *(void **)((char *)&self->mEnd);
     fl->flags = 0;
     return ((void*)self);

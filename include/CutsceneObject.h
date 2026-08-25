@@ -39,9 +39,9 @@ struct CutsceneObject {
     s16 mDeathTableID;                 /* 0x0ce */
     u8  pad_0d0[0xc];
     s32 mModel;            /* 0x0dc */
-    u8  unk_0e0;            /* 0x0e0 */
+    u8  mModel2;            /* 0x0e0 */
     u8  pad_0e1[0x21];
-    u8  unk_102;            /* 0x102 */
+    u8  mOpacity;            /* 0x102 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();

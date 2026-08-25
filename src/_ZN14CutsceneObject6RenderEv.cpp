@@ -36,7 +36,7 @@ int CutsceneObject::Render()
     } while ((unsigned)i < 3u);
     return 1;
   }
-  unsigned char op = unk_102;
+  unsigned char op = mOpacity;
   if (op == 0) return 1;
   {
     void* a = *(void**)((char*)&mModel);
@@ -45,12 +45,12 @@ int CutsceneObject::Render()
       _ZN9ModelBase12ApplyOpacityEj(a, op, 0);
       ((ModelBase*)*(void**)((char*)&mModel))->m((int)((char*)&mScaleX));
     } else {
-      void* b = *(void**)((char*)&unk_0e0);
+      void* b = *(void**)((char*)&mModel2);
       if (b != 0){
         b = (void*)((int)b);
         func_ov002_020f65b8(b);
-        _ZN9ModelBase12ApplyOpacityEj(*(void**)((char*)&unk_0e0), unk_102, 0);
-        ((ModelBase*)*(void**)((char*)&unk_0e0))->m((int)((char*)&mScaleX));
+        _ZN9ModelBase12ApplyOpacityEj(*(void**)((char*)&mModel2), mOpacity, 0);
+        ((ModelBase*)*(void**)((char*)&mModel2))->m((int)((char*)&mScaleX));
       }
     }
   }

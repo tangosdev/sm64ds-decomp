@@ -121,7 +121,7 @@ int TtcConveyorBeltLarge::InitResources()
     e = mVariant;
     kf = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(
         data_ov065_0211d198[e].a);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((dBgW_KcMbg *)((char *)&mMeshCollider), (KCL_File *)kf, *(Matrix4x3 *)((char *)&unk_2ec), 0x199, mAngleY, *(CLPS_Block *)data_ov065_0211d19c[e].a);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((dBgW_KcMbg *)((char *)&mMeshCollider), (KCL_File *)kf, *(Matrix4x3 *)((char *)&mClsnMat), 0x199, mAngleY, *(CLPS_Block *)data_ov065_0211d19c[e].a);
 
     func_020393c4(
         ((char *)this) + 0x124,
@@ -146,10 +146,10 @@ int TtcConveyorBeltLarge::InitResources()
         dBgCh_Gnd rg;
 
         rg.SetObjAndPos(*(Vector3 *)&v, (dActor_c *)0);
-        unk_394 = v.y;
+        mGroundY = v.y;
 
         if (rg.DetectClsn() != 0)
-            unk_394 = rg.result;
+            mGroundY = rg.result;
     }
 
     return 1;

@@ -7,5 +7,5 @@
 void Timer::StartTimer()
 {
   mIsRunning = 1;
-  unk_000 = func_02059650() - unk_000;
+  mTime = func_02059650() - mTime;
 }

@@ -41,7 +41,7 @@ struct dBgW_KcMbg : dBgW_Kc {
     Vector3 velocity;          /* 0x124 */
     u32 unk_130;              /* 0x130 */
     Matrix4x3 newScaledMat;    /* 0x134 */
-    s32 unk_164;               /* 0x164 - func_02053200(scale) */
+    s32 invScale;               /* 0x164 - func_02053200(scale) */
     Matrix4x3 invScaledMat;    /* 0x168 */
     Matrix4x3 prevInvScaledMat;/* 0x198 */
 
@@ -114,7 +114,7 @@ struct dBgW_KcMbg {
     Vector3 velocity;          /* 0x124 */
     u32 unk_130;               /* 0x130 */
     Matrix4x3 newScaledMat;    /* 0x134 */
-    s32 unk_164;               /* 0x164 */
+    s32 invScale;               /* 0x164 */
     Matrix4x3 invScaledMat;    /* 0x168 */
     Matrix4x3 prevInvScaledMat;/* 0x198 */
 };

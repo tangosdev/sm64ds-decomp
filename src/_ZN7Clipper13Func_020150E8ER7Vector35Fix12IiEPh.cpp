@@ -27,8 +27,8 @@ extern "C" int _ZN7Clipper13Func_020150E8ER7Vector35Fix12IiEPh(Clipper *thiz, Ve
         long long d;
 
         negZ = -v->z;
-        if (negZ < thiz->unk_050 - clip) goto fail1;
-        if (negZ > thiz->unk_054 + clip) goto fail1;
+        if (negZ < thiz->mNearZ - clip) goto fail1;
+        if (negZ > thiz->mFarZ + clip) goto fail1;
 
         first = *hint & 3;
         x = v->x;
@@ -61,8 +61,8 @@ extern "C" int _ZN7Clipper13Func_020150E8ER7Vector35Fix12IiEPh(Clipper *thiz, Ve
         int negZ;
 
         negZ = -v->z;
-        if (negZ < thiz->unk_050 - clip) goto fail2;
-        if (negZ > thiz->unk_054 + clip) goto fail2;
+        if (negZ < thiz->mNearZ - clip) goto fail2;
+        if (negZ > thiz->mFarZ + clip) goto fail2;
 
         if ((int)(((long long)v->z * thiz->mPlaneNormals[0].z + 0x800) >> 12)
             + ((int)(((long long)v->x * thiz->mPlaneNormals[0].x + 0x800) >> 12)

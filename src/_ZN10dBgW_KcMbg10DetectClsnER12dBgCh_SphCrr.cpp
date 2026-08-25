@@ -5,11 +5,11 @@
  * Vtable slot 8, and the same trick as the other two overloads: move the query
  * into the collider's local frame rather than moving the mesh. The caller's
  * sphere centre is transformed by func_02039e48 and its radius scaled by
- * unk_164, a local dBgCh_SphCrr is aimed at the result, and the base
+ * invScale, a local dBgCh_SphCrr is aimed at the result, and the base
  * dBgW_Kc::DetectClsn does the work against the static mesh.
  *
  * Coming back out is the part that is not symmetric. The push-out vector pair
- * is scaled by `scale` -- the collider's own uniform scale, NOT unk_164 which
+ * is scaled by `scale` -- the collider's own uniform scale, NOT invScale which
  * scaled the radius on the way in -- and the three result slots are merged
  * INDEPENDENTLY, each behind its own bit of dBgCh_SphCrr::flags:
  *
@@ -81,8 +81,8 @@ int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr & sphere_)
     _ZN12dBgCh_SphCrrC1Ev(&loc);
     func_02039e48(this, &sphere->centre, pos);
     _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(&loc, pos,
-        FMUL(*(int*)&sphere->radius, unk_164), 0);
-    loc.f_ec = FMUL(sphere->unk_0ec, unk_164);
+        FMUL(*(int*)&sphere->radius, invScale), 0);
+    loc.f_ec = FMUL(sphere->unk_0ec, invScale);
     func_02037940(&loc, sphere->flags);
     func_02035394(&loc, sphere);
     r = dBgW_Kc::DetectClsn(*(dBgCh_SphCrr*)&loc);

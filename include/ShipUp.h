@@ -25,9 +25,9 @@ struct ShipUp {
     u8  pad_2ec[0x32];
     u8  mModelIndex;            /* 0x31e */
     u8  pad_31f[0x1];
-    u16 unk_320;            /* 0x320 */
+    u16 mBobAngle;            /* 0x320 */
     u8  pad_322[0x2];
-    s32 unk_324;            /* 0x324 */
+    s32 mSoundHandle;            /* 0x324 */
     u16 unk_328;            /* 0x328 */
 #ifdef __cplusplus
     /* methods */

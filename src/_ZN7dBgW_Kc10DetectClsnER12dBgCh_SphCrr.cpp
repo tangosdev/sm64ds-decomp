@@ -689,7 +689,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                         if (!contactKind) contactKind = k2;
 
                     face:
-                        if (sphere.unk_108 < sn.y) continue;
+                        if (sphere.mScale < sn.y) continue;
 
                         /* Walls only, and only once the cheap tests have accepted
                            the prism. Rebuild the triangle's three real vertices --

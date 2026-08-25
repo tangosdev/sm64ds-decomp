@@ -40,18 +40,18 @@ int PyramidLift::InitResources()
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov025_02113ad8);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char*)this)+0x124, kcl, (Matrix4x3*)((char*)&unk_2ec), 0x199, mAngleY, &data_ov025_02112d08);
+        ((char*)this)+0x124, kcl, (Matrix4x3*)((char*)&mClsnMat), 0x199, mAngleY, &data_ov025_02112d08);
     func_020393d4(((char*)this)+0x124, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     func_020393c4(((char*)this)+0x124, &func_ov025_021125dc);
     {
         int n;
         char *ip;
         int k;
-        unk_370 = mPosX;
+        mBasePosX = mPosX;
         n = 0;
-        unk_374 = mPosY;
+        mBasePosY = mPosY;
         ip = ((char*)this);
-        unk_378 = mPosZ;
+        mBasePosZ = mPosZ;
         mState = (unsigned char)n;
         mHadClsn = (unsigned char)n;
         k = 0x1cc000;

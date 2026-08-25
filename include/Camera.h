@@ -45,15 +45,15 @@ struct Camera {
     Vector3 savedLookAt;            /* 0x0b0 */
     Vector3 savedPos;            /* 0x0bc */
     u8  pad_0c8[0x48];
-    s32 unk_110;            /* 0x110 */
+    s32 mTargetPlayer;            /* 0x110 */
     u8  pad_114[0x24];
     /* Current state. ChangeState compares its argument against this, and only
        swaps it -- and clears unk_1a6 -- when they differ. */
     struct State* mState;            /* 0x138 */
-    s32 unk_13c;            /* 0x13c */
+    s32 mState_13c;            /* 0x13c */
     u8  pad_140[0x8];
     /* Owned; CleanupResources deletes it. */
-    void* unk_148;            /* 0x148 */
+    void* mFixedViewPos;            /* 0x148 */
     u8  pad_14c[0x8];
     /* Flag word. Bit 0 is under-water (Camera::IsUnderwater returns it
        masked, not normalised); 0x10 vetoes a state change; 0x4000 records

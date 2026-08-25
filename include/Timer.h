@@ -14,7 +14,7 @@ struct Timer {
        value looks like on a target with no 64-bit register, so it corroborates
        rather than contradicts. Splitting it is why three of the four methods had to
        spell `*(s64*)((char*)this)`. */
-    s64 unk_000;            /* 0x000 */
+    s64 mTime;            /* 0x000 */
     u8  mIsRunning;            /* 0x008 */
 #ifdef __cplusplus
     /* methods */

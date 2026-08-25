@@ -49,7 +49,7 @@ struct dBgCh_Gnd : dBgCh, dBgPi {
     Fix12i clsnY;           /* 0x044 */
     u8  hasClsn;            /* 0x048 */
     u8  pad_049[0x3];
-    s32 unk_04c;            /* 0x04c */
+    s32 mProbeHeight;            /* 0x04c */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     /* DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the key-function
@@ -78,7 +78,7 @@ typedef char dBgCh_Gnd_size_must_be_0x50[sizeof(dBgCh_Gnd) == 0x50 ? 1 : -1];
 
 struct dBgCh_Gnd {
     u8  pad_000[0x10];
-    u8  unk_010;            /* 0x010 - first byte of the 0x28-byte dBgPi
+    u8  mBgPiBase;            /* 0x010 - first byte of the 0x28-byte dBgPi
                                        the hit is written into; kept as a byte
                                        because RaycastGroundC1/D1 spell it */
     u8  pad_011[0x27];
@@ -86,7 +86,7 @@ struct dBgCh_Gnd {
     Fix12i clsnY;           /* 0x044 */
     u8  hasClsn;            /* 0x048 */
     u8  pad_049[0x3];
-    s32 unk_04c;            /* 0x04c */
+    s32 mProbeHeight;            /* 0x04c */
 
 #ifdef __cplusplus
     /* methods */

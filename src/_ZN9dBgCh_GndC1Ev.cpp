@@ -10,7 +10,7 @@
  *                           derived class's primary block and its one
  *                           secondary thunk block, written over whatever the
  *                           base ctors left behind
- *   unk_04c = 0x1f4000      the only state this constructor itself supplies:
+ *   mProbeHeight = 0x1f4000      the only state this constructor itself supplies:
  *                           the default probe height, a Fix12i of 496.0
  *
  * Everything except that last store is synthesized: declaring the two bases
@@ -21,4 +21,4 @@
  */
 #include "dBgCh_Gnd.h"
 
-dBgCh_Gnd::dBgCh_Gnd() : unk_04c(0x1f4000) {}
+dBgCh_Gnd::dBgCh_Gnd() : mProbeHeight(0x1f4000) {}

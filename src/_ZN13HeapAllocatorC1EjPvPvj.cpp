@@ -15,8 +15,8 @@ extern void _ZN18NestedHeapIterator7AddLastEP13HeapAllocator(void* iter, void* n
 
 void _ZN13HeapAllocatorC1EjPvPvj(struct HeapAllocator *self, u32 magic, void* a, void* b, unsigned short size) {
     *(u32*)((char*)self) = magic;
-    *(void**)((char*)&self->unk_018) = a;
-    *(void**)((char*)&self->unk_01c) = b;
+    *(void**)((char*)&self->mStart) = a;
+    *(void**)((char*)&self->mEnd) = b;
     self->unk_020 = 0;
     {
         u32* p = (u32*)((char*)&self->unk_020);

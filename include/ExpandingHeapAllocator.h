@@ -25,8 +25,8 @@ struct ExpandingHeapAllocator {
     s32 unk_00c;            /* 0x00c */
     u8  unk_010;            /* 0x010 */
     u8  pad_011[0x7];
-    s32 unk_018;            /* 0x018 */
-    s32 unk_01c;            /* 0x01c */
+    s32 mStart;            /* 0x018 */
+    s32 mEnd;            /* 0x01c */
     s32 unk_020;            /* 0x020 */
     u8  unk_024;            /* 0x024 */
     u8  pad_025[0x7];

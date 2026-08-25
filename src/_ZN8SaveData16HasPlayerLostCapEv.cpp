@@ -15,5 +15,5 @@ int SaveData::HasPlayerLostCap()
 {
     if (!SaveData::CanPlayerHaveCap())
         return 0;
-    return data_0209caa0.flags1 & (0x1000000u << data_0209caa0.unk_041);
+    return data_0209caa0.flags1 & (0x1000000u << data_0209caa0.mCharacter);
 }

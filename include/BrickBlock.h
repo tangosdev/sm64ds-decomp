@@ -13,9 +13,9 @@ struct BrickBlock {
     u8  pad_00e[0xc6];
     s8  unk_0d4;            /* 0x0d4 */
     u8  unk_0d5;            /* 0x0d5 */
-    u8  unk_0d6;            /* 0x0d6 */
-    u8  unk_0d7;            /* 0x0d7 */
-    u8  unk_0d8;            /* 0x0d8 */
+    u8  mActionPending;            /* 0x0d6 */
+    u8  mActionIndex;            /* 0x0d7 */
+    u8  mIsAttached;            /* 0x0d8 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();

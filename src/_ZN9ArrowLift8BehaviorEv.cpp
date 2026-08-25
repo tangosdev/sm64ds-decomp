@@ -31,8 +31,8 @@ int ArrowLift::Behavior()
             int* p = (int*)(((int)((u8*)this) + 0x320));
             *p = *p + mHorzSpeed;
         }
-        if (unk_320 >= 0x177000) {
-            unk_320 = 0;
+        if (mTravelDist >= 0x177000) {
+            mTravelDist = 0;
             {
                 u8* p = (u8*)(((int)((u8*)this) + 0x327));
                 *p = *p + 1;

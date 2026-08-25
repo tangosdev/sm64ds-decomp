@@ -20,6 +20,6 @@ void NestedHeapIterator::AddLast(HeapAllocator * a_)
         last = mLast;
         *(int *)((char *)last + link_off + 4) = (int)a;
         mLast = (int)a;
-        *(unsigned short *)(int)((char *)&unk_008) += 1;
+        *(unsigned short *)(int)((char *)&mCount) += 1;
     }
 }

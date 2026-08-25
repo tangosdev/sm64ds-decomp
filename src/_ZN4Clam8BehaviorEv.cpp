@@ -64,7 +64,7 @@ int Clam::Behavior()
             u.shutPuff[1] = u.shutPuff[1] + 0x32000;
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x10c,
                 u.shutPuff[0], u.shutPuff[1], u.shutPuff[2]);
-            unk_170 = 0xa;
+            mShutTimer = 0xa;
             mStateTimer = 0;
             *(int *)&mdCcAc_c.flags &= ~1;
         } else {
@@ -82,8 +82,8 @@ int Clam::Behavior()
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char *)&mModelAnim,
                     *(int *)(data_ov064_0211c9cc + 4), 0x40000000, 0x1000, 0);
             } else {
-                if (unk_170 != 0)
-                    unk_170--;
+                if (mShutTimer != 0)
+                    mShutTimer--;
             }
         }
         break;

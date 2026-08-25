@@ -47,8 +47,8 @@ int SnowmanBreath::Behavior()
         return 1;
     }
 
-    if (unk_13d0 == 0) {
-        switch (unk_13d2) {
+    if (mTalkDone == 0) {
+        switch (mState) {
         case 0:
             if (func_ov027_02112618(((char *)this)) == 0) {
                 break;
@@ -79,7 +79,7 @@ int SnowmanBreath::Behavior()
         case 2:
             if (_ZN6Player12GetTalkStateEv(*(void **)((char *)&mTalkPlayer)) == -1) {
                 _ZN6Player18HasFinishedTalkingEv(*(void **)((char *)&mTalkPlayer));
-                unk_13d0 = 1;
+                mTalkDone = 1;
             }
             break;
         }

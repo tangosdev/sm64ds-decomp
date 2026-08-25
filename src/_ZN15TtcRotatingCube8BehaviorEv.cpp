@@ -19,7 +19,7 @@ extern int data_0209e650;
 int TtcRotatingCube::Behavior()
 {
     if (data_0209f2c0 != 3) {
-        switch (unk_376) {
+        switch (mState) {
         case 0:
             if (DecIfAbove0_Short((u16 *)((char *)&mWaitTimer)) != 0)
                 break;
@@ -30,23 +30,23 @@ int TtcRotatingCube::Behavior()
         case 1:
             *(int *)(((int)((char *)this) + 0xa8)) += 0x800;
             *(int *)(((int)((char *)this) + 0x370)) += mVertSpeed;
-            if (unk_370 < 0)
+            if (mOffsetY < 0)
                 break;
-            unk_370 = 0;
+            mOffsetY = 0;
             mWaitTimer = 6;
             (*(u8 *)(((int)((char *)this) + 0x376)))++;
             break;
         case 2:
             if (DecIfAbove0_Short((u16 *)((char *)&mWaitTimer)) != 0)
                 break;
-            if (_Z14ApproachLinearRsss((s16 *)((char *)&mAngleZ), unk_378, 0x4b0) == 0)
+            if (_Z14ApproachLinearRsss((s16 *)((char *)&mAngleZ), mTargetAngleZ, 0x4b0) == 0)
                 break;
             _ZN5Sound9PlayBank3EjRK7Vector3(0x40, ((char *)this) + 0x74);
-            unk_376 = 0;
+            mState = 0;
             mWaitTimer = data_ov065_0211cfa4[data_0209f2c0];
             if (data_0209f2c0 == 2)
                 mWaitTimer = (unsigned int)RandomIntInternal(&data_0209e650) % 7 * 0x14 + 5;
-            *(s16 *)(((int)((char *)this) + 0x378)) += data_ov065_0211cfa8[unk_377];
+            *(s16 *)(((int)((char *)this) + 0x378)) += data_ov065_0211cfa8[mVariant];
             break;
         }
     }

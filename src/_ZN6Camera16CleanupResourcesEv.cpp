@@ -15,7 +15,7 @@ extern "C" void _ZN6Memory16operator_delete2EPv(void *p); /* 0x0203cbcc */
 
 int Camera::CleanupResources()
 {
-    void *p = unk_148;
+    void *p = mFixedViewPos;
     if (p) {
         if (p)
             _ZN6Memory16operator_delete2EPv(p);

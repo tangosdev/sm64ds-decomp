@@ -67,7 +67,7 @@ int Coffin::InitResources()
     mPosZ = res.z;
     func_ov071_02122080(((char*)this));
     ((dBgActor_c*)((char*)this))->UpdateClsnPosAndRot();
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((dBgW_KcMbg*)((char*)&mMeshCollider), (KCL_File*)dBgW_Kc::LoadFile(data_ov071_021230d8), *(Matrix4x3*)((char*)&unk_2ec), 0x199, mAngleY, data_ov063_0211ebd8);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((dBgW_KcMbg*)((char*)&mMeshCollider), (KCL_File*)dBgW_Kc::LoadFile(data_ov071_021230d8), *(Matrix4x3*)((char*)&mClsnMat), 0x199, mAngleY, data_ov063_0211ebd8);
     func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     return 1;
 }

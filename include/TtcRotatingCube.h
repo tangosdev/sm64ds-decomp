@@ -39,11 +39,11 @@ struct TtcRotatingCube {
     /* Model member, named by _ZN5ModelD1Ev at +0x320 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel2;            /* 0x320 */
-    s32 unk_370;            /* 0x370 */
+    s32 mOffsetY;            /* 0x370 */
     s16 mWaitTimer;            /* 0x374 */
-    u8  unk_376;            /* 0x376 */
-    u8  unk_377;            /* 0x377 */
-    s16 unk_378;            /* 0x378 */
+    u8  mState;            /* 0x376 */
+    u8  mVariant;            /* 0x377 */
+    s16 mTargetAngleZ;            /* 0x378 */
     /* Set to 1 by InitResources when the two ground probes disagree. */
     u8  unk_37a;            /* 0x37a */
     u8  pad_37b[0x1];
