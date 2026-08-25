@@ -45,6 +45,17 @@
 # any of them. The four host copies carry port_ names precisely so that this
 # paragraph stays true.
 #
+# AMENDED AGAIN, run mg12 lane PANEL. THE SENTENCE ABOVE IS NOW WRONG ABOUT ONE
+# OF THE SIX and this is the correction rather than a rewrite. func_ov004_020ae858
+# HAS a src file defining it -- src/func_ov004_020ae858.cpp, at the bottom of this
+# slice -- and it is a real decompilation off the ROM, honestly NONMATCHING at 10
+# of 118 words. It is still true of that body that NO DELINK BLOCK COVERS IT:
+# config/arm9/overlays/ov004/delinks.txt runs to 0x020ae5c4 and resumes at
+# 0x020aea30, and the line rasteriser plus this renderer fill that gap exactly.
+# So the count now reads: of the six, ONE has a matched-tier src TU of its own
+# (this one, NONMATCHING), FOUR have host copies under port_ names, and
+# func_ov006_020e1854 is still the live pointer-to-member state target.
+#
 # FOUR LINES BELOW ALSO APPEAR IN ANOTHER SLICE, and that is correct rather
 # than a mistake to clean up. src/func_ov004_020adc4c.c is in slice_2d1.txt
 # (the LoadFont wedge, the one ov004 body the port could already reach), and
@@ -713,3 +724,32 @@ src/func_ov004_020b1710.c
 # how the slot-34 dispatch is spelled), so it carries a LANGUAGE CXX row in
 # port/CMakeLists.txt beside this slice's other C++ .c files.
 src/func_ov004_020ae5c4.c
+
+# Run mg12, lane PANEL. THE LAST OF THE SIX GENUINELY-UNMATCHED BODIES THIS
+# FILE'S HEADER NAMES IS SEATED, and it is the one the owner has been reporting
+# as "the play-again buttons never appear".
+#
+# func_ov004_020ae858 is the RESULTS PANEL's label renderer. It reads the three
+# button labels out of three language-indexed tables (data_ov004_020bc020,
+# data_ov004_020bbfbc, data_ov004_020bbfd0, all mounted by port/ov004_syms.txt),
+# walks each label's 8-byte glyph records to the 0xffff terminator, and draws the
+# selected one through a uniform 2x2 scale matrix built from
+# 1 / (1.0 + sin(self->timer)/2) so the highlighted button pulses. Both arms then
+# draw *data_ov006_021346bc -- the shared plate, mounted by port/ov006_syms.txt --
+# at the same spot.
+#
+# IT IS THE WHOLE DRAW AND IT IS NOT OPTIONAL. dScMgBase_c::BeforeRender
+# (src/func_ov004_020b04f4.cpp) hands the ENTIRE frame to this body while the
+# panel is up and returns 0, so nothing else in the family submits the buttons.
+# hal/scene_mg_faces.cpp's trap for this symbol is DELETED in the same commit and
+# the symbol is defined nowhere else.
+#
+# THE SIGNATURE IS VOID, not int. The ROM body sets r0 on no path that falls
+# through; the trap's int was never the ROM's. include/decl_common.h is corrected
+# in the same commit.
+#
+# HONESTLY NONMATCHING: 10 of 118 words differ at mwccarm 2004/b56 (closest of all
+# 25 installed builds) on the base-materialization/addressing floor. Every reloc
+# and the whole literal pool are identical. The banner in the TU carries the
+# measurement and the ~170-candidate lever sweep behind it.
+src/func_ov004_020ae858.cpp

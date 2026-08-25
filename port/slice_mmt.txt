@@ -379,6 +379,10 @@
 #   func_ov004_020ae858, which hal/scene_mg_faces.cpp has trapped since run
 #   link60, and the run reports all seven of that file's trapping sites entered
 #   zero times.
+#
+#   AMENDED, run mg12 lane PANEL: that body is no longer without a source and no
+#   longer trapped. src/func_ov004_020ae858.cpp is the results panel's label
+#   renderer, seated off port/slice_mg1.txt, and the trap line is deleted.
 
 # ---- ov006: dScMgMemory_c's own code block, 0x020f3834..0x020f5564 -------
 #

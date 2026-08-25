@@ -139,6 +139,7 @@
 // over a class that could not advance.
 
 #include <cstdio>
+#include <cstdlib>
 #include "dsstate_seg.h"
 
 /* EVERY HOSTED DS GLOBAL IN THIS FILE IS INSIDE THE SAVE-STATE SPAN, and it
@@ -458,6 +459,62 @@ static void mg_trap(const char *name)
 
 extern "C" unsigned port_mg_trap_hits(void) { return g_mg_trap_hits; }
 
+/* ---- lane PANEL's end-of-run readout of the results panel ----------------
+ *
+ * The seat above draws the three buttons. Whether the player can USE them is a
+ * different claim and it needs a different number, because the two halves of
+ * the panel live in different files: src/func_ov004_020ae858.cpp DRAWS off
+ * self+0x4646, and src/func_ov004_020aeb24.cpp (matched, untouched) is the
+ * STYLUS HIT TEST that WRITES it -- it boxes the stylus point against the three
+ * button centres and on a hit stores the button's index there and 0x10 at
+ * +0x4644. So +0x4646 moving from -1 to 0/1/2 is the hit test accepting a tap,
+ * read off the same field the renderer reads, and the two halves check each
+ * other rather than being asserted separately.
+ *
+ * Printed at exit rather than per frame so it cannot flood a log or perturb a
+ * frame, and only when SM64DS_MG_RESULTS_PROBE is set. Unset, this is one getenv
+ * at exit and nothing else.
+ *
+ * THAT VARIABLE IS NOT DEFINED ON THIS BRANCH, DELIBERATELY. The probe that reads
+ * it and raises the panel through the ROM's own slot 27 belongs to run mg12 lane
+ * OVERLAY and lives in hal/scene_mg.cpp on their branch, which is the canonical
+ * line of that work. This lane carried a cherry-pick of it for a while and DROPPED
+ * it: a trial merge showed the duplicate conflicts with OVERLAY's later fixes, and
+ * resolving that conflict in this lane's favour would have silently deleted one of
+ * them. So this readout is INERT until the two branches meet, and that is the
+ * correct state for it - it is a reader, not a driver, and it must not grow its own
+ * copy of somebody else's instrument. The game's own progression to this panel is
+ * still blocked at the unseated func_ov006_020d01e0 installer, so a capture cannot
+ * reach it without OVERLAY's probe.
+ */
+extern "C" { extern void *data_ov004_020beb68; }
+
+static void panel_end_readout(void)
+{
+    const char *e = std::getenv("SM64DS_MG_RESULTS_PROBE");
+    if (!e || !e[0])
+        return;
+    char *g = (char *)data_ov004_020beb68;
+    if (!g) {
+        std::printf("[panel-end] no live dScMgBase_c\n");
+        std::fflush(stdout);
+        return;
+    }
+    std::printf("[panel-end] up=%d selected=%d hold=%d anim=%u "
+                "buttons (%d,%d) (%d,%d) (%d,%d)\n",
+                *(int *)(g + 0x4628), (int)*(short *)(g + 0x4646),
+                (int)*(short *)(g + 0x4644), *(unsigned *)(g + 0x4640),
+                (int)*(short *)(g + 0x4634), (int)*(short *)(g + 0x4636),
+                (int)*(short *)(g + 0x4638), (int)*(short *)(g + 0x463a),
+                (int)*(short *)(g + 0x463c), (int)*(short *)(g + 0x463e));
+    std::fflush(stdout);
+}
+
+namespace {
+struct PanelEndReg { PanelEndReg() { std::atexit(panel_end_readout); } };
+PanelEndReg g_panel_end_reg;
+}
+
 extern "C" {
 
 /* Lane CUR2's two seated bodies, in port/unmatched/. */
@@ -468,8 +525,40 @@ void port_mg_curling_collide_020e20bc(char *self, int idx);
 void port_mg_hud_scaled_number_020b2220(int x, int y, int num, int a3, int a4,
                                         int scale, int angle);
 
-/* no delink block and no src in their own overlay's config */
-int func_ov004_020ae858(void *)             { mg_trap("func_ov004_020ae858"); return 0; }
+/* ---- SEATED, run mg12 lane PANEL ---------------------------------------
+ *
+ * THE LAST ov004 TRAP IN THIS FILE IS GONE, and it was the RESULTS PANEL's
+ * label renderer. func_ov004_020ae858 draws the three buttons a minigame's
+ * results screen offers -- the play-again row -- and returning 0 from it is
+ * exactly the defect the owner reported as the play-again buttons never
+ * appearing: dScMgBase_c::BeforeRender (src/func_ov004_020b04f4.cpp) hands the
+ * WHOLE frame to this body while the panel is up and returns, so with a stub
+ * behind it nothing submits the labels to either engine.
+ *
+ * THE MEASUREMENT THAT PROVED IT was run mg12 lane OVERLAY's: raising the panel
+ * through the ROM's own slot 27 on scene 384 and holding it for 300 frames gave
+ * 300 entries into this body, exactly one per frame, with OAM engine A 0 placed,
+ * OAM engine B 0 placed and the whole bottom half a black backdrop.
+ *
+ * THE SIGNATURE CHANGED WITH THE SEAT, and as with the bodies below that is not
+ * cosmetic: the trap returned int where the ROM returns VOID. No path in the ROM
+ * body sets r0 on the fall-through -- the early-out is `if (pred) return;` and
+ * the tail is a bare epilogue -- so the int was never the ROM's. The one caller
+ * discards it, which is why nothing ever caught it. include/decl_common.h is
+ * corrected in the same commit.
+ *
+ * IT IS A REAL DECOMPILATION, honestly NONMATCHING. src/func_ov004_020ae858.cpp
+ * differs in 10 of 118 words at mwccarm 2004/b56, the closest of all 25 installed
+ * builds, on the base-materialization/addressing floor; every reloc and the whole
+ * literal pool are identical and its banner carries the measurement. The symbol
+ * comes from port/slice_mg1.txt, so this line is simply deleted.
+ *
+ * WHAT IT STILL GETS NO SYMBOL FOR: nothing changes about the decomp hole.
+ * config/arm9/overlays/ov004/delinks.txt still covers no part of 0x020ae858 --
+ * the blocks run to 0x020ae5c4 and resume at 0x020aea30, and 0x020ae5c4 + 0x294
+ * + 0x1d8 is exactly that gap, so this body and the line rasteriser above fill it
+ * between them. 0x020ae858 remains open delink work.
+ */
 
 /* ---- SEATED, run mg10 lane F371 ----------------------------------------
  *
@@ -511,7 +600,8 @@ int func_ov004_020ae858(void *)             { mg_trap("func_ov004_020ae858"); re
  * to route to and no port_ name to spell: the symbol comes from
  * port/slice_mg1.txt and this line is simply deleted. Two of the six bodies
  * that file's header calls unmatched are real decompilations now, which
- * leaves func_ov004_020ae858 as the last ov004 trap in this file.
+ * left func_ov004_020ae858 as the last ov004 trap in this file, and run mg12
+ * lane PANEL has now seated that one too.
  */
 
 /* ---- SEATED, run mg5 lane WTIMER ----------------------------------------

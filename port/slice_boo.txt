@@ -224,6 +224,11 @@
 #       func_ov004_020ae858 because that is where this family's ov004 traps
 #       live, NOT in this lane's own hal file.
 #
+#       AMENDED, run mg12 lane PANEL: there is no trap beside it any more.
+#       func_ov004_020ae858 is seated (src/func_ov004_020ae858.cpp) and its trap
+#       is deleted, and func_ov004_020ae5c4 was itself seated earlier by run mg10
+#       lane F371. hal/scene_mg_faces.cpp now holds no ov004 trap at all.
+#
 # ---- NO ELEMENT VTABLES, AND THAT IS MEASURED THREE WAYS ------------------
 #
 # Run mg9 lane S381 found that dScMgMCarlo_c's factory builds eighty card

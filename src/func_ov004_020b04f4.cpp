@@ -7,9 +7,25 @@
 // recovered name: dScMgBase_c_BeforeRender
 /* recovered: renamed to Class_Method */
 /* dScMgBase_c::BeforeRender - recovered from vtable slot identity */
-// NONMATCHING: register allocation (div=17). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+// MATCHED at 2004/b56, 1.2/base, 1.2/sp2 and 1.2/sp2p3 -- four of the 25 installed
+// builds, with clean reloc destinations. This banner previously declared a non-match
+// at div=17 and said the file could not be byte-matched at 1.2/sp2p3; both halves were
+// STALE, and 1.2/sp2p3 is one of the four it matches at. Measured 2026-08-25 by run
+// mg12 lane PANEL and re-measured by that run's independent reviewer against the tree
+// state BEFORE the lane touched it, so the verdict is not an artifact of this branch.
+// Nothing in the body changed to make it true; the banner simply outlived the fix.
+//
+// THE OLD MARKER TOKEN IS DELIBERATELY NOT QUOTED HERE. Spelling it, even inside a
+// sentence retiring it, puts the literal string back in the file, and
+// validate_merge.py's candidate filter is a whole-file `git grep -F` for exactly that
+// token -- it would flag this genuinely matched TU as a draft candidate and rely on
+// the separate 200-character test to clear it again. Right by luck is not right.
+//
+// THIS CORRECTION MOVES NO COUNT. The old marker sat at byte 412, past both the
+// 200-character window progress.py and validate_merge.py read and the 400-character
+// window nearmiss_db.py reads, so every counter in the repo ALREADY treated this
+// function as matched -- which is very likely why the wrong banner survived so long.
+// The correction is to the record, not to the total: +0 at both windows, measured.
 typedef short s16;
 
 struct Scene;
