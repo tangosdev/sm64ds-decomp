@@ -40,3 +40,15 @@ src/func_02037e2c.c
 src/func_02037e38.c
 src/func_02037de8.c
 src/func_02037e9c.c
+
+# Virtuals the host now needs as real methods: migrating a constructor to
+# real C++ makes its TU the vtable's key function on MSVC too, and MSVC
+# emits the vtable there -- which requires every virtual to be defined, not
+# just the ones a gate happens to exercise. These already existed in src/;
+# they were simply never sliced.
+
+# Whole-class slice. Once a constructor is a real C++ constructor its TU
+# becomes the vtable's key function on MSVC as well, and the host emits the
+# vtable there -- which needs EVERY virtual defined, not the subset a gate
+# happens to exercise. A migrated class can no longer be sliced method by
+# method; it comes across whole.

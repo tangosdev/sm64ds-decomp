@@ -54,3 +54,14 @@ src/func_020456a0.c
 src/_ZN4cstd3absEi.cpp
 src/_ZN9Animation8LoadFileER13SharedFilePtr.cpp
 src/_ZN9Animation17UpdateFileOffsetsER8BCA_File.cpp
+
+# Whole-class slice. Once a constructor is a real C++ constructor its TU
+# becomes the vtable's key function on MSVC as well, and the host emits the
+# vtable there -- which needs EVERY virtual defined, not the subset a gate
+# happens to exercise. A migrated class can no longer be sliced method by
+# method; it comes across whole.
+src/_ZN5Model11UpdateVertsEv.cpp
+src/_ZN5Model9Virtual10ER9Matrix4x3.cpp
+src/_ZN5ModelD1Ev.c
+src/func_0203cbc0.c
+src/_ZN9ModelBaseD2Ev.c
