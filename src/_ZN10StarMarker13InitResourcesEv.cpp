@@ -40,7 +40,7 @@ int StarMarker::InitResources()
     u8 kind;
     int r3;
 
-    raw = ((u32)mParam >> 4) & 0xf;
+    raw = ((u32)param1 >> 4) & 0xf;
     kind = (u8)raw;
     mFlags = 0;
     v0.x = 0;
@@ -64,7 +64,7 @@ int StarMarker::InitResources()
         mGroundY = *(s32 *)((char *)&rg + (0x80 - 0x3c));
 
     r3 = 0;
-    mStarID = (u8)(mParam & 0xf);
+    mStarID = (u8)(param1 & 0xf);
     mState = 0;
 
     if (kind == 6) {
@@ -134,12 +134,12 @@ int StarMarker::InitResources()
         *p = *p | 1;
     }
     r3 = 0;
-    mSpawnPosX = mPosX;
-    mSpawnPosY = mPosY;
-    mSpawnPosZ = mPosZ;
+    mSpawnPos.x = mPosX;
+    mSpawnPos.y = mPosY;
+    mSpawnPos.z = mPosZ;
     mSpawnedActorID = r3;
     mSpawnedDeathTableID = -1;
-    mHitActor = r3;
+    mHitActor = 0;
 
     if (data_0209f2d8 == 1)
         r3 = 1;

@@ -148,6 +148,7 @@ ov002	0x020e6c40	func_ov002_020e6c40	_ZN9PowerStarD1Ev	vtable slot 16
 ov002	0x020e6c90	func_ov002_020e6c90	_ZN9PowerStarD0Ev	vtable slot 17
 ov002	0x020e6cf4	func_ov002_020e6cf4	_ZN10StarMarkerD1Ev	vtable slot 16
 ov002	0x020e6d34	func_ov002_020e6d34	_ZN10StarMarkerD0Ev	vtable slot 17
+ov002	0x020e7d84	func_ov002_020e7d84	_ZN10StarMarker7CollectEv	inferred semantic name; Behavior passes this and PowerStar path passes resolved StarMarker in r0
 ov002	0x020eab8c	func_ov002_020eab8c	_ZN10StarMarker16OnPendingDestroyEv	vtable slot 12
 ov002	0x020eabcc	func_ov002_020eabcc	_ZN10StarMarker16CleanupResourcesEv	vtable slot 3
 ov002	0x020eac18	func_ov002_020eac18	_ZN9PowerStar16CleanupResourcesEv	vtable slot 3

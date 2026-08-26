@@ -15,26 +15,19 @@
  * Provenance table: notes/butterfly-tornado-provenance.md. */
 #ifndef STARMARKER_H
 #define STARMARKER_H
-#include "types.h"
+#include "dActor_c.h"
 #include "Model.h"
 #include "ShadowModel.h"
 #include "dCcAcPos_c.h"
+#include "math/Matrix.h"
 
-struct StarMarker {
-    u8  pad_000[0x4];
-    s32 mUniqueID;            /* 0x004 -- fBase_c's own uniqueID.
-                                   SpawnRedCoinStarIfNecessary hands it to the
-                                   star it spawns, at star+0x434. */
-    s32 mParam;            /* 0x008 */
-    u8  pad_00c[0x50];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x26];
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x3c];
-    s8  mAreaId;            /* 0x0cc */
-    u8  pad_0cd[0x7];
+/* RTTI calls this class daStarBase_c. StarMarker is the readable compatibility
+ * spelling already fixed by the matched function names. The ROM's
+ * __si_class_type_info record gives it one dActor_c base at offset zero, and
+ * its 31-slot vtable has the same extent as dActor_c's. Only resource,
+ * behavior, render, pending-destroy, and destructor slots are overridden. */
+struct StarMarker : dActor_c {
+    u8 pad_0d0[0x4];
     /* dCcAcPos_c member. The cartridge's own ~StarMarker calls _ZN10dCcAcPos_cD1Ev at
        +0x0d4 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
@@ -49,22 +42,10 @@ struct StarMarker {
        ShadowModel's D1 at +0x164 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10StarMarkerD0Ev.c] */
     ShadowModel mShadowModel;            /* 0x164 */
-    /* 0x18c..0x1bb is ONE Matrix4x3, written whole: Behavior stores
-       IDENTITY_MATRIX4X3 over `*(Mtx *)&mShadowMtx` and then fills in the
-       translation row, and hands &mShadowMtx to dActor_c::DropShadowRadHeight
-       as the shadow's matrix. It stays four separate members rather than a
-       typed one because that is the spelling the bytes reproduce. */
-    u8  mShadowMtx;              /* 0x18c -- first byte of that matrix */
-    u8  pad_18d[0x23];
-    s32 mShadowMtxTX;            /* 0x1b0 -- its translation row, set to
-                                     mPos >> 3 every frame */
-    s32 mShadowMtxTY;            /* 0x1b4 */
-    s32 mShadowMtxTZ;            /* 0x1b8 */
-    s32 mSpawnPosX;              /* 0x1bc -- mPos as InitResources found it.
+    Matrix4x3 mShadowMtx;        /* 0x18c -- shadow transform */
+    Vector3 mSpawnPos;           /* 0x1bc -- mPos as InitResources found it.
                                      Written there and read nowhere in the
                                      tree; the name records the copy. */
-    s32 mSpawnPosY;              /* 0x1c0 */
-    s32 mSpawnPosZ;              /* 0x1c4 */
     s32 mGroundY;                /* 0x1c8 -- the ground height under the
                                      marker: InitResources raycasts down with
                                      a dBgCh_Gnd from mPosY + 0x1e000 and
@@ -79,7 +60,7 @@ struct StarMarker {
                                      InitResources zeroes it; nothing in the
                                      tree ever sets it non-zero, so the write
                                      side is still missing. */
-    s32 mHitActor;               /* 0x1d0 -- the actor that touched this
+    dActor_c *mHitActor;         /* 0x1d0 -- the actor that touched this
                                      marker, resolved from
                                      mdCcAcPos_c.otherOwner by Behavior just
                                      before it calls func_ov002_020e7d84.
@@ -94,15 +75,17 @@ struct StarMarker {
     u8  mStarID;            /* 0x1d9 */
     u8  pad_1da[0x1];
     u8  mFlags;            /* 0x1db */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    int Render();
-    void OnPendingDestroy();
+    virtual ~StarMarker();
+    virtual s32 InitResources();
+    virtual s32 CleanupResources();
+    virtual s32 Behavior();
+    virtual s32 Render();
+    virtual void OnPendingDestroy();
+
     void SpawnRedCoinStarIfNecessary();
-#endif
+    /* Readable inferred name, not a ROM-authenticated original spelling.
+     * Address/ownership evidence is recorded in symbols/actor_renames.tsv. */
+    void Collect();
 };
 
 typedef char StarMarker_size_must_be_0x1dc[sizeof(struct StarMarker) == 0x1dc ? 1 : -1];
