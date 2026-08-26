@@ -49,6 +49,7 @@ take over, ping the claimant first.
 | BabyPenguin, Lakitu | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus four cleanup hooks and two deleting destructors migrated to C++; all fourteen class consumers strict-matched and link-checked with `blind: 0`; Platform/collision work excluded |
 | daObjRcCarpet_c | andrewboudreau | 2026-08-23 | **done** - InitResources and Behavior migrated to real C++; strict matches and link checks verified with `blind: 0`; destructor variants excluded |
 | HUD, Minimap | andrewboudreau | 2026-08-25 | **done** - deleting destructors migrated to compiler-spelled real C++; both strict link checks `VERIFIED`, full build 11060/11060 reproducing and 106/106 modules exact; dFdDummy_c and dBgPi candidates rejected by the full link |
+| dBgPi (base dBgPc) | andrewboudreau | 2026-08-26 | **done** - the #1764 full-link rejection resolved: dBgPi's D0/D2 and C2 migrated to compiler-spelled real C++ after declaring the class's inline `operator delete`, which routes D0 to `Memory::operator_delete2` (0x0203cbcc) instead of the global `_ZdlPv` (0x0203cbf0). All six dBgPi symbols `VERIFIED` with `blind: 0`; 960 header consumers link-checked; full build 11060/11060 reproducing and 106/106 modules exact. dBgCh_Gnd/Lin/SphCrr each gained their own copy of the same `operator delete` to break the multiple-inheritance ambiguity (byte-neutral -- the ROM kept no D0 for them). |
 
 ## Claims
 
