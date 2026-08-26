@@ -20,8 +20,6 @@ extern "C" {
     void *_ZN5Model8LoadFileER13SharedFilePtr(void *shared);
     void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *mb, void *bmd, int a, int b);
     void _ZN11ShadowModel10InitCuboidEv(void *self);
-    void func_ov065_0211990c(void *self);
-    void func_ov065_021198a0(void *self);
     void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *shared);
     void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         void *mc, void *kcl, void *mtx, int fix, s16 s, void *clps);
@@ -50,55 +48,55 @@ struct dBgCh_Gnd {
 int TtcRotatingCube::InitResources()
 {
     u8 *c = (u8 *)((void *)this);
-    u16 id = *(u16 *)(c + 0xc);
+    u16 id = actorID;
 
     if (id != 0x6c) {
         if (id == 0x6d) {
-            *(u8 *)(c + 0x377) = 1;
+            mVariant = 1;
         }
     } else {
-        *(u8 *)(c + 0x377) = 0;
+        mVariant = 0;
     }
 
-    u8 idx = *(u8 *)(c + 0x377);
+    u8 idx = mVariant;
     {
         void *bmd = _ZN5Model8LoadFileER13SharedFilePtr(*(void **)((char *)data_ov065_0211cfd0 + idx * 0xc));
-        _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, bmd, 1, -1);
+        _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, bmd, 1, -1);
     }
 
     {
-        void *bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov065_0211c0a8[*(u8 *)(c + 0x377)]);
-        _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x320, bmd, 1, -1);
+        void *bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov065_0211c0a8[mVariant]);
+        _ZN9ModelBase7SetFileEP8BMD_Fileii(&mRotatingModel, bmd, 1, -1);
     }
 
-    _ZN11ShadowModel10InitCuboidEv(c + 0x380);
+    _ZN11ShadowModel10InitCuboidEv(&mShadowModel);
 
-    *(s16 *)(c + 0x300 + 0x78) = data_ov065_0211cfa8[*(u8 *)(c + 0x377)];
+    mTargetAngleZ = data_ov065_0211cfa8[mVariant];
 
-    func_ov065_0211990c(((void *)this));
-    func_ov065_021198a0(((void *)this));
+    UpdateModel();
+    UpdateClsn();
 
-    idx = *(u8 *)(c + 0x377);
+    idx = mVariant;
     if (idx == 0) {
         s32 oi = idx * 0xc;
         void *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(void **)((char *)data_ov065_0211cfd4 + oi));
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            c + 0x124, kcl, c + 0x2ec, 0x1000, *(s16 *)(c + 0x8e),
+            &mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY,
             *(void **)((char *)data_ov065_0211cfd8 + oi));
     } else {
         s32 oi = idx * 0xc;
         void *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(void **)((char *)data_ov065_0211cfd4 + oi));
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            c + 0x124, kcl, c + 0x2ec, 0x199, *(s16 *)(c + 0x8e),
+            &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY,
             *(void **)((char *)data_ov065_0211cfd8 + oi));
     }
 
-    func_020393d4(c + 0x124, (void *)_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+    func_020393d4(&mMeshCollider, (void *)_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
 
     {
         s32 va[3];
         s32 vb[3];
-        *(u16 *)(c + 0x300 + 0x74) = data_ov065_0211cfa4[data_0209f2c0];
+        mWaitTimer = data_ov065_0211cfa4[data_0209f2c0];
         va[0] = 0;
         va[2] = 0;
         vb[0] = 0;
@@ -108,22 +106,22 @@ int TtcRotatingCube::InitResources()
         va[0] = 0x64000;
         va[2] = 0x64000;
 
-        Matrix4x3_FromRotationY(data_020a0e68, *(s16 *)(c + 0x8e));
+        Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
         MulVec3Mat4x3(va, data_020a0e68, vb);
-        AddVec3(vb, c + 0x5c, vb);
+        AddVec3(vb, &mPosX, vb);
         vb[1] -= 0xd2000;
 
         dBgCh_Gnd rg;
         _ZN9dBgCh_GndC1Ev(&rg);
         _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, vb, 0);
-        *(s32 *)(c + 0x37c) = vb[1];
+        mFloorY = vb[1];
         if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0) {
-            *(s32 *)(c + 0x37c) = rg.hitY;
+            mFloorY = rg.hitY;
         }
 
-        vb[0] = *(s32 *)(c + 0x5c);
-        vb[1] = *(s32 *)(c + 0x60);
-        vb[2] = *(s32 *)(c + 0x64);
+        vb[0] = mPosX;
+        vb[1] = mPosY;
+        vb[2] = mPosZ;
         vb[1] -= 0xd2000;
 
         _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, vb, 0);
@@ -131,8 +129,8 @@ int TtcRotatingCube::InitResources()
         if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0) {
             r5 = rg.hitY;
         }
-        if (r5 != *(s32 *)(c + 0x37c)) {
-            *(u8 *)(c + 0x37a) = 1;
+        if (r5 != mFloorY) {
+            mUnevenGround = 1;
         }
         _ZN9dBgCh_GndD1Ev(&rg);
     }

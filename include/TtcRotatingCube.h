@@ -1,72 +1,53 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class TtcRotatingCube: 6 matched functions, 12 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef TTCROTATINGCUBE_H
 #define TTCROTATINGCUBE_H
-#include "types.h"
-#include "Model.h"
-#include "ShadowModel.h"
-#include "dBgW_KcMbg.h"
 
-struct TtcRotatingCube {
-    u8  pad_000[0x90];
-    /* 0x090..0x0a8 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s16 mAngleZ;                 /* 0x090 */
-    s16 mPrevAngleX;             /* 0x092 */
-    s16 mPrevAngleY;             /* 0x094 */
-    s16 mPrevAngleZ;             /* 0x096 */
-    s32 mHorzSpeed;              /* 0x098 */
-    s32 mVertAccel;              /* 0x09c */
-    s32 mTerminalVelocity;       /* 0x0a0 */
-    u8  pad_0a4[0x4];
-    s32 mVertSpeed;            /* 0x0a8 */
-    u8  pad_0ac[0x4];
-    s32 mFlags;            /* 0x0b0 */
-    u8  pad_0b4[0x20];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel1;            /* 0x0d4 */
-    /* dBgW_KcMbg member, named by the class's own destructor calling
-       dBgW_KcMbg's D1 at +0x124 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN15TtcRotatingCubeD1Ev.c] */
-    dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
-    /* The collider's transform: InitResources hands +0x2ec to
-       dBgW_KcMbg::SetFile as its `const Matrix4x3 &`. */
-    Matrix4x3 mClsnMat;            /* 0x2ec */
-    u8  pad_31c[0x4];
-    /* Model member, named by _ZN5ModelD1Ev at +0x320 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel2;            /* 0x320 */
-    s32 mOffsetY;            /* 0x370 */
-    s16 mWaitTimer;            /* 0x374 */
-    u8  mState;            /* 0x376 */
-    u8  mVariant;            /* 0x377 */
-    s16 mTargetAngleZ;            /* 0x378 */
-    /* Set to 1 by InitResources when the two ground probes disagree. */
-    u8  unk_37a;            /* 0x37a */
-    u8  pad_37b[0x1];
-    /* The floor height under the cube, from a dBgCh_Gnd probe. */
-    s32 unk_37c;            /* 0x37c */
-    /* ShadowModel member, named by the class's own destructor calling
-       ShadowModel's D1 at +0x380 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN15TtcRotatingCubeD1Ev.c] */
-    ShadowModel mShadowModel;            /* 0x380 */
-    /* The shadow's transform, the same ShadowModel + Matrix4x3 pair
-       HauntedChair evidences by byte. 0x3a8 + 0x30 closes on the 0x3d8
-       TtcRotatingCube_Spawn allocates. */
-    Matrix4x3 mShadowMat;            /* 0x3a8 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    int Render();
-#endif
+#include "dBgActor_c.h"
+#include "ShadowModel.h"
+
+/* The cartridge RTTI calls this class daObjCtRotateBlock_c. TtcRotatingCube is
+ * the readable compatibility spelling carried by all six ROM-addressed
+ * virtuals. The __si_class_type_info record proves one direct dBgActor_c base
+ * at offset zero, and the 32-slot table has exactly the same extent as that
+ * base. Slots 0, 3, 6, 9, 16 and 17 are the only overrides. symbols.txt keeps
+ * `_ZTV15TtcRotatingCube` and the cartridge-derived
+ * `_ZTV20daObjCtRotateBlock_c` at the same address; real member definitions use
+ * the readable spelling while relocation isolation binds that spelling back to
+ * the cartridge table.
+ *
+ * Both TtcRotatingCube_Spawn and TtcRotatingPrism_Spawn allocate 0x3d8 bytes,
+ * construct this exact base/member chain, and install the same vtable. Their
+ * actor IDs select mVariant during InitResources, so they are two actor entries
+ * for one class rather than evidence for two C++ types.
+ */
+struct TtcRotatingCube : dBgActor_c {
+    Model mRotatingModel;                 /* 0x320 */
+    s32 mOffsetY;                         /* 0x370 */
+    u16 mWaitTimer;                       /* 0x374 */
+    u8 mState;                            /* 0x376 */
+    u8 mVariant;                          /* 0x377 */
+    s16 mTargetAngleZ;                    /* 0x378 */
+    u8 mUnevenGround;                     /* 0x37a */
+    u8 mPad37b;                           /* 0x37b */
+    s32 mFloorY;                          /* 0x37c */
+    ShadowModel mShadowModel;             /* 0x380 */
+    Matrix4x3 mShadowMat;                 /* 0x3a8 */
+
+    virtual ~TtcRotatingCube();           /* slots 16, 17 */
+
+    virtual s32 InitResources();          /* slot  0 */
+    virtual s32 CleanupResources();       /* slot  3 */
+    virtual s32 Behavior();               /* slot  6 */
+    virtual s32 Render();                 /* slot  9 */
+
+    /* These three routines are anonymous in the image. Their names describe
+     * their exclusive calls and field effects; they are not claimed as
+     * cartridge-authenticated EAD spellings. */
+    s32 UpdateShadow();
+    void UpdateClsn();
+    void UpdateModel();
 };
 
 typedef char TtcRotatingCube_size_must_be_0x3d8[
-    sizeof(struct TtcRotatingCube) == 0x3d8 ? 1 : -1];
+    sizeof(TtcRotatingCube) == 0x3d8 ? 1 : -1];
 
 #endif

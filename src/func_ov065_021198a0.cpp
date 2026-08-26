@@ -1,18 +1,15 @@
 //cpp
-// @symbol func_ov065_021198a0
-/* recovered: shared common types */
-#include "common.h"
+// @symbol _ZN15TtcRotatingCube10UpdateClsnEv
+#include "TtcRotatingCube.h"
 extern "C" {
-
-struct MMC { char p[0x124]; };
-struct Obj { char p[0x2ec]; Matrix4x3 m; };
-int _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(MMC*, Matrix4x3&, short);
-void func_ov065_021198a0(char* self){
-    Obj* o = (Obj*)self;
-    o->m = *(Matrix4x3*)(self + 0xf0);
-    *(int*)(self+0x310) = *(int*)(self+0x5c);
-    *(int*)(self+0x314) = *(int*)(self+0x60) + *(int*)(self+0x370);
-    *(int*)(self+0x318) = *(int*)(self+0x64);
-    _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s((MMC*)(self+0x124), o->m, *(short*)(self+0x8e));
+int _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(dBgW_KcMbg*, Matrix4x3&, short);
 }
+
+void TtcRotatingCube::UpdateClsn()
+{
+    mClsnMat = mModel.mat4x3;
+    mClsnMat.m[9] = mPosX;
+    mClsnMat.m[10] = mPosY + mOffsetY;
+    mClsnMat.m[11] = mPosZ;
+    _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(&mMeshCollider, mClsnMat, mAngleY);
 }

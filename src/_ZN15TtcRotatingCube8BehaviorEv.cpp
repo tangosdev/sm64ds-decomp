@@ -21,38 +21,38 @@ int TtcRotatingCube::Behavior()
     if (data_0209f2c0 != 3) {
         switch (mState) {
         case 0:
-            if (DecIfAbove0_Short((u16 *)((char *)&mWaitTimer)) != 0)
+            if (DecIfAbove0_Short(&mWaitTimer) != 0)
                 break;
-            _ZN5Sound9PlayBank3EjRK7Vector3(0x5b, ((char *)this) + 0x74);
-            (*(u8 *)(((int)((char *)this) + 0x376)))++;
+            _ZN5Sound9PlayBank3EjRK7Vector3(0x5b, &mCamSpacePosX);
+            mState++;
             mVertSpeed = -0x5000;
             break;
         case 1:
-            *(int *)(((int)((char *)this) + 0xa8)) += 0x800;
-            *(int *)(((int)((char *)this) + 0x370)) += mVertSpeed;
+            mVertSpeed += 0x800;
+            mOffsetY += mVertSpeed;
             if (mOffsetY < 0)
                 break;
             mOffsetY = 0;
             mWaitTimer = 6;
-            (*(u8 *)(((int)((char *)this) + 0x376)))++;
+            mState++;
             break;
         case 2:
-            if (DecIfAbove0_Short((u16 *)((char *)&mWaitTimer)) != 0)
+            if (DecIfAbove0_Short(&mWaitTimer) != 0)
                 break;
-            if (_Z14ApproachLinearRsss((s16 *)((char *)&mAngleZ), mTargetAngleZ, 0x4b0) == 0)
+            if (_Z14ApproachLinearRsss(&mAngleZ, mTargetAngleZ, 0x4b0) == 0)
                 break;
-            _ZN5Sound9PlayBank3EjRK7Vector3(0x40, ((char *)this) + 0x74);
+            _ZN5Sound9PlayBank3EjRK7Vector3(0x40, &mCamSpacePosX);
             mState = 0;
             mWaitTimer = data_ov065_0211cfa4[data_0209f2c0];
             if (data_0209f2c0 == 2)
                 mWaitTimer = (unsigned int)RandomIntInternal(&data_0209e650) % 7 * 0x14 + 5;
-            *(s16 *)(((int)((char *)this) + 0x378)) += data_ov065_0211cfa8[mVariant];
+            mTargetAngleZ += data_ov065_0211cfa8[mVariant];
             break;
         }
     }
-    func_ov065_0211990c(((char *)this));
-    func_ov065_02119794(((char *)this));
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0, 0))
-        func_ov065_021198a0(((char *)this));
+    UpdateModel();
+    UpdateShadow();
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
+        UpdateClsn();
     return 1;
 }

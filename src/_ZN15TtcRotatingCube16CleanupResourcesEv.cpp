@@ -12,8 +12,8 @@ extern struct E data_ov065_0211cfd4[];
 
 int TtcRotatingCube::CleanupResources()
 {
-    if (((dBgW *)((char*)&mMovingMeshCollider))->IsEnabled()) {
-        ((dBgW *)((char*)&mMovingMeshCollider))->Disable();
+    if (((dBgW *)&mMeshCollider)->IsEnabled()) {
+        ((dBgW *)&mMeshCollider)->Disable();
     }
     ((SharedFilePtr *)(data_ov065_0211c0a8[mVariant]))->Release();
     ((SharedFilePtr *)(data_ov065_0211cfd0[mVariant].p))->Release();
