@@ -16,7 +16,7 @@ src/_ZN10PyramidTagD1Ev.cpp:
     complete
     .text start:0x0211124c end:0x0211127c
 
-src/_ZN10PyramidTagD0Ev.c:
+src/_ZN10PyramidTagD0Ev.cpp:
     complete
     .text start:0x0211127c end:0x021112c0
 
