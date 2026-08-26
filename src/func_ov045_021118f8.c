@@ -1,8 +1,13 @@
-extern void Matrix4x3_FromRotationY(void *, int);
-void func_ov045_021118f8(char *t)
+//cpp
+// @symbol _ZN17ExtendingPlatform20UpdateModelTransformEv
+#include "ExtendingPlatform.h"
+
+extern "C" void Matrix4x3_FromRotationY(Matrix4x3 *, s32);
+
+void ExtendingPlatform::UpdateModelTransform()
 {
-    Matrix4x3_FromRotationY(t + 0xf4, *(short *)(t + 0x8e));
-    *(int *)(t + 0x118) = *(int *)(t + 0x5c) >> 3;
-    *(int *)(t + 0x11c) = *(int *)(t + 0x60) >> 3;
-    *(int *)(t + 0x120) = *(int *)(t + 0x64) >> 3;
+    Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
+    mModel.mat4x3.t.x = mPosX >> 3;
+    mModel.mat4x3.t.y = mPosY >> 3;
+    mModel.mat4x3.t.z = mPosZ >> 3;
 }
