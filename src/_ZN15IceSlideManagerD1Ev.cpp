@@ -1,15 +1,9 @@
 //cpp
 // @symbol _ZN15IceSlideManagerD1Ev
+/* Force mwccarm to materialize IceSlideManager's inline complete destructor. */
+#include "IceSlideManager.h"
 
-struct dActor_c {
-    virtual ~dActor_c();
-};
-
-
-struct IceSlideManager : dActor_c {
-    virtual ~IceSlideManager();
-};
-
-IceSlideManager::~IceSlideManager()
+void IceSlideManager_EmitDestructor(IceSlideManager *manager)
 {
+    manager->~IceSlideManager();
 }

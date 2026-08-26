@@ -1,30 +1,33 @@
 //cpp
 // @symbol _ZN15IceSlideManager8BehaviorEv
-/* recovered: named members + shared header, real C++ method */
 #include "IceSlideManager.h"
-extern "C" {
-extern int _ZN8dActor_c13DistToCPlayerEv(void*);
-extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned,unsigned,unsigned,int,int);
-extern int DecIfAbove0_Short(void*);
-extern int _ZN8dActor_c24KillAndTrackInDeathTableEv(void*);
-}
+
+extern "C" u16 DecIfAbove0_Short(u16 *timer);
+
+/* ABI wall: spelling this as Sound::PlaySub(..., Fix12<int>, bool) makes
+ * mwccarm home the by-value Fix12 in an 8-byte stack slot, growing this body
+ * from 0xa4 to 0xb8. The cartridge passes the same raw fixed-point word in r3,
+ * so retain the measured scalar call view while using real actor methods. */
+extern "C" int _ZN5Sound7PlaySubEjjj5Fix12IiEb(
+    u32 soundID, u32 volume, u32 pan, Fix12i distance, bool loop);
 
 int IceSlideManager::Behavior()
 {
-  switch (mState) {
-  case 0:
-    if (_ZN8dActor_c13DistToCPlayerEv(((char*)this)) < 0x180000) {
-      unsigned char* p = (unsigned char*)(((int)((char*)this) + 0xd6));
-      _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, 0x14, 0x7f, 0x15666, 0);
-      *p += 1;
+    switch (mState) {
+    case 0:
+        if (DistToCPlayer() < 0x180000) {
+            _ZN5Sound7PlaySubEjjj5Fix12IiEb(
+                0x20, 0x14, 0x7f, 0x15666, false);
+            ++mState;
+        }
+        break;
+    case 1:
+        if (DecIfAbove0_Short(&mKillTimer) == 0) {
+            _ZN5Sound7PlaySubEjjj5Fix12IiEb(
+                0x20, 0x7f, 0, 0x15666, false);
+            KillAndTrackInDeathTable();
+        }
+        break;
     }
-    break;
-  case 1:
-    if (DecIfAbove0_Short((char*)&mKillTimer) == 0) {
-      _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, 0x7f, 0, 0x15666, 0);
-      _ZN8dActor_c24KillAndTrackInDeathTableEv(((char*)this));
-    }
-    break;
-  }
-  return 1;
+    return 1;
 }
