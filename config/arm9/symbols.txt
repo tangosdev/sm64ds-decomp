@@ -4239,6 +4239,7 @@ data_020926cc kind:data(any) addr:0x020926cc
 _ZTS7dWipe_c kind:data(any) addr:0x020926d0
 _ZTI7dWipe_c kind:data(any) addr:0x020926dc
 data_020926f0 kind:data(any) addr:0x020926f0
+_ZTV7dWipe_c kind:data(any) addr:0x020926f0
 _ZTV4View kind:data(any) addr:0x02092720
 data_02092768 kind:data(any) addr:0x02092768
 data_02092778 kind:data(any) addr:0x02092778

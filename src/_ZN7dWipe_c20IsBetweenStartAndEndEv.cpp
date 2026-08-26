@@ -1,28 +1,26 @@
 //cpp
 // @symbol _ZN7dWipe_c20IsBetweenStartAndEndEv
-/* recovered: renamed to Class_Method */
-/* dWipe_c::IsBetweenStartAndEnd() -- vtable slot 7. extern "C" carries the
- * literal mangled name unmangled -- see include/dWipe_c.h. */
-struct FaderBrightness {
-    virtual void m00();
-    virtual void m04();
-    virtual void m08();
-    virtual void m0c();
-    virtual void m10();
-    virtual int  m14();      /* vtable 0x14 */
-    virtual int  m18();      /* vtable 0x18 */
-    int pad[4];
-    int type;            /* 0x14 */
-};
+/* recovered: real C++ member function -- the compiler spells the symbol
+ *
+ * dWipe_c::IsBetweenStartAndEnd, vtable slot 7. `type == 1` is this class's
+ * escape hatch: the hardware capture path is not in use, so the question goes
+ * straight back to the base implementation through a QUALIFIED call --
+ * FaderBrightness::IsBetweenStartAndEnd() -- which mwcc turns into a direct
+ * `bl`, which is exactly what the ROM does. An unqualified call would dispatch
+ * through this object's own vptr and land back here.
+ *
+ * Otherwise the answer is composed from this object's own slots 5 and 6, both
+ * of which dWipe_c overrides, so those two stay virtual dispatches.
+ */
+#include "dWipe_c.h"
 
-extern "C" int _ZN15FaderBrightness20IsBetweenStartAndEndEv(struct FaderBrightness *thiz);
-
-extern "C" int _ZN7dWipe_c20IsBetweenStartAndEndEv(struct FaderBrightness *thiz)
+int dWipe_c::IsBetweenStartAndEnd()
 {
-    if (thiz->type == 1)
-        return _ZN15FaderBrightness20IsBetweenStartAndEndEv(thiz);
-    if (!thiz->m14()) {
-        if (thiz->m18() == 0)
+    if (type == 1)
+        return FaderBrightness::IsBetweenStartAndEnd();
+
+    if (!IsAtStart()) {
+        if (IsAtEnd() == 0)
             return 1;
     }
     return 0;

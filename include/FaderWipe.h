@@ -35,7 +35,12 @@
 struct FaderWipe : FaderColor {
     Model model;                    /* 0x10 -- constructed last by FaderWipe::FaderWipe */
 
-    virtual ~FaderWipe();           /* key function; only defined in D0Ev.c / D1Ev.c */
+    /* Out of line -- the ROM keeps it as a real call at 0x02017480, and its
+       body is empty: every store it makes belongs to a base sub-object
+       constructor or to Model's. */
+    FaderWipe();
+
+    virtual ~FaderWipe();           /* key function; defined in D1Ev.cpp / D0Ev.cpp */
     virtual void AdvanceFade();     /* slot 2 -- the only override */
 
     void LoadAndSetFile(u16 ov0ID);

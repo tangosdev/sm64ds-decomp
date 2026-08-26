@@ -23,8 +23,20 @@
  */
 #ifdef __cplusplus
 struct FaderBrightness : Fader {
-    /* Declared first -- key function. The D0/D1/D2 sources now define the real
-       destructor and isolate the requested variant from mwcc's emitted group. */
+    /* Inline, and this is where the interpolator's initial state is set. The
+       ROM's evidence is the order inside _ZN9FaderWipeC1Ev (0x02017480), the
+       chain's only surviving constructor: Fader's vtable, then THIS class's
+       vtable, and only THEN `currInterp = 0x1000; speed = 0`. A field write
+       that follows a sub-object's own vptr store belongs to that sub-object's
+       constructor, so those two are FaderBrightness's, not Fader's. A fade
+       therefore starts fully opaque and stationary. Inline because the ROM has
+       no out-of-line constructor for this class: it is emitted into
+       FaderWipe's. */
+    FaderBrightness() { currInterp = 0x1000; speed = 0; }
+
+    /* Declared first among the virtuals -- key function. The D0/D1/D2 sources
+       now define the real destructor and isolate the requested variant from
+       mwcc's emitted group. */
     virtual ~FaderBrightness();
 
     virtual void AdvanceFade();                 /* slot 2 */

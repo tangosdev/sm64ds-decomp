@@ -8,7 +8,10 @@
  * override below hands that case straight back to the base class.
  *
  * A single global static (data_0209f61c), never spawned. Derivation, size and
- * vtable evidence: notes/scene-provenance.md.
+ * vtable evidence: notes/scene-provenance.md. Its vtable storage at 0x020926f0
+ * is named _ZTV7dWipe_c in config/arm9/symbols.txt, taken from the ROM's own
+ * __si_class_type_info record for dWipe_c, so the destructors below can be real
+ * C++ and still resolve at the link.
  *
  * dWipe_c is NOT dFdWipe_c/FaderWipe; they are unrelated classes.
  */
@@ -16,7 +19,12 @@
 struct dWipe_c : FaderColor {
     /* 0x0e/0x0f reuse FaderColor's tail padding -- see notes/scene-provenance.md. */
     u8  unk_00e;         /* 0x0e */
-    s8  needsCleanup;    /* 0x0f -- capture is armed; the destructors tear it down */
+    /* 0x0f -- capture is armed; the destructors tear it down. UNSIGNED: the
+       only two reads of this field in the image, the D1 and D0 destructors at
+       0x0202fc08/0x0202fbc8, both load it with `ldrb`. It was s8 here until
+       those destructors became real C++ and the compiler was asked to emit the
+       load itself. */
+    u8  needsCleanup;
     s32 state;           /* 0x10 -- 0 idle, 1 opening, 2 open, 3 closing, 4 closed */
     s32 type;            /* 0x14 -- palette/blend path selector; 1 defers to the base */
     s32 unk_018;         /* 0x18 */
@@ -46,7 +54,7 @@ struct dWipe_c {
     Fix12i speed;       /* 0x08 (from Fader) */
     u16    color;       /* 0x0c (from FaderColor) */
     u8     unk_00e;     /* 0x0e */
-    s8     needsCleanup;/* 0x0f */
+    u8     needsCleanup;/* 0x0f -- unsigned; see the C++ branch above */
     s32    state;       /* 0x10 */
     s32    type;        /* 0x14 */
     s32    unk_018;     /* 0x18 */
