@@ -342,6 +342,21 @@ const ntr::StackLayout *hal_screen_layout(void)
        precisely what the setting promises -- "remove the gap" gives back the
        picture the port had before this feature, jump and all. */
     int want_gap = host_setting_minigame_gap() ? raw : 0;
+    /* ONE HINGE, OWNER'S RULING (2026-08-26). Games write their own G --
+       the dScMgD3DBase_c four write 16, most others 32 -- and this layout
+       used to draw each game's number, so the visible gap changed size per
+       game. The owner tested it directly: paused Trampoline Time with Mario
+       inside the hinge, and with a 16-row band his feet barely cleared the
+       bottom while nothing showed at the top -- the 3D crossing hides MORE
+       rows than the 2D G word says, so drawing 16 was not faithful to that
+       family's own physics either. His order: one gap, 32 DS rows (64 host),
+       every game. DISPLAY ONLY -- the game's word is not written, its sprite
+       submission still runs at a2 + 0xc0 + its own G, so a 2D sprite crossing
+       the seam in a G=16 game lands 16 rows early against this band. If that
+       is ever visible in play it is a report for the owner, not a reason to
+       quietly revert this. */
+    if (want_gap)
+        want_gap = 32;
     /* A VISUAL row drops the band the same way MinigameGap false does, and by
        the same mechanism: layout only. The word is untouched, the game still
        submits at a2 + 0xc0 + G, and nothing crosses in these games, so no
