@@ -200,7 +200,7 @@ src/_ZN12daDossyCap_cD0Ev.c:
     complete
     .text start:0x02118064 end:0x021180b8
 
-src/func_ov065_021180b8.c:
+src/_ZN14DorriePlatformD1Ev.cpp:
     complete
     .text start:0x021180b8 end:0x021180d4
 
@@ -288,11 +288,11 @@ src/DorrieCap_Spawn.c:
     complete
     .text start:0x021195ec end:0x02119634
 
-src/Dorrie_Spawn.cpp:
+src/Dorrie_Spawn.c:
     complete
     .text start:0x02119634 end:0x021196bc
 
-src/func_ov065_021196bc.c:
+src/_ZN14DorriePlatformC1Ev.cpp:
     complete
     .text start:0x021196bc end:0x021196d8
 
