@@ -21,26 +21,34 @@
 #include "BigBrickBlock.h"
 #include "SharedFilePtr.h"
 #include "Model.h"
+#include "Player.h"
 
+struct SharedFileRow {
+    SharedFilePtr *file;
+    u8 pad[8];
+};
+
+struct ClpsRow {
+    CLPS_Block *block;
+    u8 pad[8];
+};
 
 extern "C" {
-extern char *data_ov002_02108ab0[];   /* model handles,     0xc stride */
-extern char *data_ov002_02108ab4[];   /* collision handles, 0xc stride */
-extern char *data_ov002_02108ab8[];   /* CLPS blocks,       0xc stride */
+extern SharedFileRow data_ov002_02108ab0[];   /* model handles,     0xc stride */
+extern SharedFileRow data_ov002_02108ab4[];   /* collision handles, 0xc stride */
+extern ClpsRow data_ov002_02108ab8[];         /* CLPS blocks,       0xc stride */
 extern s8 data_0209f2f8;              /* current level */
 extern u8 data_0209f220;
 
-int _ZN6Player15IsEnteringLevelEv(Player *self);
-int func_ov002_020b36a0(BigBrickBlock *self);
 int IsStarCollectedInCurLevel(int star);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg *self, void *kcl, const Matrix4x3 *mat, int scale, s16 angY, void *clps);
+    dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 *mat, int scale, s16 angY,
+    CLPS_Block *clps);
 int _ZN5Event6GetBitEj(u32 bit);
 }
 
 int BigBrickBlock::InitResources()
 {
-    u8 *c = (u8 *)this;
     u16 id = actorID;
     u8 idx;
 
@@ -53,8 +61,7 @@ int BigBrickBlock::InitResources()
     case 0x2e: mVariant = 2; break;
     }
 
-    mModel.SetFile((BMD_File *)Model::LoadFile(
-        **(SharedFilePtr **)((char *)data_ov002_02108ab0 + mVariant * 0xc)), 1, -1);
+    mModel.SetFile((BMD_File *)Model::LoadFile(*data_ov002_02108ab0[mVariant].file), 1, -1);
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
 
@@ -63,8 +70,8 @@ int BigBrickBlock::InitResources()
     is11 = is11 == 0x11;
     if (is11 != 0) {
         int byte1;
-        mStarID = *(s32 *)(c + 8);
-        byte1 = ((u32)*(s32 *)(c + 8) >> 8) & 0xff;
+        mStarID = param1;
+        byte1 = (param1 >> 8) & 0xff;
         if (mStarID == 0xff)
             mStarID = 0;
         if (mStarID != 0 && byte1 == 0xff)
@@ -77,37 +84,37 @@ int BigBrickBlock::InitResources()
         int is10 = actorID;
         is10 = is10 == 0x10;
         if (is10 != 0) {
-            void *kcl = dBgW_Kc::LoadFile(**(SharedFilePtr **)((char *)data_ov002_02108ab4 + idx * 0xc));
+            KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab4[idx].file);
             _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
                 &mMeshCollider, kcl, &mClsnMat, 0x1800, mAngleY,
-                *(void **)((char *)data_ov002_02108ab8 + idx * 0xc));
+                data_ov002_02108ab8[idx].block);
         } else {
-            void *kcl = dBgW_Kc::LoadFile(**(SharedFilePtr **)((char *)data_ov002_02108ab4 + idx * 0xc));
+            KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab4[idx].file);
             _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
                 &mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY,
-                *(void **)((char *)data_ov002_02108ab8 + idx * 0xc));
+                data_ov002_02108ab8[idx].block);
         }
     } else {
-        void *kcl = dBgW_Kc::LoadFile(**(SharedFilePtr **)((char *)data_ov002_02108ab4 + idx * 0xc));
+        KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(*data_ov002_02108ab4[idx].file);
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY,
-            *(void **)((char *)data_ov002_02108ab8 + idx * 0xc));
+            data_ov002_02108ab8[idx].block);
     }
 
     {
     int is13 = actorID;
     is13 = is13 == 0x13;
     if (is13 != 0)
-        mEventID = *(s32 *)(c + 8) & 0xf;
+        mEventID = param1 & 0xf;
     }
     mPrevEventBit = _ZN5Event6GetBitEj(mEventID);
 
     {
     Player *pl = ClosestPlayer();
-    if (pl != 0 && _ZN6Player15IsEnteringLevelEv(pl) != 0) {
+    if (pl != 0 && pl->IsEnteringLevel() != 0) {
         int is11b = actorID;
         is11b = is11b == 0x11;
-        if (is11b != false && func_ov002_020b36a0(this) != 0) {
+        if (is11b != false && HasNonzeroAngleX()) {
             if (data_0209f2f8 == 1)
                 return 0;
         }

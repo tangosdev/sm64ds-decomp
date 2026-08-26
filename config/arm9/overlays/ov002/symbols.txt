@@ -151,8 +151,8 @@ _ZN12daObjAbuku_c13InitResourcesEv kind:function(arm,size=0x50) addr:0x020b3518
 daObjAbuku_c_Spawn kind:function(arm,size=0x38) addr:0x020b3568
 _ZN13BigBrickBlockD1Ev kind:function(arm,size=0x44) addr:0x020b35a0
 _ZN13BigBrickBlockD0Ev kind:function(arm,size=0x58) addr:0x020b35e4
-func_ov002_020b363c kind:function(arm,size=0x64) addr:0x020b363c
-func_ov002_020b36a0 kind:function(arm,size=0x14) addr:0x020b36a0
+_ZN13BigBrickBlock17NotifyLinkedActorEv kind:function(arm,size=0x64) addr:0x020b363c
+_ZN13BigBrickBlock16HasNonzeroAngleXEv kind:function(arm,size=0x14) addr:0x020b36a0
 _ZN13BigBrickBlock15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x020b36b4
 _ZN13BigBrickBlock8OnKickedER8dActor_c kind:function(arm,size=0xac) addr:0x020b36dc
 _ZN13BigBrickBlock11OnAttacked2ER8dActor_c kind:function(arm,size=0x64) addr:0x020b3788
@@ -1748,6 +1748,7 @@ data_ov002_02108ab0 kind:data(any) addr:0x02108ab0
 data_ov002_02108ab4 kind:data(any) addr:0x02108ab4
 data_ov002_02108ab8 kind:data(any) addr:0x02108ab8
 _ZTV13BigBrickBlock kind:data(any) addr:0x02108adc
+_ZTV13daObjBlockL_c kind:data(any) addr:0x02108adc
 data_ov002_02108b5c kind:data(any) addr:0x02108b5c
 data_ov002_02108b64 kind:data(any) addr:0x02108b64
 data_ov002_02108b6c kind:data(any) addr:0x02108b6c

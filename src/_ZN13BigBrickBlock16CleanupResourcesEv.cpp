@@ -1,19 +1,21 @@
 //cpp
 // @symbol _ZN13BigBrickBlock16CleanupResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "BigBrickBlock.h"
 #include "SharedFilePtr.h"
-#include "dBgW.h"
-extern char data_ov002_02108ab0[];
-extern char data_ov002_02108ab4[];
+
+struct BigBrickBlockFileRow {
+    SharedFilePtr* file;
+    u8 pad[8];
+};
+
+extern BigBrickBlockFileRow data_ov002_02108ab0[];
+extern BigBrickBlockFileRow data_ov002_02108ab4[];
 
 int BigBrickBlock::CleanupResources()
 {
-  if(((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
-    ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
-  ((SharedFilePtr *)(*(void**)(data_ov002_02108ab0 + (unsigned char)((char *)this)[0x32c]*0xc)))->Release();
-  ((SharedFilePtr *)(*(void**)(data_ov002_02108ab4 + (unsigned char)((char *)this)[0x32c]*0xc)))->Release();
-  return 1;
+    if (mMeshCollider.IsEnabled())
+        mMeshCollider.Disable();
+    data_ov002_02108ab0[mVariant].file->Release();
+    data_ov002_02108ab4[mVariant].file->Release();
+    return 1;
 }

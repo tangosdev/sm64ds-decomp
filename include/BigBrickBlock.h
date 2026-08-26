@@ -24,16 +24,17 @@
  *   +0x322  Kill's `ldrb r0, [r4, #0x322]` and InitResources' star-ID write
  *   +0x323  Kill hands `r4 + 0x323` to dActor_c::UntrackAndSpawnStar as its
  *           `s8 &trackStarID`; InitResources stores dActor_c::TrackStar's result there
- *   +0x328  Kill's `ldr r0, [r4, #0x328]`, and func_ov002_020b363c dereferences
+ *   +0x328  Kill's `ldr r0, [r4, #0x328]`, and NotifyLinkedActor dereferences
  *           the same word as an actor (reads actorID at +0xc)
  *   +0x32c  a u8 variant index, 0..2, written by InitResources and used by
  *           CleanupResources to stride the 0xc-byte file tables at
- *           data_ov002_02108ab0 / _ab4 / _ab8. Left as padding here: this change
- *           only needed the three fields above.
+ *           data_ov002_02108ab0 / _ab4 / _ab8.
  *
  * The 0x322/0x323 pair was inside a pad_321[0x3] run and 0x328 was past the end
  * of the class, so slot 31 (Kill) could not be written as a method until now.
  */
+
+struct StarSwitch;
 
 #ifdef __cplusplus
 
@@ -56,8 +57,8 @@ struct BigBrickBlock : dBgActor_c {
        dActor_c::UntrackAndSpawnStar takes `s8 &` -- Kill passes `this + 0x323` as
        exactly that argument. */
     s8 mTrackStarID;                  /* 0x323 */
-    dActor_c *mSwitch;                   /* 0x324 */
-    /* An dActor_c *, and func_ov002_020b363c is the evidence: it loads this word
+    StarSwitch *mSwitch;                 /* 0x324 */
+    /* A dActor_c *, and NotifyLinkedActor is the evidence: it loads this word
        and reads actorID at +0xc off it, then writes +0x3b0 or +0xd6. Kill only
        tests it against null. */
     dActor_c *mLinkedActor;                   /* 0x328 */
@@ -89,6 +90,12 @@ struct BigBrickBlock : dBgActor_c {
     int CleanupResources();
     int InitResources();
     int Render();
+
+    /* Non-virtual helpers owned by this TU. NotifyLinkedActor has one caller,
+       Kill(), and every object access is through this or mLinkedActor.
+       HasNonzeroAngleX is called only by Kill and InitResources. */
+    void NotifyLinkedActor();
+    bool HasNonzeroAngleX();
 
     /* Slots 21-24 and 27, all dActor_c combat-callback overrides (see
        include/dActor_c.h for the slot table). Attributed by the vtable, not
@@ -140,11 +147,11 @@ struct BigBrickBlock {
     u8  pad_321[0x1];
     u8  mStarID;            /* 0x322 */
     s8  mTrackStarID;            /* 0x323 */
-    /* dActor_c * -- the ROM loads this WORD and passes it to _ZN8dActor_c15FindWithActorIDEjPS_
-       as that function's `this`, which is an object address, so the word is a dActor_c *. It
-       says nothing about the rest of the marker's span, which stays explicit padding. Was
-       a u8 marker. */
-    dActor_c *mSwitch;            /* 0x324 */
+    /* StarSwitch * -- Behavior follows dActor_c::FindWithActorID(0xb, ...)
+       until the returned actor's byte at +0x34e equals mEventID. StarSwitch's
+       independently recovered mEventBit is exactly +0x34e; Render also reads
+       that same object's mTimer/mTimeLimit at +0x338/+0x33a. */
+    struct StarSwitch *mSwitch;   /* 0x324 */
     dActor_c *mLinkedActor;            /* 0x328 */
     u8  pad_32c[0x4];
 };

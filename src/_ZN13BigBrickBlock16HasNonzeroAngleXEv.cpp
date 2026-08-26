@@ -1,6 +1,10 @@
 //cpp
-#include "types.h"
+// @symbol _ZN13BigBrickBlock16HasNonzeroAngleXEv
+#include "BigBrickBlock.h"
 
-extern "C" int func_ov002_020b36a0(char* c){
-  return *(short*)(c+0x8c) != 0;
+/* Both callers are BigBrickBlock methods in this TU. The field at 0x8c is the
+   inherited dActor_c::mAngleX; no external state participates. */
+bool BigBrickBlock::HasNonzeroAngleX()
+{
+    return mAngleX != 0;
 }

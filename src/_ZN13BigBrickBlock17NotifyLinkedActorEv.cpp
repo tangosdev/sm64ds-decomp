@@ -1,23 +1,29 @@
 //cpp
-#include "types.h"
+// @symbol _ZN13BigBrickBlock17NotifyLinkedActorEv
+#include "BigBrickBlock.h"
 
-extern "C" void func_ov002_020b363c(char *c)
+/* The helper belongs to BigBrickBlock's recovered TU and has one caller:
+   BigBrickBlock::Kill. It follows mLinkedActor and clears the per-actor state
+   used by actor 0x121 or sets the equivalent state on actors 0x141..0x144. */
+void BigBrickBlock::NotifyLinkedActor()
 {
-    char *p = *(char**)(c + 0x328);
-    int id;
-    if (p == 0)
+    dActor_c* linkedActor = mLinkedActor;
+    int actorID;
+    if (linkedActor == 0)
         return;
-    id = *(u16*)(p + 0xc);
-    if (id <= 0x121) {
-        if (id == 0x121)
-            *(u8*)(p + 0x3b0) = 0;
+
+    actorID = linkedActor->actorID;
+    if (actorID <= 0x121) {
+        if (actorID == 0x121)
+            ((u8*)linkedActor)[0x3b0] = 0;
         return;
     }
-    switch (id) {
+
+    switch (actorID) {
     case 0x141:
     case 0x142:
     case 0x143:
     case 0x144:
-        *(u8*)(p + 0xd6) = 1;
+        ((u8*)linkedActor)[0xd6] = 1;
     }
 }

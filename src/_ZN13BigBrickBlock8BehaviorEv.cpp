@@ -1,15 +1,14 @@
 //cpp
-#include "types.h"
 // @symbol _ZN13BigBrickBlock8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "BigBrickBlock.h"
-#include "dBgW.h"
+#include "StarSwitch.h"
+
+/* Event has no shared namespace declaration yet. The two unnamed collision
+   setters remain address-named, and IsClsnInRangeOnScreen's by-value Fix12
+   signature is a documented compiler wall, so those ABI calls stay explicit. */
 extern "C" int _ZN5Event6GetBitEj(unsigned int a);
-extern "C" void *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void *after);
-extern "C" void func_020393a4(int *p, int v);
-extern "C" void func_02039394(int *p, int v);
+extern "C" void func_020393a4(void *p, int v);
+extern "C" void func_02039394(void *p, int v);
 extern "C" void _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
 
 int BigBrickBlock::Behavior()
@@ -19,22 +18,20 @@ int BigBrickBlock::Behavior()
         if (mPrevEventBit != _ZN5Event6GetBitEj(mEventID))
             mBroken = 0;
 
-        if (*(void **)((char *)&mSwitch) == 0) {
+        if (mSwitch == 0) {
             unsigned int id = 0xb;
-            char *p;
             do {
-                *(void **)((char *)&mSwitch) = _ZN8dActor_c15FindWithActorIDEjPS_(id, *(void **)((char *)&mSwitch));
-                p = *(char **)((char *)&mSwitch);
-            } while (p == 0 || mEventID != *(u8 *)(p + 0x34e));
+                mSwitch = (StarSwitch *)FindWithActorID(id, mSwitch);
+            } while (mSwitch == 0 || mEventID != mSwitch->mEventBit);
         }
 
         if (_ZN5Event6GetBitEj(mEventID) == 0 || mBroken != 0) {
-            if (((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0)
-                ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
+            if (mMeshCollider.IsEnabled() != 0)
+                mMeshCollider.Disable();
         } else {
-            func_020393a4((int *)((char *)&(*(u8 *)&mMeshCollider)), 0x15e000);
-            func_02039394((int *)((char *)&(*(u8 *)&mMeshCollider)), 0x64000);
-            _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(((char *)this), 0x150000, 0);
+            func_020393a4(&mMeshCollider, 0x15e000);
+            func_02039394(&mMeshCollider, 0x64000);
+            _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(this, 0x150000, 0);
         }
 
         mPrevEventBit = _ZN5Event6GetBitEj(mEventID);
@@ -48,9 +45,9 @@ int BigBrickBlock::Behavior()
             v1 = 0x1c2000;
             v5 = 0x96000;
         }
-        func_020393a4((int *)((char *)&(*(u8 *)&mMeshCollider)), v1);
-        func_02039394((int *)((char *)&(*(u8 *)&mMeshCollider)), v5);
-        _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(((char *)this), 0x600000, 0);
+        func_020393a4(&mMeshCollider, v1);
+        func_02039394(&mMeshCollider, v5);
+        _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(this, 0x600000, 0);
     }
     return 1;
 }
