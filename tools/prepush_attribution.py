@@ -62,7 +62,7 @@ import chaos_db_ci as CDB  # noqa: E402
 
 
 def overrides_at(rev):
-    """The manual attribution.json overrides as of `rev`, read from git rather than disk."""
+    """Path-wide attribution overrides as of ``rev``."""
     try:
         raw = subprocess.run(["git", "show", f"{rev}:attribution.json"], cwd=REPO,
                              capture_output=True, text=True, encoding="utf-8",
@@ -72,7 +72,35 @@ def overrides_at(rev):
         return {}
     ov = data.get("overrides", {}) if isinstance(data, dict) else {}
     return {k: v for k, v in ov.items()
-            if isinstance(k, str) and k.startswith("src/") and isinstance(v, str) and v}
+            if isinstance(k, str) and k.startswith("src/") and "#" not in k
+            and isinstance(v, str) and v}
+
+
+def member_overrides_at(rev):
+    """``symbol -> (source path, author)`` for consolidated-TU overrides.
+
+    ``validate_merge.attribution_snapshot`` resolves ``source.cpp#symbol`` before a
+    path-wide override.  Reading the same keys here lets a deliberate many-files-to-one
+    consolidation preserve each old symbol's author instead of reporting every legacy
+    basename as lost.
+    """
+    try:
+        raw = subprocess.run(["git", "show", f"{rev}:attribution.json"], cwd=REPO,
+                             capture_output=True, text=True, encoding="utf-8",
+                             errors="replace", check=True).stdout
+        data = json.loads(raw)
+    except (subprocess.CalledProcessError, json.JSONDecodeError):
+        return {}
+    ov = data.get("overrides", {}) if isinstance(data, dict) else {}
+    out = {}
+    for key, author in ov.items():
+        if (not isinstance(key, str) or not key.startswith("src/") or "#" not in key
+                or not isinstance(author, str) or not author):
+            continue
+        path, symbol = key.rsplit("#", 1)
+        if symbol:
+            out[symbol] = (path, author)
+    return out
 
 
 def lineage(rev):
@@ -213,7 +241,7 @@ def main():
     # rewrite-and-move in one commit still fails.
     projected, origin = project(before_by_name, steps)
 
-    changed, lost, moved_ok, renamed_ok = [], [], [], []
+    changed, lost, moved_ok, renamed_ok, consolidated_ok = [], [], [], [], []
     for name, (new_stem, new_who) in after_by_name.items():
         if name not in projected:
             continue                                   # genuinely new work
@@ -225,9 +253,16 @@ def main():
             renamed_ok.append((came_from, name, old_stem, new_stem, old_who))
         elif old_stem != new_stem:
             moved_ok.append((name, old_stem, new_stem, old_who))
+    members = member_overrides_at(args.head)
     for name, (old_stem, old_who) in projected.items():
         if name not in after_by_name:
-            lost.append((origin.get(name, name), old_stem, old_who))
+            member = members.get(name)
+            if member and member[1] == old_who:
+                consolidated_ok.append((name, old_stem, member[0], old_who))
+            elif member:
+                changed.append((name, old_stem, member[0], old_who, member[1]))
+            else:
+                lost.append((origin.get(name, name), old_stem, old_who))
 
     for name, old_stem, new_stem, old_who, new_who in changed:
         print(f"  CREDIT CHANGED  {name}")
@@ -239,15 +274,18 @@ def main():
         print(f"  moved, credit intact: {name}  [{who}]")
     for name, target, old_stem, new_stem, who in renamed_ok:
         print(f"  renamed, credit intact: {name} -> {target}  [{who}]")
+    for name, old_stem, new_path, who in consolidated_ok:
+        print(f"  consolidated, credit intact: {name}  {old_stem} -> {new_path}  [{who}]")
 
     print(f"\n{len(after_by_name)} tracked, {len(moved_ok)} moved with credit intact, "
           f"{len(renamed_ok)} renamed with credit intact, "
+          f"{len(consolidated_ok)} consolidated with credit intact, "
           f"{len(changed)} changed, {len(lost)} lost")
 
     if args.json:
         pathlib.Path(args.json).write_text(json.dumps(
             {"changed": changed, "lost": lost, "moved_ok": moved_ok,
-             "renamed_ok": renamed_ok}, indent=2),
+             "renamed_ok": renamed_ok, "consolidated_ok": consolidated_ok}, indent=2),
             encoding="utf-8")
 
     if changed or lost:

@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import io
+import importlib.util
 import json
 import pathlib
 import sys
@@ -246,16 +247,16 @@ def _probe_eligible():
 
     per_symbol_passes = [name for _rel, name, reason, _missing in results
                          if reason is None]
-    # Passing only after one isolate call per member is useful per-function evidence,
-    # but it does not validate the intact object that a production TU link must place.
-    intact = not isolated and len(per_symbol_passes) == len(SYMBOLS)
+    mode = EL.placement_mode(expected, isolate=True)
+    ready = (isolated == expected and len(per_symbol_passes) == len(SYMBOLS)
+             and mode == "derived")
     return _row(
-        "eligible", "ready" if intact else "gap",
+        "eligible", "ready" if ready else "gap",
         {"perSymbolPasses": per_symbol_passes, "isolatedSymbols": isolated,
-         "intactObjectVerdicts": int(intact)},
-        "Derived-mode evidence exists per member, but there is no intact-object verdict; "
-        "promotion must declare whether it is derived or whole-object." if not intact else
-        "The intact shared object has a placement verdict.")
+         "intactObjectVerdicts": 0, "objectMode": mode},
+        "Eligibility does not state whether the shared source is derived or intact."
+        if not ready else
+        "Every member passes and the report declares derived-object placement explicitly.")
 
 
 def _probe_rombuild(fixture):
@@ -319,17 +320,19 @@ def _probe_validate_merge(repo):
 def _probe_tiers(repo):
     before = TI.converted(repo / "legacy-src")
     after = TI.converted(repo / "src")
-    ok = (before["files"] == after["files"]
+    ok = (before["functions"] == after["functions"]
           and before["converted"] == after["converted"])
     return _row(
         "tiers", "ready" if ok else "gap",
-        {"legacyFiles": before["files"], "legacyConverted": before["converted"],
-         "mergedFiles": after["files"], "mergedConverted": after["converted"],
+        {"legacyFiles": before["source_files"], "legacyFunctions": before["functions"],
+         "legacyConverted": before["converted"],
+         "mergedFiles": after["source_files"], "mergedFunctions": after["functions"],
+         "mergedConverted": after["converted"],
          "fixtureFunctions": len(SYMBOLS)},
         "Physical-file scoring drops both numerator and denominator from two readable "
         "functions to one readable file, so consolidation changes progress without "
         "changing recovered behavior." if not ok else
-        "The readability metric preserves its units across source consolidation.")
+        "The readability metric preserves function units across source consolidation.")
 
 
 def _probe_langmode():
@@ -367,15 +370,30 @@ def _probe_attribution(repo):
         "Attribution can preserve a distinct author for each TU member.")
 
 
-def _probe_port_refs():
+def _probe_port_refs(fixture):
     report = PR.build_report()
     cmake = report["checks"]["cmake-symbols"]
     manifests = report["checks"]["manifests"]
-    ok = not cmake["failures"] and not manifests["failures"]
+    hostgen_path = TOOLS.parent / "port" / "tools" / "hostgen.py"
+    spec = importlib.util.spec_from_file_location("cpp_tu_compat_hostgen", hostgen_path)
+    hostgen = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(hostgen)
+    out_root = fixture.repo / "host-out"
+    with mock.patch.object(sys, "argv", [
+            "hostgen.py", "--decomp", str(fixture.repo), "--out", str(out_root),
+            SYMBOLS[1]]), contextlib.redirect_stdout(io.StringIO()):
+        hostgen.main()
+    generated = out_root / pathlib.PurePosixPath(SOURCE).with_suffix(".cpp")
+    generated_text = generated.read_text(encoding="utf-8") if generated.is_file() else ""
+    definitions = sum(name in generated_text for name in ("Pair::First", "Pair::Second"))
+    ok = (not cmake["failures"] and not manifests["failures"]
+          and generated.is_file() and definitions == 2)
     return _row(
         "port_refcheck", "ready" if ok else "blocked",
         {"manifestFailures": len(manifests["failures"]),
          "cmakeSymbolFailures": len(cmake["failures"]),
+         "hostgenOutput": generated.relative_to(fixture.repo).as_posix(),
+         "hostgenDefinitions": definitions,
          "messages": [f["message"] for f in cmake["failures"]]},
         "Literal manifests can move to the TU path, but CMake hostgen still resolves each "
         "symbol only as src/<symbol>.c|.cpp." if not ok else
@@ -394,7 +412,7 @@ def audit():
             _probe_tiers(fixture.repo),
             _probe_langmode(),
             _probe_attribution(fixture.repo),
-            _probe_port_refs(),
+            _probe_port_refs(fixture),
         ]
     blockers = [row["surface"] for row in rows if row["status"] == "blocked"]
     gaps = [row["surface"] for row in rows if row["status"] == "gap"]

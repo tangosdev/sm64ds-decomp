@@ -70,6 +70,7 @@ sys.path.insert(0, str(REPO / "tools"))
 import asm_policy  # noqa: E402
 import delaunder  # noqa: E402
 import demangle as D  # noqa: E402
+import srcpath as SP  # noqa: E402
 
 # A mangled basename, with or without the .c/.cpp extension.
 MANGLED = re.compile(r"^_Z[A-Za-z0-9_]+$")
@@ -214,8 +215,8 @@ def _brace_depth(text, pos):
     return depth - len(linkage_depths)
 
 
-def defined_mangled_symbol(path):
-    """The mangled symbol this file DEFINES, if any, regardless of its filename.
+def defined_mangled_symbols(path):
+    """Every mangled symbol this file defines by hand, regardless of filename.
 
     The counters used to key entirely on the basename, which made the headline
     metric trivially gameable by `git mv` -- and not only in theory:
@@ -233,7 +234,8 @@ def defined_mangled_symbol(path):
     try:
         t = (REPO / path).read_text(errors="ignore")
     except OSError:
-        return None
+        return []
+    found = []
     for m in ANY_MANGLED_DEF.finditer(t):
         line_start = t.rfind("\n", 0, m.start()) + 1
         line = t[line_start:m.start()]
@@ -243,8 +245,15 @@ def defined_mangled_symbol(path):
             continue
         if _brace_depth(t, m.start()) != 0:
             continue
-        return m.group(1)
-    return None
+        if m.group(1) not in found:
+            found.append(m.group(1))
+    return found
+
+
+def defined_mangled_symbol(path):
+    """Backward-compatible first hand-spelled mangled definition, if any."""
+    found = defined_mangled_symbols(path)
+    return found[0] if found else None
 
 
 # `extern int _ZTV6ToxBox[];`, `extern u32 _ZTV11ShadowModel[];`, `extern void
@@ -296,6 +305,33 @@ def classify(path):
     return kind, info, sym
 
 
+def classifications(path):
+    """Every evidenced C++ function owned by ``path``.
+
+    Production enrollment is the inventory authority for a reconstructed TU whose
+    filename is not any one member symbol.  Unenrolled drafts fall back to symbols
+    hand-spelled in the body, then to the legacy mangled basename.
+    """
+    full = REPO / path
+    symbols = [sym for sym in SP.symbols_for(full) if MANGLED.match(sym)]
+    for sym in defined_mangled_symbols(path):
+        if sym not in symbols:
+            symbols.append(sym)
+    stem = path.rsplit("/", 1)[-1].rsplit(".", 1)[0]
+    if MANGLED.match(stem) and stem not in symbols:
+        symbols.insert(0, stem)
+    rows = []
+    for sym in symbols:
+        try:
+            info = D.demangle(sym)
+        except Exception:
+            continue
+        if not info or not info.get("qualified"):
+            continue
+        rows.append((info.get("variant") or "method", info, sym))
+    return rows
+
+
 def by_value_class_args(info):
     """Class-typed parameters passed by value -- the un-migratable ones."""
     out = []
@@ -332,53 +368,47 @@ def audit():
     nonmatching = []
 
     for p in srcs:
-        kind, info, sym = classify(p)
-        if kind is None:
+        owned = classifications(p)
+        if not owned:
             continue
         stem = p.rsplit("/", 1)[-1].rsplit(".", 1)[0]
         is_c = p.endswith(".c")
-        (c_mangled if is_c else cpp_mangled).append(p)
-
-        # Unmigrated means "the source spells the mangled symbol", not "the file is .c".
-        # A NONMATCHING draft is not evidence a pattern works, so it counts as neither
-        # migrated nor proven -- it is tracked on its own.
-        #
-        # `sym != stem` means the file was reached by reading its body rather than its
-        # name -- i.e. it hand-spells a mangled symbol under a `func_*` filename. That
-        # is unmigrated by construction, whatever the extension says.
-        unmigrated = is_c or sym != stem or hand_spells_own_symbol(p, stem)
         draft = is_nonmatching(p)
-        if not is_c and unmigrated:
-            cpp_handspelled.append(p)
-        if draft:
-            nonmatching.append(p)
+        for kind, info, sym in owned:
+            identity = p if len(owned) == 1 else f"{p}#{sym}"
+            (c_mangled if is_c else cpp_mangled).append(identity)
 
-        slot = kinds.setdefault(kind, {"unmigrated": 0, "migrated": 0, "draft": 0})
-        if draft:
-            slot["draft"] += 1
-        if unmigrated:
-            slot["unmigrated"] += 1
-        elif not draft:
-            slot["migrated"] += 1
+            # A real migration lets C++ emit the mangled name. The basename is no
+            # longer evidence either way once a TU owns several functions.
+            unmigrated = is_c or hand_spells_own_symbol(p, sym)
+            if not is_c and unmigrated:
+                cpp_handspelled.append(identity)
+            if draft:
+                nonmatching.append(identity)
 
-        if unmigrated:
-            byval = by_value_class_args(info)
-            if byval:
-                excluded.append({"file": p, "by_value": sorted(set(byval))})
-            else:
-                cls = info.get("class") or "<free>"
-                pc = per_class.setdefault(cls, {"c_left": 0, "kinds": {}, "files": [],
-                                                "nested": False, "const_member": False})
-                pc["c_left"] += 1
-                pc["files"].append(p)
-                pc["kinds"][kind] = pc["kinds"].get(kind, 0) + 1
-                # Two things that disqualify a class from layout_free and that the
-                # has_header/ctor-dtor test cannot see. Both are read off the symbol,
-                # so they cost nothing and keep this tool ROM-free.
-                if (info.get("qualified") or "").count("::") > 1:
-                    pc["nested"] = True
-                if sym.startswith("_ZNK"):
-                    pc["const_member"] = True
+            slot = kinds.setdefault(kind, {"unmigrated": 0, "migrated": 0, "draft": 0})
+            if draft:
+                slot["draft"] += 1
+            if unmigrated:
+                slot["unmigrated"] += 1
+            elif not draft:
+                slot["migrated"] += 1
+
+            if unmigrated:
+                byval = by_value_class_args(info)
+                if byval:
+                    excluded.append({"file": identity, "by_value": sorted(set(byval))})
+                else:
+                    cls = info.get("class") or "<free>"
+                    pc = per_class.setdefault(cls, {"c_left": 0, "kinds": {}, "files": [],
+                                                    "nested": False, "const_member": False})
+                    pc["c_left"] += 1
+                    pc["files"].append(identity)
+                    pc["kinds"][kind] = pc["kinds"].get(kind, 0) + 1
+                    if (info.get("qualified") or "").count("::") > 1:
+                        pc["nested"] = True
+                    if sym.startswith("_ZNK"):
+                        pc["const_member"] = True
 
     # No include/<Class>.h AND no ctor/dtor => almost certainly an SDK *namespace*
     # (GX, CP15, IRQ...): no `this`, no vtable, no layout, no includers, so a migration

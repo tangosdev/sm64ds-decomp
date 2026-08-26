@@ -7,7 +7,7 @@ delinked gap object carrying the original ROM bytes. The result is packaged back
 into a bootable ROM.
 
     dsd delink   -> build/delinks/*.o      (gap objects, ROM bytes)
-    mwccarm      -> build/src/*.o          (our C, one function per file)
+    mwccarm      -> build/src/*.o          (our C/C++; one or more enrolled functions)
     dsd lcf      -> build/arm9.lcf + build/objects.txt
     mwldarm      -> build/final_link.o     + build/build/*.bin per region
     dsd rom config / rom build             -> build/sm64ds.nds
@@ -57,6 +57,7 @@ import rombuild_check as RBC  # noqa: E402
 import romdata_check as RDC  # noqa: E402
 import layout_check as LAY  # noqa: E402
 import rombuild_profile as RP  # noqa: E402
+import srcpath as SP  # noqa: E402
 
 # Default compiler for the ROM build — same as the matching pin (tools/match.py
 # CANONICAL / notes/rom-build.md). config/rombuild-versions.txt carries per-file
@@ -383,16 +384,7 @@ def _definition_symbols(rel, rows):
     shape; both return every ROM-ordered record so ``isolate_many`` fails closed if the
     object does not define them.
     """
-    stem = pathlib.PurePosixPath(rel).stem
-    ordered = sorted(rows)
-    owners = [(addr, size, name) for addr, size, name in ordered if name == stem]
-    if len(owners) == 1:
-        owner_addr, owner_size, owner_name = owners[0]
-        owner_end = owner_addr + owner_size
-        if all(owner_addr <= addr and addr + size <= owner_end
-               for addr, size, _name in ordered):
-            return [owner_name]
-    return [name for _addr, _size, name in ordered]
+    return SP.definition_symbols(rel, rows)
 
 
 def retarget_text_section(obj, section=".init"):

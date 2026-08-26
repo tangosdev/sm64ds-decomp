@@ -21,12 +21,16 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from enroll import read_delinks, sections, CONFIG, REPO  # noqa: E402
+import srcpath as SP  # noqa: E402
 
 BUILD = REPO / "build" / "build"
 EXTRACTED = REPO / "extracted" / "dsd"
 DEFAULT_CONFIG_ROOT = CONFIG / "arm9"
 ENTRY_SEC = re.compile(r"^\s+(\.\S+)\s+start:0x([0-9a-fA-F]+)\s+end:0x([0-9a-fA-F]+)")
-FUNC_RE = re.compile(r"^(\S+)\s+kind:function\((?:arm|thumb),size=0x([0-9a-fA-F]+)\)")
+FUNC_RE = re.compile(
+    r"^(\S+)\s+kind:function\((?:arm|thumb),size=0x([0-9a-fA-F]+)\)"
+    r"\s+addr:0x([0-9a-fA-F]+)"
+)
 
 
 def _arm9_relative(d, config_root):
@@ -139,6 +143,17 @@ def _module_code_bytes(sym_path):
     return total
 
 
+def _module_functions(sym_path):
+    """``[(start, end, name)]`` for the module's function inventory."""
+    out = []
+    for line in sym_path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        match = FUNC_RE.match(line)
+        if match:
+            start = int(match.group(3), 16)
+            out.append((start, start + int(match.group(2), 16), match.group(1)))
+    return out
+
+
 def _diff_counts(built, retail, allowed=()):
     common = min(len(built), len(retail))
     differing = unexpected = 0
@@ -190,20 +205,28 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
             "exact": module_diff == 0,
             "expectedOnly": unexpected_diff == 0,
         })
+        functions = _module_functions(sym)
 
         for rel, addr, end in entries:
             size = end - addr
+            # A complete delinks entry is a physical object contribution, not a
+            # function. Reconstructed production TUs legitimately cover several
+            # symbols with one entry; count the symbols whose full ranges it owns so
+            # source coverage stays invariant under consolidation.
+            owned = [(start, stop - start, name) for start, stop, name in functions
+                     if addr <= start and stop <= end]
+            function_count = len(SP.definition_symbols(rel, owned))
             is_mod = rel.startswith("mods/")
             if is_mod:
-                mod_functions += 1
+                mod_functions += function_count
                 mod_bytes += size
             else:
-                source_functions += 1
+                source_functions += function_count
                 source_bytes += size
             lo, hi = addr - base, end - base
             if lo < 0 or hi > len(retail) or hi > len(built):
                 if not is_mod:
-                    bad += 1
+                    bad += function_count
                     bad_function_bytes += size
                     failures.append({"module": label, "name": pathlib.Path(rel).stem,
                                      "addr": addr, "size": size,
@@ -215,14 +238,14 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
                                     "addr": addr, "size": size, "differingBytes": nd})
                 continue
             if nd:
-                bad += 1
+                bad += function_count
                 bad_function_bytes += size
                 differing_source_bytes += nd
                 failures.append({"module": label, "name": pathlib.Path(rel).stem,
                                  "addr": addr, "size": size, "differingBytes": nd})
                 per_module_bad[label] += 1
             else:
-                reproducing += 1
+                reproducing += function_count
                 reproducing_bytes += size
 
     total_functions, total_code_bytes = _code_totals(config_root)

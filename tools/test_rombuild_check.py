@@ -32,12 +32,12 @@ class RomBuildCheck(unittest.TestCase):
         RBC.BUILD, RBC.EXTRACTED = self.old_build, self.old_extracted
         self.tmp.cleanup()
 
-    def write_delinks(self, rel):
+    def write_delinks(self, rel, end=0x00001004):
         (self.config / "delinks.txt").write_text(
             "    .text start:0x00001000 end:0x00001008 kind:code\n\n"
             f"{rel}:\n"
             "    complete\n"
-            "    .text start:0x00001000 end:0x00001004\n",
+            f"    .text start:0x00001000 end:0x{end:08x}\n",
             encoding="utf-8")
 
     def test_stock_exact_reports_fidelity_and_source_coverage(self):
@@ -47,6 +47,14 @@ class RomBuildCheck(unittest.TestCase):
         self.assertEqual(report["sourceBuild"]["sourceFunctions"], 1)
         self.assertEqual(report["sourceBuild"]["sourceBytes"], 4)
         self.assertEqual(report["sourceBuild"]["sourceBytesPercent"], 50.0)
+
+    def test_shared_source_counts_every_owned_function(self):
+        self.write_delinks("src/actors/Pair.cpp", end=0x00001008)
+        report = RBC.analyze(self.config, "stock")
+        self.assertTrue(report["passed"])
+        self.assertEqual(report["sourceBuild"]["sourceFunctions"], 2)
+        self.assertEqual(report["sourceBuild"]["reproducingFunctions"], 2)
+        self.assertEqual(report["sourceBuild"]["sourceBytes"], 8)
 
     def test_module_paths_accept_config_or_arm9_as_the_root(self):
         self.assertEqual(RBC.module_label(self.config, self.config), "arm9")

@@ -12,11 +12,14 @@ above or below the similarity threshold -- and a mock would just encode the assu
 under test.
 """
 import json
+import contextlib
+import io
 import pathlib
 import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import chaos_db_ci as CDB  # noqa: E402
@@ -291,3 +294,29 @@ class RenameReplay(GitFixture):
         state, _ = self.PA.project({"a": ("src/a", "alice")}, steps)
         self.assertIn("a", state)          # never vacated -> reported lost
         self.assertNotIn("z", state)
+
+    def test_member_overrides_preserve_credit_across_tu_consolidation(self):
+        self.write("src/a.c", "int a(void){return 1;}\n")
+        self.write("src/b.c", "int b(void){return 2;}\n")
+        self.commit("alice", "match legacy members")
+        self.git("branch", "pre_tu")
+
+        (self.repo / "src/a.c").unlink()
+        (self.repo / "src/b.c").unlink()
+        self.write("src/Pair.cpp", "//cpp\nint a(){return 1;}\nint b(){return 2;}\n")
+        self.write("attribution.json", json.dumps({"overrides": {
+            "src/Pair.cpp#a": "alice",
+            "src/Pair.cpp#b": "alice",
+        }}))
+        self.commit("promoter", "consolidate original TU")
+
+        self.assertEqual(self.PA.member_overrides_at("HEAD"), {
+            "a": ("src/Pair.cpp", "alice"),
+            "b": ("src/Pair.cpp", "alice"),
+        })
+        out = io.StringIO()
+        with mock.patch.object(sys, "argv", [
+                "prepush_attribution.py", "--base", "pre_tu", "--head", "HEAD"]), \
+                contextlib.redirect_stdout(out):
+            self.assertEqual(self.PA.main(), 0)
+        self.assertIn("2 consolidated with credit intact", out.getvalue())

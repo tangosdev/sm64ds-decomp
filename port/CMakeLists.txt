@@ -123,27 +123,55 @@ sm64ds_honor_cpp_markers(SLICE3B_SOURCES)
 
 get_filename_component(PORT_REPO_ROOT_ABS "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
 
+# Resolve hostgen symbols through the decomp's production enrollment table.  A
+# reconstructed translation unit can own several symbols under one source path, so
+# src/<symbol>.c|.cpp probing is no longer a valid source lookup.  Dedupe by resolved
+# path: two requested symbols in the same TU must compile that TU once, not twice.
+function(sm64ds_hostgen_symbols out_var)
+    set(generated "")
+    set(seen_sources "")
+    foreach(sym IN LISTS ARGN)
+        execute_process(
+            COMMAND python "${PORT_REPO_ROOT_ABS}/tools/srcpath.py" "${sym}"
+            WORKING_DIRECTORY "${PORT_REPO_ROOT_ABS}"
+            RESULT_VARIABLE resolve_result
+            OUTPUT_VARIABLE sym_rel
+            ERROR_VARIABLE resolve_error
+            OUTPUT_STRIP_TRAILING_WHITESPACE)
+        if(NOT resolve_result EQUAL 0 OR sym_rel MATCHES ": not in src/$")
+            message(FATAL_ERROR
+                "hostgen source resolution failed for ${sym}: ${sym_rel}${resolve_error}")
+        endif()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/${sym_rel}")
+        if(NOT EXISTS "${sym_src}")
+            message(FATAL_ERROR "hostgen resolved ${sym} to missing ${sym_rel}")
+        endif()
+        list(FIND seen_sources "${sym_src}" seen_index)
+        if(NOT seen_index EQUAL -1)
+            continue()
+        endif()
+        list(APPEND seen_sources "${sym_src}")
+        string(REGEX REPLACE "\\.(c|cpp)$" ".cpp" sym_out_rel "${sym_rel}")
+        set(sym_out "${CMAKE_BINARY_DIR}/host-src/${sym_out_rel}")
+        add_custom_command(OUTPUT "${sym_out}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+            DEPENDS "${sym_src}"
+                    "${PORT_REPO_ROOT_ABS}/tools/srcpath.py"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen ${sym_rel}")
+        list(APPEND generated "${sym_out}")
+    endforeach()
+    set(${out_var} "${generated}" PARENT_SCOPE)
+endfunction()
+
 # Gate 4a: the game's display-list submission machinery over the ntr GX.
 # These src/ files touch MMIO textually, so they build from hostgen-emitted
 # copies under the build tree -- src/ itself is never edited.
 set(GATE4A_SYMS
     func_0205532c func_02055388 func_020553a4 func_02055780
     func_0205a358 func_0205a290 func_0205a21c func_02056e98 func_02059fa8)
-set(GATE4A_GEN "")
-foreach(sym IN LISTS GATE4A_SYMS)
-    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
-        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
-    else()
-        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
-    endif()
-    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
-    add_custom_command(OUTPUT "${sym_out}"
-        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
-                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
-        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
-        COMMENT "hostgen ${sym}")
-    list(APPEND GATE4A_GEN "${sym_out}")
-endforeach()
+sm64ds_hostgen_symbols(GATE4A_GEN ${GATE4A_SYMS})
 
 add_executable(smoke_gx tests/smoke_gx.cpp ${GATE4A_GEN})
 target_include_directories(smoke_gx PRIVATE
@@ -160,21 +188,7 @@ endif()
 # feeders to the hostgen set and the Model/render slice on top of everything.
 set(GATE4B_SYMS func_02044b30 Geometry_MatrixMultiply3x3 func_02055998
     func_02044534 func_0204488c NormalizeVec3)
-set(GATE4B_GEN "")
-foreach(sym IN LISTS GATE4B_SYMS)
-    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
-        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
-    else()
-        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
-    endif()
-    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
-    add_custom_command(OUTPUT "${sym_out}"
-        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
-                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
-        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
-        COMMENT "hostgen ${sym}")
-    list(APPEND GATE4B_GEN "${sym_out}")
-endforeach()
+sm64ds_hostgen_symbols(GATE4B_GEN ${GATE4B_SYMS})
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate4b.txt" SLICE4B_LINES)
 set(SLICE4B_SOURCES "")
@@ -246,21 +260,7 @@ endif()
 # drives the hardware sqrt unit through literal MMIO -> hostgen.
 set(GATE8_SYMS _ZN4cstd4sqrtEy _ZN4cstd11fdiv_resultEv _ZN4cstd16reciprocal_asyncE5Fix12IiE
     Matrix4x3_ApplyInPlaceToScale)
-set(GATE8_GEN "")
-foreach(sym IN LISTS GATE8_SYMS)
-    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
-        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
-    else()
-        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
-    endif()
-    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
-    add_custom_command(OUTPUT "${sym_out}"
-        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
-                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
-        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
-        COMMENT "hostgen ${sym}")
-    list(APPEND GATE8_GEN "${sym_out}")
-endforeach()
+sm64ds_hostgen_symbols(GATE8_GEN ${GATE8_SYMS})
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate8.txt" SLICE8_LINES)
 set(SLICE8_SOURCES "")
@@ -319,21 +319,7 @@ endif()
 # Gate 6: the 2D sprite engine's software side. OAM::Load reads POWCNT
 # textually -> hostgen; the rest of the slice is plain.
 set(GATE6_SYMS _ZN3OAM4LoadEv)
-set(GATE6_GEN "")
-foreach(sym IN LISTS GATE6_SYMS)
-    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
-        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
-    else()
-        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
-    endif()
-    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
-    add_custom_command(OUTPUT "${sym_out}"
-        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
-                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
-        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
-        COMMENT "hostgen ${sym}")
-    list(APPEND GATE6_GEN "${sym_out}")
-endforeach()
+sm64ds_hostgen_symbols(GATE6_GEN ${GATE6_SYMS})
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate6.txt" SLICE6_LINES)
 set(SLICE6_SOURCES "")
@@ -413,21 +399,7 @@ endif()
 # One .c file carries C++ syntax (mwccarm accepted it); hostgen's
 # emit-as-cpp with extern "C" wrap makes it legal.
 set(GATE9_SYMS _ZN7fBase_c21AfterCleanupResourcesEj)
-set(GATE9_GEN "")
-foreach(sym IN LISTS GATE9_SYMS)
-    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
-        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
-    else()
-        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
-    endif()
-    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
-    add_custom_command(OUTPUT "${sym_out}"
-        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
-                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
-        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
-        COMMENT "hostgen ${sym}")
-    list(APPEND GATE9_GEN "${sym_out}")
-endforeach()
+sm64ds_hostgen_symbols(GATE9_GEN ${GATE9_SYMS})
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate9.txt" SLICE9_LINES)
 set(SLICE9_SOURCES "")

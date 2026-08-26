@@ -27,22 +27,18 @@ class CppTuCompatibility(unittest.TestCase):
             {
                 "srcpath": "ready",
                 "enroll": "ready",
-                "eligible": "gap",
+                "eligible": "ready",
                 "rombuild": "ready",
                 "validate_merge": "ready",
-                "tiers": "gap",
-                "langmode_audit": "gap",
-                "attribution": "gap",
-                "port_refcheck": "blocked",
+                "tiers": "ready",
+                "langmode_audit": "ready",
+                "attribution": "ready",
+                "port_refcheck": "ready",
             })
-        self.assertFalse(self.report["productionCompatible"])
-        self.assertFalse(self.report["allSurfacesReady"])
-        self.assertEqual(self.report["blockers"], [
-            "port_refcheck",
-        ])
-        self.assertEqual(self.report["policyAndMetricGaps"], [
-            "eligible", "tiers", "langmode_audit", "attribution",
-        ])
+        self.assertTrue(self.report["productionCompatible"])
+        self.assertTrue(self.report["allSurfacesReady"])
+        self.assertEqual(self.report["blockers"], [])
+        self.assertEqual(self.report["policyAndMetricGaps"], [])
 
         self.assertEqual(self.rows["srcpath"]["evidence"]["symbolsForSource"],
                          list(CTC.SYMBOLS))
@@ -50,6 +46,7 @@ class CppTuCompatibility(unittest.TestCase):
         self.assertEqual(self.rows["enroll"]["evidence"]["roundTripCompleteMarks"], 1)
         self.assertEqual(self.rows["eligible"]["evidence"]["isolatedSymbols"],
                          list(CTC.SYMBOLS))
+        self.assertEqual(self.rows["eligible"]["evidence"]["objectMode"], "derived")
         self.assertEqual(len(self.rows["rombuild"]["evidence"]["enrolledSymbolMap"]), 1)
         self.assertEqual(
             self.rows["rombuild"]["evidence"]["enrolledSymbolMap"][CTC.SOURCE],
@@ -60,25 +57,28 @@ class CppTuCompatibility(unittest.TestCase):
         self.assertEqual(self.rows["validate_merge"]["evidence"]["completeRanges"], 1)
         self.assertEqual(self.rows["tiers"]["evidence"]["legacyFiles"], 2)
         self.assertEqual(self.rows["tiers"]["evidence"]["mergedFiles"], 1)
+        self.assertEqual(self.rows["tiers"]["evidence"]["legacyFunctions"], 2)
+        self.assertEqual(self.rows["tiers"]["evidence"]["mergedFunctions"], 2)
         self.assertEqual(self.rows["tiers"]["evidence"]["legacyConverted"], 2)
-        self.assertEqual(self.rows["tiers"]["evidence"]["mergedConverted"], 1)
+        self.assertEqual(self.rows["tiers"]["evidence"]["mergedConverted"], 2)
         self.assertEqual(
-            self.rows["langmode_audit"]["evidence"]["mangledDefinitionsCounted"], 0)
+            self.rows["langmode_audit"]["evidence"]["mangledDefinitionsCounted"], 2)
         self.assertEqual(
             set(self.rows["attribution"]["evidence"]["resolvedByFunction"].values()),
-            {"alice"})
+            {"alice", "bob"})
         self.assertEqual(self.rows["port_refcheck"]["evidence"]["manifestFailures"], 0)
-        self.assertEqual(self.rows["port_refcheck"]["evidence"]["cmakeSymbolFailures"], 2)
+        self.assertEqual(self.rows["port_refcheck"]["evidence"]["cmakeSymbolFailures"], 0)
+        self.assertEqual(self.rows["port_refcheck"]["evidence"]["hostgenDefinitions"], 2)
 
     def test_default_is_an_informational_command_and_strict_mode_is_a_gate(self):
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             self.assertEqual(CTC.main([]), 0)
-        self.assertIn("C++ two-function-TU compatibility: BLOCKED", out.getvalue())
+        self.assertIn("C++ two-function-TU compatibility: READY", out.getvalue())
 
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
-            self.assertEqual(CTC.main(["--require-ready"]), 1)
+            self.assertEqual(CTC.main(["--require-ready"]), 0)
 
     def test_json_output_is_machine_readable(self):
         out = io.StringIO()

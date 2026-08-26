@@ -4580,10 +4580,10 @@ def promotion_refusals(entry):
     if entry.get("externalized_output"):
         reasons.append("promotion does not yet persist externalized_output policy; "
                        "rombuild --partitioned-tu applies it in the opt-in production path")
-    linkcheck = entry.get("verification", {}).get("linkcheck", {})
+    linkcheck = entry.get("verification", {}).get("linkcheck") or {}
     if linkcheck.get("phases", {}).get("rom") is not True:
         reasons.append("the recorded full-ROM phase is not green")
-    if linkcheck.get("rom", {}).get("matchesStockRom") is not True:
+    if (linkcheck.get("rom") or {}).get("matchesStockRom") is not True:
         reasons.append("the recorded full ROM is not proven identical to the stock build")
     if linkcheck.get("result") != status:
         reasons.append("the promotion-ready status is not the recorded linkcheck result")
@@ -4673,13 +4673,12 @@ def cmd_promote(args):
             print(f"   !! manifest/delinks disagreement: extra={stale} missing={missing}")
 
     print("\n-- 4. source-path indexes and tracked ledgers")
-    print("   tools/srcpath.py: no edit needed (it rglobs src/, so the moved file is found"
-          " automatically and the deleted stems simply stop resolving).")
-    print(f"   CONSEQUENCE, not a file edit: srcpath.path_for() stops resolving "
-          f"{len(legacy)} symbol(s), so tools/enroll.py + tools/eligible.py stop counting "
-          f"them as individually eligible. rombuild_check's `complete` entry count drops "
-          f"by {len(legacy) - 1} while sourceBytes is unchanged -- plan sec 13 item 7 is "
-          f"about BYTES and is satisfied, but any function-count metric moves.")
+    print("   tools/srcpath.py: no edit needed. Its enrollment index maps every symbol "
+          "inside the new complete range to the shared source, so deleted legacy stems "
+          "continue to resolve to their production owner.")
+    print(f"   COVERAGE: one physical complete entry replaces {len(legacy)}, while "
+          "rombuild_check and readability metrics count the enrolled functions inside "
+          "the range; function and byte coverage therefore stay invariant.")
     stems = [pathlib.PurePosixPath(l).stem for l in legacy]
 
     def scan(group):
@@ -4747,12 +4746,10 @@ def cmd_promote(args):
           "from config/**/delinks.txt before falling back to 'stem == symbol name', and "
           "counts every function address inside a complete enrolled range. A shared TU "
           "path therefore does not inherently lose matched or byte-verified coverage.")
-    print("   STILL BLOCKING PRODUCTION: tools/rombuild.py reduces its enrolled sources to "
-          "one symbol per path before isolation; enroll/eligibility, compiler-pin and "
-          "init ownership, metrics, port manifests, and contributor attribution also "
-          "need an explicit shared-source contract. Run tools/cpp_tu_compat.py for the "
-          "current executable compatibility matrix. `linkcheck --partial` remains the "
-          "non-mutating proof path while these blockers are present.")
+    print("   SHARED-SOURCE CONTRACT: run `python tools/cpp_tu_compat.py --require-ready`; "
+          "it verifies enrollment, isolation, eligibility, metrics, attribution, and "
+          "port symbol resolution for a multi-function source. Any manifest-status or "
+          "extra-output refusal printed above remains independently blocking.")
     print("   Related, and NOT triggered by this TU but by any key-function TU: dsd "
           "derives vtable/typeinfo ownership from the mangled class name in the "
           "delinks.txt PATH, so replacing src/_ZN<Class>D1Ev.cpp with src/<dir>/<Class>.cpp "
@@ -4764,8 +4761,7 @@ def cmd_promote(args):
 
     print("\n-- 6. validation a real promotion would then run")
     print("   python tools/layout_check.py")
-    print("   python tools/eligible.py            (expect the eligible NAME LIST to lose "
-          "the superseded stems; diff names, not counts)")
+    print("   python tools/eligible.py            (expect derived placement for each member)")
     print("   python tools/rombuild.py            (module fidelity + source fidelity)")
     print(f"   python tools/tubuild.py linkcheck {entry['id']}   (now against the real tree)")
 

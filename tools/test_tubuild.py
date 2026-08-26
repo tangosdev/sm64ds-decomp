@@ -956,6 +956,10 @@ def test_scratch_and_no_rom_results_are_not_promotion_ready():
     no_rom = dict(ready, verification={"linkcheck": {
         "result": "link-verified", "phases": {"rom": None}, "rom": {}}})
     assert any("full-ROM phase" in reason for reason in tubuild.promotion_refusals(no_rom))
+    null_record = dict(ready, verification={"linkcheck": {
+        "result": "failed", "phases": {"rom": False}, "rom": None}})
+    assert any("not proven identical" in reason
+               for reason in tubuild.promotion_refusals(null_record))
 
 
 def test_partitioned_delinks_addition_is_gap_only_and_same_section_name_only():

@@ -19,7 +19,8 @@ class CppTuStateTests(unittest.TestCase):
             "progress_reader": lambda: (3, 0x30, 4, 0x40),
             "converted_reader": lambda: {
                 "converted": 2,
-                "files": 4,
+                "functions": 4,
+                "source_files": 3,
                 "pct": 50.0,
                 "criteria": {"real_name": 3},
             },
@@ -116,7 +117,9 @@ class CppTuStateTests(unittest.TestCase):
         self.assertEqual(report["semantic_language_mode"]["genuinely_migrated"], 1)
         self.assertEqual(report["matching_progress"]["matched_functions"], 3)
         self.assertEqual(report["matching_progress"]["function_percent"], 75.0)
-        self.assertEqual(report["converted_tier"]["strict_converted_files"], 2)
+        self.assertEqual(report["converted_tier"]["strict_converted_functions"], 2)
+        self.assertEqual(report["converted_tier"]["source_functions"], 4)
+        self.assertEqual(report["converted_tier"]["source_files"], 3)
         self.assertEqual(report["converted_tier"]["percent"], 50.0)
         self.assertEqual(report["production_tu_compatibility"]["blockers"], ["rombuild"])
 
@@ -164,7 +167,8 @@ class CppTuStateTests(unittest.TestCase):
 
         self.assertIn("Complete sources owning more than one function | 1", text)
         self.assertIn("MATCHED functions | 3 / 4 (75.00%)", text)
-        self.assertIn("Strict CONVERTED source files | 2 / 4 (50.00%)", text)
+        self.assertIn("Strict CONVERTED source functions | 2 / 4 (50.00%)", text)
+        self.assertIn("Physical production source files | 3", text)
         self.assertIn("no ambient or gitignored chaos database", text)
         self.assertIn("not enroll a TU", text)
         self.assertIn("filenames are not treated as the authority", text)
