@@ -620,7 +620,16 @@ src/func_ov006_020cfa44.c
 # The 0x800 STROKE INSTALLER, seated by run mg12 lane INST. Listed in BOTH
 # trampoline slices; see the note beside it in slice_tti.txt. It replaces the
 # trap in unmatched/MgTrampolineTime_Floors.cpp, which no longer defines it.
-src/func_ov006_020d01e0.c
+# A C++ TU since run mg13 lane BOUNCE, and that is the host dispatch: it reaches
+# the element through a class with virtuals so MSVC emits __thiscall into the
+# __fastcall adapters this vtable is bound to. As a .c file its three
+# function-pointer dispatches were 2-of-3 correct by register-allocation luck and
+# 1-of-3 wrong -- slot 0, the position getter, took the VPTR as its receiver, so
+# the element-acceptance test read its candidate's position out of the vtable and
+# a trampoline the player DREW never gained a live count. Emitted game code is
+# byte-identical across the conversion; the banner has the proof and the one
+# spelling that had to change to keep it so.
+src/func_ov006_020d01e0.cpp
 # THE MESH DRAW, seated by run mg13 lane TRAMP. Listed in BOTH trampoline
 # slices; see the note beside it in slice_tti.txt. A TT_SHARED_HOSTGEN symbol,
 # so the generated copy is what this target compiles.

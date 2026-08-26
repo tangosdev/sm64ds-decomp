@@ -384,11 +384,16 @@ static void port_mg_tte_character_census(void)
         }
     }
     std::printf("[scene] dScMgTrampoline2_c characters: %d of 5 registered, %d "
-                "carrying a nonzero bounce state. The ONLY writer of +0x18 on "
-                "this path is func_ov006_020cfc74, which run mg13 lane BOUNCE "
-                "seated -- so a nonzero state here is that body having caught a "
-                "character, and 0 of 5 with characters PRESENT is a real miss "
-                "rather than an empty scene\n", present, stated);
+                "carrying a nonzero bounce state RIGHT NOW. DO NOT READ A 0 HERE "
+                "AS 'NOTHING WAS CAUGHT': +0x18 is a state the character's own "
+                "state machine consumes within the frame, so a run that caught "
+                "prints 0 of 5 here whenever the census lands after the bounce "
+                "finished. WHAT SURVIVES A CATCH is the record's live count at "
+                "+0x324 and its caught count at +0x326 in the record readout "
+                "above, and the caught character's own +0x04..+0x0c axis with "
+                "+0x10 and +0x14 in the per-slot lines -- those are written by "
+                "the hit tail of func_ov006_020cfc74 and nothing else clears "
+                "them. Read those three, not this one\n", present, stated);
 }
 
 extern "C" void port_mg_tte_trap_counts(unsigned *a, unsigned *b, unsigned *c,
