@@ -1,23 +1,19 @@
-/* dBgPi's deleting destructor (D0).
- *   [this+0] = vtable (0x02099368)
- *   dBgPc::~dBgPc(this + 4)
- *   Memory::operator_delete2(this) (0x0203cbcc)
- * returns this.
+//cpp
+// @symbol _ZN5dBgPiD0Ev
+/* recovered: real C++ deleting destructor -- the compiler emits the whole body
+ *
+ * D0 is the DELETING destructor: store this class's vptr, destroy the dBgPc
+ * base sub-object, then return the object to its heap. None of that is
+ * written here; declaring `~dBgPi()` is enough, because mwcc emits D2, D0 and
+ * D1 together and objisolate keeps the one this file is bound to.
+ *
+ * The heap call is dBgPi's inline `operator delete` in include/dBgPi.h, which
+ * routes to Memory::operator_delete2 (0x0203cbcc) -- the destination the ROM
+ * body actually branches to. Without that member mwcc would call the global
+ * `_ZdlPv` (0x0203cbf0) instead: same bytes, wrong relocation.
  */
+#include "dBgPi.h"
 
-struct Obj {
-    void **vtable; /* 0x0 */
-};
-
-extern void *data_02099368[];
-
-extern void _ZN5dBgPcD2Ev(void *sub);
-extern void _ZN6Memory16operator_delete2EPv(void *ptr);  /* 0x0203cbcc */
-
-struct Obj *_ZN5dBgPiD0Ev(struct Obj *thiz)
+dBgPi::~dBgPi()
 {
-    thiz->vtable = (void **)data_02099368;
-    _ZN5dBgPcD2Ev((char *)thiz + 4);
-    _ZN6Memory16operator_delete2EPv(thiz);
-    return thiz;
 }

@@ -26,6 +26,8 @@ typedef struct dBgPi dBgPi;
 
 #else
 
+extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+
 struct dBgPi : dBgPc {
     /* 0x00 is the vptr; the dBgPc base occupies 0x04..0x17. */
     u16 triangleID;         /* 0x018 */
@@ -36,6 +38,26 @@ struct dBgPi : dBgPc {
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~dBgPi();       /* slots 0 (D1), 1 (D0) */
+
+    /* WHAT LETS A REAL `~dBgPi()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
+       mwcc builds D0 as "run the destructor body, then call operator delete
+       on the class". With no class-specific operator delete in scope it calls
+       the GLOBAL `_ZdlPv` (this image: 0x0203cbf0) where the ROM's D0 calls
+       Memory::operator_delete2 (0x0203cbcc). That is ONE relocated word,
+       which match.py and fdiff WILDCARD -- the isolated gate reports a clean
+       MATCH and only the full link disagrees. It is why the dBgPi deleting
+       destructor was rejected by the link in PR #1764.
+
+       The ROM proves the destination: _ZN5dBgPiD0Ev's second `bl` is to
+       0x0203cbcc = Memory::operator_delete2, the same heap path the sibling
+       dBgCh family uses (include/dBgCh.h carries an identical copy).
+
+       Declared here rather than on dBgPc because dBgPc is a non-polymorphic
+       data record that is never deleted; dBgPi is the class whose D0 does the
+       deallocation. Inline, in the class itself -- mwcc inlines it only when
+       it finds it in the class or one level up. No layout effect: a
+       non-virtual inline member adds no field and no vtable slot. */
+    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 
     /* Defined out of line; objisolate retains the enrolled C1/D1 variants and
        the compiler-generated siblings remain separately enrolled shells. */

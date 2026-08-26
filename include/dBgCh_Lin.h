@@ -109,6 +109,18 @@ struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
      */
     dBgCh_Lin();
 
+    /* ITS OWN COPY, TO RESOLVE AN AMBIGUITY THE MULTIPLE INHERITANCE CREATES.
+       dBgCh_Lin derives from both dBgCh and dBgPi, and each of those declares
+       an inline operator delete, so an inherited one is "ambiguous access to
+       name found: dBgCh::operator delete and dBgPi::operator delete".
+       Declaring it here picks the same deallocator both bases name
+       (Memory::operator_delete2, 0x0203cbcc) and satisfies the rule in
+       include/dActor_c.h that mwcc only inlines the member when it is in the
+       class or its immediate base. Byte-neutral: the ROM kept no D0 for this
+       class -- nothing ever deletes one -- and a non-virtual inline member
+       adds no field and no vtable slot. */
+    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+
     /* methods */
     Vector3 GetClsnPos();
 };
