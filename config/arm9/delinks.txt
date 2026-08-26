@@ -5043,7 +5043,7 @@ src/func_020373b8.c:
     complete
     .text start:0x020373b8 end:0x020373f8
 
-src/_ZN10dBgCh_ActrD1Ev.c:
+src/_ZN10dBgCh_ActrD1Ev.cpp:
     complete
     .text start:0x020373f8 end:0x02037430
 
@@ -5071,7 +5071,7 @@ src/func_020374f0.c:
     complete
     .text start:0x020374f0 end:0x02037534
 
-src/_ZN9dBgCh_GndD1Ev.c:
+src/_ZN9dBgCh_GndD1Ev.cpp:
     complete
     .text start:0x02037534 end:0x02037570
 
@@ -5197,7 +5197,7 @@ src/func_02037c40.c:
     complete
     .text start:0x02037c40 end:0x02037cb0
 
-src/_ZN12dBgCh_SphCrrD1Ev.c:
+src/_ZN12dBgCh_SphCrrD1Ev.cpp:
     complete
     .text start:0x02037cb0 end:0x02037d18
 
