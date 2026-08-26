@@ -68,7 +68,7 @@ int QuestionSwitch::Behavior()
             }
         } else {
             Player *p = ClosestPlayer();
-            if (*(u8 *)((char *)p + 0x6de) == 0) {
+            if (p->mIsAirborne == 0) {
                 if (p->StartTalk(*this, true) != 0) {
                     mTalkingPlayer = p;
                 }
