@@ -52,11 +52,11 @@ src/Bird_Spawn.c:
     complete
     .text start:0x02111a30 end:0x02111a70
 
-src/_ZN11CastleWaterD1Ev.c:
+src/_ZN11CastleWaterD1Ev.cpp:
     complete
     .text start:0x02111a70 end:0x02111abc
 
-src/_ZN11CastleWaterD0Ev.c:
+src/_ZN11CastleWaterD0Ev.cpp:
     complete
     .text start:0x02111abc end:0x02111b1c
 
