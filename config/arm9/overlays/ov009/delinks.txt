@@ -120,7 +120,7 @@ src/_ZN4FlagD1Ev.cpp:
     complete
     .text start:0x02112078 end:0x021120a8
 
-src/_ZN4FlagD0Ev.c:
+src/_ZN4FlagD0Ev.cpp:
     complete
     .text start:0x021120a8 end:0x021120ec
 

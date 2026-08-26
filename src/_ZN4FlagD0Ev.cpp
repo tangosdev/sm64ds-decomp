@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN4FlagD1Ev
+// @symbol _ZN4FlagD0Ev
 
 #include "Flag.h"
 
