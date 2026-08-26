@@ -251,8 +251,15 @@ void TextureTransformer::SetFile(BTA_File &f, int a, int b, unsigned c)
 // its first call rather than reading as a quiet correct answer.  Its arity and
 // return type are taken from the two CALL SITES that name it
 // (src/func_ov006_0212101c.c and src/func_ov006_02122f24.c), which agree.
+//
+// SECTION 4 IS HISTORY NOW.  All four of those bodies are seated -- the first
+// three by runs mg12/mg13 in unmatched/MgTrampolineTime_Floors.cpp's slice, and
+// the fourth, func_ov006_020cfc74, by run mg13 lane BOUNCE.  This file traps
+// nothing.  The paragraph above is kept because it is the derivation of the
+// arities the seats use, not because any of it is still a floor.
 
 #include <cstdio>
+#include <cstdlib>
 
 /* THE FIRST THREE TRAPS MOVED AT THE MERGE.  Lane TTI trapped the same three
    bodies in unmatched/MgTrampolineTime_Floors.cpp -- 0x180 and 0x181 share
@@ -270,41 +277,129 @@ extern "C" void port_mg_shared_trap_counts(unsigned *f2fc, unsigned *f1e0,
                                            unsigned *fc38);
 
 
-static unsigned g_tte_trap_020cfc74;
+/* THIS FILE'S OWN TRAP IS RETIRED.  It used to define func_ov006_020cfc74
+   count-and-return, 0x56c, with no src and no delinks block, and run mg12 lane
+   TRM had already read the listing and called it the bounce.  Run mg13 lane
+   BOUNCE decompiled it: src/func_ov006_020cfc74.c is a slice_tte.txt line now,
+   an honest NONMATCHING seat at 8 divergences against 339 ROM code words with
+   the size, the 8-word literal pool and all 28 call offsets exactly the ROM's,
+   and with every one of those 8 divergences a permutation or a re-association
+   of the same computation (its banner enumerates them).  It needs no hostgen:
+   the body has no MMIO store and its pool holds no 0x04xxxxxx word.
 
-/* func_ov006_020cfc74, 0x56c, no src and no delinks block.  Reached from
-   src/func_ov006_020cfa44.c, which is one of the fourteen 3D-Mario states
-   unmatched/MgTrampolineTerror_MarioDispatch.cpp routes -- so this floor is
-   BEHIND a state and only wants when that state is entered.  Its arity comes
-   from the one call site that names it, `func_ov006_020cfc74(o)`.
+   WHAT THAT CHANGES FOR A READER OF THE CENSUS.  This body is what a trampoline
+   RECORD's per-tick state runs to decide whether any of the up-to-five
+   characters in data_ov006_0214097c crossed the trampoline this frame.  While
+   it was trapped it was reached constantly and did nothing, so the trampolines
+   drew (run mg13 lane TRAMP seated the mesh) and every character fell straight
+   through them -- which is exactly what Tango reported on the 9c4517c2b build.
+   The observable that moves is in port/hal/trampoline_records.cpp's readout:
+   this body DECREMENTS the record's remaining count at +0x324 on each catch and
+   bumps the caught count at +0x326, and sets the render gate at +0x328 to 3 when
+   the count reaches zero.  With the trap in place +0x324 could only ever hold
+   the value the installer left there. */
+static const unsigned g_tte_trap_020cfc74 = 0;   /* RETIRED, see above */
 
-   RUN mg12 LANE TRM READ IT, AND IT IS THE BOUNCE.  Not decompiled, but no
-   longer a bare size: the full listing is banked as p2_disasm_020cfc74.txt
-   (347 words) and its call census is Vec2_Sub x6, DotVec3 x6, func_0203d524 x4,
-   Vec3_Sub, Vec3_MulScalar, SubVec3, func_ov006_020e6db4 x2 and
-   func_ov006_020cfa28.  Six dot products against six 2D differences is the
-   shape of testing a moving point against a segment from both ends, and the
-   tail calls the SAME state-setter func_ov006_020cfa28 that the installer
-   func_ov006_020d01e0 calls when it accepts an element -- so this body is the
-   3D-Mario side of the same contact the installer sets up, and the two sound
-   calls through func_ov006_020e6db4 are the bounce.  It is the last of the six
-   this lane was given and the only one with no candidate written at all. */
-extern "C" void func_ov006_020cfc74(char *)
+/* THE CHARACTER CENSUS, added with the seat by run mg13 lane BOUNCE.
+   src/func_ov006_020cfc74.c walks data_ov006_0214097c -- the up-to-five
+   character records func_ov006_020cae9c (stride 0xdc) and func_ov006_020cd658
+   (stride 0xd0) register -- and writes each caught character's bounce state to
+   its +0x18.  Without this readout a run in which nothing bounces cannot be told
+   apart from a run in which nothing was ever REGISTERED, and those two want
+   opposite follow-ups.  It reads and prints; it writes nothing.  It hangs off
+   port_mg_tte_trap_counts because that is this file's own function and the
+   census in hal/scene_mg_trampoline2.cpp already calls it once at the end of a
+   run -- no other lane's file is touched to get it. */
+extern "C" {
+extern unsigned char *data_ov006_0214097c[];
+extern unsigned char data_ov006_02140990[];      /* the four records, stride 0x32c */
+}
+
+/* THE GEOMETRY THE TEST ACTUALLY READS.  func_ov006_020cfc74 projects each
+   character onto the record's two axes at +0x14 and +0x20, about the origin at
+   +0x08, and tests against the segment that runs +/- the half-length at +0x58
+   along the first axis.  Those four fields are written by the installer
+   func_ov006_020d01e0, not by the bounce, so printing them separates "the test
+   ran and nothing crossed" from "the test ran against a segment of length
+   zero".  Plain memory reads of a symbol the ov006 mount already defines: no
+   vtable is called and nothing is written. */
+static void port_mg_tte_record_geometry(void)
 {
-    if (!g_tte_trap_020cfc74)
-        std::fprintf(stderr, "  [mg385] FLOOR func_ov006_020cfc74 (0x56c, no "
-                     "src, no delinks block) wanted from 3D-Mario state "
-                     "0x020cfa44\n");
-    ++g_tte_trap_020cfc74;
+    int i;
+    for (i = 0; i < 4; ++i) {
+        const unsigned char *r = &data_ov006_02140990[i * 0x32c];
+        const int *o = (const int *)(r + 0x08);
+        const int *u = (const int *)(r + 0x14);
+        const int *v = (const int *)(r + 0x20);
+        std::printf("[scene] trampoline record %d geometry: origin +0x08 = "
+                    "(%d, %d, %d), axis +0x14 = (%d, %d, %d), axis +0x20 = "
+                    "(%d, %d, %d), half-length +0x58 = %d, gate +0x328 = %u\n",
+                    i, o[0], o[1], o[2], u[0], u[1], u[2], v[0], v[1], v[2],
+                    *(const int *)(r + 0x58), (unsigned)r[0x328]);
+    }
+}
+
+static void port_mg_tte_character_census(void)
+{
+    int i;
+    int present = 0;
+    int stated = 0;
+
+    port_mg_tte_record_geometry();
+
+    for (i = 0; i < 5; ++i) {
+        const unsigned char *o = data_ov006_0214097c[i];
+        if (o == 0) {
+            std::printf("[scene] dScMgTrampoline2_c character slot %d: ABSENT "
+                        "(data_ov006_0214097c[%d] == 0)\n", i, i);
+            continue;
+        }
+        ++present;
+        {
+            const unsigned st = *(const unsigned short *)(o + 0x18);
+            const int px = *(const int *)(o + 0x04);
+            const int py = *(const int *)(o + 0x08);
+            const int pz = *(const int *)(o + 0x0c);
+            if (st != 0) ++stated;
+            std::printf("[scene] dScMgTrampoline2_c character slot %d: at %p, "
+                        "bounce state +0x18 = %u, axis +0x04 = "
+                        "(%d, %d, %d), +0x10 = %d, +0x14 = %d\n",
+                        i, (const void *)o, st, px, py, pz,
+                        *(const int *)(o + 0x10), *(const int *)(o + 0x14));
+            /* RAW WORDS, so a run in which nothing crossed can be read against
+               the record geometry above without calling a virtual. The record's
+               segment sits at y = -720896 (1.12, so -176.0); a character whose
+               words never reach that band never had a crossing to find. Read
+               only; 0xdc is the element stride func_ov006_020cae9c registers.
+               Behind SM64DS_TTE_CHARDUMP=1 because it is 55 words per character
+               and this census prints on every scene-385 run. */
+            if (std::getenv("SM64DS_TTE_CHARDUMP")) {
+                int k;
+                std::printf("[scene] dScMgTrampoline2_c character slot %d raw:",
+                            i);
+                for (k = 0; k < 0xdc; k += 4)
+                    std::printf(" +%02x=%d", k, *(const int *)(o + k));
+                std::printf("\n");
+            }
+        }
+    }
+    std::printf("[scene] dScMgTrampoline2_c characters: %d of 5 registered, %d "
+                "carrying a nonzero bounce state. The ONLY writer of +0x18 on "
+                "this path is func_ov006_020cfc74, which run mg13 lane BOUNCE "
+                "seated -- so a nonzero state here is that body having caught a "
+                "character, and 0 of 5 with characters PRESENT is a real miss "
+                "rather than an empty scene\n", present, stated);
 }
 
 extern "C" void port_mg_tte_trap_counts(unsigned *a, unsigned *b, unsigned *c,
                                         unsigned *d)
 {
     /* the first three come out of the unified trap bodies in
-       unmatched/MgTrampolineTime_Floors.cpp; the fourth is this file's own */
+       unmatched/MgTrampolineTime_Floors.cpp; the fourth was this file's own and
+       is now a retirement, not a measurement -- it can only read 0 */
     port_mg_shared_trap_counts(a, b, c);
     if (d) *d = g_tte_trap_020cfc74;
+    port_mg_tte_character_census();
 }
 
 /* This symbol exists so a reader grepping for who owns the aliases above finds

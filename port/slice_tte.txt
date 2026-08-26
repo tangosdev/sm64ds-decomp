@@ -625,6 +625,34 @@ src/func_ov006_020d01e0.c
 # slices; see the note beside it in slice_tti.txt. A TT_SHARED_HOSTGEN symbol,
 # so the generated copy is what this target compiles.
 src/func_ov006_020cf2fc.c
+# THE BOUNCE, seated by run mg13 lane BOUNCE, and the last floor between a drawn
+# trampoline and a character that lands on it. src/func_ov006_020cfa44.c -- one
+# of the record states this class dispatches, and a slice_tte line already --
+# calls it once per tick at 0x020cfa50, so with the mesh draw seated and this one
+# still trapped the trampolines appeared and every character fell through them.
+# It replaces the LAST trap in unmatched/MgTrampolineTerror_Faces.cpp, which is
+# now counters only.
+#
+# THIS ONE IS A PLAIN SLICE LINE, NOT A TT_SHARED_HOSTGEN SYMBOL: it writes no
+# MMIO and its 8-word literal pool holds no 0x04xxxxxx address, so the src/ copy
+# is the copy that compiles. It is a slice_tte line ONLY, because the only thing
+# that names it is src/func_ov006_020cfa44.c, which is a slice_tte line only --
+# scene 384 reaches it as well, but through the same TU, and the trampoline
+# slices land in one binary.
+#
+# ITS THREE ov006 CALLEES WERE ALREADY LISTED, so nothing else joins with it:
+# func_ov006_020e6db4 rides slice_bnp.txt, and func_ov006_020cf040 and
+# func_ov006_020cfa28 came in with the installer below. The eight arm9 math
+# helpers it calls (Vec3_Sub, Vec3_Add, Vec3_MulScalar, SubVec3, DotVec3,
+# Vec2_Sub, func_0203d524, _ZN4cstd4fdivEii) are all seated and already linked.
+# A trap-shaped floor hides its callees from static closure, so that census was
+# taken from the ROM's own relocations, not from the trap.
+#
+# An honest NONMATCHING seat -- 8 divergences against 339 ROM code words, with
+# the size, the whole literal pool and all 28 call offsets exactly the ROM's, and
+# every divergence a permutation or re-association of the same computation -- and
+# the banner in the file states each one.
+src/func_ov006_020cfc74.c
 # the installer's own three callees; see the note beside them in slice_tti.txt.
 # None was in any slice before the installer was seated.
 src/func_ov006_020cf040.c
