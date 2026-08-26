@@ -2079,11 +2079,11 @@ src/func_ov007_020cc0e4.c:
     complete
     .text start:0x020cc0e4 end:0x020cc0f4
 
-src/_ZN9dScDSMT_c15graphCallback_c14GraphCallback2Ev.c:
+src/_ZN9dScDSMT_c15graphCallback_c14GraphCallback2Ev.cpp:
     complete
     .text start:0x020cc0f4 end:0x020cc110
 
-src/_ZN9dScDSMT_c15graphCallback_c14GraphCallback0Ev.c:
+src/_ZN9dScDSMT_c15graphCallback_c14GraphCallback0Ev.cpp:
     complete
     .text start:0x020cc110 end:0x020cc118
 
