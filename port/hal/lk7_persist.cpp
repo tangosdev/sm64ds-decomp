@@ -550,6 +550,24 @@ int lk7_persist_write(void)
     size_t dsz  = (size_t)hdr.dsstate_size;
     size_t hsz  = (size_t)hdr.hw_size;
 
+    /* THE SAME THREE QUESTIONS, ASKED OF THE LIVE WORLD BEFORE IT IS WRITTEN.
+       The load refuses a state whose world cannot take a tick; this is the
+       other end of it, and it is the better end -- a file that could never be
+       loaded should not exist. A player who presses F8 in a moment the world
+       cannot answer for gets "state NOT saved", which the toast already says,
+       instead of a file that turns itself away three launches later. Reading
+       LIVE memory through the same function the load uses, at the same
+       offsets, so the two ends can never drift apart. */
+    {
+        const char *bad = world_fault(base, asz, &dsstate_lo, dsz);
+        if (bad) {
+            fprintf(stderr, "[savestate] disk save skipped: this world is not "
+                    "in a state that can be reloaded -- %s. Nothing was "
+                    "written; any earlier savestate.bin is untouched.\n", bad);
+            return 0;
+        }
+    }
+
     // The hardware stores go through the same copy-out the slot uses, into one
     // temporary blob, so the file's byte order is the hook's fixed region order.
     char *hbuf = 0;
