@@ -17,9 +17,10 @@
  * Both factories allocate 0x110 bytes, construct dActor_c, install this
  * vtable, and construct dCcAc_c at 0x0d4. Both destructor variants destroy
  * that member before chaining to dActor_c, independently proving ownership.
- * Behavior reads all five bytes after the collider; their meanings remain
- * uncertain, so their placeholder names deliberately claim only offsets and
- * widths.
+ * Behavior establishes the meanings of all five bytes after the collider.
+ * The backlink consumer at ov091 0x02133498 provides the independent witness
+ * for mLinkedMushroomGone: when its linked actor is this create-tag kind
+ * (actor ID 0x140), it writes that byte before the tag respawns the mushroom.
  *
  * The recovered original TU is ov002 [0x020b46a0, 0x020b4a70): both factory
  * functions belong to it. Its data contribution is likewise contiguous:
@@ -28,11 +29,11 @@
 struct MegaMushroomCreateTag : dActor_c {
     u8       pad_0d0[0x4];
     dCcAc_c  mMovingCylinderClsn; /* 0x0d4 */
-    u8       unk_108;             /* 0x0108 */
-    u8       unk_109;             /* 0x0109 */
-    u8       unk_10a;             /* 0x010a */
-    u8       unk_10b;             /* 0x010b */
-    u8       unk_10c;             /* 0x010c */
+    u8       mHasLinkedMushroom;   /* 0x0108 */
+    u8       mGroupId;             /* 0x0109 */
+    u8       mHasMatchingTag;      /* 0x010a */
+    u8       mSearchedForMushroom; /* 0x010b */
+    u8       mLinkedMushroomGone;  /* 0x010c */
     u8       pad_10d[0x3];
 
     virtual ~MegaMushroomCreateTag(); /* slots 16, 17 */

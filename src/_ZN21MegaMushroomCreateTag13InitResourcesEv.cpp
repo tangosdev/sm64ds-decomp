@@ -16,7 +16,7 @@ s32 MegaMushroomCreateTag::InitResources()
 {
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
         &mMovingCylinderClsn, this, 0x12c000, 0x32000, 0x800002, 0x20);
-    unk_109 = param1;
+    mGroupId = param1;
     Model::LoadFile(*(SharedFilePtr *)data_ov002_0210da30);
     return 1;
 }

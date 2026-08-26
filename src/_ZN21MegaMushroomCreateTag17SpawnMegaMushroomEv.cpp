@@ -14,7 +14,7 @@ void MegaMushroomCreateTag::SpawnMegaMushroom()
     MegaMushroomCreateTag *tag =
         (MegaMushroomCreateTag *)FindWithActorID(0x13f, 0);
     while (tag != 0) {
-        if (unk_109 == tag->unk_109) {
+        if (mGroupId == tag->mGroupId) {
             PositionWords *tagPos = (PositionWords *)&tag->mPosX;
             PositionWords spawnPos;
             spawnPos.x = tagPos->x;
