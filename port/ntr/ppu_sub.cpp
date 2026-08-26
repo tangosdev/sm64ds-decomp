@@ -1094,6 +1094,12 @@ RGB amb_avg(const uint32_t *row, int s0, int s1)
  *
  * WITH EVERY WEIGHT AT ZERO THIS IS amb_avg EXACTLY, so a still frame with
  * nothing crossing either edge composes byte for byte what it did before. */
+int band_fix_on(void);
+    /* defined with the edge memory below. Declared up here for the ONE thing
+       in this function that has to be inside the arm: the fully-masked-span
+       fallback. Everything else here is weight-driven and the weights are
+       already zero with the arm off. */
+
 RGB amb_avg_bg(const uint32_t *row, int s0, int s1, const uint8_t *mask256,
                const uint8_t *w256, const uint32_t *bg256, int w)
 {
@@ -1136,9 +1142,14 @@ RGB amb_avg_bg(const uint32_t *row, int s0, int s1, const uint8_t *mask256,
        average was the crosser's own colours, which is the thing the ruling
        forbids; the settled row is the background there by construction. On a
        frame where the memory was just seeded the two are the same pixels, so
-       this changes no capture that composes once. */
+       this changes no capture that composes once.
+
+       AND IT IS INSIDE THE KILL SWITCH. This is a rendering change like any
+       other, so SM64DS_BAND_FIX=0 has to give the plain average back or the
+       switch is not the full restore its own note promises. It shipped outside
+       the arm and the review caught it. */
     if (!n) {
-        if (!bg256) return amb_avg(row, s0, s1);
+        if (!bg256 || !band_fix_on()) return amb_avg(row, s0, s1);
         const int d0 = s0 / rx, d1 = (s1 + rx - 1) / rx;
         for (int dsx = d0; dsx < d1 && dsx < 256; ++dsx) {
             const uint32_t q = bg256[dsx];
@@ -1371,13 +1382,25 @@ int band_game_g(const StackLayout &lay);
  * the family the report is about. MEASURED, run mg15 lane BAND, scene 384
  * (Trampoline Time) and scene 372 (Bounce and Pounce), one headless run per
  * frame at 9 frames across a crossing: the band carried ZERO pixels of
- * anything but the ambient fill on every one of them, and
- * SM64DS_GAP_PEEK_TRACE=1 printed no census line at all -- no OAM entry's box
- * reaches the band on either scene. The crosser is MARIO, who on the
+ * anything but the ambient fill on every one of them.
+ *
+ * SAY THAT AS THE FRAME-LOCAL FACT IT IS. The spot checks that went with it --
+ * SM64DS_GAP_PEEK_TRACE=1 at 372 f300 and 384 f560, no census line either --
+ * were read as "no OAM entry reaches the band on this family", and mg15's
+ * independent review swept the whole run instead of two frames and REFUTED it:
+ * over 420 windowed frames scene 372 prints THIRTEEN band-raster census lines
+ * around frames 374..389, boxes reaching up to 31 of the band's 32 rows and up
+ * to 98 pixels drawn. 373, 384 and 385 print none. The band IS crosser-clean
+ * on the frames measured; it is not crosser-clean always, and the difference
+ * matters to the G clip below rather than to anything here.
+ *
+ * THE DIAGNOSIS OF THE OWNER'S REPORT IS UNDISTURBED BY THAT, which is why
+ * this block still stands. The crosser he cannot see is MARIO, who on the
  * dScMgD3DBase_c family is 3D geometry on the live engine and a DISPLAY
  * CAPTURE BITMAP on the other panel. Neither is an OAM entry, so every band
  * pass in this file -- all of which read OAM -- has nothing to draw him from,
- * and every edge mask in this file has nothing to exclude him by. That is
+ * and every edge mask in this file has nothing to exclude him by. No OAM path
+ * could ever have drawn him, whatever else reaches the band. That is
  * exactly the two halves of the report: he is inside the wash's own average,
  * and he is absent from the band.
  *
@@ -1430,11 +1453,30 @@ int band_game_g(const StackLayout &lay);
  *     this ramp                                     7 upper,  7 lower
  *
  * and over a QUIET window of the same run (frames 100..250, nothing crossing)
- * every arm reads 0 and 0, so the ramp costs a still band nothing. The
- * remaining 7 is the crosser's sub-kEdgeLo penumbra reaching the average
- * un-weighted; it is one column of twenty-four, inside a wash that is already
- * a blur, and lowering kEdgeLo to chase it would start treating a scene's own
- * animation as a crossing.
+ * every arm reads 0 and 0, so the ramp costs a still band nothing.
+ *
+ * SEVEN IS NOT ZERO. 94% QUIETER DURING A CROSSING, NOT SILENT, and that is
+ * the sentence this feature is reported with -- the owner's words were "should
+ * not touch/effect the gradient" and a note that claimed it no longer touches
+ * the gradient would be one channel of exaggeration away from a claim nobody
+ * could check. The shape, since the peak alone hides it: the residual is the
+ * SAME FIVE COLUMNS the unfixed arm moves, at about 8% of their unfixed
+ * amplitude, and zero in every other column and every quiet frame.
+ *
+ *     FIX OFF  upper c17=83 c18=78 c19=45 c16=29 c15=26
+ *              lower c19=81 c20=73 c18=25 c17=23 c21=22
+ *     FIX ON   upper c17=7  c18=7  c19=4  c15=3  c16=3
+ *              lower c20=7  c19=6  c18=3  c21=3  c17=2
+ *
+ * THE CAUSE IS THE CROSSER'S SUB-kEdgeLo PENUMBRA reaching the average
+ * un-weighted, and it is not to be chased. kEdgeLo MOVES UP IF IT EVER MOVES:
+ * lowering it starts reading a scene's own animation as a crossing, and mg15's
+ * review found a hosted scene (365) where the detector already fires on 211 of
+ * 211 steady frames off PARKED animated edge content. Seven levels out of 255
+ * on one column's endpoint, interpolated toward its neighbours and ramped down
+ * 64 host rows, sits at the edge of visibility on a smooth wash, and it
+ * happens only while a crosser is passing -- which is when the eye is on the
+ * crosser. Ship the seven, say the seven.
  *
  * WITH THE DEVIATION AT ZERO THE WEIGHT IS ZERO AND THE WASH READS THE LIVE
  * ROW EXACTLY, which is the whole zero-change guarantee: a still band with
@@ -2079,17 +2121,34 @@ inline int band_bias_b(const StackLayout &lay)
  * edge and breaks continuity at both; or pick one edge, which breaks it at the
  * other. CONTINUITY IS THE LAW here -- nothing may visibly vanish at the seam
  * -- so a 2D crosser drawn twice at two heights beats one drawn against a
- * discontinuity. It has never been seen either way: no OAM entry reaches the
- * band on this family at all (measured below), so today this decides nothing
- * and is written down for the lane that first makes it decide something.
+ * discontinuity.
  *
- * LATENT RATHER THAN FILMED, and said plainly because the distinction is the
- * whole weight of this guard. MEASURED, run mg15 lane BAND: on scenes 372 and
- * 384, at every frame captured across a crossing, SM64DS_GAP_PEEK_TRACE=1
- * printed NO census line -- no OAM entry's box reaches the band on this family
- * at all -- and the band's pixels re-derived byte-exact from the ambient fill
- * alone. So the duplicate has not been seen; it is one routed 2D sprite away
- * from being seen, and it costs two comparisons to make impossible.
+ * THIS CLIP CHANGES PIXELS TODAY. IT IS NOT LATENT, and the correction is
+ * written large because the sentence that stood here said the opposite and a
+ * later lane would have believed it. What this block first claimed was "no OAM
+ * entry reaches the band on this family at all, so today this decides
+ * nothing", off two spot frames -- 372 f300 and 384 f560. mg15's independent
+ * review swept the whole run and measured otherwise:
+ *
+ *   * over 420 windowed frames scene 372 prints THIRTEEN band-raster peek
+ *     census lines around frames 374..389, boxes reaching up to 31 of the
+ *     band's 32 rows, up to 98 pixels drawn;
+ *   * and with the clip removed on a bannered reviewer-only arm, both sides at
+ *     SM64DS_BAND_FIX=0 so the clip is the only difference, scene 372 frame
+ *     379 moves 352 of the band's 32768 pixels, max channel delta 90, host
+ *     columns 244..265, band DS rows 10..17 -- which is exactly the
+ *     [G_game, gap_ds) window this clip refuses, at the G=16 boundary.
+ *
+ * So the duplicate was real, on a scene the port ships, and the guard is
+ * removing it rather than pre-empting it. 373, 384 and 385 print no band
+ * census line over the same sweep, so the clip is inert there; the sweep that
+ * says which is which for every hosted scene is port/tools/bandprobe.py, and
+ * it belongs to this feature's proof set now rather than to a review.
+ *
+ * AND THE CLIP IS INSIDE SM64DS_BAND_FIX -- see band_game_g below. It shipped
+ * outside the arm, which made the switch a partial restore and left the clip
+ * with no way to be A/B'd at all; the review had to patch a tree to measure
+ * the 352 pixels above.
  *
  * WITH G_game == gap_ds -- every game that is not one of the four, and every
  * capture taken before the ruling -- both windows are the whole band and every
@@ -2098,6 +2157,14 @@ inline int band_bias_b(const StackLayout &lay)
  * same. */
 int band_game_g(const StackLayout &lay)
 {
+    /* AND IT IS INSIDE THE KILL SWITCH, which it was not when this shipped and
+       which cost the lane a review finding. SM64DS_BAND_FIX=0 is documented as
+       giving back the band this lane found, and a rendering change that sits
+       OUTSIDE the switch makes that sentence false and leaves itself with no
+       arm to be A/B'd by -- the reviewer had to patch his own tree to measure
+       this at all, and then measured 352 band pixels moving. A partial kill
+       switch has already burned one attribution this campaign. */
+    if (!band_fix_on()) return lay.gap_ds;
     if (lay.game_g_ds <= 0 || lay.game_g_ds >= lay.gap_ds) return lay.gap_ds;
     return lay.game_g_ds;
 }
