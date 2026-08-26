@@ -913,16 +913,17 @@ ov031	0x02111944	data_ov031_02111944	SlideDecorationOrangeSmiley_SpawnInfo	spawn
 ov031	0x02111960	data_ov031_02111960	SlideDecorationBlueSmiley_SpawnInfo	spawninfo
 ov031	0x02111984	data_ov031_02111984	_ZTV25SlideDecorationSilverStar	vtable alloc=0x128
 ov032	0x02112668	func_ov032_02112668	HugeCover_Spawn	spawnfunc
-ov032	0x02112698	func_ov032_02112698	_ZN9HugeCoverD1Ev	vtable slot 16
-ov032	0x021126e4	func_ov032_021126e4	_ZN9HugeCoverD0Ev	vtable slot 17
-ov032	0x02112744	func_ov032_02112744	_ZN9HugeCover16CleanupResourcesEv	vtable slot 3
-ov032	0x02112788	func_ov032_02112788	_ZN9HugeCover6RenderEv	vtable slot 9
-ov032	0x021127bc	func_ov032_021127bc	_ZN9HugeCover8BehaviorEv	vtable slot 6
-ov032	0x021127f0	func_ov032_021127f0	_ZN9HugeCover13InitResourcesEv	vtable slot 0
+ov032	0x02112698	func_ov032_02112698	_ZN9HugeWaterD1Ev	vtable slot 16
+ov032	0x021126e4	func_ov032_021126e4	_ZN9HugeWaterD0Ev	vtable slot 17
+ov032	0x02112744	func_ov032_02112744	_ZN9HugeWater16CleanupResourcesEv	vtable slot 3
+ov032	0x02112788	func_ov032_02112788	_ZN9HugeWater6RenderEv	vtable slot 9
+ov032	0x021127bc	func_ov032_021127bc	_ZN9HugeWater8BehaviorEv	vtable slot 6
+ov032	0x021127f0	func_ov032_021127f0	_ZN9HugeWater13InitResourcesEv	vtable slot 0
 ov032	0x021128b8	func_ov032_021128b8	HugeWater_Spawn	spawnfunc
 ov032	0x021138bc	data_ov032_021138bc	HugeCover_SpawnInfo	spawninfo
+ov032	0x021138e0	data_ov032_021138e0	_ZTV9HugeCover	vtable alloc=0x320
 ov032	0x02113980	data_ov032_02113980	HugeWater_SpawnInfo	spawninfo
-ov032	0x021139a4	data_ov032_021139a4	_ZTV9HugeCover	vtable alloc=0x320
+ov032	0x021139a4	data_ov032_021139a4	_ZTV9HugeWater	vtable alloc=0x334
 ov033	0x021113a4	func_ov033_021113a4	TinyCover_Spawn	spawnfunc
 ov033	0x021113d4	func_ov033_021113d4	_ZN9TinyCoverD1Ev	vtable slot 16
 ov033	0x02111420	func_ov033_02111420	_ZN9TinyCoverD0Ev	vtable slot 17

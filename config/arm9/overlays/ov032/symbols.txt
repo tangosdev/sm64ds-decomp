@@ -136,6 +136,7 @@ HugeCover_SpawnInfo kind:data(any) addr:0x021138bc ambiguous
 data_ov032_021138c4 kind:data(any) addr:0x021138c4 ambiguous
 data_ov032_021138d8 kind:data(any) addr:0x021138d8 ambiguous
 _ZTV9HugeCover kind:data(any) addr:0x021138e0
+_ZTV13daObjTdFuta_c kind:data(any) addr:0x021138e0
 data_ov032_021138f0 kind:data(any) addr:0x021138f0 ambiguous
 data_ov032_021138fc kind:data(any) addr:0x021138fc ambiguous
 data_ov032_02113934 kind:data(any) addr:0x02113934 ambiguous
