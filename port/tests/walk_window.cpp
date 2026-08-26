@@ -810,9 +810,10 @@ extern "C" void port_hw_regions_copy_out(void *dst);
    inconsistency instead of faulting some frames later somewhere that mentions
    none of it.
 
-   Called after every restore -- the boot-time disk read, F9, the scripted
-   SM64DS_SS_LOAD -- and at the scripted save, so a save's census and its
-   load's census can be diffed. SM64DS_SS_CENSUS=0 turns it off. */
+   Called after every restore -- the boot-time disk read, F9, the debug menu's
+   load row and the scripted SM64DS_SS_LOAD -- and at the scripted save, so a
+   save's census and its load's census can be diffed. SM64DS_SS_CENSUS=0 turns
+   it off, =2 adds the two whole-section sweeps at the bottom. */
 static const char *ss_where(const void *p)
 {
     if (!p) return "null";
@@ -825,10 +826,12 @@ static const char *ss_where(const void *p)
 }
 static void ss_census(const char *when, void *host_player, void *host_cam)
 {
+    /* 0 off, 1 (the default) the census, 2 the census plus the two section
+       sweeps below. */
     static int on = -1;
     if (on < 0) {
         const char *e = getenv("SM64DS_SS_CENSUS");
-        on = !(e && e[0] == '0');
+        on = e ? atoi(e) : 1;
     }
     if (!on) return;
 
@@ -890,8 +893,15 @@ static void ss_census(const char *when, void *host_player, void *host_cam)
                     persistent ? " persistent" : "");
         }
     }
-    lk6_savestate_scan_host_pointers(when, 24);
-    lk6_savestate_scan_world_pointers(when, 24);
+    /* THE TWO SWEEPS ARE OPT-IN (SM64DS_SS_CENSUS=2). They are whole-section
+       walks that print a couple of dozen lines each, which is the right amount
+       of detail for an investigation and the wrong amount for a playlog a
+       player fills up with F9 presses. The census above is the part worth
+       having in every log: seven lines that name what disagrees. */
+    if (on == 2) {
+        lk6_savestate_scan_host_pointers(when, 24);
+        lk6_savestate_scan_world_pointers(when, 24);
+    }
     fflush(stderr);
 }
 

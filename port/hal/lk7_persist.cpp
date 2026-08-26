@@ -336,6 +336,28 @@ static int world_check_applies(void)
     void *p = (void *)(size_t)data_0209f394[0];
     return p && in_arena(p);
 }
+/* Is this word a vtable pointer into this exe? Both singletons are C++ objects
+   with virtuals -- the frame loop dispatches through them on the first tick --
+   so an object whose first word does not address the image is not one of them,
+   whatever else it might be. /DYNAMICBASE:NO pins the image, which is what
+   makes a bare range test meaningful across a restart. Executable and
+   read-only sections both count: MSVC puts vtables in .rdata. */
+#if defined(_WIN32)
+extern "C" IMAGE_DOS_HEADER __ImageBase;
+#endif
+static int in_image(const void *p)
+{
+#if defined(_WIN32)
+    const char *base = (const char *)&__ImageBase;
+    IMAGE_NT_HEADERS32 *nt = (IMAGE_NT_HEADERS32 *)(base +
+        ((IMAGE_DOS_HEADER *)base)->e_lfanew);
+    const char *c = (const char *)p;
+    return c >= base && c < base + nt->OptionalHeader.SizeOfImage;
+#else
+    (void)p;
+    return 1;
+#endif
+}
 static const char *world_fault(const char *abuf, size_t asz,
                                const char *dbuf, size_t dsz)
 {
@@ -360,9 +382,16 @@ static const char *world_fault(const char *abuf, size_t asz,
     if (!in_arena(cam))
         return "its Camera is not in the hosted arena";
     {
+        size_t off = (const char *)player - (const char *)port_arena_base();
+        if (off + 4 > asz || !in_image(*(void *const *)(abuf + off)))
+            return "its Player is not an object of this build (no vtable)";
+    }
+    {
         size_t off = (const char *)cam - (const char *)port_arena_base();
         if (off + 0x140 > asz)
             return "its Camera runs off the end of the saved arena";
+        if (!in_image(*(void *const *)(abuf + off)))
+            return "its Camera is not an object of this build (no vtable)";
         if (!*(void *const *)(abuf + off + 0x13c))
             return "its Camera has no mode -- the first frame would fault "
                    "reading address 0x24";
