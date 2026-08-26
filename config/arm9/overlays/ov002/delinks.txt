@@ -736,31 +736,31 @@ src/OneUpMushroomBlockTag_Spawn.c:
     complete
     .text start:0x020b4670 end:0x020b46a0
 
-src/_ZN21MegaMushroomCreateTagD1Ev.cpp:
+src/_ZN16daObjKinokoTag_cD1Ev.cpp:
     complete
     .text start:0x020b46a0 end:0x020b46d0
 
-src/_ZN21MegaMushroomCreateTagD0Ev.cpp:
+src/_ZN16daObjKinokoTag_cD0Ev.cpp:
     complete
     .text start:0x020b46d0 end:0x020b4714
 
-src/_ZN21MegaMushroomCreateTag17SpawnMegaMushroomEv.cpp:
+src/_ZN16daObjKinokoTag_c17SpawnMegaMushroomEv.cpp:
     complete
     .text start:0x020b4714 end:0x020b47ec
 
-src/_ZN21MegaMushroomCreateTag20TrySpawnMegaMushroomEv.cpp:
+src/_ZN16daObjKinokoTag_c20TrySpawnMegaMushroomEv.cpp:
     complete
     .text start:0x020b47ec end:0x020b482c
 
-src/_ZN21MegaMushroomCreateTag16CleanupResourcesEv.cpp:
+src/_ZN16daObjKinokoTag_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b482c end:0x020b4850
 
-src/_ZN21MegaMushroomCreateTag8BehaviorEv.cpp:
+src/_ZN16daObjKinokoTag_c8BehaviorEv.cpp:
     complete
     .text start:0x020b4850 end:0x020b49a8
 
-src/_ZN21MegaMushroomCreateTag13InitResourcesEv.cpp:
+src/_ZN16daObjKinokoTag_c13InitResourcesEv.cpp:
     complete
     .text start:0x020b49a8 end:0x020b4a00
 
