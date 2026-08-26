@@ -97,9 +97,15 @@
 # Five of the 26 carry "recovered from vtable slot identity", so
 # port/tools/inferred_stub_guard.py refuses them until each is ruled. All five
 # are ruled in port/tools/inferred_stub_adjudicated.txt, and the evidence is
-# the strongest kind available: FOUR of the five are marked complete in
-# config/arm9/overlays/ov005/delinks.txt, which means the ROM's own bytes come
-# back out of the source. A byte-matching body is not a guess.
+# the strongest kind available: ALL FIVE are marked complete in
+# config/arm9/overlays/ov005/delinks.txt -- 020bfefc, 020c0b00, 020c14a0,
+# 020c1654 and 020c1a20, listed rather than counted this time -- which means
+# the ROM's own bytes come back out of the source. A byte-matching body is not
+# a guess. (An earlier revision said FOUR. It was an undercount, not a
+# rounding: the number was written from memory of the delinks scan instead of
+# from the scan, and the independent review caught it. The five match.py
+# re-verifications in port/tools/inferred_stub_adjudicated.txt are the primary
+# evidence either way and they were always five.)
 src/func_ov005_020bfec0.c
 src/func_ov005_020bfefc.c
 src/func_ov005_020bff4c.cpp

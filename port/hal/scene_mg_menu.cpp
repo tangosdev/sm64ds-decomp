@@ -52,7 +52,20 @@
  * INSIDE A MOUNTED SPAN (port/ov005_syms.txt keeps data_ov005_020c2490 in the
  * mount), so the raw DS words are still there at fill time to key on, and a
  * fill that cannot write a slot the ROM did not park a shared body in is the
- * safer instrument. This is that function's FIRST caller.
+ * safer instrument.
+ *
+ * IT IS NOT THAT FUNCTION'S FIRST CALLER, and an earlier revision of this
+ * banner said it was. hal/scene_mg.cpp already calls port_scene_fill_rom at
+ * SEVENTEEN sites and did so at this branch's base (5bee54dfa), and that file
+ * is compiled -- port/CMakeLists.txt's SCENE_MG_SOURCES names it. The false
+ * claim was inherited from the stale "NO CALLER TODAY" paragraph that still
+ * stands above the definition in hal/scene_boot.cpp; that comment is another
+ * lane's file and is flagged rather than edited here. The correction runs in
+ * the reassuring direction -- the function this seat leans on is far better
+ * exercised than the seat claimed -- but a banner that invents a first is a
+ * banner nobody can trust about a second thing either. What IS first here is
+ * narrower and still worth saying: this is the first caller that is not an
+ * ov006 minigame class, and the first to hand it an EIGHTEEN-slot table.
  *
  * It returns the count of slots left holding a raw DS word. For this class the
  * answer must be exactly SEVEN -- the class's own overrides -- and the seven
