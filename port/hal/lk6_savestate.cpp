@@ -103,6 +103,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdint.h>
+
+#if defined(_WIN32)
+/* the cross-process landmine scan at the bottom of this file classifies every
+   captured word through VirtualQuery */
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
 
 typedef unsigned int u32;
 
@@ -314,6 +322,174 @@ int lk6_savestate_load(void)
 
 // 1 if the slot currently holds a state (drives the menu label).
 int lk6_savestate_has(void) { return g_slot.valid; }
+
+// THE CROSS-PROCESS LANDMINE SCAN.
+//
+// data_020a5bb8 (sdat's calloc'd root) is documented above as ONE captured
+// global that holds a HOST HEAP pointer, with the note that "there may be more
+// of these; they only bite CROSS-PROCESS, and only crash-driven runs find
+// them". That note is a standing invitation to be surprised by a player. This
+// answers it by measurement instead: walk the captured bytes as machine words
+// and classify every one that looks like an address.
+//
+// A captured word may point at
+//   the exe image      fine, /DYNAMICBASE:NO pins the base every launch
+//   the hosted arena   fine, hal/os_arena.cpp pins it at 0x30000000
+//   a DS reservation   fine, ntr/io.cpp reserves those at their DS addresses
+//   .dsstate itself    fine, it is inside the image
+// and anything else that is real committed private memory is a pointer into
+// THIS PROCESS's heap or stack. Restored into another process it addresses
+// whatever that process happened to put there -- or nothing at all. Those are
+// the words a disk state cannot carry, and each one needs the same treatment
+// data_020a5bb8 got: re-seat the live value after the copy.
+//
+// Regions are classified once and cached, so the scan is a few hundred
+// VirtualQuery calls rather than one per word.
+#if defined(_WIN32)
+extern "C" IMAGE_DOS_HEADER __ImageBase;
+namespace {
+struct Region { uintptr_t lo, hi; int ok; };   /* ok: 1 safe, 0 suspect */
+Region g_rgn[256];
+int g_rgn_n;
+
+int region_ok(uintptr_t p)
+{
+    for (int i = 0; i < g_rgn_n; ++i)
+        if (p >= g_rgn[i].lo && p < g_rgn[i].hi)
+            return g_rgn[i].ok;
+    MEMORY_BASIC_INFORMATION mbi;
+    if (!VirtualQuery((void *)p, &mbi, sizeof mbi))
+        return 1;                       /* unmapped: not a live pointer */
+    uintptr_t lo = (uintptr_t)mbi.BaseAddress;
+    uintptr_t hi = lo + mbi.RegionSize;
+    int ok = 1;
+    if (mbi.State == MEM_COMMIT) {
+        if (mbi.Type == MEM_IMAGE || mbi.Type == MEM_MAPPED)
+            ok = 1;                     /* the exe (pinned) or a mapping */
+        else {
+            uintptr_t ab = (uintptr_t)mbi.AllocationBase;
+            uintptr_t arena = (uintptr_t)port_arena_base();
+            uintptr_t aend  = (uintptr_t)port_arena_end();
+            if (p >= arena && p < aend)
+                ok = 1;                 /* the pinned arena */
+            else if (ab < 0x08000000u)
+                ok = 1;                 /* a DS-address reservation */
+            else
+                ok = 0;                 /* host heap or stack: DEAD next run */
+        }
+    }
+    if (g_rgn_n < (int)(sizeof g_rgn / sizeof g_rgn[0]))
+        { g_rgn[g_rgn_n].lo = lo; g_rgn[g_rgn_n].hi = hi;
+          g_rgn[g_rgn_n].ok = ok; ++g_rgn_n; }
+    return ok;
+}
+}  // namespace
+#endif
+
+int lk6_savestate_scan_host_pointers(const char *when, int list_max)
+{
+#if !defined(_WIN32)
+    (void)when; (void)list_max;
+    return -1;
+#else
+    char *lo = dsstate_base();
+    size_t gsz = dsstate_size();
+    if (!lo || !gsz) return -1;
+    g_rgn_n = 0;
+    int bad = 0, listed = 0;
+    const size_t n = gsz / sizeof(uintptr_t);
+    const uintptr_t *w = (const uintptr_t *)lo;
+    for (size_t i = 0; i < n; ++i) {
+        uintptr_t p = w[i];
+        if (p < 0x10000u) continue;          /* small ints, flags, counts */
+        if (region_ok(p)) continue;
+        ++bad;
+        if (listed < list_max) {
+            ++listed;
+            fprintf(stderr, "[ss-scan]   .dsstate+0x%06x = %08x -- host "
+                    "memory, DEAD in the next process\n",
+                    (unsigned)(i * sizeof(uintptr_t)), (unsigned)p);
+        }
+    }
+    fprintf(stderr, "[ss-scan] %s: %d captured word(s) point at this process's "
+            "own heap or stack%s\n", when, bad,
+            bad > listed ? " (list truncated)" : "");
+    fflush(stderr);
+    return bad;
+#endif
+}
+
+// THE SAME QUESTION, THE OTHER WAY ROUND.
+//
+// The scan above finds captured bytes that cannot survive a restart. This one
+// finds the opposite hazard, and it is the one the level-handoff comment in
+// tests/walk_window.cpp already knows about: HOST storage that holds a pointer
+// INTO THE WORLD. "EVERY POINTER main() HOLDS INTO THE LEVEL IS STALE
+// AFTERWARDS" is written about a level change; a restore replaces the world
+// the same way and re-derives nothing.
+//
+// So: walk every WRITABLE image section that is not .dsstate -- the host's own
+// .data and .bss, which a restore never touches -- and count the words that
+// address the hosted arena. Each one is a host variable pointing at an object
+// that a restore has just replaced with different bytes.
+//
+// It cannot see function locals (walk_window's `player`, `c`, `cam` and
+// `stage` are locals in main's frame), which is exactly why those are handled
+// by re-deriving them at the call site rather than by this census. What it
+// does see is every FILE-SCOPE host mirror of world state, which is the class
+// hal/level_boot.cpp's handle table and entrance cache belong to.
+int lk6_savestate_scan_world_pointers(const char *when, int list_max)
+{
+#if !defined(_WIN32)
+    (void)when; (void)list_max;
+    return -1;
+#else
+    char *base = (char *)port_arena_base();
+    char *end  = (char *)port_arena_end();
+    if (!base || end <= base) return -1;
+    /* Only the CARVED part of the arena counts. The whole 8MB window is a
+       plausible-looking numeric range and .data is full of ROM bytes and
+       string literals that fall inside it by accident (0x30523030 is the
+       four characters "00R0"). Everything above the carve cursor is memory
+       nothing has handed out, so a word pointing there is noise by
+       construction. */
+    char *hi_used = (char *)port_arena_cursor();
+    if (hi_used > base && hi_used < end) end = hi_used;
+    char *dlo = dsstate_base();
+    char *dhi = dlo + dsstate_size();
+
+    char *img = (char *)&__ImageBase;
+    IMAGE_NT_HEADERS32 *nt = (IMAGE_NT_HEADERS32 *)(img +
+        ((IMAGE_DOS_HEADER *)img)->e_lfanew);
+    IMAGE_SECTION_HEADER *s = IMAGE_FIRST_SECTION(nt);
+    int bad = 0, listed = 0;
+    for (unsigned i = 0; i < nt->FileHeader.NumberOfSections; ++i, ++s) {
+        if (!(s->Characteristics & IMAGE_SCN_MEM_WRITE))
+            continue;
+        char *a = img + s->VirtualAddress;
+        char *b = a + s->Misc.VirtualSize;
+        for (char *p = a; p + sizeof(uintptr_t) <= b;
+             p += sizeof(uintptr_t)) {
+            if (p >= dlo && p < dhi) continue;      /* captured: rolls back */
+            char *v = *(char **)p;
+            if (v < base || v >= end) continue;
+            ++bad;
+            if (listed < list_max) {
+                ++listed;
+                fprintf(stderr, "[ss-rscan]   %.8s+0x%06x (%08x) = %08x -- "
+                        "host storage pointing INTO the world\n", s->Name,
+                        (unsigned)(p - a), (unsigned)(size_t)p,
+                        (unsigned)(size_t)v);
+            }
+        }
+    }
+    fprintf(stderr, "[ss-rscan] %s: %d host word(s) point into the arena a "
+            "restore just replaced%s\n", when, bad,
+            bad > listed ? " (list truncated)" : "");
+    fflush(stderr);
+    return bad;
+#endif
+}
 
 // Where a byte lives with respect to the snapshot: bit 0 set if it is inside
 // the .dsstate section, bit 1 set if it is inside the hosted arena, and 0 for

@@ -150,6 +150,13 @@ int   port_arena_is_fixed(void);
 extern char dsstate_lo;
 extern char dsstate_hi;
 
+// The world's own two singletons, for the runnability check below. Both are
+// hosted DS globals inside .dsstate: data_0209f394[0] is the local Player
+// (hal/cxxname_bridge.cpp) and data_0209f318 the Camera (hal/actor_vtables.cpp),
+// and every target that links this file links both of those.
+extern int data_0209f394[];
+extern void *data_0209f318;
+
 // the hardware content stores (ntr/io.cpp).
 unsigned port_hw_regions_size(void);
 void port_hw_regions_copy_out(void *dst);
@@ -279,6 +286,116 @@ int state_path(char *out, size_t cap)
     }
 #endif
     (void)out; (void)cap;
+    return 0;
+}
+
+// ---- IS THE SAVED WORLD A WORLD? -------------------------------------------
+//
+// Every header field is an EXE-SIDE or an ASSET-SIDE fact: which build, which
+// game data, where the image and the arena landed, how big the section is. A
+// file can agree on all of them and still hold a world the game cannot take a
+// single tick of. That is what a player hit on 2026-08-26: launcher and game
+// both 0.2.13, the state written by that same build, every field matched, the
+// state loaded -- and the first frame died in func_0200ca50 +0x12 reading
+// address 0x24, which is `mode->+0x24` with a NULL camera mode, under
+// Camera::Behavior (resolved against a layout-matched rebuild of that commit).
+//
+// So the load asks three questions of the WORLD before it commits to it, and
+// they are the three the first tick asks:
+//
+//   1. is there a Player  -- data_0209f394[0], the actor the frame loop ticks
+//      and the camera follows;
+//   2. is there a Camera  -- data_0209f318, ticked every frame by
+//      Camera::Behavior;
+//   3. does that Camera have a MODE -- its +0x13c, which func_0200ca50
+//      dereferences at +0x24 before it does anything else. The mode objects
+//      are ROM data in the .cammod run, so a live Camera's is never null; a
+//      null one means the bytes at that address are not a Camera.
+//
+// Read out of the FILE's bytes, at the same offsets they occupy live, before a
+// single byte is copied into place -- so a refusal costs the player their save
+// state and not their launch, which is the same trade every other refusal in
+// this file makes.
+//
+// SKIPPED WHEN THIS PROCESS DID NOT BOOT A LEVEL. tests/smoke_persist and
+// tests/smoke_savestate build a bare actor world on purpose -- they park their
+// own object in data_0209f394[0] and it is not an arena Player -- so asking
+// them for one would refuse the very states those tests exist to prove
+// round-trip. The gate is the LIVE world and it is the weakest thing that
+// distinguishes the game from a harness: a Player pointer that actually
+// addresses the hosted arena. If THIS process booted a level, the file has to
+// have booted one too.
+static int in_arena(const void *p)
+{
+    const char *c = (const char *)p;
+    return c >= (const char *)port_arena_base()
+        && c <  (const char *)port_arena_end();
+}
+static int world_check_applies(void)
+{
+    void *p = (void *)(size_t)data_0209f394[0];
+    return p && in_arena(p);
+}
+/* Is this word a vtable pointer into this exe? Both singletons are C++ objects
+   with virtuals -- the frame loop dispatches through them on the first tick --
+   so an object whose first word does not address the image is not one of them,
+   whatever else it might be. /DYNAMICBASE:NO pins the image, which is what
+   makes a bare range test meaningful across a restart. Executable and
+   read-only sections both count: MSVC puts vtables in .rdata. */
+#if defined(_WIN32)
+extern "C" IMAGE_DOS_HEADER __ImageBase;
+#endif
+static int in_image(const void *p)
+{
+#if defined(_WIN32)
+    const char *base = (const char *)&__ImageBase;
+    IMAGE_NT_HEADERS32 *nt = (IMAGE_NT_HEADERS32 *)(base +
+        ((IMAGE_DOS_HEADER *)base)->e_lfanew);
+    const char *c = (const char *)p;
+    return c >= base && c < base + nt->OptionalHeader.SizeOfImage;
+#else
+    (void)p;
+    return 1;
+#endif
+}
+static const char *world_fault(const char *abuf, size_t asz,
+                               const char *dbuf, size_t dsz)
+{
+    if (!abuf || !dbuf) return 0;
+    if (!world_check_applies())
+        return 0;                      /* harness world: nothing to compare */
+
+    const char *dlo = &dsstate_lo;
+    size_t off_player = (const char *)&data_0209f394[0] - dlo;
+    size_t off_cam    = (const char *)&data_0209f318   - dlo;
+    if (off_player + 4 > dsz || off_cam + 4 > dsz)
+        return 0;                      /* section shape moved; not our call */
+
+    void *player = *(void *const *)(dbuf + off_player);
+    void *cam    = *(void *const *)(dbuf + off_cam);
+    if (!player)
+        return "it has no Player (data_0209f394[0] is null)";
+    if (!in_arena(player))
+        return "its Player is not in the hosted arena";
+    if (!cam)
+        return "it has no Camera (data_0209f318 is null)";
+    if (!in_arena(cam))
+        return "its Camera is not in the hosted arena";
+    {
+        size_t off = (const char *)player - (const char *)port_arena_base();
+        if (off + 4 > asz || !in_image(*(void *const *)(abuf + off)))
+            return "its Player is not an object of this build (no vtable)";
+    }
+    {
+        size_t off = (const char *)cam - (const char *)port_arena_base();
+        if (off + 0x140 > asz)
+            return "its Camera runs off the end of the saved arena";
+        if (!in_image(*(void *const *)(abuf + off)))
+            return "its Camera is not an object of this build (no vtable)";
+        if (!*(void *const *)(abuf + off + 0x13c))
+            return "its Camera has no mode -- the first frame would fault "
+                   "reading address 0x24";
+    }
     return 0;
 }
 
@@ -470,6 +587,24 @@ int lk7_persist_write(void)
     size_t dsz  = (size_t)hdr.dsstate_size;
     size_t hsz  = (size_t)hdr.hw_size;
 
+    /* THE SAME THREE QUESTIONS, ASKED OF THE LIVE WORLD BEFORE IT IS WRITTEN.
+       The load refuses a state whose world cannot take a tick; this is the
+       other end of it, and it is the better end -- a file that could never be
+       loaded should not exist. A player who presses F8 in a moment the world
+       cannot answer for gets "state NOT saved", which the toast already says,
+       instead of a file that turns itself away three launches later. Reading
+       LIVE memory through the same function the load uses, at the same
+       offsets, so the two ends can never drift apart. */
+    {
+        const char *bad = world_fault(base, asz, &dsstate_lo, dsz);
+        if (bad) {
+            fprintf(stderr, "[savestate] disk save skipped: this world is not "
+                    "in a state that can be reloaded -- %s. Nothing was "
+                    "written; any earlier savestate.bin is untouched.\n", bad);
+            return 0;
+        }
+    }
+
     // The hardware stores go through the same copy-out the slot uses, into one
     // temporary blob, so the file's byte order is the hook's fixed region order.
     char *hbuf = 0;
@@ -601,18 +736,61 @@ int lk7_persist_read(void)
     size_t hsz = (size_t)disk.hw_size;
     char  *base = (char *)port_arena_base();
 
-    // Copy the arena and the section straight in. The bases matched the header,
-    // so every absolute pointer in these bytes addresses what it did at save.
-    if (asz && fread(base, 1, asz, f) != asz) {
+    // Read the arena and the section into buffers rather than straight into
+    // place. THE HEADER CANNOT SEE INSIDE THE WORLD, and this is the last point
+    // at which the freshly booted world still exists: the copies below are
+    // destructive, so a state that turns out not to describe a runnable world
+    // has to be turned away BEFORE it lands, not diagnosed after. The bases
+    // matched the header, so every absolute pointer in these bytes addresses
+    // what it did at save, which is what lets world_fault() below read them at
+    // their own offsets.
+    char *abuf = asz ? (char *)malloc(asz) : 0;
+    char *dbuf = dsz ? (char *)malloc(dsz) : 0;
+    if ((asz && !abuf) || (dsz && !dbuf)) {
+        fprintf(stderr, "[savestate] out of memory reading disk state\n");
+        free(abuf); free(dbuf); fclose(f);
+        return 0;
+    }
+    if (asz && fread(abuf, 1, asz, f) != asz) {
         fprintf(stderr, "[savestate] disk state refused: arena body truncated\n");
-        fclose(f);
+        free(abuf); free(dbuf); fclose(f);
         return 0;
     }
-    if (dsz && fread(&dsstate_lo, 1, dsz, f) != dsz) {
+    if (dsz && fread(dbuf, 1, dsz, f) != dsz) {
         fprintf(stderr, "[savestate] disk state refused: dsstate body truncated\n");
-        fclose(f);
+        free(abuf); free(dbuf); fclose(f);
         return 0;
     }
+    {
+        /* The kill switch covers this refusal too, and on its own terms: the
+           header may have matched every field (so `overridden` is still 0) and
+           the thing being waved through is the WORLD. Reading the env directly
+           is what lets a forensic run load a state this check would turn away
+           and watch what it does. */
+        const char *bad = world_fault(abuf, asz, dbuf, dsz);
+        if (bad && getenv("SM64DS_SAVESTATE_NO_GUARD"))
+            overridden = 1;
+        if (bad && !overridden) {
+            refuse("save state refused: it does not describe a world this "
+                   "game can run",
+                   "disk state refused: the saved world is not runnable -- %s. "
+                   "The header matched on every field (same build, same game "
+                   "data, same memory layout), so this is the world INSIDE the "
+                   "file, not the file itself. Booting fresh and leaving %s "
+                   "untouched.", bad, path);
+            verdict_savestate_refused();
+            free(abuf); free(dbuf); fclose(f);
+            return 0;
+        }
+        if (bad)
+            fprintf(stderr, "[savestate] SM64DS_SAVESTATE_NO_GUARD=1: the "
+                            "saved world is not runnable (%s), loading it "
+                            "anyway.\n", bad);
+    }
+    if (asz) memcpy(base, abuf, asz);
+    if (dsz) memcpy(&dsstate_lo, dbuf, dsz);
+    free(abuf);
+    free(dbuf);
     if (hsz) {
         char *hbuf = (char *)malloc(hsz);
         if (!hbuf) { fprintf(stderr, "[savestate] out of memory reading disk state\n"); fclose(f); return 0; }

@@ -1471,7 +1471,11 @@ enum { PORT_LEVEL_COUNT = sizeof port_level_table / sizeof port_level_table[0] }
    "not set", the direct-boot case, and falls back to the env. This is a
    separate word from data_0209f2f8 on purpose: data_0209f2f8 is bss and reads 0
    (a valid level id) before any boot, so it cannot double as the sentinel. */
+/* CAPTURED: it names which level the WORLD is, so it has to move with the
+   world a restore puts back. -1 stays the "not set" sentinel either way. */
+DSSTATE_BEGIN
 static int g_boot_target = -1;
+DSSTATE_END
 
 static int port_level_env_want(void)
 {
@@ -1802,9 +1806,17 @@ static void *(*const port_level_mount_fns[PORT_LEVEL_COUNT])(void) = {
    record is LoadEntranceObjects' own `struct Entry`: raw id, s16 x/y/z, a
    Vector3_16 rotation, and a param whose low three bits are the area.
    Sixteen bytes, and the sub-table header carries the count at +1 and the
-   array pointer at +4. */
+   array pointer at +4.
+
+   CAPTURED (DSSTATE_BEGIN/END): this is a description of the CURRENT LEVEL,
+   not of the session. A save-state restore replaces the world, and these two
+   words have to go with it or the warp list offers the previous level's
+   entrances against the restored level's overlay. See the block comment on
+   the file-handle table below for the whole argument. */
+DSSTATE_BEGIN
 static const unsigned char *g_entrance_entries;
 static int g_entrance_count;
+DSSTATE_END
 
 extern "C" int port_entrance_count(void) { return g_entrance_count; }
 
@@ -2029,7 +2041,28 @@ void _ZN13SharedFilePtr8LoadFileEv(struct PortSharedFilePtr *);
    loop. Sixty-four is twenty-nine plus room for the rest of a scene's boot; the
    per-level release below is unchanged and still runs, and the cost is one
    PortSharedFilePtr per unused slot. */
+/* ---- CAPTURED, and why -----------------------------------------------------
+
+   This table is the port's stand-in for func_0201818c's file cache. On the DS
+   that cache is DS main RAM, so a save state captures it with everything else
+   and a restore puts it back. The port hosts it as ordinary C storage instead,
+   which put it OUTSIDE all three things a restore rolls back -- and a table
+   that says which arena block holds which file is a description of the WORLD,
+   not of the session. hal/dsstate_seg.h draws that line per symbol, not per
+   file, and names ntr/runtime.cpp's two genuine DS globals as the precedent
+   for bracketing part of an otherwise host-only file.
+
+   Measured before this moved (run mg15, lane RELOAD): walk through a door into
+   sub-area 32, save, quit, launch again into the castle grounds and let the
+   disk state load at boot. The world comes back as sub-area 32 with its six
+   file rows -- and this table still held the castle grounds' TEN, with slot 1
+   naming handle 1943 at arena 30057464 while the restored world has handle
+   1884 at that same address. The next Release frees a block by the wrong
+   handle and the next load hands a consumer another file's bytes. Bracketing
+   the three arrays is what makes the two descriptions incapable of
+   disagreeing. */
 enum { PORT_LOADFILE_SLOTS = 64 };
+DSSTATE_BEGIN
 static PortSharedFilePtr g_loadfile_slot[PORT_LOADFILE_SLOTS];
 static int g_loadfile_used;
 /* How many times this handle has been LOADED since the last teardown. It is
@@ -2041,6 +2074,7 @@ static int g_loadfile_used;
    separate array because PortSharedFilePtr has to stay the ROM struct that
    SharedFilePtr::Construct and ::Release write through. */
 static unsigned char g_loadfile_loads[PORT_LOADFILE_SLOTS];
+DSSTATE_END
 
 /* ---- the instruments, env-gated and off by default -------------------------
 
@@ -4050,7 +4084,12 @@ extern "C" void *port_level_overlay(int level);   /* hal/level_change.cpp */
    that points at the image. A copy, not an index: reset_host zeroes the live
    table slot before the free runs, but SharedFilePtr::Release only needs the
    struct's own fields, so the aside copy frees the right block. */
+/* CAPTURED for the same reason as the handle table above: it is a row COPIED
+   out of that table, so a restore that rolled the table back and left this
+   behind would be the same disagreement one indirection further along. */
+DSSTATE_BEGIN
 static PortSharedFilePtr g_pending_kcl;
+DSSTATE_END
 static int g_have_pending_kcl;
 
 /* Resolve the outgoing level's KCL handle and stash its slot for a late free.
@@ -4427,6 +4466,44 @@ extern "C" void port_level_stage_reseat(void *stagev)
    that loads and renders nonsense rather than as a mount failure. Say it, do
    not abort: the table is still the thing the boot uses, and a loud mismatch
    is more useful than a dead run. */
+/* ---- readers for the HOST-SIDE description of the current level ------------
+
+   A save-state restore rolls back exactly three things: the hosted DS arena,
+   the .dsstate section, and the hardware content stores. It rolls back NOTHING
+   ELSE -- and this file stages a second description of the same world outside
+   all three. Gate 31's comment above already names that set, because a LEVEL
+   CHANGE has to undo it by hand; a restore is the same transition and undoes
+   none of it.
+
+   These readers exist so the save-state census in tests/walk_window.cpp can
+   print that second description beside the world's own without this file's
+   statics leaving this file, and without dragging hal/lk6_savestate.cpp onto
+   the link line of every target that compiles this one (smoke_player does not
+   link it). */
+extern "C" int port_level_host_boot_target(void) { return g_boot_target; }
+extern "C" const void *port_level_host_entrances(int *count)
+{
+    if (count) *count = g_entrance_count;
+    return g_entrance_entries;
+}
+extern "C" int port_level_host_file_rows(void) { return g_loadfile_used; }
+extern "C" void *port_level_host_file_row(int i, unsigned *handle,
+                                          unsigned *refs, int *persistent)
+{
+    if (i < 0 || i >= g_loadfile_used || i >= PORT_LOADFILE_SLOTS)
+        return 0;
+    if (handle)     *handle = g_loadfile_slot[i].fileID;
+    if (refs)       *refs = g_loadfile_slot[i].numRefs;
+    if (persistent) *persistent = g_loadfile_slot[i].pad;
+    return g_loadfile_slot[i].filePtr;
+}
+/* the two halves of the path binding the port's own assert reads */
+extern "C" void port_level_host_paths(void **table, int *count)
+{
+    if (table) *table = (void *)(size_t)data_020a0d84[0];
+    if (count) *count = data_020a0d8c[0];
+}
+
 extern "C" void port_level_mounts_install(void)
 {
     static int done;
