@@ -1,12 +1,14 @@
-// @symbol func_ov085_0212a0b8
-// recovered name: Toad_Kill
-/* recovered: renamed to Class_Method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* daKinopio_c::Kill - recovered from vtable slot identity */
-int func_ov085_0212a0b8(char* c){
+//cpp
+#include "PrincessPeach.h"
+
+extern "C" void _ZN8dActor_c9UpdatePosEP5dCc_c(void *, void *);
+extern "C" int func_ov085_02129f8c(void *);
+
+int PrincessPeach::InitState0()
+{
+  char *c = (char *)this;
   _ZN8dActor_c9UpdatePosEP5dCc_c(c, c+0x160);
-  func_ov085_02129ebc(c, c+0x194);
+  UpdateGroundCollision(&mWithMeshClsn);
   func_ov085_02129f8c(c);
   return 1;
 }

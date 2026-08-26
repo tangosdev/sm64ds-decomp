@@ -1,9 +1,9 @@
 //cpp
 // @symbol _ZN13PrincessPeach13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "PrincessPeach.h"
+extern "C" char data_ov085_021304f4;
+extern "C" void *data_ov085_0212f280[];
 extern "C" void _ZN9Animation8LoadFileER13SharedFilePtr(void*);
 extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 struct BMD_File; struct dActor_c; struct Vector3_16;
@@ -16,7 +16,6 @@ extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
     void *self, dActor_c *a, int b, int c, unsigned int d, unsigned int e);
 extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);
-extern "C" void func_ov085_02129fdc(char *c);
 
 int PrincessPeach::InitResources()
 {
@@ -36,7 +35,7 @@ int PrincessPeach::InitResources()
     *(int*)(s + 0x80) = 0x1000;
     *(int*)(s + 0x84) = 0x1000;
     *(int*)(s + 0x88) = 0x1000;
-    func_ov085_0212a4a4(s, 0);
-    func_ov085_02129fdc(s);
+    SetState(0);
+    UpdateModel();
     return 1;
 }

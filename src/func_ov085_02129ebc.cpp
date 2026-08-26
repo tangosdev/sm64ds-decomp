@@ -1,6 +1,7 @@
 //cpp
+#include "PrincessPeach.h"
+
 extern "C" {
-struct dBgCh_Actr;
 int dBgCh_Actr_UpdateContinuous_Veneer(void* c);
 int _ZNK10dBgCh_Actr10IsOnGroundEv(void* c);
 void* _ZNK10dBgCh_Actr14GetFloorResultEv(void* c);
@@ -8,9 +9,11 @@ void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* s, int* out);
 int _ZN4cstd4fdivEii(int a, int b);
 int _ZNK10dBgCh_Actr8IsOnWallEv(void* c);
 void* _ZNK10dBgCh_Actr13GetWallResultEv(void* c);
+}
 
-int func_ov085_02129ebc(int* self, void* clsn)
+void PrincessPeach::UpdateGroundCollision(dBgCh_Actr *clsn)
 {
+    int *self = (int *)this;
     int n0[3];
     int n1[3];
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
@@ -27,5 +30,4 @@ int func_ov085_02129ebc(int* self, void* clsn)
     if (_ZNK10dBgCh_Actr8IsOnWallEv(clsn)) {
         _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK10dBgCh_Actr13GetWallResultEv(clsn)+4, n1);
     }
-}
 }

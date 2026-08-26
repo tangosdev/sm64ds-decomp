@@ -1,18 +1,19 @@
-typedef unsigned char u8;
-typedef short s16;
+//cpp
+#include "PrincessPeach.h"
+#include "common.h"
 
-typedef struct { int x, y, z; } Vector3;
-
-extern int _ZN6Player9StartTalkER7fBase_cb(void* self, void* ab, int b);
-extern s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);
-extern int _Z14ApproachLinearRsss(s16* ref, s16 target, s16 step);
-extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
+extern "C" {
+int _ZN6Player9StartTalkER7fBase_cb(void* self, void* ab, int b);
+s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);
+int _Z14ApproachLinearRsss(s16* ref, s16 target, s16 step);
+int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
     void* self, void* ab, unsigned a, const Vector3* v, unsigned d, unsigned e);
-extern int _ZN6Player12GetTalkStateEv(void* self);
-extern void func_ov085_0212a4a4(void* c, int a);
+int _ZN6Player12GetTalkStateEv(void* self);
+}
 
-int func_ov085_0212a220(char* c)
+int PrincessPeach::State3()
 {
+    char *c = (char *)this;
     Vector3 v;
     switch (*(u8*)(c + 0x368)) {
     case 0:
@@ -35,7 +36,7 @@ int func_ov085_0212a220(char* c)
         break;
     case 2:
         if (_ZN6Player12GetTalkStateEv(*(void**)(c + 0x35c)) == -1)
-            func_ov085_0212a4a4(c, 0);
+            SetState(0);
         break;
     }
     return 1;

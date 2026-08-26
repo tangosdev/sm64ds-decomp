@@ -1,9 +1,14 @@
 //cpp
+#include "PrincessPeach.h"
+
 extern "C" {
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int _ZN6Player9StartTalkER7fBase_cb(void *self, void *actor, bool b);
-extern void func_ov085_0212a4a4(void *self, int i);
-int func_ov085_0212a37c(char *c) {
+}
+
+int PrincessPeach::InitState3()
+{
+    char *c = (char *)this;
     if (*(int*)(c+0x180) & 0x8000000) {
         char *a = (char*)_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c+0x184));
         if (a) {
@@ -11,11 +16,10 @@ int func_ov085_0212a37c(char *c) {
             if (match != 0) {
                 *(void**)(c+0x35c) = a;
                 if (_ZN6Player9StartTalkER7fBase_cb(*(void**)(c+0x35c), c, false)) {
-                    func_ov085_0212a4a4(c, 1);
+                    SetState(1);
                 }
             }
         }
     }
     return 1;
-}
 }

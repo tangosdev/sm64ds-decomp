@@ -1,24 +1,21 @@
 //cpp
 // @symbol func_ov085_02129dbc
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
+#include "PrincessPeach.h"
 #include "common.h"
+
 extern "C" {
     extern int AngleDiff(int, int);
 }
-struct dActor_c { dActor_c *ClosestPlayer(); };
 
 extern "C" int Vec3_HorzDist(const void *a, const void *b);
 extern "C" short Vec3_HorzAngle(const void *a, const void *b);
 extern "C" short Vec3_VertAngle(const void *a, const void *b);
 extern "C" void _Z14ApproachLinearRsss(short *dst, short target, short rate);
 
-
-
-extern "C" void func_ov085_02129dbc(dActor_c *self)
+void PrincessPeach::UpdateLookAt()
 {
-    char *s = (char *)self;
-    dActor_c *p = self->ClosestPlayer();
+    char *s = (char *)this;
+    Player *p = ClosestPlayer();
     if (p == 0)
         return;
     Vector3 v;

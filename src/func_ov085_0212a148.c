@@ -1,4 +1,7 @@
-int func_ov085_0212a148(void)
+//cpp
+#include "PrincessPeach.h"
+
+int PrincessPeach::State2()
 {
     return 1;
 }

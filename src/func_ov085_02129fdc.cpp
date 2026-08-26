@@ -1,4 +1,6 @@
 //cpp
+#include "PrincessPeach.h"
+
 extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* m, short angY);
@@ -8,8 +10,9 @@ extern int data_020a0e68[];
 
 typedef struct { int w[12]; } M48;
 
-void func_ov085_02129fdc(char* c)
+void PrincessPeach::UpdateModel()
 {
+    char *c = (char *)this;
     Matrix4x3_FromRotationY(c + 0xf0, *(short*)(c + 0x8e));
     *(int*)(c + 0x114) = *(int*)(c + 0x5c) >> 3;
     *(int*)(c + 0x118) = *(int*)(c + 0x60) >> 3;
