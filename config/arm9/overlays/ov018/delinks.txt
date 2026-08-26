@@ -52,7 +52,7 @@ src/_ZN13MotherPenguinD1Ev.cpp:
     complete
     .text start:0x02111848 end:0x02111898
 
-src/_ZN13MotherPenguinD0Ev.c:
+src/_ZN13MotherPenguinD0Ev.cpp:
     complete
     .text start:0x02111898 end:0x021118fc
 
