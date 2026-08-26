@@ -308,7 +308,12 @@ def attribution_snapshot(rev, functions):
     by_function, counts, sizes = {}, collections.Counter(), collections.Counter()
     for key, rec in functions["matched"].items():
         path = rec["srcPath"]
-        author = overrides.get(path) or finishers.get(path) or first.get(path)
+        # A reconstructed TU may combine functions first matched by different people.
+        # Keep the path override as the default, but let path#symbol preserve credit
+        # for each member without inventing duplicate source files.
+        member_key = f"{path}#{rec['name']}"
+        author = (overrides.get(member_key) or overrides.get(path)
+                  or finishers.get(path) or first.get(path))
         if not author:
             continue
         author = canon(author)

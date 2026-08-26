@@ -207,9 +207,12 @@ def _matching_progress(reader) -> dict[str, int | float]:
 
 def _converted_tier(reader) -> dict:
     converted = reader()
+    source_functions = converted.get("functions", converted.get("files", 0))
+    source_files = converted.get("source_files", converted.get("files", 0))
     return {
-        "strict_converted_files": converted["converted"],
-        "source_files": converted["files"],
+        "strict_converted_functions": converted["converted"],
+        "source_functions": source_functions,
+        "source_files": source_files,
         "percent": converted["pct"],
         "criteria": converted["criteria"],
     }
@@ -400,12 +403,14 @@ def render_markdown(report: dict) -> str:
         *_table([
             ("MATCHED functions", f"{progress['matched_functions']} / {progress['total_functions']} ({progress['function_percent']:.2f}%)"),
             ("MATCHED code bytes", f"{progress['matched_bytes']} / {progress['total_bytes']} ({progress['byte_percent']:.2f}%)"),
-            ("Strict CONVERTED source files", f"{converted['strict_converted_files']} / {converted['source_files']} ({converted['percent']:.2f}%)"),
+            ("Strict CONVERTED source functions", f"{converted['strict_converted_functions']} / {converted['source_functions']} ({converted['percent']:.2f}%)"),
+            ("Physical production source files", converted["source_files"]),
         ]),
         "",
         "MATCHED is recomputed from committed config symbols and `src/` through",
         "`progress.synced_from_src()`; no ambient or gitignored chaos database is accepted.",
-        "CONVERTED is the strict five-criterion result from `tiers.converted(src)`.",
+        "CONVERTED is the strict five-criterion result from `tiers.converted(src)`,",
+        "weighted by enrolled function ownership so TU consolidation does not move it.",
         "",
         "## Production source and enrollment",
         "",

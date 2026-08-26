@@ -118,13 +118,20 @@ def main():
     if args.all:
         targets = [p for p in src.rglob("*") if p.suffix in (".c", ".cpp")]
     else:
+        # The production enrollment table is authoritative once a reconstructed
+        # translation unit owns more than one symbol.  Import from the selected
+        # checkout rather than assuming this script's checkout when --decomp is used.
+        sys.path.insert(0, str(decomp / "tools"))
+        import srcpath  # noqa: PLC0415
+
+        srcpath.set_root(decomp)
         targets = []
         for name in args.symbols:
-            hit = next((p for ext in (".c", ".cpp")
-                        if (p := src / f"{name}{ext}").exists()), None)
+            hit = srcpath.path_for(name)
             if hit is None:
                 sys.exit(f"not found in decomp src/: {name}")
-            targets.append(hit)
+            if hit not in targets:
+                targets.append(hit)
         if not targets:
             sys.exit("nothing to do -- pass symbol names or --all")
 

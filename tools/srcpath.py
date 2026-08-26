@@ -86,6 +86,7 @@ _SPAWN_RE = re.compile(r"^(\w+)_Spawn$")
 _scan_cache = None
 _cohort_cache = None
 _enrolment_cache = None
+_definition_ownership_cache = None
 
 
 def symbol_for(path):
@@ -115,10 +116,11 @@ def invalidate():
 
     The enrolment index is dropped too: `enroll` and `tubuild promote` both rewrite
     delinks.txt, and a stale index would keep answering with the file they replaced."""
-    global _scan_cache, _cohort_cache, _enrolment_cache
+    global _scan_cache, _cohort_cache, _enrolment_cache, _definition_ownership_cache
     _scan_cache = None
     _cohort_cache = None
     _enrolment_cache = None
+    _definition_ownership_cache = None
 
 
 # One delinks entry opens with an unindented `<path>:` and owns the indented
@@ -128,7 +130,29 @@ def invalidate():
 # nothing. Reading those as an entry's sections would hand one file every function in
 # its module.
 _DELINKS_SECTION_RE = re.compile(r"\.\w+\s+start:0x([0-9a-fA-F]+)\s+end:0x([0-9a-fA-F]+)")
-_SYMBOL_FUNC_RE = re.compile(r"^(\S+)\s+kind:function\([^)]*\)\s+addr:0x([0-9a-fA-F]+)")
+_SYMBOL_FUNC_RE = re.compile(
+    r"^(\S+)\s+kind:function\([^,]+,size=0x([0-9a-fA-F]+)\)"
+    r"\s+addr:0x([0-9a-fA-F]+)"
+)
+
+
+def definition_symbols(rel, rows):
+    """Collapse only the proven legacy outer-owner alias shape.
+
+    ``rows`` is ``[(address, size, symbol)]``. A convention-named legacy source
+    can own nested symbol records inside its one outer definition; a reconstructed
+    TU whose filename names no member must define every disjoint owned symbol.
+    """
+    stem = pathlib.PurePosixPath(rel).stem
+    ordered = sorted(rows)
+    owners = [(addr, size, name) for addr, size, name in ordered if name == stem]
+    if len(owners) == 1:
+        owner_addr, owner_size, owner_name = owners[0]
+        owner_end = owner_addr + owner_size
+        if all(owner_addr <= addr and addr + size <= owner_end
+               for addr, size, _name in ordered):
+            return [owner_name]
+    return [name for _addr, _size, name in ordered]
 
 
 def _enrolment():
@@ -165,7 +189,7 @@ def _enrolment():
     mods stem*. Letting the mod win here would make that swap a no-op and leak the mod
     into the stock ROM. This module's first line is "where does symbol X live in src/",
     and that is exactly the rule: only entries under `src/`."""
-    global _enrolment_cache
+    global _enrolment_cache, _definition_ownership_cache
     if _enrolment_cache is None:
         by_symbol, by_path = {}, {}
         for symbols_path, _label in relocs.module_universe(repo=REPO):
@@ -177,9 +201,9 @@ def _enrolment():
                                                errors="ignore").splitlines():
                 m = _SYMBOL_FUNC_RE.match(line.strip())
                 if m:
-                    funcs.append((int(m.group(2), 16), m.group(1)))
+                    funcs.append((int(m.group(3), 16), int(m.group(2), 16), m.group(1)))
             funcs.sort()
-            addrs = [addr for addr, _ in funcs]
+            addrs = [addr for addr, _size, _name in funcs]
             entry = None
             for line in delinks.read_text(encoding="utf-8",
                                           errors="ignore").splitlines():
@@ -196,17 +220,35 @@ def _enrolment():
                 start, end = int(m.group(1), 16), int(m.group(2), 16)
                 i = bisect.bisect_left(addrs, start)
                 while i < len(addrs) and addrs[i] < end:
-                    by_symbol[funcs[i][1]] = entry
-                    by_path.setdefault(entry, []).append((addrs[i], funcs[i][1]))
+                    by_symbol[funcs[i][2]] = entry
+                    by_path.setdefault(entry, []).append(funcs[i])
                     i += 1
-        _enrolment_cache = (by_symbol,
-                            {k: [n for _, n in sorted(v)] for k, v in by_path.items()})
+        _definition_ownership_cache = {
+            path: definition_symbols(path, rows) for path, rows in by_path.items()
+        }
+        _enrolment_cache = (
+            by_symbol,
+            {path: [name for _addr, _size, name in sorted(rows)]
+             for path, rows in by_path.items()},
+        )
     return _enrolment_cache
 
 
 def enrolment_index():
     """symbol -> repo-relative `src/` path, for every function the ROM build compiles."""
     return _enrolment()[0]
+
+
+def source_ownership_index():
+    """Repo-relative source path -> owned symbols in ROM address order."""
+    return {path: list(symbols) for path, symbols in _enrolment()[1].items()}
+
+
+def source_definition_index():
+    """Repo-relative source path -> function definitions expected from its object."""
+    _enrolment()
+    return {path: list(symbols)
+            for path, symbols in (_definition_ownership_cache or {}).items()}
 
 
 def enrolled_path_for(symbol):

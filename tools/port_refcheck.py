@@ -7,7 +7,8 @@ by literal path and symbol name:
   - port/slice_gate*.txt manifests list src/ (and a couple of port/unmatched)
     files the host build compiles, one repo-root-relative path per line.
   - port/CMakeLists.txt hardcodes GATE*_SYMS lists that hostgen.py resolves
-    to src/<sym>.c or src/<sym>.cpp (mirroring the same probe here).
+    through tools/srcpath.py, so enrolled members of a shared production TU
+    resolve to that TU's physical source.
   - port/hal/*.cpp bridges MSVC linkage onto the decomp's func_XXXXXXXX /
     data_XXXXXXXX address-based naming through
     `#pragma comment(linker, "/alternatename:A=B")` and extern "C"
@@ -28,8 +29,8 @@ CHECKS
                  port/slice_gate{1,2,3a,3b,4b,6,7,8,9}.txt names a path that
                  exists in the repo.
 2. cmake syms - every symbol in port/CMakeLists.txt's hostgen `set(*_SYMS ...)`
-                 lists resolves to src/<sym>.c or src/<sym>.cpp, the same
-                 .c-then-.cpp probe the CMake itself runs at configure time.
+                 lists resolves through tools/srcpath.py, the same enrollment-
+                 aware lookup the CMake runs at configure time.
 3. hal links  - every func_XXXXXXXX / data_XXXXXXXX name that appears as the
                  alias or target of a `#pragma comment(linker,
                  "/alternatename:...")`, or as an extern "C" declaration, in
@@ -58,6 +59,9 @@ import json
 import pathlib
 import re
 import sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import srcpath as SP  # noqa: E402
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 PORT = REPO / "port"
@@ -145,9 +149,12 @@ def check_manifests():
 # ---- check 2: CMake hostgen symbol lists ------------------------------------
 
 def check_cmake_symbols():
-    """Every symbol in a `set(GATE*_SYMS ...)` list resolves to src/<sym>.c
-    or src/<sym>.cpp, mirroring the EXISTS-then-.c-else-.cpp probe the CMake
-    itself runs (port/CMakeLists.txt, one foreach per hostgen gate)."""
+    """Every symbol in a `set(GATE*_SYMS ...)` list resolves through srcpath.
+
+    Filename probing is not authoritative once one production translation unit owns
+    several symbols.  ``srcpath.path_for`` asks the live delinks enrollment first,
+    which is also what the CMake hostgen resolver now does.
+    """
     cmake = PORT / "CMakeLists.txt"
     rel = cmake.relative_to(REPO).as_posix()
     if not cmake.exists():
@@ -164,12 +171,12 @@ def check_cmake_symbols():
             sym = tok.group(0)
             checked += 1
             lineno = _line_at(text, body_start + tok.start())
-            if not ((REPO / "src" / f"{sym}.c").exists()
-                    or (REPO / "src" / f"{sym}.cpp").exists()):
+            resolved = SP.path_for(sym)
+            if resolved is None or not resolved.is_file():
                 failures.append(Failure(
                     rel, lineno,
-                    f"symbol '{sym}' ({list_name}) has no src/{sym}.c or "
-                    f"src/{sym}.cpp (renamed?)"))
+                    f"symbol '{sym}' ({list_name}) has no enrolled or "
+                    "convention-named src/ owner (renamed?)"))
     return checked, failures
 
 
