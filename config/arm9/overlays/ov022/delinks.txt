@@ -260,7 +260,7 @@ src/_ZN11VolcanoFireD1Ev.cpp:
     complete
     .text start:0x021125e0 end:0x02112610
 
-src/_ZN11VolcanoFireD0Ev.c:
+src/_ZN11VolcanoFireD0Ev.cpp:
     complete
     .text start:0x02112610 end:0x02112654
 
