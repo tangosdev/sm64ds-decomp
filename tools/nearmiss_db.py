@@ -37,9 +37,10 @@ import sys
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 import asm_policy  # noqa: E402
-import match as M
-import swarm as S
 import ledger as L
+# match/swarm (the compile+disasm stack) need capstone and pyelftools; the functions
+# that evaluate candidates import them lazily so the metadata-only subcommands
+# (stats, list, dedupe) and tools/test_nearmiss_db.py run on a bare interpreter.
 
 DB = REPO / "nearmiss" / "db.jsonl"
 LOCKDIR = REPO / "nearmiss" / ".lock"
@@ -54,6 +55,7 @@ def locked():
 
 
 def _disasm(code, relocs):
+    import swarm as S
     out = []
     for ins in S.code_insns(list(S.md.disasm(code, 0))):
         if ins.address in relocs:
@@ -70,6 +72,8 @@ def evaluate(src, name, target):
     match (swarm.oracle_ok -- NOT exact byte-equality, since reloc slots are wildcarded).
     Returns (None, False) if it does not compile or the function is absent."""
     import tempfile, os, difflib
+    import match as M
+    import swarm as S
     cpp = src.startswith("//cpp")
     try:
         ok = S.oracle_ok(src, name, target)        # definitive, reloc-aware
@@ -106,7 +110,7 @@ def _rank(r):
 
 
 def load_db():
-    db = {}
+    db, dups = {}, 0
     for r in L.read_records(DB):        # corrupt lines are reported, not swallowed
         # A row that parses as JSON but lacks addr/module is unkeyable. That used to raise
         # out of key_of and take down every caller -- one bad ingest silently disabled the
@@ -118,12 +122,22 @@ def load_db():
             continue
         key = L.key_of(r)               # normalized: addr is stored as both hex str and int
         cur = db.get(key)
-        # merge=union (and a since-fixed raw-key ingest) can leave two rows for one key.
-        # Keep the BEST, never the last read: last-wins meant the next save_db() silently
-        # discarded whichever row happened to sort earlier in the file -- ov006 0x020d7c4c
-        # lost its lower-divergence attempt exactly that way.
+        # merge=union (and any pre-#1676 raw-key ingest still running in a stale lane
+        # checkout -- ov004 0x020ae858 got duplicated by one on 2026-08-25) can leave two
+        # rows for one key. Keep the BEST, never the last read: last-wins meant the next
+        # save_db() silently discarded whichever row happened to sort earlier in the file
+        # -- ov006 0x020d7c4c lost its lower-divergence attempt exactly that way. Collapse
+        # loudly: a duplicate on disk survives until someone runs dedupe, and a silent
+        # collapse reads as a healthy DB while the file carries a dead row (219 lines
+        # reporting as 218 entries in the 2026-08-25 incident).
+        if cur is not None:
+            dups += 1
         if cur is None or _rank(r) < _rank(cur):
             db[key] = r
+    if dups:
+        print(f"nearmiss_db: {dups} duplicate (module, addr) row(s) in {DB.name}; "
+              f"kept the closest per key (run `python tools/nearmiss_db.py dedupe`)",
+              file=sys.stderr)
     return db
 
 
@@ -166,6 +180,32 @@ def resolve_name(name):
                 _NAME_IDX[fn] = (f"0x{addr:08x}", size, label,
                                  data[addr - mod["base"]:addr - mod["base"] + size].hex())
     return _NAME_IDX.get(name)
+
+
+def merge_batch(db, drops, updates):
+    """Apply one ingest batch to a loaded db dict, in place. Returns (added, improved).
+
+    Drops win over updates. A dropped key means the function is matched (the ledger or
+    committed src/ says so), and one seeds file can carry two names for one (module,
+    addr) -- a stale func_ADDR placeholder next to the real symbol -- where the
+    src-file check catches one name but not the other. Popping the key and then
+    letting the update land re-created the ghost row the drop existed to remove, and
+    counted the survivor as "+1 new" because the pop had emptied the slot the update
+    compared against."""
+    dropped = set(drops)
+    for key in dropped:
+        db.pop(key, None)
+    added = improved = 0
+    for key, rec in updates.items():
+        if key in dropped:
+            continue
+        cur = db.get(key)
+        curdiv = cur.get("divergences") if cur and cur.get("divergences") is not None else 1e9
+        if cur is None or rec["divergences"] < curdiv:
+            db[key] = rec
+            added += cur is None
+            improved += cur is not None
+    return added, improved
 
 
 def ingest(args):
@@ -231,18 +271,9 @@ def ingest(args):
                             "divergences": div, "c_source": src, "source": args.label or "fanout"}
     # merge under the lock: evaluate() above is slow, so the read-modify-write
     # happens against a FRESH db snapshot to not clobber concurrent crunchers
-    added = improved = 0
     with locked():
         db = load_db()
-        for key in drops:
-            db.pop(key, None)
-        for key, rec in updates.items():
-            cur = db.get(key)
-            curdiv = cur.get("divergences") if cur and cur.get("divergences") is not None else 1e9
-            if cur is None or rec["divergences"] < curdiv:
-                db[key] = rec
-                added += cur is None
-                improved += cur is not None
+        added, improved = merge_batch(db, drops, updates)
         save_db(db)
         total = len(db)
     print(f"ingested: +{added} new, {improved} improved. DB now {total} entries.")
@@ -476,6 +507,7 @@ def resync_names(args):
 
 def bank_matches(args):
     """Re-evaluate every entry; bank any that now byte-match (score 0)."""
+    import swarm as S
     db = load_db()
     banked, banked_keys, rescored = 0, [], {}
     for key, r in list(db.items()):
