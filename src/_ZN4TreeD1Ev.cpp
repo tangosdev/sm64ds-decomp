@@ -1,16 +1,12 @@
 //cpp
 // @symbol _ZN4TreeD1Ev
-/* recovered: named members + shared header */
+/* recovered: real C++ complete destructor
+ *
+ * The compiler owns Tree's vptr store, reverse destruction of mModel[5],
+ * and the inherited dActor_c destructor chain.
+ */
 #include "Tree.h"
-extern "C" {
-extern int __destroy_arr(void*, int, int, void*);
-extern void _ZN8dActor_cD2Ev(void*);
-extern void *_ZTV4Tree;
-extern int _ZN5ModelD1Ev();
-int _ZN4TreeD1Ev(char* c){
-    *(void**)c = (void*)&_ZTV4Tree;
-    __destroy_arr((char*)c+0xd4, 5, 0x50, (void*)&_ZN5ModelD1Ev);
-    _ZN8dActor_cD2Ev(c);
-    return (int)c;
-}
+
+Tree::~Tree()
+{
 }
