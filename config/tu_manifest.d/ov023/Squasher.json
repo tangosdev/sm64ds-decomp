@@ -99,9 +99,41 @@
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 12 unlicensed section/symbol(s); see unlicensed_output_observed",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 13 unlicensed section/symbol(s); see unlicensed_output_observed",
       "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "policy-refused",
+      "scratch": "build/tu/ov023-Squasher/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true
+      },
+      "tuRange": null,
+      "objectAudit": {
+        "counts": null,
+        "emittedTextOrderIsRomAscending": null,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": null
+      },
+      "symbolCheckNewVsBaseline": null,
+      "rom": null,
+      "linkerOutput": null
     }
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN8SquasherD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-generated base-object destructor, byte-identical to D1; the ROM contains no D2 for this class, it has no configured ROM symbol, and nothing relocates to it"
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip",
+      "reason": "vague-linkage implicit ~Vector3() emitted for the two Vector3 locals in Squasher::Behavior; 4 bytes, no configured ROM symbol, no inbound relocation. Appeared when the shadow `struct Vec3` was replaced with the real type"
+    }
+  ]
 }
