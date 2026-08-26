@@ -1350,6 +1350,15 @@ ov064	0x0211a090	func_ov064_0211a090	_ZN9WaterRing13InitResourcesEv	vtable slot 
 ov064	0x0211a1b0	func_ov064_0211a1b0	WaterRing_Spawn	spawnfunc
 ov064	0x0211a200	func_ov064_0211a200	_ZN13TreasureChestD1Ev	vtable slot 16
 ov064	0x0211a238	func_ov064_0211a238	_ZN13TreasureChestD0Ev	vtable slot 17
+ov064	0x0211a284	func_ov064_0211a284	_ZN13TreasureChest20UpdateModelTransformEv	TreasureChest TU state helper
+ov064	0x0211a2c4	func_ov064_0211a2c4	_ZN13TreasureChest6State2Ev	PMF table state 2 behavior
+ov064	0x0211a380	func_ov064_0211a380	_ZN13TreasureChest10InitState2Ev	PMF table state 2 initializer
+ov064	0x0211a39c	func_ov064_0211a39c	_ZN13TreasureChest6State1Ev	PMF table state 1 behavior
+ov064	0x0211a49c	func_ov064_0211a49c	_ZN13TreasureChest10InitState1Ev	PMF table state 1 initializer
+ov064	0x0211a4c4	func_ov064_0211a4c4	_ZN13TreasureChest6State0Ev	PMF table state 0 behavior
+ov064	0x0211a6e0	func_ov064_0211a6e0	_ZN13TreasureChest10InitState0Ev	PMF table state 0 initializer
+ov064	0x0211a6ec	func_ov064_0211a6ec	_ZN13TreasureChest8SetStateEi	PMF table initializer dispatcher
+ov064	0x0211a734	func_ov064_0211a734	_ZN13TreasureChest17CallStateBehaviorEv	PMF table behavior dispatcher
 ov064	0x0211a77c	func_ov064_0211a77c	_ZN13TreasureChest16CleanupResourcesEv	vtable slot 3
 ov064	0x0211a7c4	func_ov064_0211a7c4	_ZN13TreasureChest6RenderEv	vtable slot 9
 ov064	0x0211a7ec	func_ov064_0211a7ec	_ZN13TreasureChest8BehaviorEv	vtable slot 6

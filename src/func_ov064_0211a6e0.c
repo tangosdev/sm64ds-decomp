@@ -1,4 +1,8 @@
-void func_ov064_0211a6e0(int *p)
+//cpp
+// @symbol _ZN13TreasureChest10InitState0Ev
+#include "TreasureChest.h"
+
+void TreasureChest::InitState0()
 {
-    p[75] = 0;
+    mModelAnim.currFrame = 0;
 }

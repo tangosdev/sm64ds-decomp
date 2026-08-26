@@ -1,56 +1,50 @@
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef short s16;
-typedef int s32;
-typedef struct { s32 x, y, z; } Vector3;
-enum { false, true };
+//cpp
+// @symbol _ZN13TreasureChest6State0Ev
+#include "TreasureChest.h"
+#include "Player.h"
 
-extern void DecIfAbove0_Short(void *p);
-extern void func_02012790(u32 code);
-extern s16 Vec3_HorzAngle(const void *a, const void *b);
-extern s32 AngleDiff(s32 a, s32 b);
-extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
-extern char *_ZN8dActor_c15FindWithActorIDEjPS_(u32 actorId, void *prev);
-extern void _ZN8dActor_c13SpawnSoundObjEj(void *self, u32 id);
-extern void func_02012694(u32 code, void *pos);
-extern void _ZN6Player5ShockEj(void *player, u32 flag);
-extern void func_ov064_0211a6ec(void *c, int i);
+extern "C" {
+void DecIfAbove0_Short(u16 *value);
+void func_02012790(u32 code);
+s16 Vec3_HorzAngle(const Vector3 *from, const Vector3 *to);
+s32 AngleDiff(s32 a, s32 b);
+void func_02012694(u32 code, const Vector3 *pos);
+}
 
-void func_ov064_0211a4c4(char *sl)
+void TreasureChest::State0()
 {
-    DecIfAbove0_Short(sl + 0x170);
+    DecIfAbove0_Short(&mStateTimer);
 
-    if (*(u16 *)(sl + 0x170) == 0x58)
+    if (mStateTimer == 0x58)
         func_02012790(0xe);
 
-    u32 id = *(u32 *)(sl + 0x15c);
+    u32 id = mCylinder.otherOwner;
     if (id == 0)
         return;
-    if (*(u16 *)(sl + 0x170) != 0)
+    if (mStateTimer != 0)
         return;
 
-    char *fp = _ZN8dActor_c10FindWithIDEj(id);
-    if (fp == 0)
+    Player *player = (Player *)FindWithID(id);
+    if (player == 0)
         return;
 
     {
-        int t = *(u16 *)(fp + 0xc);
+        int t = player->actorID;
         t = t == 0xbf;
         if (t != false) {
-            Vector3 *psrc = (Vector3 *)(fp + 0x5c);
-            Vector3 v;
-            v.x = psrc->x;
-            v.y = psrc->y;
-            v.z = psrc->z;
-            if (AngleDiff(Vec3_HorzAngle(sl + 0x5c, &v), *(s16 *)(sl + 0x8e)) < 0x4000) {
+            Vector3 *playerPosPtr = (Vector3 *)&player->mPosX;
+            Vector3 playerPos;
+            playerPos.x = playerPosPtr->x;
+            playerPos.y = playerPosPtr->y;
+            playerPos.z = playerPosPtr->z;
+            if (AngleDiff(Vec3_HorzAngle((Vector3 *)&mPosX, &playerPos), mAngleY) < 0x4000) {
                 int sbcount = 0;
                 int count = 0;
-                char *cur = _ZN8dActor_c15FindWithActorIDEjPS_(0xd, 0);
+                dActor_c *cur = FindWithActorID(0xd, 0);
                 while (cur != 0) {
                     count++;
-                    if (cur != sl) {
-                        s32 fv = *(s32 *)(cur + 0x16c);
+                    if (cur != this) {
+                        s32 fv = ((TreasureChest *)cur)->mState;
                         int r1v = 1;
                         if (fv != 1) {
                             if (fv != 2)
@@ -59,34 +53,34 @@ void func_ov064_0211a4c4(char *sl)
                         if (r1v != 0)
                             sbcount++;
                     }
-                    cur = _ZN8dActor_c15FindWithActorIDEjPS_(0xd, cur);
+                    cur = FindWithActorID(0xd, cur);
                 }
 
-                if (sbcount + 1 == *(u8 *)(sl + 0x172)) {
-                    if (count == *(u8 *)(sl + 0x172)) {
-                        _ZN8dActor_c13SpawnSoundObjEj(sl, 0);
-                        *(u8 *)(sl + 0x173) = 1;
+                if (sbcount + 1 == mOrder) {
+                    if (count == mOrder) {
+                        SpawnSoundObj(0);
+                        mIsLastChest = 1;
                     } else {
                         func_02012790(0x26);
                     }
-                    if (*(u8 *)(fp + 0x706) != 0)
-                        func_02012694(0x22, sl + 0x74);
+                    if (player->mIsUnderwater != 0)
+                        func_02012694(0x22, (Vector3 *)&mCamSpacePosX);
                     else
-                        func_02012694(0x20, sl + 0x74);
-                    func_ov064_0211a6ec(sl, 1);
+                        func_02012694(0x20, (Vector3 *)&mCamSpacePosX);
+                    SetState(1);
                 } else {
-                    *(u16 *)(sl + 0x170) = 0x5a;
-                    if (*(u8 *)(fp + 0x6f9) != 0)
-                        _ZN6Player5ShockEj(fp, 0);
+                    mStateTimer = 0x5a;
+                    if (player->mIsMetal != 0)
+                        player->Shock(0);
                     else
-                        _ZN6Player5ShockEj(fp, 1);
+                        player->Shock(1);
 
                     for (;;) {
-                        cur = _ZN8dActor_c15FindWithActorIDEjPS_(0xd, cur);
+                        cur = FindWithActorID(0xd, cur);
                         if (cur == 0)
                             break;
-                        if (cur != sl)
-                            func_ov064_0211a6ec(cur, 0);
+                        if (cur != this)
+                            ((TreasureChest *)cur)->SetState(0);
                     }
                 }
             }

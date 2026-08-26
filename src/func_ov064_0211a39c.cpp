@@ -1,50 +1,37 @@
 //cpp
-// @symbol func_ov064_0211a39c
-/* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: shared common types */
-#include "common.h"
+// @symbol _ZN13TreasureChest6State1Ev
+#include "TreasureChest.h"
+#include "Player.h"
 
-struct Vec3_16 {};
-extern "C" {
-extern void _ZN9Animation7AdvanceEv(char*);
-extern char* _ZN8dActor_c13ClosestPlayerEv(char*);
-extern void _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(char*, Vector3*, unsigned int, int, unsigned short, char*);
-extern char* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, Vector3*, Vec3_16*, int, int);
-extern int _ZN9Animation8FinishedEv(char*);
-
-void func_ov064_0211a39c(char* c)
+void TreasureChest::State1()
 {
-    _ZN9Animation7AdvanceEv(c + 0x124);
-    if (((unsigned int)(*(int*)(c + 0x12c) << 4) >> 0x10) == 0x14)
-    {
-        char* p = _ZN8dActor_c13ClosestPlayerEv(c);
+    mModelAnim.Advance();
+    if (((u32)(mModelAnim.currFrame << 4) >> 0x10) == 0x14) {
+        Player *player = ClosestPlayer();
 
-        Vector3 v1;
-        v1.x = *(int*)(c + 0x5c);
-        v1.y = *(int*)(c + 0x60);
-        v1.z = *(int*)(c + 0x64);
-        v1.y = v1.y + 0xc8000;
+        Vector3 spawnPos;
+        spawnPos.x = mPosX;
+        spawnPos.y = mPosY;
+        spawnPos.z = mPosZ;
+        spawnPos.y += 0xc8000;
 
-        if (*(unsigned char*)(c + 0x173) == 0)
-        {
-            Vector3 v2;
-            v2.x = v1.x;
-            v2.y = v1.y;
-            v2.z = v1.z;
-            _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(c, &v2, *(unsigned char*)(c + 0x172), 0, 0, 0);
+        if (mIsLastChest == 0) {
+            Vector3 numberPos;
+            numberPos.x = spawnPos.x;
+            numberPos.y = spawnPos.y;
+            numberPos.z = spawnPos.z;
+            SpawnNumber(numberPos, mOrder, false, 0, 0);
         }
-        if (*(unsigned char*)(p + 0x706) != 0)
-        {
-            char* a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x123, 0, &v1, 0, *(signed char*)(c + 0xcc), -1);
-            *(int*)(a + 0xa4) = 0;
-            *(int*)(a + 0xa8) = 0x800;
-            *(int*)(a + 0xac) = 0;
+
+        if (player->mIsUnderwater != 0) {
+            dActor_c *bubble = dActor_c::Spawn(
+                0x123, 0, spawnPos, 0, mAreaId, -1);
+            bubble->unk_0a4 = 0;
+            bubble->mVertSpeed = 0x800;
+            bubble->unk_0ac = 0;
         }
     }
-    if (_ZN9Animation8FinishedEv(c + 0x124) != 0)
-    {
-        func_ov064_0211a6ec(c, 2);
-    }
-}
+
+    if (mModelAnim.Finished() != 0)
+        SetState(2);
 }

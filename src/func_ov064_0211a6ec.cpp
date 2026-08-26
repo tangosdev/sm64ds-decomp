@@ -1,6 +1,12 @@
 //cpp
-struct C; typedef void (C::*PMF)();
-struct Entry { PMF pmf[2]; };
-extern Entry data_ov064_0211c98c[];
-struct C { char pad[0x16c]; int idx; };
-extern "C" void func_ov064_0211a6ec(C *c, int i) { c->idx = i; int j = c->idx; (c->*data_ov064_0211c98c[j].pmf[0])(); }
+// @symbol _ZN13TreasureChest8SetStateEi
+#include "TreasureChest.h"
+
+extern "C" TreasureChest::StateFunc data_ov064_0211c98c[][2];
+
+void TreasureChest::SetState(s32 state)
+{
+    mState = state;
+    s32 index = mState;
+    (this->*data_ov064_0211c98c[index][0])();
+}

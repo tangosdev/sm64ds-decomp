@@ -1,8 +1,11 @@
-void func_ov064_0211a49c(char *c)
-{
-    if (*(unsigned char *)(c + 0x173) != 0) {
-        *(unsigned short *)(c + 0x170) = 0x2d;
-    }
+//cpp
+// @symbol _ZN13TreasureChest10InitState1Ev
+#include "TreasureChest.h"
 
-    *(int *)(((int)c + 0xb0)) &= ~1;
+void TreasureChest::InitState1()
+{
+    if (mIsLastChest != 0)
+        mStateTimer = 0x2d;
+
+    mFlags &= ~1;
 }

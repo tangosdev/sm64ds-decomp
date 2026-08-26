@@ -1,6 +1,9 @@
-void func_ov064_0211a380(char *c)
+//cpp
+// @symbol _ZN13TreasureChest10InitState2Ev
+#include "TreasureChest.h"
+
+void TreasureChest::InitState2()
 {
-    if (*(unsigned char *)(c + 0x173) == 0) {
-        *(int *)(((int)c + 0xb0)) |= 1;
-    }
+    if (mIsLastChest == 0)
+        mFlags |= 1;
 }
