@@ -681,6 +681,15 @@ void _ZN5Stage10LoadSkyboxEv(char *self); /* matched src, slice_gate26 */
 unsigned _ZN5Stage11GetSkyboxIDEv(void);  /* the LVL_Overlay's skybox bits */
 extern int data_0209f320;                 /* the Stage's ModelComponents */
 int port_stage_path_guard(void *player);
+/* the HOST-side description of the level (hal/level_boot.cpp's own statics,
+   none of which a save-state restore rolls back). The census below prints
+   them beside the world's own answers. */
+int port_level_host_boot_target(void);
+const void *port_level_host_entrances(int *count);
+int port_level_host_file_rows(void);
+void *port_level_host_file_row(int i, unsigned *handle, unsigned *refs,
+                               int *persistent);
+void port_level_host_paths(void **table, int *count);
 void port_stage_a2_seat(void);
 /* in-memory save state (hal/lk6_savestate.cpp): F8/F9 and the debug menu.
    save/load return 1 when they acted, has() drives the menu label. */
@@ -689,6 +698,12 @@ int lk6_savestate_load(void);
 int lk6_savestate_has(void);
 /* bit 0 the .dsstate section, bit 1 the arena, 0 = not captured at all */
 int lk6_savestate_covers(const void *p);
+/* how many captured words point at THIS process's heap or stack, and so are
+   dead in the next one (the data_020a5bb8 class). Returns the count. */
+int lk6_savestate_scan_host_pointers(const char *when, int list_max);
+/* and the other direction: host .data/.bss words pointing INTO the arena a
+   restore just replaced. Returns the count. */
+int lk6_savestate_scan_world_pointers(const char *when, int list_max);
 /* The packed-gap reproducer's one anchor (SM64DS_SS_WATCH_FLAG below).
    data_ov009_02112bc4 is the BTA_File CastleWater::InitResources hands
    TextureTransformer::Prepare and SetFile (see src/_ZN11CastleWater13Init
@@ -735,6 +750,12 @@ const char *lk7_persist_refusal(void);
    menu nor the overlay hides it) and says which of the three it was. */
 static char ss_toast[64];
 static int  ss_toast_left;
+/* Set by any restore that happens where main's frame-loop locals are not in
+   scope -- the debug menu's load row runs inside the menu handler, several
+   frames' worth of call stack away from them. The loop re-seats on the next
+   frame it sees this set. Every other restore path re-seats at the call site.
+   See the ss_reseat comment in main(). */
+static int ss_reseat_pending;
 static void ss_note(const char *msg)
 {
     snprintf(ss_toast, sizeof ss_toast, "%s", msg);
@@ -768,6 +789,111 @@ struct ShadowModel {
    that is precisely how the 0.2.1 cross-area bug shipped. */
 extern "C" unsigned port_hw_regions_size(void);
 extern "C" void port_hw_regions_copy_out(void *dst);
+
+/* ---- THE SAVE-STATE CONSISTENCY CENSUS -------------------------------------
+
+   A restore rolls back the hosted arena, the .dsstate section and the hardware
+   content stores, and nothing else. But the world is described in more places
+   than those three: hal/level_boot.cpp stages the level's file-handle table,
+   its entrance cache and its boot target as plain host statics (gate 31's
+   comment there names that exact set as what a LEVEL CHANGE has to undo by
+   hand), and THIS file's frame loop holds `player`, `c` and `cam`, derived
+   from the world at boot and re-derived only on a level handoff -- where the
+   comment reads "EVERY POINTER main() HOLDS INTO THE LEVEL IS STALE
+   AFTERWARDS".
+
+   A restore is the same transition as a level handoff and re-derives none of
+   it. Two descriptions of one world with only one of them rolled back is the
+   half-rollback disease every bug in this arc has been. So: print both
+   descriptions side by side at the moment of the restore, and say which of
+   them disagree. A run that lands in an inconsistent world then NAMES the
+   inconsistency instead of faulting some frames later somewhere that mentions
+   none of it.
+
+   Called after every restore -- the boot-time disk read, F9, the scripted
+   SM64DS_SS_LOAD -- and at the scripted save, so a save's census and its
+   load's census can be diffed. SM64DS_SS_CENSUS=0 turns it off. */
+static const char *ss_where(const void *p)
+{
+    if (!p) return "null";
+    switch (lk6_savestate_covers(p)) {
+    case 1:  return ".dsstate";
+    case 2:  return "arena";
+    case 3:  return "both?!";
+    default: return "NOT CAPTURED";
+    }
+}
+static void ss_census(const char *when, void *host_player, void *host_cam)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = getenv("SM64DS_SS_CENSUS");
+        on = !(e && e[0] == '0');
+    }
+    if (!on) return;
+
+    void *world_player = data_0209f394[0];
+    void *world_cam    = data_0209f318;
+    void *ptbl = 0;
+    int pcount = 0;
+    port_level_host_paths(&ptbl, &pcount);
+    int ecount = 0;
+    const void *ents = port_level_host_entrances(&ecount);
+
+    fprintf(stderr, "[ss-census] %s\n", when);
+    fprintf(stderr, "[ss-census]   player: host %p  world %p  -- %s\n",
+            host_player, world_player,
+            host_player == world_player ? "agree" : "DIVERGED");
+    /* +0x13c is the camera MODE object and +0x138 the STATE object, the two
+       the boot prints at spawn. They are named here because they are what the
+       player's 2026-08-26 crash actually died on: func_0200ca50 (the camera
+       state machine's per-frame dispatch, called from Camera::Behavior) opens
+       with `mode = self->+0x13c; ApproachLinear2(self+0x17a, mode->+0x24)`, so
+       a null mode reads address 0x24 -- which is exactly the
+       `access 00000000 at 00000024` in his dump, at func_0200ca50 +0x12, with
+       Camera::Behavior +0x13d as the return address above it. */
+    fprintf(stderr, "[ss-census]   camera: host %p  world %p  -- %s"
+            "  (world mode %p state %p)\n", host_cam, world_cam,
+            host_cam == world_cam ? "agree" : "DIVERGED",
+            world_cam ? *(void **)((char *)world_cam + 0x13c) : 0,
+            world_cam ? *(void **)((char *)world_cam + 0x138) : 0);
+    if (host_cam && host_cam != world_cam)
+        fprintf(stderr, "[ss-census]   camera: HOST cam mode %p state %p -- "
+                "this is what Camera::Behavior would tick\n",
+                *(void **)((char *)host_cam + 0x13c),
+                *(void **)((char *)host_cam + 0x138));
+    fprintf(stderr, "[ss-census]   level:  host boot target %d  world "
+            "data_0209f2f8 %d  -- %s\n", port_level_host_boot_target(),
+            (int)data_0209f2f8,
+            port_level_host_boot_target() == (int)data_0209f2f8
+                ? "agree" : "DIVERGED");
+    fprintf(stderr, "[ss-census]   paths:  table %p (%s) count %d", ptbl,
+            ss_where(ptbl), pcount);
+    if (world_player)
+        fprintf(stderr, "  world player binding %u",
+                *(unsigned *)((char *)world_player + 0x670));
+    if (host_player && host_player != world_player)
+        fprintf(stderr, "  HOST player binding %u",
+                *(unsigned *)((char *)host_player + 0x670));
+    fprintf(stderr, "\n");
+    fprintf(stderr, "[ss-census]   entrances: %p (%s) count %d\n", ents,
+            ss_where(ents), ecount);
+    {
+        const int rows = port_level_host_file_rows();
+        fprintf(stderr, "[ss-census]   host file table: %d row(s)\n", rows);
+        for (int i = 0; i < rows; ++i) {
+            unsigned h = 0, refs = 0;
+            int persistent = 0;
+            void *p = port_level_host_file_row(i, &h, &refs, &persistent);
+            fprintf(stderr, "[ss-census]     [%d] handle %u refs %u ptr %p "
+                    "(%s)%s\n", i, h, refs, p, ss_where(p),
+                    persistent ? " persistent" : "");
+        }
+    }
+    lk6_savestate_scan_host_pointers(when, 24);
+    lk6_savestate_scan_world_pointers(when, 24);
+    fflush(stderr);
+}
 
 /* FNV-1a over the hardware stores, through the same copy-out the save uses.
    One lazily allocated buffer; ~9.5MB, three hashes an assert run. */
@@ -3134,6 +3260,7 @@ static void menu_input(int pad_live, const XPad *pad)
                 if (edge & (1u << 5)) {
                     if (lk6_savestate_load()) {
                         an_pivot_live = 0;
+                        ss_reseat_pending = 1;
                         ss_note("state loaded");
                     } else {
                         ss_note(lk6_savestate_has()
@@ -6194,6 +6321,54 @@ int main(void)
        the sink here, in one write (see the setvbuf note above) */
     fflush(stdout);
 
+    /* ---- THE RESTORE RE-SEAT ----------------------------------------------
+
+       A save-state load replaces the world the same way a level handoff does,
+       and the handoff's own comment further down says what that costs: "EVERY
+       POINTER main() HOLDS INTO THE LEVEL IS STALE AFTERWARDS". The handoff
+       re-derives them. Until run mg15 no restore did, in any of its four
+       paths -- the boot-time disk read, F9, the debug menu's load row and the
+       scripted SM64DS_SS_LOAD -- so a state whose world put the Player at a
+       different arena address left this frame loop ticking whatever now sat
+       at the boot's address, handing port_stage_path_guard a floor binding
+       the restored level cannot produce and Camera::Behavior a follow target
+       that is not a Player.
+
+       The same three reads the handoff makes, in the same order, and it says
+       what it changed so a log shows whether a given restore needed it.
+       SM64DS_SS_NO_RESEAT=1 turns it off, for the A/B that proves it is
+       load-bearing. */
+    auto ss_reseat = [&](const char *why) {
+        static int off = -1;
+        if (off < 0) off = getenv("SM64DS_SS_NO_RESEAT") != 0;
+        if (off) {
+            fprintf(stderr, "[ss-reseat] %s: SM64DS_SS_NO_RESEAT=1, host "
+                    "pointers left as they were\n", why);
+            return;
+        }
+        void *np = data_0209f394[0];
+        void *nc = data_0209f318;
+        if (np == player && nc == cam) {
+            fprintf(stderr, "[ss-reseat] %s: player %p camera %p, both "
+                    "already the world's own\n", why, player, cam);
+            return;
+        }
+        fprintf(stderr, "[ss-reseat] %s: player %p -> %p, camera %p -> %p\n",
+                why, player, np, cam, nc);
+        if (np) {
+            player = np;
+            c = (char *)player;
+            /* read the character back off the restored Player, exactly as the
+               handoff does off the entrance-spawned one */
+            g_character = *(unsigned char *)(c + 0x6d9) & 3;
+            g_character_pending = g_character;
+        }
+        cam = nc;
+        an_pivot_live = 0;
+        if (cam_mode != CAM_DS && cam) fc_seed(cam);
+    };
+    (void)ss_reseat;
+
     /* Disk save state, read exactly once, here: the world is fully booted (the
        disk state describes a booted world, so restoring earlier would be
        stomped by the rest of boot) and the frame loop has not started. Never in
@@ -6208,6 +6383,8 @@ int main(void)
     if ((!selftest || getenv("SM64DS_SS_DISKLOAD")) && lk7_persist_available()) {
         if (lk7_persist_read()) {
             an_pivot_live = 0;   /* no ease across the load */
+            ss_census("after the boot-time disk restore", player, cam);
+            ss_reseat("after the boot-time disk restore");
             ss_note("state loaded from disk (F9 reloads it)");
         } else if (lk7_persist_refusal()[0]) {
             /* THE REFUSAL HAS TO BE VISIBLE, and this is the only place it can
@@ -6250,6 +6427,14 @@ int main(void)
             if (msg.message == WM_QUIT) return 0;
             W.TranslateMessage_(&msg);
             W.DispatchMessageA_(&msg);
+        }
+        /* A restore that happened outside this scope (the debug menu's load
+           row) left every pointer below addressing the pre-restore world.
+           Re-seat before anything this frame reads them. */
+        if (ss_reseat_pending) {
+            ss_reseat_pending = 0;
+            ss_census("after the debug menu's load row", player, cam);
+            ss_reseat("after the debug menu's load row");
         }
         /* settings.json, watched while running: the launcher's dialog writes
            the file on every change, so the gap and the volume follow the
@@ -6353,6 +6538,8 @@ int main(void)
             if (load_now && !load_edge) {
                 if (lk6_savestate_load()) {
                     an_pivot_live = 0;   /* no ease across */
+                    ss_census("after an F9 restore", player, cam);
+                    ss_reseat("after an F9 restore");
                     ss_note("state loaded");
                 } else {
                     ss_note(lk6_savestate_has() ? "state NOT loaded (see log)"
@@ -6476,6 +6663,7 @@ int main(void)
             }
             if (ss_save_fr >= 0 && frame == ss_save_fr) {
                 lk6_savestate_save();
+                ss_census("at the scripted SM64DS_SS_SAVE", player, cam);
                 /* the cross-restart reproducer's first half: mirror this save
                    to savestate.bin so a SECOND run (SM64DS_SS_DISKLOAD=1) can
                    boot from it and compare hashes across the restart */
@@ -6539,7 +6727,12 @@ int main(void)
                                 ? " -- VACUOUS: unchanged since the save, so "
                                   "the load cannot test a rollback" : "");
                 }
-                if (lk6_savestate_load()) an_pivot_live = 0;
+                if (lk6_savestate_load()) {
+                    an_pivot_live = 0;
+                    ss_census("after the scripted SM64DS_SS_LOAD restore",
+                                   player, cam);
+                    ss_reseat("after the scripted SM64DS_SS_LOAD restore");
+                }
                 const unsigned long long post = ss_hw_hash();
                 fprintf(stderr, "[ss-repro] f%d post-load: msglock(d660)=%u "
                         "(saved %u) hw=%016llx\n", frame,
