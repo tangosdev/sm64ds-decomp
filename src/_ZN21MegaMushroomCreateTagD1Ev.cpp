@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN21MegaMushroomCreateTagD1Ev
+// @symbol _ZN16daObjKinokoTag_cD1Ev
 
 #include "MegaMushroomCreateTag.h"
 
-MegaMushroomCreateTag::~MegaMushroomCreateTag()
+daObjKinokoTag_c::~daObjKinokoTag_c()
 {
 }

@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN21MegaMushroomCreateTag17SpawnMegaMushroomEv
+// @symbol _ZN16daObjKinokoTag_c17SpawnMegaMushroomEv
 
 #include "MegaMushroomCreateTag.h"
 
-void MegaMushroomCreateTag::SpawnMegaMushroom()
+void daObjKinokoTag_c::SpawnMegaMushroom()
 {
     struct PositionWords {
         Fix12i x;
@@ -11,8 +11,8 @@ void MegaMushroomCreateTag::SpawnMegaMushroom()
         Fix12i z;
     };
 
-    MegaMushroomCreateTag *tag =
-        (MegaMushroomCreateTag *)FindWithActorID(0x13f, 0);
+    daObjKinokoTag_c *tag =
+        (daObjKinokoTag_c *)FindWithActorID(0x13f, 0);
     while (tag != 0) {
         if (mGroupId == tag->mGroupId) {
             PositionWords *tagPos = (PositionWords *)&tag->mPosX;
@@ -31,6 +31,6 @@ void MegaMushroomCreateTag::SpawnMegaMushroom()
             return;
         }
 
-        tag = (MegaMushroomCreateTag *)FindWithActorID(0x13f, tag);
+        tag = (daObjKinokoTag_c *)FindWithActorID(0x13f, tag);
     }
 }

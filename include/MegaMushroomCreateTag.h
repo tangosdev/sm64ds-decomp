@@ -1,13 +1,14 @@
-#ifndef MEGAMUSHROOMCREATETAG_H
-#define MEGAMUSHROOMCREATETAG_H
+#ifndef DAOBJKINOKOTAG_C_H
+#define DAOBJKINOKOTAG_C_H
 
 #include "dActor_c.h"
 #include "dCcAc_c.h"
 
-/* The cartridge calls this class daObjKinokoTag_c in RTTI. The readable
- * MegaMushroomCreateTag spelling is already carried by its five configured
- * virtual symbols and one of its two factories. Both names resolve to the
- * same vtable at ov002 0x02108cf4.
+/* daObjKinokoTag_c is the cartridge's own class name: the literal
+ * `16daObjKinokoTag_c` is stored in its RTTI type-name object at ov002
+ * 0x02108ca0. MegaMushroomTag and MegaMushroomCreateTag remain useful
+ * descriptive names for the two actor factories, but they do not override
+ * the ROM-attested C++ class identity.
  *
  * The __si_class_type_info record at 0x02108c94 points directly at dActor_c
  * at offset zero. The 31-slot table has exactly the same extent as that base
@@ -24,9 +25,9 @@
  *
  * The recovered original TU is ov002 [0x020b46a0, 0x020b4a70): both factory
  * functions belong to it. Its data contribution is likewise contiguous:
- * internal RTTI/name, MegaMushroomTag SpawnInfo, MegaMushroomCreateTag
+ * class RTTI/name, MegaMushroomTag SpawnInfo, MegaMushroomCreateTag
  * SpawnInfo, and the complete 31-slot vtable, ending at the next class RTTI. */
-struct MegaMushroomCreateTag : dActor_c {
+struct daObjKinokoTag_c : dActor_c {
     u8       pad_0d0[0x4];
     dCcAc_c  mMovingCylinderClsn; /* 0x0d4 */
     u8       mHasLinkedMushroom;   /* 0x0108 */
@@ -36,7 +37,7 @@ struct MegaMushroomCreateTag : dActor_c {
     u8       mLinkedMushroomGone;  /* 0x010c */
     u8       pad_10d[0x3];
 
-    virtual ~MegaMushroomCreateTag(); /* slots 16, 17 */
+    virtual ~daObjKinokoTag_c();      /* slots 16, 17 */
 
     virtual s32 InitResources();      /* slot 0 */
     virtual s32 CleanupResources();   /* slot 3 */
@@ -50,7 +51,7 @@ struct MegaMushroomCreateTag : dActor_c {
     void TrySpawnMegaMushroom();
 };
 
-typedef char MegaMushroomCreateTag_size_must_be_0x110[
-    sizeof(MegaMushroomCreateTag) == 0x110 ? 1 : -1];
+typedef char daObjKinokoTag_c_size_must_be_0x110[
+    sizeof(daObjKinokoTag_c) == 0x110 ? 1 : -1];
 
 #endif

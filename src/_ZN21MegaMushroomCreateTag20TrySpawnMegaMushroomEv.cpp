@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN21MegaMushroomCreateTag20TrySpawnMegaMushroomEv
+// @symbol _ZN16daObjKinokoTag_c20TrySpawnMegaMushroomEv
 
 #include "MegaMushroomCreateTag.h"
 
-void MegaMushroomCreateTag::TrySpawnMegaMushroom()
+void daObjKinokoTag_c::TrySpawnMegaMushroom()
 {
     if (mMovingCylinderClsn.otherOwner == 0)
         return;

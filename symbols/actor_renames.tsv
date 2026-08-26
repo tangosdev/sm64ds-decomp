@@ -74,11 +74,11 @@ ov002	0x020b45e0	func_ov002_020b45e0	SilverStarBlockTag_Spawn	spawnfunc
 ov002	0x020b4610	func_ov002_020b4610	GreenShellBlockTag_Spawn	spawnfunc
 ov002	0x020b4640	func_ov002_020b4640	MegaMushroomBlockTag_Spawn	spawnfunc
 ov002	0x020b4670	func_ov002_020b4670	OneUpMushroomBlockTag_Spawn	spawnfunc
-ov002	0x020b46a0	func_ov002_020b46a0	_ZN21MegaMushroomCreateTagD1Ev	vtable slot 16
-ov002	0x020b46d0	func_ov002_020b46d0	_ZN21MegaMushroomCreateTagD0Ev	vtable slot 17
-ov002	0x020b482c	func_ov002_020b482c	_ZN21MegaMushroomCreateTag16CleanupResourcesEv	vtable slot 3
-ov002	0x020b4850	func_ov002_020b4850	_ZN21MegaMushroomCreateTag8BehaviorEv	vtable slot 6
-ov002	0x020b49a8	func_ov002_020b49a8	_ZN21MegaMushroomCreateTag13InitResourcesEv	vtable slot 0
+ov002	0x020b46a0	func_ov002_020b46a0	_ZN16daObjKinokoTag_cD1Ev	vtable slot 16; class name from ROM RTTI
+ov002	0x020b46d0	func_ov002_020b46d0	_ZN16daObjKinokoTag_cD0Ev	vtable slot 17; class name from ROM RTTI
+ov002	0x020b482c	func_ov002_020b482c	_ZN16daObjKinokoTag_c16CleanupResourcesEv	vtable slot 3; class name from ROM RTTI
+ov002	0x020b4850	func_ov002_020b4850	_ZN16daObjKinokoTag_c8BehaviorEv	vtable slot 6; class name from ROM RTTI
+ov002	0x020b49a8	func_ov002_020b49a8	_ZN16daObjKinokoTag_c13InitResourcesEv	vtable slot 0; class name from ROM RTTI
 ov002	0x020b4a00	func_ov002_020b4a00	MegaMushroomCreateTag_Spawn	spawnfunc
 ov002	0x020b4a38	func_ov002_020b4a38	MegaMushroomTag_Spawn	spawnfunc
 ov002	0x020b4ed8	func_ov002_020b4ed8	_ZN14QuestionSwitchD1Ev	vtable slot 16
@@ -277,7 +277,7 @@ ov002	0x02108bf4	data_ov002_02108bf4	OneUpMushroomBlockTag_SpawnInfo	spawninfo
 ov002	0x02108c18	data_ov002_02108c18	_ZTV10BrickBlock	vtable alloc=0xdc
 ov002	0x02108cb4	data_ov002_02108cb4	MegaMushroomTag_SpawnInfo	spawninfo
 ov002	0x02108cd0	data_ov002_02108cd0	MegaMushroomCreateTag_SpawnInfo	spawninfo
-ov002	0x02108cf4	data_ov002_02108cf4	_ZTV21MegaMushroomCreateTag	vtable alloc=0x110
+ov002	0x02108cf4	data_ov002_02108cf4	_ZTV16daObjKinokoTag_c	vtable alloc=0x110; class name from ROM RTTI
 ov002	0x02108e38	data_ov002_02108e38	QuestionSwitch_SpawnInfo	spawninfo
 ov002	0x02108e5c	data_ov002_02108e5c	_ZTV14QuestionSwitch	vtable alloc=?
 ov002	0x02108ef8	data_ov002_02108ef8	RedFlame_SpawnInfo	spawninfo
@@ -2331,5 +2331,5 @@ ov002	0x020b41f8	func_ov002_020b41f8	_ZN10BrickBlock15SpawnKoopaShellEv	PMF acti
 ov002	0x020b4250	func_ov002_020b4250	_ZN10BrickBlock17SpawnMegaMushroomEv	PMF action table entry index 1; spawns MegaMushroom
 ov002	0x020b429c	func_ov002_020b429c	_ZN10BrickBlock18SpawnOneUpMushroomEv	PMF action table entry index 0; spawns OneUpMushroom
 ov002	0x020b42e4	func_ov002_020b42e4	_ZN10BrickBlock15SpawnSilverStarEv	PMF action table entry index 3; spawns SilverStar and marker
-ov002	0x020b4714	func_ov002_020b4714	_ZN21MegaMushroomCreateTag17SpawnMegaMushroomEv	inferred helper name; this ownership proven by exclusive MegaMushroomCreateTag TU callers and field ABI
-ov002	0x020b47ec	func_ov002_020b47ec	_ZN21MegaMushroomCreateTag20TrySpawnMegaMushroomEv	inferred helper name; this ownership proven by exclusive MegaMushroomCreateTag Behavior caller and collider field ABI
+ov002	0x020b4714	func_ov002_020b4714	_ZN16daObjKinokoTag_c17SpawnMegaMushroomEv	inferred helper name; class name from ROM RTTI and this ownership proven by exclusive TU callers and field ABI
+ov002	0x020b47ec	func_ov002_020b47ec	_ZN16daObjKinokoTag_c20TrySpawnMegaMushroomEv	inferred helper name; class name from ROM RTTI and this ownership proven by exclusive Behavior caller and collider field ABI

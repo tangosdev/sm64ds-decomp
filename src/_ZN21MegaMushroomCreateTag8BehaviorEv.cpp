@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN21MegaMushroomCreateTag8BehaviorEv
+// @symbol _ZN16daObjKinokoTag_c8BehaviorEv
 
 #include "MegaMushroomCreateTag.h"
 
 extern "C" Fix12i Vec3_Dist(const Vector3 *, const Vector3 *);
 
-s32 MegaMushroomCreateTag::Behavior()
+s32 daObjKinokoTag_c::Behavior()
 {
     dActor_c *other;
     s32 isCreateTag = (s32)(actorID == 0x140);
@@ -27,12 +27,12 @@ s32 MegaMushroomCreateTag::Behavior()
     }
 
     if (!mHasMatchingTag) {
-        MegaMushroomCreateTag *tag =
-            (MegaMushroomCreateTag *)FindWithActorID(0x13f, 0);
+        daObjKinokoTag_c *tag =
+            (daObjKinokoTag_c *)FindWithActorID(0x13f, 0);
         while (tag != 0) {
             if (mGroupId == tag->mGroupId)
                 mHasMatchingTag = 1;
-            tag = (MegaMushroomCreateTag *)FindWithActorID(0x13f, tag);
+            tag = (daObjKinokoTag_c *)FindWithActorID(0x13f, tag);
         }
         if (!mHasMatchingTag)
             MarkForDestruction();
