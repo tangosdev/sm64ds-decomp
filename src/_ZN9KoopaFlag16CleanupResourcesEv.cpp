@@ -4,16 +4,14 @@
  * holds; it never touches `this`, which is why the legacy C form could declare
  * itself nullary and still reproduce. */
 #include "KoopaFlag.h"
+#include "SharedFilePtr.h"
 
-extern "C" {
-void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov062_0211e0d4[];
-extern int data_ov062_0211e0dc[];
-}
+extern SharedFilePtr data_ov062_0211e0d4;
+extern SharedFilePtr data_ov062_0211e0dc;
 
 int KoopaFlag::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211e0d4);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211e0dc);
+    data_ov062_0211e0d4.Release();
+    data_ov062_0211e0dc.Release();
     return 1;
 }
