@@ -25,12 +25,29 @@ present in the developer build, absent in the ROM-clean build.
 
 WHAT WAS GATED OUT (all behind #ifndef PORT_ROM_CLEAN)
 -----------------------------------------------------
-  * the five WinApi struct members used ONLY by the click driver:
-    ClientToScreen_, SendInput_, SetForegroundWindow_, WindowFromPoint_,
+  * the four WinApi struct members used ONLY by the click driver:
+    SendInput_, SetForegroundWindow_, WindowFromPoint_,
     GetWindowThreadProcessId_;
-  * their five GetProcAddress resolutions in winapi_load() -- which also removes
-    the "SendInput", "ClientToScreen", "WindowFromPoint", "SetForegroundWindow"
-    and "GetWindowThreadProcessId" name strings, so the shipped exe has neither
+    -- CORRECTED, run mg15 lane SAVEGUARD. It was FIVE, and ClientToScreen_
+    was the fifth. That was true on the day this lane landed (e1bc0fdbe,
+    2026-08-17) and stopped being true five days later: b91d34ed7 added the
+    optional mouse capture for the camera, and mo_client_center,
+    mo_capture_clip and mo_capture_refresh -- all three on the SHIPPING path,
+    all three serving a PLAYER setting -- call ClientToScreen_. From that
+    commit the shipping
+    build did not compile, five C2039s in walk_window.cpp, and nobody saw it
+    for four days because nothing builds PORT_ROM_CLEAN routinely (the battery
+    cannot: under that flag the emitters zero every ROM table and only
+    walk_window/_hires link the loader, so every other smoke goes red).
+    ClientToScreen is a COORDINATE CONVERSION -- it reads a window's position
+    and adds it to a point -- so it belongs outside the fence on this lane's
+    own terms: what is gated here is the OS input DRIVERS, SendInput and the
+    three calls that aim one safely. It is now unconditional, and its name
+    string is back in the shipping exe. That string is not the antivirus
+    signal; SendInput is, and SendInput is still gone.
+  * their GetProcAddress resolutions in winapi_load() -- which also removes
+    the "SendInput", "WindowFromPoint", "SetForegroundWindow" and
+    "GetWindowThreadProcessId" name strings, so the shipped exe has neither
     the SendInput import string nor a GetProcAddress that resolves it;
   * the whole driver body: enum CLICK_TEST_HOLD/MAX, struct ClickTestEnt, the
     g_ct_* globals, click_test_parse, click_test_button (the SendInput call and
@@ -100,7 +117,10 @@ shipped as demo-1.7.exe. dumpbin and a string scan, kit exe vs developer exe:
 
   string scan (count in DEV exe -> count in KIT exe):
     SendInput                    2 -> 0
-    ClientToScreen               1 -> 0
+    ClientToScreen               1 -> 0   [STALE from run mg15: now 1 -> 1,
+                                           see the correction above. The
+                                           import table row still holds --
+                                           the seam is still dynamic.]
     WindowFromPoint              1 -> 0
     SetForegroundWindow          1 -> 0
     GetWindowThreadProcessId     1 -> 0

@@ -129,6 +129,77 @@ int port_arena_is_fixed(void)
     return 0;
 #endif
 }
+
+/* THE INSTALL VERDICT, and why it lives in this file.
+
+   WHAT THE ASSET FOLDER TURNED OUT TO BE is invisible in a crash dump, and the
+   dump is the only thing a remote report gives us. The 2026-08-26 burst spent
+   real human time on exactly this question -- six dumps read side by side,
+   comparing SM64DS_ASSET_ROOT in the env block against the version in the
+   launcher metadata -- and the answer that comparison produced was WRONG,
+   because a folder's NAME is not its contents. The facts that actually settle
+   it are known at BOOT (hal/romdata_loader.cpp knows which blob it loaded and
+   whether the exe was built for it; hal/lk7_persist.cpp knows whether a disk
+   state was loaded or refused and why), and they are gone by the time anything
+   faults. So they are written here, once, into a plain host .bss buffer, and
+   tests/fault_probe.h copies it verbatim into the dump.
+
+   Note what this block does and does not settle. `romdata ... MATCH` says the
+   game data in the folder is the data this exe was built for, whatever the
+   folder is called -- it would have ended that argument in an hour. It says
+   nothing about whether a restored world is SOUND; a save state can carry every
+   matching stamp and still restore a broken world (see hal/lk7_persist.cpp).
+
+   THIS BUFFER IS HOST SESSION STATE AND MUST NOT BE IN .dsstate. It describes
+   the process, not the game: rolling it back on an F9 would make a dump
+   describe the install as it was at save time. It sits outside the
+   DSSTATE_BEGIN/END bracket below deliberately, and its name carries no DS
+   address, so tools/dsstate_guard.py correctly ignores it.
+
+   It lives in os_arena.cpp because that is the one hal file every target that
+   can write a dump already links -- lk7_persist needs port_arena_base, and the
+   ROM-CLEAN window targets link both. tests/fault_probe.h still carries a weak
+   default (the /alternatename trick it already uses for port_build_gittip) so
+   the narrow probes that include it without this file keep linking. */
+char port_install_verdict[512];
+
+/* WHICH GAME DATA THIS PROCESS BOOTED FROM, for the same reason and with the
+   same placement rule. hal/romdata_loader.cpp fills these once, at boot, from
+   the blob it verified; hal/lk7_persist.cpp stamps them into a disk save state
+   and compares them on load, because a save state is a snapshot of a world that
+   this data produced and no EXE-side field can see the difference. The storage
+   is here rather than in the loader because the loader is compiled only into
+   ROM-CLEAN targets while lk7_persist is compiled into more than that; empty
+   and zero is the correct reading for a build that loads no blob.
+
+   Host session state, deliberately outside the .dsstate bracket: an F9 must not
+   roll back which folder the process booted from. */
+char               port_romdata_sha[65];
+unsigned long long port_romdata_bytes;
+char               port_asset_root_seen[512];
+
+/* Append one line, bounded, always NUL-terminated. Safe to call before or after
+   anything. A line that does not fit is TRUNCATED, not dropped, and a buffer
+   with fewer than three bytes left loses the CRLF separator too, so the tail
+   would run on -- at 512 bytes with two lines of roughly 200 that cannot
+   happen today, and it is written down rather than prevented because this is
+   diagnostic text in a process that may be about to die, not a log. */
+void port_install_verdict_add(const char *line)
+{
+    unsigned n = 0, i = 0;
+    if (!line) return;
+    while (n < sizeof port_install_verdict - 1 && port_install_verdict[n])
+        ++n;
+    /* CRLF: the dump this ends up in (tests/fault_probe.h) is a Windows text
+       file the player opens in Notepad, and every other line in it is CRLF. */
+    if (n && n + 2 < sizeof port_install_verdict - 1) {
+        port_install_verdict[n++] = '\r';
+        port_install_verdict[n++] = '\n';
+    }
+    while (line[i] && n < sizeof port_install_verdict - 1)
+        port_install_verdict[n++] = line[i++];
+    port_install_verdict[n] = 0;
+}
 }
 
 extern "C" {

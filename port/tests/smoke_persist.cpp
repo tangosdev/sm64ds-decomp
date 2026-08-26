@@ -21,10 +21,25 @@
 //        second process loading the first one's disk state and landing on the
 //        identical arena hash is the core proof.
 //
-// Two refusal cases run in-process in the parent after the child returns, so
-// they need no second boot:
-//   - a corrupted header (magic byte flipped) is refused cleanly, file left;
-//   - a gittip mismatch (the build-tip field overwritten) is refused cleanly.
+// The refusal cases all run in-process in the parent after the child returns,
+// so they need no second boot. Each doctors ONE field of a freshly written,
+// otherwise-valid file, so the field named is provably the field that refused:
+//   A  corrupted header (magic byte flipped)            -> refused, file left
+//   B  gittip mismatch (the build-tip field overwritten) -> refused
+//   C  DIFFERENT GAME DATA (the romdata identity field)  -> refused
+//   D  the same file as C with SM64DS_SAVESTATE_NO_GUARD=1 -> LOADED, and the
+//      override does not persist to the next read
+//   E  a legacy format-2 file                            -> refused on format
+//   F  a truncated file                                  -> refused, says so
+// and then a clean valid file must load with NOTHING refused, so a green run
+// cannot be one where every read happens to fail.
+//
+// C is the case format 2 could not express at all: same exe, same build, same
+// image and arena and section bounds -- and a world built out of a different
+// asset folder's ROM tables. Every EXE-side field agrees and the state loads.
+// The header now carries which romdata.bin the world was built from, so it
+// does not. No player has reported this; it is a hole found by reading the
+// loader (hal/romdata_loader.cpp has the write-up) rather than by a report.
 //
 // The arena is pinned at a fixed host base (hal/os_arena.cpp), so both the
 // parent and the child bring the arena up at the SAME base and the saved
@@ -76,6 +91,8 @@ int lk6_savestate_has(void);
 int lk7_persist_write(void);
 int lk7_persist_read(void);
 int lk7_persist_available(void);
+const char *lk7_persist_refusal(void);
+const char *lk7_persist_refusal_detail(void);
 
 // arena window
 void *port_arena_base(void);
@@ -351,16 +368,148 @@ static int phase_save()
         }
         int r = lk7_persist_read();
         CHECK(r == 0);
-        printf("  [parent] gittip-mismatch header refused: r=%d\n", r);
+        CHECK(lk7_persist_refusal()[0] != 0);
+        printf("  [parent] gittip-mismatch header refused: r=%d  \"%s\"\n",
+               r, lk7_persist_refusal());
+    }
+
+    // ---- refusal case C: DIFFERENT GAME DATA is refused cleanly -----------
+    // A folder that outlived the build that filled it. Everything about the
+    // EXE agrees -- same binary, same build, same image base, same arena,
+    // same section -- and the asset folder underneath it is another release's.
+    // Format 2 could not ask the question at all; format 3 stamps the romdata
+    // identity, so this is the field that turns the file away.
+    //
+    // The offset is derived, not guessed: magic[8] + format(4) + gittip[64] +
+    // seven u64s (image_base, arena_base, arena_size, arena_cursor,
+    // dsstate_base, dsstate_size, hw_size) = 8+4+64+56 = 132, and the struct is
+    // #pragma pack(1).
+    //
+    // WHAT KEEPS THIS HONEST IS THE strstr, NOT THE OFFSET. An earlier note here
+    // claimed a field inserted above romdata_sha would push this poke into
+    // asset_root and turn the CHECK red. That is wrong: any insertion smaller
+    // than 65 bytes still lands INSIDE romdata_sha, the refusal still fires, and
+    // the case would go green while testing a field it does not name. The
+    // assertion on "DIFFERENT GAME DATA" below is what pins the case to the
+    // right refusal site; the offset only has to be close enough to hit the
+    // field. If a field is added above, fix the constant.
+    const long ROMDATA_SHA_OFFSET = 132;
+    {
+        CHECK(lk7_persist_write() == 1);
+        FILE *f = fopen(path, "r+b");
+        CHECK(f != NULL);
+        if (f) {
+            // a plausible sha of somebody else's romdata.bin
+            const char other[] =
+                "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0";
+            fseek(f, ROMDATA_SHA_OFFSET, SEEK_SET);
+            fwrite(other, 1, sizeof other, f);   // includes the terminating NUL
+            fclose(f);
+        }
+        int r = lk7_persist_read();
+        CHECK(r == 0);
+        CHECK(lk7_persist_refusal()[0] != 0);
+        CHECK(strstr(lk7_persist_refusal_detail(), "DIFFERENT GAME DATA") != NULL);
+        printf("  [parent] other-game-data header refused: r=%d  \"%s\"\n",
+               r, lk7_persist_refusal());
+    }
+
+    // ---- case D: the kill switch loads the SAME doctored file -------------
+    // SM64DS_SAVESTATE_NO_GUARD=1 is the forensic hatch. It must actually
+    // reach the load (otherwise it is a comment, not a switch), and it must
+    // still be honest about what it skipped. The file from case C is left on
+    // disk deliberately: the only thing that changes between the two cases is
+    // the environment variable.
+    {
+        /* _putenv, NOT SetEnvironmentVariableA. The guard reads the switch with
+           getenv, and MSVC's getenv answers out of the CRT's own copy of the
+           environment, which SetEnvironmentVariableA does not touch -- it edits
+           the Win32 block, which is what a CHILD process inherits (that is why
+           the PERSIST_PHASE handoff above uses it and is right to). Setting it
+           the Win32 way here would leave getenv answering null and this case
+           would "prove" the switch does nothing. */
+        _putenv("SM64DS_SAVESTATE_NO_GUARD=1");
+        int r = lk7_persist_read();
+        _putenv("SM64DS_SAVESTATE_NO_GUARD=");
+        CHECK(r == 1);
+        printf("  [parent] SM64DS_SAVESTATE_NO_GUARD=1 loaded the refused "
+               "state: r=%d\n", r);
+        // ...and with the switch back off, the same file is refused again, so
+        // the override is per-run and leaves nothing behind.
+        CHECK(lk7_persist_write() == 1);
+        FILE *f = fopen(path, "r+b");
+        if (f) {
+            const char other[] =
+                "0f1e2d3c4b5a69788796a5b4c3d2e1f00f1e2d3c4b5a69788796a5b4c3d2e1f0";
+            fseek(f, ROMDATA_SHA_OFFSET, SEEK_SET);
+            fwrite(other, 1, sizeof other, f);
+            fclose(f);
+        }
+        CHECK(lk7_persist_read() == 0);
+        printf("  [parent] switch off again: refused again\n");
+    }
+
+    // ---- case E: a LEGACY (format 2) file is refused, not misread ---------
+    // What every savestate.bin written before this change is: a full-size file,
+    // header plus an 8MB arena, from a build whose header had no romdata fields.
+    // The read of a format-3-sized header off it SUCCEEDS -- it gets the short
+    // header followed by arena bytes -- so the thing that has to turn it away
+    // is the FORMAT field, before a byte of the body is trusted.
+    {
+        CHECK(lk7_persist_write() == 1);
+        FILE *f = fopen(path, "r+b");
+        CHECK(f != NULL);
+        if (f) {
+            unsigned old_format = 2;            // the pre-format-3 layout
+            fseek(f, 8, SEEK_SET);              // magic[8], then format(u32)
+            fwrite(&old_format, sizeof old_format, 1, f);
+            fclose(f);
+        }
+        int r = lk7_persist_read();
+        CHECK(r == 0);
+        CHECK(strstr(lk7_persist_refusal_detail(), "format mismatch") != NULL);
+        CHECK(strstr(lk7_persist_refusal_detail(), "file 2, build 3") != NULL);
+        printf("  [parent] legacy format-2 state refused: r=%d  \"%s\"\n",
+               r, lk7_persist_refusal());
+    }
+
+    // ---- case F: a TRUNCATED file is refused, and says so ------------------
+    // The other legacy shape: a file too short to be a header at all, which is
+    // what a write killed part-way through leaves behind.
+    {
+        CHECK(lk7_persist_write() == 1);
+        FILE *src = fopen(path, "rb");
+        CHECK(src != NULL);
+        static char head[64];
+        size_t got = src ? fread(head, 1, sizeof head, src) : 0;
+        if (src) fclose(src);
+        FILE *dst = fopen(path, "wb");
+        CHECK(dst != NULL);
+        if (dst) { fwrite(head, 1, got, dst); fclose(dst); }
+        int r = lk7_persist_read();
+        CHECK(r == 0);
+        CHECK(strstr(lk7_persist_refusal_detail(), "truncated") != NULL);
+        printf("  [parent] truncated state refused: r=%d  \"%s\"\n",
+               r, lk7_persist_refusal());
     }
 
     // leave a clean valid file behind (tidy, and matches shipped behaviour)
     CHECK(lk7_persist_write() == 1);
+    // ...and a valid file must still say nothing to refuse, so a passing run
+    // cannot be one where every read refuses for some unrelated reason.
+    CHECK(lk7_persist_read() == 1);
+    CHECK(lk7_persist_refusal()[0] == 0);
     remove(path);   // do not leave a savestate.bin in the build tree
 
     if (g_failures) { fprintf(stderr, "smoke_persist: %d FAILURE(S)\n", g_failures); return 1; }
+    /* The summary names EVERY case. It used to name four of six, which is the
+       same under-reporting this smoke exists to catch: a line that reads as a
+       full account and is not one. If a case is added below, add it here. */
     printf("smoke_persist: all checks passed (wrote disk state, a second process "
-           "loaded it byte-exact, corrupted and stale-build headers both refused)\n");
+           "loaded it byte-exact; corrupted-magic, stale-build, other-game-data, "
+           "legacy-format and truncated headers all refused; the forensic "
+           "override loads one and does not stick; a clean file refuses "
+           "nothing)\n");
     return 0;
 }
 

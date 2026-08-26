@@ -241,14 +241,25 @@ struct WinApi {
        path, and a null here is simply a capture that hides and re-centres the
        pointer without also penning it in. */
     BOOL(WINAPI *ClipCursor_)(const RECT *);
-#ifndef PORT_ROM_CLEAN
-    /* SM64DS_CLICK_TEST's three (click_test_apply below): a client point to a
-       screen point, the pointer put there, and a REAL button edge through the
-       OS input queue rather than a message posted past it. Compiled out of a
-       PORT_ROM_CLEAN (shipping) build: these are the OS-input DRIVERS a
-       stranger's antivirus flags, and nothing outside SM64DS_CLICK_TEST uses
-       them. Real input reading (GetCursorPos_/GetAsyncKeyState_) stays. */
+    /* ClientToScreen is a COORDINATE CONVERSION, not an input driver: it reads
+       a window's position and adds it to a point. It sat inside the
+       PORT_ROM_CLEAN fence below when that fence was written, correctly, because
+       SM64DS_CLICK_TEST was the only caller. Then the mouse capture landed
+       (b91d34ed7) and mo_client_center / mo_capture_clip / mo_capture_refresh
+       -- all three on the SHIPPING path, all three serving a PLAYER setting --
+       started calling it, and
+       the shipping build stopped compiling. Nothing builds PORT_ROM_CLEAN
+       routinely, so that went unnoticed from b91d34ed7 to here.
+       It belongs on this side of the fence: release_hardening.txt gates the OS
+       input DRIVERS (SendInput and the foreground/window-ownership calls that
+       aim one), and this is neither. */
     BOOL(WINAPI *ClientToScreen_)(HWND, POINT *);
+#ifndef PORT_ROM_CLEAN
+    /* SM64DS_CLICK_TEST's: the pointer put at a screen point, and a REAL button
+       edge through the OS input queue rather than a message posted past it.
+       Compiled out of a PORT_ROM_CLEAN (shipping) build: these are the OS-input
+       DRIVERS a stranger's antivirus flags, and nothing outside SM64DS_CLICK_TEST
+       uses them. Real input reading (GetCursorPos_/GetAsyncKeyState_) stays. */
     UINT(WINAPI *SendInput_)(UINT, void *, int);
     BOOL(WINAPI *SetForegroundWindow_)(HWND);
     /* and the two that make the synthetic click SAFE on a shared desktop:
@@ -332,12 +343,14 @@ static bool winapi_load(void)
     W.SetCursorPos_ = (decltype(W.SetCursorPos_))GetProcAddress(u, "SetCursorPos");
     W.ShowCursor_ = (decltype(W.ShowCursor_))GetProcAddress(u, "ShowCursor");
     W.ClipCursor_ = (decltype(W.ClipCursor_))GetProcAddress(u, "ClipCursor");
+    /* the mouse capture's coordinate conversion; see the declaration's note on
+       why it is NOT behind the fence below */
+    W.ClientToScreen_ = (decltype(W.ClientToScreen_))GetProcAddress(u, "ClientToScreen");
 #ifndef PORT_ROM_CLEAN
     /* SM64DS_CLICK_TEST's synthetic-click seams. Their GetProcAddress lookups
        -- and the "SendInput"/"SetForegroundWindow"/... name strings with them
        -- are absent from a PORT_ROM_CLEAN (shipping) build, so the shipped exe
        carries no SendInput driver for a stranger's antivirus to flag. */
-    W.ClientToScreen_ = (decltype(W.ClientToScreen_))GetProcAddress(u, "ClientToScreen");
     W.SendInput_ = (decltype(W.SendInput_))GetProcAddress(u, "SendInput");
     W.SetForegroundWindow_ =
         (decltype(W.SetForegroundWindow_))GetProcAddress(u, "SetForegroundWindow");
@@ -730,6 +743,10 @@ extern unsigned char port_ov009_gap_0211222c[];
 int lk7_persist_write(void);
 int lk7_persist_read(void);
 int lk7_persist_available(void);
+/* Why the last read turned a savestate.bin away, short enough for the on-screen
+   toast; "" when there was nothing to refuse. See the note at the bottom of
+   hal/lk7_persist.cpp. */
+const char *lk7_persist_refusal(void);
 
 /* Two seconds of on-screen text for the save-state actions. Every earlier
    report of "F8 did nothing" was undiagnosable because the only evidence was a
@@ -6219,6 +6236,16 @@ int main(void)
         if (lk7_persist_read()) {
             an_pivot_live = 0;   /* no ease across the load */
             ss_note("state loaded from disk (F9 reloads it)");
+        } else if (lk7_persist_refusal()[0]) {
+            /* THE REFUSAL HAS TO BE VISIBLE, and this is the only place it can
+               be. The game has just booted FRESH on purpose -- a savestate.bin
+               was there and was turned away -- and without this line the player
+               sees a normal boot and a save state that quietly stopped
+               existing. The long form is already in the playlog; this is the
+               sentence on the screen. Same toast slot the load note uses, so
+               the two outcomes appear in the same place and read as the pair
+               they are. */
+            ss_note(lk7_persist_refusal());
         }
     }
 

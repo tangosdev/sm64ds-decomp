@@ -31,17 +31,22 @@
 //   magic         wrong bytes           -> not our file, refuse
 //   format        version bump          -> old on-disk layout, refuse
 //   gittip        different build       -> another version's world, refuse
+//   romdata       other game data       -> the world was built from other
+//                                          bytes, refuse (see below)
 //   image_base    exe rebased           -> code pointers would dangle, refuse
 //   arena_base    arena at a diff base  -> arena pointers would dangle, refuse
-//   arena_size    arena a diff size     -> lengths would not line up, refuse
 //   dsstate_base  section moved         -> hosted globals moved, refuse
-//   dsstate_size  section grew/shrank   -> another layout's blob, refuse
-//   hw_size       regions differ        -> textures would not line up, refuse
+// and then, in header_lengths_SAFE and not in the policy list above, because
+// they are the lengths the body copies are sized by and not a judgement about
+// compatibility at all:
+//   arena_size    arena a diff size     -> the copy would overrun, refuse
+//   dsstate_size  section grew/shrank   -> the copy would overrun, refuse
+//   hw_size       regions differ        -> the copy would overrun, refuse
 // THE ORDER MATTERS AND IT IS THE ORDER ABOVE. header_matches compares field
 // by field and returns on the first mismatch, so a genuinely old state file --
 // one written by any earlier build -- is refused at GITTIP, which cannot match
 // across builds and therefore fires before anything below it is even looked at.
-// dsstate_base and dsstate_size sit BEHIND gittip as backstops, not as the
+// dsstate_base and the length checks sit BEHIND gittip as backstops, not as the
 // front line: each one independently trips on a state whose gittip somehow
 // agreed, which is what makes them worth keeping even though gittip is the
 // strictly tighter test. So a change that grows or moves the .dsstate section
@@ -55,11 +60,76 @@
 // describes. (gittip, image_base and dsstate_base overlap in what they catch;
 // they are all kept because each refusal message tells the reader something
 // different about WHY the file cannot load.)
+//
+// THE HALF THE HEADER WAS MISSING: THE DATA (format 3, 2026-08-26)
+// ----------------------------------------------------------------
+// Every field listed above is an EXE-SIDE fact. Read the list again with that
+// in mind: which build, where its image landed, where its arena landed, how big
+// its hosted-global section is. Not one of them can see the ASSET FOLDER.
+//
+// And a save state is not a snapshot of an exe. It is a snapshot of a WORLD,
+// and that world was built out of build/assets/romdata.bin -- every ROM table
+// the game reads, the level and path and floor records included. The same exe
+// pointed at two different asset folders produces two different worlds, and
+// every field above says they are the same.
+//
+// NOT YET OBSERVED IN THE FIELD. The hole was found by reading this header
+// against hal/romdata_loader.cpp, not by a report, and the write-up says so
+// because a guard that claims a victim it does not have is a guard the next
+// reader stops trusting. What it can do is demonstrated on demand:
+// port/tools/install_mismatch_probe.py saves a state under one asset folder's
+// game data and boots the window on another's, and with the guard off the
+// restored world takes an access violation.
+//
+// WHAT THE 2026-08-26 BURST ACTUALLY WAS, since this file was written during it
+// and first blamed for it. Six crash reports from one player in two minutes,
+// every launch, ending in a path assert -- "binding 0 has -1 nodes and the node
+// walk holds 3 ... the floor record is wrong" -- and a null dereference. The
+// install looked mixed because the folder was NAMED for an old release. It was
+// not. The exe, the game data and the save state in that folder were all the
+// same build: the state passed the gittip field, which only a state written by
+// that same exe can do, and the shipped bundles carry no romdata.bin at all
+// (the player's own machine builds it from a recipe), so the data in the folder
+// was the data that exe asked for.
+//
+// SO THE REAL DEFECT IS UNTOUCHED BY THIS FILE AND STILL OPEN: a save state
+// written by one build and reloaded by THAT SAME BUILD, with every header field
+// agreeing -- gittip, image base, arena base, section bounds, and now the game
+// data too -- restoring a world with an invalid floor record. That is a
+// save-state FIDELITY bug, the half-rollback shape the lk6 write-up catalogues,
+// and no stamp in this header can see it: every stamp matches, correctly. It
+// has its own lane. Do not read format 3 as having closed it, and do not read a
+// clean stamp as evidence a restored world is sound.
+//
+// So the header now carries the identity of the game data the world was built
+// from: the whole-file sha256 of romdata.bin and its length, as
+// hal/romdata_loader.cpp recorded them at boot. It also carries the asset root
+// PATH, which is never compared (a player is free to move or rename the folder)
+// and exists so the refusal message can name the folder a human has to go fix.
+//
+// This is what makes the guard complete rather than merely long: gittip answers
+// "same code?", romdata answers "same data?", and a world needs both to be the
+// same world.
+//
+// FORMAT 2 STATES ARE REFUSED, NOT MISREAD. The version bump is the point: a
+// format-2 file has no romdata fields, so there is no way to ask it the
+// question, so it does not get to load. It is refused on `format` before a byte
+// of its body is read. This costs players NOTHING THEY WERE NOT ALREADY PAYING:
+// gittip changes every release, so every release has always refused every save
+// state written before it. Format 3 refuses the same files one field earlier.
+//
+// SM64DS_SAVESTATE_NO_GUARD=1 turns the POLICY refusals off for forensics --
+// load a state the guard would have turned away, to see what it does. It does
+// NOT turn off the three LENGTH checks (arena, dsstate, hw), which are not
+// policy: the load copies disk.arena_size bytes into the live arena, and a
+// longer file with the guard off would be a buffer overrun. Those three stay
+// hard in every configuration.
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <stdarg.h>
 
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
@@ -93,16 +163,41 @@ int lk6_savestate_has(void);
 // the build's git tip, embedded by CMake (host-src/port_gittip.c). Weakly
 // aliased in fault_probe.h for builds without it; here we only read it.
 extern const char port_build_gittip[];
+
+// hal/os_arena.cpp: the one-line install verdict the crash dump carries.
+void port_install_verdict_add(const char *line);
+
+// WHICH GAME DATA this process booted from. The storage is in hal/os_arena.cpp
+// -- the one hal file every target that links this one also links -- and
+// hal/romdata_loader.cpp fills it at boot in a ROM-CLEAN build. A build with no
+// loader (tests/smoke_persist.cpp is one) leaves it empty and zero, and so does
+// a ROM-CLEAN build before port_romdata_load has run. Both halves of every
+// comparison below are then the same empty string, which is the right answer
+// for two runs of the same binary reading no blob at all.
+//
+// Plain externs on purpose. The weak-symbol idiom (__declspec(selectany) plus
+// /alternatename) would work, but it costs a row in
+// tools/alternatename_baseline.txt per symbol -- an allowlist entry saying "this
+// alias is deliberately defeated in the full link" -- and three rows of frozen
+// allowlist is a bad price for storage that could simply live somewhere both
+// targets already reach.
+extern char               port_romdata_sha[65];
+extern unsigned long long port_romdata_bytes;
+extern char               port_asset_root_seen[512];
 }
 
 namespace {
 
 // Bumping any field layout below is a FORMAT_VERSION bump; an older file is
-// then refused on the format field rather than misread. Format 2 is the
+// then refused on the format field rather than misread. Format 2 was the
 // .dsstate-section world (format 1 was the never-shipped hand-list draft).
+// Format 3 adds the game-data identity (romdata sha + length + the asset root
+// path) -- see "THE HALF THE HEADER WAS MISSING" above.
 const char   MAGIC[8]        = { 'S','M','6','4','D','S','S','T' };
-const u32    FORMAT_VERSION  = 2;
+const u32    FORMAT_VERSION  = 3;
 const u32    GITTIP_FIELD    = 64;   // fixed-width, NUL-padded, always NUL-terminated
+const u32    SHA_FIELD       = 65;   // 64 hex digits + NUL, or all-NUL for "none"
+const u32    ROOT_FIELD      = 512;  // the asset root path; informational only
 
 #pragma pack(push, 1)
 struct Header {
@@ -116,6 +211,14 @@ struct Header {
     uint64_t dsstate_base;   // &dsstate_lo: where the hosted globals sit this build
     uint64_t dsstate_size;   // &dsstate_hi - &dsstate_lo
     uint64_t hw_size;        // palette + video + sprite memory, 0 if not reserved
+    /* FORMAT 3. Appended at the END on purpose: every field above keeps the
+       offset it had, so smoke_persist's "gittip is at offset 12" poke and any
+       hand analysis of an existing dump still read the same words. */
+    char     romdata_sha[SHA_FIELD]; // sha256 of the romdata.bin this world was built from
+    uint64_t romdata_bytes;          // its length; 0 with an empty sha means "none"
+    char     asset_root[ROOT_FIELD]; // where that data came from. NEVER COMPARED --
+                                     // a player may move or rename the folder. It is
+                                     // here so the refusal can name it.
 };
 #pragma pack(pop)
 
@@ -145,6 +248,11 @@ int fill_header(Header *hdr)
     hdr->dsstate_base = (uint64_t)(uintptr_t)&dsstate_lo;
     hdr->dsstate_size = (uint64_t)dsstate_size_live();
     hdr->hw_size      = (uint64_t)port_hw_regions_size();
+    /* format 3: WHICH GAME DATA this world was built out of. Read straight off
+       hal/romdata_loader.cpp's record of the blob it verified at boot. */
+    snprintf(hdr->romdata_sha, sizeof hdr->romdata_sha, "%s", port_romdata_sha);
+    hdr->romdata_bytes = port_romdata_bytes;
+    snprintf(hdr->asset_root, sizeof hdr->asset_root, "%s", port_asset_root_seen);
     return 1;
 }
 
@@ -174,68 +282,157 @@ int state_path(char *out, size_t cap)
     return 0;
 }
 
+// ---- the refusal record ----------------------------------------------------
+// A refusal has to reach three places, so it is recorded once and read three
+// times: the playlog (the long form, the line an operator greps for), the
+// on-screen toast walk_window draws (SHORT -- ss_toast is 64 bytes, and a
+// player who never opens a log otherwise sees nothing at all), and the crash
+// dump's install block (so a report from a mixed install says so on its face).
+char g_refuse_short[64];
+char g_refuse_long[640];
+
+/* The dump's install block is a three-label table (asset root / romdata /
+   savestate) and a refusal has to arrive wearing its label, or a reader has to
+   work out for themselves which subsystem the sentence came from. The long form
+   is trimmed to its first line here: the multi-line detail belongs in the
+   playlog, and the dump wants the one sentence that classifies the report. */
+void verdict_savestate_refused(void)
+{
+    char line[256];
+    unsigned n = 0;
+    while (n < sizeof line - 24 && g_refuse_long[n] &&
+           g_refuse_long[n] != '\n')
+        ++n;
+    snprintf(line, sizeof line, "savestate   REFUSED -- %.*s", (int)n,
+             g_refuse_long);
+    port_install_verdict_add(line);
+}
+
+void refuse(const char *shrt, const char *fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    vsnprintf(g_refuse_long, sizeof g_refuse_long, fmt, ap);
+    va_end(ap);
+    snprintf(g_refuse_short, sizeof g_refuse_short, "%s", shrt);
+    fprintf(stderr, "[savestate] %s\n", g_refuse_long);
+}
+
+// THE THREE LENGTH CHECKS, WHICH ARE NOT POLICY AND CANNOT BE OVERRIDDEN.
+// lk7_persist_read copies disk.arena_size bytes into the live arena, disk
+// .dsstate_size bytes over the live section, and disk.hw_size bytes into the
+// hardware stores. If any of those exceeds what this process actually has, the
+// copy is a buffer overrun -- so these three are checked before the guard's
+// kill switch is consulted, and SM64DS_SAVESTATE_NO_GUARD does not reach them.
+int header_lengths_safe(const Header *disk, const Header *self)
+{
+    if (disk->arena_size != self->arena_size) {
+        refuse("save state refused: wrong size",
+               "disk state refused: arena size mismatch (file %llu, this run %llu)",
+               (unsigned long long)disk->arena_size,
+               (unsigned long long)self->arena_size);
+        return 0;
+    }
+    if (disk->dsstate_size != self->dsstate_size) {
+        refuse("save state refused: layout changed",
+               "disk state refused: dsstate size mismatch (file %llu, this run %llu)",
+               (unsigned long long)disk->dsstate_size,
+               (unsigned long long)self->dsstate_size);
+        return 0;
+    }
+    if (disk->hw_size != self->hw_size) {
+        refuse("save state refused: layout changed",
+               "disk state refused: hardware-store size mismatch (file %llu, this run %llu)",
+               (unsigned long long)disk->hw_size,
+               (unsigned long long)self->hw_size);
+        return 0;
+    }
+    return 1;
+}
+
 // Compare the on-disk header field by field against this process. On the first
 // mismatch, name the field on stderr and return 0. Returns 1 only if every
 // field matches.
 int header_matches(const Header *disk, const Header *self)
 {
     if (memcmp(disk->magic, self->magic, sizeof disk->magic) != 0) {
-        fprintf(stderr, "[savestate] disk state refused: magic mismatch (not a save file)\n");
+        refuse("save state refused: not a save file",
+               "disk state refused: magic mismatch (not a save file)");
         return 0;
     }
     if (disk->format != self->format) {
-        fprintf(stderr, "[savestate] disk state refused: format mismatch (file %u, build %u)\n",
-                disk->format, self->format);
+        /* "different", not "older": a downgrade is rare but real (a player who
+           reinstalls the previous release over the same folder), and a toast
+           that says "older" would be a lie in exactly the case where somebody
+           is already confused about which version they are running. */
+        refuse("save state refused: different format",
+               "disk state refused: format mismatch (file %u, build %u) -- "
+               "written by a build with a different on-disk layout",
+               disk->format, self->format);
         return 0;
     }
     if (strncmp(disk->gittip, self->gittip, GITTIP_FIELD) != 0) {
-        fprintf(stderr, "[savestate] disk state refused: gittip mismatch (file %.*s, build %.*s)\n",
-                (int)GITTIP_FIELD, disk->gittip, (int)GITTIP_FIELD, self->gittip);
+        refuse("save state refused: another build",
+               "disk state refused: gittip mismatch (file %.*s, build %.*s)",
+               (int)GITTIP_FIELD, disk->gittip, (int)GITTIP_FIELD, self->gittip);
+        return 0;
+    }
+    /* THE GAME-DATA HALF (format 3). Placed right behind gittip because it is
+       the same KIND of question -- "is this the same world" -- and because a
+       version-mixed install is the one shape where gittip agrees and the world
+       still does not: same exe, other asset folder. Everything below this line
+       is about where things landed in memory, which is a different subject.
+
+       Compared verbatim, empty included. Two runs of a non-ROM-clean build both
+       stamp "" and match; a ROM-clean build never stamps "", so a state carried
+       across that line is refused, which is correct -- those two exes do not
+       read their tables from the same place at all. */
+    if (strncmp(disk->romdata_sha, self->romdata_sha, SHA_FIELD) != 0 ||
+        disk->romdata_bytes != self->romdata_bytes) {
+        refuse("save state refused: other game data",
+               "disk state refused: the save state was made from DIFFERENT GAME "
+               "DATA.\n"
+               "            state: %llu bytes, sha %.16s, from %s\n"
+               "            now:   %llu bytes, sha %.16s, from %s\n"
+               "            The exe matches; the asset folder does not. A world "
+               "built from other\n"
+               "            ROM tables cannot be restored onto these, so the "
+               "game is booting fresh\n"
+               "            instead. Your save state file has been left alone.",
+               (unsigned long long)disk->romdata_bytes,
+               disk->romdata_sha[0] ? disk->romdata_sha : "(none)          ",
+               disk->asset_root[0] ? disk->asset_root : "(unrecorded)",
+               (unsigned long long)self->romdata_bytes,
+               self->romdata_sha[0] ? self->romdata_sha : "(none)          ",
+               self->asset_root[0] ? self->asset_root : "(unrecorded)");
         return 0;
     }
     if (disk->image_base != self->image_base) {
-        fprintf(stderr, "[savestate] disk state refused: exe image base mismatch "
-                        "(file 0x%llx, this run 0x%llx) -- code pointers would "
-                        "not relocate\n",
-                (unsigned long long)disk->image_base,
-                (unsigned long long)self->image_base);
+        refuse("save state refused: exe moved in memory",
+               "disk state refused: exe image base mismatch (file 0x%llx, this "
+               "run 0x%llx) -- code pointers would not relocate",
+               (unsigned long long)disk->image_base,
+               (unsigned long long)self->image_base);
         return 0;
     }
     if (disk->arena_base != self->arena_base) {
-        fprintf(stderr, "[savestate] disk state refused: arena base mismatch "
-                        "(file 0x%llx, this run 0x%llx)\n",
-                (unsigned long long)disk->arena_base,
-                (unsigned long long)self->arena_base);
-        return 0;
-    }
-    if (disk->arena_size != self->arena_size) {
-        fprintf(stderr, "[savestate] disk state refused: arena size mismatch "
-                        "(file %llu, this run %llu)\n",
-                (unsigned long long)disk->arena_size,
-                (unsigned long long)self->arena_size);
+        refuse("save state refused: memory moved",
+               "disk state refused: arena base mismatch (file 0x%llx, this run 0x%llx)",
+               (unsigned long long)disk->arena_base,
+               (unsigned long long)self->arena_base);
         return 0;
     }
     if (disk->dsstate_base != self->dsstate_base) {
-        fprintf(stderr, "[savestate] disk state refused: dsstate base mismatch "
-                        "(file 0x%llx, this run 0x%llx)\n",
-                (unsigned long long)disk->dsstate_base,
-                (unsigned long long)self->dsstate_base);
+        refuse("save state refused: layout changed",
+               "disk state refused: dsstate base mismatch (file 0x%llx, this run 0x%llx)",
+               (unsigned long long)disk->dsstate_base,
+               (unsigned long long)self->dsstate_base);
         return 0;
     }
-    if (disk->dsstate_size != self->dsstate_size) {
-        fprintf(stderr, "[savestate] disk state refused: dsstate size mismatch "
-                        "(file %llu, this run %llu)\n",
-                (unsigned long long)disk->dsstate_size,
-                (unsigned long long)self->dsstate_size);
-        return 0;
-    }
-    if (disk->hw_size != self->hw_size) {
-        fprintf(stderr, "[savestate] disk state refused: hardware-store size mismatch "
-                        "(file %llu, this run %llu)\n",
-                (unsigned long long)disk->hw_size,
-                (unsigned long long)self->hw_size);
-        return 0;
-    }
+    /* arena_size, dsstate_size and hw_size are checked by header_lengths_safe,
+       which runs FIRST and is not overridable. They are deliberately not
+       repeated here: a duplicate check that the kill switch could skip would
+       read as if the sizes were policy, and they are memory safety. */
     return 1;
 }
 
@@ -321,9 +518,16 @@ int lk7_persist_write(void)
 // into place and hand the world to lk6 (cursor, cache drops, audio reset, all
 // of it) via lk6_savestate_save + lk6_savestate_load. Returns 1 if a disk state
 // was loaded, 0 if there was no file, disk states are off, or the header was
-// refused (a refusal names the field and leaves the file alone).
+// refused. A refusal names the field on stderr, records a short reason for the
+// on-screen toast (lk7_persist_refusal) and a line for the crash dump's install
+// block, and LEAVES THE FILE ALONE -- the caller boots fresh, which is the whole
+// point: a state that cannot be trusted costs a player their save slot, not
+// their launch.
 int lk7_persist_read(void)
 {
+    g_refuse_short[0] = 0;
+    g_refuse_long[0]  = 0;
+
     if (!lk7_persist_available()) return 0;
 
     char path[512];
@@ -334,14 +538,63 @@ int lk7_persist_read(void)
 
     Header disk;
     if (fread(&disk, sizeof disk, 1, f) != 1) {
-        fprintf(stderr, "[savestate] disk state refused: file too short for a header\n");
+        /* NOT where an older-format file lands. A format-2 savestate.bin is
+           the header plus an 8MB arena, so this fread succeeds on it -- it
+           reads a short header followed by arena bytes -- and the FORMAT field
+           at offset 8 then turns it away, which is the door that reports it
+           accurately. This one is for a file that is genuinely truncated: a
+           write killed part-way through by something the .tmp+rename dance
+           cannot cover (a full disk, a killed process on a filesystem that
+           does not make the rename atomic). */
+        refuse("save state refused: file is damaged",
+               "disk state refused: file too short even for a header (%s is "
+               "truncated); left untouched, booting fresh", path);
         fclose(f);
         return 0;
     }
 
     Header self;
     if (!fill_header(&self)) { fclose(f); return 0; }
-    if (!header_matches(&disk, &self)) { fclose(f); return 0; }
+    int overridden = 0;
+
+    /* POLICY FIRST, so the message a reader gets is the most informative one.
+       The field order in header_matches is chosen (gittip and romdata ahead of
+       the memory-layout fields) precisely so that a stale state is turned away
+       by the reason a human cares about; running the length checks first would
+       report "arena size mismatch" for a file whose real problem is that it
+       came from another build. */
+    if (!header_matches(&disk, &self)) {
+        /* THE FORENSIC HATCH. Off by default; when it is on, the refusal has
+           already been printed in full, so the log says what the guard would
+           have done as well as what it did. The game may well die a few frames
+           later -- that is the point of asking. */
+        if (!getenv("SM64DS_SAVESTATE_NO_GUARD")) {
+            verdict_savestate_refused();
+            fclose(f);
+            return 0;
+        }
+        fprintf(stderr, "[savestate] SM64DS_SAVESTATE_NO_GUARD=1: loading it "
+                        "anyway. This is a forensic option, not a fix.\n");
+        port_install_verdict_add("savestate   guard OVERRIDDEN "
+                                 "(SM64DS_SAVESTATE_NO_GUARD=1) -- the stamp "
+                                 "did NOT match and the state was loaded anyway");
+        /* The toast is cleared (the game did NOT boot fresh, so the on-screen
+           "refused" note would be a lie) but overridden is remembered, so the
+           success path below does not go on to claim the stamp matched. That
+           claim in a dump from an overridden run would be the worst possible
+           line: the one fact the reader needed, inverted. */
+        g_refuse_short[0] = 0;
+        overridden = 1;
+    }
+    /* ...and memory safety after it, unconditionally: the copies below are
+       sized by the DISK header, so a longer file would run off the end of the
+       live arena or section. The kill switch above deliberately does not reach
+       this. */
+    if (!header_lengths_safe(&disk, &self)) {
+        verdict_savestate_refused();
+        fclose(f);
+        return 0;
+    }
 
     size_t asz = (size_t)disk.arena_size;
     size_t dsz = (size_t)disk.dsstate_size;
@@ -391,7 +644,23 @@ int lk7_persist_read(void)
 
     fprintf(stderr, "[savestate] loaded disk state: %zu arena + %zu dsstate + "
                     "%zu hw bytes from %s\n", asz, dsz, hsz, path);
+    if (!overridden)
+        port_install_verdict_add("savestate   loaded from disk, stamp matched");
     return 1;
 }
+
+// THE REFUSAL, FOR THE PLAYER AND FOR THE DUMP.
+//
+// A refusal that only reaches stderr is a refusal a player never learns about:
+// the game boots fresh, their save state is silently gone, and the log they
+// would have to open to find out why is one they do not know exists. So the
+// reason is offered in two lengths and tests/walk_window.cpp shows the short
+// one on screen next to where the "state loaded" note would have gone.
+//
+// Both return an empty string when the last read had nothing to refuse, so a
+// caller can use non-empty as the test. lk7_persist_read clears them on entry,
+// which matters because the reproducer harnesses call it more than once.
+const char *lk7_persist_refusal(void)        { return g_refuse_short; }
+const char *lk7_persist_refusal_detail(void) { return g_refuse_long; }
 
 }
