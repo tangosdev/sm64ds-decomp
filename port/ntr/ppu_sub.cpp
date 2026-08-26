@@ -1503,6 +1503,17 @@ uint8_t g_edge_w[2][256];
    every gap-on capture in the port's picture set was taken under. The weight
    above is the new arm and it never touches a column this one claims. */
 uint8_t g_edge_obj[2][256];
+/* AND WHETHER THE WIDTH GUARD REFUSED THIS EDGE THIS FRAME. The guard zeroes
+   the weights, which stands down the blend and the carry -- but the wash's
+   fully-masked-span fallback never consults a weight, so it kept firing on a
+   refused edge and kept drawing that span from the SETTLED background. On a
+   wipe, which is what a refusal usually is, whole sample spans are covered by
+   OAM end to end, so the fallback fired across the band and the band TRAILED
+   THE WIPE: exactly the regression the guard exists to prevent, arriving down
+   the one path the guard did not reach. Measured on scene 362 f240 -- 21220 of
+   32768 band pixels away from the pre-lane picture, max channel delta 67, all
+   32 rows. This flag is what the fallback reads. */
+uint8_t g_edge_refused[2];
 uint32_t g_edge_live[2][256];   /* this frame's live edge colour */
 uint32_t g_edge_bg_px[2][256];  /* this frame's settled background colour */
 
@@ -1671,18 +1682,79 @@ void band_edge_update(const uint32_t *dst, int dst_w, const StackLayout &lay)
      * THIS INSTRUMENT CANNOT TELL THE TWO APART and neither can this comment;
      * it is written down unresolved rather than assumed away.
      *
-     * WHAT IT COSTS IF ONE OF THEM IS A REAL CROSSING, which is why this is not
-     * a blocker: a refused frame draws the band exactly as the port drew it
-     * before this lane -- the wash on the live row, no ghost. The failure mode
-     * is "no improvement on that frame", not a new artifact, and it degrades
-     * toward the picture that shipped. A band that occasionally declines to
-     * draw a ghost is a far smaller thing than a band that smears itself over
-     * every scene change. */
-    for (int e = 0; e < 2; ++e)
+     * WHAT A REFUSED FRAME DRAWS, and this sentence is the FOURTH absolute of
+     * this lane's that measurement has had to correct -- read the three in the
+     * blocks above first, because the pattern is the finding. It said: "a
+     * refused frame draws the band exactly as the port drew it before this
+     * lane, so the failure mode is no improvement on that frame, never a new
+     * artifact." A direction claim, reasoned from the guard zeroing the
+     * weights, and never put to a pixel.
+     *
+     * PUT TO PIXELS IT WAS FALSE. The re-review compared refused frames
+     * against a PRE-LANE build padded to the same .dsstate base by
+     * notes/port-selftest-bmp-gate.md's own method, so the comparison was
+     * whole-file sha and not a tolerance:
+     *
+     *     scene 383 f130, lower edge refused      band identical, 0 pixels
+     *     scene 362 f240, lower edge refused      21220 of 32768 band pixels
+     *                                             differ, max channel delta
+     *                                             67, across all 32 rows
+     *
+     * ZEROING THE WEIGHTS WAS NOT THE WHOLE OF STANDING DOWN. amb_avg_bg's
+     * fully-masked-span fallback reads bg256 and consults no weight, so on a
+     * refused edge it went on drawing every OAM-covered span from the SETTLED
+     * background -- and a refusal is usually a WIPE, which covers whole sample
+     * spans end to end. So the band drew from a background the wipe had
+     * already left behind and TRAILED IT: precisely the regression this guard
+     * exists to prevent, arriving through the one path the guard did not
+     * cover. 383's refusal is a fade that never fully masks a span, which is
+     * why it held at zero and hid the bug.
+     *
+     * FIXED BY STANDING THE FALLBACK DOWN TOO -- g_edge_refused, one flag, read
+     * at the wash's call site. A refused edge now passes no settled row, so
+     * amb_avg_bg's first line is the plain average of the live row: textually
+     * the pre-lane function.
+     *
+     * AND THE CLAIM THAT REPLACES THE OLD ONE IS ABOUT THE RAW SAMPLE, NOT THE
+     * DRAWN BAND, because a whole-file compare of a windowed capture cannot
+     * carry it and I nearly wrote that it could. THE WASH'S DRAWN ENDPOINT IS
+     * AN IIR FOLLOWER (amb_follow, rest and glow): its value at frame N depends
+     * on every frame before it, so once the two arms have legitimately differed
+     * ANYWHERE -- a crossing, an un-refused edge doing its job -- the drawn
+     * band goes on differing until the follower reconverges, including on
+     * frames where the refused edge contributes nothing whatever. Measured on
+     * 362: byte-identical at f70, which is before the arms first diverge, and
+     * differing from f78 on, which is the frame they first do.
+     *
+     * SO THE HISTORY-FREE STATEMENT, and it is swept rather than spot-checked:
+     * on EVERY frame where the guard refuses an edge, that edge's raw sample is
+     * byte-identical to the pre-lane arm's. All seven hosted scenes that refuse
+     * in a steady window -- 362, 363, 381, 382, 383, 387, 390 -- 900 refused
+     * edge-frames between them, zero exceptions
+     * (port/tools/bandrefusedleak.py). Nothing of this lane's reaches a refused
+     * edge any more.
+     *
+     * AND IT CORRECTS THE REVIEW'S OWN ROUND-ONE WORDING as well as mine. That
+     * pass called the fallback's exposure "latent" when it noted the switch did
+     * not cover it; it was not latent, it was 21220 pixels on a shipped scene,
+     * and neither side had looked. Both sides moved on this one.
+     *
+     * A band that occasionally declines to draw a ghost is still a far smaller
+     * thing than a band that smears itself over every scene change. */
+    for (int e = 0; e < 2; ++e) {
+        g_edge_refused[e] = 0;
         if (ncross[e] > 256 / 3) {
             std::memset(g_edge_w[e], 0, sizeof g_edge_w[e]);
+            /* AND THE FALLBACK STANDS DOWN WITH THEM. Zeroing the weights is
+               not the whole of "this edge contributes nothing this frame":
+               amb_avg_bg's fully-masked-span branch reads bg256 and never
+               reads a weight, so it went on drawing a refused edge's spans
+               from the settled background. See g_edge_refused above for the
+               21220 pixels that cost on scene 362. */
+            g_edge_refused[e] = 1;
             ncross[e] = -ncross[e];   /* the trace reports it as a refusal */
         }
+    }
 
     ++g_band_frame;
     g_band_carried = 0;
@@ -1712,10 +1784,15 @@ void band_fill_ambient(uint32_t *dst, int dst_w, const StackLayout &lay)
         int s0, s1, x0, x1;
         amb_sample_span(lay.w, c, s0, s1);
         amb_col_span(lay.w, c, x0, x1);
+        /* A REFUSED EDGE PASSES NO SETTLED ROW AT ALL, which is the whole of
+           standing the fallback down: with bg256 null amb_avg_bg's first line
+           is the plain average of the live row, the picture this file composed
+           before this lane. The weights are already zero on a refused edge, so
+           nothing else in there changes. */
         raw_t[c] = amb_avg_bg(top_edge, s0, s1, g_edge_obj[0], g_edge_w[0],
-                              g_edge_bg_px[0], lay.w);
+                              g_edge_refused[0] ? 0 : g_edge_bg_px[0], lay.w);
         raw_b[c] = amb_avg_bg(bot_edge, s0, s1, g_edge_obj[1], g_edge_w[1],
-                              g_edge_bg_px[1], lay.w);
+                              g_edge_refused[1] ? 0 : g_edge_bg_px[1], lay.w);
         centre[c] = (x0 + x1) / 2;
     }
 
@@ -4309,6 +4386,12 @@ void ppu_band_ambient_reset(void)
     g_edge.have = 0;
     std::memset(g_edge_w, 0, sizeof g_edge_w);
     std::memset(g_edge_obj, 0, sizeof g_edge_obj);
+    /* and the refusal flags, which are per FRAME rather than per scene and are
+       rewritten unconditionally at the head of every band_edge_update. Cleared
+       here anyway, for the reason the two above are: nothing this file caches
+       may cross a scene boundary, and a reader should not have to prove which
+       of these die on their own. */
+    std::memset(g_edge_refused, 0, sizeof g_edge_refused);
 }
 
 void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
