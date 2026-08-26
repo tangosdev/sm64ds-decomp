@@ -13,26 +13,7 @@ extern "C" void *data_ov004_020beb68;
 
 struct dScMgBase_c : dScene_c {
 
-    /* The nested callback class the ROM's type graph records for this scene,
-       deriving from dGraph_c::callback_c (include/dGraph_c.h). It is registered
-       with the owning scene as its context; mScene at +0x4 is that back-pointer,
-       read by all four slots. Declaring the class adds no storage to
-       dScMgBase_c -- the object itself is not a member of this class.
-
-       The slots are declared virtual, matching dGraph_c::callback_c's own
-       declarations (include/dGraph_c.h): the base supplies the vptr at +0x0,
-       so the derived fields fall where the ROM puts them, and strict object
-       isolation discards the vtable/RTTI passengers the function range does
-       not own. */
-    class graphCallback_c : public dGraph_c::callback_c {
-    public:
-        dScMgBase_c *mScene;                             /* 0x04 */
-
-        virtual int GraphCallback0();                            /* slot 0 */
-        virtual int GraphCallback1();                            /* slot 1 */
-        virtual int GraphCallback2();                            /* slot 2 */
-        virtual int GraphCallback3();                            /* slot 3 */
-    };
+    class graphCallback_c;
     /* Declared first (key function), and deliberately NOT defined inline:
        descendants call _ZN11dScMgBase_cD2Ev as a real `bl`, and an inline
        body makes every one of them miss. Defined in
@@ -108,6 +89,27 @@ struct dScMgBase_c : dScene_c {
     s16 mMenuCursor;        /* 0x4646 -- highlighted item, -1 for none */
     u8  pad_4648[0x14];
     u8  unk_465c;           /* 0x465c */
+};
+
+/* The nested callback class the ROM's type graph records for this scene,
+   deriving from dGraph_c::callback_c (include/dGraph_c.h). It is registered
+   with the owning scene as its context; mScene at +0x4 is that back-pointer,
+   read by all four slots. Declaring the class adds no storage to
+   dScMgBase_c -- the object itself is not a member of this class.
+
+   The slots are declared virtual, matching dGraph_c::callback_c's own
+   declarations (include/dGraph_c.h): the base supplies the vptr at +0x0,
+   so the derived fields fall where the ROM puts them, and strict object
+   isolation discards the vtable/RTTI passengers the function range does
+   not own. */
+class dScMgBase_c::graphCallback_c : public dGraph_c::callback_c {
+public:
+    dScMgBase_c *mScene;                             /* 0x04 */
+
+    virtual int GraphCallback0();                            /* slot 0 */
+    virtual int GraphCallback1();                            /* slot 1 */
+    virtual int GraphCallback2();                            /* slot 2 */
+    virtual int GraphCallback3();                            /* slot 3 */
 };
 
 /* A floor, not a claim the object ends here: 0x465c is the last field any
