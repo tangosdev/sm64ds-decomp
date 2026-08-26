@@ -3108,6 +3108,10 @@ foreach(line IN LISTS SLICE_OV007_LINES)
     #
     # THE FLAG IS NOT BOOKKEEPING, same as the three blocks above: the branch
     # below reads it, so the cut and the host copy's membership are one fact.
+    if(line MATCHES "^src/func_ov007_020b4b5c\\.c$")
+        set(TIDEP_B4B5C_DISPLACED TRUE)
+        continue()
+    endif()
     # run link60 lane AE1: THE NEXT BLOCKER'S CALLER, and this flag is placed
     # where it is on purpose.
     #
@@ -3142,6 +3146,34 @@ endforeach()
 # the two callers that pass a REAL index rather than riding slot 0 through r0.
 # A face that ignores its argument would have served all four players slot 0's
 # record and the four-slot path would have looked like it worked.
+# THE CUT IS HERE AND NOT IN THE SLICE FILE, which is this block's own rule
+# above: the slice line is the only thing that puts the matched TU in the
+# build, so cutting it in the file and adding the host copy here would be two
+# facts that can drift into an LNK2005 or an undefined symbol.
+foreach(displaced "src/func_0203dabc.c" "src/func_0203dae4.c")
+    list(REMOVE_ITEM SLICE_OV007_SOURCES
+         "${CMAKE_CURRENT_SOURCE_DIR}/../${displaced}")
+endforeach()
+list(APPEND SLICE_OV007_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Comms_SlotIndex_0203dabc.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Comms_SlotIndex_0203dae4.cpp")
+if(TIDEP_B4B5C_DISPLACED)
+    list(APPEND SLICE_OV007_SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov007_ImplicitR1_020b4b5c.cpp")
+    message(STATUS "TIDEP: func_ov007_020b4b5c is DISPLACED to "
+                   "unmatched/Ov007_ImplicitR1_020b4b5c.cpp, which forwards its "
+                   "own second argument, so the title's cell sizes are computed "
+                   "against the REAL camera")
+else()
+    # The opposite state, said separately, because "the slice stopped listing
+    # it" and "the displacement is off" read the same in a build log and are
+    # not the same tree. This one is an undefined symbol at the link, not a
+    # silent wrong picture: the host copy is the only definition left.
+    message(STATUS "TIDEP: slice_ov007.txt no longer lists "
+                   "src/func_ov007_020b4b5c.c, so the implicit-r1 host copy is "
+                   "NOT added and the link will fail on it. Restore the line: "
+                   "this block does the cutting, not the slice file")
+endif()
 if(AE1_ADD3C_DISPLACED)
     list(APPEND SLICE_OV007_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov007_ImplicitR0_020add3c.cpp")
