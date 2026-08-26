@@ -780,7 +780,7 @@ src/_ZN13daObjDorifu_cD1Ev.cpp:
     complete
     .text start:0x020b4af8 end:0x020b4b6c
 
-src/func_ov002_020b4b6c.c:
+src/_ZN13daObjDorifu_c16CleanupResourcesEP20daObjDorifuResources.cpp:
     complete
     .text start:0x020b4b6c end:0x020b4bc4
 
@@ -792,7 +792,7 @@ src/_ZN13daObjDorifu_c8BehaviorEv.cpp:
     complete
     .text start:0x020b4bfc end:0x020b4d58
 
-src/func_ov002_020b4d58.c:
+src/_ZN13daObjDorifu_c13InitResourcesEP20daObjDorifuResources.cpp:
     complete
     .text start:0x020b4d58 end:0x020b4ed8
 
