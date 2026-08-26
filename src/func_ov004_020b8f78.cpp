@@ -15,7 +15,21 @@ u8 DecIfAbove0_Byte(u8 *p);
 void func_ov004_020b91fc(char *c);
 }
 
-extern "C" u8 func_ov004_020b8f78(char *c)
+/* THE RETURN TYPE IS int AND IT IS LOAD-BEARING ON THE HOST, run mg14 lane
+ * RESULTS. The tail is `return *(u8 *)(c + 0x124);` and mwccarm compiles that
+ * to `ldrb r0, [r4, #0x124]` whichever type this says, so the ROM bytes are
+ * identical either way -- verified MATCH at 2004/b56 and the 1.2 trio with
+ * both spellings. MSVC is not: with a u8 return it emits `mov al, [esi+124h]`
+ * and leaves the top 24 bits of EAX holding whatever the switch above left
+ * there (0xFFFFFF on the state-0 path, from the two `sub eax,1` compares), and
+ * the ONE caller -- func_ov004_020aeb24, the results panel's tick -- declares
+ * this int and tests the full register. So the minigame results panel took its
+ * early return on every frame, the three ApproachLinear2 slides never ran, and
+ * the play-again buttons sat at their off-screen seeds forever.
+ *
+ * That is the whole defect behind "the play-again row never appears". Do not
+ * narrow this back to u8 to match the field it returns. */
+extern "C" int func_ov004_020b8f78(char *c)
 {
     u8 st = *(u8 *)(c + 0x124);
     switch (st) {
