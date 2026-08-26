@@ -1092,7 +1092,24 @@ L2_UNMATCHED(func_ov007_020ba05c)
 L2_UNMATCHED(func_ov007_020c19cc)
 L2_UNMATCHED(func_ov007_020c20b8)
 L2_UNMATCHED(func_ov007_020c368c)
-L2_UNMATCHED(func_ov007_020c4684)
+/* func_ov007_020c4684 WAS HERE AND IT LEFT THE SAME WAY 0x020c9688 DID, on a
+   host transcription rather than a decomp. It is still unmatched on main, so it
+   is still one of section 3a's fifteen; what changed is that this address now
+   has a body in the port and no longer needs a trap.
+
+   THE TRAP WAS NOT HARMLESS AND THE COUNTER SAID SO. A 300-frame scene-1 run
+   entered it SIXTEEN THOUSAND TWO HUNDRED times -- 54 a frame -- and returned 0
+   every time. Its literal pool is twelve geometry command ports and nothing
+   else (COLOR, POLYGON_ATTR, MTX_PUSH, MTX_TRANS, MTX_SCALE, BEGIN_VTXS,
+   TEXCOORD, VTX_16, VTX_YZ, VTX_XZ, END_VTXS, MTX_POP): it is the routine the
+   title screen draws THROUGH, and refusing it is why the owner's title screen
+   has a background, its sparkles and its TOUCH TO START row on it and nothing
+   else. A trap is the right answer while nobody has read the ROM at an address.
+   It stops being the right answer once somebody has.
+
+   port/unmatched/Ov007_CellQuad_020c4684.cpp carries the derivation, the four
+   resolved relocations and the alignment control. Its CMake block is guarded on
+   src/ not having the match, so a real decomp retires it automatically. */
 L2_UNMATCHED(func_ov007_020c6e68)
 /* func_ov007_020c9688 WAS HERE AND IT IS THE ONE THAT CAME OUT WITHOUT A
    DECOMP. It is still unmatched on main, so it is still one of section 3a's
