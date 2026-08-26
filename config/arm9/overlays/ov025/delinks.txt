@@ -120,7 +120,7 @@ src/_ZN11PyramidLiftD1Ev.cpp:
     complete
     .text start:0x021120e4 end:0x02112148
 
-src/_ZN11PyramidLiftD0Ev.c:
+src/_ZN11PyramidLiftD0Ev.cpp:
     complete
     .text start:0x02112148 end:0x021121c0
 
