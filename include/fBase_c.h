@@ -43,15 +43,6 @@
 extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
 extern "C" void *data_020a0eac;
 
-/* 0x14 bytes: four words plus the owner back-pointer the constructor writes. */
-struct ActorBase_SceneNode {
-    s32 unk_000;
-    s32 unk_004;
-    s32 unk_008;
-    s32 unk_00c;
-    void *owner;        /* 0x10 -- the containing fBase_c */
-};
-
 /* 0x10 bytes. Two per fBase_c; the destructor tears them down through
    0x020440e8 in reverse order. */
 struct ActorBase_ProcessingListNode {
@@ -59,6 +50,18 @@ struct ActorBase_ProcessingListNode {
 };
 
 struct fBase_c {
+    /* Intrusive scene-graph node owned by every actor. */
+    struct SceneNode {
+        s32 unk_000;
+        s32 unk_004;
+        s32 unk_008;
+        s32 unk_00c;
+        fBase_c *owner;                         /* 0x10 */
+
+        SceneNode();
+        void Reset();
+    };
+
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
     u32 uniqueID;                             /* 0x04 -- post-incremented global */
     u32 param1;                               /* 0x08 */
@@ -72,11 +75,13 @@ struct fBase_c {
        8 are the effective versions, which the constructor seeds by OR-ing the
        parent's 1|2 and 4|8 down. BeforeBehavior gates on 2, BeforeRender on 8. */
     u8  pauseFlags;                           /* 0x13 */
-    ActorBase_SceneNode sceneNode;            /* 0x14 */
+    SceneNode sceneNode;                      /* 0x14 */
     ActorBase_ProcessingListNode behavNode;   /* 0x28 */
     ActorBase_ProcessingListNode renderNode;  /* 0x38 */
     void *unk_048;                            /* 0x48 */
     void *heap;                               /* 0x4c -- Heap*, owned */
+
+    fBase_c();
 
     /* --- vtable, in _ZTV7fBase_c order. Do not reorder. --- */
     virtual s32  InitResources();                      /* slot  0 */
