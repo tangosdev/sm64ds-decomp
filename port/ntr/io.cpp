@@ -607,9 +607,26 @@ void io_write(uint32_t addr, uint64_t value, unsigned width) {
     // the HIGH half LAST -- so a trigger on the base address alone runs the
     // unit before the operand has landed and leaves SQRT_RESULT stale, which
     // is exactly GBATEK's model inverted (the unit restarts on any write to
-    // SQRTCNT or either SQRT_PARAM half). The widening also silently fixed a
-    // SECOND split-half SQRT_PARAM writer already in the build:
-    // func_02053274 (slice_gate10), the same high-half-last store order.
+    // SQRTCNT or either SQRT_PARAM half).
+    //
+    // CORRECTED, run mg15 lane SQRT. This block used to claim the widening
+    // "silently fixed a SECOND split-half SQRT_PARAM writer already in the
+    // build: func_02053274 (slice_gate10)". It did not and it could not.
+    // Widening this dispatch only helps a store that REACHES io_write, and
+    // func_02053274 was built PLAIN out of slice_gate10, so its stores latched
+    // in the mapped I/O window and never entered this function at all. It stayed
+    // a 3D distance function that returned the PREVIOUS routed sqrt's result
+    // for as long as that sentence stood here -- which is most of why nobody
+    // looked at it again. What the widening actually fixed is what the
+    // paragraph above says and nothing more: the ROM's own routed drivers,
+    // func_02053008 and func_020531a4, whose high-half-last store order left
+    // SQRT_RESULT computed from a stale operand under a base-address-only
+    // trigger. What fixed func_02053274 is routing it through hostgen so its
+    // stores arrive here in the first place (CMakeLists SQ_DIST_SYMS, and
+    // SM64DS_SQRT_SELFTEST=1 for the two-known-roots demonstration).
+    // The general lesson, and it is the one worth carrying: a trigger set in
+    // this file can only ever be as wide as the set of TUs that are ROUTED.
+    // Widening it says nothing about a TU that is built plain.
     // The divide side is NOT widened the same way on purpose -- and not
     // because divide clients write single 64-bit stores at base (they do
     // not: cstd::mod, cstd::div and two others store 32-bit at the base
