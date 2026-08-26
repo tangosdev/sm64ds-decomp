@@ -108,8 +108,13 @@ extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vect
 /* resolved: VT = _ZTV9ArrowLift */
 extern "C" int *ArrowLift_Spawn(void)
 {
-    int *p = (int *)_ZN7fBase_cnwEj(808);
-    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV9ArrowLift; }
+    int *p = (int *)_ZN7fBase_cnwEj(sizeof(ArrowLift));
+    if (p) {
+        _ZN10dBgActor_cC2Ev(p);
+        /* This intact shadow object defines the ABI vtable storage start, while
+         * the ROM's `_ZTV` symbol names the slot-array address point. */
+        p[0] = (int)(_ZTV9ArrowLift + 2);
+    }
     return p;
 }
 
@@ -269,45 +274,15 @@ int ArrowLift::Render()
 /* recovered: named members + shared header, real C++ method */
 int ArrowLift::CleanupResources()
 {
-    if (((dBgW *)((char *)&mMovingMeshCollider))->IsEnabled()) {
-        ((dBgW *)((char *)&mMovingMeshCollider))->Disable();
+    if (((dBgW *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((dBgW *)((char *)&mMeshCollider))->Disable();
     }
     ((SharedFilePtr *)&data_ov029_02114250)->Release();
     ((SharedFilePtr *)&data_ov029_02114248)->Release();
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN9ArrowLiftD0Ev, 0x021113c0, size 0x58 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN9ArrowLiftD0Ev
-/* recovered: named members + shared header, vtable identified, declarations from a shared header */
-/* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV9ArrowLift, VT1 = _ZTV10dBgActor_c */
-extern "C" int *_ZN9ArrowLiftD0Ev(int *t)
-{
-    t[0] = (int)_ZTV9ArrowLift;
-    t[0] = (int)_ZTV10dBgActor_c;
-    _ZN10dBgW_KcMbgD1Ev((char *)t + 0x124);
-    _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN8dActor_cD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return t;
-}
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN9ArrowLiftD1Ev, 0x0211137c, size 0x44 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN9ArrowLiftD1Ev
-/* recovered: named members + shared header, vtable identified, declarations from a shared header */
-/* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV9ArrowLift, VT1 = _ZTV10dBgActor_c */
-extern "C" int *_ZN9ArrowLiftD1Ev(int *t)
-{
-    t[0] = (int)_ZTV9ArrowLift;
-    t[0] = (int)_ZTV10dBgActor_c;
-    _ZN10dBgW_KcMbgD1Ev((char *)t + 0x124);
-    _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN8dActor_cD2Ev(t);
-    return t;
-}
+/* ArrowLift's inline class-body destructor is instantiated by the key-function
+ * definition above. mwccarm emits its real D1 and D0 variants into this object;
+ * keeping the old hand-mangled copies here both lied about the source form and
+ * triggered an ELFgen ICE once the header acquired the real virtual class. */

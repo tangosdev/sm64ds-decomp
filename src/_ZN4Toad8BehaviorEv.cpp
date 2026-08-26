@@ -34,8 +34,6 @@
 
 extern "C" {
 extern s8 data_0209f2f8;
-extern void func_ov085_02129570(void *c);
-extern void func_ov085_021295bc(void *c);
 extern s32 Vec3_HorzDist(const void *a, const void *b);
 extern s16 Vec3_HorzAngle(const void *a, const void *b);
 extern s16 Vec3_VertAngle(const void *a, const void *b);
@@ -49,7 +47,7 @@ extern void _ZN9ModelBase12ApplyOpacityEj(void *c, u32 a, int b);
 
 int Toad::Behavior()
 {
-    func_ov085_02129570(this);
+    RunState();
     mModelAnim.UpdateVerts();
 
     char *p = (char *)_ZN8dActor_c13ClosestPlayerEv(this);
@@ -113,14 +111,14 @@ int Toad::Behavior()
 
     mModelAnim.Advance();
 
-    func_ov085_021295bc(this);
+    UpdateModelPose();
 
     mModelAnim.speed = 0x1000;
 
     _ZN9ModelBase12ApplyOpacityEj(&mModelAnim, (u32)(u8)(mOpacity >> 3), 1);
 
-    ((dCc_c *)&mdCcAc_c)->Clear();
-    ((dCc_c *)&mdCcAc_c)->Update();
+    ((dCc_c *)&mCollider)->Clear();
+    ((dCc_c *)&mCollider)->Update();
 
     return 1;
 }

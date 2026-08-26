@@ -1,5 +1,5 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Tree: 5 matched functions, 4 evidenced fields.
+/* Reconciled from matched-function, vtable, RTTI, and constructor evidence.
+ * class Tree: 7 matched methods plus its matched spawn function.
  * Offsets/widths are observed, not guessed. Field NAMES are placeholders -
  * renaming cannot change codegen.
  *
@@ -11,24 +11,21 @@
  * (InitResources/CleanupResources/Behavior/Render/OnPendingDestroy) plus
  * the destructor pair at 16/17.
  *
- * InitResources/Behavior/D0/D1 stay hand-written extern "C" free functions
- * with the class's own mangled names (matching daObjPathLift_c/#1719's
- * precedent) -- their bodies never reference a named Tree/dActor_c member,
- * only raw self+offset arithmetic and a heap-allocated auxiliary
- * dCcPos_c-list unrelated to this class's own storage, so there is no
- * conversion benefit. The vtable slots for them are still correct: the
- * mangled symbol name is identical whether the definition is a real
- * Tree::Method() or an extern "C" free function of the same name.
+ * All seven functions are compiler-spelled Tree methods. InitResources keeps
+ * one low-level extern-C declaration for dCcPos_c::Init: its ROM name carries
+ * by-value Fix12 parameters whose honest C++ declaration changes the call ABI.
+ * That exception is about the callee signature, not Tree method ownership.
  *
- * Per the Itanium ABI the key function is the class's FIRST DECLARED
- * virtual (InitResources, slot 0), not just any virtual defined
- * out-of-line in this TU -- confirmed empirically: the compiled object has
- * zero .data sections and imports _ZTV4Tree as UNDEFINED, even though
- * CleanupResources/Render/OnPendingDestroy are real Tree:: methods here.
- * Because InitResources's real body never took class-member form, this TU
- * does NOT become the key-function TU and emits no vtable/RTTI of its own,
- * nor references any inherited base RTTI -- unlike every prior pilot in
- * this series.
+ * The destructor is declared first and is Tree's key function. A destructor
+ * source therefore emits D0/D1/D2 plus a complete 0x84-byte `_ZTV4Tree` object
+ * and RTTI. The per-function build keeps only the licensed destructor variant
+ * and rebinds its vptr store to the ROM-owned table. Raw metadata inspection is
+ * still required: the compiler calls this class `Tree` (`_ZTI4Tree`), while the
+ * cartridge RTTI string is `daTree_c` (`_ZTI8daTree_c`). The 31-slot shape and
+ * every slot destination conform, but the differently named RTTI means that
+ * compiler-emitted data must remain isolated rather than replacing the ROM
+ * bytes. This is also why the shadow TU is evidence, not a production-TU
+ * promotion candidate yet.
  */
 #ifndef TREE_H
 #define TREE_H
@@ -46,9 +43,9 @@ struct Tree : dActor_c {
     Model mModel[5];                  /* 0x0d4 */
 
     virtual ~Tree();
-    virtual s32 InitResources();       /* slot  0 -- stays extern "C", see above */
+    virtual s32 InitResources();       /* slot  0 */
     virtual s32 CleanupResources();    /* slot  3 */
-    virtual s32 Behavior();            /* slot  6 -- stays extern "C", see above */
+    virtual s32 Behavior();            /* slot  6 */
     virtual s32 Render();              /* slot  9 */
     virtual void OnPendingDestroy();   /* slot 12 -- empty body in the ROM */
 };

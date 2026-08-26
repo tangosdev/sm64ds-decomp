@@ -7,10 +7,8 @@
  * declaration order, then dEnemyBase_c::~dEnemyBase_c. Every one of those is a consequence of
  * `struct dCapEnemy_c : dEnemyBase_c` and the two members that declaration types.
  *
- * The CapIcon call is written out for the same reason as in the constructor,
- * and sits in the body for the mirror-image reason: the body runs BEFORE any
- * member destructor, and mCapIcon is the last member, so it is destroyed first
- * either way.
+ * dCapIcon_c's ROM-proven destructor is now an actual member destructor, so
+ * the empty body emits it first and Model second before the base teardown.
  *
  * This is the destructor in vtable slot 16. Slot 17 is _ZN11dCapEnemy_cD0Ev, which
  * stays as it is -- see the note in include/dEnemyBase_c.h about why the inline
@@ -18,9 +16,6 @@
  */
 #include "dCapEnemy_c.h"
 
-extern "C" void func_ov001_020ab3a0(CapIcon *icon);
-
 dCapEnemy_c::~dCapEnemy_c()
 {
-    func_ov001_020ab3a0(&mCapIcon);
 }

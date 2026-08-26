@@ -21,14 +21,11 @@
  * that table and by the base-then-derived vptr store pairs in the derived
  * classes' constructors (e.g. 0x02074edc).
  *
- * They are declared NON-virtual here on purpose: each default lives in its
- * own single-function TU (delinks 0x02018ea0..0x02018ec0), and a virtual
- * declaration would make the first out-of-line definition the class's key
- * function and emit _ZTVN8dGraph_c10callback_cE from that TU -- a section
- * the delink range does not own (the real vtable's bytes sit at 0x0208ee14
- * in another object's .data). Mangled names are identical either way; the
- * `virtual` keyword moves to the header the day the class is migrated
- * whole, vtable and all.
+ * The declarations are virtual so derived callback types retain all four
+ * inherited slots when they override only one hook. Each default remains in
+ * its independently isolated source file; strict object isolation discards
+ * compiler-emitted vtable/RTTI passengers that the function range does not
+ * own.
  *
  * This class has no virtual destructor and no data members of its own
  * beyond the vptr; derived graphCallback_c objects carry their own fields
@@ -38,10 +35,10 @@ class dGraph_c {
 public:
     class callback_c {
     public:
-        int GraphCallback0(); /* slot 0 -- 0x02018eb8, `mov r0,#1; bx lr` */
-        int GraphCallback1(); /* slot 1 -- 0x02018eb0, same */
-        int GraphCallback2(); /* slot 2 -- 0x02018ea8, same */
-        int GraphCallback3(); /* slot 3 -- 0x02018ea0, same */
+        virtual int GraphCallback0(); /* slot 0 -- 0x02018eb8, `mov r0,#1; bx lr` */
+        virtual int GraphCallback1(); /* slot 1 -- 0x02018eb0, same */
+        virtual int GraphCallback2(); /* slot 2 -- 0x02018ea8, same */
+        virtual int GraphCallback3(); /* slot 3 -- 0x02018ea0, same */
     };
 };
 

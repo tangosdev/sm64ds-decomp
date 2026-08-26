@@ -45,7 +45,10 @@ ov004) are nearly nameless and are also where the map is worth the most:
 
   * mangled names, via `srcpath.class_of` -- which already encodes the two traps
     (take the OUTER component, so `Sound::Player` not `Player`; a bare
-    `_Z<len><name>` is a free function and has no class at all).
+    `_Z<len><name>` is a free function and has no class at all).  `_Spawn` names
+    are tree coinages, not mangled class evidence: a unique local vtable relocation
+    identifies the factory's class, and that vtable's own slots recover the spelling
+    used by the class's mangled methods.
   * vtable slots, via `build/rtti_vtables.json` -- every function a class's
     vtable points at belongs to that class. RTTI carries EAD's real class names,
     so this labels functions in overlays where no symbol was ever named.
@@ -205,13 +208,74 @@ def vtable_labels():
     return out
 
 
-def label(name, addr, vt_for_module, blind):
+def vtable_factory_classes():
+    """{module: {vtable_addr: method class}} for unambiguous RTTI vtables.
+
+    The record key is the cartridge's RTTI name, which can differ from this tree's
+    already-mangled method names.  `own` slots are the non-inherited entries and
+    therefore pair the vtable with the exact class component those methods use.
+    """
+    if not VTABLES.is_file():
+        return {}
+    data = json.loads(VTABLES.read_text(errors="ignore"))
+    candidates = collections.defaultdict(lambda: collections.defaultdict(set))
+    for _cls, rec in data.items():
+        if not isinstance(rec, dict):
+            continue
+        mod = rec.get("vtable_module")
+        addr = rec.get("vtable")
+        method_classes = set()
+        for row in rec.get("own", []):
+            method_class = SP.class_of(row.get("symbol") or "")
+            if method_class:
+                method_classes.add(method_class)
+        if mod and addr and len(method_classes) == 1:
+            candidates[mod][int(addr, 0)].update(method_classes)
+    return {mod: {addr: next(iter(classes))
+                  for addr, classes in by_addr.items() if len(classes) == 1}
+            for mod, by_addr in candidates.items()}
+
+
+def factory_vtable_labels(fns, rl, vtables_for_module):
+    """{factory_addr: method class} when one local vtable settles an alias.
+
+    `<Class>_Spawn` is a source-tree naming convention, not a mangled symbol.  It
+    often agrees with the C++ class, but actor variants and later RTTI renames can
+    make it lie (`BigBoo_Spawn` and `Boo_Spawn` both construct `daTrs_c`).  A
+    relocation from the factory body to exactly one vtable in this module is the
+    cartridge's own type evidence, and the vtable's own slots supply the matching
+    mangled-method class.  Multiple local vtables are deliberately left unresolved
+    rather than guessing which constructed object is the return value.
+    """
+    local_methods = set()
+    for _addr, name, _size in fns:
+        method_class = None if name.endswith("_Spawn") else SP.class_of(name)
+        if method_class:
+            local_methods.add(method_class)
+    out = {}
+    for addr, name, size in fns:
+        if not name.endswith("_Spawn"):
+            continue
+        targets = {vtables_for_module[to]
+                   for frm, _kind, to, _module in rl
+                   if addr <= frm < addr + max(size, 4)
+                   and to in vtables_for_module
+                   and vtables_for_module[to] in local_methods}
+        if len(targets) == 1:
+            out[addr] = next(iter(targets))
+    return out
+
+
+def label(name, addr, vt_for_module, factory_for_module, blind):
     """The class a function belongs to, or None.
 
     `blind` drops the mangled-name signal, leaving only RTTI. That is the
     negative control: it simulates an unnamed overlay on one whose answer we
     already know."""
     if not blind:
+        cls = factory_for_module.get(addr)
+        if cls:
+            return cls, "symbol"
         cls = SP.class_of(name)
         if cls:
             return cls, "symbol"
@@ -242,11 +306,11 @@ class Union:
             self.parent[rb] = ra
 
 
-def _spans(fns, vt_for_module, blind, source):
+def _spans(fns, vt_for_module, factory_for_module, blind, source):
     """{class: (lo, hi)} over functions whose label came from `source`."""
     spans = {}
     for addr, name, size in fns:
-        cls, got = label(name, addr, vt_for_module, blind)
+        cls, got = label(name, addr, vt_for_module, factory_for_module, blind)
         if not cls or got != source:
             continue
         lo, hi = spans.get(cls, (addr, addr + max(size, 4)))
@@ -324,7 +388,7 @@ def _merge_overlapping(spans):
     return sorted(out, key=lambda t: t[1])
 
 
-def cluster(fns, vt_for_module, blind):
+def cluster(fns, vt_for_module, factory_for_module, blind):
     """Group the module's classes into TU-clusters, then cut `.text` between them.
 
     Symbol labels first, RTTI labels second, and RTTI is NOT allowed to merge two
@@ -350,8 +414,9 @@ def cluster(fns, vt_for_module, blind):
     RTTI signal was added for, and the negative control measures.
 
     Returns (clusters, unlabelled)."""
-    sym = _merge_overlapping(_spans(fns, vt_for_module, blind, "symbol"))
-    rtti = _spans(fns, vt_for_module, blind, "vtable")
+    sym = _merge_overlapping(
+        _spans(fns, vt_for_module, factory_for_module, blind, "symbol"))
+    rtti = _spans(fns, vt_for_module, factory_for_module, blind, "vtable")
 
     # An RTTI span may extend or create a cluster, never bridge two symbol ones.
     free = {}
@@ -477,13 +542,15 @@ def boundary_confidence(prev, nxt):
 
 # ---------------------------------------------------------------- per module
 
-def analyse(mod, vt, blind=False):
+def analyse(mod, vt, vt_addr, blind=False):
     secs = sections(mod)
     fns = functions(mod, secs)
     if not fns:
         return None                     # data-only overlay: no TU problem exists
-    clusters, unlabelled = cluster(fns, vt.get(mod["name"], {}), blind)
-    tus = absorb_unlabelled(clusters, unlabelled, call_graph(relocs(mod), secs))
+    rl = relocs(mod)
+    factory = factory_vtable_labels(fns, rl, vt_addr.get(mod["name"], {}))
+    clusters, unlabelled = cluster(fns, vt.get(mod["name"], {}), factory, blind)
+    tus = absorb_unlabelled(clusters, unlabelled, call_graph(rl, secs))
     si, n_ctor = sinits(mod, secs)
 
     labelled = sum(1 for c in tus if c["classes"])
@@ -547,6 +614,16 @@ def gates(results):
         out.append(("V1b ov062 KoopaSmall_Spawn is in the Koopa TU", ok,
                     "" if ok else "KoopaSmall was split out"))
 
+    r = by.get("ov063")
+    if r:
+        boo = next((u for u in r["units"] if "daTrs_c" in u["classes"]), None)
+        factories = {"BigBoo_Spawn", "Boo_Spawn"}
+        ok = (bool(boo) and factories.issubset(boo["functions"])
+              and not any({"BigBoo", "Boo"} & set(u["classes"])
+                          for u in r["units"]))
+        out.append(("V1c ov063 Boo variants use the daTrs_c factory TU", ok,
+                    "" if ok else "coined factory prefix split from daTrs_c"))
+
     bad = [r["module"] for r in results if r["sinits"] != r["ctor_entries"]]
     out.append(("V2a sinit count == .ctor entry count", not bad, str(bad[:5])))
 
@@ -566,7 +643,7 @@ def gates(results):
     return out
 
 
-def blind_control(vt):
+def blind_control(vt, vt_addr):
     """The negative control: re-run the known overlays with names stripped.
 
     This is the number that matters. Every gate above is scored on overlays whose
@@ -581,8 +658,8 @@ def blind_control(vt):
         m = mods.get(name)
         if not m:
             continue
-        sighted = analyse(m, vt, blind=False)
-        blind = analyse(m, vt, blind=True)
+        sighted = analyse(m, vt, vt_addr, blind=False)
+        blind = analyse(m, vt, vt_addr, blind=True)
         rows.append((name, want, sighted["tus"] if sighted else None,
                      blind["tus"] if blind else None,
                      blind["tus_with_class"] if blind else None))
@@ -610,13 +687,14 @@ def main():
     SWALLOWER_K = a.split_swallowers
 
     vt = vtable_labels()
+    vt_addr = vtable_factory_classes()
     mods = MOD.modules()
     if a.module:
         mods = [m for m in mods if m["name"] == a.module]
         if not mods:
             sys.exit(f"module {a.module} not found")
 
-    results = [r for r in (analyse(m, vt, blind=a.blind) for m in mods) if r]
+    results = [r for r in (analyse(m, vt, vt_addr, blind=a.blind) for m in mods) if r]
 
     if a.module:
         r = results[0] if results else None
@@ -640,7 +718,7 @@ def main():
             print(f"  [{'PASS' if ok else 'FAIL'}] {name} {detail if not ok else ''}")
         print("\n  negative control (names stripped, RTTI only):")
         print(f"    {'module':8} {'known':>6} {'sighted':>8} {'blind':>6} {'blind-classed':>14}")
-        for row in blind_control(vt):
+        for row in blind_control(vt, vt_addr):
             print("    {:8} {:6} {:8} {:6} {:14}".format(
                 *[("-" if v is None else v) for v in row]))
         return

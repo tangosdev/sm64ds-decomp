@@ -1,11 +1,10 @@
 //cpp
 #include "types.h"
 // @symbol _ZN10dScEntry_c8BehaviorEv
-/* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* dScEntry_c::Behavior() -- vtable slot 6. extern "C" carries the literal
- * mangled name unmangled. Runs the sub-screen fade-out if one is in flight,
- * then the per-frame callback, then every live icon. The local `Self` models
+#include "dScEntry_c.h"
+/* dScEntry_c::Behavior() -- vtable slot 6. Runs the sub-screen fade-out if
+ * one is in flight, then the per-frame callback, then every live icon. The local `Self` models
  * only the fields this function touches -- pmf at 0x5c and the icon_c[9] array
  * at 0x70 -- rather than including the shared header, matching the family
  * convention; see include/dScEntry_c.h. */
@@ -40,8 +39,9 @@ struct Self {
     u8 isFading;
 };
 
-extern "C" int _ZN10dScEntry_c8BehaviorEv(Self *c)
+s32 dScEntry_c::Behavior()
 {
+    Self *c = (Self *)this;
     char *cc = (char *)c;
 
     if (c->isFading != 0) {

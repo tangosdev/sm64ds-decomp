@@ -5,38 +5,53 @@
 #ifndef COFFIN_H
 #define COFFIN_H
 #include "types.h"
-#include "Model.h"
-#include "dBgW_KcMbg.h"
 
-struct Coffin {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x26];
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0xc];
-    s32 mVertAccel;            /* 0x09c */
-    s32 mTerminalVelocity;            /* 0x0a0 */
-    u8  pad_0a4[0x30];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~Coffin calls _ZN10dBgW_KcMbgD1Ev at
-       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  mClsnMat;            /* 0x2ec */
-    /* trailing extent the ROM's `new Coffin` literal proves; see tools/opnew_sizes.py */
-    u8 pad_2f0[0x3c];
 #ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
+
+#include "dBgActor_c.h"
+
+/* ROM identity versus compatibility spelling:
+ *
+ * The vtable used by the readable `_ZN6Coffin...` function names points at
+ * `_ZTI13daObjCasket_c` in the cartridge. Its RTTI record names
+ * `daObjCasket_c` and gives dBgActor_c as its sole base. `Coffin` remains the
+ * repository's readable compatibility spelling; compiler-emitted Coffin RTTI
+ * is a per-function passenger that objisolate must discard.
+ *
+ * The destructor proves 0x000..0x31f is the dBgActor_c base: it destroys the
+ * inherited dBgW_KcMbg at 0x124 and Model at 0x0d4, then chains to dActor_c.
+ * The remaining fields are evidenced by the Coffin TU's state helpers. */
+struct Coffin : dBgActor_c {
+    s32 mState;             /* 0x320 */
+    u16 mStateTimer;        /* 0x324 */
+    s16 mAngleStep;         /* 0x326 */
+    u16 mBehaviorTimer;     /* 0x328 */
+    u16 unk_32a;            /* 0x32a */
+
+    /* Inline is load-bearing: the two destructor sources force mwccarm to
+     * emit the ROM's D1/D0 pair without creating a homeless D2. */
+    virtual ~Coffin() {}
+
+    /* Overrides of fBase_c's slots 0, 3, 6 and 9. */
     int InitResources();
+    int CleanupResources();
+    int Behavior();
     int Render();
-#endif
 };
+
+#else
+
+/* Flat compatibility view for C translation units. */
+struct Coffin {
+    u8  pad_000[0x320];
+    s32 mState;             /* 0x320 */
+    u16 mStateTimer;        /* 0x324 */
+    s16 mAngleStep;         /* 0x326 */
+    u16 mBehaviorTimer;     /* 0x328 */
+    u16 unk_32a;            /* 0x32a */
+};
+
+#endif
 
 typedef char Coffin_size_must_be_0x32c[sizeof(struct Coffin) == 0x32c ? 1 : -1];
 

@@ -46,7 +46,6 @@ extern void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3 *pos, const void *rot, int e, int f);
 extern u8 NumStars(void);
 extern int IsStarCollectedInCurLevel(int s);
-extern void func_ov085_02129524(void *c, int i);
 extern void _ZN9dBgCh_GndC1Ev(void *thiz);
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *thiz);
 extern void _ZN9dBgCh_GndD1Ev(void *thiz);
@@ -64,11 +63,11 @@ int Toad::InitResources()
     _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim,
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_02130480), 1, 0x16);
     _ZN11ShadowModel12InitCylinderEv(&mShadowModel);
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this,
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mCollider, this,
         0x78000, 0x8c000, 0x4200004, 0);
     mOpacity = 0xff;
     mTargetOpacity = 0xff;
-    mMessageID = mParam;
+    mMessageID = param1;
     mStarID = (u8)mAngleX;
     mVariant = (u8)(mAngleX >> 8);
     if (mMessageID == 0xffff)
@@ -112,7 +111,7 @@ int Toad::InitResources()
         }
     after_inc: ;
     }
-    func_ov085_02129524(this, 0);
+    SetState(0);
     objPos.x = mPosX;
     objPos.y = mPosY;
     objPos.z = mPosZ;

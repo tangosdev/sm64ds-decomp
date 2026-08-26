@@ -5,6 +5,7 @@
 #include "decl_ShadowModel.h"
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
+extern void _ZN10dCapIcon_cD1Ev(void *);
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV15daObjMarioCap_c */
 extern void _ZN12dEnemyBase_cD2Ev(void *);
@@ -12,7 +13,7 @@ extern void *data_020a0eac;
 int *_ZN15daObjMarioCap_cD0Ev(int *t)
 {
     t[0] = (int)_ZTV15daObjMarioCap_c;
-    func_ov001_020ab3a0((char *)t + 0x3d0);
+    _ZN10dCapIcon_cD1Ev((char *)t + 0x3d0);
     _ZN11ShadowModelD1Ev((char *)t + 0x364);
     _ZN9ModelAnimD1Ev((char *)t + 0x300);
     _ZN10dBgCh_ActrD1Ev((char *)t + 0x144);

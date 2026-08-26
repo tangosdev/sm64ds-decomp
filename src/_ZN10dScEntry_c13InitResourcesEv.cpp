@@ -1,12 +1,9 @@
 //cpp
 #include "types.h"
 // @symbol _ZN10dScEntry_c13InitResourcesEv
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScEntry_c.h"
-/* dScEntry_c::InitResources() -- vtable slot 0. extern "C" carries the
- * literal mangled name unmangled -- see include/dScEntry_c.h. */
+/* dScEntry_c::InitResources() -- vtable slot 0. */
 extern "C" {
     void Enable3dEngines(void);
     void func_0200f2cc(void);
@@ -43,9 +40,10 @@ extern u8 data_0209f4ae[];
 extern void* data_0209d4a8;
 extern s32 data_0208ee44;
 
-extern "C" int _ZN10dScEntry_c13InitResourcesEv(char* c)
+s32 dScEntry_c::InitResources()
 {
-    struct dScEntry_c *self = (struct dScEntry_c *)(void *)c;
+    char *c = (char *)this;
+    dScEntry_c *self = this;
     Enable3dEngines();
     func_0200f2cc();
 

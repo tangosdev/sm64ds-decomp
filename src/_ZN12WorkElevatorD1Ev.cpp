@@ -1,22 +1,14 @@
 //cpp
 // @symbol _ZN12WorkElevatorD1Ev
-/* recovered: named members + shared header */
+/* recovered: real C++ complete destructor
+ *
+ * The four moving-mesh colliders and four models are destroyed in reverse
+ * declaration order, then dBgActor_c's inline destructor tears down its own
+ * collider/model pair and chains into dActor_c. The compiler owns every vptr
+ * store, array teardown, and destructor-variant call below this empty body.
+ */
 #include "WorkElevator.h"
-extern "C" {
-extern void* _ZTV12WorkElevator;
-extern void* _ZTV10dBgActor_c;
-void __destroy_arr(void*, int, int, void(*)(void*));
-void _ZN10dBgW_KcMbgD1Ev(void*);
-void _ZN5ModelD1Ev(void*);
-void _ZN8dActor_cD2Ev(void*);
-void* _ZN12WorkElevatorD1Ev(struct WorkElevator *self) {
-    *(void**)((char*)self) = &_ZTV12WorkElevator;
-    __destroy_arr(((char*)self)+0x520, 4, 0x1c8, _ZN10dBgW_KcMbgD1Ev);
-    __destroy_arr(((char*)self)+0x320, 4, 0x50, _ZN5ModelD1Ev);
-    *(void**)((char*)self) = &_ZTV10dBgActor_c;
-    _ZN10dBgW_KcMbgD1Ev((char*)&self->mMeshCollider);
-    _ZN5ModelD1Ev((char*)&self->mModel);
-    _ZN8dActor_cD2Ev(((char*)self));
-    return ((char*)self);
-}
+
+WorkElevator::~WorkElevator()
+{
 }

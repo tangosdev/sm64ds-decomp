@@ -2420,7 +2420,7 @@ src/_ZN10dFdDummy_c11AdvanceFadeEv.cpp:
     complete
     .text start:0x0201721c end:0x02017228
 
-src/_ZN10dFdDummy_cD0Ev.c:
+src/_ZN10dFdDummy_cD0Ev.cpp:
     complete
     .text start:0x02017228 end:0x02017254
 
@@ -2456,15 +2456,15 @@ src/engine/fader/_ZN10FaderColor11AdvanceFadeEv.cpp:
     complete
     .text start:0x020174e0 end:0x02017574
 
-src/_ZN10FaderColorD2Ev.c:
+src/_ZN10FaderColorD2Ev.cpp:
     complete
     .text start:0x02017574 end:0x02017598
 
-src/engine/fader/_ZN10FaderColorD0Ev.c:
+src/engine/fader/_ZN10FaderColorD0Ev.cpp:
     complete
     .text start:0x02017598 end:0x020175c4
 
-src/engine/fader/_ZN10FaderColorD1Ev.c:
+src/engine/fader/_ZN10FaderColorD1Ev.cpp:
     complete
     .text start:0x020175c4 end:0x020175e8
 
@@ -2504,26 +2504,26 @@ src/engine/fader/_ZN15FaderBrightness11AdvanceFadeEv.cpp:
     complete
     .text start:0x02017720 end:0x020177c4
 
-src/_ZN15FaderBrightnessD2Ev.c:
+src/_ZN15FaderBrightnessD2Ev.cpp:
     complete
     .text start:0x020177c4 end:0x020177e8
 
-src/engine/fader/_ZN15FaderBrightnessD0Ev.c:
+src/engine/fader/_ZN15FaderBrightnessD0Ev.cpp:
     complete
     .text start:0x020177e8 end:0x02017814
 
-src/engine/fader/_ZN15FaderBrightnessD1Ev.c:
+src/engine/fader/_ZN15FaderBrightnessD1Ev.cpp:
     complete
     .text start:0x02017814 end:0x02017838
 
-src/_ZN5FaderD2Ev.c:
+src/_ZN5FaderD2Ev.cpp:
     complete
     .text start:0x02017838 end:0x02017848
 
-src/engine/fader/_ZN5FaderD0Ev.c:
+src/engine/fader/_ZN5FaderD0Ev.cpp:
     .text start:0x02017848 end:0x0201786c
 
-src/engine/fader/_ZN5FaderD1Ev.c:
+src/engine/fader/_ZN5FaderD1Ev.cpp:
     complete
     .text start:0x0201786c end:0x0201787c
 
@@ -6322,15 +6322,15 @@ src/_ZN13ExpandingHeapD1Ev.c:
     complete
     .text start:0x0203c9ec end:0x0203ca10
 
-src/_ZN4HeapD2Ev.c:
+src/_ZN4HeapD2Ev.cpp:
     complete
     .text start:0x0203ca10 end:0x0203ca20
 
-src/_ZN4HeapD0Ev.c:
+src/_ZN4HeapD0Ev.cpp:
     complete
     .text start:0x0203ca20 end:0x0203ca44
 
-src/_ZN4HeapD1Ev.c:
+src/_ZN4HeapD1Ev.cpp:
     complete
     .text start:0x0203ca44 end:0x0203ca54
 
@@ -6342,7 +6342,7 @@ src/_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator.c:
     complete
     .text start:0x0203ca80 end:0x0203caac
 
-src/_ZN4HeapC1EPvjP4Heap.c:
+src/_ZN4HeapC1EPvjPS_.cpp:
     complete
     .text start:0x0203caac end:0x0203cae8
 

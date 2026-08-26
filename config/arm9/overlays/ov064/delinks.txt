@@ -336,11 +336,11 @@ src/LavaBubble_Spawn.c:
     complete
     .text start:0x02118b10 end:0x02118b50
 
-src/_ZN17BowserPuzzlePieceD1Ev.c:
+src/_ZN17BowserPuzzlePieceD1Ev.cpp:
     complete
     .text start:0x02118b50 end:0x02118b94
 
-src/_ZN17BowserPuzzlePieceD0Ev.c:
+src/_ZN17BowserPuzzlePieceD0Ev.cpp:
     complete
     .text start:0x02118b94 end:0x02118bec
 

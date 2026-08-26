@@ -5,29 +5,20 @@
 #ifndef MRI_H
 #define MRI_H
 #include "types.h"
+#include "dActor_c.h"
 #include "ModelAnim.h"
 #include "ShadowModel.h"
 #include "dCcAcPos_c.h"
 #include "TextureSequence.h"
 
-struct MrI {
-    u8  pad_000[0x8];
-    u32 mParam;            /* 0x008 */
-    u16 mActorID;            /* 0x00c */
-    u8  pad_00e[0x4e];
-    /* dActor_c::mPosX -- dActor_c.h declares s32 here, and it is de-bannered (hand-reconstructed). */
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    u8  pad_064[0x1c];
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    u8  pad_08c[0x2];
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0xc];
-    s32 mVertAccel;            /* 0x09c */
-    s32 mTerminalVelocity;            /* 0x0a0 */
-    u8  pad_0a4[0x30];
+/* The ROM's RTTI name for this class is daEykn_c (_ZTI8daEykn_c), while the
+ * established function-symbol view spells its methods as MrI.  MrI is the
+ * compiler-facing compatibility name; config/arm9/overlays/ov071/symbols.txt
+ * deliberately aliases its vtable view (_ZTV3MrI) to the cartridge's
+ * _ZTV8daEykn_c address. */
+struct MrI : dActor_c {
+    /* dActor_c ends at 0x0d0; the derived payload begins at 0x0d4. */
+    u8 pad_0d0[0x4];
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build
        checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
        stopped short of the object, so the member also takes over unk_130 (+0x5c = speed),
@@ -60,10 +51,12 @@ struct MrI {
     u8  mTimer;            /* 0x216 */
     u8  unk_217;            /* 0x217 */
 #ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
-    int Render();
+    virtual ~MrI();                          /* slots 16/17 */
+    virtual s32 InitResources();             /* slot 0 */
+    virtual s32 CleanupResources();          /* slot 3 */
+    virtual s32 Behavior();                  /* slot 6 */
+    virtual s32 Render();                    /* slot 9 */
+    virtual void OnPendingDestroy();         /* slot 12 -- empty body in the ROM */
 #endif
 };
 

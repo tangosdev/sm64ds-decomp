@@ -11,8 +11,8 @@ extern int data_ov029_02114250[];
 
 int ArrowLift::CleanupResources()
 {
-    if (((dBgW *)((char *)&mMovingMeshCollider))->IsEnabled()) {
-        ((dBgW *)((char *)&mMovingMeshCollider))->Disable();
+    if (((dBgW *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((dBgW *)((char *)&mMeshCollider))->Disable();
     }
     ((SharedFilePtr *)(data_ov029_02114250))->Release();
     ((SharedFilePtr *)(data_ov029_02114248))->Release();

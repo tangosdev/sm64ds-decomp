@@ -58,7 +58,7 @@ int MirrorLuigi::Render()
         dst++;
     }
 
-    p_f0 = ((char*)this) + 0xf0;
+    p_f0 = (char *)&mModelAnim.mat4x3;
     *(Mtx*)p_f0 = *(Mtx*)(r8res + 0x1c);
     *(int*)(p_f0 + 0x24) = -*(int*)(p_f0 + 0x24);
     func_0203c178(&data_020a0e68, -0x1000, 0x1000, 0x1000);
@@ -70,10 +70,14 @@ int MirrorLuigi::Render()
     _ZN5Model6RenderEPK7Vector3((void*)((char*)&mModelAnim), 0);
     *(Mtx*)(*(char**)((char*)&mModel.data.transforms)) =
         *(Mtx*)(*(char**)((char*)&mModelAnim.data.transforms) + 0x2d0);
-    _ZN15TextureSequence6UpdateER15ModelComponents((void*)((char*)&mAnimTexSeq), (void*)((char*)&mModelAnim.data));
-    unk_1b8 = (int)(*(unsigned char*)(player + 0x6fb)) << 12;
-    _ZN15TextureSequence6UpdateER15ModelComponents((void*)((char*)&mModelTexSeq), (void*)((char*)&mModel.data));
-    unk_1cc = (int)(*(unsigned char*)(player + 0x6fb)) << 12;
+    _ZN15TextureSequence6UpdateER15ModelComponents(
+        &mTextureSequences[0], &mModelAnim.data);
+    mTextureSequences[0].currFrame =
+        (int)(*(unsigned char*)(player + 0x6fb)) << 12;
+    _ZN15TextureSequence6UpdateER15ModelComponents(
+        &mTextureSequences[1], &mModel.data);
+    mTextureSequences[1].currFrame =
+        (int)(*(unsigned char*)(player + 0x6fb)) << 12;
     ((Sub*)((char*)&mModel))->m5(0);
     return 1;
 }

@@ -1,19 +1,14 @@
 //cpp
 // @symbol _ZN4Flag16CleanupResourcesEv
-/* Flag::CleanupResources -- vtable slot 3. Releases the two shared files the class
- * holds; it never touches `this`, which is why the legacy C form could declare
- * itself nullary and still reproduce. */
 #include "Flag.h"
+#include "SharedFilePtr.h"
 
-extern "C" {
-void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov009_02113eb8[];
-extern int data_ov009_02113eb0[];
-}
+extern SharedFilePtr data_ov009_02113eb8;
+extern SharedFilePtr data_ov009_02113eb0;
 
 int Flag::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov009_02113eb8);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov009_02113eb0);
+    data_ov009_02113eb8.Release();
+    data_ov009_02113eb0.Release();
     return 1;
 }
