@@ -139,7 +139,7 @@ int _ZN20SwitchActivatedPlank8BehaviorEv(struct SwitchActivatedPlank *self) {
         }
         *p = *p + 1;
         if (_ZN5Event6GetBitEj(self->mEventID) != 0) break;
-        ((dBgW *)((char*)&self->mMovingMeshCollider))->Disable();
+        ((dBgW *)((char*)&self->mMeshCollider))->Disable();
         self->mState = 0;
         self->mVisible = 0;
         break;
@@ -180,8 +180,8 @@ int SwitchActivatedPlank::Render()
 
 int SwitchActivatedPlank::CleanupResources()
 {
-    if (((dBgW *)((char *)&mMovingMeshCollider))->IsEnabled()) {
-        ((dBgW *)((char *)&mMovingMeshCollider))->Disable();
+    if (((dBgW *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((dBgW *)((char *)&mMeshCollider))->Disable();
     }
     ((SharedFilePtr *)&data_ov029_0211432c)->Release();
     ((SharedFilePtr *)&data_ov029_02114324)->Release();
