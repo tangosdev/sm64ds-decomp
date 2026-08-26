@@ -12,7 +12,7 @@ struct ExpandingHeap {
 };
 
 extern void *_ZTV13ExpandingHeap;
-extern void _ZN4HeapC1EPvjP4Heap(struct ExpandingHeap *heap, void *start, u32 size, struct Heap *root);
+extern void _ZN4HeapC1EPvjPS_(struct ExpandingHeap *heap, void *start, u32 size, struct Heap *root);
 
 struct ExpandingHeap *_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator(
     struct ExpandingHeap *heap,
@@ -21,7 +21,7 @@ struct ExpandingHeap *_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator(
     struct Heap *root,
     struct ExpandingHeapAllocator *allocator)
 {
-    _ZN4HeapC1EPvjP4Heap(heap, start, size, root);
+    _ZN4HeapC1EPvjPS_(heap, start, size, root);
     heap->vtable = &_ZTV13ExpandingHeap;
     heap->allocator = allocator;
     return heap;

@@ -21,7 +21,7 @@
  *
  * Offsets/widths are observed (evidence_history + evidence_rom, both passes
  * agreeing on 4-byte accesses at 0x00/0x04/0x08/0x0c/0x10). Names come from the
- * constructor's own body, not from a guess: _ZN4HeapC1EPvjP4Heap writes start,
+ * constructor's own body, not from a guess: _ZN4HeapC1EPvjPS_ writes start,
  * size and root into 0x04/0x08/0x0c in that order and then zeroes 0x10.
  *
  * TWO CORRECTIONS TO THE SKELETON THIS REPLACES:
@@ -165,13 +165,11 @@ struct Heap {
                                        constructor sets it, so every heap is
                                        fail-fast unless something clears it. */
 
-    /* THE DESTRUCTOR IS DECLARED FIRST AND MUST NEVER BE DEFINED AS A REAL
-       METHOD. It occupies slots 0/1, which makes it this class's key function;
-       defining it would emit _ZTV4Heap/_ZTI4Heap/_ZTS4Heap into that
-       translation unit and eligible.py would reject the file with "extra
-       sections: .data". include/dActor_c.h states the same rule and for the same
-       reason: declaring the destructor first pins that role to translation
-       units which by construction never define it. See runbook section 7. */
+    /* The constructor and destructor are real compiler-spelled methods. Their
+       one-function objects also carry compiler-emitted vtable/RTTI passengers;
+       strict object isolation retains only the licensed function section while
+       rebinding _ZTV4Heap to the ROM's existing address-point symbol. */
+    Heap(void* start, u32 size, Heap* root);
     virtual ~Heap();
 
     /* Pure, because the ROM says so: Heap's own sixteen slots hold code only at

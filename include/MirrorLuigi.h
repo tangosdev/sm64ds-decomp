@@ -1,53 +1,52 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class MirrorLuigi: 5 matched functions, 16 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* Mirror Luigi's camera-space reflection actor.
+ *
+ * The cartridge's RTTI record names this class `daLuigi_c` and gives it one
+ * zero-offset dActor_c base. The repository's configured function symbols use
+ * the readable compatibility spelling `MirrorLuigi`; compiler-emitted
+ * `_ZTI11MirrorLuigi` / `_ZTS11MirrorLuigi` are therefore isolation-only
+ * passengers, not names for the ROM metadata at ov055 0x02111aa4..0x02111abc.
+ *
+ * The 0x20c allocation literal in MirrorLuigi_Spawn fixes the total size. Its
+ * factory constructs the four owned member regions in declaration order and
+ * D1/D0 destroy them in reverse order, independently proving the layout below:
+ * ModelAnim @ 0x0d4, Model @ 0x138, ShadowModel @ 0x188, and two
+ * TextureSequence objects @ 0x1b0. The remaining tail is a state descriptor
+ * pointer followed by the shadow matrix used by Behavior.
+ *
+ * The ROM vtable has exactly dActor_c's 31 slots. Slots 0, 3, 6, 9, 12, 16
+ * and 17 point at the overrides declared here; every other destination is
+ * inherited unchanged.
+ */
 #ifndef MIRRORLUIGI_H
 #define MIRRORLUIGI_H
-#include "types.h"
-#include "ShadowModel.h"
+
+#include "dActor_c.h"
 #include "ModelAnim.h"
 #include "Model.h"
+#include "ShadowModel.h"
+#include "TextureSequence.h"
+#include "math/Matrix.h"
 
-struct MirrorLuigi {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x6c];
-    /* ModelAnim member. The cartridge's own ~MirrorLuigi calls _ZN9ModelAnimD1Ev at
-       +0x0d4 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    ModelAnim mModelAnim;            /* 0x0d4 */
-    /* Model member. The cartridge's own ~MirrorLuigi calls _ZN5ModelD1Ev at +0x138
-       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
-       D1 and not D2, so it is this type and not an inlined base. */
-    Model mModel;            /* 0x138 */
-    /* ShadowModel member. The cartridge's own ~MirrorLuigi calls _ZN11ShadowModelD1Ev
-       at +0x188 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    ShadowModel mShadowModel;            /* 0x188 */
-    u8  mAnimTexSeq;            /* 0x1b0 */
-    u8  pad_1b1[0x7];
-    s32 unk_1b8;            /* 0x1b8 */
-    u8  pad_1bc[0x8];
-    u8  mModelTexSeq;            /* 0x1c4 */
-    u8  pad_1c5[0x7];
-    s32 unk_1cc;            /* 0x1cc */
-    u8  pad_1d0[0x8];
-    u8  mNode;            /* 0x1d8 */
-    /* trailing extent the ROM's `new MirrorLuigi` literal proves; see tools/opnew_sizes.py */
-    u8 pad_1dc[0x30];
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();                  /* slot  3 */
-    int InitResources();
-    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
-    int Render();
-#endif
+struct MirrorLuigiState;
+
+struct MirrorLuigi : dActor_c {
+    u8 pad_0d0[0x4];
+    ModelAnim mModelAnim;                     /* 0x0d4 */
+    Model mModel;                             /* 0x138 */
+    ShadowModel mShadowModel;                 /* 0x188 */
+    TextureSequence mTextureSequences[2];     /* 0x1b0 */
+    MirrorLuigiState *mState;                 /* 0x1d8 */
+    Matrix4x3 mShadowMatrix;                  /* 0x1dc */
+
+    virtual ~MirrorLuigi();                   /* slots 16, 17 */
+    virtual s32 InitResources();              /* slot  0 */
+    virtual s32 CleanupResources();           /* slot  3 */
+    virtual s32 Behavior();                   /* slot  6 */
+    virtual s32 Render();                     /* slot  9 */
+    virtual void OnPendingDestroy();          /* slot 12 */
 };
 
-typedef char MirrorLuigi_size_must_be_0x20c[sizeof(struct MirrorLuigi) == 0x20c ? 1 : -1];
+typedef char MirrorLuigi_size_must_be_0x20c[
+    sizeof(MirrorLuigi) == 0x20c ? 1 : -1];
 
-#endif
+#endif /* MIRRORLUIGI_H */

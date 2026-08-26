@@ -12,7 +12,7 @@ extern void *data_ov064_0211c800;
 int BowserPuzzlePiece::CleanupResources()
 {
     unsigned char idx;
-    ((dBgW *)((char *)&mMovingMeshCollider))->Disable();
+    ((dBgW *)((char *)&mMeshCollider))->Disable();
     idx = *(unsigned char *)((char *)&mType);
     ((SharedFilePtr *)(data_ov064_0211adc8[idx]))->Release();
     ((SharedFilePtr *)(&data_ov064_0211c800))->Release();

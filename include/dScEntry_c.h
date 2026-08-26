@@ -15,10 +15,12 @@
  * constructor/destructor evidence for those two ranges:
  * notes/scene-provenance.md.
  *
- * Only InitResources and Behavior use this header; everything else in the
- * family carries its own local offset-based struct, matching convention.
+ * Real class-form methods use this header. Method-local offset views remain
+ * where naming the full opaque object layout would add unsupported claims.
  */
 struct dScEntry_c : dScene_c {
+    class graphCallback_c;
+
     u8  unk_050[0x30];  /* 0x050 -- opaque; icon_c[9] runs 0x070..0x1b4 */
     s32 unk_080;                  /* 0x080 */
     u8  unk_084[0x1c];  /* 0x084 -- opaque; graphCallback_c[4] runs to 0x264 */
@@ -32,8 +34,7 @@ struct dScEntry_c : dScene_c {
     u8  pad_286;                   /* 0x286 */
     u8  unk_287;                   /* 0x287 */
 
-    /* Declared first (key function). Never defined as a real method in any TU:
-       both D1 and D0 are plain functions carrying their literal mangled name. */
+    /* Declared first: the destructor is the class's key function. */
     virtual ~dScEntry_c();                              /* slots 16 (D1), 17 (D0) */
 
     /* --- overrides, in _ZTV8dScene_c/_ZTV7fBase_c order. --- */

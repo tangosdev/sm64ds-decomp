@@ -62,7 +62,7 @@ int CastleWater::InitResources()
     {
         struct KCL_File *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov009_02113c70);
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            &mMeshCollider, kcl, mMatrix, 0x1000, mAngleY, data_ov009_02112c38);
+            &mMeshCollider, kcl, mClsnMat, 0x1000, mAngleY, data_ov009_02112c38);
     }
     ((dBgW *)&mMeshCollider)->Enable((dActor_c *)(self));
     {

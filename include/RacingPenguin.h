@@ -1,7 +1,18 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class RacingPenguin: 5 matched functions, 7 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* Seeded from matched-function evidence by tools/gen_header.py, then given its
+ * real base and real member types by hand.
+ *
+ * The ROM RTTI calls this class daPgRcer_c and identifies dActor_c as its base.
+ * The readable RacingPenguin name is retained because every recovered method
+ * symbol uses it. _ZTV13RacingPenguin and _ZTV10daPgRcer_c are co-address
+ * compatibility views of the same ROM table.
+ *
+ * sizeof is independently pinned by RacingPenguin_Spawn allocating 0x398.
+ * The factory remains a truthful C source for now: plain `new RacingPenguin`
+ * emits the global `_Znwm`, while the ROM calls `fBase_c::operator new`; the
+ * current mwccarm rejects declaring that class operator in fBase_c, and an
+ * explicit allocator plus placement-new changes the factory from 0x60 bytes to
+ * 0x68/0x70. The compiler-spelled constructor sequence is therefore a measured
+ * source-form wall, not something to hide behind a relocation wildcard. */
 #ifndef RACINGPENGUIN_H
 #define RACINGPENGUIN_H
 #include "types.h"
@@ -11,6 +22,36 @@
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
 #include "PathPtr.h"
+
+#ifdef __cplusplus
+
+#include "dActor_c.h"
+
+struct RacingPenguin : dActor_c {
+    u8 pad_0d0[0x4];
+    ModelAnim mModelAnim;                 /* 0x0d4 */
+    TextureSequence mTextureSequence;     /* 0x138 */
+    ShadowModel mShadowModel;             /* 0x14c */
+    dCcAc_c mdCcAc_c;                     /* 0x174 */
+    dBgCh_Actr mWithMeshClsn;             /* 0x1a8 */
+    PathPtr mPath;                        /* 0x364 */
+    s32 mPathNodeIndex;                   /* 0x36c */
+    u8 pad_370[0x26];
+    u8 unk_396;                           /* 0x396 */
+
+    /* --- vtable overrides. Slots are inherited from fBase_c/dActor_c. --- */
+    virtual ~RacingPenguin();                    /* slots 16 (D1), 17 (D0) */
+    virtual int InitResources();                 /* slot 0 */
+    virtual int CleanupResources();              /* slot 3 */
+    virtual int Behavior();                      /* slot 6 */
+    virtual int Render();                        /* slot 9 */
+    virtual void OnPendingDestroy();             /* slot 12 */
+};
+
+typedef char RacingPenguin_size_must_be_0x398[
+    sizeof(RacingPenguin) == 0x398 ? 1 : -1];
+
+#else
 
 struct RacingPenguin {
     u8  pad_000[0x80];
@@ -75,15 +116,10 @@ struct RacingPenguin {
        byte of the object: 0x397 rounds to the 0x398 RacingPenguin_Spawn
        allocates. */
     u8  unk_396;            /* 0x396 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
-    int Render();
-#endif
 };
 
 typedef char RacingPenguin_size_must_be_0x398[sizeof(struct RacingPenguin) == 0x398 ? 1 : -1];
+
+#endif /* __cplusplus */
 
 #endif

@@ -40,7 +40,6 @@ _ZN11ShadowModel12InitCylinderEv
 # the right content. Mostly C++ destructors differing by a single byte, where a
 # deleting/complete variant resolves differently in a real relink than it does
 # when linkcheck verifies the match in isolation.
-_ZN11MirrorLuigiD1Ev
 _ZN15RecRoomCupboardD1Ev
 _ZN15RecRoomCupboardD0Ev
 _ZN14BlendModelAnimD1Ev

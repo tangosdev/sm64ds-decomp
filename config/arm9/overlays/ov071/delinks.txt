@@ -156,7 +156,7 @@ src/_ZN3MrID1Ev.cpp:
     complete
     .text start:0x02120668 end:0x021206b0
 
-src/_ZN3MrID0Ev.c:
+src/_ZN3MrID0Ev.cpp:
     complete
     .text start:0x021206b0 end:0x0212070c
 
@@ -295,11 +295,11 @@ src/MrI_Projectile_Spawn.c:
     complete
     .text start:0x02121f9c end:0x02121fe4
 
-src/_ZN6CoffinD1Ev.c:
+src/_ZN6CoffinD1Ev.cpp:
     complete
     .text start:0x02121fe4 end:0x02122028
 
-src/_ZN6CoffinD0Ev.c:
+src/_ZN6CoffinD0Ev.cpp:
     complete
     .text start:0x02122028 end:0x02122080
 

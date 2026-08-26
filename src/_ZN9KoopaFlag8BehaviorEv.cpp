@@ -6,26 +6,22 @@
 /* recovered: named members + shared header, real C++ method */
 #include "KoopaFlag.h"
 extern "C" {
-extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int d, int e);
-extern void _ZN9Animation7AdvanceEv(void *a);
-extern void _ZN5dCc_c5ClearEv(void *c);
-extern void _ZN5dCc_c6UpdateEv(void *c);
 }
 extern char data_0209d4c8[];
 
 int KoopaFlag::Behavior()
 {
     unsigned int id;
-    char *a;
+    dActor_c *a;
     int b;
 
     if (mHasTouchedFlag == 0) {
         id = mdCcAc_c.otherOwner;
         if (id != 0) {
-            a = _ZN8dActor_c10FindWithIDEj(id);
+            a = dActor_c::FindWithID(id);
             if (a != 0) {
-                b = *(unsigned short *)(a + 0xC);
+                b = a->actorID;
                 b = b == 0xBF;
                 if (b) {
                     mHasTouchedFlag = 1;
@@ -46,9 +42,9 @@ int KoopaFlag::Behavior()
         }
     }
 
-    _ZN9Animation7AdvanceEv((char *)(Animation *)&mModelAnim);
+    mModelAnim.Advance();
     func_ov062_0211afbc(((char *)this));
-    _ZN5dCc_c5ClearEv((char *)&mdCcAc_c);
-    _ZN5dCc_c6UpdateEv((char *)&mdCcAc_c);
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     return 1;
 }

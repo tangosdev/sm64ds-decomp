@@ -93,21 +93,21 @@ int Dorrie::InitResources()
         mSinkHeight = 0;
         mPushDownHeight = mSinkHeight;
     }
-    if ((mParam & 0xff) == 1)
+    if ((param1 & 0xff) == 1)
         mHasCap = 1;
     else
         mHasCap = 0;
     mCap = 0;
     if (mHasCap != 0) {
-        unk_0d8 = 0;
-        unk_0dc = 0;
-        unk_0e0 = 0;
+        mCapPosX = 0;
+        mCapPosY = 0;
+        mCapPosZ = 0;
         func_ov065_02118838(((char*)this));
         {
             void* a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0xa9, 0, ((char*)this) + 0x5c, ((char*)this) + 0x8c, mAreaId, -1);
             if (a != 0) {
-                mCap = (int)a;
+                mCap = (daDossyCap_c *)a;
                 *(int*)((char*)a + 0x174) = (int)((char*)this);
             } else {
                 mHasCap = 0;

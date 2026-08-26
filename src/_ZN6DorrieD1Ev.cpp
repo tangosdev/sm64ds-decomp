@@ -1,26 +1,11 @@
 //cpp
 // @symbol _ZN6DorrieD1Ev
-/* recovered: named members + shared header */
+/* The inline class-body destructor is real C++. This explicit call forces
+ * mwccarm to materialize Dorrie's complete destructor; objisolate keeps the
+ * enrolled D1 and discards the forcing helper. */
 #include "Dorrie.h"
-extern "C" {
-extern void *_ZTV6Dorrie;
-extern void func_ov065_021180b8(void);
-void _ZN10dCcAcPos_cD1Ev(void*);
-void _ZN7dCcAc_cD1Ev(void*);
-void _ZN10dBgCh_ActrD1Ev(void*);
-void __destroy_arr(void*, int, int, void*);
-void _ZN9ModelAnimD1Ev(void*);
-void _ZN8dActor_cD2Ev(void*);
-void *_ZN6DorrieD1Ev(void* thiz);
-}
-void *_ZN6DorrieD1Ev(void* thiz) {
-    char *c = (char*)thiz;
-    *(void**)c = &_ZTV6Dorrie;
-    _ZN10dCcAcPos_cD1Ev(c + 0x1140);
-    _ZN7dCcAc_cD1Ev(c + 0x110c);
-    _ZN10dBgCh_ActrD1Ev(c + 0xf50);
-    __destroy_arr(c + 0x150, 7, 0x200, (void*)func_ov065_021180b8);
-    _ZN9ModelAnimD1Ev(c + 0xec);
-    _ZN8dActor_cD2Ev(c);
-    return c;
+
+void Dorrie_EmitDestructor(Dorrie *p)
+{
+    p->~Dorrie();
 }

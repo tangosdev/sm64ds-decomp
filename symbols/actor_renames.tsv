@@ -2132,6 +2132,14 @@ ov098	0x0213c74c	data_ov098_0213c74c	WaterBomb_SpawnInfo	spawninfo
 ov098	0x0213c770	data_ov098_0213c770	_ZTV9WaterBomb	vtable alloc=0x3cc
 ov100	0x02140d80	func_ov100_02140d80	_ZN9ButterflyD1Ev	vtable slot 16
 ov100	0x02140dd8	func_ov100_02140dd8	_ZN9ButterflyD0Ev	vtable slot 17
+ov100	0x02140e44	func_ov100_02140e44	_ZN9Butterfly6State7Ev	PMF table index 7
+ov100	0x0214109c	func_ov100_0214109c	_ZN9Butterfly6State6Ev	PMF table index 6
+ov100	0x0214117c	func_ov100_0214117c	_ZN9Butterfly6State5Ev	PMF table index 5
+ov100	0x021412d8	func_ov100_021412d8	_ZN9Butterfly6State4Ev	PMF table index 4
+ov100	0x02141470	func_ov100_02141470	_ZN9Butterfly6State3Ev	PMF table index 3
+ov100	0x021415bc	func_ov100_021415bc	_ZN9Butterfly6State2Ev	PMF table index 2
+ov100	0x02141800	func_ov100_02141800	_ZN9Butterfly6State1Ev	PMF table index 1
+ov100	0x02141848	func_ov100_02141848	_ZN9Butterfly6State0Ev	PMF table index 0
 ov100	0x02141988	func_ov100_02141988	_ZN9Butterfly16CleanupResourcesEv	vtable slot 3
 ov100	0x021419d0	func_ov100_021419d0	_ZN9Butterfly16OnPendingDestroyEv	vtable slot 12
 ov100	0x021419d4	func_ov100_021419d4	_ZN9Butterfly6RenderEv	vtable slot 9

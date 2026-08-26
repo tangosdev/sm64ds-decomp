@@ -35,13 +35,12 @@
  *     (fBase_c::operator new(0x64) in its factory), the embedded
  *     dFdDummy_c sub-object starts at 0x54, and 0x64 - 0x54 == 0x10.
  *
- * VTABLE. data_0208ea6c, left unnamed like the rest of this Fader family
- * (Fader/FaderBrightness are unnamed; only FaderWipe has a real _ZTV symbol,
- * because a real TU defines FaderWipe's constructor out-of-line). No TU here
- * defines any dFdDummy_c virtual as a real C++ member function -- all five
- * are plain functions carrying their literal mangled name, matching the
- * family's own D0/D1 convention -- so there is no vtable-group collision
- * risk and no emitted _ZTV to name.
+ * VTABLE. data_0208ea6c and `_ZTV10dFdDummy_c` are two symbol views of the same
+ * ROM-proven address point. The destructor pair, AdvanceFade, SetBackwardTime
+ * and SetForwardTime are now real C++ member definitions, so mwcc owns all five
+ * mangled names and emits the vtable relocation used by D0/D1. Enrollment keeps
+ * the licensed function contribution, and the exact `_ZTV10dFdDummy_c` alias
+ * binds that relocation back to data_0208ea6c.
  *
  * Dtor-pair slot index confirmed 0/1 (D1/D0), matching the Fader-family
  * convention (see dWipe_c.h), not Platform's 16/17.
@@ -56,8 +55,8 @@ struct dFdDummy_c : FaderColor {
 
 typedef char dFdDummy_c_size_must_be_0x10[sizeof(dFdDummy_c) == 0x10 ? 1 : -1];
 #else
-/* Spelled for the C destructor/leaf-method translation units, which cannot
-   express the virtuals and so write out the vptr the compiler would place. */
+/* Spelled for remaining C consumers, which cannot express the virtuals and so
+   write out the vptr the compiler would place. */
 struct dFdDummy_c {
     void*  vtable;      /* 0x00 */
     Fix12i currInterp;  /* 0x04 (from Fader) */

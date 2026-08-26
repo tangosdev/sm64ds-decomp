@@ -27,10 +27,10 @@ extern SharedFilePtr data_ov062_0211e0dc;
 
 int KoopaFlag::InitResources()
 {
-    ((ModelBase*)((char*)&mModelAnim))->SetFile(
+    mModelAnim.SetFile(
         (BMD_File*)Model::LoadFile(data_ov062_0211e0d4), 1, -1);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)((char*)&mModelAnim), (BCA_File*)Animation::LoadFile(data_ov062_0211e0dc), 0, 0x1000, 0);
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj((dCcAc_c*)((char*)&mdCcAc_c), (dActor_c*)((char*)this), 0x35555, 0x294000, 0x280000c, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (BCA_File*)Animation::LoadFile(data_ov062_0211e0dc), 0, 0x1000, 0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x35555, 0x294000, 0x280000c, 0);
     mHasTouchedFlag = 0xff;
     mVictoryTimer = 0;
     return 1;

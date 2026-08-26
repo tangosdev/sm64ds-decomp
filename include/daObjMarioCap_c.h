@@ -18,11 +18,12 @@
  *   _ZN15daObjMarioCap_cD1Ev tears the same five down in exactly the reverse order and
  *   chains to _ZN12dEnemyBase_cD2Ev.
  *
- * THE 0x3d0 MEMBER IS A CapIcon, and that is what this class was waiting on. Its
- * constructor and destructor are func_ov001_020ab3c4 / func_ov001_020ab3a0 -- the same
- * pair dCapEnemy_c holds at its own 0x164, typed in include/CapIcon.h. Left as padding
- * the destructor emits a short chain and comes out a different SIZE, which reads as
- * `999 word(s) differ` and looks like a total failure rather than one missing member.
+ * THE 0x3d0 MEMBER IS dCapIcon_c (the CapIcon compatibility spelling), whose
+ * ROM RTTI and two-slot vtable identify its constructor/destructor at
+ * 0x020ab3c4 / 0x020ab3a0. It is the same member dCapEnemy_c holds at 0x164.
+ * Left as padding the destructor emits a short chain and comes out a different
+ * SIZE, which reads as `999 word(s) differ` and looks like a total failure
+ * rather than one missing member.
  *
  * SIZE 0x410, the literal in Cap_Spawn's fBase_c::operator new. CapIcon is 0x1c, so
  * 0x3d0 + 0x1c = 0x3ec closes onto the scalars below it.
@@ -56,7 +57,7 @@ struct daObjMarioCap_c : dEnemyBase_c {
     s32 unk_3c4;                                /* 0x3c4 */
     s32 unk_3c8;                                /* 0x3c8 */
     s32 unk_3cc;                                /* 0x3cc */
-    CapIcon mCapIcon;                           /* 0x3d0 */
+    dCapIcon_c mCapIcon;                        /* 0x3d0 */
     s32 unk_3ec;                                /* 0x3ec */
     s32 mType;                                  /* 0x3f0 */
     s32 mModelIndex;                            /* 0x3f4 */

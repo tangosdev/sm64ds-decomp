@@ -25,7 +25,7 @@ extern int data_ov018_02112c04[];
 int MotherPenguin::InitResources()
 {
     void *m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov018_02113c00);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this)+0xd4, m, 1, 1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, m, 1, 1);
     for (int i = 0; i < 2; i++)
         _ZN9Animation8LoadFileER13SharedFilePtr((void*)data_ov018_02112c0c[i]);
     for (int i = 0; i < 2; i++) {
@@ -34,14 +34,14 @@ int MotherPenguin::InitResources()
         TextureSequence::Prepare(*(BMD_File *)data_ov018_02113c00[1], *(BTP_File *)((int*)t)[1]);
     }
     if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0) return 0;
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this)+0x174, ((char *)this), 0x104000, 0x12c000, 0x4800004, 0x900000);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x104000, 0x12c000, 0x4800004, 0x900000);
     func_ov018_021123d0((char *)this, 0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this)+0x1a8, ((char *)this), 0x32000, 0x32000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
     char rg[0x54];
     int v[3];
     v[0] = mPosX;
@@ -58,7 +58,7 @@ int MotherPenguin::InitResources()
     mHomePosY = mPosY;
     mHomePosZ = mPosZ;
     unk_374 = 0;
-    func_ov018_02111d28(((char *)this), 0);
+    func_ov018_02111d28((char *)this, 0);
     _ZN9dBgCh_GndD1Ev(rg);
     return 1;
 }

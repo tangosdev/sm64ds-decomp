@@ -264,6 +264,7 @@ BowserPuzzleManager_SpawnInfo kind:data(any) addr:0x0211c17c
 data_ov064_0211c198 kind:data(any) addr:0x0211c198
 _ZTV19BowserPuzzleManager kind:data(any) addr:0x0211c1d8
 _ZTV17BowserPuzzlePiece kind:data(any) addr:0x0211c25c
+_ZTV16daObjFl_Puzzle_c kind:data(any) addr:0x0211c25c
 data_ov064_0211c2dc kind:data(any) addr:0x0211c2dc
 data_ov064_0211c2e4 kind:data(any) addr:0x0211c2e4
 _ZTI18daWater_Hakidasi_c kind:data(any) addr:0x0211c2ec

@@ -1,48 +1,58 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class BigMovingIceBlock: 6 matched functions, 11 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* BigMovingIceBlock, reconstructed from its factory, destructor pair, vtable
+ * and four matched methods.
+ *
+ * BASE: dBgActor_c, direct. The cartridge's __si_class_type_info record at
+ * ov056 0x02113320 points at _ZTI10dBgActor_c with subobject offset zero. Its
+ * ROM name is `18daObjEwmIceBlock_c`, while the configured function symbols
+ * use the readable compatibility spelling `BigMovingIceBlock`. A compiler
+ * object may therefore emit `_ZTI17BigMovingIceBlock`; that metadata is a
+ * discard-only passenger of the independently isolated functions, not a
+ * claim that the readable spelling owns the cartridge RTTI.
+ *
+ * SIZE 0x330 is the literal passed by BigMovingIceBlock_Spawn to
+ * fBase_c::operator new. dBgActor_c occupies 0x000..0x31f. The factory
+ * constructs a PathPtr at 0x320, and the matched behavior reads the two
+ * trailing words at 0x328 and 0x32c.
+ */
 #ifndef BIGMOVINGICEBLOCK_H
 #define BIGMOVINGICEBLOCK_H
-#include "types.h"
-#include "Model.h"
-#include "PathPtr.h"
-#include "dBgW_KcMbg.h"
 
-struct BigMovingIceBlock {
-    u8  pad_000[0x8];
-    s32 mParam;            /* 0x008 */
-    u8  pad_00c[0x50];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x26];
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x8];
-    s32 mHorzSpeed;            /* 0x098 */
-    u8  pad_09c[0x38];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~BigMovingIceBlock calls
-       _ZN10dBgW_KcMbgD1Ev at +0x124 (D0/D1), a relocation the ROM build checks;
-       recovered by tools/dtor_members.py. D1 and not D2, so it is this type and not an
-       inlined base. */
-    dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    u8  pad_2ec[0x34];
-    PathPtr mPath;            /* 0x320 */
-    s32 mPathNodeIdx;            /* 0x328 */
-    s32 mPathDir;            /* 0x32c */
+#include "types.h"
+
 #ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    int Render();
-#endif
+
+#include "dBgActor_c.h"
+#include "PathPtr.h"
+
+struct BigMovingIceBlock : dBgActor_c {
+    PathPtr mPath;          /* 0x320 */
+    s32 mPathNodeIdx;       /* 0x328 */
+    s32 mPathDir;           /* 0x32c */
+
+    /* Inline is load-bearing: explicit use from the destructor sources makes
+     * mwccarm emit the ROM's D1/D0 pair without a homeless D2. */
+    virtual ~BigMovingIceBlock() {}
+
+    /* Overrides of fBase_c's slots 0, 3, 6 and 9. */
+    virtual s32 InitResources();
+    virtual s32 CleanupResources();
+    virtual s32 Behavior();
+    virtual s32 Render();
 };
+
+#else
+
+/* Flat compatibility view for C translation units. */
+struct BigMovingIceBlock {
+    u8 pad_000[0x320];
+    u8 mPath[0x8];          /* 0x320 */
+    s32 mPathNodeIdx;       /* 0x328 */
+    s32 mPathDir;           /* 0x32c */
+};
+
+#endif
 
 typedef char BigMovingIceBlock_size_must_be_0x330[
     sizeof(struct BigMovingIceBlock) == 0x330 ? 1 : -1];
 
-#endif
+#endif /* BIGMOVINGICEBLOCK_H */

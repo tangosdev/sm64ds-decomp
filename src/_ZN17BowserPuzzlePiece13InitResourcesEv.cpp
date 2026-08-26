@@ -21,18 +21,18 @@ extern SharedFilePtr* data_ov064_0211adc8[];
 extern SharedFilePtr data_ov064_0211c800;
 extern CLPS_Block data_ov064_0211baac;
 
-void BowserPuzzlePiece::InitResources()
+int BowserPuzzlePiece::InitResources()
 {
     mType = param1 & 0xf;
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4,
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel,
         _ZN5Model8LoadFileER13SharedFilePtr(*data_ov064_0211adc8[mType]), 1, -1);
     func_ov064_02119010(((char*)this));
     func_ov064_02118fa4(((char*)this));
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char*)this) + 0x124,
+        &mMeshCollider,
         _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov064_0211c800),
-        *(const Matrix4x3*)((char*)&mClsnMat), 0x1000, mAngleY, data_ov064_0211baac);
-    func_020393c4((int*)((char*)&mMovingMeshCollider), (int)&func_ov064_021192bc);
+        mClsnMat, 0x1000, mAngleY, data_ov064_0211baac);
+    func_020393c4((int*)((char*)&mMeshCollider), (int)&func_ov064_021192bc);
     mStateInfo = data_ov064_0211c198[mType];
     mStateIndex = 0;
     unk_32c = 0;
@@ -41,4 +41,5 @@ void BowserPuzzlePiece::InitResources()
     mFreezeState = 1;
     mState = 0;
     mCanSpawnCoin = 1;
+    return 1;
 }

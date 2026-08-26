@@ -1,67 +1,96 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Toad: 5 matched functions, 16 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* Toad, reconstructed from the ov085 RTTI record, vtable, factory,
+ * destructor pair, state table, and matched methods.
+ *
+ * The cartridge calls this class `daKinopio_c`: its __si_class_type_info at
+ * 0x0212fe50 points directly at dActor_c, and its 31-slot vtable at
+ * 0x0212feb8 overrides only the usual fBase_c lifecycle slots. The readable
+ * `Toad` spelling is retained for compatibility with configured function
+ * symbols; metadata emitted by isolated destructor objects is discard-only.
+ *
+ * SIZE 0x210 is the literal passed by Toad_Spawn to fBase_c::operator new.
+ * Member subobjects are pinned independently by both constructor and
+ * destructor calls: dCcAc_c at 0x0d4, ModelAnim at 0x108, and ShadowModel at
+ * 0x16c. The two Matrix4x3 objects and state fields are addressed by the
+ * class's own nonvirtual methods and pointer-to-member state table.
+ */
 #ifndef TOAD_H
 #define TOAD_H
-#include "types.h"
-#include "ModelAnim.h"
-#include "dCcAc_c.h"
-#include "ShadowModel.h"
 
-struct Toad {
-    u8  pad_000[0x8];
-    s32 mParam;            /* 0x008 */
-    u8  pad_00c[0x50];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x24];
-    s16 mAngleX;            /* 0x08c */
-    /* Behavior turns toward the player with ApproachLinear on this and
-       measures AngleDiff against it, which is what pins it as the yaw. */
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x3c];
-    s8  mAreaId;            /* 0x0cc */
-    u8  pad_0cd[0x7];
-    /* dCcAc_c member, named by the class's own destructor calling
-       dCcAc_c's D1 at +0x0d4 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN4ToadD0Ev.c] */
-    dCcAc_c mdCcAc_c;            /* 0x0d4 */
-    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x108 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    ModelAnim mModelAnim;            /* 0x108 */
-    /* ShadowModel member. The cartridge's own ~Toad calls _ZN11ShadowModelD1Ev at
-       +0x16c (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    ShadowModel mShadowModel;            /* 0x16c */
-    u8  pad_194[0x60];
-    s32 mCapUniqueID;            /* 0x1f4 */
-    u8  pad_1f8[0x8];
-    /* Two ApproachLinear pairs: 0x200 chases 0x202 and 0x204 chases 0x206,
-       at different rates. The targets are written from the player's
-       direction each frame and the current values are what actually get
-       used, which is what makes this a smoothed head-turn. */
-    s16 mHeadYaw;            /* 0x200 */
-    s16 mHeadYawTarget;            /* 0x202 */
-    s16 mHeadPitch;            /* 0x204 */
-    s16 mHeadPitchTarget;            /* 0x206 */
-    u16 mMessageID;            /* 0x208 */
-    u8  pad_20a[0x1];
-    u8  mVariant;            /* 0x20b */
-    u8  mStarID;            /* 0x20c */
-    u8  mOpacity;            /* 0x20d */
-    u8  mTargetOpacity;            /* 0x20e */
-    u8  mStarReqIndex;            /* 0x20f */
+#include "types.h"
+
 #ifdef __cplusplus
-    /* methods */
-    int InitResources();
-    int Behavior();
-    int CleanupResources();
-    int Render();
-#endif
+
+#include "dActor_c.h"
+#include "dCcAc_c.h"
+#include "ModelAnim.h"
+#include "ShadowModel.h"
+#include "math/Matrix.h"
+
+struct Player;
+
+struct Toad : dActor_c {
+    typedef void (Toad::*StateFunc)();
+
+    struct State {
+        StateFunc init;
+        StateFunc main;
+        u32 unk_10;
+    };
+
+    u8 mPadD0[0x4];               /* 0x0d0 */
+    dCcAc_c mCollider;             /* 0x0d4 */
+    ModelAnim mModelAnim;          /* 0x108 */
+    ShadowModel mShadowModel;      /* 0x16c */
+    Matrix4x3 mCapTransform;       /* 0x194 */
+    Matrix4x3 mShadowTransform;    /* 0x1c4 */
+    u32 mCapUniqueID;              /* 0x1f4 */
+    Player *mTalkPlayer;           /* 0x1f8 */
+    s32 mState;                    /* 0x1fc */
+    s16 mHeadYaw;                  /* 0x200 */
+    s16 mHeadYawTarget;            /* 0x202 */
+    s16 mHeadPitch;                /* 0x204 */
+    s16 mHeadPitchTarget;          /* 0x206 */
+    u16 mMessageID;                /* 0x208 */
+    u8 mTalkFinished;              /* 0x20a */
+    u8 mVariant;                   /* 0x20b */
+    u8 mStarID;                    /* 0x20c */
+    u8 mOpacity;                   /* 0x20d */
+    u8 mTargetOpacity;             /* 0x20e */
+    u8 mStarReqIndex;              /* 0x20f */
+
+    /* Inline is load-bearing: explicit use from the two destructor sources
+     * makes mwccarm emit D1/D0 in ROM order without a homeless D2. */
+    virtual ~Toad() {}
+
+    virtual int InitResources();
+    virtual int CleanupResources();
+    virtual int Behavior();
+    virtual int Render();
+
+    u16 GetMessageID();
+    void St_Talk_Main();
+    void St_Talk_Init();
+    void St_Idle_Main();
+    void St_Idle_Init();
+    void SetState(s32 state);
+    void RunState();
+    void UpdateModelPose();
 };
 
-typedef char Toad_size_must_be_0x210[sizeof(struct Toad) == 0x210 ? 1 : -1];
+typedef char Toad_State_size_must_be_0x14[
+    sizeof(Toad::State) == 0x14 ? 1 : -1];
+
+#else
+
+/* No C source needs the reconstructed fields. Keep a flat compatibility
+ * view so incidental C includes still agree on the allocation size. */
+struct Toad {
+    u8 bytes[0x210];
+};
 
 #endif
+
+typedef char Toad_size_must_be_0x210[
+    sizeof(struct Toad) == 0x210 ? 1 : -1];
+
+#endif /* TOAD_H */

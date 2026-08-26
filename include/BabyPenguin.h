@@ -15,6 +15,11 @@
  *   _ZN11BabyPenguinD0Ev  the same four members destroyed in reverse,
  *       then ~dActor_c.
  *
+ * ROM RTTI names the class daPgBby_c (_ZTS9daPgBby_c); BabyPenguin is the
+ * established readable compatibility name used by the recovered method
+ * symbols. The co-addressed _ZTV11BabyPenguin/_ZTV9daPgBby_c labels pin that
+ * identity at 0x02122a90, and the RTTI record names dActor_c as its sole base.
+ *
  * SIZE 0x370 is the factory's own literal; unk_36c (2 bytes, 0x36c) closes
  * exactly on it under 4-byte alignment.
  *
@@ -38,13 +43,13 @@ struct BabyPenguin : dActor_c {
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build checks. */
     ModelAnim mModelAnim;            /* 0x0d4 */
     /* ShadowModel member, named by the class's own destructor calling
-       ShadowModel's D1 at +0x138. [_ZN11BabyPenguinD0Ev.c] */
+       ShadowModel's D1 at +0x138. [_ZN11BabyPenguinD0Ev.cpp] */
     ShadowModel mShadowModel;            /* 0x138 */
     /* dCcAc_c member, named by the class's own destructor calling
-       dCcAc_c's D1 at +0x160. [_ZN11BabyPenguinD0Ev.c] */
+       dCcAc_c's D1 at +0x160. [_ZN11BabyPenguinD0Ev.cpp] */
     dCcAc_c mdCcAc_c;            /* 0x160 */
     /* dBgCh_Actr member, named by the class's own destructor calling
-       dBgCh_Actr's D1 at +0x194. [_ZN11BabyPenguinD0Ev.c] */
+       dBgCh_Actr's D1 at +0x194. [_ZN11BabyPenguinD0Ev.cpp] */
     dBgCh_Actr mWithMeshClsn;            /* 0x194 */
     /* Copy of mPosX/Y/Z taken once in InitResources and never written again.
        [_ZN11BabyPenguin13InitResourcesEv.cpp] */

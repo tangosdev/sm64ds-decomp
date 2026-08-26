@@ -16,8 +16,8 @@
  * The Spawn constructs the three owned subobjects below at 0xd4..0x140 in
  * declaration order; D1 destroys them in exactly the reverse order before
  * chaining to dActor_c::~dActor_c -- two independent witnesses for each
- * member's type and offset. The 0xd4 member is a CapIcon: its ctor/dtor are
- * func_ov001_020ab3c4 / func_ov001_020ab3a0, the same pair dCapEnemy_c holds
+ * member's type and offset. The 0xd4 member is a dCapIcon_c: its constructor
+ * and destructor are the same pair dCapEnemy_c holds
  * at its own 0x164, typed in include/CapIcon.h. The flat header this replaces
  * read into it as two loose bytes: unk_0d4 (its vtable word) and unk_0ef
  * (mCapIcon.mFlags, 0xd4 + 0x1b).
@@ -27,17 +27,10 @@
  * OnYoshiTryEat. No CleanupResources or OnPendingDestroy override, unlike its
  * daKrpa_c/daKpFr_c/daEyBm_c siblings.
  *
- * THE DESTRUCTORS STAY UNMIGRATED, and the reason is order: D1 destroys
- * dCcAc_c, then Model, then the CapIcon -- exact reverse
- * declaration order -- but CapIcon's destructor is still spelt
- * func_ov001_020ab3a0 rather than CapIcon::~CapIcon, so a real ~daDossyCap_c()
- * would have to call it in the body, which runs BEFORE the implicit member
- * destructors instead of after them. dCapEnemy_c got away with exactly that
- * only because its CapIcon is the LAST member (see _ZN11dCapEnemy_cD2Ev.cpp);
- * here it is the first. Until CapIcon's destructor is a real method, the
- * declaration below is satisfied by the extern "C" free functions in
- * _ZN12daDossyCap_cD1Ev.c / D0Ev.c, which also keeps this class's key function
- * undefined in every TU so no object emits a coined-name vtable.
+ * The ROM's dCapIcon_c RTTI and vtable now identify its constructor and
+ * destructor by their original class name. That declaration is what finally
+ * lets the compiler reproduce this class's lifecycle: construction proceeds
+ * base, dCapIcon_c, Model, dCcAc_c; destruction is the exact reverse.
  *
  * The header this replaces was deliberately flat -- a non-deriving struct
  * whose leading "fields" duplicated dActor_c's storage -- because giving a
@@ -49,7 +42,7 @@ struct daDossyCap_c : dActor_c {
        word copied into the spawned cap actor's own 0xd0. Kept s32 as the flat
        header had it; the pointer reads go through explicit casts. */
     s32                mEatingPlayer;           /* 0x0d0 */
-    CapIcon            mCapIcon;                /* 0x0d4 */
+    dCapIcon_c         mCapIcon;                /* 0x0d4 */
     Model              mModel;                  /* 0x0f0 */
     dCcAc_c mdCcAc_c;     /* 0x140 */
     /* The actor this cap is riding, a pointer spelt s32. Behavior bails out
@@ -59,10 +52,9 @@ struct daDossyCap_c : dActor_c {
     s32                mCarrier;                 /* 0x174 */
     u8                 pad_178[0xc];
 
-    /* Declared first on purpose, same reasoning as dActor_c.h: the key
-       function pins where mwcc anchors the vtable -- and this one is never
-       defined as a method, see the header comment. */
-    virtual ~daDossyCap_c();
+    /* Inline is load-bearing: explicit use in the destructor source files
+       emits D1 then D0 without inventing a homeless D2. */
+    virtual ~daDossyCap_c() {}
 
     virtual s32 InitResources();       /* slot 0 */
     virtual s32 Behavior();            /* slot 6 */

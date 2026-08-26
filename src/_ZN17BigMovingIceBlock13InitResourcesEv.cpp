@@ -25,7 +25,7 @@ int BigMovingIceBlock::InitResources()
   void* f2 = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov056_02113314.b);
   _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, f2, ((char*)this)+0x2ec, 0x199, mAngleY, data_ov056_02113314.c);
   func_020393d4((int*)((char*)&mMeshCollider), &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
-  _ZN7PathPtr6FromIDEj(((char*)this)+0x320, mParam&0xff);
+  _ZN7PathPtr6FromIDEj(((char*)this)+0x320, param1&0xff);
   mPathDir = 1;
   mHorzSpeed = 0xa000;
   return 1;

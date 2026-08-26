@@ -56,11 +56,11 @@ src/RotatingUpDownPlatform_Spawn.c:
     complete
     .text start:0x02131bdc end:0x02131c14
 
-src/_ZN22RotatingUpDownPlatformD1Ev.c:
+src/_ZN22RotatingUpDownPlatformD1Ev.cpp:
     complete
     .text start:0x02131c14 end:0x02131c58
 
-src/_ZN22RotatingUpDownPlatformD0Ev.c:
+src/_ZN22RotatingUpDownPlatformD0Ev.cpp:
     complete
     .text start:0x02131c58 end:0x02131cb0
 

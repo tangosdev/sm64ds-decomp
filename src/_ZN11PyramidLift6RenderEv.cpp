@@ -21,7 +21,7 @@ struct Elem { int w[3]; };
 int PyramidLift::Render()
 {
     {
-        Sub* s = (Sub*)((char*)&mModel1);
+        Sub* s = (Sub*)((char*)&mModel);
         s->m(0);
     }
     int i = mNextBullet;

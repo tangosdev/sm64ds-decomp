@@ -49,7 +49,7 @@ struct dCapEnemy_c : dEnemyBase_c {
        the reads mask and the writes OR. */
     u8  mCapId;                   /* 0x113 */
     Model   mModel;               /* 0x114 */
-    CapIcon mCapIcon;             /* 0x164 */
+    dCapIcon_c mCapIcon;          /* 0x164 */
 
     dCapEnemy_c();
     virtual ~dCapEnemy_c();

@@ -11,8 +11,8 @@ extern int data_ov029_0211432c[];
 
 int SwitchActivatedPlank::CleanupResources()
 {
-    if (((dBgW *)((char *)&mMovingMeshCollider))->IsEnabled()) {
-        ((dBgW *)((char *)&mMovingMeshCollider))->Disable();
+    if (((dBgW *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((dBgW *)((char *)&mMeshCollider))->Disable();
     }
     ((SharedFilePtr *)(data_ov029_0211432c))->Release();
     ((SharedFilePtr *)(data_ov029_02114324))->Release();

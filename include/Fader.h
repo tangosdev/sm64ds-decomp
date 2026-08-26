@@ -5,15 +5,19 @@
 
 /* The screen-fade interpolator base at 0x020175e8..0x0201786c.
  *
- * Every claim here is read out of the ROM, not guessed:
+ * ROM-derived claims and repository compatibility spellings are distinguished
+ * explicitly below:
  *
- * A NOTE ON THE VTABLE NAMES BELOW, because an earlier revision of this comment
- * got them wrong. Three of this family's four vtables have NO _ZTV symbol in
- * config/arm9/symbols.txt -- they are data_0208eafc (Fader), data_0208eacc
- * (FaderBrightness) and data_0208eb2c (FaderColor). Only _ZTV9FaderWipe is a
- * real name. Writing "_ZTV5Fader" reads like a symbol you could grep for and is
- * really an inference from what the table's entries resolve to. The inference is
- * sound; the spelling was not, so the addresses are used instead.
+ * VTABLE NAMES. The ROM proves the three address points and their contents:
+ * data_0208eafc (Fader), data_0208eacc (FaderBrightness) and data_0208eb2c
+ * (FaderColor). Its RTTI records call the original classes dFader_c,
+ * dFdBrightness_c and dFdColor_c. The repository also gives those addresses
+ * compiler-facing compatibility aliases `_ZTV5Fader`,
+ * `_ZTV15FaderBrightness` and `_ZTV10FaderColor`, because those are the names
+ * mwcc emits for the currently matched class-symbol view. The aliases make
+ * generated relocations exact; they are not evidence that EAD used the
+ * compatibility class names. Layout and wiring claims below use the ROM-proven
+ * addresses.
  *
  * LAYOUT. Fader is polymorphic -- the ROM carries its vtable at data_0208eafc,
  * and Fader::~Fader stores it into [this+0x0]. So the vptr is at 0x0 and the first
@@ -62,15 +66,23 @@
  * safe to improve. Offsets, widths and vtable slots are pinned by the bytes.
  */
 #ifdef __cplusplus
+extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+
 struct Fader {
     Fix12i currInterp;  /* 0x04 -- current fade level, 0..0x1000 */
     Fix12i speed;       /* 0x08 -- per-frame delta; sign selects the target */
 
-    /* Declared first so the destructor is the key function. It is only ever
-       defined as an extern "C" free function, in _ZN5FaderD0Ev.c and
-       _ZN5FaderD1Ev.c, so no translation unit defines it and CW 1.2 emits no
-       vtable group to collide with the ROM's. */
+    /* Declared first, making the destructor the key function. The D0/D1/D2
+       sources now define a real Fader::~Fader(); mwcc therefore emits its
+       destructor variants and vtable group, while enrollment isolates the
+       licensed variant and binds `_ZTV5Fader` to the ROM-proven address point. */
     virtual ~Fader();                                /* slots 0 (D1), 1 (D0) */
+
+    /* Every deleting destructor in this hierarchy ends at
+       Memory::operator_delete2 (0x0203cbcc). Keeping that class delete path
+       inline makes mwcc emit the ROM's direct call instead of global
+       `_ZdlPv`; it adds neither object state nor a vtable slot. */
+    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 
     /* Pure, all eight: the corresponding words in data_0208eafc are null. */
     virtual void AdvanceFade() = 0;                  /* slot 2 */
@@ -88,8 +100,8 @@ struct Fader {
 
 typedef char Fader_size_must_be_0xc[sizeof(Fader) == 0xc ? 1 : -1];
 #else
-/* Same object, spelled for the C destructor translation units: C cannot express
-   the virtual functions, so the vptr the compiler would place is explicit. */
+/* Same object, spelled for remaining C consumers: C cannot express the virtual
+   functions, so the vptr the compiler would place is explicit. */
 struct Fader {
     void*  vtable;      /* 0x00 */
     Fix12i currInterp;  /* 0x04 */

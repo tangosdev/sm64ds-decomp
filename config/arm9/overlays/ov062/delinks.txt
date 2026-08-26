@@ -380,7 +380,7 @@ src/_ZN9KoopaFlagD1Ev.cpp:
     complete
     .text start:0x0211af38 end:0x0211af70
 
-src/_ZN9KoopaFlagD0Ev.c:
+src/_ZN9KoopaFlagD0Ev.cpp:
     complete
     .text start:0x0211af70 end:0x0211afbc
 

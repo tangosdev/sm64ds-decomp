@@ -1,9 +1,14 @@
 //cpp
+#include "Tree.h"
+
 extern "C" {
 extern int _ZN5dCc_c5ClearEv(void*);
 extern int _ZN5dCc_c6UpdateEv(void*);
 extern char* data_ov002_02110a48[5];
-int _ZN4Tree8BehaviorEv(void){
+}
+
+int Tree::Behavior()
+{
   char** pp = data_ov002_02110a48;
   int i;
   for(i=0;i<5;i++){
@@ -16,5 +21,4 @@ int _ZN4Tree8BehaviorEv(void){
     pp++;
   }
   return 1;
-}
 }

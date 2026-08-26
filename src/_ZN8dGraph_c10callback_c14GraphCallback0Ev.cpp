@@ -11,8 +11,8 @@
  * list. This file previously argued the opposite (static, plain function
  * table) under the name dScene_c::GraphCallback0 -- both the scope and the
  * theory were wrong; dScene_c's own vtable (0x02092680) contains none of
- * these four addresses. Declared non-virtual in dGraph_c.h only to keep
- * this single-function TU from emitting the class vtable -- see the header.
+ * these four addresses. Object isolation retains only this method from the
+ * compiler's key-function TU output.
  */
 #include "dGraph_c.h"
 
