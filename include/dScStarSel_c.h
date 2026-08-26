@@ -59,8 +59,13 @@ struct dScStarSel_c : dScene_c {
                                         character UI positions and timers */
 
     /* Declared first -- key function; see the family convention discussed in
-       dBase_c.h/dScene_c.h. Never defined as a real method in any TU: both
-       D1 and D0 are plain functions carrying their literal mangled name. */
+       dBase_c.h/dScene_c.h. The D1 source now defines this destructor as a
+       genuine compiler-spelled class method. The D0 source remains a real
+       destructor definition from which mwccarm emits the deleting variant.
+       Those one-function objects contribute only their selected text; the
+       ov003 ROM-gap data remains the production owner of this class's vtable,
+       RTTI and type-name objects. This establishes the ABI shape without
+       claiming the exact original EAD translation-unit spelling. */
     virtual ~dScStarSel_c();                             /* slots 16 (D1), 17 (D0) */
 
     /* --- overrides, in _ZTV8dScene_c/_ZTV7fBase_c order. --- */
