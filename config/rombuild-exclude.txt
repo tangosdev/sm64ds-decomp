@@ -40,8 +40,14 @@ _ZN11ShadowModel12InitCylinderEv
 # the right content. Mostly C++ destructors differing by a single byte, where a
 # deleting/complete variant resolves differently in a real relink than it does
 # when linkcheck verifies the match in isolation.
-_ZN15RecRoomCupboardD1Ev
-_ZN15RecRoomCupboardD0Ev
+#
+# _ZN15RecRoomCupboardD1Ev / D0Ev CAME OFF THIS LIST. They were here because the
+# hand-written source wrote ((dActor_c *)c)->~dActor_c(), for which the compiler
+# emits the D1 complete-object destructor where the ROM calls the D2 base-object
+# one. include/RecRoomCupboard.h now derives the class properly and both files are
+# an empty RecRoomCupboard::~RecRoomCupboard(); the compiler picks D2 itself and
+# the ROM build carries both. Cast-and-call is the shape to look for in whatever
+# is still listed here.
 _ZN14BlendModelAnimD1Ev
 _ZN5ModelD2Ev
 CleanCommonModelDataArr
