@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN10dScEntry_cD1Ev
+// @symbol _ZN10dScEntry_cD0Ev
 #include "dScEntry_c.h"
 
 extern "C" {
