@@ -415,6 +415,33 @@ struct StackLayout {
     // PHYSICAL screens and the physical screens do not move -- only the engine
     // feeding each one does.
     int main_lower;
+    // THE GAME'S OWN G, in DS rows, and it is NOT gap_ds any more.
+    //
+    // The owner's 2026-08-26 ruling draws every minigame's hinge at 32 DS rows
+    // whatever the game's framework word says (hal/screen_gap.cpp's ONE HINGE
+    // block). It is a DISPLAY ruling: the word is not written, so a game whose
+    // own G is 16 -- the dScMgD3DBase_c four, scenes 372, 373, 384 and 385 --
+    // still submits every sprite at a2 + 0xc0 + 16 into a band that is 32 rows
+    // tall.
+    //
+    // THE BAND RASTERS NEED BOTH NUMBERS. gap_ds is how many rows the IMAGE
+    // has between the halves; this is how many of them the GAME has anything
+    // to put in. An engine's rows past its own G are the OTHER screen's
+    // picture, so a raster told only gap_ds draws the bottom screen's own
+    // first rows into the band a second time. See THE GAME'S OWN G in
+    // ntr/ppu_sub.cpp for the arithmetic and for the measurement that says the
+    // duplicate is latent rather than filmed.
+    //
+    // NOT LATCHED, and set beside `seam` and `main_lower` for their reason: it
+    // is read live out of the framework word every frame, and a value cached
+    // at the scene's G-latch would be one moment's answer serving a whole
+    // minigame.
+    //
+    // ZERO FROM stack_layout(), which is the zero-change guarantee: a layout
+    // nobody tells reads its whole band as the game's, which is what every
+    // pass did before this existed and is still exactly right for every game
+    // whose own G is the band's height.
+    int game_g_ds;
 };
 
 enum { GAP_FILL_SOLID = 0, GAP_FILL_AMBIENT = 1, GAP_FILL_CUSTOM = 2 };

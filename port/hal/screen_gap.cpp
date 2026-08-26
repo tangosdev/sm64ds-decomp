@@ -450,6 +450,7 @@ const ntr::StackLayout *hal_screen_layout(void)
         g_lay.world_band = (hal_gapless_world() || hal_gapless_world_rows()) ? 1 : 0;
         g_lay.obj_raster_ds = raster ? g_lay.obj_shift_ds : 0;
         g_lay.main_lower = main_lower;
+        g_lay.game_g_ds = raw;
         return &g_lay;
     }
 
@@ -486,6 +487,13 @@ const ntr::StackLayout *hal_screen_layout(void)
     g_lay.world_band = (hal_gapless_world() || hal_gapless_world_rows()) ? 1 : 0;
     g_lay.obj_raster_ds = raster ? g_lay.obj_shift_ds : 0;
     g_lay.main_lower = main_lower;
+    /* THE GAME'S OWN G, set on both paths out of here for the reason the seam
+       flag and the swap are: it is not in the latch key, so a cached layout
+       has to be told it too. Since the ONE HINGE ruling above this is no
+       longer `want`, and the band rasters need the difference -- an engine's
+       band rows past its own G are the OTHER screen's picture. See the
+       field's note in ntr/ppu.h. */
+    g_lay.game_g_ds = raw;
     /* and the band's per-scene continuity reader, installed at the same moment
        for the same reason: it is per scene, and installing clears the cached
        OAM attributes so nothing crosses from the last minigame into this one */
@@ -530,11 +538,22 @@ const ntr::StackLayout *hal_screen_layout(void)
                          "still gapless: nothing crosses a hinge.\n", scene,
                          g_lay.obj_shift_ds, g_lay.band_h, g_lay.obj_shift_ds,
                          g_lay.w, g_lay.h);
+        /* THE SUFFIX NAMES WHICH OF THE THREE THINGS HAPPENED TO G, and it has
+           to, because since the ONE HINGE ruling `want != raw` has two causes
+           and the line used to report both of them as the setting being off.
+           Run mg15 lane BAND read `G 16 DS rows (MinigameGap off: layout uses
+           0) -> band 64 host rows` off a run with the setting ON and a 32-row
+           band on screen -- the line said the gap was gone while it was the
+           largest it has ever been. This is the line a report about a
+           wrong-looking gap is answered from; it may not be the thing that is
+           wrong. */
         if (raw)
             std::fprintf(stderr, "[gap] scene %d, G %d DS rows%s -> band %d "
                          "host rows, image %dx%d, fill %s, peek %s, art %s\n",
                          scene, raw,
-                         want == raw ? "" : " (MinigameGap off: layout uses 0)",
+                         want == raw ? ""
+                         : want == 0  ? " (MinigameGap off: layout uses 0)"
+                                      : " (ONE HINGE: the layout draws 32)",
                          g_lay.band_h, g_lay.w, g_lay.h,
                          g_lay.fill_mode == ntr::GAP_FILL_SOLID  ? "solid"
                          : g_lay.fill_mode == ntr::GAP_FILL_CUSTOM
