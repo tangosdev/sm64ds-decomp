@@ -42,7 +42,7 @@ DROP = ("SM64DS_LEVEL", "SM64DS_SCENE", "SM64DS_SKIP_CLASS",
         "SM64DS_CLICK_TEST", "SM64DS_PAD_TEST", "SM64DS_TOUCH_PROBE",
         "SM64DS_MG_SCORE_TRACE", "SM64DS_RNG_MENU_FRAMES",
         "SM64DS_WINDOW_SELFTEST", "SM64DS_SCENE_FRAMES", "PORT_WATCHDOG",
-        "SM64DS_SCENE_NO_TOUCH")
+        "SM64DS_SCENE_NO_TOUCH", "SM64DS_COMMS_FANOUT", "SM64DS_COMMS_REPORT")
 
 
 def base_env():
@@ -72,18 +72,31 @@ def main():
     exe = os.path.join(build, "walk_window.exe")
     rows = []
 
+    # BOTH artifacts per scene. SM64DS_SCENE_BMP is the 512x384 framebuffer and
+    # is written for every scene; SM64DS_SCENE_BMP_STACKED is the top-over-
+    # bottom image and hal/scene_boot.cpp only writes it when the scene's own
+    # default layout is stacked -- a minigame scene is, an adventure or title
+    # scene is not, and forcing SM64DS_DUAL_SCREEN would have the harness pick
+    # the layout instead of the code under test. So scene 1 legitimately has no
+    # stacked row, on BOTH sides of the comparison, and the plain row is what
+    # carries it.
     for scene in SCENES:
-        dst = os.path.join(out, "%s_scene%s_stacked.bmp" % (tag, scene))
-        if os.path.exists(dst):
-            os.remove(dst)
+        plain = os.path.join(out, "%s_scene%s.bmp" % (tag, scene))
+        stacked = os.path.join(out, "%s_scene%s_stacked.bmp" % (tag, scene))
+        for f in (plain, stacked):
+            if os.path.exists(f):
+                os.remove(f)
         env = base_env()
         env["SM64DS_SCENE"] = scene
         env["SM64DS_SCENE_FRAMES"] = FRAMES
-        env["SM64DS_SCENE_BMP_STACKED"] = dst
+        env["SM64DS_SCENE_BMP"] = plain
+        env["SM64DS_SCENE_BMP_STACKED"] = stacked
         r = subprocess.run([exe], cwd=build, env=env, timeout=900,
                            capture_output=True, text=True,
                            creationflags=NO_CONSOLE, startupinfo=SI_MIN)
-        rows.append(("scene %s stacked" % scene, r.returncode, dst, sha(dst)))
+        rows.append(("scene %s" % scene, r.returncode, plain, sha(plain)))
+        rows.append(("scene %s stacked" % scene, r.returncode, stacked,
+                     sha(stacked)))
 
     # The level arm is walk_window's own selftest BMP, written next to the exe.
     src = os.path.join(build, "walk_window_selftest.bmp")
@@ -105,8 +118,13 @@ def main():
     print("exe   : %s  sha256 %s" % (exe, sha(exe)))
     for name, rc, path, digest in rows:
         print("%-22s rc=%-3d %s  %s" %
-              (name, rc, digest or "(NO FILE)", os.path.basename(path)))
-    return 0 if all(rc == 0 and d for _, rc, _, d in rows) else 1
+              (name, rc, digest or "(not written by this scene's layout)",
+               os.path.basename(path)))
+    # A missing STACKED row is a layout fact, not a failure (see the note
+    # above); a missing plain row or a nonzero rc is.
+    bad = [n for n, rc, _, d in rows
+           if rc != 0 or (d is None and "stacked" not in n)]
+    return 1 if bad else 0
 
 
 if __name__ == "__main__":

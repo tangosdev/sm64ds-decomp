@@ -109,22 +109,26 @@ void comms_report(const char *tag) {
 
     const unsigned char *loc = data_020a1040;
     std::fprintf(stderr,
-        "[comms:%s]   local  frame=%d stylus={%u,%u,%u} flag=%04x key=%04x\n",
+        "[comms:%s]   local  frame=%d stylus={%u,%u,%u} flag=%04x key=%04x "
+        "head=%04x\n",
         tag ? tag : "-", *(const int *)(loc + 0x00),
         loc[0x04], loc[0x06], loc[0x08],
         *(const unsigned short *)(loc + 0x0C),
-        *(const unsigned short *)(loc + 0x0E));
+        *(const unsigned short *)(loc + 0x0E),
+        *(const unsigned short *)(loc + 0x10));
 
     for (int i = 0; i < kCommsMaxPlayers; ++i) {
         const unsigned char *p = data_020a1154 + i * 0x24;
         const unsigned char *t = data_020a0de8 + i * 4;
         std::fprintf(stderr,
             "[comms:%s]   slot%d frame=%d stylus={%u,%u,%u} flag=%04x key=%04x "
-            "| touch{now=%u chg=%u x=%u y=%u} pad{held=%04x pressed=%04x}\n",
+            "head=%04x | touch{now=%u chg=%u x=%u y=%u} "
+            "pad{held=%04x pressed=%04x}\n",
             tag ? tag : "-", i, *(const int *)(p + 0x00),
             p[0x04], p[0x06], p[0x08],
             *(const unsigned short *)(p + 0x0C),
             *(const unsigned short *)(p + 0x0E),
+            *(const unsigned short *)(p + 0x10),
             t[0], t[1], t[2], t[3],
             (unsigned)(data_020a0e58[i] & 0xFFFF),
             (unsigned)((data_020a0e58[i] >> 16) & 0xFFFF));
