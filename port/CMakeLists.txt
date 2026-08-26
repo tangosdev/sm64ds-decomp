@@ -2966,6 +2966,16 @@ set(TS1_B6EB4_DISPLACED FALSE)     # displacement: listed, and cut
 set(IR1_C2B9C_IN_SLICE FALSE)      # run mg15 lane IMPLICITR, the fourth
 set(IR1_C2B9C_DISPLACED FALSE)     # displacement and the first on the RETURN
                                    # side: listed, and cut
+set(TIDEP_B4B5C_DISPLACED FALSE)   # run mg15 lane TITLEDEPTH, the fourth
+# DECLARED HERE AND NOT BESIDE ITS SIBLING SWITCH, because the loop below reads
+# it and CMake evaluates this file top to bottom. Declared further down it would
+# still work from the command line -- -D writes the cache before this file runs
+# -- and its DEFAULT would be an empty variable up here, which is the shape of a
+# switch that is right for the wrong reason.
+option(TIDEP_ARITY_PLAIN
+       "run mg15 TITLEDEPTH: keep src/func_ov007_020b4b5c.c in the port slice, \
+so the title's cell sizer is called without its camera (pre-fix arm)"
+       OFF)
 foreach(line IN LISTS SLICE_OV007_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -3108,7 +3118,17 @@ foreach(line IN LISTS SLICE_OV007_LINES)
     #
     # THE FLAG IS NOT BOOKKEEPING, same as the three blocks above: the branch
     # below reads it, so the cut and the host copy's membership are one fact.
-    if(line MATCHES "^src/func_ov007_020b4b5c\\.c$")
+    #
+    # KILL SWITCH -DTIDEP_ARITY_PLAIN=ON puts the matched TU back and drops the
+    # host copy, which is the PRE-FIX arm and is a real control rather than a
+    # reconstruction: that arm's binary contains exactly the translation unit
+    # the base tree compiled. It is a REBUILD and not one binary, so the two
+    # arms' .dsstate bases have to be read before their selftest BMPs are
+    # compared -- notes/port-selftest-bmp-gate.md. The arm is printed on every
+    # configure in BOTH directions, because run mg15's SQRT lane proved a CMake
+    # option() caches and a switch that only announces one arm silently keeps
+    # the wrong one.
+    if(line MATCHES "^src/func_ov007_020b4b5c\\.c$" AND NOT TIDEP_ARITY_PLAIN)
         set(TIDEP_B4B5C_DISPLACED TRUE)
         continue()
     endif()
@@ -3164,11 +3184,17 @@ if(TIDEP_B4B5C_DISPLACED)
                    "unmatched/Ov007_ImplicitR1_020b4b5c.cpp, which forwards its "
                    "own second argument, so the title's cell sizes are computed "
                    "against the REAL camera")
+elseif(TIDEP_ARITY_PLAIN)
+    message(STATUS "TIDEP: TIDEP_ARITY_PLAIN=ON -- src/func_ov007_020b4b5c.c "
+                   "is back in the slice and the implicit-r1 host copy is out. "
+                   "This is the PRE-FIX arm: the title's cell sizer is called "
+                   "without its camera and reads an unfilled stack slot, and "
+                   "the title's art draws about 3.49x too large.")
 else()
-    # The opposite state, said separately, because "the slice stopped listing
-    # it" and "the displacement is off" read the same in a build log and are
+    # The third state, said separately, because "the slice stopped listing it"
+    # and "the pre-fix arm is selected" read the same in a build log and are
     # not the same tree. This one is an undefined symbol at the link, not a
-    # silent wrong picture: the host copy is the only definition left.
+    # silent wrong picture: neither definition is left.
     message(STATUS "TIDEP: slice_ov007.txt no longer lists "
                    "src/func_ov007_020b4b5c.c, so the implicit-r1 host copy is "
                    "NOT added and the link will fail on it. Restore the line: "
