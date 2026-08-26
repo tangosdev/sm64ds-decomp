@@ -2,6 +2,7 @@
 #define DSCMB_C_H
 #include "dScene_c.h"
 #include "FaderColor.h"
+#include "dGraph_c.h"
 
 /* Multi-Boot scene: one of dScene_c's ten direct children (see the census in
  * dScene_c.h). Its own destructor and other matched code already carry the
@@ -48,6 +49,32 @@
  * other dScene_c child recovered so far.
  */
 struct dScMB_c : dScene_c {
+
+    /* The GLOBAL callback object InitResources registers (data_020a0c68), not a
+       member of dScMB_c -- it occupies no space in this class; see the note above.
+       Derives from dGraph_c::callback_c, the ROM-proven base whose _ZTI edge every
+       scene's nested graphCallback_c points at (include/dGraph_c.h).
+
+       The slots are declared virtual, matching dGraph_c::callback_c's own
+       declarations (include/dGraph_c.h): the base supplies the vptr at +0x0,
+       so mOwner falls at the +0x4 GraphCallback3 loads, and strict object
+       isolation discards the vtable/RTTI passengers the function range does
+       not own. */
+    class graphCallback_c : public dGraph_c::callback_c {
+    public:
+        void *mOwner;                                   /* 0x04 -- polled by slot 3 */
+        s32   mSpinAngle;                               /* 0x08 -- 20.12 sprite spin,
+                                    advanced by the global frame step and zeroed
+                                    while the still frame is up */
+        u8    mStillTimer;                              /* 0x0c -- nonzero: draw the
+                                    single unrotated sprite and count down */
+        u8    mEnabled;                                 /* 0x0d -- nothing draws while 0 */
+        u8    mAdvancing;                               /* 0x0e -- gates the spin advance */
+
+        virtual int GraphCallback0();                           /* slot 0 */
+        virtual int GraphCallback2();                           /* slot 2 */
+        virtual int GraphCallback3();                           /* slot 3 */
+    };
     FaderColor fader;      /* 0x50 -- placement-constructed by InitResources,
                                destroyed by ~dScMB_c; see derivation above */
     s32 unk_060;            /* 0x60 -- Behavior state-machine step */

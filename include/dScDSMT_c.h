@@ -2,6 +2,7 @@
 #define DSCDSMT_C_H
 #include "dScene_c.h"
 #include "dFdDummy_c.h"
+#include "dGraph_c.h"
 
 /* One of dScene_c's ten direct children (see the census in dScene_c.h) --
  * the DS Multi-Play scene, per its own coinage (DSMT = "DS MulTi"). It had
@@ -60,6 +61,23 @@
  * _ZN8dScene_cD1Ev / _ZN8dScene_cD0Ev.
  */
 struct dScDSMT_c : dScene_c {
+
+    /* The nested class the ROM's type graph records for this scene
+       (_ZTIN9dScDSMT_c15graphCallback_cE, ov007), deriving from
+       dGraph_c::callback_c. Declaring it adds no storage -- the sub-object
+       itself is the vptr-only span already held as unk_050 below, whose own
+       internal layout stays a later pass.
+
+       The slots are declared virtual, matching dGraph_c::callback_c's own
+       declarations (include/dGraph_c.h): the base supplies the vptr at +0x0,
+       so the derived fields fall where the ROM puts them, and strict object
+       isolation discards the vtable/RTTI passengers the function range does
+       not own. */
+    class graphCallback_c : public dGraph_c::callback_c {
+    public:
+        virtual int GraphCallback0();                            /* slot 0 */
+        virtual int GraphCallback2();                            /* slot 2 */
+    };
     u8  unk_050[0x4];  /* 0x050 -- opaque; the graphCallback_c sub-object,
                                     whose own layout is a later pass. The
                                     constructor writes a base-then-derived
