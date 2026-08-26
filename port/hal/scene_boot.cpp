@@ -136,6 +136,11 @@
 #include <cstdlib>
 #include <cstring>
 
+// run mg15, lane TITLE3: the hardware write-watch below needs the x86 debug
+// registers and a vectored exception handler. Same plain include ten other
+// hal TUs already use (hal/os_arena.cpp, hal/oam_lists.cpp, ...).
+#include <windows.h>
+
 #include "ntr/gx.h"
 #include "ntr/ppu.h"
 #include "ntr/rt.h"
@@ -3987,6 +3992,265 @@ static void port_title_attract_probe(int frame, const char *when)
     std::fflush(stderr);
 }
 
+/* ---- A HARDWARE WRITE-WATCH, FOR THE SLOTS NO ROM INSTRUCTION NAMES -------
+ *
+ * Run mg15, lane TITLE3. SM64DS_T3_WATCH=<spec>, DEFAULT OFF.
+ *
+ * mg14's reviewer left the +0x130 gate at a wall a static scan cannot pass. A
+ * word-by-word capstone walk of the WHOLE of overlay_0007.bin (base
+ * 0x020ad660, alignment controlled on the byte-matched func_ov007_020c1da0)
+ * finds exactly one instruction that names #0x130 as a struct offset, and it is
+ * the READ in func_ov007_020b1cf0. Nothing in ov007 stores there literally, no
+ * instruction in the overlay carries #0x130 or #0x4c as an immediate at all,
+ * and the object the slot points at is a HOST-HEAP allocation
+ * (hal/os_arena.cpp pins the game's arena at 0x30000000, so the runtime
+ * pointer 0x30051058 has no ROM address to look up). A slot filled through a
+ * base register the compiler biased -- `str rX,[rY,#0x30]` with rY = scene +
+ * 0x100 -- is invisible to every immediate cross-reference there is.
+ *
+ * It is NOT invisible to the machine. The port owns the allocation, so one run
+ * with an x86 data breakpoint on the word names the writing instruction from
+ * its own EIP. That is what this is: up to four dword watchpoints in DR0..DR3
+ * and a vectored handler that prints the writer's module-relative EIP, the
+ * frame it fired on, the new value and the executable return addresses on the
+ * stack under it. port/tools/t3_resolve.py turns the EIPs into function names
+ * out of walk_window.map.
+ *
+ * THE INSTRUMENT IS port/tests/fault_probe.h's port_watch_words, re-cut here
+ * for three reasons rather than exported: this one is FRAME-TAGGED (the whole
+ * question is "who writes at f644"), it keeps ONE ROW PER WRITING INSTRUCTION
+ * so a per-frame writer cannot spend the 300-line cap before the interesting
+ * event, and it can arm on an address that does not exist yet.
+ *
+ * SPEC, one of:
+ *   0xADDR[,0xADDR...]  up to four absolute dword addresses, armed at
+ *                       port_scene_begin, BEFORE the scene object exists. For
+ *                       a slot whose address a previous run printed -- the
+ *                       arena is pinned and the allocation order is
+ *                       deterministic, so the address repeats.
+ *   g130                &scene[0x130] -- the SLOT. Armed the first frame the
+ *                       scene global is non-null. Names who FILLS it.
+ *   p130                the inner object's +0x10 and +0x14 -- the GATE WORD.
+ *                       Armed the first frame the whole chain resolves. Names
+ *                       who ZEROES it.
+ *   p130ptr             the outer object's word 0. Names who re-points it.
+ *
+ * A data breakpoint on x86 is a TRAP, not a fault: it fires AFTER the store
+ * retires, so the printed EIP is the instruction AFTER the store and the
+ * printed value is the NEW one. Both are stated in the output.
+ *
+ * Cost when the variable is unset: one pointer test per frame. */
+static unsigned t3w_addr[4];
+static unsigned t3w_last[4];
+static int      t3w_n;
+static int      t3w_frame = -1;
+static const char *t3w_when = "boot";
+static int      t3w_cap = 400;
+static int      t3w_shown;
+static char    *t3w_modbase;
+static int      t3w_armed;
+
+struct T3WatchRow {
+    unsigned eip;
+    unsigned hits;
+    int      first_frame;
+    int      last_frame;
+    unsigned first_val;
+    unsigned last_val;
+};
+static T3WatchRow t3w_rows[48];
+static int        t3w_nrows;
+
+static LONG WINAPI t3w_handler(EXCEPTION_POINTERS *ep)
+{
+    if (ep->ExceptionRecord->ExceptionCode != EXCEPTION_SINGLE_STEP)
+        return EXCEPTION_CONTINUE_SEARCH;
+    const unsigned eip =
+        (unsigned)((char *)ep->ExceptionRecord->ExceptionAddress - t3w_modbase);
+    unsigned nv[4] = {0, 0, 0, 0};
+    int changed = 0;
+    for (int i = 0; i < t3w_n; ++i) {
+        nv[i] = *(volatile unsigned *)(uintptr_t)t3w_addr[i];
+        if (nv[i] != t3w_last[i]) changed = 1;
+    }
+    int r = -1;
+    for (int i = 0; i < t3w_nrows; ++i)
+        if (t3w_rows[i].eip == eip) { r = i; break; }
+    if (r < 0 && t3w_nrows < (int)(sizeof t3w_rows / sizeof t3w_rows[0])) {
+        r = t3w_nrows++;
+        t3w_rows[r].eip = eip;
+        t3w_rows[r].hits = 0;
+        t3w_rows[r].first_frame = t3w_frame;
+        t3w_rows[r].first_val = nv[0];
+    }
+    if (r >= 0) {
+        ++t3w_rows[r].hits;
+        t3w_rows[r].last_frame = t3w_frame;
+        t3w_rows[r].last_val = nv[0];
+    }
+    /* EVERY value change is printed whatever the cap says: the cap is there to
+       stop a once-a-frame writer from spending the log, not to hide the one
+       event the run is for. */
+    if (changed || t3w_shown < t3w_cap) {
+        if (!changed) ++t3w_shown;
+        std::fprintf(stderr, "[t3watch] %s f%-4d eip=+0x%08x%s now={",
+                     t3w_when, t3w_frame, eip, changed ? " CHANGED" : "");
+        for (int i = 0; i < t3w_n; ++i)
+            std::fprintf(stderr, "%s%08x", i ? " " : "", nv[i]);
+        std::fprintf(stderr, "} was={");
+        for (int i = 0; i < t3w_n; ++i)
+            std::fprintf(stderr, "%s%08x", i ? " " : "", t3w_last[i]);
+        std::fprintf(stderr, "}");
+        unsigned *sp = (unsigned *)ep->ContextRecord->Esp;
+        int printed = 0;
+        for (int i = 0; i < 96 && printed < 6; ++i) {
+            if (IsBadReadPtr(sp + i, 4)) break;
+            const unsigned v = sp[i];
+            if (v >= (unsigned)(uintptr_t)t3w_modbase &&
+                v < (unsigned)(uintptr_t)t3w_modbase + 0x00800000u)
+                std::fprintf(stderr, " ret?+0x%08x",
+                             (unsigned)(v - (unsigned)(uintptr_t)t3w_modbase)),
+                    ++printed;
+        }
+        std::fprintf(stderr, "\n");
+        std::fflush(stderr);
+    }
+    for (int i = 0; i < t3w_n; ++i) t3w_last[i] = nv[i];
+    ep->ContextRecord->EFlags |= 0x10000;   /* RF: resume past the hit */
+    return EXCEPTION_CONTINUE_EXECUTION;
+}
+
+static void t3w_arm(void *addr, int nwords, const char *why)
+{
+    static int handler_in;
+    if (!t3w_modbase) t3w_modbase = (char *)GetModuleHandleA(0);
+    if (!handler_in) {
+        handler_in = 1;
+        AddVectoredExceptionHandler(1, t3w_handler);
+    }
+    if (nwords > 4) nwords = 4;
+    if (nwords < 1) nwords = 1;
+    t3w_n = nwords;
+    for (int i = 0; i < nwords; ++i) {
+        t3w_addr[i] = (unsigned)(uintptr_t)((char *)addr + 4 * i);
+        t3w_last[i] = *(volatile unsigned *)(uintptr_t)t3w_addr[i];
+    }
+    CONTEXT ctx;
+    std::memset(&ctx, 0, sizeof ctx);
+    ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
+    HANDLE th = GetCurrentThread();
+    GetThreadContext(th, &ctx);
+    DWORD *dr[4] = {&ctx.Dr0, &ctx.Dr1, &ctx.Dr2, &ctx.Dr3};
+    ctx.Dr7 = 0;
+    ctx.Dr6 = 0;
+    for (int i = 0; i < nwords; ++i) {
+        *dr[i] = (DWORD)(uintptr_t)t3w_addr[i];
+        ctx.Dr7 |= (1u << (2 * i));           /* local enable  */
+        ctx.Dr7 |= (0x1u << (16 + 4 * i));    /* break on WRITE */
+        ctx.Dr7 |= (0x3u << (18 + 4 * i));    /* len = 4 bytes  */
+    }
+    const BOOL ok = SetThreadContext(th, &ctx);
+    std::fprintf(stderr,
+                 "[t3watch] ARMED %d word(s) at %p (%s) f%d SetThreadContext=%d "
+                 "modbase=%p initial={", nwords, addr, why, t3w_frame, (int)ok,
+                 (void *)t3w_modbase);
+    for (int i = 0; i < nwords; ++i)
+        std::fprintf(stderr, "%s%08x", i ? " " : "", t3w_last[i]);
+    std::fprintf(stderr, "}\n");
+    std::fflush(stderr);
+    t3w_armed = 1;
+}
+
+static void t3w_tick(int frame, const char *when)
+{
+    static const char *spec = (const char *)-1;
+    if (spec == (const char *)-1) {
+        spec = std::getenv("SM64DS_T3_WATCH");
+        if (const char *c = std::getenv("SM64DS_T3_WATCH_CAP"))
+            t3w_cap = std::atoi(c);
+    }
+    if (!spec) return;
+    t3w_frame = frame;
+    t3w_when = when;
+    if (t3w_armed) return;
+
+    if (spec[0] == '0' && (spec[1] == 'x' || spec[1] == 'X')) {
+        unsigned a[4];
+        int n = 0;
+        const char *p = spec;
+        while (n < 4 && p && *p) {
+            a[n++] = (unsigned)std::strtoul(p, 0, 16);
+            p = std::strchr(p, ',');
+            if (p) ++p;
+        }
+        /* The arena is VirtualAlloc'd by hal/os_arena.cpp, so an address handed
+           in from a previous run is not mapped until it is. Retry rather than
+           fault, and say when it became readable. */
+        for (int i = 0; i < n; ++i)
+            if (IsBadReadPtr((const void *)(uintptr_t)a[i], 4))
+                return;
+        t3w_arm((void *)(uintptr_t)a[0], n, spec);
+        /* Absolute form: DR1..DR3 want the OTHER listed addresses, not
+           addr+4*i. Re-lay them by hand. */
+        if (n > 1) {
+            CONTEXT ctx;
+            std::memset(&ctx, 0, sizeof ctx);
+            ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
+            HANDLE th = GetCurrentThread();
+            GetThreadContext(th, &ctx);
+            DWORD *dr[4] = {&ctx.Dr0, &ctx.Dr1, &ctx.Dr2, &ctx.Dr3};
+            for (int i = 0; i < n; ++i) {
+                t3w_addr[i] = a[i];
+                t3w_last[i] = *(volatile unsigned *)(uintptr_t)a[i];
+                *dr[i] = (DWORD)a[i];
+            }
+            SetThreadContext(th, &ctx);
+        }
+        return;
+    }
+
+    char *g = data_ov007_0210342c;
+    if (!g) return;
+    if (!std::strcmp(spec, "g130")) {
+        t3w_arm(g + 0x130, 1, "&scene[0x130] -- who FILLS the slot");
+        return;
+    }
+    char *p130 = *(char **)(g + 0x130);
+    if (!p130) return;
+    if (!std::strcmp(spec, "p130ptr")) {
+        t3w_arm(p130, 1, "p130[0] -- who re-points the inner object");
+        return;
+    }
+    char *p130o = *(char **)p130;
+    if (!p130o) return;
+    if (!std::strcmp(spec, "p130")) {
+        t3w_arm(p130o + 0x10, 2, "p130obj+0x10/+0x14 -- the GATE WORD");
+        return;
+    }
+    if (!std::strcmp(spec, "p130all")) {
+        t3w_arm(p130o + 0x8, 4, "p130obj+0x08..+0x14");
+        return;
+    }
+    std::fprintf(stderr, "[t3watch] unknown SM64DS_T3_WATCH spec '%s'\n", spec);
+    std::fflush(stderr);
+    t3w_armed = 1;   /* say it once */
+}
+
+static void t3w_report(void)
+{
+    if (!t3w_modbase) return;
+    std::fprintf(stderr,
+                 "[t3watch] --- one row per WRITING INSTRUCTION. eip is the "
+                 "instruction AFTER the store (x86 data breakpoints are traps) "
+                 "and the values are POST-store. ---\n");
+    for (int i = 0; i < t3w_nrows; ++i)
+        std::fprintf(stderr, "[t3watch] eip=+0x%08x hits=%u frames=%d..%d "
+                     "val=%08x..%08x\n", t3w_rows[i].eip, t3w_rows[i].hits,
+                     t3w_rows[i].first_frame, t3w_rows[i].last_frame,
+                     t3w_rows[i].first_val, t3w_rows[i].last_val);
+    std::fflush(stderr);
+}
+
 /* TITLE LANE DIAGNOSTIC, run mg12. SM64DS_SCENE_TITLE_ALLOC=1 prints the title
    screen's own allocation map once, at the end of the run, and answers ONE
    question with addresses instead of inference: do the two 0x400 OAM shadow
@@ -4144,6 +4408,12 @@ extern "C" int port_scene_begin(void *hwnd, int zoom)
     scn_trace = trace;
 
     port_scene_layout_propose();
+
+    /* run mg15 lane TITLE3: arm the write-watch BEFORE the scene is spawned, so
+       the absolute-address form can catch the store that FILLS a slot rather
+       than only the ones that come after it. Non-absolute forms need the scene
+       global and simply return here; the per-frame call re-tries them. */
+    t3w_tick(-1, "begin");
 
     /* THE DS'S POWER-ON INTERRUPT STATE, before anything can arm an interrupt.
        The ROM's own arming code brackets SetIRQHandler in
@@ -4447,6 +4717,10 @@ extern "C" void port_scene_tick(int frame, int tick_game)
                this frame's tick left rather than what the previous one did.
                Two integer compares when the variable is unset. */
             port_title_attract_probe(frame, "tick");
+            /* run mg15, lane TITLE3: keep the write-watch's frame tag current
+               and arm it the first frame its target resolves. One pointer test
+               when SM64DS_T3_WATCH is unset. */
+            t3w_tick(frame, "tick");
         }
         /* THE DISPLAY SCAN-OUT, which is where IRQ 2 lives. The DS raises the
            HBlank edge once per scanline while the picture is being drawn, and
@@ -4477,6 +4751,25 @@ extern "C" void port_scene_tick(int frame, int tick_game)
             if (trace) std::fprintf(stderr, "[scene-trace] f%d gx_render\n", frame);
             ntr::gx_render(fb);
             if (trace) std::fprintf(stderr, "[scene-trace] f%d composite\n", frame);
+            /* run mg12 TITLE lane experiment, DEFAULT OFF. HERE and not at the
+               head of the tick: the Render slot above is what BUILDS the two
+               OAM shadows and the composite below is what runs the graph block
+               beat that UPLOADS them, so this is the only seam between the
+               build and the upload. A first pass put it at the head of the
+               tick, where the build simply overwrote it and the frame came out
+               byte-identical -- a null result that measured the placement
+               rather than the question.
+
+               RESTORED by run mg15 lane TITLE3. This call, and
+               title_alloc_report()'s in port_scene_finish, were LOST when
+               378d69a05 was rebased into f0349e9f8: the rebased twin kept both
+               function DEFINITIONS and neither call site, so on every build
+               since then SM64DS_SCENE_OAM_TAIL_ZERO and SM64DS_SCENE_TITLE_ALLOC
+               have been no-ops that still print their banner from inside a
+               function nothing calls. An A/B run against a dead knob comes out
+               byte-identical and reads as "the experiment says no difference".
+               */
+            title_oam_tail_zero();
             port_message_composite_engine_a(&fb);
             if (trace) std::fprintf(stderr, "[scene-trace] f%d sub_present\n", frame);
             hal_sub_screen_present(&fb.px[0][0], ntr::SCREEN_W, ntr::SCREEN_H);
@@ -4490,6 +4783,8 @@ extern "C" void port_scene_tick(int frame, int tick_game)
            sample cannot see what that callback did on this frame. */
         if (tick_game)
             port_title_attract_probe(frame, "rend");
+        if (tick_game)
+            t3w_tick(frame, "rend");
         if (tick_game)
             port_actor_scene_pass();
 
@@ -4524,6 +4819,13 @@ extern "C" int port_scene_finish(int frames_run)
     const char *bmp = scn_bmp;
     const char *bmp_stacked = scn_bmp_stacked;
     ntr::Framebuffer &fb = scn_fb;
+
+    /* run mg12 TITLE lane, DEFAULT OFF. Its call site was lost in the same
+       rebase as title_oam_tail_zero()'s; see the banner there. */
+    title_alloc_report();
+    /* run mg15 lane TITLE3: the write-watch's per-instruction table. Prints
+       nothing unless SM64DS_T3_WATCH armed something. */
+    t3w_report();
 
     if (bmp && !no_render)
         ntr::ppu_write_bmp(bmp, fb);
