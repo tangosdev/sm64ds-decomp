@@ -448,8 +448,9 @@ Copy this prompt to another AI agent:
 > identity, regenerated enrollment, a full `rombuild.py -j16 --no-rom` result of
 > zero mismatches and 106/106 exact modules, plus `port_refcheck`, dead-reference,
 > attribution, affected-header, and language-mode gates as applicable. Restore
-> any failure exactly and leave compiler walls unmigrated. Put docs/tools in a
-> separate PR from source migrations. After a class has several genuine methods,
+> any failure exactly and leave compiler walls unmigrated. Put documentation and
+> tooling changes in a separate PR from source migrations. After a class has
+> several genuine methods,
 > use the shadow-TU workflow to prove their original order and ownership, then
 > consolidate only compatibility-proven groups into a production class TU.
 > Report concrete evidence, not optimism.
