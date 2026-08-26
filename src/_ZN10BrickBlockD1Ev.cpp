@@ -1,14 +1,8 @@
 //cpp
 // @symbol _ZN10BrickBlockD1Ev
-
-struct dActor_c {
-    virtual ~dActor_c();
-};
-
-
-struct BrickBlock : dActor_c {
-    virtual ~BrickBlock();
-};
+/* Genuine complete destructor. The raw compiler object also materializes this
+ * class's vtable and RTTI passengers; objisolate retains only licensed D1 text. */
+#include "BrickBlock.h"
 
 BrickBlock::~BrickBlock()
 {

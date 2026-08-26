@@ -1,49 +1,53 @@
 //cpp
 // @symbol _ZN10BrickBlock8BehaviorEv
-/* recovered: named members + shared header, real C++ method */
 #include "BrickBlock.h"
-struct C;
-typedef void (C::*PMF)();
-extern "C" PMF data_ov002_0210dd30[];
+#include "BigBrickBlock.h"
+
+typedef void (BrickBlock::*BrickBlockAction)();
+extern "C" BrickBlockAction data_ov002_0210dd30[];
 extern "C" {
-void* _ZN8dActor_c4NextEPKS_(const void* prev);
-int Vec3_Dist(const void* a, const void* b);
-void _ZN7fBase_c18MarkForDestructionEv(void* c);
+extern dActor_c *_ZN8dActor_c4NextEPKS_(const dActor_c *previous);
+extern s32 Vec3_Dist(const void *a, const void *b);
 }
-struct C { char pad[0x1000]; };
 
 int BrickBlock::Behavior()
 {
-  char* o = 0;
-  if (mIsAttached != 0) goto d6;
-  o = (char*)_ZN8dActor_c4NextEPKS_(0);
-  while (o){
-    unsigned short t = *(unsigned short*)(o + 0xc);
-    int b;
-    b = (t == 0x10);
-    if (!b){
-      b = (t == 0xf);
-      if (!b){
-        b = (t == 0x11);
-        if (!b) goto next;
-      }
+    dActor_c *block = 0;
+    if (mIsAttached != 0)
+        goto attached;
+
+    block = _ZN8dActor_c4NextEPKS_(0);
+    while (block) {
+        u16 type = block->actorID;
+        int isBlock;
+        isBlock = (type == 0x10);
+        if (!isBlock) {
+            isBlock = (type == 0x0f);
+            if (!isBlock) {
+                isBlock = (type == 0x11);
+                if (!isBlock)
+                    goto next;
+            }
+        }
+        if (Vec3_Dist(&mPosX, &block->mPosX) < 0x32000) {
+            ((BigBrickBlock *)block)->mLinkedActor = this;
+            mIsAttached = 1;
+            return 1;
+        }
+    next:
+        block = _ZN8dActor_c4NextEPKS_(block);
     }
-    if (Vec3_Dist(((char*)this) + 0x5c, o + 0x5c) < 0x32000){
-      *(char**)(o + 0x328) = ((char*)this);
-      mIsAttached = 1;
-      return 1;
+
+    if (block)
+        goto attached;
+    MarkForDestruction();
+    return 1;
+
+attached:
+    if (mActionPending != 0) {
+        int index = mActionIndex;
+        (this->*data_ov002_0210dd30[index])();
+        MarkForDestruction();
     }
-  next:
-    o = (char*)_ZN8dActor_c4NextEPKS_(o);
-  }
-  if (o) goto d6;
-  _ZN7fBase_c18MarkForDestructionEv(((char*)this));
-  return 1;
-d6:
-  if (mActionPending != 0){
-    int idx = mActionIndex;
-    (((C*)((char*)this))->*data_ov002_0210dd30[idx])();
-    _ZN7fBase_c18MarkForDestructionEv(((char*)this));
-  }
-  return 1;
+    return 1;
 }

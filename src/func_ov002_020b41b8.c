@@ -1,8 +1,18 @@
-extern int data_ov002_020ff090[];
-void func_ov002_020b41b8(int *dst, char *src){
-  unsigned char idx=src[0xd7];
-  int c64=*(int*)(src+0x64);
-  int b=*(int*)(src+0x60)+data_ov002_020ff090[idx];
-  int c5c=*(int*)(src+0x5c);
-  dst[0]=c5c; dst[1]=b; dst[2]=c64;
+//cpp
+// @symbol _ZN10BrickBlock11GetSpawnPosER7Vector3RS_
+#include "BrickBlock.h"
+#include "common.h"
+
+extern s32 data_ov002_020ff090[];
+
+void BrickBlock::GetSpawnPos(Vector3 &destination, BrickBlock &tag)
+{
+    u8 index = tag.mActionIndex;
+    s32 z = tag.mPosZ;
+    s32 y = tag.mPosY + data_ov002_020ff090[index];
+    s32 x = tag.mPosX;
+
+    destination.x = x;
+    destination.y = y;
+    destination.z = z;
 }

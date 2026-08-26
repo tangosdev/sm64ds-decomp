@@ -1,38 +1,26 @@
-// @symbol func_ov002_020b42e4
-/* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: shared common types */
+//cpp
+// @symbol _ZN10BrickBlock15SpawnSilverStarEv
+#include "BrickBlock.h"
 #include "common.h"
-struct dActor_c {
-    char pad4[4];
-    int f4;     // 0x4
-    char pad_to434[0x434 - 8];
-    int f434;   // 0x434
-};
 
-extern void _ZN8dActor_c11UntrackStarERa(char *thiz, signed char *star);
-extern struct dActor_c *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-    unsigned int a, unsigned int b, const struct Vector3 *pos,
-    const struct Vector3_16 *rot, int e, int f);
-extern void LinkSilverStarAndStarMarker(char *a, char *b);
+extern "C" void LinkSilverStarAndStarMarker(void *starMarker, void *silverStar);
 
-void func_ov002_020b42e4(char *self)
+void BrickBlock::SpawnSilverStar()
 {
-    struct Vector3 v;
-    struct dActor_c *a;
-    struct dActor_c *b;
+    Vector3 spawnPos;
+    dActor_c *starMarker;
+    dActor_c *silverStar;
 
-    _ZN8dActor_c11UntrackStarERa(self, (signed char *)(self + 0xd5));
-    func_ov002_020b41b8((int *)&v, self);
-    a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-        0xb4, 0x50, &v, 0, *(signed char *)(self + 0xcc), -1);
-    b = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-        0xb3, (*(signed char *)(self + 0xd4)) | 0x10, &v, 0,
-        *(signed char *)(self + 0xcc), -1);
-    if (a == 0)
+    UntrackStar(mTrackStarID);
+    GetSpawnPos(spawnPos, *this);
+    starMarker = Spawn(0xb4, 0x50, spawnPos, 0, mAreaId, -1);
+    silverStar = Spawn(0xb3, mStarID | 0x10, spawnPos, 0, mAreaId, -1);
+    if (starMarker == 0)
         return;
-    if (b == 0)
+    if (silverStar == 0)
         return;
-    b->f434 = a->f4;
-    LinkSilverStarAndStarMarker((char *)a, (char *)b);
+
+    /* Silver Star's marker-owner unique ID is the word at 0x434. */
+    *(u32 *)((char *)silverStar + 0x434) = starMarker->uniqueID;
+    LinkSilverStarAndStarMarker(starMarker, silverStar);
 }

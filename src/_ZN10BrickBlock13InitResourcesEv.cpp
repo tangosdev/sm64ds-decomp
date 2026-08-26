@@ -1,33 +1,41 @@
 //cpp
+// @symbol _ZN10BrickBlock13InitResourcesEv
+#include "BrickBlock.h"
+
 extern "C" {
-extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* f);
-extern int _ZN8dActor_c9TrackStarEjj(char* c, unsigned a, unsigned b);
-extern void LoadSilverStarAndNumber(void);
+extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *file);
+extern void LoadSilverStarAndNumber();
 extern int data_ov002_0210d9d8;
 extern int data_ov002_0210da30;
 extern int data_ov002_0210da18;
-int _ZN10BrickBlock13InitResourcesEv(char* c) {
-    *(signed char*)(c+0xd4) = *(int*)(c+8) & 0x7f;
-    if (*(signed char*)(c+0xd4) == 0x7f) *(signed char*)(c+0xd4) = 0;
-    switch (*(unsigned short*)(c+0xc)) {
+}
+
+int BrickBlock::InitResources()
+{
+    mStarID = param1 & 0x7f;
+    if (mStarID == 0x7f)
+        mStarID = 0;
+
+    switch (actorID) {
     case 0x141:
-        *(unsigned char*)(c+0xd7) = 0;
+        mActionIndex = 0;
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9d8);
         break;
     case 0x142:
-        *(unsigned char*)(c+0xd7) = 1;
+        mActionIndex = 1;
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da30);
         break;
     case 0x143:
-        *(unsigned char*)(c+0xd7) = 2;
+        mActionIndex = 2;
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da18);
         break;
     case 0x144:
-        *(unsigned char*)(c+0xd7) = 3;
-        *(unsigned char*)(c+0xd5) = _ZN8dActor_c9TrackStarEjj(c, *(unsigned char*)(c+0xd4), 1);
+        mActionIndex = 3;
+        /* TrackStar's star index is unsigned even though this stored byte is
+         * signed at the other ROM load sites. The cast preserves the ldrb. */
+        mTrackStarID = TrackStar((u8)mStarID, 1);
         LoadSilverStarAndNumber();
         break;
     }
     return 1;
-}
 }

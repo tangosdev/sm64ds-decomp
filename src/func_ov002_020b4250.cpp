@@ -1,15 +1,11 @@
 //cpp
-// @symbol func_ov002_020b4250
-// recovered name: BigBrickBlock_AfterClsn
-/* recovered: shared common types, renamed to Class_Method */
-/* daObjBlockL_c::AfterClsn - recovered from vtable slot identity */
-struct V3{int x,y,z;};
-extern "C" {
-void func_ov002_020b41b8(struct V3*, char*);
-int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, struct V3*, void*, int, int);
-void func_ov002_020b4250(char* c){
-  struct V3 v;
-  func_ov002_020b41b8(&v, c);
-  _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x115, 0, &v, 0, *(signed char*)(c+0xcc), -1);
-}
+// @symbol _ZN10BrickBlock17SpawnMegaMushroomEv
+#include "BrickBlock.h"
+#include "common.h"
+
+void BrickBlock::SpawnMegaMushroom()
+{
+    Vector3 spawnPos;
+    GetSpawnPos(spawnPos, *this);
+    Spawn(0x115, 0, spawnPos, 0, mAreaId, -1);
 }
