@@ -744,11 +744,11 @@ src/_ZN21MegaMushroomCreateTagD0Ev.cpp:
     complete
     .text start:0x020b46d0 end:0x020b4714
 
-src/func_ov002_020b4714.cpp:
+src/_ZN21MegaMushroomCreateTag17SpawnMegaMushroomEv.cpp:
     complete
     .text start:0x020b4714 end:0x020b47ec
 
-src/func_ov002_020b47ec.cpp:
+src/_ZN21MegaMushroomCreateTag20TrySpawnMegaMushroomEv.cpp:
     complete
     .text start:0x020b47ec end:0x020b482c
 
