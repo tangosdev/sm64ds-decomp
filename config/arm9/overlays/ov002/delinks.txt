@@ -764,7 +764,7 @@ src/_ZN16daObjKinokoTag_c13InitResourcesEv.cpp:
     complete
     .text start:0x020b49a8 end:0x020b4a00
 
-src/MegaMushroomCreateTag_Spawn.c:
+src/daObjKinokoTag_c_Spawn.c:
     complete
     .text start:0x020b4a00 end:0x020b4a38
 
