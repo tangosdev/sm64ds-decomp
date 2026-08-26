@@ -6704,12 +6704,21 @@ int main(void)
 
                    =2 IS NOT SELF-GUARDING BY HAND. It fails a rollback that
                    did not happen, but a run where the halfword never moved
-                   between the save and the load prints VACUOUS and still exits
-                   0, because a bare walk_window has no way to know whether the
-                   caller meant to drive a level change. port/tools/
-                   savestate_soak.py is the guard: it rejects a vacuous run as a
-                   failure. Read a hand-run's VACUOUS line, do not read its
-                   exit code. */
+                   between the save and the load still exits 0, because a bare
+                   walk_window has no way to know whether the caller meant to
+                   drive a level change. port/tools/savestate_soak.py is the
+                   guard. Read a hand-run's lines, do not read its exit code.
+
+                   WHAT THE SOAK READS NOW (run mg15 lane RELOAD2). The
+                   halfword was the wrong anchor: it reads the same whether
+                   ov009's record is reached through the mount's rebased
+                   pointer or through the raw DS reservation, so the arm it
+                   guarded could only ever report VACUOUS, and it did, on every
+                   level, for as long as it existed. The line that moves is the
+                   STORAGE COVERAGE printed above -- ".dsstate (captured)"
+                   against "NOT CAPTURED" -- and the soak asserts its three
+                   transitions in order: the pass ran, a restore rolled it
+                   back, the pass ran again. */
                 if (const char *w = getenv("SM64DS_SS_WATCH_FLAG"))
                     ss_watch = atoi(w);
             }
@@ -6815,7 +6824,16 @@ int main(void)
                 }
                 /* A rollback test over a byte that never moved proves
                    nothing, and it fails silently in the direction of looking
-                   green. Say so before the load rather than after. */
+                   green. Say so before the load rather than after.
+
+                   THE HALFWORD IS NO LONGER THE ARM'S VERDICT, and the wording
+                   says so, because a line reading VACUOUS in a run that PASSES
+                   is its own little trap. This byte reads the same on both
+                   sides of the mount's patch pass, so it can be expected to sit
+                   still; port/tools/savestate_soak.py reads the COVERAGE
+                   transitions in the [ss-flag] lines instead, which do move.
+                   Kept because a run where it DOES move is still worth
+                   seeing. */
                 if (ss_watch && ss_saw_save) {
                     const unsigned pre_gap = *(const unsigned short *)
                         (port_ov009_gap_0211222c + 12);
@@ -6823,8 +6841,9 @@ int main(void)
                             "(saved %04x)%s\n", frame, pre_gap,
                             ss_flag_at_save,
                             pre_gap == ss_flag_at_save
-                                ? " -- VACUOUS: unchanged since the save, so "
-                                  "the load cannot test a rollback" : "");
+                                ? " -- this halfword did not move, so it tests "
+                                  "no rollback (the soak's verdict comes from "
+                                  "the storage-coverage lines above)" : "");
                 }
                 if (lk6_savestate_load()) {
                     an_pivot_live = 0;
