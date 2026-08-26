@@ -59,6 +59,26 @@
 # else happened to be defeated that day; the wave 6 shrink and the link60
 # growth were both hand-made for exactly that reason.
 #
+# GROWTH, run mg15 lane SAVEGUARD: _port_install_verdict=_port_fault_no_verdict
+# was ADDED. One row, and the ninth member of the fault_probe fallback-stub
+# family this list already carries eight of. port_install_verdict is the boot
+# verdict on the install -- which asset folder the exe actually read, whether
+# its game data matches this build, and what happened to any save state in it --
+# written by hal/romdata_loader.cpp and hal/lk7_persist.cpp into storage in
+# hal/os_arena.cpp, and copied into the crash dump by tests/fault_probe.h. In
+# walk_window the real definition links and the empty stub dies to /OPT:REF, the
+# same reading as its eight siblings; in a probe that includes fault_probe.h
+# without linking os_arena.cpp the stub fires and the dump prints no install
+# block, which is correct -- such a binary has no verdict to give.
+#
+# THE THREE THAT ARE NOT HERE. The same lane needed port_romdata_sha,
+# port_romdata_bytes and port_asset_root_seen readable from hal/lk7_persist.cpp,
+# which is compiled into targets hal/romdata_loader.cpp is not. The weak-symbol
+# idiom would have worked and would have cost three more frozen rows; the
+# storage was put in hal/os_arena.cpp instead, which every target that links
+# lk7_persist already links, and no alias was needed at all. Prefer that when
+# the choice exists -- this list is meant to grow slowly.
+#
 # One LHS=RHS pair per line, sorted.
 ?ChangeState@Player@@QAEHAAUState@1@@Z=?ChangeState@PlayerChangeStateFace@@QAEHAAUState@1@@Z
 ?Enable@MeshColliderBase@@QAEXPAUActor@@@Z=?Enable@MeshColliderBase@@QAEHPAUActor@@@Z
@@ -79,6 +99,7 @@ _data_020a4b68=_port_fault_no_walker
 _data_ov021_021149c0=_data_ov014_021149c0
 _port_build_gittip=_port_fault_no_gittip
 _port_crash_dir_get=_port_crash_dir_get_stub
+_port_install_verdict=_port_fault_no_verdict
 _port_last_frame=_port_fault_no_frame
 _port_playlog_path=_port_fault_no_playlog
 _port_rich_dump_ex=_port_rich_dump_ex_stub

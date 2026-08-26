@@ -181,6 +181,13 @@ extern "C" __declspec(selectany) const char port_fault_no_gittip[] = "unknown";
    null/"off" means stderr was left on the console, nothing to tail. */
 extern "C" const char *port_playlog_path;
 extern "C" __declspec(selectany) const char *port_fault_no_playlog = 0;
+/* THE INSTALL VERDICT (hal/os_arena.cpp): what the asset folder turned out to
+   be and what happened to any savestate.bin in it, decided at boot and held so
+   a dump can carry it. Weak default is the empty string, which prints nothing
+   -- a build with no romdata loader and no persist layer has no verdict to
+   give, and an empty block is worse than no block. */
+extern "C" char port_install_verdict[];
+extern "C" __declspec(selectany) char port_fault_no_verdict[1] = { 0 };
 #else
 extern signed char data_0209f2f8;
 __declspec(selectany) signed char port_fault_no_level = -1;
@@ -192,12 +199,15 @@ extern const char port_build_gittip[];
 __declspec(selectany) const char port_fault_no_gittip[] = "unknown";
 extern const char *port_playlog_path;
 __declspec(selectany) const char *port_fault_no_playlog = 0;
+extern char port_install_verdict[];
+__declspec(selectany) char port_fault_no_verdict[1] = { 0 };
 #endif
 #pragma comment(linker, "/alternatename:_data_0209f2f8=_port_fault_no_level")
 #pragma comment(linker, "/alternatename:_data_0209f394=_port_fault_no_players")
 #pragma comment(linker, "/alternatename:_data_0209f250=_port_fault_no_pidx")
 #pragma comment(linker, "/alternatename:_port_build_gittip=_port_fault_no_gittip")
 #pragma comment(linker, "/alternatename:_port_playlog_path=_port_fault_no_playlog")
+#pragma comment(linker, "/alternatename:_port_install_verdict=_port_fault_no_verdict")
 /* Class-name resolution goes through a weak DATA function pointer, not a direct
    call. walk_window (which links hal/actor_registry.cpp) sets it to the real
    port_actor_class_name; the bare smokes -- which install the probe but do NOT
@@ -506,6 +516,35 @@ static void port_rich_dump(EXCEPTION_POINTERS *ep, unsigned code,
     }
     PORT_RD_STR("\r\nresolve: tools/resolve_crash.py <thisfile>"
                 "  (offsets -> build/port/walk_window.map)\r\n");
+    /* THE INSTALL BLOCK. What the asset folder turned out to be, and what
+       happened to any save state in it, both settled at boot by
+       hal/romdata_loader.cpp and hal/lk7_persist.cpp.
+
+       This exists because of the 2026-08-26 player burst -- not because it
+       explains that burst, but because of how long it took to NOT explain it.
+       Six dumps, every one "c0000005 +0009d322 access 00000000 at 00000024",
+       every one of those facts a symptom. The env block said the asset root was
+       a folder named for an old release; the metadata said the build was a new
+       one; a human put the two side by side and concluded the install was
+       mixed. It was not -- the folder's contents matched the exe, and the real
+       defect was a save state that its own build could not reload. A dump line
+       stating what the game data ACTUALLY WAS would have closed that off in an
+       hour instead of sending a lane after the wrong bug.
+
+       So the block reports measurements, never inferences: a sha the loader
+       computed against what the exe was built for. A folder's name is not
+       evidence and does not appear here.
+
+       One line each, pre-composed at boot, so the classifier can key a family
+       on "romdata ... MISMATCH" or "savestate refused" without knowing anything
+       about either subsystem. It goes ABOVE the env block on purpose: the env
+       block is what the process was TOLD, this is what that turned out to
+       mean. */
+    if (port_install_verdict[0]) {
+        PORT_RD_STR("---- install ----\r\n");
+        PORT_RD_STR(port_install_verdict);
+        PORT_RD_STR("\r\n");
+    }
     /* the SM64DS_* environment: scan the process block, emit every SM64DS_ var */
     PORT_RD_STR("---- SM64DS_* env ----\r\n");
     {

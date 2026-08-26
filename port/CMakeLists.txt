@@ -670,8 +670,13 @@ endif()
 # hal/lk7_persist.cpp. The parent saves and mirrors to savestate.bin, then
 # spawns a SECOND PROCESS of itself which loads the disk state and must land on
 # the identical arena hash -- the save surviving the process ending is the
-# whole point, so the test crosses a real process boundary. Two header-refusal
-# cases (corrupted magic, stale gittip) run in the parent afterwards.
+# whole point, so the test crosses a real process boundary. Six header cases
+# then run in the parent, each doctoring ONE field of an otherwise valid file:
+# corrupted magic, stale gittip, DIFFERENT GAME DATA (an asset folder that
+# outlived the build that filled it), the same file loaded anyway under
+# SM64DS_SAVESTATE_NO_GUARD=1, a legacy format-2 file, and a truncated one --
+# and finally a clean valid file, which must refuse nothing at all, so a green
+# run cannot be one where every read happens to fail.
 add_executable(smoke_persist tests/smoke_persist.cpp "${HEAP_INITGAME_SRC}"
     ${HEAP_DESTROY_CHAIN_SRC}
     hal/lk6_savestate.cpp hal/lk7_persist.cpp hal/dsstate_seg.cpp
