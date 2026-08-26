@@ -1,7 +1,7 @@
-extern int _ZN10dBgW_KcMbgC1Ev();
+//cpp
+// @symbol _ZN14DorriePlatformC1Ev
+#include "Dorrie.h"
 
-int func_ov065_021196bc(char *t)
+DorriePlatform::DorriePlatform()
 {
-    _ZN10dBgW_KcMbgC1Ev(t + 0x30);
-    return (int)t;
 }

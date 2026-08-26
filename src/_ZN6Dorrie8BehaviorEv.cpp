@@ -1,5 +1,6 @@
 //cpp
 #pragma opt_propagation off
+#include "Dorrie.h"
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
 
@@ -18,11 +19,6 @@ extern void func_ov065_02118248(char* c);
 extern PMF data_ov065_0211d7fc[];
 extern short data_02082214[];
 }
-
-class Dorrie {
-public:
-    int Behavior();
-};
 
 int Dorrie::Behavior()
 {
