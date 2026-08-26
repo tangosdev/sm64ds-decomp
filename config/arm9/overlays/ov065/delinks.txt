@@ -296,23 +296,23 @@ src/_ZN14DorriePlatformC1Ev.cpp:
     complete
     .text start:0x021196bc end:0x021196d8
 
-src/_ZN15TtcRotatingCubeD1Ev.c:
+src/_ZN15TtcRotatingCubeD1Ev.cpp:
     complete
     .text start:0x021196d8 end:0x0211972c
 
-src/_ZN15TtcRotatingCubeD0Ev.c:
+src/_ZN15TtcRotatingCubeD0Ev.cpp:
     complete
     .text start:0x0211972c end:0x02119794
 
-src/func_ov065_02119794.c:
+src/_ZN15TtcRotatingCube12UpdateShadowEv.cpp:
     complete
     .text start:0x02119794 end:0x021198a0
 
-src/func_ov065_021198a0.cpp:
+src/_ZN15TtcRotatingCube10UpdateClsnEv.cpp:
     complete
     .text start:0x021198a0 end:0x0211990c
 
-src/func_ov065_0211990c.c:
+src/_ZN15TtcRotatingCube11UpdateModelEv.cpp:
     complete
     .text start:0x0211990c end:0x02119984
 
