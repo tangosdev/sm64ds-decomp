@@ -6,12 +6,6 @@
 #include "RotatingUpDownPlatform.h"
 extern "C" void _Z14ApproachLinearRiii(int*, int, int);
 extern "C" void _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
-typedef void (*PMFholder);
-struct dBgActor_c {
-    void UpdateModelPosAndRotY();
-    void UpdateClsnPosAndRot();
-};
-
 /* Not a member above, though it is one on the real class. Declared `int
    IsClsnInRange(int, int)` it mangles _ZN10dBgActor_c13IsClsnInRangeEii, which nothing
    defines; the ROM's symbol takes two Fix12<int>, and that type is an aggregate with

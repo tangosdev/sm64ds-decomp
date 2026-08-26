@@ -24,7 +24,7 @@ int RotatingUpDownPlatform::InitResources()
 {
     unsigned char idx;
 
-    mVariant = (unsigned char)(*(unsigned*)((char*)&mParam) >> 8);
+    mVariant = (unsigned char)(*(unsigned*)((char*)&param1) >> 8);
     idx = mVariant;
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, _ZN5Model8LoadFileER13SharedFilePtr((void*)data_ov091_021344fc[idx]), 1, -1);
 
@@ -41,7 +41,7 @@ int RotatingUpDownPlatform::InitResources()
     func_020393d4(((char*)this) + 0x124, &_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     func_020393c4(((char*)this) + 0x124, &func_ov091_02132380);
 
-    _ZN7PathPtr6FromIDEj(&mPathPtr, *(unsigned*)((char*)&mParam) & 0xf);
+    _ZN7PathPtr6FromIDEj(&mPathPtr, *(unsigned*)((char*)&param1) & 0xf);
     mNodeCount = _ZNK7PathPtr8NumNodesEv((char*)&mPathPtr);
     mNodeIndex = 0;
     mBasePosX = mPosX;
