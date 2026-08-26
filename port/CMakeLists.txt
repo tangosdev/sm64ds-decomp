@@ -1904,9 +1904,18 @@ list(APPEND PORT_ACTOR_OVERLAYS ov004 ov006)
 # the same ROM bytes at the same address agree exactly, which is a stronger
 # statement about the mount's addressing than any run-time probe.
 #
-# It grows .dsstate; the three water pixels track the section base, so the
-# selftest BMP is comparable only at an equal base and must not be
-# byte-compared across this commit.
+# IT GROWS .dsstate BY 3544 BYTES, MEASURED, and the symbol count by exactly
+# 54 with NOTHING LOST: dsstate_guard reports 959440 bytes captured before and
+# 962984 after, and the base moves 0xc8e000 to 0xc92000. The 54 reconcile
+# completely -- the mount's 51 symbols, the one pack gap pk005_gap_020c2430
+# (the 16 bytes between .rodata's end at 0x020c2430 and .data's start at
+# 0x020c2440, which are in the ROM image too), and the two arm9 .bss words
+# hal/auto_bss.cpp gained for this scene. A map diff of the two captured spans
+# lists those 54 as NEW and zero as GONE.
+#
+# The three water pixels track the section base, so the selftest BMP is
+# comparable only at an equal base and must not be byte-compared across this
+# commit.
 list(APPEND PORT_ACTOR_OVERLAYS ov005)
 # ov084 joins for gate 32: the first ENEMY overlay, GOOMBA and BOB_OMB_BUDDY.
 # ...and ov014, ov062 and ov091 with them. ov014 is a LEVEL overlay (Bob-omb

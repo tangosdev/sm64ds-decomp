@@ -94,6 +94,17 @@ NAMED = [
     # highlighted row base, advanced by func_ov005_020c0878, and 3 is where the
     # ROM starts it. The port does not write Nintendo's numbers down; it reads
     # them, which is the same argument every other row in this list makes.
+    #
+    # ONE HONEST GAP, NAMED RATHER THAN LEFT TO BE FOUND. data_0208a174 is
+    # MUTABLE DS state -- the menu writes the player's selection into it -- and
+    # nothing this emitter produces lands in .dsstate. Every symbol in this
+    # file goes into romdata.c's own section (measured: walk_window.map puts
+    # _data_0208a170 at 0003:00004660, outside the captured span), which is the
+    # mechanism's existing behaviour for all 30-odd NAMED entries and not
+    # something these two introduced. The consequence is bounded and specific:
+    # a save state taken while the minigame menu is open does not roll back the
+    # highlighted row or the selection. Moving the emitter's output into
+    # .dsstate is a change to every row here and is not this lane's to make.
     "data_0208a170", "data_0208a174",
     "data_0208a178", "data_0208c178",
     "data_0208e504", "data_0208e538", "data_0208e548", "data_0208e54c",
