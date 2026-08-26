@@ -430,3 +430,22 @@ None of these is a defect. They are the three things that look like one.
   CREATE_NO_WINDOW (no `start`, no new-console Start-Process) unless it drives
   real OS input with SM64DS_CLICK_TEST, which overrides the flag and takes the
   foreground by design.
+
+  AMENDED (run mg14, after the owner's second report): the rule above stopped
+  the focus theft and left the windows VISIBLE, and a battery still painted
+  roughly a hundred of them over the desk in seven minutes. Section 8c's own
+  sentence said what was missing -- "anyone expecting a silent desktop wants
+  SM64DS_NO_FOCUS together with a minimized launch". The four spawners
+  (battery.py, gapdrive.py, gapproof.py, savestate_soak.py) now pass
+  STARTUPINFO with wShowWindow = SW_SHOWMINNOACTIVE (7), which
+  host_show_mode() honours, so every scripted game window starts minimized
+  and unactivated: nothing appears at all.
+
+  PROVEN before shipping, level 1 at 300 frames on one binary, A/B:
+    MINIMIZED  rc=0 bmp=5b783a29d753ce4dfbd35c79a7b2850f
+    OFFSCREEN  rc=0 bmp=5b783a29d753ce4dfbd35c79a7b2850f  (control at 20000,20000)
+  Byte-identical picture and identical player positions -- the selftest BMP is
+  written from the port's own framebuffer, so the picture cannot depend on
+  window visibility. The rule is now: NO_FOCUS + CREATE_NO_WINDOW +
+  SW_SHOWMINNOACTIVE on every scripted run; SM64DS_CLICK_TEST still overrides
+  all three by design.

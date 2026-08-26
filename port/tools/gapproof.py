@@ -337,11 +337,20 @@ def scene_run(scene, frames, out_bmp, settings=None, extra_env=None):
         # console-subsystem exe, so a run launched with no console to inherit
         # gets a new console window on the desk; capture_output already pipes
         # every handle, so nothing is lost by not making one.
+        # SW_SHOWMINNOACTIVE via STARTUPINFO: same reason and same proof as
+        # battery.py's SI_MIN -- the game window starts minimized instead of
+        # appearing over the desk; walk_window honours the request.
+        _si = None
+        if hasattr(subprocess, "STARTUPINFO"):
+            _si = subprocess.STARTUPINFO()
+            _si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            _si.wShowWindow = 7  # SW_SHOWMINNOACTIVE
         r = subprocess.run([os.path.join(BUILD, "walk_window.exe")], cwd=BUILD,
                            env=env, capture_output=True, text=True,
                            errors="replace", timeout=600,
                            creationflags=getattr(subprocess,
-                                                 "CREATE_NO_WINDOW", 0))
+                                                 "CREATE_NO_WINDOW", 0),
+                           startupinfo=_si)
     finally:
         clear_settings()
     return r

@@ -43,10 +43,19 @@ def selftest():
     # WINDOW on the desk. capture_output already pipes all three handles, so
     # nothing here reads it. Same one-liner and same reason as battery.py's
     # NO_CONSOLE; the game window's half is SM64DS_NO_FOCUS.
+    # SW_SHOWMINNOACTIVE via STARTUPINFO: same reason and same proof as
+    # battery.py's SI_MIN -- the game window starts minimized instead of
+    # appearing over the desk; walk_window honours the request.
+    _si = None
+    if hasattr(subprocess, "STARTUPINFO"):
+        _si = subprocess.STARTUPINFO()
+        _si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        _si.wShowWindow = 7  # SW_SHOWMINNOACTIVE
     r = subprocess.run([os.path.join(G.BUILD, "walk_window.exe")], cwd=G.BUILD,
                        env=env, capture_output=True, text=True,
                        errors="replace", timeout=1800,
-                       creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+                       creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+                       startupinfo=_si)
     bmp = os.path.join(G.BUILD, "walk_window_selftest.bmp")
     print("selftest rc=%d md5=%s" % (r.returncode, G.md5(bmp)))
     for ln in r.stdout.splitlines():

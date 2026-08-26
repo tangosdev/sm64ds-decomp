@@ -556,11 +556,27 @@ def hosted_scenes(root):
 # SM64DS_NO_FOCUS, set in selftest_env below.
 NO_CONSOLE = getattr(subprocess, "CREATE_NO_WINDOW", 0)
 
+# SW_SHOWMINNOACTIVE. CREATE_NO_WINDOW silences the console and SM64DS_NO_FOCUS
+# stops the game window taking the keyboard, but the game window still APPEARED,
+# and a battery paints roughly a hundred of them over the desk in seven minutes.
+# walk_window honours the launcher's STARTUPINFO show request (host_show_mode(),
+# the other half of the run mg12 no-focus work), so asking for
+# SW_SHOWMINNOACTIVE here starts every game window minimized and unactivated:
+# nothing appears, nothing flashes, and the selftest BMP is written from the
+# port's own framebuffer so the picture cannot depend on the window being
+# visible -- proven by md5 A/B before this shipped (port/no_focus.txt section 9).
+if hasattr(subprocess, "STARTUPINFO"):
+    SI_MIN = subprocess.STARTUPINFO()
+    SI_MIN.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    SI_MIN.wShowWindow = 7  # SW_SHOWMINNOACTIVE
+else:
+    SI_MIN = None
+
 
 def run(cmd, cwd, env=None, timeout=STEP_TIMEOUT):
     return subprocess.run(cmd, cwd=cwd, env=env, timeout=timeout,
                           capture_output=True, text=True,
-                          creationflags=NO_CONSOLE)
+                          creationflags=NO_CONSOLE, startupinfo=SI_MIN)
 
 
 def selftest_env(lvl, skip=None):

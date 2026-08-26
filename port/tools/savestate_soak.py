@@ -60,10 +60,19 @@ def run(exe, build, env):
         # CREATE_NO_WINDOW: see battery.py's NO_CONSOLE. A console-subsystem
         # child launched with no console to inherit makes one, and a soak makes
         # a lot of children; capture_output already pipes all three handles.
+        # SW_SHOWMINNOACTIVE via STARTUPINFO: same reason and same proof as
+        # battery.py's SI_MIN -- the game window starts minimized instead of
+        # appearing over the desk; walk_window honours the request.
+        _si = None
+        if hasattr(subprocess, "STARTUPINFO"):
+            _si = subprocess.STARTUPINFO()
+            _si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            _si.wShowWindow = 7  # SW_SHOWMINNOACTIVE
         return subprocess.run([exe], cwd=build, env=e, timeout=TIMEOUT,
                               capture_output=True, text=True,
                               creationflags=getattr(subprocess,
-                                                    "CREATE_NO_WINDOW", 0))
+                                                    "CREATE_NO_WINDOW", 0),
+                              startupinfo=_si)
     except subprocess.TimeoutExpired:
         return None
 
