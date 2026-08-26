@@ -5,6 +5,9 @@
  * literal mangled extern "C" spellings; QSVec3 is a local plain-int triple, a
  * stack temp only. */
 #include "QuestionSwitch.h"
+#include "Message.h"
+#include "Player.h"
+#include "Sound.h"
 
 struct QSVec3 { int x, y, z; };
 
@@ -12,23 +15,7 @@ extern "C" {
 unsigned short DecIfAbove0_Short(unsigned short* p);
 unsigned char DecIfAbove0_Byte(unsigned char* p);
 void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int d, int e);
-int _ZN6Player12GetTalkStateEv(void* self);
-int _ZN9Animation8FinishedEv(void* self);
-void _ZN9Animation7AdvanceEv(void* self);
-void _ZN7Message11PrepareTalkEv(void);
-void _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msg, const void* vec, unsigned int a, unsigned int b);
-void _ZN7Message13DisplaySavingEt(unsigned short a);
-int _ZN6Player18HasFinishedTalkingEv(void* self);
-void _ZN7Message7EndTalkEv(void);
-char* _ZN8dActor_c13ClosestPlayerEv(void* self);
-int _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);
-int _ZN4dBgW9IsEnabledEv(void* self);
-void _ZN4dBgW7DisableEv(void* self);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-int func_ov002_020b4fd0(char* c);
-void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const void* v);
-void func_ov002_020b50a0(char* c);
-void func_ov002_020b503c(char* self);
 }
 
 extern u8 data_0209d684;
@@ -37,23 +24,22 @@ extern u32 data_0209caa0[];
 
 int QuestionSwitch::Behavior()
 {
-    char* self = (char*)this;
-    if (*(u16*)(self + 0x71c) != 0) {
-        if (DecIfAbove0_Short((u16*)(self + 0x71c)) == 0) {
+    if (mSoundDelay != 0) {
+        if (DecIfAbove0_Short(&mSoundDelay) == 0) {
             _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, 0x7f, 0, 0x8777, 0);
         }
     }
 
-    if (*(u8*)(self + 0x71b) != 0) {
-        char* player = *(char**)(self + 0x720);
+    if (mTalking != 0) {
+        Player *player = mTalkingPlayer;
         if (player != 0) {
-            switch (_ZN6Player12GetTalkStateEv(player)) {
+            switch (player->GetTalkState()) {
             case 0:
                 _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, 0x14, 0x7f, 0x6b000, 0);
-                *(u16*)(self + 0x71c) = 0x4b;
-                if (_ZN9Animation8FinishedEv(self + 0x704) != 0) {
-                    _ZN7Message11PrepareTalkEv();
-                    _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(player, self, 0x183, 0, 1, 2);
+                mSoundDelay = 0x4b;
+                if (mModelAnim.Finished() != 0) {
+                    Message::PrepareTalk();
+                    player->ShowMessage(*this, 0x183, 0, 1, 2);
                 }
                 break;
             case 1:
@@ -61,19 +47,19 @@ int QuestionSwitch::Behavior()
             default: {
                 u8 st = data_0209d684;
                 if (st == 1) {
-                    _ZN7Message13DisplaySavingEt(0x295);
+                    Message::DisplaySaving(0x295);
                 } else if (st == 2) {
-                    if (_ZN6Player18HasFinishedTalkingEv(player) != 0) {
-                        _ZN7Message7EndTalkEv();
-                        *(int*)(self + 0x720) = 0;
-                        *(u8*)(self + 0x71b) = 0;
+                    if (player->HasFinishedTalking() != 0) {
+                        Message::EndTalk();
+                        mTalkingPlayer = 0;
+                        mTalking = 0;
                     }
                 } else {
                     if (data_0209d660 == 0) {
-                        if (_ZN6Player18HasFinishedTalkingEv(player) != 0) {
-                            _ZN7Message7EndTalkEv();
-                            *(int*)(self + 0x720) = 0;
-                            *(u8*)(self + 0x71b) = 0;
+                        if (player->HasFinishedTalking() != 0) {
+                            Message::EndTalk();
+                            mTalkingPlayer = 0;
+                            mTalking = 0;
                         }
                     }
                 }
@@ -81,29 +67,29 @@ int QuestionSwitch::Behavior()
             }
             }
         } else {
-            char* p = _ZN8dActor_c13ClosestPlayerEv(self);
-            if (*(u8*)(p + 0x6de) == 0) {
-                if (_ZN6Player9StartTalkER7fBase_cb(p, self, 1) != 0) {
-                    *(char**)(self + 0x720) = p;
+            Player *p = ClosestPlayer();
+            if (*(u8 *)((char *)p + 0x6de) == 0) {
+                if (p->StartTalk(*this, true) != 0) {
+                    mTalkingPlayer = p;
                 }
             }
         }
     }
 
     {
-        u8 f = *(u8*)(self + 0x71a);
+        u8 f = mPressedThisFrame;
         if (f != 0) {
-            if (DecIfAbove0_Byte((u8*)(self + 0x718)) == 0) {
-                if (_ZN4dBgW9IsEnabledEv(*(char**)(self + 0x320)) != 0) {
-                    _ZN4dBgW7DisableEv(*(char**)(self + 0x320));
+            if (DecIfAbove0_Byte((u8 *)&mPressTimer) == 0) {
+                if (mActiveMeshCollider->IsEnabled() != 0) {
+                    mActiveMeshCollider->Disable();
                 }
-                *(char**)(self + 0x320) = self + 0x4ec;
+                mActiveMeshCollider = &mMovingMeshCollider;
                 data_0209caa0[1] |= 0x80000000;
                 {
                     volatile QSVec3 v;
-                    int y = *(int*)(self + 0x60) + 0x64000;
-                    int z = *(int*)(self + 0x64);
-                    int x = *(int*)(self + 0x5c);
+                    int y = mPosY + 0x64000;
+                    int z = mPosZ;
+                    int x = mPosX;
                     v.x = x;
                     v.y = y;
                     v.z = z;
@@ -111,33 +97,33 @@ int QuestionSwitch::Behavior()
                     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x6e, v.x, v.y, v.z);
                     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x6f, v.x, v.y, v.z);
                 }
-                _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x70, *(int*)(self + 0x5c), *(int*)(self + 0x60), *(int*)(self + 0x64));
-                *(u8*)(self + 0x71b) = 1;
+                _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x70, mPosX, mPosY, mPosZ);
+                mTalking = 1;
             }
         } else if (f == 0) {
-            *(u8*)(self + 0x718) = 8;
+            mPressTimer = 8;
         }
     }
 
     if ((data_0209caa0[1] & 0x80000000) == 0) {
-        *(char**)(self + 0x320) = self + 0x324;
+        mActiveMeshCollider = &mStaticMeshCollider;
     }
 
-    if (func_ov002_020b4fd0(self) == 0) {
-        if (*(char**)(self + 0x320) == self + 0x324) {
-            *(int*)(self + 0x70c) = 0;
+    if (UpdateClsnState() == 0) {
+        if (mActiveMeshCollider == &mStaticMeshCollider) {
+            mModelAnim.currFrame = 0;
         } else {
-            if (_ZN9Animation8FinishedEv(self + 0x704) == 0) {
-                _ZN9Animation7AdvanceEv(self + 0x704);
-                if (_ZN9Animation8FinishedEv(self + 0x704) != 0) {
-                    _ZN5Sound9PlayBank3EjRK7Vector3(0, self + 0x74);
+            if (mModelAnim.Finished() == 0) {
+                mModelAnim.Advance();
+                if (mModelAnim.Finished() != 0) {
+                    Sound::PlayBank3(0, *(Vector3 *)&mCamSpacePosX);
                 }
             }
         }
-        func_ov002_020b50a0(self);
-        func_ov002_020b503c(self);
+        UpdateModelTransform();
+        UpdateClsnTransform();
     }
 
-    *(u8*)(self + 0x71a) = 0;
+    mPressedThisFrame = 0;
     return 1;
 }
