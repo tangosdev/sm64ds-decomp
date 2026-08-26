@@ -40,19 +40,19 @@ src/RotatingClockHand_Spawn.c:
     complete
     .text start:0x021116bc end:0x021116ec
 
-src/_ZN16SpinningPlatformD1Ev.c:
+src/_ZN16SpinningPlatformD1Ev.cpp:
     complete
     .text start:0x021116ec end:0x02111738
 
-src/_ZN16SpinningPlatformD0Ev.c:
+src/_ZN16SpinningPlatformD0Ev.cpp:
     complete
     .text start:0x02111738 end:0x02111798
 
-src/func_ov035_02111798.c:
+src/_ZN16SpinningPlatform12UpdateShadowEv.cpp:
     complete
     .text start:0x02111798 end:0x021118a8
 
-src/func_ov035_021118a8.c:
+src/_ZN16SpinningPlatform11UpdateModelEv.cpp:
     complete
     .text start:0x021118a8 end:0x021118f0
 
