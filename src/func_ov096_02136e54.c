@@ -1,32 +1,31 @@
-#include "types.h"
-extern s16 data_02082214[];
+//cpp
+// @symbol _ZN7Tornado10UpdateSpinEi
+#include "Tornado.h"
 
-void func_ov096_02136e54(void* c, int a)
+extern "C" s16 data_02082214[];
+
+void Tornado::UpdateSpin(s32 scale)
 {
-    char* cc = (char*)c;
-    s16* pang = (s16*)(cc + 0x35a);
-    s16* pw = (s16*)(cc + 0x8e);
+    u16 idx = (u16)unk_35a;
+    s16 wave = data_02082214[(idx >> 4) * 2 + 1];
+    s32 radiusScale = (wave + 0x1000) >> 1;
+    s32 frameScale = (s32)(((long long)scale * 0x666 + 0x800) >> 12);
+    s32 radius = (s32)(((long long)radiusScale * 0x4cc + 0x800) >> 12);
+    radius += 0x1000;
+    mScaleX = (s32)(((long long)radius * frameScale + 0x800) >> 12);
 
-    u16 idx = *(u16*)(cc + 0x35a);
-    s16 d = data_02082214[(idx >> 4) * 2 + 1];
-    s32 r6 = (d + 0x1000) >> 1;
-    s32 fp = (s32)(((long long)a * 0x666 + 0x800) >> 12);
-    s32 t2 = (s32)(((long long)r6 * 0x4cc + 0x800) >> 12);
-    s32 t3 = t2 + 0x1000;
-    *(s32*)(cc + 0x80) = (s32)(((long long)t3 * fp + 0x800) >> 12);
+    u16 idx2 = (u16)unk_35a;
+    s16 wave2 = data_02082214[(idx2 >> 4) * 2 + 1];
+    s32 heightScale = ((0x1000 - wave2) >> 2) + 0x800;
+    mScaleY = (s32)(((long long)heightScale * frameScale + 0x800) >> 12);
 
-    u16 idx2 = *(u16*)(cc + 0x35a);
-    s16 d2 = data_02082214[(idx2 >> 4) * 2 + 1];
-    s32 u = ((0x1000 - d2) >> 2) + 0x800;
-    *(s32*)(cc + 0x84) = (s32)(((long long)u * fp + 0x800) >> 12);
-
-    *(s32*)(cc + 0x88) = *(s32*)(cc + 0x80);
-    *pang += 0x200;
-    *(s32*)(cc + 0x98) = 0xe000;
-    *pw += 0x2c00;
-    *(s32*)(cc + 0xd8) = *(s32*)(cc + 0x80) * 0x514;
-    *(s32*)(cc + 0xdc) = *(s32*)(cc + 0x84) * 0xfa0;
-    *(s32*)(cc + 0x80) <<= 1;
-    *(s32*)(cc + 0x84) <<= 2;
-    *(s32*)(cc + 0x88) <<= 1;
+    mScaleZ = mScaleX;
+    unk_35a += 0x200;
+    mHorzSpeed = 0xe000;
+    mAngleY += 0x2c00;
+    mdCcAc_c.radius = mScaleX * 0x514;
+    mdCcAc_c.height = mScaleY * 0xfa0;
+    mScaleX <<= 1;
+    mScaleY <<= 2;
+    mScaleZ <<= 1;
 }

@@ -1,106 +1,90 @@
 //cpp
-// @symbol func_ov096_02137088
-/* recovered: shared common types, declarations from a shared header */
-#include "decl_dBgCh_Actr.h"
-/* recovered: shared common types */
+// @symbol _ZN7Tornado6State1Ev
+#include "Tornado.h"
 #include "common.h"
+
 extern "C" {
-
-    extern int func_ov002_020de328(void*);
-    extern void func_ov096_02136e54(void*, int);
-extern short Vec3_HorzAngle(const void *a, const void *b);
-extern int Vec3_HorzDist(const void *a, const void *b);
-extern int Vec3_Dist(const void *a, const void *b);
-extern unsigned _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned a, unsigned b, unsigned c, const void *v, unsigned e);
-extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
-extern void _Z14ApproachLinearRsss(short *v, short target, short step);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
-extern void dBgCh_Actr_UpdateContinuous_Veneer(void *p);
-extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *p);
-extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *s, int *out);
-extern short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
-extern unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, int x, int y, int z, const void *v, void *cb);
-void func_ov096_02137088(char *c);
+int func_ov002_020de328(void *actor);
+s16 Vec3_HorzAngle(const void *a, const void *b);
+s32 Vec3_HorzDist(const void *a, const void *b);
+s32 Vec3_Dist(const void *a, const void *b);
+u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 handle, u32 bank, u32 sound,
+                                      const void *pos, u32 flags);
+void _Z14ApproachLinearRsss(s16 *value, s16 target, s16 step);
+void dBgCh_Actr_UpdateContinuous_Veneer(void *collision);
+void *_ZNK10dBgCh_Actr13GetWallResultEv(void *collision);
+void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *surface, s32 *out);
+s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
+u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+    u32 handle, u32 effect, s32 x, s32 y, s32 z, const void *direction,
+    void *callback);
 }
-#define M(p) ((long long)(int)(p))
 
-void func_ov096_02137088(char *c)
+void Tornado::State1()
 {
-    struct Vector3 pos;
-    char *player;
-    void *p33c;
-    short ang;
-    unsigned short *p354 = (unsigned short *)(int)M(c + 0x354);
-    *p354 = (unsigned short)(*p354 + 1);
+    Vector3 playerPos;
+    s16 angle;
+    u16 *chaseTimer = &mChaseTimer;
+    *chaseTimer = (u16)(*chaseTimer + 1);
 
-    ang = Vec3_HorzAngle(c + 0x5c, c + 0x340);
-    *(short *)(c + 0x356) = ang;
+    angle = Vec3_HorzAngle(&mPosX, &mHomePosX);
+    mAngleToHome = angle;
 
-    *(unsigned *)(c + 0x36c) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-        *(unsigned *)(c + 0x36c), 3, 0x85, c + 0x74, 0);
+    mSoundHandle = _ZN5Sound8PlayLongEjjjRK7Vector3s(
+        mSoundHandle, 3, 0x85, &mCamSpacePosX, 0);
+    mHorzSpeed = 0x14000;
 
-    *(int *)(c + 0x98) = 0x14000;
-
-    player = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
+    Player *player = ClosestPlayer();
     if (player == 0)
         goto null_player;
 
     {
-        int *pp = (int *)(int)M(player + 0x5c);
-        pos.x = pp[0];
-        pos.y = pp[1];
-        pos.z = pp[2];
+        s32 *pos = (s32 *)((char *)player + 0x5c);
+        playerPos.x = pos[0];
+        playerPos.y = pos[1];
+        playerPos.z = pos[2];
     }
 
-    if (Vec3_HorzDist(c + 0x340, &pos) < *(int *)(c + 0x34c)
-        && *(unsigned char *)(c + 0x360) == 0
-        && *(unsigned short *)(c + 0x354) < 0x384) {
-        ang = Vec3_HorzAngle(c + 0x5c, &pos);
-        *(short *)(c + 0x358) = ang;
-        _Z14ApproachLinearRsss((short *)(c + 0x94), *(short *)(c + 0x358), 0x200);
-        p33c = *(void **)(c + 0x33c);
-        if (p33c != 0) {
-            if (func_ov002_020de328(p33c) != 0) {
-                unsigned char *pb = (unsigned char *)(int)M(c + 0x360);
-                *pb = (unsigned char)(*pb + 1);
-            }
-        }
+    if (Vec3_HorzDist(&mHomePosX, &playerPos) < mChaseRange
+        && mTriggerCount == 0
+        && mChaseTimer < 0x384) {
+        angle = Vec3_HorzAngle(&mPosX, &playerPos);
+        mAngleToPlayer = angle;
+        _Z14ApproachLinearRsss(&mPrevAngleY, mAngleToPlayer, 0x200);
+        if (mCaughtActor != 0 && func_ov002_020de328(mCaughtActor) != 0)
+            ++mTriggerCount;
     } else {
-        _Z14ApproachLinearRsss((short *)(c + 0x94), *(short *)(c + 0x356), 0x200);
-        if (Vec3_HorzDist(c + 0x340, c + 0x5c) < 0xc8000)
-            *(int *)(c + 0x35c) = 2;
+        _Z14ApproachLinearRsss(&mPrevAngleY, mAngleToHome, 0x200);
+        if (Vec3_HorzDist(&mHomePosX, &mPosX) < 0xc8000)
+            mState = 2;
     }
     goto cont;
 
 null_player:
-    *(int *)(c + 0x35c) = 2;
+    mState = 2;
     return;
 
 cont:
-    if (Vec3_Dist(c + 0x5c, &pos) > 0xbb8000
-        || *(unsigned short *)(c + 0x354) >= 0x384) {
-        *(int *)(c + 0x35c) = 2;
+    if (Vec3_Dist(&mPosX, &playerPos) > 0xbb8000 || mChaseTimer >= 0x384)
+        mState = 2;
+
+    UpdatePos(0);
+    dBgCh_Actr_UpdateContinuous_Veneer(&mWithMeshClsn);
+    if (mWithMeshClsn.IsOnWall() != 0) {
+        s32 normal[3];
+        void *wall = _ZNK10dBgCh_Actr13GetWallResultEv(&mWithMeshClsn);
+        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)wall + 4, normal);
+        mPrevAngleY = _ZN4cstd5atan2E5Fix12IiES1_(normal[0], normal[2]);
     }
 
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
-    dBgCh_Actr_UpdateContinuous_Veneer(c + 0x108);
-    if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x108) != 0) {
-        int n[3];
-        void *wr = _ZNK10dBgCh_Actr13GetWallResultEv(c + 0x108);
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)wr + 4, n);
-        *(short *)(c + 0x94) = _ZN4cstd5atan2E5Fix12IiES1_(n[0], n[2]);
-    }
-
-    func_ov096_02136e54(c, 0x1000);
+    UpdateSpin(0x1000);
 
     {
-        int z = *(int *)(c + 0x64);
-        *(unsigned *)(c + 0x364) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            *(unsigned *)(c + 0x364), 0x11f,
-            *(int *)(c + 0x5c), *(int *)(c + 0x60), z, 0, 0);
-        z = *(int *)(c + 0x64);
-        *(unsigned *)(c + 0x368) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            *(unsigned *)(c + 0x368), 0x120,
-            *(int *)(c + 0x5c), *(int *)(c + 0x60), z, 0, 0);
+        s32 z = mPosZ;
+        mParticleHandle0 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            mParticleHandle0, 0x11f, mPosX, mPosY, z, 0, 0);
+        z = mPosZ;
+        mParticleHandle1 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+            mParticleHandle1, 0x120, mPosX, mPosY, z, 0, 0);
     }
 }

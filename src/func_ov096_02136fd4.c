@@ -1,31 +1,29 @@
-typedef struct dActor_c dActor_c;
-typedef int Fix12i;
-extern void func_ov096_02136e54(dActor_c* t, int x);
-extern dActor_c* _ZN8dActor_c13ClosestPlayerEv(dActor_c* self);
-extern Fix12i Vec3_HorzDist(const void* a, const void* b);
-#define M(p) (p)
-void func_ov096_02136fd4(dActor_c* thiz)
+//cpp
+// @symbol _ZN7Tornado6State2Ev
+#include "Tornado.h"
+
+extern "C" s32 Vec3_HorzDist(const void *a, const void *b);
+
+void Tornado::State2()
 {
-    char* c = (char*)thiz;
-    int v = (int)(0x3c - *(unsigned short*)(c + 0x350)) << 0xc;
-    if (v < 0) goto rest;
-    func_ov096_02136e54(thiz, v / 0x3c);
+    s32 scale = (0x3c - mStateTimer) << 12;
+    if (scale < 0)
+        goto finished;
+
+    UpdateSpin(scale / 0x3c);
     return;
-rest:;
-    {
-        int* q = (int*)(int)M(c + 0xec);
-        *q |= 1;
+
+finished:
+    mdCcAc_c.flags |= 1;
+    mCaughtActor = 0;
+
+    Player *player = ClosestPlayer();
+    if (player) {
+        if (Vec3_HorzDist(&mHomePosX, (char *)player + 0x5c) > 0x9c4000)
+            mState = 0;
+        if (mStateTimer > 0x168)
+            mState = 0;
+        return;
     }
-    *(int*)(c + 0x33c) = 0;
-    {
-        dActor_c* p = _ZN8dActor_c13ClosestPlayerEv(thiz);
-        if (p) {
-            if (Vec3_HorzDist(c + 0x340, (char*)p + 0x5c) > 0x9c4000)
-                *(int*)(c + 0x35c) = 0;
-            if (*(unsigned short*)(c + 0x350) > 0x168)
-                *(int*)(c + 0x35c) = 0;
-            return;
-        }
-    }
-    *(int*)(c + 0x35c) = 0;
+    mState = 0;
 }
