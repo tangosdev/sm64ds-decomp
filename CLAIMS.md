@@ -49,6 +49,8 @@ take over, ping the claimant first.
 | BabyPenguin, Lakitu | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus four cleanup hooks and two deleting destructors migrated to C++; all fourteen class consumers strict-matched and link-checked with `blind: 0`; Platform/collision work excluded |
 | daObjRcCarpet_c | andrewboudreau | 2026-08-23 | **done** - InitResources and Behavior migrated to real C++; strict matches and link checks verified with `blind: 0`; destructor variants excluded |
 | HUD, Minimap | andrewboudreau | 2026-08-25 | **done** - deleting destructors migrated to compiler-spelled real C++; both strict link checks `VERIFIED`, full build 11060/11060 reproducing and 106/106 modules exact; dFdDummy_c and dBgPi candidates rejected by the full link |
+| Particle::SysTracker | andrewboudreau | 2026-08-26 | **done** - real `namespace Particle { struct SysTracker }` with its nested `Contents`; all five ROM members (ctor, dtor, Initialise, Update, Contents::FindData) compiler-spelled, strict link checks `VERIFIED` with `blind: 0` |
+| RecRoomCupboard | andrewboudreau | 2026-08-26 | **done** - new header from factory/destructor/vtable evidence; all five ROM members compiler-spelled, strict link checks `VERIFIED` with `blind: 0`; the real inheritance made the compiler pick D2 for the base step, which took both destructors off `config/rombuild-exclude.txt` |
 
 ## Claims
 

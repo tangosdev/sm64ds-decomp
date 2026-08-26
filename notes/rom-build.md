@@ -552,7 +552,8 @@ every relocated word, so all four "matched" byte-for-byte with the bug in place.
 argument for the ROM build as a gate** — it catches a class the byte oracle is blind to
 by construction.
 
-**Six remain, and all six are documented non-bugs:**
+**Three remain. All three of the original six that took the cast-and-call shape were
+retired by the C++ class migration; see the struck-through bullet below.**
 
 - three (`_ZN5ModelD1Ev`, `_ZN5ModelD2Ev`, `_ZN14BlendModelAnimD1Ev`) call `_ZdlPv`
   where the ROM goes through the 12-byte veneer at `0x0203cbc0`. That trampoline is the
@@ -566,10 +567,17 @@ by construction.
   synthesizes veneers it *needs* (out-of-range or interworking, neither of which applies
   to an in-range ARM→ARM `BL`). No linker flag routes a call through another object's
   existing trampoline. Left alone deliberately.
-- three (`_ZN11MirrorLuigiD1Ev`, `_ZN15RecRoomCupboardD0Ev`, `_ZN15RecRoomCupboardD1Ev`)
+- ~~three (`_ZN11MirrorLuigiD1Ev`, `_ZN15RecRoomCupboardD0Ev`, `_ZN15RecRoomCupboardD1Ev`)
   write `((Actor *)c)->~Actor()`, for which the compiler emits the D1 complete-object
-  destructor while the ROM calls the D2 base-object one. Only real inheritance would make
-  the compiler choose D2, so this is structural, not a rename — exactly the kind of work
+  destructor while the ROM calls the D2 base-object one.~~ **Two of the three are fixed,
+  and by exactly the route this bullet predicted.** `include/RecRoomCupboard.h` now derives
+  the class from `dActor_c` and gives it its five `dCcAcPos_c` members, and both destructor
+  files are an empty `RecRoomCupboard::~RecRoomCupboard()`; the compiler picks D2 for the
+  base step on its own. Both came off `config/rombuild-exclude.txt` and the ROM build
+  carries them: source-built functions 11,061 -> 11,063, mismatching 0,
+  106/106 exact. `_ZN11MirrorLuigiD1Ev` came off the list separately, in the MirrorLuigi
+  class migration (#1782), by the same route.
+  Only real inheritance would make the compiler choose D2, so this is structural, not a rename — exactly the kind of work
   the `readable/` C++-promotion branches do.
 - ~~one (`_ZN11ShadowModelC1Ev`) stores a vtable pointer that resolves elsewhere than
   `_ZTV11ShadowModel`.~~ **This one was a real bug, not a non-bug** — see below.
