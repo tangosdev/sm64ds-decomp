@@ -1,9 +1,18 @@
 //cpp
+// @symbol _ZN4Tree8BehaviorEv
+/* recovered: real class-form method. Replaces the hand-written extern "C"
+ * definition left by the #1719-era note; the body is unchanged -- it walks
+ * the heap-allocated dCcPos_c node list shared through data_ov002_02110a48
+ * and touches none of this class's own storage. */
+#include "Tree.h"
+
 extern "C" {
 extern int _ZN5dCc_c5ClearEv(void*);
 extern int _ZN5dCc_c6UpdateEv(void*);
 extern char* data_ov002_02110a48[5];
-int _ZN4Tree8BehaviorEv(void){
+}
+
+s32 Tree::Behavior() {
   char** pp = data_ov002_02110a48;
   int i;
   for(i=0;i<5;i++){
@@ -16,5 +25,4 @@ int _ZN4Tree8BehaviorEv(void){
     pp++;
   }
   return 1;
-}
 }

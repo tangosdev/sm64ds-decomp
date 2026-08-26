@@ -1,18 +1,14 @@
 //cpp
 // @symbol _ZN4TreeD0Ev
-/* recovered: named members + shared header */
+/* recovered: real C++ deleting destructor -- the compiler emits the whole
+ * body: run the complete-object destruction (see _ZN4TreeD1Ev.cpp), then
+ * return the object to its heap through dActor_c's inline operator delete
+ * (Memory::Deallocate into data_020a0eac, the actor heap). Nobody writes
+ * that tail; declaring ~Tree() is enough, because mwccarm emits D2/D1/D0
+ * together.
+ */
 #include "Tree.h"
-extern "C" {
-extern int _ZTV4Tree[];
-extern int _ZN5ModelD1Ev[];
-void __destroy_arr(void*, int, int, void*);
-void _ZN8dActor_cD2Ev(void*);
-void _ZN6Memory10DeallocateEPvP4Heap(void*, void*);
-void* _ZN4TreeD0Ev(char* c){
-  *(int*)c = (int)_ZTV4Tree;
-  __destroy_arr(c+0xd4, 5, 0x50, (void*)_ZN5ModelD1Ev);
-  _ZN8dActor_cD2Ev(c);
-  _ZN6Memory10DeallocateEPvP4Heap(c, data_020a0eac);
-  return c;
-}
+
+Tree::~Tree()
+{
 }

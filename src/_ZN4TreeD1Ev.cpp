@@ -1,16 +1,16 @@
 //cpp
 // @symbol _ZN4TreeD1Ev
-/* recovered: named members + shared header */
+/* recovered: real C++ complete-object destructor -- the compiler emits the
+ * whole body. An empty ~Tree() stores the class vtable, destroys mModel[5]
+ * through __destroy_arr, and runs the dActor_c base step; the deleting
+ * variant gets its heap tail from dActor_c's inline operator delete.
+ *
+ * Replaces the hand-written extern "C" definition kept by the #1719-era
+ * "no conversion benefit" note; with mModel now a real typed member array
+ * there is nothing left to spell by hand.
+ */
 #include "Tree.h"
-extern "C" {
-extern int __destroy_arr(void*, int, int, void*);
-extern void _ZN8dActor_cD2Ev(void*);
-extern void *_ZTV4Tree;
-extern int _ZN5ModelD1Ev();
-int _ZN4TreeD1Ev(char* c){
-    *(void**)c = (void*)&_ZTV4Tree;
-    __destroy_arr((char*)c+0xd4, 5, 0x50, (void*)&_ZN5ModelD1Ev);
-    _ZN8dActor_cD2Ev(c);
-    return (int)c;
-}
+
+Tree::~Tree()
+{
 }
