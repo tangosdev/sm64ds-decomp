@@ -1,7 +1,7 @@
 //cpp
 // @symbol _ZN16daObjKinokoTag_c8BehaviorEv
 
-#include "MegaMushroomCreateTag.h"
+#include "daObjKinokoTag_c.h"
 
 extern "C" Fix12i Vec3_Dist(const Vector3 *, const Vector3 *);
 

@@ -1,7 +1,7 @@
 //cpp
 // @symbol _ZN16daObjKinokoTag_c17SpawnMegaMushroomEv
 
-#include "MegaMushroomCreateTag.h"
+#include "daObjKinokoTag_c.h"
 
 void daObjKinokoTag_c::SpawnMegaMushroom()
 {

@@ -1,7 +1,7 @@
 //cpp
 // @symbol _ZN16daObjKinokoTag_c16CleanupResourcesEv
 
-#include "MegaMushroomCreateTag.h"
+#include "daObjKinokoTag_c.h"
 #include "SharedFilePtr.h"
 
 extern "C" int data_ov002_0210da30[];

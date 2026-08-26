@@ -1,7 +1,7 @@
 //cpp
 // @symbol _ZN16daObjKinokoTag_c13InitResourcesEv
 
-#include "MegaMushroomCreateTag.h"
+#include "daObjKinokoTag_c.h"
 #include "Model.h"
 #include "SharedFilePtr.h"
 
