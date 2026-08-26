@@ -30,14 +30,19 @@
 // wrong and is corrected here: the two sets are independent. Closing the tail (below)
 // left the +0x8c block exactly where it was.
 //
-// WHAT CLOSED THE OTHER TEN, each measured against a clean compile, not asserted:
+// WHAT CLOSED THE OTHER TEN -- two levers, measured against clean compiles, not
+// asserted. MEASURED ALONE each lever closes FOUR (17 -> 13 either way); TOGETHER
+// they close TEN (17 -> 7). The extra two are an interaction: neither spelling
+// reaches the ROM's schedule until both hold. (An earlier revision credited them
+// six-and-four; the lane's own per-lever diffs read 13 both, and the re-ratify
+// measured the same.)
 //
-//   * Spelling the success return as the array expression rather than `return rec;`
-//     is worth SIX words. It is what gives the ROM's r4/r5 colouring at +0x310,
-//     +0x32c and +0x33c -- the compiler CSEs the address straight back onto the rec
-//     the call already used, so the emitted code still returns the saved pointer.
+//   * Spelling the success return as the array expression rather than `return rec;`.
+//     It gives the ROM's r4/r5 colouring at +0x310, +0x32c and +0x33c -- the
+//     compiler CSEs the address straight back onto the rec the call already used,
+//     so the emitted code still returns the saved pointer.
 //   * Routing the three record-field stores through ONE named `short *p` address
-//     temporary with a `*(volatile short *)p =` store is worth FOUR more. It is what
+//     temporary with a `*(volatile short *)p =` store. It is what
 //     makes mwccarm interleave pool load / constant / store the way the ROM does
 //     instead of batching the three pool loads ahead of the three stores. The
 //     volatile is a codegen spelling and changes nothing about the stores: same three

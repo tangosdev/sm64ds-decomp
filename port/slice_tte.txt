@@ -264,8 +264,9 @@
 # THIS SECTION IS HISTORY, NOT THE CURRENT STATE. When it was written, six bodies
 # on this class's live path had no src file and no delinks block. All six are now
 # seated and all six are slice lines in the list at the bottom of this file. Two
-# are byte matches with delinks blocks (02123938 and, through the four callees it
-# hides, 021238d0 / 0212382c / 021237c8 / 0212373c); four are honest NONMATCHING
+# are byte matches with delinks blocks (02123938 and, through the four callees
+# that 02123428 hides -- the census below is the authority on who hides them --
+# 021238d0 / 0212382c / 021237c8 / 0212373c); four are honest NONMATCHING
 # seats with banners naming every divergence (02123428 42/197, 020cf2fc 25/258,
 # 020d01e0 49/503, 020cfc74 8/339) and one is 020d0c38 at 7/235. Run mg14 lane
 # GAPS re-derived 02123938's gate from a clean tree -- MATCHING VERSIONS 2004/b56,
@@ -490,7 +491,7 @@
 # written when func_ov006_02123938 -- the per-tick draw -- had no body, so the lines
 # it stamps were missing on every frame. Run mg12 lane TRM byte-matched it and gave
 # it a delinks block, and run mg13's own scene logs record the retired counter
-# reading 0 wants. Run mg14 lane GAPS re-derived the gate from a clean tree:
+# reading 0 (no wants). Run mg14 lane GAPS re-derived the gate from a clean tree:
 # tools/match.py --c src/func_ov006_02123938.c --func func_ov006_02123938
 # --addr 0x02123938 --size 0x1e8 --module ov006 --all --brief reports MATCHING
 # VERSIONS 2004/b56, 1.2/base, 1.2/sp2, 1.2/sp2p3, and linkcheck reports
