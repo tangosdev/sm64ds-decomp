@@ -1650,10 +1650,34 @@ void band_edge_update(const uint32_t *dst, int dst_w, const StackLayout &lay)
      * ABOVE IT THE WHOLE TERM STANDS DOWN FOR THAT EDGE, which puts the wash
      * back on the live row exactly -- the picture this file composed before
      * this lane, following the fade the way it always has -- and carries
-     * nothing. An object genuinely wide enough to cover a third of the screen
-     * while crossing would be refused too; nothing in these games is, and a
-     * band that occasionally declines to draw a ghost is a far smaller thing
-     * than a band that smears itself over every scene change. */
+     * nothing.
+     *
+     * AN OBJECT WIDE ENOUGH IS REFUSED TOO, AND SOME ARE. This block first
+     * said "nothing in these games is", off the two scenes it was written
+     * against, which is the same absolute-from-a-spot-check that mg15's review
+     * caught twice elsewhere in this file. Asked of the whole hosted set with
+     * port/tools/bandprobe.py, the honest answer is:
+     *
+     *   * EVERY scene refuses from frame 2 for 70-80 frames. That is the
+     *     opening fade, it is what this guard is for, and it is right.
+     *   * SEVEN also refuse away from the opening -- 362 (f223..275), 363
+     *     (f223..288), 381 and 382 (f220..274), 383 (f111..153), 387 (f258..292
+     *     and f335..391) and 390 (eight short runs of 1-4 frames scattered
+     *     from f122 to f397).
+     *
+     * The long mid-run refusals have the shape of a round-change or result
+     * wipe, which is a fade and is correct. 390's short scattered ones do not,
+     * and are the likelier candidate for a genuinely wide crosser being eaten.
+     * THIS INSTRUMENT CANNOT TELL THE TWO APART and neither can this comment;
+     * it is written down unresolved rather than assumed away.
+     *
+     * WHAT IT COSTS IF ONE OF THEM IS A REAL CROSSING, which is why this is not
+     * a blocker: a refused frame draws the band exactly as the port drew it
+     * before this lane -- the wash on the live row, no ghost. The failure mode
+     * is "no improvement on that frame", not a new artifact, and it degrades
+     * toward the picture that shipped. A band that occasionally declines to
+     * draw a ghost is a far smaller thing than a band that smears itself over
+     * every scene change. */
     for (int e = 0; e < 2; ++e)
         if (ncross[e] > 256 / 3) {
             std::memset(g_edge_w[e], 0, sizeof g_edge_w[e]);
