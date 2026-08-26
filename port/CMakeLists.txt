@@ -2963,6 +2963,9 @@ set(AE1_BBFF0_COMPILED FALSE)      # and the NEXT blocker's caller: compiled,
                                    # the line is read
 set(TS1_B6EB4_IN_SLICE FALSE)      # run link60 Stage 5 lane TS1, the third
 set(TS1_B6EB4_DISPLACED FALSE)     # displacement: listed, and cut
+set(IR1_C2B9C_IN_SLICE FALSE)      # run mg15 lane IMPLICITR, the fourth
+set(IR1_C2B9C_DISPLACED FALSE)     # displacement and the first on the RETURN
+                                   # side: listed, and cut
 foreach(line IN LISTS SLICE_OV007_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -3047,6 +3050,37 @@ foreach(line IN LISTS SLICE_OV007_LINES)
         set(TS1_B6EB4_DISPLACED TRUE)
         continue()
     endif()
+    # run mg15 lane IMPLICITR: THE FOURTH DISPLACEMENT IN THIS SLICE, and the
+    # FIRST ONE ON THE RETURN SIDE.
+    #
+    # func_ov007_020c2b9c is MATCHED and stays matched. It is cut from the port
+    # only, because it is the frame where the title's IMPLICIT RETURN VALUE is
+    # destroyed: its own call to func_ov007_020c2c68 leaves the new object in
+    # r0, nothing between that branch and the single `bx lr` writes r0, so the
+    # ROM's callee hands the object back by falling out and the matched body is
+    # correct to declare `void`. Both matched callers -- func_ov007_020c2acc
+    # and func_ov007_020c2b38, the byte-array and int-array twins -- already
+    # declare it `void *` and take it out of r0 with `mov r5, r0`. On MSVC the
+    # callee never writes EAX and both callers read whatever was left there;
+    # 020c2acc then faults at +0x3f on `mov dword ptr [eax+esi*4], ecx` with
+    # eax = 0x62.
+    #
+    # THE CALLEE IS THE ONLY FRAME THAT CAN BE DISPLACED, which is the
+    # difference from the three seams above. The value is allocated inside
+    # func_ov007_020c2c68 and lives in the callee's own local; no caller frame
+    # holds it to forward. One cut therefore answers BOTH call sites and
+    # neither caller is touched. Derivation, the ROM disassembly of every path,
+    # the two-row reloc sweep and the measured src/ alternative are in
+    # port/unmatched/Ov007_ImplicitReturn_020c2b9c.cpp's header.
+    #
+    # THE FLAGS ARE NOT BOOKKEEPING, same as the three blocks above: the
+    # IMPLICITR predicate near the marker blocks reads them, so the cut and
+    # what the predicate says about it cannot drift.
+    if(line MATCHES "^src/func_ov007_020c2b9c\\.c$")
+        set(IR1_C2B9C_IN_SLICE TRUE)
+        set(IR1_C2B9C_DISPLACED TRUE)
+        continue()
+    endif()
     # run link60 lane AE1: THE NEXT BLOCKER'S CALLER, and this flag is placed
     # where it is on purpose.
     #
@@ -3093,6 +3127,20 @@ elseif(NOT RT1_ADD3C_IN_SLICE)
     message(STATUS "AE1: slice_ov007.txt no longer lists "
                    "src/func_ov007_020add3c.c, so the implicit-r0 host copy is "
                    "NOT added and the link will fail on it. Restore the line: "
+                   "this block does the cutting, not the slice file")
+endif()
+if(IR1_C2B9C_DISPLACED)
+    list(APPEND SLICE_OV007_SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov007_ImplicitReturn_020c2b9c.cpp")
+elseif(NOT IR1_C2B9C_IN_SLICE)
+    # The two opposite states the branches beside this one distinguish, for the
+    # same reason: the slice line is the only thing that puts the matched TU in
+    # the build, so if the line is gone the host copy must not be added blind.
+    # Two bodies for one address is an LNK2005 and none is a silent undefined
+    # symbol.
+    message(STATUS "IR1: slice_ov007.txt no longer lists "
+                   "src/func_ov007_020c2b9c.c, so the implicit-return host copy "
+                   "is NOT added and the link will fail on it. Restore the line: "
                    "this block does the cutting, not the slice file")
 endif()
 if(TS1_B6EB4_DISPLACED)
@@ -3644,6 +3692,48 @@ else()
                    "func_ov007_020ae558 is GONE from this binary, scene 1's "
                    "implicit-r0 marker is RETIRED -- if the scene now runs, "
                    "delete its SCENE_BLOCKED row")
+endif()
+
+# run mg15 lane IMPLICITR: THE SEAM BEHIND THE TOUCH-TO-START HANDOFF, and the
+# predicate exists to answer ONE question a later lane will make stale.
+#
+# The displacement above is the fix. The thing that can rot is the reason for
+# it: src/func_ov007_020c2b9c.c defines the body `void`, and this lane MEASURED
+# that spelling the return there (`void *` + `return r;`) still matches, 0 of 23
+# words at 2004/b56 with strict relocs. That is the MP1 shape -- run mg15 lane
+# MP1 retired two host copies the moment include/decl_common.h could carry the
+# fix -- and if a later lane takes it, this host copy becomes dead weight that
+# nothing in the build would complain about.
+#
+# So the predicate reads the SOURCE FACT that makes the displacement necessary
+# (the `void` definition still in src/, which the byte gate owns) against
+# whether the cut ran. It is a STATUS line and not a battery define on purpose:
+# there is no SCENE_BLOCKED row for this seam to retire, and a define nothing
+# consumes is a marker that cannot fire.
+file(STRINGS "${PORT_REPO_ROOT_ABS}/src/func_ov007_020c2b9c.c"
+     IR1_C2B9C_VOID_DEF
+     REGEX "^[ \t]*void[ \t]+func_ov007_020c2b9c[ \t]*\\(")
+if(IR1_C2B9C_VOID_DEF AND IR1_C2B9C_DISPLACED)
+    message(STATUS "IR1: func_ov007_020c2b9c is DISPLACED to "
+                   "unmatched/Ov007_ImplicitReturn_020c2b9c.cpp, which spells "
+                   "the return its two matched callers already declare, so the "
+                   "title's post-handoff fault at func_ov007_020c2acc+0x3f is "
+                   "not in this binary")
+elseif(IR1_C2B9C_VOID_DEF AND IR1_C2B9C_IN_SLICE)
+    message(WARNING "IR1: func_ov007_020c2b9c still DEFINES itself void and its "
+                    "TU is back in the build, so both matched callers read an "
+                    "EAX nobody set and the title faults after touch-to-start. "
+                    "Restore the cut in the slice loop above")
+elseif(NOT IR1_C2B9C_VOID_DEF)
+    # The good ending, and it is a DIFFERENT tree from the one above rather
+    # than the same one worded differently: the decomp itself now returns the
+    # object, so the host copy has nothing left to add and its CMake block plus
+    # port/unmatched/Ov007_ImplicitReturn_020c2b9c.cpp should go, the way MP1
+    # deleted Comms_SlotIndex_*.cpp.
+    message(STATUS "IR1: src/func_ov007_020c2b9c.c no longer defines itself "
+                   "void, so the implicit-return seam is fixed in the DECOMP "
+                   "and this displacement is REDUNDANT -- retire it (delete the "
+                   "cut in the slice loop and the host copy)")
 endif()
 
 # run link60 lane AE1: SCENE 1'S NEXT BLOCKER, AND IT IS A NEW DEFECT CLASS.

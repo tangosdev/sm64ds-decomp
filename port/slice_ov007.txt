@@ -25,10 +25,19 @@
 # not a slice of the overlay, it IS the overlay. 532 delink source blocks cover
 # those 548 functions; 531 are listed below and the one exclusion is at the
 # bottom with its reason. (527 and 526 when this was written -- the next two
-# sections say where the other five came from.) One of the 531 is LISTED AND
-# NOT BUILT, which is a different thing from the exclusion and has its own note
-# beside it at the bottom: run link60 lane RT1 displaced
-# src/func_ov007_020be980.c to a host copy.
+# sections say where the other five came from.) FOUR of the 531 are LISTED AND
+# NOT BUILT, which is a different thing from the exclusion and each has its own
+# note at the bottom: run link60 lane RT1 displaced src/func_ov007_020be980.c,
+# lane AE1 displaced src/func_ov007_020add3c.c, Stage 5 lane TS1 displaced
+# src/func_ov007_020b6eb4.c and run mg15 lane IMPLICITR displaced
+# src/func_ov007_020c2b9c.c, each to a host copy.
+#
+# THIS SENTENCE SAID "ONE" UNTIL RUN MG15 AND IT HAD BEEN WRONG SINCE THE
+# SECOND DISPLACEMENT LANDED. Each lane wrote its own note at the bottom and
+# none came back to the count at the top, so the header undercounted the cuts
+# by three while every individual note was accurate. Recorded rather than
+# quietly fixed: a per-lane note is not a census, and the next displacement
+# updates this line as part of the cut.
 #
 # /OPT:REF IS THE REFEREE. No /include:, and this lane's aliases are
 # name-spelling faces onto symbols that already exist. Whatever of the 531 does
@@ -664,6 +673,34 @@ src/func_ov007_020ccab4.c
 #   call to func_ov007_020c5dec resolves through the alias to the ov002 body
 #   -- wrong overlay, in the ov007 direction. One alias cannot express per-
 #   context routing. ROUTED.
+
+# ---- THE FOURTH DISPLACEMENT (run mg15 lane IMPLICITR) ---------------------
+# src/func_ov007_020c2b9c.c IS STILL LISTED ABOVE and is NOT built by the port.
+#
+# Same treatment as the three below and the FIRST one on the RETURN side. Its
+# own call to func_ov007_020c2c68 leaves the new object in r0 and nothing
+# between that branch and the single `bx lr` writes r0, so the ROM's callee
+# hands the object back by falling out and this matched body is correct to
+# declare `void`. Both matched callers -- func_ov007_020c2acc and
+# func_ov007_020c2b38, the byte-array and int-array twins -- already declare it
+# `void *` and take it with `mov r5, r0`. On MSVC the callee's EAX is whatever
+# its last expression left there (memcpy's destination on the block-copy path,
+# the last copied word on the scalar one), so 020c2acc walks a data word as if
+# it were the object and faults at +0x3f on `mov dword ptr [eax+esi*4], ecx`.
+#
+# ONE CUT ANSWERS BOTH CALL SITES, because the value is allocated inside
+# func_ov007_020c2c68 and lives in this frame's own local: no caller frame holds
+# it to forward, so the callee is the only frame that can be displaced. The cut
+# is in port/CMakeLists.txt beside the other three and
+# port/unmatched/Ov007_ImplicitReturn_020c2b9c.cpp links in its place. The TU
+# stays MATCHED and stays in the decomp, untouched; it is out of the port and
+# only the port, and the linked count went down by one on purpose.
+#
+# AND THE ALTERNATIVE WAS MEASURED RATHER THAN DISMISSED: spelling the return in
+# src/ (`void *` + `return r;`) STILL MATCHES, 0 of 23 words at 2004/b56 with
+# strict relocs. That is the MP1 shape and it would retire this displacement
+# outright. It is a review's ruling, not a lane's; the number and the variant
+# are in this lane's evidence and the host copy's header says so too.
 
 # ---- THE THIRD DISPLACEMENT (run link60 Stage 5 lane TS1) ------------------
 # src/func_ov007_020b6eb4.c IS STILL LISTED ABOVE and is NOT built by the port.
