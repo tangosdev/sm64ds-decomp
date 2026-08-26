@@ -3791,3 +3791,60 @@ extern "C" void port_mg_results_probe(int frame)
                  (int)*(short *)(g + 0x463c), (int)*(short *)(g + 0x463e));
     std::fflush(stderr);
 }
+
+/* ---- lane RESULTS (mg14): THE LIFECYCLE SWEEP -------------------------------
+ *
+ * The probe above raises the panel and reads the record ONCE, on the raise
+ * frame, and hal/scene_mg_faces.cpp's [panel-end] reads it ONCE, at exit. Two
+ * endpoints cannot tell "never written" from "written and then torn down", and
+ * that ambiguity cost run mg12 two rounds. This walks the SAME fields across
+ * the raise -> idle -> input lifecycle instead, at fixed offsets from the raise
+ * frame, and prints the two values that decide which half of the tick is
+ * running:
+ *
+ *   slot7  how many times dScMgBase_c slot 7 reached func_ov004_020b0620
+ *   tick   how many times slot 7 reached func_ov004_020aeb24 (the STEP), and
+ *          how many of those RETURNED -- a difference means it faulted inside
+ *   bb0    how many times Scene::BeforeBehavior answered 0 and stopped slot 7
+ *          BEFORE the tick call
+ *   gate   the +0xf4 sub-object's state byte (+0x218) and its count (+0x214),
+ *          which are what func_ov004_020b8f78 returns and loops over -- a
+ *          nonzero state byte is the tick's OWN early return, ahead of the
+ *          three ApproachLinear2 slides
+ *
+ * Off unless SM64DS_MG_RESULTS_PROBE is set, exactly like the probe it reads
+ * behind. Unset it is one getenv and a compare. */
+extern "C" {
+unsigned g_res_slot7, g_res_tick_in, g_res_tick_out, g_res_bb_zero;
+}
+
+extern "C" void port_mg_results_watch(int frame)
+{
+    static int at = -2, raised = -1;
+    if (at == -2) {
+        const char *e = std::getenv("SM64DS_MG_RESULTS_PROBE");
+        at = (e && e[0]) ? std::atoi(e) : -1;
+    }
+    if (at < 0) return;
+    char *g = (char *)data_ov004_020beb68;
+    if (!g) return;
+    if (raised < 0) {
+        if (*(int *)(g + 0x4628) == 0) return;
+        raised = frame;
+    }
+    const int d = frame - raised;
+    if (d != 0 && d != 1 && d != 2 && d != 5 && d != 20 && d != 50 &&
+        d != 150 && d != 300)
+        return;
+    std::printf("[watch] +%-3d f%-3d up=%d sel=%d hold=%d anim=%u "
+                "btn (%d,%d) (%d,%d) (%d,%d)  slot7=%u bb0=%u tick=%u/%u "
+                "gate=state%u/count%d\n",
+                d, frame, *(int *)(g + 0x4628), (int)*(short *)(g + 0x4646),
+                (int)*(short *)(g + 0x4644), *(unsigned *)(g + 0x4640),
+                (int)*(short *)(g + 0x4634), (int)*(short *)(g + 0x4636),
+                (int)*(short *)(g + 0x4638), (int)*(short *)(g + 0x463a),
+                (int)*(short *)(g + 0x463c), (int)*(short *)(g + 0x463e),
+                g_res_slot7, g_res_bb_zero, g_res_tick_in, g_res_tick_out,
+                (unsigned)*(unsigned char *)(g + 0x218), *(int *)(g + 0x214));
+    std::fflush(stdout);
+}
