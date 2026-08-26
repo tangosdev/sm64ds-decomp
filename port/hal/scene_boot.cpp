@@ -944,12 +944,15 @@ static void l2_fill_0208ea6c(void)
 // /OPT:REF still drops it, but the day a slice reaches it the matched body is
 // what answers instead of an unresolved external.
 //
-// ov007 is 548 functions and 533 have a matched src TU. The fifteen that do
+// ov007 is 548 functions and 534 have a matched src TU. The fourteen that do
 // not are inside delink blocks marked incomplete, they are called from bodies
 // that ARE matched, and there is no C for them anywhere in the tree. A
 // plausible hand-written body would be exactly the guess the inferred-stub
-// guard exists to refuse, so fourteen of them are a TRAP that names itself once
-// and returns zero. A run that enters one says so on stderr and keeps going,
+// guard exists to refuse, so thirteen of them are a TRAP that names itself once
+// and returns zero.
+// (534/14/13 are 533/15/14 plus run mg15 lane TITLE3's match of
+// func_ov007_020ae834. The pair moved because a BODY ARRIVED, which is the way
+// the tree wants it to move; nothing was recounted for this edit.) A run that enters one says so on stderr and keeps going,
 // which is what makes "none of them was entered" a measurement instead of an
 // assumption. (533 and 15 were RECOUNTED for this edit rather than stepped
 // from the old pair: every ov007 function in symbols.txt joined to its delink
@@ -966,12 +969,24 @@ static void l2_fill_0208ea6c(void)
 // THIS PASS: func_ov007_020b2998 used to be in that list and it was the only
 // blocker in it. Lane CK1 matched it, lane PC2 brought the TU across, and the
 // scene now dies TWO CALL LEVELS DEEPER on something that is not a trap at all
-// (port/ov007_seat.txt section 5b). NONE OF THE FOUR NAMES LEFT IS A BLOCKER:
-// they return 0 and the run carries on, which is the trap doing its job rather
-// than the trap being harmless. port/ov007_seat.txt carries the counter
-// readback for the nineteen and the gate manifest carries it for the fifteen.
+// (port/ov007_seat.txt section 5b).
 //
-// FOURTEEN OF THE FIFTEEN ARE TRAPPED. THE FIFTEENTH IS TRANSCRIBED, and the
+// "NONE OF THE FOUR NAMES LEFT IS A BLOCKER" USED TO STAND HERE AND RUN mg15
+// LANE TITLE3 PROVED IT FALSE. A trap that returns 0 and lets the run carry on
+// is not the same thing as a trap that costs nothing, and func_ov007_020ae834
+// was the counter-example: it is the state-machine ADVANCE for all twenty-four
+// of the title's 2D elements, src/func_ov007_020aed98.c calls it once per
+// element per frame through src/func_ov007_020b44ec.c, and with it trapped NONE
+// of those twenty-four objects ever changed state. That is what held the
+// touch-to-start gate shut. A 900-frame scene-1 run entered it 59,400 times
+// and the run "carried on" the whole way. The lesson for the three names left
+// (020b46b0, 020c20b8, 020c4684, plus the data_0208ea6c vtable slot) is that
+// entering a trap thousands of times a run is a MEASUREMENT OF A HOLE, not a
+// clean bill: 020b46b0 is 48 entries a frame and it is the per-element STYLUS
+// handler. port/ov007_seat.txt carries the counter readback for the nineteen
+// and the gate manifest carries it for the fourteen.
+//
+// THIRTEEN OF THE FOURTEEN ARE TRAPPED. THE FOURTEENTH IS TRANSCRIBED, and the
 // distinction is the whole of run link60 lane SC1. func_ov007_020c9688 is the
 // one the trap list can no longer carry, because a trap there is not a
 // coverage statement, it is scene 1's block: the trap returned 0 six times,
@@ -984,11 +999,12 @@ static void l2_fill_0208ea6c(void)
 // IT IS NOT A DECOMP AND IT DOES NOT PRETEND TO BE ONE. It is not scored by
 // match.py, not counted by linkage.py, and it carries no
 // "recovered from vtable slot identity" marker, so the inferred-stub guard
-// neither counts it nor should. The number above stays at fifteen because the
-// DECOMP is still fifteen short; the crack side owns closing it, and the day
+// neither counts it nor should. The number above counts it because the DECOMP
+// is still short by it; the crack side owns closing it, and the day
 // src/func_ov007_020c9688 exists the interim leaves the build in the same
-// configure that notices. It went sixteen to fifteen this pass for the OTHER
-// reason, the one that costs nothing: func_ov007_020b2998 got a real match.
+// configure that notices. It went sixteen to fifteen on func_ov007_020b2998's
+// match and fifteen to fourteen on func_ov007_020ae834's, both for the same
+// reason, the one that costs nothing: the ROM's own C arrived.
 static unsigned g_l2_trap_hits;
 static void l2_trap(const char *name)
 {
@@ -1010,7 +1026,11 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
 #define L2_UNMATCHED(sym)                                                      \
     extern "C" int sym(void);                                                  \
     extern "C" int sym(void) { l2_trap(#sym); return 0; }
-L2_UNMATCHED(func_ov007_020ae834)
+/* func_ov007_020ae834 WAS HERE AND ITS TRAP WAS THE TITLE'S TOUCH-TO-START
+   BLOCK. Run mg15 lane TITLE3 matched it byte-identical at 2004/b56 with
+   strict relocs and src/func_ov007_020ae834.c is in slice_ov007.txt now, so a
+   trap here would be an LNK2005 against the body. See the census note above:
+   this is the name that made "none of the four left is a blocker" false. */
 L2_UNMATCHED(func_ov007_020b1718)
 /* func_ov007_020b2998 WAS HERE AND IT CAME OUT ON A REAL DECOMP. The decomp's
    main matched it as db0c4960635e on 2026-08-16 (PR #1536) and run link60's

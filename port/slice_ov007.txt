@@ -143,6 +143,7 @@ src/func_ov007_020ae2d0.c
 src/func_ov007_020ae454.c
 src/func_ov007_020ae558.c
 src/func_ov007_020ae810.c
+src/func_ov007_020ae834.c
 src/func_ov007_020aea4c.c
 src/func_ov007_020aea6c.c
 src/func_ov007_020aeaec.c
