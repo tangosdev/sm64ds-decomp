@@ -204,11 +204,11 @@ src/WDW_Water_Spawn.c:
     complete
     .text start:0x021125f8 end:0x02112630
 
-src/_ZN20SwitchActivatedPlankD1Ev.c:
+src/_ZN20SwitchActivatedPlankD1Ev.cpp:
     complete
     .text start:0x02112630 end:0x0211267c
 
-src/_ZN20SwitchActivatedPlankD0Ev.c:
+src/_ZN20SwitchActivatedPlankD0Ev.cpp:
     complete
     .text start:0x0211267c end:0x021126dc
 
