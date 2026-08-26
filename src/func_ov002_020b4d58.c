@@ -1,60 +1,72 @@
-#include "types.h"
-typedef struct { int w[12]; } M48;
+//cpp
+// @symbol _ZN13daObjDorifu_c13InitResourcesEP20daObjDorifuResources
+#include "daObjDorifu_c.h"
 
-extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, void *bmd, int a, int b);
-extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *sfp);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *thiz, void *kcl, void *mtx, int fix, short s, void *clps);
-extern void _ZN4dBgW6EnableEP8dActor_c(void *thiz, void *actor);
+typedef struct { s32 words[12]; } Matrix4x3Copy;
 
-int func_ov002_020b4d58(char *c, char *arg)
+extern "C" {
+void Matrix4x3_FromRotationY(void *mat, s32 angle);
+
+/* A genuine SetFile call with its by-value Fix12<int> parameter triggers known
+ * mwccarm wall 6az and grows this function by eight bytes. Keep the ABI-exact
+ * declaration until that compiler wall has a source-form solution. */
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void *self, void *kcl, void *mat, s32 scale, s16 angle, void *clps);
+}
+
+/* Shared initialization for the three concrete drifting-platform descendants.
+ * The raw matrix copies are load-bearing: ordinary C++ struct assignment
+ * scalarizes them instead of emitting the ROM's ldm/stm sequence. */
+s32 daObjDorifu_c::InitResources(daObjDorifuResources *resources)
 {
-    int i;
-    char *pp;
-    char *mb;
-    int j;
-    char *mtx;
-    int fix = 0x1000;
-    char *dst;
-    char *cl;
+    s32 i;
+    char *resourcePos;
+    char *modelPos;
+    s32 j;
+    char *sourceMat;
+    s32 scale = 0x1000;
+    char *modelDst;
+    char *clsnPos;
+    char *self = (char *)this;
+    char *resourceBytes = (char *)resources;
 
-    pp = arg;
-    mb = c + 0x320;
-    for (i = 0; i < 5; i++) {
-        _ZN9ModelBase7SetFileEP8BMD_Fileii(mb,
-            _ZN5Model8LoadFileER13SharedFilePtr(*(void **)pp), 1, -1);
-        pp += 0xc;
-        mb += 0x50;
+    resourcePos = resourceBytes;
+    modelPos = self + 0x320;
+    for (i = 0; i < 5; ++i) {
+        ((Model *)modelPos)->SetFile(
+            (BMD_File *)Model::LoadFile(**(SharedFilePtr **)resourcePos), 1, -1);
+        resourcePos += 0xc;
+        modelPos += 0x50;
     }
 
-    *(u8 *)(c + 0xdc8) = 4;
-    *(u8 *)(c + 0xdc9) = 2;
-    *(u8 *)(c + 0xdcb) = *(int *)(c + 8) & 0xf;
-    Matrix4x3_FromRotationY(c + 0x33c, *(s16 *)(c + 0x8e));
-    *(int *)(c + 0x360) = *(int *)(c + 0x5c) >> 3;
-    *(int *)(c + 0x364) = *(int *)(c + 0x60) >> 3;
-    *(int *)(c + 0x368) = *(int *)(c + 0x64) >> 3;
-    *(M48 *)(c + 0xd98) = *(M48 *)(c + 0x33c);
-    *(int *)(c + 0xdbc) = *(int *)(c + 0x5c);
-    *(int *)(c + 0xdc0) = *(int *)(c + 0x60);
-    *(int *)(c + 0xdc4) = *(int *)(c + 0x64);
+    mActivePlank = 4;
+    mStepTimer = 2;
+    mEventBit = param1 & 0xf;
+    Matrix4x3_FromRotationY(self + 0x33c, mAngleY);
+    *(s32 *)(self + 0x360) = mPosX >> 3;
+    *(s32 *)(self + 0x364) = mPosY >> 3;
+    *(s32 *)(self + 0x368) = mPosZ >> 3;
+    *(Matrix4x3Copy *)&mPlatformMat = *(Matrix4x3Copy *)(self + 0x33c);
+    *(s32 *)(self + 0xdbc) = mPosX;
+    *(s32 *)(self + 0xdc0) = mPosY;
+    *(s32 *)(self + 0xdc4) = mPosZ;
 
     j = 0;
-    mtx = c + 0x33c;
-    dst = c + 0x320;
-    cl = c + 0x4b0;
-    for (; j < 5; j++) {
-        *(M48 *)(dst + 0x1c) = *(M48 *)mtx;
+    sourceMat = self + 0x33c;
+    modelDst = self + 0x320;
+    clsnPos = self + 0x4b0;
+    for (; j < 5; ++j) {
+        *(Matrix4x3Copy *)(modelDst + 0x1c) = *(Matrix4x3Copy *)sourceMat;
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            cl, _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(void **)(arg + 4)),
-            c + 0xd98, fix, *(s16 *)(c + 0x8e), *(void **)(arg + 8));
-        if (j == *(u8 *)(c + 0xdc8))
-            _ZN4dBgW6EnableEP8dActor_c(cl, c);
-        dst += 0x50;
-        arg += 0xc;
-        cl += 0x1c8;
+            clsnPos,
+            dBgW_Kc::LoadFile(**(SharedFilePtr **)(resourceBytes + 4)),
+            &mPlatformMat, scale, mAngleY,
+            *(void **)(resourceBytes + 8));
+        if (j == mActivePlank)
+            ((dBgW_KcMbg *)clsnPos)->Enable(this);
+        modelDst += 0x50;
+        resourceBytes += 0xc;
+        clsnPos += 0x1c8;
     }
     return 1;
 }

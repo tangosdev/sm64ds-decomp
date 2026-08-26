@@ -1,16 +1,16 @@
-extern int _ZN4dBgW9IsEnabledEv(void *);
-extern void _ZN4dBgW7DisableEv(void *);
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-int func_ov002_020b4b6c(char *t, void **f){
-  int i;
-  char *m=t+0x4b0;
-  for(i=0;i<5;i++){
-    if(_ZN4dBgW9IsEnabledEv(m))
-      _ZN4dBgW7DisableEv(m);
-    _ZN13SharedFilePtr7ReleaseEv(f[0]);
-    _ZN13SharedFilePtr7ReleaseEv(f[1]);
-    m+=0x1c8;
-    f+=3;
-  }
-  return 1;
+//cpp
+// @symbol _ZN13daObjDorifu_c16CleanupResourcesEP20daObjDorifuResources
+#include "daObjDorifu_c.h"
+
+/* Shared cleanup for the three concrete drifting-platform descendants. Their
+ * slot-3 overrides pass their own five-entry resource table here. */
+s32 daObjDorifu_c::CleanupResources(daObjDorifuResources *resources)
+{
+    for (s32 i = 0; i < 5; ++i) {
+        if (mPlankClsn[i].IsEnabled())
+            mPlankClsn[i].Disable();
+        resources[i].modelFile->Release();
+        resources[i].clsnFile->Release();
+    }
+    return 1;
 }
