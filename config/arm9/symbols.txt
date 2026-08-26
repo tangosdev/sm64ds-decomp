@@ -3638,8 +3638,11 @@ data_0208ea6c kind:data(any) addr:0x0208ea6c
 _ZTV10dFdDummy_c kind:data(any) addr:0x0208ea6c
 _ZTV9FaderWipe kind:data(any) addr:0x0208ea9c
 data_0208eacc kind:data(any) addr:0x0208eacc
+_ZTV15FaderBrightness kind:data(any) addr:0x0208eacc
 data_0208eafc kind:data(any) addr:0x0208eafc
+_ZTV5Fader kind:data(any) addr:0x0208eafc
 data_0208eb2c kind:data(any) addr:0x0208eb2c
+_ZTV10FaderColor kind:data(any) addr:0x0208eb2c
 data_0208eb54 kind:data(any) addr:0x0208eb54
 data_0208eb58 kind:data(any) addr:0x0208eb58
 data_0208eb5c kind:data(any) addr:0x0208eb5c

@@ -62,6 +62,8 @@
  * safe to improve. Offsets, widths and vtable slots are pinned by the bytes.
  */
 #ifdef __cplusplus
+extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+
 struct Fader {
     Fix12i currInterp;  /* 0x04 -- current fade level, 0..0x1000 */
     Fix12i speed;       /* 0x08 -- per-frame delta; sign selects the target */
@@ -71,6 +73,12 @@ struct Fader {
        _ZN5FaderD1Ev.c, so no translation unit defines it and CW 1.2 emits no
        vtable group to collide with the ROM's. */
     virtual ~Fader();                                /* slots 0 (D1), 1 (D0) */
+
+    /* Every deleting destructor in this hierarchy ends at
+       Memory::operator_delete2 (0x0203cbcc). Keeping that class delete path
+       inline makes mwcc emit the ROM's direct call instead of global
+       `_ZdlPv`; it adds neither object state nor a vtable slot. */
+    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 
     /* Pure, all eight: the corresponding words in data_0208eafc are null. */
     virtual void AdvanceFade() = 0;                  /* slot 2 */
