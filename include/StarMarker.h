@@ -4,7 +4,7 @@
  * padding. Renaming cannot change codegen.
  *
  * The on-screen glint that shows where an uncollected star will appear.
- * mParam's low nibble is the star id and its next nibble picks the flavour --
+ * param1's low nibble is the star id and its next nibble picks the flavour --
  * InitResources turns that into mState (0 spins a plain star model, 1 is the
  * markable one, 2 and 3 are the two collision-driven variants) and into the
  * mFlags bits everything else tests.
@@ -12,7 +12,9 @@
  * 0x004, 0x05c..0x064, 0x08e and 0x0cc ARE fBase_c's and dActor_c's OWN
  * LAYOUT, not this class's, and are named from include/dActor_c.h by offset.
  *
- * Provenance table: notes/butterfly-tornado-provenance.md. */
+ * Field provenance: notes/butterfly-tornado-provenance.md. The ROM TU boundary
+ * is shared with PowerStar and StarCamera; this class header does not claim a
+ * standalone original source file. */
 #ifndef STARMARKER_H
 #define STARMARKER_H
 #include "dActor_c.h"
@@ -63,7 +65,7 @@ struct StarMarker : dActor_c {
     dActor_c *mHitActor;         /* 0x1d0 -- the actor that touched this
                                      marker, resolved from
                                      mdCcAcPos_c.otherOwner by Behavior just
-                                     before it calls func_ov002_020e7d84.
+                                     before it calls Collect().
                                      A dActor_c*, stored through an int. */
     u16 mAppearTimer;            /* 0x1d4 */
     s16 mSpawnedDeathTableID;    /* 0x1d6 -- the death-table slot
