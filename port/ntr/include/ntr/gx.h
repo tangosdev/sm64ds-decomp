@@ -139,6 +139,11 @@ void gx_debug_proj(float out[16]);
 // bit 13 (projection). Read-only; ntr/io.cpp uses it to answer the two linked
 // stack-level readers with the host's real state instead of a dead latch.
 void gx_matrix_stack_levels(unsigned &pos_level, unsigned &proj_level);
+
+// The live POSITION matrix, row-vector convention like everything else here.
+// For a caller that needs to report what its own vertices will be transformed
+// by; see the definition for why the projection alone cannot answer it.
+void gx_debug_pos(float out[16]);
 // the live matrix state, for tracking down a mis-placed draw
 void gx_debug_matrices(int *mode, float pos[16], float proj[16]);
 

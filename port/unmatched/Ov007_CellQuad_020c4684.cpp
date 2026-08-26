@@ -133,6 +133,7 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include "ntr/gx.h"
 #include "ntr/mmio.h"
 
 /* SM64DS_CELLQUAD_PROBE=<n>: the first n calls' INPUTS, one line each. DEFAULT
@@ -269,7 +270,7 @@ void func_ov007_020c4684(char *self, unsigned color, unsigned alpha,
         NTR_MMIO(int, 0x0400046c) = 0x1000;
     }
 
-    if (cellquad_probe_budget())
+    if (cellquad_probe_budget()) {
         std::fprintf(stderr,
                      "[cellquad] quad(%d,%d) vec(%d,%d,%d) tex=%p sizeS=%u "
                      "sizeT=%u cols=%u rows=%u xy12=(%d,%d) alpha=%u id=%u "
@@ -279,6 +280,21 @@ void func_ov007_020c4684(char *self, unsigned color, unsigned alpha,
                      sizeS, sizeT, (unsigned)cols, (unsigned)rows, x12, y12,
                      alpha, polyid, flags,
                      (!(flags & 1) && !(flags & 2)) ? "020c49bc" : "inline");
+        /* THE MATRIX THE UNIT QUAD IS ABOUT TO BE SPENT THROUGH, live, with
+           the cell's own MTX_TRANS and MTX_SCALE already applied -- so this is
+           the whole model-to-eye transform for the corners below. The rows
+           that decide the size are 0 and 5, and row 3 is the eye-space
+           position: on a row-vector matrix with no rotation the quad's depth
+           is -m[14]. Without this, an object at the wrong depth and an object
+           scaled wrong at the right depth are the same measurement. */
+        float m[16];
+        ntr::gx_debug_pos(m);
+        std::fprintf(stderr,
+                     "[cellquad]   posmtx sx=%.6f sy=%.6f sz=%.6f  "
+                     "t=(%.4f,%.4f,%.4f)  row0=[%.5f %.5f %.5f %.5f]\n",
+                     m[0], m[5], m[10], m[12], m[13], m[14],
+                     m[0], m[1], m[2], m[3]);
+    }
 
     /* 0x020c4814 .. 0x020c496c: the two draw arms. */
     if (!(flags & 1) && !(flags & 2)) {

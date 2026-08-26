@@ -3081,6 +3081,33 @@ foreach(line IN LISTS SLICE_OV007_LINES)
         set(IR1_C2B9C_DISPLACED TRUE)
         continue()
     endif()
+    # run mg15 lane TITLEDEPTH: THE FOURTH DISPLACEMENT IN THIS SLICE, and the
+    # same frame shape as add3c above -- one register over.
+    #
+    # func_ov007_020b4b5c is MATCHED and stays matched. It is cut from the port
+    # only, because it is the frame where the title screen's CAMERA is
+    # destroyed: it declares func_ov007_020c43bc with one parameter and calls it
+    # with one, and the ROM leaves the camera in r1 across the branch (it saves
+    # its own second argument into r5 at 0x020b4b78 and never writes r1 before
+    # the bl at 0x020b4b80). On MSVC the callee reads a stack slot nobody
+    # filled.
+    #
+    # THE ROW WAS ALREADY KNOWN AND ALREADY ACCEPTED: port/ov007_seat.txt
+    # section 5d lists it among the sixteen faulting-direction rows, and
+    # port/tools/aritycheck_plainfunc_baseline.txt line 159 carries it. What
+    # this lane adds is the SYMPTOM. func_ov007_020c43bc computes the cell
+    # system's world quad size as texels * depth * tan(halfFov) / 96, reading
+    # the field of view from the camera's +0xd4; with the garbage pointer it
+    # read an index of 256 (22.5 degrees) where the title's camera carries 6.77,
+    # so every cell was cot(6.77)/cot(22.5) = 3.4877 times too large. The
+    # arithmetic reproduces the observed record to the unit -- a 16-texel cell
+    # came out 583 and should be 167 -- and the title's backdrop, sized through
+    # the OTHER caller (func_ov007_020c41dc, which passes the camera), measures
+    # exactly 1.000 DS pixels per texel in the same frame. The derivation is in
+    # port/unmatched/Ov007_ImplicitR1_020b4b5c.cpp's header.
+    #
+    # THE FLAG IS NOT BOOKKEEPING, same as the three blocks above: the branch
+    # below reads it, so the cut and the host copy's membership are one fact.
     # run link60 lane AE1: THE NEXT BLOCKER'S CALLER, and this flag is placed
     # where it is on purpose.
     #
@@ -3674,6 +3701,125 @@ endif()
 if(NOT TITEX_GX_CUT EQUAL TITEX_GX_WANT)
     message(STATUS "TITEX: expected to cut ${TITEX_GX_WANT} plain ov007 "
                    "geometry-port entries and cut ${TITEX_GX_CUT}. If "
+                   "slice_ov007.txt stopped listing one of them the hostgen "
+                   "copy is still added and the link will say so; if a SECOND "
+                   "slice started listing one, this cut missed it and the link "
+                   "will say that too")
+endif()
+
+# ---- run mg15 lane TITLEDEPTH: THE PER-FRAME GEOMETRY RESET ----------------
+#
+# One row past the TITLETEX block above, and the same defect: two arm9 helpers
+# that slice_ov007.txt lists and no other slice does, every store in them
+# PLAIN, so none of it reaches the geometry engine.
+#
+# WHAT THEY ARE, read off extracted/arm9_dec.bin at 0x02004000 rather than
+# taken on the source's word. Alignment proven first on the two MATCHED
+# neighbours func_02055464 and func_02055490, whose disassembly reproduces
+# their src TUs instruction for instruction (the 0x2000>>13 and 0x1f00>>8
+# field extractions, the GXSTAT pool word 0x04000600 at each tail):
+#
+#   func_020557b4  GXSTAT bit-27 busy wait; GXSTAT |= 0x8000 (clear the
+#                  matrix-stack error flag); DISP3DCNT |= 0x2000 and |= 0x1000
+#                  (the two 3D error acknowledges); call func_02055624; then
+#                  POLYGON_ATTR = 0x1f0080, TEXIMAGE_PARAM = 0, PLTT_BASE = 0
+#                  -- the DEFAULT MATERIAL every frame starts from.
+#   func_02055624  read the position/vector stack level into a and the
+#                  projection stack level into b (through the two matched
+#                  helpers above, which read GXSTAT); then
+#                  MTX_MODE 3 + MTX_IDENTITY   -- the TEXTURE matrix
+#                  MTX_MODE 0 + MTX_POP b      -- unwind the projection stack
+#                  MTX_MODE 2 + MTX_POP a + MTX_IDENTITY
+#                                              -- unwind the position stack and
+#                                                 start the frame from identity
+#
+# IT IS THE PER-FRAME RESET, from the ROM's own call graph and not from the
+# name: src/func_ov007_020bcf90.c is the title screen's Render, and it opens
+# with func_020557b4(); func_02055624(); func_02055574(...) before it draws
+# anything. func_020557b4's only other caller is func_0200f4b4.
+#
+# WHY IT COULD NOT BE ROUTED UNTIL NOW. func_02055624 POPS BY A NUMBER IT
+# READS OUT OF GXSTAT. Until the commit before this one those bits were a
+# snapshot refreshed only when something touched the register through the MMIO
+# proxy -- measured 1620 disagreements in 2743 samples on 60 frames of scene 1
+# -- so routing this while they were dead would have popped by a stale number,
+# which is worse than not popping at all. The geometry engine publishes the
+# level at push and pop time now, so the two reads are true.
+#
+# ONE MODELLING DIVERGENCE, NAMED. On hardware DISP3DCNT bits 12 and 13 are
+# status bits and writing 1 ACKNOWLEDGES them; against the host's mapped window
+# the same store SETS them. Nothing in the port reads DISP3DCNT -- the only
+# reader in the tree is ntr/ppu_audit.cpp's census row -- so this costs
+# nothing today, and it is written down rather than left for someone to find.
+#
+# KILL SWITCH -DTIDEP_RESET_PLAIN=ON, printed on EVERY configure in BOTH
+# directions (run mg15's SQRT lane proved a CMake option() caches and a switch
+# that only announces one arm silently keeps the wrong one). It is a rebuild
+# rather than one binary, so the two arms' .dsstate bases have to be read
+# before their BMPs are compared -- notes/port-selftest-bmp-gate.md.
+option(TIDEP_RESET_PLAIN
+       "run mg15 TITLEDEPTH: build the per-frame geometry reset PLAIN (pre-fix arm)"
+       OFF)
+set(TIDEP_RESET_SYMS
+    func_020557b4          # GXSTAT  DISP3DCNT  POLYGON_ATTR  TEXIMAGE_PARAM
+                           # PLTT_BASE
+    func_02055624)         # GXSTAT  MTX_MODE  MTX_POP  MTX_IDENTITY
+list(LENGTH TIDEP_RESET_SYMS TIDEP_RESET_WANT)
+if(TIDEP_RESET_PLAIN)
+    message(STATUS "TIDEP: TIDEP_RESET_PLAIN=ON -- the ${TIDEP_RESET_WANT} "
+                   "per-frame geometry reset TUs build PLAIN. This is the "
+                   "PRE-FIX arm: the position and texture matrices are never "
+                   "made identity, the stacks are never unwound and the "
+                   "default material is never set.")
+else()
+    message(STATUS "TIDEP: TIDEP_RESET_PLAIN=OFF -- the ${TIDEP_RESET_WANT} "
+                   "per-frame geometry reset TUs route through hostgen "
+                   "(shipped arm).")
+endif()
+set(TIDEP_RESET_GEN "")
+if(NOT TIDEP_RESET_PLAIN)
+    foreach(sym IN LISTS TIDEP_RESET_SYMS)
+        set(sym_in "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        if(NOT EXISTS "${sym_in}")
+            set(sym_in "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+        endif()
+        set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+        add_custom_command(OUTPUT "${sym_out}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+            DEPENDS "${sym_in}"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen ${sym}")
+        list(APPEND TIDEP_RESET_GEN "${sym_out}")
+    endforeach()
+endif()
+# Cut the plain slice entries in the SAME block that adds the generated ones,
+# for the TITEX block's reason: the real net is the LINKER either way, and the
+# count guard below is only a signpost for a reader looking at a failed link.
+set(TIDEP_RESET_CUT 0)
+set(SLICE_OV007_SRC_TIDEP "")
+foreach(src IN LISTS SLICE_OV007_SOURCES)
+    set(_cut OFF)
+    if(NOT TIDEP_RESET_PLAIN)
+        foreach(sym IN LISTS TIDEP_RESET_SYMS)
+            if(src MATCHES "/${sym}\\.(c|cpp)$")
+                set(_cut ON)
+            endif()
+        endforeach()
+    endif()
+    if(_cut)
+        math(EXPR TIDEP_RESET_CUT "${TIDEP_RESET_CUT}+1")
+    else()
+        list(APPEND SLICE_OV007_SRC_TIDEP "${src}")
+    endif()
+endforeach()
+set(SLICE_OV007_SOURCES ${SLICE_OV007_SRC_TIDEP})
+if(TIDEP_RESET_PLAIN)
+    set(TIDEP_RESET_CUT ${TIDEP_RESET_WANT})
+endif()
+if(NOT TIDEP_RESET_CUT EQUAL TIDEP_RESET_WANT)
+    message(STATUS "TIDEP: expected to cut ${TIDEP_RESET_WANT} plain "
+                   "geometry-reset entries and cut ${TIDEP_RESET_CUT}. If "
                    "slice_ov007.txt stopped listing one of them the hostgen "
                    "copy is still added and the link will say so; if a SECOND "
                    "slice started listing one, this cut missed it and the link "
@@ -8691,7 +8837,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE32_SOURCES}
     ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
@@ -8847,7 +8993,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
@@ -9037,7 +9183,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp

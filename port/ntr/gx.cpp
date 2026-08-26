@@ -1235,6 +1235,14 @@ void gx_debug_proj(float out[16]) {
     for (int i = 0; i < 16; ++i) out[i] = g.proj.m[i];
 }
 
+/* The live POSITION matrix, for a caller that needs to say what a vertex it is
+   about to submit will be transformed BY. gx_debug_proj's counterpart: the
+   projection alone cannot tell an object placed at the wrong depth from one
+   scaled wrong at the right depth, and those two have the same symptom. */
+void gx_debug_pos(float out[16]) {
+    for (int i = 0; i < 16; ++i) out[i] = g.pos.m[i];
+}
+
 // GXSTAT bits 8-12 and 13 want these. Clamped to the widths the register has
 // (5 bits and 1 bit) so a caller can shift them in without re-checking; the
 // MTX_PUSH handlers above already refuse to grow past 31 and 1 respectively.
@@ -1443,6 +1451,73 @@ static void tri_report() {
                kv.second.v1);
 }
 
+/* SM64DS_TEXPX=<frame>: THE DECISION NUMBER FOR THE TITLE'S SCALE, measured on
+   the assembled frame rather than argued from matrices. DEFAULT OFF (0).
+
+   A DS 2D-in-3D surface is drawn ONE TEXEL TO ONE PIXEL, and that is a
+   property of the finished triangle, not of any one stage: it is the screen
+   distance between two vertices divided by the texel distance between the same
+   two vertices. Every transform between the record and the raster is already
+   folded into both halves, so this number cannot be fooled by a wrong
+   projection, a wrong depth, a scale left in the position matrix or a wrong
+   quad size -- if it reads 1.00 the art is at the ROM's own proportions and if
+   it reads 2.43 the art is 2.43x oversized, whatever the cause.
+
+   DS PIXELS, not host pixels: the interactive tier rasters at 2x, so the raw
+   ratio is halved. Reported per bound texture, with the eye-space depth beside
+   it, because the depth is the lever the lane was pointed at and this says
+   whether it is the one that is off.
+
+   Edges shorter than half a texel are skipped -- they carry no information and
+   their ratio is numerically meaningless. A quad whose texel span is zero
+   (the untextured backdrop fills) reports no rows at all, which is correct:
+   there is no texel to be one pixel. */
+static void texpx_report() {
+    static int want = -1;
+    static unsigned f;
+    if (want < 0) {
+        const char *e = getenv("SM64DS_TEXPX");
+        want = e ? atoi(e) : 0;
+    }
+    const unsigned this_frame = f++;
+    if (want <= 0 || (int)this_frame != want) return;
+    struct Acc {
+        int n; double lo, hi, sum; int tw, th; double w_lo, w_hi;
+    };
+    std::map<uint32_t, Acc> acc;
+    for (const GxTriangle &t : g.tris) {
+        for (int e = 0; e < 3; ++e) {
+            const GxVertex &a = t.v[e], &b = t.v[(e + 1) % 3];
+            const double du = b.u - a.u, dv = b.v - a.v;
+            const double dtex = std::sqrt(du * du + dv * dv);
+            if (dtex < 0.5) continue;
+            const double dx = b.x - a.x, dy = b.y - a.y;
+            const double dpx = std::sqrt(dx * dx + dy * dy) * 0.5;  // host -> DS
+            const double r = dpx / dtex;
+            auto it = acc.find(t.dbg_tex);
+            if (it == acc.end())
+                it = acc.emplace(t.dbg_tex, Acc{0, 1e30, -1e30, 0.0, t.tw, t.th,
+                                                1e30, -1e30}).first;
+            Acc &q = it->second;
+            ++q.n; q.sum += r;
+            if (r < q.lo) q.lo = r;
+            if (r > q.hi) q.hi = r;
+            const double w = (a.w + b.w) * 0.5;
+            if (w < q.w_lo) q.w_lo = w;
+            if (w > q.w_hi) q.w_hi = w;
+        }
+    }
+    printf("[texpx] frame %u: DS PIXELS PER TEXEL per bound texture. 1.00 is "
+           "one texel one pixel.\n", this_frame);
+    for (const auto &kv : acc)
+        printf("[texpx]   tex=%08x %3dx%-3d edges=%5d  px/texel min %6.3f  "
+               "max %6.3f  mean %6.3f   w[%8.3f..%8.3f]\n",
+               kv.first, kv.second.tw, kv.second.th, kv.second.n,
+               kv.second.lo, kv.second.hi, kv.second.sum / kv.second.n,
+               kv.second.w_lo, kv.second.w_hi);
+    std::fflush(stdout);
+}
+
 // One texel coordinate under the DS wrap rules (GBATEK TEXIMAGE_PARAM 16-19):
 // repeat clear = CLAMP to the edge texel; repeat set = wrap; flip on top of
 // repeat mirrors every other tile. `repeat && !flip` is the exact expression
@@ -1576,6 +1651,7 @@ void gx_render(Framebuffer &fb) {
     std::chrono::steady_clock::time_point t_enter;
     if (tm) t_enter = std::chrono::steady_clock::now();
     tri_report();
+    texpx_report();
     mat_report();
     mtx_report(false);
     /* Depth clear: 768KB at the window's 2x tier, every frame. 1e30f is not a
