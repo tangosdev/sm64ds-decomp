@@ -260,7 +260,7 @@ src/_ZN11VolcanoFireD1Ev.cpp:
     complete
     .text start:0x021125e0 end:0x02112610
 
-src/_ZN11VolcanoFireD0Ev.c:
+src/_ZN11VolcanoFireD0Ev.cpp:
     complete
     .text start:0x02112610 end:0x02112654
 
@@ -276,7 +276,7 @@ src/func_ov022_02112710.c:
     complete
     .text start:0x02112710 end:0x02112790
 
-src/func_ov022_02112790.cpp:
+src/_ZN11VolcanoFire11ChangeStateEPNS_5StateE.cpp:
     complete
     .text start:0x02112790 end:0x021127e0
 
