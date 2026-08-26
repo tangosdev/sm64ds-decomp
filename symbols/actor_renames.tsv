@@ -54,6 +54,8 @@ ov002	0x020b3248	func_ov002_020b3248	WingFeather_Spawn	spawnfunc
 ov002	0x020b3568	func_ov002_020b3568	Bubble_Spawn	spawnfunc
 ov002	0x020b35a0	func_ov002_020b35a0	_ZN13BigBrickBlockD1Ev	vtable slot 16
 ov002	0x020b35e4	func_ov002_020b35e4	_ZN13BigBrickBlockD0Ev	vtable slot 17
+ov002	0x020b363c	func_ov002_020b363c	_ZN13BigBrickBlock17NotifyLinkedActorEv	inferred helper: sole caller BigBrickBlock::Kill; this owns mLinkedActor at 0x328
+ov002	0x020b36a0	func_ov002_020b36a0	_ZN13BigBrickBlock16HasNonzeroAngleXEv	inferred helper: BigBrickBlock::Kill/InitResources callers; reads inherited mAngleX at 0x8c
 ov002	0x020b3ab0	func_ov002_020b3ab0	_ZN13BigBrickBlock16CleanupResourcesEv	vtable slot 3
 ov002	0x020b3b14	func_ov002_020b3b14	_ZN13BigBrickBlock6RenderEv	vtable slot 9
 ov002	0x020b3c0c	func_ov002_020b3c0c	_ZN13BigBrickBlock8BehaviorEv	vtable slot 6
