@@ -387,6 +387,27 @@ static bool winapi_load(void)
 #include "fault_probe.h"
 #include "overlay_font.h"
 #include "hal/host_settings.h"   /* settings.json, the launcher's file */
+#include "hal/comms_seam.h"       /* run mg15 lane MP1: the radio seam */
+
+/* run mg15 lane MP1. SM64DS_COMMS_FANOUT=1 runs the ROM's own steps 0x16 and
+   0x17 (src/func_0203bb60.c, src/func_0203bc7c.c) after the comms tick, so
+   TouchInfo[4] and PadData[4] come out of the four comms records the way the
+   DS builds them instead of being written directly by the port. OFF by
+   default: the swap is MP2's, and MP1's byte-identical solo proof depends on
+   the default path being untouched.
+   SM64DS_COMMS_REPORT=1 additionally prints the four slots each frame
+   (port::comms_report), which is the instrument the two-instance stylus proof
+   reads its verdict off. */
+static bool comms_fanout_on() {
+    static int v = -1;
+    if (v < 0) v = getenv("SM64DS_COMMS_FANOUT") ? 1 : 0;
+    return v != 0;
+}
+static bool comms_fanout_report() {
+    static int v = -1;
+    if (v < 0) v = getenv("SM64DS_COMMS_REPORT") ? 1 : 0;
+    return v != 0;
+}
 extern "C" void out_set_volume_pct(int);  /* hal/sdat/out_win.cpp */
 
 /* The run-mode half of settings.json (hal/host_settings.cpp). Declared here
@@ -2428,6 +2449,12 @@ static const char *const PORT_RELAUNCH_CLEAR[] = {
        gate of its own, so an inherited one drives synthetic stylus presses
        into the child (review TCR1 measured it moving a selftest BMP). */
     "SM64DS_TOUCH_PROBE",
+    /* run mg15 lane MP1. SM64DS_COMMS_FANOUT hands TouchInfo[4] and
+       PadData[4] to the ROM's four-slot route instead of the port's direct
+       writes -- the whole input path, in a child nobody asked to experiment
+       on. SM64DS_COMMS_REPORT prints four lines a frame into the child's
+       playlog. Same class as the two above. */
+    "SM64DS_COMMS_FANOUT",  "SM64DS_COMMS_REPORT",
 };
 
 /* ONE RELAUNCH, TWO DESTINATIONS. `scene_id >= 0` starts the child on the
@@ -8397,6 +8424,30 @@ int main(void)
             if (cam_mode != CAM_DS && !cutscene_cam)
                 *(short *)data_020a1050 = fc_yaw;
             func_0203e0ac();
+            /* run mg15 lane MP1: the ROM's OWN steps 0x16 and 0x17, right
+               where src/func_020197b8.c runs them -- immediately after the
+               comms tick that filled the four records. func_0203bb60 turns
+               those four into TouchInfo[4] and func_0203bc7c turns them into
+               PadData[4], which is where every stylus and button read in the
+               game comes from.
+
+               OFF BY DEFAULT, and that is not timidity. The port writes those
+               two arrays DIRECTLY today (hal/input_probe.cpp, the scene
+               publish in hal/scene_boot.cpp), so turning this on hands the
+               whole input path to the ROM's four-slot route in one step. That
+               swap is MP2's, because that is the change with a regression
+               surface, and MP1's solo proof is only worth something if the
+               default path is untouched.
+
+               It is a REAL call site and not a linker directive, which is the
+               standard port/hal/w8a_stage_faces.cpp set after a review found
+               eleven TUs of directive-manufactured linkage: something has to
+               actually call the body for it to count as linked. */
+            if (comms_fanout_on()) {
+                port::comms_fanout();
+                if (comms_fanout_report())
+                    port::comms_report("level");
+            }
             if (trace_cam)
                 fprintf(stderr,
                         "[cam-in] f%03d rx=%6d ry=%6d fc=%d yaw=%04x "

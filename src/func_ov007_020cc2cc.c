@@ -25,12 +25,12 @@ int func_ov007_020cc2cc(char* c)
         data_ov007_02103260 = -1;
     }
 
-    func_0203da9c();
     {
-        u16* p = func_0203dabc();
-        int arg4;
-        func_0203da9c();
-        arg4 = func_0203dae4();
+        /* The ROM leaves func_0203da9c's return in r0 and lets the next bl
+           read it as its own argument. Passing it explicitly is the same two
+           bl's on ARM and the only shape that works on a stack ABI. */
+        u16* p = func_0203dabc(func_0203da9c());
+        int arg4 = func_0203dae4(func_0203da9c());
         result = func_ov007_020b7090(p[0], p[1], p[2], p[3], arg4);
     }
 

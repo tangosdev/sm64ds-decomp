@@ -607,6 +607,10 @@ def selftest_env(lvl, skip=None):
     # one changing the level-1 selftest BMP (524 probe lines, d2cec869 instead
     # of the baseline). It is dropped in both env builders for that reason.
     env.pop("SM64DS_TOUCH_PROBE", None)
+    # run mg15 lane MP1: the four-slot input route and its per-frame readout,
+    # dropped in both env builders for the reason the four above it are.
+    env.pop("SM64DS_COMMS_FANOUT", None)
+    env.pop("SM64DS_COMMS_REPORT", None)
     # SM64DS_RNG_MENU_FRAMES (run mg5, lane RNGSEED) pins the minigame RNG's
     # menu dwell and forces the seed, which moves data_0209d4b8 off the .bss
     # zero every draw in this tree is measured from. It is DETERMINISTIC -- the
@@ -704,6 +708,13 @@ def scene_env(scene, extra=None):
               "SM64DS_SCENE_SUBLEVEL", "SM64DS_DUAL_SCREEN", "PORT_WATCHDOG",
               "SM64DS_SCENE_WINDOW", "SM64DS_CLICK_TEST", "SM64DS_PAD_TEST",
               "SM64DS_TOUCH_PROBE", "SM64DS_MG_SCORE_TRACE",
+              # run mg15 lane MP1: SM64DS_COMMS_FANOUT routes TouchInfo[4] and
+              # PadData[4] through the ROM's four comms records instead of the
+              # port's direct writes, and SM64DS_COMMS_REPORT prints four lines
+              # a frame. An inherited fanout would change the whole input path
+              # of a row this step is measuring -- the same class as the five
+              # above, and the more consequential one.
+              "SM64DS_COMMS_FANOUT", "SM64DS_COMMS_REPORT",
               "SM64DS_RNG_MENU_FRAMES"):
         env.pop(k, None)
     if extra:

@@ -239,11 +239,14 @@ void _ZN5Sound6Player19SetPlayableSeqCountEii(int playerId, int maxSeq)
 // group-load seam in the sound stack asks it first. Two independent reasons
 // the src version cannot run here, and they push the same way:
 //
-//   1. It reads *(u16 *)0x027ffc40 -- the DS main-RAM mirror -- literally, and
-//      ntr/io.cpp maps MAIN_BASE 0x02000000 for MAIN_SIZE 0x00400000, so
-//      0x027ffc40 is not mapped at all. The read is an access violation.
-//      slice_gate14.txt called this one: "harmless while nothing calls it, a
-//      fault the day something does."
+//   1. It reads *(u16 *)0x027ffc40 -- the DS boot indicator. (THIS HALF IS
+//      NOW STALE and is kept because the file's reasoning was built on it:
+//      it used to say the address was outside every region ntr maps, and it
+//      WAS, until SHARED_BASE 0x027ff000 joined ntr/io.cpp's kRegions as a
+//      fatal region. The read is a real read today. What it reads is 0, a
+//      cartridge boot -- see the boot-indicator note at ntr/io.cpp's write --
+//      so the DS-faithful answer is 0 and reason 2 below is what carries the
+//      whole decision now.)
 //   2. Even given the read, the DS-faithful answer is 0 -- and 0 is what sends
 //      func_02011f7c into func_020510a4(data_0209b498, data_0209b484) with
 //      data_0209b498 still null (plain BSS in hal/actor_vtables.cpp, because

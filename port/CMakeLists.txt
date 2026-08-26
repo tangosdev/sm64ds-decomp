@@ -3056,30 +3056,26 @@ foreach(line IN LISTS SLICE_OV007_LINES)
     endif()
     list(APPEND SLICE_OV007_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
-# run mg12 lane TITLE: THE TWO COMMS SLOT-INDEX FRAMES, displaced for the arity
-# ride-through that port/tools/aritycheck_plainfunc_baseline.txt lines 80 and
-# 81 already carry. include/decl_common.h declares func_0203dabc and
-# func_0203dae4 as (void); their matched definitions take the comms slot index,
-# which the ROM leaves in r0 from the func_0203da9c() call immediately before.
-# On x86 the callee reads the caller's stack instead, and indexes
-# data_020a1154 at stride 0x24 with it -- every frame the title screen runs,
-# because src/func_ov007_020cc2cc.c is the ONE linked caller of either address.
-# The other two callers in the tree (src/func_0203bb60.c, src/func_0203bc7c.c)
-# declare their own int parameter and are in NO slice, so the face cannot
-# mis-serve them; if either is ever linked, the header is the fix and these two
-# lines come out.
+# run mg12 lane TITLE seated THE TWO COMMS SLOT-INDEX FRAMES here as host
+# copies. RUN MG15 LANE MP1 RETIRED THEM: the defect was never the frames, it
+# was include/decl_common.h declaring func_0203dabc and func_0203dae4 as (void)
+# when both matched definitions take the comms slot index -- which the ROM
+# leaves in r0 from the func_0203da9c() call immediately before, so ARM is
+# correct and a stack ABI reads an unwritten slot.
 #
-# THE CUT IS HERE AND NOT IN THE SLICE FILE, which is this block's own rule
-# above: the slice line is the only thing that puts the matched TU in the
-# build, so cutting it in the file and adding the host copy here would be two
-# facts that can drift into an LNK2005 or an undefined symbol.
-foreach(displaced "src/func_0203dabc.c" "src/func_0203dae4.c")
-    list(REMOVE_ITEM SLICE_OV007_SOURCES
-         "${CMAKE_CURRENT_SOURCE_DIR}/../${displaced}")
-endforeach()
-list(APPEND SLICE_OV007_SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Comms_SlotIndex_0203dabc.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Comms_SlotIndex_0203dae4.cpp")
+# The header now declares both with the parameter, and the one linked ROM
+# caller passes it: src/func_ov007_020cc2cc.c does
+#     func_0203dabc(func_0203da9c())
+# which is the same two bl's on ARM. STILL A MATCH at 2004/b56 with strict
+# relocs after the change; that gate is the whole reason the header could be
+# fixed instead of worked around. The two matched TUs are therefore back in
+# the link as themselves, and port/unmatched/Comms_SlotIndex_*.cpp are gone.
+#
+# WHY IT MATTERED NOW: mg15's MP1 lane links src/func_0203bb60.c and
+# src/func_0203bc7c.c, the ROM's four-player fan-out, and those are precisely
+# the two callers that pass a REAL index rather than riding slot 0 through r0.
+# A face that ignores its argument would have served all four players slot 0's
+# record and the four-slot path would have looked like it worked.
 if(AE1_ADD3C_DISPLACED)
     list(APPEND SLICE_OV007_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov007_ImplicitR0_020add3c.cpp")
@@ -6583,6 +6579,27 @@ foreach(src IN LISTS SLICE10_SOURCES)
        OR src MATCHES "/func_02049018\\.c$")
         continue()
     endif()
+    # run mg15 lane MP1: THE DS SLEEP/WAKE PAIR AND ITS SCHEDULER.
+    # src/OS_SleepThread.c's first act is data_020a612c->node, and
+    # hal/cxx_aliases.cpp hosts data_020a612c as zero -- so the ROM body is a
+    # null dereference on its first call, and port/nfs_names_map.txt:402 has
+    # said so since the NitroFS seat. MEASURED by build target
+    # mp_sleepwake_rom: 0xC0000005, through the real veneer. It is not
+    # theoretical either -- src/func_02018e68.c (slice_mg1) reaches it on the
+    # file-read failure path, so today the error report faults before it can
+    # print. Past the deref, src/func_02057f54.c reschedules through
+    # ARMProcessorMode/ARMSaveContext/ARMRestoreContext, none of which has a
+    # host body and none of which has an honest one to write.
+    # hal/os_thread.cpp reproduces the queue-word half of the contract exactly
+    # and replaces the ARM context switch with a bounded host pump. It is
+    # appended through SLICE_COMMS_SOURCES below, which every consumer of
+    # SLICE10_CAM_SOURCES also takes -- checked: the three add_executable
+    # lines that use this variable are the three that use that one.
+    if(src MATCHES "/OS_SleepThread\\.c$"
+       OR src MATCHES "/OS_WakeupThread\\.c$"
+       OR src MATCHES "/func_02057f54\\.c$")
+        continue()
+    endif()
     list(APPEND SLICE10_CAM_SOURCES "${src}")
 endforeach()
 
@@ -6596,6 +6613,29 @@ list(APPEND SLICE10_CAM_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_ReleaseHeldDispatch.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_SwimMain.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/InitCrashScreen_ResetVeneer.cpp")
+
+# run mg15 lane MP1: THE RADIO SEAM AND THE COMMS CLOSURE.
+#
+# hal/comms_seam.cpp hosts the eight ROM addresses where the game stops being
+# a game and starts being a radio (the WM SDK, and under it arm7.bin, which
+# this repo does not decompile and a PC port does not want). Everything ABOVE
+# those eight stays the ROM's, verbatim -- that is the whole point, and it is
+# what keeps the port portable back to hardware. The transport contract a
+# launcher mod implements is in hal/comms_seam.h; nothing here is a network.
+#
+# hal/os_thread.cpp is the DS sleep/wake pair, hosted, replacing the three
+# gate-10 rows filtered out above.
+#
+# slice_comms.txt is the ROM's four-player fan-out, linked but not yet driven.
+set(SLICE_COMMS_SOURCES hal/comms_seam.cpp hal/os_thread.cpp)
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_comms.txt" SLICE_COMMS_LINES)
+foreach(line IN LISTS SLICE_COMMS_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_COMMS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
 
 # The hosted ARM7: native SDAT player behind the game's own command queue.
 set(SOUND_HOST_SOURCES
@@ -8342,7 +8382,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/stage_slot0.cpp ${SLICE_S4_SLOT0_SOURCES}
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE7_SOURCES} ${SLICE8_SOURCES} ${SLICE9_CAM_SOURCES}
-    ${SLICE10_CAM_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}
+    ${SLICE10_CAM_SOURCES} ${SLICE_COMMS_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}
     ${SLICE15_SOURCES} ${SLICE16_SOURCES} ${SLICE17_SOURCES}
     ${SLICE18_SOURCES} ${SLICE19_SOURCES} ${SLICE20_SOURCES}
     ${SLICE_W1L1_SOURCES} ${SLICE_W1L2_SOURCES} ${SLICE_W1L3_SOURCES}
@@ -8496,7 +8536,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/stage_slot0.cpp ${SLICE_S4_SLOT0_SOURCES}
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE7_SOURCES} ${SLICE8_SOURCES} ${SLICE9_CAM_SOURCES}
-    ${SLICE10_CAM_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}
+    ${SLICE10_CAM_SOURCES} ${SLICE_COMMS_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}
     ${SLICE15_SOURCES} ${SLICE16_SOURCES} ${SLICE17_SOURCES}
     ${SLICE18_SOURCES} ${SLICE19_SOURCES} ${SLICE20_SOURCES}
     ${SLICE_W1L1_SOURCES} ${SLICE_W1L2_SOURCES} ${SLICE_W1L3_SOURCES}
@@ -8686,7 +8726,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/stage_slot0.cpp ${SLICE_S4_SLOT0_SOURCES}
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE7_SOURCES} ${SLICE8_SOURCES} ${SLICE9_CAM_SOURCES}
-    ${SLICE10_CAM_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}
+    ${SLICE10_CAM_SOURCES} ${SLICE_COMMS_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}
     ${SLICE15_SOURCES} ${SLICE16_SOURCES} ${SLICE17_SOURCES}
     ${SLICE18_SOURCES} ${SLICE19_SOURCES} ${SLICE20_SOURCES}
     ${SLICE_W1L1_SOURCES} ${SLICE_W1L2_SOURCES} ${SLICE_W1L3_SOURCES}
@@ -8882,4 +8922,77 @@ if(WIN32)
     enable_language(RC)
     target_sources(walk_window PRIVATE res/walk_window.rc)
     target_sources(walk_window_hires PRIVATE res/walk_window.rc)
+endif()
+
+# ===========================================================================
+# run mg15 lane MP1: THE SLEEP/WAKE PROBE.
+#
+# runs/mg15/out/MP/FRONTIER.md section 10.2 names the ROM wireless lockstep's
+# OS_SleepThread as the largest unknown in the whole radio-seam plan. These two
+# targets are the experiment it asked for, and they are a matched pair on ONE
+# source file: same probe, two thread implementations.
+#
+#   mp_sleepwake_rom  links the ROM bodies port/slice_gate10.txt already puts
+#                     in every shipped binary (lines 340/347/349) and calls the
+#                     sleep through the real veneer under a structured-exception
+#                     guard. It MEASURES port/nfs_names_map.txt:402's claim that
+#                     "OS_SleepThread would fault in this port anyway".
+#   mp_sleepwake      links port/hal/os_thread.cpp instead.
+#
+# Both link src/func_02042778.c and src/func_0201a4d0.c AS THEMSELVES, so the
+# call really is func_02042778 -> func_0201a4d0 -> OS_SleepThread(data_0209d4fc)
+# and not a transcription of it. Console-only, no window, no BMP.
+add_executable(mp_sleepwake tests/mp_sleepwake.cpp
+    hal/os_thread.cpp
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_02042778.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0201a4d0.c")
+target_include_directories(mp_sleepwake PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_link_libraries(mp_sleepwake PRIVATE ntr)
+target_compile_definitions(mp_sleepwake PRIVATE SM64DS_PLATFORM_PC
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+if(MSVC)
+    target_compile_options(mp_sleepwake PRIVATE /wd4311 /wd4312 /wd4068)
+endif()
+
+add_executable(mp_sleepwake_rom tests/mp_sleepwake.cpp
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/OS_SleepThread.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/OS_WakeupThread.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_02057f54.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_02042778.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0201a4d0.c")
+target_include_directories(mp_sleepwake_rom PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_link_libraries(mp_sleepwake_rom PRIVATE ntr)
+target_compile_definitions(mp_sleepwake_rom PRIVATE SM64DS_PLATFORM_PC
+    MP_PROBE_ROM_THREADS
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+if(MSVC)
+    target_compile_options(mp_sleepwake_rom PRIVATE /wd4311 /wd4312 /wd4068 /EHa)
+endif()
+
+# run mg15 lane MP1: THE SEAM PROBE. The seam's solo answers and the ROM's
+# four-slot fan-out, exercised with the ROM's own code (src/func_0203e0ac.c,
+# src/func_0203bb60.c, src/func_0203bc7c.c and the two slot-index accessors)
+# and the hosted seam faces. Console-only, no window, no BMP.
+add_executable(mp_comms_seam tests/mp_comms_seam.cpp
+    hal/comms_seam.cpp hal/os_thread.cpp
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203e0ac.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203bb60.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203bc7c.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203dabc.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203dae4.c")
+target_include_directories(mp_comms_seam PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_link_libraries(mp_comms_seam PRIVATE ntr)
+target_compile_definitions(mp_comms_seam PRIVATE SM64DS_PLATFORM_PC
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+if(MSVC)
+    target_compile_options(mp_comms_seam PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
