@@ -60,9 +60,9 @@
   "shadow_decls": {
     "local_body_no_include": 1248,
     "local_body_no_include_cpp": 531,
-    "local_struct_body": 2185,
-    "local_struct_body_cpp": 1209,
-    "pad_layout": 554
+    "local_struct_body": 2184,
+    "local_struct_body_cpp": 1208,
+    "pad_layout": 553
   },
   "totals": {
     "c_extension": 6624,
