@@ -3010,30 +3010,26 @@ foreach(line IN LISTS SLICE_OV007_LINES)
     endif()
     list(APPEND SLICE_OV007_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
-# run mg12 lane TITLE: THE TWO COMMS SLOT-INDEX FRAMES, displaced for the arity
-# ride-through that port/tools/aritycheck_plainfunc_baseline.txt lines 80 and
-# 81 already carry. include/decl_common.h declares func_0203dabc and
-# func_0203dae4 as (void); their matched definitions take the comms slot index,
-# which the ROM leaves in r0 from the func_0203da9c() call immediately before.
-# On x86 the callee reads the caller's stack instead, and indexes
-# data_020a1154 at stride 0x24 with it -- every frame the title screen runs,
-# because src/func_ov007_020cc2cc.c is the ONE linked caller of either address.
-# The other two callers in the tree (src/func_0203bb60.c, src/func_0203bc7c.c)
-# declare their own int parameter and are in NO slice, so the face cannot
-# mis-serve them; if either is ever linked, the header is the fix and these two
-# lines come out.
+# run mg12 lane TITLE seated THE TWO COMMS SLOT-INDEX FRAMES here as host
+# copies. RUN MG15 LANE MP1 RETIRED THEM: the defect was never the frames, it
+# was include/decl_common.h declaring func_0203dabc and func_0203dae4 as (void)
+# when both matched definitions take the comms slot index -- which the ROM
+# leaves in r0 from the func_0203da9c() call immediately before, so ARM is
+# correct and a stack ABI reads an unwritten slot.
 #
-# THE CUT IS HERE AND NOT IN THE SLICE FILE, which is this block's own rule
-# above: the slice line is the only thing that puts the matched TU in the
-# build, so cutting it in the file and adding the host copy here would be two
-# facts that can drift into an LNK2005 or an undefined symbol.
-foreach(displaced "src/func_0203dabc.c" "src/func_0203dae4.c")
-    list(REMOVE_ITEM SLICE_OV007_SOURCES
-         "${CMAKE_CURRENT_SOURCE_DIR}/../${displaced}")
-endforeach()
-list(APPEND SLICE_OV007_SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Comms_SlotIndex_0203dabc.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Comms_SlotIndex_0203dae4.cpp")
+# The header now declares both with the parameter, and the one linked ROM
+# caller passes it: src/func_ov007_020cc2cc.c does
+#     func_0203dabc(func_0203da9c())
+# which is the same two bl's on ARM. STILL A MATCH at 2004/b56 with strict
+# relocs after the change; that gate is the whole reason the header could be
+# fixed instead of worked around. The two matched TUs are therefore back in
+# the link as themselves, and port/unmatched/Comms_SlotIndex_*.cpp are gone.
+#
+# WHY IT MATTERED NOW: mg15's MP1 lane links src/func_0203bb60.c and
+# src/func_0203bc7c.c, the ROM's four-player fan-out, and those are precisely
+# the two callers that pass a REAL index rather than riding slot 0 through r0.
+# A face that ignores its argument would have served all four players slot 0's
+# record and the four-slot path would have looked like it worked.
 if(AE1_ADD3C_DISPLACED)
     list(APPEND SLICE_OV007_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov007_ImplicitR0_020add3c.cpp")

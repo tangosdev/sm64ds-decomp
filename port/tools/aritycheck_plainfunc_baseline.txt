@@ -47,11 +47,16 @@
 #       form=call, not a jump, so no RIDE exclusion applies and the row is
 #       genuinely short. It has been a known, documented seam since that
 #       guard existed; it stays here rather than being re-discovered.
-#   func_0203dabc|include/decl_common.h
-#       A header prototype: decl_common.h spells it (void), the definition
-#       takes one, and src/func_ov007_020cc2cc.c calls it with nothing
-#       through the include. The header rows are the #1539 analogue for
-#       plain names (that fix was also a header declaration).
+#   func_0203dabc|include/decl_common.h   -- FIXED AND REMOVED, run mg15 MP1.
+#       It was a header prototype: decl_common.h spelled it (void), both
+#       definitions take the comms slot index, and src/func_ov007_020cc2cc.c
+#       called it with nothing through the include. mg15 lane MP1 gave the
+#       header the parameter and the caller the explicit argument
+#       (func_0203dabc(func_0203da9c())), which is the same two bl on ARM:
+#       still MATCH at 2004/b56 with strict relocs. Its sibling row
+#       func_0203dae4|include/decl_common.h went with it. Kept here as the
+#       worked example of a header row that could be CLOSED rather than
+#       ridden, since this file may only shrink.
 #
 # Generated 2026-08-22 from the mg8 tree (branch mg8-sosbin + the plain-name
 # ratchet change) with:
@@ -77,8 +82,6 @@ func_0203ad6c|src/_ZN7PathPtr6FromIDEj.cpp
 func_0203cc0c|src/_ZN6Memory13operator_new2Ej.cpp
 func_0203cc0c|src/_Znwj.cpp
 func_0203d7d4|src/_ZN5Sound19LoadGroupAndSetBankEii.c
-func_0203dabc|include/decl_common.h
-func_0203dae4|include/decl_common.h
 func_0203f714|src/func_0203f920.c
 func_02040a5c|src/func_0203ea5c.c
 func_02042fe4|src/func_02013edc.c

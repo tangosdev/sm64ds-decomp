@@ -1329,7 +1329,13 @@ extern int func_0203d7b8(void);
 extern int func_0203d8fc(void);
 extern int func_0203da3c(void);
 extern int func_0203da9c(void);
-extern int func_0203dae4(void);
+/* THE COMMS SLOT INDEX. Takes the index; src/func_0203dae4.c always did.
+   Declared (void) until run mg15 lane MP1, which is the arity ride-through
+   port/tools/aritycheck_plainfunc_baseline.txt used to carry a row for: the
+   ROM's callers leave the index in r0 from the func_0203da9c() call before,
+   so on ARM nothing is wrong, and on x86 the callee reads an unwritten stack
+   slot. Its sibling func_0203dabc is a few hundred lines down, same story. */
+extern int func_0203dae4(int slot);
 extern int func_020431c4(void*);
 extern int func_0204424c(int);
 extern int func_0204531c(char*, int);
@@ -1747,7 +1753,11 @@ extern u16 data_ov091_02134504[];
 extern u16 data_ov091_02134514[];
 extern u16 gSkyboxFileTable[];
 extern u16*data_0209f334;
-extern u16*func_0203dabc(void);
+/* THE COMMS SLOT INDEX, RECORD HALF. See func_0203dae4 above for the defect
+   this parameter closes. (The return type stays u16* here and int* in
+   src/func_0203dabc.c: both are a pointer in r0, the callers read halfwords,
+   and the matched TU is not worth reopening for a cast.) */
+extern u16*func_0203dabc(int slot);
 extern u32 VRAM_Tex_Size;
 extern u32 _ZTV4View;
 extern u32 _ZTV6Camera;
