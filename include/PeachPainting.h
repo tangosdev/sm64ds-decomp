@@ -1,27 +1,34 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class PeachPainting: 5 matched functions, 2 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef PEACHPAINTING_H
 #define PEACHPAINTING_H
-#include "types.h"
+
+#include "dActor_c.h"
 #include "Model.h"
 
-struct PeachPainting {
-    u8  pad_000[0xd4];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x0d4 */
-    u8  mOpacity;            /* 0x124 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();                  /* slot  3 */
-    int InitResources();
-    int Render();
-#endif
+/* The cartridge RTTI names this class daObjC1Peach_c. PeachPainting is the
+ * readable compatibility spelling already carried by every known virtual.
+ * The __si_class_type_info record points directly at dActor_c, and the class's
+ * 31-slot vtable has the same extent as that base's table. */
+struct PeachPainting : dActor_c {
+    u32 unk_0d0;                 /* 0x0d0 */
+    Model mModel;                /* 0x0d4 */
+    u8 mOpacity;                 /* 0x124 */
+    u8 pad_125[3];
+
+    /* Inline is load-bearing: the forcing translation units emit the genuine
+     * D1 and D0 while objisolate discards their wrapper/passenger sections. */
+    virtual ~PeachPainting() {}
+
+    virtual int InitResources();
+    virtual int CleanupResources();
+    virtual int Behavior();
+    virtual int Render();
+
+    /* Nonvirtual helper called once by InitResources. Its body consumes this
+     * actor's angle, position, scale, and embedded Model, proving ownership. */
+    void UpdateModelTransform();
 };
 
-typedef char PeachPainting_size_must_be_0x128[sizeof(struct PeachPainting) == 0x128 ? 1 : -1];
+typedef char PeachPainting_size_must_be_0x128[
+    sizeof(PeachPainting) == 0x128 ? 1 : -1];
 
 #endif

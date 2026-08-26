@@ -1,69 +1,89 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class SnowmanBody: 5 matched functions, 21 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef SNOWMANBODY_H
 #define SNOWMANBODY_H
-#include "types.h"
+
+#include "dActor_c.h"
 #include "Model.h"
 #include "ShadowModel.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
+#include "PathPtr.h"
 
-struct SnowmanBody {
-    u8  pad_000[0x8];
-    u32 mParam;            /* 0x008 */
-    u8  pad_00c[0x50];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x18];
-    /* 0x080..0x08c is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s32 mScaleX;                 /* 0x080 */
-    s32 mScaleY;                 /* 0x084 */
-    s32 mScaleZ;                 /* 0x088 */
-    s16 mAngleX;            /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    s16 mAngleZ;            /* 0x090 */
-    u8  pad_092[0x42];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x0d4 */
-    /* ShadowModel member. The cartridge's own ~SnowmanBody calls _ZN11ShadowModelD1Ev
-       at +0x124 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    ShadowModel mShadowModel;            /* 0x124 */
-    /* dCcAc_c member. The cartridge's own ~SnowmanBody calls _ZN7dCcAc_cD1Ev at +0x14c
-       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
-       D1 and not D2, so it is this type and not an inlined base. */
-    dCcAc_c mdCcAc_c;            /* 0x14c */
-    /* dBgCh_Actr member. The cartridge's own ~SnowmanBody calls _ZN10dBgCh_ActrD1Ev at
-       +0x180 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgCh_Actr mWithMeshClsn;            /* 0x180 */
-    s32 mHomePosX;            /* 0x33c */
-    s32 mHomePosY;            /* 0x340 */
-    s32 mHomePosZ;            /* 0x344 */
-    s16 mHomeAngleX;            /* 0x348 */
-    s16 mHomeAngleY;            /* 0x34a */
-    s16 mHomeAngleZ;            /* 0x34c */
-    u8  pad_34e[0x2];
-    u8  mShadowMat;            /* 0x350 */
-    u8  pad_351[0x3f];
-    s32 mTalkPlayer;            /* 0x390 */
-    u8  pad_394[0x10];
-    u8  unk_3a4;            /* 0x3a4 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();                  /* slot  3 */
-    int InitResources();
-    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
-    int Render();
-#endif
+/* The cartridge RTTI names this class daBgSnmBdy_c. SnowmanBody is the
+ * readable compatibility spelling already carried by every matched virtual.
+ * Its __si_class_type_info record has dActor_c as the sole base at offset zero,
+ * and its vtable has the same 31 slots as dActor_c. The D1/D0 pair and factory
+ * independently pin the four owned subobjects and the total allocation size.
+ *
+ * The six state pairs are not guesses from code adjacency. The static
+ * initializer at 0x02122018 copies twelve ROM PMF constants into
+ * data_ov072_02122b64 in the exact pairs documented below. SetState indexes
+ * that table at state * 0x10 and invokes the first PMF; Behavior invokes the
+ * second. Descriptive original names are absent, so the ROM-evidenced indices
+ * are retained.
+ */
+struct SnowmanBody : dActor_c {
+    u8 mPad0d0[0x4];                    /* 0x0d0 */
+    Model mModel;                       /* 0x0d4 */
+    ShadowModel mShadowModel;           /* 0x124 */
+    dCcAc_c mCylinder;                  /* 0x14c */
+    dBgCh_Actr mWithMeshClsn;           /* 0x180 */
+
+    s32 mHomePosX;                      /* 0x33c */
+    s32 mHomePosY;                      /* 0x340 */
+    s32 mHomePosZ;                      /* 0x344 */
+    s16 mHomeAngleX;                    /* 0x348 */
+    s16 mHomeAngleY;                    /* 0x34a */
+    s16 mHomeAngleZ;                    /* 0x34c */
+    u8 mPad34e[0x2];                    /* 0x34e */
+    Matrix4x3 mShadowMat;               /* 0x350 */
+    PathPtr mPath;                      /* 0x380 */
+    u32 mPathNode;                      /* 0x388 */
+
+    typedef int (SnowmanBody::*StateFunc)();
+    StateFunc *mStateFuncs;             /* 0x38c */
+    Player *mTalkPlayer;                /* 0x390 */
+    s32 mStateValue;                    /* 0x394 */
+    s32 mRadius;                        /* 0x398 */
+    u32 mSoundID;                       /* 0x39c */
+    u16 mStateTimer;                    /* 0x3a0 */
+    u8 mSubstate;                       /* 0x3a2 */
+    u8 mPlayerReachedPath;              /* 0x3a3 */
+    u8 unk_3a4;                         /* 0x3a4 */
+    u8 mPad3a5[0x3];                    /* 0x3a5 */
+
+    virtual ~SnowmanBody();             /* slots 16, 17 */
+
+    virtual int InitResources();        /* slot  0 */
+    virtual int CleanupResources();     /* slot  3 */
+    virtual int Behavior();             /* slot  6 */
+    virtual int Render();               /* slot  9 */
+    virtual void OnPendingDestroy();    /* slot 12 */
+
+    int InitState0();
+    int State0();
+    int InitState1();
+    int State1();
+    int InitState2();
+    int State2();
+    int InitState3();
+    int State3();
+    int InitState4();
+    int State4();
+    int InitState5();
+    int State5();
+
+    int IsPlayerNearCenter();
+    void UpdateRollAngle();
+    int AdvancePath();
+    int HurtPlayer();
+    void UpdateGroundCollision(dBgCh_Actr *collision);
+    void UpdateModel();
+    void CallStateBehavior();
+    void CallStateInit();
+    void SetState(int state);
 };
 
-typedef char SnowmanBody_size_must_be_0x3a8[sizeof(struct SnowmanBody) == 0x3a8 ? 1 : -1];
+typedef char SnowmanBody_size_must_be_0x3a8[
+    sizeof(SnowmanBody) == 0x3a8 ? 1 : -1];
 
 #endif

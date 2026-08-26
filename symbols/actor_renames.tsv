@@ -148,6 +148,7 @@ ov002	0x020e6c40	func_ov002_020e6c40	_ZN9PowerStarD1Ev	vtable slot 16
 ov002	0x020e6c90	func_ov002_020e6c90	_ZN9PowerStarD0Ev	vtable slot 17
 ov002	0x020e6cf4	func_ov002_020e6cf4	_ZN10StarMarkerD1Ev	vtable slot 16
 ov002	0x020e6d34	func_ov002_020e6d34	_ZN10StarMarkerD0Ev	vtable slot 17
+ov002	0x020e7d84	func_ov002_020e7d84	_ZN10StarMarker7CollectEv	inferred semantic name; Behavior passes this and PowerStar path passes resolved StarMarker in r0
 ov002	0x020eab8c	func_ov002_020eab8c	_ZN10StarMarker16OnPendingDestroyEv	vtable slot 12
 ov002	0x020eabcc	func_ov002_020eabcc	_ZN10StarMarker16CleanupResourcesEv	vtable slot 3
 ov002	0x020eac18	func_ov002_020eac18	_ZN9PowerStar16CleanupResourcesEv	vtable slot 3
@@ -833,6 +834,9 @@ ov029	0x021115f8	func_ov029_021115f8	_ZN29FloatOnWaterPlatformWdwSquare13InitRes
 ov029	0x021116f8	func_ov029_021116f8	ArrowLift_Spawn	spawnfunc
 ov029	0x02111728	func_ov029_02111728	_ZN9ArrowLiftD1Ev	vtable slot 16
 ov029	0x02111760	func_ov029_02111760	_ZN9ArrowLiftD0Ev	vtable slot 17
+ov029	0x021117ac	func_ov029_021117ac	_ZN12WaterDiamond19CheckClsnWithPlayerEv	WaterDiamond Behavior helper; established class name
+ov029	0x02111850	func_ov029_02111850	_ZN12WaterDiamond10SetWaterIDEv	WaterDiamond Behavior helper; established class name
+ov029	0x021118c8	func_ov029_021118c8	_ZN12WaterDiamond20UpdateModelTransformEv	WaterDiamond Behavior helper; established class name
 ov029	0x02111908	func_ov029_02111908	_ZN9ArrowLift16CleanupResourcesEv	vtable slot 3
 ov029	0x0211192c	func_ov029_0211192c	_ZN9ArrowLift6RenderEv	vtable slot 9
 ov029	0x02111954	func_ov029_02111954	_ZN9ArrowLift8BehaviorEv	vtable slot 6
@@ -1352,6 +1356,15 @@ ov064	0x0211a090	func_ov064_0211a090	_ZN9WaterRing13InitResourcesEv	vtable slot 
 ov064	0x0211a1b0	func_ov064_0211a1b0	WaterRing_Spawn	spawnfunc
 ov064	0x0211a200	func_ov064_0211a200	_ZN13TreasureChestD1Ev	vtable slot 16
 ov064	0x0211a238	func_ov064_0211a238	_ZN13TreasureChestD0Ev	vtable slot 17
+ov064	0x0211a284	func_ov064_0211a284	_ZN13TreasureChest20UpdateModelTransformEv	TreasureChest TU state helper
+ov064	0x0211a2c4	func_ov064_0211a2c4	_ZN13TreasureChest6State2Ev	PMF table state 2 behavior
+ov064	0x0211a380	func_ov064_0211a380	_ZN13TreasureChest10InitState2Ev	PMF table state 2 initializer
+ov064	0x0211a39c	func_ov064_0211a39c	_ZN13TreasureChest6State1Ev	PMF table state 1 behavior
+ov064	0x0211a49c	func_ov064_0211a49c	_ZN13TreasureChest10InitState1Ev	PMF table state 1 initializer
+ov064	0x0211a4c4	func_ov064_0211a4c4	_ZN13TreasureChest6State0Ev	PMF table state 0 behavior
+ov064	0x0211a6e0	func_ov064_0211a6e0	_ZN13TreasureChest10InitState0Ev	PMF table state 0 initializer
+ov064	0x0211a6ec	func_ov064_0211a6ec	_ZN13TreasureChest8SetStateEi	PMF table initializer dispatcher
+ov064	0x0211a734	func_ov064_0211a734	_ZN13TreasureChest17CallStateBehaviorEv	PMF table behavior dispatcher
 ov064	0x0211a77c	func_ov064_0211a77c	_ZN13TreasureChest16CleanupResourcesEv	vtable slot 3
 ov064	0x0211a7c4	func_ov064_0211a7c4	_ZN13TreasureChest6RenderEv	vtable slot 9
 ov064	0x0211a7ec	func_ov064_0211a7ec	_ZN13TreasureChest8BehaviorEv	vtable slot 6
@@ -2250,3 +2263,24 @@ ov102	0x0214e534	data_ov102_0214e534	BobOmb_SpawnInfo	spawninfo
 ov102	0x0214e558	data_ov102_0214e558	_ZTV6BobOmb	vtable alloc=0x400
 ov102	0x0214e62c	data_ov102_0214e62c	KoopaShell_SpawnInfo	spawninfo
 ov102	0x0214e650	data_ov102_0214e650	_ZTV10KoopaShell	vtable alloc=0x3e0
+ov072	0x0211f0a4	func_ov072_0211f0a4	_ZN11SnowmanBody18IsPlayerNearCenterEv	SnowmanBody TU helper; direct class-only calls
+ov072	0x0211f158	func_ov072_0211f158	_ZN11SnowmanBody15UpdateRollAngleEv	SnowmanBody TU helper; direct class-only calls
+ov072	0x0211f1dc	func_ov072_0211f1dc	_ZN11SnowmanBody11AdvancePathEv	SnowmanBody TU helper; direct class-only calls
+ov072	0x0211f280	func_ov072_0211f280	_ZN11SnowmanBody10HurtPlayerEv	SnowmanBody TU helper; direct class-only calls
+ov072	0x0211f330	func_ov072_0211f330	_ZN11SnowmanBody21UpdateGroundCollisionEP10dBgCh_Actr	SnowmanBody TU helper; r0 owner and r1 collision object
+ov072	0x0211f3e4	func_ov072_0211f3e4	_ZN11SnowmanBody11UpdateModelEv	SnowmanBody TU helper; direct class-only calls
+ov072	0x0211f48c	func_ov072_0211f48c	_ZN11SnowmanBody6State5Ev	PMF state table behavior index 5
+ov072	0x0211f578	func_ov072_0211f578	_ZN11SnowmanBody10InitState5Ev	PMF state table entry index 5
+ov072	0x0211f598	func_ov072_0211f598	_ZN11SnowmanBody6State4Ev	PMF state table behavior index 4
+ov072	0x0211f63c	func_ov072_0211f63c	_ZN11SnowmanBody10InitState4Ev	PMF state table entry index 4
+ov072	0x0211f65c	func_ov072_0211f65c	_ZN11SnowmanBody6State3Ev	PMF state table behavior index 3
+ov072	0x0211f804	func_ov072_0211f804	_ZN11SnowmanBody10InitState3Ev	PMF state table entry index 3
+ov072	0x0211f81c	func_ov072_0211f81c	_ZN11SnowmanBody6State2Ev	PMF state table behavior index 2
+ov072	0x0211f9c4	func_ov072_0211f9c4	_ZN11SnowmanBody10InitState2Ev	PMF state table entry index 2
+ov072	0x0211fa08	func_ov072_0211fa08	_ZN11SnowmanBody6State1Ev	PMF state table behavior index 1
+ov072	0x0211faf0	func_ov072_0211faf0	_ZN11SnowmanBody10InitState1Ev	PMF state table entry index 1
+ov072	0x0211fb14	func_ov072_0211fb14	_ZN11SnowmanBody6State0Ev	PMF state table behavior index 0
+ov072	0x0211fb7c	func_ov072_0211fb7c	_ZN11SnowmanBody10InitState0Ev	PMF state table entry index 0
+ov072	0x0211fc3c	func_ov072_0211fc3c	_ZN11SnowmanBody17CallStateBehaviorEv	PMF dispatches second entry in current state pair
+ov072	0x0211fc78	func_ov072_0211fc78	_ZN11SnowmanBody13CallStateInitEv	PMF dispatches first entry in current state pair
+ov072	0x0211fcb0	func_ov072_0211fcb0	_ZN11SnowmanBody8SetStateEi	indexes six-pair PMF table at state times 0x10

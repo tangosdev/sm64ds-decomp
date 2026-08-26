@@ -4150,7 +4150,7 @@ src/_ZN10StarMarkerD1Ev.cpp:
     complete
     .text start:0x020e6cf4 end:0x020e6d34
 
-src/_ZN10StarMarkerD0Ev.c:
+src/_ZN10StarMarkerD0Ev.cpp:
     complete
     .text start:0x020e6d34 end:0x020e6d88
 
@@ -4229,7 +4229,7 @@ src/func_ov002_020e7d08.cpp:
     complete
     .text start:0x020e7d08 end:0x020e7d84
 
-src/func_ov002_020e7d84.c:
+src/_ZN10StarMarker7CollectEv.cpp:
     complete
     .text start:0x020e7d84 end:0x020e7e14
 
