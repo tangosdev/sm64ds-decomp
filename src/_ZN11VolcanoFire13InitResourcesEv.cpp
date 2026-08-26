@@ -16,6 +16,6 @@ int VolcanoFire::InitResources()
 {
     mTerminalVelocity = -0xc8000;
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mCylinderClsn, this, 0x1e000, 0x1e000, 0x200002, 0);
-    func_ov022_02112790(this, &data_ov022_02114690);
+    ChangeState((State *)&data_ov022_02114690);
     return 1;
 }
