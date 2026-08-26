@@ -6,6 +6,11 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV21MegaMushroomCreateTag */
+/* A real-C++ `new MegaMushroomCreateTag` probe reproduces the instruction
+ * shape, but CW names the allocation relocation `_Znwm` (global operator new).
+ * With that unresolved name mapped to the ROM's only global operator new, the
+ * relocation-aware check is WRONG with blind:0 at +0x08: this factory calls
+ * fBase_c::operator new instead. Keep this ABI boundary in C. */
 int *MegaMushroomTag_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(272);

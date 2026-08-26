@@ -2331,3 +2331,5 @@ ov002	0x020b41f8	func_ov002_020b41f8	_ZN10BrickBlock15SpawnKoopaShellEv	PMF acti
 ov002	0x020b4250	func_ov002_020b4250	_ZN10BrickBlock17SpawnMegaMushroomEv	PMF action table entry index 1; spawns MegaMushroom
 ov002	0x020b429c	func_ov002_020b429c	_ZN10BrickBlock18SpawnOneUpMushroomEv	PMF action table entry index 0; spawns OneUpMushroom
 ov002	0x020b42e4	func_ov002_020b42e4	_ZN10BrickBlock15SpawnSilverStarEv	PMF action table entry index 3; spawns SilverStar and marker
+ov002	0x020b4714	func_ov002_020b4714	_ZN21MegaMushroomCreateTag17SpawnMegaMushroomEv	inferred helper name; this ownership proven by exclusive MegaMushroomCreateTag TU callers and field ABI
+ov002	0x020b47ec	func_ov002_020b47ec	_ZN21MegaMushroomCreateTag20TrySpawnMegaMushroomEv	inferred helper name; this ownership proven by exclusive MegaMushroomCreateTag Behavior caller and collider field ABI

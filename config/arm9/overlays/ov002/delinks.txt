@@ -740,15 +740,15 @@ src/_ZN21MegaMushroomCreateTagD1Ev.cpp:
     complete
     .text start:0x020b46a0 end:0x020b46d0
 
-src/_ZN21MegaMushroomCreateTagD0Ev.c:
+src/_ZN21MegaMushroomCreateTagD0Ev.cpp:
     complete
     .text start:0x020b46d0 end:0x020b4714
 
-src/func_ov002_020b4714.c:
+src/func_ov002_020b4714.cpp:
     complete
     .text start:0x020b4714 end:0x020b47ec
 
-src/func_ov002_020b47ec.c:
+src/func_ov002_020b47ec.cpp:
     complete
     .text start:0x020b47ec end:0x020b482c
 

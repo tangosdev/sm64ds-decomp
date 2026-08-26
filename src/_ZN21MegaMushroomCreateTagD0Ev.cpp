@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN21MegaMushroomCreateTagD1Ev
+// @symbol _ZN21MegaMushroomCreateTagD0Ev
 
 #include "MegaMushroomCreateTag.h"
 
