@@ -947,18 +947,20 @@ ov035	0x021112ec	func_ov035_021112ec	_ZN16RotatingCogSmall8BehaviorEv	vtable slo
 ov035	0x021114e0	func_ov035_021114e0	_ZN16RotatingCogSmall13InitResourcesEv	vtable slot 0
 ov035	0x0211165c	func_ov035_0211165c	RotatingCogSmall_Spawn	spawnfunc
 ov035	0x021116bc	func_ov035_021116bc	RotatingClockHand_Spawn	spawnfunc
-ov035	0x021116ec	func_ov035_021116ec	_ZN17RotatingClockHandD1Ev	vtable slot 16
-ov035	0x02111738	func_ov035_02111738	_ZN17RotatingClockHandD0Ev	vtable slot 17
-ov035	0x021118f0	func_ov035_021118f0	_ZN17RotatingClockHand16CleanupResourcesEv	vtable slot 3
-ov035	0x02111934	func_ov035_02111934	_ZN17RotatingClockHand6RenderEv	vtable slot 9
-ov035	0x0211195c	func_ov035_0211195c	_ZN17RotatingClockHand8BehaviorEv	vtable slot 6
-ov035	0x02111a98	func_ov035_02111a98	_ZN17RotatingClockHand13InitResourcesEv	vtable slot 0
+ov035	0x021116ec	func_ov035_021116ec	_ZN16SpinningPlatformD1Ev	vtable slot 16; method-symbol spelling and class-only TU
+ov035	0x02111738	func_ov035_02111738	_ZN16SpinningPlatformD0Ev	vtable slot 17; method-symbol spelling and class-only TU
+ov035	0x02111798	func_ov035_02111798	_ZN16SpinningPlatform12UpdateShadowEv	SpinningPlatform TU helper; direct class-only call from Behavior
+ov035	0x021118a8	func_ov035_021118a8	_ZN16SpinningPlatform11UpdateModelEv	SpinningPlatform TU helper; direct class-only calls from InitResources and Behavior
+ov035	0x021118f0	func_ov035_021118f0	_ZN16SpinningPlatform16CleanupResourcesEv	vtable slot 3; method-symbol spelling and class-only TU
+ov035	0x02111934	func_ov035_02111934	_ZN16SpinningPlatform6RenderEv	vtable slot 9; method-symbol spelling and class-only TU
+ov035	0x0211195c	func_ov035_0211195c	_ZN16SpinningPlatform8BehaviorEv	vtable slot 6; method-symbol spelling and class-only TU
+ov035	0x02111a98	func_ov035_02111a98	_ZN16SpinningPlatform13InitResourcesEv	vtable slot 0; method-symbol spelling and class-only TU
 ov035	0x02111b98	func_ov035_02111b98	SpinningPlatform_Spawn	spawnfunc
 ov035	0x02112aa4	data_ov035_02112aa4	RotatingClockHand_SpawnInfo	spawninfo
 ov035	0x02112adc	data_ov035_02112adc	RotatingCogSmall_SpawnInfo	spawninfo
 ov035	0x02112b00	data_ov035_02112b00	_ZTV16RotatingCogSmall	vtable alloc=0x330
 ov035	0x02112ba8	data_ov035_02112ba8	SpinningPlatform_SpawnInfo	spawninfo
-ov035	0x02112bcc	data_ov035_02112bcc	_ZTV17RotatingClockHand	vtable alloc=0x330
+ov035	0x02112bcc	data_ov035_02112bcc	_ZTV16SpinningPlatform	vtable alloc=0x380; ROM RTTI name is daObjCtMecha11_c
 ov036	0x02111414	func_ov036_02111414	SwingingPlatform_Spawn	spawnfunc
 ov036	0x02111544	func_ov036_02111544	RotatingPlatformRr_Spawn	spawnfunc
 ov036	0x02111580	func_ov036_02111580	_ZN18RotatingPlatformRrD1Ev	vtable slot 16

@@ -1,8 +1,5 @@
 //cpp
 // @symbol _ZN16SpinningPlatform8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "SpinningPlatform.h"
 extern "C" {
 extern int DecIfAbove0_Short(char *p);
@@ -14,6 +11,7 @@ extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char *c);
 }
 extern unsigned char data_0209f2c0[];
 extern int data_0209e650[];
+extern short data_ov035_02112b80[];
 
 int SpinningPlatform::Behavior()
 {
@@ -21,29 +19,33 @@ int SpinningPlatform::Behavior()
     mPrevAngleX = data_ov035_02112b80[idx];
     if (idx == 2) {
         if (DecIfAbove0_Short((char *)&mRandTimer) == 0) {
-            int r = (unsigned short)((unsigned)RandomIntInternal((char*)data_0209e650) >> 16);
+            int r = (unsigned short)((unsigned)RandomIntInternal((char *)data_0209e650) >> 16);
             if ((unsigned)r >= 0x7fff) mRandDirection = 1;
             else mRandDirection = -1;
             mRandTimer = (short)((r % 4 + 1) * 0x1e);
             mRandFrames = mRandTimer;
         } else {
             if ((int)mRandTimer < (int)mRandFrames - 5) {
-                short *q = (short*)(((int)((char *)this) + 0x92));
-                *q = (short)(*q * mRandDirection);
+                /* Keeping the member-address temporary is load-bearing: CW
+                 * retains the 0x92 pointer in r2 and the earlier this+0x300
+                 * base in r0, exactly as the cartridge does. */
+                short *angleStep = &mPrevAngleX;
+                *angleStep = (short)(*angleStep * mRandDirection);
             } else {
                 mPrevAngleX = 0;
             }
         }
     }
-    func_020393a4((int*)((char *)&mMeshCollider), 0x180000);
-    func_02039394((int*)((char *)&mMeshCollider), 0x1000);
-    {
-        short *s = (short*)(((int)((char *)this) + 0x8c));
-        *s = (short)(*s + mPrevAngleX);
-    }
-    func_ov035_021118a8(((char *)this));
-    func_ov035_02111798(((char *)this));
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0x180000, 0x1000))
-        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
+    func_020393a4((int *)&mMeshCollider, 0x180000);
+    func_02039394((int *)&mMeshCollider, 0x1000);
+    /* As above, materialising the inherited field address preserves the
+     * cartridge's add-r3/load/store sequence. */
+    short *angle = &mAngleX;
+    *angle = (short)(*angle + mPrevAngleX);
+    UpdateModel();
+    UpdateShadow();
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(
+            (char *)this, 0x180000, 0x1000))
+        UpdateClsnPosAndRot();
     return 1;
 }

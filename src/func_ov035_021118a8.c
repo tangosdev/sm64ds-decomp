@@ -1,8 +1,12 @@
-extern void Matrix4x3_FromRotationXYZExt(void *, int, int, int);
-void func_ov035_021118a8(char *t)
+//cpp
+#include "SpinningPlatform.h"
+
+extern "C" void Matrix4x3_FromRotationXYZExt(void *, int, int, int);
+
+void SpinningPlatform::UpdateModel()
 {
-    Matrix4x3_FromRotationXYZExt(t + 0xf0, *(short *)(t + 0x8c), *(short *)(t + 0x8e), *(short *)(t + 0x90));
-    *(int *)(t + 0x114) = *(int *)(t + 0x5c) >> 3;
-    *(int *)(t + 0x118) = *(int *)(t + 0x60) >> 3;
-    *(int *)(t + 0x11c) = *(int *)(t + 0x64) >> 3;
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3.m[9] = mPosX >> 3;
+    mModel.mat4x3.m[10] = mPosY >> 3;
+    mModel.mat4x3.m[11] = mPosZ >> 3;
 }

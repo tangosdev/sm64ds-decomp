@@ -1,48 +1,46 @@
 #ifndef SPINNINGPLATFORM_H
 #define SPINNINGPLATFORM_H
-#include "types.h"
-#include "Model.h"
-#include "ShadowModel.h"
-#include "dBgW_KcMbg.h"
 
-struct SpinningPlatform {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x26];
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x2];
-    s16 mPrevAngleX;            /* 0x092 */
-    u8  pad_094[0x40];
-    Model mModel;            /* 0x0d4 */
-    dBgW_KcMbg mMeshCollider;            /* 0x124 */
-    /* The collider's transform: InitResources hands +0x2ec to
-       dBgW_KcMbg::SetFile as its `const Matrix4x3 &`. Was a u8 marker
-       plus its pad. */
-    Matrix4x3 mClsnMat;            /* 0x2ec */
-    u8  pad_31c[0x2];
-    s8  mRandDirection;            /* 0x31e */
-    u8  pad_31f[0x1];
-    u16 mRandTimer;            /* 0x320 */
-    u16 mRandFrames;            /* 0x322 */
-    s32 mFloorPosY;            /* 0x324 */
-    ShadowModel mShadowModel; /* 0x328 */
-    /* The shadow's transform. ShadowModel + Matrix4x3 is the same pair
-       HauntedChair evidences by byte (a 48-byte identity block-copied over
-       +0x14c, which lands exactly on the next member), and 0x350 + 0x30 closes
-       on the 0x380 SpinningPlatform_Spawn allocates. */
-    Matrix4x3 mShadowMat;            /* 0x350 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    int Render();
-#endif
+#include "dBgActor_c.h"
+#include "ShadowModel.h"
+
+/* A clock-stage platform that rotates around all three axes and projects a
+ * height-sensitive cuboid shadow onto the floor below it.
+ *
+ * The cartridge's __si_class_type_info record calls this class
+ * daObjCtMecha11_c and names dBgActor_c as its sole base at offset zero. The
+ * matched method symbols use the readable compatibility spelling
+ * SpinningPlatform, and `_ZTV16SpinningPlatform` is an existing symbol alias
+ * for the same 32-slot ROM table at 0x02112bcc. Compiler-emitted
+ * SpinningPlatform RTTI in an isolated method object is only a passenger; it
+ * must not be mistaken for the cartridge's daObjCtMecha11_c identity.
+ *
+ * dBgActor_c's non-POD data ends at 0x31e, so the Itanium layout reuses its two
+ * bytes of tail padding for the first derived member. The factory allocation,
+ * destructor member offsets, and shadow-update body close the object exactly
+ * at 0x380. Field names below are descriptive compatibility names; offsets and
+ * widths are the ROM-evidenced claims. */
+struct SpinningPlatform : dBgActor_c {
+    s8  mRandDirection;             /* 0x31e */
+    u8  pad_31f;                    /* 0x31f */
+    u16 mRandTimer;                 /* 0x320 */
+    u16 mRandFrames;                /* 0x322 */
+    s32 mFloorPosY;                 /* 0x324 */
+    ShadowModel mShadowModel;       /* 0x328 */
+    Matrix4x3 mShadowMat;           /* 0x350 */
+
+    virtual ~SpinningPlatform();    /* slots 16, 17 */
+
+    virtual int InitResources();    /* slot  0 */
+    virtual int CleanupResources(); /* slot  3 */
+    virtual int Behavior();         /* slot  6 */
+    virtual int Render();           /* slot  9 */
+
+    int UpdateShadow();
+    void UpdateModel();
 };
 
 typedef char SpinningPlatform_size_must_be_0x380[
-    sizeof(struct SpinningPlatform) == 0x380 ? 1 : -1];
+    sizeof(SpinningPlatform) == 0x380 ? 1 : -1];
 
 #endif

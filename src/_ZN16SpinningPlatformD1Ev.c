@@ -1,20 +1,10 @@
+//cpp
 // @symbol _ZN16SpinningPlatformD1Ev
-/* recovered: named members + shared header, vtable identified, declarations from a shared header */
-#include "decl_Actor.h"
-#include "decl_Model.h"
-#include "decl_dBgW_KcMbg.h"
-#include "decl_ShadowModel.h"
-#include "decl_common.h"
-extern int _ZTV10dBgActor_c[];
-/* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV16daObjCtMecha11_c; VT1 = _ZTV10dBgActor_c */
-int *_ZN16SpinningPlatformD1Ev(int *t)
+/* Real compiler-spelled complete destructor. mwccarm derives the reverse
+ * teardown order from the class: ShadowModel, then dBgActor_c's moving mesh
+ * collider and Model, then the dActor_c base chain. */
+#include "SpinningPlatform.h"
+
+SpinningPlatform::~SpinningPlatform()
 {
-    t[0] = (int)_ZTV16daObjCtMecha11_c;
-    _ZN11ShadowModelD1Ev((char *)t + 0x328);
-    t[0] = (int)_ZTV10dBgActor_c;
-    _ZN10dBgW_KcMbgD1Ev((char *)t + 0x124);
-    _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN8dActor_cD2Ev(t);
-    return t;
 }
