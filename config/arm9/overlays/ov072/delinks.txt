@@ -8,91 +8,91 @@ src/_ZN11SnowmanBodyD1Ev.cpp:
     complete
     .text start:0x0211f000 end:0x0211f048
 
-src/_ZN11SnowmanBodyD0Ev.c:
+src/_ZN11SnowmanBodyD0Ev.cpp:
     complete
     .text start:0x0211f048 end:0x0211f0a4
 
-src/func_ov072_0211f0a4.c:
+src/_ZN11SnowmanBody18IsPlayerNearCenterEv.cpp:
     complete
     .text start:0x0211f0a4 end:0x0211f158
 
-src/func_ov072_0211f158.cpp:
+src/_ZN11SnowmanBody15UpdateRollAngleEv.cpp:
     complete
     .text start:0x0211f158 end:0x0211f1dc
 
-src/func_ov072_0211f1dc.cpp:
+src/_ZN11SnowmanBody11AdvancePathEv.cpp:
     complete
     .text start:0x0211f1dc end:0x0211f280
 
-src/func_ov072_0211f280.c:
+src/_ZN11SnowmanBody10HurtPlayerEv.cpp:
     complete
     .text start:0x0211f280 end:0x0211f330
 
-src/func_ov072_0211f330.c:
+src/_ZN11SnowmanBody21UpdateGroundCollisionEP10dBgCh_Actr.cpp:
     complete
     .text start:0x0211f330 end:0x0211f3e4
 
-src/func_ov072_0211f3e4.c:
+src/_ZN11SnowmanBody11UpdateModelEv.cpp:
     complete
     .text start:0x0211f3e4 end:0x0211f48c
 
-src/func_ov072_0211f48c.cpp:
+src/_ZN11SnowmanBody6State5Ev.cpp:
     complete
     .text start:0x0211f48c end:0x0211f578
 
-src/func_ov072_0211f578.c:
+src/_ZN11SnowmanBody10InitState5Ev.cpp:
     complete
     .text start:0x0211f578 end:0x0211f598
 
-src/func_ov072_0211f598.c:
+src/_ZN11SnowmanBody6State4Ev.cpp:
     complete
     .text start:0x0211f598 end:0x0211f63c
 
-src/func_ov072_0211f63c.c:
+src/_ZN11SnowmanBody10InitState4Ev.cpp:
     complete
     .text start:0x0211f63c end:0x0211f65c
 
-src/func_ov072_0211f65c.cpp:
+src/_ZN11SnowmanBody6State3Ev.cpp:
     complete
     .text start:0x0211f65c end:0x0211f804
 
-src/func_ov072_0211f804.c:
+src/_ZN11SnowmanBody10InitState3Ev.cpp:
     complete
     .text start:0x0211f804 end:0x0211f81c
 
-src/func_ov072_0211f81c.cpp:
+src/_ZN11SnowmanBody6State2Ev.cpp:
     complete
     .text start:0x0211f81c end:0x0211f9c4
 
-src/func_ov072_0211f9c4.c:
+src/_ZN11SnowmanBody10InitState2Ev.cpp:
     complete
     .text start:0x0211f9c4 end:0x0211fa08
 
-src/func_ov072_0211fa08.cpp:
+src/_ZN11SnowmanBody6State1Ev.cpp:
     complete
     .text start:0x0211fa08 end:0x0211faf0
 
-src/func_ov072_0211faf0.c:
+src/_ZN11SnowmanBody10InitState1Ev.cpp:
     complete
     .text start:0x0211faf0 end:0x0211fb14
 
-src/func_ov072_0211fb14.cpp:
+src/_ZN11SnowmanBody6State0Ev.cpp:
     complete
     .text start:0x0211fb14 end:0x0211fb7c
 
-src/func_ov072_0211fb7c.c:
+src/_ZN11SnowmanBody10InitState0Ev.cpp:
     complete
     .text start:0x0211fb7c end:0x0211fc3c
 
-src/func_ov072_0211fc3c.cpp:
+src/_ZN11SnowmanBody17CallStateBehaviorEv.cpp:
     complete
     .text start:0x0211fc3c end:0x0211fc78
 
-src/func_ov072_0211fc78.cpp:
+src/_ZN11SnowmanBody13CallStateInitEv.cpp:
     complete
     .text start:0x0211fc78 end:0x0211fcb0
 
-src/func_ov072_0211fcb0.c:
+src/_ZN11SnowmanBody8SetStateEi.cpp:
     complete
     .text start:0x0211fcb0 end:0x0211fccc
 

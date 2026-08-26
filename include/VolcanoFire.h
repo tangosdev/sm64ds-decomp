@@ -1,39 +1,51 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class VolcanoFire: 5 matched functions, 1 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* VolcanoFire, reconstructed from its factory, destructor pair, vtable/RTTI,
+ * collision member, state dispatcher and five matched methods.
+ *
+ * The cartridge's RTTI calls this class daObj_volcanoCannon_c while the
+ * configured function names use VolcanoFire. The English spelling is kept as
+ * the compatibility-facing C++ class; the ROM-owned metadata is audited
+ * independently at _ZTI21daObj_volcanoCannon_c / _ZTV21daObj_volcanoCannon_c.
+ *
+ * VolcanoFire_Spawn allocates 0x11c bytes, constructs dActor_c, then dCcAc_c at
+ * +0xd4. The D1 body destroys that member and then the base, closing the same
+ * layout from the other direction.
+ */
 #ifndef VOLCANOFIRE_H
 #define VOLCANOFIRE_H
+
 #include "types.h"
+#include "dActor_c.h"
 #include "dCcAc_c.h"
 
-struct VolcanoFire {
-    u8  pad_000[0xd4];
-    dCcAc_c mdCcAc_c;         /* 0x0d4 */
-    /* The four fields below are read by Behavior and CleanupResources and were
-       simply off the end of the generated header. VolcanoFire_Spawn allocates
-       0x11c, and 0x118 is the only word neither function touches. */
-    /* State record. Behavior loads it, reads a pointer-to-member at +0x8 and
-       calls it on `this` -- so it points at a state table entry, not a scalar. */
-    void *mState;             /* 0x108 */
-    /* The VolcanoRing that spawned this fire: CleanupResources decrements the
-       u16 at +0x324 of whatever this points at. */
-    void *mSpawner;           /* 0x10c */
-    /* Counted down every frame by DecIfAbove0_Short. */
-    u16 mKillTimer;           /* 0x110 */
+struct VolcanoFire : dActor_c {
+    typedef int (VolcanoFire::*StateFunc)();
+
+    struct State {
+        StateFunc init;
+        StateFunc behavior;
+    };
+
+    u8  pad_0d0[0x4];
+    dCcAc_c mCylinderClsn;       /* 0x0d4 */
+    State *mState;               /* 0x108 */
+    dActor_c *mSpawner;          /* 0x10c */
+    u16 mKillTimer;              /* 0x110 */
     u8  pad_112[0x2];
-    /* Particle handle, passed back into Particle::System::NewUnkCallback818. */
-    u32 mParticleID;          /* 0x114 */
-    /* Unread by the five recovered functions; the reference calls it killPosY. */
-    s32 unk_118;              /* 0x118 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();                  /* slot  3 */
-    int InitResources();
-#endif
+    u32 mParticleID;             /* 0x114 */
+    s32 mKillPosY;               /* 0x118 */
+
+    /* Inline is load-bearing: a forcing use in each destructor source emits
+     * the ROM's D1/D0 pair without adding a homeless D2 to the enrolled file. */
+    virtual ~VolcanoFire() {}
+
+    virtual int InitResources();       /* slot 0 */
+    virtual int CleanupResources();    /* slot 3 */
+    virtual int Behavior();            /* slot 6 */
+
+    int ChangeState(State *state);
 };
 
-typedef char VolcanoFire_size_must_be_0x11c[sizeof(struct VolcanoFire) == 0x11c ? 1 : -1];
+typedef char VolcanoFire_size_must_be_0x11c[
+    sizeof(VolcanoFire) == 0x11c ? 1 : -1];
 
-#endif
+#endif /* VOLCANOFIRE_H */

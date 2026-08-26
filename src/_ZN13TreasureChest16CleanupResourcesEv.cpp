@@ -12,16 +12,16 @@
 #include "TreasureChest.h"
 #include "SharedFilePtr.h"
 
-extern char data_ov064_0211c96c;
-extern char data_ov064_0211c964;
-extern char data_ov002_0210d9a8;
-extern char data_ov002_0210da38;
+extern SharedFilePtr data_ov064_0211c96c;
+extern SharedFilePtr data_ov064_0211c964;
+extern SharedFilePtr data_ov002_0210d9a8;
+extern SharedFilePtr data_ov002_0210da38;
 
 int TreasureChest::CleanupResources()
 {
-    ((SharedFilePtr *)(&data_ov064_0211c96c))->Release();
-    ((SharedFilePtr *)(&data_ov064_0211c964))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210d9a8))->Release();
-    ((SharedFilePtr *)(&data_ov002_0210da38))->Release();
+    data_ov064_0211c96c.Release();
+    data_ov064_0211c964.Release();
+    data_ov002_0210d9a8.Release();
+    data_ov002_0210da38.Release();
     return 1;
 }

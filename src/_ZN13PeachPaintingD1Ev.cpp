@@ -1,18 +1,9 @@
 //cpp
 // @symbol _ZN13PeachPaintingD1Ev
+/* Force mwccarm to emit the class-body destructor as a genuine C++ D1. */
+#include "PeachPainting.h"
 
-struct dActor_c {
-    char pad[0xd0];
-    virtual ~dActor_c();
-};
-
-struct Model { char pad[0x4]; ~Model(); };
-
-struct PeachPainting : dActor_c {
-    Model m0;   /* 0xd4 */
-    virtual ~PeachPainting();
-};
-
-PeachPainting::~PeachPainting()
+void PeachPainting_EmitDestructor(PeachPainting *painting)
 {
+    painting->~PeachPainting();
 }
