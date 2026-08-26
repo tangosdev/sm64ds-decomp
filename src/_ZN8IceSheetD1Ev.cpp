@@ -1,15 +1,11 @@
 //cpp
 // @symbol _ZN8IceSheetD1Ev
-/* recovered: real C++ destructor -- the compiler emits the whole body
- *
- * Two vtable stores and three destructor calls, every one a consequence of
- * `struct IceSheet : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
- * because dBgActor_c's destructor is defined in its class body -- then
- * dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This class adds no
- * member with a destructor of its own.
- */
+/* Force mwccarm to materialize the inline class-body complete destructor.
+ * objisolate retains the enrolled D1 and discards this forcing helper and the
+ * compatibility-name vtable/RTTI passengers. */
 #include "IceSheet.h"
 
-IceSheet::~IceSheet()
+void IceSheet_EmitDestructor(IceSheet *sheet)
 {
+    sheet->~IceSheet();
 }

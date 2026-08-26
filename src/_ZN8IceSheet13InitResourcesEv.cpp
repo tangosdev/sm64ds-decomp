@@ -1,25 +1,30 @@
 //cpp
 // @symbol _ZN8IceSheet13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "IceSheet.h"
+#include "SharedFilePtr.h"
+
 extern "C" {
-extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
-extern int _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
-extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
-extern void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void*);
-extern int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
+/* The true member signature takes Fix12<int> by value. A faithful C++ call
+ * homes that argument differently under mwccarm and does not reproduce this
+ * call site, so retain the verified scalar ABI spelling. */
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    dBgW_KcMbg *self, KCL_File *file, Matrix4x3 *mat, int scale,
+    short angY, void *clps);
+extern char data_ov002_0210d754;
 }
+extern SharedFilePtr IceSheet_ClsnFile;
+extern SharedFilePtr IceSheet_ModelFile;
 
 int IceSheet::InitResources()
 {
-    void *mdl = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov018_02113c84);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, mdl, 1, -1);
-    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char *)this));
-    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
-    void *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov018_02113c7c);
-    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY, (void *)&data_ov002_0210d754);
+    void *modelFile = Model::LoadFile(IceSheet_ModelFile);
+    mModel.SetFile((BMD_File *)modelFile, 1, -1);
+    UpdateModelPosAndRotY();
+    UpdateClsnPosAndRot();
+
+    KCL_File *clsnFile = (KCL_File *)dBgW_Kc::LoadFile(IceSheet_ClsnFile);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        &mMeshCollider, clsnFile, &mClsnMat, 0x199, mAngleY,
+        &data_ov002_0210d754);
     return 1;
 }
