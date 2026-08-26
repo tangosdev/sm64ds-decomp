@@ -1183,6 +1183,83 @@ static void mat_report() {
            "NEVER REACHED THE ENGINE.\n");
 }
 
+/* SM64DS_MTX_BALANCE=1: the MATRIX half of mat_report's question, per frame
+   and then once at exit. DEFAULT OFF.
+
+   WHY IT EXISTS. mat_report already separates "the game never asked" from "the
+   game asked and the ask did not arrive" for the four material registers, and
+   the separation is the same one every plain-built MMIO defect turns on: ntr
+   maps real memory across 0x04000000, so a translation unit that reaches a
+   geometry command port with a plain store latches a word there and the engine
+   never receives the command. The MATRIX ports are the half nothing reported,
+   and they are the half where a miss is unbounded rather than local: a
+   MTX_PUSH that does not arrive does not lose one object's bracket, it leaves
+   every MTX_MULT the bracket was meant to contain applied to the live matrix
+   for the rest of the frame.
+
+   THE TWO NUMBERS THAT DECIDE IT, side by side per port:
+     exec   commands the engine actually ran (gx_debug_commands, no take, so
+            this never disturbs a census another reader owns)
+     latch  the word sitting in the mapped I/O window at that same port
+   A NONZERO LATCH UNDER A ZERO EXEC IS A STORE THAT NEVER ARRIVED. A nonzero
+   latch under a nonzero exec says only that both kinds of writer exist, which
+   is why the per-frame stack line below it is printed as well: an engine whose
+   position stack level never leaves 0 while thousands of MTX_MULTs run is an
+   unbalanced bracket whatever the latch says. */
+static void mtx_report(bool at_exit);
+static void mtx_report_atexit() { mtx_report(true); }
+static void mtx_report(bool at_exit) {
+    static int on = -1;
+    if (on < 0) {
+        on = getenv("SM64DS_MTX_BALANCE") ? 1 : 0;
+        if (on) std::atexit(mtx_report_atexit);
+    }
+    if (!on) return;
+    static const struct { uint8_t cmd; const char *name; } kPorts[] = {
+        {0x10, "MTX_MODE"},     {0x11, "MTX_PUSH"},   {0x12, "MTX_POP"},
+        {0x13, "MTX_STORE"},    {0x14, "MTX_RESTORE"},{0x15, "MTX_IDENTITY"},
+        {0x16, "MTX_LOAD_4x4"}, {0x17, "MTX_LOAD_4x3"},
+        {0x18, "MTX_MULT_4x4"}, {0x19, "MTX_MULT_4x3"},
+        {0x1A, "MTX_MULT_3x3"}, {0x1B, "MTX_SCALE"},  {0x1C, "MTX_TRANS"},
+        {0x20, "COLOR"},        {0x21, "NORMAL"},     {0x22, "TEXCOORD"},
+        {0x23, "VTX_16"},       {0x24, "VTX_10"},
+        {0x29, "POLYGON_ATTR"}, {0x2A, "TEXIMAGE_PARAM"}, {0x2B, "PLTT_BASE"},
+        {0x40, "BEGIN_VTXS"},   {0x41, "END_VTXS"},   {0x50, "SWAP_BUFFERS"},
+        {0x60, "VIEWPORT"},
+    };
+    uint32_t counts[256];
+    uint32_t ports, fifo, swap, resets;
+    gx_debug_commands(counts, ports, fifo, swap, resets, /*take=*/false);
+    unsigned pos_level = 0, proj_level = 0;
+    gx_matrix_stack_levels(pos_level, proj_level);
+    if (!at_exit) {
+        /* One line per frame, and the STACK LEVEL is the point of it: a
+           lifecycle rather than an endpoint, because a level read once at the
+           end cannot tell a bracket that balanced from one that never ran. */
+        static unsigned f;
+        printf("[mtxbal] f%-4u pos_sp=%u proj_sp=%u  push=%u pop=%u "
+               "mult4x3=%u mult4x4=%u scale=%u trans=%u  begin=%u\n",
+               f++, pos_level, proj_level, counts[0x11], counts[0x12],
+               counts[0x19], counts[0x18], counts[0x1B], counts[0x1C],
+               counts[0x40]);
+        return;
+    }
+    printf("[mtxbal] EXEC vs LATCH, whole run (%u port writes, %u fifo words, "
+           "%u gx_reset)\n", ports, fifo, resets);
+    for (const auto &r : kPorts) {
+        const uint32_t addr = 0x04000400u + (uint32_t)r.cmd * 4u;
+        const uint32_t latch = *reinterpret_cast<volatile uint32_t *>(
+            static_cast<uintptr_t>(addr));
+        printf("[mtxbal]   %-15s %08x  exec %8u  latch %08x%s\n", r.name, addr,
+               counts[r.cmd], latch,
+               (counts[r.cmd] == 0 && latch != 0)
+                   ? "   <-- STORED, NEVER EXECUTED" : "");
+    }
+    printf("[mtxbal] A NONZERO LATCH UNDER A ZERO EXEC IS A PLAIN STORE THAT "
+           "NEVER REACHED THE ENGINE.\n");
+    printf("[mtxbal] final pos_sp=%u proj_sp=%u\n", pos_level, proj_level);
+}
+
 /* SM64DS_TRI_LOG=1: once, after the first full frame is assembled, the
    per-material picture the RASTER sees -- how many triangles carried each
    TEXIMAGE_PARAM, whether a decoded texture came with it, and the texel
@@ -1354,6 +1431,7 @@ void gx_render(Framebuffer &fb) {
     if (tm) t_enter = std::chrono::steady_clock::now();
     tri_report();
     mat_report();
+    mtx_report(false);
     /* Depth clear: 768KB at the window's 2x tier, every frame. 1e30f is not a
        repeating byte pattern so memset cannot do it, but one row can be built
        scalar and the rest copied from it, which is memcpy's problem rather
