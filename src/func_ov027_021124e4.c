@@ -1,27 +1,31 @@
-typedef short s16;
-typedef struct Vector3 { int x, y, z; } Vector3;
-extern s16 Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
-extern int RandomIntInternal(int* seed);
-extern Vector3 data_ov027_02113d10;
-extern int data_0209e650;
+//cpp
+// @symbol _ZN21SnowmanBreathParticle8TrySpawnER6Player
+#include "SnowmanBreath.h"
 
-int func_ov027_021124e4(void* thiz, void* other)
+extern "C" {
+s16 Vec3_HorzAngle(const Vector3 *, const Vector3 *);
+s32 RandomIntInternal(s32 *);
+extern Vector3 data_ov027_02113d10;
+extern s32 data_0209e650;
+}
+
+int SnowmanBreathParticle::TrySpawn(Player &player)
 {
-    char* c = (char*)thiz;
-    int ang;
-    if (*(unsigned char*)(c + 0x5e) != 0) return 0;
-    *(int*)(c + 0x40) = data_ov027_02113d10.x;
-    *(int*)(c + 0x44) = data_ov027_02113d10.y;
-    *(int*)(c + 0x48) = data_ov027_02113d10.z;
-    ang = Vec3_HorzAngle((Vector3*)(c + 0x40), (Vector3*)((char*)other + 0x5c));
-    if (ang > 0x2af8) ang = 0x2af8;
-    if (ang < 0x9de) ang = 0x9de;
+    s32 angle;
+    if (mTimer != 0)
+        return 0;
+    mPos = data_ov027_02113d10;
+    angle = Vec3_HorzAngle(&mPos, (Vector3 *)((char *)&player + 0x5c));
+    if (angle > 0x2af8)
+        angle = 0x2af8;
+    if (angle < 0x9de)
+        angle = 0x9de;
     {
-        int r = RandomIntInternal(&data_0209e650);
-        *(short*)(c + 0x58) = 0xc1c;
-        *(short*)(c + 0x5a) = (short)(ang + ((r & 0x1fff) - 0x1000));
+        s32 random = RandomIntInternal(&data_0209e650);
+        mAngleX = 0xc1c;
+        mAngleY = (s16)(angle + ((random & 0x1fff) - 0x1000));
     }
-    *(short*)(c + 0x5c) = 0;
-    *(unsigned char*)(c + 0x5e) = 0x16;
+    mAngleZ = 0;
+    mTimer = 0x16;
     return 1;
 }

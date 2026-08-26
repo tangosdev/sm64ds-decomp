@@ -1,85 +1,76 @@
 //cpp
+// @symbol _ZN21SnowmanBreathParticle9HitPlayerEv
+#include "SnowmanBreath.h"
+#include "decl_Player.h"
+
 extern "C" {
-extern void *_ZN8dActor_c10FindWithIDEj(unsigned id);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned a, int x, int y, int z);
-extern void _ZN6Player8BlowAwayEs(void *o, short s);
-extern int _ZN6Player15IsCollectingCapEv(void *o);
-extern int Vec3_HorzAngle(void *a, void *b);
-extern void _ZN6Player18SetNewHatCharacterEjjb(void *o, unsigned a, unsigned b, int c);
-extern int _ZN8SaveData16HasPlayerLostCapEv(void);
-extern void _ZN8SaveData13PlayerLoseCapEv(void);
-extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned id, unsigned fl, void *v, void *v16, int a, int b);
-extern char data_ov027_02113d10;
+void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32, s32, s32, s32);
+int _ZN6Player15IsCollectingCapEv(void *);
+s16 Vec3_HorzAngle(const Vector3 *, const Vector3 *);
+void _ZN6Player18SetNewHatCharacterEjjb(void *, u32, u32, int);
+int _ZN8SaveData16HasPlayerLostCapEv();
+void _ZN8SaveData13PlayerLoseCapEv();
+extern Vector3 data_ov027_02113d10;
+}
 
-void func_ov027_02112170(void *cc)
+void SnowmanBreathParticle::HitPlayer()
 {
-    char *c = (char*)cc;
-    char *e;
-    int id;
-    unsigned h;
-    int ang;
-    short vec16[3];
-    int v[3];
-    char *s;
-
-    id = *(int*)(c + 0x24);
+    u32 id = mCollider.otherOwner;
     if (id == 0)
         return;
-    e = (char*)_ZN8dActor_c10FindWithIDEj(id);
-    if (e == 0)
+    dActor_c *actor = dActor_c::FindWithID(id);
+    if (actor == 0)
+        return;
+    if ((int)(actor->actorID == 0xbf) == 0)
+        return;
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
+        0x100, mPos.x, mPos.y, mPos.z);
+
+    char *player = (char *)actor;
+    if (*(u8 *)(player + 0x6f9))
+        return;
+    if (*(u8 *)(player + 0x703))
+        return;
+    if (*(u8 *)(player + 0x6fd))
+        return;
+    _ZN6Player8BlowAwayEs(player, mAngleY);
+    if (_ZN6Player15IsCollectingCapEv(player))
+        return;
+    if (*(u8 *)(player + 0x6ff))
+        return;
+    if (*(u8 *)(player + 0x6fb))
         return;
 
-    h = *(unsigned short*)(e + 0xc);
-    if ((int)(h == 0xbf) == 0)
-        return;
-
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x100, *(int*)(c + 0x40), *(int*)(c + 0x44), *(int*)(c + 0x48));
-
-    if (*(unsigned char*)(e + 0x6f9))
-        return;
-    if (*(unsigned char*)(e + 0x703))
-        return;
-    if (*(unsigned char*)(e + 0x6fd))
-        return;
-
-    _ZN6Player8BlowAwayEs(e, *(short*)(c + 0x5a));
-
-    if (_ZN6Player15IsCollectingCapEv(e))
-        return;
-    if (*(unsigned char*)(e + 0x6ff))
-        return;
-    if (*(unsigned char*)(e + 0x6fb))
-        return;
-
-    ang = Vec3_HorzAngle(&data_ov027_02113d10, e + 0x5c);
-    vec16[0] = 0;
-    vec16[1] = (short)ang;
-    vec16[2] = 0;
-
-    if (*(unsigned char*)(e + 0x6d9) != *(int*)(e + 8)) {
-        _ZN6Player18SetNewHatCharacterEjjb(e, *(unsigned char*)(e + 0x6d9), 0, 0);
+    s32 angle = Vec3_HorzAngle(&data_ov027_02113d10,
+                               (Vector3 *)&actor->mPosX);
+    Vector3_16 rotation;
+    rotation.x = 0;
+    rotation.y = (s16)angle;
+    rotation.z = 0;
+    if (*(u8 *)(player + 0x6d9) != actor->param1) {
+        _ZN6Player18SetNewHatCharacterEjjb(
+            player, *(u8 *)(player + 0x6d9), 0, 0);
     } else {
         if (_ZN8SaveData16HasPlayerLostCapEv())
             return;
         _ZN8SaveData13PlayerLoseCapEv();
     }
 
+    Vector3 spawnPos;
     {
-        int t40 = *(int*)(c + 0x40);
-        int t48 = *(int*)(c + 0x48);
-        int t44 = *(int*)(c + 0x44) + 0x96000;
-        v[0] = t40;
-        v[1] = t44;
-        v[2] = t48;
+        s32 posX = mPos.x;
+        s32 posZ = mPos.z;
+        s32 posY = mPos.y + 0x96000;
+        spawnPos.x = posX;
+        spawnPos.y = posY;
+        spawnPos.z = posZ;
     }
-    s = (char*)_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-        0x10d, (*(int*)(e + 8) << 8) | 3, v, vec16, 0, -1);
-    if (s == 0)
+    dActor_c *cap = dActor_c::Spawn(
+        0x10d, (actor->param1 << 8) | 3, spawnPos, &rotation, 0, -1);
+    if (cap == 0)
         return;
-
-    *(int*)(s + 0xa4) = 0;
-    *(int*)(s + 0xa8) = 0x14000;
-    *(int*)(s + 0xac) = 0;
-    *(int*)(s + 0x98) = 0x1c000;
-}
+    cap->unk_0a4 = 0;
+    cap->mVertSpeed = 0x14000;
+    cap->unk_0ac = 0;
+    cap->mHorzSpeed = 0x1c000;
 }

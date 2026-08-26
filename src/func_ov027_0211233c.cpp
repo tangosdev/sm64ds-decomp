@@ -1,16 +1,20 @@
 //cpp
+// @symbol _ZN21SnowmanBreathParticle12CheckSnowmanEv
+#include "SnowmanBreath.h"
+
 extern "C" {
-extern void* _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int, void*);
-extern int Vec3_Dist(void*, void*);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
+s32 Vec3_Dist(const Vector3 *, const Vector3 *);
+void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32, s32, s32, s32);
 }
-extern "C" int func_ov027_0211233c(char* c){
-  void* a = _ZN8dActor_c15FindWithActorIDEjPS_(0x102, 0);
-  int thr = *(int*)(c+4) + 0x12b000;
-  int d = Vec3_Dist(c+0x40, (char*)a+0x5c);
-  if (d >= thr)
-    return d;
-  _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x100, *(int*)(c+0x40), *(int*)(c+0x44), *(int*)(c+0x48));
-  *(char*)(c+0x5e) = 0;
-  return 0;
+
+void SnowmanBreathParticle::CheckSnowman()
+{
+    dActor_c *snowman = dActor_c::FindWithActorID(0x102, 0);
+    s32 threshold = mCollider.radius + 0x12b000;
+    s32 distance = Vec3_Dist(&mPos, (Vector3 *)&snowman->mPosX);
+    if (distance >= threshold)
+        return;
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
+        0x100, mPos.x, mPos.y, mPos.z);
+    mTimer = 0;
 }

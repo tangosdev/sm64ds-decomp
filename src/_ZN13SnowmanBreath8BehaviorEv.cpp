@@ -33,12 +33,11 @@ extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(int handle, unsigned int a,
 int SnowmanBreath::Behavior()
 {
     int b;
-    char *slotBase;
+    SnowmanBreathParticle *slotBase;
     u8 *idx;
-    char *base;
     Vector3 pos;
     int i;
-    char *slot;
+    SnowmanBreathParticle *slot;
     int zero;
 
     b = data_0209f2d8[0];
@@ -48,18 +47,15 @@ int SnowmanBreath::Behavior()
     }
 
     if (mTalkDone == 0) {
-        switch (mState) {
+        switch (mTalkState) {
         case 0:
-            if (func_ov027_02112618(((char *)this)) == 0) {
+            if (IsPlayerInRange() == 0) {
                 break;
             }
-            if (_ZN6Player9StartTalkER7fBase_cb(*(void **)((char *)&mTalkPlayer), ((char *)this), 1) == 0) {
+            if (_ZN6Player9StartTalkER7fBase_cb(mTalkPlayer, this, 1) == 0) {
                 break;
             }
-            {
-                u8 *state = (u8 *)(((int)((char *)this) + 0x13d2));
-                *state = *state + 1;
-            }
+            mTalkState++;
             break;
         case 1:
             pos.x = mPosX;
@@ -68,48 +64,43 @@ int SnowmanBreath::Behavior()
             pos.z = mPosZ;
             pos.y = pos.y + 0x12c000;
             if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
-                    *(void **)((char *)&mTalkPlayer), ((char *)this), 0xbb, &pos, zero, zero) == 0) {
+                    mTalkPlayer, this, 0xbb, &pos, zero, zero) == 0) {
                 break;
             }
-            {
-                u8 *state = (u8 *)(((int)((char *)this) + 0x13d2));
-                *state = *state + 1;
-            }
+            mTalkState++;
             break;
         case 2:
-            if (_ZN6Player12GetTalkStateEv(*(void **)((char *)&mTalkPlayer)) == -1) {
-                _ZN6Player18HasFinishedTalkingEv(*(void **)((char *)&mTalkPlayer));
+            if (_ZN6Player12GetTalkStateEv(mTalkPlayer) == -1) {
+                _ZN6Player18HasFinishedTalkingEv(mTalkPlayer);
                 mTalkDone = 1;
             }
             break;
         }
     } else {
-        if (func_ov027_02112618(((char *)this)) != 0) {
-            int *timer = (int *)(((int)((char *)this) + 0x13c8));
-            *timer = *timer + 1;
-            base = ((char *)this) + 0x1000;
-            if ((*(int *)(base + 0x3c8) & 7) != 0) {
-                slotBase = ((char *)this) + 0xd4;
-                idx = (u8 *)((char *)&unk_13d3);
+        if (IsPlayerInRange() != 0) {
+            mTalkTimer++;
+            if ((mTalkTimer & 7) != 0) {
+                slotBase = mParticles;
+                idx = &mNextParticle;
                 do {
-                    slot = slotBase + *(u8 *)(base + 0x3d3) * 0x60;
-                    b = func_ov027_021124e4(slot, *(void **)(base + 0x3c4));
+                    slot = slotBase + mNextParticle;
+                    b = slot->TrySpawn(*mTalkPlayer);
                     *idx = *idx + 1;
                     *idx = *idx % 0x32;
                 } while (b == 0);
             }
             mSoundHandle =
                 _ZN5Sound8PlayLongEjjjRK7Vector3s(mSoundHandle, 3, 0x184,
-                                                  ((char *)this) + 0x74, 0);
+                                                  &mCamSpacePosX, 0);
         }
     }
 
-    slot = ((char *)this) + 0xd4;
+    slot = mParticles;
     i = 0;
     do {
-        func_ov027_02112480(slot);
+        slot->Behavior();
         i++;
-        slot += 0x60;
+        slot++;
     } while (i < 0x32);
 
     return 1;
