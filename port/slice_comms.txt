@@ -25,6 +25,15 @@
 #
 # Both are MATCHED at 2004/b56 with strict relocs; see runs/mg15/out/MP1/.
 #
+# COUNT THEM HONESTLY. Exactly TWO translation units are newly linked as
+# source by this file. Two more (src/func_0203dabc.c, src/func_0203dae4.c)
+# RETURN as source in place of the host copies the arity fix retired, and
+# two more again (src/func_0203e0ac.c, src/func_0203da9c.c) were already
+# linked and were byte-gated alongside them only because they are the
+# closure this path runs through. An earlier lane note called all six
+# "newly linked", which over-labelled four of them; reviewer MP1RV caught
+# it. The byte-gate table was right, the label was not.
+#
 # NOT DRIVEN BY DEFAULT. Linking them changes no behaviour on its own: the
 # port's own input path still writes TouchInfo and PadData directly, and
 # hal/comms_seam.cpp's port_comms_fanout() is what calls these. mp_comms_seam

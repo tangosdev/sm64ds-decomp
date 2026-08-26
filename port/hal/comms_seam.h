@@ -1,5 +1,62 @@
 // THE RADIO SEAM. Run mg15, lane MP1, stage one of the multiplayer plan.
 //
+// ###########################################################################
+// #  PROVISIONAL UNTIL MP2. THE ARCHITECTURE IS SETTLED; THE API IS NOT.    #
+// ###########################################################################
+//
+// Reviewer MP1RV's freeze judgment, and it is the right call: an API should be
+// frozen when a REAL CONSUMER HAS RUN AGAINST IT, and this one has not. No
+// face below has ever been called by its real caller -- src/func_0203ea5c.c,
+// the ROM's own lockstep, is in no slice. Everything MP1 proved was driven
+// either by the hosted faces directly or by a lockstep skeleton written for
+// the probe. The first time the ROM drives these eight is MP2, and that is
+// exactly when signature and ordering mistakes surface.
+//
+// So: WRITE A TRANSPORT AGAINST THIS, BUT DO NOT PUBLISH A MOD THAT DEPENDS ON
+// IT until the contract is frozen at the end of MP2, when a loopback transport
+// has actually driven it.
+//
+// WHAT WILL NOT MOVE: the architecture. The radio seam is wired faithfully in
+// the port core so every line of game code above it stays the DS's and stays
+// portable back to hardware; the network ships only ever as a launcher mod;
+// the default is the ROM's own solo fallback. That is settled.
+//
+// THE FOUR KNOWN GAPS, so a would-be mod author sees them rather than
+// discovering them in the first hour:
+//
+//   1. exchange()'s `status` OUT-PARAM has no useful meaning yet. It is
+//      specified below as "whatever the ROM would have read back out of
+//      data_020a0f80[1]", which cannot be understood without reading
+//      func_0203ea5c. In practice the ROM stores it in a stack local (sp2e)
+//      and never reads it. WRITE 0. That is the whole contract, and MP2 should
+//      either say so in the field's own comment or give the parameter a real
+//      job.
+//   2. NO LIFECYCLE ORDERING IS SPECIFIED. Must open() precede
+//      become_parent()? What does state() return before open()? Is a double
+//      close() legal? A transport author has to guess today. MP2 pins it,
+//      because MP2 is what first calls them in a fixed order.
+//   3. NO ERROR CHANNEL. open() returns void. The intended answer is "leave
+//      state() at idle and let the ROM's own bound fire", which is the right
+//      shape -- the ROM already handles a radio that never comes up -- but it
+//      is nowhere stated as the contract, and a transport that wants to report
+//      WHY has no way to.
+//   4. THE WM STATUS WORD IS NOT IN THE CONTRACT. func_02040a5c /
+//      func_02040a84 are hosted in comms_seam.cpp, which keeps the word
+//      itself, so a real transport cannot supply it. It is documented in the
+//      .cpp and absent from CommsTransport. Decide in MP2 whether it becomes
+//      an entry or stays seam-owned.
+//
+// AND ONE PRE-CONDITION ON MP2 ITSELF, not a gap in this file: func_02040a5c
+// carries character-for-character the arity defect MP1 closed for
+// func_0203dabc / func_0203dae4. src/func_02040a5c.c:11 takes a u32;
+// src/func_0203ea5c.c:33 declares it (void) and :359 calls it with nothing.
+// Correct on ARM, a read of an unwritten stack slot on x86. It is a RIDDEN row
+// in port/tools/aritycheck_plainfunc_baseline.txt, so no ratchet fires, and
+// func_0203ea5c is in no slice so nothing is broken today. THE DAY MP2 LINKS
+// func_0203ea5c TO RUN THE LOCKSTEP, g_wm_status starts taking stack garbage.
+// Fix it the way MP1 fixed the other two: give the declaration its parameter,
+// give the call site its argument, and re-gate the caller at 2004/b56.
+//
 // =========================== THE OWNER'S RULE ==============================
 //
 // The seam is wired FAITHFULLY in the port core so that every line of game
@@ -36,7 +93,7 @@
 // wireless thread with two callbacks.
 //
 // THE WIRE FORMAT IS THE ROM'S AND IT IS FIXED. 0x20 bytes per player per
-// frame, staged at data_020a1020 by src/func_0203ea5c.c:176-187 and unpacked
+// frame, staged at data_020a1020 by src/func_0203ea5c.c:177-186 and unpacked
 // at the same offsets on receive (lines 277-290):
 //
 //   +0x00 (2)  flag word      0x8000 live, 0x4000 round complete, 0x2000 ...,
@@ -81,16 +138,19 @@
 // used to answer both with one lie:
 //
 //   0x027FFC40 == 2      "this console was DOWNLOAD-PLAYED".
-//                        src/func_0203db64.c:72 turns that into
-//                        data_020a0f04 = 2 -- an automatic wireless CHILD --
-//                        and src/func_020408b0.c:33 picks its init branch on
-//                        it. It is a BOOT fact, not a role request.
+//                        src/func_0203db64.c:73 TESTS it and :79 seats
+//                        data_020a0f04 = 2 -- an automatic wireless CHILD,
+//                        followed by a 0x4b0-bounded spin that calls the
+//                        sleep veneer -- and src/func_020408b0.c:33 picks its
+//                        init branch on it. It is a BOOT fact, not a role
+//                        request. (:72 is the `data_020a0f04 = 0` above the
+//                        test; an earlier draft of this note cited it.)
 //   data_020a0f10 != 0   "my comms slot is not the parent's", i.e. I am a
 //                        guest in a session that already exists.
 //
 // port/ntr/io.cpp used to write 2 at 0x027FFC40 to skip an ARM7 sound
-// handshake. That answer is now given where the question is asked (see
-// comms_role_semantics() and hal/star_flow.cpp's func_0203d974) and the boot
+// handshake. That answer is now given where the question is asked --
+// hal/star_flow.cpp's hosted func_0203d974, a plain `return 1` -- and the boot
 // indicator carries the truth: a cartridge boot, host-capable, no role
 // claimed. comms_set_boot_indicator exists so a launcher mod can simulate a
 // downloaded child on purpose, which is the only way that value should ever
@@ -154,9 +214,13 @@ struct CommsTransport {
 
     // Publish my kCommsBlockBytes for this frame and answer whether every
     // live peer's block for THIS frame has arrived. 1 = the round is
-    // complete, 0 = keep waiting. `status` receives whatever the ROM would
-    // have read back out of data_020a0f80[1]; write 0 if there is nothing
-    // meaningful to report.
+    // complete, 0 = keep waiting.
+    //
+    // `status`: WRITE 0. PROVISIONAL, gap 1 in the banner at the top of this
+    // file. It nominally receives what the ROM reads back out of
+    // data_020a0f80[1], but the ROM's own caller stores that in a stack local
+    // and never reads it, so 0 is the entire contract until MP2 either gives
+    // the parameter a real job or documents it away.
     int (*exchange)(const void *my_block, uint16_t *status);
 
     // Player `aid`'s block for the round exchange() just completed, or null

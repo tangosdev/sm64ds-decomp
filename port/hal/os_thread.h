@@ -60,7 +60,7 @@
 // IT CANNOT HANG. The bound is port_thread_set_pump_limit (default
 // kPortThreadPumpLimitDefault). The ROM's own wireless loop carries a second,
 // independent bound of its own (0x4B0 turns before init completes, 0x12C
-// after -- src/func_0203ea5c.c:141-146) and drops the session to solo when it
+// after -- src/func_0203ea5c.c:142-146) and drops the session to solo when it
 // runs out. Two bounds, and neither of them is "wait forever".
 //
 // RE-ENTRANCY IS REFUSED. A pump that reaches game code that sleeps again

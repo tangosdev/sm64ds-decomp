@@ -572,11 +572,17 @@ bool io_init() {
                         where the question is asked.
          func_0203d7d4  (slice_gate14) now answers 0 for arg 0 instead of 1.
                         Its one linked arg-0 caller is src/func_02018e68.c,
-                        which RETURNS EARLY on 0 -- and on 1 walked into
-                        OS_SleepThread, which run mg15 measured faulting
-                        (0xC0000005). So the honest value is the safer one:
-                        the file-read error path now reaches its Crash()
-                        cleanly instead of dying before it can report.
+                        which RETURNS EARLY on 0, where on 1 it fell through
+                        to OS_SleepThread(0). Against the ROM body of
+                        OS_SleepThread that fall-through FAULTED -- run mg15's
+                        mp_sleepwake_rom measured 0xC0000005 on it -- so the
+                        file-read error path used to die before it could
+                        report. TWO INDEPENDENT CHANGES IN THIS SERIES REMOVE
+                        THAT, and an earlier draft of this note credited only
+                        one: the honest 0 keeps the path out of the sleep, and
+                        hal/os_thread.cpp hosts OS_SleepThread so the
+                        fall-through would no longer fault either way. The
+                        flag alone is not the whole rescue.
          func_02013f4c  (slice_gate10) the dev crash screen's A+B+select+start
                         soft reset now takes func_01ffdd98 instead of
                         func_0205f958. Both are console resets with no meaning

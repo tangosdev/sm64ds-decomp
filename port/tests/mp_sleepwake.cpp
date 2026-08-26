@@ -133,7 +133,7 @@ static bool probe_pump(unsigned spin) {
 // ===========================================================================
 // PART 3: the ROM's wireless lockstep, control skeleton verbatim.
 //
-// src/func_0203ea5c.c, lines 141-146 (the bound), 157 (the while), 190-232
+// src/func_0203ea5c.c, lines 142-146 (the bound), 157 (the while), 190-232
 // (the link-state switch), 413-421 (the sleep), 423-424 (the give-up).
 // The packet staging (lines 158-189) and the unpack (lines 234-411) are
 // elided: they touch no host runtime and cannot change the loop's shape.
@@ -366,10 +366,18 @@ int main() {
                 (unsigned long long)s.pump_turns,
                 (unsigned long long)s.pump_stops,
                 (unsigned long long)s.timeouts);
+    /* Reviewer MP1RV corrected this line. An earlier draft printed "nothing
+       the port ships calls rt_run", which is FALSE: smoke_frames.cpp:156 and
+       smoke_modelanim.cpp:157/209 do, and both are battery targets. The true
+       and equally useful statement is the CALLER SET -- rt_run serves those
+       two and nothing else, so neither walk_window's level loop nor the scene
+       loop is on a game fiber, and each says so in as many words
+       (walk_window.cpp:6243, hal/scene_boot.cpp:4457). */
     std::printf("   -> rt.h:11-12's 'generalises to' is TRUE for the mechanism "
-                "and FALSE for the shipped targets: rt_vblank_wait is a no-op "
-                "when rt_run is not driving a fiber (rt.cpp:149), and nothing "
-                "the port ships calls rt_run.\n");
+                "and FALSE for walk_window and the scene loop: rt_vblank_wait "
+                "is a no-op when rt_run is not driving a fiber (rt.cpp:149), "
+                "and rt_run's only callers are smoke_frames and "
+                "smoke_modelanim.\n");
     CHECK(s.pump_stops == 1);
     CHECK(s.timeouts == 0);
     thread_set_pump(probe_pump);
@@ -405,7 +413,7 @@ int main() {
     std::printf("   loop turns=%d  host frames=%llu  %.3f ms  role_after=%d "
                 "completed=%d\n", r.turns, r.host_frames, r.ms, r.role_after,
                 (int)r.completed);
-    std::printf("   -> role_after 0 is src/func_0203ea5c.c:423, "
+    std::printf("   -> role_after 0 is src/func_0203ea5c.c:487, "
                 "data_020a0f04 = 0: the ROM's OWN silent drop back to solo.\n");
     CHECK(r.turns == 0x12C);
     CHECK(!r.completed);

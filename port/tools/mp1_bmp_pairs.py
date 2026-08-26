@@ -7,6 +7,19 @@ Runs the same rows on any build dir, so the seam build and a base build can be
 compared. SILENT: CREATE_NO_WINDOW and STARTUPINFO SW_SHOWMINNOACTIVE, exactly
 as port/tools/battery.py does it, plus SM64DS_NO_FOCUS. Nothing appears.
 
+300 IS A BLIND FRAME COUNT FOR THE LAYOUT CLASS, and this script hard-codes it.
+Reviewer MP1RV named the hole: the docstring below justifies the comparison by
+citing a battery.py measurement taken at 296 FRAMES, where a 4 KB base move
+showed 1 changed pixel and a 64-byte interior shift showed 1354 -- and both were
+byte-identical at 300. So a clean 300-frame compare is not by itself evidence
+that the layout stayed out of the frame. The reviewer re-ran the whole set at
+296 on independently built binaries: all nine artifacts identical there too, and
+every 296 hash differs from its 300 hash, so the instrument really re-rendered.
+The structural proof is the one that actually licenses this comparison (see the
+next paragraph); the frame count is a second opinion. A future edit should take
+the count as an argument rather than pinning 300 -- left as a doc note here
+because this round was comment-and-doc only.
+
 WHAT MAKES THIS COMPARISON MEAN ANYTHING. port/tools/battery.py's header:
 the rendered frame depends on the ABSOLUTE ADDRESSES of hosted DS globals, so
 an insertion INTERIOR to .dsstate changes the picture (its own table: 1354

@@ -8,7 +8,7 @@
 //   func_02040704 says slot 0, func_020406b4 never completes a round, and
 //   asking to become a parent or a child changes none of that. That is what a
 //   DS with nobody in range does, and it is what makes the ROM's own timeout
-//   (src/func_0203ea5c.c:423) drop the session back to solo instead of the
+//   (src/func_0203ea5c.c:487) drop the session back to solo instead of the
 //   port inventing a fallback.
 //
 //   THE FOUR INPUT SLOTS CARRY FOUR COPIES OF THE LOCAL INPUT. SM64DS is

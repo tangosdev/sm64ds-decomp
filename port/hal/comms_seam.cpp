@@ -163,7 +163,7 @@ void func_02040820(void) {
     if (t) { t->become_parent(); return; }
     // No radio: the request is recorded and refused the way an unanswered
     // radio refuses it -- the state never leaves idle, so the ROM's own wait
-    // bound expires and src/func_0203ea5c.c:423 drops the session to solo.
+    // bound expires and src/func_0203ea5c.c:487 drops the session to solo.
     port::g_solo_state = port::kCommsIdle;
 }
 
