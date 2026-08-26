@@ -132,35 +132,35 @@ src/_ZN12HauntedChairD1Ev.cpp:
     complete
     .text start:0x02112938 end:0x02112980
 
-src/_ZN12HauntedChairD0Ev.c:
+src/_ZN12HauntedChairD0Ev.cpp:
     complete
     .text start:0x02112980 end:0x021129dc
 
-src/func_ov020_021129dc.c:
+src/_ZN12HauntedChair6State3Ev.cpp:
     complete
     .text start:0x021129dc end:0x02112b00
 
-src/func_ov020_02112b00.c:
+src/_ZN12HauntedChair6State2Ev.cpp:
     complete
     .text start:0x02112b00 end:0x02112e94
 
-src/func_ov020_02112e94.c:
+src/_ZN12HauntedChair6State1Ev.cpp:
     complete
     .text start:0x02112e94 end:0x021130c8
 
-src/func_ov020_021130c8.c:
+src/_ZN12HauntedChair6State0Ev.cpp:
     complete
     .text start:0x021130c8 end:0x02113148
 
-src/func_ov020_02113148.c:
+src/_ZN12HauntedChair18ApproachStateValueEPsS0_isis.cpp:
     complete
     .text start:0x02113148 end:0x021131f8
 
-src/func_ov020_021131f8.c:
+src/_ZN12HauntedChair5BreakEv.cpp:
     complete
     .text start:0x021131f8 end:0x02113240
 
-src/func_ov020_02113240.cpp:
+src/_ZN12HauntedChair11UpdateModelEv.cpp:
     complete
     .text start:0x02113240 end:0x021132d8
 
