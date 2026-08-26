@@ -3329,6 +3329,42 @@ endif()
 # table in the tree. src/ is NOT edited -- this is a build-time routing, so the
 # byte gate cannot move.
 #
+# WHAT THE BREAKAGE COST, in the callers' own terms. func_ov002_020c8a4c is
+# sub-state 15 of Player::St_NoControl_Main: it faces the player at a target
+# point (self+0x744), and the whole body turns on
+#
+#     if (func_02053274(self+0x5c, self+0x744) < 0xa000)   /* 0xa000 = 10.0 */
+#
+# which is an ARRIVAL test -- "am I close enough to the target yet". With a
+# stale sqrt that test compares a number that never changes against a constant,
+# so it is either permanently true or permanently false for the whole scripted
+# move, and which one it is depends on what the last routed sqrt happened to
+# leave in the register. func_ov002_020d6dac stores the raycast hit distance
+# straight into self+0x654 and then spawns a particle at the hit point, so its
+# stale value is a wrong distance written into player state. func_ov007_020c2e90
+# is a two-sided range test, (d<<12) > r and r <= (e<<12).
+#
+# AND WHAT THE REGRESSION COULD AND COULD NOT SEE, measured rather than
+# inferred. Five paired captures (scenes 1, 4, 374 and level 1 at two frame
+# counts each) came back BYTE-IDENTICAL across the two arms. That is only
+# reassuring once you know whether the body ran in those frames at all, so
+# ntr::sqrt_runs() was added to count entries to run_sqrt -- a plain build never
+# enters it, so the arms' difference IS the call count the routing added:
+#
+#     scene 1  @300   4734 vs  4734     delta 0
+#     scene 4  @300   1200 vs  1200     delta 0
+#     scene 374@300      0 vs     0     delta 0
+#     level 1  @300  56404 vs 56404     delta 0
+#     level 1  @450  82988 vs 82988     delta 0
+#
+# The counter is demonstrably live (level 1 runs the unit 56,404 times in 300
+# frames); func_02053274 is simply not on any of those paths. Both Player
+# callers are sub-states a W-held walk never enters, and the ov007 chain hangs
+# off func_ov007_020c65bc, which nothing in src/ calls by name. So the identical
+# pixels are a measured NOT-REACHED, not a fix that does nothing -- and no run
+# in the standard regression set can confirm the repair in pixels. The self-test
+# is the confirmation, and it is why this change has one.
+#
 # ONE SLICE LISTS IT (port/slice_gate10.txt) and the cut below is guarded on
 # that count the way TI2's and T2's are: if a second slice ever lists it the
 # hostgen copy becomes a duplicate symbol and the link says so, and if this cut
