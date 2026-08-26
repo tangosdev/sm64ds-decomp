@@ -8,7 +8,7 @@
  *   dBgPi::~dBgPi(this+0x74)
  *   _ZN8dM3dGSphD2Ev(this+0x38)
  *   _ZN5dBgPiD2Ev(this+0x10)
- *   func_020354d0(this)                  (base dtor)
+ *   _ZN5dBgChD2Ev(this)                  (base dtor)
  *   Memory::operator_delete2(this)       (0x0203cbcc)
  * returns this.
  */
@@ -28,7 +28,7 @@ extern void *data_02099358[];
 extern void _ZN5dBgPiD1Ev(void *thiz);   /* 0x02038144 */
 extern void _ZN8dM3dGSphD2Ev(void *thiz);          /* 0x0203ac1c */
 extern void _ZN5dBgPiD2Ev(void *thiz);          /* 0x020380ec */
-extern void func_020354d0(struct Obj *thiz);    /* 0x020354d0 */
+extern void _ZN5dBgChD2Ev(struct Obj *thiz);    /* 0x020354d0 */
 extern void _ZN6Memory16operator_delete2EPv(void *ptr); /* 0x0203cbcc */
 
 struct Obj *func_02037c40(struct Obj *thiz)
@@ -41,7 +41,7 @@ struct Obj *func_02037c40(struct Obj *thiz)
     _ZN5dBgPiD1Ev((char *)thiz + 0x74);
     _ZN8dM3dGSphD2Ev((char *)thiz + 0x38);
     _ZN5dBgPiD2Ev((char *)thiz + 0x10);
-    func_020354d0(thiz);
+    _ZN5dBgChD2Ev(thiz);
     _ZN6Memory16operator_delete2EPv(thiz);
     return thiz;
 }

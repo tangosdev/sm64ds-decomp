@@ -11,6 +11,6 @@ int *_ZN9dBgCh_LinD1Ev(struct dBgCh_Lin *self) {
     _ZN8dM3dGSphD1Ev((char *)&self->mBoundSphere);
     func_ov002_020feab8((char *)&self->mLineBase);
     _ZN5dBgPiD2Ev((char *)&self->mBgPiBase);
-    func_020354d0(((int *)self));
+    _ZN5dBgChD2Ev(((int *)self));
     return ((int *)self);
 }

@@ -16,6 +16,6 @@ int *_ZN12dBgCh_SphCrrD1Ev(struct dBgCh_SphCrr *self) {
     _ZN5dBgPiD1Ev((char *)&self->mClsnResult1);
     _ZN8dM3dGSphD2Ev((char *)&self->mSphereBase);
     _ZN5dBgPiD2Ev((char *)&self->mBgPiBase);
-    func_020354d0(((int *)self));
+    _ZN5dBgChD2Ev(((int *)self));
     return ((int *)self);
 }
