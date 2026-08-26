@@ -1,24 +1,60 @@
-// NONMATCHING: instruction scheduling in ONE block (17 of 235 words differ).
-// Size is exact (0x3ac), control flow is exact, the 0x54 frame and every local's
-// stack slot are exact, and ALL FIFTEEN external call sites land at the ROM's own
-// byte offset with the ROM's own destination: func_0203b958 at +0x01c, +0x1f0,
-// +0x200, +0x210, +0x25c, +0x27c and +0x29c; func_0203d434 at +0x0ac; Vec2_Len
-// (0x0203d614) at +0x0ec and +0x13c; _ZN4cstd4fdivEii (0x02053258) at +0x148;
-// func_0203d630 at +0x154; func_0203d704 at +0x164; Vec2_Sub (0x0203d6d0) at
-// +0x174; func_ov006_020d01e0 at +0x344. Plus the four pool words
-// data_ov006_02140990 / _02140cae / _02140cb4 / _02140cb6. Logic verified
-// instruction by instruction against the ROM at 0x020d0c38. Run mg12, lane TRM.
+// NONMATCHING: register naming only, in two blocks (7 of 235 words differ). No
+// instruction is added, removed or reordered anywhere in the body -- the ROM's
+// instruction stream and this one are the same 235 instructions in the same order,
+// and seven of them name a different register. Size is exact (0x3ac), control flow
+// is exact, the 0x54 frame and every local's stack slot are exact, and ALL FIFTEEN
+// external call sites land at the ROM's own byte offset with the ROM's own
+// destination: func_0203b958 at +0x01c, +0x1f0, +0x200, +0x210, +0x25c, +0x27c and
+// +0x29c; func_0203d434 at +0x0ac; Vec2_Len (0x0203d614) at +0x0ec and +0x13c;
+// _ZN4cstd4fdivEii (0x02053258) at +0x148; func_0203d630 at +0x154; func_0203d704
+// at +0x164; Vec2_Sub (0x0203d6d0) at +0x174; func_ov006_020d01e0 at +0x344. Plus
+// the four pool words data_ov006_02140990 / _02140cb4 / _02140cb6 / _02140cae, whose
+// extern declarations are ordered here to match the ROM's own pool order -- the byte
+// gate wildcards pool words and cannot see that, so it is taken on the linkcheck
+// argument, not on a gate figure. Logic verified instruction by instruction against
+// the ROM at 0x020d0c38. Run mg12 lane TRM seated it; run mg14 lane GAPS took it
+// from 17 divergences to 7.
 //
-// THE ONE DIVERGENCE: the three record-field stores in the success tail
-// (+0x34c..+0x36c). The ROM interleaves them -- pool load, constant, store,
-// pool load, constant, store, pool load, store -- while mwccarm 2004/b56 batches
-// the three pool loads and the two constants and then issues the stores back to
-// back. Same three stores, same three destinations, same index register
-// (i * 0x32c), same values (1, 0, i). Everything before +0x34c is byte-identical
-// bar register naming that this block causes. The midpoint temporaries (mx/my),
-// the unsigned-char record arrays, the walking j pointer and the doubled tmp[1]
-// write were each measured and each closed a real divergence; nothing left moves
-// this last block (statement order and store spelling were swept).
+// THE TWO REMAINING DIVERGENCES, both register naming, both measured:
+//
+//   1. MIDPOINT BLOCK, 5 words at +0x8c, +0x98, +0x9c, +0xa4 and +0xa8. The ROM
+//      keeps my in r2 and shifts it in place (asr r2,r2,#1 then lsl r2,r2,#0xc),
+//      and puts mid[0] in r1; this build puts my in r3 and mid[0] in r2, so the two
+//      stores at sp+0x14 and sp+0x18 name the opposite registers. Same two values,
+//      same two stack slots, same order.
+//   2. FIRST RECORD STORE, 2 words at +0x348 and +0x350. The ROM loads
+//      data_ov006_02140cb4 into r1; this build loads it into r3. The other two
+//      record stores name the ROM's own registers (r0, then r1 again).
+//
+// The previous banner attributed the +0x8c block to the tail-store block. That was
+// wrong and is corrected here: the two sets are independent. Closing the tail (below)
+// left the +0x8c block exactly where it was.
+//
+// WHAT CLOSED THE OTHER TEN, each measured against a clean compile, not asserted:
+//
+//   * Spelling the success return as the array expression rather than `return rec;`
+//     is worth SIX words. It is what gives the ROM's r4/r5 colouring at +0x310,
+//     +0x32c and +0x33c -- the compiler CSEs the address straight back onto the rec
+//     the call already used, so the emitted code still returns the saved pointer.
+//   * Routing the three record-field stores through ONE named `short *p` address
+//     temporary with a `*(volatile short *)p =` store is worth FOUR more. It is what
+//     makes mwccarm interleave pool load / constant / store the way the ROM does
+//     instead of batching the three pool loads ahead of the three stores. The
+//     volatile is a codegen spelling and changes nothing about the stores: same three
+//     destinations, same index register (i * 0x32c), same values 1, 0 and i.
+//
+// SWEPT AND REJECTED for the remaining seven, every one re-run from a clean compile:
+// volatile on the extern declarations (16); the volatile cast without the named
+// temporary (11); three distinct pointer temporaries (11); two alternating temporaries
+// (11); all eight direct/through-pointer mixes of the three stores (11, except
+// all-three-through-one at 7); an explicit index temporary (17); pointer arithmetic
+// instead of &arr[] (17); dropping the (short) cast (13); the stores moved before the
+// call (26); all store-order permutations (13 and 14); nine spellings of the midpoint
+// block including both compound-assignment forms and inlining the temporaries away
+// (7 at best, 19 at worst); five declaration positions for the address temporary (7
+// flat). The permuter was run for five minutes at -j4 from this source and never beat
+// the base score. Statement order and store spelling do not move either block: this
+// reads as a rank-pinned colouring floor, not an untried lever.
 //
 // Counts as decompiled, not matched. No delinks block, by the NONMATCHING seat
 // convention (src/MgTrampolineTerror_Spawn.c precedent).
@@ -45,9 +81,9 @@ extern void func_ov006_020d01e0(short *g, short *a, short *b);
 extern void Vec2_Sub(int *o, int *a, int *b);
 
 extern unsigned char data_ov006_02140990[];
-extern unsigned char data_ov006_02140cae[];
 extern unsigned char data_ov006_02140cb4[];
 extern unsigned char data_ov006_02140cb6[];
+extern unsigned char data_ov006_02140cae[];
 
 short *func_ov006_020d0c38(short *a, short *b)
 {
@@ -71,6 +107,7 @@ short *func_ov006_020d0c38(short *a, short *b)
     short *rec;
     unsigned char *pi;
     unsigned char *pj;
+    short *p;
 
     func_0203b958(d, a, b);
     if ((d[0] < 0 ? (short)-d[0] : d[0]) < 8)
@@ -138,10 +175,13 @@ short *func_ov006_020d0c38(short *a, short *b)
         pb[1] = b[1];
         rec = (short *)&data_ov006_02140990[i * 0x32c];
         func_ov006_020d01e0(rec, pa, pb);
-        *(short *)&data_ov006_02140cb4[i * 0x32c] = 1;
-        *(short *)&data_ov006_02140cb6[i * 0x32c] = 0;
-        *(short *)&data_ov006_02140cae[i * 0x32c] = (short)i;
-        return rec;
+        p = (short *)&data_ov006_02140cb4[i * 0x32c];
+        *(volatile short *)p = 1;
+        p = (short *)&data_ov006_02140cb6[i * 0x32c];
+        *(volatile short *)p = 0;
+        p = (short *)&data_ov006_02140cae[i * 0x32c];
+        *(volatile short *)p = (short)i;
+        return (short *)&data_ov006_02140990[i * 0x32c];
     }
     return 0;
 }
