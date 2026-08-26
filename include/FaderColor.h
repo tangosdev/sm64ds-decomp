@@ -24,8 +24,10 @@
  * VTABLE. data_0208eb2c is ten slots and overrides exactly one,
  * slot 2 -- AdvanceFade. Slots 3..9 still point at FaderBrightness's functions.
  * AdvanceFade is NOT declared first here: the destructor is, so that ~FaderColor
- * is the key function and no TU defines it. An override takes its base's slot
- * whatever order it is declared in, so this costs nothing.
+ * is the key function. Its D0/D1/D2 sources now define the real destructor;
+ * mwcc's `_ZTV10FaderColor` relocation binds to the same ROM-proven address
+ * point as data_0208eb2c. The ROM RTTI name remains dFdColor_c. An override
+ * takes its base's slot whatever order it is declared in, so this costs nothing.
  */
 #ifdef __cplusplus
 struct FaderColor : FaderBrightness {
@@ -42,8 +44,8 @@ struct FaderColor : FaderBrightness {
 
 typedef char FaderColor_size_must_be_0x10[sizeof(FaderColor) == 0x10 ? 1 : -1];
 #else
-/* Spelled for the C destructor translation unit, which cannot express the
-   virtuals and so writes out the vptr the compiler would place. */
+/* Spelled for remaining C consumers, which cannot express the virtuals and so
+   write out the vptr the compiler would place. */
 struct FaderColor {
     void*  vtable;      /* 0x00 */
     Fix12i currInterp;  /* 0x04 (from Fader) */

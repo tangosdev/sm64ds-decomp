@@ -11,8 +11,9 @@
  * It is the only concrete implementation in the family: its vtable at
  * data_0208eacc fills all eight of the slots Fader leaves null, and both
  * data_0208eb2c (FaderColor's) and _ZTV9FaderWipe still point at these functions
- * for everything except AdvanceFade. On why three of the four are spelled as
- * addresses rather than _ZTV names, see include/Fader.h.
+ * for everything except AdvanceFade. `data_0208eacc` is the ROM-proven address
+ * point; `_ZTV15FaderBrightness` is its compiler-facing compatibility alias.
+ * The ROM RTTI name is dFdBrightness_c; see include/Fader.h.
  *
  * THREE OF THESE USED TO BE DECLARED NON-VIRTUAL -- IsBetweenStartAndEnd,
  * SetToEnd and SetToStart. They occupy slots 7, 8 and 9 of every concrete table
@@ -22,8 +23,8 @@
  */
 #ifdef __cplusplus
 struct FaderBrightness : Fader {
-    /* Declared first -- key function; only ever defined as an extern "C" free
-       function, in D0Ev.c and D1Ev.c. */
+    /* Declared first -- key function. The D0/D1/D2 sources now define the real
+       destructor and isolate the requested variant from mwcc's emitted group. */
     virtual ~FaderBrightness();
 
     virtual void AdvanceFade();                 /* slot 2 */
