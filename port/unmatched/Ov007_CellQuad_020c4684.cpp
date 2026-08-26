@@ -189,8 +189,12 @@ void func_ov007_020c49bc(int arg0, int arg1, int arg2, int arg3, int arg4,
                          int arg5, unsigned short *arg6, int arg7);
 
 /* The global quad scale, 0x00001000 in the ROM image. Dereferenced one
-   instruction after its address is loaded; see PROVENANCE. */
-extern int data_ov007_0210325c;
+   instruction after its address is loaded; see PROVENANCE. SPELLED AS THE
+   MOUNT SPELLS IT: build/port/host-src/ov007_syms.c defines it
+   `u8 data_ov007_0210325c[4] = { 0,16,0,0 }` with align(4), and an `extern
+   int` of the same name would link fine and disagree with the definition --
+   which is the narrow-declaration class this repo already tracks 48 of. */
+extern unsigned char data_ov007_0210325c[4];
 
 void func_ov007_020c4684(char *self, unsigned color, unsigned alpha,
                          unsigned polyid, unsigned flags, const short *vec);
@@ -252,7 +256,7 @@ void func_ov007_020c4684(char *self, unsigned color, unsigned alpha,
         const int w = *(int *)(self + 0x20);
         const int h = *(int *)(self + 0x24);
         const int nw = -w, nh = -h;
-        const int scale = data_ov007_0210325c;
+        const int scale = *(const int *)data_ov007_0210325c;
         NTR_MMIO(int, 0x04000470) =                             /* MTX_TRANS */
             (int)vec[0] + ((nw + (int)((unsigned)nw >> 31)) >> 1);
         NTR_MMIO(int, 0x04000470) =
