@@ -1,11 +1,11 @@
 //cpp
 // @symbol _ZN8IceSheetD0Ev
-/* A delete expression forces the genuine compiler-spelled deleting
- * destructor. dActor_c's inline operator delete supplies the actor-heap
- * deallocation used by the cartridge. */
+/* The out-of-line definition makes mwccarm materialize the genuine deleting
+ * destructor. This per-symbol source also retains the verified vtable/base
+ * RTTI contribution that the one-function build measured before migration;
+ * objisolate keeps D0 and discards the unlicensed variants and data. */
 #include "IceSheet.h"
 
-void IceSheet_EmitDeletingDestructor(IceSheet *sheet)
+IceSheet::~IceSheet()
 {
-    delete sheet;
 }

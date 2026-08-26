@@ -16,9 +16,11 @@
  * members before chaining to dActor_c. Those two independent observations
  * pin both the empty derived layout and the allocation size. */
 struct IceSheet : dBgActor_c {
-    /* Inline is load-bearing. Explicit use from the destructor sources makes
-     * mwccarm emit the genuine D1/D0 pair in ROM order without a homeless D2. */
-    virtual ~IceSheet() {}
+    /* Out of line is load-bearing in the repository's one-function object
+     * shape. Each enrolled destructor source must ask mwccarm for the genuine
+     * variant and retain the class's already-verified raw data contribution;
+     * objisolate keeps only that source's licensed D1 or D0 text. */
+    virtual ~IceSheet();
 
     virtual int InitResources();                  /* slot  0 */
     virtual int CleanupResources();               /* slot  3 */

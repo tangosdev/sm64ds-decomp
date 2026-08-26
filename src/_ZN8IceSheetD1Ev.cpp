@@ -1,11 +1,11 @@
 //cpp
 // @symbol _ZN8IceSheetD1Ev
-/* Force mwccarm to materialize the inline class-body complete destructor.
- * objisolate retains the enrolled D1 and discards this forcing helper and the
- * compatibility-name vtable/RTTI passengers. */
+/* The out-of-line definition makes mwccarm materialize the genuine complete
+ * destructor. This per-symbol source also retains the verified vtable/base
+ * RTTI contribution that the one-function build measured before migration;
+ * objisolate keeps D1 and discards the unlicensed variants and data. */
 #include "IceSheet.h"
 
-void IceSheet_EmitDestructor(IceSheet *sheet)
+IceSheet::~IceSheet()
 {
-    sheet->~IceSheet();
 }
