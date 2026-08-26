@@ -1,23 +1,28 @@
 //cpp
 // @symbol _ZN12WaterDiamond13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "WaterDiamond.h"
+#include "SharedFilePtr.h"
+
+/* This one call deliberately retains the ABI-spelled entry point. Its ROM
+ * signature takes Fix12<int> by value; asking this compiler to pass the real
+ * class type homes the register arguments to the stack and grows the caller.
+ * The scalar view below is the measured 2004/b56 codegen wall, not a guessed
+ * replacement API. */
 extern "C" {
-extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* f);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* bmd, int a, int b);
-extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, int fix, int t, unsigned int u, unsigned int v);
+void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+    void *, dActor_c *, Fix12i, Fix12i, u32, u32);
 }
+
+extern SharedFilePtr data_ov029_02114270;
 
 int WaterDiamond::InitResources()
 {
-  void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov029_02114270);
-  _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, m, 1, -1);
-  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this)+0x124, ((char*)this), 0x32000, 0x64000, 0x800002, 0);
-  mWaterID = 0;
-  mWaterParam = mParam & 1;
-  mActive = 0;
-  mAngleY = 0;
-  return 1;
+    mModel.SetFile((BMD_File *)Model::LoadFile(data_ov029_02114270), 1, -1);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+        &mCylinder, this, 0x32000, 0x64000, 0x800002, 0);
+    mWaterID = 0;
+    mWaterParam = param1 & 1;
+    mActive = 0;
+    mAngleY = 0;
+    return 1;
 }

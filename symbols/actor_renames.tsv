@@ -833,6 +833,9 @@ ov029	0x021115f8	func_ov029_021115f8	_ZN29FloatOnWaterPlatformWdwSquare13InitRes
 ov029	0x021116f8	func_ov029_021116f8	ArrowLift_Spawn	spawnfunc
 ov029	0x02111728	func_ov029_02111728	_ZN9ArrowLiftD1Ev	vtable slot 16
 ov029	0x02111760	func_ov029_02111760	_ZN9ArrowLiftD0Ev	vtable slot 17
+ov029	0x021117ac	func_ov029_021117ac	_ZN12WaterDiamond19CheckClsnWithPlayerEv	WaterDiamond Behavior helper; established class name
+ov029	0x02111850	func_ov029_02111850	_ZN12WaterDiamond10SetWaterIDEv	WaterDiamond Behavior helper; established class name
+ov029	0x021118c8	func_ov029_021118c8	_ZN12WaterDiamond20UpdateModelTransformEv	WaterDiamond Behavior helper; established class name
 ov029	0x02111908	func_ov029_02111908	_ZN9ArrowLift16CleanupResourcesEv	vtable slot 3
 ov029	0x0211192c	func_ov029_0211192c	_ZN9ArrowLift6RenderEv	vtable slot 9
 ov029	0x02111954	func_ov029_02111954	_ZN9ArrowLift8BehaviorEv	vtable slot 6

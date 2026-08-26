@@ -1,28 +1,31 @@
 //cpp
-struct Vector3;
-struct dActor_c { static dActor_c *FindWithID(unsigned int id); };
-struct Sound { static void PlayBank3(unsigned int id, const Vector3 &v); };
+#include "WaterDiamond.h"
+#include "WDW_Water.h"
 
-extern "C" void func_ov029_021117ac(char *c)
+struct Sound {
+    static void PlayBank3(u32 id, const Vector3 &pos);
+};
+
+void WaterDiamond::CheckClsnWithPlayer()
 {
-    if (*(unsigned char *)(c + 0x15d) != 0)
+    if (mActive != 0)
         return;
-    unsigned int id = *(unsigned int *)(c + 0x148);
+    u32 id = mCylinder.otherOwner;
     if (id == 0)
         return;
-    char *a = (char *)dActor_c::FindWithID(id);
-    if (a == 0)
+    dActor_c *actor = dActor_c::FindWithID(id);
+    if (actor == 0)
         return;
-    int b = (int)(*(unsigned short *)(a + 0xc) == 0xbf);
-    if (b == 0)
+    int isPlayer = (int)(actor->actorID == 0xbf);
+    if (isPlayer == 0)
         return;
-    char *o = (char *)dActor_c::FindWithID(*(unsigned int *)(c + 0x158));
-    int v = *(int *)(o + 0x334);
-    if (v != *(int *)(o + 0x60))
+    WDW_Water *water = (WDW_Water *)dActor_c::FindWithID(mWaterID);
+    int targetPosY = water->mTargetPosY;
+    if (targetPosY != water->mPosY)
         return;
-    if (v == *(int *)(c + 0x60))
+    if (targetPosY == mPosY)
         return;
-    *(unsigned char *)(c + 0x15d) = 1;
-    *(int *)(o + 0x334) = *(int *)(c + 0x60);
-    Sound::PlayBank3(0x63, *(Vector3 *)(c + 0x74));
+    mActive = 1;
+    water->mTargetPosY = mPosY;
+    Sound::PlayBank3(0x63, *(Vector3 *)&mCamSpacePosX);
 }

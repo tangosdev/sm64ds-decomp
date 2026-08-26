@@ -1,40 +1,47 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class WaterDiamond: 5 matched functions, 8 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef WATERDIAMOND_H
 #define WATERDIAMOND_H
-#include "types.h"
+
+#include "dActor_c.h"
 #include "Model.h"
 #include "dCcAc_c.h"
 
-struct WaterDiamond {
-    u8  pad_000[0x8];
-    s32 mParam;            /* 0x008 */
-    u8  pad_00c[0x54];
-    s32 mPosY;            /* 0x060 */
-    u8  pad_064[0x2a];
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x44];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x0d4 */
-    /* dCcAc_c member, named by the class's own destructor calling
-       dCcAc_c's D1 at +0x124 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN12WaterDiamondD0Ev.c] */
-    dCcAc_c mdCcAc_c;            /* 0x124 */
-    s32 mWaterID;            /* 0x158 */
-    s8  mWaterParam;            /* 0x15c */
-    u8  mActive;            /* 0x15d */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();                  /* slot  3 */
-    int InitResources();
-    int Render();
-#endif
+/* WaterDiamond is the readable symbol spelling for the class whose cartridge
+ * RTTI name is daObjWc_Obj03_c. The ROM exposes both names at the same vtable
+ * address: methods mangle as WaterDiamond while the typeinfo string retains
+ * EAD's daObjWc_Obj03_c name.
+ *
+ * The factory allocates 0x160 bytes, constructs dActor_c, then constructs the
+ * Model at 0x0d4 and dCcAc_c at 0x124. Both destructor variants destroy those
+ * members in reverse order before chaining to dActor_c, independently proving
+ * their ownership and the class extent.
+ *
+ * The 31-slot ROM vtable differs from dActor_c only in slots 0, 3, 6, 9, 16
+ * and 17, exactly the virtual declarations below. The three non-virtual
+ * helpers form the rest of the same high-confidence ten-function TU and are
+ * called directly by Behavior.
+ */
+struct WaterDiamond : dActor_c {
+    u8      pad_0d0[0x4];
+    Model   mModel;             /* 0x0d4 */
+    dCcAc_c mCylinder;          /* 0x0124 */
+    u32     mWaterID;           /* 0x0158 -- unique ID of actor 0x65 */
+    u8      mWaterParam;        /* 0x015c -- selects the matching WDW water */
+    u8      mActive;            /* 0x015d -- water movement in progress */
+    u8      pad_15e[0x2];
+
+    virtual ~WaterDiamond();                  /* slots 16 (D1), 17 (D0) */
+
+    virtual s32 InitResources();              /* slot  0 */
+    virtual s32 CleanupResources();           /* slot  3 */
+    virtual s32 Behavior();                   /* slot  6 */
+    virtual s32 Render();                     /* slot  9 */
+
+    void CheckClsnWithPlayer();
+    void SetWaterID();
+    void UpdateModelTransform();
 };
 
-typedef char WaterDiamond_size_must_be_0x160[sizeof(struct WaterDiamond) == 0x160 ? 1 : -1];
+typedef char WaterDiamond_size_must_be_0x160[
+    sizeof(WaterDiamond) == 0x160 ? 1 : -1];
 
 #endif
