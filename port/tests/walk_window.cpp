@@ -882,16 +882,25 @@ static void ss_census(const char *when, void *host_player, void *host_cam)
     fprintf(stderr, "[ss-census]   entrances: %p (%s) count %d\n", ents,
             ss_where(ents), ecount);
     {
+        /* The rows themselves only at =2: a level's table runs to a couple of
+           dozen and a player can press F9 all afternoon. At =1 the line that
+           matters is how many rows there are and whether any of them points
+           somewhere a restore does not reach -- a count that changed across a
+           restore is the tell, and the rows are one env away when it does. */
         const int rows = port_level_host_file_rows();
-        fprintf(stderr, "[ss-census]   host file table: %d row(s)\n", rows);
+        int outside = 0;
         for (int i = 0; i < rows; ++i) {
             unsigned h = 0, refs = 0;
             int persistent = 0;
             void *p = port_level_host_file_row(i, &h, &refs, &persistent);
-            fprintf(stderr, "[ss-census]     [%d] handle %u refs %u ptr %p "
-                    "(%s)%s\n", i, h, refs, p, ss_where(p),
-                    persistent ? " persistent" : "");
+            if (!lk6_savestate_covers(p)) ++outside;
+            if (on == 2)
+                fprintf(stderr, "[ss-census]     [%d] handle %u refs %u ptr %p "
+                        "(%s)%s\n", i, h, refs, p, ss_where(p),
+                        persistent ? " persistent" : "");
         }
+        fprintf(stderr, "[ss-census]   host file table: %d row(s), %d pointing "
+                "outside anything a restore rolls back\n", rows, outside);
     }
     /* THE TWO SWEEPS ARE OPT-IN (SM64DS_SS_CENSUS=2). They are whole-section
        walks that print a couple of dozen lines each, which is the right amount
