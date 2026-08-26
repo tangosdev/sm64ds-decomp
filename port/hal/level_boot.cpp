@@ -1594,11 +1594,20 @@ static void port_jrb_staticrock_clps_seat(void)
    slot PER LEVEL rather than one slot overall: a session that goes 1 -> 6 -> 1
    must get the first mount of each back rather than a re-patch of either. Any
    mount registered with port_level_mount_register owes the same guarantee. */
+extern "C" void port_sqrt_selftest(void);   /* hal/scene_boot.cpp */
+
 static void *port_level_mount_at(int idx)
 {
     static void *mounted[PORT_LEVEL_COUNT];
     if (mounted[idx])
         return mounted[idx];
+    /* Run mg15 lane SQRT. The square-root self-test is idempotent and default
+       off. It is called here as well as from port_scene_begin because a LEVEL
+       run never enters the scene path, and the level arm of that lane's
+       regression came back with no self-test line -- which reads exactly like a
+       self-test that passed. The in-level engine is where func_02053274's two
+       Player-state callers live, so the level arm is the one that matters most. */
+    port_sqrt_selftest();
     const PortLevelDesc *d = &port_level_table[idx];
     d->patch();
     /* JRB owns STATIC_ROCK's cross-mount CLPS pointer; seat it now that ov016's

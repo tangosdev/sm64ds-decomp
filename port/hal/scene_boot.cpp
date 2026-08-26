@@ -137,6 +137,7 @@
 #include <cstring>
 
 #include "ntr/gx.h"
+#include "ntr/mmio.h"
 #include "ntr/ppu.h"
 #include "ntr/rt.h"
 
@@ -4114,6 +4115,143 @@ static void title_oam_tail_zero(void)
     }
 }
 
+/* ---------------------------------------------------------------------------
+ * THE SQUARE-ROOT UNIT SELF-TEST. Run mg15, lane SQRT.
+ * SM64DS_SQRT_SELFTEST=1, DEFAULT OFF.
+ *
+ * func_02053274 is the 3D distance function: it squares the three axis deltas,
+ * shifts the sum left by 2, drives the DS square-root unit with that as a
+ * 64-bit operand and returns (SQRT_RESULT + 1) >> 1, i.e. the ROUNDED distance.
+ * It reaches SQRTCNT (0x40002b0) and BOTH HALVES of SQRT_PARAM (0x40002b8 and
+ * 0x40002bc) through a POINTER BOUND TO A LITERAL -- `param[0]` and `param[1]`
+ * off `volatile unsigned int *param = (volatile unsigned int *)0x40002b8` --
+ * which is why a scan that only looks for cast-derefs files it as a harmless
+ * result reader and misses it.
+ *
+ * Built PLAIN, every one of those stores latches in ntr's mapped I/O window,
+ * ntr::run_sqrt is never entered, and the read of SQRT_RESULT returns whatever
+ * the last HOSTGEN-ROUTED sqrt left there. So it is a distance function that
+ * answers the PREVIOUS square root.
+ *
+ * TWO KNOWN ROOTS, BACK TO BACK, EACH SEEDED BY A ROUTED DRIVER.
+ * func_020531a4 IS routed (SQRTUNIT_SYMS), and every routed driver puts its
+ * operand in the HIGH word, so func_020531a4(k) leaves
+ * SQRT_RESULT = isqrt64(k << 32) = floor(sqrt(k)) * 65536 exactly. That makes
+ * the broken arm's answer PREDICTED rather than merely wrong: it is
+ * (floor(sqrt(k)) * 65536 + 1) >> 1, printed next to it as `stale=`.
+ *
+ *   seed k=1  ->  SQRT_RESULT 65536   ask dist(0,0,0 -> 300,400,0), want 500
+ *   seed k=4  ->  SQRT_RESULT 131072  ask dist(0,0,0 -> 3,4,0),     want 5
+ *
+ * The plain arm answers 32768 then 65536 -- each question gets the seed's root,
+ * not its own. Pair B asks the two questions with NO reseed between them, which
+ * is the shape the defect is named for: the second question comes back with the
+ * FIRST question's answer, because the first call never moved the unit.
+ *
+ * IT PUTS THE WINDOW BACK. The four registers are saved and restored around the
+ * test through PLAIN volatile derefs, which in a host file (this one is not
+ * hostgen'd) are RAW accesses to the mapped window and trigger nothing -- which
+ * is exactly what a restore must be. Without that, an instrument that seeds the
+ * sqrt unit would change what the game's own first plain sqrt reads back, and
+ * the BMP regression would be measuring the probe. The BMP pairs are still
+ * captured with this OFF; this is belt and braces. */
+extern "C" {
+int func_02053274(int *a, int *b);
+int func_020531a4(int a);
+}
+/* CALLED FROM TWO PLACES, and that is not belt and braces. port_scene_begin is
+   the SCENE path (SM64DS_SCENE); a LEVEL run (SM64DS_LEVEL +
+   SM64DS_WINDOW_SELFTEST, the port's own rendering gate) never enters it and
+   boots through hal/level_boot.cpp instead. The first version of this hung only
+   off port_scene_begin, and the level arm of the regression came back with no
+   self-test line at all -- which reads exactly like a self-test that passed.
+   port_level_mount_at calls it too, and the guard below makes the second call a
+   no-op on the paths that reach both. */
+extern "C" void port_sqrt_selftest(void)
+{
+    static int done;
+    if (done) return;
+
+    /* Unset or exactly "0" is off; any other value is on. Deliberately not
+       atoi: a non-numeric value should turn a diagnostic ON, not silently off,
+       which is the same rule the attract probe above settled on. */
+    const char *e = std::getenv("SM64DS_SQRT_SELFTEST");
+    if (!e) return;
+    if (e[0] == '0' && e[1] == '\0') return;
+    done = 1;
+
+    volatile unsigned short *sq_cnt = (volatile unsigned short *)0x40002b0;
+    volatile unsigned int   *sq_res = (volatile unsigned int *)0x40002b4;
+    volatile unsigned int   *sq_par = (volatile unsigned int *)0x40002b8;
+    const unsigned short save_cnt = *sq_cnt;
+    const unsigned int   save_res = *sq_res;
+    const unsigned int   save_p0  = sq_par[0];
+    const unsigned int   save_p1  = sq_par[1];
+
+    int origin[3] = {0, 0, 0};
+    int p500[3]   = {300, 400, 0};   /* 300-400-500 triple */
+    int p5[3]     = {3, 4, 0};       /* 3-4-5 triple       */
+
+    /* PAIR A: each question preceded by a routed seed, so the broken answer is
+       predicted and visibly tracks the seed rather than being a constant. */
+    func_020531a4(1);
+    const unsigned int seed_a = *sq_res;
+    const int a1 = func_02053274(origin, p500);
+    func_020531a4(4);
+    const unsigned int seed_b = *sq_res;
+    const int a2 = func_02053274(origin, p5);
+
+    /* PAIR B: the two questions back to back with nothing in between. */
+    func_020531a4(1);
+    const int b1 = func_02053274(origin, p500);
+    const int b2 = func_02053274(origin, p5);
+
+    std::fprintf(stderr,
+        "[sqrt-selftest] A: d(300,400,0)=%d want=500 stale=%d | "
+        "d(3,4,0)=%d want=5 stale=%d\n",
+        a1, (int)((seed_a + 1) >> 1), a2, (int)((seed_b + 1) >> 1));
+    std::fprintf(stderr,
+        "[sqrt-selftest] B: back-to-back d(300,400,0)=%d want=500 then "
+        "d(3,4,0)=%d want=5 -- second==first means the unit never ran\n",
+        b1, b2);
+    std::fprintf(stderr,
+        "[sqrt-selftest] VERDICT %s\n",
+        (a1 == 500 && a2 == 5 && b1 == 500 && b2 == 5)
+            ? "FIXED: both roots correct, and the second question got its own answer"
+            : (b1 == b2)
+                ? "BROKEN: the second question came back with the first's answer"
+                : "BROKEN: at least one root is wrong");
+
+    sq_par[0] = save_p0;
+    sq_par[1] = save_p1;
+    *sq_cnt = save_cnt;
+    *sq_res = save_res;
+
+    /* THE REACH COUNT, and it is the difference between two findings that look
+       identical in a BMP diff. If the regression captures come back
+       byte-identical, that is only reassuring once you know whether
+       func_02053274 RAN in those frames at all. ntr::sqrt_runs() counts every
+       entry to ntr::run_sqrt, and a PLAIN build never enters it, so the
+       difference between the two arms' final counts IS the number of calls the
+       routing added. The baseline is printed too, because this self-test itself
+       contributes to the count (three routed seeds in both arms, plus four
+       func_02053274 calls in the routed arm only) and that offset has to be
+       visible rather than quietly subtracted. */
+    const unsigned long base = ntr::sqrt_runs();
+    std::fprintf(stderr, "[sqrt-selftest] run_sqrt entries after selftest: %lu\n",
+                 base);
+    static unsigned long s_base;
+    s_base = base;
+    std::atexit([] {
+        std::fprintf(stderr,
+                     "[sqrt-selftest] run_sqrt entries at exit: %lu "
+                     "(selftest baseline %lu, game frames contributed %lu)\n",
+                     ntr::sqrt_runs(), s_base, ntr::sqrt_runs() - s_base);
+        std::fflush(stderr);
+    });
+    std::fflush(stderr);
+}
+
 /* THE BRING-UP AND THE SPAWN. Returns 0, or the process exit code to die with.
    `hwnd` is the window this run will be presented into, or null for a headless
    one: hal_sub_screen_init_hw keys g_headless off exactly that, so passing a
@@ -4154,6 +4292,8 @@ extern "C" int port_scene_begin(void *hwnd, int zoom)
        in for is src/func_0201a054.c, the game's own IRQ init, which is in no
        slice. See port/irq2_map.txt section 2. */
     ntr::rt_irq_boot_state();
+
+    port_sqrt_selftest();
 
     /* THE MINIGAME RNG SEED (run mg5, lane RNGSEED). Frozen randomness: the
        launcher's F5 boots straight into SM64DS_SCENE=<id> and so never runs

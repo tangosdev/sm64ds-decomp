@@ -3272,6 +3272,166 @@ if(NOT TI2_MOD_CUT EQUAL 1)
                    "it, this cut missed it and the link will say that too")
 endif()
 
+# run mg15 lane SQRT: THE SQUARE-ROOT UNIT'S FIFTH CLIENT, func_02053274.
+#
+# SQRTUNIT_SYMS above routes the unit's four DRIVERS (func_02053008,
+# func_02053130, func_020531a4, func_02052fdc). It does not route the unit's
+# fifth client, and that one is not a driver at all: src/func_02053274.c is the
+# 3D DISTANCE function. It squares the three axis deltas, shifts the sum left by
+# 2, drives the unit with that as a 64-bit operand and returns
+# (SQRT_RESULT + 1) >> 1, the rounded distance. slice_gate10.txt listed it plain.
+#
+# WHY IT SURVIVED FOUR ROUNDS OF THIS. Every sweep for raw MMIO before mg14
+# looked for a CAST-DEREF of a literal. This body reaches SQRTCNT (0x40002b0)
+# and BOTH HALVES of SQRT_PARAM (0x40002b8, 0x40002bc) through a POINTER BOUND
+# TO A LITERAL --
+#
+#     volatile unsigned int *param = (volatile unsigned int *)0x40002b8;
+#     param[0] = (unsigned int)sq;  param[1] = (unsigned int)(sq >> 32);
+#
+# -- and reaches only SQRT_RESULT by a cast-deref. So a deref-only scan sees one
+# harmless RESULT READ and files the body as safe, while the two stores that
+# actually start the unit are invisible to it. hostgen's MMIO_BIND transform is
+# exactly the thing that sees them; it emits NINE rewrites on this body, and
+# port/tools/hostgen.py's own audit of source-touches-versus-NTR_MMIO-sites is
+# the check that says none was missed (9 touches, 9 sites, same address
+# multiset, nothing left plain, and param[1] scaled to 0x40002bc).
+#
+# WHAT IT DID. ntr maps real memory across the DS I/O window, so a plain TU's
+# stores latch and ntr::run_sqrt is never entered; the read of SQRT_RESULT then
+# returns whatever the last HOSTGEN-ROUTED sqrt left there. func_02053274 was a
+# distance function that answers the PREVIOUS square root. The self-test in
+# hal/scene_boot.cpp (SM64DS_SQRT_SELFTEST=1) asks it two roots it cannot get
+# wrong, each seeded by the routed func_020531a4 so the broken answer is
+# PREDICTED and not merely wrong.
+#
+# AND IT CORRECTS A COMMENT THAT SAID THIS WAS ALREADY FIXED. ntr/io.cpp's
+# sqrt-trigger block claimed the widening "silently fixed a SECOND split-half
+# SQRT_PARAM writer already in the build: func_02053274". It cannot have:
+# widening io_write's dispatch only helps a store that REACHES io_write, and a
+# plain TU's stores never do. That comment is corrected in the same commit as
+# this routing, because it is the reason nobody looked here for a year.
+#
+# BLAST RADIUS, SWEPT NOT ASSUMED. Three direct callers, eight TUs to depth 3,
+# and every one of the eight is in a slice list, so every one is in the link:
+#
+#   in-level engine (slice_gate10)
+#     Player::St_NoControl_Main -> func_ov002_020c8a4c     dist < 0xa000 gate
+#     Player::St_YoshiPower_Main -> func_ov002_020d6998
+#                                -> func_ov002_020d6dac    raycast hit distance
+#                                                          -> self+0x654, then a
+#                                                          Particle::System::New
+#   title / ov007 (slice_ov007)
+#     func_ov007_020c65bc -> func_ov007_020c25fc
+#                         -> func_ov007_020c2e90            (d<<12) > r range test
+#
+# Nothing reaches it indirectly: the address 0x02053274 appears in no pointer
+# table in the tree. src/ is NOT edited -- this is a build-time routing, so the
+# byte gate cannot move.
+#
+# WHAT THE BREAKAGE COST, in the callers' own terms. func_ov002_020c8a4c is
+# sub-state 15 of Player::St_NoControl_Main: it faces the player at a target
+# point (self+0x744), and the whole body turns on
+#
+#     if (func_02053274(self+0x5c, self+0x744) < 0xa000)   /* 0xa000 = 10.0 */
+#
+# which is an ARRIVAL test -- "am I close enough to the target yet". With a
+# stale sqrt that test compares a number that never changes against a constant,
+# so it is either permanently true or permanently false for the whole scripted
+# move, and which one it is depends on what the last routed sqrt happened to
+# leave in the register. func_ov002_020d6dac stores the raycast hit distance
+# straight into self+0x654 and then spawns a particle at the hit point, so its
+# stale value is a wrong distance written into player state. func_ov007_020c2e90
+# is a two-sided range test, (d<<12) > r and r <= (e<<12).
+#
+# AND WHAT THE REGRESSION COULD AND COULD NOT SEE, measured rather than
+# inferred. Five paired captures (scenes 1, 4, 374 and level 1 at two frame
+# counts each) came back BYTE-IDENTICAL across the two arms. That is only
+# reassuring once you know whether the body ran in those frames at all, so
+# ntr::sqrt_runs() was added to count entries to run_sqrt -- a plain build never
+# enters it, so the arms' difference IS the call count the routing added:
+#
+#     scene 1  @300   4734 vs  4734     delta 0
+#     scene 4  @300   1200 vs  1200     delta 0
+#     scene 374@300      0 vs     0     delta 0
+#     level 1  @300  56404 vs 56404     delta 0
+#     level 1  @450  82988 vs 82988     delta 0
+#
+# The counter is demonstrably live (level 1 runs the unit 56,404 times in 300
+# frames); func_02053274 is simply not on any of those paths. Both Player
+# callers are sub-states a W-held walk never enters, and the ov007 chain hangs
+# off func_ov007_020c65bc, which nothing in src/ calls by name. So the identical
+# pixels are a measured NOT-REACHED, not a fix that does nothing -- and no run
+# in the standard regression set can confirm the repair in pixels. The self-test
+# is the confirmation, and it is why this change has one.
+#
+# ONE SLICE LISTS IT (port/slice_gate10.txt) and the cut below is guarded on
+# that count the way TI2's and T2's are: if a second slice ever lists it the
+# hostgen copy becomes a duplicate symbol and the link says so, and if this cut
+# ever misses the plain entry the link says that too.
+#
+# THE A/B. -DSQ_DIST_PLAIN=ON puts the plain entry back and drops the hostgen
+# copy, so the before/after is two builds off ONE tree with ONE difference. It
+# is a REBUILD and not one binary, so the two arms' .dsstate bases have to be
+# read before their BMPs are compared -- see notes/port-selftest-bmp-gate.md.
+# Default OFF: the routing is the shipped behaviour.
+# AND IT SAYS WHICH ARM IT IS ON EVERY CONFIGURE, not only when the switch is
+# on. `option()` writes to CMakeCache.txt, so a build dir that was once
+# configured with -DSQ_DIST_PLAIN=ON STAYS on the pre-fix arm when the next
+# configure omits the flag entirely. That cost this lane two builds: both were
+# labelled fix-on, both were actually pre-fix, and the only reason it did not
+# reach the write-up is that the self-test printed BROKEN out of a binary that
+# was supposed to be fixed. A guard that only speaks when the switch is set
+# cannot catch its own stale cache, so this one always speaks. Pass the flag
+# explicitly on BOTH arms (-DSQ_DIST_PLAIN=OFF and =ON) and read this line back
+# out of the build log before trusting either binary.
+option(SQ_DIST_PLAIN "run mg15 SQRT: build func_02053274 PLAIN (pre-fix arm)" OFF)
+set(SQ_DIST_SYMS func_02053274)
+if(SQ_DIST_PLAIN)
+    set(SQ_DIST_SYMS "")
+    message(STATUS "SQRT ARM: SQ_DIST_PLAIN=ON -- func_02053274 builds PLAIN. "
+                   "This is the PRE-FIX arm: the DS square-root unit is never "
+                   "entered and the 3D distance function returns the previous "
+                   "routed sqrt's result.")
+else()
+    message(STATUS "SQRT ARM: SQ_DIST_PLAIN=OFF -- func_02053274 is ROUTED "
+                   "through hostgen. This is the SHIPPED arm.")
+endif()
+set(SQ_DIST_GEN "")
+foreach(sym IN LISTS SQ_DIST_SYMS)
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${PORT_REPO_ROOT_ABS}/src/${sym}.c"
+                "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND SQ_DIST_GEN "${sym_out}")
+endforeach()
+
+set(SQ_DIST_CUT 0)
+set(SLICE10_SRC_SQ "")
+foreach(src IN LISTS SLICE10_SOURCES)
+    if(src MATCHES "/func_02053274\\.c$" AND NOT SQ_DIST_PLAIN)
+        math(EXPR SQ_DIST_CUT "${SQ_DIST_CUT}+1")
+        continue()
+    endif()
+    list(APPEND SLICE10_SRC_SQ "${src}")
+endforeach()
+set(SLICE10_SOURCES ${SLICE10_SRC_SQ})
+if(SQ_DIST_PLAIN)
+    # The pre-fix arm cuts nothing on purpose, so satisfy the guard rather than
+    # letting it print a scary line about a cut that was never meant to happen.
+    set(SQ_DIST_CUT 1)
+endif()
+if(NOT SQ_DIST_CUT EQUAL 1)
+    message(STATUS "SQRT: expected to cut 1 plain func_02053274 entry and cut "
+                   "${SQ_DIST_CUT}. If slice_gate10.txt stopped listing "
+                   "src/func_02053274.c the hostgen copy is still added and the "
+                   "link will say so; if a SECOND slice started listing it, this "
+                   "cut missed it and the link will say that too")
+endif()
+
 # run link60 lane SC1: THE SCENE 1 INTERIM, AND ITS OWN RETIREMENT SWITCH.
 #
 # func_ov007_020c9688 is scene 1's blocker and it is a hole in the DECOMP:
@@ -8115,7 +8275,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE32_SOURCES}
     ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
@@ -8271,7 +8431,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
@@ -8461,7 +8621,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
