@@ -1,38 +1,31 @@
 //cpp
 // @symbol _ZN12WaterDiamond8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "WaterDiamond.h"
-typedef short s16;
-extern "C" {
-extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern void _ZN5dCc_c5ClearEv(void* self);
-extern void _ZN5dCc_c6UpdateEv(void* self);
-}
+#include "WDW_Water.h"
 
 int WaterDiamond::Behavior()
 {
-    func_ov029_02111850(((char*)this));
+    SetWaterID();
     if (mWaterID == 0) return 1;
-    func_ov029_021117ac(((char*)this));
+    CheckClsnWithPlayer();
     if (mActive != 0) {
-        char* p;
-        s16* a = (s16*)(((int)((char*)this) + 0x8e));
-        *a = *a + 0x400;
-        p = _ZN8dActor_c10FindWithIDEj(mWaterID);
-        if (p != 0) {
-            if (mPosY == *(int*)(p+0x60)) {
+        /* The address-valued temporary is load-bearing under 2004/b56: the
+         * cartridge keeps r1 as &mAngleY for both the halfword load and store. */
+        s16 *angleY = (s16 *)((int)(char *)this + 0x8e);
+        *angleY = *angleY + 0x400;
+        WDW_Water *water = (WDW_Water *)dActor_c::FindWithID(mWaterID);
+        if (water != 0) {
+            if (mPosY == water->mPosY) {
                 if (mAngleY == 0) mActive = 0;
             }
-            if (mPosY != *(int*)(p+0x334)) {
+            if (mPosY != water->mTargetPosY) {
                 mActive = 0;
                 mAngleY = 0;
             }
         }
     }
-    func_ov029_021118c8(((char*)this));
-    _ZN5dCc_c5ClearEv((void*)((char*)&mdCcAc_c));
-    _ZN5dCc_c6UpdateEv((void*)((char*)&mdCcAc_c));
+    UpdateModelTransform();
+    mCylinder.Clear();
+    mCylinder.Update();
     return 1;
 }

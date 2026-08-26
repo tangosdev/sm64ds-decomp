@@ -62,9 +62,9 @@ int StarMarker::Behavior()
     }
     if ((unsigned int)(mFlags << 0x1e) >> 0x1f) {
         *(Mtx *)((char *)&mShadowMtx) = IDENTITY_MATRIX4X3;
-        mShadowMtxTX = mPosX >> 3;
-        mShadowMtxTY = mPosY >> 3;
-        mShadowMtxTZ = mPosZ >> 3;
+        mShadowMtx.t.x = mPosX >> 3;
+        mShadowMtx.t.y = mPosY >> 3;
+        mShadowMtx.t.z = mPosZ >> 3;
         {
             int d = mPosY - mGroundY;
             int rad = 0xa0000;
@@ -83,8 +83,8 @@ int StarMarker::Behavior()
                 char *a = _ZN8dActor_c10FindWithIDEj(mdCcAcPos_c.otherOwner);
                 if (a != 0) {
                     if ((mdCcAcPos_c.hitFlags & 0x408000) != 0) {
-                        mHitActor = (int)a;
-                        func_ov002_020e7d84(((char *)this));
+                        mHitActor = (dActor_c *)a;
+                        Collect();
                         return 1;
                     }
                 }

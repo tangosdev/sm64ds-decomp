@@ -60,19 +60,19 @@ src/_ZN12WaterDiamondD1Ev.cpp:
     complete
     .text start:0x02111728 end:0x02111760
 
-src/_ZN12WaterDiamondD0Ev.c:
+src/_ZN12WaterDiamondD0Ev.cpp:
     complete
     .text start:0x02111760 end:0x021117ac
 
-src/func_ov029_021117ac.cpp:
+src/_ZN12WaterDiamond19CheckClsnWithPlayerEv.cpp:
     complete
     .text start:0x021117ac end:0x02111850
 
-src/func_ov029_02111850.cpp:
+src/_ZN12WaterDiamond10SetWaterIDEv.cpp:
     complete
     .text start:0x02111850 end:0x021118c8
 
-src/func_ov029_021118c8.c:
+src/_ZN12WaterDiamond20UpdateModelTransformEv.cpp:
     complete
     .text start:0x021118c8 end:0x02111908
 

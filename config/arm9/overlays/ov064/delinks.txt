@@ -548,43 +548,43 @@ src/_ZN13TreasureChestD1Ev.cpp:
     complete
     .text start:0x0211a200 end:0x0211a238
 
-src/_ZN13TreasureChestD0Ev.c:
+src/_ZN13TreasureChestD0Ev.cpp:
     complete
     .text start:0x0211a238 end:0x0211a284
 
-src/func_ov064_0211a284.c:
+src/_ZN13TreasureChest20UpdateModelTransformEv.cpp:
     complete
     .text start:0x0211a284 end:0x0211a2c4
 
-src/func_ov064_0211a2c4.cpp:
+src/_ZN13TreasureChest6State2Ev.cpp:
     complete
     .text start:0x0211a2c4 end:0x0211a380
 
-src/func_ov064_0211a380.c:
+src/_ZN13TreasureChest10InitState2Ev.cpp:
     complete
     .text start:0x0211a380 end:0x0211a39c
 
-src/func_ov064_0211a39c.cpp:
+src/_ZN13TreasureChest6State1Ev.cpp:
     complete
     .text start:0x0211a39c end:0x0211a49c
 
-src/func_ov064_0211a49c.c:
+src/_ZN13TreasureChest10InitState1Ev.cpp:
     complete
     .text start:0x0211a49c end:0x0211a4c4
 
-src/func_ov064_0211a4c4.c:
+src/_ZN13TreasureChest6State0Ev.cpp:
     complete
     .text start:0x0211a4c4 end:0x0211a6e0
 
-src/func_ov064_0211a6e0.c:
+src/_ZN13TreasureChest10InitState0Ev.cpp:
     complete
     .text start:0x0211a6e0 end:0x0211a6ec
 
-src/func_ov064_0211a6ec.cpp:
+src/_ZN13TreasureChest8SetStateEi.cpp:
     complete
     .text start:0x0211a6ec end:0x0211a734
 
-src/func_ov064_0211a734.cpp:
+src/_ZN13TreasureChest17CallStateBehaviorEv.cpp:
     complete
     .text start:0x0211a734 end:0x0211a77c
 
