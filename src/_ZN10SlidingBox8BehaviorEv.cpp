@@ -2,23 +2,20 @@
 // @symbol _ZN10SlidingBox8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "SlidingBox.h"
+#include "SurfaceInfo.h"
 
 extern short data_02082214[];
 
+namespace cstd { int fdiv(int a, int b); }
+namespace Sound {
+u32 PlayLong(u32 handle, u32 player, u32 soundID,
+             const Vector3 &position, s16 arg);
+}
+
 extern "C" {
-void *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void *p);
-void _ZN7fBase_c18MarkForDestructionEv(void *self);
-void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
 void dBgCh_Actr_UpdateContinuous_Veneer(void *p);
-int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
 void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
-void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, Vector3 *out);
-int _ZN4cstd4fdivEii(int a, int b);
-int _ZN8dActor_c13DistToCPlayerEv(void *self);
-int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int, unsigned int, unsigned int, void *, unsigned int);
-void func_ov016_021130a4(char *t);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 }
 
 int SlidingBox::Behavior()
@@ -27,29 +24,29 @@ int SlidingBox::Behavior()
 
     switch (mState) {
     case 0:
-        *(void **)&mShip = _ZN8dActor_c15FindWithActorIDEjPS_(0x39, 0);
-        if (*(void **)&mShip == 0) {
-            _ZN7fBase_c18MarkForDestructionEv((char *)this);
+        mShip = dActor_c::FindWithActorID(0x39, 0);
+        if (mShip == 0) {
+            MarkForDestruction();
             break;
         }
         mState++;
         /* fallthrough */
     case 1:
-        _ZN8dActor_c9UpdatePosEP5dCc_c((char *)this, 0);
+        UpdatePos(0);
         dBgCh_Actr_UpdateContinuous_Veneer((char *)&mWithMeshClsn);
-        if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mWithMeshClsn)) {
+        if (mWithMeshClsn.IsOnGround()) {
             mState++;
-            mBasePosX = mPosX;
-            mBasePosY = mPosY;
-            mBasePosZ = mPosZ;
+            mBasePos.x = mPosX;
+            mBasePos.y = mPosY;
+            mBasePos.z = mPosZ;
         }
         break;
     case 2: {
-        s16 *src = (s16 *)((*(char **)&mShip) + 0x8c);
+        s16 *shipAngles = &mShip->mAngleX;
         int spd;
-        mAngleX = src[0];
-        mAngleY = src[1];
-        mAngleZ = src[2];
+        mAngleX = shipAngles[0];
+        mAngleY = shipAngles[1];
+        mAngleZ = shipAngles[2];
         mPrevAngleY = mAngleY;
         mHorzSpeed = data_02082214[((u16)mAngleX >> 4) * 2] * 0x8c;
         mHorzPos += mHorzSpeed;
@@ -58,36 +55,37 @@ int SlidingBox::Behavior()
             mHorzPos = 0x4ff000;
         else if (spd < -0x32000)
             mHorzPos = -0x32000;
-        mPosX = mBasePosX + (int)(((long long)mHorzPos * data_02082214[((u16)mAngleY >> 4) * 2] + 0x800) >> 12);
-        mPosZ = mBasePosZ + (int)(((long long)mHorzPos * data_02082214[((u16)mAngleY >> 4) * 2 + 1] + 0x800) >> 12);
+        mPosX = mBasePos.x + (int)(((long long)mHorzPos * data_02082214[((u16)mAngleY >> 4) * 2] + 0x800) >> 12);
+        mPosZ = mBasePos.z + (int)(((long long)mHorzPos * data_02082214[((u16)mAngleY >> 4) * 2 + 1] + 0x800) >> 12);
         mHorzSpeed = 0;
-        _ZN8dActor_c9UpdatePosEP5dCc_c((char *)this, 0);
+        UpdatePos(0);
         dBgCh_Actr_UpdateContinuous_Veneer((char *)&mWithMeshClsn);
-        if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mWithMeshClsn)) {
+        if (mWithMeshClsn.IsOnGround()) {
             void *fr = _ZNK10dBgCh_Actr14GetFloorResultEv((char *)&mWithMeshClsn);
-            _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)fr + 4, &normal);
+            ((SurfaceInfo *)((char *)fr + 4))->CopyNormalTo(normal);
             if (normal.y != 0) {
-                mVertSpeed = -(_ZN4cstd4fdivEii(
+                mVertSpeed = -(cstd::fdiv(
                     (int)(((long long)normal.x * unk_0a4 + 0x800) >> 12)
                   + (int)(((long long)normal.z * unk_0ac + 0x800) >> 12),
                     normal.y) + 0x8000);
             }
         }
-        if (_ZN8dActor_c13DistToCPlayerEv((char *)this) < 0x7d0000) {
+        if (DistToCPlayer() < 0x7d0000) {
             int vel = mHorzSpeed;
             if (vel < 0)
                 vel = -vel;
             if (vel > 0x3000) {
-                mSoundID = _ZN5Sound8PlayLongEjjjRK7Vector3s(mSoundID, 3, 0x9f, (char *)this + 0x74, 0);
+                mSoundID = Sound::PlayLong(
+                    mSoundID, 3, 0x9f, *(Vector3 *)&mCamSpacePosX, 0);
             }
         }
         break;
     }
     }
 
-    func_ov016_021130a4((char *)this);
+    UpdateModel();
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_((char *)this, 0, 0)) {
-        _ZN10dBgActor_c19UpdateClsnPosAndRotEv((char *)this);
+        UpdateClsnPosAndRot();
     }
     return 1;
 }

@@ -1,11 +1,14 @@
 // @symbol SlidingBox_Spawn
-/* recovered: vtable identified, globals resolved, declarations from a shared header */
+/* Measured C/ABI wall: `return new SlidingBox` reproduces the instruction
+ * bytes, but its allocator relocation names unresolved global `_Znwm` while
+ * the ROM calls fBase_c::operator new at 0x02043444. Keep the explicit actor
+ * allocation and construction sequence until that allocator can be expressed
+ * honestly in C++. */
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
-/* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV10SlidingBox */
+
 int *SlidingBox_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1272);
