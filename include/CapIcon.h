@@ -77,6 +77,7 @@ struct dCapIcon_c {
 
 /* Compatibility spelling retained while callers move to the ROM name. */
 typedef dCapIcon_c CapIcon;
+typedef char dCapIcon_c_size_must_be_0x1c[sizeof(dCapIcon_c) == 0x1c ? 1 : -1];
 
 #else
 
