@@ -1,5 +1,5 @@
 //cpp
-// @symbol func_ov022_02112790
+// @symbol _ZN11VolcanoFire11ChangeStateEPNS_5StateE
 /* VolcanoFire's state transition helper. The state record contains two
  * pointer-to-member callbacks; transition stores the record and runs init. */
 #include "VolcanoFire.h"
