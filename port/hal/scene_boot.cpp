@@ -434,6 +434,7 @@ void port_fader_advance(void);
 void port_frame_clock_tick(void);    /* phase 6: data_020a0db0 (hal/fader_wipes.cpp) */
 /* SM64DS_MG_RESULTS_PROBE (hal/scene_mg.cpp), off unless the variable is set */
 void port_mg_results_probe(int frame);
+void port_mg_results_watch(int frame);   /* lane RESULTS (mg14) lifecycle sweep */
 void hal_sub_screen_init_hw(void *hwnd, int zoom);
 void hal_sub_screen_probe(void);
 void hal_sub_screen_frame_begin(void);
@@ -4259,6 +4260,8 @@ extern "C" void port_scene_tick(int frame, int tick_game)
                scene that cannot be played to its end headless. Unset, this is
                two integer compares. */
             port_mg_results_probe(frame);
+            /* lane RESULTS (mg14): the lifecycle sweep, same gate. */
+            port_mg_results_watch(frame);
         }
         /* THE DISPLAY SCAN-OUT, which is where IRQ 2 lives. The DS raises the
            HBlank edge once per scanline while the picture is being drawn, and

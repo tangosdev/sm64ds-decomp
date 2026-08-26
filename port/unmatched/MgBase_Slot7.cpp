@@ -88,6 +88,26 @@ struct Self {
 };
 }  /* namespace mg20 */
 
+/* ---- lane RESULTS (mg14): four counters, host bookkeeping ----------------
+ *
+ * Same class as the MG_SLOT counters in hal/scene_mg.cpp and for the same
+ * reason: from outside, a slot that is never dispatched and a slot that runs
+ * and takes an early return look identical, and only a counter tells them
+ * apart. This body is the ONE place both questions can be asked at once --
+ * it is the caller of the results panel's tick and the caller of
+ * Scene::BeforeBehavior that can veto it -- so the four live here rather than
+ * in a fifth file. They cost three increments a frame and are read by
+ * port_mg_results_watch, which prints nothing unless SM64DS_MG_RESULTS_PROBE
+ * is set.
+ *
+ * They earned their place: mg12 read the panel's frozen record and concluded
+ * the FILL was missing, when the fill was correct and the tick was returning
+ * early. slot7 vs tick_in vs tick_out separates "never called", "called and
+ * vetoed", "called and early-returned" and "called and faulted" in one line. */
+extern "C" {
+extern unsigned g_res_slot7, g_res_tick_in, g_res_tick_out, g_res_bb_zero;
+}
+
 extern "C" {
 extern mg20::Scene *data_0209f5bc;
 extern unsigned char data_020a0e40;
@@ -101,9 +121,12 @@ int func_ov004_020b0620(void *cv)
     int mode;
     unsigned short flags;
 
+    ++g_res_slot7;
     /* the ONE semantic change: self is passed. See the block above. */
-    if (_ZN5Scene14BeforeBehaviorEv(self) == 0)
+    if (_ZN5Scene14BeforeBehaviorEv(self) == 0) {
+        ++g_res_bb_zero;
         return 0;
+    }
 
     if (((mg20::Scene *)data_0209f5bc)->f05()) {
         mode = data_020a0e40;
@@ -122,7 +145,9 @@ int func_ov004_020b0620(void *cv)
     }
 
     if (*(int *)(self + 0x4628) != 0) {
+        ++g_res_tick_in;
         func_ov004_020aeb24(self);
+        ++g_res_tick_out;
         return 0;
     }
     if (*(int *)(self + 0x462c) != 0)
