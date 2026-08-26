@@ -125,9 +125,9 @@ typedef char BigBrickBlock_size_must_be_0x330[sizeof(BigBrickBlock) == 0x330 ? 1
 
 #else
 
-/* The C spelling of the same object, flat. Kept because the D0 file is a C
-   translation unit that reads these fields, and D0 is compiler-generated so it
-   can never be migrated. Same arrangement as include/ShadowModel.h. */
+/* The C spelling of the same object, flat, retained for C translation units
+   that include this header. D0 and D1 are now compiler-generated from the real
+   C++ destructor definitions in their respective .cpp files. */
 struct BigBrickBlock {
     u8  pad_000[0xc];
     u16 mActorId;            /* 0x00c */
