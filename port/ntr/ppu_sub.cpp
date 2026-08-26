@@ -1075,31 +1075,91 @@ RGB amb_avg(const uint32_t *row, int s0, int s1)
     return o;
 }
 
-/* THE SAME AVERAGE WITH THE SPRITES LEFT OUT. The wash is supposed to be the
+/* THE SAME AVERAGE WITH THE CROSSERS LEFT OUT. The wash is supposed to be the
    SCENE's glow, and the plain average reads whatever is on the edge row --
-   including a bob-omb mid-crossing, whose black then pink turned whole
-   columns black then pink for as long as it straddled the edge (the owner's
-   2026-08-20 report). mask256 marks the DS columns of this edge row that an
-   OBJ covers; those host pixels are skipped, so the wash is background only.
-   A span the sprite covers END TO END falls back to the plain average: a
-   wrong-but-stable colour beats an uninitialised one, and the follower above
-   it smooths the moment anyway. */
+   including a bob-omb mid-crossing, whose black then pink turned whole columns
+   black then pink for as long as it straddled the edge (the owner's 2026-08-20
+   report), and including Mario, whom no OAM mask can see (the owner's
+   2026-08-26 one). w256 is how much of a crosser stands in each DS column of
+   this edge row, 0..255; see THE EDGE ROWS' SETTLED BACKGROUND below for what
+   fills it and why it is a weight rather than a flag.
+ *
+ * A CROSSER COLUMN IS SUBSTITUTED RATHER THAN SKIPPED, and that is the change
+ * the 2026-08-26 ruling wanted. Skipping renormalises over the columns that
+ * are left, which is right until a span is covered END TO END -- and the old
+ * fallback for that was the PLAIN average, i.e. the crosser's own colours,
+ * which is precisely "the thing travelling through touched the gradient". The
+ * settled background carries a colour for every column, so every span has a
+ * background answer and no span can fall back to a contaminated mean.
+ *
+ * WITH EVERY WEIGHT AT ZERO THIS IS amb_avg EXACTLY, so a still frame with
+ * nothing crossing either edge composes byte for byte what it did before. */
+int band_fix_on(void);
+    /* defined with the edge memory below. Declared up here for the ONE thing
+       in this function that has to be inside the arm: the fully-masked-span
+       fallback. Everything else here is weight-driven and the weights are
+       already zero with the arm off. */
+
 RGB amb_avg_bg(const uint32_t *row, int s0, int s1, const uint8_t *mask256,
-               int w)
+               const uint8_t *w256, const uint32_t *bg256, int w)
 {
     if (!mask256) return amb_avg(row, s0, s1);
     const int rx = w / 256 > 0 ? w / 256 : 1;
     int r = 0, g = 0, b = 0, n = 0;
     for (int x = s0; x < s1; ++x) {
         const int dsx = x / rx;
+        /* A SPRITE COLUMN IS SKIPPED, exactly as it has been since the
+           2026-08-20 report. The OAM mask is a fact about what the engine drew
+           and "read the rest of the window instead" is the right answer for a
+           column that has no background in it at all. Nothing about this arm
+           moved in run mg15, which is why every gap-on capture in the port's
+           existing picture set still hashes the same. */
         if (dsx < 256 && mask256[dsx]) continue;
         const uint32_t p = row[x];
-        r += (int)((p >> 16) & 0xff);
-        g += (int)((p >> 8) & 0xff);
-        b += (int)(p & 0xff);
+        int pr = (int)((p >> 16) & 0xff);
+        int pg = (int)((p >> 8) & 0xff);
+        int pb = (int)(p & 0xff);
+        /* AND EVERYTHING ELSE IS BLENDED TOWARD ITS OWN SETTLED VALUE by how
+           much of a crosser stands in it. This is the arm the ruling added:
+           the OAM mask cannot see a 3D crosser, and a weight computed off the
+           column's own history can. At weight 0 -- every column of a still
+           band, and every column of the seeded first frame -- this is the
+           live pixel unchanged. */
+        const int cw = (dsx < 256 && w256 && bg256) ? (int)w256[dsx] : 0;
+        if (cw) {
+            const uint32_t q = bg256[dsx];
+            pr += ((int)((q >> 16) & 0xff) - pr) * cw / 255;
+            pg += ((int)((q >> 8) & 0xff) - pg) * cw / 255;
+            pb += ((int)(q & 0xff) - pb) * cw / 255;
+        }
+        r += pr;
+        g += pg;
+        b += pb;
         ++n;
     }
-    if (!n) return amb_avg(row, s0, s1);
+    /* A SPAN A SPRITE COVERS END TO END falls back to the SETTLED row over the
+       same span rather than to the plain average of the live one. The plain
+       average was the crosser's own colours, which is the thing the ruling
+       forbids; the settled row is the background there by construction. On a
+       frame where the memory was just seeded the two are the same pixels, so
+       this changes no capture that composes once.
+
+       AND IT IS INSIDE THE KILL SWITCH. This is a rendering change like any
+       other, so SM64DS_BAND_FIX=0 has to give the plain average back or the
+       switch is not the full restore its own note promises. It shipped outside
+       the arm and the review caught it. */
+    if (!n) {
+        if (!bg256 || !band_fix_on()) return amb_avg(row, s0, s1);
+        const int d0 = s0 / rx, d1 = (s1 + rx - 1) / rx;
+        for (int dsx = d0; dsx < d1 && dsx < 256; ++dsx) {
+            const uint32_t q = bg256[dsx];
+            r += (int)((q >> 16) & 0xff);
+            g += (int)((q >> 8) & 0xff);
+            b += (int)(q & 0xff);
+            ++n;
+        }
+        if (!n) return amb_avg(row, s0, s1);
+    }
     RGB o = {r / n, g / n, b / n};
     return o;
 }
@@ -1301,13 +1361,422 @@ void band_edge_obj_masks(uint8_t *mtop, uint8_t *mbot, int main_lower);
        alone. main_lower is POWCNT1 bit 15 clear: the two ENGINES exchange, the
        two edge rows do not, because mtop is the upper screen's last row and
        mbot the lower screen's first whichever engine is feeding each. */
+int band_game_g(const StackLayout &lay);
+    /* defined beside band_bias_a/b below, which is where the question belongs:
+       how many of the band's rows the GAME actually has, which since the
+       owner's uniform-hinge ruling is no longer the band's own height. Only
+       the trace line above reads it from up here. */
+
+/* ---- THE EDGE ROWS' SETTLED BACKGROUND, AND WHAT IS CROSSING THEM ----------
+ *
+ * THE OWNER'S RULING, 2026-08-26, on the uniform 32-row hinge: "you cant see
+ * mario through the gradient. Any thing that travels through the screens
+ * should not touch/effect the gradient they should just blur as they pass
+ * through." Two sentences about two passes, and they want the SAME fact: which
+ * pixels of the two edge rows are a crosser and which are the scene. The
+ * gradient has to be built from the second set alone; the ghost has to be
+ * built from the first.
+ *
+ * band_edge_obj_masks below answers that for SPRITES, off the two engines' own
+ * OAM, and that mask is the whole of what the wash had. It cannot answer it on
+ * the family the report is about. MEASURED, run mg15 lane BAND, scene 384
+ * (Trampoline Time) and scene 372 (Bounce and Pounce), one headless run per
+ * frame at 9 frames across a crossing: the band carried ZERO pixels of
+ * anything but the ambient fill on every one of them.
+ *
+ * SAY THAT AS THE FRAME-LOCAL FACT IT IS. The spot checks that went with it --
+ * SM64DS_GAP_PEEK_TRACE=1 at 372 f300 and 384 f560, no census line either --
+ * were read as "no OAM entry reaches the band on this family", and mg15's
+ * independent review swept the whole run instead of two frames and REFUTED it:
+ * over 420 windowed frames scene 372 prints THIRTEEN band-raster census lines
+ * around frames 374..389, boxes reaching up to 31 of the band's 32 rows and up
+ * to 98 pixels drawn. 373, 384 and 385 print none. The band IS crosser-clean
+ * on the frames measured; it is not crosser-clean always, and the difference
+ * matters to the G clip below rather than to anything here.
+ *
+ * THE DIAGNOSIS OF THE OWNER'S REPORT IS UNDISTURBED BY THAT, which is why
+ * this block still stands. The crosser he cannot see is MARIO, who on the
+ * dScMgD3DBase_c family is 3D geometry on the live engine and a DISPLAY
+ * CAPTURE BITMAP on the other panel. Neither is an OAM entry, so every band
+ * pass in this file -- all of which read OAM -- has nothing to draw him from,
+ * and every edge mask in this file has nothing to exclude him by. No OAM path
+ * could ever have drawn him, whatever else reaches the band. That is
+ * exactly the two halves of the report: he is inside the wash's own average,
+ * and he is absent from the band.
+ *
+ * WHAT IS AVAILABLE FOR ANY SOURCE is the row's own history. A scene's edge
+ * row is nearly still; a crosser is a few frames of it being different. So
+ * each edge keeps a SETTLED BACKGROUND -- one colour per DS column, following
+ * the live row by the same slow step the ambient `rest` follower uses -- and a
+ * column standing far enough off its own settled value is a crosser. NOTHING
+ * IS INVENTED: the carried pixels are the game's own, read back out of the
+ * composed image the two screen blits have just written.
+ *
+ * IT FOLLOWS THROUGH EVERYTHING, sprites included, and that is a decision
+ * rather than an oversight. Holding the memory still under an OAM column was
+ * built first, on the reading that a sprite must not teach the background its
+ * own colour -- and it makes a PARKED sprite permanently deviant, because its
+ * column's settled value stays frozen at whatever the row held before the
+ * sprite arrived, so the band would carry a ghost of a HUD element for as long
+ * as the minigame ran. A follower this slow already tells the two cases apart
+ * on its own: a crosser is gone in three or four frames and moves a 1/16
+ * follower by almost nothing, while something that parks is learned inside
+ * about ten and stops reading as a crossing. One rule, both cases, and the OAM
+ * mask keeps its own separate job in the wash.
+ *
+ * PER SCENE, dropped by ppu_band_ambient_reset beside the ambient memory and
+ * for the same reason: a background learned in one minigame would light the
+ * next one's first frames, and worse, would call its whole first second a
+ * crossing. */
+
+/* HOW FAR OFF ITS OWN SETTLED VALUE A COLUMN HAS TO STAND, in channels, before
+   it reads as a crosser rather than as the scene. MEASURED on scene 384 over
+   the 500..600 window: the still band's own column-to-column frame noise stays
+   inside 6 channels (bandcensus.py's own threshold, and the band re-derives
+   byte-exact there), while Mario against the night sky and against the blue
+   platform moves whole columns by 60 and more. 24 sits well clear of the noise
+   and well under the signal.
+ *
+ * AND IT IS A RAMP RATHER THAN A LINE, from kEdgeLo to kEdgeDev. A BINARY mask
+ * was built and measured first, and the measurement is why this is a ramp: a
+ * column's deviation crosses a single threshold back and forth on consecutive
+ * frames at a crosser's own soft edge -- 3D geometry has no hard edge -- and
+ * every flip swaps that column's whole contribution to the wash's average
+ * between two different colours at once.
+ *
+ * THE NUMBER THE RAMP IS WORTH, run mg15 lane BAND, scene 384 windowed, the
+ * crossing at frames 300..350, largest frame-to-frame move of the DRAWN
+ * gradient endpoint over all 24 columns and both edges:
+ *
+ *     no crosser term at all (SM64DS_BAND_FIX=0)   83 upper, 81 lower
+ *     binary mask at kEdgeDev                      20 upper, 14 lower
+ *     this ramp                                     7 upper,  7 lower
+ *
+ * and over a QUIET window of the same run (frames 100..250, nothing crossing)
+ * every arm reads 0 and 0, so the ramp costs a still band nothing.
+ *
+ * SEVEN IS NOT ZERO. 94% QUIETER DURING A CROSSING, NOT SILENT, and that is
+ * the sentence this feature is reported with -- the owner's words were "should
+ * not touch/effect the gradient" and a note that claimed it no longer touches
+ * the gradient would be one channel of exaggeration away from a claim nobody
+ * could check. The shape, since the peak alone hides it: the residual is the
+ * SAME FIVE COLUMNS the unfixed arm moves, at about 8% of their unfixed
+ * amplitude, and zero in every other column and every quiet frame.
+ *
+ *     FIX OFF  upper c17=83 c18=78 c19=45 c16=29 c15=26
+ *              lower c19=81 c20=73 c18=25 c17=23 c21=22
+ *     FIX ON   upper c17=7  c18=7  c19=4  c15=3  c16=3
+ *              lower c20=7  c19=6  c18=3  c21=3  c17=2
+ *
+ * THE CAUSE IS THE CROSSER'S SUB-kEdgeLo PENUMBRA reaching the average
+ * un-weighted, and it is not to be chased. kEdgeLo MOVES UP IF IT EVER MOVES:
+ * lowering it starts reading a scene's own animation as a crossing, and mg15's
+ * review found a hosted scene (365) where the detector already fires on 211 of
+ * 211 steady frames off PARKED animated edge content. Seven levels out of 255
+ * on one column's endpoint, interpolated toward its neighbours and ramped down
+ * 64 host rows, sits at the edge of visibility on a smooth wash, and it
+ * happens only while a crosser is passing -- which is when the eye is on the
+ * crosser. Ship the seven, say the seven.
+ *
+ * WITH THE DEVIATION AT ZERO THE WEIGHT IS ZERO AND THE WASH READS THE LIVE
+ * ROW EXACTLY, which is the whole zero-change guarantee: a still band with
+ * nothing crossing either edge composes byte for byte what it always did. */
+constexpr int kEdgeLo = 8, kEdgeDev = 24;
+
+struct EdgeMem {
+    int have;                  /* 0 until this scene's first band frame */
+    int bg[2][256][3];         /* [edge][DS column][channel], fixed point */
+};
+/* Edge 0 is the UPPER screen's last row, edge 1 the LOWER screen's first --
+   physical rows, which POWCNT1's swap does not move; see band_edge_obj_masks.
+   One instance, the same bookkeeping the ambient memory makes and for the same
+   reason: the compose runs on one thread on one path and never re-enters. */
+EdgeMem g_edge;
+/* HOW MUCH OF A CROSSER IS IN THIS COLUMN, 0..255. 0 is "this is the scene",
+   255 is "this is entirely something passing through", and the two consumers
+   read the same number: the wash blends the settled background in by it, and
+   the carry fades the live pixel in by it. One number, so the gradient and the
+   ghost can never disagree about what is crossing. */
+uint8_t g_edge_w[2][256];
+/* AND THE OAM MASK, kept separate and kept doing exactly its old job: the wash
+   SKIPS a sprite column, which is what it has done since 2026-08-20 and what
+   every gap-on capture in the port's picture set was taken under. The weight
+   above is the new arm and it never touches a column this one claims. */
+uint8_t g_edge_obj[2][256];
+/* AND WHETHER THE WIDTH GUARD REFUSED THIS EDGE THIS FRAME. The guard zeroes
+   the weights, which stands down the blend and the carry -- but the wash's
+   fully-masked-span fallback never consults a weight, so it kept firing on a
+   refused edge and kept drawing that span from the SETTLED background. On a
+   wipe, which is what a refusal usually is, whole sample spans are covered by
+   OAM end to end, so the fallback fired across the band and the band TRAILED
+   THE WIPE: exactly the regression the guard exists to prevent, arriving down
+   the one path the guard did not reach. Measured on scene 362 f240 -- 21220 of
+   32768 band pixels away from the pre-lane picture, max channel delta 67, all
+   32 rows. This flag is what the fallback reads. */
+uint8_t g_edge_refused[2];
+uint32_t g_edge_live[2][256];   /* this frame's live edge colour */
+uint32_t g_edge_bg_px[2][256];  /* this frame's settled background colour */
+
+/* SM64DS_BAND_FIX=0 gives back the band this lane found: the wash masked by
+   OAM alone and no carry, on the same binary, which is what
+   notes/port-selftest-bmp-gate.md requires before two BMPs may be compared at
+   all. Nothing else turns any of this off. */
+int band_fix_on(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *s = std::getenv("SM64DS_BAND_FIX");
+        on = !(s && *s == '0');
+    }
+    return on;
+}
+
+/* SM64DS_BAND_TRACE=1: one line per composed band frame carrying the numbers
+   this lane's claims are read off -- the game's own G against the band the
+   layout drew, the two engines' row windows, and how many DS columns of each
+   edge row read as a crosser. A capture with no such line is a capture this
+   pass did not run on. stderr, off unless asked. */
+int band_trace_on(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *s = std::getenv("SM64DS_BAND_TRACE");
+        on = s && *s && *s != '0';
+    }
+    return on;
+}
+
+unsigned g_band_frame;
+/* HOW MANY BAND CELLS THE CARRY WROTE THIS FRAME, reset at the head of the
+   frame's edge reading and reported by band_ghost at the end of it. It is the
+   direct per-frame answer to the only law this whole feature runs under --
+   nothing may visibly vanish at the seam -- because a run of frames whose
+   crosser weight is non-zero and whose carried count is non-zero on EVERY one
+   of them is a crossing with no vanish frame in it, said by the program rather
+   than inferred from a handful of captures. */
+unsigned g_band_carried;
+
+/* One DS column of one edge row, reduced from the host pixels that stand over
+   it. The average rather than a sample, because the mask this feeds is about
+   "is something here" and a thin crosser that falls between samples is exactly
+   the thing that must not be missed. */
+uint32_t edge_col(const uint32_t *row, int x, int rx)
+{
+    int r = 0, g = 0, b = 0;
+    for (int o = 0; o < rx; ++o) {
+        const uint32_t p = row[x * rx + o];
+        r += (int)((p >> 16) & 0xff);
+        g += (int)((p >> 8) & 0xff);
+        b += (int)(p & 0xff);
+    }
+    return 0xFF000000u | ((uint32_t)(r / rx) << 16) |
+           ((uint32_t)(g / rx) << 8) | (uint32_t)(b / rx);
+}
+
+/* THE FRAME'S EDGE READING, taken ONCE and read by both the fill and the
+   ghost. It runs at the head of band_fill because the fill is the first band
+   pass in the compose and the two screen blits are already down; the ghost
+   runs later in the same frame and reads what this left. */
+void band_edge_update(const uint32_t *dst, int dst_w, const StackLayout &lay)
+{
+    band_edge_obj_masks(g_edge_obj[0], g_edge_obj[1], lay.main_lower);
+    const uint32_t *row[2] = {dst + (size_t)(lay.band_y - 1) * dst_w,
+                              dst + (size_t)lay.bottom_y * dst_w};
+    const int rx = dst_w / 256 > 0 ? dst_w / 256 : 1;
+    for (int e = 0; e < 2; ++e)
+        for (int x = 0; x < 256; ++x)
+            g_edge_live[e][x] = edge_col(row[e], x, rx);
+
+    /* SEEDED FROM THIS FRAME EXACTLY, once per scene, which is amb_seed's own
+       rule and it is here for amb_seed's own reason: a minigame's band is lit
+       correctly on the frame it appears rather than ramping up to it. It also
+       makes the FIRST composed frame carry no crossing signal at all, by
+       construction -- every deviation is zero -- and that is the honest answer,
+       because one frame cannot say what is moving. Every headless capture in
+       this port composes exactly once (hal/sub_screen.cpp's stacked image is
+       built at the capture, not per tick), so every one of them is that frame,
+       and the whole picture set the port already has is unmoved by this. */
+    if (!g_edge.have) {
+        g_edge.have = 1;
+        for (int e = 0; e < 2; ++e)
+            for (int x = 0; x < 256; ++x) {
+                const uint32_t v = g_edge_live[e][x];
+                g_edge.bg[e][x][0] = (int)((v >> 16) & 0xff) << kAmbFixBits;
+                g_edge.bg[e][x][1] = (int)((v >> 8) & 0xff) << kAmbFixBits;
+                g_edge.bg[e][x][2] = (int)(v & 0xff) << kAmbFixBits;
+            }
+    }
+
+    int ncross[2] = {0, 0};
+    for (int e = 0; e < 2; ++e)
+        for (int x = 0; x < 256; ++x) {
+            const uint32_t p = g_edge_live[e][x];
+            const int ch[3] = {(int)((p >> 16) & 0xff), (int)((p >> 8) & 0xff),
+                               (int)(p & 0xff)};
+            for (int i = 0; i < 3; ++i)
+                g_edge.bg[e][x][i] += amb_step(
+                    (ch[i] << kAmbFixBits) - g_edge.bg[e][x][i],
+                    kAmbRestNum, kAmbRestDen);
+            const int bc[3] = {g_edge.bg[e][x][0] >> kAmbFixBits,
+                               g_edge.bg[e][x][1] >> kAmbFixBits,
+                               g_edge.bg[e][x][2] >> kAmbFixBits};
+            g_edge_bg_px[e][x] = 0xFF000000u | ((uint32_t)bc[0] << 16) |
+                                 ((uint32_t)bc[1] << 8) | (uint32_t)bc[2];
+            int dv = 0;
+            for (int i = 0; i < 3; ++i) {
+                const int d = ch[i] > bc[i] ? ch[i] - bc[i] : bc[i] - ch[i];
+                if (d > dv) dv = d;
+            }
+            const int w = !band_fix_on()  ? 0
+                          : dv <= kEdgeLo ? 0
+                          : dv >= kEdgeDev ? 255
+                          : (dv - kEdgeLo) * 255 / (kEdgeDev - kEdgeLo);
+            g_edge_w[e][x] = (uint8_t)w;
+            if (w) ++ncross[e];
+        }
+
+    /* ---- A CROSSING IS LOCAL, AND A FADE IS NOT --------------------------
+     *
+     * The deviation test cannot tell "something is passing through this row"
+     * from "this whole row is changing", and the second happens on every scene
+     * transition: a fade moves every column at once, past every threshold, for
+     * as long as the fade runs. Left alone, that has the band do exactly the
+     * two things this lane exists to stop -- the wash blends toward a settled
+     * value the fade has left behind, so the band TRAILS the picture, and the
+     * carry paints the whole width of the band with the edge rows.
+     *
+     * So the width of the disturbance is the test, and it separates. MEASURED,
+     * run mg15 lane BAND, scenes 372 and 384 windowed, the widest edge of each
+     * composed frame:
+     *
+     *     scene 384, 481 frames    allowed peak  32 of 256   refused 93..256
+     *     scene 372, 601 frames    allowed peak  52 of 256   refused 256
+     *
+     * so every real crossing stayed under a fifth of the row and every refused
+     * frame is a scene opening. A third of the row sits inside the gap between
+     * 52 and 93. The low end of that gap is the TAIL of a fade, where the two
+     * cases genuinely do start to look alike; the head of one is never in
+     * doubt.
+     *
+     * ABOVE IT THE WHOLE TERM STANDS DOWN FOR THAT EDGE, which puts the wash
+     * back on the live row exactly -- the picture this file composed before
+     * this lane, following the fade the way it always has -- and carries
+     * nothing.
+     *
+     * AN OBJECT WIDE ENOUGH IS REFUSED TOO, AND SOME ARE. This block first
+     * said "nothing in these games is", off the two scenes it was written
+     * against, which is the same absolute-from-a-spot-check that mg15's review
+     * caught twice elsewhere in this file. Asked of the whole hosted set with
+     * port/tools/bandprobe.py, the honest answer is:
+     *
+     *   * EVERY scene refuses from frame 2 for 70-80 frames. That is the
+     *     opening fade, it is what this guard is for, and it is right.
+     *   * SEVEN also refuse away from the opening -- 362 (f223..275), 363
+     *     (f223..288), 381 and 382 (f220..274), 383 (f111..153), 387 (f258..292
+     *     and f335..391) and 390 (eight short runs of 1-4 frames scattered
+     *     from f122 to f397).
+     *
+     * The long mid-run refusals have the shape of a round-change or result
+     * wipe, which is a fade and is correct. 390's short scattered ones do not,
+     * and are the likelier candidate for a genuinely wide crosser being eaten.
+     * THIS INSTRUMENT CANNOT TELL THE TWO APART and neither can this comment;
+     * it is written down unresolved rather than assumed away.
+     *
+     * WHAT A REFUSED FRAME DRAWS, and this sentence is the FOURTH absolute of
+     * this lane's that measurement has had to correct -- read the three in the
+     * blocks above first, because the pattern is the finding. It said: "a
+     * refused frame draws the band exactly as the port drew it before this
+     * lane, so the failure mode is no improvement on that frame, never a new
+     * artifact." A direction claim, reasoned from the guard zeroing the
+     * weights, and never put to a pixel.
+     *
+     * PUT TO PIXELS IT WAS FALSE. The re-review compared refused frames
+     * against a PRE-LANE build padded to the same .dsstate base by
+     * notes/port-selftest-bmp-gate.md's own method, so the comparison was
+     * whole-file sha and not a tolerance:
+     *
+     *     scene 383 f130, lower edge refused      band identical, 0 pixels
+     *     scene 362 f240, lower edge refused      21220 of 32768 band pixels
+     *                                             differ, max channel delta
+     *                                             67, across all 32 rows
+     *
+     * ZEROING THE WEIGHTS WAS NOT THE WHOLE OF STANDING DOWN. amb_avg_bg's
+     * fully-masked-span fallback reads bg256 and consults no weight, so on a
+     * refused edge it went on drawing every OAM-covered span from the SETTLED
+     * background -- and a refusal is usually a WIPE, which covers whole sample
+     * spans end to end. So the band drew from a background the wipe had
+     * already left behind and TRAILED IT: precisely the regression this guard
+     * exists to prevent, arriving through the one path the guard did not
+     * cover. 383's refusal is a fade that never fully masks a span, which is
+     * why it held at zero and hid the bug.
+     *
+     * FIXED BY STANDING THE FALLBACK DOWN TOO -- g_edge_refused, one flag, read
+     * at the wash's call site. A refused edge now passes no settled row, so
+     * amb_avg_bg's first line is the plain average of the live row: textually
+     * the pre-lane function.
+     *
+     * AND THE CLAIM THAT REPLACES THE OLD ONE IS ABOUT THE RAW SAMPLE, NOT THE
+     * DRAWN BAND, because a whole-file compare of a windowed capture cannot
+     * carry it and I nearly wrote that it could. THE WASH'S DRAWN ENDPOINT IS
+     * AN IIR FOLLOWER (amb_follow, rest and glow): its value at frame N depends
+     * on every frame before it, so once the two arms have legitimately differed
+     * ANYWHERE -- a crossing, an un-refused edge doing its job -- the drawn
+     * band goes on differing until the follower reconverges, including on
+     * frames where the refused edge contributes nothing whatever. Measured on
+     * 362: byte-identical at f70, which is before the arms first diverge, and
+     * differing from f78 on, which is the frame they first do.
+     *
+     * SO THE HISTORY-FREE STATEMENT, and it is swept rather than spot-checked:
+     * on EVERY frame where the guard refuses an edge, that edge's raw sample is
+     * byte-identical to the pre-lane arm's. All seven hosted scenes that refuse
+     * in a steady window -- 362, 363, 381, 382, 383, 387, 390 -- 900 refused
+     * edge-frames between them, zero exceptions
+     * (port/tools/bandrefusedleak.py). Nothing of this lane's reaches a refused
+     * edge any more.
+     *
+     * AND IT CORRECTS THE REVIEW'S OWN ROUND-ONE WORDING as well as mine. That
+     * pass called the fallback's exposure "latent" when it noted the switch did
+     * not cover it; it was not latent, it was 21220 pixels on a shipped scene,
+     * and neither side had looked. Both sides moved on this one.
+     *
+     * A band that occasionally declines to draw a ghost is still a far smaller
+     * thing than a band that smears itself over every scene change. */
+    for (int e = 0; e < 2; ++e) {
+        g_edge_refused[e] = 0;
+        if (ncross[e] > 256 / 3) {
+            std::memset(g_edge_w[e], 0, sizeof g_edge_w[e]);
+            /* AND THE FALLBACK STANDS DOWN WITH THEM. Zeroing the weights is
+               not the whole of "this edge contributes nothing this frame":
+               amb_avg_bg's fully-masked-span branch reads bg256 and never
+               reads a weight, so it went on drawing a refused edge's spans
+               from the settled background. See g_edge_refused above for the
+               21220 pixels that cost on scene 362. */
+            g_edge_refused[e] = 1;
+            ncross[e] = -ncross[e];   /* the trace reports it as a refusal */
+        }
+    }
+
+    ++g_band_frame;
+    g_band_carried = 0;
+    if (band_trace_on()) {
+        const int g = band_game_g(lay);
+        /* A NEGATIVE COUNT IS THE WIDTH REFUSAL, not a smaller number: that
+           edge saw the disturbance and declined to call it a crossing, and a
+           reader has to be able to tell it from an edge that saw nothing. */
+        std::fprintf(stderr, "[band] f%u scene G %d DS rows, layout draws %d "
+                     "(%d host), upper engine writes band rows 0..%d, lower "
+                     "%d..%d; crossers: upper edge %d/256 columns, lower edge "
+                     "%d/256%s\n", g_band_frame, lay.game_g_ds, lay.gap_ds,
+                     lay.band_h, g - 1, lay.gap_ds - g, lay.gap_ds - 1,
+                     ncross[0], ncross[1],
+                     band_fix_on() ? "" : "  [SM64DS_BAND_FIX=0]");
+    }
+}
 
 void band_fill_ambient(uint32_t *dst, int dst_w, const StackLayout &lay)
 {
     const uint32_t *top_edge = dst + (size_t)(lay.band_y - 1) * dst_w;
     const uint32_t *bot_edge = dst + (size_t)lay.bottom_y * dst_w;
-    uint8_t mtop[256], mbot[256];
-    band_edge_obj_masks(mtop, mbot, lay.main_lower);
     RGB tops[kAmbCols], bots[kAmbCols];
     RGB raw_t[kAmbCols], raw_b[kAmbCols];
     int centre[kAmbCols];
@@ -1315,8 +1784,15 @@ void band_fill_ambient(uint32_t *dst, int dst_w, const StackLayout &lay)
         int s0, s1, x0, x1;
         amb_sample_span(lay.w, c, s0, s1);
         amb_col_span(lay.w, c, x0, x1);
-        raw_t[c] = amb_avg_bg(top_edge, s0, s1, mtop, lay.w);
-        raw_b[c] = amb_avg_bg(bot_edge, s0, s1, mbot, lay.w);
+        /* A REFUSED EDGE PASSES NO SETTLED ROW AT ALL, which is the whole of
+           standing the fallback down: with bg256 null amb_avg_bg's first line
+           is the plain average of the live row, the picture this file composed
+           before this lane. The weights are already zero on a refused edge, so
+           nothing else in there changes. */
+        raw_t[c] = amb_avg_bg(top_edge, s0, s1, g_edge_obj[0], g_edge_w[0],
+                              g_edge_refused[0] ? 0 : g_edge_bg_px[0], lay.w);
+        raw_b[c] = amb_avg_bg(bot_edge, s0, s1, g_edge_obj[1], g_edge_w[1],
+                              g_edge_refused[1] ? 0 : g_edge_bg_px[1], lay.w);
         centre[c] = (x0 + x1) / 2;
     }
 
@@ -1450,6 +1926,19 @@ void band_art(uint32_t *dst, int dst_w, const StackLayout &lay)
 void band_fill(uint32_t *dst, int dst_w, const StackLayout &lay)
 {
     if (lay.band_h <= 0) return;
+    /* THE FRAME'S EDGE READING FIRST, and unconditionally, because two later
+       passes read it and only one of them is a fill mode. See THE EDGE ROWS'
+       SETTLED BACKGROUND: the wash needs the crosser mask, and band_ghost --
+       which runs after every fill mode, not only after the ambient one --
+       needs the mask AND the live colours behind it. Taking it once here is
+       also what keeps the two answers the same answer.
+
+       IT COSTS THE TWO OAM ROW RASTERS the ambient fill already paid for, now
+       paid on the solid and custom fills too. That is one 128-entry walk per
+       engine over ONE row, which band_edge_obj_masks has always been, and it
+       buys those modes a band that shows a crosser instead of swallowing
+       one. */
+    band_edge_update(dst, dst_w, lay);
     /* THE WORLD-BAND: the GaplessMinigames mode. These rows are playfield,
        not decoration. The engine's own backdrop colour was tried first and
        measured wrong by eye on scene 368 -- palette entry zero is WHITE
@@ -1702,6 +2191,95 @@ inline int band_bias_b(const StackLayout &lay)
     return lay.main_lower ? -192 : lay.gap_ds;
 }
 
+/* ---- THE GAME'S OWN G, AND WHY THE BAND'S HEIGHT IS NOT IT ANY MORE --------
+ *
+ * The owner's 2026-08-26 ruling draws EVERY minigame's hinge at 32 DS rows
+ * (hal/screen_gap.cpp's ONE HINGE block), display only: the framework word is
+ * not written, so a game whose own G is 16 -- the dScMgD3DBase_c four, 372,
+ * 373, 384 and 385 -- still submits every sprite at a2 + 0xc0 + 16 while this
+ * band is 32 rows tall. The ruling says so itself and asks for a report if it
+ * is ever visible. This is that report's arithmetic, and the guard for it.
+ *
+ * band_bias_a says the upper screen's engine has band row 0 at its own engine
+ * row 192, which is true. Its engine row 192 + k is WORLD row k - G_game, and
+ * the band means its row k to be world k - gap_ds; the two agree only when
+ * G_game IS the band's height. With G_game 16 in a 32-row band that engine's
+ * rows 192+16 .. 192+31 are world 0 .. 15 -- rows THE LOWER SCREEN IS ALREADY
+ * SHOWING -- so the raster would draw the bottom screen's own first sixteen
+ * rows of sprites into the band's lower half a second time. Inventing picture,
+ * not merely misplacing it.
+ *
+ * SO EACH ENGINE WRITES ONLY THE G_game ROWS NEAREST ITS OWN EDGE. The upper
+ * screen's engine has world -G_game..-1 immediately below its last row: band
+ * rows [0, G_game). The lower screen's has the same world rows immediately
+ * above its first: band rows [gap_ds - G_game, gap_ds).
+ *
+ * WHICH SHOWS THE HIDDEN ROWS TWICE, once anchored to each edge, and that is
+ * the honest cost of a band taller than the truth rather than an oversight.
+ * The three ways to put G_game rows of world into gap_ds rows of picture are:
+ * anchor both continuations to their own edges and let them overlap in world
+ * terms, which is this; centre them, which leaves a blank strip against each
+ * edge and breaks continuity at both; or pick one edge, which breaks it at the
+ * other. CONTINUITY IS THE LAW here -- nothing may visibly vanish at the seam
+ * -- so a 2D crosser drawn twice at two heights beats one drawn against a
+ * discontinuity.
+ *
+ * THIS CLIP CHANGES PIXELS TODAY. IT IS NOT LATENT, and the correction is
+ * written large because the sentence that stood here said the opposite and a
+ * later lane would have believed it. What this block first claimed was "no OAM
+ * entry reaches the band on this family at all, so today this decides
+ * nothing", off two spot frames -- 372 f300 and 384 f560. mg15's independent
+ * review swept the whole run and measured otherwise:
+ *
+ *   * over 420 windowed frames scene 372 prints THIRTEEN band-raster peek
+ *     census lines around frames 374..389, boxes reaching up to 31 of the
+ *     band's 32 rows, up to 98 pixels drawn;
+ *   * and with the clip removed on a bannered reviewer-only arm, both sides at
+ *     SM64DS_BAND_FIX=0 so the clip is the only difference, scene 372 frame
+ *     379 moves 352 of the band's 32768 pixels, max channel delta 90, host
+ *     columns 244..265, band DS rows 10..17 -- which is exactly the
+ *     [G_game, gap_ds) window this clip refuses, at the G=16 boundary.
+ *
+ * So the duplicate was real, on a scene the port ships, and the guard is
+ * removing it rather than pre-empting it. 373, 384 and 385 print no band
+ * census line over the same sweep, so the clip is inert there; the sweep that
+ * says which is which for every hosted scene is port/tools/bandprobe.py, and
+ * it belongs to this feature's proof set now rather than to a review.
+ *
+ * AND THE CLIP IS INSIDE SM64DS_BAND_FIX -- see band_game_g below. It shipped
+ * outside the arm, which made the switch a partial restore and left the clip
+ * with no way to be A/B'd at all; the review had to patch a tree to measure
+ * the 352 pixels above.
+ *
+ * WITH G_game == gap_ds -- every game that is not one of the four, and every
+ * capture taken before the ruling -- both windows are the whole band and every
+ * pass below is byte for byte what it was. A layout nobody told (game_g_ds 0,
+ * which is every layout stack_layout builds and never hands to hal) is the
+ * same. */
+int band_game_g(const StackLayout &lay)
+{
+    /* AND IT IS INSIDE THE KILL SWITCH, which it was not when this shipped and
+       which cost the lane a review finding. SM64DS_BAND_FIX=0 is documented as
+       giving back the band this lane found, and a rendering change that sits
+       OUTSIDE the switch makes that sentence false and leaves itself with no
+       arm to be A/B'd by -- the reviewer had to patch his own tree to measure
+       this at all, and then measured 352 band pixels moving. A partial kill
+       switch has already burned one attribution this campaign. */
+    if (!band_fix_on()) return lay.gap_ds;
+    if (lay.game_g_ds <= 0 || lay.game_g_ds >= lay.gap_ds) return lay.gap_ds;
+    return lay.game_g_ds;
+}
+
+/* The band rows one binding may write, from which screen its engine is on.
+   `upper` is what band_bias_a/b already decided; this is the same fact asked
+   the other way, so the two can never disagree about a binding. */
+inline void band_window(const StackLayout &lay, int upper, int &k0, int &k1)
+{
+    const int g = band_game_g(lay);
+    if (upper) { k0 = 0; k1 = g; }
+    else { k0 = lay.gap_ds - g; k1 = lay.gap_ds; }
+}
+
 /* ---- THE PASSES THAT ARE ENGINE A's BY CONSTRUCTION, UNDER A SWAP ----------
  *
  * Three of the passes below are not "the upper screen's engine" but ENGINE A's
@@ -1924,10 +2502,15 @@ int band_texel(const BandTexels &t, const BandEntry &d, int sx, int sy,
  * numbers are the before and the after of the clipping the headroom fixes, and
  * taking them from the same frame of the same run is what makes them comparable
  * at all. Every other caller passes neither and is unchanged. */
+/* `k0` / `k1` ARE THE BINDING'S OWN WINDOW, the band rows this engine may
+   write, and every caller that does not have one passes the whole band. See
+   THE GAME'S OWN G above: since the uniform-hinge ruling an engine's rows past
+   its own G are the OTHER screen's picture, and a raster that wrote them would
+   put a second copy of it in the band. */
 int band_draw_entry(BandPixel *band, int gap_ds, const BandEngine &e,
                     uint16_t a0, uint16_t a1, uint16_t a2, const BandEntry &d,
                     int ktop, int x, int only_empty, int split = -1,
-                    int *n_below = 0)
+                    int *n_below = 0, int k0 = 0, int k1 = 1 << 24)
 {
     BandTexels t;
     if (!band_texels(e, a0, a1, a2, d, t)) return 0;
@@ -1937,6 +2520,7 @@ int band_draw_entry(BandPixel *band, int gap_ds, const BandEngine &e,
     for (int sy = 0; sy < d.bh; ++sy) {
         const int k = ktop + sy;
         if (k < 0 || k >= gap_ds) continue;
+        if (k < k0 || k >= k1) continue;
         for (int sx = 0; sx < d.bw; ++sx) {
             const int px = x + sx;
             if (px < 0 || px >= 256) continue;
@@ -2012,7 +2596,7 @@ int band_trace_frames(void)
  * pixel is empty or this sprite's priority number is at least as good. */
 void band_raster_engine(BandPixel *band, int gap_ds, const BandEngine &e,
                         int trace = -1, const char *tag = "gappeek",
-                        int split = -1)
+                        int split = -1, int k0 = 0, int k1 = 1 << 24)
 {
     if (!((rd32(e.reg) >> 12) & 1)) return;          // OBJ layer off
     if (trace < 0) trace = band_trace_frames();
@@ -2037,7 +2621,7 @@ void band_raster_engine(BandPixel *band, int gap_ds, const BandEngine &e,
 
         int below = 0;
         const int drawn = band_draw_entry(band, gap_ds, e, a0, a1, a2, d, ktop,
-                                          d.x, 0, split, &below);
+                                          d.x, 0, split, &below, k0, k1);
         if (box_rows && trace)
             std::fprintf(stderr, "[%s] %s oam%3d a0=%04x a1=%04x a2=%04x "
                          "%dx%d%s at (%d,%d): box reaches %d row(s), %d "
@@ -2233,8 +2817,15 @@ void band_ghost(uint32_t *dst, int dst_w, const StackLayout &lay)
                            band_bias_a(lay), 0, "A", 0};
     const BandEngine eb = {kRegBase, kOamBase, kObjVram, kObjPltt, kObjExtPltt,
                            band_bias_b(lay), 1, "B", 0};
-    band_raster_engine(band, lay.gap_ds, ea);
-    band_raster_engine(band, lay.gap_ds, eb);
+    /* AND EACH ENGINE'S OWN WINDOW, because since the uniform-hinge ruling the
+       band can be taller than the game's G and an engine's rows past its own G
+       are the other screen's picture. See THE GAME'S OWN G above; with the two
+       equal these are the whole band and the two calls are what they were. */
+    int ak0, ak1, bk0, bk1;
+    band_window(lay, !lay.main_lower, ak0, ak1);
+    band_window(lay, lay.main_lower, bk0, bk1);
+    band_raster_engine(band, lay.gap_ds, ea, -1, "gappeek", -1, ak0, ak1);
+    band_raster_engine(band, lay.gap_ds, eb, -1, "gappeek", -1, bk0, bk1);
     band_continuity(band, lay.gap_ds, ea, eb);
 
     const int H = lay.gap_ds, W = 256, R = 2;
@@ -2254,6 +2845,68 @@ void band_ghost(uint32_t *dst, int dst_w, const StackLayout &lay)
                 o[0] = o[1] = o[2] = o[3] = 0;
             }
         }
+    /* ---- THE CROSSER CARRY -------------------------------------------------
+     *
+     * THE OWNER'S RULING, 2026-08-26: a thing travelling through the screens
+     * "should just blur as they pass through". The rasters above answer that
+     * for anything the game submitted as an OAM entry, out of its own tiles,
+     * at its own world row. They cannot answer it for the crosser the report
+     * is actually about: on the dScMgD3DBase_c family Mario is 3D geometry on
+     * the live engine and a display-capture bitmap on the other panel, and
+     * neither is an OAM entry. MEASURED, and it is the whole finding of run
+     * mg15 lane BAND -- scenes 372 and 384, every frame captured across a
+     * crossing, ZERO band pixels of anything but the ambient fill and NO
+     * gappeek census line at all. He is not misplaced in the band. He is not
+     * in it.
+     *
+     * AND THERE IS NOTHING CRISP TO DRAW HIM WITH. The band's rows are world
+     * rows below the 3D engine's own 192-row viewport; no geometry was
+     * rasterised there, on hardware or here, so any crisp answer would be
+     * invented. What IS real is the pixels he occupies in the two rows either
+     * side of the band, which the two screen blits have already written into
+     * this very image. Those get carried into the band and faded, and the box
+     * blur below is what makes them a blur rather than a stretch.
+     *
+     * FROM ITS OWN EDGE, FADING TO THE FAR ONE, both edges independently. An
+     * object leaving the upper screen fades DOWN the band while its arrival at
+     * the lower screen fades UP, and the two cross over in the middle, so
+     * there is no band row at which it is drawn by neither -- which is the law
+     * this whole feature exists under: nothing may visibly vanish at the seam.
+     *
+     * ONLY WHERE THE RASTER LEFT THE GRID EMPTY, and the test is the stronger
+     * alpha rather than a first-writer-wins: a real OAM entry above carries
+     * 255, the carry's own maximum is 255 at its own edge, so `a <= o[3]`
+     * refuses every carry over a rastered pixel by arithmetic instead of by
+     * ordering, and the two edges' carries resolve against each other by which
+     * one is nearer. */
+    if (band_fix_on())
+        for (int e = 0; e < 2; ++e)
+            for (int x = 0; x < W; ++x) {
+                const int cw = g_edge_w[e][x];
+                if (!cw) continue;
+                const uint32_t p = g_edge_live[e][x];
+                const int cr = (int)((p >> 16) & 0xff);
+                const int cg = (int)((p >> 8) & 0xff);
+                const int cb = (int)(p & 0xff);
+                for (int k = 0; k < H; ++k) {
+                    const int d = e == 0 ? k : H - 1 - k;
+                    /* THE FALLOFF TIMES THE COLUMN'S OWN WEIGHT, so a column
+                       the wash still mostly trusts contributes a faint ghost
+                       and one it has written off entirely contributes a full
+                       one. Same number both passes read, so the band never
+                       shows a ghost the gradient has not already stepped
+                       aside for. */
+                    const int a = 255 * (H - d) / H * cw / 255;
+                    int *o = p0 + ((size_t)k * W + x) * 4;
+                    if (a <= o[3]) continue;
+                    o[0] = cr; o[1] = cg; o[2] = cb; o[3] = a;
+                    any = 1;
+                    ++g_band_carried;
+                }
+            }
+    if (band_trace_on())
+        std::fprintf(stderr, "[band] f%u ghost: %u band cell(s) carried from "
+                     "the edge rows\n", g_band_frame, g_band_carried);
     if (!any) return;
     /* horizontal then vertical box, premultiplied by coverage so a blurred
        edge fades instead of smearing black */
@@ -2368,8 +3021,17 @@ void band_peek(uint32_t *dst, int dst_w, const StackLayout &lay)
        when one does, it is the owner's call and not a derivation. */
     const BandEngine eb = {kRegBase, kOamBase, kObjVram, kObjPltt, kObjExtPltt,
                            band_bias_b(lay), 1, "B", 0};
-    band_raster_engine(band, lay.gap_ds, ea);
-    band_raster_engine(band, lay.gap_ds, eb);
+    /* AND EACH ONE'S OWN WINDOW, for the reason band_ghost's two calls carry
+       one: since the uniform-hinge ruling an engine's band rows past its own G
+       are the OTHER screen's picture, and peek's whole claim is that it draws
+       what the engines were given -- which does not include drawing the bottom
+       screen's own rows a second time. With G equal to the band's height these
+       are the whole band and both calls are what they were. */
+    int ak0, ak1, bk0, bk1;
+    band_window(lay, !lay.main_lower, ak0, ak1);
+    band_window(lay, lay.main_lower, bk0, bk1);
+    band_raster_engine(band, lay.gap_ds, ea, -1, "gappeek", -1, ak0, ak1);
+    band_raster_engine(band, lay.gap_ds, eb, -1, "gappeek", -1, bk0, bk1);
     /* AND THE DEAD ZONE LAST, so "did an engine draw this pixel" is asked of
        the finished merge rather than of half of it. */
     band_continuity(band, lay.gap_ds, ea, eb);
@@ -3562,6 +4224,14 @@ StackLayout stack_layout(int gap_ds, int head_ds, int obj_shift_ds,
        before the bit was read at all, so a layout nobody tells composes exactly
        the way it always did. hal/screen_gap.cpp sets it every frame. */
     l.main_lower = 0;
+    /* NOT AN INPUT HERE, for the reason the seam flag and the swap are not:
+       this function is handed the LAYOUT's band and the game's own G is a
+       different question about the same rows, read live every frame.
+       hal/screen_gap.cpp sets it beside those two. Zero means "the whole band
+       is the game's", which is what every band pass assumed before this
+       existed and is still right for every game whose G is the band's
+       height. */
+    l.game_g_ds = 0;
     return l;
 }
 
@@ -3706,6 +4376,22 @@ int ppu_obj_routed_live_is(int slot)
 void ppu_band_ambient_reset(void)
 {
     g_amb.have = 0;
+    /* AND THE EDGE ROWS' SETTLED BACKGROUND with it, for the reason the
+       ambient memory is dropped here: it is per-scene state whose lifetime is
+       the scene. A background learned in one minigame would light the next
+       one's band off the last one's picture -- and worse than the wash's
+       version of that, it would call the whole of the next scene's first
+       second a crossing, because every column would stand far off a settled
+       value that belongs to a different game. */
+    g_edge.have = 0;
+    std::memset(g_edge_w, 0, sizeof g_edge_w);
+    std::memset(g_edge_obj, 0, sizeof g_edge_obj);
+    /* and the refusal flags, which are per FRAME rather than per scene and are
+       rewritten unconditionally at the head of every band_edge_update. Cleared
+       here anyway, for the reason the two above are: nothing this file caches
+       may cross a scene boundary, and a reader should not have to prove which
+       of these die on their own. */
+    std::memset(g_edge_refused, 0, sizeof g_edge_refused);
 }
 
 void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
