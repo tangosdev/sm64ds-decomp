@@ -2287,6 +2287,18 @@ ov072	0x0211fb7c	func_ov072_0211fb7c	_ZN11SnowmanBody10InitState0Ev	PMF state ta
 ov072	0x0211fc3c	func_ov072_0211fc3c	_ZN11SnowmanBody17CallStateBehaviorEv	PMF dispatches second entry in current state pair
 ov072	0x0211fc78	func_ov072_0211fc78	_ZN11SnowmanBody13CallStateInitEv	PMF dispatches first entry in current state pair
 ov072	0x0211fcb0	func_ov072_0211fcb0	_ZN11SnowmanBody8SetStateEi	indexes six-pair PMF table at state times 0x10
+ov072	0x0211ffd8	func_ov072_0211ffd8	_ZN11SnowmanHead11UpdateModelEv	SnowmanHead TU helper; direct lifecycle callers
+ov072	0x0212001c	func_ov072_0212001c	_ZN11SnowmanHead6State3Ev	PMF state table behavior index 3
+ov072	0x02120180	func_ov072_02120180	_ZN11SnowmanHead10InitState3Ev	PMF state table entry index 3
+ov072	0x021201d4	func_ov072_021201d4	_ZN11SnowmanHead6State2Ev	PMF state table behavior index 2
+ov072	0x02120308	func_ov072_02120308	_ZN11SnowmanHead10InitState2Ev	PMF state table entry index 2
+ov072	0x02120358	func_ov072_02120358	_ZN11SnowmanHead6State1Ev	PMF state table behavior index 1
+ov072	0x02120430	func_ov072_02120430	_ZN11SnowmanHead10InitState1Ev	PMF state table entry index 1
+ov072	0x02120450	func_ov072_02120450	_ZN11SnowmanHead6State0Ev	PMF state table behavior index 0
+ov072	0x02120514	func_ov072_02120514	_ZN11SnowmanHead10InitState0Ev	PMF state table entry index 0
+ov072	0x02120560	func_ov072_02120560	_ZN11SnowmanHead17CallStateBehaviorEv	PMF dispatches second entry in current state pair
+ov072	0x0212059c	func_ov072_0212059c	_ZN11SnowmanHead13CallStateInitEv	PMF dispatches first entry in current state pair
+ov072	0x021205d4	func_ov072_021205d4	_ZN11SnowmanHead8SetStateEi	indexes four-pair PMF table at state times 0x10
 ov085	0x02129dbc	func_ov085_02129dbc	_ZN13PrincessPeach12UpdateLookAtEv	inferred helper ownership: only PrincessPeach::Behavior caller; this offsets
 ov085	0x02129ebc	func_ov085_02129ebc	_ZN13PrincessPeach21UpdateGroundCollisionEP10dBgCh_Actr	inferred helper ownership: PrincessPeach state callers; dBgCh member
 ov085	0x02129fdc	func_ov085_02129fdc	_ZN13PrincessPeach11UpdateModelEv	inferred helper ownership: PrincessPeach lifecycle callers; this offsets

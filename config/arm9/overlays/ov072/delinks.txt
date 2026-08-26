@@ -124,55 +124,55 @@ src/_ZN11SnowmanHeadD1Ev.cpp:
     complete
     .text start:0x0211ff34 end:0x0211ff7c
 
-src/_ZN11SnowmanHeadD0Ev.c:
+src/_ZN11SnowmanHeadD0Ev.cpp:
     complete
     .text start:0x0211ff7c end:0x0211ffd8
 
-src/func_ov072_0211ffd8.c:
+src/_ZN11SnowmanHead11UpdateModelEv.cpp:
     complete
     .text start:0x0211ffd8 end:0x0212001c
 
-src/func_ov072_0212001c.c:
+src/_ZN11SnowmanHead6State3Ev.cpp:
     complete
     .text start:0x0212001c end:0x02120180
 
-src/func_ov072_02120180.c:
+src/_ZN11SnowmanHead10InitState3Ev.cpp:
     complete
     .text start:0x02120180 end:0x021201d4
 
-src/func_ov072_021201d4.c:
+src/_ZN11SnowmanHead6State2Ev.cpp:
     complete
     .text start:0x021201d4 end:0x02120308
 
-src/func_ov072_02120308.c:
+src/_ZN11SnowmanHead10InitState2Ev.cpp:
     complete
     .text start:0x02120308 end:0x02120358
 
-src/func_ov072_02120358.c:
+src/_ZN11SnowmanHead6State1Ev.cpp:
     complete
     .text start:0x02120358 end:0x02120430
 
-src/func_ov072_02120430.c:
+src/_ZN11SnowmanHead10InitState1Ev.cpp:
     complete
     .text start:0x02120430 end:0x02120450
 
-src/func_ov072_02120450.cpp:
+src/_ZN11SnowmanHead6State0Ev.cpp:
     complete
     .text start:0x02120450 end:0x02120514
 
-src/func_ov072_02120514.c:
+src/_ZN11SnowmanHead10InitState0Ev.cpp:
     complete
     .text start:0x02120514 end:0x02120560
 
-src/func_ov072_02120560.cpp:
+src/_ZN11SnowmanHead17CallStateBehaviorEv.cpp:
     complete
     .text start:0x02120560 end:0x0212059c
 
-src/func_ov072_0212059c.cpp:
+src/_ZN11SnowmanHead13CallStateInitEv.cpp:
     complete
     .text start:0x0212059c end:0x021205d4
 
-src/func_ov072_021205d4.c:
+src/_ZN11SnowmanHead8SetStateEi.cpp:
     complete
     .text start:0x021205d4 end:0x021205f0
 
