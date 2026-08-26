@@ -150,6 +150,11 @@ int   port_arena_is_fixed(void);
 extern char dsstate_lo;
 extern char dsstate_hi;
 
+// hal/lk6_savestate.cpp: the fix-off arm's bracket, round whichever memcpy
+// actually rolls .dsstate back. Returns non-zero if it stashed.
+int  port_ss_rollguard_begin(void);
+void port_ss_rollguard_end(int began);
+
 // The world's own two singletons, for the runnability check below. Both are
 // hosted DS globals inside .dsstate: data_0209f394[0] is the local Player
 // (hal/cxxname_bridge.cpp) and data_0209f318 the Camera (hal/actor_vtables.cpp),
@@ -787,8 +792,16 @@ int lk7_persist_read(void)
                             "saved world is not runnable (%s), loading it "
                             "anyway.\n", bad);
     }
+    /* SM64DS_SS_NO_ROLLGUARD=1, the fix-off arm: THIS is the copy that rolls a
+       disk state's .dsstate over the live one -- lk6_savestate_load is only
+       reached afterwards, through the slot round-trip below -- so the bracket
+       belongs here as well as there. See port_ss_rollguard_begin in
+       hal/lk6_savestate.cpp for what a knob on the wrong copy site looked
+       like. */
+    const int norg = port_ss_rollguard_begin();
     if (asz) memcpy(base, abuf, asz);
     if (dsz) memcpy(&dsstate_lo, dbuf, dsz);
+    port_ss_rollguard_end(norg);
     free(abuf);
     free(dbuf);
     if (hsz) {

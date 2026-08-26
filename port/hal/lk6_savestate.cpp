@@ -184,6 +184,36 @@ static int ss_no_rollguard(void)
     return on;
 }
 
+// THE BRACKET GOES ROUND THE COPY, WHEREVER THE COPY IS, and the first version
+// of this got that wrong in a way worth recording: hal/lk7_persist.cpp's disk
+// read does NOT restore through lk6_savestate_load. It reads the file into its
+// own buffers, runs world_fault over them, and then memcpy's them into place
+// itself -- and only afterwards makes the in-memory slot agree by calling
+// lk6_savestate_save + lk6_savestate_load, which is the saved/restored pair a
+// player's playlog shows for a plain launch.
+//
+// So a knob that only wrapped lk6's copy stashed values that lk7 had ALREADY
+// rolled back and put them straight back unchanged. It printed its line, did
+// nothing, and the fix-off arm came out looking like the fix-on arm. That is
+// the failure mode this lane exists to kill -- an instrument that reports on
+// something other than what it claims -- so the pair is exported and both copy
+// sites use it.
+extern "C" int port_ss_rollguard_begin(void)
+{
+    if (!ss_no_rollguard() || !g_rollguard_stash)
+        return 0;
+    g_rollguard_stash();
+    fprintf(stderr, "[savestate] SM64DS_SS_NO_ROLLGUARD=1: the one-shot guards "
+                    "will NOT roll back with what they guard\n");
+    return 1;
+}
+
+extern "C" void port_ss_rollguard_end(int began)
+{
+    if (began && g_rollguard_unstash)
+        g_rollguard_unstash();
+}
+
 namespace {
 
 char  *dsstate_base() { return &dsstate_lo; }
@@ -319,17 +349,11 @@ int lk6_savestate_load(void)
 
     // SM64DS_SS_NO_ROLLGUARD=1: keep the one-shot guards out of the rollback,
     // the way a plain host static did before RELOAD2. The fix-off arm.
-    const int norg = ss_no_rollguard();
-    if (norg && g_rollguard_stash) {
-        g_rollguard_stash();
-        fprintf(stderr, "[savestate] SM64DS_SS_NO_ROLLGUARD=1: the one-shot "
-                        "guards will NOT roll back with what they guard\n");
-    }
+    const int norg = port_ss_rollguard_begin();
 
     memcpy(base, g_slot.arena, g_slot.arena_size);
     memcpy(dsstate_base(), g_slot.globals, g_slot.globals_size);
-    if (norg && g_rollguard_unstash)
-        g_rollguard_unstash();
+    port_ss_rollguard_end(norg);
     if (g_slot.hw_size)
         port_hw_regions_copy_in(g_slot.hw);   /* also drops the decode cache */
     port_arena_set_cursor(g_slot.arena_cursor);
