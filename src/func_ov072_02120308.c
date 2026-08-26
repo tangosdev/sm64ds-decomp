@@ -1,11 +1,14 @@
-int func_ov072_02120308(char *base)
+//cpp
+#include "SnowmanHead.h"
+
+int SnowmanHead::InitState2()
 {
-    *(int *)(((int)base + 0xb0)) &= ~1;
-    *(int *)(base + 0x9c) = -0x2000;
-    *(int *)(base + 0xa0) = -0x3c000;
-    *(int *)(base + 0xa8) = 0x2d000;
-    *(unsigned char *)(base + 0x335) = 0x78;
-    *(unsigned char *)(base + 0x334) = 0;
-    *(int *)(base + 0x330) = 2;
+    mFlags &= ~1;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
+    mVertSpeed = 0x2d000;
+    mStateTimer = 0x78;
+    mSubstate = 0;
+    mStateValue = 2;
     return 1;
 }

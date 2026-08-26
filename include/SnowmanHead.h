@@ -1,56 +1,62 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class SnowmanHead: 5 matched functions, 10 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef SNOWMANHEAD_H
 #define SNOWMANHEAD_H
-#include "types.h"
+
+#include "dActor_c.h"
 #include "Model.h"
 #include "TextureSequence.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
 
-struct SnowmanHead {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x18];
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    u8  pad_08c[0x48];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x0d4 */
-    /* TextureSequence member, named by the class's own destructor calling
-       TextureSequence's D1 at +0x124 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11SnowmanHeadD0Ev.c] */
-    TextureSequence mTextureSequence;            /* 0x124 */
-    /* dCcAc_c member, named by the class's own destructor calling
-       dCcAc_c's D1 at +0x138 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11SnowmanHeadD0Ev.c] */
-    dCcAc_c mdCcAc_c;            /* 0x138 */
-    /* dBgCh_Actr member, named by the class's own destructor calling
-       dBgCh_Actr's D1 at +0x16c -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11SnowmanHeadD0Ev.c] */
-    dBgCh_Actr mWithMeshClsn;            /* 0x16c */
-    /* Trailing remainder, 0x10 bytes. All three markers are typed and the
-       last one ends at 0x328; SnowmanHead_Spawn allocates 0x338. Nothing in
-       the five recovered functions reads this range -- the state machine that
-       does lives in func_ov072_02120560 / func_ov072_021205d4, which are not
-       decompiled -- so it stays explicit padding rather than invented fields. */
-    u8  pad_328[0x10];
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();                  /* slot  3 */
-    int InitResources();
-    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
-    int Render();
-#endif
+/* The cartridge RTTI names this class daBgSnmHed_c. SnowmanHead is the
+ * readable compatibility spelling already carried by every matched virtual.
+ * Its __si_class_type_info record has dActor_c as the sole base at offset zero,
+ * and its vtable has the same 31 slots as dActor_c. The D1/D0 pair and factory
+ * independently pin the four owned subobjects and the total allocation size.
+ *
+ * The four state pairs are recovered from __sinit_ov072_021221f8, which copies
+ * eight ROM PMF constants into data_ov072_02122c00. SetState indexes that table
+ * at state * 0x10 and invokes the first PMF; Behavior invokes the second.
+ * Descriptive original names are absent, so the ROM-evidenced indices remain.
+ */
+struct SnowmanHead : dActor_c {
+    u8 mPad0d0[0x4];                    /* 0x0d0 */
+    Model mModel;                       /* 0x0d4 */
+    TextureSequence mTextureSequence;   /* 0x124 */
+    dCcAc_c mCylinder;                  /* 0x138 */
+    dBgCh_Actr mWithMeshClsn;           /* 0x16c */
+
+    typedef int (SnowmanHead::*StateFunc)();
+    StateFunc *mStateFuncs;             /* 0x328 */
+    Player *mTalkPlayer;                /* 0x32c */
+    s32 mStateValue;                    /* 0x330 */
+    u8 mSubstate;                       /* 0x334 */
+    u8 mStateTimer;                     /* 0x335 */
+    u8 unk_336;                         /* 0x336 */
+    u8 mPad337;                         /* 0x337 */
+
+    virtual ~SnowmanHead();             /* slots 16, 17 */
+
+    virtual int InitResources();        /* slot  0 */
+    virtual int CleanupResources();     /* slot  3 */
+    virtual int Behavior();             /* slot  6 */
+    virtual int Render();               /* slot  9 */
+    virtual void OnPendingDestroy();    /* slot 12 */
+
+    void UpdateModel();
+    int InitState0();
+    int State0();
+    int InitState1();
+    int State1();
+    int InitState2();
+    int State2();
+    int InitState3();
+    int State3();
+    void CallStateBehavior();
+    void CallStateInit();
+    void SetState(int state);
 };
 
-typedef char SnowmanHead_size_must_be_0x338[sizeof(struct SnowmanHead) == 0x338 ? 1 : -1];
+typedef char SnowmanHead_size_must_be_0x338[
+    sizeof(SnowmanHead) == 0x338 ? 1 : -1];
 
 #endif

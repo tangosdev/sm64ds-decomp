@@ -1,61 +1,50 @@
-// @symbol func_ov072_0212001c
-// recovered name: SnowmanBody_Kill
-/* recovered: shared common types, renamed to Class_Method */
-/* daBgSnmBdy_c::Kill - recovered from vtable slot identity */
-struct Vec3 { int x, y, z; };
-extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
-extern int Vec3_HorzDist(void *a, void *b);
-extern int _ZN6Player9StartTalkER7fBase_cb(void *player, void *actor, int b);
-extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *player, void *actor, unsigned msg, const void *pos, unsigned a, unsigned b);
-extern int _ZN6Player12GetTalkStateEv(void *player);
-extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned id, unsigned param, const void *pos, const void *ang, int a, int b);
-extern void _ZN9Animation7AdvanceEv(void *anim);
-extern int _Z14ApproachLinearRsss(short *p, short to, short step);
+//cpp
+#include "SnowmanHead.h"
+#include "Player.h"
 
-int func_ov072_0212001c(char *c)
+void ApproachLinear(short &value, short target, short step);
+extern "C" int Vec3_HorzDist(const void *a, const void *b);
+struct SnowmanHeadVec3 {
+    s32 x;
+    s32 y;
+    s32 z;
+};
+
+int SnowmanHead::State3()
 {
-    struct Vec3 v;
-    unsigned char *st;
-    unsigned int param;
-    v.x = *(int *)(c + 0x5c);
-    v.y = *(int *)(c + 0x60);
-    v.z = *(int *)(c + 0x64);
-    v.y = v.y + 0x1c2000;
-    switch (*(unsigned char *)(c + 0x334)) {
+    SnowmanHeadVec3 pos;
+    pos.x = mPosX;
+    pos.y = mPosY;
+    pos.z = mPosZ;
+    pos.y += 0x1c2000;
+
+    switch (mSubstate) {
     case 0:
-        *(void **)(c + 0x32c) = _ZN8dActor_c13ClosestPlayerEv(c);
-        if (Vec3_HorzDist(c + 0x5c, *(char **)(c + 0x32c) + 0x5c) < 0x118000) {
-            if (_ZN6Player9StartTalkER7fBase_cb(*(void **)(c + 0x32c), c, 1)) {
-                st = (unsigned char *)(((int)c + 0x334));
-                *st = *st + 1;
-            }
+        mTalkPlayer = ClosestPlayer();
+        if (Vec3_HorzDist((char *)this + 0x5c,
+                          (char *)mTalkPlayer + 0x5c) < 0x118000) {
+            if (mTalkPlayer->StartTalk(*this, true))
+                mSubstate++;
         }
         break;
     case 1:
-        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void **)(c + 0x32c), c, 0xb1, &v, 0, 2)) {
-            st = (unsigned char *)(((int)c + 0x334));
-            *st = *st + 1;
-        }
+        if (mTalkPlayer->ShowMessage(
+                *this, 0xb1, (Vector3 *)&pos, 0, 2))
+            mSubstate++;
         break;
     case 2:
-        if (_ZN6Player12GetTalkStateEv(*(void **)(c + 0x32c)) == -1) {
-            param = *(int *)(c + 8) & 0xf;
+        if (mTalkPlayer->GetTalkState() == -1) {
+            unsigned int param = (*(int *)&param1) & 0xf;
             param = param & 0xff;
-            param = param | 0x40;
-            _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0xb2,
-                param,
-                c + 0x5c,
-                0,
-                *(signed char *)(c + 0xcc),
-                -1);
-            st = (unsigned char *)(((int)c + 0x334));
-            *st = *st + 1;
+            param |= 0x40;
+            Spawn(0xb2, param, *(Vector3 *)((char *)this + 0x5c),
+                  0, mAreaId, -1);
+            mSubstate++;
         }
         break;
     }
-    _ZN9Animation7AdvanceEv(c + 0x124);
-    _Z14ApproachLinearRsss((short *)(c + 0x8e), (short)-0x4000, 0x514);
-    *(int *)(c + 0x60) = (int)0xffc427c0;
+    mTextureSequence.Advance();
+    ApproachLinear(mAngleY, -0x4000, 0x514);
+    mPosY = (int)0xffc427c0;
     return 1;
 }

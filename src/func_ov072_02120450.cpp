@@ -1,36 +1,26 @@
 //cpp
-// @symbol func_ov072_02120450
-/* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: shared common types */
-#include "common.h"
+#include "SnowmanHead.h"
+#include "Player.h"
 
-typedef int Fix12i;
+void ApproachLinear(short &value, short target, short step);
+extern "C" int Vec3_HorzDist(const void *a, const void *b);
+extern "C" unsigned char DecIfAbove0_Byte(unsigned char *value);
 
-void ApproachLinear(short& v, short target, short step);
-struct Animation { void Advance(); };
-extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
-
-struct fBase_c {};
-struct dActor_c : fBase_c { dActor_c* ClosestPlayer(); };
-extern "C" Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
-struct Player : dActor_c { int StartTalk(fBase_c& a, bool b); };
-
-extern "C" bool func_ov072_02120450(dActor_c* self) {
-    char* s = (char*)self;
-    ApproachLinear(*(short*)(s + 0x8e), -0x4000, 0x514);
-    ((Animation*)(s + 0x124))->Advance();
-    if (*(unsigned char*)(s + 0x336)) {
-        func_ov072_021205d4(self, 2);
-        return true;
+int SnowmanHead::State0()
+{
+    ApproachLinear(mAngleY, -0x4000, 0x514);
+    mTextureSequence.Advance();
+    if (unk_336) {
+        SetState(2);
+        return 1;
     }
-    if (DecIfAbove0_Byte((unsigned char*)(s + 0x335)) == 0) {
-        dActor_c* p = self->ClosestPlayer();
-        if (Vec3_HorzDist((Vector3*)(s + 0x5c), (Vector3*)((char*)p + 0x5c)) < 0x118000
-            && ((Player*)p)->StartTalk(*self, true) != 0) {
-            *(dActor_c**)(s + 0x32c) = p;
-            func_ov072_021205d4(self, 1);
+    if (DecIfAbove0_Byte(&mStateTimer) == 0) {
+        Player *player = ClosestPlayer();
+        if (Vec3_HorzDist((char *)this + 0x5c, (char *)player + 0x5c) < 0x118000
+            && player->StartTalk(*this, true) != 0) {
+            mTalkPlayer = player;
+            SetState(1);
         }
     }
-    return true;
+    return 1;
 }

@@ -18,7 +18,6 @@ extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *t,
 extern void _ZN9dBgCh_GndC1Ev(void *t);
 extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *t, const struct Vector3 *pos, void *actor);
 extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *t);
-extern void func_ov072_0211ffd8(char *c);
 extern void _ZN9dBgCh_GndD1Ev(void *t);
 
 }
@@ -56,8 +55,8 @@ int SnowmanHead::InitResources()
     else
         mPosY = pos.y;
 
-    func_ov072_021205d4(((char *)this), 0);
-    func_ov072_0211ffd8(((char *)this));
+    SetState(0);
+    UpdateModel();
     _ZN9dBgCh_GndD1Ev(ray);
     return 1;
 }

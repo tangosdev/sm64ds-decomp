@@ -1,45 +1,50 @@
-// @symbol func_ov072_021201d4
-/* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: shared common types */
-#include "common.h"
-typedef int Fix12i;
+//cpp
+#include "SnowmanHead.h"
 
+extern "C" {
+void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(
+    void *self, const void *pos, int magnitude);
+int func_0201267c(int id, void *pos);
+void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
+    unsigned int id, int x, int y, int z);
+int _ZN5Sound7PlaySubEjjj5Fix12IiEb(
+    unsigned int soundID, unsigned int volume, unsigned int pan,
+    int distance, int loop);
+unsigned char DecIfAbove0_Byte(unsigned char *value);
+}
+struct SnowmanHeadVec3 {
+    s32 x;
+    s32 y;
+    s32 z;
+};
 
-extern int _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
-extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *self, const struct Vector3 *v, Fix12i mag);
-extern int func_0201267c(int a, void *b);
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int soundID, unsigned int vol, unsigned int pan, Fix12i dist, int loop);
-extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-
-int func_ov072_021201d4(char *self)
+int SnowmanHead::State2()
 {
-    struct Vector3 v;
-    unsigned char *st;
-    switch (*(unsigned char *)(self + 0x334))
-    {
+    SnowmanHeadVec3 pos;
+    switch (mSubstate) {
     case 0:
-        _ZN8dActor_c9UpdatePosEP5dCc_c(self, self + 0x138);
-        if (*(int *)(self + 0xa8) < 0 && *(int *)(self + 0x60) < (int)0xffc427c0)
-        {
-            v.x = *(int *)(self + 0x5c);
-            v.y = *(int *)(self + 0x60);
-            v.z = *(int *)(self + 0x64);
-            _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(self, &v, 0x5dc000);
-            func_0201267c(0x115, self + 0x74);
-            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x10f, *(int *)(self + 0x5c), *(int *)(self + 0x60), *(int *)(self + 0x64));
-            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x110, *(int *)(self + 0x5c), *(int *)(self + 0x60), *(int *)(self + 0x64));
-            _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, 0x14, 0x7f, 0x15666, 0);
-            st = (unsigned char *)(((int)self + 0x334));
-            *st = *st + 1;
+        UpdatePos(&mCylinder);
+        if (mVertSpeed < 0 && mPosY < (int)0xffc427c0) {
+            pos.x = mPosX;
+            pos.y = mPosY;
+            pos.z = mPosZ;
+            _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(
+                this, &pos, 0x5dc000);
+            func_0201267c(0x115, (char *)this + 0x74);
+            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
+                0x10f, mPosX, mPosY, mPosZ);
+            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
+                0x110, mPosX, mPosY, mPosZ);
+            _ZN5Sound7PlaySubEjjj5Fix12IiEb(
+                0x20, 0x14, 0x7f, 0x15666, 0);
+            mSubstate++;
         }
         break;
     case 1:
-        if (DecIfAbove0_Byte((unsigned char *)(self + 0x335)) == 0)
-        {
-            _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x20, 0x7f, 0, 0x15666, 0);
-            func_ov072_021205d4(self, 3);
+        if (DecIfAbove0_Byte(&mStateTimer) == 0) {
+            _ZN5Sound7PlaySubEjjj5Fix12IiEb(
+                0x20, 0x7f, 0, 0x15666, 0);
+            SetState(3);
         }
         break;
     }

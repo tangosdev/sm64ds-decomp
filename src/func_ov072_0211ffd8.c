@@ -1,8 +1,12 @@
-extern void Matrix4x3_FromRotationY(void *, int);
-void func_ov072_0211ffd8(char *t)
+//cpp
+#include "SnowmanHead.h"
+
+extern "C" void Matrix4x3_FromRotationY(void *matrix, int angle);
+
+void SnowmanHead::UpdateModel()
 {
-    Matrix4x3_FromRotationY(t + 0xf0, *(short *)(t + 0x8e));
-    *(int *)(t + 0x114) = *(int *)(t + 0x5c) >> 3;
-    *(int *)(t + 0x118) = (*(int *)(t + 0x60) + 0x96000) >> 3;
-    *(int *)(t + 0x11c) = *(int *)(t + 0x64) >> 3;
+    Matrix4x3_FromRotationY((char *)this + 0xf0, mAngleY);
+    *(s32 *)((char *)this + 0x114) = mPosX >> 3;
+    *(s32 *)((char *)this + 0x118) = (mPosY + 0x96000) >> 3;
+    *(s32 *)((char *)this + 0x11c) = mPosZ >> 3;
 }
