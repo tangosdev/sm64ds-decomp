@@ -12,9 +12,9 @@ func_ov001_020aaf40 kind:function(arm,size=0x1d0) addr:0x020aaf40
 func_ov001_020ab110 kind:function(arm,size=0x118) addr:0x020ab110
 func_ov001_020ab228 kind:function(arm,size=0xbc) addr:0x020ab228
 func_ov001_020ab2e4 kind:function(arm,size=0x90) addr:0x020ab2e4
-func_ov001_020ab374 kind:function(arm,size=0x2c) addr:0x020ab374
-func_ov001_020ab3a0 kind:function(arm,size=0x24) addr:0x020ab3a0
-func_ov001_020ab3c4 kind:function(arm,size=0x2c) addr:0x020ab3c4
+_ZN10dCapIcon_cD0Ev kind:function(arm,size=0x2c) addr:0x020ab374
+_ZN10dCapIcon_cD1Ev kind:function(arm,size=0x24) addr:0x020ab3a0
+_ZN10dCapIcon_cC1Ev kind:function(arm,size=0x2c) addr:0x020ab3c4
 func_ov001_020ab3f0 kind:function(arm,size=0x2c) addr:0x020ab3f0
 func_ov001_020ab41c kind:function(arm,size=0x34) addr:0x020ab41c
 TouchArea_Update kind:function(arm,size=0xfc) addr:0x020ab450
@@ -132,6 +132,7 @@ _ZN3OAM18STANDARD_MODE_TEXTE kind:data(any) addr:0x020ad188
 _ZN3OAM19DUAL_HAND_MODE_TEXTE kind:data(any) addr:0x020ad2d0
 _ZTI10dCapIcon_c kind:data(any) addr:0x020ad450
 _ZTS10dCapIcon_c kind:data(any) addr:0x020ad458
+_ZTV10dCapIcon_c kind:data(any) addr:0x020ad470
 data_ov001_020ad470 kind:data(any) addr:0x020ad470
 _ZTI9dThIcon_c kind:data(any) addr:0x020ad478
 _ZTS9dThIcon_c kind:data(any) addr:0x020ad480

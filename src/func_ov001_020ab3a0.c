@@ -1,2 +1,13 @@
-extern int data_ov001_020ad470[]; extern int func_ov001_020ab110();
-int func_ov001_020ab3a0(int *x) { x[0] = (int)data_ov001_020ad470; func_ov001_020ab110(x); return (int)x; }
+//cpp
+// @symbol _ZN10dCapIcon_cD1Ev
+/* ROM RTTI names this class dCapIcon_c. The compiler supplies the vptr store
+ * around the one class-specific action: unlinking the icon. objisolate retains
+ * D1 from the compiler's full destructor group. */
+#include "CapIcon.h"
+
+extern "C" void func_ov001_020ab110(dCapIcon_c *icon);
+
+dCapIcon_c::~dCapIcon_c()
+{
+    func_ov001_020ab110(this);
+}

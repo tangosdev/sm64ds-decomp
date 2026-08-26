@@ -7,6 +7,7 @@
 #include "decl_ShadowModel.h"
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
+extern void _ZN10dCapIcon_cC1Ev(void *);
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV15daObjMarioCap_c */
 int *Cap_Spawn(void)
@@ -19,7 +20,7 @@ int *Cap_Spawn(void)
         _ZN10dBgCh_ActrC1Ev((char *)p + 0x144);
         _ZN9ModelAnimC1Ev((char *)p + 0x300);
         _ZN11ShadowModelC1Ev((char *)p + 0x364);
-        func_ov001_020ab3c4((char *)p + 0x3d0);
+        _ZN10dCapIcon_cC1Ev((char *)p + 0x3d0);
     }
     return p;
 }

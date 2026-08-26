@@ -1,11 +1,12 @@
-extern int data_ov001_020ad470;
+//cpp
+// @symbol _ZN10dCapIcon_cC1Ev
+/* The compiler supplies the dCapIcon_c vptr store. The constructor body clears
+ * the intrusive links and marks the icon as not linked, exactly as in ROM. */
+#include "CapIcon.h"
 
-void *func_ov001_020ab3c4(void *r0) {
-    char *ptr = (char *)r0;
-    *(int *)ptr = (int)&data_ov001_020ad470;
-    *(int *)(ptr + 0xc) = 0;
-    *(int *)(ptr + 0x10) = 0;
-
-    *(unsigned char *)(int)(ptr + 0x1b) |= 4;
-    return r0;
+dCapIcon_c::dCapIcon_c()
+{
+    mPrev = 0;
+    mNext = 0;
+    mFlags |= 4;
 }

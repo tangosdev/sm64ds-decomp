@@ -8,12 +8,13 @@ struct dActor_c;
 /* The record an actor carries while it is holding one of the caps, and a node in
  * a per-character intrusive doubly-linked list. 0x1c bytes.
  *
- * The type had no name and no header: every user spelt it as a raw offset into
- * itself. It is reconstructed here from the four functions that are entirely
- * about it --
+ * The tree originally had no name or header for it: every user spelt it as a
+ * raw offset into itself. ROM RTTI at ov001 0x020ad450 now proves the original
+ * name dCapIcon_c, and the class is reconstructed here from the four functions
+ * that are entirely about it --
  *
- *   func_ov001_020ab3c4   construct: store the vtable, null both links, set bit 2
- *   func_ov001_020ab3a0   destruct:  store the vtable, then unlink
+ *   dCapIcon_c::dCapIcon_c construct: store the vtable, null both links, set bit 2
+ *   dCapIcon_c::~dCapIcon_c destruct: store the vtable, then unlink
  *   func_ov001_020ab228   link into the list for a character
  *   func_ov001_020ab110   unlink, and reset every field
  *
@@ -33,16 +34,26 @@ struct dActor_c;
  * agrees when it unlinks: it writes this->next into prev->[0x10] and this->prev
  * into next->[0x0c].
  */
-struct CapIcon {
-    void **vtable;                /* 0x00 */
+#ifdef __cplusplus
+
+extern "C" void _ZN6Memory16operator_delete2EPv(void *ptr);
+
+/* RTTI at ov001 0x020ad450 supplies the original class name. Its two-slot
+ * vtable at 0x020ad470 identifies the complete/deleting destructor pair at
+ * 0x020ab3a0/0x020ab374, while the adjacent 0x020ab3c4 routine is the
+ * constructor used by every owning actor. These declarations deliberately
+ * have no inline bodies: owners must emit calls to those ROM-owned lifecycle
+ * functions rather than duplicating their vtable stores and unlink logic. */
+struct dCapIcon_c {
+    /* The compiler-owned vptr occupies 0x00. */
     /* The actor wearing the cap, and a copy of that actor's uniqueID taken at
        link time. func_ov001_020ab110 compares the owner against the live slot
        table before releasing it, which is what the copy is for: the slot can
        outlive the actor, and the id says whether it did. */
     struct dActor_c *mOwner;         /* 0x04 */
     u32 mOwnerUniqueID;           /* 0x08 */
-    struct CapIcon *mPrev;        /* 0x0c */
-    struct CapIcon *mNext;        /* 0x10 */
+    struct dCapIcon_c *mPrev;     /* 0x0c */
+    struct dCapIcon_c *mNext;     /* 0x10 */
     /* Index into the global slot table data_0209f3e8, or -1 for "not held".
        Both the constructor and the unlink reset it, the unlink to -1. */
     s32 mSlot;                    /* 0x14 */
@@ -58,8 +69,34 @@ struct CapIcon {
        the unlink sets it again on the way out, and func_ov001_020ab110 returns
        immediately if it is already set. */
     u8 mFlags;                    /* 0x1b */
+
+    dCapIcon_c();
+    virtual ~dCapIcon_c();
+    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 };
 
-typedef char CapIcon_size_must_be_0x1c[sizeof(struct CapIcon) == 0x1c ? 1 : -1];
+/* Compatibility spelling retained while callers move to the ROM name. */
+typedef dCapIcon_c CapIcon;
+
+#else
+
+/* Flat C view of the same polymorphic object. */
+struct CapIcon {
+    void **vtable;                /* 0x00 */
+    struct dActor_c *mOwner;      /* 0x04 */
+    u32 mOwnerUniqueID;           /* 0x08 */
+    struct CapIcon *mPrev;        /* 0x0c */
+    struct CapIcon *mNext;        /* 0x10 */
+    s32 mSlot;                    /* 0x14 */
+    u8 mCharacter;                /* 0x18 */
+    u8 unk_19;                    /* 0x19 */
+    u8 unk_1a;                    /* 0x1a */
+    u8 mFlags;                    /* 0x1b */
+};
+typedef struct CapIcon CapIcon;
+
+#endif
+
+typedef char CapIcon_size_must_be_0x1c[sizeof(CapIcon) == 0x1c ? 1 : -1];
 
 #endif /* CAPICON_H */
