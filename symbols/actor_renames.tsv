@@ -2248,3 +2248,24 @@ ov102	0x0214e534	data_ov102_0214e534	BobOmb_SpawnInfo	spawninfo
 ov102	0x0214e558	data_ov102_0214e558	_ZTV6BobOmb	vtable alloc=0x400
 ov102	0x0214e62c	data_ov102_0214e62c	KoopaShell_SpawnInfo	spawninfo
 ov102	0x0214e650	data_ov102_0214e650	_ZTV10KoopaShell	vtable alloc=0x3e0
+ov072	0x0211f0a4	func_ov072_0211f0a4	_ZN11SnowmanBody18IsPlayerNearCenterEv	SnowmanBody TU helper; direct class-only calls
+ov072	0x0211f158	func_ov072_0211f158	_ZN11SnowmanBody15UpdateRollAngleEv	SnowmanBody TU helper; direct class-only calls
+ov072	0x0211f1dc	func_ov072_0211f1dc	_ZN11SnowmanBody11AdvancePathEv	SnowmanBody TU helper; direct class-only calls
+ov072	0x0211f280	func_ov072_0211f280	_ZN11SnowmanBody10HurtPlayerEv	SnowmanBody TU helper; direct class-only calls
+ov072	0x0211f330	func_ov072_0211f330	_ZN11SnowmanBody21UpdateGroundCollisionEP10dBgCh_Actr	SnowmanBody TU helper; r0 owner and r1 collision object
+ov072	0x0211f3e4	func_ov072_0211f3e4	_ZN11SnowmanBody11UpdateModelEv	SnowmanBody TU helper; direct class-only calls
+ov072	0x0211f48c	func_ov072_0211f48c	_ZN11SnowmanBody6State5Ev	PMF state table behavior index 5
+ov072	0x0211f578	func_ov072_0211f578	_ZN11SnowmanBody10InitState5Ev	PMF state table entry index 5
+ov072	0x0211f598	func_ov072_0211f598	_ZN11SnowmanBody6State4Ev	PMF state table behavior index 4
+ov072	0x0211f63c	func_ov072_0211f63c	_ZN11SnowmanBody10InitState4Ev	PMF state table entry index 4
+ov072	0x0211f65c	func_ov072_0211f65c	_ZN11SnowmanBody6State3Ev	PMF state table behavior index 3
+ov072	0x0211f804	func_ov072_0211f804	_ZN11SnowmanBody10InitState3Ev	PMF state table entry index 3
+ov072	0x0211f81c	func_ov072_0211f81c	_ZN11SnowmanBody6State2Ev	PMF state table behavior index 2
+ov072	0x0211f9c4	func_ov072_0211f9c4	_ZN11SnowmanBody10InitState2Ev	PMF state table entry index 2
+ov072	0x0211fa08	func_ov072_0211fa08	_ZN11SnowmanBody6State1Ev	PMF state table behavior index 1
+ov072	0x0211faf0	func_ov072_0211faf0	_ZN11SnowmanBody10InitState1Ev	PMF state table entry index 1
+ov072	0x0211fb14	func_ov072_0211fb14	_ZN11SnowmanBody6State0Ev	PMF state table behavior index 0
+ov072	0x0211fb7c	func_ov072_0211fb7c	_ZN11SnowmanBody10InitState0Ev	PMF state table entry index 0
+ov072	0x0211fc3c	func_ov072_0211fc3c	_ZN11SnowmanBody17CallStateBehaviorEv	PMF dispatches second entry in current state pair
+ov072	0x0211fc78	func_ov072_0211fc78	_ZN11SnowmanBody13CallStateInitEv	PMF dispatches first entry in current state pair
+ov072	0x0211fcb0	func_ov072_0211fcb0	_ZN11SnowmanBody8SetStateEi	indexes six-pair PMF table at state times 0x10

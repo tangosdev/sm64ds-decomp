@@ -1,6 +1,10 @@
-int func_ov072_0211f804(char *p)
+//cpp
+#include "SnowmanBody.h"
+
+int SnowmanBody::InitState3()
 {
-    *(char *)(p + 0x3a2) = 0;
-    *(int *)(p + 0x394) = 3;
+    char *c = (char *)this;
+    *(char *)(c + 0x3a2) = 0;
+    *(int *)(c + 0x394) = 3;
     return 1;
 }

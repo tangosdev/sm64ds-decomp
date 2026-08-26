@@ -1,5 +1,9 @@
-int func_ov072_0211f9c4(char *c)
+//cpp
+#include "SnowmanBody.h"
+
+int SnowmanBody::InitState2()
 {
+    char *c = (char *)this;
     *(int *)(c + 0x9c) = -0x2000;
     *(int *)(c + 0xa0) = -0x3c000;
     {
