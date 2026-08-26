@@ -147,6 +147,41 @@ void port_hw_regions_copy_in(const void *src);
 // between them: &dsstate_hi - &dsstate_lo, recomputed by the linker every build.
 extern char dsstate_lo;
 extern char dsstate_hi;
+
+// THE ROLLBACK-COUPLED GUARDS' A/B HOOK.
+//
+// Two one-shot guards now live INSIDE the captured section, because what they
+// guard lives there too: hal/level_boot.cpp's level mount cache and
+// hal/ov009_boot.cpp's sinit flag. Both of those files carry the argument.
+// SM64DS_SS_NO_ROLLGUARD=1 puts the pre-restore values back after the section
+// copy, which is exactly what a plain host static used to do -- so ONE binary
+// answers both arms of the A/B and a fix-off run needs no second build.
+//
+// A HOOK RATHER THAN A DIRECT CALL, and the reason is the link set:
+// smoke_savestate and smoke_persist link this file but link neither the mount
+// table nor ov009, so a direct call would break both smoke targets at the
+// linker. hal/level_boot.cpp registers the pair from port_level_mounts_install,
+// which runs in the a2 seat -- before any level boot and before lk7's
+// boot-time disk read. Null in the smokes, which have no mount to roll.
+void port_ss_rollguard_hook(void (*stash)(void), void (*unstash)(void));
+}
+
+static void (*g_rollguard_stash)(void);
+static void (*g_rollguard_unstash)(void);
+
+extern "C" void port_ss_rollguard_hook(void (*stash)(void),
+                                       void (*unstash)(void))
+{
+    g_rollguard_stash = stash;
+    g_rollguard_unstash = unstash;
+}
+
+static int ss_no_rollguard(void)
+{
+    static int on = -1;
+    if (on < 0)
+        on = getenv("SM64DS_SS_NO_ROLLGUARD") != 0;
+    return on;
 }
 
 namespace {
@@ -282,8 +317,19 @@ int lk6_savestate_load(void)
         return 0;
     }
 
+    // SM64DS_SS_NO_ROLLGUARD=1: keep the one-shot guards out of the rollback,
+    // the way a plain host static did before RELOAD2. The fix-off arm.
+    const int norg = ss_no_rollguard();
+    if (norg && g_rollguard_stash) {
+        g_rollguard_stash();
+        fprintf(stderr, "[savestate] SM64DS_SS_NO_ROLLGUARD=1: the one-shot "
+                        "guards will NOT roll back with what they guard\n");
+    }
+
     memcpy(base, g_slot.arena, g_slot.arena_size);
     memcpy(dsstate_base(), g_slot.globals, g_slot.globals_size);
+    if (norg && g_rollguard_unstash)
+        g_rollguard_unstash();
     if (g_slot.hw_size)
         port_hw_regions_copy_in(g_slot.hw);   /* also drops the decode cache */
     port_arena_set_cursor(g_slot.arena_cursor);

@@ -17,6 +17,43 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include "dsstate_seg.h"
+
+/* THE GUARD IS CAPTURED, and it is the same defect the level mount cache had.
+ *
+ * Everything port_ov009_sinits does lands in .dsstate: port_ov009_syms_patch
+ * rebases the overlay image's own words, and the four __sinit functions
+ * construct SharedFilePtrs and Vector3 arrays that are hosted DS globals. A
+ * save-state restore rolls all of that back. While `done` was a plain host
+ * static it did NOT roll back, so the pass never ran again and the world held
+ * RAW DS pointers for the rest of the session -- every access ov009 made
+ * through data_ov009_02112bc4+20 landing on the zero-filled DS reservation at
+ * 0x02112238 instead of the hosted block.
+ *
+ * That was measured before it was fixed. Three runs, one binary
+ * (RELOADRV's ov009_hazard.log, re-run here): a plain castle-grounds boot
+ * reads the record at 00CFB3E8 with "storage in .dsstate (captured)"; a
+ * level-2 boot (ov009 never mounted) reads 02112238, "NOT CAPTURED"; and a
+ * castle-grounds boot that HAD run the sinits, then restored the level-2
+ * state, went back to 02112238 and stayed there.
+ *
+ * Bracketing makes the flag and the bytes it describes roll together, so the
+ * pass re-runs exactly when its results were rolled away and not otherwise --
+ * the same choice, for the same reason, as g_level_mounted in
+ * hal/level_boot.cpp, which has the long form of the argument. */
+DSSTATE_BEGIN
+static int g_ov009_sinits_done;
+DSSTATE_END
+
+/* the fix-off half of the A/B; see port_mount_cache_stash in hal/level_boot.cpp */
+static int g_ov009_sinits_done_stash;
+
+extern "C" void port_ov009_sinit_stash(void)
+{ g_ov009_sinits_done_stash = g_ov009_sinits_done; }
+
+extern "C" void port_ov009_sinit_unstash(void)
+{ g_ov009_sinits_done = g_ov009_sinits_done_stash; }
+
 extern "C" {
 
 void __sinit_ov009_02112458(void);
@@ -56,10 +93,9 @@ static const struct { unsigned rom; void (*host)(void *); } g_bird[4] = {
 
 extern "C" void port_ov009_sinits(void)
 {
-    static int done;
-    if (done)
+    if (g_ov009_sinits_done)
         return;
-    done = 1;
+    g_ov009_sinits_done = 1;
     port_ov009_pack_check();
     /* the per-symbol mount's own internal pointers (the BTA's
        four, the CLPS chain) rebased onto host storage */

@@ -1600,9 +1600,78 @@ static void port_jrb_staticrock_clps_seat(void)
    mount registered with port_level_mount_register owes the same guarantee. */
 extern "C" void port_sqrt_selftest(void);   /* hal/scene_boot.cpp */
 
+/* CAPTURED, and this is the whole of the cross-level reload crash.
+ *
+ * The cache above describes ONE THING: whether this level's overlay image has
+ * been patched. The image IS .dsstate -- tools/ovdata.py routes every mounted
+ * byte and every synthetic gap block into the captured section on purpose --
+ * and d->patch() writes into it. So a save-state restore rolls the IMAGE back
+ * and, while this array was a plain host static, left the CACHE alone. The two
+ * descriptions of the same fact then disagreed, in the one direction that is
+ * fatal: the cache says "patched", the bytes say "raw".
+ *
+ * WHAT THAT COST, measured rather than argued (RELOAD2's four-arm A/B, all
+ * from one binary, restore held fixed and only the warp destination varied):
+ *
+ *   warp to the level THIS PROCESS booted, after restoring a state whose
+ *   session never mounted it   -> cache HIT on a rolled-back image
+ *                                 FAULT c0000005 accessing 000000cc
+ *   warp to a level neither side ever mounted -> cache miss, real patch, clean
+ *   warp to a level the SAVED session mounted but this process did not
+ *                              -> cache miss on an already-patched image, and
+ *                                 clean (the generated passes are pure
+ *                                 absolute assignment, so a second one writes
+ *                                 the same words -- checked, not assumed)
+ *   no restore, the same self-warp (control)  -> clean, two object loads
+ *
+ * The fault is the minimap's. Reading a raw DS pointer out of a rolled-back
+ * overlay does not fault, because ntr/io.cpp reserves the DS address space
+ * zero-filled -- so LVL_Overlay's objTable and sub-table words read as NULL,
+ * Stage::LoadClsnAndObjects loads NO objects (SM64DS_TRACE_LOADERS prints not
+ * one line for that boot), LoadEntranceObjects therefore never spawns a
+ * Player, data_0209f394[data_0209f250] stays 0, and Minimap::InitResources'
+ * GetMinimapID(data_0209f394[data_0209f250], -1) reads obj->+0xcc through it.
+ * Every symptom is downstream of the one silent skipped patch.
+ *
+ * ROLL THE FLAG WITH THE FACT, rather than clearing it or re-running the pass.
+ * Clearing the cache after a restore would force a re-patch of the image the
+ * restore just handed back ALREADY patched. Re-running every pass unguarded
+ * relies on all of them being idempotent, which is not a property the mount
+ * registry can promise for a mount nobody has written yet. Bracketing is the
+ * one option under which the flag and the bytes it describes cannot disagree,
+ * whichever way the restore moves them -- which is the same argument, in the
+ * same words, that hal/lk7_persist.cpp makes for the host file-handle table.
+ *
+ * The cells hold HOST addresses into the mounted images, which are image
+ * addresses and not heap or stack, so lk6's cross-process landmine scan
+ * ([ss-scan]) is untouched by this: it counts words pointing at THIS process's
+ * heap or stack and these are neither. */
+DSSTATE_BEGIN
+static void *g_level_mounted[PORT_LEVEL_COUNT];
+DSSTATE_END
+
+/* The fix-off half of the A/B, so one binary answers both arms.
+ * SM64DS_SS_NO_ROLLGUARD=1 makes lk6's load put these host-side bytes back
+ * after the section copy, which is exactly the pre-fix behaviour: the flags
+ * survive a restore that rolls their subject back. Host storage by
+ * construction -- outside the bracket, so the stash itself never rolls. */
+static void *g_level_mounted_stash[PORT_LEVEL_COUNT];
+
+extern "C" void port_mount_cache_stash(void)
+{
+    std::memcpy(g_level_mounted_stash, g_level_mounted,
+                sizeof g_level_mounted);
+}
+
+extern "C" void port_mount_cache_unstash(void)
+{
+    std::memcpy(g_level_mounted, g_level_mounted_stash,
+                sizeof g_level_mounted);
+}
+
 static void *port_level_mount_at(int idx)
 {
-    static void *mounted[PORT_LEVEL_COUNT];
+    void **mounted = g_level_mounted;
     if (mounted[idx])
         return mounted[idx];
     /* Run mg15 lane SQRT. The square-root self-test is idempotent and default
@@ -2486,6 +2555,13 @@ enum {
     LOADER_EXIT = 10,
 };
 
+/* NOT CAPTURED, and this one is WRITE-ONLY: port_stage_boot_body assigns it and
+   nothing in the tree reads it (grep -rn g_stage_mc port/ finds the definition
+   and the one assignment, nothing else). RELOADRV's reverse scan named it
+   because it holds an arena address, which it does -- and a stale arena address
+   nothing dereferences is not a hazard, it is dead storage. Left in place
+   rather than deleted because that is a separate change from this lane's, and
+   named here so the next reverse scan does not have to re-derive the answer. */
 static void *g_stage_mc;
 
 extern "C" void port_scene_canary(const char *where);
@@ -2581,6 +2657,15 @@ static void port_minimap_stale_probe(const char *when);
  *
  * The two arguments ride in a stash rather than through the dispatch, because
  * the ROM's init Process dispatches int(void) and has nowhere to put them. */
+/* NOT CAPTURED, adjudicated rather than assumed. RELOADRV's reverse scan named
+   g_boot_mc as a host word holding an arena address (3003afcc, the Stage's
+   level MeshCollider). It is a CALL ARGUMENT IN TRANSIT: port_stage_a_boot
+   writes all three, port_stage_lifecycle_boot reads them back through
+   port_stage_boot_arg_mc/_spawn on the same call, and port_stage_boot_set_result
+   fills the third before the same call returns. Nothing reads any of them
+   outside one boot, and no restore lands inside a boot -- the disk read runs
+   after the boot completes and F9 runs in the frame loop -- so what a restore
+   would roll back is a value that is dead until the next boot overwrites it. */
 static void *g_boot_mc;
 static int   g_boot_spawn;
 static void *g_boot_result;
@@ -4087,10 +4172,19 @@ extern "C" void *port_level_overlay(int level);   /* hal/level_change.cpp */
 /* CAPTURED for the same reason as the handle table above: it is a row COPIED
    out of that table, so a restore that rolled the table back and left this
    behind would be the same disagreement one indirection further along. */
+/* THE VALIDITY FLAG RIDES WITH THE ROW IT VALIDATES. Half a description is
+   what this whole family of bugs is made of: a restore that rolled the slot
+   copy back and left the flag saying "there is one" would be the file-handle
+   disagreement again, one indirection further along. Practically inert -- the
+   flag is only non-zero BETWEEN port_level_reset_host and
+   port_level_stage_reseat, a window inside one level change that no restore
+   can land in -- but a pair that cannot disagree needs no such argument, and
+   the argument is what would have to be re-checked the next time the window
+   moves. Four bytes. */
 DSSTATE_BEGIN
 static PortSharedFilePtr g_pending_kcl;
-DSSTATE_END
 static int g_have_pending_kcl;
+DSSTATE_END
 
 /* Resolve the outgoing level's KCL handle and stash its slot for a late free.
    Called from port_level_reset_host BEFORE port_level_latch, so data_0209f2f8
@@ -4504,12 +4598,46 @@ extern "C" void port_level_host_paths(void **table, int *count)
     if (count) *count = data_020a0d8c[0];
 }
 
+/* The two rollback-coupled one-shot guards, stashed and put back together.
+   hal/lk6_savestate.cpp calls this pair only under SM64DS_SS_NO_ROLLGUARD=1,
+   which is the fix-off arm of RELOAD2's A/B; see the hook's comment there and
+   the argument on g_level_mounted above. */
+extern "C" {
+void port_mount_cache_stash(void);
+void port_mount_cache_unstash(void);
+void port_ov009_sinit_stash(void);       /* hal/ov009_boot.cpp */
+void port_ov009_sinit_unstash(void);
+void port_ss_rollguard_hook(void (*stash)(void), void (*unstash)(void));
+}
+
+static void port_rollguard_stash(void)
+{
+    port_mount_cache_stash();
+    port_ov009_sinit_stash();
+}
+
+static void port_rollguard_unstash(void)
+{
+    port_mount_cache_unstash();
+    port_ov009_sinit_unstash();
+}
+
 extern "C" void port_level_mounts_install(void)
 {
+    /* HOST-ONLY, and deliberately not bracketed: what this guards is the host
+       mount REGISTRY (port_level_mount_register), which no restore touches.
+       The flag that had to move into .dsstate is g_level_mounted above, whose
+       subject is the overlay IMAGE. Same shape, opposite adjudication, and the
+       difference is which side of the section the guarded work lands on. */
     static int done;
     if (done)
         return;
     done = 1;
+    /* Register the rollback-coupled guards' A/B hook here rather than in a
+       constructor: this runs in the a2 seat, before the first level boot and
+       before lk7's boot-time disk read, which is before any restore can
+       happen. */
+    port_ss_rollguard_hook(port_rollguard_stash, port_rollguard_unstash);
     for (int i = 0; i < PORT_LEVEL_COUNT; ++i) {
         const PortLevelDesc *d = &port_level_table[i];
         const unsigned ds = port_level_ds_overlay(d->id);
