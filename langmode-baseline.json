@@ -3,11 +3,11 @@
   "codegen_hacks": {
     "cv_launder": 3,
     "cv_launder_sites": 6,
-    "extern_vtable": 247,
-    "extern_vtable_classes": 180,
+    "extern_vtable": 223,
+    "extern_vtable_classes": 175,
     "inline_asm": 13,
-    "launder_or_forced": 213,
-    "launder_sites": 443
+    "launder_or_forced": 212,
+    "launder_sites": 442
   },
   "exclusions": {
     "by_value_class_param": 56
@@ -16,8 +16,8 @@
     "by_kind": {
       "C1": {
         "draft": 0,
-        "migrated": 26,
-        "unmigrated": 15
+        "migrated": 29,
+        "unmigrated": 14
       },
       "C2": {
         "draft": 1,
@@ -31,42 +31,42 @@
       },
       "D0": {
         "draft": 1,
-        "migrated": 284,
-        "unmigrated": 92
+        "migrated": 311,
+        "unmigrated": 66
       },
       "D1": {
         "draft": 1,
-        "migrated": 331,
-        "unmigrated": 52
+        "migrated": 351,
+        "unmigrated": 34
       },
       "D2": {
         "draft": 0,
-        "migrated": 2,
-        "unmigrated": 20
+        "migrated": 6,
+        "unmigrated": 16
       },
       "method": {
         "draft": 11,
-        "migrated": 2317,
-        "unmigrated": 172
+        "migrated": 2342,
+        "unmigrated": 159
       }
     },
-    "cpp_still_handspelled": 154,
-    "mangled_c": 209,
-    "mangled_cpp": 3125,
-    "mangled_total": 3334,
+    "cpp_still_handspelled": 134,
+    "mangled_c": 167,
+    "mangled_cpp": 3184,
+    "mangled_total": 3351,
     "nonmatching_drafts": 14,
-    "unmigrated_total": 363
+    "unmigrated_total": 301
   },
   "shadow_decls": {
-    "local_body_no_include": 1294,
-    "local_body_no_include_cpp": 573,
-    "local_struct_body": 2252,
-    "local_struct_body_cpp": 1270,
-    "pad_layout": 596
+    "local_body_no_include": 1274,
+    "local_body_no_include_cpp": 557,
+    "local_struct_body": 2225,
+    "local_struct_body_cpp": 1249,
+    "pad_layout": 582
   },
   "totals": {
-    "c_extension": 6739,
-    "cpp_extension": 4563,
+    "c_extension": 6687,
+    "cpp_extension": 4615,
     "src_files": 11302
   }
 }
