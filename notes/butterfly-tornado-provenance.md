@@ -12,13 +12,10 @@ cartridge under 2004/b56, checked per function with `build_pin`'s `verify`
 
 ## A rule these four share
 
-Each of these classes is a FLAT shadow struct -- it does not inherit from
-`dActor_c` in C++, it restates the same bytes. So the range 0x000..0x0d0 in
-each of them is `fBase_c`'s and `dActor_c`'s own layout, and the honest name
-for a field there is the one `include/dActor_c.h` already gives that offset.
-`include/Tornado.h` was already doing this over 0x080..0x098; this pass
-finished Tornado's range and did the same for `include/Butterfly.h` and
-`include/StarMarker.h`.
+Tornado and StarMarker remain flat shadow structs that restate `dActor_c`'s
+bytes. Butterfly has since been promoted to genuine `Butterfly : dActor_c`
+class form; its inherited fields therefore come directly from
+`include/dActor_c.h` rather than being repeated locally.
 
 Where `dActor_c` itself still says `unk_`, so does the shadow: `Butterfly`
 writes 0x0a4/0x0a8/0x0ac together as an (x, vertical, z) velocity triple,
@@ -36,27 +33,28 @@ turns into a 1-Up.
 `mState` is a DISPATCH INDEX, and that is the key that opened the rest of the
 class. `Butterfly::Behavior` reads it, looks
 `data_ov100_02148628[mState]` up as a pointer-to-member-function and calls it.
-Every one of the eight `func_ov100_*` files between `_ZN9ButterflyD0Ev`
+Every one of the eight state methods between `_ZN9ButterflyD0Ev`
 (0x02140dd8) and `_ZN9Butterfly16CleanupResourcesEv` (0x02141988) in
 `config/arm9/overlays/ov100/symbols.txt` is therefore one of this class's own
-states, which is where most of the names below come from.
+states. The ROM does not retain their descriptive source names, so they are
+named `Butterfly::State0` through `State7` from their exact PMF-table indices.
 
 | offset | name | evidence |
 | --- | --- | --- |
 | 0x080/0x084/0x088 | `mScaleX/Y/Z` | `dActor_c`'s own offsets. `src/_ZN9Butterfly8BehaviorEv.cpp` writes all three from `mScale` every frame. |
 | 0x08e | `mAngleY` | `dActor_c`'s offset. Behavior copies `mPrevAngleY` here and builds the render matrix from it. |
-| 0x092 | `mPrevAngleX` | `dActor_c`'s offset. `src/func_ov100_0214117c.cpp` eases it toward -0x2000 or 0x2000 to make the butterfly climb or dive. Stays `u16` -- this class indexes the sine table with it unsigned, and renaming must not retype. |
+| 0x092 | `mPrevAngleX` | `dActor_c`'s offset. `Butterfly::State5` eases it toward -0x2000 or 0x2000 to make the butterfly climb or dive. Its sine-table users deliberately load through `u16 *`. |
 | 0x094 | `mPrevAngleY` | `dActor_c`'s offset; the heading, eased toward `mWanderAngle`, toward home, or toward the player depending on state. |
 | 0x098 | `mHorzSpeed` | `dActor_c`'s offset. |
 | 0x0a8 | `mVertSpeed` | `dActor_c`'s offset. |
-| 0x3d4/0x3d8/0x3dc | `mHomePosX/Y/Z` | `src/_ZN9Butterfly13InitResourcesEv.cpp` copies `mPos` here before anything moves. `src/func_ov100_02141470.c` and `src/func_ov100_021415bc.c` snap `mPos` back to it; `src/func_ov100_0214117c.cpp` takes `Vec3_HorzAngle(mPos, mHomePos)` as the heading home. |
-| 0x3e0 | `mScale` | InitResources sets 0x1000 and Behavior copies it into all three scale words. `src/func_ov100_0214109c.cpp` winds it from 0 up to 0x800 in 0x40 steps, or drops it to 0 for a butterfly that is not kind 1; `src/func_ov100_02140e44.cpp` adds a sine-table wobble driven by `mFlutterPhase`. |
+| 0x3d4/0x3d8/0x3dc | `mHomePosX/Y/Z` | `src/_ZN9Butterfly13InitResourcesEv.cpp` copies `mPos` here before anything moves. `State3` and `State2` snap `mPos` back to it; `State5` takes `Vec3_HorzAngle(mPos, mHomePos)` as the heading home. |
+| 0x3e0 | `mScale` | InitResources sets 0x1000 and Behavior copies it into all three scale words. `State6` winds it from 0 up to 0x800 in 0x40 steps, or drops it to 0 for a butterfly that is not kind 1; `State7` adds a sine-table wobble driven by `mFlutterPhase`. |
 | 0x3e4 | `mState` | The dispatch index above. InitResources sets 0, 1 or 4; 4 is inert (Behavior skips the matrix work and `src/_ZN9Butterfly6RenderEv.cpp` draws nothing). |
 | 0x3e8 | `mStateTimer` | Seeded to a random 0..99 by InitResources, then zeroed by every state that hands over. States compare it against 0x14, 0x3c, 0x6e, 0x78, 0x9d and 100. |
-| 0x3ec | `mWanderAngle` | `src/func_ov100_021412d8.c` rolls a random angle into it at spawn and seeds `mPrevAngleY` from it; after 0x3c frames `src/func_ov100_0214117c.cpp` steers toward it instead of toward home. |
-| 0x3ee | `mFlutterPhase` | `src/func_ov100_02140e44.cpp` advances it by 0x2710 or 0xfa0 a frame and feeds it to the sine table to pump `mScale`. Zeroed by `src/func_ov100_0214109c.cpp`. |
-| 0x3f0 | `mKind` | `src/func_ov100_021412d8.c` writes `param1 >> 6` here, and spawns three more of actor 0x150 with a kind in bits 0xc0 -- one of them kind 1. Only kind 1 becomes actor 0x114 in `src/func_ov100_0214109c.cpp`; `src/func_ov100_0214117c.cpp` tests `(u8)(mKind + 0xff) <= 1`, i.e. kind 1 or 2. Behavior skips all movement while it is 0, which is the spawner's own value. |
-| 0x3f1 | `mUseAnimModel` | Behavior and Render both branch on it: 1 draws `mModelAnim` with `mShadowModel1` and advances the animation, 0 draws `mModel` with `mShadowModel2` and does not. Set by InitResources, cleared by `src/func_ov100_0214109c.cpp` alongside `mScale = 0`. |
+| 0x3ec | `mWanderAngle` | `State4` rolls a random angle into it at spawn and seeds `mPrevAngleY` from it; after 0x3c frames `State5` steers toward it instead of toward home. |
+| 0x3ee | `mFlutterPhase` | `State7` advances it by 0x2710 or 0xfa0 a frame and feeds it to the sine table to pump `mScale`. Zeroed by `State6`. |
+| 0x3f0 | `mKind` | `State4` writes `param1 >> 6` here, and spawns three more of actor 0x150 with a kind in bits 0xc0 -- one of them kind 1. Only kind 1 becomes actor 0x114 in `State6`; `State5` tests `(u8)(mKind + 0xff) <= 1`, i.e. kind 1 or 2. Behavior skips all movement while this is 0, which is the spawner's own value. |
+| 0x3f1 | `mUseAnimModel` | Behavior and Render both branch on it: 1 draws `mModelAnim` with `mShadowModel1` and advances the animation, 0 draws `mModel` with `mShadowModel2` and does not. Set by InitResources, cleared by `State6` alongside `mScale = 0`. |
 
 0x3d4..0x3dc, 0x3e8, 0x3ec and 0x3ee were inside `pad_3d4` and `pad_3e8`
 before this pass; the writes above are what took them out of the padding.

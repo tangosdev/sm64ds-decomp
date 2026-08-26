@@ -1,12 +1,17 @@
+//cpp
+#include "Butterfly.h"
+extern "C" {
 extern short data_02082214[];
 extern short Vec3_HorzAngle(const void *a, const void *b);
 extern short Vec3_VertAngle(const void *a, const void *b);
 extern void _Z14ApproachLinearRsss(short *dst, short target, short step);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cyl);
 extern int _ZN8dActor_c15IsPlayerInRangeEi(void *self, int range);
+}
 
-void func_ov100_02141470(char *c)
+void Butterfly::State3()
 {
+    char *c = (char*)this;
     int *p;
 
     _Z14ApproachLinearRsss((short *)(c + 0x94),

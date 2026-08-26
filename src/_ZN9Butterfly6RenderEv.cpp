@@ -2,18 +2,14 @@
 // @symbol _ZN9Butterfly6RenderEv
 /* recovered: named members + shared header, real C++ method */
 #include "Butterfly.h"
-struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
-struct Base2 { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(void*); };
-struct D { char pad[0xd4]; Base b1; char pad2[0x138-0xd8]; Base2 b2; };
 
 int Butterfly::Render()
 {
-  char* c=(char*)((D*)this);
-  if(*(int*)(c+0x3e4)==4) return 1;
-  if(*(unsigned char*)(c+0x3f1)!=0){
-    ((D*)this)->b1.m(0);
+  if(mState == 4) return 1;
+  if(mUseAnimModel != 0){
+    mModelAnim.Render(0);
   } else {
-    ((D*)this)->b2.m(c+0x80);
+    mModel.Render((Vector3*)&mScaleX);
   }
   return 1;
 }

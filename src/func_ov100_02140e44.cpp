@@ -1,8 +1,9 @@
 //cpp
 #include "types.h"
-// @symbol func_ov100_02140e44
+// @symbol _ZN9Butterfly6State7Ev
 /* recovered: shared common types */
 #include "common.h"
+#include "Butterfly.h"
 extern "C" {
 void _Z14ApproachLinearRiii(int* p, int a, int b);
 void* _ZN8dActor_c13ClosestPlayerEv(void* self);
@@ -26,8 +27,9 @@ extern s16 data_02082214[];
 
 #define L(p) ((int)(p))
 
-extern "C" void func_ov100_02140e44(char* c)
+void Butterfly::State7()
 {
+    char* c = (char*)this;
     void* player;
     int r5;
     int v;

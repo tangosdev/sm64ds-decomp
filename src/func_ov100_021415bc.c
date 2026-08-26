@@ -1,9 +1,12 @@
-// @symbol func_ov100_021415bc
+//cpp
+// @symbol _ZN9Butterfly6State2Ev
 /* recovered: shared common types */
 #include "common.h"
+#include "Butterfly.h"
 #pragma opt_common_subs off
 #define M(p) (p)
 
+extern "C" {
 extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern void Vec3_Sub(struct Vector3 *out, void *a, void *b);
 extern int Vec3_HorzLen(struct Vector3 *v);
@@ -12,9 +15,11 @@ extern short Vec3_VertAngle(const void *a, const void *b);
 extern void _Z14ApproachLinearRsss(short *dst, short target, short step);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cyl);
 extern short data_02082214[];
+}
 
-void func_ov100_021415bc(char *c)
+void Butterfly::State2()
 {
+    char *c = (char*)this;
     char *player;
     struct Vector3 v;
     struct Vector3 d;

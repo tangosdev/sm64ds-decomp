@@ -1,9 +1,10 @@
 //cpp
-// @symbol func_ov100_0214117c
+// @symbol _ZN9Butterfly6State5Ev
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_Actor.h"
 /* recovered: shared common types */
 #include "common.h"
+#include "Butterfly.h"
 typedef short s16;
 
 
@@ -17,8 +18,9 @@ extern void _Z14ApproachLinearRsss(s16* val, s16 target, s16 step);
 extern int data_0209e650;
 }
 
-extern "C" void func_ov100_0214117c(char* c)
+void Butterfly::State5()
 {
+    char* c = (char*)this;
     s16 hAngle;
 
     if (!_ZN8dActor_c15IsPlayerInRangeEi(c, 0x5dc)) {
