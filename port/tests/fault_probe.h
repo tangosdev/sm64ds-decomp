@@ -532,8 +532,9 @@ static void port_rich_dump(EXCEPTION_POINTERS *ep, unsigned code,
        hour instead of sending a lane after the wrong bug.
 
        So the block reports measurements, never inferences: a sha the loader
-       computed against what the exe was built for. A folder's name is not
-       evidence and does not appear here.
+       computed against what the exe was built for. The folder path is printed
+       as context; it is never evidence -- the verdict is derived from the
+       shas alone, never from the name.
 
        One line each, pre-composed at boot, so the classifier can key a family
        on "romdata ... MISMATCH" or "savestate refused" without knowing anything

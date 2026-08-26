@@ -1488,10 +1488,14 @@ func_ov006_021230c4  REAL_DECOMP  TTE.md#0x181  slot 25 OnPushed: 0x24, 9 instru
 #                         --base 0x020bfec0 --module ov005 --all --brief
 #
 # with (ADDR, SIZE) the five pairs named in the rows below. --module ov005 is
-# not optional and getting it wrong fails in a confusing direction: match.py
-# prints "bytes match but the reloc-destination check could not run -- NOT a
-# verified match" and then "MATCHING VERSIONS: none", which reads like a byte
-# failure and is really a refusal to certify. Every row below comes back
+# not optional, and the danger is the OPPOSITE of loud: MEASURED (mg15 MENU
+# re-ratify, on func_ov005_020c1a20) -- `--module arm9` reports MATCH,
+# `--module ov5` reports MATCH, `--module` omitted reports MATCH; only
+# `--module ov006` refuses, and via the WRONG-DEST path, not a clean error.
+# A mis-spelled module SILENTLY UNDER-VERIFIES: the byte compare passes and
+# the reloc-destination check quietly runs against the wrong (or no) reloc
+# table. Spell it ov005 exactly, and confirm the output says the reloc
+# destinations were checked. Every row below comes back
 # MATCHING at 2004/b56 (the canonical compiler) WITH the reloc destinations
 # checked, not merely "bytes match". A body the ROM can be rebuilt from is not
 # a behavioural guess, which is the fear the marker stands in for; the marker
