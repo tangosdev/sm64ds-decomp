@@ -21,7 +21,7 @@
 
 struct Squasher : dBgActor_c {
     s16 mAngVelX;                      /* 0x31e */
-    s16 mStateTimer;                      /* 0x320 */
+    u16 mStateTimer;                  /* 0x320 -- ROM reads it with ldrh */
     u8 mState;                       /* 0x322 */
     u8  pad_323[0x1];
     ShadowModel mShadowModel;         /* 0x324 */

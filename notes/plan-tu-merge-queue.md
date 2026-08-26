@@ -885,7 +885,14 @@ has been right every time so far:
 
 1. a declaration's parameter list disagrees with the definition in the same TU (`(void)`, or
    empty parens) → restate from the definition;
-2. the vptr store needs `+ 2` (≈88 Tier-1 TUs);
+2. the vptr store needs `+ 2` -- **but only if the compiled object DEFINES that
+   `_ZTV`** (the TU carries a real `class` and owns its key function). Where the TU still
+   declares `extern int _ZTV<C>[];` with no class in the file, the symbol stays
+   `SHN_UNDEF`, `config/.../symbols.txt` already binds it to the slot array, and the
+   addend must be **0**. `ov036/daObjRcCarpet_c` is the counter-example. Neither byte
+   gate can tell the two apart: `match.compare` wildcards a relocated word and
+   `objisolate.plan()` deliberately whitelists an UNDEF `_ZTV` at addend 8 -- only
+   `linkcheck` catches it. Check `st_shndx` in the `.o` before writing `+ 2`;
 3. a symbol restated locally with a different type than the project header gives it
    (`int*` vs `void*` for the game-heap pointer) → drop the local restatement;
 4. a function declared as data (`extern int f[];`) in a TU that defines `f` → drop it;
@@ -893,3 +900,55 @@ has been right every time so far:
 
 Shapes 1, 3 and 4 are mechanical and scriptable. Shape 2 is a one-token edit. Only the
 class-header gaps (`mMovingMeshCollider`) and the local-class collisions are real judgment.
+
+### 7.4 Reconciling a generated TU against the real headers
+
+`create` emits a **shadow**: local `struct Base { virtual void v0(); ... }` stand-ins for
+real vtables, and callees hand-declared as `extern "C" void _ZN8dActor_c13DistToCPlayerEv(
+char*)`. That compiles and byte-matches, and it is not the deliverable -- a `.cpp` whose
+every call is a hand-mangled `extern "C"` is C with a different file extension, and buys
+nothing the `.c` did not already have. Reconciling is a separate pass with its own
+findings. Measured over the first seven merged TUs (37 hand-spelled mangled names in code
+-> 17):
+
+* **Declaring a C++ callee as `extern "C"` under its mangled name is never necessary for
+  linkage.** Spelled as ordinary C++ against the real header, the compiler produces the
+  same symbol and the same `bl`. `include/SharedFilePtr.h` and `include/Sound.h` both
+  already argue this in their own header comments. Every such substitution in this batch
+  was byte-neutral.
+* **The generated file often does not include its own class's header.** `daObjRcCarpet_c`
+  had a complete `daObjRcCarpet_c : PathLift` declaration with named members and all four
+  methods, while the shadow included `common.h`, `SharedFilePtr.h` and `dBgW.h` -- not
+  `daObjRcCarpet_c.h`. Look there first.
+* **The wall is by-value `Fix12<int>` at a CALL SITE, not just at a definition.** Wall 6az
+  was recorded against method *definitions*; it applies to calls too. `Fix12<T>` is a
+  constructor-less aggregate, so a literal argument needs a named temporary or a compound
+  literal, and mwcc gives **either** one a stack slot the ROM does not have. Both spellings
+  were measured on `Squasher::InitResources` and `::Behavior`: each turns a matching
+  function into a size mismatch. Those call sites keep the mangled `extern "C"`, with the
+  reason at the line. Most of the seven TUs' surviving externs are this one wall.
+* **`*_Spawn` factories are irreducible, and that is a finding, not a gap.** They hand-roll
+  construction over raw storage, so their callees are C++ constructors invoked where no
+  object exists yet -- `_ZN8Particle10SysTrackerC1Ev(p + 0x471c)` has no real C++ spelling.
+  Say so in the file rather than leaving it looking unreviewed.
+* **Shadow structs hide real vtable slots.** `struct Base { virtual void v0(); ... v4();
+  virtual void m(int); }` with `b->m(0)` is `Model::Render(const Vector3 *)`, slot 5,
+  called with a null scale. Count the shadow's virtuals, look that slot up in the real
+  header, and the call reads as itself.
+
+### 7.5 Two defects the reconcile pass surfaced
+
+**A cross-overlay symbol collision in `ov023/Squasher`.** `Squasher::InitResources` loaded
+its collision file through `&_ZN19RotatingPlatformWdwD1Ev` -- a **function in ov029**. The
+intended symbol is `Squasher_ClsnFile`, a **bss variable in ov023**. Both sit at
+0x02112080 because the two overlays load at the same address, so every byte gate was
+satisfied and the wrong name survived. It is a latent break: it decodes correctly only for
+as long as those two overlays keep colliding. Fixed. Anything that picks a name for an
+address without filtering on the module can reproduce this; the reloc-destination check
+prints the module (`!= 0x02112080:ov023`) and is the gate that would have caught it.
+
+**`AddVec3` and `Matrix4x3_FromRotationY` have no header and are re-declared per file.**
+Ten `src_tu/` files declare them locally with mutually contradictory signatures -- `int` vs
+`short` for the angle, `Vec3 *` vs `Vector3 *` vs `void *` for the vectors. They belong in
+`include/decl_common.h` once. Not done here: a `decl_common.h` edit needs an `eligible.py`
+bracket of its own, so it is a separate PR.
