@@ -8,39 +8,39 @@ src/_ZN4ToadD1Ev.cpp:
     complete
     .text start:0x02129020 end:0x02129060
 
-src/_ZN4ToadD0Ev.c:
+src/_ZN4ToadD0Ev.cpp:
     complete
     .text start:0x02129060 end:0x021290b4
 
-src/func_ov085_021290b4.c:
+src/_ZN4Toad12GetMessageIDEv.cpp:
     complete
     .text start:0x021290b4 end:0x021291ac
 
-src/func_ov085_021291ac.c:
+src/_ZN4Toad12St_Talk_MainEv.cpp:
     complete
     .text start:0x021291ac end:0x0212943c
 
-src/func_ov085_0212943c.cpp:
+src/_ZN4Toad12St_Talk_InitEv.cpp:
     complete
     .text start:0x0212943c end:0x02129470
 
-src/func_ov085_02129470.cpp:
+src/_ZN4Toad12St_Idle_MainEv.cpp:
     complete
     .text start:0x02129470 end:0x021294f0
 
-src/func_ov085_021294f0.cpp:
+src/_ZN4Toad12St_Idle_InitEv.cpp:
     complete
     .text start:0x021294f0 end:0x02129524
 
-src/func_ov085_02129524.cpp:
+src/_ZN4Toad8SetStateEi.cpp:
     complete
     .text start:0x02129524 end:0x02129570
 
-src/func_ov085_02129570.cpp:
+src/_ZN4Toad8RunStateEv.cpp:
     complete
     .text start:0x02129570 end:0x021295bc
 
-src/func_ov085_021295bc.c:
+src/_ZN4Toad15UpdateModelPoseEv.cpp:
     complete
     .text start:0x021295bc end:0x021297e8
 
