@@ -1,5 +1,7 @@
+//cpp
 #include "types.h"
-void func_ov002_020b363c(char *c)
+
+extern "C" void func_ov002_020b363c(char *c)
 {
     char *p = *(char**)(c + 0x328);
     int id;
