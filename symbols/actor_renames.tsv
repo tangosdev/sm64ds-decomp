@@ -272,7 +272,7 @@ ov002	0x02108ba0	data_ov002_02108ba0	MegaMushroomBlockTag_SpawnInfo	spawninfo
 ov002	0x02108bbc	data_ov002_02108bbc	GreenShellBlockTag_SpawnInfo	spawninfo
 ov002	0x02108bd8	data_ov002_02108bd8	SilverStarBlockTag_SpawnInfo	spawninfo
 ov002	0x02108bf4	data_ov002_02108bf4	OneUpMushroomBlockTag_SpawnInfo	spawninfo
-ov002	0x02108c18	data_ov002_02108c18	_ZTV10BrickBlock	vtable alloc=0x330
+ov002	0x02108c18	data_ov002_02108c18	_ZTV10BrickBlock	vtable alloc=0xdc
 ov002	0x02108cb4	data_ov002_02108cb4	MegaMushroomTag_SpawnInfo	spawninfo
 ov002	0x02108cd0	data_ov002_02108cd0	MegaMushroomCreateTag_SpawnInfo	spawninfo
 ov002	0x02108cf4	data_ov002_02108cf4	_ZTV21MegaMushroomCreateTag	vtable alloc=0x110
@@ -2303,3 +2303,8 @@ ov085	0x0212a3ec	func_ov085_0212a3ec	_ZN13PrincessPeach6State4Ev	PMF table state
 ov085	0x0212a430	func_ov085_0212a430	_ZN13PrincessPeach17CallStateBehaviorEv	inferred helper ownership: Behavior caller; invokes second PMF
 ov085	0x0212a46c	func_ov085_0212a46c	_ZN13PrincessPeach13CallStateInitEv	inferred helper ownership: SetState caller; invokes first PMF
 ov085	0x0212a4a4	func_ov085_0212a4a4	_ZN13PrincessPeach8SetStateEi	inferred helper ownership: state table select; calls first PMF
+ov002	0x020b41b8	func_ov002_020b41b8	_ZN10BrickBlock11GetSpawnPosER7Vector3RS_	inferred helper ownership: four BrickBlock action callers; destination and owner references
+ov002	0x020b41f8	func_ov002_020b41f8	_ZN10BrickBlock15SpawnKoopaShellEv	PMF action table entry index 2; spawns KoopaShell
+ov002	0x020b4250	func_ov002_020b4250	_ZN10BrickBlock17SpawnMegaMushroomEv	PMF action table entry index 1; spawns MegaMushroom
+ov002	0x020b429c	func_ov002_020b429c	_ZN10BrickBlock18SpawnOneUpMushroomEv	PMF action table entry index 0; spawns OneUpMushroom
+ov002	0x020b42e4	func_ov002_020b42e4	_ZN10BrickBlock15SpawnSilverStarEv	PMF action table entry index 3; spawns SilverStar and marker

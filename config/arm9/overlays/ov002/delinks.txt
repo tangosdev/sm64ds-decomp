@@ -684,27 +684,27 @@ src/_ZN10BrickBlockD1Ev.cpp:
     complete
     .text start:0x020b415c end:0x020b4180
 
-src/_ZN10BrickBlockD0Ev.c:
+src/_ZN10BrickBlockD0Ev.cpp:
     complete
     .text start:0x020b4180 end:0x020b41b8
 
-src/func_ov002_020b41b8.c:
+src/_ZN10BrickBlock11GetSpawnPosER7Vector3RS_.cpp:
     complete
     .text start:0x020b41b8 end:0x020b41f8
 
-src/func_ov002_020b41f8.cpp:
+src/_ZN10BrickBlock15SpawnKoopaShellEv.cpp:
     complete
     .text start:0x020b41f8 end:0x020b4250
 
-src/func_ov002_020b4250.cpp:
+src/_ZN10BrickBlock17SpawnMegaMushroomEv.cpp:
     complete
     .text start:0x020b4250 end:0x020b429c
 
-src/func_ov002_020b429c.cpp:
+src/_ZN10BrickBlock18SpawnOneUpMushroomEv.cpp:
     complete
     .text start:0x020b429c end:0x020b42e4
 
-src/func_ov002_020b42e4.c:
+src/_ZN10BrickBlock15SpawnSilverStarEv.cpp:
     complete
     .text start:0x020b42e4 end:0x020b4394
 
