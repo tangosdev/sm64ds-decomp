@@ -15,10 +15,10 @@ repository by hand, also read:
 - `notes/runbook-type-reconstruction.md`
 - `notes/dtor-migration.md`
 - `notes/plan-cpp-language-mode.md`
-- `.claude/skills/decomp-cpp-class-form/SKILL.md`
-- `.claude/skills/decomp-tu-build/SKILL.md`
-- `.claude/skills/decomp-tu-slicing/SKILL.md`
-- `.claude/skills/agent-lock/SKILL.md`
+- the installed `decomp-cpp-class-form` skill
+- the installed `decomp-tu-build` skill
+- the installed `decomp-tu-slicing` skill
+- the installed local `agent-lock` skill
 
 ## Non-negotiable result
 
@@ -73,8 +73,9 @@ Every agent needs a unique holder name:
 
 ```powershell
 $env:AGENTLOCK_HOLDER = 'cpp-heap'
-python tools/agentlock.py list
-python tools/agentlock.py acquire `
+$AgentLockCli = '<path supplied by the installed agent-lock skill>'
+python $AgentLockCli list
+python $AgentLockCli acquire `
   --files include/Heap.h src/_ZN4HeapD0Ev.c src/_ZN4HeapD1Ev.c `
           config/arm9/symbols.txt config/arm9/delinks.txt `
   --range arm9 0x0203ca10 0x0203ca54 `
@@ -85,12 +86,12 @@ Acquire the complete resource set atomically before dispatching the lane. Renew 
 jobs, and release only after the branch is pushed or deliberately abandoned:
 
 ```powershell
-python tools/agentlock.py renew `
+python $AgentLockCli renew `
   --files include/Heap.h src/_ZN4HeapD0Ev.c src/_ZN4HeapD1Ev.c `
           config/arm9/symbols.txt config/arm9/delinks.txt `
   --range arm9 0x0203ca10 0x0203ca54
 
-python tools/agentlock.py release `
+python $AgentLockCli release `
   --files include/Heap.h src/_ZN4HeapD0Ev.c src/_ZN4HeapD1Ev.c `
           config/arm9/symbols.txt config/arm9/delinks.txt `
   --range arm9 0x0203ca10 0x0203ca54
