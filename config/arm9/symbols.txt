@@ -1622,7 +1622,7 @@ _ZN4HeapD0Ev kind:function(arm,size=0x24) addr:0x0203ca20
 _ZN4HeapD1Ev kind:function(arm,size=0x10) addr:0x0203ca44
 _ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator kind:function(arm,size=0x2c) addr:0x0203ca54
 _ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator kind:function(arm,size=0x2c) addr:0x0203ca80
-_ZN4HeapC1EPvjP4Heap kind:function(arm,size=0x3c) addr:0x0203caac
+_ZN4HeapC1EPvjPS_ kind:function(arm,size=0x3c) addr:0x0203caac
 _ZN4Heap18InitializeRootHeapEv kind:function(arm,size=0x1c) addr:0x0203cae8
 _ZN4Heap13SetupRootHeapEv kind:function(arm,size=0xbc) addr:0x0203cb04
 func_0203cbc0 kind:function(arm,size=0xc) addr:0x0203cbc0
@@ -4361,6 +4361,7 @@ _ZTSN5mHeap9ExpHeap_tE kind:data(any) addr:0x02099d14
 _ZTSN5mHeap11SolidHeap_tE kind:data(any) addr:0x02099d28
 _ZTV9SolidHeap kind:data(any) addr:0x02099d48
 data_02099d90 kind:data(any) addr:0x02099d90
+_ZTV4Heap kind:data(any) addr:0x02099d90
 _ZTV13ExpandingHeap kind:data(any) addr:0x02099dd8
 data_02099e18 kind:data(any) addr:0x02099e18
 data_02099e1c kind:data(any) addr:0x02099e1c

@@ -1,13 +1,7 @@
-extern void *data_02099d90;
-extern void _ZN6Memory16operator_delete2EPv(void *ptr);
+//cpp
+// @symbol _ZN4HeapD0Ev
+#include "Heap.h"
 
-struct Heap {
-    void *vtable;
-};
-
-void *_ZN4HeapD0Ev(struct Heap *self)
+Heap::~Heap()
 {
-    self->vtable = &data_02099d90;
-    _ZN6Memory16operator_delete2EPv(self);
-    return self;
 }
