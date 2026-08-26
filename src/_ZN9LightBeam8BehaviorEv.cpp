@@ -2,43 +2,20 @@
 #include "types.h"
 // @symbol _ZN9LightBeam8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_Message.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "LightBeam.h"
+#include "Message.h"
+#include "Player.h"
 extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(const Vector3* v, const Matrix4x3* m, Vector3* res);
 extern void Vec3_Add(Vector3* out, const Vector3* a, const Vector3* b);
-extern int _ZN6Player12GetTalkStateEv(void* p);
 extern int _Z14ApproachLinearRsss(s16* val, s16 target, s16 step);
-extern void _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* p, void* base, u32 a, const Vector3* v, u32 b, u32 c);
-extern void _ZN7Message7EndTalkEv(void);
-extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern s16 Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
-extern int _ZN6Player9StartTalkER7fBase_cb(void* p, void* base, int b);
-extern void _ZN5dCc_c5ClearEv(void* c);
-extern void _ZN5dCc_c6UpdateEv(void* c);
 }
 
 extern Matrix4x3 data_020a0e68;
-
-struct Obj {
-    char pad0[0x5c];
-    Vector3 pos;        /* 0x5c */
-    char pad1[0x8e - 0x68];
-    s16 angle_8e;       /* 0x8e */
-    char pad2[0x124 - 0x90];
-    u32 clsn_124;       /* 0x124 dCc_c */
-    u32 f128;           /* 0x128 */
-    char pad3[0x144 - 0x12c];
-    u32 f144;           /* 0x144 */
-    u32 f148;           /* 0x148 */
-    char pad4[0x158 - 0x14c];
-    Vector3 vec_158;    /* 0x158 */
-    s32 f164;           /* 0x164 */
-    u16 arr_168[4];     /* 0x168 */
-};
 
 int LightBeam::Behavior()
 {
@@ -46,11 +23,11 @@ int LightBeam::Behavior()
     Vector3 hv;
     Vector3 vIn2, vMid2, vRes2;
 
-    if (((Obj*)this)->f164 != 0) {
-        void* p;
-        if (!_ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt(((Obj*)this), ((Obj*)this)->arr_168))
+    if (mTalkPlayer != 0) {
+        Player *p;
+        if (!_ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt(this, mSoundTimers))
             return 1;
-        p = (void*)((Obj*)this)->f164;
+        p = (Player *)mTalkPlayer;
 
         vIn.x = -0x3b0000;
         vIn.y = 0x200000;
@@ -58,37 +35,37 @@ int LightBeam::Behavior()
         vMid.x = 0;
         vMid.y = 0;
         vMid.z = 0;
-        Matrix4x3_FromRotationY(&data_020a0e68, ((Obj*)this)->angle_8e);
+        Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
         MulVec3Mat4x3(&vIn, &data_020a0e68, &vMid);
-        Vec3_Add(&vRes, &((Obj*)this)->pos, &vMid);
+        Vec3_Add(&vRes, (Vector3 *)&mPosX, &vMid);
 
-        switch (_ZN6Player12GetTalkStateEv(p)) {
+        switch (p->GetTalkState()) {
         case 0:
-            if (_Z14ApproachLinearRsss((s16*)((char*)p + 0x8e), ((Obj*)this)->angle_8e + 0x8000, 0x800)) {
-                _ZN7Message11PrepareTalkEv();
-                _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(p, ((Obj*)this), 0x192, &vRes, 0, 0);
+            if (_Z14ApproachLinearRsss(&p->mAngleY, mAngleY + 0x8000, 0x800)) {
+                Message::PrepareTalk();
+                p->ShowMessage(*this, 0x192, &vRes, 0, 0);
             }
             break;
         case 1:
             break;
         default:
-            _ZN7Message7EndTalkEv();
-            ((Obj*)this)->f164 = 0;
+            Message::EndTalk();
+            mTalkPlayer = 0;
             break;
         }
     } else {
-        if (((Obj*)this)->f144 & 0x8000000) {
-            void* o = _ZN8dActor_c10FindWithIDEj(((Obj*)this)->f148);
+        if (mCylinder.hitFlags & 0x8000000) {
+            dActor_c *o = dActor_c::FindWithID(mCylinder.otherOwner);
             if (o) {
-                int b = (int)(*(u16*)((char*)o + 0xc) == 0xbf);
+                int b = (int)(o->actorID == 0xbf);
                 if (b) {
-                    Vector3* op = (Vector3*)((int)o + 0x5c);
+                    Vector3* op = (Vector3 *)&o->mPosX;
                     hv = *op;
-                    if (AngleDiff(Vec3_HorzAngle(&((Obj*)this)->pos, &hv), ((Obj*)this)->angle_8e) < 0x4000) {
+                    if (AngleDiff(Vec3_HorzAngle((Vector3 *)&mPosX, &hv), mAngleY) < 0x4000) {
                         if (*(s32*)((char*)o + 0x664) == 0xd) {
-                            if (_ZN6Player9StartTalkER7fBase_cb(o, ((Obj*)this), 0)) {
-                                ((Obj*)this)->f164 = (s32)o;
-                                *(s16*)((char*)&mSoundTimer) = 0;
+                            if (((Player *)o)->StartTalk(*this, false)) {
+                                mTalkPlayer = o;
+                                mSoundTimers[0] = 0;
                             }
                         }
                     }
@@ -103,14 +80,14 @@ int LightBeam::Behavior()
     vMid2.x = 0;
     vMid2.y = 0;
     vMid2.z = 0;
-    Matrix4x3_FromRotationY(&data_020a0e68, ((Obj*)this)->angle_8e);
+    Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
     MulVec3Mat4x3(&vIn2, &data_020a0e68, &vMid2);
-    Vec3_Add(&vRes2, &((Obj*)this)->pos, &vMid2);
-    ((Obj*)this)->vec_158.x = vRes2.x;
-    ((Obj*)this)->vec_158.y = vRes2.y;
-    ((Obj*)this)->vec_158.z = vRes2.z;
-    ((Obj*)this)->f128 = 0xf0000;
-    _ZN5dCc_c5ClearEv(&((Obj*)this)->clsn_124);
-    _ZN5dCc_c6UpdateEv(&((Obj*)this)->clsn_124);
+    Vec3_Add(&vRes2, (Vector3 *)&mPosX, &vMid2);
+    mCylinder.pos.x = vRes2.x;
+    mCylinder.pos.y = vRes2.y;
+    mCylinder.pos.z = vRes2.z;
+    mCylinder.radius = 0xf0000;
+    mCylinder.Clear();
+    mCylinder.Update();
     return 1;
 }

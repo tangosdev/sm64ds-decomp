@@ -75,7 +75,7 @@ src/_ZN9LightBeamD1Ev.cpp:
     complete
     .text start:0x021119d0 end:0x02111a08
 
-src/_ZN9LightBeamD0Ev.c:
+src/_ZN9LightBeamD0Ev.cpp:
     complete
     .text start:0x02111a08 end:0x02111a54
 

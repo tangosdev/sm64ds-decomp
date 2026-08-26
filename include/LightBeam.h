@@ -1,30 +1,32 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class LightBeam: 5 matched functions, 3 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef LIGHTBEAM_H
 #define LIGHTBEAM_H
-#include "types.h"
+
+#include "dActor_c.h"
 #include "Model.h"
 #include "dCcAcPos_c.h"
 
-struct LightBeam {
-    u8  pad_000[0xd4];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x0d4 */
-    dCcAcPos_c mdCcAcPos_c;   /* 0x124 */
-    u8  pad_164[0x4];
-    u16 mSoundTimer;              /* 0x168 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();                  /* slot  3 */
-    int InitResources();
-    int Render();
-#endif
+/* The cartridge names this class daObjC1Hikari_c in RTTI. LightBeam is the
+ * readable compatibility spelling already carried by every matched method.
+ * Its __si_class_type_info record points directly at dActor_c, and its
+ * 31-slot vtable has exactly the same extent as that base's table. */
+struct LightBeam : dActor_c {
+    u32 unk_0d0;                  /* 0x0d0 */
+    Model mModel;                 /* 0x0d4 */
+    dCcAcPos_c mCylinder;         /* 0x124 */
+    dActor_c *mTalkPlayer;        /* 0x164 */
+    u16 mSoundTimers[2];          /* 0x168 */
+
+    /* Inline is load-bearing: the two forcing translation units emit the
+     * genuine D1 and D0 while objisolate discards their wrappers/passengers. */
+    virtual ~LightBeam() {}
+
+    virtual int InitResources();
+    virtual int CleanupResources();
+    virtual int Behavior();
+    virtual int Render();
 };
 
-typedef char LightBeam_size_must_be_0x16c[sizeof(struct LightBeam) == 0x16c ? 1 : -1];
+typedef char LightBeam_size_must_be_0x16c[
+    sizeof(LightBeam) == 0x16c ? 1 : -1];
 
 #endif
