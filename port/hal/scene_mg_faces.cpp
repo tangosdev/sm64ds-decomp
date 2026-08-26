@@ -482,12 +482,35 @@ extern "C" unsigned port_mg_trap_hits(void) { return g_mg_trap_hits; }
  * byte-identical cherry-pick of the probe after a trial merge showed it
  * conflicting with OVERLAY's later fixes. Both branches are merged now, the
  * probe is live here, and func_ov006_020d01e0 is seated - the mg12 burst drove
- * this readout on the merged tree and it printed. What still stands between the
- * panel and visible pixels at that measurement: the renderer runs and writes all
- * 128 sub-OAM slots, but the three button centres compute off the 256x192 screen
- * ((-128,48), (384,96), (128,224)) and the +0x4640 animation counter stays 0
- * three hundred frames after the raise, so every sprite parks on the hide row.
- * The next floor is whatever fills +0x4634..+0x463e and steps +0x4640.)
+ * this readout on the merged tree and it printed.
+ *
+ * THAT FLOOR IS CLOSED, run mg14 lane RESULTS, and the diagnosis mg12 left here
+ * was aimed one step too far upstream. mg12 read the panel as needing "whatever
+ * fills +0x4634..+0x463e and steps +0x4640". Nothing was missing from the FILL:
+ * func_ov004_020af27c, the ROM's own slot 27, writes all six halfwords, and
+ * (-128,48) (384,96) (128,224) ARE the values it writes -- the OFF-SCREEN START
+ * of a slide-in. The motion was the missing half, and both the slide and the
+ * stylus hit test live in ONE function, func_ov004_020aeb24, which is why the
+ * buttons being off screen and the taps being ignored were one defect.
+ *
+ * It never reached its three ApproachLinear2 calls. Its first statement is
+ * `if (func_ov004_020b8f78(c + 0xf4) != 0) return;`, and that callee was
+ * DEFINED returning u8 while this one caller declares it int. MSVC writes AL
+ * and leaves EAX's top 24 bits stale, so the test read 0xFFFFFF00 and took the
+ * early return on all 300 frames. src/func_ov004_020b8f78.cpp now returns int,
+ * which mwccarm compiles to the same `ldrb r0` and which leaves the function
+ * MATCHED at 2004/b56 and the 1.2 trio. Measured after: the buttons slide to
+ * (128,48) (128,96) (128,144) over sixteen frames, OAM engine B goes 0 placed
+ * -> 115 placed, and a scripted tap at (128,48) moves +0x4646 off -1, steps
+ * +0x4640 to 0x10000 and dismisses the panel through slot 28.
+ *
+ * WHAT IS STILL OPEN AND IS A DIFFERENT FLOOR: the sprites are placed but their
+ * TILE CONTENT reads as vertical stripes rather than glyphs. Sub OBJ VRAM is
+ * BYTE-IDENTICAL across the raise (97792 nonzero bytes before and after), so
+ * the renderer only submits OAM and the palette and the label font has to have
+ * been uploaded by something else -- which on a probe-raised panel never ran.
+ * Telling "the probe skipped the round-end resource load" apart from a real
+ * tile-source defect needs the panel reached through real play.)
  */
 extern "C" { extern void *data_ov004_020beb68; }
 
