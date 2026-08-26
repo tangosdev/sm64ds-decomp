@@ -5731,7 +5731,7 @@ src/_ZN7MinimapD1Ev.cpp:
     complete
     .text start:0x020f975c end:0x020f978c
 
-src/_ZN7MinimapD0Ev.c:
+src/_ZN7MinimapD0Ev.cpp:
     complete
     .text start:0x020f978c end:0x020f97d0
 
@@ -5779,7 +5779,7 @@ src/_ZN3HUDD1Ev.cpp:
     complete
     .text start:0x020fb8f8 end:0x020fb928
 
-src/_ZN3HUDD0Ev.c:
+src/_ZN3HUDD0Ev.cpp:
     complete
     .text start:0x020fb928 end:0x020fb96c
 

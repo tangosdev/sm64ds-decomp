@@ -48,6 +48,7 @@ take over, ping the claimant first.
 | AmbientSoundEffects, BobOmbBuddy | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus four cleanup/render hooks and two deleting destructors migrated to C++; all thirteen class consumers strict-matched and link-checked with `blind: 0`; Platform/collision work excluded |
 | BabyPenguin, Lakitu | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus four cleanup hooks and two deleting destructors migrated to C++; all fourteen class consumers strict-matched and link-checked with `blind: 0`; Platform/collision work excluded |
 | daObjRcCarpet_c | andrewboudreau | 2026-08-23 | **done** - InitResources and Behavior migrated to real C++; strict matches and link checks verified with `blind: 0`; destructor variants excluded |
+| HUD, Minimap | andrewboudreau | 2026-08-25 | **done** - deleting destructors migrated to compiler-spelled real C++; both strict link checks `VERIFIED`, full build 11060/11060 reproducing and 106/106 modules exact; dFdDummy_c and dBgPi candidates rejected by the full link |
 
 ## Claims
 
