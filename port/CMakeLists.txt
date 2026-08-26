@@ -3173,6 +3173,105 @@ if(NOT T2_DIV_CUT EQUAL 2)
                    "will say that too")
 endif()
 
+# run mg14 lane TITLE2: THE DIVIDER'S ACTUAL LAST RAW CALLER, cstd::mod.
+#
+# The T2 block above says "THE HARDWARE DIVIDER'S LAST RAW CALLER" and it was
+# wrong by one. Its blast-radius sweep bounded itself to cstd::ldiv and
+# fdiv_async and to cstd::fdiv (which is a host face and not in the link at
+# all). It never asked about src/_ZN4cstd3modEii.c, which reaches DIVCNT,
+# DIV_NUMER and DIV_DENOM through the same plain literal-address stores and
+# reads DIV_REM (0x040002a8) back the same way, and which slice_ov007.txt
+# listed as a plain entry. Same failure, same fix, one caller later.
+#
+# WHAT IT ACTUALLY DID, measured on this tree's own binary rather than argued.
+# ntr maps real memory across the DS I/O window, so a plain TU's stores latch
+# and ntr::run_divide is never entered; the read of DIV_REM then returns
+# whatever the last HOSTGEN-ROUTED divide left in the window. cstd::mod was
+# therefore a function that returns the PREVIOUS divide's remainder. The probe
+# in hal/scene_boot.cpp prints the demonstration on one line:
+#
+#     div1000_7=142 mod419_40=6(want19)
+#
+# 1000/7 is 142 remainder 6, and cstd::mod(419, 40) answered 6. cstd::div is
+# correct because slice_gate29.txt routes its whole gate through hostgen; this
+# is the asymmetry that hid it, because the two live one line apart in src/.
+#
+# WHAT IT COST, and this is why a title-screen lane is editing a divider.
+# func_ov007_020b0da0 is the title's attract callback (MATCH at 2004/b56). It
+# computes var_r4 from cstd::mod(counter, 0x28) and ends the attract with
+#
+#     if ((st4 & 2) && (var_r4 == 0 || var_r4 == 0x800)) scene->f_100->f_18 = 0;
+#
+# With a stale mod, var_r4 was never 0 and never 0x800 (measured 614), so the
+# callback pointer was never dropped, so func_ov007_020b0a20's
+# `if (scene->f_100->f_18 == 0)` re-arm never fired, so func_ov007_020be980
+# never restarted the logo animation, so it stayed PAUSED at frame 0 of 157 --
+# f0 == 1 being the one value func_ov007_020c9110 refuses to step -- and
+# scene 1 sat in state 11 forever. The touch was being HEARD the whole time:
+# the same body's stylus hotspot sets st4 |= 2 on the press frame.
+#
+# BLAST RADIUS, SWEPT NOT ASSUMED. `grep -rl _ZN4cstd3modEii src/` is 15 files:
+# the definition and fourteen callers, ALL of them ov007 --
+# 020ae2d0 020aefb4 020af260 020b0da0 020b1cf0 020b2e64 020b9ca8 020ba368
+# 020baa10 020bad8c 020bb4b0 020bed60 020c49bc 020c9d90. So nothing outside the
+# title screen and file select changes behaviour here, and inside it every one
+# of those fourteen was reading a stale remainder. src/ is NOT edited: this is
+# a build-time routing exactly like T2's, so the byte gate cannot move.
+#
+# ONE SLICE LISTS IT (port/slice_ov007.txt), and the cut below is guarded on
+# that count the way T2's is: if a second slice ever lists it the hostgen copy
+# becomes a duplicate symbol and the link says so, and if this cut ever misses
+# the plain entry the link says that too.
+# THE A/B THIS ROUTING GETS AND T2's DID NOT. -DTI2_MOD_PLAIN=ON puts the plain
+# entry back and drops the hostgen copy, so the before/after is two builds off
+# ONE tree with ONE difference, which is what a regression on a build-time
+# change can honestly be. It is a REBUILD and not one binary, so the two arms'
+# .dsstate bases have to be read before their BMPs are compared -- see
+# notes/port-selftest-bmp-gate.md, whose rule this switch exists to satisfy
+# rather than to dodge. Default OFF: the routing is the shipped behaviour.
+option(TI2_MOD_PLAIN "run mg14 TITLE2: build cstd::mod PLAIN (pre-fix arm)" OFF)
+set(TI2_MOD_SYMS _ZN4cstd3modEii)
+if(TI2_MOD_PLAIN)
+    set(TI2_MOD_SYMS "")
+    message(STATUS "TI2: TI2_MOD_PLAIN=ON -- cstd::mod builds PLAIN. This is "
+                   "the PRE-FIX arm: the DS divider is never entered and "
+                   "cstd::mod returns the previous proxied divide's remainder.")
+endif()
+set(TI2_MOD_GEN "")
+foreach(sym IN LISTS TI2_MOD_SYMS)
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${PORT_REPO_ROOT_ABS}/src/${sym}.c"
+                "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND TI2_MOD_GEN "${sym_out}")
+endforeach()
+
+set(TI2_MOD_CUT 0)
+set(SLICE_OV007_SRC_TI2 "")
+foreach(src IN LISTS SLICE_OV007_SOURCES)
+    if(src MATCHES "/_ZN4cstd3modEii\\.c$" AND NOT TI2_MOD_PLAIN)
+        math(EXPR TI2_MOD_CUT "${TI2_MOD_CUT}+1")
+        continue()
+    endif()
+    list(APPEND SLICE_OV007_SRC_TI2 "${src}")
+endforeach()
+set(SLICE_OV007_SOURCES ${SLICE_OV007_SRC_TI2})
+if(TI2_MOD_PLAIN)
+    # The A arm cuts nothing on purpose, so satisfy the guard rather than
+    # letting it print a scary line about a cut that was never meant to happen.
+    set(TI2_MOD_CUT 1)
+endif()
+if(NOT TI2_MOD_CUT EQUAL 1)
+    message(STATUS "TI2: expected to cut 1 plain cstd::mod entry and cut "
+                   "${TI2_MOD_CUT}. If slice_ov007.txt stopped listing "
+                   "src/_ZN4cstd3modEii.c the hostgen copy is still added and "
+                   "the link will say so; if a SECOND slice started listing "
+                   "it, this cut missed it and the link will say that too")
+endif()
+
 # run link60 lane SC1: THE SCENE 1 INTERIM, AND ITS OWN RETIREMENT SWITCH.
 #
 # func_ov007_020c9688 is scene 1's blocker and it is a hole in the DECOMP:
@@ -8016,7 +8115,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE32_SOURCES}
     ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
@@ -8172,7 +8271,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
@@ -8362,7 +8461,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
