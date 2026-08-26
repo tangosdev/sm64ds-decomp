@@ -625,8 +625,11 @@ src/func_ov006_020cfa44.c
 # __fastcall adapters this vtable is bound to. As a .c file its three
 # function-pointer dispatches were 2-of-3 correct by register-allocation luck and
 # 1-of-3 wrong -- slot 0, the position getter, took the VPTR as its receiver, so
-# the element-acceptance test read its candidate's position out of the vtable and
-# a trampoline the player DREW never gained a live count. Emitted game code is
+# that site read an address inside the vtable instead of its candidate's
+# position. NO runtime symptom was ever measured from it: the drawn trampoline
+# installs, gates and catches identically under both spellings (two-arm sweeps,
+# lane and reviewer). The conversion removes a latent defect whose safety was
+# register-allocation luck, at measured zero cost. Emitted game code is
 # byte-identical across the conversion; the banner has the proof and the one
 # spelling that had to change to keep it so.
 src/func_ov006_020d01e0.cpp
