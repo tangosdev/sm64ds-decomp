@@ -109,7 +109,7 @@ shape family is a fraction of the first — and that, not TU count, is what size
   moved text) — they read the reconciled declaration set, each `TUBUILD CONFLICT`
   resolution, and the verify transcript.
 * **Blast radius is bounded by the manifest.** `tubuild` writes only `src_tu/`,
-  `config/tu_manifest.json`, `build/tu/`. It never touches `src/` or
+  `config/tu_manifest.d/`, `build/tu/`. It never touches `src/` or
   `config/**/delinks.txt`, and `promote` is `--dry-run`-only in this tree. A merge batch
   is **purely additive and cannot break the ROM build.** Going to 20 TUs would make the
   PR unreviewable, not risky.
@@ -520,9 +520,10 @@ Every TU in this pool is a key-function TU, so vtable/RTTI emission appears as
 surfaces. Watch the objisolate addend rule: a `_ZTV*` relocation's addend must **lose 8**
 on rebinding; get it wrong and it links clean and corrupts 34 modules.
 
-## 3. Pre-flight static checks — `tools/tu_preflight.py`
+## 3. Pre-flight static checks — a proposed `tools/tu_preflight.py`
 
-Read-only, no compiles. Takes TU ids or `--batch B3`; exits non-zero on any FAIL.
+**NOT WRITTEN.** This section specifies a tool that does not exist in the tree;
+the checks below were run by hand for the batches merged so far. Read-only, no compiles. Takes TU ids or `--batch B3`; exits non-zero on any FAIL.
 
 ```
 python tools/tu_preflight.py ov023/Squasher
@@ -704,7 +705,8 @@ Neither is "blocked only by pragmas/incomplete members".
 Per `tubuild.py inspect` (authoritative over the census): **6 functions without
 `complete`**, of which **3 have no legacy source at all** — `func_ov063_021166ac`,
 `func_ov063_02117cdc`, `_ZN3Boo6RenderEv`/`_ZN3Boo8BehaviorEv`/`_ZN3Boo13InitResourcesEv`
-region. Boo's sources live under `src/actors/Boo/`, a partially-migrated directory.
+region. Boo has NO source directory -- that is what "no legacy source at all"
+means here. `src/actors/BooCage/` is a different class and not a lead.
 3 members carry `opt_propagation off` / `opt_common_subs off` / `optimize_for_size on`.
 **Swallower: 97 functions, 69% of ov063**, carrying 4 class labels, **3 separate vtables**
 (`_ZTV3Boo`, `_ZTV7BooCage`, `_ZTV10BigBooIcon`) and 3 destructor pairs. 94 members is
@@ -819,7 +821,7 @@ where noted.**
 | `ov045/PoleLift` | **7/7 MATCH, objisolate clean, reloc-destinations clean → TEXT-VERIFIED.** The one out-of-order pair is the D1/D0 group, the precedented exception. |
 | `ov045/FallBlockBfs` | **3/5 — NOT verified.** Both destructors `999 word(s) differ` with wrong reloc destinations (`_ZTV10dBgActor_c != 0x021130f4:ov045`). |
 
-`FallBlockBfs` is banked in `config/tu_manifest.json` as `text-verified` and does not
+`FallBlockBfs` is banked in `config/tu_manifest.d/` as `text-verified` and does not
 reproduce today. **A banked status is not evidence.** Re-verify before trusting any entry.
 
 ### Pilot 1 `ov023/Squasher`: 9/9 MATCH → TEXT-VERIFIED

@@ -29,7 +29,7 @@ Planned 2026-08-25. No builds were run during planning.
 
 | census said | tree says | impact |
 |---|---|---|
-| 19 of the 330 already compile as C++ → **311** un-migrated | **15** active, 1 inert, 314 bare → **315** un-migrated. The 15 are all `src/func_ov006_*.c`; 19 `.c` files tree-wide carry an active marker but 4 are tier P3/P4, outside the 330 | stage sizing |
+| 19 of the 330 already compile as C++ → **311** un-migrated | **15** active, 1 inert, 314 bare → **315** un-migrated. The 15 all match the glob `func_ov006_*.c` under `src/`; 19 `.c` files tree-wide carry an active marker but 4 are tier P3/P4, outside the 330 | stage sizing |
 | 3 inert-marker violators "in the positive pool" | only **1** (`src/_ZN7dWipe_c15SetBackwardTimeEj.c`) is in the 1,167. `src/func_0204322c.c` is WEAK-refs-only, `src/func_ov075_0211b1cc.c` is PURE-C | two are not this workstream's problem |
 | — | **262 of the 315** un-migrated direct files are in `build/eligible-names.txt`; **53 are not** | the 53 have no per-file byte gate → TU-work or nothing |
 | — | of the 55 safe-pool TUs containing a provably-C++ `.c`, **all 55 are direct-seeded. Zero purely-transitive safe TUs exist.** | the 837 transitive files split 203 (inside direct-seeded safe TUs) / 634 (blocked TUs). There is no "transitive-only merge" to schedule |
@@ -186,7 +186,9 @@ unaffected by virtualness, and not declaring them `virtual` is what keeps this f
 becoming the key-function TU and emitting `_ZTV` — the exact trap the class-form skill
 warns about. **Preserve that; do not "fix" it to `virtual`.**
 
-The exact edit (`src/_ZN12FallBlockBfs13InitResourcesEv.c`, `0x02111e10`, size `0x14`, ov045):
+The exact edit (`src/_ZN12FallBlockBfs13InitResourcesEv.cpp` -- it was a `.c` when this
+was written; the conversion below is what landed, so the path is now `.cpp`),
+`0x02111e10`, size `0x14`, ov045:
 
 ```cpp
 //cpp
@@ -200,7 +202,7 @@ This is a **real** migration: the compiler mangles the name. Verify that claim w
 oracle **before** the byte gate — it needs no ROM and no serialization:
 
 ```
-python tools/mangle.py src/_ZN12FallBlockBfs13InitResourcesEv.c \
+python tools/mangle.py src/_ZN12FallBlockBfs13InitResourcesEv.cpp \
     --expect _ZN12FallBlockBfs13InitResourcesEv
 ```
 
@@ -356,8 +358,8 @@ python tools/match.py --c src/func_ov027_02111680.c \
 and the pilot deliberately excludes:
 
 ```
-python tools/mangle.py src/_ZN12FallBlockBfs13InitResourcesEv.c --expect _ZN12FallBlockBfs13InitResourcesEv
-python tools/match.py --c src/_ZN12FallBlockBfs13InitResourcesEv.c \
+python tools/mangle.py src/_ZN12FallBlockBfs13InitResourcesEv.cpp --expect _ZN12FallBlockBfs13InitResourcesEv
+python tools/match.py --c src/_ZN12FallBlockBfs13InitResourcesEv.cpp \
     --func _ZN12FallBlockBfs13InitResourcesEv --addr 0x02111e10 --size 0x14 --module ov045
 ```
 
