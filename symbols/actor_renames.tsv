@@ -2284,3 +2284,19 @@ ov072	0x0211fb7c	func_ov072_0211fb7c	_ZN11SnowmanBody10InitState0Ev	PMF state ta
 ov072	0x0211fc3c	func_ov072_0211fc3c	_ZN11SnowmanBody17CallStateBehaviorEv	PMF dispatches second entry in current state pair
 ov072	0x0211fc78	func_ov072_0211fc78	_ZN11SnowmanBody13CallStateInitEv	PMF dispatches first entry in current state pair
 ov072	0x0211fcb0	func_ov072_0211fcb0	_ZN11SnowmanBody8SetStateEi	indexes six-pair PMF table at state times 0x10
+ov085	0x02129dbc	func_ov085_02129dbc	_ZN13PrincessPeach12UpdateLookAtEv	inferred helper ownership: only PrincessPeach::Behavior caller; this offsets
+ov085	0x02129ebc	func_ov085_02129ebc	_ZN13PrincessPeach21UpdateGroundCollisionEP10dBgCh_Actr	inferred helper ownership: PrincessPeach state callers; dBgCh member
+ov085	0x02129fdc	func_ov085_02129fdc	_ZN13PrincessPeach11UpdateModelEv	inferred helper ownership: PrincessPeach lifecycle callers; this offsets
+ov085	0x0212a0b8	func_ov085_0212a0b8	_ZN13PrincessPeach10InitState0Ev	PMF table state 0 first entry
+ov085	0x0212a0e8	func_ov085_0212a0e8	_ZN13PrincessPeach6State0Ev	PMF table state 0 second entry
+ov085	0x0212a148	func_ov085_0212a148	_ZN13PrincessPeach6State2Ev	PMF table state 2 second entry
+ov085	0x0212a150	func_ov085_0212a150	_ZN13PrincessPeach10InitState2Ev	PMF table state 2 first entry
+ov085	0x0212a19c	func_ov085_0212a19c	_ZN13PrincessPeach10InitState4Ev	PMF table state 4 first entry
+ov085	0x0212a1d4	func_ov085_0212a1d4	_ZN13PrincessPeach6State1Ev	PMF table state 1 second entry
+ov085	0x0212a220	func_ov085_0212a220	_ZN13PrincessPeach6State3Ev	PMF table state 3 second entry
+ov085	0x0212a328	func_ov085_0212a328	_ZN13PrincessPeach10InitState1Ev	PMF table state 1 first entry
+ov085	0x0212a37c	func_ov085_0212a37c	_ZN13PrincessPeach10InitState3Ev	PMF table state 3 first entry
+ov085	0x0212a3ec	func_ov085_0212a3ec	_ZN13PrincessPeach6State4Ev	PMF table state 4 second entry
+ov085	0x0212a430	func_ov085_0212a430	_ZN13PrincessPeach17CallStateBehaviorEv	inferred helper ownership: Behavior caller; invokes second PMF
+ov085	0x0212a46c	func_ov085_0212a46c	_ZN13PrincessPeach13CallStateInitEv	inferred helper ownership: SetState caller; invokes first PMF
+ov085	0x0212a4a4	func_ov085_0212a4a4	_ZN13PrincessPeach8SetStateEi	inferred helper ownership: state table select; calls first PMF
