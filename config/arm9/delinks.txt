@@ -6322,15 +6322,15 @@ src/_ZN13ExpandingHeapD1Ev.c:
     complete
     .text start:0x0203c9ec end:0x0203ca10
 
-src/_ZN4HeapD2Ev.c:
+src/_ZN4HeapD2Ev.cpp:
     complete
     .text start:0x0203ca10 end:0x0203ca20
 
-src/_ZN4HeapD0Ev.c:
+src/_ZN4HeapD0Ev.cpp:
     complete
     .text start:0x0203ca20 end:0x0203ca44
 
-src/_ZN4HeapD1Ev.c:
+src/_ZN4HeapD1Ev.cpp:
     complete
     .text start:0x0203ca44 end:0x0203ca54
 
@@ -6342,7 +6342,7 @@ src/_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator.c:
     complete
     .text start:0x0203ca80 end:0x0203caac
 
-src/_ZN4HeapC1EPvjP4Heap.c:
+src/_ZN4HeapC1EPvjPS_.cpp:
     complete
     .text start:0x0203caac end:0x0203cae8
 
