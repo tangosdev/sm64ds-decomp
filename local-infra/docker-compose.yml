@@ -1,0 +1,16 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: sm64ds-agentlock-redis
+    # Loopback-only: this is a local coordination cache for agents on THIS machine,
+    # not a shared/network service like the tangos.dev claims board.
+    ports:
+      - "127.0.0.1:6379:6379"
+    # Locks are meaningful only while an agent session is alive; a restart should
+    # start empty, not resurrect stale locks. No AOF/RDB, no volume.
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
