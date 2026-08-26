@@ -3806,6 +3806,187 @@ static void port_scene_comms_publish(void)
     }
 }
 
+/* ---- THE TITLE'S ATTRACT STATE, ONE LINE PER FRAME -----------------------
+ *
+ * Run mg14, lane TITLE2. SM64DS_TITLE_ATTRACT_PROBE=1, DEFAULT OFF.
+ *
+ * mg12 established that the stylus reaches dScDSMT_c's own tracker and that
+ * the scene sits in state 11 with its 157-frame opening animation frozen at
+ * frame 0. It did not establish WHY, and the three candidate causes have
+ * nothing in common:
+ *
+ *   the animation is never STEPPED   -- func_ov007_020c9110 is the stepper
+ *       (f14 += f18; f10 = f14 >> 12) and it runs only through
+ *       func_ov007_020bc894 <- func_ov007_020bc02c <- func_ov007_020be9ac <-
+ *       func_ov007_020b2370, which func_ov007_020bcf90 calls only when its own
+ *       r4 gate holds. That gate is `*(short*)*(char**)(g+4) == 0 ||
+ *       (== 1 && the state word == 0)`, so with state 11 it needs the g+4
+ *       state machine to read 0. r4 is printed.
+ *   the animation is stepped but PAUSED -- func_ov007_020c9110 only advances
+ *       while f0 == 0; func_ov007_020c9214 sets f0 = 0 and f8 |= 1, and
+ *       func_ov007_020be964 turns f0 0 -> 1. f0 and f8 are printed, and f8's
+ *       low bit is the free witness: 020c9110 CLEARS it on the first tick it
+ *       makes on this object, so f8 even means the stepper has run and f8 odd
+ *       means it has not.
+ *   the SKIP is blocked -- src/func_ov007_020b0a20.c's attract skip needs
+ *       (keyEdge || touchDownEdge) && mode >= 4 && func_ov007_020aebac() == 0
+ *       && anim fc != -1 && anim f10 <= f12 - 0x1F. Every term is printed, so
+ *       the failing one is read off the line rather than inferred.
+ *
+ * func_ov007_020aebac dereferences **(char ***)(g + 0x28) with no null check
+ * of its own, so this probe checks that chain before calling it and prints the
+ * three save-slot bytes and the word at +4 it actually tests.
+ */
+extern "C" {
+int func_ov007_020aebac(void);
+int _ZN4cstd3modEii(int a, int b);
+int _ZN4cstd3divEii(int a, int b);
+}
+static void port_title_attract_probe(int frame, const char *when)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_TITLE_ATTRACT_PROBE");
+        on = e ? std::atoi(e) : 0;
+        if (e && on == 0) on = 1;   /* any non-numeric value means level 1 */
+    }
+    if (!on) return;
+
+    char *g = data_ov007_0210342c;
+    if (!g) {
+        std::fprintf(stderr, "[attract] %s f%-4d NO SCENE GLOBAL\n", when, frame);
+        std::fflush(stderr);
+        return;
+    }
+    const char *s4   = *(const char *const *)(g + 4);
+    const char *s8   = *(const char *const *)(g + 8);
+    const char *p100 = *(const char *const *)(g + 0x100);
+    const char *p104 = *(const char *const *)(g + 0x104);
+    const char *e    = p100 ? *(const char *const *)(p100 + 4) : 0;
+    const char *a    = e ? *(const char *const *)(e + 0x18) : 0;
+    const char *m    = *(const char *const *)(g + 0xf4);
+    const char *ma   = m ? *(const char *const *)(m + 0x18) : 0;
+    const char *q28  = *(const char *const *)(g + 0x28);
+    const char *q    = q28 ? *(const char *const *)q28 : 0;
+    const char *trk  = *(const char *const *)(g + 0x50);
+    const char *keys = *(const char *const *)(g + 0x54);
+
+    const int pA = s4 ? (int)*(const short *)s4 : -999;
+    const int pB = s8 ? (int)*(const short *)s8 : -999;
+    /* src/func_ov007_020bcf90.c's own expression, transcribed. */
+    const int r4 = !((pA != 0) && ((pA != 1) || (pB != 0)));
+
+    const int mode = s8 ? *(const int *)(s8 + 0xc) : -999;
+    std::fprintf(stderr,
+                 "[attract] %s f%-4d s4=%d st=%d next=%d st4=%d mode=%d r4=%d",
+                 when, frame, pA, pB,
+                 s8 ? (int)*(const short *)(s8 + 2) : -999,
+                 s8 ? *(const int *)(s8 + 4) : -999,
+                 mode, r4);
+    /* src/func_ov007_020b0da0.c's own var_r4, recomputed here through the same
+       two hosted DS-divider entry points the ROM body uses, because the whole
+       question is whether the fp-clear branch
+       `(st4 & 2) && (var_r4 == 0 || var_r4 == 0x800)` can ever be true. */
+    if (mode >= 0) {
+        const int m1 = _ZN4cstd3modEii(mode, 0x28);
+        int vr4;
+        if (m1 <= 0) vr4 = 0;
+        else if (m1 >= 0x28) vr4 = 0x1000;
+        else vr4 = _ZN4cstd3divEii(m1 << 12, 0x28);
+        /* THE DIVIDER SELF-TEST, and it is the whole diagnosis in one field.
+           cstd::div is hostgen-routed (slice_gate29.txt) so its DIV_DENOM
+           store reaches ntr::run_divide; cstd::mod is NOT (slice_ov007.txt,
+           plain) so its stores latch in the mapped I/O window and it reads
+           back DIV_REM as whatever the last PROXIED divide left there.
+           div(1000,7) is 142 remainder 6, so a mod that answers 6 to
+           mod(419,40) is returning the previous call's remainder and a mod
+           that answers 19 is doing its own arithmetic. */
+        const int selfdiv = _ZN4cstd3divEii(1000, 7);
+        const int selfmod = _ZN4cstd3modEii(419, 40);
+        std::fprintf(stderr, " m1=%d vr4=%d div1000_7=%d mod419_40=%d(want19)",
+                     m1, vr4, selfdiv, selfmod);
+    }
+    if (a)
+        std::fprintf(stderr,
+                     "  anim{f0=%d f4=%d f8=%d fc=%d f10=%u f12=%u f14=%d f18=%d}",
+                     *(const int *)a, *(const int *)(a + 4), *(const int *)(a + 8),
+                     (int)*(const short *)(a + 0xc),
+                     (unsigned)*(const unsigned short *)(a + 0x10),
+                     (unsigned)*(const unsigned short *)(a + 0x12),
+                     *(const int *)(a + 0x14), *(const int *)(a + 0x18));
+    else
+        std::fprintf(stderr, "  anim{NONE}");
+    if (e)
+        std::fprintf(stderr, "  e94=%d e98=%d e9c=%d",
+                     *(const int *)(e + 0x94), *(const int *)(e + 0x98),
+                     *(const int *)(e + 0x9c));
+    if (p100)
+        std::fprintf(stderr, "  fp=%d b0=%u b1=%u",
+                     *(const int *)(p100 + 0x18) ? 1 : 0,
+                     (unsigned)(unsigned char)p100[0],
+                     (unsigned)(unsigned char)p100[1]);
+    if (p104)
+        std::fprintf(stderr, "  p104fp=%d", *(const int *)(p104 + 0x18) ? 1 : 0);
+    if (ma)
+        std::fprintf(stderr, "  mdl{fc=%d f0=%d f10=%u f12=%u}",
+                     (int)*(const short *)(ma + 0xc), *(const int *)ma,
+                     (unsigned)*(const unsigned short *)(ma + 0x10),
+                     (unsigned)*(const unsigned short *)(ma + 0x12));
+    if (q)
+        std::fprintf(stderr, "  aebac=%d save{%u,%u,%u q4=%d}",
+                     func_ov007_020aebac(),
+                     (unsigned)(unsigned char)q[0xb],
+                     (unsigned)(unsigned char)q[0xc],
+                     (unsigned)(unsigned char)q[0xd],
+                     *(const int *)(q + 4));
+    else
+        std::fprintf(stderr, "  aebac=UNREACHABLE");
+    /* THE STATE-0 TOUCH-TO-START GATE, both halves.
+       src/func_ov007_020b1cf0.c:51 is
+           *(int *)(**(char ***)(g + 0x130) + 0x10) == 0x1000
+        && func_ov007_020c1da0(0) == 0
+       and only then does it look at the tracker. a130 is the first half. */
+    {
+        const char *p130 = *(const char *const *)(g + 0x130);
+        const char *p130o = p130 ? *(const char *const *)p130 : 0;
+        std::fprintf(stderr, "  a130=%d c1da0=%d",
+                     p130o ? *(const int *)(p130o + 0x10) : -999,
+                     func_ov007_020c1da0(0));
+        /* WHAT THE +0x130 OBJECT IS. No ov007 instruction stores to the scene
+           object at +0x130 -- a word-by-word capstone scan of
+           extracted/overlays/overlay_0007.bin at base 0x020ad660 finds exactly
+           one access at that offset in the whole overlay and it is the READ in
+           func_ov007_020b1cf0 -- so the slot is filled somewhere the offset is
+           not spelled literally and the identity has to be read at runtime.
+           SM64DS_TITLE_ATTRACT_PROBE=2 prints the pointers and the first six
+           words of the inner object so the next lane can name the class. */
+        if (on > 1 && p130o) {
+            std::fprintf(stderr, "  p130=%p o=%p w{%08x %08x %08x %08x %08x %08x}",
+                         (const void *)p130, (const void *)p130o,
+                         ((const unsigned *)p130o)[0], ((const unsigned *)p130o)[1],
+                         ((const unsigned *)p130o)[2], ((const unsigned *)p130o)[3],
+                         ((const unsigned *)p130o)[4], ((const unsigned *)p130o)[5]);
+            std::fprintf(stderr, " same_as{f4=%d 100=%d 104=%d 134=%d 40=%d}",
+                         p130 == *(const char *const *)(g + 0xf4),
+                         p130 == *(const char *const *)(g + 0x100),
+                         p130 == *(const char *const *)(g + 0x104),
+                         p130 == *(const char *const *)(g + 0x134),
+                         p130 == *(const char *const *)(g + 0x40));
+        }
+    }
+    if (trk)
+        std::fprintf(stderr, "  trk{now=%u prev=%u rel=%d}",
+                     (unsigned)*(const unsigned short *)(trk + 0x0c),
+                     (unsigned)*(const unsigned short *)(trk + 0x14),
+                     *(const int *)(trk + 0x24));
+    if (keys)
+        std::fprintf(stderr, "  keys{%u,%u}",
+                     (unsigned)*(const unsigned short *)keys,
+                     (unsigned)*(const unsigned short *)(keys + 2));
+    std::fprintf(stderr, "\n");
+    std::fflush(stderr);
+}
+
 /* TITLE LANE DIAGNOSTIC, run mg12. SM64DS_SCENE_TITLE_ALLOC=1 prints the title
    screen's own allocation map once, at the end of the run, and answers ONE
    question with addresses instead of inference: do the two 0x400 OAM shadow
@@ -4262,6 +4443,10 @@ extern "C" void port_scene_tick(int frame, int tick_game)
             port_mg_results_probe(frame);
             /* lane RESULTS (mg14): the lifecycle sweep, same gate. */
             port_mg_results_watch(frame);
+            /* AFTER the actor tick, so the animation object read here is what
+               this frame's tick left rather than what the previous one did.
+               Two integer compares when the variable is unset. */
+            port_title_attract_probe(frame, "tick");
         }
         /* THE DISPLAY SCAN-OUT, which is where IRQ 2 lives. The DS raises the
            HBlank edge once per scanline while the picture is being drawn, and
@@ -4297,6 +4482,14 @@ extern "C" void port_scene_tick(int frame, int tick_game)
             hal_sub_screen_present(&fb.px[0][0], ntr::SCREEN_W, ntr::SCREEN_H);
             if (trace) std::fprintf(stderr, "[scene-trace] f%d render done\n", frame);
         }
+        /* AND AGAIN AFTER THE RENDER, because the title's attract callback
+           func_ov007_020b0da0 is reached from the scene's RENDER slot
+           (ti_render -> func_ov007_020cc2b0 -> func_ov007_020b7040 ->
+           func_ov007_020bcf90 -> func_ov007_020b2370 -> func_ov007_020be9ac ->
+           the object's fp) and not from the behaviour tick. A single pre-tick
+           sample cannot see what that callback did on this frame. */
+        if (tick_game)
+            port_title_attract_probe(frame, "rend");
         if (tick_game)
             port_actor_scene_pass();
 
