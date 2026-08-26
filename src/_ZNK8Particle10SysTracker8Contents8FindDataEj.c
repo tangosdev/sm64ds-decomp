@@ -1,11 +1,22 @@
-void* _ZNK8Particle10SysTracker8Contents8FindDataEj(char* table, int id){
-  if(id==0) return 0;
-  int idx = id & 0xf;
-  char* base = table + (idx<<2);
-  char* node = *(char**)(base + 0x708);
-  while(node){
-    if(id == *(int*)node) return node;
-    node = *(char**)(node+0x18);
-  }
-  return 0;
+//cpp
+// @symbol _ZNK8Particle10SysTracker8Contents8FindDataEj
+/* recovered: real class form -- the compiler spells the mangled name */
+#include "Particle__SysTracker.h"
+
+namespace Particle {
+
+void *SysTracker::Contents::FindData(u32 uniqueID) const
+{
+    if (uniqueID == 0)
+        return 0;
+
+    char *node = (char *)mBuckets[uniqueID & 0xf];
+    while (node) {
+        if ((s32)uniqueID == *(s32 *)node)
+            return node;
+        node = *(char **)(node + 0x18);
+    }
+    return 0;
+}
+
 }
