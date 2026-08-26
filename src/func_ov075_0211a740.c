@@ -5,7 +5,7 @@ extern void func_020733a8(void*, int, int, void*, void*);
 struct P2 { int a, b; };
 extern char data_0208e4b8[];
 extern char _ZTV8dScene_c[];
-extern char _ZTV10dScEntry_c[];
+extern char data_ov075_0211d304[];
 extern struct P2 data_02086b58;
 extern void func_ov075_02115bac(void);
 extern void func_ov075_0211a838(void);
@@ -25,7 +25,7 @@ void* func_ov075_0211a740(void)
             *f |= 1;
             *f |= 4;
         }
-        *(char**)p = _ZTV10dScEntry_c;
+        *(char**)p = data_ov075_0211d304;
         v = data_02086b58;
         *(struct P2*)(p + 0x54) = v;
         *(struct P2*)(p + 0x5c) = v;

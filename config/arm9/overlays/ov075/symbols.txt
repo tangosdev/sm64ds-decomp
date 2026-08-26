@@ -329,6 +329,7 @@ data_ov075_0211d264 kind:data(any) addr:0x0211d264
 data_ov075_0211d290 kind:data(any) addr:0x0211d290 ambiguous
 data_ov075_0211d2ac kind:data(any) addr:0x0211d2ac
 _ZTV10dScEntry_c kind:data(any) addr:0x0211d304
+data_ov075_0211d304 kind:data(any) addr:0x0211d304
 data_ov075_0211d34c kind:data(any) addr:0x0211d34c
 data_ov075_0211d354 kind:data(any) addr:0x0211d354
 data_ov075_0211d35c kind:data(any) addr:0x0211d35c

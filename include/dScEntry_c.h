@@ -1,7 +1,6 @@
 #ifndef DSCENTRY_C_H
 #define DSCENTRY_C_H
 
-#include "dGraph_c.h"
 #include "dScene_c.h"
 
 /* The "entry" scene -- whichever course or minigame is currently loaded, keyed
@@ -20,15 +19,7 @@
  * where naming the full opaque object layout would add unsupported claims.
  */
 struct dScEntry_c : dScene_c {
-    class graphCallback_c : public dGraph_c::callback_c {
-    public:
-        void *compressedBg2Screen; /* 0x04 */
-        void *entryScene;          /* 0x08 */
-        s32 bg2Priority;           /* 0x0c */
-        u8 unk_010[0x1c];          /* 0x10 */
-
-        virtual int GraphCallback2();
-    };
+    class graphCallback_c;
 
     u8  unk_050[0x30];  /* 0x050 -- opaque; icon_c[9] runs 0x070..0x1b4 */
     s32 unk_080;                  /* 0x080 */
@@ -56,7 +47,5 @@ struct dScEntry_c : dScene_c {
 };
 
 typedef char dScEntry_c_size_must_be_0x288[sizeof(dScEntry_c) == 0x288 ? 1 : -1];
-typedef char dScEntry_graphCallback_c_size_must_be_0x2c[
-    sizeof(dScEntry_c::graphCallback_c) == 0x2c ? 1 : -1];
 
 #endif
