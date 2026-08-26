@@ -21,6 +21,8 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "dsstate_seg.h"
+
 extern "C" {
 
 void *_ZN5StageC3Ev(void);
@@ -402,7 +404,20 @@ typedef int(__fastcall *StageSlot0)(void *self, void *dummy);
 // Stage's and the table has to have the Stage's record under it. Both are put
 // back afterwards: the registry owns that table for every other class, and the
 // Stage is not spawned through the spine that would consult it.
+//
+// CAPTURED. This is a HOST MIRROR OF A WORLD POINTER -- the Stage lives in the
+// hosted arena (3003a6b0) and port_stage_render_* reads it every frame -- and
+// a save state rolls the arena back underneath it. It is right today for the
+// same reason RELOAD's file-handle table looked right for thirty arms: the
+// boot allocates the Stage first, so every launch of one build puts it at the
+// same address, so the mirror happens to agree with the world it is mirroring.
+// That is an agreement by coincidence of layout, not by construction, and it
+// is exactly the argument hal/lk7_persist.cpp refutes for the handle table.
+// Four bytes buys the construction. RELOADRV's reverse scan ([ss-rscan])
+// named this symbol; this is the adjudication.
+DSSTATE_BEGIN
 static void *g_stage;
+DSSTATE_END
 
 extern "C" void *port_stage_object(void) { return g_stage; }
 

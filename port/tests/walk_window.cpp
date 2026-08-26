@@ -1251,7 +1251,12 @@ static const int ZOOM = 2;
 #else
 static const int ZOOM = 3;
 #endif
+/* The level MeshCollider every ray in this file is cast against: the STAGE'S
+   own, at Stage+0x91c, on the Stage-backed boot. RELOADRV's reverse scan named
+   it as a host mirror of a world pointer; the restore re-seat re-derives it
+   from the Stage rather than capturing it (see the note at the re-seat). */
 static void *g_mc;
+extern "C" void *port_stage_object(void);   /* hal/stage_bridges.cpp */
 
 /* ---- THE FRAME PACER'S CLOCK ------------------------------------------
    frame_pace below sleeps out the remainder of a frame budget that is 16.65ms
@@ -6030,6 +6035,14 @@ int main(void)
     /* diagnostic: a direct ground ray at the spawn separates a filter
        problem (player flags) from a registry problem (nothing hittable) */
     {
+        /* NOT CAPTURED, and it does not need to be. RELOADRV's reverse scan
+           named this buffer because its +12 word holds the Player (30039f38)
+           -- but that word is an OUTPUT: RaycastGround's constructor runs over
+           the whole 0x50 on the next line and SetObjAndPos writes the object
+           before DetectClsn reads it, every time. A function-scope static that
+           is fully re-constructed before every read cannot carry a stale
+           pointer into a use. (It is a static rather than a local only so the
+           address is stable for the printf walk below.) */
         static char rg[0x50];
         int pos[3] = {*(int *)(c + 0x5c), *(int *)(c + 0x60),
                       *(int *)(c + 0x64)};
@@ -6412,6 +6425,21 @@ int main(void)
         cam = nc;
         an_pivot_live = 0;
         if (cam_mode != CAM_DS && cam) fc_seed(cam);
+        /* g_mc IS A FOURTH POINTER INTO THE WORLD, and RELOADRV's reverse scan
+           found it: it is the Stage's level MeshCollider at Stage+0x91c, set
+           once during setup and then read by every ground and line ray this
+           frame loop casts. RE-DERIVED rather than captured, because it is a
+           harness global in the file whose frame counter and playlog must NOT
+           roll back (hal/dsstate_seg.h draws that line per symbol, and putting
+           a bracket in this file to hold one word invites the later-extern
+           trap that file warns about). The expression is the boot's own, and
+           only for the Stage-backed case: the no-Stage boot points g_mc at
+           mc_storage, a harness buffer, which a restore has no opinion about. */
+        {
+            void *st = port_stage_object();
+            if (st && g_mc != (void *)mc_storage)
+                g_mc = (char *)st + 0x91c;
+        }
     };
     (void)ss_reseat;
 
