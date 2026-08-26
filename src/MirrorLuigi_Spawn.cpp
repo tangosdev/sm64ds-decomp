@@ -10,15 +10,17 @@ extern void* func_020733a8(void* a, int b, int n, void* ctor, void* dtor);
 extern int _ZTV11MirrorLuigi[];
 extern void _ZN15TextureSequenceD1Ev(void*);
 extern void _ZN15TextureSequenceC1Ev(void*);
-void* MirrorLuigi_Spawn(void){
-  char* c = (char*)_ZN7fBase_cnwEj(sizeof(struct MirrorLuigi));
+MirrorLuigi* MirrorLuigi_Spawn(void){
+  MirrorLuigi* c = (MirrorLuigi*)_ZN7fBase_cnwEj(sizeof(MirrorLuigi));
   if (c) {
     _ZN8dActor_cC2Ev(c);
     *(int**)c = _ZTV11MirrorLuigi;
-    _ZN9ModelAnimC1Ev(c+0xd4);
-    _ZN5ModelC1Ev(c+0x138);
-    _ZN11ShadowModelC1Ev(c+0x188);
-    func_020733a8(c+0x1b0, 2, 0x14, (void*)_ZN15TextureSequenceC1Ev, (void*)_ZN15TextureSequenceD1Ev);
+    _ZN9ModelAnimC1Ev(&c->mModelAnim);
+    _ZN5ModelC1Ev(&c->mModel);
+    _ZN11ShadowModelC1Ev(&c->mShadowModel);
+    func_020733a8(&c->mTextureSequences[0], 2, sizeof(TextureSequence),
+                  (void*)_ZN15TextureSequenceC1Ev,
+                  (void*)_ZN15TextureSequenceD1Ev);
   }
   return c;
 }
