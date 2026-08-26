@@ -2303,6 +2303,15 @@ ov085	0x0212a3ec	func_ov085_0212a3ec	_ZN13PrincessPeach6State4Ev	PMF table state
 ov085	0x0212a430	func_ov085_0212a430	_ZN13PrincessPeach17CallStateBehaviorEv	inferred helper ownership: Behavior caller; invokes second PMF
 ov085	0x0212a46c	func_ov085_0212a46c	_ZN13PrincessPeach13CallStateInitEv	inferred helper ownership: SetState caller; invokes first PMF
 ov085	0x0212a4a4	func_ov085_0212a4a4	_ZN13PrincessPeach8SetStateEi	inferred helper ownership: state table select; calls first PMF
+ov027	0x02112158	func_ov027_02112158	_ZN21SnowmanBreathParticleD1Ev	50-element SnowmanBreath helper array destructor target; stride 0x60
+ov027	0x02112170	func_ov027_02112170	_ZN21SnowmanBreathParticle9HitPlayerEv	inferred helper name; SnowmanBreath particle owner and this layout proven by TU calls
+ov027	0x0211233c	func_ov027_0211233c	_ZN21SnowmanBreathParticle12CheckSnowmanEv	inferred helper name; SnowmanBreath particle owner and this layout proven by TU calls
+ov027	0x021123b0	func_ov027_021123b0	_ZN21SnowmanBreathParticle14UpdatePositionEv	inferred helper name; SnowmanBreath particle owner and this layout proven by TU calls
+ov027	0x02112424	func_ov027_02112424	_ZN21SnowmanBreathParticle6RenderEv	inferred helper name; SnowmanBreath particle owner and this layout proven by TU calls
+ov027	0x02112480	func_ov027_02112480	_ZN21SnowmanBreathParticle8BehaviorEv	inferred helper name; SnowmanBreath particle owner and this layout proven by TU calls
+ov027	0x021124e4	func_ov027_021124e4	_ZN21SnowmanBreathParticle8TrySpawnER6Player	inferred helper name and Player reference parameter; owner and call shape proven by TU calls
+ov027	0x021125a8	func_ov027_021125a8	_ZN21SnowmanBreathParticleC1Ev	50-element SnowmanBreath helper array constructor target; stride 0x60
+ov027	0x02112618	func_ov027_02112618	_ZN13SnowmanBreath15IsPlayerInRangeEv	inferred helper name; SnowmanBreath-only Behavior caller and this owner proven
 ov002	0x020b41b8	func_ov002_020b41b8	_ZN10BrickBlock11GetSpawnPosER7Vector3RS_	inferred helper ownership: four BrickBlock action callers; destination and owner references
 ov002	0x020b41f8	func_ov002_020b41f8	_ZN10BrickBlock15SpawnKoopaShellEv	PMF action table entry index 2; spawns KoopaShell
 ov002	0x020b4250	func_ov002_020b4250	_ZN10BrickBlock17SpawnMegaMushroomEv	PMF action table entry index 1; spawns MegaMushroom
