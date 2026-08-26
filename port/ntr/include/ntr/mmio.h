@@ -69,6 +69,19 @@ inline void *host_ptr(uint32_t addr) { return reinterpret_cast<void *>(addr); }
 uint64_t io_read(uint32_t addr, unsigned width);
 void     io_write(uint32_t addr, uint64_t value, unsigned width);
 
+// How many times the square-root unit has actually been RUN this process.
+//
+// A REACH COUNTER, and it exists because "no pixel changed" is two different
+// findings. Run mg15 lane SQRT routed func_02053274 (the 3D distance function)
+// through hostgen and every regression capture came back byte-identical. That
+// is only reassuring once you know whether the body RAN at all in those frames:
+// a fix that changes nothing because nothing called it, and a fix that changes
+// nothing because its answer never flipped a branch, are not the same claim.
+// Reading this on both arms of the A/B gives the call count as a DELTA, since a
+// plain build never enters run_sqrt and a routed one does. One increment on a
+// path that already does a 64-bit integer square root.
+unsigned long sqrt_runs();
+
 // Proxy standing in for `*(volatile T *)addr`. Reads and writes are dispatched so
 // that write-triggered registers run their side effect.
 template <class T>

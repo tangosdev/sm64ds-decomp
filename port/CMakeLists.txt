@@ -3339,14 +3339,27 @@ endif()
 # is a REBUILD and not one binary, so the two arms' .dsstate bases have to be
 # read before their BMPs are compared -- see notes/port-selftest-bmp-gate.md.
 # Default OFF: the routing is the shipped behaviour.
+# AND IT SAYS WHICH ARM IT IS ON EVERY CONFIGURE, not only when the switch is
+# on. `option()` writes to CMakeCache.txt, so a build dir that was once
+# configured with -DSQ_DIST_PLAIN=ON STAYS on the pre-fix arm when the next
+# configure omits the flag entirely. That cost this lane two builds: both were
+# labelled fix-on, both were actually pre-fix, and the only reason it did not
+# reach the write-up is that the self-test printed BROKEN out of a binary that
+# was supposed to be fixed. A guard that only speaks when the switch is set
+# cannot catch its own stale cache, so this one always speaks. Pass the flag
+# explicitly on BOTH arms (-DSQ_DIST_PLAIN=OFF and =ON) and read this line back
+# out of the build log before trusting either binary.
 option(SQ_DIST_PLAIN "run mg15 SQRT: build func_02053274 PLAIN (pre-fix arm)" OFF)
 set(SQ_DIST_SYMS func_02053274)
 if(SQ_DIST_PLAIN)
     set(SQ_DIST_SYMS "")
-    message(STATUS "SQRT: SQ_DIST_PLAIN=ON -- func_02053274 builds PLAIN. This "
-                   "is the PRE-FIX arm: the DS square-root unit is never "
+    message(STATUS "SQRT ARM: SQ_DIST_PLAIN=ON -- func_02053274 builds PLAIN. "
+                   "This is the PRE-FIX arm: the DS square-root unit is never "
                    "entered and the 3D distance function returns the previous "
                    "routed sqrt's result.")
+else()
+    message(STATUS "SQRT ARM: SQ_DIST_PLAIN=OFF -- func_02053274 is ROUTED "
+                   "through hostgen. This is the SHIPPED arm.")
 endif()
 set(SQ_DIST_GEN "")
 foreach(sym IN LISTS SQ_DIST_SYMS)

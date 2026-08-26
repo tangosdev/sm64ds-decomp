@@ -137,6 +137,7 @@
 #include <cstring>
 
 #include "ntr/gx.h"
+#include "ntr/mmio.h"
 #include "ntr/ppu.h"
 #include "ntr/rt.h"
 
@@ -4158,14 +4159,26 @@ extern "C" {
 int func_02053274(int *a, int *b);
 int func_020531a4(int a);
 }
-static void port_sqrt_selftest(void)
+/* CALLED FROM TWO PLACES, and that is not belt and braces. port_scene_begin is
+   the SCENE path (SM64DS_SCENE); a LEVEL run (SM64DS_LEVEL +
+   SM64DS_WINDOW_SELFTEST, the port's own rendering gate) never enters it and
+   boots through hal/level_boot.cpp instead. The first version of this hung only
+   off port_scene_begin, and the level arm of the regression came back with no
+   self-test line at all -- which reads exactly like a self-test that passed.
+   port_level_mount_at calls it too, and the guard below makes the second call a
+   no-op on the paths that reach both. */
+extern "C" void port_sqrt_selftest(void)
 {
+    static int done;
+    if (done) return;
+
     /* Unset or exactly "0" is off; any other value is on. Deliberately not
        atoi: a non-numeric value should turn a diagnostic ON, not silently off,
        which is the same rule the attract probe above settled on. */
     const char *e = std::getenv("SM64DS_SQRT_SELFTEST");
     if (!e) return;
     if (e[0] == '0' && e[1] == '\0') return;
+    done = 1;
 
     volatile unsigned short *sq_cnt = (volatile unsigned short *)0x40002b0;
     volatile unsigned int   *sq_res = (volatile unsigned int *)0x40002b4;
@@ -4213,6 +4226,29 @@ static void port_sqrt_selftest(void)
     sq_par[1] = save_p1;
     *sq_cnt = save_cnt;
     *sq_res = save_res;
+
+    /* THE REACH COUNT, and it is the difference between two findings that look
+       identical in a BMP diff. If the regression captures come back
+       byte-identical, that is only reassuring once you know whether
+       func_02053274 RAN in those frames at all. ntr::sqrt_runs() counts every
+       entry to ntr::run_sqrt, and a PLAIN build never enters it, so the
+       difference between the two arms' final counts IS the number of calls the
+       routing added. The baseline is printed too, because this self-test itself
+       contributes to the count (three routed seeds in both arms, plus four
+       func_02053274 calls in the routed arm only) and that offset has to be
+       visible rather than quietly subtracted. */
+    const unsigned long base = ntr::sqrt_runs();
+    std::fprintf(stderr, "[sqrt-selftest] run_sqrt entries after selftest: %lu\n",
+                 base);
+    static unsigned long s_base;
+    s_base = base;
+    std::atexit([] {
+        std::fprintf(stderr,
+                     "[sqrt-selftest] run_sqrt entries at exit: %lu "
+                     "(selftest baseline %lu, game frames contributed %lu)\n",
+                     ntr::sqrt_runs(), s_base, ntr::sqrt_runs() - s_base);
+        std::fflush(stderr);
+    });
     std::fflush(stderr);
 }
 

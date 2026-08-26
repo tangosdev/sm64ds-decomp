@@ -236,7 +236,10 @@ uint32_t isqrt64(uint64_t v) {
     return static_cast<uint32_t>(root >> 1);
 }
 
+unsigned long g_sqrt_runs;
+
 void run_sqrt() {
+    ++g_sqrt_runs;
     const uint16_t mode = static_cast<uint16_t>(raw_read(SQRTCNT, 2)) & 1;
     uint64_t param = raw_read(SQRT_PARAM, 8);
     if (mode == 0) param &= 0xFFFFFFFFull;      // 32-bit mode
@@ -244,6 +247,12 @@ void run_sqrt() {
 }
 
 }  // namespace
+
+// See the block over the declaration in ntr/mmio.h: this is how a lane tells
+// "nothing changed because nothing called it" apart from "nothing changed
+// because the answer did not flip a branch". A plain TU never reaches here, so
+// the difference between the two arms of a routing A/B IS the call count.
+unsigned long sqrt_runs() { return g_sqrt_runs; }
 
 // ---------------------------------------------------------------------------
 // CLAIMING THE DS ADDRESSES
