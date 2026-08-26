@@ -1592,12 +1592,18 @@ void band_edge_update(const uint32_t *dst, int dst_w, const StackLayout &lay)
      * value the fade has left behind, so the band TRAILS the picture, and the
      * carry paints the whole width of the band with the edge rows.
      *
-     * So the width of the disturbance is the test, and it separates cleanly.
-     * MEASURED, run mg15 lane BAND, scene 372 and scene 384 windowed over 600
-     * frames each: every real crossing moved between 16 and 44 of the 256
-     * columns of an edge (6% to 17%), while the scene's own opening fade moved
-     * 126 to 256 of them (49% to 100%). A third of the row is a wide margin
-     * either side of that gap.
+     * So the width of the disturbance is the test, and it separates. MEASURED,
+     * run mg15 lane BAND, scenes 372 and 384 windowed, the widest edge of each
+     * composed frame:
+     *
+     *     scene 384, 481 frames    allowed peak  32 of 256   refused 93..256
+     *     scene 372, 601 frames    allowed peak  52 of 256   refused 256
+     *
+     * so every real crossing stayed under a fifth of the row and every refused
+     * frame is a scene opening. A third of the row sits inside the gap between
+     * 52 and 93. The low end of that gap is the TAIL of a fade, where the two
+     * cases genuinely do start to look alike; the head of one is never in
+     * doubt.
      *
      * ABOVE IT THE WHOLE TERM STANDS DOWN FOR THAT EDGE, which puts the wash
      * back on the live row exactly -- the picture this file composed before
@@ -2063,9 +2069,19 @@ inline int band_bias_b(const StackLayout &lay)
  * SO EACH ENGINE WRITES ONLY THE G_game ROWS NEAREST ITS OWN EDGE. The upper
  * screen's engine has world -G_game..-1 immediately below its last row: band
  * rows [0, G_game). The lower screen's has the same world rows immediately
- * above its first: band rows [gap_ds - G_game, gap_ds). Between them, when the
- * band is taller than G_game, are rows NO ENGINE HAS at all, and the ghost's
- * blur is what crosses them.
+ * above its first: band rows [gap_ds - G_game, gap_ds).
+ *
+ * WHICH SHOWS THE HIDDEN ROWS TWICE, once anchored to each edge, and that is
+ * the honest cost of a band taller than the truth rather than an oversight.
+ * The three ways to put G_game rows of world into gap_ds rows of picture are:
+ * anchor both continuations to their own edges and let them overlap in world
+ * terms, which is this; centre them, which leaves a blank strip against each
+ * edge and breaks continuity at both; or pick one edge, which breaks it at the
+ * other. CONTINUITY IS THE LAW here -- nothing may visibly vanish at the seam
+ * -- so a 2D crosser drawn twice at two heights beats one drawn against a
+ * discontinuity. It has never been seen either way: no OAM entry reaches the
+ * band on this family at all (measured below), so today this decides nothing
+ * and is written down for the lane that first makes it decide something.
  *
  * LATENT RATHER THAN FILMED, and said plainly because the distinction is the
  * whole weight of this guard. MEASURED, run mg15 lane BAND: on scenes 372 and

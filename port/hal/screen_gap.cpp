@@ -546,14 +546,21 @@ const ntr::StackLayout *hal_screen_layout(void)
            band on screen -- the line said the gap was gone while it was the
            largest it has ever been. This is the line a report about a
            wrong-looking gap is answered from; it may not be the thing that is
-           wrong. */
+           wrong.
+
+           AND THE HINGE ARM PRINTS `want` RATHER THAN THE LITERAL 32, so the
+           day the ruling's number moves this line moves with it instead of
+           becoming the second wrong thing the same reader has to notice. */
+        char hinge[64];
+        std::snprintf(hinge, sizeof hinge,
+                      " (ONE HINGE: the layout draws %d)", want);
         if (raw)
             std::fprintf(stderr, "[gap] scene %d, G %d DS rows%s -> band %d "
                          "host rows, image %dx%d, fill %s, peek %s, art %s\n",
                          scene, raw,
                          want == raw ? ""
                          : want == 0  ? " (MinigameGap off: layout uses 0)"
-                                      : " (ONE HINGE: the layout draws 32)",
+                                      : hinge,
                          g_lay.band_h, g_lay.w, g_lay.h,
                          g_lay.fill_mode == ntr::GAP_FILL_SOLID  ? "solid"
                          : g_lay.fill_mode == ntr::GAP_FILL_CUSTOM
