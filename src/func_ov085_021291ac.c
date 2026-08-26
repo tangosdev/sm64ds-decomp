@@ -1,70 +1,75 @@
+//cpp
+// @symbol _ZN4Toad12St_Talk_MainEv
 #pragma opt_propagation off
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef signed char s8;
-typedef short s16;
-typedef struct { int x, y, z; } Vector3;
-extern int func_ov085_021290b4(char *c);
-extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
-extern int _ZN6Player12GetTalkStateEv(char *p);
-extern int _Z14ApproachLinearRsss(s16 *cur, s16 tgt, s16 step);
-extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, int fix, int loop);
-extern void _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(char *p, char *actor, u32 msg, const Vector3 *pos, u32 d, u32 e);
-extern int IsStarCollectedInCurLevel(void);
-extern u8 NumStars(void);
-extern char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, const void *pos, const void *rot, int a, int b);
-extern int func_02013a44(void);
-extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
-extern void _ZN7fBase_c18MarkForDestructionEv(char *self);
-extern void _ZN8dActor_c13SpawnSoundObjEj(char *self, u32 id);
-extern void _ZN7Message7EndTalkEv(void);
-extern void func_ov085_02129524(char *c, int i);
+#include "Toad.h"
+
+extern "C" {
+extern s16 Vec3_HorzAngle(const Vector3 *, const Vector3 *);
+extern int _ZN6Player12GetTalkStateEv(char *);
+extern int _Z14ApproachLinearRsss(s16 *, s16, s16);
+extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32, u32, u32, int, int);
+extern void _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
+    char *, char *, u32, const Vector3 *, u32, u32);
+extern int IsStarCollectedInCurLevel();
+extern u8 NumStars();
+extern char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
+    u32, u32, const void *, const void *, int, int);
+extern int func_02013a44();
+extern char *_ZN8dActor_c10FindWithIDEj(u32);
+extern void _ZN7fBase_c18MarkForDestructionEv(char *);
+extern void _ZN8dActor_c13SpawnSoundObjEj(char *, u32);
+extern void _ZN7Message7EndTalkEv();
 extern s8 data_0209f2f8;
 extern int data_0209caa0[];
 extern u8 data_ov085_0212f27c[];
-#define M(p) (p)
-void func_ov085_021291ac(char *c)
-{
-    char *p;
-    int r4;
-    s16 ang;
-    Vector3 pv;
-    Vector3 pos;
-    Vector3 pos2;
-    int st;
+}
 
-    p = *(char **)(c + 0x1f8);
-    r4 = func_ov085_021290b4(c);
+#define M(p) (p)
+
+void Toad::St_Talk_Main()
+{
+    char *c = (char *)this;
+    char *player;
+    int messageID;
+    s16 angle;
+    Vector3 playerPos;
+    Vector3 messagePos;
+    Vector3 starPos;
+    int talkState;
+
+    player = (char *)mTalkPlayer;
+    messageID = GetMessageID();
     {
-        int *ps = (int *)(int)M(p + 0x5c);
-        pv.x = ps[0];
-        pv.y = ps[1];
-        pv.z = ps[2];
+        int *pos = (int *)(int)M(player + 0x5c);
+        playerPos.x = pos[0];
+        playerPos.y = pos[1];
+        playerPos.z = pos[2];
     }
-    ang = Vec3_HorzAngle((Vector3 *)(c + 0x5c), &pv);
-    st = _ZN6Player12GetTalkStateEv(p);
-    switch (st) {
+    angle = Vec3_HorzAngle((Vector3 *)(c + 0x5c), &playerPos);
+    talkState = _ZN6Player12GetTalkStateEv(player);
+    switch (talkState) {
     case 0: {
-        if (_Z14ApproachLinearRsss((s16 *)(c + 0x8e), ang, 0x800) == 0)
+        if (_Z14ApproachLinearRsss(&mAngleY, angle, 0x800) == 0)
             return;
         if (data_0209f2f8 == 0x32) {
             if ((data_0209caa0[1] & 0x40000000) == 0)
                 data_0209caa0[1] |= 0x40000000;
         }
-        if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x25, 0x14, 0x7f, 0x15666, 1) == 0)
+        if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(
+                0x25, 0x14, 0x7f, 0x15666, 1) == 0)
             return;
         {
-            int y = *(int *)(c + 0x60);
-            int z = *(int *)(c + 0x64);
+            int y = mPosY;
+            int z = mPosZ;
             int x;
-            y = y + 0x46000;
-            pos.x = *(int *)(c + 0x5c);
-            pos.y = y;
-            pos.z = z;
+            y += 0x46000;
+            messagePos.x = mPosX;
+            messagePos.y = y;
+            messagePos.z = z;
             (void)x;
         }
-        _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(p, c, (u32)(s16)r4, &pos, 0, 0);
+        _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
+            player, c, (u32)(s16)messageID, &messagePos, 0, 0);
         return;
     }
     case 1:
@@ -73,47 +78,43 @@ void func_ov085_021291ac(char *c)
         break;
     }
 
-    if (*(u8 *)(c + 0x20a) == 0) {
-        *(u8 *)(c + 0x20a) = 1;
-        if (*(u8 *)(c + 0x20c) != 0xff) {
-            if (IsStarCollectedInCurLevel() == 0) {
-                if (NumStars() >= data_ov085_0212f27c[*(u8 *)(c + 0x20f)]) {
-                    pos2.x = *(int *)(c + 0x5c);
-                    pos2.y = *(int *)(c + 0x60);
-                    pos2.z = *(int *)(c + 0x64);
-                    pos2.y = pos2.y + 0xc8000;
+    if (mTalkFinished == 0) {
+        mTalkFinished = 1;
+        if (mStarID != 0xff && IsStarCollectedInCurLevel() == 0) {
+            if (NumStars() >= data_ov085_0212f27c[mStarReqIndex]) {
+                starPos.x = mPosX;
+                starPos.y = mPosY;
+                starPos.z = mPosZ;
+                starPos.y += 0xc8000;
+                _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
+                    0xb2, mStarID | 0x20, &starPos, 0, mAreaId, -1);
+                u16 *message = (u16 *)(int)M(c + 0x208);
+                *message = (u16)(*message + 1);
+            }
+        }
+    }
+
+    if (mVariant == 1 && func_02013a44() != 0) {
+        u32 id = mCapUniqueID;
+        if (id != 0) {
+            char *found = _ZN8dActor_c10FindWithIDEj(id);
+            if (found != 0) {
+                _ZN7fBase_c18MarkForDestructionEv(found);
+                mCapUniqueID = 0;
+                _ZN8dActor_c13SpawnSoundObjEj(c, 1);
+                {
+                    u32 param = 0x13;
+                    u8 character = *(u8 *)(player + 0x6d9);
                     _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                        0xb2, *(u8 *)(c + 0x20c) | 0x20, &pos2, 0, *(s8 *)(c + 0xcc), -1);
-                    {
-                        u16 *p208 = (u16 *)(int)M(c + 0x208);
-                        *p208 = (u16)(*p208 + 1);
-                    }
+                        0x10d, param | ((u32)character << 8),
+                        &playerPos, 0, mAreaId, -1);
                 }
             }
         }
     }
 
-    if (*(u8 *)(c + 0x20b) == 1) {
-        if (func_02013a44() != 0) {
-            u32 id = *(u32 *)(c + 0x1f4);
-            if (id != 0) {
-                char *found = _ZN8dActor_c10FindWithIDEj(id);
-                if (found != 0) {
-                    _ZN7fBase_c18MarkForDestructionEv(found);
-                    *(int *)(c + 0x1f4) = 0;
-                    _ZN8dActor_c13SpawnSoundObjEj(c, 1);
-                    {
-                        u32 k = 0x13;
-                        u8 plb = *(u8 *)(p + 0x6d9);
-                        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                            0x10d, k | ((u32)plb << 8), &pv, 0, *(s8 *)(c + 0xcc), -1);
-                    }
-                }
-            }
-        }
-    }
     if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x25, 0x7f, 0, 0x7222, 0) == 0)
         return;
     _ZN7Message7EndTalkEv();
-    func_ov085_02129524(c, 0);
+    SetState(0);
 }

@@ -1,36 +1,42 @@
-extern signed char data_0209f2f8;
-extern int func_020138dc(void);
-extern int func_02013a44(void);
-extern unsigned short ObjectMessageIDToActualMessageID(short);
+//cpp
+// @symbol _ZN4Toad12GetMessageIDEv
+#include "Toad.h"
 
-unsigned short func_ov085_021290b4(char* c) {
-    int* r5 = *(int**)(c + 0x1f8);
-    unsigned short r4 = *(unsigned short*)(c + 0x200 + 8);
+extern "C" {
+extern s8 data_0209f2f8;
+extern int func_020138dc();
+extern int func_02013a44();
+extern u16 ObjectMessageIDToActualMessageID(s16);
+}
+
+u16 Toad::GetMessageID()
+{
+    int *player = (int *)mTalkPlayer;
+    u16 messageID = mMessageID;
+
     if (data_0209f2f8 == 0x32) {
-        int v = func_020138dc();
-        switch (v) {
+        int state = func_020138dc();
+        switch (state) {
         case 0x1c:
             return 0x134;
         case 0: {
-            int msg = ObjectMessageIDToActualMessageID((short)r4);
-            int sum = msg + r5[2];
-            return (unsigned short)sum;
+            int message = ObjectMessageIDToActualMessageID((s16)messageID);
+            int sum = message + player[2];
+            return (u16)sum;
         }
         default:
             return 0x133;
         }
     }
-    if (*(unsigned char*)(c + 0x20b) == 1) {
-        if (func_02013a44() != 0) {
-            int n = r5[2];
-            int t = 0xb0a;
-            t = t + n;
-            return ObjectMessageIDToActualMessageID((short)(unsigned short)t);
-        }
+
+    if (mVariant == 1 && func_02013a44() != 0) {
+        int n = player[2];
+        int message = 0xb0a;
+        message += n;
+        return ObjectMessageIDToActualMessageID((s16)(u16)message);
     }
-    {
-        int msg = ObjectMessageIDToActualMessageID((short)r4);
-        int sum = msg + r5[2];
-        return (unsigned short)sum;
-    }
+
+    int message = ObjectMessageIDToActualMessageID((s16)messageID);
+    int sum = message + player[2];
+    return (u16)sum;
 }

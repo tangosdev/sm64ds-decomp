@@ -1,9 +1,16 @@
 //cpp
+// @symbol _ZN4Toad12St_Idle_InitEv
+#include "Toad.h"
+#include "SharedFilePtr.h"
+
 extern "C" {
-struct BCA_File; struct SharedPtr{void*a;BCA_File*f;};
-extern struct SharedPtr data_ov085_02130488;
-int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*,BCA_File*,int,int,unsigned);
-void func_ov085_021294f0(char*c){
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c+0x108, data_ov085_02130488.f, 0, 0x1000, 0);
+extern SharedFilePtr data_ov085_02130488;
+extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+    void *, BCA_File *, int, int, u32);
 }
+
+void Toad::St_Idle_Init()
+{
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+        &mModelAnim, ((BCA_File **)&data_ov085_02130488)[1], 0, 0x1000, 0);
 }
