@@ -129,11 +129,6 @@
       "symbol": "_ZN8SquasherD2Ev",
       "disposition": "deadstrip",
       "reason": "compiler-generated base-object destructor, byte-identical to D1; the ROM contains no D2 for this class, it has no configured ROM symbol, and nothing relocates to it"
-    },
-    {
-      "symbol": "_ZN7Vector3D1Ev",
-      "disposition": "deadstrip",
-      "reason": "vague-linkage implicit ~Vector3() emitted for the two Vector3 locals in Squasher::Behavior; 4 bytes, no configured ROM symbol, no inbound relocation. Appeared when the shadow `struct Vec3` was replaced with the real type"
     }
   ]
 }
