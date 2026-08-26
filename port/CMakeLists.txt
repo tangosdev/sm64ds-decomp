@@ -8623,3 +8623,54 @@ if(WIN32)
     target_sources(walk_window PRIVATE res/walk_window.rc)
     target_sources(walk_window_hires PRIVATE res/walk_window.rc)
 endif()
+
+# ===========================================================================
+# run mg15 lane MP1: THE SLEEP/WAKE PROBE.
+#
+# runs/mg15/out/MP/FRONTIER.md section 10.2 names the ROM wireless lockstep's
+# OS_SleepThread as the largest unknown in the whole radio-seam plan. These two
+# targets are the experiment it asked for, and they are a matched pair on ONE
+# source file: same probe, two thread implementations.
+#
+#   mp_sleepwake_rom  links the ROM bodies port/slice_gate10.txt already puts
+#                     in every shipped binary (lines 340/347/349) and calls the
+#                     sleep through the real veneer under a structured-exception
+#                     guard. It MEASURES port/nfs_names_map.txt:402's claim that
+#                     "OS_SleepThread would fault in this port anyway".
+#   mp_sleepwake      links port/hal/os_thread.cpp instead.
+#
+# Both link src/func_02042778.c and src/func_0201a4d0.c AS THEMSELVES, so the
+# call really is func_02042778 -> func_0201a4d0 -> OS_SleepThread(data_0209d4fc)
+# and not a transcription of it. Console-only, no window, no BMP.
+add_executable(mp_sleepwake tests/mp_sleepwake.cpp
+    hal/os_thread.cpp
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_02042778.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0201a4d0.c")
+target_include_directories(mp_sleepwake PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_link_libraries(mp_sleepwake PRIVATE ntr)
+target_compile_definitions(mp_sleepwake PRIVATE SM64DS_PLATFORM_PC
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+if(MSVC)
+    target_compile_options(mp_sleepwake PRIVATE /wd4311 /wd4312 /wd4068)
+endif()
+
+add_executable(mp_sleepwake_rom tests/mp_sleepwake.cpp
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/OS_SleepThread.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/OS_WakeupThread.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_02057f54.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_02042778.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0201a4d0.c")
+target_include_directories(mp_sleepwake_rom PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_link_libraries(mp_sleepwake_rom PRIVATE ntr)
+target_compile_definitions(mp_sleepwake_rom PRIVATE SM64DS_PLATFORM_PC
+    MP_PROBE_ROM_THREADS
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+if(MSVC)
+    target_compile_options(mp_sleepwake_rom PRIVATE /wd4311 /wd4312 /wd4068 /EHa)
+endif()
