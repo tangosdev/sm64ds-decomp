@@ -1,27 +1,31 @@
 //cpp
 // @symbol _ZN9HugeCover13InitResourcesEv
 #include "HugeCover.h"
-// recovered name: daObjTdFuta_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* daObjTdFuta_c::InitResources - recovered from vtable slot identity */
+#include "SharedFilePtr.h"
+
+namespace Event { s32 GetBit(u32 bit); }
+
+/* dBgW_KcMbg::SetFile takes Fix12<int> by value. An ordinary member call
+ * triggers mwccarm's by-value-class parameter homing and changes the ROM ABI,
+ * so this one call deliberately retains the measured register-level view. */
 extern "C" {
-extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
-extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
-extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
-extern void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void*);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
-extern int _ZN5Event6GetBitEj(unsigned int);
-s32 HugeCover::InitResources() {
-    char * c = (char *)this;
-  void *f = _ZN5Model8LoadFileER13SharedFilePtr((void*)data_ov032_02113ad4);
-  _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, f, 1, -1);
-  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
-  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
-  void *k = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr((void*)data_ov032_02113acc);
-  _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c+0x124, k, c+0x2ec, 0x199, *(short*)(c+0x8e), data_ov032_02112f98);
-  return _ZN5Event6GetBitEj(0xe) == 0;
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void *self, void *kcl, void *mtx, int scale, short angleY, void *clps);
+extern SharedFilePtr data_ov032_02113acc;
+extern SharedFilePtr data_ov032_02113ad4;
+extern char data_ov032_02112f98;
 }
+
+s32 HugeCover::InitResources()
+{
+    mModel.SetFile((BMD_File *)Model::LoadFile(data_ov032_02113ad4), 1, -1);
+    UpdateModelPosAndRotY();
+    UpdateClsnPosAndRot();
+
+    void *kcl = dBgW_Kc::LoadFile(data_ov032_02113acc);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY,
+        &data_ov032_02112f98);
+
+    return Event::GetBit(0xe) == 0;
 }

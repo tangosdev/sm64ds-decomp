@@ -1,22 +1,17 @@
 //cpp
 // @symbol _ZN9HugeCover16CleanupResourcesEv
 #include "HugeCover.h"
-// recovered name: daObjTdFuta_c_CleanupResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* daObjTdFuta_c::CleanupResources - recovered from vtable slot identity */
-extern "C" {
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov032_02113ad4[];
-}
+#include "SharedFilePtr.h"
 
-s32 HugeCover::CleanupResources() {
-    void * t = (void *)this;
-    if (_ZN4dBgW9IsEnabledEv((char *)t + 0x124)) {
-        _ZN4dBgW7DisableEv((char *)t + 0x124);
-    }
-    _ZN13SharedFilePtr7ReleaseEv(data_ov032_02113ad4);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov032_02113acc);
+extern "C" SharedFilePtr data_ov032_02113acc;
+extern "C" SharedFilePtr data_ov032_02113ad4;
+
+s32 HugeCover::CleanupResources()
+{
+    if (mMeshCollider.IsEnabled())
+        mMeshCollider.Disable();
+
+    data_ov032_02113ad4.Release();
+    data_ov032_02113acc.Release();
     return 1;
 }
