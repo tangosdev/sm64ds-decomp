@@ -5943,13 +5943,9 @@ src/func_0203b438.c:
     complete
     .text start:0x0203b438 end:0x0203b4ac
 
-src/_ZN7fBase_c9SceneNode5ResetEv.c:
+src/actors/ActorBase_SceneNode.cpp:
     complete
-    .text start:0x0203b4ac end:0x0203b4c4
-
-src/_ZN7fBase_c9SceneNodeC1Ev.c:
-    complete
-    .text start:0x0203b4c4 end:0x0203b4dc
+    .text start:0x0203b4ac end:0x0203b4dc
 
 src/_ZN4cstd5atan2E5Fix12IiES1_.c:
     .text start:0x0203b4dc end:0x0203b684

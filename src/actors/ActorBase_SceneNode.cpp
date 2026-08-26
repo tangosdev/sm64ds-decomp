@@ -1,8 +1,8 @@
 //cpp
-/* SHADOW translation unit -- arm9 / fBase_c::SceneNode, the NESTED class.
+/* Production translation unit -- arm9 / fBase_c::SceneNode, the NESTED class.
  *
- * NOT ENROLLED, AND NOT CANONICAL. The two one-function sources under src/
- * remain the enrolled owners of 0x0203b4ac..0x0203b4dc.
+ * This source is the enrolled owner of the complete ROM range
+ * 0x0203b4ac..0x0203b4dc. It replaces the two historical one-function files.
  *
  * WHY THIS IS A SEPARATE TU FROM fBase_c. These are the only two
  * _ZN7fBase_c* functions in the image that are NOT in the class's main run at

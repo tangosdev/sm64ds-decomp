@@ -1,9 +1,9 @@
 {
   "id": "arm9/ActorBase_SceneNode",
   "module": "arm9",
-  "source": "src_tu/actors/ActorBase_SceneNode.cpp",
+  "source": "src/actors/ActorBase_SceneNode.cpp",
   "promoted_source": "src/actors/ActorBase_SceneNode.cpp",
-  "status": "link-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "NOT FROM tu_map. tools/tu_map.py reports the arm9 `main` module as UNDER-SEGMENTED -- one unit 0x20049f0..0x20707a4 with 2984 functions and 73 class labels -- so there is no tu_map boundary and no `tubuild.py create` candidate id. Every line below is hand-derived.",
@@ -89,7 +89,33 @@
         "unlicensedSections": []
       },
       "symbolCheckNewVsBaseline": [],
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
       "linkerOutput": null
     }
+  },
+  "partial_isolation": {
+    "round": "tools/tubuild.py partial -- one compile of the consolidated source, objisolate.derive per licensed function, compared against rombuild.compile_one + objisolate.isolate of each legacy source",
+    "derivedObjects": 2,
+    "contributionEquivalent": "2/2",
+    "comparedFields": [
+      "keptSection",
+      "keptBytes",
+      "relocs",
+      "defined",
+      "mapping",
+      "live",
+      "undefReferenced"
+    ],
+    "legacyEntriesComplete": "2/2",
+    "extraInertImports": 1,
+    "extraImportsWithNoHome": [],
+    "artefacts": "build/tu/arm9-ActorBase_SceneNode/partial/partial.json (gitignored)",
+    "state": "contribution-equivalent",
+    "stateMeaning": "every derived object's linker-visible contribution -- kept section header and bytes, its relocations by symbol name, every defined symbol, every content section still carrying bytes, and every relocation-referenced import -- is byte-identical to what the current per-function compile+isolate pipeline produces for the same function",
+    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
   }
 }
