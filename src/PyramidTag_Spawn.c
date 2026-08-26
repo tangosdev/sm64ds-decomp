@@ -1,5 +1,9 @@
 // @symbol PyramidTag_Spawn
-/* recovered: vtable identified, globals resolved, declarations from a shared header */
+/* The pinned compiler cannot spell the ROM's folded factory in C++: `new
+ * PyramidTag` calls the unavailable global _Znwm, while the cartridge calls
+ * fBase_c::operator new. Placement new and class-specific operator new are
+ * rejected by mwccarm 2004/b56 (notes/ctor-migration.md section 5d), so this
+ * remains the truthful C transcription of the compiler-generated sequence. */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
 #include "decl_dCcAc_c.h"

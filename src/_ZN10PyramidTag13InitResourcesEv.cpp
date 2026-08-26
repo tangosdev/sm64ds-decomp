@@ -1,18 +1,24 @@
 //cpp
 // @symbol _ZN10PyramidTag13InitResourcesEv
-/* recovered: named members + shared header, real C++ method */
-#include "PyramidTag.h"
-extern "C" {
-int _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int, void*);
-void _ZN7fBase_c18MarkForDestructionEv(void*);
-void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void*, void*, int, int, unsigned int, unsigned int);
-}
 
-int PyramidTag::InitResources()
+#include "PyramidTag.h"
+
+/* dCcAc_c::Init takes Fix12<int> values by value. Spelling those as the real
+ * class type makes mwccarm home the register arguments and grows this caller,
+ * so retain the measured scalar ABI view at this one call boundary. */
+extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+    void *, dActor_c *, Fix12i, Fix12i, u32, u32);
+
+s32 PyramidTag::InitResources()
 {
-    int a = _ZN8dActor_c15FindWithActorIDEjPS_(0x55, 0);
-    if(a == 0){ _ZN7fBase_c18MarkForDestructionEv(((char*)this)); return 1; }
-    mPyramidTopID = *(int*)(a+4);
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this)+0xd4, ((char*)this), 0x7d000, 0x28000, 2, 0x400000);
+    dActor_c *top = dActor_c::FindWithActorID(0x55, 0);
+    if (top == 0) {
+        MarkForDestruction();
+        return 1;
+    }
+
+    mPyramidTopID = top->uniqueID;
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+        &mCylinder, this, 0x7d000, 0x28000, 2, 0x400000);
     return 1;
 }
