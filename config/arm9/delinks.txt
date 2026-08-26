@@ -2440,15 +2440,15 @@ src/engine/fader/_ZN9FaderWipe11AdvanceFadeEv.cpp:
     complete
     .text start:0x020172d8 end:0x02017418
 
-src/engine/fader/_ZN9FaderWipeD0Ev.c:
+src/engine/fader/_ZN9FaderWipeD0Ev.cpp:
     complete
     .text start:0x02017418 end:0x02017450
 
-src/engine/fader/_ZN9FaderWipeD1Ev.c:
+src/engine/fader/_ZN9FaderWipeD1Ev.cpp:
     complete
     .text start:0x02017450 end:0x02017480
 
-src/engine/fader/_ZN9FaderWipeC1Ev.c:
+src/engine/fader/_ZN9FaderWipeC1Ev.cpp:
     complete
     .text start:0x02017480 end:0x020174e0
 
@@ -4420,11 +4420,11 @@ src/func_0202fb30.c:
     complete
     .text start:0x0202fb30 end:0x0202fbc8
 
-src/_ZN7dWipe_cD0Ev.c:
+src/_ZN7dWipe_cD0Ev.cpp:
     complete
     .text start:0x0202fbc8 end:0x0202fc08
 
-src/_ZN7dWipe_cD1Ev.c:
+src/_ZN7dWipe_cD1Ev.cpp:
     complete
     .text start:0x0202fc08 end:0x0202fc40
 
