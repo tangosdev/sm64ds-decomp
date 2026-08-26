@@ -1,3 +1,4 @@
+//cpp
 // NONMATCHING: instruction scheduling and one block-copy spelling
 // (49 of 503 code words differ). Run mg12, lane INST.
 //
@@ -14,6 +15,41 @@
 // ROM's: 0x1f at +0x329, the three accept tests (d3 < 0x100, d2 <= best,
 // d2 > -0x24000), the -half < d1 < half extent test, the 0x400000 branch,
 // 0x1b1 / 0x1ae, and the 0x180 / 0x100 / 0x555 grid steps.
+//
+// THIS IS A C++ TU AND THAT IS THE HOST DISPATCH, NOT A STYLE CHOICE. Run mg13
+// lane BOUNCE. The element is declared as a class with four virtuals and the
+// three dispatch sites are spelled obj->IsActive(), obj->GetPos() and
+// obj->GetDir(), which is what src/func_ov006_020ce8a0.cpp and
+// src/func_ov006_020ce108.cpp -- the other ROM bodies on this same vtable --
+// already do.
+//
+// AS A .c FILE IT DISPATCHED THROUGH C FUNCTION-POINTER CASTS AND ONE OF THE
+// THREE SITES WAS BROKEN. The port binds this vtable's slots to __fastcall
+// adapters, which take the receiver in ECX; a C function-pointer call is
+// __cdecl and pushes it on the stack, leaving ECX to register allocation.
+// dumpbin of the .c object showed 2-of-3 lucky and 1-of-3 wrong:
+//
+//   site A, slot 3 IsActive    mov ecx,[ebx] ... push ecx      ECX = OBJECT, lucky
+//   site B, slot 0 GetPos      mov eax,[ebx] / push eax /
+//                              mov ecx,[eax]                   ECX = VPTR, BROKEN
+//   site C, slot 2 GetDir      mov ecx,[ebx] ... push ecx      ECX = OBJECT, lucky
+//
+// Site B is the position getter, so the installer's element-acceptance test read
+// its candidate's position out of the hosted vtable words. The live symptom was
+// that a trampoline the player DRAWS got real geometry from the stroke and then
+// never gained a live count or a render gate, while the scene's own starting
+// trampoline worked -- characters bouncing off the starter and falling through
+// anything drawn. func_ov006_020cfc74 had the same defect at both of its
+// position sites and this is the same fix.
+//
+// THE EMITTED BYTES ARE UNCHANGED BY THE CONVERSION, and that is measured:
+// compiled at 2004/b56 the .c at -lang c99 and this file at -lang c++ produce
+// the SAME 0x7e8 bytes, the same 27 relocations and the same sha256 over the
+// emitted function. One spelling had to change to keep that true: C++ mode
+// copies `bestP = curP` memberwise as two three-word moves, four bytes more than
+// the ROM's single block copy, so the assignment goes through the flat PairRaw
+// view above. Six spellings were measured; the POD cast and a union pun are the
+// two that reproduce the ROM's shape, and the POD cast is the readable one.
 //
 // THE DIVERGENCES, and the 49 are ACCOUNTED FOR IN FULL below -- the five named
 // ranges hold 42, and the remaining 7 are the already-stated length delta (-24
@@ -148,34 +184,41 @@ typedef s32 Fix12i;
 
 struct Vec3 { s32 x, y, z; };
 struct Pair { struct Vec3 a, b; };
+/* the flat view of Pair. C++ mode copies a Pair memberwise and costs four
+   bytes; this POD keeps the ROM's single 24-byte block copy. See the banner. */
+struct PairRaw { s32 w[6]; };
 typedef struct Vec3 Vector3;
 
-extern void Vec3_Add(struct Vec3* out, struct Vec3* a, struct Vec3* b);
-extern void Vec3_MulScalar(struct Vec3* out, struct Vec3* in, int s);
-extern void Vec3_Sub(struct Vec3* out, struct Vec3* a, struct Vec3* b);
-extern void func_0203ce80(struct Vec3* dst, struct Vec3* src);
-extern void func_0203cf00(struct Vec3* out, struct Vec3* a, struct Vec3* b);
-extern void Vec3_MulScalarInPlace(int *v, int s);
-extern void SubVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
-extern Fix12i Vec3_Dist(const Vector3* a, const Vector3* b);
-extern Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
-extern int _ZN4cstd4fdivEii(int a, int b);
-extern void func_ov006_020cf040(void *a, void *b, void *c);
-extern void func_ov006_020cf124(void *a);
-extern void func_ov006_020e6db4(int a0, int a1, int a2);
-extern void func_ov006_020cfa28(char *p);
-extern void func_ov006_020cfc58(char *p);
+extern "C" void Vec3_Add(struct Vec3* out, struct Vec3* a, struct Vec3* b);
+extern "C" void Vec3_MulScalar(struct Vec3* out, struct Vec3* in, int s);
+extern "C" void Vec3_Sub(struct Vec3* out, struct Vec3* a, struct Vec3* b);
+extern "C" void func_0203ce80(struct Vec3* dst, struct Vec3* src);
+extern "C" void func_0203cf00(struct Vec3* out, struct Vec3* a, struct Vec3* b);
+extern "C" void Vec3_MulScalarInPlace(int *v, int s);
+extern "C" void SubVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
+extern "C" Fix12i Vec3_Dist(const Vector3* a, const Vector3* b);
+extern "C" Fix12i DotVec3(const Vector3 *a, const Vector3 *b);
+extern "C" int _ZN4cstd4fdivEii(int a, int b);
+extern "C" void func_ov006_020cf040(void *a, void *b, void *c);
+extern "C" void func_ov006_020cf124(void *a);
+extern "C" void func_ov006_020e6db4(int a0, int a1, int a2);
+extern "C" void func_ov006_020cfa28(char *p);
+extern "C" void func_ov006_020cfc58(char *p);
 
-extern void *data_ov006_0214097c[];
-extern s32 data_ov006_0213b2fc;
-extern s32 data_ov006_0213b300;
-extern s32 data_ov006_0213b2f8;
-extern s32 data_ov006_0213b304;
+extern "C" struct Elem *data_ov006_0214097c[];
+extern "C" s32 data_ov006_0213b2fc;
+extern "C" s32 data_ov006_0213b300;
+extern "C" s32 data_ov006_0213b2f8;
+extern "C" s32 data_ov006_0213b304;
 
-typedef s32 (*IsActiveFn)(void *);
-typedef struct Vec3 *(*GetVecFn)(void *);
+struct Elem {
+    virtual struct Vec3 *GetPos();
+    virtual struct Vec3 *GetTargetPos();
+    virtual struct Vec3 *GetDir();
+    virtual s32 IsActive();
+};
 
-void func_ov006_020d01e0(short *g, short *p1, short *p2)
+extern "C" void func_ov006_020d01e0(short *g, short *p1, short *p2)
 {
     char *c = (char *)g;
     struct Vec3 va, vb;
@@ -188,9 +231,9 @@ void func_ov006_020d01e0(short *g, short *p1, short *p2)
     s32 flag;
     struct Vec3 *sl, *sb;
     s32 bestVal, bestD1;
-    void *bestObj;
+    struct Elem *bestObj;
     s32 k;
-    void *obj;
+    struct Elem *obj;
     struct Vec3 *pos, *dir;
     s32 d1, d2, d3;
     s32 absC, blendVal, ratio;
@@ -350,14 +393,14 @@ void func_ov006_020d01e0(short *g, short *p1, short *p2)
     do {
         obj = data_ov006_0214097c[k];
         if (obj != 0) {
-            if (((IsActiveFn)((*(void ***)obj))[3])(obj) != 0) {
+            if (obj->IsActive() != 0) {
                 obj = data_ov006_0214097c[k];
-                pos = ((GetVecFn)((*(void ***)obj))[0])(obj);
+                pos = obj->GetPos();
                 curP.a.x = pos->x;
                 curP.a.y = pos->y;
                 curP.a.z = pos->z;
                 obj = data_ov006_0214097c[k];
-                dir = ((GetVecFn)((*(void ***)obj))[2])(obj);
+                dir = obj->GetDir();
                 curP.b.x = dir->x;
                 curP.b.y = dir->y;
                 curP.b.z = dir->z;
@@ -371,7 +414,7 @@ void func_ov006_020d01e0(short *g, short *p1, short *p2)
                 if (d3 < 0x100 && d2 <= bestVal && d2 > -0x24000) {
                     s32 h = *(s32 *)(c + 0x58);
                     if (d1 > -h && d1 < h) {
-                        bestP = curP;
+                        *(struct PairRaw *)&bestP = *(struct PairRaw *)&curP;
                         bestObj = obj;
                         bestVal = d2;
                         bestD1 = d1;

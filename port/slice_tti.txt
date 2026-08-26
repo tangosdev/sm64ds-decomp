@@ -584,7 +584,16 @@ src/func_ov006_020cd72c.c
 # in unmatched/MgTrampolineTime_Floors.cpp, so that file no longer defines it
 # and its floor counter now reads a retired 0. An honest NONMATCHING seat; the
 # banner in the file states its four divergences.
-src/func_ov006_020d01e0.c
+# A C++ TU since run mg13 lane BOUNCE, and that is the host dispatch: it reaches
+# the element through a class with virtuals so MSVC emits __thiscall into the
+# __fastcall adapters this vtable is bound to. As a .c file its three
+# function-pointer dispatches were 2-of-3 correct by register-allocation luck and
+# 1-of-3 wrong -- slot 0, the position getter, took the VPTR as its receiver, so
+# the element-acceptance test read its candidate's position out of the vtable and
+# a trampoline the player DREW never gained a live count. Emitted game code is
+# byte-identical across the conversion; the banner has the proof and the one
+# spelling that had to change to keep it so.
+src/func_ov006_020d01e0.cpp
 # THE MESH DRAW, seated by run mg13 lane TRAMP, and the last thing between a
 # drawn stroke and a trampoline the player can see. src/func_ov006_020d09e0.c
 # calls it once per record whose +0x328 gate the installer above set, so with
