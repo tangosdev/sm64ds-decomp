@@ -1582,10 +1582,43 @@ void band_edge_update(const uint32_t *dst, int dst_w, const StackLayout &lay)
             if (w) ++ncross[e];
         }
 
+    /* ---- A CROSSING IS LOCAL, AND A FADE IS NOT --------------------------
+     *
+     * The deviation test cannot tell "something is passing through this row"
+     * from "this whole row is changing", and the second happens on every scene
+     * transition: a fade moves every column at once, past every threshold, for
+     * as long as the fade runs. Left alone, that has the band do exactly the
+     * two things this lane exists to stop -- the wash blends toward a settled
+     * value the fade has left behind, so the band TRAILS the picture, and the
+     * carry paints the whole width of the band with the edge rows.
+     *
+     * So the width of the disturbance is the test, and it separates cleanly.
+     * MEASURED, run mg15 lane BAND, scene 372 and scene 384 windowed over 600
+     * frames each: every real crossing moved between 16 and 44 of the 256
+     * columns of an edge (6% to 17%), while the scene's own opening fade moved
+     * 126 to 256 of them (49% to 100%). A third of the row is a wide margin
+     * either side of that gap.
+     *
+     * ABOVE IT THE WHOLE TERM STANDS DOWN FOR THAT EDGE, which puts the wash
+     * back on the live row exactly -- the picture this file composed before
+     * this lane, following the fade the way it always has -- and carries
+     * nothing. An object genuinely wide enough to cover a third of the screen
+     * while crossing would be refused too; nothing in these games is, and a
+     * band that occasionally declines to draw a ghost is a far smaller thing
+     * than a band that smears itself over every scene change. */
+    for (int e = 0; e < 2; ++e)
+        if (ncross[e] > 256 / 3) {
+            std::memset(g_edge_w[e], 0, sizeof g_edge_w[e]);
+            ncross[e] = -ncross[e];   /* the trace reports it as a refusal */
+        }
+
     ++g_band_frame;
     g_band_carried = 0;
     if (band_trace_on()) {
         const int g = band_game_g(lay);
+        /* A NEGATIVE COUNT IS THE WIDTH REFUSAL, not a smaller number: that
+           edge saw the disturbance and declined to call it a crossing, and a
+           reader has to be able to tell it from an edge that saw nothing. */
         std::fprintf(stderr, "[band] f%u scene G %d DS rows, layout draws %d "
                      "(%d host), upper engine writes band rows 0..%d, lower "
                      "%d..%d; crossers: upper edge %d/256 columns, lower edge "
