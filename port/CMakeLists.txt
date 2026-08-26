@@ -3526,6 +3526,159 @@ if(NOT SQ_DIST_CUT EQUAL 1)
                    "link will say so; if a SECOND slice started listing it, this "
                    "cut missed it and the link will say that too")
 endif()
+# ---- run mg15 lane TITLETEX: ov007's GEOMETRY COMMAND PORTS ----------------
+#
+# THE SAME DEFECT AS TI2 ABOVE, one register block over, and this is the one
+# the owner has been looking at since his first title-screen test: "any other
+# graphics than those have jumbled glitchy textures", and on the fresh f300 /
+# f450 captures, "its just a big glitched yellow texture".
+#
+# WHAT WAS MEASURED, before anything was changed. SM64DS_MTX_BALANCE=1 (added
+# to port/ntr/gx.cpp by this lane) prints, per command port, the commands the
+# geometry engine EXECUTED next to the word sitting in the mapped I/O window at
+# that same port. On SM64DS_SCENE=1, 300 frames, off the unmodified tree:
+#
+#     MTX_PUSH   04000444  exec        0  latch 00000000
+#     MTX_POP    04000448  exec        0  latch 00000001   <-- STORED, NEVER EXECUTED
+#     MTX_MULT_4x3 04000464 exec    17951
+#     MTX_SCALE  0400046c  exec    11051
+#     VIEWPORT   04000580  exec        0  latch bfff0000   <-- STORED, NEVER EXECUTED
+#     SWAP_BUFFERS 04000540 exec       0  latch 00000002   <-- STORED, NEVER EXECUTED
+#     pos_sp = 0 on every one of the 300 frames, and 0 at exit
+#
+# ZERO MATRIX PUSHES AND ZERO POPS IN A WHOLE RUN, against 17,951 matrix
+# multiplies. The position stack level never leaves 0 -- read per frame, not at
+# one endpoint, because an endpoint cannot tell a bracket that balanced from
+# one that never ran. The title screen brackets each of the ~27 objects it
+# places per frame with MTX_PUSH ... MTX_POP, and not one of those brackets
+# reaches the engine: src/func_ov007_020c421c.c, _020ca5f0.c and _020b413c.c
+# write the push and the pop as PLAIN literal stores, and ntr maps real memory
+# across 0x04000000, so each one latches a word and the geometry engine is
+# never told. Everything the bracket was meant to contain -- the MTX_MULT_4x3
+# that src/func_ov007_020c42f8.c submits through func_0205532c, which IS routed
+# and DOES arrive -- stays applied to the live matrix for the rest of the
+# frame, and the model drawn after it is transformed by an accumulated product
+# nothing in the ROM ever computes. The audit's geometry census is the picture
+# of that: bounding box x -227.094 .. 1025.594, y -480.132 .. 811.985 on a
+# 512x384 panel, 0 degenerate, projection correct. The frame is one surface
+# stretched past every edge, which is the yellow.
+#
+# THE SAME THREE FILES DROP THEIR MTX_SCALE the same way, so every object also
+# loses the scale it was placed at, and src/func_ov007_020c0078.c -- the
+# title's own perspective setup -- drops MTX_STORE and VIEWPORT. The viewport
+# word it stores is bfff0000, which decodes to (0,0)-(255,191), the whole DS
+# screen; ntr::gx_reset's fallback rectangle is the same rectangle at the
+# host's 2x tier, so THAT one costs nothing today and is routed for
+# faithfulness rather than for a symptom. MTX_STORE is not free: its slot is
+# what func_ov007_020c0078's own MTX_RESTORE readers come back to.
+#
+# THE TREATMENT IS THE ONE THE PORT ALREADY USES FOR THIS CLASS and it costs
+# nothing in the ledger: port/tools/hostgen.py rewrites the literal derefs to
+# NTR_MMIO so the store dispatches through ntr::io_write, src/ is not edited,
+# and every one of these translation units stays byte-matched. It is the same
+# block shape as T2's divider, TI2's cstd::mod above and the SQRTUNIT group.
+#
+# THE SET IS THE MEASURED ONE, not a guess. port/tools/hostgen.py's own MMIO
+# patterns were run over every source in walk_window's build.ninja that is
+# compiled straight out of the tree, with comments stripped so a banner
+# quoting a register does not count as a writer. Twelve ov007 translation
+# units reach a geometry command port that way; they are all here. THE THREE
+# ov007 DIVIDER TUs THAT THE SAME SCAN FOUND (func_ov007_020c30ac,
+# _020c31e0, _020c7d60) ARE DELIBERATELY NOT IN THIS SET: they are the
+# DIV/SQRT unit, run mg15's SQRT lane owns that register block in the same
+# wave, and two lanes routing the same class in one run is how a duplicate
+# symbol arrives. They are recorded in this lane's results for the next wave.
+#
+# THE KILL SWITCH IS -DTITEX_GX_PLAIN=ON and it gives the plain arm back on the
+# same tree, which is what a build-time routing can honestly offer. It is a
+# REBUILD and not one binary, so the two arms' .dsstate bases have to be read
+# before their BMPs are compared -- notes/port-selftest-bmp-gate.md. THE ARM IS
+# PRINTED ON EVERY CONFIGURE, in both directions, because run mg15's SQRT lane
+# proved that a CMake option() CACHES and an A/B switch that only announces one
+# arm silently keeps the wrong one.
+option(TITEX_GX_PLAIN
+       "run mg15 TITLETEX: build ov007's geometry-port TUs PLAIN (pre-fix arm)"
+       OFF)
+set(TITEX_GX_SYMS
+    func_ov007_020b413c    # MTX_PUSH  MTX_POP
+    func_ov007_020b6c54    # SWAP_BUFFERS
+    func_ov007_020c0078    # MTX_STORE  VIEWPORT
+    func_ov007_020c1404    # PLTT_BASE
+    func_ov007_020c1448    # TEXIMAGE_PARAM
+    func_ov007_020c232c    # LIGHT_VECTOR  LIGHT_COLOR
+    func_ov007_020c421c    # MTX_PUSH  MTX_POP  MTX_SCALE
+    func_ov007_020c42f8    # MTX_SCALE
+    func_ov007_020c49bc    # TEXCOORD VTX_16 VTX_XZ VTX_YZ BEGIN_VTXS END_VTXS
+    func_ov007_020c4fcc    # COLOR  POLYGON_ATTR  TEXIMAGE_PARAM
+    func_ov007_020ca5f0    # MTX_PUSH MTX_POP MTX_SCALE MTX_TRANS POLYGON_ATTR
+                           # DIF_AMB SPE_EMI
+    func_ov007_020ca86c)   # NORMAL  VTX_16  BEGIN_VTXS  END_VTXS
+list(LENGTH TITEX_GX_SYMS TITEX_GX_WANT)
+if(TITEX_GX_PLAIN)
+    message(STATUS "TITEX: TITEX_GX_PLAIN=ON -- ov007's ${TITEX_GX_WANT} "
+                   "geometry-port TUs build PLAIN. This is the PRE-FIX arm: "
+                   "MTX_PUSH/MTX_POP/MTX_SCALE/VIEWPORT latch in mapped memory "
+                   "and the geometry engine is never told.")
+else()
+    message(STATUS "TITEX: TITEX_GX_PLAIN=OFF -- ov007's ${TITEX_GX_WANT} "
+                   "geometry-port TUs route through hostgen (shipped arm).")
+endif()
+set(TITEX_GX_GEN "")
+if(NOT TITEX_GX_PLAIN)
+    foreach(sym IN LISTS TITEX_GX_SYMS)
+        # The tree spells these .c except func_ov007_020c4fcc, which is .cpp;
+        # hostgen emits .cpp either way, so only the DEPENDS has to know.
+        set(sym_in "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        if(NOT EXISTS "${sym_in}")
+            set(sym_in "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+        endif()
+        set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+        add_custom_command(OUTPUT "${sym_out}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+            DEPENDS "${sym_in}"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen ${sym}")
+        list(APPEND TITEX_GX_GEN "${sym_out}")
+    endforeach()
+endif()
+# Cut the plain slice entries in the SAME block that adds the generated ones,
+# so the cut cannot drift from the branch that adds the copy. The real net is
+# the LINKER either way: a slice that stopped listing one of these answers with
+# an undefined symbol, and one that started listing a second copy answers with
+# a duplicate. The count guard below is a signpost for a reader looking at that
+# failed link, which is what the T2 block's own comment says of its own.
+set(TITEX_GX_CUT 0)
+set(SLICE_OV007_SRC_TITEX "")
+foreach(src IN LISTS SLICE_OV007_SOURCES)
+    set(_cut OFF)
+    if(NOT TITEX_GX_PLAIN)
+        foreach(sym IN LISTS TITEX_GX_SYMS)
+            if(src MATCHES "/${sym}\\.(c|cpp)$")
+                set(_cut ON)
+            endif()
+        endforeach()
+    endif()
+    if(_cut)
+        math(EXPR TITEX_GX_CUT "${TITEX_GX_CUT}+1")
+    else()
+        list(APPEND SLICE_OV007_SRC_TITEX "${src}")
+    endif()
+endforeach()
+set(SLICE_OV007_SOURCES ${SLICE_OV007_SRC_TITEX})
+if(TITEX_GX_PLAIN)
+    # The pre-fix arm cuts nothing on purpose; satisfy the guard rather than
+    # print a scary line about a cut that was never meant to happen.
+    set(TITEX_GX_CUT ${TITEX_GX_WANT})
+endif()
+if(NOT TITEX_GX_CUT EQUAL TITEX_GX_WANT)
+    message(STATUS "TITEX: expected to cut ${TITEX_GX_WANT} plain ov007 "
+                   "geometry-port entries and cut ${TITEX_GX_CUT}. If "
+                   "slice_ov007.txt stopped listing one of them the hostgen "
+                   "copy is still added and the link will say so; if a SECOND "
+                   "slice started listing one, this cut missed it and the link "
+                   "will say that too")
+endif()
 
 # run link60 lane SC1: THE SCENE 1 INTERIM, AND ITS OWN RETIREMENT SWITCH.
 #
@@ -3557,6 +3710,34 @@ else()
                    "on the host transcription interim")
     list(APPEND SC1_INTERIM_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov007_OamCellBank_020c9688.cpp")
+endif()
+
+# run mg15 lane TITLETEX: THE SECOND SCENE 1 INTERIM, ON SC1's OWN TERMS.
+#
+# func_ov007_020c4684 is the routine the title screen DRAWS THROUGH -- its
+# literal pool is twelve geometry command ports and nothing else -- and
+# hal/scene_boot.cpp stood an L2_UNMATCHED trap there that a 300-frame scene-1
+# run entered 16,200 times, 54 a frame, returning 0 every time. Nothing the
+# title places came out of it. port/unmatched/Ov007_CellQuad_020c4684.cpp is a
+# host transcription read off extracted/overlays/overlay_0007.bin at the
+# config-aligned base, with all four of its relocations resolved and its
+# alignment proven first on its own byte-matched caller.
+#
+# THE GUARD IS SC1's GUARD, for SC1's reason: an interim that has to be
+# remembered is an interim that gets forgotten, and the failure mode is a host
+# body quietly winning over a matched one. The list is EMPTY the moment src/
+# has the match, whichever extension it lands under, and the matched TU then
+# arrives on its own through slice_ov007.txt.
+if(EXISTS "${PORT_REPO_ROOT_ABS}/src/func_ov007_020c4684.c"
+   OR EXISTS "${PORT_REPO_ROOT_ABS}/src/func_ov007_020c4684.cpp")
+    message(STATUS "TITEX: src/func_ov007_020c4684 EXISTS, the title's "
+                   "polygon-submitter interim is RETIRED and "
+                   "port/unmatched/Ov007_CellQuad_020c4684.cpp is deletable")
+else()
+    message(STATUS "TITEX: func_ov007_020c4684 still unmatched, the title "
+                   "screen draws through the host transcription interim")
+    list(APPEND SC1_INTERIM_SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov007_CellQuad_020c4684.cpp")
 endif()
 
 # run link60 lane PC2: SCENE 1'S NEXT BLOCKER, AND THE PREDICATE THAT NAMES IT.
@@ -8510,7 +8691,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE32_SOURCES}
     ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
@@ -8666,7 +8847,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
@@ -8856,7 +9037,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
