@@ -317,22 +317,30 @@ int state_path(char *out, size_t cap)
 // state and not their launch, which is the same trade every other refusal in
 // this file makes.
 //
-// SKIPPED WHEN THE LIVE PROCESS HAS NO PLAYER OF ITS OWN. tests/smoke_persist
-// and tests/smoke_savestate build a bare actor world with no Player and no
-// Camera on purpose; asking a harness world for a Player would refuse the very
-// state those tests exist to prove round-trips. The gate is the live world, not
-// the file: if THIS process booted a level, the file has to have booted one too.
+// SKIPPED WHEN THIS PROCESS DID NOT BOOT A LEVEL. tests/smoke_persist and
+// tests/smoke_savestate build a bare actor world on purpose -- they park their
+// own object in data_0209f394[0] and it is not an arena Player -- so asking
+// them for one would refuse the very states those tests exist to prove
+// round-trip. The gate is the LIVE world and it is the weakest thing that
+// distinguishes the game from a harness: a Player pointer that actually
+// addresses the hosted arena. If THIS process booted a level, the file has to
+// have booted one too.
 static int in_arena(const void *p)
 {
     const char *c = (const char *)p;
     return c >= (const char *)port_arena_base()
         && c <  (const char *)port_arena_end();
 }
+static int world_check_applies(void)
+{
+    void *p = (void *)(size_t)data_0209f394[0];
+    return p && in_arena(p);
+}
 static const char *world_fault(const char *abuf, size_t asz,
                                const char *dbuf, size_t dsz)
 {
     if (!abuf || !dbuf) return 0;
-    if (!data_0209f394[0])
+    if (!world_check_applies())
         return 0;                      /* harness world: nothing to compare */
 
     const char *dlo = &dsstate_lo;
