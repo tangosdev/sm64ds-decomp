@@ -1,4 +1,4 @@
-// @symbol MegaMushroomCreateTag_Spawn
+// @symbol daObjKinokoTag_c_Spawn
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -11,7 +11,7 @@
  * With that unresolved name mapped to the ROM's only global operator new, the
  * relocation-aware check is WRONG with blind:0 at +0x08: this factory calls
  * fBase_c::operator new instead. Keep this ABI boundary in C. */
-int *MegaMushroomCreateTag_Spawn(void)
+int *daObjKinokoTag_c_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(272);
     if (p) {

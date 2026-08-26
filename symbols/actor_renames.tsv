@@ -79,7 +79,7 @@ ov002	0x020b46d0	func_ov002_020b46d0	_ZN16daObjKinokoTag_cD0Ev	vtable slot 17; c
 ov002	0x020b482c	func_ov002_020b482c	_ZN16daObjKinokoTag_c16CleanupResourcesEv	vtable slot 3; class name from ROM RTTI
 ov002	0x020b4850	func_ov002_020b4850	_ZN16daObjKinokoTag_c8BehaviorEv	vtable slot 6; class name from ROM RTTI
 ov002	0x020b49a8	func_ov002_020b49a8	_ZN16daObjKinokoTag_c13InitResourcesEv	vtable slot 0; class name from ROM RTTI
-ov002	0x020b4a00	func_ov002_020b4a00	MegaMushroomCreateTag_Spawn	spawnfunc
+ov002	0x020b4a00	func_ov002_020b4a00	daObjKinokoTag_c_Spawn	spawnfunc; constructed class from ROM RTTI/vtable; factory spelling inferred
 ov002	0x020b4a38	func_ov002_020b4a38	MegaMushroomTag_Spawn	spawnfunc
 ov002	0x020b4ed8	func_ov002_020b4ed8	_ZN14QuestionSwitchD1Ev	vtable slot 16
 ov002	0x020b4f44	func_ov002_020b4f44	_ZN14QuestionSwitchD0Ev	vtable slot 17
