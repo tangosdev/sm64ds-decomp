@@ -6319,6 +6319,27 @@ foreach(src IN LISTS SLICE10_SOURCES)
        OR src MATCHES "/func_02049018\\.c$")
         continue()
     endif()
+    # run mg15 lane MP1: THE DS SLEEP/WAKE PAIR AND ITS SCHEDULER.
+    # src/OS_SleepThread.c's first act is data_020a612c->node, and
+    # hal/cxx_aliases.cpp hosts data_020a612c as zero -- so the ROM body is a
+    # null dereference on its first call, and port/nfs_names_map.txt:402 has
+    # said so since the NitroFS seat. MEASURED by build target
+    # mp_sleepwake_rom: 0xC0000005, through the real veneer. It is not
+    # theoretical either -- src/func_02018e68.c (slice_mg1) reaches it on the
+    # file-read failure path, so today the error report faults before it can
+    # print. Past the deref, src/func_02057f54.c reschedules through
+    # ARMProcessorMode/ARMSaveContext/ARMRestoreContext, none of which has a
+    # host body and none of which has an honest one to write.
+    # hal/os_thread.cpp reproduces the queue-word half of the contract exactly
+    # and replaces the ARM context switch with a bounded host pump. It is
+    # appended through SLICE_COMMS_SOURCES below, which every consumer of
+    # SLICE10_CAM_SOURCES also takes -- checked: the three add_executable
+    # lines that use this variable are the three that use that one.
+    if(src MATCHES "/OS_SleepThread\\.c$"
+       OR src MATCHES "/OS_WakeupThread\\.c$"
+       OR src MATCHES "/func_02057f54\\.c$")
+        continue()
+    endif()
     list(APPEND SLICE10_CAM_SOURCES "${src}")
 endforeach()
 
@@ -6332,6 +6353,29 @@ list(APPEND SLICE10_CAM_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_ReleaseHeldDispatch.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_SwimMain.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/InitCrashScreen_ResetVeneer.cpp")
+
+# run mg15 lane MP1: THE RADIO SEAM AND THE COMMS CLOSURE.
+#
+# hal/comms_seam.cpp hosts the eight ROM addresses where the game stops being
+# a game and starts being a radio (the WM SDK, and under it arm7.bin, which
+# this repo does not decompile and a PC port does not want). Everything ABOVE
+# those eight stays the ROM's, verbatim -- that is the whole point, and it is
+# what keeps the port portable back to hardware. The transport contract a
+# launcher mod implements is in hal/comms_seam.h; nothing here is a network.
+#
+# hal/os_thread.cpp is the DS sleep/wake pair, hosted, replacing the three
+# gate-10 rows filtered out above.
+#
+# slice_comms.txt is the ROM's four-player fan-out, linked but not yet driven.
+set(SLICE_COMMS_SOURCES hal/comms_seam.cpp hal/os_thread.cpp)
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_comms.txt" SLICE_COMMS_LINES)
+foreach(line IN LISTS SLICE_COMMS_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_COMMS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
 
 # The hosted ARM7: native SDAT player behind the game's own command queue.
 set(SOUND_HOST_SOURCES
@@ -8078,7 +8122,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/stage_slot0.cpp ${SLICE_S4_SLOT0_SOURCES}
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE7_SOURCES} ${SLICE8_SOURCES} ${SLICE9_CAM_SOURCES}
-    ${SLICE10_CAM_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}
+    ${SLICE10_CAM_SOURCES} ${SLICE_COMMS_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}
     ${SLICE15_SOURCES} ${SLICE16_SOURCES} ${SLICE17_SOURCES}
     ${SLICE18_SOURCES} ${SLICE19_SOURCES} ${SLICE20_SOURCES}
     ${SLICE_W1L1_SOURCES} ${SLICE_W1L2_SOURCES} ${SLICE_W1L3_SOURCES}
@@ -8232,7 +8276,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/stage_slot0.cpp ${SLICE_S4_SLOT0_SOURCES}
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE7_SOURCES} ${SLICE8_SOURCES} ${SLICE9_CAM_SOURCES}
-    ${SLICE10_CAM_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}
+    ${SLICE10_CAM_SOURCES} ${SLICE_COMMS_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}
     ${SLICE15_SOURCES} ${SLICE16_SOURCES} ${SLICE17_SOURCES}
     ${SLICE18_SOURCES} ${SLICE19_SOURCES} ${SLICE20_SOURCES}
     ${SLICE_W1L1_SOURCES} ${SLICE_W1L2_SOURCES} ${SLICE_W1L3_SOURCES}
@@ -8422,7 +8466,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/stage_slot0.cpp ${SLICE_S4_SLOT0_SOURCES}
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE7_SOURCES} ${SLICE8_SOURCES} ${SLICE9_CAM_SOURCES}
-    ${SLICE10_CAM_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}
+    ${SLICE10_CAM_SOURCES} ${SLICE_COMMS_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}
     ${SLICE15_SOURCES} ${SLICE16_SOURCES} ${SLICE17_SOURCES}
     ${SLICE18_SOURCES} ${SLICE19_SOURCES} ${SLICE20_SOURCES}
     ${SLICE_W1L1_SOURCES} ${SLICE_W1L2_SOURCES} ${SLICE_W1L3_SOURCES}
@@ -8669,4 +8713,26 @@ target_compile_definitions(mp_sleepwake_rom PRIVATE SM64DS_PLATFORM_PC
     PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
 if(MSVC)
     target_compile_options(mp_sleepwake_rom PRIVATE /wd4311 /wd4312 /wd4068 /EHa)
+endif()
+
+# run mg15 lane MP1: THE SEAM PROBE. The seam's solo answers and the ROM's
+# four-slot fan-out, exercised with the ROM's own code (src/func_0203e0ac.c,
+# src/func_0203bb60.c, src/func_0203bc7c.c and the two slot-index accessors)
+# and the hosted seam faces. Console-only, no window, no BMP.
+add_executable(mp_comms_seam tests/mp_comms_seam.cpp
+    hal/comms_seam.cpp hal/os_thread.cpp
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203e0ac.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203bb60.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203bc7c.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203dabc.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203dae4.c")
+target_include_directories(mp_comms_seam PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_link_libraries(mp_comms_seam PRIVATE ntr)
+target_compile_definitions(mp_comms_seam PRIVATE SM64DS_PLATFORM_PC
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+if(MSVC)
+    target_compile_options(mp_comms_seam PRIVATE /wd4311 /wd4312 /wd4068)
 endif()

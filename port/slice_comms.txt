@@ -1,0 +1,35 @@
+# THE COMMS CLOSURE. Run mg15, lane MP1, stage one of the multiplayer plan.
+#
+# SM64DS's input path is four-player all the way down IN SINGLE PLAYER TOO.
+# Solo is the degenerate case where one comms record is copied into all four
+# slots by src/func_0203e0ac.c (already linked, slice_gate13). What was never
+# linked is the other half: the two functions that turn those four records
+# into the arrays the whole game actually reads.
+#
+#   step 0x16 of the main loop  func_0203bb60  four records -> TouchInfo[4]
+#                                              at data_020a0de8
+#   step 0x17                   func_0203bc7c  four records -> PadData[4]
+#                                              at data_020a0e58, plus the
+#                                              per-player edge masks at
+#                                              data_020a0e48/data_020a0e50
+#
+# Every stylus and button read in the entire game comes out of a four-entry
+# array whose index is a player number, and these two are what fill them.
+#
+# THESE ARE THE TWO CALLERS THAT PASS A REAL INDEX to func_0203dabc and
+# func_0203dae4 -- which is why linking them had to wait for the
+# include/decl_common.h arity fix (same run, commit "Fix the comms slot-index
+# arity"). Before that fix, a host face that ignored its argument would have
+# served all four players slot 0's record and the four-slot path would have
+# LOOKED like it worked.
+#
+# Both are MATCHED at 2004/b56 with strict relocs; see runs/mg15/out/MP1/.
+#
+# NOT DRIVEN BY DEFAULT. Linking them changes no behaviour on its own: the
+# port's own input path still writes TouchInfo and PadData directly, and
+# hal/comms_seam.cpp's port_comms_fanout() is what calls these. mp_comms_seam
+# is the target that exercises them. Wiring them into the frame loops in place
+# of the direct writes is MP2's job, because that is the change with a
+# regression surface.
+src/func_0203bb60.c
+src/func_0203bc7c.c
