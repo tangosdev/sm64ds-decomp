@@ -58,6 +58,8 @@ import romdata_check as RDC  # noqa: E402
 import layout_check as LAY  # noqa: E402
 import rombuild_profile as RP  # noqa: E402
 import srcpath as SP  # noqa: E402
+import relocs as RL  # noqa: E402
+import tu_manifest as TUM  # noqa: E402
 
 # Default compiler for the ROM build — same as the matching pin (tools/match.py
 # CANONICAL / notes/rom-build.md). config/rombuild-versions.txt carries per-file
@@ -288,7 +290,7 @@ def init_section_sources():
     return {rel for (_d, _name, rel, _addr, _size, sec) in cands if sec == ".init"}
 
 
-def _isolate(obj, rel, syms, data_sink=None):
+def _isolate(obj, rel, syms, data_sink=None, compiler_only=None):
     """Reduce a compiled `src/` object to its declared function(s).
 
     A legacy source owns one function and takes the unchanged singular isolation path.
@@ -317,8 +319,17 @@ def _isolate(obj, rel, syms, data_sink=None):
     if isinstance(selected, (list, tuple)):
         if not selected:
             return "source owns no enrolled functions"
-        plan = (OI.isolate(obj, selected[0]) if len(selected) == 1
-                else OI.isolate_many(obj, selected))
+        if len(selected) == 1:
+            plan = OI.isolate(obj, selected[0])
+        else:
+            dead = (compiler_only or {}).get(rel.replace("\\", "/"), [])
+            if dead:
+                reduced, dead_plan = OI.derive_deadstrip(obj.read_bytes(), dead)
+                if reduced is None:
+                    return ("compiler-only deadstrip refused: "
+                            + str(dead_plan.get("error")))
+                obj.write_bytes(reduced)
+            plan = OI.isolate_many(obj, selected)
     else:
         plan = OI.isolate(obj, selected)
     if plan.get("kind") == OI.NOT_A_FUNCTION:
@@ -361,6 +372,61 @@ def enrolled_symbols():
         grouped.setdefault(rel, []).append((addr, _size, name))
     return {rel: _definition_symbols(rel, rows)
             for rel, rows in grouped.items()}
+
+
+def compiler_only_policies(enrolled=None, manifest=None, homes=None):
+    """Exact dead-strip allow-lists for promoted multi-function sources.
+
+    The manifest is evidence, not a wildcard: every row must name one homeless,
+    unlicensed function and explicitly request ``deadstrip`` with a reason.  Object
+    surgery remains objisolate's job; this preflight only proves the checked-in policy
+    cannot hide a function that has a retail address.
+    """
+    data = TUM.load() if manifest is None else manifest
+    active = None if enrolled is None else {
+        str(rel).replace("\\", "/") for rel in enrolled
+    }
+    homes = RL.load_symbol_homes() if homes is None else homes
+    out, errors = {}, []
+    for entry in data.get("entries", []):
+        rows = entry.get("compiler_only_output") or []
+        if not rows:
+            continue
+        source = str(entry.get("source", "")).replace("\\", "/")
+        if not source:
+            errors.append(f"{entry.get('id', '<unknown>')}: compiler-only policy has no source")
+            continue
+        if active is not None and source not in active:
+            continue
+        if source in out:
+            errors.append(f"{source}: compiler-only policy is declared by multiple entries")
+            continue
+        licensed = {row.get("symbol") for row in entry.get("functions", [])}
+        wanted = []
+        for i, row in enumerate(rows):
+            if not isinstance(row, dict):
+                errors.append(f"{source}: compiler_only_output[{i}] is not an object")
+                continue
+            symbol = row.get("symbol")
+            if not symbol:
+                errors.append(f"{source}: compiler_only_output[{i}] has no symbol")
+                continue
+            if row.get("disposition") != "deadstrip":
+                errors.append(f"{source}: {symbol} disposition must be deadstrip")
+            if not str(row.get("reason", "")).strip():
+                errors.append(f"{source}: {symbol} needs a non-empty reason")
+            if symbol in licensed:
+                errors.append(f"{source}: {symbol} is licensed by the manifest")
+            if homes.get(symbol):
+                errors.append(f"{source}: {symbol} has configured ROM home(s) "
+                              f"{homes[symbol]}")
+            if symbol in wanted:
+                errors.append(f"{source}: duplicate compiler-only symbol {symbol}")
+            wanted.append(symbol)
+        out[source] = wanted
+    if errors:
+        raise BuildError("compiler-only policy", 1, "\n".join(errors))
+    return out
 
 
 def _definition_symbols(rel, rows):
@@ -434,7 +500,7 @@ def retarget_text_section(obj, section=".init"):
 
 
 def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_root=None,
-                data_sink=None, prebuilt=None):
+                data_sink=None, prebuilt=None, compiler_only=None):
     """Compile one enrolled source file to the object path dsd's objects.txt names.
 
     Returns (rel, error-or-None, outcome), where outcome is how the object was
@@ -474,7 +540,7 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_roo
             err = _retarget(obj, rel, init_srcs)
             if err:
                 return rel, f"retarget: {err}", "error"
-            err = _isolate(obj, rel, syms, data_sink)
+            err = _isolate(obj, rel, syms, data_sink, compiler_only)
             if err:
                 return rel, f"isolate: {err}", "error"
             return rel, None, "hit"
@@ -508,18 +574,18 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_roo
         if err:
             return rel, f"retarget: {err}", "error"
         if key is None:
-            err = _isolate(obj, rel, syms, data_sink)
+            err = _isolate(obj, rel, syms, data_sink, compiler_only)
             return (rel, f"isolate: {err}", "error") if err else (rel, None, "miss")
         deps = cache.deps_from(scratch)
         if deps is None:
-            err = _isolate(obj, rel, syms, data_sink)
+            err = _isolate(obj, rel, syms, data_sink, compiler_only)
             return (rel, f"isolate: {err}", "error") if err else (rel, None, "uncacheable")
         # Cache the RAW object, then isolate the working copy. Storing the reduced
         # form instead would bake this transformation into every entry, so any later
         # fix to it would be masked by isolate()'s own idempotence -- which is exactly
         # how the STB_LOPROC bug survived a rebuild and forced SCHEMA 2.
         cache.put(key, deps, obj)
-        err = _isolate(obj, rel, syms, data_sink)
+        err = _isolate(obj, rel, syms, data_sink, compiler_only)
         return (rel, f"isolate: {err}", "error") if err else (rel, None, "miss")
     finally:
         if scratch:
@@ -663,6 +729,7 @@ def main():
                                 enabled=not args.no_cache)
         init_srcs = init_section_sources()
         syms = enrolled_symbols()
+        compiler_only = compiler_only_policies(srcs)
         # Collected during the compile because that is the only point at which the
         # objects still carry the data mwcc emitted -- see _isolate. None switches the
         # measurement off entirely; it never affects what gets linked either way.
@@ -680,6 +747,7 @@ def main():
                 for rel, err, outcome in ex.map(
                         lambda s: compile_one(s, vers, cache, init_srcs, syms,
                                               data_sink=data_sink,
+                                              compiler_only=compiler_only,
                                               prebuilt=tu_overrides.get(
                                                   s.replace("\\", "/"))), srcs):
                     outcomes[outcome] = outcomes.get(outcome, 0) + 1

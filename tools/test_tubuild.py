@@ -949,8 +949,9 @@ def test_scratch_and_no_rom_results_are_not_promotion_ready():
     assert tubuild.promotion_refusals(ready) == []
     assert any("non-.text" in reason for reason in tubuild.promotion_refusals(
         dict(ready, sections=[{"name": ".text"}, {"name": ".data"}])))
-    assert any("compiler_only_output" in reason for reason in tubuild.promotion_refusals(
-        dict(ready, compiler_only_output=[{"symbol": "D2"}])))
+    assert not any("compiler_only_output" in reason for reason in tubuild.promotion_refusals(
+        dict(ready, compiler_only_output=[{
+            "symbol": "D2", "disposition": "deadstrip", "reason": "unused variant"}])))
     assert any("externalized_output" in reason for reason in tubuild.promotion_refusals(
         dict(ready, externalized_output=[{"symbol": "_ZTI4Base"}])))
     no_rom = dict(ready, verification={"linkcheck": {

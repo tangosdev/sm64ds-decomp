@@ -1118,7 +1118,13 @@ def cmd_compile(args):
 
     obj_bytes, version, flags, build_dir, obj_path = _compile_tu(entry, args.version)
     inv = elf_inventory(obj_bytes)
-    unlicensed_funcs, unlicensed_objs, unlicensed_secs = unlicensed_inventory(entry, inv)
+    audited_bytes, compiler_only, policy_reasons = apply_compiler_only_policy(
+        obj_bytes, entry)
+    if not policy_reasons and compiler_only.get("deadstripped"):
+        print(f"compiler-only     : exact deadstrip {compiler_only['deadstripped']}")
+    audit_inv = elf_inventory(audited_bytes) if audited_bytes is not None else inv
+    unlicensed_funcs, unlicensed_objs, unlicensed_secs = unlicensed_inventory(
+        entry, audit_inv)
 
     lines = [f"TU {entry['id']}  object {obj_path.relative_to(REPO).as_posix()}",
             f"toolchain: {version}   flags: {flags}", ""]
@@ -1181,12 +1187,17 @@ def cmd_verify(args):
 
     obj_bytes, version, flags, build_dir, obj_path = _compile_tu(entry, args.version)
     inv = elf_inventory(obj_bytes)
+    audited_bytes, compiler_only, policy_reasons = apply_compiler_only_policy(
+        obj_bytes, entry)
+    audit_inv = elf_inventory(audited_bytes) if audited_bytes is not None else inv
 
     name_index = RA.build_name_index()
     config_relocs = RA.build_config_relocs()
     sym_index = RL.load_all_syms()
 
     print(f"\nTU {entry['id']}\n")
+    if not policy_reasons and compiler_only.get("deadstripped"):
+        print(f"compiler-only     : exact deadstrip {compiler_only['deadstripped']}\n")
     rows = []
     all_bytes_ok = all_reloc_ok = True
     sec_order = []
@@ -1253,7 +1264,8 @@ def cmd_verify(args):
              f"{bad_pairs}  (a destructor's D0/D1/D2 group is ordered by the compiler, not "
              f"by source text, per the pilot report sec 3 -- not necessarily a bug)")
 
-    unlicensed_funcs, unlicensed_objs, unlicensed_secs = unlicensed_inventory(entry, inv)
+    unlicensed_funcs, unlicensed_objs, unlicensed_secs = unlicensed_inventory(
+        entry, audit_inv)
     n_unlicensed = len(unlicensed_funcs) + len(unlicensed_objs) + len(unlicensed_secs)
     if n_unlicensed:
         print()
@@ -1268,6 +1280,10 @@ def cmd_verify(args):
         for s in unlicensed_secs:
             print(f"EXTRA    {s['name']:8} size=0x{s['size']:x}  not in manifest (no function/"
                  f"data claims it)")
+    if policy_reasons:
+        print()
+        for reason in policy_reasons:
+            print(f"POLICY   {reason}")
 
     secs = sorted((int(s["start"], 16), int(s["end"], 16), s["name"])
                  for s in entry.get("sections", []))
@@ -1276,7 +1292,8 @@ def cmd_verify(args):
         print(f"\nMANIFEST ERROR: overlapping section claims: {overlaps}")
 
     declared_syms = {f["symbol"] for f in entry["functions"]}
-    defined_syms = {s["name"] for s in inv["symbols"] if s["type"] == "STT_FUNC"}
+    defined_syms = {s["name"] for s in audit_inv["symbols"]
+                    if s["type"] == "STT_FUNC"}
     if declared_syms - defined_syms:
         print(f"\nMANIFEST ERROR: declared but not defined: {sorted(declared_syms - defined_syms)}")
 
@@ -1293,6 +1310,8 @@ def cmd_verify(args):
     if n_unlicensed:
         print(f"        {n_unlicensed} unlicensed section/symbol(s) present -> PROMOTION "
              f"REFUSED regardless of the above (plan sec 4.5, 8)")
+    if policy_reasons:
+        print("        compiler-only policy refused -> PROMOTION REFUSED")
 
     entry.setdefault("verification", {})
     entry["verification"].update({
@@ -1305,6 +1324,7 @@ def cmd_verify(args):
                       "tools/reloc_audit.py check_destinations() (relocation target identity)",
         "functions_matched": n_match,
         "functions_declared": len(rows),
+        "compilerOnlyOutput": compiler_only,
     })
     # Keep the nested `criteria` block honest about what THIS run actually measured --
     # `comparison` above always names reloc_audit now that verify runs it unconditionally,
@@ -1330,8 +1350,10 @@ def cmd_verify(args):
         "every_declared_function_defined": "PASS" if not any(v == "MISSING" for _o, _s, v in rows) else "FAIL",
         "every_declared_function_bytes_match": "PASS" if all_bytes_ok else "FAIL",
         "declared_function_set_equals_defined_function_set":
-            "PASS" if not (declared_syms - defined_syms) and n_unlicensed == 0
-            else f"FAIL-BY-DESIGN -- {n_unlicensed} unlicensed section/symbol(s); see unlicensed_output_observed",
+            "PASS" if (not (declared_syms - defined_syms) and n_unlicensed == 0
+                       and not policy_reasons)
+            else f"FAIL-BY-DESIGN -- {n_unlicensed} unlicensed section/symbol(s), "
+                 f"{len(policy_reasons)} compiler-only policy error(s)",
         "functions_occur_in_expected_order":
             "PASS" if not bad_pairs else f"PARTIAL -- ordinal pair(s) not in ROM order: {bad_pairs}",
         "relocation_destinations_verified": "PASS" if all_reloc_ok else "FAIL -- see DIFF/objisolate lines above",
@@ -4574,9 +4596,6 @@ def promotion_refusals(entry):
            if isinstance(s, dict)):
         reasons.append("promotion does not yet install tracked non-.text delinks claims; "
                        "rombuild --partitioned-tu supports them only in a generated profile")
-    if entry.get("compiler_only_output"):
-        reasons.append("promotion does not yet persist compiler_only_output policy; "
-                       "rombuild --partitioned-tu applies it in the opt-in production path")
     if entry.get("externalized_output"):
         reasons.append("promotion does not yet persist externalized_output policy; "
                        "rombuild --partitioned-tu applies it in the opt-in production path")

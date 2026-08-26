@@ -122,6 +122,65 @@ class RomBuildEnrollment(unittest.TestCase):
             one.assert_called_once_with(obj, "Only")
             many.assert_not_called()
 
+    def test_multi_source_applies_exact_compiler_only_deadstrip_first(self):
+        obj = self.repo / "Pair.o"
+        obj.write_bytes(b"raw object")
+        policy = {"src/Pair.cpp": ["_ZN4PairC2Ev"]}
+        with mock.patch.object(
+                RB.OI, "derive_deadstrip",
+                return_value=(b"reduced object", {"error": None})) as deadstrip, \
+                mock.patch.object(RB.OI, "isolate_many",
+                                  return_value={"error": None}) as many:
+            self.assertIsNone(RB._isolate(
+                obj, "src/Pair.cpp", {"src/Pair.cpp": ["First", "Second"]},
+                compiler_only=policy))
+        deadstrip.assert_called_once_with(b"raw object", ["_ZN4PairC2Ev"])
+        many.assert_called_once_with(obj, ["First", "Second"])
+        self.assertEqual(obj.read_bytes(), b"reduced object")
+
+    def test_compiler_only_policy_refuses_a_symbol_with_a_rom_home(self):
+        manifest = {"entries": [{
+            "id": "arm9/Pair",
+            "source": "src/Pair.cpp",
+            "functions": [{"symbol": "First"}, {"symbol": "Second"}],
+            "compiler_only_output": [{
+                "symbol": "_ZN4PairC2Ev", "disposition": "deadstrip",
+                "reason": "compiler-generated constructor variant"
+            }]
+        }]}
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.compiler_only_policies(
+                manifest=manifest, homes={"_ZN4PairC2Ev": [("arm9", 0x02000008)]})
+        self.assertIn("configured ROM home", raised.exception.output)
+
+    def test_compiler_only_policy_accepts_an_exact_homeless_variant(self):
+        manifest = {"entries": [{
+            "id": "arm9/Pair",
+            "source": "src/Pair.cpp",
+            "functions": [{"symbol": "First"}, {"symbol": "Second"}],
+            "compiler_only_output": [{
+                "symbol": "_ZN4PairC2Ev", "disposition": "deadstrip",
+                "reason": "compiler-generated constructor variant"
+            }]
+        }]}
+        self.assertEqual(
+            RB.compiler_only_policies(manifest=manifest, homes={}),
+            {"src/Pair.cpp": ["_ZN4PairC2Ev"]})
+
+    def test_compiler_only_policy_ignores_unenrolled_shadow_manifests(self):
+        manifest = {"entries": [{
+            "id": "arm9/Shadow",
+            "source": "src_tu/Shadow.cpp",
+            "functions": [{"symbol": "First"}],
+            "compiler_only_output": [{
+                "symbol": "ConfiguredElsewhere", "disposition": "deadstrip",
+                "reason": "research-only observation"
+            }]
+        }]}
+        self.assertEqual(RB.compiler_only_policies(
+            enrolled=["src/Pair.cpp"], manifest=manifest,
+            homes={"ConfiguredElsewhere": [("arm9", 0x02000008)]}), {})
+
 
 def _compiler():
     exe = RB.MW / RB.VERSION / "mwccarm.exe"

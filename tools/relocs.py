@@ -7,6 +7,7 @@ symbol from the wrong overlay.  The public resolver therefore uses a canonical
 each relocation record.
 """
 import argparse
+import collections
 import json
 import pathlib
 import re
@@ -171,6 +172,15 @@ def load_all_syms() -> SymbolIndex:
     for module, path in iter_symbol_files(include_itcm_dtcm=True):
         d.update(load_syms_file(path, module))
     return d
+
+
+def load_symbol_homes(repo=None) -> dict[str, list[tuple[str, int]]]:
+    """Every configured home for every symbol name, preserving aliases/modules."""
+    homes = collections.defaultdict(list)
+    for module, path in iter_symbol_files(include_itcm_dtcm=True, repo=repo):
+        for name, (owner, addr) in iter_syms_pairs(path, module):
+            homes[name].append((owner, addr))
+    return dict(homes)
 
 
 def _fallback_name(addr: int) -> str:
