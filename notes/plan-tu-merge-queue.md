@@ -952,3 +952,25 @@ Ten `src_tu/` files declare them locally with mutually contradictory signatures 
 `short` for the angle, `Vec3 *` vs `Vector3 *` vs `void *` for the vectors. They belong in
 `include/decl_common.h` once. Not done here: a `decl_common.h` edit needs an `eligible.py`
 bracket of its own, so it is a separate PR.
+
+### 7.6 The next linkcheck blocker: inline `~Vector3()`
+
+`ov023/Squasher` reaches TEXT-VERIFIED but **cannot reach LINK-VERIFIED**, and after this
+pass the reason is down to exactly one symbol. `include/types.h` gives `Vector3` an inline
+in-class `~Vector3() {}` (declared deliberately -- the ROM's `__destroy_arr` over arrays of
+it proves the element type has one). So every TU that so much as declares a `Vector3` local
+emits a vague-linkage `_ZN7Vector3D1Ev`, which the licensing audit sees as unlicensed
+output. It cannot be waived: `apply_compiler_only_policy` refuses any symbol with a
+configured ROM home, and this one has one (`arm9`).
+
+That guard is right in general -- it is what stops a policy hiding a genuine duplicate
+definition -- but it does not model vague linkage, where having a ROM home and being
+emitted by every touching TU are both true at once and harmless, because the linker merges
+them. **A `disposition` beyond `deadstrip` is what this needs**, not a per-TU waiver.
+Until then any merged TU with a `Vector3` local stops at TEXT-VERIFIED. Not attempted here:
+a `tools/` change cannot be tested by the PR that makes it -- the validator restores
+`tools/` from base.
+
+The one policy that IS valid was added: `_ZN8SquasherD2Ev`, a compiler-generated
+base-object destructor with no ROM home and no inbound relocation. It was the blocker
+before `_ZN7Vector3D1Ev` became one, so this is a step forward, not a wash.
