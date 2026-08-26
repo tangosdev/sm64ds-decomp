@@ -974,12 +974,14 @@ static void l2_fill_0208ea6c(void)
 // "NONE OF THE FOUR NAMES LEFT IS A BLOCKER" USED TO STAND HERE AND RUN mg15
 // LANE TITLE3 PROVED IT FALSE. A trap that returns 0 and lets the run carry on
 // is not the same thing as a trap that costs nothing, and func_ov007_020ae834
-// was the counter-example: it is the state-machine ADVANCE for all twenty-four
-// of the title's 2D elements, src/func_ov007_020aed98.c calls it once per
-// element per frame through src/func_ov007_020b44ec.c, and with it trapped NONE
-// of those twenty-four objects ever changed state. That is what held the
-// touch-to-start gate shut. A 900-frame scene-1 run entered it 59,400 times
-// and the run "carried on" the whole way. The lesson for the three names left
+// was the counter-example: it is the state-machine ADVANCE for BOTH of the
+// title's 2D element families, and src/func_ov007_020aed98.c drives both --
+// the twenty-four at scene+0x114 through src/func_ov007_020b44ec.c and the
+// nine at scene+0xa4 through src/func_ov007_020add3c.c, one call per element
+// per pass. With it trapped NONE of those thirty-three objects ever changed
+// state. That is what held the touch-to-start gate shut. A 900-frame scene-1
+// run entered it 59,400 times, which is (24 + 9) x 2 passes x 900 frames
+// exactly, and the run "carried on" the whole way. The lesson for the names left
 // (020b46b0, 020c20b8, 020c4684, plus the data_0208ea6c vtable slot) is that
 // entering a trap thousands of times a run is a MEASUREMENT OF A HOLE, not a
 // clean bill: 020b46b0 is 48 entries a frame and it is the per-element STYLUS
