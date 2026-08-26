@@ -156,7 +156,7 @@ src/_ZN3MrID1Ev.cpp:
     complete
     .text start:0x02120668 end:0x021206b0
 
-src/_ZN3MrID0Ev.c:
+src/_ZN3MrID0Ev.cpp:
     complete
     .text start:0x021206b0 end:0x0212070c
 
