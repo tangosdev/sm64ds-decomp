@@ -6,7 +6,7 @@
 extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int _ZN5Event6GetBitEj(unsigned int bit);
 extern int func_ov002_020e8ef0(void* a, void* b);
-extern void func_ov002_020e7d84(void);
+extern void _ZN10StarMarker7CollectEv(void);
 
 void func_ov002_020e930c(void* self) {
     char* a = (char*)self;
@@ -28,14 +28,14 @@ void func_ov002_020e930c(void* self) {
         if (func_ov002_020e8ef0(self, o) == 0) return;
         if (*(int*)(a + 0x43c) != 6) return;
         if (_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(a + 0x434)) == 0) return;
-        func_ov002_020e7d84();
+        _ZN10StarMarker7CollectEv();
     } else {
         if (flags & 0x8000) {
             if (*(u8*)(b + 0x709) != 0) return;
             if (_ZN5Event6GetBitEj(0x1e) != 0) return;
             if (*(int*)(a + 0x43c) != 6) return;
             if (_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(a + 0x434)) == 0) return;
-            func_ov002_020e7d84();
+            _ZN10StarMarker7CollectEv();
         }
     }
 }

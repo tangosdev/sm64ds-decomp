@@ -1,18 +1,10 @@
 //cpp
 // @symbol _ZN11VolcanoFireD1Ev
+/* Force mwccarm to materialize the inline class-body complete destructor.
+ * objisolate retains the enrolled D1 and discards this forcing helper. */
+#include "VolcanoFire.h"
 
-struct dActor_c {
-    char pad[0xd0];
-    virtual ~dActor_c();
-};
-
-struct dCcAc_c { char pad[0x4]; ~dCcAc_c(); };
-
-struct VolcanoFire : dActor_c {
-    dCcAc_c m0;   /* 0xd4 */
-    virtual ~VolcanoFire();
-};
-
-VolcanoFire::~VolcanoFire()
+void VolcanoFire_EmitDestructor(VolcanoFire *fire)
 {
+    fire->~VolcanoFire();
 }

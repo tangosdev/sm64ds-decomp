@@ -9,8 +9,7 @@
 
 int VolcanoFire::CleanupResources()
 {
-    char *p = (char *)mSpawner;
-    if (p)
-        *(u16 *)(p + 0x324) -= 1;
+    if (mSpawner)
+        *(u16 *)((char *)mSpawner + 0x324) -= 1;
     return 1;
 }

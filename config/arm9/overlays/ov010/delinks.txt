@@ -107,11 +107,11 @@ src/_ZN13PeachPaintingD1Ev.cpp:
     complete
     .text start:0x02111e10 end:0x02111e40
 
-src/_ZN13PeachPaintingD0Ev.c:
+src/_ZN13PeachPaintingD0Ev.cpp:
     complete
     .text start:0x02111e40 end:0x02111e84
 
-src/func_ov010_02111e84.c:
+src/_ZN13PeachPainting20UpdateModelTransformEv.cpp:
     complete
     .text start:0x02111e84 end:0x02111ec4
 
