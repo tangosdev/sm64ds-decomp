@@ -5,32 +5,56 @@
 #ifndef ARROWLIFT_H
 #define ARROWLIFT_H
 #include "types.h"
-#include "Model.h"
-#include "dBgW_KcMbg.h"
 
-struct ArrowLift {
-    u8  pad_000[0x98];
-    s32 mHorzSpeed;            /* 0x098 */
-    u8  pad_09c[0x38];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x0d4 */
-    /* dBgW_KcMbg member. The cartridge's own ~ArrowLift calls _ZN10dBgW_KcMbgD1Ev at
-       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
-       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
-    dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
-    u8  pad_2ec[0x34];
-    s32 mTravelDist;            /* 0x320 */
-    /* trailing extent the ROM's `new ArrowLift` literal proves; see tools/opnew_sizes.py */
-    u8 pad_324[0x4];
 #ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
+
+#include "dBgActor_c.h"
+
+/* ROM identity versus compatibility spelling:
+ *
+ * The vtable whose compiler-facing symbol is `_ZTV9ArrowLift` has a 32-slot
+ * dBgActor_c-shaped table, but its ABI preamble points at the cartridge's
+ * `_ZTI15daObjWc_Obj02_c` (0x02113cac), whose name record says
+ * `15daObjWc_Obj02_c` and whose sole base is dBgActor_c. `ArrowLift` is the
+ * repository's readable compatibility name used by the existing function
+ * symbols, not a claim about the original EAD RTTI spelling. Consequently a
+ * per-function ArrowLift object can emit `_ZTI9ArrowLift`; that compiler-only
+ * passenger must remain discarded by objisolate and is not evidence that this
+ * spelling owns the ROM RTTI or is ready for whole-TU promotion.
+ *
+ * The ROM destructor proves that 0x000..0x31f is one dBgActor_c base: after
+ * restoring _ZTV10dBgActor_c it destroys the base's dBgW_KcMbg at 0x124 and
+ * Model at 0x0d4, then chains to dActor_c::~dActor_c. ArrowLift itself owns
+ * only the eight-byte state tail below. */
+struct ArrowLift : dBgActor_c {
+    s32 mTravelDist;          /* 0x320 */
+    u16 mStateTimer;          /* 0x324 */
+    u8  mTriggered;           /* 0x326 */
+    u8  mState;               /* 0x327 */
+
+    /* Inline is load-bearing: when forced from the two destructor source
+     * files, mwccarm emits the ROM's D1/D0 bodies without a homeless D2. */
+    virtual ~ArrowLift() {}
+
+    /* Overrides of fBase_c's slots 0, 3, 6 and 9. Virtualness is inherited. */
     int InitResources();
+    int CleanupResources();
+    int Behavior();
     int Render();
-#endif
 };
+
+#else
+
+/* Flat compatibility view for the still-C factory. */
+struct ArrowLift {
+    u8  pad_000[0x320];
+    s32 mTravelDist;          /* 0x320 */
+    u16 mStateTimer;          /* 0x324 */
+    u8  mTriggered;           /* 0x326 */
+    u8  mState;               /* 0x327 */
+};
+
+#endif
 
 typedef char ArrowLift_size_must_be_0x328[sizeof(struct ArrowLift) == 0x328 ? 1 : -1];
 

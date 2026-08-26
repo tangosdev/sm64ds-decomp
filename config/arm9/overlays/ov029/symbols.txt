@@ -183,6 +183,7 @@ _ZTS15daObjWc_Obj02_c kind:data(any) addr:0x02113cb8
 ArrowLift_SpawnInfo kind:data(any) addr:0x02113ccc ambiguous
 data_ov029_02113cd4 kind:data(any) addr:0x02113cd4 ambiguous
 data_ov029_02113cec kind:data(any) addr:0x02113cec ambiguous
+_ZTV15daObjWc_Obj02_c kind:data(any) addr:0x02113cf0
 _ZTV9ArrowLift kind:data(any) addr:0x02113cf0
 data_ov029_02113cf4 kind:data(any) addr:0x02113cf4 ambiguous
 data_ov029_02113d30 kind:data(any) addr:0x02113d30 ambiguous
