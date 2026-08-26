@@ -1,7 +1,17 @@
-"""The band feature's WHOLE-SCENE-SET probe for the crosser detector's
-DISCLOSED RISK: the crosser detector is
-source-agnostic, so anything ANIMATED PARKED against a hinge edge row would
-also read as a crosser and get blurred into the band.
+"""The band feature's WHOLE-SCENE-SET probe.
+
+THE RISK IT EXISTS FOR: ntr/ppu_sub.cpp's crosser detector is source-agnostic
+by design -- it has to be, because a 3D crosser is not an OAM entry and nothing
+structural can see one -- so anything ANIMATED PARKED against a hinge edge row
+also reads as a crosser and gets blurred into the band for as long as it sits
+there.
+
+WHY IT IS A TOOL AND NOT A PARAGRAPH. Run mg15 lane BAND checked five scenes,
+found none, and wrote "nothing in these games does" into the record; the
+lane's independent review swept all 32 and found scene 365 doing exactly it,
+on 100% of a steady window. A claim about the SET has to be measured over the
+set. Adopted from that review (its rvprobe.py) so the next such claim has an
+instrument behind it rather than a spot check.
 
 Sweeps every hosted scene with the shipped detector's own instrument
 (SM64DS_BAND_TRACE=1) plus the OAM band census (SM64DS_GAP_PEEK_TRACE=1), and
