@@ -1,7 +1,7 @@
 extern void _ZN8dM3dGSphD1Ev(void *);
 extern void func_ov002_020feab8(void *);
 extern void _ZN5dBgPiD2Ev(void *);
-extern void func_020354d0(void *);
+extern void _ZN5dBgChD2Ev(void *);
 extern void _ZN6Memory16operator_delete2EPv(void *);
 extern int data_020992a4[];
 extern int data_020992b4[];
@@ -12,7 +12,7 @@ int *func_02037710(int *t)
     _ZN8dM3dGSphD1Ev((char *)t + 0x64);
     func_ov002_020feab8((char *)t + 0x38);
     _ZN5dBgPiD2Ev((char *)t + 0x10);
-    func_020354d0(t);
+    _ZN5dBgChD2Ev(t);
     _ZN6Memory16operator_delete2EPv(t);
     return t;
 }

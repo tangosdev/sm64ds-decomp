@@ -4799,15 +4799,15 @@ src/_ZN5dBgCh21StopDetectingOrdinaryEv.cpp:
     complete
     .text start:0x020354bc end:0x020354d0
 
-src/func_020354d0.c:
+src/_ZN5dBgChD2Ev.cpp:
     complete
     .text start:0x020354d0 end:0x020354e0
 
-src/func_020354e0.c:
+src/_ZN5dBgChD0Ev.cpp:
     complete
     .text start:0x020354e0 end:0x02035504
 
-src/func_02035504.c:
+src/_ZN5dBgChD1Ev.cpp:
     complete
     .text start:0x02035504 end:0x02035514
 
