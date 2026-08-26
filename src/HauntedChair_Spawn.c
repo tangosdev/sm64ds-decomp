@@ -1,5 +1,8 @@
 // @symbol HauntedChair_Spawn
-/* recovered: vtable identified, globals resolved, declarations from a shared header */
+/* The natural C++ spelling `return new HauntedChair` reproduces every
+ * instruction, but its allocation relocation names the unavailable global
+ * `_Znwm` (linkcheck BLIND-1) where the ROM calls fBase_c::operator new.
+ * Keep this truthful C transcription until that allocator spelling is solved. */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
 #include "decl_Model.h"
@@ -7,8 +10,6 @@
 #include "decl_ShadowModel.h"
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
-/* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV12HauntedChair */
 int *HauntedChair_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(936);

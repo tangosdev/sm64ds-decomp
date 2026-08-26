@@ -1,10 +1,18 @@
+//cpp
+// @symbol _ZN12HauntedChair6State3Ev
+#include "HauntedChair.h"
+
+extern "C" {
 extern short data_02082214[];
 extern int AngleDiff(int a, int b);
-extern void func_ov020_02113148(char* c, int* p, char* q, short r, int a, int b, int d);
+}
 
-void func_ov020_021129dc(char* c){
+void HauntedChair::State3()
+{
+    char* c = (char*)this;
     int* p3a4 = *(int**)(c + 0x3a4);
-    func_ov020_02113148(c, p3a4, c + 0x398, *(short*)(c + 0x3a2), 0xfa0, 0x14, 2);
+    ApproachStateValue((short *)p3a4, (short *)(c + 0x398),
+                       *(short*)(c + 0x3a2), 0xfa0, 0x14, 2);
     {
         int a = AngleDiff(*(short*)*(int**)(c + 0x3a4), 0);
         int* ip = *(int**)(c + 0x3a4);

@@ -1,28 +1,33 @@
+//cpp
+// @symbol _ZN12HauntedChair6State2Ev
+#include "HauntedChair.h"
+
 typedef int s32;
 typedef unsigned int u32;
 typedef unsigned short u16;
 typedef signed short s16;
 typedef unsigned char u8;
-typedef struct { s32 x, y, z; } Vector3;
+typedef struct { s32 x, y, z; } PlainVector3;
 
+extern "C" {
 extern void dBgCh_Actr_UpdateContinuous_Veneer(void *);
-extern void func_ov020_02113148(void *, void *, void *, int, int, int, int);
 extern void func_0201267c(int, void *);
 extern void *_ZN8dActor_c13ClosestPlayerEv(void *);
-extern void Vec3_Sub(Vector3 *res, const Vector3 *v0, const Vector3 *v1);
+extern void Vec3_Sub(PlainVector3 *res, const PlainVector3 *v0, const PlainVector3 *v1);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
-extern s32 Vec3_HorzLen(const Vector3 *v0);
+extern s32 Vec3_HorzLen(const PlainVector3 *v0);
 extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *);
 extern void func_ov020_021131f8(void *);
 extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *);
 extern void *_ZNK10dBgCh_Actr13GetWallResultEv(void *);
-extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *, Vector3 *);
+extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *, PlainVector3 *);
 extern int _ZN8dActor_c14GetSubtractionEss(void *, s16, s16);
 extern void AddVec3(void *, void *, void *);
 extern void *_ZN8dActor_c10FindWithIDEj(u32);
-extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *, const Vector3 *, u32, int, u32, u32, u32);
+extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *, const PlainVector3 *, u32, int, u32, u32, u32);
 
 extern s16 data_02082214[];
+}
 
 typedef struct {
     u8 _pad[0x9e];
@@ -34,8 +39,9 @@ typedef struct {
 #define A94 (*(u16 *)((char *)c + 0x94))
 #define ST  ((State300 *)((char *)c + 0x300))
 
-void func_ov020_02112b00(char *c)
+void HauntedChair::State2()
 {
+    char *c = (char *)this;
     dBgCh_Actr_UpdateContinuous_Veneer(c + 0x1bc);
     (*(u16 *)(((int)c + 0x39e)))++;
 
@@ -44,8 +50,10 @@ void func_ov020_02112b00(char *c)
             *(s32 *)(c + 0xa8) = 0x6000;
         else
             *(s32 *)(c + 0xa8) = 0;
-        func_ov020_02113148(c, c + 0x8c, c + 0x398, -0xfa0, 0xc8, 0x14, 2);
-        func_ov020_02113148(c, c + 0x90, c + 0x39c, 0, 0, 0x14, 1);
+        ApproachStateValue((short *)(c + 0x8c), (short *)(c + 0x398),
+                           -0xfa0, 0xc8, 0x14, 2);
+        ApproachStateValue((short *)(c + 0x90), (short *)(c + 0x39c),
+                           0, 0, 0x14, 1);
         if (ST->counter == 0x46) {
             func_0201267c(0x5c, c + 0x74);
         }
@@ -59,14 +67,14 @@ void func_ov020_02112b00(char *c)
                 if (player == 0)
                     return;
                 {
-                    Vector3 *pp = (Vector3 *)(((int)player + 0x5c));
-                    Vector3 playerPos;
-                    Vector3 diff;
+                    PlainVector3 *pp = (PlainVector3 *)(((int)player + 0x5c));
+                    PlainVector3 playerPos;
+                    PlainVector3 diff;
                     s32 r;
                     playerPos.x = pp->x;
                     playerPos.y = pp->y;
                     playerPos.z = pp->z;
-                    Vec3_Sub(&diff, &playerPos, (Vector3 *)(c + 0x5c));
+                    Vec3_Sub(&diff, &playerPos, (PlainVector3 *)(c + 0x5c));
                     *(s16 *)(c + 0x94) = _ZN4cstd5atan2E5Fix12IiES1_(diff.x, diff.z);
                     *(s16 *)(c + 0x92) = _ZN4cstd5atan2E5Fix12IiES1_(diff.y, Vec3_HorzLen(&diff)) * -1;
                     r = (s32)(((long long)data_02082214[(A92 >> 4) * 2 + 1] * 0x32000 + 0x800) >> 12);
@@ -81,14 +89,14 @@ void func_ov020_02112b00(char *c)
             }
         } else {
             if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1bc) != 0) {
-                func_ov020_021131f8(c);
+                Break();
             } else if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x1bc) != 0) {
                 void *wr = _ZNK10dBgCh_Actr13GetWallResultEv(c + 0x1bc);
-                Vector3 normal;
+                PlainVector3 normal;
                 _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)wr + 4, &normal);
                 if (_ZN8dActor_c14GetSubtractionEss(c, *(s16 *)(c + 0x94),
                         _ZN4cstd5atan2E5Fix12IiES1_(normal.x, normal.z)) > 0x4000) {
-                    func_ov020_021131f8(c);
+                    Break();
                 }
             }
         }
@@ -112,7 +120,7 @@ void func_ov020_02112b00(char *c)
         if (b != 0)
             return;
         {
-            Vector3 pos;
+            PlainVector3 pos;
             pos.x = *(s32 *)(c + 0x5c);
             pos.y = *(s32 *)(c + 0x60);
             pos.z = *(s32 *)(c + 0x64);

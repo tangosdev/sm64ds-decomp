@@ -1,8 +1,6 @@
 //cpp
 // @symbol _ZN12HauntedChair8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "HauntedChair.h"
 extern "C" {
 extern void func_0200f760(char* a, char* b);
@@ -15,14 +13,14 @@ int HauntedChair::Behavior()
 {
   func_0200f760(((char*)this), ((char*)this) + 0x17c);
   switch (mState) {
-  case 0: func_ov020_021130c8(((char*)this)); break;
-  case 1: func_ov020_02112e94(((char*)this)); break;
-  case 2: func_ov020_02112b00(((char*)this)); break;
-  case 3: func_ov020_021129dc(((char*)this)); break;
+  case 0: State0(); break;
+  case 1: State1(); break;
+  case 2: State2(); break;
+  case 3: State3(); break;
   }
-  func_ov020_02113240(((char*)this));
-  _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c);
+  UpdateModel();
+  _ZN5dCc_c5ClearEv((char*)&mCylinder);
   _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x17c, ((char*)this) + 0x38c);
-  _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c);
+  _ZN5dCc_c6UpdateEv((char*)&mCylinder);
   return 1;
 }

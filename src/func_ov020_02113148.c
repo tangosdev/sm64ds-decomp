@@ -1,5 +1,10 @@
+//cpp
+// @symbol _ZN12HauntedChair18ApproachStateValueEPsS0_isis
+#include "HauntedChair.h"
+
 #pragma opt_common_subs off
-int func_ov020_02113148(int a, short* pos, short* vel, int target, short thresh, int accel, short mult)
+int HauntedChair::ApproachStateValue(short* pos, short* vel, int target,
+                                     short thresh, int accel, short mult)
 {
     short old = pos[0];
     pos[0] = old + vel[0];

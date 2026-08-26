@@ -1,9 +1,16 @@
+//cpp
+// @symbol _ZN12HauntedChair6State0Ev
+#include "HauntedChair.h"
+
 typedef int Fix12i;
-typedef struct Vector3 { int x, y, z; } Vector3;
+extern "C" {
 extern void *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void *start);
 extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
+}
 
-void func_ov020_021130c8(char *c) {
+void HauntedChair::State0()
+{
+    char *c = (char *)this;
     *(int*)(c + 0x378) = 1;
     *(short*)(c + 0x300 + 0xa0) = 1;
     *(short*)(c + 0x300 + 0xa2) = 0;

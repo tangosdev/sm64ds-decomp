@@ -1,16 +1,21 @@
-// @symbol func_ov020_02112e94
+//cpp
+// @symbol _ZN12HauntedChair6State1Ev
 /* recovered: shared common types */
 #include "common.h"
+#include "HauntedChair.h"
 #define LAUNDER(p) (p)
 
+extern "C" {
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int Vec3_Dist(const void *a, const void *b);
 extern short Vec3_HorzAngle(const void *a, const void *b);
 extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern void func_0201267c(int a, void *b);
+}
 
-void func_ov020_02112e94(char *r4)
+void HauntedChair::State1()
 {
+    char *r4 = (char *)this;
     int sp[4];
     void *a;
     short d;
