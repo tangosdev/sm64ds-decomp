@@ -234,12 +234,23 @@ static int __fastcall ice_d0(void *s, void *)
 { return (int)(size_t)_ZN17BigMovingIceBlockD0Ev((int *)s); }
 
 // ---- the mount bring-up ----------------------------------------------------
+/* CAPTURED, and the argument is hal/level_boot.cpp's on g_level_mounted: this
+   flag says "port_ov56_bringup has run", and everything that pass writes --
+   the mount's rebased pointers and the SharedFilePtrs its static initialisers
+   construct -- lives in .dsstate. A restore rolls that back. A guard that does
+   not roll back with it leaves the pass skipped forever and the overlay
+   holding raw DS pointers, which is the defect behind both of the RELOAD
+   review's referrals. Bracketed, the pass re-runs exactly when its results
+   were rolled away. */
+DSSTATE_BEGIN
+static int g_ov56_bringup_done;
+DSSTATE_END
+
 extern "C" void port_ov56_bringup(void)
 {
-    static int done;
-    if (done)
+    if (g_ov56_bringup_done)
         return;
-    done = 1;
+    g_ov56_bringup_done = 1;
     port_ov056_pack_check();
     port_ov056_syms_patch();
     /* before the sinit and before any teardown: both destructors install ov002

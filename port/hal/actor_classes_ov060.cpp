@@ -393,12 +393,23 @@ static void ov60_fill_shared(void *volatile *vt)
 // owns actor_overlays.cpp should move this body beside the ov013/ov045
 // blocks and cut the guard to a call. The ov046 one-symbol mount rides the
 // same guard: its only consumer is this cast.
+/* CAPTURED, and the argument is hal/level_boot.cpp's on g_level_mounted: this
+   flag says "port_ov60_bringup has run", and everything that pass writes --
+   the mount's rebased pointers and the SharedFilePtrs its static initialisers
+   construct -- lives in .dsstate. A restore rolls that back. A guard that does
+   not roll back with it leaves the pass skipped forever and the overlay
+   holding raw DS pointers, which is the defect behind both of the RELOAD
+   review's referrals. Bracketed, the pass re-runs exactly when its results
+   were rolled away. */
+DSSTATE_BEGIN
+static int g_ov60_bringup_done;
+DSSTATE_END
+
 extern "C" void port_ov60_bringup(void)
 {
-    static int done;
-    if (done)
+    if (g_ov60_bringup_done)
         return;
-    done = 1;
+    g_ov60_bringup_done = 1;
     port_ov060_pack_check();
     port_ov060_syms_patch();
     port_ov046_pack_check();

@@ -225,11 +225,22 @@ static int __fastcall cl_d1(void *s, void *)
 static int __fastcall cl_d0(void *s, void *)
 { return (int)(size_t)_ZN4ClamD0Ev((int *)s); }
 
+/* CAPTURED, and the argument is hal/level_boot.cpp's on g_level_mounted: this
+   flag says "hal_fill_clam_vtable has run", and everything that pass writes --
+   the mount's rebased pointers and the SharedFilePtrs its static initialisers
+   construct -- lives in .dsstate. A restore rolls that back. A guard that does
+   not roll back with it leaves the pass skipped forever and the overlay
+   holding raw DS pointers, which is the defect behind both of the RELOAD
+   review's referrals. Bracketed, the pass re-runs exactly when its results
+   were rolled away. */
+DSSTATE_BEGIN
+static int g_clam_vtable_done;
+DSSTATE_END
+
 extern "C" void hal_fill_clam_vtable(void)
 {
-    static int done;
-    if (!done) {
-        done = 1;
+    if (!g_clam_vtable_done) {
+        g_clam_vtable_done = 1;
         __sinit_ov064_0211b698();
     }
     void *volatile *vt = (void *volatile *)_ZTV4Clam;

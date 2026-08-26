@@ -2093,6 +2093,15 @@ static void scene_fill_title(void)
        mount's coverage, so the patch cannot undo the fill -- but the fill
        would be undone if it ran first and the patch happened to cover a slot,
        so the safe order is the one the ov043/ov045 mounts already use. */
+    /* HOST-SIDE ON PURPOSE, adjudicated by run mg15 lane RELOAD2. The other
+       eighteen patch-pass guards moved into .dsstate so a restore rolls them
+       back with what they guard; these four did not, because a SCENE run
+       cannot meet a save state at all. main() hands the whole process to
+       port_scene_run/scene_window_run BEFORE the level bring-up and therefore
+       before lk7_persist_read and before the frame loop that owns F8/F9, so a
+       run that reaches this pass can neither write nor read one. Bracketing
+       these would cost .dsstate bytes to insure against a shape that cannot
+       occur. */
     static int done;
     if (!done) {
         done = 1;

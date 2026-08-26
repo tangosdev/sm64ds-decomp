@@ -169,12 +169,23 @@ DSSTATE_END
    is what port/tools/alternatename_guard.py requires. */
 #pragma comment(linker, "/alternatename:__ZTV25SlideDecorationSilverStar=__ZTV18daObjHsBillboard_c")
 
+/* CAPTURED, and the argument is hal/level_boot.cpp's on g_level_mounted: this
+   flag says "port_ov31_bringup has run", and everything that pass writes --
+   the mount's rebased pointers and the SharedFilePtrs its static initialisers
+   construct -- lives in .dsstate. A restore rolls that back. A guard that does
+   not roll back with it leaves the pass skipped forever and the overlay
+   holding raw DS pointers, which is the defect behind both of the RELOAD
+   review's referrals. Bracketed, the pass re-runs exactly when its results
+   were rolled away. */
+DSSTATE_BEGIN
+static int g_ov31_bringup_done;
+DSSTATE_END
+
 extern "C" void port_ov31_bringup(void)
 {
-    static int done;
-    if (done)
+    if (g_ov31_bringup_done)
         return;
-    done = 1;
+    g_ov31_bringup_done = 1;
     port_ov031_pack_check();
     port_ov031_syms_patch();
     __sinit_ov031_02111434();

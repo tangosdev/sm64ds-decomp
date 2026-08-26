@@ -226,6 +226,16 @@ static void mgm_pack_check(void)
    order could, if a patch ever grew to cover a slot. */
 extern "C" void port_scene_fill_mgm(void)
 {
+    /* HOST-SIDE ON PURPOSE, adjudicated by run mg15 lane RELOAD2. The other
+       eighteen patch-pass guards moved into .dsstate so a restore rolls them
+       back with what they guard; these four did not, because a SCENE run
+       cannot meet a save state at all. main() hands the whole process to
+       port_scene_run/scene_window_run BEFORE the level bring-up and therefore
+       before lk7_persist_read and before the frame loop that owns F8/F9, so a
+       run that reaches this pass can neither write nor read one. Bracketing
+       these would cost .dsstate bytes to insure against a shape that cannot
+       occur -- and port_scene_fill_mgm additionally registers an
+       atexit handler that must not be registered twice. */
     static int done;
     if (!done) {
         done = 1;

@@ -101,12 +101,23 @@ DSSTATE_END
 // the two SharedFilePtrs the file table at 0x0211427c points at, and therefore
 // the ones this class's Init veneer dereferences. Running it from here, behind
 // this file's own done guard, adds it without editing the shared bring-up.
+/* CAPTURED, and the argument is hal/level_boot.cpp's on g_level_mounted: this
+   flag says "fb83_bringup has run", and everything that pass writes --
+   the mount's rebased pointers and the SharedFilePtrs its static initialisers
+   construct -- lives in .dsstate. A restore rolls that back. A guard that does
+   not roll back with it leaves the pass skipped forever and the overlay
+   holding raw DS pointers, which is the defect behind both of the RELOAD
+   review's referrals. Bracketed, the pass re-runs exactly when its results
+   were rolled away. */
+DSSTATE_BEGIN
+static int g_fb83_bringup_done;
+DSSTATE_END
+
 static void fb83_bringup(void)
 {
-    static int done;
-    if (done)
+    if (g_fb83_bringup_done)
         return;
-    done = 1;
+    g_fb83_bringup_done = 1;
     port_ov22_bringup();
     __sinit_ov022_02112fe4();
 }

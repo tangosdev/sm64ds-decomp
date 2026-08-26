@@ -1669,11 +1669,32 @@ extern "C" void port_mount_cache_unstash(void)
                 sizeof g_level_mounted);
 }
 
+/* SM64DS_TRACE_MOUNT=1: one line per mount call saying whether the cache
+   answered or the patch pass ran. This is the instrument the cross-level reload
+   crash needed and did not have -- with the cache and the image described in
+   two places, "did the patch run for this entry" was only ever inferable from
+   the absence of [load] lines three layers downstream. */
+static int port_mount_trace(void)
+{
+    static int on = -1;
+    if (on < 0)
+        on = std::getenv("SM64DS_TRACE_MOUNT") != 0;
+    return on;
+}
+
 static void *port_level_mount_at(int idx)
 {
     void **mounted = g_level_mounted;
-    if (mounted[idx])
+    if (mounted[idx]) {
+        if (port_mount_trace())
+            std::fprintf(stderr, "[mount] level %d: CACHE HIT %p (the patch "
+                         "pass does not run)\n", port_level_table[idx].id,
+                         mounted[idx]);
         return mounted[idx];
+    }
+    if (port_mount_trace())
+        std::fprintf(stderr, "[mount] level %d: PATCHING (%s)\n",
+                     port_level_table[idx].id, port_level_table[idx].overlay);
     /* Run mg15 lane SQRT. The square-root self-test is idempotent and default
        off. It is called here as well as from port_scene_begin because a LEVEL
        run never enters the scene path, and the level arm of that lane's

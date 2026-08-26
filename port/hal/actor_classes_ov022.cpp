@@ -400,12 +400,23 @@ static void ov22_fill_shared(void *volatile *vt)
 }
 
 // ---- the mount bring-up ----------------------------------------------------
+/* CAPTURED, and the argument is hal/level_boot.cpp's on g_level_mounted: this
+   flag says "port_ov22_bringup has run", and everything that pass writes --
+   the mount's rebased pointers and the SharedFilePtrs its static initialisers
+   construct -- lives in .dsstate. A restore rolls that back. A guard that does
+   not roll back with it leaves the pass skipped forever and the overlay
+   holding raw DS pointers, which is the defect behind both of the RELOAD
+   review's referrals. Bracketed, the pass re-runs exactly when its results
+   were rolled away. */
+DSSTATE_BEGIN
+static int g_ov22_bringup_done;
+DSSTATE_END
+
 extern "C" void port_ov22_bringup(void)
 {
-    static int done;
-    if (done)
+    if (g_ov22_bringup_done)
         return;
-    done = 1;
+    g_ov22_bringup_done = 1;
     port_ov022_pack_check();
     port_ov022_syms_patch();
     __sinit_ov022_02112ca8();   /* 71's SharedFilePtrs   */

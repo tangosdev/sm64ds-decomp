@@ -200,12 +200,23 @@ static int __fastcall o43_kill(void *s, void *)
 // classes' pairs and stay OFF (the ov081 rule), and 02111940 could not link if
 // it were wanted: it spells twenty-odd cells with ov047 and ov052 names, none
 // of which resolve in port/.
+/* CAPTURED, and the argument is hal/level_boot.cpp's on g_level_mounted: this
+   flag says "port_ov43_bringup has run", and everything that pass writes --
+   the mount's rebased pointers and the SharedFilePtrs its static initialisers
+   construct -- lives in .dsstate. A restore rolls that back. A guard that does
+   not roll back with it leaves the pass skipped forever and the overlay
+   holding raw DS pointers, which is the defect behind both of the RELOAD
+   review's referrals. Bracketed, the pass re-runs exactly when its results
+   were rolled away. */
+DSSTATE_BEGIN
+static int g_ov43_bringup_done;
+DSSTATE_END
+
 extern "C" void port_ov43_bringup(void)
 {
-    static int done;
-    if (done)
+    if (g_ov43_bringup_done)
         return;
-    done = 1;
+    g_ov43_bringup_done = 1;
     port_ov043_pack_check();
     port_ov043_syms_patch();
     /* the Platform base table the D1/D0 install between member teardowns */

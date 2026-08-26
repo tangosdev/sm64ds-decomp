@@ -11,6 +11,7 @@
 // InitResources loads through -- and the port's only job is to call them in
 // ROM order and to check the mount underneath them first.
 #include <cstdio>
+#include "dsstate_seg.h"
 #include <cstdlib>
 
 extern "C" {
@@ -983,12 +984,23 @@ void port_ov65_bringup(void);   /* hal/actor_classes_ov065.cpp */
 void port_ov70_bringup(void);   /* hal/actor_classes_ov070.cpp */
 }
 
+/* CAPTURED, and the argument is hal/level_boot.cpp's on g_level_mounted: this
+   flag says "port_actor_overlays_sinits has run", and everything that pass writes --
+   the mount's rebased pointers and the SharedFilePtrs its static initialisers
+   construct -- lives in .dsstate. A restore rolls that back. A guard that does
+   not roll back with it leaves the pass skipped forever and the overlay
+   holding raw DS pointers, which is the defect behind both of the RELOAD
+   review's referrals. Bracketed, the pass re-runs exactly when its results
+   were rolled away. */
+DSSTATE_BEGIN
+static int g_actor_overlays_sinits_done;
+DSSTATE_END
+
 extern "C" void port_actor_overlays_sinits(void)
 {
-    static int done;
-    if (done)
+    if (g_actor_overlays_sinits_done)
         return;
-    done = 1;
+    g_actor_overlays_sinits_done = 1;
 
     port_ov085_pack_check();
     port_ov085_syms_patch();
@@ -1271,7 +1283,7 @@ extern "C" void port_actor_overlays_sinits(void)
      *
      * Waves 3-5 mounted six more overlays while no lane owned this file, so
      * each parked its pack_check / syms_patch / sinit sequence in a local
-     * ovNN_bringup() behind a done-guard and had every registry fill call it.
+     * ovNN_bringup() behind a g_actor_overlays_sinits_done-guard and had every registry fill call it.
      * Four of those files say in their own headers that this is the right home
      * and asked the next owner of actor_overlays.cpp to bring them here.
      *
@@ -1284,7 +1296,7 @@ extern "C" void port_actor_overlays_sinits(void)
      * call happens: here, in an order that is written down, instead of at
      * whichever class the registry loop happened to reach first.
      *
-     * The done-guards stay, and so do the calls in the fills. That is not
+     * The g_actor_overlays_sinits_done-guards stay, and so do the calls in the fills. That is not
      * belt-and-braces: a fill is reachable from the registry install, this
      * function is not the only way in, and the guard is what makes the second
      * call inert instead of an assumption about who runs first.

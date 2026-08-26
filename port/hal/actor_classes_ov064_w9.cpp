@@ -295,12 +295,23 @@ static void w9tp_fill_shared(void *volatile *vt)
 
 /* The one ov064 sinit this lane runs; see the header for why it is here rather
    than in hal/actor_overlays.cpp and why running it late is safe. */
+/* CAPTURED, and the argument is hal/level_boot.cpp's on g_level_mounted: this
+   flag says "w9tp_bringup has run", and everything that pass writes --
+   the mount's rebased pointers and the SharedFilePtrs its static initialisers
+   construct -- lives in .dsstate. A restore rolls that back. A guard that does
+   not roll back with it leaves the pass skipped forever and the overlay
+   holding raw DS pointers, which is the defect behind both of the RELOAD
+   review's referrals. Bracketed, the pass re-runs exactly when its results
+   were rolled away. */
+DSSTATE_BEGIN
+static int g_w9tp_bringup_done;
+DSSTATE_END
+
 static void w9tp_bringup(void)
 {
-    static int done;
-    if (done)
+    if (g_w9tp_bringup_done)
         return;
-    done = 1;
+    g_w9tp_bringup_done = 1;
     __sinit_ov064_0211b078();
 }
 
