@@ -5335,11 +5335,11 @@ src/func_020380c0.c:
     complete
     .text start:0x020380c0 end:0x020380ec
 
-src/_ZN5dBgPiD2Ev.c:
+src/_ZN5dBgPiD2Ev.cpp:
     complete
     .text start:0x020380ec end:0x02038114
 
-src/_ZN5dBgPiD0Ev.c:
+src/_ZN5dBgPiD0Ev.cpp:
     complete
     .text start:0x02038114 end:0x02038144
 
@@ -5351,7 +5351,7 @@ src/_ZN5dBgPiC1Ev.cpp:
     complete
     .text start:0x0203816c end:0x0203819c
 
-src/_ZN5dBgPiC2Ev.c:
+src/_ZN5dBgPiC2Ev.cpp:
     complete
     .text start:0x0203819c end:0x020381cc
 
