@@ -4601,22 +4601,27 @@ extern "C" void port_level_host_paths(void **table, int *count)
 /* The two rollback-coupled one-shot guards, stashed and put back together.
    hal/lk6_savestate.cpp calls this pair only under SM64DS_SS_NO_ROLLGUARD=1,
    which is the fix-off arm of RELOAD2's A/B; see the hook's comment there and
-   the argument on g_level_mounted above. */
+   the argument on g_level_mounted above.
+
+   REGISTERED BY tests/walk_window.cpp, NOT HERE, and the link set is the whole
+   reason: smoke_player links this file but not hal/lk6_savestate.cpp, so a
+   call to port_ss_rollguard_hook from here is an unresolved external in that
+   target. walk_window is the only binary that links both, so it is the only
+   place the two halves can be joined. */
 extern "C" {
 void port_mount_cache_stash(void);
 void port_mount_cache_unstash(void);
 void port_ov009_sinit_stash(void);       /* hal/ov009_boot.cpp */
 void port_ov009_sinit_unstash(void);
-void port_ss_rollguard_hook(void (*stash)(void), void (*unstash)(void));
 }
 
-static void port_rollguard_stash(void)
+extern "C" void port_rollguard_stash(void)
 {
     port_mount_cache_stash();
     port_ov009_sinit_stash();
 }
 
-static void port_rollguard_unstash(void)
+extern "C" void port_rollguard_unstash(void)
 {
     port_mount_cache_unstash();
     port_ov009_sinit_unstash();
@@ -4633,11 +4638,6 @@ extern "C" void port_level_mounts_install(void)
     if (done)
         return;
     done = 1;
-    /* Register the rollback-coupled guards' A/B hook here rather than in a
-       constructor: this runs in the a2 seat, before the first level boot and
-       before lk7's boot-time disk read, which is before any restore can
-       happen. */
-    port_ss_rollguard_hook(port_rollguard_stash, port_rollguard_unstash);
     for (int i = 0; i < PORT_LEVEL_COUNT; ++i) {
         const PortLevelDesc *d = &port_level_table[i];
         const unsigned ds = port_level_ds_overlay(d->id);

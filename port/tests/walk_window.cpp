@@ -1257,6 +1257,10 @@ static const int ZOOM = 3;
    from the Stage rather than capturing it (see the note at the re-seat). */
 static void *g_mc;
 extern "C" void *port_stage_object(void);   /* hal/stage_bridges.cpp */
+/* the two halves of the rollback-coupled guards' A/B; see the registration */
+extern "C" void port_ss_rollguard_hook(void (*)(void), void (*)(void));
+extern "C" void port_rollguard_stash(void);
+extern "C" void port_rollguard_unstash(void);
 
 /* ---- THE FRAME PACER'S CLOCK ------------------------------------------
    frame_pace below sleeps out the remainder of a frame budget that is 16.65ms
@@ -6454,6 +6458,16 @@ int main(void)
        two boots with this set and must land on the first run's hardware hash.
        Without the env, selftests never touch savestate.bin, so the comparator
        runs stay deterministic. */
+    /* THE ROLLBACK-COUPLED GUARDS' A/B HOOK, joined here because this is the
+       only binary that links both halves: hal/lk6_savestate.cpp owns the hook
+       and the two smoke targets link it without the mount table, while
+       hal/level_boot.cpp owns the stash pair and smoke_player links THAT
+       without lk6. Registered before the first restore of any kind -- the disk
+       read below is the earliest one, and F9 and the menu's load row are all
+       later, in the frame loop. Does nothing unless SM64DS_SS_NO_ROLLGUARD=1
+       asks for the fix-off arm. */
+    port_ss_rollguard_hook(port_rollguard_stash, port_rollguard_unstash);
+
     if ((!selftest || getenv("SM64DS_SS_DISKLOAD")) && lk7_persist_available()) {
         if (lk7_persist_read()) {
             an_pivot_live = 0;   /* no ease across the load */
@@ -6721,9 +6735,19 @@ int main(void)
             if (ss_watch) {
                 static int seeded;
                 static unsigned last;
+                /* THE COVERAGE IS THE MEASUREMENT, not just the value.
+                   Whether the pointer leads into .dsstate or into the raw DS
+                   reservation is exactly what a mount's patch pass decides,
+                   and the id halfword behind it reads 0000 on BOTH sides of
+                   that -- so a watch keyed only on the value prints one line
+                   at f0 and never again, which is why the soak's cross-level
+                   arm could only ever report VACUOUS. Keying on the pair makes
+                   the line fire when the pass runs, when a restore rolls it
+                   back, and when it runs again. */
+                static int last_cov = -1;
                 int cov = 0;
                 const unsigned now = ss_flag_word(&cov);
-                if (!seeded || now != last) {
+                if (!seeded || now != last || cov != last_cov) {
                     fprintf(stderr, "[ss-flag] f%d ov009 water-anim id "
                             "%04x -> %04x, storage %s\n", frame,
                             seeded ? last : now, now,
@@ -6733,6 +6757,7 @@ int main(void)
                     ss_flag_dump(seeded ? "after the change" : "first look");
                     seeded = 1;
                     last = now;
+                    last_cov = cov;
                 }
             }
             if (ss_save_fr >= 0 && frame == ss_save_fr) {
