@@ -164,9 +164,11 @@ void seat_player_globals(void)
 
    THE BANK IS WRITTEN HERE AND THAT IS DELIBERATE. LoadGroupAndSetBank is
    matched src and in the link, but its first line is func_0203d974, whose
-   console-type read at 0x027ffc40 is outside every region ntr maps (main RAM
-   is 0x02000000..0x02400000), so on the host it is a fault, not an answer.
-   The port answers 1 -- see port_console_is_dsi below -- and the ROM's `1`
+   read at 0x027ffc40 the port answers for. (This note used to say that
+   address was outside every region ntr maps. It is not: SHARED_BASE
+   0x027ff000 is a fatal region in ntr/io.cpp's kRegions, and the port writes
+   a cartridge-boot 0 there. The reason the face stays is the sound heap, not
+   the mapping -- see func_0203d974 below.) The port answers 1 and the ROM's `1`
    branch returns early for any group but 0x2f without recording anything.
    Both branches END by storing the bank and the group, and those two words
    are the whole observable effect once the load itself is a no-op (the SDAT
@@ -233,10 +235,14 @@ extern "C" {
 
 /* func_0203d974, hosted. Removed from slice_gate14's source list.
  *
- * The ROM reads the console-type halfword the firmware leaves at 0x027ffc40
- * and answers "is this a DSi (or a debug unit)". Nothing maps that address on
- * the host, so the src version is a fault waiting for its first caller, and
- * it has one now: Sound::LoadGroupAndSetBank is on the course boot path.
+ * The ROM reads the BOOT INDICATOR the firmware leaves at 0x027ffc40 -- "was
+ * this console download-played" -- and ORs it with "is my comms slot not the
+ * parent's". (An earlier draft of this note called it a console-type word and
+ * said nothing mapped it. Both halves are wrong now: ntr/io.cpp maps
+ * SHARED_BASE 0x027ff000 as a fatal region, and the port writes 0 there, a
+ * cartridge boot. See the boot-indicator note at that write.) So the read is
+ * fine and the DS-faithful ANSWER is 0 -- which is exactly the branch this
+ * face exists to avoid, for the reason below.
  *
  * The port answers 1. Not because the host is a DSi, but because the 0 branch
  * is the one that walks the SOUND HEAP -- func_020134d8 -> func_02051918 over

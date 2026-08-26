@@ -10,7 +10,6 @@
 #include "comms_seam.h"
 
 #include "os_thread.h"
-#include "dsstate_seg.h"
 
 #include <cstdio>
 #include <cstring>
@@ -264,14 +263,43 @@ void func_0203e20c(void) {
 // is the undersized-host-global trap this tree has been bitten by before.
 // ===========================================================================
 //
-// THEY ARE DS STATE, so they go inside the save-state bracket. Nothing here
-// re-declares them further down the file, which is the silent way out of the
-// bracket dsstate_seg.h warns about. port/tools/dsstate_guard.py is what
-// caught them the first time they were written as plain globals.
-DSSTATE_BEGIN
+// THEY ARE DS STATE, so they go inside the save-state bracket -- but NOT at
+// hal/dsstate_seg.h's default $mmm suffix, and the reason is a measurement
+// rather than a preference.
+//
+// port/tools/battery.py's own header: some hosted DS data reaches the geometry
+// stream as a POINTER VALUE, so the rendered frame depends on the ABSOLUTE
+// ADDRESS of hosted globals, and an insertion INTERIOR to .dsstate shifts
+// every global past it while leaving the section base exactly where it was.
+// Its measured table puts that at 1354 changed pixels for 64 inserted bytes at
+// 296 frames. So three new globals at $mmm would make every BMP comparison
+// against a pre-seam build a layout artifact, and "byte-identical" would have
+// been unavailable as evidence for the whole regression proof.
+//
+// MSVC merges grouped sections in lexical order of the text after the `$`.
+// $wcomms sorts after every family this tree uses ($aaa, $aab, $after, $bulk,
+// $camcomm, $camrec, $gxbank, $hvsstar, $l2_, $mg, $mmblk, $mmcray, $mmm,
+// $oamsh, $pk*, $savblk, $touch) and before the $zzz high sentinel, so these
+// three land at the TOP of the captured span and NOT ONE existing hosted
+// global moves. The span grows; the span is read only by lk6_savestate.cpp's
+// memcpy and reaches no frame. That is what makes the BMP pairs in
+// runs/mg15/out/MP1/ mean something.
+//
+// RETIREMENT CONDITION: if these ever have to be ROM-SPACED against
+// data_020a0e58 (they are its immediate ROM neighbours), they move into that
+// band and every BMP baseline taken against this layout has to be retaken.
+// Nothing needs that today -- src/func_0203bc7c.c indexes each array within
+// its own bounds and never reaches one as an interior address of another,
+// which is the only thing the gxband rule is about.
+//
+// Nothing below re-declares them, which is the silent way out of the bracket
+// dsstate_seg.h warns about.
+#pragma section(".dsstate$wcomms", read, write)
 extern "C" {
-unsigned char data_020a0e44[4];         // 0x020a0e44 .. 0x020a0e48
-unsigned short data_020a0e48[4];        // 0x020a0e48 .. 0x020a0e50
-unsigned short data_020a0e50[4];        // 0x020a0e50 .. 0x020a0e58
+__declspec(allocate(".dsstate$wcomms")) __declspec(align(4))
+unsigned char data_020a0e44[4] = {0};       // 0x020a0e44 .. 0x020a0e48
+__declspec(allocate(".dsstate$wcomms")) __declspec(align(2))
+unsigned short data_020a0e48[4] = {0};      // 0x020a0e48 .. 0x020a0e50
+__declspec(allocate(".dsstate$wcomms")) __declspec(align(2))
+unsigned short data_020a0e50[4] = {0};      // 0x020a0e50 .. 0x020a0e58
 }
-DSSTATE_END

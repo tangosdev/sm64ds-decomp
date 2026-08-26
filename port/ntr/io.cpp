@@ -544,15 +544,50 @@ bool io_init() {
     // display-list pump spin-waits on bit 25 before touching the FIFO, so the
     // latch must come up idle or the wait never falls through.
     raw_write(0x04000600u, 0x06000000u, 4);
-    /* The shared block comes up saying the sound system is already busy.
-       func_0203d974 is `*(u16 *)0x27ffc40 == 2 || data_020a0f10`, and it is the
-       guard on func_02011f7c's ARM7 handshake -- the one that loads a
-       character's voice bank. Answering 1 skips the handshake and leaves the
-       bank id recorded, which is what the port wants: there is no ARM7, the
-       SDAT player owns banks, and the ROM path would reach for a core that is
-       not there. Reachable the moment the Player is anyone but Mario, since
-       func_ov002_020e6330 loads the bank off the character byte. */
-    *reinterpret_cast<volatile uint16_t *>(SHARED_BASE + 0xc40) = 2;
+    /* THE BOOT INDICATOR, and it says CARTRIDGE BOOT.
+       Run mg15 lane MP1 replaced a 2 here, and the reason it was a 2 had
+       already stopped being true twice over.
+
+       0x027FFC40 is the halfword the DS firmware leaves in the shared system
+       block. 2 means "this console was DOWNLOAD-PLAYED", and the ROM does not
+       treat that as trivia: src/func_0203db64.c:72 turns it into
+       data_020a0f04 = 2, an automatic wireless CHILD that never sees a menu,
+       and src/func_020408b0.c:33 picks its wireless init branch on it. The
+       day the radio seam is wired -- it is now, hal/comms_seam.cpp -- a 2 here
+       would mean every copy of the port boots believing it was download-played
+       and tries to become somebody's guest. Nobody could host.
+
+       THE OLD REASON. The 2 was here to make func_0203d974 answer 1 and skip
+       func_02011f7c's ARM7 voice-bank handshake. But func_0203d974 has been
+       HOST-FACED as a plain `return 1` in hal/star_flow.cpp since the sound
+       lane (cut from slice_gate10 and slice_gate14), so the write did not
+       serve it at all. And the second half of that prose -- "0x027ffc40 is not
+       mapped, the read is an access violation", still written in
+       hal/star_flow.cpp and hal/sdat/sound_abi.cpp -- stopped being true when
+       SHARED_BASE joined kRegions above as a FATAL region.
+
+       WHAT THE HONEST VALUE COSTS, measured and not argued:
+         func_0203d974  host-faced, unaffected. The ARM7 handshake is still
+                        skipped, for the port's own reason and at the seam
+                        where the question is asked.
+         func_0203d7d4  (slice_gate14) now answers 0 for arg 0 instead of 1.
+                        Its one linked arg-0 caller is src/func_02018e68.c,
+                        which RETURNS EARLY on 0 -- and on 1 walked into
+                        OS_SleepThread, which run mg15 measured faulting
+                        (0xC0000005). So the honest value is the safer one:
+                        the file-read error path now reaches its Crash()
+                        cleanly instead of dying before it can report.
+         func_02013f4c  (slice_gate10) the dev crash screen's A+B+select+start
+                        soft reset now takes func_01ffdd98 instead of
+                        func_0205f958. Both are console resets with no meaning
+                        on a PC (func_01ffdd98 is stubbed __debugbreak in
+                        hal/cxx_aliases.cpp, func_0205f958 reloads the card),
+                        and the branch needs the crash screen to be up.
+
+       port::comms_set_boot_indicator() is how a launcher mod deliberately
+       simulates a downloaded child. That is the only thing that should ever
+       make this a 2. */
+    *reinterpret_cast<volatile uint16_t *>(SHARED_BASE + 0xc40) = 0;
     return true;
 }
 
