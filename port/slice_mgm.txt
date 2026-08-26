@@ -1,0 +1,206 @@
+# Gate MGM: dScMiniGm_c, actor id 5, the MINIGAME SELECTION MENU (the Rec Room
+# grid the player picks a game off). Run mg15, lane MENU.
+#
+# ---- 1. THE SCENE ID, DERIVED --------------------------------------------
+#
+# src/GetSceneOverlayID.c maps scene ids to overlays and its ov005 arm is one
+# line, `case 5: return (int)&overlay_5;`. The other direction agrees: the arm9
+# spawn table's entry for id 5 is config/arm9/relocs.txt
+# `from:0x02090878 kind:load to:0x020c2440`, and (0x02090878 - 0x02090864)/4 = 5.
+# 0x020c2440 is the first symbol of ov005's .data.
+#
+# Everything below was read out of extracted/overlays/overlay_0005.bin at base
+# 0x020bfec0 (the delinks.txt .text start), with the base proven on a symbol
+# first: func_ov005_020c21ec's first word is e92d4010 = push {r4,lr} and
+# func_ov005_020c14a0's is the same, so the file offset arithmetic is right.
+#
+#   SpawnInfo      0x020c2440  {0x020c21ec factory, 0x00080005}
+#   RTTI           0x020c2448  {0x0209a764 class_type_info vt, 0x020c2454 name,
+#                              0x020914d4 base}, and 0x020c2454 spells
+#                              "11dScMiniGm_c"
+#   factory        0x020c21ec  0x64 bytes: ActorBase::operator new(0xb0),
+#                              ActorBase::ActorBase(), the ActorDerived and
+#                              Scene vptrs, |=1 and |=4 on the flag byte at
+#                              +0x13, then the class vptr 0x020c2490
+#   vtable         0x020c2490  EIGHTEEN slots (delta to the next symbol,
+#                              data_ov005_020c24d8, is 0x48 = 18 words), the
+#                              _ZTV5Scene shape -- NOT the 36-slot
+#                              dScMgBase_c shape the ov006 minigames use.
+#                              dScMiniGm_c is a direct Scene subclass; the
+#                              minigames are not.
+#   object size    0xb0        the factory's operator new argument
+#   overrides      7           slots 0, 3, 6, 9, 12, 16, 17:
+#                                0  0x020c1a20  InitResources
+#                                3  0x020c1654  CleanupResources
+#                                6  0x020c14a0  Behavior
+#                                9  0x020c0b04  Render
+#                               12  0x020c0b00  OnPendingDestroy
+#                               16  0x020bfec0  D2
+#                               17  0x020bfefc  D0
+#                              the other ELEVEN hold arm9 words
+#                              (0x0202e638 0x0202e62c 0x0202e5f0 0x0202e5d0
+#                               0x0202e3d4 0x0202e3c8 0x0202e3a4 0x0202e398
+#                               0x0204357c 0x0204349c 0x02043494), every one
+#                              of which is already a row in scene_boot.cpp's
+#                              kSceneRomFaces, so port_scene_fill_rom accounts
+#                              for the whole table and leaves zero raw words.
+#
+# ---- 2. THE WHOLE OVERLAY IS ALREADY DECOMPILED --------------------------
+#
+# ov005 is the smallest scene overlay in the game: .text is 0x020bfec0..
+# 0x020c2250, 0x2390 bytes, TWENTY-SIX functions, and every one of them has a
+# src/ TU. config/arm9/overlays/ov005/delinks.txt marks 23 of the 26 complete
+# (byte-matched and delinked); the other three carry NONMATCHING banners:
+#
+#   func_ov005_020c0378  the touch SELECTOR      regalloc/path-A schedule
+#   func_ov005_020c0b04  Render                  "missing logic (ROM does more)"
+#   func_ov005_020c16e4  the tile blitter        size 0x338 vs 0x33c
+#
+# The Render banner is the one that matters to this seat and it is reported as
+# a floor rather than smoothed over: its body is decompiled but INCOMPLETE
+# against the ROM, so anything the menu fails to draw has that as its first
+# suspect. It is seated anyway because the alternative is a no-op slot, which
+# draws nothing at all.
+#
+# ---- 3. WHAT WAS MISSING FROM THE PORT, MEASURED -------------------------
+#
+# The 26 TUs' whole external closure was extracted and checked against
+# build/port/walk_window.map (the shipped window's own link, hashed at the
+# moment of use). NINETY-FOUR names, EIGHTY-FIVE already resolved. The nine
+# that did not, and what each needed:
+#
+#   ExitMinigameMenu        src/ExitMinigameMenu.c        -> this slice
+#   func_02013598           src/func_02013598.c           -> this slice
+#   func_020135d0           src/func_020135d0.c           -> this slice
+#   func_02013638           src/func_02013638.c           -> this slice
+#   func_020233f4           src/func_020233f4.c           -> ALREADY in
+#                                                         port/slice_gate29.txt
+#   data_0208a170           arm9 .data, ROM value 3       -> romdata.py NAMED
+#   data_0208a174           arm9 .data, ROM value -1      -> romdata.py NAMED
+#   data_0209b304           arm9 .bss                     -> hal/auto_bss.cpp
+#   data_0209f1d8           arm9 .bss                     -> hal/auto_bss.cpp
+#
+# Nine. That is the entire gap between "the port has never touched this scene"
+# and "the scene's code links", and it is why this lane is one lane and not a
+# wave the way mg9..mg11 were.
+#
+# ---- 4. THE THREE //cpp-MARKED .c FILES ----------------------------------
+#
+# src/func_ov005_020c0140.c, _020c0378.c and _020c0878.c open with the //cpp
+# marker and a top-level `extern "C" {` block, which is invalid C. They get
+# LANGUAGE CXX in port/CMakeLists.txt beside this slice, the treatment gates
+# 176/177/194 already established. The three genuine .cpp TUs (020bff4c,
+# 020c0250, 020c1030) need nothing.
+#
+# ---- 5. THE FIVE MARKER BODIES ------------------------------------------
+#
+# Five of the 26 carry "recovered from vtable slot identity", so
+# port/tools/inferred_stub_guard.py refuses them until each is ruled. All five
+# are ruled in port/tools/inferred_stub_adjudicated.txt, and the evidence is
+# the strongest kind available: FOUR of the five are marked complete in
+# config/arm9/overlays/ov005/delinks.txt, which means the ROM's own bytes come
+# back out of the source. A byte-matching body is not a guess.
+src/func_ov005_020bfec0.c
+src/func_ov005_020bfefc.c
+src/func_ov005_020bff4c.cpp
+src/func_ov005_020bffc8.c
+src/func_ov005_020bfff4.c
+src/func_ov005_020c0010.c
+src/func_ov005_020c0030.c
+src/func_ov005_020c007c.c
+src/func_ov005_020c00b4.c
+src/func_ov005_020c00e4.c
+src/func_ov005_020c0140.c
+src/func_ov005_020c0250.cpp
+src/func_ov005_020c0378.c
+src/func_ov005_020c06cc.c
+src/func_ov005_020c0878.c
+src/func_ov005_020c0b00.c
+src/func_ov005_020c0b04.c
+src/func_ov005_020c0f38.c
+src/func_ov005_020c1030.cpp
+src/func_ov005_020c1130.c
+src/func_ov005_020c14a0.c
+src/func_ov005_020c1654.c
+src/func_ov005_020c1688.c
+src/func_ov005_020c16e4.c
+src/func_ov005_020c1a20.c
+src/func_ov005_020c21ec.c
+src/ExitMinigameMenu.c
+src/func_02013598.c
+src/func_020135d0.c
+src/func_02013638.c
+# src/func_020233f4.c is NOT listed. It is already a line of
+# port/slice_gate29.txt, which every target that takes this slice also takes,
+# and that slice compiles it as C++ (LANGUAGE CXX). Listing it here as well
+# gave MSVC two object rules for one file -- func_020233f4.cpp.obj and
+# func_020233f4.c.obj -- and the link failed with LNK2005. The symbol is
+# already resolved for this slice's readers by gate 29's copy.
+#
+# ---- 6. THE PROOF, run mg15 lane MENU ------------------------------------
+#
+# Three headless runs of the same binary (walk_window.exe sha256
+# 219203699a4403882acd9282c34dea25724e9794e9bb5630080d0ca5460191e0, hashed at
+# the moment of use), all SM64DS_FAULTS_FATAL=1, all SM64DS_WINDOW_SELFTEST=1
+# + SM64DS_NO_FOCUS=1 so nothing appears on the desk:
+#
+#   SM64DS_SCENE=5 SM64DS_SCENE_FRAMES=150      rc 0, "clean", 0 UNHANDLED
+#   SM64DS_SCENE=5 SM64DS_SCENE_FRAMES=300      rc 0, "clean", 0 UNHANDLED
+#   the same at 300 with SM64DS_TOUCH_PROBE=200-202:88:60
+#                                               rc 0, "clean", 0 UNHANDLED
+#
+# TWO FRAME COUNTS BECAUSE ONE IS LAYOUT-BLIND (notes/port-selftest-bmp-gate.md).
+# The stacked captures at 150 and 300 DIFFER on engine B
+# (25dd00cc... vs b4b8d278...) and are IDENTICAL on engine A
+# (1942228c... both), which is the honest reading: the bottom screen animates
+# and the top screen is static in this state. A single count could not have
+# said either thing.
+#
+# THE SLOT COUNTERS, from hal/scene_mg_menu.cpp's own witness:
+#
+#   no tap, 300 frames    init 1  clean 0  beh 299  render 300  pdes 0  d2 0
+#   tapped, 300 frames    init 1  clean 1  beh 240  render 240  pdes 1  d2 1
+#
+# The tapped run's Behavior STOPS at 240 -- forty frames after the f200 press
+# plus the fade -- and CleanupResources, OnPendingDestroy and the D2 all fire
+# exactly once. The scene tears itself down on a selection, which is what the
+# ROM does.
+#
+# THE DECISION NUMBERS, named from the ROM (section 5 above) BEFORE the run:
+#
+#                       no tap        tapped at DS (88,60) on f200
+#   data_0208a174        -1            3          the selected row
+#   data_0209b2fc[0]      0            1          the launch latch
+#   data_0209b308 u16     0            366        the picked minigame's id
+#   data_02092664       391            366        THE PENDING SCENE ID
+#
+# 366 is 0x016E, and row 3 of the launch table at data_ov005_020c24d8 is
+# id=0x016e -- "Wanted!", dScMgLuigi_c, which this port already hosts as
+# SCENE_MG_LUIGI. So the menu hit-tested a touch into the right cell, read the
+# right row out of the ROM's own table, and asked Scene::SetSceneToSpawn for
+# the right game. data_02092664 is the load-bearing one: taking a touch and
+# ASKING THE GAME FOR A SCENE are two different claims and only that word is
+# the second.
+#
+# A FOURTH, INDEPENDENT WITNESS TO THE SAME EVENT: the untapped runs report
+# `irq2: 0 HBlank deliver(s)` and the tapped run reports 9994, with 2045 of
+# them changing the latched window. That is the scene fade's HBlank window
+# effect running, and nothing in the harness turned it on.
+#
+# ---- 7. THE FLOOR THIS LANE LEAVES ---------------------------------------
+#
+# The menu DRAWS on both screens: engine A is the Rec Room (Toad, the wall of
+# cards, "TOUCH TO SELECT"), engine B is the picker (the four character
+# portraits down the left, the star counter, the back button, the starred
+# background). Measured: engine B 78 distinct colours, 40.3% of pixels off the
+# dominant one; engine A 152 distinct colours, 92.3% off the dominant one.
+#
+# WHAT IS MISSING IS THE GRID'S CARDS. On engine B the two "NEW!" badges draw
+# at DS y about 87, x about 70 and 118 -- inside grid cells (row 0, columns 0
+# and 1) by func_ov005_020c0378's own hit test -- with no card art under them.
+# The first suspect is named in section 2 and in hal/scene_mg_menu.cpp:
+# func_ov005_020c0b04, the Render slot, is NONMATCHING with the banner
+# "missing logic (ROM does more)". This lane did not chase it: the seat is
+# proved to boot, draw and take a touch, and finishing Render is a decomp job
+# on one body rather than a port job. Nobody should read this seat's pictures
+# as a claim about the ROM's Render.

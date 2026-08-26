@@ -79,6 +79,22 @@ TABLES = [
 # config/arm9/symbols.txt (size = delta to the next symbol, the ovdata.py
 # convention). Emitted as aligned byte arrays so any struct view works.
 NAMED = [
+    # Run mg15 lane MENU: the minigame SELECTION menu's two row words. Both are
+    # arm9 .data (config/arm9/delinks.txt: .data 0x02086bc0..0x0209b000), four
+    # bytes each by the delta rule, and NEITHER carries a relocation -- checked
+    # over both spans in config/arm9/relocs.txt, no `from:0x0208a170` and no
+    # `from:0x0208a174` line exists. Their ROM values are 0x00000003 and
+    # 0xffffffff, read out of extracted/arm9_dec.bin at 0x0208a170.
+    #
+    # THE -1 IS THE WHOLE REASON THEY COME FROM HERE AND NOT FROM A HAL LINE.
+    # data_0208a174 is the menu's SELECTION and its boot value is the "nothing
+    # picked" sentinel; src/func_ov005_020c0378.c only ever writes a row index
+    # into it, so a host that zeroed it would boot the menu with row 0 already
+    # chosen and nothing in the game would ever say so. data_0208a170 is the
+    # highlighted row base, advanced by func_ov005_020c0878, and 3 is where the
+    # ROM starts it. The port does not write Nintendo's numbers down; it reads
+    # them, which is the same argument every other row in this list makes.
+    "data_0208a170", "data_0208a174",
     "data_0208a178", "data_0208c178",
     "data_0208e504", "data_0208e538", "data_0208e548", "data_0208e54c",
     "data_0208e55c", "data_0208e56c", "data_0208e57c", "data_0208e58c",
