@@ -67,9 +67,9 @@ before this pass; the writes above are what took them out of the padding.
 `Tornado::Behavior` switches on `mState` and calls one of three free
 functions, all inside this class's own address range:
 
-- 0 `src/func_ov096_021372c0.cpp` -- dormant at home.
-- 1 `src/func_ov096_02137088.cpp` -- hunting.
-- 2 `src/func_ov096_02136fd4.c` -- winding down.
+- 0 `src/_ZN7Tornado6State0Ev.cpp` -- dormant at home.
+- 1 `src/_ZN7Tornado6State1Ev.cpp` -- hunting.
+- 2 `src/_ZN7Tornado6State2Ev.cpp` -- winding down.
 
 | offset | name | evidence |
 | --- | --- | --- |
