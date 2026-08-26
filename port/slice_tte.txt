@@ -633,6 +633,14 @@ src/func_ov006_020cf2fc.c
 # It replaces the LAST trap in unmatched/MgTrampolineTerror_Faces.cpp, which is
 # now counters only.
 #
+# IT IS A C++ TU, and that is the host dispatch rather than a style choice: the
+# element is a class with four virtuals so MSVC emits a __thiscall virtual call
+# into the __fastcall adapters this vtable is bound to, the way
+# src/func_ov006_020ce8a0.cpp and src/func_ov006_020ce108.cpp already do. As a .c
+# file with a struct of function pointers it compiled to the SAME BYTES and read
+# its positions out of the vtable instead of the character. The banner has the
+# disassembly.
+#
 # THIS ONE IS A PLAIN SLICE LINE, NOT A TT_SHARED_HOSTGEN SYMBOL: it writes no
 # MMIO and its 8-word literal pool holds no 0x04xxxxxx address, so the src/ copy
 # is the copy that compiles. It is a slice_tte line ONLY, because the only thing
@@ -652,7 +660,7 @@ src/func_ov006_020cf2fc.c
 # the size, the whole literal pool and all 28 call offsets exactly the ROM's, and
 # every divergence a permutation or re-association of the same computation -- and
 # the banner in the file states each one.
-src/func_ov006_020cfc74.c
+src/func_ov006_020cfc74.cpp
 # the installer's own three callees; see the note beside them in slice_tti.txt.
 # None was in any slice before the installer was seated.
 src/func_ov006_020cf040.c

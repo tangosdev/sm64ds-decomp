@@ -1,3 +1,4 @@
+//cpp
 // NONMATCHING: eight words, every one of them provably semantics-preserving --
 // six of pre-loop schedule and one addressing split (8 divergences against 339
 // ROM code words, 97.6% aligned). Run mg13, lane BOUNCE. This is the TRAMPOLINE
@@ -39,6 +40,28 @@
 // disagreement is between two translation units in C and is harmless -- the
 // value comes back in a register nobody reads -- but it is stated here rather
 // than left for a reader to trip over.
+//
+// THIS IS A C++ TU AND THAT IS LOAD-BEARING ON THE HOST, NOT ON THE ROM. The
+// element is declared as a class with four virtuals and the three dispatches are
+// spelled arr[i]->IsActive(), ->GetPos() and ->GetTargetPos(), which is what
+// src/func_ov006_020ce8a0.cpp and src/func_ov006_020ce108.cpp -- the two other
+// ROM bodies that dispatch this same vtable -- already do.
+//
+// It began as a .c file with a struct of function pointers. That spelling
+// compiles to the SAME BYTES at 2004/b56 -- verified: same 0x56c, same 339 code
+// words, same 8-word pool, the same eight divergence offsets, byte-identical
+// object and identical relocations -- and it is WRONG ON THE HOST. The port
+// binds this vtable's slots to __fastcall adapters, because MSVC dispatches a
+// virtual through ECX. A C function-pointer call is __cdecl, so MSVC pushed the
+// receiver on the stack and left ECX holding whatever register allocation had
+// last put there. dumpbin of the .c build showed it landing both ways inside
+// this one function: at the IsActive site ECX happened to hold the object, and
+// at BOTH position sites it held the VPTR, so GetPos returned vptr + 0x24 and
+// GetTargetPos returned vptr + 0x30. The body read its two positions out of the
+// hosted vtable, its crossing test could never fire, and the trampolines drew
+// while every character fell straight through them. The C++ spelling makes the
+// receiver arrive by contract instead of by luck, and it changes not one byte of
+// what mwccarm emits.
 //
 // WHAT IS EXACT. The size is the ROM's 0x56c to the byte: 339 code words and 8
 // pool words in both. All TWENTY-EIGHT calls sit at the ROM's own byte offsets,
@@ -161,12 +184,7 @@ typedef unsigned short u16;
 struct Vec3 { int x, y, z; };
 struct V2 { int x, y; };
 
-struct VT {
-    struct Vec3 *(*GetPos)(void *);
-    struct Vec3 *(*GetTargetPos)(void *);
-    void (*Pad08)(void *);
-    int (*IsActive)(void *);
-};
+struct Cannon;
 struct SObj {
     char pad[0x324];
     u16 cnt324;
@@ -174,32 +192,35 @@ struct SObj {
     u8 state328;
 };
 struct Cannon {
-    struct VT *vt;
+    virtual struct Vec3 *GetPos();
+    virtual struct Vec3 *GetTargetPos();
+    virtual void Pad08();
+    virtual int IsActive();
     struct Vec3 v4;
     int f10;
     int f14;
     u16 f18;
 };
 
-extern void Vec3_Sub(struct Vec3 *out, struct Vec3 *a, struct Vec3 *b);
-extern void SubVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
-extern int DotVec3(struct Vec3 *a, struct Vec3 *b);
-extern void Vec2_Sub(int *o, int *a, int *b);
-extern int func_0203d524(int *a, int *b);
-extern int _ZN4cstd4fdivEii(int a, int b);
-extern void func_ov006_020e6db4(int a0, int a1, int a2);
-extern void func_ov006_020cf040(char *sl, void *arg1, struct Vec3 *r2);
-extern void func_ov006_020cfa28(char *p);
-extern void Vec3_MulScalar(struct Vec3 *out, struct Vec3 *in, int scale);
-extern void Vec3_Add(struct Vec3 *out, struct Vec3 *a, struct Vec3 *b);
+extern "C" void Vec3_Sub(struct Vec3 *out, struct Vec3 *a, struct Vec3 *b);
+extern "C" void SubVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
+extern "C" int DotVec3(struct Vec3 *a, struct Vec3 *b);
+extern "C" void Vec2_Sub(int *o, int *a, int *b);
+extern "C" int func_0203d524(int *a, int *b);
+extern "C" int _ZN4cstd4fdivEii(int a, int b);
+extern "C" void func_ov006_020e6db4(int a0, int a1, int a2);
+extern "C" void func_ov006_020cf040(char *sl, void *arg1, struct Vec3 *r2);
+extern "C" void func_ov006_020cfa28(char *p);
+extern "C" void Vec3_MulScalar(struct Vec3 *out, struct Vec3 *in, int scale);
+extern "C" void Vec3_Add(struct Vec3 *out, struct Vec3 *a, struct Vec3 *b);
 
-extern struct Cannon *data_ov006_0214097c[];
-extern int data_ov006_0213b30c;
-extern int data_ov006_0213b310;
-extern int data_ov006_0213b2f4;
-extern int data_ov006_0213b308;
+extern "C" struct Cannon *data_ov006_0214097c[];
+extern "C" int data_ov006_0213b30c;
+extern "C" int data_ov006_0213b310;
+extern "C" int data_ov006_0213b2f4;
+extern "C" int data_ov006_0213b308;
 
-int func_ov006_020cfc74(char *c)
+extern "C" int func_ov006_020cfc74(char *c)
 {
     int i;
     int a;
@@ -237,15 +258,15 @@ int func_ov006_020cfc74(char *c)
 
         if (arr[i] == 0)
             continue;
-        if (arr[i]->vt->IsActive(arr[i]) == 0)
+        if (arr[i]->IsActive() == 0)
             continue;
 
-        p0 = arr[i]->vt->GetPos(arr[i]);
+        p0 = arr[i]->GetPos();
         pos0.x = p0->x;
         pos0.y = p0->y;
         pos0.z = p0->z;
 
-        p1 = arr[i]->vt->GetTargetPos(arr[i]);
+        p1 = arr[i]->GetTargetPos();
         pos1.x = p1->x;
         pos1.y = p1->y;
         pos1.z = p1->z;
