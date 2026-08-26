@@ -232,7 +232,7 @@ fader vtables out of `extracted/arm9_dec.bin` shows 10 slots each with Fader's s
 reconstructed, hierarchy not. Treat "this header looks finished" as a hypothesis and
 check the ROM's own vtable before building on it.
 
-**Rung 2 -- unmigrated function** (`src/_ZN10BrickBlockD0Ev.c`, today):
+**Rung 2 -- unmigrated function** (`src/_ZN10BrickBlockD0Ev.cpp`, today):
 
 ```c
 int *_ZN10BrickBlockD0Ev(int *t)
