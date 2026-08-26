@@ -8,39 +8,39 @@ src/_ZN9ButterflyD1Ev.cpp:
     complete
     .text start:0x02140d80 end:0x02140dd8
 
-src/_ZN9ButterflyD0Ev.c:
+src/_ZN9ButterflyD0Ev.cpp:
     complete
     .text start:0x02140dd8 end:0x02140e44
 
-src/func_ov100_02140e44.cpp:
+src/_ZN9Butterfly6State7Ev.cpp:
     complete
     .text start:0x02140e44 end:0x0214109c
 
-src/func_ov100_0214109c.cpp:
+src/_ZN9Butterfly6State6Ev.cpp:
     complete
     .text start:0x0214109c end:0x0214117c
 
-src/func_ov100_0214117c.cpp:
+src/_ZN9Butterfly6State5Ev.cpp:
     complete
     .text start:0x0214117c end:0x021412d8
 
-src/func_ov100_021412d8.c:
+src/_ZN9Butterfly6State4Ev.cpp:
     complete
     .text start:0x021412d8 end:0x02141470
 
-src/func_ov100_02141470.c:
+src/_ZN9Butterfly6State3Ev.cpp:
     complete
     .text start:0x02141470 end:0x021415bc
 
-src/func_ov100_021415bc.c:
+src/_ZN9Butterfly6State2Ev.cpp:
     complete
     .text start:0x021415bc end:0x02141800
 
-src/func_ov100_02141800.cpp:
+src/_ZN9Butterfly6State1Ev.cpp:
     complete
     .text start:0x02141800 end:0x02141848
 
-src/func_ov100_02141848.c:
+src/_ZN9Butterfly6State0Ev.cpp:
     complete
     .text start:0x02141848 end:0x02141988
 
