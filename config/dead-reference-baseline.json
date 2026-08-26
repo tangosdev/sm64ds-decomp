@@ -222,8 +222,40 @@
    "ref": "src/func_ov007_020cc2cc.c"
   },
   {
+   "file": "notes/plan-cpp-conversion-queue.md",
+   "ref": "config/tu_manifest.json"
+  },
+  {
+   "file": "notes/plan-cpp-conversion-queue.md",
+   "ref": "notes/data"
+  },
+  {
+   "file": "notes/plan-cpp-conversion-queue.md",
+   "ref": "notes/data/c-cpp-classification.tsv"
+  },
+  {
+   "file": "notes/plan-cpp-conversion-queue.md",
+   "ref": "tools/agentlock.py"
+  },
+  {
    "file": "notes/plan-cpp-language-mode.md",
    "ref": "src/_ZN9ActorBaseC1Ev.cpp"
+  },
+  {
+   "file": "notes/plan-tu-merge-queue.md",
+   "ref": "config/tu_manifest.json"
+  },
+  {
+   "file": "notes/plan-tu-merge-queue.md",
+   "ref": "notes/data"
+  },
+  {
+   "file": "notes/plan-tu-merge-queue.md",
+   "ref": "notes/data/tu-merge-candidates.json"
+  },
+  {
+   "file": "notes/plan-tu-merge-queue.md",
+   "ref": "tools/tu_preflight.py"
   },
   {
    "file": "notes/port-selftest-bmp-gate.md",
@@ -268,6 +300,14 @@
   {
    "file": "notes/translation-unit-reconstruction-plan.md",
    "ref": "src_tu/actors/Chuckya.cpp"
+  },
+  {
+   "file": "notes/tu-cpp-census-2026-08.md",
+   "ref": "config/tu_manifest.json"
+  },
+  {
+   "file": "notes/tu-cpp-census-2026-08.md",
+   "ref": "notes/data"
   },
   {
    "file": "notes/tu-reconstruction-pilot-2-report.md",
