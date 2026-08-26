@@ -1060,7 +1060,26 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
    strict relocs and src/func_ov007_020ae834.c is in slice_ov007.txt now, so a
    trap here would be an LNK2005 against the body. See the census note above:
    this is the name that made "none of the four left is a blocker" false. */
-L2_UNMATCHED(func_ov007_020b1718)
+/* func_ov007_020b1718 WAS HERE. mg15 run STATE4 matched it byte for byte at
+   2004/b56 (0 of 269 words differ, strict relocs, linkcheck VERIFIED) and
+   src/func_ov007_020b1718.c carries the body, so a trap here would be an
+   LNK2005 against it -- measured, not assumed: a merge that keeps both this
+   line and the seated TU fails the link loudly rather than shadowing it.
+   This is the title element state machine's state 4, the start sequence.
+   With the trap in place a tap ENTERED state 4 and never left it -- the
+   body returned 0, so neither of its completion writes ran and the scene
+   machine was never handed forward. Run mg16 lane TITLE reproduced exactly
+   that on this base before seating: scene 1, 2400 frames, a touch probe at
+   frames 1200-1260, the trap entered 1199 times and still being entered on
+   the last frame of the run.
+   It is on the artwork path too, but NOT by hiding elements. The draw gate
+   is element+0x20, checked at the tail of src/func_ov007_020b44ec.c, and
+   its only writer on that path is func_ov007_020ae834's case 1. Elements
+   sit hidden because the phase machine at data_ov007_0210342c+0xc never
+   leaves state 0 on the attract path, and the element requesters only ask
+   on a phase state's first frame. This body is one of that phase word's
+   writers -- on state 4's first frame it requests phase 2 -- and phase 2
+   is reached only when it runs. */
 /* func_ov007_020b2998 WAS HERE AND IT CAME OUT ON A REAL DECOMP. The decomp's
    main matched it as db0c4960635e on 2026-08-16 (PR #1536) and run link60's
    PC2 lane brought the matched TU across by address, so src/ has the body and
