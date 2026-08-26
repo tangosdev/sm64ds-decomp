@@ -23,16 +23,6 @@
     "_ZN13HeapAllocatorC1EjPvS0_j"
    ]
   },
-  "_ZN4HeapC1EPvjP4Heap": {
-   "verdict": "MISMATCH",
-   "reason": "emitted ['_ZN4HeapC1EPvjPS_', '_ZN4HeapC2EPvjPS_'], claimed _ZN4HeapC1EPvjP4Heap",
-   "cause": "Itanium substitution not applied: the name spells a type out in full where the ABI requires an S_/S0_ back-reference.  Hand-derived, not compiler-derived",
-   "module": "arm9",
-   "addr": "0x0203caac",
-   "proposed": [
-    "_ZN4HeapC1EPvjPS_"
-   ]
-  },
   "_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE": {
    "verdict": "MISMATCH",
    "reason": "emitted ['_ZN4cstd10fdiv_asyncE5Fix12IiES1_'], claimed _ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE",
