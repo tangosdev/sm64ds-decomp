@@ -25,12 +25,6 @@ struct CLPS_Block;
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 extern "C" int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, KCL_File* f, const Matrix4x3& m, Fix12Raw s, short n, CLPS_Block& c);
 
-struct dBgActor_c {
-    void UpdateClsnPosAndRot();
-};
-
-void dBgActor_c::UpdateClsnPosAndRot();
-
 extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(const Vector3* v, const void* m, Vector3* res);

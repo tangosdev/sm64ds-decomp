@@ -147,6 +147,7 @@ _ZTI13daObjCasket_c kind:data(any) addr:0x02122e94
 _ZTS13daObjCasket_c kind:data(any) addr:0x02122ea0
 Coffin_SpawnInfo kind:data(any) addr:0x02122eb0 ambiguous
 data_ov071_02122ecc kind:data(any) addr:0x02122ecc
+_ZTV13daObjCasket_c kind:data(any) addr:0x02122efc
 _ZTV6Coffin kind:data(any) addr:0x02122efc
 data_ov071_02122f80 kind:bss addr:0x02122f80
 data_ov071_02122f88 kind:bss addr:0x02122f88
