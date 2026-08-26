@@ -92,6 +92,23 @@ hal_fill_fall_block_lll_vtable # _ZTV20daObjFl_Fall_Block_c is a host-only name
 # treat it as the seat's own label rather than an independently measured fact;
 # the commit hash is the measured half.
 #
+# Run mg15 lane MENU appends the THIRTY-SIXTH row, and it is the first that is
+# not a minigame: dScMiniGm_c is the MENU those thirty launch from, scene 5,
+# ov005. The class is EIGHTEEN slots (a direct Scene subclass) rather than the
+# 36-slot dScMgBase_c shape, so vtspan resolves it to its own ROM table and not
+# to data_ov004_020bc0c0 -- but the blind spot is identical and so is the
+# adjudication: hal/scene_mg_menu.cpp writes its seven own slots by index and
+# hands the other eleven to port_scene_fill_rom(), which keys on the ROM WORD.
+# --fills sees the seven and reports the eleven as never written.
+#
+# THIS ROW'S SEAT CARRIES ITS OWN RUNTIME PROOF, which the rows below do not.
+# port_scene_fill_rom returns the number of slots it left holding a raw DS
+# word, and the fill asserts it is exactly seven on every boot
+# (`if (left != 7) fprintf(...)`). That line has never fired: not in this
+# lane's runs, and not in the independent reviewer's six. So for this one row
+# the "vtspan cannot see it" claim is not just mechanical reasoning about the
+# checker, it is measured from the other side.
+port_scene_fill_mgm            # scene 5   menu         seated mg15 lane MENU, commit fa6507a3c
 port_scene_fill_cup            # scene 361 cup          seated mg9 lane CUP, commit 61d53e3e4
 port_scene_fill_memory1        # scene 362 memory1      seated mg9 lane MMT, commit 004ca2bf7
 port_scene_fill_memory2        # scene 363 memory2      seated mg6 lane MEM, commit 4992799c9

@@ -1462,3 +1462,57 @@ func_ov006_02124298  REAL_DECOMP  TTE.md#0x181  slot 19: 0x34, 12 instructions p
 func_ov006_02122f24  REAL_DECOMP  TTE.md#0x181  slot 23 OnAttacked2: 0x1a0, 101 instructions plus a three-word pool = 104 = 0x1a0/4. The ov004 020ae1a0 guard, the two virtual probes on data_0209f5bc through slots 0x14 and 0x1c that write data_ov006_0213fbc4, the +0x4628 gate, the +0x7bab arm with the 0x18 / 0xe8 corner tests, func_ov006_020d0c38 on the four packed shorts, func_02012718(0x1af, sum << 11) against func_02012790(0xe), the MultiStore16 0x6000 clear and the two byte clears. All three pool words (0209f5bc, 0213fbc4, 1af) match. data_ov006_0213fbc4 is the word past 0x180's vtable, which is why this body is 0x180's width victim
 func_ov006_021230e8  REAL_DECOMP  TTE.md#0x181  slot 24 OnKicked: 0xa4, 39 instructions plus a two-word pool = 41 = 0xa4/4. Guard func_ov006_020e6e78, the +0x4628 test, then the +0x4664 split writing data_0209d45c bit 3 and SetBg2Offset(0,0) / (0,0xc0) with 0x04000018 set to 0 or 0xc00000. Both pool words (0209d45c, 04000018) match src
 func_ov006_021230c4  REAL_DECOMP  TTE.md#0x181  slot 25 OnPushed: 0x24, 9 instructions and no pool = 9 = 0x24/4. bl 020e6e54 then normalise to 0/1, the same two conditional moves as the base body it wraps
+#
+# ---------------------------------------------------------------------------
+# run mg15 (lane MENU), 2026-08-26.
+#
+# dScMiniGm_c, scene 5, the minigame SELECTION menu (ov005). Five of the
+# overlay's 26 bodies carry the marker. THE RULING IS THE STRONGEST KIND THIS
+# FILE ADMITS and it is not an instruction-by-instruction reading: all five
+# BYTE-MATCH the ROM. All five are also marked complete in
+# config/arm9/overlays/ov005/delinks.txt, and the match was re-run in this
+# lane's own worktree rather than taken off that file.
+#
+# THE COMMAND, RUNNABLE AS WRITTEN. An earlier revision of this block recorded
+# it with --c, --func, --addr and --size missing, all four of which match.py
+# marks required, so the recipe exited on argparse and reproduced nothing. That
+# is a worse failure than no recipe: a reader who tried it would conclude the
+# evidence was fabricated rather than that the recipe was. match.py takes ONE
+# function per invocation, so it is five invocations and not one sweep:
+#
+#   cd <worktree root>
+#   python tools/match.py --c src/func_ov005_<ADDR>.c \
+#                         --func func_ov005_<ADDR> \
+#                         --addr 0x<ADDR> --size <SIZE> \
+#                         --bin extracted/overlays/overlay_0005.bin \
+#                         --base 0x020bfec0 --module ov005 --all --brief
+#
+# with (ADDR, SIZE) the five pairs named in the rows below. --module ov005 is
+# not optional and getting it wrong fails in a confusing direction: match.py
+# prints "bytes match but the reloc-destination check could not run -- NOT a
+# verified match" and then "MATCHING VERSIONS: none", which reads like a byte
+# failure and is really a refusal to certify. Every row below comes back
+# MATCHING at 2004/b56 (the canonical compiler) WITH the reloc destinations
+# checked, not merely "bytes match". A body the ROM can be rebuilt from is not
+# a behavioural guess, which is the fear the marker stands in for; the marker
+# here records how the function's NAME was recovered (from its vtable slot),
+# exactly the mis-proxy this file's header describes.
+#
+# THE EVIDENCE REFERENCE IS AN ABSOLUTE PATH TO A FILE THAT EXISTS. An earlier
+# revision cited "runs/mg15/status/MENU.md#ov005", which existed nowhere -- not
+# in the run dir, not in the repo tree -- and the guard's parser only checks
+# that a third field is PRESENT, so the dangling citation passed silently. That
+# is the exact property this file's header claims to protect, so the correction
+# is recorded here rather than made quietly.
+#
+# One correction the disassembly forced, recorded because a name that lies is
+# worse than a name that is missing: func_ov005_020bfefc is labelled
+# "OnYoshiTryEat" by the RTTI recovery and it is the DELETING DESTRUCTOR (slot
+# 17). Its body calls Memory::Deallocate(this, *0x020a0eac) and the ROM parks
+# it at vtable 0x020c24d4, the D0 slot. Same mislabel class as
+# func_ov022_021123d0 above.
+func_ov005_020bfefc  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 17 D0, addr 0x020bfefc size 0x50; match.py MATCHING at 2004/b56 with reloc destinations checked. NAME says OnYoshiTryEat and is wrong, body is the D0
+func_ov005_020c0b00  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 12 OnPendingDestroy, addr 0x020c0b00 size 0x4; four bytes, bx lr; match.py MATCHING at 2004/b56
+func_ov005_020c14a0  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 6 Behavior, addr 0x020c14a0 size 0x1b4; match.py MATCHING at 2004/b56 with reloc destinations checked. This is the body hal/scene_mg.cpp RNG seeder replicates
+func_ov005_020c1654  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 3 CleanupResources, addr 0x020c1654 size 0x34; match.py MATCHING at 2004/b56 with reloc destinations checked
+func_ov005_020c1a20  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 0 InitResources, addr 0x020c1a20 size 0x7cc; match.py MATCHING at 2004/b56 with reloc destinations checked

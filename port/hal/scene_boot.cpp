@@ -243,6 +243,32 @@
 #pragma comment(linker, "/alternatename:__ZTV9dScDSMT_c=_data_ov007_021032e8")
 #pragma comment(linker, "/alternatename:__ZTV8dScene_c=__ZTV5Scene")
 
+// ---- run mg15 lane MENU: the dScMiniGm_c PLACEHOLDER SPELLING -------------
+//
+// src/func_ov005_020bfec0.c (the class's D2, vtable slot 16) spells its three
+// vptr restores with the per-TU placeholder names the ov003 write-up named as
+// blocker 2, the same shape the ov007 pair above has. All three are resolved
+// to the address the ROM actually stores, read out of that body's OWN literal
+// pool in extracted/overlays/overlay_0005.bin:
+//
+//   func_ov005_020bfec0 (D2)   ldr r1,[pc,#0x24] -> 0x020c2490 ; _ZTV11dScMiniGm_c
+//                              ldr r2,[pc,#0x20] -> 0x02092680 ; _ZTV8dScene_c
+//                              ldr r1,[pc,#0x1c] -> 0x0208e4b8 ; _ZTV7dBase_c
+//                              then bl 0x02043d48, ActorBase::~ActorBase
+//
+// ONE of the three needs a face. _ZTV8dScene_c is already aliased onto
+// _ZTV5Scene one line above -- and the note there names ov005 as one of the
+// four TUs that spell it, so this lane is that note coming true rather than a
+// new claim. _ZTV7dBase_c resolves to hal/sub_actors.cpp's trap-filled array,
+// the known divergence that block records.
+//
+// _ZTV11dScMiniGm_c is UNIQUE to src/func_ov005_020bfec0.c -- nothing else in
+// the tree spells it -- so aliasing it to the ROM's own address inside the
+// ov005 mount is exact and cannot collide. 0x020c2490 is the same address the
+// factory func_ov005_020c21ec stores into the object's +0 word (its own pool,
+// at 0x020c224c), so the two agree and neither is a guess.
+#pragma comment(linker, "/alternatename:__ZTV11dScMiniGm_c=_data_ov005_020c2490")
+
 extern "C" {
 
 /* the spawn table and the two Scene entry points (matched arm9) */
@@ -2645,6 +2671,31 @@ void port_scene_fill_trampoline(void);
 extern unsigned char MgTrampolineTerror_SpawnInfo[];
 void *port_mg_trampoline2_spawn(void);
 void port_scene_fill_trampoline2(void);
+/* run mg15 lane MENU: dScMiniGm_c, actor id 5 -- the minigame SELECTION MENU
+   itself, the scene every minigame row above is reached FROM on the DS and
+   that this harness has skipped for its whole history. Not an ov006 minigame
+   and not a 36-slot dScMgBase_c subclass: it lives in ov005, it is a direct
+   Scene subclass with the same EIGHTEEN-slot table dScStarSel_c and dScDSMT_c
+   have, and its SpawnInfo is the mount's own data_ov005_020c2440 rather than a
+   named Mg* symbol (dsd names no spawn symbol in ov005). The id is derived two
+   ways that agree -- src/GetSceneOverlayID.c's `case 5: return &overlay_5` and
+   the arm9 spawn-table relocation from:0x02090878 to:0x020c2440, whose index
+   (0x02090878 - 0x02090864) / 4 is 5. port/slice_mgm.txt carries the
+   derivation, the nine-name gap measurement and the Render floor;
+   hal/scene_mg_menu.cpp is the seat.
+
+   reads_sublevel is 0, and for this class the reason is not the minigames'.
+   IsMinigameActorID is `id >= 0x169 && id <= 0x186` and 5 is nowhere near it,
+   so the menu is NOT a minigame by the ROM's own predicate -- which is correct
+   and load-bearing in three places: hal/scene_mg.cpp's RNG seeder refuses it
+   (so a menu run is seeded-fixed and cannot re-freeze itself), the stacked
+   sub-screen layout is not proposed for it, and port_mg_scene_spawn_param
+   answers 0. The sublevel answer is measured the same way every row above is:
+   no relocation anywhere in ov005 lands on data_02092110 and no TU in this
+   class's closure names it. */
+extern unsigned char data_ov005_020c2440[];
+void *port_mgm_spawn(void);
+void port_scene_fill_mgm(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -3374,6 +3425,18 @@ static const PortSceneClass port_scene_classes[] = {
        in this class's closure names it. A minigame is not about a course. */
     {385, "SCENE_MG_TRAMPOLINE2", MgTrampolineTerror_SpawnInfo,
      port_mg_trampoline2_spawn, port_scene_fill_trampoline2, 0},
+    /* APPENDED AFTER EVERY EXISTING ROW, run mg15 lane MENU. The ordering rule
+       every minigame row above states -- port_scene_registry_install walks
+       this table in order and port_scene_mg_overlay_load runs the thirty-five
+       ov006 constructors once per process at the tail of the FIRST minigame
+       row's fill -- applies here in the weakest possible form and is obeyed
+       anyway: this row's fill touches ov005 storage only (the mount's own
+       vtable at data_ov005_020c2490, eighteen words, checked at fill time),
+       and ov005 is in a DIFFERENT overlay from every constructor that gate
+       runs, so there is no word for it to race over. Appending costs nothing
+       and keeps the one rule the table has intact. */
+    {5, "SCENE_MG_MENU", data_ov005_020c2440, port_mgm_spawn,
+     port_scene_fill_mgm, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
@@ -3401,7 +3464,7 @@ extern "C" void port_scene_registry_install(void)
         k->fill();
         ++n;
     }
-    std::printf("[scene] %d scene classes registered (ov003, ov007, ov006)\n",
+    std::printf("[scene] %d scene classes registered (ov003, ov005, ov007, ov006)\n",
                 n);
 }
 

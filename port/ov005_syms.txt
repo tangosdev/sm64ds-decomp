@@ -1,0 +1,62 @@
+# ov005: the MINIGAME SELECTION MENU scene's data, all of it.
+#
+# ov005 is dScMiniGm_c -- the Rec Room grid the player picks a minigame off --
+# and it is the FIFTH occupant of a scene slot to be mounted. Its slot is
+# 0x020bfec0, the one it shares with ov006: config/arm9/overlays/ov005/
+# delinks.txt puts it at 0x020bfec0..0x020c3020 and ov006 at
+# 0x020bfec0..0x021430a0, so the two overlap and rule 1 of tools/ovdata.py's
+# residency model already makes them exclusive without anything being asserted
+# here. GetSceneOverlayID's `case 5: return &overlay_5` is what puts ov005 in
+# that model's scene set, and it is parsed out of the matched source, so the
+# cross pass cannot conflate an ov005 target with an ov006 one.
+#
+# THE SCENE ID IS 5, derived and not inherited: the arm9 spawn table entry for
+# it, config/arm9/relocs.txt `from:0x02090878 kind:load to:0x020c2440`, is
+# ACTOR_SPAWN_TABLE[(0x02090878 - 0x02090864) / 4] = [5], and 0x020c2440 is the
+# first symbol of this overlay's .data -- the SpawnInfo, whose +0 word
+# relocates to func_ov005_020c21ec (the factory) and whose +4 is 0x00080005.
+#
+# WHY ALL 51 AND NOT A SLICE, the ov007 argument unchanged: --pack fills the
+# space between mounted symbols with ZEROED padding rather than ROM bytes, so a
+# partial mount of a contiguous section leaves holes wherever a symbol was
+# skipped. Mounting every data-kind symbol dsd names -- 6 in .rodata, 45 in
+# .data -- makes the run contiguous from 0x020c2250 to 0x020c3020. .bss is
+# start:0x020c3020 end:0x020c3020, empty, so there is nothing to mount there.
+#
+# NO SINITS EXIST TO WIRE. delinks.txt gives .ctor start:0x020c2430
+# end:0x020c2430 -- zero length -- and there is no .init section, so ov005 has
+# no static initialisers. Same as ov003 and ov007.
+#
+# NO SIZE IS PINNED. Every delta between consecutive symbols here is >= 4, so
+# ovdata's default (max(4, delta-to-next)) is the ROM width in all 51 cases and
+# --pack lays them contiguously with no overlap refusal. Checked by
+# subtraction over the sorted list, both sections.
+#
+# THE VTABLE STAYS IN THE MOUNT, deliberately, and that is the ov007 treatment
+# rather than the ov003 one. data_ov005_020c2490 is _ZTV11dScMiniGm_c -- the
+# address func_ov005_020c21ec stores into the object's +0 word and the address
+# func_ov005_020bfec0's literal pool holds -- and eighteen slots wide (the
+# delta to data_ov005_020c24d8 is 0x48). hal/scene_mg_menu.cpp fills it with
+# port_scene_fill_rom(), the KEYED fill, which reads the ROM word each slot
+# holds and replaces only the words the port has a host body for. That fill can
+# only work if the ROM bytes are present, so leaving the table out of the mount
+# the way port/ov003_syms.txt leaves data_ov003_020b1704 out would break it.
+#
+# ONE SYMBOL PAIR IS AN OVERLAPPING NAME, the shape port/ov007_syms.txt calls
+# out: data_ov005_020c24d8 is the 36-row minigame launch table (stride 0x34,
+# 0x750 bytes, ending exactly at data_ov005_020c2c28) and dsd ALSO named
+# 0x020c24dc, its second column, because src/func_ov005_020c0378.c indexes the
+# two separately. No pin is needed -- the delta rule gives 24d8 four bytes and
+# 24dc the remaining 0x74c -- and --pack is what puts the table back
+# contiguous. hal/scene_mg_menu.cpp checks the spacing at run time.
+#
+# THE MOUNT IS NOT A LINKAGE CLAIM. Mounted bytes are not matched TUs.
+data_ov005_020c2250 data_ov005_020c2260 data_ov005_020c2280 data_ov005_020c22c8 data_ov005_020c2310 data_ov005_020c23a0
+data_ov005_020c2440 data_ov005_020c2448 data_ov005_020c2454 data_ov005_020c2464 data_ov005_020c2490 data_ov005_020c24d8
+data_ov005_020c24dc data_ov005_020c2c28 data_ov005_020c2c48 data_ov005_020c2c90 data_ov005_020c2cd8 data_ov005_020c2d20
+data_ov005_020c2d68 data_ov005_020c2db0 data_ov005_020c2df8 data_ov005_020c2e40 data_ov005_020c2e88 data_ov005_020c2e8c
+data_ov005_020c2e94 data_ov005_020c2e9c data_ov005_020c2ea4 data_ov005_020c2eac data_ov005_020c2eb4 data_ov005_020c2ebc
+data_ov005_020c2ec4 data_ov005_020c2ecc data_ov005_020c2ed4 data_ov005_020c2edc data_ov005_020c2ee4 data_ov005_020c2eec
+data_ov005_020c2ef4 data_ov005_020c2efc data_ov005_020c2f24 data_ov005_020c2f2c data_ov005_020c2f34 data_ov005_020c2f3c
+data_ov005_020c2f44 data_ov005_020c2f4c data_ov005_020c2f60 data_ov005_020c2f68 data_ov005_020c2f78 data_ov005_020c2f88
+data_ov005_020c2f8c data_ov005_020c2fcc data_ov005_020c2fd0
