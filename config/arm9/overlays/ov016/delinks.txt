@@ -168,15 +168,15 @@ src/FloatOnWaterPlatformJrb_Spawn.c:
     complete
     .text start:0x02112fbc end:0x02112ff8
 
-src/_ZN10SlidingBoxD1Ev.c:
+src/_ZN10SlidingBoxD1Ev.cpp:
     complete
     .text start:0x02112ff8 end:0x02113044
 
-src/_ZN10SlidingBoxD0Ev.c:
+src/_ZN10SlidingBoxD0Ev.cpp:
     complete
     .text start:0x02113044 end:0x021130a4
 
-src/func_ov016_021130a4.c:
+src/_ZN10SlidingBox11UpdateModelEv.cpp:
     complete
     .text start:0x021130a4 end:0x021130ec
 
