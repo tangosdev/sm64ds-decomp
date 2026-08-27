@@ -224,10 +224,25 @@ THAT PARENTHESIS IS ABOUT RUNNING AND NOT ABOUT COMPILING, which is the whole
 reason this arm can exist. Under PORT_ROM_CLEAN the smoke exes still BUILD
 perfectly well; they fail when RUN, because their ROM tables are zeroed and
 they do not link the loader that would fill them back in. So the arm builds the
-shipping configuration and runs exactly one thing out of it -- walk_window, the
-only target that links the loader and the only target that ships. Nothing here
-ever runs a smoke exe out of build/port-kit, and adding one would reintroduce
-the exact red that kept this arm out of the battery for so long.
+shipping configuration and runs exactly one thing out of it: walk_window, which
+is the target that ships. Nothing here ever runs a smoke exe out of
+build/port-kit, and adding one would reintroduce the exact red that kept this
+arm out of the battery for so long.
+
+WHICH LEAVES ONE GAP, AND IT IS NAMED RATHER THAN GLOSSED. The quote above says
+walk_window AND walk_window_hires link the loader, so walk_window is not the
+only target that could run out of this directory. It is the only one this arm
+BUILDS, because tools/portable_kit/package_kit.ps1 builds only walk_window and
+that is the exe the kit ships; the ninja line here is `ninja -C <dir>
+walk_window` and matching the packaging script was the deliberate choice. The
+consequence is that a ROM_CLEAN break confined to walk_window_hires -- its own
+target_compile_definitions block in port/CMakeLists.txt, or anything it links
+that walk_window does not -- is caught by NOTHING: not by this arm, not by
+package_kit.ps1, and not by the developer steps above, which never define the
+flag at all. That is a smaller hole than the one this arm closes, and it is
+still a hole. Adding walk_window_hires to the ninja line would close it at the
+cost of a second link; whoever wants that should know they are also making this
+arm stop matching what the kit actually builds.
 
 ITS OWN BINARY DIRECTORY, NOT A RECONFIGURE OF build/port. The two
 configurations disagree about a preprocessor symbol that reaches most of the
@@ -874,14 +889,33 @@ def shipcfg_missing_inputs(root):
     answer, and it would go stale the first time the first one moved -- which
     is the failure port/kit_assets.txt itself was created to end.
 
-    Three of the paths on it the arm's own BUILD produces: romdata.bin,
-    romdata.manifest and romdata.recipe.tsv are outputs of the
-    romblob_ready_ww target that walk_window depends on under PORT_ROM_CLEAN
-    (port/CMakeLists.txt). The rest is the NitroFS catalog -- files.tsv,
-    handles.tsv, nitrofs.tsv and the card's own FNT and FAT images -- and that
-    is SETUP rather than a build product: it comes from `python
-    tools/asset_catalog.py generate <rom>` and a fresh worktree has none of it.
-    gate.py already names that same state for the developer selftests.
+    TWO of the eight paths on it the arm's own BUILD produces: romdata.bin and
+    romdata.manifest are outputs of the romblob_ready_ww target that
+    walk_window depends on under PORT_ROM_CLEAN (port/CMakeLists.txt). That
+    target also writes romdata.recipe.tsv, but the recipe is NOT on this list
+    and must not be counted as one of them: it is the shippable how -- offsets
+    and hashes for the player's own extractor -- and the exe never opens it, so
+    kit_assets.txt does not name it. Counting it here would report the tree one
+    input better off than it is.
+
+    Five more are the NitroFS catalog -- files.tsv, handles.tsv, nitrofs.tsv
+    and the card's own FNT and FAT images -- and that is SETUP rather than a
+    build product: it comes from `python tools/asset_catalog.py generate <rom>`
+    and a fresh worktree has none of it. gate.py already names that same state
+    for the developer selftests. The eighth is the unpacked filesystem's
+    sentinel, extracted/dsd/files/data/sound_data.sdat.
+
+    WHICH OF THOSE CAN ACTUALLY REACH THE NOT-RUN BRANCH IN A FULL BATTERY IS
+    NARROWER THAN THE LIST LOOKS, and it is worth knowing before anyone reads
+    a missing-input partial as the common case. hal/fs_names.cpp's asset_root()
+    resolves the catalog in BOTH configurations, so the developer selftests
+    need those same five files: measured with nitrofs.tsv moved aside, level 1
+    exits 2 with "FATAL: NitroFS table index missing" and the battery is red at
+    step 3, hundreds of lines before this arm. The two romdata files cannot
+    reach it either, because the arm's own build regenerates them before this
+    function is called. So in practice the branch that fires under a full
+    battery is the kit_assets.txt one above, and this branch is a guard for a
+    tree assembled some other way rather than a routine outcome.
     """
     path = os.path.join(root, "port", "kit_assets.txt")
     if not os.path.isfile(path):
@@ -934,15 +968,26 @@ def shipcfg_env(root):
 def shipcfg_arm(root):
     """Build the shipping configuration, and prove the exe it makes still runs.
 
-    Returns True if the battery may go on. The long form -- why it exists, why
-    its own directory, why walk_window alone, and why the BMP is not compared
+    Returns (ok, carry): ok is False if the battery must stop, and carry is
+    None or the text of a `skips:` line main() must restate at the end.
+
+    THE CARRY IS NOT DECORATION. This arm has a PARTIAL outcome -- the build
+    half ran and the run half did not, because the inputs for it are setup
+    rather than build products -- and a partial that returns green with no
+    standing line is indistinguishable in a gate tail from a full green.
+    gate.py keeps lines matching ^skips: whatever the return code was, and
+    that is the only channel a partial has. Every NOT RUN path below therefore
+    hands one back, the same way --no-shipcfg does.
+
+    The long form -- why it exists, why its own directory, why walk_window
+    only and what that leaves uncovered, and why the BMP is not compared
     against anything -- is THE SHIPPING CONFIGURATION in this file's docstring.
     """
     build = os.path.join(root, SHIPCFG_BUILD)
     script, no_vcvars = shipcfg_script(root, build)
     if script is None:
         print(f"shipcfg build: FAIL, no vcvars32.bat at {no_vcvars}")
-        return False
+        return False, None
 
     t0 = time.time()
     try:
@@ -950,7 +995,7 @@ def shipcfg_arm(root):
     except subprocess.TimeoutExpired:
         print(f"shipcfg build: FAIL, configure and build did not finish "
               f"inside {SHIPCFG_BUILD_TIMEOUT}s")
-        return False
+        return False, None
     secs = time.time() - t0
     if r.returncode:
         print(f"shipcfg build: FAIL rc={r.returncode} after {secs:.0f}s -- the "
@@ -959,14 +1004,14 @@ def shipcfg_arm(root):
               f"in the configuration that ships and in no other.")
         print((r.stdout or "")[-3000:])
         print((r.stderr or "")[-3000:])
-        return False
+        return False, None
     exe = os.path.join(build, "walk_window.exe")
     if not os.path.isfile(exe):
         # ninja can report success over a target that produced nothing if the
         # link line is wrong in the right way, so ask the filesystem.
         print(f"shipcfg build: FAIL, rc=0 but there is no walk_window.exe at "
               f"{exe}")
-        return False
+        return False, None
     print(f"shipcfg build: ok, walk_window.exe linked in {SHIPCFG_BUILD} "
           f"(PORT_ROM_CLEAN, static CRT, {secs:.0f}s)")
 
@@ -975,7 +1020,8 @@ def shipcfg_arm(root):
         print("shipcfg selftest: NOT RUN, port/kit_assets.txt is not in this "
               "tree, so what the run half needs cannot be established. The "
               "BUILD half above ran.")
-        return True
+        return True, ("the shipping exe was BUILT but NOT RUN "
+                      "(port/kit_assets.txt is not in this tree)")
     if missing:
         shown = ", ".join(missing[:3]) + (", ..." if len(missing) > 3 else "")
         print(f"shipcfg selftest: NOT RUN, this tree is missing {len(missing)} "
@@ -983,7 +1029,8 @@ def shipcfg_arm(root):
               f"BUILD half above ran, and it is the half that catches a "
               f"shipping-config compile break; `python "
               f"tools/asset_catalog.py generate <rom>` gets the run half too.")
-        return True
+        return True, (f"the shipping exe was BUILT but NOT RUN ({len(missing)} "
+                      f"of port/kit_assets.txt's inputs are missing: {shown})")
 
     bmp = os.path.join(build, SHIPCFG_BMP)
     if os.path.exists(bmp):
@@ -997,23 +1044,23 @@ def shipcfg_arm(root):
     except subprocess.TimeoutExpired:
         print(f"shipcfg selftest: FAIL, the shipping exe did not finish "
               f"{SELFTEST_FRAMES} frames inside {SHIPCFG_RUN_TIMEOUT}s")
-        return False
+        return False, None
     secs = time.time() - t0
     if r.returncode:
         print(f"shipcfg selftest: FAIL rc={r.returncode} -- the shipping "
               f"configuration builds, but the exe it makes cannot complete a "
               f"headless selftest.")
         print(((r.stdout or "") + (r.stderr or ""))[-1500:])
-        return False
+        return False, None
     if not os.path.isfile(bmp):
         print(f"shipcfg selftest: FAIL, rc=0 but no {SHIPCFG_BMP} was written "
               f"-- the run exited cleanly without ever reaching the renderer.")
-        return False
+        return False, None
     print(f"shipcfg selftest: ok, rc=0 and {SHIPCFG_BMP} written "
           f"({os.path.getsize(bmp):,} bytes, {secs:.0f}s) -- LIVENESS ONLY, "
           f"not a raster comparison and not compared against the developer "
           f"build's BMP (see THE SHIPPING CONFIGURATION above)")
-    return True
+    return True, None
 
 
 def main():
@@ -1209,12 +1256,16 @@ def main():
     # a level or a scene and carry the skip machinery -- and every red this arm
     # prints therefore lands on a tree whose developer configuration is already
     # green. That makes its failures configuration-specific by construction.
+    shipcfg_carry = None
     if skip_shipcfg:
         print("shipcfg: SKIPPED by --no-shipcfg -- the SHIPPING configuration "
               "(PORT_ROM_CLEAN, static CRT) was NOT built or run by this "
               "battery, so a break in it is not covered by this green.")
-    elif not shipcfg_arm(root):
-        return 1
+        shipcfg_carry = "the SHIPPING configuration was NOT built (--no-shipcfg)"
+    else:
+        ok, shipcfg_carry = shipcfg_arm(root)
+        if not ok:
+            return 1
 
     # gate.py tails this output, so the debt is restated where a tail will see
     # it rather than only next to the level it belongs to.
@@ -1242,12 +1293,14 @@ def main():
     if scene_unblocked:
         print("skips: BLOCK RETIRED and removable -- " +
               ", ".join(f"scene {sc}" for sc in scene_unblocked))
-    # An opted-out arm is debt like any other skip, so it is restated on the
-    # line gate.py's BATTERY_CARRY tails. A green carrying this line and a
-    # green without it are not the same green, and a reader of a tail should
-    # not have to know that to see the difference.
-    if skip_shipcfg:
-        print("skips: the SHIPPING configuration was NOT built (--no-shipcfg)")
+    # An opted-out arm is debt like any other skip, and so is a PARTIAL one --
+    # built but not run, because the run half's inputs are setup rather than
+    # build products. Both are restated on the line gate.py's BATTERY_CARRY
+    # tails. A green carrying one of these lines and a green without one are
+    # not the same green, and a reader of a tail should not have to know the
+    # arm's internals to see the difference.
+    if shipcfg_carry:
+        print("skips: " + shipcfg_carry)
 
     print("battery: ALL GREEN")
     return 0
