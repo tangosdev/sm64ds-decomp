@@ -9501,7 +9501,7 @@
    "n_files": 5,
    "files": [
     "src/actors/FallBlockBbh/_ZN12FallBlockBbhD1Ev.cpp",
-    "src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.c",
+    "src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.cpp",
     "src/actors/FallBlockBbh/_ZN12FallBlockBbh16CleanupResourcesEv.cpp",
     "src/actors/FallBlockBbh/_ZN12FallBlockBbh13InitResourcesEv.cpp",
     "src/actors/FallBlockBbh/FallBlockBbh_Spawn.c"

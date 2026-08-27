@@ -8,6 +8,7 @@
     "mitch.cairns": "mitchellcairns"
   },
   "overrides": {
+    "src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.cpp": "tangosdev",
     "src/actors/BooCage/_ZN11daTBasket_cD0Ev.cpp": "tangosdev",
     "src/actors/BooCage/_ZN11daTBasket_cD0Ev.cpp#_ZN7BooCageD0Ev": "tangosdev",
     "src/actors/BooCage/_ZN11daTBasket_cD1Ev.cpp": "tangosdev",

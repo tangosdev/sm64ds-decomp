@@ -1418,7 +1418,6 @@ src/actors/Boo/_ZN3Boo16OnPendingDestroyEv.c	P1-vtable+mangled	ov063	daTrs_c	Boo
 src/actors/BooCage/BooCage_Spawn.c	WEAK-refs-only	ov063				1		None		-
 src/actors/Bookshelf/Bookshelf_Spawn.c	WEAK-refs-only	ov063				1		None		-
 src/actors/FallBlockBbh/FallBlockBbh_Spawn.c	S1-stores-rom-vptr	ov063			stores _ZTV12FallBlockBbh	1		None	_ZTV12FallBlockBbh/_ZTV16daObjFallBlock_c	-
-src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.c	DTOR-ONLY	ov063	daObjTh_Fall_Block_c	FallBlockBbh/daObjTh_Fall_Block_c	_ZN12FallBlockBbhD0Ev	1		True	_ZTV10dBgActor_c/_ZTV12FallBlockBbh/_ZTV16daObjFallBlock_c	-
 src/actors/MadPiano/_ZN8MadPianoD1Ev.c	DTOR-ONLY	ov063	daPiano_c	MadPiano/daPiano_c	_ZN8MadPianoD1Ev	1		True	_ZTV10dBgActor_c/_ZTV8MadPiano	-
 src/actors/MadPiano/__sinit_ov063_0211e5fc.c	WEAK-refs-only	ov063				0		None		extra-sections:init
 src/actors/MansionSteps/MansionSteps_Spawn.c	WEAK-refs-only	ov063				1		None		-

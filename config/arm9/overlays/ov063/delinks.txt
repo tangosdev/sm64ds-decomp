@@ -471,7 +471,7 @@ src/actors/FallBlockBbh/_ZN12FallBlockBbhD1Ev.cpp:
     complete
     .text start:0x0211d3a0 end:0x0211d3f0
 
-src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.c:
+src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.cpp:
     complete
     .text start:0x0211d3f0 end:0x0211d454
 
