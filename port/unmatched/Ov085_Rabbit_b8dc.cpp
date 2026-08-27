@@ -166,17 +166,43 @@ extern "C" int func_ov085_0212b8dc(char* c)
    the wrong half was mine rather than this file's author's.
 
    This fix stops the rabbit FAULTING, so it is no longer frozen and no longer
-   vanishes. It does NOT restore the dialogue and does NOT deliver the castle
-   key. Those need a player pointer at rabbit+0x45c, which two places READ
-   (_ZN6Rabbit8BehaviorEv.c:85 gating the whole talk block, and
-   func_ov085_0212ae08.c:44, the caught-dialog state that ends by spawning the
-   key) and which NOTHING in the tree writes. The single writer,
-   _ZN6Rabbit8BehaviorEv.c:150, sits inside a branch guarded by
-   Enemy::UpdateYoshiEat, and that is a host stub returning 0 unconditionally
-   (hal/actor_vtables.cpp), because slice_gate32.txt records ov002 0x020ade78
-   as a 0x3cc-byte hole with no C anywhere in src/.
+   vanishes. It does NOT by itself restore the dialogue: that needs a player
+   pointer at rabbit+0x45c, which two places READ (_ZN6Rabbit8BehaviorEv.c:85
+   gating the whole talk block, and func_ov085_0212ae08.c:44, the caught-dialog
+   state that ends by spawning the key).
 
-   So the whole in-mouth arm of Rabbit::Behavior is dead code, and the key
-   spawn is unreachable. Measured both ways: every run on both the fixed and
-   the unfixed build ends with zero keys in the world. That is a SEPARATE open
-   bug and UpdateYoshiEat is the real ticket, not this field. */
+   WHAT THIS NOTE USED TO SAY AND WHY IT WAS WRONG. It claimed NOTHING in the
+   tree writes rabbit+0x45c, that the only writer was _ZN6Rabbit8BehaviorEv.c:150
+   behind the Enemy::UpdateYoshiEat host stub, and therefore that "the key spawn
+   is unreachable" dead code. The first clause is false and the conclusion with
+   it. There is a SECOND writer, on a different path entirely:
+
+     src/func_ov085_0212a828.cpp:19   *(void**)(c + 0x45c) = o;
+
+   after a successful Player::TryGrab, and func_ov085_0212a828 is called from
+   _ZN6Rabbit8BehaviorEv.c:204 -- OUTSIDE the UpdateYoshiEat block, which opens
+   at line 130 and returns at 155. The call is in the ROM's own relocs:
+   config/arm9/overlays/ov085/relocs.txt:456,
+   from:0x0212c778 kind:arm_call to:0x0212a828 module:overlay(85).
+   The natural catch is GRABBING the rabbit, not Yoshi eating it. Only the
+   line-150 half of the old claim was ever right.
+
+   The old note's "measured both ways: every run ends with zero keys in the
+   world" measured the Yoshi arm only, and read that as the whole actor.
+
+   TWO INDEPENDENT PLAYERS COLLECTED THIS KEY on release 0.2.13 (built
+   2026-08-22, source tip 9a4bd47b8), which is proof enough on its own that the
+   spawn is reachable: report eacd7977ed564011a31a752119943fbb ("Bunny key was
+   floating after I collected it") and Erableto's 16:59:35 level-6 note in the
+   same corpus ("Rabbit key is still on top of the player head after collecting
+   it"). Both are written up as report 2 of runs/mg15/status/TRIAGE14.md,
+   triaged 2026-08-27.
+
+   Re-measured here on 2026-08-27 rather than argued: driving the rabbit's own
+   grab check with its collision-detect fields armed (SM64DS_RABBIT_TRIGGER,
+   hal/input_probe.cpp) runs the real Player::TryGrab and the real
+   func_ov085_0212a828, and rabbit+0x45c comes out written --
+     [rabbit] f92 GRABBED: Player::TryGrab succeeded, rabbit+0x45c = 30039F38
+   on SM64DS_LEVEL=1. UpdateYoshiEat is still a real open item; it is just not
+   the only way in, and this key spawn is not dead code. A comment that says a
+   live bug is impossible costs whoever reads it next a session. */
