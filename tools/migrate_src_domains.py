@@ -28,8 +28,8 @@ TEXT_SUFFIXES = {
     ".c", ".cpp", ".h", ".hpp", ".json", ".jsonl", ".md", ".txt", ".tsv",
     ".yaml", ".yml", ".cmake", ".ps1", ".py",
 }
-POSIX_SOURCE = re.compile(r"src/[^\s\"'`<>|:]+?\.(?:c|cpp)")
-WINDOWS_SOURCE = re.compile(r"src\\[^\s\"'`<>|:]+?\.(?:c|cpp)")
+POSIX_SOURCE = re.compile(r"src/[^\s\"'`<>|:]+?\.(?:cpp|c)")
+WINDOWS_SOURCE = re.compile(r"src\\[^\s\"'`<>|:]+?\.(?:cpp|c)")
 
 
 def git(*args: str) -> str:
@@ -153,12 +153,19 @@ def domain_for(stem: str, cls: str | None, actors: set[str]) -> pathlib.PurePosi
 def target_for(path: pathlib.Path, actors: set[str]) -> pathlib.Path:
     stem = path.stem
     rel = path.relative_to(SRC).as_posix()
-    if rel.startswith("actors/"):
+    lower_rel = rel.lower()
+    if lower_rel.startswith("actors/"):
         return SRC / "game" / "actors" / pathlib.PurePosixPath(rel).relative_to("actors")
-    if rel.startswith("engine/fader/"):
+    if lower_rel.startswith("engine/fader/"):
         return SRC / "runtime" / "graphics" / "fader" / path.name
-    if rel.startswith("engine/message/"):
+    if lower_rel.startswith("engine/message/"):
         return SRC / "ui" / "messages" / path.name
+    if lower_rel.startswith("runtime/graphics/fader"):
+        return SRC / "runtime" / "graphics" / "fader" / path.name
+    if pathlib.PurePosixPath(rel).parts[0] in {"runtime", "game", "ui", "minigames"}:
+        return path
+    if lower_rel.startswith("unnamed/") and len(pathlib.PurePosixPath(rel).parts) >= 4:
+        return path
     module = SP.module_of(stem)
     if module:
         band = SP.address_band(stem)
@@ -192,7 +199,10 @@ def plan() -> dict[str, str]:
             continue
         if new_rel in destinations:
             raise ValueError(f"destination collision: {destinations[new_rel]} and {old_rel} -> {new_rel}")
-        if new.exists() and new.resolve() != old.resolve():
+        # A rerun after files moved but before git staging still sees the old paths in
+        # the index.  Accept exactly that recoverable state so reference reconciliation
+        # can be retried; both old and new existing is still a collision.
+        if old.exists() and new.exists() and new.resolve() != old.resolve():
             raise ValueError(f"destination already exists: {new_rel}")
         destinations[new_rel] = old_rel
         moves[old_rel] = new_rel
@@ -209,6 +219,9 @@ def rewrite_references(moves: dict[str, str]) -> list[str]:
         path = REPO / rel
         if not path.is_file() or path.suffix.lower() not in TEXT_SUFFIXES:
             continue
+        if SRC.resolve() in path.resolve().parents:
+            # A path-only migration must not touch compiler inputs, even in comments.
+            continue
         try:
             text = path.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError):
@@ -222,21 +235,62 @@ def rewrite_references(moves: dict[str, str]) -> list[str]:
     return edited
 
 
+def restore_staged_source_bytes() -> int:
+    """Restore every staged rename's source blob exactly from ``HEAD``.
+
+    This is a safety repair for a migration interrupted after an older version of this
+    tool rewrote path literals inside compiler inputs.  Only rename pairs under ``src``
+    are considered; additions and deletions are refused by the normal repository gates.
+    """
+    result = subprocess.run(
+        ["git", "diff", "--cached", "--name-status", "-z", "--find-renames=1%", "--", "src"],
+        cwd=REPO, check=True, capture_output=True,
+    )
+    tokens = result.stdout.split(b"\0")
+    restored = 0
+    i = 0
+    while i < len(tokens) and tokens[i]:
+        status = tokens[i].decode("utf-8", errors="replace")
+        i += 1
+        if status.startswith(("R", "C")):
+            old = tokens[i].decode("utf-8", errors="replace")
+            new = tokens[i + 1].decode("utf-8", errors="replace")
+            i += 2
+            if not status.startswith("R"):
+                continue
+            if status == "R100":
+                continue
+            original = subprocess.run(
+                ["git", "show", f"HEAD:{old}"], cwd=REPO, check=True,
+                capture_output=True,
+            ).stdout
+            target = REPO / new
+            if target.read_bytes() != original:
+                target.write_bytes(original)
+                restored += 1
+        else:
+            i += 1
+    return restored
+
+
 def apply(moves: dict[str, str]) -> list[str]:
     # Validate every resolved target before the first mutation.
     src_root = SRC.resolve()
     for old_rel, new_rel in moves.items():
         old = (REPO / old_rel).resolve()
         new = (REPO / new_rel).resolve()
-        if not old.is_file() or SRC.resolve() not in old.parents:
+        if old.is_file() and SRC.resolve() not in old.parents:
             raise ValueError(f"source is not a file under src: {old_rel}")
+        if not old.is_file() and not new.is_file():
+            raise ValueError(f"neither source nor already-moved target exists: {old_rel}")
         if src_root not in new.parents:
             raise ValueError(f"target escapes src: {new_rel}")
     for old_rel, new_rel in sorted(moves.items()):
         old = REPO / old_rel
         new = REPO / new_rel
-        new.parent.mkdir(parents=True, exist_ok=True)
-        old.rename(new)
+        if old.is_file():
+            new.parent.mkdir(parents=True, exist_ok=True)
+            old.rename(new)
     return rewrite_references(moves)
 
 
@@ -258,8 +312,12 @@ def print_summary(moves: dict[str, str], sample: int) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--apply", action="store_true")
+    parser.add_argument("--restore-staged-source-bytes", action="store_true")
     parser.add_argument("--sample", type=int, default=20)
     args = parser.parse_args(argv)
+    if args.restore_staged_source_bytes:
+        print(f"restored {restore_staged_source_bytes()} staged source file(s) from HEAD blobs")
+        return 0
     moves = plan()
     print_summary(moves, args.sample)
     if not args.apply:
