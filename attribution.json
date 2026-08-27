@@ -945,6 +945,14 @@
     "src/game/actors/HealingHeart.cpp#_ZN12HealingHeart6RenderEv": "tangosdev",
     "src/game/actors/HealingHeart.cpp#_ZN12HealingHeart8BehaviorEv": "tangosdev",
     "src/game/actors/HealingHeart.cpp#_ZN12HealingHeart13InitResourcesEv": "tangosdev",
-    "src/game/actors/HealingHeart.cpp#HealingHeart_Spawn": "tangosdev"
+    "src/game/actors/HealingHeart.cpp#HealingHeart_Spawn": "tangosdev",
+    "src/game/actors/Number.cpp#_ZN6NumberD1Ev": "tangosdev",
+    "src/game/actors/Number.cpp#_ZN6NumberD0Ev": "tangosdev",
+    "src/game/actors/Number.cpp#func_ov002_020f0918": "tangosdev",
+    "src/game/actors/Number.cpp#_ZN6Number16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/Number.cpp#_ZN6Number6RenderEv": "ruspecial",
+    "src/game/actors/Number.cpp#_ZN6Number8BehaviorEv": "ruspecial",
+    "src/game/actors/Number.cpp#_ZN6Number13InitResourcesEv": "tangosdev",
+    "src/game/actors/Number.cpp#Number_Spawn": "tangosdev"
   }
 }
