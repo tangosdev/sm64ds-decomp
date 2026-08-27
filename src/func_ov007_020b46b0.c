@@ -1,3 +1,32 @@
+/* Title/menu per-element stylus hit test.
+ *
+ * func_ov007_020aed98 calls this once per element per frame, for all 24
+ * elements: func_ov007_020b46b0(ctx[0x114 + i*4], ctx[0x50]), where ctx is
+ * data_ov007_0210342c.  arg0 is the element (a two-word record: [0] is the
+ * menu object, [4] its placement), arg1 is the touch-panel record that
+ * func_ov007_020c1db0 maintains.  Returns nothing; a hit acts by calling
+ * func_ov007_020b63e4, which parks the chosen item's id in ctx+0x180.
+ *
+ * Touch-panel fields, named from func_ov007_020c1db0's own struct:
+ *   +0x08 u16  stylus x, this frame       +0x0c u16  stylus down, this frame
+ *   +0x0a u16  stylus y, this frame       +0x14 u16  stylus down, last frame
+ *
+ * Two independent paths:
+ *
+ *   1. PRESS.  Gated on down-now && !down-last-frame, i.e. the frame the
+ *      stylus first touches, plus (u32)tp+0x24 >= 1.  Tests the stylus point
+ *      against the element's own rectangle (obj+0x28 holds min x/min y/max
+ *      x/max y at +4/+8/+0xc/+0x10, offset by the placement's 20.12 position
+ *      at +4/+8 >> 12).  A hit selects immediately.  If that misses, three
+ *      element types get a second chance against a hardcoded screen rect:
+ *      x 8..0x66, y 0x50..0x60 for type 0xc (when ctx[0x28]->[9] is 0) or
+ *      type 0xd (when it is not), and x 8..0x48, y 0x20..0x30 for type 9.
+ *
+ *   2. HOLD.  Only while ctx[4]->[0] == 3, and only for element types 3 and 6.
+ *      Requires the stylus merely to be down, not freshly pressed, and counts
+ *      frames in the element's state record at +4; past 0x3a it selects.  Any
+ *      frame the element is not held resets that counter to 0.
+ */
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef short s16;
@@ -17,84 +46,84 @@ extern void func_ov007_020c1d78(int i);
 
 void func_ov007_020b46b0(void* arg0, void* arg1)
 {
-    char* c = (char*)arg0;
-    char* b = (char*)arg1;
-    int r5 = 0;
+    char* elem = (char*)arg0;
+    char* tp = (char*)arg1;
+    int held = 0;
 
     {
-        char* p = *(char**)c;
-        int r4a = 0;
-        int r2a = 0;
-        int r1a = 0;
-        if (*(*(s16**)(p + 4)) == 0) {
-            if (*(s32*)(p + 0x10) >= 0x1000
-                || (data_ov007_020d77dc[**(u16**)c].f0 & 2))
-                r1a = 1;
+        char* obj_a = *(char**)elem;
+        int sel_a = 0;
+        int gate2_a = 0;
+        int gate1_a = 0;
+        if (*(*(s16**)(obj_a + 4)) == 0) {
+            if (*(s32*)(obj_a + 0x10) >= 0x1000
+                || (data_ov007_020d77dc[**(u16**)elem].f0 & 2))
+                gate1_a = 1;
         }
-        if (r1a) {
-            if (!(data_ov007_020d77dc[**(u16**)c].f0 & 1))
-                r2a = 1;
+        if (gate1_a) {
+            if (!(data_ov007_020d77dc[**(u16**)elem].f0 & 1))
+                gate2_a = 1;
         }
-        if (r2a) {
-            int sba = 1;
+        if (gate2_a) {
+            int ok_a = 1;
             if (func_ov007_020b79e4()) {
-                int r8a = 0;
+                int sub_a = 0;
                 if (func_ov007_020b79e4()) {
-                    u16 id2 = **(u16**)c;
-                    int x = sba;
-                    if (id2 != 0x16 && id2 != 0x17) x = r8a;
-                    if (x) r8a = 1;
+                    u16 id2 = **(u16**)elem;
+                    int x = ok_a;
+                    if (id2 != 0x16 && id2 != 0x17) x = sub_a;
+                    if (x) sub_a = 1;
                 }
-                if (!r8a) sba = 0;
+                if (!sub_a) ok_a = 0;
             }
-            if (sba) r4a = 1;
+            if (ok_a) sel_a = 1;
         }
 
-        if (r4a && func_ov007_020c1da0(0) == 0) {
-            int r2 = 0;
-            int r1 = 0;
-            int r4 = *(u16*)(b + 0xc);
-            if (r4 != 0) {
-                if (*(u16*)(b + 0x14) == 0)
-                    r1 = 1;
+        if (sel_a && func_ov007_020c1da0(0) == 0) {
+            int armed = 0;
+            int fresh = 0;
+            int touching = *(u16*)(tp + 0xc);
+            if (touching != 0) {
+                if (*(u16*)(tp + 0x14) == 0)
+                    fresh = 1;
             }
-            if (r1) {
-                if ((u32)*(s32*)(b + 0x24) >= 1U)
-                    r2 = 1;
+            if (fresh) {
+                if ((u32)*(s32*)(tp + 0x24) >= 1U)
+                    armed = 1;
             }
-            if (r2) {
-                char* oo = *(char**)c;
-                char* pp = *(char**)(c + 4);
-                char* o28 = *(char**)(oo + 0x28);
-                int ip = *(s32*)(pp + 8);
-                int p4 = *(s32*)(pp + 4);
-                int hi_x = *(s32*)(o28 + 0x10) + (ip >> 12);
-                int lo_x = *(s32*)(o28 + 8) + (ip >> 12);
-                int hi_z = *(s32*)(o28 + 0xc) + (p4 >> 12);
-                int lo_z = *(s32*)(o28 + 4) + (p4 >> 12);
-                if (r4 != 0
-                    && (s32)*(u16*)(b + 8) >= lo_z && (s32)*(u16*)(b + 8) <= hi_z
-                    && (s32)*(u16*)(b + 0xa) >= lo_x && (s32)*(u16*)(b + 0xa) <= hi_x) {
+            if (armed) {
+                char* obj = *(char**)elem;
+                char* xform = *(char**)(elem + 4);
+                char* rect = *(char**)(obj + 0x28);
+                int pos_y = *(s32*)(xform + 8);
+                int pos_x = *(s32*)(xform + 4);
+                int max_y = *(s32*)(rect + 0x10) + (pos_y >> 12);
+                int min_y = *(s32*)(rect + 8) + (pos_y >> 12);
+                int max_x = *(s32*)(rect + 0xc) + (pos_x >> 12);
+                int min_x = *(s32*)(rect + 4) + (pos_x >> 12);
+                if (touching != 0
+                    && (s32)*(u16*)(tp + 8) >= min_x && (s32)*(u16*)(tp + 8) <= max_x
+                    && (s32)*(u16*)(tp + 0xa) >= min_y && (s32)*(u16*)(tp + 0xa) <= max_y) {
                     func_ov007_020b63e4((char**)arg0);
                 } else {
-                    u16 t = *(u16*)oo;
+                    u16 t = *(u16*)obj;
                     if ((t == 0xc
                          && (*(u8**)(*(char**)(data_ov007_0210342c + 0x28)))[9] == 0)
                         || (t == 0xd
                             && (*(u8**)(*(char**)(data_ov007_0210342c + 0x28)))[9] != 0)) {
-                        if (r4 != 0) {
-                            s32 x = *(u16*)(b + 8);
+                        if (touching != 0) {
+                            s32 x = *(u16*)(tp + 8);
                             if (x >= 8 && x <= 0x66) {
-                                s32 y = *(u16*)(b + 0xa);
+                                s32 y = *(u16*)(tp + 0xa);
                                 if (y >= 0x50 && y <= 0x60)
                                     func_ov007_020b63e4((char**)arg0);
                             }
                         }
                     } else if (t == 9) {
-                        if (r4 != 0) {
-                            s32 x = *(u16*)(b + 8);
+                        if (touching != 0) {
+                            s32 x = *(u16*)(tp + 8);
                             if (x >= 8 && x <= 0x48) {
-                                s32 y = *(u16*)(b + 0xa);
+                                s32 y = *(u16*)(tp + 0xa);
                                 if (y >= 0x20 && y <= 0x30)
                                     func_ov007_020b63e4((char**)arg0);
                             }
@@ -109,54 +138,54 @@ void func_ov007_020b46b0(void* arg0, void* arg1)
     if (*(s16*)(*(char**)(data_ov007_0210342c + 4)) == 3) {
         u16 t0 = *(u16*)(*(char**)arg0);
         if (t0 == 3 || t0 == 6) {
-            char* p2 = *(char**)c;
-            int r4b = 0;
-            int r2b = 0;
-            int r1b = 0;
-            if (*(*(s16**)(p2 + 4)) == 0) {
-                if (*(s32*)(p2 + 0x10) >= 0x1000
-                    || (data_ov007_020d77dc[**(u16**)c].f0 & 2))
-                    r1b = 1;
+            char* obj_b = *(char**)elem;
+            int sel_b = 0;
+            int gate2_b = 0;
+            int gate1_b = 0;
+            if (*(*(s16**)(obj_b + 4)) == 0) {
+                if (*(s32*)(obj_b + 0x10) >= 0x1000
+                    || (data_ov007_020d77dc[**(u16**)elem].f0 & 2))
+                    gate1_b = 1;
             }
-            if (r1b) {
-                if (!(data_ov007_020d77dc[**(u16**)c].f0 & 1))
-                    r2b = 1;
+            if (gate1_b) {
+                if (!(data_ov007_020d77dc[**(u16**)elem].f0 & 1))
+                    gate2_b = 1;
             }
-            if (r2b) {
-                int sbb = 1;
+            if (gate2_b) {
+                int ok_b = 1;
                 if (func_ov007_020b79e4()) {
-                    int r8b = 0;
+                    int sub_b = 0;
                     if (func_ov007_020b79e4()) {
-                        u16 id2 = **(u16**)c;
-                        int x = sbb;
-                        if (id2 != 0x16 && id2 != 0x17) x = r8b;
-                        if (x) r8b = 1;
+                        u16 id2 = **(u16**)elem;
+                        int x = ok_b;
+                        if (id2 != 0x16 && id2 != 0x17) x = sub_b;
+                        if (x) sub_b = 1;
                     }
-                    if (!r8b) sbb = 0;
+                    if (!sub_b) ok_b = 0;
                 }
-                if (sbb) r4b = 1;
+                if (ok_b) sel_b = 1;
             }
 
-            if (r4b && func_ov007_020c1da0(0) == 0
-                && *(u16*)(b + 0xc) != 0
+            if (sel_b && func_ov007_020c1da0(0) == 0
+                && *(u16*)(tp + 0xc) != 0
                 && *(s16*)func_ov007_020b8f78() == 5
                 && func_ov007_020b8fa0() == 0) {
-                char* oo = *(char**)c;
-                char* pp = *(char**)(c + 4);
-                char* o28 = *(char**)(oo + 0x28);
-                int ip = *(s32*)(pp + 8);
-                int p4 = *(s32*)(pp + 4);
-                int hi_x = *(s32*)(o28 + 0x10) + (ip >> 12);
-                int lo_x = *(s32*)(o28 + 8) + (ip >> 12);
-                int hi_z = *(s32*)(o28 + 0xc) + (p4 >> 12);
-                int lo_z = *(s32*)(o28 + 4) + (p4 >> 12);
-                if (*(u16*)(b + 0xc) != 0
-                    && (s32)*(u16*)(b + 8) >= lo_z && (s32)*(u16*)(b + 8) <= hi_z
-                    && (s32)*(u16*)(b + 0xa) >= lo_x && (s32)*(u16*)(b + 0xa) <= hi_x) {
-                    char* fp = *(char**)(oo + 4);
-                    r5 = 1;
-                    *(s32*)(fp + 4) += 1;
-                    if (*(s32*)(*(char**)(*(char**)c + 4) + 4) > 0x3a)
+                char* obj = *(char**)elem;
+                char* xform = *(char**)(elem + 4);
+                char* rect = *(char**)(obj + 0x28);
+                int pos_y = *(s32*)(xform + 8);
+                int pos_x = *(s32*)(xform + 4);
+                int max_y = *(s32*)(rect + 0x10) + (pos_y >> 12);
+                int min_y = *(s32*)(rect + 8) + (pos_y >> 12);
+                int max_x = *(s32*)(rect + 0xc) + (pos_x >> 12);
+                int min_x = *(s32*)(rect + 4) + (pos_x >> 12);
+                if (*(u16*)(tp + 0xc) != 0
+                    && (s32)*(u16*)(tp + 8) >= min_x && (s32)*(u16*)(tp + 8) <= max_x
+                    && (s32)*(u16*)(tp + 0xa) >= min_y && (s32)*(u16*)(tp + 0xa) <= max_y) {
+                    char* state = *(char**)(obj + 4);
+                    held = 1;
+                    *(s32*)(state + 4) += 1;
+                    if (*(s32*)(*(char**)(*(char**)elem + 4) + 4) > 0x3a)
                         func_ov007_020b63e4((char**)arg0);
                 }
             }
@@ -164,13 +193,13 @@ void func_ov007_020b46b0(void* arg0, void* arg1)
     }
 
 done:
-    if (r5 == 0)
-        *(s32*)(*(char**)(*(char**)c + 4) + 4) = 0;
+    if (held == 0)
+        *(s32*)(*(char**)(*(char**)elem + 4) + 4) = 0;
     {
-        char* q = *(char**)(*(char**)c + 4);
-        if (*(s16*)q != 2)
+        char* st = *(char**)(*(char**)elem + 4);
+        if (*(s16*)st != 2)
             return;
-        if (*(s16*)(q + 2) == -1)
+        if (*(s16*)(st + 2) == -1)
             return;
     }
     func_ov007_020c1d78(0);
