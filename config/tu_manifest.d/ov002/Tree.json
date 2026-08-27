@@ -1,9 +1,10 @@
 {
   "id": "ov002/Tree",
   "module": "ov002",
-  "source": "src_tu/actors/Tree.cpp",
-  "promoted_source": "src/actors/Tree.cpp",
+  "source": "src/game/actors/Tree.cpp",
+  "promoted_source": "src/game/actors/Tree.cpp",
   "status": "text-verified",
+  "production_mode": "derived-text",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20ebf8c..0x20ec388, 8 function(s), from build/tu_map.json (tools/tu_map.py)",

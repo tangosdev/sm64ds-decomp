@@ -5,5 +5,10 @@
     "ov002/daObjAbuku_c",
     "ov047/daObjKm3_Kaitendai_c",
     "ov047/daObjKm3_Kurumajiku_c"
+  ],
+  "derived_text_tus": [
+    "ov006/MgBingoBallSlotsShot",
+    "ov002/Tree",
+    "ov018/PowerStarCreate"
   ]
 }
