@@ -32,6 +32,7 @@
     "ov002/LevelObjects",
     "arm9/Scene",
     "ov012/BasementWater",
-    "ov012/SwitchPillar"
+    "ov012/SwitchPillar",
+    "ov013/ClockPaintingPendulum"
   ]
 }
