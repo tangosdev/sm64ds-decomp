@@ -5727,7 +5727,7 @@ src/_ZN10dBgW_KcMbgC1Ev.cpp:
     complete
     .text start:0x0203a494 end:0x0203a4b8
 
-src/_ZN10dBgW_KcMbgC2Ev.c:
+src/_ZN10dBgW_KcMbgC2Ev.cpp:
     complete
     .text start:0x0203a4b8 end:0x0203a4dc
 
