@@ -32,7 +32,7 @@ src/func_02039404.c
 src/InvMat4x3.c
 src/func_02039e18.c
 src/func_02053200.c
-src/_ZN7dBgW_KcC2Ev.c
+src/_ZN7dBgW_KcC2Ev.cpp
 src/_ZN10dBgW_KcMbg9TransformERK9Matrix4x3s.cpp
 src/func_0203b244.c
 src/LenVec3.c
