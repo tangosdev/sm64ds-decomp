@@ -289,7 +289,26 @@ extern unsigned char data_020a0f04[];
 // The touch-panel scratch block, hosted by hal/scene_boot.cpp as int[6]. Word
 // 6 AS A HALFWORD (byte +12) is the ring write index; see section 6.
 extern int data_020a80cc[];
+// The per-slot Player pointers and the controller count, both hosted by the
+// port already. Read by the VS probe in section 8.
+extern void *data_0209f394[];
+extern unsigned char data_0209f21c;
+extern unsigned char data_0209f250[];
+// The per-slot "this slot is live" flags. _Z19LoadEntranceObjects... DISCARDS
+// the actor it just spawned when this is 0 (`data_0209f394[i] = 0`), so a slot
+// with a spawned actor and a clear flag looks identical to a slot that never
+// spawned. The probe prints it for exactly that reason.
+extern int data_0209fc5c[];
+// hal/level_boot.cpp's own accessor for the level's entrance-record count.
+int port_entrance_count(void);
 }
+
+namespace port {
+namespace {
+inline unsigned char data_0209f21c_byte() { return data_0209f21c; }
+inline unsigned char data_0209f250_byte() { return data_0209f250[0]; }
+}  // namespace
+}  // namespace port
 
 namespace port {
 namespace {
@@ -479,6 +498,130 @@ void comms_publish_pad(unsigned held) {
     // are not visible at 0x04000130; the port has no ARM7 publishing it, and 0
     // is the correct "none of those pressed" value once the OR is taken.
     *reinterpret_cast<volatile unsigned short *>(kDsSharedPad) = 0;
+}
+
+// ===========================================================================
+// 8. THE VS PROBE -- the instrument rungs 9 to 11 read their verdict off.
+//
+// SM64DS_VS_PROBE=1 prints one line per frame per live player slot, read
+// STRAIGHT OUT OF THE GAME'S OWN ACTOR ARRAY, because that is the only kind of
+// evidence the exit test accepts. Wire counters can say a session is healthy
+// while nothing in the world has moved: rungs 2 to 8 all passed for weeks
+// against a port that spawns exactly one player. What proves multiplayer is a
+// SECOND PLAYER ACTOR EXISTING AND MOVING, so this reads:
+//
+//   data_0209f394[i]   the per-slot Player pointer, written by
+//                      _Z19LoadEntranceObjects... as it spawns each one. NULL
+//                      here means the slot never spawned, which is the first
+//                      thing that would go wrong.
+//   +0x6d8  mPlayerNo  the slot the actor believes it is, unpacked by
+//                      Player::InitResources from the (i << 6) spawn flag. If
+//                      two actors report the same number the spawn packing is
+//                      wrong and everything downstream is reading one pad.
+//   +0x5c   position   Vector3 of Fix12i, the same field Actor::ClosestPlayer
+//                      and CylinderClsn::Process do their distance on.
+//   +0x2f8  otherOwner the body cylinder's "who did I touch this frame", which
+//                      CylinderClsn::Process writes on a pair hit and
+//                      func_ov002_020d869c reads. NON-ZERO IS CONTACT, and it
+//                      is what rung 11 asserts on rather than on positions
+//                      alone -- two players can be near each other without the
+//                      solver having paired them.
+//
+// Printed for every slot below data_0209f21c whether or not it spawned, so
+// "slot 1 is missing" reads as loudly as "slot 1 is here", which is the same
+// discipline the TITLE lane's scene-request witness needed.
+// ===========================================================================
+
+namespace {
+int g_vs_probe = -1;
+}
+
+void vs_probe(int frame) {
+    if (g_vs_probe < 0) g_vs_probe = std::getenv("SM64DS_VS_PROBE") ? 1 : 0;
+    if (!g_vs_probe) return;
+
+    // THE COUNT IS PART OF THE EVIDENCE, not the loop bound only. A probe that
+    // silently iterates once because the count is 1 looks exactly like a probe
+    // whose second actor failed to spawn, and those are different bugs. Print
+    // it, and walk ALL FOUR slots regardless so a live actor in a slot past the
+    // count is visible rather than skipped.
+    const int n = (int)data_0209f21c_byte();
+    std::fprintf(stderr, "[vs] f%d count=%d me=%d live=%d,%d,%d,%d\n", frame, n,
+                 (int)data_0209f250_byte(),
+                 data_0209fc5c[0], data_0209fc5c[1],
+                 data_0209fc5c[2], data_0209fc5c[3]);
+    // ONCE: how many entrance records the level actually has.
+    // _Z19LoadEntranceObjects... spawns player i from entrance record p3 + i
+    // (its `e++` at the bottom of the loop), so a level whose table has no
+    // record at p3+1 cannot spawn a second player no matter what the count
+    // says -- and the failure looks exactly like a spawn that returned null.
+    // Printed once so the two causes are told apart from the log alone.
+    static bool said_ent = false;
+    if (!said_ent) {
+        said_ent = true;
+        std::fprintf(stderr,
+                     "[vs] entrance records on this level: %d "
+                     "(player i spawns from record p3+i)\n",
+                     port_entrance_count());
+    }
+    for (int i = 0; i < kCommsMaxPlayers; ++i) {
+        const unsigned char *a = (const unsigned char *)data_0209f394[i];
+        if (!a) {
+            std::fprintf(stderr, "[vs] f%d slot%d actor=NULL\n", frame, i);
+            continue;
+        }
+        int px = 0, py = 0, pz = 0;
+        unsigned other = 0;
+        std::memcpy(&px, a + 0x5c, 4);
+        std::memcpy(&py, a + 0x60, 4);
+        std::memcpy(&pz, a + 0x64, 4);
+        std::memcpy(&other, a + 0x2f8, 4);
+        std::fprintf(stderr,
+                     "[vs] f%d slot%d actor=%p no=%d pos=(%d,%d,%d) touched=%u\n",
+                     frame, i, (const void *)a, (int)a[0x6d8], px, py, pz,
+                     other);
+    }
+}
+
+// ===========================================================================
+// 7. HOW MANY PLAYERS THIS LEVEL BOOTS WITH.
+//
+// hal/level_boot.cpp asks this where it used to write the constant 1, and the
+// answer comes off the SEAM rather than off a knob, for a reason that decides
+// whether this lane can ship: with no transport installed it MUST answer 1, so
+// every single-player baseline in this tree stays valid and the multiplayer
+// work costs the solo game nothing. That is the same discipline the seam's own
+// solo answers keep, and rung 1 is what checks it.
+//
+// WITH A TRANSPORT it answers the live count the ROM's own conductor
+// negotiated -- player_count() off the installed transport, which the carrier
+// derives from its live mask, which src/func_0203ea5c.c's unpack loop is what
+// populates. So the number of Player actors the level spawns is decided by how
+// many consoles are actually in the session, which is what the DS does.
+//
+// CLAMPED TO kCommsMaxPlayers AND FLOORED AT 1. The floor matters: a transport
+// that answers 0 (installed but not yet connected) would otherwise boot a level
+// with no player at all, which faults rather than degrades.
+//
+// SM64DS_VS_PLAYERS overrides it, and is for proofs only. It exists because
+// rungs 9 to 11 need a two-player arena on a single instance to separate "the
+// spawn path works" from "the wire works", and debugging both at once is how a
+// lane spends a day on the wrong half.
+// ===========================================================================
+
+int vs_player_count() {
+    if (const char *s = std::getenv("SM64DS_VS_PLAYERS")) {
+        const int v = std::atoi(s);
+        if (v >= 1 && v <= kCommsMaxPlayers) return v;
+        std::fprintf(stderr,
+                     "[comms:conductor] SM64DS_VS_PLAYERS=%s out of range "
+                     "1..%d; ignored\n", s, (int)kCommsMaxPlayers);
+    }
+    const CommsTransport *t = comms_transport();
+    if (!t) return 1;                       // solo: unchanged, and that is load-bearing
+    const int n = t->player_count();
+    if (n < 1) return 1;
+    return n > kCommsMaxPlayers ? (int)kCommsMaxPlayers : n;
 }
 
 // ===========================================================================

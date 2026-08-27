@@ -103,6 +103,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+#include "hal/comms_seam.h"   /* run mg16 lane MP3: port::vs_player_count() */
+
 extern "C" {
 
 /* ---- the ROM's request words ---------------------------------------------
@@ -1410,10 +1412,32 @@ extern "C" int port_title_select(int i)
        LoadLevelNoReturn opens with SetAndStopColorFader (safe now: the color
        fader is a real object), so this runs whether or not the port can mount
        the row. */
-    data_0209f2d8 = 0;                 /* single player */
+    /* run mg16 lane MP3: THE VS FLAG STAYS 0, DELIBERATELY, and an earlier
+       revision of this line set it from the player count -- which is wrong for
+       a reason that is not obvious and cost nothing only because it was caught
+       before it shipped.
+
+       data_0209f2d8 == 1 is not "two players are present". It is DS VS MODE,
+       and it is a mode switch with a very wide surface: eleven attack-cylinder
+       wrappers in ov002 branch on it, so does func_ov002_020dd908 (the VS
+       ground-pound shockwave), and so do Stage, StarMarker, the HUD and the
+       fader. Turning it on to get two players is paying for the entire VS
+       feature set to get one of its preconditions, and every one of those
+       branches is then live and unproven.
+
+       TWO PLAYERS DO NOT NEED IT. The spawn loop, the per-slot input fan-out
+       and the cylinder solver that pushes two bodies apart are all mode-0 code
+       that reads the player COUNT, not the VS flag. So the count moves and the
+       mode does not, and what the owner asked for -- two characters that move
+       each other -- lands on the path that is already proven.
+
+       The flag is what the VS MENU sets, through src/PrepareVsMode.c, when the
+       player actually chooses VS. That is where it belongs and where it will
+       come from once ov075 is mounted. */
+    data_0209f2d8 = 0;
     LoadLevelNoReturn(level, (unsigned)entrance, 1, 0);
     SetPlayerGlobals();
-    SetNumPlayers(1);
+    SetNumPlayers(port::vs_player_count());
     /* Scene::StartSceneFade(4, 0, 0): records scene 4 (dScStarSel_c) as the
        pending scene and sets the fade colour. data_0209f5e8[6] (+0xc) = 0x7fff
        is the ROM's own next line: fade to WHITE, not black. */

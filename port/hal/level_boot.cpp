@@ -74,6 +74,7 @@
 
 #include "MeshCollider.h"
 #include "dsstate_seg.h"
+#include "hal/comms_seam.h"   /* run mg16 lane MP3: port::vs_player_count() */
 
 extern "C" {
 void port_ov009_patch(void);
@@ -1998,8 +1999,37 @@ void _Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij(void *, int, unsig
 
 static void port_load0(void *t, int a, unsigned b)
 { port_loader_enter(0, t); _Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij(t, a, b); }
+/* run mg16 lane MP3: the spawn loop's own inputs, declared here because the
+   file's main extern block for them is a thousand lines further down. */
+extern "C" {
+extern unsigned char data_0209f21c;
+extern int data_0209fc5c[];
+extern unsigned char data_02092128[];
+extern unsigned char data_0209caa0[];
+extern unsigned short data_ov002_0210cbf4[];
+extern void *data_0209f394[];
+}
+
+extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3);
+
 static void port_load1(void *t, int a, unsigned b)
-{ port_loader_enter(1, t); _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij(t, a, b); }
+{
+    port_loader_enter(1, t);
+    /* run mg16 lane MP3: the player count AS THE SPAWN LOOP SEES IT, which is
+       the only reading that decides how many Player actors exist. The count is
+       seated in two places (hal/level_boot.cpp's a2 seat and
+       tests/walk_window.cpp), and a seat that lands after this call is a seat
+       that did nothing -- which is exactly the bug this line was added to
+       settle, so it prints the value at the door rather than at frame time. */
+    if (std::getenv("SM64DS_VS_PROBE"))
+        std::fprintf(stderr,
+                     "[vs] LoadEntranceObjects: count=%d p3=%u live=%d,%d "
+                     "chars=%d,%d\n",
+                     (int)data_0209f21c, b, data_0209fc5c[0], data_0209fc5c[1],
+                     (int)data_02092128[0], (int)data_02092128[1]);
+    _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij(t, a, b);
+    port_vs_spawn_extra_players(t, b);
+}
 static void port_load2(void *t, int a, unsigned b)
 { port_loader_enter(2, t); _Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij(t, a, b); }
 static void port_load3(void *t, int a, unsigned b)
@@ -3505,6 +3535,84 @@ extern void *data_0209f394[];          /* the local players, [0] is ours */
 const char *port_actor_class_name(unsigned id);
 }
 
+/* ===========================================================================
+ * THE SECOND PLAYER'S SPAWN POINT, and why the port has to supply one.
+ *
+ * _Z19LoadEntranceObjects... spawns player i from ENTRANCE RECORD p3 + i --
+ * its `e++` at the bottom of the loop -- so a level whose entrance table
+ * carries four consecutive player starts spawns four players and one that does
+ * not, does not. SM64DS's VS arenas have those consecutive records. Castle
+ * grounds does not: record p3+1 is entrance 1 of 14, a different door, and
+ * Actor::Spawn makes whatever that record names, which is not a Player.
+ *
+ * MEASURED, not assumed, and this is the shape the bug presents in:
+ *     [vs] LoadEntranceObjects: count=2 p3=0 live=1,1 chars=0,1
+ *     [vs] f0 count=2 me=0 live=1,1,0,0
+ *     [vs] f0 slot1 actor=NULL
+ * Every input the loop reads is correct and the slot is still empty, because
+ * the thing that is wrong is the DATA the loop reads, not the loop.
+ *
+ * So the port supplies the missing starts, from player 0's OWN record, and
+ * says so rather than pretending the level had them. Everything else about
+ * each spawn is the ROM's: the same Actor::Spawn, the same class id out of
+ * data_ov002_0210cbf4, the same flag packing including `(i << 6)` -- which is
+ * what Player::InitResources unpacks into mPlayerNo, so the actor knows which
+ * comms slot it is -- and the same area and rotation.
+ *
+ * THEY ARE PLACED DELIBERATELY OVERLAPPING, 40.0 units apart on x against body
+ * cylinders of radius 40.0 each. Two cylinders 40 apart with a combined radius
+ * of 80 overlap by 40, so CylinderClsn::Process's symmetric branch has real
+ * work to do on the very first frame and BOTH positions move. That makes the
+ * collision proof decisive on frame 1 rather than dependent on driving two
+ * characters together, and it is a legitimate arena start: VS arenas spawn
+ * players close and the ROM's own solver is what separates them.
+ *
+ * RETIREMENT: when ov075 (the VS menu) is mounted and a real VS arena is
+ * loaded, its entrance table carries the consecutive starts and this function
+ * finds every slot already filled and does nothing. It is a stand-in for
+ * missing level data, not a replacement for the ROM's spawn path.
+ * =========================================================================== */
+extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
+{
+    struct Entry { unsigned short raw; short x, y, z; short rx, ry, rz;
+                   unsigned short param; };
+    struct ObjSubTable { unsigned char pad0, count, pad2[2]; Entry *entries; };
+
+    ObjSubTable *t = (ObjSubTable *)tbl;
+    const int n = (int)data_0209f21c;
+    if (n < 2 || !t || !t->entries) return;
+    if ((unsigned)t->count <= p3) return;
+
+    Entry *base = t->entries + p3;      /* player 0's own record */
+    const unsigned sl = (unsigned)((base->param >> 7) & 0xf);
+    const int area = (int)(signed char)(base->param & 7);
+
+    for (int i = 1; i < n && i < 4; ++i) {
+        if (data_0209f394[i]) continue;             /* the level had a start */
+        if (data_0209fc5c[i] == 0) continue;        /* slot not live */
+
+        int pos[3];
+        pos[0] = (base->x << 12) + i * (40 << 12);  /* 40.0 units apart: OVERLAP */
+        pos[1] = base->y << 12;
+        pos[2] = base->z << 12;
+
+        const unsigned f2 = data_0209caa0[0x41];
+        const unsigned f1 = data_02092128[i];
+        const unsigned flags = f2 | (f1 << 3) | ((unsigned)i << 6) | (sl << 8);
+
+        void *a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            data_ov002_0210cbf4[base->raw], flags,
+            (const PortVec3 *)pos, (const PortVec3_16 *)&base->rx, area, -1);
+        data_0209f394[i] = a;
+        std::fprintf(stderr,
+                     "[vs] port-supplied start for slot %d: actor=%p "
+                     "char=%u pos=(%d,%d,%d) (the level's entrance table has "
+                     "no player start at record %u)\n",
+                     i, a, f1, pos[0], pos[1], pos[2], p3 + i);
+    }
+}
+
+
 /* ---- classes that belong to a LEVEL overlay -------------------------------
    Four of the registry's rows are ov009's, and their SharedFilePtrs are
    constructed by ov009's own static initialisers -- which run only when ov009
@@ -3619,6 +3727,13 @@ extern unsigned char data_0209f21c;    /* controller count */
 extern unsigned char data_0209f250;    /* local player index */
 extern int data_0209fc5c[];            /* per-player "this slot is live" */
 extern unsigned char data_02092128[];  /* per-player character */
+/* run mg16 lane MP3: the ROM's own "which comms slot am I", linked since MP1
+   and never called until now. src/func_0203da9c.c is `return data_020a0f10`. */
+int func_0203da9c(void);
+/* and the ROM's own player-count setter: data_0208a0e0 = n plus func_020308d0.
+   Stage::InitResources:153 copies data_0208a0e0 into data_0209f21c, so this is
+   the write that actually survives into the spawn loop. */
+void SetNumPlayers(int n);
 extern signed char data_02092120;      /* currently shown area, -1 = none */
 extern int data_0209f32c[];            /* water level */
 /* data_0209fc48 (the running cutscene) is DEFINED above, in the retirement
@@ -3810,12 +3925,73 @@ static void port_a2_seat_body(int make_stage)
         data_0209f5c0[0] = (int)(size_t)stage;
     }
 
-    /* one local player, index 0, playing Mario, with the slot marked live so
-       LoadEntranceObjects keeps the pointer it spawns */
-    data_0209f21c = 1;
-    data_0209f250 = 0;
-    data_0209fc5c[0] = 1;
-    data_02092128[0] = 0;
+    /* ---- HOW MANY PLAYERS, AND WHICH ONE AM I (run mg16, lane MP3) ---------
+     *
+     * These four lines used to be four constants: one player, index 0, Mario,
+     * slot 0 live. That is what a single-player port needs and it is ALSO the
+     * only thing standing between this build and two players in one world --
+     * which is worth stating plainly, because the multiplayer work looked from
+     * the outside like it needed a remote-player actor and a spawn path, and it
+     * needs neither.
+     *
+     * THE ROM HAS NO REMOTE-PLAYER CONCEPT. It spawns ONE Player actor PER
+     * COMMS SLOT: _Z19LoadEntranceObjects...'s loop runs `i < data_0209f21c`,
+     * packs the slot into the spawn flags as `(i << 6)`, and Player::
+     * InitResources unpacks it into mPlayerNo at +0x6d8. Player::Behavior then
+     * sets data_020a0e40 = mPlayerNo for the length of its own tick, so every
+     * downstream `data_020a0e58[data_020a0e40 * 4]` read resolves to THAT
+     * player's pad. Remote input is that one assignment, and it is the ROM's.
+     *
+     * data_0209f21c == 1 is therefore the whole blocker: the spawn loop runs
+     * once, Stage::CheckInput fills only Ctrl[0], and CylinderClsn::Process's
+     * pairwise walk has a one-element list so two players could never touch
+     * each other either.
+     *
+     * WHAT DECIDES THE COUNT IS THE SESSION, not a knob. port::vs_player_count()
+     * reads the seam: with no transport installed it answers 1 and these lines
+     * are byte-for-byte what they were, which is what keeps every single-player
+     * baseline in this tree valid. With a transport connected it answers the
+     * live player count the ROM's own conductor negotiated.
+     *
+     * data_0209f250 stops being a constant too. The ROM's own spelling is
+     * Stage::InitResources:154, `data_0209f250 = func_0203da9c()`, and
+     * func_0203da9c returns data_020a0f10 -- MY COMMS SLOT. Hardcoding it to 0
+     * meant both instances believed they were player 0, so both would have
+     * driven the same actor and neither would have driven the other.
+     * func_0203da9c has been linked and never called for the whole life of this
+     * port; this is the call site it was waiting for. */
+    const int vs_players = port::vs_player_count();
+    /* THROUGH THE ROM'S OWN SETTER, and the first version of this did not, which
+       is worth recording because it looked like it worked. Writing
+       data_0209f21c here seats it -- and then Stage::InitResources:153 runs and
+       does `data_0209f21c = data_0208a0e0`, putting it straight back to 1. The
+       count the game actually uses lives in data_0208a0e0, and SetNumPlayers is
+       the ROM's own way to write it (it also calls func_020308d0, which this
+       must not skip). Measured: the boot log said "2 players" while the probe
+       reported one actor on all 300 frames. data_0209f21c is still seated too,
+       for the window before InitResources runs. */
+    SetNumPlayers(vs_players);
+    data_0209f21c = (unsigned char)vs_players;
+    data_0209f250 = (unsigned char)func_0203da9c();
+    for (int i = 0; i < vs_players; ++i) {
+        data_0209fc5c[i] = 1;          /* this slot is live */
+        data_02092128[i] = (unsigned char)i;   /* character: see below */
+    }
+    /* CHARACTER PER SLOT, and it is a placeholder with a reason rather than a
+     * decision. The ROM picks these in the VS menu (ov075), which is not
+     * mounted yet, so slot i gets character i -- 0 Mario, 1 Luigi, 2 Wario,
+     * 3 Yoshi -- which is the character ORDER the VS menu offers and makes the
+     * two players visually distinguishable in a proof capture, which is the
+     * point at this stage. When ov075 lands, its own selection replaces this. */
+    if (vs_players > 1)
+        std::fprintf(stderr,
+                     "  [a2] VS: %d players, I am slot %d, characters",
+                     vs_players, (int)data_0209f250);
+    if (vs_players > 1) {
+        for (int i = 0; i < vs_players; ++i)
+            std::fprintf(stderr, " %d", (int)data_02092128[i]);
+        std::fprintf(stderr, "\n");
+    }
     /* data_0209caa0[0x41], which is byte 0xf of data_0209cad2 -- the third
        symbol of the run. Spelled at its owner rather than as an index past
        the first symbol's declared 0x14 bytes, which MSVC turns into a

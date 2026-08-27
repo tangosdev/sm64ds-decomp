@@ -6211,7 +6211,13 @@ int main(void)
     data_0209caa0[2] |= 0x80;
     data_0209d660 = 0;
     data_0209fc48 = 0;
-    data_0209f21c = 1;
+    /* run mg16 lane MP3: THE SECOND SEAT, and the one that was actually
+       winning. hal/level_boot.cpp's a2 seat sets the player count too, and this
+       line runs after it -- so seating two players there and reading one here
+       is exactly what the VS probe measured: the boot log said "2 players" and
+       the probe reported count=1 with slot1 NULL on every frame of a 300-frame
+       run. Two seats for one fact, and the later one silently won. */
+    data_0209f21c = (unsigned char)port::vs_player_count();
     data_0209f350[0] = 0;
     /* the ROM's button-remap tables are DS pointers (0x0207xxxx) the
        host has no image behind; buttons are written directly to the
@@ -8909,6 +8915,13 @@ int main(void)
                fan-out. See THE STUCK CONTROLLER in hal/comms_conductor.cpp. */
             port::comms_publish_pad(port_raw_pad_bits());
             func_0203df40();
+            /* run mg16 lane MP3: the VS probe, read out of the game's own
+               per-slot actor array. Here rather than at the report site
+               because it must run whether or not SM64DS_COMMS_REPORT is on:
+               rungs 9 to 11 are about ACTORS, and a single-instance two-player
+               run has no comms report to hang off. Silent unless
+               SM64DS_VS_PROBE is set. */
+            port::vs_probe(frame);
             /* run mg15 lane MP1: the ROM's OWN steps 0x16 and 0x17, right
                where src/func_020197b8.c runs them -- immediately after the
                comms tick that filled the four records. func_0203bb60 turns
