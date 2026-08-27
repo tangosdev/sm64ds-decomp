@@ -1199,6 +1199,46 @@ Ranked by blast radius.
     Itanium body carrying no parameter list in its spelling, so no demangler
     closes them; the fix is to read the pop out of the target's own emitted
     `ret`, which means disassembling beyond the hal objects.
+  * THE HEADER AUTHORITY STOPS AT SLOT 30, AND EXTENSION VIRTUALS USED TO FALL
+    THROUGH IT SILENTLY. ActorBase.h declares 0..17 and Actor.h 18..30, so a
+    slot a DERIVED class adds past the Actor tail has no key in
+    ACTOR_SLOT_ARGS, `need` came back None, and the row read NO_AUTHORITY --
+    whose wording ("non-Actor table: consensus") describes a short Model or HUD
+    table and is a false description of a 33-slot Actor table. Real classes do
+    add these: PathLift adds AfterClsn at 32, Bully and BigBully add six at
+    31..36, and Platform::Kill sits at 31 on thirty-odd tables.
+    AND CONSENSUS COULD NOT COVER FOR IT. `consensus_odd` asks whether a fill
+    disagrees with its PEERS, so a slot that is wrong EVERYWHERE produces no
+    outlier at all. Slot 32 had three fills, all the two-parameter shape, all
+    emitting a bare ret against a dispatch site that pushes one word: unanimous,
+    and unanimously wrong. Both detectors read clean over it and the port
+    shipped report 7447e46c -- a level 46 return into the stack, walker PLAYER,
+    `ebp` holding the un-popped Actor.
+    CLOSED 2026-08-27, run mg16 lane FIXD, three arms:
+      (a) ACTOR_EXT_SLOT_ARGS, an authority for slots past 30 keyed on the
+          EMITTED DISPATCH rather than a header, because what decides a pop is
+          how many words the call site pushed and a call site reaches a slot by
+          OFFSET. Slot 32 = 1 argument, off src/func_ov002_020eff90.cpp's
+          `push` / `call [eax+80h]` / no-cleanup sequence, agreed by the only
+          other slot-32 site in the tree (src/_ZN6Lakitu6RenderEv.cpp). Nothing
+          goes in that table without a site named beside it.
+      (b) a new EXT_UNJUDGED verdict for an extension slot with no dispatch
+          evidence, reported in its own block and counted in the exit status.
+          It is UNCHECKED, not passed, and it says so. 35 distinct rows on this
+          tree today, dominated by slot 31 (Platform::Kill); each needs its
+          dispatch site read, and none of them is cleared by this work.
+      (c) a CONSENSUS-VS-AUTHORITY arm, which fires when the WHOLE peer group
+          disagrees with the slot's authority. This is the arm consensus alone
+          cannot have: it speaks precisely when nothing is an outlier because
+          everything is wrong together.
+    Proved both ways. --selftest gained a slot-32 fill that must read UNDERPOP
+    (it read NO_AUTHORITY before), an unknown slot-34 fill that must read
+    EXT_UNJUDGED, and a two-table fixture that pins the blind spot itself: two
+    slot-32 fills agreeing with each other, ZERO consensus outliers, and the
+    authority arm reporting the pair. On the real tree the new authority
+    immediately found the two instances the fix for 7447e46c did not touch,
+    bly_v32 and bbly_v32, with the consensus block still reporting 0 outliers
+    over them -- which is the hole demonstrating itself on live data.
   * aritycheck's full census (2075 rows since the else/return misparse fix;
     2106 when this was written) does not gate and its parser is a regex over
     C and C++ text. The honest route to gating it is to read arity out of

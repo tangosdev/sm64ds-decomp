@@ -100,6 +100,36 @@ SLOT_NAME = {
     26: 'OnHitByCannonBlastedChar(Actor&)', 27: 'OnHitByMegaChar(Player&)',
     28: 'OnHitFromUnderneath(Actor&)', 29: 'OnAimedAtWithEgg()',
     30: 'OnAimedAtWithEggReturnVec()->Vector3',
+    31: 'Kill()  [extension]', 32: 'AfterClsn(Actor&)  [extension]',
+}
+
+# args past `this` for EXTENSION slots -- the virtuals a derived class adds
+# PAST the Actor tail at slot 30. ActorBase.h and Actor.h cannot supply these:
+# they are per-class additions, so the header authority above simply has no key
+# for them and every one of them read NO_AUTHORITY, which is a silent pass.
+#
+# THIS TABLE IS KEYED ON THE EMITTED DISPATCH, NOT ON A HEADER. What decides a
+# callee's pop is how many words the CALL SITE pushed, and a call site reaches
+# a slot by OFFSET, so the offset is the right key even where two classes give
+# the slot different names. Each entry names the site its number came off, and
+# nothing goes in here without one:
+#
+#   32  1 arg   src/func_ov002_020eff90.cpp, the shared veneer over a
+#               33-virtual class -- `b->m(x)` compiles to
+#                   mov  ecx,dword ptr [ebp+0Ch]
+#                   push dword ptr [ebp+10h]          <- one word pushed
+#                   call dword ptr [eax+00000080h]    <- 0x80/4 = slot 32
+#                   pop  ebp                          <- NO add esp,4
+#               so the callee owes ret 4. src/_ZN6Lakitu6RenderEv.cpp is the
+#               only other slot-32 dispatch in the tree and it pushes one word
+#               too (`m(0)`), so the two sites agree.
+#
+# The bug this was written for: pl_after_clsn (PathLift/door AfterClsn, level
+# 46) was the two-parameter shape, emitted a bare ret, and left the pushed
+# Actor on the stack -- report 7447e46c. It read NO_AUTHORITY here and clean on
+# consensus, because every slot-32 thunk in the tree shared the same wrong pop.
+ACTOR_EXT_SLOT_ARGS = {
+    32: 1,
 }
 
 # calls that do not come back: the thunk's own `ret` is unreachable
@@ -306,6 +336,14 @@ def analyse(funcs, stores, extsig):
                    decline=declines(sym, funcs) if f else False,
                    slot_sig=SLOT_NAME.get(slot, '?'))
         need = ACTOR_SLOT_ARGS.get(slot) if row['actor31'] else None
+        # Extension virtuals, the slots a derived class adds past the Actor
+        # tail. The header authority has no key for them by construction, so
+        # before this they fell straight through to NO_AUTHORITY and rested on
+        # a consensus that cannot see a uniformly wrong slot.
+        ext = need is None and row['actor31'] and slot > 30
+        if ext:
+            need = ACTOR_EXT_SLOT_ARGS.get(slot)
+        row['ext_slot'] = ext
         row['want_pop'] = None if need is None else 4 * need
         if row['decline']:
             row['verdict'] = 'DECLINE'          # ret unreachable, cannot matter
@@ -313,6 +351,11 @@ def analyse(funcs, stores, extsig):
             row['verdict'] = 'NORETURN'
         elif len(r) > 1:
             row['verdict'] = 'MIXED'
+        elif need is None and ext:
+            # An extension slot with no dispatch evidence. Loud on purpose:
+            # NO_AUTHORITY reads as "a short non-Actor table", which is a fair
+            # description of a Model or HUD table and a false one here.
+            row['verdict'] = 'EXT_UNJUDGED'
         elif need is None:
             row['verdict'] = 'NO_AUTHORITY'     # non-Actor table: consensus
         else:
@@ -338,6 +381,14 @@ def analyse(funcs, stores, extsig):
         r['consensus_n'] = n
         r['consensus_total'] = sum(c.values())
         r['consensus_odd'] = (r['pop'] != top and n > 1)
+        # CONSENSUS CANNOT SEE A SLOT THAT IS WRONG EVERYWHERE. `consensus_odd`
+        # asks whether a fill disagrees with its peers, so when every peer is
+        # wrong in the same way nothing is odd and the slot reads clean twice
+        # over -- which is precisely how slot 32 hid: three fills, all the
+        # two-parameter shape, unanimous. Where the slot DOES have an
+        # authority, say so when the whole peer group disagrees with it.
+        r['consensus_vs_authority'] = (
+            r.get('want_pop') is not None and top != r['want_pop'])
     return rows, actor31, slotset
 
 
@@ -374,6 +425,12 @@ FIX_NOBYTES = """\
   00000000: jmp         ?AfterBehavior@ActorBase@@UAEXI@Z
 ?fwd_thunk_wrong@@YIHPAX0@Z:
   00000000: jmp         ?OnHeapCreated@ActorBase@@UAEXXZ
+?ext32_short@@YIHPAX0@Z:
+  00000000: ret
+?ext32_short2@@YIHPAX0@Z:
+  00000000: ret
+?ext34_unknown@@YIHPAX0@Z:
+  00000000: ret
 _hal_fill_crate:
   00000000: mov         eax,offset __ZTV5Crate
   00000005: mov         dword ptr [eax+54h],offset ?crate_pounded@@YIHPAX0@Z
@@ -382,7 +439,14 @@ _hal_fill_crate:
   00000017: mov         dword ptr [eax+34h],offset ?sa_trap13@@YIHPAX0@Z
   0000001D: mov         dword ptr [eax+20h],offset ?fwd_thunk@@YIHPAX0@Z
   00000023: mov         dword ptr [eax+58h],offset ?fwd_thunk_wrong@@YIHPAX0@Z
-  00000029: ret
+  00000029: mov         dword ptr [eax+80h],offset ?ext32_short@@YIHPAX0@Z
+  0000002F: mov         dword ptr [eax+88h],offset ?ext34_unknown@@YIHPAX0@Z
+  00000035: ret
+_hal_fill_crate2:
+  00000000: mov         eax,offset __ZTV6Crate2
+  00000005: mov         dword ptr [eax+58h],offset ?good_pounded@@YIHPAX0@Z
+  0000000B: mov         dword ptr [eax+80h],offset ?ext32_short2@@YIHPAX0@Z
+  00000011: ret
 """
 
 # The SAME fill, as plain `dumpbin /disasm` emits it: the encoded bytes sit
@@ -448,6 +512,32 @@ def selftest():
     # is the RED half of that repair.
     want('?fwd_thunk_wrong@@YIHPAX0@Z', 22, 'UNDERPOP', 0,
          'wrong-arity tail-jump target, caught ONLY through the decoration')
+
+    print('\n  EXTENSION SLOTS PAST 30 (the slot-32 hole, report 7447e46c)')
+    # 0x80/4 == 32, AfterClsn, dispatched with one word pushed by
+    # src/func_ov002_020eff90.cpp. A bare ret leaves it on the stack. Before
+    # ACTOR_EXT_SLOT_ARGS this read NO_AUTHORITY, which is a silent pass.
+    want('?ext32_short@@YIHPAX0@Z', 32, 'UNDERPOP', 0,
+         'bare ret on an extension slot the dispatch site pushes for')
+    # 0x88/4 == 34: no dispatch evidence, so it must read UNJUDGED and must
+    # NOT read NO_AUTHORITY, which is the wording for a short non-Actor table.
+    want('?ext34_unknown@@YIHPAX0@Z', 34, 'EXT_UNJUDGED', 0,
+         'extension slot with no dispatch evidence is unjudged, not passed')
+
+    print('\n  A UNANIMOUSLY WRONG SLOT IS INVISIBLE TO CONSENSUS')
+    # Two tables, both seating slot 32 with the same wrong bare ret. Nothing is
+    # an outlier, so consensus_odd is False for both -- which is exactly how the
+    # real slot 32 hid behind three matching fills. The authority arm has to be
+    # the thing that speaks.
+    r32 = [r for r in rows if r['slot'] == 32 and r['pop'] == 0]
+    ok = len(r32) == 2 and not any(r.get('consensus_odd') for r in r32)
+    bad += 0 if ok else 1
+    print('    %-4s %d slot-32 fills agree with each other, 0 flagged as '
+          'consensus outliers' % ('ok' if ok else 'FAIL', len(r32)))
+    ok = all(r.get('consensus_vs_authority') for r in r32)
+    bad += 0 if ok else 1
+    print('    %-4s and the whole peer group is reported against the '
+          'authority instead' % ('ok' if ok else 'FAIL'))
 
     print('\n  ACTOR31 classification')
     ok = '__ZTV5Crate' in actor31
@@ -628,11 +718,36 @@ def main(argv):
               % (r['slot'], r['table'], r['thunk'], r['pop'], r['consensus'],
                  r['consensus_n'], r['consensus_total'], flag))
 
+    # A whole peer group that disagrees with the slot's authority. This is the
+    # arm consensus alone cannot have: it fires when NOTHING is an outlier
+    # because everything is wrong together.
+    uall = distinct(rows, lambda r: r.get('consensus_vs_authority'))
+    print('\n=== %d distinct slots where the WHOLE peer group disagrees with '
+          'the authority ===' % len(uall))
+    for r in uall:
+        print('slot %2d %-30s peers ret %-3s (%d/%d) but the dispatch site '
+              'wants ret %s'
+              % (r['slot'], r['table'], r['consensus'], r['consensus_n'],
+                 r['consensus_total'], r['want_pop']))
+
+    # Extension virtuals with no dispatch evidence. Not a pass: the header
+    # authority stops at slot 30 by construction, so without this they are
+    # invisible rather than judged.
+    uext = distinct(rows, lambda r: r['verdict'] == 'EXT_UNJUDGED')
+    print('\n=== %d distinct EXTENSION slots past 30 with no dispatch '
+          'evidence (UNJUDGED, not passed) ===' % len(uext))
+    for r in uext:
+        print('slot %2d %-30s %-34s got ret %-3s  [%s]'
+              % (r['slot'], r['table'], r['thunk'], r['pop'], r['obj']))
+    if uext:
+        print('  Each needs its dispatch site read and a row added to '
+              'ACTOR_EXT_SLOT_ARGS, or a ruling that nothing dispatches it.')
+
     if args.json:
         with open(args.json, 'w', encoding='utf-8') as f:
             json.dump(rows, f, indent=1)
 
-    return 1 if uniq or uodd else 0
+    return 1 if uniq or uodd or uall or uext else 0
 
 
 if __name__ == '__main__':
