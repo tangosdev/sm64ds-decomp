@@ -1,20 +1,16 @@
 //cpp
 // @symbol _ZN13daObjMaruta_cD0Ev
-/* recovered: real C++ deleting destructor -- forced out of line via the key function
- *
- * daObjMaruta_c.h defines `~daObjMaruta_c() {}` in the class body on purpose,
- * so no TU that merely includes the header emits _ZN13daObjMaruta_cD0Ev --
- * but the ROM carries one at ov080 0x02126fbc. The vtable is what needs the
- * deleting destructor as a symbol, and the vtable is emitted by the TU that
- * defines the key function (OnHitByMegaChar, the first non-inline virtual --
- * include/daObjMaruta_c.h records the rule). Defining it here makes mwcc emit
- * _ZTV13daObjMaruta_c and the destructor variants alongside it, and
- * objisolate keeps only the D0 .text this file is bound to, discarding the
- * duplicate OnHitByMegaChar body and the .data
- * (notes/dtor-migration.md section 3).
- */
+/* D0, the deleting destructor, forced. daObjMaruta_c's destructor is defined inline
+ * in its class body on purpose -- so every descendant inlines it -- which
+ * means a TU that merely includes the header emits no out-of-line variant at
+ * all. A `delete` expression asks for one that the inline copy cannot satisfy:
+ * mwcc emits D0 (destroy through the class and its bases, then hand the object
+ * to the inherited operator delete), and objisolate keeps it while dropping
+ * this forcing function's own .text. The D1 half is forced the same way in
+ * src/_ZN13daObjMaruta_cD1Ev.cpp. */
 #include "daObjMaruta_c.h"
 
-void daObjMaruta_c::OnHitByMegaChar(Player &player)
+void daObjMaruta_c_EmitDeletingDestructor(daObjMaruta_c *p)
 {
+    delete p;
 }
