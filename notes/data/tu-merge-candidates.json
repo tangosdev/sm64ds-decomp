@@ -1747,7 +1747,7 @@
     "src/_ZN6Thwomp8BehaviorEv.cpp",
     "src/_ZN6Thwomp13InitResourcesEv.cpp",
     "src/Thwomp_Spawn.c",
-    "src/_ZN11daDsnBase_cD0Ev.c",
+    "src/_ZN11daDsnBase_cD0Ev.cpp",
     "src/_ZN11daDsnBase_cD1Ev.c",
     "src/func_ov091_02132dc0.cpp",
     "src/func_ov091_02132e64.c",
