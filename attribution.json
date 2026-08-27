@@ -1089,6 +1089,19 @@
     "src/game/actors/MgMushroomRoulette.cpp#func_ov006_0210a4ac": "tangosdev",
     "src/game/actors/MgPicturePoker.cpp#MgPicturePoker_Spawn": "tangosdev",
     "src/game/actors/MgPicturePoker.cpp#func_ov006_020dbe14": "tangosdev",
-    "src/game/actors/MgPicturePoker.cpp#func_ov006_020dbe30": "tangosdev"
+    "src/game/actors/MgPicturePoker.cpp#func_ov006_020dbe30": "tangosdev",
+    "src/game/actors/FloatOnWaterPlatformWdwSquare.cpp#_ZN29FloatOnWaterPlatformWdwSquareD1Ev": "tangosdev",
+    "src/game/actors/FloatOnWaterPlatformWdwSquare.cpp#_ZN29FloatOnWaterPlatformWdwSquareD0Ev": "tangosdev",
+    "src/game/actors/FloatOnWaterPlatformWdwSquare.cpp#_ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv": "tangosdev",
+    "src/game/actors/FloatOnWaterPlatformWdwSquare.cpp#FloatOnWaterPlatformWdwSquare_Spawn": "tangosdev",
+    "src/game/actors/FloatOnWaterPlatformWdwRectangle.cpp#_ZN32FloatOnWaterPlatformWdwRectangleD1Ev": "tangosdev",
+    "src/game/actors/FloatOnWaterPlatformWdwRectangle.cpp#_ZN32FloatOnWaterPlatformWdwRectangleD0Ev": "tangosdev",
+    "src/game/actors/FloatOnWaterPlatformWdwRectangle.cpp#_ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv": "lunavyqo",
+    "src/game/actors/FloatOnWaterPlatformWdwRectangle.cpp#FloatOnWaterPlatformWdwRectangle_Spawn": "tangosdev",
+    "src/game/actors/RotatingPlatformWdw.cpp#_ZN19RotatingPlatformWdwD1Ev": "tangosdev",
+    "src/game/actors/RotatingPlatformWdw.cpp#_ZN19RotatingPlatformWdwD0Ev": "tangosdev",
+    "src/game/actors/RotatingPlatformWdw.cpp#_ZN19RotatingPlatformWdw16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/RotatingPlatformWdw.cpp#_ZN19RotatingPlatformWdw13InitResourcesEv": "ruspecial",
+    "src/game/actors/RotatingPlatformWdw.cpp#RotatingPlatformWdw_Spawn": "tangosdev"
   }
 }
