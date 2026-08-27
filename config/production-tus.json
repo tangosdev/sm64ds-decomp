@@ -15,6 +15,7 @@
     "ov002/WaterfallMist",
     "ov002/SoundObject",
     "ov017/ShipWater",
-    "ov045/PoleLift"
+    "ov045/PoleLift",
+    "ov002/AmbientSoundEffects"
   ]
 }

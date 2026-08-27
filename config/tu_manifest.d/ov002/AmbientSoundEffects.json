@@ -1,8 +1,8 @@
 {
   "id": "ov002/AmbientSoundEffects",
   "module": "ov002",
-  "source": "src_tu/actors/AmbientSoundEffects.cpp",
-  "promoted_source": "src/actors/AmbientSoundEffects.cpp",
+  "source": "src/game/actors/AmbientSoundEffects.cpp",
+  "promoted_source": "src/game/actors/AmbientSoundEffects.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -98,69 +98,61 @@
     }
   },
   "unlicensed_output_observed": {
-    "note": "Ten definitions are present in the raw object and intentionally excluded from this text-only proof. The inherited records have canonical arm9 homes; the three derived-class records use the configured text label rather than the retail RTTI name daSetSE_c.",
+    "note": "Pinned-compiler inventory stamped by tools/promote_derived_tus.py --stamp-discarded-output before default production admission. These definitions are not ROM ownership claims; every build requires an exact inventory match, exact derived text contributions, exact modules, and an exact ROM.",
+    "toolchain": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "text": [
       {
         "symbol": "_ZN19AmbientSoundEffectsD2Ev",
         "size": "0x24",
-        "binding": "STB_GLOBAL",
-        "note": "compiler-emitted base destructor variant with no licensed ROM text contribution"
+        "binding": "STB_GLOBAL"
       }
     ],
     "data": [
       {
-        "symbol": "_ZTI7fBase_c",
-        "size": "0x8",
-        "binding": "STB_LOPROC",
-        "canonical_home": "arm9:0x02086d70"
-      },
-      {
-        "symbol": "_ZTS7fBase_c",
-        "size": "0x9",
-        "binding": "STB_LOPROC",
-        "canonical_home": "arm9:0x02086e60"
-      },
-      {
-        "symbol": "_ZTS7dBase_c",
-        "size": "0x9",
-        "binding": "STB_LOPROC",
-        "canonical_home": "arm9:0x02086e54"
-      },
-      {
-        "symbol": "_ZTS8dActor_c",
-        "size": "0xa",
-        "binding": "STB_LOPROC",
-        "canonical_home": "arm9:0x0208e384"
+        "symbol": "_ZTI19AmbientSoundEffects",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
       },
       {
         "symbol": "_ZTI7dBase_c",
         "size": "0xc",
-        "binding": "STB_LOPROC",
-        "canonical_home": "arm9:0x02086e78"
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "size": "0x8",
+        "binding": "STB_LOPROC"
       },
       {
         "symbol": "_ZTI8dActor_c",
         "size": "0xc",
-        "binding": "STB_LOPROC",
-        "canonical_home": "arm9:0x0208e390"
-      },
-      {
-        "symbol": "_ZTI19AmbientSoundEffects",
-        "size": "0xc",
-        "binding": "STB_LOPROC",
-        "note": "retail record is _ZTI9daSetSE_c at ov002:0x0210b470"
+        "binding": "STB_LOPROC"
       },
       {
         "symbol": "_ZTS19AmbientSoundEffects",
         "size": "0x16",
-        "binding": "STB_LOPROC",
-        "note": "retail string is _ZTS9daSetSE_c at ov002:0x0210b464"
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "size": "0xa",
+        "binding": "STB_LOPROC"
       },
       {
         "symbol": "_ZTV19AmbientSoundEffects",
         "size": "0x84",
-        "binding": "STB_GLOBAL",
-        "note": "not licensed while its RTTI/type-name identity differs from retail"
+        "binding": "STB_GLOBAL"
       }
     ],
     "bss": [],
@@ -223,5 +215,6 @@
       "matchesStockRom": true
     },
     "scratch": "build/tu/ov002-AmbientSoundEffects/link-partial (gitignored)"
-  }
+  },
+  "production_mode": "derived-text"
 }

@@ -736,6 +736,14 @@
     "src/game/actors/PoleLift.cpp#_ZN8PoleLift6RenderEv": "tangosdev",
     "src/game/actors/PoleLift.cpp#_ZN8PoleLift8BehaviorEv": "tangosdev",
     "src/game/actors/PoleLift.cpp#_ZN8PoleLift13InitResourcesEv": "tangosdev",
-    "src/game/actors/PoleLift.cpp#PoleLift_Spawn": "tangosdev"
+    "src/game/actors/PoleLift.cpp#PoleLift_Spawn": "tangosdev",
+    "src/game/actors/AmbientSoundEffects.cpp#_ZN19AmbientSoundEffectsD1Ev": "tangosdev",
+    "src/game/actors/AmbientSoundEffects.cpp#_ZN19AmbientSoundEffectsD0Ev": "tangosdev",
+    "src/game/actors/AmbientSoundEffects.cpp#_ZN19AmbientSoundEffects16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/AmbientSoundEffects.cpp#_ZN19AmbientSoundEffects16OnPendingDestroyEv": "tangosdev",
+    "src/game/actors/AmbientSoundEffects.cpp#_ZN19AmbientSoundEffects6RenderEv": "tangosdev",
+    "src/game/actors/AmbientSoundEffects.cpp#_ZN19AmbientSoundEffects8BehaviorEv": "lunavyqo",
+    "src/game/actors/AmbientSoundEffects.cpp#_ZN19AmbientSoundEffects13InitResourcesEv": "tangosdev",
+    "src/game/actors/AmbientSoundEffects.cpp#AmbientSoundEffects_Spawn": "tangosdev"
   }
 }
