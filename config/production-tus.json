@@ -28,6 +28,7 @@
     "ov002/BlueCoinSwitch",
     "ov002/Exit",
     "ov002/Platform",
-    "ov098/ArrowSignRight"
+    "ov098/ArrowSignRight",
+    "ov002/LevelObjects"
   ]
 }
