@@ -80,11 +80,11 @@ src/game/actors/SeesawUtm/SeesawUtm_Spawn.c:
     complete
     .text start:0x02135fc4 end:0x02135ff4
 
-src/game/actors/UpDownLiftBbh/_ZN13UpDownLiftBbhD1Ev.c:
+src/game/actors/UpDownLiftBbh/_ZN13UpDownLiftBbhD1Ev.cpp:
     complete
     .text start:0x02135ff4 end:0x02136038
 
-src/game/actors/UpDownLiftBbh/_ZN13UpDownLiftBbhD0Ev.c:
+src/game/actors/UpDownLiftBbh/_ZN13UpDownLiftBbhD0Ev.cpp:
     complete
     .text start:0x02136038 end:0x02136090
 
