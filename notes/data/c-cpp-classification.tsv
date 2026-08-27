@@ -851,8 +851,8 @@ src/_ZN19RotatingPlatformWdw16CleanupResourcesEv.c	P1-vtable+mangled	ov029	daObj
 src/_ZN19RotatingPlatformWdwD0Ev.c	DTOR-ONLY	ov029	daObjWc_Obj07_c	RotatingPlatformWdw/daObjWc_Obj07_c	_ZN19RotatingPlatformWdwD0Ev	1		True	_ZTV10dBgActor_c/_ZTV16daObjKaitendai_c/_ZTV19RotatingPlatformWdw	-
 src/_ZN20SwitchActivatedPlankD0Ev.c	DTOR-ONLY	ov029	daObjWc_Obj04_c	SwitchActivatedPlank/daObjWc_Obj04_c	_ZN20SwitchActivatedPlankD0Ev	1		True	_ZTV10dBgActor_c	-
 src/_ZN20SwitchActivatedPlankD1Ev.c	DTOR-ONLY	ov029	daObjWc_Obj04_c	SwitchActivatedPlank/daObjWc_Obj04_c	_ZN20SwitchActivatedPlankD1Ev	1		True	_ZTV10dBgActor_c	-
-src/_ZN20TtcConveyorBeltLargeD0Ev.c	DTOR-ONLY	ov065	daObjCtMecha04_c	TtcConveyorBeltLarge/daObjCtMecha04_c	_ZN20TtcConveyorBeltLargeD0Ev	1		True	_ZTV10dBgActor_c	-
-src/_ZN20TtcConveyorBeltLargeD1Ev.c	DTOR-ONLY	ov065	daObjCtMecha04_c	TtcConveyorBeltLarge/daObjCtMecha04_c	_ZN20TtcConveyorBeltLargeD1Ev	1		True	_ZTV10dBgActor_c	-
+src/_ZN20TtcConveyorBeltLargeD0Ev.cpp	DTOR-ONLY	ov065	daObjCtMecha04_c	TtcConveyorBeltLarge/daObjCtMecha04_c	_ZN20TtcConveyorBeltLargeD0Ev	1		True	_ZTV10dBgActor_c	-
+src/_ZN20TtcConveyorBeltLargeD1Ev.cpp	DTOR-ONLY	ov065	daObjCtMecha04_c	TtcConveyorBeltLarge/daObjCtMecha04_c	_ZN20TtcConveyorBeltLargeD1Ev	1		True	_ZTV10dBgActor_c	-
 src/_ZN20daObjFl_Fall_Block_c13InitResourcesEv.c	P1-vtable+mangled	ov022	daObjFl_Fall_Block_c	daObjFl_Fall_Block_c	vtable daObjFl_Fall_Block_c slot 0 @0x2112448 | _ZN20daObjFl_Fall_Block_c13InitResourcesEv	1		True		-
 src/_ZN20daObjFl_Fall_Block_c16CleanupResourcesEv.c	P1-vtable+mangled	ov022	daObjFl_Fall_Block_c	daObjFl_Fall_Block_c	vtable daObjFl_Fall_Block_c slot 3 @0x2112434 | _ZN20daObjFl_Fall_Block_c16CleanupResourcesEv	1		True		-
 src/_ZN20daObjFl_Fall_Block_cD0Ev.c	DTOR-ONLY	ov022	daObjFl_Fall_Block_c	daObjFl_Fall_Block_c	_ZN20daObjFl_Fall_Block_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV16daObjFallBlock_c/_ZTV20daObjFl_Fall_Block_c	-
@@ -955,8 +955,8 @@ src/_ZN5Ukiki16CleanupResourcesEv.c	P1-vtable+mangled	ov030	daMky_c	Ukiki/daMky_
 src/_ZN5Ukiki16OnPendingDestroyEv.c	P1-vtable+mangled	ov030	daMky_c	Ukiki/daMky_c	vtable daMky_c slot 12 @0x211422c | _ZN5Ukiki16OnPendingDestroyEv	1		True		-
 src/_ZN5UkikiD0Ev.c	DTOR-ONLY	ov030	daMky_c	Ukiki/daMky_c	_ZN5UkikiD0Ev	1		True		-
 src/_ZN6CameraC1Ev.c	P3-mangled-method-only	arm9		Camera	_ZN6CameraC1Ev	1		True	_ZTV4View/_ZTV6Camera	-
-src/_ZN6CameraD0Ev.c	DTOR-ONLY	arm9	dCamera_c	Camera/dCamera_c	_ZN6CameraD0Ev	1		True	_ZTV4View/_ZTV6Camera	-
-src/_ZN6CameraD1Ev.c	DTOR-ONLY	arm9	dCamera_c	Camera/dCamera_c	_ZN6CameraD1Ev	1		True	_ZTV4View/_ZTV6Camera	-
+src/_ZN6CameraD0Ev.cpp	DTOR-ONLY	arm9	dCamera_c	Camera/dCamera_c	_ZN6CameraD0Ev	1		True	_ZTV4View/_ZTV6Camera	-
+src/_ZN6CameraD1Ev.cpp	DTOR-ONLY	arm9	dCamera_c	Camera/dCamera_c	_ZN6CameraD1Ev	1		True	_ZTV4View/_ZTV6Camera	-
 src/_ZN6Cannon16CleanupResourcesEv.c	P1-vtable+mangled	ov098	daCnn_c	Cannon/daCnn_c	vtable daCnn_c slot 3 @0x213b1d8 | _ZN6Cannon16CleanupResourcesEv	1		True		-
 src/_ZN6CannonD0Ev.cpp	DTOR-ONLY	ov098	daCnn_c	Cannon/daCnn_c	_ZN6CannonD0Ev	1		True		-
 src/_ZN6CoffinD0Ev.c	DTOR-ONLY	ov071	daObjCasket_c	Coffin/daObjCasket_c	_ZN6CoffinD0Ev	1		True	_ZTV10dBgActor_c/_ZTV6Coffin	-
@@ -978,8 +978,8 @@ src/_ZN7Clipper13Func_020150E8ER7Vector35Fix12IiEPh.c	P3-mangled-method-only	arm
 src/_ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_.c	P3-mangled-method-only	arm9		Clipper	_ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_	1		True		by-value-class-param
 src/_ZN7Clipper13Func_0201559CEv.c	P3-mangled-method-only	arm9		Clipper	_ZN7Clipper13Func_0201559CEv	1		True		-
 src/_ZN7ClipperC1Ev.c	P3-mangled-method-only	arm9		Clipper	_ZN7ClipperC1Ev	1		True	_ZTV7Clipper	-
-src/_ZN7ClipperD0Ev.c	DTOR-ONLY	arm9	dClipper	Clipper/dClipper	_ZN7ClipperD0Ev	1		True	_ZTV7Clipper	-
-src/_ZN7ClipperD1Ev.c	DTOR-ONLY	arm9	dClipper	Clipper/dClipper	_ZN7ClipperD1Ev	1		True	_ZTV7Clipper	-
+src/_ZN7ClipperD0Ev.cpp	DTOR-ONLY	arm9	dClipper	Clipper/dClipper	_ZN7ClipperD0Ev	1		True	_ZTV7Clipper	-
+src/_ZN7ClipperD1Ev.cpp	DTOR-ONLY	arm9	dClipper	Clipper/dClipper	_ZN7ClipperD1Ev	1		True	_ZTV7Clipper	-
 src/_ZN7MinimapC1Ev.c	P3-mangled-method-only	ov002		Minimap	_ZN7MinimapC1Ev	1		True	_ZTV7Minimap/_ZTV7dBase_c	-
 src/_ZN7MinimapD0Ev.c	DTOR-ONLY	ov002	dMap_c	Minimap/dMap_c	_ZN7MinimapD0Ev	1		True	_ZTV7Minimap/_ZTV7dBase_c	-
 src/_ZN7PathPtrC1Ev.c	P3-mangled-method-only	arm9		PathPtr	_ZN7PathPtrC1Ev	1		True		-

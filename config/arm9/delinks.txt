@@ -116,11 +116,11 @@ src/main.c:
     complete
     .text start:0x02007000 end:0x0200705c
 
-src/_ZN6CameraD1Ev.c:
+src/_ZN6CameraD1Ev.cpp:
     complete
     .text start:0x0200705c end:0x02007098
 
-src/_ZN6CameraD0Ev.c:
+src/_ZN6CameraD0Ev.cpp:
     complete
     .text start:0x02007098 end:0x020070e8
 
@@ -1956,11 +1956,11 @@ src/_ZN7Clipper13Func_020156DCEv.cpp:
     complete
     .text start:0x020156dc end:0x020156fc
 
-src/_ZN7ClipperD0Ev.c:
+src/_ZN7ClipperD0Ev.cpp:
     complete
     .text start:0x020156fc end:0x02015720
 
-src/_ZN7ClipperD1Ev.c:
+src/_ZN7ClipperD1Ev.cpp:
     complete
     .text start:0x02015720 end:0x02015730
 
