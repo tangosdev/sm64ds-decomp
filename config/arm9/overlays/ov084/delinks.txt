@@ -123,6 +123,10 @@ src/_ZN7daKrb_c8BehaviorEv.cpp:
     complete
     .text start:0x0212b6ec end:0x0212bc30
 
+src/_ZN7daKrb_c13InitResourcesEv.cpp:
+    complete
+    .text start:0x0212bc30 end:0x0212bfc0
+
 src/_ZN7daKrb_c13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0212bfc0 end:0x0212bff8

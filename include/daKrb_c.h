@@ -105,6 +105,11 @@ struct daKrb_c : dCapEnemy_c {
     /* methods */
     int Behavior();
     int CleanupResources();
+    /* Declared here so src/_ZN7daKrb_c13InitResourcesEv.cpp can be a real method
+       rather than an extern "C" free function under the mangled name. ~daKrb_c is
+       still the first virtual DECLARED, so the key function -- and with it
+       _ZTV7daKrb_c -- stays where it already was. */
+    int InitResources();
     void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
     int Render();
 
