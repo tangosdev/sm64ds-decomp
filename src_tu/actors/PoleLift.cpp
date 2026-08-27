@@ -207,6 +207,3 @@ int PoleLift::CleanupResources()
  * that third section is the one thing standing between this file and a
  * whole-range link.
  */
-PoleLift::~PoleLift()
-{
-}

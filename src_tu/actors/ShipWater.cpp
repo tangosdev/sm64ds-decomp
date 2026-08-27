@@ -206,6 +206,3 @@ int ShipWater::CleanupResources()
  * member with a destructor of its own. D0 additionally destroys through the
  * base and returns the object to its heap via an inline operator delete.
  */
-ShipWater::~ShipWater()
-{
-}

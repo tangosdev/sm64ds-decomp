@@ -11,7 +11,7 @@ struct AmbientSoundEffects : dActor_c {
     u8  pad_0d0[0x4];
     u32 mSoundHandle;       /* 0x0d4 */
 
-    virtual ~AmbientSoundEffects();
+    virtual ~AmbientSoundEffects() {}
 
     virtual s32 InitResources();
     virtual s32 CleanupResources();

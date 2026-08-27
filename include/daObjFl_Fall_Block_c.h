@@ -33,7 +33,7 @@
 
 struct daObjFl_Fall_Block_c : daObjFallBlock_c {
     /* --- vtable --- */
-    virtual ~daObjFl_Fall_Block_c();       /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjFl_Fall_Block_c() {}       /* slots 16 (D1), 17 (D0) */
 
     int CleanupResources();                /* slot  3 */
     int InitResources();                   /* slot  0 */

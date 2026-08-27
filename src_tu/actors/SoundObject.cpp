@@ -205,6 +205,3 @@ int func_ov002_020f93a8(char* c, unsigned short* p) {
 // @symbol _ZN11SoundObjectD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body.
  * Vtable slot 16: one vtable store, the members in reverse, then ~dActor_c. */
-SoundObject::~SoundObject()
-{
-}

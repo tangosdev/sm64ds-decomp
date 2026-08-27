@@ -83,7 +83,7 @@ struct ArrowSignRight : dBgActor_c {
     u8  mVariant;                     /* 0x37c -- 0/1 from actorID; indexes all three ov098 resource columns */
 
     /* --- vtable --- */
-    virtual ~ArrowSignRight();
+    virtual ~ArrowSignRight() {}
 
     int Behavior();
     int CleanupResources();

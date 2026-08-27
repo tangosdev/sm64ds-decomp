@@ -34,7 +34,7 @@ struct InvisiblePole : dActor_c {
     u8                  pad_0d0[0x4];
     dCcAc_c  mClsn;           /* 0x0d4 */
 
-    virtual ~InvisiblePole();            /* slots 16 (D1), 17 (D0) */
+    virtual ~InvisiblePole() {}            /* slots 16 (D1), 17 (D0) */
 
     virtual s32  InitResources();        /* slot  0 */
     virtual s32  CleanupResources();     /* slot  3 */
