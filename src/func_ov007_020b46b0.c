@@ -29,15 +29,18 @@
  *
  * Two things about the box shape below are load-bearing, not style.  Each axis is
  * shifted once into its position local rather than at each of the four edges, and
- * the element is re-dereferenced in every edge expression rather than read through
- * a bound pointer.  Neither alone is enough.  Measured at 2004/b56 over all four
- * combinations: pointer locals with per-edge shifts scores 37 divergences,
- * re-dereferencing with per-edge shifts also 37, pointer locals with pre-shifted
+ * the object and rect pointers are re-dereferenced in every edge expression rather
+ * than bound to locals.  Neither alone is enough.  Measured at 2004/b56 over all
+ * four combinations: bound pointers with per-edge shifts scores 37 divergences,
+ * re-dereferencing with per-edge shifts also 37, bound pointers with pre-shifted
  * positions 51, and only the two together 0.
  *
- * Reusing the preamble's already-bound object pointer here, rather than re-reading
- * the element, does not just cost divergences, it breaks the size: the ROM performs
- * that reload, so folding it away compiles to 0x49c instead of 0x4ac.
+ * The re-dereferencing requirement is narrower than it looks, so measure before
+ * tidying rather than assuming the whole shape is fragile.  Binding each pointer on
+ * its own, against the shipped source: binding the rect costs 49 divergences,
+ * binding the object costs 14, and binding the transform is FREE at 0.  The
+ * transform is written out longhand below only to keep the four edges reading
+ * alike.
  */
 typedef unsigned char u8;
 typedef unsigned short u16;
