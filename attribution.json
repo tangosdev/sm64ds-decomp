@@ -760,6 +760,14 @@
     "src/game/actors/daObjCannonShutter_c.cpp#_ZN20daObjCannonShutter_c6RenderEv": "tangosdev",
     "src/game/actors/daObjCannonShutter_c.cpp#_ZN20daObjCannonShutter_c8BehaviorEv": "tangosdev",
     "src/game/actors/daObjCannonShutter_c.cpp#_ZN20daObjCannonShutter_c13InitResourcesEv": "tangosdev",
-    "src/game/actors/daObjCannonShutter_c.cpp#daObjCannonShutter_c_Spawn": "tangosdev"
+    "src/game/actors/daObjCannonShutter_c.cpp#daObjCannonShutter_c_Spawn": "tangosdev",
+    "src/game/actors/InvisiblePole.cpp#_ZN13InvisiblePoleD1Ev": "tangosdev",
+    "src/game/actors/InvisiblePole.cpp#_ZN13InvisiblePoleD0Ev": "tangosdev",
+    "src/game/actors/InvisiblePole.cpp#_ZN13InvisiblePole16CleanupResourcesEv": "andrewboudreau",
+    "src/game/actors/InvisiblePole.cpp#_ZN13InvisiblePole16OnPendingDestroyEv": "andrewboudreau",
+    "src/game/actors/InvisiblePole.cpp#_ZN13InvisiblePole6RenderEv": "andrewboudreau",
+    "src/game/actors/InvisiblePole.cpp#_ZN13InvisiblePole8BehaviorEv": "andrewboudreau",
+    "src/game/actors/InvisiblePole.cpp#_ZN13InvisiblePole13InitResourcesEv": "andrewboudreau",
+    "src/game/actors/InvisiblePole.cpp#InvisiblePole_Spawn": "tangosdev"
   }
 }
