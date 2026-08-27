@@ -715,6 +715,13 @@
     "src/game/actors/WaterfallMist.cpp#_ZN13WaterfallMistD0Ev": "tangosdev",
     "src/game/actors/WaterfallMist.cpp#_ZN13WaterfallMist8BehaviorEv": "tangosdev",
     "src/game/actors/WaterfallMist.cpp#_ZN13WaterfallMist13InitResourcesEv": "tangosdev",
-    "src/game/actors/WaterfallMist.cpp#WaterfallMist_Spawn": "tangosdev"
+    "src/game/actors/WaterfallMist.cpp#WaterfallMist_Spawn": "tangosdev",
+    "src/game/actors/SoundObject.cpp#_ZN11SoundObjectD1Ev": "tangosdev",
+    "src/game/actors/SoundObject.cpp#_ZN11SoundObjectD0Ev": "tangosdev",
+    "src/game/actors/SoundObject.cpp#func_ov002_020f93a8": "tangosdev",
+    "src/game/actors/SoundObject.cpp#func_ov002_020f9468": "tangosdev",
+    "src/game/actors/SoundObject.cpp#_ZN11SoundObject8BehaviorEv": "tangosdev",
+    "src/game/actors/SoundObject.cpp#_ZN11SoundObject13InitResourcesEv": "ruspecial",
+    "src/game/actors/SoundObject.cpp#SoundObject_Spawn": "tangosdev"
   }
 }
