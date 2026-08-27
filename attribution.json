@@ -929,6 +929,10 @@
     "src/game/actors/ArrowLift.cpp#_ZN9ArrowLift13InitResourcesEv": "tangosdev",
     "src/game/actors/ArrowLift.cpp#func_ov029_021116c4": "tangosdev",
     "src/game/actors/ArrowLift.cpp#func_ov029_021116e4": "tangosdev",
-    "src/game/actors/ArrowLift.cpp#ArrowLift_Spawn": "tangosdev"
+    "src/game/actors/ArrowLift.cpp#ArrowLift_Spawn": "tangosdev",
+    "src/game/actors/daObjRc_Dorifu_c.cpp#_ZN16daObjRc_Dorifu_cD1Ev": "tangosdev",
+    "src/game/actors/daObjRc_Dorifu_c.cpp#_ZN16daObjRc_Dorifu_cD0Ev": "tangosdev",
+    "src/game/actors/daObjRc_Dorifu_c.cpp#_ZN16daObjRc_Dorifu_c16CleanupResourcesEv": "andrewboudreau",
+    "src/game/actors/daObjRc_Dorifu_c.cpp#_ZN16daObjRc_Dorifu_c13InitResourcesEv": "andrewboudreau"
   }
 }
