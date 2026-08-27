@@ -31,6 +31,7 @@
     "ov098/ArrowSignRight",
     "ov002/LevelObjects",
     "arm9/Scene",
-    "ov012/BasementWater"
+    "ov012/BasementWater",
+    "ov012/SwitchPillar"
   ]
 }

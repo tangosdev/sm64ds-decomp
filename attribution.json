@@ -897,6 +897,14 @@
     "src/game/actors/BasementWater.cpp#_ZN13BasementWater6RenderEv": "tangosdev",
     "src/game/actors/BasementWater.cpp#_ZN13BasementWater8BehaviorEv": "lunavyqo",
     "src/game/actors/BasementWater.cpp#_ZN13BasementWater13InitResourcesEv": "tangosdev",
-    "src/game/actors/BasementWater.cpp#BasementWater_Spawn": "tangosdev"
+    "src/game/actors/BasementWater.cpp#BasementWater_Spawn": "tangosdev",
+    "src/game/actors/SwitchPillar.cpp#_ZN12SwitchPillarD1Ev": "tangosdev",
+    "src/game/actors/SwitchPillar.cpp#_ZN12SwitchPillarD0Ev": "andrewboudreau",
+    "src/game/actors/SwitchPillar.cpp#_ZN12SwitchPillar15OnGroundPoundedER8dActor_c": "lunavyqo",
+    "src/game/actors/SwitchPillar.cpp#_ZN12SwitchPillar16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/SwitchPillar.cpp#_ZN12SwitchPillar6RenderEv": "tangosdev",
+    "src/game/actors/SwitchPillar.cpp#_ZN12SwitchPillar8BehaviorEv": "tangosdev",
+    "src/game/actors/SwitchPillar.cpp#_ZN12SwitchPillar13InitResourcesEv": "lunavyqo",
+    "src/game/actors/SwitchPillar.cpp#SwitchPillar_Spawn": "tangosdev"
   }
 }
