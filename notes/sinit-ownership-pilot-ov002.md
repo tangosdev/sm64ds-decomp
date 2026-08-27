@@ -109,13 +109,14 @@ result remains 29/30 because `dEnemyBase_cD2Ev` uses the existing co-address
 python tools/rtti_extract.py --check
 python tools/rtti_vtables.py
 python tools/tu_map.py
-python tools/sinit_owners.py --module ov002 --show all --no-write
 python tools/tubuild.py inspect ov002/dEnemyBase_c
 ```
 
 Observed: 429 RTTI records, 0 unresolved; 454 candidate TUs; ownership row high,
 two ownership globals, one consumer TU, no blocker; candidate boundary medium,
-31 functions with one unmatched hole.
+31 functions with one unmatched hole. The ownership row came from the separate
+static-initializer ownership-tool experiment on which this pilot was originally
+run; this PR records the independent reproduction evidence, not that tooling.
 
 ```powershell
 $env:LM_LICENSE_FILE = (Resolve-Path tools\mwccarm\license.dat)
