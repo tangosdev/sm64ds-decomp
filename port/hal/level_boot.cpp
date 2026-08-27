@@ -3727,6 +3727,9 @@ extern unsigned char data_0209f21c;    /* controller count */
 extern unsigned char data_0209f250;    /* local player index */
 extern int data_0209fc5c[];            /* per-player "this slot is live" */
 extern unsigned char data_02092128[];  /* per-player character */
+/* run mg16 lane MP3: the per-player input gate Player::Behavior tests before it
+   will point data_020a0e40 at its own slot. Hosted by hal/auto_bss.cpp. */
+extern int data_0209fc68[];
 /* run mg16 lane MP3: the ROM's own "which comms slot am I", linked since MP1
    and never called until now. src/func_0203da9c.c is `return data_020a0f10`. */
 int func_0203da9c(void);
@@ -3961,6 +3964,37 @@ static void port_a2_seat_body(int make_stage)
      * func_0203da9c has been linked and never called for the whole life of this
      * port; this is the call site it was waiting for. */
     const int vs_players = port::vs_player_count();
+    /* ---- THE PER-PLAYER INPUT GATE (run mg16, lane MP3) -------------------
+     *
+     * Without this, two Player actors exist and BOTH READ PLAYER 0'S PAD, so
+     * the second one mirrors the first exactly and no input from anywhere can
+     * ever reach it. src/_ZN6Player8BehaviorEv.cpp:111-122 is the gate:
+     *
+     *     if (data_0209fc68 == 0) {
+     *         ... if (data_0209fc48 == 0) { data_020a0e40 = 0; goto skip; }
+     *     }
+     *     data_020a0e40 = mPlayerNo;
+     *
+     * data_020a0e40 is "which player is being ticked", and every downstream
+     * data_020a0e58[data_020a0e40 * 4] read resolves through it. With the gate
+     * clear it is pinned to 0 for every actor; with it set each Player reads
+     * its OWN slot, which is the entire remote-input mechanism.
+     *
+     * SEATED DIRECTLY RATHER THAN THROUGH THE ROM'S SETTERS, and the reasoning
+     * is proportionality. The ROM writes this from six session functions
+     * around 0x02030xxx (~0x420 bytes) that are matched but unlinked, and every
+     * one of them is about entering a multiplayer SESSION -- menus, mode
+     * selection, the things ov075 drives. Linking six functions to set one flag
+     * would pull that whole surface in for a byte, and this lane's own rule has
+     * been to move the ROM's code in when the ROM's code is what runs. Nothing
+     * here runs: the flag is a precondition, and the port is standing in for
+     * the menu that would set it, exactly as it does for the role byte in
+     * hal/comms_conductor.cpp. When ov075 lands, its setters own this and this
+     * line goes.
+     *
+     * ONE PLAYER LEAVES IT CLEAR, so the single-player path is untouched and
+     * data_020a0e40 stays pinned at 0 exactly as it always was. */
+    data_0209fc68[0] = (vs_players > 1) ? 1 : 0;
     /* THROUGH THE ROM'S OWN SETTER, and the first version of this did not, which
        is worth recording because it looked like it worked. Writing
        data_0209f21c here seats it -- and then Stage::InitResources:153 runs and

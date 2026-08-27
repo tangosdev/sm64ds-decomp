@@ -301,7 +301,20 @@ extern unsigned char data_0209f250[];
 extern int data_0209fc5c[];
 // hal/level_boot.cpp's own accessor for the level's entrance-record count.
 int port_entrance_count(void);
+// The fanned-out pad mirror and Stage::CheckInput's Ctrl block, for the probe's
+// input-chain columns.
+extern int data_020a0e58[];
+extern int data_0209f498[];
 }
+
+namespace port {
+namespace {
+inline int *data_020a0e58_arr() { return data_020a0e58; }
+inline unsigned char *data_0209f498_bytes() {
+    return reinterpret_cast<unsigned char *>(&data_0209f498[0]);
+}
+}  // namespace
+}  // namespace port
 
 namespace port {
 namespace {
@@ -576,10 +589,21 @@ void vs_probe(int frame) {
         std::memcpy(&py, a + 0x60, 4);
         std::memcpy(&pz, a + 0x64, 4);
         std::memcpy(&other, a + 0x2f8, 4);
+        // THE INPUT CHAIN, per slot, so a body that will not move can be told
+        // apart from a body that is not being TOLD to move. Four links:
+        //   pad   data_020a0e58[i]      what func_0203bc7c fanned out
+        //   ctrl  data_0209f498 + i*0x18 what Stage::CheckInput made of it
+        //   ang   ctrl + 0x0e            the stick angle Player::Behavior reads
+        const unsigned pad = (unsigned)(data_020a0e58_arr()[i] & 0xFFFF);
+        const unsigned char *ctrl = data_0209f498_bytes() + i * 0x18;
+        int cheld = 0, cang = 0;
+        std::memcpy(&cheld, ctrl + 0x00, 4);
+        std::memcpy(&cang, ctrl + 0x0e, 2);
         std::fprintf(stderr,
-                     "[vs] f%d slot%d actor=%p no=%d pos=(%d,%d,%d) touched=%u\n",
+                     "[vs] f%d slot%d actor=%p no=%d pos=(%d,%d,%d) touched=%u "
+                     "pad=%04x ctrl0=%08x ang=%04x\n",
                      frame, i, (const void *)a, (int)a[0x6d8], px, py, pz,
-                     other);
+                     other, pad, (unsigned)cheld, (unsigned)(cang & 0xffff));
     }
 }
 

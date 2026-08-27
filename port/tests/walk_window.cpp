@@ -7332,14 +7332,65 @@ int main(void)
             port_input_probe_apply(frame);
             _ZN5Stage10CheckInputEv();
             /* the matched TU writes its own data_0209f498 block; older
-               TUs read per-field split symbols -- copy the record out */
+               TUs read per-field split symbols -- copy the record out
+               ----------------------------------------------------------------
+               run mg16 lane MP3: FOR EVERY PLAYER, AT THE DS's OWN STRIDE.
+               This copied slot 0 and only slot 0, which was right while the
+               port asserted one player and is the exact reason a second
+               player could receive input and still not move.
+
+               ON THE DS THESE FIVE NAMES ARE INTERIOR ADDRESSES OF THE Ctrl
+               BLOCK ITSELF: data_0209f498 + 8, +0xa, +0xc, +0xe and +0x14,
+               with Ctrl striding 0x18 per player. That is why
+               port/unmatched/Player_Behavior.cpp reads its stick angle as
+               `*(s16 *)((char *)&data_0209f4a6 + data_020a0e40 * 0x18)` --
+               on hardware that walks straight into player N's own Ctrl record.
+               The port hosts the five as SEPARATE arrays, so the same walk
+               lands inside data_0209f4a6's own storage instead, reading a byte
+               nobody wrote. Slot 0 worked because its offset is zero.
+
+               So the copy writes each player's fields at that same 0x18 stride,
+               which puts player N's values exactly where the ROM's walk looks
+               for them.
+
+               THE CEILING IS TWO PLAYERS AND IT IS A LAYOUT FACT, not a
+               judgement. hal/auto_bss.cpp hosts these as int[8] -- 32 bytes --
+               so player 1 at +0x18 (24) fits and player 2 at +0x30 (48) would
+               run off the end into whatever the linker put next. Enlarging
+               them is not free either: they sit INTERIOR to .dsstate$mmm, so
+               growing them shifts every hosted global above them and retires
+               every BMP baseline in the tree (port/tools/battery.py's own
+               doctrine). The real fix is to host the five as interior
+               addresses of data_0209f498, the way hal/camera_bridges.cpp hosts
+               the comms records, and that is a band migration with its own
+               regression surface. Until then this refuses above two loudly
+               rather than corrupting a neighbour quietly. */
             {
                 const char *q = (const char *)data_0209f498;
-                *(short *)(data_0209f4a0 + 0) = *(const short *)(q + 0x08);
-                *(short *)data_0209f4a2 = *(const short *)(q + 0x0a);
-                *(short *)data_0209f4a4 = *(const short *)(q + 0x0c);
-                *(short *)data_0209f4a6 = *(const short *)(q + 0x0e);
-                data_0209f4ac[0] = *(const unsigned char *)(q + 0x14);
+                int np = (int)data_0209f21c;
+                if (np > 2) {
+                    static bool said;
+                    if (!said) {
+                        said = true;
+                        fprintf(stderr,
+                                "[vs] REFUSING to fan the Ctrl split symbols "
+                                "past 2 players: hal/auto_bss.cpp hosts "
+                                "data_0209f4a0..ac as int[8] and player 2 "
+                                "would write at +0x30, off the end. Host them "
+                                "as interior addresses of data_0209f498 first. "
+                                "Clamping to 2.\n");
+                    }
+                    np = 2;
+                }
+                for (int pi = 0; pi < np; ++pi) {
+                    const char *r = q + pi * 0x18;
+                    const int o = pi * 0x18;
+                    *(short *)((char *)data_0209f4a0 + o) = *(const short *)(r + 0x08);
+                    *(short *)((char *)data_0209f4a2 + o) = *(const short *)(r + 0x0a);
+                    *(short *)((char *)data_0209f4a4 + o) = *(const short *)(r + 0x0c);
+                    *(short *)((char *)data_0209f4a6 + o) = *(const short *)(r + 0x0e);
+                    *((unsigned char *)data_0209f4ac + o) = *(const unsigned char *)(r + 0x14);
+                }
             }
             /* ---- RUN MODE ANALOG: the record, refilled from the pad's left
                stick. See the RUN_ mode block up by the menu enum for why this
@@ -9720,6 +9771,20 @@ int main(void)
             port_actor_scene_pass();
         size_t tris_before = 0;
         if (selftest) ntr::gx_polygons(tris_before);
+        /* run mg16 lane MP3: DRAW EVERY PLAYER, not just the local one.
+           This line drew data_0209f394[0] and nothing else, which was correct
+           while the port asserted there was exactly one player. With a second
+           one spawned it is the difference between a player who is there and a
+           player who is INVISIBLE: slot 1 collides, is pushed, moves and casts
+           no pixels, so a capture of the frame shows one character and the
+           owner is asked to judge a picture the second player is missing from.
+           The local player keeps drawing last, so nothing about his own
+           submission order changes. */
+        for (int pi = (int)data_0209f21c - 1; pi >= 0; --pi) {
+            if (pi == (int)data_0209f250) continue;   /* drawn below, as before */
+            if (void *other = data_0209f394[pi])
+                hal_render_player_world(other);
+        }
         hal_render_player_world(player);
         /* Stage::GraphCallback1: the particle submission, last, after every
            opaque draw in the frame. The billboards carry their own absolute
