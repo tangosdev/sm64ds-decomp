@@ -16,7 +16,7 @@ int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
 void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, Vector3 *v);
 int func_02010844(void *unused, Vector3 *v, s16 angle);
-int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(void *self, dBgCh_Actr *wm, Fix12i a, s16 b, int c, int d, void *e);
+int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(void *self, dBgCh_Actr *wm, Fix12i a, s16 b, int c, int d, void *e);
 void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, dBgCh_Actr *wm, unsigned int j);
 void func_ov077_02126dac(char *t);
 void func_ov077_02126528(char *c);
@@ -56,7 +56,7 @@ int HeaveHo::Behavior()
         r5 = func_02010844(((char *)this), &v, mAngleY);
     }
 
-    b = _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(((char *)this), (dBgCh_Actr *)((char *)&mWithMeshClsn), 0x3c000, (s16)0x2888, 0, 1, (void *)0x32000);
+    b = _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(((char *)this), (dBgCh_Actr *)((char *)&mWithMeshClsn), 0x3c000, (s16)0x2888, 0, 1, (void *)0x32000);
     if (b == 0) {
         if (r5 < 0)
             r5 = (s16)-r5;

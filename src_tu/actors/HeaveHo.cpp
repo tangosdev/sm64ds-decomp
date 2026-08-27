@@ -133,7 +133,7 @@ int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
 void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, Vector3 *v);
 int func_02010844(void *unused, Vector3 *v, s16 angle);
-int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(void *self, dBgCh_Actr *wm, Fix12i a, s16 b, int c, int d, void *e);
+int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(void *self, dBgCh_Actr *wm, Fix12i a, s16 b, int c, int d, void *e);
 void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, dBgCh_Actr *wm, unsigned int j);
 void func_ov077_02126dac(char *t);
 void func_ov077_02126528(char *c);
@@ -173,7 +173,7 @@ int HeaveHo::Behavior()
         r5 = func_02010844(((char *)this), &v, mAngleY);
     }
 
-    b = _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(((char *)this), (dBgCh_Actr *)((char *)&mWithMeshClsn), 0x3c000, (s16)0x2888, 0, 1, (void *)0x32000);
+    b = _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(((char *)this), (dBgCh_Actr *)((char *)&mWithMeshClsn), 0x3c000, (s16)0x2888, 0, 1, (void *)0x32000);
     if (b == 0) {
         if (r5 < 0)
             r5 = (s16)-r5;
@@ -647,12 +647,9 @@ extern "C" void func_ov077_02126528(char *c)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 /* (Vector3: real header type in scope) */
 
-/* This C-derived member owns a raw 0x78-byte stack view and drives its
- * lifecycle through explicit ABI calls. It is not the complete 0x84-byte C++
- * dBgCh_Lin object now exposed by the shared header. */
-typedef struct RaycastLineStorage {
+typedef struct dBgCh_LinPad {
     char pad[0x78];
-} RaycastLineStorage;
+} dBgCh_LinPad;
 
 extern signed char data_0209f2f8;
 extern char data_020a0e68[];
@@ -669,8 +666,8 @@ extern void MulVec3Mat4x3(void *in, void *m, void *out);
 int func_ov077_02126300(void *vc)
 {
     char *c = (char *)vc;
-    RaycastLineStorage ray1;
-    RaycastLineStorage ray2;
+    dBgCh_LinPad ray1;
+    dBgCh_LinPad ray2;
     Vector3 start;
     Vector3 end;
     Vector3 dir;

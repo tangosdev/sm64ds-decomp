@@ -410,7 +410,7 @@ src/_ZN4FishD1Ev.cpp:
     complete
     .text start:0x0214620c end:0x0214623c
 
-src/_ZN4FishD0Ev.c:
+src/_ZN4FishD0Ev.cpp:
     complete
     .text start:0x0214623c end:0x02146280
 
