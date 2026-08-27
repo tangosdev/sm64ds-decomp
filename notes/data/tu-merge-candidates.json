@@ -309,7 +309,7 @@
     "src/_ZN6ToxBox6RenderEv.cpp",
     "src/_ZN6ToxBox8BehaviorEv.cpp",
     "src/_ZN6ToxBox13InitResourcesEv.c",
-    "src/ToxBox_Spawn.c"
+    "src/ToxBox_Spawn.cpp"
    ],
    "ext_mix": {
     ".cpp": 11,
@@ -37333,7 +37333,7 @@
     "src/_ZN6ToxBox6RenderEv.cpp",
     "src/_ZN6ToxBox8BehaviorEv.cpp",
     "src/_ZN6ToxBox13InitResourcesEv.c",
-    "src/ToxBox_Spawn.c"
+    "src/ToxBox_Spawn.cpp"
    ],
    "ext_mix": {
     ".cpp": 11,

@@ -500,7 +500,6 @@ src/Toad_Spawn.c	WEAK-refs-only	ov085				1		None		-
 src/Tornado_Spawn.c	WEAK-refs-only	ov096				1		None		-
 src/TouchArea_Update.c	PURE-C	ov001				1		None		-
 src/TowerStep_Spawn.c	WEAK-refs-only	ov015				1		None		-
-src/ToxBox_Spawn.c	S1-stores-rom-vptr	ov092			stores _ZTV6ToxBox	1		None	_ZTV6ToxBox	-
 src/Trap_Spawn.c	S1-stores-rom-vptr	ov010			stores _ZTV4Trap	1		None	_ZTV4Trap	-
 src/TreasureChest_Spawn.c	WEAK-refs-only	ov064				1		None		-
 src/TtcConveyorBeltLarge_Spawn.c	WEAK-refs-only	ov065				1		None		-
