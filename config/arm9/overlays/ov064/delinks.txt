@@ -612,7 +612,7 @@ src/_ZN4ClamD1Ev.cpp:
     complete
     .text start:0x0211a930 end:0x0211a968
 
-src/_ZN4ClamD0Ev.c:
+src/_ZN4ClamD0Ev.cpp:
     complete
     .text start:0x0211a968 end:0x0211a9b4
 

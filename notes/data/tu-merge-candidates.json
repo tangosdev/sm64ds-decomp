@@ -5524,7 +5524,7 @@
    "n_files": 8,
    "files": [
     "src/_ZN4ClamD1Ev.cpp",
-    "src/_ZN4ClamD0Ev.c",
+    "src/_ZN4ClamD0Ev.cpp",
     "src/func_ov064_0211a9b4.c",
     "src/_ZN4Clam16CleanupResourcesEv.cpp",
     "src/_ZN4Clam6RenderEv.cpp",
@@ -5905,7 +5905,7 @@
    "n_files": 8,
    "files": [
     "src/_ZN22ClockPaintingHandShortD1Ev.cpp",
-    "src/_ZN22ClockPaintingHandShortD0Ev.c",
+    "src/_ZN22ClockPaintingHandShortD0Ev.cpp",
     "src/func_ov013_02111430.c",
     "src/_ZN22ClockPaintingHandShort16CleanupResourcesEv.cpp",
     "src/_ZN22ClockPaintingHandShort6RenderEv.cpp",
@@ -7530,7 +7530,7 @@
    "n_files": 10,
    "files": [
     "src/_ZN25SlideDecorationSilverStarD1Ev.cpp",
-    "src/_ZN25SlideDecorationSilverStarD0Ev.c",
+    "src/_ZN25SlideDecorationSilverStarD0Ev.cpp",
     "src/func_ov031_02111214.c",
     "src/_ZN25SlideDecorationSilverStar16CleanupResourcesEv.cpp",
     "src/_ZN25SlideDecorationSilverStar6RenderEv.cpp",
@@ -17284,7 +17284,7 @@
    "n_files": 143,
    "files": [
     "src/_ZN14CutsceneObjectD1Ev.cpp",
-    "src/_ZN14CutsceneObjectD0Ev.c",
+    "src/_ZN14CutsceneObjectD0Ev.cpp",
     "src/func_ov002_020f1fcc.c",
     "src/func_ov002_020f20f4.c",
     "src/func_ov002_020f2210.c",
@@ -30191,7 +30191,7 @@
    "n_files": 13,
    "files": [
     "src/_ZN6CannonD1Ev.cpp",
-    "src/_ZN6CannonD0Ev.c",
+    "src/_ZN6CannonD0Ev.cpp",
     "src/func_ov098_0213a984.c",
     "src/func_ov098_0213aa28.c",
     "src/func_ov098_0213ad08.c",
