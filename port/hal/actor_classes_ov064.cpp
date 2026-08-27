@@ -273,9 +273,19 @@ static int __fastcall bly_clean(void *s, void *)
 { return _ZN5Bully16CleanupResourcesEv(s); }
 static int __fastcall bly_aimed(void *s, void *)
 { (void)s; return func_ov064_02115f84(); }      /* slot 29, Bully's own stub */
-/* slots 31..36: the six extension virtuals, Bully's own */
+/* slots 31..36: the six extension virtuals, Bully's own.
+   SLOT 32 IS AfterClsn AND TAKES THE POP. func_ov064_02117220 is Bully's
+   AfterClsn (port/unmatched/Bully_AfterClsn.cpp), the same extension virtual
+   PathLift carries at the same slot, and the tree's only two slot-32 dispatch
+   sites -- src/func_ov002_020eff90.cpp and src/_ZN6Lakitu6RenderEv.cpp -- both
+   PUSH one word and leave the cleanup to the callee. The two-parameter shape
+   emitted a bare ret and left it on the stack; see actor_classes_ov100pl.cpp's
+   pl_after_clsn for the full emitted trace and the crash it produced. Found by
+   abicheck once ACTOR_EXT_SLOT_ARGS gave slot 32 an authority: consensus could
+   not see it, because every slot-32 thunk in the tree was wrong the same way. */
 static int __fastcall bly_v31(void *s, void *) { return func_ov064_021171b0(s); }
-static int __fastcall bly_v32(void *s, void *) { return func_ov064_02117220(s); }
+static int __fastcall bly_v32(void *s, void *, void * /*clsnActor, ridethrough*/)
+{ return func_ov064_02117220(s); }
 static int __fastcall bly_v33(void *s, void *) { return func_ov064_02117168(s); }
 static int __fastcall bly_v34(void *s, void *) { return func_ov064_02117154(s); }
 static int __fastcall bly_v35(void *s, void *) { return func_ov064_02117140(s); }
@@ -352,9 +362,11 @@ static int __fastcall bbly_behavior(void *s, void *)
 static int __fastcall bbly_render(void *s, void *)
 { port_actor_render_probe("BIG_BULLY", (char *)s + 0x110);
   return _ZN8BigBully6RenderEv(s); }
-/* BigBully's own six extension virtuals */
+/* BigBully's own six extension virtuals. Slot 32 takes the pop for bly_v32's
+   reason -- same extension virtual, same slot, same dispatch sites. */
 static int __fastcall bbly_v31(void *s, void *) { return func_ov064_0211755c(s); }
-static int __fastcall bbly_v32(void *s, void *) { return func_ov064_021175cc(s); }
+static int __fastcall bbly_v32(void *s, void *, void * /*clsnActor, ridethrough*/)
+{ return func_ov064_021175cc(s); }
 static int __fastcall bbly_v33(void *s, void *) { return func_ov064_02116374(s); }
 static int __fastcall bbly_v34(void *s, void *) { return func_ov064_02116360(s); }
 static int __fastcall bbly_v35(void *s, void *) { return func_ov064_0211635c(s); }
