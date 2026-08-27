@@ -42,6 +42,9 @@
     "ov002/Number",
     "ov002/WingFeather",
     "ov002/EnemySpawner+EnemySwitchTag",
-    "arm9/Actor"
+    "arm9/Actor",
+    "ov004/dScMgBase_c",
+    "ov006/MgWhichWiggler",
+    "ov006/MgTrampolineTerror"
   ]
 }
