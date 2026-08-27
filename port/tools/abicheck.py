@@ -105,31 +105,37 @@ SLOT_NAME = {
 
 # args past `this` for EXTENSION slots -- the virtuals a derived class adds
 # PAST the Actor tail at slot 30. ActorBase.h and Actor.h cannot supply these:
-# they are per-class additions, so the header authority above simply has no key
-# for them and every one of them read NO_AUTHORITY, which is a silent pass.
+# they are per-class additions, so the header authority above has no key for
+# them and every one read NO_AUTHORITY, which is a silent pass.
 #
-# THIS TABLE IS KEYED ON THE EMITTED DISPATCH, NOT ON A HEADER. What decides a
-# callee's pop is how many words the CALL SITE pushed, and a call site reaches
-# a slot by OFFSET, so the offset is the right key even where two classes give
-# the slot different names. Each entry names the site its number came off, and
-# nothing goes in here without one:
+# KEYED ON (TABLE, SLOT), BECAUSE A SLOT NUMBER IS NOT A CONTRACT. The first
+# version of this keyed on the slot alone and asserted slot 32 = 1 argument.
+# THAT WAS WRONG AND IT BROKE A SECOND CLASS. Swept out of the linked binary --
+# `dumpbin /disasm:nobytes walk_window.exe` for `call dword ptr [reg+000000
+# 80h]` -- there are exactly THREE slot-32 dispatch sites and they disagree:
 #
-#   32  1 arg   src/func_ov002_020eff90.cpp, the shared veneer over a
-#               33-virtual class -- `b->m(x)` compiles to
-#                   mov  ecx,dword ptr [ebp+0Ch]
-#                   push dword ptr [ebp+10h]          <- one word pushed
-#                   call dword ptr [eax+00000080h]    <- 0x80/4 = slot 32
-#                   pop  ebp                          <- NO add esp,4
-#               so the callee owes ret 4. src/_ZN6Lakitu6RenderEv.cpp is the
-#               only other slot-32 dispatch in the tree and it pushes one word
-#               too (`m(0)`), so the two sites agree.
+#   func_ov004_020b08f0 +0xb    mov ecx,esi / call [eax+80h]     pushes 0
+#   func_ov002_020eff90 +0xb    push [ebp+10h] / call [eax+80h]  pushes 1
+#   func_ov064_02116d1c +0x129  mov ecx,esi / call [eax+80h]     pushes 0
 #
-# The bug this was written for: pl_after_clsn (PathLift/door AfterClsn, level
-# 46) was the two-parameter shape, emitted a bare ret, and left the pushed
-# Actor on the stack -- report 7447e46c. It read NO_AUTHORITY here and clean on
-# consensus, because every slot-32 thunk in the tree shared the same wrong pop.
-ACTOR_EXT_SLOT_ARGS = {
-    32: 1,
+# An extension virtual is per-class by definition, so three classes' slot 32
+# are three different methods and only ONE of them takes an argument. Widening
+# Bully's thunk on the strength of the slot number made its callee pop four
+# bytes func_ov064_02116d1c never pushed, and that function unwinds by
+# `add esp,0Ch` and four explicit pops with no `mov esp,ebp`, so it cannot
+# absorb an overpop -- the same wild execute as the bug, mirrored.
+#
+# So a row here binds ONE TABLE's slot to the site that dispatches it, and the
+# site is named. A slot whose sites disagree and whose table is not listed
+# stays EXT_UNJUDGED, which is the honest answer rather than a guess.
+ACTOR_EXT_SLOT_AUTHORITY = {
+    # PathLift / PathLiftActor_c, the two tables pl_fill_shared writes.
+    # Dispatched ONLY by func_ov002_020eff90, the veneer PathLift's own base
+    # init seats as the collider callback at MeshColliderBase+0x1c
+    # (src/func_ov002_020efaf0.cpp:41), which pushes one word and does not
+    # clean it. Report 7447e46c is that word going unpopped.
+    ('_data_ov002_0210af70', 32): 1,
+    ('_data_ov100_0214857c', 32): 1,
 }
 
 # calls that do not come back: the thunk's own `ret` is unreachable
@@ -143,6 +149,16 @@ VTSTORE = re.compile(
     r'offset (?P<sym>\S+)')
 REGLOAD = re.compile(r'^(?P<reg>e[a-z]{2}),offset (?P<sym>\S+)$')
 REGCOPY = re.compile(r'^(?P<reg>e[a-z]{2}),(?P<src>e[a-z]{2})$')
+# `mov eax,dword ptr [ebp+8]` -- a register loaded from an INCOMING PARAMETER.
+# A shared filler takes the table as an argument (`pl_fill_shared(void
+# volatile **vt)`), so every slot it writes is stored through one of these and
+# the table name is not in this function at all. Bound to the caller's pushed
+# argument in bind_param_stores() below.
+PARAMLOAD = re.compile(
+    r'^(?P<reg>e[a-z]{2}),dword ptr \[ebp\+(?P<off>[0-9A-Fa-f]+)h?\]$')
+# `push offset _data_ov002_0210af70` -- the table handed to such a filler.
+PUSHOFF = re.compile(r'^offset (?P<sym>\S+)$')
+PARAM_TAB = '#param'      # marker table name; never a real symbol
 REGLEA = re.compile(r'^(?P<reg>e[a-z]{2}),\[(?P<src>e[a-z]{2})\+(?P<off>[0-9A-F]+h?)\]$')
 
 
@@ -155,6 +171,7 @@ def load(path):
 def parse(text, obj):
     """(functions, vtable stores) out of one object's disassembly."""
     funcs, stores, cur = {}, [], None
+    pending_push = None     # the `push offset TAB` a `call` may consume
     regs = {}      # a fill usually does `mov eax,offset __ZTV5Crate` once and
     #              # then stores through eax, so the table name only survives
     #              # if we carry the register binding forward
@@ -169,6 +186,14 @@ def parse(text, obj):
                 cur['jmps'].append(args.strip())
             elif op == 'call':
                 cur['calls'].append(args.strip())
+                # `push offset TAB` / `call FILLER` -- the edge that tells us
+                # which table a shared filler was handed. Recorded per callee.
+                if pending_push:
+                    cur['fill_edges'].append((args.strip(), pending_push))
+                pending_push = None
+            elif op == 'push':
+                pm = PUSHOFF.match(args.strip())
+                pending_push = pm.group('sym') if pm else None
             elif op == 'mov':
                 s = VTSTORE.search(args)
                 if s:
@@ -184,11 +209,16 @@ def parse(text, obj):
                     if rm:
                         regs[rm.group('reg')] = (rm.group('sym'), 0)
                     else:
-                        rm = REGCOPY.match(args)
-                        if rm and rm.group('src') in regs:
-                            regs[rm.group('reg')] = regs[rm.group('src')]
-                        elif rm:
-                            regs.pop(rm.group('reg'), None)
+                        pm = PARAMLOAD.match(args)
+                        if pm:
+                            regs[pm.group('reg')] = (
+                                '%s+%s' % (PARAM_TAB, pm.group('off')), 0)
+                        else:
+                            rm = REGCOPY.match(args)
+                            if rm and rm.group('src') in regs:
+                                regs[rm.group('reg')] = regs[rm.group('src')]
+                            elif rm:
+                                regs.pop(rm.group('reg'), None)
             elif op == 'lea':
                 rm = REGLEA.match(args)
                 if rm and rm.group('src') in regs:
@@ -200,9 +230,58 @@ def parse(text, obj):
         m = FUNC.match(line)
         if m and not line.startswith(' '):
             cur = dict(sym=m.group(1), sig=m.group(2) or '', rets=set(),
-                       jmps=[], calls=[], n=0, obj=obj)
+                       jmps=[], calls=[], n=0, obj=obj, fill_edges=[])
+            pending_push = None
             funcs.setdefault(m.group(1), cur)
     return funcs, stores
+
+
+def bind_param_stores(funcs, stores):
+    """Resolve stores a SHARED FILLER made through its table parameter.
+
+    THE HOLE THIS CLOSES. port/hal seats most of its Actor tables through one
+    helper per overlay -- `pl_fill_shared(void volatile **vt)`,
+    `ov63_fill_shared(...)` -- which writes twenty-odd slots through a pointer
+    it was HANDED. In the emitted code that is
+
+        ?pl_fill_shared@@YAXPCRAX@Z:
+          mov eax,dword ptr [ebp+8]
+          mov dword ptr [eax+4],offset ?pl_binit@@YIHPAX0@Z
+          ...
+
+    with no table name anywhere in the function, so the register binding never
+    resolved and every one of those fills was dropped. That is not a corner:
+    it is how the bug this checker was widened for got seated. pl_after_clsn
+    had ZERO rows in abicheck -- measured, 2376 rows and not one of them --
+    while the fix was being written on the strength of abicheck's output.
+
+    The caller supplies the missing half, `push offset TAB` / `call FILLER`,
+    recorded per function as a fill edge. A filler with several callers (six
+    for ov63_fill_shared) fills every one of their tables, so every edge is
+    emitted, which is what the source actually does.
+
+    Only the FIRST parameter is bound, and only from `[ebp+8]`. A filler that
+    takes the table second, or indexes it, is not attempted and its stores stay
+    dropped rather than being guessed at."""
+    # callee sym -> [table, ...], DEDUPED: two different functions often hand
+    # the same filler the same table (a bring-up and a fill entry point both
+    # do), and counting that twice inflates every number downstream.
+    edges = defaultdict(list)
+    for f in funcs.values():
+        for callee, tab in f.get('fill_edges', ()):
+            if is_vtable(tab) and tab not in edges[callee]:
+                edges[callee].append(tab)
+    if not edges:
+        return stores, {}
+    out, bound = [], Counter()
+    for tab, slot, sym, where, obj in stores:
+        if not tab.startswith(PARAM_TAB + '+8'):
+            out.append((tab, slot, sym, where, obj))
+            continue
+        for real in edges.get(where, ()):
+            out.append((real, slot, sym, where, obj))
+            bound[where] += 1
+    return out, bound
 
 
 # ---- pop size of a symbol we have no disassembly for ------------------------
@@ -342,7 +421,7 @@ def analyse(funcs, stores, extsig):
         # a consensus that cannot see a uniformly wrong slot.
         ext = need is None and row['actor31'] and slot > 30
         if ext:
-            need = ACTOR_EXT_SLOT_ARGS.get(slot)
+            need = ACTOR_EXT_SLOT_AUTHORITY.get((tab, slot))
         row['ext_slot'] = ext
         row['want_pop'] = None if need is None else 4 * need
         if row['decline']:
@@ -368,10 +447,10 @@ def analyse(funcs, stores, extsig):
     peer = defaultdict(Counter)
     for r in rows:
         if r['pop'] is not None and not r['decline']:
-            key = ('ACTOR31' if r['actor31'] else r['table'], r['slot'])
+            key = consensus_key(r)
             peer[key][r['pop']] += 1
     for r in rows:
-        key = ('ACTOR31' if r['actor31'] else r['table'], r['slot'])
+        key = consensus_key(r)
         c = peer.get(key)
         if not c or r['pop'] is None or r['decline']:
             r['consensus'] = None
@@ -390,6 +469,43 @@ def analyse(funcs, stores, extsig):
         r['consensus_vs_authority'] = (
             r.get('want_pop') is not None and top != r['want_pop'])
     return rows, actor31, slotset
+
+
+def consensus_key(r):
+    """Who counts as a fill's PEERS.
+
+    Slots 0..30 are declared once, in ActorBase.h and Actor.h, so every
+    Actor-layout table's slot 21 is the same method and they are all peers.
+    AN EXTENSION SLOT IS NOT: a virtual a derived class adds is that class's
+    own, so PathLift's slot 32 and Bully's slot 32 are different methods that
+    happen to share an index. Pooling them makes the majority of one class the
+    evidence against another -- measured here, it flagged the CORRECT
+    pl_after_clsn as an outlier because Bully's two equally-correct bare rets
+    outvoted it, on a 2-versus-2 split decided by tie-break. So extension slots
+    are peers only within their own table."""
+    return ((r['table'], r['slot']) if r['slot'] > 30
+            else ('ACTOR31' if r['actor31'] else r['table'], r['slot']))
+
+
+EXT_BASELINE = 'abicheck_extslot_baseline.txt'
+
+
+def load_ext_baseline():
+    """The frozen set of extension-slot fills with no per-table authority.
+
+    Same contract as aritycheck's two baselines: DEBT, not clearance. The set
+    may shrink without ceremony; a row that is not in it fails the run."""
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), EXT_BASELINE)
+    keys = set()
+    try:
+        with open(p, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#'):
+                    keys.add(line)
+    except OSError:
+        pass
+    return keys, p
 
 
 def distinct(rows, pred):
@@ -427,7 +543,7 @@ FIX_NOBYTES = """\
   00000000: jmp         ?OnHeapCreated@ActorBase@@UAEXXZ
 ?ext32_short@@YIHPAX0@Z:
   00000000: ret
-?ext32_short2@@YIHPAX0@Z:
+?ext32_other@@YIHPAX0@Z:
   00000000: ret
 ?ext34_unknown@@YIHPAX0@Z:
   00000000: ret
@@ -439,13 +555,25 @@ _hal_fill_crate:
   00000017: mov         dword ptr [eax+34h],offset ?sa_trap13@@YIHPAX0@Z
   0000001D: mov         dword ptr [eax+20h],offset ?fwd_thunk@@YIHPAX0@Z
   00000023: mov         dword ptr [eax+58h],offset ?fwd_thunk_wrong@@YIHPAX0@Z
-  00000029: mov         dword ptr [eax+80h],offset ?ext32_short@@YIHPAX0@Z
-  0000002F: mov         dword ptr [eax+88h],offset ?ext34_unknown@@YIHPAX0@Z
-  00000035: ret
+  00000029: mov         dword ptr [eax+88h],offset ?ext34_unknown@@YIHPAX0@Z
+  0000002F: ret
+?pl_filler@@YAXPCRAX@Z:
+  00000000: push        ebp
+  00000001: mov         ebp,esp
+  00000003: mov         eax,dword ptr [ebp+8]
+  00000006: mov         dword ptr [eax+58h],offset ?good_pounded@@YIHPAX0@Z
+  0000000D: mov         dword ptr [eax+80h],offset ?ext32_short@@YIHPAX0@Z
+  00000014: pop         ebp
+  00000015: ret
+_hal_fill_pathlift:
+  00000000: push        offset _data_ov002_0210af70
+  00000005: call        ?pl_filler@@YAXPCRAX@Z
+  0000000A: add         esp,4
+  0000000D: ret
 _hal_fill_crate2:
   00000000: mov         eax,offset __ZTV6Crate2
   00000005: mov         dword ptr [eax+58h],offset ?good_pounded@@YIHPAX0@Z
-  0000000B: mov         dword ptr [eax+80h],offset ?ext32_short2@@YIHPAX0@Z
+  0000000B: mov         dword ptr [eax+80h],offset ?ext32_other@@YIHPAX0@Z
   00000011: ret
 """
 
@@ -473,6 +601,7 @@ def selftest():
               'unsigned int)',
               '?OnHeapCreated@ActorBase@@UAEXXZ':
               'public: virtual void __thiscall ActorBase::OnHeapCreated(void)'}
+    stores, _pb = bind_param_stores(funcs, stores)
     rows, actor31, slotset = analyse(funcs, stores, extsig)
     by = {(r['thunk'], r['slot']): r for r in rows}
 
@@ -513,31 +642,49 @@ def selftest():
     want('?fwd_thunk_wrong@@YIHPAX0@Z', 22, 'UNDERPOP', 0,
          'wrong-arity tail-jump target, caught ONLY through the decoration')
 
+    print('\n  A TABLE PASSED TO A SHARED FILLER IS STILL A TABLE')
+    # THE MISS THAT MATTERED. pl_after_clsn -- the thunk in report 7447e46c --
+    # is seated by pl_fill_shared through a pointer PARAMETER, so no register
+    # in that function ever names a table and the fill was dropped entirely.
+    # Measured on the real tree before this: 2376 rows and not one of them was
+    # pl_after_clsn, pl_kill, pl_pounded or pl_atk1. The checker was reported
+    # green over the exact seat the bug shipped from.
+    ok = any(r['thunk'] == '?ext32_short@@YIHPAX0@Z'
+             and r['table'] == '_data_ov002_0210af70' for r in rows)
+    bad += 0 if ok else 1
+    print('    %-4s a fill stored through [ebp+8] is bound to the table its '
+          'caller pushed' % ('ok' if ok else 'FAIL'))
+
     print('\n  EXTENSION SLOTS PAST 30 (the slot-32 hole, report 7447e46c)')
-    # 0x80/4 == 32, AfterClsn, dispatched with one word pushed by
-    # src/func_ov002_020eff90.cpp. A bare ret leaves it on the stack. Before
-    # ACTOR_EXT_SLOT_ARGS this read NO_AUTHORITY, which is a silent pass.
+    # Authority is keyed on (TABLE, slot). This table's slot 32 is dispatched
+    # by func_ov002_020eff90, which pushes one word, so a bare ret underpops.
     want('?ext32_short@@YIHPAX0@Z', 32, 'UNDERPOP', 0,
-         'bare ret on an extension slot the dispatch site pushes for')
-    # 0x88/4 == 34: no dispatch evidence, so it must read UNJUDGED and must
-    # NOT read NO_AUTHORITY, which is the wording for a short non-Actor table.
+         'bare ret where THIS TABLE\'s dispatch site pushes')
+    # SAME SLOT, DIFFERENT TABLE, NO AUTHORITY. Keying on the slot number alone
+    # would call this UNDERPOP too, which is exactly the wrong answer that
+    # widened Bully's thunk into an overpop against a site that pushes nothing.
+    want('?ext32_other@@YIHPAX0@Z', 32, 'EXT_UNJUDGED', 0,
+         'same slot on a table with no authority stays unjudged')
+    # 0x88/4 == 34: no authority anywhere, must not read NO_AUTHORITY, which
+    # is the wording for a short non-Actor table.
     want('?ext34_unknown@@YIHPAX0@Z', 34, 'EXT_UNJUDGED', 0,
-         'extension slot with no dispatch evidence is unjudged, not passed')
+         'extension slot with no authority is unjudged, not passed')
 
     print('\n  A UNANIMOUSLY WRONG SLOT IS INVISIBLE TO CONSENSUS')
-    # Two tables, both seating slot 32 with the same wrong bare ret. Nothing is
-    # an outlier, so consensus_odd is False for both -- which is exactly how the
-    # real slot 32 hid behind three matching fills. The authority arm has to be
-    # the thing that speaks.
+    # Two tables, both seating slot 32 with the same bare ret. Nothing is an
+    # outlier, so consensus_odd is False for both -- which is how the real slot
+    # 32 hid behind matching fills. The authority arm has to be what speaks,
+    # and only for the table it actually has evidence for.
     r32 = [r for r in rows if r['slot'] == 32 and r['pop'] == 0]
     ok = len(r32) == 2 and not any(r.get('consensus_odd') for r in r32)
     bad += 0 if ok else 1
     print('    %-4s %d slot-32 fills agree with each other, 0 flagged as '
           'consensus outliers' % ('ok' if ok else 'FAIL', len(r32)))
-    ok = all(r.get('consensus_vs_authority') for r in r32)
+    auth = [r for r in r32 if r['table'] == '_data_ov002_0210af70']
+    ok = bool(auth) and all(r.get('consensus_vs_authority') for r in auth)
     bad += 0 if ok else 1
-    print('    %-4s and the whole peer group is reported against the '
-          'authority instead' % ('ok' if ok else 'FAIL'))
+    print('    %-4s and the peer group is reported against the authority for '
+          'the table that has one' % ('ok' if ok else 'FAIL'))
 
     print('\n  ACTOR31 classification')
     ok = '__ZTV5Crate' in actor31
@@ -606,6 +753,17 @@ def main(argv):
         for k, v in f.items():
             funcs.setdefault(k, v)
         stores.extend(s)
+
+    # Resolve the shared fillers' parameter-borne stores. Done AFTER every
+    # object is parsed, because the filler and the caller that names its table
+    # need not be in the same object.
+    stores, param_bound = bind_param_stores(funcs, stores)
+    if param_bound:
+        print('shared fillers: %d slot fills recovered through a table '
+              'PARAMETER, from %d filler(s)'
+              % (sum(param_bound.values()), len(param_bound)))
+        for fn, n in sorted(param_bound.items(), key=lambda kv: -kv[1])[:6]:
+            print('    %-44s %3d fills' % (fn[:44], n))
 
     # mangled name -> demangled signature, for the bodies a thunk tail-jumps
     # into that are defined outside the hal objects. Without these a
@@ -733,21 +891,45 @@ def main(argv):
     # Extension virtuals with no dispatch evidence. Not a pass: the header
     # authority stops at slot 30 by construction, so without this they are
     # invisible rather than judged.
+    # EXTENSION slots with no per-table authority. LOUD BUT RATCHETED, not a
+    # gate failure: the first cut of this counted them in the exit status, and
+    # since the tree carries 35 of them abicheck could never exit 0 again --
+    # which permanently fails abi_prove's "GREEN on this build" arm, whose
+    # whole job is to show the checker passes when nothing is broken. A
+    # checker that always fails proves as little as one that always passes.
+    # So it ratchets, the way aritycheck's two baselines do: the frozen set may
+    # shrink freely, and a NEW row is the only thing that fails.
     uext = distinct(rows, lambda r: r['verdict'] == 'EXT_UNJUDGED')
-    print('\n=== %d distinct EXTENSION slots past 30 with no dispatch '
-          'evidence (UNJUDGED, not passed) ===' % len(uext))
+    live_ext = sorted({'%s slot %d %s' % (r['table'], r['slot'], r['thunk'])
+                       for r in rows if r['verdict'] == 'EXT_UNJUDGED'})
+    base_ext, base_path = load_ext_baseline()
+    new_ext = [k for k in live_ext if k not in base_ext]
+    gone_ext = [k for k in base_ext if k not in live_ext]
+    print('\n=== %d distinct EXTENSION slots past 30 with no per-table '
+          'authority (UNJUDGED, not passed) ===' % len(uext))
     for r in uext:
         print('slot %2d %-30s %-34s got ret %-3s  [%s]'
               % (r['slot'], r['table'], r['thunk'], r['pop'], r['obj']))
-    if uext:
-        print('  Each needs its dispatch site read and a row added to '
-              'ACTOR_EXT_SLOT_ARGS, or a ruling that nothing dispatches it.')
+    print('  %d baselined, %d live, %d NEW, %d retired  [%s]'
+          % (len(base_ext), len(live_ext), len(new_ext), len(gone_ext),
+             os.path.basename(base_path)))
+    if new_ext:
+        print('  NEW, and this is the failure:')
+        for k in new_ext:
+            print('      %s' % k)
+        print('  Read its dispatch site out of the emitted code and add a row '
+              'to ACTOR_EXT_SLOT_AUTHORITY keyed on (table, slot), or baseline '
+              'it with a ruling. Do NOT key on the slot number alone: slot 32 '
+              'has three dispatch sites and only one of them pushes.')
+    else:
+        print('  EXTENSION RATCHET PASSED: no new unjudged extension slot. '
+              'The baselined rows are UNCHECKED DEBT, not clearance.')
 
     if args.json:
         with open(args.json, 'w', encoding='utf-8') as f:
             json.dump(rows, f, indent=1)
 
-    return 1 if uniq or uodd or uall or uext else 0
+    return 1 if uniq or uodd or uall or new_ext else 0
 
 
 if __name__ == '__main__':

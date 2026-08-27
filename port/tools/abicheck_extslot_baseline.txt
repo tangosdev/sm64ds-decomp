@@ -1,0 +1,93 @@
+# abicheck EXTENSION-SLOT baseline -- UNCHECKED DEBT, NOT CLEARANCE.
+#
+# One line per (table, slot, thunk) fill at a slot PAST 30 on an Actor-layout
+# table for which ACTOR_EXT_SLOT_AUTHORITY has no row. The header authority
+# stops at slot 30 because ActorBase.h and Actor.h stop there; a virtual a
+# derived class ADDS has no header to read, and only its dispatch site fixes
+# its pop.
+#
+# DO NOT clear a row by guessing from the slot number. Slot 32 has three
+# dispatch sites in the binary and only ONE of them pushes -- keying on the
+# slot alone is what widened Bully's thunk into an overpop against a site that
+# pushes nothing. Read the site out of the emitted code, then add a row to
+# ACTOR_EXT_SLOT_AUTHORITY keyed on (table, slot).
+#
+# This set may shrink freely. A row NOT in it fails the run.
+__ZTV10MrBlizzard slot 31 ?mb_kill@@YIHPAX0@Z
+__ZTV10ShutterBob slot 31 ?bw_kill@@YIHPAX0@Z
+__ZTV10ShutterHmc slot 31 ?ov65_kill@@YIHPAX0@Z
+__ZTV10StarSwitch slot 31 ?bw_kill@@YIHPAX0@Z
+__ZTV11CannonHatch slot 31 ?bw_kill@@YIHPAX0@Z
+__ZTV11FallBlockWf slot 31 ?fb_slot31@@YIHPAX0@Z
+__ZTV11PyramidLift slot 31 ?ov25_kill@@YIHPAX0@Z
+__ZTV11PyramidStep slot 31 ?ov25_kill@@YIHPAX0@Z
+__ZTV11daObjPile_c slot 31 ?pile_kill@@YIHPAX0@Z
+__ZTV12FallBlockBbh slot 31 ?fbb_slot31@@YIHPAX0@Z
+__ZTV12FallBlockBfs slot 31 ?fb_slot31@@YIHPAX0@Z
+__ZTV12FortressWall slot 31 ?fw_s31@@YIHPAX0@Z
+__ZTV12MetalNetLift slot 31 ?w9tp_kill@@YIHPAX0@Z
+__ZTV12WorkElevator slot 31 ?ov65_kill@@YIHPAX0@Z
+__ZTV13BigBrickBlock slot 31 ?bbb_kill@@YIHPAX0@Z
+__ZTV13FortressTower slot 31 ?bw_kill@@YIHPAX0@Z
+__ZTV13PoleBillboard slot 31 ?wf_kill@@YIHPAX0@Z
+__ZTV13QuestionBlock slot 31 ?ac_kill@@YIHPAX0@Z
+__ZTV13UpDownLiftBbh slot 31 ?udl_kill@@YIHPAX0@Z
+__ZTV14ArrowSignRight slot 31 ?as_kill@@YIHPAX0@Z
+__ZTV14BlueCoinSwitch slot 31 ?ac_kill@@YIHPAX0@Z
+__ZTV14KnockDownPlank slot 31 ?mb_kill@@YIHPAX0@Z
+__ZTV14MovingBarSmall slot 31 ?ts_kill@@YIHPAX0@Z
+__ZTV14SquarePathLift slot 31 ?ov52_kill@@YIHPAX0@Z
+__ZTV14daObjMcWater_c slot 31 ?ac_kill@@YIHPAX0@Z
+__ZTV15ChainChompFence slot 31 ?ccf_kill@@YIHPAX0@Z
+__ZTV15FireSeaElevator slot 31 ?ov45_kill@@YIHPAX0@Z
+__ZTV15RotatingFirebar slot 31 ?fb_kill@@YIHPAX0@Z
+__ZTV16FloatingFloorBfs slot 31 ?ov45_kill@@YIHPAX0@Z
+__ZTV17BigMovingIceBlock slot 31 ?ov56_kill@@YIHPAX0@Z
+__ZTV17SlidingPlatformWf slot 31 ?swf_kill@@YIHPAX0@Z
+__ZTV17daObjFl_Amilift_c slot 31 ?aml_kill@@YIHPAX0@Z
+__ZTV18BowserFireSeaArena slot 31 ?ov60_kill@@YIHPAX0@Z
+__ZTV19BowserPuzzleManager slot 31 ?bp_kill@@YIHPAX0@Z
+__ZTV19FloatingFloorLllBig slot 31 ?ov22_kill@@YIHPAX0@Z
+__ZTV19RotatingPlatformLll slot 31 ?ov22_kill@@YIHPAX0@Z
+__ZTV19daObjKm1_Ukishima_c slot 31 ?o43_kill@@YIHPAX0@Z
+__ZTV20daObjFl_Fall_Block_c slot 31 ?fb83_slot31@@YIHPAX0@Z
+__ZTV21FloatingFloorLllSmall slot 31 ?ov22_kill@@YIHPAX0@Z
+__ZTV23FloatOnWaterPlatformJrb slot 31 ?sbx_kill@@YIHPAX0@Z
+__ZTV25RotatingUpDownPlatformUtm slot 31 ?rud_kill@@YIHPAX0@Z
+__ZTV5Bully slot 31 ?bly_v31@@YIHPAX0@Z
+__ZTV5Bully slot 32 ?bly_v32@@YIHPAX0@Z
+__ZTV5Bully slot 33 ?bly_v33@@YIHPAX0@Z
+__ZTV5Bully slot 34 ?bly_v34@@YIHPAX0@Z
+__ZTV5Bully slot 35 ?bly_v35@@YIHPAX0@Z
+__ZTV5Bully slot 36 ?bly_v36@@YIHPAX0@Z
+__ZTV5Crate slot 31 ?crate_kill@@YIHPAX0@Z
+__ZTV6Coffin slot 31 ?ov63_kill@@YIHPAX0@Z
+__ZTV6ShipUp slot 31 ?shu_kill@@YIHPAX0@Z
+__ZTV6Thwomp slot 31 ?thw_kill@@YIHPAX0@Z
+__ZTV8BigBully slot 31 ?bbly_v31@@YIHPAX0@Z
+__ZTV8BigBully slot 32 ?bbly_v32@@YIHPAX0@Z
+__ZTV8BigBully slot 33 ?bbly_v33@@YIHPAX0@Z
+__ZTV8BigBully slot 34 ?bbly_v34@@YIHPAX0@Z
+__ZTV8BigBully slot 35 ?bbly_v35@@YIHPAX0@Z
+__ZTV8BigBully slot 36 ?bbly_v36@@YIHPAX0@Z
+__ZTV8CccArena slot 31 ?ccc_kill@@YIHPAX0@Z
+__ZTV8IceBlock slot 31 ?icb_kill@@YIHPAX0@Z
+__ZTV8IceSheet slot 31 ?ics_kill@@YIHPAX0@Z
+__ZTV8MadPiano slot 31 ?ov63_kill@@YIHPAX0@Z
+__ZTV8MetalNet slot 31 ?ac_kill@@YIHPAX0@Z
+__ZTV8WallSign slot 31 ?ov85_kill@@YIHPAX0@Z
+__ZTV9SeesawBob slot 31 ?bw_kill@@YIHPAX0@Z
+__ZTV9Spindrift slot 31 ?spd_kill@@YIHPAX0@Z
+__ZTV9TowerStep slot 31 ?wf_kill@@YIHPAX0@Z
+_data_ov002_0210af70 slot 31 ?pl_kill@@YIHPAX0@Z
+_data_ov015_021147e8 slot 31 ?wf_kill@@YIHPAX0@Z
+_data_ov016_02114b00 slot 31 ?rkp_kill@@YIHPAX0@Z
+_data_ov016_02114bcc slot 31 ?fow_kill@@YIHPAX0@Z
+_data_ov018_021138cc slot 31 ?skl_kill@@YIHPAX0@Z
+_data_ov022_02113d18 slot 31 ?ov22_kill@@YIHPAX0@Z
+_data_ov045_02112cf4 slot 31 ?ov45_kill@@YIHPAX0@Z
+_data_ov045_02112f50 slot 31 ?ov45_kill@@YIHPAX0@Z
+_data_ov052_02112520 slot 31 ?ov52_kill@@YIHPAX0@Z
+_data_ov060_0211a9b0 slot 31 ?ov60_kill@@YIHPAX0@Z
+_data_ov079_02127fb8 slot 31 ?blz_kill@@YIHPAX0@Z
+_data_ov100_0214857c slot 31 ?pl_kill@@YIHPAX0@Z
