@@ -247,10 +247,12 @@ inline unsigned long hton32(unsigned long v)
 /* ---- shared state ---------------------------------------------------------*/
 
 struct Cmd {
-    enum Kind { PING, INFO, OBJLIST, OBJMOVE, WARP } kind;
+    enum Kind { PING, INFO, OBJLIST, OBJMOVE, WARP, ERR } kind;
     unsigned objptr;            /* OBJMOVE */
     int x, y, z;                /* OBJMOVE, Fix12 */
     int level, entrance;        /* WARP */
+    const char *msg;            /* ERR: always a string literal (static
+                                   lifetime), so the queue never owns storage */
 };
 
 std::mutex g_mtx;               /* guards everything below */
@@ -406,15 +408,21 @@ void exec(const Cmd &c)
     case Cmd::OBJLIST:  exec_objlist();   return;
     case Cmd::OBJMOVE:  exec_objmove(c);  return;
     case Cmd::WARP:     exec_warp(c);     return;
+    case Cmd::ERR:
+        /* A refusal the socket thread decided on, emitted HERE so it takes its
+           turn in command order. See enqueue_err's comment. */
+        push_reply(c.msg);
+        return;
     }
 }
 
 /* ---- line parsing, on the socket thread -----------------------------------
  *
- * Nothing here touches game state. Verbs that need it are enqueued; the ones
- * that do not (an unknown verb, a malformed argument list, and the two
- * deliberately-unsupported memory pokes) are answered straight into the
- * outbound buffer.
+ * Nothing here touches game state. EVERY line ends up on the queue -- the real
+ * verbs, and equally the refusals this thread could answer by itself (unknown
+ * verb, malformed argument list, the two unsupported memory pokes). Answering a
+ * refusal immediately would let it overtake an earlier command's reply on the
+ * same socket, and the Studio's router is strict FIFO; see enqueue_err.
  *
  * Hand-rolled tokenising rather than sscanf, because the input is hostile by
  * assumption: a fuzz blast puts NUL bytes mid-line, and any NUL-terminated read
@@ -461,6 +469,36 @@ void enqueue(const Cmd &c)
     g_queue.push_back(c);
 }
 
+/* EVERY REPLY LEAVES FROM THE FRAME DRAIN, INCLUDING THE REFUSALS.
+   Call with g_mtx held.
+
+   The socket thread can decide some answers by itself -- a malformed argument
+   list, an unknown verb, the two unsupported memory pokes -- and the obvious
+   thing is to write them straight into the outbound buffer, which is what this
+   file did first. That is a REPLY-ORDERING BUG, and a nasty one.
+
+   Commands that need game state answer from editor_channel_drain() a frame
+   later, so a refusal written immediately OVERTAKES a reply that was asked for
+   first. Both arrive on the same socket, and the Studio's reply router
+   (viewer_app.rs game_link_thread) is strict FIFO -- it pops end_kinds in
+   order -- so an inverted pair silently misroutes: one write of
+   "ping\npeek32 0" came back ["err unsupported", "pong"], and "objlist\nzzz"
+   put the err ahead of the whole obj block, which the router then reads as the
+   answer to a different request.
+
+   Queueing the refusal too makes the queue the single ordering authority: every
+   reply, refusal or not, is emitted from the drain in the order the commands
+   arrived. A refusal dropped when the queue is full is the same bound every
+   other command is under, and a flooding client is already being shed. */
+void enqueue_err(const char *msg)
+{
+    Cmd c;
+    std::memset(&c, 0, sizeof c);
+    c.kind = Cmd::ERR;
+    c.msg = msg;                /* string literal: static lifetime, no copy */
+    enqueue(c);
+}
+
 void handle_line(const std::string &line)
 {
     size_t i = 0;
@@ -483,7 +521,7 @@ void handle_line(const std::string &line)
             !next_tok(line, i, d) || !next_tok(line, i, e) ||
             !parse_u32hex(a, ptr) || !parse_int(b, x) ||
             !parse_int(d, y) || !parse_int(e, z)) {
-            push_reply("err objmove <ptr> <x> <y> <z>\n");
+            enqueue_err("err objmove <ptr> <x> <y> <z>\n");
             return;
         }
         c.kind = Cmd::OBJMOVE;
@@ -496,11 +534,11 @@ void handle_line(const std::string &line)
         std::string a, b;
         int level = 0, entrance = 0;
         if (!next_tok(line, i, a) || !parse_int(a, level)) {
-            push_reply("err warp <level> [entrance]\n");
+            enqueue_err("err warp <level> [entrance]\n");
             return;
         }
         if (next_tok(line, i, b) && !parse_int(b, entrance)) {
-            push_reply("err warp <level> [entrance]\n");
+            enqueue_err("err warp <level> [entrance]\n");
             return;
         }
         c.kind = Cmd::WARP;
@@ -513,11 +551,11 @@ void handle_line(const std::string &line)
        a DS address is not a host address. Named explicitly so a client written
        against the recomp's channel gets a real answer instead of "unknown". */
     if (verb == "peek32" || verb == "poke32") {
-        push_reply("err unsupported\n");
+        enqueue_err("err unsupported\n");
         return;
     }
 
-    push_reply("err unknown\n");
+    enqueue_err("err unknown\n");
 }
 
 /* ---- the socket thread ----------------------------------------------------*/
