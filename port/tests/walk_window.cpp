@@ -401,6 +401,9 @@ static bool winapi_load(void)
 #include "overlay_font.h"
 #include "hal/host_settings.h"   /* settings.json, the launcher's file */
 #include "hal/comms_seam.h"       /* run mg15 lane MP1: the radio seam */
+#include "hal/comms_loopback.h"   /* run mg16 lane MP2: the loopback carrier */
+#include "hal/comms_lockstep.h"   /* run mg16 lane MP2: the lockstep driver */
+#include "hal/instance_tag.h"     /* run mg16 lane MP2: per-instance filenames */
 
 /* run mg15 lane MP1. SM64DS_COMMS_FANOUT=1 runs the ROM's own steps 0x16 and
    0x17 (src/func_0203bb60.c, src/func_0203bc7c.c) after the comms tick, so
@@ -2631,6 +2634,15 @@ static const char *const PORT_RELAUNCH_CLEAR[] = {
        on. SM64DS_COMMS_REPORT prints four lines a frame into the child's
        playlog. Same class as the two above. */
     "SM64DS_COMMS_FANOUT",  "SM64DS_COMMS_REPORT",
+    /* run mg16 lane MP2. SM64DS_COMMS_ROLE is the strongest member of this
+       whole list: an inherited one makes the child OPEN A SOCKET and try to
+       join a session, and if it inherits the PARENT role from a parent that is
+       still running it also fails a bind and prints a refusal nobody asked
+       for. The other three are its arguments and travel with it -- an
+       inherited PORT would aim the child at the wrong session and an inherited
+       INJECT would put scripted stylus values on a wire the player is using. */
+    "SM64DS_COMMS_ROLE",    "SM64DS_COMMS_PORT",
+    "SM64DS_COMMS_SLOT",    "SM64DS_COMMS_INJECT",
 };
 
 /* ONE RELAUNCH, TWO DESTINATIONS. `scene_id >= 0` starts the child on the
@@ -4703,6 +4715,25 @@ static int host_show_mode(int nofocus)
 
 static HWND host_window_open(int stacked, HDC *out_hdc, const char *title)
 {
+    /* run mg16 lane MP2: WHICH COPY OF THE GAME IS THIS?
+       Two instances now run side by side as DS parent and child, and two
+       identical title bars are two windows a player cannot tell apart. When
+       SM64DS_INSTANCE names an instance its tag leads the title, so the pair
+       reads "[P1] SM64DS | ..." and "[P2] SM64DS | ...". With the env unset the
+       tag is empty and the title is byte-for-byte the string the caller passed,
+       which is what every existing run still gets. The same env separates the
+       exe-adjacent files that ARE separated -- startup_error.txt,
+       savestate.bin and settings.json's sibling temp, but NOT crash.txt or
+       exit.txt, and hal/instance_tag.h's survey says exactly which and why --
+       so one knob does both jobs and there is no second name to keep in
+       sync. */
+    char titlebuf[320];
+    if (port_instance_tag()[0]) {
+        _snprintf(titlebuf, sizeof titlebuf, "[%s] %s",
+                  port_instance_tag() + 1 /* skip the leading '.' */, title);
+        titlebuf[sizeof titlebuf - 1] = 0;
+        title = titlebuf;
+    }
     /* Registered once. Two windows are never open at the same time in this
        program, but a second RegisterClassA of a live class fails and there is
        no reason to make the second caller find that out. */
@@ -5122,7 +5153,11 @@ static void port_startup_error_path(char *path, unsigned cap)
     DWORD n = GetModuleFileNameA(0, path, cap);
     while (n && path[n - 1] != 92 /* '\\' */)
         --n;
-    lstrcpynA(path + n, "startup_error.txt", (int)(cap - n));
+    /* run mg16 lane MP2: SM64DS_INSTANCE suffixes this so a second copy of the
+       game on the same machine cannot clear or overwrite the first copy's
+       startup error. Unset, the name is unchanged. See hal/instance_tag.h. */
+    _snprintf(path + n, cap - n, "startup_error%s.txt", port_instance_tag());
+    path[cap - 1] = 0;
 }
 
 static void port_startup_error_clear(void)
@@ -5619,6 +5654,12 @@ int main(void)
        block that a fatal loss prints goes in the log here too. */
     if (ntr::io_reserve_lost_mask()) fputs(ntr::io_reserve_detail(), stderr);
     if (!winapi_load()) { fprintf(stderr, "winapi_load failed\n"); return 2; }
+    /* run mg16 lane MP2: the loopback carrier, if and only if SM64DS_COMMS_ROLE
+       names a role. With the env unset this installs nothing and returns false,
+       the seam keeps its own solo answers, and every path below is the one that
+       ran yesterday. Placed after io_init because the seam's boot indicator
+       writes through the 0x027ff000 mapping io_init reserves. */
+    port::comms_loopback_install_from_env();
     pacer_begin();
 #ifdef PORT_ROM_CLEAN
     /* ROM-CLEAN: load + verify the ROM tables from romdata.bin FIRST, before
@@ -8813,7 +8854,16 @@ int main(void)
                into the echo below. */
             if (cam_mode != CAM_DS && !cutscene_cam)
                 *(short *)data_020a1050 = fc_yaw;
-            func_0203e0ac();
+            /* run mg16 lane MP2: src/func_0203df40.c's SWITCH, hosted.
+               data_020a0f04 == 1 or 2 dispatches to the lockstep
+               (func_0203ea5c on the DS, transcribed in hal/comms_lockstep.cpp
+               here); 0 dispatches to func_0203e0ac, the solo cascade, which is
+               what this line has always been and what it still is with no
+               transport installed. comms_lockstep_tick() answers false for
+               "run the role-0 arm", so with SM64DS_COMMS_ROLE unset the call
+               below is reached on every frame exactly as before. */
+            if (!port::comms_lockstep_tick())
+                func_0203e0ac();
             /* run mg15 lane MP1: the ROM's OWN steps 0x16 and 0x17, right
                where src/func_020197b8.c runs them -- immediately after the
                comms tick that filled the four records. func_0203bb60 turns
@@ -8835,8 +8885,17 @@ int main(void)
                actually call the body for it to count as linked. */
             if (comms_fanout_on()) {
                 port::comms_fanout();
-                if (comms_fanout_report())
+                if (comms_fanout_report()) {
                     port::comms_report("level");
+                    /* run mg16 lane MP2: the carrier's own half of the same
+                       readout. Silent when no transport is installed, so an
+                       MP1-era SM64DS_COMMS_REPORT run prints what it always
+                       printed. */
+                    if (port::comms_transport()) {
+                        port::comms_lockstep_report("level");
+                        port::comms_loopback_report("level");
+                    }
+                }
             }
             if (trace_cam)
                 fprintf(stderr,

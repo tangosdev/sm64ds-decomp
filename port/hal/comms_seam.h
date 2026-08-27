@@ -190,6 +190,15 @@ enum : int { kCommsBlockBytes = 0x20 };
 // later. Nothing here allocates, blocks, or throws. `poll` is the only entry
 // called while the game is inside the ROM's lockstep wait, and it is called
 // once per pump turn -- that is, once per DS frame the game is stalled.
+//
+// *** THE TWO SENTENCES ABOVE ABOUT `poll` ARE NOT TRUE TODAY. run mg16 lane
+// MP2 wrote the first real transport against this contract and found that
+// NOTHING IN THE SEAM EVER CALLS poll: `->poll` appears exactly once in the
+// whole tree, in the null check at comms_seam.cpp:52, which REFUSES a
+// transport for omitting an entry it then never drives. See HOLE 1 in the
+// contract-holes write-up at the bottom of hal/comms_loopback.cpp for the
+// measurement and the two proposed fixes. Annotation only -- changing the
+// contract belongs to the freeze lane, not to a comment. ***
 // ---------------------------------------------------------------------------
 struct CommsTransport {
     // Human-readable, for the debug readout and the crash log. Not parsed.
@@ -230,6 +239,11 @@ struct CommsTransport {
 
     // Called once per pump turn while the game is blocked. A socket transport
     // does its recv here.
+    //
+    // NOT DRIVEN. Required at install and never called -- see the starred note
+    // above and HOLE 1 in hal/comms_loopback.cpp. A transport that does its
+    // recv ONLY here receives nothing; the loopback carrier services itself
+    // from every entry it owns instead.
     void (*poll)();
 };
 

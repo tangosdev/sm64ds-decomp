@@ -223,7 +223,10 @@ const void *func_0204068c(unsigned short aid) {
 
 // src/func_02040c34.c: starts the DS's wireless THREAD with two callbacks,
 // which are the ROM's own src/func_0203f644.c and src/func_0203f604.c. A host
-// transport has no thread to start -- it is polled from the seam's own pump --
+// transport has no thread to start -- it is polled from the seam's own pump,
+// EXCEPT THAT THERE IS NO SUCH PUMP: nothing here calls t->poll(), which is
+// HOLE 1 in the contract-holes write-up at the bottom of hal/comms_loopback.cpp
+// (annotation only; the fix belongs to the freeze lane) --
 // so this records the request and returns. The callbacks are deliberately NOT
 // invoked: on the DS they run in the wireless thread's context and mutate the
 // same state the poll path does, so calling them from here would double-apply

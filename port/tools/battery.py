@@ -711,6 +711,16 @@ def selftest_env(lvl, skip=None):
     # dropped in both env builders for the reason the four above it are.
     env.pop("SM64DS_COMMS_FANOUT", None)
     env.pop("SM64DS_COMMS_REPORT", None)
+    # run mg16 lane MP2: the loopback carrier's four knobs, dropped for the
+    # reason the two above are and then some. SM64DS_COMMS_ROLE makes the run
+    # open a UDP socket and hunt for a peer; on a battery box that is a bind
+    # that may fail, a wait bound that may expire, and either way a run whose
+    # input path came off a wire instead of off the harness. The other three
+    # are its arguments.
+    env.pop("SM64DS_COMMS_ROLE", None)
+    env.pop("SM64DS_COMMS_PORT", None)
+    env.pop("SM64DS_COMMS_SLOT", None)
+    env.pop("SM64DS_COMMS_INJECT", None)
     # SM64DS_RNG_MENU_FRAMES (run mg5, lane RNGSEED) pins the minigame RNG's
     # menu dwell and forces the seed, which moves data_0209d4b8 off the .bss
     # zero every draw in this tree is measured from. It is DETERMINISTIC -- the
@@ -815,6 +825,11 @@ def scene_env(scene, extra=None):
               # of a row this step is measuring -- the same class as the five
               # above, and the more consequential one.
               "SM64DS_COMMS_FANOUT", "SM64DS_COMMS_REPORT",
+              # run mg16 lane MP2: the loopback carrier's four. An inherited
+              # SM64DS_COMMS_ROLE opens a socket and hunts for a peer on a box
+              # whose whole job is to answer one question about one scene.
+              "SM64DS_COMMS_ROLE", "SM64DS_COMMS_PORT",
+              "SM64DS_COMMS_SLOT", "SM64DS_COMMS_INJECT",
               "SM64DS_RNG_MENU_FRAMES"):
         env.pop(k, None)
     if extra:
