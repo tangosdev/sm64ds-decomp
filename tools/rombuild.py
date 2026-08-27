@@ -624,9 +624,21 @@ def main():
                     help="production-build one partitioned-link-verified manifest TU: "
                          "compile it once, substitute its exact derived text objects, "
                          "and link its licensed reduced non-text object (repeatable)")
+    ap.add_argument("--no-production-tus", action="store_true",
+                    help="disable config/production-tus.json for a legacy-source control "
+                         "build; explicit --partitioned-tu arguments still apply")
     args = ap.parse_args()
+    if args.profile == "stock" and not args.no_production_tus:
+        import tu_production as TP
+        try:
+            configured = TP.configured_ids()
+        except TP.ProductionTuError as exc:
+            ap.error(str(exc))
+        args.partitioned_tu = list(dict.fromkeys(
+            [*configured, *args.partitioned_tu]))
     if args.tu_module and args.partitioned_tu:
-        ap.error("--tu-module and --partitioned-tu are mutually exclusive")
+        ap.error("--tu-module and production partitioned TUs are mutually exclusive; "
+                 "pass --no-production-tus for a config_tu experiment")
     if args.partitioned_tu and args.profile != "stock":
         ap.error("--partitioned-tu currently supports only the stock profile")
     if args.partitioned_tu and args.no_check:
