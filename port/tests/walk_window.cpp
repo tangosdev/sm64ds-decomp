@@ -1167,6 +1167,10 @@ extern "C" void *data_0209f324;   /* WIPES, the seven-wipe array */
 extern "C" signed char data_02092110;    /* the staged next level */
 extern "C" unsigned char data_0209f268;  /* the staged next entrance */
 extern "C" unsigned char data_0209f26c;  /* why we are leaving (2 = death) */
+extern "C" unsigned char data_0209f2fc[]; /* the LATCHED entry reason, the copy
+                                             Stage::InitResources:201 makes and
+                                             the boot now seats */
+extern "C" signed char data_0209f2f4[];  /* remaining lives */
 
 /* ---- THE EXIT PROBE: the painting warp, reproducible without a keyboard ----
    Two players walked into the Snowman's Land painting on castle_2f and the
@@ -8337,6 +8341,47 @@ int main(void)
                                     *(void **)(c + 0x370));
                             cp_done = 1;
                         }
+                    }
+                } else if (!strcmp(cp_what, "deathloop")) {
+                    /* THE DEATH-RESPAWN REPRODUCTION, and the reason it is not
+                       the `death` verb above: that one calls
+                       port_course_respawn() the moment the handoff fires --
+                       which is at the level-change REQUEST, before the
+                       re-entry boot -- and port_course_respawn force-writes
+                       0x880 into the health word (hal/star_flow.cpp). So it
+                       hands the next level a healthy player whether or not the
+                       GAME can restore one, and comes out clean either way.
+                       Reproducing the infinite death loop with it gives a
+                       false negative.
+
+                       This verb hurts to zero with Player::Hurt exactly as
+                       `death` does and then fakes NOTHING: the ROM's own
+                       St_DeadHit_Main -> KillPlayer -> SetNextLevel(2) carries
+                       it, the harness's normal level-change poll boots the
+                       destination, and the game is left to restore the player
+                       from its own level-enter step (src/func_ov002_020c75f0.c
+                       :29, gated on the latched entry reason). It never sets
+                       cp_done, so it keeps reporting across the re-entry and a
+                       loop shows up as repeated changes rather than silence. */
+                    static int dl_empty_at = -1;
+                    if (port_course_health() > 0 && dl_empty_at < 0) {
+                        if (port_course_can_hurt(player))
+                            port_course_hurt(player, 2);
+                    } else {
+                        if (dl_empty_at < 0) {
+                            dl_empty_at = frame;
+                            fprintf(stderr, "[deathloop] hp reached 0 at frame "
+                                    "%d -- handing off to the ROM, nothing "
+                                    "faked from here\n", frame);
+                        }
+                        if (frame % 20 == 0)
+                            fprintf(stderr, "[deathloop] f%d level=%d hp=%d "
+                                    "lives=%d entry-reason=%d dead-state=%d\n",
+                                    frame, (int)data_0209f2f8,
+                                    port_course_health(),
+                                    (int)data_0209f2f4[0],
+                                    (int)data_0209f2fc[0],
+                                    port_course_in_dead_state(player));
                     }
                 } else if (!strcmp(cp_what, "star")) {
                     if (frame == cp_frame) {

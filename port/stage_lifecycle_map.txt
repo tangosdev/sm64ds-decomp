@@ -255,10 +255,20 @@ name; "none" means no writer exists anywhere in the port.
                                     walk_window.cpp:2815), and ONCE PER
                                     PROCESS rather than per entry. Wrong
                                     value and wrong cadence.
-  data_0209f2fc = data_0209f26c     none. HUD::InitResources reads it
-                                    (port/unmatched/HUD_InitResources.cpp:288,
-                                    :293) to pick its layout, so the HUD
-                                    chooses off a byte nobody sets.
+  data_0209f2fc = data_0209f26c     SEATED (level_boot.cpp, immediately before
+                                    data_0209f2f8 is replaced, which is where
+                                    InitResources:201 does it). It used to say
+                                    "none", and that was the infinite death
+                                    loop: the Player's own level-enter step
+                                    (src/func_ov002_020c75f0.c:29) restores full
+                                    health when this byte is 1 or 2, and it read
+                                    0 every entry, so a death respawned with the
+                                    health it died with and died again. The same
+                                    byte gates the life loss --
+                                    HUD::InitResources:288 seats
+                                    data_ov002_02111178 = 1 on == 2, which is
+                                    what lets HUD::UpdateHealthMeter reach the
+                                    game's only GiveLives(-1).
   data_02092134 = 0x44444444        none. hal/star_flow.cpp:618
                                     (GetStarCameraSetting) reads nibbles out
                                     of it, and its storage is romdata.c.obj,

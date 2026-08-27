@@ -2555,7 +2555,13 @@ DSSTATE_BEGIN
 extern "C" {
 unsigned char data_0209f200[4];   /* level-enter mode latch         */
 unsigned char data_0209f254[4];   /* the star / silver-star request */
-unsigned char data_0209f2fc[4];   /* the "lost the cap" check gate  */
+/* THE LATCHED ENTRY REASON, 1 fresh / 2 death -- Stage::InitResources' copy of
+   data_0209f26c (src/_ZN5Stage13InitResourcesEv.cpp:201), not a cap check. The
+   old comment here said "the 'lost the cap' check gate", which is wrong and cost
+   a triage pass: it is what the Player's level-enter step reads to restore
+   health on re-entry (src/func_ov002_020c75f0.c:29) and what HUD::InitResources
+   reads to pick the meter state. The boot latches it; see the seat below. */
+unsigned char data_0209f2fc[4];
 signed char   data_02092114[4];   /* queued character swap, -1 none */
 int           data_0209212c;      /* the spawn probe's Y            */
 int           data_0209fc48;      /* the running cutscene, 0 = none */
@@ -2590,6 +2596,12 @@ void _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider(void *ovl,
                                                                   unsigned p,
                                                                   void *mc);
 extern signed char data_0209f2f8;    /* current level */
+/* why we are ENTERING: 1 fresh, 2 death. SetNextLevel (src/SetNextLevel.c:54)
+   writes it from KillPlayer's / HitDeathPlane's argument; the boot latches it
+   into data_0209f2fc the way Stage::InitResources:201 does. Declared the same
+   way hal/level_change.cpp:118 declares it -- storage is auto_bss.cpp's wider
+   host allocation and the ROM reads it as a byte. */
+extern unsigned char data_0209f26c;
 extern int data_0209f264[];          /* current entrance */
 extern int data_0209f220[];          /* current star filter */
 extern unsigned char *data_0209f344; /* VS star-order pointer (host: bob_enemy_bridges.cpp) */
@@ -2780,6 +2792,44 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
     if (!spawn)
         port_stage_suppress(o, (1u << LOADER_ENTRANCE) | (1u << LOADER_DOOR) |
                                    (1u << LOADER_EXIT), 1);
+
+    /* THE ENTRY REASON, LATCHED, where Stage::InitResources latches it:
+       src/_ZN5Stage13InitResourcesEv.cpp:201, `data_0209f2fc = data_0209f26c`,
+       immediately before the same function replaces data_0209f2f8 with the
+       level being entered -- which is the line directly below. data_0209f26c is
+       "why we are entering" (1 fresh, 2 death), written by SetNextLevel
+       (src/SetNextLevel.c:54) from KillPlayer's and HitDeathPlane's argument;
+       data_0209f2fc is the copy every consumer downstream of the boot reads.
+
+       WITHOUT THIS THE PORT CANNOT LEAVE A DEATH. The ROM restores the player
+       on re-entry from the Player level-enter state itself,
+       src/func_ov002_020c75f0.c:29 --
+
+           if (data_0209f2fc == 1 || data_0209f2fc == 2)
+               Player::Heal(c, 0x880);
+
+       -- and GiveHealth clamps at 0x880, so that is an unconditional restore to
+       full health. That step is linked (slice_gate14.txt) and dispatched
+       (hal/player_states.inc:297); it has been declining every entry because its
+       gate read a byte nobody set. The same file plays the death-arrival voice
+       clip on == 2 (line 68), and HUD::InitResources reads the same byte to pick
+       the meter state (port/unmatched/HUD_InitResources.cpp:288): == 2 seats
+       data_ov002_02111178 = 1, which is what lets HUD::UpdateHealthMeter walk
+       state 1 -> 2 -> 3 once health is back to 8, and state 3 is the ONLY
+       GiveLives(-1) call site in the game (src/_ZN3HUD17UpdateHealthMeterEv.cpp
+       :117). So health restore and life loss are the same seat, and this is it.
+
+       NOT SetPlayerGlobals. That function seats lives to 4 and health to 0x880
+       for all four players and has exactly three callers game-wide -- StartFile,
+       PrepareVsMode and an ov003 menu path -- none of them a level entry. It is
+       the NEW FILE seat, which is why hal/star_flow.cpp's port_course_seat is
+       correctly a once-per-session one-shot. Running it per entry would restore
+       lives to 4 on every respawn and make game over unreachable a second way.
+
+       Unconditional, as the ROM's is: the A1 geometry regression has no HUD and
+       no Player, so nothing there reads it either way. Listed as missing, with
+       its live readers named, in port/stage_lifecycle_map.txt:258. */
+    data_0209f2fc[0] = data_0209f26c;
 
     data_0209f2f8 = (signed char)port_level_id();
     /* TEMPORARY probe (hal/cannon_probe.cpp): SM64DS_CANNONS_OPEN=1 sets the
