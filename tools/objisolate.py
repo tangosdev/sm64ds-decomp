@@ -237,24 +237,30 @@ def plan(raw, keep_symbol):
 def plan_many(raw, keep_symbols):
     """Validate an exact text-only multi-function object for production linking.
 
-    This is deliberately not ``plan`` with a wider argument.  The one-function
-    pipeline is allowed to discard compiler-emitted neighbours and data because one
-    delinks entry licenses one function.  A consolidated source has one spanning
-    delinks entry: its intact object is the linker contribution, so silently dropping
-    an unexpected helper or data section would create a hole inside a range dsd no
-    longer fills from the ROM.
+    A consolidated source has one spanning delinks entry, so its object is the whole
+    linker contribution for that range: an unexpected ``.text`` body would put code
+    inside a range dsd no longer fills from the ROM, and that stays a refusal.
 
-    The accepted shape is intentionally narrow:
+    ``.data`` is the opposite case, and refusing it was what stopped the promotion
+    program dead. Under the Itanium ABI a class's vtable and RTTI are emitted into
+    the TU that defines its KEY FUNCTION -- which, for almost every actor here, is
+    the destructor the TU exists to hold. So the moment a reconstructed TU is real
+    enough to place its own structors, mwcc hands it ``_ZTV``/``_ZTI``/``_ZTS`` as
+    well. Measured over the 25 entries that were otherwise ready: 23 of them, 9 to
+    13 data symbols each. The cartridge already carves those addresses out and dsd's
+    gap object supplies them, exactly as for the one-function path.
+
+    So this now does what ``plan`` has always done for singletons, generalised from
+    one kept section to N: drop the non-text content, externalise its symbols so a
+    weak gap-object import can never bind to our address 0, and take the vtable
+    address-point preamble back off the surviving relocations. The accepted shape:
 
     * at least two distinct requested symbols, each defined exactly once as a function;
     * one dedicated, non-empty ``.text`` section per requested symbol;
     * those sections occur in the caller's ROM order;
-    * no other non-debug content and no unlicensed symbol in a kept section; and
-    * no undefined RTTI relocation that still needs the single-function ``-8`` rewrite.
-
-    Success therefore needs no ELF surgery: the exact input object is preserved.  The
-    returned plan uses the familiar shape so callers can report one isolation verdict
-    without weakening or changing ``plan``/``derive``/``isolate`` for singletons.
+    * no unlicensed symbol in a kept section, and no unlicensed ``.text`` anywhere
+      (a compiler-only policy runs BEFORE this and is the only way to license one);
+    * every RTTI relocation in the surveyed shape, same checks as ``plan``.
     """
     requested = [str(name) for name in keep_symbols if str(name)]
     if len(requested) < 2:
@@ -307,58 +313,130 @@ def plan_many(raw, keep_symbols):
         return {"error": f"kept function section(s) also define unlicensed symbol(s): "
                          f"{foreign}"}
 
+    keepset = set(keep)
     live = [
         (index, sec) for index, sec in enumerate(secs)
         if sec.header["sh_type"] in CONTENT and sec.header["sh_size"]
         and not any(sec.name.startswith(prefix) for prefix in IGNORE)
     ]
-    extra = [(index, sec) for index, sec in live if index not in set(keep)]
-    if extra:
-        detail = []
-        for index, sec in extra:
-            names = sorted({
-                sym.name for sym in syms
-                if sym.name and not sym.name.startswith("$")
-                and sym["st_info"]["type"] != "STT_SECTION"
-                and sym["st_shndx"] == index
-            })
-            detail.append(f"section[{index}] {sec.name} size 0x{sec.header['sh_size']:x} "
-                          f"defines {names}")
-        return {"error": "unlicensed content in text-only multi-symbol object: "
-                         + "; ".join(detail)}
+    extra = [(index, sec) for index, sec in live if index not in keepset]
+
+    def occupants_of(index):
+        return sorted({
+            sym.name for sym in syms
+            if sym.name and not sym.name.startswith("$")
+            and sym["st_info"]["type"] != "STT_SECTION"
+            and sym["st_shndx"] == index
+        })
+
+    # An unlicensed .text body is still fatal, and for the reason the spanning delinks
+    # entry exists at all: dsd no longer fills this range from the ROM, so a stray
+    # function would be placed inside it. Non-text content is a different animal --
+    # see the docstring -- and is dropped and externalised below.
+    # Only the key-function side effect is droppable. An ordinary owned definition --
+    # a table, a string, a global the source actually declares -- is NOT carved out of
+    # the cartridge by name, so externalising it would invent an import nothing can
+    # satisfy. Refuse it here with a sentence that says so, rather than at the link
+    # with an undefined symbol. Measured over the 25 ready entries: 258 data symbols,
+    # every one of them _ZTV/_ZTI/_ZTS.
+    RTTI = ("_ZTV", "_ZTI", "_ZTS")
+    owned = []
+    for index, sec in extra:
+        if sec.name.startswith(".text"):
+            continue
+        for name in occupants_of(index):
+            if not name.startswith(RTTI):
+                owned.append(f"section[{index}] {sec.name} defines {name}")
+    if owned:
+        return {"error": "multi-symbol object owns non-RTTI data this path cannot "
+                         "externalise: " + "; ".join(owned)}
+
+    stray_text = [(index, sec) for index, sec in extra if sec.name.startswith(".text")]
+    if stray_text:
+        detail = "; ".join(
+            f"section[{index}] {sec.name} size 0x{sec.header['sh_size']:x} "
+            f"defines {occupants_of(index)}" for index, sec in stray_text)
+        return {"error": "unlicensed content in text-only multi-symbol object: " + detail}
 
     emitted = [name for _index, name in sorted(zip(keep, requested))]
     if emitted != requested:
         return {"error": "requested functions are not emitted in ROM order: "
                          f"requested {requested}, emitted {emitted}"}
 
+    drop = [index for index, _sec in extra]
+    dropset = set(drop)
+    # Relocation sections describing dropped sections go too: their targets no longer
+    # exist, and leaving them would have the linker apply fixups into a zero-length
+    # section. Same rule, same reason, as the one-function path.
+    drop += [index for index, sec in enumerate(secs)
+             if isinstance(sec, RelocationSection) and sec.header["sh_size"]
+             and sec.header["sh_info"] in dropset]
+
     referenced = set()
     for relsec in secs:
-        if not isinstance(relsec, RelocationSection) or relsec.header["sh_info"] not in keep:
+        if not isinstance(relsec, RelocationSection):
+            continue
+        if relsec.header["sh_info"] not in keepset:
             continue
         for reloc in relsec.iter_relocations():
             target = symtab.get_symbol(reloc["r_info_sym"])
             if target.name:
                 referenced.add(target.name)
+            # A reloc through a section symbol into a dropped section carries its
+            # target in the addend alone, so externalising cannot preserve it and
+            # nothing downstream would notice. `plan` refuses it; so does this.
+            if not target.name and target["st_shndx"] in dropset:
+                return {"error": f"unnamed section-symbol reloc into dropped section "
+                                 f"{secs[target['st_shndx']].name} at "
+                                 f"0x{reloc['r_offset']:x}"}
             if not target.name.startswith(("_ZTV", "_ZTI", "_ZTS")):
                 continue
             if not relsec.is_RELA():
                 return {"error": f"{target.name}: RTTI reloc is REL, not RELA"}
-            if target["st_shndx"] in ("SHN_UNDEF", SHN_UNDEF) \
-                    and reloc["r_addend"] != 0:
-                return {"error": f"{target.name}: intact multi-symbol object has "
-                                 f"undefined RTTI addend {reloc['r_addend']}; text-only "
-                                 "production isolation cannot rewrite it"}
+            addend = reloc["r_addend"]
+            if target["st_shndx"] in dropset:
+                # Identical arithmetic to `plan`: mwcc's _ZTV addresses the vtable
+                # OBJECT's start while the ROM's symbol IS the slot array, so the
+                # preamble comes off. Everything else must already be exact, and a
+                # shape no survey has seen is refused rather than corrected.
+                ok = (reloc["r_info_type"] == R_ARM_ABS32
+                      and (addend >= VTABLE_PREAMBLE if target.name.startswith("_ZTV")
+                           else addend == 0))
+                if not ok:
+                    return {"error": f"{target.name}: unexpected reloc "
+                                     f"type={reloc['r_info_type']} addend={addend}"}
+            elif target["st_shndx"] in ("SHN_UNDEF", SHN_UNDEF):
+                if addend and not (target.name.startswith("_ZTV")
+                                   and addend >= VTABLE_PREAMBLE):
+                    return {"error": f"{target.name}: undefined RTTI reference with "
+                                     f"addend {addend}; the ROM symbol is already the "
+                                     f"slot array, so this would land {addend} past it"}
 
-    return {"keep": keep, "keepSymbols": requested, "drop": [],
-            "externalise": [], "dead": [], "referenced": sorted(referenced),
-            "error": None}
+    wanted = set(requested)
+    externalise, dead = [], []
+    for sym in syms:
+        if not sym.name or sym.name in wanted:
+            continue
+        if sym["st_shndx"] in dropset:
+            (externalise if sym.name in referenced else dead).append(sym.name)
+
+    return {"keep": keep, "keepSections": sorted(keepset), "keepSymbols": requested,
+            "drop": sorted(set(drop)), "externalise": sorted(set(externalise)),
+            "dead": sorted(set(dead)), "referenced": sorted(referenced), "error": None}
 
 
 def derive_many(raw, keep_symbols):
-    """Pure, fail-closed validation of one exact text-only multi-function object."""
+    """Pure, fail-closed reduction of one multi-function object.
+
+    Returns the input bytes unchanged when the plan has nothing to do -- a genuinely
+    text-only TU, which is what this used to be the only accepted shape.
+    """
     p = plan_many(bytes(raw), keep_symbols)
-    return (None, p) if p.get("error") else (bytes(raw), p)
+    if p.get("error"):
+        return None, p
+    if not (p["drop"] or p["externalise"]):
+        return bytes(raw), p
+    return _apply(raw, p, None), p
 
 
 def referenced_undefined(raw, keep_symbol):
@@ -1086,7 +1164,16 @@ def isolate_many(obj, keep_symbols):
 
 
 def _apply(raw, p, keep_symbol):
-    """The reduction itself: header surgery on a copy of `raw`, per plan `p`."""
+    """The reduction itself: header surgery on a copy of `raw`, per plan `p`.
+
+    ``keep_symbol`` is the one-function path's survivor. A multi-function plan names
+    its survivors in ``keepSymbols`` and its kept sections in ``keepSections``, and
+    passes ``None`` here; the two shapes share every line below, which is the point
+    of generalising the plan rather than writing a second surgeon.
+    """
+    survivors = set(p.get("keepSymbols") or ())
+    if keep_symbol:
+        survivors.add(keep_symbol)
     raw = bytearray(raw)
     elf = ELFFile(io.BytesIO(bytes(raw)))
     endian = "<" if elf.little_endian else ">"
@@ -1110,7 +1197,7 @@ def _apply(raw, p, keep_symbol):
         return {sym.name} if sym["st_info"]["bind"] != "STB_LOCAL" else set()
 
     for idx, s in enumerate(symtab.iter_symbols()):
-        if s.name == keep_symbol or s["st_shndx"] not in dropset:
+        if s.name in survivors or s["st_shndx"] not in dropset:
             continue
         # EVERY symbol in a dropped section, whatever its binding -- not just
         # STB_GLOBAL/STB_WEAK. Restricting it to those two is what made mwldarm
@@ -1166,7 +1253,9 @@ def _apply(raw, p, keep_symbol):
     # is part of the verified ROM data (for example an _ZTI record's ABI-vtable link).
     # Section partitioning therefore never opts into this rewrite: it must preserve
     # the already-verified data relocation stream byte-for-byte.
-    keeps = {p["keep"]} if isinstance(p.get("keep"), int) else set()
+    keeps = set(p.get("keepSections") or ())
+    if isinstance(p.get("keep"), int):
+        keeps.add(p["keep"])
     for s in elf.iter_sections():
         if not isinstance(s, RelocationSection) or s.header["sh_info"] not in keeps:
             continue

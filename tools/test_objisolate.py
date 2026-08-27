@@ -111,6 +111,55 @@ class Isolate(unittest.TestCase):
         OI.isolate_many(obj, names)
         self.assertEqual(obj.read_bytes(), raw)
 
+    def _key_function_tu(self):
+        """A TU that defines a class's key function, so mwcc hands it the vtable.
+
+        This is not a contrived shape: it is what almost every reconstructed actor TU
+        looks like once it is real enough to place its own destructor, and refusing it
+        is what kept 23 of 25 otherwise-ready entries out of production.
+        """
+        obj = self.build(
+            "struct K { int k; virtual void Second(); virtual void First(); };\n"
+            "void K::Second() {}\n"
+            "void K::First() {}\n")
+        return obj, ["_ZN1K5FirstEv", "_ZN1K6SecondEv"]
+
+    def test_multi_symbol_isolation_externalises_a_key_function_vtable(self):
+        import io
+        from elftools.elf.elffile import ELFFile
+
+        obj, names = self._key_function_tu()
+        raw = obj.read_bytes()
+        out, plan = OI.derive_many(raw, names)
+        self.assertIsNone(plan["error"])
+        self.assertIn("_ZTV1K", plan["externalise"] + plan["dead"])
+        self.assertTrue(plan["drop"], "the vtable/RTTI sections must be dropped")
+        self.assertIsNotNone(out)
+        self.assertEqual(len(out), len(raw), "surgery must not move a single byte")
+
+        # The dangerous case: a dropped definition left visible would let a weak gap
+        # import bind to our address 0 instead of the cartridge's carved-out symbol.
+        elf = ELFFile(io.BytesIO(out))
+        symtab = elf.get_section_by_name(".symtab")
+        for sym in symtab.iter_symbols():
+            if sym.name in plan["externalise"]:
+                self.assertIn(sym["st_shndx"], ("SHN_UNDEF", OI.SHN_UNDEF),
+                              f"{sym.name} still defines an address")
+        secs = list(elf.iter_sections())
+        for index in plan["drop"]:
+            self.assertEqual(secs[index].header["sh_size"], 0)
+        for index in plan["keep"]:
+            self.assertTrue(secs[index].header["sh_size"])
+
+    def test_multi_symbol_isolation_keeps_a_text_only_object_byte_identical(self):
+        """The old accepted shape must still cost nothing -- no surgery, same bytes."""
+        obj, names = self._plain_two_function_tu()
+        raw = obj.read_bytes()
+        out, plan = OI.derive_many(raw, names)
+        self.assertIsNone(plan["error"])
+        self.assertEqual(plan["drop"], [])
+        self.assertEqual(out, raw)
+
     def test_multi_symbol_isolation_refuses_a_missing_member(self):
         obj, names = self._plain_two_function_tu()
         out, plan = OI.derive_many(
@@ -157,7 +206,7 @@ class Isolate(unittest.TestCase):
             'extern "C" int owned_data = 1;\n')
         out, plan = OI.derive_many(obj.read_bytes(), names)
         self.assertIsNone(out)
-        self.assertIn("unlicensed content", plan["error"])
+        self.assertIn("non-RTTI data", plan["error"])
         self.assertIn("owned_data", plan["error"])
 
     def test_multi_symbol_isolation_refuses_wrong_emission_order(self):

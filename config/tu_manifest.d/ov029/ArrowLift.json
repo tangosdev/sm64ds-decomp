@@ -1,9 +1,9 @@
 {
   "id": "ov029/ArrowLift",
   "module": "ov029",
-  "source": "src_tu/actors/ArrowLift.cpp",
+  "source": "src/actors/ArrowLift.cpp",
   "promoted_source": "src/actors/ArrowLift.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x211137c..0x2111728, 9 function(s), from build/tu_map.json (tools/tu_map.py)",

@@ -1,9 +1,9 @@
 {
   "id": "arm9/Scene",
   "module": "arm9",
-  "source": "src_tu/scene/Scene.cpp",
+  "source": "src/actors/Scene.cpp",
   "promoted_source": "src/actors/Scene.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "tu_map CANNOT segment this module: tools/tu_map.py emits `main` as ONE unit covering 0x20049f0..0x20707a4 with 2984 functions and ~70 class labels, and lists the module under `under-segmented (TU count is a lower bound)`. There is therefore no `tubuild.py create` candidate id for Scene and NO tu_map boundary behind any of the readings below -- all of them were established by hand from the cartridge.",
