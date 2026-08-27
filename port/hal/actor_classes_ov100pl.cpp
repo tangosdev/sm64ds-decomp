@@ -336,8 +336,34 @@ static int __fastcall pl_egg(void *s, void *)
 static int __fastcall pl_kill(void *s, void *)
 { _ZN8Platform4KillEv(s); return 0; }
 /* slot 32: the extra virtual PathLiftActor_c adds. BOTH tables carry the
-   SAME word (0x020eff18), so both get the same thunk. */
-static int __fastcall pl_after_clsn(void *s, void *)
+   SAME word (0x020eff18), so both get the same thunk.
+
+   THE THIRD PARAMETER IS THE POP, NOT A VALUE. The dispatch site is
+   src/func_ov002_020eff90.cpp, `b->m(x)` over a 33-virtual class, which MSVC
+   emits as thiscall with the argument PUSHED and no caller cleanup:
+
+       mov  ecx,dword ptr [ebp+0Ch]      ; this
+       push dword ptr [ebp+10h]          ; x -- the colliding Actor
+       mov  eax,dword ptr [ecx]
+       call dword ptr [eax+00000080h]    ; slot 32
+       pop  ebp                          ; NO add esp,4: the callee pops
+       ret
+
+   The two-parameter shape emitted a bare `ret` and popped nothing, so `pop ebp`
+   took the pushed Actor into EBP and `ret` took the saved EBP -- a stack
+   address -- as the return address. That is report 7447e46c: level 46, walker
+   PLAYER, `access 00000008 at 00e7f1bc`, `eip 00e7f1bc esp 00e7f1a4` (delta
+   0x18), and `ebp 30039f38` equal to the dump's own `player` line, which is the
+   un-popped argument sitting where the frame pointer belongs. It reached the
+   veneer through the collider callback at MeshColliderBase+0x1c, which
+   func_02038234 calls cdecl (`call ebx` / `add esp,0Ch`), and the same fault
+   stands in that reporter's quarantine ledger on 0.2.8.2 as well.
+
+   PathLift::AfterClsn takes VOID in the ROM (_ZN8PathLift9AfterClsnEv,
+   0x020eff18, size 0x78): the argument rides in r1 on ARM and costs nothing
+   there. On the host somebody still has to clean it, and that is the callee.
+   The flw_reset spelling (bf9e332a5). */
+static int __fastcall pl_after_clsn(void *s, void *, void * /*clsnActor, ridethrough*/)
 { ((PathLift *)s)->PathLift::AfterClsn(); return 0; }
 
 static void pl_fill_shared(void *volatile *vt)

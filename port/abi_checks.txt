@@ -350,6 +350,14 @@ faces and nothing else; the fill count is 2310 at both ends.
     0 distinct AUTHORITY mismatches, 0 distinct CONSENSUS outliers
     exit 0
 
+  SUPERSEDED 2026-08-27 (run mg16 lane FIXD): the transcript above is a real
+  run and is left exactly as it was, but its census is no longer the tree's.
+  The parameter binding recovered 3326 fills this run never saw -- every slot
+  seated through a shared filler -- so the same command now reads 5702 fills
+  and 77%. Both numbers are honest about their own run; section 7's first
+  bullet carries the current one. Do not quote 2391 or 47% as the tree's
+  coverage.
+
   47% IS THE HONEST NUMBER AND IT IS NOT A PASS FOR THE OTHER 53%. It was
   35% until the undname bug above was fixed: the recovered abicheck read a
   precomputed _unres.txt / _unres_demangled.txt pair out of the disasm
@@ -1194,11 +1202,94 @@ Ranked by blast radius.
 7. LIMITS, STATED
 -----------------
 
-  * abicheck judges 47% of the fills it reads. The 132 NORETURN are
-    UNCHECKED, not passed. They are thunks whose tail-jump target is a flat
-    Itanium body carrying no parameter list in its spelling, so no demangler
-    closes them; the fix is to read the pop out of the target's own emitted
-    `ret`, which means disassembling beyond the hal objects.
+  * abicheck judges 77% of the fills it reads: 4413 of 5702, measured on
+    cons 2026-08-27 after the parameter binding below. It was 47% of 2376
+    when this section was first written, and BOTH HALVES of that moved for
+    the same reason -- the binding recovered 3326 fills that used to be
+    dropped silently, so the denominator grew and the share judged grew with
+    it. The older figure is left named rather than overwritten because a
+    coverage number with no census beside it is unreadable.
+    The 133 NORETURN are UNCHECKED, not passed. They are thunks whose
+    tail-jump target is a flat Itanium body carrying no parameter list in its
+    spelling, so no demangler closes them; the fix is to read the pop out of
+    the target's own emitted `ret`, which means disassembling beyond the hal
+    objects. 393 more rest on consensus alone and 682 DECLINE are exempt.
+  * THE HEADER AUTHORITY STOPS AT SLOT 30, AND EXTENSION VIRTUALS USED TO FALL
+    THROUGH IT SILENTLY. ActorBase.h declares 0..17 and Actor.h 18..30, so a
+    slot a DERIVED class adds past the Actor tail has no key in
+    ACTOR_SLOT_ARGS, `need` came back None, and the row read NO_AUTHORITY --
+    whose wording ("non-Actor table: consensus") describes a short Model or HUD
+    table and is a false description of a 33-slot Actor table. Real classes do
+    add these: PathLift adds AfterClsn at 32, Bully and BigBully add six at
+    31..36, and Platform::Kill sits at 31 on thirty-odd tables.
+    AND CONSENSUS COULD NOT COVER FOR IT. `consensus_odd` asks whether a fill
+    disagrees with its PEERS, so a slot that is wrong EVERYWHERE produces no
+    outlier at all. Slot 32 had three fills, all the two-parameter shape, all
+    emitting a bare ret against a dispatch site that pushes one word: unanimous,
+    and unanimously wrong. Both detectors read clean over it and the port
+    shipped report 7447e46c -- a level 46 return into the stack, walker PLAYER,
+    `ebp` holding the un-popped Actor.
+    AND THE FIRST ATTEMPT AT CLOSING IT WAS ITSELF WRONG, THREE WAYS. Kept
+    here in full, because every one of the three is a shape a checker author
+    will reach for again.
+      (i)   IT NEVER SAW THE SEAT THE BUG SHIPPED FROM. port/hal seats most
+            Actor tables through one helper per overlay (pl_fill_shared,
+            ov63_fill_shared) which writes twenty-odd slots through a pointer
+            it was HANDED, so no register in that function names a table and
+            VTSTORE's binding dropped the lot. Measured: pl_after_clsn had
+            ZERO rows out of 2376, as did pl_kill, pl_pounded and pl_atk1. The
+            closure was written, and reported green, on a checker blind to the
+            exact thunk it was written for.
+      (ii)  IT KEYED THE AUTHORITY ON THE SLOT NUMBER. A virtual a derived
+            class ADDS is that class's own, so a slot index is not a contract.
+            Asserting "slot 32 takes one argument" widened Bully's thunk to
+            ret 4 against a site that pushes nothing -- the same wild execute,
+            mirrored into a second class by the fix for the first.
+      (iii) IT COULD NEVER EXIT 0 AGAIN, because EXT_UNJUDGED counted toward
+            the exit status over rows the tree already carries. That
+            permanently fails abi_prove's "GREEN on this build" arm, and a
+            checker that always fails proves as little as one that always
+            passes.
+    A fourth error was in the EVIDENCE rather than the code, and is the reason
+    (ii) looked safe: the claim that src/_ZN6Lakitu6RenderEv.cpp was a second,
+    agreeing slot-32 dispatch site. Its VObj declares SIX virtuals, so its
+    `m(0)` is slot 5 at +0x14, and the TU appears in no slice file and is not
+    linked. It was neither slot 32 nor in the build.
+
+    CLOSED PROPERLY 2026-08-27, run mg16 lane FIXD, after that review:
+      (a) THE PARAMETER BINDING. `push offset TAB` / `call FILLER` is recorded
+          as a fill edge and resolved after every object is parsed, so a slot
+          seated through a shared filler is attributed to every table its
+          callers hand it. 3326 fills recovered from 29 fillers; the census
+          goes 2376 -> 5702 and coverage 46% -> 77%. This is what makes
+          pl_after_clsn visible at all.
+      (b) ACTOR_EXT_SLOT_AUTHORITY, keyed on (TABLE, slot), each row naming the
+          site it came off. The site census is the evidence and it is written
+          down: sweeping the linked binary for `call dword ptr [reg+000000
+          80h]` finds exactly three slot-32 dispatches --
+            func_ov004_020b08f0 +0xb    pushes 0
+            func_ov002_020eff90 +0xb    pushes 1
+            func_ov064_02116d1c +0x129  pushes 0
+          -- so only the two PathLift tables have a row.
+      (c) EXT_UNJUDGED for an extension slot with no per-table authority, LOUD
+          and RATCHETED against port/tools/abicheck_extslot_baseline.txt. 78
+          rows frozen today, dominated by slot 31 (Platform::Kill). UNCHECKED
+          DEBT, not clearance; the set may shrink freely and only a NEW row
+          fails the run.
+      (d) consensus peers for an extension slot are scoped to its OWN TABLE.
+          Pooled across ACTOR31 it flagged the CORRECT pl_after_clsn as an
+          outlier, because Bully's two equally-correct bare rets outvoted it on
+          a 2-versus-2 split settled by tie-break.
+      (e) a CONSENSUS-VS-AUTHORITY arm, which fires when a whole peer group
+          disagrees with its slot's authority -- the case consensus alone
+          cannot raise, since nothing is an outlier when everything agrees.
+    Proved both ways. --selftest gained a filler fixture (a table pushed to a
+    helper that stores through [ebp+8], which must bind), a slot-32 fill on the
+    authoritative table that must read UNDERPOP, and a second table's slot 32
+    with no authority that must stay EXT_UNJUDGED rather than being judged by
+    its neighbour. abi_prove carries pl_after_clsn as a vtable fixture, which it
+    could not before: with the fill invisible, re-breaking it changed nothing
+    and the red arm could not fire. 33 of 33 proofs pass.
   * aritycheck's full census (2075 rows since the else/return misparse fix;
     2106 when this was written) does not gate and its parser is a regex over
     C and C++ text. The honest route to gating it is to read arity out of
@@ -1251,6 +1342,27 @@ Ranked by blast radius.
     because there is none, and aritycheck has no census row because nothing
     defines the LHS name. The suite has three detectors and this instance is
     invisible to all three.
+  * AN ADJACENT TOOL, RECORDED HERE BECAUSE THIS BRANCH IS WHERE THE READING
+    HAPPENED: tools/resolve_crash.py HAS NO OUT-OF-MODULE GUARD. The port's
+    dumps print `offset = ExceptionAddress - GetModuleHandle(0)`, and for an
+    execute-at-stack fault -- the whole family the work above exists for --
+    that number is not an image offset at all. resolve_crash.py still resolves
+    it to "the symbol with the greatest RVA <= offset" and prints the result in
+    the same column, same format, same confidence as the genuine frames right
+    below it. On report 7447e46c it produced
+
+        offset +00a7f1bc -> ??__Fseen@?7??bind_from_vram@...@ntr@@YAXXZ@YAXXZ
+                            +0x83657c (ntr_2x:gx.cpp.obj)
+
+    An offset of 0x83657c is 8.6 MB past its symbol and cannot be a resolution,
+    but nothing in the output says so. port/tools/faultmap.py already reads the
+    PE's image size next to the map ("image size : 0x973000 from the PE next to
+    the map"), so the bound exists and resolve_crash.py simply does not use it.
+    It should refuse, or visibly mark, an offset past the end of the image or
+    absurdly far past its symbol. NOT FIXED in run mg16 lane FIXD; the lane read
+    around it by hand, which is exactly the reading a tool is supposed to spare
+    the next person.
+
   * A CLEAN ZERO-OPEN RUN DOES NOT MEAN A PATH WAS EXERCISED. Lane RF1
     measured this the hard way on section 6 items 1 and 2: with a probe in all
     four entry points, thirty-three separate drives -- two full level-entry ->
