@@ -1192,7 +1192,7 @@ src/_ZN8dActor_cD2Ev.cpp:
     complete
     .text start:0x020112c8 end:0x02011314
 
-src/_ZN8dActor_cD0Ev.c:
+src/_ZN8dActor_cD0Ev.cpp:
     complete
     .text start:0x02011314 end:0x02011374
 
@@ -1756,7 +1756,7 @@ src/_ZN7dBase_cD1Ev.cpp:
     complete
     .text start:0x02013e80 end:0x02013ea4
 
-src/_ZN7dBase_cD0Ev.c:
+src/_ZN7dBase_cD0Ev.cpp:
     complete
     .text start:0x02013ea4 end:0x02013edc
 
@@ -1924,15 +1924,15 @@ src/_ZN5dCc_c4InitE5Fix12IiES1_jj.cpp:
     complete
     .text start:0x02015040 end:0x02015058
 
-src/_ZN5dCc_cD2Ev.c:
+src/_ZN5dCc_cD2Ev.cpp:
     complete
     .text start:0x02015058 end:0x0201507c
 
-src/_ZN5dCc_cD0Ev.c:
+src/_ZN5dCc_cD0Ev.cpp:
     complete
     .text start:0x0201507c end:0x020150a8
 
-src/_ZN5dCc_cD1Ev.c:
+src/_ZN5dCc_cD1Ev.cpp:
     complete
     .text start:0x020150a8 end:0x020150cc
 
@@ -2368,15 +2368,15 @@ src/func_02017060.c:
     complete
     .text start:0x02017060 end:0x020170b8
 
-src/_ZN9ModelBaseD2Ev.c:
+src/_ZN9ModelBaseD2Ev.cpp:
     complete
     .text start:0x020170b8 end:0x020170e8
 
-src/_ZN9ModelBaseD0Ev.c:
+src/_ZN9ModelBaseD0Ev.cpp:
     complete
     .text start:0x020170e8 end:0x02017120
 
-src/_ZN9ModelBaseD1Ev.c:
+src/_ZN9ModelBaseD1Ev.cpp:
     complete
     .text start:0x02017120 end:0x02017150
 
@@ -7170,15 +7170,15 @@ src/_ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE.cpp:
     complete
     .text start:0x02043c88 end:0x02043d48
 
-src/_ZN7fBase_cD2Ev.c:
+src/_ZN7fBase_cD2Ev.cpp:
     complete
     .text start:0x02043d48 end:0x02043d78
 
-src/_ZN7fBase_cD0Ev.c:
+src/_ZN7fBase_cD0Ev.cpp:
     complete
     .text start:0x02043d78 end:0x02043dbc
 
-src/_ZN7fBase_cD1Ev.c:
+src/_ZN7fBase_cD1Ev.cpp:
     complete
     .text start:0x02043dbc end:0x02043dec
 
