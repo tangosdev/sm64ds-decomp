@@ -776,6 +776,14 @@
     "src/game/actors/OneUpLogo.cpp#_ZN9OneUpLogo6RenderEv": "tangosdev",
     "src/game/actors/OneUpLogo.cpp#_ZN9OneUpLogo8BehaviorEv": "ruspecial",
     "src/game/actors/OneUpLogo.cpp#_ZN9OneUpLogo13InitResourcesEv": "tangosdev",
-    "src/game/actors/OneUpLogo.cpp#OneUpLogo_Spawn": "tangosdev"
+    "src/game/actors/OneUpLogo.cpp#OneUpLogo_Spawn": "tangosdev",
+    "src/game/actors/Seaweed.cpp#_ZN7SeaweedD1Ev": "tangosdev",
+    "src/game/actors/Seaweed.cpp#_ZN7SeaweedD0Ev": "tangosdev",
+    "src/game/actors/Seaweed.cpp#func_ov002_020bc488": "tangosdev",
+    "src/game/actors/Seaweed.cpp#_ZN7Seaweed16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/Seaweed.cpp#_ZN7Seaweed6RenderEv": "tangosdev",
+    "src/game/actors/Seaweed.cpp#_ZN7Seaweed8BehaviorEv": "tangosdev",
+    "src/game/actors/Seaweed.cpp#_ZN7Seaweed13InitResourcesEv": "tangosdev",
+    "src/game/actors/Seaweed.cpp#Seaweed_Spawn": "tangosdev"
   }
 }
