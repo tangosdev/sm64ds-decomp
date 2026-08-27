@@ -30464,7 +30464,7 @@
    "n_files": 18,
    "files": [
     "src/_ZN4FishD1Ev.cpp",
-    "src/_ZN4FishD0Ev.c",
+    "src/_ZN4FishD0Ev.cpp",
     "src/func_ov100_02146280.c",
     "src/func_ov100_0214629c.cpp",
     "src/func_ov100_0214639c.c",
