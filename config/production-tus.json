@@ -30,6 +30,7 @@
     "ov002/Platform",
     "ov098/ArrowSignRight",
     "ov002/LevelObjects",
-    "arm9/Scene"
+    "arm9/Scene",
+    "ov012/BasementWater"
   ]
 }
