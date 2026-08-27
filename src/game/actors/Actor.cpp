@@ -150,15 +150,18 @@ extern "C" void* _ZN8dActor_cC2Ev(struct dActor_c *self) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 95 -- _ZN8Vector3sD1Ev
  * 0x02011508  size 0x4   legacy src/runtime/math/Vector3s/_ZN8Vector3sD1Ev.cpp */
-/* No forcing scaffold. The legacy file reaches this four-byte `bx lr` through a
- * `struct Vector3s_ForceDestructor { Vector3s v[2]; ~Vector3s_ForceDestructor(); }`,
- * because an explicit `p->~Vector3s()` on an empty inline destructor is inlined away
- * while an ARRAY cleanup has to pass the destructor's address along -- but that
- * scaffold is 0x50 of STB_GLOBAL .text with no address in this ROM, and objisolate
- * strips it per function. In a merged TU it lands INSIDE the span and shifts
- * everything after it, which is the one thing between this file and a whole-range
- * link. Spelling the ROM symbol directly emits the same four bytes and nothing else. */
-extern "C" void _ZN8Vector3sD1Ev(void *self) {}
+/* Force mwcc to emit the inline empty Vector3s destructor with its authentic
+ * vague-linkage binding.  The helper destructor is not a ROM-owned function;
+ * derived-text production inventories and discards that extra output after the
+ * canonical TU has been compiled once. */
+struct Vector3s_ForceDestructor {
+    Vector3s v[2];
+    ~Vector3s_ForceDestructor();
+};
+
+Vector3s_ForceDestructor::~Vector3s_ForceDestructor()
+{
+}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 94 -- _ZN8dActor_cC1Ev
@@ -1734,17 +1737,17 @@ extern "C" int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(dActor_c *self, in
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 0 -- _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b
  * 0x0200f658  size 0xb4   legacy src/game/actors/dActor_c/_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b.cpp */
-struct dBgCh_LinPad { char data[0x78]; };
+struct ActorRaycastLineStorage { char data[0x78]; };
 extern "C" {
-extern void _ZN9dBgCh_LinC1Ev(dBgCh_LinPad*);
-extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(dBgCh_LinPad*, const Vector3*, const Vector3*, dActor_c*);
-extern int _ZN9dBgCh_Lin10DetectClsnEv(dBgCh_LinPad*);
+extern void _ZN9dBgCh_LinC1Ev(ActorRaycastLineStorage*);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(ActorRaycastLineStorage*, const Vector3*, const Vector3*, dActor_c*);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(ActorRaycastLineStorage*);
 extern Vector3* func_02037dc4(void*);
-extern void _ZN9dBgCh_LinD1Ev(dBgCh_LinPad*);
+extern void _ZN9dBgCh_LinD1Ev(ActorRaycastLineStorage*);
 }
 extern "C" {
 int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(dActor_c *self, Vector3 *a, Vector3 *out, int doStore){
-  dBgCh_LinPad rl;
+  ActorRaycastLineStorage rl;
   _ZN9dBgCh_LinC1Ev(&rl);
   _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&rl, a, (const Vector3*)out, 0);
   if(_ZN9dBgCh_Lin10DetectClsnEv(&rl)){

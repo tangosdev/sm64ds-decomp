@@ -1,8 +1,8 @@
 {
   "id": "arm9/Actor",
   "module": "arm9",
-  "source": "src_tu/actors/Actor.cpp",
-  "promoted_source": "src/actors/Actor.cpp",
+  "source": "src/game/actors/Actor.cpp",
+  "promoted_source": "src/game/actors/Actor.cpp",
   "status": "link-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -362,7 +362,7 @@
       "symbol": "_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j",
       "address": "0x020102b0",
       "size": "0x00000054",
-      "legacy_source": "src/_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.c",
+      "legacy_source": "src/game/actors/dActor_c/_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.cpp",
       "ordinal": 48
     },
     {
@@ -397,7 +397,7 @@
       "symbol": "_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s",
       "address": "0x02010428",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s.c",
+      "legacy_source": "src/game/actors/dActor_c/_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s.cpp",
       "ordinal": 53
     },
     {
@@ -411,7 +411,7 @@
       "symbol": "_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i",
       "address": "0x02010498",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.c",
+      "legacy_source": "src/game/actors/dActor_c/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.cpp",
       "ordinal": 55
     },
     {
@@ -453,7 +453,7 @@
       "symbol": "_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs",
       "address": "0x02010714",
       "size": "0x00000130",
-      "legacy_source": "src/_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs.c",
+      "legacy_source": "src/game/actors/dActor_c/_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs.cpp",
       "ordinal": 61
     },
     {
@@ -523,14 +523,14 @@
       "symbol": "_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j",
       "address": "0x02010b9c",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.c",
+      "legacy_source": "src/game/actors/dActor_c/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.cpp",
       "ordinal": 71
     },
     {
       "symbol": "_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j",
       "address": "0x02010be8",
       "size": "0x00000048",
-      "legacy_source": "src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c",
+      "legacy_source": "src/game/actors/dActor_c/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.cpp",
       "ordinal": 72
     },
     {
@@ -771,7 +771,7 @@
   "partial_isolation": {
     "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
     "derivedObjects": 97,
-    "contributionEquivalent": "96/97",
+    "contributionEquivalent": "97/97",
     "comparedFields": [
       "keptSection",
       "keptBytes",
@@ -782,11 +782,11 @@
       "undefReferenced"
     ],
     "legacyEntriesComplete": "97/97",
-    "extraInertImports": 199,
+    "extraInertImports": 202,
     "extraImportsWithNoHome": [],
     "artefacts": "build/tu/arm9-Actor/partial/partial.json (gitignored)",
-    "state": "derived",
-    "stateMeaning": "N per-function objects were extracted from one compiled TU object; their equivalence to the production objects was not established",
+    "state": "partial-link-verified",
+    "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
     "delinksChanged": false,
     "substitutedObjectPaths": [
@@ -838,20 +838,20 @@
       "src/game/actors/dActor_c/_ZN8dActor_c13OnYoshiTryEatEv.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3.cpp",
-      "src/_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.c",
+      "src/game/actors/dActor_c/_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.cpp",
       "src/unnamed/arm9/0201/func_02010304.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_c18FindExplosionActorER5dCc_c.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_c7FindEggER5dCc_c.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_c14GetSubtractionEss.cpp",
-      "src/_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s.c",
+      "src/game/actors/dActor_c/_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_c15IsPlayerInRangeERK7Vector3i.cpp",
-      "src/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.c",
+      "src/game/actors/dActor_c/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_c15IsPlayerInRangeEi.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_c24BumpedUnderneathByPlayerER6Player.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player.cpp",
       "src/unnamed/arm9/0201/func_020105cc.c",
       "src/game/actors/dActor_c/_ZN8dActor_c15GivePlayerCoinsER6Playerhj.cpp",
-      "src/_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs.c",
+      "src/game/actors/dActor_c/_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs.cpp",
       "src/unnamed/arm9/0201/func_02010844.c",
       "src/game/actors/dActor_c/_ZN8dActor_c18ClosestWithActorIDEj.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_c18HorzAngleToFPlayerEv.cpp",
@@ -861,8 +861,8 @@
       "src/game/actors/dActor_c/_ZN8dActor_c13DistToCPlayerEv.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_c22ClosestNonVanishPlayerEv.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_c13ClosestPlayerEv.cpp",
-      "src/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.c",
-      "src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c",
+      "src/game/actors/dActor_c/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.cpp",
+      "src/game/actors/dActor_c/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_c9UpdatePosEP5dCc_c.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c.cpp",
@@ -888,7 +888,7 @@
       "src/runtime/math/Vector3s/_ZN8Vector3sD1Ev.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_cC2Ev.cpp"
     ],
-    "result": "failed",
+    "result": "partial-link-verified",
     "phases": {
       "delink": true,
       "lcf": true,
@@ -908,8 +908,37 @@
     "symbolCheckNewVsBaseline": [],
     "rom": {
       "bytes": 16777216,
-      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "matchesStockRom": true
     },
     "scratch": "build/tu/arm9-Actor/link-partial (gitignored)"
-  }
+  },
+  "unlicensed_output_observed": {
+    "note": "Pinned-compiler inventory stamped by tools/promote_derived_tus.py --stamp-discarded-output before default production admission. These definitions are not ROM ownership claims; every build requires an exact inventory match, exact derived text contributions, exact modules, and an exact ROM.",
+    "toolchain": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "text": [
+      {
+        "symbol": "_ZN24Vector3s_ForceDestructorD1Ev",
+        "size": "0x28",
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "symbol": "_ZN24Vector3s_ForceDestructorD2Ev",
+        "size": "0x28",
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "symbol": "_ZN7Vector3D1Ev",
+        "size": "0x4",
+        "binding": "STB_LOPROC"
+      }
+    ],
+    "data": [],
+    "bss": [],
+    "init": [],
+    "rodata": [],
+    "ctor": []
+  },
+  "production_mode": "derived-text"
 }

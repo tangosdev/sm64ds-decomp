@@ -41,6 +41,7 @@
     "ov002/HealingHeart",
     "ov002/Number",
     "ov002/WingFeather",
-    "ov002/EnemySpawner+EnemySwitchTag"
+    "ov002/EnemySpawner+EnemySwitchTag",
+    "arm9/Actor"
   ]
 }
