@@ -1082,6 +1082,13 @@
     "src/game/actors/MgWhichWiggler.cpp#MgWhichWiggler_Spawn": "tangosdev",
     "src/game/actors/MgWhichWiggler.cpp#func_ov006_020ede80": "tangosdev",
     "src/game/actors/MgTrampolineTerror.cpp#MgTrampolineTerror_Spawn": "lunavyqo",
-    "src/game/actors/MgTrampolineTerror.cpp#func_ov006_021248a8": "tangosdev"
+    "src/game/actors/MgTrampolineTerror.cpp#func_ov006_021248a8": "tangosdev",
+    "src/game/actors/MgPairAGoneAndOn.cpp#MgPairAGoneAndOn_Spawn": "tangosdev",
+    "src/game/actors/MgPairAGoneAndOn.cpp#func_ov006_020fa740": "tangosdev",
+    "src/game/actors/MgMushroomRoulette.cpp#MgMushroomRoulette_Spawn": "tangosdev",
+    "src/game/actors/MgMushroomRoulette.cpp#func_ov006_0210a4ac": "tangosdev",
+    "src/game/actors/MgPicturePoker.cpp#MgPicturePoker_Spawn": "tangosdev",
+    "src/game/actors/MgPicturePoker.cpp#func_ov006_020dbe14": "tangosdev",
+    "src/game/actors/MgPicturePoker.cpp#func_ov006_020dbe30": "tangosdev"
   }
 }
