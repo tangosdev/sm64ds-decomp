@@ -895,7 +895,7 @@ def main():
             return sizes[cls][0], sizes[cls][1]
         if cls in layout_sizes:
             n, k = layout_sizes[cls].most_common(1)[0]
-            # UPPER BOUND ONLY.  `src/_ZN8PoleLiftD1Ev.cpp` pads Model to 0x80 so the
+            # UPPER BOUND ONLY.  `src/actors/PoleLift.cpp` pads Model to 0x80 so the
             # next member lands at 0x158; the real class is 0x50 and the 0x30 between
             # them is unknown space.  Never let this override an assertion.
             return n, "inferred (UPPER BOUND) from %d local layout(s)" % k

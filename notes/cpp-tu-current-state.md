@@ -20,8 +20,8 @@ python tools/cpp_tu_state.py --check-note
 | --- | ---: |
 | MATCHED functions | 11231 / 11401 (98.51%) |
 | MATCHED code bytes | 2117968 / 2238108 (94.63%) |
-| Strict CONVERTED source functions | 2340 / 11304 (20.70%) |
-| Physical production source files | 11268 |
+| Strict CONVERTED source functions | 2266 / 11304 (20.05%) |
+| Physical production source files | 11143 |
 
 MATCHED is recomputed from committed config symbols and `src/` through
 `progress.synced_from_src()`; no ambient or gitignored chaos database is accepted.
@@ -32,9 +32,9 @@ weighted by enrolled function ownership so TU consolidation does not move it.
 
 | Measure | Live value |
 | --- | ---: |
-| Tracked production source files | 11268 |
-| Tracked `.c` files | 6508 |
-| Tracked `.cpp` files | 4760 |
+| Tracked production source files | 11143 |
+| Tracked `.c` files | 6481 |
+| Tracked `.cpp` files | 4662 |
 | `.cpp` files missing first-line `//cpp` | 0 |
 | Mangled-symbol source files | 3463 |
 | Genuinely migrated C++ symbol files | 3300 |
@@ -44,9 +44,9 @@ weighted by enrolled function ownership so TU consolidation does not move it.
 | Delinks path-owned function-symbol records | 11197 |
 | Path-owned records still supplied from ROM bytes | 128 |
 | Source-built (`complete`) function-symbol records | 11069 |
-| Source-built (`complete`) source files | 11028 |
-| Complete sources owning more than one function | 5 |
-| Source-built records inside multi-function sources | 46 |
+| Source-built (`complete`) source files | 10903 |
+| Complete sources owning more than one function | 25 |
+| Source-built records inside multi-function sources | 191 |
 | Largest function-symbol-records-per-source count | 21 |
 | Complete source paths missing from git | 0 |
 
@@ -56,7 +56,7 @@ require the delinks entry's `complete` marker; entries without it are ROM-byte
 placeholders and are not reported as decompiled. The join remains correct when a
 source owns two functions; filenames are not treated as the authority.
 
-Current complete multi-function owners: `src/actors/ActorBase_SceneNode.cpp` (2 function-symbol records), `src/actors/ArrowLift.cpp` (9 function-symbol records), `src/actors/Scene.cpp` (21 function-symbol records), `src/actors/daObjPathLift_c.cpp` (8 function-symbol records), `src/func_01ff97d8.c` (6 function-symbol records).
+Current complete multi-function owners: `src/actors/ActorBase_SceneNode.cpp` (2 function-symbol records), `src/actors/AmbientSoundEffects.cpp` (8 function-symbol records), `src/actors/ArrowLift.cpp` (9 function-symbol records), `src/actors/ArrowSignRight.cpp` (11 function-symbol records), `src/actors/BasementWater.cpp` (7 function-symbol records), `src/actors/BlueCoinSwitch.cpp` (9 function-symbol records), `src/actors/CameraTag.cpp` (8 function-symbol records), `src/actors/ChillBully_daIDonketu_c.cpp` (7 function-symbol records), `src/actors/Exit.cpp` (9 function-symbol records), `src/actors/InvisiblePole.cpp` (8 function-symbol records), and 15 more in `--json`.
 
 A `.cpp` extension alone proves nothing about compiler language mode; this build
 selects C++ only when the first line is exactly `//cpp`. The marker-missing count
@@ -71,17 +71,17 @@ partition to add to the migrated and unmigrated rows.
 
 | Measure | Live value |
 | --- | ---: |
-| Tracked `src_tu/` source files | 84 |
+| Tracked `src_tu/` source files | 64 |
 | Manifest entries | 88 |
 | Functions named by manifest entries | 1085 |
 | Unique functions named by the manifest | 1085 |
 | Modules represented | 27 |
 | Manifest shadow sources present in git | 88 |
 | Entries licensing non-text sections | 3 |
-| Entries actually production-enrolled at `promoted_source` | 4 |
+| Entries actually production-enrolled at `promoted_source` | 24 |
 | Existing promotion paths that disagree with delinks | 0 |
 
-Manifest statuses: `link-verified` 5, `promoted` 4, `text-verified` 79.
+Manifest statuses: `link-verified` 5, `promoted` 24, `text-verified` 59.
 
 `config/tu_manifest.d/` records reconstruction evidence and licensed ranges. It does
 not enroll a TU. The production number above counts an entry as promoted only when every
