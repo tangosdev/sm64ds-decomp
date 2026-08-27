@@ -702,6 +702,10 @@
     "src/game/actors/PowerStarCreate.cpp#_ZN15PowerStarCreateD1Ev": "andrewboudreau",
     "src/game/actors/PowerStarCreate.cpp#_ZN15PowerStarCreateD0Ev": "tangosdev",
     "src/game/actors/PowerStarCreate.cpp#_ZN15PowerStarCreate8BehaviorEv": "tangosdev",
-    "src/game/actors/PowerStarCreate.cpp#PowerStarCreate_Spawn": "tangosdev"
+    "src/game/actors/PowerStarCreate.cpp#PowerStarCreate_Spawn": "tangosdev",
+    "src/game/actors/daObjFl_Fall_Block_c.cpp#_ZN20daObjFl_Fall_Block_cD1Ev": "tangosdev",
+    "src/game/actors/daObjFl_Fall_Block_c.cpp#_ZN20daObjFl_Fall_Block_cD0Ev": "tangosdev",
+    "src/game/actors/daObjFl_Fall_Block_c.cpp#_ZN20daObjFl_Fall_Block_c16CleanupResourcesEv": "lunavyqo",
+    "src/game/actors/daObjFl_Fall_Block_c.cpp#_ZN20daObjFl_Fall_Block_c13InitResourcesEv": "lunavyqo"
   }
 }
