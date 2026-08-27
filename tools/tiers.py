@@ -271,9 +271,10 @@ def converted(src_root=None):
     passes_hist = {}
     readable = core = 0
     ownership = srcpath.source_definition_index()
+    comparison_only = srcpath.partitioned_legacy_sources()
     repo_root = srcpath.REPO.absolute()
 
-    source_readable = 0
+    source_readable = scored_sources = 0
     total = 0
     for p in files:
         with open(p, errors="replace") as f:
@@ -284,6 +285,9 @@ def converted(src_root=None):
             rel = path.absolute().relative_to(repo_root).as_posix()
         except ValueError:
             rel = None
+        if rel in comparison_only:
+            continue
+        scored_sources += 1
         members = ownership.get(rel) or [path.stem]
         all_readable = True
         for sym in members:
@@ -307,7 +311,7 @@ def converted(src_root=None):
 
     return {
         "functions": total,
-        "source_files": len(files),
+        "source_files": scored_sources,
         "converted_source_files": source_readable,
         "converted": readable,
         "pct": round(100.0 * readable / total, 2) if total else 0.0,
