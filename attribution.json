@@ -706,6 +706,10 @@
     "src/game/actors/daObjFl_Fall_Block_c.cpp#_ZN20daObjFl_Fall_Block_cD1Ev": "tangosdev",
     "src/game/actors/daObjFl_Fall_Block_c.cpp#_ZN20daObjFl_Fall_Block_cD0Ev": "tangosdev",
     "src/game/actors/daObjFl_Fall_Block_c.cpp#_ZN20daObjFl_Fall_Block_c16CleanupResourcesEv": "lunavyqo",
-    "src/game/actors/daObjFl_Fall_Block_c.cpp#_ZN20daObjFl_Fall_Block_c13InitResourcesEv": "lunavyqo"
+    "src/game/actors/daObjFl_Fall_Block_c.cpp#_ZN20daObjFl_Fall_Block_c13InitResourcesEv": "lunavyqo",
+    "src/game/actors/daObjKm3_Kuruma_c.cpp#_ZN17daObjKm3_Kuruma_cD1Ev": "tangosdev",
+    "src/game/actors/daObjKm3_Kuruma_c.cpp#_ZN17daObjKm3_Kuruma_cD0Ev": "tangosdev",
+    "src/game/actors/daObjKm3_Kuruma_c.cpp#_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv": "lunavyqo",
+    "src/game/actors/daObjKm3_Kuruma_c.cpp#_ZN17daObjKm3_Kuruma_c13InitResourcesEv": "lunavyqo"
   }
 }
