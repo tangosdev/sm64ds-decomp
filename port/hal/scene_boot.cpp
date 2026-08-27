@@ -1124,7 +1124,28 @@ L2_UNMATCHED(func_ov007_020c368c)
    port/unmatched/Ov007_CellQuad_020c4684.cpp carries the derivation, the four
    resolved relocations and the alignment control. Its CMake block is guarded on
    src/ not having the match, so a real decomp retires it automatically. */
-L2_UNMATCHED(func_ov007_020c6e68)
+/* func_ov007_020c6e68 WAS HERE, AND ITS TRAP WAS A LIVE CRASH RATHER THAN A
+   MISSING PICTURE. Run mg16 matched it byte for byte at 2004/b56 (121 words,
+   109 exact, 12 reloc wildcards, 0 mismatches) with linkcheck VERIFIED at 0
+   blind slots, against func_ov007_020b63e4 as the alignment control, so a trap
+   here would now be an LNK2005 against src/func_ov007_020c6e68.c.
+
+   THIS BODY ALLOCATES THE MENU'S GEOMETRY. It fills the per-index arrays at
+   self+0x28, +0x2c, +0x34, +0x3c, +0x40 and +0x44, and the +0x28 one is the
+   Vec3 array src/func_ov007_020c2f14.c walks to build a bounding box. Trapped,
+   it returned 0 without allocating, so that array stayed null and
+   func_ov007_020c2f14's very first statement -- `tmp = points[0]` -- read
+   through it.
+
+   WHAT THAT LOOKED LIKE FROM THE OUTSIDE, and it is the reason this took a
+   playlog to find: an access violation (c0000005) at func_ov007_020c2f14+0x12,
+   caught by the port's quarantine, which freezes the faulting actor and lets
+   the frame continue. The scene run then reported "2400 frames of scene 1
+   (SCENE_TITLE), clean" and exited 0. The title's Behavior and Render slots
+   simply stopped being entered at frame 1478 and its cleanup slot never ran --
+   a frozen actor is refused on every list, which is exactly why the census
+   showed behaviour and render stopping together with cleanup at 0. EXIT 0 AND
+   THE WORD "clean" SAY THE HARNESS SURVIVED, NOT THE GAME. */
 /* func_ov007_020c9688 WAS HERE AND IT IS THE ONE THAT CAME OUT WITHOUT A
    DECOMP. It is still unmatched on main, so it is still one of section 3a's
    fifteen; what changed is that this address now has a body in the port and no
