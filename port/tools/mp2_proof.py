@@ -47,6 +47,7 @@ import re
 import subprocess
 import sys
 import time
+import glob
 import hashlib
 
 # ---------------------------------------------------------------------------
@@ -230,8 +231,15 @@ def rung1(root, exe, out):
 # RUNGS 2/3/4 -- TWO INSTANCES
 # ---------------------------------------------------------------------------
 def two_instances(root, exe, out, name, frames, extra_p=None, extra_c=None,
-                  port=PORT_BASE):
-    """Launch parent and child TOGETHER, minimized, and return both logs."""
+                  port=PORT_BASE, stagger=0.4):
+    """Launch parent and child TOGETHER, minimized, and return both logs.
+
+    `stagger` is how long to wait after starting the parent before starting the
+    child. NEGATIVE means START THE CHILD FIRST by that many seconds, which is
+    the ordering rung 7 uses: on a real desktop the launch order is not the
+    order the two processes reach their frame loops, because boot time varies by
+    seconds with asset loading.
+    """
     dp = os.path.join(out, name + "_p1")
     dc = os.path.join(out, name + "_p2")
     for d in (dp, dc):
@@ -255,9 +263,14 @@ def two_instances(root, exe, out, name, frames, extra_p=None, extra_c=None,
     # Parent first, as the DS does: the child needs a door to knock on. The gap
     # is small on purpose -- both boots take the same few seconds, so starting
     # them close keeps their frame loops overlapping.
-    pp = spawn(exe, dp, ep, lp)
-    time.sleep(0.4)
-    pc = spawn(exe, dc, ec, lc)
+    if stagger >= 0:
+        pp = spawn(exe, dp, ep, lp)
+        time.sleep(stagger)
+        pc = spawn(exe, dc, ec, lc)
+    else:
+        pc = spawn(exe, dc, ec, lc)
+        time.sleep(-stagger)
+        pp = spawn(exe, dp, ep, lp)
     rp = finish(pp, 900)
     rc_ = finish(pc, 900)
     return rp, rc_, text(lp), text(lc)
@@ -470,6 +483,45 @@ def rung_depart(root, exe, out):
                       rows2[-1].group(0).strip() if rows2 else "NO SLOT2 ROWS"))
 
 
+def rung_childfirst(root, exe, out):
+    """THE CHILD REACHES ITS FRAME LOOP FIRST. Field-report follow-up.
+
+    The launch ORDER is not the order two processes reach their frame loops: a
+    boot is seconds of asset loading and it varies. So a child can be retrying
+    its JOIN before the parent has ever ticked, and the parent's socket is bound
+    (func_020408b0 -> lb_open) a few statements BEFORE the game asks to be
+    parent (func_02040820 -> lb_become_parent), in that same first tick, with a
+    drain() in between. A JOIN handled in that window used to be accepted onto
+    the wire while the parent's own state was still idle, and become_parent then
+    reset the live mask and lost it -- the child believed it had joined and the
+    parent never left link 2.
+
+    Both sides must end up fully joined regardless of which starts first.
+    """
+    rp, rc, tp, tc = two_instances(root, exe, out, "r7_childfirst",
+                                   SELFTEST_FRAMES, port=PORT_BASE + 32,
+                                   stagger=-2.0)
+
+    def joined(t, role, slot, link):
+        for m in re.finditer(r"^\[comms:level\] transport=loopback.*$", t, re.M):
+            l = m.group(0)
+            if (field(l, "connected") == "yes" and field(l, "players") == "2"
+                    and field(l, "role") == role and field(l, "slot") == slot
+                    and field(l, "link") == link):
+                return l
+        return ""
+
+    jp = joined(tp, "1", "0", "3")
+    jc = joined(tc, "2", "1", "4")
+    kp = last(r"^\[lockstep:level\] .*$", tp)
+    ok = bool(jp) and bool(jc) and rp == 0 and rc == 0
+    return verdict(ok,
+                   "rung7 CHILD STARTED FIRST (2s before the parent): parent %s "
+                   "| child %s | parent lockstep %s"
+                   % (jp or "NEVER FULLY JOINED", jc or "NEVER FULLY JOINED",
+                      kp or "none"))
+
+
 def rung5(root, out):
     """The two-window script's MECHANICS, minimized.
 
@@ -498,6 +550,58 @@ def rung5(root, out):
     return ok
 
 
+def rung_playmode(root, out):
+    """THE TWO-WINDOW SCRIPT IN PLAY MODE. The rung that would have caught the
+    field failure, and the reason it exists.
+
+    Rung 5 runs the script with -Frames, which sets SM64DS_WINDOW_SELFTEST. That
+    is the ONE configuration in which walk_window leaves stderr on the handle
+    its launcher gave it. Unset -- which is what a human running -Visible gets --
+    the flight recorder freopen()s stderr into playlog/play_<timestamp>.log, so
+    the script's run.log stays empty and its CONNECTED grep sees nothing.
+
+    A visible run reported NOT CONNECTED on exactly that, while both playlogs
+    showed a clean join at round 0 and 6211 completed rounds per side. The
+    session was fine; the verdict was blind, and every rung in this ladder was
+    blind to the blindness because they all set the knob.
+
+    So this rung runs the script the way a human does -- NO -Frames, play mode,
+    flight recorder live -- and only adds -ExitWhenConnected so it terminates.
+    Still minimized: the visible run is not ours to make.
+    """
+    script = os.path.join(root, "port", "tools", "mp2_two_windows.ps1")
+    d = os.path.join(out, "r8_playmode")
+    os.makedirs(d, exist_ok=True)
+    log = os.path.join(d, "run.log")
+    cmd = ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass",
+           "-File", script, "-Minimized", "-ExitWhenConnected",
+           "-Port", str(PORT_BASE + 40), "-Root", root, "-RunDir", d]
+    with open(log, "wb") as f:
+        p = subprocess.run(cmd, cwd=d, stdout=f, stderr=subprocess.STDOUT,
+                           creationflags=NO_CONSOLE, startupinfo=SI_MIN,
+                           timeout=900)
+    t = text(log)
+    # And prove the blindness is really gone: the verdict must have been read
+    # out of a playlog, because in play mode run.log is empty by construction.
+    pl = glob.glob(os.path.join(d, "P1", "playlog", "*.log"))
+    empty_runlog = (os.path.exists(os.path.join(d, "P1", "run.log"))
+                    and os.path.getsize(os.path.join(d, "P1", "run.log")) == 0)
+    # THE PASS CONDITION IS THE MECHANISM, not just the outcome. run.log MUST be
+    # empty -- that is the flight recorder having taken stderr, i.e. the exact
+    # condition the field failure ran into -- AND the join must still have been
+    # detected. Together those two say the verdict was read out of the playlog.
+    # Requiring the emptiness is what makes this a regression test: if anyone
+    # reverts Read-Log to run.log only, CONNECTED stops being found and this
+    # goes red, which is precisely what did not happen before.
+    return verdict(p.returncode == 0 and "MP2 TWO-WINDOW: CONNECTED" in t
+                   and len(pl) > 0 and empty_runlog,
+                   "rung8 two-window script in PLAY MODE, flight recorder live: "
+                   "P1 run.log empty=%s (stderr went to the playlog, which is "
+                   "the field-failure condition), %d playlog(s) read, rc=%d | %s"
+                   % (empty_runlog, len(pl), p.returncode,
+                      last(r"^MP2 TWO-WINDOW: .*$", t) or "NO VERDICT LINE"))
+
+
 def main(argv):
     root = os.path.abspath(argv[0] if argv and not argv[0].startswith("-")
                            else ".")
@@ -523,7 +627,9 @@ def main(argv):
              ("3", lambda: rung3(root, exe, out)),
              ("4", lambda: rung4(root, exe, out)),
              ("5", lambda: rung5(root, out)),
-             ("6", lambda: rung_depart(root, exe, out))]
+             ("6", lambda: rung_depart(root, exe, out)),
+             ("7", lambda: rung_childfirst(root, exe, out)),
+             ("8", lambda: rung_playmode(root, out))]
     ok = True
     for n, fn in rungs:
         if only is not None and n != str(only):

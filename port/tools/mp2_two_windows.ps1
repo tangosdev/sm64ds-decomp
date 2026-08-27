@@ -51,6 +51,11 @@ param(
     # Default minimized. -Visible is the opt-in, and it is for a human.
     [switch]$Minimized,
     [switch]$Visible,
+    # Close both instances as soon as the join is confirmed. For the proof
+    # ladder, which needs PLAY mode (no SM64DS_WINDOW_SELFTEST, so the flight
+    # recorder path is exercised) but must still terminate. A human never wants
+    # this: a play session is theirs to close.
+    [switch]$ExitWhenConnected,
     [int]$Frames = 0,             # 0 = play until closed; >0 = a scripted run
     [int]$Level  = 1,
     [int]$Port   = 51765,         # kCommsLoopbackPortBase
@@ -155,7 +160,7 @@ $p1 = Start-Instance -Tag "P1" -Role "parent"
 Start-Sleep -Milliseconds 600
 $p2 = Start-Instance -Tag "P2" -Role "child"
 
-function Read-Log([string]$path) {
+function Read-One([string]$path) {
     if (-not (Test-Path $path)) { return "" }
     # Shared read: the game still has the file open for writing.
     try {
@@ -167,14 +172,42 @@ function Read-Log([string]$path) {
     } catch { return "" }
 }
 
+function Read-Log([string]$dir) {
+    # THE FLIGHT RECORDER MOVES STDERR, AND THIS SCRIPT'S VERDICT USED TO MISS IT.
+    #
+    # walk_window.cpp only keeps stderr on the handle its launcher gave it when
+    # SM64DS_WINDOW_SELFTEST is SET. With the knob unset -- which is exactly the
+    # -Frames 0 PLAY mode a human runs -- it freopen()s stderr into
+    # playlog/play_<timestamp>.log a few lines into main. So run.log is created,
+    # stays EMPTY for the whole session, and every [comms:level] line this
+    # script greps for goes somewhere else.
+    #
+    # That is not hypothetical: the first visible two-window run reported NOT
+    # CONNECTED while both playlogs showed a clean join at round 0 and 6211
+    # completed rounds on each side. The session was fine; the verdict was
+    # blind. The ladder never caught it because every headless rung sets
+    # SM64DS_WINDOW_SELFTEST, which is the one configuration where run.log
+    # works.
+    #
+    # So: read BOTH, and prefer whichever actually has content.
+    $t = Read-One (Join-Path $dir "run.log")
+    $pl = Join-Path $dir "playlog"
+    if (Test-Path $pl) {
+        $newest = Get-ChildItem -Path $pl -Filter "*.log" -ErrorAction SilentlyContinue |
+                  Sort-Object LastWriteTime | Select-Object -Last 1
+        if ($newest) { $t = $t + "`n" + (Read-One $newest.FullName) }
+    }
+    return $t
+}
+
 # The verdict is read off the GAME'S OWN report line in both logs, not guessed
 # from the fact that two processes exist.
 $deadline  = (Get-Date).AddSeconds(180)
 $connected = $false
 $c1 = ""; $c2 = ""
 while ((Get-Date) -lt $deadline) {
-    $t1 = Read-Log $p1.Log
-    $t2 = Read-Log $p2.Log
+    $t1 = Read-Log $dirs["P1"]
+    $t2 = Read-Log $dirs["P2"]
     $c1 = ($t1 -split "`n" | Where-Object { $_ -match '^\[comms:level\] transport=loopback.*connected=yes.*players=2.*role=1' } | Select-Object -Last 1)
     $c2 = ($t2 -split "`n" | Where-Object { $_ -match '^\[comms:level\] transport=loopback.*connected=yes.*players=2.*role=2' } | Select-Object -Last 1)
     if ($c1 -and $c2) {
@@ -188,7 +221,10 @@ while ((Get-Date) -lt $deadline) {
     Start-Sleep -Milliseconds 500
 }
 
-if ($Frames -gt 0) {
+if ($connected -and $ExitWhenConnected) {
+    Write-Host "MP2 TWO-WINDOW: join confirmed, closing both (-ExitWhenConnected)"
+    foreach ($h in @($p1,$p2)) { if (-not $h.Proc.HasExited) { $h.Proc.Kill() } }
+} elseif ($Frames -gt 0) {
     foreach ($h in @($p1,$p2)) { $h.Proc.WaitForExit(900000) | Out-Null }
 } elseif (-not $connected) {
     # Only tear down what we started, and only when the point of the run (the
