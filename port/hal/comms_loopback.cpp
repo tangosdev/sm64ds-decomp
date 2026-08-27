@@ -880,6 +880,22 @@ bool comms_loopback_install_from_env() {
     if (!comms_set_transport(&kLoopback)) return false;
     g_installed = true;
 
+    // run mg16 lane MP3: SEAT THE SESSION REQUEST AND INSTALL THE PUMP.
+    //
+    // Installing a transport used to be the whole of it, because MP2's
+    // transcription drove the seam faces itself. The ROM's own conductor is
+    // linked now and it dispatches on data_020a0f04, which nothing here was
+    // setting -- so two carriers would come up, connect to nothing, and report
+    // role=0 forever. On the DS that byte is seated by the multiplayer menu;
+    // this launcher-side install is what stands in for it. See HOLE 3 in the
+    // frozen contract.
+    //
+    // The pump goes in here too rather than at seam-install time, because a
+    // transport is the only thing that gives poll() anything to do.
+    comms_seat_session_request(g_role == kRoleParent ? kCommsRoleParent
+                                                     : kCommsRoleChild);
+    comms_install_pump();
+
     // SAY GOODBYE ON THE WAY OUT.
     //
     // On the DS the seam's close() face has exactly one caller,

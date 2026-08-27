@@ -300,8 +300,19 @@ def rung2(root, exe, out):
     rp, rc, tp, tc = two_instances(root, exe, out, "r2_join", SELFTEST_FRAMES)
     lp = last(r"^\[comms:level\] transport=.*$", tp)
     lc = last(r"^\[comms:level\] transport=.*$", tc)
-    kp = last(r"^\[lockstep:level\] .*$", tp)
-    kc = last(r"^\[lockstep:level\] .*$", tc)
+    # run mg16 lane MP3: the [lockstep:level] line is GONE and this rung asserts
+    # on the carrier's own report instead.
+    #
+    # MP2 printed lockstep ticks/rounds/timeouts/spins/peer_updates from inside
+    # its transcription of src/func_0203ea5c.c. That TU is linked now and drives
+    # itself, so those counters would have to be measured from inside a
+    # byte-matched ROM body, which this repo does not edit. Rather than quietly
+    # dropping an assertion, the rung moves to the INDEPENDENT witness that
+    # still exists: the loopback carrier's own view of the session, which is
+    # produced by different code from the seam readout above and therefore
+    # actually corroborates it rather than restating it.
+    kp = last(r"^\[loopback:level\] .*$", tp)
+    kc = last(r"^\[loopback:level\] .*$", tc)
 
     ok = True
     ok &= verdict(rp == 0 and rc == 0,
@@ -337,8 +348,15 @@ def rung2(root, exe, out):
                   "rung2 exchange counters advancing on BOTH: parent "
                   "exchanges=%d rounds=%d, child exchanges=%d rounds=%d"
                   % (ep, rp_, ec, rc2))
-    ok &= verdict(bool(kp) and bool(kc),
-                  "rung2 lockstep parent | %s ;; child | %s"
+    # The carrier must agree with the seam: both sides live, both past round 0,
+    # and each carrying the OTHER's traffic (a parent that never received is a
+    # parent talking to itself).
+    def carrier_ok(l):
+        return (bool(l) and field(l, "live") not in ("", "0x0", "0x1")
+                and (field(l, "round", int) or 0) > 1
+                and (field(l, "recvd", int) or 0) > 1)
+    ok &= verdict(carrier_ok(kp) and carrier_ok(kc),
+                  "rung2 carrier corroborates the seam | parent %s ;; child %s"
                   % (kp or "NONE", kc or "NONE"))
     print("      final lines (after the first instance exited, so a drop to "
           "solo here is func_0203ea5c:487 working):")

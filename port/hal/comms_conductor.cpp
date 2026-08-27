@@ -69,6 +69,8 @@
 #include "comms_seam.h"
 #include "os_thread.h"
 
+#include <windows.h>   // ::Sleep, for the pump's one-millisecond yield
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -281,6 +283,9 @@ extern "C" {
 extern unsigned char data_020a1040[];
 extern unsigned char data_020a1154[];
 extern unsigned char data_020a0e40[];
+// The ROLE byte, hosted by hal/stage_slot0.cpp. src/func_0203df40.c switches
+// on it and nothing in the port was seating it; see HOLE 3 below.
+extern unsigned char data_020a0f04[];
 }
 
 extern "C" int port_comms_conductor_check_layout(void) {
@@ -446,6 +451,48 @@ void comms_publish_pad(unsigned held) {
 }
 
 // ===========================================================================
+// 5. SEATING THE SESSION REQUEST -- and the close of HOLE 3.
+//
+// MP2's transcription decided the role itself: it read the carrier's env role
+// and called become_parent/become_child directly, then wrote data_020a0f04 so
+// the rest of the game saw the truth. The real conductor does the opposite. It
+// READS data_020a0f04 and dispatches on it (src/func_0203df40.c:42-57), and its
+// case-0 arm (src/func_0203ea5c.c:192-198) is what calls become_parent or
+// become_child, off that same byte. So with the role byte at 0 the ROM takes
+// its solo arm forever and the transport is never asked for anything -- which
+// is exactly what the first two-instance run after linking showed: two carriers
+// installed, connected=no, role=0, exchanges=0, on both sides.
+//
+// THAT IS NOT A BUG IN THE ROM'S CODE, IT IS A MISSING MENU. On the DS the role
+// byte is seated by the multiplayer menu before the conductor ever runs -- the
+// same way src/func_0203db64.c:79 seats it to 2 for a download-played cartridge
+// -- and data_02099e1c is the one-shot that menu sets to ask the radio to open
+// (:137-140 tests it, calls func_020408b0(2), and clears it). The port has no
+// menu on this path, so the launcher mod stands in for one. That is the honest
+// division: the mod says "start a session as parent", and every line after that
+// is the ROM's.
+//
+// THIS IS HOLE 3's ANSWER, and the real caller settled it in the direction MP2
+// guessed at. The transport MAY be pre-configured with a role -- a loopback
+// carrier must be, because the role decides which port it binds -- and the
+// ROM's become_parent/become_child is then a REQUEST that agrees with it. What
+// MP2 could not know is that the ROM does not ask at all until something seats
+// the byte, so "who wins" was never the question. The question is who SEATS it,
+// and the answer is: whatever stands in for the menu.
+// ===========================================================================
+
+void comms_seat_session_request(int role) {
+    data_020a0f04[0] = (unsigned char)role;   // 1 = parent, 2 = child
+    data_02099e1c[0] = 1;                     // ask the radio to open, :137-140
+    std::fprintf(stderr,
+                 "[comms:conductor] seated the session request the DS's "
+                 "multiplayer menu would seat: role byte data_020a0f04 = %d "
+                 "(%s), open one-shot data_02099e1c = 1. Every decision after "
+                 "this one is src/func_0203df40.c's and src/func_0203ea5c.c's.\n",
+                 role, role == kCommsRoleParent ? "parent" : "child");
+}
+
+// ===========================================================================
 // 4. THE PUMP -- and the close of HOLE 1.
 //
 // comms_seam.h has said since MP1 that `poll` "is called once per pump turn --
@@ -472,10 +519,43 @@ namespace {
 
 ThreadPump g_prev_pump = nullptr;
 
+// ONE TURN PER SLEEP, AND THE FIRST VERSION OF THIS FUNCTION HUNG THE GAME.
+//
+// It returned true -- "keep pumping" -- which is the obvious thing for a pump
+// to do and is wrong here for a reason worth writing down. OS_SleepThread's
+// loop (hal/os_thread.cpp:88-101) ends when the queue word clears, when the
+// pump says stop, or when the pump limit is reached. The queue word is
+// data_0209d4fc and the only thing that clears it is OS_WakeupThread from
+// IRQ::VBlankHandler, which is not running on this path -- so a pump that
+// never says stop burns the WHOLE limit, 600 turns, on EVERY sleep. The ROM's
+// wait loop takes up to 1200 turns and sleeps once per turn, so the honest
+// worst case was 720,000 pump calls inside a single game frame. Measured, not
+// reasoned about: the parent sent exactly ONE datagram and then stopped
+// reporting, while the child knocked 160 times and resent 158 of them.
+//
+// os_thread.h's own header predicts the good case ("PUMP INSTALLED -> a real
+// wait, one host frame per turn, bounded") and it is right for a pump that
+// advances the thing being waited on. This one is not: the thing being waited
+// on is ANOTHER PROCESS, and no amount of raising VBlank edges in this one
+// makes the peer's datagram arrive sooner. What makes it arrive is wall-clock
+// time and a recv, which is exactly the two lines below.
+//
+// So: service the transport, yield a millisecond, and give the turn back to
+// the ROM's own loop -- whose bound (0x4B0 before the session is up, 0x12C
+// after) is then the thing that governs the wait, which is what MP2's
+// ::Sleep(1) achieved and what the ROM intends. The difference from MP2 is
+// that poll() is now genuinely called, once per turn of the ROM's own wait,
+// which is the sentence comms_seam.h has always made.
+//
+// A PREVIOUSLY INSTALLED PUMP KEEPS ITS VOTE. Nothing in the shipped binaries
+// installs one today (only tests/mp_sleepwake.cpp does), but if something ever
+// does it knows how many turns it needs and this must not overrule it.
 bool conductor_pump(unsigned spin) {
     if (const CommsTransport *t = comms_transport())
         t->poll();                       // THE CONTRACT'S OWN SENTENCE, honoured
-    return g_prev_pump ? g_prev_pump(spin) : true;
+    if (g_prev_pump) return g_prev_pump(spin);
+    ::Sleep(1);                          // wall time, so the peer can answer
+    return false;                        // one turn; the ROM's bound governs
 }
 
 }  // namespace

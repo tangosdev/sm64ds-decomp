@@ -322,6 +322,17 @@ void comms_publish_pad(unsigned held);
 // fix (a), and it is what makes this header's `poll` paragraph true.
 void comms_install_pump();
 
+// Seat the role byte data_020a0f04 and the open one-shot data_02099e1c, which
+// on the DS are seated by the MULTIPLAYER MENU before the conductor first runs.
+// `role` is kCommsRoleParent or kCommsRoleChild.
+//
+// Without this the linked src/func_0203df40.c switches to its solo arm forever
+// and never asks the transport for anything -- the conductor's own
+// become_parent/become_child live in the case-0 arm and are chosen off this
+// same byte. A launcher mod that installs a transport must seat it; that is
+// the mod standing in for the menu the port does not have on this path.
+void comms_seat_session_request(int role);
+
 }  // namespace port
 
 extern "C" {
