@@ -393,6 +393,8 @@
     "src/game/actors/Key/_ZN3Key13OnTurnIntoEggER6Player.cpp": "tangosdev",
     "src/_ZN4Warp8BehaviorEv.c": "tangosdev",
     "src/game/actors/Warp/_ZN4Warp8BehaviorEv.cpp": "tangosdev",
+    "src/_ZN4WarpD0Ev.c": "tangosdev",
+    "src/game/actors/Warp/_ZN4WarpD0Ev.cpp": "tangosdev",
     "src/_ZN5Koopa13OnTurnIntoEggER6Player.c": "ruspecial",
     "src/game/actors/Koopa/_ZN5Koopa13OnTurnIntoEggER6Player.cpp": "ruspecial",
     "src/_ZN5Swoop13OnTurnIntoEggER6Player.c": "tangosdev",
@@ -792,6 +794,14 @@
     "src/game/actors/VirtualDoor.cpp#_ZN11VirtualDoor6RenderEv": "andrewboudreau",
     "src/game/actors/VirtualDoor.cpp#_ZN11VirtualDoor8BehaviorEv": "ruspecial",
     "src/game/actors/VirtualDoor.cpp#_ZN11VirtualDoor13InitResourcesEv": "andrew",
-    "src/game/actors/VirtualDoor.cpp#VirtualDoor_Spawn": "tangosdev"
+    "src/game/actors/VirtualDoor.cpp#VirtualDoor_Spawn": "tangosdev",
+    "src/game/actors/Warp.cpp#_ZN4WarpD1Ev": "tangosdev",
+    "src/game/actors/Warp.cpp#_ZN4WarpD0Ev": "tangosdev",
+    "src/game/actors/Warp.cpp#_ZN4Warp16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/Warp.cpp#_ZN4Warp16OnPendingDestroyEv": "tangosdev",
+    "src/game/actors/Warp.cpp#_ZN4Warp6RenderEv": "tangosdev",
+    "src/game/actors/Warp.cpp#_ZN4Warp8BehaviorEv": "tangosdev",
+    "src/game/actors/Warp.cpp#_ZN4Warp13InitResourcesEv": "tangosdev",
+    "src/game/actors/Warp.cpp#Warp_Spawn": "tangosdev"
   }
 }

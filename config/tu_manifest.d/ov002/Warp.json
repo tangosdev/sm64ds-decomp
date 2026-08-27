@@ -1,8 +1,8 @@
 {
   "id": "ov002/Warp",
   "module": "ov002",
-  "source": "src_tu/actors/Warp.cpp",
-  "promoted_source": "src/actors/Warp.cpp",
+  "source": "src/game/actors/Warp.cpp",
+  "promoted_source": "src/game/actors/Warp.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -29,7 +29,7 @@
       "symbol": "_ZN4WarpD0Ev",
       "address": "0x020ec3b8",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN4WarpD0Ev.c",
+      "legacy_source": "src/game/actors/Warp/_ZN4WarpD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -113,7 +113,7 @@
     ],
     "substitutedObjectPaths": [
       "src/game/actors/Warp/_ZN4WarpD1Ev.cpp",
-      "src/_ZN4WarpD0Ev.c",
+      "src/game/actors/Warp/_ZN4WarpD0Ev.cpp",
       "src/game/actors/Warp/_ZN4Warp16CleanupResourcesEv.cpp",
       "src/game/actors/Warp/_ZN4Warp16OnPendingDestroyEv.cpp",
       "src/game/actors/Warp/_ZN4Warp6RenderEv.cpp",
@@ -299,5 +299,69 @@
         }
       ]
     }
-  ]
+  ],
+  "production_mode": "derived-text",
+  "unlicensed_output_observed": {
+    "note": "Pinned-compiler inventory stamped by tools/promote_derived_tus.py --stamp-discarded-output before default production admission. These definitions are not ROM ownership claims; every build requires an exact inventory match, exact derived text contributions, exact modules, and an exact ROM.",
+    "toolchain": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "text": [
+      {
+        "symbol": "_ZN4WarpD2Ev",
+        "size": "0x30",
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "data": [
+      {
+        "symbol": "_ZTI4Warp",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "size": "0x8",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS4Warp",
+        "size": "0x6",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "size": "0xa",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTV4Warp",
+        "size": "0x84",
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "bss": [],
+    "init": [],
+    "rodata": [],
+    "ctor": []
+  }
 }
