@@ -104,7 +104,7 @@ src/_ZN11dCapEnemy_c14UnloadCapModelEv.cpp:
     complete
     .text start:0x020064e0 end:0x0200651c
 
-src/_ZN11dCapEnemy_cD2Ev.cpp:
+src/_ZN11dCapEnemy_cD1Ev.cpp:
     complete
     .text start:0x0200651c end:0x02006554
 

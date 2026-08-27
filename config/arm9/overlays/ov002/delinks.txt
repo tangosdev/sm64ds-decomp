@@ -128,7 +128,7 @@ src/_ZN12dEnemyBase_cC2Ev.cpp:
     complete
     .text start:0x020aed98 end:0x020aedbc
 
-src/func_ov002_020aedbc.c:
+src/_ZN11dCapEnemy_cD2Ev.cpp:
     complete
     .text start:0x020aedbc end:0x020aedf4
 
