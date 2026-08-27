@@ -4,34 +4,11 @@
     .ctor       start:0x021119f8 end:0x021119fc kind:rodata align:4
     .data       start:0x02111a00 end:0x02111c80 kind:data align:32
     .bss        start:0x02111c80 end:0x02111cc0 kind:bss align:32
-src/_ZN9ShipWaterD1Ev.cpp:
-    complete
-    .text start:0x021111a0 end:0x021111ec
-
-src/_ZN9ShipWaterD0Ev.cpp:
-    complete
-    .text start:0x021111ec end:0x0211124c
-
-src/_ZN9ShipWater16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211124c end:0x02111290
-
-src/_ZN9ShipWater6RenderEv.cpp:
-    complete
-    .text start:0x02111290 end:0x021112c4
-
-src/_ZN9ShipWater8BehaviorEv.cpp:
-    complete
-    .text start:0x021112c4 end:0x021113c0
-
-src/_ZN9ShipWater13InitResourcesEv.cpp:
-    complete
-    .text start:0x021113c0 end:0x02111480
-
-src/ShipWater_Spawn.c:
-    complete
-    .text start:0x02111480 end:0x021114b8
-
 src/__sinit_ov017_0211198c.c:
     complete
     .init start:0x0211198c end:0x021119f8
+
+src/actors/ShipWater.cpp:
+    complete
+    .text start:0x021111a0 end:0x021114b8
+

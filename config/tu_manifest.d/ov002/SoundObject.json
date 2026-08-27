@@ -1,9 +1,9 @@
 {
   "id": "ov002/SoundObject",
   "module": "ov002",
-  "source": "src_tu/actors/SoundObject.cpp",
+  "source": "src/actors/SoundObject.cpp",
   "promoted_source": "src/actors/SoundObject.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20f934c..0x20f975c, 7 function(s), from build/tu_map.json (tools/tu_map.py)",

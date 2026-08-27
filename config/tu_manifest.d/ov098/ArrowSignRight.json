@@ -1,9 +1,9 @@
 {
   "id": "ov098/ArrowSignRight",
   "module": "ov098",
-  "source": "src_tu/actors/ArrowSignRight.cpp",
+  "source": "src/actors/ArrowSignRight.cpp",
   "promoted_source": "src/actors/ArrowSignRight.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x2137be0..0x2138008, 11 function(s), from build/tu_map.json (tools/tu_map.py)",

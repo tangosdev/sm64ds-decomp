@@ -4,49 +4,9 @@
     .ctor       start:0x0213c33c end:0x0213c34c kind:rodata align:4
     .data       start:0x0213c360 end:0x0213c800 kind:data align:32
     .bss        start:0x0213c800 end:0x0213c960 kind:bss align:32
-src/_ZN14ArrowSignRightD1Ev.cpp:
+src/actors/ArrowSignRight.cpp:
     complete
-    .text start:0x02137be0 end:0x02137c2c
-
-src/_ZN14ArrowSignRightD0Ev.cpp:
-    complete
-    .text start:0x02137c2c end:0x02137c8c
-
-src/func_ov098_02137c8c.c:
-    complete
-    .text start:0x02137c8c end:0x02137ccc
-
-src/_ZN14ArrowSignRight4KillEv.cpp:
-    complete
-    .text start:0x02137ccc end:0x02137d40
-
-src/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp:
-    complete
-    .text start:0x02137d40 end:0x02137d80
-
-src/_ZN14ArrowSignRight15OnHitByMegaCharER6Player.cpp:
-    complete
-    .text start:0x02137d80 end:0x02137dbc
-
-src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02137dbc end:0x02137e20
-
-src/_ZN14ArrowSignRight6RenderEv.cpp:
-    complete
-    .text start:0x02137e20 end:0x02137e48
-
-src/_ZN14ArrowSignRight8BehaviorEv.cpp:
-    complete
-    .text start:0x02137e48 end:0x02137eec
-
-src/_ZN14ArrowSignRight13InitResourcesEv.cpp:
-    complete
-    .text start:0x02137eec end:0x02137fd0
-
-src/ArrowSignRight_Spawn.c:
-    complete
-    .text start:0x02137fd0 end:0x02138008
+    .text start:0x02137be0 end:0x02138008
 
 src/ArrowSignLeft_Spawn.c:
     complete

@@ -1,9 +1,9 @@
 {
   "id": "ov018/PowerStarCreate",
   "module": "ov018",
-  "source": "src_tu/actors/PowerStarCreate.cpp",
+  "source": "src/actors/PowerStarCreate.cpp",
   "promoted_source": "src/actors/PowerStarCreate.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x21126d4..0x21127bc, 4 function(s), from build/tu_map.json (tools/tu_map.py)",

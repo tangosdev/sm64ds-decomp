@@ -1,9 +1,9 @@
 {
   "id": "ov002/CameraTag",
   "module": "ov002",
-  "source": "src_tu/actors/CameraTag.cpp",
+  "source": "src/actors/CameraTag.cpp",
   "promoted_source": "src/actors/CameraTag.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20b0748..0x20b07f8, 8 function(s), from build/tu_map.json (tools/tu_map.py)",

@@ -1,9 +1,9 @@
 {
   "id": "ov002/Seaweed",
   "module": "ov002",
-  "source": "src_tu/actors/Seaweed.cpp",
+  "source": "src/actors/Seaweed.cpp",
   "promoted_source": "src/actors/Seaweed.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20bc414..0x20bc5e0, 8 function(s), from build/tu_map.json (tools/tu_map.py)",

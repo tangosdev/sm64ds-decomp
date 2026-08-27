@@ -1,9 +1,9 @@
 {
   "id": "ov002/AmbientSoundEffects",
   "module": "ov002",
-  "source": "src_tu/actors/AmbientSoundEffects.cpp",
+  "source": "src/actors/AmbientSoundEffects.cpp",
   "promoted_source": "src/actors/AmbientSoundEffects.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20f198c..0x20f1bc4, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
