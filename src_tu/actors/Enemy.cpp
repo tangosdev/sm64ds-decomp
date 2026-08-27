@@ -925,3 +925,57 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr & ww_, ModelAnim & mm_, 
     }
     return 1;
 }
+
+/* Ownership pilot for __sinit_ov002_02100938.  This is excluded from the normal
+   shadow build: compile with -DSINIT_OWNERSHIP_PILOT to ask mwccarm to generate
+   the candidate TU's static initializer from ordinary non-const PMF arrays.
+   The current func_ov002_* placeholders do not expose the original member names,
+   so the probe methods stand in for symbol spelling; the PMF representation,
+   initializer bytes, section layout, relocation slots and addends are the claim
+   being tested.  There is intentionally no hand-written __sinit body. */
+#ifdef SINIT_OWNERSHIP_PILOT
+struct EnemySinitOwnerProbe {
+    void action0(int, int);
+    void action1(int, int);
+    void action2(int, int);
+    void action3(int, int);
+    void action4(int, int);
+    void action5(int, int);
+    void action6(int, int);
+    void action7(int, int);
+
+    int death0(dBgCh_Actr&);
+    int death1(dBgCh_Actr&);
+    int death2(dBgCh_Actr&);
+    int death3(dBgCh_Actr&);
+    int death4(dBgCh_Actr&);
+    int death5(dBgCh_Actr&);
+    int death6(dBgCh_Actr&);
+    int death7(dBgCh_Actr&);
+};
+
+typedef void (EnemySinitOwnerProbe::*EnemyActionPMF)(int, int);
+typedef int (EnemySinitOwnerProbe::*EnemyDeathPMF)(dBgCh_Actr&);
+
+EnemyActionPMF data_ov002_0210db80__sinit_pilot[8] = {
+    &EnemySinitOwnerProbe::action0,
+    &EnemySinitOwnerProbe::action1,
+    &EnemySinitOwnerProbe::action2,
+    &EnemySinitOwnerProbe::action3,
+    &EnemySinitOwnerProbe::action4,
+    &EnemySinitOwnerProbe::action5,
+    &EnemySinitOwnerProbe::action6,
+    &EnemySinitOwnerProbe::action7,
+};
+
+EnemyDeathPMF data_ov002_0210dbc0__sinit_pilot[8] = {
+    &EnemySinitOwnerProbe::death0,
+    &EnemySinitOwnerProbe::death1,
+    &EnemySinitOwnerProbe::death2,
+    &EnemySinitOwnerProbe::death3,
+    &EnemySinitOwnerProbe::death4,
+    &EnemySinitOwnerProbe::death5,
+    &EnemySinitOwnerProbe::death6,
+    &EnemySinitOwnerProbe::death7,
+};
+#endif
