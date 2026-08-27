@@ -8,7 +8,7 @@ extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void func_ov002_020aea30(char* c, void* p, int a, int b);
 extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(char* c, void* cyl, void* p);
 extern void _ZN6Player6BounceE5Fix12IiE(void* p, int f);
-extern void func_ov002_020ada40(char* c, void* v, void* p, int a);
+extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(char* c, void* v, void* p, int a);
 extern void func_02012694(int a, void* b);
 extern int _ZN6Player9IsOnShellEv(void* p);
 extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(char* c, void* v, unsigned int a, int b, short d);
@@ -76,7 +76,7 @@ void func_ov090_021310b4(char* c)
         hv[0] = 0x1000;
         hv[1] = 0;
         hv[2] = 0;
-        func_ov002_020ada40(c, hv, p, 0);
+        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, hv, p, 0);
         func_02012694(0x1d, c + 0x74);
         return;
     }

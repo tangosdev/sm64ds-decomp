@@ -12,7 +12,7 @@ src/_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj.cpp:
     complete
     .text start:0x020ad838 end:0x020ada40
 
-src/func_ov002_020ada40.cpp:
+src/_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE.cpp:
     complete
     .text start:0x020ada40 end:0x020adb40
 
@@ -28,7 +28,7 @@ src/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs.cpp:
     complete
     .text start:0x020ae244 end:0x020ae2b8
 
-src/_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_.cpp:
+src/_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi.cpp:
     complete
     .text start:0x020ae2b8 end:0x020ae454
 
@@ -112,7 +112,7 @@ src/_ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj.cpp:
     complete
     .text start:0x020aebf8 end:0x020aed18
 
-src/_ZN12dEnemyBase_cD2Ev.c:
+src/_ZN12dEnemyBase_cD2Ev.cpp:
     complete
     .text start:0x020aed18 end:0x020aed3c
 
@@ -128,11 +128,11 @@ src/_ZN12dEnemyBase_cC2Ev.cpp:
     complete
     .text start:0x020aed98 end:0x020aedbc
 
-src/func_ov002_020aedbc.c:
+src/_ZN11dCapEnemy_cD2Ev.cpp:
     complete
     .text start:0x020aedbc end:0x020aedf4
 
-src/_ZN11dCapEnemy_cD0Ev.c:
+src/_ZN11dCapEnemy_cD0Ev.cpp:
     complete
     .text start:0x020aedf4 end:0x020aee40
 
@@ -1100,7 +1100,7 @@ src/_ZN15daObjMarioCap_cD1Ev.cpp:
     complete
     .text start:0x020b6f18 end:0x020b6f68
 
-src/_ZN15daObjMarioCap_cD0Ev.c:
+src/_ZN15daObjMarioCap_cD0Ev.cpp:
     complete
     .text start:0x020b6f68 end:0x020b6fcc
 
@@ -5093,7 +5093,7 @@ src/_ZN14CutsceneObjectD1Ev.cpp:
     complete
     .text start:0x020f1f70 end:0x020f1f94
 
-src/_ZN14CutsceneObjectD0Ev.c:
+src/_ZN14CutsceneObjectD0Ev.cpp:
     complete
     .text start:0x020f1f94 end:0x020f1fcc
 

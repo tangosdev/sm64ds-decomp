@@ -1,18 +1,13 @@
 //cpp
 // @symbol _ZN8PathLiftD0Ev
-/* recovered: real C++ deleting destructor -- the compiler emits the whole body
- *
- * D0 is the DELETING destructor: destroy through this class and its bases --
- * which is why more than one vptr store appears -- then return the object to
- * its heap. Nobody writes that; declaring `~PathLift()` is enough, because mwcc
- * emits D2, D0 and D1 together and objisolate keeps the one this file is bound
- * to.
- *
- * The deallocation is an inline operator delete, which is why nothing below
- * mentions a heap.
+/* The deleting (D0) half of the pair src/_ZN8PathLiftD1Ev.cpp forces. A
+ * `delete` expression is what materialises D0 -- destroy through the class and
+ * its bases, which is why more than one vptr store appears, then hand the
+ * object to the inherited operator delete.
  */
 #include "PathLift.h"
 
-PathLift::~PathLift()
+void PathLift_EmitDeletingDestructor(PathLift *p)
 {
+    delete p;
 }

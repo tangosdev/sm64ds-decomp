@@ -10,7 +10,7 @@ extern "C" {
 int _ZN8dActor_c13DistToCPlayerEv(dActor_c* self);
 void func_ov079_02123f34(dActor_c* self);
 void _ZN8dActor_c9UpdatePosEP5dCc_c(dActor_c* self, dCc_c* c);
-int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(dActor_c* self, dBgCh_Actr* w, int a, short b, int c, int d, void* e);
+int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(dActor_c* self, dBgCh_Actr* w, int a, short b, int c, int d, void* e);
 void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(dActor_c* self, dBgCh_Actr* w, unsigned int n);
 void func_ov079_02124188(dActor_c* self);
 int func_ov079_021243e0(char* c, int r4);
@@ -33,7 +33,7 @@ int Whomp::Behavior()
     _ZN8dActor_c9UpdatePosEP5dCc_c(((dActor_c*)this), 0);
 
     if (mHorzSpeed != 0) {
-        if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(((dActor_c*)this), &mWithMeshClsn, 0x3c000, (short)0x2888, 0, 0, (void*)0x32000)) {
+        if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(((dActor_c*)this), &mWithMeshClsn, 0x3c000, (short)0x2888, 0, 0, (void*)0x32000)) {
             /* The step would leave the ledge: rewind to last frame's position. */
             mPosX = mSafePosX;
             mPosY = mSafePosY;
