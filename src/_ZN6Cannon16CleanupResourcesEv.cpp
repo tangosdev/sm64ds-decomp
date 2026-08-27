@@ -4,18 +4,16 @@
  * holds; it never touches `this`, which is why the legacy C form could declare
  * itself nullary and still reproduce. */
 #include "Cannon.h"
+#include "SharedFilePtr.h"
 
-extern "C" {
-void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov098_0213c8e8[];
-extern int data_ov098_0213c91c[];
-extern int data_ov002_0210da38[];
-}
+extern SharedFilePtr data_ov098_0213c8e8;
+extern SharedFilePtr data_ov098_0213c91c;
+extern SharedFilePtr data_ov002_0210da38;
 
 int Cannon::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov098_0213c8e8);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov098_0213c91c);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210da38);
+    data_ov098_0213c8e8.Release();
+    data_ov098_0213c91c.Release();
+    data_ov002_0210da38.Release();
     return 1;
 }

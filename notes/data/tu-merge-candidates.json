@@ -30191,7 +30191,7 @@
    "n_files": 13,
    "files": [
     "src/_ZN6CannonD1Ev.cpp",
-    "src/_ZN6CannonD0Ev.c",
+    "src/_ZN6CannonD0Ev.cpp",
     "src/func_ov098_0213a984.c",
     "src/func_ov098_0213aa28.c",
     "src/func_ov098_0213ad08.c",
