@@ -1,13 +1,22 @@
-/* Deleting (D0) virtual destructor: set vptr, then Memory::operator_delete2(this),
- * return this.  vtable @ 0x020994cc (unnamed in reference; class unknown). */
-extern void *_ZTV8dM3dGSph;
-extern void _ZN6Memory16operator_delete2EPv(void *ptr);
+//cpp
+// @symbol _ZN8dM3dGSphD0Ev
+/* D0, the DELETING destructor. Unlike the D1/D2 pair these are NOT the
+ * same code -- D0 runs the destructor and then hands the object to
+ * operator delete, so it is longer. What is shared is the SOURCE: one
+ * `Class::~Class()` makes mwcc emit D0, D1 and D2 together, and
+ * objisolate keeps the one this file is bound to by config/.../delinks.txt.
+ * That is why this file carries the same definition as
+ * src/_ZN8dM3dGSphD1Ev.cpp -- it is not duplication, it is how
+ * one-symbol-per-file enrolment meets a compiler that emits three.
+ *
+ * The `operator delete` on the immediate base is what makes the length come
+ * out right: CW inlines it into D0 only when it finds one there, and without
+ * it D0 calls the global _ZdlPv and lands three words short. */
+/* And this one deallocates through Memory::operator_delete2, not the actor
+ * heap -- see the operator delete in include/dM3dGSph.h and why it has to be
+ * there rather than inherited. */
+#include "dM3dGSph.h"
 
-struct Obj { void *vtable; };
-
-void *_ZN8dM3dGSphD0Ev(struct Obj *self)
+dM3dGSph::~dM3dGSph()
 {
-    self->vtable = &_ZTV8dM3dGSph;
-    _ZN6Memory16operator_delete2EPv(self);
-    return self;
 }

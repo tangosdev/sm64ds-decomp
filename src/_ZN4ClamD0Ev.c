@@ -1,18 +1,42 @@
+//cpp
 // @symbol _ZN4ClamD0Ev
-/* recovered: named members + shared header, vtable identified, declarations from a shared header */
-#include "decl_Actor.h"
-#include "decl_ModelAnim.h"
-#include "decl_dCcAc_c.h"
-#include "decl_common.h"
-/* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV12daObjShell_c */
-extern void *data_020a0eac;
-int *_ZN4ClamD0Ev(int *t)
+/* D0, the DELETING destructor. Unlike the D1/D2 pair these are NOT the
+ * same code -- D0 runs the destructor and then hands the object to
+ * operator delete, so it is longer. What is shared is the SOURCE: one
+ * `Class::~Class()` makes mwcc emit D0, D1 and D2 together, and
+ * objisolate keeps the one this file is bound to by config/.../delinks.txt.
+ * That is why this file carries the same definition as
+ * src/_ZN4ClamD1Ev.cpp -- it is not duplication, it is how
+ * one-symbol-per-file enrolment meets a compiler that emits three.
+ *
+ * The `operator delete` on the immediate base is what makes the length come
+ * out right: CW inlines it into D0 only when it finds one there, and without
+ * it D0 calls the global _ZdlPv and lands three words short. */
+
+extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *ptr, void *heap);
+extern "C" void *data_020a0eac;
+
+
+struct dActor_c {
+    char pad[0xd0];
+    virtual ~dActor_c();
+    /* INLINE and on the IMMEDIATE base -- both load-bearing. CW inlines
+       operator delete into D0 only when it is found on the class or its
+       immediate base; without it D0 calls the global _ZdlPv, which this image
+       does not contain, and comes out three words short. Mirrors
+       include/dActor_c.h. */
+    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
+};
+
+struct ModelAnim { char pad[0x64]; ~ModelAnim(); };
+struct dCcAc_c { char pad[0x4]; ~dCcAc_c(); };
+
+struct Clam : dActor_c {
+    ModelAnim m0;   /* 0xd4 */
+    dCcAc_c m1;   /* 0x138 */
+    virtual ~Clam();
+};
+
+Clam::~Clam()
 {
-    t[0] = (int)_ZTV12daObjShell_c;
-    _ZN7dCcAc_cD1Ev((char *)t + 0x138);
-    _ZN9ModelAnimD1Ev((char *)t + 0xd4);
-    _ZN8dActor_cD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return t;
 }
