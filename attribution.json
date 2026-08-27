@@ -8,6 +8,7 @@
     "mitch.cairns": "mitchellcairns"
   },
   "overrides": {
+    "src/game/actors/dBgPc/_ZN5dBgPcC2Ev.cpp": "tangosdev",
     "src/game/actors/ActorBase_SceneNode.cpp#_ZN7fBase_c9SceneNode5ResetEv": "tangosdev",
     "src/game/actors/ActorBase_SceneNode.cpp#_ZN7fBase_c9SceneNodeC1Ev": "tangosdev",
     "src/_ZN14KnockDownPlank8BehaviorEv.c": "lunavyqo",
