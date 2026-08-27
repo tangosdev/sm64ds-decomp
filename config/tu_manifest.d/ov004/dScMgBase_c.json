@@ -1,8 +1,8 @@
 {
   "id": "ov004/dScMgBase_c",
   "module": "ov004",
-  "source": "src_tu/actors/dScMgBase_c.cpp",
-  "promoted_source": "src/actors/dScMgBase_c.cpp",
+  "source": "src/minigames/dScMgBase_c.cpp",
+  "promoted_source": "src/minigames/dScMgBase_c.cpp",
   "status": "link-verified",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -23,56 +23,56 @@
       "address": "0x020b04e8",
       "size": "0x00000004",
       "legacy_source": "src/minigames/dScMgBase_c/_ZN11dScMgBase_c16OnPendingDestroyEv.cpp",
-      "ordinal": 8
+      "ordinal": 0
     },
     {
       "symbol": "_ZN11dScMgBase_c6RenderEv",
       "address": "0x020b04ec",
       "size": "0x00000008",
       "legacy_source": "src/minigames/dScMgBase_c/_ZN11dScMgBase_c6RenderEv.cpp",
-      "ordinal": 9
+      "ordinal": 1
     },
     {
       "symbol": "_ZN11dScMgBase_c12BeforeRenderEv",
       "address": "0x020b04f4",
       "size": "0x00000124",
       "legacy_source": "src/minigames/dScMgBase_c/_ZN11dScMgBase_c12BeforeRenderEv.cpp",
-      "ordinal": 10
+      "ordinal": 2
     },
     {
       "symbol": "_ZN11dScMgBase_c8BehaviorEv",
       "address": "0x020b0618",
       "size": "0x00000008",
       "legacy_source": "src/minigames/dScMgBase_c/_ZN11dScMgBase_c8BehaviorEv.cpp",
-      "ordinal": 11
+      "ordinal": 3
     },
     {
       "symbol": "_ZN11dScMgBase_c14BeforeBehaviorEv",
       "address": "0x020b0620",
       "size": "0x00000220",
       "legacy_source": "src/minigames/dScMgBase_c/_ZN11dScMgBase_c14BeforeBehaviorEv.cpp",
-      "ordinal": 12
+      "ordinal": 4
     },
     {
       "symbol": "_ZN11dScMgBase_c21AfterCleanupResourcesEj",
       "address": "0x020b0840",
       "size": "0x000000b0",
       "legacy_source": "src/minigames/dScMgBase_c/_ZN11dScMgBase_c21AfterCleanupResourcesEj.cpp",
-      "ordinal": 13
+      "ordinal": 5
     },
     {
       "symbol": "_ZN11dScMgBase_c18AfterInitResourcesEj",
       "address": "0x020b08f0",
       "size": "0x00000040",
       "legacy_source": "src/minigames/dScMgBase_c/_ZN11dScMgBase_c18AfterInitResourcesEj.cpp",
-      "ordinal": 14
+      "ordinal": 6
     },
     {
       "symbol": "_ZN11dScMgBase_c19BeforeInitResourcesEv",
       "address": "0x020b0930",
       "size": "0x00000108",
       "legacy_source": "src/minigames/dScMgBase_c/_ZN11dScMgBase_c19BeforeInitResourcesEv.cpp",
-      "ordinal": 15
+      "ordinal": 7
     }
   ],
   "data": [],
@@ -124,5 +124,71 @@
       "symbolCheckNewVsBaseline": [],
       "linkerOutput": null
     }
-  }
+  },
+  "partial_isolation": {
+    "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+    "delinksChanged": false,
+    "derivedObjects": 8,
+    "contributionEquivalent": "8/8",
+    "comparedFields": [
+      "keptSection",
+      "keptBytes",
+      "relocs",
+      "defined",
+      "mapping",
+      "live",
+      "undefReferenced"
+    ],
+    "substitutedObjectPaths": [
+      "src/minigames/dScMgBase_c/_ZN11dScMgBase_c16OnPendingDestroyEv.cpp",
+      "src/minigames/dScMgBase_c/_ZN11dScMgBase_c6RenderEv.cpp",
+      "src/minigames/dScMgBase_c/_ZN11dScMgBase_c12BeforeRenderEv.cpp",
+      "src/minigames/dScMgBase_c/_ZN11dScMgBase_c8BehaviorEv.cpp",
+      "src/minigames/dScMgBase_c/_ZN11dScMgBase_c14BeforeBehaviorEv.cpp",
+      "src/minigames/dScMgBase_c/_ZN11dScMgBase_c21AfterCleanupResourcesEj.cpp",
+      "src/minigames/dScMgBase_c/_ZN11dScMgBase_c18AfterInitResourcesEj.cpp",
+      "src/minigames/dScMgBase_c/_ZN11dScMgBase_c19BeforeInitResourcesEv.cpp"
+    ],
+    "extraInertImports": 54,
+    "extraImportsWithNoHome": [],
+    "result": "partial-link-verified",
+    "phases": {
+      "delink": true,
+      "lcf": true,
+      "compile": true,
+      "link": true,
+      "checkModules": true,
+      "checkSymbols": false,
+      "rom": true
+    },
+    "tuRange": {
+      "start": "0x020b04e8",
+      "end": "0x020b0a38",
+      "differingBytes": 0,
+      "firstDiff": null
+    },
+    "moduleFidelityPassed": true,
+    "symbolCheckNewVsBaseline": [],
+    "rom": {
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "matchesStockRom": true
+    },
+    "scratch": "build/tu/ov004-dScMgBase_c/link-partial (gitignored)",
+    "state": "partial-link-verified",
+    "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
+    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+  },
+  "unlicensed_output_observed": {
+    "note": "Pinned-compiler inventory stamped by tools/promote_derived_tus.py --stamp-discarded-output before default production admission. These definitions are not ROM ownership claims; every build requires an exact inventory match, exact derived text contributions, exact modules, and an exact ROM.",
+    "toolchain": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "text": [],
+    "data": [],
+    "bss": [],
+    "init": [],
+    "rodata": [],
+    "ctor": []
+  },
+  "production_mode": "derived-text"
 }

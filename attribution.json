@@ -1070,6 +1070,18 @@
     "src/game/actors/Actor.cpp#_ZN8dActor_cD1Ev": "tangosdev",
     "src/game/actors/Actor.cpp#_ZN8dActor_cC1Ev": "tangosdev",
     "src/game/actors/Actor.cpp#_ZN8Vector3sD1Ev": "andrewboudreau",
-    "src/game/actors/Actor.cpp#_ZN8dActor_cC2Ev": "tangosdev"
+    "src/game/actors/Actor.cpp#_ZN8dActor_cC2Ev": "tangosdev",
+    "src/minigames/dScMgBase_c.cpp#_ZN11dScMgBase_c16OnPendingDestroyEv": "andrewboudreau",
+    "src/minigames/dScMgBase_c.cpp#_ZN11dScMgBase_c6RenderEv": "andrewboudreau",
+    "src/minigames/dScMgBase_c.cpp#_ZN11dScMgBase_c12BeforeRenderEv": "andrewboudreau",
+    "src/minigames/dScMgBase_c.cpp#_ZN11dScMgBase_c8BehaviorEv": "andrewboudreau",
+    "src/minigames/dScMgBase_c.cpp#_ZN11dScMgBase_c14BeforeBehaviorEv": "tangosdev",
+    "src/minigames/dScMgBase_c.cpp#_ZN11dScMgBase_c21AfterCleanupResourcesEj": "andrewboudreau",
+    "src/minigames/dScMgBase_c.cpp#_ZN11dScMgBase_c18AfterInitResourcesEj": "andrewboudreau",
+    "src/minigames/dScMgBase_c.cpp#_ZN11dScMgBase_c19BeforeInitResourcesEv": "tangosdev",
+    "src/game/actors/MgWhichWiggler.cpp#MgWhichWiggler_Spawn": "tangosdev",
+    "src/game/actors/MgWhichWiggler.cpp#func_ov006_020ede80": "tangosdev",
+    "src/game/actors/MgTrampolineTerror.cpp#MgTrampolineTerror_Spawn": "lunavyqo",
+    "src/game/actors/MgTrampolineTerror.cpp#func_ov006_021248a8": "tangosdev"
   }
 }
