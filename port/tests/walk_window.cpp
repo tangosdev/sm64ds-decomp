@@ -403,6 +403,7 @@ static bool winapi_load(void)
 #include "hal/comms_seam.h"       /* run mg15 lane MP1: the radio seam */
 #include "hal/comms_loopback.h"   /* run mg16 lane MP2: the loopback carrier */
 #include "hal/comms_lockstep.h"   /* run mg16 lane MP2: the lockstep driver */
+#include "hal/instance_tag.h"     /* run mg16 lane MP2: per-instance filenames */
 
 /* run mg15 lane MP1. SM64DS_COMMS_FANOUT=1 runs the ROM's own steps 0x16 and
    0x17 (src/func_0203bb60.c, src/func_0203bc7c.c) after the comms tick, so
@@ -4709,6 +4710,22 @@ static int host_show_mode(int nofocus)
 
 static HWND host_window_open(int stacked, HDC *out_hdc, const char *title)
 {
+    /* run mg16 lane MP2: WHICH COPY OF THE GAME IS THIS?
+       Two instances now run side by side as DS parent and child, and two
+       identical title bars are two windows a player cannot tell apart. When
+       SM64DS_INSTANCE names an instance its tag leads the title, so the pair
+       reads "[P1] SM64DS | ..." and "[P2] SM64DS | ...". With the env unset the
+       tag is empty and the title is byte-for-byte the string the caller passed,
+       which is what every existing run still gets. The same env already
+       separates the four exe-adjacent files (hal/instance_tag.h), so one knob
+       does both jobs and there is no second name to keep in sync. */
+    char titlebuf[320];
+    if (port_instance_tag()[0]) {
+        _snprintf(titlebuf, sizeof titlebuf, "[%s] %s",
+                  port_instance_tag() + 1 /* skip the leading '.' */, title);
+        titlebuf[sizeof titlebuf - 1] = 0;
+        title = titlebuf;
+    }
     /* Registered once. Two windows are never open at the same time in this
        program, but a second RegisterClassA of a live class fails and there is
        no reason to make the second caller find that out. */
@@ -5128,7 +5145,11 @@ static void port_startup_error_path(char *path, unsigned cap)
     DWORD n = GetModuleFileNameA(0, path, cap);
     while (n && path[n - 1] != 92 /* '\\' */)
         --n;
-    lstrcpynA(path + n, "startup_error.txt", (int)(cap - n));
+    /* run mg16 lane MP2: SM64DS_INSTANCE suffixes this so a second copy of the
+       game on the same machine cannot clear or overwrite the first copy's
+       startup error. Unset, the name is unchanged. See hal/instance_tag.h. */
+    _snprintf(path + n, cap - n, "startup_error%s.txt", port_instance_tag());
+    path[cap - 1] = 0;
 }
 
 static void port_startup_error_clear(void)

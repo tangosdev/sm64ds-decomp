@@ -58,6 +58,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/* run mg16 lane MP2: the instance suffix on startup_error.txt */
+#include "instance_tag.h"
+
 namespace {
 
 void refuse_path(char *path, unsigned cap)
@@ -65,7 +68,11 @@ void refuse_path(char *path, unsigned cap)
     DWORD n = GetModuleFileNameA(0, path, cap);
     while (n && path[n - 1] != 92 /* '\\' */)
         --n;
-    lstrcpynA(path + n, "startup_error.txt", (int)(cap - n));
+    /* run mg16 lane MP2: the second writer of this same file. It carries the
+       instance suffix for the reason walk_window's copy does -- two copies of
+       the game in one folder, and a refusal that must say which one refused. */
+    _snprintf(path + n, cap - n, "startup_error%s.txt", port_instance_tag());
+    path[cap - 1] = 0;
 }
 
 /* Write `text` to startup_error.txt next to the exe and, unless this is an

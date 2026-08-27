@@ -131,6 +131,9 @@
 #include <stdint.h>
 #include <stdarg.h>
 
+/* run mg16 lane MP2: the instance suffix on savestate.bin */
+#include "instance_tag.h"
+
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -283,8 +286,15 @@ int state_path(char *out, size_t cap)
         if (fwd && (!slash || fwd > slash)) slash = fwd;
         if (slash) {
             *slash = '\0';
-            if (strlen(exe) + 16 < cap) {
-                snprintf(out, cap, "%s\\savestate.bin", exe);
+            /* run mg16 lane MP2: THE DANGEROUS ONE. Two copies of the game in
+               one folder share this path, and smoke_persist.cpp:249 already
+               names the hazard -- "a separate process picking up the first
+               one's savestate.bin". SM64DS_INSTANCE gives each its own; unset,
+               the name is unchanged and every existing save still loads. The
+               +16 headroom check becomes +32 to cover the suffix. */
+            if (strlen(exe) + 32 < cap) {
+                snprintf(out, cap, "%s\\savestate%s.bin", exe,
+                         port_instance_tag());
                 return 1;
             }
         }
