@@ -44,7 +44,7 @@
 // here, because the whole point of this lane is that the ROM's own line runs.
 //
 // So the fix goes where the hardware is, not where the game is. The port has
-// the right value already -- hal/input_probe.cpp:304 records that the pad
+// the right value already -- hal/input_probe.cpp:310 records that the pad
 // mirror is in DS KEYINPUT bit order and already active-high -- so writing the
 // REGISTER active-low makes the ROM's expression evaluate correctly with not
 // one line of game code diverging:
