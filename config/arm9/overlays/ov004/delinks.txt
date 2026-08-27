@@ -44,7 +44,7 @@ src/func_ov004_020ada20.c:
     complete
     .text start:0x020ada20 end:0x020ada40
 
-src/_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player.c:
+src/func_ov004_020ada40.c:
     complete
     .text start:0x020ada40 end:0x020adafc
 

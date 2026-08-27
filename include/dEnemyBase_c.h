@@ -6,6 +6,7 @@
 #define DENEMYBASE_C_H
 #include "types.h"
 #include "dActor_c.h"
+#include "math/Fix12.h"
 
 /* fwd */
 struct dCc_c;
@@ -119,22 +120,43 @@ struct dEnemyBase_c : dActor_c {
        bytes because that class has no header here. */
     void SpawnMegaCharParticles(dActor_c & a, char * p);
     int UpdateKillByInvincibleChar(dBgCh_Actr & ww_, ModelAnim & mm_, unsigned int flags);
-    /* PROVISIONAL SIGNATURE -- do not migrate a caller against it yet. Two
-       separate problems, both caller-side:
+    /* RESOLVED 2026-08-27. Both halves of the old PROVISIONAL note held up, and
+       both are now fixed in config rather than carried as a caveat here.
 
-       (1) This name is currently attached to ov004 0x020ada40, which cannot be
-           this method (it reads only r0 and range-checks it as a scalar). The
-           code that IS this method is ov002 0x020ada40, still carrying the
-           placeholder name func_ov002_020ada40. See notes/overlay-residency.md,
-           which independently resolves this address to ov002.
+       (1) WRONG ADDRESS. The name sat on ov004 0x020ada40, which reads only r0
+           and range-checks it as a scalar -- it cannot be this method. ov002 and
+           ov004 are alternates in one overlay slot (both based at 0x020ad3e0),
+           which is why one address could carry two unrelated functions, and why
+           every actor overlay's relocs.txt records this call as the ambiguous
+           `module:overlays(2,4)`. What disambiguates it is not the config but the
+           code: the ov002 body at the same address consumes r0/r1/r2 exactly as
+           (enemy, Vector3_16 &, Player &) -- Vec3_HorzAngle(player + 0x5c,
+           &this->pos), then Player::IncMegaKillCount(player) -- while ov004's
+           only unambiguous callers are inside ov004 itself. The name moved to
+           ov002 0x020ada40; ov004's function is `func_ov004_020ada40` again.
 
-       (2) The arity below is refuted by three call sites, which materialise a
-           FOURTH argument in r3 with three different Fix12 constants --
-           ov062 0x02117cf0 (0x46000), ov084 0x02129f94 (0x41000) and
-           ov084 0x02129fcc (0x96000) -- with no other consumer before the bl.
-           The ov002 callee ignores r3, so the trailing parameter is accepted
-           and dropped. A two-reference prototype cannot emit those moves. */
-    void KillByInvincibleChar(const Vector3_16 & a1_, Player & a2_);
+       (2) ARITY. Every `bl` to this address in the whole image was disassembled:
+           19 of them, and the split is itself the proof of (1). The four inside
+           ov004 (0x020ad97c, 0x020ada10, 0x020adb70, 0x020adbac) leave r3 alone,
+           which is what a one-scalar-argument call looks like. All 15 outside it
+           materialise a fourth argument in r3 -- the old note listed three. Most
+           pass a Fix12 constant (0x46000, 0x41000, 0x96000, 0x32000, 0);
+           ov064 0x02116904 and ov102 0x0214cc8c load one from an object; ov081
+           0x02123988
+           passes the RETURN of the virtual at vtable offset 0x74, which is slot
+           29 -- and this method's own body calls that same slot 29 and adds the
+           result to pos.y before spawning particles. So the caller hands over a
+           height the callee then recomputes and the parameter is simply unused,
+           which is why no body reads r3. Two src/ files declared a three-argument
+           form and still matched: at those sites the `mov r3, #0` doubles as the
+           source of the following `strh`, so the argument setup is invisible.
+
+           Its type is `Fix12<int>`, by the sibling: the ROM's
+           `dBgActor_c::UpdateKillByMegaChar(s16, s16, s16, Fix12<int>)` is the
+           background-actor form of the same operation and ends in the same
+           parameter. The mangled name below is the compiler's own answer for the
+           declaration, not a hand-mangle. */
+    void KillByInvincibleChar(const Vector3_16 & vel_, Player & player_, Fix12<int> unused_);
 };
 
 /* Makes dEnemyBase_c's size a claim the compiler enforces, and makes every header
