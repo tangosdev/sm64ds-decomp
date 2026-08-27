@@ -3247,6 +3247,19 @@ def production_objects(entry, build_root, jobs=1, cache=None):
     return out, errors
 
 
+def linkcheck_compiler_only_policies(srcs, entry=None, partitioned=False):
+    """Return production dead-strip policies for the scratch whole-tree compile.
+
+    Baseline and ordinary whole-TU links must compile already-promoted sources with
+    the same exact policies as ``rombuild.py``. Partitioned mode still applies those
+    production policies, but keeps the candidate TU raw until its audited [4c] phase.
+    """
+    policies = RB.compiler_only_policies(srcs)
+    if partitioned and entry is not None:
+        policies.pop(str(entry.get("source", "")).replace("\\", "/"), None)
+    return policies
+
+
 def partial_report(entry, merged_bytes, derived, prod_paths):
     """[(ordinal, symbol, verdict_dict_or_error)] plus the aggregate counts."""
     rows = []
@@ -3750,11 +3763,15 @@ def cmd_linkcheck(args):
                                 enabled=not args.no_cache)
     init_srcs = RB.init_section_sources()
     syms = RB.enrolled_symbols()
+    compiler_only = linkcheck_compiler_only_policies(
+        srcs, entry=entry, partitioned=partitioned)
     t0 = time.time()
     failures, outcomes = [], collections.Counter()
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
         for rel, err, outcome in ex.map(
-                lambda s: RB.compile_one(s, vers, cache, init_srcs, syms, build_root=scratch),
+                lambda s: RB.compile_one(s, vers, cache, init_srcs, syms,
+                                         build_root=scratch,
+                                         compiler_only=compiler_only),
                 srcs):
             outcomes[outcome] += 1
             if err:

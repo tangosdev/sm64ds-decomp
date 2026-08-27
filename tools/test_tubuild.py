@@ -260,7 +260,8 @@ def test_promote_dry_run_refuses_a_tu_that_is_not_link_verified_but_still_explai
     assert "function_snapshot() builds {stem: path}" not in out
     assert "tools/cpp_tu_compat.py" in out
     assert (REPO / "src_tu" / "actors" / "PoleLift.cpp").is_file()
-    assert (REPO / "src" / "_ZN8PoleLift6RenderEv.cpp").is_file()
+    assert (REPO / "src" / "game" / "actors" / "PoleLift" /
+            "_ZN8PoleLift6RenderEv.cpp").is_file()
 
 
 def test_splice_refuses_a_span_whose_legacy_entries_are_not_complete():
@@ -661,6 +662,28 @@ def test_compiler_only_policy_is_exact_and_refuses_a_real_rom_home():
         obj, entry, homes={"_ZN1PD2Ev": [("ov999", 0x1234)]})
     assert out is None
     assert any("configured ROM home" in r for r in reasons)
+
+
+def test_linkcheck_compile_keeps_production_policies_but_defers_partition_candidate(
+        monkeypatch):
+    policies = {
+        "src/game/actors/ActorBase_SceneNode.cpp": ["_ZN7fBase_c9SceneNodeC2Ev"],
+        "src_tu/actors/daObjAbuku_c.cpp": ["_ZN12daObjAbuku_cD2Ev"],
+    }
+    monkeypatch.setattr(
+        tubuild.RB, "compiler_only_policies",
+        lambda _srcs: {key: list(value) for key, value in policies.items()})
+
+    ordinary = tubuild.linkcheck_compiler_only_policies(
+        list(policies), entry={"source": "src_tu/actors/daObjAbuku_c.cpp"})
+    assert ordinary == policies
+
+    partitioned = tubuild.linkcheck_compiler_only_policies(
+        list(policies), entry={"source": "src_tu\\actors\\daObjAbuku_c.cpp"},
+        partitioned=True)
+    assert partitioned == {
+        "src/game/actors/ActorBase_SceneNode.cpp": ["_ZN7fBase_c9SceneNodeC2Ev"]
+    }
 
 
 def test_unknown_id_fails_closed_with_a_clear_reason():
