@@ -260,9 +260,9 @@ agree. They say nothing about whether this change's layout stayed out of the
 frame. To ask that question, pad the baseline to an equal base AND an equal
 span and compare there, or compare on the counts the table names.
 
-The doctrine is port/tools/battery.py lines 34-160; the long form, with the gap
-audit and the five unfixed truncations that keep the rule alive, is
-notes/port-selftest-bmp-gate.md.
+The doctrine is the block at the top of port/tools/battery.py (lines 34-157);
+the long form, with the gap audit and the five unfixed truncations that keep the
+rule alive, is notes/port-selftest-bmp-gate.md.
 
 The other four BMPs the battery writes -- smoke_anim, smoke_gx, smoke_model,
 smoke_oam -- cannot be affected, and that is structural rather than measured:

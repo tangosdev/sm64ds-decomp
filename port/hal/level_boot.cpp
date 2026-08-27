@@ -1659,9 +1659,19 @@ extern "C" void port_sqrt_selftest(void);   /* hal/scene_boot.cpp */
  * own image, they allocate nothing on the host and they register nothing with
  * the host, so the worst a bracket placed wrongly can cost is a redundant
  * re-patch -- never a doubled effect. A pass that gains a host allocation or a
- * host registration leaves that set and has to be ruled on its own terms, which
- * is why port_scene_fill_mgm stays host-side: it registers an atexit handler,
- * and registering that twice is a doubled effect no re-patch argument covers.
+ * host registration leaves that set in principle and has to be ruled on its own
+ * terms.
+ *
+ * The four scene-path passes are host-side for a different and simpler reason,
+ * and theirs is the one that governs: a SCENE run cannot meet a save state at
+ * all, because main() hands the whole process to port_scene_run before the
+ * level bring-up and therefore before lk7_persist_read and before the frame
+ * loop that owns F8/F9. Bracketing them would spend .dsstate bytes insuring
+ * against a shape that cannot occur. The argument is written at the site, in
+ * hal/scene_mg_menu.cpp. port_scene_fill_mgm also registers an atexit handler,
+ * but that is a second remark there rather than the ruling, and its own `armed`
+ * static latches it separately from `done` -- so bracketing `done` would not
+ * have re-registered it either.
  *
  * The cells hold HOST addresses into the mounted images, which are image
  * addresses and not heap or stack, so lk6's cross-process landmine scan
@@ -3590,10 +3600,16 @@ extern unsigned char data_ov002_0210da48[], data_ov002_0210d9b8[],
 
    AND THE DISAGREEMENT IS REACHABLE, which is worth stating because "loaded"
    looks like a one-way latch and is not: SharedFilePtr::Release decrements
-   numRefs and frees at zero, and seven CleanupResources bodies release these
-   same records (Player, Toad, Klepto, Stump, Dorrie, RollingLogTtm,
-   QuestionBlock, SnowmanBreath). A record can be back to unloaded inside a
-   session, so a state can hold one either way round.
+   numRefs and frees at zero. Counted over the tree rather than eyeballed, and
+   the count is uneven: FOUR of the twelve are released anywhere at all --
+   0210da40, 0210d9a0, 0210d9c0 and 0210d9a8 -- by fourteen classes
+   (BowserPuzzlePiece, Coin, Dorrie, InvisibleSecret, Klepto, MantaRay, Player,
+   QuestionBlock, RollingLogTtm, SnowmanBreath, StarMarker, Stump, Toad,
+   TreasureChest) plus one free function, func_ov002_020f069c; every site but
+   that last is a CleanupResources body. The other EIGHT are released nowhere,
+   so once the seat has run they stay loaded for the life of the process. It is
+   the four that make a disagreement reachable: one of those can be back to
+   unloaded inside a session, so a state can hold it either way round.
 
    THE SWEEP MISSED THIS ONE and the reason generalises: RELOAD2's sweep
    enumerated callers of port_ovNNN_syms_patch and __sinit_ovNNN_*, and this
