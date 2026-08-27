@@ -21,8 +21,8 @@
       },
       "C2": {
         "draft": 1,
-        "migrated": 9,
-        "unmigrated": 10
+        "migrated": 10,
+        "unmigrated": 9
       },
       "C3": {
         "draft": 0,
@@ -31,8 +31,8 @@
       },
       "D0": {
         "draft": 1,
-        "migrated": 333,
-        "unmigrated": 44
+        "migrated": 334,
+        "unmigrated": 43
       },
       "D1": {
         "draft": 1,
@@ -41,8 +41,8 @@
       },
       "D2": {
         "draft": 0,
-        "migrated": 6,
-        "unmigrated": 16
+        "migrated": 7,
+        "unmigrated": 15
       },
       "method": {
         "draft": 11,
@@ -51,22 +51,22 @@
       }
     },
     "cpp_still_handspelled": 124,
-    "mangled_c": 127,
-    "mangled_cpp": 3336,
+    "mangled_c": 124,
+    "mangled_cpp": 3339,
     "mangled_total": 3463,
     "nonmatching_drafts": 14,
-    "unmigrated_total": 251
+    "unmigrated_total": 248
   },
   "shadow_decls": {
-    "local_body_no_include": 1232,
+    "local_body_no_include": 1231,
     "local_body_no_include_cpp": 521,
-    "local_struct_body": 2161,
+    "local_struct_body": 2160,
     "local_struct_body_cpp": 1193,
     "pad_layout": 543
   },
   "totals": {
-    "c_extension": 6577,
-    "cpp_extension": 4725,
+    "c_extension": 6574,
+    "cpp_extension": 4728,
     "src_files": 11302
   }
 }
