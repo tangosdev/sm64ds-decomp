@@ -103,6 +103,25 @@ def member_overrides_at(rev):
     return out
 
 
+def tracked_sources_at(rev):
+    """The C/C++ source paths that actually exist at ``rev``.
+
+    Attribution history intentionally knows about deleted and renamed paths.  A
+    revision comparison must not let those historical aliases collide by basename
+    with the one file that revision really tracks; set iteration made the winner
+    nondeterministic when both ``X.c`` and a later ``X.cpp`` existed in history.
+    """
+    try:
+        raw = subprocess.run(
+            ["git", "ls-tree", "-r", "-z", "--name-only", rev, "--", "src"],
+            cwd=REPO, capture_output=True, check=True,
+        ).stdout.decode("utf-8", errors="surrogateescape")
+    except (OSError, subprocess.CalledProcessError):
+        return set()
+    return {path for path in raw.split("\0")
+            if path.endswith((".c", ".cpp"))}
+
+
 def lineage(rev):
     """{stem-without-extension: handle} at `rev`, resolved the way the merge gate resolves it.
 
@@ -125,8 +144,9 @@ def lineage(rev):
     first = CDB.first_matchers(rev)
     finishers = CDB.match_finishers(rev)
     overrides = overrides_at(rev)
+    tracked = tracked_sources_at(rev)
     out = {}
-    for path in set(first) | set(finishers) | set(overrides):
+    for path in tracked:
         who = overrides.get(path) or finishers.get(path) or first.get(path)
         if who:
             out[path.rsplit(".", 1)[0]] = who
