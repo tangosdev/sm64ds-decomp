@@ -15,7 +15,7 @@ int UnknownVsEntry::Behavior()
 {
     if (mSuspended == 0) {
         int i;
-        char* base;
+        UnknownVsPlayer* player;
         char* p;
         u8* g;
         int fp;
@@ -23,21 +23,21 @@ int UnknownVsEntry::Behavior()
         char* ee;
         g = &data_0209fc5c;
         p = ((char*)this);
-        base = ((char*)this) + 0x920;
+        player = mPlayers;
         fp = 1;
         i = 0;
         z = 0;
         ee = ((char*)this); ee += 0xe80;
-        for (; i < 4; i++, base += 0x158, p += 0x158, g += 1) {
-            func_ov075_02114cd8(base);
+        for (; i < 4; i++, player++, p += 0x158, g += 1) {
+            func_ov075_02114cd8((char*)player);
             if (*(u8*)(p + 0xa75)) {
-                int* q = (int*)(int)(base + 0x118);
+                int* q = (int*)(int)&player->mPosition;
                 int v[3];
                 v[0] = q[0]; v[1] = q[1]; v[2] = q[2];
                 func_ov075_0211ab38(ee, v);
             }
             if (*g) {
-                if (func_ov075_021148f0(base) == 0)
+                if (func_ov075_021148f0((char*)player) == 0)
                     fp = z;
             }
         }

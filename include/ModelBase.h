@@ -38,11 +38,12 @@
  * run `python tools/eligible.py --no-isolate` and every D1 in this family that
  * has since become a real method drops straight back out of the eligible set.
  *
- * So D1 may be a real method wherever the layout is known. D2 stays a C file,
- * and D0 stays one for a different and permanent reason -- it is the deleting
- * destructor, which the compiler generates and nobody can write by hand, so
- * renaming it .cpp would change the extension without migrating anything.
- * ModelBase's own three are still C files; the derived classes have moved.
+ * So every destructor variant may now be retained from a real `~Class()`
+ * definition wherever the layout is known. D2 and D0 are compiler-generated,
+ * not separately writable methods; the one-function intake format repeats the
+ * real definition and objisolate keeps the enrolled ABI variant. ModelBase's
+ * own D2/D0/D1 are now retained this way too: one destructor body owns the
+ * model-file release, while the compiler supplies the vptr and delete paths.
  *
  * What has NOT changed is the declaration order. The destructor stays first,
  * because for a root class vtable slot order IS declaration order.

@@ -1,83 +1,82 @@
 //cpp
 #include "types.h"
 // @symbol _ZN13UpDownLiftBbh13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
+/* recovered: real C++ method over the reconstructed platform hierarchy */
 #include "UpDownLiftBbh.h"
-/* _ZN13UpDownLiftBbh13InitResourcesEv at 0x021365d8 (ov095), size 0x18c
- * Compiler mwccarm 1.2/sp2p3, flags:
- * -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
- * natural signed /2 spelling; mwcc synthesizes add/lsr#31/asr#1 itself and
- * self-schedules the byte store into the ROM slot */
+#include "SharedFilePtr.h"
+
+/* dBgW_KcMbg::SetFile takes Fix12<int> by value. A faithful member call hits
+   mwccarm wall 6az, so this call retains the exact scalar ABI spelling. */
 extern "C" {
-extern void *_ZN5Model8LoadFileER13SharedFilePtr(int sfp);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *m, void *f, int a, int b);
-extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
-extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(int sfp);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *mc, void *kcl, void *mtx, int fix, short s, int clps);
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat, int scale,
+    s16 angleY, CLPS_Block *clps);
 extern void func_020393d4(void *p, void *v);
 extern void func_020393c4(void *p, void *v);
+extern void func_ov095_02136788(void *a, void *b, void *c);
 }
-extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
-extern int data_ov095_02136f68[];
-extern int data_ov095_02136f74[];
+
+extern SharedFilePtr *data_ov095_02136f68[];
+extern SharedFilePtr *data_ov095_02136f74[];
+extern CLPS_Block *data_ov095_021375a4[];
 
 int UpDownLiftBbh::InitResources()
 {
   int idx;
-  int *new_var;
+  void *new_var;
   u16 t;
   int b;
-  *((u8 *) ((char *)&unk_349)) = 0;
-  t = *((u16 *) ((char *)&actorID));
+  unk_349 = 0;
+  t = actorID;
   b = (int) (t == 0x20);
   if (b != 0)
   {
-    *((int *) ((char *)&mVariant)) = 0;
+    mVariant = 0;
     goto load;
   }
   b = (int) (t == 0x21);
   if (b != 0)
   {
-    *((int *) ((char *)&mVariant)) = 1;
+    mVariant = 1;
     goto load;
   }
   b = (int) (t == 0x83);
   if (b != 0)
   {
-    *((int *) ((char *)&mVariant)) = 2;
-    *((u8 *) ((char *)&unk_349)) = 1;
+    mVariant = 2;
+    unk_349 = 1;
     goto load;
   }
   return 0;
   load:
-  idx = *((int *) ((char *)&mVariant));
+  idx = mVariant;
 
-  _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, _ZN5Model8LoadFileER13SharedFilePtr(data_ov095_02136f68[idx]), 1, -1);
-  new_var = &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
-  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
-  idx = *((int *) ((char *)&mVariant));
-  _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char *)this) + 0x124, _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov095_02136f74[idx]), ((char *)this) + 0x2ec, 0x199, *((s16 *) ((char *)&mAngleY)), data_ov095_021375a4[idx]);
-  func_020393d4(((char *)this) + 0x124, new_var);
-  func_020393c4(((char *)this) + 0x124, &func_ov095_02136788);
-  *((int *) ((char *)&mRider)) = 0;
-  *((int *) ((char *)&mState)) = 0;
+  mModel.SetFile((BMD_File *)Model::LoadFile(*data_ov095_02136f68[idx]), 1, -1);
+  new_var = (void *)&dBgW::UpdatePosWithTransform;
+  UpdateClsnPosAndRot();
+  idx = mVariant;
+  _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+      &mMeshCollider, (KCL_File *)dBgW_Kc::LoadFile(*data_ov095_02136f74[idx]),
+      &mClsnMat, 0x199, mAngleY, data_ov095_021375a4[idx]);
+  func_020393d4(&mMeshCollider, new_var);
+  func_020393c4(&mMeshCollider, (void *)&func_ov095_02136788);
+  mRider = 0;
+  mState = 0;
   /* Top of the shaft is where it was placed; the spawn word says how far down
      it travels, and it stops halfway on the way back up. */
-  if ((*((u8 *) ((char *)&unk_349))) == 2)
+  if (unk_349 == 2)
   {
-    mTopY = mPosY + ((*((u16 *) ((char *)&mPrevAngleZ))) << 12);
+    mTopY = mPosY + ((u16)mPrevAngleZ << 12);
   }
   else
   {
     mTopY = mPosY;
   }
-  mBottomY = mTopY - ((*((u16 *) ((char *)&mPrevAngleX))) << 12);
+  mBottomY = mTopY - ((u16)mPrevAngleX << 12);
   mMiddleY = (mTopY + mBottomY) / 2;
-  *((u8 *) ((char *)&unk_346)) = 0;
-  *((u8 *) ((char *)&mIsArmed)) = 1;
-  *((u8 *) ((char *)&mIsRidden)) = 0;
+  unk_346 = 0;
+  mIsArmed = 1;
+  mIsRidden = 0;
   mSoundHandle = 0;
   return 1;
 }

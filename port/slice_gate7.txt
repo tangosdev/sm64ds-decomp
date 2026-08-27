@@ -18,7 +18,7 @@ src/_ZN9Animation8SetFlagsEi.cpp
 src/_ZN9Animation7AdvanceEv.cpp
 src/_ZN9Animation8FinishedEv.cpp
 src/_ZN9Animation8GetFlagsEv.cpp
-src/_ZN9AnimationD1Ev.c
+src/_ZN9AnimationD1Ev.cpp
 
 # ModelAnim comes across whole now that its constructor is real C++: the TU
 # is the vtable's key function for MSVC too, so every virtual has to be

@@ -22,7 +22,9 @@
  * key-function arrangement from include/ModelBase.h, and the objisolate
  * exemption to it recorded there. That matters more than usual here, because
  * D1 carries the unlink logic and is now the only place it is written.
- * D0 and D2 stay C files.
+ * D0 and D1 are both retained from that real destructor definition, so the
+ * compiler owns their vptr reset, ModelBase teardown and deleting-wrapper call.
+ * The ROM has no separately enrolled D2 symbol for this class.
  *
  * LAYOUT evidence: C1 calls ModelBase::C2, stores the vptr, zeroes mat,
  * prev and next; InitModel fills mat/scale/opacity and links; the D1

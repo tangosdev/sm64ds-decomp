@@ -1,16 +1,8 @@
 //cpp
 // @symbol _ZN14UnknownVsEntry13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_Particle.h"
-#include "decl_ShadowModel.h"
 #include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "UnknownVsEntry.h"
 extern "C" {
-extern void _ZN5Model8LoadFileER13SharedFilePtr(void* f);
-extern void _ZN9Animation8LoadFileER13SharedFilePtr(void* f);
-extern void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void* f);
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* bca, int a, int fx, unsigned int f);
 extern void func_ov075_021152d4(char* self);
 }
@@ -43,72 +35,72 @@ struct M48 { int w[12]; };
 
 int UnknownVsEntry::InitResources()
 {
-    int i; int kind; char* p;
+    int i; int kind; UnknownVsPlayer* player;
 
     InitialiseVramGlobals();
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov075_0211d3fc);
-    if (mParam != 1) {
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov075_0211d3bc);
-        _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d3e4);
+    Model::LoadFile(*(SharedFilePtr*)&data_ov075_0211d3fc);
+    if (param1 != 1) {
+        Model::LoadFile(*(SharedFilePtr*)&data_ov075_0211d3bc);
+        Animation::LoadFile(*(SharedFilePtr*)&data_ov075_0211d3e4);
     }
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov075_0211d404);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov075_0211d3c4);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d414);
+    Model::LoadFile(*(SharedFilePtr*)&data_ov075_0211d404);
+    Model::LoadFile(*(SharedFilePtr*)&data_ov075_0211d3c4);
+    Animation::LoadFile(*(SharedFilePtr*)&data_ov075_0211d414);
 
-    if (mParam != 1) {
-        _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d394);
-        _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d3cc);
-        _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d39c);
-        _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d3d4);
-        _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d3a4);
-        _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d3ec);
-        _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d384);
-        _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d424);
-        _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d42c);
-        _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d41c);
+    if (param1 != 1) {
+        Animation::LoadFile(*(SharedFilePtr*)&data_ov075_0211d394);
+        Animation::LoadFile(*(SharedFilePtr*)&data_ov075_0211d3cc);
+        Animation::LoadFile(*(SharedFilePtr*)&data_ov075_0211d39c);
+        Animation::LoadFile(*(SharedFilePtr*)&data_ov075_0211d3d4);
+        Animation::LoadFile(*(SharedFilePtr*)&data_ov075_0211d3a4);
+        Animation::LoadFile(*(SharedFilePtr*)&data_ov075_0211d3ec);
+        Animation::LoadFile(*(SharedFilePtr*)&data_ov075_0211d384);
+        Animation::LoadFile(*(SharedFilePtr*)&data_ov075_0211d424);
+        Animation::LoadFile(*(SharedFilePtr*)&data_ov075_0211d42c);
+        Animation::LoadFile(*(SharedFilePtr*)&data_ov075_0211d41c);
     } else {
-        _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d3ac);
-        _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d3b4);
-        _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d3f4);
-        _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d38c);
-        _ZN15TextureSequence8LoadFileER13SharedFilePtr(&data_ov075_0211d3dc);
+        Animation::LoadFile(*(SharedFilePtr*)&data_ov075_0211d3ac);
+        Animation::LoadFile(*(SharedFilePtr*)&data_ov075_0211d3b4);
+        Animation::LoadFile(*(SharedFilePtr*)&data_ov075_0211d3f4);
+        Animation::LoadFile(*(SharedFilePtr*)&data_ov075_0211d38c);
+        TextureSequence::LoadFile(*(SharedFilePtr*)&data_ov075_0211d3dc);
     }
 
-    _ZN15TextureSequence8LoadFileER13SharedFilePtr(&data_ov075_0211d40c);
+    TextureSequence::LoadFile(*(SharedFilePtr*)&data_ov075_0211d40c);
 
     _ZN3G3X6SetFogEbiii(0, 0, 2, 0x1000);
-    _ZN11ShadowModel8CleanAllEv();
+    ShadowModel::CleanAll();
 
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0x86c, *(void**)(&data_ov075_0211d3fc + 4), 1, -1);
+    mModel.SetFile(*(BMD_File**)(&data_ov075_0211d3fc + 4), 1, -1);
 
     func_0203c178(&data_020a0e68, 0x7d000, 0x7d000, 0x7d000);
     /* 0x888 is +0x1c inside the Model at 0x86c -- its mat4x3. The cartridge's own
        ~UnknownVsEntry proves the extent; see tools/dtor_members.py. */
     *(struct M48*)((char*)&mModel.mat4x3) = *(struct M48*)&data_020a0e68;
 
-    if (mParam != 1) {
-        _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0x8bc, *(void**)(&data_ov075_0211d3bc + 4), 1, -1);
+    if (param1 != 1) {
+        mModelAnim.SetFile(*(BMD_File**)(&data_ov075_0211d3bc + 4), 1, -1);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char*)this) + 0x8bc, *(void**)(&data_ov075_0211d3e4 + 4), 0, 0x1000, 0);
     }
 
     func_ov075_0211b458(((char*)this) + 0xe80, (int*)&data_ov075_0211c654, 0);
-    _ZN8Particle10SysTracker10InitialiseEv((char*)&mParticle);
+    mParticles.Initialise();
 
-    p = ((char*)this) + 0x920;
+    player = mPlayers;
     i = 0;
     do {
-        kind = mParam;
+        kind = param1;
         int r = func_ov075_02115290(((char*)this), i);
-        if (!func_ov075_02114ddc(p, kind, i, r))
+        if (!func_ov075_02114ddc((char*)player, kind, i, r))
             return 0;
         i++;
-        p += 0x158;
+        player++;
     } while (i < 4);
 
     data_ov075_0211d380 = -1;
     mAnimActive = 0;
 
-    if (mParam == 2) {
+    if (param1 == 2) {
         int v = func_0203da9c();
         func_ov075_02115098(((char*)this), v);
     }

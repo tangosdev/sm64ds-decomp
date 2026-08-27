@@ -2340,3 +2340,6 @@ ov002	0x020b429c	func_ov002_020b429c	_ZN10BrickBlock18SpawnOneUpMushroomEv	PMF a
 ov002	0x020b42e4	func_ov002_020b42e4	_ZN10BrickBlock15SpawnSilverStarEv	PMF action table entry index 3; spawns SilverStar and marker
 ov002	0x020b4714	func_ov002_020b4714	_ZN16daObjKinokoTag_c17SpawnMegaMushroomEv	inferred helper name; class name from ROM RTTI and this ownership proven by exclusive TU callers and field ABI
 ov002	0x020b47ec	func_ov002_020b47ec	_ZN16daObjKinokoTag_c20TrySpawnMegaMushroomEv	inferred helper name; class name from ROM RTTI and this ownership proven by exclusive Behavior caller and collider field ABI
+ov065	0x0211a550	func_ov065_0211a550	_ZN16daObjCtMecha04_c12UpdateShadowEv	inferred helper name; class name from ROM RTTI and this ownership proven by exclusive Behavior caller, owned shadow fields, and dActor_c shadow call
+ov065	0x0211aa38	func_ov065_0211aa38	_ZN16daObjCtMecha04_c15MoveActorOnBeltER8dActor_c	inferred helper name and dActor_c reference parameter; callback forwarding and conveyor/actor field ABI prove ownership and call shape
+ov065	0x0211aacc	func_ov065_0211aacc	_ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_	inferred helper name and callback types; installed as the collider callback and observed forwarding owner and colliding actor

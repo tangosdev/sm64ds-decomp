@@ -92,15 +92,15 @@ _ZN16daObjCtMecha03_c6RenderEv kind:function(arm,size=0x28) addr:0x0211a1a0
 _ZN16daObjCtMecha03_c8BehaviorEv kind:function(arm,size=0x190) addr:0x0211a1c8
 _ZN16daObjCtMecha03_c13InitResourcesEv kind:function(arm,size=0x104) addr:0x0211a358
 func_ov065_0211a45c kind:function(arm,size=0x38) addr:0x0211a45c
-_ZN20TtcConveyorBeltLargeD1Ev kind:function(arm,size=0x54) addr:0x0211a494
-_ZN20TtcConveyorBeltLargeD0Ev kind:function(arm,size=0x68) addr:0x0211a4e8
-func_ov065_0211a550 kind:function(arm,size=0xe8) addr:0x0211a550
-_ZN20TtcConveyorBeltLarge16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x0211a638
-_ZN20TtcConveyorBeltLarge6RenderEv kind:function(arm,size=0x34) addr:0x0211a69c
-_ZN20TtcConveyorBeltLarge8BehaviorEv kind:function(arm,size=0x1a0) addr:0x0211a6d0
-_ZN20TtcConveyorBeltLarge13InitResourcesEv kind:function(arm,size=0x1c8) addr:0x0211a870
-func_ov065_0211aa38 kind:function(arm,size=0x94) addr:0x0211aa38
-func_ov065_0211aacc kind:function(arm,size=0x14) addr:0x0211aacc
+_ZN16daObjCtMecha04_cD1Ev kind:function(arm,size=0x54) addr:0x0211a494
+_ZN16daObjCtMecha04_cD0Ev kind:function(arm,size=0x68) addr:0x0211a4e8
+_ZN16daObjCtMecha04_c12UpdateShadowEv kind:function(arm,size=0xe8) addr:0x0211a550
+_ZN16daObjCtMecha04_c16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x0211a638
+_ZN16daObjCtMecha04_c6RenderEv kind:function(arm,size=0x34) addr:0x0211a69c
+_ZN16daObjCtMecha04_c8BehaviorEv kind:function(arm,size=0x1a0) addr:0x0211a6d0
+_ZN16daObjCtMecha04_c13InitResourcesEv kind:function(arm,size=0x1c8) addr:0x0211a870
+_ZN16daObjCtMecha04_c15MoveActorOnBeltER8dActor_c kind:function(arm,size=0x94) addr:0x0211aa38
+_ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_ kind:function(arm,size=0x14) addr:0x0211aacc
 TtcConveyorBeltLarge_Spawn kind:function(arm,size=0x40) addr:0x0211aae0
 TtcConveyorBeltSmall_Spawn kind:function(arm,size=0x40) addr:0x0211ab20
 _ZN16daObjCtMecha05_cD1Ev kind:function(arm,size=0x4c) addr:0x0211ab60
@@ -234,7 +234,6 @@ data_ov065_0211d198 kind:data(any) addr:0x0211d198
 data_ov065_0211d19c kind:data(any) addr:0x0211d19c
 TtcConveyorBeltSmall_SpawnInfo kind:data(any) addr:0x0211d1ac ambiguous
 TtcConveyorBeltLarge_SpawnInfo kind:data(any) addr:0x0211d1c8 ambiguous
-_ZTV20TtcConveyorBeltLarge kind:data(any) addr:0x0211d1ec
 _ZTV16daObjCtMecha04_c kind:data(any) addr:0x0211d1ec
 data_ov065_0211d26c kind:data(any) addr:0x0211d26c
 _ZTI16daObjCtMecha05_c kind:data(any) addr:0x0211d270

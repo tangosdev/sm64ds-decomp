@@ -49,7 +49,6 @@ _ZN11ShadowModel12InitCylinderEv
 # the ROM build carries both. Cast-and-call is the shape to look for in whatever
 # is still listed here.
 _ZN14BlendModelAnimD1Ev
-_ZN5ModelD2Ev
 CleanCommonModelDataArr
 func_020313d8
 

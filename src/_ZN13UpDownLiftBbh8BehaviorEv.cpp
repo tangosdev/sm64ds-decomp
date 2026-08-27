@@ -1,34 +1,38 @@
 //cpp
 #include "types.h"
 // @symbol _ZN13UpDownLiftBbh8BehaviorEv
-/* recovered: named members + shared header, real C++ method */
+/* recovered: real C++ method over the reconstructed actor hierarchy */
 #include "UpDownLiftBbh.h"
-struct Plat;
-typedef void (Plat::*PMF)();
-extern "C" PMF data_ov095_02137910[];
+#include "Player.h"
 
-extern "C" void* _ZN8dActor_c13ClosestPlayerEv(void* c);
-extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* c);
+typedef void (UpDownLiftBbh::*State)();
+extern State data_ov095_02137910[];
+
+/* A real Fix12<int> by-value call homes the two zero arguments to the stack
+   under this compiler, while the ROM passes their scalar representation in
+   registers. Keep this one proven codegen boundary until wall 6az is solved. */
 extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* c, int a, int b);
-extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* c);
-extern "C" int _ZN6Player7IsInAirEv(void* c);
+
 int UpDownLiftBbh::Behavior()
 {
     int old;
-    *(void**)((char*)&mClosestPlayer) = _ZN8dActor_c13ClosestPlayerEv(((char*)this));
+    mClosestPlayer = ClosestPlayer();
     old = mState;
-    (((Plat*)((char*)this))->*data_ov095_02137910[old])();
+    (this->*data_ov095_02137910[old])();
     mStateTimer += 1;
-    if (old != mState) mStateTimer = 0;
-    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0) != 0)
-        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
+    if (old != mState)
+        mStateTimer = 0;
+
+    UpdateModelPosAndRotY();
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0)
+        UpdateClsnPosAndRot();
+
     /* Waiting at either end, or on the way back: once the rider has landed
        somewhere else, forget them and arm the trigger again. */
     if (mState == 0 || (unsigned)(mState - 3) <= 1) {
-        void* pl = *(void**)((char*)&mRider);
-        if (pl != 0) {
-            if (_ZN6Player7IsInAirEv(pl) == 0) {
+        Player *player = mRider;
+        if (player != 0) {
+            if (player->IsInAir() == 0) {
                 if (mIsRidden == 0) {
                     mRider = 0;
                     mIsArmed = 1;
@@ -37,7 +41,7 @@ int UpDownLiftBbh::Behavior()
         }
     }
     mIsRidden = 0;
-    if (*(void**)((char*)&mClosestPlayer) != 0)
-        mPlayerPosY = *(int*)(*(char**)((char*)&mClosestPlayer) + 0x60);
+    if (mClosestPlayer != 0)
+        mPlayerPosY = mClosestPlayer->mPosY;
     return 1;
 }

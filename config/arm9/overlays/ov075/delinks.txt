@@ -8,11 +8,11 @@ src/_ZN14UnknownVsEntryD1Ev.cpp:
     complete
     .text start:0x02113ee0 end:0x02113f54
 
-src/_ZN14UnknownVsEntryD0Ev.c:
+src/_ZN14UnknownVsEntryD0Ev.cpp:
     complete
     .text start:0x02113f54 end:0x02113fdc
 
-src/func_ov075_02113fdc.c:
+src/_ZN15UnknownVsPlayerD1Ev.cpp:
     complete
     .text start:0x02113fdc end:0x02114010
 
@@ -172,7 +172,7 @@ src/UnknownVsEntry_Spawn.cpp:
     complete
     .text start:0x021159f4 end:0x02115a88
 
-src/func_ov075_02115a88.c:
+src/_ZN15UnknownVsPlayerC1Ev.cpp:
     complete
     .text start:0x02115a88 end:0x02115ab8
 

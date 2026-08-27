@@ -877,7 +877,7 @@
     "src/_ZN19dScMgSingle3DBase_cD1Ev.cpp",
     "src/_ZN20SwitchActivatedPlank16CleanupResourcesEv.cpp",
     "src/_ZN20SwitchActivatedPlank6RenderEv.cpp",
-    "src/_ZN20TtcConveyorBeltLarge16CleanupResourcesEv.cpp",
+    "src/_ZN16daObjCtMecha04_c16CleanupResourcesEv.cpp",
     "src/_ZN20cMgSmartball_dokan_c14RestoreInitialEv.cpp",
     "src/_ZN20daObjCannonShutter_c16CleanupResourcesEv.cpp",
     "src/_ZN20daObjCannonShutter_cD0Ev.cpp",

@@ -1,4 +1,6 @@
 //cpp
+#include "UnknownVsEntry.h"
+
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned int sz);
 extern void _ZN7fBase_cC2Ev(void* p);
@@ -8,20 +10,22 @@ extern void _ZN9ModelAnimC1Ev(void* p);
 extern void func_020733a8(void* a, int b, int c, void* d, void* e);
 extern void* data_0208e4b8;
 extern void* _ZTV14UnknownVsEntry;
-extern void func_ov075_02113fdc(void);
-extern void func_ov075_02115a88(void);
+extern void _ZN15UnknownVsPlayerD1Ev(void);
+extern void _ZN15UnknownVsPlayerC1Ev(void);
 }
-extern "C" char* UnknownVsEntry_Spawn(void);
-extern "C" char* UnknownVsEntry_Spawn(void){
-  char* p = (char*)_ZN7fBase_cnwEj(0xf48);
+extern "C" UnknownVsEntry* UnknownVsEntry_Spawn(void);
+extern "C" UnknownVsEntry* UnknownVsEntry_Spawn(void){
+  UnknownVsEntry* p = (UnknownVsEntry*)_ZN7fBase_cnwEj(sizeof(UnknownVsEntry));
   if (p) {
     _ZN7fBase_cC2Ev(p);
     *(void**)p = &data_0208e4b8;
     *(void**)p = &_ZTV14UnknownVsEntry;
-    _ZN8Particle10SysTrackerC1Ev(p + 0x50);
-    _ZN5ModelC1Ev(p + 0x86c);
-    _ZN9ModelAnimC1Ev(p + 0x8bc);
-    func_020733a8(p + 0x920, 4, 0x158, (void*)func_ov075_02115a88, (void*)func_ov075_02113fdc);
+    _ZN8Particle10SysTrackerC1Ev(&p->mParticles);
+    _ZN5ModelC1Ev(&p->mModel);
+    _ZN9ModelAnimC1Ev(&p->mModelAnim);
+    func_020733a8(p->mPlayers, 4, sizeof(UnknownVsPlayer),
+                  (void*)_ZN15UnknownVsPlayerC1Ev,
+                  (void*)_ZN15UnknownVsPlayerD1Ev);
   }
   return p;
 }

@@ -1,26 +1,19 @@
-/* class UpDownLiftBbh: 4 matched functions.
+/* The three up/down lifts in BBH, HMC and RR share this implementation and
+ * _ZTV13UpDownLiftBbh. Their factories allocate 0x34c bytes, call
+ * dBgActor_c::dBgActor_c(), and install this class's vtable.
  *
- * 0x000..0x0d4 is the fBase_c -> dBase_c -> dActor_c layout written out flat --
- * this struct does not derive from any of them -- so the names in that range are
- * COPIED from include/fBase_c.h and include/dActor_c.h at the matching offset,
- * not independently evidenced here. Nothing can shadow: there is no base class.
+ * The destructor proves the hierarchy and ownership independently: it changes
+ * the vptr from UpDownLiftBbh to dBgActor_c, destroys dBgActor_c's
+ * dBgW_KcMbg and Model members, then chains to dActor_c. In C++ those are all
+ * consequences of deriving from dBgActor_c; the source destructor is empty.
  *
- * FOUR SLOTS IN THAT RANGE ARE DELIBERATELY STILL unk_, and the reason is worth
- * reading before someone "finishes the job":
- *
- *   0x010, 0x011, 0x012   fBase_c does not name them either. Copying a name
- *                         across would be inventing one, not importing one.
- *   0x092, 0x096          These are dActor_c's mPrevAngleX and mPrevAngleZ
- *                         slots, and this actor reads them as UNSIGNED shaft
- *                         measurements in InitResources:
+ * Two inherited angle slots have an unusual actor-specific reading worth
+ * preserving: InitResources treats mPrevAngleX and mPrevAngleZ as UNSIGNED
+ * shaft measurements:
  *                           mBottomY = mTopY - (unk_092 << 12)
  *                           mTopY    = mPosY + (unk_096 << 12)   (variant only)
- *                         Nothing matched WRITES either slot, so which of the
- *                         two readings is right -- the base's snapshot, or an
- *                         actor-specific reuse of the same words -- is not
- *                         settled by any body that reproduces the cartridge.
- *                         Naming them either way would pick a side on no
- *                         evidence, so they keep the offset name.
+ * Nothing matched writes either slot, so the base names remain provisional for
+ * this use even though the physical inheritance is proven.
  *
  * unk_346 and unk_349 are the actor's own and are still unk_ for the ordinary
  * reason (write-only in matched code), but unk_349 carries one observation that
@@ -35,6 +28,41 @@
 #include "Model.h"
 #include "dBgW_KcMbg.h"
 
+#ifdef __cplusplus
+
+#include "dBgActor_c.h"
+
+struct UpDownLiftBbh : dBgActor_c {
+    /* dBgActor_c's last member ends at 0x31e. Keep its two bytes of tail
+       padding so the first word owned by this class starts at 0x320. */
+    u8 pad_31e[0x2];
+    Player *mRider;                 /* 0x320 */
+    Player *mClosestPlayer;         /* 0x324 */
+    s32 mVariant;                   /* 0x328 */
+    s32 mState;                     /* 0x32c */
+    s32 mPlayerPosY;                /* 0x330 */
+    s32 mTopY;                      /* 0x334 */
+    s32 mBottomY;                   /* 0x338 */
+    s32 mMiddleY;                   /* 0x33c */
+    u32 mSoundHandle;               /* 0x340 */
+    u16 mStateTimer;                /* 0x344 */
+    u8 unk_346;                     /* 0x346 */
+    u8 mIsArmed;                    /* 0x347 */
+    u8 mIsRidden;                   /* 0x348 */
+    u8 unk_349;                     /* 0x349 */
+
+    /* Declared first so the destructor TUs, rather than an ordinary virtual
+       method TU, remain the key-function/vtable owners. */
+    virtual ~UpDownLiftBbh();
+    virtual int InitResources();
+    virtual int CleanupResources();
+    virtual int Behavior();
+    virtual int Render();
+};
+
+#else
+
+/* Flat C spelling retained for any future C consumer. */
 struct UpDownLiftBbh {
     u8  pad_000[0xc];
     u16 actorID;                 /* 0x00c */
@@ -103,14 +131,9 @@ struct UpDownLiftBbh {
     u8  mIsArmed;            /* 0x347 */
     u8  mIsRidden;            /* 0x348 */
     u8  unk_349;            /* 0x349 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    int Render();
-#endif
 };
+
+#endif /* __cplusplus */
 
 typedef char UpDownLiftBbh_size_must_be_0x34c[sizeof(struct UpDownLiftBbh) == 0x34c ? 1 : -1];
 

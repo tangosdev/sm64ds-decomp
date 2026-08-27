@@ -17,11 +17,11 @@
  *   slot 4  0x02016bb8  Virtual10(Matrix4x3 &)
  *   slot 5  0x02016b78  Render(Vector3 const *)
  *
- * THE DESTRUCTOR IS DECLARED FIRST, with D1 defined as a real method. The
- * key-function vtable emitted beside it is stripped by objisolate and rebound
- * to the ROM's carved-out _ZTV5Model, as described in ModelBase.h. D0 and D2
- * remain separate C files because they are compiler variants rather than
- * separately writable source methods.
+ * THE DESTRUCTOR IS DECLARED FIRST. Each enrolled destructor-variant
+ * translation unit defines the same real method; mwcc emits D2/D0/D1 together
+ * and objisolate keeps the variant named by that file's enrollment. The
+ * key-function vtable emitted beside it is stripped and rebound to the ROM's
+ * carved-out _ZTV5Model, as described in ModelBase.h.
  *
  * LAYOUT evidence: Model::C2 calls ModelBase::C2, stores _ZTV5Model, copies
  * mat4x3 from IDENTITY_MATRIX4X3 and zeroes +0x4c. Model::DoSetFile allocates
