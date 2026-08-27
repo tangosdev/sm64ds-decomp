@@ -190,7 +190,7 @@ def sync_attribution(entries, ids):
     return added
 
 
-def stamp_discarded_output(entries, ids):
+def stamp_discarded_output(entries, ids, *, refresh=False):
     """Record the exact raw compiler surface intentionally omitted by text mode."""
     stamped = 0
     for tu_id in ids:
@@ -201,9 +201,14 @@ def stamp_discarded_output(entries, ids):
         if (entry.get("partial_isolation") or {}).get("state") \
                 != "partial-link-verified":
             raise PromotionError(f"{tu_id}: no partial-link-verified proof")
-        if entry.get("unlicensed_output_observed") is not None:
+        previous = entry.get("unlicensed_output_observed")
+        if previous is not None and not refresh:
             raise PromotionError(
                 f"{tu_id}: discarded-output inventory already exists; refusing overwrite")
+        if previous is None and refresh:
+            raise PromotionError(
+                f"{tu_id}: discarded-output inventory does not exist; use "
+                "--stamp-discarded-output")
         raw, version, flags, _build_dir, _obj_path = TB._compile_tu(entry)
         inv = TB.elf_inventory(raw)
         funcs, objects, anonymous = TB.unlicensed_inventory(entry, inv)
@@ -258,6 +263,8 @@ def main():
                         help="write path#symbol credit for every configured production TU")
     parser.add_argument("--stamp-discarded-output", action="store_true",
                         help="compile selected ids and record their exact unowned output")
+    parser.add_argument("--refresh-discarded-output", action="store_true",
+                        help="replace an existing unowned-output inventory from the pinned compiler")
     args = parser.parse_args()
     entries = load_entries()
     ids = list(args.ids)
@@ -273,8 +280,11 @@ def main():
     ids = list(dict.fromkeys(ids))
     if not ids and not args.sync_attribution:
         parser.error("pass TU ids or --all-verified")
-    if args.stamp_discarded_output:
-        stamp_discarded_output(entries, ids)
+    if args.stamp_discarded_output and args.refresh_discarded_output:
+        parser.error("choose only one discarded-output stamping mode")
+    if args.stamp_discarded_output or args.refresh_discarded_output:
+        stamp_discarded_output(entries, ids,
+                               refresh=args.refresh_discarded_output)
         rows = []
     else:
         rows = plan(ids) if ids else []
