@@ -1,13 +1,11 @@
-extern void *_ZTV4dBgW;
-extern void _ZN6Memory16operator_delete2EPv(void *ptr);
+//cpp
+// @symbol _ZN4dBgWD0Ev
+/* D0, the DELETING destructor: run the destructor body, then hand the object
+ * to operator delete. Longer than the D1/D2 pair, but built from the same
+ * one `dBgW::~dBgW()` definition. The class `operator delete` in the header
+ * is what makes the tail call land on the right deallocator. */
+#include "dBgW.h"
 
-struct dBgW {
-    void *vtable;
-};
-
-void *_ZN4dBgWD0Ev(struct dBgW *self)
+dBgW::~dBgW()
 {
-    self->vtable = &_ZTV4dBgW;
-    _ZN6Memory16operator_delete2EPv(self);
-    return self;
 }

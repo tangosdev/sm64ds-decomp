@@ -1,13 +1,11 @@
-extern void *_ZTV13ExpandingHeap;
-extern void *_ZN4HeapD2Ev(void *self);
+//cpp
+// @symbol _ZN13ExpandingHeapD1Ev
+/* D1, the complete-object destructor. One `ExpandingHeap::~ExpandingHeap()` definition makes
+ * mwcc emit D0, D1 and D2 together; objisolate keeps the one this file is
+ * bound to by its delinks entry, so the D0/D2 siblings carry the same
+ * definition in their own files. */
+#include "ExpandingHeap.h"
 
-struct ExpandingHeap {
-    void *vtable;
-};
-
-void *_ZN13ExpandingHeapD1Ev(struct ExpandingHeap *self)
+ExpandingHeap::~ExpandingHeap()
 {
-    self->vtable = &_ZTV13ExpandingHeap;
-    _ZN4HeapD2Ev(self);
-    return self;
 }

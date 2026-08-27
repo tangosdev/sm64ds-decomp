@@ -1,14 +1,11 @@
-/* dBgW::~dBgW() at 0x0203968c
- * Complete-object destructor (D1): it occupies slot 0 of this class's own vtable
- * (0x02099388, the ROM's dBgW), with D0 in slot 1. As the root of the hierarchy
- * it only resets the vptr; there is no base subobject to destruct -- which is why
- * it was mistakable for a D2. A D2 is never in a vtable at all.
- * See notes/dtor-variant-audit.md.
- */
+//cpp
+// @symbol _ZN4dBgWD1Ev
+/* D1, the complete-object destructor. One `dBgW::~dBgW()` definition makes
+ * mwcc emit D0, D1 and D2 together; objisolate keeps the one this file is
+ * bound to by its delinks entry, so the D0/D2 siblings carry the same
+ * definition in their own files. */
+#include "dBgW.h"
 
-extern int _ZTV4dBgW[]; // vtable
-
-void _ZN4dBgWD1Ev(void* self)
+dBgW::~dBgW()
 {
-    *(int*)self = (int)_ZTV4dBgW; // set vptr
 }
