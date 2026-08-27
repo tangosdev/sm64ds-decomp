@@ -3550,7 +3550,7 @@ src/func_02022260.c:
     complete
     .text start:0x02022260 end:0x02022298
 
-src/func_02022298.c:
+src/_ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev.cpp:
     complete
     .text start:0x02022298 end:0x020222f0
 
