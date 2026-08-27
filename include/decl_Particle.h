@@ -24,7 +24,7 @@ extern u32 _ZN8Particle6System10NewWeatherEjj5Fix12IiES2_S2_PK11Vector3_16fj(u32
 extern u32 _ZN8Particle7Texture12AllocTexVramEjb(const void*, u32);
 extern unsigned int _ZN8Particle7Texture12AllocPalVramEjb(unsigned int, unsigned int);
 extern void _ZN8Particle10SysTracker10InitialiseEv(void*);
-extern void _ZN8Particle14SimpleCallbackC2Ev(char*);
+extern void _ZN5dPa_c7level_c16simpleCallback_cC1Ev(char*);
 extern void _ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_(Fix12i, Fix12i, Fix12i);
 extern void _ZN8Particle9RenderAllEv(void);
 

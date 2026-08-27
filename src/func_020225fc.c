@@ -5,12 +5,12 @@ struct Obj {
     short f8;          /* 0x8 */
 };
 
-extern void func_020226a4(char *p);
+extern void _ZN5dPa_c7level_c16simpleCallback_cC2Ev(char *p);
 extern int data_0208f414;
 
 struct Obj *func_020225fc(struct Obj *thiz)
 {
-    func_020226a4((char *)thiz);
+    _ZN5dPa_c7level_c16simpleCallback_cC2Ev((char *)thiz);
     thiz->vt = &data_0208f414;
     thiz->f6 = 0x1000;
     thiz->f8 = 0;

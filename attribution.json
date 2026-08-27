@@ -8,6 +8,10 @@
     "mitch.cairns": "mitchellcairns"
   },
   "overrides": {
+    "src/_ZN5dPa_c7level_c16simpleCallback_cC1Ev.cpp": "tangosdev",
+    "src/_ZN5dPa_c7level_c16simpleCallback_cC1Ev.cpp#_ZN8Particle14SimpleCallbackC2Ev": "tangosdev",
+    "src/_ZN5dPa_c7level_c16simpleCallback_cC2Ev.cpp": "tangosdev",
+    "src/_ZN5dPa_c7level_c16simpleCallback_cC2Ev.cpp#func_020226a4": "tangosdev",
     "src/_ZN10MemoryNode6TargetC1EPS_.cpp": "tangosdev",
     "src/_ZN10MemoryNode6TargetC1EPS_.cpp#_ZN10MemoryNode6TargetC1EP10MemoryNode": "tangosdev",
     "src/actors/ActorBase_SceneNode.cpp#_ZN7fBase_c9SceneNode5ResetEv": "tangosdev",
