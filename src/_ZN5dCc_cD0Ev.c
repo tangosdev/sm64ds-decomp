@@ -1,15 +1,13 @@
-extern void *data_0208e6ec;
-extern void *func_02014fa4(void *self);
-extern void _ZN6Memory16operator_delete2EPv(void *ptr);
+//cpp
+// @symbol _ZN5dCc_cD0Ev
+/* D0, the DELETING destructor: run the destructor body, then hand the object
+ * to operator delete. Longer than the D1/D2 pair, but built from the same one
+ * `dCc_c::~dCc_c()` definition. */
+#include "dCc_c.h"
 
-struct dCc_c {
-    void *vtable;
-};
+extern "C" void func_02014fa4(void *self);
 
-void *_ZN5dCc_cD0Ev(struct dCc_c *self)
+dCc_c::~dCc_c()
 {
-    self->vtable = &data_0208e6ec;
-    func_02014fa4(self);
-    _ZN6Memory16operator_delete2EPv(self);
-    return self;
+    func_02014fa4(this);
 }

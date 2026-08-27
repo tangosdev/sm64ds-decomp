@@ -1,12 +1,14 @@
+//cpp
 // @symbol _ZN7fBase_cD1Ev
-/* recovered: named members + shared header, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header */
+/* D1, the complete-object destructor. One `fBase_c::~fBase_c()` definition makes mwcc
+ * emit D0, D1 and D2 together; objisolate keeps the one this file is bound to
+ * by its delinks entry, so the siblings carry the same definition. */
 #include "fBase_c.h"
-extern void *_ZTV7fBase_c[];   /* 0x02099edc */
-int *_ZN7fBase_cD1Ev(struct fBase_c *self) {
-    ((int *)self)[0] = (int)_ZTV7fBase_c;
-    func_020440e8((char *)&self->renderNode);
-    func_020440e8((char *)&self->behavNode);
-    return ((int *)self);
+
+extern "C" void func_020440e8(void *node);
+
+fBase_c::~fBase_c()
+{
+    func_020440e8(&renderNode);
+    func_020440e8(&behavNode);
 }

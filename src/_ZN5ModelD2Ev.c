@@ -1,28 +1,24 @@
-/* Model::~Model (D2/base) at 0x02016ca8
+//cpp
+// @symbol _ZN5ModelD2Ev
+/* D2, the base-object destructor. Same definition as the D1 file, and
+ * deliberately so: Model has no virtual bases, so mwcc emits D1 and D2 as
+ * byte-identical code. Only how the ROM REACHES an address separates them --
+ * a vtable slot holds D1, a derived destructor's base-chain `bl` reaches D2. */
+/* recovered: real C++ destructor
  *
- * Model : ModelBase.
- *   [this+0]    = _ZTV5Model           (0x0208e90c)
- *   if (this->unk4C) operator delete(this->unk4C)  (bl 0x0203cbc0 -> _ZdlPv)
- *   bl 0x020170b8 = ModelBase::~ModelBase(this)    (D2/base)
- * returns this.
+ * Model owns the transformed-vertex buffer allocated by DoSetFile. Releasing
+ * that buffer through the game's delete veneer is the only part of destruction
+ * written by this class: C++ emits the Model vtable restore before the body and
+ * the ModelBase destructor call after it. The class-specific operator delete
+ * inherited from ModelBase also gives the compiler-generated deleting
+ * destructor its ROM callee.
  */
+#include "Model.h"
 
-struct Model {
-    void **vtable;       /* 0x00 */
-    char pad[0x4c - 4];
-    void *unk4C;         /* 0x4c: freed pointer */
-};
+extern "C" void func_0203cbc0(void *ptr);
 
-extern void *_ZTV5Model[];
-
-extern void _ZdlPv(void *ptr);
-extern void *_ZN9ModelBaseD2Ev(struct Model *thiz);
-
-struct Model *_ZN5ModelD2Ev(struct Model *thiz)
+Model::~Model()
 {
-    thiz->vtable = (void **)_ZTV5Model;
-    if (thiz->unk4C)
-        _ZdlPv(thiz->unk4C);
-    _ZN9ModelBaseD2Ev(thiz);
-    return thiz;
+    if (transformsBuf)
+        func_0203cbc0(transformsBuf);
 }

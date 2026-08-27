@@ -1,18 +1,16 @@
-/* _ZN9ModelBaseD2Ev at 0x020170b8
- * ModelBase destructor: write own vtable; if member at +4 is non-null,
- * call cleanup(member) (0x02018144); return this.
- */
-struct ModelBase {
-    void *vtable; /* 0x00 */
-    void *res;    /* 0x04 */
-};
-extern void *_ZTV9ModelBase[];
-extern void Deallocate(void *res); /* 0x02018144 */
-struct ModelBase *_ZN9ModelBaseD2Ev(struct ModelBase *thiz)
+//cpp
+// @symbol _ZN9ModelBaseD2Ev
+/* D2, the base-object destructor. Same definition as the D1 file, and
+ * deliberately so: ModelBase has no virtual bases, so mwcc emits D1 and D2 as
+ * byte-identical code. Only how the ROM REACHES an address separates them --
+ * a vtable slot holds D1, a derived destructor's base-chain `bl` reaches D2. */
+#include "ModelBase.h"
+
+extern "C" void Deallocate(void *ptr);
+
+ModelBase::~ModelBase()
 {
-    thiz->vtable = (void *)_ZTV9ModelBase;
-    if (thiz->res != 0) {
-        Deallocate(thiz->res);
+    if (modelFile != 0) {
+        Deallocate(modelFile);
     }
-    return thiz;
 }

@@ -1,18 +1,15 @@
-/* _ZN9ModelBaseD1Ev at 0x02017120
- * ModelBase destructor: write own vtable; if member at +4 is non-null,
- * call cleanup(member) (0x02018144); return this.
- */
-struct ModelBase {
-    void *vtable; /* 0x00 */
-    void *res;    /* 0x04 */
-};
-extern void *_ZTV9ModelBase[];
-extern void Deallocate(void *res); /* 0x02018144 */
-struct ModelBase *_ZN9ModelBaseD1Ev(struct ModelBase *thiz)
+//cpp
+// @symbol _ZN9ModelBaseD1Ev
+/* D1, the complete-object destructor. One `ModelBase::~ModelBase()` definition makes mwcc
+ * emit D0, D1 and D2 together; objisolate keeps the one this file is bound to
+ * by its delinks entry, so the siblings carry the same definition. */
+#include "ModelBase.h"
+
+extern "C" void Deallocate(void *ptr);
+
+ModelBase::~ModelBase()
 {
-    thiz->vtable = (void *)_ZTV9ModelBase;
-    if (thiz->res != 0) {
-        Deallocate(thiz->res);
+    if (modelFile != 0) {
+        Deallocate(modelFile);
     }
-    return thiz;
 }

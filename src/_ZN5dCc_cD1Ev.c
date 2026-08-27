@@ -1,20 +1,13 @@
+//cpp
 // @symbol _ZN5dCc_cD1Ev
-/* recovered: named members + shared header */
+/* D1, the complete-object destructor. One `dCc_c::~dCc_c()` definition makes mwcc
+ * emit D0, D1 and D2 together; objisolate keeps the one this file is bound to
+ * by its delinks entry, so the siblings carry the same definition. */
 #include "dCc_c.h"
-/* dCc_c::~dCc_c() at 0x020150a8
- * Complete-object destructor (D1), vtable slot 0. Installs the dCc_c
- * vtable, then unlinks this node from the active list. Returns this.
- *
- * func_02014fa4 is NOT a base destructor -- dCc_c is a root, its
- * typeinfo is the baseless __class_type_info kind. See include/dCc_c.h.
- */
 
-extern int data_0208e6ec[];   // vtable (wildcard reloc, not byte-verified)
-extern void func_02014fa4(void* self); // intrusive-list unlink
+extern "C" void func_02014fa4(void *self);
 
-void* _ZN5dCc_cD1Ev(void* self)
+dCc_c::~dCc_c()
 {
-    *(int*)self = (int)data_0208e6ec; // set vptr
-    func_02014fa4(self);
-    return self;
+    func_02014fa4(this);
 }

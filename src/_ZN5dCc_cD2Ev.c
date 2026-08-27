@@ -1,21 +1,14 @@
+//cpp
 // @symbol _ZN5dCc_cD2Ev
-/* recovered: named members + shared header */
+/* D2, the base-object destructor. Same definition as the D1 file, and
+ * deliberately so: dCc_c has no virtual bases, so mwcc emits D1 and D2 as
+ * byte-identical code. Only how the ROM REACHES an address separates them --
+ * a vtable slot holds D1, a derived destructor's base-chain `bl` reaches D2. */
 #include "dCc_c.h"
-/* dCc_c::~dCc_c() at 0x02015058
- * Base-object destructor (D2), reached by direct call from derived
- * destructors, never through a vtable. Installs the dCc_c vtable,
- * then unlinks this node from the active list. Returns this.
- *
- * func_02014fa4 is NOT a base destructor -- dCc_c is a root, its
- * typeinfo is the baseless __class_type_info kind. See include/dCc_c.h.
- */
 
-extern int data_0208e6ec[];   // vtable (wildcard reloc, not byte-verified)
-extern void func_02014fa4(void* self); // intrusive-list unlink
+extern "C" void func_02014fa4(void *self);
 
-void* _ZN5dCc_cD2Ev(void* self)
+dCc_c::~dCc_c()
 {
-    *(int*)self = (int)data_0208e6ec; // set vptr
-    func_02014fa4(self);
-    return self;
+    func_02014fa4(this);
 }
