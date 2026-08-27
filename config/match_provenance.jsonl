@@ -469,3 +469,5 @@
 {"id":"arm9:0x0202fd0c","module":"arm9","addr":33750284,"name":"_ZN4View6RenderEv","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"tangosdev","srcPath":"src/_ZN4View6RenderEv.cpp"}
 {"id":"arm9:0x0200705c","module":"arm9","addr":33583196,"name":"_ZN6CameraD1Ev","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"tangosdev","srcPath":"src/_ZN6CameraD1Ev.cpp"}
 {"id":"arm9:0x02007098","module":"arm9","addr":33583256,"name":"_ZN6CameraD0Ev","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"tangosdev","srcPath":"src/_ZN6CameraD0Ev.cpp"}
+{"id":"ov016:0x0211260c","module":"ov016","addr":34678284,"name":"_ZN6ShipUpD1Ev","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"tangosdev","srcPath":"src/_ZN6ShipUpD1Ev.cpp"}
+{"id":"ov016:0x02112650","module":"ov016","addr":34678352,"name":"_ZN6ShipUpD0Ev","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"tangosdev","srcPath":"src/_ZN6ShipUpD0Ev.cpp"}
