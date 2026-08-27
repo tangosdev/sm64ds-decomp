@@ -12,7 +12,7 @@ struct SolidHeap {
 };
 
 extern void *_ZTV9SolidHeap;
-extern void _ZN4HeapC1EPvjPS_(struct SolidHeap *heap, void *start, u32 size, struct Heap *root);
+extern void _ZN4HeapC2EPvjPS_(struct SolidHeap *heap, void *start, u32 size, struct Heap *root);
 
 struct SolidHeap *_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator(
     struct SolidHeap *heap,
@@ -21,7 +21,7 @@ struct SolidHeap *_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator(
     struct Heap *root,
     struct SolidHeapAllocator *allocator)
 {
-    _ZN4HeapC1EPvjPS_(heap, start, size, root);
+    _ZN4HeapC2EPvjPS_(heap, start, size, root);
     heap->vtable = &_ZTV9SolidHeap;
     heap->allocator = allocator;
     return heap;
