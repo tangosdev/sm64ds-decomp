@@ -284,6 +284,3 @@ void func_ov098_02137c8c(char *t)
  * member with a destructor of its own. D0 additionally destroys through the
  * base and returns the object to its heap via an inline operator delete.
  */
-ArrowSignRight::~ArrowSignRight()
-{
-}

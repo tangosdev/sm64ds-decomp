@@ -28,7 +28,7 @@ struct ShipWater : dBgActor_c {
     s32 mSoundID;                      /* 0x33c */
 
     /* --- vtable --- */
-    virtual ~ShipWater();
+    virtual ~ShipWater() {}
 
     int Behavior();
     int CleanupResources();

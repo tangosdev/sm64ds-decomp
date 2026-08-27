@@ -48,6 +48,3 @@ int daObjKm3_Kuruma_c::CleanupResources()
 /* ROM ordinal 0 -- _ZN17daObjKm3_Kuruma_cD1Ev */
 // @symbol _ZN17daObjKm3_Kuruma_cD1Ev
 /* The compiler emits D2, D0 and D1 from this one class definition. */
-daObjKm3_Kuruma_c::~daObjKm3_Kuruma_c()
-{
-}

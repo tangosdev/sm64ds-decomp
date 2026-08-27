@@ -25,7 +25,7 @@
 struct SwitchPillar : dBgActor_c {
     u8  mPressed;            /* 0x31e */
 
-    virtual ~SwitchPillar();            /* slots 16 (D1), 17 (D0) */
+    virtual ~SwitchPillar() {}            /* slots 16 (D1), 17 (D0) */
 
     virtual s32   InitResources();         /* slot  0 */
     virtual s32   CleanupResources();      /* slot  3 */

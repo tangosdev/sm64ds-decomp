@@ -27,7 +27,7 @@ struct ChillBully : daOts_c {
        is why it is a field and not a local. */
     s8  mStarSlot;                  /* 0x3fb */
 
-    virtual ~ChillBully();
+    virtual ~ChillBully() {}
 
     /* methods */
     int Behavior();

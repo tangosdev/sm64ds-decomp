@@ -181,6 +181,3 @@ int BasementWater::CleanupResources()
  * The deallocation is an inline operator delete, which is why nothing below
  * mentions a heap.
  */
-BasementWater::~BasementWater()
-{
-}

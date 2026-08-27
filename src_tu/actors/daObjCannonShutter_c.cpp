@@ -243,6 +243,3 @@ void func_ov002_020bc990(void *c){
  * dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This class adds no
  * member with a destructor of its own.
  */
-daObjCannonShutter_c::~daObjCannonShutter_c()
-{
-}

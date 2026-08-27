@@ -120,9 +120,11 @@
   },
   "compiler_only_output": [
     {
-      "symbol": "_ZN14ArrowSignRightD2Ev",
-      "disposition": "deadstrip",
-      "reason": "compiler-generated base-object destructor is byte-identical to D1, has no configured ROM symbol, and has no inbound relocation"
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "vague-linkage copy of _ZN7Vector3D1Ev, re-emitted by every TU that needs it; the cartridge keeps one at arm9:0x020072c0 and another enrolled source owns it. rombuild proves this object's body against the cartridge before discarding it."
     }
   ],
   "externalized_output": [

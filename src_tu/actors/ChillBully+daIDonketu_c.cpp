@@ -199,6 +199,3 @@ int func_ov027_02111680(char* self){
  * Byte-for-byte the same shape as Bully's and BigBully's, which is what three
  * siblings sharing a base look like.
  */
-ChillBully::~ChillBully()
-{
-}
