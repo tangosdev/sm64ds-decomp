@@ -152,7 +152,10 @@ extern char dsstate_hi;
 //
 // Two one-shot guards now live INSIDE the captured section, because what they
 // guard lives there too: hal/level_boot.cpp's level mount cache and
-// hal/ov009_boot.cpp's sinit flag. Both of those files carry the argument.
+// hal/ov009_boot.cpp's sinit flag. Both of those files carry the argument, and
+// hal/level_boot.cpp states the rule it comes from once, on g_level_mounted: a
+// one-shot guard belongs on the same side of the captured section as the work
+// it guards.
 // SM64DS_SS_NO_ROLLGUARD=1 puts the pre-restore values back after the section
 // copy, which is exactly what a plain host static used to do -- so ONE binary
 // answers both arms of the A/B and a fix-off run needs no second build.

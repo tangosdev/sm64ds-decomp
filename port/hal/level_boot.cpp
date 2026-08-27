@@ -1642,6 +1642,27 @@ extern "C" void port_sqrt_selftest(void);   /* hal/scene_boot.cpp */
  * whichever way the restore moves them -- which is the same argument, in the
  * same words, that hal/lk7_persist.cpp makes for the host file-handle table.
  *
+ * THE RULE THIS AND EVERY RULING LIKE IT COMES FROM, written once here because
+ * it has been everywhere implied and nowhere stated: A ONE-SHOT GUARD BELONGS
+ * ON THE SAME SIDE OF THE CAPTURED SECTION AS THE WORK IT GUARDS. Same side and
+ * the two roll back together and can never disagree, whichever way a restore
+ * moves them; opposite sides and a restore moves one without the other, which
+ * is the defect above in its general form. That is the whole question each
+ * guard is asked and the only one: this array and the eighteen level-path
+ * bring-ups host their subjects in .dsstate and are bracketed with them, while
+ * port_level_mounts_install below guards the host mount REGISTRY and stays
+ * outside it. Same shape, opposite answers, one test.
+ *
+ * AND THE RULE ERRS SAFE ONLY BECAUSE OF A SECOND FACT, which is checked per
+ * pass rather than assumed: every bracketed pass is RE-RUNNABLE. pack_check,
+ * syms_patch, the __sinit_* bodies and the vtable fills are idempotent on their
+ * own image, they allocate nothing on the host and they register nothing with
+ * the host, so the worst a bracket placed wrongly can cost is a redundant
+ * re-patch -- never a doubled effect. A pass that gains a host allocation or a
+ * host registration leaves that set and has to be ruled on its own terms, which
+ * is why port_scene_fill_mgm stays host-side: it registers an atexit handler,
+ * and registering that twice is a doubled effect no re-patch argument covers.
+ *
  * The cells hold HOST addresses into the mounted images, which are image
  * addresses and not heap or stack, so lk6's cross-process landmine scan
  * ([ss-scan]) is untouched by this: it counts words pointing at THIS process's
