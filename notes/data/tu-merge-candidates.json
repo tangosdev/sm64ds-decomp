@@ -11955,7 +11955,7 @@
     "src/_ZN8Particle25EndingStarGlitterCallback8OnUpdateERNS_6SystemEb.c",
     "src/_ZN8Particle25EndingStarGlitterCallback14SpawnParticlesERNS_6SystemE.c",
     "src/func_02022260.c",
-    "src/func_02022298.c",
+    "src/_ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev.cpp",
     "src/_ZN8Particle17CheckLavaCallback8OnUpdateERNS_6SystemEb.c",
     "src/_ZN8Particle17CheckLavaCallback14SpawnParticlesERNS_6SystemE.cpp",
     "src/_ZN8Particle22FitWaterSimpleCallback8OnUpdateERNS_6SystemEb.c",

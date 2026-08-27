@@ -913,7 +913,7 @@ _ZN8Particle18CheckWaterCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0
 _ZN8Particle25EndingStarGlitterCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x50) addr:0x020221dc
 _ZN8Particle25EndingStarGlitterCallback14SpawnParticlesERNS_6SystemE kind:function(arm,size=0x34) addr:0x0202222c
 func_02022260 kind:function(arm,size=0x38) addr:0x02022260
-func_02022298 kind:function(arm,size=0x58) addr:0x02022298
+_ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev kind:function(arm,size=0x58) addr:0x02022298
 _ZN8Particle17CheckLavaCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x38) addr:0x020222f0
 _ZN8Particle17CheckLavaCallback14SpawnParticlesERNS_6SystemE kind:function(arm,size=0xf0) addr:0x02022328
 _ZN8Particle22FitWaterSimpleCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x4c) addr:0x02022418
@@ -3721,7 +3721,7 @@ _ZTIN5dPa_c7level_c18fitWaterCallback_cE kind:data(any) addr:0x0208f390
 data_0208f3a4 kind:data(any) addr:0x0208f3a4
 _ZTVN5dPa_c7level_c10callback_cE kind:data(any) addr:0x0208f3b4
 _ZTVN5dPa_c7level_c16simpleCallback_cE kind:data(any) addr:0x0208f3c4
-data_0208f3d4 kind:data(any) addr:0x0208f3d4
+_ZTVN5dPa_c7level_c20edStarKiraCallback_cE kind:data(any) addr:0x0208f3d4
 data_0208f3e4 kind:data(any) addr:0x0208f3e4
 data_0208f3f4 kind:data(any) addr:0x0208f3f4
 data_0208f404 kind:data(any) addr:0x0208f404

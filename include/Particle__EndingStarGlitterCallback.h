@@ -1,5 +1,6 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Particle::EndingStarGlitterCallback: 2 matched functions, 2 evidenced fields.
+ * Compatibility view of ROM RTTI class dPa_c::level_c::edStarKiraCallback_c:
+ * 2 still-imported method symbols, 2 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef PARTICLE__ENDINGSTARGLITTERCALLBACK_H
