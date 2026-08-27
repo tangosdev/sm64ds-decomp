@@ -1,34 +1,40 @@
 //cpp
-#include "types.h"
 // @symbol _ZN4Fish13InitResourcesEv
-/* recovered: named members + shared header, real C++ method */
+/* recovered: typed ModelAnim and shared-file setup */
 #include "Fish.h"
+#include "SharedFilePtr.h"
+
 extern "C" {
-extern int _ZN9Animation8LoadFileER13SharedFilePtr(void*);
-extern int _ZN5Model8LoadFileER13SharedFilePtr(void*);
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*,int,int,int);
-extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*,int,int,int,unsigned int);
+void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+    void *self, BCA_File *file, int flags, int speed, unsigned int startFrame);
 }
-extern int data_ov100_021489cc[];
-extern int* data_ov100_021473a4[];
-extern int* data_ov100_021473b0[];
+extern SharedFilePtr data_ov100_021489cc;
+extern SharedFilePtr *data_ov100_021473a4[];
+extern SharedFilePtr *data_ov100_021473b0[];
 
 int Fish::InitResources()
 {
-  u8 v;
-  _ZN9Animation8LoadFileER13SharedFilePtr(data_ov100_021489cc);
-  mModelIndex = (param1 >> 4) & 7;
-  v = mModelIndex;
-  if (v > 2) {
-    if (v < 6) mVariant = v - 2;
-    mModelIndex = 0;
-  }
-  _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, _ZN5Model8LoadFileER13SharedFilePtr(data_ov100_021473a4[mModelIndex]), 1, -1);
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char*)this)+0xd4, _ZN9Animation8LoadFileER13SharedFilePtr(data_ov100_021473b0[mModelIndex]), 0, 0x1000, 0);
-  mHidden = 1;
-  mUniqueID_13c = uniqueID;
-  mState = 0;
-  mTopY = mPosY + 0xc8000;
-  unk_150 = 0;
-  return 1;
+    u8 modelIndex;
+    Animation::LoadFile(data_ov100_021489cc);
+    mModelIndex = (param1 >> 4) & 7;
+    modelIndex = mModelIndex;
+    if (modelIndex > 2) {
+        if (modelIndex < 6)
+            mVariant = modelIndex - 2;
+        mModelIndex = 0;
+    }
+    mModelAnim.SetFile(
+        (BMD_File *)Model::LoadFile(*data_ov100_021473a4[mModelIndex]), 1, -1);
+    /* Calling the true Fix12<int>-taking method homes the class value to the
+       stack under this compiler (+8 bytes), so retain its exact ROM ABI here. */
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+        &mModelAnim,
+        (BCA_File *)Animation::LoadFile(*data_ov100_021473b0[mModelIndex]),
+        0, 0x1000, 0);
+    mHidden = 1;
+    mUniqueID_13c = uniqueID;
+    mState = 0;
+    mTopY = mPosY + 0xc8000;
+    unk_150 = 0;
+    return 1;
 }
