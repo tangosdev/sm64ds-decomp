@@ -1,8 +1,8 @@
 {
   "id": "arm9/Scene",
   "module": "arm9",
-  "source": "src_tu/scene/Scene.cpp",
-  "promoted_source": "src/actors/Scene.cpp",
+  "source": "src/game/stages/Scene.cpp",
+  "promoted_source": "src/game/stages/Scene.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -337,5 +337,53 @@
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
     "romIdenticalToBaseline": "The 16,777,216-byte ROM this run built has sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8, which is BIT-IDENTICAL to the one `linkcheck --baseline --module arm9` builds with no TU substitution at all. Substituting all 21 derived objects changes nothing in the cartridge.",
     "checkSymbolsIsPreExisting": "phases.checkSymbols is false, and it is NOT this TU's. `dsd check symbols --fail` emits exactly two errors -- data_020ad524 and data_020ad560 'not found in linked binary', both ~0x7f000 bytes outside this TU's span -- and the BASELINE CONTROL run, which substitutes nothing, emits the same two. Recorded by the tool itself as symbolCheckNewVsBaseline: [] (0 NEW, 0 resolved). The first partial run reported NOT partial-link-verified only because no baseline artefact existed yet to attribute it against; with the control in hand the same run passes."
+  },
+  "production_mode": "derived-text",
+  "unlicensed_output_observed": {
+    "note": "Pinned-compiler inventory stamped by tools/promote_derived_tus.py --stamp-discarded-output before default production admission. These definitions are not ROM ownership claims; every build requires an exact inventory match, exact derived text contributions, exact modules, and an exact ROM.",
+    "toolchain": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "text": [],
+    "data": [
+      {
+        "symbol": "_ZTI7dBase_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "size": "0x8",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI8dScene_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS8dScene_c",
+        "size": "0xa",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTV8dScene_c",
+        "size": "0x50",
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "bss": [],
+    "init": [],
+    "rodata": [],
+    "ctor": []
   }
 }

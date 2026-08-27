@@ -869,6 +869,27 @@
     "src/game/stages/LevelObjects.cpp#_Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij": "ruspecial",
     "src/game/stages/LevelObjects.cpp#_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij": "tangosdev",
     "src/game/stages/LevelObjects.cpp#_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij": "ruspecial",
-    "src/game/stages/LevelObjects.cpp#_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij": "tangosdev"
+    "src/game/stages/LevelObjects.cpp#_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij": "tangosdev",
+    "src/game/stages/Scene.cpp#_ZN8dScene_cD1Ev": "tangosdev",
+    "src/game/stages/Scene.cpp#_ZN8dScene_cD0Ev": "andrewboudreau",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c20SetAndStopColorFaderEv": "tangosdev",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c9SetFadersEP15FaderBrightness": "tangosdev",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c16SpawnIfNecessaryEv": "tangosdev",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c18PrepareToSpawnBootEv": "tangosdev",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c14StartSceneFadeEjjt": "tangosdev",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c15SetSceneToSpawnEjj": "tangosdev",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c11AfterRenderEj": "ruspecial",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c12BeforeRenderEv": "tangosdev",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c13AfterBehaviorEj": "andrewboudreau",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c14BeforeBehaviorEv": "tangosdev",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c21AfterCleanupResourcesEj": "ruspecial",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c22BeforeCleanupResourcesEv": "tangosdev",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c18AfterInitResourcesEj": "ruspecial",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c19BeforeInitResourcesEv": "tangosdev",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c19ResetFadersAndSoundEv": "tangosdev",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c20Initialise3dGraphicsEv": "andrewboudreau",
+    "src/game/stages/Scene.cpp#_ZN5Stage12SetVramBanksEv": "tangosdev",
+    "src/game/stages/Scene.cpp#_ZN2GX15DisableAllBanksEv": "tangosdev",
+    "src/game/stages/Scene.cpp#_ZN8dScene_c22ResetHardwareRegistersEv": "tangosdev"
   }
 }
