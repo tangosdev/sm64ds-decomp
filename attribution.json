@@ -913,6 +913,13 @@
     "src/game/actors/ClockPaintingPendulum.cpp#_ZN21ClockPaintingPendulum6RenderEv": "andrewboudreau",
     "src/game/actors/ClockPaintingPendulum.cpp#_ZN21ClockPaintingPendulum8BehaviorEv": "lunavyqo",
     "src/game/actors/ClockPaintingPendulum.cpp#_ZN21ClockPaintingPendulum13InitResourcesEv": "tangosdev",
-    "src/game/actors/ClockPaintingPendulum.cpp#ClockPaintingPendulum_Spawn": "tangosdev"
+    "src/game/actors/ClockPaintingPendulum.cpp#ClockPaintingPendulum_Spawn": "tangosdev",
+    "src/game/actors/ChillBully+daIDonketu_c.cpp#_ZN10ChillBullyD1Ev": "andrewboudreau",
+    "src/game/actors/ChillBully+daIDonketu_c.cpp#_ZN10ChillBullyD0Ev": "andrewboudreau",
+    "src/game/actors/ChillBully+daIDonketu_c.cpp#func_ov027_02111680": "tangosdev",
+    "src/game/actors/ChillBully+daIDonketu_c.cpp#func_ov027_021116f0": "tangosdev",
+    "src/game/actors/ChillBully+daIDonketu_c.cpp#_ZN10ChillBully8BehaviorEv": "andrewboudreau",
+    "src/game/actors/ChillBully+daIDonketu_c.cpp#_ZN10ChillBully13InitResourcesEv": "andrewboudreau",
+    "src/game/actors/ChillBully+daIDonketu_c.cpp#ChillBully_Spawn": "tangosdev"
   }
 }
