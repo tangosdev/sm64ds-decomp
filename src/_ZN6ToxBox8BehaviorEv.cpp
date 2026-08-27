@@ -1,61 +1,48 @@
 //cpp
-struct Vector3 { int x, y, z; };
-struct Mtx43 { int m[12]; };
-struct ToxBox;
+// @symbol _ZN6ToxBox8BehaviorEv
+#include "ToxBox.h"
 
-typedef void (ToxBox::*PMF)();
-struct TableEnt { PMF pmf; };
-extern TableEnt data_ov092_02132568[];
-
-struct ToxBox {
-    char pad[0x568];
-    int state;
-};
-
-#define LA(p) (p)
+typedef void (ToxBox::*ToxBoxState)();
+struct ToxBoxStateEntry { ToxBoxState state; };
+extern ToxBoxStateEntry data_ov092_02132568[];
 
 extern "C" {
-void func_ov092_02131aec(void* c);
-int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
-void func_ov092_02131a88(char* self);
-void _ZN5dCc_c5ClearEv(void* m);
-void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* m, Vector3* v);
-void _ZN5dCc_c6UpdateEv(void* m);
+void func_ov092_02131aec(ToxBox *self);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(
+    dBgActor_c *self, int range, int offset);
+void func_ov092_02131a88(ToxBox *self);
 }
 
-extern "C" int _ZN6ToxBox8BehaviorEv(ToxBox* self) {
-    char* c = (char*)self;
-    Vector3 v;
-    *(unsigned char*)(c+0x576) = 1;
-    *(unsigned char*)(c+0x577) = 0;
-    {
-        int idx = self->state;
-        (self->*data_ov092_02132568[idx].pmf)();
-        {
-            unsigned short* cnt = (unsigned short*)LA(c+0x564);
-            (*cnt)++;
-        }
-        if (idx != self->state) {
-            *(unsigned short*)(c+0x564) = 0;
-        }
-    }
-    func_ov092_02131aec(c);
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0) {
-        func_ov092_02131a88(c);
-    }
-    if (*(unsigned char*)(c+0x577) == 1) {
-        if (*(short*)(c+0x8c) != 0 || *(short*)(c+0x8e) != 0 || *(short*)(c+0x90) != 0) {
-            *(Mtx43*)(c+0x528) = *(Mtx43*)(c+0xf0);
-            *(short*)(c+0x8c) = 0;
-            *(short*)(c+0x8e) = 0;
-            *(short*)(c+0x90) = 0;
+int ToxBox::Behavior()
+{
+    unk_576 = 1;
+    unk_577 = 0;
+
+    s32 oldState = mMoveDir;
+    (this->*data_ov092_02132568[oldState].state)();
+    mStateTimer++;
+    if (oldState != mMoveDir)
+        mStateTimer = 0;
+
+    func_ov092_02131aec(this);
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0)
+        func_ov092_02131a88(this);
+
+    if (unk_577 == 1) {
+        if (mAngleX != 0 || mAngleY != 0 || mAngleZ != 0) {
+            mBaseMtx = mModel.mat4x3;
+            mAngleX = 0;
+            mAngleY = 0;
+            mAngleZ = 0;
         }
     }
-    _ZN5dCc_c5ClearEv(c+0x4e8);
-    v.x = 0;
-    v.y = -0xfa000;
-    v.z = 0;
-    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c+0x4e8, &v);
-    _ZN5dCc_c6UpdateEv(c+0x4e8);
+
+    mdCcAcPos_c.Clear();
+    Vector3 offset;
+    offset.x = 0;
+    offset.y = -0xfa000;
+    offset.z = 0;
+    mdCcAcPos_c.SetPosRelativeToActor(offset);
+    mdCcAcPos_c.Update();
     return 1;
 }

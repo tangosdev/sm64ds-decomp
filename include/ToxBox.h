@@ -17,6 +17,51 @@
 #ifndef TOXBOX_H
 #define TOXBOX_H
 #include "types.h"
+
+#ifdef __cplusplus
+
+/* dBgActor_c.h deliberately selects the flat Matrix4x3 spelling before
+ * Model.h. It must therefore be the first ownership header included here. */
+#include "dBgActor_c.h"
+#include "dBgCh_Actr.h"
+#include "dCcAcPos_c.h"
+#include "PathPtr.h"
+
+/* The teardown and construction order independently identify the real class:
+ * dBgActor_c is the base, followed by dBgCh_Actr, dCcAcPos_c, and PathPtr
+ * members at the same offsets used by ToxBox_Spawn. The base owns the Model
+ * and dBgW_KcMbg formerly repeated in this header. */
+struct ToxBox : dBgActor_c {
+    dActor_c *mPlayerActor;         /* 0x320 - player that started the roll */
+    dBgCh_Actr mWithMeshClsn;       /* 0x324 */
+    u8 pad_4e0[0x8];
+    dCcAcPos_c mdCcAcPos_c;         /* 0x4e8 */
+    Matrix4x3 mBaseMtx;             /* 0x528 - untumbled model transform */
+    Vector3 mRestPos;               /* 0x558 */
+    u16 mStateTimer;                /* 0x564 */
+    u8 pad_566[0x2];
+    s32 mMoveDir;                   /* 0x568 - movement-state dispatch index */
+    s32 *mMoveSeq;                  /* 0x56c */
+    s32 mMoveSeqIndex;              /* 0x570 */
+    u8 mMoveKind;                   /* 0x574 - canned sequence or path */
+    u8 mOrientBits;                 /* 0x575 */
+    u8 unk_576;
+    u8 unk_577;
+    s32 mPathNodeCount;             /* 0x578 */
+    s32 mPathNodeIndex;             /* 0x57c */
+    Vector3 mPathNode;              /* 0x580 */
+    PathPtr mPathPtr;               /* 0x58c */
+
+    virtual ~ToxBox();
+
+    virtual int InitResources();
+    virtual int CleanupResources();
+    virtual int Behavior();
+    virtual int Render();
+};
+
+#else
+
 #include "Model.h"
 #include "dBgW_KcMbg.h"
 #include "dBgCh_Actr.h"
@@ -118,13 +163,9 @@ struct ToxBox {
     u8  mPathPtr;            /* 0x58c */
     /* trailing extent the ROM's `new ToxBox` literal proves; see tools/opnew_sizes.py */
     u8 pad_590[0x4];
-#ifdef __cplusplus
-    /* methods */
-    int CleanupResources();
-    int InitResources();
-    int Render();
-#endif
 };
+
+#endif /* __cplusplus */
 
 typedef char ToxBox_size_must_be_0x594[sizeof(struct ToxBox) == 0x594 ? 1 : -1];
 
