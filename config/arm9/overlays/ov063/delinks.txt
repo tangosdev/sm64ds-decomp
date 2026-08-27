@@ -383,11 +383,11 @@ src/actors/daTrs_c/Boo_Spawn.cpp:
     complete
     .text start:0x0211c590 end:0x0211c600
 
-src/actors/MansionSteps/_ZN12MansionStepsD1Ev.cpp:
+src/actors/MansionSteps/_ZN11daTrsTrap_cD1Ev.cpp:
     complete
     .text start:0x0211c600 end:0x0211c638
 
-src/actors/MansionSteps/_ZN12MansionStepsD0Ev.c:
+src/actors/MansionSteps/_ZN11daTrsTrap_cD0Ev.cpp:
     complete
     .text start:0x0211c638 end:0x0211c684
 

@@ -1425,7 +1425,6 @@ src/actors/MadPiano/_ZN8MadPianoD1Ev.c	DTOR-ONLY	ov063	daPiano_c	MadPiano/daPian
 src/actors/MadPiano/__sinit_ov063_0211e5fc.c	WEAK-refs-only	ov063				0		None		extra-sections:init
 src/actors/MansionSteps/MansionSteps_Spawn.c	WEAK-refs-only	ov063				1		None		-
 src/actors/MansionSteps/_ZN12MansionSteps16OnPendingDestroyEv.c	P1-vtable+mangled	ov063	daTrsTrap_c	MansionSteps/daTrsTrap_c	vtable daTrsTrap_c slot 12 @0x211ce30 | _ZN12MansionSteps16OnPendingDestroyEv	1		True		-
-src/actors/MansionSteps/_ZN12MansionStepsD0Ev.c	DTOR-ONLY	ov063	daTrsTrap_c	MansionSteps/daTrsTrap_c	_ZN12MansionStepsD0Ev	1		True		-
 src/actors/MerryGoRound/MerryGoRound_Spawn.c	WEAK-refs-only	ov063				1		None		-
 src/actors/TrapDoor/TrapDoor_Spawn.c	WEAK-refs-only	ov063				1		None		-
 src/dScMgJump2_c_Spawn.c	P2-vtable-only	ov006	dScMgJump_c	dScMgJump_c	vtable dScMgJump_c slot 38 @0x20efaf0	1		True	_ZTV12dScMgJump2_c/_ZTV14dScMgD3DBase_c	-

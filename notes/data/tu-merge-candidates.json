@@ -364,8 +364,8 @@
    "n_functions_map": 22,
    "n_files": 21,
    "files": [
-    "src/actors/MansionSteps/_ZN12MansionStepsD1Ev.cpp",
-    "src/actors/MansionSteps/_ZN12MansionStepsD0Ev.c",
+    "src/actors/MansionSteps/_ZN11daTrsTrap_cD1Ev.cpp",
+    "src/actors/MansionSteps/_ZN11daTrsTrap_cD0Ev.cpp",
     "src/unnamed/ov063/func_ov063_0211c684.c",
     "src/unnamed/ov063/func_ov063_0211c6f8.cpp",
     "src/unnamed/ov063/func_ov063_0211c770.c",
@@ -37359,8 +37359,8 @@
     "TrapDoor"
    ],
    "files": [
-    "src/actors/MansionSteps/_ZN12MansionStepsD1Ev.cpp",
-    "src/actors/MansionSteps/_ZN12MansionStepsD0Ev.c",
+    "src/actors/MansionSteps/_ZN11daTrsTrap_cD1Ev.cpp",
+    "src/actors/MansionSteps/_ZN11daTrsTrap_cD0Ev.cpp",
     "src/unnamed/ov063/func_ov063_0211c684.c",
     "src/unnamed/ov063/func_ov063_0211c6f8.cpp",
     "src/unnamed/ov063/func_ov063_0211c770.c",
