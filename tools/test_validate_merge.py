@@ -200,22 +200,26 @@ class ValidateMerge(unittest.TestCase):
                 self.base, "HEAD", require_merge_commit=True,
                 expected_pr_head=self.base)
 
-    def test_a_credit_change_names_the_file_and_both_contributors(self):
-        # "2 changed" is unactionable: the PR author cannot see which files moved,
-        # and the worker log they would need is on the maintainer's box.
+    def test_a_credit_change_warns_without_failing(self):
+        # Reassignment alone -- both a before and an after contributor -- is never a
+        # blocker: a rebase or resolving someone else's merge conflict relabels a
+        # function's "last touched by" without losing anything, and this project spends
+        # no tokens defending credit. It is still named, in the warning and the table,
+        # so a PR author can see which files moved without that costing the merge.
         (self.repo / "attribution.json").write_text(
             '{"overrides": {"src/Example.c": "bob"}}\n', encoding="utf-8")
         commit(self.repo, "pin credit", "maintainer")
         report = VM.build_report(self.base, "HEAD")
-        self.assertEqual(report["status"], "Failed")
-        self.assertIn("src/Example.c: alice -> bob", "; ".join(report["reasons"]))
+        self.assertEqual(report["status"], "Passed")
+        self.assertEqual(report["reasons"], [])
+        self.assertIn("src/Example.c: alice -> bob", "; ".join(report["warnings"]))
         self.assertEqual(report["attribution"]["changed"][0]["path"], "src/Example.c")
         self.assertIn("| `arm9:0x02000000` | `src/Example.c` | alice | bob |",
                       report["reportMarkdown"])
 
-    def test_attribution_override_reports_the_change_without_failing(self):
-        # The label says "I know, and I meant it" -- so the finding is still computed
-        # and still named, it just stops being a reason the merge cannot land.
+    def test_attribution_override_is_not_needed_for_a_pure_change(self):
+        # The override label exists for a real LOSS. A pure reassignment already passes
+        # without it, and passing the label besides changes nothing about that.
         (self.repo / "attribution.json").write_text(
             '{"overrides": {"src/Example.c": "bob"}}\n', encoding="utf-8")
         commit(self.repo, "pin credit", "maintainer")
@@ -223,13 +227,14 @@ class ValidateMerge(unittest.TestCase):
         self.assertEqual(report["status"], "Passed")
         self.assertEqual(report["reasons"], [])
         self.assertIn("src/Example.c: alice -> bob", "; ".join(report["warnings"]))
-        self.assertIn("(override label)", report["reportMarkdown"])
+        self.assertNotIn("(override label)", report["reportMarkdown"])
         self.assertEqual(len(report["attribution"]["changed"]), 1)
 
     def test_a_wholesale_credit_move_stays_within_the_relay_summary_limit(self):
         # The relay rejects a result whose summary runs past 500 characters, and a
         # rejected result is a job that never reports at all. Naming files is worth
-        # length; a repin sweep must still fit in the reply that carries the verdict.
+        # length in the warning and the check body; a repin sweep must still fit in the
+        # reply that carries the verdict.
         symbols = self.repo / "config" / "arm9" / "symbols.txt"
         text = symbols.read_text(encoding="utf-8")
         overrides = {}
@@ -246,10 +251,10 @@ class ValidateMerge(unittest.TestCase):
         commit(self.repo, "repin them all", "maintainer")
 
         report = VM.build_report(base, "HEAD")
-        self.assertEqual(report["status"], "Failed")
+        self.assertEqual(report["status"], "Passed")
         self.assertEqual(len(report["attribution"]["changed"]), 40)
         self.assertLessEqual(len(report["summary"]), VM.SUMMARY_LIMIT)
-        self.assertIn("+37 more", "; ".join(report["reasons"]))
+        self.assertIn("+37 more", "; ".join(report["warnings"]))
         self.assertIn("+15 more", report["reportMarkdown"])
 
     def test_override_does_not_excuse_a_non_attribution_failure(self):
@@ -374,7 +379,7 @@ class ValidateMerge(unittest.TestCase):
         unlabelled = VM.build_report(base, head)
         self.assertEqual(unlabelled["status"], "Failed")
         self.assertEqual([r.split(" (")[0] for r in unlabelled["reasons"]],
-                         ["contributor attribution changed or was lost"])
+                         ["contributor attribution was lost"])
 
         report = VM.build_report(base, head, allow_attribution_change=True)
         self.assertEqual(report["status"], "Passed")
