@@ -15,7 +15,7 @@ int CutsceneObject::CleanupResources()
   if (r1 == 0x2f) return func_ov002_020f23d0(((char*)this));
   Obj* a = *(Obj**)((char*)&mModel);
   if (a) if (a) a->m04();
-  Obj* b = *(Obj**)((char*)&mModel2);
+  Obj* b = *(Obj**)((char*)&mModelAnim);
   if (b) if (b) b->m04();
   return 1;
 }

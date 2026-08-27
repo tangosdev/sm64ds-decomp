@@ -45,12 +45,12 @@ int CutsceneObject::Render()
       _ZN9ModelBase12ApplyOpacityEj(a, op, 0);
       ((ModelBase*)*(void**)((char*)&mModel))->m((int)((char*)&mScaleX));
     } else {
-      void* b = *(void**)((char*)&mModel2);
+      void* b = *(void**)((char*)&mModelAnim);
       if (b != 0){
         b = (void*)((int)b);
         func_ov002_020f65b8(b);
-        _ZN9ModelBase12ApplyOpacityEj(*(void**)((char*)&mModel2), mOpacity, 0);
-        ((ModelBase*)*(void**)((char*)&mModel2))->m((int)((char*)&mScaleX));
+        _ZN9ModelBase12ApplyOpacityEj(*(void**)((char*)&mModelAnim), mOpacity, 0);
+        ((ModelBase*)*(void**)((char*)&mModelAnim))->m((int)((char*)&mScaleX));
       }
     }
   }

@@ -1,57 +1,42 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class CutsceneObject: 6 matched functions, 5 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* The cutscene-only actor family, vtable _ZTV14CutsceneObject.
+ *
+ * The factory allocates 0x104 bytes, constructs dActor_c, and installs this
+ * vtable. The destructor performs no class-local teardown: it changes the
+ * vptr, runs dActor_c's destruction, and releases the actor allocation. That
+ * is exactly the code generated for an empty destructor on this inheritance
+ * graph; none of those operations belongs in the source body.
+ *
+ * The two owned render objects are selected by param1. InitResources writes a
+ * Model pointer at 0xdc for the static variants and a ModelAnim pointer at
+ * 0xe0 for the animated variants; CleanupResources destroys whichever exists.
+ */
 #ifndef CUTSCENEOBJECT_H
 #define CUTSCENEOBJECT_H
-#include "types.h"
 
-struct CutsceneObject {
-    u8  pad_000[0x8];
-    s32 param1;            /* 0x008 */
-    u8  pad_00c[0x74];
-    /* 0x080..0x0dc is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s32 mScaleX;                 /* 0x080 */
-    s32 mScaleY;                 /* 0x084 */
-    s32 mScaleZ;                 /* 0x088 */
-    s16 mAngleX;                 /* 0x08c */
-    s16 mAngleY;                 /* 0x08e */
-    s16 mAngleZ;                 /* 0x090 */
-    s16 mPrevAngleX;             /* 0x092 */
-    s16 mPrevAngleY;             /* 0x094 */
-    s16 mPrevAngleZ;             /* 0x096 */
-    s32 mHorzSpeed;              /* 0x098 */
-    s32 mVertAccel;              /* 0x09c */
-    s32 mTerminalVelocity;       /* 0x0a0 */
-    u8  pad_0a4[0x4];
-    s32 mVertSpeed;              /* 0x0a8 */
-    u8  pad_0ac[0x4];
-    u32 mFlags;                  /* 0x0b0 */
-    s32 mClipOffsetY;                 /* 0x0b4 */
-    s32 mClipRadius;                 /* 0x0b8 */
-    s32 mClipDistance;                 /* 0x0bc */
-    s32 mFarDistance;                 /* 0x0c0 */
-    u8  mClipResult;                 /* 0x0c4 */
-    u8  pad_0c5[0x7];
-    s8  mAreaId;                 /* 0x0cc */
-    u8  pad_0cd[0x1];
-    s16 mDeathTableID;                 /* 0x0ce */
-    u8  pad_0d0[0xc];
-    s32 mModel;            /* 0x0dc */
-    u8  mModel2;            /* 0x0e0 */
-    u8  pad_0e1[0x21];
-    u8  mOpacity;            /* 0x102 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
-    int Render();
-#endif
+#include "dActor_c.h"
+
+struct Model;
+struct ModelAnim;
+
+struct CutsceneObject : dActor_c {
+    u8 pad_0d0[0xc];       /* 0x0d0 */
+    Model *mModel;          /* 0x0dc */
+    ModelAnim *mModelAnim;  /* 0x0e0 */
+    u8 pad_0e4[0x1e];      /* 0x0e4 */
+    u8 mOpacity;            /* 0x102 */
+    u8 unk_103;             /* 0x103 */
+
+    /* Keep the destructor first: it is the class's key function and remains
+       the translation-unit owner selected by the ROM's lifecycle symbols. */
+    virtual ~CutsceneObject();
+    virtual int InitResources();
+    virtual int CleanupResources();
+    virtual int Behavior();
+    virtual int Render();
+    virtual void OnPendingDestroy();
 };
 
-typedef char CutsceneObject_size_must_be_0x104[sizeof(struct CutsceneObject) == 0x104 ? 1 : -1];
+typedef char CutsceneObject_size_must_be_0x104[
+    sizeof(CutsceneObject) == 0x104 ? 1 : -1];
 
 #endif
