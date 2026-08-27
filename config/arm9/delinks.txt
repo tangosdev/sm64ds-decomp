@@ -6346,7 +6346,7 @@ src/_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator.cpp:
     complete
     .text start:0x0203ca80 end:0x0203caac
 
-src/_ZN4HeapC1EPvjPS_.cpp:
+src/_ZN4HeapC2EPvjPS_.cpp:
     complete
     .text start:0x0203caac end:0x0203cae8
 

@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN4HeapC1EPvjPS_
+// @symbol _ZN4HeapC2EPvjPS_
 #include "Heap.h"
 
 Heap::Heap(void* start, u32 size, Heap* root)
