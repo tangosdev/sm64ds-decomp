@@ -234,21 +234,35 @@ is supposed to have. Decomposed with port/tools/mapdiff.py rather than by eye:
 No ROM function body was added or removed, which is why linked delta is 0.
 
 THE SELFTEST BMPs. This change hosts new data, so it moves the .dsstate layout,
-and notes/port-selftest-bmp-gate.md only permits a byte comparison at an equal
-base. The base DID move, one page:
+and a byte comparison is legal only at an equal base AND an equal span. BOTH
+moved here. The base moved one page and the span grew 40 bytes:
 
-    before   [layout] dsstate=00BB5000..00C9F3A0
-    after    [layout] dsstate=00BB6000..00CA03C8
+    before   [layout] dsstate=00BB5000..00C9F3A0   span 959392
+    after    [layout] dsstate=00BB6000..00CA03C8   span 959432
 
-and the level-1 selftest BMP is BYTE-IDENTICAL ACROSS THAT MOVE anyway:
+and the level-1 selftest BMP is byte-identical across that move:
 
     before   5b783a29d753ce4dfbd35c79a7b2850f
     after    5b783a29d753ce4dfbd35c79a7b2850f
 
-No padding was needed to get a legal comparison, which is a stronger result
-than the rule asks for rather than a way around it. (The rule stands: a
-DIFFERENCE across unequal bases would have proved nothing and would have needed
-the 4 KB pad. An IDENTITY across unequal bases cannot be a false pass.)
+WHAT THAT IDENTITY IS AND IS NOT. It is not a legal comparison and it is not a
+stronger result than the rule asks for. This change made BOTH of the known
+perturbations at once: the base move, and a 40-byte INTERIOR shift, which is
+the class battery.py's measured table prices at 1354 px. That same table shows
+both classes reading `same` at exactly 300 frames while differing at 291, 292,
+296, 298, 302 and 303 -- and 300 is the count this battery runs
+(SELFTEST_FRAMES). So a clean 300-frame identity across a layout change is the
+false pass the doctrine documents, not evidence against one.
+
+What the two hashes do prove is liveness: the run reached frame 300 and wrote
+the same picture on a count where the known perturbations are measured to
+agree. They say nothing about whether this change's layout stayed out of the
+frame. To ask that question, pad the baseline to an equal base AND an equal
+span and compare there, or compare on the counts the table names.
+
+The doctrine is port/tools/battery.py lines 34-160; the long form, with the gap
+audit and the five unfixed truncations that keep the rule alive, is
+notes/port-selftest-bmp-gate.md.
 
 The other four BMPs the battery writes -- smoke_anim, smoke_gx, smoke_model,
 smoke_oam -- cannot be affected, and that is structural rather than measured:
