@@ -83,10 +83,15 @@ ov002	0x020b4a00	func_ov002_020b4a00	daObjKinokoTag_c_Spawn	spawnfunc; construct
 ov002	0x020b4a38	func_ov002_020b4a38	MegaMushroomTag_Spawn	spawnfunc
 ov002	0x020b4ed8	func_ov002_020b4ed8	_ZN14QuestionSwitchD1Ev	vtable slot 16
 ov002	0x020b4f44	func_ov002_020b4f44	_ZN14QuestionSwitchD0Ev	vtable slot 17
+ov002	0x020b4fd0	func_ov002_020b4fd0	_ZN14QuestionSwitch15UpdateClsnStateEv	QuestionSwitch helper; sole caller is Behavior; operates only on this object's active moving-mesh collider; body byte-verified at this address
+ov002	0x020b503c	func_ov002_020b503c	_ZN14QuestionSwitch19UpdateClsnTransformEv	QuestionSwitch helper; both callers are QuestionSwitch methods; rebuilds this object's active moving-mesh transform; body byte-verified at this address
+ov002	0x020b50a0	func_ov002_020b50a0	_ZN14QuestionSwitch20UpdateModelTransformEv	QuestionSwitch helper; both callers are QuestionSwitch methods; rebuilds its ModelAnim matrix into the inherited render model; body byte-verified at this address
 ov002	0x020b512c	func_ov002_020b512c	_ZN14QuestionSwitch16CleanupResourcesEv	vtable slot 3
 ov002	0x020b51ac	func_ov002_020b51ac	_ZN14QuestionSwitch6RenderEv	vtable slot 9
 ov002	0x020b51dc	func_ov002_020b51dc	_ZN14QuestionSwitch8BehaviorEv	vtable slot 6
 ov002	0x020b5500	func_ov002_020b5500	_ZN14QuestionSwitch13InitResourcesEv	vtable slot 0
+ov002	0x020b567c	func_ov002_020b567c	_ZN14QuestionSwitch10HandleClsnER8dActor_c	QuestionSwitch helper; sole caller is AfterClsnCallback, which supplies the collider owner as this; body byte-verified at this address
+ov002	0x020b56c4	func_ov002_020b56c4	_ZN14QuestionSwitch17AfterClsnCallbackEP4dBgWP8dActor_cS3_	QuestionSwitch static callback; func_020393c4 installs it at dBgW+0x1c on this object's own moving-mesh collider; body byte-verified at this address
 ov002	0x020b56d8	func_ov002_020b56d8	QuestionSwitch_Spawn	spawnfunc
 ov002	0x020b5734	func_ov002_020b5734	_ZN9BlueFlameD1Ev	vtable slot 16
 ov002	0x020b5764	func_ov002_020b5764	_ZN9BlueFlameD0Ev	vtable slot 17
