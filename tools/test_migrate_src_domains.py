@@ -30,3 +30,10 @@ def test_special_class_recovers_thunk_and_class_artifact_owners():
     assert M.special_class("_ZThn80_N9Animation7AdvanceEv") == "Animation"
     assert M.special_class("_ZTV5Model") == "Model"
     assert M.special_class("_ZTI13InvisiblePole") == "InvisiblePole"
+
+
+def test_literal_path_pattern_takes_the_whole_cpp_suffix():
+    text = "src/runtime/graphics/Model/_ZN5ModelD1Ev.cpp: and src/func_02004000.c:"
+    assert [match.group(0) for match in M.POSIX_SOURCE.finditer(text)] == [
+        "src/runtime/graphics/Model/_ZN5ModelD1Ev.cpp", "src/func_02004000.c",
+    ]
