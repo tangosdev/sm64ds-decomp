@@ -44,11 +44,9 @@
  * byte-identical either way. Verified, not assumed.
  *
  * TARGET IS A HALF-OPEN POINTER PAIR describing the block's true extent, padding
- * included. Its constructor is a C1 and stays a hand-spelled free function -- ctor
- * migration is Phase 5, and nothing here needs it. Deliberately NOT declared below:
- * declaring a constructor would remove the implicit default one, and
- * ExpandingHeapAllocator::Deallocate builds a Target as a plain local before filling it
- * in. Leaving Target an aggregate keeps that legal. */
+ * included. Its explicit constructor recovers that extent from a node; the empty
+ * default constructor preserves the aggregate-like scratch locals that callers fill
+ * manually. */
 #ifndef MEMORYNODE_H
 #define MEMORYNODE_H
 #include "types.h"
@@ -69,7 +67,16 @@ struct MemoryNode {
     struct Target {
         char* start;
         char* end;
+#ifdef __cplusplus
+        Target() {}
+        Target(MemoryNode* node);
+#endif
     };
 };
+
+typedef char MemoryNode_size_must_be_0x10[
+    sizeof(struct MemoryNode) == 0x10 ? 1 : -1];
+typedef char MemoryNode_Target_size_must_be_0x8[
+    sizeof(struct MemoryNode::Target) == 0x8 ? 1 : -1];
 
 #endif
