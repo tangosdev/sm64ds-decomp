@@ -808,15 +808,15 @@ src/_ZN14QuestionSwitch15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x020b4fc4 end:0x020b4fd0
 
-src/func_ov002_020b4fd0.c:
+src/_ZN14QuestionSwitch15UpdateClsnStateEv.cpp:
     complete
     .text start:0x020b4fd0 end:0x020b503c
 
-src/func_ov002_020b503c.cpp:
+src/_ZN14QuestionSwitch19UpdateClsnTransformEv.cpp:
     complete
     .text start:0x020b503c end:0x020b50a0
 
-src/func_ov002_020b50a0.c:
+src/_ZN14QuestionSwitch20UpdateModelTransformEv.cpp:
     complete
     .text start:0x020b50a0 end:0x020b512c
 
@@ -836,11 +836,11 @@ src/_ZN14QuestionSwitch13InitResourcesEv.cpp:
     complete
     .text start:0x020b5500 end:0x020b567c
 
-src/func_ov002_020b567c.c:
+src/_ZN14QuestionSwitch10HandleClsnER8dActor_c.cpp:
     complete
     .text start:0x020b567c end:0x020b56c4
 
-src/func_ov002_020b56c4.c:
+src/_ZN14QuestionSwitch17AfterClsnCallbackEP4dBgWP8dActor_cS3_.cpp:
     complete
     .text start:0x020b56c4 end:0x020b56d8
 
