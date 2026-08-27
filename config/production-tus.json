@@ -48,6 +48,9 @@
     "ov006/MgTrampolineTerror",
     "ov006/MgPairAGoneAndOn",
     "ov006/MgMushroomRoulette",
-    "ov006/MgPicturePoker"
+    "ov006/MgPicturePoker",
+    "ov029/FloatOnWaterPlatformWdwSquare",
+    "ov029/FloatOnWaterPlatformWdwRectangle",
+    "ov029/RotatingPlatformWdw"
   ]
 }
