@@ -28,6 +28,7 @@ struct TTC_MovingBar : dBgActor_c {
     /* --- vtable --- */
     virtual ~TTC_MovingBar();
 
+    int Behavior();
     int CleanupResources();
     int InitResources();
     int Render();

@@ -1,0 +1,62 @@
+{
+  "id": "ov006/MgWhichWiggler",
+  "module": "ov006",
+  "source": "src_tu/actors/MgWhichWiggler.cpp",
+  "promoted_source": "src/actors/MgWhichWiggler.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x020ede18..0x020edec0, 2 function(s), from config/arm9/overlays/ov006/delinks.txt and symbols.txt (hand-built manifest entry -- NOT re-derivable from a fresh build/tu_map.json run)",
+    "no class label (unattributed run; two plain functions, no vtable/RTTI anchor)",
+    "HAND-WRITTEN ENTRY, NOT tubuild.py create output: a freshly regenerated build/tu_map.json (rtti_extract -> rtti_vtables -> tu_map, this same commit) no longer isolates this address range as its own unit -- it now falls INSIDE a 180-function, 7-class run (0x20e6c28-0x20eebe8: MgPsycheOut, dScMg3DEsp_c, dScMgD3DBase_c, dScMgHanachan_c, dScMgJump_c) that tu_map's own meta.under_segmented list flags for module ov006 (TU count is a LOWER BOUND, per decomp-tu-slicing). The original tier1_under_cliff candidate (notes/data/tu-merge-candidates.json) was generated from an EARLIER tu_map snapshot that cut this module much finer (87 units vs 71 now) -- the same stale-map-over-cut failure mode notes/stale-tu-map-overcut-ov006.md documents elsewhere in ov006. This TU's 2-function boundary is therefore UNCONFIRMED by the current tool: text-level compile/verify below is real, but do not read it as proof this is the ROM's actual original TU cut -- it may be a fragment of the larger unresolved run."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020ede18",
+      "end": "0x020edec0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "MgWhichWiggler_Spawn",
+      "address": "0x020ede18",
+      "size": "0x00000068",
+      "legacy_source": "src/MgWhichWiggler_Spawn.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov006_020ede80",
+      "address": "0x020ede80",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov006_020ede80.c",
+      "ordinal": 1
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-built manifest entry (tools.build_manifest_entry's schema, not its code path): tools/tubuild.py create ov006/MgWhichWiggler now fails with 'no candidate TU in build/tu_map.json' because the freshly regenerated map no longer isolates this range -- see boundary_evidence above.",
+    "The src_tu/actors/MgWhichWiggler.cpp shadow file already existed (generated in an earlier session against the older, finer-cut map) and was reconciled/verified in place against this hand-written entry."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-MgWhichWiggler/MgWhichWiggler.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 2,
+    "functions_declared": 2,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}
