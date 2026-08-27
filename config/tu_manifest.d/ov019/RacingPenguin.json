@@ -29,7 +29,7 @@
       "symbol": "_ZN13RacingPenguinD0Ev",
       "address": "0x021111f0",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN13RacingPenguinD0Ev.c",
+      "legacy_source": "src/_ZN13RacingPenguinD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -197,7 +197,7 @@
       "symbol": "_ZN13RacingPenguin16OnPendingDestroyEv",
       "address": "0x0211235c",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN13RacingPenguin16OnPendingDestroyEv.c",
+      "legacy_source": "src/_ZN13RacingPenguin16OnPendingDestroyEv.cpp",
       "ordinal": 25
     },
     {

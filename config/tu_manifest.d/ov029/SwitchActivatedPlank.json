@@ -22,14 +22,14 @@
       "symbol": "_ZN20SwitchActivatedPlankD1Ev",
       "address": "0x02112630",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN20SwitchActivatedPlankD1Ev.c",
+      "legacy_source": "src/_ZN20SwitchActivatedPlankD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN20SwitchActivatedPlankD0Ev",
       "address": "0x0211267c",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN20SwitchActivatedPlankD0Ev.c",
+      "legacy_source": "src/_ZN20SwitchActivatedPlankD0Ev.cpp",
       "ordinal": 1
     },
     {

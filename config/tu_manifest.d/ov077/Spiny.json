@@ -29,7 +29,7 @@
       "symbol": "_ZN5SpinyD0Ev",
       "address": "0x02124bb4",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN5SpinyD0Ev.c",
+      "legacy_source": "src/_ZN5SpinyD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -211,14 +211,14 @@
       "symbol": "_ZN5Spiny16CleanupResourcesEv",
       "address": "0x02125eb0",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN5Spiny16CleanupResourcesEv.c",
+      "legacy_source": "src/_ZN5Spiny16CleanupResourcesEv.cpp",
       "ordinal": 27
     },
     {
       "symbol": "_ZN5Spiny16OnPendingDestroyEv",
       "address": "0x02125eec",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN5Spiny16OnPendingDestroyEv.c",
+      "legacy_source": "src/_ZN5Spiny16OnPendingDestroyEv.cpp",
       "ordinal": 28
     },
     {

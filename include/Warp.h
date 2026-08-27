@@ -21,7 +21,7 @@ struct Warp : dActor_c {
     u8  pad_0d0[0x4];
     dCcAc_c     mdCcAc_c; /* 0x0d4 */
 
-    virtual ~Warp();            /* slots 16 (D1), 17 (D0) */
+    virtual ~Warp() {}            /* slots 16 (D1), 17 (D0) */
 
     virtual s32   InitResources();         /* slot  0 */
     virtual s32   CleanupResources();      /* slot  3 */

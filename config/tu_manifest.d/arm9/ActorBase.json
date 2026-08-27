@@ -174,21 +174,21 @@
       "symbol": "_ZN7fBase_cD2Ev",
       "address": "0x02043d48",
       "size": "0x00000030",
-      "legacy_source": "src/_ZN7fBase_cD2Ev.c",
+      "legacy_source": "src/_ZN7fBase_cD2Ev.cpp",
       "ordinal": 21
     },
     {
       "symbol": "_ZN7fBase_cD0Ev",
       "address": "0x02043d78",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN7fBase_cD0Ev.c",
+      "legacy_source": "src/_ZN7fBase_cD0Ev.cpp",
       "ordinal": 22
     },
     {
       "symbol": "_ZN7fBase_cD1Ev",
       "address": "0x02043dbc",
       "size": "0x00000030",
-      "legacy_source": "src/_ZN7fBase_cD1Ev.c",
+      "legacy_source": "src/_ZN7fBase_cD1Ev.cpp",
       "ordinal": 23
     }
   ],

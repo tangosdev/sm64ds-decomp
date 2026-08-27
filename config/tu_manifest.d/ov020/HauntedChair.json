@@ -29,7 +29,7 @@
       "symbol": "_ZN12HauntedChairD0Ev",
       "address": "0x02112980",
       "size": "0x0000005c",
-      "legacy_source": "src/_ZN12HauntedChairD0Ev.c",
+      "legacy_source": "src/_ZN12HauntedChairD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -85,7 +85,7 @@
       "symbol": "_ZN12HauntedChair16CleanupResourcesEv",
       "address": "0x021132d8",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN12HauntedChair16CleanupResourcesEv.c",
+      "legacy_source": "src/_ZN12HauntedChair16CleanupResourcesEv.cpp",
       "ordinal": 9
     },
     {
