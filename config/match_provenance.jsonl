@@ -471,3 +471,5 @@
 {"id":"arm9:0x02007098","module":"arm9","addr":33583256,"name":"_ZN6CameraD0Ev","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"tangosdev","srcPath":"src/_ZN6CameraD0Ev.cpp"}
 {"id":"ov016:0x0211260c","module":"ov016","addr":34678284,"name":"_ZN6ShipUpD1Ev","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"tangosdev","srcPath":"src/_ZN6ShipUpD1Ev.cpp"}
 {"id":"ov016:0x02112650","module":"ov016","addr":34678352,"name":"_ZN6ShipUpD0Ev","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"tangosdev","srcPath":"src/_ZN6ShipUpD0Ev.cpp"}
+{"id":"ov002:0x020f1f70","module":"ov002","addr":34545520,"name":"_ZN14CutsceneObjectD1Ev","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"tangosdev","srcPath":"src/_ZN14CutsceneObjectD1Ev.cpp"}
+{"id":"ov002:0x020f1f94","module":"ov002","addr":34545556,"name":"_ZN14CutsceneObjectD0Ev","matchProvenance":{"kind":"ai","model":"gpt-5","reasoning":"high","harness":"codex"},"author":"tangosdev","srcPath":"src/_ZN14CutsceneObjectD0Ev.cpp"}
