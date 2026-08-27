@@ -227,7 +227,7 @@ Cheap habits that would have caught all five, in the order they cost least:
 
 `rombuild.compile_one` and `build_pin.flags_for` both test `text.startswith("//cpp")`
 and **never** consult the extension. Ten `.cpp` files tree-wide carry the marker behind
-an `#include`, so the build compiles them as **c99**:
+an `#include`, so the build compiles them as **c99**.
 
 The standing advice has been to leave them alone because they match as c99. Twice now
 that has been wrong. `Goomboss` moved to byte 0, still matched, and became a real
