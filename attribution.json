@@ -953,6 +953,14 @@
     "src/game/actors/Number.cpp#_ZN6Number6RenderEv": "ruspecial",
     "src/game/actors/Number.cpp#_ZN6Number8BehaviorEv": "ruspecial",
     "src/game/actors/Number.cpp#_ZN6Number13InitResourcesEv": "tangosdev",
-    "src/game/actors/Number.cpp#Number_Spawn": "tangosdev"
+    "src/game/actors/Number.cpp#Number_Spawn": "tangosdev",
+    "src/game/actors/WingFeather.cpp#_ZN11WingFeatherD1Ev": "tangosdev",
+    "src/game/actors/WingFeather.cpp#_ZN11WingFeatherD0Ev": "tangosdev",
+    "src/game/actors/WingFeather.cpp#func_ov002_020b2c44": "tangosdev",
+    "src/game/actors/WingFeather.cpp#_ZN11WingFeather16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/WingFeather.cpp#_ZN11WingFeather6RenderEv": "tangosdev",
+    "src/game/actors/WingFeather.cpp#_ZN11WingFeather8BehaviorEv": "noreply",
+    "src/game/actors/WingFeather.cpp#_ZN11WingFeather13InitResourcesEv": "tangosdev",
+    "src/game/actors/WingFeather.cpp#WingFeather_Spawn": "tangosdev"
   }
 }
