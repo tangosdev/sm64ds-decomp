@@ -1,17 +1,10 @@
 //cpp
 // @symbol _ZN25SlideDecorationSilverStarD1Ev
-
-struct dActor_c {
-    char pad[0xd0];
-    virtual ~dActor_c();
-};
-
-struct Model { char pad[0x4]; ~Model(); };
-
-struct SlideDecorationSilverStar : dActor_c {
-    Model m0;   /* 0xd4 */
-    virtual ~SlideDecorationSilverStar();
-};
+/* recovered: native complete destructor -- the compiler emits the whole body
+ *
+ * The typed class layout owns the Model member and dActor_c base teardown.
+ */
+#include "SlideDecorationSilverStar.h"
 
 SlideDecorationSilverStar::~SlideDecorationSilverStar()
 {

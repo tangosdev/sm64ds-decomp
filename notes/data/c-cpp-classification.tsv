@@ -883,7 +883,6 @@ src/_ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3.c	P3-mangle
 src/_ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj.c	P3-mangled-method-only	arm9		MovingCylinderClsnWithPos	_ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj	1		True		by-value-class-param
 src/_ZN25MovingCylinderClsnWithPos6GetPosEv.c	P1-vtable+mangled	arm9	dCcAcPos_c	MovingCylinderClsnWithPos/dCcAcPos_c	vtable dCcAcPos_c slot 2 @0x2014a2c | _ZN25MovingCylinderClsnWithPos6GetPosEv	1		True		-
 src/_ZN25MovingCylinderClsnWithPosC1Ev.c	P3-mangled-method-only	arm9		MovingCylinderClsnWithPos	_ZN25MovingCylinderClsnWithPosC1Ev	1		True	_ZTV25MovingCylinderClsnWithPos	-
-src/_ZN25SlideDecorationSilverStarD0Ev.c	DTOR-ONLY	ov031	daObjHsBillboard_c	SlideDecorationSilverStar/daObjHsBillboard_c	_ZN25SlideDecorationSilverStarD0Ev	1		True		-
 src/_ZN29FloatOnWaterPlatformWdwSquareD0Ev.c	DTOR-ONLY	ov029	daObjWcObj01_c	FloatOnWaterPlatformWdwSquare/daObjWcObj01_c	_ZN29FloatOnWaterPlatformWdwSquareD0Ev	1		True	_ZTV10dBgActor_c/_ZTV17daObjFloatBoard_c/_ZTV29FloatOnWaterPlatformWdwSquare	-
 src/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.c	DTOR-ONLY	ov029	daObjWcObj06_c	FloatOnWaterPlatformWdwRectangle/daObjWcObj06_c	_ZN32FloatOnWaterPlatformWdwRectangleD0Ev	1		True	_ZTV10dBgActor_c/_ZTV17daObjFloatBoard_c/_ZTV32FloatOnWaterPlatformWdwRectangle	-
 src/_ZN3Amp16CleanupResourcesEv.c	P1-vtable+mangled	ov070	daBrq_c	Amp/daBrq_c	vtable daBrq_c slot 3 @0x2120dc4 | _ZN3Amp16CleanupResourcesEv	1		True		-

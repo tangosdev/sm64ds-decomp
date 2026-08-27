@@ -7530,7 +7530,7 @@
    "n_files": 10,
    "files": [
     "src/_ZN25SlideDecorationSilverStarD1Ev.cpp",
-    "src/_ZN25SlideDecorationSilverStarD0Ev.c",
+    "src/_ZN25SlideDecorationSilverStarD0Ev.cpp",
     "src/func_ov031_02111214.c",
     "src/_ZN25SlideDecorationSilverStar16CleanupResourcesEv.cpp",
     "src/_ZN25SlideDecorationSilverStar6RenderEv.cpp",
