@@ -1,8 +1,8 @@
 {
   "id": "ov036/daObjRc_Dorifu_c",
   "module": "ov036",
-  "source": "src_tu/actors/daObjRc_Dorifu_c.cpp",
-  "promoted_source": "src/actors/daObjRc_Dorifu_c.cpp",
+  "source": "src/game/actors/daObjRc_Dorifu_c.cpp",
+  "promoted_source": "src/game/actors/daObjRc_Dorifu_c.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -67,12 +67,33 @@
       "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- raw object also emits compiler-only D2 plus 13 unlicensed RTTI/type-name/vtable definitions",
       "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "link-failed",
+      "scratch": "build/tu/ov036-daObjRc_Dorifu_c/link-partial (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": false
+      },
+      "tuRange": null,
+      "objectAudit": {
+        "counts": null,
+        "emittedTextOrderIsRomAscending": null,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": null
+      },
+      "symbolCheckNewVsBaseline": null,
+      "rom": null,
+      "linkerOutput": "mwldarm.exe: Undefined : \"func_ov002_020b4b6c\"\nmwldarm.exe: Referenced from \"daObjRc_Dorifu_c::CleanupResources()\" in \nmwldarm.exe: _ZN16daObjRc_Dorifu_c16CleanupResourcesEv.o\nmwldarm.exe: Undefined : \"func_ov002_020b4d58\"\nmwldarm.exe: Referenced from \"daObjRc_Dorifu_c::InitResources()\" in \nmwldarm.exe: _ZN16daObjRc_Dorifu_c13InitResourcesEv.o\nmwldarm.exe: alert: Link failed. \n\nErrors caused tool to abort."
     }
   },
   "partial_isolation": {
-    "round": "tools/tubuild.py partial -- one compile of the consolidated source, objisolate.derive per licensed function, compared against rombuild.compile_one + objisolate.isolate of each legacy source",
+    "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
     "derivedObjects": 4,
-    "contributionEquivalent": "3/4",
+    "contributionEquivalent": "4/4",
     "comparedFields": [
       "keptSection",
       "keptBytes",
@@ -86,8 +107,123 @@
     "extraInertImports": 59,
     "extraImportsWithNoHome": [],
     "artefacts": "build/tu/ov036-daObjRc_Dorifu_c/partial/partial.json (gitignored)",
-    "state": "derived",
-    "stateMeaning": "N per-function objects were extracted from one compiled TU object; their equivalence to the production objects was not established",
-    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+    "state": "partial-link-verified",
+    "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
+    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
+    "delinksChanged": false,
+    "substitutedObjectPaths": [
+      "src/game/actors/daObjRc_Dorifu_c/_ZN16daObjRc_Dorifu_cD1Ev.cpp",
+      "src/game/actors/daObjRc_Dorifu_c/_ZN16daObjRc_Dorifu_cD0Ev.cpp",
+      "src/game/actors/daObjRc_Dorifu_c/_ZN16daObjRc_Dorifu_c16CleanupResourcesEv.cpp",
+      "src/game/actors/daObjRc_Dorifu_c/_ZN16daObjRc_Dorifu_c13InitResourcesEv.cpp"
+    ],
+    "result": "partial-link-verified",
+    "phases": {
+      "delink": true,
+      "lcf": true,
+      "compile": true,
+      "link": true,
+      "checkModules": true,
+      "checkSymbols": false,
+      "rom": true
+    },
+    "tuRange": {
+      "start": "0x02111f8c",
+      "end": "0x021120c8",
+      "differingBytes": 0,
+      "firstDiff": null
+    },
+    "moduleFidelityPassed": true,
+    "symbolCheckNewVsBaseline": [],
+    "rom": {
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "matchesStockRom": true
+    },
+    "scratch": "build/tu/ov036-daObjRc_Dorifu_c/link-partial (gitignored)"
+  },
+  "production_mode": "derived-text",
+  "unlicensed_output_observed": {
+    "note": "Pinned-compiler inventory stamped by tools/promote_derived_tus.py --stamp-discarded-output before default production admission. These definitions are not ROM ownership claims; every build requires an exact inventory match, exact derived text contributions, exact modules, and an exact ROM.",
+    "toolchain": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "text": [
+      {
+        "symbol": "_ZN16daObjRc_Dorifu_cD2Ev",
+        "size": "0x80",
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "data": [
+      {
+        "symbol": "_ZTI10dBgActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI13daObjDorifu_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI16daObjRc_Dorifu_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "size": "0x8",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS10dBgActor_c",
+        "size": "0xd",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS13daObjDorifu_c",
+        "size": "0x10",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS16daObjRc_Dorifu_c",
+        "size": "0x13",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "size": "0xa",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTV16daObjRc_Dorifu_c",
+        "size": "0x88",
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "bss": [],
+    "init": [],
+    "rodata": [],
+    "ctor": []
   }
 }
