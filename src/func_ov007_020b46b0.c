@@ -27,11 +27,17 @@
  *      frames in the element's state record at +4; past 0x3a it selects.  Any
  *      frame the element is not held resets that counter to 0.
  *
- * Two things about the shape below are load-bearing, not style.  The element is
- * re-dereferenced in every edge expression rather than bound to a local: the ROM
- * reloads it each time, and binding it collapses those reloads and shrinks the
- * function.  And each axis is shifted once into its position local rather than at
- * each of the four edges.  Either change alone scores worse than both together.
+ * Two things about the box shape below are load-bearing, not style.  Each axis is
+ * shifted once into its position local rather than at each of the four edges, and
+ * the element is re-dereferenced in every edge expression rather than read through
+ * a bound pointer.  Neither alone is enough.  Measured at 2004/b56 over all four
+ * combinations: pointer locals with per-edge shifts scores 37 divergences,
+ * re-dereferencing with per-edge shifts also 37, pointer locals with pre-shifted
+ * positions 51, and only the two together 0.
+ *
+ * Reusing the preamble's already-bound object pointer here, rather than re-reading
+ * the element, does not just cost divergences, it breaks the size: the ROM performs
+ * that reload, so folding it away compiles to 0x49c instead of 0x4ac.
  */
 typedef unsigned char u8;
 typedef unsigned short u16;
