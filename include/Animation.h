@@ -61,7 +61,10 @@ struct Animation {
     int GetFlags();
     void SetFlags(int flags);
     u32 GetFrameCount() const;
-    bool WillHitFrame(int frame) const;
+    /* int, not bool: every caller in the tree declares this wide, and in the
+       C TUs `bool` IS `int` (types.h). A 1-byte return here would leave the
+       upper 24 bits of the result register holding numFramesAndFlags. */
+    int WillHitFrame(int frame) const;
 
     /* --- static --- */
     static char *LoadFile(SharedFilePtr &ptr);
