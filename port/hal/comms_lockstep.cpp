@@ -67,6 +67,11 @@ extern int data_020a0f1c[];             // the flag word (hal/player_bridges.cpp
 extern unsigned char data_020a0de8[];   // TouchInfo[4], {now, chg, x, y}
 extern unsigned short data_020a0e58[];  // PadData[4], {held, pressed}
 
+// src/func_0205a588.c, the SDK memset primitive, hosted at
+// hal/cxx_aliases.cpp:331. src/func_0203ea5c.c:275 clears each comms record
+// through it, so the transcription calls it rather than memset directly.
+void func_0205a588(void *p, int v, int n);
+
 // The eight seam faces, signatures exactly as hal/comms_seam.cpp defines them.
 void func_020408b0(unsigned short mode);
 void func_02040820(void);
@@ -97,20 +102,36 @@ const void *func_0204068c(unsigned short aid);
 //
 // $xmp2 sorts after $wcomms ('x' > 'w') and still before $zzz. That is
 // deliberately stricter than reusing $wcomms: appending to an existing group
-// leaves the order WITHIN the group to the linker, and if this global landed
+// leaves the order WITHIN the group to the linker, and if these globals landed
 // ahead of MP1's three then MP1's three would move. A suffix of its own makes
 // "not one existing hosted global moves" a property of the sort order rather
 // than a hope about link order.
+//
+// AN EARLIER REVISION OF THIS FILE ARGUED EXACTLY THAT AND THEN WROTE
+// .dsstate$wcomms ANYWAY -- the comment and the code disagreed, and the build
+// was correct only by the luck of the link order the paragraph above refuses to
+// rely on. Review caught it. The map evidence for the fix is banked at
+// runs/mg16/out/MP2/dsstate_map.txt: both globals land in $xmp2 above MP1's
+// three, and data_020a0e44/48/50 hold their addresses.
 //
 // RETIREMENT CONDITION, the same one MP1 wrote: if this ever has to be
 // ROM-SPACED against data_020a0f00 or data_020a0f04 (its ROM neighbours), it
 // moves into that band and every BMP baseline taken against this layout has to
 // be retaken. Nothing needs that today -- no code reaches one of the three as
 // an interior address of another.
-#pragma section(".dsstate$wcomms", read, write)
+#pragma section(".dsstate$xmp2", read, write)
 extern "C" {
-__declspec(allocate(".dsstate$wcomms")) __declspec(align(4))
+__declspec(allocate(".dsstate$xmp2")) __declspec(align(4))
 unsigned char data_020a0f08[4] = {0};   // 0x020a0f08 .. 0x020a0f0c
+
+// src/func_0203ea5c.c:279, the counter the ROM bumps once per LIVE peer record
+// it accepts. Sized by ROM span too (0x02099e18 -> 0x02099e1c). Nothing else in
+// the tree defines or reads it -- the four TUs that reference it
+// (func_0203daac, func_0203db64, func_0203df40, func_0203ea5c) are all
+// unlinked -- so it is hosted here to keep the unpack a COMPLETE transcription
+// rather than one with a silently dropped line.
+__declspec(allocate(".dsstate$xmp2")) __declspec(align(4))
+int data_02099e18 = 0;                  // 0x02099e18 .. 0x02099e1c
 }
 
 namespace port {
@@ -247,14 +268,41 @@ void stage_block(unsigned char *b) {
 }
 
 // ---------------------------------------------------------------------------
-// UNPACK one peer -- src/func_0203ea5c.c:277-290, the mirror image.
+// UNPACK one peer -- src/func_0203ea5c.c:274-290, the mirror image.
+//
+// `b` MAY BE NULL and the function still has work to do. That is the whole
+// point of the first line and it is the shape of the ROM's own loop:
+//
+//     temp_r5 = func_0204068c(var_r7);        :274
+//     func_0205a588(var_r6, 0, sp24);         :275   <-- unconditional
+//     if (temp_r5 != 0) { ... }               :276
+//
+// The clear runs for EVERY slot on EVERY round, BEFORE the null check and
+// before the flag copy, and sp24 is 0x24 (assigned at :153) -- the WHOLE
+// record, not just the header.
+//
+// WHY IT MATTERS, and it is not bookkeeping: +0x0C bit 0x8000 is the LIVE bit,
+// and every reader of these records gates on it. Without the clear a slot that
+// goes quiet -- a player who left, a child whose datagrams stopped -- keeps the
+// last live bit it was ever sent, FOREVER, and the game goes on reading a
+// departed player's final frame as a current one. Skipping the clear on a null
+// block, which is what this file did before, is exactly the case that leaves it
+// set, because a departed peer is precisely the peer whose block is null.
+//
+// func_0205a588 is the ROM's own memset primitive and it is already hosted
+// (hal/cxx_aliases.cpp:331 -> memset), so this is called rather than open-coded
+// for the same reason every other move here cites its line.
 void unpack_slot(int i, const unsigned char *b) {
     unsigned char *rec = data_020a1154 + i * 0x24;
 
-    std::memcpy(rec + 0x0C, b + 0x00, 2);         // :277  flag, ALWAYS
+    func_0205a588(rec, 0, 0x24);                  // :275  ALWAYS, whole record
+    if (!b) return;                               // :276
+
+    std::memcpy(rec + 0x0C, b + 0x00, 2);         // :277  flag
     if ((get16(rec + 0x0C) & 0x8000) == 0)        // :278  the live gate
         return;
 
+    ++data_02099e18;                              // :279  live-record counter
     std::memcpy(rec + 0x00, b + 0x02, 4);         // :280  frame
     std::memcpy(rec + 0x0E, b + 0x06, 2);         // :281  key
     std::memcpy(rec + 0x04, b + 0x08, 1);         // :282  stylus x
@@ -346,6 +394,14 @@ bool comms_lockstep_tick() {
 
     // --- THE WAIT, :157 `while ((sp8 == 0) && (sp4 != 0))`, with the bound
     //     selected at :142-146: 0x12C once the session is up, 0x4B0 before.
+    // :142-146 selects the bound off data_020a0ef0: 0x12C once that flag is
+    // set, 0x4B0 before. data_020a0ef0 IS NOT HOSTED anywhere in this tree and
+    // no linked TU reads or writes it, so hosting it here would add a global
+    // that only this line could ever set -- a fiction with a ROM name on it.
+    // g_ever_round stands in for it and carries the same meaning the ROM gives
+    // it on this path: the long bound applies until the session has completed a
+    // round, the short one after. IF func_0203ea5c IS EVER LINKED the real flag
+    // arrives with it and this substitution must go.
     int bound = g_ever_round ? 0x12C : 0x4B0;
     unsigned short status = 0;
     int done = 0;
@@ -390,11 +446,12 @@ bool comms_lockstep_tick() {
     //     names its parameter `ignored`.
     data_020a0f10[0] = func_02040704(data_020a0f1c[0] & 0x4000);
 
-    // --- :240 then :274, all four slots.
+    // --- :271-295, all four slots. NOTE there is no `continue` on a null
+    //     block: unpack_slot's FIRST act is the ROM's unconditional record
+    //     clear at :275, which a departed peer needs more than a live one does.
     for (int i = 0; i < kCommsMaxPlayers; ++i) {
         const unsigned char *b =
             (const unsigned char *)func_0204068c((unsigned short)i);
-        if (!b) continue;
         unpack_slot(i, b);
     }
     return true;

@@ -160,6 +160,8 @@
 // SOCKET, AF_INET, FIONBIO. None of its function DECLARATIONS are used; every
 // call below goes through the WS table.
 
+extern "C" void func_02040724(void);   /* the seam's close() face */
+
 namespace port {
 namespace {
 
@@ -853,6 +855,26 @@ bool comms_loopback_install_from_env() {
 
     if (!comms_set_transport(&kLoopback)) return false;
     g_installed = true;
+
+    // SAY GOODBYE ON THE WAY OUT.
+    //
+    // On the DS the seam's close() face has exactly one caller,
+    // src/func_0203df40.c:70, on the tick after the role byte drops to 0. That
+    // TU is in no slice, so in this port NOTHING calls func_02040724 and a
+    // process that simply exits leaves its peers holding it in their live mask
+    // until their own wait bound expires -- every remaining peer stalls for a
+    // full bound, once, for no reason.
+    //
+    // atexit is the honest hook for it here: it is the port's own shutdown, it
+    // runs before the CRT tears down, and closesocket is safe there. It routes
+    // through the SEAM FACE rather than lb_close directly so the call is the
+    // same one the ROM would make.
+    //
+    // This is also what makes the departed-player path reachable at all: the
+    // Bye is what clears the leaver out of the parent's live mask, which lets
+    // the parent complete another round, which is when the ROM's per-record
+    // clear at src/func_0203ea5c.c:275 wipes the leaver's stale live bit.
+    std::atexit([]() { func_02040724(); });
     std::fprintf(stderr, "[comms:loopback] installed as %s, port base %d\n",
                  g_role == kRoleParent ? "parent" : "child", g_port_base);
     return true;

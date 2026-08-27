@@ -32,9 +32,14 @@ machine collide on three different kinds of path, and each gets its own answer
   TEMP               -- separates the %TEMP%\\sm64ds-crashes dir, which every
                         boot PRUNES TO FOUR, so a shared one has instance two
                         deleting instance one's dumps
-  SM64DS_INSTANCE    -- separates the four files that live NEXT TO THE EXE and
-                        which no cwd or TEMP can separate: startup_error.txt,
-                        crash.txt, exit.txt and savestate.bin
+  SM64DS_INSTANCE    -- separates the files that live NEXT TO THE EXE, which no
+                        cwd and no TEMP can separate. Exactly which:
+                        startup_error.txt and savestate.bin are suffixed, and so
+                        is settings.json's sibling temp. crash.txt and exit.txt
+                        ARE NOT -- editing fault_probe.h cost the port its fixed
+                        address ranges at startup, so those two stay shared and
+                        the per-instance TEMP makes the RICH crash dumps the
+                        ones to read. Survey and bisect: port/hal/instance_tag.h
 """
 
 import os
@@ -397,6 +402,74 @@ def rung4(root, exe, out):
     return ok
 
 
+def rung_depart(root, exe, out):
+    """THE DEPARTED-PLAYER LIVE BIT. Review finding 1's consequence, measured.
+
+    src/func_0203ea5c.c:275 clears the whole 0x24 record for every slot every
+    round, BEFORE the null check. Without it a slot that stops sending keeps the
+    0x8000 LIVE bit at +0x0C forever and the game reads a departed player's last
+    frame as a current one.
+
+    IT TAKES THREE INSTANCES, and the first version of this check used two and
+    PASSED FOR THE WRONG REASON. With one child, that child leaving drops the
+    parent below two players, the parent leaves the connected state, the
+    lockstep stops running and func_0203e0ac -- the ROM's solo cascade -- takes
+    over and rewrites all four records itself. The flag did clear, but the clear
+    under test never executed. The giveaway was that SLOT 0, the parent's own
+    record, froze at the departed child's frame number too.
+
+    So: parent plus TWO children, and only the second child leaves early. The
+    parent stays connected to child 1, keeps completing rounds, and keeps
+    running the unpack -- which is the only thing that can clear slot 2.
+
+    The assertion is on the WHOLE record, not just the flag: frame must go to 0
+    as well, because the ROM clears 0x24 bytes and a flag-only check would pass
+    against a clear that only touched the header.
+    """
+    dirs, envs, procs = {}, {}, []
+    spec = [("P1", "parent", None, "700"), ("P2", "child", "1", "700"),
+            ("P3", "child", "2", "150")]
+    for tag, role, slot, frames in spec:
+        d = os.path.join(out, "r6_depart_" + tag)
+        os.makedirs(os.path.join(d, "tmp"), exist_ok=True)
+        e = env_base(root, d, tag)
+        e["SM64DS_WINDOW_SELFTEST"] = frames
+        e["SM64DS_COMMS_ROLE"] = role
+        e["SM64DS_COMMS_PORT"] = str(PORT_BASE + 24)
+        e["SM64DS_COMMS_FANOUT"] = "1"
+        e["SM64DS_COMMS_REPORT"] = "1"
+        if slot:
+            e["SM64DS_COMMS_SLOT"] = slot
+        dirs[tag], envs[tag] = d, e
+    for tag, _, _, _ in spec:
+        procs.append(spawn(exe, dirs[tag], envs[tag],
+                           os.path.join(dirs[tag], "run.log")))
+        time.sleep(0.4)
+    rcs = [finish(p, 900) for p in procs]
+    tp = text(os.path.join(dirs["P1"], "run.log"))
+
+    rows2 = slot_rows(tp, 2)          # the leaver
+    rows1 = slot_rows(tp, 1)          # the one that stays
+    live2 = [i for i, m in enumerate(rows2) if int(m.group(6), 16) & 0x8000]
+    # CLEARED means the whole record: flag 0 AND frame 0.
+    clr2 = [i for i, m in enumerate(rows2)
+            if int(m.group(6), 16) == 0 and int(m.group(2)) == 0]
+    # And the session must still have been RUNNING when that happened, which is
+    # what makes the clear the unpack's work and not the solo cascade's.
+    still1 = [i for i, m in enumerate(rows1) if int(m.group(6), 16) & 0x8000]
+    ok = (bool(live2) and bool(clr2) and max(clr2) > max(live2)
+          and bool(still1) and max(still1) > max(live2))
+    return verdict(all(r == 0 for r in rcs) and ok,
+                   "rung6 departed-player record: slot2 live in %d frames (last "
+                   "row %s), then FULLY cleared (flag=0 and frame=0) in %d "
+                   "frames (last row %s), while slot1 stayed live to row %s so "
+                   "the lockstep was still running | %s"
+                   % (len(live2), max(live2) if live2 else "-",
+                      len(clr2), max(clr2) if clr2 else "-",
+                      max(still1) if still1 else "-",
+                      rows2[-1].group(0).strip() if rows2 else "NO SLOT2 ROWS"))
+
+
 def rung5(root, out):
     """The two-window script's MECHANICS, minimized.
 
@@ -449,7 +522,8 @@ def main(argv):
              ("2", lambda: rung2(root, exe, out)),
              ("3", lambda: rung3(root, exe, out)),
              ("4", lambda: rung4(root, exe, out)),
-             ("5", lambda: rung5(root, out))]
+             ("5", lambda: rung5(root, out)),
+             ("6", lambda: rung_depart(root, exe, out))]
     ok = True
     for n, fn in rungs:
         if only is not None and n != str(only):
