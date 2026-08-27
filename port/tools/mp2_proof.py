@@ -100,6 +100,16 @@ def env_base(root, run_dir, instance):
     # machine. Set here rather than per-rung so no future rung can forget it,
     # and set AFTER the SM64DS_ scrub above so an inherited value cannot win.
     e["SM64DS_VOLUME"] = "0"
+    # BELT AND BRACES ON THE MINIMIZE. SI_MIN above already asks for
+    # SW_SHOWMINNOACTIVE through STARTUPINFO and that is the authoritative
+    # request here -- Python can make it and does. This env says the same thing
+    # a second way, and it is set because the failure it guards against has now
+    # happened twice in this tree: a cmd.exe shim ate the STARTUPINFO once, and
+    # .NET dropped WindowStyle on the floor once. Both times the window came up
+    # visible on the owner's desk and every log still said the run was quiet.
+    # A guarantee that depends on one mechanism is one mechanism away from
+    # being a comment.
+    e["SM64DS_MINIMIZED"] = "1"
     e["SM64DS_INSTANCE"] = instance
     e["TEMP"] = os.path.join(run_dir, "tmp")
     e["TMP"] = e["TEMP"]

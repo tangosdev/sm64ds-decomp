@@ -228,3 +228,48 @@ class than the actor the port seats -- hal/actor_classes_bob_world.cpp derives
 the shift by address at its head. So e.g. the seven _ZN13InvisiblePole* TUs are
 not the class the port fills as INVISIBLE_POLE, and they will link when the
 class they really belong to is mounted, not before.
+
+
+================================================================================
+VS MULTIPLAYER: WHAT ov002 STILL OWES (run mg16, lane MP3)
+================================================================================
+
+MP3 linked the ROM's multiplayer conductor and got two Player actors into one
+world, driven by two processes, physically colliding. Two things it went looking
+for in ov002 and did NOT find are recorded here rather than only in a lane's
+status file, because this is where the next person will look.
+
+1. THE VS STAR-STEAL LOGIC IS NOT LOCATED. In DS VS mode a player who is hit
+   drops a star and the attacker can take it. Searched for and not found: no
+   ov002 symbol matches a steal/drop/transfer shape, and the only VS star
+   symbols in the tree are RENDER-side (the HUD's star count). The PvP hit
+   consumer func_ov002_020d869c was read end to end -- it refuses any collision
+   whose partner is not actor id 0xbf (Player) -- and it does not move a star.
+   THIS IS AN OPEN QUESTION, NOT A MEASURED NEGATIVE: the search was by symbol
+   name and by reading the hit path, not by tracing the star count backwards
+   from its writer, which is what would settle it. Anyone picking up VS scoring
+   should start there.
+
+2. THE PER-PLAYER Ctrl SPLIT SYMBOLS CAP THE GAME AT TWO PLAYERS, and the cap
+   is in the PORT, not in ov002. On the DS data_0209f4a0/a2/a4/a6/ac are
+   interior addresses of the Ctrl block (data_0209f498 + 8/0xa/0xc/0xe/0x14,
+   stride 0x18), which is why Player::Behavior reads its stick angle as
+   `&data_0209f4a6 + data_020a0e40 * 0x18`. hal/auto_bss.cpp hosts them as five
+   separate int[8] arrays, so that walk only lands correctly for slot 0 (offset
+   zero) and slot 1 (+0x18, still inside 32 bytes). Slot 2 would write at +0x30,
+   off the end. tests/walk_window.cpp REFUSES above two players loudly rather
+   than corrupting a neighbour.
+   THE FIX is to host the five as interior addresses of data_0209f498 the way
+   hal/camera_bridges.cpp hosts the comms records. It is a band migration with a
+   real regression surface: those symbols sit INTERIOR to .dsstate$mmm, so
+   growing or moving them shifts every hosted global above them and retires
+   every BMP baseline in the tree.
+
+3. THE VS MODE FLAG IS DELIBERATELY OFF. data_0209f2d8 == 1 is not "two players
+   are present", it is DS VS MODE, and eleven attack-cylinder wrappers in ov002
+   branch on it (VS ground-pound radius 0x82000 against single-player's
+   0x32000), as do func_ov002_020dd908's shockwave, Stage, StarMarker, the HUD
+   and the fader. MP3 moved the player COUNT and left the mode alone, so two
+   players run on mode-0 code that was already proven. Turning the flag on is a
+   lane of its own and it wants ov075 (the VS menu) mounted first, because
+   src/PrepareVsMode.c is what the ROM sets it from.

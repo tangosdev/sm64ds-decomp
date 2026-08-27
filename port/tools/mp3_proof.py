@@ -46,6 +46,7 @@ PORT_BASE = M.PORT_BASE + 64        # clear of every mp2 rung's port range
 
 # [vs] f<frame> slot<i> actor=<hex> no=<n> pos=(x,y,z) touched=<n>
 VS = re.compile(r"^\[vs\] f(\d+) slot(\d) actor=([0-9A-Fa-f]+) no=(\d) "
+                r"char=(\d) "
                 r"pos=\((-?\d+),(-?\d+),(-?\d+)\) touched=(\d+)", re.M)
 
 
@@ -56,8 +57,9 @@ def rows(t, slot):
         if int(m.group(2)) != slot:
             continue
         out.append(dict(f=int(m.group(1)), actor=m.group(3), no=int(m.group(4)),
-                        x=int(m.group(5)), y=int(m.group(6)), z=int(m.group(7)),
-                        touched=int(m.group(8))))
+                        char=int(m.group(5)),
+                        x=int(m.group(6)), y=int(m.group(7)), z=int(m.group(8)),
+                        touched=int(m.group(9))))
     return out
 
 
@@ -128,6 +130,16 @@ def rungA():
     ok &= M.verdict(r0[-1]["actor"] != r1[-1]["actor"],
                     "rungA they are DIFFERENT actors | %s vs %s"
                     % (r0[-1]["actor"], r1[-1]["actor"]))
+    # AND DIFFERENT CHARACTERS, read off the actor's own +0x6d9 rather than off
+    # the table that is supposed to seat it. This is a rung because the two
+    # disagreed once: the seat's comment said slot i gets character i and both
+    # players came up Mario, because the character is spawn-flag bits 0..2 and
+    # the seat was filling bits 3..5. A capture where the owner cannot tell the
+    # two players apart is worth failing a rung over.
+    ok &= M.verdict(r0[-1]["char"] == 0 and r1[-1]["char"] == 1,
+                    "rungA and DIFFERENT CHARACTERS | slot0 char=%d (Mario) "
+                    "slot1 char=%d (Luigi), read off each actor's +0x6d9"
+                    % (r0[-1]["char"], r1[-1]["char"]))
 
     gap0 = abs(r1[0]["x"] - r0[0]["x"])
     gapN = abs(r1[-1]["x"] - r0[-1]["x"])

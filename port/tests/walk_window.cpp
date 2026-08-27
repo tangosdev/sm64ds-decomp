@@ -4720,6 +4720,30 @@ static int host_show_mode(int nofocus)
             break;
         }
     }
+    /* SM64DS_MINIMIZED=1 -- THE SAME REQUEST, FOR A LAUNCHER THAT CANNOT MAKE
+       IT. Run mg16 lane MP3.
+
+       Everything above reads the request out of STARTUPINFO, which is the right
+       place and is what port/tools/mp2_proof.py uses (it sets wShowWindow = 7
+       directly, because Python can). NOT EVERY LAUNCHER CAN. .NET's
+       ProcessStartInfo.WindowStyle is not carried into STARTUPINFO when
+       UseShellExecute is false, and a launcher that needs to redirect a stream
+       has no choice about that -- so port/tools/mp2_two_windows.ps1 asked for
+       Minimized, got no STARTF_USESHOWWINDOW at all, and the window came up
+       VISIBLE. That is the second time a launcher lost this guarantee silently;
+       the first was a cmd.exe shim eating the STARTUPINFO on the way past.
+
+       So the request can also be made the way every other port knob is made.
+       STARTUPINFO STILL WINS where it carries a real spelling -- this only
+       fills in when the launcher could not speak that way -- and the composition
+       with SM64DS_NO_FOCUS below is unchanged.
+
+       It is deliberately a REQUEST TO BE QUIETER, never louder: there is no
+       env value that un-minimizes a window STARTUPINFO asked to minimize. */
+    if (want == -1) {
+        const char *m = getenv("SM64DS_MINIMIZED");
+        if (m && atoi(m) != 0) want = SW_SHOWMINNOACTIVE;
+    }
     if (nofocus) {
         /* THE TWO COMPOSE rather than one winning. A minimized request under
            SM64DS_NO_FOCUS is minimized AND not activated, which is the quietest

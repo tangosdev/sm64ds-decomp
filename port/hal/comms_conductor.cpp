@@ -56,6 +56,22 @@
 // the hardware asks it. It is also the same shape as comms_set_boot_indicator,
 // which writes 0x027FFC40 rather than teaching the game to skip the read.
 //
+// ONE OTHER READER SHARES THIS REGISTER, and writing it changes what that
+// reader sees. Found by the MP3 reviewer, checked here, and left alone
+// deliberately. src/func_02013f4c.c -- the DEV CRASH SCREEN's button-sequence
+// detector -- computes the identical expression at its head and watches
+// `raw & 0x3ff` for a combination. While KEYINPUT read 0 it saw 0x2fff every
+// frame: every button held, forever, so its edge test (`old ^ cur`) never fired
+// and the sequence could never be entered. It now sees what the player is
+// actually pressing.
+//
+// THAT IS THE CORRECT BEHAVIOUR AND IT IS FREE TODAY. It is what the hardware
+// would give it, which is the whole standard this change is held to; the
+// detector is only reachable from the crash path (src/func_02013f28.c spins on
+// it); and a real combination is a deliberate act. It is written down because a
+// dev crash screen appearing after a multiplayer lane touched the pad register
+// would otherwise look like an unrelated regression to whoever met it first.
+//
 // ORDERING IS LOAD-BEARING and it is the trap MP2 wrote down. With the ROM's
 // fan-out on, func_0203bc7c OVERWRITES the pad mirror from the four comms
 // records later in the same frame. Publishing the register from the mirror
@@ -67,7 +83,10 @@
 // ===========================================================================
 
 #include "comms_seam.h"
-#include "comms_loopback.h"   // the carrier's role, for the retry
+/* hal/comms_loopback.h is deliberately NOT included: nothing in this file may
+   know which transport is installed. The re-seat used to read the loopback
+   carrier's stats struct for the role and now takes it from state(), which is
+   the transport-agnostic answer the seam already has. */
 #include "os_thread.h"
 
 #include <windows.h>   // ::Sleep, for the pump's one-millisecond yield
@@ -183,16 +202,22 @@ MP3_BSS(".dsstate$ymp3a0007", data_020a102b, 2);    // heading
 MP3_BSS(".dsstate$ymp3a0008", data_020a102d, 1);    // player count, slot 0 only
 MP3_BSS(".dsstate$ymp3a0009", data_020a102e, 1);    // reserved, slot 0 only
 MP3_BSS(".dsstate$ymp3a0010", data_020a102f, 17);   // game payload
-// 0x020a1040 begins data_020a1040, the local record, hosted by
-// hal/camera_bridges.cpp. Nothing may be added between here and there.
+// On the DS, 0x020a1040 -- data_020a1040, the local record -- begins here.
+// In the host image that symbol is hal/camera_bridges.cpp's and lands
+// elsewhere, which costs nothing: every walk the conductor makes over this
+// block is internal to it, and the guard checks the band's own 0x20 span
+// rather than an adjacency the host does not have.
 
 // ---------------------------------------------------------------------------
 // BAND B -- THE PER-PLAYER INFO BUFFERS, 0x020a10a4 .. 0x020a1154.
 //
 // src/func_0203ea5c.c:171 indexes data_020a10a4 by (sel * 0x16) for sel in
 // 0..3, and :319/:327 walk data_020a10ba and data_020a1112 in 0x16 strides.
-// Eight DS symbols summing to 0xb0, landing exactly on data_020a1154 -- the
-// four records camera_bridges already hosts. data_020a10a4's own span is 2 and
+// Eight DS symbols summing to 0xb0, which on the DS lands exactly on
+// data_020a1154. That adjacency is a ROM fact and NOT a host one -- the four
+// records are camera_bridges' and sit elsewhere in this image -- and it is not
+// needed: every index above stays inside this band's own 0xb0. Its own span is
+// what the guard checks. data_020a10a4's own span is 2 and
 // its declared use is 0x16, which is the undersized trap in miniature: the
 // other 20 bytes are data_020a10a6, and they are only there if the band is.
 MP3_BSS(".dsstate$ymp3b0000", data_020a10a4, 2);
@@ -246,20 +271,27 @@ MP3_BSS(".dsstate$ymp3s0009", data_020a1fc0, 0x440);
 //
 // src/func_0203b9bc.c walks data_020a0df8 as NINE eight-byte entries (its index
 // fixup is `if (k < 0) k += 9`) and settles the answer into data_020a0dd8. The
-// spans agree exactly: 0x020a0df8 runs 0x48 = 9 * 8 up to data_020a0e40, and
+// spans agree exactly: on the DS 0x020a0df8 runs 0x48 = 9 * 8 up to
+// data_020a0e40 (a ROM adjacency, not a host one), and
 // data_020a0dd8 runs 8 up to data_020a0de0. Two independent facts meeting is
 // what makes this a reading rather than a guess.
 //
-// THE PORT DOES NOT FILL THIS RING, and that is stated here rather than
-// discovered later. hal/sub_screen.cpp's poll_touch writes TouchInfo at
-// data_020a0de8 directly; nothing writes the ring. So func_0203b9bc takes its
-// `flag == 0` branch every frame and publishes the ROM's own IDLE QUAD --
-// a = b = 0xff, c = 0, d = 0 -- which is exactly what the ROM publishes when
-// nobody is touching the screen. That is correct, not degraded: the stylus half
-// of the local record honestly reads "no touch". Feeding the ring from
-// poll_touch is what would make a real stylus cross the wire, and it is a
-// separate change with its own regression surface, so it is named here and not
-// done here.
+// THE PORT FILLS THIS RING, as of the same lane that hosted it.
+// hal/sub_screen.cpp's poll_touch writes one entry per frame at the bottom of
+// its store, in the ROM's own encoding, and advances the write index in the
+// DS's own halfword at data_020a80cc+12 -- the one src/func_0205edc8.c returns
+// and src/func_0203b9bc.c reads backwards from, so the reader and the writer
+// walk one ring rather than two.
+//
+// It did not, for the first half of this lane, and the consequence is worth
+// keeping: func_0203b9bc took its `flag == 0` branch every frame and published
+// the ROM's IDLE QUAD (a = b = 0xff, c = 0, d = 0), so the stylus could not
+// cross the wire while the key crossed perfectly on the same run. That
+// asymmetry is what identified the missing writer. Rung 3 now carries both
+// halves, 298 of 300 frames each direction.
+//
+// The ROM's three-consecutive-samples debounce is left alone, so a one-frame
+// tap still does not cross. That is correct DS behaviour, not a limitation.
 MP3_BSS(".dsstate$ymp3t0000", data_020a0dd8, 8);
 MP3_BSS(".dsstate$ymp3t0001", data_020a0de0, 8);
 MP3_BSS(".dsstate$ymp3t0002", data_020a0df8, 0x48);   // nine eight-byte ring entries
@@ -278,12 +310,14 @@ MP3_BSS(".dsstate$ymp3t0002", data_020a0df8, 0x48);   // nine eight-byte ring en
 // the wire carries whatever else the linker put there.
 // The far ends of three of the bands are hosted elsewhere and are what makes
 // the checks below meaningful: a band that is internally contiguous but lands
-// in the wrong place would still pass a self-check. data_020a1040 and
-// data_020a1154 are hal/camera_bridges.cpp's; data_020a0e40 is auto_bss's.
+// in the wrong place would still pass a self-check.
+//
+// THE THREE CROSS-FILE ANCHORS ARE NOT DECLARED HERE ANY MORE. An earlier
+// revision took data_020a1040, data_020a1154 and data_020a0e40 in order to
+// assert that this file's bands ended exactly where the DS says they end. They
+// are hosted by other files and land elsewhere in the image, so those rows
+// would have failed a correct build; the reasoning is at the guard itself.
 extern "C" {
-extern unsigned char data_020a1040[];
-extern unsigned char data_020a1154[];
-extern unsigned char data_020a0e40[];
 // The ROLE byte, hosted by hal/stage_slot0.cpp. src/func_0203df40.c switches
 // on it and nothing in the port was seating it; see HOLE 3 below.
 extern unsigned char data_020a0f04[];
@@ -333,15 +367,47 @@ inline unsigned char *data_020a80cc_bytes() {
 }  // namespace port
 
 extern "C" int port_comms_conductor_check_layout(void) {
+    // ONLY THIS FILE'S OWN BANDS, and the three cross-file rows an earlier
+    // revision carried are gone. They were wrong in a way worth recording,
+    // because the instinct that put them there is a reasonable one.
+    //
+    // On the DS band A ends exactly where data_020a1040 begins, band B ends
+    // exactly where data_020a1154 begins, and the ring ends exactly where
+    // data_020a0e40 begins -- so asserting those adjacencies looks like
+    // asserting the layout is ROM-faithful. In the HOST IMAGE those three
+    // anchors are hosted by other files (camera_bridges, auto_bss) and land
+    // nowhere near this file's sections: measured, data_020a1040 sits at
+    // 0004:00000002 against band A at 0004:000eb53c. Wiring those rows would
+    // have failed the guard on a build that is perfectly correct.
+    //
+    // AND THEY DO NOT NEED TO BE ADJACENT, which is the actual point. Every
+    // walk the conductor makes is INTERNAL to one band: it hands the transport
+    // &data_020a1020 for kCommsBlockBytes, and band A is 0x20 bytes of its own
+    // symbols; it indexes data_020a10a4 by sel*0x16 for sel 0..3 and steps
+    // data_020a1112 three times by 0x16, all inside band B's 0xb0. What has to
+    // be true is that each band is CONTIGUOUS AND LONG ENOUGH, which is what
+    // these rows check. Where a band happens to sit is the linker's business.
+    //
+    // The ring needs no row at all: nothing walks from it into another symbol,
+    // and its length is a compile-time property of its own declaration.
     struct { const char *what; long got, want; } rows[] = {
-        {"A: 1020->1040 block",  (long)(data_020a1040 - data_020a1020), 0x20},
-        {"A: 1020->1023",        (long)(data_020a1023 - data_020a1020), 3},
-        {"A: 1020->102f",        (long)(data_020a102f - data_020a1020), 0x0f},
-        {"B: 10a4->10ba",        (long)(data_020a10ba - data_020a10a4), 0x16},
-        {"B: 10a4->1112",        (long)(data_020a1112 - data_020a10a4), 0x6e},
-        {"B: 10a4->1154",        (long)(data_020a1154 - data_020a10a4), 0xb0},
-        {"C: 0fa6->0fbe",        (long)(data_020a0fbe - data_020a0fa6), 0x18},
-        {"T: 0df8 ring stride",  (long)(data_020a0e40 - data_020a0df8), 0x48},
+        // Band A -- the staged 0x20 block, checked end to end and at its two
+        // interior landmarks. The span row is the one that matters: it is the
+        // guarantee that &data_020a1020 really is kCommsBlockBytes of this
+        // band's own storage.
+        {"A: block span 1020..102f+17",
+         (long)((data_020a102f + 17) - data_020a1020), 0x20},
+        {"A: 1020->1023",  (long)(data_020a1023 - data_020a1020), 3},
+        {"A: 1020->102f",  (long)(data_020a102f - data_020a1020), 0x0f},
+        // Band B -- the per-player info buffers, four 0x16 slots then three
+        // more, checked end to end and at both stride landmarks.
+        {"B: band span 10a4..1112+66",
+         (long)((data_020a1112 + 66) - data_020a10a4), 0xb0},
+        {"B: 10a4->10ba",  (long)(data_020a10ba - data_020a10a4), 0x16},
+        {"B: 10a4->1112",  (long)(data_020a1112 - data_020a10a4), 0x6e},
+        // Band C -- the six-byte player ids: 0fa6 must carry a full 24 bytes
+        // before 0fbe starts, which is 18 of its own plus 0fb8's 6.
+        {"C: 0fa6->0fbe",  (long)(data_020a0fbe - data_020a0fa6), 0x18},
     };
     int bad = 0;
     for (unsigned i = 0; i < sizeof rows / sizeof rows[0]; ++i) {
@@ -428,12 +494,13 @@ namespace {
 // (walk_window.cpp:3388 and :3480 both gate on g_selftest), and the headless
 // two-instance proofs are selftest runs.
 //
-// THE STYLUS FIELDS ARE ACCEPTED AND DO NOT REACH THE WIRE, and saying so is
-// the point. They used to be written straight into the record. Now they would
-// have to arrive through the touch ring, which nothing fills (see the ring's
-// own note above), so func_0203b9bc publishes the idle quad regardless. The
-// parser keeps them so the ladder's existing invocations stay valid and the
-// change is visible as a verdict rather than as a silent zero.
+// THE STYLUS FIELDS REACH THE WIRE, and they take a longer road than they used
+// to. MP2 wrote them straight into the comms record. They now enter at the
+// TOUCH PANEL -- comms_inject_touch below, honoured by hal/sub_screen.cpp's
+// poll_touch beside the touch probe -- and travel the ROM's own path from
+// there: the four-deep ring, src/func_0203b9bc.c, src/func_0203df40.c, the
+// staged block. From that line on an injected touch is indistinguishable from
+// a real one, which is a better place for the knob than the record was.
 bool     g_inject_on = false;
 unsigned g_inj_key = 0, g_inj_x = 0, g_inj_y = 0, g_inj_touch = 0;
 
@@ -460,9 +527,8 @@ void inject_parse() {
     }
     std::fprintf(stderr,
                  "[comms:conductor] injecting key=0x%04x into the DS key "
-                 "register; stylus={%u,%u} touch=%u ACCEPTED BUT NOT CARRIED "
-                 "(the port does not fill the touch ring func_0203b9bc reads, "
-                 "so the ROM publishes its idle quad)\n",
+                 "register and stylus={%u,%u} touch=%u into the touch panel; "
+                 "both cross the wire through the ROM's own readers\n",
                  g_inj_key, g_inj_x, g_inj_y, g_inj_touch);
 }
 
@@ -548,12 +614,36 @@ void comms_retry_dropped_session() {
                      "DS's multiplayer menu would; this message is printed "
                      "once.\n", st);
 
-    const CommsLoopbackStats ls = comms_loopback_stats();
-    comms_seat_session_request(ls.role == 1 ? kCommsRoleParent
-                                            : kCommsRoleChild);
+    // THE ROLE COMES FROM THE LINK STATE, NOT FROM THE CARRIER. An earlier
+    // revision read comms_loopback_stats().role here, which is a specific
+    // transport's private struct leaking into a path that must work for any
+    // transport -- and worse, it read it without checking `installed`, so a
+    // different transport would have been re-seated from a stale loopback
+    // struct. The seam already knows the answer in a transport-agnostic way:
+    // state() distinguishes parent-connected from child-connected, and it is
+    // the value this function just tested.
+    comms_seat_session_request(st == kCommsParentConnected ? kCommsRoleParent
+                                                           : kCommsRoleChild);
 }
 
 void comms_publish_pad(unsigned held) {
+    // THE BAND GUARD, RUN ONCE, HERE. It has to be called from somewhere or it
+    // is decoration, and this is the one entry that is reached on every frame
+    // of every path that uses this file -- solo included, which matters,
+    // because a shuffled band would corrupt the local record whether or not a
+    // transport is installed. Reported once either way: a guard that is silent
+    // on success is indistinguishable from a guard nobody called, which is the
+    // failure mode this whole paragraph exists to avoid.
+    static bool checked = false;
+    if (!checked) {
+        checked = true;
+        if (port_comms_conductor_check_layout())
+            std::fprintf(stderr,
+                         "  [conductor] bands OK -- A spans 0x20 at "
+                         "&data_020a1020, B spans 0xb0 at &data_020a10a4, "
+                         "C gives 0fa6 its full 24 bytes\n");
+    }
+
     inject_parse();
     comms_retry_dropped_session();
     if (g_inject_on) held = g_inj_key;
@@ -656,10 +746,16 @@ void vs_probe(int frame) {
         int cheld = 0, cang = 0;
         std::memcpy(&cheld, ctrl + 0x00, 4);
         std::memcpy(&cang, ctrl + 0x0e, 2);
+        // +0x6d9 is the CHARACTER the actor actually came up as, read off the
+        // actor rather than off the table that was supposed to seat it --
+        // tests/walk_window.cpp reads the same byte into g_character for the
+        // same reason. Two claims disagreed about whether player 1 is Luigi;
+        // this is the one that settles it.
         std::fprintf(stderr,
-                     "[vs] f%d slot%d actor=%p no=%d pos=(%d,%d,%d) touched=%u "
-                     "pad=%04x ctrl0=%08x ang=%04x\n",
-                     frame, i, (const void *)a, (int)a[0x6d8], px, py, pz,
+                     "[vs] f%d slot%d actor=%p no=%d char=%d pos=(%d,%d,%d) "
+                     "touched=%u pad=%04x ctrl0=%08x ang=%04x\n",
+                     frame, i, (const void *)a, (int)a[0x6d8],
+                     (int)(a[0x6d9] & 3), px, py, pz,
                      other, pad, (unsigned)cheld, (unsigned)(cang & 0xffff));
     }
 }

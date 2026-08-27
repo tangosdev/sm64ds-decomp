@@ -2012,6 +2012,19 @@ extern void *data_0209f394[];
 
 extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3);
 
+/* THE PORT'S OWN PER-SLOT CHARACTER CHOICE. See the note at the a2 seat: the
+   ROM's data_02092128 is rewritten during the level boot, so the choice the
+   port makes for the extra players cannot live there. Four slots, defaulting
+   to slot-index order (0 Mario, 1 Luigi, 2 Wario, 3 Yoshi), which is the order
+   the VS menu offers and what makes two players tellable apart in a capture. */
+static unsigned char g_vs_character[4] = {0, 1, 2, 3};
+extern "C" void port_vs_set_character(int slot, int ch) {
+    if (slot >= 0 && slot < 4) g_vs_character[slot] = (unsigned char)(ch & 3);
+}
+extern "C" int port_vs_character(int slot) {
+    return (slot >= 0 && slot < 4) ? (int)g_vs_character[slot] : 0;
+}
+
 static void port_load1(void *t, int a, unsigned b)
 {
     port_loader_enter(1, t);
@@ -3596,8 +3609,32 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
         pos[1] = base->y << 12;
         pos[2] = base->z << 12;
 
-        const unsigned f2 = data_0209caa0[0x41];
-        const unsigned f1 = data_02092128[i];
+        /* THE CHARACTER IS FLAG BITS 0..2, NOT BITS 3..5, and getting that
+           backwards is why both players came up Mario in every capture this
+           lane banked -- the contradiction the review caught between this
+           function's own comment and MP3.md's gap note. Re-derived from
+           src/_ZN6Player13InitResourcesEv.cpp:71-77 rather than from either
+           claim:
+
+               a = *(u32 *)(c + 8);                 the spawn flags
+               *(u8 *)(c + 0x6d8) = (a >> 6) & 3;   mPlayerNo   <- (i << 6)
+               sub                = (a >> 3) & 7;               <- f1
+               *(u8 *)(c + 0x6d9) =  a       & 7;   CHARACTER   <- f2
+
+           So the byte the model is chosen from is f2, which in the ROM's own
+           loop is data_0209caa0[0x41] -- the SAVE FILE's character, the same
+           for every slot. data_02092128[i] lands at +0x6da as `sub`, and :83-87
+           then writes data_02092128[playerNo] BACK from the character whenever
+           the two disagree, which is the table rewrite measured mid-boot.
+
+           So both halves carry the port's choice: f2 so the actor comes up as
+           that character, f1 so `sub` agrees with it and the ROM's own
+           reconciliation has nothing to correct. The ROM's table is re-seated
+           to match for anything downstream that reads it. */
+        const unsigned ch = (unsigned)port_vs_character(i);
+        const unsigned f2 = ch;
+        const unsigned f1 = ch;
+        data_02092128[i] = (unsigned char)ch;
         const unsigned flags = f2 | (f1 << 3) | ((unsigned)i << 6) | (sl << 8);
 
         void *a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
@@ -3737,6 +3774,10 @@ int func_0203da9c(void);
    Stage::InitResources:153 copies data_0208a0e0 into data_0209f21c, so this is
    the write that actually survives into the spawn loop. */
 void SetNumPlayers(int n);
+/* run mg16 lane MP3: the port's own per-slot character choice, defined above
+   port_load1. It exists because the ROM rewrites data_02092128 during the boot. */
+void port_vs_set_character(int slot, int ch);
+int  port_vs_character(int slot);
 extern signed char data_02092120;      /* currently shown area, -1 = none */
 extern int data_0209f32c[];            /* water level */
 /* data_0209fc48 (the running cutscene) is DEFINED above, in the retirement
@@ -4010,7 +4051,20 @@ static void port_a2_seat_body(int make_stage)
     for (int i = 0; i < vs_players; ++i) {
         data_0209fc5c[i] = 1;          /* this slot is live */
         data_02092128[i] = (unsigned char)i;   /* character: see below */
+        port_vs_set_character(i, i);   /* and the port's own copy: see below */
     }
+    /* THE PORT KEEPS ITS OWN COPY OF THE CHARACTER CHOICE, and that is not
+     * belt-and-braces -- data_02092128 IS REWRITTEN DURING THE LEVEL BOOT.
+     * Measured: the loader witness prints chars=0,1 on the way into
+     * LoadEntranceObjects and port_vs_spawn_extra_players, which runs
+     * immediately after it, reads 0 for slot 1. Something inside the spawn
+     * (Player::InitResources seats the array from the save block) puts player
+     * 0's character back across every slot.
+     *
+     * That is the ROM's table and the ROM's business. What is NOT the ROM's is
+     * the choice for the EXTRA players, because the port is standing in for the
+     * VS menu that would make it, so the port holds that decision in its own
+     * storage instead of leaving it in a table the ROM owns and overwrites. */
     /* CHARACTER PER SLOT, and it is a placeholder with a reason rather than a
      * decision. The ROM picks these in the VS menu (ov075), which is not
      * mounted yet, so slot i gets character i -- 0 Mario, 1 Luigi, 2 Wario,

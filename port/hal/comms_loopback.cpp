@@ -514,12 +514,23 @@ void drain() {
 // ---------------------------------------------------------------------------
 // SERVICE
 //
-// PROPOSED CONTRACT CHANGE 1 lives here. comms_seam.h says poll() is "called
+// HOLE 1 WAS FOUND HERE AND IS NOW CLOSED. comms_seam.h says poll() is "called
 // once per pump turn while the game is blocked" and that "a socket transport
-// does its recv here" -- but NOTHING IN THE SEAM CALLS IT. comms_set_transport
-// refuses a null poll at install time (comms_seam.cpp:52) and that is the only
-// mention of the entry in the whole tree. A transport that took the sentence at
-// its word would receive nothing, ever.
+// does its recv here". When this file was written NOTHING IN THE SEAM CALLED
+// IT -- comms_set_transport refused a null poll at install and that was the
+// only mention of the entry in the tree -- so a transport that took the
+// sentence at its word would have received nothing, ever.
+//
+// Run mg16 lane MP3 closed it by fix (a): the seam grows the pump, because
+// linking src/func_0203ea5c.c showed the ROM's wait SLEEPS rather than spins
+// and hal/os_thread.h's hook was written for that exact call chain. poll() is
+// now called once per turn of the ROM's own wait. See the frozen contract at
+// the top of comms_seam.h.
+//
+// THIS CARRIER STILL SERVICES ITSELF FROM EVERY ENTRY, and that is deliberate
+// rather than leftover: a transport that only works when someone remembers to
+// pump it is fragile, and the servicing below is what makes the connect phase
+// work before any wait loop is running to pump it.
 //
 // So this carrier services itself from EVERY entry it owns -- state(), slot(),
 // player_count(), exchange() and poll() all land here first -- and is correct
@@ -984,7 +995,32 @@ void comms_loopback_report(const char *tag) {
 }  // namespace port
 
 // ===========================================================================
-// WHAT WRITING THIS FOUND: PROPOSED CONTRACT CHANGES FOR THE MP2 FREEZE
+// ###########################################################################
+// #  HISTORICAL. EVERY PROPOSAL BELOW HAS BEEN DECIDED.                     #
+// #                                                                         #
+// #  The contract froze in run mg16 lane MP3, once src/func_0203ea5c.c was  #
+// #  linked and the ROM's own caller drove the seam. THE AUTHORITY IS THE   #
+// #  BANNER AT THE TOP OF hal/comms_seam.h -- read that, not this. What     #
+// #  follows is kept because it is the measurement each decision rests on,  #
+// #  and a frozen contract with no record of why is worse than none.        #
+// #                                                                         #
+// #  Outcomes, so nobody has to reconstruct them:                           #
+// #    HOLE 1 poll never called   CLOSED by fix (a), the seam grew the pump #
+// #    HOLE 2 lifecycle           CLOSED exactly as proposed                #
+// #    HOLE 3 role decided twice  CLOSED, but the real caller REFRAMED it   #
+// #    HOLE 4 no round id         CLOSED as proposed                        #
+// #    HOLE 5 abandon()           CLOSED, entry added; it had more teeth    #
+// #    GAP 1 status out-param     no change, write 0                        #
+// #    GAP 4 WM status word       stays seam-owned                          #
+// #                                                                         #
+// #  TWO DID NOT GO AS PROPOSED. HOLE 3's "who wins" turned out not to be   #
+// #  the question -- the ROM asks for no role until something seats         #
+// #  data_020a0f04 -- and HOLE 5's drop turned out to be PERMANENT rather   #
+// #  than merely desynchronising, so the seam re-seats as well as telling   #
+// #  the transport. Both are written up at the freeze.                      #
+// ###########################################################################
+//
+// WHAT WRITING THIS FOUND: THE PROPOSALS, AS THEY WERE PUT (now all decided)
 //
 // comms_seam.h says the contract freezes at the end of MP2, when a loopback
 // transport has actually driven it. This is that transport, and these are the
