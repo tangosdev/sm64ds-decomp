@@ -680,7 +680,7 @@ src/_ZN11daBgSnwmn_c16CleanupResourcesEv.c	P1-vtable+mangled	ov072	daBgSnwmn_c	d
 src/_ZN11daBgSnwmn_c16OnPendingDestroyEv.c	P1-vtable+mangled	ov072	daBgSnwmn_c	daBgSnwmn_c	vtable daBgSnwmn_c slot 12 @0x21209bc | _ZN11daBgSnwmn_c16OnPendingDestroyEv	1		True		-
 src/_ZN11daBgSnwmn_cD0Ev.c	DTOR-ONLY	ov072	daBgSnwmn_c	daBgSnwmn_c	_ZN11daBgSnwmn_cD0Ev	1		True		-
 src/_ZN11daBgSnwmn_cD1Ev.c	DTOR-ONLY	ov072	daBgSnwmn_c	daBgSnwmn_c	_ZN11daBgSnwmn_cD1Ev	1		True		-
-src/_ZN11daDsnBase_cD0Ev.c	DTOR-ONLY	ov091	daDsn_c	daDsnBase_c/daDsn_c	_ZN11daDsnBase_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV11daDsnBase_c	-
+src/_ZN11daDsnBase_cD0Ev.cpp	DTOR-ONLY	ov091	daDsn_c	daDsnBase_c/daDsn_c	_ZN11daDsnBase_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV11daDsnBase_c	-
 src/_ZN11daDsnBase_cD1Ev.c	DTOR-ONLY	ov091	daDsn_c	daDsnBase_c/daDsn_c	_ZN11daDsnBase_cD1Ev	1		True	_ZTV10dBgActor_c/_ZTV11daDsnBase_c	-
 src/_ZN12CylinderClsnD0Ev.c	DTOR-ONLY	arm9	dCc_c	CylinderClsn/dCc_c	_ZN12CylinderClsnD0Ev	1		True		-
 src/_ZN12CylinderClsnD1Ev.c	DTOR-ONLY	arm9	dCc_c	CylinderClsn/dCc_c	_ZN12CylinderClsnD1Ev	1		True		-
