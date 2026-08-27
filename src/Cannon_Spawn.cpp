@@ -1,20 +1,26 @@
+//cpp
 // @symbol Cannon_Spawn
-/* recovered: vtable identified, globals resolved, declarations from a shared header */
-#include "decl_Actor.h"
-#include "decl_ActorBase.h"
-#include "decl_Model.h"
-#include "decl_dCcAc_c.h"
-#include "decl_common.h"
-/* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV6Cannon */
-int *Cannon_Spawn(void)
+#include "Cannon.h"
+
+/* This compiler rejects both the cartridge's class-specific operator-new
+ * spelling and placement new. Keep that allocation/constructor ABI boundary
+ * explicit, while the real class layout names every constructed subobject. */
+extern "C" {
+void *_ZN7fBase_cnwEj(unsigned int size);
+void _ZN8dActor_cC2Ev(void *self);
+void _ZN5ModelC1Ev(void *self);
+void _ZN7dCcAc_cC1Ev(void *self);
+extern void *_ZTV6Cannon;
+}
+
+extern "C" Cannon *Cannon_Spawn()
 {
-    int *p = (int *)_ZN7fBase_cnwEj(408);
-    if (p) {
-        _ZN8dActor_cC2Ev(p);
-        p[0] = (int)_ZTV6Cannon;
-        _ZN5ModelC1Ev((char *)p + 0xd4);
-        _ZN7dCcAc_cC1Ev((char *)p + 0x124);
+    Cannon *actor = (Cannon *)_ZN7fBase_cnwEj(sizeof(Cannon));
+    if (actor) {
+        _ZN8dActor_cC2Ev(actor);
+        *(void **)actor = &_ZTV6Cannon;
+        _ZN5ModelC1Ev(&actor->mModel);
+        _ZN7dCcAc_cC1Ev(&actor->mdCcAc_c);
     }
-    return p;
+    return actor;
 }

@@ -30202,7 +30202,7 @@
     "src/_ZN6Cannon6RenderEv.cpp",
     "src/_ZN6Cannon8BehaviorEv.cpp",
     "src/_ZN6Cannon13InitResourcesEv.cpp",
-    "src/Cannon_Spawn.c"
+    "src/Cannon_Spawn.cpp"
    ],
    "ext_mix": {
     ".cpp": 6,

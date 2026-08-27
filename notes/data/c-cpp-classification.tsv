@@ -54,7 +54,6 @@ src/CageLift_Spawn.c	S1-stores-rom-vptr	ov029			stores _ZTV8CageLift	1		None	_ZT
 src/CameraTag_Spawn.c	WEAK-refs-only	ov002				1		None		-
 src/Camera_UpdateMatrices.c	WEAK-refs-only	ov006				1		None		-
 src/CannonHatch_Spawn.c	WEAK-refs-only	ov002				1		None		-
-src/Cannon_Spawn.c	WEAK-refs-only	ov098				1		None		-
 src/CapBlockLuigi_Spawn.c	WEAK-refs-only	ov102				1		None		-
 src/CapBlockMario_Spawn.c	WEAK-refs-only	ov102				1		None		-
 src/CapBlockWario_Spawn.c	WEAK-refs-only	ov102				1		None		-
