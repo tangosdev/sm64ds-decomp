@@ -10,9 +10,8 @@
  * dCapIcon_c's ROM-proven destructor is now an actual member destructor, so
  * the empty body emits it first and Model second before the base teardown.
  *
- * This is the destructor in vtable slot 16. Slot 17 is _ZN11dCapEnemy_cD0Ev, which
- * stays as it is -- see the note in include/dEnemyBase_c.h about why the inline
- * operator delete on the immediate base is what lets a D0 reproduce at all.
+ * The overlay D1 and D0 variants use this same native definition; the inline
+ * operator delete on the immediate base is what lets D0 reproduce its heap call.
  */
 #include "dCapEnemy_c.h"
 

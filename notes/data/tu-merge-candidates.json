@@ -32312,7 +32312,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/func_ov002_020aedbc.c"
+    "src/_ZN11dCapEnemy_cD1Ev.cpp"
    ],
    "ext_mix": {
     ".c": 1
@@ -32362,7 +32362,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/_ZN11dCapEnemy_cD0Ev.c"
+    "src/_ZN11dCapEnemy_cD0Ev.cpp"
    ],
    "ext_mix": {
     ".c": 1

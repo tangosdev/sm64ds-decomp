@@ -7,9 +7,9 @@
  * so it is established by hand, the same way as its sibling daKrb_c:
  *
  *   - Backward: daTrs_c's own destructor (_ZN7daTrs_cD1Ev, src/actors/daTrs_c/_ZN7daTrs_cD1Ev.cpp)
- *     tears down its own six members, then calls func_ov002_020aedbc -- the
+ *     tears down its own six members, then calls `_ZN11dCapEnemy_cD1Ev` -- the
  *     exact function _ZN7daKrb_cD1Ev (src/_ZN7daKrb_cD1Ev.c) calls after tearing
- *     down its own members. func_ov002_020aedbc sits at 0x020aedbc and is
+ *     down its own members. `_ZN11dCapEnemy_cD1Ev` sits at 0x020aedbc and is
  *     immediately followed, at 0x020aedf4, by the already-matched
  *     _ZN11dCapEnemy_cD0Ev -- so 0x020aedbc is dCapEnemy_c's own out-of-line D1, and
  *     both sibling destructors chain to it.
@@ -17,8 +17,8 @@
  *     _ZN11dCapEnemy_cC2Ev(t) before storing _ZTV7daTrs_c -- exactly Goomba_Spawn's
  *     shape, which calls the same _ZN11dCapEnemy_cC2Ev before storing _ZTV7daKrb_c.
  *
- * Not renaming func_ov002_020aedbc here -- that is dCapEnemy_c's own file and
- * belongs to the goomba-family rename.
+ * The base destructor's mangled identity is now enrolled with its own
+ * config/delinks entry, so derived teardown links to the C++ symbol directly.
  *
  * SIZE 0x5e0, the literal Boo_Spawn passes to fBase_c::operator new
  * (src/actors/daTrs_c/Boo_Spawn.cpp: `_ZN7fBase_cnwEj(0x5e0)`). dCapEnemy_c ends at
@@ -48,11 +48,9 @@
  * ~daTrs_c() is declared but not defined in-class -- the destructor's actual
  * bodies are the existing hand-written _ZN7daTrs_cD1Ev / _ZN7daTrs_cD0Ev, kept as
  * manual `extern "C"` definitions rather than compiler-synthesized ones so
- * the base-chain call keeps spelling func_ov002_020aedbc. `_ZN11dCapEnemy_cD2Ev`
- * now exists (0x0200651c, named by the goomba-family rename) but it is a
- * DIFFERENT function: the base-chain target here is 0x020aedbc, dCapEnemy_c's
- * own out-of-line D1, which is still unnamed. A compiler-synthesized destructor
- * would emit a call to the former, not the latter.
+ * the overlay base-chain call targets `_ZN11dCapEnemy_cD1Ev` at 0x020aedbc.
+ * `_ZN11dCapEnemy_cD2Ev` remains the distinct ARM9 base-object variant at
+ * 0x0200651c.
  */
 #ifndef DATRS_C_H
 #define DATRS_C_H

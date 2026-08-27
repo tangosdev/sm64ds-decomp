@@ -23,8 +23,7 @@
  *                  renamed daKrb_c, so the compiler still emits _ZTV7daKrb_c.
  *
  * DERIVES FROM dCapEnemy_c. _ZN7daKrb_cD1Ev tears down its own five members and then
- * chains to func_ov002_020aedbc, which IS dCapEnemy_c::~dCapEnemy_c (dCapEnemy_c has no
- * named out-of-line D1 of its own to call by name -- see include/dCapEnemy_c.h). Goomba_Spawn
+ * chains to `_ZN11dCapEnemy_cD1Ev`, dCapEnemy_c's out-of-line complete destructor. Goomba_Spawn
  * (and GoombaSmall_Spawn, GoombaLarge_Spawn -- all three build the identical class,
  * differing only in spawn param) call _ZN11dCapEnemy_cC2Ev(p) before storing this
  * class's own vtable, the same forward/backward pair CapEnemy's own header documents.

@@ -667,7 +667,6 @@ src/_ZN11VolcanoFireD0Ev.c	DTOR-ONLY	ov022	daObj_volcanoCannon_c	VolcanoFire/daO
 src/_ZN11VolcanoRingD0Ev.c	DTOR-ONLY	ov022	daObjFl_Ring_c	VolcanoRing/daObjFl_Ring_c	_ZN11VolcanoRingD0Ev	1		True	_ZTV10dBgActor_c/_ZTV11VolcanoRing	-
 src/_ZN11WingFeather16CleanupResourcesEv.c	P1-vtable+mangled	ov002	daFeather_c	WingFeather/daFeather_c	vtable daFeather_c slot 3 @0x20b2e30 | _ZN11WingFeather16CleanupResourcesEv	1		True		-
 src/_ZN11WingFeatherD0Ev.c	DTOR-ONLY	ov002	daFeather_c	WingFeather/daFeather_c	_ZN11WingFeatherD0Ev	1		True		-
-src/_ZN11dCapEnemy_cD0Ev.c	DTOR-ONLY	ov002	dCapEnemy_c	dCapEnemy_c	_ZN11dCapEnemy_cD0Ev	1		True		-
 src/_ZN11dScMiniGm_c13InitResourcesEv.c	P1-vtable+mangled	ov005	dScMiniGm_c	dScMiniGm_c	vtable dScMiniGm_c slot 0 @0x20c1a20 | _ZN11dScMiniGm_c13InitResourcesEv	1		True		-
 src/_ZN11dScMiniGm_c16CleanupResourcesEv.c	P1-vtable+mangled	ov005	dScMiniGm_c	dScMiniGm_c	vtable dScMiniGm_c slot 3 @0x20c1654 | _ZN11dScMiniGm_c16CleanupResourcesEv	1		True		-
 src/_ZN11dScMiniGm_c16OnPendingDestroyEv.c	P1-vtable+mangled	ov005	dScMiniGm_c	dScMiniGm_c	vtable dScMiniGm_c slot 12 @0x20c0b00 | _ZN11dScMiniGm_c16OnPendingDestroyEv	1		True		-
@@ -3311,7 +3310,6 @@ src/func_ov002_020ae968.c	WEAK-refs-only	ov002				1		None		-
 src/func_ov002_020ae9f8.c	PURE-C	ov002				1		None		-
 src/func_ov002_020aea24.c	PURE-C	ov002				1		None		-
 src/func_ov002_020aea2c.c	PURE-C	ov002				1		None		-
-src/func_ov002_020aedbc.c	WEAK-refs-only	ov002				1		None		-
 src/func_ov002_020aefa4.c	PURE-C	ov002				1		None		-
 src/func_ov002_020af0c0.c	WEAK-refs-only	ov002				1		None		-
 src/func_ov002_020af1dc.c	WEAK-refs-only	ov002				1		None		-
