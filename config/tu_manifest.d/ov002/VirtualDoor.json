@@ -1,9 +1,9 @@
 {
   "id": "ov002/VirtualDoor",
   "module": "ov002",
-  "source": "src_tu/actors/VirtualDoor.cpp",
+  "source": "src/actors/VirtualDoor.cpp",
   "promoted_source": "src/actors/VirtualDoor.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20b07f8..0x20b09b0, 8 function(s), from build/tu_map.json (tools/tu_map.py)",

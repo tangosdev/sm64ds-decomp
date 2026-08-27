@@ -71,6 +71,17 @@ def plan(entry):
     if not src.startswith("src_tu/") or not dest.startswith("src/"):
         raise PromoteError(f"{ident}: expected src_tu/ source and src/ promoted_source, "
                            f"got {src!r} -> {dest!r}")
+    # MEASURED, not defensive: `ChillBully+daIDonketu_c.cpp` linked fine as a src_tu
+    # compile and then broke the whole ROM at the link --
+    #   mwldarm.exe: File not found: ChillBully
+    #   mwldarm.exe: Expecting: (
+    # because dsd writes bare, unquoted object names into the LCF and mwldarm's parser
+    # treats `+` as punctuation. src_tu/ names a multi-class TU with `+` and nothing
+    # ever links those, so the convention is safe exactly until promotion. No promoted
+    # source has ever carried one; keep it that way here, where it costs a second.
+    if not re.fullmatch(r"[A-Za-z0-9_./-]+", dest):
+        raise PromoteError(f"{ident}: {dest!r} has a character the linker command file "
+                           f"cannot carry unquoted; rename the file before promoting")
     if not (REPO / src).is_file():
         raise PromoteError(f"{ident}: {src} is not on disk")
     if (REPO / dest).exists():

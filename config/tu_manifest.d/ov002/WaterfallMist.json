@@ -1,9 +1,9 @@
 {
   "id": "ov002/WaterfallMist",
   "module": "ov002",
-  "source": "src_tu/actors/WaterfallMist.cpp",
+  "source": "src/actors/WaterfallMist.cpp",
   "promoted_source": "src/actors/WaterfallMist.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20b6e08..0x20b6f18, 5 function(s), from build/tu_map.json (tools/tu_map.py)",

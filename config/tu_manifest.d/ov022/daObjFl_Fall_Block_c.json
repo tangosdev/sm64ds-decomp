@@ -1,9 +1,9 @@
 {
   "id": "ov022/daObjFl_Fall_Block_c",
   "module": "ov022",
-  "source": "src_tu/actors/daObjFl_Fall_Block_c.cpp",
+  "source": "src/actors/daObjFl_Fall_Block_c.cpp",
   "promoted_source": "src/actors/daObjFl_Fall_Block_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x2112380..0x211245c, 4 function(s), from build/tu_map.json (tools/tu_map.py)",

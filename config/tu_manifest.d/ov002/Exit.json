@@ -1,9 +1,9 @@
 {
   "id": "ov002/Exit",
   "module": "ov002",
-  "source": "src_tu/actors/Exit.cpp",
+  "source": "src/actors/Exit.cpp",
   "promoted_source": "src/actors/Exit.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20b09b0..0x20b0f54, 9 function(s), from build/tu_map.json (tools/tu_map.py)",

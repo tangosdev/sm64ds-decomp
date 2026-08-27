@@ -1,9 +1,9 @@
 {
   "id": "ov047/daObjKm3_Kuruma_c",
   "module": "ov047",
-  "source": "src_tu/actors/daObjKm3_Kuruma_c.cpp",
+  "source": "src/actors/daObjKm3_Kuruma_c.cpp",
   "promoted_source": "src/actors/daObjKm3_Kuruma_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x21113f8..0x21114d4, 4 function(s), from build/tu_map.json (tools/tu_map.py)",

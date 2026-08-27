@@ -1,9 +1,9 @@
 {
   "id": "ov017/ShipWater",
   "module": "ov017",
-  "source": "src_tu/actors/ShipWater.cpp",
+  "source": "src/actors/ShipWater.cpp",
   "promoted_source": "src/actors/ShipWater.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x21111a0..0x21114b8, 7 function(s), from build/tu_map.json (tools/tu_map.py)",

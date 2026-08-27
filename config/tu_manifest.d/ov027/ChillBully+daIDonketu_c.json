@@ -1,9 +1,9 @@
 {
   "id": "ov027/ChillBully+daIDonketu_c",
   "module": "ov027",
-  "source": "src_tu/actors/ChillBully+daIDonketu_c.cpp",
-  "promoted_source": "src/actors/ChillBully+daIDonketu_c.cpp",
-  "status": "text-verified",
+  "source": "src/actors/ChillBully_daIDonketu_c.cpp",
+  "promoted_source": "src/actors/ChillBully_daIDonketu_c.cpp",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x21115c4..0x21118c8, 7 function(s), from build/tu_map.json (tools/tu_map.py)",

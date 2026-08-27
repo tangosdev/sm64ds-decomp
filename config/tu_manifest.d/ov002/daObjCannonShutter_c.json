@@ -1,9 +1,9 @@
 {
   "id": "ov002/daObjCannonShutter_c",
   "module": "ov002",
-  "source": "src_tu/actors/daObjCannonShutter_c.cpp",
+  "source": "src/actors/daObjCannonShutter_c.cpp",
   "promoted_source": "src/actors/daObjCannonShutter_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20bc8f4..0x20bccfc, 8 function(s), from build/tu_map.json (tools/tu_map.py)",

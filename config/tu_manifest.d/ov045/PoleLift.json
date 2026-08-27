@@ -1,9 +1,9 @@
 {
   "id": "ov045/PoleLift",
   "module": "ov045",
-  "source": "src_tu/actors/PoleLift.cpp",
+  "source": "src/actors/PoleLift.cpp",
   "promoted_source": "src/actors/PoleLift.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x0211150c..0x02111840, seven functions with no foreign symbol inside the span",

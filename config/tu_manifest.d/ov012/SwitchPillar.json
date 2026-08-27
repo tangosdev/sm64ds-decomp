@@ -1,9 +1,9 @@
 {
   "id": "ov012/SwitchPillar",
   "module": "ov012",
-  "source": "src_tu/actors/SwitchPillar.cpp",
+  "source": "src/actors/SwitchPillar.cpp",
   "promoted_source": "src/actors/SwitchPillar.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x21111a0..0x2111450, 8 function(s), from build/tu_map.json (tools/tu_map.py)",

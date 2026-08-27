@@ -1,9 +1,9 @@
 {
   "id": "ov002/OneUpLogo",
   "module": "ov002",
-  "source": "src_tu/actors/OneUpLogo.cpp",
+  "source": "src/actors/OneUpLogo.cpp",
   "promoted_source": "src/actors/OneUpLogo.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20f0dd0..0x20f11b0, 8 function(s), from build/tu_map.json (tools/tu_map.py)",

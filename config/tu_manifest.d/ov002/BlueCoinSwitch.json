@@ -1,9 +1,9 @@
 {
   "id": "ov002/BlueCoinSwitch",
   "module": "ov002",
-  "source": "src_tu/actors/BlueCoinSwitch.cpp",
+  "source": "src/actors/BlueCoinSwitch.cpp",
   "promoted_source": "src/actors/BlueCoinSwitch.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20f11b0..0x20f15fc, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
