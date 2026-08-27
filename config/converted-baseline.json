@@ -1947,7 +1947,7 @@
     "src/_ll_sdiv.c",
     "src/_s32_div_f.c",
     "src/_u32_div_f.c",
-    "src/actors/BigBooIcon/_ZN10BigBooIconD1Ev.cpp",
+    "src/actors/BigBooIcon/_ZN11daTrsIcon_cD1Ev.cpp",
     "src/actors/BooCage/_ZN7BooCage16CleanupResourcesEv.cpp",
     "src/actors/BooCage/_ZN7BooCage6RenderEv.cpp",
     "src/actors/BooCage/_ZN7BooCageD1Ev.cpp",
