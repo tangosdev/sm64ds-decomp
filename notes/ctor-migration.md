@@ -564,3 +564,11 @@ resolution (their −8 is PC bias, not addressing). Measured on all four shapes
 in-tree: three-block SphCrr, two-block Lin, single-inheritance Clipper,
 no-base Animation, plus ModelAnim2 D0 (the documented 44-addend case) — all
 MATCH under strict relocs now, where the MI ones could never pass before.
+
+**Deleting destructors need the original deallocation surface.** The
+RTTI-correct `daTrsTrap_c` D1 is an empty body over typed `Model` and
+`dBgW_KcMbg` members. Its first native D0 compiled 12 bytes short because a
+minimal `dActor_c` shadow fell back to global `operator delete`. Restoring the
+inherited inline operator that calls `Memory::Deallocate(ptr, data_020a0eac)`
+made CodeWarrior emit the ROM's heap load and direct deallocation call after
+member/base teardown. Both D1 and D0 then linked VERIFIED with no blind slots.

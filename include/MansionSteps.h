@@ -1,5 +1,6 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class MansionSteps: 5 matched functions, 6 evidenced fields.
+ * Compatibility view of ROM RTTI class daTrsTrap_c: 5 still-imported
+ * MansionSteps method symbols, 6 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef MANSIONSTEPS_H
@@ -23,7 +24,7 @@ struct MansionSteps {
     u8  pad_157[0x5];
     /* dBgW_KcMbg member, named by the class's own destructor calling
        dBgW_KcMbg's D1 at +0x15c -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN12MansionStepsD0Ev.c] */
+       checks. Was a u8 marker. [_ZN11daTrsTrap_cD0Ev.cpp] */
     dBgW_KcMbg mMovingMeshCollider;            /* 0x15c */
     /* The collider's transform, the second half of the dBgW_KcMbg + Matrix4x3
        pair this tree carries everywhere a moving mesh collider appears

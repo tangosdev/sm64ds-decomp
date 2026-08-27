@@ -8,6 +8,10 @@
     "mitch.cairns": "mitchellcairns"
   },
   "overrides": {
+    "src/actors/MansionSteps/_ZN11daTrsTrap_cD0Ev.cpp": "tangosdev",
+    "src/actors/MansionSteps/_ZN11daTrsTrap_cD0Ev.cpp#_ZN12MansionStepsD0Ev": "tangosdev",
+    "src/actors/MansionSteps/_ZN11daTrsTrap_cD1Ev.cpp": "tangosdev",
+    "src/actors/MansionSteps/_ZN11daTrsTrap_cD1Ev.cpp#_ZN12MansionStepsD1Ev": "tangosdev",
     "src/_ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev.cpp": "tangosdev",
     "src/_ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev.cpp#func_02022298": "tangosdev",
     "src/_ZN5dPa_c7level_c15scaleCallback_cC1Ev.cpp": "tangosdev",

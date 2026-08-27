@@ -36041,11 +36041,11 @@ matched: yes</title></rect><rect x="1524.36" y="382.30" width="6.41" height="8.9
 module: ov063
 addr: 0x0211c590
 size: 112 bytes
-matched: yes</title></rect><rect x="1524.36" y="391.24" width="6.41" height="4.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MansionStepsD1Ev
+matched: yes</title></rect><rect x="1524.36" y="391.24" width="6.41" height="4.47" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daTrsTrap_cD1Ev
 module: ov063
 addr: 0x0211c600
 size: 56 bytes
-matched: yes</title></rect><rect x="1524.36" y="395.72" width="6.41" height="6.07" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12MansionStepsD0Ev
+matched: yes</title></rect><rect x="1524.36" y="395.72" width="6.41" height="6.07" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daTrsTrap_cD0Ev
 module: ov063
 addr: 0x0211c638
 size: 76 bytes
