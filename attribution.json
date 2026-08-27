@@ -841,6 +841,17 @@
     "src/game/actors/Platform.cpp#_ZN10dBgActor_c21UpdateModelPosAndRotYEv": "tangosdev",
     "src/game/actors/Platform.cpp#_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_": "tangosdev",
     "src/game/actors/Platform.cpp#_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_": "tangosdev",
-    "src/game/actors/Platform.cpp#_ZN10dBgActor_cC2Ev": "tangosdev"
+    "src/game/actors/Platform.cpp#_ZN10dBgActor_cC2Ev": "tangosdev",
+    "src/game/actors/ArrowSignRight.cpp#_ZN14ArrowSignRightD1Ev": "tangosdev",
+    "src/game/actors/ArrowSignRight.cpp#_ZN14ArrowSignRightD0Ev": "tangosdev",
+    "src/game/actors/ArrowSignRight.cpp#func_ov098_02137c8c": "tangosdev",
+    "src/game/actors/ArrowSignRight.cpp#_ZN14ArrowSignRight4KillEv": "andrewboudreau",
+    "src/game/actors/ArrowSignRight.cpp#_ZN14ArrowSignRight11OnAttacked1ER8dActor_c": "tangosdev",
+    "src/game/actors/ArrowSignRight.cpp#_ZN14ArrowSignRight15OnHitByMegaCharER6Player": "tangosdev",
+    "src/game/actors/ArrowSignRight.cpp#_ZN14ArrowSignRight16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/ArrowSignRight.cpp#_ZN14ArrowSignRight6RenderEv": "tangosdev",
+    "src/game/actors/ArrowSignRight.cpp#_ZN14ArrowSignRight8BehaviorEv": "tangosdev",
+    "src/game/actors/ArrowSignRight.cpp#_ZN14ArrowSignRight13InitResourcesEv": "tangosdev",
+    "src/game/actors/ArrowSignRight.cpp#ArrowSignRight_Spawn": "tangosdev"
   }
 }
