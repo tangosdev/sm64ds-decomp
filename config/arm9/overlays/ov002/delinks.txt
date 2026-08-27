@@ -5093,7 +5093,7 @@ src/_ZN14CutsceneObjectD1Ev.cpp:
     complete
     .text start:0x020f1f70 end:0x020f1f94
 
-src/_ZN14CutsceneObjectD0Ev.c:
+src/_ZN14CutsceneObjectD0Ev.cpp:
     complete
     .text start:0x020f1f94 end:0x020f1fcc
 
