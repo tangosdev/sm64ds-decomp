@@ -257,6 +257,20 @@ class RenameReplay(GitFixture):
         self.assertEqual(origin["c"], "b")
         self.assertEqual(origin["b"], "a")
 
+    def test_lineage_excludes_a_deleted_extension_alias(self):
+        """A stale X.c override must not race the revision's real X.cpp by set order."""
+        self.write("src/f.c", CLEAN)
+        self.write("attribution.json", json.dumps({
+            "overrides": {"src/f.c": "old-override"},
+        }))
+        self.commit("author", "add c source")
+        (self.repo / "src/f.c").unlink()
+        self.write("src/f.cpp", "//cpp\n" + CLEAN)
+        self.commit("promoter", "replace c source with cpp")
+
+        self.assertEqual(self.PA.tracked_sources_at("HEAD"), {"src/f.cpp"})
+        self.assertEqual(set(self.PA.lineage("HEAD")), {"src/f"})
+
     def test_composing_would_have_been_wrong(self):
         """Pin the exact failure: forward-chasing sends a's credit to c."""
         steps = [("b", "c"), ("a", "b")]
