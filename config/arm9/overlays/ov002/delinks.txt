@@ -28,7 +28,7 @@ src/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs.cpp:
     complete
     .text start:0x020ae244 end:0x020ae2b8
 
-src/_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_.cpp:
+src/_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi.cpp:
     complete
     .text start:0x020ae2b8 end:0x020ae454
 

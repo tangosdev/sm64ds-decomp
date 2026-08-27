@@ -523,7 +523,7 @@ extern "C" int func_ov002_020ae454(char* c, void* a){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_ */
+/* ROM ordinal 6 -- _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi */
 /* 0x020ae2b8, size 0x19c                                                     */
 /* -------------------------------------------------------------------------- */
 /* Stays an extern "C" free function under its mangled name: the symbol claims
@@ -540,7 +540,7 @@ extern void _ZN9dBgCh_LinD1Ev(void* self);
 extern short data_02082214[];
 }
 
-extern "C" int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(struct dEnemyBase_c *self, void* clsn, int fix2, short a3, unsigned char a4, unsigned char a5, int fix6) {
+extern "C" int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(struct dEnemyBase_c *self, void* clsn, int fix2, short a3, unsigned char a4, unsigned char a5, int fix6) {
   Vector3 v1;
   Vector3 v2;
   char cr[0x28];

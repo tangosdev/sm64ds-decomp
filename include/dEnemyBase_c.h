@@ -109,6 +109,17 @@ struct dEnemyBase_c : dActor_c {
     /* Already a real method -- its own file builds _ZN12dEnemyBase_c9SpawnCoinEv from a
        local `struct dEnemyBase_c : dActor_c` shadow. Declared here so callers need not
        spell the mangled name. */
+    /* Its parameters are SCALARS, and the mangled name says so. The old name
+       spelled the first and last `Fix12<int>`, which the image refutes: mwcc
+       homes a class-typed by-value parameter to the stack the moment a body
+       reads it, and this function's ROM bytes read both straight from r1 and
+       r3. Nothing anchors the class spelling either -- the whole image contains
+       zero `_Z...` strings and zero occurrences of `5Fix12IiE`, so every
+       mangled name in this tree is reconstructed and this one was a guess that
+       the bytes disagree with. `Fix12i` keeps the fixed-point intent and
+       mangles as plain `i`. See notes/mwccarm-codegen.md 6az. */
+    int IsGoingOffCliff(dBgCh_Actr & clsn_, Fix12i down_, s16 slopeAng_,
+                        bool detectWater_, bool skipPipeCheck_, Fix12i up_);
     void SpawnCoin();
     int SpawnParticlesIfHitOtherObj(dCc_c & clsn_);
     /* Its own file still builds this from a local `struct dEnemyBase_c { char pad[0x100]; }`

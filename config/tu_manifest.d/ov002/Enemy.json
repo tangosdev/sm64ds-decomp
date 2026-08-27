@@ -56,10 +56,10 @@
       "ordinal": 5
     },
     {
-      "symbol": "_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_",
+      "symbol": "_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi",
       "address": "0x020ae2b8",
       "size": "0x0000019c",
-      "legacy_source": "src/_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_.cpp",
+      "legacy_source": "src/_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi.cpp",
       "ordinal": 6
     },
     {
