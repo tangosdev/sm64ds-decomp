@@ -1,15 +1,14 @@
-extern void *_ZTV4View;
-extern void *data_0208e4b8;
-extern void *_ZN7fBase_cD2Ev(void *self);
+//cpp
+// @symbol _ZN4ViewD1Ev
+/* D1, the complete-object destructor. The base chain, the intermediate vptr
+ * stores and the member teardown are all the compiler's -- the class is spelt
+ * against its real base header rather than a flat shadow. */
+#include "dBase_c.h"
 
-struct View {
-    void *vtable;
+struct View : dBase_c {
+    virtual ~View();
 };
 
-void *_ZN4ViewD1Ev(struct View *self)
+View::~View()
 {
-    self->vtable = &_ZTV4View;
-    self->vtable = &data_0208e4b8;
-    _ZN7fBase_cD2Ev(self);
-    return self;
 }

@@ -1,19 +1,14 @@
+//cpp
 // @symbol _ZN13UpDownLiftBbhD1Ev
-/* recovered: named members + shared header, vtable identified, declarations from a shared header */
-#include "decl_Actor.h"
-#include "decl_Model.h"
-#include "decl_dBgW_KcMbg.h"
-#include "decl_common.h"
-extern int _ZTV13UpDownLiftBbh[];
-extern int _ZTV10dBgActor_c[];
-/* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV13UpDownLiftBbh; VT1 = _ZTV10dBgActor_c */
-int *_ZN13UpDownLiftBbhD1Ev(int *t)
+/* D1, the complete-object destructor. The base chain, the intermediate vptr
+ * stores and the member teardown are all the compiler's -- the class is spelt
+ * against its real base header rather than a flat shadow. */
+#include "dBgActor_c.h"
+
+struct UpDownLiftBbh : dBgActor_c {
+    virtual ~UpDownLiftBbh();
+};
+
+UpDownLiftBbh::~UpDownLiftBbh()
 {
-    t[0] = (int)_ZTV13UpDownLiftBbh;
-    t[0] = (int)_ZTV10dBgActor_c;
-    _ZN10dBgW_KcMbgD1Ev((char *)t + 0x124);
-    _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN8dActor_cD2Ev(t);
-    return t;
 }
