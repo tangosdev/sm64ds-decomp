@@ -13,16 +13,6 @@
     "_ZN10MemoryNode6TargetC1EPS_"
    ]
   },
-  "_ZN13HeapAllocatorC1EjPvPvj": {
-   "verdict": "MISMATCH",
-   "reason": "emitted ['_ZN13HeapAllocatorC1EjPvS0_j', '_ZN13HeapAllocatorC2EjPvS0_j'], claimed _ZN13HeapAllocatorC1EjPvPvj",
-   "cause": "Itanium substitution not applied: the name spells a type out in full where the ABI requires an S_/S0_ back-reference.  Hand-derived, not compiler-derived",
-   "module": "arm9",
-   "addr": "0x0204df54",
-   "proposed": [
-    "_ZN13HeapAllocatorC1EjPvS0_j"
-   ]
-  },
   "_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE": {
    "verdict": "MISMATCH",
    "reason": "emitted ['_ZN4cstd10fdiv_asyncE5Fix12IiES1_'], claimed _ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE",

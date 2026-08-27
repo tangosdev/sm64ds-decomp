@@ -7842,7 +7842,7 @@ src/_ZN18NestedHeapIterator4InitEP13HeapAllocator.cpp:
     complete
     .text start:0x0204dee0 end:0x0204df20
 
-src/_ZN18NestedHeapIteratorC1Ej.c:
+src/_ZN18NestedHeapIteratorC1Ej.cpp:
     complete
     .text start:0x0204df20 end:0x0204df38
 
@@ -7850,7 +7850,7 @@ src/_ZN13HeapAllocator6RemoveEv.cpp:
     complete
     .text start:0x0204df38 end:0x0204df54
 
-src/_ZN13HeapAllocatorC1EjPvPvj.cpp:
+src/func_0204df54.cpp:
     complete
     .text start:0x0204df54 end:0x0204dfe8
 
@@ -7922,7 +7922,7 @@ src/_ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjt.cpp:
     complete
     .text start:0x0204e690 end:0x0204e828
 
-src/_ZN22ExpandingHeapAllocatorC1EPvj.c:
+src/_ZN22ExpandingHeapAllocatorC1EPvj.cpp:
     complete
     .text start:0x0204e828 end:0x0204e8b0
 
@@ -7994,7 +7994,7 @@ src/_ZN18SolidHeapAllocator16AllocateForwardsEPvjj.cpp:
     complete
     .text start:0x0204ecd4 end:0x0204ed54
 
-src/_ZN18SolidHeapAllocatorC1EPvj.c:
+src/_ZN18SolidHeapAllocatorC1EPvj.cpp:
     complete
     .text start:0x0204ed54 end:0x0204eda4
 

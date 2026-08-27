@@ -15,23 +15,22 @@
 #ifndef EXPANDINGHEAPALLOCATOR_H
 #define EXPANDINGHEAPALLOCATOR_H
 #include "types.h"
+#include "HeapAllocator.h"
 #include "MemoryNode.h"   /* the five node methods below take it by pointer */
 
 /* The generator also emitted `struct align_; struct ptr; struct size_;` as forward
  * declarations -- parameter names mistaken for type names. No source ever referenced
  * them; dropped, as in SolidHeapAllocator.h. */
-struct ExpandingHeapAllocator {
-    u8  pad_000[0xc];
-    s32 unk_00c;            /* 0x00c */
-    u8  unk_010;            /* 0x010 */
-    u8  pad_011[0x7];
-    s32 mStart;            /* 0x018 */
-    s32 mEnd;            /* 0x01c */
-    s32 unk_020;            /* 0x020 */
-    u8  unk_024;            /* 0x024 */
-    u8  pad_025[0x7];
-    u8  unk_02c;            /* 0x02c */
+struct ExpandingHeapAllocator : HeapAllocator {
+    MemoryNode* mFirstNode; /* 0x024 */
+    MemoryNode* mLastNode;  /* 0x028 */
+    u32 unk_02c;            /* 0x02c */
+    u32 unk_030;            /* 0x030 */
+    u16 mNodeID;            /* 0x034 */
+    u16 mFlags2;            /* 0x036 */
 #ifdef __cplusplus
+    ExpandingHeapAllocator(void* heapEnd, u32 flags);
+
     /* methods. Parameter types are read off the mangled name: `Eji` is
        (unsigned int, int), `EPv` is (void*), `Ev` is (). */
     void* Allocate(u32 size, int align);
@@ -123,5 +122,8 @@ struct ExpandingHeapAllocator {
        land it is an instance method. */
 #endif
 };
+
+typedef char ExpandingHeapAllocator_size_must_be_0x38[
+    sizeof(struct ExpandingHeapAllocator) == 0x38 ? 1 : -1];
 
 #endif

@@ -13,13 +13,13 @@ void NestedHeapIterator::AddLast(HeapAllocator * a_)
     if (*(int *)((char *)this) == 0) { _ZN18NestedHeapIterator4InitEP13HeapAllocator(((char *)this), a); return; }
     {
         unsigned short link_off = mLinkOffset;
-        int last = mLast;
+        int last = (int)mLast;
         *(int *)(a + link_off) = last;
         *(int *)(a + link_off + 4) = 0;
         link_off = mLinkOffset;
-        last = mLast;
+        last = (int)mLast;
         *(int *)((char *)last + link_off + 4) = (int)a;
-        mLast = (int)a;
+        mLast = (HeapAllocator*)a;
         *(unsigned short *)(int)((char *)&mCount) += 1;
     }
 }
