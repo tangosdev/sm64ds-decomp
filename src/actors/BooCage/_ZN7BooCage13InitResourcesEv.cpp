@@ -25,6 +25,6 @@ int BooCage::InitResources()
     _ZN10dBgCh_Actr13SetLimMovFlagEv((char *)&mWithMeshClsn);
     mParticleID = 0;
     mSoundTimer = 0;
-    unk_37e = 0;
+    mMuteSecretSound = 0;
     return 1;
 }

@@ -1950,7 +1950,7 @@
     "src/actors/BigBooIcon/_ZN11daTrsIcon_cD1Ev.cpp",
     "src/actors/BooCage/_ZN7BooCage16CleanupResourcesEv.cpp",
     "src/actors/BooCage/_ZN7BooCage6RenderEv.cpp",
-    "src/actors/BooCage/_ZN7BooCageD1Ev.cpp",
+    "src/actors/BooCage/_ZN11daTBasket_cD1Ev.cpp",
     "src/actors/FallBlockBbh/_ZN12FallBlockBbh13InitResourcesEv.cpp",
     "src/actors/FallBlockBbh/_ZN12FallBlockBbh16CleanupResourcesEv.cpp",
     "src/actors/FallBlockBbh/_ZN12FallBlockBbhD1Ev.cpp",
