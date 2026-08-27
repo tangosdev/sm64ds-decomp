@@ -1599,6 +1599,7 @@ static void port_jrb_staticrock_clps_seat(void)
    must get the first mount of each back rather than a re-patch of either. Any
    mount registered with port_level_mount_register owes the same guarantee. */
 extern "C" void port_sqrt_selftest(void);   /* hal/scene_boot.cpp */
+extern "C" void port_stage_mod_apply(int level_id, void *lvl);  /* hal/stage_mods.cpp */
 
 /* CAPTURED, and this is the whole of the cross-level reload crash.
  *
@@ -1747,6 +1748,14 @@ static void *port_level_mount_at(int idx)
         std::abort();
     }
     mounted[idx] = lvl;
+    /* THE LEVEL-EDITS MOD, hal/stage_mods.cpp, and this is the only line of it
+       that lives here. The window is exactly this wide: after d->patch(), so
+       the LVL_Overlay's objTable and sub-table words are host pointers rather
+       than DS addresses, and before anything has read them -- the object
+       tables are walked later and once, by Stage::LoadClsnAndObjects in
+       matched src. Off (no SM64DS_STAGE_MOD) it reads one env var and
+       returns. */
+    port_stage_mod_apply(d->id, lvl);
     return lvl;
 }
 
