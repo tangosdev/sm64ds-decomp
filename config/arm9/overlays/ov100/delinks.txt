@@ -195,7 +195,7 @@ src/_ZN14UnchainedChomp16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021442d4 end:0x021442dc
 
-src/UnchainedChomp_Spawn.c:
+src/UnchainedChomp_Spawn.cpp:
     complete
     .text start:0x021442dc end:0x021443f4
 
