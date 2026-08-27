@@ -322,60 +322,15 @@ void func_ov100_02146e70(void *c_) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN15daObjPathLift_cD0Ev, 0x02146dec, size 0x84 */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN15daObjPathLift_cD0Ev
-/* recovered: renamed to Class_Method, declarations from a shared header */
-#include "decl_Actor.h"
-#include "decl_Model.h"
-#include "decl_dBgW_KcMbg.h"
-#include "decl_ShadowModel.h"
-/* decl_common.h dropped here too -- see the note at the top of this file. */
-/* recovered: renamed to Class_Method */
-extern "C" {
-extern void* data_020a0eac;
-
-
-void* _ZN15daObjPathLift_cD0Ev(char* p){
-  *(void***)p = (void**)data_ov100_0214857c;
-  _ZN11ShadowModelD1Ev(p+0x450);
-  *(void***)p = (void**)data_ov002_0210af70;
-  __destroy_arr(p+0x320, 3, 0x50, _ZN5ModelD1Ev);
-  *(void***)p = (void**)_ZTV10dBgActor_c;
-  _ZN10dBgW_KcMbgD1Ev(p+0x124);
-  _ZN5ModelD1Ev(p+0xd4);
-  _ZN8dActor_cD2Ev(p);
-  _ZN6Memory10DeallocateEPvP4Heap(p, data_020a0eac);
-  return p;
-}
-}
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN15daObjPathLift_cD1Ev, 0x02146d7c, size 0x70 */
+/* ROM ordinals 0/1 -- compiler-generated D1/D0 destructor variants. */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjPathLift_cD1Ev
-/* recovered: vtable identified, declarations from a shared header
- *
- * NOT a real out-of-line `daObjPathLift_c::~daObjPathLift_c()`: that form
- * measured 999 differing words under 2004/b56 (build_pin), because PathLift's
- * own destructor (include/PathLift.h) is genuinely out-of-line -- unlike
- * dBgActor_c's, which is inline on purpose precisely so every subclass
- * inlines it -- so a real derived-class destructor would call
- * `_ZN8PathLiftD2Ev`, a symbol that does not exist in the ROM. The ROM
- * instead inlines PathLift's own cleanup directly here, exactly as this free
- * function under the mangled D1 name reproduces. `virtual ~daObjPathLift_c();`
- * in the header stays a declaration only -- nothing ever calls it through a
- * real `delete`, so the linker never needs a body, matching the
- * never-define-the-key-function idiom in include/dActor_c.h.
- */
-extern "C" int _ZN15daObjPathLift_cD1Ev(char* c){
-  *(int**)c=(int*)data_ov100_0214857c;
-  _ZN11ShadowModelD1Ev(c+0x450);
-  *(int**)c=(int*)data_ov002_0210af70;
-  __destroy_arr(c+0x320,3,0x50,_ZN5ModelD1Ev);
-  *(int**)c=(int*)_ZTV10dBgActor_c;
-  _ZN10dBgW_KcMbgD1Ev(c+0x124);
-  _ZN5ModelD1Ev(c+0xd4);
-  _ZN8dActor_cD2Ev(c);
-  return (int)c;
+// @symbol _ZN15daObjPathLift_cD0Ev
+/* Current one-function comparison sources define this same empty destructor.
+ * PathLift's inline destructor and the declared member/base layout make mwccarm
+ * emit the ROM's cleanup sequence, including canonical vtable and array-cleanup
+ * relocation names. Derived-text production retains D1/D0 and audits any extra
+ * compiler-generated variant as discarded output. */
+daObjPathLift_c::~daObjPathLift_c()
+{
 }
