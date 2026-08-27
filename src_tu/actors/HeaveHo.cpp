@@ -647,9 +647,9 @@ extern "C" void func_ov077_02126528(char *c)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 /* (Vector3: real header type in scope) */
 
-typedef struct dBgCh_Lin {
+typedef struct dBgCh_LinPad {
     char pad[0x78];
-} dBgCh_Lin;
+} dBgCh_LinPad;
 
 extern signed char data_0209f2f8;
 extern char data_020a0e68[];
@@ -666,8 +666,8 @@ extern void MulVec3Mat4x3(void *in, void *m, void *out);
 int func_ov077_02126300(void *vc)
 {
     char *c = (char *)vc;
-    dBgCh_Lin ray1;
-    dBgCh_Lin ray2;
+    dBgCh_LinPad ray1;
+    dBgCh_LinPad ray2;
     Vector3 start;
     Vector3 end;
     Vector3 dir;
