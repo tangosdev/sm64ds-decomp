@@ -920,6 +920,15 @@
     "src/game/actors/ChillBully+daIDonketu_c.cpp#func_ov027_021116f0": "tangosdev",
     "src/game/actors/ChillBully+daIDonketu_c.cpp#_ZN10ChillBully8BehaviorEv": "andrewboudreau",
     "src/game/actors/ChillBully+daIDonketu_c.cpp#_ZN10ChillBully13InitResourcesEv": "andrewboudreau",
-    "src/game/actors/ChillBully+daIDonketu_c.cpp#ChillBully_Spawn": "tangosdev"
+    "src/game/actors/ChillBully+daIDonketu_c.cpp#ChillBully_Spawn": "tangosdev",
+    "src/game/actors/ArrowLift.cpp#_ZN9ArrowLiftD1Ev": "tangosdev",
+    "src/game/actors/ArrowLift.cpp#_ZN9ArrowLiftD0Ev": "tangosdev",
+    "src/game/actors/ArrowLift.cpp#_ZN9ArrowLift16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/ArrowLift.cpp#_ZN9ArrowLift6RenderEv": "tangosdev",
+    "src/game/actors/ArrowLift.cpp#_ZN9ArrowLift8BehaviorEv": "tangosdev",
+    "src/game/actors/ArrowLift.cpp#_ZN9ArrowLift13InitResourcesEv": "tangosdev",
+    "src/game/actors/ArrowLift.cpp#func_ov029_021116c4": "tangosdev",
+    "src/game/actors/ArrowLift.cpp#func_ov029_021116e4": "tangosdev",
+    "src/game/actors/ArrowLift.cpp#ArrowLift_Spawn": "tangosdev"
   }
 }

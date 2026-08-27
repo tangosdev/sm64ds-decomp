@@ -1,8 +1,8 @@
 {
   "id": "ov029/ArrowLift",
   "module": "ov029",
-  "source": "src_tu/actors/ArrowLift.cpp",
-  "promoted_source": "src/actors/ArrowLift.cpp",
+  "source": "src/game/actors/ArrowLift.cpp",
+  "promoted_source": "src/game/actors/ArrowLift.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -111,7 +111,7 @@
     }
   },
   "partial_isolation": {
-    "round": "tools/tubuild.py partial -- one compile of the consolidated source, objisolate.derive per licensed function, compared against rombuild.compile_one + objisolate.isolate of each legacy source",
+    "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
     "derivedObjects": 9,
     "contributionEquivalent": "9/9",
     "comparedFields": [
@@ -127,8 +127,112 @@
     "extraInertImports": 74,
     "extraImportsWithNoHome": [],
     "artefacts": "build/tu/ov029-ArrowLift/partial/partial.json (gitignored)",
-    "state": "contribution-equivalent",
-    "stateMeaning": "every derived object's linker-visible contribution -- kept section header and bytes, its relocations by symbol name, every defined symbol, every content section still carrying bytes, and every relocation-referenced import -- is byte-identical to what the current per-function compile+isolate pipeline produces for the same function",
-    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+    "state": "partial-link-verified",
+    "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
+    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
+    "delinksChanged": false,
+    "substitutedObjectPaths": [
+      "src/game/actors/ArrowLift/_ZN9ArrowLiftD1Ev.cpp",
+      "src/game/actors/ArrowLift/_ZN9ArrowLiftD0Ev.cpp",
+      "src/game/actors/ArrowLift/_ZN9ArrowLift16CleanupResourcesEv.cpp",
+      "src/game/actors/ArrowLift/_ZN9ArrowLift6RenderEv.cpp",
+      "src/game/actors/ArrowLift/_ZN9ArrowLift8BehaviorEv.cpp",
+      "src/game/actors/ArrowLift/_ZN9ArrowLift13InitResourcesEv.cpp",
+      "src/unnamed/ov029/0211/func_ov029_021116c4.cpp",
+      "src/unnamed/ov029/0211/func_ov029_021116e4.c",
+      "src/game/actors/ArrowLift/ArrowLift_Spawn.c"
+    ],
+    "result": "partial-link-verified",
+    "phases": {
+      "delink": true,
+      "lcf": true,
+      "compile": true,
+      "link": true,
+      "checkModules": true,
+      "checkSymbols": false,
+      "rom": true
+    },
+    "tuRange": {
+      "start": "0x0211137c",
+      "end": "0x02111728",
+      "differingBytes": 0,
+      "firstDiff": null
+    },
+    "moduleFidelityPassed": true,
+    "symbolCheckNewVsBaseline": [],
+    "rom": {
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "matchesStockRom": true
+    },
+    "scratch": "build/tu/ov029-ArrowLift/link-partial (gitignored)"
+  },
+  "production_mode": "derived-text",
+  "unlicensed_output_observed": {
+    "note": "Pinned-compiler inventory stamped by tools/promote_derived_tus.py --stamp-discarded-output before default production admission. These definitions are not ROM ownership claims; every build requires an exact inventory match, exact derived text contributions, exact modules, and an exact ROM.",
+    "toolchain": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "text": [],
+    "data": [
+      {
+        "symbol": "_ZTI10dBgActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "size": "0x8",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI9ArrowLift",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS10dBgActor_c",
+        "size": "0xd",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "size": "0xa",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS9ArrowLift",
+        "size": "0xb",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTV9ArrowLift",
+        "size": "0x88",
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "bss": [],
+    "init": [],
+    "rodata": [],
+    "ctor": []
   }
 }
