@@ -1,3 +1,4 @@
+import json
 import pathlib
 import sys
 import tempfile
@@ -10,6 +11,21 @@ import tu_production as TP  # noqa: E402
 
 
 class ProductionTuAdmission(unittest.TestCase):
+    def test_configured_ids_are_ordered_and_fail_closed(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = pathlib.Path(td) / "production-tus.json"
+            path.write_text(json.dumps({
+                "schema_version": 1,
+                "partitioned_tus": ["ov002/A", "ov047/B"],
+            }), encoding="utf-8")
+            self.assertEqual(TP.configured_ids(path), ["ov002/A", "ov047/B"])
+            path.write_text(json.dumps({
+                "schema_version": 1,
+                "partitioned_tus": ["ov002/A", "ov002/A"],
+            }), encoding="utf-8")
+            with self.assertRaisesRegex(TP.ProductionTuError, "duplicate"):
+                TP.configured_ids(path)
+
     def test_duplicate_request_refuses_before_touching_baseline_or_config(self):
         with self.assertRaisesRegex(TP.ProductionTuError, "duplicate"):
             TP.prepare(["ov002/Thing", "ov002/Thing"], "unused", "unused")

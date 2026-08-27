@@ -1,5 +1,12 @@
 # Building a playable `.nds` from source
 
+The ordinary stock build also enables every partitioned-link-verified C++ TU listed
+in `config/production-tus.json`. Each one is compiled once; exact derived text
+contributions plus its licensed compiler-emitted RTTI, vtable, and data replace the
+legacy objects in a generated fail-closed profile. Use `--no-production-tus` only for
+the legacy-source control build used to refresh strict baseline evidence. Additional
+verified entries can be tested with repeatable `--partitioned-tu <module/TU-id>` flags.
+
 **Goal.** Produce a bootable `build/sm64ds.nds` whose ARM9 code comes from *our* C
 wherever `src/` has a verified match, and from the ROM's delinked objects everywhere
 else. Then change a line of C, rebuild, and see the change in a running game.

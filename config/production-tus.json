@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "note": "Partitioned-link-verified C++ translation units enabled in the default stock ROM build. Each entry is recompiled once and re-verifies text, non-text, relocations, aliases, modules, symbols, and the final ROM on every build.",
+  "partitioned_tus": [
+    "ov002/daObjAbuku_c",
+    "ov047/daObjKm3_Kaitendai_c",
+    "ov047/daObjKm3_Kurumajiku_c"
+  ]
+}

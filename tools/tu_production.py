@@ -23,6 +23,9 @@ import pathlib
 import tubuild as TB
 
 
+PRODUCTION_CONFIG = TB.REPO / "config" / "production-tus.json"
+
+
 class ProductionTuError(RuntimeError):
     """A partitioned TU cannot safely enter the normal ROM build."""
 
@@ -30,6 +33,30 @@ class ProductionTuError(RuntimeError):
 def _raise(label, reasons):
     detail = "; ".join(str(reason) for reason in reasons if reason)
     raise ProductionTuError(f"{label}: {detail or 'refused without a reason'}")
+
+
+def configured_ids(path=PRODUCTION_CONFIG):
+    """Return the fail-closed list of TUs enabled in an ordinary stock build."""
+    path = pathlib.Path(path)
+    if not path.is_file():
+        return []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ProductionTuError(f"production TU config is unreadable: {exc}") from exc
+    if data.get("schema_version") != 1:
+        raise ProductionTuError(
+            f"production TU config has unsupported schema_version "
+            f"{data.get('schema_version')!r}")
+    rows = data.get("partitioned_tus")
+    if not isinstance(rows, list):
+        raise ProductionTuError("production TU config needs a partitioned_tus list")
+    ids = [row for row in rows if isinstance(row, str) and row.strip()]
+    if len(ids) != len(rows):
+        raise ProductionTuError("production TU ids must be non-empty strings")
+    if len(ids) != len(set(ids)):
+        raise ProductionTuError("production TU config contains duplicate ids")
+    return ids
 
 
 def _strict_baseline():
