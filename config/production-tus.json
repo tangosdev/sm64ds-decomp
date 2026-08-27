@@ -17,6 +17,7 @@
     "ov017/ShipWater",
     "ov045/PoleLift",
     "ov002/AmbientSoundEffects",
-    "ov002/CameraTag"
+    "ov002/CameraTag",
+    "ov002/daObjCannonShutter_c"
   ]
 }
