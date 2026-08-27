@@ -35,7 +35,9 @@ int *SwitchActivatedPlank_Spawn(void)
     int *p = (int *)_ZN7fBase_cnwEj(936);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
-        p[0] = (int)_ZTV20SwitchActivatedPlank;
+        /* This TU emits the vtable object, so its symbol includes the two-word
+         * Itanium preamble.  The ROM/config symbol names the slot array. */
+        p[0] = (int)(_ZTV20SwitchActivatedPlank + 2);
         _ZN5ModelC1Ev((char *)p + 0x320);
     }
     return p;
@@ -217,54 +219,8 @@ void func_ov029_021126dc(char *c) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN20SwitchActivatedPlankD0Ev, 0x0211267c, size 0x60 */
+/* ROM ordinals 0/1 -- mwcc emits D1 and D0 from this one C++ definition. */
 /* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-// @symbol _ZN20SwitchActivatedPlankD0Ev
-/* recovered: named members + shared header, vtable identified, declarations from a shared header */
-#include "decl_Actor.h"
-#include "decl_Model.h"
-#include "decl_dBgW_KcMbg.h"
-#include "decl_common.h"
-extern int _ZTV10dBgActor_c[];
-/* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV15daObjWc_Obj04_c; VT1 = _ZTV10dBgActor_c */
-extern void *data_020a0eac;
-int *_ZN20SwitchActivatedPlankD0Ev(int *t)
+SwitchActivatedPlank::~SwitchActivatedPlank()
 {
-    t[0] = (int)_ZTV15daObjWc_Obj04_c;
-    _ZN5ModelD1Ev((char *)t + 0x320);
-    t[0] = (int)_ZTV10dBgActor_c;
-    _ZN10dBgW_KcMbgD1Ev((char *)t + 0x124);
-    _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN8dActor_cD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return t;
 }
-}
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN20SwitchActivatedPlankD1Ev, 0x02112630, size 0x4c */
-/* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-// @symbol _ZN20SwitchActivatedPlankD1Ev
-/* recovered: named members + shared header, vtable identified, declarations from a shared header */
-#include "decl_Actor.h"
-#include "decl_Model.h"
-#include "decl_dBgW_KcMbg.h"
-#include "decl_common.h"
-extern int _ZTV10dBgActor_c[];
-/* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV15daObjWc_Obj04_c; VT1 = _ZTV10dBgActor_c */
-int *_ZN20SwitchActivatedPlankD1Ev(int *t)
-{
-    t[0] = (int)_ZTV15daObjWc_Obj04_c;
-    _ZN5ModelD1Ev((char *)t + 0x320);
-    t[0] = (int)_ZTV10dBgActor_c;
-    _ZN10dBgW_KcMbgD1Ev((char *)t + 0x124);
-    _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN8dActor_cD2Ev(t);
-    return t;
-}
-}
-

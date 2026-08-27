@@ -51,6 +51,9 @@
     "ov006/MgPicturePoker",
     "ov029/FloatOnWaterPlatformWdwSquare",
     "ov029/FloatOnWaterPlatformWdwRectangle",
-    "ov029/RotatingPlatformWdw"
+    "ov029/RotatingPlatformWdw",
+    "ov029/WDW_Water",
+    "ov029/CageLift",
+    "ov029/SwitchActivatedPlank"
   ]
 }
