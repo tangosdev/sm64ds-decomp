@@ -18,8 +18,8 @@ Resolving `include/*.h`'s inheritance edges transitively gives **60 classes** un
 
 | | before | after |
 |---|---|---|
-| real `Class::Method` definitions | 443 | **455** |
-| `extern "C"` free functions under the mangled name | 17 | **5** |
+| real `Class::Method` definitions | 443 | **461** |
+| `extern "C"` free functions under the mangled name | 17 | **1** |
 
 So the family was already 96% real C++ and the sweep is a tail, not a campaign. That
 is worth recording because the tail is where the *interesting* blockers live — the
@@ -64,9 +64,10 @@ path with no file there (function silently falls back to ROM bytes)"* — which 
 honest failure, but it arrives one step after the tool's own `kept 2 / tried 2`.
 Re-point the delinks line by hand after any `d0_migrate` run.
 
-## The wall, measured
+## The wall, measured — and dismantled
 
-Five files remain, and they are not one problem.
+Nine files remained when this note was first written. All nine are now
+converted; what follows is what each one actually turned out to be.
 
 ### The cross-module `dCapEnemy_c` D2 duplicate — SOLVED, 4 files (2026-08-27)
 
@@ -112,47 +113,115 @@ ABI variants cannot be told apart by comparing them; ask the image who calls eac
 and who stores a pointer to it. Both scans are a dozen lines against
 `modules.modules()` and either one alone would have settled it.
 
-### A by-value class parameter — 1 file, measured cost
+### A by-value class parameter — SOLVED, and the wall was the name
 
-`dEnemyBase_c::IsGoingOffCliff(dBgCh_Actr &, Fix12<int>, short, bool, bool, Fix12<int>)`
-(ov002 0x020ae2b8, 0x19c) compiles as a real method and lands at **0x1ac — four words
-over**, whether the `Fix12<int>` parameters are copied into locals at entry or used in
-place through their `.val`. `Fix12<int>` is a one-`int` POD aggregate and
-`sizeof(Fix12<int>) == 4`, and it still costs. The free-function form, whose
-parameters are plain `int`, matches exactly. This is the standing
-by-value-class-parameter blocker with a number attached: **+0x10 on this function**.
+`dEnemyBase_c::IsGoingOffCliff` was the standing example of
+notes/mwccarm-codegen.md 6az: declared with `Fix12<int>` parameters it landed
+0x10 over, 17 spellings got no closer than +0x8, and the rule was that a symbol
+carrying `5Fix12IiE` "cannot be DEFINED as a real C++ method".
 
-### A disputed name — 1 file, deliberately not migrated
+Two measurements dissolved it.
 
-`_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player.c` converts to a real
-method and matches, and it was reverted anyway. `include/dEnemyBase_c.h` marks the
-signature PROVISIONAL and says "do not migrate a caller against it yet": the name is
-attached to ov004 0x020ada40, which cannot be this method (it reads only `r0` and
-range-checks it as a scalar; the code that IS the method is ov002 0x020ada40, still
-`func_ov002_020ada40`), and three call sites materialise a fourth argument in `r3`
-that the arity does not admit.
+`KillByInvincibleChar` (below) takes a `Fix12<int>` by value, never reads it, and
+matches exactly -- so the homing is emitted in response to a USE, not by the
+calling convention, and 6az's "the cost is in the parameter passing, not in how
+the member is reached" was the wrong way round. On this function, reading one such
+parameter costs +0x8 and reading both +0x10: two words per used class parameter.
 
-The general point, which is not about this file: **`extern "C" int _ZN…(void *self)`
-and `void Class::Method(T &, U &)` assert different things.** The first says only
-"these bytes live at this address". The second asserts the name, the owning class, the
-arity and every parameter type. The byte gates cannot tell the two claims apart — they
-pass identically. So where a header records a dispute, the prose is the binding
-evidence and the `MATCH` line is not.
+And the premise was unchecked. **The image contains zero `_Z...` strings and zero
+occurrences of `5Fix12IiE`**, censused over arm9 and all 105 overlays -- which is
+just notes/symbol-name-provenance.md's opening line ("a retail NDS cartridge has
+no symbol table") arriving from the other direction. Every mangled name here is
+reconstructed, so a `5Fix12IiE` inside one is somebody's decision, and mwcc's
+homing is the ROM saying that decision is wrong. Renamed
+`_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi` -- `Fix12i`, the `s32`
+typedef that keeps the intent and mangles as plain `i` -- it matches as a method.
 
-### The rest — 3 files, each its own reason
+One trap on the way: the parameters must be used DIRECTLY. Aliasing them into
+locals at entry keeps parameter and copy both live and costs r7, r8 and a spill.
 
-- `_ZN7daKrb_c13InitResourcesEv.cpp` — a **NONMATCHING** near-miss at 916 bytes
-  against the ROM's 912, one instruction over. Its `//cpp` marker also sits behind an
-  `#include` and is therefore inert, but that is not what stands between it and a
-  match: 916 comes out identical under `-lang c99` and `-lang c++`.
-- `_ZN11RollingRock8BehaviorEv.c` — a documented three-word near-miss, one
-  register-allocation choice, with a ruled-out list of ten spellings in the file
-  header. Do not re-grind it without a lever that changes pressure at the struct copy.
-- `_ZN7daOts_cD1Ev.cpp` — **not actually a holdout.** `daOts_c.h` defines
-  `~daOts_c() {}` in the class body so descendants inline it, and the file's
-  `_force_daOts_cD1` scaffold is the sanctioned way to force the out-of-line variant
-  (`dtor-migration.md` §3). The destructor here is already compiler-generated; only
-  the *forcing function* is hand-written, and `objisolate` drops its `.text`.
+### Two names on the wrong function — SOLVED, 2 files
+
+ov002 and ov004 are alternates in one overlay slot, both based at 0x020ad3e0, so
+one address is two unrelated functions and every actor overlay's `relocs.txt`
+records such a call as the ambiguous `module:overlays(2,4)`. Two `dEnemyBase_c`
+names had landed on the ov004 side.
+
+`KillByInvincibleChar` was on ov004 0x020ada40, which reads only r0 and
+range-checks it as a scalar. The ov002 body at the same address is the method:
+`Vec3_HorzAngle(player + 0x5c, &this->pos)`, then `Player::IncMegaKillCount`. Its
+arity was refuted too -- all 19 `bl`s to the address were disassembled, and the
+split IS the proof: the four inside ov004 leave r3 alone, all 15 outside it
+materialise a fourth argument. ov081 0x02123988 passes the return of vtable slot
+29, OnAimedAtWithEgg -- which this method's own body then calls again itself, so
+the parameter is handed over and never read. Type from the ROM's sibling
+`dBgActor_c::UpdateKillByMegaChar(s16, s16, s16, Fix12<int>)`. Moved, given the
+third parameter, migrated: matches first try.
+
+`KillByAttack` was on ov004 0x020aea30, whose body walks an 8-byte table to an
+0xffff sentinel. The ov002 function there dispatches a pointer-to-member from
+`data_ov002_0210db80[mDeathState - 1]`, and is what all 34 enemy-overlay call
+sites reach. Same arity shape: an unused fourth argument makes it match.
+Deliberately left as `func_ov002_020aea30` -- the name was coined against the
+wrong body, and inheriting it would repeat the mistake -- with the evidence
+recorded in the file for a naming pass.
+
+### The last two near-misses — SOLVED, 2 files
+
+`daKrb_c::InitResources` sat 4 bytes over (916 against 912) behind a NONMATCHING
+banner. One instruction, and it is the field-address CSE: `*(int*)(c + 8) =
+*(int*)(c + 8) & 0xf0ff;` spelled identically on both sides lets mwcc compute the
+address once where the ROM re-issues `[r4, #8]`. Eleven variants swept, and the
+split is clean -- all six that differ the spelling match, all three that do not
+miss by the same word. It is now a real method AND enrolled, so ov084 gains 912
+bytes from source.
+
+`RollingRock::Behavior` settled at three words with a note saying "spelling alone
+does not reach it" after ten spellings. The lever was already written down, just
+not applied at the copy: `struct AngleWords { u16 w[3]; };` and
+`*(AngleWords *)&v16 = *(AngleWords *)(c + 0x92);`. Copying through a struct whose
+only member is an array is the documented remedy for C++ struct-copy
+scalarisation, and it turns out to fix load ORDER as well as load width -- the
+address is not 4-aligned, so no `ldm` is involved; what it buys is that the copy
+stops being three member assignments, and the register reuse that forced the
+ROM-unlike interleave goes with it. notes/mwccarm-codegen.md gains 6ay.
+
+### What is left: nothing, and one thing that was never a holdout
+
+`src/_ZN7daOts_cD1Ev.cpp` is the only `extern "C"` definition left under a family
+class's mangled name, and its `_force_daOts_cD1` scaffold is the sanctioned way to
+force an out-of-line variant of a class-body-inline destructor. It is not a
+holdout and should not be "fixed".
+
+## What the five walls had in common
+
+Not one of them was a compiler limit.
+
+| the wall | what it actually was |
+|---|---|
+| cross-module `dCapEnemy_c` D2 duplicate | D1 and D2 names on each other's addresses |
+| by-value `Fix12<int>` parameters | a coined parameter type the ROM refutes |
+| two "disputed signatures" | the name on the other overlay's function |
+| `daKrb_c::InitResources`, 4 bytes | a documented codegen lever, unapplied |
+| `RollingRock::Behavior`, 3 words | a documented codegen lever, unapplied |
+
+Three were naming errors and two were levers already written down in this repo.
+The common failure is the same in both halves: a note recording a measurement,
+then a later reader treating the note's *explanation* as measured too. The
+measurements were all sound -- 916 really is 4 over, the reloc really was wrong,
+`Fix12<int>` really does cost 0x10. It was the sentence after each measurement
+that was the guess, and each one closed off the question for months.
+
+Cheap habits that would have caught all five, in the order they cost least:
+
+1. **Ask the image who calls it.** A dozen lines against `modules.modules()`
+   scanning `bl` targets, and another dozen scanning for data words equal to an
+   address, settled both naming errors and the D1/D2 swap. Neither needed a
+   disassembler.
+2. **Grep `relocs.txt` for `module:overlays(`.** Both wrong-function names were
+   already flagged there as ambiguous.
+3. **Re-read the lever list before declaring a near-miss dead.** Both remaining
+   near-misses fell to a lever in notes/mwccarm-codegen.md.
 
 ## One thing this sweep found that is not about enemies
 
@@ -160,16 +229,19 @@ evidence and the `MATCH` line is not.
 and **never** consult the extension. Ten `.cpp` files tree-wide carry the marker behind
 an `#include`, so the build compiles them as **c99**:
 
+The standing advice has been to leave them alone because they match as c99. Twice now
+that has been wrong. `Goomboss` moved to byte 0, still matched, and became a real
+method. `daKrb_c::InitResources` was worse: the inert marker was not what stood between
+it and a match -- 916 came out the same either way -- but it stopped `fdiff` and the
+permuter from compiling the file at all, which is presumably why a four-byte near-miss
+sat unexamined long enough to grow a NONMATCHING banner. Move the marker first; then
+measure.
+
+Eight are left untested:
+
 ```
 _ZN14BlueCoinSwitch13InitResourcesEv   _ZN6Number13InitResourcesEv
-_ZN7daKrb_c13InitResourcesEv           _ZN8Goomboss13InitResourcesEv
 func_ov002_020f6618                    func_ov006_020e6e78
 func_ov006_020e7fe8                    func_ov060_02111cc0
 func_ov075_021143e4                    func_ov075_02114ddc
 ```
-
-The standing advice has been to leave them alone because they match as c99. For
-`Goomboss` that turned out to be wrong: moving the marker to byte 0 still matches, and
-the file is now a real method. The other nine were not tested here. The advice should
-be "measure it", not "leave it" — the marker's position is a property of the file, not
-evidence about the function.
