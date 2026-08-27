@@ -961,6 +961,18 @@
     "src/game/actors/WingFeather.cpp#_ZN11WingFeather6RenderEv": "tangosdev",
     "src/game/actors/WingFeather.cpp#_ZN11WingFeather8BehaviorEv": "noreply",
     "src/game/actors/WingFeather.cpp#_ZN11WingFeather13InitResourcesEv": "tangosdev",
-    "src/game/actors/WingFeather.cpp#WingFeather_Spawn": "tangosdev"
+    "src/game/actors/WingFeather.cpp#WingFeather_Spawn": "tangosdev",
+    "src/game/actors/EnemySpawner+EnemySwitchTag.cpp#_ZN14EnemySwitchTagD1Ev": "tangosdev",
+    "src/game/actors/EnemySpawner+EnemySwitchTag.cpp#_ZN14EnemySwitchTagD0Ev": "tangosdev",
+    "src/game/actors/EnemySpawner+EnemySwitchTag.cpp#_ZN12EnemySpawnerD1Ev": "tangosdev",
+    "src/game/actors/EnemySpawner+EnemySwitchTag.cpp#_ZN12EnemySpawnerD0Ev": "tangosdev",
+    "src/game/actors/EnemySpawner+EnemySwitchTag.cpp#_ZN14EnemySwitchTag16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/EnemySpawner+EnemySwitchTag.cpp#_ZN12EnemySpawner8BehaviorEv": "tangosdev",
+    "src/game/actors/EnemySpawner+EnemySwitchTag.cpp#_ZN14EnemySwitchTag8BehaviorEv": "tangosdev",
+    "src/game/actors/EnemySpawner+EnemySwitchTag.cpp#_ZN12EnemySpawner16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/EnemySpawner+EnemySwitchTag.cpp#_ZN12EnemySpawner13InitResourcesEv": "tangosdev",
+    "src/game/actors/EnemySpawner+EnemySwitchTag.cpp#_ZN14EnemySwitchTag13InitResourcesEv": "tangosdev",
+    "src/game/actors/EnemySpawner+EnemySwitchTag.cpp#EnemySpawner_Spawn": "tangosdev",
+    "src/game/actors/EnemySpawner+EnemySwitchTag.cpp#EnemySwitchTag_Spawn": "tangosdev"
   }
 }

@@ -40,6 +40,7 @@
     "ov043/daObjKm1_Dorifu_c",
     "ov002/HealingHeart",
     "ov002/Number",
-    "ov002/WingFeather"
+    "ov002/WingFeather",
+    "ov002/EnemySpawner+EnemySwitchTag"
   ]
 }
