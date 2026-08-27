@@ -7,7 +7,7 @@ src/_ZN4Heap14CreateRootHeapEPvj.cpp
 src/_ZN4Heap19CreateExpandingHeapEjPS_i.cpp
 src/_ZN4Heap28CreateExpandingHeapAllocatorEPvjj.cpp
 src/_ZN4HeapC2EPvjPS_.cpp
-src/_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator.c
+src/_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator.cpp
 src/_ZN13ExpandingHeap9VAllocateEji.cpp
 src/_ZN13ExpandingHeap11VDeallocateEPv.cpp
 src/_ZN13ExpandingHeap7VSizeofEPv.cpp
