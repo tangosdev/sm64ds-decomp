@@ -18,8 +18,8 @@ Resolving `include/*.h`'s inheritance edges transitively gives **60 classes** un
 
 | | before | after |
 |---|---|---|
-| real `Class::Method` definitions | 443 | **451** |
-| `extern "C"` free functions under the mangled name | 17 | **9** |
+| real `Class::Method` definitions | 443 | **455** |
+| `extern "C"` free functions under the mangled name | 17 | **5** |
 
 So the family was already 96% real C++ and the sweep is a tail, not a campaign. That
 is worth recording because the tail is where the *interesting* blockers live — the
@@ -33,6 +33,10 @@ written the way the original was.
 | `_ZN12dEnemyBase_cC2Ev` | ov002 0x020aed98 0x24 | base call + vptr store |
 | `_ZN12dEnemyBase_cD2Ev` | ov002 0x020aed18 0x24 | vptr store + base D2 |
 | `_ZN7BooCageD0Ev` | ov063 0x0211600c 0x5c | 4 sub-object dtors, base chain, `operator delete` |
+| `_ZN11dCapEnemy_cD1Ev` | arm9 0x0200651c 0x38 | vptr store, 2 members, base D2 (was named D2) |
+| `_ZN11dCapEnemy_cD2Ev` | ov002 0x020aedbc 0x38 | the same body, bound to the other variant |
+| `_ZN7daTrs_cD1Ev` / `D0Ev` | ov063 0x02115ee0 / 0x02115f48 | 6 members, base D2 chain |
+| `_ZN7daKrb_cD1Ev` / `D0Ev` | ov084 0x02129020 / 0x02129070 | 5 members, base D2 chain |
 | `_ZN14UnchainedChompD0Ev` | ov100 0x02143290 0xe0 | 3 `__destroy_arr` + 4 sub-object dtors + chain |
 | `_ZN11dCapEnemy_cD0Ev` | ov002 0x020aedf4 0x4c | 2 sub-object dtors, base chain |
 | `_ZN15daObjMarioCap_cD0Ev` | ov002 0x020b6f68 0x64 | 5 sub-object dtors, base chain |
@@ -62,33 +66,51 @@ Re-point the delinks line by hand after any `d0_migrate` run.
 
 ## The wall, measured
 
-Nine files remain, and they are not one problem.
+Five files remain, and they are not one problem.
 
-### The cross-module `dCapEnemy_c` D2 duplicate — 4 files, structural
+### The cross-module `dCapEnemy_c` D2 duplicate — SOLVED, 4 files (2026-08-27)
 
-`daKrb_c` D0/D1 and `daTrs_c` D0/D1 all reproduce the ROM **byte for byte** as real
-destructors and are all rejected by the relocation leg with the same line:
+`daKrb_c` D0/D1 and `daTrs_c` D0/D1 all reproduced the ROM **byte for byte** as real
+destructors and were all rejected by the relocation leg with the same line:
 
 ```
 +0x4c  cand _ZN11dCapEnemy_cD2Ev (0x0200651c) != config 0x020aedbc:ov002
 ```
 
-`dCapEnemy_c::~dCapEnemy_c` exists twice in the image — once in arm9 under its mangled
-name, once duplicated into ov002 as `func_ov002_020aedbc`, byte-identical apart from
-three `bl` displacements. A vague-linkage COMDAT destructor with an overlay-local
-copy. A real derived destructor chains to the mangled name; the ROM's overlay code
-calls the overlay copy. Naming the ov002 copy would put one mangled name in **both**
-`config/arm9/symbols.txt` and an overlay's, which a census says this tree has never
-done (0 cases).
+The reading recorded here first — one vague-linkage COMDAT destructor duplicated into
+two modules, so naming the ov002 copy would put one mangled name in both
+`config/arm9/symbols.txt` and an overlay's, which this tree has never done — was
+wrong. There is no duplicate and no collision. `dCapEnemy_c` has no virtual bases, so
+its **D1 and D2 are byte-identical code**, and the two addresses are the two ABI
+variants. The names were on the wrong ones.
 
-This was previously recorded as blocking `daKrb_c` alone. It is not class-specific: it
-blocks **every** `dCapEnemy_c` descendant's destructor pair, and `daTrs_c` is the
-second one measured. Any future cap-enemy hits it too.
+What settles which is which is not the bytes but how the ROM reaches each address, and
+both questions are cheap to ask:
 
-Note what this costs to find. `build_pin.verify` and a bare byte compare both say
-`MATCH` — `match.compare` wildcards every relocated word, so a `bl` to the wrong
-variant compares equal. Only `--strict-relocs` (on by default in `match.py`) and the
-full relink see it.
+- **Who calls it?** Scanning every module's `bl` instructions for the two targets
+  returns four call sites, *all* of them to ov002 0x020aedbc, and *none* to arm9
+  0x0200651c. The four are exactly daTrs_c's and daKrb_c's two destructors each —
+  derived destructors tearing down their base sub-object. That is what D2 is for.
+- **Who points at it?** Scanning every module for a data word equal to either address
+  returns one hit: ov002 0x021082c4, which is slot 16 of `_ZTV11dCapEnemy_c`
+  (0x02108284) — the destructor pair's slot, with slot 17 already holding the matched
+  `_ZN11dCapEnemy_cD0Ev`. A vtable slot holds the complete-object destructor. So arm9
+  0x0200651c is **D1**.
+
+So `config/arm9/symbols.txt`'s `_ZN11dCapEnemy_cD2Ev` at 0x0200651c became
+`_ZN11dCapEnemy_cD1Ev`, and ov002's placeholder `func_ov002_020aedbc` at 0x020aedbc
+became `_ZN11dCapEnemy_cD2Ev`, each with its source file renamed to follow. Both are
+now `dCapEnemy_c::~dCapEnemy_c() {}` — mwcc emits all three variants from one
+definition and `objisolate` keeps whichever variant the delink entry names, so the
+same two-line body serves both files. With the chain target correct, all four blocked
+destructors became compiler-generated C++ with no source change at all beyond dropping
+their hand-spelled bodies.
+
+The general lesson is worth more than the four files. **A wall that says "the compiler
+names the wrong function" may be the config naming the wrong address.** Byte-identical
+ABI variants cannot be told apart by comparing them; ask the image who calls each one
+and who stores a pointer to it. Both scans are a dozen lines against
+`modules.modules()` and either one alone would have settled it.
 
 ### A by-value class parameter — 1 file, measured cost
 
