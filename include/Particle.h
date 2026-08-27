@@ -77,14 +77,14 @@ struct Particle {
     u8  mCallback_7a8;      /* 0x7a8 - SimpleCallback */
     u8  pad_7a9[0x7];
     s32 mSystemID_7b0;      /* 0x7b0 */
-    u8  mCallback_7b4;      /* 0x7b4 - built by func_020225fc */
+    u8  mCallback_7b4;      /* 0x7b4 - scaleCallback_c */
     u8  pad_7b5[0xb];
     s32 mSystemID_7c0;      /* 0x7c0 */
-    u8  mCallback_7c4;      /* 0x7c4 - built by func_020225fc */
+    u8  mCallback_7c4;      /* 0x7c4 - scaleCallback_c */
     u8  pad_7c5[0xf];
-    u8  mCallback_7d4;      /* 0x7d4 - built by func_020225fc */
+    u8  mCallback_7d4;      /* 0x7d4 - scaleCallback_c */
     u8  pad_7d5[0xf];
-    u8  mCallback_7e4;      /* 0x7e4 - built by func_020225fc */
+    u8  mCallback_7e4;      /* 0x7e4 - scaleCallback_c */
     u8  pad_7e5[0xb];
     u8  mCallback_7f0;      /* 0x7f0 - vtable data_0208f3f4 */
     u8  pad_7f1[0x3];
