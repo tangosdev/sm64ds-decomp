@@ -597,7 +597,64 @@ extern "C" void port_probe_rabbit_trigger(int frame)
                      "the actor never ticks)\n", frame);
     }
 
+    /* SM64DS_RABBIT_PARAM / SM64DS_RABBIT_GLOW re-dress this rabbit as a COURSE
+     * (glowing) rabbit instead of the castle key rabbit the level table gave it.
+     *
+     * Both fields are ordinary spawn parameters of this same actor -- +0x43c is
+     * the variant word the level's object table supplies (7 is the castle key
+     * rabbit; a course rabbit carries its course number) and +0x429 is the
+     * glowing marker. Nothing else is touched.
+     *
+     * WHY IT MATTERS. func_ov085_0212ae08's +43c == 7 arm spawns the key and
+     * returns. Every OTHER variant falls through to the tail, where the arm at
+     * "flag_path" -- taken when +0x429 != 0 and SaveData::NumGlowingRabbitsFound()
+     * != 8 -- spawns the key and IN THE SAME FRAME hands the rabbit to state
+     * 0213068c, whose Main func_ov085_0212a904 opens message 0x148 on its very
+     * first frame (case 0). The key's own descent needs about ten frames
+     * (func_ov085_0212d24c sets +0x100 = 10 and func_ov085_0212d108 only leaves
+     * on that countdown), so that second dialogue is up well before the key
+     * arrives -- which is the overlap this lane is looking for, reached with no
+     * injected key at all. */
+    if (const char *pe = std::getenv("SM64DS_RABBIT_PARAM")) {
+        static int done;
+        if (!done) {
+            done = 1;
+            *(int *)(rb + 0x43c) = (int)std::strtol(pe, 0, 0);
+            std::fprintf(stderr, "  [rabbit] f%d rabbit+0x43c := %d (course "
+                         "variant instead of the castle key rabbit)\n",
+                         frame, *(int *)(rb + 0x43c));
+        }
+    }
+    if (std::getenv("SM64DS_RABBIT_GLOW")) {
+        static int done;
+        if (!done) {
+            done = 1;
+            *(unsigned char *)(rb + 0x429) = 1;
+            std::fprintf(stderr, "  [rabbit] f%d rabbit+0x429 := 1 (glowing "
+                         "marker)\n", frame);
+        }
+    }
+
     static int caught, tries;
+
+    /* SM64DS_RABBIT_REGRAB=1 re-arms the stand-in once the rabbit has been let
+     * go again (func_ov085_0212ae08's +43c==7 arm clears rabbit+0x45c in the
+     * same breath as it spawns the key). Re-grabbing the rabbit is an ordinary
+     * player action -- the rabbit is standing right there and Rabbit::Behavior
+     * puts it back on its catchable arm (src/_ZN6Rabbit8BehaviorEv.c:154-162) --
+     * and it is the only NATURAL way found so far to put the player back under
+     * mIsNoControl while the key is still flying to him. That is the overlap
+     * lane C could only reach by injecting a key with SM64DS_KEY_SPAWN_AT. */
+    if (caught && *(void **)(rb + 0x45c) == 0 && std::getenv("SM64DS_RABBIT_REGRAB")) {
+        static int announced;
+        if (!announced) {
+            announced = 1;
+            std::fprintf(stderr, "  [rabbit] f%d rabbit released (+0x45c = 0), "
+                         "re-arming the grab stand-in\n", frame);
+        }
+        caught = 0;
+    }
+
     if (caught) {
         /* post-grab: follow the rabbit's own caught states, so a run that never
            reaches the key spawn says where it stopped instead of going quiet. */
@@ -867,12 +924,25 @@ extern "C" void port_probe_rabbit_key(int frame)
     int noctl = player ? (int)*(unsigned char *)(player + 0x709) : -1;
     int kind  = player ? (int)*(unsigned char *)(player + 0x70a) : -1;
 
-    if (step == p_step && d684 == p_d684 && d660 == p_d660 && noctl == p_noctl
+    /* while the key is still descending (its own step word 0) print EVERY frame:
+       the descent is only about ten frames and the whole question is which of it
+       and the rabbit's second dialogue lands first. */
+    if (step != 0 &&
+        step == p_step && d684 == p_d684 && d660 == p_d660 && noctl == p_noctl
         && frame - last < 60)
         return;
     p_step = step; p_d684 = d684; p_d660 = d660; p_noctl = noctl; last = frame;
 
+    /* +0x100 is the key's DESCENT COUNTDOWN. func_ov085_0212d24c (the spawn
+       init) sets it to 10 and func_ov085_0212d108 refuses to home or hand over
+       to the caught state while it is non-zero, so it is the whole clock on the
+       race between the key arriving and the rabbit's SECOND dialogue opening.
+       +0x60 is the key's Y and +0xa8 its vertical speed: the handover test is
+       purely geometric, player.y + 0x64000 > key.y, with no control-state check
+       anywhere in it. */
     std::fprintf(stderr, "  [rkey] f%d step=%d +198=%d +19c=0x%x d684=%d "
-                 "d660=%d noctl=%d kind=%d\n", frame, step, f198, f19c,
-                 d684, d660, noctl, kind);
+                 "d660=%d noctl=%d kind=%d cd100=%d ky=%d kvy=%d\n",
+                 frame, step, f198, f19c, d684, d660, noctl, kind,
+                 (int)*(unsigned short *)(k + 0x100),
+                 *(int *)(k + 0x60), *(int *)(k + 0xa8));
 }
