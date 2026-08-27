@@ -1,27 +1,36 @@
 //cpp
+// @symbol MadPiano_Spawn
 #include "MadPiano.h"
+
+/* The pinned compiler has no usable source spelling for the class-specific
+ * operator new or placement new (notes/ctor-migration.md, factory wall), so
+ * this factory keeps only that ABI boundary explicit. The subobjects and
+ * construction order are expressed through the real class layout. */
 extern "C" {
-void* _ZN7fBase_cnwEj(unsigned int);
-void _ZN10dBgActor_cC2Ev(void*);
-void _ZN9ModelAnimC1Ev(void*);
-void _ZN11ShadowModelC1Ev(void*);
-void func_020733a8(void*, int, int, void*, void*);
-void _ZN10dCcAcPos_cC1Ev(void*);
-void _ZN10dCcAcPos_cD1Ev(void*);
-void _ZN10dBgCh_ActrC1Ev(void*);
-extern int _ZTV8MadPiano[];
-void* MadPiano_Spawn(void) {
-  char* r4 = (char*)_ZN7fBase_cnwEj(sizeof(struct MadPiano));
-  if (r4) {
-    _ZN10dBgActor_cC2Ev(r4);
-    *(int*)r4 = (int)_ZTV8MadPiano;
-    _ZN9ModelAnimC1Ev(r4 + 0x320);
-    _ZN11ShadowModelC1Ev(r4 + 0x384);
-    _ZN11ShadowModelC1Ev(r4 + 0x3ac);
-    _ZN11ShadowModelC1Ev(r4 + 0x3d4);
-    func_020733a8(r4 + 0x48c, 2, 0x40, (void*)_ZN10dCcAcPos_cC1Ev, (void*)_ZN10dCcAcPos_cD1Ev);
-    _ZN10dBgCh_ActrC1Ev(r4 + 0x50c);
-  }
-  return r4;
+void *_ZN7fBase_cnwEj(unsigned int size);
+void _ZN10dBgActor_cC2Ev(void *self);
+void _ZN9ModelAnimC1Ev(void *self);
+void _ZN11ShadowModelC1Ev(void *self);
+void func_020733a8(void *array, int count, int stride, void *ctor, void *dtor);
+void _ZN10dCcAcPos_cC1Ev(void *self);
+void _ZN10dCcAcPos_cD1Ev(void *self);
+void _ZN10dBgCh_ActrC1Ev(void *self);
+extern void *_ZTV8MadPiano;
 }
+
+extern "C" MadPiano *MadPiano_Spawn()
+{
+    MadPiano *actor = (MadPiano *)_ZN7fBase_cnwEj(sizeof(MadPiano));
+    if (actor) {
+        _ZN10dBgActor_cC2Ev(actor);
+        *(void **)actor = &_ZTV8MadPiano;
+        _ZN9ModelAnimC1Ev(&actor->mModelAnim);
+        _ZN11ShadowModelC1Ev(&actor->mShadowModel1);
+        _ZN11ShadowModelC1Ev(&actor->mShadowModel2);
+        _ZN11ShadowModelC1Ev(&actor->mShadowModel3);
+        func_020733a8(actor->mCylinderClsn, 2, sizeof(dCcAcPos_c),
+            (void *)_ZN10dCcAcPos_cC1Ev, (void *)_ZN10dCcAcPos_cD1Ev);
+        _ZN10dBgCh_ActrC1Ev(&actor->mWithMeshClsn);
+    }
+    return actor;
 }
