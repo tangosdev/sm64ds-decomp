@@ -18,7 +18,13 @@ extern u16 data_020a0f1c;
 extern int data_020a0f98;
 
 extern void func_0203b9bc(struct Col4 *out);
-extern int func_0203ea5c(void);
+/* DEFECT D2, fixed here: the declaration follows the definition.
+   src/func_0203ea5c.c:82 defines `void func_0203ea5c(void)`. This TU used to
+   declare it `int`, and both call sites below discard the result, so on ARM the
+   lie is invisible -- r0 is simply never read. It stops being invisible the day
+   both TUs are in one link and a compiler is entitled to believe the
+   declaration. */
+extern void func_0203ea5c(void);
 extern void func_0203e20c(void);
 extern void func_0203e0ac(void);
 extern void func_02040724(void);

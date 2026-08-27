@@ -934,7 +934,24 @@ extern "C" void port_actor_tick(void)
    Process reading slots 2 and 3 directly instead of dispatching. That is a
    0x49c-byte transcription and a gate of its own. Turning the switch on
    without it faults on the first frame with a jump to +0xffed0000, which is
-   the null at MSVC slot 1 of an unfilled table. */
+   the null at MSVC slot 1 of an unfilled table.
+
+   THAT TRANSCRIPTION WAS WRITTEN AND THE CYLINDER PASS RUNS. Everything above
+   is still true of THIS SYMBOL and this switch, and reading it as "the port
+   does not do cylinder collision" -- which is what it says on a quick read --
+   is now wrong enough to send the next debugger somewhere else entirely.
+   Corrected in passing by run mg16 lane MP3, which needed the answer and had
+   to go and find it:
+
+     port/unmatched/CylinderClsn_Process.cpp is the ROM-shaped host copy the
+     paragraph above prescribes, port/slice_gate181.txt:22-25 records it, and
+     tests/walk_window.cpp calls port_cylinder_clsn_process() UNCONDITIONALLY
+     once per frame. SM64DS_CYLINDER_PASS gates only the MATCHED symbol below,
+     which stays off for the dispatch reason given.
+
+   So actor-vs-actor cylinder collision is LIVE by default, and MP3's rungs
+   depend on it: two Player body cylinders land on the one list at
+   data_0209cee8 and the host Process's symmetric branch pushes them apart. */
 extern "C" void _ZN12CylinderClsn7ProcessEv(void);
 
 static int port_cylinder_pass_on(void)
