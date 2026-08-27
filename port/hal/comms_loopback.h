@@ -25,7 +25,15 @@
 //   SM64DS_COMMS_PORT=<n>      base UDP port, default kCommsLoopbackPortBase.
 //                              Slot k listens on <n>+k, so the parent is <n>.
 //   SM64DS_COMMS_SLOT=<1..3>   a child may pin its slot instead of claiming
-//                              the first free one. Out of range is refused.
+//                              the first free one. OUT OF RANGE WARNS AND FALLS
+//                              BACK to the first free slot -- the PIN is
+//                              refused, the session is not. Refusing to start
+//                              would turn a mistyped knob into a game that
+//                              never comes up, and the transport already has
+//                              one honest way to fail (stay idle and let the
+//                              ROM's bound drop to solo) which should mean a
+//                              real transport failure, not a typo. Ignored
+//                              entirely for the parent, which is always slot 0.
 //
 // It composes with the MP1 knobs rather than replacing them:
 // SM64DS_COMMS_FANOUT=1 still runs the ROM's steps 0x16 and 0x17, and
