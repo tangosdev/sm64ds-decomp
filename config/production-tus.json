@@ -45,6 +45,9 @@
     "arm9/Actor",
     "ov004/dScMgBase_c",
     "ov006/MgWhichWiggler",
-    "ov006/MgTrampolineTerror"
+    "ov006/MgTrampolineTerror",
+    "ov006/MgPairAGoneAndOn",
+    "ov006/MgMushroomRoulette",
+    "ov006/MgPicturePoker"
   ]
 }
