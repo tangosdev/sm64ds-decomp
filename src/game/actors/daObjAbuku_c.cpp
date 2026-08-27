@@ -1,10 +1,10 @@
 //cpp
-/* Manually curated shadow translation unit for ov002/daObjAbuku_c.
+/* Manually curated production translation unit for ov002/daObjAbuku_c.
  *
- * NOT ENROLLED and NOT CANONICAL: this readable C++ source is a research
- * artifact under src_tu/.  The seven licensed text functions are retained
- * from the legacy sources, but their class members now use the real
- * daObjAbuku_c : dActor_c declaration and the real dCcAc_c subobject.
+ * CANONICAL PARTITIONED TU: the default stock build compiles this file once,
+ * derives its seven exact text contributions, and links its licensed RTTI,
+ * vtable, actor descriptor, and other data through the fail-closed production
+ * TU profile. The legacy one-function sources remain comparison oracles only.
  *
  * mwccarm 2004/b56 emits one .text section per function in reverse source
  * order.  Keep the ROM-high function first below.  The compiler-owned
@@ -12,8 +12,8 @@
  * tubuild inventory records those extra sections instead of hiding them.
  *
  * Legacy sources covered by the seven licensed text ranges (ROM order):
- *   [0] 0x020b3298  src/_ZN12daObjAbuku_cD1Ev.c
- *   [1] 0x020b32c8  src/_ZN12daObjAbuku_cD0Ev.c
+ *   [0] 0x020b3298  src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_cD1Ev.cpp
+ *   [1] 0x020b32c8  src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_cD0Ev.cpp
  *   [2] 0x020b330c  src/unnamed/ov002/020b/func_ov002_020b330c.cpp
  *   [3] 0x020b3344  src/unnamed/ov002/020b/func_ov002_020b3344.c
  *   [4] 0x020b33dc  src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_c8BehaviorEv.cpp

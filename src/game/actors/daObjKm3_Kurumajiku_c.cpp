@@ -1,10 +1,10 @@
 //cpp
-/* Manually curated shadow translation unit.
+/* Manually curated production translation unit.
  * ov047/daObjKm3_Kurumajiku_c  (5 function(s))
  *
- * NOT ENROLLED and NOT CANONICAL. The readable class and member definitions
- * are compiled only by tubuild's scratch pipeline while the five legacy
- * production sources remain authoritative.
+ * CANONICAL PARTITIONED TU. The default stock build compiles this file once,
+ * derives its exact text contributions, and links its licensed compiler-owned
+ * data. The five legacy one-function sources remain comparison oracles only.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
  * emits one .text section per function, in the REVERSE of source order, so
@@ -14,7 +14,7 @@
  *
  * Assembled from these legacy one-function sources (ROM address order):
  *   [0] 0x021111a0  src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp
- *   [1] 0x021111f0  src/_ZN21daObjKm3_Kurumajiku_cD0Ev.c
+ *   [1] 0x021111f0  src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp
  *   [2] 0x02111254  src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp
  *   [3] 0x02111268  src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp
  *   [4] 0x02111280  src/game/actors/RickshawBs/RickshawBs_Spawn.c

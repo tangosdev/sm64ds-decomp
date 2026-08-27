@@ -1,10 +1,10 @@
 //cpp
-/* Manually curated shadow translation unit.
+/* Manually curated production translation unit.
  * ov047/daObjKm3_Kaitendai_c  (5 function(s))
  *
- * NOT ENROLLED and NOT CANONICAL. The readable class and member definitions
- * are compiled only by tubuild's scratch pipeline while the five legacy
- * production sources remain authoritative.
+ * CANONICAL PARTITIONED TU. The default stock build compiles this file once,
+ * derives its exact text contributions, and links its licensed compiler-owned
+ * data. The five legacy one-function sources remain comparison oracles only.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
  * emits one .text section per function in reverse source order. The destructor
@@ -12,7 +12,7 @@
  *
  * Assembled from these legacy one-function sources (ROM address order):
  *   [0] 0x021112bc  src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp
- *   [1] 0x0211130c  src/_ZN20daObjKm3_Kaitendai_cD0Ev.c
+ *   [1] 0x0211130c  src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_cD0Ev.cpp
  *   [2] 0x02111370  src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.cpp
  *   [3] 0x02111384  src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.cpp
  *   [4] 0x021113bc  src/unnamed/ov047/0211/func_ov047_021113bc.c
