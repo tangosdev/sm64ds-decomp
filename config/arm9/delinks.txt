@@ -6314,7 +6314,7 @@ src/_ZN9SolidHeapD0Ev.cpp:
     complete
     .text start:0x0203c970 end:0x0203c99c
 
-src/_ZN9SolidHeapD1Ev.c:
+src/_ZN9SolidHeapD1Ev.cpp:
     complete
     .text start:0x0203c99c end:0x0203c9c0
 
@@ -6338,7 +6338,7 @@ src/_ZN4HeapD1Ev.cpp:
     complete
     .text start:0x0203ca44 end:0x0203ca54
 
-src/_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator.c:
+src/_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator.cpp:
     complete
     .text start:0x0203ca54 end:0x0203ca80
 
