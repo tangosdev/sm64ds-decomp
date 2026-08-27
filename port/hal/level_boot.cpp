@@ -3557,6 +3557,55 @@ extern unsigned char data_ov002_0210da48[], data_ov002_0210d9b8[],
     data_ov002_0210d9a8[];
 }
 
+/* CAPTURED, and it is g_level_mounted's argument again with a different
+   payload. What this flag says is "the twelve preloads have run", and what that
+   pass writes is the twelve SharedFilePtr records themselves: Model::LoadFile
+   fills fileID, numRefs and filePtr in each. They are hosted ov002 globals, so
+   they are .dsstate content and a restore rolls them back. A host static does
+   not roll back with them, and the two then disagree in the fatal direction --
+   the flag says done, the records read unloaded, the pass never runs again, and
+   the first type-11 mushroom walks the null BMD_File described at the top of
+   this block into Model::AddToCommonModelDataArr.
+
+   AND THE DISAGREEMENT IS REACHABLE, which is worth stating because "loaded"
+   looks like a one-way latch and is not: SharedFilePtr::Release decrements
+   numRefs and frees at zero, and seven CleanupResources bodies release these
+   same records (Player, Toad, Klepto, Stump, Dorrie, RollingLogTtm,
+   QuestionBlock, SnowmanBreath). A record can be back to unloaded inside a
+   session, so a state can hold one either way round.
+
+   THE SWEEP MISSED THIS ONE and the reason generalises: RELOAD2's sweep
+   enumerated callers of port_ovNNN_syms_patch and __sinit_ovNNN_*, and this
+   pass calls neither. Its callee is Model::LoadFile. A search keyed to the two
+   patch-pass names cannot see a one-shot guard whose payload is a LOADER, so
+   the family is wider than that pattern and the next audit should be keyed on
+   which side of the section the payload lands on, not on the callee's name.
+
+   THE RE-RUN IS SAFE, read out of the callees rather than assumed.
+   SharedFilePtr::LoadFile calls Load() only when numRefs is 0, and
+   Model::LoadFile does UpdateFileOffsets + AddToCommonModelDataArr +
+   ReallocateModelFile only when numRefs comes back 1, so the expensive half is
+   the first load and nothing else. The storage does not leak either: Load()
+   carves through Memory::Allocate, which comes out of the root heap arena, and
+   hal/lk6_savestate.cpp captures that arena AND its carve cursor
+   (Slot.arena/Slot.arena_cursor) and puts both back -- so a rollback un-carves
+   the block in the same motion that rolls the record back. Bracketed, flag and
+   records move together, so the one case that would drift a refcount, a re-run
+   over a record that is still loaded, cannot arise from a restore at all.
+
+   NOT IN THE SM64DS_SS_NO_ROLLGUARD STASH, and that is deliberate: it matches
+   the eighteen rather than the two. port_rollguard_stash below carries
+   g_level_mounted and ov009's sinit flag, the pair RELOAD2's A/B actually
+   measured; the bracketed level-path guards are not in it. Adding this one
+   would WIDEN the knob rather than keep it the before/after switch the soak
+   reads, so the knob's scope stays what it was.
+
+   tbl stays host-side on purpose: it is const, nothing writes it, and it holds
+   host addresses that are fixed for the process lifetime. */
+DSSTATE_BEGIN
+static int g_preload_shared_models_done;
+DSSTATE_END
+
 extern "C" void port_stage_preload_shared_models(void)
 {
     static void *const tbl[12] = {
@@ -3565,11 +3614,10 @@ extern "C" void port_stage_preload_shared_models(void)
         data_ov002_0210d9c0, data_ov002_0210e7d8, data_ov002_0210e3a0,
         data_ov002_0211094c, data_ov002_0211095c, data_ov002_0210d9a8,
     };
-    static int done;
     int loaded = 0;
-    if (done)
+    if (g_preload_shared_models_done)
         return;
-    done = 1;
+    g_preload_shared_models_done = 1;
     for (int i = 0; i < 12; ++i) {
         _ZN5Model8LoadFileER13SharedFilePtr(tbl[i]);
         /* SharedFilePtr is {u16 fileID; u8 numRefs; u8 pad; char *filePtr} */
