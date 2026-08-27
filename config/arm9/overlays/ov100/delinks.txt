@@ -478,37 +478,9 @@ src/Fish_Spawn.cpp:
     complete
     .text start:0x02146d38 end:0x02146d7c
 
-src/_ZN15daObjPathLift_cD1Ev.cpp:
+src/actors/daObjPathLift_c.cpp:
     complete
-    .text start:0x02146d7c end:0x02146dec
-
-src/_ZN15daObjPathLift_cD0Ev.cpp:
-    complete
-    .text start:0x02146dec end:0x02146e70
-
-src/func_ov100_02146e70.c:
-    complete
-    .text start:0x02146e70 end:0x0214700c
-
-src/func_ov100_0214700c.c:
-    complete
-    .text start:0x0214700c end:0x02147054
-
-src/_ZN15daObjPathLift_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02147054 end:0x021470a4
-
-src/_ZN15daObjPathLift_c6RenderEv.cpp:
-    complete
-    .text start:0x021470a4 end:0x021470f4
-
-src/_ZN15daObjPathLift_c8BehaviorEv.cpp:
-    complete
-    .text start:0x021470f4 end:0x021471e0
-
-src/_ZN15daObjPathLift_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x021471e0 end:0x02147328
+    .text start:0x02146d7c end:0x02147328
 
 src/PathLift_Spawn.cpp:
     complete
