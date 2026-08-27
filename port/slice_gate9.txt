@@ -2,11 +2,7 @@
 # spawns through its factory, initializes, behaves and renders through
 # vtable dispatch. Sits on the full prior stack.
 
-src/ArrowSignRight_Spawn.c
-src/_ZN14ArrowSignRight13InitResourcesEv.cpp
-src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp
-src/_ZN14ArrowSignRight8BehaviorEv.cpp
-src/_ZN14ArrowSignRight6RenderEv.cpp
+src/actors/ArrowSignRight.cpp
 src/_ZN10dBgActor_cC2Ev.cpp
 src/_ZN8dActor_cC2Ev.cpp
 # SceneNode's constructor and Reset now share their production translation unit.
@@ -26,7 +22,6 @@ src/_ZN10dBgActor_c21UpdateModelPosAndRotYEv.cpp
 src/_ZN9ModelBase7SetFileEP8BMD_Fileii.cpp
 src/func_02039394.c
 src/func_020393a4.c
-src/func_ov098_02137c8c.c
 src/func_020393f0.c
 src/func_02039404.c
 src/InvMat4x3.c
@@ -74,6 +69,4 @@ src/func_0203b20c.c
 
 # dBgW's non-virtual accessors: these were always sliced here. They are not
 # part of the vtable and have nothing to do with the constructor migration.
-src/_ZN4dBgW7DisableEv.cpp
-src/_ZN4dBgW9IsEnabledEv.cpp
 src/_ZN4dBgW6EnableEP8dActor_c.cpp

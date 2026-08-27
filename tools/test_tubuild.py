@@ -2,7 +2,7 @@
 
 Per the assignment this tool generalizes (notes/tu-reconstruction-pilot-report.md):
 if `tubuild.py verify` disagrees with pilot #1's hand-verified result for
-ov045/PoleLift (7/7 MATCH, clean objisolate, one known destructor-order anomaly),
+ov002/daObjAbuku_c (7/7 MATCH, clean objisolate, one known destructor-order anomaly),
 the TOOL has a bug, not the pilot. This file is that check, automated.
 
 Runs the real CLI via subprocess (not the internal functions) so it exercises
@@ -65,14 +65,14 @@ def _scratch_manifest():
 
 # --------------------------------------------------------------------------- list
 
-def test_list_finds_polelift_and_its_module_neighbours():
+def test_list_finds_daobjabuku_c_and_its_module_neighbours():
     """No compiler needed: `list` only reads build/tu_map.json, config/, and src/."""
-    code, out = _run("list", "--module", "ov045", "--verify-sample", "0")
+    code, out = _run("list", "--module", "ov002", "--verify-sample", "0")
     assert code == 0, out
-    assert "ov045/PoleLift" in out
-    assert "ov045/FireSeaElevator" in out          # its lower-address neighbour
-    assert "ov045/ExtendingPlatform" in out         # its higher-address neighbour
-    # PoleLift is 7 functions, all `complete` -- see the manifest and the pilot report.
+    assert "ov002/daObjAbuku_c" in out
+    assert "ov002/WingFeather" in out              # its lower-address neighbour
+    assert "ov002/BrickBlock" in out               # a higher-address neighbour
+    # daObjAbuku_c is 7 functions, all `complete` -- see the manifest and the pilot report.
     assert "7     7/7" in out
 
 
@@ -93,22 +93,22 @@ def test_list_has_no_duplicate_ids_anywhere_in_the_tree():
 
 # ------------------------------------------------------------------------ inspect
 
-def test_inspect_polelift_reproduces_the_pilots_static_findings():
+def test_inspect_daobjabuku_c_reproduces_the_pilots_static_findings():
     """No compiler strictly needed for these fields, but build_pin.verify also runs
     inside `inspect`, so this is skipped without the toolchain like the rest."""
     if not _toolchain():
         return
-    code, out = _run("inspect", "ov045/PoleLift")
+    code, out = _run("inspect", "ov002/daObjAbuku_c")
     assert code == 0, out
-    assert "classes           PoleLift" in out
+    assert "classes           daObjAbuku_c" in out
     assert "boundary conf.    high" in out
     # The pilot's report sec 4: D1/D0 are real, D2 is a compiler-only byproduct
     # that only appears once the TU is actually compiled (verify/compile), not here.
-    assert "_ZN8PoleLiftD1Ev" in out and "_ZN8PoleLiftD0Ev" in out
-    assert "D0/D1/D2 destructor variants     : ['_ZN8PoleLiftD1Ev', '_ZN8PoleLiftD0Ev']" in out
+    assert "_ZN12daObjAbuku_cD1Ev" in out and "_ZN12daObjAbuku_cD0Ev" in out
+    assert "D0/D1/D2 destructor variants     : ['_ZN12daObjAbuku_cD1Ev', '_ZN12daObjAbuku_cD0Ev']" in out
     # The pilot report sec 4: this TU emits the class's vtable because it defines
-    # the key function (~PoleLift is the only virtual PoleLift declares itself).
-    assert "_ZTV8PoleLift" in out
+    # the key function (~daObjAbuku_c is the only virtual daObjAbuku_c declares itself).
+    assert "_ZTV12daObjAbuku_c" in out
     assert "all functions verify under the build's pin: True" in out
     assert "manifest entry: status=" in out
 
@@ -120,55 +120,59 @@ def test_verify_reproduces_pilot_1s_7_of_7_and_clean_objisolate():
     walk of match.py + objisolate.py + reloc_audit.py agree with what a human
     found by hand for this exact TU (notes/tu-reconstruction-pilot-report.md sec 1)?
 
-    Runs against the ALREADY-CURATED src_tu/actors/PoleLift.cpp -- `create` is not
+    Runs against the ALREADY-CURATED src_tu/actors/daObjAbuku_c.cpp -- `create` is not
     involved, matching the assignment's instruction to skip it for this candidate.
     """
     if not _toolchain():
         return
-    shadow = REPO / "src_tu" / "actors" / "PoleLift.cpp"
+    shadow = REPO / "src_tu" / "actors" / "daObjAbuku_c.cpp"
     assert shadow.is_file(), "the pilot's committed shadow TU is missing"
 
     scratch = _scratch_manifest()
     try:
-        code, out = _run("verify", "ov045/PoleLift", manifest=scratch)
+        code, out = _run("verify", "ov002/daObjAbuku_c", manifest=scratch)
     finally:
         scratch.unlink(missing_ok=True)
     assert code == 0, out
 
     # Every one of the pilot's seven MATCH lines, independently reproduced.
     for sym, addr, size in [
-            ("_ZN8PoleLiftD1Ev", "0x0211150c", "0x04c"),
-            ("_ZN8PoleLiftD0Ev", "0x02111558", "0x060"),
-            ("_ZN8PoleLift16CleanupResourcesEv", "0x021115b8", "0x038"),
-            ("_ZN8PoleLift6RenderEv", "0x021115f0", "0x028"),
-            ("_ZN8PoleLift8BehaviorEv", "0x02111618", "0x120"),
-            ("_ZN8PoleLift13InitResourcesEv", "0x02111738", "0x0d0"),
-            ("PoleLift_Spawn", "0x02111808", "0x038")]:
+            ("_ZN12daObjAbuku_cD1Ev", "0x020b3298", "0x030"),
+            ("_ZN12daObjAbuku_cD0Ev", "0x020b32c8", "0x044"),
+            ("func_ov002_020b330c", "0x020b330c", "0x038"),
+            ("func_ov002_020b3344", "0x020b3344", "0x098"),
+            ("_ZN12daObjAbuku_c8BehaviorEv", "0x020b33dc", "0x13c"),
+            ("_ZN12daObjAbuku_c13InitResourcesEv", "0x020b3518", "0x050"),
+            ("daObjAbuku_c_Spawn", "0x020b3568", "0x038")]:
         assert f"MATCH    {sym}" in out and addr in out, (sym, out)
 
     assert "byte comparison   : 7/7 MATCH" in out
     # This is the check pilot #1 needed and match.compare alone could not give:
-    # the vtable-addend bug (PoleLift_Spawn's `+2` fix) would show here as a
+    # the vtable-addend bug (daObjAbuku_c_Spawn's `+2` fix) would show here as a
     # failure even though the byte compare above is a false-green 7/7.
     assert "objisolate check  : clean" in out
     # The one documented, non-fixable anomaly (pilot report sec 3): the compiler
     # emits D2/D0/D1 in a fixed order that puts D0 before D1, opposite the ROM.
     assert "1 ordinal pair(s) NOT in ROM order: [(0, 1)]" in out
     assert "Result: 7/7 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED" in out
-    # 1 unlicensed .text (D2) + 11 unlicensed .data (the vtable + the RTTI records)
-    # = 12 -- present and correctly refusing promotion, not silently dropped.
+    # Six unlicensed .data symbols -- the base-class typeinfo records (_ZTI/_ZTS for
+    # fBase_c, dBase_c, dActor_c) this TU emits as vague linkage because it is
+    # daObjAbuku_c's key-function TU. Present and correctly refusing promotion, not
+    # silently dropped. The D2 is not among them: it is named on the
+    # `compiler-only : exact deadstrip` line above, the licensed path for a variant
+    # the retail link discarded.
     #
-    # THE PILOT'S SEC 4 INVENTORY SAID 15, AND SO DID THIS LINE UNTIL IT WAS MEASURED.
-    # The extra three were Platform's: two out-of-line vague-linkage destructors and
-    # _ZTV8Platform, emitted here because Platform had no key function to anchor them.
-    # #1555 ("Give Platform its 32nd vtable slot: Platform::Kill") gave it one, and
-    # they moved to Platform's own TU. Compiling this file's own historical forms
-    # against their own include/ trees reads 43 sections / 15 unlicensed at dedaa139e^
-    # and 37 / 12 at dedaa139e -- so this expectation went stale at #1555, 116 pull
-    # requests before the collision rename (#1643) that later stopped the file
-    # compiling at all and hid the staleness behind a compile error.
-    assert "12 unlicensed section/symbol(s) present -> PROMOTION REFUSED" in out
-    assert "_ZN8PoleLiftD2Ev" in out and "_ZTV8PoleLift" in out
+    # This subject used to be ov045/PoleLift and this number used to be 12 -- and,
+    # before anyone measured it, 15. Both went stale under the tree, not under this
+    # file: #1555 gave Platform a key function and moved three symbols off PoleLift,
+    # and PoleLift was later promoted out of src_tu/ entirely once its destructor
+    # moved into the class body. A count pinned to one TU's incidental emission has
+    # now gone stale three times. If it goes again, re-measure with
+    # `python tools/tubuild.py verify ov002/daObjAbuku_c` -- do not tune it until the
+    # assert passes.
+    assert "6 unlicensed section/symbol(s) present -> PROMOTION REFUSED" in out
+    assert "_ZN12daObjAbuku_cD2Ev" in out, "the D2 variant must be named, not implied"
+    assert "_ZTI7fBase_c" in out and "_ZTS8dActor_c" in out, "the base typeinfo must be named"
 
 
 def test_compile_report_matches_the_pilots_object_inventory():
@@ -183,7 +187,7 @@ def test_compile_report_matches_the_pilots_object_inventory():
     """
     if not _toolchain():
         return
-    code, out = _run("compile", "ov045/PoleLift")
+    code, out = _run("compile", "ov002/daObjAbuku_c")
     assert code == 0, out
     assert "sections (37):" in out
     # Anchored to the section-LISTING line shape ("[ NN] .text  type=SHT_..."), not
@@ -194,11 +198,14 @@ def test_compile_report_matches_the_pilots_object_inventory():
     n_text = len(re.findall(r"\[\s*\d+\] \.text\s+type=SHT_", out))
     n_data = len(re.findall(r"\[\s*\d+\] \.data\s+type=SHT_", out))
     assert n_text == 8, f"expected 8 .text sections, counted {n_text}"
-    assert n_data == 11, f"expected 11 .data sections, counted {n_data}"
-    assert "UNLICENSED function symbols (1)" in out
-    assert "UNLICENSED object/data symbols (11)" in out
-    assert (REPO / "build" / "tu" / "ov045-PoleLift" / "inventory.txt").is_file()
-    assert (REPO / "build" / "tu" / "ov045-PoleLift" / "PoleLift.o").is_file()
+    assert n_data == 10, f"expected 10 .data sections, counted {n_data}"
+    # No UNLICENSED *function* heading: the D2 this TU emits is licensed by the
+    # entry's compiler_only_output row, so the only unlicensed output left is the
+    # base-class typeinfo the key-function TU carries.
+    assert "UNLICENSED object/data symbols (6):" in out
+    assert "UNLICENSED function symbols" not in out
+    assert (REPO / "build" / "tu" / "ov002-daObjAbuku_c" / "inventory.txt").is_file()
+    assert (REPO / "build" / "tu" / "ov002-daObjAbuku_c" / "daObjAbuku_c.o").is_file()
 
 
 # ---------------------------------------------------------------- partial isolation
@@ -217,12 +224,12 @@ def test_partial_reproduces_the_production_per_function_objects():
     """
     if not _toolchain():
         return
-    code, out = _run("partial", "ov045/PoleLift", "--no-record", timeout=600)
+    code, out = _run("partial", "ov002/daObjAbuku_c", "--no-record", timeout=600)
     assert code == 0, out
-    for sym in ("_ZN8PoleLiftD1Ev", "_ZN8PoleLiftD0Ev",
-                "_ZN8PoleLift16CleanupResourcesEv", "_ZN8PoleLift6RenderEv",
-                "_ZN8PoleLift8BehaviorEv", "_ZN8PoleLift13InitResourcesEv",
-                "PoleLift_Spawn"):
+    for sym in ("_ZN12daObjAbuku_cD1Ev", "_ZN12daObjAbuku_cD0Ev",
+                "func_ov002_020b330c", "func_ov002_020b3344",
+                "_ZN12daObjAbuku_c8BehaviorEv", "_ZN12daObjAbuku_c13InitResourcesEv",
+                "daObjAbuku_c_Spawn"):
         line = next((l for l in out.splitlines() if f" {sym} " in l), None)
         assert line and "IDENTICAL" in line, (sym, line, out)
     assert "contribution equivalence: 7/7" in out
@@ -240,7 +247,7 @@ def test_partial_reproduces_the_production_per_function_objects():
 def test_promote_refuses_to_mutate_without_dry_run():
     """The mutating half of `promote` deletes enrolled src/ files and edits tracked
     delinks.txt. Until that lands it must refuse loudly, not half-execute."""
-    code, out = _run("promote", "ov045/PoleLift")
+    code, out = _run("promote", "ov002/daObjAbuku_c")
     assert code != 0
     assert "only --dry-run is implemented" in out
 
@@ -249,18 +256,18 @@ def test_promote_dry_run_refuses_a_tu_that_is_not_link_verified_but_still_explai
     """plan sec 7.7: promotion is refused unless every required gate is green -- and
     the dry run still has to PRINT the plan, because seeing what a promotion would do
     is the point of a dry run even when it would be refused."""
-    code, out = _run("promote", "ov045/PoleLift", "--dry-run")
+    code, out = _run("promote", "ov002/daObjAbuku_c", "--dry-run")
     assert code != 0, "text-verified is not enough to promote"
     assert "promotion would be REFUSED" in out
-    assert "git mv src_tu/actors/PoleLift.cpp" in out
-    assert "git rm src/_ZN8PoleLift6RenderEv.cpp" in out
+    assert "git mv src_tu/actors/daObjAbuku_c.cpp" in out
+    assert "git rm src/func_ov002_020b330c.cpp" in out
     assert "NOTHING IS WRITTEN BY THIS COMMAND" in out
     assert "DRY RUN COMPLETE" in out
     assert "COVERAGE GATE IS TU-AWARE" in out
     assert "function_snapshot() builds {stem: path}" not in out
     assert "tools/cpp_tu_compat.py" in out
-    assert (REPO / "src_tu" / "actors" / "PoleLift.cpp").is_file()
-    assert (REPO / "src" / "_ZN8PoleLift6RenderEv.cpp").is_file()
+    assert (REPO / "src_tu" / "actors" / "daObjAbuku_c.cpp").is_file()
+    assert (REPO / "src" / "func_ov002_020b330c.cpp").is_file()
 
 
 def test_splice_refuses_a_span_whose_legacy_entries_are_not_complete():
@@ -1229,7 +1236,7 @@ def test_partitioned_recorder_is_compact_orthogonal_and_preserves_verified_evide
 
 
 def test_partitioned_cli_modes_are_mutually_exclusive_before_any_build():
-    code, out = _run("linkcheck", "ov045/PoleLift", "--partial", "--partitioned")
+    code, out = _run("linkcheck", "ov002/daObjAbuku_c", "--partial", "--partitioned")
     assert code != 0
     assert "not allowed with argument" in out or "mutually exclusive" in out
 

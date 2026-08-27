@@ -835,7 +835,7 @@ p[0] = (int)_ZTV8Squasher + 8;     /* WRONG -- mwcc emits an extra ADD; the func
                                     * changes (999 word(s) differ) and the addend stays 0 */
 ```
 
-**The `+ 2` must be inside the cast.** `src_tu/actors/PoleLift.cpp` documents this in a
+**The `+ 2` must be inside the cast.** `src/actors/PoleLift.cpp` documents this in a
 17-line comment that predates this plan; roughly **88 of the 100 Tier-1 TUs** hand-store a
 vtable their own TU owns and will need the same edit. It is the most common reconcile step
 in the queue — a known step, not a blocker. *(An earlier revision of this section claimed
