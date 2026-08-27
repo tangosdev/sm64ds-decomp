@@ -1,8 +1,8 @@
-// NONMATCHING: register allocation only (div=37 at mwccarm 2004/b56). Size is exact
-// (0x4ac) and every instruction is the right instruction in the right order; the residue
-// is which register holds which value in the two bounding-box blocks and the stylus-down
-// flag. Logic verified against the ROM instruction by instruction. Counts as decompiled,
-// not matched. See runs/mg16/status/CRACK-020b46b0.md.
+// NONMATCHING: register allocation only (div=20 at mwccarm 2004/b56). The size is exact
+// (0x4ac) and every instruction is the right instruction in the right order. The residue
+// is which register holds which value in the two bounding-box blocks: eight loads in the
+// first, ten words in the second. Logic verified against the ROM instruction by
+// instruction. Counts as decompiled, not matched. See runs/mg16/status/CRACK-020b46b0.md.
 /* Title/menu per-element stylus hit test.
  *
  * func_ov007_020aed98 calls this once per element per frame, for all 24
@@ -104,7 +104,9 @@ void func_ov007_020b46b0(void* arg0, void* arg1)
                 int pos_x = *(s32*)(xform + 4);
                 int max_y = *(s32*)(rect + 0x10) + (pos_y >> 12);
                 int min_y = *(s32*)(rect + 8) + (pos_y >> 12);
-                int max_x = *(s32*)(rect + 0xc) + (pos_x >> 12);
+                int max_x = *(s32*)(rect + 0xc) + (pos_x >> 12u);  /* the u is load-bearing:
+                       spelling one of the two pos_x shifts differently is what
+                       gives mwcc the ROM's register assignment here (div 37->20) */
                 int min_x = *(s32*)(rect + 4) + (pos_x >> 12);
                 if (touching != 0
                     && (s32)*(u16*)(tp + 8) >= min_x && (s32)*(u16*)(tp + 8) <= max_x
