@@ -296,6 +296,20 @@ def module_of(symbol):
     return (m.group(1) or "arm9") if m else None
 
 
+def address_band(symbol):
+    """Four-hex-digit address band for an address-named symbol, else ``None``.
+
+    ``src/unnamed/<module>/`` is still the evidence-bearing grouping.  The band is a
+    browse-only shard below it, keeping the large arm9/ov006 buckets below GitHub's
+    practical directory-listing limit without claiming a semantic subsystem.
+    """
+    m = _UNNAMED_RE.match(symbol)
+    if not m:
+        return None
+    addr = symbol.rsplit("_", 1)[-1].lower()
+    return addr[:4]
+
+
 def class_of(symbol):
     """The class an Itanium-mangled or `<Class>_Spawn` symbol belongs to, else None.
 
@@ -340,6 +354,10 @@ def placement_for(symbol):
     mod = module_of(symbol)
     if mod is not None:
         d = SRC / UNNAMED_DIR / mod
+        band = address_band(symbol)
+        sharded = d / band if band is not None else None
+        if sharded is not None and sharded.is_dir():
+            return sharded
         return d if d.is_dir() else None
     cls = class_of(symbol)
     if cls:

@@ -133,6 +133,12 @@ class SrcPath(unittest.TestCase):
         self.assertEqual(SP.new_path_for("func_ov063_02116190", "c"),
                          SP.SRC / "unnamed/ov063/func_ov063_02116190.c")
 
+    def test_unnamed_prefers_an_existing_address_band(self):
+        self.write("unnamed/ov063/0211/func_ov063_021160c4.c")
+        self.assertEqual(SP.address_band("func_ov063_02116190"), "0211")
+        self.assertEqual(SP.new_path_for("func_ov063_02116190", "c"),
+                         SP.SRC / "unnamed/ov063/0211/func_ov063_02116190.c")
+
     def test_unnamed_stays_flat_until_its_module_is_migrated(self):
         self.write("unnamed/ov063/func_ov063_021160c4.c")
         self.assertEqual(SP.new_path_for("func_0205c410", "c"), SP.SRC / "func_0205c410.c")
