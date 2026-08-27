@@ -111,6 +111,11 @@
         "unlicensedSections": []
       },
       "symbolCheckNewVsBaseline": [],
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
       "linkerOutput": null
     }
   }
