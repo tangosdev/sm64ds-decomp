@@ -905,6 +905,14 @@
     "src/game/actors/SwitchPillar.cpp#_ZN12SwitchPillar6RenderEv": "tangosdev",
     "src/game/actors/SwitchPillar.cpp#_ZN12SwitchPillar8BehaviorEv": "tangosdev",
     "src/game/actors/SwitchPillar.cpp#_ZN12SwitchPillar13InitResourcesEv": "lunavyqo",
-    "src/game/actors/SwitchPillar.cpp#SwitchPillar_Spawn": "tangosdev"
+    "src/game/actors/SwitchPillar.cpp#SwitchPillar_Spawn": "tangosdev",
+    "src/game/actors/ClockPaintingPendulum.cpp#_ZN21ClockPaintingPendulumD1Ev": "tangosdev",
+    "src/game/actors/ClockPaintingPendulum.cpp#_ZN21ClockPaintingPendulumD0Ev": "andrewboudreau",
+    "src/game/actors/ClockPaintingPendulum.cpp#_ZN21ClockPaintingPendulum16CleanupResourcesEv": "andrewboudreau",
+    "src/game/actors/ClockPaintingPendulum.cpp#func_ov013_02111238": "tangosdev",
+    "src/game/actors/ClockPaintingPendulum.cpp#_ZN21ClockPaintingPendulum6RenderEv": "andrewboudreau",
+    "src/game/actors/ClockPaintingPendulum.cpp#_ZN21ClockPaintingPendulum8BehaviorEv": "lunavyqo",
+    "src/game/actors/ClockPaintingPendulum.cpp#_ZN21ClockPaintingPendulum13InitResourcesEv": "tangosdev",
+    "src/game/actors/ClockPaintingPendulum.cpp#ClockPaintingPendulum_Spawn": "tangosdev"
   }
 }
