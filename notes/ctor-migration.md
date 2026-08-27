@@ -145,7 +145,7 @@ Consequences, same as the D1/D0 arrangement:
   `objisolate` strips the sibling variant and any local helpers, exactly as
   it strips a real destructor's extra sections.
 - The sibling variant keeps its existing hand-written `.c` file
-  (`_ZN5ModelC2Ev.c` still provides C2). Do not delete it and do not write
+  (`_ZN5ModelC2Ev.cpp` still provides C2). Do not delete it and do not write
   the constructor twice — that is an ODR violation across TUs.
 - Eligibility rules hold unchanged. All four landed files pass
   `tools/eligible.py` with isolation on.

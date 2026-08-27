@@ -376,11 +376,11 @@ src/unnamed/ov065/0211/func_ov065_0211a45c.c:
     complete
     .text start:0x0211a45c end:0x0211a494
 
-src/game/actors/TtcConveyorBeltLarge/_ZN20TtcConveyorBeltLargeD1Ev.c:
+src/game/actors/TtcConveyorBeltLarge/_ZN20TtcConveyorBeltLargeD1Ev.cpp:
     complete
     .text start:0x0211a494 end:0x0211a4e8
 
-src/game/actors/TtcConveyorBeltLarge/_ZN20TtcConveyorBeltLargeD0Ev.c:
+src/game/actors/TtcConveyorBeltLarge/_ZN20TtcConveyorBeltLargeD0Ev.cpp:
     complete
     .text start:0x0211a4e8 end:0x0211a550
 

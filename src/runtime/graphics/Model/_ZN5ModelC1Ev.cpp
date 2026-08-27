@@ -23,7 +23,7 @@
  *
  * The compiler emits this TU's object with THREE functions: C1, an identical
  * C2, and a local Matrix4x3 destructor helper. objisolate keeps only the C1,
- * so _ZN5ModelC2Ev.c continues to provide the base-object variant, exactly as
+ * so _ZN5ModelC2Ev.cpp continues to provide the base-object variant, exactly as
  * a real ~Class() coexists with its hand-written D0.
  */
 #include "common.h"

@@ -69,7 +69,8 @@ extern "C" {
 // smoke_actor's `vcall0(actor, 9)` -- Itanium numbering for Render -- then
 // reads off the end of it and calls null. So the constructor runs for its
 // member initialization and the vptr is put back to the table the port
-// dispatches through, which is exactly what src/runtime/graphics/Model/_ZN5ModelC2Ev.c does on the
+// dispatches through, which is exactly what
+// src/runtime/graphics/Model/_ZN5ModelC2Ev.cpp does on the
 // line after its own base-constructor call.
 extern "C" void *_ZTV5Model[8];
 void _ZN5ModelC1Ev(void *self)
