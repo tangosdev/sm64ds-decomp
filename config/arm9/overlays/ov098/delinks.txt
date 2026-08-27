@@ -308,7 +308,7 @@ src/_ZN6Cannon13InitResourcesEv.cpp:
     complete
     .text start:0x0213b2d4 end:0x0213b43c
 
-src/Cannon_Spawn.c:
+src/Cannon_Spawn.cpp:
     complete
     .text start:0x0213b43c end:0x0213b47c
 
