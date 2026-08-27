@@ -1,8 +1,8 @@
 {
   "id": "ov002/WaterfallMist",
   "module": "ov002",
-  "source": "src_tu/actors/WaterfallMist.cpp",
-  "promoted_source": "src/actors/WaterfallMist.cpp",
+  "source": "src/game/actors/WaterfallMist.cpp",
+  "promoted_source": "src/game/actors/WaterfallMist.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -199,5 +199,6 @@
       "matchesStockRom": true
     },
     "scratch": "build/tu/ov002-WaterfallMist/link-partial (gitignored)"
-  }
+  },
+  "production_mode": "derived-text"
 }
