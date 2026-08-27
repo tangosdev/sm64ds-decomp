@@ -350,6 +350,14 @@ faces and nothing else; the fill count is 2310 at both ends.
     0 distinct AUTHORITY mismatches, 0 distinct CONSENSUS outliers
     exit 0
 
+  SUPERSEDED 2026-08-27 (run mg16 lane FIXD): the transcript above is a real
+  run and is left exactly as it was, but its census is no longer the tree's.
+  The parameter binding recovered 3326 fills this run never saw -- every slot
+  seated through a shared filler -- so the same command now reads 5702 fills
+  and 77%. Both numbers are honest about their own run; section 7's first
+  bullet carries the current one. Do not quote 2391 or 47% as the tree's
+  coverage.
+
   47% IS THE HONEST NUMBER AND IT IS NOT A PASS FOR THE OTHER 53%. It was
   35% until the undname bug above was fixed: the recovered abicheck read a
   precomputed _unres.txt / _unres_demangled.txt pair out of the disasm
@@ -1194,11 +1202,18 @@ Ranked by blast radius.
 7. LIMITS, STATED
 -----------------
 
-  * abicheck judges 47% of the fills it reads. The 132 NORETURN are
-    UNCHECKED, not passed. They are thunks whose tail-jump target is a flat
-    Itanium body carrying no parameter list in its spelling, so no demangler
-    closes them; the fix is to read the pop out of the target's own emitted
-    `ret`, which means disassembling beyond the hal objects.
+  * abicheck judges 77% of the fills it reads: 4413 of 5702, measured on
+    cons 2026-08-27 after the parameter binding below. It was 47% of 2376
+    when this section was first written, and BOTH HALVES of that moved for
+    the same reason -- the binding recovered 3326 fills that used to be
+    dropped silently, so the denominator grew and the share judged grew with
+    it. The older figure is left named rather than overwritten because a
+    coverage number with no census beside it is unreadable.
+    The 133 NORETURN are UNCHECKED, not passed. They are thunks whose
+    tail-jump target is a flat Itanium body carrying no parameter list in its
+    spelling, so no demangler closes them; the fix is to read the pop out of
+    the target's own emitted `ret`, which means disassembling beyond the hal
+    objects. 393 more rest on consensus alone and 682 DECLINE are exempt.
   * THE HEADER AUTHORITY STOPS AT SLOT 30, AND EXTENSION VIRTUALS USED TO FALL
     THROUGH IT SILENTLY. ActorBase.h declares 0..17 and Actor.h 18..30, so a
     slot a DERIVED class adds past the Actor tail has no key in
@@ -1327,6 +1342,27 @@ Ranked by blast radius.
     because there is none, and aritycheck has no census row because nothing
     defines the LHS name. The suite has three detectors and this instance is
     invisible to all three.
+  * AN ADJACENT TOOL, RECORDED HERE BECAUSE THIS BRANCH IS WHERE THE READING
+    HAPPENED: tools/resolve_crash.py HAS NO OUT-OF-MODULE GUARD. The port's
+    dumps print `offset = ExceptionAddress - GetModuleHandle(0)`, and for an
+    execute-at-stack fault -- the whole family the work above exists for --
+    that number is not an image offset at all. resolve_crash.py still resolves
+    it to "the symbol with the greatest RVA <= offset" and prints the result in
+    the same column, same format, same confidence as the genuine frames right
+    below it. On report 7447e46c it produced
+
+        offset +00a7f1bc -> ??__Fseen@?7??bind_from_vram@...@ntr@@YAXXZ@YAXXZ
+                            +0x83657c (ntr_2x:gx.cpp.obj)
+
+    An offset of 0x83657c is 8.6 MB past its symbol and cannot be a resolution,
+    but nothing in the output says so. port/tools/faultmap.py already reads the
+    PE's image size next to the map ("image size : 0x973000 from the PE next to
+    the map"), so the bound exists and resolve_crash.py simply does not use it.
+    It should refuse, or visibly mark, an offset past the end of the image or
+    absurdly far past its symbol. NOT FIXED in run mg16 lane FIXD; the lane read
+    around it by hand, which is exactly the reading a tool is supposed to spare
+    the next person.
+
   * A CLEAN ZERO-OPEN RUN DOES NOT MEAN A PATH WAS EXERCISED. Lane RF1
     measured this the hard way on section 6 items 1 and 2: with a probe in all
     four entry points, thirty-three separate drives -- two full level-entry ->
