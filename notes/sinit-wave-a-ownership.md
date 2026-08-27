@@ -180,7 +180,7 @@ and the three ROM constructor/destructor veneers have distinct generic names.
 
 ## Reproduction commands and gates
 
-The probe is `src_tu/research/sinit_wave_a_probes.cpp`; it is compile-disabled
+The probe is `notes/sinit-probes/wave_a.cpp`; it is compile-disabled
 unless exactly one `SINIT_PROBE_*` macro is supplied and is not listed by any
 manifest/delinks file.  Representative compile command (repeat with
 `SINIT_PROBE_KURUMAJIKU` and `SINIT_PROBE_MADPIANO`):
