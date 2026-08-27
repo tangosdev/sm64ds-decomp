@@ -1,14 +1,16 @@
 //cpp
 // @symbol _ZN5dCc_cC2Ev
-/* recovered: named members + shared header, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header */
+/* recovered: real C++ base-object constructor
+ *
+ * The ROM's three steps are the vptr store and then zeroing both intrusive-list
+ * links: an unlinked node. That is exactly what `dCc_c()` with no base class
+ * and two member initializers means, so the body handles the member initialization.
+ */
 #include "dCc_c.h"
-extern "C" {
-/* Sets the vptr, then zeroes both intrusive-list links: an unlinked node. */
-void _ZN5dCc_cC2Ev(struct dCc_c *self) {
-  *(int*)self=(int)data_0208e6ec;
-  *(int*)&self->prev=0;
-  *(int*)&self->next=0;
-}
+
+dCc_c::dCc_c()
+{
+    *(void**)this = data_0208e6ec;
+    prev = 0;
+    next = 0;
 }
