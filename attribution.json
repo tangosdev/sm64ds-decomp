@@ -819,6 +819,15 @@
     "src/game/actors/BlueCoinSwitch.cpp#_ZN14BlueCoinSwitch13InitResourcesEv": "lunavyqo",
     "src/game/actors/BlueCoinSwitch.cpp#func_ov002_020f1578": "tangosdev",
     "src/game/actors/BlueCoinSwitch.cpp#func_ov002_020f15b8": "ruspecial",
-    "src/game/actors/BlueCoinSwitch.cpp#BlueCoinSwitch_Spawn": "tangosdev"
+    "src/game/actors/BlueCoinSwitch.cpp#BlueCoinSwitch_Spawn": "tangosdev",
+    "src/game/actors/Exit.cpp#_ZN4ExitD1Ev": "andrewboudreau",
+    "src/game/actors/Exit.cpp#_ZN4ExitD0Ev": "andrewboudreau",
+    "src/game/actors/Exit.cpp#func_ov002_020b0a0c": "tangosdev",
+    "src/game/actors/Exit.cpp#_ZN4Exit16CleanupResourcesEv": "andrewboudreau",
+    "src/game/actors/Exit.cpp#_ZN4Exit16OnPendingDestroyEv": "andrewboudreau",
+    "src/game/actors/Exit.cpp#_ZN4Exit6RenderEv": "tangosdev",
+    "src/game/actors/Exit.cpp#_ZN4Exit8BehaviorEv": "andrewboudreau",
+    "src/game/actors/Exit.cpp#_ZN4Exit13InitResourcesEv": "andrewboudreau",
+    "src/game/actors/Exit.cpp#Exit_Spawn": "tangosdev"
   }
 }

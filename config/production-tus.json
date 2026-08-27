@@ -25,6 +25,7 @@
     "ov002/VirtualDoor",
     "ov002/Warp",
     "ov100/daObjPathLift_c",
-    "ov002/BlueCoinSwitch"
+    "ov002/BlueCoinSwitch",
+    "ov002/Exit"
   ]
 }
