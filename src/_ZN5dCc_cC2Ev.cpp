@@ -1,14 +1,12 @@
 //cpp
 // @symbol _ZN5dCc_cC2Ev
-/* recovered: named members + shared header, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header */
+/* C2, the base-subobject constructor. The vptr store is the compiler's; the
+ * body is only what the ROM's constructor actually writes -- both intrusive
+ * list links zeroed, an unlinked node. */
 #include "dCc_c.h"
-extern "C" {
-/* Sets the vptr, then zeroes both intrusive-list links: an unlinked node. */
-void _ZN5dCc_cC2Ev(struct dCc_c *self) {
-  *(int*)self=(int)data_0208e6ec;
-  *(int*)&self->prev=0;
-  *(int*)&self->next=0;
-}
+
+dCc_c::dCc_c()
+{
+    prev = 0;
+    next = 0;
 }
