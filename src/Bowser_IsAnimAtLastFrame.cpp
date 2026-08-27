@@ -12,6 +12,9 @@ struct Obj {
     Animation anim;
 };
 
-extern "C" bool Bowser_IsAnimAtLastFrame(Obj* o) {
+/* int, not bool: all 17 cross-TU declarations of this read it wide, and the
+   ROM writes the whole of r0 on both return paths (+0x3c mov r0,#1,
+   +0x48 mov r0,#0). A C++ bool here would return the answer in AL alone. */
+extern "C" int Bowser_IsAnimAtLastFrame(Obj* o) {
     return o->anim.Finished() || o->anim.WillHitFrame((unsigned short)(o->anim.GetFrameCount() - 1));
 }
