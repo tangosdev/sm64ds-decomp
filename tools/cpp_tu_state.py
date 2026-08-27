@@ -49,6 +49,23 @@ class StateError(RuntimeError):
     pass
 
 
+def configured_partitioned_tus(repo: pathlib.Path) -> list[str]:
+    """Manifest ids enabled by the default production ROM build."""
+    path = repo / "config" / "production-tus.json"
+    if not path.is_file():
+        return []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise StateError(f"{path} is unreadable: {exc}") from exc
+    rows = data.get("partitioned_tus") if data.get("schema_version") == 1 else None
+    if (not isinstance(rows, list)
+            or any(not isinstance(row, str) or not row for row in rows)
+            or len(rows) != len(set(rows))):
+        raise StateError(f"{path} has an invalid partitioned_tus registry")
+    return rows
+
+
 def dirty_authority_inputs(repo: pathlib.Path) -> list[str]:
     """Unstaged/untracked paths that would mix index and working-tree states."""
     try:
@@ -268,9 +285,15 @@ def collect(repo: pathlib.Path = REPO, *, progress_reader=None,
     shadow_present = 0
     production_promoted = 0
     promotion_mismatch = []
+    configured_partitioned = set(configured_partitioned_tus(repo))
+    production_partitioned = 0
+    production_partitioned_functions = 0
+    partitioned_mismatch = []
+    seen_entries = set()
     non_text_entries = 0
     for entry in entries:
         entry_id = entry.get("id", "<missing-id>")
+        seen_entries.add(entry_id)
         statuses[str(entry.get("status", "<missing-status>"))] += 1
         if entry.get("module"):
             modules.add(entry["module"])
@@ -285,14 +308,27 @@ def collect(repo: pathlib.Path = REPO, *, progress_reader=None,
         if any(section.get("name") != ".text" for section in sections):
             non_text_entries += 1
 
+        if entry_id in configured_partitioned:
+            partition_state = (entry.get("partitioned_link") or {}).get("state")
+            canonical = entry.get("source")
+            if (entry.get("production_mode") == "partitioned"
+                    and partition_state == "partitioned-link-verified"
+                    and canonical == entry.get("promoted_source")
+                    and canonical in tracked_set):
+                production_partitioned += 1
+                production_partitioned_functions += len(symbols)
+            else:
+                partitioned_mismatch.append(entry_id)
+
         promoted = entry.get("promoted_source")
-        if not promoted or promoted not in tracked_set:
+        if entry.get("status") != "promoted" or not promoted or promoted not in tracked_set:
             continue
         actual = {by_symbol.get((entry.get("module"), symbol)) for symbol in symbols}
         if symbols and actual == {promoted}:
             production_promoted += 1
         else:
             promotion_mismatch.append(entry_id)
+    partitioned_mismatch.extend(sorted(configured_partitioned - seen_entries))
 
     production_counts = _suffix_counts(production_tracked)
     production_counts["cpp_marker_missing"] = len(marker_missing)
@@ -345,6 +381,9 @@ def collect(repo: pathlib.Path = REPO, *, progress_reader=None,
             "entries_with_non_text_sections": non_text_entries,
             "production_promoted_entries": production_promoted,
             "promotion_mismatch_entries": sorted(promotion_mismatch),
+            "production_partitioned_entries": production_partitioned,
+            "production_partitioned_functions": production_partitioned_functions,
+            "partitioned_mismatch_entries": sorted(partitioned_mismatch),
         },
         "commands": {
             "refresh_this_note": "python tools/cpp_tu_state.py --write-note",
@@ -451,7 +490,7 @@ def render_markdown(report: dict) -> str:
         "Nonmatching drafts are shown as a separate, overlapping warning count, not a third",
         "partition to add to the migrated and unmigrated rows.",
         "",
-        "## Shadow TU reconstruction",
+        "## TU reconstruction and production",
         "",
         *_table([
             ("Tracked `src_tu/` source files", src["shadow"]["total"]),
@@ -459,17 +498,23 @@ def render_markdown(report: dict) -> str:
             ("Functions named by manifest entries", tu["manifest_functions"]),
             ("Unique functions named by the manifest", tu["unique_manifest_functions"]),
             ("Modules represented", tu["modules"]),
-            ("Manifest shadow sources present in git", tu["shadow_sources_present"]),
+            ("Manifest source files present in git", tu["shadow_sources_present"]),
             ("Entries licensing non-text sections", tu["entries_with_non_text_sections"]),
             ("Entries actually production-enrolled at `promoted_source`", tu["production_promoted_entries"]),
             ("Existing promotion paths that disagree with delinks", len(tu["promotion_mismatch_entries"])),
+            ("Default partitioned production TUs", tu["production_partitioned_entries"]),
+            ("Functions supplied by partitioned production TUs", tu["production_partitioned_functions"]),
+            ("Invalid configured partitioned production entries", len(tu["partitioned_mismatch_entries"])),
         ]),
         "",
         f"Manifest statuses: {status or '(none)'}.",
         "",
-        "`config/tu_manifest.d/` records reconstruction evidence and licensed ranges. It does",
-        "not enroll a TU. The production number above counts an entry as promoted only when every",
-        "manifest function is owned by that entry's tracked `promoted_source` in live delinks.",
+        "`config/tu_manifest.d/` records reconstruction evidence and licensed ranges; it does",
+        "not enroll a TU by itself. Direct",
+        "promotion is counted only when every manifest function is owned by the tracked",
+        "`promoted_source` in live delinks. `config/production-tus.json` is the separate",
+        "fail-closed authority for default partitioned production: those canonical TUs compile",
+        "once and supply exact derived text plus licensed compiler-emitted non-text output.",
         "",
         "## Production TU compatibility",
         "",
