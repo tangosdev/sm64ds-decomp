@@ -16,6 +16,7 @@ extern char _ZTVN5dPa_c7level_c10callback_cE[];
 extern void *data_0209ee74;
 extern "C" void _ZN5dPa_c7level_c16simpleCallback_cC1Ev(char *);
 extern "C" void _ZN5dPa_c7level_c16simpleCallback_cC2Ev(char *);
+extern "C" void _ZN5dPa_c7level_c15scaleCallback_cC1Ev(char *);
 
 namespace Particle {
 
@@ -34,10 +35,10 @@ SysTracker::SysTracker()
     *(void **)((char *)&mRippleCallback) = data_0208f444;
     _ZN5dPa_c7level_c16simpleCallback_cC1Ev((char *)&mCallback_79c);
     _ZN5dPa_c7level_c16simpleCallback_cC1Ev((char *)&mCallback_7a8);
-    func_020225fc((char *)&mCallback_7b4);
-    func_020225fc((char *)&mCallback_7c4);
-    func_020225fc((char *)&mCallback_7d4);
-    func_020225fc((char *)&mCallback_7e4);
+    _ZN5dPa_c7level_c15scaleCallback_cC1Ev((char *)&mCallback_7b4);
+    _ZN5dPa_c7level_c15scaleCallback_cC1Ev((char *)&mCallback_7c4);
+    _ZN5dPa_c7level_c15scaleCallback_cC1Ev((char *)&mCallback_7d4);
+    _ZN5dPa_c7level_c15scaleCallback_cC1Ev((char *)&mCallback_7e4);
     *(volatile void **)((char *)&mCallback_7f0) = _ZTVN5dPa_c7level_c10callback_cE;
     *(volatile void **)((char *)&mCallback_7f0) = data_0208f3f4;
     *(volatile void **)((char *)&mCallback_7f4) = _ZTVN5dPa_c7level_c10callback_cE;

@@ -1873,7 +1873,6 @@ src/func_02021c90.c	PURE-C	arm9				1		None		-
 src/func_02021cd4.c	PURE-C	arm9				1		None		-
 src/func_02022260.c	PURE-C	arm9				1		None		-
 src/func_02022298.c	PURE-C	arm9				1		None		-
-src/func_020225fc.c	PURE-C	arm9				1		None		-
 src/func_020226fc.c	WEAK-refs-only	arm9				1		None		-
 src/func_02022774.c	WEAK-refs-only	arm9				1		None		-
 src/func_020227ec.c	WEAK-refs-only	arm9				1		None		-
