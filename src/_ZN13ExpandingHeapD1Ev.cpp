@@ -1,13 +1,7 @@
-extern void *_ZTV13ExpandingHeap;
-extern void *_ZN4HeapD2Ev(void *self);
+//cpp
+// @symbol _ZN13ExpandingHeapD1Ev
+#include "ExpandingHeap.h"
 
-struct ExpandingHeap {
-    void *vtable;
-};
-
-void *_ZN13ExpandingHeapD1Ev(struct ExpandingHeap *self)
+ExpandingHeap::~ExpandingHeap()
 {
-    self->vtable = &_ZTV13ExpandingHeap;
-    _ZN4HeapD2Ev(self);
-    return self;
 }

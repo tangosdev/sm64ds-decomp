@@ -72,9 +72,15 @@ struct ExpandingHeap : Heap {
                                            why Heap::CreateExpandingHeapAllocator
                                            constructs it at the arena's start. */
 
-    /* Declared first to hold slots 0/1, and never defined -- see the same note
-       in include/Heap.h. The D0/D1 pair remains C files bound to their ROM
-       addresses. */
+    /* The constructor's initializer list is the ROM body: construct Heap, then
+       store the allocator pointer. No explicit vtable write belongs in source;
+       CodeWarrior installs this class's vptr between those two steps. */
+    ExpandingHeap(void* start, u32 size, Heap* root,
+                  ExpandingHeapAllocator* allocator);
+
+    /* Defined as an empty real destructor in the independently enrolled D1 and
+       D0 files. CodeWarrior supplies both this vptr transition and Heap's
+       teardown; objisolate retains the lifecycle variant owned by each file. */
     virtual ~ExpandingHeap();
 
     virtual void  VDestroy();                       /*  2 */
