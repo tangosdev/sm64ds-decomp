@@ -54,6 +54,9 @@
     "ov029/RotatingPlatformWdw",
     "ov029/WDW_Water",
     "ov029/CageLift",
-    "ov029/SwitchActivatedPlank"
+    "ov029/SwitchActivatedPlank",
+    "ov047/RickshawPlatformBs",
+    "ov019/IceSlideManager",
+    "ov014/ShutterBob"
   ]
 }

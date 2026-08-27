@@ -1,8 +1,8 @@
 {
   "id": "ov047/RickshawPlatformBs",
   "module": "ov047",
-  "source": "src_tu/actors/RickshawPlatformBs.cpp",
-  "promoted_source": "src/actors/RickshawPlatformBs.cpp",
+  "source": "src/game/actors/RickshawPlatformBs.cpp",
+  "promoted_source": "src/game/actors/RickshawPlatformBs.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -80,6 +80,162 @@
       "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 14 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
       "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "link-failed",
+      "scratch": "build/tu/ov047-RickshawPlatformBs/link-partial (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": false
+      },
+      "tuRange": null,
+      "objectAudit": {
+        "counts": null,
+        "emittedTextOrderIsRomAscending": null,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": null
+      },
+      "symbolCheckNewVsBaseline": null,
+      "rom": null,
+      "linkerOutput": "mwldarm.exe: Undefined : \"func_ov002_020b4b6c\"\nmwldarm.exe: Referenced from \"RickshawPlatformBs::CleanupResources()\" in \nmwldarm.exe: _ZN18RickshawPlatformBs16CleanupResourcesEv.o\nmwldarm.exe: Undefined : \"func_ov002_020b4d58\"\nmwldarm.exe: Referenced from \"RickshawPlatformBs::InitResources()\" in \nmwldarm.exe: _ZN18RickshawPlatformBs13InitResourcesEv.o\nmwldarm.exe: alert: Link failed. \n\nErrors caused tool to abort."
     }
-  }
+  },
+  "partial_isolation": {
+    "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+    "delinksChanged": false,
+    "derivedObjects": 5,
+    "contributionEquivalent": "5/5",
+    "comparedFields": [
+      "keptSection",
+      "keptBytes",
+      "relocs",
+      "defined",
+      "mapping",
+      "live",
+      "undefReferenced"
+    ],
+    "substitutedObjectPaths": [
+      "src/game/actors/RickshawPlatformBs/_ZN18RickshawPlatformBsD1Ev.cpp",
+      "src/game/actors/RickshawPlatformBs/_ZN18RickshawPlatformBsD0Ev.cpp",
+      "src/game/actors/RickshawPlatformBs/_ZN18RickshawPlatformBs16CleanupResourcesEv.cpp",
+      "src/game/actors/RickshawPlatformBs/_ZN18RickshawPlatformBs13InitResourcesEv.cpp",
+      "src/game/actors/StairsBs/StairsBs_Spawn.cpp"
+    ],
+    "extraInertImports": 65,
+    "extraImportsWithNoHome": [],
+    "result": "partial-link-verified",
+    "phases": {
+      "delink": true,
+      "lcf": true,
+      "compile": true,
+      "link": true,
+      "checkModules": true,
+      "checkSymbols": false,
+      "rom": true
+    },
+    "tuRange": {
+      "start": "0x02111510",
+      "end": "0x021116dc",
+      "differingBytes": 0,
+      "firstDiff": null
+    },
+    "moduleFidelityPassed": true,
+    "symbolCheckNewVsBaseline": [],
+    "rom": {
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "matchesStockRom": true
+    },
+    "scratch": "build/tu/ov047-RickshawPlatformBs/link-partial (gitignored)",
+    "state": "partial-link-verified",
+    "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
+    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+  },
+  "unlicensed_output_observed": {
+    "note": "Pinned-compiler inventory stamped by tools/promote_derived_tus.py --stamp-discarded-output before default production admission. These definitions are not ROM ownership claims; every build requires an exact inventory match, exact derived text contributions, exact modules, and an exact ROM.",
+    "toolchain": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "text": [
+      {
+        "symbol": "_ZN18RickshawPlatformBsD2Ev",
+        "size": "0x80",
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "data": [
+      {
+        "symbol": "_ZTI10dBgActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI13daObjDorifu_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI18RickshawPlatformBs",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "size": "0x8",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS10dBgActor_c",
+        "size": "0xd",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS13daObjDorifu_c",
+        "size": "0x10",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS18RickshawPlatformBs",
+        "size": "0x15",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "size": "0xa",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTV18RickshawPlatformBs",
+        "size": "0x88",
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "bss": [],
+    "init": [],
+    "rodata": [],
+    "ctor": []
+  },
+  "production_mode": "derived-text"
 }
