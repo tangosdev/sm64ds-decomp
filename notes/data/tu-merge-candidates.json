@@ -26639,8 +26639,8 @@
    "files": [
     "src/actors/Boo/_ZN3BooD1Ev.cpp",
     "src/actors/Boo/_ZN3BooD0Ev.cpp",
-    "src/actors/BooCage/_ZN7BooCageD1Ev.cpp",
-    "src/actors/BooCage/_ZN7BooCageD0Ev.c",
+    "src/actors/BooCage/_ZN11daTBasket_cD1Ev.cpp",
+    "src/actors/BooCage/_ZN11daTBasket_cD0Ev.cpp",
     "src/actors/BigBooIcon/_ZN11daTrsIcon_cD1Ev.cpp",
     "src/actors/BigBooIcon/_ZN11daTrsIcon_cD0Ev.cpp",
     "src/actors/Boo/_ZN3Boo16OnAimedAtWithEggEv.cpp",

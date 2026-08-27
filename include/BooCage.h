@@ -10,13 +10,13 @@
  *
  *     _ZN7fBase_cnwEj(0x380)      <- the allocation, so 0x380 IS the sizeof
  *     _ZN12dEnemyBase_cC2Ev                 <- the base, so this derives from dEnemyBase_c
- *     str  _ZTV7BooCage             <- and it is this class, not a relative
+ *     str  _ZTV11daTBasket_c         <- and it is this class, not a relative
  *     +0x110 _ZN7dCcAc_cC1Ev
  *     +0x144 _ZN10dBgCh_ActrC1Ev
  *     +0x300 _ZN5ModelC1Ev
  *     +0x350 _ZN11ShadowModelC1Ev
  *
- * `_ZN7BooCageD1Ev` (ov063:0x02115fc4) destroys the same four at the same offsets in
+ * `_ZN11daTBasket_cD1Ev` (ov063:0x02115fc4) destroys the same four at the same offsets in
  * exactly the reverse order and then chains to `_ZN12dEnemyBase_cD2Ev`. Construction order
  * forward, destruction order backward, same offsets, same types: that is a layout
  * read twice, not once.
@@ -35,6 +35,7 @@
 #include "ShadowModel.h"
 #include "dBgCh_Actr.h"
 
+/* Compatibility view for the five still-imported BooCage method symbols. */
 struct BooCage : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
@@ -42,7 +43,7 @@ struct BooCage : dEnemyBase_c {
     ShadowModel                  mShadowModel;          /* 0x350 */
     s32                          mParticleID;               /* 0x378 */
     s16                          mSoundTimer;               /* 0x37c */
-    u8                           unk_37e;               /* 0x37e */
+    u8                           mMuteSecretSound;      /* 0x37e -- nonzero skips Sound::PlaySecretSound */
     u8  pad_37f[0x1];
 
     /* --- vtable --- */

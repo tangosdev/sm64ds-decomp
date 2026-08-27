@@ -8,6 +8,10 @@
     "mitch.cairns": "mitchellcairns"
   },
   "overrides": {
+    "src/actors/BooCage/_ZN11daTBasket_cD0Ev.cpp": "tangosdev",
+    "src/actors/BooCage/_ZN11daTBasket_cD0Ev.cpp#_ZN7BooCageD0Ev": "tangosdev",
+    "src/actors/BooCage/_ZN11daTBasket_cD1Ev.cpp": "tangosdev",
+    "src/actors/BooCage/_ZN11daTBasket_cD1Ev.cpp#_ZN7BooCageD1Ev": "tangosdev",
     "src/actors/BigBooIcon/_ZN11daTrsIcon_cD0Ev.cpp": "tangosdev",
     "src/actors/BigBooIcon/_ZN11daTrsIcon_cD0Ev.cpp#_ZN10BigBooIconD0Ev": "tangosdev",
     "src/actors/BigBooIcon/_ZN11daTrsIcon_cD1Ev.cpp": "tangosdev",

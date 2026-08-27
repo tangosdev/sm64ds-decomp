@@ -1,7 +1,7 @@
 _ZN7daTrs_cD1Ev kind:function(arm,size=0x68) addr:0x02115ee0
 _ZN7daTrs_cD0Ev kind:function(arm,size=0x7c) addr:0x02115f48
-_ZN7BooCageD1Ev kind:function(arm,size=0x48) addr:0x02115fc4
-_ZN7BooCageD0Ev kind:function(arm,size=0x5c) addr:0x0211600c
+_ZN11daTBasket_cD1Ev kind:function(arm,size=0x48) addr:0x02115fc4
+_ZN11daTBasket_cD0Ev kind:function(arm,size=0x5c) addr:0x0211600c
 _ZN11daTrsIcon_cD1Ev kind:function(arm,size=0x24) addr:0x02116068
 _ZN11daTrsIcon_cD0Ev kind:function(arm,size=0x38) addr:0x0211608c
 _ZN7daTrs_c16OnAimedAtWithEggEv kind:function(arm,size=0x10) addr:0x021160c4
