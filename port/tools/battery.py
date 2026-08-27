@@ -25,8 +25,19 @@ Everything the merge gate runs, in order, stopping at the first failure:
                       never lower it)
   6. ptr_audit        port/tools/ptr_audit.py -- unhosted code pointers must
                       stay at zero
+  7. shipping config  THE OTHER CONFIGURATION. Steps 1-6 build and run exactly
+                      one of the two configurations this tree has -- build/port,
+                      the developer build -- and the binary that actually goes
+                      out is PORT_ROM_CLEAN against the static CRT, which is a
+                      different compile and a different link and breaks on its
+                      own. This arm configures and builds it into its own
+                      build/port-kit and fails the battery if configure, build
+                      or link fails, then runs that exe's headless selftest ONCE
+                      as a liveness check. --no-shipcfg opts out, loudly. The
+                      long form is at THE SHIPPING CONFIGURATION below
 
     python port/tools/battery.py [repo-root] [--linked-floor N] [--skip-build]
+                                 [--no-shipcfg]
 
 Exit 0 all green, 1 first red, with a one-line verdict per step so a log tail
 reads as a checklist.
@@ -189,15 +200,89 @@ census OFF one of these logs must take the FIRST [census] block, before the
 first "[lvl] change:" line -- taking the last one silently files the
 destination level's actors under the level that was asked for. Two blocks by
 itself is not the warp signal; a "[lvl] change:" line is.
+
+THE SHIPPING CONFIGURATION IS A SECOND CONFIGURATION, AND IT BREAKS ALONE.
+
+Steps 1 to 6 build and run build/port, the developer build. The binary that
+actually goes out is not that one. It is PORT_ROM_CLEAN against the static CRT,
+configured by tools/portable_kit/package_kit.ps1 into its own build/port-kit,
+and for four days in August 2026 it did not compile at all while this battery
+kept printing ALL GREEN.
+
+port/release_hardening.txt is the write-up. b91d34ed7 added the camera's
+optional mouse capture; three of its helpers call ClientToScreen_, which sat
+inside an #ifndef PORT_ROM_CLEAN fence; the shipping build stopped compiling
+with five C2039s in walk_window.cpp and nothing noticed. That note also names
+the reason nothing noticed, and the reason was this file:
+
+    nobody saw it for four days because nothing builds PORT_ROM_CLEAN
+    routinely (the battery cannot: under that flag the emitters zero every ROM
+    table and only walk_window/_hires link the loader, so every other smoke
+    goes red).
+
+THAT PARENTHESIS IS ABOUT RUNNING AND NOT ABOUT COMPILING, which is the whole
+reason this arm can exist. Under PORT_ROM_CLEAN the smoke exes still BUILD
+perfectly well; they fail when RUN, because their ROM tables are zeroed and
+they do not link the loader that would fill them back in. So the arm builds the
+shipping configuration and runs exactly one thing out of it -- walk_window, the
+only target that links the loader and the only target that ships. Nothing here
+ever runs a smoke exe out of build/port-kit, and adding one would reintroduce
+the exact red that kept this arm out of the battery for so long.
+
+ITS OWN BINARY DIRECTORY, NOT A RECONFIGURE OF build/port. The two
+configurations disagree about a preprocessor symbol that reaches most of the
+tree, so sharing one directory would throw away every object file on each
+alternation and make the battery unusable. package_kit.ps1 already keeps them
+apart for that reason and this arm uses the same directory it does, so the two
+share a cache instead of fighting over one.
+
+THE BMP HERE IS A LIVENESS CHECK, NOT A RASTER COMPARISON, and it is not
+compared against the developer build's BMP either. THE SELFTEST BMP TRACKS THE
+HOSTED-GLOBAL LAYOUT above is the long form: a comparison with meaning holds
+the whole hosted layout constant, base and span both, and a different
+configuration is a different compile and a different link, so it holds neither.
+port/tools/kit_smoke.py states the same rule for the same reason over the
+packaged exe. What is being asked of this run is only "did it reach the
+renderer and write a frame". Anyone who later turns this into a picture compare
+will be comparing two binaries that were never comparable.
+
+DEFAULT ON, BECAUSE AN OFF-BY-DEFAULT ARM CANNOT CATCH A SILENT BREAK. That is
+not a preference, it is the entire finding of the four days: the check that
+exists and is not run is worth what the check that does not exist is worth.
+--no-shipcfg opts a fast iteration loop out and prints a warning saying the
+shipping configuration was not built, so a green carrying that line cannot be
+read as the same green as one without it.
+
+LAST, AND THAT ORDERING IS LOAD-BEARING. A tree-wide breakage -- a crashing
+actor, a bad seat -- breaks both configurations, and the developer steps above
+diagnose it far better than this one can, with the skip and blocked machinery
+and a named level or scene. Running those first means every red this arm ever
+prints arrives on a tree whose developer configuration is already green, which
+makes it a CONFIGURATION-SPECIFIC red by construction. Moving this arm earlier
+would buy a few minutes of latency and spend the only thing that makes its
+failures easy to read.
 """
 
 import os
 import re
 import subprocess
 import sys
+import time
 
 SELFTEST_FRAMES = "300"
 STEP_TIMEOUT = 600
+
+# THE SHIPPING CONFIGURATION. Spelled exactly as
+# tools/portable_kit/package_kit.ps1 spells it, because two checks that
+# disagree about what the shipping build IS are worse than one -- the same
+# rule kit_smoke.py's ROM_CLEAN_MARK is kept spelled the same way for.
+SHIPCFG_BUILD = os.path.join("build", "port-kit")
+# A FROM-SCRATCH configure and build of a second whole configuration, so this
+# is not STEP_TIMEOUT. Once the directory exists ninja is incremental and the
+# arm costs a link; the leash is sized for the first run in a fresh worktree.
+SHIPCFG_BUILD_TIMEOUT = 5400
+SHIPCFG_RUN_TIMEOUT = 600
+SHIPCFG_BMP = "walk_window_selftest.bmp"
 
 TABLE_OPEN = "static const PortLevelDesc port_level_table[] = {"
 SCENE_TABLE_OPEN = "static const PortSceneClass port_scene_classes[] = {"
@@ -741,6 +826,196 @@ def scene_retire_probe(build, scene):
     return False, "bare rc=0"
 
 
+def shipcfg_script(root, build):
+    """Write the cmd that configures and builds the shipping configuration.
+
+    Toolchain located the way port/build-port.cmd locates it, switched the way
+    tools/portable_kit/package_kit.ps1 switches it, and the target is
+    walk_window ALONE for the reason the doctrine block gives. A file rather
+    than a command line because vcvars32.bat has to leave its environment
+    behind for cmake in the same shell, which a single subprocess call cannot
+    arrange.
+
+    Returns (script path, None), or (None, the vcvars path that is not there).
+    """
+    pf = os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")
+    vs = os.path.join(pf, "Microsoft Visual Studio", "2022", "BuildTools")
+    vcvars = os.path.join(vs, "VC", "Auxiliary", "Build", "vcvars32.bat")
+    cm = os.path.join(vs, "Common7", "IDE", "CommonExtensions", "Microsoft",
+                      "CMake")
+    if not os.path.isfile(vcvars):
+        return None, vcvars
+    # Under build/, which is gitignored, so the arm leaves nothing in the tree.
+    # A FIXED name rather than a temporary one: it is overwritten every run,
+    # and it is the honest answer to "what exactly did the arm build" for
+    # anyone reading a red.
+    path = os.path.join(root, "build", "shipcfg_build.cmd")
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="ascii", newline="") as f:
+        f.write(
+            "@echo off\r\n"
+            'call "%s" >nul || exit /b 1\r\n'
+            'set "PATH=%s\\CMake\\bin;%s\\Ninja;%%PATH%%"\r\n'
+            'cmake -S "%s" -B "%s" -G Ninja -DCMAKE_BUILD_TYPE=Release'
+            ' -DPORT_ROM_CLEAN=ON -DCMAKE_MAKE_PROGRAM="%s\\Ninja\\ninja.exe"'
+            ' -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded || exit /b 1\r\n'
+            'ninja -C "%s" walk_window\r\n'
+            % (vcvars, cm, cm, os.path.join(root, "port"), build, cm, build))
+    return path, None
+
+
+def shipcfg_missing_inputs(root):
+    """Which of port/kit_assets.txt's required paths this tree does not have.
+
+    THE LIST IS READ, NOT RESTATED HERE. port/kit_assets.txt is the tree's one
+    answer to "what does a run of the shipping exe need", and it is the list
+    kit_smoke.py already checks the packaged exe and the player's extractor
+    against in both directions. A copy of it in this file would be a second
+    answer, and it would go stale the first time the first one moved -- which
+    is the failure port/kit_assets.txt itself was created to end.
+
+    Three of the paths on it the arm's own BUILD produces: romdata.bin,
+    romdata.manifest and romdata.recipe.tsv are outputs of the
+    romblob_ready_ww target that walk_window depends on under PORT_ROM_CLEAN
+    (port/CMakeLists.txt). The rest is the NitroFS catalog -- files.tsv,
+    handles.tsv, nitrofs.tsv and the card's own FNT and FAT images -- and that
+    is SETUP rather than a build product: it comes from `python
+    tools/asset_catalog.py generate <rom>` and a fresh worktree has none of it.
+    gate.py already names that same state for the developer selftests.
+    """
+    path = os.path.join(root, "port", "kit_assets.txt")
+    if not os.path.isfile(path):
+        # No list is not "nothing is required", so do not answer as if it were.
+        return None
+    missing = []
+    with open(path, encoding="utf-8", errors="replace") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if not os.path.exists(os.path.join(root, *line.split("/"))):
+                missing.append(line)
+    return missing
+
+
+def shipcfg_env(root):
+    """The shipping exe's environment: an ALLOWLIST, not a pop-list.
+
+    selftest_env and scene_env above drop knobs one at a time, and their own
+    comments record what that costs -- a knob per lane, each one added after
+    somebody noticed an inherited value moving a row that was supposed to be
+    measuring something else. kit_smoke.py's launch_env answers the same
+    question the other way round for the packaged exe: keep nothing that starts
+    with SM64DS_, then set exactly what the run needs. A NEW arm can start from
+    that shape at no cost, and unlike a pop-list it cannot go stale.
+    """
+    env = {k: v for k, v in os.environ.items() if not k.startswith("SM64DS_")}
+    # Not optional the way it is for the developer build: this configuration
+    # has NO PORT_REPO_ROOT fallback (hal/asset_root_refuse.cpp), so without
+    # this the exe refuses to start, on purpose.
+    env["SM64DS_ASSET_ROOT"] = root
+    env["SM64DS_WINDOW_SELFTEST"] = SELFTEST_FRAMES
+    # For the reason the level selftests set it: without it a quarantined
+    # access violation freezes one actor, the run keeps ticking and exits 0. A
+    # liveness check that accepts that is not a liveness check.
+    env["SM64DS_FAULTS_FATAL"] = "1"
+    # A modal box would hang the battery until somebody clicked it.
+    # SM64DS_WINDOW_SELFTEST already implies this (tests/walk_window.cpp), so
+    # it is the second of two locks rather than the only one.
+    env["SM64DS_NO_DIALOG"] = "1"
+    # The window half of the quiet-desk plumbing, as everywhere else in this
+    # file. The console half (CREATE_NO_WINDOW) and the show-mode half
+    # (SW_SHOWMINNOACTIVE) are applied by run() itself, so this child is as
+    # silent as every other one the battery spawns.
+    env["SM64DS_NO_FOCUS"] = "1"
+    return env
+
+
+def shipcfg_arm(root):
+    """Build the shipping configuration, and prove the exe it makes still runs.
+
+    Returns True if the battery may go on. The long form -- why it exists, why
+    its own directory, why walk_window alone, and why the BMP is not compared
+    against anything -- is THE SHIPPING CONFIGURATION in this file's docstring.
+    """
+    build = os.path.join(root, SHIPCFG_BUILD)
+    script, no_vcvars = shipcfg_script(root, build)
+    if script is None:
+        print(f"shipcfg build: FAIL, no vcvars32.bat at {no_vcvars}")
+        return False
+
+    t0 = time.time()
+    try:
+        r = run(["cmd", "/c", script], root, timeout=SHIPCFG_BUILD_TIMEOUT)
+    except subprocess.TimeoutExpired:
+        print(f"shipcfg build: FAIL, configure and build did not finish "
+              f"inside {SHIPCFG_BUILD_TIMEOUT}s")
+        return False
+    secs = time.time() - t0
+    if r.returncode:
+        print(f"shipcfg build: FAIL rc={r.returncode} after {secs:.0f}s -- the "
+              f"SHIPPING configuration (PORT_ROM_CLEAN, static CRT) does not "
+              f"build. Every step above this line is green, so this is a break "
+              f"in the configuration that ships and in no other.")
+        print((r.stdout or "")[-3000:])
+        print((r.stderr or "")[-3000:])
+        return False
+    exe = os.path.join(build, "walk_window.exe")
+    if not os.path.isfile(exe):
+        # ninja can report success over a target that produced nothing if the
+        # link line is wrong in the right way, so ask the filesystem.
+        print(f"shipcfg build: FAIL, rc=0 but there is no walk_window.exe at "
+              f"{exe}")
+        return False
+    print(f"shipcfg build: ok, walk_window.exe linked in {SHIPCFG_BUILD} "
+          f"(PORT_ROM_CLEAN, static CRT, {secs:.0f}s)")
+
+    missing = shipcfg_missing_inputs(root)
+    if missing is None:
+        print("shipcfg selftest: NOT RUN, port/kit_assets.txt is not in this "
+              "tree, so what the run half needs cannot be established. The "
+              "BUILD half above ran.")
+        return True
+    if missing:
+        shown = ", ".join(missing[:3]) + (", ..." if len(missing) > 3 else "")
+        print(f"shipcfg selftest: NOT RUN, this tree is missing {len(missing)} "
+              f"of the inputs port/kit_assets.txt requires ({shown}). The "
+              f"BUILD half above ran, and it is the half that catches a "
+              f"shipping-config compile break; `python "
+              f"tools/asset_catalog.py generate <rom>` gets the run half too.")
+        return True
+
+    bmp = os.path.join(build, SHIPCFG_BMP)
+    if os.path.exists(bmp):
+        # Otherwise "a BMP is there" is satisfied by one an earlier run left,
+        # and the check passes over an exe that wrote nothing at all.
+        os.remove(bmp)
+    t0 = time.time()
+    try:
+        r = run([exe], build, env=shipcfg_env(root),
+                timeout=SHIPCFG_RUN_TIMEOUT)
+    except subprocess.TimeoutExpired:
+        print(f"shipcfg selftest: FAIL, the shipping exe did not finish "
+              f"{SELFTEST_FRAMES} frames inside {SHIPCFG_RUN_TIMEOUT}s")
+        return False
+    secs = time.time() - t0
+    if r.returncode:
+        print(f"shipcfg selftest: FAIL rc={r.returncode} -- the shipping "
+              f"configuration builds, but the exe it makes cannot complete a "
+              f"headless selftest.")
+        print(((r.stdout or "") + (r.stderr or ""))[-1500:])
+        return False
+    if not os.path.isfile(bmp):
+        print(f"shipcfg selftest: FAIL, rc=0 but no {SHIPCFG_BMP} was written "
+              f"-- the run exited cleanly without ever reaching the renderer.")
+        return False
+    print(f"shipcfg selftest: ok, rc=0 and {SHIPCFG_BMP} written "
+          f"({os.path.getsize(bmp):,} bytes, {secs:.0f}s) -- LIVENESS ONLY, "
+          f"not a raster comparison and not compared against the developer "
+          f"build's BMP (see THE SHIPPING CONFIGURATION above)")
+    return True
+
+
 def main():
     args = [a for a in sys.argv[1:]]
     floor = 0
@@ -751,6 +1026,13 @@ def main():
     skip_build = "--skip-build" in args
     if skip_build:
         args.remove("--skip-build")
+    # SEPARATE FROM --skip-build ON PURPOSE. --skip-build means "reuse what is
+    # in build/port"; it says nothing about the other configuration, which
+    # lives in another directory and has its own ninja cache. A lane that wants
+    # both fast paths asks for both.
+    skip_shipcfg = "--no-shipcfg" in args
+    if skip_shipcfg:
+        args.remove("--no-shipcfg")
     root = os.path.abspath(args[0] if args else ".")
     build = os.path.join(root, "build", "port")
 
@@ -921,6 +1203,19 @@ def main():
         return 1
     print("ptr_audit: 0 unhosted code pointers")
 
+    # THE SHIPPING CONFIGURATION, LAST. Everything above tests build/port, the
+    # developer build; this is the other one, the one that goes out. It is last
+    # so that a tree-wide breakage is diagnosed by the steps above -- which name
+    # a level or a scene and carry the skip machinery -- and every red this arm
+    # prints therefore lands on a tree whose developer configuration is already
+    # green. That makes its failures configuration-specific by construction.
+    if skip_shipcfg:
+        print("shipcfg: SKIPPED by --no-shipcfg -- the SHIPPING configuration "
+              "(PORT_ROM_CLEAN, static CRT) was NOT built or run by this "
+              "battery, so a break in it is not covered by this green.")
+    elif not shipcfg_arm(root):
+        return 1
+
     # gate.py tails this output, so the debt is restated where a tail will see
     # it rather than only next to the level it belongs to.
     if LEVEL_SKIPS:
@@ -947,6 +1242,12 @@ def main():
     if scene_unblocked:
         print("skips: BLOCK RETIRED and removable -- " +
               ", ".join(f"scene {sc}" for sc in scene_unblocked))
+    # An opted-out arm is debt like any other skip, so it is restated on the
+    # line gate.py's BATTERY_CARRY tails. A green carrying this line and a
+    # green without it are not the same green, and a reader of a tail should
+    # not have to know that to see the difference.
+    if skip_shipcfg:
+        print("skips: the SHIPPING configuration was NOT built (--no-shipcfg)")
 
     print("battery: ALL GREEN")
     return 0
