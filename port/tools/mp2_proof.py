@@ -1,0 +1,469 @@
+#!/usr/bin/env python3
+"""THE MP2 PROOF LADDER, one command. Run mg16, lane MP2.
+
+Five rungs, in order, each one a verdict line. Nothing here launches a visible
+window: every child is spawned through the same quiet plumbing
+port/tools/battery.py uses, and the reason is a standing owner order after a
+test window appeared over a live game.
+
+  1. SOLO REGRESSION   knob off, the level-1 selftest is unchanged against a
+                       stored baseline; knob on and solo, the MP1 report line
+                       still says transport=solo.
+  2. JOIN              two headless instances, parent and child, both rc 0,
+                       connected on both sides, players=2, roles right, and the
+                       exchange counter advancing on BOTH.
+  3. DATA CROSSING     a scripted stylus/pad value injected on one side shows up
+                       in the OTHER side's slot report, both directions.
+  4. VS SCENE          both instances direct-booted into the scene the fan-out
+                       call site serves, a full scripted run, FAULTS_FATAL=1 and
+                       no UNHANDLED fault.
+  5. TWO-WINDOW SCRIPT the milestone script's mechanics, spawned MINIMIZED.
+                       THE VISIBLE COLD START IS NOT RUN HERE. It belongs to the
+                       coordinator with the owner present.
+
+    python port/tools/mp2_proof.py [repo-root] [--only N] [--out DIR]
+
+Exit 0 all green, 1 at the first red.
+
+WHY THE INSTANCES ARE SEPARATED THREE WAYS. Two copies of this game on one
+machine collide on three different kinds of path, and each gets its own answer
+(the long version is in port/hal/instance_tag.h):
+  working directory  -- separates playlog/ and the selftest BMP
+  TEMP               -- separates the %TEMP%\\sm64ds-crashes dir, which every
+                        boot PRUNES TO FOUR, so a shared one has instance two
+                        deleting instance one's dumps
+  SM64DS_INSTANCE    -- separates the four files that live NEXT TO THE EXE and
+                        which no cwd or TEMP can separate: startup_error.txt,
+                        crash.txt, exit.txt and savestate.bin
+"""
+
+import os
+import re
+import subprocess
+import sys
+import time
+import hashlib
+
+# ---------------------------------------------------------------------------
+# THE QUIET LAUNCH. Copied in shape from port/tools/battery.py's NO_CONSOLE /
+# SI_MIN pair, and it is not optional here. CREATE_NO_WINDOW silences the
+# console; SW_SHOWMINNOACTIVE starts the game window minimized and unactivated;
+# SM64DS_NO_FOCUS=1 (set in env_base below) is walk_window's own half, the
+# WS_EX_NOACTIVATE + SW_SHOWNOACTIVATE pair. All three, every launch.
+# ---------------------------------------------------------------------------
+NO_CONSOLE = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+if hasattr(subprocess, "STARTUPINFO"):
+    SI_MIN = subprocess.STARTUPINFO()
+    SI_MIN.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    SI_MIN.wShowWindow = 7          # SW_SHOWMINNOACTIVE
+else:
+    SI_MIN = None
+
+SELFTEST_FRAMES = "300"
+# The MP1 review's count. 300 is a blind count for this layout class; the
+# docstring that justifies a BMP comparison was citing a 296-frame measurement,
+# so rung 1 compares BOTH and treats a disagreement at either as a red.
+LAYOUT_FRAMES = "296"
+
+PORT_BASE = 51765               # kCommsLoopbackPortBase
+
+
+def sha(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        h.update(f.read())
+    return h.hexdigest()[:16].upper()
+
+
+def env_base(root, run_dir, instance):
+    e = dict(os.environ)
+    # Never inherit a lane's knobs into a proof run: the same discipline
+    # battery.py keeps, and for the same reason.
+    for k in list(e):
+        if k.startswith("SM64DS_"):
+            e.pop(k)
+    e["SM64DS_ASSET_ROOT"] = root
+    e["SM64DS_FAULTS_FATAL"] = "1"
+    e["SM64DS_NO_DIALOG"] = "1"
+    e["SM64DS_NO_FOCUS"] = "1"          # the game-window half of the quiet rule
+    e["SM64DS_INSTANCE"] = instance
+    e["TEMP"] = os.path.join(run_dir, "tmp")
+    e["TMP"] = e["TEMP"]
+    os.makedirs(e["TEMP"], exist_ok=True)
+    return e
+
+
+def spawn(exe, cwd, env, logpath):
+    log = open(logpath, "wb")
+    # BOTH streams into one log. The selftest's verdict line -- "selftest: N
+    # frames, pos=(x, y, z)" -- goes to STDOUT while every [comms:*] and
+    # [layout] line goes to stderr, and rung 1 needs both.
+    p = subprocess.Popen([exe], cwd=cwd, env=env,
+                         stdout=log, stderr=subprocess.STDOUT,
+                         creationflags=NO_CONSOLE, startupinfo=SI_MIN)
+    p._logfile = log
+    return p
+
+
+def finish(p, timeout):
+    try:
+        rc = p.wait(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        p.kill()
+        rc = -9
+    p._logfile.close()
+    return rc
+
+
+def run_one(exe, cwd, env, logpath, timeout=600):
+    return finish(spawn(exe, cwd, env, logpath), timeout)
+
+
+def text(path):
+    with open(path, "r", encoding="utf-8", errors="replace") as f:
+        return f.read()
+
+
+VERDICTS = []
+
+
+def verdict(ok, line):
+    VERDICTS.append(("PASS" if ok else "FAIL") + "  " + line)
+    print(VERDICTS[-1], flush=True)
+    return ok
+
+
+# ---------------------------------------------------------------------------
+# RUNG 1 -- SOLO REGRESSION
+# ---------------------------------------------------------------------------
+# The pre-change measurement, taken in this same build directory before the
+# transport existed or was in the link. runs/mg16/out/MP2/r1_baseline_prechange.txt
+# carries the same numbers and the rule for reading a diff.
+PRECHANGE = {
+    "296": dict(pos="-4915200, 2949510, 11429316",
+                layout="dsstate=00C9B000..00D86534",
+                bmp="28B27CBCC0E5261F"),
+    "300": dict(pos="-4915200, 2929633, 11141348",
+                layout="dsstate=00C9B000..00D86534",
+                bmp="9129CE6CF3A229D4"),
+}
+
+
+def rung1(root, exe, out):
+    ok = True
+    base = {}
+    for frames in (LAYOUT_FRAMES, SELFTEST_FRAMES):
+        d = os.path.join(out, "r1_solo_%s" % frames)
+        os.makedirs(os.path.join(d, "tmp"), exist_ok=True)
+        env = env_base(root, d, "r1")
+        env["SM64DS_WINDOW_SELFTEST"] = frames
+        log = os.path.join(d, "run.log")
+        rc = run_one(exe, d, env, log)
+        t = text(log)
+        bmp = os.path.join(d, "walk_window_selftest.bmp")
+        pos = re.search(r"^selftest: \d+ frames, pos=\(([^)]*)\)", t, re.M)
+        lay = re.search(r"^\[layout\] (dsstate=\S+)", t, re.M)
+        base[frames] = dict(
+            rc=rc,
+            pos=pos.group(1) if pos else "MISSING",
+            layout=lay.group(1) if lay else "MISSING",
+            bmp=sha(bmp) if os.path.exists(bmp) else "MISSING")
+        want = PRECHANGE[frames]
+        same_pos = base[frames]["pos"] == want["pos"]
+        same_lay = base[frames]["layout"] == want["layout"]
+        same_bmp = base[frames]["bmp"] == want["bmp"]
+        # POSITION IS THE REGRESSION SIGNAL. The BMP is only evidence when the
+        # layout matched: battery.py's doctrine is that the rendered frame
+        # depends on the ABSOLUTE ADDRESS of hosted globals, so a moved
+        # .dsstate base changes the picture without anything having regressed.
+        # A moved layout is therefore reported, not failed, and the verdict
+        # falls back to position -- which is game state and moves for no
+        # layout reason.
+        ok &= verdict(rc == 0 and same_pos and (same_bmp or not same_lay),
+                      "rung1 solo knob-off %s frames rc=%d pos=(%s) %s | "
+                      "pos %s, layout %s, bmp %s%s"
+                      % (frames, rc, base[frames]["pos"], base[frames]["layout"],
+                         "SAME" if same_pos else "CHANGED",
+                         "SAME" if same_lay else "MOVED",
+                         "SAME" if same_bmp else "DIFFERS",
+                         "" if same_lay else
+                         "  (layout moved, so the BMP is not comparable and the "
+                         "verdict rests on pos)"))
+
+    # knob ON, still solo: the MP1 report must be exactly what MP1 measured.
+    d = os.path.join(out, "r1_fanout")
+    os.makedirs(os.path.join(d, "tmp"), exist_ok=True)
+    env = env_base(root, d, "r1f")
+    env["SM64DS_WINDOW_SELFTEST"] = SELFTEST_FRAMES
+    env["SM64DS_COMMS_FANOUT"] = "1"
+    env["SM64DS_COMMS_REPORT"] = "1"
+    log = os.path.join(d, "run.log")
+    rc = run_one(exe, d, env, log)
+    t = text(log)
+    # The SUMMARY line specifically. A bare [comms:level] match would take the
+    # last of the four per-slot rows the same tag prints every frame.
+    line = ""
+    for m in re.finditer(r"^\[comms:level\] transport=.*$", t, re.M):
+        line = m.group(0)
+    want = ("transport=solo (no transport)" in line and "players=1" in line
+            and "role=0" in line and "exchanges=0" in line
+            and "connected=no" in line)
+    # And the carrier must be SILENT: no transport is installed, so neither of
+    # MP2's two extra report lines may appear.
+    quiet = "[loopback:" not in t and "[lockstep:" not in t
+    ok &= verdict(rc == 0 and want and quiet,
+                  "rung1 solo knob-on rc=%d quiet=%s | %s"
+                  % (rc, quiet, line or "NO [comms:level] LINE"))
+    with open(os.path.join(out, "r1_baseline.txt"), "w") as f:
+        for k, v in base.items():
+            f.write("%s frames rc=%d pos=(%s) %s bmp=%s\n"
+                    % (k, v["rc"], v["pos"], v["layout"], v["bmp"]))
+    return ok
+
+
+# ---------------------------------------------------------------------------
+# RUNGS 2/3/4 -- TWO INSTANCES
+# ---------------------------------------------------------------------------
+def two_instances(root, exe, out, name, frames, extra_p=None, extra_c=None,
+                  port=PORT_BASE):
+    """Launch parent and child TOGETHER, minimized, and return both logs."""
+    dp = os.path.join(out, name + "_p1")
+    dc = os.path.join(out, name + "_p2")
+    for d in (dp, dc):
+        os.makedirs(os.path.join(d, "tmp"), exist_ok=True)
+
+    ep = env_base(root, dp, "p1")
+    ec = env_base(root, dc, "p2")
+    for e, role in ((ep, "parent"), (ec, "child")):
+        e["SM64DS_WINDOW_SELFTEST"] = frames
+        e["SM64DS_COMMS_ROLE"] = role
+        e["SM64DS_COMMS_PORT"] = str(port)
+        e["SM64DS_COMMS_FANOUT"] = "1"
+        e["SM64DS_COMMS_REPORT"] = "1"
+    for k, v in (extra_p or {}).items():
+        ep[k] = v
+    for k, v in (extra_c or {}).items():
+        ec[k] = v
+
+    lp = os.path.join(dp, "run.log")
+    lc = os.path.join(dc, "run.log")
+    # Parent first, as the DS does: the child needs a door to knock on. The gap
+    # is small on purpose -- both boots take the same few seconds, so starting
+    # them close keeps their frame loops overlapping.
+    pp = spawn(exe, dp, ep, lp)
+    time.sleep(0.4)
+    pc = spawn(exe, dc, ec, lc)
+    rp = finish(pp, 900)
+    rc_ = finish(pc, 900)
+    return rp, rc_, text(lp), text(lc)
+
+
+def last(pattern, t):
+    got = ""
+    for m in re.finditer(pattern, t, re.M):
+        got = m.group(0)
+    return got
+
+
+def field(line, key, cast=str):
+    m = re.search(r"\b%s=([^\s]+)" % re.escape(key), line)
+    return cast(m.group(1)) if m else None
+
+
+def rung2(root, exe, out):
+    rp, rc, tp, tc = two_instances(root, exe, out, "r2_join", SELFTEST_FRAMES)
+    lp = last(r"^\[comms:level\] transport=.*$", tp)
+    lc = last(r"^\[comms:level\] transport=.*$", tc)
+    kp = last(r"^\[lockstep:level\] .*$", tp)
+    kc = last(r"^\[lockstep:level\] .*$", tc)
+
+    ok = True
+    ok &= verdict(rp == 0 and rc == 0,
+                  "rung2 join exit codes parent=%d child=%d" % (rp, rc))
+
+    # ASSERT ON THE CONNECTED WINDOW, NOT ON THE LAST LINE, and the reason is a
+    # real behaviour rather than a convenience. Both instances run a FIXED frame
+    # count, so whichever finishes first leaves while the other is still
+    # ticking. The one left behind then spins its wait bound out and drops the
+    # session to solo exactly the way src/func_0203ea5c.c:487 drops it --
+    # role goes back to 0. That is the ROM's own shutdown behaviour working, so
+    # the proof looks for a frame where the session was actually up.
+    def joined(t, role, slot, link):
+        for m in re.finditer(r"^\[comms:level\] transport=loopback.*$", t, re.M):
+            l = m.group(0)
+            if (field(l, "connected") == "yes" and field(l, "players") == "2"
+                    and field(l, "role") == role and field(l, "slot") == slot
+                    and field(l, "link") == link):
+                return l
+        return ""
+
+    jp = joined(tp, "1", "0", "3")
+    jc = joined(tc, "2", "1", "4")
+    ok &= verdict(bool(jp), "rung2 join PARENT | " + (jp or "NO FULLY-JOINED "
+                  "FRAME; last was: " + (lp or "no report line")))
+    ok &= verdict(bool(jc), "rung2 join CHILD  | " + (jc or "NO FULLY-JOINED "
+                  "FRAME; last was: " + (lc or "no report line")))
+    ep = field(lp, "exchanges", int) or 0
+    ec = field(lc, "exchanges", int) or 0
+    rp_ = field(lp, "rounds", int) or 0
+    rc2 = field(lc, "rounds", int) or 0
+    ok &= verdict(ep > 1 and ec > 1 and rp_ > 1 and rc2 > 1,
+                  "rung2 exchange counters advancing on BOTH: parent "
+                  "exchanges=%d rounds=%d, child exchanges=%d rounds=%d"
+                  % (ep, rp_, ec, rc2))
+    ok &= verdict(bool(kp) and bool(kc),
+                  "rung2 lockstep parent | %s ;; child | %s"
+                  % (kp or "NONE", kc or "NONE"))
+    print("      final lines (after the first instance exited, so a drop to "
+          "solo here is func_0203ea5c:487 working):")
+    print("        P1 " + (lp or "none"))
+    print("        P2 " + (lc or "none"))
+    return ok
+
+
+STYLUS = re.compile(r"^\[comms:level\]\s+slot(\d) frame=(-?\d+) "
+                    r"stylus=\{(\d+),(\d+),(\d+)\} flag=([0-9a-f]+) "
+                    r"key=([0-9a-f]+)", re.M)
+
+
+def slot_rows(t, slot):
+    """Every reported row for `slot`, newest last."""
+    return [m for m in STYLUS.finditer(t) if int(m.group(1)) == slot]
+
+
+def rung3(root, exe, out):
+    """Inject a known value on one side; find it in the OTHER side's slot."""
+    ok = True
+    # CHILD -> PARENT. The child stuffs the ROM's own local-record fields the
+    # way src/func_0203df40.c:31-39 does; the parent must see them in slot 1.
+    ckey, cx, cy, ct = 0x0041, 0x5A, 0x2C, 1
+    rp, rc, tp, tc = two_instances(
+        root, exe, out, "r3_c2p", SELFTEST_FRAMES,
+        extra_c={"SM64DS_COMMS_INJECT":
+                 "key=0x%x,x=%d,y=%d,touch=%d" % (ckey, cx, cy, ct)})
+    rows = slot_rows(tp, 1)
+    hit = [m for m in rows
+           if int(m.group(7), 16) == ckey and int(m.group(3)) == cx
+           and int(m.group(4)) == cy and int(m.group(5)) == ct]
+    ok &= verdict(rp == 0 and rc == 0 and len(hit) > 0,
+                  "rung3 CHILD->PARENT injected key=0x%04x stylus={%d,%d,%d}: "
+                  "parent slot1 carried it in %d of %d reported frames | %s"
+                  % (ckey, cx, cy, ct, len(hit), len(rows),
+                     hit[-1].group(0).strip() if hit else "NEVER SEEN"))
+
+    # PARENT -> CHILD, the reverse, with a different value so a stale log
+    # cannot pass for a fresh one.
+    pkey, px, py, pt = 0x0802, 0x11, 0x77, 1
+    rp, rc, tp, tc = two_instances(
+        root, exe, out, "r3_p2c", SELFTEST_FRAMES,
+        extra_p={"SM64DS_COMMS_INJECT":
+                 "key=0x%x,x=%d,y=%d,touch=%d" % (pkey, px, py, pt)})
+    rows = slot_rows(tc, 0)
+    hit = [m for m in rows
+           if int(m.group(7), 16) == pkey and int(m.group(3)) == px
+           and int(m.group(4)) == py and int(m.group(5)) == pt]
+    ok &= verdict(rp == 0 and rc == 0 and len(hit) > 0,
+                  "rung3 PARENT->CHILD injected key=0x%04x stylus={%d,%d,%d}: "
+                  "child slot0 carried it in %d of %d reported frames | %s"
+                  % (pkey, px, py, pt, len(hit), len(rows),
+                     hit[-1].group(0).strip() if hit else "NEVER SEEN"))
+    return ok
+
+
+def rung4(root, exe, out):
+    """A full scripted run with FAULTS_FATAL=1 and no unhandled fault.
+
+    THE SCENE. The fan-out call site (walk_window.cpp, immediately after the
+    comms tick) is on the LEVEL path, so what it serves is a level boot, and
+    level 1 is the one every battery row already treats as the reference. It is
+    also the VS-capable one in the sense that matters here: hal/level_boot.cpp
+    seats data_0209f344 from VS_STAR_SPAWN_ORDERS indexed by data_020a1040, the
+    VS local-comms record, which is the record this lane now fills.
+    """
+    frames = "600"
+    rp, rc, tp, tc = two_instances(root, exe, out, "r4_vs", frames,
+                                   port=PORT_BASE + 8)
+    ok = True
+    for who, t, r in (("parent", tp, rp), ("child", tc, rc)):
+        unh = t.count("FAULT code")
+        lk = last(r"^\[lockstep:level\] .*$", t)
+        rounds = field(lk, "rounds", int) or 0
+        touts = field(lk, "timeouts", int) or 0
+        ok &= verdict(r == 0 and unh == 0 and rounds > 100,
+                      "rung4 VS %-6s rc=%d unhandled=%d over %s frames | %s"
+                      % (who, r, unh, frames, lk or "NO LOCKSTEP LINE"))
+        if touts:
+            print("      note: %s reported %d wait-bound timeouts" % (who, touts))
+    return ok
+
+
+def rung5(root, out):
+    """The two-window script's MECHANICS, minimized.
+
+    THE VISIBLE COLD START IS DELIBERATELY NOT RUN. A test window appeared over
+    the owner's live game, and the standing order since is that every launch
+    this lane makes is minimized and unactivated. The script therefore carries a
+    -Minimized switch, this rung exercises exactly that path, and the visible
+    run belongs to the coordinator with the owner present.
+    """
+    script = os.path.join(root, "port", "tools", "mp2_two_windows.ps1")
+    d = os.path.join(out, "r5_script")
+    os.makedirs(d, exist_ok=True)
+    log = os.path.join(d, "run.log")
+    cmd = ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass",
+           "-File", script, "-Minimized", "-Frames", "600",
+           "-Root", root, "-RunDir", d]
+    with open(log, "wb") as f:
+        p = subprocess.run(cmd, cwd=d, stdout=f, stderr=subprocess.STDOUT,
+                           creationflags=NO_CONSOLE, startupinfo=SI_MIN,
+                           timeout=900)
+    t = text(log)
+    ok = verdict(p.returncode == 0 and "MP2 TWO-WINDOW: CONNECTED" in t,
+                 "rung5 two-window script (MINIMIZED variant) rc=%d | %s"
+                 % (p.returncode,
+                    last(r"^MP2 TWO-WINDOW: .*$", t) or "NO VERDICT LINE"))
+    return ok
+
+
+def main(argv):
+    root = os.path.abspath(argv[0] if argv and not argv[0].startswith("-")
+                           else ".")
+    only = None
+    out = os.path.join(root, "runs", "mg16", "out", "MP2")
+    i = 0
+    while i < len(argv):
+        if argv[i] == "--only":
+            i += 1
+            only = int(argv[i])
+        elif argv[i] == "--out":
+            i += 1
+            out = os.path.abspath(argv[i])
+        i += 1
+    os.makedirs(out, exist_ok=True)
+    exe = os.path.join(root, "build", "port", "walk_window.exe")
+    if not os.path.exists(exe):
+        print("no walk_window.exe at " + exe)
+        return 1
+
+    rungs = [("1", lambda: rung1(root, exe, out)),
+             ("2", lambda: rung2(root, exe, out)),
+             ("3", lambda: rung3(root, exe, out)),
+             ("4", lambda: rung4(root, exe, out)),
+             ("5", lambda: rung5(root, out))]
+    ok = True
+    for n, fn in rungs:
+        if only is not None and n != str(only):
+            continue
+        t0 = time.time()
+        ok &= fn()
+        print("  (rung %s took %.0fs)" % (n, time.time() - t0), flush=True)
+        if not ok:
+            break
+    with open(os.path.join(out, "verdicts.txt"), "w") as f:
+        f.write("\n".join(VERDICTS) + "\n")
+    print("\n" + ("ALL GREEN" if ok else "RED"))
+    return 0 if ok else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
