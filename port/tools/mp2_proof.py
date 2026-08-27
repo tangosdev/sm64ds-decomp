@@ -92,6 +92,24 @@ def env_base(root, run_dir, instance):
     e["SM64DS_FAULTS_FATAL"] = "1"
     e["SM64DS_NO_DIALOG"] = "1"
     e["SM64DS_NO_FOCUS"] = "1"          # the game-window half of the quiet rule
+    # run mg16 lane MP3: THE THIRD HALF OF THE QUIET RULE, which was missing.
+    # The owner's standing order is nothing visible, nothing focused and NOTHING
+    # AUDIBLE on a test launch. This file had the first two (CREATE_NO_WINDOW +
+    # SW_SHOWMINNOACTIVE above, SM64DS_NO_FOCUS here) and never silenced the
+    # audio, so every rung that reached a level was free to make noise on his
+    # machine. Set here rather than per-rung so no future rung can forget it,
+    # and set AFTER the SM64DS_ scrub above so an inherited value cannot win.
+    e["SM64DS_VOLUME"] = "0"
+    # BELT AND BRACES ON THE MINIMIZE. SI_MIN above already asks for
+    # SW_SHOWMINNOACTIVE through STARTUPINFO and that is the authoritative
+    # request here -- Python can make it and does. This env says the same thing
+    # a second way, and it is set because the failure it guards against has now
+    # happened twice in this tree: a cmd.exe shim ate the STARTUPINFO once, and
+    # .NET dropped WindowStyle on the floor once. Both times the window came up
+    # visible on the owner's desk and every log still said the run was quiet.
+    # A guarantee that depends on one mechanism is one mechanism away from
+    # being a comment.
+    e["SM64DS_MINIMIZED"] = "1"
     e["SM64DS_INSTANCE"] = instance
     e["TEMP"] = os.path.join(run_dir, "tmp")
     e["TMP"] = e["TEMP"]
@@ -292,8 +310,19 @@ def rung2(root, exe, out):
     rp, rc, tp, tc = two_instances(root, exe, out, "r2_join", SELFTEST_FRAMES)
     lp = last(r"^\[comms:level\] transport=.*$", tp)
     lc = last(r"^\[comms:level\] transport=.*$", tc)
-    kp = last(r"^\[lockstep:level\] .*$", tp)
-    kc = last(r"^\[lockstep:level\] .*$", tc)
+    # run mg16 lane MP3: the [lockstep:level] line is GONE and this rung asserts
+    # on the carrier's own report instead.
+    #
+    # MP2 printed lockstep ticks/rounds/timeouts/spins/peer_updates from inside
+    # its transcription of src/func_0203ea5c.c. That TU is linked now and drives
+    # itself, so those counters would have to be measured from inside a
+    # byte-matched ROM body, which this repo does not edit. Rather than quietly
+    # dropping an assertion, the rung moves to the INDEPENDENT witness that
+    # still exists: the loopback carrier's own view of the session, which is
+    # produced by different code from the seam readout above and therefore
+    # actually corroborates it rather than restating it.
+    kp = last(r"^\[loopback:level\] .*$", tp)
+    kc = last(r"^\[loopback:level\] .*$", tc)
 
     ok = True
     ok &= verdict(rp == 0 and rc == 0,
@@ -329,8 +358,15 @@ def rung2(root, exe, out):
                   "rung2 exchange counters advancing on BOTH: parent "
                   "exchanges=%d rounds=%d, child exchanges=%d rounds=%d"
                   % (ep, rp_, ec, rc2))
-    ok &= verdict(bool(kp) and bool(kc),
-                  "rung2 lockstep parent | %s ;; child | %s"
+    # The carrier must agree with the seam: both sides live, both past round 0,
+    # and each carrying the OTHER's traffic (a parent that never received is a
+    # parent talking to itself).
+    def carrier_ok(l):
+        return (bool(l) and field(l, "live") not in ("", "0x0", "0x1")
+                and (field(l, "round", int) or 0) > 1
+                and (field(l, "recvd", int) or 0) > 1)
+    ok &= verdict(carrier_ok(kp) and carrier_ok(kc),
+                  "rung2 carrier corroborates the seam | parent %s ;; child %s"
                   % (kp or "NONE", kc or "NONE"))
     print("      final lines (after the first instance exited, so a drop to "
           "solo here is func_0203ea5c:487 working):")
@@ -404,14 +440,15 @@ def rung4(root, exe, out):
     ok = True
     for who, t, r in (("parent", tp, rp), ("child", tc, rc)):
         unh = t.count("FAULT code")
-        lk = last(r"^\[lockstep:level\] .*$", t)
-        rounds = field(lk, "rounds", int) or 0
-        touts = field(lk, "timeouts", int) or 0
+        # run mg16 lane MP3: reads the CARRIER's round counter, not the retired
+        # transcription's. Same reasoning as rung 2 -- src/func_0203ea5c.c
+        # drives itself now and its internal counters would have to be measured
+        # from inside a byte-matched TU.
+        lk = last(r"^\[loopback:level\] .*$", t)
+        rounds = field(lk, "round", int) or 0
         ok &= verdict(r == 0 and unh == 0 and rounds > 100,
                       "rung4 VS %-6s rc=%d unhandled=%d over %s frames | %s"
-                      % (who, r, unh, frames, lk or "NO LOCKSTEP LINE"))
-        if touts:
-            print("      note: %s reported %d wait-bound timeouts" % (who, touts))
+                      % (who, r, unh, frames, lk or "NO CARRIER LINE"))
     return ok
 
 
@@ -513,11 +550,13 @@ def rung_childfirst(root, exe, out):
 
     jp = joined(tp, "1", "0", "3")
     jc = joined(tc, "2", "1", "4")
-    kp = last(r"^\[lockstep:level\] .*$", tp)
+    # run mg16 lane MP3: the carrier's line, for the retired-counter reason
+    # rung 2 records.
+    kp = last(r"^\[loopback:level\] .*$", tp)
     ok = bool(jp) and bool(jc) and rp == 0 and rc == 0
     return verdict(ok,
                    "rung7 CHILD STARTED FIRST (2s before the parent): parent %s "
-                   "| child %s | parent lockstep %s"
+                   "| child %s | parent carrier %s"
                    % (jp or "NEVER FULLY JOINED", jc or "NEVER FULLY JOINED",
                       kp or "none"))
 

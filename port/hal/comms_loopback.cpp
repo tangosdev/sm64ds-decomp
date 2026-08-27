@@ -333,6 +333,8 @@ unsigned g_last_join_ms    = 0;
 
 unsigned long long g_sent = 0, g_recvd = 0, g_dropped = 0;
 unsigned long long g_resends = 0, g_stale_serves = 0;
+// run mg16 lane MP3: how many rounds the game walked away from (HOLE 5).
+unsigned long long g_abandons = 0;
 
 bool g_wsa_up = false;
 
@@ -512,12 +514,23 @@ void drain() {
 // ---------------------------------------------------------------------------
 // SERVICE
 //
-// PROPOSED CONTRACT CHANGE 1 lives here. comms_seam.h says poll() is "called
+// HOLE 1 WAS FOUND HERE AND IS NOW CLOSED. comms_seam.h says poll() is "called
 // once per pump turn while the game is blocked" and that "a socket transport
-// does its recv here" -- but NOTHING IN THE SEAM CALLS IT. comms_set_transport
-// refuses a null poll at install time (comms_seam.cpp:52) and that is the only
-// mention of the entry in the whole tree. A transport that took the sentence at
-// its word would receive nothing, ever.
+// does its recv here". When this file was written NOTHING IN THE SEAM CALLED
+// IT -- comms_set_transport refused a null poll at install and that was the
+// only mention of the entry in the tree -- so a transport that took the
+// sentence at its word would have received nothing, ever.
+//
+// Run mg16 lane MP3 closed it by fix (a): the seam grows the pump, because
+// linking src/func_0203ea5c.c showed the ROM's wait SLEEPS rather than spins
+// and hal/os_thread.h's hook was written for that exact call chain. poll() is
+// now called once per turn of the ROM's own wait. See the frozen contract at
+// the top of comms_seam.h.
+//
+// THIS CARRIER STILL SERVICES ITSELF FROM EVERY ENTRY, and that is deliberate
+// rather than leftover: a transport that only works when someone remembers to
+// pump it is fragile, and the servicing below is what makes the connect phase
+// work before any wait loop is running to pump it.
 //
 // So this carrier services itself from EVERY entry it owns -- state(), slot(),
 // player_count(), exchange() and poll() all land here first -- and is correct
@@ -822,6 +835,36 @@ const void *lb_peer_block(int aid) {
 
 void lb_poll() { service(); }
 
+// THE GAME WALKED AWAY FROM THE OPEN ROUND. Run mg16 lane MP3; HOLE 5's entry.
+//
+// src/func_0203ea5c.c:487 drops the session back to solo when the ROM's wait
+// bound runs out, and until this entry existed that was invisible here: the
+// carrier kept holding a round nobody would ever complete, and its round
+// counter stayed permanently one ahead of the peer's. The write-up at the
+// bottom of this file predicted a four-deep broadcast cache would heal a single
+// abandoned round and that repeated ones would walk the clocks apart faster
+// than the cache could close. Rung 7 is what that looks like from outside: a
+// child that starts before the parent spends its whole wait bound knocking at
+// a port nobody has bound yet, gives up, and never joins.
+//
+// The reset is deliberately small. The SESSION is not being torn down -- the
+// socket stays bound, the live mask stays as the peers last reported it, and
+// the role does not change -- because the game has not left, it has stopped
+// waiting for this one frame. What goes is the ROUND: the latched blocks and
+// the mask that says which of them are fresh, so the next exchange() starts
+// clean instead of trying to finish a frame the game has forgotten.
+void lb_abandon() {
+    if (g_latched_mask == 0 && g_stage_mask == 0) return;   // nothing open
+    std::fprintf(stderr,
+                 "[comms:loopback] the game abandoned round %lu (the ROM's "
+                 "wait bound expired and src/func_0203ea5c.c:487 dropped it to "
+                 "solo); clearing the open round, keeping the session\n",
+                 (unsigned long)g_round);
+    g_latched_mask = 0;
+    g_stage_mask = 0;
+    ++g_abandons;
+}
+
 const CommsTransport kLoopback = {
     "loopback (udp 127.0.0.1)",
     lb_open,
@@ -834,6 +877,7 @@ const CommsTransport kLoopback = {
     lb_exchange,
     lb_peer_block,
     lb_poll,
+    lb_abandon,
 };
 
 }  // namespace
@@ -879,6 +923,22 @@ bool comms_loopback_install_from_env() {
 
     if (!comms_set_transport(&kLoopback)) return false;
     g_installed = true;
+
+    // run mg16 lane MP3: SEAT THE SESSION REQUEST AND INSTALL THE PUMP.
+    //
+    // Installing a transport used to be the whole of it, because MP2's
+    // transcription drove the seam faces itself. The ROM's own conductor is
+    // linked now and it dispatches on data_020a0f04, which nothing here was
+    // setting -- so two carriers would come up, connect to nothing, and report
+    // role=0 forever. On the DS that byte is seated by the multiplayer menu;
+    // this launcher-side install is what stands in for it. See HOLE 3 in the
+    // frozen contract.
+    //
+    // The pump goes in here too rather than at seam-install time, because a
+    // transport is the only thing that gives poll() anything to do.
+    comms_seat_session_request(g_role == kRoleParent ? kCommsRoleParent
+                                                     : kCommsRoleChild);
+    comms_install_pump();
 
     // SAY GOODBYE ON THE WAY OUT.
     //
@@ -935,7 +995,32 @@ void comms_loopback_report(const char *tag) {
 }  // namespace port
 
 // ===========================================================================
-// WHAT WRITING THIS FOUND: PROPOSED CONTRACT CHANGES FOR THE MP2 FREEZE
+// ###########################################################################
+// #  HISTORICAL. EVERY PROPOSAL BELOW HAS BEEN DECIDED.                     #
+// #                                                                         #
+// #  The contract froze in run mg16 lane MP3, once src/func_0203ea5c.c was  #
+// #  linked and the ROM's own caller drove the seam. THE AUTHORITY IS THE   #
+// #  BANNER AT THE TOP OF hal/comms_seam.h -- read that, not this. What     #
+// #  follows is kept because it is the measurement each decision rests on,  #
+// #  and a frozen contract with no record of why is worse than none.        #
+// #                                                                         #
+// #  Outcomes, so nobody has to reconstruct them:                           #
+// #    HOLE 1 poll never called   CLOSED by fix (a), the seam grew the pump #
+// #    HOLE 2 lifecycle           CLOSED exactly as proposed                #
+// #    HOLE 3 role decided twice  CLOSED, but the real caller REFRAMED it   #
+// #    HOLE 4 no round id         CLOSED as proposed                        #
+// #    HOLE 5 abandon()           CLOSED, entry added; it had more teeth    #
+// #    GAP 1 status out-param     no change, write 0                        #
+// #    GAP 4 WM status word       stays seam-owned                          #
+// #                                                                         #
+// #  TWO DID NOT GO AS PROPOSED. HOLE 3's "who wins" turned out not to be   #
+// #  the question -- the ROM asks for no role until something seats         #
+// #  data_020a0f04 -- and HOLE 5's drop turned out to be PERMANENT rather   #
+// #  than merely desynchronising, so the seam re-seats as well as telling   #
+// #  the transport. Both are written up at the freeze.                      #
+// ###########################################################################
+//
+// WHAT WRITING THIS FOUND: THE PROPOSALS, AS THEY WERE PUT (now all decided)
 //
 // comms_seam.h says the contract freezes at the end of MP2, when a loopback
 // transport has actually driven it. This is that transport, and these are the

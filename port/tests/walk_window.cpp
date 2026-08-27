@@ -402,9 +402,21 @@ static bool winapi_load(void)
 #include "hal/host_settings.h"   /* settings.json, the launcher's file */
 #include "hal/comms_seam.h"       /* run mg15 lane MP1: the radio seam */
 #include "hal/comms_loopback.h"   /* run mg16 lane MP2: the loopback carrier */
-#include "hal/comms_lockstep.h"   /* run mg16 lane MP2: the lockstep driver */
+/* run mg16 lane MP3: hal/comms_lockstep.h is RETIRED. Its transcription of
+   src/func_0203ea5c.c existed only because that TU was in no slice; the TU is
+   linked now and drives itself. Its lessons live in comms_seam.h's frozen
+   contract and in hal/comms_conductor.cpp. */
 #include "hal/instance_tag.h"     /* run mg16 lane MP2: per-instance filenames */
 #include "hal/editor_channel.h"   /* run lvled lane B: the editor control channel */
+
+/* run mg16 lane MP3: the raw DS pad bits for this frame, handed from where the
+   harness computes them to where hal/comms_conductor.cpp publishes them into
+   the DS key register. One value, one frame, no reader outside this file --
+   a stash rather than a hosted global precisely because it is harness
+   plumbing and not DS state, so it stays out of the .dsstate bracket. */
+static unsigned short g_raw_pad_bits;
+static void port_raw_pad_stash(unsigned short raw) { g_raw_pad_bits = raw; }
+static unsigned port_raw_pad_bits(void) { return g_raw_pad_bits; }
 
 /* run mg15 lane MP1. SM64DS_COMMS_FANOUT=1 runs the ROM's own steps 0x16 and
    0x17 (src/func_0203bb60.c, src/func_0203bc7c.c) after the comms tick, so
@@ -607,6 +619,10 @@ int hal_camera_init_resources(void *cam);
 int hal_camera_behavior(void *cam);
 int hal_camera_render(void *cam);
 void func_0203e0ac(void);
+/* run mg16 lane MP3: the ROM's own comms dispatcher, linked through
+   port/slice_mp3.txt. It owns the switch that used to be hosted at the call
+   site below, and the only call site of the seam's close() face. */
+void func_0203df40(void);
 /* the ROM's own camera math, which the freecam rig builds its view with:
    the same eye construction func_02009e70 uses and the same two G3i entry
    points plus CopyToViewMat that Camera::Render ends in */
@@ -1055,6 +1071,9 @@ void port_input_probe_sign_trigger(int frame);
 void port_probe_alcheck(void);
 void port_probe_sign_yaw(void);
 void port_probe_chomp(int frame);
+void port_probe_rabbit_key(int frame);   /* TEMPORARY: SM64DS_TRACE_RABBITKEY */
+void port_probe_rabbit_trigger(int frame); /* TEMPORARY: SM64DS_RABBIT_TRIGGER */
+void port_probe_key_spawn(int frame);      /* TEMPORARY: SM64DS_KEY_SPAWN_AT */
 /* the scene-fade request the title-select hands off with. Recorded by the port
    in hal/level_change.cpp and acted on by this frame loop. */
 int port_scene_fade_pending(int *sceneId);
@@ -4702,6 +4721,30 @@ static int host_show_mode(int nofocus)
             break;
         }
     }
+    /* SM64DS_MINIMIZED=1 -- THE SAME REQUEST, FOR A LAUNCHER THAT CANNOT MAKE
+       IT. Run mg16 lane MP3.
+
+       Everything above reads the request out of STARTUPINFO, which is the right
+       place and is what port/tools/mp2_proof.py uses (it sets wShowWindow = 7
+       directly, because Python can). NOT EVERY LAUNCHER CAN. .NET's
+       ProcessStartInfo.WindowStyle is not carried into STARTUPINFO when
+       UseShellExecute is false, and a launcher that needs to redirect a stream
+       has no choice about that -- so port/tools/mp2_two_windows.ps1 asked for
+       Minimized, got no STARTF_USESHOWWINDOW at all, and the window came up
+       VISIBLE. That is the second time a launcher lost this guarantee silently;
+       the first was a cmd.exe shim eating the STARTUPINFO on the way past.
+
+       So the request can also be made the way every other port knob is made.
+       STARTUPINFO STILL WINS where it carries a real spelling -- this only
+       fills in when the launcher could not speak that way -- and the composition
+       with SM64DS_NO_FOCUS below is unchanged.
+
+       It is deliberately a REQUEST TO BE QUIETER, never louder: there is no
+       env value that un-minimizes a window STARTUPINFO asked to minimize. */
+    if (want == -1) {
+        const char *m = getenv("SM64DS_MINIMIZED");
+        if (m && atoi(m) != 0) want = SW_SHOWMINNOACTIVE;
+    }
     if (nofocus) {
         /* THE TWO COMPOSE rather than one winning. A minimized request under
            SM64DS_NO_FOCUS is minimized AND not activated, which is the quietest
@@ -6193,7 +6236,13 @@ int main(void)
     data_0209caa0[2] |= 0x80;
     data_0209d660 = 0;
     data_0209fc48 = 0;
-    data_0209f21c = 1;
+    /* run mg16 lane MP3: THE SECOND SEAT, and the one that was actually
+       winning. hal/level_boot.cpp's a2 seat sets the player count too, and this
+       line runs after it -- so seating two players there and reading one here
+       is exactly what the VS probe measured: the boot log said "2 players" and
+       the probe reported count=1 with slot1 NULL on every frame of a 300-frame
+       run. Two seats for one fact, and the later one silently won. */
+    data_0209f21c = (unsigned char)port::vs_player_count();
     data_0209f350[0] = 0;
     /* the ROM's button-remap tables are DS pointers (0x0207xxxx) the
        host has no image behind; buttons are written directly to the
@@ -7282,6 +7331,15 @@ int main(void)
             if (dx < 0) raw |= 0x20;   /* left  */
             if (dx > 0) raw |= 0x10;   /* right */
             static unsigned short raw_prev;
+            /* run mg16 lane MP3: the SAME value the pad mirror gets, stashed
+               for hal/comms_conductor.cpp's key-register publish further down
+               the frame. Taken HERE, at the source, because the ROM's fan-out
+               (func_0203bc7c, when SM64DS_COMMS_FANOUT is on) rewrites that
+               mirror from the four comms records later in this same frame --
+               so reading the mirror at publish time would feed the wire back
+               into itself. Stashing the source value is what makes the
+               ordering a fact rather than a comment. */
+            port_raw_pad_stash(raw);
             *(unsigned short *)((char *)data_020a0e58 + 0) = raw;
             *(unsigned short *)((char *)data_020a0e58 + 2) =
                 (unsigned short)(raw & (unsigned short)~raw_prev);
@@ -7303,14 +7361,65 @@ int main(void)
             port_input_probe_apply(frame);
             _ZN5Stage10CheckInputEv();
             /* the matched TU writes its own data_0209f498 block; older
-               TUs read per-field split symbols -- copy the record out */
+               TUs read per-field split symbols -- copy the record out
+               ----------------------------------------------------------------
+               run mg16 lane MP3: FOR EVERY PLAYER, AT THE DS's OWN STRIDE.
+               This copied slot 0 and only slot 0, which was right while the
+               port asserted one player and is the exact reason a second
+               player could receive input and still not move.
+
+               ON THE DS THESE FIVE NAMES ARE INTERIOR ADDRESSES OF THE Ctrl
+               BLOCK ITSELF: data_0209f498 + 8, +0xa, +0xc, +0xe and +0x14,
+               with Ctrl striding 0x18 per player. That is why
+               port/unmatched/Player_Behavior.cpp reads its stick angle as
+               `*(s16 *)((char *)&data_0209f4a6 + data_020a0e40 * 0x18)` --
+               on hardware that walks straight into player N's own Ctrl record.
+               The port hosts the five as SEPARATE arrays, so the same walk
+               lands inside data_0209f4a6's own storage instead, reading a byte
+               nobody wrote. Slot 0 worked because its offset is zero.
+
+               So the copy writes each player's fields at that same 0x18 stride,
+               which puts player N's values exactly where the ROM's walk looks
+               for them.
+
+               THE CEILING IS TWO PLAYERS AND IT IS A LAYOUT FACT, not a
+               judgement. hal/auto_bss.cpp hosts these as int[8] -- 32 bytes --
+               so player 1 at +0x18 (24) fits and player 2 at +0x30 (48) would
+               run off the end into whatever the linker put next. Enlarging
+               them is not free either: they sit INTERIOR to .dsstate$mmm, so
+               growing them shifts every hosted global above them and retires
+               every BMP baseline in the tree (port/tools/battery.py's own
+               doctrine). The real fix is to host the five as interior
+               addresses of data_0209f498, the way hal/camera_bridges.cpp hosts
+               the comms records, and that is a band migration with its own
+               regression surface. Until then this refuses above two loudly
+               rather than corrupting a neighbour quietly. */
             {
                 const char *q = (const char *)data_0209f498;
-                *(short *)(data_0209f4a0 + 0) = *(const short *)(q + 0x08);
-                *(short *)data_0209f4a2 = *(const short *)(q + 0x0a);
-                *(short *)data_0209f4a4 = *(const short *)(q + 0x0c);
-                *(short *)data_0209f4a6 = *(const short *)(q + 0x0e);
-                data_0209f4ac[0] = *(const unsigned char *)(q + 0x14);
+                int np = (int)data_0209f21c;
+                if (np > 2) {
+                    static bool said;
+                    if (!said) {
+                        said = true;
+                        fprintf(stderr,
+                                "[vs] REFUSING to fan the Ctrl split symbols "
+                                "past 2 players: hal/auto_bss.cpp hosts "
+                                "data_0209f4a0..ac as int[8] and player 2 "
+                                "would write at +0x30, off the end. Host them "
+                                "as interior addresses of data_0209f498 first. "
+                                "Clamping to 2.\n");
+                    }
+                    np = 2;
+                }
+                for (int pi = 0; pi < np; ++pi) {
+                    const char *r = q + pi * 0x18;
+                    const int o = pi * 0x18;
+                    *(short *)((char *)data_0209f4a0 + o) = *(const short *)(r + 0x08);
+                    *(short *)((char *)data_0209f4a2 + o) = *(const short *)(r + 0x0a);
+                    *(short *)((char *)data_0209f4a4 + o) = *(const short *)(r + 0x0c);
+                    *(short *)((char *)data_0209f4a6 + o) = *(const short *)(r + 0x0e);
+                    *((unsigned char *)data_0209f4ac + o) = *(const unsigned char *)(r + 0x14);
+                }
             }
             /* ---- RUN MODE ANALOG: the record, refilled from the pad's left
                stick. See the RUN_ mode block up by the menu enum for why this
@@ -8695,6 +8804,8 @@ int main(void)
             port_probe_alcheck();
             port_probe_sign_yaw();
             port_probe_chomp(frame);
+            port_probe_rabbit_trigger(frame);  /* TEMPORARY: SM64DS_RABBIT_TRIGGER */
+            port_probe_key_spawn(frame);       /* TEMPORARY: SM64DS_KEY_SPAWN_AT */
             port_actor_tick();
         } else if (*(void **)(c + 0x370)) {
             hal_player_behavior(player);
@@ -8766,6 +8877,7 @@ int main(void)
         port_message_pump();
         port_input_probe_trace_msg(frame);   /* TEMPORARY: SM64DS_TRACE_MSG */
         port_input_probe_trace_cannon(frame);/* TEMPORARY: SM64DS_TRACE_CANNON */
+        port_probe_rabbit_key(frame);        /* TEMPORARY: SM64DS_TRACE_RABBITKEY */
         /* the real boot seats the path table, so the tracking's own binding
            stands -- except where the port's unfilled floor record invents
            one the level cannot produce (hal/level_boot.cpp) */
@@ -8859,16 +8971,37 @@ int main(void)
                into the echo below. */
             if (cam_mode != CAM_DS && !cutscene_cam)
                 *(short *)data_020a1050 = fc_yaw;
-            /* run mg16 lane MP2: src/func_0203df40.c's SWITCH, hosted.
-               data_020a0f04 == 1 or 2 dispatches to the lockstep
-               (func_0203ea5c on the DS, transcribed in hal/comms_lockstep.cpp
-               here); 0 dispatches to func_0203e0ac, the solo cascade, which is
-               what this line has always been and what it still is with no
-               transport installed. comms_lockstep_tick() answers false for
-               "run the role-0 arm", so with SM64DS_COMMS_ROLE unset the call
-               below is reached on every frame exactly as before. */
-            if (!port::comms_lockstep_tick())
-                func_0203e0ac();
+            /* run mg16 lane MP3: THE ROM'S OWN DISPATCHER, LINKED.
+               src/func_0203df40.c fills the local comms record from the pad and
+               the touch panel and then switches on the role byte: 1 and 2 reach
+               src/func_0203ea5c.c, the real lockstep; 3 reaches Download Play;
+               0 and anything else reach func_0203e0ac, the solo cascade this
+               line used to call directly.
+
+               MP2 had a hosted transcription here (hal/comms_lockstep.cpp) and
+               an `if (!tick()) func_0203e0ac();` around it, because
+               func_0203ea5c was in no slice. Both are gone: the role-0 arm is
+               INSIDE func_0203df40's own switch, so calling it here as well
+               would run the solo cascade twice on every single-player frame.
+
+               WITH NO TRANSPORT INSTALLED NOTHING CHANGES. data_020a0f04 comes
+               up 0 and only a transport moves it, so the switch takes its
+               default arm and func_0203e0ac runs exactly as it always has --
+               now reached through the ROM's own dispatcher rather than around
+               it. That is the whole point, and rung 1 is what proves it.
+
+               ORDERING: comms_publish_pad below is what makes :31 of that TU
+               read a real pad, and it must land before this call and before the
+               fan-out. See THE STUCK CONTROLLER in hal/comms_conductor.cpp. */
+            port::comms_publish_pad(port_raw_pad_bits());
+            func_0203df40();
+            /* run mg16 lane MP3: the VS probe, read out of the game's own
+               per-slot actor array. Here rather than at the report site
+               because it must run whether or not SM64DS_COMMS_REPORT is on:
+               rungs 9 to 11 are about ACTORS, and a single-instance two-player
+               run has no comms report to hang off. Silent unless
+               SM64DS_VS_PROBE is set. */
+            port::vs_probe(frame);
             /* run mg15 lane MP1: the ROM's OWN steps 0x16 and 0x17, right
                where src/func_020197b8.c runs them -- immediately after the
                comms tick that filled the four records. func_0203bb60 turns
@@ -8897,7 +9030,19 @@ int main(void)
                        MP1-era SM64DS_COMMS_REPORT run prints what it always
                        printed. */
                     if (port::comms_transport()) {
-                        port::comms_lockstep_report("level");
+                        /* run mg16 lane MP3: the lockstep's own counters are
+                           GONE, and that is a real cost of linking the real
+                           thing rather than an oversight. MP2 counted ticks,
+                           rounds, timeouts, spins and peer_updates from inside
+                           its transcription. Those live inside
+                           src/func_0203ea5c.c now -- the spin loop, the bound,
+                           the per-slot unpack -- and instrumenting them would
+                           mean editing a byte-matched TU, which this repo does
+                           not do. What survives is what the SEAM can see:
+                           comms_report's exchanges/rounds count real calls
+                           through func_020406b4, and the carrier's own
+                           counters are unaffected. Saying which numbers went
+                           away is more useful than quietly printing fewer. */
                         port::comms_loopback_report("level");
                     }
                 }
@@ -9655,6 +9800,20 @@ int main(void)
             port_actor_scene_pass();
         size_t tris_before = 0;
         if (selftest) ntr::gx_polygons(tris_before);
+        /* run mg16 lane MP3: DRAW EVERY PLAYER, not just the local one.
+           This line drew data_0209f394[0] and nothing else, which was correct
+           while the port asserted there was exactly one player. With a second
+           one spawned it is the difference between a player who is there and a
+           player who is INVISIBLE: slot 1 collides, is pushed, moves and casts
+           no pixels, so a capture of the frame shows one character and the
+           owner is asked to judge a picture the second player is missing from.
+           The local player keeps drawing last, so nothing about his own
+           submission order changes. */
+        for (int pi = (int)data_0209f21c - 1; pi >= 0; --pi) {
+            if (pi == (int)data_0209f250) continue;   /* drawn below, as before */
+            if (void *other = data_0209f394[pi])
+                hal_render_player_world(other);
+        }
         hal_render_player_world(player);
         /* Stage::GraphCallback1: the particle submission, last, after every
            opaque draw in the frame. The billboards carry their own absolute

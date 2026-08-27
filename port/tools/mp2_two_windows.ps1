@@ -56,6 +56,21 @@ param(
     # recorder path is exercised) but must still terminate. A human never wants
     # this: a play session is theirs to close.
     [switch]$ExitWhenConnected,
+    # AUDIO IS OFF UNLESS THIS IS PASSED, and it is not a convenience switch.
+    # Run mg16 lane MP3, review fix 1. This script scrubbed every SM64DS_* out
+    # of the child environment -- which is right, a proof run must not inherit
+    # another lane's knobs -- and then never put SM64DS_VOLUME back. Everywhere
+    # else in this tree the mute is INHERITED from the machine-wide setting, so
+    # this was the one arm in the whole port that stripped it, and a run out of
+    # this script came up at the game's default volume on the owner's desk.
+    # Measured in the lane's own 13:42 logs at 50%.
+    #
+    # So the rebuilt environment sets SM64DS_VOLUME=0 unconditionally, and only
+    # an explicit -Audio re-enables it. That is deliberately not tied to
+    # -Visible: a visible run is still a silent one unless a human says
+    # otherwise, because the failure this is guarding against was noise on his
+    # desk, not a window.
+    [switch]$Audio,
     [int]$Frames = 0,             # 0 = play until closed; >0 = a scripted run
     [int]$Level  = 1,
     [int]$Port   = 51765,         # kCommsLoopbackPortBase
@@ -95,20 +110,32 @@ function Start-Instance {
     $log = Join-Path $d "run.log"
     Remove-Item $log -ErrorAction SilentlyContinue
 
-    # STDERR GOES STRAIGHT TO A FILE, through cmd's own redirection.
+    # THE GAME IS LAUNCHED DIRECTLY. NO SHIM. Run mg16 lane MP3, review fix 1.
     #
-    # The first version of this script captured stderr with
-    # Register-ObjectEvent + a StringBuilder. It worked for the first instance
-    # and SILENTLY LOST THE SECOND: P1's log came out 93071 bytes with 426
-    # report lines, P2's came out 1685 bytes with none, cut off mid-boot. The
-    # join had actually happened; the evidence had not been recorded. A file
-    # redirection cannot half-work like that, and it is what the Python driver
-    # (port/tools/mp2_proof.py) does for the same reason.
+    # This used to be `cmd.exe /c "walk_window.exe 2> log"`, and the redirection
+    # was the only reason for it. The cost was invisible and total: every window
+    # control below is carried in the STARTUPINFO of the process this line
+    # names, so WindowStyle and CreateNoWindow applied to CMD.EXE and the game
+    # was created by cmd with default show state. The lane's own 13:42 logs
+    # caught it -- the game reported SW_SHOWNOACTIVATE, i.e. VISIBLE, on a run
+    # that had asked for minimized. A quiet-launch guarantee that lands on a
+    # shim is not a guarantee.
+    #
+    # It also broke teardown: Kill() below killed cmd and ORPHANED the game,
+    # which then sat holding its socket and its window for about a minute.
+    #
+    # The redirection is kept by asking .NET for the stream and copying it to
+    # the log file with CopyToAsync -- a pure stream copy with no PowerShell
+    # eventing in it. That distinction matters: the FIRST version of this script
+    # used Register-ObjectEvent and silently lost the SECOND instance's log
+    # entirely (93071 bytes vs 1685, cut off mid-boot), which is the trap the
+    # shim was introduced to avoid. A stream copy cannot half-work that way, and
+    # port/tools/mp2_proof.py redirects to a file for the same reason.
     $psi = New-Object System.Diagnostics.ProcessStartInfo
-    $psi.FileName         = "cmd.exe"
-    $psi.Arguments        = '/c ""' + $exe + '" 2> "' + $log + '""'
+    $psi.FileName         = $exe
     $psi.WorkingDirectory = $d
     $psi.UseShellExecute  = $false
+    $psi.RedirectStandardError = $true
     # THE SHOW MODE, and why "Minimized" here is not the activating one.
     # .NET's ProcessWindowStyle has no SW_SHOWMINNOACTIVE spelling -- Minimized
     # is SW_SHOWMINIMIZED, which DOES activate, and port/tools/mp2_proof.py asks
@@ -139,6 +166,21 @@ function Start-Instance {
     $psi.EnvironmentVariables["SM64DS_NO_DIALOG"]   = "1"
     $psi.EnvironmentVariables["TEMP"]               = (Join-Path $d "tmp")
     $psi.EnvironmentVariables["TMP"]                = (Join-Path $d "tmp")
+    # THE THIRD HALF OF THE QUIET RULE, restored after the scrub above removed
+    # it. See the -Audio parameter's note: the scrub is correct and the missing
+    # restore is what put sound on the owner's desk. Set LAST of the SM64DS_
+    # block so nothing above can win, and only lifted by an explicit -Audio.
+    if (-not $Audio) { $psi.EnvironmentVariables["SM64DS_VOLUME"] = "0" }
+    # THE MINIMIZE, ASKED FOR IN THE ONE WAY THAT SURVIVES THIS LAUNCHER.
+    # $psi.WindowStyle above is set and is NOT ENOUGH: .NET does not carry
+    # WindowStyle into STARTUPINFO when UseShellExecute is false, which this
+    # launcher needs in order to redirect stderr. Measured -- the game reported
+    # SW_SHOWNOACTIVATE (visible, unfocused) on a run that asked for Minimized,
+    # with and without CreateNoWindow. walk_window's host_show_mode() takes the
+    # same request from this env when STARTUPINFO carries no show spelling; the
+    # STARTUPINFO path still wins where a launcher can use it, which is what
+    # port/tools/mp2_proof.py does.
+    if ($showMinimized) { $psi.EnvironmentVariables["SM64DS_MINIMIZED"] = "1" }
     if ($showMinimized) { $psi.EnvironmentVariables["SM64DS_NO_FOCUS"] = "1" }
     if ($Frames -gt 0) {
         $psi.EnvironmentVariables["SM64DS_WINDOW_SELFTEST"] = "$Frames"
@@ -146,7 +188,23 @@ function Start-Instance {
     }
 
     $p = [System.Diagnostics.Process]::Start($psi)
-    return [pscustomobject]@{ Proc = $p; Log = $log; Tag = $Tag }
+    # Pump stderr into the log with a plain async stream copy. The FileStream
+    # and the Task are handed back so the caller can await and dispose them
+    # rather than letting a half-written log look like a short session.
+    $fs = New-Object System.IO.FileStream($log,
+              [System.IO.FileMode]::Create, [System.IO.FileAccess]::Write,
+              [System.IO.FileShare]::Read)
+    $copy = $p.StandardError.BaseStream.CopyToAsync($fs)
+    return [pscustomobject]@{ Proc = $p; Log = $log; Tag = $Tag;
+                             Stream = $fs; Copy = $copy }
+}
+
+# Finish the stderr pump and close the file, so Read-Log below sees everything
+# the instance wrote. Called after both processes are done, and safe to call on
+# a handle whose process was killed -- the copy completes when the pipe closes.
+function Close-Log($h) {
+    try { $h.Copy.Wait(5000) | Out-Null } catch { }
+    try { $h.Stream.Flush(); $h.Stream.Dispose() } catch { }
 }
 
 Write-Host ("MP2 TWO-WINDOW: starting {0}, level {1}, udp base {2}, frames {3}" -f `
@@ -221,6 +279,12 @@ while ((Get-Date) -lt $deadline) {
     Start-Sleep -Milliseconds 500
 }
 
+# THESE KILLS NOW REACH THE GAME. Run mg16 lane MP3, review fix 1: while this
+# script launched through a cmd.exe shim, $h.Proc WAS THE SHIM, so Kill() ended
+# cmd and left walk_window running -- orphaned, still holding its UDP port and
+# its window, for about a minute until its own frame budget ran out. Launching
+# the exe directly (see Start-Instance) makes the handle the game's, so the
+# teardown below does what it has always said it does.
 if ($connected -and $ExitWhenConnected) {
     Write-Host "MP2 TWO-WINDOW: join confirmed, closing both (-ExitWhenConnected)"
     foreach ($h in @($p1,$p2)) { if (-not $h.Proc.HasExited) { $h.Proc.Kill() } }
@@ -231,6 +295,8 @@ if ($connected -and $ExitWhenConnected) {
     # join) did not happen. A play session is the human's to close.
     foreach ($h in @($p1,$p2)) { if (-not $h.Proc.HasExited) { $h.Proc.Kill() } }
 }
+
+foreach ($h in @($p1,$p2)) { Close-Log $h }
 
 foreach ($h in @($p1,$p2)) {
     Write-Host ("  {0} exit={1} log={2}" -f $h.Tag,

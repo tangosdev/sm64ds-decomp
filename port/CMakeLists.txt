@@ -6639,9 +6639,32 @@ list(APPEND SLICE10_CAM_SOURCES
 # an invented order would prove nothing about the contract. BOTH ARE INERT
 # WITHOUT SM64DS_COMMS_ROLE: nothing installs, and the seam answers solo.
 set(SLICE_COMMS_SOURCES hal/comms_seam.cpp hal/os_thread.cpp
-                        hal/comms_loopback.cpp hal/comms_lockstep.cpp)
+                        hal/comms_loopback.cpp)
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_comms.txt" SLICE_COMMS_LINES)
 foreach(line IN LISTS SLICE_COMMS_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_COMMS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+# run mg16 lane MP3: the REAL conductor, src/func_0203ea5c.c, and the dispatcher
+# that switches to it. slice_mp3.txt says what is in it and why the seam line did
+# not move to accommodate it. hal/comms_conductor.cpp is the host side: the DS
+# globals the conductor needs that nothing had hosted, the one WM face that stays
+# below the seam, the DS key register the dispatcher reads, and the pump that
+# finally makes the contract's `poll` entry true.
+#
+# APPENDED TO SLICE_COMMS_SOURCES ON PURPOSE rather than given a list of its own:
+# every consumer of the comms slice needs the conductor too, and three separate
+# target lists each having to remember a new variable is exactly the shape
+# FINDING 5 of the TITLE lane got bitten by (take one side of a generator-list
+# conflict and a lane's TUs silently leave the link, which links fine and runs
+# wrong).
+list(APPEND SLICE_COMMS_SOURCES hal/comms_conductor.cpp)
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_mp3.txt" SLICE_MP3_LINES)
+foreach(line IN LISTS SLICE_MP3_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
         continue()
