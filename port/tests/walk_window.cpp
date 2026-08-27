@@ -404,6 +404,7 @@ static bool winapi_load(void)
 #include "hal/comms_loopback.h"   /* run mg16 lane MP2: the loopback carrier */
 #include "hal/comms_lockstep.h"   /* run mg16 lane MP2: the lockstep driver */
 #include "hal/instance_tag.h"     /* run mg16 lane MP2: per-instance filenames */
+#include "hal/editor_channel.h"   /* run lvled lane B: the editor control channel */
 
 /* run mg15 lane MP1. SM64DS_COMMS_FANOUT=1 runs the ROM's own steps 0x16 and
    0x17 (src/func_0203bb60.c, src/func_0203bc7c.c) after the comms tick, so
@@ -6554,6 +6555,10 @@ int main(void)
        Only ntr::rt_run used to seat it and this loop is not on that fiber.
        See port/irq2_map.txt section 2. */
     ntr::rt_irq_boot_state();
+    /* The editor control channel (hal/editor_channel.cpp). A no-op unless
+       SM64DS_EDITOR_CHANNEL=1 -- it reads the variable and returns before any
+       socket exists -- so the shipped window grows no listener by default. */
+    editor_channel_init();
     for (;;) {
         double t_frame, t_phase;
         int game_ticked = 1;   /* cleared when a tick is skipped */
@@ -10060,6 +10065,11 @@ int main(void)
             }
         }
         sdat_host_tick();   /* hosted ARM7: drain the sound queue, feed the mixer */
+        /* THE FRAME BOUNDARY. Everything this frame -- tick, render, present --
+           is done, and nothing of the next frame has started, so an editor's
+           object move or staged warp lands on a world that is not half-updated.
+           A no-op when the channel is not armed. */
+        editor_channel_drain();
         ++frame;   /* counts in live mode too -- the [cam-in]-style live
                       diagnostics carry a real frame number */
         port_last_frame = frame;   /* fault_probe.h: crash.txt/exit.txt context */

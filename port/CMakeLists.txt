@@ -8507,6 +8507,13 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # the launcher's settings.json, read by the game (camera turn direction,
     # and the four screen-gap keys hal/screen_gap.cpp reads)
     hal/host_settings.cpp hal/screen_gap.cpp
+    # run lvled lane B: the editor control channel on 127.0.0.1:7355, the link
+    # the Studio's editor talks to. Compiled in unconditionally but INERT unless
+    # SM64DS_EDITOR_CHANNEL=1 -- no thread, no socket, no listener without it.
+    # It is on BOTH targets that compile tests/walk_window.cpp (walk_window and
+    # walk_window_hires), because the frame loop's drain call lives in that
+    # shared file and a target without this source fails the link.
+    hal/editor_channel.cpp
     # the Mods panel's file-layer half: installs hal/fs.cpp's mod hooks
     # (LovesMeCharacter). Game-shaped targets only; every smoke keeps the
     # null hooks and stock file serving.
@@ -8697,6 +8704,13 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # the launcher's settings.json, read by the game (camera turn direction,
     # and the four screen-gap keys hal/screen_gap.cpp reads)
     hal/host_settings.cpp hal/screen_gap.cpp
+    # run lvled lane B: the editor control channel on 127.0.0.1:7355, the link
+    # the Studio's editor talks to. Compiled in unconditionally but INERT unless
+    # SM64DS_EDITOR_CHANNEL=1 -- no thread, no socket, no listener without it.
+    # It is on BOTH targets that compile tests/walk_window.cpp (walk_window and
+    # walk_window_hires), because the frame loop's drain call lives in that
+    # shared file and a target without this source fails the link.
+    hal/editor_channel.cpp
     # the Mods panel's file-layer half: installs hal/fs.cpp's mod hooks
     # (LovesMeCharacter). Game-shaped targets only; every smoke keeps the
     # null hooks and stock file serving.
