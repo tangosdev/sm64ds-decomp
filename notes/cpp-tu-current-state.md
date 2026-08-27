@@ -36,10 +36,10 @@ weighted by enrolled function ownership so TU consolidation does not move it.
 | Tracked `.c` files | 6512 |
 | Tracked `.cpp` files | 4848 |
 | `.cpp` files missing first-line `//cpp` | 0 |
-| Mangled-symbol source files | 3859 |
-| Genuinely migrated C++ symbol files | 3662 |
-| Not semantically migrated | 194 |
-| `.cpp` files still hand-spelling their symbol | 133 |
+| Mangled-symbol source files | 3463 |
+| Genuinely migrated C++ symbol files | 3286 |
+| Not semantically migrated | 174 |
+| `.cpp` files still hand-spelling their symbol | 113 |
 | Nonmatching C++-symbol drafts | 14 |
 | Delinks path-owned function-symbol records | 11197 |
 | Path-owned records still supplied from ROM bytes | 128 |

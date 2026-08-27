@@ -6,9 +6,10 @@
 into a single `.cpp`, compiled once with the pinned toolchain, and compared
 function-by-function against the ROM.
 
-**What it is not:** a build change. `src_tu/actors/PoleLift.cpp` is not enrolled,
-`config/**/delinks.txt` is untouched, and the seven one-function sources under
-`src/` remain the sole enrolled owners of `0x0211150c..0x02111840`. No
+**Historical boundary:** this began as a shadow-only reconstruction. It is now the
+derived-text production TU `src/game/actors/PoleLift.cpp`: the canonical source is
+compiled once while the seven one-function sources remain exact proof oracles for
+`0x0211150c..0x02111840`. No
 `rombuild.py`, no `eligible.py`, no link.
 
 ---
@@ -64,7 +65,7 @@ OK    src/game/actors/PoleLift/PoleLift_Spawn.c                           2004/b
 | --- | --- |
 | Candidate | `ov045` / `PoleLift`, RTTI name `daObjKm2_Ami_Bou_c` |
 | Span | `.text` `0x0211150c`–`0x02111840`, 7 functions |
-| Shadow source | `src_tu/actors/PoleLift.cpp` (`//cpp`, so C++) |
+| Canonical source | `src/game/actors/PoleLift.cpp` (`//cpp`, so C++) |
 | Compiler | `tools/mwccarm/2004/b56/mwccarm.exe` — `rombuild.VERSION`, and `config/rombuild-versions.txt` carries no override for any of the seven stems, so this is the pin for all of them |
 | Flags | `rombuild.CFLAGS` with `-lang c99` → `-lang c++`, exactly what `build_pin.flags_for` returns for a `//cpp` file:<br>`-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off -i include` |
 | Object | `build/tu/ov045-PoleLift/PoleLift.o` (gitignored) |
@@ -124,7 +125,7 @@ Strict reversal. Confirmed.
 
 ### The real TU
 
-`src_tu/actors/PoleLift.cpp` is therefore written **bottom-to-top against the ROM**
+`src/game/actors/PoleLift.cpp` is therefore written **bottom-to-top against the ROM**
 — `PoleLift_Spawn` first in the file, `~PoleLift` last. The emitted `.text` order
 is:
 
@@ -443,7 +444,7 @@ committed state and still `complete` in `config/arm9/overlays/ov045/delinks.txt`
 
 | Path | |
 | --- | --- |
-| `src_tu/actors/PoleLift.cpp` | new — the shadow TU, not enrolled |
+| `src/game/actors/PoleLift.cpp` | promoted canonical derived-text production TU |
 | `config/tu_manifest.d/` | new — one entry, `ov045/PoleLift`, status `text-verified` |
 | `notes/tu-reconstruction-pilot-report.md` | new — this file |
 

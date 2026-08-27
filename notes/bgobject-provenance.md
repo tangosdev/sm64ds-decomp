@@ -335,9 +335,10 @@ make the code say what the prose said. Bodies read:
 | 0x32d | `mEventBit` | `param1 & 0xf`, passed straight to `Event::SetBit(u32)`. |
 | 0x32e | `mHomeAreaId` | `InitResources` copies `mAreaId` here before `Behavior` sets `mAreaId = -1`, and `Behavior` passes it to `IsAreaShowing`. |
 
-The rename carried into `src_tu/actors/BlueCoinSwitch.cpp` as well as `src/` — the
-shadow TU builds only under a `tuModules` profile, so a stale spelling there compiles
-nowhere and no normal gate would have caught it. `tools/check_src_tu_compiles.py`
+The rename carried into the canonical TU `src/game/actors/BlueCoinSwitch.cpp` as
+well as its one-function proof sources. Before production admission the shadow TU
+built only under a `tuModules` profile, so a stale spelling there compiled nowhere
+and no normal gate would have caught it. `tools/check_src_tu_compiles.py`
 (72/72) and `tools/check_src_tu.py` were run after.
 
 ---
@@ -378,7 +379,7 @@ In the C twin, the `u8` marker at `0x2ec` became `mClsnMat`, the name
 `include/dBgActor_c.h` gives that offset and what `InitResources` passes to
 `dBgW_KcMbg::SetFile`.
 
-The rename carried into `src_tu/actors/daObjCannonShutter_c.cpp`, along with the same
+The rename carried into `src/game/actors/daObjCannonShutter_c.cpp`, along with the same
 raw-offset collapses: `Render`'s whole-object `struct Obj { char pad[0xd4]; Sub sub; }`
 shadow is gone in favour of `&mModel`, and `InitResources` reaches `mModel`,
 `mMeshCollider` and `mClsnMat` by name.
@@ -685,7 +686,8 @@ In the C twin, `0x074` becomes `mCamSpacePosX`.
 | 0x348 | `mShadowMat` | `Behavior` passes `&mShadowMat` as the `Matrix4x3 &` argument of `dActor_c::DropShadowScaleXYZ(ShadowModel &, Matrix4x3 &, ...)`, with `mShadowModel` as the argument before it. `0x348 + 0x30 = 0x378`. The same shape `SignPost` and `QuestionBlock` already carry. |
 | 0x37c | `mVariant` | `InitResources` sets `0`/`1` from actorID and uses it as the row index into all three ov098 resource columns `data_ov098_0213c380/384/388`. |
 
-The rename carried into `src_tu/actors/ArrowSignRight.cpp` as well as `src/`.
+The rename carried into `src/game/actors/ArrowSignRight.cpp` as well as its
+one-function proof sources.
 In the C twin, `0x00c` becomes `actorID` and `0x08e` `mAngleY`.
 
 ---

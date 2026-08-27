@@ -54,7 +54,12 @@ class TreeTests(unittest.TestCase):
         """If this is red, src_tu is stranded -- fix the tree, not the test."""
         report = C.check(REPO / "src_tu")
         self.assertTrue(report["ok"], report["failures"][:10])
-        self.assertGreater(report["checked"]["sources"], 30)
+        expected_sources = sum(
+            1 for path in (REPO / "src_tu").rglob("*")
+            if path.is_file() and path.suffix in C.SOURCE_SUFFIXES
+        )
+        self.assertGreater(expected_sources, 0)
+        self.assertEqual(report["checked"]["sources"], expected_sources)
         self.assertGreater(report["checked"]["references"], 100)
 
     def test_cli_exits_zero_on_the_committed_tree(self):

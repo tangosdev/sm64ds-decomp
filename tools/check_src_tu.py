@@ -52,8 +52,9 @@ python-names.yml do.
 tools/check_src_tu_compiles.py is the other half: it runs the compiler, so it runs
 where the compiler is (tools/hooks/pre-push, the build box) and not here.
 
-This section used to name src_tu/actors/Actor.cpp and src_tu/actors/CastleWater.cpp
-as being in that state. They were not: both compile, and neither they nor any header
+This section used to name the Actor and CastleWater TUs, now promoted at
+src/game/actors/Actor.cpp and src/game/actors/CastleWater.cpp, as being in that
+state. They were not: both compile, and neither they nor any header
 has changed since this file landed, so the claim was wrong when it was written. The
 one translation unit that really did not compile -- ov029/SwitchActivatedPlank, whose
 placeholder `struct dBgW_Kc { int d; };` collided with the real class #1643 gave it --

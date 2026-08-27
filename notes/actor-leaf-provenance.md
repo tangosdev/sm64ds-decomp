@@ -210,7 +210,8 @@ carry the rename.
 | 0x171 | `mWasTouched` | edge detector on the collider: latched to 1 (and `mHealTimer` zeroed, so the heal fires that frame) the first frame the `dCcAc_c` reports an occupant, cleared the frame it reports none. |
 
 Sources: `src/game/actors/HealingHeart/_ZN12HealingHeart13InitResourcesEv.cpp`,
-`src/game/actors/HealingHeart/_ZN12HealingHeart8BehaviorEv.cpp`, and `src_tu/actors/HealingHeart.cpp`.
+`src/game/actors/HealingHeart/_ZN12HealingHeart8BehaviorEv.cpp`, and the canonical
+production TU `src/game/actors/HealingHeart.cpp`.
 
 ## WingFeather -- include/WingFeather.h
 
@@ -223,7 +224,7 @@ Sources: `src/game/actors/HealingHeart/_ZN12HealingHeart13InitResourcesEv.cpp`,
 
 Sources: `src/game/actors/WingFeather/_ZN11WingFeather13InitResourcesEv.cpp`,
 `src/game/actors/WingFeather/_ZN11WingFeather8BehaviorEv.cpp`, `src/game/actors/WingFeather/_ZN11WingFeather6RenderEv.cpp`,
-`src_tu/actors/WingFeather.cpp`.
+the canonical production TU `src/game/actors/WingFeather.cpp`.
 
 ## daObjAbuku_c -- include/daObjAbuku_c.h
 
@@ -238,7 +239,7 @@ overlay.
 | 0x110 | `mParticle` | particle-handle shape, effect 1. |
 
 Sources: `src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_c13InitResourcesEv.cpp`,
-`src_tu/actors/daObjAbuku_c.cpp`.
+the canonical production TU `src/game/actors/daObjAbuku_c.cpp`.
 
 ## daEyBm_c -- include/daEyBm_c.h
 

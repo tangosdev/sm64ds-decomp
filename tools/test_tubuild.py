@@ -120,13 +120,13 @@ def test_verify_reproduces_pilot_1s_7_of_7_and_clean_objisolate():
     walk of match.py + objisolate.py + reloc_audit.py agree with what a human
     found by hand for this exact TU (notes/tu-reconstruction-pilot-report.md sec 1)?
 
-    Runs against the ALREADY-CURATED src_tu/actors/PoleLift.cpp -- `create` is not
+    Runs against the ALREADY-CURATED src/game/actors/PoleLift.cpp -- `create` is not
     involved, matching the assignment's instruction to skip it for this candidate.
     """
     if not _toolchain():
         return
-    shadow = REPO / "src_tu" / "actors" / "PoleLift.cpp"
-    assert shadow.is_file(), "the pilot's committed shadow TU is missing"
+    shadow = REPO / "src" / "game" / "actors" / "PoleLift.cpp"
+    assert shadow.is_file(), "the pilot's promoted production TU is missing"
 
     scratch = _scratch_manifest()
     try:
@@ -252,14 +252,14 @@ def test_promote_dry_run_refuses_a_tu_that_is_not_link_verified_but_still_explai
     code, out = _run("promote", "ov045/PoleLift", "--dry-run")
     assert code != 0, "text-verified is not enough to promote"
     assert "promotion would be REFUSED" in out
-    assert "git mv src_tu/actors/PoleLift.cpp" in out
+    assert "git mv src/game/actors/PoleLift.cpp" in out
     assert "git rm src/game/actors/PoleLift/_ZN8PoleLift6RenderEv.cpp" in out
     assert "NOTHING IS WRITTEN BY THIS COMMAND" in out
     assert "DRY RUN COMPLETE" in out
     assert "COVERAGE GATE IS TU-AWARE" in out
     assert "function_snapshot() builds {stem: path}" not in out
     assert "tools/cpp_tu_compat.py" in out
-    assert (REPO / "src_tu" / "actors" / "PoleLift.cpp").is_file()
+    assert (REPO / "src" / "game" / "actors" / "PoleLift.cpp").is_file()
     assert (REPO / "src" / "game" / "actors" / "PoleLift" /
             "_ZN8PoleLift6RenderEv.cpp").is_file()
 
@@ -668,18 +668,18 @@ def test_linkcheck_compile_keeps_production_policies_but_defers_partition_candid
         monkeypatch):
     policies = {
         "src/game/actors/ActorBase_SceneNode.cpp": ["_ZN7fBase_c9SceneNodeC2Ev"],
-        "src_tu/actors/daObjAbuku_c.cpp": ["_ZN12daObjAbuku_cD2Ev"],
+        "src/game/actors/daObjAbuku_c.cpp": ["_ZN12daObjAbuku_cD2Ev"],
     }
     monkeypatch.setattr(
         tubuild.RB, "compiler_only_policies",
         lambda _srcs: {key: list(value) for key, value in policies.items()})
 
     ordinary = tubuild.linkcheck_compiler_only_policies(
-        list(policies), entry={"source": "src_tu/actors/daObjAbuku_c.cpp"})
+        list(policies), entry={"source": "src/game/actors/daObjAbuku_c.cpp"})
     assert ordinary == policies
 
     partitioned = tubuild.linkcheck_compiler_only_policies(
-        list(policies), entry={"source": "src_tu\\actors\\daObjAbuku_c.cpp"},
+        list(policies), entry={"source": "src\\game\\actors\\daObjAbuku_c.cpp"},
         partitioned=True)
     assert partitioned == {
         "src/game/actors/ActorBase_SceneNode.cpp": ["_ZN7fBase_c9SceneNodeC2Ev"]

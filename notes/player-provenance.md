@@ -358,8 +358,8 @@ Only two slots are the actor's own, and both are witnessed:
 | 0x0d4 | `mKillTimer` | `InitResources` seeds it with 0x78 (120 frames) and nothing else arms it; `Behavior`'s state 1 runs it down with `DecIfAbove0_Short` and, at zero, plays one more sound and calls `dActor_c::KillAndTrackInDeathTable`. Armed once, expires once, and its expiry IS the kill. |
 | 0x0d6 | `mState` | `Behavior` switches on it over exactly `{0, 1}`. State 0 waits for `DistToCPlayer() < 0x180000`, plays a sound and increments it; state 1 is the countdown above. A two-state machine, not a flag -- and the increment is spelt through a byte pointer at `this + 0xd6`, which is why the slot is `u8`. |
 
-The rename carried into `src_tu/actors/IceSlideManager.cpp`, which keeps its own
-TU-local shadow `dActor_c`; `check_src_tu_compiles` is green on all 72.
+The rename carried into `src/game/actors/IceSlideManager.cpp`, which keeps its own
+TU-local shadow `dActor_c`; `check_src_tu_compiles` keeps that source compiled.
 
 ## UpDownLiftBbh
 

@@ -141,7 +141,7 @@ Matching byte-for-byte and being readable are not in conflict. Recovered classes
 promoted from flat C into real C++ where the vtables prove the hierarchy, so
 `ActorBase`, `ActorDerived`, `Actor`, and the `Model` and `ModelAnim` families are
 declared as actual classes in `include/`. Actor implementations are moving under
-`src/actors/<Class>/`. Every promotion is gated on the same byte check as everything
+`src/game/actors/<Class>/`. Every promotion is gated on the same byte check as everything
 else, so readability never costs a match.
 
 ## Where things stand

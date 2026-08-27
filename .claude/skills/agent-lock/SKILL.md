@@ -52,9 +52,9 @@ Acquire is all-or-nothing across every resource in one call — if any file or t
 is already held, nothing is locked and you get back exactly what's holding it.
 
 ```
-python tools/agentlock.py acquire --files src_tu/actors/Actor.cpp include/dActor_c.h --note "migrating Actor" --ttl 1800
+python tools/agentlock.py acquire --files src/game/actors/Actor.cpp include/dActor_c.h --note "migrating Actor" --ttl 1800
 python tools/agentlock.py acquire --range ov006 0x020f0000 0x020f0100 --note "DetectClsn rewrite"
-python tools/agentlock.py acquire --files src_tu/actors/Actor.cpp --range ov006 0x020f0000 0x020f0100
+python tools/agentlock.py acquire --files src/game/actors/Actor.cpp --range ov006 0x020f0000 0x020f0100
 ```
 
 `--wait N` polls for up to N seconds instead of failing immediately (useful when you'd
@@ -64,21 +64,21 @@ Long edits should renew before the TTL (default 1800s) runs out — `list`/`chec
 remaining TTL:
 
 ```
-python tools/agentlock.py renew --files src_tu/actors/Actor.cpp include/dActor_c.h --ttl 1800
+python tools/agentlock.py renew --files src/game/actors/Actor.cpp include/dActor_c.h --ttl 1800
 ```
 
 Release when done — always, even if the edit failed, so you don't sit on a lock for the
 next 30 minutes:
 
 ```
-python tools/agentlock.py release --files src_tu/actors/Actor.cpp include/dActor_c.h
+python tools/agentlock.py release --files src/game/actors/Actor.cpp include/dActor_c.h
 python tools/agentlock.py release --range ov006 0x020f0000 0x020f0100
 ```
 
 Check before planning work, or list everything currently held:
 
 ```
-python tools/agentlock.py check --files src_tu/actors/Actor.cpp
+python tools/agentlock.py check --files src/game/actors/Actor.cpp
 python tools/agentlock.py list --module ov006
 python tools/agentlock.py list
 ```

@@ -132,13 +132,51 @@ INLINE_ASM = re.compile(r"__asm|(?<![A-Za-z0-9_])asm\s*[({]")
 #  delaunder.find_sites, which reads code. See the call site for why.)
 
 
+def production_oracle_sources():
+    """Legacy per-function sources retained only as derived-text proof oracles.
+
+    A configured derived-text TU is the source compiled by the default ROM build;
+    its manifest members remain tracked so every compiler-derived contribution can
+    still be compared with the independently matched one-function object. Counting
+    both copies would make a successful consolidation *increase* language-mode and
+    codegen-debt metrics. Follow the same production authority as rombuild instead.
+    """
+    registry = REPO / "config" / "production-tus.json"
+    if not registry.is_file():
+        return set()
+    data = json.loads(registry.read_text(encoding="utf-8"))
+    configured = data.get("partitioned_tus", []) + data.get("derived_text_tus", [])
+    manifest_root = REPO / "config" / "tu_manifest.d"
+    manifests = {}
+    for candidate in manifest_root.rglob("*.json"):
+        row = json.loads(candidate.read_text(encoding="utf-8"))
+        if row.get("id"):
+            manifests[row["id"]] = row
+    oracles = set()
+    for tu_id in configured:
+        manifest = manifests.get(tu_id)
+        if manifest is None:
+            raise RuntimeError(f"configured production TU has no manifest: {tu_id}")
+        canonical = manifest.get("promoted_source") or manifest.get("source")
+        if not canonical:
+            raise RuntimeError(f"configured production TU has no source: {tu_id}")
+        for row in manifest.get("functions", []):
+            legacy = row.get("legacy_source")
+            if legacy and legacy != canonical:
+                oracles.add(pathlib.PurePosixPath(legacy).as_posix())
+    return oracles
+
+
 def tracked_sources():
-    """Every git-tracked C/C++ file under src/, as repo-relative posix paths."""
+    """Git-tracked C/C++ files that contribute to the default production build."""
     out = subprocess.run(
         ["git", "-C", str(REPO), "ls-files", "src"],
         capture_output=True, text=True, check=True,
     ).stdout.split()
-    return [p for p in out if p.endswith((".c", ".cpp"))]
+    sources = [pathlib.PurePosixPath(p).as_posix()
+               for p in out if p.endswith((".c", ".cpp"))]
+    oracle_sources = production_oracle_sources()
+    return [p for p in sources if p not in oracle_sources]
 
 
 # Any mangled symbol DEFINED in the body -- same shape as hand_spells_own_symbol,
