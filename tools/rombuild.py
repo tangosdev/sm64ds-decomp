@@ -607,6 +607,7 @@ def main():
                     help="skip the src/ layout invariant gate (see tools/layout_check.py)")
     ap.add_argument("--no-check", action="store_true",
                     help="skip module/source fidelity analysis; report status is unchecked")
+    ap.add_argument("--data-json", help="dump every ROM-data verdict record as JSON")
     ap.add_argument("--no-data-check", action="store_true",
                     help="skip comparing emitted vtable/RTTI data against the ROM "
                          "(see tools/romdata_check.py); never affects the link")
@@ -838,13 +839,20 @@ def main():
             # validate_merge ratchets the verified count instead.
             romdata = RDC.summarize(data_sink)
             report["romData"] = romdata
+            if args.data_json:
+                # The only way to tell a real data regression from a consolidation
+                # collapsing duplicate records -- see RDC.summarize.
+                pathlib.Path(args.data_json).write_text(
+                    json.dumps(data_sink, indent=1), encoding="utf-8")
             analysis["moduleComposition"]["dataBytesVerified"] = romdata["verifiedBytes"]
         RBC.print_report(analysis)
         if data_sink is not None:
             rd = report["romData"]
             print(f"ROM data from source: {rd['verified']:,} symbol(s) verified, "
                   f"{rd['partial']:,} partial, {rd['differs']:,} differ, "
-                  f"{rd['unnamed']:,} unnamed by config")
+                  f"{rd['unnamed']:,} unnamed by config"
+                  + (f" (from {rd['records']:,} object records)"
+                     if rd.get("records") else ""))
         report["analysis"] = analysis
         report["status"] = "passed" if analysis["passed"] else "failed"
         save_report()

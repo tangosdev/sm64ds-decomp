@@ -232,18 +232,57 @@ def check_object(obj_path, rel, names=None):
                  "note": f"{type(exc).__name__}: {exc}"}]
 
 
+RANK = {UNNAMED: 0, DIFFERS: 1, PARTIAL: 2, VERIFIED: 3}
+
+
 def summarize(records):
+    """Counts of ROM DATA SYMBOLS, not of compiled object records.
+
+    A record is one emitted data symbol in one object, and vague linkage means the
+    same symbol is emitted by every object that needs it: five sources destroying a
+    Vector3 produce five ``_ZTI7fBase_c`` records proving the same cartridge bytes.
+    Counting records made the headline number a function of how many FILES the tree
+    happens to be split into, so merging eight per-function sources into the one
+    translation unit the original build had -- which is the whole point of TU
+    reconstruction -- read as ROM data losing verification. Measured on the first
+    promotion: 28 records vanished, 6 of them VERIFIED, and not one symbol dropped a
+    grade. The ratchet in validate_merge reads `verified`, so it has to mean symbols.
+
+    ``verified``/``partial``/``unnamed`` are unique symbols at their BEST verdict.
+    ``differs`` is deliberately the opposite -- any symbol with at least one differing
+    record -- so a newly wrong copy can never hide behind a correct sibling. The
+    per-record totals stay available under ``*Records`` for anyone comparing against
+    an older report.
+    """
     counts = collections.Counter(r["verdict"] for r in records)
     verified_bytes = sum(r.get("bytes", 0) for r in records if r["verdict"] == VERIFIED)
     partial_bytes = sum(r.get("bytes", 0) for r in records if r["verdict"] == PARTIAL)
+    best, bytes_for = {}, {}
+    for r in records:
+        sym, verdict = r["symbol"], r["verdict"]
+        if RANK.get(verdict, -1) > RANK.get(best.get(sym), -1):
+            best[sym] = verdict
+            bytes_for[sym] = r.get("bytes", 0)
+    differing_syms = {r["symbol"] for r in records if r["verdict"] == DIFFERS}
+    unique = collections.Counter(
+        v for s, v in best.items() if s not in differing_syms)
     return {
-        "symbols": len(records),
-        "verified": counts[VERIFIED],
-        "partial": counts[PARTIAL],
-        "differs": counts[DIFFERS],
-        "unnamed": counts[UNNAMED],
-        "verifiedBytes": verified_bytes,
-        "partialBytes": partial_bytes,
+        "symbols": len(best),
+        "verified": unique[VERIFIED],
+        "partial": unique[PARTIAL],
+        "differs": len(differing_syms),
+        "unnamed": unique[UNNAMED],
+        "verifiedBytes": sum(b for s, b in bytes_for.items()
+                             if best[s] == VERIFIED and s not in differing_syms),
+        "partialBytes": sum(b for s, b in bytes_for.items()
+                            if best[s] == PARTIAL and s not in differing_syms),
+        "records": len(records),
+        "verifiedRecords": counts[VERIFIED],
+        "partialRecords": counts[PARTIAL],
+        "differsRecords": counts[DIFFERS],
+        "unnamedRecords": counts[UNNAMED],
+        "verifiedBytesRecords": verified_bytes,
+        "partialBytesRecords": partial_bytes,
         # The actionable list: a class model whose vtable disagrees with the cartridge.
         "differing": sorted(
             ({"src": r["src"], "symbol": r["symbol"], "module": r.get("module"),
