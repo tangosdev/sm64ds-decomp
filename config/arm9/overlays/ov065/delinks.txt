@@ -376,47 +376,47 @@ src/func_ov065_0211a45c.c:
     complete
     .text start:0x0211a45c end:0x0211a494
 
-src/_ZN20TtcConveyorBeltLargeD1Ev.c:
+src/_ZN16daObjCtMecha04_cD1Ev.cpp:
     complete
     .text start:0x0211a494 end:0x0211a4e8
 
-src/_ZN20TtcConveyorBeltLargeD0Ev.c:
+src/_ZN16daObjCtMecha04_cD0Ev.cpp:
     complete
     .text start:0x0211a4e8 end:0x0211a550
 
-src/func_ov065_0211a550.c:
+src/_ZN16daObjCtMecha04_c12UpdateShadowEv.cpp:
     complete
     .text start:0x0211a550 end:0x0211a638
 
-src/_ZN20TtcConveyorBeltLarge16CleanupResourcesEv.cpp:
+src/_ZN16daObjCtMecha04_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211a638 end:0x0211a69c
 
-src/_ZN20TtcConveyorBeltLarge6RenderEv.cpp:
+src/_ZN16daObjCtMecha04_c6RenderEv.cpp:
     complete
     .text start:0x0211a69c end:0x0211a6d0
 
-src/_ZN20TtcConveyorBeltLarge8BehaviorEv.cpp:
+src/_ZN16daObjCtMecha04_c8BehaviorEv.cpp:
     complete
     .text start:0x0211a6d0 end:0x0211a870
 
-src/_ZN20TtcConveyorBeltLarge13InitResourcesEv.cpp:
+src/_ZN16daObjCtMecha04_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211a870 end:0x0211aa38
 
-src/func_ov065_0211aa38.c:
+src/_ZN16daObjCtMecha04_c15MoveActorOnBeltER8dActor_c.cpp:
     complete
     .text start:0x0211aa38 end:0x0211aacc
 
-src/func_ov065_0211aacc.c:
+src/_ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_.cpp:
     complete
     .text start:0x0211aacc end:0x0211aae0
 
-src/TtcConveyorBeltLarge_Spawn.c:
+src/TtcConveyorBeltLarge_Spawn.cpp:
     complete
     .text start:0x0211aae0 end:0x0211ab20
 
-src/TtcConveyorBeltSmall_Spawn.c:
+src/TtcConveyorBeltSmall_Spawn.cpp:
     complete
     .text start:0x0211ab20 end:0x0211ab60
 

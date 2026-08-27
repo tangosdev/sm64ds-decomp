@@ -19,9 +19,10 @@
  * The ROM's RTTI names this class dExtFrameCtrl_c -- a frame controller,
  * i.e. the playback cursor, not the animation data.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the
- * key-function arrangement from include/ModelBase.h. C1/C2/D0/D1/D2 stay
- * self-contained translation units.
+ * The destructor is declared first, which makes it the key virtual function.
+ * Each enrolled destructor-variant translation unit defines the same real
+ * `Animation::~Animation()`; mwcc emits D2/D0/D1 together and objisolate keeps
+ * the variant named by that file's enrollment.
  *
  * LAYOUT is 0x10 bytes, pinned by C2 (vptr store, +0x8 zeroed, +0xc set
  * to 0x1000 = 1.0) and read consistently by Copy/Advance/Finished:

@@ -5935,7 +5935,7 @@ src/_ZN8dM3dGLin3SetERK7Vector3S2_.cpp:
     complete
     .text start:0x020fea84 end:0x020feab8
 
-src/func_ov002_020feab8.c:
+src/_ZN8dM3dGLinD2Ev.cpp:
     complete
     .text start:0x020feab8 end:0x020feabc
 

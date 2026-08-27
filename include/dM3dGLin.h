@@ -7,7 +7,7 @@
  *   _ZN8dM3dGLin3SetERK7Vector3S2_   start = a; end = b   (both, word stores)
  *   func_ov002_020fea68              a[0..2] = b[0..2]    GetStart
  *   func_ov002_020fea4c              a[0..2] = b[3..5]    GetEnd
- *   func_ov002_020feab8              `bx lr'              the trivial ~dM3dGLin
+ *   _ZN8dM3dGLinD2Ev                 `bx lr'              the trivial base dtor
  *
  * NON-POLYMORPHIC: no vptr anywhere in those bodies, so despite appearing in
  * a polymorphic class's base list it contributes no vtable store to any
@@ -28,6 +28,7 @@ struct dM3dGLin {
     Vector3 end;            /* 0x0c */
 
 #ifdef __cplusplus
+    ~dM3dGLin();
     void Set(const Vector3 &start, const Vector3 &end);
 #endif
 };

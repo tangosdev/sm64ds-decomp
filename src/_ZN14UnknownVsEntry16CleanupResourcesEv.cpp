@@ -34,7 +34,7 @@ int UnknownVsEntry::CleanupResources()
     ((SharedFilePtr *)(data_ov075_0211d404))->Release();
     ((SharedFilePtr *)(data_ov075_0211d3c4))->Release();
     ((SharedFilePtr *)(data_ov075_0211d414))->Release();
-    if (*(int*)((char*)&mParam) != 1) {
+    if (param1 != 1) {
         ((SharedFilePtr *)(data_ov075_0211d394))->Release();
         ((SharedFilePtr *)(data_ov075_0211d3cc))->Release();
         ((SharedFilePtr *)(data_ov075_0211d39c))->Release();
@@ -54,7 +54,7 @@ int UnknownVsEntry::CleanupResources()
     }
     ((SharedFilePtr *)(data_ov075_0211d40c))->Release();
     ((SharedFilePtr *)(data_ov075_0211d3fc))->Release();
-    if (*(int*)((char*)&mParam) != 1) {
+    if (param1 != 1) {
         ((SharedFilePtr *)(data_ov075_0211d3bc))->Release();
         ((SharedFilePtr *)(data_ov075_0211d3e4))->Release();
     }

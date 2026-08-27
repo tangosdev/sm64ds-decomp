@@ -1956,11 +1956,11 @@ src/_ZN7Clipper13Func_020156DCEv.cpp:
     complete
     .text start:0x020156dc end:0x020156fc
 
-src/_ZN7ClipperD0Ev.c:
+src/_ZN7ClipperD0Ev.cpp:
     complete
     .text start:0x020156fc end:0x02015720
 
-src/_ZN7ClipperD1Ev.c:
+src/_ZN7ClipperD1Ev.cpp:
     complete
     .text start:0x02015720 end:0x02015730
 
@@ -2072,15 +2072,15 @@ src/_ZN9Animation7AdvanceEv.cpp:
     complete
     .text start:0x02015c3c end:0x02015cb4
 
-src/_ZN9AnimationD2Ev.c:
+src/_ZN9AnimationD2Ev.cpp:
     complete
     .text start:0x02015cb4 end:0x02015cc4
 
-src/_ZN9AnimationD0Ev.c:
+src/_ZN9AnimationD0Ev.cpp:
     complete
     .text start:0x02015cc4 end:0x02015ce8
 
-src/_ZN9AnimationD1Ev.c:
+src/_ZN9AnimationD1Ev.cpp:
     complete
     .text start:0x02015ce8 end:0x02015cf8
 
@@ -2108,7 +2108,7 @@ src/_ZN11ShadowModel9DoSetFileEPcii.cpp:
     complete
     .text start:0x02015ef4 end:0x02015f80
 
-src/_ZN11ShadowModelD0Ev.c:
+src/_ZN11ShadowModelD0Ev.cpp:
     complete
     .text start:0x02015f80 end:0x02015ff8
 
@@ -2328,7 +2328,11 @@ src/_ZN5Model11UpdateVertsEv.cpp:
     complete
     .text start:0x02016c98 end:0x02016ca8
 
-src/_ZN5ModelD0Ev.c:
+src/_ZN5ModelD2Ev.cpp:
+    complete
+    .text start:0x02016ca8 end:0x02016ce0
+
+src/_ZN5ModelD0Ev.cpp:
     complete
     .text start:0x02016ce0 end:0x02016d20
 
@@ -2368,15 +2372,15 @@ src/func_02017060.c:
     complete
     .text start:0x02017060 end:0x020170b8
 
-src/_ZN9ModelBaseD2Ev.c:
+src/_ZN9ModelBaseD2Ev.cpp:
     complete
     .text start:0x020170b8 end:0x020170e8
 
-src/_ZN9ModelBaseD0Ev.c:
+src/_ZN9ModelBaseD0Ev.cpp:
     complete
     .text start:0x020170e8 end:0x02017120
 
-src/_ZN9ModelBaseD1Ev.c:
+src/_ZN9ModelBaseD1Ev.cpp:
     complete
     .text start:0x02017120 end:0x02017150
 
@@ -5098,11 +5102,11 @@ src/_ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c.cpp:
     complete
     .text start:0x02037670 end:0x02037710
 
-src/func_02037710.c:
+src/_ZN9dBgCh_LinD0Ev.cpp:
     complete
     .text start:0x02037710 end:0x02037764
 
-src/_ZN9dBgCh_LinD1Ev.c:
+src/_ZN9dBgCh_LinD1Ev.cpp:
     complete
     .text start:0x02037764 end:0x020377b0
 

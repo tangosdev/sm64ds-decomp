@@ -90,7 +90,7 @@ void _ZN6Memory16operator_delete2EPv(void *p) { _ZN6Memory10DeallocateEPv(p); }
 }
 
 // Model::~Model() is NOT bridged here: this branch promotes
-// src/_ZN5ModelD1Ev.c to a real C++ destructor and the gate-4b slice
+// src/_ZN5ModelD1Ev.cpp is a real C++ destructor and the gate-4b slice
 // compiles it, so MSVC takes slot 0 from src/ directly. Defining it here as
 // well would be a duplicate definition.
 
