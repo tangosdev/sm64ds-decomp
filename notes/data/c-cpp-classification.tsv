@@ -68,7 +68,6 @@ src/ChangeArea.c	PURE-C	arm9				1		None		-
 src/CheepCheep_Spawn.c	WEAK-refs-only	ov090				1		None		-
 src/ChillBully_Spawn.c	WEAK-refs-only	ov027				1		None		-
 src/Chuckya_Spawn.c	WEAK-refs-only	ov062				1		None		-
-src/Clam_Spawn.c	WEAK-refs-only	ov064				1		None		-
 src/CleanCommonModelDataArr.c	WEAK-refs-only					0		None		not-in-delinks
 src/ClearSpikeBomb.c	PURE-C	arm9				1		None		-
 src/ClockPaintingHandLong_Spawn.c	WEAK-refs-only	ov013				1		None		-

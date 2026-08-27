@@ -1,20 +1,26 @@
+//cpp
 // @symbol Clam_Spawn
-/* recovered: vtable identified, globals resolved, declarations from a shared header */
-#include "decl_Actor.h"
-#include "decl_ActorBase.h"
-#include "decl_ModelAnim.h"
-#include "decl_dCcAc_c.h"
-#include "decl_common.h"
-/* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV4Clam */
-int *Clam_Spawn(void)
+#include "Clam.h"
+
+/* This compiler rejects both the cartridge's class-specific operator-new
+ * spelling and placement new. Keep that allocation/constructor ABI boundary
+ * explicit, while the real class layout names every constructed subobject. */
+extern "C" {
+void *_ZN7fBase_cnwEj(unsigned int size);
+void _ZN8dActor_cC2Ev(void *self);
+void _ZN9ModelAnimC1Ev(void *self);
+void _ZN7dCcAc_cC1Ev(void *self);
+extern void *_ZTV4Clam;
+}
+
+extern "C" Clam *Clam_Spawn()
 {
-    int *p = (int *)_ZN7fBase_cnwEj(372);
-    if (p) {
-        _ZN8dActor_cC2Ev(p);
-        p[0] = (int)_ZTV4Clam;
-        _ZN9ModelAnimC1Ev((char *)p + 0xd4);
-        _ZN7dCcAc_cC1Ev((char *)p + 0x138);
+    Clam *actor = (Clam *)_ZN7fBase_cnwEj(sizeof(Clam));
+    if (actor) {
+        _ZN8dActor_cC2Ev(actor);
+        *(void **)actor = &_ZTV4Clam;
+        _ZN9ModelAnimC1Ev(&actor->mModelAnim);
+        _ZN7dCcAc_cC1Ev(&actor->mdCcAc_c);
     }
-    return p;
+    return actor;
 }

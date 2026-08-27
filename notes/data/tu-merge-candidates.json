@@ -5530,7 +5530,7 @@
     "src/_ZN4Clam6RenderEv.cpp",
     "src/_ZN4Clam8BehaviorEv.cpp",
     "src/_ZN4Clam13InitResourcesEv.cpp",
-    "src/Clam_Spawn.c"
+    "src/Clam_Spawn.cpp"
    ],
    "ext_mix": {
     ".cpp": 5,
