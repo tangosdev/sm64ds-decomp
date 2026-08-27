@@ -802,6 +802,14 @@
     "src/game/actors/Warp.cpp#_ZN4Warp6RenderEv": "tangosdev",
     "src/game/actors/Warp.cpp#_ZN4Warp8BehaviorEv": "tangosdev",
     "src/game/actors/Warp.cpp#_ZN4Warp13InitResourcesEv": "tangosdev",
-    "src/game/actors/Warp.cpp#Warp_Spawn": "tangosdev"
+    "src/game/actors/Warp.cpp#Warp_Spawn": "tangosdev",
+    "src/game/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_cD1Ev": "tangosdev",
+    "src/game/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_cD0Ev": "tangosdev",
+    "src/game/actors/daObjPathLift_c.cpp#func_ov100_02146e70": "aitddlabs",
+    "src/game/actors/daObjPathLift_c.cpp#func_ov100_0214700c": "tangosdev",
+    "src/game/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c6RenderEv": "tangosdev",
+    "src/game/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c8BehaviorEv": "tangosdev",
+    "src/game/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c13InitResourcesEv": "tangosdev"
   }
 }
