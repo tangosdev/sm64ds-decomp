@@ -29,7 +29,14 @@ struct PathLift : dBgActor_c {
     u8  pad_42c[0x20];
     s32 mState;                          /* 0x44c */
 
-    virtual ~PathLift();
+    /* DEFINED INLINE, and that is the point. The ROM's daObjPathLift_c
+       destructor contains PathLift's cleanup verbatim rather than a `bl` to a
+       _ZN8PathLiftD2Ev that this image does not contain -- so the original
+       destructor was inline in the class body and every subclass inlined it,
+       the same arrangement include/dBase_c.h records. PathLift's own D0/D1
+       still exist as out-of-line symbols because the vtable needs an address;
+       their files force the emission and objisolate keeps the bound variant. */
+    virtual ~PathLift() {}
 
     void AfterClsn();
     /* Non-virtual. Subclasses (e.g. daObjPathLift_c) call it from their own

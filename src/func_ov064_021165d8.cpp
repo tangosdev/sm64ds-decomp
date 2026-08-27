@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
-int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(void* self, void* wm, int fix12, short s, int b1, int b2, int t);
+int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(void* self, void* wm, int fix12, short s, int b1, int b2, int t);
 int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix12, unsigned int j);
 void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void* self, void* wm, unsigned int j);
 int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
@@ -25,7 +25,7 @@ extern "C" void func_ov064_021165d8(unsigned char* c)
 {
     _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
 
-    if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(
+    if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(
             c, c + 0x174,
             *(int*)(*(int*)(c + 0x330) + 0x2c),
             0x2888, 0, 1, 0x32000) != 0

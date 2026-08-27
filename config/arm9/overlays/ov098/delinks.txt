@@ -264,7 +264,7 @@ src/_ZN6CannonD1Ev.cpp:
     complete
     .text start:0x0213a900 end:0x0213a938
 
-src/_ZN6CannonD0Ev.c:
+src/_ZN6CannonD0Ev.cpp:
     complete
     .text start:0x0213a938 end:0x0213a984
 

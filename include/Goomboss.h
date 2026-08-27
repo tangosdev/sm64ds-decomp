@@ -82,6 +82,11 @@ struct Goomboss : dEnemyBase_c {
 
     virtual s32 Behavior();
     virtual s32 CleanupResources();
+    /* Declared here so src/_ZN8Goomboss13InitResourcesEv.cpp can be a real method
+       rather than an extern "C" free function under the mangled name. Safe to
+       declare virtual: ~Goomboss is still the first virtual DECLARED, so the key
+       function -- and with it _ZTV8Goomboss -- stays where it already was. */
+    virtual s32 InitResources();
     virtual s32 Render();
 };
 

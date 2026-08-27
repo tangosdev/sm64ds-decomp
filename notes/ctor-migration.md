@@ -396,8 +396,11 @@ no vtable. An ABI probe settles the shape: dBgPi introduces the virtual
 destructor and derives from the non-polymorphic dBgPc. With no dynamic primary
 base, the compiler places dBgPi's own vptr at +0x00 and its dBgPc base at +0x04.
 The generated C2 sequence therefore constructs dBgPc at +0x04 before storing
-dBgPi's vptr. C1 now lives in `src/_ZN5dBgPiC1Ev.cpp` as real C++; the separately
-enrolled C2 ABI variant remains in `src/_ZN5dBgPiC2Ev.cpp`.
+dBgPi's vptr. C1 now lives in `src/_ZN5dBgPiC1Ev.cpp` as real C++, and since
+#1833 so does the separately enrolled C2 ABI variant, in
+`src/_ZN5dBgPiC2Ev.cpp`. The two files carry the same definition -- C1 and C2
+are two of the functions mwcc emits from one constructor, and
+`config/arm9/delinks.txt` binds each file to one of them.
 
 ## 6. The recipe, condensed
 

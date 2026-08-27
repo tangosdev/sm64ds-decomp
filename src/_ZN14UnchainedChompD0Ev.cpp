@@ -1,36 +1,18 @@
 //cpp
 // @symbol _ZN14UnchainedChompD0Ev
-/* recovered: named members + shared header
+/* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
- * Memory::Deallocate and data_020a0eac are NOT declared here. dEnemyBase_c.h already
- * declares both -- as `void` and `void *` -- and a second extern "C" declaration
- * with a different type is not a redeclaration but an attempt to overload a
- * C-linkage name, which mwccarm rejects outright. */
+ * Nothing below spells the teardown. The three `__destroy_arr` calls, the six
+ * Model and six ShadowModel array elements, the sub-object destructors and the
+ * dEnemyBase_c chain are all consequences of include/UnchainedChomp.h's typed
+ * members; the deallocation is dEnemyBase_c's inline `operator delete`.
+ *
+ * The identical body stands in _ZN14UnchainedChompD1Ev.cpp: one
+ * `~UnchainedChomp() {}` emits D2, D0 and D1 together and objisolate keeps the
+ * variant each file is bound to.
+ */
 #include "UnchainedChomp.h"
-extern "C" {
-int __destroy_arr(void*, int, int, void*);
-int _ZN11ShadowModelD1Ev(void*);
-int _ZN9ModelAnimD1Ev(void*);
-int _ZN10dBgCh_ActrD1Ev(void*);
-int _ZN10dCcAcPos_cD1Ev(void*);
-int _ZN12dEnemyBase_cD2Ev(void*);
-extern int _ZTV14UnchainedChomp[];
-extern void _ZN8Vector3sD1Ev();
-extern void _ZN7Vector3D1Ev();
-extern void _ZN5ModelD1Ev();
-void* _ZN14UnchainedChompD0Ev(struct UnchainedChomp *self) {
-  *(int**)((char*)self) = _ZTV14UnchainedChomp;
-  __destroy_arr(((char*)self)+0x768, 6, 6, (void*)_ZN8Vector3sD1Ev);
-  __destroy_arr(((char*)self)+0x720, 6, 0xc, (void*)_ZN7Vector3D1Ev);
-  __destroy_arr(((char*)self)+0x6d8, 6, 0xc, (void*)_ZN7Vector3D1Ev);
-  _ZN11ShadowModelD1Ev((char*)&self->mShadowModel);
-  __destroy_arr(((char*)self)+0x550, 6, 0x28, (void*)_ZN11ShadowModelD1Ev);
-  __destroy_arr(((char*)self)+0x370, 6, 0x50, (void*)_ZN5ModelD1Ev);
-  _ZN9ModelAnimD1Ev((char*)&self->mModelAnim);
-  _ZN10dBgCh_ActrD1Ev((char*)&self->mWithMeshClsn);
-  _ZN10dCcAcPos_cD1Ev((char*)&self->mdCcAcPos_c);
-  _ZN12dEnemyBase_cD2Ev(((char*)self));
-  _ZN6Memory10DeallocateEPvP4Heap(((char*)self), data_020a0eac);
-  return ((char*)self);
-}
+
+UnchainedChomp::~UnchainedChomp()
+{
 }
