@@ -937,6 +937,14 @@
     "src/game/actors/daObjKm1_Dorifu_c.cpp#_ZN17daObjKm1_Dorifu_cD1Ev": "andrewboudreau",
     "src/game/actors/daObjKm1_Dorifu_c.cpp#_ZN17daObjKm1_Dorifu_cD0Ev": "andrewboudreau",
     "src/game/actors/daObjKm1_Dorifu_c.cpp#_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv": "lunavyqo",
-    "src/game/actors/daObjKm1_Dorifu_c.cpp#_ZN17daObjKm1_Dorifu_c13InitResourcesEv": "lunavyqo"
+    "src/game/actors/daObjKm1_Dorifu_c.cpp#_ZN17daObjKm1_Dorifu_c13InitResourcesEv": "lunavyqo",
+    "src/game/actors/HealingHeart.cpp#_ZN12HealingHeartD1Ev": "tangosdev",
+    "src/game/actors/HealingHeart.cpp#_ZN12HealingHeartD0Ev": "tangosdev",
+    "src/game/actors/HealingHeart.cpp#func_ov002_020bc664": "tangosdev",
+    "src/game/actors/HealingHeart.cpp#_ZN12HealingHeart16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/HealingHeart.cpp#_ZN12HealingHeart6RenderEv": "tangosdev",
+    "src/game/actors/HealingHeart.cpp#_ZN12HealingHeart8BehaviorEv": "tangosdev",
+    "src/game/actors/HealingHeart.cpp#_ZN12HealingHeart13InitResourcesEv": "tangosdev",
+    "src/game/actors/HealingHeart.cpp#HealingHeart_Spawn": "tangosdev"
   }
 }
