@@ -15,6 +15,38 @@ one, add it here AND, if it recurs, as a rule in `swarm.py` so the free tier can
 
 ---
 
+## 6ay. The C++ struct-copy lever reaches load ORDER, not just load width
+
+The known divergence is that `v = *(T *)p` is a blind byte move in C and scalarises
+to the members' own types in C++. The documented fix -- copy through a struct whose
+only member is an array -- is usually described as restoring the `ldm`/`stm` pair.
+It does more than that, and `RollingRock::Behavior` (ov021 0x02112854, 0x2d8) is the
+case that shows it.
+
+Copying a `Vector3_16` out of an actor at +0x92 as a method scalarised to three
+`ldrsh` where the ROM has `ldrh` -- four words out. Retyping the destination to an
+unsigned-member struct fixed the width and left THREE words: mwcc then reused one
+register and interleaved `strh r1,[sp,#8]` between the two loads, where the ROM
+batches `ldrh r2,[r4,#0x92]` and `ldrh r1,[r4,#0x94]` and stores after. The file's
+note ruled out ten spellings -- named temps, pointer derefs, const references,
+laundering the address, splitting the copy, reordering it -- and concluded
+"spelling alone does not reach it".
+
+    struct AngleWords { u16 w[3]; };
+    *(AngleWords *)&v16 = *(AngleWords *)(c + 0x92);
+
+matches exactly. The address is not 4-aligned so no `ldm` is involved: what the
+array member buys here is that the copy stops being three member assignments at
+all, and with it goes the register reuse that forced the interleave. Note the
+lever is applied AT THE COPY, through a cast, not by retyping the destination --
+retyping to an unsigned struct is the variant that leaves three words.
+
+**How to apply.** When a C-to-C++ conversion misses at a struct copy, try the
+array-member cast before any of the ten spellings above; it is one line and it
+addresses both the width and the order. Reading the copy into a local of the
+array-struct type first is NOT the same thing and is much worse (188 instructions
+against 182).
+
 ## 6az. Class-typed by-value parameters are homed to the stack (the Fix12 wall)
 
 Declaring a parameter as a by-value class - including the real `Fix12<int>`
