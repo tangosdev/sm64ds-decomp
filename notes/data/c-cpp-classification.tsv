@@ -654,7 +654,7 @@ src/_ZN11RickshawBdwD0Ev.c	DTOR-ONLY	ov043	daObjKm1_Kurumajiku_c	RickshawBdw/daO
 src/_ZN11RollingRock8BehaviorEv.c	P1-vtable+mangled	ov021	daGrock_c	RollingRock/daGrock_c	vtable daGrock_c slot 6 @0x2112854 | _ZN11RollingRock8BehaviorEv	1		True		-
 src/_ZN11ShadowModel9InitModelEP9Matrix4x35Fix12IiES3_S3_j.c	P3-mangled-method-only	arm9		ShadowModel	_ZN11ShadowModel9InitModelEP9Matrix4x35Fix12IiES3_S3_j	1		True		by-value-class-param
 src/_ZN11ShadowModelC1Ev.c	P3-mangled-method-only	arm9		ShadowModel	_ZN11ShadowModelC1Ev	1		True	_ZTV11ShadowModel	-
-src/_ZN11ShadowModelD0Ev.c	DTOR-ONLY	arm9	dExtShadowModel_c	ShadowModel/dExtShadowModel_c	_ZN11ShadowModelD0Ev	1		True	_ZTV11ShadowModel	-
+src/_ZN11ShadowModelD0Ev.cpp	DTOR-ONLY	arm9	dExtShadowModel_c	ShadowModel/dExtShadowModel_c	_ZN11ShadowModelD0Ev	1		True	_ZTV11ShadowModel	-
 src/_ZN11SnowmanBody16CleanupResourcesEv.c	P1-vtable+mangled	ov072	daBgSnmBdy_c	SnowmanBody/daBgSnmBdy_c	vtable daBgSnmBdy_c slot 3 @0x211fccc | _ZN11SnowmanBody16CleanupResourcesEv	1		True		-
 src/_ZN11SnowmanBody16OnPendingDestroyEv.c	P1-vtable+mangled	ov072	daBgSnmBdy_c	SnowmanBody/daBgSnmBdy_c	vtable daBgSnmBdy_c slot 12 @0x211fcf0 | _ZN11SnowmanBody16OnPendingDestroyEv	1		True		-
 src/_ZN11SnowmanBodyD0Ev.c	DTOR-ONLY	ov072	daBgSnmBdy_c	SnowmanBody/daBgSnmBdy_c	_ZN11SnowmanBodyD0Ev	1		True		-
@@ -940,7 +940,7 @@ src/_ZN5Crate4KillEv.c	P1-vtable+mangled	ov098	daObjBlockS_c	Crate/daObjBlockS_c
 src/_ZN5FaderD2Ev.c	DTOR-ONLY	arm9		Fader	_ZN5FaderD2Ev	1		True		-
 src/_ZN5ModelC1Ev.c	P3-mangled-method-only	arm9		Model	_ZN5ModelC1Ev	1		True	_ZTV5Model	-
 src/_ZN5ModelC2Ev.c	P3-mangled-method-only	arm9		Model	_ZN5ModelC2Ev	1		True	_ZTV5Model	-
-src/_ZN5ModelD0Ev.c	DTOR-ONLY	arm9	dExtSimpleModel_c	Model/dExtSimpleModel_c	_ZN5ModelD0Ev	1		True	_ZTV5Model	-
+src/_ZN5ModelD0Ev.cpp	DTOR-ONLY	arm9	dExtSimpleModel_c	Model/dExtSimpleModel_c	_ZN5ModelD0Ev	1		True	_ZTV5Model	-
 src/_ZN5ModelD1Ev.c	DTOR-ONLY			Model	_ZN5ModelD1Ev	0		True	_ZTV5Model	not-in-delinks
 src/_ZN5ModelD2Ev.c	DTOR-ONLY			Model	_ZN5ModelD2Ev	0		True	_ZTV5Model	not-in-delinks
 src/_ZN5PokeyD0Ev.c	DTOR-ONLY	ov096	daSanbo_c	Pokey/daSanbo_c	_ZN5PokeyD0Ev	1		True		-
