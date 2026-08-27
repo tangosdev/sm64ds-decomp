@@ -367,7 +367,7 @@ src/actors/daTrs_c/_ZN7daTrs_c13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0211c480 end:0x0211c4a0
 
-src/actors/BigBooIcon/BigBooIcon_Spawn.cpp:
+src/actors/BigBooIcon/BigBooIcon_Spawn.c:
     complete
     .text start:0x0211c4a0 end:0x0211c4d0
 
