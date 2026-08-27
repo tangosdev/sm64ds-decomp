@@ -76,7 +76,7 @@ struct ModelAnim : Model, Animation {
     virtual void Render(const Vector3 *scale);            /* slot 5 */
     virtual void Virtual18(u32 mat, const Vector3 *scale);/* slot 6 */
 
-    /* DECLARED, defined out of line in src/_ZN9ModelAnimC1Ev.cpp as real C++
+    /* DECLARED, defined out of line in src/runtime/graphics/ModelAnim/_ZN9ModelAnimC1Ev.cpp as real C++
      * -- complete-object context for every ROM caller (103 of them), hence C1.
      * Body is the single store file = 0; both base steps and both vptr stores
      * are synthesised (notes/ctor-migration.md section 6). The C2 sibling each

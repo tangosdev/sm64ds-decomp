@@ -22,56 +22,56 @@
       "symbol": "_ZN11VirtualDoorD1Ev",
       "address": "0x020b07f8",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN11VirtualDoorD1Ev.cpp",
+      "legacy_source": "src/game/actors/VirtualDoor/_ZN11VirtualDoorD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN11VirtualDoorD0Ev",
       "address": "0x020b081c",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN11VirtualDoorD0Ev.cpp",
+      "legacy_source": "src/game/actors/VirtualDoor/_ZN11VirtualDoorD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN11VirtualDoor16CleanupResourcesEv",
       "address": "0x020b0854",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN11VirtualDoor16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/VirtualDoor/_ZN11VirtualDoor16CleanupResourcesEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN11VirtualDoor16OnPendingDestroyEv",
       "address": "0x020b085c",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN11VirtualDoor16OnPendingDestroyEv.cpp",
+      "legacy_source": "src/game/actors/VirtualDoor/_ZN11VirtualDoor16OnPendingDestroyEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN11VirtualDoor6RenderEv",
       "address": "0x020b0860",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN11VirtualDoor6RenderEv.cpp",
+      "legacy_source": "src/game/actors/VirtualDoor/_ZN11VirtualDoor6RenderEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN11VirtualDoor8BehaviorEv",
       "address": "0x020b0868",
       "size": "0x000000d0",
-      "legacy_source": "src/_ZN11VirtualDoor8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/VirtualDoor/_ZN11VirtualDoor8BehaviorEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN11VirtualDoor13InitResourcesEv",
       "address": "0x020b0938",
       "size": "0x00000048",
-      "legacy_source": "src/_ZN11VirtualDoor13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/VirtualDoor/_ZN11VirtualDoor13InitResourcesEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "VirtualDoor_Spawn",
       "address": "0x020b0980",
       "size": "0x00000030",
-      "legacy_source": "src/VirtualDoor_Spawn.c",
+      "legacy_source": "src/game/actors/VirtualDoor/VirtualDoor_Spawn.c",
       "ordinal": 7
     }
   ],
@@ -262,14 +262,14 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN11VirtualDoorD1Ev.cpp",
-      "src/_ZN11VirtualDoorD0Ev.cpp",
-      "src/_ZN11VirtualDoor16CleanupResourcesEv.cpp",
-      "src/_ZN11VirtualDoor16OnPendingDestroyEv.cpp",
-      "src/_ZN11VirtualDoor6RenderEv.cpp",
-      "src/_ZN11VirtualDoor8BehaviorEv.cpp",
-      "src/_ZN11VirtualDoor13InitResourcesEv.cpp",
-      "src/VirtualDoor_Spawn.c"
+      "src/game/actors/VirtualDoor/_ZN11VirtualDoorD1Ev.cpp",
+      "src/game/actors/VirtualDoor/_ZN11VirtualDoorD0Ev.cpp",
+      "src/game/actors/VirtualDoor/_ZN11VirtualDoor16CleanupResourcesEv.cpp",
+      "src/game/actors/VirtualDoor/_ZN11VirtualDoor16OnPendingDestroyEv.cpp",
+      "src/game/actors/VirtualDoor/_ZN11VirtualDoor6RenderEv.cpp",
+      "src/game/actors/VirtualDoor/_ZN11VirtualDoor8BehaviorEv.cpp",
+      "src/game/actors/VirtualDoor/_ZN11VirtualDoor13InitResourcesEv.cpp",
+      "src/game/actors/VirtualDoor/VirtualDoor_Spawn.c"
     ],
     "extraInertImports": 56,
     "extraImportsWithNoHome": [],

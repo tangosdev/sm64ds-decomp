@@ -78,7 +78,7 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
      */
     virtual ~dBgCh_SphCrr();
 
-    /* DECLARED, defined out of line in src/_ZN12dBgCh_SphCrrC1Ev.cpp as real
+    /* DECLARED, defined out of line in src/game/actors/dBgCh_SphCrr/_ZN12dBgCh_SphCrrC1Ev.cpp as real
      * C++ -- complete-object context for every ROM caller, hence C1.
      */
     dBgCh_SphCrr();

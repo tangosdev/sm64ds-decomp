@@ -4,78 +4,78 @@
     .ctor       start:0x02111760 end:0x02111768 kind:rodata align:4
     .data       start:0x02111780 end:0x02112280 kind:data align:32
     .bss        start:0x02112280 end:0x021122c0 kind:bss align:32
-src/_ZN21ClockPaintingPendulumD1Ev.cpp:
+src/game/actors/ClockPaintingPendulum/_ZN21ClockPaintingPendulumD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111d0
 
-src/_ZN21ClockPaintingPendulumD0Ev.cpp:
+src/game/actors/ClockPaintingPendulum/_ZN21ClockPaintingPendulumD0Ev.cpp:
     complete
     .text start:0x021111d0 end:0x02111214
 
-src/_ZN21ClockPaintingPendulum16CleanupResourcesEv.cpp:
+src/game/actors/ClockPaintingPendulum/_ZN21ClockPaintingPendulum16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111214 end:0x02111238
 
-src/func_ov013_02111238.c:
+src/unnamed/ov013/0211/func_ov013_02111238.c:
     complete
     .text start:0x02111238 end:0x02111280
 
-src/_ZN21ClockPaintingPendulum6RenderEv.cpp:
+src/game/actors/ClockPaintingPendulum/_ZN21ClockPaintingPendulum6RenderEv.cpp:
     complete
     .text start:0x02111280 end:0x021112a8
 
-src/_ZN21ClockPaintingPendulum8BehaviorEv.cpp:
+src/game/actors/ClockPaintingPendulum/_ZN21ClockPaintingPendulum8BehaviorEv.cpp:
     complete
     .text start:0x021112a8 end:0x0211133c
 
-src/_ZN21ClockPaintingPendulum13InitResourcesEv.cpp:
+src/game/actors/ClockPaintingPendulum/_ZN21ClockPaintingPendulum13InitResourcesEv.cpp:
     complete
     .text start:0x0211133c end:0x02111384
 
-src/ClockPaintingPendulum_Spawn.c:
+src/game/actors/ClockPaintingPendulum/ClockPaintingPendulum_Spawn.c:
     complete
     .text start:0x02111384 end:0x021113bc
 
-src/_ZN22ClockPaintingHandShortD1Ev.cpp:
+src/game/actors/ClockPaintingHandShort/_ZN22ClockPaintingHandShortD1Ev.cpp:
     complete
     .text start:0x021113bc end:0x021113ec
 
-src/_ZN22ClockPaintingHandShortD0Ev.cpp:
+src/game/actors/ClockPaintingHandShort/_ZN22ClockPaintingHandShortD0Ev.cpp:
     complete
     .text start:0x021113ec end:0x02111430
 
-src/func_ov013_02111430.c:
+src/unnamed/ov013/0211/func_ov013_02111430.c:
     complete
     .text start:0x02111430 end:0x02111478
 
-src/_ZN22ClockPaintingHandShort16CleanupResourcesEv.cpp:
+src/game/actors/ClockPaintingHandShort/_ZN22ClockPaintingHandShort16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111478 end:0x021114a4
 
-src/_ZN22ClockPaintingHandShort6RenderEv.cpp:
+src/game/actors/ClockPaintingHandShort/_ZN22ClockPaintingHandShort6RenderEv.cpp:
     complete
     .text start:0x021114a4 end:0x021114cc
 
-src/_ZN22ClockPaintingHandShort8BehaviorEv.cpp:
+src/game/actors/ClockPaintingHandShort/_ZN22ClockPaintingHandShort8BehaviorEv.cpp:
     complete
     .text start:0x021114cc end:0x021115cc
 
-src/_ZN22ClockPaintingHandShort13InitResourcesEv.cpp:
+src/game/actors/ClockPaintingHandShort/_ZN22ClockPaintingHandShort13InitResourcesEv.cpp:
     complete
     .text start:0x021115cc end:0x0211163c
 
-src/ClockPaintingHandShort_Spawn.c:
+src/game/actors/ClockPaintingHandShort/ClockPaintingHandShort_Spawn.c:
     complete
     .text start:0x0211163c end:0x02111674
 
-src/ClockPaintingHandLong_Spawn.c:
+src/game/actors/ClockPaintingHandLong/ClockPaintingHandLong_Spawn.c:
     complete
     .text start:0x02111674 end:0x021116ac
 
-src/__sinit_ov013_021116b8.c:
+src/unnamed/ov013/0211/__sinit_ov013_021116b8.c:
     complete
     .init start:0x021116b8 end:0x021116f8
 
-src/__sinit_ov013_021116f8.c:
+src/unnamed/ov013/0211/__sinit_ov013_021116f8.c:
     complete
     .init start:0x021116f8 end:0x02111760

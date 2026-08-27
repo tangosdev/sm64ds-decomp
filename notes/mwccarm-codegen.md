@@ -893,7 +893,7 @@ Three parked "not reachable from C" regalloc near-misses cracked byte-exact
   still passes the values in registers, and demoting the fields to memory class removes
   the extra *named webs* that `volatile` + named ints introduce - which is what the
   rotation was. Prefer this form; fall back to `volatile` only if the coloring already
-  matches. (Mined from the twin `src/func_ov006_02107ea8.c`, which uses the same idiom.)
+  matches. (Mined from the twin `src/unnamed/ov006/0210/func_ov006_02107ea8.c`, which uses the same idiom.)
 - **Stack layout is declaration order, low to high** (volatile arrays and structs
   included): `saved[3]` then `v1` then `v2` lands sp+0 / sp+0xc / sp+0x18
   (func_ov092_021311b0; confirmed again on func_ov092_02131010's tmp/eq/dust).
@@ -1170,7 +1170,7 @@ Everything else follows from that. Corollaries, each verified with minimal toys:
 
 **The one matched precedent, and why it is not available here.** A corpus scan of all of arm9
 for the ROM shape `cmp rX,#0; beq #8; <single mov>` finds exactly TWO sites: `func_02068398`
-and `func_0205c048` -- and c048 is MATCHED. Its source (src/func_0205c048.c) buys the branch
+and `func_0205c048` -- and c048 is MATCHED. Its source (src/unnamed/arm9/0205/func_0205c048.c) buys the branch
 with a genuinely 2-condition guard, giving the assignment block two predecessors:
 ```c
 if (r8 != 0)      goto Lsep1;   /* pred 1: the goto      */
@@ -2925,7 +2925,7 @@ Three corrections fell straight out of it, all of which had been recorded as evi
   `-opt noschedule` COMMAND-LINE flag. Any "`#pragma scheduling off` is inert" line is
   meaningless, including ones asserted this session on the grounds that the token appears in
   the binary -- appearing in the binary is not the same as being pragma-exposed.
-- **`long_calls` is not a pragma.** `src/func_ov065_0211aacc.c` carried
+- **`long_calls` is not a pragma.** `src/unnamed/ov065/0211/func_ov065_0211aacc.c` carried
   `#pragma long_calls on` plus a comment crediting it for the pooled
   `ldr ip,[pc,#8]; bx ip` tail-call. It was silently ignored; the file matches on all 12
   builds with the line removed. Comment corrected.

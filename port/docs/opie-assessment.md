@@ -101,16 +101,16 @@ geometry engine exactly this way — command word then packed params to the FIFO
 straight to it:
 
 ```c
-/* src/Geometry_MatrixMultiply3x3.c:5 */   *(volatile u32 *)0x4000400 = 0x1a;
+/* src/runtime/math/Geometry_MatrixMultiply3x3.c:5 */   *(volatile u32 *)0x4000400 = 0x1a;
                                            Copy36Bytes(m, (int *)0x4000400);
-/* src/func_0205a290.c:35 */               DMAStartTransfer(ch, base, 0x4000400, 0x84400000 | ...);
+/* src/unnamed/arm9/0205/func_0205a290.c:35 */               DMAStartTransfer(ch, base, 0x4000400, 0x84400000 | ...);
 ```
 
 So the 3D seam for us is the **command stream**, not per-call immediate inlines.
 
 **Failure mode correction:** dead registers do not produce a blank screen, they produce a
 **hang**. The game spin-waits on hardware — `while (*(volatile unsigned *)(0x40000b0 + (ch*3+2)*4) & 0x80000000);`
-(`src/func_02059fa8.c:2`), `while (IPCSend(7,0,0) < 0);` (`src/func_0205ae30.c`). Any
+(`src/unnamed/arm9/0205/func_02059fa8.c:2`), `while (IPCSend(7,0,0) < 0);` (`src/unnamed/arm9/0205/func_0205ae30.c`). Any
 register the host layer leaves inert is a deadlock in the boot path.
 
 ### 2b. Our tree is *not* pre-wrapped in SDK-shaped inlines
@@ -124,8 +124,8 @@ an earlier "~670" was a regex artifact, see the appendix).
 - **3 files** — `func_0204af3c.c`, `func_ov007_020c1448.c`, `func_ov007_020ca86c.c` —
   define *any* named `G3_`/`GX_`/`G2_` inline. Not "overwhelmingly." Three.
 - The norm is a bare store, sometimes not even volatile:
-  `*(volatile int *)0x4000440 = 2;` (`src/func_ov006_020d09e0.c:9`),
-  `src/func_ov080_02125fd0.c:16`.
+  `*(volatile int *)0x4000440 = 2;` (`src/unnamed/ov006/020d/func_ov006_020d09e0.c:9`),
+  `src/unnamed/ov080/0212/func_ov080_02125fd0.c:16`.
 
 So "the decomp has incidentally done most of the API-recovery a port needs" was the
 opposite of true, and Phase 2 cannot be sized as "swap a header."
@@ -149,10 +149,10 @@ That grep proves nothing in a tree that names unknowns `func_XXXX`. Re-examined:
 
 - **G3d/G2d: genuinely absent.** The BMD loader checks no magic anywhere, `BMD_File.h`
   is a flat count/offset header, and name lookup is linear `strcmp`
-  (`src/func_020471ac.c`) where NNS G3d uses radix dictionaries. Hand-rolled EAD readers.
+  (`src/unnamed/arm9/0204/func_020471ac.c`) where NNS G3d uses radix dictionaries. Hand-rolled EAD readers.
 - **FND heaps: NNS under EAD names.** The signatures are literal NNS FND tags —
-  `0x46524d48` = `'FRMH'` (`src/_ZN18SolidHeapAllocatorC1EPvj.c:14`) and `0x45585048` =
-  `'EXPH'` (`src/_ZN22ExpandingHeapAllocatorC1EPvj.c:24`).
+  `0x46524d48` = `'FRMH'` (`src/runtime/memory/SolidHeapAllocator/_ZN18SolidHeapAllocatorC1EPvj.c:14`) and `0x45585048` =
+  `'EXPH'` (`src/runtime/memory/ExpandingHeapAllocator/_ZN22ExpandingHeapAllocatorC1EPvj.c:24`).
 
 Correct statement: *SM64DS does not use NNS G2d/G3d; its heap and sound layers are
 NNS/SDK-shaped under EAD names.* And write "BMD/BTP/BCA," not "BMD0/BTP0/BCA0" — the
@@ -163,10 +163,10 @@ game never checks a stamp, and the `0` spelling invites the NSBMD confusion.
 The first draft called audio "a separate, unscoped subproject." That was wrong. The ARM9
 side is the **stock NitroSDK sound stack over SDAT**:
 
-- `src/Snd_SendCommand.c` builds command records from a pool and dispatches them —
+- `src/game/objects/Snd_SendCommand.c` builds command records from a pool and dispatches them —
   NitroSDK's `SND` command-queue shape.
-- `src/func_0205b070.c` is `SND_FlushCommand` (DC-flush of 0x1800 = 256 × 0x18, then IPC
-  on **PXI tag 7** = sound). `src/IPCSend.c:34` is `PXI_SendWordByFifo` on `0x4000188`.
+- `src/unnamed/arm9/0205/func_0205b070.c` is `SND_FlushCommand` (DC-flush of 0x1800 = 256 × 0x18, then IPC
+  on **PXI tag 7** = sound). `src/game/objects/IPCSend.c:34` is `PXI_SendWordByFifo` on `0x4000188`.
 - The data is SDAT: `symbols/verified.tsv` names `0x020a5bb8` as
   `_ZN5Sound8SDAT_RAM3PTRE`, and `Sound::InfoSequenceEntry::GetWithID` walks the SDAT
   INFO block. `roadmap.md:42` already says "SDAT / SSEQ playback."
@@ -198,7 +198,7 @@ callback-signature widening, staticness toggles, and `NitroStaticInit` shims.)*
 We have the same problem plus in-place 32-bit fixup written back into loaded file images:
 
 ```c
-/* src/_ZN5Model17UpdateFileOffsetsER8BMD_File.cpp */
+/* src/runtime/graphics/Model/_ZN5Model17UpdateFileOffsetsER8BMD_File.cpp */
 int base = (int)&file;
 if (g->lists) g->lists = (BMD_DisplayList *)((int)g->lists + base);
 ```
@@ -210,9 +210,9 @@ via `(u32)&` / `(int)&`, and they point at globals, function pointers, and overl
 descriptors:
 
 ```c
-if (g == (int)&data_02089608)                     /* src/ContinueKuppaScriptIfNecessary.c:17 */
+if (g == (int)&data_02089608)                     /* src/game/objects/ContinueKuppaScriptIfNecessary.c:17 */
 (int)&func_02034fbc                                /* src/func_02034da4.c:48 — function ptr */
-LoadOverlay((int)&overlay_0)                       /* src/func_0201a2f8.c:41 */
+LoadOverlay((int)&overlay_0)                       /* src/unnamed/arm9/0201/func_0201a2f8.c:41 */
 ```
 
 Moving `s_HW_MAIN_MEM` low fixes none of those; host `.data`/`.text` sit at the image

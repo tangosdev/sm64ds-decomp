@@ -31,119 +31,119 @@
       "symbol": "_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc",
       "address": "0x020fe190",
       "size": "0x000001ac",
-      "legacy_source": "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp",
+      "legacy_source": "src/game/stages/Stage/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij",
       "address": "0x020fe33c",
       "size": "0x00000090",
-      "legacy_source": "src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp",
+      "legacy_source": "src/runtime/filesystem/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij",
       "address": "0x020fe3cc",
       "size": "0x00000018",
-      "legacy_source": "src/_Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "legacy_source": "src/game/camera/_Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEij",
       "address": "0x020fe3e4",
       "size": "0x00000014",
-      "legacy_source": "src/_Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "legacy_source": "src/runtime/filesystem/_Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_Z23LoadMinimapScaleObjectsRN11LVL_Overlay11ObjSubTableEij",
       "address": "0x020fe3f8",
       "size": "0x00000014",
-      "legacy_source": "src/_Z23LoadMinimapScaleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "legacy_source": "src/ui/hud/_Z23LoadMinimapScaleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_Z22LoadMinimapTileObjectsRN11LVL_Overlay11ObjSubTableEij",
       "address": "0x020fe40c",
       "size": "0x00000014",
-      "legacy_source": "src/_Z22LoadMinimapTileObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "legacy_source": "src/ui/hud/_Z22LoadMinimapTileObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_Z15LoadExitObjectsRN11LVL_Overlay11ObjSubTableEij",
       "address": "0x020fe420",
       "size": "0x000000d0",
-      "legacy_source": "src/_Z15LoadExitObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "legacy_source": "src/runtime/filesystem/_Z15LoadExitObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
       "ordinal": 6
     },
     {
       "symbol": "_Z15LoadDoorObjectsRN11LVL_Overlay11ObjSubTableEij",
       "address": "0x020fe4f0",
       "size": "0x000000dc",
-      "legacy_source": "src/_Z15LoadDoorObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "legacy_source": "src/runtime/filesystem/_Z15LoadDoorObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
       "ordinal": 7
     },
     {
       "symbol": "_Z14LoadFogObjectsRN11LVL_Overlay11ObjSubTableEij",
       "address": "0x020fe5cc",
       "size": "0x00000014",
-      "legacy_source": "src/_Z14LoadFogObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "legacy_source": "src/runtime/filesystem/_Z14LoadFogObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
       "ordinal": 8
     },
     {
       "symbol": "_Z23LoadTeleportDestObjectsRN11LVL_Overlay11ObjSubTableEij",
       "address": "0x020fe5e0",
       "size": "0x00000014",
-      "legacy_source": "src/_Z23LoadTeleportDestObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "legacy_source": "src/runtime/filesystem/_Z23LoadTeleportDestObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
       "ordinal": 9
     },
     {
       "symbol": "_Z25LoadTeleportSourceObjectsRN11LVL_Overlay11ObjSubTableEij",
       "address": "0x020fe5f4",
       "size": "0x0000009c",
-      "legacy_source": "src/_Z25LoadTeleportSourceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "legacy_source": "src/runtime/filesystem/_Z25LoadTeleportSourceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
       "ordinal": 10
     },
     {
       "symbol": "_Z15LoadViewObjectsRN11LVL_Overlay11ObjSubTableEij",
       "address": "0x020fe690",
       "size": "0x00000014",
-      "legacy_source": "src/_Z15LoadViewObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "legacy_source": "src/game/camera/_Z15LoadViewObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
       "ordinal": 11
     },
     {
       "symbol": "_Z15LoadPathObjectsRN11LVL_Overlay11ObjSubTableEij",
       "address": "0x020fe6a4",
       "size": "0x00000014",
-      "legacy_source": "src/_Z15LoadPathObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "legacy_source": "src/runtime/filesystem/_Z15LoadPathObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
       "ordinal": 12
     },
     {
       "symbol": "_Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij",
       "address": "0x020fe6b8",
       "size": "0x00000010",
-      "legacy_source": "src/_Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "legacy_source": "src/runtime/filesystem/_Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
       "ordinal": 13
     },
     {
       "symbol": "_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij",
       "address": "0x020fe6c8",
       "size": "0x000001e4",
-      "legacy_source": "src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "legacy_source": "src/runtime/filesystem/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
       "ordinal": 14
     },
     {
       "symbol": "_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij",
       "address": "0x020fe8ac",
       "size": "0x000000b4",
-      "legacy_source": "src/_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "legacy_source": "src/runtime/filesystem/_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
       "ordinal": 15
     },
     {
       "symbol": "_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij",
       "address": "0x020fe960",
       "size": "0x000000ec",
-      "legacy_source": "src/_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "legacy_source": "src/runtime/filesystem/_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
       "ordinal": 16
     }
   ],
@@ -300,23 +300,23 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp",
-      "src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp",
-      "src/_Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
-      "src/_Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
-      "src/_Z23LoadMinimapScaleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
-      "src/_Z22LoadMinimapTileObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
-      "src/_Z15LoadExitObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
-      "src/_Z15LoadDoorObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
-      "src/_Z14LoadFogObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
-      "src/_Z23LoadTeleportDestObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
-      "src/_Z25LoadTeleportSourceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
-      "src/_Z15LoadViewObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
-      "src/_Z15LoadPathObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
-      "src/_Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
-      "src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
-      "src/_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
-      "src/_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp"
+      "src/game/stages/Stage/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp",
+      "src/runtime/filesystem/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp",
+      "src/game/camera/_Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/runtime/filesystem/_Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/ui/hud/_Z23LoadMinimapScaleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/ui/hud/_Z22LoadMinimapTileObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/runtime/filesystem/_Z15LoadExitObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/runtime/filesystem/_Z15LoadDoorObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/runtime/filesystem/_Z14LoadFogObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/runtime/filesystem/_Z23LoadTeleportDestObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/runtime/filesystem/_Z25LoadTeleportSourceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/game/camera/_Z15LoadViewObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/runtime/filesystem/_Z15LoadPathObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/runtime/filesystem/_Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/runtime/filesystem/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/runtime/filesystem/_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+      "src/runtime/filesystem/_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp"
     ],
     "extraInertImports": 58,
     "extraImportsWithNoHome": [],

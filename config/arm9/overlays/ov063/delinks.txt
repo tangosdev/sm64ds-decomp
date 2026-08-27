@@ -4,569 +4,569 @@
     .ctor       start:0x0211e6fc end:0x0211e70c kind:rodata align:4
     .data       start:0x0211e720 end:0x0211edc0 kind:data align:32
     .bss        start:0x0211edc0 end:0x0211efe0 kind:bss align:32
-src/actors/daTrs_c/_ZN7daTrs_cD1Ev.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_cD1Ev.cpp:
     complete
     .text start:0x02115ee0 end:0x02115f48
 
-src/actors/daTrs_c/_ZN7daTrs_cD0Ev.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_cD0Ev.cpp:
     complete
     .text start:0x02115f48 end:0x02115fc4
 
-src/actors/BooCage/_ZN7BooCageD1Ev.cpp:
+src/game/actors/BooCage/_ZN7BooCageD1Ev.cpp:
     complete
     .text start:0x02115fc4 end:0x0211600c
 
-src/actors/BooCage/_ZN7BooCageD0Ev.c:
+src/game/actors/BooCage/_ZN7BooCageD0Ev.c:
     complete
     .text start:0x0211600c end:0x02116068
 
-src/actors/BigBooIcon/_ZN10BigBooIconD1Ev.cpp:
+src/game/actors/BigBooIcon/_ZN10BigBooIconD1Ev.cpp:
     complete
     .text start:0x02116068 end:0x0211608c
 
-src/actors/BigBooIcon/_ZN10BigBooIconD0Ev.c:
+src/game/actors/BigBooIcon/_ZN10BigBooIconD0Ev.c:
     complete
     .text start:0x0211608c end:0x021160c4
 
-src/actors/daTrs_c/_ZN7daTrs_c16OnAimedAtWithEggEv.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_c16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021160c4 end:0x021160d4
 
-src/unnamed/ov063/func_ov063_021160d4.c:
+src/unnamed/ov063/0211/func_ov063_021160d4.c:
     complete
     .text start:0x021160d4 end:0x02116190
 
-src/unnamed/ov063/func_ov063_02116190.c:
+src/unnamed/ov063/0211/func_ov063_02116190.c:
     complete
     .text start:0x02116190 end:0x02116244
 
-src/unnamed/ov063/func_ov063_02116244.c:
+src/unnamed/ov063/0211/func_ov063_02116244.c:
     complete
     .text start:0x02116244 end:0x021162c8
 
-src/unnamed/ov063/func_ov063_021162c8.cpp:
+src/unnamed/ov063/0211/func_ov063_021162c8.cpp:
     complete
     .text start:0x021162c8 end:0x021163d0
 
-src/unnamed/ov063/func_ov063_021163d0.c:
+src/unnamed/ov063/0211/func_ov063_021163d0.c:
     complete
     .text start:0x021163d0 end:0x0211640c
 
-src/unnamed/ov063/func_ov063_0211640c.c:
+src/unnamed/ov063/0211/func_ov063_0211640c.c:
     complete
     .text start:0x0211640c end:0x021166ac
 
-src/unnamed/ov063/func_ov063_021169c4.cpp:
+src/unnamed/ov063/0211/func_ov063_021169c4.cpp:
     complete
     .text start:0x021169c4 end:0x02116a1c
 
-src/unnamed/ov063/func_ov063_02116a1c.c:
+src/unnamed/ov063/0211/func_ov063_02116a1c.c:
     complete
     .text start:0x02116a1c end:0x02116bf0
 
-src/unnamed/ov063/func_ov063_02116bf0.c:
+src/unnamed/ov063/0211/func_ov063_02116bf0.c:
     complete
     .text start:0x02116bf0 end:0x02116bf4
 
-src/unnamed/ov063/func_ov063_02116bf4.c:
+src/unnamed/ov063/0211/func_ov063_02116bf4.c:
     complete
     .text start:0x02116bf4 end:0x02116d38
 
-src/unnamed/ov063/func_ov063_02116d38.c:
+src/unnamed/ov063/0211/func_ov063_02116d38.c:
     complete
     .text start:0x02116d38 end:0x02116d98
 
-src/unnamed/ov063/func_ov063_02116d98.c:
+src/unnamed/ov063/0211/func_ov063_02116d98.c:
     complete
     .text start:0x02116d98 end:0x02116dbc
 
-src/unnamed/ov063/func_ov063_02116dbc.c:
+src/unnamed/ov063/0211/func_ov063_02116dbc.c:
     complete
     .text start:0x02116dbc end:0x02116df0
 
-src/unnamed/ov063/func_ov063_02116df0.c:
+src/unnamed/ov063/0211/func_ov063_02116df0.c:
     complete
     .text start:0x02116df0 end:0x02116e14
 
-src/unnamed/ov063/func_ov063_02116e14.cpp:
+src/unnamed/ov063/0211/func_ov063_02116e14.cpp:
     complete
     .text start:0x02116e14 end:0x02116f48
 
-src/unnamed/ov063/func_ov063_02116f48.cpp:
+src/unnamed/ov063/0211/func_ov063_02116f48.cpp:
     complete
     .text start:0x02116f48 end:0x02116fac
 
-src/unnamed/ov063/func_ov063_02116fac.c:
+src/unnamed/ov063/0211/func_ov063_02116fac.c:
     complete
     .text start:0x02116fac end:0x021172a8
 
-src/unnamed/ov063/func_ov063_021172a8.c:
+src/unnamed/ov063/0211/func_ov063_021172a8.c:
     complete
     .text start:0x021172a8 end:0x02117364
 
-src/unnamed/ov063/func_ov063_02117364.c:
+src/unnamed/ov063/0211/func_ov063_02117364.c:
     complete
     .text start:0x02117364 end:0x02117650
 
-src/unnamed/ov063/func_ov063_02117650.c:
+src/unnamed/ov063/0211/func_ov063_02117650.c:
     complete
     .text start:0x02117650 end:0x0211776c
 
-src/unnamed/ov063/func_ov063_0211776c.cpp:
+src/unnamed/ov063/0211/func_ov063_0211776c.cpp:
     complete
     .text start:0x0211776c end:0x021177b0
 
-src/unnamed/ov063/func_ov063_021177b0.c:
+src/unnamed/ov063/0211/func_ov063_021177b0.c:
     complete
     .text start:0x021177b0 end:0x02117b0c
 
-src/unnamed/ov063/func_ov063_02117b0c.c:
+src/unnamed/ov063/0211/func_ov063_02117b0c.c:
     complete
     .text start:0x02117b0c end:0x02117cdc
 
-src/unnamed/ov063/func_ov063_02118458.c:
+src/unnamed/ov063/0211/func_ov063_02118458.c:
     complete
     .text start:0x02118458 end:0x0211873c
 
-src/unnamed/ov063/func_ov063_0211873c.c:
+src/unnamed/ov063/0211/func_ov063_0211873c.c:
     complete
     .text start:0x0211873c end:0x02118914
 
-src/unnamed/ov063/func_ov063_02118914.c:
+src/unnamed/ov063/0211/func_ov063_02118914.c:
     complete
     .text start:0x02118914 end:0x021189f4
 
-src/unnamed/ov063/func_ov063_021189f4.c:
+src/unnamed/ov063/0211/func_ov063_021189f4.c:
     complete
     .text start:0x021189f4 end:0x02118b2c
 
-src/unnamed/ov063/func_ov063_02118b2c.c:
+src/unnamed/ov063/0211/func_ov063_02118b2c.c:
     complete
     .text start:0x02118b2c end:0x02118b98
 
-src/unnamed/ov063/func_ov063_02118b98.c:
+src/unnamed/ov063/0211/func_ov063_02118b98.c:
     .text start:0x02118b98 end:0x02118cd8
 
-src/unnamed/ov063/func_ov063_02118cd8.c:
+src/unnamed/ov063/0211/func_ov063_02118cd8.c:
     complete
     .text start:0x02118cd8 end:0x02118ddc
 
-src/unnamed/ov063/func_ov063_02118ddc.cpp:
+src/unnamed/ov063/0211/func_ov063_02118ddc.cpp:
     complete
     .text start:0x02118ddc end:0x02118e5c
 
-src/unnamed/ov063/func_ov063_02118e5c.c:
+src/unnamed/ov063/0211/func_ov063_02118e5c.c:
     complete
     .text start:0x02118e5c end:0x02118ea0
 
-src/unnamed/ov063/func_ov063_02118ea0.c:
+src/unnamed/ov063/0211/func_ov063_02118ea0.c:
     complete
     .text start:0x02118ea0 end:0x02118eac
 
-src/unnamed/ov063/func_ov063_02118eac.c:
+src/unnamed/ov063/0211/func_ov063_02118eac.c:
     complete
     .text start:0x02118eac end:0x02118f24
 
-src/unnamed/ov063/func_ov063_02118f24.c:
+src/unnamed/ov063/0211/func_ov063_02118f24.c:
     complete
     .text start:0x02118f24 end:0x02118f50
 
-src/unnamed/ov063/func_ov063_02118f50.c:
+src/unnamed/ov063/0211/func_ov063_02118f50.c:
     complete
     .text start:0x02118f50 end:0x02118f74
 
-src/unnamed/ov063/func_ov063_02118f74.c:
+src/unnamed/ov063/0211/func_ov063_02118f74.c:
     complete
     .text start:0x02118f74 end:0x02119074
 
-src/unnamed/ov063/func_ov063_02119074.c:
+src/unnamed/ov063/0211/func_ov063_02119074.c:
     complete
     .text start:0x02119074 end:0x02119274
 
-src/unnamed/ov063/func_ov063_02119274.c:
+src/unnamed/ov063/0211/func_ov063_02119274.c:
     complete
     .text start:0x02119274 end:0x021192d4
 
-src/unnamed/ov063/func_ov063_021192d4.c:
+src/unnamed/ov063/0211/func_ov063_021192d4.c:
     complete
     .text start:0x021192d4 end:0x0211934c
 
-src/unnamed/ov063/func_ov063_0211934c.cpp:
+src/unnamed/ov063/0211/func_ov063_0211934c.cpp:
     complete
     .text start:0x0211934c end:0x0211975c
 
-src/unnamed/ov063/func_ov063_0211975c.cpp:
+src/unnamed/ov063/0211/func_ov063_0211975c.cpp:
     complete
     .text start:0x0211975c end:0x02119870
 
-src/unnamed/ov063/func_ov063_02119870.c:
+src/unnamed/ov063/0211/func_ov063_02119870.c:
     complete
     .text start:0x02119870 end:0x02119894
 
-src/unnamed/ov063/func_ov063_02119894.c:
+src/unnamed/ov063/0211/func_ov063_02119894.c:
     complete
     .text start:0x02119894 end:0x02119960
 
-src/unnamed/ov063/func_ov063_02119960.c:
+src/unnamed/ov063/0211/func_ov063_02119960.c:
     complete
     .text start:0x02119960 end:0x02119a2c
 
-src/unnamed/ov063/func_ov063_02119a2c.c:
+src/unnamed/ov063/0211/func_ov063_02119a2c.c:
     complete
     .text start:0x02119a2c end:0x02119a50
 
-src/unnamed/ov063/func_ov063_02119a50.c:
+src/unnamed/ov063/0211/func_ov063_02119a50.c:
     complete
     .text start:0x02119a50 end:0x02119ab0
 
-src/unnamed/ov063/func_ov063_02119ab0.c:
+src/unnamed/ov063/0211/func_ov063_02119ab0.c:
     complete
     .text start:0x02119ab0 end:0x02119b1c
 
-src/unnamed/ov063/func_ov063_02119b1c.c:
+src/unnamed/ov063/0211/func_ov063_02119b1c.c:
     complete
     .text start:0x02119b1c end:0x02119b84
 
-src/unnamed/ov063/func_ov063_02119b84.c:
+src/unnamed/ov063/0211/func_ov063_02119b84.c:
     complete
     .text start:0x02119b84 end:0x02119bb0
 
-src/unnamed/ov063/func_ov063_02119bb0.c:
+src/unnamed/ov063/0211/func_ov063_02119bb0.c:
     complete
     .text start:0x02119bb0 end:0x02119c18
 
-src/unnamed/ov063/func_ov063_02119c18.c:
+src/unnamed/ov063/0211/func_ov063_02119c18.c:
     complete
     .text start:0x02119c18 end:0x02119c58
 
-src/unnamed/ov063/func_ov063_02119c58.cpp:
+src/unnamed/ov063/0211/func_ov063_02119c58.cpp:
     complete
     .text start:0x02119c58 end:0x02119cc0
 
-src/unnamed/ov063/func_ov063_02119cc0.c:
+src/unnamed/ov063/0211/func_ov063_02119cc0.c:
     complete
     .text start:0x02119cc0 end:0x02119e38
 
-src/unnamed/ov063/func_ov063_02119e38.c:
+src/unnamed/ov063/0211/func_ov063_02119e38.c:
     complete
     .text start:0x02119e38 end:0x0211a030
 
-src/unnamed/ov063/func_ov063_0211a030.c:
+src/unnamed/ov063/0211/func_ov063_0211a030.c:
     complete
     .text start:0x0211a030 end:0x0211a0a8
 
-src/unnamed/ov063/func_ov063_0211a0a8.c:
+src/unnamed/ov063/0211/func_ov063_0211a0a8.c:
     complete
     .text start:0x0211a0a8 end:0x0211a0dc
 
-src/unnamed/ov063/func_ov063_0211a0dc.cpp:
+src/unnamed/ov063/0211/func_ov063_0211a0dc.cpp:
     complete
     .text start:0x0211a0dc end:0x0211a3d0
 
-src/unnamed/ov063/func_ov063_0211a3d0.cpp:
+src/unnamed/ov063/0211/func_ov063_0211a3d0.cpp:
     complete
     .text start:0x0211a3d0 end:0x0211a564
 
-src/unnamed/ov063/func_ov063_0211a564.c:
+src/unnamed/ov063/0211/func_ov063_0211a564.c:
     complete
     .text start:0x0211a564 end:0x0211a634
 
-src/unnamed/ov063/func_ov063_0211a634.c:
+src/unnamed/ov063/0211/func_ov063_0211a634.c:
     complete
     .text start:0x0211a634 end:0x0211a6f0
 
-src/unnamed/ov063/func_ov063_0211a6f0.c:
+src/unnamed/ov063/0211/func_ov063_0211a6f0.c:
     complete
     .text start:0x0211a6f0 end:0x0211a718
 
-src/unnamed/ov063/func_ov063_0211a718.c:
+src/unnamed/ov063/0211/func_ov063_0211a718.c:
     complete
     .text start:0x0211a718 end:0x0211a76c
 
-src/unnamed/ov063/func_ov063_0211a76c.c:
+src/unnamed/ov063/0211/func_ov063_0211a76c.c:
     complete
     .text start:0x0211a76c end:0x0211a810
 
-src/unnamed/ov063/func_ov063_0211a810.c:
+src/unnamed/ov063/0211/func_ov063_0211a810.c:
     complete
     .text start:0x0211a810 end:0x0211a8a4
 
-src/unnamed/ov063/func_ov063_0211a8a4.cpp:
+src/unnamed/ov063/0211/func_ov063_0211a8a4.cpp:
     complete
     .text start:0x0211a8a4 end:0x0211a960
 
-src/unnamed/ov063/func_ov063_0211a960.c:
+src/unnamed/ov063/0211/func_ov063_0211a960.c:
     complete
     .text start:0x0211a960 end:0x0211a964
 
-src/unnamed/ov063/func_ov063_0211a964.c:
+src/unnamed/ov063/0211/func_ov063_0211a964.c:
     complete
     .text start:0x0211a964 end:0x0211aa34
 
-src/unnamed/ov063/func_ov063_0211aa34.c:
+src/unnamed/ov063/0211/func_ov063_0211aa34.c:
     complete
     .text start:0x0211aa34 end:0x0211ab68
 
-src/unnamed/ov063/func_ov063_0211ab68.c:
+src/unnamed/ov063/0211/func_ov063_0211ab68.c:
     complete
     .text start:0x0211ab68 end:0x0211ad00
 
-src/unnamed/ov063/func_ov063_0211ad00.c:
+src/unnamed/ov063/0211/func_ov063_0211ad00.c:
     complete
     .text start:0x0211ad00 end:0x0211adb4
 
-src/unnamed/ov063/func_ov063_0211adb4.c:
+src/unnamed/ov063/0211/func_ov063_0211adb4.c:
     complete
     .text start:0x0211adb4 end:0x0211adfc
 
-src/unnamed/ov063/func_ov063_0211adfc.c:
+src/unnamed/ov063/0211/func_ov063_0211adfc.c:
     complete
     .text start:0x0211adfc end:0x0211ae1c
 
-src/actors/BooCage/_ZN7BooCage16CleanupResourcesEv.cpp:
+src/game/actors/BooCage/_ZN7BooCage16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211ae1c end:0x0211ae40
 
-src/actors/daTrs_c/_ZN7daTrs_c16CleanupResourcesEv.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211ae40 end:0x0211af6c
 
-src/actors/daTrs_c/_ZN7daTrs_c16OnPendingDestroyEv.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0211af6c end:0x0211af70
 
-src/actors/daTrs_c/_ZN7daTrs_c6RenderEv.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_c6RenderEv.cpp:
     complete
     .text start:0x0211af70 end:0x0211b078
 
-src/actors/BooCage/_ZN7BooCage6RenderEv.cpp:
+src/game/actors/BooCage/_ZN7BooCage6RenderEv.cpp:
     complete
     .text start:0x0211b078 end:0x0211b0a4
 
-src/actors/daTrs_c/_ZN7daTrs_c8BehaviorEv.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_c8BehaviorEv.cpp:
     complete
     .text start:0x0211b0a4 end:0x0211b888
 
-src/actors/BooCage/_ZN7BooCage8BehaviorEv.cpp:
+src/game/actors/BooCage/_ZN7BooCage8BehaviorEv.cpp:
     complete
     .text start:0x0211b888 end:0x0211b9bc
 
-src/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211b9bc end:0x0211c35c
 
-src/actors/BooCage/_ZN7BooCage13InitResourcesEv.cpp:
+src/game/actors/BooCage/_ZN7BooCage13InitResourcesEv.cpp:
     complete
     .text start:0x0211c35c end:0x0211c444
 
-src/actors/BigBooIcon/_ZN10BigBooIcon13InitResourcesEv.cpp:
+src/game/actors/BigBooIcon/_ZN10BigBooIcon13InitResourcesEv.cpp:
     complete
     .text start:0x0211c444 end:0x0211c480
 
-src/actors/daTrs_c/_ZN7daTrs_c13OnYoshiTryEatEv.cpp:
+src/game/actors/daTrs_c/_ZN7daTrs_c13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0211c480 end:0x0211c4a0
 
-src/actors/BigBooIcon/BigBooIcon_Spawn.c:
+src/game/actors/BigBooIcon/BigBooIcon_Spawn.c:
     complete
     .text start:0x0211c4a0 end:0x0211c4d0
 
-src/actors/BooCage/BooCage_Spawn.c:
+src/game/actors/BooCage/BooCage_Spawn.c:
     complete
     .text start:0x0211c4d0 end:0x0211c520
 
-src/actors/BigBoo/BigBoo_Spawn.cpp:
+src/game/actors/BigBoo/BigBoo_Spawn.cpp:
     complete
     .text start:0x0211c520 end:0x0211c590
 
-src/actors/daTrs_c/Boo_Spawn.cpp:
+src/game/actors/daTrs_c/Boo_Spawn.cpp:
     complete
     .text start:0x0211c590 end:0x0211c600
 
-src/actors/MansionSteps/_ZN12MansionStepsD1Ev.cpp:
+src/game/actors/MansionSteps/_ZN12MansionStepsD1Ev.cpp:
     complete
     .text start:0x0211c600 end:0x0211c638
 
-src/actors/MansionSteps/_ZN12MansionStepsD0Ev.c:
+src/game/actors/MansionSteps/_ZN12MansionStepsD0Ev.c:
     complete
     .text start:0x0211c638 end:0x0211c684
 
-src/unnamed/ov063/func_ov063_0211c684.c:
+src/unnamed/ov063/0211/func_ov063_0211c684.c:
     complete
     .text start:0x0211c684 end:0x0211c6f8
 
-src/unnamed/ov063/func_ov063_0211c6f8.cpp:
+src/unnamed/ov063/0211/func_ov063_0211c6f8.cpp:
     complete
     .text start:0x0211c6f8 end:0x0211c770
 
-src/unnamed/ov063/func_ov063_0211c770.c:
+src/unnamed/ov063/0211/func_ov063_0211c770.c:
     complete
     .text start:0x0211c770 end:0x0211c7b0
 
-src/unnamed/ov063/func_ov063_0211c7b0.c:
+src/unnamed/ov063/0211/func_ov063_0211c7b0.c:
     complete
     .text start:0x0211c7b0 end:0x0211c82c
 
-src/unnamed/ov063/func_ov063_0211c82c.c:
+src/unnamed/ov063/0211/func_ov063_0211c82c.c:
     complete
     .text start:0x0211c82c end:0x0211c89c
 
-src/unnamed/ov063/func_ov063_0211c89c.c:
+src/unnamed/ov063/0211/func_ov063_0211c89c.c:
     complete
     .text start:0x0211c89c end:0x0211cae8
 
-src/unnamed/ov063/func_ov063_0211cae8.c:
+src/unnamed/ov063/0211/func_ov063_0211cae8.c:
     complete
     .text start:0x0211cae8 end:0x0211cb54
 
-src/unnamed/ov063/func_ov063_0211cb54.c:
+src/unnamed/ov063/0211/func_ov063_0211cb54.c:
     complete
     .text start:0x0211cb54 end:0x0211cc18
 
-src/unnamed/ov063/func_ov063_0211cc18.c:
+src/unnamed/ov063/0211/func_ov063_0211cc18.c:
     complete
     .text start:0x0211cc18 end:0x0211cdec
 
-src/actors/MansionSteps/_ZN12MansionSteps16CleanupResourcesEv.cpp:
+src/game/actors/MansionSteps/_ZN12MansionSteps16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211cdec end:0x0211ce30
 
-src/actors/MansionSteps/_ZN12MansionSteps16OnPendingDestroyEv.c:
+src/game/actors/MansionSteps/_ZN12MansionSteps16OnPendingDestroyEv.c:
     complete
     .text start:0x0211ce30 end:0x0211ce34
 
-src/actors/MansionSteps/_ZN12MansionSteps6RenderEv.cpp:
+src/game/actors/MansionSteps/_ZN12MansionSteps6RenderEv.cpp:
     complete
     .text start:0x0211ce34 end:0x0211ce74
 
-src/actors/MansionSteps/_ZN12MansionSteps8BehaviorEv.cpp:
+src/game/actors/MansionSteps/_ZN12MansionSteps8BehaviorEv.cpp:
     complete
     .text start:0x0211ce74 end:0x0211cf00
 
-src/unnamed/ov063/func_ov063_0211d270.cpp:
+src/unnamed/ov063/0211/func_ov063_0211d270.cpp:
     complete
     .text start:0x0211d270 end:0x0211d28c
 
-src/unnamed/ov063/func_ov063_0211d28c.c:
+src/unnamed/ov063/0211/func_ov063_0211d28c.c:
     complete
     .text start:0x0211d28c end:0x0211d2a0
 
-src/actors/TrapDoor/TrapDoor_Spawn.c:
+src/game/actors/TrapDoor/TrapDoor_Spawn.c:
     complete
     .text start:0x0211d2a0 end:0x0211d2e0
 
-src/actors/MerryGoRound/MerryGoRound_Spawn.c:
+src/game/actors/MerryGoRound/MerryGoRound_Spawn.c:
     complete
     .text start:0x0211d2e0 end:0x0211d320
 
-src/actors/Bookshelf/Bookshelf_Spawn.c:
+src/game/actors/Bookshelf/Bookshelf_Spawn.c:
     complete
     .text start:0x0211d320 end:0x0211d360
 
-src/actors/MansionSteps/MansionSteps_Spawn.c:
+src/game/actors/MansionSteps/MansionSteps_Spawn.c:
     complete
     .text start:0x0211d360 end:0x0211d3a0
 
-src/actors/FallBlockBbh/_ZN12FallBlockBbhD1Ev.cpp:
+src/game/actors/FallBlockBbh/_ZN12FallBlockBbhD1Ev.cpp:
     complete
     .text start:0x0211d3a0 end:0x0211d3f0
 
-src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.cpp:
+src/game/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.cpp:
     complete
     .text start:0x0211d3f0 end:0x0211d454
 
-src/actors/FallBlockBbh/_ZN12FallBlockBbh16CleanupResourcesEv.cpp:
+src/game/actors/FallBlockBbh/_ZN12FallBlockBbh16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211d454 end:0x0211d468
 
-src/actors/FallBlockBbh/_ZN12FallBlockBbh13InitResourcesEv.cpp:
+src/game/actors/FallBlockBbh/_ZN12FallBlockBbh13InitResourcesEv.cpp:
     complete
     .text start:0x0211d468 end:0x0211d47c
 
-src/actors/FallBlockBbh/FallBlockBbh_Spawn.c:
+src/game/actors/FallBlockBbh/FallBlockBbh_Spawn.c:
     complete
     .text start:0x0211d47c end:0x0211d4b8
 
-src/actors/MadPiano/_ZN8MadPianoD1Ev.c:
+src/game/actors/MadPiano/_ZN8MadPianoD1Ev.c:
     complete
     .text start:0x0211d4b8 end:0x0211d54c
 
-src/actors/MadPiano/_ZN8MadPianoD0Ev.cpp:
+src/game/actors/MadPiano/_ZN8MadPianoD0Ev.cpp:
     complete
     .text start:0x0211d54c end:0x0211d5f4
 
-src/unnamed/ov063/func_ov063_0211d5f4.c:
+src/unnamed/ov063/0211/func_ov063_0211d5f4.c:
     complete
     .text start:0x0211d5f4 end:0x0211d828
 
-src/unnamed/ov063/func_ov063_0211d828.cpp:
+src/unnamed/ov063/0211/func_ov063_0211d828.cpp:
     complete
     .text start:0x0211d828 end:0x0211d88c
 
-src/unnamed/ov063/func_ov063_0211d88c.c:
+src/unnamed/ov063/0211/func_ov063_0211d88c.c:
     complete
     .text start:0x0211d88c end:0x0211d8cc
 
-src/unnamed/ov063/func_ov063_0211d8cc.cpp:
+src/unnamed/ov063/0211/func_ov063_0211d8cc.cpp:
     complete
     .text start:0x0211d8cc end:0x0211dba4
 
-src/unnamed/ov063/func_ov063_0211dba4.c:
+src/unnamed/ov063/0211/func_ov063_0211dba4.c:
     complete
     .text start:0x0211dba4 end:0x0211dbb8
 
-src/unnamed/ov063/func_ov063_0211dbb8.c:
+src/unnamed/ov063/0211/func_ov063_0211dbb8.c:
     complete
     .text start:0x0211dbb8 end:0x0211dd78
 
-src/unnamed/ov063/func_ov063_0211dd78.c:
+src/unnamed/ov063/0211/func_ov063_0211dd78.c:
     complete
     .text start:0x0211dd78 end:0x0211dd84
 
-src/unnamed/ov063/func_ov063_0211dd84.c:
+src/unnamed/ov063/0211/func_ov063_0211dd84.c:
     complete
     .text start:0x0211dd84 end:0x0211ddac
 
-src/unnamed/ov063/func_ov063_0211ddac.cpp:
+src/unnamed/ov063/0211/func_ov063_0211ddac.cpp:
     complete
     .text start:0x0211ddac end:0x0211ddf4
 
-src/unnamed/ov063/func_ov063_0211ddf4.cpp:
+src/unnamed/ov063/0211/func_ov063_0211ddf4.cpp:
     complete
     .text start:0x0211ddf4 end:0x0211de3c
 
-src/actors/MadPiano/_ZN8MadPiano16CleanupResourcesEv.cpp:
+src/game/actors/MadPiano/_ZN8MadPiano16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211de3c end:0x0211de8c
 
-src/actors/MadPiano/_ZN8MadPiano6RenderEv.cpp:
+src/game/actors/MadPiano/_ZN8MadPiano6RenderEv.cpp:
     complete
     .text start:0x0211de8c end:0x0211deb8
 
-src/actors/MadPiano/_ZN8MadPiano8BehaviorEv.cpp:
+src/game/actors/MadPiano/_ZN8MadPiano8BehaviorEv.cpp:
     complete
     .text start:0x0211deb8 end:0x0211dfac
 
-src/actors/MadPiano/_ZN8MadPiano13InitResourcesEv.cpp:
+src/game/actors/MadPiano/_ZN8MadPiano13InitResourcesEv.cpp:
     complete
     .text start:0x0211dfac end:0x0211e128
 
-src/actors/MadPiano/MadPiano_Spawn.cpp:
+src/game/actors/MadPiano/MadPiano_Spawn.cpp:
     complete
     .text start:0x0211e128 end:0x0211e1c0
 
-src/unnamed/ov063/__sinit_ov063_0211e29c.c:
+src/unnamed/ov063/0211/__sinit_ov063_0211e29c.c:
     complete
     .init start:0x0211e29c end:0x0211e3cc
 
-src/unnamed/ov063/__sinit_ov063_0211e3cc.c:
+src/unnamed/ov063/0211/__sinit_ov063_0211e3cc.c:
     complete
     .init start:0x0211e3cc end:0x0211e590
 
-src/unnamed/ov063/__sinit_ov063_0211e590.c:
+src/unnamed/ov063/0211/__sinit_ov063_0211e590.c:
     complete
     .init start:0x0211e590 end:0x0211e5fc
 
-src/actors/MadPiano/__sinit_ov063_0211e5fc.c:
+src/game/actors/MadPiano/__sinit_ov063_0211e5fc.c:
     complete
     .init start:0x0211e5fc end:0x0211e6fc

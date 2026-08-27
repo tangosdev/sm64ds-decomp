@@ -1,6 +1,6 @@
 // HOST REIMPLEMENTATION -- not byte-verified against the ROM.
 //
-// The matched src/_ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3.cpp calls
+// The matched src/runtime/graphics/ModelComponents/_ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3.cpp calls
 // the material bind as `func_02044b30(this)`: on the DS the material index
 // travels to the callee in r1, left there by the loop's own arithmetic -- a
 // register contract the byte-matched C never names (same class as

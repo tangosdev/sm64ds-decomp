@@ -16,17 +16,17 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02137be0  src/_ZN14ArrowSignRightD1Ev.cpp
- *   [1] 0x02137c2c  src/_ZN14ArrowSignRightD0Ev.cpp
- *   [2] 0x02137c8c  src/func_ov098_02137c8c.c
- *   [3] 0x02137ccc  src/_ZN14ArrowSignRight4KillEv.cpp
- *   [4] 0x02137d40  src/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp
- *   [5] 0x02137d80  src/_ZN14ArrowSignRight15OnHitByMegaCharER6Player.cpp
- *   [6] 0x02137dbc  src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp
- *   [7] 0x02137e20  src/_ZN14ArrowSignRight6RenderEv.cpp
- *   [8] 0x02137e48  src/_ZN14ArrowSignRight8BehaviorEv.cpp
- *   [9] 0x02137eec  src/_ZN14ArrowSignRight13InitResourcesEv.cpp
- *   [10] 0x02137fd0  src/ArrowSignRight_Spawn.c
+ *   [0] 0x02137be0  src/game/actors/ArrowSignRight/_ZN14ArrowSignRightD1Ev.cpp
+ *   [1] 0x02137c2c  src/game/actors/ArrowSignRight/_ZN14ArrowSignRightD0Ev.cpp
+ *   [2] 0x02137c8c  src/unnamed/ov098/0213/func_ov098_02137c8c.c
+ *   [3] 0x02137ccc  src/game/actors/ArrowSignRight/_ZN14ArrowSignRight4KillEv.cpp
+ *   [4] 0x02137d40  src/game/actors/ArrowSignRight/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp
+ *   [5] 0x02137d80  src/game/actors/ArrowSignRight/_ZN14ArrowSignRight15OnHitByMegaCharER6Player.cpp
+ *   [6] 0x02137dbc  src/game/actors/ArrowSignRight/_ZN14ArrowSignRight16CleanupResourcesEv.cpp
+ *   [7] 0x02137e20  src/game/actors/ArrowSignRight/_ZN14ArrowSignRight6RenderEv.cpp
+ *   [8] 0x02137e48  src/game/actors/ArrowSignRight/_ZN14ArrowSignRight8BehaviorEv.cpp
+ *   [9] 0x02137eec  src/game/actors/ArrowSignRight/_ZN14ArrowSignRight13InitResourcesEv.cpp
+ *   [10] 0x02137fd0  src/game/actors/ArrowSignRight/ArrowSignRight_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -232,7 +232,7 @@ int ArrowSignRight::OnAttacked1(dActor_c &other)
  * instructions where the ROM has six. Particle::System::NewSimple stays spelled
  * as its mangled name -- its parameters are Fix12<int> BY VALUE and declaring
  * the true types changes how the caller passes them. Both points are argued in
- * full in src/_ZN10dBgActor_c4KillEv.cpp. */
+ * full in src/game/actors/dBgActor_c/_ZN10dBgActor_c4KillEv.cpp. */
 void ArrowSignRight::Kill()
 {
     Vector3 pos;

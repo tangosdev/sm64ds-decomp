@@ -22,28 +22,28 @@
       "symbol": "_ZN29FloatOnWaterPlatformWdwSquareD1Ev",
       "address": "0x021111a0",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN29FloatOnWaterPlatformWdwSquareD1Ev.cpp",
+      "legacy_source": "src/game/actors/FloatOnWaterPlatformWdwSquare/_ZN29FloatOnWaterPlatformWdwSquareD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN29FloatOnWaterPlatformWdwSquareD0Ev",
       "address": "0x021111f0",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN29FloatOnWaterPlatformWdwSquareD0Ev.cpp",
+      "legacy_source": "src/game/actors/FloatOnWaterPlatformWdwSquare/_ZN29FloatOnWaterPlatformWdwSquareD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv",
       "address": "0x02111254",
       "size": "0x000000ec",
-      "legacy_source": "src/_ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/FloatOnWaterPlatformWdwSquare/_ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "FloatOnWaterPlatformWdwSquare_Spawn",
       "address": "0x02111340",
       "size": "0x0000003c",
-      "legacy_source": "src/FloatOnWaterPlatformWdwSquare_Spawn.c",
+      "legacy_source": "src/game/actors/FloatOnWaterPlatformWdwSquare/FloatOnWaterPlatformWdwSquare_Spawn.c",
       "ordinal": 3
     }
   ],

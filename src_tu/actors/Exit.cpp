@@ -16,15 +16,15 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020b09b0  src/_ZN4ExitD1Ev.cpp
+ *   [0] 0x020b09b0  src/game/actors/Exit/_ZN4ExitD1Ev.cpp
  *   [1] 0x020b09d4  src/_ZN4ExitD0Ev.c
- *   [2] 0x020b0a0c  src/func_ov002_020b0a0c.c
- *   [3] 0x020b0a70  src/_ZN4Exit16CleanupResourcesEv.cpp
- *   [4] 0x020b0a78  src/_ZN4Exit16OnPendingDestroyEv.cpp
- *   [5] 0x020b0a7c  src/_ZN4Exit6RenderEv.cpp
- *   [6] 0x020b0a84  src/_ZN4Exit8BehaviorEv.cpp
- *   [7] 0x020b0d88  src/_ZN4Exit13InitResourcesEv.cpp
- *   [8] 0x020b0f24  src/Exit_Spawn.c
+ *   [2] 0x020b0a0c  src/unnamed/ov002/020b/func_ov002_020b0a0c.c
+ *   [3] 0x020b0a70  src/game/actors/Exit/_ZN4Exit16CleanupResourcesEv.cpp
+ *   [4] 0x020b0a78  src/game/actors/Exit/_ZN4Exit16OnPendingDestroyEv.cpp
+ *   [5] 0x020b0a7c  src/game/actors/Exit/_ZN4Exit6RenderEv.cpp
+ *   [6] 0x020b0a84  src/game/actors/Exit/_ZN4Exit8BehaviorEv.cpp
+ *   [7] 0x020b0d88  src/game/actors/Exit/_ZN4Exit13InitResourcesEv.cpp
+ *   [8] 0x020b0f24  src/game/actors/Exit/Exit_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

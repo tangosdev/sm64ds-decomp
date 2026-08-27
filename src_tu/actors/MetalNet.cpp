@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02111dc4  src/_ZN8MetalNetD1Ev.cpp
- *   [1] 0x02111e08  src/_ZN8MetalNetD0Ev.cpp
- *   [2] 0x02111e60  src/_ZN8MetalNet16CleanupResourcesEv.cpp
+ *   [0] 0x02111dc4  src/game/actors/MetalNet/_ZN8MetalNetD1Ev.cpp
+ *   [1] 0x02111e08  src/game/actors/MetalNet/_ZN8MetalNetD0Ev.cpp
+ *   [2] 0x02111e60  src/game/actors/MetalNet/_ZN8MetalNet16CleanupResourcesEv.cpp
  *   [3] 0x02111ea4  src/_ZN8MetalNet16OnPendingDestroyEv.c
- *   [4] 0x02111ea8  src/_ZN8MetalNet6RenderEv.cpp
- *   [5] 0x02111ed0  src/_ZN8MetalNet8BehaviorEv.cpp
- *   [6] 0x02111f40  src/_ZN8MetalNet13InitResourcesEv.cpp
- *   [7] 0x02112048  src/MetalNet_Spawn.c
+ *   [4] 0x02111ea8  src/game/actors/MetalNet/_ZN8MetalNet6RenderEv.cpp
+ *   [5] 0x02111ed0  src/game/actors/MetalNet/_ZN8MetalNet8BehaviorEv.cpp
+ *   [6] 0x02111f40  src/game/actors/MetalNet/_ZN8MetalNet13InitResourcesEv.cpp
+ *   [7] 0x02112048  src/game/actors/MetalNet/MetalNet_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

@@ -100,7 +100,7 @@ def source_hash(path: pathlib.Path) -> str | None:
 
     LF-normalised, because the pin has to mean the same thing on both platforms and the
     raw bytes do not. This repository has no `text=auto` rule in .gitattributes, so line
-    endings are left to each clone's core.autocrlf: src/_ZN7Tornado6State1Ev.cpp is 105
+    endings are left to each clone's core.autocrlf: src/game/actors/Tornado/_ZN7Tornado6State1Ev.cpp is 105
     CRLF and zero bare LF in a default Windows checkout and 105 bare LF on the ubuntu
     runner that regenerates the published count. A raw-byte pin recorded on Windows
     therefore misses on every row in CI, all 18 exclusions lapse at once, and the count

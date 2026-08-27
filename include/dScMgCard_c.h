@@ -27,7 +27,7 @@
  * 020db9dc.c, 020dbaf0.cpp -- five of dScMgCard_c's own vtable methods).
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN11dScMgCard_cD1Ev.cpp; D0Ev.cpp
+ * its own. Defined for real in src/minigames/dScMgCard_c/_ZN11dScMgCard_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
  * dScMgBase_c, two levels up, already provides one. */
 #ifndef DSCMGCARD_C_H
@@ -46,10 +46,10 @@ struct dScMgCard_c : dScMgSingle3DBase_c {
        Re-overrides of slots fBase_c already owns, NOT new virtuals: the
        table stays the base's width and no field moves. Declared AFTER the
        destructor so the destructor is still the first virtual declared. */
-    virtual s32 InitResources();     /* slot 0 -- src/_ZN11dScMgCard_c13InitResourcesEv.cpp */
+    virtual s32 InitResources();     /* slot 0 -- src/minigames/dScMgCard_c/_ZN11dScMgCard_c13InitResourcesEv.cpp */
     virtual s32 CleanupResources();  /* slot 3 -- ov006 0x020da994 */
     virtual s32 Behavior();          /* slot 6 -- ov006 0x020dabec */
-    virtual s32 Render();            /* slot 9 -- src/_ZN11dScMgCard_c6RenderEv.cpp */
+    virtual s32 Render();            /* slot 9 -- src/minigames/dScMgCard_c/_ZN11dScMgCard_c6RenderEv.cpp */
 
     u8  pad_4f38[0x1a];   /* 0x4f38 -- shared table start, see file banner */
     s16 unk_4f52;          /* 0x4f52 -- within shared table */
@@ -59,7 +59,7 @@ struct dScMgCard_c : dScMgSingle3DBase_c {
     u8  mArray1[0xf0];      /* 0x51a8 -- 5 * 0x30, dtor func_ov006_020d96e0 */
     u8  mArray2[0xf0];      /* 0x5298 -- 5 * 0x30, dtor func_ov006_020d96f0 */
     s16 mState;              /* 0x5388 -- the round's step counter; the state
-                                machine in src/func_ov006_020dac34.cpp is one
+                                machine in src/unnamed/ov006/020d/func_ov006_020dac34.cpp is one
                                 long switch on it and mostly just `++`s it */
     s16 mStateTimer;         /* 0x538a -- reloaded (0x10, 0x14, 0x1e, 0x3c,
                                 0x5a) on each step and run down to 0 before

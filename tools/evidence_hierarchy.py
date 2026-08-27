@@ -672,7 +672,7 @@ def iter_definitions(text):
     function definition in a file.
 
     Necessary because a file's symbol is not always the identifier that is
-    defined in it: src/_ZN10ChainChomp13InitResourcesEv.cpp defines
+    defined in it: src/game/actors/ChainChomp/_ZN10ChainChomp13InitResourcesEv.cpp defines
     `int ChainChomp::InitResources()`, with `this` aliased to a local `c`.
     Requiring the mangled name would have found zero accesses there -- the same
     shape of miss that section 2 of the plan is about.

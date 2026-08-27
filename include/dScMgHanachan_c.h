@@ -4,7 +4,7 @@
 
 /* __destroy_arr / func_ov006_020ea324: the same __destroy_arr(p, count,
    elem_size, dtor) idiom dScMgBase_c's own D1/D0 use for touchIcon_0f4 (see
-   dScMgBase_c.h's file banner and src/_ZN11dScMgBase_cD1Ev.cpp) -- declared
+   dScMgBase_c.h's file banner and src/minigames/dScMgBase_c/_ZN11dScMgBase_cD1Ev.cpp) -- declared
    here, not per-destructor-file, matching dScMgBase_c.h's own placement of
    func_ov004_020b929c. */
 extern "C" void __destroy_arr(void *arr, int count, int elemSize, void *dtor);
@@ -15,12 +15,12 @@ extern "C" void func_ov006_020ea324(void);
    3 (CleanupResources -- the fBase_c/dScene_c-level virtual, see
    include/fBase_c.h; NOT one of dScMgBase_c's usual six overrides), 6
    (Behavior), 9 (Render), 16 (D1), 17 (D0), 18 (own new slot, not yet
-   named -- stays a raw extern "C" helper (src/func_ov006_020eda48.c), not a
+   named -- stays a raw extern "C" helper (src/unnamed/ov006/020e/func_ov006_020eda48.c), not a
    declared method, same precedent as every other dScMgBase_c leaf's slot 18).
 
    THE DESTRUCTOR IS NON-TRIVIAL, unlike most siblings: this class owns an
    array of 15 elements * 0x98 bytes at its own 0x4678, explicitly destroyed
-   via __destroy_arr in BOTH D1 and D0 (src/_ZN15dScMgHanachan_cD1Ev.cpp and
+   via __destroy_arr in BOTH D1 and D0 (src/minigames/dScMgHanachan_c/_ZN15dScMgHanachan_cD1Ev.cpp and
    .../_D0Ev.cpp carry an identical body, same shape dScMgBase_c's own D1/D0
    pair uses) -- the base-D2 call and own-vtable-write are compiler
    generated, and D0's extra Memory::Deallocate comes for free from

@@ -16,36 +16,36 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021111a0  src/_ZN13RacingPenguinD1Ev.cpp
+ *   [0] 0x021111a0  src/game/actors/RacingPenguin/_ZN13RacingPenguinD1Ev.cpp
  *   [1] 0x021111f0  src/_ZN13RacingPenguinD0Ev.c
- *   [2] 0x02111254  src/func_ov019_02111254.c
- *   [3] 0x0211127c  src/func_ov019_0211127c.cpp
- *   [4] 0x021112b8  src/func_ov019_021112b8.c
- *   [5] 0x0211131c  src/func_ov019_0211131c.c
- *   [6] 0x021113b0  src/func_ov019_021113b0.c
- *   [7] 0x0211140c  src/func_ov019_0211140c.cpp
- *   [8] 0x021114ec  src/func_ov019_021114ec.cpp
- *   [9] 0x02111558  src/func_ov019_02111558.c
- *   [10] 0x02111754  src/func_ov019_02111754.cpp
- *   [11] 0x021117a8  src/func_ov019_021117a8.c
- *   [12] 0x02111904  src/func_ov019_02111904.c
- *   [13] 0x0211197c  src/func_ov019_0211197c.c
- *   [14] 0x02111d58  src/func_ov019_02111d58.c
- *   [15] 0x02111dec  src/func_ov019_02111dec.c
- *   [16] 0x02111f54  src/func_ov019_02111f54.c
- *   [17] 0x02111fec  src/func_ov019_02111fec.c
- *   [18] 0x0211213c  src/func_ov019_0211213c.c
- *   [19] 0x02112168  src/func_ov019_02112168.c
- *   [20] 0x021121f8  src/func_ov019_021121f8.c
- *   [21] 0x02112268  src/func_ov019_02112268.cpp
- *   [22] 0x021122a4  src/func_ov019_021122a4.cpp
- *   [23] 0x021122dc  src/func_ov019_021122dc.c
- *   [24] 0x021122f8  src/_ZN13RacingPenguin16CleanupResourcesEv.cpp
+ *   [2] 0x02111254  src/unnamed/ov019/0211/func_ov019_02111254.c
+ *   [3] 0x0211127c  src/unnamed/ov019/0211/func_ov019_0211127c.cpp
+ *   [4] 0x021112b8  src/unnamed/ov019/0211/func_ov019_021112b8.c
+ *   [5] 0x0211131c  src/unnamed/ov019/0211/func_ov019_0211131c.c
+ *   [6] 0x021113b0  src/unnamed/ov019/0211/func_ov019_021113b0.c
+ *   [7] 0x0211140c  src/unnamed/ov019/0211/func_ov019_0211140c.cpp
+ *   [8] 0x021114ec  src/unnamed/ov019/0211/func_ov019_021114ec.cpp
+ *   [9] 0x02111558  src/unnamed/ov019/0211/func_ov019_02111558.c
+ *   [10] 0x02111754  src/unnamed/ov019/0211/func_ov019_02111754.cpp
+ *   [11] 0x021117a8  src/unnamed/ov019/0211/func_ov019_021117a8.c
+ *   [12] 0x02111904  src/unnamed/ov019/0211/func_ov019_02111904.c
+ *   [13] 0x0211197c  src/unnamed/ov019/0211/func_ov019_0211197c.c
+ *   [14] 0x02111d58  src/unnamed/ov019/0211/func_ov019_02111d58.c
+ *   [15] 0x02111dec  src/unnamed/ov019/0211/func_ov019_02111dec.c
+ *   [16] 0x02111f54  src/unnamed/ov019/0211/func_ov019_02111f54.c
+ *   [17] 0x02111fec  src/unnamed/ov019/0211/func_ov019_02111fec.c
+ *   [18] 0x0211213c  src/unnamed/ov019/0211/func_ov019_0211213c.c
+ *   [19] 0x02112168  src/unnamed/ov019/0211/func_ov019_02112168.c
+ *   [20] 0x021121f8  src/unnamed/ov019/0211/func_ov019_021121f8.c
+ *   [21] 0x02112268  src/unnamed/ov019/0211/func_ov019_02112268.cpp
+ *   [22] 0x021122a4  src/unnamed/ov019/0211/func_ov019_021122a4.cpp
+ *   [23] 0x021122dc  src/unnamed/ov019/0211/func_ov019_021122dc.c
+ *   [24] 0x021122f8  src/game/actors/RacingPenguin/_ZN13RacingPenguin16CleanupResourcesEv.cpp
  *   [25] 0x0211235c  src/_ZN13RacingPenguin16OnPendingDestroyEv.c
- *   [26] 0x02112360  src/_ZN13RacingPenguin6RenderEv.cpp
- *   [27] 0x02112394  src/_ZN13RacingPenguin8BehaviorEv.cpp
- *   [28] 0x021123d4  src/_ZN13RacingPenguin13InitResourcesEv.cpp
- *   [29] 0x021125bc  src/RacingPenguin_Spawn.c
+ *   [26] 0x02112360  src/game/actors/RacingPenguin/_ZN13RacingPenguin6RenderEv.cpp
+ *   [27] 0x02112394  src/game/actors/RacingPenguin/_ZN13RacingPenguin8BehaviorEv.cpp
+ *   [28] 0x021123d4  src/game/actors/RacingPenguin/_ZN13RacingPenguin13InitResourcesEv.cpp
+ *   [29] 0x021125bc  src/game/actors/RacingPenguin/RacingPenguin_Spawn.c
  */
 
 /* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources

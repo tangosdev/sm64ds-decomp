@@ -42,7 +42,7 @@ struct Clipper {
        vtable or the D2 variant, and D0/D1 stay self-contained C files. */
     virtual ~Clipper();     /* slots 0 (D1), 1 (D0) */
 
-    /* DECLARED, never defined as a method here -- src/_ZN7ClipperC1Ev.cpp owns
+    /* DECLARED, never defined as a method here -- src/game/camera/Clipper/_ZN7ClipperC1Ev.cpp owns
        C1 (notes/ctor-migration.md section 2). Its body calls the shared init
        helper, whose definition keeps its extern "C" spelling: the ROM symbol
        ends in Ev because it is enrolled under that literal name, not because

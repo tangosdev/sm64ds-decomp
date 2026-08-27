@@ -66,7 +66,7 @@ Both are now declared `Fix12i` (a typedef of `s32`, so byte-identical). So is
 ~~No includer uses any of these fields in a way that distinguishes signed from
 unsigned -- no sub-word load, no comparison, no right shift, no division.~~
 
-There is a sub-word access: `src/_ZN20SwitchActivatedPlank8BehaviorEv.cpp:35` does an
+There is a sub-word access: `src/game/actors/SwitchActivatedPlank/_ZN20SwitchActivatedPlank8BehaviorEv.cpp:35` does an
 `unsigned short*` read-modify-write on retyped `unk_3a0`. The correct statement is
 narrower and is what the experiment actually shows: **no access whose codegen depends
 on the declared type.** Every compiled reference to these fields goes through an

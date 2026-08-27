@@ -13,15 +13,15 @@ typed-subobject constructor (dBgCh_Actr).
 
 | file | function | ROM |
 |---|---|---|
-| `src/_ZN9ModelBaseC2Ev.cpp` | `ModelBase::ModelBase()` | 0x02017150, 0x18 |
-| `src/_ZN5ModelC1Ev.cpp` | `Model::Model()` | 0x02016d58, 0x50 |
-| `src/_ZN11CommonModelC1Ev.cpp` | `CommonModel::CommonModel()` | 0x02016204, 0x50 |
-| `src/_ZN11ShadowModelC1Ev.cpp` | `ShadowModel::ShadowModel()` | 0x02016068, 0x34 |
-| `src/_ZN7PathPtrC1Ev.cpp` | `PathPtr::PathPtr()` | 0x0203ad74, 0x10 |
-| `src/_ZN8dM3dGSphC1Ev.cpp` | `dM3dGSph::dM3dGSph()` | 0x0203ac60, 0x10 |
-| `src/_ZN9dBgCh_LinC1Ev.cpp` | `dBgCh_Lin::dBgCh_Lin()` | 0x020377b0, 0x5c |
-| `src/_ZN12dBgCh_SphCrrC1Ev.cpp` | `dBgCh_SphCrr::dBgCh_SphCrr()` | 0x02037d18, 0x6c |
-| `src/_ZN9dBgCh_GndC1Ev.cpp` | `dBgCh_Gnd::dBgCh_Gnd()` | 0x02037570, 0x40 |
+| `src/runtime/graphics/ModelBase/_ZN9ModelBaseC2Ev.cpp` | `ModelBase::ModelBase()` | 0x02017150, 0x18 |
+| `src/runtime/graphics/Model/_ZN5ModelC1Ev.cpp` | `Model::Model()` | 0x02016d58, 0x50 |
+| `src/runtime/graphics/CommonModel/_ZN11CommonModelC1Ev.cpp` | `CommonModel::CommonModel()` | 0x02016204, 0x50 |
+| `src/runtime/graphics/ShadowModel/_ZN11ShadowModelC1Ev.cpp` | `ShadowModel::ShadowModel()` | 0x02016068, 0x34 |
+| `src/game/actors/PathPtr/_ZN7PathPtrC1Ev.cpp` | `PathPtr::PathPtr()` | 0x0203ad74, 0x10 |
+| `src/game/actors/dM3dGSph/_ZN8dM3dGSphC1Ev.cpp` | `dM3dGSph::dM3dGSph()` | 0x0203ac60, 0x10 |
+| `src/game/actors/dBgCh_Lin/_ZN9dBgCh_LinC1Ev.cpp` | `dBgCh_Lin::dBgCh_Lin()` | 0x020377b0, 0x5c |
+| `src/game/actors/dBgCh_SphCrr/_ZN12dBgCh_SphCrrC1Ev.cpp` | `dBgCh_SphCrr::dBgCh_SphCrr()` | 0x02037d18, 0x6c |
+| `src/game/actors/dBgCh_Gnd/_ZN9dBgCh_GndC1Ev.cpp` | `dBgCh_Gnd::dBgCh_Gnd()` | 0x02037570, 0x40 |
 
 The seventh is the tree's **first multiple-inheritance constructor**: its
 header declares `dBgCh_Lin : dBgCh, dBgPi, dM3dGLin` straight out of the
@@ -396,9 +396,9 @@ no vtable. An ABI probe settles the shape: dBgPi introduces the virtual
 destructor and derives from the non-polymorphic dBgPc. With no dynamic primary
 base, the compiler places dBgPi's own vptr at +0x00 and its dBgPc base at +0x04.
 The generated C2 sequence therefore constructs dBgPc at +0x04 before storing
-dBgPi's vptr. C1 now lives in `src/_ZN5dBgPiC1Ev.cpp` as real C++, and since
+dBgPi's vptr. C1 now lives in `src/game/actors/dBgPi/_ZN5dBgPiC1Ev.cpp` as real C++, and since
 #1833 so does the separately enrolled C2 ABI variant, in
-`src/_ZN5dBgPiC2Ev.cpp`. The two files carry the same definition -- C1 and C2
+`src/game/actors/dBgPi/_ZN5dBgPiC2Ev.cpp`. The two files carry the same definition -- C1 and C2
 are two of the functions mwcc emits from one constructor, and
 `config/arm9/delinks.txt` binds each file to one of them.
 

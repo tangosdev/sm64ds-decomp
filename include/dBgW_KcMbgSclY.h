@@ -20,7 +20,7 @@
  * here are the real ones.
  *
  * THE "DetectClsn triple is launder-heavy" CLAIM IS RETIRED for slot 7.
- * src/_ZN14dBgW_KcMbgSclY10DetectClsnER9dBgCh_Lin.cpp is a real method as of
+ * src/game/actors/dBgW_KcMbgSclY/_ZN14dBgW_KcMbgSclY10DetectClsnER9dBgCh_Lin.cpp is a real method as of
  * 2026-08-22 and needs no launder at all -- every access is a named dBgCh_Lin
  * member and the base call is the ordinary qualified `dBgW_Kc::DetectClsn'.
  * Slots 6 and 8 have not been retried; the claim was never measured per slot,
@@ -43,7 +43,7 @@ struct dBgW_KcMbgSclY : dBgW_KcMbg {
     virtual int DetectClsn(dBgCh_Lin &ray);             /* slot 7 - free def */
     virtual int DetectClsn(dBgCh_SphCrr &sphere);           /* slot 8 - free def */
 
-    /* DECLARED, never defined as a method here -- src/_ZN14dBgW_KcMbgSclYC1Ev.cpp
+    /* DECLARED, never defined as a method here -- src/game/actors/dBgW_KcMbgSclY/_ZN14dBgW_KcMbgSclYC1Ev.cpp
        owns C1; the C2 variant has no ROM counterpart because nothing derives
        from SclY (notes/ctor-migration.md section 2). */
     dBgW_KcMbgSclY();

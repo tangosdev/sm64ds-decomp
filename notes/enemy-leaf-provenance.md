@@ -32,11 +32,11 @@ once, here, rather than per class.
 
 | offset | name | evidence |
 | --- | --- | --- |
-| 0x300 | `mState` (`State *`) | `src/_ZN9JetStream8BehaviorEv.cpp` loads the pointer word at 0x300 every frame, tests the word at `+0x08` of what it points at, and if non-zero calls it as a pointer-to-member on `this`. That is the same object `Bullet::State` describes (`include/Bullet.h`, handler at +0x08) and the same `mState` spelling `Chuckya`, `ChiefChilly` and `daBakubaku_c` already use for it. Only `+0x08` is evidenced; the first two words stay padding. |
+| 0x300 | `mState` (`State *`) | `src/game/actors/JetStream/_ZN9JetStream8BehaviorEv.cpp` loads the pointer word at 0x300 every frame, tests the word at `+0x08` of what it points at, and if non-zero calls it as a pointer-to-member on `this`. That is the same object `Bullet::State` describes (`include/Bullet.h`, handler at +0x08) and the same `mState` spelling `Chuckya`, `ChiefChilly` and `daBakubaku_c` already use for it. Only `+0x08` is evidenced; the first two words stay padding. |
 
 Left `unk_`:
 
-* **0x314, 0x318** — `src/_ZN9JetStream13InitResourcesEv.cpp` decodes both out of
+* **0x314, 0x318** — `src/game/actors/JetStream/_ZN9JetStream13InitResourcesEv.cpp` decodes both out of
   the spawn word: `unk_314 = (param1 >> 12) & 0xf`, `unk_318 = param1 & 1` and then
   `if ((param1 & 0xf) > 1) unk_318 = 0`. Nothing in the tree reads either back, so
   the bytes say how they are *built* but nothing about what they *select*. A name
@@ -59,7 +59,7 @@ Byte-neutral cleanups made in the same pass (each re-verified with
 
 | offset | name | evidence |
 | --- | --- | --- |
-| 0x5d0 | `mSpawnPosX` | `src/_ZN8Goomboss13InitResourcesEv.cpp` copies `self+0x5c` (mPosX) into `self+0x5d0` once, immediately after the collision cylinders are sized, and nothing writes it again. |
+| 0x5d0 | `mSpawnPosX` | `src/game/actors/Goomboss/_ZN8Goomboss13InitResourcesEv.cpp` copies `self+0x5c` (mPosX) into `self+0x5d0` once, immediately after the collision cylinders are sized, and nothing writes it again. |
 | 0x5d4 | `mSpawnPosY` | same, from `self+0x60` (mPosY). |
 | 0x5d8 | `mSpawnPosZ` | same, from `self+0x64` (mPosZ). |
 
@@ -82,7 +82,7 @@ Byte-neutral cleanups (each re-verified, `2004/b56`):
 * `Behavior` — `((char*)this)+0x40c` became `&mWithMeshClsn`, `+0x110` became
   `(char *)mdCc_cs`, `+0x74` became `&mCamSpacePosX`.
 
-`src/_ZN8Goomboss13InitResourcesEv.cpp` is left alone: it is an `extern "C"`
+`src/game/actors/Goomboss/_ZN8Goomboss13InitResourcesEv.cpp` is left alone: it is an `extern "C"`
 function over a bare `char *self` that never includes the header at all, so its
 offsets are not member accesses to collapse.
 
@@ -90,8 +90,8 @@ offsets are not member accesses to collapse.
 
 ## ChainChomp (`include/ChainChomp.h`, ov014)
 
-Bodies read: `src/_ZN10ChainChomp8BehaviorEv.cpp`,
-`src/_ZN10ChainChomp13InitResourcesEv.cpp`, `src/_ZN10ChainChomp6RenderEv.cpp`,
+Bodies read: `src/game/actors/ChainChomp/_ZN10ChainChomp8BehaviorEv.cpp`,
+`src/game/actors/ChainChomp/_ZN10ChainChomp13InitResourcesEv.cpp`, `src/game/actors/ChainChomp/_ZN10ChainChomp6RenderEv.cpp`,
 and the merged `src_tu/actors/ChainChomp.cpp`.
 
 | offset | name | evidence |
@@ -134,10 +134,10 @@ profile, so a stale spelling there would not have been caught by any green gate.
 
 ## BobOmb (`include/BobOmb.h`, ov102)
 
-Bodies read: `src/_ZN6BobOmb13InitResourcesEv.cpp`,
-`src/_ZN6BobOmb8BehaviorEv.cpp`, `src/_ZN6BobOmb6RenderEv.cpp`,
-`src/_ZN6BobOmb13OnYoshiTryEatEv.cpp`,
-`src/_ZN6BobOmb13OnTurnIntoEggER6Player.cpp`.
+Bodies read: `src/game/actors/BobOmb/_ZN6BobOmb13InitResourcesEv.cpp`,
+`src/game/actors/BobOmb/_ZN6BobOmb8BehaviorEv.cpp`, `src/game/actors/BobOmb/_ZN6BobOmb6RenderEv.cpp`,
+`src/game/actors/BobOmb/_ZN6BobOmb13OnYoshiTryEatEv.cpp`,
+`src/game/actors/BobOmb/_ZN6BobOmb13OnTurnIntoEggER6Player.cpp`.
 
 | offset | name | evidence |
 | --- | --- | --- |
@@ -171,10 +171,10 @@ with" flag rather than a counter.
 
 ## Whomp (`include/Whomp.h`, ov079)
 
-Bodies read: `src/_ZN5Whomp13InitResourcesEv.cpp`,
-`src/_ZN5Whomp8BehaviorEv.cpp`, `src/_ZN5Whomp6RenderEv.cpp`,
-`src/_ZN5Whomp16OnAimedAtWithEggEv.cpp`,
-`src/_ZN5Whomp15OnHitByMegaCharER6Player.cpp`.
+Bodies read: `src/game/actors/Whomp/_ZN5Whomp13InitResourcesEv.cpp`,
+`src/game/actors/Whomp/_ZN5Whomp8BehaviorEv.cpp`, `src/game/actors/Whomp/_ZN5Whomp6RenderEv.cpp`,
+`src/game/actors/Whomp/_ZN5Whomp16OnAimedAtWithEggEv.cpp`,
+`src/game/actors/Whomp/_ZN5Whomp15OnHitByMegaCharER6Player.cpp`.
 
 | offset | name | evidence |
 | --- | --- | --- |
@@ -225,9 +225,9 @@ the offset better than `unk_100` does.
 
 ## RollingIronBall (`include/RollingIronBall.h`, ov100)
 
-Bodies read: `src/_ZN15RollingIronBall13InitResourcesEv.cpp`,
-`src/_ZN15RollingIronBall8BehaviorEv.cpp`,
-`src/_ZN15RollingIronBall6RenderEv.cpp`.
+Bodies read: `src/game/actors/RollingIronBall/_ZN15RollingIronBall13InitResourcesEv.cpp`,
+`src/game/actors/RollingIronBall/_ZN15RollingIronBall8BehaviorEv.cpp`,
+`src/game/actors/RollingIronBall/_ZN15RollingIronBall6RenderEv.cpp`.
 
 | offset | name | evidence |
 | --- | --- | --- |
@@ -294,8 +294,8 @@ Byte-neutral cleanup: `Behavior`'s
 
 ## Klepto (`include/Klepto.h`, ov062)
 
-Bodies read: `src/_ZN6Klepto13InitResourcesEv.cpp`,
-`src/_ZN6Klepto8BehaviorEv.cpp`, `src/_ZN6Klepto6RenderEv.cpp`.
+Bodies read: `src/game/actors/Klepto/_ZN6Klepto13InitResourcesEv.cpp`,
+`src/game/actors/Klepto/_ZN6Klepto8BehaviorEv.cpp`, `src/game/actors/Klepto/_ZN6Klepto6RenderEv.cpp`.
 
 | offset | name | evidence |
 | --- | --- | --- |

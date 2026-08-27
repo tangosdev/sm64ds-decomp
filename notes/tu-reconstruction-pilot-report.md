@@ -47,13 +47,13 @@ Before and after, the seven untouched legacy files were re-verified with
 an environment artefact:
 
 ```python
-OK    src/_ZN8PoleLiftD1Ev.cpp                       2004/b56
-OK    src/_ZN8PoleLiftD0Ev.cpp                       2004/b56
-OK    src/_ZN8PoleLift16CleanupResourcesEv.cpp       2004/b56
-OK    src/_ZN8PoleLift6RenderEv.cpp                  2004/b56
-OK    src/_ZN8PoleLift8BehaviorEv.cpp                2004/b56
-OK    src/_ZN8PoleLift13InitResourcesEv.cpp          2004/b56
-OK    src/PoleLift_Spawn.c                           2004/b56
+OK    src/game/actors/PoleLift/_ZN8PoleLiftD1Ev.cpp                       2004/b56
+OK    src/game/actors/PoleLift/_ZN8PoleLiftD0Ev.cpp                       2004/b56
+OK    src/game/actors/PoleLift/_ZN8PoleLift16CleanupResourcesEv.cpp       2004/b56
+OK    src/game/actors/PoleLift/_ZN8PoleLift6RenderEv.cpp                  2004/b56
+OK    src/game/actors/PoleLift/_ZN8PoleLift8BehaviorEv.cpp                2004/b56
+OK    src/game/actors/PoleLift/_ZN8PoleLift13InitResourcesEv.cpp          2004/b56
+OK    src/game/actors/PoleLift/PoleLift_Spawn.c                           2004/b56
 ```
 
 ---
@@ -248,9 +248,9 @@ The two conventions collide:
   `0x02112d74` = typeinfo). Its own vptr stores relocate against it with
   addend `8`.
 
-In the legacy tree the two never meet: `src/PoleLift_Spawn.c` is a **C** TU that
+In the legacy tree the two never meet: `src/game/actors/PoleLift/PoleLift_Spawn.c` is a **C** TU that
 only ever references an external `_ZTV8PoleLift`, so addend 0 is right; and
-`src/_ZN8PoleLiftD1Ev.cpp` defines the vtable, but `objisolate` strips it,
+`src/game/actors/PoleLift/_ZN8PoleLiftD1Ev.cpp` defines the vtable, but `objisolate` strips it,
 externalises the symbol and subtracts `VTABLE_PREAMBLE` from the addend — the
 correction its own comment documents at length.
 
@@ -359,7 +359,7 @@ For this candidate specifically, in ascending difficulty:
    contributes through per-function isolation (plan §9/§13, which works today —
    `objisolate` accepts all seven), or the linkcheck needs a rule for
    deadstrippable extras. **Not a new obstacle:** the legacy, already-enrolled
-   `src/_ZN8PoleLiftD1Ev.cpp` compiled alone emits the identical D2 today, and
+   `src/game/actors/PoleLift/_ZN8PoleLiftD1Ev.cpp` compiled alone emits the identical D2 today, and
    `objisolate` already strips it on every push. TU consolidation does not
    introduce this shape; it only makes it visible in one object instead of
    scattered across per-function ones.

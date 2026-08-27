@@ -16,10 +16,10 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021111a0  src/_ZN29FloatOnWaterPlatformWdwSquareD1Ev.cpp
+ *   [0] 0x021111a0  src/game/actors/FloatOnWaterPlatformWdwSquare/_ZN29FloatOnWaterPlatformWdwSquareD1Ev.cpp
  *   [1] 0x021111f0  src/_ZN29FloatOnWaterPlatformWdwSquareD0Ev.c
- *   [2] 0x02111254  src/_ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv.cpp
- *   [3] 0x02111340  src/FloatOnWaterPlatformWdwSquare_Spawn.c
+ *   [2] 0x02111254  src/game/actors/FloatOnWaterPlatformWdwSquare/_ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv.cpp
+ *   [3] 0x02111340  src/game/actors/FloatOnWaterPlatformWdwSquare/FloatOnWaterPlatformWdwSquare_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

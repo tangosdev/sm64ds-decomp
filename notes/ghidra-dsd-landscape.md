@@ -318,7 +318,7 @@ structural cause, not 706 scattered defects.
 **G5.6 — CORRECTION: these are NOT 135 latent fakematches. 60 are provably safe.**
 [high] I initially framed every ambiguous call site in a matched function as a possible
 fakematch. Checking what the callers actually reference refutes that for 60 of the 135.
-`src/Wiggler_Spawn.c` declares `extern void _ZN5EnemyC2Ev(void);` and calls it **by
+`src/game/actors/Wiggler/Wiggler_Spawn.c` declares `extern void _ZN5EnemyC2Ev(void);` and calls it **by
 name**. Only ov002 defines that symbol, so mwldarm pins the callee at link time
 regardless of what `relocs.txt` says. The ambiguity is dsd's own bookkeeping — it
 governs the gap objects dsd supplies for undecompiled code, not a name-resolved call.
@@ -338,7 +338,7 @@ overlay 2, for all 57.** That is consistent with the bounded enemy-subclass fami
 `[[enemy-subclass-census]]`.
 
 **G5.7 — The other 75 ARE the phantom-reference worklist, and this explains its cause.**
-[high] `src/func_ov006_02115b0c.c:59` declares:
+[high] `src/unnamed/ov006/0211/func_ov006_02115b0c.c:59` declares:
 
 ```c
 extern void *func_020adc74(void *p);

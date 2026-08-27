@@ -22,7 +22,7 @@
       "symbol": "_ZN13PeachPaintingD1Ev",
       "address": "0x02111e10",
       "size": "0x00000030",
-      "legacy_source": "src/_ZN13PeachPaintingD1Ev.cpp",
+      "legacy_source": "src/game/actors/PeachPainting/_ZN13PeachPaintingD1Ev.cpp",
       "ordinal": 0
     },
     {
@@ -50,28 +50,28 @@
       "symbol": "_ZN13PeachPainting6RenderEv",
       "address": "0x02111ee8",
       "size": "0x00000040",
-      "legacy_source": "src/_ZN13PeachPainting6RenderEv.cpp",
+      "legacy_source": "src/game/actors/PeachPainting/_ZN13PeachPainting6RenderEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN13PeachPainting8BehaviorEv",
       "address": "0x02111f28",
       "size": "0x00000098",
-      "legacy_source": "src/_ZN13PeachPainting8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/PeachPainting/_ZN13PeachPainting8BehaviorEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN13PeachPainting13InitResourcesEv",
       "address": "0x02111fc0",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN13PeachPainting13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/PeachPainting/_ZN13PeachPainting13InitResourcesEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "PeachPainting_Spawn",
       "address": "0x02112004",
       "size": "0x00000038",
-      "legacy_source": "src/PeachPainting_Spawn.c",
+      "legacy_source": "src/game/actors/PeachPainting/PeachPainting_Spawn.c",
       "ordinal": 7
     }
   ],

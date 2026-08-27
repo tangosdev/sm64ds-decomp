@@ -3,34 +3,34 @@
     .ctor       start:0x02111354 end:0x02111358 kind:rodata align:4
     .data       start:0x02111360 end:0x02111680 kind:data align:32
     .bss        start:0x02111680 end:0x021116a0 kind:bss align:32
-src/_ZN19OrangeBallBillboardD1Ev.cpp:
+src/game/actors/OrangeBallBillboard/_ZN19OrangeBallBillboardD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111d0
 
-src/_ZN19OrangeBallBillboardD0Ev.cpp:
+src/game/actors/OrangeBallBillboard/_ZN19OrangeBallBillboardD0Ev.cpp:
     complete
     .text start:0x021111d0 end:0x02111214
 
-src/func_ov044_02111214.c:
+src/unnamed/ov044/0211/func_ov044_02111214.c:
     complete
     .text start:0x02111214 end:0x02111254
 
-src/_ZN19OrangeBallBillboard16CleanupResourcesEv.cpp:
+src/game/actors/OrangeBallBillboard/_ZN19OrangeBallBillboard16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111254 end:0x02111278
 
-src/_ZN19OrangeBallBillboard6RenderEv.cpp:
+src/game/actors/OrangeBallBillboard/_ZN19OrangeBallBillboard6RenderEv.cpp:
     complete
     .text start:0x02111278 end:0x021112a0
 
-src/_ZN19OrangeBallBillboard13InitResourcesEv.cpp:
+src/game/actors/OrangeBallBillboard/_ZN19OrangeBallBillboard13InitResourcesEv.cpp:
     complete
     .text start:0x021112a0 end:0x021112dc
 
-src/OrangeBallBillboard_Spawn.c:
+src/game/actors/OrangeBallBillboard/OrangeBallBillboard_Spawn.c:
     complete
     .text start:0x021112dc end:0x02111314
 
-src/__sinit_ov044_02111314.c:
+src/unnamed/ov044/0211/__sinit_ov044_02111314.c:
     complete
     .init start:0x02111314 end:0x02111354

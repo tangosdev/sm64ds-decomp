@@ -13,10 +13,10 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02111630  src/_ZN17daObjKm1_Dorifu_cD1Ev.cpp
+ *   [0] 0x02111630  src/game/actors/daObjKm1_Dorifu_c/_ZN17daObjKm1_Dorifu_cD1Ev.cpp
  *   [1] 0x021116b0  src/_ZN17daObjKm1_Dorifu_cD0Ev.c
- *   [2] 0x02111744  src/_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv.cpp
- *   [3] 0x02111758  src/_ZN17daObjKm1_Dorifu_c13InitResourcesEv.cpp
+ *   [2] 0x02111744  src/game/actors/daObjKm1_Dorifu_c/_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv.cpp
+ *   [3] 0x02111758  src/game/actors/daObjKm1_Dorifu_c/_ZN17daObjKm1_Dorifu_c13InitResourcesEv.cpp
  */
 
 #include "daObjKm1_Dorifu_c.h"

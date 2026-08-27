@@ -16,15 +16,15 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x0211ab60  src/_ZN16daObjCtMecha05_cD1Ev.cpp
- *   [1] 0x0211abac  src/_ZN16daObjCtMecha05_cD0Ev.cpp
- *   [2] 0x0211ac0c  src/func_ov065_0211ac0c.c
- *   [3] 0x0211ad04  src/_ZN16daObjCtMecha05_c16CleanupResourcesEv.cpp
- *   [4] 0x0211ad48  src/_ZN16daObjCtMecha05_c6RenderEv.cpp
- *   [5] 0x0211ad70  src/func_ov065_0211ad70.c
- *   [6] 0x0211ae08  src/_ZN16daObjCtMecha05_c8BehaviorEv.cpp
- *   [7] 0x0211b1d4  src/_ZN16daObjCtMecha05_c13InitResourcesEv.cpp
- *   [8] 0x0211b328  src/TTC_MovingBar_Spawn.c
+ *   [0] 0x0211ab60  src/game/actors/daObjCtMecha05_c/_ZN16daObjCtMecha05_cD1Ev.cpp
+ *   [1] 0x0211abac  src/game/actors/daObjCtMecha05_c/_ZN16daObjCtMecha05_cD0Ev.cpp
+ *   [2] 0x0211ac0c  src/unnamed/ov065/0211/func_ov065_0211ac0c.c
+ *   [3] 0x0211ad04  src/game/actors/daObjCtMecha05_c/_ZN16daObjCtMecha05_c16CleanupResourcesEv.cpp
+ *   [4] 0x0211ad48  src/game/actors/daObjCtMecha05_c/_ZN16daObjCtMecha05_c6RenderEv.cpp
+ *   [5] 0x0211ad70  src/unnamed/ov065/0211/func_ov065_0211ad70.c
+ *   [6] 0x0211ae08  src/game/actors/daObjCtMecha05_c/_ZN16daObjCtMecha05_c8BehaviorEv.cpp
+ *   [7] 0x0211b1d4  src/game/actors/daObjCtMecha05_c/_ZN16daObjCtMecha05_c13InitResourcesEv.cpp
+ *   [8] 0x0211b328  src/game/actors/TTC_MovingBar/TTC_MovingBar_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

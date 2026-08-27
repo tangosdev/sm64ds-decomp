@@ -4,166 +4,166 @@
     .ctor       start:0x02112e94 end:0x02112ea0 kind:rodata align:4
     .data       start:0x02112ec0 end:0x02113a40 kind:data align:32
     .bss        start:0x02113a40 end:0x02113b20 kind:bss align:32
-src/_ZN12daBakubaku_cD1Ev.cpp:
+src/game/actors/daBakubaku_c/_ZN12daBakubaku_cD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111f0
 
-src/_ZN12daBakubaku_cD0Ev.cpp:
+src/game/actors/daBakubaku_c/_ZN12daBakubaku_cD0Ev.cpp:
     complete
     .text start:0x021111f0 end:0x02111254
 
-src/func_ov032_02111254.c:
+src/unnamed/ov032/0211/func_ov032_02111254.c:
     complete
     .text start:0x02111254 end:0x02111350
 
-src/func_ov032_02111350.c:
+src/unnamed/ov032/0211/func_ov032_02111350.c:
     complete
     .text start:0x02111350 end:0x021113fc
 
-src/func_ov032_021113fc.cpp:
+src/unnamed/ov032/0211/func_ov032_021113fc.cpp:
     complete
     .text start:0x021113fc end:0x02111620
 
-src/func_ov032_02111620.cpp:
+src/unnamed/ov032/0211/func_ov032_02111620.cpp:
     complete
     .text start:0x02111620 end:0x02111814
 
-src/func_ov032_02111814.c:
+src/unnamed/ov032/0211/func_ov032_02111814.c:
     complete
     .text start:0x02111814 end:0x02111830
 
-src/func_ov032_02111830.c:
+src/unnamed/ov032/0211/func_ov032_02111830.c:
     complete
     .text start:0x02111830 end:0x02111b50
 
-src/func_ov032_02111b50.c:
+src/unnamed/ov032/0211/func_ov032_02111b50.c:
     complete
     .text start:0x02111b50 end:0x02111b9c
 
-src/func_ov032_02111b9c.cpp:
+src/unnamed/ov032/0211/func_ov032_02111b9c.cpp:
     complete
     .text start:0x02111b9c end:0x02111d58
 
-src/func_ov032_02111d58.c:
+src/unnamed/ov032/0211/func_ov032_02111d58.c:
     complete
     .text start:0x02111d58 end:0x02111d7c
 
-src/func_ov032_02111d7c.cpp:
+src/unnamed/ov032/0211/func_ov032_02111d7c.cpp:
     complete
     .text start:0x02111d7c end:0x02111dd8
 
-src/func_ov032_02111dd8.c:
+src/unnamed/ov032/0211/func_ov032_02111dd8.c:
     complete
     .text start:0x02111dd8 end:0x02111e24
 
-src/func_ov032_02111e24.c:
+src/unnamed/ov032/0211/func_ov032_02111e24.c:
     complete
     .text start:0x02111e24 end:0x02111f9c
 
-src/func_ov032_02111f9c.c:
+src/unnamed/ov032/0211/func_ov032_02111f9c.c:
     complete
     .text start:0x02111f9c end:0x02111ff4
 
-src/func_ov032_02111ff4.cpp:
+src/unnamed/ov032/0211/func_ov032_02111ff4.cpp:
     complete
     .text start:0x02111ff4 end:0x02112044
 
-src/func_ov032_02112044.cpp:
+src/unnamed/ov032/0211/func_ov032_02112044.cpp:
     complete
     .text start:0x02112044 end:0x02112124
 
-src/_ZN12daBakubaku_c16CleanupResourcesEv.cpp:
+src/game/actors/daBakubaku_c/_ZN12daBakubaku_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112124 end:0x02112160
 
-src/_ZN12daBakubaku_c16OnPendingDestroyEv.cpp:
+src/game/actors/daBakubaku_c/_ZN12daBakubaku_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02112160 end:0x02112164
 
-src/_ZN12daBakubaku_c6RenderEv.cpp:
+src/game/actors/daBakubaku_c/_ZN12daBakubaku_c6RenderEv.cpp:
     complete
     .text start:0x02112164 end:0x021121b4
 
-src/_ZN12daBakubaku_c8BehaviorEv.cpp:
+src/game/actors/daBakubaku_c/_ZN12daBakubaku_c8BehaviorEv.cpp:
     complete
     .text start:0x021121b4 end:0x021122dc
 
-src/_ZN12daBakubaku_c13InitResourcesEv.cpp:
+src/game/actors/daBakubaku_c/_ZN12daBakubaku_c13InitResourcesEv.cpp:
     complete
     .text start:0x021122dc end:0x02112444
 
-src/_ZN12daBakubaku_c16OnAimedAtWithEggEv.cpp:
+src/game/actors/daBakubaku_c/_ZN12daBakubaku_c16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02112444 end:0x0211244c
 
-src/func_ov032_0211244c.c:
+src/unnamed/ov032/0211/func_ov032_0211244c.c:
     complete
     .text start:0x0211244c end:0x021124a8
 
-src/_ZN9HugeCoverD1Ev.cpp:
+src/game/actors/HugeCover/_ZN9HugeCoverD1Ev.cpp:
     complete
     .text start:0x021124a8 end:0x021124ec
 
-src/_ZN9HugeCoverD0Ev.cpp:
+src/game/actors/HugeCover/_ZN9HugeCoverD0Ev.cpp:
     complete
     .text start:0x021124ec end:0x02112544
 
-src/_ZN9HugeCover16CleanupResourcesEv.cpp:
+src/game/actors/HugeCover/_ZN9HugeCover16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112544 end:0x02112588
 
-src/_ZN9HugeCover6RenderEv.cpp:
+src/game/actors/HugeCover/_ZN9HugeCover6RenderEv.cpp:
     complete
     .text start:0x02112588 end:0x021125b0
 
-src/_ZN9HugeCover8BehaviorEv.cpp:
+src/game/actors/HugeCover/_ZN9HugeCover8BehaviorEv.cpp:
     complete
     .text start:0x021125b0 end:0x021125d4
 
-src/_ZN9HugeCover13InitResourcesEv.cpp:
+src/game/actors/HugeCover/_ZN9HugeCover13InitResourcesEv.cpp:
     complete
     .text start:0x021125d4 end:0x02112668
 
-src/HugeCover_Spawn.c:
+src/game/actors/HugeCover/HugeCover_Spawn.c:
     complete
     .text start:0x02112668 end:0x02112698
 
-src/_ZN9HugeWaterD1Ev.cpp:
+src/game/actors/HugeWater/_ZN9HugeWaterD1Ev.cpp:
     complete
     .text start:0x02112698 end:0x021126e4
 
-src/_ZN9HugeWaterD0Ev.cpp:
+src/game/actors/HugeWater/_ZN9HugeWaterD0Ev.cpp:
     complete
     .text start:0x021126e4 end:0x02112744
 
-src/_ZN9HugeWater16CleanupResourcesEv.cpp:
+src/game/actors/HugeWater/_ZN9HugeWater16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112744 end:0x02112788
 
-src/_ZN9HugeWater6RenderEv.cpp:
+src/game/actors/HugeWater/_ZN9HugeWater6RenderEv.cpp:
     complete
     .text start:0x02112788 end:0x021127bc
 
-src/_ZN9HugeWater8BehaviorEv.cpp:
+src/game/actors/HugeWater/_ZN9HugeWater8BehaviorEv.cpp:
     complete
     .text start:0x021127bc end:0x021127f0
 
-src/_ZN9HugeWater13InitResourcesEv.cpp:
+src/game/actors/HugeWater/_ZN9HugeWater13InitResourcesEv.cpp:
     complete
     .text start:0x021127f0 end:0x021128b8
 
-src/HugeWater_Spawn.c:
+src/game/actors/HugeWater/HugeWater_Spawn.c:
     complete
     .text start:0x021128b8 end:0x021128f0
 
-src/__sinit_ov032_02112c10.c:
+src/unnamed/ov032/0211/__sinit_ov032_02112c10.c:
     complete
     .init start:0x02112c10 end:0x02112dbc
 
-src/__sinit_ov032_02112dbc.c:
+src/unnamed/ov032/0211/__sinit_ov032_02112dbc.c:
     complete
     .init start:0x02112dbc end:0x02112e28
 
-src/__sinit_ov032_02112e28.c:
+src/unnamed/ov032/0211/__sinit_ov032_02112e28.c:
     complete
     .init start:0x02112e28 end:0x02112e94

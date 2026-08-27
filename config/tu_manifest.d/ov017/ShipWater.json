@@ -22,49 +22,49 @@
       "symbol": "_ZN9ShipWaterD1Ev",
       "address": "0x021111a0",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN9ShipWaterD1Ev.cpp",
+      "legacy_source": "src/game/actors/ShipWater/_ZN9ShipWaterD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN9ShipWaterD0Ev",
       "address": "0x021111ec",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN9ShipWaterD0Ev.cpp",
+      "legacy_source": "src/game/actors/ShipWater/_ZN9ShipWaterD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN9ShipWater16CleanupResourcesEv",
       "address": "0x0211124c",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN9ShipWater16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/ShipWater/_ZN9ShipWater16CleanupResourcesEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN9ShipWater6RenderEv",
       "address": "0x02111290",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN9ShipWater6RenderEv.cpp",
+      "legacy_source": "src/game/actors/ShipWater/_ZN9ShipWater6RenderEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN9ShipWater8BehaviorEv",
       "address": "0x021112c4",
       "size": "0x000000fc",
-      "legacy_source": "src/_ZN9ShipWater8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/ShipWater/_ZN9ShipWater8BehaviorEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN9ShipWater13InitResourcesEv",
       "address": "0x021113c0",
       "size": "0x000000c0",
-      "legacy_source": "src/_ZN9ShipWater13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/ShipWater/_ZN9ShipWater13InitResourcesEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "ShipWater_Spawn",
       "address": "0x02111480",
       "size": "0x00000038",
-      "legacy_source": "src/ShipWater_Spawn.c",
+      "legacy_source": "src/game/actors/ShipWater/ShipWater_Spawn.c",
       "ordinal": 6
     }
   ],
@@ -346,13 +346,13 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN9ShipWaterD1Ev.cpp",
-      "src/_ZN9ShipWaterD0Ev.cpp",
-      "src/_ZN9ShipWater16CleanupResourcesEv.cpp",
-      "src/_ZN9ShipWater6RenderEv.cpp",
-      "src/_ZN9ShipWater8BehaviorEv.cpp",
-      "src/_ZN9ShipWater13InitResourcesEv.cpp",
-      "src/ShipWater_Spawn.c"
+      "src/game/actors/ShipWater/_ZN9ShipWaterD1Ev.cpp",
+      "src/game/actors/ShipWater/_ZN9ShipWaterD0Ev.cpp",
+      "src/game/actors/ShipWater/_ZN9ShipWater16CleanupResourcesEv.cpp",
+      "src/game/actors/ShipWater/_ZN9ShipWater6RenderEv.cpp",
+      "src/game/actors/ShipWater/_ZN9ShipWater8BehaviorEv.cpp",
+      "src/game/actors/ShipWater/_ZN9ShipWater13InitResourcesEv.cpp",
+      "src/game/actors/ShipWater/ShipWater_Spawn.c"
     ],
     "extraInertImports": 77,
     "extraImportsWithNoHome": [],

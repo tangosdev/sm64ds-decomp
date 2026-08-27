@@ -4,66 +4,66 @@
     .ctor       start:0x02111c3c end:0x02111c44 kind:rodata align:4
     .data       start:0x02111c60 end:0x02112680 kind:data align:32
     .bss        start:0x02112680 end:0x021126e0 kind:bss align:32
-src/_ZN13daObjEmmLog_cD1Ev.cpp:
+src/game/actors/daObjEmmLog_c/_ZN13daObjEmmLog_cD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111e4
 
-src/_ZN13daObjEmmLog_cD0Ev.cpp:
+src/game/actors/daObjEmmLog_c/_ZN13daObjEmmLog_cD0Ev.cpp:
     complete
     .text start:0x021111e4 end:0x0211123c
 
-src/_ZN13daObjEmmLog_c16CleanupResourcesEv.cpp:
+src/game/actors/daObjEmmLog_c/_ZN13daObjEmmLog_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211123c end:0x02111284
 
-src/_ZN13daObjEmmLog_c6RenderEv.cpp:
+src/game/actors/daObjEmmLog_c/_ZN13daObjEmmLog_c6RenderEv.cpp:
     complete
     .text start:0x02111284 end:0x021112ac
 
-src/_ZN13daObjEmmLog_c8BehaviorEv.cpp:
+src/game/actors/daObjEmmLog_c/_ZN13daObjEmmLog_c8BehaviorEv.cpp:
     complete
     .text start:0x021112ac end:0x02111348
 
-src/_ZN13daObjEmmLog_c13InitResourcesEv.cpp:
+src/game/actors/daObjEmmLog_c/_ZN13daObjEmmLog_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111348 end:0x02111410
 
-src/daObjEmmLog_c_Spawn.c:
+src/game/actors/daObjEmmLog_c/daObjEmmLog_c_Spawn.c:
     complete
     .text start:0x02111410 end:0x02111440
 
-src/_ZN14SquarePathLiftD1Ev.cpp:
+src/game/actors/SquarePathLift/_ZN14SquarePathLiftD1Ev.cpp:
     complete
     .text start:0x02111440 end:0x02111484
 
-src/_ZN14SquarePathLiftD0Ev.cpp:
+src/game/actors/SquarePathLift/_ZN14SquarePathLiftD0Ev.cpp:
     complete
     .text start:0x02111484 end:0x021114dc
 
-src/_ZN14SquarePathLift16CleanupResourcesEv.cpp:
+src/game/actors/SquarePathLift/_ZN14SquarePathLift16CleanupResourcesEv.cpp:
     complete
     .text start:0x021114dc end:0x02111524
 
-src/_ZN14SquarePathLift6RenderEv.cpp:
+src/game/actors/SquarePathLift/_ZN14SquarePathLift6RenderEv.cpp:
     complete
     .text start:0x02111524 end:0x0211154c
 
-src/_ZN14SquarePathLift8BehaviorEv.cpp:
+src/game/actors/SquarePathLift/_ZN14SquarePathLift8BehaviorEv.cpp:
     complete
     .text start:0x0211154c end:0x0211177c
 
-src/_ZN14SquarePathLift13InitResourcesEv.cpp:
+src/game/actors/SquarePathLift/_ZN14SquarePathLift13InitResourcesEv.cpp:
     complete
     .text start:0x0211177c end:0x02111830
 
-src/SquarePathLift_Spawn.c:
+src/game/actors/SquarePathLift/SquarePathLift_Spawn.c:
     complete
     .text start:0x02111830 end:0x02111868
 
-src/__sinit_ov052_02111b64.c:
+src/unnamed/ov052/0211/__sinit_ov052_02111b64.c:
     complete
     .init start:0x02111b64 end:0x02111bd0
 
-src/__sinit_ov052_02111bd0.c:
+src/unnamed/ov052/0211/__sinit_ov052_02111bd0.c:
     complete
     .init start:0x02111bd0 end:0x02111c3c

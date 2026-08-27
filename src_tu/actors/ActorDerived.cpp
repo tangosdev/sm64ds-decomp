@@ -115,7 +115,7 @@ extern "C" void _ZN7dBase_c18AfterInitResourcesEj(dBase_c *self,
  * THE PARAMETER LIST IS THE PROJECT'S RECONSTRUCTION, NOT A MEASUREMENT, and a
  * forwarder is the one shape that cannot testify about it: three words that
  * move no register observe nothing about their own arguments. What can be
- * observed is the CALLEE -- src/func_02042ffc.c is `int func_02042ffc(void *a,
+ * observed is the CALLEE -- src/unnamed/arm9/0204/func_02042ffc.c is `int func_02042ffc(void *a,
  * void *b)`, TWO arguments, and it passes `(char *)b + 0x14`, i.e. an
  * fBase_c's sceneNode. So the callee's own recovered body agrees with this
  * name on the second parameter being an fBase_c* and says nothing at all
@@ -160,7 +160,7 @@ extern "C" void func_02013edc(int a, int b, int c)
  *     for free -- measured, 5/5 MATCH, no scaffold needed. But the emitted
  *     vtable then collides with the gap object's copy and the link aborts.
  *   * A forcing scaffold -- a never-called `p->~dBase_c()`, which is what
- *     src/_ZN7dBase_cD1Ev.cpp uses. objisolate strips that per function,
+ *     src/game/actors/dBase_c/_ZN7dBase_cD1Ev.cpp uses. objisolate strips that per function,
  *     but a MERGED object cannot be reduced that way: the scaffold is .text no
  *     symbols.txt names, `-nodead` keeps it, and it lands inside this span.
  *

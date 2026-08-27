@@ -23,14 +23,14 @@
       "symbol": "_ZN10dBgActor_cD1Ev",
       "address": "0x020ee42c",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN10dBgActor_cD1Ev.cpp",
+      "legacy_source": "src/game/actors/dBgActor_c/_ZN10dBgActor_cD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN10dBgActor_cD0Ev",
       "address": "0x020ee464",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN10dBgActor_cD0Ev.cpp",
+      "legacy_source": "src/game/actors/dBgActor_c/_ZN10dBgActor_cD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -44,49 +44,49 @@
       "symbol": "_ZN10dBgActor_c4KillEv",
       "address": "0x020ee55c",
       "size": "0x00000074",
-      "legacy_source": "src/_ZN10dBgActor_c4KillEv.cpp",
+      "legacy_source": "src/game/actors/dBgActor_c/_ZN10dBgActor_c4KillEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "func_ov002_020ee5d0",
       "address": "0x020ee5d0",
       "size": "0x000000a4",
-      "legacy_source": "src/func_ov002_020ee5d0.c",
+      "legacy_source": "src/unnamed/ov002/020e/func_ov002_020ee5d0.c",
       "ordinal": 4
     },
     {
       "symbol": "_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE",
       "address": "0x020ee674",
       "size": "0x00000158",
-      "legacy_source": "src/_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE.cpp",
+      "legacy_source": "src/game/actors/dBgActor_c/_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN10dBgActor_c19UpdateClsnPosAndRotEv",
       "address": "0x020ee7cc",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN10dBgActor_c19UpdateClsnPosAndRotEv.cpp",
+      "legacy_source": "src/game/actors/dBgActor_c/_ZN10dBgActor_c19UpdateClsnPosAndRotEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "_ZN10dBgActor_c21UpdateModelPosAndRotYEv",
       "address": "0x020ee830",
       "size": "0x00000040",
-      "legacy_source": "src/_ZN10dBgActor_c21UpdateModelPosAndRotYEv.cpp",
+      "legacy_source": "src/game/actors/dBgActor_c/_ZN10dBgActor_c21UpdateModelPosAndRotYEv.cpp",
       "ordinal": 7
     },
     {
       "symbol": "_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_",
       "address": "0x020ee870",
       "size": "0x000000c4",
-      "legacy_source": "src/_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_.cpp",
+      "legacy_source": "src/game/actors/dBgActor_c/_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_.cpp",
       "ordinal": 8
     },
     {
       "symbol": "_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_",
       "address": "0x020ee934",
       "size": "0x0000011c",
-      "legacy_source": "src/_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_.cpp",
+      "legacy_source": "src/game/actors/dBgActor_c/_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_.cpp",
       "ordinal": 9
     },
     {
@@ -151,16 +151,16 @@
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
     "delinksChanged": false,
     "substitutedObjectPaths": [
-      "src/_ZN10dBgActor_cD1Ev.cpp",
-      "src/_ZN10dBgActor_cD0Ev.cpp",
+      "src/game/actors/dBgActor_c/_ZN10dBgActor_cD1Ev.cpp",
+      "src/game/actors/dBgActor_c/_ZN10dBgActor_cD0Ev.cpp",
       "src/_ZN10dBgActor_c14KillByMegaCharER6Player.c",
-      "src/_ZN10dBgActor_c4KillEv.cpp",
-      "src/func_ov002_020ee5d0.c",
-      "src/_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE.cpp",
-      "src/_ZN10dBgActor_c19UpdateClsnPosAndRotEv.cpp",
-      "src/_ZN10dBgActor_c21UpdateModelPosAndRotYEv.cpp",
-      "src/_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_.cpp",
-      "src/_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_.cpp",
+      "src/game/actors/dBgActor_c/_ZN10dBgActor_c4KillEv.cpp",
+      "src/unnamed/ov002/020e/func_ov002_020ee5d0.c",
+      "src/game/actors/dBgActor_c/_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE.cpp",
+      "src/game/actors/dBgActor_c/_ZN10dBgActor_c19UpdateClsnPosAndRotEv.cpp",
+      "src/game/actors/dBgActor_c/_ZN10dBgActor_c21UpdateModelPosAndRotYEv.cpp",
+      "src/game/actors/dBgActor_c/_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_.cpp",
+      "src/game/actors/dBgActor_c/_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_.cpp",
       "src/_ZN10dBgActor_cC2Ev.c"
     ],
     "result": "partial-link-verified",

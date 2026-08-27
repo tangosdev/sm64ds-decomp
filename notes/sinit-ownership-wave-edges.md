@@ -181,17 +181,17 @@ Observed: 429 RTTI records, 0 unresolved; 454 candidate TUs; the ownership repor
 contains 305 initializers, including both rows as high with no blocker.
 
 ```powershell
-python tools/match.py --c src/__sinit_ov002_02107370.c `
+python tools/match.py --c src/unnamed/ov002/0210/__sinit_ov002_02107370.c `
   --func __sinit_ov002_02107370 --addr 0x02107370 --size 0xc18 `
   --version 2004/b56 --module ov002 --strict-relocs --brief
 python tools/linkcheck.py --name __sinit_ov002_02107370 `
-  --c src/__sinit_ov002_02107370.c --addr 0x02107370 --size 0xc18 --module ov002
+  --c src/unnamed/ov002/0210/__sinit_ov002_02107370.c --addr 0x02107370 --size 0xc18 --module ov002
 
-python tools/match.py --c src/__sinit_ov080_02127b2c.c `
+python tools/match.py --c src/unnamed/ov080/0212/__sinit_ov080_02127b2c.c `
   --func __sinit_ov080_02127b2c --addr 0x02127b2c --size 0x434 `
   --version 2004/b56 --module ov080 --strict-relocs --brief
 python tools/linkcheck.py --name __sinit_ov080_02127b2c `
-  --c src/__sinit_ov080_02127b2c.c --addr 0x02127b2c --size 0x434 --module ov080
+  --c src/unnamed/ov080/0212/__sinit_ov080_02127b2c.c --addr 0x02127b2c --size 0x434 --module ov080
 ```
 
 Observed for both: `MATCH`; linkcheck `VERIFIED`, `blind: 0`.

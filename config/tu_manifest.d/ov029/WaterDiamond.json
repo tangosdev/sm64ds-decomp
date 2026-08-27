@@ -22,7 +22,7 @@
       "symbol": "_ZN12WaterDiamondD1Ev",
       "address": "0x02111728",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN12WaterDiamondD1Ev.cpp",
+      "legacy_source": "src/game/actors/WaterDiamond/_ZN12WaterDiamondD1Ev.cpp",
       "ordinal": 0
     },
     {
@@ -64,28 +64,28 @@
       "symbol": "_ZN12WaterDiamond6RenderEv",
       "address": "0x0211192c",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN12WaterDiamond6RenderEv.cpp",
+      "legacy_source": "src/game/actors/WaterDiamond/_ZN12WaterDiamond6RenderEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "_ZN12WaterDiamond8BehaviorEv",
       "address": "0x02111954",
       "size": "0x000000b0",
-      "legacy_source": "src/_ZN12WaterDiamond8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/WaterDiamond/_ZN12WaterDiamond8BehaviorEv.cpp",
       "ordinal": 7
     },
     {
       "symbol": "_ZN12WaterDiamond13InitResourcesEv",
       "address": "0x02111a04",
       "size": "0x00000080",
-      "legacy_source": "src/_ZN12WaterDiamond13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/WaterDiamond/_ZN12WaterDiamond13InitResourcesEv.cpp",
       "ordinal": 8
     },
     {
       "symbol": "WaterDiamond_Spawn",
       "address": "0x02111a84",
       "size": "0x00000040",
-      "legacy_source": "src/WaterDiamond_Spawn.c",
+      "legacy_source": "src/game/actors/WaterDiamond/WaterDiamond_Spawn.c",
       "ordinal": 9
     }
   ],

@@ -15,7 +15,7 @@ Planned 2026-08-25. No builds were run during planning.
 | census said | tree says | impact |
 |---|---|---|
 | 19 of the 330 already compile as C++ → **311** un-migrated | **15** active, 1 inert, 314 bare → **315** un-migrated. The 15 are all `func_ov006_*.c` files under `src/`; 19 `.c` files tree-wide carry an active marker but 4 are tier P3/P4, outside the 330 | stage sizing |
-| 3 inert-marker violators "in the positive pool" | only **1** (`src/_ZN7dWipe_c15SetBackwardTimeEj.c`) is in the 1,167. `src/func_0204322c.c` is WEAK-refs-only, `src/func_ov075_0211b1cc.c` is PURE-C | two are not this workstream's problem |
+| 3 inert-marker violators "in the positive pool" | only **1** (`src/game/actors/dWipe_c/_ZN7dWipe_c15SetBackwardTimeEj.c`) is in the 1,167. `src/unnamed/arm9/0204/func_0204322c.c` is WEAK-refs-only, `src/unnamed/ov075/0211/func_ov075_0211b1cc.c` is PURE-C | two are not this workstream's problem |
 | — | **262 of the 315** un-migrated direct files are in `build/eligible-names.txt`; **53 are not** | the 53 have no per-file byte gate → TU-work or nothing |
 | — | of the 55 safe-pool TUs containing a provably-C++ `.c`, **all 55 are direct-seeded. Zero purely-transitive safe TUs exist.** | the 837 transitive files split 203 (inside direct-seeded safe TUs) / 634 (blocked TUs). There is no "transitive-only merge" to schedule |
 | — | `config/rombuild-versions.txt` holds exactly **one** override (`_ZN11dScMgCard_c13InitResourcesEv → 1.2/base`) | `match.py`'s default `CANONICAL` == the build's pin for every file in this plan except that one. Grep before each batch |
@@ -97,7 +97,7 @@ Rollback is identical and cheap for every stage because no stage moves a file:
 
 ### S0 — the one inert marker · 1 file · no build
 
-`src/_ZN7dWipe_c15SetBackwardTimeEj.c` has its `//cpp` below an `#include`, so it is inert.
+`src/game/actors/dWipe_c/_ZN7dWipe_c15SetBackwardTimeEj.c` has its `//cpp` below an `#include`, so it is inert.
 
 **Do not move it.** The file is **not** in `build/eligible-names.txt`, so no per-file byte
 gate exists for it, and moving the marker to byte 0 would change the language mode of a
@@ -172,10 +172,10 @@ becoming the key-function TU and emitting `_ZTV` — the exact trap the class-fo
 warns about. **Preserve that; do not "fix" it to `virtual`.**
 
 **SINCE LANDED.** This pilot went in with #1684, essentially as written below; the
-file is now `src/_ZN12FallBlockBfs13InitResourcesEv.cpp`. Kept because the reasoning
+file is now `src/game/actors/FallBlockBfs/_ZN12FallBlockBfs13InitResourcesEv.cpp`. Kept because the reasoning
 above it is what the rest of the queue rests on.
 
-The exact edit (`src/_ZN12FallBlockBfs13InitResourcesEv.cpp`, `0x02111e10`, size `0x14`, ov045):
+The exact edit (`src/game/actors/FallBlockBfs/_ZN12FallBlockBfs13InitResourcesEv.cpp`, `0x02111e10`, size `0x14`, ov045):
 
 ```cpp
 //cpp
@@ -189,7 +189,7 @@ This is a **real** migration: the compiler mangles the name. Verify that claim w
 oracle **before** the byte gate — it needs no ROM and no serialization:
 
 ```
-python tools/mangle.py src/_ZN12FallBlockBfs13InitResourcesEv.cpp \
+python tools/mangle.py src/game/actors/FallBlockBfs/_ZN12FallBlockBfs13InitResourcesEv.cpp \
     --expect _ZN12FallBlockBfs13InitResourcesEv
 ```
 
@@ -281,9 +281,9 @@ merge. So S1 legitimately harvests blocked-pool files; S6 does not.
 
 ## 3. The pilot — run first, serially
 
-**`src/func_ov027_02111680.c`**, chosen deliberately over the smaller candidates.
+**`src/unnamed/ov027/0211/func_ov027_02111680.c`**, chosen deliberately over the smaller candidates.
 
-Why not the 4-byte `src/func_ov001_020ab54c.c` (an empty `bx lr`): a stub is
+Why not the 4-byte `src/unnamed/ov001/020a/func_ov001_020ab54c.c` (an empty `bx lr`): a stub is
 codegen-identical in both languages by construction and would validate nothing. This file
 is the smallest candidate that puts **real code** through the C→C++ front end while
 holding every other variable fixed:
@@ -319,7 +319,7 @@ the header first — that is the one judgment call in the pilot.
 **Verification, exactly this, serially:**
 
 ```
-python tools/match.py --c src/func_ov027_02111680.c \
+python tools/match.py --c src/unnamed/ov027/0211/func_ov027_02111680.c \
     --func func_ov027_02111680 --addr 0x02111680 --size 0x70 --module ov027
 ```
 
@@ -345,8 +345,8 @@ python tools/match.py --c src/func_ov027_02111680.c \
 and the pilot deliberately excludes:
 
 ```
-python tools/mangle.py src/_ZN12FallBlockBfs13InitResourcesEv.cpp --expect _ZN12FallBlockBfs13InitResourcesEv
-python tools/match.py --c src/_ZN12FallBlockBfs13InitResourcesEv.cpp \
+python tools/mangle.py src/game/actors/FallBlockBfs/_ZN12FallBlockBfs13InitResourcesEv.cpp --expect _ZN12FallBlockBfs13InitResourcesEv
+python tools/match.py --c src/game/actors/FallBlockBfs/_ZN12FallBlockBfs13InitResourcesEv.cpp \
     --func _ZN12FallBlockBfs13InitResourcesEv --addr 0x02111e10 --size 0x14 --module ov045
 ```
 

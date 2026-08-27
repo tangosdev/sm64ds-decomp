@@ -4,70 +4,70 @@
     .ctor       start:0x02111ac0 end:0x02111ac8 kind:rodata align:4
     .data       start:0x02111ae0 end:0x021124c0 kind:data align:32
     .bss        start:0x021124c0 end:0x02112520 kind:bss align:32
-src/_ZN9TinyCoverD1Ev.cpp:
+src/game/actors/TinyCover/_ZN9TinyCoverD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111e4
 
-src/_ZN9TinyCoverD0Ev.cpp:
+src/game/actors/TinyCover/_ZN9TinyCoverD0Ev.cpp:
     complete
     .text start:0x021111e4 end:0x0211123c
 
-src/_ZN9TinyCover15OnGroundPoundedER8dActor_c.cpp:
+src/game/actors/TinyCover/_ZN9TinyCover15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x0211123c end:0x02111280
 
-src/_ZN9TinyCover16CleanupResourcesEv.cpp:
+src/game/actors/TinyCover/_ZN9TinyCover16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111280 end:0x021112c4
 
-src/_ZN9TinyCover6RenderEv.cpp:
+src/game/actors/TinyCover/_ZN9TinyCover6RenderEv.cpp:
     complete
     .text start:0x021112c4 end:0x021112ec
 
-src/_ZN9TinyCover8BehaviorEv.cpp:
+src/game/actors/TinyCover/_ZN9TinyCover8BehaviorEv.cpp:
     complete
     .text start:0x021112ec end:0x02111310
 
-src/_ZN9TinyCover13InitResourcesEv.cpp:
+src/game/actors/TinyCover/_ZN9TinyCover13InitResourcesEv.cpp:
     complete
     .text start:0x02111310 end:0x021113a4
 
-src/TinyCover_Spawn.c:
+src/game/actors/TinyCover/TinyCover_Spawn.c:
     complete
     .text start:0x021113a4 end:0x021113d4
 
-src/_ZN9TinyWaterD1Ev.cpp:
+src/game/actors/TinyWater/_ZN9TinyWaterD1Ev.cpp:
     complete
     .text start:0x021113d4 end:0x02111420
 
-src/_ZN9TinyWaterD0Ev.cpp:
+src/game/actors/TinyWater/_ZN9TinyWaterD0Ev.cpp:
     complete
     .text start:0x02111420 end:0x02111480
 
-src/_ZN9TinyWater16CleanupResourcesEv.cpp:
+src/game/actors/TinyWater/_ZN9TinyWater16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111480 end:0x021114c4
 
-src/_ZN9TinyWater6RenderEv.cpp:
+src/game/actors/TinyWater/_ZN9TinyWater6RenderEv.cpp:
     complete
     .text start:0x021114c4 end:0x021114f8
 
-src/_ZN9TinyWater8BehaviorEv.cpp:
+src/game/actors/TinyWater/_ZN9TinyWater8BehaviorEv.cpp:
     complete
     .text start:0x021114f8 end:0x021115bc
 
-src/_ZN9TinyWater13InitResourcesEv.cpp:
+src/game/actors/TinyWater/_ZN9TinyWater13InitResourcesEv.cpp:
     complete
     .text start:0x021115bc end:0x02111690
 
-src/TinyWater_Spawn.c:
+src/game/actors/TinyWater/TinyWater_Spawn.c:
     complete
     .text start:0x02111690 end:0x021116c8
 
-src/__sinit_ov033_021119e8.c:
+src/unnamed/ov033/0211/__sinit_ov033_021119e8.c:
     complete
     .init start:0x021119e8 end:0x02111a54
 
-src/__sinit_ov033_02111a54.c:
+src/unnamed/ov033/0211/__sinit_ov033_02111a54.c:
     complete
     .init start:0x02111a54 end:0x02111ac0

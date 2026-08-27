@@ -22,7 +22,7 @@
       "symbol": "_ZN13RacingPenguinD1Ev",
       "address": "0x021111a0",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN13RacingPenguinD1Ev.cpp",
+      "legacy_source": "src/game/actors/RacingPenguin/_ZN13RacingPenguinD1Ev.cpp",
       "ordinal": 0
     },
     {
@@ -36,161 +36,161 @@
       "symbol": "func_ov019_02111254",
       "address": "0x02111254",
       "size": "0x00000028",
-      "legacy_source": "src/func_ov019_02111254.c",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_02111254.c",
       "ordinal": 2
     },
     {
       "symbol": "func_ov019_0211127c",
       "address": "0x0211127c",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov019_0211127c.cpp",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_0211127c.cpp",
       "ordinal": 3
     },
     {
       "symbol": "func_ov019_021112b8",
       "address": "0x021112b8",
       "size": "0x00000064",
-      "legacy_source": "src/func_ov019_021112b8.c",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_021112b8.c",
       "ordinal": 4
     },
     {
       "symbol": "func_ov019_0211131c",
       "address": "0x0211131c",
       "size": "0x00000094",
-      "legacy_source": "src/func_ov019_0211131c.c",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_0211131c.c",
       "ordinal": 5
     },
     {
       "symbol": "func_ov019_021113b0",
       "address": "0x021113b0",
       "size": "0x0000005c",
-      "legacy_source": "src/func_ov019_021113b0.c",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_021113b0.c",
       "ordinal": 6
     },
     {
       "symbol": "func_ov019_0211140c",
       "address": "0x0211140c",
       "size": "0x000000e0",
-      "legacy_source": "src/func_ov019_0211140c.cpp",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_0211140c.cpp",
       "ordinal": 7
     },
     {
       "symbol": "func_ov019_021114ec",
       "address": "0x021114ec",
       "size": "0x0000006c",
-      "legacy_source": "src/func_ov019_021114ec.cpp",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_021114ec.cpp",
       "ordinal": 8
     },
     {
       "symbol": "func_ov019_02111558",
       "address": "0x02111558",
       "size": "0x000001fc",
-      "legacy_source": "src/func_ov019_02111558.c",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_02111558.c",
       "ordinal": 9
     },
     {
       "symbol": "func_ov019_02111754",
       "address": "0x02111754",
       "size": "0x00000054",
-      "legacy_source": "src/func_ov019_02111754.cpp",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_02111754.cpp",
       "ordinal": 10
     },
     {
       "symbol": "func_ov019_021117a8",
       "address": "0x021117a8",
       "size": "0x0000015c",
-      "legacy_source": "src/func_ov019_021117a8.c",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_021117a8.c",
       "ordinal": 11
     },
     {
       "symbol": "func_ov019_02111904",
       "address": "0x02111904",
       "size": "0x00000078",
-      "legacy_source": "src/func_ov019_02111904.c",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_02111904.c",
       "ordinal": 12
     },
     {
       "symbol": "func_ov019_0211197c",
       "address": "0x0211197c",
       "size": "0x000003dc",
-      "legacy_source": "src/func_ov019_0211197c.c",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_0211197c.c",
       "ordinal": 13
     },
     {
       "symbol": "func_ov019_02111d58",
       "address": "0x02111d58",
       "size": "0x00000094",
-      "legacy_source": "src/func_ov019_02111d58.c",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_02111d58.c",
       "ordinal": 14
     },
     {
       "symbol": "func_ov019_02111dec",
       "address": "0x02111dec",
       "size": "0x00000168",
-      "legacy_source": "src/func_ov019_02111dec.c",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_02111dec.c",
       "ordinal": 15
     },
     {
       "symbol": "func_ov019_02111f54",
       "address": "0x02111f54",
       "size": "0x00000098",
-      "legacy_source": "src/func_ov019_02111f54.c",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_02111f54.c",
       "ordinal": 16
     },
     {
       "symbol": "func_ov019_02111fec",
       "address": "0x02111fec",
       "size": "0x00000150",
-      "legacy_source": "src/func_ov019_02111fec.c",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_02111fec.c",
       "ordinal": 17
     },
     {
       "symbol": "func_ov019_0211213c",
       "address": "0x0211213c",
       "size": "0x0000002c",
-      "legacy_source": "src/func_ov019_0211213c.c",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_0211213c.c",
       "ordinal": 18
     },
     {
       "symbol": "func_ov019_02112168",
       "address": "0x02112168",
       "size": "0x00000090",
-      "legacy_source": "src/func_ov019_02112168.c",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_02112168.c",
       "ordinal": 19
     },
     {
       "symbol": "func_ov019_021121f8",
       "address": "0x021121f8",
       "size": "0x00000070",
-      "legacy_source": "src/func_ov019_021121f8.c",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_021121f8.c",
       "ordinal": 20
     },
     {
       "symbol": "func_ov019_02112268",
       "address": "0x02112268",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov019_02112268.cpp",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_02112268.cpp",
       "ordinal": 21
     },
     {
       "symbol": "func_ov019_021122a4",
       "address": "0x021122a4",
       "size": "0x00000038",
-      "legacy_source": "src/func_ov019_021122a4.cpp",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_021122a4.cpp",
       "ordinal": 22
     },
     {
       "symbol": "func_ov019_021122dc",
       "address": "0x021122dc",
       "size": "0x0000001c",
-      "legacy_source": "src/func_ov019_021122dc.c",
+      "legacy_source": "src/unnamed/ov019/0211/func_ov019_021122dc.c",
       "ordinal": 23
     },
     {
       "symbol": "_ZN13RacingPenguin16CleanupResourcesEv",
       "address": "0x021122f8",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN13RacingPenguin16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/RacingPenguin/_ZN13RacingPenguin16CleanupResourcesEv.cpp",
       "ordinal": 24
     },
     {
@@ -204,28 +204,28 @@
       "symbol": "_ZN13RacingPenguin6RenderEv",
       "address": "0x02112360",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN13RacingPenguin6RenderEv.cpp",
+      "legacy_source": "src/game/actors/RacingPenguin/_ZN13RacingPenguin6RenderEv.cpp",
       "ordinal": 26
     },
     {
       "symbol": "_ZN13RacingPenguin8BehaviorEv",
       "address": "0x02112394",
       "size": "0x00000040",
-      "legacy_source": "src/_ZN13RacingPenguin8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/RacingPenguin/_ZN13RacingPenguin8BehaviorEv.cpp",
       "ordinal": 27
     },
     {
       "symbol": "_ZN13RacingPenguin13InitResourcesEv",
       "address": "0x021123d4",
       "size": "0x000001e8",
-      "legacy_source": "src/_ZN13RacingPenguin13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/RacingPenguin/_ZN13RacingPenguin13InitResourcesEv.cpp",
       "ordinal": 28
     },
     {
       "symbol": "RacingPenguin_Spawn",
       "address": "0x021125bc",
       "size": "0x00000060",
-      "legacy_source": "src/RacingPenguin_Spawn.c",
+      "legacy_source": "src/game/actors/RacingPenguin/RacingPenguin_Spawn.c",
       "ordinal": 29
     }
   ],
@@ -233,10 +233,10 @@
   "bss": [],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
-    "tubuild create warning: RAW: src/func_ov019_0211140c.cpp (func_ov019_0211140c) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov019_021114ec.cpp (func_ov019_021114ec) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov019_02111754.cpp (func_ov019_02111754) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/_ZN13RacingPenguin16CleanupResourcesEv.cpp (_ZN13RacingPenguin16CleanupResourcesEv) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/unnamed/ov019/0211/func_ov019_0211140c.cpp (func_ov019_0211140c) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/unnamed/ov019/0211/func_ov019_021114ec.cpp (func_ov019_021114ec) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/unnamed/ov019/0211/func_ov019_02111754.cpp (func_ov019_02111754) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/game/actors/RacingPenguin/_ZN13RacingPenguin16CleanupResourcesEv.cpp (_ZN13RacingPenguin16CleanupResourcesEv) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: CONFLICT: macro 'LB' differs between the legacy file that used to hold func_ov019_02111558 and the one that held func_ov019_0211197c; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration '_ZNK7PathPtr7GetNodeER7Vector3j' differs between the legacy file that used to hold func_ov019_0211131c and the one that held func_ov019_021113b0; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov019_0211131c and the one that held func_ov019_021113b0; kept the first, the other is commented out for review",

@@ -54,7 +54,7 @@ struct daObjMaruta_c : dBgActor_c {
     virtual ~daObjMaruta_c() {}
 
     /* Slot 27, this class's own override, defined out of line in
-       src/_ZN13daObjMaruta_c15OnHitByMegaCharER6Player.cpp. LAYOUT-NEUTRAL: it
+       src/game/actors/daObjMaruta_c/_ZN13daObjMaruta_c15OnHitByMegaCharER6Player.cpp. LAYOUT-NEUTRAL: it
        re-uses the slot dActor_c already holds rather than appending one, and adds
        no field, so the 0x320 assert below is untouched.
 

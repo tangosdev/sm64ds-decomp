@@ -13,14 +13,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020f198c  src/_ZN19AmbientSoundEffectsD1Ev.cpp
- *   [1] 0x020f19b0  src/_ZN19AmbientSoundEffectsD0Ev.cpp
- *   [2] 0x020f19e8  src/_ZN19AmbientSoundEffects16CleanupResourcesEv.cpp
- *   [3] 0x020f19f0  src/_ZN19AmbientSoundEffects16OnPendingDestroyEv.cpp
- *   [4] 0x020f19f4  src/_ZN19AmbientSoundEffects6RenderEv.cpp
- *   [5] 0x020f19fc  src/_ZN19AmbientSoundEffects8BehaviorEv.cpp
- *   [6] 0x020f1ac4  src/_ZN19AmbientSoundEffects13InitResourcesEv.cpp
- *   [7] 0x020f1b94  src/AmbientSoundEffects_Spawn.c
+ *   [0] 0x020f198c  src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffectsD1Ev.cpp
+ *   [1] 0x020f19b0  src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffectsD0Ev.cpp
+ *   [2] 0x020f19e8  src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffects16CleanupResourcesEv.cpp
+ *   [3] 0x020f19f0  src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffects16OnPendingDestroyEv.cpp
+ *   [4] 0x020f19f4  src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffects6RenderEv.cpp
+ *   [5] 0x020f19fc  src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffects8BehaviorEv.cpp
+ *   [6] 0x020f1ac4  src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffects13InitResourcesEv.cpp
+ *   [7] 0x020f1b94  src/game/actors/AmbientSoundEffects/AmbientSoundEffects_Spawn.c
  *
  * Naming boundary: these configured text symbols use AmbientSoundEffects,
  * while the adjacent retail RTTI spells daSetSE_c. Until that symbol migration

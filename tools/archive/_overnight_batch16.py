@@ -19,12 +19,12 @@ FLOORS = [
 def batch_status():
     out = []
     entries = [
-        ("func_ov007_020bc3dc", "src/func_ov007_020bc3dc.c", "0x020bc3dc", "0x58",
+        ("func_ov007_020bc3dc", "src/unnamed/ov007/020b/func_ov007_020bc3dc.c", "0x020bc3dc", "0x58",
          "extracted/dsd/arm9_overlays/ov007.bin", "0x020ad660"),
-        ("func_0206e3dc", "src/func_0206e3dc.c", "0x0206e3dc", "0x74", None, None),
-        ("func_ov002_020bf36c", "src/func_ov002_020bf36c.cpp", "0x020bf36c", "0xa0",
+        ("func_0206e3dc", "src/unnamed/arm9/0206/func_0206e3dc.c", "0x0206e3dc", "0x74", None, None),
+        ("func_ov002_020bf36c", "src/unnamed/ov002/020b/func_ov002_020bf36c.cpp", "0x020bf36c", "0xa0",
          "extracted/dsd/arm9_overlays/ov002.bin", "0x020ad660"),
-        ("_ZN5Model9DoSetFileEPcii", "src/_ZN5Model9DoSetFileEPcii.cpp", "0x02016bf8", "0xa0", None, None),
+        ("_ZN5Model9DoSetFileEPcii", "src/runtime/graphics/Model/_ZN5Model9DoSetFileEPcii.cpp", "0x02016bf8", "0xa0", None, None),
     ]
     for name, src, addr, size, bp, bb in entries:
         mcmd = [sys.executable, str(REPO / "tools/match.py"), "--c", str(REPO / src),

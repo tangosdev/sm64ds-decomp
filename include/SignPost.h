@@ -119,7 +119,7 @@ struct SignPost : dBgActor_c {
        assert below is unaffected.
 
        It is also this class's KEY FUNCTION, the destructor above being inline,
-       so src/_ZN8SignPost4KillEv.cpp emits _ZTV8SignPost, _ZTI8SignPost and the
+       so src/game/actors/SignPost/_ZN8SignPost4KillEv.cpp emits _ZTV8SignPost, _ZTI8SignPost and the
        destructor variants alongside the one function it is bound to.
        objisolate.py reduces the object back to that one 0x74 .text before
        eligible.py and rombuild.py judge it -- checked, not assumed. */

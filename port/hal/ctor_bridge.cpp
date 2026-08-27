@@ -4,7 +4,7 @@
 // class -- C1 for a complete object and C2 for a base subobject -- and this
 // decomp enrolls each variant in its own file, objisolate stripping the
 // sibling the file does not own. That is correct for the cartridge and it is
-// why src/_ZN9AnimationC1Ev.cpp and src/_ZN9AnimationC2Ev.cpp both exist with
+// why src/runtime/graphics/Animation/_ZN9AnimationC1Ev.cpp and src/runtime/graphics/Animation/_ZN9AnimationC2Ev.cpp both exist with
 // the same body.
 //
 // MSVC has ONE constructor symbol. Compile both files for the host and the
@@ -26,7 +26,7 @@
 // `Matrix3x3 r; Vector3 t;`), and whichever a TU sees first stands. Model
 // embeds one, so a TU that saw the other spelling could disagree about
 // sizeof(Model) -- and placement new here would construct against the wrong
-// layout. src/_ZN5ModelC1Ev.cpp orders its includes the same way, for the
+// layout. src/runtime/graphics/Model/_ZN5ModelC1Ev.cpp orders its includes the same way, for the
 // same reason.
 #include "common.h"
 
@@ -69,7 +69,7 @@ extern "C" {
 // smoke_actor's `vcall0(actor, 9)` -- Itanium numbering for Render -- then
 // reads off the end of it and calls null. So the constructor runs for its
 // member initialization and the vptr is put back to the table the port
-// dispatches through, which is exactly what src/_ZN5ModelC2Ev.c does on the
+// dispatches through, which is exactly what src/runtime/graphics/Model/_ZN5ModelC2Ev.c does on the
 // line after its own base-constructor call.
 extern "C" void *_ZTV5Model[8];
 void _ZN5ModelC1Ev(void *self)
@@ -108,7 +108,7 @@ ModelBase::~ModelBase()
     abort();
 }
 
-// src/func_0203cbc0.c is a tail-call veneer to _ZdlPv, the DS global operator
+// src/unnamed/arm9/0203/func_0203cbc0.c is a tail-call veneer to _ZdlPv, the DS global operator
 // delete, and Model's destructor calls it. The veneer is sliced now, so its
 // target routes through the Memory layer here -- matching how _Znwj is
 // handled in hal/cxxname_bridge.cpp.

@@ -3,93 +3,93 @@
     .ctor       start:0x020ab7e4 end:0x020ab7e4 kind:rodata align:4
     .data       start:0x020ab800 end:0x020ad620 kind:data align:32
     .bss        start:0x020ad620 end:0x020ad660 kind:bss align:32
-src/func_ov001_020aa420.c:
+src/unnamed/ov001/020a/func_ov001_020aa420.c:
     complete
     .text start:0x020aa420 end:0x020aa6b0
 
-src/func_ov001_020aa6b0.c:
+src/unnamed/ov001/020a/func_ov001_020aa6b0.c:
     complete
     .text start:0x020aa6b0 end:0x020aa6cc
 
-src/func_ov001_020aa6cc.c:
+src/unnamed/ov001/020a/func_ov001_020aa6cc.c:
     complete
     .text start:0x020aa6cc end:0x020aa6e4
 
-src/func_ov001_020aa6e4.cpp:
+src/unnamed/ov001/020a/func_ov001_020aa6e4.cpp:
     complete
     .text start:0x020aa6e4 end:0x020aa79c
 
-src/func_ov001_020aa79c.c:
+src/unnamed/ov001/020a/func_ov001_020aa79c.c:
     complete
     .text start:0x020aa79c end:0x020aa7b8
 
-src/func_ov001_020aa7b8.cpp:
+src/unnamed/ov001/020a/func_ov001_020aa7b8.cpp:
     complete
     .text start:0x020aa7b8 end:0x020aa858
 
-src/func_ov001_020aa858.cpp:
+src/unnamed/ov001/020a/func_ov001_020aa858.cpp:
     complete
     .text start:0x020aa858 end:0x020aa960
 
-src/func_ov001_020aa960.cpp:
+src/unnamed/ov001/020a/func_ov001_020aa960.cpp:
     complete
     .text start:0x020aa960 end:0x020aaa54
 
-src/func_ov001_020aaa54.cpp:
+src/unnamed/ov001/020a/func_ov001_020aaa54.cpp:
     complete
     .text start:0x020aaa54 end:0x020aadac
 
-src/func_ov001_020aadac.c:
+src/unnamed/ov001/020a/func_ov001_020aadac.c:
     complete
     .text start:0x020aadac end:0x020aaf40
 
-src/func_ov001_020aaf40.c:
+src/unnamed/ov001/020a/func_ov001_020aaf40.c:
     complete
     .text start:0x020aaf40 end:0x020ab110
 
-src/func_ov001_020ab110.c:
+src/unnamed/ov001/020a/func_ov001_020ab110.c:
     .text start:0x020ab110 end:0x020ab228
 
-src/func_ov001_020ab228.c:
+src/unnamed/ov001/020a/func_ov001_020ab228.c:
     complete
     .text start:0x020ab228 end:0x020ab2e4
 
-src/func_ov001_020ab2e4.c:
+src/unnamed/ov001/020a/func_ov001_020ab2e4.c:
     complete
     .text start:0x020ab2e4 end:0x020ab374
 
-src/_ZN10dCapIcon_cD0Ev.cpp:
+src/game/actors/dCapIcon_c/_ZN10dCapIcon_cD0Ev.cpp:
     complete
     .text start:0x020ab374 end:0x020ab3a0
 
-src/_ZN10dCapIcon_cD1Ev.cpp:
+src/game/actors/dCapIcon_c/_ZN10dCapIcon_cD1Ev.cpp:
     complete
     .text start:0x020ab3a0 end:0x020ab3c4
 
-src/_ZN10dCapIcon_cC1Ev.cpp:
+src/game/actors/dCapIcon_c/_ZN10dCapIcon_cC1Ev.cpp:
     complete
     .text start:0x020ab3c4 end:0x020ab3f0
 
-src/func_ov001_020ab3f0.c:
+src/unnamed/ov001/020a/func_ov001_020ab3f0.c:
     complete
     .text start:0x020ab3f0 end:0x020ab41c
 
-src/func_ov001_020ab41c.c:
+src/unnamed/ov001/020a/func_ov001_020ab41c.c:
     complete
     .text start:0x020ab41c end:0x020ab450
 
-src/TouchArea_Update.c:
+src/game/objects/TouchArea_Update.c:
     complete
     .text start:0x020ab450 end:0x020ab54c
 
-src/func_ov001_020ab54c.c:
+src/unnamed/ov001/020a/func_ov001_020ab54c.c:
     complete
     .text start:0x020ab54c end:0x020ab550
 
-src/func_ov001_020ab550.c:
+src/unnamed/ov001/020a/func_ov001_020ab550.c:
     complete
     .text start:0x020ab550 end:0x020ab5b0
 
-src/func_ov001_020ab5b0.c:
+src/unnamed/ov001/020a/func_ov001_020ab5b0.c:
     complete
     .text start:0x020ab5b0 end:0x020ab5f8

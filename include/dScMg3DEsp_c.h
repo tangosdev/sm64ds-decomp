@@ -35,7 +35,7 @@
  * include/dScMgRoulette_c.h's own note.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN12dScMg3DEsp_cD1Ev.cpp; D0Ev.cpp
+ * its own. Defined for real in src/minigames/dScMg3DEsp_c/_ZN12dScMg3DEsp_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
  * dScMgBase_c, two levels up, already provides one. */
 #ifndef DSCMG3DESP_C_H
@@ -66,10 +66,10 @@ struct dScMg3DEsp_c : dScMgSingle3DBase_c {
        translation unit starts emitting _ZTV12dScMg3DEsp_c because of these.
        Signatures are include/fBase_c.h's and include/dScMgBase_c.h's own,
        copied unchanged. --- */
-    s32 InitResources();      /* slot 0 -- src/_ZN12dScMg3DEsp_c13InitResourcesEv.cpp */
+    s32 InitResources();      /* slot 0 -- src/minigames/dScMg3DEsp_c/_ZN12dScMg3DEsp_c13InitResourcesEv.cpp */
     s32 CleanupResources();   /* slot 3 -- ov006 0x020e9cec */
     s32 Behavior();           /* slot 6 -- ov006 0x020e9e00 */
-    s32 Render();             /* slot 9 -- src/_ZN12dScMg3DEsp_c6RenderEv.cpp */
+    s32 Render();             /* slot 9 -- src/minigames/dScMg3DEsp_c/_ZN12dScMg3DEsp_c6RenderEv.cpp */
 };
 
 typedef char dScMg3DEsp_c_size_must_be_0x5558[sizeof(dScMg3DEsp_c) == 0x5558 ? 1 : -1];

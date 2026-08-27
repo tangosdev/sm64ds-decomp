@@ -148,7 +148,7 @@ its radius plus one cell.
 A first draft carrying the head and the three-axis AABB was banked at
 `notes/drafts-sphereclsn-detectclsn.cpp`. It was a **stub** — the walk and the prism tests
 were not written — so it could not match. (#1655 has since finished the function: it is
-byte-exact in `src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`, and the draft file is gone.)
+byte-exact in `src/game/actors/dBgW_Kc/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`, and the draft file is gone.)
 What that draft established is that the AABB arithmetic is right,
 emitting the ROM's own sequence (`sub` origin, `sub`/`add` the slack, `asrs` + `movmi #0` low
 clamp, `mvn` for `~mask`, `movgt` high clamp, `cmp` and early-out) per axis. Build it at
@@ -321,7 +321,7 @@ exists; do not read the shrink as a regression.
 
 ## SphereClsn is largely recoverable from its already-matched callers (2026-08-06)
 
-`func_02037a6c` needed no analysis — `src/func_02037a6c.c` is **already matched and enrolled**,
+`func_02037a6c` needed no analysis — `src/unnamed/arm9/0203/func_02037a6c.c` is **already matched and enrolled**,
 and it is an AABB expand:
 
 ```c
@@ -758,7 +758,7 @@ The earlier note's "compares it against the squared radius" is the wrong operati
 
 Four sites (`0x1ffc2d8`, `0x1ffc448`, `0x1ffc5b8`, `0x1ffca78`) inline the DS hardware sqrt:
 save IME, `SQRTCNT = 1`, 64-bit `SQRT_PARAM`, restore IME, spin on `SQRTCNT & 0x8000`, read
-`SQRT_RESULT`. But `cstd::sqrt(u64)` at `0x0203d744` (matched, `src/_ZN4cstd4sqrtEy.cpp`)
+`SQRT_RESULT`. But `cstd::sqrt(u64)` at `0x0203d744` (matched, `src/game/actors/cstd/_ZN4cstd4sqrtEy.cpp`)
 pre-shifts `x << 2` and rounds its result `(r + 1) >> 1`. **Neither appears here.** So this
 is a separate raw inline helper, not that function -- and the `0` and `1` it writes come from
 frame slots `sp+0x118` and `sp+0x10c` rather than immediates, which is what four expansions

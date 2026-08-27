@@ -7,31 +7,31 @@
  * the manifest notes.
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02121118  src/_ZN8daKrpa_cD1Ev.cpp
- *   [1] 0x02121160  src/_ZN8daKrpa_cD0Ev.cpp
- *   [2] 0x021211bc  src/_ZN8daKrpa_c13OnYoshiTryEatEv.cpp
- *   [3] 0x021211c4  src/func_ov070_021211c4.cpp
- *   [4] 0x02121298  src/func_ov070_02121298.cpp
- *   [5] 0x02121310  src/func_ov070_02121310.cpp
- *   [6] 0x021213cc  src/func_ov070_021213cc.c
- *   [7] 0x02121438  src/func_ov070_02121438.cpp
- *   [8] 0x021214f8  src/func_ov070_021214f8.cpp
- *   [9] 0x02121548  src/func_ov070_02121548.c
- *   [10] 0x0212156c  src/func_ov070_0212156c.c
- *   [11] 0x021216b8  src/func_ov070_021216b8.c
- *   [12] 0x02121710  src/func_ov070_02121710.cpp
- *   [13] 0x021217ac  src/func_ov070_021217ac.c
- *   [14] 0x0212180c  src/func_ov070_0212180c.cpp
- *   [15] 0x02121848  src/func_ov070_02121848.cpp
- *   [16] 0x02121880  src/func_ov070_02121880.c
- *   [17] 0x0212189c  src/_ZN8daKrpa_c16CleanupResourcesEv.cpp
- *   [18] 0x021218c0  src/_ZN8daKrpa_c16OnPendingDestroyEv.cpp
- *   [19] 0x021218c4  src/_ZN8daKrpa_c6RenderEv.cpp
- *   [20] 0x021218f4  src/_ZN8daKrpa_c8BehaviorEv.cpp
- *   [21] 0x02121914  src/_ZN8daKrpa_c13InitResourcesEv.cpp
- *   [22] 0x02121a64  src/func_ov070_02121a64.c
- *   [23] 0x02121ae0  src/func_ov070_02121ae0.c
- *   [24] 0x02121af8  src/daKrpa_c_Spawn.c
+ *   [0] 0x02121118  src/game/actors/daKrpa_c/_ZN8daKrpa_cD1Ev.cpp
+ *   [1] 0x02121160  src/game/actors/daKrpa_c/_ZN8daKrpa_cD0Ev.cpp
+ *   [2] 0x021211bc  src/game/actors/daKrpa_c/_ZN8daKrpa_c13OnYoshiTryEatEv.cpp
+ *   [3] 0x021211c4  src/unnamed/ov070/0212/func_ov070_021211c4.cpp
+ *   [4] 0x02121298  src/unnamed/ov070/0212/func_ov070_02121298.cpp
+ *   [5] 0x02121310  src/unnamed/ov070/0212/func_ov070_02121310.cpp
+ *   [6] 0x021213cc  src/unnamed/ov070/0212/func_ov070_021213cc.c
+ *   [7] 0x02121438  src/unnamed/ov070/0212/func_ov070_02121438.cpp
+ *   [8] 0x021214f8  src/unnamed/ov070/0212/func_ov070_021214f8.cpp
+ *   [9] 0x02121548  src/unnamed/ov070/0212/func_ov070_02121548.c
+ *   [10] 0x0212156c  src/unnamed/ov070/0212/func_ov070_0212156c.c
+ *   [11] 0x021216b8  src/unnamed/ov070/0212/func_ov070_021216b8.c
+ *   [12] 0x02121710  src/unnamed/ov070/0212/func_ov070_02121710.cpp
+ *   [13] 0x021217ac  src/unnamed/ov070/0212/func_ov070_021217ac.c
+ *   [14] 0x0212180c  src/unnamed/ov070/0212/func_ov070_0212180c.cpp
+ *   [15] 0x02121848  src/unnamed/ov070/0212/func_ov070_02121848.cpp
+ *   [16] 0x02121880  src/unnamed/ov070/0212/func_ov070_02121880.c
+ *   [17] 0x0212189c  src/game/actors/daKrpa_c/_ZN8daKrpa_c16CleanupResourcesEv.cpp
+ *   [18] 0x021218c0  src/game/actors/daKrpa_c/_ZN8daKrpa_c16OnPendingDestroyEv.cpp
+ *   [19] 0x021218c4  src/game/actors/daKrpa_c/_ZN8daKrpa_c6RenderEv.cpp
+ *   [20] 0x021218f4  src/game/actors/daKrpa_c/_ZN8daKrpa_c8BehaviorEv.cpp
+ *   [21] 0x02121914  src/game/actors/daKrpa_c/_ZN8daKrpa_c13InitResourcesEv.cpp
+ *   [22] 0x02121a64  src/unnamed/ov070/0212/func_ov070_02121a64.c
+ *   [23] 0x02121ae0  src/unnamed/ov070/0212/func_ov070_02121ae0.c
+ *   [24] 0x02121af8  src/game/actors/daKrpa_c/daKrpa_c_Spawn.c
  */
 
 /* -------------------------------------------------------------------------- */

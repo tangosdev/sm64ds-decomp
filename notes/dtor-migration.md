@@ -78,7 +78,7 @@ sentinel hides exactly the signal you need. Use `tools/dtor_diff.py`, which prin
 sizes and the two disassemblies side by side:
 
 ```sh
-python tools/dtor_diff.py src/_ZN5ModelD1Ev.cpp _ZN5ModelD1Ev 0x02016d20 0x38 arm9
+python tools/dtor_diff.py src/runtime/graphics/Model/_ZN5ModelD1Ev.cpp _ZN5ModelD1Ev 0x02016d20 0x38 arm9
 # pin 2004/b56   ROM 0x38   candidate 0x30   delta -8 bytes
 ```
 

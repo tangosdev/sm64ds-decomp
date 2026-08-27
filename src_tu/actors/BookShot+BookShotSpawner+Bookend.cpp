@@ -16,37 +16,37 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021111a0  src/_ZN8BookShotD1Ev.cpp
+ *   [0] 0x021111a0  src/game/actors/BookShot/_ZN8BookShotD1Ev.cpp
  *   [1] 0x021111f0  src/_ZN8BookShotD0Ev.c
- *   [2] 0x02111254  src/_ZN15BookShotSpawnerD1Ev.cpp
- *   [3] 0x02111278  src/_ZN15BookShotSpawnerD0Ev.cpp
- *   [4] 0x021112b0  src/func_ov020_021112b0.c
- *   [5] 0x02111340  src/func_ov020_02111340.c
- *   [6] 0x02111418  src/func_ov020_02111418.cpp
- *   [7] 0x021115ac  src/func_ov020_021115ac.c
- *   [8] 0x0211174c  src/func_ov020_0211174c.c
- *   [9] 0x021119dc  src/func_ov020_021119dc.c
- *   [10] 0x02111aa8  src/func_ov020_02111aa8.c
- *   [11] 0x02111b28  src/func_ov020_02111b28.cpp
- *   [12] 0x02111c30  src/func_ov020_02111c30.c
- *   [13] 0x02111ee0  src/func_ov020_02111ee0.cpp
- *   [14] 0x02111fc4  src/func_ov020_02111fc4.cpp
- *   [15] 0x02112080  src/func_ov020_02112080.cpp
- *   [16] 0x02112110  src/func_ov020_02112110.cpp
- *   [17] 0x0211216c  src/func_ov020_0211216c.cpp
- *   [18] 0x02112244  src/_ZN8BookShot16CleanupResourcesEv.cpp
- *   [19] 0x02112290  src/_ZN15BookShotSpawner16CleanupResourcesEv.cpp
- *   [20] 0x021122c4  src/_ZN8BookShot6RenderEv.cpp
- *   [21] 0x0211233c  src/_ZN8BookShot8BehaviorEv.cpp
- *   [22] 0x02112418  src/_ZN15BookShotSpawner8BehaviorEv.cpp
- *   [23] 0x021124e4  src/_ZN8BookShot13InitResourcesEv.cpp
- *   [24] 0x02112768  src/_ZN15BookShotSpawner13InitResourcesEv.cpp
- *   [25] 0x021127a4  src/_ZN8BookShot16OnAimedAtWithEggEv.cpp
- *   [26] 0x021127cc  src/_ZN8BookShot13OnYoshiTryEatEv.cpp
- *   [27] 0x021127f4  src/func_ov020_021127f4.c
- *   [28] 0x02112850  src/BookShotSpawner_Spawn.c
- *   [29] 0x02112880  src/Bookend_Spawn.c
- *   [30] 0x021128dc  src/BookShot_Spawn.c
+ *   [2] 0x02111254  src/game/actors/BookShotSpawner/_ZN15BookShotSpawnerD1Ev.cpp
+ *   [3] 0x02111278  src/game/actors/BookShotSpawner/_ZN15BookShotSpawnerD0Ev.cpp
+ *   [4] 0x021112b0  src/unnamed/ov020/0211/func_ov020_021112b0.c
+ *   [5] 0x02111340  src/unnamed/ov020/0211/func_ov020_02111340.c
+ *   [6] 0x02111418  src/unnamed/ov020/0211/func_ov020_02111418.cpp
+ *   [7] 0x021115ac  src/unnamed/ov020/0211/func_ov020_021115ac.c
+ *   [8] 0x0211174c  src/unnamed/ov020/0211/func_ov020_0211174c.c
+ *   [9] 0x021119dc  src/unnamed/ov020/0211/func_ov020_021119dc.c
+ *   [10] 0x02111aa8  src/unnamed/ov020/0211/func_ov020_02111aa8.c
+ *   [11] 0x02111b28  src/unnamed/ov020/0211/func_ov020_02111b28.cpp
+ *   [12] 0x02111c30  src/unnamed/ov020/0211/func_ov020_02111c30.c
+ *   [13] 0x02111ee0  src/unnamed/ov020/0211/func_ov020_02111ee0.cpp
+ *   [14] 0x02111fc4  src/unnamed/ov020/0211/func_ov020_02111fc4.cpp
+ *   [15] 0x02112080  src/unnamed/ov020/0211/func_ov020_02112080.cpp
+ *   [16] 0x02112110  src/unnamed/ov020/0211/func_ov020_02112110.cpp
+ *   [17] 0x0211216c  src/unnamed/ov020/0211/func_ov020_0211216c.cpp
+ *   [18] 0x02112244  src/game/actors/BookShot/_ZN8BookShot16CleanupResourcesEv.cpp
+ *   [19] 0x02112290  src/game/actors/BookShotSpawner/_ZN15BookShotSpawner16CleanupResourcesEv.cpp
+ *   [20] 0x021122c4  src/game/actors/BookShot/_ZN8BookShot6RenderEv.cpp
+ *   [21] 0x0211233c  src/game/actors/BookShot/_ZN8BookShot8BehaviorEv.cpp
+ *   [22] 0x02112418  src/game/actors/BookShotSpawner/_ZN15BookShotSpawner8BehaviorEv.cpp
+ *   [23] 0x021124e4  src/game/actors/BookShot/_ZN8BookShot13InitResourcesEv.cpp
+ *   [24] 0x02112768  src/game/actors/BookShotSpawner/_ZN15BookShotSpawner13InitResourcesEv.cpp
+ *   [25] 0x021127a4  src/game/actors/BookShot/_ZN8BookShot16OnAimedAtWithEggEv.cpp
+ *   [26] 0x021127cc  src/game/actors/BookShot/_ZN8BookShot13OnYoshiTryEatEv.cpp
+ *   [27] 0x021127f4  src/unnamed/ov020/0211/func_ov020_021127f4.c
+ *   [28] 0x02112850  src/game/actors/BookShotSpawner/BookShotSpawner_Spawn.c
+ *   [29] 0x02112880  src/game/actors/Bookend/Bookend_Spawn.c
+ *   [30] 0x021128dc  src/game/actors/BookShot/BookShot_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

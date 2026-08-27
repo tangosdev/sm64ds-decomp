@@ -16,8 +16,8 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x0212471c  src/MgTrampolineTerror_Spawn.cpp
- *   [1] 0x021248a8  src/func_ov006_021248a8.cpp
+ *   [0] 0x0212471c  src/minigames/MgTrampolineTerror/MgTrampolineTerror_Spawn.cpp
+ *   [1] 0x021248a8  src/unnamed/ov006/0212/func_ov006_021248a8.cpp
  */
 
 extern "C" {

@@ -22,14 +22,14 @@
       "symbol": "MgWhichWiggler_Spawn",
       "address": "0x020ede18",
       "size": "0x00000068",
-      "legacy_source": "src/MgWhichWiggler_Spawn.cpp",
+      "legacy_source": "src/minigames/MgWhichWiggler/MgWhichWiggler_Spawn.cpp",
       "ordinal": 0
     },
     {
       "symbol": "func_ov006_020ede80",
       "address": "0x020ede80",
       "size": "0x00000040",
-      "legacy_source": "src/func_ov006_020ede80.c",
+      "legacy_source": "src/unnamed/ov006/020e/func_ov006_020ede80.c",
       "ordinal": 1
     }
   ],

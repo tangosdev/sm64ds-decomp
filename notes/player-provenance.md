@@ -25,7 +25,7 @@ and not `mPrevPos*`.
 
 ## Player -- named this pass
 
-`Player::Behavior` (`src/_ZN6Player8BehaviorEv.cpp`) is the single richest witness:
+`Player::Behavior` (`src/game/player/Player/_ZN6Player8BehaviorEv.cpp`) is the single richest witness:
 it is the per-tick driver, so it holds the snapshot writes and the whole timer
 countdown block. Where a row cites "Behavior" that is the file meant.
 
@@ -320,7 +320,7 @@ Still `unk_` in Bowser, with the reason:
 | 0x174 | `mHomePosX` | `InitResources` copies `mPosX/Y/Z` into 0x174/0x178/0x17c, then raises the Y copy by `unk_184 >> 3`. Saved-at-spawn position with a vertical offset. |
 | 0x178 | `mHomePosY` | as above; it is the one the `>> 3` term is added to. |
 | 0x17c | `mHomePosZ` | as above. |
-| 0x1a8 | `mSlotIndex` | `InitResources`: `mSlotIndex = AddSpikeBomb(this)`, and `src/AddSpikeBomb.c` returns the index of the first free slot in the eight-entry global `data_0209f3a4` (or -1). `src/ClearSpikeBomb.c` takes that index back. |
+| 0x1a8 | `mSlotIndex` | `InitResources`: `mSlotIndex = AddSpikeBomb(this)`, and `src/game/objects/AddSpikeBomb.c` returns the index of the first free slot in the eight-entry global `data_0209f3a4` (or -1). `src/game/objects/ClearSpikeBomb.c` takes that index back. |
 | 0x1ae | `mOpacity` | `InitResources` sets 0xff; `SpikeBomb::Render` returns early on `< 8`. Full alpha at spawn plus a "too faint to bother drawing" guard is an opacity byte, and 0xff is not a plausible state id or counter. |
 
 Left `unk_` in SpikeBomb: **0x180** (`Vec3_HorzLen` of the spawn position, i.e. a
@@ -335,7 +335,7 @@ Three more, all found while chasing the arrays.
 | offset | name | evidence |
 | --- | --- | --- |
 | 0x560/0x564/0x568 | `mWallNormalX/Y/Z` | The exact counterpart of `mFloorNormal*` three words earlier, and written the same way: `func_ov002_020c25a8` calls `SurfaceInfo::CopyNormalTo(dBgCh_Actr::GetWallResult(&mMeshClsn) + 4, &wn)` and stores `wn.x/y/z` into the three slots, then pushes the actor back out along it (`mPosX -= mWallNormalX * 2`, `mPosZ -= mWallNormalZ * 2`). Seven bodies read the X/Z pair back as `cstd::atan2(mWallNormalX, mWallNormalZ)` to recover the wall's facing -- `St_Shell_Main`, `St_OnWall_Main` (twice), `St_Balloon_Main`, `St_CrazedCrate_Main`, `func_ov002_020c2138`, `func_ov002_020dd2f4`, `func_ov002_020e28d4`. 0x564 was declared padding until that middle store was disassembled, which is exactly how 0x554 and 0x55c got here. |
-| 0x719 | `mKeyModelId` | `CleanupResources` passes it to `UnloadKeyModels(i)` under `mLoadedResourceFlags & 0x10`, and that function (`src/UnloadKeyModels.cpp`) indexes two eight-entry `SharedFilePtr` tables with it and releases both. `St_LevelEnter_Init` seeds it with -1, which `UnloadKeyModels`'s `if (i >= 8) return` treats as "nothing loaded". The same argument slot is `mState` in `Key::CleanupResources` and `v - 7` in `Door::CleanupResources`, so it selects WHICH key model, not how many. |
+| 0x719 | `mKeyModelId` | `CleanupResources` passes it to `UnloadKeyModels(i)` under `mLoadedResourceFlags & 0x10`, and that function (`src/runtime/graphics/UnloadKeyModels.cpp`) indexes two eight-entry `SharedFilePtr` tables with it and releases both. `St_LevelEnter_Init` seeds it with -1, which `UnloadKeyModels`'s `if (i >= 8) return` treats as "nothing loaded". The same argument slot is `mState` in `Key::CleanupResources` and `v - 7` in `Door::CleanupResources`, so it selects WHICH key model, not how many. |
 | 0x6f7 | `mSwimMusicPushed` | A latch on a music push. `St_Swim_Main` sets it to 1 immediately after `func_ov002_020bd928(this, 0x33)` and clears it immediately after `func_ov002_020bd8c0(this, 0x33)`; `St_Swim_Cleanup` does nothing unless it is set, and then clears it and calls `func_ov002_020bd8c0(this, 0x33)`. The two helpers are `Sound::SetMusic` / `Sound::EndMusic` wrappers around the track words at 0x678/0x67c/0x680, so what is latched is "this state has a temporary track pushed and still owes the pop". Only the Swim states touch it. |
 
 ## IceSlideManager

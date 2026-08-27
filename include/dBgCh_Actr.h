@@ -102,7 +102,7 @@ struct dBgCh_Actr : dBgCh {
        and D1/D0/C1 keep their own translation units. */
     virtual ~dBgCh_Actr();    /* slots 0 (D1), 1 (D0) */
 
-    /* DECLARED, never defined as a method here -- src/_ZN10dBgCh_ActrC1Ev.cpp
+    /* DECLARED, never defined as a method here -- src/game/actors/dBgCh_Actr/_ZN10dBgCh_ActrC1Ev.cpp
        owns C1 (notes/ctor-migration.md section 2). Empty body: both member
        classes have real out-of-line ctors, so synthesis emits base step +
        vptr + both constructions in the ROM's order by itself. */

@@ -22,56 +22,56 @@
       "symbol": "_ZN11dScMgBase_c16OnPendingDestroyEv",
       "address": "0x020b04e8",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN11dScMgBase_c16OnPendingDestroyEv.cpp",
+      "legacy_source": "src/minigames/dScMgBase_c/_ZN11dScMgBase_c16OnPendingDestroyEv.cpp",
       "ordinal": 8
     },
     {
       "symbol": "_ZN11dScMgBase_c6RenderEv",
       "address": "0x020b04ec",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN11dScMgBase_c6RenderEv.cpp",
+      "legacy_source": "src/minigames/dScMgBase_c/_ZN11dScMgBase_c6RenderEv.cpp",
       "ordinal": 9
     },
     {
       "symbol": "_ZN11dScMgBase_c12BeforeRenderEv",
       "address": "0x020b04f4",
       "size": "0x00000124",
-      "legacy_source": "src/_ZN11dScMgBase_c12BeforeRenderEv.cpp",
+      "legacy_source": "src/minigames/dScMgBase_c/_ZN11dScMgBase_c12BeforeRenderEv.cpp",
       "ordinal": 10
     },
     {
       "symbol": "_ZN11dScMgBase_c8BehaviorEv",
       "address": "0x020b0618",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN11dScMgBase_c8BehaviorEv.cpp",
+      "legacy_source": "src/minigames/dScMgBase_c/_ZN11dScMgBase_c8BehaviorEv.cpp",
       "ordinal": 11
     },
     {
       "symbol": "_ZN11dScMgBase_c14BeforeBehaviorEv",
       "address": "0x020b0620",
       "size": "0x00000220",
-      "legacy_source": "src/_ZN11dScMgBase_c14BeforeBehaviorEv.cpp",
+      "legacy_source": "src/minigames/dScMgBase_c/_ZN11dScMgBase_c14BeforeBehaviorEv.cpp",
       "ordinal": 12
     },
     {
       "symbol": "_ZN11dScMgBase_c21AfterCleanupResourcesEj",
       "address": "0x020b0840",
       "size": "0x000000b0",
-      "legacy_source": "src/_ZN11dScMgBase_c21AfterCleanupResourcesEj.cpp",
+      "legacy_source": "src/minigames/dScMgBase_c/_ZN11dScMgBase_c21AfterCleanupResourcesEj.cpp",
       "ordinal": 13
     },
     {
       "symbol": "_ZN11dScMgBase_c18AfterInitResourcesEj",
       "address": "0x020b08f0",
       "size": "0x00000040",
-      "legacy_source": "src/_ZN11dScMgBase_c18AfterInitResourcesEj.cpp",
+      "legacy_source": "src/minigames/dScMgBase_c/_ZN11dScMgBase_c18AfterInitResourcesEj.cpp",
       "ordinal": 14
     },
     {
       "symbol": "_ZN11dScMgBase_c19BeforeInitResourcesEv",
       "address": "0x020b0930",
       "size": "0x00000108",
-      "legacy_source": "src/_ZN11dScMgBase_c19BeforeInitResourcesEv.cpp",
+      "legacy_source": "src/minigames/dScMgBase_c/_ZN11dScMgBase_c19BeforeInitResourcesEv.cpp",
       "ordinal": 15
     }
   ],

@@ -69,7 +69,7 @@
  * missing one is `_ZN7fBase_cC2Ev` (0x02043dec, 0x160), and it belongs to
  * this TU by every boundary test -- it is inside the contiguous run, it carries
  * the class's own name, and nothing else claims it. It is left out because the
- * tree has no C++ for it: src/_ZN7fBase_cC2Ev.cpp is a whole-function
+ * tree has no C++ for it: src/game/actors/fBase_c/_ZN7fBase_cC2Ev.cpp is a whole-function
  * hand-written `asm` transcription, its own banner says "NONMATCHING ... does
  * NOT count as matched", and config/arm9/delinks.txt has no entry for it at all
  * -- it is neither compiled nor enrolled today. Admitting asm here would let

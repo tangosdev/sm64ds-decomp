@@ -262,7 +262,7 @@ class SrcPath(unittest.TestCase):
     def test_merged_tu_owns_both_of_its_symbols(self):
         """The case the whole index exists for. Neither symbol names the file."""
         tu = self.write("actors/ActorBase_SceneNode.cpp")
-        self.enrol([("src/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
+        self.enrol([("src/game/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
                    [("_ZN7fBase_c9SceneNode5ResetEv", 0x0203b4ac),
                     ("_ZN7fBase_c9SceneNodeC1Ev", 0x0203b4c4)])
         self.assertEqual(SP.path_for("_ZN7fBase_c9SceneNode5ResetEv"), tu)
@@ -271,34 +271,34 @@ class SrcPath(unittest.TestCase):
     def test_symbols_for_lists_a_tus_functions_in_rom_order(self):
         """Written high-address-first in the source; ROM order is what is reported."""
         self.write("actors/ActorBase_SceneNode.cpp")
-        self.enrol([("src/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
+        self.enrol([("src/game/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
                    [("_ZN7fBase_c9SceneNodeC1Ev", 0x0203b4c4),
                     ("_ZN7fBase_c9SceneNode5ResetEv", 0x0203b4ac)])
-        self.assertEqual(SP.symbols_for("src/actors/ActorBase_SceneNode.cpp"),
+        self.assertEqual(SP.symbols_for("src/game/actors/ActorBase_SceneNode.cpp"),
                          ["_ZN7fBase_c9SceneNode5ResetEv", "_ZN7fBase_c9SceneNodeC1Ev"])
 
     def test_symbols_for_falls_back_to_the_filename(self):
         self.write("func_0203b438.c")
-        self.assertEqual(SP.symbols_for("src/func_0203b438.c"), ["func_0203b438"])
+        self.assertEqual(SP.symbols_for("src/unnamed/arm9/0203/func_0203b438.c"), ["func_0203b438"])
 
     def test_build_index_names_the_symbols_inside_a_merged_tu(self):
         """A stem-keyed index cannot see either function; the enrolment pass adds both."""
         self.write("actors/ActorBase_SceneNode.cpp")
-        self.enrol([("src/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
+        self.enrol([("src/game/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
                    [("_ZN7fBase_c9SceneNode5ResetEv", 0x0203b4ac),
                     ("_ZN7fBase_c9SceneNodeC1Ev", 0x0203b4c4)])
         idx = SP.build_index()
         self.assertEqual(idx["_ZN7fBase_c9SceneNode5ResetEv"],
-                         "src/actors/ActorBase_SceneNode.cpp")
+                         "src/game/actors/ActorBase_SceneNode.cpp")
         self.assertEqual(idx["_ZN7fBase_c9SceneNodeC1Ev"],
-                         "src/actors/ActorBase_SceneNode.cpp")
+                         "src/game/actors/ActorBase_SceneNode.cpp")
 
     def test_enrolment_beats_a_stale_one_function_file(self):
         """A leftover src/<symbol>.c beside a promoted TU is a file nothing compiles.
         Answering with it would report a match the ROM build never made."""
         tu = self.write("actors/ActorBase_SceneNode.cpp")
         self.write("_ZN7fBase_c9SceneNodeC1Ev.c")
-        self.enrol([("src/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
+        self.enrol([("src/game/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
                    [("_ZN7fBase_c9SceneNodeC1Ev", 0x0203b4c4)])
         self.assertEqual(SP.path_for("_ZN7fBase_c9SceneNodeC1Ev"), tu)
         # ...and the duplicate stays visible to whoever looks for duplicates.
@@ -322,10 +322,10 @@ class SrcPath(unittest.TestCase):
         would hand the first file every function in that module."""
         self.write("func_0203b438.c")
         self.write("other.c")
-        self.enrol([("src/func_0203b438.c", [(0x0203b438, 0x0203b4ac)])],
+        self.enrol([("src/unnamed/arm9/0203/func_0203b438.c", [(0x0203b438, 0x0203b4ac)])],
                    [("func_0203b438", 0x0203b438), ("elsewhere", 0x02050000)])
         self.assertEqual(SP.enrolment_index(),
-                         {"func_0203b438": "src/func_0203b438.c"})
+                         {"func_0203b438": "src/unnamed/arm9/0203/func_0203b438.c"})
 
     def test_an_unenrolled_symbol_still_uses_the_convention(self):
         p = self.write("func_02050000.c")

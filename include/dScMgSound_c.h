@@ -22,7 +22,7 @@
  * nothing to preserve, nothing to invent.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN12dScMgSound_cD1Ev.cpp; D0Ev.cpp
+ * its own. Defined for real in src/minigames/dScMgSound_c/_ZN12dScMgSound_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy for its own key-function TU. No separate
  * operator delete is needed -- dScMgBase_c, two levels up, already
  * provides one. */

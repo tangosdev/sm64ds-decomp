@@ -77,7 +77,7 @@ def alias_collision_addresses():
     config/arm9/itcm/symbols.txt declares four bodies twice, once as a sized function and
     once as a zero-size alias at the identical address (_dmul beside func_01ff8708,
     _ll_sdiv beside func_01ffaa34, _s32_div_f beside __aeabi_idiv, _u32_div_f beside
-    __aeabi_uidiv). srcpath resolves src/_dmul.c -- a real HAND-ASM PRIMITIVE match --
+    __aeabi_uidiv). srcpath resolves src/runtime/math/_dmul.c -- a real HAND-ASM PRIMITIVE match --
     onto the ZERO-SIZE record, so the same 1,776-byte body was counted matched at 0 bytes
     as the alias and unmatched at full size as the primary. linkcheck reports all four
     NO-SYM (len-mismatch), which is the byte gate declining to compare a real function
@@ -125,7 +125,7 @@ def enrollment_of(label, addr, src_path, enrolled, blocks):
     so an address-coverage test calls it enrolled, but the path it names is not the
     src/ path, and enrolled_addresses() drops mods/ on purpose, because a deliberate
     divergence must never be counted as a reproduction of the cartridge. It is reported
-    no_block here, which is the honest answer for src/Player_ScaleByCharFactor.c: that
+    no_block here, which is the honest answer for src/game/player/Player_ScaleByCharFactor.c: that
     file is compiled by nothing.
     """
     if (label, addr) in enrolled:
@@ -412,7 +412,7 @@ def match_finishers(rev="HEAD") -> dict[str, str]:
         # between runs. Same history, different credit.
         #
         # The draft test is asm_policy.has_draft_banner -- the same rule the live count
-        # uses -- not a fixed head window: src/func_ov091_021339fc.c carried its marker
+        # uses -- not a fixed head window: src/unnamed/ov091/0213/func_ov091_021339fc.c carried its marker
         # at byte 246 for months, so a 200-byte read judged every drafted state of that
         # file "clean" and handed the finisher's credit to the drafter.
         blob = data[pos:pos + size].decode("utf-8", "replace")

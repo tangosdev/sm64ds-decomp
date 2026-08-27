@@ -7,7 +7,7 @@
  * this class adds exactly one field: a 4-byte countdown at 0x34.
  *
  * WHAT THE ONE FIELD IS. mRespawnTimer is armed with 0x3c -- one second --
- * by func_ov006_021115cc, which src/func_ov006_02112ad8.c (the ball physics)
+ * by func_ov006_021115cc, which src/unnamed/ov006/0211/func_ov006_02112ad8.c (the ball physics)
  * calls on this hole the frame a ball falls into it; the same call raises the
  * base's unk_031, awards the drop and plays the effect. SaveSnapshot opens
  * with the base's own SaveSnapshot body written out inline (same pattern as

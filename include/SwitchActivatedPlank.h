@@ -40,7 +40,7 @@ struct SwitchActivatedPlank : dBgActor_c {
     int Render();
     int Behavior();
 
-    /* MEASURED -- defined out-of-line in src/_ZN20SwitchActivatedPlankD1Ev.cpp.
+    /* MEASURED -- defined out-of-line in src/game/actors/SwitchActivatedPlank/_ZN20SwitchActivatedPlankD1Ev.cpp.
        Declaring it virtual is what makes mwccarm emit the ROM's D1/D0 pair;
        see notes/dtor-migration.md. */
     virtual ~SwitchActivatedPlank();

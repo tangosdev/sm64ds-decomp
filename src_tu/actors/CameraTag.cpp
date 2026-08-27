@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020b0748  src/_ZN9CameraTagD1Ev.cpp
+ *   [0] 0x020b0748  src/game/camera/CameraTag/_ZN9CameraTagD1Ev.cpp
  *   [1] 0x020b076c  src/_ZN9CameraTagD0Ev.c
- *   [2] 0x020b07a4  src/_ZN9CameraTag16CleanupResourcesEv.cpp
- *   [3] 0x020b07ac  src/_ZN9CameraTag16OnPendingDestroyEv.cpp
- *   [4] 0x020b07b0  src/_ZN9CameraTag6RenderEv.cpp
- *   [5] 0x020b07b8  src/_ZN9CameraTag8BehaviorEv.cpp
- *   [6] 0x020b07c0  src/_ZN9CameraTag13InitResourcesEv.cpp
- *   [7] 0x020b07c8  src/CameraTag_Spawn.c
+ *   [2] 0x020b07a4  src/game/camera/CameraTag/_ZN9CameraTag16CleanupResourcesEv.cpp
+ *   [3] 0x020b07ac  src/game/camera/CameraTag/_ZN9CameraTag16OnPendingDestroyEv.cpp
+ *   [4] 0x020b07b0  src/game/camera/CameraTag/_ZN9CameraTag6RenderEv.cpp
+ *   [5] 0x020b07b8  src/game/camera/CameraTag/_ZN9CameraTag8BehaviorEv.cpp
+ *   [6] 0x020b07c0  src/game/camera/CameraTag/_ZN9CameraTag13InitResourcesEv.cpp
+ *   [7] 0x020b07c8  src/game/camera/CameraTag/CameraTag_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

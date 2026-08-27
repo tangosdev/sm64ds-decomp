@@ -7,15 +7,15 @@
  * the manifest notes.
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021121a4  src/_ZN9WDW_WaterD1Ev.cpp
- *   [1] 0x021121f0  src/_ZN9WDW_WaterD0Ev.cpp
- *   [2] 0x02112250  src/func_ov029_02112250.cpp
- *   [3] 0x021122b4  src/func_ov029_021122b4.c
- *   [4] 0x021122dc  src/_ZN9WDW_Water16CleanupResourcesEv.cpp
- *   [5] 0x02112320  src/_ZN9WDW_Water6RenderEv.cpp
- *   [6] 0x02112354  src/_ZN9WDW_Water8BehaviorEv.cpp
- *   [7] 0x021124d0  src/_ZN9WDW_Water13InitResourcesEv.cpp
- *   [8] 0x021125f8  src/WDW_Water_Spawn.c
+ *   [0] 0x021121a4  src/game/actors/WDW_Water/_ZN9WDW_WaterD1Ev.cpp
+ *   [1] 0x021121f0  src/game/actors/WDW_Water/_ZN9WDW_WaterD0Ev.cpp
+ *   [2] 0x02112250  src/unnamed/ov029/0211/func_ov029_02112250.cpp
+ *   [3] 0x021122b4  src/unnamed/ov029/0211/func_ov029_021122b4.c
+ *   [4] 0x021122dc  src/game/actors/WDW_Water/_ZN9WDW_Water16CleanupResourcesEv.cpp
+ *   [5] 0x02112320  src/game/actors/WDW_Water/_ZN9WDW_Water6RenderEv.cpp
+ *   [6] 0x02112354  src/game/actors/WDW_Water/_ZN9WDW_Water8BehaviorEv.cpp
+ *   [7] 0x021124d0  src/game/actors/WDW_Water/_ZN9WDW_Water13InitResourcesEv.cpp
+ *   [8] 0x021125f8  src/game/actors/WDW_Water/WDW_Water_Spawn.c
  */
 
 /* -------------------------------------------------------------------------- */

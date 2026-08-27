@@ -22,14 +22,14 @@
       "symbol": "MgPairAGoneAndOn_Spawn",
       "address": "0x020fa6ac",
       "size": "0x00000094",
-      "legacy_source": "src/MgPairAGoneAndOn_Spawn.cpp",
+      "legacy_source": "src/minigames/MgPairAGoneAndOn/MgPairAGoneAndOn_Spawn.cpp",
       "ordinal": 0
     },
     {
       "symbol": "func_ov006_020fa740",
       "address": "0x020fa740",
       "size": "0x0000001c",
-      "legacy_source": "src/func_ov006_020fa740.c",
+      "legacy_source": "src/unnamed/ov006/020f/func_ov006_020fa740.c",
       "ordinal": 1
     }
   ],

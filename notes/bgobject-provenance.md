@@ -15,10 +15,10 @@ and again after each raw-offset collapse.
 
 ## StarSwitch (`include/StarSwitch.h`, ov002, size 0x354)
 
-Bodies read: `src/_ZN10StarSwitch13InitResourcesEv.cpp`,
-`src/_ZN10StarSwitch8BehaviorEv.cpp`, `src/_ZN10StarSwitch6RenderEv.cpp`,
-`src/_ZN10StarSwitch16CleanupResourcesEv.cpp`,
-`src/_ZN10StarSwitch15OnGroundPoundedER8dActor_c.cpp`, `src/StarSwitch_Spawn.c`.
+Bodies read: `src/game/actors/StarSwitch/_ZN10StarSwitch13InitResourcesEv.cpp`,
+`src/game/actors/StarSwitch/_ZN10StarSwitch8BehaviorEv.cpp`, `src/game/actors/StarSwitch/_ZN10StarSwitch6RenderEv.cpp`,
+`src/game/actors/StarSwitch/_ZN10StarSwitch16CleanupResourcesEv.cpp`,
+`src/game/actors/StarSwitch/_ZN10StarSwitch15OnGroundPoundedER8dActor_c.cpp`, `src/game/actors/StarSwitch/StarSwitch_Spawn.c`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -61,11 +61,11 @@ Raw-offset collapses, each re-verified byte-exact:
 
 ## Crate (`include/Crate.h`, ov098, size 0x608)
 
-Bodies read: `src/_ZN5Crate13InitResourcesEv.cpp`, `src/_ZN5Crate8BehaviorEv.cpp`,
-`src/_ZN5Crate6RenderEv.cpp`, `src/_ZN5Crate16CleanupResourcesEv.cpp`,
-`src/_ZN5Crate4KillEv.cpp`, `src/_ZN5Crate13OnTurnIntoEggER6Player.cpp`,
-`src/_ZN5Crate13OnYoshiTryEatEv.cpp`,
-`src/_ZN5Crate15OnGroundPoundedER8dActor_c.cpp`, `src/Crate_SetState.cpp`.
+Bodies read: `src/game/actors/Crate/_ZN5Crate13InitResourcesEv.cpp`, `src/game/actors/Crate/_ZN5Crate8BehaviorEv.cpp`,
+`src/game/actors/Crate/_ZN5Crate6RenderEv.cpp`, `src/game/actors/Crate/_ZN5Crate16CleanupResourcesEv.cpp`,
+`src/game/actors/Crate/_ZN5Crate4KillEv.cpp`, `src/game/actors/Crate/_ZN5Crate13OnTurnIntoEggER6Player.cpp`,
+`src/game/actors/Crate/_ZN5Crate13OnYoshiTryEatEv.cpp`,
+`src/game/actors/Crate/_ZN5Crate15OnGroundPoundedER8dActor_c.cpp`, `src/game/objects/Crate_SetState.cpp`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -114,9 +114,9 @@ class as for the flat shadow the ROM's own code is built against.
 
 ## daDgr_c (`include/daDgr_c.h`, ov025, size 0x334)
 
-A swinging platform. Bodies read: `src/_ZN7daDgr_c13InitResourcesEv.cpp`,
-`src/_ZN7daDgr_c8BehaviorEv.cpp`, `src/_ZN7daDgr_c6RenderEv.cpp`,
-`src/_ZN7daDgr_c16CleanupResourcesEv.cpp`, `src/func_ov025_02111898.c` (the factory).
+A swinging platform. Bodies read: `src/game/actors/daDgr_c/_ZN7daDgr_c13InitResourcesEv.cpp`,
+`src/game/actors/daDgr_c/_ZN7daDgr_c8BehaviorEv.cpp`, `src/game/actors/daDgr_c/_ZN7daDgr_c6RenderEv.cpp`,
+`src/game/actors/daDgr_c/_ZN7daDgr_c16CleanupResourcesEv.cpp`, `src/unnamed/ov025/0211/func_ov025_02111898.c` (the factory).
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -139,7 +139,7 @@ Left `unk_`: `0x31c` / `0x31d` in the C twin — those are `dBgActor_c`'s own tw
 trailing bytes and are `unk_` in `include/dBgActor_c.h` too, which this pass does not
 own.
 
-`src/_ZN7daDgr_c13InitResourcesEv.cpp` was an `extern "C"` free function over a raw
+`src/game/actors/daDgr_c/_ZN7daDgr_c13InitResourcesEv.cpp` was an `extern "C"` free function over a raw
 `char *`, with four local one-word shadow structs (`Model`, `ModelBase`, `dBgW_Kc`,
 `dBgW_KcMbg`) and every field reached by literal offset — `*(int *)(c + 0x320) =
 *(int *)(c + 0x60);`. It is now a real `s32 daDgr_c::InitResources()` over the shared
@@ -153,12 +153,12 @@ was measured instead.
 
 ## SignPost (`include/SignPost.h`, ov002, size 0x5a4)
 
-Bodies read: `src/_ZN8SignPost13InitResourcesEv.cpp`,
-`src/_ZN8SignPost8BehaviorEv.cpp`, `src/_ZN8SignPost6RenderEv.cpp`,
-`src/_ZN8SignPost16CleanupResourcesEv.cpp`, `src/_ZN8SignPost4KillEv.cpp`,
-`src/_ZN8SignPost15OnGroundPoundedER8dActor_c.cpp`,
-`src/_ZN8SignPost11OnAttacked1ER8dActor_c.cpp`,
-`src/_ZN8SignPost15OnHitByMegaCharER6Player.cpp`.
+Bodies read: `src/game/actors/SignPost/_ZN8SignPost13InitResourcesEv.cpp`,
+`src/game/actors/SignPost/_ZN8SignPost8BehaviorEv.cpp`, `src/game/actors/SignPost/_ZN8SignPost6RenderEv.cpp`,
+`src/game/actors/SignPost/_ZN8SignPost16CleanupResourcesEv.cpp`, `src/game/actors/SignPost/_ZN8SignPost4KillEv.cpp`,
+`src/game/actors/SignPost/_ZN8SignPost15OnGroundPoundedER8dActor_c.cpp`,
+`src/game/actors/SignPost/_ZN8SignPost11OnAttacked1ER8dActor_c.cpp`,
+`src/game/actors/SignPost/_ZN8SignPost15OnHitByMegaCharER6Player.cpp`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -182,7 +182,7 @@ which is what `include/dBgActor_c.h` calls that offset and what `InitResources` 
 to `dBgW_KcMbg::SetFile`. The marker stays `u8`, the idiom the twin already uses for
 `mdCcAc_c` and `mShadowModel`.
 
-`src/_ZN8SignPost8BehaviorEv.cpp` was an `extern "C"` free function over a raw
+`src/game/actors/SignPost/_ZN8SignPost8BehaviorEv.cpp` was an `extern "C"` free function over a raw
 `char *c` with 30 literal offsets and a local one-word `Vector3`; it is now a real
 `int SignPost::Behavior()`. That conversion is what turned 0x354, 0x380, 0x584, 0x588
 and 0x58c from padding into evidenced fields. It needed one declaration added to the
@@ -219,8 +219,8 @@ offsets in `include/dActor_c.h` were repointed to those names: `mCamSpacePosX`,
 `mHorzSpeed`, `mVertAccel`, `mTerminalVelocity`, `mVertSpeed`, `mFlags`,
 `mClipOffsetY`, `mClipRadius`.
 
-Both `src/_ZN10daPgDfdr_c13InitResourcesEv.cpp` and
-`src/_ZN10daPgDfdr_c8BehaviorEv.cpp` were `extern "C"` free functions over a raw
+Both `src/game/actors/daPgDfdr_c/_ZN10daPgDfdr_c13InitResourcesEv.cpp` and
+`src/game/actors/daPgDfdr_c/_ZN10daPgDfdr_c8BehaviorEv.cpp` were `extern "C"` free functions over a raw
 `char *`; both are real methods now, byte-exact. The header already declared both
 virtual, so `tools/eligible.py` is unchanged by this. The conversion made one thing
 readable that the offsets hid: `Behavior`'s two `Animation::Advance` calls are the
@@ -239,9 +239,9 @@ members turned **every remaining `pad_` run in the class** into an evidenced fie
 and the class now closes on 0x874 by field span instead of only by the factory's
 `operator new` literal.
 
-Bodies read: `src/_ZN6Eyerok13InitResourcesEv.cpp`, `src/_ZN6Eyerok8BehaviorEv.cpp`,
-`src/_ZN6Eyerok6RenderEv.cpp`, `src/_ZN6Eyerok16CleanupResourcesEv.cpp`,
-`src/_ZN6Eyerok16OnAimedAtWithEggEv.cpp`, `src/Eyerok_Spawn.cpp`.
+Bodies read: `src/game/actors/Eyerok/_ZN6Eyerok13InitResourcesEv.cpp`, `src/game/actors/Eyerok/_ZN6Eyerok8BehaviorEv.cpp`,
+`src/game/actors/Eyerok/_ZN6Eyerok6RenderEv.cpp`, `src/game/actors/Eyerok/_ZN6Eyerok16CleanupResourcesEv.cpp`,
+`src/game/actors/Eyerok/_ZN6Eyerok16OnAimedAtWithEggEv.cpp`, `src/game/actors/Eyerok/Eyerok_Spawn.cpp`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -283,10 +283,10 @@ re-verified. Two were rejected by the ROM and are documented in place:
 
 ## PushBlock (`include/PushBlock.h`, ov002, size 0x4f4)
 
-Bodies read: `src/_ZN9PushBlock13InitResourcesEv.cpp`,
-`src/_ZN9PushBlock8BehaviorEv.c`, `src/_ZN9PushBlock6RenderEv.cpp`,
-`src/_ZN9PushBlock8OnPushedER8dActor_c.cpp`, `src/_ZN9PushBlock4KillEv.cpp`,
-`src/_ZN9PushBlock15OnHitByMegaCharER6Player.cpp`.
+Bodies read: `src/game/actors/PushBlock/_ZN9PushBlock13InitResourcesEv.cpp`,
+`src/game/actors/PushBlock/_ZN9PushBlock8BehaviorEv.c`, `src/game/actors/PushBlock/_ZN9PushBlock6RenderEv.cpp`,
+`src/game/actors/PushBlock/_ZN9PushBlock8OnPushedER8dActor_c.cpp`, `src/game/actors/PushBlock/_ZN9PushBlock4KillEv.cpp`,
+`src/game/actors/PushBlock/_ZN9PushBlock15OnHitByMegaCharER6Player.cpp`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -305,7 +305,7 @@ carried: `mPrevPosX/Y/Z` (0x068) and `mCamSpacePosX/Y/Z` (0x074), both of which
 `mClsnMat` (0x2ec) and `mWithMeshClsn` (0x320) as `u8` markers, which is the idiom the
 other twins in this family use.
 
-`src/_ZN9PushBlock13InitResourcesEv.cpp` was an `extern "C"` free function over a raw
+`src/game/actors/PushBlock/_ZN9PushBlock13InitResourcesEv.cpp` was an `extern "C"` free function over a raw
 `char *self`; it is a real `int PushBlock::InitResources()` now, byte-exact, with all
 fourteen hand offsets on named members. `tools/eligible.py` is unchanged by it.
 
@@ -321,9 +321,9 @@ around it are free. The measurement is in a comment at the site.
 
 This header already carried a full prose account of every offset; the names below just
 make the code say what the prose said. Bodies read:
-`src/_ZN14BlueCoinSwitch13InitResourcesEv.cpp`,
-`src/_ZN14BlueCoinSwitch8BehaviorEv.cpp`, `src/_ZN14BlueCoinSwitch6RenderEv.cpp`,
-`src/_ZN14BlueCoinSwitch16CleanupResourcesEv.cpp`.
+`src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitch13InitResourcesEv.cpp`,
+`src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitch8BehaviorEv.cpp`, `src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitch6RenderEv.cpp`,
+`src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitch16CleanupResourcesEv.cpp`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -387,14 +387,14 @@ shadow is gone in favour of `&mModel`, and `InitResources` reaches `mModel`,
 
 ## QuestionBlock (`include/QuestionBlock.h`, ov102, size 0x3f8)
 
-Bodies read: `src/_ZN13QuestionBlock13InitResourcesEv.cpp`,
-`src/_ZN13QuestionBlock8BehaviorEv.cpp`, `src/_ZN13QuestionBlock6RenderEv.cpp`,
-`src/_ZN13QuestionBlock16CleanupResourcesEv.cpp`,
-`src/_ZN13QuestionBlock15OnGroundPoundedER8dActor_c.cpp`,
-`src/_ZN13QuestionBlock11OnAttacked1ER8dActor_c.cpp`,
-`src/_ZN13QuestionBlock8OnKickedER8dActor_c.cpp`,
-`src/_ZN13QuestionBlock15OnHitByMegaCharER6Player.cpp`,
-`src/_ZN13QuestionBlock19OnHitFromUnderneathER8dActor_c.cpp`.
+Bodies read: `src/game/actors/QuestionBlock/_ZN13QuestionBlock13InitResourcesEv.cpp`,
+`src/game/actors/QuestionBlock/_ZN13QuestionBlock8BehaviorEv.cpp`, `src/game/actors/QuestionBlock/_ZN13QuestionBlock6RenderEv.cpp`,
+`src/game/actors/QuestionBlock/_ZN13QuestionBlock16CleanupResourcesEv.cpp`,
+`src/game/actors/QuestionBlock/_ZN13QuestionBlock15OnGroundPoundedER8dActor_c.cpp`,
+`src/game/actors/QuestionBlock/_ZN13QuestionBlock11OnAttacked1ER8dActor_c.cpp`,
+`src/game/actors/QuestionBlock/_ZN13QuestionBlock8OnKickedER8dActor_c.cpp`,
+`src/game/actors/QuestionBlock/_ZN13QuestionBlock15OnHitByMegaCharER6Player.cpp`,
+`src/game/actors/QuestionBlock/_ZN13QuestionBlock19OnHitFromUnderneathER8dActor_c.cpp`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -419,12 +419,12 @@ whole-object shadow casts are `&mModelAnim` and `&mModel`.
 
 ## FortressWall (`include/FortressWall.h`, ov079, size 0x324)
 
-Bodies read: `src/_ZN12FortressWall13InitResourcesEv.cpp`,
-`src/_ZN12FortressWall8BehaviorEv.cpp`, `src/_ZN12FortressWall6RenderEv.cpp`,
-`src/_ZN12FortressWall4KillEv.cpp`,
-`src/_ZN12FortressWall16CleanupResourcesEv.cpp`,
-`src/_ZN12FortressWall24OnHitByCannonBlastedCharER8dActor_c.cpp`,
-`src/FortressWall_Spawn.c`, `src/FortressWallBreakable_Spawn.c`.
+Bodies read: `src/game/actors/FortressWall/_ZN12FortressWall13InitResourcesEv.cpp`,
+`src/game/actors/FortressWall/_ZN12FortressWall8BehaviorEv.cpp`, `src/game/actors/FortressWall/_ZN12FortressWall6RenderEv.cpp`,
+`src/game/actors/FortressWall/_ZN12FortressWall4KillEv.cpp`,
+`src/game/actors/FortressWall/_ZN12FortressWall16CleanupResourcesEv.cpp`,
+`src/game/actors/FortressWall/_ZN12FortressWall24OnHitByCannonBlastedCharER8dActor_c.cpp`,
+`src/game/actors/FortressWall/FortressWall_Spawn.c`, `src/game/actors/FortressWallBreakable/FortressWallBreakable_Spawn.c`.
 
 Two actors share this class: `FortressWallBreakable_Spawn` (actorID 0x30) and
 `FortressWall_Spawn`. Every field is about telling those two apart.
@@ -432,7 +432,7 @@ Two actors share this class: `FortressWallBreakable_Spawn` (actorID 0x30) and
 | Offset | Name | Evidence |
 | --- | --- | --- |
 | 0x31e | `mVariant` | `InitResources` sets 0 when `actorID == 0x30` and 1 otherwise, then uses it to index all three ov079 file tables — `data_ov079_02128058` (model), `data_ov079_0212805c` (KCL), `data_ov079_02128060` (CLPS block). `CleanupResources` indexes the first two again to `Release()` them. |
-| 0x31f | `mStarId` | `param1 & 0xff`, with `0xff` read as 0. `Behavior` passes it as `dActor_c::Spawn(0xb2, mStarId \| 0x40, …)`; actor 0xb2 is the star and its spawn word is `starID \| (howToSpawnStar << 4)` (`src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp`), so the low nibble this contributes is a star index and the `0x40` is that call's spawn style. |
+| 0x31f | `mStarId` | `param1 & 0xff`, with `0xff` read as 0. `Behavior` passes it as `dActor_c::Spawn(0xb2, mStarId \| 0x40, …)`; actor 0xb2 is the star and its spawn word is `starID \| (howToSpawnStar << 4)` (`src/game/actors/dActor_c/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp`), so the low nibble this contributes is a star index and the `0x40` is that call's spawn style. |
 | 0x321 | `mBroken` | `Kill()` sets it on actorID 0x30 *instead of* calling `MarkForDestruction` — the breakable wall survives its own Kill. `Render` draws nothing while it is set, and `Behavior` runs the break sequence (disable the collider, wait for the sound, spawn the star, destroy) only while it is set. |
 | 0x322 | `mBreakSoundState` | `Behavior` passes `&mBreakSoundState` as the `u16 *state` argument of `Sound::PlaySecretSound(dActor_c *, u16 *)` and spawns the star on the frame that returns nonzero. **Declared `u16`, not the `u8` the header had**: the parameter type is `u16 *`, and the byte at 0x323 was the struct's tail padding, so the field span now lands exactly on the ROM's 0x324 instead of being rounded up to it. |
 
@@ -466,7 +466,7 @@ mismatching, 106/106 exact) and `tools/check_src_tu_compiles.py` (72/72).
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x4dc | `mStarActor` | `src/_ZN9UkikiCage13InitResourcesEv.cpp` stores what `dActor_c::Spawn(0xb2, (param1 & 0xf) or 0x50, ...)` returned; actor `0xb2` is the star (`src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp`). `src/_ZN9UkikiCage8BehaviorEv.cpp` writes that actor's `+0x5c/+0x60/+0x64` — `dActor_c::mPosX/Y/Z` — from the cage's own position plus `0x3c000` in Y on every falling frame. Declared type left `s32`; the store is still a cast. |
+| 0x4dc | `mStarActor` | `src/game/actors/UkikiCage/_ZN9UkikiCage13InitResourcesEv.cpp` stores what `dActor_c::Spawn(0xb2, (param1 & 0xf) or 0x50, ...)` returned; actor `0xb2` is the star (`src/game/actors/dActor_c/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp`). `src/game/actors/UkikiCage/_ZN9UkikiCage8BehaviorEv.cpp` writes that actor's `+0x5c/+0x60/+0x64` — `dActor_c::mPosX/Y/Z` — from the cage's own position plus `0x3c000` in Y on every falling frame. Declared type left `s32`; the store is still a cast. |
 
 In the `#else` C twin, ten offsets already named at exactly those offsets in
 `include/dActor_c.h` were repointed to those names: `mPosX/Y/Z` (0x05c),
@@ -477,10 +477,10 @@ In the `#else` C twin, ten offsets already named at exactly those offsets in
 
 ## QuestionSwitch (`include/QuestionSwitch.h`, ov002, size 0x724)
 
-Bodies read: `src/_ZN14QuestionSwitch13InitResourcesEv.cpp`,
-`src/_ZN14QuestionSwitch8BehaviorEv.cpp`,
-`src/_ZN14QuestionSwitch16CleanupResourcesEv.cpp`,
-`src/_ZN14QuestionSwitch15OnGroundPoundedER8dActor_c.cpp`.
+Bodies read: `src/game/actors/QuestionSwitch/_ZN14QuestionSwitch13InitResourcesEv.cpp`,
+`src/game/actors/QuestionSwitch/_ZN14QuestionSwitch8BehaviorEv.cpp`,
+`src/game/actors/QuestionSwitch/_ZN14QuestionSwitch16CleanupResourcesEv.cpp`,
+`src/game/actors/QuestionSwitch/_ZN14QuestionSwitch15OnGroundPoundedER8dActor_c.cpp`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -499,7 +499,7 @@ gives that offset.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x320 | `mState` | `src/_ZN8CccArena8BehaviorEv.cpp` reads the WORD here as a pointer, tests `*(p + 8)` and calls the pointer-to-member pair at `p + 8` through `this`. The same shape `Eyerok`'s own 0x48c has. `InitResources` installs it through `func_ov073_021223a4(this, &data_ov073_021234b0)`. Declared type left `u8`. |
+| 0x320 | `mState` | `src/game/actors/CccArena/_ZN8CccArena8BehaviorEv.cpp` reads the WORD here as a pointer, tests `*(p + 8)` and calls the pointer-to-member pair at `p + 8` through `this`. The same shape `Eyerok`'s own 0x48c has. `InitResources` installs it through `func_ov073_021223a4(this, &data_ov073_021234b0)`. Declared type left `u8`. |
 | 0x32c | `mVariant` | `InitResources` sets `0`/`1`/`2` for actorID `0xaa`/`0xab`/`0xac` and then uses it as the row index into all three 0xc-stride ov073 tables — `data_ov073_021231bc` (model), `...1c0` (KCL), `...1c4` (CLPS). `CleanupResources` indexes the first two again to `Release()` them. Was inside `pad_321`. |
 | 0x32d | `mSpawnIndex` | `InitResources` copies the value of a per-variant global counter (`data_ov073_02123424` for `0xab`, `...3420` for `0xac`) and then increments that counter — a serial number among the arena pieces of this variant. Was inside `pad_321`. |
 
@@ -516,7 +516,7 @@ Raw-offset collapses, each re-verified byte-exact: the six
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x31e | `mAngleXSpeed` | `src/_ZN18BowserFireSeaArena8BehaviorEv.cpp` adds it to `dActor_c::mAngleX` every frame and does nothing else with it. |
+| 0x31e | `mAngleXSpeed` | `src/game/actors/BowserFireSeaArena/_ZN18BowserFireSeaArena8BehaviorEv.cpp` adds it to `dActor_c::mAngleX` every frame and does nothing else with it. |
 | 0x320 | `mAngleYSpeed` | the same, into `mAngleY`. |
 | 0x322 | `mAngleZSpeed` | the same, into `mAngleZ`. |
 
@@ -623,8 +623,8 @@ In the C twin, `0x09c` becomes `mVertAccel`, `0x0a0` `mTerminalVelocity`,
 ## daObjCtMecha03_c (`include/daObjCtMecha03_c.h`, ov065, size 0x388)
 
 A pendulum, in four fields `Behavior` integrates. Bodies read:
-`src/_ZN16daObjCtMecha03_c13InitResourcesEv.cpp`,
-`src/_ZN16daObjCtMecha03_c8BehaviorEv.cpp`.
+`src/game/actors/daObjCtMecha03_c/_ZN16daObjCtMecha03_c13InitResourcesEv.cpp`,
+`src/game/actors/daObjCtMecha03_c/_ZN16daObjCtMecha03_c8BehaviorEv.cpp`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -707,7 +707,7 @@ In the C twin, `0x00c` becomes `actorID` and `0x08e` `mAngleY`.
 | `ChainChompFence` (ov060) | 0x31e | `mDisabled` | both `Behavior` and `Render` return immediately while it is nonzero, and nothing else in a matched body touches it. |
 | `LavaPlank` (ov022) | 0x324 | `mPhaseAngle` | `InitResources` seeds it from `mAngleX`; `Behavior` adds `0x400` per frame and uses `(u16)mPhaseAngle >> 4` as the sine-table index. |
 
-`PathLift::mAfterClsnRan` also carried into `src/_ZN15daObjRcCarpet_c8BehaviorEv.cpp`,
+`PathLift::mAfterClsnRan` also carried into `src/game/actors/daObjRcCarpet_c/_ZN15daObjRcCarpet_c8BehaviorEv.cpp`,
 a subclass that reads the inherited field — the kind of cross-file breakage a header
 rename in this family causes, and which `tools/rombuild.py` catches while
 `build_pin.verify` on the renamed class alone does not.

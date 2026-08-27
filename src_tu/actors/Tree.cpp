@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020ebf8c  src/_ZN4TreeD1Ev.cpp
- *   [1] 0x020ebfcc  src/_ZN4TreeD0Ev.cpp
- *   [2] 0x020ec020  src/_ZN4Tree16CleanupResourcesEv.cpp
- *   [3] 0x020ec0a0  src/_ZN4Tree16OnPendingDestroyEv.cpp
- *   [4] 0x020ec0a4  src/_ZN4Tree6RenderEv.cpp
- *   [5] 0x020ec1d8  src/_ZN4Tree8BehaviorEv.cpp
- *   [6] 0x020ec22c  src/_ZN4Tree13InitResourcesEv.cpp
- *   [7] 0x020ec32c  src/Tree_Spawn.cpp
+ *   [0] 0x020ebf8c  src/game/actors/Tree/_ZN4TreeD1Ev.cpp
+ *   [1] 0x020ebfcc  src/game/actors/Tree/_ZN4TreeD0Ev.cpp
+ *   [2] 0x020ec020  src/game/actors/Tree/_ZN4Tree16CleanupResourcesEv.cpp
+ *   [3] 0x020ec0a0  src/game/actors/Tree/_ZN4Tree16OnPendingDestroyEv.cpp
+ *   [4] 0x020ec0a4  src/game/actors/Tree/_ZN4Tree6RenderEv.cpp
+ *   [5] 0x020ec1d8  src/game/actors/Tree/_ZN4Tree8BehaviorEv.cpp
+ *   [6] 0x020ec22c  src/game/actors/Tree/_ZN4Tree13InitResourcesEv.cpp
+ *   [7] 0x020ec32c  src/game/actors/Tree/Tree_Spawn.cpp
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

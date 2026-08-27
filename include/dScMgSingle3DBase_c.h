@@ -108,7 +108,7 @@ struct dScMgSingle3DBase_c : dScMgBase_c {
      * the last field it CAN parse, which silently undercounts every derived
      * class's field offsets. MEASURED -- see notes/minigame-provenance.md. */
     /* 0x4660..0x471c IS ONE MINIGAME CAMERA, 0xbc bytes, and three readings
-     * agree. src/Camera_UpdateMatrices.c -- the ov006 routine both
+     * agree. src/game/camera/Camera_UpdateMatrices.c -- the ov006 routine both
      * dScMgRoulette_c::Render and dScMg3DEsp_c::Render call as
      * Camera_UpdateMatrices(this + 0x4660) -- carries the layout outright:
      * view matrix at +0x00, projection at +0x60, `eye` at +0xa0, `target` at

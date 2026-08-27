@@ -7,16 +7,16 @@
  * the manifest notes.
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02111728  src/_ZN12WaterDiamondD1Ev.cpp
+ *   [0] 0x02111728  src/game/actors/WaterDiamond/_ZN12WaterDiamondD1Ev.cpp
  *   [1] 0x02111760  src/_ZN12WaterDiamondD0Ev.c
  *   [2] 0x021117ac  src/func_ov029_021117ac.cpp
  *   [3] 0x02111850  src/func_ov029_02111850.cpp
  *   [4] 0x021118c8  src/func_ov029_021118c8.c
  *   [5] 0x02111908  src/_ZN12WaterDiamond16CleanupResourcesEv.c
- *   [6] 0x0211192c  src/_ZN12WaterDiamond6RenderEv.cpp
- *   [7] 0x02111954  src/_ZN12WaterDiamond8BehaviorEv.cpp
- *   [8] 0x02111a04  src/_ZN12WaterDiamond13InitResourcesEv.cpp
- *   [9] 0x02111a84  src/WaterDiamond_Spawn.c
+ *   [6] 0x0211192c  src/game/actors/WaterDiamond/_ZN12WaterDiamond6RenderEv.cpp
+ *   [7] 0x02111954  src/game/actors/WaterDiamond/_ZN12WaterDiamond8BehaviorEv.cpp
+ *   [8] 0x02111a04  src/game/actors/WaterDiamond/_ZN12WaterDiamond13InitResourcesEv.cpp
+ *   [9] 0x02111a84  src/game/actors/WaterDiamond/WaterDiamond_Spawn.c
  */
 
 /* -------------------------------------------------------------------------- */

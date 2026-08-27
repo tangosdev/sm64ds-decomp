@@ -5,7 +5,7 @@
  * that table to this class rather than to a neighbour.
  *
  * SIZE 0x60b0, from the factory's own `_ZN7fBase_cnwEj(0x60b0)`
- * (src/func_ov006_020f8e44.cpp).
+ * (src/unnamed/ov006/020f/func_ov006_020f8e44.cpp).
  *
  * SHARED TABLE at 0x4f38, size 0x270, constructed by func_ov006_020c1d80
  * and destroyed by func_ov006_020c1c64 -- the same pair dScMgCard_c and
@@ -31,7 +31,7 @@
  * are already declared there.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN13dScMgMCarlo_cD1Ev.cpp; D0Ev.cpp
+ * its own. Defined for real in src/minigames/dScMgMCarlo_c/_ZN13dScMgMCarlo_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
  * dScMgBase_c, two levels up, already provides one. */
 #ifndef DSCMGMCARLO_C_H
@@ -53,9 +53,9 @@ struct dScMgMCarlo_c : dScMgSingle3DBase_c {
        and adds no field, and the 0x60b0 assert below still holds. The destructor
        above is declared first and out of line, so it stays this class's KEY
        FUNCTION and this translation unit does not emit _ZTV13dScMgMCarlo_c. */
-    s32 InitResources();   /* slot  0 -- src/_ZN13dScMgMCarlo_c13InitResourcesEv.cpp */
-    s32 Behavior();        /* slot  6 -- src/_ZN13dScMgMCarlo_c8BehaviorEv.cpp */
-    s32 Render();          /* slot  9 -- src/_ZN13dScMgMCarlo_c6RenderEv.cpp */
+    s32 InitResources();   /* slot  0 -- src/minigames/dScMgMCarlo_c/_ZN13dScMgMCarlo_c13InitResourcesEv.cpp */
+    s32 Behavior();        /* slot  6 -- src/minigames/dScMgMCarlo_c/_ZN13dScMgMCarlo_c8BehaviorEv.cpp */
+    s32 Render();          /* slot  9 -- src/minigames/dScMgMCarlo_c/_ZN13dScMgMCarlo_c6RenderEv.cpp */
 
     u8  pad_4f38[0x1a];    /* 0x4f38 -- shared table start, see file banner */
     s16 unk_4f52;          /* 0x4f52 -- within shared table */

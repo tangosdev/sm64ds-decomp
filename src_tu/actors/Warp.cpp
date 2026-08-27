@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020ec388  src/_ZN4WarpD1Ev.cpp
+ *   [0] 0x020ec388  src/game/actors/Warp/_ZN4WarpD1Ev.cpp
  *   [1] 0x020ec3b8  src/_ZN4WarpD0Ev.c
- *   [2] 0x020ec3fc  src/_ZN4Warp16CleanupResourcesEv.cpp
- *   [3] 0x020ec404  src/_ZN4Warp16OnPendingDestroyEv.cpp
- *   [4] 0x020ec408  src/_ZN4Warp6RenderEv.cpp
- *   [5] 0x020ec410  src/_ZN4Warp8BehaviorEv.cpp
- *   [6] 0x020ec4c4  src/_ZN4Warp13InitResourcesEv.cpp
- *   [7] 0x020ec534  src/Warp_Spawn.c
+ *   [2] 0x020ec3fc  src/game/actors/Warp/_ZN4Warp16CleanupResourcesEv.cpp
+ *   [3] 0x020ec404  src/game/actors/Warp/_ZN4Warp16OnPendingDestroyEv.cpp
+ *   [4] 0x020ec408  src/game/actors/Warp/_ZN4Warp6RenderEv.cpp
+ *   [5] 0x020ec410  src/game/actors/Warp/_ZN4Warp8BehaviorEv.cpp
+ *   [6] 0x020ec4c4  src/game/actors/Warp/_ZN4Warp13InitResourcesEv.cpp
+ *   [7] 0x020ec534  src/game/actors/Warp/Warp_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

@@ -11,10 +11,10 @@
  * variants are the documented compiler-chosen exception.
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021113f8  src/_ZN17daObjKm3_Kuruma_cD1Ev.cpp
+ *   [0] 0x021113f8  src/game/actors/daObjKm3_Kuruma_c/_ZN17daObjKm3_Kuruma_cD1Ev.cpp
  *   [1] 0x02111448  src/_ZN17daObjKm3_Kuruma_cD0Ev.c
- *   [2] 0x021114ac  src/_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv.cpp
- *   [3] 0x021114c0  src/_ZN17daObjKm3_Kuruma_c13InitResourcesEv.cpp
+ *   [2] 0x021114ac  src/game/actors/daObjKm3_Kuruma_c/_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv.cpp
+ *   [3] 0x021114c0  src/game/actors/daObjKm3_Kuruma_c/_ZN17daObjKm3_Kuruma_c13InitResourcesEv.cpp
  */
 
 #include "daObjKm3_Kuruma_c.h"

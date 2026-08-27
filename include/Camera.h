@@ -16,7 +16,7 @@ struct Camera {
 
        Spelled WITHOUT a preprocessor guard, and the field below is
        `struct State*` rather than `State*`, because both forms have to survive
-       C as well: src/_ZN6CameraC1Ev.c is a C file that includes this header.
+       C as well: src/game/camera/Camera/_ZN6CameraC1Ev.c is a C file that includes this header.
        The elaborated form works in both languages and means the same thing --
        in C++ it finds the nested Camera::State, in C the tag declared here.
 

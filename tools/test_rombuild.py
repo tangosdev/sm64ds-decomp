@@ -67,7 +67,7 @@ class RomBuildEnrollment(unittest.TestCase):
             })
 
     def test_nested_function_records_are_aliases_not_required_definitions(self):
-        rel = "src/func_01ff97d8.c"
+        rel = "src/unnamed/arm9/01ff/func_01ff97d8.c"
         candidates = [
             (self.config, "func_01ff98f4", rel, 0x01ff98f4, 0x0b0, ".text"),
             (self.config, "func_01ff99a4", rel, 0x01ff99a4, 0x39c, ".text"),

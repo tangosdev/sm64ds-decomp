@@ -302,7 +302,7 @@ An earlier revision of this note said those 72 dodge the vtable with a **shadow 
 whose destructor is declared and never defined. **Both claims are false**, and a compile
 settles it:
 
-    src/_ZN6CannonD1Ev.cpp     -> .data x5 + .text x3
+    src/game/actors/Cannon/_ZN6CannonD1Ev.cpp     -> .data x5 + .text x3
                                   DEFINES _ZTV6Cannon, _ZTI6Cannon, _ZTS6Cannon,
                                           _ZTI5Actor, _ZTS5Actor
                                   DEFINES _ZN6CannonD0Ev, D1Ev, D2Ev

@@ -4,7 +4,7 @@
 **Compiler:** mwccarm `1.2/sp2p3` and `2004/b56` (`-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e`)
 **Status (2026-07-29):** no pure-C preimage exists. Recommend reclassifying from
 `// NONMATCHING` (a "register-allocation/scheduling wall", per `fcdfc66d`) to **ASM-PRIMITIVE**.
-**Current file:** `src/func_02059d8c.c` — asm hatch, no provenance row, not counted as matched.
+**Current file:** `src/unnamed/arm9/0205/func_02059d8c.c` — asm hatch, no provenance row, not counted as matched.
 
 ## ROM shape
 
@@ -172,7 +172,7 @@ Proposed addition to the policy's list, phrased to stay narrow and mechanically 
 
 Note the qualifier is load-bearing: `bhs` after a plain `cmp` is ordinary C (`if (a >= b)`) and
 must not qualify. Under this addition `func_02059d8c` is reclassified ASM-PRIMITIVE alongside its
-CP15 neighbors, and the wording in `src/func_02059d8c.c` calling it a
+CP15 neighbors, and the wording in `src/unnamed/arm9/0205/func_02059d8c.c` calling it a
 "register-allocation/scheduling wall" should be corrected — that framing implies C could reach it
 with the right levers, which is disproven.
 

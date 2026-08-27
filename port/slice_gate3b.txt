@@ -7,7 +7,7 @@
 #   provides an ABI-portable Construct instead.
 #   _ZN13SharedFilePtr4LoadEv.cpp -- the seam itself (card hardware).
 
-src/_ZN13SharedFilePtr8LoadFileEv.cpp
-src/_ZN13SharedFilePtr7ReleaseEv.cpp
-src/func_02017c24.c
-src/func_02017e0c.c
+src/runtime/filesystem/SharedFilePtr/_ZN13SharedFilePtr8LoadFileEv.cpp
+src/runtime/filesystem/SharedFilePtr/_ZN13SharedFilePtr7ReleaseEv.cpp
+src/unnamed/arm9/0201/func_02017c24.c
+src/unnamed/arm9/0201/func_02017e0c.c

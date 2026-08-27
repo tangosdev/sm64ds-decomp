@@ -4,466 +4,466 @@
     .ctor       start:0x0214e0a0 end:0x0214e0b0 kind:rodata align:4
     .data       start:0x0214e0c0 end:0x0214e6e0 kind:data align:32
     .bss        start:0x0214e6e0 end:0x0214eaa0 kind:bss align:32
-src/_ZN13FortressTowerD1Ev.cpp:
+src/game/actors/FortressTower/_ZN13FortressTowerD1Ev.cpp:
     complete
     .text start:0x02148a80 end:0x02148ac4
 
-src/_ZN13FortressTowerD0Ev.cpp:
+src/game/actors/FortressTower/_ZN13FortressTowerD0Ev.cpp:
     complete
     .text start:0x02148ac4 end:0x02148b1c
 
-src/_ZN13FortressTower16CleanupResourcesEv.cpp:
+src/game/actors/FortressTower/_ZN13FortressTower16CleanupResourcesEv.cpp:
     complete
     .text start:0x02148b1c end:0x02148b80
 
-src/_ZN13FortressTower6RenderEv.cpp:
+src/game/actors/FortressTower/_ZN13FortressTower6RenderEv.cpp:
     complete
     .text start:0x02148b80 end:0x02148ba8
 
-src/_ZN13FortressTower8BehaviorEv.cpp:
+src/game/actors/FortressTower/_ZN13FortressTower8BehaviorEv.cpp:
     complete
     .text start:0x02148ba8 end:0x02148c94
 
-src/_ZN13FortressTower13InitResourcesEv.cpp:
+src/game/actors/FortressTower/_ZN13FortressTower13InitResourcesEv.cpp:
     complete
     .text start:0x02148c94 end:0x02148e9c
 
-src/RopeBarrier_Spawn.c:
+src/game/actors/RopeBarrier/RopeBarrier_Spawn.c:
     complete
     .text start:0x02148e9c end:0x02148ecc
 
-src/CgStairs_Spawn.c:
+src/game/actors/CgStairs/CgStairs_Spawn.c:
     complete
     .text start:0x02148ecc end:0x02148efc
 
-src/WarpPipe_Spawn.c:
+src/game/actors/WarpPipe/WarpPipe_Spawn.c:
     complete
     .text start:0x02148efc end:0x02148f2c
 
-src/FortressTower_Spawn.c:
+src/game/actors/FortressTower/FortressTower_Spawn.c:
     complete
     .text start:0x02148f2c end:0x02148f5c
 
-src/RockTriangle_Spawn.c:
+src/game/actors/RockTriangle/RockTriangle_Spawn.c:
     complete
     .text start:0x02148f5c end:0x02148f8c
 
-src/StaticRock_Spawn.c:
+src/game/actors/StaticRock/StaticRock_Spawn.c:
     complete
     .text start:0x02148f8c end:0x02148fbc
 
-src/_ZN13QuestionBlockD1Ev.cpp:
+src/game/actors/QuestionBlock/_ZN13QuestionBlockD1Ev.cpp:
     complete
     .text start:0x02148fbc end:0x02149010
 
-src/_ZN13QuestionBlockD0Ev.cpp:
+src/game/actors/QuestionBlock/_ZN13QuestionBlockD0Ev.cpp:
     complete
     .text start:0x02149010 end:0x02149078
 
-src/func_ov102_02149078.c:
+src/unnamed/ov102/0214/func_ov102_02149078.c:
     complete
     .text start:0x02149078 end:0x02149100
 
-src/func_ov102_02149100.c:
+src/unnamed/ov102/0214/func_ov102_02149100.c:
     complete
     .text start:0x02149100 end:0x02149220
 
-src/func_ov102_02149220.cpp:
+src/unnamed/ov102/0214/func_ov102_02149220.cpp:
     complete
     .text start:0x02149220 end:0x02149288
 
-src/func_ov102_02149288.cpp:
+src/unnamed/ov102/0214/func_ov102_02149288.cpp:
     complete
     .text start:0x02149288 end:0x021492d4
 
-src/func_ov102_021492d4.c:
+src/unnamed/ov102/0214/func_ov102_021492d4.c:
     complete
     .text start:0x021492d4 end:0x02149384
 
-src/func_ov102_02149384.cpp:
+src/unnamed/ov102/0214/func_ov102_02149384.cpp:
     complete
     .text start:0x02149384 end:0x021493dc
 
-src/func_ov102_021493dc.cpp:
+src/unnamed/ov102/0214/func_ov102_021493dc.cpp:
     complete
     .text start:0x021493dc end:0x02149428
 
-src/func_ov102_02149428.c:
+src/unnamed/ov102/0214/func_ov102_02149428.c:
     complete
     .text start:0x02149428 end:0x02149478
 
-src/func_ov102_02149478.c:
+src/unnamed/ov102/0214/func_ov102_02149478.c:
     complete
     .text start:0x02149478 end:0x021494cc
 
-src/func_ov102_021494cc.c:
+src/unnamed/ov102/0214/func_ov102_021494cc.c:
     complete
     .text start:0x021494cc end:0x0214953c
 
-src/func_ov102_0214953c.c:
+src/unnamed/ov102/0214/func_ov102_0214953c.c:
     complete
     .text start:0x0214953c end:0x02149610
 
-src/func_ov102_02149610.cpp:
+src/unnamed/ov102/0214/func_ov102_02149610.cpp:
     complete
     .text start:0x02149610 end:0x02149684
 
-src/func_ov102_02149684.c:
+src/unnamed/ov102/0214/func_ov102_02149684.c:
     complete
     .text start:0x02149684 end:0x021496a4
 
-src/_ZN13QuestionBlock19OnHitFromUnderneathER8dActor_c.cpp:
+src/game/actors/QuestionBlock/_ZN13QuestionBlock19OnHitFromUnderneathER8dActor_c.cpp:
     complete
     .text start:0x021496a4 end:0x02149710
 
-src/_ZN13QuestionBlock15OnHitByMegaCharER6Player.cpp:
+src/game/actors/QuestionBlock/_ZN13QuestionBlock15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02149710 end:0x02149770
 
-src/_ZN13QuestionBlock8OnKickedER8dActor_c.cpp:
+src/game/actors/QuestionBlock/_ZN13QuestionBlock8OnKickedER8dActor_c.cpp:
     complete
     .text start:0x02149770 end:0x021497c8
 
-src/_ZN13QuestionBlock11OnAttacked1ER8dActor_c.cpp:
+src/game/actors/QuestionBlock/_ZN13QuestionBlock11OnAttacked1ER8dActor_c.cpp:
     complete
     .text start:0x021497c8 end:0x02149820
 
-src/_ZN13QuestionBlock15OnGroundPoundedER8dActor_c.cpp:
+src/game/actors/QuestionBlock/_ZN13QuestionBlock15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x02149820 end:0x02149878
 
-src/func_ov102_02149878.c:
+src/unnamed/ov102/0214/func_ov102_02149878.c:
     complete
     .text start:0x02149878 end:0x021498c4
 
-src/func_ov102_021498c4.c:
+src/unnamed/ov102/0214/func_ov102_021498c4.c:
     complete
     .text start:0x021498c4 end:0x021498e0
 
-src/func_ov102_021498e0.cpp:
+src/unnamed/ov102/0214/func_ov102_021498e0.cpp:
     complete
     .text start:0x021498e0 end:0x02149c78
 
-src/func_ov102_02149c78.c:
+src/unnamed/ov102/0214/func_ov102_02149c78.c:
     complete
     .text start:0x02149c78 end:0x02149ccc
 
-src/func_ov102_02149ccc.cpp:
+src/unnamed/ov102/0214/func_ov102_02149ccc.cpp:
     complete
     .text start:0x02149ccc end:0x02149d80
 
-src/func_ov102_02149d80.c:
+src/unnamed/ov102/0214/func_ov102_02149d80.c:
     complete
     .text start:0x02149d80 end:0x02149da8
 
-src/func_ov102_02149da8.cpp:
+src/unnamed/ov102/0214/func_ov102_02149da8.cpp:
     complete
     .text start:0x02149da8 end:0x02149df0
 
-src/func_ov102_02149df0.cpp:
+src/unnamed/ov102/0214/func_ov102_02149df0.cpp:
     complete
     .text start:0x02149df0 end:0x02149e38
 
-src/func_ov102_02149e38.cpp:
+src/unnamed/ov102/0214/func_ov102_02149e38.cpp:
     complete
     .text start:0x02149e38 end:0x02149ea4
 
-src/func_ov102_02149ea4.c:
+src/unnamed/ov102/0214/func_ov102_02149ea4.c:
     complete
     .text start:0x02149ea4 end:0x02149ff0
 
-src/func_ov102_02149ff0.c:
+src/unnamed/ov102/0214/func_ov102_02149ff0.c:
     complete
     .text start:0x02149ff0 end:0x0214a08c
 
-src/_ZN13QuestionBlock16CleanupResourcesEv.cpp:
+src/game/actors/QuestionBlock/_ZN13QuestionBlock16CleanupResourcesEv.cpp:
     complete
     .text start:0x0214a08c end:0x0214a2ac
 
-src/_ZN13QuestionBlock6RenderEv.cpp:
+src/game/actors/QuestionBlock/_ZN13QuestionBlock6RenderEv.cpp:
     complete
     .text start:0x0214a2ac end:0x0214a32c
 
-src/_ZN13QuestionBlock8BehaviorEv.cpp:
+src/game/actors/QuestionBlock/_ZN13QuestionBlock8BehaviorEv.cpp:
     complete
     .text start:0x0214a32c end:0x0214a4a4
 
-src/_ZN13QuestionBlock13InitResourcesEv.cpp:
+src/game/actors/QuestionBlock/_ZN13QuestionBlock13InitResourcesEv.cpp:
     complete
     .text start:0x0214a4a4 end:0x0214a7ec
 
-src/CapBlockWario_Spawn.c:
+src/game/player/CapBlockWario/CapBlockWario_Spawn.c:
     complete
     .text start:0x0214a7ec end:0x0214a82c
 
-src/CapBlockLuigi_Spawn.c:
+src/game/player/CapBlockLuigi/CapBlockLuigi_Spawn.c:
     complete
     .text start:0x0214a82c end:0x0214a86c
 
-src/CapBlockMario_Spawn.c:
+src/game/player/CapBlockMario/CapBlockMario_Spawn.c:
     complete
     .text start:0x0214a86c end:0x0214a8ac
 
-src/ExclamationBlock_Spawn.c:
+src/game/actors/ExclamationBlock/ExclamationBlock_Spawn.c:
     complete
     .text start:0x0214a8ac end:0x0214a8ec
 
-src/QuestionBlock_Spawn.c:
+src/game/actors/QuestionBlock/QuestionBlock_Spawn.c:
     complete
     .text start:0x0214a8ec end:0x0214a92c
 
-src/ExclamationBlockVs_Spawn.c:
+src/game/actors/ExclamationBlockVs/ExclamationBlockVs_Spawn.c:
     complete
     .text start:0x0214a92c end:0x0214a96c
 
-src/_ZN6BobOmbD1Ev.cpp:
+src/game/actors/BobOmb/_ZN6BobOmbD1Ev.cpp:
     complete
     .text start:0x0214a96c end:0x0214a9b4
 
-src/_ZN6BobOmbD0Ev.cpp:
+src/game/actors/BobOmb/_ZN6BobOmbD0Ev.cpp:
     complete
     .text start:0x0214a9b4 end:0x0214aa10
 
-src/_ZN6BobOmb16OnAimedAtWithEggEv.cpp:
+src/game/actors/BobOmb/_ZN6BobOmb16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x0214aa10 end:0x0214aa18
 
-src/func_ov102_0214aa18.cpp:
+src/unnamed/ov102/0214/func_ov102_0214aa18.cpp:
     complete
     .text start:0x0214aa18 end:0x0214ab1c
 
-src/func_ov102_0214ab1c.c:
+src/unnamed/ov102/0214/func_ov102_0214ab1c.c:
     complete
     .text start:0x0214ab1c end:0x0214ad14
 
-src/func_ov102_0214ad14.c:
+src/unnamed/ov102/0214/func_ov102_0214ad14.c:
     complete
     .text start:0x0214ad14 end:0x0214ad40
 
-src/func_ov102_0214ad40.c:
+src/unnamed/ov102/0214/func_ov102_0214ad40.c:
     complete
     .text start:0x0214ad40 end:0x0214adc8
 
-src/_ZN6BobOmb13OnTurnIntoEggER6Player.cpp:
+src/game/actors/BobOmb/_ZN6BobOmb13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x0214adc8 end:0x0214ae1c
 
-src/func_ov102_0214ae1c.c:
+src/unnamed/ov102/0214/func_ov102_0214ae1c.c:
     complete
     .text start:0x0214ae1c end:0x0214b03c
 
-src/func_ov102_0214b03c.cpp:
+src/unnamed/ov102/0214/func_ov102_0214b03c.cpp:
     complete
     .text start:0x0214b03c end:0x0214b128
 
-src/func_ov102_0214b128.cpp:
+src/unnamed/ov102/0214/func_ov102_0214b128.cpp:
     complete
     .text start:0x0214b128 end:0x0214b248
 
-src/func_ov102_0214b248.cpp:
+src/unnamed/ov102/0214/func_ov102_0214b248.cpp:
     complete
     .text start:0x0214b248 end:0x0214b384
 
-src/func_ov102_0214b384.c:
+src/unnamed/ov102/0214/func_ov102_0214b384.c:
     complete
     .text start:0x0214b384 end:0x0214b3b8
 
-src/func_ov102_0214b3b8.c:
+src/unnamed/ov102/0214/func_ov102_0214b3b8.c:
     complete
     .text start:0x0214b3b8 end:0x0214b3f0
 
-src/func_ov102_0214b3f0.c:
+src/unnamed/ov102/0214/func_ov102_0214b3f0.c:
     complete
     .text start:0x0214b3f0 end:0x0214b444
 
-src/func_ov102_0214b444.cpp:
+src/unnamed/ov102/0214/func_ov102_0214b444.cpp:
     complete
     .text start:0x0214b444 end:0x0214b53c
 
-src/func_ov102_0214b53c.c:
+src/unnamed/ov102/0214/func_ov102_0214b53c.c:
     complete
     .text start:0x0214b53c end:0x0214b988
 
-src/func_ov102_0214b988.cpp:
+src/unnamed/ov102/0214/func_ov102_0214b988.cpp:
     complete
     .text start:0x0214b988 end:0x0214ba30
 
-src/func_ov102_0214ba30.cpp:
+src/unnamed/ov102/0214/func_ov102_0214ba30.cpp:
     complete
     .text start:0x0214ba30 end:0x0214baa0
 
-src/func_ov102_0214baa0.c:
+src/unnamed/ov102/0214/func_ov102_0214baa0.c:
     complete
     .text start:0x0214baa0 end:0x0214bbd8
 
-src/func_ov102_0214bbd8.c:
+src/unnamed/ov102/0214/func_ov102_0214bbd8.c:
     complete
     .text start:0x0214bbd8 end:0x0214bc20
 
-src/func_ov102_0214bc20.c:
+src/unnamed/ov102/0214/func_ov102_0214bc20.c:
     complete
     .text start:0x0214bc20 end:0x0214bcc8
 
-src/func_ov102_0214bcc8.c:
+src/unnamed/ov102/0214/func_ov102_0214bcc8.c:
     complete
     .text start:0x0214bcc8 end:0x0214bd20
 
-src/func_ov102_0214bd20.cpp:
+src/unnamed/ov102/0214/func_ov102_0214bd20.cpp:
     complete
     .text start:0x0214bd20 end:0x0214bd90
 
-src/func_ov102_0214bd90.c:
+src/unnamed/ov102/0214/func_ov102_0214bd90.c:
     complete
     .text start:0x0214bd90 end:0x0214be1c
 
-src/func_ov102_0214be1c.cpp:
+src/unnamed/ov102/0214/func_ov102_0214be1c.cpp:
     complete
     .text start:0x0214be1c end:0x0214beb4
 
-src/func_ov102_0214beb4.c:
+src/unnamed/ov102/0214/func_ov102_0214beb4.c:
     complete
     .text start:0x0214beb4 end:0x0214bf64
 
-src/func_ov102_0214bf64.cpp:
+src/unnamed/ov102/0214/func_ov102_0214bf64.cpp:
     complete
     .text start:0x0214bf64 end:0x0214c0b8
 
-src/func_ov102_0214c0b8.c:
+src/unnamed/ov102/0214/func_ov102_0214c0b8.c:
     complete
     .text start:0x0214c0b8 end:0x0214c12c
 
-src/_ZN6BobOmb16CleanupResourcesEv.cpp:
+src/game/actors/BobOmb/_ZN6BobOmb16CleanupResourcesEv.cpp:
     complete
     .text start:0x0214c12c end:0x0214c168
 
-src/_ZN6BobOmb6RenderEv.cpp:
+src/game/actors/BobOmb/_ZN6BobOmb6RenderEv.cpp:
     complete
     .text start:0x0214c168 end:0x0214c1bc
 
-src/_ZN6BobOmb8BehaviorEv.cpp:
+src/game/actors/BobOmb/_ZN6BobOmb8BehaviorEv.cpp:
     complete
     .text start:0x0214c1bc end:0x0214c510
 
-src/_ZN6BobOmb13InitResourcesEv.cpp:
+src/game/actors/BobOmb/_ZN6BobOmb13InitResourcesEv.cpp:
     complete
     .text start:0x0214c510 end:0x0214c6e4
 
-src/_ZN6BobOmb13OnYoshiTryEatEv.cpp:
+src/game/actors/BobOmb/_ZN6BobOmb13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0214c6e4 end:0x0214c6f8
 
-src/BobOmb_Spawn.c:
+src/game/actors/BobOmb/BobOmb_Spawn.c:
     complete
     .text start:0x0214c6f8 end:0x0214c748
 
-src/_ZN10KoopaShellD1Ev.cpp:
+src/game/actors/KoopaShell/_ZN10KoopaShellD1Ev.cpp:
     complete
     .text start:0x0214c748 end:0x0214c798
 
-src/_ZN10KoopaShellD0Ev.cpp:
+src/game/actors/KoopaShell/_ZN10KoopaShellD0Ev.cpp:
     complete
     .text start:0x0214c798 end:0x0214c7fc
 
-src/func_ov102_0214c7fc.cpp:
+src/unnamed/ov102/0214/func_ov102_0214c7fc.cpp:
     complete
     .text start:0x0214c7fc end:0x0214c84c
 
-src/func_ov102_0214c84c.c:
+src/unnamed/ov102/0214/func_ov102_0214c84c.c:
     complete
     .text start:0x0214c84c end:0x0214cbec
 
-src/func_ov102_0214cbec.cpp:
+src/unnamed/ov102/0214/func_ov102_0214cbec.cpp:
     complete
     .text start:0x0214cbec end:0x0214ce60
 
-src/func_ov102_0214ce60.cpp:
+src/unnamed/ov102/0214/func_ov102_0214ce60.cpp:
     complete
     .text start:0x0214ce60 end:0x0214cf4c
 
-src/func_ov102_0214cf4c.cpp:
+src/unnamed/ov102/0214/func_ov102_0214cf4c.cpp:
     complete
     .text start:0x0214cf4c end:0x0214cf98
 
-src/func_ov102_0214cf98.cpp:
+src/unnamed/ov102/0214/func_ov102_0214cf98.cpp:
     complete
     .text start:0x0214cf98 end:0x0214cfe4
 
-src/func_ov102_0214cfe4.cpp:
+src/unnamed/ov102/0214/func_ov102_0214cfe4.cpp:
     complete
     .text start:0x0214cfe4 end:0x0214d020
 
-src/func_ov102_0214d020.c:
+src/unnamed/ov102/0214/func_ov102_0214d020.c:
     complete
     .text start:0x0214d020 end:0x0214d044
 
-src/func_ov102_0214d044.cpp:
+src/unnamed/ov102/0214/func_ov102_0214d044.cpp:
     complete
     .text start:0x0214d044 end:0x0214d0bc
 
-src/func_ov102_0214d0bc.cpp:
+src/unnamed/ov102/0214/func_ov102_0214d0bc.cpp:
     complete
     .text start:0x0214d0bc end:0x0214d114
 
-src/func_ov102_0214d114.c:
+src/unnamed/ov102/0214/func_ov102_0214d114.c:
     complete
     .text start:0x0214d114 end:0x0214d148
 
-src/func_ov102_0214d148.cpp:
+src/unnamed/ov102/0214/func_ov102_0214d148.cpp:
     complete
     .text start:0x0214d148 end:0x0214d1b0
 
-src/func_ov102_0214d1b0.c:
+src/unnamed/ov102/0214/func_ov102_0214d1b0.c:
     complete
     .text start:0x0214d1b0 end:0x0214d1b8
 
-src/func_ov102_0214d1b8.c:
+src/unnamed/ov102/0214/func_ov102_0214d1b8.c:
     complete
     .text start:0x0214d1b8 end:0x0214d1f8
 
-src/func_ov102_0214d1f8.cpp:
+src/unnamed/ov102/0214/func_ov102_0214d1f8.cpp:
     complete
     .text start:0x0214d1f8 end:0x0214d248
 
-src/_ZN10KoopaShell16CleanupResourcesEv.cpp:
+src/game/actors/KoopaShell/_ZN10KoopaShell16CleanupResourcesEv.cpp:
     complete
     .text start:0x0214d248 end:0x0214d274
 
-src/_ZN10KoopaShell16OnPendingDestroyEv.cpp:
+src/game/actors/KoopaShell/_ZN10KoopaShell16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0214d274 end:0x0214d278
 
-src/_ZN10KoopaShell6RenderEv.cpp:
+src/game/actors/KoopaShell/_ZN10KoopaShell6RenderEv.cpp:
     complete
     .text start:0x0214d278 end:0x0214d2e8
 
-src/_ZN10KoopaShell8BehaviorEv.cpp:
+src/game/actors/KoopaShell/_ZN10KoopaShell8BehaviorEv.cpp:
     complete
     .text start:0x0214d2e8 end:0x0214d54c
 
-src/_ZN10KoopaShell13InitResourcesEv.cpp:
+src/game/actors/KoopaShell/_ZN10KoopaShell13InitResourcesEv.cpp:
     complete
     .text start:0x0214d54c end:0x0214d6a0
 
-src/_ZN10KoopaShell13OnYoshiTryEatEv.cpp:
+src/game/actors/KoopaShell/_ZN10KoopaShell13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0214d6a0 end:0x0214d6b4
 
-src/KoopaShell_Spawn.c:
+src/game/actors/KoopaShell/KoopaShell_Spawn.c:
     complete
     .text start:0x0214d6b4 end:0x0214d70c
 
-src/__sinit_ov102_0214d714.c:
+src/unnamed/ov102/0214/__sinit_ov102_0214d714.c:
     complete
     .init start:0x0214d714 end:0x0214d908
 
-src/__sinit_ov102_0214d908.c:
+src/unnamed/ov102/0214/__sinit_ov102_0214d908.c:
     complete
     .init start:0x0214d908 end:0x0214de70
 
-src/__sinit_ov102_0214de70.c:
+src/unnamed/ov102/0214/__sinit_ov102_0214de70.c:
     complete
     .init start:0x0214de70 end:0x0214dfac
 
-src/__sinit_ov102_0214dfac.c:
+src/unnamed/ov102/0214/__sinit_ov102_0214dfac.c:
     complete
     .init start:0x0214dfac end:0x0214e0a0

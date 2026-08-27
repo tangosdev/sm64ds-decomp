@@ -37,7 +37,7 @@
  * not a claim that nothing reads it.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN16dScMgSmartball_cD1Ev.cpp; D0Ev.cpp
+ * its own. Defined for real in src/minigames/dScMgSmartball_c/_ZN16dScMgSmartball_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
  * dScMgBase_c, the immediate base, already provides one. */
 #ifndef DSCMGSMARTBALL_C_H
@@ -65,9 +65,9 @@ struct dScMgSmartball_c : dScMgBase_c {
        because the ROM only ever compares it against 2 -- but the declaration it is
        overriding is `void AfterCleanupResources(u32)`, so that is what it is. */
     void AfterCleanupResources(u32 vfSuccess);
-                           /* slot  5 -- src/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp */
-    s32  Behavior();       /* slot  6 -- src/_ZN16dScMgSmartball_c8BehaviorEv.cpp */
-    s32  Render();         /* slot  9 -- src/_ZN16dScMgSmartball_c6RenderEv.cpp */
+                           /* slot  5 -- src/minigames/dScMgSmartball_c/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp */
+    s32  Behavior();       /* slot  6 -- src/minigames/dScMgSmartball_c/_ZN16dScMgSmartball_c8BehaviorEv.cpp */
+    s32  Render();         /* slot  9 -- src/minigames/dScMgSmartball_c/_ZN16dScMgSmartball_c6RenderEv.cpp */
 
     u8 pad_465d[0x16b];   /* 0x465d -- dScMgBase_c's data ends here; real matched
                               access inside, see file banner */

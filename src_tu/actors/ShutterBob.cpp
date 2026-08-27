@@ -16,12 +16,12 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021111a0  src/_ZN10ShutterBobD1Ev.cpp
+ *   [0] 0x021111a0  src/game/actors/ShutterBob/_ZN10ShutterBobD1Ev.cpp
  *   [1] 0x021111f0  src/_ZN10ShutterBobD0Ev.c
- *   [2] 0x02111254  src/_ZN10ShutterBob16CleanupResourcesEv.cpp
- *   [3] 0x02111268  src/_ZN10ShutterBob8BehaviorEv.cpp
- *   [4] 0x02111294  src/_ZN10ShutterBob13InitResourcesEv.cpp
- *   [5] 0x021112cc  src/ShutterBob_Spawn.c
+ *   [2] 0x02111254  src/game/actors/ShutterBob/_ZN10ShutterBob16CleanupResourcesEv.cpp
+ *   [3] 0x02111268  src/game/actors/ShutterBob/_ZN10ShutterBob8BehaviorEv.cpp
+ *   [4] 0x02111294  src/game/actors/ShutterBob/_ZN10ShutterBob13InitResourcesEv.cpp
+ *   [5] 0x021112cc  src/game/actors/ShutterBob/ShutterBob_Spawn.c
  */
 
 /* TUBUILD WARNING -- #pragma directive(s) were present in the legacy

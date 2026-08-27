@@ -29,10 +29,10 @@
  * work, before this class had its own header. This class overrides five
  * slots beyond the destructor:
  *
- *   0   InitResources      ov100 0x021455a0  (src/_ZN4Door13InitResourcesEv.c)
- *   3   CleanupResources   ov100 0x0214542c  (src/_ZN4Door16CleanupResourcesEv.cpp)
- *   6   Behavior           ov100 0x02145550  (src/_ZN4Door8BehaviorEv.cpp)
- *   9   Render             ov100 0x021454c8  (src/_ZN4Door6RenderEv.cpp)
+ *   0   InitResources      ov100 0x021455a0  (src/game/actors/Door/_ZN4Door13InitResourcesEv.c)
+ *   3   CleanupResources   ov100 0x0214542c  (src/game/actors/Door/_ZN4Door16CleanupResourcesEv.cpp)
+ *   6   Behavior           ov100 0x02145550  (src/game/actors/Door/_ZN4Door8BehaviorEv.cpp)
+ *   9   Render             ov100 0x021454c8  (src/game/actors/Door/_ZN4Door6RenderEv.cpp)
  *   12  OnPendingDestroy   ov100 0x021454c4  (src/_ZN4Door16OnPendingDestroyEv.c)
  *
  * (config/arm9/overlays/ov100/relocs.txt: 0x02148188/0x02148194/0x021481a0/
@@ -55,7 +55,7 @@
  * were re-measured: Render is byte-exact under the pinned 2004/b56, and
  * InitResources compiles to output IDENTICAL to its pre-fold bytes.
  *
- * Only src/_ZN4Door13InitResourcesEv.c ALREADY FAILED TO BYTE-MATCH before
+ * Only src/game/actors/Door/_ZN4Door13InitResourcesEv.c ALREADY FAILED TO BYTE-MATCH before
  * the rename -- config/arm9/overlays/ov100/delinks.txt carries no `complete`
  * marker for it, so dsd supplies that range from the cartridge and the ROM
  * build never compiles the file -- and stays that way. The gap is one
@@ -72,7 +72,7 @@
  * 0x138..0x147 (0x10 = 16 bytes) as this class's own storage, all of it
  * touched by the five sources above: two heap-owned pointers at 0x138/0x13c,
  * a callback-node pointer at 0x140 (read in Behavior as a pointer-to-member
- * dispatch, written in src/func_ov100_021453d8.cpp -- out of this slice), and
+ * dispatch, written in src/unnamed/ov100/0214/func_ov100_021453d8.cpp -- out of this slice), and
  * a key-model index byte at 0x144.
  *
  * 0x138 IS A Model*, and this header used to say the opposite -- that the
@@ -126,7 +126,7 @@ struct Door : dActor_c {
     Model *mKeyModel;          /* 0x138 -- owned, see SIZE above */
     void *mKeyFile;           /* 0x13c -- released through SharedFilePtr */
     /* Behavior casts this to a node whose +0x8 is a `void (Door::*)(int)` and
-       calls it on this Door; written by src/func_ov100_021453d8.cpp.
+       calls it on this Door; written by src/unnamed/ov100/0214/func_ov100_021453d8.cpp.
        [_ZN4Door8BehaviorEv.cpp] */
     void *mCallbackNode;           /* 0x140 -- callback-node pointer, see SIZE above */
     s8   mKeyModelIdx;            /* 0x144 -- key-model index */

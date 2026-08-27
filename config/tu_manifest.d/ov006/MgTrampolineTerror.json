@@ -22,14 +22,14 @@
       "symbol": "MgTrampolineTerror_Spawn",
       "address": "0x0212471c",
       "size": "0x0000018c",
-      "legacy_source": "src/MgTrampolineTerror_Spawn.cpp",
+      "legacy_source": "src/minigames/MgTrampolineTerror/MgTrampolineTerror_Spawn.cpp",
       "ordinal": 0
     },
     {
       "symbol": "func_ov006_021248a8",
       "address": "0x021248a8",
       "size": "0x00000060",
-      "legacy_source": "src/func_ov006_021248a8.cpp",
+      "legacy_source": "src/unnamed/ov006/0212/func_ov006_021248a8.cpp",
       "ordinal": 1
     }
   ],

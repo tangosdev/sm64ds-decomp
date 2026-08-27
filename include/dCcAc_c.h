@@ -48,8 +48,8 @@ struct dCcAc_c : dCc_c {
     virtual Vector3 &GetPos();          /* slot 2 - the owner's pos, not ours */
     virtual u32 GetOwnerID();           /* slot 3 - owner->uniqueID */
 
-    /* DECLARED, defined out of line in src/_ZN7dCcAc_cC1Ev.cpp and
-     * src/_ZN7dCcAc_cC2Ev.cpp as real C++ -- the init list nulls owner, which
+    /* DECLARED, defined out of line in src/game/actors/dCcAc_c/_ZN7dCcAc_cC1Ev.cpp and
+     * src/game/actors/dCcAc_c/_ZN7dCcAc_cC2Ev.cpp as real C++ -- the init list nulls owner, which
      * is the only store past the vptr the ROM makes. */
     dCcAc_c();
 

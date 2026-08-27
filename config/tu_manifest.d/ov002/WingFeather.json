@@ -22,56 +22,56 @@
       "symbol": "_ZN11WingFeatherD1Ev",
       "address": "0x020b2ba0",
       "size": "0x00000048",
-      "legacy_source": "src/_ZN11WingFeatherD1Ev.cpp",
+      "legacy_source": "src/game/actors/WingFeather/_ZN11WingFeatherD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN11WingFeatherD0Ev",
       "address": "0x020b2be8",
       "size": "0x0000005c",
-      "legacy_source": "src/_ZN11WingFeatherD0Ev.cpp",
+      "legacy_source": "src/game/actors/WingFeather/_ZN11WingFeatherD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "func_ov002_020b2c44",
       "address": "0x020b2c44",
       "size": "0x000001ec",
-      "legacy_source": "src/func_ov002_020b2c44.cpp",
+      "legacy_source": "src/unnamed/ov002/020b/func_ov002_020b2c44.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN11WingFeather16CleanupResourcesEv",
       "address": "0x020b2e30",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN11WingFeather16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/WingFeather/_ZN11WingFeather16CleanupResourcesEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN11WingFeather6RenderEv",
       "address": "0x020b2e54",
       "size": "0x00000048",
-      "legacy_source": "src/_ZN11WingFeather6RenderEv.cpp",
+      "legacy_source": "src/game/actors/WingFeather/_ZN11WingFeather6RenderEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN11WingFeather8BehaviorEv",
       "address": "0x020b2e9c",
       "size": "0x00000280",
-      "legacy_source": "src/_ZN11WingFeather8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/WingFeather/_ZN11WingFeather8BehaviorEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN11WingFeather13InitResourcesEv",
       "address": "0x020b311c",
       "size": "0x0000012c",
-      "legacy_source": "src/_ZN11WingFeather13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/WingFeather/_ZN11WingFeather13InitResourcesEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "WingFeather_Spawn",
       "address": "0x020b3248",
       "size": "0x00000050",
-      "legacy_source": "src/WingFeather_Spawn.c",
+      "legacy_source": "src/game/actors/WingFeather/WingFeather_Spawn.c",
       "ordinal": 7
     }
   ],
@@ -116,14 +116,14 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN11WingFeatherD1Ev.cpp",
-      "src/_ZN11WingFeatherD0Ev.cpp",
-      "src/func_ov002_020b2c44.cpp",
-      "src/_ZN11WingFeather16CleanupResourcesEv.cpp",
-      "src/_ZN11WingFeather6RenderEv.cpp",
-      "src/_ZN11WingFeather8BehaviorEv.cpp",
-      "src/_ZN11WingFeather13InitResourcesEv.cpp",
-      "src/WingFeather_Spawn.c"
+      "src/game/actors/WingFeather/_ZN11WingFeatherD1Ev.cpp",
+      "src/game/actors/WingFeather/_ZN11WingFeatherD0Ev.cpp",
+      "src/unnamed/ov002/020b/func_ov002_020b2c44.cpp",
+      "src/game/actors/WingFeather/_ZN11WingFeather16CleanupResourcesEv.cpp",
+      "src/game/actors/WingFeather/_ZN11WingFeather6RenderEv.cpp",
+      "src/game/actors/WingFeather/_ZN11WingFeather8BehaviorEv.cpp",
+      "src/game/actors/WingFeather/_ZN11WingFeather13InitResourcesEv.cpp",
+      "src/game/actors/WingFeather/WingFeather_Spawn.c"
     ],
     "extraInertImports": 97,
     "extraImportsWithNoHome": [],

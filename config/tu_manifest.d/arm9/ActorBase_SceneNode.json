@@ -1,8 +1,8 @@
 {
   "id": "arm9/ActorBase_SceneNode",
   "module": "arm9",
-  "source": "src/actors/ActorBase_SceneNode.cpp",
-  "promoted_source": "src/actors/ActorBase_SceneNode.cpp",
+  "source": "src/game/actors/ActorBase_SceneNode.cpp",
+  "promoted_source": "src/game/actors/ActorBase_SceneNode.cpp",
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [

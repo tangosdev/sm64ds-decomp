@@ -4,7 +4,7 @@
  * `PathLift` (_ZTV8PathLift, _ZN8PathLiftD1Ev, ...), so PathLift.h already
  * uses that name and this header follows it.
  *
- * SIZE 0x4b4, the literal PathLift_Spawn (src/PathLift_Spawn.cpp) passes to
+ * SIZE 0x4b4, the literal PathLift_Spawn (src/game/actors/PathLift/PathLift_Spawn.cpp) passes to
  * fBase_c::operator new. PathLift ends 0x450; the D1 destructor
  * (func_ov100_02146d7c, this class's own) destroys only a ShadowModel at
  * 0x450 before storing PathLift's own vtable and running PathLift's

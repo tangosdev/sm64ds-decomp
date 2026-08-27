@@ -76,7 +76,7 @@ $env:AGENTLOCK_HOLDER = 'cpp-heap'
 $AgentLockCli = '<path supplied by the installed agent-lock skill>'
 python $AgentLockCli list
 python $AgentLockCli acquire `
-  --files include/Heap.h src/_ZN4HeapD0Ev.cpp src/_ZN4HeapD1Ev.cpp `
+  --files include/Heap.h src/runtime/memory/Heap/_ZN4HeapD0Ev.cpp src/runtime/memory/Heap/_ZN4HeapD1Ev.cpp `
           config/arm9/symbols.txt config/arm9/delinks.txt `
   --range arm9 0x0203ca10 0x0203ca54 `
   --ttl 3600 --wait 60 --note 'real C++ Heap migration'
@@ -87,12 +87,12 @@ jobs, and release only after the branch is pushed or deliberately abandoned:
 
 ```powershell
 python $AgentLockCli renew `
-  --files include/Heap.h src/_ZN4HeapD0Ev.cpp src/_ZN4HeapD1Ev.cpp `
+  --files include/Heap.h src/runtime/memory/Heap/_ZN4HeapD0Ev.cpp src/runtime/memory/Heap/_ZN4HeapD1Ev.cpp `
           config/arm9/symbols.txt config/arm9/delinks.txt `
   --range arm9 0x0203ca10 0x0203ca54
 
 python $AgentLockCli release `
-  --files include/Heap.h src/_ZN4HeapD0Ev.cpp src/_ZN4HeapD1Ev.cpp `
+  --files include/Heap.h src/runtime/memory/Heap/_ZN4HeapD0Ev.cpp src/runtime/memory/Heap/_ZN4HeapD1Ev.cpp `
           config/arm9/symbols.txt config/arm9/delinks.txt `
   --range arm9 0x0203ca10 0x0203ca54
 ```

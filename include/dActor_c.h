@@ -101,8 +101,8 @@ struct dActor_c : dBase_c {
            16 (D1) and 17 (D0); position here does not affect that. --- */
     virtual ~dActor_c();
 
-    /* DECLARED, never defined as a method -- src/_ZN8dActor_cC1Ev.cpp and
-       src/_ZN8dActor_cC2Ev.cpp provide the symbol as hand-spelt extern "C"
+    /* DECLARED, never defined as a method -- src/game/actors/dActor_c/_ZN8dActor_cC1Ev.cpp and
+       src/game/actors/dActor_c/_ZN8dActor_cC2Ev.cpp provide the symbol as hand-spelt extern "C"
        bodies (the rich spawn-seeding logic needs exact frame-slot control).
        Declaring it is what lets a real derived constructor emit
        `bl _ZN8dActor_cC2Ev` instead of inlining the implicit base

@@ -4,206 +4,206 @@
     .ctor       start:0x02112e6c end:0x02112e78 kind:rodata align:4
     .data       start:0x02112e80 end:0x02113bc0 kind:data align:32
     .bss        start:0x02113bc0 end:0x02113cc0 kind:bss align:32
-src/_ZN7SkiLiftD1Ev.cpp:
+src/game/actors/SkiLift/_ZN7SkiLiftD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111e4
 
-src/_ZN7SkiLiftD0Ev.cpp:
+src/game/actors/SkiLift/_ZN7SkiLiftD0Ev.cpp:
     complete
     .text start:0x021111e4 end:0x0211123c
 
-src/_ZN7SkiLift15OnHitByMegaCharER6Player.cpp:
+src/game/actors/SkiLift/_ZN7SkiLift15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x0211123c end:0x02111278
 
-src/func_ov018_02111278.cpp:
+src/unnamed/ov018/0211/func_ov018_02111278.cpp:
     complete
     .text start:0x02111278 end:0x021112fc
 
-src/_ZN7SkiLift16CleanupResourcesEv.cpp:
+src/game/actors/SkiLift/_ZN7SkiLift16CleanupResourcesEv.cpp:
     complete
     .text start:0x021112fc end:0x02111340
 
-src/_ZN7SkiLift6RenderEv.cpp:
+src/game/actors/SkiLift/_ZN7SkiLift6RenderEv.cpp:
     complete
     .text start:0x02111340 end:0x02111368
 
-src/_ZN7SkiLift8BehaviorEv.cpp:
+src/game/actors/SkiLift/_ZN7SkiLift8BehaviorEv.cpp:
     complete
     .text start:0x02111368 end:0x021116b4
 
-src/_ZN7SkiLift13InitResourcesEv.cpp:
+src/game/actors/SkiLift/_ZN7SkiLift13InitResourcesEv.cpp:
     complete
     .text start:0x021116b4 end:0x021117e8
 
-src/func_ov018_021117e8.cpp:
+src/unnamed/ov018/0211/func_ov018_021117e8.cpp:
     complete
     .text start:0x021117e8 end:0x02111804
 
-src/func_ov018_02111804.c:
+src/unnamed/ov018/0211/func_ov018_02111804.c:
     complete
     .text start:0x02111804 end:0x02111818
 
-src/SkiLift_Spawn.c:
+src/game/actors/SkiLift/SkiLift_Spawn.c:
     complete
     .text start:0x02111818 end:0x02111848
 
-src/_ZN13MotherPenguinD1Ev.cpp:
+src/game/actors/MotherPenguin/_ZN13MotherPenguinD1Ev.cpp:
     complete
     .text start:0x02111848 end:0x02111898
 
-src/_ZN13MotherPenguinD0Ev.cpp:
+src/game/actors/MotherPenguin/_ZN13MotherPenguinD0Ev.cpp:
     complete
     .text start:0x02111898 end:0x021118fc
 
-src/func_ov018_021118fc.c:
+src/unnamed/ov018/0211/func_ov018_021118fc.c:
     complete
     .text start:0x021118fc end:0x02111968
 
-src/func_ov018_02111968.c:
+src/unnamed/ov018/0211/func_ov018_02111968.c:
     complete
     .text start:0x02111968 end:0x02111a48
 
-src/func_ov018_02111a48.c:
+src/unnamed/ov018/0211/func_ov018_02111a48.c:
     complete
     .text start:0x02111a48 end:0x02111b3c
 
-src/func_ov018_02111b3c.c:
+src/unnamed/ov018/0211/func_ov018_02111b3c.c:
     complete
     .text start:0x02111b3c end:0x02111bf0
 
-src/func_ov018_02111bf0.cpp:
+src/unnamed/ov018/0211/func_ov018_02111bf0.cpp:
     complete
     .text start:0x02111bf0 end:0x02111d28
 
-src/func_ov018_02111d28.cpp:
+src/unnamed/ov018/0211/func_ov018_02111d28.cpp:
     complete
     .text start:0x02111d28 end:0x02111e28
 
-src/func_ov018_02111e28.cpp:
+src/unnamed/ov018/0211/func_ov018_02111e28.cpp:
     complete
     .text start:0x02111e28 end:0x02111f1c
 
-src/func_ov018_02111f1c.cpp:
+src/unnamed/ov018/0211/func_ov018_02111f1c.cpp:
     complete
     .text start:0x02111f1c end:0x02111fac
 
-src/func_ov018_02111fac.c:
+src/unnamed/ov018/0211/func_ov018_02111fac.c:
     complete
     .text start:0x02111fac end:0x021121dc
 
-src/func_ov018_021121dc.cpp:
+src/unnamed/ov018/0211/func_ov018_021121dc.cpp:
     complete
     .text start:0x021121dc end:0x02112234
 
-src/func_ov018_02112234.c:
+src/unnamed/ov018/0211/func_ov018_02112234.c:
     complete
     .text start:0x02112234 end:0x021122ec
 
-src/func_ov018_021122ec.c:
+src/unnamed/ov018/0211/func_ov018_021122ec.c:
     complete
     .text start:0x021122ec end:0x0211235c
 
-src/func_ov018_0211235c.cpp:
+src/unnamed/ov018/0211/func_ov018_0211235c.cpp:
     complete
     .text start:0x0211235c end:0x02112398
 
-src/func_ov018_02112398.cpp:
+src/unnamed/ov018/0211/func_ov018_02112398.cpp:
     complete
     .text start:0x02112398 end:0x021123d0
 
-src/func_ov018_021123d0.c:
+src/unnamed/ov018/0211/func_ov018_021123d0.c:
     complete
     .text start:0x021123d0 end:0x021123ec
 
-src/_ZN13MotherPenguin16CleanupResourcesEv.cpp:
+src/game/actors/MotherPenguin/_ZN13MotherPenguin16CleanupResourcesEv.cpp:
     complete
     .text start:0x021123ec end:0x02112450
 
-src/_ZN13MotherPenguin16OnPendingDestroyEv.cpp:
+src/game/actors/MotherPenguin/_ZN13MotherPenguin16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02112450 end:0x02112454
 
-src/_ZN13MotherPenguin6RenderEv.cpp:
+src/game/actors/MotherPenguin/_ZN13MotherPenguin6RenderEv.cpp:
     complete
     .text start:0x02112454 end:0x02112480
 
-src/_ZN13MotherPenguin8BehaviorEv.cpp:
+src/game/actors/MotherPenguin/_ZN13MotherPenguin8BehaviorEv.cpp:
     complete
     .text start:0x02112480 end:0x021124d0
 
-src/_ZN13MotherPenguin13InitResourcesEv.cpp:
+src/game/actors/MotherPenguin/_ZN13MotherPenguin13InitResourcesEv.cpp:
     complete
     .text start:0x021124d0 end:0x0211267c
 
-src/MotherPenguin_Spawn.c:
+src/game/actors/MotherPenguin/MotherPenguin_Spawn.c:
     complete
     .text start:0x0211267c end:0x021126d4
 
-src/_ZN15PowerStarCreateD1Ev.cpp:
+src/game/actors/PowerStarCreate/_ZN15PowerStarCreateD1Ev.cpp:
     complete
     .text start:0x021126d4 end:0x021126f8
 
-src/_ZN15PowerStarCreateD0Ev.cpp:
+src/game/actors/PowerStarCreate/_ZN15PowerStarCreateD0Ev.cpp:
     complete
     .text start:0x021126f8 end:0x02112730
 
-src/_ZN15PowerStarCreate8BehaviorEv.cpp:
+src/game/actors/PowerStarCreate/_ZN15PowerStarCreate8BehaviorEv.cpp:
     complete
     .text start:0x02112730 end:0x0211278c
 
-src/PowerStarCreate_Spawn.c:
+src/game/actors/PowerStarCreate/PowerStarCreate_Spawn.c:
     complete
     .text start:0x0211278c end:0x021127bc
 
-src/_ZN8IceSheetD1Ev.cpp:
+src/game/actors/IceSheet/_ZN8IceSheetD1Ev.cpp:
     complete
     .text start:0x021127bc end:0x02112800
 
-src/_ZN8IceSheetD0Ev.cpp:
+src/game/actors/IceSheet/_ZN8IceSheetD0Ev.cpp:
     complete
     .text start:0x02112800 end:0x02112858
 
-src/_ZN8IceSheet15OnHitByMegaCharER6Player.cpp:
+src/game/actors/IceSheet/_ZN8IceSheet15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02112858 end:0x02112880
 
-src/_ZN8IceSheet4KillEv.cpp:
+src/game/actors/IceSheet/_ZN8IceSheet4KillEv.cpp:
     complete
     .text start:0x02112880 end:0x021128e0
 
-src/_ZN8IceSheet15OnGroundPoundedER8dActor_c.cpp:
+src/game/actors/IceSheet/_ZN8IceSheet15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x021128e0 end:0x02112924
 
-src/_ZN8IceSheet16CleanupResourcesEv.cpp:
+src/game/actors/IceSheet/_ZN8IceSheet16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112924 end:0x02112968
 
-src/_ZN8IceSheet6RenderEv.cpp:
+src/game/actors/IceSheet/_ZN8IceSheet6RenderEv.cpp:
     complete
     .text start:0x02112968 end:0x02112990
 
-src/_ZN8IceSheet8BehaviorEv.cpp:
+src/game/actors/IceSheet/_ZN8IceSheet8BehaviorEv.cpp:
     complete
     .text start:0x02112990 end:0x021129c0
 
-src/_ZN8IceSheet13InitResourcesEv.cpp:
+src/game/actors/IceSheet/_ZN8IceSheet13InitResourcesEv.cpp:
     complete
     .text start:0x021129c0 end:0x02112a44
 
-src/IceSheet_Spawn.c:
+src/game/actors/IceSheet/IceSheet_Spawn.c:
     complete
     .text start:0x02112a44 end:0x02112a74
 
-src/__sinit_ov018_02112c14.c:
+src/unnamed/ov018/0211/__sinit_ov018_02112c14.c:
     complete
     .init start:0x02112c14 end:0x02112c80
 
-src/__sinit_ov018_02112c80.cpp:
+src/unnamed/ov018/0211/__sinit_ov018_02112c80.cpp:
     complete
     .init start:0x02112c80 end:0x02112e00
 
-src/__sinit_ov018_02112e00.c:
+src/unnamed/ov018/0211/__sinit_ov018_02112e00.c:
     complete
     .init start:0x02112e00 end:0x02112e6c

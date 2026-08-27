@@ -177,8 +177,8 @@ class RealManifest(unittest.TestCase):
     def test_the_manifest_does_not_list_a_zero_size_alias(self):
         """The two halves must stay disjoint, or the CI line double-counts them."""
         rows = {r["src"] for r in BG.manifest_rows()}
-        for name in ("src/_dmul.c", "src/_ll_sdiv.c", "src/_s32_div_f.c",
-                     "src/_u32_div_f.c"):
+        for name in ("src/runtime/math/_dmul.c", "src/runtime/math/_ll_sdiv.c", "src/runtime/math/_s32_div_f.c",
+                     "src/runtime/math/_u32_div_f.c"):
             self.assertNotIn(name, rows, "handled by the derived half, not the manifest")
 
 

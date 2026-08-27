@@ -22,56 +22,56 @@
       "symbol": "_ZN6NumberD1Ev",
       "address": "0x020f0894",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN6NumberD1Ev.cpp",
+      "legacy_source": "src/game/actors/Number/_ZN6NumberD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN6NumberD0Ev",
       "address": "0x020f08cc",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN6NumberD0Ev.cpp",
+      "legacy_source": "src/game/actors/Number/_ZN6NumberD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "func_ov002_020f0918",
       "address": "0x020f0918",
       "size": "0x00000024",
-      "legacy_source": "src/func_ov002_020f0918.c",
+      "legacy_source": "src/unnamed/ov002/020f/func_ov002_020f0918.c",
       "ordinal": 2
     },
     {
       "symbol": "_ZN6Number16CleanupResourcesEv",
       "address": "0x020f093c",
       "size": "0x00000058",
-      "legacy_source": "src/_ZN6Number16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/Number/_ZN6Number16CleanupResourcesEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN6Number6RenderEv",
       "address": "0x020f0994",
       "size": "0x000000cc",
-      "legacy_source": "src/_ZN6Number6RenderEv.cpp",
+      "legacy_source": "src/game/actors/Number/_ZN6Number6RenderEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN6Number8BehaviorEv",
       "address": "0x020f0a60",
       "size": "0x00000174",
-      "legacy_source": "src/_ZN6Number8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/Number/_ZN6Number8BehaviorEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN6Number13InitResourcesEv",
       "address": "0x020f0bd4",
       "size": "0x000001bc",
-      "legacy_source": "src/_ZN6Number13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/Number/_ZN6Number13InitResourcesEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "Number_Spawn",
       "address": "0x020f0d90",
       "size": "0x00000040",
-      "legacy_source": "src/Number_Spawn.c",
+      "legacy_source": "src/game/actors/Number/Number_Spawn.c",
       "ordinal": 7
     }
   ],
@@ -113,14 +113,14 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN6NumberD1Ev.cpp",
-      "src/_ZN6NumberD0Ev.cpp",
-      "src/func_ov002_020f0918.c",
-      "src/_ZN6Number16CleanupResourcesEv.cpp",
-      "src/_ZN6Number6RenderEv.cpp",
-      "src/_ZN6Number8BehaviorEv.cpp",
-      "src/_ZN6Number13InitResourcesEv.cpp",
-      "src/Number_Spawn.c"
+      "src/game/actors/Number/_ZN6NumberD1Ev.cpp",
+      "src/game/actors/Number/_ZN6NumberD0Ev.cpp",
+      "src/unnamed/ov002/020f/func_ov002_020f0918.c",
+      "src/game/actors/Number/_ZN6Number16CleanupResourcesEv.cpp",
+      "src/game/actors/Number/_ZN6Number6RenderEv.cpp",
+      "src/game/actors/Number/_ZN6Number8BehaviorEv.cpp",
+      "src/game/actors/Number/_ZN6Number13InitResourcesEv.cpp",
+      "src/game/actors/Number/Number_Spawn.c"
     ],
     "extraInertImports": 71,
     "extraImportsWithNoHome": [],

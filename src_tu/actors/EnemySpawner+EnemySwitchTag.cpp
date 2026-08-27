@@ -16,18 +16,18 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020f15fc  src/_ZN14EnemySwitchTagD1Ev.cpp
+ *   [0] 0x020f15fc  src/game/actors/EnemySwitchTag/_ZN14EnemySwitchTagD1Ev.cpp
  *   [1] 0x020f162c  src/_ZN14EnemySwitchTagD0Ev.c
- *   [2] 0x020f1670  src/_ZN12EnemySpawnerD1Ev.cpp
- *   [3] 0x020f1694  src/_ZN12EnemySpawnerD0Ev.cpp
- *   [4] 0x020f16cc  src/_ZN14EnemySwitchTag16CleanupResourcesEv.cpp
- *   [5] 0x020f16ec  src/_ZN12EnemySpawner8BehaviorEv.cpp
- *   [6] 0x020f1760  src/_ZN14EnemySwitchTag8BehaviorEv.cpp
- *   [7] 0x020f1814  src/_ZN12EnemySpawner16CleanupResourcesEv.cpp
- *   [8] 0x020f1838  src/_ZN12EnemySpawner13InitResourcesEv.cpp
- *   [9] 0x020f1878  src/_ZN14EnemySwitchTag13InitResourcesEv.cpp
- *   [10] 0x020f1924  src/EnemySpawner_Spawn.c
- *   [11] 0x020f1954  src/EnemySwitchTag_Spawn.c
+ *   [2] 0x020f1670  src/game/actors/EnemySpawner/_ZN12EnemySpawnerD1Ev.cpp
+ *   [3] 0x020f1694  src/game/actors/EnemySpawner/_ZN12EnemySpawnerD0Ev.cpp
+ *   [4] 0x020f16cc  src/game/actors/EnemySwitchTag/_ZN14EnemySwitchTag16CleanupResourcesEv.cpp
+ *   [5] 0x020f16ec  src/game/actors/EnemySpawner/_ZN12EnemySpawner8BehaviorEv.cpp
+ *   [6] 0x020f1760  src/game/actors/EnemySwitchTag/_ZN14EnemySwitchTag8BehaviorEv.cpp
+ *   [7] 0x020f1814  src/game/actors/EnemySpawner/_ZN12EnemySpawner16CleanupResourcesEv.cpp
+ *   [8] 0x020f1838  src/game/actors/EnemySpawner/_ZN12EnemySpawner13InitResourcesEv.cpp
+ *   [9] 0x020f1878  src/game/actors/EnemySwitchTag/_ZN14EnemySwitchTag13InitResourcesEv.cpp
+ *   [10] 0x020f1924  src/game/actors/EnemySpawner/EnemySpawner_Spawn.c
+ *   [11] 0x020f1954  src/game/actors/EnemySwitchTag/EnemySwitchTag_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

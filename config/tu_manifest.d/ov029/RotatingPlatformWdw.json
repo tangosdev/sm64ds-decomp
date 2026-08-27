@@ -22,14 +22,14 @@
       "symbol": "_ZN19RotatingPlatformWdwD1Ev",
       "address": "0x02112080",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN19RotatingPlatformWdwD1Ev.cpp",
+      "legacy_source": "src/game/actors/RotatingPlatformWdw/_ZN19RotatingPlatformWdwD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN19RotatingPlatformWdwD0Ev",
       "address": "0x021120d0",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN19RotatingPlatformWdwD0Ev.cpp",
+      "legacy_source": "src/game/actors/RotatingPlatformWdw/_ZN19RotatingPlatformWdwD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -50,7 +50,7 @@
       "symbol": "RotatingPlatformWdw_Spawn",
       "address": "0x02112168",
       "size": "0x0000003c",
-      "legacy_source": "src/RotatingPlatformWdw_Spawn.c",
+      "legacy_source": "src/game/actors/RotatingPlatformWdw/RotatingPlatformWdw_Spawn.c",
       "ordinal": 4
     }
   ],

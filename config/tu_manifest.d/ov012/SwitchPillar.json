@@ -22,56 +22,56 @@
       "symbol": "_ZN12SwitchPillarD1Ev",
       "address": "0x021111a0",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN12SwitchPillarD1Ev.cpp",
+      "legacy_source": "src/game/actors/SwitchPillar/_ZN12SwitchPillarD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN12SwitchPillarD0Ev",
       "address": "0x021111e4",
       "size": "0x00000058",
-      "legacy_source": "src/_ZN12SwitchPillarD0Ev.cpp",
+      "legacy_source": "src/game/actors/SwitchPillar/_ZN12SwitchPillarD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN12SwitchPillar15OnGroundPoundedER8dActor_c",
       "address": "0x0211123c",
       "size": "0x000000b0",
-      "legacy_source": "src/_ZN12SwitchPillar15OnGroundPoundedER8dActor_c.cpp",
+      "legacy_source": "src/game/actors/SwitchPillar/_ZN12SwitchPillar15OnGroundPoundedER8dActor_c.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN12SwitchPillar16CleanupResourcesEv",
       "address": "0x021112ec",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN12SwitchPillar16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/SwitchPillar/_ZN12SwitchPillar16CleanupResourcesEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN12SwitchPillar6RenderEv",
       "address": "0x02111324",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN12SwitchPillar6RenderEv.cpp",
+      "legacy_source": "src/game/actors/SwitchPillar/_ZN12SwitchPillar6RenderEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN12SwitchPillar8BehaviorEv",
       "address": "0x0211134c",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN12SwitchPillar8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/SwitchPillar/_ZN12SwitchPillar8BehaviorEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN12SwitchPillar13InitResourcesEv",
       "address": "0x02111370",
       "size": "0x000000b0",
-      "legacy_source": "src/_ZN12SwitchPillar13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/SwitchPillar/_ZN12SwitchPillar13InitResourcesEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "SwitchPillar_Spawn",
       "address": "0x02111420",
       "size": "0x00000030",
-      "legacy_source": "src/SwitchPillar_Spawn.c",
+      "legacy_source": "src/game/actors/SwitchPillar/SwitchPillar_Spawn.c",
       "ordinal": 7
     }
   ],

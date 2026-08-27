@@ -4,190 +4,190 @@
     .ctor       start:0x0211242c end:0x02112444 kind:rodata align:4
     .data       start:0x02112460 end:0x02113180 kind:data align:32
     .bss        start:0x02113180 end:0x02113280 kind:bss align:32
-src/_ZN15FireSeaElevatorD1Ev.cpp:
+src/game/actors/FireSeaElevator/_ZN15FireSeaElevatorD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111e4
 
-src/_ZN15FireSeaElevatorD0Ev.cpp:
+src/game/actors/FireSeaElevator/_ZN15FireSeaElevatorD0Ev.cpp:
     complete
     .text start:0x021111e4 end:0x0211123c
 
-src/_ZN15FireSeaElevator16CleanupResourcesEv.cpp:
+src/game/actors/FireSeaElevator/_ZN15FireSeaElevator16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211123c end:0x02111274
 
-src/_ZN15FireSeaElevator6RenderEv.cpp:
+src/game/actors/FireSeaElevator/_ZN15FireSeaElevator6RenderEv.cpp:
     complete
     .text start:0x02111274 end:0x0211129c
 
-src/_ZN15FireSeaElevator8BehaviorEv.cpp:
+src/game/actors/FireSeaElevator/_ZN15FireSeaElevator8BehaviorEv.cpp:
     complete
     .text start:0x0211129c end:0x021113ec
 
-src/_ZN15FireSeaElevator13InitResourcesEv.cpp:
+src/game/actors/FireSeaElevator/_ZN15FireSeaElevator13InitResourcesEv.cpp:
     complete
     .text start:0x021113ec end:0x021114a8
 
-src/func_ov045_021114a8.cpp:
+src/unnamed/ov045/0211/func_ov045_021114a8.cpp:
     complete
     .text start:0x021114a8 end:0x021114c8
 
-src/func_ov045_021114c8.c:
+src/unnamed/ov045/0211/func_ov045_021114c8.c:
     complete
     .text start:0x021114c8 end:0x021114dc
 
-src/FireSeaElevator_Spawn.c:
+src/game/actors/FireSeaElevator/FireSeaElevator_Spawn.c:
     complete
     .text start:0x021114dc end:0x0211150c
 
-src/_ZN8PoleLiftD1Ev.cpp:
+src/game/actors/PoleLift/_ZN8PoleLiftD1Ev.cpp:
     complete
     .text start:0x0211150c end:0x02111558
 
-src/_ZN8PoleLiftD0Ev.cpp:
+src/game/actors/PoleLift/_ZN8PoleLiftD0Ev.cpp:
     complete
     .text start:0x02111558 end:0x021115b8
 
-src/_ZN8PoleLift16CleanupResourcesEv.cpp:
+src/game/actors/PoleLift/_ZN8PoleLift16CleanupResourcesEv.cpp:
     complete
     .text start:0x021115b8 end:0x021115f0
 
-src/_ZN8PoleLift6RenderEv.cpp:
+src/game/actors/PoleLift/_ZN8PoleLift6RenderEv.cpp:
     complete
     .text start:0x021115f0 end:0x02111618
 
-src/_ZN8PoleLift8BehaviorEv.cpp:
+src/game/actors/PoleLift/_ZN8PoleLift8BehaviorEv.cpp:
     complete
     .text start:0x02111618 end:0x02111738
 
-src/_ZN8PoleLift13InitResourcesEv.cpp:
+src/game/actors/PoleLift/_ZN8PoleLift13InitResourcesEv.cpp:
     complete
     .text start:0x02111738 end:0x02111808
 
-src/PoleLift_Spawn.c:
+src/game/actors/PoleLift/PoleLift_Spawn.c:
     complete
     .text start:0x02111808 end:0x02111840
 
-src/_ZN17ExtendingPlatformD1Ev.cpp:
+src/game/actors/ExtendingPlatform/_ZN17ExtendingPlatformD1Ev.cpp:
     complete
     .text start:0x02111840 end:0x02111878
 
-src/_ZN17ExtendingPlatformD0Ev.cpp:
+src/game/actors/ExtendingPlatform/_ZN17ExtendingPlatformD0Ev.cpp:
     complete
     .text start:0x02111878 end:0x021118c4
 
-src/_ZN17ExtendingPlatform23UpdateColliderTransformEv.cpp:
+src/game/actors/ExtendingPlatform/_ZN17ExtendingPlatform23UpdateColliderTransformEv.cpp:
     complete
     .text start:0x021118c4 end:0x021118f8
 
-src/_ZN17ExtendingPlatform20UpdateModelTransformEv.cpp:
+src/game/actors/ExtendingPlatform/_ZN17ExtendingPlatform20UpdateModelTransformEv.cpp:
     complete
     .text start:0x021118f8 end:0x02111938
 
-src/_ZN17ExtendingPlatform16CleanupResourcesEv.cpp:
+src/game/actors/ExtendingPlatform/_ZN17ExtendingPlatform16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111938 end:0x02111970
 
-src/_ZN17ExtendingPlatform16OnPendingDestroyEv.cpp:
+src/game/actors/ExtendingPlatform/_ZN17ExtendingPlatform16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02111970 end:0x02111974
 
-src/_ZN17ExtendingPlatform6RenderEv.cpp:
+src/game/actors/ExtendingPlatform/_ZN17ExtendingPlatform6RenderEv.cpp:
     complete
     .text start:0x02111974 end:0x021119c0
 
-src/_ZN17ExtendingPlatform8BehaviorEv.cpp:
+src/game/actors/ExtendingPlatform/_ZN17ExtendingPlatform8BehaviorEv.cpp:
     complete
     .text start:0x021119c0 end:0x02111a30
 
-src/_ZN17ExtendingPlatform13InitResourcesEv.cpp:
+src/game/actors/ExtendingPlatform/_ZN17ExtendingPlatform13InitResourcesEv.cpp:
     complete
     .text start:0x02111a30 end:0x02111ad4
 
-src/ExtendingPlatform_Spawn.c:
+src/game/actors/ExtendingPlatform/ExtendingPlatform_Spawn.c:
     complete
     .text start:0x02111ad4 end:0x02111b14
 
-src/_ZN16FloatingFloorBfsD1Ev.cpp:
+src/game/actors/FloatingFloorBfs/_ZN16FloatingFloorBfsD1Ev.cpp:
     complete
     .text start:0x02111b14 end:0x02111b64
 
-src/_ZN16FloatingFloorBfsD0Ev.cpp:
+src/game/actors/FloatingFloorBfs/_ZN16FloatingFloorBfsD0Ev.cpp:
     complete
     .text start:0x02111b64 end:0x02111bc8
 
-src/_ZN16FloatingFloorBfs16CleanupResourcesEv.cpp:
+src/game/actors/FloatingFloorBfs/_ZN16FloatingFloorBfs16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111bc8 end:0x02111bdc
 
-src/_ZN16FloatingFloorBfs13InitResourcesEv.cpp:
+src/game/actors/FloatingFloorBfs/_ZN16FloatingFloorBfs13InitResourcesEv.cpp:
     complete
     .text start:0x02111bdc end:0x02111bf4
 
-src/FloatingFloorBfs_Spawn.c:
+src/game/actors/FloatingFloorBfs/FloatingFloorBfs_Spawn.c:
     complete
     .text start:0x02111bf4 end:0x02111c30
 
-src/_ZN18TiltingPlatformBfsD1Ev.cpp:
+src/game/actors/TiltingPlatformBfs/_ZN18TiltingPlatformBfsD1Ev.cpp:
     complete
     .text start:0x02111c30 end:0x02111c80
 
-src/_ZN18TiltingPlatformBfsD0Ev.cpp:
+src/game/actors/TiltingPlatformBfs/_ZN18TiltingPlatformBfsD0Ev.cpp:
     complete
     .text start:0x02111c80 end:0x02111ce4
 
-src/_ZN18TiltingPlatformBfs16CleanupResourcesEv.cpp:
+src/game/actors/TiltingPlatformBfs/_ZN18TiltingPlatformBfs16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111ce4 end:0x02111cf8
 
-src/_ZN18TiltingPlatformBfs13InitResourcesEv.cpp:
+src/game/actors/TiltingPlatformBfs/_ZN18TiltingPlatformBfs13InitResourcesEv.cpp:
     complete
     .text start:0x02111cf8 end:0x02111d0c
 
-src/TiltingPlatformBfs_Spawn.c:
+src/game/actors/TiltingPlatformBfs/TiltingPlatformBfs_Spawn.c:
     complete
     .text start:0x02111d0c end:0x02111d48
 
-src/_ZN12FallBlockBfsD1Ev.cpp:
+src/game/actors/FallBlockBfs/_ZN12FallBlockBfsD1Ev.cpp:
     complete
     .text start:0x02111d48 end:0x02111d98
 
-src/_ZN12FallBlockBfsD0Ev.cpp:
+src/game/actors/FallBlockBfs/_ZN12FallBlockBfsD0Ev.cpp:
     complete
     .text start:0x02111d98 end:0x02111dfc
 
-src/_ZN12FallBlockBfs16CleanupResourcesEv.cpp:
+src/game/actors/FallBlockBfs/_ZN12FallBlockBfs16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111dfc end:0x02111e10
 
-src/_ZN12FallBlockBfs13InitResourcesEv.cpp:
+src/game/actors/FallBlockBfs/_ZN12FallBlockBfs13InitResourcesEv.cpp:
     complete
     .text start:0x02111e10 end:0x02111e24
 
-src/FallBlockBfs_Spawn.c:
+src/game/actors/FallBlockBfs/FallBlockBfs_Spawn.c:
     complete
     .text start:0x02111e24 end:0x02111e60
 
-src/__sinit_ov045_021121a8.c:
+src/unnamed/ov045/0211/__sinit_ov045_021121a8.c:
     complete
     .init start:0x021121a8 end:0x02112214
 
-src/__sinit_ov045_02112214.c:
+src/unnamed/ov045/0211/__sinit_ov045_02112214.c:
     complete
     .init start:0x02112214 end:0x02112280
 
-src/__sinit_ov045_02112280.c:
+src/unnamed/ov045/0211/__sinit_ov045_02112280.c:
     complete
     .init start:0x02112280 end:0x021122ec
 
-src/__sinit_ov045_021122ec.c:
+src/unnamed/ov045/0211/__sinit_ov045_021122ec.c:
     complete
     .init start:0x021122ec end:0x02112358
 
-src/__sinit_ov045_02112358.c:
+src/unnamed/ov045/0211/__sinit_ov045_02112358.c:
     complete
     .init start:0x02112358 end:0x021123c0
 
-src/__sinit_ov045_021123c0.c:
+src/unnamed/ov045/0211/__sinit_ov045_021123c0.c:
     complete
     .init start:0x021123c0 end:0x0211242c

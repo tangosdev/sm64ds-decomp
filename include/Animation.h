@@ -54,8 +54,8 @@ struct Animation {
     /* --- vtable, in ROM order: the destructor pair and nothing else. --- */
     virtual ~Animation();                /* slots 0 (D1), 1 (D0) */
 
-    /* DECLARED, never defined as a method here -- src/_ZN9AnimationC1Ev.cpp
-       owns C1 and src/_ZN9AnimationC2Ev.cpp the base-subobject variant
+    /* DECLARED, never defined as a method here -- src/runtime/graphics/Animation/_ZN9AnimationC1Ev.cpp
+       owns C1 and src/runtime/graphics/Animation/_ZN9AnimationC2Ev.cpp the base-subobject variant
        (notes/ctor-migration.md section 2). Declaring it is what makes
        MaterialChanger/TextureTransformer/TextureSequence (and ModelAnim's
        base step) emit `bl _ZN9AnimationC2Ev' instead of synthesising inline. */

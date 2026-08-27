@@ -162,7 +162,11 @@ def target_for(path: pathlib.Path, actors: set[str]) -> pathlib.Path:
         return SRC / "ui" / "messages" / path.name
     if lower_rel.startswith("runtime/graphics/fader"):
         return SRC / "runtime" / "graphics" / "fader" / path.name
-    if pathlib.PurePosixPath(rel).parts[0] in {"runtime", "game", "ui", "minigames"}:
+    parts = pathlib.PurePosixPath(rel).parts
+    if len(parts) >= 3 and tuple(part.lower() for part in parts[:2]) == ("runtime", "graphics") \
+            and parts[2].lower() in {"fader", "faderbrightness", "fadercolor", "faderwipe"}:
+        return SRC / "runtime" / "graphics" / "fader" / path.name
+    if parts[0] in {"runtime", "game", "ui", "minigames"}:
         return path
     if lower_rel.startswith("unnamed/") and len(pathlib.PurePosixPath(rel).parts) >= 4:
         return path
@@ -173,6 +177,8 @@ def target_for(path: pathlib.Path, actors: set[str]) -> pathlib.Path:
         return SRC / "unnamed" / module / band / path.name
 
     cls = class_for(path)
+    if cls in {"Fader", "FaderBrightness", "FaderColor", "FaderWipe"}:
+        return SRC / "runtime" / "graphics" / "fader" / path.name
     domain = domain_for(stem, cls, actors)
     # A class directory gives readers a usable method list and keeps large domain
     # buckets browsable.  A reconstructed source owning several classes stays at the

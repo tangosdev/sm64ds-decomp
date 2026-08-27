@@ -28,7 +28,7 @@ files, none of which is a method of the class.
 | Offset | Name | Evidence |
 | --- | --- | --- |
 | 0x000 | `mResourceFile` | `_ZN8Particle10SysTracker10InitialiseEv` stores either `data_02075f14` (the file, used in place) or a heap buffer it fills with `DecompressLZ16`, then hands it to the manager via `func_0204a17c`. `_ZN8Particle10SysTrackerD1Ev` frees it through `Memory::Deallocate` *only* when it is not `data_02075f14` — i.e. only when the tracker owns the decompressed copy. Was `pad_000[0x4]`. |
-| 0x004 | `mManager` | The `Particle::Manager`. `Initialise` allocates it with `func_0204a4c8(...)` and pokes `0x8000` into its `+0x30`; `_ZN8Particle9RenderAllEv` and `_ZN8Particle10SysTracker6UpdateEv` pass it straight to the render/update entry points; `_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_` and `src/func_02021d1c.cpp` call `Particle::Manager::AddSystem` on it. Was `unk_004` typed `s32`, now `void *`. |
+| 0x004 | `mManager` | The `Particle::Manager`. `Initialise` allocates it with `func_0204a4c8(...)` and pokes `0x8000` into its `+0x30`; `_ZN8Particle9RenderAllEv` and `_ZN8Particle10SysTracker6UpdateEv` pass it straight to the render/update entry points; `_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_` and `src/unnamed/arm9/0202/func_02021d1c.cpp` call `Particle::Manager::AddSystem` on it. Was `unk_004` typed `s32`, now `void *`. |
 | 0x008 | `mContents` | A real nested class, not a guess: `_ZN8Particle6System12FromUniqueIDEj` calls `_ZNK8Particle10SysTracker8Contents8FindDataEj(this + 8, uniqueID)` — the mangled callee names `Particle::SysTracker::Contents` and puts it at `+8`. The constructor and destructor run `func_02021c90` / `func_02021b98` on the same address, and `SysTracker::Update` runs `func_02021bec`. Was `unk_008`. |
 
 ### The callback bank, 0x750 upward
@@ -45,9 +45,9 @@ subobject. Three call sites give both halves a role:
 
 | ID slot | Callback | Effect | Proving file |
 | --- | --- | --- | --- |
-| 0x750 `mRunningSlidingDustSystemID` | 0x754 `mRunningSlidingDustCallback` | 0xda | `src/_ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_.c` |
-| 0x768 `mBigSplashSystemID` | 0x76c `mBigSplashCallback` | 0xdd | `src/_ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_.c` |
-| 0x78c `mRippleSystemID` | 0x790 `mRippleCallback` | 0x109 | `src/_ZN8Particle6System9NewRippleE5Fix12IiES2_S2_.c` |
+| 0x750 `mRunningSlidingDustSystemID` | 0x754 `mRunningSlidingDustCallback` | 0xda | `src/game/actors/Particle/_ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_.c` |
+| 0x768 `mBigSplashSystemID` | 0x76c `mBigSplashCallback` | 0xdd | `src/game/actors/Particle/_ZN8Particle6System12NewBigSplashE5Fix12IiES2_S2_.c` |
+| 0x78c `mRippleSystemID` | 0x790 `mRippleCallback` | 0x109 | `src/game/actors/Particle/_ZN8Particle6System9NewRippleE5Fix12IiES2_S2_.c` |
 
 Two more callbacks are named without an ID slot, because their `New*` wrapper
 takes the unique ID from the caller instead:
@@ -90,11 +90,11 @@ builds 0x7b4, 0x7c4, 0x7d4, 0x7e4.
 different fields, and `SomeGlobal`). All but one now declare it
 `struct Particle *` and reach members by name; every one was re-verified
 byte-identical. The exception is
-`src/_ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE.cpp`, which
+`src/game/actors/Particle/_ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE.cpp`, which
 opens `namespace Particle { ... }` — including `Particle.h` there makes the
 struct name and the namespace name collide, so it keeps its local shadow.
 
-`src/_ZN8Particle14SimpleCallbackC2Ev.cpp` was typed `struct Particle *self`
+`src/game/actors/Particle/_ZN8Particle14SimpleCallbackC2Ev.cpp` was typed `struct Particle *self`
 and reached the callback's own `s16` as `&self->unk_004`. That was never a
 `SysTracker`: it is a `Particle::SimpleCallback`, and the two only agreed
 because both objects start with a pointer-sized word. It now takes `char *`.
@@ -102,8 +102,8 @@ because both objects start with a pointer-sized word. It now takes `char *`.
 ### The third shadow — collapsed onto the real names
 
 `include/Particle__SysTracker.h` is a *third* declaration of this class, and it
-is what `src/_ZN8Particle10SysTracker10InitialiseEv.cpp` and
-`src/_ZN8Particle10SysTracker6UpdateEv.cpp` include. A later pass that owned the
+is what `src/game/actors/Particle/_ZN8Particle10SysTracker10InitialiseEv.cpp` and
+`src/game/actors/Particle/_ZN8Particle10SysTracker6UpdateEv.cpp` include. A later pass that owned the
 file finished it: its three fields now read `mResourceFile` / `mManager` /
 `mContents`, with the same types `include/Particle.h` carries, so all three
 declarations of the class spell the head identically.
@@ -122,7 +122,7 @@ with `build_pin`'s `verify`, from `tools/build_pin.py`).
 What is still NOT merged is the three *declarations* into one. `include/Stage.h`
 must keep its own copy because `Stage` embeds the object by value and needs the
 declared-never-defined destructor, and
-`src/_ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE.cpp` opens
+`src/game/actors/Particle/_ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE.cpp` opens
 `namespace Particle { ... }`, so a header declaring a struct of that name
 collides there. Those two reasons are unchanged by this pass; only the names
 converged. `include/Stage.h`'s own header comment still describes the third

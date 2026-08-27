@@ -4,366 +4,366 @@
     .ctor       start:0x021277cc end:0x021277d8 kind:rodata align:4
     .data       start:0x021277e0 end:0x02127b20 kind:data align:32
     .bss        start:0x02127b20 end:0x02127d40 kind:bss align:32
-src/_ZN6LakituD1Ev.cpp:
+src/game/actors/Lakitu/_ZN6LakituD1Ev.cpp:
     complete
     .text start:0x02123740 end:0x02123798
 
-src/_ZN6LakituD0Ev.cpp:
+src/game/actors/Lakitu/_ZN6LakituD0Ev.cpp:
     complete
     .text start:0x02123798 end:0x02123804
 
-src/_ZN6Lakitu13OnYoshiTryEatEv.cpp:
+src/game/actors/Lakitu/_ZN6Lakitu13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02123804 end:0x0212380c
 
-src/_ZN6Lakitu16OnAimedAtWithEggEv.cpp:
+src/game/actors/Lakitu/_ZN6Lakitu16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x0212380c end:0x02123814
 
-src/func_ov077_02123814.c:
+src/unnamed/ov077/0212/func_ov077_02123814.c:
     complete
     .text start:0x02123814 end:0x02123880
 
-src/func_ov077_02123880.c:
+src/unnamed/ov077/0212/func_ov077_02123880.c:
     complete
     .text start:0x02123880 end:0x021238bc
 
-src/func_ov077_021238bc.cpp:
+src/unnamed/ov077/0212/func_ov077_021238bc.cpp:
     complete
     .text start:0x021238bc end:0x0212390c
 
-src/func_ov077_0212390c.cpp:
+src/unnamed/ov077/0212/func_ov077_0212390c.cpp:
     complete
     .text start:0x0212390c end:0x02123a1c
 
-src/func_ov077_02123a1c.cpp:
+src/unnamed/ov077/0212/func_ov077_02123a1c.cpp:
     complete
     .text start:0x02123a1c end:0x02123a74
 
-src/func_ov077_02123a74.cpp:
+src/unnamed/ov077/0212/func_ov077_02123a74.cpp:
     complete
     .text start:0x02123a74 end:0x02123c6c
 
-src/func_ov077_02123c6c.cpp:
+src/unnamed/ov077/0212/func_ov077_02123c6c.cpp:
     complete
     .text start:0x02123c6c end:0x02123d40
 
-src/func_ov077_02123d40.cpp:
+src/unnamed/ov077/0212/func_ov077_02123d40.cpp:
     complete
     .text start:0x02123d40 end:0x02123fcc
 
-src/func_ov077_02123fcc.c:
+src/unnamed/ov077/0212/func_ov077_02123fcc.c:
     complete
     .text start:0x02123fcc end:0x02124038
 
-src/func_ov077_02124038.cpp:
+src/unnamed/ov077/0212/func_ov077_02124038.cpp:
     complete
     .text start:0x02124038 end:0x02124118
 
-src/func_ov077_02124118.cpp:
+src/unnamed/ov077/0212/func_ov077_02124118.cpp:
     complete
     .text start:0x02124118 end:0x021241ac
 
-src/func_ov077_021241ac.c:
+src/unnamed/ov077/0212/func_ov077_021241ac.c:
     complete
     .text start:0x021241ac end:0x021242f0
 
-src/func_ov077_021242f0.c:
+src/unnamed/ov077/0212/func_ov077_021242f0.c:
     complete
     .text start:0x021242f0 end:0x02124394
 
-src/func_ov077_02124394.c:
+src/unnamed/ov077/0212/func_ov077_02124394.c:
     complete
     .text start:0x02124394 end:0x021243c0
 
-src/func_ov077_021243c0.cpp:
+src/unnamed/ov077/0212/func_ov077_021243c0.cpp:
     complete
     .text start:0x021243c0 end:0x021244d4
 
-src/func_ov077_021244d4.cpp:
+src/unnamed/ov077/0212/func_ov077_021244d4.cpp:
     complete
     .text start:0x021244d4 end:0x02124564
 
-src/func_ov077_02124564.c:
+src/unnamed/ov077/0212/func_ov077_02124564.c:
     complete
     .text start:0x02124564 end:0x02124698
 
-src/func_ov077_02124698.c:
+src/unnamed/ov077/0212/func_ov077_02124698.c:
     complete
     .text start:0x02124698 end:0x02124718
 
-src/func_ov077_02124718.cpp:
+src/unnamed/ov077/0212/func_ov077_02124718.cpp:
     complete
     .text start:0x02124718 end:0x02124754
 
-src/func_ov077_02124754.cpp:
+src/unnamed/ov077/0212/func_ov077_02124754.cpp:
     complete
     .text start:0x02124754 end:0x0212478c
 
-src/func_ov077_0212478c.c:
+src/unnamed/ov077/0212/func_ov077_0212478c.c:
     complete
     .text start:0x0212478c end:0x021247a8
 
-src/_ZN6Lakitu16CleanupResourcesEv.cpp:
+src/game/actors/Lakitu/_ZN6Lakitu16CleanupResourcesEv.cpp:
     complete
     .text start:0x021247a8 end:0x02124824
 
-src/_ZN6Lakitu16OnPendingDestroyEv.cpp:
+src/game/actors/Lakitu/_ZN6Lakitu16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02124824 end:0x02124828
 
-src/_ZN6Lakitu6RenderEv.cpp:
+src/game/actors/Lakitu/_ZN6Lakitu6RenderEv.cpp:
     complete
     .text start:0x02124828 end:0x021248b8
 
-src/_ZN6Lakitu8BehaviorEv.cpp:
+src/game/actors/Lakitu/_ZN6Lakitu8BehaviorEv.cpp:
     complete
     .text start:0x021248b8 end:0x02124908
 
-src/_ZN6Lakitu13InitResourcesEv.cpp:
+src/game/actors/Lakitu/_ZN6Lakitu13InitResourcesEv.cpp:
     complete
     .text start:0x02124908 end:0x02124aa4
 
-src/_ZN6Lakitu13OnTurnIntoEggER6Player.cpp:
+src/game/actors/Lakitu/_ZN6Lakitu13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02124aa4 end:0x02124b04
 
-src/Lakitu_Spawn.c:
+src/game/actors/Lakitu/Lakitu_Spawn.c:
     complete
     .text start:0x02124b04 end:0x02124b64
 
-src/_ZN5SpinyD1Ev.cpp:
+src/game/actors/Spiny/_ZN5SpinyD1Ev.cpp:
     complete
     .text start:0x02124b64 end:0x02124bb4
 
-src/_ZN5SpinyD0Ev.cpp:
+src/game/actors/Spiny/_ZN5SpinyD0Ev.cpp:
     complete
     .text start:0x02124bb4 end:0x02124c18
 
-src/_ZN5Spiny13OnYoshiTryEatEv.cpp:
+src/game/actors/Spiny/_ZN5Spiny13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02124c18 end:0x02124c20
 
-src/_ZN5Spiny16OnAimedAtWithEggEv.cpp:
+src/game/actors/Spiny/_ZN5Spiny16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02124c20 end:0x02124c28
 
-src/func_ov077_02124c28.cpp:
+src/unnamed/ov077/0212/func_ov077_02124c28.cpp:
     complete
     .text start:0x02124c28 end:0x02124ce4
 
-src/func_ov077_02124ce4.c:
+src/unnamed/ov077/0212/func_ov077_02124ce4.c:
     complete
     .text start:0x02124ce4 end:0x02124d08
 
-src/func_ov077_02124d08.cpp:
+src/unnamed/ov077/0212/func_ov077_02124d08.cpp:
     complete
     .text start:0x02124d08 end:0x02124eb0
 
-src/func_ov077_02124eb0.cpp:
+src/unnamed/ov077/0212/func_ov077_02124eb0.cpp:
     complete
     .text start:0x02124eb0 end:0x021250a8
 
-src/func_ov077_021250a8.cpp:
+src/unnamed/ov077/0212/func_ov077_021250a8.cpp:
     complete
     .text start:0x021250a8 end:0x021251d0
 
-src/func_ov077_021251d0.cpp:
+src/unnamed/ov077/0212/func_ov077_021251d0.cpp:
     complete
     .text start:0x021251d0 end:0x02125290
 
-src/func_ov077_02125290.c:
+src/unnamed/ov077/0212/func_ov077_02125290.c:
     complete
     .text start:0x02125290 end:0x02125304
 
-src/func_ov077_02125304.cpp:
+src/unnamed/ov077/0212/func_ov077_02125304.cpp:
     complete
     .text start:0x02125304 end:0x021253a4
 
-src/func_ov077_021253a4.cpp:
+src/unnamed/ov077/0212/func_ov077_021253a4.cpp:
     complete
     .text start:0x021253a4 end:0x02125480
 
-src/func_ov077_02125480.cpp:
+src/unnamed/ov077/0212/func_ov077_02125480.cpp:
     complete
     .text start:0x02125480 end:0x02125550
 
-src/func_ov077_02125550.cpp:
+src/unnamed/ov077/0212/func_ov077_02125550.cpp:
     complete
     .text start:0x02125550 end:0x021256b4
 
-src/func_ov077_021256b4.c:
+src/unnamed/ov077/0212/func_ov077_021256b4.c:
     complete
     .text start:0x021256b4 end:0x02125830
 
-src/func_ov077_02125830.c:
+src/unnamed/ov077/0212/func_ov077_02125830.c:
     complete
     .text start:0x02125830 end:0x021258dc
 
-src/func_ov077_021258dc.c:
+src/unnamed/ov077/0212/func_ov077_021258dc.c:
     complete
     .text start:0x021258dc end:0x02125908
 
-src/func_ov077_02125908.c:
+src/unnamed/ov077/0212/func_ov077_02125908.c:
     complete
     .text start:0x02125908 end:0x02125a0c
 
-src/func_ov077_02125a0c.c:
+src/unnamed/ov077/0212/func_ov077_02125a0c.c:
     complete
     .text start:0x02125a0c end:0x02125a54
 
-src/func_ov077_02125a54.c:
+src/unnamed/ov077/0212/func_ov077_02125a54.c:
     complete
     .text start:0x02125a54 end:0x02125b1c
 
-src/func_ov077_02125b1c.cpp:
+src/unnamed/ov077/0212/func_ov077_02125b1c.cpp:
     complete
     .text start:0x02125b1c end:0x02125bb4
 
-src/func_ov077_02125bb4.c:
+src/unnamed/ov077/0212/func_ov077_02125bb4.c:
     complete
     .text start:0x02125bb4 end:0x02125dd4
 
-src/func_ov077_02125dd4.c:
+src/unnamed/ov077/0212/func_ov077_02125dd4.c:
     complete
     .text start:0x02125dd4 end:0x02125e20
 
-src/func_ov077_02125e20.cpp:
+src/unnamed/ov077/0212/func_ov077_02125e20.cpp:
     complete
     .text start:0x02125e20 end:0x02125e5c
 
-src/func_ov077_02125e5c.cpp:
+src/unnamed/ov077/0212/func_ov077_02125e5c.cpp:
     complete
     .text start:0x02125e5c end:0x02125e94
 
-src/func_ov077_02125e94.c:
+src/unnamed/ov077/0212/func_ov077_02125e94.c:
     complete
     .text start:0x02125e94 end:0x02125eb0
 
-src/_ZN5Spiny16CleanupResourcesEv.cpp:
+src/game/actors/Spiny/_ZN5Spiny16CleanupResourcesEv.cpp:
     complete
     .text start:0x02125eb0 end:0x02125eec
 
-src/_ZN5Spiny16OnPendingDestroyEv.cpp:
+src/game/actors/Spiny/_ZN5Spiny16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02125eec end:0x02125ef0
 
-src/_ZN5Spiny6RenderEv.cpp:
+src/game/actors/Spiny/_ZN5Spiny6RenderEv.cpp:
     complete
     .text start:0x02125ef0 end:0x02125f68
 
-src/_ZN5Spiny8BehaviorEv.cpp:
+src/game/actors/Spiny/_ZN5Spiny8BehaviorEv.cpp:
     complete
     .text start:0x02125f68 end:0x02126058
 
-src/_ZN5Spiny13InitResourcesEv.cpp:
+src/game/actors/Spiny/_ZN5Spiny13InitResourcesEv.cpp:
     complete
     .text start:0x02126058 end:0x02126194
 
-src/_ZN5Spiny13OnTurnIntoEggER6Player.cpp:
+src/game/actors/Spiny/_ZN5Spiny13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02126194 end:0x021261f4
 
-src/Spiny_Spawn.c:
+src/game/actors/Spiny/Spiny_Spawn.c:
     complete
     .text start:0x021261f4 end:0x0212624c
 
-src/_ZN7HeaveHoD1Ev.cpp:
+src/game/actors/HeaveHo/_ZN7HeaveHoD1Ev.cpp:
     complete
     .text start:0x0212624c end:0x0212629c
 
-src/_ZN7HeaveHoD0Ev.cpp:
+src/game/actors/HeaveHo/_ZN7HeaveHoD0Ev.cpp:
     complete
     .text start:0x0212629c end:0x02126300
 
-src/func_ov077_02126300.c:
+src/unnamed/ov077/0212/func_ov077_02126300.c:
     complete
     .text start:0x02126300 end:0x02126528
 
-src/func_ov077_02126528.cpp:
+src/unnamed/ov077/0212/func_ov077_02126528.cpp:
     complete
     .text start:0x02126528 end:0x02126640
 
-src/func_ov077_02126640.cpp:
+src/unnamed/ov077/0212/func_ov077_02126640.cpp:
     complete
     .text start:0x02126640 end:0x02126758
 
-src/func_ov077_02126758.cpp:
+src/unnamed/ov077/0212/func_ov077_02126758.cpp:
     complete
     .text start:0x02126758 end:0x0212679c
 
-src/func_ov077_0212679c.c:
+src/unnamed/ov077/0212/func_ov077_0212679c.c:
     complete
     .text start:0x0212679c end:0x02126930
 
-src/func_ov077_02126930.cpp:
+src/unnamed/ov077/0212/func_ov077_02126930.cpp:
     complete
     .text start:0x02126930 end:0x021269a8
 
-src/func_ov077_021269a8.cpp:
+src/unnamed/ov077/0212/func_ov077_021269a8.cpp:
     complete
     .text start:0x021269a8 end:0x02126a04
 
-src/func_ov077_02126a04.c:
+src/unnamed/ov077/0212/func_ov077_02126a04.c:
     complete
     .text start:0x02126a04 end:0x02126a50
 
-src/func_ov077_02126a50.c:
+src/unnamed/ov077/0212/func_ov077_02126a50.c:
     complete
     .text start:0x02126a50 end:0x02126a84
 
-src/func_ov077_02126a84.c:
+src/unnamed/ov077/0212/func_ov077_02126a84.c:
     complete
     .text start:0x02126a84 end:0x02126ad0
 
-src/func_ov077_02126ad0.c:
+src/unnamed/ov077/0212/func_ov077_02126ad0.c:
     complete
     .text start:0x02126ad0 end:0x02126cd4
 
-src/func_ov077_02126cd4.cpp:
+src/unnamed/ov077/0212/func_ov077_02126cd4.cpp:
     complete
     .text start:0x02126cd4 end:0x02126d5c
 
-src/func_ov077_02126d5c.cpp:
+src/unnamed/ov077/0212/func_ov077_02126d5c.cpp:
     complete
     .text start:0x02126d5c end:0x02126dac
 
-src/func_ov077_02126dac.c:
+src/unnamed/ov077/0212/func_ov077_02126dac.c:
     complete
     .text start:0x02126dac end:0x02126dec
 
-src/_ZN7HeaveHo16CleanupResourcesEv.cpp:
+src/game/actors/HeaveHo/_ZN7HeaveHo16CleanupResourcesEv.cpp:
     complete
     .text start:0x02126dec end:0x02126e34
 
-src/_ZN7HeaveHo16OnPendingDestroyEv.cpp:
+src/game/actors/HeaveHo/_ZN7HeaveHo16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02126e34 end:0x02126e38
 
-src/_ZN7HeaveHo6RenderEv.cpp:
+src/game/actors/HeaveHo/_ZN7HeaveHo6RenderEv.cpp:
     complete
     .text start:0x02126e38 end:0x02126e88
 
-src/_ZN7HeaveHo8BehaviorEv.cpp:
+src/game/actors/HeaveHo/_ZN7HeaveHo8BehaviorEv.cpp:
     complete
     .text start:0x02126e88 end:0x0212706c
 
-src/_ZN7HeaveHo13InitResourcesEv.cpp:
+src/game/actors/HeaveHo/_ZN7HeaveHo13InitResourcesEv.cpp:
     complete
     .text start:0x0212706c end:0x021271d4
 
-src/HeaveHo_Spawn.c:
+src/game/actors/HeaveHo/HeaveHo_Spawn.c:
     complete
     .text start:0x021271d4 end:0x02127230
 
-src/__sinit_ov077_02127240.c:
+src/unnamed/ov077/0212/__sinit_ov077_02127240.c:
     complete
     .init start:0x02127240 end:0x0212749c
 
-src/__sinit_ov077_0212749c.c:
+src/unnamed/ov077/0212/__sinit_ov077_0212749c.c:
     complete
     .init start:0x0212749c end:0x021275fc
 
-src/__sinit_ov077_021275fc.c:
+src/unnamed/ov077/0212/__sinit_ov077_021275fc.c:
     complete
     .init start:0x021275fc end:0x021277cc

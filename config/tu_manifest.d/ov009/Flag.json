@@ -22,7 +22,7 @@
       "symbol": "_ZN4FlagD1Ev",
       "address": "0x02112078",
       "size": "0x00000030",
-      "legacy_source": "src/_ZN4FlagD1Ev.cpp",
+      "legacy_source": "src/game/actors/Flag/_ZN4FlagD1Ev.cpp",
       "ordinal": 0
     },
     {
@@ -43,28 +43,28 @@
       "symbol": "_ZN4Flag6RenderEv",
       "address": "0x0211211c",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN4Flag6RenderEv.cpp",
+      "legacy_source": "src/game/actors/Flag/_ZN4Flag6RenderEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN4Flag8BehaviorEv",
       "address": "0x02112144",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN4Flag8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/Flag/_ZN4Flag8BehaviorEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN4Flag13InitResourcesEv",
       "address": "0x02112190",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN4Flag13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/Flag/_ZN4Flag13InitResourcesEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "Flag_Spawn",
       "address": "0x021121f0",
       "size": "0x00000038",
-      "legacy_source": "src/Flag_Spawn.c",
+      "legacy_source": "src/game/actors/Flag/Flag_Spawn.c",
       "ordinal": 6
     }
   ],

@@ -12,7 +12,7 @@ genuinely overlay-ambiguous are now settled.**
 
 ## 1. The premise the whole thing rests on
 
-`LoadOverlay` (`src/LoadOverlay.c`) keeps a 12-entry table of resident overlays and
+`LoadOverlay` (`src/runtime/filesystem/LoadOverlay.c`) keeps a 12-entry table of resident overlays and
 refuses to create an overlap:
 
 ```c
@@ -54,7 +54,7 @@ Note what this does **not** say: ov000 ends at `0x020BF4E0` and ov006 starts at
 
 ## 3. ov000 is a boot overlay (**E1**)
 
-`src/func_0201a2f8.c` -- loaded, entered at its own base address, unloaded, all
+`src/unnamed/arm9/0201/func_0201a2f8.c` -- loaded, entered at its own base address, unloaded, all
 before anything else exists:
 
 ```c
@@ -82,7 +82,7 @@ backwards, which is why `possible()` takes the referring function.
 
 ## 4. The scene slot (**E3**, **E4**)
 
-`GetSceneOverlayID` (`src/GetSceneOverlayID.c`) is the scene -> overlay map:
+`GetSceneOverlayID` (`src/game/stages/GetSceneOverlayID.c`) is the scene -> overlay map:
 
 | scene | overlay |
 |---|---|
@@ -96,7 +96,7 @@ backwards, which is why `possible()` takes the referring function.
 single word `data_0208ee4c`, so **exactly one of {ov002, ov003, ov005, ov006, ov007}
 is resident**. Scene 6 additionally loads ov075 once (file select).
 
-And `src/func_0201a798.c:8`:
+And `src/unnamed/arm9/0201/func_0201a798.c:8`:
 
 ```c
 if (id == (int)&overlay_6) LoadOverlay((int)&overlay_4);
@@ -138,7 +138,7 @@ So the resident set for level L is
 and a module in the level system can only reference overlays reachable from some
 level that loads it.
 
-Worked example: `src/_ZN15TtcRotatingGear13InitResourcesEv.cpp` is in ov065, which
+Worked example: `src/game/actors/TtcRotatingGear/_ZN15TtcRotatingGear13InitResourcesEv.cpp` is in ov065, which
 is `group[0][4]`, loaded by levels 13, 27 and 33 -- level overlays ov021, ov035,
 ov041. Its ambiguous target `0x021121b8` listed eleven candidate level overlays;
 exactly one, **ov035**, is in that set.
@@ -196,16 +196,16 @@ ambiguity -- and it is now the biggest single block of work left.
 
 | file | referrer | why residency cannot decide |
 |---|---|---|
-| `src/func_ov002_020ec670.c` | ov002 | `0x02123804` -- all four of ov077/078/079/080 hold a real, differently-sized function there. Engine code reaching into a slot; the callee genuinely depends on the level. |
-| `src/_ZN14CutsceneObject13InitResourcesEv.cpp` | ov002 | `0x02113c20` in the level slot; ov002 is resident for every level. |
-| `src/_ZN16BowserShockwaves13InitResourcesEv.cpp` | ov060 | narrowed to the three Bowser levels (ov044/ov046/ov048); all 19 candidate symbols are dsd placeholders. |
-| `src/func_ov089_0213162c.c` | ov089 | ov089 is loaded by many levels. |
-| `src/_ZN6Bullet13InitResourcesEv.cpp` | ov002 | ov065 vs ov075 (see below). |
+| `src/unnamed/ov002/020e/func_ov002_020ec670.c` | ov002 | `0x02123804` -- all four of ov077/078/079/080 hold a real, differently-sized function there. Engine code reaching into a slot; the callee genuinely depends on the level. |
+| `src/game/stages/CutsceneObject/_ZN14CutsceneObject13InitResourcesEv.cpp` | ov002 | `0x02113c20` in the level slot; ov002 is resident for every level. |
+| `src/game/actors/BowserShockwaves/_ZN16BowserShockwaves13InitResourcesEv.cpp` | ov060 | narrowed to the three Bowser levels (ov044/ov046/ov048); all 19 candidate symbols are dsd placeholders. |
+| `src/unnamed/ov089/0213/func_ov089_0213162c.c` | ov089 | ov089 is loaded by many levels. |
+| `src/game/actors/Bullet/_ZN6Bullet13InitResourcesEv.cpp` | ov002 | ov065 vs ov075 (see below). |
 | `src/_ZN8CapEnemy6AddCapEj.c` | arm9 | ov002 vs ov007; arm9 spans both. |
-| `src/func_02008b4c.c` | arm9 | ov002 vs ov006; both hold a real function. |
-| `src/func_02029408.c` | arm9 | ov002 `_ZN6Player8CanPauseEv` vs ov004 (see below). |
-| `src/func_0201a458.c` | arm9 | ov062 vs ov065, and ov006 vs ov100 (see below). |
-| `src/func_0201a2f8.c` | arm9 | the one place ov000 *is* the answer. The tool refuses instead of answering ov001, which is the point of passing the function; the source above settles it by inspection. |
+| `src/unnamed/arm9/0200/func_02008b4c.c` | arm9 | ov002 vs ov006; both hold a real function. |
+| `src/unnamed/arm9/0202/func_02029408.c` | arm9 | ov002 `_ZN6Player8CanPauseEv` vs ov004 (see below). |
+| `src/unnamed/arm9/0201/func_0201a458.c` | arm9 | ov062 vs ov065, and ov006 vs ov100 (see below). |
+| `src/unnamed/arm9/0201/func_0201a2f8.c` | arm9 | the one place ov000 *is* the answer. The tool refuses instead of answering ov001, which is the point of passing the function; the source above settles it by inspection. |
 
 Four of these have a second, weaker line of evidence available. **dsd flags a symbol
 `ambiguous` in `symbols.txt` when it invented it only to have a name for a possible
@@ -231,8 +231,8 @@ structure problem, not a lookup.
 
 ## 10. A misnaming found on the way
 
-`overlay_64` and `overlay_66` in `src/func_02034fbc.c`, `src/func_ov007_020cc2cc.c`
-and `src/func_ov075_02117bc4.c` are **overlay ids 100 and 102**: the literals in the
+`overlay_64` and `overlay_66` in `src/unnamed/arm9/0203/func_02034fbc.c`, `src/func_ov007_020cc2cc.c`
+and `src/unnamed/ov075/0211/func_ov075_02117bc4.c` are **overlay ids 100 and 102**: the literals in the
 ROM are `0x64` and `0x66` and whoever named them wrote the hex digits as decimal.
 `overlay_75` next to them is genuine decimal 75 (`0x4b`), so the convention is not
 even consistent. Taken literally, ov064 and ov066 overlap and `LoadOverlay` would

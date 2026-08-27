@@ -16,15 +16,15 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020f11b0  src/_ZN14BlueCoinSwitchD1Ev.cpp
- *   [1] 0x020f11f4  src/_ZN14BlueCoinSwitchD0Ev.cpp
- *   [2] 0x020f124c  src/_ZN14BlueCoinSwitch16CleanupResourcesEv.cpp
- *   [3] 0x020f1290  src/_ZN14BlueCoinSwitch6RenderEv.cpp
- *   [4] 0x020f12c8  src/_ZN14BlueCoinSwitch8BehaviorEv.cpp
- *   [5] 0x020f1468  src/_ZN14BlueCoinSwitch13InitResourcesEv.cpp
- *   [6] 0x020f1578  src/func_ov002_020f1578.c
- *   [7] 0x020f15b8  src/func_ov002_020f15b8.c
- *   [8] 0x020f15cc  src/BlueCoinSwitch_Spawn.c
+ *   [0] 0x020f11b0  src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitchD1Ev.cpp
+ *   [1] 0x020f11f4  src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitchD0Ev.cpp
+ *   [2] 0x020f124c  src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitch16CleanupResourcesEv.cpp
+ *   [3] 0x020f1290  src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitch6RenderEv.cpp
+ *   [4] 0x020f12c8  src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitch8BehaviorEv.cpp
+ *   [5] 0x020f1468  src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitch13InitResourcesEv.cpp
+ *   [6] 0x020f1578  src/unnamed/ov002/020f/func_ov002_020f1578.c
+ *   [7] 0x020f15b8  src/unnamed/ov002/020f/func_ov002_020f15b8.c
+ *   [8] 0x020f15cc  src/game/actors/BlueCoinSwitch/BlueCoinSwitch_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

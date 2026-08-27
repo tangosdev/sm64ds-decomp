@@ -7,33 +7,33 @@
  * the manifest notes.
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x0211f000  src/_ZN6FlyGuyD1Ev.cpp
- *   [1] 0x0211f048  src/_ZN6FlyGuyD0Ev.cpp
- *   [2] 0x0211f0a4  src/func_ov070_0211f0a4.cpp
- *   [3] 0x0211f100  src/func_ov070_0211f100.cpp
- *   [4] 0x0211f368  src/func_ov070_0211f368.cpp
- *   [5] 0x0211f450  src/func_ov070_0211f450.c
- *   [6] 0x0211f48c  src/func_ov070_0211f48c.c
- *   [7] 0x0211f5f0  src/func_ov070_0211f5f0.cpp
- *   [8] 0x0211f62c  src/func_ov070_0211f62c.c
- *   [9] 0x0211f694  src/func_ov070_0211f694.cpp
- *   [10] 0x0211f6e0  src/func_ov070_0211f6e0.c
- *   [11] 0x0211fa80  src/func_ov070_0211fa80.c
- *   [12] 0x0211fae4  src/func_ov070_0211fae4.c
- *   [13] 0x0211fd60  src/func_ov070_0211fd60.c
- *   [14] 0x0211fd98  src/func_ov070_0211fd98.c
- *   [15] 0x0211ffa8  src/func_ov070_0211ffa8.cpp
- *   [16] 0x02120020  src/FlyGuy_ChangeState.cpp
- *   [17] 0x02120070  src/func_ov070_02120070.cpp
- *   [18] 0x02120150  src/_ZN6FlyGuy16CleanupResourcesEv.cpp
- *   [19] 0x021201bc  src/_ZN6FlyGuy16OnPendingDestroyEv.cpp
- *   [20] 0x021201c0  src/_ZN6FlyGuy6RenderEv.cpp
- *   [21] 0x02120210  src/_ZN6FlyGuy8BehaviorEv.cpp
- *   [22] 0x021203b4  src/_ZN6FlyGuy13InitResourcesEv.cpp
- *   [23] 0x021204e4  src/_ZN6FlyGuy16OnAimedAtWithEggEv.cpp
- *   [24] 0x021204ec  src/_ZN6FlyGuy13OnTurnIntoEggER6Player.cpp
- *   [25] 0x02120518  src/_ZN6FlyGuy13OnYoshiTryEatEv.cpp
- *   [26] 0x02120520  src/FlyGuy_Spawn.c
+ *   [0] 0x0211f000  src/game/actors/FlyGuy/_ZN6FlyGuyD1Ev.cpp
+ *   [1] 0x0211f048  src/game/actors/FlyGuy/_ZN6FlyGuyD0Ev.cpp
+ *   [2] 0x0211f0a4  src/unnamed/ov070/0211/func_ov070_0211f0a4.cpp
+ *   [3] 0x0211f100  src/unnamed/ov070/0211/func_ov070_0211f100.cpp
+ *   [4] 0x0211f368  src/unnamed/ov070/0211/func_ov070_0211f368.cpp
+ *   [5] 0x0211f450  src/unnamed/ov070/0211/func_ov070_0211f450.c
+ *   [6] 0x0211f48c  src/unnamed/ov070/0211/func_ov070_0211f48c.c
+ *   [7] 0x0211f5f0  src/unnamed/ov070/0211/func_ov070_0211f5f0.cpp
+ *   [8] 0x0211f62c  src/unnamed/ov070/0211/func_ov070_0211f62c.c
+ *   [9] 0x0211f694  src/unnamed/ov070/0211/func_ov070_0211f694.cpp
+ *   [10] 0x0211f6e0  src/unnamed/ov070/0211/func_ov070_0211f6e0.c
+ *   [11] 0x0211fa80  src/unnamed/ov070/0211/func_ov070_0211fa80.c
+ *   [12] 0x0211fae4  src/unnamed/ov070/0211/func_ov070_0211fae4.c
+ *   [13] 0x0211fd60  src/unnamed/ov070/0211/func_ov070_0211fd60.c
+ *   [14] 0x0211fd98  src/unnamed/ov070/0211/func_ov070_0211fd98.c
+ *   [15] 0x0211ffa8  src/unnamed/ov070/0211/func_ov070_0211ffa8.cpp
+ *   [16] 0x02120020  src/game/objects/FlyGuy_ChangeState.cpp
+ *   [17] 0x02120070  src/unnamed/ov070/0212/func_ov070_02120070.cpp
+ *   [18] 0x02120150  src/game/actors/FlyGuy/_ZN6FlyGuy16CleanupResourcesEv.cpp
+ *   [19] 0x021201bc  src/game/actors/FlyGuy/_ZN6FlyGuy16OnPendingDestroyEv.cpp
+ *   [20] 0x021201c0  src/game/actors/FlyGuy/_ZN6FlyGuy6RenderEv.cpp
+ *   [21] 0x02120210  src/game/actors/FlyGuy/_ZN6FlyGuy8BehaviorEv.cpp
+ *   [22] 0x021203b4  src/game/actors/FlyGuy/_ZN6FlyGuy13InitResourcesEv.cpp
+ *   [23] 0x021204e4  src/game/actors/FlyGuy/_ZN6FlyGuy16OnAimedAtWithEggEv.cpp
+ *   [24] 0x021204ec  src/game/actors/FlyGuy/_ZN6FlyGuy13OnTurnIntoEggER6Player.cpp
+ *   [25] 0x02120518  src/game/actors/FlyGuy/_ZN6FlyGuy13OnYoshiTryEatEv.cpp
+ *   [26] 0x02120520  src/game/actors/FlyGuy/FlyGuy_Spawn.c
  */
 
 struct V3w { int w[3]; };  /* array-wrapper: C++ scalarizes a plain struct copy; this form keeps the C front end's ldm/stm block copy */

@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020bc414  src/_ZN7SeaweedD1Ev.cpp
+ *   [0] 0x020bc414  src/game/actors/Seaweed/_ZN7SeaweedD1Ev.cpp
  *   [1] 0x020bc444  src/_ZN7SeaweedD0Ev.c
- *   [2] 0x020bc488  src/func_ov002_020bc488.c
- *   [3] 0x020bc4c8  src/_ZN7Seaweed16CleanupResourcesEv.cpp
- *   [4] 0x020bc4f8  src/_ZN7Seaweed6RenderEv.cpp
- *   [5] 0x020bc520  src/_ZN7Seaweed8BehaviorEv.cpp
- *   [6] 0x020bc540  src/_ZN7Seaweed13InitResourcesEv.cpp
- *   [7] 0x020bc5a8  src/Seaweed_Spawn.c
+ *   [2] 0x020bc488  src/unnamed/ov002/020b/func_ov002_020bc488.c
+ *   [3] 0x020bc4c8  src/game/actors/Seaweed/_ZN7Seaweed16CleanupResourcesEv.cpp
+ *   [4] 0x020bc4f8  src/game/actors/Seaweed/_ZN7Seaweed6RenderEv.cpp
+ *   [5] 0x020bc520  src/game/actors/Seaweed/_ZN7Seaweed8BehaviorEv.cpp
+ *   [6] 0x020bc540  src/game/actors/Seaweed/_ZN7Seaweed13InitResourcesEv.cpp
+ *   [7] 0x020bc5a8  src/game/actors/Seaweed/Seaweed_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

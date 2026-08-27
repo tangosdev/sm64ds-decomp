@@ -7,28 +7,28 @@
  * the manifest notes.
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x0212624c  src/_ZN7HeaveHoD1Ev.cpp
- *   [1] 0x0212629c  src/_ZN7HeaveHoD0Ev.cpp
- *   [2] 0x02126300  src/func_ov077_02126300.c
- *   [3] 0x02126528  src/func_ov077_02126528.cpp
- *   [4] 0x02126640  src/func_ov077_02126640.cpp
- *   [5] 0x02126758  src/func_ov077_02126758.cpp
- *   [6] 0x0212679c  src/func_ov077_0212679c.c
- *   [7] 0x02126930  src/func_ov077_02126930.cpp
- *   [8] 0x021269a8  src/func_ov077_021269a8.cpp
- *   [9] 0x02126a04  src/func_ov077_02126a04.c
- *   [10] 0x02126a50  src/func_ov077_02126a50.c
- *   [11] 0x02126a84  src/func_ov077_02126a84.c
- *   [12] 0x02126ad0  src/func_ov077_02126ad0.c
- *   [13] 0x02126cd4  src/func_ov077_02126cd4.cpp
- *   [14] 0x02126d5c  src/func_ov077_02126d5c.cpp
- *   [15] 0x02126dac  src/func_ov077_02126dac.c
- *   [16] 0x02126dec  src/_ZN7HeaveHo16CleanupResourcesEv.cpp
- *   [17] 0x02126e34  src/_ZN7HeaveHo16OnPendingDestroyEv.cpp
- *   [18] 0x02126e38  src/_ZN7HeaveHo6RenderEv.cpp
- *   [19] 0x02126e88  src/_ZN7HeaveHo8BehaviorEv.cpp
- *   [20] 0x0212706c  src/_ZN7HeaveHo13InitResourcesEv.cpp
- *   [21] 0x021271d4  src/HeaveHo_Spawn.c
+ *   [0] 0x0212624c  src/game/actors/HeaveHo/_ZN7HeaveHoD1Ev.cpp
+ *   [1] 0x0212629c  src/game/actors/HeaveHo/_ZN7HeaveHoD0Ev.cpp
+ *   [2] 0x02126300  src/unnamed/ov077/0212/func_ov077_02126300.c
+ *   [3] 0x02126528  src/unnamed/ov077/0212/func_ov077_02126528.cpp
+ *   [4] 0x02126640  src/unnamed/ov077/0212/func_ov077_02126640.cpp
+ *   [5] 0x02126758  src/unnamed/ov077/0212/func_ov077_02126758.cpp
+ *   [6] 0x0212679c  src/unnamed/ov077/0212/func_ov077_0212679c.c
+ *   [7] 0x02126930  src/unnamed/ov077/0212/func_ov077_02126930.cpp
+ *   [8] 0x021269a8  src/unnamed/ov077/0212/func_ov077_021269a8.cpp
+ *   [9] 0x02126a04  src/unnamed/ov077/0212/func_ov077_02126a04.c
+ *   [10] 0x02126a50  src/unnamed/ov077/0212/func_ov077_02126a50.c
+ *   [11] 0x02126a84  src/unnamed/ov077/0212/func_ov077_02126a84.c
+ *   [12] 0x02126ad0  src/unnamed/ov077/0212/func_ov077_02126ad0.c
+ *   [13] 0x02126cd4  src/unnamed/ov077/0212/func_ov077_02126cd4.cpp
+ *   [14] 0x02126d5c  src/unnamed/ov077/0212/func_ov077_02126d5c.cpp
+ *   [15] 0x02126dac  src/unnamed/ov077/0212/func_ov077_02126dac.c
+ *   [16] 0x02126dec  src/game/actors/HeaveHo/_ZN7HeaveHo16CleanupResourcesEv.cpp
+ *   [17] 0x02126e34  src/game/actors/HeaveHo/_ZN7HeaveHo16OnPendingDestroyEv.cpp
+ *   [18] 0x02126e38  src/game/actors/HeaveHo/_ZN7HeaveHo6RenderEv.cpp
+ *   [19] 0x02126e88  src/game/actors/HeaveHo/_ZN7HeaveHo8BehaviorEv.cpp
+ *   [20] 0x0212706c  src/game/actors/HeaveHo/_ZN7HeaveHo13InitResourcesEv.cpp
+ *   [21] 0x021271d4  src/game/actors/HeaveHo/HeaveHo_Spawn.c
  */
 
 /* -------------------------------------------------------------------------- */

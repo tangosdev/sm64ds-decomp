@@ -16,8 +16,8 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020ede18  src/MgWhichWiggler_Spawn.cpp
- *   [1] 0x020ede80  src/func_ov006_020ede80.c
+ *   [0] 0x020ede18  src/minigames/MgWhichWiggler/MgWhichWiggler_Spawn.cpp
+ *   [1] 0x020ede80  src/unnamed/ov006/020e/func_ov006_020ede80.c
  */
 
 extern "C" {

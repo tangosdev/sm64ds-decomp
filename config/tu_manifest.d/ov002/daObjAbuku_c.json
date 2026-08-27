@@ -27,49 +27,49 @@
       "symbol": "_ZN12daObjAbuku_cD1Ev",
       "address": "0x020b3298",
       "size": "0x00000030",
-      "legacy_source": "src/_ZN12daObjAbuku_cD1Ev.cpp",
+      "legacy_source": "src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_cD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN12daObjAbuku_cD0Ev",
       "address": "0x020b32c8",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN12daObjAbuku_cD0Ev.cpp",
+      "legacy_source": "src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_cD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "func_ov002_020b330c",
       "address": "0x020b330c",
       "size": "0x00000038",
-      "legacy_source": "src/func_ov002_020b330c.cpp",
+      "legacy_source": "src/unnamed/ov002/020b/func_ov002_020b330c.cpp",
       "ordinal": 2
     },
     {
       "symbol": "func_ov002_020b3344",
       "address": "0x020b3344",
       "size": "0x00000098",
-      "legacy_source": "src/func_ov002_020b3344.c",
+      "legacy_source": "src/unnamed/ov002/020b/func_ov002_020b3344.c",
       "ordinal": 3
     },
     {
       "symbol": "_ZN12daObjAbuku_c8BehaviorEv",
       "address": "0x020b33dc",
       "size": "0x0000013c",
-      "legacy_source": "src/_ZN12daObjAbuku_c8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_c8BehaviorEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN12daObjAbuku_c13InitResourcesEv",
       "address": "0x020b3518",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN12daObjAbuku_c13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_c13InitResourcesEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "daObjAbuku_c_Spawn",
       "address": "0x020b3568",
       "size": "0x00000038",
-      "legacy_source": "src/daObjAbuku_c_Spawn.c",
+      "legacy_source": "src/game/actors/daObjAbuku_c/daObjAbuku_c_Spawn.c",
       "ordinal": 6
     }
   ],
@@ -750,13 +750,13 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN12daObjAbuku_cD1Ev.cpp",
-      "src/_ZN12daObjAbuku_cD0Ev.cpp",
-      "src/func_ov002_020b330c.cpp",
-      "src/func_ov002_020b3344.c",
-      "src/_ZN12daObjAbuku_c8BehaviorEv.cpp",
-      "src/_ZN12daObjAbuku_c13InitResourcesEv.cpp",
-      "src/daObjAbuku_c_Spawn.c"
+      "src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_cD1Ev.cpp",
+      "src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_cD0Ev.cpp",
+      "src/unnamed/ov002/020b/func_ov002_020b330c.cpp",
+      "src/unnamed/ov002/020b/func_ov002_020b3344.c",
+      "src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_c8BehaviorEv.cpp",
+      "src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_c13InitResourcesEv.cpp",
+      "src/game/actors/daObjAbuku_c/daObjAbuku_c_Spawn.c"
     ],
     "extraInertImports": 72,
     "extraImportsWithNoHome": [
@@ -805,13 +805,13 @@
         "mergedBytes": 7576,
         "contributionEquivalent": "7/7",
         "substitutedObjectPaths": [
-          "src/_ZN12daObjAbuku_cD1Ev.cpp",
-          "src/_ZN12daObjAbuku_cD0Ev.cpp",
-          "src/func_ov002_020b330c.cpp",
-          "src/func_ov002_020b3344.c",
-          "src/_ZN12daObjAbuku_c8BehaviorEv.cpp",
-          "src/_ZN12daObjAbuku_c13InitResourcesEv.cpp",
-          "src/daObjAbuku_c_Spawn.c"
+          "src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_cD1Ev.cpp",
+          "src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_cD0Ev.cpp",
+          "src/unnamed/ov002/020b/func_ov002_020b330c.cpp",
+          "src/unnamed/ov002/020b/func_ov002_020b3344.c",
+          "src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_c8BehaviorEv.cpp",
+          "src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_c13InitResourcesEv.cpp",
+          "src/game/actors/daObjAbuku_c/daObjAbuku_c_Spawn.c"
         ],
         "rows": [
           {
@@ -1183,13 +1183,13 @@
         "mergedBytes": 7576,
         "contributionEquivalent": "7/7",
         "substitutedObjectPaths": [
-          "src/_ZN12daObjAbuku_cD1Ev.cpp",
-          "src/_ZN12daObjAbuku_cD0Ev.cpp",
-          "src/func_ov002_020b330c.cpp",
-          "src/func_ov002_020b3344.c",
-          "src/_ZN12daObjAbuku_c8BehaviorEv.cpp",
-          "src/_ZN12daObjAbuku_c13InitResourcesEv.cpp",
-          "src/daObjAbuku_c_Spawn.c"
+          "src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_cD1Ev.cpp",
+          "src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_cD0Ev.cpp",
+          "src/unnamed/ov002/020b/func_ov002_020b330c.cpp",
+          "src/unnamed/ov002/020b/func_ov002_020b3344.c",
+          "src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_c8BehaviorEv.cpp",
+          "src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_c13InitResourcesEv.cpp",
+          "src/game/actors/daObjAbuku_c/daObjAbuku_c_Spawn.c"
         ],
         "rows": [
           {

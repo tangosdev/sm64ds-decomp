@@ -7,35 +7,35 @@
  * the manifest notes.
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02111308  src/_ZN10ChainChompD1Ev.cpp
- *   [1] 0x021113bc  src/_ZN10ChainChompD0Ev.cpp
- *   [2] 0x02111484  src/func_ov014_02111484.c
- *   [3] 0x021114d8  src/func_ov014_021114d8.c
- *   [4] 0x0211150c  src/func_ov014_0211150c.c
- *   [5] 0x021115c0  src/func_ov014_021115c0.c
- *   [6] 0x021115ec  src/func_ov014_021115ec.cpp
- *   [7] 0x02111a6c  src/func_ov014_02111a6c.cpp
- *   [8] 0x02111af0  src/func_ov014_02111af0.c
- *   [9] 0x02111b70  src/func_ov014_02111b70.c
- *   [10] 0x02111ca8  src/func_ov014_02111ca8.cpp
- *   [11] 0x02111dc4  src/func_ov014_02111dc4.cpp
- *   [12] 0x02111e14  src/func_ov014_02111e14.c
- *   [13] 0x02111e74  src/func_ov014_02111e74.cpp
- *   [14] 0x02111ebc  src/func_ov014_02111ebc.cpp
- *   [15] 0x02111f08  src/func_ov014_02111f08.cpp
- *   [16] 0x02111f54  src/func_ov014_02111f54.cpp
- *   [17] 0x02111fb8  src/func_ov014_02111fb8.c
- *   [18] 0x02111fe0  src/func_ov014_02111fe0.c
- *   [19] 0x02112114  src/func_ov014_02112114.c
- *   [20] 0x021122dc  src/func_ov014_021122dc.c
- *   [21] 0x0211236c  src/func_ov014_0211236c.c
- *   [22] 0x0211250c  src/func_ov014_0211250c.c
- *   [23] 0x02112788  src/func_ov014_02112788.c
- *   [24] 0x0211294c  src/_ZN10ChainChomp16CleanupResourcesEv.cpp
- *   [25] 0x02112994  src/_ZN10ChainChomp6RenderEv.cpp
- *   [26] 0x021129ec  src/_ZN10ChainChomp8BehaviorEv.cpp
- *   [27] 0x02112b14  src/_ZN10ChainChomp13InitResourcesEv.cpp
- *   [28] 0x02112d1c  src/ChainChomp_Spawn.cpp
+ *   [0] 0x02111308  src/game/actors/ChainChomp/_ZN10ChainChompD1Ev.cpp
+ *   [1] 0x021113bc  src/game/actors/ChainChomp/_ZN10ChainChompD0Ev.cpp
+ *   [2] 0x02111484  src/unnamed/ov014/0211/func_ov014_02111484.c
+ *   [3] 0x021114d8  src/unnamed/ov014/0211/func_ov014_021114d8.c
+ *   [4] 0x0211150c  src/unnamed/ov014/0211/func_ov014_0211150c.c
+ *   [5] 0x021115c0  src/unnamed/ov014/0211/func_ov014_021115c0.c
+ *   [6] 0x021115ec  src/unnamed/ov014/0211/func_ov014_021115ec.cpp
+ *   [7] 0x02111a6c  src/unnamed/ov014/0211/func_ov014_02111a6c.cpp
+ *   [8] 0x02111af0  src/unnamed/ov014/0211/func_ov014_02111af0.c
+ *   [9] 0x02111b70  src/unnamed/ov014/0211/func_ov014_02111b70.c
+ *   [10] 0x02111ca8  src/unnamed/ov014/0211/func_ov014_02111ca8.cpp
+ *   [11] 0x02111dc4  src/unnamed/ov014/0211/func_ov014_02111dc4.cpp
+ *   [12] 0x02111e14  src/unnamed/ov014/0211/func_ov014_02111e14.c
+ *   [13] 0x02111e74  src/unnamed/ov014/0211/func_ov014_02111e74.cpp
+ *   [14] 0x02111ebc  src/unnamed/ov014/0211/func_ov014_02111ebc.cpp
+ *   [15] 0x02111f08  src/unnamed/ov014/0211/func_ov014_02111f08.cpp
+ *   [16] 0x02111f54  src/unnamed/ov014/0211/func_ov014_02111f54.cpp
+ *   [17] 0x02111fb8  src/unnamed/ov014/0211/func_ov014_02111fb8.c
+ *   [18] 0x02111fe0  src/unnamed/ov014/0211/func_ov014_02111fe0.c
+ *   [19] 0x02112114  src/unnamed/ov014/0211/func_ov014_02112114.c
+ *   [20] 0x021122dc  src/unnamed/ov014/0211/func_ov014_021122dc.c
+ *   [21] 0x0211236c  src/unnamed/ov014/0211/func_ov014_0211236c.c
+ *   [22] 0x0211250c  src/unnamed/ov014/0211/func_ov014_0211250c.c
+ *   [23] 0x02112788  src/unnamed/ov014/0211/func_ov014_02112788.c
+ *   [24] 0x0211294c  src/game/actors/ChainChomp/_ZN10ChainChomp16CleanupResourcesEv.cpp
+ *   [25] 0x02112994  src/game/actors/ChainChomp/_ZN10ChainChomp6RenderEv.cpp
+ *   [26] 0x021129ec  src/game/actors/ChainChomp/_ZN10ChainChomp8BehaviorEv.cpp
+ *   [27] 0x02112b14  src/game/actors/ChainChomp/_ZN10ChainChomp13InitResourcesEv.cpp
+ *   [28] 0x02112d1c  src/game/actors/ChainChomp/ChainChomp_Spawn.cpp
  */
 
 /* -------------------------------------------------------------------------- */

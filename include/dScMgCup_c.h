@@ -11,7 +11,7 @@
  * header.
  *
  * SIZE 0x5470, from the factory's own `_ZN7fBase_cnwEj(0x5470)`
- * (src/func_ov006_020e0574.cpp).
+ * (src/unnamed/ov006/020e/func_ov006_020e0574.cpp).
  *
  * THE FACTORY AND THE DESTRUCTOR AGREE MEMBER FOR MEMBER, which is the
  * bar this tree sets (see include/dScMgCard_c.h's own note). The factory
@@ -33,7 +33,7 @@
  *
  * OWN TAIL, 0x5400..0x5470, IS THE CLASS'S STATE MACHINE, not the
  * unclaimed trailing space the first draft of this header called it. The
- * first statement of Cup's own Behavior (src/_ZN10dScMgCup_c8BehaviorEv.cpp,
+ * first statement of Cup's own Behavior (src/minigames/dScMgCup_c/_ZN10dScMgCup_c8BehaviorEv.cpp,
  * vtable slot 6) is a pointer-to-member dispatch through
  * `data_ov006_02141870[*(int*)(o + 0x5418)]`; InitResources
  * (func_ov006_020e0308.cpp, slot 0) already carries a local struct naming
@@ -44,7 +44,7 @@
  * but the span and the literal AGREE here, which the first draft denied.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN10dScMgCup_cD1Ev.cpp; D0Ev.cpp
+ * its own. Defined for real in src/minigames/dScMgCup_c/_ZN10dScMgCup_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
  * dScMgBase_c, two levels up, already provides one. */
 #ifndef DSCMGCUP_C_H
@@ -68,9 +68,9 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
        holds. The destructor above is declared first and out of line, so it stays
        this class's KEY FUNCTION and neither of these translation units emits
        _ZTV10dScMgCup_c. */
-    s32 InitResources();  /* slot  0 -- src/_ZN10dScMgCup_c13InitResourcesEv.cpp */
-    s32 Behavior();       /* slot  6 -- src/_ZN10dScMgCup_c8BehaviorEv.cpp */
-    s32 Render();         /* slot  9 -- src/_ZN10dScMgCup_c6RenderEv.cpp */
+    s32 InitResources();  /* slot  0 -- src/minigames/dScMgCup_c/_ZN10dScMgCup_c13InitResourcesEv.cpp */
+    s32 Behavior();       /* slot  6 -- src/minigames/dScMgCup_c/_ZN10dScMgCup_c8BehaviorEv.cpp */
+    s32 Render();         /* slot  9 -- src/minigames/dScMgCup_c/_ZN10dScMgCup_c6RenderEv.cpp */
 
     u8  pad_4f38[0x19c];  /* 0x4f38 -- opaque table, see file banner */
     s32 unk_50d4;         /* 0x50d4 -- split-literal access, see file banner */

@@ -7,25 +7,25 @@
  * the manifest notes.
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02120570  src/_ZN3AmpD1Ev.cpp
- *   [1] 0x021205d0  src/_ZN3AmpD0Ev.cpp
- *   [2] 0x02120644  src/func_ov070_02120644.cpp
- *   [3] 0x02120724  src/func_ov070_02120724.c
- *   [4] 0x021208a4  src/func_ov070_021208a4.c
- *   [5] 0x02120910  src/func_ov070_02120910.cpp
- *   [6] 0x021209e4  src/func_ov070_021209e4.cpp
- *   [7] 0x02120bf8  src/func_ov070_02120bf8.cpp
- *   [8] 0x02120cac  src/func_ov070_02120cac.cpp
- *   [9] 0x02120ce4  src/func_ov070_02120ce4.c
- *   [10] 0x02120d34  src/func_ov070_02120d34.cpp
- *   [11] 0x02120d70  src/func_ov070_02120d70.cpp
- *   [12] 0x02120da8  src/func_ov070_02120da8.c
- *   [13] 0x02120dc4  src/_ZN3Amp16CleanupResourcesEv.cpp
- *   [14] 0x02120e20  src/_ZN3Amp16OnPendingDestroyEv.cpp
- *   [15] 0x02120e24  src/_ZN3Amp6RenderEv.cpp
- *   [16] 0x02120e8c  src/_ZN3Amp8BehaviorEv.cpp
- *   [17] 0x02120eec  src/_ZN3Amp13InitResourcesEv.cpp
- *   [18] 0x021210ac  src/Amp_Spawn.c
+ *   [0] 0x02120570  src/game/actors/Amp/_ZN3AmpD1Ev.cpp
+ *   [1] 0x021205d0  src/game/actors/Amp/_ZN3AmpD0Ev.cpp
+ *   [2] 0x02120644  src/unnamed/ov070/0212/func_ov070_02120644.cpp
+ *   [3] 0x02120724  src/unnamed/ov070/0212/func_ov070_02120724.c
+ *   [4] 0x021208a4  src/unnamed/ov070/0212/func_ov070_021208a4.c
+ *   [5] 0x02120910  src/unnamed/ov070/0212/func_ov070_02120910.cpp
+ *   [6] 0x021209e4  src/unnamed/ov070/0212/func_ov070_021209e4.cpp
+ *   [7] 0x02120bf8  src/unnamed/ov070/0212/func_ov070_02120bf8.cpp
+ *   [8] 0x02120cac  src/unnamed/ov070/0212/func_ov070_02120cac.cpp
+ *   [9] 0x02120ce4  src/unnamed/ov070/0212/func_ov070_02120ce4.c
+ *   [10] 0x02120d34  src/unnamed/ov070/0212/func_ov070_02120d34.cpp
+ *   [11] 0x02120d70  src/unnamed/ov070/0212/func_ov070_02120d70.cpp
+ *   [12] 0x02120da8  src/unnamed/ov070/0212/func_ov070_02120da8.c
+ *   [13] 0x02120dc4  src/game/actors/Amp/_ZN3Amp16CleanupResourcesEv.cpp
+ *   [14] 0x02120e20  src/game/actors/Amp/_ZN3Amp16OnPendingDestroyEv.cpp
+ *   [15] 0x02120e24  src/game/actors/Amp/_ZN3Amp6RenderEv.cpp
+ *   [16] 0x02120e8c  src/game/actors/Amp/_ZN3Amp8BehaviorEv.cpp
+ *   [17] 0x02120eec  src/game/actors/Amp/_ZN3Amp13InitResourcesEv.cpp
+ *   [18] 0x021210ac  src/game/actors/Amp/Amp_Spawn.c
  */
 
 /* -------------------------------------------------------------------------- */

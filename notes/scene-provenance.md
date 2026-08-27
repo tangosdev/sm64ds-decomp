@@ -82,7 +82,7 @@ declared `virtual ~dScene_c();` cannot be inlined and emits `bl _ZN8dScene_cD2Ev
 the ROM has none (measured on a `Stage` trial: 80 bytes with the call vs the ROM's 104
 with none).
 
-The cost is what `dBase_c` already pays: `src/_ZN8dScene_cD1Ev.cpp` and `_ZN8dScene_cD0Ev.cpp`
+The cost is what `dBase_c` already pays: `src/game/stages/dScene_c/_ZN8dScene_cD1Ev.cpp` and `_ZN8dScene_cD0Ev.cpp`
 can no longer *define* `~dScene_c()`, and a bare include emits nothing. Both carry a
 forcing call instead; see the note in each file.
 
@@ -151,7 +151,7 @@ colliding with the copy the module's gap object supplies from ROM data. The dest
 is declared first, which is free for a derived class (an override takes its base's slot
 wherever it is written) and pins the role to `~Stage`. `tools/objisolate.py` makes that
 TU eligible anyway, so `~Stage` is a real method, defined identically —
-`Stage::~Stage() {}` — in both `src/_ZN5StageD1Ev.cpp` and `src/_ZN5StageD0Ev.cpp`.
+`Stage::~Stage() {}` — in both `src/game/stages/Stage/_ZN5StageD1Ev.cpp` and `src/game/stages/Stage/_ZN5StageD0Ev.cpp`.
 Unlike `dScene_c`, `Stage` does not need to define it inline in the class body: `Stage`
 is a leaf, so nothing derives from it that would need to inline *its* destructor in
 turn.
@@ -165,9 +165,9 @@ not the same as the last field the object has. The trailing `pad_9c0[0x8]` and t
 
 **`Particle::SysTracker`, embedded at `Stage+0x50`.** Not its own header yet:
 `include/Particle.h` and `include/Particle__SysTracker.h` are two *separate*
-`gen_header.py` shadows of this same class. `src/_ZN8Particle10SysTrackerC1Ev.cpp` writes
+`gen_header.py` shadows of this same class. `src/game/actors/Particle/_ZN8Particle10SysTrackerC1Ev.cpp` writes
 fields through `struct Particle *self` up to `unk_818`, while
-`src/_ZN8Particle10SysTracker10InitialiseEv.cpp` and `6UpdateEv.c` read `mManager`/`mContents`
+`src/game/actors/Particle/_ZN8Particle10SysTracker10InitialiseEv.cpp` and `6UpdateEv.c` read `mManager`/`mContents`
 through `struct Particle__SysTracker *self` — the same offsets `Particle.h` also
 carries. Their union is what `Stage.h` declares locally: `Particle.h`'s full 34-field
 layout, last field `unk_818` (1 byte, ends 0x819), padded to 0x81c for 4-byte
@@ -176,7 +176,7 @@ second independent check on the same number. Declared locally rather than mergin
 two real headers because neither `Stage` source file includes them and a merge has its
 own blast radius across every file that already casts through one shadow or the other.
 
-Its destructor is declared, never defined: `src/_ZN8Particle10SysTrackerD1Ev.cpp`
+Its destructor is declared, never defined: `src/game/actors/Particle/_ZN8Particle10SysTrackerD1Ev.cpp`
 already supplies `_ZN8Particle10SysTrackerD1Ev` as an `extern "C"` free function; the
 declaration only lets `Stage`'s implicit destructor find it by name. Not virtual —
 `dtor_variant_audit.py` established `Particle::SysTracker` has no RTTI record and no
@@ -202,9 +202,9 @@ object and no other argument; `GraphCallback2` reads its fields (fixed-point mat
 emitting a vtable the delink ranges do not own.
 
 **`PS_Init` is deliberately not declared in the header**, even though
-`src/_ZN5Stage7PS_InitEv.cpp` defines `Stage::PS_Init()` and is byte-verified and
+`src/game/stages/Stage/_ZN5Stage7PS_InitEv.cpp` defines `Stage::PS_Init()` and is byte-verified and
 enrolled. It uses its own local shadow `class Stage` (the same pattern
-`src/_ZN5Stage8BehaviorEv.cpp` uses) on purpose: a real landmine lived at that exact
+`src/game/stages/Stage/_ZN5Stage8BehaviorEv.cpp` uses) on purpose: a real landmine lived at that exact
 filename — an untracked, un-enrolled second `.cpp` for the symbol whose private
 `struct G2x` declared `SetBlendBrightness`'s middle parameter as `int`, mangling to
 `_ZN3G2x18SetBlendBrightnessEPVtis`, which resolves to nothing and would silently *not*
@@ -235,7 +235,7 @@ the destructor pair at 16/17. Confirmed against `config/arm9/relocs.txt`'s vtabl
 at 0x02091528 and 0x02091540.
 
 **Converted 2026-08-22.** Both overrides are now real `BootScene::` methods
-(`src/_ZN9BootScene13InitResourcesEv.cpp`, `src/_ZN9BootScene8BehaviorEv.cpp`), both
+(`src/game/stages/BootScene/_ZN9BootScene13InitResourcesEv.cpp`, `src/game/stages/BootScene/_ZN9BootScene8BehaviorEv.cpp`), both
 byte-exact, and neither includes `include/dScBoot_c.h` any more. A previous revision of
 the header said they were "NOT CONVERTED BY THIS PASS", which was later read as saying
 they *could not* be. The key function is the first non-inline virtual *declared*, which
@@ -257,7 +257,7 @@ at 0x056. Two corrections:
 
 With 0x056 counted, the class's own fields run 0x050..0x056 — seven bytes, one short of
 the 0x058 an eighth (padding) byte reaches. 0x058 is exactly what
-`src/func_02023624.c`'s `operator new(0x58)` allocates. Since `dScBoot_c` is a leaf, no
+`src/unnamed/arm9/0202/func_02023624.c`'s `operator new(0x58)` allocates. Since `dScBoot_c` is a leaf, no
 subclass needs the object to extend further, so the assertion holds to it.
 
 **`InitResources` in detail.** The very first thing the game draws. It hands the four
@@ -350,7 +350,7 @@ same slot. Two of the ten (`SetToEnd`, `SetToStart`) are pure tail-call veneers 
 `FaderBrightness`/`FaderColor` bodies and otherwise run the hardware-capture path.
 
 **`SetBackwardTime` stays plain C — measured, do not "fix".** The full record:
-`src/_ZN7dWipe_c15SetBackwardTimeEj.c` takes a third parameter that arrives in r2 and is
+`src/game/actors/dWipe_c/_ZN7dWipe_c15SetBackwardTimeEj.c` takes a third parameter that arrives in r2 and is
 forwarded to the guard call with zero instructions, which keeps r2 live from entry to
 the call and forces the cached `type` into r3 as in the ROM. As a real method the
 mangled name fixes the arity at one (`Ej`), so the r2-holding parameter cannot exist,

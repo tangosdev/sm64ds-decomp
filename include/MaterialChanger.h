@@ -40,7 +40,7 @@ struct MaterialChanger : Animation {
     /* --- vtable: the destructor pair only. --- */
     virtual ~MaterialChanger();                       /* slots 0 (D1), 1 (D0) */
 
-    /* DECLARED, never defined as a method here -- src/_ZN15MaterialChangerC1Ev.cpp
+    /* DECLARED, never defined as a method here -- src/runtime/graphics/MaterialChanger/_ZN15MaterialChangerC1Ev.cpp
        owns C1 (notes/ctor-migration.md section 2). */
     MaterialChanger();
 

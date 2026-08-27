@@ -33,7 +33,7 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
        Re-overrides of slots fBase_c already owns, NOT new virtuals: the
        table stays the base's width and no field moves. Declared AFTER the
        destructor so the destructor is still the first virtual declared. */
-    virtual s32 InitResources();     /* slot 0 -- src/_ZN17dScMgTrampoline_c13InitResourcesEv.cpp */
+    virtual s32 InitResources();     /* slot 0 -- src/minigames/dScMgTrampoline_c/_ZN17dScMgTrampoline_c13InitResourcesEv.cpp */
     virtual s32 CleanupResources();  /* slot 3 -- ov006 0x021212e0 */
     virtual s32 Behavior();          /* slot 6 -- ov006 0x021214f8 */
     virtual s32 Render();            /* slot 9 -- ov006 0x021212fc */
@@ -67,7 +67,7 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
     s16 unk_5dc2;         /* 0x5dc2 */
     u8  mTouching;        /* 0x5dc4 -- a drag is in progress */
     u8  mTouchReleased;   /* 0x5dc5 -- set on the release edge; the swipe test
-                             in src/func_ov006_0212101c.c consumes and clears it */
+                             in src/unnamed/ov006/0212/func_ov006_0212101c.c consumes and clears it */
     u8  pad_5dc6[0x2];    /* 0x5dc6 -- rounds up to the 0x5dc8 boundary */
 };
 

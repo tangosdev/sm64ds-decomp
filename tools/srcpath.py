@@ -167,7 +167,7 @@ def _enrolment():
     ``test_enrolment_round_trips_single_and_multi_symbol_sources``.
 
     They stop agreeing the moment one file owns two functions, which is what TU
-    reconstruction produces: a promoted `src/actors/ActorBase_SceneNode.cpp` is the
+    reconstruction produces: a promoted `src/game/actors/ActorBase_SceneNode.cpp` is the
     enrolled owner of 0x0203b4ac..0x0203b4dc, and neither symbol in it can be found by
     filename. The
     convention then answers None, and every tool built on it concludes the functions

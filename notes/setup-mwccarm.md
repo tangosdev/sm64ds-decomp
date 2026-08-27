@@ -41,7 +41,7 @@ Notes from running it (recovered and verified 2026-08-05):
   ```sh
   python - <<'PY'
   import sys; sys.path.insert(0, "tools"); import build_pin as BP
-  print(BP.verify("src/engine/fader/_ZN5Fader13AdvanceInterpEv.cpp",
+  print(BP.verify("src/runtime/graphics/fader/_ZN5Fader13AdvanceInterpEv.cpp",
                   "_ZN5Fader13AdvanceInterpEv", 0x020175e8, 0x28, "arm9"))
   PY
   # -> (True, '2004/b56')

@@ -30,7 +30,7 @@ So a converted method cannot carry any other symbol, and the only way to pass
 `real_name` was to **un-convert** the method back into a flat `extern "C"`
 function. The tier paid you to undo the work it exists to measure.
 
-This is not a hypothetical. `src/_ZN10KoopaShell13OnYoshiTryEatEv.cpp` is:
+This is not a hypothetical. `src/game/actors/KoopaShell/_ZN10KoopaShell13OnYoshiTryEatEv.cpp` is:
 
 ```cpp
 // @symbol _ZN10KoopaShell13OnYoshiTryEatEv
@@ -81,9 +81,9 @@ It scored `real_name` 972 → 2,611 and CONVERTED → 1,087, and it is wrong fou
 An adversarial audit found all four with concrete cases:
 
 - **Misattribution.** `search()` takes the first match anywhere in the file.
-  `src/_ZN5Stage13UpdateMessageEv.cpp` reports `Message::UpdateWindow` — a
+  `src/game/stages/Stage/_ZN5Stage13UpdateMessageEv.cpp` reports `Message::UpdateWindow` — a
   one-line stub for a *dependency* class declared above the real function.
-  `src/_ZN6Coffin13InitResourcesEv.cpp` matches a bare `MeshCollider::LoadFile`
+  `src/game/actors/Coffin/_ZN6Coffin13InitResourcesEv.cpp` matches a bare `MeshCollider::LoadFile`
   forward declaration that ends in `;` and is defined in another file entirely.
 - **Override of a correct failure.** Four files whose own symbol is a genuinely
   unidentified `func_ov*` placeholder (`func_ov006_020c8f20`, `func_ov006_020cb030`,

@@ -105,7 +105,7 @@ struct daKrb_c : dCapEnemy_c {
     /* methods */
     int Behavior();
     int CleanupResources();
-    /* Declared here so src/_ZN7daKrb_c13InitResourcesEv.cpp can be a real method
+    /* Declared here so src/game/actors/daKrb_c/_ZN7daKrb_c13InitResourcesEv.cpp can be a real method
        rather than an extern "C" free function under the mangled name. ~daKrb_c is
        still the first virtual DECLARED, so the key function -- and with it
        _ZTV7daKrb_c -- stays where it already was. */
@@ -116,7 +116,7 @@ struct daKrb_c : dCapEnemy_c {
     /* --- vtable, resolved from the census worklist against dActor_c --- */
     int OnYoshiTryEat();                        /* slot 18 */
     /* slot 19 (OnTurnIntoEgg) is not declared here -- see the class comment.
-       It stays src/func_ov084_0212b344.cpp, an un-migrated free function. */
+       It stays src/unnamed/ov084/0212/func_ov084_0212b344.cpp, an un-migrated free function. */
     int OnAimedAtWithEgg();                     /* slot 29 */
 };
 

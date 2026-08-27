@@ -25,7 +25,7 @@
  * therefore cannot use a typed member at all. Same class, same member, two
  * different answers, decided by the ROM's own ordering.
  *
- * 0x5004 IS A PAIR OF s32, not padding: src/func_ov006_020ee2c4.c assigns
+ * 0x5004 IS A PAIR OF s32, not padding: src/unnamed/ov006/020e/func_ov006_020ee2c4.c assigns
  * `*(P*)(c + 0x5004) = data_ov006_0213cb7c` through its own local
  * `typedef struct { int a, b; } P`. That write, and the s16 at 0x5014 in
  * the same function, are what bound dScMgD3DBase_c at 0x5004 from above.
@@ -52,10 +52,10 @@ struct dScMgJump_c : dScMgD3DBase_c {
        field, and the 0x5834 assert below still holds. The destructor above is
        declared first and out of line, so it stays this class's KEY FUNCTION and
        none of these translation units emits _ZTV11dScMgJump_c. */
-    s32 InitResources();    /* slot  0 -- src/_ZN11dScMgJump_c13InitResourcesEv.cpp */
-    s32 CleanupResources(); /* slot  3 -- src/_ZN11dScMgJump_c16CleanupResourcesEv.cpp */
-    s32 Behavior();         /* slot  6 -- src/_ZN11dScMgJump_c8BehaviorEv.cpp */
-    s32 Render();           /* slot  9 -- src/_ZN11dScMgJump_c6RenderEv.cpp */
+    s32 InitResources();    /* slot  0 -- src/minigames/dScMgJump_c/_ZN11dScMgJump_c13InitResourcesEv.cpp */
+    s32 CleanupResources(); /* slot  3 -- src/minigames/dScMgJump_c/_ZN11dScMgJump_c16CleanupResourcesEv.cpp */
+    s32 Behavior();         /* slot  6 -- src/minigames/dScMgJump_c/_ZN11dScMgJump_c8BehaviorEv.cpp */
+    s32 Render();           /* slot  9 -- src/minigames/dScMgJump_c/_ZN11dScMgJump_c6RenderEv.cpp */
 
     s32   unk_5004;        /* 0x5004 -- written as an { int, int } pair */
     s32   unk_5008;        /* 0x5008 */

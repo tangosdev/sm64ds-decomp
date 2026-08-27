@@ -22,77 +22,77 @@
       "symbol": "_ZN14ArrowSignRightD1Ev",
       "address": "0x02137be0",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN14ArrowSignRightD1Ev.cpp",
+      "legacy_source": "src/game/actors/ArrowSignRight/_ZN14ArrowSignRightD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN14ArrowSignRightD0Ev",
       "address": "0x02137c2c",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN14ArrowSignRightD0Ev.cpp",
+      "legacy_source": "src/game/actors/ArrowSignRight/_ZN14ArrowSignRightD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "func_ov098_02137c8c",
       "address": "0x02137c8c",
       "size": "0x00000040",
-      "legacy_source": "src/func_ov098_02137c8c.c",
+      "legacy_source": "src/unnamed/ov098/0213/func_ov098_02137c8c.c",
       "ordinal": 2
     },
     {
       "symbol": "_ZN14ArrowSignRight4KillEv",
       "address": "0x02137ccc",
       "size": "0x00000074",
-      "legacy_source": "src/_ZN14ArrowSignRight4KillEv.cpp",
+      "legacy_source": "src/game/actors/ArrowSignRight/_ZN14ArrowSignRight4KillEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN14ArrowSignRight11OnAttacked1ER8dActor_c",
       "address": "0x02137d40",
       "size": "0x00000040",
-      "legacy_source": "src/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp",
+      "legacy_source": "src/game/actors/ArrowSignRight/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN14ArrowSignRight15OnHitByMegaCharER6Player",
       "address": "0x02137d80",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN14ArrowSignRight15OnHitByMegaCharER6Player.cpp",
+      "legacy_source": "src/game/actors/ArrowSignRight/_ZN14ArrowSignRight15OnHitByMegaCharER6Player.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN14ArrowSignRight16CleanupResourcesEv",
       "address": "0x02137dbc",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/ArrowSignRight/_ZN14ArrowSignRight16CleanupResourcesEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "_ZN14ArrowSignRight6RenderEv",
       "address": "0x02137e20",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN14ArrowSignRight6RenderEv.cpp",
+      "legacy_source": "src/game/actors/ArrowSignRight/_ZN14ArrowSignRight6RenderEv.cpp",
       "ordinal": 7
     },
     {
       "symbol": "_ZN14ArrowSignRight8BehaviorEv",
       "address": "0x02137e48",
       "size": "0x000000a4",
-      "legacy_source": "src/_ZN14ArrowSignRight8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/ArrowSignRight/_ZN14ArrowSignRight8BehaviorEv.cpp",
       "ordinal": 8
     },
     {
       "symbol": "_ZN14ArrowSignRight13InitResourcesEv",
       "address": "0x02137eec",
       "size": "0x000000e4",
-      "legacy_source": "src/_ZN14ArrowSignRight13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/ArrowSignRight/_ZN14ArrowSignRight13InitResourcesEv.cpp",
       "ordinal": 9
     },
     {
       "symbol": "ArrowSignRight_Spawn",
       "address": "0x02137fd0",
       "size": "0x00000038",
-      "legacy_source": "src/ArrowSignRight_Spawn.c",
+      "legacy_source": "src/game/actors/ArrowSignRight/ArrowSignRight_Spawn.c",
       "ordinal": 10
     }
   ],
@@ -333,17 +333,17 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN14ArrowSignRightD1Ev.cpp",
-      "src/_ZN14ArrowSignRightD0Ev.cpp",
-      "src/func_ov098_02137c8c.c",
-      "src/_ZN14ArrowSignRight4KillEv.cpp",
-      "src/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp",
-      "src/_ZN14ArrowSignRight15OnHitByMegaCharER6Player.cpp",
-      "src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp",
-      "src/_ZN14ArrowSignRight6RenderEv.cpp",
-      "src/_ZN14ArrowSignRight8BehaviorEv.cpp",
-      "src/_ZN14ArrowSignRight13InitResourcesEv.cpp",
-      "src/ArrowSignRight_Spawn.c"
+      "src/game/actors/ArrowSignRight/_ZN14ArrowSignRightD1Ev.cpp",
+      "src/game/actors/ArrowSignRight/_ZN14ArrowSignRightD0Ev.cpp",
+      "src/unnamed/ov098/0213/func_ov098_02137c8c.c",
+      "src/game/actors/ArrowSignRight/_ZN14ArrowSignRight4KillEv.cpp",
+      "src/game/actors/ArrowSignRight/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp",
+      "src/game/actors/ArrowSignRight/_ZN14ArrowSignRight15OnHitByMegaCharER6Player.cpp",
+      "src/game/actors/ArrowSignRight/_ZN14ArrowSignRight16CleanupResourcesEv.cpp",
+      "src/game/actors/ArrowSignRight/_ZN14ArrowSignRight6RenderEv.cpp",
+      "src/game/actors/ArrowSignRight/_ZN14ArrowSignRight8BehaviorEv.cpp",
+      "src/game/actors/ArrowSignRight/_ZN14ArrowSignRight13InitResourcesEv.cpp",
+      "src/game/actors/ArrowSignRight/ArrowSignRight_Spawn.c"
     ],
     "extraInertImports": 85,
     "extraImportsWithNoHome": [],

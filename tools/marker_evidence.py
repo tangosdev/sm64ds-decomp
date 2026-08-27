@@ -660,7 +660,7 @@ def scan_casts(body, bases, fieldmap, env, origin, path, base_line, known_types,
                local_structs):
     """`((ModelBase *)((char *)&mModel))->SetFile(...)` -- a cast is a lower bound.
 
-    UNLESS the file declares that struct itself.  `src/_ZN5Stage11RenderModelEv.cpp`
+    UNLESS the file declares that struct itself.  `src/game/stages/Stage/_ZN5Stage11RenderModelEv.cpp`
     writes `struct ModelComponents { void *sub; Component *components; };` -- a local
     stand-in whose NAME a human chose and whose layout does not match the real class.
     Casting through it proves nothing about the type; it is recorded as `localname`
@@ -702,7 +702,7 @@ _SKIP_MEMBER_TY = set(EH._W1) | set(EH._W2) | set(EH._W4) | set(EH._W8) | {"void
 def scan_local_layout(code, cls, origin, path):
     """A migrated file that declares its own layout IS a member-type table.
 
-    `src/_ZN3AmpD1Ev.cpp` says `struct Amp : Actor { ModelAnim m0; /* 0xd4 */ ... }`
+    `src/game/actors/Amp/_ZN3AmpD1Ev.cpp` says `struct Amp : Actor { ModelAnim m0; /* 0xd4 */ ... }`
     and that file byte-matches, so both the offsets and the class names in it are
     pinned by the ROM's own relocations.
     """
@@ -895,7 +895,7 @@ def main():
             return sizes[cls][0], sizes[cls][1]
         if cls in layout_sizes:
             n, k = layout_sizes[cls].most_common(1)[0]
-            # UPPER BOUND ONLY.  `src/_ZN8PoleLiftD1Ev.cpp` pads Model to 0x80 so the
+            # UPPER BOUND ONLY.  `src/game/actors/PoleLift/_ZN8PoleLiftD1Ev.cpp` pads Model to 0x80 so the
             # next member lands at 0x158; the real class is 0x50 and the 0x30 between
             # them is unknown space.  Never let this override an assertion.
             return n, "inferred (UPPER BOUND) from %d local layout(s)" % k

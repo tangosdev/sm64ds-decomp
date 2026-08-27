@@ -78,7 +78,7 @@ struct daPgDfdr_c : dBgActor_c {
      * A leaf class (no RTTI children), so the destructor is declared OUT OF
      * LINE here, matching every other leaf under dBgActor_c (e.g.
      * include/BigBrickBlock.h). Defined as a real method in
-     * src/_ZN10daPgDfdr_cD1Ev.cpp / src/_ZN10daPgDfdr_cD0Ev.cpp -- both empty
+     * src/game/actors/daPgDfdr_c/_ZN10daPgDfdr_cD1Ev.cpp / src/game/actors/daPgDfdr_c/_ZN10daPgDfdr_cD0Ev.cpp -- both empty
      * bodies; the compiler emits the three member teardowns (in reverse
      * declaration order: dCcAc_c, TextureSequence, ModelAnim), the
      * two inherited vtable stores and the two dBgActor_c member teardowns on

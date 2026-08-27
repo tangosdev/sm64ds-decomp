@@ -34,7 +34,7 @@
  * stop at 0x5000 (the first draft of it did; the write is what caught it).
  *
  * From above, the bound is dScMgJump_c's: a Jump helper
- * (src/func_ov006_020ee2c4.c) writes 0x5004 and 0x5014, and no method of
+ * (src/unnamed/ov006/020e/func_ov006_020ee2c4.c) writes 0x5004 and 0x5014, and no method of
  * THIS class touches either. Its three siblings begin at 0x500c instead, so
  * 0x5004..0x500c is Jump's alone.
  *
@@ -114,7 +114,7 @@ struct dScMgD3DBase_c : dScMgBase_c {
        (+0xa0..+0xb8), and all four children reference all fourteen. Kept as
        flat names for now because the eight files that read them spell them
        this way; typing it as a real array is its own change. */
-    /* AND EACH ELEMENT IS A MINIGAME CAMERA. src/Camera_UpdateMatrices.c
+    /* AND EACH ELEMENT IS A MINIGAME CAMERA. src/game/camera/Camera_UpdateMatrices.c
        carries the 0xbc layout: matrices in the head, `eye` at +0xa0, `target`
        at +0xac and `angle` at +0xb8. dScMgJump_c::InitResources settles which
        element is which by calling Camera_UpdateMatrices(this + 0x466c) and

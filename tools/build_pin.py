@@ -15,7 +15,7 @@ other sweep member links the wrong bytes. A tool that rewrites a file, byte-chec
 rewrite against the sweep and keeps it has verified nothing the build will honour: the
 gate reports success for something the build then rejects.
 
-Observed: `src/func_ov006_020cb030.cpp` was rewritten by a transform that byte-verified
+Observed: `src/unnamed/ov006/020c/func_ov006_020cb030.cpp` was rewritten by a transform that byte-verified
 it against the sweep. The check passed. The ROM build then reported the overlay
 MISMATCHING by three words -- `module fidelity: 105/106`, `ROM-build analysis: FAIL`.
 

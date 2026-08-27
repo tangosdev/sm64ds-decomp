@@ -64,7 +64,7 @@ struct QuestionBlock : dBgActor_c {
        include/dActor_c.h's slots 24, 21 and 27 (corrected from `int` by
        BigBrickBlock::OnKicked and Stump::OnGroundPounded/OnHitByMegaChar
        respectively -- see include/BigBrickBlock.h, include/Stump.h and
-       src/_ZN8dActor_c8OnKickedERS_.cpp for the falsifying evidence; this
+       src/game/actors/dActor_c/_ZN8dActor_c8OnKickedERS_.cpp for the falsifying evidence; this
        class's own overrides happened to byte-match under the old `int` too,
        re-verified rather than assumed). The other two stay `int`, dActor_c's
        own declared type for their slots. */

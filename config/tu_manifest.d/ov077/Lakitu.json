@@ -22,224 +22,224 @@
       "symbol": "_ZN6LakituD1Ev",
       "address": "0x02123740",
       "size": "0x00000058",
-      "legacy_source": "src/_ZN6LakituD1Ev.cpp",
+      "legacy_source": "src/game/actors/Lakitu/_ZN6LakituD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN6LakituD0Ev",
       "address": "0x02123798",
       "size": "0x0000006c",
-      "legacy_source": "src/_ZN6LakituD0Ev.cpp",
+      "legacy_source": "src/game/actors/Lakitu/_ZN6LakituD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN6Lakitu13OnYoshiTryEatEv",
       "address": "0x02123804",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN6Lakitu13OnYoshiTryEatEv.cpp",
+      "legacy_source": "src/game/actors/Lakitu/_ZN6Lakitu13OnYoshiTryEatEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN6Lakitu16OnAimedAtWithEggEv",
       "address": "0x0212380c",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN6Lakitu16OnAimedAtWithEggEv.cpp",
+      "legacy_source": "src/game/actors/Lakitu/_ZN6Lakitu16OnAimedAtWithEggEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "func_ov077_02123814",
       "address": "0x02123814",
       "size": "0x0000006c",
-      "legacy_source": "src/func_ov077_02123814.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02123814.c",
       "ordinal": 4
     },
     {
       "symbol": "func_ov077_02123880",
       "address": "0x02123880",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov077_02123880.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02123880.c",
       "ordinal": 5
     },
     {
       "symbol": "func_ov077_021238bc",
       "address": "0x021238bc",
       "size": "0x00000050",
-      "legacy_source": "src/func_ov077_021238bc.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_021238bc.cpp",
       "ordinal": 6
     },
     {
       "symbol": "func_ov077_0212390c",
       "address": "0x0212390c",
       "size": "0x00000110",
-      "legacy_source": "src/func_ov077_0212390c.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_0212390c.cpp",
       "ordinal": 7
     },
     {
       "symbol": "func_ov077_02123a1c",
       "address": "0x02123a1c",
       "size": "0x00000058",
-      "legacy_source": "src/func_ov077_02123a1c.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02123a1c.cpp",
       "ordinal": 8
     },
     {
       "symbol": "func_ov077_02123a74",
       "address": "0x02123a74",
       "size": "0x000001f8",
-      "legacy_source": "src/func_ov077_02123a74.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02123a74.cpp",
       "ordinal": 9
     },
     {
       "symbol": "func_ov077_02123c6c",
       "address": "0x02123c6c",
       "size": "0x000000d4",
-      "legacy_source": "src/func_ov077_02123c6c.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02123c6c.cpp",
       "ordinal": 10
     },
     {
       "symbol": "func_ov077_02123d40",
       "address": "0x02123d40",
       "size": "0x0000028c",
-      "legacy_source": "src/func_ov077_02123d40.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02123d40.cpp",
       "ordinal": 11
     },
     {
       "symbol": "func_ov077_02123fcc",
       "address": "0x02123fcc",
       "size": "0x0000006c",
-      "legacy_source": "src/func_ov077_02123fcc.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02123fcc.c",
       "ordinal": 12
     },
     {
       "symbol": "func_ov077_02124038",
       "address": "0x02124038",
       "size": "0x000000e0",
-      "legacy_source": "src/func_ov077_02124038.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02124038.cpp",
       "ordinal": 13
     },
     {
       "symbol": "func_ov077_02124118",
       "address": "0x02124118",
       "size": "0x00000094",
-      "legacy_source": "src/func_ov077_02124118.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02124118.cpp",
       "ordinal": 14
     },
     {
       "symbol": "func_ov077_021241ac",
       "address": "0x021241ac",
       "size": "0x00000144",
-      "legacy_source": "src/func_ov077_021241ac.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_021241ac.c",
       "ordinal": 15
     },
     {
       "symbol": "func_ov077_021242f0",
       "address": "0x021242f0",
       "size": "0x000000a4",
-      "legacy_source": "src/func_ov077_021242f0.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_021242f0.c",
       "ordinal": 16
     },
     {
       "symbol": "func_ov077_02124394",
       "address": "0x02124394",
       "size": "0x0000002c",
-      "legacy_source": "src/func_ov077_02124394.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02124394.c",
       "ordinal": 17
     },
     {
       "symbol": "func_ov077_021243c0",
       "address": "0x021243c0",
       "size": "0x00000114",
-      "legacy_source": "src/func_ov077_021243c0.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_021243c0.cpp",
       "ordinal": 18
     },
     {
       "symbol": "func_ov077_021244d4",
       "address": "0x021244d4",
       "size": "0x00000090",
-      "legacy_source": "src/func_ov077_021244d4.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_021244d4.cpp",
       "ordinal": 19
     },
     {
       "symbol": "func_ov077_02124564",
       "address": "0x02124564",
       "size": "0x00000134",
-      "legacy_source": "src/func_ov077_02124564.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02124564.c",
       "ordinal": 20
     },
     {
       "symbol": "func_ov077_02124698",
       "address": "0x02124698",
       "size": "0x00000080",
-      "legacy_source": "src/func_ov077_02124698.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02124698.c",
       "ordinal": 21
     },
     {
       "symbol": "func_ov077_02124718",
       "address": "0x02124718",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov077_02124718.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02124718.cpp",
       "ordinal": 22
     },
     {
       "symbol": "func_ov077_02124754",
       "address": "0x02124754",
       "size": "0x00000038",
-      "legacy_source": "src/func_ov077_02124754.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02124754.cpp",
       "ordinal": 23
     },
     {
       "symbol": "func_ov077_0212478c",
       "address": "0x0212478c",
       "size": "0x0000001c",
-      "legacy_source": "src/func_ov077_0212478c.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_0212478c.c",
       "ordinal": 24
     },
     {
       "symbol": "_ZN6Lakitu16CleanupResourcesEv",
       "address": "0x021247a8",
       "size": "0x0000007c",
-      "legacy_source": "src/_ZN6Lakitu16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/Lakitu/_ZN6Lakitu16CleanupResourcesEv.cpp",
       "ordinal": 25
     },
     {
       "symbol": "_ZN6Lakitu16OnPendingDestroyEv",
       "address": "0x02124824",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN6Lakitu16OnPendingDestroyEv.cpp",
+      "legacy_source": "src/game/actors/Lakitu/_ZN6Lakitu16OnPendingDestroyEv.cpp",
       "ordinal": 26
     },
     {
       "symbol": "_ZN6Lakitu6RenderEv",
       "address": "0x02124828",
       "size": "0x00000090",
-      "legacy_source": "src/_ZN6Lakitu6RenderEv.cpp",
+      "legacy_source": "src/game/actors/Lakitu/_ZN6Lakitu6RenderEv.cpp",
       "ordinal": 27
     },
     {
       "symbol": "_ZN6Lakitu8BehaviorEv",
       "address": "0x021248b8",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN6Lakitu8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/Lakitu/_ZN6Lakitu8BehaviorEv.cpp",
       "ordinal": 28
     },
     {
       "symbol": "_ZN6Lakitu13InitResourcesEv",
       "address": "0x02124908",
       "size": "0x0000019c",
-      "legacy_source": "src/_ZN6Lakitu13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/Lakitu/_ZN6Lakitu13InitResourcesEv.cpp",
       "ordinal": 29
     },
     {
       "symbol": "_ZN6Lakitu13OnTurnIntoEggER6Player",
       "address": "0x02124aa4",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN6Lakitu13OnTurnIntoEggER6Player.cpp",
+      "legacy_source": "src/game/actors/Lakitu/_ZN6Lakitu13OnTurnIntoEggER6Player.cpp",
       "ordinal": 30
     },
     {
       "symbol": "Lakitu_Spawn",
       "address": "0x02124b04",
       "size": "0x00000060",
-      "legacy_source": "src/Lakitu_Spawn.c",
+      "legacy_source": "src/game/actors/Lakitu/Lakitu_Spawn.c",
       "ordinal": 31
     }
   ],

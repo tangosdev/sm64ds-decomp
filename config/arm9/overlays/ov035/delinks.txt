@@ -4,82 +4,82 @@
     .ctor       start:0x02112028 end:0x02112030 kind:rodata align:4
     .data       start:0x02112040 end:0x02112c60 kind:data align:32
     .bss        start:0x02112c60 end:0x02112ce0 kind:bss align:32
-src/_ZN16RotatingCogSmallD1Ev.cpp:
+src/game/actors/RotatingCogSmall/_ZN16RotatingCogSmallD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111e4
 
-src/_ZN16RotatingCogSmallD0Ev.cpp:
+src/game/actors/RotatingCogSmall/_ZN16RotatingCogSmallD0Ev.cpp:
     complete
     .text start:0x021111e4 end:0x0211123c
 
-src/_ZN16RotatingCogSmall16CleanupResourcesEv.cpp:
+src/game/actors/RotatingCogSmall/_ZN16RotatingCogSmall16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211123c end:0x021112c4
 
-src/_ZN16RotatingCogSmall6RenderEv.cpp:
+src/game/actors/RotatingCogSmall/_ZN16RotatingCogSmall6RenderEv.cpp:
     complete
     .text start:0x021112c4 end:0x021112ec
 
-src/_ZN16RotatingCogSmall8BehaviorEv.cpp:
+src/game/actors/RotatingCogSmall/_ZN16RotatingCogSmall8BehaviorEv.cpp:
     complete
     .text start:0x021112ec end:0x021114e0
 
-src/_ZN16RotatingCogSmall13InitResourcesEv.cpp:
+src/game/actors/RotatingCogSmall/_ZN16RotatingCogSmall13InitResourcesEv.cpp:
     complete
     .text start:0x021114e0 end:0x0211165c
 
-src/RotatingCogSmall_Spawn.c:
+src/game/actors/RotatingCogSmall/RotatingCogSmall_Spawn.c:
     complete
     .text start:0x0211165c end:0x0211168c
 
-src/func_ov035_0211168c.c:
+src/unnamed/ov035/0211/func_ov035_0211168c.c:
     complete
     .text start:0x0211168c end:0x021116bc
 
-src/RotatingClockHand_Spawn.c:
+src/game/actors/RotatingClockHand/RotatingClockHand_Spawn.c:
     complete
     .text start:0x021116bc end:0x021116ec
 
-src/_ZN16SpinningPlatformD1Ev.cpp:
+src/game/actors/SpinningPlatform/_ZN16SpinningPlatformD1Ev.cpp:
     complete
     .text start:0x021116ec end:0x02111738
 
-src/_ZN16SpinningPlatformD0Ev.cpp:
+src/game/actors/SpinningPlatform/_ZN16SpinningPlatformD0Ev.cpp:
     complete
     .text start:0x02111738 end:0x02111798
 
-src/_ZN16SpinningPlatform12UpdateShadowEv.cpp:
+src/game/actors/SpinningPlatform/_ZN16SpinningPlatform12UpdateShadowEv.cpp:
     complete
     .text start:0x02111798 end:0x021118a8
 
-src/_ZN16SpinningPlatform11UpdateModelEv.cpp:
+src/game/actors/SpinningPlatform/_ZN16SpinningPlatform11UpdateModelEv.cpp:
     complete
     .text start:0x021118a8 end:0x021118f0
 
-src/_ZN16SpinningPlatform16CleanupResourcesEv.cpp:
+src/game/actors/SpinningPlatform/_ZN16SpinningPlatform16CleanupResourcesEv.cpp:
     complete
     .text start:0x021118f0 end:0x02111934
 
-src/_ZN16SpinningPlatform6RenderEv.cpp:
+src/game/actors/SpinningPlatform/_ZN16SpinningPlatform6RenderEv.cpp:
     complete
     .text start:0x02111934 end:0x0211195c
 
-src/_ZN16SpinningPlatform8BehaviorEv.cpp:
+src/game/actors/SpinningPlatform/_ZN16SpinningPlatform8BehaviorEv.cpp:
     complete
     .text start:0x0211195c end:0x02111a98
 
-src/_ZN16SpinningPlatform13InitResourcesEv.cpp:
+src/game/actors/SpinningPlatform/_ZN16SpinningPlatform13InitResourcesEv.cpp:
     complete
     .text start:0x02111a98 end:0x02111b98
 
-src/SpinningPlatform_Spawn.c:
+src/game/actors/SpinningPlatform/SpinningPlatform_Spawn.c:
     complete
     .text start:0x02111b98 end:0x02111bd0
 
-src/__sinit_ov035_02111f04.c:
+src/unnamed/ov035/0211/__sinit_ov035_02111f04.c:
     complete
     .init start:0x02111f04 end:0x02111fc0
 
-src/__sinit_ov035_02111fc0.c:
+src/unnamed/ov035/0211/__sinit_ov035_02111fc0.c:
     complete
     .init start:0x02111fc0 end:0x02112028

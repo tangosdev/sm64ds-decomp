@@ -4,682 +4,682 @@
     .ctor       start:0x0211b72c end:0x0211b758 kind:rodata align:4
     .data       start:0x0211b760 end:0x0211c660 kind:data align:32
     .bss        start:0x0211c660 end:0x0211ca00 kind:bss align:32
-src/_ZN7daOts_cD1Ev.cpp:
+src/game/actors/daOts_c/_ZN7daOts_cD1Ev.cpp:
     complete
     .text start:0x02115ee0 end:0x02115f28
 
-src/_ZN7daOts_cD0Ev.cpp:
+src/game/actors/daOts_c/_ZN7daOts_cD0Ev.cpp:
     complete
     .text start:0x02115f28 end:0x02115f84
 
-src/_ZN7daOts_c16OnAimedAtWithEggEv.cpp:
+src/game/actors/daOts_c/_ZN7daOts_c16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02115f84 end:0x02115f98
 
-src/func_ov064_02115f98.c:
+src/unnamed/ov064/0211/func_ov064_02115f98.c:
     complete
     .text start:0x02115f98 end:0x02116110
 
-src/func_ov064_02116110.cpp:
+src/unnamed/ov064/0211/func_ov064_02116110.cpp:
     complete
     .text start:0x02116110 end:0x0211616c
 
-src/func_ov064_0211616c.c:
+src/unnamed/ov064/0211/func_ov064_0211616c.c:
     complete
     .text start:0x0211616c end:0x02116220
 
-src/func_ov064_02116220.cpp:
+src/unnamed/ov064/0211/func_ov064_02116220.cpp:
     complete
     .text start:0x02116220 end:0x02116348
 
-src/func_ov064_02116348.c:
+src/unnamed/ov064/0211/func_ov064_02116348.c:
     complete
     .text start:0x02116348 end:0x0211635c
 
-src/func_ov064_0211635c.c:
+src/unnamed/ov064/0211/func_ov064_0211635c.c:
     complete
     .text start:0x0211635c end:0x02116360
 
-src/func_ov064_02116360.c:
+src/unnamed/ov064/0211/func_ov064_02116360.c:
     complete
     .text start:0x02116360 end:0x02116374
 
-src/func_ov064_02116374.cpp:
+src/unnamed/ov064/0211/func_ov064_02116374.cpp:
     complete
     .text start:0x02116374 end:0x021163bc
 
-src/func_ov064_021163bc.c:
+src/unnamed/ov064/0211/func_ov064_021163bc.c:
     complete
     .text start:0x021163bc end:0x021163c0
 
-src/func_ov064_021163c0.cpp:
+src/unnamed/ov064/0211/func_ov064_021163c0.cpp:
     complete
     .text start:0x021163c0 end:0x02116460
 
-src/func_ov064_02116460.cpp:
+src/unnamed/ov064/0211/func_ov064_02116460.cpp:
     complete
     .text start:0x02116460 end:0x02116560
 
-src/func_ov064_02116560.cpp:
+src/unnamed/ov064/0211/func_ov064_02116560.cpp:
     complete
     .text start:0x02116560 end:0x021165d4
 
-src/func_ov064_021165d4.c:
+src/unnamed/ov064/0211/func_ov064_021165d4.c:
     complete
     .text start:0x021165d4 end:0x021165d8
 
-src/func_ov064_021165d8.cpp:
+src/unnamed/ov064/0211/func_ov064_021165d8.cpp:
     complete
     .text start:0x021165d8 end:0x021166f0
 
-src/func_ov064_021166f0.c:
+src/unnamed/ov064/0211/func_ov064_021166f0.c:
     complete
     .text start:0x021166f0 end:0x02116754
 
-src/func_ov064_02116754.cpp:
+src/unnamed/ov064/0211/func_ov064_02116754.cpp:
     complete
     .text start:0x02116754 end:0x02116bac
 
-src/func_ov064_02116bac.cpp:
+src/unnamed/ov064/0211/func_ov064_02116bac.cpp:
     complete
     .text start:0x02116bac end:0x02116ca0
 
-src/_ZN7daOts_c16CleanupResourcesEv.cpp:
+src/game/actors/daOts_c/_ZN7daOts_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02116ca0 end:0x02116cf0
 
-src/_ZN7daOts_c6RenderEv.cpp:
+src/game/actors/daOts_c/_ZN7daOts_c6RenderEv.cpp:
     complete
     .text start:0x02116cf0 end:0x02116d1c
 
-src/func_ov064_02116d1c.cpp:
+src/unnamed/ov064/0211/func_ov064_02116d1c.cpp:
     complete
     .text start:0x02116d1c end:0x02116ec0
 
-src/func_ov064_02116ec0.cpp:
+src/unnamed/ov064/0211/func_ov064_02116ec0.cpp:
     complete
     .text start:0x02116ec0 end:0x02117070
 
-src/_ZN5BullyD1Ev.cpp:
+src/game/actors/Bully/_ZN5BullyD1Ev.cpp:
     complete
     .text start:0x02117070 end:0x021170c4
 
-src/_ZN5BullyD0Ev.cpp:
+src/game/actors/Bully/_ZN5BullyD0Ev.cpp:
     complete
     .text start:0x021170c4 end:0x0211712c
 
-src/func_ov064_0211712c.c:
+src/unnamed/ov064/0211/func_ov064_0211712c.c:
     complete
     .text start:0x0211712c end:0x02117140
 
-src/func_ov064_02117140.c:
+src/unnamed/ov064/0211/func_ov064_02117140.c:
     complete
     .text start:0x02117140 end:0x02117154
 
-src/func_ov064_02117154.c:
+src/unnamed/ov064/0211/func_ov064_02117154.c:
     complete
     .text start:0x02117154 end:0x02117168
 
-src/func_ov064_02117168.c:
+src/unnamed/ov064/0211/func_ov064_02117168.c:
     complete
     .text start:0x02117168 end:0x021171b0
 
-src/func_ov064_021171b0.c:
+src/unnamed/ov064/0211/func_ov064_021171b0.c:
     complete
     .text start:0x021171b0 end:0x02117220
 
-src/func_ov064_02117220.cpp:
+src/unnamed/ov064/0211/func_ov064_02117220.cpp:
     complete
     .text start:0x02117220 end:0x02117310
 
-src/_ZN5Bully8BehaviorEv.cpp:
+src/game/actors/Bully/_ZN5Bully8BehaviorEv.cpp:
     complete
     .text start:0x02117310 end:0x02117424
 
-src/_ZN5Bully13InitResourcesEv.cpp:
+src/game/actors/Bully/_ZN5Bully13InitResourcesEv.cpp:
     complete
     .text start:0x02117424 end:0x02117444
 
-src/Bully_Spawn.c:
+src/game/actors/Bully/Bully_Spawn.c:
     complete
     .text start:0x02117444 end:0x021174a0
 
-src/_ZN8BigBullyD1Ev.cpp:
+src/game/actors/BigBully/_ZN8BigBullyD1Ev.cpp:
     complete
     .text start:0x021174a0 end:0x021174f4
 
-src/_ZN8BigBullyD0Ev.cpp:
+src/game/actors/BigBully/_ZN8BigBullyD0Ev.cpp:
     complete
     .text start:0x021174f4 end:0x0211755c
 
-src/func_ov064_0211755c.c:
+src/unnamed/ov064/0211/func_ov064_0211755c.c:
     complete
     .text start:0x0211755c end:0x021175cc
 
-src/func_ov064_021175cc.cpp:
+src/unnamed/ov064/0211/func_ov064_021175cc.cpp:
     complete
     .text start:0x021175cc end:0x0211764c
 
-src/_ZN8BigBully6RenderEv.cpp:
+src/game/actors/BigBully/_ZN8BigBully6RenderEv.cpp:
     complete
     .text start:0x0211764c end:0x02117684
 
-src/_ZN8BigBully8BehaviorEv.cpp:
+src/game/actors/BigBully/_ZN8BigBully8BehaviorEv.cpp:
     complete
     .text start:0x02117684 end:0x02117784
 
-src/_ZN8BigBully13InitResourcesEv.cpp:
+src/game/actors/BigBully/_ZN8BigBully13InitResourcesEv.cpp:
     complete
     .text start:0x02117784 end:0x0211791c
 
-src/BigBully_Spawn.c:
+src/game/actors/BigBully/BigBully_Spawn.c:
     complete
     .text start:0x0211791c end:0x02117978
 
-src/_ZN12MetalNetLiftD1Ev.cpp:
+src/game/actors/MetalNetLift/_ZN12MetalNetLiftD1Ev.cpp:
     complete
     .text start:0x02117978 end:0x021179bc
 
-src/_ZN12MetalNetLiftD0Ev.cpp:
+src/game/actors/MetalNetLift/_ZN12MetalNetLiftD0Ev.cpp:
     complete
     .text start:0x021179bc end:0x02117a14
 
-src/func_ov064_02117a14.cpp:
+src/unnamed/ov064/0211/func_ov064_02117a14.cpp:
     complete
     .text start:0x02117a14 end:0x02117a44
 
-src/func_ov064_02117a44.cpp:
+src/unnamed/ov064/0211/func_ov064_02117a44.cpp:
     complete
     .text start:0x02117a44 end:0x02117b8c
 
-src/func_ov064_02117b8c.c:
+src/unnamed/ov064/0211/func_ov064_02117b8c.c:
     complete
     .text start:0x02117b8c end:0x02117bdc
 
-src/func_ov064_02117bdc.c:
+src/unnamed/ov064/0211/func_ov064_02117bdc.c:
     complete
     .text start:0x02117bdc end:0x02117c24
 
-src/func_ov064_02117c24.c:
+src/unnamed/ov064/0211/func_ov064_02117c24.c:
     complete
     .text start:0x02117c24 end:0x02117cc4
 
-src/_ZN12MetalNetLift16CleanupResourcesEv.cpp:
+src/game/actors/MetalNetLift/_ZN12MetalNetLift16CleanupResourcesEv.cpp:
     complete
     .text start:0x02117cc4 end:0x02117cfc
 
-src/_ZN12MetalNetLift6RenderEv.cpp:
+src/game/actors/MetalNetLift/_ZN12MetalNetLift6RenderEv.cpp:
     complete
     .text start:0x02117cfc end:0x02117d24
 
-src/_ZN12MetalNetLift8BehaviorEv.cpp:
+src/game/actors/MetalNetLift/_ZN12MetalNetLift8BehaviorEv.cpp:
     complete
     .text start:0x02117d24 end:0x02117e44
 
-src/_ZN12MetalNetLift13InitResourcesEv.cpp:
+src/game/actors/MetalNetLift/_ZN12MetalNetLift13InitResourcesEv.cpp:
     complete
     .text start:0x02117e44 end:0x02117fb4
 
-src/func_ov064_02117fb4.cpp:
+src/unnamed/ov064/0211/func_ov064_02117fb4.cpp:
     complete
     .text start:0x02117fb4 end:0x02117fd4
 
-src/func_ov064_02117fd4.c:
+src/unnamed/ov064/0211/func_ov064_02117fd4.c:
     complete
     .text start:0x02117fd4 end:0x02117fe8
 
-src/MetalNetLift_Spawn.c:
+src/game/actors/MetalNetLift/MetalNetLift_Spawn.c:
     complete
     .text start:0x02117fe8 end:0x02118020
 
-src/_ZN18TiltingPlatformLllD1Ev.cpp:
+src/game/actors/TiltingPlatformLll/_ZN18TiltingPlatformLllD1Ev.cpp:
     complete
     .text start:0x02118020 end:0x02118070
 
-src/_ZN18TiltingPlatformLllD0Ev.cpp:
+src/game/actors/TiltingPlatformLll/_ZN18TiltingPlatformLllD0Ev.cpp:
     complete
     .text start:0x02118070 end:0x021180d4
 
-src/_ZN18TiltingPlatformLll16CleanupResourcesEv.cpp:
+src/game/actors/TiltingPlatformLll/_ZN18TiltingPlatformLll16CleanupResourcesEv.cpp:
     complete
     .text start:0x021180d4 end:0x021180e8
 
-src/_ZN18TiltingPlatformLll13InitResourcesEv.cpp:
+src/game/actors/TiltingPlatformLll/_ZN18TiltingPlatformLll13InitResourcesEv.cpp:
     complete
     .text start:0x021180e8 end:0x021180fc
 
-src/TiltingPlatformLll_Spawn.c:
+src/game/actors/TiltingPlatformLll/TiltingPlatformLll_Spawn.c:
     complete
     .text start:0x021180fc end:0x02118138
 
-src/_ZN15RotatingFirebarD1Ev.cpp:
+src/game/actors/RotatingFirebar/_ZN15RotatingFirebarD1Ev.cpp:
     complete
     .text start:0x02118138 end:0x02118194
 
-src/_ZN15RotatingFirebarD0Ev.cpp:
+src/game/actors/RotatingFirebar/_ZN15RotatingFirebarD0Ev.cpp:
     complete
     .text start:0x02118194 end:0x02118204
 
-src/_ZN15RotatingFirebar16CleanupResourcesEv.cpp:
+src/game/actors/RotatingFirebar/_ZN15RotatingFirebar16CleanupResourcesEv.cpp:
     complete
     .text start:0x02118204 end:0x0211824c
 
-src/_ZN15RotatingFirebar6RenderEv.cpp:
+src/game/actors/RotatingFirebar/_ZN15RotatingFirebar6RenderEv.cpp:
     complete
     .text start:0x0211824c end:0x02118274
 
-src/_ZN15RotatingFirebar8BehaviorEv.cpp:
+src/game/actors/RotatingFirebar/_ZN15RotatingFirebar8BehaviorEv.cpp:
     complete
     .text start:0x02118274 end:0x02118480
 
-src/_ZN15RotatingFirebar13InitResourcesEv.cpp:
+src/game/actors/RotatingFirebar/_ZN15RotatingFirebar13InitResourcesEv.cpp:
     complete
     .text start:0x02118480 end:0x02118564
 
-src/RotatingFirebar_Spawn.cpp:
+src/game/actors/RotatingFirebar/RotatingFirebar_Spawn.cpp:
     complete
     .text start:0x02118564 end:0x021185c0
 
-src/_ZN10LavaBubbleD1Ev.cpp:
+src/game/actors/LavaBubble/_ZN10LavaBubbleD1Ev.cpp:
     complete
     .text start:0x021185c0 end:0x021185f8
 
-src/_ZN10LavaBubbleD0Ev.cpp:
+src/game/actors/LavaBubble/_ZN10LavaBubbleD0Ev.cpp:
     complete
     .text start:0x021185f8 end:0x02118644
 
-src/func_ov064_02118644.c:
+src/unnamed/ov064/0211/func_ov064_02118644.c:
     complete
     .text start:0x02118644 end:0x0211873c
 
-src/func_ov064_0211873c.c:
+src/unnamed/ov064/0211/func_ov064_0211873c.c:
     complete
     .text start:0x0211873c end:0x02118760
 
-src/func_ov064_02118760.c:
+src/unnamed/ov064/0211/func_ov064_02118760.c:
     complete
     .text start:0x02118760 end:0x021187d0
 
-src/func_ov064_021187d0.c:
+src/unnamed/ov064/0211/func_ov064_021187d0.c:
     complete
     .text start:0x021187d0 end:0x021187ec
 
-src/func_ov064_021187ec.cpp:
+src/unnamed/ov064/0211/func_ov064_021187ec.cpp:
     complete
     .text start:0x021187ec end:0x0211883c
 
-src/_ZN10LavaBubble16CleanupResourcesEv.cpp:
+src/game/actors/LavaBubble/_ZN10LavaBubble16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211883c end:0x02118844
 
-src/_ZN10LavaBubble16OnPendingDestroyEv.cpp:
+src/game/actors/LavaBubble/_ZN10LavaBubble16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02118844 end:0x02118848
 
-src/_ZN10LavaBubble6RenderEv.cpp:
+src/game/actors/LavaBubble/_ZN10LavaBubble6RenderEv.cpp:
     complete
     .text start:0x02118848 end:0x02118850
 
-src/_ZN10LavaBubble8BehaviorEv.cpp:
+src/game/actors/LavaBubble/_ZN10LavaBubble8BehaviorEv.cpp:
     complete
     .text start:0x02118850 end:0x021189d8
 
-src/_ZN10LavaBubble13InitResourcesEv.cpp:
+src/game/actors/LavaBubble/_ZN10LavaBubble13InitResourcesEv.cpp:
     complete
     .text start:0x021189d8 end:0x02118b08
 
-src/_ZN10LavaBubble13OnYoshiTryEatEv.cpp:
+src/game/actors/LavaBubble/_ZN10LavaBubble13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02118b08 end:0x02118b10
 
-src/LavaBubble_Spawn.c:
+src/game/actors/LavaBubble/LavaBubble_Spawn.c:
     complete
     .text start:0x02118b10 end:0x02118b50
 
-src/_ZN17BowserPuzzlePieceD1Ev.cpp:
+src/game/actors/BowserPuzzlePiece/_ZN17BowserPuzzlePieceD1Ev.cpp:
     complete
     .text start:0x02118b50 end:0x02118b94
 
-src/_ZN17BowserPuzzlePieceD0Ev.cpp:
+src/game/actors/BowserPuzzlePiece/_ZN17BowserPuzzlePieceD0Ev.cpp:
     complete
     .text start:0x02118b94 end:0x02118bec
 
-src/_ZN19BowserPuzzleManagerD1Ev.cpp:
+src/game/actors/BowserPuzzleManager/_ZN19BowserPuzzleManagerD1Ev.cpp:
     complete
     .text start:0x02118bec end:0x02118c10
 
-src/_ZN19BowserPuzzleManagerD0Ev.cpp:
+src/game/actors/BowserPuzzleManager/_ZN19BowserPuzzleManagerD0Ev.cpp:
     complete
     .text start:0x02118c10 end:0x02118c48
 
-src/func_ov064_02118c48.c:
+src/unnamed/ov064/0211/func_ov064_02118c48.c:
     complete
     .text start:0x02118c48 end:0x02118cd4
 
-src/func_ov064_02118cd4.c:
+src/unnamed/ov064/0211/func_ov064_02118cd4.c:
     complete
     .text start:0x02118cd4 end:0x02118cec
 
-src/func_ov064_02118cec.c:
+src/unnamed/ov064/0211/func_ov064_02118cec.c:
     complete
     .text start:0x02118cec end:0x02118d08
 
-src/func_ov064_02118d08.c:
+src/unnamed/ov064/0211/func_ov064_02118d08.c:
     complete
     .text start:0x02118d08 end:0x02118d20
 
-src/func_ov064_02118d20.c:
+src/unnamed/ov064/0211/func_ov064_02118d20.c:
     complete
     .text start:0x02118d20 end:0x02118d3c
 
-src/func_ov064_02118d3c.c:
+src/unnamed/ov064/0211/func_ov064_02118d3c.c:
     complete
     .text start:0x02118d3c end:0x02118da0
 
-src/func_ov064_02118da0.cpp:
+src/unnamed/ov064/0211/func_ov064_02118da0.cpp:
     complete
     .text start:0x02118da0 end:0x02118e24
 
-src/func_ov064_02118e24.cpp:
+src/unnamed/ov064/0211/func_ov064_02118e24.cpp:
     complete
     .text start:0x02118e24 end:0x02118ee4
 
-src/func_ov064_02118ee4.c:
+src/unnamed/ov064/0211/func_ov064_02118ee4.c:
     complete
     .text start:0x02118ee4 end:0x02118fa4
 
-src/func_ov064_02118fa4.cpp:
+src/unnamed/ov064/0211/func_ov064_02118fa4.cpp:
     complete
     .text start:0x02118fa4 end:0x02119010
 
-src/func_ov064_02119010.c:
+src/unnamed/ov064/0211/func_ov064_02119010.c:
     complete
     .text start:0x02119010 end:0x0211904c
 
-src/_ZN17BowserPuzzlePiece16CleanupResourcesEv.cpp:
+src/game/actors/BowserPuzzlePiece/_ZN17BowserPuzzlePiece16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211904c end:0x02119088
 
-src/_ZN17BowserPuzzlePiece6RenderEv.cpp:
+src/game/actors/BowserPuzzlePiece/_ZN17BowserPuzzlePiece6RenderEv.cpp:
     complete
     .text start:0x02119088 end:0x021190b0
 
-src/_ZN17BowserPuzzlePiece8BehaviorEv.cpp:
+src/game/actors/BowserPuzzlePiece/_ZN17BowserPuzzlePiece8BehaviorEv.cpp:
     complete
     .text start:0x021190b0 end:0x0211915c
 
-src/_ZN19BowserPuzzleManager8BehaviorEv.cpp:
+src/game/actors/BowserPuzzleManager/_ZN19BowserPuzzleManager8BehaviorEv.cpp:
     complete
     .text start:0x0211915c end:0x021191a8
 
-src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp:
+src/game/actors/BowserPuzzlePiece/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp:
     complete
     .text start:0x021191a8 end:0x02119284
 
-src/_ZN19BowserPuzzleManager13InitResourcesEv.cpp:
+src/game/actors/BowserPuzzleManager/_ZN19BowserPuzzleManager13InitResourcesEv.cpp:
     complete
     .text start:0x02119284 end:0x0211929c
 
-src/func_ov064_0211929c.cpp:
+src/unnamed/ov064/0211/func_ov064_0211929c.cpp:
     complete
     .text start:0x0211929c end:0x021192bc
 
-src/func_ov064_021192bc.c:
+src/unnamed/ov064/0211/func_ov064_021192bc.c:
     complete
     .text start:0x021192bc end:0x021192d0
 
-src/BowserPuzzleManager_Spawn.c:
+src/game/actors/BowserPuzzleManager/BowserPuzzleManager_Spawn.c:
     complete
     .text start:0x021192d0 end:0x02119300
 
-src/BowserPuzzlePiece_Spawn.c:
+src/game/actors/BowserPuzzlePiece/BowserPuzzlePiece_Spawn.c:
     complete
     .text start:0x02119300 end:0x02119330
 
-src/_ZN9JetStreamD1Ev.cpp:
+src/game/actors/JetStream/_ZN9JetStreamD1Ev.cpp:
     complete
     .text start:0x02119330 end:0x02119368
 
-src/_ZN9JetStreamD0Ev.cpp:
+src/game/actors/JetStream/_ZN9JetStreamD0Ev.cpp:
     complete
     .text start:0x02119368 end:0x021193b4
 
-src/func_ov064_021193b4.c:
+src/unnamed/ov064/0211/func_ov064_021193b4.c:
     complete
     .text start:0x021193b4 end:0x021197fc
 
-src/func_ov064_021197fc.cpp:
+src/unnamed/ov064/0211/func_ov064_021197fc.cpp:
     complete
     .text start:0x021197fc end:0x0211982c
 
-src/func_ov064_0211982c.cpp:
+src/unnamed/ov064/0211/func_ov064_0211982c.cpp:
     complete
     .text start:0x0211982c end:0x0211987c
 
-src/func_ov064_0211987c.c:
+src/unnamed/ov064/0211/func_ov064_0211987c.c:
     complete
     .text start:0x0211987c end:0x02119880
 
-src/_ZN9JetStream16CleanupResourcesEv.cpp:
+src/game/actors/JetStream/_ZN9JetStream16CleanupResourcesEv.cpp:
     complete
     .text start:0x02119880 end:0x021198b0
 
-src/_ZN9JetStream16OnPendingDestroyEv.cpp:
+src/game/actors/JetStream/_ZN9JetStream16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021198b0 end:0x021198b4
 
-src/_ZN9JetStream6RenderEv.cpp:
+src/game/actors/JetStream/_ZN9JetStream6RenderEv.cpp:
     complete
     .text start:0x021198b4 end:0x021198bc
 
-src/_ZN9JetStream8BehaviorEv.cpp:
+src/game/actors/JetStream/_ZN9JetStream8BehaviorEv.cpp:
     complete
     .text start:0x021198bc end:0x0211992c
 
-src/_ZN9JetStream13InitResourcesEv.cpp:
+src/game/actors/JetStream/_ZN9JetStream13InitResourcesEv.cpp:
     complete
     .text start:0x0211992c end:0x02119a18
 
-src/JetStream_Spawn.c:
+src/game/actors/JetStream/JetStream_Spawn.c:
     complete
     .text start:0x02119a18 end:0x02119a58
 
-src/_ZN9WaterRingD1Ev.cpp:
+src/game/actors/WaterRing/_ZN9WaterRingD1Ev.cpp:
     complete
     .text start:0x02119a58 end:0x02119aa0
 
-src/_ZN9WaterRingD0Ev.cpp:
+src/game/actors/WaterRing/_ZN9WaterRingD0Ev.cpp:
     complete
     .text start:0x02119aa0 end:0x02119afc
 
-src/func_ov064_02119afc.cpp:
+src/unnamed/ov064/0211/func_ov064_02119afc.cpp:
     complete
     .text start:0x02119afc end:0x02119c60
 
-src/func_ov064_02119c60.c:
+src/unnamed/ov064/0211/func_ov064_02119c60.c:
     complete
     .text start:0x02119c60 end:0x02119ce4
 
-src/func_ov064_02119ce4.c:
+src/unnamed/ov064/0211/func_ov064_02119ce4.c:
     complete
     .text start:0x02119ce4 end:0x02119d28
 
-src/func_ov064_02119d28.c:
+src/unnamed/ov064/0211/func_ov064_02119d28.c:
     complete
     .text start:0x02119d28 end:0x02119ea0
 
-src/func_ov064_02119ea0.c:
+src/unnamed/ov064/0211/func_ov064_02119ea0.c:
     complete
     .text start:0x02119ea0 end:0x02119ecc
 
-src/func_ov064_02119ecc.cpp:
+src/unnamed/ov064/0211/func_ov064_02119ecc.cpp:
     complete
     .text start:0x02119ecc end:0x02119f1c
 
-src/func_ov064_02119f1c.cpp:
+src/unnamed/ov064/0211/func_ov064_02119f1c.cpp:
     complete
     .text start:0x02119f1c end:0x02119fa0
 
-src/_ZN9WaterRing16CleanupResourcesEv.cpp:
+src/game/actors/WaterRing/_ZN9WaterRing16CleanupResourcesEv.cpp:
     complete
     .text start:0x02119fa0 end:0x02119fc4
 
-src/_ZN9WaterRing16OnPendingDestroyEv.cpp:
+src/game/actors/WaterRing/_ZN9WaterRing16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02119fc4 end:0x02119fc8
 
-src/_ZN9WaterRing6RenderEv.cpp:
+src/game/actors/WaterRing/_ZN9WaterRing6RenderEv.cpp:
     complete
     .text start:0x02119fc8 end:0x02119ffc
 
-src/_ZN9WaterRing8BehaviorEv.cpp:
+src/game/actors/WaterRing/_ZN9WaterRing8BehaviorEv.cpp:
     complete
     .text start:0x02119ffc end:0x0211a090
 
-src/_ZN9WaterRing13InitResourcesEv.cpp:
+src/game/actors/WaterRing/_ZN9WaterRing13InitResourcesEv.cpp:
     complete
     .text start:0x0211a090 end:0x0211a1b0
 
-src/WaterRing_Spawn.c:
+src/game/actors/WaterRing/WaterRing_Spawn.c:
     complete
     .text start:0x0211a1b0 end:0x0211a200
 
-src/_ZN13TreasureChestD1Ev.cpp:
+src/game/actors/TreasureChest/_ZN13TreasureChestD1Ev.cpp:
     complete
     .text start:0x0211a200 end:0x0211a238
 
-src/_ZN13TreasureChestD0Ev.cpp:
+src/game/actors/TreasureChest/_ZN13TreasureChestD0Ev.cpp:
     complete
     .text start:0x0211a238 end:0x0211a284
 
-src/_ZN13TreasureChest20UpdateModelTransformEv.cpp:
+src/game/actors/TreasureChest/_ZN13TreasureChest20UpdateModelTransformEv.cpp:
     complete
     .text start:0x0211a284 end:0x0211a2c4
 
-src/_ZN13TreasureChest6State2Ev.cpp:
+src/game/actors/TreasureChest/_ZN13TreasureChest6State2Ev.cpp:
     complete
     .text start:0x0211a2c4 end:0x0211a380
 
-src/_ZN13TreasureChest10InitState2Ev.cpp:
+src/game/actors/TreasureChest/_ZN13TreasureChest10InitState2Ev.cpp:
     complete
     .text start:0x0211a380 end:0x0211a39c
 
-src/_ZN13TreasureChest6State1Ev.cpp:
+src/game/actors/TreasureChest/_ZN13TreasureChest6State1Ev.cpp:
     complete
     .text start:0x0211a39c end:0x0211a49c
 
-src/_ZN13TreasureChest10InitState1Ev.cpp:
+src/game/actors/TreasureChest/_ZN13TreasureChest10InitState1Ev.cpp:
     complete
     .text start:0x0211a49c end:0x0211a4c4
 
-src/_ZN13TreasureChest6State0Ev.cpp:
+src/game/actors/TreasureChest/_ZN13TreasureChest6State0Ev.cpp:
     complete
     .text start:0x0211a4c4 end:0x0211a6e0
 
-src/_ZN13TreasureChest10InitState0Ev.cpp:
+src/game/actors/TreasureChest/_ZN13TreasureChest10InitState0Ev.cpp:
     complete
     .text start:0x0211a6e0 end:0x0211a6ec
 
-src/_ZN13TreasureChest8SetStateEi.cpp:
+src/game/actors/TreasureChest/_ZN13TreasureChest8SetStateEi.cpp:
     complete
     .text start:0x0211a6ec end:0x0211a734
 
-src/_ZN13TreasureChest17CallStateBehaviorEv.cpp:
+src/game/actors/TreasureChest/_ZN13TreasureChest17CallStateBehaviorEv.cpp:
     complete
     .text start:0x0211a734 end:0x0211a77c
 
-src/_ZN13TreasureChest16CleanupResourcesEv.cpp:
+src/game/actors/TreasureChest/_ZN13TreasureChest16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211a77c end:0x0211a7c4
 
-src/_ZN13TreasureChest6RenderEv.cpp:
+src/game/actors/TreasureChest/_ZN13TreasureChest6RenderEv.cpp:
     complete
     .text start:0x0211a7c4 end:0x0211a7ec
 
-src/_ZN13TreasureChest8BehaviorEv.cpp:
+src/game/actors/TreasureChest/_ZN13TreasureChest8BehaviorEv.cpp:
     complete
     .text start:0x0211a7ec end:0x0211a814
 
-src/_ZN13TreasureChest13InitResourcesEv.cpp:
+src/game/actors/TreasureChest/_ZN13TreasureChest13InitResourcesEv.cpp:
     complete
     .text start:0x0211a814 end:0x0211a8f0
 
-src/TreasureChest_Spawn.c:
+src/game/actors/TreasureChest/TreasureChest_Spawn.c:
     complete
     .text start:0x0211a8f0 end:0x0211a930
 
-src/_ZN4ClamD1Ev.cpp:
+src/game/actors/Clam/_ZN4ClamD1Ev.cpp:
     complete
     .text start:0x0211a930 end:0x0211a968
 
-src/_ZN4ClamD0Ev.cpp:
+src/game/actors/Clam/_ZN4ClamD0Ev.cpp:
     complete
     .text start:0x0211a968 end:0x0211a9b4
 
-src/func_ov064_0211a9b4.c:
+src/unnamed/ov064/0211/func_ov064_0211a9b4.c:
     complete
     .text start:0x0211a9b4 end:0x0211a9f4
 
-src/_ZN4Clam16CleanupResourcesEv.cpp:
+src/game/actors/Clam/_ZN4Clam16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211a9f4 end:0x0211aa30
 
-src/_ZN4Clam6RenderEv.cpp:
+src/game/actors/Clam/_ZN4Clam6RenderEv.cpp:
     complete
     .text start:0x0211aa30 end:0x0211aa58
 
-src/_ZN4Clam8BehaviorEv.cpp:
+src/game/actors/Clam/_ZN4Clam8BehaviorEv.cpp:
     complete
     .text start:0x0211aa58 end:0x0211acc4
 
-src/_ZN4Clam13InitResourcesEv.cpp:
+src/game/actors/Clam/_ZN4Clam13InitResourcesEv.cpp:
     complete
     .text start:0x0211acc4 end:0x0211ad70
 
-src/Clam_Spawn.c:
+src/game/actors/Clam/Clam_Spawn.c:
     complete
     .text start:0x0211ad70 end:0x0211adb0
 
-src/__sinit_ov064_0211ae00.c:
+src/unnamed/ov064/0211/__sinit_ov064_0211ae00.c:
     complete
     .init start:0x0211ae00 end:0x0211aee0
 
-src/__sinit_ov064_0211aee0.c:
+src/unnamed/ov064/0211/__sinit_ov064_0211aee0.c:
     complete
     .init start:0x0211aee0 end:0x0211afc0
 
-src/__sinit_ov064_0211afc0.c:
+src/unnamed/ov064/0211/__sinit_ov064_0211afc0.c:
     complete
     .init start:0x0211afc0 end:0x0211b078
 
-src/__sinit_ov064_0211b078.c:
+src/unnamed/ov064/0211/__sinit_ov064_0211b078.c:
     complete
     .init start:0x0211b078 end:0x0211b0e4
 
-src/__sinit_ov064_0211b0e4.c:
+src/unnamed/ov064/0211/__sinit_ov064_0211b0e4.c:
     complete
     .init start:0x0211b0e4 end:0x0211b150
 
-src/__sinit_ov064_0211b150.c:
+src/unnamed/ov064/0211/__sinit_ov064_0211b150.c:
     complete
     .init start:0x0211b150 end:0x0211b1d4
 
-src/__sinit_ov064_0211b1d4.c:
+src/unnamed/ov064/0211/__sinit_ov064_0211b1d4.c:
     complete
     .init start:0x0211b1d4 end:0x0211b4dc
 
-src/__sinit_ov064_0211b4dc.c:
+src/unnamed/ov064/0211/__sinit_ov064_0211b4dc.c:
     complete
     .init start:0x0211b4dc end:0x0211b518
 
-src/__sinit_ov064_0211b518.c:
+src/unnamed/ov064/0211/__sinit_ov064_0211b518.c:
     complete
     .init start:0x0211b518 end:0x0211b59c
 
-src/__sinit_ov064_0211b59c.c:
+src/unnamed/ov064/0211/__sinit_ov064_0211b59c.c:
     complete
     .init start:0x0211b59c end:0x0211b698
 
-src/__sinit_ov064_0211b698.c:
+src/unnamed/ov064/0211/__sinit_ov064_0211b698.c:
     complete
     .init start:0x0211b698 end:0x0211b72c

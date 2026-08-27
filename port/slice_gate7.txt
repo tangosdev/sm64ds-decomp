@@ -2,27 +2,27 @@
 # Animation::Advance owns frame progression (speed, loop/clamp mode bits)
 # instead of a harness counter. Sits on the gate-4/5 stack.
 
-src/_ZN9ModelAnimC1Ev.cpp
-src/_ZN9ModelAnimC2Ev.c
-src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c
-src/_ZN9ModelAnim11UpdateVertsEv.cpp
-src/_ZN9ModelAnim6RenderEPK7Vector3.cpp
-src/_ZN9ModelAnim9Virtual10ER9Matrix4x3.cpp
-src/_ZN9AnimationC1Ev.cpp
-# src/_ZN9AnimationC2Ev.cpp is the C2 sibling of the C1 above and has the
+src/runtime/graphics/ModelAnim/_ZN9ModelAnimC1Ev.cpp
+src/runtime/graphics/ModelAnim/_ZN9ModelAnimC2Ev.c
+src/runtime/graphics/ModelAnim/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c
+src/runtime/graphics/ModelAnim/_ZN9ModelAnim11UpdateVertsEv.cpp
+src/runtime/graphics/ModelAnim/_ZN9ModelAnim6RenderEPK7Vector3.cpp
+src/runtime/graphics/ModelAnim/_ZN9ModelAnim9Virtual10ER9Matrix4x3.cpp
+src/runtime/graphics/Animation/_ZN9AnimationC1Ev.cpp
+# src/runtime/graphics/Animation/_ZN9AnimationC2Ev.cpp is the C2 sibling of the C1 above and has the
 # identical body. Itanium keeps them as two symbols; MSVC has one, so
 # building both is a duplicate definition. The host builds C1 and
 # hal/ctor_bridge.cpp defines the C2 name.
-src/_ZN9Animation12SetAnimationEti5Fix12IiEt.cpp
-src/_ZN9Animation8SetFlagsEi.cpp
-src/_ZN9Animation7AdvanceEv.cpp
-src/_ZN9Animation8FinishedEv.cpp
-src/_ZN9Animation8GetFlagsEv.cpp
-src/_ZN9AnimationD1Ev.cpp
+src/runtime/graphics/Animation/_ZN9Animation12SetAnimationEti5Fix12IiEt.cpp
+src/runtime/graphics/Animation/_ZN9Animation8SetFlagsEi.cpp
+src/runtime/graphics/Animation/_ZN9Animation7AdvanceEv.cpp
+src/runtime/graphics/Animation/_ZN9Animation8FinishedEv.cpp
+src/runtime/graphics/Animation/_ZN9Animation8GetFlagsEv.cpp
+src/runtime/graphics/Animation/_ZN9AnimationD1Ev.cpp
 
 # ModelAnim comes across whole now that its constructor is real C++: the TU
 # is the vtable's key function for MSVC too, so every virtual has to be
 # defined. Virtual18 and the destructor were the two the gate never
 # exercised and so never sliced.
-src/_ZN9ModelAnim9Virtual18EjPK7Vector3.cpp
-src/_ZN9ModelAnimD1Ev.cpp
+src/runtime/graphics/ModelAnim/_ZN9ModelAnim9Virtual18EjPK7Vector3.cpp
+src/runtime/graphics/ModelAnim/_ZN9ModelAnimD1Ev.cpp

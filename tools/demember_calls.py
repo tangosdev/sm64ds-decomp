@@ -53,7 +53,7 @@ below reads the relocation's destination out of `config/**/relocs.txt`, and comp
 with the one mwccarm `tools/rombuild.py` will build the file with rather than a sweep
 of all 25 installed ones. Both of those are load-bearing:
 
-    src/func_ov006_020cb030.cpp passed the byte-only sweep check this tool shipped
+    src/unnamed/ov006/020c/func_ov006_020cb030.cpp passed the byte-only sweep check this tool shipped
     with, was enrolled, and the ROM build reported ov006 MISMATCHING --
     `module fidelity: 105/106`, `ROM-build analysis: FAIL`. The differing word was a
     `bl` at 0x020cb088 going to func_ov006_020c9024 where the ROM's own relocation

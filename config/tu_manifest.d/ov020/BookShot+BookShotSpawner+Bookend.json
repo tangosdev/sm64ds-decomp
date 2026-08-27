@@ -22,217 +22,217 @@
       "symbol": "_ZN8BookShotD1Ev",
       "address": "0x021111a0",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN8BookShotD1Ev.cpp",
+      "legacy_source": "src/game/actors/BookShot/_ZN8BookShotD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN8BookShotD0Ev",
       "address": "0x021111f0",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN8BookShotD0Ev.cpp",
+      "legacy_source": "src/game/actors/BookShot/_ZN8BookShotD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN15BookShotSpawnerD1Ev",
       "address": "0x02111254",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN15BookShotSpawnerD1Ev.cpp",
+      "legacy_source": "src/game/actors/BookShotSpawner/_ZN15BookShotSpawnerD1Ev.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN15BookShotSpawnerD0Ev",
       "address": "0x02111278",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN15BookShotSpawnerD0Ev.cpp",
+      "legacy_source": "src/game/actors/BookShotSpawner/_ZN15BookShotSpawnerD0Ev.cpp",
       "ordinal": 3
     },
     {
       "symbol": "func_ov020_021112b0",
       "address": "0x021112b0",
       "size": "0x00000090",
-      "legacy_source": "src/func_ov020_021112b0.c",
+      "legacy_source": "src/unnamed/ov020/0211/func_ov020_021112b0.c",
       "ordinal": 4
     },
     {
       "symbol": "func_ov020_02111340",
       "address": "0x02111340",
       "size": "0x000000d8",
-      "legacy_source": "src/func_ov020_02111340.c",
+      "legacy_source": "src/unnamed/ov020/0211/func_ov020_02111340.c",
       "ordinal": 5
     },
     {
       "symbol": "func_ov020_02111418",
       "address": "0x02111418",
       "size": "0x00000194",
-      "legacy_source": "src/func_ov020_02111418.cpp",
+      "legacy_source": "src/unnamed/ov020/0211/func_ov020_02111418.cpp",
       "ordinal": 6
     },
     {
       "symbol": "func_ov020_021115ac",
       "address": "0x021115ac",
       "size": "0x000001a0",
-      "legacy_source": "src/func_ov020_021115ac.c",
+      "legacy_source": "src/unnamed/ov020/0211/func_ov020_021115ac.c",
       "ordinal": 7
     },
     {
       "symbol": "func_ov020_0211174c",
       "address": "0x0211174c",
       "size": "0x00000290",
-      "legacy_source": "src/func_ov020_0211174c.c",
+      "legacy_source": "src/unnamed/ov020/0211/func_ov020_0211174c.c",
       "ordinal": 8
     },
     {
       "symbol": "func_ov020_021119dc",
       "address": "0x021119dc",
       "size": "0x000000cc",
-      "legacy_source": "src/func_ov020_021119dc.c",
+      "legacy_source": "src/unnamed/ov020/0211/func_ov020_021119dc.c",
       "ordinal": 9
     },
     {
       "symbol": "func_ov020_02111aa8",
       "address": "0x02111aa8",
       "size": "0x00000080",
-      "legacy_source": "src/func_ov020_02111aa8.c",
+      "legacy_source": "src/unnamed/ov020/0211/func_ov020_02111aa8.c",
       "ordinal": 10
     },
     {
       "symbol": "func_ov020_02111b28",
       "address": "0x02111b28",
       "size": "0x00000108",
-      "legacy_source": "src/func_ov020_02111b28.cpp",
+      "legacy_source": "src/unnamed/ov020/0211/func_ov020_02111b28.cpp",
       "ordinal": 11
     },
     {
       "symbol": "func_ov020_02111c30",
       "address": "0x02111c30",
       "size": "0x000002b0",
-      "legacy_source": "src/func_ov020_02111c30.c",
+      "legacy_source": "src/unnamed/ov020/0211/func_ov020_02111c30.c",
       "ordinal": 12
     },
     {
       "symbol": "func_ov020_02111ee0",
       "address": "0x02111ee0",
       "size": "0x000000e4",
-      "legacy_source": "src/func_ov020_02111ee0.cpp",
+      "legacy_source": "src/unnamed/ov020/0211/func_ov020_02111ee0.cpp",
       "ordinal": 13
     },
     {
       "symbol": "func_ov020_02111fc4",
       "address": "0x02111fc4",
       "size": "0x000000bc",
-      "legacy_source": "src/func_ov020_02111fc4.cpp",
+      "legacy_source": "src/unnamed/ov020/0211/func_ov020_02111fc4.cpp",
       "ordinal": 14
     },
     {
       "symbol": "func_ov020_02112080",
       "address": "0x02112080",
       "size": "0x00000090",
-      "legacy_source": "src/func_ov020_02112080.cpp",
+      "legacy_source": "src/unnamed/ov020/0211/func_ov020_02112080.cpp",
       "ordinal": 15
     },
     {
       "symbol": "func_ov020_02112110",
       "address": "0x02112110",
       "size": "0x0000005c",
-      "legacy_source": "src/func_ov020_02112110.cpp",
+      "legacy_source": "src/unnamed/ov020/0211/func_ov020_02112110.cpp",
       "ordinal": 16
     },
     {
       "symbol": "func_ov020_0211216c",
       "address": "0x0211216c",
       "size": "0x000000d8",
-      "legacy_source": "src/func_ov020_0211216c.cpp",
+      "legacy_source": "src/unnamed/ov020/0211/func_ov020_0211216c.cpp",
       "ordinal": 17
     },
     {
       "symbol": "_ZN8BookShot16CleanupResourcesEv",
       "address": "0x02112244",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN8BookShot16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/BookShot/_ZN8BookShot16CleanupResourcesEv.cpp",
       "ordinal": 18
     },
     {
       "symbol": "_ZN15BookShotSpawner16CleanupResourcesEv",
       "address": "0x02112290",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN15BookShotSpawner16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/BookShotSpawner/_ZN15BookShotSpawner16CleanupResourcesEv.cpp",
       "ordinal": 19
     },
     {
       "symbol": "_ZN8BookShot6RenderEv",
       "address": "0x021122c4",
       "size": "0x00000078",
-      "legacy_source": "src/_ZN8BookShot6RenderEv.cpp",
+      "legacy_source": "src/game/actors/BookShot/_ZN8BookShot6RenderEv.cpp",
       "ordinal": 20
     },
     {
       "symbol": "_ZN8BookShot8BehaviorEv",
       "address": "0x0211233c",
       "size": "0x000000dc",
-      "legacy_source": "src/_ZN8BookShot8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/BookShot/_ZN8BookShot8BehaviorEv.cpp",
       "ordinal": 21
     },
     {
       "symbol": "_ZN15BookShotSpawner8BehaviorEv",
       "address": "0x02112418",
       "size": "0x000000cc",
-      "legacy_source": "src/_ZN15BookShotSpawner8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/BookShotSpawner/_ZN15BookShotSpawner8BehaviorEv.cpp",
       "ordinal": 22
     },
     {
       "symbol": "_ZN8BookShot13InitResourcesEv",
       "address": "0x021124e4",
       "size": "0x00000284",
-      "legacy_source": "src/_ZN8BookShot13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/BookShot/_ZN8BookShot13InitResourcesEv.cpp",
       "ordinal": 23
     },
     {
       "symbol": "_ZN15BookShotSpawner13InitResourcesEv",
       "address": "0x02112768",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN15BookShotSpawner13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/BookShotSpawner/_ZN15BookShotSpawner13InitResourcesEv.cpp",
       "ordinal": 24
     },
     {
       "symbol": "_ZN8BookShot16OnAimedAtWithEggEv",
       "address": "0x021127a4",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN8BookShot16OnAimedAtWithEggEv.cpp",
+      "legacy_source": "src/game/actors/BookShot/_ZN8BookShot16OnAimedAtWithEggEv.cpp",
       "ordinal": 25
     },
     {
       "symbol": "_ZN8BookShot13OnYoshiTryEatEv",
       "address": "0x021127cc",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN8BookShot13OnYoshiTryEatEv.cpp",
+      "legacy_source": "src/game/actors/BookShot/_ZN8BookShot13OnYoshiTryEatEv.cpp",
       "ordinal": 26
     },
     {
       "symbol": "func_ov020_021127f4",
       "address": "0x021127f4",
       "size": "0x0000005c",
-      "legacy_source": "src/func_ov020_021127f4.c",
+      "legacy_source": "src/unnamed/ov020/0211/func_ov020_021127f4.c",
       "ordinal": 27
     },
     {
       "symbol": "BookShotSpawner_Spawn",
       "address": "0x02112850",
       "size": "0x00000030",
-      "legacy_source": "src/BookShotSpawner_Spawn.c",
+      "legacy_source": "src/game/actors/BookShotSpawner/BookShotSpawner_Spawn.c",
       "ordinal": 28
     },
     {
       "symbol": "Bookend_Spawn",
       "address": "0x02112880",
       "size": "0x0000005c",
-      "legacy_source": "src/Bookend_Spawn.c",
+      "legacy_source": "src/game/actors/Bookend/Bookend_Spawn.c",
       "ordinal": 29
     },
     {
       "symbol": "BookShot_Spawn",
       "address": "0x021128dc",
       "size": "0x0000005c",
-      "legacy_source": "src/BookShot_Spawn.c",
+      "legacy_source": "src/game/actors/BookShot/BookShot_Spawn.c",
       "ordinal": 30
     }
   ],
@@ -240,12 +240,12 @@
   "bss": [],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
-    "tubuild create warning: RAW: src/func_ov020_02111418.cpp (func_ov020_02111418) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov020_02111b28.cpp (func_ov020_02111b28) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov020_02111ee0.cpp (func_ov020_02111ee0) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov020_02112110.cpp (func_ov020_02112110) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov020_0211216c.cpp (func_ov020_0211216c) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/_ZN8BookShot16OnAimedAtWithEggEv.cpp (_ZN8BookShot16OnAimedAtWithEggEv) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/unnamed/ov020/0211/func_ov020_02111418.cpp (func_ov020_02111418) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/unnamed/ov020/0211/func_ov020_02111b28.cpp (func_ov020_02111b28) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/unnamed/ov020/0211/func_ov020_02111ee0.cpp (func_ov020_02111ee0) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/unnamed/ov020/0211/func_ov020_02112110.cpp (func_ov020_02112110) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/unnamed/ov020/0211/func_ov020_0211216c.cpp (func_ov020_0211216c) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/game/actors/BookShot/_ZN8BookShot16OnAimedAtWithEggEv.cpp (_ZN8BookShot16OnAimedAtWithEggEv) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: CONFLICT: macro 'LDR' differs between the legacy file that used to hold func_ov020_021115ac and the one that held _ZN8BookShot13InitResourcesEv; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov020_02111340 and the one that held func_ov020_021115ac; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov020_02111340 and the one that held func_ov020_0211174c; kept the first, the other is commented out for review",

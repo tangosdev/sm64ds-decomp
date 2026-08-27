@@ -66,7 +66,7 @@ def run_group(label, func, addr, size, bp, bb, flags, variants, out_path, wrap=N
 
 
 E3DC = {
-    "baseline": open(REPO / "src/func_0206e3dc.c", encoding="utf-8").read(),
+    "baseline": open(REPO / "src/unnamed/arm9/0206/func_0206e3dc.c", encoding="utf-8").read(),
     "manual_bytes": """extern void func_0206e450(void);
 extern unsigned int func_0206e4a4(void (*fn)(void), void *ctx);
 unsigned int func_0206e3dc(char *buf, unsigned int len) {
@@ -160,7 +160,7 @@ extern "C" void func_ov002_020bf36c(char *self, void *arg) {
 }"""
 
 BF36C = {
-    "baseline": open(REPO / "src/func_ov002_020bf36c.cpp", encoding="utf-8").read(),
+    "baseline": open(REPO / "src/unnamed/ov002/020b/func_ov002_020bf36c.cpp", encoding="utf-8").read(),
     "actor_r4": """//cpp
 class Actor;
 """ + BF36C_HEAD % """    Actor *r4;
@@ -224,7 +224,7 @@ int _ZN5Model9DoSetFileEPcii(void *c, void *file, int a, int b) {
 }"""
 
 DOSET = {
-    "baseline": open(REPO / "src/_ZN5Model9DoSetFileEPcii.cpp", encoding="utf-8").read(),
+    "baseline": open(REPO / "src/runtime/graphics/Model/_ZN5Model9DoSetFileEPcii.cpp", encoding="utf-8").read(),
     "slot_ptr": DOSET_HEAD % """    char *r7;
     void **slot;
     void *alloc;
@@ -271,7 +271,7 @@ DOSET = {
 }
 
 BC3DC = {
-    "baseline": open(REPO / "src/func_ov007_020bc3dc.c", encoding="utf-8").read(),
+    "baseline": open(REPO / "src/unnamed/ov007/020b/func_ov007_020bc3dc.c", encoding="utf-8").read(),
     "ands_flag": """extern int func_ov007_020c9214();
 void func_ov007_020bc3dc(void *c, int i, int a2) {
     unsigned short **arr;
@@ -313,16 +313,16 @@ void func_ov007_020bc3dc(void *c, int i, int a2) {
 if __name__ == "__main__":
     ok = False
     ok |= run_group("e3dc", "func_0206e3dc", "0x0206e3dc", "0x74", None, None, FLAGS,
-                    E3DC, REPO / "src/func_0206e3dc.c")
+                    E3DC, REPO / "src/unnamed/arm9/0206/func_0206e3dc.c")
     ok |= run_group("bf36c", "func_ov002_020bf36c", "0x020bf36c", "0xa0",
                     "extracted/dsd/arm9_overlays/ov002.bin", "0x020ad660", FLAGS_CPP,
                     {k: (v if k == "baseline" else BF36C_WRAP(v)) for k, v in BF36C.items()},
-                    REPO / "src/func_ov002_020bf36c.cpp", BF36C_WRAP)
+                    REPO / "src/unnamed/ov002/020b/func_ov002_020bf36c.cpp", BF36C_WRAP)
     ok |= run_group("doset", "_ZN5Model9DoSetFileEPcii", "0x02016bf8", "0xa0", None, None, FLAGS_CPP,
                     {k: (v if k == "baseline" else DOSET_WRAP(v)) for k, v in DOSET.items()},
-                    REPO / "src/_ZN5Model9DoSetFileEPcii.cpp",
+                    REPO / "src/runtime/graphics/Model/_ZN5Model9DoSetFileEPcii.cpp",
                     lambda s: DOSET_WRAP(s) if not s.startswith("//cpp") else s + "\n")
     ok |= run_group("bc3dc", "func_ov007_020bc3dc", "0x020bc3dc", "0x58",
                     "extracted/dsd/arm9_overlays/ov007.bin", "0x020ad660", FLAGS,
-                    BC3DC, REPO / "src/func_ov007_020bc3dc.c")
+                    BC3DC, REPO / "src/unnamed/ov007/020b/func_ov007_020bc3dc.c")
     print("\nANY MATCH:", ok)

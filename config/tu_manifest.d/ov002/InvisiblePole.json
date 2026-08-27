@@ -22,56 +22,56 @@
       "symbol": "_ZN13InvisiblePoleD1Ev",
       "address": "0x020b05d0",
       "size": "0x00000030",
-      "legacy_source": "src/_ZN13InvisiblePoleD1Ev.cpp",
+      "legacy_source": "src/game/actors/InvisiblePole/_ZN13InvisiblePoleD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN13InvisiblePoleD0Ev",
       "address": "0x020b0600",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN13InvisiblePoleD0Ev.cpp",
+      "legacy_source": "src/game/actors/InvisiblePole/_ZN13InvisiblePoleD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN13InvisiblePole16CleanupResourcesEv",
       "address": "0x020b0644",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN13InvisiblePole16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/InvisiblePole/_ZN13InvisiblePole16CleanupResourcesEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN13InvisiblePole16OnPendingDestroyEv",
       "address": "0x020b064c",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN13InvisiblePole16OnPendingDestroyEv.cpp",
+      "legacy_source": "src/game/actors/InvisiblePole/_ZN13InvisiblePole16OnPendingDestroyEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN13InvisiblePole6RenderEv",
       "address": "0x020b0650",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN13InvisiblePole6RenderEv.cpp",
+      "legacy_source": "src/game/actors/InvisiblePole/_ZN13InvisiblePole6RenderEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN13InvisiblePole8BehaviorEv",
       "address": "0x020b0658",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN13InvisiblePole8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/InvisiblePole/_ZN13InvisiblePole8BehaviorEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN13InvisiblePole13InitResourcesEv",
       "address": "0x020b067c",
       "size": "0x00000094",
-      "legacy_source": "src/_ZN13InvisiblePole13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/InvisiblePole/_ZN13InvisiblePole13InitResourcesEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "InvisiblePole_Spawn",
       "address": "0x020b0710",
       "size": "0x00000038",
-      "legacy_source": "src/InvisiblePole_Spawn.c",
+      "legacy_source": "src/game/actors/InvisiblePole/InvisiblePole_Spawn.c",
       "ordinal": 7
     }
   ],
@@ -112,14 +112,14 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN13InvisiblePoleD1Ev.cpp",
-      "src/_ZN13InvisiblePoleD0Ev.cpp",
-      "src/_ZN13InvisiblePole16CleanupResourcesEv.cpp",
-      "src/_ZN13InvisiblePole16OnPendingDestroyEv.cpp",
-      "src/_ZN13InvisiblePole6RenderEv.cpp",
-      "src/_ZN13InvisiblePole8BehaviorEv.cpp",
-      "src/_ZN13InvisiblePole13InitResourcesEv.cpp",
-      "src/InvisiblePole_Spawn.c"
+      "src/game/actors/InvisiblePole/_ZN13InvisiblePoleD1Ev.cpp",
+      "src/game/actors/InvisiblePole/_ZN13InvisiblePoleD0Ev.cpp",
+      "src/game/actors/InvisiblePole/_ZN13InvisiblePole16CleanupResourcesEv.cpp",
+      "src/game/actors/InvisiblePole/_ZN13InvisiblePole16OnPendingDestroyEv.cpp",
+      "src/game/actors/InvisiblePole/_ZN13InvisiblePole6RenderEv.cpp",
+      "src/game/actors/InvisiblePole/_ZN13InvisiblePole8BehaviorEv.cpp",
+      "src/game/actors/InvisiblePole/_ZN13InvisiblePole13InitResourcesEv.cpp",
+      "src/game/actors/InvisiblePole/InvisiblePole_Spawn.c"
     ],
     "extraInertImports": 55,
     "extraImportsWithNoHome": [],

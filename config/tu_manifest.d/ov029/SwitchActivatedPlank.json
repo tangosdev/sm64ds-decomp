@@ -36,49 +36,49 @@
       "symbol": "func_ov029_021126dc",
       "address": "0x021126dc",
       "size": "0x00000034",
-      "legacy_source": "src/func_ov029_021126dc.c",
+      "legacy_source": "src/unnamed/ov029/0211/func_ov029_021126dc.c",
       "ordinal": 2
     },
     {
       "symbol": "func_ov029_02112710",
       "address": "0x02112710",
       "size": "0x00000040",
-      "legacy_source": "src/func_ov029_02112710.c",
+      "legacy_source": "src/unnamed/ov029/0211/func_ov029_02112710.c",
       "ordinal": 3
     },
     {
       "symbol": "_ZN20SwitchActivatedPlank16CleanupResourcesEv",
       "address": "0x02112750",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN20SwitchActivatedPlank16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/SwitchActivatedPlank/_ZN20SwitchActivatedPlank16CleanupResourcesEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN20SwitchActivatedPlank6RenderEv",
       "address": "0x02112794",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN20SwitchActivatedPlank6RenderEv.cpp",
+      "legacy_source": "src/game/actors/SwitchActivatedPlank/_ZN20SwitchActivatedPlank6RenderEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN20SwitchActivatedPlank8BehaviorEv",
       "address": "0x021127cc",
       "size": "0x000000e4",
-      "legacy_source": "src/_ZN20SwitchActivatedPlank8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/SwitchActivatedPlank/_ZN20SwitchActivatedPlank8BehaviorEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "_ZN20SwitchActivatedPlank13InitResourcesEv",
       "address": "0x021128b0",
       "size": "0x000000b4",
-      "legacy_source": "src/_ZN20SwitchActivatedPlank13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/SwitchActivatedPlank/_ZN20SwitchActivatedPlank13InitResourcesEv.cpp",
       "ordinal": 7
     },
     {
       "symbol": "SwitchActivatedPlank_Spawn",
       "address": "0x02112964",
       "size": "0x00000038",
-      "legacy_source": "src/SwitchActivatedPlank_Spawn.c",
+      "legacy_source": "src/game/actors/SwitchActivatedPlank/SwitchActivatedPlank_Spawn.c",
       "ordinal": 8
     }
   ],

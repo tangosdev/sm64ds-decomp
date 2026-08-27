@@ -4,322 +4,322 @@
     .ctor       start:0x02113410 end:0x0211342c kind:rodata align:4
     .data       start:0x02113440 end:0x02114960 kind:data align:32
     .bss        start:0x02114960 end:0x02114b00 kind:bss align:32
-src/_ZN13PoleBillboardD1Ev.cpp:
+src/game/actors/PoleBillboard/_ZN13PoleBillboardD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111d0
 
-src/_ZN13PoleBillboardD0Ev.cpp:
+src/game/actors/PoleBillboard/_ZN13PoleBillboardD0Ev.cpp:
     complete
     .text start:0x021111d0 end:0x02111214
 
-src/func_ov015_02111214.c:
+src/unnamed/ov015/0211/func_ov015_02111214.c:
     complete
     .text start:0x02111214 end:0x02111254
 
-src/_ZN13PoleBillboard16CleanupResourcesEv.cpp:
+src/game/actors/PoleBillboard/_ZN13PoleBillboard16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111254 end:0x02111278
 
-src/_ZN13PoleBillboard6RenderEv.cpp:
+src/game/actors/PoleBillboard/_ZN13PoleBillboard6RenderEv.cpp:
     complete
     .text start:0x02111278 end:0x021112a0
 
-src/_ZN13PoleBillboard13InitResourcesEv.cpp:
+src/game/actors/PoleBillboard/_ZN13PoleBillboard13InitResourcesEv.cpp:
     complete
     .text start:0x021112a0 end:0x021112dc
 
-src/PoleBillboard_Spawn.c:
+src/game/actors/PoleBillboard/PoleBillboard_Spawn.c:
     complete
     .text start:0x021112dc end:0x02111314
 
-src/_ZN14KnockDownPlankD1Ev.cpp:
+src/game/actors/KnockDownPlank/_ZN14KnockDownPlankD1Ev.cpp:
     complete
     .text start:0x02111314 end:0x02111360
 
-src/_ZN14KnockDownPlankD0Ev.cpp:
+src/game/actors/KnockDownPlank/_ZN14KnockDownPlankD0Ev.cpp:
     complete
     .text start:0x02111360 end:0x021113c0
 
-src/_ZN14KnockDownPlank15OnHitByMegaCharER6Player.cpp:
+src/game/actors/KnockDownPlank/_ZN14KnockDownPlank15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x021113c0 end:0x021113fc
 
-src/_ZN14KnockDownPlank8OnKickedER8dActor_c.cpp:
+src/game/actors/KnockDownPlank/_ZN14KnockDownPlank8OnKickedER8dActor_c.cpp:
     complete
     .text start:0x021113fc end:0x02111408
 
-src/_ZN14KnockDownPlank11OnAttacked2ER8dActor_c.cpp:
+src/game/actors/KnockDownPlank/_ZN14KnockDownPlank11OnAttacked2ER8dActor_c.cpp:
     complete
     .text start:0x02111408 end:0x02111414
 
-src/func_ov015_02111414.c:
+src/unnamed/ov015/0211/func_ov015_02111414.c:
     complete
     .text start:0x02111414 end:0x021114f0
 
-src/func_ov015_0211166c.c:
+src/unnamed/ov015/0211/func_ov015_0211166c.c:
     complete
     .text start:0x0211166c end:0x021116b4
 
-src/_ZN14KnockDownPlank16CleanupResourcesEv.cpp:
+src/game/actors/KnockDownPlank/_ZN14KnockDownPlank16CleanupResourcesEv.cpp:
     complete
     .text start:0x021116b4 end:0x021116f8
 
-src/_ZN14KnockDownPlank6RenderEv.cpp:
+src/game/actors/KnockDownPlank/_ZN14KnockDownPlank6RenderEv.cpp:
     complete
     .text start:0x021116f8 end:0x02111720
 
-src/_ZN14KnockDownPlank8BehaviorEv.cpp:
+src/game/actors/KnockDownPlank/_ZN14KnockDownPlank8BehaviorEv.cpp:
     complete
     .text start:0x02111720 end:0x02111960
 
-src/_ZN14KnockDownPlank13InitResourcesEv.cpp:
+src/game/actors/KnockDownPlank/_ZN14KnockDownPlank13InitResourcesEv.cpp:
     complete
     .text start:0x02111960 end:0x02111b68
 
-src/KnockDownPlank_Spawn.c:
+src/game/actors/KnockDownPlank/KnockDownPlank_Spawn.c:
     complete
     .text start:0x02111b68 end:0x02111ba0
 
-src/_ZN9MovingBarD1Ev.cpp:
+src/game/actors/MovingBar/_ZN9MovingBarD1Ev.cpp:
     complete
     .text start:0x02111ba0 end:0x02111be4
 
-src/_ZN9MovingBarD0Ev.cpp:
+src/game/actors/MovingBar/_ZN9MovingBarD0Ev.cpp:
     complete
     .text start:0x02111be4 end:0x02111c3c
 
-src/_ZN9MovingBar4KillEv.cpp:
+src/game/actors/MovingBar/_ZN9MovingBar4KillEv.cpp:
     complete
     .text start:0x02111c3c end:0x02111cb8
 
-src/_ZN9MovingBar15OnHitByMegaCharER6Player.cpp:
+src/game/actors/MovingBar/_ZN9MovingBar15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02111cb8 end:0x02111ce0
 
-src/func_ov015_02111ce0.cpp:
+src/unnamed/ov015/0211/func_ov015_02111ce0.cpp:
     complete
     .text start:0x02111ce0 end:0x02111d28
 
-src/func_ov015_02111d28.c:
+src/unnamed/ov015/0211/func_ov015_02111d28.c:
     complete
     .text start:0x02111d28 end:0x02111d4c
 
-src/func_ov015_02111d4c.c:
+src/unnamed/ov015/0211/func_ov015_02111d4c.c:
     complete
     .text start:0x02111d4c end:0x02111d8c
 
-src/func_ov015_02111d8c.c:
+src/unnamed/ov015/0211/func_ov015_02111d8c.c:
     complete
     .text start:0x02111d8c end:0x02111d98
 
-src/func_ov015_02111d98.cpp:
+src/unnamed/ov015/0211/func_ov015_02111d98.cpp:
     complete
     .text start:0x02111d98 end:0x02111dd4
 
-src/func_ov015_02111dd4.c:
+src/unnamed/ov015/0211/func_ov015_02111dd4.c:
     complete
     .text start:0x02111dd4 end:0x02111df4
 
-src/func_ov015_02111df4.c:
+src/unnamed/ov015/0211/func_ov015_02111df4.c:
     complete
     .text start:0x02111df4 end:0x02111e60
 
-src/func_ov015_02111e60.c:
+src/unnamed/ov015/0211/func_ov015_02111e60.c:
     complete
     .text start:0x02111e60 end:0x02111e80
 
-src/func_ov015_02111e80.c:
+src/unnamed/ov015/0211/func_ov015_02111e80.c:
     complete
     .text start:0x02111e80 end:0x02111ee0
 
-src/func_ov015_02111ee0.c:
+src/unnamed/ov015/0211/func_ov015_02111ee0.c:
     complete
     .text start:0x02111ee0 end:0x02111eec
 
-src/func_ov015_02111eec.c:
+src/unnamed/ov015/0211/func_ov015_02111eec.c:
     complete
     .text start:0x02111eec end:0x02111f4c
 
-src/func_ov015_02111f4c.c:
+src/unnamed/ov015/0211/func_ov015_02111f4c.c:
     complete
     .text start:0x02111f4c end:0x02111f6c
 
-src/func_ov015_02111f6c.c:
+src/unnamed/ov015/0211/func_ov015_02111f6c.c:
     complete
     .text start:0x02111f6c end:0x02111fac
 
-src/func_ov015_02111fac.c:
+src/unnamed/ov015/0211/func_ov015_02111fac.c:
     complete
     .text start:0x02111fac end:0x02111fb8
 
-src/func_ov015_02111fb8.c:
+src/unnamed/ov015/0211/func_ov015_02111fb8.c:
     complete
     .text start:0x02111fb8 end:0x02112004
 
-src/_ZN9MovingBar16CleanupResourcesEv.cpp:
+src/game/actors/MovingBar/_ZN9MovingBar16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112004 end:0x02112068
 
-src/_ZN9MovingBar6RenderEv.cpp:
+src/game/actors/MovingBar/_ZN9MovingBar6RenderEv.cpp:
     complete
     .text start:0x02112068 end:0x02112090
 
-src/_ZN9MovingBar8BehaviorEv.cpp:
+src/game/actors/MovingBar/_ZN9MovingBar8BehaviorEv.cpp:
     complete
     .text start:0x02112090 end:0x021120fc
 
-src/_ZN9MovingBar13InitResourcesEv.cpp:
+src/game/actors/MovingBar/_ZN9MovingBar13InitResourcesEv.cpp:
     complete
     .text start:0x021120fc end:0x02112230
 
-src/MovingBarBig_Spawn.c:
+src/game/actors/MovingBarBig/MovingBarBig_Spawn.c:
     complete
     .text start:0x02112230 end:0x02112260
 
-src/MovingBarSmall_Spawn.c:
+src/game/actors/MovingBarSmall/MovingBarSmall_Spawn.c:
     complete
     .text start:0x02112260 end:0x02112290
 
-src/_ZN9TowerStepD1Ev.cpp:
+src/game/actors/TowerStep/_ZN9TowerStepD1Ev.cpp:
     complete
     .text start:0x02112290 end:0x021122dc
 
-src/_ZN9TowerStepD0Ev.cpp:
+src/game/actors/TowerStep/_ZN9TowerStepD0Ev.cpp:
     complete
     .text start:0x021122dc end:0x0211233c
 
-src/_ZN9TowerStep4KillEv.cpp:
+src/game/actors/TowerStep/_ZN9TowerStep4KillEv.cpp:
     complete
     .text start:0x0211233c end:0x021123a0
 
-src/_ZN9TowerStep15OnHitByMegaCharER6Player.cpp:
+src/game/actors/TowerStep/_ZN9TowerStep15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x021123a0 end:0x021123c8
 
-src/func_ov015_021123c8.cpp:
+src/unnamed/ov015/0211/func_ov015_021123c8.cpp:
     complete
     .text start:0x021123c8 end:0x02112464
 
-src/_ZN9TowerStep16CleanupResourcesEv.cpp:
+src/game/actors/TowerStep/_ZN9TowerStep16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112464 end:0x021124a8
 
-src/_ZN9TowerStep6RenderEv.cpp:
+src/game/actors/TowerStep/_ZN9TowerStep6RenderEv.cpp:
     complete
     .text start:0x021124a8 end:0x021124d0
 
-src/_ZN9TowerStep8BehaviorEv.cpp:
+src/game/actors/TowerStep/_ZN9TowerStep8BehaviorEv.cpp:
     complete
     .text start:0x021124d0 end:0x0211269c
 
-src/_ZN9TowerStep13InitResourcesEv.cpp:
+src/game/actors/TowerStep/_ZN9TowerStep13InitResourcesEv.cpp:
     complete
     .text start:0x0211269c end:0x021128e8
 
-src/func_ov015_021128e8.c:
+src/unnamed/ov015/0211/func_ov015_021128e8.c:
     complete
     .text start:0x021128e8 end:0x021128f8
 
-src/func_ov015_021128f8.c:
+src/unnamed/ov015/0211/func_ov015_021128f8.c:
     complete
     .text start:0x021128f8 end:0x0211290c
 
-src/TowerStep_Spawn.c:
+src/game/actors/TowerStep/TowerStep_Spawn.c:
     complete
     .text start:0x0211290c end:0x02112944
 
-src/_ZN14RotatingBridgeD1Ev.cpp:
+src/game/actors/RotatingBridge/_ZN14RotatingBridgeD1Ev.cpp:
     complete
     .text start:0x02112944 end:0x02112988
 
-src/_ZN14RotatingBridgeD0Ev.cpp:
+src/game/actors/RotatingBridge/_ZN14RotatingBridgeD0Ev.cpp:
     complete
     .text start:0x02112988 end:0x021129e0
 
-src/_ZN14RotatingBridge16CleanupResourcesEv.cpp:
+src/game/actors/RotatingBridge/_ZN14RotatingBridge16CleanupResourcesEv.cpp:
     complete
     .text start:0x021129e0 end:0x02112a24
 
-src/_ZN14RotatingBridge6RenderEv.cpp:
+src/game/actors/RotatingBridge/_ZN14RotatingBridge6RenderEv.cpp:
     complete
     .text start:0x02112a24 end:0x02112a4c
 
-src/_ZN14RotatingBridge8BehaviorEv.cpp:
+src/game/actors/RotatingBridge/_ZN14RotatingBridge8BehaviorEv.cpp:
     complete
     .text start:0x02112a4c end:0x02112b04
 
-src/_ZN14RotatingBridge13InitResourcesEv.cpp:
+src/game/actors/RotatingBridge/_ZN14RotatingBridge13InitResourcesEv.cpp:
     complete
     .text start:0x02112b04 end:0x02112ba0
 
-src/RotatingBridge_Spawn.c:
+src/game/actors/RotatingBridge/RotatingBridge_Spawn.c:
     complete
     .text start:0x02112ba0 end:0x02112bd0
 
-src/_ZN18RotatingPlatformWfD1Ev.cpp:
+src/game/actors/RotatingPlatformWf/_ZN18RotatingPlatformWfD1Ev.cpp:
     complete
     .text start:0x02112bd0 end:0x02112c20
 
-src/_ZN18RotatingPlatformWfD0Ev.cpp:
+src/game/actors/RotatingPlatformWf/_ZN18RotatingPlatformWfD0Ev.cpp:
     complete
     .text start:0x02112c20 end:0x02112c84
 
-src/_ZN18RotatingPlatformWf16CleanupResourcesEv.cpp:
+src/game/actors/RotatingPlatformWf/_ZN18RotatingPlatformWf16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112c84 end:0x02112c98
 
-src/_ZN18RotatingPlatformWf13InitResourcesEv.cpp:
+src/game/actors/RotatingPlatformWf/_ZN18RotatingPlatformWf13InitResourcesEv.cpp:
     complete
     .text start:0x02112c98 end:0x02112cb8
 
-src/RotatingPlatformWf_Spawn.c:
+src/game/actors/RotatingPlatformWf/RotatingPlatformWf_Spawn.c:
     complete
     .text start:0x02112cb8 end:0x02112cf4
 
-src/_ZN11FallBlockWfD1Ev.cpp:
+src/game/actors/FallBlockWf/_ZN11FallBlockWfD1Ev.cpp:
     complete
     .text start:0x02112cf4 end:0x02112d44
 
-src/_ZN11FallBlockWfD0Ev.cpp:
+src/game/actors/FallBlockWf/_ZN11FallBlockWfD0Ev.cpp:
     complete
     .text start:0x02112d44 end:0x02112da8
 
-src/_ZN11FallBlockWf16CleanupResourcesEv.cpp:
+src/game/actors/FallBlockWf/_ZN11FallBlockWf16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112da8 end:0x02112dbc
 
-src/_ZN11FallBlockWf13InitResourcesEv.cpp:
+src/game/actors/FallBlockWf/_ZN11FallBlockWf13InitResourcesEv.cpp:
     complete
     .text start:0x02112dbc end:0x02112dd0
 
-src/FallBlockWf_Spawn.c:
+src/game/actors/FallBlockWf/FallBlockWf_Spawn.c:
     complete
     .text start:0x02112dd0 end:0x02112e0c
 
-src/__sinit_ov015_02112f9c.c:
+src/unnamed/ov015/0211/__sinit_ov015_02112f9c.c:
     complete
     .init start:0x02112f9c end:0x02112fdc
 
-src/__sinit_ov015_02112fdc.c:
+src/unnamed/ov015/0211/__sinit_ov015_02112fdc.c:
     complete
     .init start:0x02112fdc end:0x02113048
 
-src/__sinit_ov015_02113048.c:
+src/unnamed/ov015/0211/__sinit_ov015_02113048.c:
     complete
     .init start:0x02113048 end:0x02113264
 
-src/__sinit_ov015_02113264.c:
+src/unnamed/ov015/0211/__sinit_ov015_02113264.c:
     complete
     .init start:0x02113264 end:0x021132d0
 
-src/__sinit_ov015_021132d0.c:
+src/unnamed/ov015/0211/__sinit_ov015_021132d0.c:
     complete
     .init start:0x021132d0 end:0x0211333c
 
-src/__sinit_ov015_0211333c.c:
+src/unnamed/ov015/0211/__sinit_ov015_0211333c.c:
     complete
     .init start:0x0211333c end:0x021133a8
 
-src/__sinit_ov015_021133a8.c:
+src/unnamed/ov015/0211/__sinit_ov015_021133a8.c:
     complete
     .init start:0x021133a8 end:0x02113410

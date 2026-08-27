@@ -27,35 +27,35 @@
       "symbol": "_ZN21daObjKm3_Kurumajiku_cD1Ev",
       "address": "0x021111a0",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp",
+      "legacy_source": "src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN21daObjKm3_Kurumajiku_cD0Ev",
       "address": "0x021111f0",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp",
+      "legacy_source": "src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv",
       "address": "0x02111254",
       "size": "0x00000014",
-      "legacy_source": "src/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv",
       "address": "0x02111268",
       "size": "0x00000018",
-      "legacy_source": "src/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "RickshawBs_Spawn",
       "address": "0x02111280",
       "size": "0x0000003c",
-      "legacy_source": "src/RickshawBs_Spawn.c",
+      "legacy_source": "src/game/actors/RickshawBs/RickshawBs_Spawn.c",
       "ordinal": 4
     }
   ],
@@ -796,11 +796,11 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp",
-      "src/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp",
-      "src/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp",
-      "src/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp",
-      "src/RickshawBs_Spawn.c"
+      "src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp",
+      "src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp",
+      "src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp",
+      "src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp",
+      "src/game/actors/RickshawBs/RickshawBs_Spawn.c"
     ],
     "extraInertImports": 65,
     "extraImportsWithNoHome": [],
@@ -845,11 +845,11 @@
         "mergedBytes": 7032,
         "contributionEquivalent": "5/5",
         "substitutedObjectPaths": [
-          "src/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp",
-          "src/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp",
-          "src/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp",
-          "src/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp",
-          "src/RickshawBs_Spawn.c"
+          "src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp",
+          "src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp",
+          "src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp",
+          "src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp",
+          "src/game/actors/RickshawBs/RickshawBs_Spawn.c"
         ],
         "rows": [
           {
@@ -1207,11 +1207,11 @@
         "mergedBytes": 7032,
         "contributionEquivalent": "5/5",
         "substitutedObjectPaths": [
-          "src/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp",
-          "src/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp",
-          "src/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp",
-          "src/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp",
-          "src/RickshawBs_Spawn.c"
+          "src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp",
+          "src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp",
+          "src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp",
+          "src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp",
+          "src/game/actors/RickshawBs/RickshawBs_Spawn.c"
         ],
         "rows": [
           {

@@ -107,7 +107,7 @@ struct daObjFallBlock_c : dBgActor_c {
        unaffected.
 
        It is also this class's KEY FUNCTION, the destructor above being inline,
-       so src/_ZN16daObjFallBlock_c4KillEv.cpp emits _ZTV16daObjFallBlock_c,
+       so src/game/actors/daObjFallBlock_c/_ZN16daObjFallBlock_c4KillEv.cpp emits _ZTV16daObjFallBlock_c,
        _ZTI16daObjFallBlock_c and the destructor variants alongside the one
        function it is bound to. objisolate.py reduces the object back to that
        one 0xc0 .text before eligible.py and rombuild.py judge it -- checked,

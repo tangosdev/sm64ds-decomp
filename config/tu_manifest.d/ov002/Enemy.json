@@ -24,7 +24,7 @@
       "symbol": "_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj",
       "address": "0x020ad838",
       "size": "0x00000208",
-      "legacy_source": "src/_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj.cpp",
+      "legacy_source": "src/game/actors/dEnemyBase_c/_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj.cpp",
       "ordinal": 0
     },
     {
@@ -38,196 +38,196 @@
       "symbol": "_ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc",
       "address": "0x020adb40",
       "size": "0x00000280",
-      "legacy_source": "src/_ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc.cpp",
+      "legacy_source": "src/game/actors/dEnemyBase_c/_ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c",
       "address": "0x020addc0",
       "size": "0x000000b8",
-      "legacy_source": "src/_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c.cpp",
+      "legacy_source": "src/game/actors/dEnemyBase_c/_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs",
       "address": "0x020ae244",
       "size": "0x00000074",
-      "legacy_source": "src/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs.cpp",
+      "legacy_source": "src/game/actors/dEnemyBase_c/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi",
       "address": "0x020ae2b8",
       "size": "0x0000019c",
-      "legacy_source": "src/_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi.cpp",
+      "legacy_source": "src/game/actors/dEnemyBase_c/_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi.cpp",
       "ordinal": 6
     },
     {
       "symbol": "func_ov002_020ae454",
       "address": "0x020ae454",
       "size": "0x00000078",
-      "legacy_source": "src/func_ov002_020ae454.cpp",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020ae454.cpp",
       "ordinal": 7
     },
     {
       "symbol": "func_ov002_020ae4cc",
       "address": "0x020ae4cc",
       "size": "0x000000fc",
-      "legacy_source": "src/func_ov002_020ae4cc.cpp",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020ae4cc.cpp",
       "ordinal": 8
     },
     {
       "symbol": "func_ov002_020ae5c8",
       "address": "0x020ae5c8",
       "size": "0x00000040",
-      "legacy_source": "src/func_ov002_020ae5c8.c",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020ae5c8.c",
       "ordinal": 9
     },
     {
       "symbol": "func_ov002_020ae608",
       "address": "0x020ae608",
       "size": "0x00000044",
-      "legacy_source": "src/func_ov002_020ae608.c",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020ae608.c",
       "ordinal": 10
     },
     {
       "symbol": "func_ov002_020ae64c",
       "address": "0x020ae64c",
       "size": "0x0000005c",
-      "legacy_source": "src/func_ov002_020ae64c.c",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020ae64c.c",
       "ordinal": 11
     },
     {
       "symbol": "_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr",
       "address": "0x020ae6a8",
       "size": "0x00000094",
-      "legacy_source": "src/_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr.cpp",
+      "legacy_source": "src/game/actors/dEnemyBase_c/_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr.cpp",
       "ordinal": 12
     },
     {
       "symbol": "func_ov002_020ae73c",
       "address": "0x020ae73c",
       "size": "0x000000d0",
-      "legacy_source": "src/func_ov002_020ae73c.c",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020ae73c.c",
       "ordinal": 13
     },
     {
       "symbol": "func_ov002_020ae80c",
       "address": "0x020ae80c",
       "size": "0x00000038",
-      "legacy_source": "src/func_ov002_020ae80c.c",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020ae80c.c",
       "ordinal": 14
     },
     {
       "symbol": "func_ov002_020ae844",
       "address": "0x020ae844",
       "size": "0x00000038",
-      "legacy_source": "src/func_ov002_020ae844.c",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020ae844.c",
       "ordinal": 15
     },
     {
       "symbol": "func_ov002_020ae87c",
       "address": "0x020ae87c",
       "size": "0x00000014",
-      "legacy_source": "src/func_ov002_020ae87c.c",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020ae87c.c",
       "ordinal": 16
     },
     {
       "symbol": "func_ov002_020ae890",
       "address": "0x020ae890",
       "size": "0x00000028",
-      "legacy_source": "src/func_ov002_020ae890.c",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020ae890.c",
       "ordinal": 17
     },
     {
       "symbol": "func_ov002_020ae8b8",
       "address": "0x020ae8b8",
       "size": "0x0000009c",
-      "legacy_source": "src/func_ov002_020ae8b8.c",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020ae8b8.c",
       "ordinal": 18
     },
     {
       "symbol": "func_ov002_020ae954",
       "address": "0x020ae954",
       "size": "0x00000014",
-      "legacy_source": "src/func_ov002_020ae954.c",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020ae954.c",
       "ordinal": 19
     },
     {
       "symbol": "func_ov002_020ae968",
       "address": "0x020ae968",
       "size": "0x00000090",
-      "legacy_source": "src/func_ov002_020ae968.c",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020ae968.c",
       "ordinal": 20
     },
     {
       "symbol": "func_ov002_020ae9f8",
       "address": "0x020ae9f8",
       "size": "0x0000002c",
-      "legacy_source": "src/func_ov002_020ae9f8.c",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020ae9f8.c",
       "ordinal": 21
     },
     {
       "symbol": "func_ov002_020aea24",
       "address": "0x020aea24",
       "size": "0x00000008",
-      "legacy_source": "src/func_ov002_020aea24.c",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020aea24.c",
       "ordinal": 22
     },
     {
       "symbol": "func_ov002_020aea2c",
       "address": "0x020aea2c",
       "size": "0x00000004",
-      "legacy_source": "src/func_ov002_020aea2c.c",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020aea2c.c",
       "ordinal": 23
     },
     {
       "symbol": "func_ov002_020aea30",
       "address": "0x020aea30",
       "size": "0x0000008c",
-      "legacy_source": "src/func_ov002_020aea30.cpp",
+      "legacy_source": "src/unnamed/ov002/020a/func_ov002_020aea30.cpp",
       "ordinal": 24
     },
     {
       "symbol": "_ZN12dEnemyBase_c9SpawnCoinEv",
       "address": "0x020aeabc",
       "size": "0x0000013c",
-      "legacy_source": "src/_ZN12dEnemyBase_c9SpawnCoinEv.cpp",
+      "legacy_source": "src/game/actors/dEnemyBase_c/_ZN12dEnemyBase_c9SpawnCoinEv.cpp",
       "ordinal": 25
     },
     {
       "symbol": "_ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj",
       "address": "0x020aebf8",
       "size": "0x00000120",
-      "legacy_source": "src/_ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj.cpp",
+      "legacy_source": "src/game/actors/dEnemyBase_c/_ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj.cpp",
       "ordinal": 26
     },
     {
       "symbol": "_ZN12dEnemyBase_cD2Ev",
       "address": "0x020aed18",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN12dEnemyBase_cD2Ev.cpp",
+      "legacy_source": "src/game/actors/dEnemyBase_c/_ZN12dEnemyBase_cD2Ev.cpp",
       "ordinal": 27
     },
     {
       "symbol": "_ZN12dEnemyBase_cD0Ev",
       "address": "0x020aed3c",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN12dEnemyBase_cD0Ev.cpp",
+      "legacy_source": "src/game/actors/dEnemyBase_c/_ZN12dEnemyBase_cD0Ev.cpp",
       "ordinal": 28
     },
     {
       "symbol": "_ZN12dEnemyBase_cD1Ev",
       "address": "0x020aed74",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN12dEnemyBase_cD1Ev.cpp",
+      "legacy_source": "src/game/actors/dEnemyBase_c/_ZN12dEnemyBase_cD1Ev.cpp",
       "ordinal": 29
     },
     {
       "symbol": "_ZN12dEnemyBase_cC2Ev",
       "address": "0x020aed98",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN12dEnemyBase_cC2Ev.cpp",
+      "legacy_source": "src/game/actors/dEnemyBase_c/_ZN12dEnemyBase_cC2Ev.cpp",
       "ordinal": 30
     }
   ],
@@ -239,7 +239,7 @@
     "THE SECOND ARGUMENT TO func_ov002_020ae5c8 IS REAL. Its own file defines it `(void *c)` and never reads a second argument; func_ov002_020ae64c's file declared it `(char *, int)` and passed one. Merged the one-argument way, func_ov002_020ae64c compiles to 0x50 against the ROM's 0x5c -- three instructions short, because `x` no longer has to survive the body in a callee-saved register. Both observations are true at once and the definition here carries the parameter unused. This is a declaration conflict that per-function compilation could not have exposed.",
     "KEY-FUNCTION SIDE EFFECT, expected and inventoried rather than verified: Enemy's first non-inline virtual is ~Enemy and this TU defines it, so the object also emits _ZTV12dEnemyBase_c (0x84, STB_GLOBAL), _ZTI12dEnemyBase_c/_ZTS12dEnemyBase_c and the inherited Actor/ActorDerived/ActorBase RTTI records, plus a vague-linkage _ZN7Vector3D1Ev from types.h's Vector3 destructor. Ten unlicensed symbols; none is claimed correct here.",
     "THE VTABLE DATA CANNOT DATA-VERIFY UNTIL THE CLASS IS RENAMED, and that is a measurement, not a guess: the ROM's typeinfo record at 0x021081c0 is _ZTI12dEnemyBase_c with the name string _ZTS12dEnemyBase_c, while this tree calls the class `Enemy`, so the compiler emits _ZTI12dEnemyBase_c / _ZTS12dEnemyBase_c (a 7-byte string where the ROM holds sixteen). The vtable's 33 slot words are structurally right; only the RTTI names are not. Renaming Enemy -> dEnemyBase_c is a tree-wide change and is out of scope here.",
-    "_ZN12dEnemyBase_cD2Ev is the one member whose derived object is not byte-identical in linker contribution to the production one, and the difference is a symbol ALIAS, not a byte: the legacy src/_ZN12dEnemyBase_cD2Ev.cpp stores the vptr through `data_ov002_021081e4` while a real `Enemy::~Enemy()` makes the compiler name its own _ZTV12dEnemyBase_c. ov002/symbols.txt gives both names the same address, 0x021081e4, objisolate's addend correction lands the derived reloc on addend 0 there, and the scratch link reproduced the range byte-for-byte -- so the destination is proven identical and only the name differs.",
+    "_ZN12dEnemyBase_cD2Ev is the one member whose derived object is not byte-identical in linker contribution to the production one, and the difference is a symbol ALIAS, not a byte: the legacy src/game/actors/dEnemyBase_c/_ZN12dEnemyBase_cD2Ev.cpp stores the vptr through `data_ov002_021081e4` while a real `Enemy::~Enemy()` makes the compiler name its own _ZTV12dEnemyBase_c. ov002/symbols.txt gives both names the same address, 0x021081e4, objisolate's addend correction lands the derived reloc on addend 0 there, and the scratch link reproduced the range byte-for-byte -- so the destination is proven identical and only the name differs.",
     "NAMING WAS DELIBERATELY LEFT ALONE. Eighteen members still carry func_ov002_* placeholder names, including 0x020ada40, which include/Enemy.h identifies as Enemy::KillByInvincibleChar. Renaming a linker symbol strands references this tree's gates cannot see, so it is a separate change."
   ],
   "verification": {
@@ -280,7 +280,7 @@
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
   },
   "sub_span_link": {
-    "round": "tools/tubuild.py linkcheck --partial, run TWICE against the two contiguous sub-spans the hole at ordinal 4 leaves behind. The whole span cannot be run: `linkcheck --partial` refuses it with 'range gap/overlap at 0x020ade78: next entry src/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs.cpp starts at 0x020ae244'. config/**/delinks.txt was NOT changed in either run: the same entries, the same object paths, only the source that produced those objects.",
+    "round": "tools/tubuild.py linkcheck --partial, run TWICE against the two contiguous sub-spans the hole at ordinal 4 leaves behind. The whole span cannot be run: `linkcheck --partial` refuses it with 'range gap/overlap at 0x020ade78: next entry src/game/actors/dEnemyBase_c/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs.cpp starts at 0x020ae244'. config/**/delinks.txt was NOT changed in either run: the same entries, the same object paths, only the source that produced those objects.",
     "lower": {
       "span": "0x020ad838..0x020ade78",
       "functions": "ordinals 0..3",

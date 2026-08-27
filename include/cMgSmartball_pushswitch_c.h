@@ -5,7 +5,7 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * SIZE 0x38, from _Znwj(0x38) in src/func_ov006_02115b0c.c. Base ends at
+ * SIZE 0x38, from _Znwj(0x38) in src/unnamed/ov006/0211/func_ov006_02115b0c.c. Base ends at
  * 0x34, so this class adds exactly one field: a 4-byte countdown at 0x34.
  *
  * mReleaseDelay is how long the switch stays down once nothing is holding it.

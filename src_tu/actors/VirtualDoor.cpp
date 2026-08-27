@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020b07f8  src/_ZN11VirtualDoorD1Ev.cpp
- *   [1] 0x020b081c  src/_ZN11VirtualDoorD0Ev.cpp
- *   [2] 0x020b0854  src/_ZN11VirtualDoor16CleanupResourcesEv.cpp
- *   [3] 0x020b085c  src/_ZN11VirtualDoor16OnPendingDestroyEv.cpp
- *   [4] 0x020b0860  src/_ZN11VirtualDoor6RenderEv.cpp
- *   [5] 0x020b0868  src/_ZN11VirtualDoor8BehaviorEv.cpp
- *   [6] 0x020b0938  src/_ZN11VirtualDoor13InitResourcesEv.cpp
- *   [7] 0x020b0980  src/VirtualDoor_Spawn.c
+ *   [0] 0x020b07f8  src/game/actors/VirtualDoor/_ZN11VirtualDoorD1Ev.cpp
+ *   [1] 0x020b081c  src/game/actors/VirtualDoor/_ZN11VirtualDoorD0Ev.cpp
+ *   [2] 0x020b0854  src/game/actors/VirtualDoor/_ZN11VirtualDoor16CleanupResourcesEv.cpp
+ *   [3] 0x020b085c  src/game/actors/VirtualDoor/_ZN11VirtualDoor16OnPendingDestroyEv.cpp
+ *   [4] 0x020b0860  src/game/actors/VirtualDoor/_ZN11VirtualDoor6RenderEv.cpp
+ *   [5] 0x020b0868  src/game/actors/VirtualDoor/_ZN11VirtualDoor8BehaviorEv.cpp
+ *   [6] 0x020b0938  src/game/actors/VirtualDoor/_ZN11VirtualDoor13InitResourcesEv.cpp
+ *   [7] 0x020b0980  src/game/actors/VirtualDoor/VirtualDoor_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

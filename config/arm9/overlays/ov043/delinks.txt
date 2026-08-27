@@ -3,106 +3,106 @@
     .ctor       start:0x02111ae8 end:0x02111af8 kind:rodata align:4
     .data       start:0x02111b00 end:0x021125e0 kind:data align:32
     .bss        start:0x021125e0 end:0x02112720 kind:bss align:32
-src/_ZN11DiamondLiftD1Ev.cpp:
+src/game/actors/DiamondLift/_ZN11DiamondLiftD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111e4
 
-src/_ZN11DiamondLiftD0Ev.cpp:
+src/game/actors/DiamondLift/_ZN11DiamondLiftD0Ev.cpp:
     complete
     .text start:0x021111e4 end:0x0211123c
 
-src/_ZN11DiamondLift16CleanupResourcesEv.cpp:
+src/game/actors/DiamondLift/_ZN11DiamondLift16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211123c end:0x02111280
 
-src/_ZN11DiamondLift6RenderEv.cpp:
+src/game/actors/DiamondLift/_ZN11DiamondLift6RenderEv.cpp:
     complete
     .text start:0x02111280 end:0x021112a8
 
-src/_ZN11DiamondLift8BehaviorEv.cpp:
+src/game/actors/DiamondLift/_ZN11DiamondLift8BehaviorEv.cpp:
     complete
     .text start:0x021112a8 end:0x02111320
 
-src/_ZN11DiamondLift13InitResourcesEv.cpp:
+src/game/actors/DiamondLift/_ZN11DiamondLift13InitResourcesEv.cpp:
     complete
     .text start:0x02111320 end:0x021113cc
 
-src/DiamondLift_Spawn.c:
+src/game/actors/DiamondLift/DiamondLift_Spawn.c:
     complete
     .text start:0x021113cc end:0x021113fc
 
-src/_ZN11RickshawBdwD1Ev.cpp:
+src/game/actors/RickshawBdw/_ZN11RickshawBdwD1Ev.cpp:
     complete
     .text start:0x021113fc end:0x0211144c
 
-src/_ZN11RickshawBdwD0Ev.cpp:
+src/game/actors/RickshawBdw/_ZN11RickshawBdwD0Ev.cpp:
     complete
     .text start:0x0211144c end:0x021114b0
 
-src/_ZN11RickshawBdw16CleanupResourcesEv.cpp:
+src/game/actors/RickshawBdw/_ZN11RickshawBdw16CleanupResourcesEv.cpp:
     complete
     .text start:0x021114b0 end:0x021114c4
 
-src/_ZN11RickshawBdw13InitResourcesEv.cpp:
+src/game/actors/RickshawBdw/_ZN11RickshawBdw13InitResourcesEv.cpp:
     complete
     .text start:0x021114c4 end:0x021114dc
 
-src/RickshawBdw_Spawn.c:
+src/game/actors/RickshawBdw/RickshawBdw_Spawn.c:
     complete
     .text start:0x021114dc end:0x02111518
 
-src/_ZN19RickshawPlatformBdwD1Ev.cpp:
+src/game/actors/RickshawPlatformBdw/_ZN19RickshawPlatformBdwD1Ev.cpp:
     complete
     .text start:0x02111518 end:0x02111568
 
-src/_ZN19RickshawPlatformBdwD0Ev.cpp:
+src/game/actors/RickshawPlatformBdw/_ZN19RickshawPlatformBdwD0Ev.cpp:
     complete
     .text start:0x02111568 end:0x021115cc
 
-src/_ZN19RickshawPlatformBdw16CleanupResourcesEv.cpp:
+src/game/actors/RickshawPlatformBdw/_ZN19RickshawPlatformBdw16CleanupResourcesEv.cpp:
     complete
     .text start:0x021115cc end:0x021115e0
 
-src/_ZN19RickshawPlatformBdw13InitResourcesEv.cpp:
+src/game/actors/RickshawPlatformBdw/_ZN19RickshawPlatformBdw13InitResourcesEv.cpp:
     complete
     .text start:0x021115e0 end:0x021115f4
 
-src/RickshawPlatformBdw_Spawn.c:
+src/game/actors/RickshawPlatformBdw/RickshawPlatformBdw_Spawn.c:
     complete
     .text start:0x021115f4 end:0x02111630
 
-src/_ZN17daObjKm1_Dorifu_cD1Ev.cpp:
+src/game/actors/daObjKm1_Dorifu_c/_ZN17daObjKm1_Dorifu_cD1Ev.cpp:
     complete
     .text start:0x02111630 end:0x021116b0
 
-src/_ZN17daObjKm1_Dorifu_cD0Ev.cpp:
+src/game/actors/daObjKm1_Dorifu_c/_ZN17daObjKm1_Dorifu_cD0Ev.cpp:
     complete
     .text start:0x021116b0 end:0x02111744
 
-src/_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv.cpp:
+src/game/actors/daObjKm1_Dorifu_c/_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111744 end:0x02111758
 
-src/_ZN17daObjKm1_Dorifu_c13InitResourcesEv.cpp:
+src/game/actors/daObjKm1_Dorifu_c/_ZN17daObjKm1_Dorifu_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111758 end:0x0211176c
 
-src/StairsBdw_Spawn.cpp:
+src/game/actors/StairsBdw/StairsBdw_Spawn.cpp:
     complete
     .text start:0x0211176c end:0x021117fc
 
-src/__sinit_ov043_021117fc.c:
+src/unnamed/ov043/0211/__sinit_ov043_021117fc.c:
     complete
     .init start:0x021117fc end:0x02111868
 
-src/__sinit_ov043_02111868.c:
+src/unnamed/ov043/0211/__sinit_ov043_02111868.c:
     complete
     .init start:0x02111868 end:0x021118d4
 
-src/__sinit_ov043_021118d4.c:
+src/unnamed/ov043/0211/__sinit_ov043_021118d4.c:
     complete
     .init start:0x021118d4 end:0x02111940
 
-src/__sinit_ov043_02111940.c:
+src/unnamed/ov043/0211/__sinit_ov043_02111940.c:
     complete
     .init start:0x02111940 end:0x02111ae8

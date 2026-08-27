@@ -22,63 +22,63 @@
       "symbol": "_ZN9WDW_WaterD1Ev",
       "address": "0x021121a4",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN9WDW_WaterD1Ev.cpp",
+      "legacy_source": "src/game/actors/WDW_Water/_ZN9WDW_WaterD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN9WDW_WaterD0Ev",
       "address": "0x021121f0",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN9WDW_WaterD0Ev.cpp",
+      "legacy_source": "src/game/actors/WDW_Water/_ZN9WDW_WaterD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "func_ov029_02112250",
       "address": "0x02112250",
       "size": "0x00000064",
-      "legacy_source": "src/func_ov029_02112250.cpp",
+      "legacy_source": "src/unnamed/ov029/0211/func_ov029_02112250.cpp",
       "ordinal": 2
     },
     {
       "symbol": "func_ov029_021122b4",
       "address": "0x021122b4",
       "size": "0x00000028",
-      "legacy_source": "src/func_ov029_021122b4.c",
+      "legacy_source": "src/unnamed/ov029/0211/func_ov029_021122b4.c",
       "ordinal": 3
     },
     {
       "symbol": "_ZN9WDW_Water16CleanupResourcesEv",
       "address": "0x021122dc",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN9WDW_Water16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/WDW_Water/_ZN9WDW_Water16CleanupResourcesEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN9WDW_Water6RenderEv",
       "address": "0x02112320",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN9WDW_Water6RenderEv.cpp",
+      "legacy_source": "src/game/actors/WDW_Water/_ZN9WDW_Water6RenderEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN9WDW_Water8BehaviorEv",
       "address": "0x02112354",
       "size": "0x0000017c",
-      "legacy_source": "src/_ZN9WDW_Water8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/WDW_Water/_ZN9WDW_Water8BehaviorEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "_ZN9WDW_Water13InitResourcesEv",
       "address": "0x021124d0",
       "size": "0x00000128",
-      "legacy_source": "src/_ZN9WDW_Water13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/WDW_Water/_ZN9WDW_Water13InitResourcesEv.cpp",
       "ordinal": 7
     },
     {
       "symbol": "WDW_Water_Spawn",
       "address": "0x021125f8",
       "size": "0x00000038",
-      "legacy_source": "src/WDW_Water_Spawn.c",
+      "legacy_source": "src/game/actors/WDW_Water/WDW_Water_Spawn.c",
       "ordinal": 8
     }
   ],

@@ -3,98 +3,98 @@
     .ctor       start:0x021119c4 end:0x021119d4 kind:rodata align:4
     .data       start:0x021119e0 end:0x021125e0 kind:data align:32
     .bss        start:0x021125e0 end:0x02112720 kind:bss align:32
-src/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp:
+src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111f0
 
-src/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp:
+src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_cD0Ev.cpp:
     complete
     .text start:0x021111f0 end:0x02111254
 
-src/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp:
+src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111254 end:0x02111268
 
-src/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp:
+src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111268 end:0x02111280
 
-src/RickshawBs_Spawn.c:
+src/game/actors/RickshawBs/RickshawBs_Spawn.c:
     complete
     .text start:0x02111280 end:0x021112bc
 
-src/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp:
+src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp:
     complete
     .text start:0x021112bc end:0x0211130c
 
-src/_ZN20daObjKm3_Kaitendai_cD0Ev.cpp:
+src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_cD0Ev.cpp:
     complete
     .text start:0x0211130c end:0x02111370
 
-src/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.cpp:
+src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111370 end:0x02111384
 
-src/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.cpp:
+src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111384 end:0x021113bc
 
-src/func_ov047_021113bc.c:
+src/unnamed/ov047/0211/func_ov047_021113bc.c:
     complete
     .text start:0x021113bc end:0x021113f8
 
-src/_ZN17daObjKm3_Kuruma_cD1Ev.cpp:
+src/game/actors/daObjKm3_Kuruma_c/_ZN17daObjKm3_Kuruma_cD1Ev.cpp:
     complete
     .text start:0x021113f8 end:0x02111448
 
-src/_ZN17daObjKm3_Kuruma_cD0Ev.cpp:
+src/game/actors/daObjKm3_Kuruma_c/_ZN17daObjKm3_Kuruma_cD0Ev.cpp:
     complete
     .text start:0x02111448 end:0x021114ac
 
-src/_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv.cpp:
+src/game/actors/daObjKm3_Kuruma_c/_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x021114ac end:0x021114c0
 
-src/_ZN17daObjKm3_Kuruma_c13InitResourcesEv.cpp:
+src/game/actors/daObjKm3_Kuruma_c/_ZN17daObjKm3_Kuruma_c13InitResourcesEv.cpp:
     complete
     .text start:0x021114c0 end:0x021114d4
 
-src/RickshawPlatformBs_Spawn.c:
+src/game/actors/RickshawPlatformBs/RickshawPlatformBs_Spawn.c:
     complete
     .text start:0x021114d4 end:0x02111510
 
-src/_ZN18RickshawPlatformBsD1Ev.cpp:
+src/game/actors/RickshawPlatformBs/_ZN18RickshawPlatformBsD1Ev.cpp:
     complete
     .text start:0x02111510 end:0x02111590
 
-src/_ZN18RickshawPlatformBsD0Ev.cpp:
+src/game/actors/RickshawPlatformBs/_ZN18RickshawPlatformBsD0Ev.cpp:
     complete
     .text start:0x02111590 end:0x02111624
 
-src/_ZN18RickshawPlatformBs16CleanupResourcesEv.cpp:
+src/game/actors/RickshawPlatformBs/_ZN18RickshawPlatformBs16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111624 end:0x02111638
 
-src/_ZN18RickshawPlatformBs13InitResourcesEv.cpp:
+src/game/actors/RickshawPlatformBs/_ZN18RickshawPlatformBs13InitResourcesEv.cpp:
     complete
     .text start:0x02111638 end:0x0211164c
 
-src/StairsBs_Spawn.cpp:
+src/game/actors/StairsBs/StairsBs_Spawn.cpp:
     complete
     .text start:0x0211164c end:0x021116dc
 
-src/__sinit_ov047_021116dc.c:
+src/unnamed/ov047/0211/__sinit_ov047_021116dc.c:
     complete
     .init start:0x021116dc end:0x02111748
 
-src/__sinit_ov047_02111748.c:
+src/unnamed/ov047/0211/__sinit_ov047_02111748.c:
     complete
     .init start:0x02111748 end:0x021117b4
 
-src/__sinit_ov047_021117b4.c:
+src/unnamed/ov047/0211/__sinit_ov047_021117b4.c:
     complete
     .init start:0x021117b4 end:0x0211181c
 
-src/__sinit_ov047_0211181c.c:
+src/unnamed/ov047/0211/__sinit_ov047_0211181c.c:
     complete
     .init start:0x0211181c end:0x021119c4

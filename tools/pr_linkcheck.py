@@ -183,7 +183,7 @@ def check_file(path, idx, ledger):
 
     WHICH SYMBOLS THE FILE OWNS is `srcpath.symbols_for`, not `Path.stem`. For a legacy
     one-function source those are the same string. For a merged translation unit
-    they are not: `src/actors/ActorBase_SceneNode.cpp` holds two functions and is named
+    they are not: `src/game/actors/ActorBase_SceneNode.cpp` holds two functions and is named
     after neither, so the stem resolved to nothing and the whole file was reported
     `unresolved` with `0` slots checked -- a file the PR comment listed as examined and
     that nothing had looked at. It could not fall through to the passenger loop either,
@@ -362,7 +362,7 @@ def main():
     #
     # NO-SYM is the fourth, and it was missing. A file that does not compile, or compiles
     # without emitting its symbol, is graded NO-SYM — and NO-SYM was not in this set, so
-    # the worst possible outcome scored as a pass. src/func_ov002_020d6c60.cpp has been
+    # the worst possible outcome scored as a pass. src/unnamed/ov002/020d/func_ov002_020d6c60.cpp has been
     # unbuildable since #866 (`illegal function overloading`, its local declaration
     # disagreeing with decl_common.h), carries no NONMATCHING banner, and was edited by a
     # merged PR while broken. A gate that cannot fail the file it could not even build is

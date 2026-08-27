@@ -49,7 +49,7 @@ struct dCcAcPos_c : dCcAc_c {
     virtual Vector3 &GetPos();              /* slot 2 - our pos, not the owner's */
     /* slot 3 GetOwnerID is inherited through a linker veneer; see above. */
 
-    /* DECLARED, defined out of line in src/_ZN10dCcAcPos_cC1Ev.cpp as real
+    /* DECLARED, defined out of line in src/game/actors/dCcAcPos_c/_ZN10dCcAcPos_cC1Ev.cpp as real
      * C++ -- the body is empty; the dCcAc_c base step and the vptr store are
      * the whole ROM function. */
     dCcAcPos_c();

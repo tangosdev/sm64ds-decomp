@@ -4,453 +4,453 @@
     .ctor       start:0x02128824 end:0x02128838 kind:rodata align:4
     .data       start:0x02128840 end:0x02128d60 kind:data align:32
     .bss        start:0x02128d60 end:0x02129000 kind:bss align:32
-src/_ZN9SpindriftD1Ev.cpp:
+src/game/actors/Spindrift/_ZN9SpindriftD1Ev.cpp:
     complete
     .text start:0x02123740 end:0x02123788
 
-src/_ZN9SpindriftD0Ev.cpp:
+src/game/actors/Spindrift/_ZN9SpindriftD0Ev.cpp:
     complete
     .text start:0x02123788 end:0x021237e4
 
-src/_ZN9Spindrift16OnAimedAtWithEggEv.cpp:
+src/game/actors/Spindrift/_ZN9Spindrift16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021237e4 end:0x021237ec
 
-src/func_ov081_021237ec.cpp:
+src/unnamed/ov081/0212/func_ov081_021237ec.cpp:
     complete
     .text start:0x021237ec end:0x02123910
 
-src/func_ov081_02123910.cpp:
+src/unnamed/ov081/0212/func_ov081_02123910.cpp:
     complete
     .text start:0x02123910 end:0x02123b20
 
-src/func_ov081_02123b20.cpp:
+src/unnamed/ov081/0212/func_ov081_02123b20.cpp:
     complete
     .text start:0x02123b20 end:0x02123bec
 
-src/_ZN9Spindrift16CleanupResourcesEv.cpp:
+src/game/actors/Spindrift/_ZN9Spindrift16CleanupResourcesEv.cpp:
     complete
     .text start:0x02123bec end:0x02123c1c
 
-src/_ZN9Spindrift6RenderEv.cpp:
+src/game/actors/Spindrift/_ZN9Spindrift6RenderEv.cpp:
     complete
     .text start:0x02123c1c end:0x02123c6c
 
-src/_ZN9Spindrift8BehaviorEv.cpp:
+src/game/actors/Spindrift/_ZN9Spindrift8BehaviorEv.cpp:
     complete
     .text start:0x02123c6c end:0x02123ed0
 
-src/_ZN9Spindrift13InitResourcesEv.cpp:
+src/game/actors/Spindrift/_ZN9Spindrift13InitResourcesEv.cpp:
     complete
     .text start:0x02123ed0 end:0x02123fd8
 
-src/_ZN9Spindrift13OnTurnIntoEggER6Player.cpp:
+src/game/actors/Spindrift/_ZN9Spindrift13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02123fd8 end:0x02124038
 
-src/_ZN9Spindrift13OnYoshiTryEatEv.cpp:
+src/game/actors/Spindrift/_ZN9Spindrift13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02124038 end:0x02124040
 
-src/Spindrift_Spawn.c:
+src/game/actors/Spindrift/Spindrift_Spawn.c:
     complete
     .text start:0x02124040 end:0x02124090
 
-src/_ZN10MrBlizzardD1Ev.cpp:
+src/game/actors/MrBlizzard/_ZN10MrBlizzardD1Ev.cpp:
     complete
     .text start:0x02124090 end:0x021240d8
 
-src/_ZN10MrBlizzardD0Ev.cpp:
+src/game/actors/MrBlizzard/_ZN10MrBlizzardD0Ev.cpp:
     complete
     .text start:0x021240d8 end:0x02124134
 
-src/func_ov081_02124134.c:
+src/unnamed/ov081/0212/func_ov081_02124134.c:
     complete
     .text start:0x02124134 end:0x0212423c
 
-src/func_ov081_0212423c.c:
+src/unnamed/ov081/0212/func_ov081_0212423c.c:
     complete
     .text start:0x0212423c end:0x021243cc
 
-src/func_ov081_021243cc.cpp:
+src/unnamed/ov081/0212/func_ov081_021243cc.cpp:
     complete
     .text start:0x021243cc end:0x021245e8
 
-src/func_ov081_021245e8.c:
+src/unnamed/ov081/0212/func_ov081_021245e8.c:
     complete
     .text start:0x021245e8 end:0x021246a0
 
-src/func_ov081_021246a0.c:
+src/unnamed/ov081/0212/func_ov081_021246a0.c:
     complete
     .text start:0x021246a0 end:0x0212479c
 
-src/func_ov081_0212479c.cpp:
+src/unnamed/ov081/0212/func_ov081_0212479c.cpp:
     complete
     .text start:0x0212479c end:0x02124894
 
-src/func_ov081_02124894.c:
+src/unnamed/ov081/0212/func_ov081_02124894.c:
     complete
     .text start:0x02124894 end:0x0212498c
 
-src/func_ov081_0212498c.c:
+src/unnamed/ov081/0212/func_ov081_0212498c.c:
     complete
     .text start:0x0212498c end:0x021249f4
 
-src/func_ov081_021249f4.c:
+src/unnamed/ov081/0212/func_ov081_021249f4.c:
     complete
     .text start:0x021249f4 end:0x02124b08
 
-src/func_ov081_02124b08.c:
+src/unnamed/ov081/0212/func_ov081_02124b08.c:
     complete
     .text start:0x02124b08 end:0x02124b98
 
-src/func_ov081_02124b98.cpp:
+src/unnamed/ov081/0212/func_ov081_02124b98.cpp:
     complete
     .text start:0x02124b98 end:0x02124d14
 
-src/func_ov081_02124d14.cpp:
+src/unnamed/ov081/0212/func_ov081_02124d14.cpp:
     complete
     .text start:0x02124d14 end:0x02124d50
 
-src/func_ov081_02124d50.cpp:
+src/unnamed/ov081/0212/func_ov081_02124d50.cpp:
     complete
     .text start:0x02124d50 end:0x02124dfc
 
-src/func_ov081_02124dfc.c:
+src/unnamed/ov081/0212/func_ov081_02124dfc.c:
     complete
     .text start:0x02124dfc end:0x02124e64
 
-src/func_ov081_02124e64.c:
+src/unnamed/ov081/0212/func_ov081_02124e64.c:
     complete
     .text start:0x02124e64 end:0x02124ec0
 
-src/func_ov081_02124ec0.c:
+src/unnamed/ov081/0212/func_ov081_02124ec0.c:
     complete
     .text start:0x02124ec0 end:0x02124f20
 
-src/func_ov081_02124f20.cpp:
+src/unnamed/ov081/0212/func_ov081_02124f20.cpp:
     complete
     .text start:0x02124f20 end:0x02124f7c
 
-src/func_ov081_02124f7c.c:
+src/unnamed/ov081/0212/func_ov081_02124f7c.c:
     complete
     .text start:0x02124f7c end:0x02125038
 
-src/func_ov081_02125038.cpp:
+src/unnamed/ov081/0212/func_ov081_02125038.cpp:
     complete
     .text start:0x02125038 end:0x02125068
 
-src/func_ov081_02125068.cpp:
+src/unnamed/ov081/0212/func_ov081_02125068.cpp:
     complete
     .text start:0x02125068 end:0x021250c8
 
-src/func_ov081_021250c8.c:
+src/unnamed/ov081/0212/func_ov081_021250c8.c:
     complete
     .text start:0x021250c8 end:0x02125200
 
-src/func_ov081_02125200.c:
+src/unnamed/ov081/0212/func_ov081_02125200.c:
     complete
     .text start:0x02125200 end:0x02125208
 
-src/func_ov081_02125208.c:
+src/unnamed/ov081/0212/func_ov081_02125208.c:
     complete
     .text start:0x02125208 end:0x0212538c
 
-src/func_ov081_0212538c.c:
+src/unnamed/ov081/0212/func_ov081_0212538c.c:
     complete
     .text start:0x0212538c end:0x02125488
 
-src/func_ov081_02125488.cpp:
+src/unnamed/ov081/0212/func_ov081_02125488.cpp:
     complete
     .text start:0x02125488 end:0x021254d8
 
-src/func_ov081_021254d8.cpp:
+src/unnamed/ov081/0212/func_ov081_021254d8.cpp:
     complete
     .text start:0x021254d8 end:0x021257b0
 
-src/_ZN10MrBlizzard16CleanupResourcesEv.cpp:
+src/game/actors/MrBlizzard/_ZN10MrBlizzard16CleanupResourcesEv.cpp:
     complete
     .text start:0x021257b0 end:0x0212581c
 
-src/_ZN10MrBlizzard16OnPendingDestroyEv.cpp:
+src/game/actors/MrBlizzard/_ZN10MrBlizzard16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212581c end:0x02125820
 
-src/_ZN10MrBlizzard6RenderEv.cpp:
+src/game/actors/MrBlizzard/_ZN10MrBlizzard6RenderEv.cpp:
     complete
     .text start:0x02125820 end:0x0212588c
 
-src/_ZN10MrBlizzard8BehaviorEv.cpp:
+src/game/actors/MrBlizzard/_ZN10MrBlizzard8BehaviorEv.cpp:
     complete
     .text start:0x0212588c end:0x02125ba0
 
-src/_ZN10MrBlizzard13InitResourcesEv.cpp:
+src/game/actors/MrBlizzard/_ZN10MrBlizzard13InitResourcesEv.cpp:
     complete
     .text start:0x02125ba0 end:0x02125eb8
 
-src/_ZN10MrBlizzard16OnAimedAtWithEggEv.cpp:
+src/game/actors/MrBlizzard/_ZN10MrBlizzard16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02125eb8 end:0x02125ec0
 
-src/MrBlizzard_Spawn.c:
+src/game/actors/MrBlizzard/MrBlizzard_Spawn.c:
     complete
     .text start:0x02125ec0 end:0x02125f14
 
-src/_ZN8SnowballD1Ev.cpp:
+src/game/actors/Snowball/_ZN8SnowballD1Ev.cpp:
     complete
     .text start:0x02125f14 end:0x02125f5c
 
-src/_ZN8SnowballD0Ev.cpp:
+src/game/actors/Snowball/_ZN8SnowballD0Ev.cpp:
     complete
     .text start:0x02125f5c end:0x02125fb8
 
-src/func_ov081_02125fb8.c:
+src/unnamed/ov081/0212/func_ov081_02125fb8.c:
     complete
     .text start:0x02125fb8 end:0x021260fc
 
-src/func_ov081_021260fc.cpp:
+src/unnamed/ov081/0212/func_ov081_021260fc.cpp:
     complete
     .text start:0x021260fc end:0x021261b8
 
-src/func_ov081_021261b8.c:
+src/unnamed/ov081/0212/func_ov081_021261b8.c:
     complete
     .text start:0x021261b8 end:0x021261d4
 
-src/func_ov081_021261d4.cpp:
+src/unnamed/ov081/0212/func_ov081_021261d4.cpp:
     complete
     .text start:0x021261d4 end:0x02126224
 
-src/func_ov081_02126224.c:
+src/unnamed/ov081/0212/func_ov081_02126224.c:
     complete
     .text start:0x02126224 end:0x02126298
 
-src/_ZN8Snowball16CleanupResourcesEv.cpp:
+src/game/actors/Snowball/_ZN8Snowball16CleanupResourcesEv.cpp:
     complete
     .text start:0x02126298 end:0x021262bc
 
-src/_ZN8Snowball16OnPendingDestroyEv.cpp:
+src/game/actors/Snowball/_ZN8Snowball16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021262bc end:0x021262c0
 
-src/_ZN8Snowball6RenderEv.cpp:
+src/game/actors/Snowball/_ZN8Snowball6RenderEv.cpp:
     complete
     .text start:0x021262c0 end:0x021262ec
 
-src/_ZN8Snowball8BehaviorEv.cpp:
+src/game/actors/Snowball/_ZN8Snowball8BehaviorEv.cpp:
     complete
     .text start:0x021262ec end:0x021263b8
 
-src/_ZN8Snowball13InitResourcesEv.cpp:
+src/game/actors/Snowball/_ZN8Snowball13InitResourcesEv.cpp:
     complete
     .text start:0x021263b8 end:0x021264b4
 
-src/Snowball_Spawn.c:
+src/game/actors/Snowball/Snowball_Spawn.c:
     complete
     .text start:0x021264b4 end:0x02126504
 
-src/_ZN8MoneybagD1Ev.cpp:
+src/game/actors/Moneybag/_ZN8MoneybagD1Ev.cpp:
     complete
     .text start:0x02126504 end:0x02126554
 
-src/_ZN8MoneybagD0Ev.cpp:
+src/game/actors/Moneybag/_ZN8MoneybagD0Ev.cpp:
     complete
     .text start:0x02126554 end:0x021265b8
 
-src/_ZN8Moneybag13OnYoshiTryEatEv.cpp:
+src/game/actors/Moneybag/_ZN8Moneybag13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x021265b8 end:0x021265c0
 
-src/_ZN8Moneybag16OnAimedAtWithEggEv.cpp:
+src/game/actors/Moneybag/_ZN8Moneybag16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021265c0 end:0x021265c8
 
-src/func_ov081_021265c8.c:
+src/unnamed/ov081/0212/func_ov081_021265c8.c:
     complete
     .text start:0x021265c8 end:0x02126700
 
-src/func_ov081_02126700.cpp:
+src/unnamed/ov081/0212/func_ov081_02126700.cpp:
     complete
     .text start:0x02126700 end:0x02126758
 
-src/func_ov081_02126758.cpp:
+src/unnamed/ov081/0212/func_ov081_02126758.cpp:
     complete
     .text start:0x02126758 end:0x02126950
 
-src/func_ov081_02126950.cpp:
+src/unnamed/ov081/0212/func_ov081_02126950.cpp:
     complete
     .text start:0x02126950 end:0x02126a20
 
-src/func_ov081_02126a20.cpp:
+src/unnamed/ov081/0212/func_ov081_02126a20.cpp:
     complete
     .text start:0x02126a20 end:0x02126c20
 
-src/func_ov081_02126c20.cpp:
+src/unnamed/ov081/0212/func_ov081_02126c20.cpp:
     complete
     .text start:0x02126c20 end:0x02126c8c
 
-src/func_ov081_02126c8c.cpp:
+src/unnamed/ov081/0212/func_ov081_02126c8c.cpp:
     complete
     .text start:0x02126c8c end:0x02126d64
 
-src/func_ov081_02126d64.c:
+src/unnamed/ov081/0212/func_ov081_02126d64.c:
     .text start:0x02126d64 end:0x02126e28
 
-src/func_ov081_02126e28.c:
+src/unnamed/ov081/0212/func_ov081_02126e28.c:
     complete
     .text start:0x02126e28 end:0x02126fa4
 
-src/func_ov081_02126fa4.cpp:
+src/unnamed/ov081/0212/func_ov081_02126fa4.cpp:
     complete
     .text start:0x02126fa4 end:0x02127044
 
-src/func_ov081_02127044.c:
+src/unnamed/ov081/0212/func_ov081_02127044.c:
     complete
     .text start:0x02127044 end:0x02127070
 
-src/func_ov081_02127070.cpp:
+src/unnamed/ov081/0212/func_ov081_02127070.cpp:
     complete
     .text start:0x02127070 end:0x02127134
 
-src/func_ov081_02127134.c:
+src/unnamed/ov081/0212/func_ov081_02127134.c:
     complete
     .text start:0x02127134 end:0x02127188
 
-src/func_ov081_02127188.c:
+src/unnamed/ov081/0212/func_ov081_02127188.c:
     complete
     .text start:0x02127188 end:0x021271e8
 
-src/func_ov081_021271e8.c:
+src/unnamed/ov081/0212/func_ov081_021271e8.c:
     complete
     .text start:0x021271e8 end:0x02127240
 
-src/func_ov081_02127240.cpp:
+src/unnamed/ov081/0212/func_ov081_02127240.cpp:
     complete
     .text start:0x02127240 end:0x02127314
 
-src/func_ov081_02127314.cpp:
+src/unnamed/ov081/0212/func_ov081_02127314.cpp:
     complete
     .text start:0x02127314 end:0x02127398
 
-src/func_ov081_02127398.c:
+src/unnamed/ov081/0212/func_ov081_02127398.c:
     complete
     .text start:0x02127398 end:0x021273e8
 
-src/func_ov081_021273e8.c:
+src/unnamed/ov081/0212/func_ov081_021273e8.c:
     complete
     .text start:0x021273e8 end:0x02127440
 
-src/func_ov081_02127440.cpp:
+src/unnamed/ov081/0212/func_ov081_02127440.cpp:
     complete
     .text start:0x02127440 end:0x021274c8
 
-src/func_ov081_021274c8.cpp:
+src/unnamed/ov081/0212/func_ov081_021274c8.cpp:
     complete
     .text start:0x021274c8 end:0x02127558
 
-src/func_ov081_02127558.c:
+src/unnamed/ov081/0212/func_ov081_02127558.c:
     complete
     .text start:0x02127558 end:0x021276b0
 
-src/func_ov081_021276b0.cpp:
+src/unnamed/ov081/0212/func_ov081_021276b0.cpp:
     complete
     .text start:0x021276b0 end:0x02127708
 
-src/func_ov081_02127708.cpp:
+src/unnamed/ov081/0212/func_ov081_02127708.cpp:
     complete
     .text start:0x02127708 end:0x02127744
 
-src/func_ov081_02127744.cpp:
+src/unnamed/ov081/0212/func_ov081_02127744.cpp:
     complete
     .text start:0x02127744 end:0x0212777c
 
-src/func_ov081_0212777c.c:
+src/unnamed/ov081/0212/func_ov081_0212777c.c:
     complete
     .text start:0x0212777c end:0x02127798
 
-src/_ZN8Moneybag16CleanupResourcesEv.cpp:
+src/game/actors/Moneybag/_ZN8Moneybag16CleanupResourcesEv.cpp:
     complete
     .text start:0x02127798 end:0x021277dc
 
-src/_ZN8Moneybag16OnPendingDestroyEv.cpp:
+src/game/actors/Moneybag/_ZN8Moneybag16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021277dc end:0x021277e0
 
-src/_ZN8Moneybag6RenderEv.cpp:
+src/game/actors/Moneybag/_ZN8Moneybag6RenderEv.cpp:
     complete
     .text start:0x021277e0 end:0x02127854
 
-src/_ZN8Moneybag8BehaviorEv.cpp:
+src/game/actors/Moneybag/_ZN8Moneybag8BehaviorEv.cpp:
     complete
     .text start:0x02127854 end:0x021278a8
 
-src/_ZN8Moneybag13InitResourcesEv.cpp:
+src/game/actors/Moneybag/_ZN8Moneybag13InitResourcesEv.cpp:
     complete
     .text start:0x021278a8 end:0x02127a7c
 
-src/_ZN8Moneybag13OnTurnIntoEggER6Player.cpp:
+src/game/actors/Moneybag/_ZN8Moneybag13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02127a7c end:0x02127adc
 
-src/Moneybag_Spawn.c:
+src/game/actors/Moneybag/Moneybag_Spawn.c:
     complete
     .text start:0x02127adc end:0x02127b34
 
-src/_ZN8IceBlockD1Ev.cpp:
+src/game/actors/IceBlock/_ZN8IceBlockD1Ev.cpp:
     complete
     .text start:0x02127b34 end:0x02127b80
 
-src/_ZN8IceBlockD0Ev.cpp:
+src/game/actors/IceBlock/_ZN8IceBlockD0Ev.cpp:
     complete
     .text start:0x02127b80 end:0x02127be0
 
-src/func_ov081_02127be0.cpp:
+src/unnamed/ov081/0212/func_ov081_02127be0.cpp:
     complete
     .text start:0x02127be0 end:0x02127ccc
 
-src/_ZN8IceBlock15OnHitByMegaCharER6Player.cpp:
+src/game/actors/IceBlock/_ZN8IceBlock15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02127ccc end:0x02127cf4
 
-src/_ZN8IceBlock4KillEv.cpp:
+src/game/actors/IceBlock/_ZN8IceBlock4KillEv.cpp:
     complete
     .text start:0x02127cf4 end:0x02127d98
 
-src/_ZN8IceBlock16CleanupResourcesEv.cpp:
+src/game/actors/IceBlock/_ZN8IceBlock16CleanupResourcesEv.cpp:
     complete
     .text start:0x02127d98 end:0x02127ddc
 
-src/_ZN8IceBlock6RenderEv.cpp:
+src/game/actors/IceBlock/_ZN8IceBlock6RenderEv.cpp:
     complete
     .text start:0x02127ddc end:0x02127e1c
 
-src/_ZN8IceBlock8BehaviorEv.cpp:
+src/game/actors/IceBlock/_ZN8IceBlock8BehaviorEv.cpp:
     complete
     .text start:0x02127e1c end:0x02127ff0
 
-src/_ZN8IceBlock13InitResourcesEv.cpp:
+src/game/actors/IceBlock/_ZN8IceBlock13InitResourcesEv.cpp:
     complete
     .text start:0x02127ff0 end:0x021280a0
 
-src/IceBlock_Spawn.c:
+src/game/actors/IceBlock/IceBlock_Spawn.c:
     complete
     .text start:0x021280a0 end:0x021280d8
 
-src/__sinit_ov081_021280e8.c:
+src/unnamed/ov081/0212/__sinit_ov081_021280e8.c:
     complete
     .init start:0x021280e8 end:0x02128154
 
-src/__sinit_ov081_02128154.c:
+src/unnamed/ov081/0212/__sinit_ov081_02128154.c:
     complete
     .init start:0x02128154 end:0x021284b4
 
-src/__sinit_ov081_021284b4.c:
+src/unnamed/ov081/0212/__sinit_ov081_021284b4.c:
     complete
     .init start:0x021284b4 end:0x021284f0
 
-src/__sinit_ov081_021284f0.c:
+src/unnamed/ov081/0212/__sinit_ov081_021284f0.c:
     complete
     .init start:0x021284f0 end:0x021287b8
 
-src/__sinit_ov081_021287b8.c:
+src/unnamed/ov081/0212/__sinit_ov081_021287b8.c:
     complete
     .init start:0x021287b8 end:0x02128824

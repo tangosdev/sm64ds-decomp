@@ -4,213 +4,213 @@
     .ctor       start:0x02122d70 end:0x02122d74 kind:rodata align:4
     .data       start:0x02122d80 end:0x02122fe0 kind:data align:32
     .bss        start:0x02122fe0 end:0x021231a0 kind:bss align:32
-src/_ZN8GoombossD1Ev.cpp:
+src/game/actors/Goomboss/_ZN8GoombossD1Ev.cpp:
     complete
     .text start:0x0211f000 end:0x0211f0a0
 
-src/_ZN8GoombossD0Ev.cpp:
+src/game/actors/Goomboss/_ZN8GoombossD0Ev.cpp:
     complete
     .text start:0x0211f0a0 end:0x0211f154
 
-src/func_ov074_0211f154.c:
+src/unnamed/ov074/0211/func_ov074_0211f154.c:
     complete
     .text start:0x0211f154 end:0x0211f244
 
-src/func_ov074_0211f244.cpp:
+src/unnamed/ov074/0211/func_ov074_0211f244.cpp:
     complete
     .text start:0x0211f244 end:0x0211f344
 
-src/func_ov074_0211f344.c:
+src/unnamed/ov074/0211/func_ov074_0211f344.c:
     complete
     .text start:0x0211f344 end:0x0211f38c
 
-src/func_ov074_0211f38c.c:
+src/unnamed/ov074/0211/func_ov074_0211f38c.c:
     complete
     .text start:0x0211f38c end:0x0211f5b8
 
-src/func_ov074_0211f5b8.cpp:
+src/unnamed/ov074/0211/func_ov074_0211f5b8.cpp:
     complete
     .text start:0x0211f5b8 end:0x0211fa08
 
-src/func_ov074_0211fa08.c:
+src/unnamed/ov074/0211/func_ov074_0211fa08.c:
     complete
     .text start:0x0211fa08 end:0x0211fa74
 
-src/func_ov074_0211fa74.c:
+src/unnamed/ov074/0211/func_ov074_0211fa74.c:
     complete
     .text start:0x0211fa74 end:0x0211fb84
 
-src/func_ov074_0211fb84.c:
+src/unnamed/ov074/0211/func_ov074_0211fb84.c:
     complete
     .text start:0x0211fb84 end:0x0211fbd0
 
-src/func_ov074_0211fbd0.c:
+src/unnamed/ov074/0211/func_ov074_0211fbd0.c:
     complete
     .text start:0x0211fbd0 end:0x0211fc34
 
-src/func_ov074_0211fc34.c:
+src/unnamed/ov074/0211/func_ov074_0211fc34.c:
     complete
     .text start:0x0211fc34 end:0x0211fc38
 
-src/func_ov074_0211fc38.c:
+src/unnamed/ov074/0211/func_ov074_0211fc38.c:
     complete
     .text start:0x0211fc38 end:0x0211fd48
 
-src/func_ov074_0211fd48.c:
+src/unnamed/ov074/0211/func_ov074_0211fd48.c:
     complete
     .text start:0x0211fd48 end:0x0211fd74
 
-src/func_ov074_0211fd74.cpp:
+src/unnamed/ov074/0211/func_ov074_0211fd74.cpp:
     complete
     .text start:0x0211fd74 end:0x0211ffac
 
-src/func_ov074_0211ffac.c:
+src/unnamed/ov074/0211/func_ov074_0211ffac.c:
     complete
     .text start:0x0211ffac end:0x0211ffcc
 
-src/func_ov074_0211ffcc.c:
+src/unnamed/ov074/0211/func_ov074_0211ffcc.c:
     complete
     .text start:0x0211ffcc end:0x0212007c
 
-src/func_ov074_0212007c.c:
+src/unnamed/ov074/0212/func_ov074_0212007c.c:
     complete
     .text start:0x0212007c end:0x02120080
 
-src/func_ov074_02120080.cpp:
+src/unnamed/ov074/0212/func_ov074_02120080.cpp:
     complete
     .text start:0x02120080 end:0x0212016c
 
-src/func_ov074_0212016c.c:
+src/unnamed/ov074/0212/func_ov074_0212016c.c:
     complete
     .text start:0x0212016c end:0x0212018c
 
-src/func_ov074_0212018c.cpp:
+src/unnamed/ov074/0212/func_ov074_0212018c.cpp:
     complete
     .text start:0x0212018c end:0x021201ec
 
-src/func_ov074_021201ec.c:
+src/unnamed/ov074/0212/func_ov074_021201ec.c:
     complete
     .text start:0x021201ec end:0x021201f0
 
-src/func_ov074_021203e0.c:
+src/unnamed/ov074/0212/func_ov074_021203e0.c:
     complete
     .text start:0x021203e0 end:0x021203e4
 
-src/func_ov074_021203e4.cpp:
+src/unnamed/ov074/0212/func_ov074_021203e4.cpp:
     complete
     .text start:0x021203e4 end:0x0212042c
 
-src/func_ov074_0212042c.cpp:
+src/unnamed/ov074/0212/func_ov074_0212042c.cpp:
     complete
     .text start:0x0212042c end:0x02120474
 
-src/func_ov074_02120474.cpp:
+src/unnamed/ov074/0212/func_ov074_02120474.cpp:
     complete
     .text start:0x02120474 end:0x021204c0
 
-src/func_ov074_021206c8.c:
+src/unnamed/ov074/0212/func_ov074_021206c8.c:
     complete
     .text start:0x021206c8 end:0x021207b8
 
-src/func_ov074_021207b8.c:
+src/unnamed/ov074/0212/func_ov074_021207b8.c:
     complete
     .text start:0x021207b8 end:0x02120808
 
-src/func_ov074_02120808.cpp:
+src/unnamed/ov074/0212/func_ov074_02120808.cpp:
     complete
     .text start:0x02120808 end:0x0212087c
 
-src/func_ov074_0212087c.c:
+src/unnamed/ov074/0212/func_ov074_0212087c.c:
     complete
     .text start:0x0212087c end:0x02120b24
 
-src/func_ov074_02120b24.c:
+src/unnamed/ov074/0212/func_ov074_02120b24.c:
     complete
     .text start:0x02120b24 end:0x02120b90
 
-src/func_ov074_02120b90.c:
+src/unnamed/ov074/0212/func_ov074_02120b90.c:
     complete
     .text start:0x02120b90 end:0x02120bb8
 
-src/func_ov074_02120bb8.c:
+src/unnamed/ov074/0212/func_ov074_02120bb8.c:
     complete
     .text start:0x02120bb8 end:0x02120d74
 
-src/func_ov074_02120d74.c:
+src/unnamed/ov074/0212/func_ov074_02120d74.c:
     complete
     .text start:0x02120d74 end:0x02121270
 
-src/func_ov074_02121270.c:
+src/unnamed/ov074/0212/func_ov074_02121270.c:
     complete
     .text start:0x02121270 end:0x02121300
 
-src/func_ov074_02121300.cpp:
+src/unnamed/ov074/0212/func_ov074_02121300.cpp:
     complete
     .text start:0x02121300 end:0x02121380
 
-src/func_ov074_021216f4.c:
+src/unnamed/ov074/0212/func_ov074_021216f4.c:
     complete
     .text start:0x021216f4 end:0x02121800
 
-src/func_ov074_02121800.c:
+src/unnamed/ov074/0212/func_ov074_02121800.c:
     complete
     .text start:0x02121800 end:0x0212195c
 
-src/func_ov074_0212195c.c:
+src/unnamed/ov074/0212/func_ov074_0212195c.c:
     complete
     .text start:0x0212195c end:0x0212199c
 
-src/func_ov074_0212199c.c:
+src/unnamed/ov074/0212/func_ov074_0212199c.c:
     complete
     .text start:0x0212199c end:0x02121a20
 
-src/func_ov074_02121a20.c:
+src/unnamed/ov074/0212/func_ov074_02121a20.c:
     complete
     .text start:0x02121a20 end:0x02121a4c
 
-src/func_ov074_02121a4c.cpp:
+src/unnamed/ov074/0212/func_ov074_02121a4c.cpp:
     complete
     .text start:0x02121a4c end:0x02121abc
 
-src/_ZN8Goomboss16CleanupResourcesEv.cpp:
+src/game/actors/Goomboss/_ZN8Goomboss16CleanupResourcesEv.cpp:
     complete
     .text start:0x02121abc end:0x02121b70
 
-src/_ZN8Goomboss6RenderEv.cpp:
+src/game/actors/Goomboss/_ZN8Goomboss6RenderEv.cpp:
     complete
     .text start:0x02121b70 end:0x02121bf0
 
-src/_ZN8Goomboss8BehaviorEv.cpp:
+src/game/actors/Goomboss/_ZN8Goomboss8BehaviorEv.cpp:
     complete
     .text start:0x02121bf0 end:0x02121e98
 
-src/_ZN8Goomboss13InitResourcesEv.cpp:
+src/game/actors/Goomboss/_ZN8Goomboss13InitResourcesEv.cpp:
     .text start:0x02121e98 end:0x0212229c
 
-src/func_ov074_0212229c.c:
+src/unnamed/ov074/0212/func_ov074_0212229c.c:
     complete
     .text start:0x0212229c end:0x021222e0
 
-src/func_ov074_021222e0.cpp:
+src/unnamed/ov074/0212/func_ov074_021222e0.cpp:
     complete
     .text start:0x021222e0 end:0x021223bc
 
-src/func_ov074_021223bc.cpp:
+src/unnamed/ov074/0212/func_ov074_021223bc.cpp:
     complete
     .text start:0x021223bc end:0x02122634
 
-src/func_ov074_02122634.cpp:
+src/unnamed/ov074/0212/func_ov074_02122634.cpp:
     complete
     .text start:0x02122634 end:0x02122764
 
-src/ExplosionGoomba_Spawn.cpp:
+src/game/actors/ExplosionGoomba/ExplosionGoomba_Spawn.cpp:
     complete
     .text start:0x02122764 end:0x02122838
 
-src/Goomboss_Spawn.cpp:
+src/game/actors/Goomboss/Goomboss_Spawn.cpp:
     complete
     .text start:0x02122838 end:0x0212290c
 
-src/__sinit_ov074_02122978.c:
+src/unnamed/ov074/0212/__sinit_ov074_02122978.c:
     complete
     .init start:0x02122978 end:0x02122d70

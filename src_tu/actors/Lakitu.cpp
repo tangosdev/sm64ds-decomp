@@ -7,38 +7,38 @@
  * the manifest notes.
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02123740  src/_ZN6LakituD1Ev.cpp
- *   [1] 0x02123798  src/_ZN6LakituD0Ev.cpp
- *   [2] 0x02123804  src/_ZN6Lakitu13OnYoshiTryEatEv.cpp
- *   [3] 0x0212380c  src/_ZN6Lakitu16OnAimedAtWithEggEv.cpp
- *   [4] 0x02123814  src/func_ov077_02123814.c
- *   [5] 0x02123880  src/func_ov077_02123880.c
- *   [6] 0x021238bc  src/func_ov077_021238bc.cpp
- *   [7] 0x0212390c  src/func_ov077_0212390c.cpp
- *   [8] 0x02123a1c  src/func_ov077_02123a1c.cpp
- *   [9] 0x02123a74  src/func_ov077_02123a74.cpp
- *   [10] 0x02123c6c  src/func_ov077_02123c6c.cpp
- *   [11] 0x02123d40  src/func_ov077_02123d40.cpp
- *   [12] 0x02123fcc  src/func_ov077_02123fcc.c
- *   [13] 0x02124038  src/func_ov077_02124038.cpp
- *   [14] 0x02124118  src/func_ov077_02124118.cpp
- *   [15] 0x021241ac  src/func_ov077_021241ac.c
- *   [16] 0x021242f0  src/func_ov077_021242f0.c
- *   [17] 0x02124394  src/func_ov077_02124394.c
- *   [18] 0x021243c0  src/func_ov077_021243c0.cpp
- *   [19] 0x021244d4  src/func_ov077_021244d4.cpp
- *   [20] 0x02124564  src/func_ov077_02124564.c
- *   [21] 0x02124698  src/func_ov077_02124698.c
- *   [22] 0x02124718  src/func_ov077_02124718.cpp
- *   [23] 0x02124754  src/func_ov077_02124754.cpp
- *   [24] 0x0212478c  src/func_ov077_0212478c.c
- *   [25] 0x021247a8  src/_ZN6Lakitu16CleanupResourcesEv.cpp
- *   [26] 0x02124824  src/_ZN6Lakitu16OnPendingDestroyEv.cpp
- *   [27] 0x02124828  src/_ZN6Lakitu6RenderEv.cpp
- *   [28] 0x021248b8  src/_ZN6Lakitu8BehaviorEv.cpp
- *   [29] 0x02124908  src/_ZN6Lakitu13InitResourcesEv.cpp
- *   [30] 0x02124aa4  src/_ZN6Lakitu13OnTurnIntoEggER6Player.cpp
- *   [31] 0x02124b04  src/Lakitu_Spawn.c
+ *   [0] 0x02123740  src/game/actors/Lakitu/_ZN6LakituD1Ev.cpp
+ *   [1] 0x02123798  src/game/actors/Lakitu/_ZN6LakituD0Ev.cpp
+ *   [2] 0x02123804  src/game/actors/Lakitu/_ZN6Lakitu13OnYoshiTryEatEv.cpp
+ *   [3] 0x0212380c  src/game/actors/Lakitu/_ZN6Lakitu16OnAimedAtWithEggEv.cpp
+ *   [4] 0x02123814  src/unnamed/ov077/0212/func_ov077_02123814.c
+ *   [5] 0x02123880  src/unnamed/ov077/0212/func_ov077_02123880.c
+ *   [6] 0x021238bc  src/unnamed/ov077/0212/func_ov077_021238bc.cpp
+ *   [7] 0x0212390c  src/unnamed/ov077/0212/func_ov077_0212390c.cpp
+ *   [8] 0x02123a1c  src/unnamed/ov077/0212/func_ov077_02123a1c.cpp
+ *   [9] 0x02123a74  src/unnamed/ov077/0212/func_ov077_02123a74.cpp
+ *   [10] 0x02123c6c  src/unnamed/ov077/0212/func_ov077_02123c6c.cpp
+ *   [11] 0x02123d40  src/unnamed/ov077/0212/func_ov077_02123d40.cpp
+ *   [12] 0x02123fcc  src/unnamed/ov077/0212/func_ov077_02123fcc.c
+ *   [13] 0x02124038  src/unnamed/ov077/0212/func_ov077_02124038.cpp
+ *   [14] 0x02124118  src/unnamed/ov077/0212/func_ov077_02124118.cpp
+ *   [15] 0x021241ac  src/unnamed/ov077/0212/func_ov077_021241ac.c
+ *   [16] 0x021242f0  src/unnamed/ov077/0212/func_ov077_021242f0.c
+ *   [17] 0x02124394  src/unnamed/ov077/0212/func_ov077_02124394.c
+ *   [18] 0x021243c0  src/unnamed/ov077/0212/func_ov077_021243c0.cpp
+ *   [19] 0x021244d4  src/unnamed/ov077/0212/func_ov077_021244d4.cpp
+ *   [20] 0x02124564  src/unnamed/ov077/0212/func_ov077_02124564.c
+ *   [21] 0x02124698  src/unnamed/ov077/0212/func_ov077_02124698.c
+ *   [22] 0x02124718  src/unnamed/ov077/0212/func_ov077_02124718.cpp
+ *   [23] 0x02124754  src/unnamed/ov077/0212/func_ov077_02124754.cpp
+ *   [24] 0x0212478c  src/unnamed/ov077/0212/func_ov077_0212478c.c
+ *   [25] 0x021247a8  src/game/actors/Lakitu/_ZN6Lakitu16CleanupResourcesEv.cpp
+ *   [26] 0x02124824  src/game/actors/Lakitu/_ZN6Lakitu16OnPendingDestroyEv.cpp
+ *   [27] 0x02124828  src/game/actors/Lakitu/_ZN6Lakitu6RenderEv.cpp
+ *   [28] 0x021248b8  src/game/actors/Lakitu/_ZN6Lakitu8BehaviorEv.cpp
+ *   [29] 0x02124908  src/game/actors/Lakitu/_ZN6Lakitu13InitResourcesEv.cpp
+ *   [30] 0x02124aa4  src/game/actors/Lakitu/_ZN6Lakitu13OnTurnIntoEggER6Player.cpp
+ *   [31] 0x02124b04  src/game/actors/Lakitu/Lakitu_Spawn.c
  */
 
 /* -------------------------------------------------------------------------- */

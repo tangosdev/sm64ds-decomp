@@ -4,254 +4,254 @@
     .ctor       start:0x02114dd0 end:0x02114ddc kind:rodata align:4
     .data       start:0x02114de0 end:0x02115c80 kind:data align:32
     .bss        start:0x02115c80 end:0x02115ec0 kind:bss align:32
-src/_ZN9UkikiCageD1Ev.cpp:
+src/game/actors/UkikiCage/_ZN9UkikiCageD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111ec
 
-src/_ZN9UkikiCageD0Ev.cpp:
+src/game/actors/UkikiCage/_ZN9UkikiCageD0Ev.cpp:
     complete
     .text start:0x021111ec end:0x0211124c
 
-src/func_ov030_0211124c.cpp:
+src/unnamed/ov030/0211/func_ov030_0211124c.cpp:
     complete
     .text start:0x0211124c end:0x0211130c
 
-src/_ZN9UkikiCage16CleanupResourcesEv.cpp:
+src/game/actors/UkikiCage/_ZN9UkikiCage16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211130c end:0x02111350
 
-src/_ZN9UkikiCage6RenderEv.cpp:
+src/game/actors/UkikiCage/_ZN9UkikiCage6RenderEv.cpp:
     complete
     .text start:0x02111350 end:0x02111384
 
-src/_ZN9UkikiCage8BehaviorEv.cpp:
+src/game/actors/UkikiCage/_ZN9UkikiCage8BehaviorEv.cpp:
     complete
     .text start:0x02111384 end:0x02111410
 
-src/_ZN9UkikiCage13InitResourcesEv.cpp:
+src/game/actors/UkikiCage/_ZN9UkikiCage13InitResourcesEv.cpp:
     complete
     .text start:0x02111410 end:0x02111524
 
-src/UkikiCage_Spawn.c:
+src/game/actors/UkikiCage/UkikiCage_Spawn.c:
     complete
     .text start:0x02111524 end:0x0211155c
 
-src/_ZN13RollingLogTtmD1Ev.cpp:
+src/game/actors/RollingLogTtm/_ZN13RollingLogTtmD1Ev.cpp:
     complete
     .text start:0x0211155c end:0x021115ac
 
-src/_ZN13RollingLogTtmD0Ev.cpp:
+src/game/actors/RollingLogTtm/_ZN13RollingLogTtmD0Ev.cpp:
     complete
     .text start:0x021115ac end:0x02111610
 
-src/_ZN13RollingLogTtm16CleanupResourcesEv.cpp:
+src/game/actors/RollingLogTtm/_ZN13RollingLogTtm16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111610 end:0x02111624
 
-src/_ZN13RollingLogTtm8BehaviorEv.cpp:
+src/game/actors/RollingLogTtm/_ZN13RollingLogTtm8BehaviorEv.cpp:
     complete
     .text start:0x02111624 end:0x02111638
 
-src/_ZN13RollingLogTtm13InitResourcesEv.cpp:
+src/game/actors/RollingLogTtm/_ZN13RollingLogTtm13InitResourcesEv.cpp:
     complete
     .text start:0x02111638 end:0x0211164c
 
-src/RollingLogTtm_Spawn.c:
+src/game/actors/RollingLogTtm/RollingLogTtm_Spawn.c:
     complete
     .text start:0x0211164c end:0x02111688
 
-src/_ZN5UkikiD1Ev.cpp:
+src/game/actors/Ukiki/_ZN5UkikiD1Ev.cpp:
     complete
     .text start:0x02111688 end:0x021116d0
 
-src/_ZN5UkikiD0Ev.cpp:
+src/game/actors/Ukiki/_ZN5UkikiD0Ev.cpp:
     complete
     .text start:0x021116d0 end:0x0211172c
 
-src/_ZN5Ukiki13OnYoshiTryEatEv.cpp:
+src/game/actors/Ukiki/_ZN5Ukiki13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0211172c end:0x02111734
 
-src/func_ov030_02111734.c:
+src/unnamed/ov030/0211/func_ov030_02111734.c:
     complete
     .text start:0x02111734 end:0x02111890
 
-src/func_ov030_02111890.c:
+src/unnamed/ov030/0211/func_ov030_02111890.c:
     complete
     .text start:0x02111890 end:0x02111908
 
-src/func_ov030_02111908.c:
+src/unnamed/ov030/0211/func_ov030_02111908.c:
     complete
     .text start:0x02111908 end:0x02111a00
 
-src/func_ov030_02111a00.c:
+src/unnamed/ov030/0211/func_ov030_02111a00.c:
     complete
     .text start:0x02111a00 end:0x02111b20
 
-src/func_ov030_02111b20.c:
+src/unnamed/ov030/0211/func_ov030_02111b20.c:
     complete
     .text start:0x02111b20 end:0x02111bc4
 
-src/func_ov030_02111bc4.c:
+src/unnamed/ov030/0211/func_ov030_02111bc4.c:
     complete
     .text start:0x02111bc4 end:0x02111dd0
 
-src/func_ov030_02111dd0.cpp:
+src/unnamed/ov030/0211/func_ov030_02111dd0.cpp:
     complete
     .text start:0x02111dd0 end:0x02111ea4
 
-src/func_ov030_02111ea4.cpp:
+src/unnamed/ov030/0211/func_ov030_02111ea4.cpp:
     complete
     .text start:0x02111ea4 end:0x02111f6c
 
-src/func_ov030_02111f6c.cpp:
+src/unnamed/ov030/0211/func_ov030_02111f6c.cpp:
     complete
     .text start:0x02111f6c end:0x02112094
 
-src/func_ov030_02112094.cpp:
+src/unnamed/ov030/0211/func_ov030_02112094.cpp:
     complete
     .text start:0x02112094 end:0x021122b0
 
-src/func_ov030_021122b0.cpp:
+src/unnamed/ov030/0211/func_ov030_021122b0.cpp:
     complete
     .text start:0x021122b0 end:0x021123a4
 
-src/func_ov030_021123a4.cpp:
+src/unnamed/ov030/0211/func_ov030_021123a4.cpp:
     complete
     .text start:0x021123a4 end:0x02112400
 
-src/func_ov030_02112400.cpp:
+src/unnamed/ov030/0211/func_ov030_02112400.cpp:
     complete
     .text start:0x02112400 end:0x02112560
 
-src/func_ov030_02112560.c:
+src/unnamed/ov030/0211/func_ov030_02112560.c:
     complete
     .text start:0x02112560 end:0x02112578
 
-src/func_ov030_02112578.c:
+src/unnamed/ov030/0211/func_ov030_02112578.c:
     complete
     .text start:0x02112578 end:0x02112a14
 
-src/func_ov030_02112a14.c:
+src/unnamed/ov030/0211/func_ov030_02112a14.c:
     complete
     .text start:0x02112a14 end:0x02112a84
 
-src/func_ov030_02112a84.c:
+src/unnamed/ov030/0211/func_ov030_02112a84.c:
     complete
     .text start:0x02112a84 end:0x02112c14
 
-src/func_ov030_02112c14.c:
+src/unnamed/ov030/0211/func_ov030_02112c14.c:
     complete
     .text start:0x02112c14 end:0x02112da0
 
-src/func_ov030_02112da0.c:
+src/unnamed/ov030/0211/func_ov030_02112da0.c:
     complete
     .text start:0x02112da0 end:0x02112ff8
 
-src/func_ov030_02112ff8.c:
+src/unnamed/ov030/0211/func_ov030_02112ff8.c:
     complete
     .text start:0x02112ff8 end:0x02113094
 
-src/func_ov030_02113094.c:
+src/unnamed/ov030/0211/func_ov030_02113094.c:
     complete
     .text start:0x02113094 end:0x021132d4
 
-src/func_ov030_021132d4.cpp:
+src/unnamed/ov030/0211/func_ov030_021132d4.cpp:
     complete
     .text start:0x021132d4 end:0x02113324
 
-src/func_ov030_02113324.cpp:
+src/unnamed/ov030/0211/func_ov030_02113324.cpp:
     complete
     .text start:0x02113324 end:0x0211360c
 
-src/func_ov030_0211360c.cpp:
+src/unnamed/ov030/0211/func_ov030_0211360c.cpp:
     complete
     .text start:0x0211360c end:0x021136b0
 
-src/func_ov030_021136b0.c:
+src/unnamed/ov030/0211/func_ov030_021136b0.c:
     complete
     .text start:0x021136b0 end:0x02113a80
 
-src/func_ov030_02113a80.cpp:
+src/unnamed/ov030/0211/func_ov030_02113a80.cpp:
     complete
     .text start:0x02113a80 end:0x02113b38
 
-src/func_ov030_02113b38.cpp:
+src/unnamed/ov030/0211/func_ov030_02113b38.cpp:
     complete
     .text start:0x02113b38 end:0x02113be8
 
-src/func_ov030_02113be8.c:
+src/unnamed/ov030/0211/func_ov030_02113be8.c:
     complete
     .text start:0x02113be8 end:0x02113d20
 
-src/func_ov030_02113d20.c:
+src/unnamed/ov030/0211/func_ov030_02113d20.c:
     complete
     .text start:0x02113d20 end:0x02113fd8
 
-src/func_ov030_02113fd8.c:
+src/unnamed/ov030/0211/func_ov030_02113fd8.c:
     complete
     .text start:0x02113fd8 end:0x02113ff0
 
-src/func_ov030_02113ff0.cpp:
+src/unnamed/ov030/0211/func_ov030_02113ff0.cpp:
     complete
     .text start:0x02113ff0 end:0x02114124
 
-src/func_ov030_02114124.c:
+src/unnamed/ov030/0211/func_ov030_02114124.c:
     complete
     .text start:0x02114124 end:0x02114134
 
-src/func_ov030_02114134.cpp:
+src/unnamed/ov030/0211/func_ov030_02114134.cpp:
     complete
     .text start:0x02114134 end:0x02114170
 
-src/func_ov030_02114170.cpp:
+src/unnamed/ov030/0211/func_ov030_02114170.cpp:
     complete
     .text start:0x02114170 end:0x021141a8
 
-src/func_ov030_021141a8.c:
+src/unnamed/ov030/0211/func_ov030_021141a8.c:
     complete
     .text start:0x021141a8 end:0x021141c4
 
-src/_ZN5Ukiki16CleanupResourcesEv.cpp:
+src/game/actors/Ukiki/_ZN5Ukiki16CleanupResourcesEv.cpp:
     complete
     .text start:0x021141c4 end:0x0211422c
 
-src/_ZN5Ukiki16OnPendingDestroyEv.cpp:
+src/game/actors/Ukiki/_ZN5Ukiki16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0211422c end:0x02114230
 
-src/_ZN5Ukiki6RenderEv.cpp:
+src/game/actors/Ukiki/_ZN5Ukiki6RenderEv.cpp:
     complete
     .text start:0x02114230 end:0x02114278
 
-src/_ZN5Ukiki8BehaviorEv.cpp:
+src/game/actors/Ukiki/_ZN5Ukiki8BehaviorEv.cpp:
     complete
     .text start:0x02114278 end:0x02114378
 
-src/_ZN5Ukiki13InitResourcesEv.cpp:
+src/game/actors/Ukiki/_ZN5Ukiki13InitResourcesEv.cpp:
     complete
     .text start:0x02114378 end:0x021145d4
 
-src/_ZN5Ukiki13OnTurnIntoEggER6Player.cpp:
+src/game/actors/Ukiki/_ZN5Ukiki13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x021145d4 end:0x021145e0
 
-src/UkikiStar_Spawn.c:
+src/game/actors/UkikiStar/UkikiStar_Spawn.c:
     complete
     .text start:0x021145e0 end:0x02114638
 
-src/UkikiThief_Spawn.c:
+src/game/actors/UkikiThief/UkikiThief_Spawn.c:
     complete
     .text start:0x02114638 end:0x02114690
 
-src/__sinit_ov030_0211484c.c:
+src/unnamed/ov030/0211/__sinit_ov030_0211484c.c:
     complete
     .init start:0x0211484c end:0x021148b8
 
-src/__sinit_ov030_021148b8.c:
+src/unnamed/ov030/0211/__sinit_ov030_021148b8.c:
     complete
     .init start:0x021148b8 end:0x02114924
 
-src/__sinit_ov030_02114924.c:
+src/unnamed/ov030/0211/__sinit_ov030_02114924.c:
     complete
     .init start:0x02114924 end:0x02114dd0

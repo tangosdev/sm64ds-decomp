@@ -16,11 +16,11 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02111510  src/_ZN18RickshawPlatformBsD1Ev.cpp
- *   [1] 0x02111590  src/_ZN18RickshawPlatformBsD0Ev.cpp
- *   [2] 0x02111624  src/_ZN18RickshawPlatformBs16CleanupResourcesEv.cpp
- *   [3] 0x02111638  src/_ZN18RickshawPlatformBs13InitResourcesEv.cpp
- *   [4] 0x0211164c  src/StairsBs_Spawn.cpp
+ *   [0] 0x02111510  src/game/actors/RickshawPlatformBs/_ZN18RickshawPlatformBsD1Ev.cpp
+ *   [1] 0x02111590  src/game/actors/RickshawPlatformBs/_ZN18RickshawPlatformBsD0Ev.cpp
+ *   [2] 0x02111624  src/game/actors/RickshawPlatformBs/_ZN18RickshawPlatformBs16CleanupResourcesEv.cpp
+ *   [3] 0x02111638  src/game/actors/RickshawPlatformBs/_ZN18RickshawPlatformBs13InitResourcesEv.cpp
+ *   [4] 0x0211164c  src/game/actors/StairsBs/StairsBs_Spawn.cpp
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

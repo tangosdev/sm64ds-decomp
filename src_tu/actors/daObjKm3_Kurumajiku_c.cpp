@@ -13,11 +13,11 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021111a0  src/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp
+ *   [0] 0x021111a0  src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp
  *   [1] 0x021111f0  src/_ZN21daObjKm3_Kurumajiku_cD0Ev.c
- *   [2] 0x02111254  src/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp
- *   [3] 0x02111268  src/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp
- *   [4] 0x02111280  src/RickshawBs_Spawn.c
+ *   [2] 0x02111254  src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp
+ *   [3] 0x02111268  src/game/actors/daObjKm3_Kurumajiku_c/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp
+ *   [4] 0x02111280  src/game/actors/RickshawBs/RickshawBs_Spawn.c
  */
 
 struct ResourceDescriptor {

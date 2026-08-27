@@ -22,7 +22,7 @@
       "symbol": "_ZN5SpinyD1Ev",
       "address": "0x02124b64",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN5SpinyD1Ev.cpp",
+      "legacy_source": "src/game/actors/Spiny/_ZN5SpinyD1Ev.cpp",
       "ordinal": 0
     },
     {
@@ -36,175 +36,175 @@
       "symbol": "_ZN5Spiny13OnYoshiTryEatEv",
       "address": "0x02124c18",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN5Spiny13OnYoshiTryEatEv.cpp",
+      "legacy_source": "src/game/actors/Spiny/_ZN5Spiny13OnYoshiTryEatEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN5Spiny16OnAimedAtWithEggEv",
       "address": "0x02124c20",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN5Spiny16OnAimedAtWithEggEv.cpp",
+      "legacy_source": "src/game/actors/Spiny/_ZN5Spiny16OnAimedAtWithEggEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "func_ov077_02124c28",
       "address": "0x02124c28",
       "size": "0x000000bc",
-      "legacy_source": "src/func_ov077_02124c28.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02124c28.cpp",
       "ordinal": 4
     },
     {
       "symbol": "func_ov077_02124ce4",
       "address": "0x02124ce4",
       "size": "0x00000024",
-      "legacy_source": "src/func_ov077_02124ce4.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02124ce4.c",
       "ordinal": 5
     },
     {
       "symbol": "func_ov077_02124d08",
       "address": "0x02124d08",
       "size": "0x000001a8",
-      "legacy_source": "src/func_ov077_02124d08.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02124d08.cpp",
       "ordinal": 6
     },
     {
       "symbol": "func_ov077_02124eb0",
       "address": "0x02124eb0",
       "size": "0x000001f8",
-      "legacy_source": "src/func_ov077_02124eb0.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02124eb0.cpp",
       "ordinal": 7
     },
     {
       "symbol": "func_ov077_021250a8",
       "address": "0x021250a8",
       "size": "0x00000128",
-      "legacy_source": "src/func_ov077_021250a8.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_021250a8.cpp",
       "ordinal": 8
     },
     {
       "symbol": "func_ov077_021251d0",
       "address": "0x021251d0",
       "size": "0x000000c0",
-      "legacy_source": "src/func_ov077_021251d0.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_021251d0.cpp",
       "ordinal": 9
     },
     {
       "symbol": "func_ov077_02125290",
       "address": "0x02125290",
       "size": "0x00000074",
-      "legacy_source": "src/func_ov077_02125290.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02125290.c",
       "ordinal": 10
     },
     {
       "symbol": "func_ov077_02125304",
       "address": "0x02125304",
       "size": "0x000000a0",
-      "legacy_source": "src/func_ov077_02125304.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02125304.cpp",
       "ordinal": 11
     },
     {
       "symbol": "func_ov077_021253a4",
       "address": "0x021253a4",
       "size": "0x000000dc",
-      "legacy_source": "src/func_ov077_021253a4.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_021253a4.cpp",
       "ordinal": 12
     },
     {
       "symbol": "func_ov077_02125480",
       "address": "0x02125480",
       "size": "0x000000d0",
-      "legacy_source": "src/func_ov077_02125480.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02125480.cpp",
       "ordinal": 13
     },
     {
       "symbol": "func_ov077_02125550",
       "address": "0x02125550",
       "size": "0x00000164",
-      "legacy_source": "src/func_ov077_02125550.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02125550.cpp",
       "ordinal": 14
     },
     {
       "symbol": "func_ov077_021256b4",
       "address": "0x021256b4",
       "size": "0x0000017c",
-      "legacy_source": "src/func_ov077_021256b4.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_021256b4.c",
       "ordinal": 15
     },
     {
       "symbol": "func_ov077_02125830",
       "address": "0x02125830",
       "size": "0x000000ac",
-      "legacy_source": "src/func_ov077_02125830.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02125830.c",
       "ordinal": 16
     },
     {
       "symbol": "func_ov077_021258dc",
       "address": "0x021258dc",
       "size": "0x0000002c",
-      "legacy_source": "src/func_ov077_021258dc.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_021258dc.c",
       "ordinal": 17
     },
     {
       "symbol": "func_ov077_02125908",
       "address": "0x02125908",
       "size": "0x00000104",
-      "legacy_source": "src/func_ov077_02125908.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02125908.c",
       "ordinal": 18
     },
     {
       "symbol": "func_ov077_02125a0c",
       "address": "0x02125a0c",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov077_02125a0c.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02125a0c.c",
       "ordinal": 19
     },
     {
       "symbol": "func_ov077_02125a54",
       "address": "0x02125a54",
       "size": "0x000000c8",
-      "legacy_source": "src/func_ov077_02125a54.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02125a54.c",
       "ordinal": 20
     },
     {
       "symbol": "func_ov077_02125b1c",
       "address": "0x02125b1c",
       "size": "0x00000098",
-      "legacy_source": "src/func_ov077_02125b1c.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02125b1c.cpp",
       "ordinal": 21
     },
     {
       "symbol": "func_ov077_02125bb4",
       "address": "0x02125bb4",
       "size": "0x00000220",
-      "legacy_source": "src/func_ov077_02125bb4.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02125bb4.c",
       "ordinal": 22
     },
     {
       "symbol": "func_ov077_02125dd4",
       "address": "0x02125dd4",
       "size": "0x0000004c",
-      "legacy_source": "src/func_ov077_02125dd4.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02125dd4.c",
       "ordinal": 23
     },
     {
       "symbol": "func_ov077_02125e20",
       "address": "0x02125e20",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov077_02125e20.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02125e20.cpp",
       "ordinal": 24
     },
     {
       "symbol": "func_ov077_02125e5c",
       "address": "0x02125e5c",
       "size": "0x00000038",
-      "legacy_source": "src/func_ov077_02125e5c.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02125e5c.cpp",
       "ordinal": 25
     },
     {
       "symbol": "func_ov077_02125e94",
       "address": "0x02125e94",
       "size": "0x0000001c",
-      "legacy_source": "src/func_ov077_02125e94.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02125e94.c",
       "ordinal": 26
     },
     {
@@ -225,35 +225,35 @@
       "symbol": "_ZN5Spiny6RenderEv",
       "address": "0x02125ef0",
       "size": "0x00000078",
-      "legacy_source": "src/_ZN5Spiny6RenderEv.cpp",
+      "legacy_source": "src/game/actors/Spiny/_ZN5Spiny6RenderEv.cpp",
       "ordinal": 29
     },
     {
       "symbol": "_ZN5Spiny8BehaviorEv",
       "address": "0x02125f68",
       "size": "0x000000f0",
-      "legacy_source": "src/_ZN5Spiny8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/Spiny/_ZN5Spiny8BehaviorEv.cpp",
       "ordinal": 30
     },
     {
       "symbol": "_ZN5Spiny13InitResourcesEv",
       "address": "0x02126058",
       "size": "0x0000013c",
-      "legacy_source": "src/_ZN5Spiny13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/Spiny/_ZN5Spiny13InitResourcesEv.cpp",
       "ordinal": 31
     },
     {
       "symbol": "_ZN5Spiny13OnTurnIntoEggER6Player",
       "address": "0x02126194",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN5Spiny13OnTurnIntoEggER6Player.cpp",
+      "legacy_source": "src/game/actors/Spiny/_ZN5Spiny13OnTurnIntoEggER6Player.cpp",
       "ordinal": 32
     },
     {
       "symbol": "Spiny_Spawn",
       "address": "0x021261f4",
       "size": "0x00000058",
-      "legacy_source": "src/Spiny_Spawn.c",
+      "legacy_source": "src/game/actors/Spiny/Spiny_Spawn.c",
       "ordinal": 33
     }
   ],

@@ -16,7 +16,7 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02112938  src/_ZN12HauntedChairD1Ev.cpp
+ *   [0] 0x02112938  src/game/actors/HauntedChair/_ZN12HauntedChairD1Ev.cpp
  *   [1] 0x02112980  src/_ZN12HauntedChairD0Ev.c
  *   [2] 0x021129dc  src/func_ov020_021129dc.c
  *   [3] 0x02112b00  src/func_ov020_02112b00.c
@@ -26,10 +26,10 @@
  *   [7] 0x021131f8  src/func_ov020_021131f8.c
  *   [8] 0x02113240  src/func_ov020_02113240.cpp
  *   [9] 0x021132d8  src/_ZN12HauntedChair16CleanupResourcesEv.c
- *   [10] 0x021132fc  src/_ZN12HauntedChair6RenderEv.cpp
- *   [11] 0x02113324  src/_ZN12HauntedChair8BehaviorEv.cpp
- *   [12] 0x021133b0  src/_ZN12HauntedChair13InitResourcesEv.cpp
- *   [13] 0x02113494  src/HauntedChair_Spawn.c
+ *   [10] 0x021132fc  src/game/actors/HauntedChair/_ZN12HauntedChair6RenderEv.cpp
+ *   [11] 0x02113324  src/game/actors/HauntedChair/_ZN12HauntedChair8BehaviorEv.cpp
+ *   [12] 0x021133b0  src/game/actors/HauntedChair/_ZN12HauntedChair13InitResourcesEv.cpp
+ *   [13] 0x02113494  src/game/actors/HauntedChair/HauntedChair_Spawn.c
  */
 
 /* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources

@@ -202,7 +202,7 @@ The prologue's fifteen fell in a parallel workstream the same day, and the shape
 RESULT match=True mismatches=0/1778
 ```
 
-The function is enrolled at `src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`. Two flagged untrue constructs ship in it (§9's round-trip, and the `const volatile` pointee) — finding the author's true spellings is open work, and this document's own §4 rule applies to any story anyone tells about them.
+The function is enrolled at `src/game/actors/dBgW_Kc/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`. Two flagged untrue constructs ship in it (§9's round-trip, and the `const volatile` pointee) — finding the author's true spellings is open work, and this document's own §4 rule applies to any story anyone tells about them.
 
 The measurement footnote that nearly hid the finish line: the byte gate that ships is the build-flag one (`-Cpp_exceptions off`). fdiff's default regime reads the matched file as 4/1778 — a literal-pool word and the zero-init store order are flag artifacts. Score with the build flags.
 

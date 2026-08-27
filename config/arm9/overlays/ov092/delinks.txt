@@ -4,98 +4,98 @@
     .ctor       start:0x02132210 end:0x02132214 kind:rodata align:4
     .data       start:0x02132220 end:0x02132540 kind:data align:32
     .bss        start:0x02132540 end:0x021325c0 kind:bss align:32
-src/_ZN6ToxBoxD1Ev.cpp:
+src/game/actors/ToxBox/_ZN6ToxBoxD1Ev.cpp:
     complete
     .text start:0x02130f00 end:0x02130f5c
 
-src/_ZN6ToxBoxD0Ev.cpp:
+src/game/actors/ToxBox/_ZN6ToxBoxD0Ev.cpp:
     complete
     .text start:0x02130f5c end:0x02130fcc
 
-src/func_ov092_02130fcc.c:
+src/unnamed/ov092/0213/func_ov092_02130fcc.c:
     complete
     .text start:0x02130fcc end:0x02131010
 
-src/func_ov092_02131010.cpp:
+src/unnamed/ov092/0213/func_ov092_02131010.cpp:
     complete
     .text start:0x02131010 end:0x021311b0
 
-src/func_ov092_021311b0.cpp:
+src/unnamed/ov092/0213/func_ov092_021311b0.cpp:
     complete
     .text start:0x021311b0 end:0x021313b0
 
-src/func_ov092_021313b0.cpp:
+src/unnamed/ov092/0213/func_ov092_021313b0.cpp:
     complete
     .text start:0x021313b0 end:0x021314d0
 
-src/func_ov092_021314d0.c:
+src/unnamed/ov092/0213/func_ov092_021314d0.c:
     complete
     .text start:0x021314d0 end:0x02131578
 
-src/func_ov092_02131578.c:
+src/unnamed/ov092/0213/func_ov092_02131578.c:
     complete
     .text start:0x02131578 end:0x021315ac
 
-src/func_ov092_021315ac.c:
+src/unnamed/ov092/0213/func_ov092_021315ac.c:
     complete
     .text start:0x021315ac end:0x02131620
 
-src/func_ov092_02131620.c:
+src/unnamed/ov092/0213/func_ov092_02131620.c:
     complete
     .text start:0x02131620 end:0x02131650
 
-src/func_ov092_02131650.c:
+src/unnamed/ov092/0213/func_ov092_02131650.c:
     complete
     .text start:0x02131650 end:0x02131680
 
-src/func_ov092_02131680.c:
+src/unnamed/ov092/0213/func_ov092_02131680.c:
     complete
     .text start:0x02131680 end:0x021316b0
 
-src/func_ov092_021316b0.c:
+src/unnamed/ov092/0213/func_ov092_021316b0.c:
     complete
     .text start:0x021316b0 end:0x021316d8
 
-src/func_ov092_021316d8.c:
+src/unnamed/ov092/0213/func_ov092_021316d8.c:
     complete
     .text start:0x021316d8 end:0x02131878
 
-src/func_ov092_02131878.c:
+src/unnamed/ov092/0213/func_ov092_02131878.c:
     complete
     .text start:0x02131878 end:0x021319b0
 
-src/func_ov092_021319b0.cpp:
+src/unnamed/ov092/0213/func_ov092_021319b0.cpp:
     complete
     .text start:0x021319b0 end:0x02131a88
 
-src/func_ov092_02131a88.cpp:
+src/unnamed/ov092/0213/func_ov092_02131a88.cpp:
     complete
     .text start:0x02131a88 end:0x02131aec
 
-src/func_ov092_02131aec.cpp:
+src/unnamed/ov092/0213/func_ov092_02131aec.cpp:
     complete
     .text start:0x02131aec end:0x02131bd8
 
-src/_ZN6ToxBox16CleanupResourcesEv.cpp:
+src/game/actors/ToxBox/_ZN6ToxBox16CleanupResourcesEv.cpp:
     complete
     .text start:0x02131bd8 end:0x02131c1c
 
-src/_ZN6ToxBox6RenderEv.cpp:
+src/game/actors/ToxBox/_ZN6ToxBox6RenderEv.cpp:
     complete
     .text start:0x02131c1c end:0x02131c44
 
-src/_ZN6ToxBox8BehaviorEv.cpp:
+src/game/actors/ToxBox/_ZN6ToxBox8BehaviorEv.cpp:
     complete
     .text start:0x02131c44 end:0x02131da0
 
-src/_ZN6ToxBox13InitResourcesEv.cpp:
+src/game/actors/ToxBox/_ZN6ToxBox13InitResourcesEv.cpp:
     complete
     .text start:0x02131da0 end:0x02132018
 
-src/ToxBox_Spawn.c:
+src/game/actors/ToxBox/ToxBox_Spawn.c:
     complete
     .text start:0x02132018 end:0x02132074
 
-src/__sinit_ov092_021320cc.c:
+src/unnamed/ov092/0213/__sinit_ov092_021320cc.c:
     complete
     .init start:0x021320cc end:0x02132210

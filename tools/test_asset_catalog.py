@@ -150,12 +150,12 @@ class AssetCatalogTests(unittest.TestCase):
     def test_mangled_resource_method_supplies_medium_confidence_layout_owner(self):
         self.assertEqual(
             AC.resource_owner_from_source(
-                "src/_ZN14QuestionSwitch13InitResourcesEv.cpp"
+                "src/game/actors/QuestionSwitch/_ZN14QuestionSwitch13InitResourcesEv.cpp"
             ),
             ("QuestionSwitch", "mangled-resource-method"),
         )
         self.assertIsNone(
-            AC.resource_owner_from_source("src/_ZN7Message11DisplayTextEt.cpp")
+            AC.resource_owner_from_source("src/ui/messages/Message/_ZN7Message11DisplayTextEt.cpp")
         )
 
 

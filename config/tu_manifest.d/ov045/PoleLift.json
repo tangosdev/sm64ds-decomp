@@ -24,49 +24,49 @@
       "symbol": "_ZN8PoleLiftD1Ev",
       "address": "0x0211150c",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN8PoleLiftD1Ev.cpp",
+      "legacy_source": "src/game/actors/PoleLift/_ZN8PoleLiftD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN8PoleLiftD0Ev",
       "address": "0x02111558",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN8PoleLiftD0Ev.cpp",
+      "legacy_source": "src/game/actors/PoleLift/_ZN8PoleLiftD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN8PoleLift16CleanupResourcesEv",
       "address": "0x021115b8",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN8PoleLift16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/PoleLift/_ZN8PoleLift16CleanupResourcesEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN8PoleLift6RenderEv",
       "address": "0x021115f0",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN8PoleLift6RenderEv.cpp",
+      "legacy_source": "src/game/actors/PoleLift/_ZN8PoleLift6RenderEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN8PoleLift8BehaviorEv",
       "address": "0x02111618",
       "size": "0x00000120",
-      "legacy_source": "src/_ZN8PoleLift8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/PoleLift/_ZN8PoleLift8BehaviorEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN8PoleLift13InitResourcesEv",
       "address": "0x02111738",
       "size": "0x000000d0",
-      "legacy_source": "src/_ZN8PoleLift13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/PoleLift/_ZN8PoleLift13InitResourcesEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "PoleLift_Spawn",
       "address": "0x02111808",
       "size": "0x00000038",
-      "legacy_source": "src/PoleLift_Spawn.c",
+      "legacy_source": "src/game/actors/PoleLift/PoleLift_Spawn.c",
       "ordinal": 6
     }
   ],
@@ -348,13 +348,13 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN8PoleLiftD1Ev.cpp",
-      "src/_ZN8PoleLiftD0Ev.cpp",
-      "src/_ZN8PoleLift16CleanupResourcesEv.cpp",
-      "src/_ZN8PoleLift6RenderEv.cpp",
-      "src/_ZN8PoleLift8BehaviorEv.cpp",
-      "src/_ZN8PoleLift13InitResourcesEv.cpp",
-      "src/PoleLift_Spawn.c"
+      "src/game/actors/PoleLift/_ZN8PoleLiftD1Ev.cpp",
+      "src/game/actors/PoleLift/_ZN8PoleLiftD0Ev.cpp",
+      "src/game/actors/PoleLift/_ZN8PoleLift16CleanupResourcesEv.cpp",
+      "src/game/actors/PoleLift/_ZN8PoleLift6RenderEv.cpp",
+      "src/game/actors/PoleLift/_ZN8PoleLift8BehaviorEv.cpp",
+      "src/game/actors/PoleLift/_ZN8PoleLift13InitResourcesEv.cpp",
+      "src/game/actors/PoleLift/PoleLift_Spawn.c"
     ],
     "extraInertImports": 78,
     "extraImportsWithNoHome": [],

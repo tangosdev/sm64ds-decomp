@@ -84,7 +84,7 @@ struct dScMgTrampoline2_c : dScMgD3DBase_c {
        Behavior IS THE MATCHED ACCESS THAT REACHES pad_7ac4 and pad_5004; the
        banner above records what that costs the two "no matched access"
        claims. --- */
-    s32 InitResources();      /* slot 0 -- src/_ZN18dScMgTrampoline2_c13InitResourcesEv.cpp */
+    s32 InitResources();      /* slot 0 -- src/minigames/dScMgTrampoline2_c/_ZN18dScMgTrampoline2_c13InitResourcesEv.cpp */
     s32 CleanupResources();   /* slot 3 -- ov006 0x0212318c */
     s32 Behavior();           /* slot 6 -- ov006 0x02123340 */
     s32 Render();             /* slot 9 -- ov006 0x021231ac */

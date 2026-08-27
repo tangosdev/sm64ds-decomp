@@ -22,189 +22,189 @@
       "symbol": "_ZN6FlyGuyD1Ev",
       "address": "0x0211f000",
       "size": "0x00000048",
-      "legacy_source": "src/_ZN6FlyGuyD1Ev.cpp",
+      "legacy_source": "src/game/actors/FlyGuy/_ZN6FlyGuyD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN6FlyGuyD0Ev",
       "address": "0x0211f048",
       "size": "0x0000005c",
-      "legacy_source": "src/_ZN6FlyGuyD0Ev.cpp",
+      "legacy_source": "src/game/actors/FlyGuy/_ZN6FlyGuyD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "func_ov070_0211f0a4",
       "address": "0x0211f0a4",
       "size": "0x0000005c",
-      "legacy_source": "src/func_ov070_0211f0a4.cpp",
+      "legacy_source": "src/unnamed/ov070/0211/func_ov070_0211f0a4.cpp",
       "ordinal": 2
     },
     {
       "symbol": "func_ov070_0211f100",
       "address": "0x0211f100",
       "size": "0x00000268",
-      "legacy_source": "src/func_ov070_0211f100.cpp",
+      "legacy_source": "src/unnamed/ov070/0211/func_ov070_0211f100.cpp",
       "ordinal": 3
     },
     {
       "symbol": "func_ov070_0211f368",
       "address": "0x0211f368",
       "size": "0x000000e8",
-      "legacy_source": "src/func_ov070_0211f368.cpp",
+      "legacy_source": "src/unnamed/ov070/0211/func_ov070_0211f368.cpp",
       "ordinal": 4
     },
     {
       "symbol": "func_ov070_0211f450",
       "address": "0x0211f450",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov070_0211f450.c",
+      "legacy_source": "src/unnamed/ov070/0211/func_ov070_0211f450.c",
       "ordinal": 5
     },
     {
       "symbol": "func_ov070_0211f48c",
       "address": "0x0211f48c",
       "size": "0x00000164",
-      "legacy_source": "src/func_ov070_0211f48c.c",
+      "legacy_source": "src/unnamed/ov070/0211/func_ov070_0211f48c.c",
       "ordinal": 6
     },
     {
       "symbol": "func_ov070_0211f5f0",
       "address": "0x0211f5f0",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov070_0211f5f0.cpp",
+      "legacy_source": "src/unnamed/ov070/0211/func_ov070_0211f5f0.cpp",
       "ordinal": 7
     },
     {
       "symbol": "func_ov070_0211f62c",
       "address": "0x0211f62c",
       "size": "0x00000068",
-      "legacy_source": "src/func_ov070_0211f62c.c",
+      "legacy_source": "src/unnamed/ov070/0211/func_ov070_0211f62c.c",
       "ordinal": 8
     },
     {
       "symbol": "func_ov070_0211f694",
       "address": "0x0211f694",
       "size": "0x0000004c",
-      "legacy_source": "src/func_ov070_0211f694.cpp",
+      "legacy_source": "src/unnamed/ov070/0211/func_ov070_0211f694.cpp",
       "ordinal": 9
     },
     {
       "symbol": "func_ov070_0211f6e0",
       "address": "0x0211f6e0",
       "size": "0x000003a0",
-      "legacy_source": "src/func_ov070_0211f6e0.c",
+      "legacy_source": "src/unnamed/ov070/0211/func_ov070_0211f6e0.c",
       "ordinal": 10
     },
     {
       "symbol": "func_ov070_0211fa80",
       "address": "0x0211fa80",
       "size": "0x00000064",
-      "legacy_source": "src/func_ov070_0211fa80.c",
+      "legacy_source": "src/unnamed/ov070/0211/func_ov070_0211fa80.c",
       "ordinal": 11
     },
     {
       "symbol": "func_ov070_0211fae4",
       "address": "0x0211fae4",
       "size": "0x0000027c",
-      "legacy_source": "src/func_ov070_0211fae4.c",
+      "legacy_source": "src/unnamed/ov070/0211/func_ov070_0211fae4.c",
       "ordinal": 12
     },
     {
       "symbol": "func_ov070_0211fd60",
       "address": "0x0211fd60",
       "size": "0x00000038",
-      "legacy_source": "src/func_ov070_0211fd60.c",
+      "legacy_source": "src/unnamed/ov070/0211/func_ov070_0211fd60.c",
       "ordinal": 13
     },
     {
       "symbol": "func_ov070_0211fd98",
       "address": "0x0211fd98",
       "size": "0x00000210",
-      "legacy_source": "src/func_ov070_0211fd98.c",
+      "legacy_source": "src/unnamed/ov070/0211/func_ov070_0211fd98.c",
       "ordinal": 14
     },
     {
       "symbol": "func_ov070_0211ffa8",
       "address": "0x0211ffa8",
       "size": "0x00000078",
-      "legacy_source": "src/func_ov070_0211ffa8.cpp",
+      "legacy_source": "src/unnamed/ov070/0211/func_ov070_0211ffa8.cpp",
       "ordinal": 15
     },
     {
       "symbol": "FlyGuy_ChangeState",
       "address": "0x02120020",
       "size": "0x00000050",
-      "legacy_source": "src/FlyGuy_ChangeState.cpp",
+      "legacy_source": "src/game/objects/FlyGuy_ChangeState.cpp",
       "ordinal": 16
     },
     {
       "symbol": "func_ov070_02120070",
       "address": "0x02120070",
       "size": "0x000000e0",
-      "legacy_source": "src/func_ov070_02120070.cpp",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02120070.cpp",
       "ordinal": 17
     },
     {
       "symbol": "_ZN6FlyGuy16CleanupResourcesEv",
       "address": "0x02120150",
       "size": "0x0000006c",
-      "legacy_source": "src/_ZN6FlyGuy16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/FlyGuy/_ZN6FlyGuy16CleanupResourcesEv.cpp",
       "ordinal": 18
     },
     {
       "symbol": "_ZN6FlyGuy16OnPendingDestroyEv",
       "address": "0x021201bc",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN6FlyGuy16OnPendingDestroyEv.cpp",
+      "legacy_source": "src/game/actors/FlyGuy/_ZN6FlyGuy16OnPendingDestroyEv.cpp",
       "ordinal": 19
     },
     {
       "symbol": "_ZN6FlyGuy6RenderEv",
       "address": "0x021201c0",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN6FlyGuy6RenderEv.cpp",
+      "legacy_source": "src/game/actors/FlyGuy/_ZN6FlyGuy6RenderEv.cpp",
       "ordinal": 20
     },
     {
       "symbol": "_ZN6FlyGuy8BehaviorEv",
       "address": "0x02120210",
       "size": "0x000001a4",
-      "legacy_source": "src/_ZN6FlyGuy8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/FlyGuy/_ZN6FlyGuy8BehaviorEv.cpp",
       "ordinal": 21
     },
     {
       "symbol": "_ZN6FlyGuy13InitResourcesEv",
       "address": "0x021203b4",
       "size": "0x00000130",
-      "legacy_source": "src/_ZN6FlyGuy13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/FlyGuy/_ZN6FlyGuy13InitResourcesEv.cpp",
       "ordinal": 22
     },
     {
       "symbol": "_ZN6FlyGuy16OnAimedAtWithEggEv",
       "address": "0x021204e4",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN6FlyGuy16OnAimedAtWithEggEv.cpp",
+      "legacy_source": "src/game/actors/FlyGuy/_ZN6FlyGuy16OnAimedAtWithEggEv.cpp",
       "ordinal": 23
     },
     {
       "symbol": "_ZN6FlyGuy13OnTurnIntoEggER6Player",
       "address": "0x021204ec",
       "size": "0x0000002c",
-      "legacy_source": "src/_ZN6FlyGuy13OnTurnIntoEggER6Player.cpp",
+      "legacy_source": "src/game/actors/FlyGuy/_ZN6FlyGuy13OnTurnIntoEggER6Player.cpp",
       "ordinal": 24
     },
     {
       "symbol": "_ZN6FlyGuy13OnYoshiTryEatEv",
       "address": "0x02120518",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN6FlyGuy13OnYoshiTryEatEv.cpp",
+      "legacy_source": "src/game/actors/FlyGuy/_ZN6FlyGuy13OnYoshiTryEatEv.cpp",
       "ordinal": 25
     },
     {
       "symbol": "FlyGuy_Spawn",
       "address": "0x02120520",
       "size": "0x00000050",
-      "legacy_source": "src/FlyGuy_Spawn.c",
+      "legacy_source": "src/game/actors/FlyGuy/FlyGuy_Spawn.c",
       "ordinal": 26
     }
   ],

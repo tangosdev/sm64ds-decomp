@@ -16,11 +16,11 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02112080  src/_ZN19RotatingPlatformWdwD1Ev.cpp
+ *   [0] 0x02112080  src/game/actors/RotatingPlatformWdw/_ZN19RotatingPlatformWdwD1Ev.cpp
  *   [1] 0x021120d0  src/_ZN19RotatingPlatformWdwD0Ev.c
  *   [2] 0x02112134  src/_ZN19RotatingPlatformWdw16CleanupResourcesEv.c
  *   [3] 0x02112148  src/_ZN19RotatingPlatformWdw13InitResourcesEv.c
- *   [4] 0x02112168  src/RotatingPlatformWdw_Spawn.c
+ *   [4] 0x02112168  src/game/actors/RotatingPlatformWdw/RotatingPlatformWdw_Spawn.c
  */
 
 /* TUBUILD WARNING -- #pragma directive(s) were present in the legacy

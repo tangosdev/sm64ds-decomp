@@ -19,7 +19,7 @@
  * method in any translation unit. Its declaration in the class is required and
  * harmless -- include/fBase_c.h does declare InitResources (slot 0) in-class,
  * and removing it would delete a slot and shift the other seventeen. What
- * fBase_c.h relies on is that src/_ZN7fBase_c13InitResourcesEv.cpp defines
+ * fBase_c.h relies on is that src/game/actors/fBase_c/_ZN7fBase_c13InitResourcesEv.cpp defines
  * it as an extern "C" free function rather than a method.
  *
  * dBase_c used to get there cheaply: the destructor was declared FIRST,
@@ -44,7 +44,7 @@
  * back out of the class un-matches dScene_c, Stage and every actor destructor
  * below them.
  *
- * The cost is that src/_ZN7dBase_cD1Ev.cpp can no longer define it --
+ * The cost is that src/game/actors/dBase_c/_ZN7dBase_cD1Ev.cpp can no longer define it --
  * that would be a redefinition -- and a TU that merely includes this header
  * emits nothing. That file therefore carries a forcing function instead; see
  * the note in it.

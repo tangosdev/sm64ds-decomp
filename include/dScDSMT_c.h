@@ -79,7 +79,7 @@ struct dScDSMT_c : dScene_c {
     /* Declared first -- key function; see the family convention discussed
        in dScene_c.h. Never defined as a real method in any TU: both D1 and
        D0 are plain functions carrying their literal mangled name
-       (src/_ZN9dScDSMT_cD1Ev.cpp, src/_ZN9dScDSMT_cD0Ev.c). */
+       (src/game/stages/dScDSMT_c/_ZN9dScDSMT_cD1Ev.cpp, src/_ZN9dScDSMT_cD0Ev.c). */
     virtual ~dScDSMT_c();                                /* slots 16 (D1), 17 (D0) */
 
     /* --- overrides, in _ZTV8dScene_c/_ZTV7fBase_c order. --- */

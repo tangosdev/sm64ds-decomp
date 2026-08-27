@@ -16,23 +16,23 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021111a0  src/_ZN4TrapD1Ev.cpp
- *   [1] 0x021111ec  src/_ZN4TrapD0Ev.cpp
- *   [2] 0x0211124c  src/func_ov010_0211124c.c
- *   [3] 0x0211125c  src/func_ov010_0211125c.c
- *   [4] 0x02111284  src/func_ov010_02111284.c
- *   [5] 0x021112b4  src/func_ov010_021112b4.c
- *   [6] 0x02111320  src/func_ov010_02111320.c
- *   [7] 0x0211139c  src/func_ov010_0211139c.cpp
- *   [8] 0x021113f0  src/func_ov010_021113f0.c
- *   [9] 0x0211146c  src/func_ov010_0211146c.c
- *   [10] 0x02111554  src/_ZN4Trap16CleanupResourcesEv.cpp
- *   [11] 0x021115a8  src/_ZN4Trap6RenderEv.cpp
- *   [12] 0x021115e0  src/_ZN4Trap8BehaviorEv.cpp
+ *   [0] 0x021111a0  src/game/actors/Trap/_ZN4TrapD1Ev.cpp
+ *   [1] 0x021111ec  src/game/actors/Trap/_ZN4TrapD0Ev.cpp
+ *   [2] 0x0211124c  src/unnamed/ov010/0211/func_ov010_0211124c.c
+ *   [3] 0x0211125c  src/unnamed/ov010/0211/func_ov010_0211125c.c
+ *   [4] 0x02111284  src/unnamed/ov010/0211/func_ov010_02111284.c
+ *   [5] 0x021112b4  src/unnamed/ov010/0211/func_ov010_021112b4.c
+ *   [6] 0x02111320  src/unnamed/ov010/0211/func_ov010_02111320.c
+ *   [7] 0x0211139c  src/unnamed/ov010/0211/func_ov010_0211139c.cpp
+ *   [8] 0x021113f0  src/unnamed/ov010/0211/func_ov010_021113f0.c
+ *   [9] 0x0211146c  src/unnamed/ov010/0211/func_ov010_0211146c.c
+ *   [10] 0x02111554  src/game/actors/Trap/_ZN4Trap16CleanupResourcesEv.cpp
+ *   [11] 0x021115a8  src/game/actors/Trap/_ZN4Trap6RenderEv.cpp
+ *   [12] 0x021115e0  src/game/actors/Trap/_ZN4Trap8BehaviorEv.cpp
  *   [13] 0x02111654  src/_ZN4Trap13InitResourcesEv.c
- *   [14] 0x0211184c  src/func_ov010_0211184c.c
- *   [15] 0x02111984  src/func_ov010_02111984.c
- *   [16] 0x02111998  src/Trap_Spawn.c
+ *   [14] 0x0211184c  src/unnamed/ov010/0211/func_ov010_0211184c.c
+ *   [15] 0x02111984  src/unnamed/ov010/0211/func_ov010_02111984.c
+ *   [16] 0x02111998  src/game/actors/Trap/Trap_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
