@@ -5905,13 +5905,13 @@
    "n_files": 8,
    "files": [
     "src/_ZN22ClockPaintingHandShortD1Ev.cpp",
-    "src/_ZN22ClockPaintingHandShortD0Ev.c",
+    "src/_ZN22ClockPaintingHandShortD0Ev.cpp",
     "src/func_ov013_02111430.c",
     "src/_ZN22ClockPaintingHandShort16CleanupResourcesEv.cpp",
     "src/_ZN22ClockPaintingHandShort6RenderEv.cpp",
     "src/_ZN22ClockPaintingHandShort8BehaviorEv.cpp",
     "src/_ZN22ClockPaintingHandShort13InitResourcesEv.cpp",
-    "src/ClockPaintingHandShort_Spawn.c"
+    "src/ClockPaintingHandShort_Spawn.cpp"
    ],
    "ext_mix": {
     ".cpp": 5,
