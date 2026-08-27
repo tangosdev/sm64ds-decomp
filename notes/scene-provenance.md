@@ -82,9 +82,10 @@ declared `virtual ~dScene_c();` cannot be inlined and emits `bl _ZN8dScene_cD2Ev
 the ROM has none (measured on a `Stage` trial: 80 bytes with the call vs the ROM's 104
 with none).
 
-The cost is what `dBase_c` already pays: `src/_ZN8dScene_cD1Ev.cpp` and `_ZN8dScene_cD0Ev.cpp`
-can no longer *define* `~dScene_c()`, and a bare include emits nothing. Both carry a
-forcing call instead; see the note in each file.
+The cost is what `dBase_c` already pays: the D1 and D0 bodies can no longer *define*
+`~dScene_c()`, and a bare include emits nothing, so a forcing call stands in. Both
+variants now live in `src/actors/Scene.cpp`, the promoted translation unit that owns
+the whole `arm9/Scene` range; see the note there.
 
 ### Layout — why dScene_c declares no fields
 
