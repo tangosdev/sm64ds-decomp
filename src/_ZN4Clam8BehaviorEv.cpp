@@ -40,9 +40,7 @@ extern char data_ov064_0211c9bc[];
 
 extern void func_0201267c(int soundId, Fix12i *camSpacePos);
 extern int _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-extern int _ZN8dActor_c13DistToCPlayerEv(char *self);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *ma, int file, int flags, int speed, unsigned int startFrame);
-extern char *_ZN8dActor_c10FindWithIDEj(int id);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(char *player, int *src, unsigned int damage, int knockback, unsigned int a, unsigned int b, unsigned int c);
 }
 
@@ -66,10 +64,10 @@ int Clam::Behavior()
                 u.shutPuff[0], u.shutPuff[1], u.shutPuff[2]);
             mShutTimer = 0xa;
             mStateTimer = 0;
-            *(int *)&mdCcAc_c.flags &= ~1;
+            mdCcAc_c.flags &= ~1;
         } else {
             if (mStateTimer > 0x96 &&
-                _ZN8dActor_c13DistToCPlayerEv((char *)this) < 0x1f4000) {
+                DistToCPlayer() < 0x1f4000) {
                 func_0201267c(0x26, &mCamSpacePosX);
                 u.lungePuff[0] = mPosX;
                 u.lungePuff[1] = mPosY;
@@ -96,7 +94,7 @@ int Clam::Behavior()
         } else {
             if (!mModelAnim.WillHitFrame(8)) {
                 if (mModelAnim.WillHitFrame(0xf))
-                    *(int *)&mdCcAc_c.flags |= 1;
+                    mdCcAc_c.flags |= 1;
             }
         }
         break;
@@ -105,21 +103,21 @@ int Clam::Behavior()
     mStateTimer++;
 
     if (mdCcAc_c.otherOwner != 0) {
-        char *touched = _ZN8dActor_c10FindWithIDEj(mdCcAc_c.otherOwner);
+        dActor_c *touched = dActor_c::FindWithID(mdCcAc_c.otherOwner);
         if (touched != 0) {
-            int isPlayer = (int)(*(u16 *)(touched + 0xc) == 0xbf);
+            int isPlayer = (int)(touched->actorID == 0xbf);
             if (isPlayer != 0) {
                 u.hurtFrom[0] = mPosX;
                 u.hurtFrom[1] = mPosY;
                 u.hurtFrom[2] = mPosZ;
-                _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(touched, u.hurtFrom,
+                _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj((char *)touched, u.hurtFrom,
                     2, 0xc000, 1, 0, 1);
             }
         }
     }
 
     mModelAnim.Advance();
-    ((dCc_c *)&mdCcAc_c)->Clear();
-    ((dCc_c *)&mdCcAc_c)->Update();
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     return 1;
 }

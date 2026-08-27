@@ -901,7 +901,6 @@ src/_ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b.c	P3-mangled-method-only	arm9
 src/_ZN4Bird16CleanupResourcesEv.c	P1-vtable+mangled	ov009	daSBird_c	Bird/daSBird_c	vtable daSBird_c slot 3 @0x211183c | _ZN4Bird16CleanupResourcesEv	1		True		-
 src/_ZN4Bird16OnPendingDestroyEv.c	P1-vtable+mangled	ov009	daSBird_c	Bird/daSBird_c	vtable daSBird_c slot 12 @0x211186c | _ZN4Bird16OnPendingDestroyEv	1		True		-
 src/_ZN4BirdD0Ev.c	DTOR-ONLY	ov009	daSBird_c	Bird/daSBird_c	_ZN4BirdD0Ev	1		True		-
-src/_ZN4ClamD0Ev.c	DTOR-ONLY	ov064	daObjShell_c	Clam/daObjShell_c	_ZN4ClamD0Ev	1		True		-
 src/_ZN4Coin13InitResourcesEv.c	P1-vtable+mangled	ov002	daCoin_c	Coin/daCoin_c	vtable daCoin_c slot 0 @0x20b2508 | _ZN4Coin13InitResourcesEv	1		True		-
 src/_ZN4Coin16CleanupResourcesEv.c	P1-vtable+mangled	ov002	daCoin_c	Coin/daCoin_c	vtable daCoin_c slot 3 @0x20b2198 | _ZN4Coin16CleanupResourcesEv	1		True		-
 src/_ZN4CoinD0Ev.c	DTOR-ONLY	ov002	daCoin_c	Coin/daCoin_c	_ZN4CoinD0Ev	1		True		-

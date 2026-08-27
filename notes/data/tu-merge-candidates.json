@@ -5524,7 +5524,7 @@
    "n_files": 8,
    "files": [
     "src/_ZN4ClamD1Ev.cpp",
-    "src/_ZN4ClamD0Ev.c",
+    "src/_ZN4ClamD0Ev.cpp",
     "src/func_ov064_0211a9b4.c",
     "src/_ZN4Clam16CleanupResourcesEv.cpp",
     "src/_ZN4Clam6RenderEv.cpp",

@@ -14,14 +14,14 @@
 #include "Clam.h"
 #include "SharedFilePtr.h"
 
-extern char data_ov064_0211c9c4;
-extern char data_ov064_0211c9cc;
-extern char data_ov064_0211c9bc;
+extern SharedFilePtr data_ov064_0211c9c4;
+extern SharedFilePtr data_ov064_0211c9cc;
+extern SharedFilePtr data_ov064_0211c9bc;
 
 int Clam::CleanupResources()
 {
-    ((SharedFilePtr *)(&data_ov064_0211c9c4))->Release();
-    ((SharedFilePtr *)(&data_ov064_0211c9cc))->Release();
-    ((SharedFilePtr *)(&data_ov064_0211c9bc))->Release();
+    data_ov064_0211c9c4.Release();
+    data_ov064_0211c9cc.Release();
+    data_ov064_0211c9bc.Release();
     return 1;
 }
