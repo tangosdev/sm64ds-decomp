@@ -402,8 +402,20 @@ static bool winapi_load(void)
 #include "hal/host_settings.h"   /* settings.json, the launcher's file */
 #include "hal/comms_seam.h"       /* run mg15 lane MP1: the radio seam */
 #include "hal/comms_loopback.h"   /* run mg16 lane MP2: the loopback carrier */
-#include "hal/comms_lockstep.h"   /* run mg16 lane MP2: the lockstep driver */
+/* run mg16 lane MP3: hal/comms_lockstep.h is RETIRED. Its transcription of
+   src/func_0203ea5c.c existed only because that TU was in no slice; the TU is
+   linked now and drives itself. Its lessons live in comms_seam.h's frozen
+   contract and in hal/comms_conductor.cpp. */
 #include "hal/instance_tag.h"     /* run mg16 lane MP2: per-instance filenames */
+
+/* run mg16 lane MP3: the raw DS pad bits for this frame, handed from where the
+   harness computes them to where hal/comms_conductor.cpp publishes them into
+   the DS key register. One value, one frame, no reader outside this file --
+   a stash rather than a hosted global precisely because it is harness
+   plumbing and not DS state, so it stays out of the .dsstate bracket. */
+static unsigned short g_raw_pad_bits;
+static void port_raw_pad_stash(unsigned short raw) { g_raw_pad_bits = raw; }
+static unsigned port_raw_pad_bits(void) { return g_raw_pad_bits; }
 
 /* run mg15 lane MP1. SM64DS_COMMS_FANOUT=1 runs the ROM's own steps 0x16 and
    0x17 (src/func_0203bb60.c, src/func_0203bc7c.c) after the comms tick, so
@@ -606,6 +618,10 @@ int hal_camera_init_resources(void *cam);
 int hal_camera_behavior(void *cam);
 int hal_camera_render(void *cam);
 void func_0203e0ac(void);
+/* run mg16 lane MP3: the ROM's own comms dispatcher, linked through
+   port/slice_mp3.txt. It owns the switch that used to be hosted at the call
+   site below, and the only call site of the seam's close() face. */
+void func_0203df40(void);
 /* the ROM's own camera math, which the freecam rig builds its view with:
    the same eye construction func_02009e70 uses and the same two G3i entry
    points plus CopyToViewMat that Camera::Render ends in */
@@ -7280,6 +7296,15 @@ int main(void)
             if (dx < 0) raw |= 0x20;   /* left  */
             if (dx > 0) raw |= 0x10;   /* right */
             static unsigned short raw_prev;
+            /* run mg16 lane MP3: the SAME value the pad mirror gets, stashed
+               for hal/comms_conductor.cpp's key-register publish further down
+               the frame. Taken HERE, at the source, because the ROM's fan-out
+               (func_0203bc7c, when SM64DS_COMMS_FANOUT is on) rewrites that
+               mirror from the four comms records later in this same frame --
+               so reading the mirror at publish time would feed the wire back
+               into itself. Stashing the source value is what makes the
+               ordering a fact rather than a comment. */
+            port_raw_pad_stash(raw);
             *(unsigned short *)((char *)data_020a0e58 + 0) = raw;
             *(unsigned short *)((char *)data_020a0e58 + 2) =
                 (unsigned short)(raw & (unsigned short)~raw_prev);
@@ -8860,16 +8885,30 @@ int main(void)
                into the echo below. */
             if (cam_mode != CAM_DS && !cutscene_cam)
                 *(short *)data_020a1050 = fc_yaw;
-            /* run mg16 lane MP2: src/func_0203df40.c's SWITCH, hosted.
-               data_020a0f04 == 1 or 2 dispatches to the lockstep
-               (func_0203ea5c on the DS, transcribed in hal/comms_lockstep.cpp
-               here); 0 dispatches to func_0203e0ac, the solo cascade, which is
-               what this line has always been and what it still is with no
-               transport installed. comms_lockstep_tick() answers false for
-               "run the role-0 arm", so with SM64DS_COMMS_ROLE unset the call
-               below is reached on every frame exactly as before. */
-            if (!port::comms_lockstep_tick())
-                func_0203e0ac();
+            /* run mg16 lane MP3: THE ROM'S OWN DISPATCHER, LINKED.
+               src/func_0203df40.c fills the local comms record from the pad and
+               the touch panel and then switches on the role byte: 1 and 2 reach
+               src/func_0203ea5c.c, the real lockstep; 3 reaches Download Play;
+               0 and anything else reach func_0203e0ac, the solo cascade this
+               line used to call directly.
+
+               MP2 had a hosted transcription here (hal/comms_lockstep.cpp) and
+               an `if (!tick()) func_0203e0ac();` around it, because
+               func_0203ea5c was in no slice. Both are gone: the role-0 arm is
+               INSIDE func_0203df40's own switch, so calling it here as well
+               would run the solo cascade twice on every single-player frame.
+
+               WITH NO TRANSPORT INSTALLED NOTHING CHANGES. data_020a0f04 comes
+               up 0 and only a transport moves it, so the switch takes its
+               default arm and func_0203e0ac runs exactly as it always has --
+               now reached through the ROM's own dispatcher rather than around
+               it. That is the whole point, and rung 1 is what proves it.
+
+               ORDERING: comms_publish_pad below is what makes :31 of that TU
+               read a real pad, and it must land before this call and before the
+               fan-out. See THE STUCK CONTROLLER in hal/comms_conductor.cpp. */
+            port::comms_publish_pad(port_raw_pad_bits());
+            func_0203df40();
             /* run mg15 lane MP1: the ROM's OWN steps 0x16 and 0x17, right
                where src/func_020197b8.c runs them -- immediately after the
                comms tick that filled the four records. func_0203bb60 turns
@@ -8898,7 +8937,19 @@ int main(void)
                        MP1-era SM64DS_COMMS_REPORT run prints what it always
                        printed. */
                     if (port::comms_transport()) {
-                        port::comms_lockstep_report("level");
+                        /* run mg16 lane MP3: the lockstep's own counters are
+                           GONE, and that is a real cost of linking the real
+                           thing rather than an oversight. MP2 counted ticks,
+                           rounds, timeouts, spins and peer_updates from inside
+                           its transcription. Those live inside
+                           src/func_0203ea5c.c now -- the spin loop, the bound,
+                           the per-slot unpack -- and instrumenting them would
+                           mean editing a byte-matched TU, which this repo does
+                           not do. What survives is what the SEAM can see:
+                           comms_report's exchanges/rounds count real calls
+                           through func_020406b4, and the carrier's own
+                           counters are unaffected. Saying which numbers went
+                           away is more useful than quietly printing fewer. */
                         port::comms_loopback_report("level");
                     }
                 }

@@ -92,6 +92,14 @@ def env_base(root, run_dir, instance):
     e["SM64DS_FAULTS_FATAL"] = "1"
     e["SM64DS_NO_DIALOG"] = "1"
     e["SM64DS_NO_FOCUS"] = "1"          # the game-window half of the quiet rule
+    # run mg16 lane MP3: THE THIRD HALF OF THE QUIET RULE, which was missing.
+    # The owner's standing order is nothing visible, nothing focused and NOTHING
+    # AUDIBLE on a test launch. This file had the first two (CREATE_NO_WINDOW +
+    # SW_SHOWMINNOACTIVE above, SM64DS_NO_FOCUS here) and never silenced the
+    # audio, so every rung that reached a level was free to make noise on his
+    # machine. Set here rather than per-rung so no future rung can forget it,
+    # and set AFTER the SM64DS_ scrub above so an inherited value cannot win.
+    e["SM64DS_VOLUME"] = "0"
     e["SM64DS_INSTANCE"] = instance
     e["TEMP"] = os.path.join(run_dir, "tmp")
     e["TMP"] = e["TEMP"]

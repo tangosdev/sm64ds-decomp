@@ -299,6 +299,36 @@ void comms_fanout();
 // Written to stderr. This is the instrument step 5(c) reads its verdict off.
 void comms_report(const char *tag);
 
+// ---------------------------------------------------------------------------
+// THE CONDUCTOR'S HOST SIDE. Run mg16 lane MP3, implemented in
+// hal/comms_conductor.cpp. These exist because src/func_0203df40.c and
+// src/func_0203ea5c.c are LINKED now and the ROM's own code has hardware
+// expectations the port has to meet.
+// ---------------------------------------------------------------------------
+
+// Publish `held` into the DS key register the way the hardware carries it:
+// ACTIVE LOW, complemented against 0x2fff. src/func_0203df40.c:31 reads
+// KEYINPUT and un-complements it, so a port that leaves the register at 0 hands
+// the game ALL FOURTEEN BUTTONS HELD rather than none.
+//
+// CALL IT UPSTREAM OF THE CONDUCTOR AND OF THE FAN-OUT, and pass the value in
+// rather than letting this read the pad mirror: with the fan-out on,
+// func_0203bc7c rewrites that mirror from the four comms records later in the
+// same frame, so a self-read here would feed the wire back into itself.
+void comms_publish_pad(unsigned held);
+
+// Install the seam's pump, which calls the installed transport's poll() once
+// per OS_SleepThread turn inside the ROM's own wait loop. This is HOLE 1's
+// fix (a), and it is what makes this header's `poll` paragraph true.
+void comms_install_pump();
+
 }  // namespace port
+
+extern "C" {
+// Assert that the .dsstate$ymp3 bands came out of the linker contiguous and in
+// ROM order. Returns nonzero when they did. Everything the conductor does with
+// &data_020a1020 as a 0x20-byte block depends on it.
+int port_comms_conductor_check_layout(void);
+}
 
 #endif  // PORT_HAL_COMMS_SEAM_H

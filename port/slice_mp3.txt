@@ -1,0 +1,85 @@
+# THE CONDUCTOR. Run mg16, lane MP3, stage three of the multiplayer plan.
+#
+# MP1 cut the radio seam. MP2 wrote a loopback carrier and drove it with a
+# TRANSCRIPTION of the ROM's lockstep, because the real one was in no slice.
+# This file is the real one.
+#
+#   src/func_0203df40.c   THE DISPATCHER. Fills the local comms record from the
+#                         pad and the touch panel, then switches on the role
+#                         byte data_020a0f04: 1 and 2 go to the conductor, 3 to
+#                         DS Download Play, 0 and anything else to
+#                         func_0203e0ac, the solo cascade the port already runs.
+#                         It also owns the ONLY call site of the seam's close()
+#                         face (func_02040724), which MP2 had to reach with an
+#                         atexit hook because this TU was not linked.
+#   src/func_0203ea5c.c   THE CONDUCTOR. 489 lines: stage the 0x20 block, ask
+#                         the link what it is, become parent or child, spin the
+#                         ROM's own wait bound, unpack every live peer's block
+#                         into the four 0x24 records, and drop the session back
+#                         to solo when the bound runs out.
+#
+# WHAT MP2 MEASURED, AND WHAT IS ACTUALLY TRUE. The handover priced this lane as
+# possible decompilation work: three of the eight non-seam callees "have no
+# slice row and no host face anywhere". Both halves of that are true and the
+# conclusion drawn from them was not. No slice row and no host face means NOBODY
+# EVER LINKED IT, not that there is no body. Every function below already had
+# committed source, and all of them were byte-verified at 2004/b56 before this
+# file was written -- the conductor itself included, all 0xba8 of it. This lane
+# needed no crack loop, no near-miss ingest and no NONMATCHING banner.
+#
+# THE SEAM LINE DID NOT MOVE, and that is the one thing worth checking twice.
+# func_0203fd64 sends a WM command and is game code, so it is linked here. What
+# it sends the command THROUGH -- func_0206259c, which is WM_GetSystemWork /
+# WM_CheckStateEx / WM_SetCallbackTable / WM_SendCommand and nothing else -- is
+# the radio, so it is HOSTED in hal/comms_conductor.cpp as a ninth seam face
+# rather than linked. That keeps the cut exactly where comms_seam.h draws it:
+# above the line is the game and it is the ROM's, below the line is arm7.bin and
+# it is the port's.
+#
+# THE HOST HAD BETTER ANSWER 1. func_0203ea5c:361-363 and :381-383 are
+#     data_020a0f2c = N;  do { } while (func_0203fd64() != 1);
+# an UNBOUNDED busy loop with no timeout of its own. func_0203fd64 answers 1
+# only when func_0206259c returns 2, which on the DS means WM_SendCommand
+# accepted the command. A host face that answered anything else would hang the
+# game solid, with no bound to save it. The face returns 2 and says so at the
+# site.
+#
+# ONE MORE RING. func_02042778 is the sleep the wait loop takes; it veneers to
+# func_0201a4d0, which is OS_SleepThread on the per-VBlank queue data_0209d4fc.
+# That is not a new problem -- hal/os_thread.h was written for exactly this call
+# chain and names it in its own header -- and it is what finally makes the
+# seam's `poll` entry real. See HOLE 1 in the frozen contract.
+#
+# COUNT THEM HONESTLY. THIRTEEN translation units are newly linked as source by
+# this file. Nothing here returns as a replacement for a host copy and nothing
+# here was already linked; func_0203e0ac (the role-0 arm), func_0205ea28 and
+# func_0203da9c were already in the link and are NOT listed below, because
+# listing them would over-count this lane the way MP1's first note over-counted
+# its own.
+
+# The two the lane exists for.
+src/func_0203df40.c
+src/func_0203ea5c.c
+
+# The dispatcher's own pull: the touch quad, read off the touch-panel ring.
+# func_0203e20c (Download Play) and func_02040724 (leave) are hosted seam faces;
+# func_0203e0ac is already linked through slice_gate13.
+src/func_0203b9bc.c
+src/func_0205edc8.c
+
+# The conductor's eight non-seam callees. func_02040a5c and func_02040a84 are
+# the WM status-word pair and are already hosted in hal/comms_seam.cpp, so six
+# of the eight are here.
+src/func_0204271c.c
+src/func_02042748.c
+src/func_0203fd64.c
+src/func_02042778.c
+src/func_0203f604.c
+src/func_0203f644.c
+
+# What those six reach in turn. func_0206259c is deliberately absent: it is the
+# radio, and it is hosted. Memory::Allocate and Memory::Deallocate, which
+# func_0203f604 reaches, are already linked through slice_gate3a.
+src/func_0201a4d0.c
+src/func_02040a94.c
+src/func_02040634.c
