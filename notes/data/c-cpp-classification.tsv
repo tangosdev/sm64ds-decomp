@@ -716,7 +716,7 @@ src/_ZN12daObjAbuku_cD1Ev.c	DTOR-ONLY	ov002	daObjAbuku_c	daObjAbuku_c	_ZN12daObj
 src/_ZN13BigBrickBlock13InitResourcesEv.c	P1-vtable+mangled	ov002	daObjBlockL_c	BigBrickBlock/daObjBlockL_c	vtable daObjBlockL_c slot 0 @0x20b3d78 | _ZN13BigBrickBlock13InitResourcesEv	1		True		-
 src/_ZN13BowserShutterD0Ev.c	DTOR-ONLY	ov026	daObjWlKoopaShutter_c	BowserShutter/daObjWlKoopaShutter_c	_ZN13BowserShutterD0Ev	1		True	_ZTV10dBgActor_c/_ZTV13BowserShutter	-
 src/_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator.c	P3-mangled-method-only	arm9		ExpandingHeap	_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator	1		True	_ZTV13ExpandingHeap	-
-src/_ZN13ExpandingHeapD1Ev.c	DTOR-ONLY	arm9	mHeap::ExpHeap_t	ExpandingHeap/mHeap	_ZN13ExpandingHeapD1Ev	1		True	_ZTV13ExpandingHeap	-
+src/_ZN13ExpandingHeapD1Ev.cpp	DTOR-ONLY	arm9	mHeap::ExpHeap_t	ExpandingHeap/mHeap	_ZN13ExpandingHeapD1Ev	1		True	_ZTV13ExpandingHeap	-
 src/_ZN13InvisiblePoleD0Ev.c	DTOR-ONLY	ov002	daBar_c	InvisiblePole/daBar_c	_ZN13InvisiblePoleD0Ev	1		True	_ZTV13InvisiblePole	-
 src/_ZN13MotherPenguin16OnPendingDestroyEv.c	P1-vtable+mangled	ov018	daPgMthr_c	MotherPenguin/daPgMthr_c	vtable daPgMthr_c slot 12 @0x2112450 | _ZN13MotherPenguin16OnPendingDestroyEv	1		True		-
 src/_ZN13MotherPenguinD0Ev.c	DTOR-ONLY	ov018	daPgMthr_c	MotherPenguin/daPgMthr_c	_ZN13MotherPenguinD0Ev	1		True		-
@@ -1055,9 +1055,9 @@ src/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.c
 src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c	P3-mangled-method-only	arm9		dActor_c	_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j	1		True		by-value-class-param
 src/_ZN8dActor_cD0Ev.c	DTOR-ONLY	arm9	dActor_c	dActor_c	_ZN8dActor_cD0Ev	1		True	_ZTV7dBase_c/_ZTV8dActor_c	-
 src/_ZN8dM3dGSphD2Ev.cpp	DTOR-ONLY	arm9		dM3dGSph	_ZN8dM3dGSphD2Ev	1		False		no-header:dM3dGSph
-src/_ZN9AnimationD0Ev.c	DTOR-ONLY	arm9	dExtFrameCtrl_c	Animation/dExtFrameCtrl_c	_ZN9AnimationD0Ev	1		True	_ZTV9Animation	-
-src/_ZN9AnimationD1Ev.c	DTOR-ONLY	arm9	dExtFrameCtrl_c	Animation/dExtFrameCtrl_c	_ZN9AnimationD1Ev	1		True	_ZTV9Animation	-
-src/_ZN9AnimationD2Ev.c	DTOR-ONLY	arm9		Animation	_ZN9AnimationD2Ev	1		True	_ZTV9Animation	-
+src/_ZN9AnimationD0Ev.cpp	DTOR-ONLY	arm9	dExtFrameCtrl_c	Animation/dExtFrameCtrl_c	_ZN9AnimationD0Ev	1		True	_ZTV9Animation	-
+src/_ZN9AnimationD1Ev.cpp	DTOR-ONLY	arm9	dExtFrameCtrl_c	Animation/dExtFrameCtrl_c	_ZN9AnimationD1Ev	1		True	_ZTV9Animation	-
+src/_ZN9AnimationD2Ev.cpp	DTOR-ONLY	arm9		Animation	_ZN9AnimationD2Ev	1		True	_ZTV9Animation	-
 src/_ZN9ArrowLiftD0Ev.c	DTOR-ONLY	ov029	daObjWc_Obj02_c	ArrowLift/daObjWc_Obj02_c	_ZN9ArrowLiftD0Ev	1		True	_ZTV10dBgActor_c/_ZTV9ArrowLift	-
 src/_ZN9ArrowLiftD1Ev.c	DTOR-ONLY	ov029	daObjWc_Obj02_c	ArrowLift/daObjWc_Obj02_c	_ZN9ArrowLiftD1Ev	1		True	_ZTV10dBgActor_c/_ZTV9ArrowLift	-
 src/_ZN9BlueFlameD0Ev.c	DTOR-ONLY	ov002	daObjFire_c	BlueFlame/daObjFire_c	_ZN9BlueFlameD0Ev	1		True		-
@@ -1091,7 +1091,7 @@ src/_ZN9PushBlock8BehaviorEv.c	P1-vtable+mangled	ov002	daObjPushblock_c	PushBloc
 src/_ZN9PushBlock8OnPushedER8dActor_c.c	P1-vtable+mangled	ov002	daObjPushblock_c	PushBlock/daObjPushblock_c	vtable daObjPushblock_c slot 25 @0x20b8d3c | _ZN9PushBlock8OnPushedER8dActor_c	1		True		-
 src/_ZN9ShipWater13InitResourcesEv.c	P1-vtable+mangled	ov017	daObjKsWater_c	ShipWater/daObjKsWater_c	vtable daObjKsWater_c slot 0 @0x21113c0 | _ZN9ShipWater13InitResourcesEv	1		True		-
 src/_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator.c	P3-mangled-method-only	arm9		SolidHeap	_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator	1		True	_ZTV9SolidHeap	-
-src/_ZN9SolidHeapD1Ev.c	DTOR-ONLY	arm9	mHeap::SolidHeap_t	SolidHeap/mHeap	_ZN9SolidHeapD1Ev	1		True	_ZTV9SolidHeap	-
+src/_ZN9SolidHeapD1Ev.cpp	DTOR-ONLY	arm9	mHeap::SolidHeap_t	SolidHeap/mHeap	_ZN9SolidHeapD1Ev	1		True	_ZTV9SolidHeap	-
 src/_ZN9SpindriftD0Ev.c	DTOR-ONLY	ov081	daHuwa_c	Spindrift/daHuwa_c	_ZN9SpindriftD0Ev	1		True		-
 src/_ZN9SubmarineD0Ev.c	DTOR-ONLY	ov026	daObjWlSubmarine_c	Submarine/daObjWlSubmarine_c	_ZN9SubmarineD0Ev	1		True	_ZTV10dBgActor_c/_ZTV9Submarine	-
 src/_ZN9TinyCoverD0Ev.c	DTOR-ONLY	ov033	daObjTtFuta_c	TinyCover/daObjTtFuta_c	_ZN9TinyCoverD0Ev	1		True	_ZTV10dBgActor_c/_ZTV9TinyCover	-
@@ -1420,7 +1420,7 @@ src/actors/BooCage/BooCage_Spawn.c	WEAK-refs-only	ov063				1		None		-
 src/actors/BooCage/_ZN7BooCageD0Ev.c	DTOR-ONLY	ov063	daTBasket_c	BooCage/daTBasket_c	_ZN7BooCageD0Ev	1		True		-
 src/actors/Bookshelf/Bookshelf_Spawn.c	WEAK-refs-only	ov063				1		None		-
 src/actors/FallBlockBbh/FallBlockBbh_Spawn.c	S1-stores-rom-vptr	ov063			stores _ZTV12FallBlockBbh	1		None	_ZTV12FallBlockBbh/_ZTV16daObjFallBlock_c	-
-src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.c	DTOR-ONLY	ov063	daObjTh_Fall_Block_c	FallBlockBbh/daObjTh_Fall_Block_c	_ZN12FallBlockBbhD0Ev	1		True	_ZTV10dBgActor_c/_ZTV12FallBlockBbh/_ZTV16daObjFallBlock_c	-
+src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.cpp	DTOR-ONLY	ov063	daObjTh_Fall_Block_c	FallBlockBbh/daObjTh_Fall_Block_c	_ZN12FallBlockBbhD0Ev	1		True	_ZTV10dBgActor_c/_ZTV12FallBlockBbh/_ZTV16daObjFallBlock_c	-
 src/actors/MadPiano/_ZN8MadPianoD1Ev.c	DTOR-ONLY	ov063	daPiano_c	MadPiano/daPiano_c	_ZN8MadPianoD1Ev	1		True	_ZTV10dBgActor_c/_ZTV8MadPiano	-
 src/actors/MadPiano/__sinit_ov063_0211e5fc.c	WEAK-refs-only	ov063				0		None		extra-sections:init
 src/actors/MansionSteps/MansionSteps_Spawn.c	WEAK-refs-only	ov063				1		None		-

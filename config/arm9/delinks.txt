@@ -2072,15 +2072,15 @@ src/_ZN9Animation7AdvanceEv.cpp:
     complete
     .text start:0x02015c3c end:0x02015cb4
 
-src/_ZN9AnimationD2Ev.c:
+src/_ZN9AnimationD2Ev.cpp:
     complete
     .text start:0x02015cb4 end:0x02015cc4
 
-src/_ZN9AnimationD0Ev.c:
+src/_ZN9AnimationD0Ev.cpp:
     complete
     .text start:0x02015cc4 end:0x02015ce8
 
-src/_ZN9AnimationD1Ev.c:
+src/_ZN9AnimationD1Ev.cpp:
     complete
     .text start:0x02015ce8 end:0x02015cf8
 
@@ -5575,15 +5575,15 @@ src/func_02039624.c:
     complete
     .text start:0x02039624 end:0x02039658
 
-src/_ZN4dBgWD2Ev.c:
+src/_ZN4dBgWD2Ev.cpp:
     complete
     .text start:0x02039658 end:0x02039668
 
-src/_ZN4dBgWD0Ev.c:
+src/_ZN4dBgWD0Ev.cpp:
     complete
     .text start:0x02039668 end:0x0203968c
 
-src/_ZN4dBgWD1Ev.c:
+src/_ZN4dBgWD1Ev.cpp:
     complete
     .text start:0x0203968c end:0x0203969c
 
@@ -6310,7 +6310,7 @@ src/_ZN9SolidHeapD0Ev.cpp:
     complete
     .text start:0x0203c970 end:0x0203c99c
 
-src/_ZN9SolidHeapD1Ev.c:
+src/_ZN9SolidHeapD1Ev.cpp:
     complete
     .text start:0x0203c99c end:0x0203c9c0
 
@@ -6318,7 +6318,7 @@ src/_ZN13ExpandingHeapD0Ev.cpp:
     complete
     .text start:0x0203c9c0 end:0x0203c9ec
 
-src/_ZN13ExpandingHeapD1Ev.c:
+src/_ZN13ExpandingHeapD1Ev.cpp:
     complete
     .text start:0x0203c9ec end:0x0203ca10
 
