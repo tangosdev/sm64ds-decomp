@@ -890,6 +890,13 @@
     "src/game/stages/Scene.cpp#_ZN8dScene_c20Initialise3dGraphicsEv": "andrewboudreau",
     "src/game/stages/Scene.cpp#_ZN5Stage12SetVramBanksEv": "tangosdev",
     "src/game/stages/Scene.cpp#_ZN2GX15DisableAllBanksEv": "tangosdev",
-    "src/game/stages/Scene.cpp#_ZN8dScene_c22ResetHardwareRegistersEv": "tangosdev"
+    "src/game/stages/Scene.cpp#_ZN8dScene_c22ResetHardwareRegistersEv": "tangosdev",
+    "src/game/actors/BasementWater.cpp#_ZN13BasementWaterD1Ev": "tangosdev",
+    "src/game/actors/BasementWater.cpp#_ZN13BasementWaterD0Ev": "tangosdev",
+    "src/game/actors/BasementWater.cpp#_ZN13BasementWater16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/BasementWater.cpp#_ZN13BasementWater6RenderEv": "tangosdev",
+    "src/game/actors/BasementWater.cpp#_ZN13BasementWater8BehaviorEv": "lunavyqo",
+    "src/game/actors/BasementWater.cpp#_ZN13BasementWater13InitResourcesEv": "tangosdev",
+    "src/game/actors/BasementWater.cpp#BasementWater_Spawn": "tangosdev"
   }
 }

@@ -1,8 +1,8 @@
 {
   "id": "ov012/BasementWater",
   "module": "ov012",
-  "source": "src_tu/actors/BasementWater.cpp",
-  "promoted_source": "src/actors/BasementWater.cpp",
+  "source": "src/game/actors/BasementWater.cpp",
+  "promoted_source": "src/game/actors/BasementWater.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -108,8 +108,8 @@
     "extraInertImports": 80,
     "extraImportsWithNoHome": [],
     "artefacts": "build/tu/ov012-BasementWater/partial/partial.json (gitignored)",
-    "state": "contribution-equivalent",
-    "stateMeaning": "every derived object's linker-visible contribution -- kept section header and bytes, its relocations by symbol name, every defined symbol, every content section still carrying bytes, and every relocation-referenced import -- is byte-identical to what the current per-function compile+isolate pipeline produces for the same function",
+    "state": "partial-link-verified",
+    "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
     "delinksChanged": false,
     "substitutedObjectPaths": [
@@ -121,7 +121,7 @@
       "src/game/actors/BasementWater/_ZN13BasementWater13InitResourcesEv.cpp",
       "src/game/actors/BasementWater/BasementWater_Spawn.c"
     ],
-    "result": "failed",
+    "result": "partial-link-verified",
     "phases": {
       "delink": true,
       "lcf": true,
@@ -138,11 +138,86 @@
       "firstDiff": null
     },
     "moduleFidelityPassed": true,
-    "symbolCheckNewVsBaseline": null,
+    "symbolCheckNewVsBaseline": [],
     "rom": {
       "bytes": 16777216,
-      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "matchesStockRom": true
     },
     "scratch": "build/tu/ov012-BasementWater/link-partial (gitignored)"
+  },
+  "production_mode": "derived-text",
+  "unlicensed_output_observed": {
+    "note": "Pinned-compiler inventory stamped by tools/promote_derived_tus.py --stamp-discarded-output before default production admission. These definitions are not ROM ownership claims; every build requires an exact inventory match, exact derived text contributions, exact modules, and an exact ROM.",
+    "toolchain": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "text": [
+      {
+        "symbol": "_ZN13BasementWaterD2Ev",
+        "size": "0x4c",
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "data": [
+      {
+        "symbol": "_ZTI10dBgActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI13BasementWater",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "size": "0x8",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS10dBgActor_c",
+        "size": "0xd",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS13BasementWater",
+        "size": "0x10",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "size": "0xa",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTV13BasementWater",
+        "size": "0x88",
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "bss": [],
+    "init": [],
+    "rodata": [],
+    "ctor": []
   }
 }
