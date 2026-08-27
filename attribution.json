@@ -744,6 +744,14 @@
     "src/game/actors/AmbientSoundEffects.cpp#_ZN19AmbientSoundEffects6RenderEv": "tangosdev",
     "src/game/actors/AmbientSoundEffects.cpp#_ZN19AmbientSoundEffects8BehaviorEv": "lunavyqo",
     "src/game/actors/AmbientSoundEffects.cpp#_ZN19AmbientSoundEffects13InitResourcesEv": "tangosdev",
-    "src/game/actors/AmbientSoundEffects.cpp#AmbientSoundEffects_Spawn": "tangosdev"
+    "src/game/actors/AmbientSoundEffects.cpp#AmbientSoundEffects_Spawn": "tangosdev",
+    "src/game/actors/CameraTag.cpp#_ZN9CameraTagD1Ev": "tangosdev",
+    "src/game/actors/CameraTag.cpp#_ZN9CameraTagD0Ev": "tangosdev",
+    "src/game/actors/CameraTag.cpp#_ZN9CameraTag16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/CameraTag.cpp#_ZN9CameraTag16OnPendingDestroyEv": "tangosdev",
+    "src/game/actors/CameraTag.cpp#_ZN9CameraTag6RenderEv": "tangosdev",
+    "src/game/actors/CameraTag.cpp#_ZN9CameraTag8BehaviorEv": "tangosdev",
+    "src/game/actors/CameraTag.cpp#_ZN9CameraTag13InitResourcesEv": "tangosdev",
+    "src/game/actors/CameraTag.cpp#CameraTag_Spawn": "tangosdev"
   }
 }

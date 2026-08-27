@@ -1,8 +1,8 @@
 {
   "id": "ov002/CameraTag",
   "module": "ov002",
-  "source": "src_tu/actors/CameraTag.cpp",
-  "promoted_source": "src/actors/CameraTag.cpp",
+  "source": "src/game/actors/CameraTag.cpp",
+  "promoted_source": "src/game/actors/CameraTag.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -299,5 +299,69 @@
     "state": "partial-link-verified",
     "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+  },
+  "production_mode": "derived-text",
+  "unlicensed_output_observed": {
+    "note": "Pinned-compiler inventory stamped by tools/promote_derived_tus.py --stamp-discarded-output before default production admission. These definitions are not ROM ownership claims; every build requires an exact inventory match, exact derived text contributions, exact modules, and an exact ROM.",
+    "toolchain": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "text": [
+      {
+        "symbol": "_ZN9CameraTagD2Ev",
+        "size": "0x24",
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "data": [
+      {
+        "symbol": "_ZTI7dBase_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "size": "0x8",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI9CameraTag",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "size": "0xa",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS9CameraTag",
+        "size": "0xb",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTV9CameraTag",
+        "size": "0x84",
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "bss": [],
+    "init": [],
+    "rodata": [],
+    "ctor": []
   }
 }
