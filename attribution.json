@@ -768,6 +768,14 @@
     "src/game/actors/InvisiblePole.cpp#_ZN13InvisiblePole6RenderEv": "andrewboudreau",
     "src/game/actors/InvisiblePole.cpp#_ZN13InvisiblePole8BehaviorEv": "andrewboudreau",
     "src/game/actors/InvisiblePole.cpp#_ZN13InvisiblePole13InitResourcesEv": "andrewboudreau",
-    "src/game/actors/InvisiblePole.cpp#InvisiblePole_Spawn": "tangosdev"
+    "src/game/actors/InvisiblePole.cpp#InvisiblePole_Spawn": "tangosdev",
+    "src/game/actors/OneUpLogo.cpp#_ZN9OneUpLogoD1Ev": "tangosdev",
+    "src/game/actors/OneUpLogo.cpp#_ZN9OneUpLogoD0Ev": "tangosdev",
+    "src/game/actors/OneUpLogo.cpp#func_ov002_020f0e54": "tangosdev",
+    "src/game/actors/OneUpLogo.cpp#_ZN9OneUpLogo16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/OneUpLogo.cpp#_ZN9OneUpLogo6RenderEv": "tangosdev",
+    "src/game/actors/OneUpLogo.cpp#_ZN9OneUpLogo8BehaviorEv": "ruspecial",
+    "src/game/actors/OneUpLogo.cpp#_ZN9OneUpLogo13InitResourcesEv": "tangosdev",
+    "src/game/actors/OneUpLogo.cpp#OneUpLogo_Spawn": "tangosdev"
   }
 }
