@@ -67,6 +67,7 @@ than guessed at. The effect is that migrating a module makes it *stay* migrated,
 nothing moves that a human did not already move.
 """
 import bisect
+import json
 import pathlib
 import re
 
@@ -87,6 +88,7 @@ _scan_cache = None
 _cohort_cache = None
 _enrolment_cache = None
 _definition_ownership_cache = None
+_partitioned_production_cache = None
 
 
 def symbol_for(path):
@@ -117,10 +119,140 @@ def invalidate():
     The enrolment index is dropped too: `enroll` and `tubuild promote` both rewrite
     delinks.txt, and a stale index would keep answering with the file they replaced."""
     global _scan_cache, _cohort_cache, _enrolment_cache, _definition_ownership_cache
+    global _partitioned_production_cache
     _scan_cache = None
     _cohort_cache = None
     _enrolment_cache = None
     _definition_ownership_cache = None
+    _partitioned_production_cache = None
+
+
+def _partitioned_production():
+    """Validated ownership overlay for default partitioned production TUs.
+
+    Tracked ``delinks.txt`` deliberately keeps naming the one-function comparison
+    sources: the partitioned build replaces those selectors in a generated profile
+    and uses them as the byte/relocation oracle for each compiler-emitted function.
+    ``config/production-tus.json`` is the complementary production fact: the named
+    canonical TU is the source that emits those functions in an ordinary stock build.
+
+    Keeping the two roles explicit avoids rewriting all 106 link configs merely to
+    describe a build-time partition, while still making source ownership truthful to
+    progress, attribution, lookup, and migration tooling.
+    """
+    global _partitioned_production_cache
+    if _partitioned_production_cache is not None:
+        return _partitioned_production_cache
+
+    config = REPO / "config" / "production-tus.json"
+    empty = {
+        "entries": [],
+        "by_symbol": {},
+        "legacy_by_symbol": {},
+        "legacy_sources": set(),
+        "sources": set(),
+    }
+    if not config.is_file():
+        _partitioned_production_cache = empty
+        return _partitioned_production_cache
+    try:
+        registry = json.loads(config.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeError(f"unreadable production TU registry: {exc}") from exc
+    if registry.get("schema_version") != 1:
+        raise RuntimeError("production TU registry needs schema_version 1")
+    ids = registry.get("partitioned_tus")
+    if not isinstance(ids, list) or any(not isinstance(row, str) or not row
+                                        for row in ids):
+        raise RuntimeError("production TU registry needs non-empty string ids")
+    if len(ids) != len(set(ids)):
+        raise RuntimeError("production TU registry contains duplicate ids")
+
+    manifests = {}
+    manifest_root = REPO / "config" / "tu_manifest.d"
+    if manifest_root.is_dir():
+        for path in sorted(manifest_root.rglob("*.json")):
+            try:
+                row = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                raise RuntimeError(f"unreadable TU manifest {path}: {exc}") from exc
+            tu_id = row.get("id")
+            if not tu_id:
+                continue
+            if tu_id in manifests:
+                raise RuntimeError(f"duplicate TU manifest id {tu_id!r}")
+            manifests[tu_id] = row
+
+    entries, by_symbol, legacy_by_symbol = [], {}, {}
+    legacy_sources, sources = set(), set()
+    for tu_id in ids:
+        entry = manifests.get(tu_id)
+        if entry is None:
+            raise RuntimeError(f"production TU {tu_id!r} has no manifest")
+        state = (entry.get("partitioned_link") or {}).get("state")
+        if entry.get("production_mode") != "partitioned" \
+                or state != "partitioned-link-verified":
+            raise RuntimeError(
+                f"production TU {tu_id!r} is not partitioned-link-verified")
+        source = entry.get("source")
+        if source != entry.get("promoted_source") \
+                or not isinstance(source, str) or not source.startswith("src/") \
+                or not (REPO / source).is_file():
+            raise RuntimeError(
+                f"production TU {tu_id!r} has no canonical promoted src/ source")
+        funcs = entry.get("functions")
+        if not isinstance(funcs, list) or not funcs:
+            raise RuntimeError(f"production TU {tu_id!r} has no functions")
+        normalized = []
+        entry_legacy = {}
+        for ordinal, row in enumerate(funcs):
+            symbol = row.get("symbol") if isinstance(row, dict) else None
+            legacy = row.get("legacy_source") if isinstance(row, dict) else None
+            if not isinstance(symbol, str) or not symbol \
+                    or not isinstance(legacy, str) or not legacy.startswith("src/"):
+                raise RuntimeError(
+                    f"production TU {tu_id!r} has an invalid function row")
+            if row.get("ordinal") != ordinal:
+                raise RuntimeError(
+                    f"production TU {tu_id!r} function ordinals are not contiguous")
+            if symbol in by_symbol:
+                raise RuntimeError(f"production symbol {symbol!r} is claimed twice")
+            if legacy in legacy_sources:
+                raise RuntimeError(
+                    f"production comparison source {legacy!r} is claimed twice")
+            by_symbol[symbol] = source
+            legacy_by_symbol[symbol] = legacy
+            legacy_sources.add(legacy)
+            entry_legacy[symbol] = legacy
+            normalized.append(symbol)
+        entries.append({"id": tu_id, "source": source,
+                        "symbols": normalized,
+                        "legacy_by_symbol": entry_legacy})
+        sources.add(source)
+
+    _partitioned_production_cache = {
+        "entries": entries,
+        "by_symbol": by_symbol,
+        "legacy_by_symbol": legacy_by_symbol,
+        "legacy_sources": legacy_sources,
+        "sources": sources,
+    }
+    return _partitioned_production_cache
+
+
+def partitioned_legacy_path_for(symbol):
+    """Comparison-oracle path for a compiler-emitted production member, if any."""
+    return _partitioned_production()["legacy_by_symbol"].get(symbol)
+
+
+def partitioned_legacy_sources():
+    """Repo-relative one-function sources retained only as partitioning oracles."""
+    return set(_partitioned_production()["legacy_sources"])
+
+
+def partitioned_production_sources():
+    """Repo-relative canonical sources enabled in the default partitioned build."""
+    return set(_partitioned_production()["sources"])
 
 
 # One delinks entry opens with an unindented `<path>:` and owns the indented
@@ -223,8 +355,34 @@ def _enrolment():
                     by_symbol[funcs[i][2]] = entry
                     by_path.setdefault(entry, []).append(funcs[i])
                     i += 1
+        # The tracked link configs retain one-function paths as exact comparison
+        # selectors. Overlay the default production registry so every source-facing
+        # tool sees the canonical compiler-emitting TU as owner. Move the complete
+        # legacy range (including any nested aliases), but define the TU by its
+        # manifest rows so aliases do not inflate conversion totals.
+        production_definitions = {}
+        for production in _partitioned_production()["entries"]:
+            canonical = production["source"]
+            moved = []
+            for symbol in production["symbols"]:
+                legacy = production["legacy_by_symbol"][symbol]
+                rows = by_path.get(legacy)
+                if not rows or symbol not in definition_symbols(legacy, rows):
+                    raise RuntimeError(
+                        f"production TU {production['id']!r} comparison source "
+                        f"{legacy!r} does not own {symbol!r} in tracked delinks")
+                moved.extend(rows)
+                for _addr, _size, owned in rows:
+                    by_symbol[owned] = canonical
+                del by_path[legacy]
+            by_path.setdefault(canonical, []).extend(moved)
+            production_definitions[canonical] = list(production["symbols"])
+
         _definition_ownership_cache = {
-            path: definition_symbols(path, rows) for path, rows in by_path.items()
+            path: (production_definitions[path]
+                   if path in production_definitions
+                   else definition_symbols(path, rows))
+            for path, rows in by_path.items()
         }
         _enrolment_cache = (
             by_symbol,
@@ -490,7 +648,6 @@ def build_index():
 
 if __name__ == "__main__":
     import argparse
-    import json
 
     ap = argparse.ArgumentParser(description="resolve a symbol to its src/ path")
     ap.add_argument("symbol", nargs="?", help="symbol to look up")

@@ -1,6 +1,7 @@
 """What srcpath has to guarantee, especially the subdirectory case that does not exist
 in the tree yet -- that is the whole point of the module, so it is the part most worth
 pinning before anything moves."""
+import json
 import pathlib
 import sys
 import tempfile
@@ -304,6 +305,46 @@ class SrcPath(unittest.TestCase):
         # ...and the duplicate stays visible to whoever looks for duplicates.
         self.assertIn(SP.SRC / "_ZN7fBase_c9SceneNodeC1Ev.c",
                       SP.paths_for("_ZN7fBase_c9SceneNodeC1Ev"))
+
+    def test_partitioned_production_overlays_comparison_source_ownership(self):
+        """Tracked delinks remains the byte oracle; source tools name the real TU."""
+        symbol = "_ZN3Foo1AEv"
+        legacy = self.write("game/actors/Foo/_ZN3Foo1AEv.cpp", "//cpp\n")
+        canonical = self.write("game/actors/Foo.cpp", "//cpp\n")
+        self.enrol(
+            [(legacy.relative_to(SP.REPO).as_posix(),
+              [(0x02001000, 0x02001004)])],
+            [(symbol, 0x02001000)])
+        manifest_dir = SP.REPO / "config" / "tu_manifest.d" / "arm9"
+        manifest_dir.mkdir(parents=True)
+        (manifest_dir / "Foo.json").write_text(json.dumps({
+            "id": "arm9/Foo",
+            "source": canonical.relative_to(SP.REPO).as_posix(),
+            "promoted_source": canonical.relative_to(SP.REPO).as_posix(),
+            "production_mode": "partitioned",
+            "partitioned_link": {"state": "partitioned-link-verified"},
+            "functions": [{
+                "symbol": symbol,
+                "legacy_source": legacy.relative_to(SP.REPO).as_posix(),
+                "ordinal": 0,
+            }],
+        }))
+        (SP.REPO / "config" / "production-tus.json").write_text(json.dumps({
+            "schema_version": 1,
+            "partitioned_tus": ["arm9/Foo"],
+        }))
+        SP.invalidate()
+
+        self.assertEqual(SP.path_for(symbol), canonical)
+        self.assertEqual(SP.symbols_for(canonical), [symbol])
+        self.assertEqual(SP.source_definition_index(), {
+            canonical.relative_to(SP.REPO).as_posix(): [symbol],
+        })
+        self.assertEqual(SP.partitioned_legacy_path_for(symbol),
+                         legacy.relative_to(SP.REPO).as_posix())
+        self.assertEqual(SP.partitioned_legacy_sources(), {
+            legacy.relative_to(SP.REPO).as_posix(),
+        })
 
     def test_a_mods_entry_never_wins(self):
         """rombuild_profile._stock_delinks swaps `mods/X.c:` for its src/ counterpart by

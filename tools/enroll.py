@@ -275,7 +275,12 @@ def candidates():
             f = next((MODS / (name + e) for e in (".c", ".cpp")
                       if (MODS / (name + e)).is_file()), None)
             if f is None:
-                f = SP.path_for(name)
+                # A partitioned production TU is the real source owner, but tracked
+                # delinks intentionally keeps its one-function comparison selectors.
+                # Preserve those selectors here; rombuild swaps in the freshly
+                # derived compiler output through its generated production profile.
+                legacy = SP.partitioned_legacy_path_for(name)
+                f = REPO / legacy if legacy else SP.path_for(name)
             if f is None:
                 skipped["no src file"] += 1
                 continue
