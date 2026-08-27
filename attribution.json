@@ -8,6 +8,8 @@
     "mitch.cairns": "mitchellcairns"
   },
   "overrides": {
+    "src/_ZN10MemoryNode6TargetC1EPS_.cpp": "tangosdev",
+    "src/_ZN10MemoryNode6TargetC1EPS_.cpp#_ZN10MemoryNode6TargetC1EP10MemoryNode": "tangosdev",
     "src/actors/ActorBase_SceneNode.cpp#_ZN7fBase_c9SceneNode5ResetEv": "tangosdev",
     "src/actors/ActorBase_SceneNode.cpp#_ZN7fBase_c9SceneNodeC1Ev": "tangosdev",
     "src/_ZN14KnockDownPlank8BehaviorEv.c": "lunavyqo",

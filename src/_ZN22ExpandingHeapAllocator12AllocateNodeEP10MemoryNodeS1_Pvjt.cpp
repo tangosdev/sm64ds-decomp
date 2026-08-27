@@ -34,22 +34,17 @@
  * high half. The declaration was never checked against the callee, and the callee is
  * where the width is observable. See the same correction applied to DeallocateAll.
  *
- * `Extent` is the recovered body's own view of MemoryNode::Target -- kept, and cast at
- * the call, for the reason CreateNode states: rewriting a recovered body's local views
- * into the reconstructed type is a body change, and this class has already produced a
- * three-word divergence from exactly that kind of tidying (SetNodeID, #1221). Only the
- * declaration moved.
+ * The three extents are MemoryNode::Target objects. In particular, t0 is constructed
+ * directly from the free node, allowing the compiler to emit the recovered nested-class
+ * constructor call instead of spelling its ABI symbol by hand.
  *
  * `c` is typed MemoryNode* because the ROM's mangled name says so, but callers pass the
  * allocator's embedded node-list, not a real node -- the same sentinel-node convention
  * LinkNode and UnlinkNode document.
  */
-struct Extent { int start; int end; };
-
 extern "C" {
-void  _ZN10MemoryNode6TargetC1EP10MemoryNode(struct Extent* thiz, MemoryNode* node);
 void* _ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_(MemoryNode* c, MemoryNode* node);
-void* _ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt(struct Extent* t, unsigned short tt);
+void* _ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt(MemoryNode::Target* t, unsigned short tt);
 void* _ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_(void* c, void* node, void* link);
 void  MultiStore_Int(int val, int* dst, int len);
 }
@@ -57,23 +52,22 @@ void  MultiStore_Int(int val, int* dst, int len);
 void* ExpandingHeapAllocator::AllocateNode(MemoryNode* c, MemoryNode* node, void* target,
                                            u32 size, u16 z)
 {
-    struct Extent t0;
-    struct Extent t1;
-    struct Extent t2;
+    MemoryNode::Target t0(node);
+    MemoryNode::Target t1;
+    MemoryNode::Target t2;
     void* link;
     int header;
-    _ZN10MemoryNode6TargetC1EP10MemoryNode(&t0, node);
 
-    int oldLimit = t0.end;
+    int oldLimit = (int)t0.end;
     header = (int)target - 0x10;
     int backStart = (int)size + (int)target;
-    t0.end = header;
-    t1.end = oldLimit;
-    t1.start = backStart;
+    t0.end = (char*)header;
+    t1.end = (char*)oldLimit;
+    t1.start = (char*)backStart;
 
     link = _ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_(c, node);
 
-    unsigned int frontGap = t0.end - t0.start;
+    unsigned int frontGap = (unsigned int)(t0.end - t0.start);
     if (frontGap < 0x10) {
         t0.end = t0.start;
     } else {
@@ -81,7 +75,7 @@ void* ExpandingHeapAllocator::AllocateNode(MemoryNode* c, MemoryNode* node, void
         link = _ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_(c, newFront, link);
     }
 
-    unsigned int backGap = t1.end - t1.start;
+    unsigned int backGap = (unsigned int)(t1.end - t1.start);
     if (backGap < 0x10) {
         t1.start = t1.end;
     } else {
@@ -97,7 +91,7 @@ void* ExpandingHeapAllocator::AllocateNode(MemoryNode* c, MemoryNode* node, void
         MultiStore_Int(zero, dst, len);
     }
 
-    t2.start = header;
+    t2.start = (char*)header;
     t2.end = t1.start;
     void* allocNode = _ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt(&t2, 0x5544);
 
@@ -105,7 +99,7 @@ void* ExpandingHeapAllocator::AllocateNode(MemoryNode* c, MemoryNode* node, void
     void* usedList = (char*)c + 8;
     *flagsPtr &= ~0x8000;
     *flagsPtr |= (z & 1) << 15;
-    int t0e = t0.end;
+    int t0e = (int)t0.end;
     *flagsPtr &= ~0x7f00;
     *flagsPtr |= (((unsigned short)((int)allocNode - t0e)) & 0x7f) << 8;
     unsigned int cRaw = *(unsigned short*)((char*)c + 0x10);

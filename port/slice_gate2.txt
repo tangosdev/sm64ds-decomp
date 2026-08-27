@@ -20,7 +20,7 @@ src/_ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjt.cpp
 src/_ZN22ExpandingHeapAllocator8FreeNodeEP10MemoryNodePNS0_6TargetE.cpp
 src/_ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_.cpp
 src/_ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_.cpp
-src/_ZN10MemoryNode6TargetC1EP10MemoryNode.cpp
+src/_ZN10MemoryNode6TargetC1EPS_.cpp
 
 # NestedHeapIterator: the shared HeapAllocator initializer registers every allocator
 # in the global nesting registry, so the iterator family rides along.
