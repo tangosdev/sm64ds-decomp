@@ -1,6 +1,8 @@
+//cpp
+#include "Goomboss.h"
+#include "Goomboss.h"
 #include "MaterialChanger.h"
 #include "TextureSequence.h"
-//cpp
 #include "types.h"
 struct SharedFilePtr;
 struct BMD_File;
@@ -16,7 +18,7 @@ struct BMD_File;
 struct BTP_File;
 struct BMA_File;
 extern "C" {
-    void func_ov074_02122634(char *self);
+    s32 func_ov074_02122634(char *self);
     void *_ZN5Model8LoadFileER13SharedFilePtr(void *shared);
     void LoadKeyModels(int idx);
     void *_ZN9Animation8LoadFileER13SharedFilePtr(void *shared);
@@ -58,8 +60,9 @@ extern s16 data_02082214[];
 
 struct RG { char pad[0x4c]; };
 
-extern "C" int _ZN8Goomboss13InitResourcesEv(char *self)
+int Goomboss::InitResources()
 {
+    char *self = (char *)this;
     s32 i;
     s32 j;
     s32 k;
@@ -70,8 +73,7 @@ extern "C" int _ZN8Goomboss13InitResourcesEv(char *self)
     s32 v[3];
 
     if (*(u32 *)(self + 8) == 0x1111) {
-        func_ov074_02122634(self);
-        return;
+        return func_ov074_02122634(self);
     }
 
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da30);
