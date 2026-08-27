@@ -121,7 +121,14 @@ def image_size(map_path):
 
 
 def resolve_one(offset, syms):
-    """Nearest preceding code symbol for a module RVA. Binary search."""
+    """Nearest preceding code symbol for a module RVA. Binary search.
+
+    Identical-code folding gives several symbols one address; this returns
+    whichever folded sibling sorts LAST and says nothing about the others.
+    Fine for a quick inline annotation, wrong to lean on for blame --
+    port/tools/faultmap.py prints every folded name and says FOLDED, so use
+    that when the attribution matters.
+    """
     lo, hi, best = 0, len(syms) - 1, None
     while lo <= hi:
         mid = (lo + hi) // 2
