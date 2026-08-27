@@ -29,7 +29,7 @@ rewriting those sources, which drags every referencing file into the PR and turn
 Ten of the 858 are referenced (see `--report`).  For these, deferral is not merely
 procedural -- some of the references are *overlay-ambiguous* and renaming them would
 assert something false.  `0x0211396c` exists in both ov018 and ov032;
-`src/__sinit_ov018_02112c80.cpp` -- an ov018 file -- refers to it by ov032's spelling,
+`src/unnamed/ov018/0211/__sinit_ov018_02112c80.cpp` -- an ov018 file -- refers to it by ov032's spelling,
 `data_ov032_0211396c`.  Renaming that to `_ZTS14daObjTdWater_c` would state that an
 ov018 reference points at ov032's typeinfo string.  It may; nothing here proves it.
 See notes/overlay-ambiguous-references.md and tools/overlay_residency.py.

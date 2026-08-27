@@ -22,63 +22,63 @@
       "symbol": "_ZN4ExitD1Ev",
       "address": "0x020b09b0",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN4ExitD1Ev.cpp",
+      "legacy_source": "src/game/actors/Exit/_ZN4ExitD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN4ExitD0Ev",
       "address": "0x020b09d4",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN4ExitD0Ev.cpp",
+      "legacy_source": "src/game/actors/Exit/_ZN4ExitD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "func_ov002_020b0a0c",
       "address": "0x020b0a0c",
       "size": "0x00000064",
-      "legacy_source": "src/func_ov002_020b0a0c.c",
+      "legacy_source": "src/unnamed/ov002/020b/func_ov002_020b0a0c.c",
       "ordinal": 2
     },
     {
       "symbol": "_ZN4Exit16CleanupResourcesEv",
       "address": "0x020b0a70",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN4Exit16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/Exit/_ZN4Exit16CleanupResourcesEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN4Exit16OnPendingDestroyEv",
       "address": "0x020b0a78",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN4Exit16OnPendingDestroyEv.cpp",
+      "legacy_source": "src/game/actors/Exit/_ZN4Exit16OnPendingDestroyEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN4Exit6RenderEv",
       "address": "0x020b0a7c",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN4Exit6RenderEv.cpp",
+      "legacy_source": "src/game/actors/Exit/_ZN4Exit6RenderEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN4Exit8BehaviorEv",
       "address": "0x020b0a84",
       "size": "0x00000304",
-      "legacy_source": "src/_ZN4Exit8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/Exit/_ZN4Exit8BehaviorEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "_ZN4Exit13InitResourcesEv",
       "address": "0x020b0d88",
       "size": "0x0000019c",
-      "legacy_source": "src/_ZN4Exit13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/Exit/_ZN4Exit13InitResourcesEv.cpp",
       "ordinal": 7
     },
     {
       "symbol": "Exit_Spawn",
       "address": "0x020b0f24",
       "size": "0x00000030",
-      "legacy_source": "src/Exit_Spawn.c",
+      "legacy_source": "src/game/actors/Exit/Exit_Spawn.c",
       "ordinal": 8
     }
   ],
@@ -270,15 +270,15 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN4ExitD1Ev.cpp",
-      "src/_ZN4ExitD0Ev.cpp",
-      "src/func_ov002_020b0a0c.c",
-      "src/_ZN4Exit16CleanupResourcesEv.cpp",
-      "src/_ZN4Exit16OnPendingDestroyEv.cpp",
-      "src/_ZN4Exit6RenderEv.cpp",
-      "src/_ZN4Exit8BehaviorEv.cpp",
-      "src/_ZN4Exit13InitResourcesEv.cpp",
-      "src/Exit_Spawn.c"
+      "src/game/actors/Exit/_ZN4ExitD1Ev.cpp",
+      "src/game/actors/Exit/_ZN4ExitD0Ev.cpp",
+      "src/unnamed/ov002/020b/func_ov002_020b0a0c.c",
+      "src/game/actors/Exit/_ZN4Exit16CleanupResourcesEv.cpp",
+      "src/game/actors/Exit/_ZN4Exit16OnPendingDestroyEv.cpp",
+      "src/game/actors/Exit/_ZN4Exit6RenderEv.cpp",
+      "src/game/actors/Exit/_ZN4Exit8BehaviorEv.cpp",
+      "src/game/actors/Exit/_ZN4Exit13InitResourcesEv.cpp",
+      "src/game/actors/Exit/Exit_Spawn.c"
     ],
     "extraInertImports": 76,
     "extraImportsWithNoHome": [],

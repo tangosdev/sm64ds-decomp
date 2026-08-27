@@ -172,7 +172,7 @@ an unindented path ending in `:`, followed by indented lines:
 ```text
     .text       start:0x02004000 end:0x020736f4 kind:code align:32
     ...
-src/AngleDiff.c:
+src/runtime/math/AngleDiff.c:
     complete
     .text start:0x0203b0e8 end:0x0203b0fc
 ```
@@ -268,7 +268,7 @@ show up as a failure here.
 
 `AngleDiff` is a verified-good pick: `config/arm9/symbols.txt:1513`
 (`kind:function(arm,size=0x14) addr:0x0203b0e8`), the next symbol is exactly adjacent at
-`0x0203b0fc`, `src/AngleDiff.c` is pure ALU with no literal pool, no data and no calls,
+`0x0203b0fc`, `src/runtime/math/AngleDiff.c` is pure ALU with no literal pool, no data and no calls,
 and zero relocations originate inside it.
 
 1. Add its file entry (with `complete`) to `config/arm9/delinks.txt`.

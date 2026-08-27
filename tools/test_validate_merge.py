@@ -125,7 +125,7 @@ class ValidateMerge(unittest.TestCase):
         # the downgrade, or every PR that so much as renames a declared draft
         # fails on a non-reproduction the gate already excused.
         state = VM._link_state([{
-            "file": "src/_ZN5Model27LoadCompressedTextureToVramEPcjS0_.cpp",
+            "file": "src/runtime/graphics/Model/_ZN5Model27LoadCompressedTextureToVramEPcjS0_.cpp",
             "worst": "DRAFT",
             "results": [{"sym": "_ZN5Model27LoadCompressedTextureToVramEPcjS0_",
                          "verdict": "NO-REPRO"}],

@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020f0894  src/_ZN6NumberD1Ev.cpp
+ *   [0] 0x020f0894  src/game/actors/Number/_ZN6NumberD1Ev.cpp
  *   [1] 0x020f08cc  src/_ZN6NumberD0Ev.c
- *   [2] 0x020f0918  src/func_ov002_020f0918.c
- *   [3] 0x020f093c  src/_ZN6Number16CleanupResourcesEv.cpp
- *   [4] 0x020f0994  src/_ZN6Number6RenderEv.cpp
- *   [5] 0x020f0a60  src/_ZN6Number8BehaviorEv.cpp
- *   [6] 0x020f0bd4  src/_ZN6Number13InitResourcesEv.cpp
- *   [7] 0x020f0d90  src/Number_Spawn.c
+ *   [2] 0x020f0918  src/unnamed/ov002/020f/func_ov002_020f0918.c
+ *   [3] 0x020f093c  src/game/actors/Number/_ZN6Number16CleanupResourcesEv.cpp
+ *   [4] 0x020f0994  src/game/actors/Number/_ZN6Number6RenderEv.cpp
+ *   [5] 0x020f0a60  src/game/actors/Number/_ZN6Number8BehaviorEv.cpp
+ *   [6] 0x020f0bd4  src/game/actors/Number/_ZN6Number13InitResourcesEv.cpp
+ *   [7] 0x020f0d90  src/game/actors/Number/Number_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

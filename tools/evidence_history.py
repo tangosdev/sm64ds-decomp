@@ -381,7 +381,7 @@ def find_definition(code, stem):
 def find_method_definition(code, cls_last, method):
     """Find `Class::Method(...) { ... }` -- the already-real-C++ files.
 
-    src/_ZN13ExpandingHeap9VAllocateEji.cpp is written as
+    src/runtime/memory/ExpandingHeap/_ZN13ExpandingHeap9VAllocateEji.cpp is written as
     `void* ExpandingHeap::VAllocate(u32 size, int align)`, so there is no explicit
     `this` parameter at all and members are bare identifiers.
     """
@@ -655,7 +655,7 @@ _ALIAS_RE = re.compile(
 def find_aliases(body, bases):
     """Locals that provably still hold `this`, e.g. `unsigned char *c = (unsigned char *)thiz;`.
 
-    Only single-assignment aliases qualify.  src/_ZN10ChainChomp13InitResourcesEv.cpp
+    Only single-assignment aliases qualify.  src/game/actors/ChainChomp/_ZN10ChainChomp13InitResourcesEv.cpp
     is the reason both halves of that rule matter: it aliases `thiz` to `c`
     (keep), but it also walks `unsigned char *dst = c;` forward with `dst = dst + 0xc`
     inside a loop (drop -- after one iteration `dst + 0x524` is no longer a field of

@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [8] 0x020b04e8  src/_ZN11dScMgBase_c16OnPendingDestroyEv.cpp
- *   [9] 0x020b04ec  src/_ZN11dScMgBase_c6RenderEv.cpp
- *   [10] 0x020b04f4  src/_ZN11dScMgBase_c12BeforeRenderEv.cpp
- *   [11] 0x020b0618  src/_ZN11dScMgBase_c8BehaviorEv.cpp
- *   [12] 0x020b0620  src/_ZN11dScMgBase_c14BeforeBehaviorEv.cpp
- *   [13] 0x020b0840  src/_ZN11dScMgBase_c21AfterCleanupResourcesEj.cpp
- *   [14] 0x020b08f0  src/_ZN11dScMgBase_c18AfterInitResourcesEj.cpp
- *   [15] 0x020b0930  src/_ZN11dScMgBase_c19BeforeInitResourcesEv.cpp
+ *   [8] 0x020b04e8  src/minigames/dScMgBase_c/_ZN11dScMgBase_c16OnPendingDestroyEv.cpp
+ *   [9] 0x020b04ec  src/minigames/dScMgBase_c/_ZN11dScMgBase_c6RenderEv.cpp
+ *   [10] 0x020b04f4  src/minigames/dScMgBase_c/_ZN11dScMgBase_c12BeforeRenderEv.cpp
+ *   [11] 0x020b0618  src/minigames/dScMgBase_c/_ZN11dScMgBase_c8BehaviorEv.cpp
+ *   [12] 0x020b0620  src/minigames/dScMgBase_c/_ZN11dScMgBase_c14BeforeBehaviorEv.cpp
+ *   [13] 0x020b0840  src/minigames/dScMgBase_c/_ZN11dScMgBase_c21AfterCleanupResourcesEj.cpp
+ *   [14] 0x020b08f0  src/minigames/dScMgBase_c/_ZN11dScMgBase_c18AfterInitResourcesEj.cpp
+ *   [15] 0x020b0930  src/minigames/dScMgBase_c/_ZN11dScMgBase_c19BeforeInitResourcesEv.cpp
  */
 
 /* TUBUILD WARNING -- #pragma directive(s) were present in the legacy
@@ -43,7 +43,7 @@
 
 /* FILE-GLOBAL, and deliberately so: the last state set anywhere applies to
    every function in the TU. Carried over from
-   src/_ZN11dScMgBase_c14BeforeBehaviorEv.cpp, the only member of the real
+   src/minigames/dScMgBase_c/_ZN11dScMgBase_c14BeforeBehaviorEv.cpp, the only member of the real
    0x020b04e8..0x020b2adc run that had one. */
 #pragma opt_strength_reduction off
 

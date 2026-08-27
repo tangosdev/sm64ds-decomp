@@ -4,170 +4,170 @@
     .ctor       start:0x021373b4 end:0x021373bc kind:rodata align:4
     .data       start:0x021373c0 end:0x02137780 kind:data align:32
     .bss        start:0x02137780 end:0x02137940 kind:bss align:32
-src/_ZN9SeesawBobD1Ev.cpp:
+src/game/actors/SeesawBob/_ZN9SeesawBobD1Ev.cpp:
     complete
     .text start:0x02135700 end:0x02135744
 
-src/_ZN9SeesawBobD0Ev.cpp:
+src/game/actors/SeesawBob/_ZN9SeesawBobD0Ev.cpp:
     complete
     .text start:0x02135744 end:0x0213579c
 
-src/func_ov095_0213579c.c:
+src/unnamed/ov095/0213/func_ov095_0213579c.c:
     complete
     .text start:0x0213579c end:0x021357d8
 
-src/_ZN9SeesawBob15OnGroundPoundedER8dActor_c.cpp:
+src/game/actors/SeesawBob/_ZN9SeesawBob15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x021357d8 end:0x021358cc
 
-src/func_ov095_021358cc.c:
+src/unnamed/ov095/0213/func_ov095_021358cc.c:
     complete
     .text start:0x021358cc end:0x0213597c
 
-src/func_ov095_0213597c.c:
+src/unnamed/ov095/0213/func_ov095_0213597c.c:
     complete
     .text start:0x0213597c end:0x021359c4
 
-src/_ZN9SeesawBob16CleanupResourcesEv.cpp:
+src/game/actors/SeesawBob/_ZN9SeesawBob16CleanupResourcesEv.cpp:
     complete
     .text start:0x021359c4 end:0x02135a28
 
-src/_ZN9SeesawBob6RenderEv.cpp:
+src/game/actors/SeesawBob/_ZN9SeesawBob6RenderEv.cpp:
     complete
     .text start:0x02135a28 end:0x02135a50
 
-src/_ZN9SeesawBob8BehaviorEv.cpp:
+src/game/actors/SeesawBob/_ZN9SeesawBob8BehaviorEv.cpp:
     complete
     .text start:0x02135a50 end:0x02135b74
 
-src/_ZN9SeesawBob13InitResourcesEv.cpp:
+src/game/actors/SeesawBob/_ZN9SeesawBob13InitResourcesEv.cpp:
     complete
     .text start:0x02135b74 end:0x02135cdc
 
-src/func_ov095_02135cdc.c:
+src/unnamed/ov095/0213/func_ov095_02135cdc.c:
     complete
     .text start:0x02135cdc end:0x02135e90
 
-src/func_ov095_02135e90.c:
+src/unnamed/ov095/0213/func_ov095_02135e90.c:
     complete
     .text start:0x02135e90 end:0x02135ea4
 
-src/SeesawRr_Spawn.c:
+src/game/actors/SeesawRr/SeesawRr_Spawn.c:
     complete
     .text start:0x02135ea4 end:0x02135ed4
 
-src/SeesawBsZigZag_Spawn.c:
+src/game/actors/SeesawBsZigZag/SeesawBsZigZag_Spawn.c:
     complete
     .text start:0x02135ed4 end:0x02135f04
 
-src/SeesawBsPlank_Spawn.c:
+src/game/actors/SeesawBsPlank/SeesawBsPlank_Spawn.c:
     complete
     .text start:0x02135f04 end:0x02135f34
 
-src/SeesawBfs_Spawn.c:
+src/game/actors/SeesawBfs/SeesawBfs_Spawn.c:
     complete
     .text start:0x02135f34 end:0x02135f64
 
-src/SeesawBdw_Spawn.c:
+src/game/actors/SeesawBdw/SeesawBdw_Spawn.c:
     complete
     .text start:0x02135f64 end:0x02135f94
 
-src/SeesawBob_Spawn.c:
+src/game/actors/SeesawBob/SeesawBob_Spawn.c:
     complete
     .text start:0x02135f94 end:0x02135fc4
 
-src/SeesawUtm_Spawn.c:
+src/game/actors/SeesawUtm/SeesawUtm_Spawn.c:
     complete
     .text start:0x02135fc4 end:0x02135ff4
 
-src/_ZN13UpDownLiftBbhD1Ev.c:
+src/game/actors/UpDownLiftBbh/_ZN13UpDownLiftBbhD1Ev.c:
     complete
     .text start:0x02135ff4 end:0x02136038
 
-src/_ZN13UpDownLiftBbhD0Ev.c:
+src/game/actors/UpDownLiftBbh/_ZN13UpDownLiftBbhD0Ev.c:
     complete
     .text start:0x02136038 end:0x02136090
 
-src/func_ov095_02136090.cpp:
+src/unnamed/ov095/0213/func_ov095_02136090.cpp:
     complete
     .text start:0x02136090 end:0x02136104
 
-src/func_ov095_02136104.cpp:
+src/unnamed/ov095/0213/func_ov095_02136104.cpp:
     complete
     .text start:0x02136104 end:0x02136178
 
-src/func_ov095_02136178.c:
+src/unnamed/ov095/0213/func_ov095_02136178.c:
     complete
     .text start:0x02136178 end:0x02136298
 
-src/func_ov095_02136298.cpp:
+src/unnamed/ov095/0213/func_ov095_02136298.cpp:
     complete
     .text start:0x02136298 end:0x02136368
 
-src/func_ov095_02136368.c:
+src/unnamed/ov095/0213/func_ov095_02136368.c:
     complete
     .text start:0x02136368 end:0x0213645c
 
-src/_ZN13UpDownLiftBbh16CleanupResourcesEv.cpp:
+src/game/actors/UpDownLiftBbh/_ZN13UpDownLiftBbh16CleanupResourcesEv.cpp:
     complete
     .text start:0x0213645c end:0x021364b0
 
-src/_ZN13UpDownLiftBbh6RenderEv.cpp:
+src/game/actors/UpDownLiftBbh/_ZN13UpDownLiftBbh6RenderEv.cpp:
     complete
     .text start:0x021364b0 end:0x021364d8
 
-src/_ZN13UpDownLiftBbh8BehaviorEv.cpp:
+src/game/actors/UpDownLiftBbh/_ZN13UpDownLiftBbh8BehaviorEv.cpp:
     complete
     .text start:0x021364d8 end:0x021365d8
 
-src/_ZN13UpDownLiftBbh13InitResourcesEv.cpp:
+src/game/actors/UpDownLiftBbh/_ZN13UpDownLiftBbh13InitResourcesEv.cpp:
     complete
     .text start:0x021365d8 end:0x02136764
 
-src/func_ov095_02136764.cpp:
+src/unnamed/ov095/0213/func_ov095_02136764.cpp:
     complete
     .text start:0x02136764 end:0x02136788
 
-src/func_ov095_02136788.c:
+src/unnamed/ov095/0213/func_ov095_02136788.c:
     complete
     .text start:0x02136788 end:0x0213679c
 
-src/UpDownLiftRr_Spawn.c:
+src/game/actors/UpDownLiftRr/UpDownLiftRr_Spawn.c:
     complete
     .text start:0x0213679c end:0x021367cc
 
-src/UpDownLiftHmc_Spawn.c:
+src/game/actors/UpDownLiftHmc/UpDownLiftHmc_Spawn.c:
     complete
     .text start:0x021367cc end:0x021367fc
 
-src/UpDownLiftBbh_Spawn.c:
+src/game/actors/UpDownLiftBbh/UpDownLiftBbh_Spawn.c:
     complete
     .text start:0x021367fc end:0x0213682c
 
-src/_ZN12FlamethrowerD1Ev.cpp:
+src/game/actors/Flamethrower/_ZN12FlamethrowerD1Ev.cpp:
     complete
     .text start:0x0213682c end:0x02136884
 
-src/_ZN12FlamethrowerD0Ev.cpp:
+src/game/actors/Flamethrower/_ZN12FlamethrowerD0Ev.cpp:
     complete
     .text start:0x02136884 end:0x021368f0
 
-src/_ZN12Flamethrower8BehaviorEv.cpp:
+src/game/actors/Flamethrower/_ZN12Flamethrower8BehaviorEv.cpp:
     complete
     .text start:0x021368f0 end:0x02136d60
 
-src/_ZN12Flamethrower13InitResourcesEv.cpp:
+src/game/actors/Flamethrower/_ZN12Flamethrower13InitResourcesEv.cpp:
     complete
     .text start:0x02136d60 end:0x02136ed4
 
-src/Flamethrower_Spawn.cpp:
+src/game/actors/Flamethrower/Flamethrower_Spawn.cpp:
     complete
     .text start:0x02136ed4 end:0x02136f58
 
-src/__sinit_ov095_02136fe0.c:
+src/unnamed/ov095/0213/__sinit_ov095_02136fe0.c:
     complete
     .init start:0x02136fe0 end:0x0213722c
 
-src/__sinit_ov095_0213722c.c:
+src/unnamed/ov095/0213/__sinit_ov095_0213722c.c:
     complete
     .init start:0x0213722c end:0x021373b4

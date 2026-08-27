@@ -433,7 +433,7 @@ def _definition_symbols(rel, rows):
     """Collapse owned records only for one exact legacy outer-owner alias shape.
 
     Some ROM functions contain independently named entry points.  The concrete case
-    is ``src/func_01ff97d8.c``: one 0xb6c outer function owns the complete range while
+    is ``src/unnamed/arm9/01ff/func_01ff97d8.c``: one 0xb6c outer function owns the complete range while
     four nonzero function records partition its interior.  Those records are useful
     address/ownership aliases, but mwcc emits only the outer definition.  Treating the
     five records as a consolidated TU would make the exact object fail with four

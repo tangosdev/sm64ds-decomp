@@ -116,7 +116,7 @@ Wall-clock ESTIMATES ONLY (no builds were run this pass): Tier-1 create+compile 
 
 ## 9. Known inert-marker violators (report, do NOT tidy)
 
-`//cpp` must be the FIRST BYTES; an `#include` above it makes it inert. In the positive pool: `src/_ZN7dWipe_c15SetBackwardTimeEj.c`, `src/func_0204322c.c`, `src/func_ov075_0211b1cc.c`.
+`//cpp` must be the FIRST BYTES; an `#include` above it makes it inert. In the positive pool: `src/game/actors/dWipe_c/_ZN7dWipe_c15SetBackwardTimeEj.c`, `src/unnamed/arm9/0204/func_0204322c.c`, `src/unnamed/ov075/0211/func_ov075_0211b1cc.c`.
 
 Also: 113 `.c` files tree-wide are absent from `delinks.txt` and therefore INVISIBLE to the byte gates. 190 `.cpp` files still hand-spell their own mangled symbol (separate debt, not part of this).
 

@@ -4,190 +4,190 @@
     .ctor       start:0x02113768 end:0x02113770 kind:rodata align:4
     .data       start:0x02113780 end:0x02114aa0 kind:data align:32
     .bss        start:0x02114aa0 end:0x02114b20 kind:bss align:32
-src/_ZN8BookShotD1Ev.cpp:
+src/game/actors/BookShot/_ZN8BookShotD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111f0
 
-src/_ZN8BookShotD0Ev.cpp:
+src/game/actors/BookShot/_ZN8BookShotD0Ev.cpp:
     complete
     .text start:0x021111f0 end:0x02111254
 
-src/_ZN15BookShotSpawnerD1Ev.cpp:
+src/game/actors/BookShotSpawner/_ZN15BookShotSpawnerD1Ev.cpp:
     complete
     .text start:0x02111254 end:0x02111278
 
-src/_ZN15BookShotSpawnerD0Ev.cpp:
+src/game/actors/BookShotSpawner/_ZN15BookShotSpawnerD0Ev.cpp:
     complete
     .text start:0x02111278 end:0x021112b0
 
-src/func_ov020_021112b0.c:
+src/unnamed/ov020/0211/func_ov020_021112b0.c:
     complete
     .text start:0x021112b0 end:0x02111340
 
-src/func_ov020_02111340.c:
+src/unnamed/ov020/0211/func_ov020_02111340.c:
     complete
     .text start:0x02111340 end:0x02111418
 
-src/func_ov020_02111418.cpp:
+src/unnamed/ov020/0211/func_ov020_02111418.cpp:
     complete
     .text start:0x02111418 end:0x021115ac
 
-src/func_ov020_021115ac.c:
+src/unnamed/ov020/0211/func_ov020_021115ac.c:
     complete
     .text start:0x021115ac end:0x0211174c
 
-src/func_ov020_0211174c.c:
+src/unnamed/ov020/0211/func_ov020_0211174c.c:
     complete
     .text start:0x0211174c end:0x021119dc
 
-src/func_ov020_021119dc.c:
+src/unnamed/ov020/0211/func_ov020_021119dc.c:
     complete
     .text start:0x021119dc end:0x02111aa8
 
-src/func_ov020_02111aa8.c:
+src/unnamed/ov020/0211/func_ov020_02111aa8.c:
     complete
     .text start:0x02111aa8 end:0x02111b28
 
-src/func_ov020_02111b28.cpp:
+src/unnamed/ov020/0211/func_ov020_02111b28.cpp:
     complete
     .text start:0x02111b28 end:0x02111c30
 
-src/func_ov020_02111c30.c:
+src/unnamed/ov020/0211/func_ov020_02111c30.c:
     complete
     .text start:0x02111c30 end:0x02111ee0
 
-src/func_ov020_02111ee0.cpp:
+src/unnamed/ov020/0211/func_ov020_02111ee0.cpp:
     complete
     .text start:0x02111ee0 end:0x02111fc4
 
-src/func_ov020_02111fc4.cpp:
+src/unnamed/ov020/0211/func_ov020_02111fc4.cpp:
     complete
     .text start:0x02111fc4 end:0x02112080
 
-src/func_ov020_02112080.cpp:
+src/unnamed/ov020/0211/func_ov020_02112080.cpp:
     complete
     .text start:0x02112080 end:0x02112110
 
-src/func_ov020_02112110.cpp:
+src/unnamed/ov020/0211/func_ov020_02112110.cpp:
     complete
     .text start:0x02112110 end:0x0211216c
 
-src/func_ov020_0211216c.cpp:
+src/unnamed/ov020/0211/func_ov020_0211216c.cpp:
     complete
     .text start:0x0211216c end:0x02112244
 
-src/_ZN8BookShot16CleanupResourcesEv.cpp:
+src/game/actors/BookShot/_ZN8BookShot16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112244 end:0x02112290
 
-src/_ZN15BookShotSpawner16CleanupResourcesEv.cpp:
+src/game/actors/BookShotSpawner/_ZN15BookShotSpawner16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112290 end:0x021122c4
 
-src/_ZN8BookShot6RenderEv.cpp:
+src/game/actors/BookShot/_ZN8BookShot6RenderEv.cpp:
     complete
     .text start:0x021122c4 end:0x0211233c
 
-src/_ZN8BookShot8BehaviorEv.cpp:
+src/game/actors/BookShot/_ZN8BookShot8BehaviorEv.cpp:
     complete
     .text start:0x0211233c end:0x02112418
 
-src/_ZN15BookShotSpawner8BehaviorEv.cpp:
+src/game/actors/BookShotSpawner/_ZN15BookShotSpawner8BehaviorEv.cpp:
     complete
     .text start:0x02112418 end:0x021124e4
 
-src/_ZN8BookShot13InitResourcesEv.cpp:
+src/game/actors/BookShot/_ZN8BookShot13InitResourcesEv.cpp:
     complete
     .text start:0x021124e4 end:0x02112768
 
-src/_ZN15BookShotSpawner13InitResourcesEv.cpp:
+src/game/actors/BookShotSpawner/_ZN15BookShotSpawner13InitResourcesEv.cpp:
     complete
     .text start:0x02112768 end:0x021127a4
 
-src/_ZN8BookShot16OnAimedAtWithEggEv.cpp:
+src/game/actors/BookShot/_ZN8BookShot16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021127a4 end:0x021127cc
 
-src/_ZN8BookShot13OnYoshiTryEatEv.cpp:
+src/game/actors/BookShot/_ZN8BookShot13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x021127cc end:0x021127f4
 
-src/func_ov020_021127f4.c:
+src/unnamed/ov020/0211/func_ov020_021127f4.c:
     complete
     .text start:0x021127f4 end:0x02112850
 
-src/BookShotSpawner_Spawn.c:
+src/game/actors/BookShotSpawner/BookShotSpawner_Spawn.c:
     complete
     .text start:0x02112850 end:0x02112880
 
-src/Bookend_Spawn.c:
+src/game/actors/Bookend/Bookend_Spawn.c:
     complete
     .text start:0x02112880 end:0x021128dc
 
-src/BookShot_Spawn.c:
+src/game/actors/BookShot/BookShot_Spawn.c:
     complete
     .text start:0x021128dc end:0x02112938
 
-src/_ZN12HauntedChairD1Ev.cpp:
+src/game/actors/HauntedChair/_ZN12HauntedChairD1Ev.cpp:
     complete
     .text start:0x02112938 end:0x02112980
 
-src/_ZN12HauntedChairD0Ev.cpp:
+src/game/actors/HauntedChair/_ZN12HauntedChairD0Ev.cpp:
     complete
     .text start:0x02112980 end:0x021129dc
 
-src/_ZN12HauntedChair6State3Ev.cpp:
+src/game/actors/HauntedChair/_ZN12HauntedChair6State3Ev.cpp:
     complete
     .text start:0x021129dc end:0x02112b00
 
-src/_ZN12HauntedChair6State2Ev.cpp:
+src/game/actors/HauntedChair/_ZN12HauntedChair6State2Ev.cpp:
     complete
     .text start:0x02112b00 end:0x02112e94
 
-src/_ZN12HauntedChair6State1Ev.cpp:
+src/game/actors/HauntedChair/_ZN12HauntedChair6State1Ev.cpp:
     complete
     .text start:0x02112e94 end:0x021130c8
 
-src/_ZN12HauntedChair6State0Ev.cpp:
+src/game/actors/HauntedChair/_ZN12HauntedChair6State0Ev.cpp:
     complete
     .text start:0x021130c8 end:0x02113148
 
-src/_ZN12HauntedChair18ApproachStateValueEPsS0_isis.cpp:
+src/game/actors/HauntedChair/_ZN12HauntedChair18ApproachStateValueEPsS0_isis.cpp:
     complete
     .text start:0x02113148 end:0x021131f8
 
-src/_ZN12HauntedChair5BreakEv.cpp:
+src/game/actors/HauntedChair/_ZN12HauntedChair5BreakEv.cpp:
     complete
     .text start:0x021131f8 end:0x02113240
 
-src/_ZN12HauntedChair11UpdateModelEv.cpp:
+src/game/actors/HauntedChair/_ZN12HauntedChair11UpdateModelEv.cpp:
     complete
     .text start:0x02113240 end:0x021132d8
 
-src/_ZN12HauntedChair16CleanupResourcesEv.cpp:
+src/game/actors/HauntedChair/_ZN12HauntedChair16CleanupResourcesEv.cpp:
     complete
     .text start:0x021132d8 end:0x021132fc
 
-src/_ZN12HauntedChair6RenderEv.cpp:
+src/game/actors/HauntedChair/_ZN12HauntedChair6RenderEv.cpp:
     complete
     .text start:0x021132fc end:0x02113324
 
-src/_ZN12HauntedChair8BehaviorEv.cpp:
+src/game/actors/HauntedChair/_ZN12HauntedChair8BehaviorEv.cpp:
     complete
     .text start:0x02113324 end:0x021133b0
 
-src/_ZN12HauntedChair13InitResourcesEv.cpp:
+src/game/actors/HauntedChair/_ZN12HauntedChair13InitResourcesEv.cpp:
     complete
     .text start:0x021133b0 end:0x02113494
 
-src/HauntedChair_Spawn.c:
+src/game/actors/HauntedChair/HauntedChair_Spawn.c:
     complete
     .text start:0x02113494 end:0x021134e4
 
-src/__sinit_ov020_02113674.c:
+src/unnamed/ov020/0211/__sinit_ov020_02113674.c:
     complete
     .init start:0x02113674 end:0x0211372c
 
-src/__sinit_ov020_0211372c.c:
+src/unnamed/ov020/0211/__sinit_ov020_0211372c.c:
     complete
     .init start:0x0211372c end:0x02113768

@@ -22,154 +22,154 @@
       "symbol": "_ZN7HeaveHoD1Ev",
       "address": "0x0212624c",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN7HeaveHoD1Ev.cpp",
+      "legacy_source": "src/game/actors/HeaveHo/_ZN7HeaveHoD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN7HeaveHoD0Ev",
       "address": "0x0212629c",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN7HeaveHoD0Ev.cpp",
+      "legacy_source": "src/game/actors/HeaveHo/_ZN7HeaveHoD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "func_ov077_02126300",
       "address": "0x02126300",
       "size": "0x00000228",
-      "legacy_source": "src/func_ov077_02126300.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02126300.c",
       "ordinal": 2
     },
     {
       "symbol": "func_ov077_02126528",
       "address": "0x02126528",
       "size": "0x00000118",
-      "legacy_source": "src/func_ov077_02126528.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02126528.cpp",
       "ordinal": 3
     },
     {
       "symbol": "func_ov077_02126640",
       "address": "0x02126640",
       "size": "0x00000118",
-      "legacy_source": "src/func_ov077_02126640.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02126640.cpp",
       "ordinal": 4
     },
     {
       "symbol": "func_ov077_02126758",
       "address": "0x02126758",
       "size": "0x00000044",
-      "legacy_source": "src/func_ov077_02126758.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02126758.cpp",
       "ordinal": 5
     },
     {
       "symbol": "func_ov077_0212679c",
       "address": "0x0212679c",
       "size": "0x00000194",
-      "legacy_source": "src/func_ov077_0212679c.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_0212679c.c",
       "ordinal": 6
     },
     {
       "symbol": "func_ov077_02126930",
       "address": "0x02126930",
       "size": "0x00000078",
-      "legacy_source": "src/func_ov077_02126930.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02126930.cpp",
       "ordinal": 7
     },
     {
       "symbol": "func_ov077_021269a8",
       "address": "0x021269a8",
       "size": "0x0000005c",
-      "legacy_source": "src/func_ov077_021269a8.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_021269a8.cpp",
       "ordinal": 8
     },
     {
       "symbol": "func_ov077_02126a04",
       "address": "0x02126a04",
       "size": "0x0000004c",
-      "legacy_source": "src/func_ov077_02126a04.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02126a04.c",
       "ordinal": 9
     },
     {
       "symbol": "func_ov077_02126a50",
       "address": "0x02126a50",
       "size": "0x00000034",
-      "legacy_source": "src/func_ov077_02126a50.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02126a50.c",
       "ordinal": 10
     },
     {
       "symbol": "func_ov077_02126a84",
       "address": "0x02126a84",
       "size": "0x0000004c",
-      "legacy_source": "src/func_ov077_02126a84.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02126a84.c",
       "ordinal": 11
     },
     {
       "symbol": "func_ov077_02126ad0",
       "address": "0x02126ad0",
       "size": "0x00000204",
-      "legacy_source": "src/func_ov077_02126ad0.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02126ad0.c",
       "ordinal": 12
     },
     {
       "symbol": "func_ov077_02126cd4",
       "address": "0x02126cd4",
       "size": "0x00000088",
-      "legacy_source": "src/func_ov077_02126cd4.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02126cd4.cpp",
       "ordinal": 13
     },
     {
       "symbol": "func_ov077_02126d5c",
       "address": "0x02126d5c",
       "size": "0x00000050",
-      "legacy_source": "src/func_ov077_02126d5c.cpp",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02126d5c.cpp",
       "ordinal": 14
     },
     {
       "symbol": "func_ov077_02126dac",
       "address": "0x02126dac",
       "size": "0x00000040",
-      "legacy_source": "src/func_ov077_02126dac.c",
+      "legacy_source": "src/unnamed/ov077/0212/func_ov077_02126dac.c",
       "ordinal": 15
     },
     {
       "symbol": "_ZN7HeaveHo16CleanupResourcesEv",
       "address": "0x02126dec",
       "size": "0x00000048",
-      "legacy_source": "src/_ZN7HeaveHo16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/HeaveHo/_ZN7HeaveHo16CleanupResourcesEv.cpp",
       "ordinal": 16
     },
     {
       "symbol": "_ZN7HeaveHo16OnPendingDestroyEv",
       "address": "0x02126e34",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN7HeaveHo16OnPendingDestroyEv.cpp",
+      "legacy_source": "src/game/actors/HeaveHo/_ZN7HeaveHo16OnPendingDestroyEv.cpp",
       "ordinal": 17
     },
     {
       "symbol": "_ZN7HeaveHo6RenderEv",
       "address": "0x02126e38",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN7HeaveHo6RenderEv.cpp",
+      "legacy_source": "src/game/actors/HeaveHo/_ZN7HeaveHo6RenderEv.cpp",
       "ordinal": 18
     },
     {
       "symbol": "_ZN7HeaveHo8BehaviorEv",
       "address": "0x02126e88",
       "size": "0x000001e4",
-      "legacy_source": "src/_ZN7HeaveHo8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/HeaveHo/_ZN7HeaveHo8BehaviorEv.cpp",
       "ordinal": 19
     },
     {
       "symbol": "_ZN7HeaveHo13InitResourcesEv",
       "address": "0x0212706c",
       "size": "0x00000168",
-      "legacy_source": "src/_ZN7HeaveHo13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/HeaveHo/_ZN7HeaveHo13InitResourcesEv.cpp",
       "ordinal": 20
     },
     {
       "symbol": "HeaveHo_Spawn",
       "address": "0x021271d4",
       "size": "0x0000005c",
-      "legacy_source": "src/HeaveHo_Spawn.c",
+      "legacy_source": "src/game/actors/HeaveHo/HeaveHo_Spawn.c",
       "ordinal": 21
     }
   ],

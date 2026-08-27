@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x0211af38  src/_ZN9KoopaFlagD1Ev.cpp
+ *   [0] 0x0211af38  src/game/actors/KoopaFlag/_ZN9KoopaFlagD1Ev.cpp
  *   [1] 0x0211af70  src/_ZN9KoopaFlagD0Ev.c
- *   [2] 0x0211afbc  src/func_ov062_0211afbc.c
+ *   [2] 0x0211afbc  src/unnamed/ov062/0211/func_ov062_0211afbc.c
  *   [3] 0x0211b000  src/_ZN9KoopaFlag16CleanupResourcesEv.c
- *   [4] 0x0211b030  src/_ZN9KoopaFlag6RenderEv.cpp
- *   [5] 0x0211b05c  src/_ZN9KoopaFlag8BehaviorEv.cpp
- *   [6] 0x0211b168  src/_ZN9KoopaFlag13InitResourcesEv.cpp
- *   [7] 0x0211b208  src/KoopaFlag_Spawn.c
+ *   [4] 0x0211b030  src/game/actors/KoopaFlag/_ZN9KoopaFlag6RenderEv.cpp
+ *   [5] 0x0211b05c  src/game/actors/KoopaFlag/_ZN9KoopaFlag8BehaviorEv.cpp
+ *   [6] 0x0211b168  src/game/actors/KoopaFlag/_ZN9KoopaFlag13InitResourcesEv.cpp
+ *   [7] 0x0211b208  src/game/actors/KoopaFlag/KoopaFlag_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

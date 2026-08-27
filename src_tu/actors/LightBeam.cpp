@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021119d0  src/_ZN9LightBeamD1Ev.cpp
+ *   [0] 0x021119d0  src/game/actors/LightBeam/_ZN9LightBeamD1Ev.cpp
  *   [1] 0x02111a08  src/_ZN9LightBeamD0Ev.c
- *   [2] 0x02111a54  src/func_ov010_02111a54.c
+ *   [2] 0x02111a54  src/unnamed/ov010/0211/func_ov010_02111a54.c
  *   [3] 0x02111a94  src/_ZN9LightBeam16CleanupResourcesEv.c
- *   [4] 0x02111ab8  src/_ZN9LightBeam6RenderEv.cpp
- *   [5] 0x02111ae0  src/_ZN9LightBeam8BehaviorEv.cpp
- *   [6] 0x02111d20  src/_ZN9LightBeam13InitResourcesEv.cpp
- *   [7] 0x02111dd0  src/LightBeam_Spawn.c
+ *   [4] 0x02111ab8  src/game/actors/LightBeam/_ZN9LightBeam6RenderEv.cpp
+ *   [5] 0x02111ae0  src/game/actors/LightBeam/_ZN9LightBeam8BehaviorEv.cpp
+ *   [6] 0x02111d20  src/game/actors/LightBeam/_ZN9LightBeam13InitResourcesEv.cpp
+ *   [7] 0x02111dd0  src/game/actors/LightBeam/LightBeam_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

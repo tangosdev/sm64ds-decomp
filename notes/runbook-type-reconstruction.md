@@ -70,7 +70,7 @@ division.** Genuinely inert changes: renaming a field, a typedef alias (`Fix12i`
 The generated width is the width of the access matched code happened to make, not the
 field's real width. `include/ChainChomp.h` *used to* declare `u8 mScaleX; /* 0x080 */` where
 `include/dActor_c.h:106` -- de-bannered, hand-reconstructed -- declares `s32 mScaleX` at the
-same offset, and `src/_ZN10ChainChomp13InitResourcesEv.cpp` settles it by writing
+same offset, and `src/game/actors/ChainChomp/_ZN10ChainChomp13InitResourcesEv.cpp` settles it by writing
 `*(int *)(c + 0x80) = 0x1000;`. The derived header was the wrong one.
 
 *(Re-checked 2026-08-21: this particular conflict has since been fixed -- `ChainChomp.h:68`
@@ -232,7 +232,7 @@ fader vtables out of `extracted/arm9_dec.bin` shows 10 slots each with Fader's s
 reconstructed, hierarchy not. Treat "this header looks finished" as a hypothesis and
 check the ROM's own vtable before building on it.
 
-**Rung 2 -- unmigrated function** (`src/_ZN10BrickBlockD0Ev.cpp`, today):
+**Rung 2 -- unmigrated function** (`src/game/actors/BrickBlock/_ZN10BrickBlockD0Ev.cpp`, today):
 
 ```c
 int *_ZN10BrickBlockD0Ev(int *t)
@@ -246,7 +246,7 @@ int *_ZN10BrickBlockD0Ev(int *t)
 
 `this` is an `int*`, members are array indices, the symbol name is spelled by hand.
 
-**Rung 3 -- migrated function** (`src/engine/fader/_ZN5Fader13AdvanceInterpEv.cpp`, done):
+**Rung 3 -- migrated function** (`src/runtime/graphics/fader/_ZN5Fader13AdvanceInterpEv.cpp`, done):
 
 ```c
 //cpp
@@ -281,7 +281,7 @@ declaration.
 Nothing merges and nothing accumulates. The binding is one line in a generated file:
 
 ```sh
-src/engine/fader/_ZN5Fader13AdvanceInterpEv.cpp:
+src/runtime/graphics/fader/_ZN5Fader13AdvanceInterpEv.cpp:
     complete
     .text start:0x020175e8 end:0x02017610
 ```

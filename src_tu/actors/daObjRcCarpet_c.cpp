@@ -16,15 +16,15 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02112158  src/_ZN15daObjRcCarpet_cD1Ev.cpp
- *   [1] 0x021121c8  src/_ZN15daObjRcCarpet_cD0Ev.cpp
- *   [2] 0x0211224c  src/func_ov036_0211224c.cpp
- *   [3] 0x021122c0  src/func_ov036_021122c0.cpp
- *   [4] 0x02112318  src/_ZN15daObjRcCarpet_c16CleanupResourcesEv.cpp
- *   [5] 0x02112378  src/_ZN15daObjRcCarpet_c6RenderEv.cpp
- *   [6] 0x021123c8  src/_ZN15daObjRcCarpet_c8BehaviorEv.cpp
- *   [7] 0x0211244c  src/_ZN15daObjRcCarpet_c13InitResourcesEv.cpp
- *   [8] 0x02112538  src/FlyingCarpet_Spawn.cpp
+ *   [0] 0x02112158  src/game/actors/daObjRcCarpet_c/_ZN15daObjRcCarpet_cD1Ev.cpp
+ *   [1] 0x021121c8  src/game/actors/daObjRcCarpet_c/_ZN15daObjRcCarpet_cD0Ev.cpp
+ *   [2] 0x0211224c  src/unnamed/ov036/0211/func_ov036_0211224c.cpp
+ *   [3] 0x021122c0  src/unnamed/ov036/0211/func_ov036_021122c0.cpp
+ *   [4] 0x02112318  src/game/actors/daObjRcCarpet_c/_ZN15daObjRcCarpet_c16CleanupResourcesEv.cpp
+ *   [5] 0x02112378  src/game/actors/daObjRcCarpet_c/_ZN15daObjRcCarpet_c6RenderEv.cpp
+ *   [6] 0x021123c8  src/game/actors/daObjRcCarpet_c/_ZN15daObjRcCarpet_c8BehaviorEv.cpp
+ *   [7] 0x0211244c  src/game/actors/daObjRcCarpet_c/_ZN15daObjRcCarpet_c13InitResourcesEv.cpp
+ *   [8] 0x02112538  src/game/actors/FlyingCarpet/FlyingCarpet_Spawn.cpp
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -234,7 +234,7 @@ void func_ov036_0211224c(char* self){
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjRcCarpet_cD0Ev
 /* recovered: vtable identified, declarations from a shared header. Same wall as
- * src/_ZN15daObjRcCarpet_cD1Ev.cpp: hand-written under the mangled D0 name
+ * src/game/actors/daObjRcCarpet_c/_ZN15daObjRcCarpet_cD1Ev.cpp: hand-written under the mangled D0 name
  * rather than a real `delete` expression, matching include/daObjPathLift_c.h's
  * precedent for a PathLift-derived class. */
 extern "C" {

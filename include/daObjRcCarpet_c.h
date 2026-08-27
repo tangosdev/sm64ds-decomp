@@ -17,7 +17,7 @@
  *   kind  __si_class_type_info, ONE base, subobject offset 0
  *   base  dPathLiftActor_c (= PathLift), ov002 0x0210af0c
  *
- * SIZE 0x4c0, the literal FlyingCarpet_Spawn (src/FlyingCarpet_Spawn.cpp) passes
+ * SIZE 0x4c0, the literal FlyingCarpet_Spawn (src/game/actors/FlyingCarpet/FlyingCarpet_Spawn.cpp) passes
  * to fBase_c::operator new. PathLift ends 0x450; the D1 destructor
  * (func_ov036_02112158, this class's own) destroys only a ModelAnim at 0x450
  * before storing PathLift's own vtable and running PathLift's inlined cleanup
@@ -29,7 +29,7 @@
  *
  * A PathPtr is also constructed, at +0x430 -- inside PathLift's own generic
  * tail padding (PathLift.h's pad_42c[0x20]), not this class's own storage.
- * daObjPathLift_c_Spawn (src/PathLift_Spawn.cpp) builds one at the identical
+ * daObjPathLift_c_Spawn (src/game/actors/PathLift/PathLift_Spawn.cpp) builds one at the identical
  * offset for its sibling, so this is PathLift's own construction sequence,
  * replayed identically by every PathLift descendant's still-hand-rolled Spawn
  * function; it is trivially destructible (include/PathPtr.h declares no
@@ -60,7 +60,7 @@ struct daObjRcCarpet_c : PathLift {
        so a real `daObjRcCarpet_c::~daObjRcCarpet_c() {}` would call a
        `_ZN8PathLiftD2Ev` that does not exist in the ROM. D1/D0 stay
        hand-written free functions under the correct mangled names in
-       src/_ZN15daObjRcCarpet_cD1Ev.cpp and src/_ZN15daObjRcCarpet_cD0Ev.c. */
+       src/game/actors/daObjRcCarpet_c/_ZN15daObjRcCarpet_cD1Ev.cpp and src/_ZN15daObjRcCarpet_cD0Ev.c. */
     virtual ~daObjRcCarpet_c();
 
     int InitResources();

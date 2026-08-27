@@ -71,7 +71,7 @@ struct Coin : dActor_c {
     /* param1 bits 4..6 for a red (0x121) or blue (0x122) coin, 0xff otherwise
        -- the same three-bit value LoadObjects compares against data_0209f220 to
        decide whether an object belongs to the entrance the level was started
-       from (src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp). A red coin
+       from (src/runtime/filesystem/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp). A red coin
        claims a star-marker slot only when it matches (or the level is 0x13); a
        blue coin with a filter under 8 clears bit 0 of mCoinFlags.
        [_ZN4Coin13InitResourcesEv.cpp] */
@@ -82,7 +82,7 @@ struct Coin : dActor_c {
        Render entirely; Behavior tests bits 0 and 1. Every read-modify-write of
        it keeps its raw `*(u8*)((int)c + 0x3ae)` spelling on purpose -- see the
        "FOUR SITES KEEP RAW OFFSETS" note in
-       src/_ZN4Coin13InitResourcesEv.cpp. [_ZN4Coin6RenderEv.cpp,
+       src/game/actors/Coin/_ZN4Coin13InitResourcesEv.cpp. [_ZN4Coin6RenderEv.cpp,
        _ZN4Coin8BehaviorEv.cpp] */
     u8  mCoinFlags;            /* 0x3ae */
     u8  pad_3af[0x1];

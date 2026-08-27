@@ -27,7 +27,7 @@ struct FortressWall : dBgActor_c {
     /* param1 & 0xff, with 0xff read as 0. Behavior hands it to
        dActor_c::Spawn(0xb2, mStarId | 0x40, ...); actor 0xb2 is the star and its
        spawn word is starID | (howToSpawnStar << 4)
-       (src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp), so the low
+       (src/game/actors/dActor_c/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp), so the low
        nibble this contributes is a star index. */
     u8 mStarId;                       /* 0x31f */
     u8  pad_320[0x1];

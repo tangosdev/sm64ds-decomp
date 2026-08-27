@@ -5,7 +5,7 @@
  * that table to this class rather than to a neighbour.
  *
  * SIZE 0x5ff8, from the factory's own `_ZN7fBase_cnwEj(0x5ff8)`
- * (src/func_ov006_0212b7f8.cpp).
+ * (src/unnamed/ov006/0212/func_ov006_0212b7f8.cpp).
  *
  * FACTORY AND DESTRUCTOR AGREE MEMBER FOR MEMBER. The factory builds
  * mArray at 0x4f38 (0x16 elements of 0x20, element ctor
@@ -34,7 +34,7 @@
  * taken from that class's OWN render path instead. See its note.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN13dScMgFlower_cD1Ev.cpp; D0Ev.cpp
+ * its own. Defined for real in src/minigames/dScMgFlower_c/_ZN13dScMgFlower_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
  * dScMgBase_c, two levels up, already provides one. */
 #ifndef DSCMGFLOWER_C_H
@@ -62,9 +62,9 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
        holds. The destructor above is declared first and out of line, so it stays
        this class's KEY FUNCTION and none of these translation units emits
        _ZTV13dScMgFlower_c. */
-    s32 InitResources();   /* slot  0 -- src/_ZN13dScMgFlower_c13InitResourcesEv.cpp */
-    s32 Behavior();        /* slot  6 -- src/_ZN13dScMgFlower_c8BehaviorEv.cpp */
-    s32 Render();          /* slot  9 -- src/_ZN13dScMgFlower_c6RenderEv.cpp */
+    s32 InitResources();   /* slot  0 -- src/minigames/dScMgFlower_c/_ZN13dScMgFlower_c13InitResourcesEv.cpp */
+    s32 Behavior();        /* slot  6 -- src/minigames/dScMgFlower_c/_ZN13dScMgFlower_c8BehaviorEv.cpp */
+    s32 Render();          /* slot  9 -- src/minigames/dScMgFlower_c/_ZN13dScMgFlower_c6RenderEv.cpp */
 
     u8  mArray[0x2c0];     /* 0x4f38 -- 0x16 * 0x20, elem dtor func_ov006_0212a650 */
     u8  pad_51f8[0xdc0];   /* 0x51f8 -- opaque object, see file banner */
@@ -86,7 +86,7 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
     s32 mWinStreak;        /* 0x5fdc -- consecutive "loves me" petals; at 3 the
                               payout is 3 points instead of 1 */
     s32 mLoseStreak;       /* 0x5fe0 -- the mirror count, pays nothing */
-    s32 mHoldTimer;        /* 0x5fe4 -- src/func_ov006_0212aa74.c counts it up to
+    s32 mHoldTimer;        /* 0x5fe4 -- src/unnamed/ov006/0212/func_ov006_0212aa74.c counts it up to
                               0x15 and resets; above 0x14 means "held" */
     s32 mState;            /* 0x5fe8 -- 0 playing, 1 over */
     s32 mFaceSprite;       /* 0x5fec -- index into data_ov006_0213ab94, the

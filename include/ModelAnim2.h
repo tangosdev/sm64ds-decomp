@@ -30,7 +30,7 @@ struct ModelAnim2 : ModelAnim {
     /* --- vtable order. Do not reorder. --- */
     virtual ~ModelAnim2();                     /* slots 0 (D1), 1 (D0) */
 
-    /* DECLARED, defined out of line in src/_ZN10ModelAnim2C1Ev.cpp as real
+    /* DECLARED, defined out of line in src/runtime/graphics/ModelAnim2/_ZN10ModelAnim2C1Ev.cpp as real
      * C++ -- complete-object context, hence C1. Init list `: otherFile(0)`
      * puts the scalar store BEFORE otherAnim's implicit construction, which
      * is the ROM's schedule; a body statement would come one call too late

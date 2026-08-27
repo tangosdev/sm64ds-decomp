@@ -24,7 +24,7 @@
  * dummy}, two method-only shells, the correct {clps, normal}, and one at 0x24.
  * Seven definitions of one type is how a wrong one silently wins.
  *
- * The 0x24 one, in src/func_ov018_02111bf0.cpp, was not a competing layout at
+ * The 0x24 one, in src/unnamed/ov018/0211/func_ov018_02111bf0.cpp, was not a competing layout at
  * all: it was used as `struct dBgPi { void *vt; SurfaceInfo info; }', i.e. as a
  * filler for the REST of dBgPi (0x28 = 4 + 0x24). It has been renamed there to
  * say what it is, so the name SurfaceInfo now means one thing tree-wide.

@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02111e10  src/_ZN13PeachPaintingD1Ev.cpp
+ *   [0] 0x02111e10  src/game/actors/PeachPainting/_ZN13PeachPaintingD1Ev.cpp
  *   [1] 0x02111e40  src/_ZN13PeachPaintingD0Ev.c
  *   [2] 0x02111e84  src/func_ov010_02111e84.c
  *   [3] 0x02111ec4  src/_ZN13PeachPainting16CleanupResourcesEv.c
- *   [4] 0x02111ee8  src/_ZN13PeachPainting6RenderEv.cpp
- *   [5] 0x02111f28  src/_ZN13PeachPainting8BehaviorEv.cpp
- *   [6] 0x02111fc0  src/_ZN13PeachPainting13InitResourcesEv.cpp
- *   [7] 0x02112004  src/PeachPainting_Spawn.c
+ *   [4] 0x02111ee8  src/game/actors/PeachPainting/_ZN13PeachPainting6RenderEv.cpp
+ *   [5] 0x02111f28  src/game/actors/PeachPainting/_ZN13PeachPainting8BehaviorEv.cpp
+ *   [6] 0x02111fc0  src/game/actors/PeachPainting/_ZN13PeachPainting13InitResourcesEv.cpp
+ *   [7] 0x02112004  src/game/actors/PeachPainting/PeachPainting_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

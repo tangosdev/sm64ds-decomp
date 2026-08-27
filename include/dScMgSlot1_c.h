@@ -4,7 +4,7 @@
  * Own vtable slots (python tools/rtti_vtables.py --own dScMgSlot1_c): 0
  * (InitResources), 6 (Behavior -- NOT migrated, see below), 9 (Render), 16
  * (D1), 17 (D0), 18 (own new slot -- stays a raw extern "C" helper,
- * src/func_ov006_0210c674.c, same precedent as every other dScMgBase_c
+ * src/unnamed/ov006/0210/func_ov006_0210c674.c, same precedent as every other dScMgBase_c
  * leaf's slot 18), 27 (OnHitByMegaChar), 28 (OnHitFromUnderneath).
  * rtti_vtables.py --own also reports slot 36 (MgBingoBallSlotsShot_Spawn);
  * that one is SPURIOUS -- address-gap math confirms it: the vtable data
@@ -51,7 +51,7 @@
  * identical address dScMgBase_c.h cites for dThIcon_c's own vtable).
  * data_ov006_0213e5d4 is betIcon_c's own vtable (build/rtti.json:
  * "ov006:0x0213e594" -> vtable "0x0213e5d4"). The constructor
- * (src/func_ov006_0210d6b8.cpp, already matched, not touched by this
+ * (src/unnamed/ov006/0210/func_ov006_0210d6b8.cpp, already matched, not touched by this
  * migration) confirms the construction order: it writes data_ov001_020ad494 (the
  * dThIcon_c base vtable) into this+0x4660 FIRST, then overwrites it with
  * data_ov006_0213e5d4 (betIcon_c's own vtable) -- ordinary base-then-derived
@@ -60,7 +60,7 @@
  * starts at this+0x4684, so betIcon_c is exactly 0x24 bytes, the same size
  * as dMgPsOpt_c::TouchIcon_c. Render also confirms it is genuinely
  * polymorphic: it calls `((SomeVtbl*)(this+0x4660))->Virtual4()` (slot 1)
- * directly (src/_ZN12dScMgSlot1_c6RenderEv.cpp). Neither betIcon_c nor
+ * directly (src/minigames/dScMgSlot1_c/_ZN12dScMgSlot1_c6RenderEv.cpp). Neither betIcon_c nor
  * dThIcon_c has a header yet (same as dScMgBase_c's own TouchIcon_c/
  * dThIcon_c), so it stays raw bytes here too, and the destructor writes the
  * two vtables explicitly by hand instead of relying on a member destructor
@@ -89,7 +89,7 @@
  * with the exact signature copied from include/dActor_c.h's own slots 27/28 --
  * the same "OnHitByMegaChar"/"OnHitFromUnderneath" names were independently
  * recovered on dScMgBase_c's own copy at the same two slots
- * (src/func_ov004_020af27c.cpp and .../func_ov004_020af04c.cpp, both of
+ * (src/unnamed/ov004/020a/func_ov004_020af27c.cpp and .../func_ov004_020af04c.cpp, both of
  * which dScMgSlot1_c's own overrides call into), and on many unrelated
  * fBase_c descendants across other overlays -- a shared, fixed
  * collision-event slot pair used across both the dActor_c and dScene_c branches,

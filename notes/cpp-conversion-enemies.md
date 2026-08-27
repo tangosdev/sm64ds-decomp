@@ -188,7 +188,7 @@ ROM-unlike interleave goes with it. notes/mwccarm-codegen.md gains 6ay.
 
 ### What is left: nothing, and one thing that was never a holdout
 
-`src/_ZN7daOts_cD1Ev.cpp` is the only `extern "C"` definition left under a family
+`src/game/actors/daOts_c/_ZN7daOts_cD1Ev.cpp` is the only `extern "C"` definition left under a family
 class's mangled name, and its `_force_daOts_cD1` scaffold is the sanctioned way to
 force an out-of-line variant of a class-body-inline destructor. It is not a
 holdout and should not be "fixed".

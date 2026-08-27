@@ -92,7 +92,7 @@ The generated `.init` result is exact in three independent comparisons:
 1. Against the ROM at `0x02100938`: `MATCH`, size `0x1a4`, zero non-relocation
    divergences.
 2. Against the compiled hand transcription in
-   `src/__sinit_ov002_02100938.c`: all 420 raw object bytes and all eighteen
+   `src/unnamed/ov002/0210/__sinit_ov002_02100938.c`: all 420 raw object bytes and all eighteen
    relocation offsets are identical.
 3. In the full Enemy shadow object: all thirty admitted text functions remain
    raw-byte identical to the normal shadow object and all thirty functions'

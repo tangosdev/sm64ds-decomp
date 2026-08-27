@@ -27,35 +27,35 @@
       "symbol": "_ZN20daObjKm3_Kaitendai_cD1Ev",
       "address": "0x021112bc",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp",
+      "legacy_source": "src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN20daObjKm3_Kaitendai_cD0Ev",
       "address": "0x0211130c",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN20daObjKm3_Kaitendai_cD0Ev.cpp",
+      "legacy_source": "src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_cD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv",
       "address": "0x02111370",
       "size": "0x00000014",
-      "legacy_source": "src/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN20daObjKm3_Kaitendai_c13InitResourcesEv",
       "address": "0x02111384",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "func_ov047_021113bc",
       "address": "0x021113bc",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov047_021113bc.c",
+      "legacy_source": "src/unnamed/ov047/0211/func_ov047_021113bc.c",
       "ordinal": 4
     }
   ],
@@ -804,11 +804,11 @@
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
     "delinksChanged": false,
     "substitutedObjectPaths": [
-      "src/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp",
-      "src/_ZN20daObjKm3_Kaitendai_cD0Ev.cpp",
-      "src/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.cpp",
-      "src/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.cpp",
-      "src/func_ov047_021113bc.c"
+      "src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp",
+      "src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_cD0Ev.cpp",
+      "src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.cpp",
+      "src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.cpp",
+      "src/unnamed/ov047/0211/func_ov047_021113bc.c"
     ],
     "result": "partial-link-verified",
     "phases": {
@@ -846,11 +846,11 @@
         "mergedBytes": 7128,
         "contributionEquivalent": "5/5",
         "substitutedObjectPaths": [
-          "src/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp",
-          "src/_ZN20daObjKm3_Kaitendai_cD0Ev.cpp",
-          "src/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.cpp",
-          "src/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.cpp",
-          "src/func_ov047_021113bc.c"
+          "src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp",
+          "src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_cD0Ev.cpp",
+          "src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.cpp",
+          "src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.cpp",
+          "src/unnamed/ov047/0211/func_ov047_021113bc.c"
         ],
         "rows": [
           {
@@ -1208,11 +1208,11 @@
         "mergedBytes": 7128,
         "contributionEquivalent": "5/5",
         "substitutedObjectPaths": [
-          "src/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp",
-          "src/_ZN20daObjKm3_Kaitendai_cD0Ev.cpp",
-          "src/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.cpp",
-          "src/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.cpp",
-          "src/func_ov047_021113bc.c"
+          "src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp",
+          "src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_cD0Ev.cpp",
+          "src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.cpp",
+          "src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.cpp",
+          "src/unnamed/ov047/0211/func_ov047_021113bc.c"
         ],
         "rows": [
           {

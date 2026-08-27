@@ -2023,7 +2023,7 @@ extern void func_0201a428(void);
 extern void func_0201cd08(int);
 extern void func_0201cebc(int);
 extern void func_0201d418(int, int);
-/* Course/star index, 0..0x15. Matches the definition in src/func_0201d850.c, which
+/* Course/star index, 0..0x15. Matches the definition in src/unnamed/arm9/0201/func_0201d850.c, which
    compares it unsigned (`arg0 < 0xf`, `arg0 >= 0x15`) and uses it as an array index
    and a multiplier. Its two callers used to declare it locally and disagree -- `int
    func_0201d850(unsigned char)` in DisplayPauseText, `int func_0201d850(signed char)`
@@ -2906,7 +2906,7 @@ extern void func_ov100_021437d4(void*);
 extern void func_ov100_02143b68(char*);
 extern void func_ov100_02145070(int);
 extern void func_ov100_02145170(char*, char*, struct Vector3*, struct Vector3*);
-/* Returns int -- the tree's own definition (src/func_ov100_021453d8.cpp)
+/* Returns int -- the tree's own definition (src/unnamed/ov100/0214/func_ov100_021453d8.cpp)
    defines it `extern "C" int`, and its early-out is `return 1`. */
 extern int func_ov100_021453d8(char*, void*, int);
 extern void func_ov100_02145e10(char*, char*);

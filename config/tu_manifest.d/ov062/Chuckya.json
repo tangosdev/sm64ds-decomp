@@ -22,252 +22,252 @@
       "symbol": "_ZN7ChuckyaD1Ev",
       "address": "0x02115ee0",
       "size": "0x00000048",
-      "legacy_source": "src/_ZN7ChuckyaD1Ev.cpp",
+      "legacy_source": "src/game/actors/Chuckya/_ZN7ChuckyaD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN7ChuckyaD0Ev",
       "address": "0x02115f28",
       "size": "0x0000005c",
-      "legacy_source": "src/_ZN7ChuckyaD0Ev.cpp",
+      "legacy_source": "src/game/actors/Chuckya/_ZN7ChuckyaD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "func_ov062_02115f84",
       "address": "0x02115f84",
       "size": "0x0000008c",
-      "legacy_source": "src/func_ov062_02115f84.c",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02115f84.c",
       "ordinal": 2
     },
     {
       "symbol": "func_ov062_02116010",
       "address": "0x02116010",
       "size": "0x00000198",
-      "legacy_source": "src/func_ov062_02116010.c",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116010.c",
       "ordinal": 3
     },
     {
       "symbol": "func_ov062_021161a8",
       "address": "0x021161a8",
       "size": "0x00000090",
-      "legacy_source": "src/func_ov062_021161a8.c",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_021161a8.c",
       "ordinal": 4
     },
     {
       "symbol": "func_ov062_02116238",
       "address": "0x02116238",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov062_02116238.c",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116238.c",
       "ordinal": 5
     },
     {
       "symbol": "func_ov062_02116274",
       "address": "0x02116274",
       "size": "0x00000044",
-      "legacy_source": "src/func_ov062_02116274.c",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116274.c",
       "ordinal": 6
     },
     {
       "symbol": "func_ov062_021162b8",
       "address": "0x021162b8",
       "size": "0x00000074",
-      "legacy_source": "src/func_ov062_021162b8.cpp",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_021162b8.cpp",
       "ordinal": 7
     },
     {
       "symbol": "func_ov062_0211632c",
       "address": "0x0211632c",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov062_0211632c.cpp",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_0211632c.cpp",
       "ordinal": 8
     },
     {
       "symbol": "func_ov062_02116368",
       "address": "0x02116368",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov062_02116368.c",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116368.c",
       "ordinal": 9
     },
     {
       "symbol": "func_ov062_021163b0",
       "address": "0x021163b0",
       "size": "0x000000e8",
-      "legacy_source": "src/func_ov062_021163b0.c",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_021163b0.c",
       "ordinal": 10
     },
     {
       "symbol": "func_ov062_02116498",
       "address": "0x02116498",
       "size": "0x00000050",
-      "legacy_source": "src/func_ov062_02116498.c",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116498.c",
       "ordinal": 11
     },
     {
       "symbol": "func_ov062_021164e8",
       "address": "0x021164e8",
       "size": "0x000000f8",
-      "legacy_source": "src/func_ov062_021164e8.cpp",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_021164e8.cpp",
       "ordinal": 12
     },
     {
       "symbol": "func_ov062_021165e0",
       "address": "0x021165e0",
       "size": "0x00000008",
-      "legacy_source": "src/func_ov062_021165e0.c",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_021165e0.c",
       "ordinal": 13
     },
     {
       "symbol": "func_ov062_021165e8",
       "address": "0x021165e8",
       "size": "0x0000019c",
-      "legacy_source": "src/func_ov062_021165e8.c",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_021165e8.c",
       "ordinal": 14
     },
     {
       "symbol": "func_ov062_02116784",
       "address": "0x02116784",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov062_02116784.c",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116784.c",
       "ordinal": 15
     },
     {
       "symbol": "func_ov062_021167c0",
       "address": "0x021167c0",
       "size": "0x00000090",
-      "legacy_source": "src/func_ov062_021167c0.cpp",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_021167c0.cpp",
       "ordinal": 16
     },
     {
       "symbol": "func_ov062_02116850",
       "address": "0x02116850",
       "size": "0x00000044",
-      "legacy_source": "src/func_ov062_02116850.c",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116850.c",
       "ordinal": 17
     },
     {
       "symbol": "func_ov062_02116894",
       "address": "0x02116894",
       "size": "0x000000ec",
-      "legacy_source": "src/func_ov062_02116894.cpp",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116894.cpp",
       "ordinal": 18
     },
     {
       "symbol": "func_ov062_02116980",
       "address": "0x02116980",
       "size": "0x00000088",
-      "legacy_source": "src/func_ov062_02116980.c",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116980.c",
       "ordinal": 19
     },
     {
       "symbol": "func_ov062_02116a08",
       "address": "0x02116a08",
       "size": "0x00000178",
-      "legacy_source": "src/func_ov062_02116a08.c",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116a08.c",
       "ordinal": 20
     },
     {
       "symbol": "func_ov062_02116b80",
       "address": "0x02116b80",
       "size": "0x00000078",
-      "legacy_source": "src/func_ov062_02116b80.cpp",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116b80.cpp",
       "ordinal": 21
     },
     {
       "symbol": "func_ov062_02116bf8",
       "address": "0x02116bf8",
       "size": "0x00000080",
-      "legacy_source": "src/func_ov062_02116bf8.c",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116bf8.c",
       "ordinal": 22
     },
     {
       "symbol": "func_ov062_02116c78",
       "address": "0x02116c78",
       "size": "0x00000060",
-      "legacy_source": "src/func_ov062_02116c78.cpp",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116c78.cpp",
       "ordinal": 23
     },
     {
       "symbol": "Chuckya_ChangeState",
       "address": "0x02116cd8",
       "size": "0x00000050",
-      "legacy_source": "src/Chuckya_ChangeState.cpp",
+      "legacy_source": "src/game/objects/Chuckya_ChangeState.cpp",
       "ordinal": 24
     },
     {
       "symbol": "func_ov062_02116d28",
       "address": "0x02116d28",
       "size": "0x00000094",
-      "legacy_source": "src/func_ov062_02116d28.cpp",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116d28.cpp",
       "ordinal": 25
     },
     {
       "symbol": "func_ov062_02116dbc",
       "address": "0x02116dbc",
       "size": "0x000000c4",
-      "legacy_source": "src/func_ov062_02116dbc.cpp",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116dbc.cpp",
       "ordinal": 26
     },
     {
       "symbol": "func_ov062_02116e80",
       "address": "0x02116e80",
       "size": "0x0000005c",
-      "legacy_source": "src/func_ov062_02116e80.c",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116e80.c",
       "ordinal": 27
     },
     {
       "symbol": "func_ov062_02116edc",
       "address": "0x02116edc",
       "size": "0x000000e4",
-      "legacy_source": "src/func_ov062_02116edc.cpp",
+      "legacy_source": "src/unnamed/ov062/0211/func_ov062_02116edc.cpp",
       "ordinal": 28
     },
     {
       "symbol": "_ZN7Chuckya16CleanupResourcesEv",
       "address": "0x02116fc0",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN7Chuckya16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/Chuckya/_ZN7Chuckya16CleanupResourcesEv.cpp",
       "ordinal": 29
     },
     {
       "symbol": "_ZN7Chuckya16OnPendingDestroyEv",
       "address": "0x02117020",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN7Chuckya16OnPendingDestroyEv.cpp",
+      "legacy_source": "src/game/actors/Chuckya/_ZN7Chuckya16OnPendingDestroyEv.cpp",
       "ordinal": 30
     },
     {
       "symbol": "_ZN7Chuckya6RenderEv",
       "address": "0x02117024",
       "size": "0x00000058",
-      "legacy_source": "src/_ZN7Chuckya6RenderEv.cpp",
+      "legacy_source": "src/game/actors/Chuckya/_ZN7Chuckya6RenderEv.cpp",
       "ordinal": 31
     },
     {
       "symbol": "_ZN7Chuckya8BehaviorEv",
       "address": "0x0211707c",
       "size": "0x000002b8",
-      "legacy_source": "src/_ZN7Chuckya8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/Chuckya/_ZN7Chuckya8BehaviorEv.cpp",
       "ordinal": 32
     },
     {
       "symbol": "_ZN7Chuckya13InitResourcesEv",
       "address": "0x02117334",
       "size": "0x0000013c",
-      "legacy_source": "src/_ZN7Chuckya13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/Chuckya/_ZN7Chuckya13InitResourcesEv.cpp",
       "ordinal": 33
     },
     {
       "symbol": "_ZN7Chuckya16OnAimedAtWithEggEv",
       "address": "0x02117470",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN7Chuckya16OnAimedAtWithEggEv.cpp",
+      "legacy_source": "src/game/actors/Chuckya/_ZN7Chuckya16OnAimedAtWithEggEv.cpp",
       "ordinal": 34
     },
     {
       "symbol": "Chuckya_Spawn",
       "address": "0x02117478",
       "size": "0x00000054",
-      "legacy_source": "src/Chuckya_Spawn.c",
+      "legacy_source": "src/game/actors/Chuckya/Chuckya_Spawn.c",
       "ordinal": 35
     }
   ],
@@ -275,12 +275,12 @@
   "bss": [],
   "notes": [
     "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
-    "tubuild create warning: RAW: src/func_ov062_021162b8.cpp (func_ov062_021162b8) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov062_0211632c.cpp (func_ov062_0211632c) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov062_02116894.cpp (func_ov062_02116894) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov062_02116b80.cpp (func_ov062_02116b80) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov062_02116c78.cpp (func_ov062_02116c78) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
-    "tubuild create warning: RAW: src/func_ov062_02116edc.cpp (func_ov062_02116edc) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/unnamed/ov062/0211/func_ov062_021162b8.cpp (func_ov062_021162b8) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/unnamed/ov062/0211/func_ov062_0211632c.cpp (func_ov062_0211632c) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/unnamed/ov062/0211/func_ov062_02116894.cpp (func_ov062_02116894) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/unnamed/ov062/0211/func_ov062_02116b80.cpp (func_ov062_02116b80) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/unnamed/ov062/0211/func_ov062_02116c78.cpp (func_ov062_02116c78) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/unnamed/ov062/0211/func_ov062_02116edc.cpp (func_ov062_02116edc) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning: CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov062_02116010 and the one that held func_ov062_021161a8; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'Chuckya_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held func_ov062_021161a8; kept the first, the other is commented out for review",
     "tubuild create warning: CONFLICT: extern declaration 'Chuckya_ChangeState' differs between the legacy file that used to hold func_ov062_02116010 and the one that held func_ov062_02116274; kept the first, the other is commented out for review",

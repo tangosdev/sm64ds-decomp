@@ -22,63 +22,63 @@
       "symbol": "_ZN14BlueCoinSwitchD1Ev",
       "address": "0x020f11b0",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN14BlueCoinSwitchD1Ev.cpp",
+      "legacy_source": "src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitchD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN14BlueCoinSwitchD0Ev",
       "address": "0x020f11f4",
       "size": "0x00000058",
-      "legacy_source": "src/_ZN14BlueCoinSwitchD0Ev.cpp",
+      "legacy_source": "src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitchD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN14BlueCoinSwitch16CleanupResourcesEv",
       "address": "0x020f124c",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN14BlueCoinSwitch16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitch16CleanupResourcesEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN14BlueCoinSwitch6RenderEv",
       "address": "0x020f1290",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN14BlueCoinSwitch6RenderEv.cpp",
+      "legacy_source": "src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitch6RenderEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN14BlueCoinSwitch8BehaviorEv",
       "address": "0x020f12c8",
       "size": "0x000001a0",
-      "legacy_source": "src/_ZN14BlueCoinSwitch8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitch8BehaviorEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN14BlueCoinSwitch13InitResourcesEv",
       "address": "0x020f1468",
       "size": "0x00000110",
-      "legacy_source": "src/_ZN14BlueCoinSwitch13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitch13InitResourcesEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "func_ov002_020f1578",
       "address": "0x020f1578",
       "size": "0x00000040",
-      "legacy_source": "src/func_ov002_020f1578.c",
+      "legacy_source": "src/unnamed/ov002/020f/func_ov002_020f1578.c",
       "ordinal": 6
     },
     {
       "symbol": "func_ov002_020f15b8",
       "address": "0x020f15b8",
       "size": "0x00000014",
-      "legacy_source": "src/func_ov002_020f15b8.c",
+      "legacy_source": "src/unnamed/ov002/020f/func_ov002_020f15b8.c",
       "ordinal": 7
     },
     {
       "symbol": "BlueCoinSwitch_Spawn",
       "address": "0x020f15cc",
       "size": "0x00000030",
-      "legacy_source": "src/BlueCoinSwitch_Spawn.c",
+      "legacy_source": "src/game/actors/BlueCoinSwitch/BlueCoinSwitch_Spawn.c",
       "ordinal": 8
     }
   ],
@@ -121,15 +121,15 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN14BlueCoinSwitchD1Ev.cpp",
-      "src/_ZN14BlueCoinSwitchD0Ev.cpp",
-      "src/_ZN14BlueCoinSwitch16CleanupResourcesEv.cpp",
-      "src/_ZN14BlueCoinSwitch6RenderEv.cpp",
-      "src/_ZN14BlueCoinSwitch8BehaviorEv.cpp",
-      "src/_ZN14BlueCoinSwitch13InitResourcesEv.cpp",
-      "src/func_ov002_020f1578.c",
-      "src/func_ov002_020f15b8.c",
-      "src/BlueCoinSwitch_Spawn.c"
+      "src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitchD1Ev.cpp",
+      "src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitchD0Ev.cpp",
+      "src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitch16CleanupResourcesEv.cpp",
+      "src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitch6RenderEv.cpp",
+      "src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitch8BehaviorEv.cpp",
+      "src/game/actors/BlueCoinSwitch/_ZN14BlueCoinSwitch13InitResourcesEv.cpp",
+      "src/unnamed/ov002/020f/func_ov002_020f1578.c",
+      "src/unnamed/ov002/020f/func_ov002_020f15b8.c",
+      "src/game/actors/BlueCoinSwitch/BlueCoinSwitch_Spawn.c"
     ],
     "extraInertImports": 82,
     "extraImportsWithNoHome": [],

@@ -4,382 +4,382 @@
     .ctor       start:0x0213c33c end:0x0213c34c kind:rodata align:4
     .data       start:0x0213c360 end:0x0213c800 kind:data align:32
     .bss        start:0x0213c800 end:0x0213c960 kind:bss align:32
-src/_ZN14ArrowSignRightD1Ev.cpp:
+src/game/actors/ArrowSignRight/_ZN14ArrowSignRightD1Ev.cpp:
     complete
     .text start:0x02137be0 end:0x02137c2c
 
-src/_ZN14ArrowSignRightD0Ev.cpp:
+src/game/actors/ArrowSignRight/_ZN14ArrowSignRightD0Ev.cpp:
     complete
     .text start:0x02137c2c end:0x02137c8c
 
-src/func_ov098_02137c8c.c:
+src/unnamed/ov098/0213/func_ov098_02137c8c.c:
     complete
     .text start:0x02137c8c end:0x02137ccc
 
-src/_ZN14ArrowSignRight4KillEv.cpp:
+src/game/actors/ArrowSignRight/_ZN14ArrowSignRight4KillEv.cpp:
     complete
     .text start:0x02137ccc end:0x02137d40
 
-src/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp:
+src/game/actors/ArrowSignRight/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp:
     complete
     .text start:0x02137d40 end:0x02137d80
 
-src/_ZN14ArrowSignRight15OnHitByMegaCharER6Player.cpp:
+src/game/actors/ArrowSignRight/_ZN14ArrowSignRight15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02137d80 end:0x02137dbc
 
-src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp:
+src/game/actors/ArrowSignRight/_ZN14ArrowSignRight16CleanupResourcesEv.cpp:
     complete
     .text start:0x02137dbc end:0x02137e20
 
-src/_ZN14ArrowSignRight6RenderEv.cpp:
+src/game/actors/ArrowSignRight/_ZN14ArrowSignRight6RenderEv.cpp:
     complete
     .text start:0x02137e20 end:0x02137e48
 
-src/_ZN14ArrowSignRight8BehaviorEv.cpp:
+src/game/actors/ArrowSignRight/_ZN14ArrowSignRight8BehaviorEv.cpp:
     complete
     .text start:0x02137e48 end:0x02137eec
 
-src/_ZN14ArrowSignRight13InitResourcesEv.cpp:
+src/game/actors/ArrowSignRight/_ZN14ArrowSignRight13InitResourcesEv.cpp:
     complete
     .text start:0x02137eec end:0x02137fd0
 
-src/ArrowSignRight_Spawn.c:
+src/game/actors/ArrowSignRight/ArrowSignRight_Spawn.c:
     complete
     .text start:0x02137fd0 end:0x02138008
 
-src/ArrowSignLeft_Spawn.c:
+src/game/actors/ArrowSignLeft/ArrowSignLeft_Spawn.c:
     complete
     .text start:0x02138008 end:0x02138040
 
-src/_ZN5CrateD1Ev.cpp:
+src/game/actors/Crate/_ZN5CrateD1Ev.cpp:
     complete
     .text start:0x02138040 end:0x021380bc
 
-src/_ZN5CrateD0Ev.cpp:
+src/game/actors/Crate/_ZN5CrateD0Ev.cpp:
     complete
     .text start:0x021380bc end:0x0213814c
 
-src/func_ov098_0213814c.cpp:
+src/unnamed/ov098/0213/func_ov098_0213814c.cpp:
     complete
     .text start:0x0213814c end:0x021381e8
 
-src/func_ov098_021381e8.c:
+src/unnamed/ov098/0213/func_ov098_021381e8.c:
     complete
     .text start:0x021381e8 end:0x02138238
 
-src/func_ov098_02138238.c:
+src/unnamed/ov098/0213/func_ov098_02138238.c:
     complete
     .text start:0x02138238 end:0x02138318
 
-src/func_ov098_02138318.c:
+src/unnamed/ov098/0213/func_ov098_02138318.c:
     complete
     .text start:0x02138318 end:0x02138344
 
-src/func_ov098_02138344.cpp:
+src/unnamed/ov098/0213/func_ov098_02138344.cpp:
     complete
     .text start:0x02138344 end:0x02138484
 
-src/func_ov098_02138484.c:
+src/unnamed/ov098/0213/func_ov098_02138484.c:
     complete
     .text start:0x02138484 end:0x021384fc
 
-src/func_ov098_021384fc.cpp:
+src/unnamed/ov098/0213/func_ov098_021384fc.cpp:
     complete
     .text start:0x021384fc end:0x021385e0
 
-src/func_ov098_021385e0.c:
+src/unnamed/ov098/0213/func_ov098_021385e0.c:
     complete
     .text start:0x021385e0 end:0x02138734
 
-src/func_ov098_02138734.cpp:
+src/unnamed/ov098/0213/func_ov098_02138734.cpp:
     complete
     .text start:0x02138734 end:0x02138818
 
-src/func_ov098_02138818.c:
+src/unnamed/ov098/0213/func_ov098_02138818.c:
     complete
     .text start:0x02138818 end:0x021388bc
 
-src/func_ov098_021388bc.cpp:
+src/unnamed/ov098/0213/func_ov098_021388bc.cpp:
     complete
     .text start:0x021388bc end:0x021389cc
 
-src/func_ov098_021389cc.c:
+src/unnamed/ov098/0213/func_ov098_021389cc.c:
     complete
     .text start:0x021389cc end:0x021389f8
 
-src/func_ov098_021389f8.cpp:
+src/unnamed/ov098/0213/func_ov098_021389f8.cpp:
     complete
     .text start:0x021389f8 end:0x02138b18
 
-src/func_ov098_02138b18.c:
+src/unnamed/ov098/0213/func_ov098_02138b18.c:
     complete
     .text start:0x02138b18 end:0x02138b28
 
-src/Crate_SetState.cpp:
+src/game/objects/Crate_SetState.cpp:
     complete
     .text start:0x02138b28 end:0x02138b70
 
-src/func_ov098_02138b70.cpp:
+src/unnamed/ov098/0213/func_ov098_02138b70.cpp:
     complete
     .text start:0x02138b70 end:0x02138bb8
 
-src/func_ov098_02138bb8.cpp:
+src/unnamed/ov098/0213/func_ov098_02138bb8.cpp:
     complete
     .text start:0x02138bb8 end:0x02138bfc
 
-src/func_ov098_02138bfc.c:
+src/unnamed/ov098/0213/func_ov098_02138bfc.c:
     complete
     .text start:0x02138bfc end:0x02138ce0
 
-src/func_ov098_02138ce0.c:
+src/unnamed/ov098/0213/func_ov098_02138ce0.c:
     complete
     .text start:0x02138ce0 end:0x02138e08
 
-src/func_ov098_02138e08.c:
+src/unnamed/ov098/0213/func_ov098_02138e08.c:
     complete
     .text start:0x02138e08 end:0x02138e6c
 
-src/func_ov098_02138e6c.cpp:
+src/unnamed/ov098/0213/func_ov098_02138e6c.cpp:
     complete
     .text start:0x02138e6c end:0x02139070
 
-src/_ZN5Crate4KillEv.cpp:
+src/game/actors/Crate/_ZN5Crate4KillEv.cpp:
     complete
     .text start:0x02139070 end:0x021390ec
 
-src/func_ov098_021390ec.cpp:
+src/unnamed/ov098/0213/func_ov098_021390ec.cpp:
     complete
     .text start:0x021390ec end:0x02139228
 
-src/func_ov098_02139228.cpp:
+src/unnamed/ov098/0213/func_ov098_02139228.cpp:
     complete
     .text start:0x02139228 end:0x021396a4
 
-src/func_ov098_021396a4.cpp:
+src/unnamed/ov098/0213/func_ov098_021396a4.cpp:
     complete
     .text start:0x021396a4 end:0x021397c8
 
-src/func_ov098_021397c8.cpp:
+src/unnamed/ov098/0213/func_ov098_021397c8.cpp:
     complete
     .text start:0x021397c8 end:0x02139850
 
-src/func_ov098_02139850.c:
+src/unnamed/ov098/0213/func_ov098_02139850.c:
     complete
     .text start:0x02139850 end:0x02139a50
 
-src/_ZN5Crate16CleanupResourcesEv.cpp:
+src/game/actors/Crate/_ZN5Crate16CleanupResourcesEv.cpp:
     complete
     .text start:0x02139a50 end:0x02139aa8
 
-src/_ZN5Crate6RenderEv.cpp:
+src/game/actors/Crate/_ZN5Crate6RenderEv.cpp:
     complete
     .text start:0x02139aa8 end:0x02139b0c
 
-src/_ZN5Crate8BehaviorEv.cpp:
+src/game/actors/Crate/_ZN5Crate8BehaviorEv.cpp:
     complete
     .text start:0x02139b0c end:0x02139d14
 
-src/_ZN5Crate13InitResourcesEv.cpp:
+src/game/actors/Crate/_ZN5Crate13InitResourcesEv.cpp:
     complete
     .text start:0x02139d14 end:0x02139e44
 
-src/_ZN5Crate15OnGroundPoundedER8dActor_c.cpp:
+src/game/actors/Crate/_ZN5Crate15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x02139e44 end:0x02139e64
 
-src/_ZN5Crate13OnYoshiTryEatEv.cpp:
+src/game/actors/Crate/_ZN5Crate13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02139e64 end:0x02139e78
 
-src/_ZN5Crate13OnTurnIntoEggER6Player.cpp:
+src/game/actors/Crate/_ZN5Crate13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02139e78 end:0x02139f04
 
-src/Crate_Spawn.cpp:
+src/game/actors/Crate/Crate_Spawn.cpp:
     complete
     .text start:0x02139f04 end:0x02139f70
 
-src/_ZN16daObjFallBlock_cD0Ev.cpp:
+src/game/actors/daObjFallBlock_c/_ZN16daObjFallBlock_cD0Ev.cpp:
     complete
     .text start:0x02139f70 end:0x02139fc8
 
-src/_ZN16daObjFallBlock_cD1Ev.cpp:
+src/game/actors/daObjFallBlock_c/_ZN16daObjFallBlock_cD1Ev.cpp:
     complete
     .text start:0x02139fc8 end:0x0213a00c
 
-src/func_ov098_0213a00c.cpp:
+src/unnamed/ov098/0213/func_ov098_0213a00c.cpp:
     complete
     .text start:0x0213a00c end:0x0213a0a8
 
-src/func_ov098_0213a0a8.cpp:
+src/unnamed/ov098/0213/func_ov098_0213a0a8.cpp:
     complete
     .text start:0x0213a0a8 end:0x0213a0e8
 
-src/func_ov098_0213a0e8.c:
+src/unnamed/ov098/0213/func_ov098_0213a0e8.c:
     complete
     .text start:0x0213a0e8 end:0x0213a148
 
-src/func_ov098_0213a148.c:
+src/unnamed/ov098/0213/func_ov098_0213a148.c:
     complete
     .text start:0x0213a148 end:0x0213a17c
 
-src/_ZN16daObjFallBlock_c4KillEv.cpp:
+src/game/actors/daObjFallBlock_c/_ZN16daObjFallBlock_c4KillEv.cpp:
     complete
     .text start:0x0213a17c end:0x0213a23c
 
-src/func_ov098_0213a23c.c:
+src/unnamed/ov098/0213/func_ov098_0213a23c.c:
     complete
     .text start:0x0213a23c end:0x0213a284
 
-src/_ZN16daObjFallBlock_c15OnHitByMegaCharER6Player.cpp:
+src/game/actors/daObjFallBlock_c/_ZN16daObjFallBlock_c15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x0213a284 end:0x0213a2cc
 
-src/func_ov098_0213a2cc.c:
+src/unnamed/ov098/0213/func_ov098_0213a2cc.c:
     complete
     .text start:0x0213a2cc end:0x0213a314
 
-src/_ZN16daObjFallBlock_c6RenderEv.cpp:
+src/game/actors/daObjFallBlock_c/_ZN16daObjFallBlock_c6RenderEv.cpp:
     complete
     .text start:0x0213a314 end:0x0213a36c
 
-src/_ZN16daObjFallBlock_c8BehaviorEv.cpp:
+src/game/actors/daObjFallBlock_c/_ZN16daObjFallBlock_c8BehaviorEv.cpp:
     complete
     .text start:0x0213a36c end:0x0213a794
 
-src/func_ov098_0213a794.cpp:
+src/unnamed/ov098/0213/func_ov098_0213a794.cpp:
     complete
     .text start:0x0213a794 end:0x0213a8e0
 
-src/func_ov098_0213a8e0.c:
+src/unnamed/ov098/0213/func_ov098_0213a8e0.c:
     complete
     .text start:0x0213a8e0 end:0x0213a8ec
 
-src/func_ov098_0213a8ec.c:
+src/unnamed/ov098/0213/func_ov098_0213a8ec.c:
     complete
     .text start:0x0213a8ec end:0x0213a900
 
-src/_ZN6CannonD1Ev.cpp:
+src/game/actors/Cannon/_ZN6CannonD1Ev.cpp:
     complete
     .text start:0x0213a900 end:0x0213a938
 
-src/_ZN6CannonD0Ev.cpp:
+src/game/actors/Cannon/_ZN6CannonD0Ev.cpp:
     complete
     .text start:0x0213a938 end:0x0213a984
 
-src/func_ov098_0213a984.c:
+src/unnamed/ov098/0213/func_ov098_0213a984.c:
     complete
     .text start:0x0213a984 end:0x0213aa28
 
-src/func_ov098_0213aa28.c:
+src/unnamed/ov098/0213/func_ov098_0213aa28.c:
     complete
     .text start:0x0213aa28 end:0x0213ad08
 
-src/func_ov098_0213ad08.c:
+src/unnamed/ov098/0213/func_ov098_0213ad08.c:
     complete
     .text start:0x0213ad08 end:0x0213ade8
 
-src/func_ov098_0213ade8.c:
+src/unnamed/ov098/0213/func_ov098_0213ade8.c:
     complete
     .text start:0x0213ade8 end:0x0213b0a4
 
-src/func_ov098_0213b0a4.cpp:
+src/unnamed/ov098/0213/func_ov098_0213b0a4.cpp:
     complete
     .text start:0x0213b0a4 end:0x0213b15c
 
-src/func_ov098_0213b15c.cpp:
+src/unnamed/ov098/0213/func_ov098_0213b15c.cpp:
     complete
     .text start:0x0213b15c end:0x0213b1d8
 
-src/_ZN6Cannon16CleanupResourcesEv.cpp:
+src/game/actors/Cannon/_ZN6Cannon16CleanupResourcesEv.cpp:
     complete
     .text start:0x0213b1d8 end:0x0213b214
 
-src/_ZN6Cannon6RenderEv.cpp:
+src/game/actors/Cannon/_ZN6Cannon6RenderEv.cpp:
     complete
     .text start:0x0213b214 end:0x0213b26c
 
-src/_ZN6Cannon8BehaviorEv.cpp:
+src/game/actors/Cannon/_ZN6Cannon8BehaviorEv.cpp:
     complete
     .text start:0x0213b26c end:0x0213b2d4
 
-src/_ZN6Cannon13InitResourcesEv.cpp:
+src/game/actors/Cannon/_ZN6Cannon13InitResourcesEv.cpp:
     complete
     .text start:0x0213b2d4 end:0x0213b43c
 
-src/Cannon_Spawn.c:
+src/game/actors/Cannon/Cannon_Spawn.c:
     complete
     .text start:0x0213b43c end:0x0213b47c
 
-src/_ZN9WaterBombD1Ev.cpp:
+src/game/actors/WaterBomb/_ZN9WaterBombD1Ev.cpp:
     complete
     .text start:0x0213b47c end:0x0213b4c4
 
-src/_ZN9WaterBombD0Ev.cpp:
+src/game/actors/WaterBomb/_ZN9WaterBombD0Ev.cpp:
     complete
     .text start:0x0213b4c4 end:0x0213b520
 
-src/func_ov098_0213b520.c:
+src/unnamed/ov098/0213/func_ov098_0213b520.c:
     complete
     .text start:0x0213b520 end:0x0213b584
 
-src/func_ov098_0213b584.c:
+src/unnamed/ov098/0213/func_ov098_0213b584.c:
     complete
     .text start:0x0213b584 end:0x0213b63c
 
-src/func_ov098_0213b63c.cpp:
+src/unnamed/ov098/0213/func_ov098_0213b63c.cpp:
     complete
     .text start:0x0213b63c end:0x0213b6e0
 
-src/func_ov098_0213b6e0.cpp:
+src/unnamed/ov098/0213/func_ov098_0213b6e0.cpp:
     complete
     .text start:0x0213b6e0 end:0x0213b7e8
 
-src/func_ov098_0213b7e8.c:
+src/unnamed/ov098/0213/func_ov098_0213b7e8.c:
     complete
     .text start:0x0213b7e8 end:0x0213b9d8
 
-src/func_ov098_0213b9d8.cpp:
+src/unnamed/ov098/0213/func_ov098_0213b9d8.cpp:
     complete
     .text start:0x0213b9d8 end:0x0213bb1c
 
-src/func_ov098_0213bb1c.cpp:
+src/unnamed/ov098/0213/func_ov098_0213bb1c.cpp:
     complete
     .text start:0x0213bb1c end:0x0213bb9c
 
-src/_ZN9WaterBomb16CleanupResourcesEv.cpp:
+src/game/actors/WaterBomb/_ZN9WaterBomb16CleanupResourcesEv.cpp:
     complete
     .text start:0x0213bb9c end:0x0213bbe4
 
-src/_ZN9WaterBomb6RenderEv.cpp:
+src/game/actors/WaterBomb/_ZN9WaterBomb6RenderEv.cpp:
     complete
     .text start:0x0213bbe4 end:0x0213bc20
 
-src/_ZN9WaterBomb8BehaviorEv.cpp:
+src/game/actors/WaterBomb/_ZN9WaterBomb8BehaviorEv.cpp:
     complete
     .text start:0x0213bc20 end:0x0213bd14
 
-src/_ZN9WaterBomb13InitResourcesEv.cpp:
+src/game/actors/WaterBomb/_ZN9WaterBomb13InitResourcesEv.cpp:
     complete
     .text start:0x0213bd14 end:0x0213bf10
 
-src/WaterBomb_Spawn.c:
+src/game/actors/WaterBomb/WaterBomb_Spawn.c:
     complete
     .text start:0x0213bf10 end:0x0213bf60
 
-src/__sinit_ov098_0213bf9c.c:
+src/unnamed/ov098/0213/__sinit_ov098_0213bf9c.c:
     complete
     .init start:0x0213bf9c end:0x0213c058
 
-src/__sinit_ov098_0213c058.c:
+src/unnamed/ov098/0213/__sinit_ov098_0213c058.c:
     complete
     .init start:0x0213c058 end:0x0213c214
 
-src/__sinit_ov098_0213c214.c:
+src/unnamed/ov098/0213/__sinit_ov098_0213c214.c:
     complete
     .init start:0x0213c214 end:0x0213c2b4
 
-src/__sinit_ov098_0213c2b4.c:
+src/unnamed/ov098/0213/__sinit_ov098_0213c2b4.c:
     complete
     .init start:0x0213c2b4 end:0x0213c33c

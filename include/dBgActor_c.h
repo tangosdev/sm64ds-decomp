@@ -49,7 +49,7 @@ struct dBgActor_c : dActor_c {
     virtual void Kill();
 
     /* --- non-virtual --- */
-    /* DECLARED, defined out of line in src/_ZN10dBgActor_cC2Ev.cpp as real
+    /* DECLARED, defined out of line in src/game/actors/dBgActor_c/_ZN10dBgActor_cC2Ev.cpp as real
      * C++. Base-only class: the ROM function is the dActor_c base step, the
      * vptr store, and the two member constructions in declaration order. */
     dBgActor_c();

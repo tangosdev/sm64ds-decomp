@@ -80,8 +80,8 @@ struct BigBrickBlock : dBgActor_c {
        override adds no slot and no field, so the size assert is unaffected.
 
        NOT the key function: ~BigBrickBlock() above is declared out of line and
-       is defined as a real method by src/_ZN13BigBrickBlockD1Ev.cpp and
-       src/_ZN13BigBrickBlockD0Ev.cpp, so the destructor stays the first
+       is defined as a real method by src/game/actors/BigBrickBlock/_ZN13BigBrickBlockD1Ev.cpp and
+       src/game/actors/BigBrickBlock/_ZN13BigBrickBlockD0Ev.cpp, so the destructor stays the first
        non-inline virtual and those two TUs keep emitting _ZTV13BigBrickBlock.
        This one does not -- checked with objisolate, not assumed. */
     virtual void Kill();              /* slot 31 */

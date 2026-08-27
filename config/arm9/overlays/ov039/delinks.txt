@@ -3,38 +3,38 @@
     .ctor       start:0x021113f4 end:0x021113f8 kind:rodata align:4
     .data       start:0x02111400 end:0x021118e0 kind:data align:32
     .bss        start:0x021118e0 end:0x02111900 kind:bss align:32
-src/_ZN5CloudD1Ev.cpp:
+src/game/actors/Cloud/_ZN5CloudD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111d0
 
-src/_ZN5CloudD0Ev.cpp:
+src/game/actors/Cloud/_ZN5CloudD0Ev.cpp:
     complete
     .text start:0x021111d0 end:0x02111214
 
-src/func_ov039_02111214.c:
+src/unnamed/ov039/0211/func_ov039_02111214.c:
     complete
     .text start:0x02111214 end:0x02111254
 
-src/_ZN5Cloud16CleanupResourcesEv.cpp:
+src/game/actors/Cloud/_ZN5Cloud16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111254 end:0x02111278
 
-src/_ZN5Cloud6RenderEv.cpp:
+src/game/actors/Cloud/_ZN5Cloud6RenderEv.cpp:
     complete
     .text start:0x02111278 end:0x021112a0
 
-src/_ZN5Cloud8BehaviorEv.cpp:
+src/game/actors/Cloud/_ZN5Cloud8BehaviorEv.cpp:
     complete
     .text start:0x021112a0 end:0x0211132c
 
-src/_ZN5Cloud13InitResourcesEv.cpp:
+src/game/actors/Cloud/_ZN5Cloud13InitResourcesEv.cpp:
     complete
     .text start:0x0211132c end:0x0211137c
 
-src/Cloud_Spawn.c:
+src/game/actors/Cloud/Cloud_Spawn.c:
     complete
     .text start:0x0211137c end:0x021113b4
 
-src/__sinit_ov039_021113b4.c:
+src/unnamed/ov039/0211/__sinit_ov039_021113b4.c:
     complete
     .init start:0x021113b4 end:0x021113f4

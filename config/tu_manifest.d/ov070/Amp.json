@@ -22,133 +22,133 @@
       "symbol": "_ZN3AmpD1Ev",
       "address": "0x02120570",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN3AmpD1Ev.cpp",
+      "legacy_source": "src/game/actors/Amp/_ZN3AmpD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN3AmpD0Ev",
       "address": "0x021205d0",
       "size": "0x00000074",
-      "legacy_source": "src/_ZN3AmpD0Ev.cpp",
+      "legacy_source": "src/game/actors/Amp/_ZN3AmpD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "func_ov070_02120644",
       "address": "0x02120644",
       "size": "0x000000e0",
-      "legacy_source": "src/func_ov070_02120644.cpp",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02120644.cpp",
       "ordinal": 2
     },
     {
       "symbol": "func_ov070_02120724",
       "address": "0x02120724",
       "size": "0x00000180",
-      "legacy_source": "src/func_ov070_02120724.c",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02120724.c",
       "ordinal": 3
     },
     {
       "symbol": "func_ov070_021208a4",
       "address": "0x021208a4",
       "size": "0x0000006c",
-      "legacy_source": "src/func_ov070_021208a4.c",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_021208a4.c",
       "ordinal": 4
     },
     {
       "symbol": "func_ov070_02120910",
       "address": "0x02120910",
       "size": "0x000000d4",
-      "legacy_source": "src/func_ov070_02120910.cpp",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02120910.cpp",
       "ordinal": 5
     },
     {
       "symbol": "func_ov070_021209e4",
       "address": "0x021209e4",
       "size": "0x00000214",
-      "legacy_source": "src/func_ov070_021209e4.cpp",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_021209e4.cpp",
       "ordinal": 6
     },
     {
       "symbol": "func_ov070_02120bf8",
       "address": "0x02120bf8",
       "size": "0x000000b4",
-      "legacy_source": "src/func_ov070_02120bf8.cpp",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02120bf8.cpp",
       "ordinal": 7
     },
     {
       "symbol": "func_ov070_02120cac",
       "address": "0x02120cac",
       "size": "0x00000038",
-      "legacy_source": "src/func_ov070_02120cac.cpp",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02120cac.cpp",
       "ordinal": 8
     },
     {
       "symbol": "func_ov070_02120ce4",
       "address": "0x02120ce4",
       "size": "0x00000050",
-      "legacy_source": "src/func_ov070_02120ce4.c",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02120ce4.c",
       "ordinal": 9
     },
     {
       "symbol": "func_ov070_02120d34",
       "address": "0x02120d34",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov070_02120d34.cpp",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02120d34.cpp",
       "ordinal": 10
     },
     {
       "symbol": "func_ov070_02120d70",
       "address": "0x02120d70",
       "size": "0x00000038",
-      "legacy_source": "src/func_ov070_02120d70.cpp",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02120d70.cpp",
       "ordinal": 11
     },
     {
       "symbol": "func_ov070_02120da8",
       "address": "0x02120da8",
       "size": "0x0000001c",
-      "legacy_source": "src/func_ov070_02120da8.c",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02120da8.c",
       "ordinal": 12
     },
     {
       "symbol": "_ZN3Amp16CleanupResourcesEv",
       "address": "0x02120dc4",
       "size": "0x0000005c",
-      "legacy_source": "src/_ZN3Amp16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/Amp/_ZN3Amp16CleanupResourcesEv.cpp",
       "ordinal": 13
     },
     {
       "symbol": "_ZN3Amp16OnPendingDestroyEv",
       "address": "0x02120e20",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN3Amp16OnPendingDestroyEv.cpp",
+      "legacy_source": "src/game/actors/Amp/_ZN3Amp16OnPendingDestroyEv.cpp",
       "ordinal": 14
     },
     {
       "symbol": "_ZN3Amp6RenderEv",
       "address": "0x02120e24",
       "size": "0x00000068",
-      "legacy_source": "src/_ZN3Amp6RenderEv.cpp",
+      "legacy_source": "src/game/actors/Amp/_ZN3Amp6RenderEv.cpp",
       "ordinal": 15
     },
     {
       "symbol": "_ZN3Amp8BehaviorEv",
       "address": "0x02120e8c",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN3Amp8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/Amp/_ZN3Amp8BehaviorEv.cpp",
       "ordinal": 16
     },
     {
       "symbol": "_ZN3Amp13InitResourcesEv",
       "address": "0x02120eec",
       "size": "0x000001c0",
-      "legacy_source": "src/_ZN3Amp13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/Amp/_ZN3Amp13InitResourcesEv.cpp",
       "ordinal": 17
     },
     {
       "symbol": "Amp_Spawn",
       "address": "0x021210ac",
       "size": "0x0000006c",
-      "legacy_source": "src/Amp_Spawn.c",
+      "legacy_source": "src/game/actors/Amp/Amp_Spawn.c",
       "ordinal": 18
     }
   ],

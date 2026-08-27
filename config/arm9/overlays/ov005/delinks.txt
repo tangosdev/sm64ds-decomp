@@ -3,98 +3,98 @@
     .ctor       start:0x020c2430 end:0x020c2430 kind:rodata align:4
     .data       start:0x020c2440 end:0x020c3020 kind:data align:32
     .bss        start:0x020c3020 end:0x020c3020 kind:bss align:32
-src/_ZN11dScMiniGm_cD1Ev.cpp:
+src/game/stages/dScMiniGm_c/_ZN11dScMiniGm_cD1Ev.cpp:
     complete
     .text start:0x020bfec0 end:0x020bfefc
 
-src/_ZN11dScMiniGm_cD0Ev.cpp:
+src/game/stages/dScMiniGm_c/_ZN11dScMiniGm_cD0Ev.cpp:
     complete
     .text start:0x020bfefc end:0x020bff4c
 
-src/func_ov005_020bff4c.cpp:
+src/unnamed/ov005/020b/func_ov005_020bff4c.cpp:
     complete
     .text start:0x020bff4c end:0x020bffc8
 
-src/func_ov005_020bffc8.c:
+src/unnamed/ov005/020b/func_ov005_020bffc8.c:
     complete
     .text start:0x020bffc8 end:0x020bfff4
 
-src/func_ov005_020bfff4.c:
+src/unnamed/ov005/020b/func_ov005_020bfff4.c:
     complete
     .text start:0x020bfff4 end:0x020c0010
 
-src/func_ov005_020c0010.c:
+src/unnamed/ov005/020c/func_ov005_020c0010.c:
     complete
     .text start:0x020c0010 end:0x020c0030
 
-src/func_ov005_020c0030.c:
+src/unnamed/ov005/020c/func_ov005_020c0030.c:
     complete
     .text start:0x020c0030 end:0x020c007c
 
-src/func_ov005_020c007c.c:
+src/unnamed/ov005/020c/func_ov005_020c007c.c:
     complete
     .text start:0x020c007c end:0x020c00b4
 
-src/func_ov005_020c00b4.c:
+src/unnamed/ov005/020c/func_ov005_020c00b4.c:
     complete
     .text start:0x020c00b4 end:0x020c00e4
 
-src/func_ov005_020c00e4.c:
+src/unnamed/ov005/020c/func_ov005_020c00e4.c:
     complete
     .text start:0x020c00e4 end:0x020c0140
 
-src/func_ov005_020c0140.cpp:
+src/unnamed/ov005/020c/func_ov005_020c0140.cpp:
     complete
     .text start:0x020c0140 end:0x020c0250
 
-src/func_ov005_020c0250.cpp:
+src/unnamed/ov005/020c/func_ov005_020c0250.cpp:
     complete
     .text start:0x020c0250 end:0x020c0378
 
-src/func_ov005_020c06cc.c:
+src/unnamed/ov005/020c/func_ov005_020c06cc.c:
     complete
     .text start:0x020c06cc end:0x020c0878
 
-src/func_ov005_020c0878.cpp:
+src/unnamed/ov005/020c/func_ov005_020c0878.cpp:
     complete
     .text start:0x020c0878 end:0x020c0b00
 
-src/_ZN11dScMiniGm_c16OnPendingDestroyEv.cpp:
+src/game/stages/dScMiniGm_c/_ZN11dScMiniGm_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020c0b00 end:0x020c0b04
 
-src/func_ov005_020c0f38.c:
+src/unnamed/ov005/020c/func_ov005_020c0f38.c:
     complete
     .text start:0x020c0f38 end:0x020c1030
 
-src/func_ov005_020c1030.cpp:
+src/unnamed/ov005/020c/func_ov005_020c1030.cpp:
     complete
     .text start:0x020c1030 end:0x020c1130
 
-src/func_ov005_020c1130.c:
+src/unnamed/ov005/020c/func_ov005_020c1130.c:
     complete
     .text start:0x020c1130 end:0x020c14a0
 
-src/_ZN11dScMiniGm_c8BehaviorEv.cpp:
+src/game/stages/dScMiniGm_c/_ZN11dScMiniGm_c8BehaviorEv.cpp:
     complete
     .text start:0x020c14a0 end:0x020c1654
 
-src/_ZN11dScMiniGm_c16CleanupResourcesEv.cpp:
+src/game/stages/dScMiniGm_c/_ZN11dScMiniGm_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020c1654 end:0x020c1688
 
-src/func_ov005_020c1688.c:
+src/unnamed/ov005/020c/func_ov005_020c1688.c:
     complete
     .text start:0x020c1688 end:0x020c16e4
 
-src/func_ov005_020c16e4.c:
+src/unnamed/ov005/020c/func_ov005_020c16e4.c:
     complete
     .text start:0x020c16e4 end:0x020c1a20
 
-src/_ZN11dScMiniGm_c13InitResourcesEv.cpp:
+src/game/stages/dScMiniGm_c/_ZN11dScMiniGm_c13InitResourcesEv.cpp:
     complete
     .text start:0x020c1a20 end:0x020c21ec
 
-src/func_ov005_020c21ec.c:
+src/unnamed/ov005/020c/func_ov005_020c21ec.c:
     complete
     .text start:0x020c21ec end:0x020c2250

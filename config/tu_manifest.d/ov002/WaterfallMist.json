@@ -23,35 +23,35 @@
       "symbol": "_ZN13WaterfallMistD1Ev",
       "address": "0x020b6e08",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN13WaterfallMistD1Ev.cpp",
+      "legacy_source": "src/game/actors/WaterfallMist/_ZN13WaterfallMistD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN13WaterfallMistD0Ev",
       "address": "0x020b6e2c",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN13WaterfallMistD0Ev.cpp",
+      "legacy_source": "src/game/actors/WaterfallMist/_ZN13WaterfallMistD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN13WaterfallMist8BehaviorEv",
       "address": "0x020b6e64",
       "size": "0x00000048",
-      "legacy_source": "src/_ZN13WaterfallMist8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/WaterfallMist/_ZN13WaterfallMist8BehaviorEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN13WaterfallMist13InitResourcesEv",
       "address": "0x020b6eac",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN13WaterfallMist13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/WaterfallMist/_ZN13WaterfallMist13InitResourcesEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "WaterfallMist_Spawn",
       "address": "0x020b6ee8",
       "size": "0x00000030",
-      "legacy_source": "src/WaterfallMist_Spawn.c",
+      "legacy_source": "src/game/actors/WaterfallMist/WaterfallMist_Spawn.c",
       "ordinal": 4
     }
   ],
@@ -169,11 +169,11 @@
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
     "delinksChanged": false,
     "substitutedObjectPaths": [
-      "src/_ZN13WaterfallMistD1Ev.cpp",
-      "src/_ZN13WaterfallMistD0Ev.cpp",
-      "src/_ZN13WaterfallMist8BehaviorEv.cpp",
-      "src/_ZN13WaterfallMist13InitResourcesEv.cpp",
-      "src/WaterfallMist_Spawn.c"
+      "src/game/actors/WaterfallMist/_ZN13WaterfallMistD1Ev.cpp",
+      "src/game/actors/WaterfallMist/_ZN13WaterfallMistD0Ev.cpp",
+      "src/game/actors/WaterfallMist/_ZN13WaterfallMist8BehaviorEv.cpp",
+      "src/game/actors/WaterfallMist/_ZN13WaterfallMist13InitResourcesEv.cpp",
+      "src/game/actors/WaterfallMist/WaterfallMist_Spawn.c"
     ],
     "result": "partial-link-verified",
     "phases": {

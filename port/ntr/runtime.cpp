@@ -6,8 +6,8 @@
 // file it stands in for.
 //
 // Linkage matters and is not uniform in the decomp:
-//   src/VBlankIntrWait.c        `asm void VBlankIntrWait(void)`      -> C++ linkage
-//   src/_ZN3IRQ6EnableEv.cpp    `extern "C" asm unsigned int ...`    -> C linkage
+//   src/game/objects/VBlankIntrWait.c        `asm void VBlankIntrWait(void)`      -> C++ linkage
+//   src/game/actors/IRQ/_ZN3IRQ6EnableEv.cpp    `extern "C" asm unsigned int ...`    -> C linkage
 // The decomp's filenames are already Itanium mangled names, so a .c file built as
 // C++ gets mangled a second time. Match whichever form the original used, or the
 // link fails in a way that looks like a missing symbol rather than a mismatch.

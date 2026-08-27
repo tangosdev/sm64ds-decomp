@@ -16,15 +16,15 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021111a0  src/_ZN8SquasherD1Ev.cpp
- *   [1] 0x021111ec  src/_ZN8SquasherD0Ev.cpp
- *   [2] 0x0211124c  src/func_ov023_0211124c.c
- *   [3] 0x02111308  src/func_ov023_02111308.c
- *   [4] 0x02111350  src/_ZN8Squasher16CleanupResourcesEv.cpp
- *   [5] 0x02111388  src/_ZN8Squasher6RenderEv.cpp
- *   [6] 0x021113b0  src/_ZN8Squasher8BehaviorEv.cpp
- *   [7] 0x02111670  src/_ZN8Squasher13InitResourcesEv.cpp
- *   [8] 0x02111728  src/Squasher_Spawn.c
+ *   [0] 0x021111a0  src/game/actors/Squasher/_ZN8SquasherD1Ev.cpp
+ *   [1] 0x021111ec  src/game/actors/Squasher/_ZN8SquasherD0Ev.cpp
+ *   [2] 0x0211124c  src/unnamed/ov023/0211/func_ov023_0211124c.c
+ *   [3] 0x02111308  src/unnamed/ov023/0211/func_ov023_02111308.c
+ *   [4] 0x02111350  src/game/actors/Squasher/_ZN8Squasher16CleanupResourcesEv.cpp
+ *   [5] 0x02111388  src/game/actors/Squasher/_ZN8Squasher6RenderEv.cpp
+ *   [6] 0x021113b0  src/game/actors/Squasher/_ZN8Squasher8BehaviorEv.cpp
+ *   [7] 0x02111670  src/game/actors/Squasher/_ZN8Squasher13InitResourcesEv.cpp
+ *   [8] 0x02111728  src/game/actors/Squasher/Squasher_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

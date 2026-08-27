@@ -17,25 +17,25 @@
 #       port/hal/cstd_div.c is the host divider
 
 # fixed-point math and vectors (self-contained C)
-src/DotVec3.c
-src/CrossVec3.c
-src/MulVec3Mat4x3.c
-src/Matrix3x3_FromQuaternion.c
-src/_Z14ApproachLinearRiii.cpp
+src/runtime/math/DotVec3.c
+src/runtime/math/CrossVec3.c
+src/runtime/math/MulVec3Mat4x3.c
+src/runtime/math/Matrix3x3_FromQuaternion.c
+src/game/objects/_Z14ApproachLinearRiii.cpp
 
 # Timer (plain struct + methods, no externs)
-src/_ZN5Timer10ResetTimerEv.cpp
-src/_ZN5Timer10StartTimerEv.cpp
-src/_ZN5Timer9StopTimerEv.cpp
-src/_ZN5Timer7GetTimeEv.cpp
+src/game/actors/Timer/_ZN5Timer10ResetTimerEv.cpp
+src/game/actors/Timer/_ZN5Timer10StartTimerEv.cpp
+src/game/actors/Timer/_ZN5Timer9StopTimerEv.cpp
+src/game/actors/Timer/_ZN5Timer7GetTimeEv.cpp
 
 # Fader hierarchy (real C++ with vtables -- host vtables are exactly what a
 # port wants, unlike the hybrid, which must reject them)
-src/engine/fader/_ZN5Fader13AdvanceInterpEv.cpp
-src/engine/fader/_ZN15FaderBrightness10SetToStartEv.cpp
-src/engine/fader/_ZN15FaderBrightness8SetToEndEv.cpp
-src/engine/fader/_ZN15FaderBrightness9IsAtStartEv.cpp
-src/engine/fader/_ZN15FaderBrightness7IsAtEndEv.cpp
-src/engine/fader/_ZN15FaderBrightness20IsBetweenStartAndEndEv.cpp
-src/engine/fader/_ZN15FaderBrightness14SetForwardTimeEj.cpp
-src/engine/fader/_ZN15FaderBrightness15SetBackwardTimeEj.cpp
+src/runtime/graphics/fader/_ZN5Fader13AdvanceInterpEv.cpp
+src/runtime/graphics/fader/_ZN15FaderBrightness10SetToStartEv.cpp
+src/runtime/graphics/fader/_ZN15FaderBrightness8SetToEndEv.cpp
+src/runtime/graphics/fader/_ZN15FaderBrightness9IsAtStartEv.cpp
+src/runtime/graphics/fader/_ZN15FaderBrightness7IsAtEndEv.cpp
+src/runtime/graphics/fader/_ZN15FaderBrightness20IsBetweenStartAndEndEv.cpp
+src/runtime/graphics/fader/_ZN15FaderBrightness14SetForwardTimeEj.cpp
+src/runtime/graphics/fader/_ZN15FaderBrightness15SetBackwardTimeEj.cpp

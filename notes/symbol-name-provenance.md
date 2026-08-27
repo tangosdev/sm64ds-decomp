@@ -155,7 +155,7 @@ inference:
 
 | symbol | name declares | tree says | witness |
 |---|---|---|---|
-| `_ZN7Clipper13Func_020156DCEv` | 0 | **5** | `src/Camera_UpdateMatrices.c` declares `(void*,int,int,int,int)` and matches the ROM |
+| `_ZN7Clipper13Func_020156DCEv` | 0 | **5** | `src/game/camera/Camera_UpdateMatrices.c` declares `(void*,int,int,int,int)` and matches the ROM |
 | `_ZN12dEnemyBase_c12KillByAttackER8dActor_c` | 1 (+`this`) | **4** | its own definition takes 4, and three call sites pass 4 |
 | `_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player` | 2 (+`this`) | **3** | 15 call sites outside ov004 materialise r3; the four inside it do not |
 

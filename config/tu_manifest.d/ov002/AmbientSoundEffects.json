@@ -23,56 +23,56 @@
       "symbol": "_ZN19AmbientSoundEffectsD1Ev",
       "address": "0x020f198c",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN19AmbientSoundEffectsD1Ev.cpp",
+      "legacy_source": "src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffectsD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN19AmbientSoundEffectsD0Ev",
       "address": "0x020f19b0",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN19AmbientSoundEffectsD0Ev.cpp",
+      "legacy_source": "src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffectsD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN19AmbientSoundEffects16CleanupResourcesEv",
       "address": "0x020f19e8",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN19AmbientSoundEffects16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffects16CleanupResourcesEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN19AmbientSoundEffects16OnPendingDestroyEv",
       "address": "0x020f19f0",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN19AmbientSoundEffects16OnPendingDestroyEv.cpp",
+      "legacy_source": "src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffects16OnPendingDestroyEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN19AmbientSoundEffects6RenderEv",
       "address": "0x020f19f4",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN19AmbientSoundEffects6RenderEv.cpp",
+      "legacy_source": "src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffects6RenderEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN19AmbientSoundEffects8BehaviorEv",
       "address": "0x020f19fc",
       "size": "0x000000c8",
-      "legacy_source": "src/_ZN19AmbientSoundEffects8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffects8BehaviorEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN19AmbientSoundEffects13InitResourcesEv",
       "address": "0x020f1ac4",
       "size": "0x000000d0",
-      "legacy_source": "src/_ZN19AmbientSoundEffects13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffects13InitResourcesEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "AmbientSoundEffects_Spawn",
       "address": "0x020f1b94",
       "size": "0x00000030",
-      "legacy_source": "src/AmbientSoundEffects_Spawn.c",
+      "legacy_source": "src/game/actors/AmbientSoundEffects/AmbientSoundEffects_Spawn.c",
       "ordinal": 7
     }
   ],
@@ -190,14 +190,14 @@
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
     "delinksChanged": false,
     "substitutedObjectPaths": [
-      "src/_ZN19AmbientSoundEffectsD1Ev.cpp",
-      "src/_ZN19AmbientSoundEffectsD0Ev.cpp",
-      "src/_ZN19AmbientSoundEffects16CleanupResourcesEv.cpp",
-      "src/_ZN19AmbientSoundEffects16OnPendingDestroyEv.cpp",
-      "src/_ZN19AmbientSoundEffects6RenderEv.cpp",
-      "src/_ZN19AmbientSoundEffects8BehaviorEv.cpp",
-      "src/_ZN19AmbientSoundEffects13InitResourcesEv.cpp",
-      "src/AmbientSoundEffects_Spawn.c"
+      "src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffectsD1Ev.cpp",
+      "src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffectsD0Ev.cpp",
+      "src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffects16CleanupResourcesEv.cpp",
+      "src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffects16OnPendingDestroyEv.cpp",
+      "src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffects6RenderEv.cpp",
+      "src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffects8BehaviorEv.cpp",
+      "src/game/actors/AmbientSoundEffects/_ZN19AmbientSoundEffects13InitResourcesEv.cpp",
+      "src/game/actors/AmbientSoundEffects/AmbientSoundEffects_Spawn.c"
     ],
     "result": "partial-link-verified",
     "phases": {

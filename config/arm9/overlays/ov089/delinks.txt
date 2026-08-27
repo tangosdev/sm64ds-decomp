@@ -4,85 +4,85 @@
     .ctor       start:0x02132af4 end:0x02132af8 kind:rodata align:4
     .data       start:0x02132b00 end:0x02132c40 kind:data align:32
     .bss        start:0x02132c40 end:0x02132d40 kind:bss align:32
-src/_ZN3KeyD1Ev.cpp:
+src/game/actors/Key/_ZN3KeyD1Ev.cpp:
     complete
     .text start:0x02130f00 end:0x02130f50
 
-src/_ZN3KeyD0Ev.cpp:
+src/game/actors/Key/_ZN3KeyD0Ev.cpp:
     complete
     .text start:0x02130f50 end:0x02130fb4
 
-src/func_ov089_02130fb4.c:
+src/unnamed/ov089/0213/func_ov089_02130fb4.c:
     complete
     .text start:0x02130fb4 end:0x021310cc
 
-src/UnloadKeyModels.cpp:
+src/runtime/graphics/UnloadKeyModels.cpp:
     complete
     .text start:0x021310cc end:0x02131114
 
-src/LoadKeyModels.cpp:
+src/runtime/graphics/LoadKeyModels.cpp:
     complete
     .text start:0x02131114 end:0x0213115c
 
-src/func_ov089_0213115c.cpp:
+src/unnamed/ov089/0213/func_ov089_0213115c.cpp:
     complete
     .text start:0x0213115c end:0x021311c0
 
-src/func_ov089_021311c0.c:
+src/unnamed/ov089/0213/func_ov089_021311c0.c:
     complete
     .text start:0x021311c0 end:0x0213162c
 
-src/func_ov089_0213162c.c:
+src/unnamed/ov089/0213/func_ov089_0213162c.c:
     .text start:0x0213162c end:0x02131b18
 
-src/func_ov089_02131b18.c:
+src/unnamed/ov089/0213/func_ov089_02131b18.c:
     complete
     .text start:0x02131b18 end:0x02131dcc
 
-src/func_ov089_02131dcc.c:
+src/unnamed/ov089/0213/func_ov089_02131dcc.c:
     complete
     .text start:0x02131dcc end:0x02131df4
 
-src/func_ov089_02131df4.c:
+src/unnamed/ov089/0213/func_ov089_02131df4.c:
     complete
     .text start:0x02131df4 end:0x02131f04
 
-src/_ZN3Key13OnTurnIntoEggER6Player.cpp:
+src/game/actors/Key/_ZN3Key13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02131f04 end:0x02131f4c
 
-src/_ZN3Key13OnYoshiTryEatEv.cpp:
+src/game/actors/Key/_ZN3Key13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02131f4c end:0x02131f54
 
-src/func_ov089_02131f54.cpp:
+src/unnamed/ov089/0213/func_ov089_02131f54.cpp:
     complete
     .text start:0x02131f54 end:0x02132084
 
-src/_ZN3Key16CleanupResourcesEv.cpp:
+src/game/actors/Key/_ZN3Key16CleanupResourcesEv.cpp:
     complete
     .text start:0x02132084 end:0x021320f0
 
-src/_ZN3Key6RenderEv.cpp:
+src/game/actors/Key/_ZN3Key6RenderEv.cpp:
     complete
     .text start:0x021320f0 end:0x02132194
 
-src/_ZN3Key8BehaviorEv.cpp:
+src/game/actors/Key/_ZN3Key8BehaviorEv.cpp:
     complete
     .text start:0x02132194 end:0x021324a4
 
-src/_ZN3Key13InitResourcesEv.cpp:
+src/game/actors/Key/_ZN3Key13InitResourcesEv.cpp:
     complete
     .text start:0x021324a4 end:0x021327d0
 
-src/LastStar_Spawn.c:
+src/game/actors/LastStar/LastStar_Spawn.c:
     complete
     .text start:0x021327d0 end:0x02132828
 
-src/Key_Spawn.c:
+src/game/actors/Key/Key_Spawn.c:
     complete
     .text start:0x02132828 end:0x02132880
 
-src/__sinit_ov089_021328d4.c:
+src/unnamed/ov089/0213/__sinit_ov089_021328d4.c:
     complete
     .init start:0x021328d4 end:0x02132af4

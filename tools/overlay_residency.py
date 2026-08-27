@@ -74,7 +74,7 @@ RANGE = _load_ranges()
 def conflict(a, b):
     """Can `a` and `b` be resident together?  No, if their ranges intersect.
 
-    `LoadOverlay` (src/LoadOverlay.c) walks the 12-entry resident table
+    `LoadOverlay` (src/runtime/filesystem/LoadOverlay.c) walks the 12-entry resident table
     `data_0209d3c4` and calls `Crash()` when the incoming overlay's
     [start, start + code + bss) intersects one already there. The game enforces
     this itself; it is not an assumption about the linker.
@@ -88,7 +88,7 @@ def conflict(a, b):
 
 # --------------------------------------------------------------------------- E1
 # ov000 is loaded, entered at its own base address, and unloaded again inside one
-# function -- src/func_0201a2f8.c:41-43 --
+# function -- src/unnamed/arm9/0201/func_0201a2f8.c:41-43 --
 #
 #     LoadOverlay((int)&overlay_0);
 #     func_020aa420();                 /* == ov000's base address */
@@ -147,8 +147,8 @@ _SINGLE_CONFIG = {s: not any(conflict(a, b) for a in ts for b in ts if a < b)
 def _level_tables():
     """The three tables `LoadLevelOverlays` and `LoadOrUnloadObjectOverlays` read.
 
-    src/_Z17LoadLevelOverlaysi.cpp        ov = data_020758c8[level]
-    src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp
+    src/game/stages/_Z17LoadLevelOverlaysi.cpp        ov = data_020758c8[level]
+    src/runtime/filesystem/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp
                                           fn(data_02075804[i].t[data_02075998[idx][i]])
 
     data_02075804 is 7 groups of 7 overlay ids and each group is exactly one tier of

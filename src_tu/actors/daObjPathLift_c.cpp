@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02146d7c  src/_ZN15daObjPathLift_cD1Ev.cpp
- *   [1] 0x02146dec  src/_ZN15daObjPathLift_cD0Ev.cpp
- *   [2] 0x02146e70  src/func_ov100_02146e70.c
- *   [3] 0x0214700c  src/func_ov100_0214700c.c
- *   [4] 0x02147054  src/_ZN15daObjPathLift_c16CleanupResourcesEv.cpp
- *   [5] 0x021470a4  src/_ZN15daObjPathLift_c6RenderEv.cpp
- *   [6] 0x021470f4  src/_ZN15daObjPathLift_c8BehaviorEv.cpp
- *   [7] 0x021471e0  src/_ZN15daObjPathLift_c13InitResourcesEv.cpp
+ *   [0] 0x02146d7c  src/game/actors/daObjPathLift_c/_ZN15daObjPathLift_cD1Ev.cpp
+ *   [1] 0x02146dec  src/game/actors/daObjPathLift_c/_ZN15daObjPathLift_cD0Ev.cpp
+ *   [2] 0x02146e70  src/unnamed/ov100/0214/func_ov100_02146e70.c
+ *   [3] 0x0214700c  src/unnamed/ov100/0214/func_ov100_0214700c.c
+ *   [4] 0x02147054  src/game/actors/daObjPathLift_c/_ZN15daObjPathLift_c16CleanupResourcesEv.cpp
+ *   [5] 0x021470a4  src/game/actors/daObjPathLift_c/_ZN15daObjPathLift_c6RenderEv.cpp
+ *   [6] 0x021470f4  src/game/actors/daObjPathLift_c/_ZN15daObjPathLift_c8BehaviorEv.cpp
+ *   [7] 0x021471e0  src/game/actors/daObjPathLift_c/_ZN15daObjPathLift_c13InitResourcesEv.cpp
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -106,7 +106,7 @@ void func_ov002_020efaf0(char* c);
 extern void _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 }
 
-/* Real type (matches src/_ZN11PyramidLift13InitResourcesEv.cpp), not the
+/* Real type (matches src/game/actors/PyramidLift/_ZN11PyramidLift13InitResourcesEv.cpp), not the
    `int[]` this TU's own CleanupResources legacy file assumed -- that file's
    bare (no `&`) SharedFilePtr::Release call site is fixed below to match. */
 extern SharedFilePtr data_ov002_0210d9f0;

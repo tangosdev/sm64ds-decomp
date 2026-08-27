@@ -22,7 +22,7 @@
       "symbol": "_ZN12HauntedChairD1Ev",
       "address": "0x02112938",
       "size": "0x00000048",
-      "legacy_source": "src/_ZN12HauntedChairD1Ev.cpp",
+      "legacy_source": "src/game/actors/HauntedChair/_ZN12HauntedChairD1Ev.cpp",
       "ordinal": 0
     },
     {
@@ -92,28 +92,28 @@
       "symbol": "_ZN12HauntedChair6RenderEv",
       "address": "0x021132fc",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN12HauntedChair6RenderEv.cpp",
+      "legacy_source": "src/game/actors/HauntedChair/_ZN12HauntedChair6RenderEv.cpp",
       "ordinal": 10
     },
     {
       "symbol": "_ZN12HauntedChair8BehaviorEv",
       "address": "0x02113324",
       "size": "0x0000008c",
-      "legacy_source": "src/_ZN12HauntedChair8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/HauntedChair/_ZN12HauntedChair8BehaviorEv.cpp",
       "ordinal": 11
     },
     {
       "symbol": "_ZN12HauntedChair13InitResourcesEv",
       "address": "0x021133b0",
       "size": "0x000000e4",
-      "legacy_source": "src/_ZN12HauntedChair13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/HauntedChair/_ZN12HauntedChair13InitResourcesEv.cpp",
       "ordinal": 12
     },
     {
       "symbol": "HauntedChair_Spawn",
       "address": "0x02113494",
       "size": "0x00000050",
-      "legacy_source": "src/HauntedChair_Spawn.c",
+      "legacy_source": "src/game/actors/HauntedChair/HauntedChair_Spawn.c",
       "ordinal": 13
     }
   ],

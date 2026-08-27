@@ -22,21 +22,21 @@
       "symbol": "_ZN8MetalNetD1Ev",
       "address": "0x02111dc4",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN8MetalNetD1Ev.cpp",
+      "legacy_source": "src/game/actors/MetalNet/_ZN8MetalNetD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN8MetalNetD0Ev",
       "address": "0x02111e08",
       "size": "0x00000058",
-      "legacy_source": "src/_ZN8MetalNetD0Ev.cpp",
+      "legacy_source": "src/game/actors/MetalNet/_ZN8MetalNetD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN8MetalNet16CleanupResourcesEv",
       "address": "0x02111e60",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN8MetalNet16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/MetalNet/_ZN8MetalNet16CleanupResourcesEv.cpp",
       "ordinal": 2
     },
     {
@@ -50,28 +50,28 @@
       "symbol": "_ZN8MetalNet6RenderEv",
       "address": "0x02111ea8",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN8MetalNet6RenderEv.cpp",
+      "legacy_source": "src/game/actors/MetalNet/_ZN8MetalNet6RenderEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN8MetalNet8BehaviorEv",
       "address": "0x02111ed0",
       "size": "0x00000070",
-      "legacy_source": "src/_ZN8MetalNet8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/MetalNet/_ZN8MetalNet8BehaviorEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN8MetalNet13InitResourcesEv",
       "address": "0x02111f40",
       "size": "0x00000108",
-      "legacy_source": "src/_ZN8MetalNet13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/MetalNet/_ZN8MetalNet13InitResourcesEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "MetalNet_Spawn",
       "address": "0x02112048",
       "size": "0x00000030",
-      "legacy_source": "src/MetalNet_Spawn.c",
+      "legacy_source": "src/game/actors/MetalNet/MetalNet_Spawn.c",
       "ordinal": 7
     }
   ],

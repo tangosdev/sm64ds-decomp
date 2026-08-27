@@ -27,147 +27,147 @@
       "symbol": "_ZN8dScene_cD1Ev",
       "address": "0x0202e140",
       "size": "0x00000030",
-      "legacy_source": "src/_ZN8dScene_cD1Ev.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_cD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN8dScene_cD0Ev",
       "address": "0x0202e170",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN8dScene_cD0Ev.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_cD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN8dScene_c20SetAndStopColorFaderEv",
       "address": "0x0202e1b4",
       "size": "0x0000002c",
-      "legacy_source": "src/_ZN8dScene_c20SetAndStopColorFaderEv.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c20SetAndStopColorFaderEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN8dScene_c9SetFadersEP15FaderBrightness",
       "address": "0x0202e1e0",
       "size": "0x0000008c",
-      "legacy_source": "src/_ZN8dScene_c9SetFadersEP15FaderBrightness.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c9SetFadersEP15FaderBrightness.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN8dScene_c16SpawnIfNecessaryEv",
       "address": "0x0202e26c",
       "size": "0x00000094",
-      "legacy_source": "src/_ZN8dScene_c16SpawnIfNecessaryEv.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c16SpawnIfNecessaryEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN8dScene_c18PrepareToSpawnBootEv",
       "address": "0x0202e300",
       "size": "0x00000048",
-      "legacy_source": "src/_ZN8dScene_c18PrepareToSpawnBootEv.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c18PrepareToSpawnBootEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN8dScene_c14StartSceneFadeEjjt",
       "address": "0x0202e348",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN8dScene_c14StartSceneFadeEjjt.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c14StartSceneFadeEjjt.cpp",
       "ordinal": 6
     },
     {
       "symbol": "_ZN8dScene_c15SetSceneToSpawnEjj",
       "address": "0x0202e36c",
       "size": "0x0000002c",
-      "legacy_source": "src/_ZN8dScene_c15SetSceneToSpawnEjj.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c15SetSceneToSpawnEjj.cpp",
       "ordinal": 7
     },
     {
       "symbol": "_ZN8dScene_c11AfterRenderEj",
       "address": "0x0202e398",
       "size": "0x0000000c",
-      "legacy_source": "src/_ZN8dScene_c11AfterRenderEj.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c11AfterRenderEj.cpp",
       "ordinal": 8
     },
     {
       "symbol": "_ZN8dScene_c12BeforeRenderEv",
       "address": "0x0202e3a4",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN8dScene_c12BeforeRenderEv.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c12BeforeRenderEv.cpp",
       "ordinal": 9
     },
     {
       "symbol": "_ZN8dScene_c13AfterBehaviorEj",
       "address": "0x0202e3c8",
       "size": "0x0000000c",
-      "legacy_source": "src/_ZN8dScene_c13AfterBehaviorEj.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c13AfterBehaviorEj.cpp",
       "ordinal": 10
     },
     {
       "symbol": "_ZN8dScene_c14BeforeBehaviorEv",
       "address": "0x0202e3d4",
       "size": "0x000001fc",
-      "legacy_source": "src/_ZN8dScene_c14BeforeBehaviorEv.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c14BeforeBehaviorEv.cpp",
       "ordinal": 11
     },
     {
       "symbol": "_ZN8dScene_c21AfterCleanupResourcesEj",
       "address": "0x0202e5d0",
       "size": "0x00000020",
-      "legacy_source": "src/_ZN8dScene_c21AfterCleanupResourcesEj.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c21AfterCleanupResourcesEj.cpp",
       "ordinal": 12
     },
     {
       "symbol": "_ZN8dScene_c22BeforeCleanupResourcesEv",
       "address": "0x0202e5f0",
       "size": "0x0000003c",
-      "legacy_source": "src/_ZN8dScene_c22BeforeCleanupResourcesEv.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c22BeforeCleanupResourcesEv.cpp",
       "ordinal": 13
     },
     {
       "symbol": "_ZN8dScene_c18AfterInitResourcesEj",
       "address": "0x0202e62c",
       "size": "0x0000000c",
-      "legacy_source": "src/_ZN8dScene_c18AfterInitResourcesEj.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c18AfterInitResourcesEj.cpp",
       "ordinal": 14
     },
     {
       "symbol": "_ZN8dScene_c19BeforeInitResourcesEv",
       "address": "0x0202e638",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN8dScene_c19BeforeInitResourcesEv.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c19BeforeInitResourcesEv.cpp",
       "ordinal": 15
     },
     {
       "symbol": "_ZN8dScene_c19ResetFadersAndSoundEv",
       "address": "0x0202e66c",
       "size": "0x0000005c",
-      "legacy_source": "src/_ZN8dScene_c19ResetFadersAndSoundEv.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c19ResetFadersAndSoundEv.cpp",
       "ordinal": 16
     },
     {
       "symbol": "_ZN8dScene_c20Initialise3dGraphicsEv",
       "address": "0x0202e6c8",
       "size": "0x00000074",
-      "legacy_source": "src/_ZN8dScene_c20Initialise3dGraphicsEv.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c20Initialise3dGraphicsEv.cpp",
       "ordinal": 17
     },
     {
       "symbol": "_ZN5Stage12SetVramBanksEv",
       "address": "0x0202e73c",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN5Stage12SetVramBanksEv.cpp",
+      "legacy_source": "src/game/stages/Stage/_ZN5Stage12SetVramBanksEv.cpp",
       "ordinal": 18
     },
     {
       "symbol": "_ZN2GX15DisableAllBanksEv",
       "address": "0x0202e78c",
       "size": "0x00000048",
-      "legacy_source": "src/_ZN2GX15DisableAllBanksEv.cpp",
+      "legacy_source": "src/game/actors/GX/_ZN2GX15DisableAllBanksEv.cpp",
       "ordinal": 19
     },
     {
       "symbol": "_ZN8dScene_c22ResetHardwareRegistersEv",
       "address": "0x0202e7d4",
       "size": "0x000004c8",
-      "legacy_source": "src/_ZN8dScene_c22ResetHardwareRegistersEv.cpp",
+      "legacy_source": "src/game/stages/dScene_c/_ZN8dScene_c22ResetHardwareRegistersEv.cpp",
       "ordinal": 20
     }
   ],
@@ -176,7 +176,7 @@
   "notes": [
     "HAND-ASSEMBLED. `tubuild.py create` has no candidate for this TU (see boundary_evidence item 1) and would refuse these sources anyway, several being extern \"C\"-wrapped. Written against notes/tu-reconstruction-pilot-report.md and src_tu/actors/PoleLift.cpp; the manifest entry itself is built by tubuild.build_manifest_entry so the schema stays the tool's own.",
     "The two functions at 0x0202e73c and 0x0202e78c carry other classes' names (Stage::SetVramBanks, GX::DisableAllBanks) and are admitted on the data-attribution reading in boundary_evidence, not on their names. Names in this tree are project coinages; the ROM's RTTI carries class names only.",
-    "ZERO UNLICENSED .text, AND THAT TOOK REMOVING A SCAFFOLD RATHER THAN ADDING ONE. ~Scene() is defined INLINE in include/Scene.h, and src/_ZN8dScene_cD1Ev.cpp / src/_ZN8dScene_cD0Ev.cpp each carry a never-called forcing function because a TU that merely includes the header emits no out-of-line copy. This TU needs no such thing: it defines Scene's key function (BeforeInitResources, the first non-inline virtual), so it emits _ZTV8dScene_c, whose slots 16/17 ARE D1/D0, and taking their addresses for the table forces both out-of-line copies. MEASURED both ways -- `tubuild.py compile` reports D1 at section[16] size 0x30 and D0 at section[18] size 0x44 with the scaffold and without it; dropping it took unlicensed function symbols 1 -> 0. It was worth dropping and not merely tidy: a 0x38-byte STB_GLOBAL .text that no config/arm9/symbols.txt entry names, sitting inside the licensed span, displaces every byte after it under rombuild's -nodead link (measured on arm9/Actor: 506 bytes differ and 15/106 modules exact with a scaffold, IDENTICAL and 106/106 without).",
+    "ZERO UNLICENSED .text, AND THAT TOOK REMOVING A SCAFFOLD RATHER THAN ADDING ONE. ~Scene() is defined INLINE in include/Scene.h, and src/game/stages/dScene_c/_ZN8dScene_cD1Ev.cpp / src/game/stages/dScene_c/_ZN8dScene_cD0Ev.cpp each carry a never-called forcing function because a TU that merely includes the header emits no out-of-line copy. This TU needs no such thing: it defines Scene's key function (BeforeInitResources, the first non-inline virtual), so it emits _ZTV8dScene_c, whose slots 16/17 ARE D1/D0, and taking their addresses for the table forces both out-of-line copies. MEASURED both ways -- `tubuild.py compile` reports D1 at section[16] size 0x30 and D0 at section[18] size 0x44 with the scaffold and without it; dropping it took unlicensed function symbols 1 -> 0. It was worth dropping and not merely tidy: a 0x38-byte STB_GLOBAL .text that no config/arm9/symbols.txt entry names, sitting inside the licensed span, displaces every byte after it under rombuild's -nodead link (measured on arm9/Actor: 506 bytes differ and 15/106 modules exact with a scaffold, IDENTICAL and 106/106 without).",
     "UNLICENSED .data, 7 symbols, ALL EXPECTED AND NONE VERIFIED. Defining the key function emits _ZTV8dScene_c (0x50, STB_GLOBAL) plus six STB_LOPROC RTTI records for Scene and its bases. _ZTV8dScene_c is ROM-resident at 0x02092678..0x020926c8 -- inside the 0x02092660..0x020926c8 block boundary_evidence establishes this TU owns -- so it is licensable in principle, but it is deliberately NOT listed under `data` here: every one of its 20 words is a relocation, `verify` does not compare data at all, and listing it would only stop the tool reporting it while proving nothing. That is the `data-verified` rung and this round did not attempt it. Note also the convention clash the pilot hit in the text direction: mwcc's `_ZTV8dScene_c` names the vtable OBJECT at 0x02092678 while config/arm9/symbols.txt names the SLOT ARRAY at 0x02092680, eight bytes apart.",
     "boundary_confidence 'high' came out of tubuild.tu_confidence's DEGENERATE path -- with a single synthetic unit it has no neighbouring unit to score against and returns 'high' merely because the unit carries a class label. It is NOT a tu_map boundary_confidence reading, because tu_map has no boundary here at all. The real basis for trusting this cut is the boundary_evidence list, item 5 in particular.",
     "LADDER REACHED: status text-verified on the whole-range axis (whole-range linking is walled -- see verification.linkcheck.whyWholeRangeCannotPassYet), and partial-link-verified on the orthogonal partial-isolation axis, where the TU range 0x0202e140..0x0202ec9c comes out IDENTICAL (2908 bytes, 0 differing), module fidelity is 106/106 exact at 100.000000%, dsd check modules --fail PASSes, and the full ROM builds bit-identical to the baseline control.",
@@ -285,27 +285,27 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN8dScene_cD1Ev.cpp",
-      "src/_ZN8dScene_cD0Ev.cpp",
-      "src/_ZN8dScene_c20SetAndStopColorFaderEv.cpp",
-      "src/_ZN8dScene_c9SetFadersEP15FaderBrightness.cpp",
-      "src/_ZN8dScene_c16SpawnIfNecessaryEv.cpp",
-      "src/_ZN8dScene_c18PrepareToSpawnBootEv.cpp",
-      "src/_ZN8dScene_c14StartSceneFadeEjjt.cpp",
-      "src/_ZN8dScene_c15SetSceneToSpawnEjj.cpp",
-      "src/_ZN8dScene_c11AfterRenderEj.cpp",
-      "src/_ZN8dScene_c12BeforeRenderEv.cpp",
-      "src/_ZN8dScene_c13AfterBehaviorEj.cpp",
-      "src/_ZN8dScene_c14BeforeBehaviorEv.cpp",
-      "src/_ZN8dScene_c21AfterCleanupResourcesEj.cpp",
-      "src/_ZN8dScene_c22BeforeCleanupResourcesEv.cpp",
-      "src/_ZN8dScene_c18AfterInitResourcesEj.cpp",
-      "src/_ZN8dScene_c19BeforeInitResourcesEv.cpp",
-      "src/_ZN8dScene_c19ResetFadersAndSoundEv.cpp",
-      "src/_ZN8dScene_c20Initialise3dGraphicsEv.cpp",
-      "src/_ZN5Stage12SetVramBanksEv.cpp",
-      "src/_ZN2GX15DisableAllBanksEv.cpp",
-      "src/_ZN8dScene_c22ResetHardwareRegistersEv.cpp"
+      "src/game/stages/dScene_c/_ZN8dScene_cD1Ev.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_cD0Ev.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c20SetAndStopColorFaderEv.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c9SetFadersEP15FaderBrightness.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c16SpawnIfNecessaryEv.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c18PrepareToSpawnBootEv.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c14StartSceneFadeEjjt.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c15SetSceneToSpawnEjj.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c11AfterRenderEj.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c12BeforeRenderEv.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c13AfterBehaviorEj.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c14BeforeBehaviorEv.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c21AfterCleanupResourcesEj.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c22BeforeCleanupResourcesEv.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c18AfterInitResourcesEj.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c19BeforeInitResourcesEv.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c19ResetFadersAndSoundEv.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c20Initialise3dGraphicsEv.cpp",
+      "src/game/stages/Stage/_ZN5Stage12SetVramBanksEv.cpp",
+      "src/game/actors/GX/_ZN2GX15DisableAllBanksEv.cpp",
+      "src/game/stages/dScene_c/_ZN8dScene_c22ResetHardwareRegistersEv.cpp"
     ],
     "extraInertImports": 99,
     "extraImportsWithNoHome": [],

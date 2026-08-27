@@ -22,84 +22,84 @@
       "symbol": "_ZN14EnemySwitchTagD1Ev",
       "address": "0x020f15fc",
       "size": "0x00000030",
-      "legacy_source": "src/_ZN14EnemySwitchTagD1Ev.cpp",
+      "legacy_source": "src/game/actors/EnemySwitchTag/_ZN14EnemySwitchTagD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN14EnemySwitchTagD0Ev",
       "address": "0x020f162c",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN14EnemySwitchTagD0Ev.cpp",
+      "legacy_source": "src/game/actors/EnemySwitchTag/_ZN14EnemySwitchTagD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN12EnemySpawnerD1Ev",
       "address": "0x020f1670",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN12EnemySpawnerD1Ev.cpp",
+      "legacy_source": "src/game/actors/EnemySpawner/_ZN12EnemySpawnerD1Ev.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN12EnemySpawnerD0Ev",
       "address": "0x020f1694",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN12EnemySpawnerD0Ev.cpp",
+      "legacy_source": "src/game/actors/EnemySpawner/_ZN12EnemySpawnerD0Ev.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN14EnemySwitchTag16CleanupResourcesEv",
       "address": "0x020f16cc",
       "size": "0x00000020",
-      "legacy_source": "src/_ZN14EnemySwitchTag16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/EnemySwitchTag/_ZN14EnemySwitchTag16CleanupResourcesEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN12EnemySpawner8BehaviorEv",
       "address": "0x020f16ec",
       "size": "0x00000074",
-      "legacy_source": "src/_ZN12EnemySpawner8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/EnemySpawner/_ZN12EnemySpawner8BehaviorEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN14EnemySwitchTag8BehaviorEv",
       "address": "0x020f1760",
       "size": "0x000000b4",
-      "legacy_source": "src/_ZN14EnemySwitchTag8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/EnemySwitchTag/_ZN14EnemySwitchTag8BehaviorEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "_ZN12EnemySpawner16CleanupResourcesEv",
       "address": "0x020f1814",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN12EnemySpawner16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/EnemySpawner/_ZN12EnemySpawner16CleanupResourcesEv.cpp",
       "ordinal": 7
     },
     {
       "symbol": "_ZN12EnemySpawner13InitResourcesEv",
       "address": "0x020f1838",
       "size": "0x00000040",
-      "legacy_source": "src/_ZN12EnemySpawner13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/EnemySpawner/_ZN12EnemySpawner13InitResourcesEv.cpp",
       "ordinal": 8
     },
     {
       "symbol": "_ZN14EnemySwitchTag13InitResourcesEv",
       "address": "0x020f1878",
       "size": "0x000000ac",
-      "legacy_source": "src/_ZN14EnemySwitchTag13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/EnemySwitchTag/_ZN14EnemySwitchTag13InitResourcesEv.cpp",
       "ordinal": 9
     },
     {
       "symbol": "EnemySpawner_Spawn",
       "address": "0x020f1924",
       "size": "0x00000030",
-      "legacy_source": "src/EnemySpawner_Spawn.c",
+      "legacy_source": "src/game/actors/EnemySpawner/EnemySpawner_Spawn.c",
       "ordinal": 10
     },
     {
       "symbol": "EnemySwitchTag_Spawn",
       "address": "0x020f1954",
       "size": "0x00000038",
-      "legacy_source": "src/EnemySwitchTag_Spawn.c",
+      "legacy_source": "src/game/actors/EnemySwitchTag/EnemySwitchTag_Spawn.c",
       "ordinal": 11
     }
   ],
@@ -143,18 +143,18 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN14EnemySwitchTagD1Ev.cpp",
-      "src/_ZN14EnemySwitchTagD0Ev.cpp",
-      "src/_ZN12EnemySpawnerD1Ev.cpp",
-      "src/_ZN12EnemySpawnerD0Ev.cpp",
-      "src/_ZN14EnemySwitchTag16CleanupResourcesEv.cpp",
-      "src/_ZN12EnemySpawner8BehaviorEv.cpp",
-      "src/_ZN14EnemySwitchTag8BehaviorEv.cpp",
-      "src/_ZN12EnemySpawner16CleanupResourcesEv.cpp",
-      "src/_ZN12EnemySpawner13InitResourcesEv.cpp",
-      "src/_ZN14EnemySwitchTag13InitResourcesEv.cpp",
-      "src/EnemySpawner_Spawn.c",
-      "src/EnemySwitchTag_Spawn.c"
+      "src/game/actors/EnemySwitchTag/_ZN14EnemySwitchTagD1Ev.cpp",
+      "src/game/actors/EnemySwitchTag/_ZN14EnemySwitchTagD0Ev.cpp",
+      "src/game/actors/EnemySpawner/_ZN12EnemySpawnerD1Ev.cpp",
+      "src/game/actors/EnemySpawner/_ZN12EnemySpawnerD0Ev.cpp",
+      "src/game/actors/EnemySwitchTag/_ZN14EnemySwitchTag16CleanupResourcesEv.cpp",
+      "src/game/actors/EnemySpawner/_ZN12EnemySpawner8BehaviorEv.cpp",
+      "src/game/actors/EnemySwitchTag/_ZN14EnemySwitchTag8BehaviorEv.cpp",
+      "src/game/actors/EnemySpawner/_ZN12EnemySpawner16CleanupResourcesEv.cpp",
+      "src/game/actors/EnemySpawner/_ZN12EnemySpawner13InitResourcesEv.cpp",
+      "src/game/actors/EnemySwitchTag/_ZN14EnemySwitchTag13InitResourcesEv.cpp",
+      "src/game/actors/EnemySpawner/EnemySpawner_Spawn.c",
+      "src/game/actors/EnemySwitchTag/EnemySwitchTag_Spawn.c"
     ],
     "extraInertImports": 73,
     "extraImportsWithNoHome": [],

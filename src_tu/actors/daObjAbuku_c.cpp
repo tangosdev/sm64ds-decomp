@@ -14,11 +14,11 @@
  * Legacy sources covered by the seven licensed text ranges (ROM order):
  *   [0] 0x020b3298  src/_ZN12daObjAbuku_cD1Ev.c
  *   [1] 0x020b32c8  src/_ZN12daObjAbuku_cD0Ev.c
- *   [2] 0x020b330c  src/func_ov002_020b330c.cpp
- *   [3] 0x020b3344  src/func_ov002_020b3344.c
- *   [4] 0x020b33dc  src/_ZN12daObjAbuku_c8BehaviorEv.cpp
- *   [5] 0x020b3518  src/_ZN12daObjAbuku_c13InitResourcesEv.cpp
- *   [6] 0x020b3568  src/daObjAbuku_c_Spawn.c
+ *   [2] 0x020b330c  src/unnamed/ov002/020b/func_ov002_020b330c.cpp
+ *   [3] 0x020b3344  src/unnamed/ov002/020b/func_ov002_020b3344.c
+ *   [4] 0x020b33dc  src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_c8BehaviorEv.cpp
+ *   [5] 0x020b3518  src/game/actors/daObjAbuku_c/_ZN12daObjAbuku_c13InitResourcesEv.cpp
+ *   [6] 0x020b3568  src/game/actors/daObjAbuku_c/daObjAbuku_c_Spawn.c
  */
 
 /* Real recovered class declarations and typed member/subobject access. */

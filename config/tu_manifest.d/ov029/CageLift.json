@@ -22,7 +22,7 @@
       "symbol": "_ZN8CageLiftD1Ev",
       "address": "0x02111ac4",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN8CageLiftD1Ev.cpp",
+      "legacy_source": "src/game/actors/CageLift/_ZN8CageLiftD1Ev.cpp",
       "ordinal": 0
     },
     {
@@ -36,49 +36,49 @@
       "symbol": "_ZN8CageLift16CleanupResourcesEv",
       "address": "0x02111b60",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN8CageLift16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/CageLift/_ZN8CageLift16CleanupResourcesEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN8CageLift6RenderEv",
       "address": "0x02111ba4",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN8CageLift6RenderEv.cpp",
+      "legacy_source": "src/game/actors/CageLift/_ZN8CageLift6RenderEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN8CageLift8BehaviorEv",
       "address": "0x02111bcc",
       "size": "0x000001a0",
-      "legacy_source": "src/_ZN8CageLift8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/CageLift/_ZN8CageLift8BehaviorEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN8CageLift13InitResourcesEv",
       "address": "0x02111d6c",
       "size": "0x000000d4",
-      "legacy_source": "src/_ZN8CageLift13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/CageLift/_ZN8CageLift13InitResourcesEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "func_ov029_02111e40",
       "address": "0x02111e40",
       "size": "0x00000020",
-      "legacy_source": "src/func_ov029_02111e40.cpp",
+      "legacy_source": "src/unnamed/ov029/0211/func_ov029_02111e40.cpp",
       "ordinal": 6
     },
     {
       "symbol": "func_ov029_02111e60",
       "address": "0x02111e60",
       "size": "0x00000014",
-      "legacy_source": "src/func_ov029_02111e60.c",
+      "legacy_source": "src/unnamed/ov029/0211/func_ov029_02111e60.c",
       "ordinal": 7
     },
     {
       "symbol": "CageLift_Spawn",
       "address": "0x02111e74",
       "size": "0x00000030",
-      "legacy_source": "src/CageLift_Spawn.c",
+      "legacy_source": "src/game/actors/CageLift/CageLift_Spawn.c",
       "ordinal": 8
     }
   ],

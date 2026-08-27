@@ -6,7 +6,7 @@
  * than to a neighbour.
  *
  * SIZE 0x5044, from the factory's own `_ZN7fBase_cnwEj(0x5044)`
- * (src/func_ov006_0210c120.c). The evidenced field span stops at 0x5043,
+ * (src/unnamed/ov006/0210/func_ov006_0210c120.c). The evidenced field span stops at 0x5043,
  * so the trailing byte is alignment, not unclaimed space.
  *
  * TABLE at 0x4f38, constructed by func_ov006_020c221c and destroyed by
@@ -30,7 +30,7 @@
  * all four are dScMgBase_c's own and are already declared there.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN12dScMgSlot3_cD1Ev.cpp; D0Ev.cpp
+ * its own. Defined for real in src/minigames/dScMgSlot3_c/_ZN12dScMgSlot3_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
  * dScMgBase_c, two levels up, already provides one. */
 #ifndef DSCMGSLOT3_C_H
@@ -50,9 +50,9 @@ struct dScMgSlot3_c : dScMgSingle3DBase_c {
        field, and the 0x5044 assert below still holds. The destructor above is
        declared first and out of line, so it stays this class's KEY FUNCTION and
        neither of these translation units emits _ZTV12dScMgSlot3_c. */
-    s32 InitResources();   /* slot  0 -- src/_ZN12dScMgSlot3_c13InitResourcesEv.cpp */
-    s32 Behavior();        /* slot  6 -- src/_ZN12dScMgSlot3_c8BehaviorEv.cpp */
-    s32 Render();          /* slot  9 -- src/_ZN12dScMgSlot3_c6RenderEv.cpp */
+    s32 InitResources();   /* slot  0 -- src/minigames/dScMgSlot3_c/_ZN12dScMgSlot3_c13InitResourcesEv.cpp */
+    s32 Behavior();        /* slot  6 -- src/minigames/dScMgSlot3_c/_ZN12dScMgSlot3_c8BehaviorEv.cpp */
+    s32 Render();          /* slot  9 -- src/minigames/dScMgSlot3_c/_ZN12dScMgSlot3_c6RenderEv.cpp */
 
     u8  pad_4f38[0xac];     /* 0x4f38 -- opaque table, see file banner */
     s32 mReelPos[3];        /* 0x4fe4 -- Fix12 scroll of each reel; seeded to a

@@ -16,8 +16,8 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02119824  src/MgBingoBallSlotsShot_Spawn.cpp
- *   [1] 0x02119900  src/func_ov006_02119900.c
+ *   [0] 0x02119824  src/minigames/MgBingoBallSlotsShot/MgBingoBallSlotsShot_Spawn.cpp
+ *   [1] 0x02119900  src/unnamed/ov006/0211/func_ov006_02119900.c
  */
 
 extern "C" {

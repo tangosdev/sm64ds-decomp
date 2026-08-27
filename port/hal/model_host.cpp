@@ -90,7 +90,7 @@ void _ZN2GX10EndLoadTexEv(void) {}
 void _ZN2GX16BeginLoadTexPlttEv(void) {}
 void _ZN2GX14EndLoadTexPlttEv(void) {}
 
-// GX::LoadTex destination resolution (see src/_ZN2GX7LoadTexEPKvjj.cpp):
+// GX::LoadTex destination resolution (see src/game/actors/GX/_ZN2GX7LoadTexEPKvjj.cpp):
 //   data_020a60ac  base window address        -> texture slots at 0x06800000
 //   data_020a60bc  secondary bank address     -> 0 = single flat window
 //   data_020a60c0  where the window splits    -> unused while _bc is 0

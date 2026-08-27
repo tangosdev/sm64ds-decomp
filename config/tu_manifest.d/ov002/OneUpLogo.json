@@ -22,56 +22,56 @@
       "symbol": "_ZN9OneUpLogoD1Ev",
       "address": "0x020f0dd0",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN9OneUpLogoD1Ev.cpp",
+      "legacy_source": "src/game/actors/OneUpLogo/_ZN9OneUpLogoD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN9OneUpLogoD0Ev",
       "address": "0x020f0e08",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN9OneUpLogoD0Ev.cpp",
+      "legacy_source": "src/game/actors/OneUpLogo/_ZN9OneUpLogoD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "func_ov002_020f0e54",
       "address": "0x020f0e54",
       "size": "0x00000024",
-      "legacy_source": "src/func_ov002_020f0e54.c",
+      "legacy_source": "src/unnamed/ov002/020f/func_ov002_020f0e54.c",
       "ordinal": 2
     },
     {
       "symbol": "_ZN9OneUpLogo16CleanupResourcesEv",
       "address": "0x020f0e78",
       "size": "0x00000030",
-      "legacy_source": "src/_ZN9OneUpLogo16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/OneUpLogo/_ZN9OneUpLogo16CleanupResourcesEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN9OneUpLogo6RenderEv",
       "address": "0x020f0ea8",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN9OneUpLogo6RenderEv.cpp",
+      "legacy_source": "src/game/actors/OneUpLogo/_ZN9OneUpLogo6RenderEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN9OneUpLogo8BehaviorEv",
       "address": "0x020f0f08",
       "size": "0x00000174",
-      "legacy_source": "src/_ZN9OneUpLogo8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/OneUpLogo/_ZN9OneUpLogo8BehaviorEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN9OneUpLogo13InitResourcesEv",
       "address": "0x020f107c",
       "size": "0x000000f4",
-      "legacy_source": "src/_ZN9OneUpLogo13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/OneUpLogo/_ZN9OneUpLogo13InitResourcesEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "OneUpLogo_Spawn",
       "address": "0x020f1170",
       "size": "0x00000040",
-      "legacy_source": "src/OneUpLogo_Spawn.c",
+      "legacy_source": "src/game/actors/OneUpLogo/OneUpLogo_Spawn.c",
       "ordinal": 7
     }
   ],
@@ -112,14 +112,14 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN9OneUpLogoD1Ev.cpp",
-      "src/_ZN9OneUpLogoD0Ev.cpp",
-      "src/func_ov002_020f0e54.c",
-      "src/_ZN9OneUpLogo16CleanupResourcesEv.cpp",
-      "src/_ZN9OneUpLogo6RenderEv.cpp",
-      "src/_ZN9OneUpLogo8BehaviorEv.cpp",
-      "src/_ZN9OneUpLogo13InitResourcesEv.cpp",
-      "src/OneUpLogo_Spawn.c"
+      "src/game/actors/OneUpLogo/_ZN9OneUpLogoD1Ev.cpp",
+      "src/game/actors/OneUpLogo/_ZN9OneUpLogoD0Ev.cpp",
+      "src/unnamed/ov002/020f/func_ov002_020f0e54.c",
+      "src/game/actors/OneUpLogo/_ZN9OneUpLogo16CleanupResourcesEv.cpp",
+      "src/game/actors/OneUpLogo/_ZN9OneUpLogo6RenderEv.cpp",
+      "src/game/actors/OneUpLogo/_ZN9OneUpLogo8BehaviorEv.cpp",
+      "src/game/actors/OneUpLogo/_ZN9OneUpLogo13InitResourcesEv.cpp",
+      "src/game/actors/OneUpLogo/OneUpLogo_Spawn.c"
     ],
     "extraInertImports": 68,
     "extraImportsWithNoHome": [],

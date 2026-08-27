@@ -161,7 +161,7 @@ a documented contamination vector worth a policy note. *This was not verified �
 
 ## 5. Defects found along the way (actionable)
 
-1. **`src/_ZN6Player16St_WallJump_InitEv.cpp` is misattributed.** Its own banner admits it is
+1. **`src/game/player/Player/_ZN6Player16St_WallJump_InitEv.cpp` is misattributed.** Its own banner admits it is
    *"NOT a Player method"*; it dereferences `this+0x4eb0`, `+0x4eb4`, `+0x4ee5` — ~0x4700 bytes
    past the end of a 0x768-byte `Player`. The real `St_WallJump_Main` is in ov002; this one is in
    ov006. **The bad assumption has already leaked into `include/Player.h:536-540`** as a footnote
@@ -177,10 +177,10 @@ a documented contamination vector worth a policy note. *This was not verified �
    `SURFACE_VANISH_CAP_WALLS = 0x7B`, unrepresentable in 5 bits. With a 5-bit field and ~9 observed
    values, collision with some low N64 ID is near-certain.
 
-4. **`src/AngleDiff.c`** has no header comment, no `@symbol` line, no matching claim — unlike every
+4. **`src/runtime/math/AngleDiff.c`** has no header comment, no `@symbol` line, no matching claim — unlike every
    neighbour in the math set. Lowest-confidence file in that group.
 
-5. **`src/_ZN6Player11ChangeStateERNS_5StateE.cpp`** declares a local `struct State` and a
+5. **`src/game/player/Player/_ZN6Player11ChangeStateERNS_5StateE.cpp`** declares a local `struct State` and a
    `struct C3;` inside the .cpp, and writes fields through `*(State**)((char*)&self->unk_378)`
    casts. The ROM confirms the 0x18/3-PMF layout, so the *shape* is right — but this is an
    un-recovered type re-declared per-file instead of living in a header.
@@ -332,7 +332,7 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 **Two traps in this table:**
 
 1. **`Bookend` → `BookShot`.** The community actor-ID label and the ROM-embedded mangled class name
-   disagree. `src/Bookend_Spawn.c` has `VT0=_ZTV8BookShot`. Trust the mangled name.
+   disagree. `src/game/actors/Bookend/Bookend_Spawn.c` has `VT0=_ZTV8BookShot`. Trust the mangled name.
 2. **`UkikiThief` is not a class.** `UkikiThief_Spawn` (`ov030/symbols.txt:60`) instantiates
    `_ZTV13RollingLogTtm` — identical-code folding. `notes/actor-naming.md:31-33` already warns
    that shared functions are "claimed by the lowest actor id." Re-derive its real behavior; do not

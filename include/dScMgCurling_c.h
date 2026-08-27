@@ -24,7 +24,7 @@ struct dScMgCurling_c : dScMgBase_c {
 
     /* Slot 18 (one of dScMgBase_c's own undeclared new slots 18-35) is
        left unnamed here too, same reasoning as dScMgBase_c.h's own -- its
-       target (src/func_ov006_020e3470.cpp) has a "recovered name" of
+       target (src/unnamed/ov006/020e/func_ov006_020e3470.cpp) has a "recovered name" of
        OnYoshiTryEat_020e3470, which is wrong (same tree-wide mislabel
        documented in notes/dscene-c-siblings-census.md section 3): its
        body sets fields and calls helpers, nothing like a destructor. */

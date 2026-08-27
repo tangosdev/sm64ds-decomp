@@ -25,7 +25,7 @@
  * its body rather than calling it -- and Kill, defined below, is this class's
  * key function. Defining the key function is what makes this TU emit
  * _ZTV10dBgActor_c, _ZTI10dBgActor_c and the D1/D0/D2 variant group. The two legacy
- * files src/_ZN10dBgActor_cD1Ev.cpp and src/_ZN10dBgActor_cD0Ev.cpp exist only
+ * files src/game/actors/dBgActor_c/_ZN10dBgActor_cD1Ev.cpp and src/game/actors/dBgActor_c/_ZN10dBgActor_cD0Ev.cpp exist only
  * because a per-function file has no key function to hang them on and needs a
  * forcing function (`p->~dBgActor_c()` / `delete p`); merged, that scaffolding is
  * exactly what we do NOT want, since it would add two .text sections the

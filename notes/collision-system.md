@@ -22,7 +22,7 @@ collision class can become a key-function TU. See §2.
 
 **2. SUPERSEDED -- the biggest unmatched function is unmatched no more.**
 `DetectClsn(dBgCh_SphCrr&)` byte-matches as of 2026-08-21 and lives at
-`src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`, enrolled complete. The
+`src/game/actors/dBgW_Kc/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`, enrolled complete. The
 notes draft it pointed at is deleted; its history is this file's Phase 3b
 sections and git. (The original fact, kept for the record: the notes draft
 and the nearmiss bank disagreed, and the bank was better -- check both before
@@ -227,7 +227,7 @@ wall, else underside. **[P]**
 their own behaviour; `Update` links the object at the head of `data_0209cee8`, so the
 active set is rebuilt each frame by whoever chooses to register. `Process()` (0x02014aa8)
 is O(n²) over that list and has **exactly one caller: `Stage::Render()` at 0x0202ba14** —
-verified directly, `src/_ZN5Stage6RenderEv.cpp` is the only file in `src/` that names it.
+verified directly, `src/game/stages/Stage/_ZN5Stage6RenderEv.cpp` is the only file in `src/` that names it.
 **[P]**
 
 *(Call-site counts in this section and §3.6 are reloc-table derived — they count sites,
@@ -356,7 +356,7 @@ concentrated in structure, status, and numbers.
 | `itcm.md:65` | 6 unnamed dBgW_Kc funcs, "88 bytes" | **WRONG** — 0x54 = 84 |
 | `itcm.md:384` | "the full 13-slot map is in `include/dBgW_Kc.h`" | **WRONG pointer** — it is `dBgW.h:11` |
 | `itcm.md:533` | "the **only** read of `KCL_Prism::length`" | **WRONG** — `DetectClsn(dBgCh_Gnd&).cpp:172` reads it too; and the type is `KCL_Tri` |
-| `dtor-variant-audit.md` | "enrolled destructor migrations in this tree: **zero**" | **WRONG** — `src/_ZN7dBgW_KcD1Ev.cpp` is one |
+| `dtor-variant-audit.md` | "enrolled destructor migrations in this tree: **zero**" | **WRONG** — `src/game/actors/dBgW_Kc/_ZN7dBgW_KcD1Ev.cpp` is one |
 | `docs/class-reference.html` | `dCc_c` has "2 live slots" | **WRONG** — 4. **FIXED 2026-08-19**; the same defect also hid `dFader_c` (2→10) and `mHeap::Heap_t` (2→16) |
 | `docs/class-hierarchy.html` §6 | dBgCh_Gnd and dBgCh_Actr "have no `type_info` record" | **WRONG** — both do; §4 of the same page contradicts it |
 | `docs/class-reference.html` | built 2026-08-07, pre-rename | **regenerate** — stale paths, `unknown_class` joins its own data disproves |
@@ -539,7 +539,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   (r7 vs r8) at 2004/b56.
 - **3b. `DetectClsn(dBgCh_SphCrr&)`**, 7,112 B. **MATCHED 2026-08-21 --
   0/1778 under the build flags, enrolled at
-  `src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`.** The dated sections
+  `src/game/actors/dBgW_Kc/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`.** The dated sections
   below are the full campaign record (1493 -> 978 -> 253 -> 125 -> 36 -> 31 ->
   15 -> 0); read them before touching the file, and note two flagged untrue
   constructs remain as open readability work. It began the campaign at
@@ -775,7 +775,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   read flat across real gains. `mismatches=N/M` is frozen at 999 until the sizes match.
 
   ```
-  python tools/fdiff.py --c src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp \
+  python tools/fdiff.py --c src/game/actors/dBgW_Kc/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp \
     --name _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr \
     --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56 --align
   ```
@@ -1130,7 +1130,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   1502 fix is the same name-the-tolerance edit in both trees) -- and the two
   halves composed to zero on the first compile.
 
-  The file now lives at `src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`,
+  The file now lives at `src/game/actors/dBgW_Kc/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`,
   enrolled complete in `config/arm9/itcm/delinks.txt` (0x01ffb830-0x01ffd3f8,
   butted against the matched Gnd twin). Two untrue constructs ship in it,
   both flagged in the file header: the volatile round-trip on rsc and the
@@ -1356,7 +1356,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   **3c is done, and it moved 3b.** The cross-read (below) found the shortfall was *block
   layout*, not missing code. `nearmiss/db.jsonl` carried the improved body, as did
   `notes/drafts-sphereclsn-detectclsn.cpp` until #1655 matched the function and deleted it;
-  the finished body is `src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`.
+  the finished body is `src/game/actors/dBgW_Kc/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`.
 
   ### What the cross-read established
 
@@ -1576,7 +1576,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   array should not) does not hold either.
 
   Ground truth on house style, from the matched sibling in the SAME TU
-  (`src/_ZN7dBgW_Kc10DetectClsnER9dBgCh_Gnd.cpp`): it uses **no macros and no
+  (`src/game/actors/dBgW_Kc/_ZN7dBgW_Kc10DetectClsnER9dBgCh_Gnd.cpp`): it uses **no macros and no
   helpers at all** -- named scalar intermediates and fully written-out
   expressions, e.g.
 
@@ -1655,7 +1655,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   until the sizes match.
 
   ```sh
-  python tools/fdiff.py --c src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp \
+  python tools/fdiff.py --c src/game/actors/dBgW_Kc/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp \
     --name _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr \
     --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56 --align
   ```
@@ -1756,7 +1756,7 @@ grep -c complete config/arm9/delinks.txt
 python -c "import json;[print(json.loads(l)['name'],json.loads(l)['divergences']) for l in open('nearmiss/db.jsonl',encoding='utf-8')]"
 grep -n dBgCh_SphCrr config/match_attempts.jsonl
 # score a draft (module itcm, never arm9/itcm)
-python tools/fdiff.py --c src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp \
+python tools/fdiff.py --c src/game/actors/dBgW_Kc/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp \
   --name _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr \
   --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56 --align
 # the port line

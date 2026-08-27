@@ -7,40 +7,40 @@
  * the manifest notes.
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02124b64  src/_ZN5SpinyD1Ev.cpp
+ *   [0] 0x02124b64  src/game/actors/Spiny/_ZN5SpinyD1Ev.cpp
  *   [1] 0x02124bb4  src/_ZN5SpinyD0Ev.c
- *   [2] 0x02124c18  src/_ZN5Spiny13OnYoshiTryEatEv.cpp
- *   [3] 0x02124c20  src/_ZN5Spiny16OnAimedAtWithEggEv.cpp
- *   [4] 0x02124c28  src/func_ov077_02124c28.cpp
- *   [5] 0x02124ce4  src/func_ov077_02124ce4.c
- *   [6] 0x02124d08  src/func_ov077_02124d08.cpp
- *   [7] 0x02124eb0  src/func_ov077_02124eb0.cpp
- *   [8] 0x021250a8  src/func_ov077_021250a8.cpp
- *   [9] 0x021251d0  src/func_ov077_021251d0.cpp
- *   [10] 0x02125290  src/func_ov077_02125290.c
- *   [11] 0x02125304  src/func_ov077_02125304.cpp
- *   [12] 0x021253a4  src/func_ov077_021253a4.cpp
- *   [13] 0x02125480  src/func_ov077_02125480.cpp
- *   [14] 0x02125550  src/func_ov077_02125550.cpp
- *   [15] 0x021256b4  src/func_ov077_021256b4.c
- *   [16] 0x02125830  src/func_ov077_02125830.c
- *   [17] 0x021258dc  src/func_ov077_021258dc.c
- *   [18] 0x02125908  src/func_ov077_02125908.c
- *   [19] 0x02125a0c  src/func_ov077_02125a0c.c
- *   [20] 0x02125a54  src/func_ov077_02125a54.c
- *   [21] 0x02125b1c  src/func_ov077_02125b1c.cpp
- *   [22] 0x02125bb4  src/func_ov077_02125bb4.c
- *   [23] 0x02125dd4  src/func_ov077_02125dd4.c
- *   [24] 0x02125e20  src/func_ov077_02125e20.cpp
- *   [25] 0x02125e5c  src/func_ov077_02125e5c.cpp
- *   [26] 0x02125e94  src/func_ov077_02125e94.c
+ *   [2] 0x02124c18  src/game/actors/Spiny/_ZN5Spiny13OnYoshiTryEatEv.cpp
+ *   [3] 0x02124c20  src/game/actors/Spiny/_ZN5Spiny16OnAimedAtWithEggEv.cpp
+ *   [4] 0x02124c28  src/unnamed/ov077/0212/func_ov077_02124c28.cpp
+ *   [5] 0x02124ce4  src/unnamed/ov077/0212/func_ov077_02124ce4.c
+ *   [6] 0x02124d08  src/unnamed/ov077/0212/func_ov077_02124d08.cpp
+ *   [7] 0x02124eb0  src/unnamed/ov077/0212/func_ov077_02124eb0.cpp
+ *   [8] 0x021250a8  src/unnamed/ov077/0212/func_ov077_021250a8.cpp
+ *   [9] 0x021251d0  src/unnamed/ov077/0212/func_ov077_021251d0.cpp
+ *   [10] 0x02125290  src/unnamed/ov077/0212/func_ov077_02125290.c
+ *   [11] 0x02125304  src/unnamed/ov077/0212/func_ov077_02125304.cpp
+ *   [12] 0x021253a4  src/unnamed/ov077/0212/func_ov077_021253a4.cpp
+ *   [13] 0x02125480  src/unnamed/ov077/0212/func_ov077_02125480.cpp
+ *   [14] 0x02125550  src/unnamed/ov077/0212/func_ov077_02125550.cpp
+ *   [15] 0x021256b4  src/unnamed/ov077/0212/func_ov077_021256b4.c
+ *   [16] 0x02125830  src/unnamed/ov077/0212/func_ov077_02125830.c
+ *   [17] 0x021258dc  src/unnamed/ov077/0212/func_ov077_021258dc.c
+ *   [18] 0x02125908  src/unnamed/ov077/0212/func_ov077_02125908.c
+ *   [19] 0x02125a0c  src/unnamed/ov077/0212/func_ov077_02125a0c.c
+ *   [20] 0x02125a54  src/unnamed/ov077/0212/func_ov077_02125a54.c
+ *   [21] 0x02125b1c  src/unnamed/ov077/0212/func_ov077_02125b1c.cpp
+ *   [22] 0x02125bb4  src/unnamed/ov077/0212/func_ov077_02125bb4.c
+ *   [23] 0x02125dd4  src/unnamed/ov077/0212/func_ov077_02125dd4.c
+ *   [24] 0x02125e20  src/unnamed/ov077/0212/func_ov077_02125e20.cpp
+ *   [25] 0x02125e5c  src/unnamed/ov077/0212/func_ov077_02125e5c.cpp
+ *   [26] 0x02125e94  src/unnamed/ov077/0212/func_ov077_02125e94.c
  *   [27] 0x02125eb0  src/_ZN5Spiny16CleanupResourcesEv.c
  *   [28] 0x02125eec  src/_ZN5Spiny16OnPendingDestroyEv.c
- *   [29] 0x02125ef0  src/_ZN5Spiny6RenderEv.cpp
- *   [30] 0x02125f68  src/_ZN5Spiny8BehaviorEv.cpp
- *   [31] 0x02126058  src/_ZN5Spiny13InitResourcesEv.cpp
- *   [32] 0x02126194  src/_ZN5Spiny13OnTurnIntoEggER6Player.cpp
- *   [33] 0x021261f4  src/Spiny_Spawn.c
+ *   [29] 0x02125ef0  src/game/actors/Spiny/_ZN5Spiny6RenderEv.cpp
+ *   [30] 0x02125f68  src/game/actors/Spiny/_ZN5Spiny8BehaviorEv.cpp
+ *   [31] 0x02126058  src/game/actors/Spiny/_ZN5Spiny13InitResourcesEv.cpp
+ *   [32] 0x02126194  src/game/actors/Spiny/_ZN5Spiny13OnTurnIntoEggER6Player.cpp
+ *   [33] 0x021261f4  src/game/actors/Spiny/Spiny_Spawn.c
  */
 
 /* -------------------------------------------------------------------------- */

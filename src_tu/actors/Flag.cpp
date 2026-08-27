@@ -16,13 +16,13 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02112078  src/_ZN4FlagD1Ev.cpp
+ *   [0] 0x02112078  src/game/actors/Flag/_ZN4FlagD1Ev.cpp
  *   [1] 0x021120a8  src/_ZN4FlagD0Ev.c
  *   [2] 0x021120ec  src/_ZN4Flag16CleanupResourcesEv.c
- *   [3] 0x0211211c  src/_ZN4Flag6RenderEv.cpp
- *   [4] 0x02112144  src/_ZN4Flag8BehaviorEv.cpp
- *   [5] 0x02112190  src/_ZN4Flag13InitResourcesEv.cpp
- *   [6] 0x021121f0  src/Flag_Spawn.c
+ *   [3] 0x0211211c  src/game/actors/Flag/_ZN4Flag6RenderEv.cpp
+ *   [4] 0x02112144  src/game/actors/Flag/_ZN4Flag8BehaviorEv.cpp
+ *   [5] 0x02112190  src/game/actors/Flag/_ZN4Flag13InitResourcesEv.cpp
+ *   [6] 0x021121f0  src/game/actors/Flag/Flag_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

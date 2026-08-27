@@ -3,130 +3,130 @@
     .ctor       start:0x020b1350 end:0x020b1350 kind:rodata align:4
     .data       start:0x020b1360 end:0x020b18a0 kind:data align:32
     .bss        start:0x020b18a0 end:0x020b18a0 kind:bss align:32
-src/_ZN10dScTitle_cD1Ev.cpp:
+src/game/stages/dScTitle_c/_ZN10dScTitle_cD1Ev.cpp:
     complete
     .text start:0x020ad660 end:0x020ad69c
 
-src/_ZN10dScTitle_cD0Ev.cpp:
+src/game/stages/dScTitle_c/_ZN10dScTitle_cD0Ev.cpp:
     complete
     .text start:0x020ad69c end:0x020ad6ec
 
-src/func_ov003_020ad6ec.c:
+src/unnamed/ov003/020a/func_ov003_020ad6ec.c:
     complete
     .text start:0x020ad6ec end:0x020ad7a0
 
-src/_ZN10dScTitle_c16OnPendingDestroyEv.cpp:
+src/game/stages/dScTitle_c/_ZN10dScTitle_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020ad7a0 end:0x020ad7a4
 
-src/_ZN10dScTitle_c6RenderEv.cpp:
+src/game/stages/dScTitle_c/_ZN10dScTitle_c6RenderEv.cpp:
     complete
     .text start:0x020ad7a4 end:0x020ad814
 
-src/_ZN10dScTitle_c8BehaviorEv.cpp:
+src/game/stages/dScTitle_c/_ZN10dScTitle_c8BehaviorEv.cpp:
     complete
     .text start:0x020ad814 end:0x020ada80
 
-src/_ZN10dScTitle_c16CleanupResourcesEv.cpp:
+src/game/stages/dScTitle_c/_ZN10dScTitle_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020ada80 end:0x020ada9c
 
-src/_ZN10dScTitle_c13InitResourcesEv.cpp:
+src/game/stages/dScTitle_c/_ZN10dScTitle_c13InitResourcesEv.cpp:
     complete
     .text start:0x020ada9c end:0x020adc10
 
-src/func_ov003_020adc10.cpp:
+src/unnamed/ov003/020a/func_ov003_020adc10.cpp:
     complete
     .text start:0x020adc10 end:0x020adc74
 
-src/func_ov003_020adc74.cpp:
+src/unnamed/ov003/020a/func_ov003_020adc74.cpp:
     complete
     .text start:0x020adc74 end:0x020adcbc
 
-src/func_ov003_020adcbc.cpp:
+src/unnamed/ov003/020a/func_ov003_020adcbc.cpp:
     complete
     .text start:0x020adcbc end:0x020addfc
 
-src/_ZN12dScStarSel_cD1Ev.cpp:
+src/game/stages/dScStarSel_c/_ZN12dScStarSel_cD1Ev.cpp:
     complete
     .text start:0x020addfc end:0x020ade54
 
-src/_ZN12dScStarSel_cD0Ev.cpp:
+src/game/stages/dScStarSel_c/_ZN12dScStarSel_cD0Ev.cpp:
     complete
     .text start:0x020ade54 end:0x020adec0
 
-src/func_ov003_020adec0.c:
+src/unnamed/ov003/020a/func_ov003_020adec0.c:
     complete
     .text start:0x020adec0 end:0x020adf50
 
-src/func_ov003_020adf50.c:
+src/unnamed/ov003/020a/func_ov003_020adf50.c:
     complete
     .text start:0x020adf50 end:0x020adfc8
 
-src/func_ov003_020adfc8.cpp:
+src/unnamed/ov003/020a/func_ov003_020adfc8.cpp:
     complete
     .text start:0x020adfc8 end:0x020ae0b0
 
-src/func_ov003_020ae0b0.c:
+src/unnamed/ov003/020a/func_ov003_020ae0b0.c:
     complete
     .text start:0x020ae0b0 end:0x020ae1a4
 
-src/func_ov003_020ae1a4.c:
+src/unnamed/ov003/020a/func_ov003_020ae1a4.c:
     complete
     .text start:0x020ae1a4 end:0x020ae238
 
-src/func_ov003_020ae238.c:
+src/unnamed/ov003/020a/func_ov003_020ae238.c:
     complete
     .text start:0x020ae238 end:0x020ae358
 
-src/_ZN12dScStarSel_c16OnPendingDestroyEv.cpp:
+src/game/stages/dScStarSel_c/_ZN12dScStarSel_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020ae6f0 end:0x020ae6f4
 
-src/_ZN12dScStarSel_c16CleanupResourcesEv.cpp:
+src/game/stages/dScStarSel_c/_ZN12dScStarSel_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020af86c end:0x020af8a0
 
-src/StarSelect_Spawn.cpp:
+src/game/actors/StarSelect/StarSelect_Spawn.cpp:
     complete
     .text start:0x020b04f0 end:0x020b0580
 
-src/_ZN13dScGameOver_cD1Ev.cpp:
+src/game/stages/dScGameOver_c/_ZN13dScGameOver_cD1Ev.cpp:
     complete
     .text start:0x020b0580 end:0x020b05bc
 
-src/_ZN13dScGameOver_cD0Ev.cpp:
+src/game/stages/dScGameOver_c/_ZN13dScGameOver_cD0Ev.cpp:
     complete
     .text start:0x020b05bc end:0x020b060c
 
-src/func_ov003_020b060c.c:
+src/unnamed/ov003/020b/func_ov003_020b060c.c:
     complete
     .text start:0x020b060c end:0x020b0730
 
-src/func_ov003_020b0730.c:
+src/unnamed/ov003/020b/func_ov003_020b0730.c:
     complete
     .text start:0x020b0730 end:0x020b0810
 
-src/_ZN13dScGameOver_c16OnPendingDestroyEv.cpp:
+src/game/stages/dScGameOver_c/_ZN13dScGameOver_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020b0810 end:0x020b0814
 
-src/_ZN13dScGameOver_c6RenderEv.cpp:
+src/game/stages/dScGameOver_c/_ZN13dScGameOver_c6RenderEv.cpp:
     complete
     .text start:0x020b0814 end:0x020b0894
 
-src/_ZN13dScGameOver_c8BehaviorEv.cpp:
+src/game/stages/dScGameOver_c/_ZN13dScGameOver_c8BehaviorEv.cpp:
     complete
     .text start:0x020b0894 end:0x020b0b34
 
-src/_ZN13dScGameOver_c16CleanupResourcesEv.cpp:
+src/game/stages/dScGameOver_c/_ZN13dScGameOver_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b0b34 end:0x020b0b3c
 
-src/_ZN13dScGameOver_c13InitResourcesEv.cpp:
+src/game/stages/dScGameOver_c/_ZN13dScGameOver_c13InitResourcesEv.cpp:
     complete
     .text start:0x020b0b3c end:0x020b1118
 
-src/func_ov003_020b1118.cpp:
+src/unnamed/ov003/020b/func_ov003_020b1118.cpp:
     complete
     .text start:0x020b1118 end:0x020b117c

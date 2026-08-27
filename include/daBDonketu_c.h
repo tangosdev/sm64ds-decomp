@@ -1,7 +1,7 @@
 /* The flat C spelling of BigBully -- daBDonketu_c is what the ROM's RTTI calls
  * that class, and include/BigBully.h models it properly as daOts_c ->
  * dEnemyBase_c -> dActor_c. Kept flat because its one includer,
- * src/func_ov064_021175cc.cpp, is a recovered handler that takes `this` as a
+ * src/unnamed/ov064/0211/func_ov064_021175cc.cpp, is a recovered handler that takes `this` as a
  * char*. Field names below are the ones the real chain uses at those offsets,
  * so the two headers cannot drift into describing one class two ways.
  *

@@ -3,94 +3,94 @@
     .ctor       start:0x021369b8 end:0x021369bc kind:rodata align:4
     .data       start:0x021369c0 end:0x02136ae0 kind:data align:32
     .bss        start:0x02136ae0 end:0x02136b80 kind:bss align:32
-src/_ZN10HootTheOwlD1Ev.cpp:
+src/game/actors/HootTheOwl/_ZN10HootTheOwlD1Ev.cpp:
     complete
     .text start:0x02135700 end:0x02135748
 
-src/_ZN10HootTheOwlD0Ev.cpp:
+src/game/actors/HootTheOwl/_ZN10HootTheOwlD0Ev.cpp:
     complete
     .text start:0x02135748 end:0x021357a4
 
-src/func_ov094_021357a4.c:
+src/unnamed/ov094/0213/func_ov094_021357a4.c:
     complete
     .text start:0x021357a4 end:0x021358b4
 
-src/func_ov094_021358b4.cpp:
+src/unnamed/ov094/0213/func_ov094_021358b4.cpp:
     complete
     .text start:0x021358b4 end:0x0213598c
 
-src/func_ov094_0213598c.cpp:
+src/unnamed/ov094/0213/func_ov094_0213598c.cpp:
     complete
     .text start:0x0213598c end:0x021359d8
 
-src/func_ov094_021359d8.cpp:
+src/unnamed/ov094/0213/func_ov094_021359d8.cpp:
     complete
     .text start:0x021359d8 end:0x02135bd4
 
-src/func_ov094_02135bd4.cpp:
+src/unnamed/ov094/0213/func_ov094_02135bd4.cpp:
     complete
     .text start:0x02135bd4 end:0x02135c28
 
-src/func_ov094_02135c28.c:
+src/unnamed/ov094/0213/func_ov094_02135c28.c:
     complete
     .text start:0x02135c28 end:0x02135e64
 
-src/func_ov094_02135e64.cpp:
+src/unnamed/ov094/0213/func_ov094_02135e64.cpp:
     complete
     .text start:0x02135e64 end:0x02135ee0
 
-src/func_ov094_02135ee0.cpp:
+src/unnamed/ov094/0213/func_ov094_02135ee0.cpp:
     complete
     .text start:0x02135ee0 end:0x02135fe0
 
-src/func_ov094_02135fe0.c:
+src/unnamed/ov094/0213/func_ov094_02135fe0.c:
     complete
     .text start:0x02135fe0 end:0x02136024
 
-src/func_ov094_02136024.cpp:
+src/unnamed/ov094/0213/func_ov094_02136024.cpp:
     complete
     .text start:0x02136024 end:0x02136150
 
-src/func_ov094_02136150.c:
+src/unnamed/ov094/0213/func_ov094_02136150.c:
     complete
     .text start:0x02136150 end:0x02136188
 
-src/func_ov094_02136188.cpp:
+src/unnamed/ov094/0213/func_ov094_02136188.cpp:
     complete
     .text start:0x02136188 end:0x021361d8
 
-src/func_ov094_021361d8.c:
+src/unnamed/ov094/0213/func_ov094_021361d8.c:
     complete
     .text start:0x021361d8 end:0x021362e0
 
-src/func_ov094_021362e0.c:
+src/unnamed/ov094/0213/func_ov094_021362e0.c:
     complete
     .text start:0x021362e0 end:0x021363e0
 
-src/_ZN10HootTheOwl16CleanupResourcesEv.cpp:
+src/game/actors/HootTheOwl/_ZN10HootTheOwl16CleanupResourcesEv.cpp:
     complete
     .text start:0x021363e0 end:0x02136428
 
-src/_ZN10HootTheOwl16OnPendingDestroyEv.cpp:
+src/game/actors/HootTheOwl/_ZN10HootTheOwl16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02136428 end:0x0213642c
 
-src/_ZN10HootTheOwl6RenderEv.cpp:
+src/game/actors/HootTheOwl/_ZN10HootTheOwl6RenderEv.cpp:
     complete
     .text start:0x0213642c end:0x02136478
 
-src/_ZN10HootTheOwl8BehaviorEv.cpp:
+src/game/actors/HootTheOwl/_ZN10HootTheOwl8BehaviorEv.cpp:
     complete
     .text start:0x02136478 end:0x02136634
 
-src/_ZN10HootTheOwl13InitResourcesEv.cpp:
+src/game/actors/HootTheOwl/_ZN10HootTheOwl13InitResourcesEv.cpp:
     complete
     .text start:0x02136634 end:0x02136798
 
-src/HootTheOwl_Spawn.c:
+src/game/actors/HootTheOwl/HootTheOwl_Spawn.c:
     complete
     .text start:0x02136798 end:0x021367e8
 
-src/__sinit_ov094_021367e8.c:
+src/unnamed/ov094/0213/__sinit_ov094_021367e8.c:
     complete
     .init start:0x021367e8 end:0x021369b8

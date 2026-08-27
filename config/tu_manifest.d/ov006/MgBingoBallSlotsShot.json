@@ -22,14 +22,14 @@
       "symbol": "MgBingoBallSlotsShot_Spawn",
       "address": "0x02119824",
       "size": "0x000000dc",
-      "legacy_source": "src/MgBingoBallSlotsShot_Spawn.cpp",
+      "legacy_source": "src/minigames/MgBingoBallSlotsShot/MgBingoBallSlotsShot_Spawn.cpp",
       "ordinal": 0
     },
     {
       "symbol": "func_ov006_02119900",
       "address": "0x02119900",
       "size": "0x00000004",
-      "legacy_source": "src/func_ov006_02119900.c",
+      "legacy_source": "src/unnamed/ov006/0211/func_ov006_02119900.c",
       "ordinal": 1
     }
   ],

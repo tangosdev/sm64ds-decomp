@@ -22,35 +22,35 @@
       "symbol": "_ZN12FallBlockBfsD1Ev",
       "address": "0x02111d48",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN12FallBlockBfsD1Ev.cpp",
+      "legacy_source": "src/game/actors/FallBlockBfs/_ZN12FallBlockBfsD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN12FallBlockBfsD0Ev",
       "address": "0x02111d98",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN12FallBlockBfsD0Ev.cpp",
+      "legacy_source": "src/game/actors/FallBlockBfs/_ZN12FallBlockBfsD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN12FallBlockBfs16CleanupResourcesEv",
       "address": "0x02111dfc",
       "size": "0x00000014",
-      "legacy_source": "src/_ZN12FallBlockBfs16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/FallBlockBfs/_ZN12FallBlockBfs16CleanupResourcesEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN12FallBlockBfs13InitResourcesEv",
       "address": "0x02111e10",
       "size": "0x00000014",
-      "legacy_source": "src/_ZN12FallBlockBfs13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/FallBlockBfs/_ZN12FallBlockBfs13InitResourcesEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "FallBlockBfs_Spawn",
       "address": "0x02111e24",
       "size": "0x0000003c",
-      "legacy_source": "src/FallBlockBfs_Spawn.c",
+      "legacy_source": "src/game/actors/FallBlockBfs/FallBlockBfs_Spawn.c",
       "ordinal": 4
     }
   ],

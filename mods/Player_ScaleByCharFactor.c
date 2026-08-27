@@ -1,5 +1,5 @@
 // A deliberate divergence from the ROM, built into the game instead of
-// src/Player_ScaleByCharFactor.c. See notes/rom-build.md (M3).
+// src/game/player/Player_ScaleByCharFactor.c. See notes/rom-build.md (M3).
 //
 // The retail function scales a value by the current character's factor in 4.12
 // fixed point. Shifting by 11 instead of 12 doubles the result. The instruction

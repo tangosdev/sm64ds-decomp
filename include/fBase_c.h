@@ -12,7 +12,7 @@
  * destructor is at 16/17, NOT 0/1, and vtable+0x40 (which AfterCleanupResources
  * dispatches through) is that D1 destructor, not OnPendingDestroy at slot 12.
  *
- * InitResources is declared here but src/_ZN7fBase_c13InitResourcesEv.cpp
+ * InitResources is declared here but src/game/actors/fBase_c/_ZN7fBase_c13InitResourcesEv.cpp
  * deliberately defines it as an extern "C" free function, because a class's
  * first non-inline virtual is its key function and CW emits the vtable into
  * whichever TU defines it -- colliding with the copy the module's gap object
@@ -105,7 +105,7 @@ struct fBase_c {
     /* --- non-virtual --- */
     void MarkForDestruction();
     /* operator new is deliberately NOT declared here: CW rejects an in-class
-       declaration of it, so src/_ZN7fBase_cnwEj.cpp defines it under its mangled
+       declaration of it, so src/game/actors/fBase_c/_ZN7fBase_cnwEj.cpp defines it under its mangled
        name instead. It is neither virtual nor layout-affecting.
 
        operator delete IS accepted in-class, and must be, INLINE: CW builds D0

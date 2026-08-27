@@ -69,7 +69,7 @@ It was an array running off the end of the block that hosted it, into memory who
 contents depend on the image base.
 
 The castle moat water is a texgen mode 1 material whose S/T translation comes from a
-91 frame BTA track: `src/func_020469e8.c` reads `tableC[idx+frame]`,
+91 frame BTA track: `src/unnamed/arm9/0204/func_020469e8.c` reads `tableC[idx+frame]`,
 `TextureTransformer::Update` supplies the frame, and `Animation::Advance` wraps modulo
 the BTA header's 91. The track is one contiguous run of 91 Fix12 words at ov009 DS
 address 0x021122ec.

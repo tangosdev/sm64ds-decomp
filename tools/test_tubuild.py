@@ -253,7 +253,7 @@ def test_promote_dry_run_refuses_a_tu_that_is_not_link_verified_but_still_explai
     assert code != 0, "text-verified is not enough to promote"
     assert "promotion would be REFUSED" in out
     assert "git mv src_tu/actors/PoleLift.cpp" in out
-    assert "git rm src/_ZN8PoleLift6RenderEv.cpp" in out
+    assert "git rm src/game/actors/PoleLift/_ZN8PoleLift6RenderEv.cpp" in out
     assert "NOTHING IS WRITTEN BY THIS COMMAND" in out
     assert "DRY RUN COMPLETE" in out
     assert "COVERAGE GATE IS TU-AWARE" in out

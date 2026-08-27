@@ -75,7 +75,7 @@ struct daDgr_c : dBgActor_c {
      * A leaf class (no RTTI children), so the destructor is declared OUT OF
      * LINE here rather than inline, matching every other leaf under
      * dBgActor_c (e.g. include/BigBrickBlock.h). Defined as a real method in
-     * src/_ZN7daDgr_cD1Ev.cpp / src/_ZN7daDgr_cD0Ev.cpp -- both empty bodies,
+     * src/game/actors/daDgr_c/_ZN7daDgr_cD1Ev.cpp / src/game/actors/daDgr_c/_ZN7daDgr_cD0Ev.cpp -- both empty bodies,
      * because this class owns no member with its own destructor; the compiler
      * emits the two inherited vtable stores and the two dBgActor_c member
      * teardowns on its own. */

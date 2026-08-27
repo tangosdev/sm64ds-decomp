@@ -18,13 +18,13 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021111a0  src/_ZN9ShipWaterD1Ev.cpp
- *   [1] 0x021111ec  src/_ZN9ShipWaterD0Ev.cpp
- *   [2] 0x0211124c  src/_ZN9ShipWater16CleanupResourcesEv.cpp
- *   [3] 0x02111290  src/_ZN9ShipWater6RenderEv.cpp
- *   [4] 0x021112c4  src/_ZN9ShipWater8BehaviorEv.cpp
- *   [5] 0x021113c0  src/_ZN9ShipWater13InitResourcesEv.cpp
- *   [6] 0x02111480  src/ShipWater_Spawn.c
+ *   [0] 0x021111a0  src/game/actors/ShipWater/_ZN9ShipWaterD1Ev.cpp
+ *   [1] 0x021111ec  src/game/actors/ShipWater/_ZN9ShipWaterD0Ev.cpp
+ *   [2] 0x0211124c  src/game/actors/ShipWater/_ZN9ShipWater16CleanupResourcesEv.cpp
+ *   [3] 0x02111290  src/game/actors/ShipWater/_ZN9ShipWater6RenderEv.cpp
+ *   [4] 0x021112c4  src/game/actors/ShipWater/_ZN9ShipWater8BehaviorEv.cpp
+ *   [5] 0x021113c0  src/game/actors/ShipWater/_ZN9ShipWater13InitResourcesEv.cpp
+ *   [6] 0x02111480  src/game/actors/ShipWater/ShipWater_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

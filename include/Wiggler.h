@@ -17,7 +17,7 @@
  *     dCcAcPos_c[5] 0x5b8 + 5*0x40 = 0x6f8
  *
  * The Vector3s array is what named func_02011508 -- see the note on Vector3s in
- * include/types.h and src/_ZN8Vector3sD1Ev.cpp.
+ * include/types.h and src/runtime/math/Vector3s/_ZN8Vector3sD1Ev.cpp.
  */
 
 #ifdef __cplusplus

@@ -18,7 +18,7 @@ struct LVL_Overlay;
  * include/Particle__SysTracker.h and the one in include/dScMgSingle3DBase_c.h.
  * All four now carry the same names and types for the fields they share.
  *
- * The destructor is declared, never defined -- src/_ZN8Particle10SysTrackerD1Ev.cpp
+ * The destructor is declared, never defined -- src/game/actors/Particle/_ZN8Particle10SysTrackerD1Ev.cpp
  * supplies it as an extern "C" free function, and this declaration only lets
  * Stage's implicit destructor find it by name. NOT virtual: the class has no
  * RTTI record and no _ZTV in the ROM, so it must not gain a vtable pointer. */

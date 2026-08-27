@@ -22,28 +22,28 @@
       "symbol": "_ZN15PowerStarCreateD1Ev",
       "address": "0x021126d4",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN15PowerStarCreateD1Ev.cpp",
+      "legacy_source": "src/game/actors/PowerStarCreate/_ZN15PowerStarCreateD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN15PowerStarCreateD0Ev",
       "address": "0x021126f8",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN15PowerStarCreateD0Ev.cpp",
+      "legacy_source": "src/game/actors/PowerStarCreate/_ZN15PowerStarCreateD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN15PowerStarCreate8BehaviorEv",
       "address": "0x02112730",
       "size": "0x0000005c",
-      "legacy_source": "src/_ZN15PowerStarCreate8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/PowerStarCreate/_ZN15PowerStarCreate8BehaviorEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "PowerStarCreate_Spawn",
       "address": "0x0211278c",
       "size": "0x00000030",
-      "legacy_source": "src/PowerStarCreate_Spawn.c",
+      "legacy_source": "src/game/actors/PowerStarCreate/PowerStarCreate_Spawn.c",
       "ordinal": 3
     }
   ],
@@ -162,10 +162,10 @@
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
     "delinksChanged": false,
     "substitutedObjectPaths": [
-      "src/_ZN15PowerStarCreateD1Ev.cpp",
-      "src/_ZN15PowerStarCreateD0Ev.cpp",
-      "src/_ZN15PowerStarCreate8BehaviorEv.cpp",
-      "src/PowerStarCreate_Spawn.c"
+      "src/game/actors/PowerStarCreate/_ZN15PowerStarCreateD1Ev.cpp",
+      "src/game/actors/PowerStarCreate/_ZN15PowerStarCreateD0Ev.cpp",
+      "src/game/actors/PowerStarCreate/_ZN15PowerStarCreate8BehaviorEv.cpp",
+      "src/game/actors/PowerStarCreate/PowerStarCreate_Spawn.c"
     ],
     "result": "partial-link-verified",
     "phases": {

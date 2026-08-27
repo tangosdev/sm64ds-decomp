@@ -864,7 +864,7 @@ void dScene_c::SetAndStopColorFader()
  * Because the definition is in the header, this TU cannot define it again, and
  * merely including the header emits nothing at all -- `_ZN8dScene_cD1Ev is not in
  * the object`. The two uses below force the out-of-line copies into existence,
- * exactly as src/_ZN8dScene_cD1Ev.cpp and src/_ZN8dScene_cD0Ev.cpp do one apiece.
+ * exactly as src/game/stages/dScene_c/_ZN8dScene_cD1Ev.cpp and src/game/stages/dScene_c/_ZN8dScene_cD0Ev.cpp do one apiece.
  * They are never called; they are UNLICENSED extra .text this TU emits, listed
  * as such by `tubuild.py compile`, and they are the reason this file cannot be
  * promoted as-is.
@@ -898,7 +898,7 @@ void dScene_c::SetAndStopColorFader()
  * both stores landing on 0x02092680 and 0x0208e4b8 exactly as
  * config/arm9/relocs.txt records them.
  *
- * WHY NO SCAFFOLD. src/_ZN8dScene_cD1Ev.cpp and src/_ZN8dScene_cD0Ev.cpp each carry a
+ * WHY NO SCAFFOLD. src/game/stages/dScene_c/_ZN8dScene_cD1Ev.cpp and src/game/stages/dScene_c/_ZN8dScene_cD0Ev.cpp each carry a
  * never-called forcing function (`p->~dScene_c();` / `delete p;`) because a TU that
  * merely includes the header emits no out-of-line copy -- their own comments
  * record `_ZN8dScene_cD1Ev is not in the object`. THAT IS NOT TRUE OF THIS TU, and

@@ -22,91 +22,91 @@
       "symbol": "_ZN4BirdD1Ev",
       "address": "0x021111a0",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN4BirdD1Ev.cpp",
+      "legacy_source": "src/game/actors/Bird/_ZN4BirdD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN4BirdD0Ev",
       "address": "0x021111d8",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN4BirdD0Ev.cpp",
+      "legacy_source": "src/game/actors/Bird/_ZN4BirdD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "func_ov009_02111224",
       "address": "0x02111224",
       "size": "0x00000010",
-      "legacy_source": "src/func_ov009_02111224.c",
+      "legacy_source": "src/unnamed/ov009/0211/func_ov009_02111224.c",
       "ordinal": 2
     },
     {
       "symbol": "func_ov009_02111234",
       "address": "0x02111234",
       "size": "0x00000228",
-      "legacy_source": "src/func_ov009_02111234.cpp",
+      "legacy_source": "src/unnamed/ov009/0211/func_ov009_02111234.cpp",
       "ordinal": 3
     },
     {
       "symbol": "func_ov009_0211145c",
       "address": "0x0211145c",
       "size": "0x0000017c",
-      "legacy_source": "src/func_ov009_0211145c.c",
+      "legacy_source": "src/unnamed/ov009/0211/func_ov009_0211145c.c",
       "ordinal": 4
     },
     {
       "symbol": "func_ov009_021115d8",
       "address": "0x021115d8",
       "size": "0x00000114",
-      "legacy_source": "src/func_ov009_021115d8.c",
+      "legacy_source": "src/unnamed/ov009/0211/func_ov009_021115d8.c",
       "ordinal": 5
     },
     {
       "symbol": "func_ov009_021116ec",
       "address": "0x021116ec",
       "size": "0x00000150",
-      "legacy_source": "src/func_ov009_021116ec.cpp",
+      "legacy_source": "src/unnamed/ov009/0211/func_ov009_021116ec.cpp",
       "ordinal": 6
     },
     {
       "symbol": "_ZN4Bird16CleanupResourcesEv",
       "address": "0x0211183c",
       "size": "0x00000030",
-      "legacy_source": "src/_ZN4Bird16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/Bird/_ZN4Bird16CleanupResourcesEv.cpp",
       "ordinal": 7
     },
     {
       "symbol": "_ZN4Bird16OnPendingDestroyEv",
       "address": "0x0211186c",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN4Bird16OnPendingDestroyEv.cpp",
+      "legacy_source": "src/game/actors/Bird/_ZN4Bird16OnPendingDestroyEv.cpp",
       "ordinal": 8
     },
     {
       "symbol": "_ZN4Bird6RenderEv",
       "address": "0x02111870",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN4Bird6RenderEv.cpp",
+      "legacy_source": "src/game/actors/Bird/_ZN4Bird6RenderEv.cpp",
       "ordinal": 9
     },
     {
       "symbol": "_ZN4Bird8BehaviorEv",
       "address": "0x02111898",
       "size": "0x000000e4",
-      "legacy_source": "src/_ZN4Bird8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/Bird/_ZN4Bird8BehaviorEv.cpp",
       "ordinal": 10
     },
     {
       "symbol": "_ZN4Bird13InitResourcesEv",
       "address": "0x0211197c",
       "size": "0x000000b4",
-      "legacy_source": "src/_ZN4Bird13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/Bird/_ZN4Bird13InitResourcesEv.cpp",
       "ordinal": 11
     },
     {
       "symbol": "Bird_Spawn",
       "address": "0x02111a30",
       "size": "0x00000040",
-      "legacy_source": "src/Bird_Spawn.c",
+      "legacy_source": "src/game/actors/Bird/Bird_Spawn.c",
       "ordinal": 12
     }
   ],

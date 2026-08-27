@@ -22,203 +22,203 @@
       "symbol": "_ZN10ChainChompD1Ev",
       "address": "0x02111308",
       "size": "0x000000b4",
-      "legacy_source": "src/_ZN10ChainChompD1Ev.cpp",
+      "legacy_source": "src/game/actors/ChainChomp/_ZN10ChainChompD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN10ChainChompD0Ev",
       "address": "0x021113bc",
       "size": "0x000000c8",
-      "legacy_source": "src/_ZN10ChainChompD0Ev.cpp",
+      "legacy_source": "src/game/actors/ChainChomp/_ZN10ChainChompD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "func_ov014_02111484",
       "address": "0x02111484",
       "size": "0x00000054",
-      "legacy_source": "src/func_ov014_02111484.c",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_02111484.c",
       "ordinal": 2
     },
     {
       "symbol": "func_ov014_021114d8",
       "address": "0x021114d8",
       "size": "0x00000034",
-      "legacy_source": "src/func_ov014_021114d8.c",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_021114d8.c",
       "ordinal": 3
     },
     {
       "symbol": "func_ov014_0211150c",
       "address": "0x0211150c",
       "size": "0x000000b4",
-      "legacy_source": "src/func_ov014_0211150c.c",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_0211150c.c",
       "ordinal": 4
     },
     {
       "symbol": "func_ov014_021115c0",
       "address": "0x021115c0",
       "size": "0x0000002c",
-      "legacy_source": "src/func_ov014_021115c0.c",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_021115c0.c",
       "ordinal": 5
     },
     {
       "symbol": "func_ov014_021115ec",
       "address": "0x021115ec",
       "size": "0x00000480",
-      "legacy_source": "src/func_ov014_021115ec.cpp",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_021115ec.cpp",
       "ordinal": 6
     },
     {
       "symbol": "func_ov014_02111a6c",
       "address": "0x02111a6c",
       "size": "0x00000084",
-      "legacy_source": "src/func_ov014_02111a6c.cpp",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_02111a6c.cpp",
       "ordinal": 7
     },
     {
       "symbol": "func_ov014_02111af0",
       "address": "0x02111af0",
       "size": "0x00000080",
-      "legacy_source": "src/func_ov014_02111af0.c",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_02111af0.c",
       "ordinal": 8
     },
     {
       "symbol": "func_ov014_02111b70",
       "address": "0x02111b70",
       "size": "0x00000138",
-      "legacy_source": "src/func_ov014_02111b70.c",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_02111b70.c",
       "ordinal": 9
     },
     {
       "symbol": "func_ov014_02111ca8",
       "address": "0x02111ca8",
       "size": "0x0000011c",
-      "legacy_source": "src/func_ov014_02111ca8.cpp",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_02111ca8.cpp",
       "ordinal": 10
     },
     {
       "symbol": "func_ov014_02111dc4",
       "address": "0x02111dc4",
       "size": "0x00000050",
-      "legacy_source": "src/func_ov014_02111dc4.cpp",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_02111dc4.cpp",
       "ordinal": 11
     },
     {
       "symbol": "func_ov014_02111e14",
       "address": "0x02111e14",
       "size": "0x00000060",
-      "legacy_source": "src/func_ov014_02111e14.c",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_02111e14.c",
       "ordinal": 12
     },
     {
       "symbol": "func_ov014_02111e74",
       "address": "0x02111e74",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov014_02111e74.cpp",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_02111e74.cpp",
       "ordinal": 13
     },
     {
       "symbol": "func_ov014_02111ebc",
       "address": "0x02111ebc",
       "size": "0x0000004c",
-      "legacy_source": "src/func_ov014_02111ebc.cpp",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_02111ebc.cpp",
       "ordinal": 14
     },
     {
       "symbol": "func_ov014_02111f08",
       "address": "0x02111f08",
       "size": "0x0000004c",
-      "legacy_source": "src/func_ov014_02111f08.cpp",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_02111f08.cpp",
       "ordinal": 15
     },
     {
       "symbol": "func_ov014_02111f54",
       "address": "0x02111f54",
       "size": "0x00000064",
-      "legacy_source": "src/func_ov014_02111f54.cpp",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_02111f54.cpp",
       "ordinal": 16
     },
     {
       "symbol": "func_ov014_02111fb8",
       "address": "0x02111fb8",
       "size": "0x00000028",
-      "legacy_source": "src/func_ov014_02111fb8.c",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_02111fb8.c",
       "ordinal": 17
     },
     {
       "symbol": "func_ov014_02111fe0",
       "address": "0x02111fe0",
       "size": "0x00000134",
-      "legacy_source": "src/func_ov014_02111fe0.c",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_02111fe0.c",
       "ordinal": 18
     },
     {
       "symbol": "func_ov014_02112114",
       "address": "0x02112114",
       "size": "0x000001c8",
-      "legacy_source": "src/func_ov014_02112114.c",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_02112114.c",
       "ordinal": 19
     },
     {
       "symbol": "func_ov014_021122dc",
       "address": "0x021122dc",
       "size": "0x00000090",
-      "legacy_source": "src/func_ov014_021122dc.c",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_021122dc.c",
       "ordinal": 20
     },
     {
       "symbol": "func_ov014_0211236c",
       "address": "0x0211236c",
       "size": "0x000001a0",
-      "legacy_source": "src/func_ov014_0211236c.c",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_0211236c.c",
       "ordinal": 21
     },
     {
       "symbol": "func_ov014_0211250c",
       "address": "0x0211250c",
       "size": "0x0000027c",
-      "legacy_source": "src/func_ov014_0211250c.c",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_0211250c.c",
       "ordinal": 22
     },
     {
       "symbol": "func_ov014_02112788",
       "address": "0x02112788",
       "size": "0x000001c4",
-      "legacy_source": "src/func_ov014_02112788.c",
+      "legacy_source": "src/unnamed/ov014/0211/func_ov014_02112788.c",
       "ordinal": 23
     },
     {
       "symbol": "_ZN10ChainChomp16CleanupResourcesEv",
       "address": "0x0211294c",
       "size": "0x00000048",
-      "legacy_source": "src/_ZN10ChainChomp16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/ChainChomp/_ZN10ChainChomp16CleanupResourcesEv.cpp",
       "ordinal": 24
     },
     {
       "symbol": "_ZN10ChainChomp6RenderEv",
       "address": "0x02112994",
       "size": "0x00000058",
-      "legacy_source": "src/_ZN10ChainChomp6RenderEv.cpp",
+      "legacy_source": "src/game/actors/ChainChomp/_ZN10ChainChomp6RenderEv.cpp",
       "ordinal": 25
     },
     {
       "symbol": "_ZN10ChainChomp8BehaviorEv",
       "address": "0x021129ec",
       "size": "0x00000128",
-      "legacy_source": "src/_ZN10ChainChomp8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/ChainChomp/_ZN10ChainChomp8BehaviorEv.cpp",
       "ordinal": 26
     },
     {
       "symbol": "_ZN10ChainChomp13InitResourcesEv",
       "address": "0x02112b14",
       "size": "0x00000208",
-      "legacy_source": "src/_ZN10ChainChomp13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/ChainChomp/_ZN10ChainChomp13InitResourcesEv.cpp",
       "ordinal": 27
     },
     {
       "symbol": "ChainChomp_Spawn",
       "address": "0x02112d1c",
       "size": "0x000000f0",
-      "legacy_source": "src/ChainChomp_Spawn.cpp",
+      "legacy_source": "src/game/actors/ChainChomp/ChainChomp_Spawn.cpp",
       "ordinal": 28
     }
   ],

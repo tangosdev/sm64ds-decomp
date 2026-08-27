@@ -29,10 +29,10 @@
  * / D0Ev, ov013 0x021111a0 / 0x021111d0) by earlier work. This class
  * overrides four slots beyond the destructor:
  *
- *   0  InitResources      ov013 0x0211133c  (src/_ZN21ClockPaintingPendulum13InitResourcesEv.cpp)
+ *   0  InitResources      ov013 0x0211133c  (src/game/actors/ClockPaintingPendulum/_ZN21ClockPaintingPendulum13InitResourcesEv.cpp)
  *   3  CleanupResources   ov013 0x02111214  (src/_ZN21ClockPaintingPendulum16CleanupResourcesEv.c)
  *   6  Behavior           ov013 0x021112a8  (src/_ZN21ClockPaintingPendulum8BehaviorEv.c)
- *   9  Render             ov013 0x02111280  (src/_ZN21ClockPaintingPendulum6RenderEv.cpp)
+ *   9  Render             ov013 0x02111280  (src/game/actors/ClockPaintingPendulum/_ZN21ClockPaintingPendulum6RenderEv.cpp)
  *
  * (config/arm9/overlays/ov013/relocs.txt has no entries at the vtable's own
  * slot addresses because the whole vtable is one relocation-free literal
@@ -45,12 +45,12 @@
  * implementation, so it is not part of this recovery.
  *
  * All four bytes still match; only the symbol NAMES were placeholders
- * (func_ov013_0211xxxx), now renamed. src/func_ov013_02111238.c, the small
+ * (func_ov013_0211xxxx), now renamed. src/unnamed/ov013/0211/func_ov013_02111238.c, the small
  * helper both InitResources and Behavior call, is untouched -- it is not a
  * vtable slot and stays under its func_ name.
  *
  * NOT CONVERTED TO REAL METHODS BY THIS PASS, same idiom as include/Door.h
- * and src/_ZN7fBase_c13InitResourcesEv.cpp: each of the four sources above is
+ * and src/game/actors/fBase_c/_ZN7fBase_c13InitResourcesEv.cpp: each of the four sources above is
  * declared here as a virtual override so the header documents the vtable
  * completely, but defined as a free function taking the object pointer
  * explicitly, never as a real `ClockPaintingPendulum::` method -- so nothing

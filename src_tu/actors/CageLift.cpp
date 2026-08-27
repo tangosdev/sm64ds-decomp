@@ -7,15 +7,15 @@
  * the manifest notes.
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02111ac4  src/_ZN8CageLiftD1Ev.cpp
+ *   [0] 0x02111ac4  src/game/actors/CageLift/_ZN8CageLiftD1Ev.cpp
  *   [1] 0x02111b08  src/_ZN8CageLiftD0Ev.c
- *   [2] 0x02111b60  src/_ZN8CageLift16CleanupResourcesEv.cpp
- *   [3] 0x02111ba4  src/_ZN8CageLift6RenderEv.cpp
- *   [4] 0x02111bcc  src/_ZN8CageLift8BehaviorEv.cpp
- *   [5] 0x02111d6c  src/_ZN8CageLift13InitResourcesEv.cpp
- *   [6] 0x02111e40  src/func_ov029_02111e40.cpp
- *   [7] 0x02111e60  src/func_ov029_02111e60.c
- *   [8] 0x02111e74  src/CageLift_Spawn.c
+ *   [2] 0x02111b60  src/game/actors/CageLift/_ZN8CageLift16CleanupResourcesEv.cpp
+ *   [3] 0x02111ba4  src/game/actors/CageLift/_ZN8CageLift6RenderEv.cpp
+ *   [4] 0x02111bcc  src/game/actors/CageLift/_ZN8CageLift8BehaviorEv.cpp
+ *   [5] 0x02111d6c  src/game/actors/CageLift/_ZN8CageLift13InitResourcesEv.cpp
+ *   [6] 0x02111e40  src/unnamed/ov029/0211/func_ov029_02111e40.cpp
+ *   [7] 0x02111e60  src/unnamed/ov029/0211/func_ov029_02111e60.c
+ *   [8] 0x02111e74  src/game/actors/CageLift/CageLift_Spawn.c
  */
 
 /* -------------------------------------------------------------------------- */

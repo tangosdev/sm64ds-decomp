@@ -240,14 +240,14 @@ The committed initializer sources were checked with explicit module/address/size
 parameters:
 
 ```powershell
-python tools/match.py --c src/__sinit_ov009_02112458.c --func __sinit_ov009_02112458 --addr 0x02112458 --size 0xcc --version 2004/b56 --module ov009 --strict-relocs --brief
-python tools/linkcheck.py --c src/__sinit_ov009_02112458.c --name __sinit_ov009_02112458 --addr 0x02112458 --size 0xcc --module ov009
+python tools/match.py --c src/unnamed/ov009/0211/__sinit_ov009_02112458.c --func __sinit_ov009_02112458 --addr 0x02112458 --size 0xcc --version 2004/b56 --module ov009 --strict-relocs --brief
+python tools/linkcheck.py --c src/unnamed/ov009/0211/__sinit_ov009_02112458.c --name __sinit_ov009_02112458 --addr 0x02112458 --size 0xcc --module ov009
 
-python tools/match.py --c src/__sinit_ov015_02112f9c.c --func __sinit_ov015_02112f9c --addr 0x02112f9c --size 0x40 --version 2004/b56 --module ov015 --strict-relocs --brief
-python tools/linkcheck.py --c src/__sinit_ov015_02112f9c.c --name __sinit_ov015_02112f9c --addr 0x02112f9c --size 0x40 --module ov015
+python tools/match.py --c src/unnamed/ov015/0211/__sinit_ov015_02112f9c.c --func __sinit_ov015_02112f9c --addr 0x02112f9c --size 0x40 --version 2004/b56 --module ov015 --strict-relocs --brief
+python tools/linkcheck.py --c src/unnamed/ov015/0211/__sinit_ov015_02112f9c.c --name __sinit_ov015_02112f9c --addr 0x02112f9c --size 0x40 --module ov015
 
-python tools/match.py --c src/__sinit_ov002_02101064.c --func __sinit_ov002_02101064 --addr 0x02101064 --size 0x414 --version 2004/b56 --module ov002 --strict-relocs --brief
-python tools/linkcheck.py --c src/__sinit_ov002_02101064.c --name __sinit_ov002_02101064 --addr 0x02101064 --size 0x414 --module ov002
+python tools/match.py --c src/unnamed/ov002/0210/__sinit_ov002_02101064.c --func __sinit_ov002_02101064 --addr 0x02101064 --size 0x414 --version 2004/b56 --module ov002 --strict-relocs --brief
+python tools/linkcheck.py --c src/unnamed/ov002/0210/__sinit_ov002_02101064.c --name __sinit_ov002_02101064 --addr 0x02101064 --size 0x414 --module ov002
 ```
 
 Observed: all three `MATCH`; all three `VERIFIED`, `blind: 0`.

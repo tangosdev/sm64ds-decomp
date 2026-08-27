@@ -94,7 +94,7 @@ against 3 proven — is far weaker than its volume suggests, because the deletin
 destructor also has to get `operator delete` right.
 
 **A second, quieter backlog.** The proven destructor pattern often bought its bytes with a
-new lie. `src/_ZN6CannonD1Ev.cpp` is a genuine `Cannon::~Cannon()`, but it re-declares its
+new lie. `src/game/actors/Cannon/_ZN6CannonD1Ev.cpp` is a genuine `Cannon::~Cannon()`, but it re-declares its
 own base locally rather than including the real header:
 
 ```cpp

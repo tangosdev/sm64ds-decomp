@@ -22,21 +22,21 @@
       "symbol": "MgPicturePoker_Spawn",
       "address": "0x020dbd54",
       "size": "0x000000c0",
-      "legacy_source": "src/MgPicturePoker_Spawn.cpp",
+      "legacy_source": "src/minigames/MgPicturePoker/MgPicturePoker_Spawn.cpp",
       "ordinal": 0
     },
     {
       "symbol": "func_ov006_020dbe14",
       "address": "0x020dbe14",
       "size": "0x0000001c",
-      "legacy_source": "src/func_ov006_020dbe14.c",
+      "legacy_source": "src/unnamed/ov006/020d/func_ov006_020dbe14.c",
       "ordinal": 1
     },
     {
       "symbol": "func_ov006_020dbe30",
       "address": "0x020dbe30",
       "size": "0x00000010",
-      "legacy_source": "src/func_ov006_020dbe30.c",
+      "legacy_source": "src/unnamed/ov006/020d/func_ov006_020dbe30.c",
       "ordinal": 2
     }
   ],

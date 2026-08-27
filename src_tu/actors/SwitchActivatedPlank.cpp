@@ -9,13 +9,13 @@
  * Assembled from these legacy one-function sources (ROM address order):
  *   [0] 0x02112630  src/_ZN20SwitchActivatedPlankD1Ev.c
  *   [1] 0x0211267c  src/_ZN20SwitchActivatedPlankD0Ev.c
- *   [2] 0x021126dc  src/func_ov029_021126dc.c
- *   [3] 0x02112710  src/func_ov029_02112710.c
- *   [4] 0x02112750  src/_ZN20SwitchActivatedPlank16CleanupResourcesEv.cpp
- *   [5] 0x02112794  src/_ZN20SwitchActivatedPlank6RenderEv.cpp
- *   [6] 0x021127cc  src/_ZN20SwitchActivatedPlank8BehaviorEv.cpp
- *   [7] 0x021128b0  src/_ZN20SwitchActivatedPlank13InitResourcesEv.cpp
- *   [8] 0x02112964  src/SwitchActivatedPlank_Spawn.c
+ *   [2] 0x021126dc  src/unnamed/ov029/0211/func_ov029_021126dc.c
+ *   [3] 0x02112710  src/unnamed/ov029/0211/func_ov029_02112710.c
+ *   [4] 0x02112750  src/game/actors/SwitchActivatedPlank/_ZN20SwitchActivatedPlank16CleanupResourcesEv.cpp
+ *   [5] 0x02112794  src/game/actors/SwitchActivatedPlank/_ZN20SwitchActivatedPlank6RenderEv.cpp
+ *   [6] 0x021127cc  src/game/actors/SwitchActivatedPlank/_ZN20SwitchActivatedPlank8BehaviorEv.cpp
+ *   [7] 0x021128b0  src/game/actors/SwitchActivatedPlank/_ZN20SwitchActivatedPlank13InitResourcesEv.cpp
+ *   [8] 0x02112964  src/game/actors/SwitchActivatedPlank/SwitchActivatedPlank_Spawn.c
  */
 
 /* -------------------------------------------------------------------------- */

@@ -41,7 +41,7 @@ struct Trap : dBgActor_c {
        _ZN5ModelC1Ev((char*)p + 0x320) directly, no dBgCh_Actr wrapper. This is
        the door's own model and it is NOT the only one the object carries:
        dBgActor_c's inherited Model at 0xd4 is live too -- ~Trap destroys both,
-       Model::D1 at +0x320 and again at +0xd4 (see src/_ZN4TrapD1Ev.cpp). So it
+       Model::D1 at +0x320 and again at +0xd4 (see src/game/actors/Trap/_ZN4TrapD1Ev.cpp). So it
        must not be called "mModel": that name is already the base's, and an
        unqualified mModel inside a Trap method would silently bind to 0x320
        while a reader collapsing a +0xd4 poke would expect 0xd4. Named for the

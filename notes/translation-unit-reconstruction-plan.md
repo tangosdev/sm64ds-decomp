@@ -181,14 +181,14 @@ An illustrative entry:
       "symbol": "_ZN7Chuckya8BehaviorEv",
       "address": "0x021xxxxx",
       "size": "0x000xxxxx",
-      "legacy_source": "src/_ZN7Chuckya8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/Chuckya/_ZN7Chuckya8BehaviorEv.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN7Chuckya6RenderEv",
       "address": "0x021xxxxx",
       "size": "0x000xxxxx",
-      "legacy_source": "src/_ZN7Chuckya6RenderEv.cpp",
+      "legacy_source": "src/game/actors/Chuckya/_ZN7Chuckya6RenderEv.cpp",
       "ordinal": 1
     }
   ],

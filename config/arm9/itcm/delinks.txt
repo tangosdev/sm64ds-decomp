@@ -1,113 +1,113 @@
     .text       start:0x01ff8000 end:0x01ffdf3c kind:code align:32
     .bss        start:0x01ffdf40 end:0x01ffdf40 kind:bss align:32
-src/func_01ff859c.c:
+src/unnamed/arm9/01ff/func_01ff859c.c:
     complete
     .text start:0x01ff859c end:0x01ff8708
 
-src/func_01ff97d8.c:
+src/unnamed/arm9/01ff/func_01ff97d8.c:
     complete
     .text start:0x01ff97d8 end:0x01ffa344
 
-src/func_01ffa344.c:
+src/unnamed/arm9/01ff/func_01ffa344.c:
     complete
     .text start:0x01ffa344 end:0x01ffa440
 
-src/func_01ffa4bc.c:
+src/unnamed/arm9/01ff/func_01ffa4bc.c:
     complete
     .text start:0x01ffa4bc end:0x01ffa588
 
-src/func_01ffafd4.c:
+src/unnamed/arm9/01ff/func_01ffafd4.c:
     complete
     .text start:0x01ffafd4 end:0x01ffb008
 
-src/func_01ffb008.c:
+src/unnamed/arm9/01ff/func_01ffb008.c:
     complete
     .text start:0x01ffb008 end:0x01ffb030
 
-src/func_01ffb030.c:
+src/unnamed/arm9/01ff/func_01ffb030.c:
     complete
     .text start:0x01ffb030 end:0x01ffb07c
 
-src/func_01ffb07c.cpp:
+src/unnamed/arm9/01ff/func_01ffb07c.cpp:
     complete
     .text start:0x01ffb07c end:0x01ffb098
 
-src/func_01ffb098.cpp:
+src/unnamed/arm9/01ff/func_01ffb098.cpp:
     complete
     .text start:0x01ffb098 end:0x01ffb0a4
 
-src/func_01ffb0a4.cpp:
+src/unnamed/arm9/01ff/func_01ffb0a4.cpp:
     complete
     .text start:0x01ffb0a4 end:0x01ffb0b0
 
-src/func_01ffb0b0.cpp:
+src/unnamed/arm9/01ff/func_01ffb0b0.cpp:
     complete
     .text start:0x01ffb0b0 end:0x01ffb0bc
 
-src/func_01ffb0bc.cpp:
+src/unnamed/arm9/01ff/func_01ffb0bc.cpp:
     complete
     .text start:0x01ffb0bc end:0x01ffb0c8
 
-src/func_01ffb0c8.cpp:
+src/unnamed/arm9/01ff/func_01ffb0c8.cpp:
     complete
     .text start:0x01ffb0c8 end:0x01ffb0d0
 
-src/_ZNK7dBgW_Kc13GetUnkOctreeYEv.cpp:
+src/game/actors/dBgW_Kc/_ZNK7dBgW_Kc13GetUnkOctreeYEv.cpp:
     complete
     .text start:0x01ffb0d0 end:0x01ffb0ec
 
-src/_ZNK7dBgW_Kc16GetOctreeOriginYEv.cpp:
+src/game/actors/dBgW_Kc/_ZNK7dBgW_Kc16GetOctreeOriginYEv.cpp:
     complete
     .text start:0x01ffb0ec end:0x01ffb0fc
 
-src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp:
+src/game/actors/dBgW_Kc/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp:
     complete
     .text start:0x01ffb830 end:0x01ffd3f8
 
-src/_ZN7dBgW_Kc10DetectClsnER9dBgCh_Gnd.cpp:
+src/game/actors/dBgW_Kc/_ZN7dBgW_Kc10DetectClsnER9dBgCh_Gnd.cpp:
     complete
     .text start:0x01ffd3f8 end:0x01ffd890
 
-src/_ZN7dBgW_Kc17GetTriangleOriginEsR7Vector3.cpp:
+src/game/actors/dBgW_Kc/_ZN7dBgW_Kc17GetTriangleOriginEsR7Vector3.cpp:
     complete
     .text start:0x01ffd890 end:0x01ffd8d8
 
-src/_ZN7dBgW_Kc9GetNormalEsR7Vector3.cpp:
+src/game/actors/dBgW_Kc/_ZN7dBgW_Kc9GetNormalEsR7Vector3.cpp:
     complete
     .text start:0x01ffd8d8 end:0x01ffd920
 
-src/_ZN7dBgW_Kc14GetSurfaceInfoEsR11SurfaceInfo.cpp:
+src/game/actors/dBgW_Kc/_ZN7dBgW_Kc14GetSurfaceInfoEsR11SurfaceInfo.cpp:
     complete
     .text start:0x01ffd920 end:0x01ffd97c
 
-src/func_01ffd9d4.c:
+src/unnamed/arm9/01ff/func_01ffd9d4.c:
     complete
     .text start:0x01ffd9d4 end:0x01ffdb28
 
-src/func_01ffdb28.c:
+src/unnamed/arm9/01ff/func_01ffdb28.c:
     complete
     .text start:0x01ffdb28 end:0x01ffdbd8
 
-src/OSReadROMArea.c:
+src/game/objects/OSReadROMArea.c:
     complete
     .text start:0x01ffdbd8 end:0x01ffdd08
 
-src/func_01ffdd08.c:
+src/unnamed/arm9/01ff/func_01ffdd08.c:
     complete
     .text start:0x01ffdd08 end:0x01ffdd98
 
-src/func_01ffdd98.c:
+src/unnamed/arm9/01ff/func_01ffdd98.c:
     complete
     .text start:0x01ffdd98 end:0x01ffde00
 
-src/DMAStartTransferFB.c:
+src/game/objects/DMAStartTransferFB.c:
     complete
     .text start:0x01ffde00 end:0x01ffde50
 
-src/DMAStartTransfer.c:
+src/game/objects/DMAStartTransfer.c:
     complete
     .text start:0x01ffde50 end:0x01ffde98
 
-src/func_01ffde98.c:
+src/unnamed/arm9/01ff/func_01ffde98.c:
     complete
     .text start:0x01ffde98 end:0x01ffdf3c

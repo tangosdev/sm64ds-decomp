@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020b05d0  src/_ZN13InvisiblePoleD1Ev.cpp
+ *   [0] 0x020b05d0  src/game/actors/InvisiblePole/_ZN13InvisiblePoleD1Ev.cpp
  *   [1] 0x020b0600  src/_ZN13InvisiblePoleD0Ev.c
- *   [2] 0x020b0644  src/_ZN13InvisiblePole16CleanupResourcesEv.cpp
- *   [3] 0x020b064c  src/_ZN13InvisiblePole16OnPendingDestroyEv.cpp
- *   [4] 0x020b0650  src/_ZN13InvisiblePole6RenderEv.cpp
- *   [5] 0x020b0658  src/_ZN13InvisiblePole8BehaviorEv.cpp
- *   [6] 0x020b067c  src/_ZN13InvisiblePole13InitResourcesEv.cpp
- *   [7] 0x020b0710  src/InvisiblePole_Spawn.c
+ *   [2] 0x020b0644  src/game/actors/InvisiblePole/_ZN13InvisiblePole16CleanupResourcesEv.cpp
+ *   [3] 0x020b064c  src/game/actors/InvisiblePole/_ZN13InvisiblePole16OnPendingDestroyEv.cpp
+ *   [4] 0x020b0650  src/game/actors/InvisiblePole/_ZN13InvisiblePole6RenderEv.cpp
+ *   [5] 0x020b0658  src/game/actors/InvisiblePole/_ZN13InvisiblePole8BehaviorEv.cpp
+ *   [6] 0x020b067c  src/game/actors/InvisiblePole/_ZN13InvisiblePole13InitResourcesEv.cpp
+ *   [7] 0x020b0710  src/game/actors/InvisiblePole/InvisiblePole_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

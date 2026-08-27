@@ -9,7 +9,7 @@
 struct HeapAllocator {
     u8  pad_000[0x18];
     /* Pointers, not integers -- the constructor spells it:
-       src/_ZN13HeapAllocatorC1EjPvPvj.cpp stores its two `void*` parameters here as
+       src/runtime/memory/HeapAllocator/_ZN13HeapAllocatorC1EjPvPvj.cpp stores its two `void*` parameters here as
        `*(void**)((char*)&self->unk_018) = a;`. Same 4 bytes as s32, so this is
        byte-identical; it just stops the header under-claiming what the tree proves. */
     void *mStart;              /* 0x018 */

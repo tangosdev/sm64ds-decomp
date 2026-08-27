@@ -16,8 +16,8 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020fa6ac  src/MgPairAGoneAndOn_Spawn.cpp
- *   [1] 0x020fa740  src/func_ov006_020fa740.c
+ *   [0] 0x020fa6ac  src/minigames/MgPairAGoneAndOn/MgPairAGoneAndOn_Spawn.cpp
+ *   [1] 0x020fa740  src/unnamed/ov006/020f/func_ov006_020fa740.c
  */
 
 extern "C" {

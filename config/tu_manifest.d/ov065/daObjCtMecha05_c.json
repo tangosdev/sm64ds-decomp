@@ -22,63 +22,63 @@
       "symbol": "_ZN16daObjCtMecha05_cD1Ev",
       "address": "0x0211ab60",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN16daObjCtMecha05_cD1Ev.cpp",
+      "legacy_source": "src/game/actors/daObjCtMecha05_c/_ZN16daObjCtMecha05_cD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN16daObjCtMecha05_cD0Ev",
       "address": "0x0211abac",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN16daObjCtMecha05_cD0Ev.cpp",
+      "legacy_source": "src/game/actors/daObjCtMecha05_c/_ZN16daObjCtMecha05_cD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "func_ov065_0211ac0c",
       "address": "0x0211ac0c",
       "size": "0x000000f8",
-      "legacy_source": "src/func_ov065_0211ac0c.c",
+      "legacy_source": "src/unnamed/ov065/0211/func_ov065_0211ac0c.c",
       "ordinal": 2
     },
     {
       "symbol": "_ZN16daObjCtMecha05_c16CleanupResourcesEv",
       "address": "0x0211ad04",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN16daObjCtMecha05_c16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/daObjCtMecha05_c/_ZN16daObjCtMecha05_c16CleanupResourcesEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN16daObjCtMecha05_c6RenderEv",
       "address": "0x0211ad48",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN16daObjCtMecha05_c6RenderEv.cpp",
+      "legacy_source": "src/game/actors/daObjCtMecha05_c/_ZN16daObjCtMecha05_c6RenderEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "func_ov065_0211ad70",
       "address": "0x0211ad70",
       "size": "0x00000098",
-      "legacy_source": "src/func_ov065_0211ad70.c",
+      "legacy_source": "src/unnamed/ov065/0211/func_ov065_0211ad70.c",
       "ordinal": 5
     },
     {
       "symbol": "_ZN16daObjCtMecha05_c8BehaviorEv",
       "address": "0x0211ae08",
       "size": "0x000003cc",
-      "legacy_source": "src/_ZN16daObjCtMecha05_c8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/daObjCtMecha05_c/_ZN16daObjCtMecha05_c8BehaviorEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "_ZN16daObjCtMecha05_c13InitResourcesEv",
       "address": "0x0211b1d4",
       "size": "0x00000154",
-      "legacy_source": "src/_ZN16daObjCtMecha05_c13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/daObjCtMecha05_c/_ZN16daObjCtMecha05_c13InitResourcesEv.cpp",
       "ordinal": 7
     },
     {
       "symbol": "TTC_MovingBar_Spawn",
       "address": "0x0211b328",
       "size": "0x00000038",
-      "legacy_source": "src/TTC_MovingBar_Spawn.c",
+      "legacy_source": "src/game/actors/TTC_MovingBar/TTC_MovingBar_Spawn.c",
       "ordinal": 8
     }
   ],

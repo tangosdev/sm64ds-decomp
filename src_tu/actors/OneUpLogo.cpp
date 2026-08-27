@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020f0dd0  src/_ZN9OneUpLogoD1Ev.cpp
- *   [1] 0x020f0e08  src/_ZN9OneUpLogoD0Ev.cpp
- *   [2] 0x020f0e54  src/func_ov002_020f0e54.c
- *   [3] 0x020f0e78  src/_ZN9OneUpLogo16CleanupResourcesEv.cpp
- *   [4] 0x020f0ea8  src/_ZN9OneUpLogo6RenderEv.cpp
- *   [5] 0x020f0f08  src/_ZN9OneUpLogo8BehaviorEv.cpp
- *   [6] 0x020f107c  src/_ZN9OneUpLogo13InitResourcesEv.cpp
- *   [7] 0x020f1170  src/OneUpLogo_Spawn.c
+ *   [0] 0x020f0dd0  src/game/actors/OneUpLogo/_ZN9OneUpLogoD1Ev.cpp
+ *   [1] 0x020f0e08  src/game/actors/OneUpLogo/_ZN9OneUpLogoD0Ev.cpp
+ *   [2] 0x020f0e54  src/unnamed/ov002/020f/func_ov002_020f0e54.c
+ *   [3] 0x020f0e78  src/game/actors/OneUpLogo/_ZN9OneUpLogo16CleanupResourcesEv.cpp
+ *   [4] 0x020f0ea8  src/game/actors/OneUpLogo/_ZN9OneUpLogo6RenderEv.cpp
+ *   [5] 0x020f0f08  src/game/actors/OneUpLogo/_ZN9OneUpLogo8BehaviorEv.cpp
+ *   [6] 0x020f107c  src/game/actors/OneUpLogo/_ZN9OneUpLogo13InitResourcesEv.cpp
+ *   [7] 0x020f1170  src/game/actors/OneUpLogo/OneUpLogo_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

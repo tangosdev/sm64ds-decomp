@@ -118,7 +118,7 @@ def classify(job):
     src = REPO / rel
     # One object PER JOB, in this tool's own scratch root, for two reasons that both
     # bit in practice:
-    #   1. A delinks entry can span several functions (src/func_01ff97d8.c covers five),
+    #   1. A delinks entry can span several functions (src/unnamed/arm9/01ff/func_01ff97d8.c covers five),
     #      so candidates() legitimately yields several jobs for ONE source file. Keyed
     #      by file alone they all compiled to the same -o path concurrently: mwccarm
     #      invocations failed on the locked/half-written file and objisolate mutated an

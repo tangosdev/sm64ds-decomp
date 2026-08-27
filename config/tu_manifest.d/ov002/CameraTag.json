@@ -22,56 +22,56 @@
       "symbol": "_ZN9CameraTagD1Ev",
       "address": "0x020b0748",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN9CameraTagD1Ev.cpp",
+      "legacy_source": "src/game/camera/CameraTag/_ZN9CameraTagD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN9CameraTagD0Ev",
       "address": "0x020b076c",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN9CameraTagD0Ev.cpp",
+      "legacy_source": "src/game/camera/CameraTag/_ZN9CameraTagD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN9CameraTag16CleanupResourcesEv",
       "address": "0x020b07a4",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN9CameraTag16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/camera/CameraTag/_ZN9CameraTag16CleanupResourcesEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN9CameraTag16OnPendingDestroyEv",
       "address": "0x020b07ac",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN9CameraTag16OnPendingDestroyEv.cpp",
+      "legacy_source": "src/game/camera/CameraTag/_ZN9CameraTag16OnPendingDestroyEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN9CameraTag6RenderEv",
       "address": "0x020b07b0",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN9CameraTag6RenderEv.cpp",
+      "legacy_source": "src/game/camera/CameraTag/_ZN9CameraTag6RenderEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN9CameraTag8BehaviorEv",
       "address": "0x020b07b8",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN9CameraTag8BehaviorEv.cpp",
+      "legacy_source": "src/game/camera/CameraTag/_ZN9CameraTag8BehaviorEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN9CameraTag13InitResourcesEv",
       "address": "0x020b07c0",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN9CameraTag13InitResourcesEv.cpp",
+      "legacy_source": "src/game/camera/CameraTag/_ZN9CameraTag13InitResourcesEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "CameraTag_Spawn",
       "address": "0x020b07c8",
       "size": "0x00000030",
-      "legacy_source": "src/CameraTag_Spawn.c",
+      "legacy_source": "src/game/camera/CameraTag/CameraTag_Spawn.c",
       "ordinal": 7
     }
   ],
@@ -262,14 +262,14 @@
       "undefReferenced"
     ],
     "substitutedObjectPaths": [
-      "src/_ZN9CameraTagD1Ev.cpp",
-      "src/_ZN9CameraTagD0Ev.cpp",
-      "src/_ZN9CameraTag16CleanupResourcesEv.cpp",
-      "src/_ZN9CameraTag16OnPendingDestroyEv.cpp",
-      "src/_ZN9CameraTag6RenderEv.cpp",
-      "src/_ZN9CameraTag8BehaviorEv.cpp",
-      "src/_ZN9CameraTag13InitResourcesEv.cpp",
-      "src/CameraTag_Spawn.c"
+      "src/game/camera/CameraTag/_ZN9CameraTagD1Ev.cpp",
+      "src/game/camera/CameraTag/_ZN9CameraTagD0Ev.cpp",
+      "src/game/camera/CameraTag/_ZN9CameraTag16CleanupResourcesEv.cpp",
+      "src/game/camera/CameraTag/_ZN9CameraTag16OnPendingDestroyEv.cpp",
+      "src/game/camera/CameraTag/_ZN9CameraTag6RenderEv.cpp",
+      "src/game/camera/CameraTag/_ZN9CameraTag8BehaviorEv.cpp",
+      "src/game/camera/CameraTag/_ZN9CameraTag13InitResourcesEv.cpp",
+      "src/game/camera/CameraTag/CameraTag_Spawn.c"
     ],
     "extraInertImports": 49,
     "extraImportsWithNoHome": [],

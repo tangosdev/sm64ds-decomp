@@ -13,11 +13,11 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020b6e08  src/_ZN13WaterfallMistD1Ev.cpp
- *   [1] 0x020b6e2c  src/_ZN13WaterfallMistD0Ev.cpp
- *   [2] 0x020b6e64  src/_ZN13WaterfallMist8BehaviorEv.cpp
- *   [3] 0x020b6eac  src/_ZN13WaterfallMist13InitResourcesEv.cpp
- *   [4] 0x020b6ee8  src/WaterfallMist_Spawn.c
+ *   [0] 0x020b6e08  src/game/actors/WaterfallMist/_ZN13WaterfallMistD1Ev.cpp
+ *   [1] 0x020b6e2c  src/game/actors/WaterfallMist/_ZN13WaterfallMistD0Ev.cpp
+ *   [2] 0x020b6e64  src/game/actors/WaterfallMist/_ZN13WaterfallMist8BehaviorEv.cpp
+ *   [3] 0x020b6eac  src/game/actors/WaterfallMist/_ZN13WaterfallMist13InitResourcesEv.cpp
+ *   [4] 0x020b6ee8  src/game/actors/WaterfallMist/WaterfallMist_Spawn.c
  *
  * Naming boundary: these configured text symbols use WaterfallMist, while the
  * adjacent retail RTTI spells daObjWaterfall_c. Until that symbol migration is

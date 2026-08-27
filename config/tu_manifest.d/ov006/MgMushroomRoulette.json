@@ -22,14 +22,14 @@
       "symbol": "MgMushroomRoulette_Spawn",
       "address": "0x0210a400",
       "size": "0x000000ac",
-      "legacy_source": "src/MgMushroomRoulette_Spawn.cpp",
+      "legacy_source": "src/minigames/MgMushroomRoulette/MgMushroomRoulette_Spawn.cpp",
       "ordinal": 0
     },
     {
       "symbol": "func_ov006_0210a4ac",
       "address": "0x0210a4ac",
       "size": "0x00000004",
-      "legacy_source": "src/func_ov006_0210a4ac.c",
+      "legacy_source": "src/unnamed/ov006/0210/func_ov006_0210a4ac.c",
       "ordinal": 1
     }
   ],

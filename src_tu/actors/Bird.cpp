@@ -16,19 +16,19 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021111a0  src/_ZN4BirdD1Ev.cpp
- *   [1] 0x021111d8  src/_ZN4BirdD0Ev.cpp
- *   [2] 0x02111224  src/func_ov009_02111224.c
- *   [3] 0x02111234  src/func_ov009_02111234.cpp
- *   [4] 0x0211145c  src/func_ov009_0211145c.c
- *   [5] 0x021115d8  src/func_ov009_021115d8.c
- *   [6] 0x021116ec  src/func_ov009_021116ec.cpp
- *   [7] 0x0211183c  src/_ZN4Bird16CleanupResourcesEv.cpp
- *   [8] 0x0211186c  src/_ZN4Bird16OnPendingDestroyEv.cpp
- *   [9] 0x02111870  src/_ZN4Bird6RenderEv.cpp
- *   [10] 0x02111898  src/_ZN4Bird8BehaviorEv.cpp
- *   [11] 0x0211197c  src/_ZN4Bird13InitResourcesEv.cpp
- *   [12] 0x02111a30  src/Bird_Spawn.c
+ *   [0] 0x021111a0  src/game/actors/Bird/_ZN4BirdD1Ev.cpp
+ *   [1] 0x021111d8  src/game/actors/Bird/_ZN4BirdD0Ev.cpp
+ *   [2] 0x02111224  src/unnamed/ov009/0211/func_ov009_02111224.c
+ *   [3] 0x02111234  src/unnamed/ov009/0211/func_ov009_02111234.cpp
+ *   [4] 0x0211145c  src/unnamed/ov009/0211/func_ov009_0211145c.c
+ *   [5] 0x021115d8  src/unnamed/ov009/0211/func_ov009_021115d8.c
+ *   [6] 0x021116ec  src/unnamed/ov009/0211/func_ov009_021116ec.cpp
+ *   [7] 0x0211183c  src/game/actors/Bird/_ZN4Bird16CleanupResourcesEv.cpp
+ *   [8] 0x0211186c  src/game/actors/Bird/_ZN4Bird16OnPendingDestroyEv.cpp
+ *   [9] 0x02111870  src/game/actors/Bird/_ZN4Bird6RenderEv.cpp
+ *   [10] 0x02111898  src/game/actors/Bird/_ZN4Bird8BehaviorEv.cpp
+ *   [11] 0x0211197c  src/game/actors/Bird/_ZN4Bird13InitResourcesEv.cpp
+ *   [12] 0x02111a30  src/game/actors/Bird/Bird_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

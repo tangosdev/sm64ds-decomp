@@ -16,13 +16,13 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02111450  src/_ZN13BasementWaterD1Ev.cpp
- *   [1] 0x0211149c  src/_ZN13BasementWaterD0Ev.cpp
- *   [2] 0x021114fc  src/_ZN13BasementWater16CleanupResourcesEv.cpp
- *   [3] 0x02111540  src/_ZN13BasementWater6RenderEv.cpp
- *   [4] 0x02111574  src/_ZN13BasementWater8BehaviorEv.cpp
- *   [5] 0x0211164c  src/_ZN13BasementWater13InitResourcesEv.cpp
- *   [6] 0x02111730  src/BasementWater_Spawn.c
+ *   [0] 0x02111450  src/game/actors/BasementWater/_ZN13BasementWaterD1Ev.cpp
+ *   [1] 0x0211149c  src/game/actors/BasementWater/_ZN13BasementWaterD0Ev.cpp
+ *   [2] 0x021114fc  src/game/actors/BasementWater/_ZN13BasementWater16CleanupResourcesEv.cpp
+ *   [3] 0x02111540  src/game/actors/BasementWater/_ZN13BasementWater6RenderEv.cpp
+ *   [4] 0x02111574  src/game/actors/BasementWater/_ZN13BasementWater8BehaviorEv.cpp
+ *   [5] 0x0211164c  src/game/actors/BasementWater/_ZN13BasementWater13InitResourcesEv.cpp
+ *   [6] 0x02111730  src/game/actors/BasementWater/BasementWater_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021111a0  src/_ZN12SwitchPillarD1Ev.cpp
+ *   [0] 0x021111a0  src/game/actors/SwitchPillar/_ZN12SwitchPillarD1Ev.cpp
  *   [1] 0x021111e4  src/_ZN12SwitchPillarD0Ev.c
- *   [2] 0x0211123c  src/_ZN12SwitchPillar15OnGroundPoundedER8dActor_c.cpp
- *   [3] 0x021112ec  src/_ZN12SwitchPillar16CleanupResourcesEv.cpp
- *   [4] 0x02111324  src/_ZN12SwitchPillar6RenderEv.cpp
- *   [5] 0x0211134c  src/_ZN12SwitchPillar8BehaviorEv.cpp
- *   [6] 0x02111370  src/_ZN12SwitchPillar13InitResourcesEv.cpp
- *   [7] 0x02111420  src/SwitchPillar_Spawn.c
+ *   [2] 0x0211123c  src/game/actors/SwitchPillar/_ZN12SwitchPillar15OnGroundPoundedER8dActor_c.cpp
+ *   [3] 0x021112ec  src/game/actors/SwitchPillar/_ZN12SwitchPillar16CleanupResourcesEv.cpp
+ *   [4] 0x02111324  src/game/actors/SwitchPillar/_ZN12SwitchPillar6RenderEv.cpp
+ *   [5] 0x0211134c  src/game/actors/SwitchPillar/_ZN12SwitchPillar8BehaviorEv.cpp
+ *   [6] 0x02111370  src/game/actors/SwitchPillar/_ZN12SwitchPillar13InitResourcesEv.cpp
+ *   [7] 0x02111420  src/game/actors/SwitchPillar/SwitchPillar_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -81,7 +81,7 @@ int *SwitchPillar_Spawn(void)
 /* SwitchPillar::InitResources -- vtable slot 0, ov012 0x02111370.
  *
  * Real member function on real fields, same idiom as
- * src/_ZN11VolcanoRing13InitResourcesEv.cpp (#1583): mModel/mMeshCollider/
+ * src/game/actors/VolcanoRing/_ZN11VolcanoRing13InitResourcesEv.cpp (#1583): mModel/mMeshCollider/
  * mClsnMat/mAngleY are dBgActor_c's/dActor_c's own named fields
  * (include/dBgActor_c.h, include/dActor_c.h). ModelBase::SetFile,
  * UpdateModelPosAndRotY and UpdateClsnPosAndRot are real method calls.
@@ -91,7 +91,7 @@ int *SwitchPillar_Spawn(void)
  * changing the argument-passing ABI (mwccarm-codegen.md 6az).
  *
  * data_0209caa0 is the same untyped shared-flags global other TUs reference
- * raw (e.g. src/func_ov002_020d4748.cpp); mPosY -= 0x64000 and mPressed = 1
+ * raw (e.g. src/unnamed/ov002/020d/func_ov002_020d4748.cpp); mPosY -= 0x64000 and mPressed = 1
  * only run when data_0209caa0[2] & 0x80000 is set -- some other pillar in the
  * group already reported pressed (see OnGroundPounded), so this one starts
  * sunk and pre-flagged. */

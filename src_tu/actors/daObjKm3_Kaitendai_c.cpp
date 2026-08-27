@@ -11,11 +11,11 @@
  * variants are the documented compiler-chosen exception.
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021112bc  src/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp
+ *   [0] 0x021112bc  src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_cD1Ev.cpp
  *   [1] 0x0211130c  src/_ZN20daObjKm3_Kaitendai_cD0Ev.c
- *   [2] 0x02111370  src/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.cpp
- *   [3] 0x02111384  src/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.cpp
- *   [4] 0x021113bc  src/func_ov047_021113bc.c
+ *   [2] 0x02111370  src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.cpp
+ *   [3] 0x02111384  src/game/actors/daObjKm3_Kaitendai_c/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.cpp
+ *   [4] 0x021113bc  src/unnamed/ov047/0211/func_ov047_021113bc.c
  */
 
 struct ResourceDescriptor {

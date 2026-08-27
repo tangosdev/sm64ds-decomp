@@ -16,15 +16,15 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x0211b360  src/_ZN13TTC_MovingBarD1Ev.cpp
- *   [1] 0x0211b3ac  src/_ZN13TTC_MovingBarD0Ev.cpp
- *   [2] 0x0211b40c  src/func_ov065_0211b40c.c
- *   [3] 0x0211b47c  src/_ZN13TTC_MovingBar16CleanupResourcesEv.cpp
- *   [4] 0x0211b4e0  src/_ZN13TTC_MovingBar6RenderEv.cpp
- *   [5] 0x0211b508  src/_ZN13TTC_MovingBar8BehaviorEv.cpp
- *   [6] 0x0211b640  src/_ZN13TTC_MovingBar13InitResourcesEv.cpp
- *   [7] 0x0211b780  src/TtcRotatingTriangle_Spawn.c
- *   [8] 0x0211b7b8  src/TtcRotatingGear_Spawn.c
+ *   [0] 0x0211b360  src/game/actors/TTC_MovingBar/_ZN13TTC_MovingBarD1Ev.cpp
+ *   [1] 0x0211b3ac  src/game/actors/TTC_MovingBar/_ZN13TTC_MovingBarD0Ev.cpp
+ *   [2] 0x0211b40c  src/unnamed/ov065/0211/func_ov065_0211b40c.c
+ *   [3] 0x0211b47c  src/game/actors/TTC_MovingBar/_ZN13TTC_MovingBar16CleanupResourcesEv.cpp
+ *   [4] 0x0211b4e0  src/game/actors/TTC_MovingBar/_ZN13TTC_MovingBar6RenderEv.cpp
+ *   [5] 0x0211b508  src/game/actors/TTC_MovingBar/_ZN13TTC_MovingBar8BehaviorEv.cpp
+ *   [6] 0x0211b640  src/game/actors/TTC_MovingBar/_ZN13TTC_MovingBar13InitResourcesEv.cpp
+ *   [7] 0x0211b780  src/game/actors/TtcRotatingTriangle/TtcRotatingTriangle_Spawn.c
+ *   [8] 0x0211b7b8  src/game/actors/TtcRotatingGear/TtcRotatingGear_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

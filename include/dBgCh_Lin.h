@@ -104,7 +104,7 @@ struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
      */
     virtual ~dBgCh_Lin();
 
-    /* DECLARED, defined out of line in src/_ZN9dBgCh_LinC1Ev.cpp as real C++
+    /* DECLARED, defined out of line in src/game/actors/dBgCh_Lin/_ZN9dBgCh_LinC1Ev.cpp as real C++
      * -- complete-object context for every ROM caller, hence C1.
      */
     dBgCh_Lin();

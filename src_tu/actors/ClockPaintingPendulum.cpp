@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021111a0  src/_ZN21ClockPaintingPendulumD1Ev.cpp
+ *   [0] 0x021111a0  src/game/actors/ClockPaintingPendulum/_ZN21ClockPaintingPendulumD1Ev.cpp
  *   [1] 0x021111d0  src/_ZN21ClockPaintingPendulumD0Ev.c
- *   [2] 0x02111214  src/_ZN21ClockPaintingPendulum16CleanupResourcesEv.cpp
- *   [3] 0x02111238  src/func_ov013_02111238.c
- *   [4] 0x02111280  src/_ZN21ClockPaintingPendulum6RenderEv.cpp
- *   [5] 0x021112a8  src/_ZN21ClockPaintingPendulum8BehaviorEv.cpp
- *   [6] 0x0211133c  src/_ZN21ClockPaintingPendulum13InitResourcesEv.cpp
- *   [7] 0x02111384  src/ClockPaintingPendulum_Spawn.c
+ *   [2] 0x02111214  src/game/actors/ClockPaintingPendulum/_ZN21ClockPaintingPendulum16CleanupResourcesEv.cpp
+ *   [3] 0x02111238  src/unnamed/ov013/0211/func_ov013_02111238.c
+ *   [4] 0x02111280  src/game/actors/ClockPaintingPendulum/_ZN21ClockPaintingPendulum6RenderEv.cpp
+ *   [5] 0x021112a8  src/game/actors/ClockPaintingPendulum/_ZN21ClockPaintingPendulum8BehaviorEv.cpp
+ *   [6] 0x0211133c  src/game/actors/ClockPaintingPendulum/_ZN21ClockPaintingPendulum13InitResourcesEv.cpp
+ *   [7] 0x02111384  src/game/actors/ClockPaintingPendulum/ClockPaintingPendulum_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending
@@ -84,7 +84,7 @@ int *ClockPaintingPendulum_Spawn(void)
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, vtable slot 0 */
 /* ClockPaintingPendulum::InitResources -- vtable slot 0, ov013 0x0211133c.
- * Same idiom as src/_ZN4Door13InitResourcesEv.c: declared as an override in
+ * Same idiom as src/game/actors/Door/_ZN4Door13InitResourcesEv.c: declared as an override in
  * include/ClockPaintingPendulum.h, defined here under the mangled symbol,
  * not as a real ClockPaintingPendulum:: method. */
 extern "C" {

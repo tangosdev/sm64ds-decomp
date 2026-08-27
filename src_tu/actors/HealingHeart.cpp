@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020bc5e0  src/_ZN12HealingHeartD1Ev.cpp
+ *   [0] 0x020bc5e0  src/game/actors/HealingHeart/_ZN12HealingHeartD1Ev.cpp
  *   [1] 0x020bc618  src/_ZN12HealingHeartD0Ev.c
- *   [2] 0x020bc664  src/func_ov002_020bc664.c
- *   [3] 0x020bc6a4  src/_ZN12HealingHeart16CleanupResourcesEv.cpp
- *   [4] 0x020bc6d4  src/_ZN12HealingHeart6RenderEv.cpp
- *   [5] 0x020bc6fc  src/_ZN12HealingHeart8BehaviorEv.cpp
- *   [6] 0x020bc81c  src/_ZN12HealingHeart13InitResourcesEv.cpp
- *   [7] 0x020bc8b4  src/HealingHeart_Spawn.c
+ *   [2] 0x020bc664  src/unnamed/ov002/020b/func_ov002_020bc664.c
+ *   [3] 0x020bc6a4  src/game/actors/HealingHeart/_ZN12HealingHeart16CleanupResourcesEv.cpp
+ *   [4] 0x020bc6d4  src/game/actors/HealingHeart/_ZN12HealingHeart6RenderEv.cpp
+ *   [5] 0x020bc6fc  src/game/actors/HealingHeart/_ZN12HealingHeart8BehaviorEv.cpp
+ *   [6] 0x020bc81c  src/game/actors/HealingHeart/_ZN12HealingHeart13InitResourcesEv.cpp
+ *   [7] 0x020bc8b4  src/game/actors/HealingHeart/HealingHeart_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

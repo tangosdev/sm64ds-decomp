@@ -13,10 +13,10 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021126d4  src/_ZN15PowerStarCreateD1Ev.cpp
+ *   [0] 0x021126d4  src/game/actors/PowerStarCreate/_ZN15PowerStarCreateD1Ev.cpp
  *   [1] 0x021126f8  src/_ZN15PowerStarCreateD0Ev.c
- *   [2] 0x02112730  src/_ZN15PowerStarCreate8BehaviorEv.cpp
- *   [3] 0x0211278c  src/PowerStarCreate_Spawn.c
+ *   [2] 0x02112730  src/game/actors/PowerStarCreate/_ZN15PowerStarCreate8BehaviorEv.cpp
+ *   [3] 0x0211278c  src/game/actors/PowerStarCreate/PowerStarCreate_Spawn.c
  *
  * Naming boundary: these configured text symbols use PowerStarCreate, while
  * the adjacent retail RTTI spells daSCre_c (_ZTS8daSCre_c/_ZTI8daSCre_c).

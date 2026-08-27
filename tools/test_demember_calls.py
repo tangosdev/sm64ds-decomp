@@ -95,7 +95,7 @@ def test_only_the_named_classs_calls_are_rewritten():
 
 
 def test_two_classes_of_the_same_name_go_to_two_different_symbols():
-    """src/_ZN9WaterBomb13InitResourcesEv.cpp: `Init` on MovingCylinderClsn and on
+    """src/game/actors/WaterBomb/_ZN9WaterBomb13InitResourcesEv.cpp: `Init` on MovingCylinderClsn and on
     WithMeshClsn, interleaved. Sending all four to one symbol still byte-matches."""
     src = """\
 struct MovingCylinderClsn { void Init(Actor *a, int r); };
@@ -115,7 +115,7 @@ void f(void *t) {
 
 
 def test_a_qualified_call_on_another_class_is_left_alone():
-    """src/_ZN6Camera6RenderEv.cpp: three `OAM::Render(..)` and one `View::Render()`."""
+    """src/game/camera/Camera/_ZN6Camera6RenderEv.cpp: three `OAM::Render(..)` and one `View::Render()`."""
     src = """\
 struct OAM { static void Render(bool, int); };
 struct View { int Render(); };
@@ -168,7 +168,7 @@ def test_a_call_that_never_matched_still_stops_the_file():
 
 # ------------------------------------------------------- the implicit-`this` shape
 
-# src/_ZN6Player12St_Land_InitEv.cpp in miniature: the file IS a Player member, and
+# src/game/player/Player/_ZN6Player12St_Land_InitEv.cpp in miniature: the file IS a Player member, and
 # calls its sibling with no receiver at all.
 IMPLICIT = """\
 struct Player {

@@ -6,19 +6,19 @@
  * rtti_reconcile came back 'no_belief' on this edge (base not auto-inferred),
  * so it is established by hand, the same way as its sibling daKrb_c:
  *
- *   - Backward: daTrs_c's own destructor (_ZN7daTrs_cD1Ev, src/actors/daTrs_c/_ZN7daTrs_cD1Ev.cpp)
+ *   - Backward: daTrs_c's own destructor (_ZN7daTrs_cD1Ev, src/game/actors/daTrs_c/_ZN7daTrs_cD1Ev.cpp)
  *     tears down its own six members, then calls _ZN11dCapEnemy_cD2Ev -- the
- *     exact function _ZN7daKrb_cD1Ev (src/_ZN7daKrb_cD1Ev.cpp) calls after tearing
+ *     exact function _ZN7daKrb_cD1Ev (src/game/actors/daKrb_c/_ZN7daKrb_cD1Ev.cpp) calls after tearing
  *     down its own members. It sits at 0x020aedbc and is immediately followed,
  *     at 0x020aedf4, by the already-matched _ZN11dCapEnemy_cD0Ev -- so 0x020aedbc
  *     is dCapEnemy_c's own out-of-line base-object destructor, and both sibling
  *     destructors chain to it.
- *   - Forward: Boo_Spawn (src/actors/daTrs_c/Boo_Spawn.cpp) calls
+ *   - Forward: Boo_Spawn (src/game/actors/daTrs_c/Boo_Spawn.cpp) calls
  *     _ZN11dCapEnemy_cC2Ev(t) before storing _ZTV7daTrs_c -- exactly Goomba_Spawn's
  *     shape, which calls the same _ZN11dCapEnemy_cC2Ev before storing _ZTV7daKrb_c.
  *
  * SIZE 0x5e0, the literal Boo_Spawn passes to fBase_c::operator new
- * (src/actors/daTrs_c/Boo_Spawn.cpp: `_ZN7fBase_cnwEj(0x5e0)`). dCapEnemy_c ends at
+ * (src/game/actors/daTrs_c/Boo_Spawn.cpp: `_ZN7fBase_cnwEj(0x5e0)`). dCapEnemy_c ends at
  * 0x180 (include/dCapEnemy_c.h); everything from there down is daTrs_c's own.
  *
  * The six members close exactly on one another -- evidenced twice, in the

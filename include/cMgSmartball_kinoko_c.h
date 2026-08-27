@@ -4,7 +4,7 @@
  * One of eleven direct children of cMgSmartball_object_c -- see that header
  * for the family's shape (a root, three slots, no virtual destructor).
  *
- * SIZE 0x40, from _Znwj(0x40) in src/func_ov006_02115b0c.c. Base ends at
+ * SIZE 0x40, from _Znwj(0x40) in src/unnamed/ov006/0211/func_ov006_02115b0c.c. Base ends at
  * 0x34, so this class adds 0x0c bytes -- one of the smallest children.
  *
  * FIELD EVIDENCE. SaveSnapshot (func_ov006_0211192c) and Update

@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020bc8f4  src/_ZN20daObjCannonShutter_cD1Ev.cpp
- *   [1] 0x020bc938  src/_ZN20daObjCannonShutter_cD0Ev.cpp
- *   [2] 0x020bc990  src/func_ov002_020bc990.c
- *   [3] 0x020bc9b0  src/_ZN20daObjCannonShutter_c16CleanupResourcesEv.cpp
- *   [4] 0x020bc9f4  src/_ZN20daObjCannonShutter_c6RenderEv.cpp
- *   [5] 0x020bca78  src/_ZN20daObjCannonShutter_c8BehaviorEv.cpp
- *   [6] 0x020bcc20  src/_ZN20daObjCannonShutter_c13InitResourcesEv.cpp
- *   [7] 0x020bcccc  src/daObjCannonShutter_c_Spawn.c
+ *   [0] 0x020bc8f4  src/game/actors/daObjCannonShutter_c/_ZN20daObjCannonShutter_cD1Ev.cpp
+ *   [1] 0x020bc938  src/game/actors/daObjCannonShutter_c/_ZN20daObjCannonShutter_cD0Ev.cpp
+ *   [2] 0x020bc990  src/unnamed/ov002/020b/func_ov002_020bc990.c
+ *   [3] 0x020bc9b0  src/game/actors/daObjCannonShutter_c/_ZN20daObjCannonShutter_c16CleanupResourcesEv.cpp
+ *   [4] 0x020bc9f4  src/game/actors/daObjCannonShutter_c/_ZN20daObjCannonShutter_c6RenderEv.cpp
+ *   [5] 0x020bca78  src/game/actors/daObjCannonShutter_c/_ZN20daObjCannonShutter_c8BehaviorEv.cpp
+ *   [6] 0x020bcc20  src/game/actors/daObjCannonShutter_c/_ZN20daObjCannonShutter_c13InitResourcesEv.cpp
+ *   [7] 0x020bcccc  src/game/actors/daObjCannonShutter_c/daObjCannonShutter_c_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

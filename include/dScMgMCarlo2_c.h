@@ -10,7 +10,7 @@
  *
  * SHARED TABLE at 0x4f38, size 0x270 (func_ov006_020c1d80/020c1c64), same
  * as five siblings -- see include/dScMgMemory_c.h's own note. TWO fields
- * fall WITHIN it and are real matched access (src/func_ov006_020fa4d4.cpp):
+ * fall WITHIN it and are real matched access (src/unnamed/ov006/020f/func_ov006_020fa4d4.cpp):
  * unk_4f52 and unk_511e are literally the ctor's own `*(short*)(t+0x1a)=0`
  * and `*(short*)(t+0x1e6)=0` writes (func_ov006_020c1d80's own body) --
  * named here instead of folded into the opaque table, everything else in
@@ -25,7 +25,7 @@
  * (src/func_ov006_020f9ffc.cpp, .../020fa4d4.cpp, .../020fa56c.cpp).
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN14dScMgMCarlo2_cD1Ev.cpp; D0Ev.cpp
+ * its own. Defined for real in src/minigames/dScMgMCarlo2_c/_ZN14dScMgMCarlo2_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
  * dScMgBase_c, two levels up, already provides one. */
 #ifndef DSCMGMCARLO2_C_H
@@ -56,10 +56,10 @@ struct dScMgMCarlo2_c : dScMgSingle3DBase_c {
        translation unit starts emitting _ZTV14dScMgMCarlo2_c because of these.
        Signatures are include/fBase_c.h's and include/dScMgBase_c.h's own,
        copied unchanged. --- */
-    s32 InitResources();      /* slot 0 -- src/_ZN14dScMgMCarlo2_c13InitResourcesEv.cpp */
+    s32 InitResources();      /* slot 0 -- src/minigames/dScMgMCarlo2_c/_ZN14dScMgMCarlo2_c13InitResourcesEv.cpp */
     s32 CleanupResources();   /* slot 3 -- ov006 0x020f9fe0 */
     s32 Behavior();           /* slot 6 -- ov006 0x020fa13c */
-    s32 Render();             /* slot 9 -- src/_ZN14dScMgMCarlo2_c6RenderEv.cpp */
+    s32 Render();             /* slot 9 -- src/minigames/dScMgMCarlo2_c/_ZN14dScMgMCarlo2_c6RenderEv.cpp */
 };
 
 typedef char dScMgMCarlo2_c_size_must_be_0x5930[sizeof(dScMgMCarlo2_c) == 0x5930 ? 1 : -1];

@@ -18,13 +18,13 @@
  * Assembled from these legacy one-function sources (ROM address order):
  *   [0] 0x0211137c  src/_ZN9ArrowLiftD1Ev.c
  *   [1] 0x021113c0  src/_ZN9ArrowLiftD0Ev.c
- *   [2] 0x02111418  src/_ZN9ArrowLift16CleanupResourcesEv.cpp
- *   [3] 0x0211145c  src/_ZN9ArrowLift6RenderEv.cpp
- *   [4] 0x02111484  src/_ZN9ArrowLift8BehaviorEv.cpp
- *   [5] 0x021115f8  src/_ZN9ArrowLift13InitResourcesEv.cpp
- *   [6] 0x021116c4  src/func_ov029_021116c4.cpp
- *   [7] 0x021116e4  src/func_ov029_021116e4.c
- *   [8] 0x021116f8  src/ArrowLift_Spawn.c
+ *   [2] 0x02111418  src/game/actors/ArrowLift/_ZN9ArrowLift16CleanupResourcesEv.cpp
+ *   [3] 0x0211145c  src/game/actors/ArrowLift/_ZN9ArrowLift6RenderEv.cpp
+ *   [4] 0x02111484  src/game/actors/ArrowLift/_ZN9ArrowLift8BehaviorEv.cpp
+ *   [5] 0x021115f8  src/game/actors/ArrowLift/_ZN9ArrowLift13InitResourcesEv.cpp
+ *   [6] 0x021116c4  src/unnamed/ov029/0211/func_ov029_021116c4.cpp
+ *   [7] 0x021116e4  src/unnamed/ov029/0211/func_ov029_021116e4.c
+ *   [8] 0x021116f8  src/game/actors/ArrowLift/ArrowLift_Spawn.c
  */
 
 /* TUBUILD WARNING -- #pragma directive(s) were present in the legacy

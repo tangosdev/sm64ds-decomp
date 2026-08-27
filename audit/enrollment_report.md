@@ -34,7 +34,7 @@ gap is a file that moved and left its delinks entry pointing at nothing.
 Two independent derivations of the no-block set produced 47 and 48. The one record
 between them is:
 
-**`src/Player_ScaleByCharFactor.c`, ov002, 0x020bf30c.**
+**`src/game/player/Player_ScaleByCharFactor.c`, ov002, 0x020bf30c.**
 
 Both derivations are right about different questions. The address range 0x020bf30c to
 0x020bf340 IS marked `complete` in `config/arm9/overlays/ov002/delinks.txt`, so a test
@@ -46,7 +46,7 @@ scale factor, documented in notes/rom-build.md as M3). `enrolled_addresses()` dr
 returns **48**.
 
 For the question this audit is about, 48 is the right answer:
-`src/Player_ScaleByCharFactor.c` is the faithful decomp, it is counted `matched`, and
+`src/game/player/Player_ScaleByCharFactor.c` is the faithful decomp, it is counted `matched`, and
 it is compiled by nothing. The mod is built in its place. This is the only `mods/` entry
 in all 106 delinks files, so the discrepancy cannot recur elsewhere without someone
 adding a second mod.
@@ -104,7 +104,7 @@ no-block set and a reader should know they exist.
 
 `config/arm9/itcm/symbols.txt` declares each of these twice, once as a sized function
 and once as a zero-size alias at the identical address. `srcpath` resolves
-`src/_dmul.c`, which carries a `HAND-ASM PRIMITIVE` banner and is a real accepted
+`src/runtime/math/_dmul.c`, which carries a `HAND-ASM PRIMITIVE` banner and is a real accepted
 match, onto the **zero-size** record. So the same body is simultaneously counted as
 matched (as the alias, worth 0 bytes) and unmatched (as the primary, worth its real
 size).
@@ -172,7 +172,7 @@ at this ref with the ROM build's own flags and every version in the sweep. All 1
 | broken draft: three struct members the file's own structs do not declare | 1 |
 
 The overloading class is a single mechanical defect. Example:
-`src/func_ov002_020cfbdc.cpp:24` defines `extern "C" int func_ov002_020cfbdc(char *self)`
+`src/unnamed/ov002/020c/func_ov002_020cfbdc.cpp:24` defines `extern "C" int func_ov002_020cfbdc(char *self)`
 while `include/decl_common.h:1414` declares `extern int func_ov002_020cfbdc(void*);`
 with C++ linkage and a different parameter type. 12 of the 16 clash on their own symbol,
 4 on a callee they redeclare (for instance `func_ov064_02119ecc`, declared `(void*, void*)`
@@ -180,7 +180,7 @@ in the source and `(char*, void*)` at `decl_common.h:2744`). These files are pla
 correct decompilations that stopped compiling when `decl_common.h` grew; the byte gate
 cannot say, because nothing gets as far as codegen.
 
-The one broken draft is `src/func_ov007_020ba05c.c`, which is the file lane PC1 named.
+The one broken draft is `src/unnamed/ov007/020b/func_ov007_020ba05c.c`, which is the file lane PC1 named.
 Independently confirmed here: it fails with `'array28' is not a member of class 'struct
 StructObj20'`, plus `array24` and `f2C`, and it carries the comment
 `bHolder->b->f2C = 0; // or bHolder->f2C? wait`. It has never been compiled by any gate
@@ -209,7 +209,7 @@ At least 10 rows per class were opened and read, beyond the byte gate.
 * **no_block**: all 48 attributed to a gate; `Div.c` (thumb `swi 0x09` primitive),
   `_ZN5ModelD1Ev.c` (documented D1 with the D2 codegen note), `func_0206d9cc.c`
   (FIQ-disable primitive with a shared body label), the four itcm aliases and
-  `mods/Player_ScaleByCharFactor.c` versus `src/Player_ScaleByCharFactor.c` read in full.
+  `mods/Player_ScaleByCharFactor.c` versus `src/game/player/Player_ScaleByCharFactor.c` read in full.
 
 ## 6. What the count becomes under each candidate policy
 
@@ -318,28 +318,28 @@ file at this ref.
 
 | module | addr | size | file | credited to | first error |
 | --- | --- | --- | --- | --- | --- |
-| arm9 | 0x02022f40 | 428 | `src/_ZN8Particle10SysTracker10InitialiseEv.cpp` | tangosdev | line 20: illegal function overloading |
-| itcm | 0x01ff8708 | 0 | `src/_dmul.c` | ruspecial | zero-size alias of `func_01ff8708` (1,776 bytes, unmatched) |
-| itcm | 0x01ffaa34 | 0 | `src/_ll_sdiv.c` | ruspecial | zero-size alias of `func_01ffaa34` (432 bytes, unmatched) |
-| itcm | 0x01ffabe4 | 0 | `src/_s32_div_f.c` | ruspecial | zero-size alias of `__aeabi_idiv` (524 bytes, unmatched) |
-| itcm | 0x01ffadf0 | 0 | `src/_u32_div_f.c` | ruspecial | zero-size alias of `__aeabi_uidiv` (484 bytes, unmatched) |
-| ov002 | 0x020cfbdc | 424 | `src/func_ov002_020cfbdc.cpp` | ruspecial | line 24: illegal function overloading |
-| ov002 | 0x020e3e00 | 400 | `src/func_ov002_020e3e00.cpp` | ruspecial | line 14: illegal function overloading |
-| ov004 | 0x020aeed8 | 372 | `src/func_ov004_020aeed8.cpp` | tangosdev | line 50: illegal function overloading |
-| ov004 | 0x020af094 | 488 | `src/func_ov004_020af094.cpp` | andrewboudreau | line 56: illegal function overloading |
-| ov006 | 0x020e6e78 | 232 | `src/func_ov006_020e6e78.cpp` | tangosdev | line 14: illegal function overloading |
-| ov007 | 0x020ba05c | 644 | `src/func_ov007_020ba05c.c` | mitch030504 | line 114: `'array28' is not a member of class 'struct StructObj20'` |
-| ov064 | 0x02119afc | 356 | `src/func_ov064_02119afc.cpp` | tangosdev | line 15: illegal function overloading |
-| ov065 | 0x02119c38 | 644 | `src/_ZN15TtcRotatingCube13InitResourcesEv.cpp` | tangosdev | line 20: illegal function overloading |
-| ov071 | 0x02121ba4 | 200 | `src/func_ov071_02121ba4.cpp` | tangosdev | line 12: illegal function overloading |
-| ov078 | 0x02124cf4 | 424 | `src/func_ov078_02124cf4.cpp` | lunavyqo | line 14: illegal function overloading |
-| ov080 | 0x02124088 | 384 | `src/func_ov080_02124088.cpp` | andrewboudreau | line 20: illegal function overloading |
-| ov081 | 0x02123910 | 528 | `src/func_ov081_02123910.cpp` | lunavyqo | line 31: illegal function overloading |
+| arm9 | 0x02022f40 | 428 | `src/game/actors/Particle/_ZN8Particle10SysTracker10InitialiseEv.cpp` | tangosdev | line 20: illegal function overloading |
+| itcm | 0x01ff8708 | 0 | `src/runtime/math/_dmul.c` | ruspecial | zero-size alias of `func_01ff8708` (1,776 bytes, unmatched) |
+| itcm | 0x01ffaa34 | 0 | `src/runtime/math/_ll_sdiv.c` | ruspecial | zero-size alias of `func_01ffaa34` (432 bytes, unmatched) |
+| itcm | 0x01ffabe4 | 0 | `src/runtime/math/_s32_div_f.c` | ruspecial | zero-size alias of `__aeabi_idiv` (524 bytes, unmatched) |
+| itcm | 0x01ffadf0 | 0 | `src/runtime/math/_u32_div_f.c` | ruspecial | zero-size alias of `__aeabi_uidiv` (484 bytes, unmatched) |
+| ov002 | 0x020cfbdc | 424 | `src/unnamed/ov002/020c/func_ov002_020cfbdc.cpp` | ruspecial | line 24: illegal function overloading |
+| ov002 | 0x020e3e00 | 400 | `src/unnamed/ov002/020e/func_ov002_020e3e00.cpp` | ruspecial | line 14: illegal function overloading |
+| ov004 | 0x020aeed8 | 372 | `src/unnamed/ov004/020a/func_ov004_020aeed8.cpp` | tangosdev | line 50: illegal function overloading |
+| ov004 | 0x020af094 | 488 | `src/unnamed/ov004/020a/func_ov004_020af094.cpp` | andrewboudreau | line 56: illegal function overloading |
+| ov006 | 0x020e6e78 | 232 | `src/unnamed/ov006/020e/func_ov006_020e6e78.cpp` | tangosdev | line 14: illegal function overloading |
+| ov007 | 0x020ba05c | 644 | `src/unnamed/ov007/020b/func_ov007_020ba05c.c` | mitch030504 | line 114: `'array28' is not a member of class 'struct StructObj20'` |
+| ov064 | 0x02119afc | 356 | `src/unnamed/ov064/0211/func_ov064_02119afc.cpp` | tangosdev | line 15: illegal function overloading |
+| ov065 | 0x02119c38 | 644 | `src/game/actors/TtcRotatingCube/_ZN15TtcRotatingCube13InitResourcesEv.cpp` | tangosdev | line 20: illegal function overloading |
+| ov071 | 0x02121ba4 | 200 | `src/unnamed/ov071/0212/func_ov071_02121ba4.cpp` | tangosdev | line 12: illegal function overloading |
+| ov078 | 0x02124cf4 | 424 | `src/unnamed/ov078/0212/func_ov078_02124cf4.cpp` | lunavyqo | line 14: illegal function overloading |
+| ov080 | 0x02124088 | 384 | `src/unnamed/ov080/0212/func_ov080_02124088.cpp` | andrewboudreau | line 20: illegal function overloading |
+| ov081 | 0x02123910 | 528 | `src/unnamed/ov081/0212/func_ov081_02123910.cpp` | lunavyqo | line 31: illegal function overloading |
 | ov084 | 0x0212bc30 | 912 | `src/_ZN6Goomba13InitResourcesEv.cpp` | tangosdev | line 17: template argument list expected |
 | ov085 | 0x02129dbc | 256 | `src/func_ov085_02129dbc.cpp` | ruspecial | line 17: illegal function overloading |
 | ov096 | 0x02137088 | 568 | `src/func_ov096_02137088.cpp` | lunavyqo | line 22: illegal function overloading |
-| ov098 | 0x0213a794 | 332 | `src/func_ov098_0213a794.cpp` | tangosdev | line 22: illegal function overloading |
-| ov102 | 0x0214b248 | 316 | `src/func_ov102_0214b248.cpp` | lunavyqo | line 18: illegal function overloading |
+| ov098 | 0x0213a794 | 332 | `src/unnamed/ov098/0213/func_ov098_0213a794.cpp` | tangosdev | line 22: illegal function overloading |
+| ov102 | 0x0214b248 | 316 | `src/unnamed/ov102/0214/func_ov102_0214b248.cpp` | lunavyqo | line 18: illegal function overloading |
 
 `src/_ZN6Goomba13InitResourcesEv.cpp` carries its `//cpp` sentinel on line 2, behind an
 `#include`. `eligible.classify` and `reloc_audit.winning_object` both test

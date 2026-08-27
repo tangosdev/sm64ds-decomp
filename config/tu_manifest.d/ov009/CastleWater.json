@@ -36,42 +36,42 @@
       "symbol": "func_ov009_02111b1c",
       "address": "0x02111b1c",
       "size": "0x000000b8",
-      "legacy_source": "src/func_ov009_02111b1c.cpp",
+      "legacy_source": "src/unnamed/ov009/0211/func_ov009_02111b1c.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN11CastleWater16CleanupResourcesEv",
       "address": "0x02111bd4",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN11CastleWater16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/CastleWater/_ZN11CastleWater16CleanupResourcesEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "_ZN11CastleWater6RenderEv",
       "address": "0x02111c18",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN11CastleWater6RenderEv.cpp",
+      "legacy_source": "src/game/actors/CastleWater/_ZN11CastleWater6RenderEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN11CastleWater8BehaviorEv",
       "address": "0x02111c4c",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN11CastleWater8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/CastleWater/_ZN11CastleWater8BehaviorEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN11CastleWater13InitResourcesEv",
       "address": "0x02111c74",
       "size": "0x00000118",
-      "legacy_source": "src/_ZN11CastleWater13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/CastleWater/_ZN11CastleWater13InitResourcesEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "CastleWater_Spawn",
       "address": "0x02111d8c",
       "size": "0x00000038",
-      "legacy_source": "src/CastleWater_Spawn.c",
+      "legacy_source": "src/game/actors/CastleWater/CastleWater_Spawn.c",
       "ordinal": 7
     }
   ],

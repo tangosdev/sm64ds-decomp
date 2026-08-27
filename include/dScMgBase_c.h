@@ -17,7 +17,7 @@ struct dScMgBase_c : dScene_c {
     /* Declared first (key function), and deliberately NOT defined inline:
        descendants call _ZN11dScMgBase_cD2Ev as a real `bl`, and an inline
        body makes every one of them miss. Defined in
-       src/_ZN11dScMgBase_cD1Ev.cpp and .../_D0Ev.cpp.
+       src/minigames/dScMgBase_c/_ZN11dScMgBase_cD1Ev.cpp and .../_D0Ev.cpp.
        MEASURED -- do not move the body up here. */
     virtual ~dScMgBase_c();
 

@@ -4,7 +4,7 @@
  * _ZN5CrateD1Ev, Crate_Spawn, ...), so the C++ class keeps that name -- a real
  * class references its own _ZTV, and a name mismatch only fails at link.
  *
- * SIZE 0x608, the literal Crate_Spawn (src/Crate_Spawn.cpp) passes to
+ * SIZE 0x608, the literal Crate_Spawn (src/game/actors/Crate/Crate_Spawn.cpp) passes to
  * fBase_c::operator new. dBgActor_c ends 0x320; everything from there down is
  * this class's own, confirmed by _ZN5CrateD1Ev.cpp destroying
  * dCcAcPos_c x2, ShadowModel and dBgCh_Actr in reverse before

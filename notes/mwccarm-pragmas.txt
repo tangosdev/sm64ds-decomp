@@ -21,7 +21,7 @@
 #   scheduling                     -> NOT a pragma (the real control is the -opt schedule
 #                                     COMMAND-LINE flag); "#pragma scheduling off is inert"
 #                                     results are meaningless
-#   long_calls                     -> NOT a pragma; src/func_ov065_0211aacc.c credited it for
+#   long_calls                     -> NOT a pragma; src/unnamed/ov065/0211/func_ov065_0211aacc.c credited it for
 #                                     a tail-call shape it does not produce
 #
 # Presence here means the compiler PARSES the name, not that the pragma moves codegen on your

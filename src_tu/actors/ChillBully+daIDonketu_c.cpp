@@ -16,13 +16,13 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021115c4  src/_ZN10ChillBullyD1Ev.cpp
- *   [1] 0x02111618  src/_ZN10ChillBullyD0Ev.cpp
- *   [2] 0x02111680  src/func_ov027_02111680.c
- *   [3] 0x021116f0  src/func_ov027_021116f0.cpp
- *   [4] 0x02111770  src/_ZN10ChillBully8BehaviorEv.cpp
- *   [5] 0x0211181c  src/_ZN10ChillBully13InitResourcesEv.cpp
- *   [6] 0x0211186c  src/ChillBully_Spawn.c
+ *   [0] 0x021115c4  src/game/actors/ChillBully/_ZN10ChillBullyD1Ev.cpp
+ *   [1] 0x02111618  src/game/actors/ChillBully/_ZN10ChillBullyD0Ev.cpp
+ *   [2] 0x02111680  src/unnamed/ov027/0211/func_ov027_02111680.c
+ *   [3] 0x021116f0  src/unnamed/ov027/0211/func_ov027_021116f0.cpp
+ *   [4] 0x02111770  src/game/actors/ChillBully/_ZN10ChillBully8BehaviorEv.cpp
+ *   [5] 0x0211181c  src/game/actors/ChillBully/_ZN10ChillBully13InitResourcesEv.cpp
+ *   [6] 0x0211186c  src/game/actors/ChillBully/ChillBully_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

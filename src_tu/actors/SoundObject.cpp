@@ -16,13 +16,13 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020f934c  src/_ZN11SoundObjectD1Ev.cpp
+ *   [0] 0x020f934c  src/game/actors/SoundObject/_ZN11SoundObjectD1Ev.cpp
  *   [1] 0x020f9370  src/_ZN11SoundObjectD0Ev.c
- *   [2] 0x020f93a8  src/func_ov002_020f93a8.cpp
- *   [3] 0x020f9468  src/func_ov002_020f9468.c
- *   [4] 0x020f94fc  src/_ZN11SoundObject8BehaviorEv.cpp
- *   [5] 0x020f95e0  src/_ZN11SoundObject13InitResourcesEv.cpp
- *   [6] 0x020f972c  src/SoundObject_Spawn.c
+ *   [2] 0x020f93a8  src/unnamed/ov002/020f/func_ov002_020f93a8.cpp
+ *   [3] 0x020f9468  src/unnamed/ov002/020f/func_ov002_020f9468.c
+ *   [4] 0x020f94fc  src/game/actors/SoundObject/_ZN11SoundObject8BehaviorEv.cpp
+ *   [5] 0x020f95e0  src/game/actors/SoundObject/_ZN11SoundObject13InitResourcesEv.cpp
+ *   [6] 0x020f972c  src/game/actors/SoundObject/SoundObject_Spawn.c
  */
 
 /* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources

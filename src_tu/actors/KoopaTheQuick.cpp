@@ -16,24 +16,24 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x0211975c  src/_ZN13KoopaTheQuickD1Ev.cpp
- *   [1] 0x021197a4  src/_ZN13KoopaTheQuickD0Ev.cpp
- *   [2] 0x02119800  src/func_ov062_02119800.cpp
- *   [3] 0x02119954  src/func_ov062_02119954.c
- *   [4] 0x021199ac  src/func_ov062_021199ac.c
- *   [5] 0x02119af0  src/func_ov062_02119af0.cpp
- *   [6] 0x02119be0  src/func_ov062_02119be0.c
- *   [7] 0x0211a0f0  src/func_ov062_0211a0f0.c
- *   [8] 0x0211a168  src/func_ov062_0211a168.c
- *   [9] 0x0211a1f4  src/func_ov062_0211a1f4.c
- *   [10] 0x0211a740  src/func_ov062_0211a740.cpp
- *   [11] 0x0211a9c4  src/func_ov062_0211a9c4.c
- *   [12] 0x0211aac0  src/func_ov062_0211aac0.c
- *   [13] 0x0211ab50  src/_ZN13KoopaTheQuick6RenderEv.cpp
- *   [14] 0x0211ab88  src/_ZN13KoopaTheQuick8BehaviorEv.cpp
- *   [15] 0x0211ac10  src/_ZN13KoopaTheQuick16CleanupResourcesEv.cpp
- *   [16] 0x0211ac94  src/_ZN13KoopaTheQuick13InitResourcesEv.cpp
- *   [17] 0x0211aee0  src/KoopaTheQuick_Spawn.c
+ *   [0] 0x0211975c  src/game/actors/KoopaTheQuick/_ZN13KoopaTheQuickD1Ev.cpp
+ *   [1] 0x021197a4  src/game/actors/KoopaTheQuick/_ZN13KoopaTheQuickD0Ev.cpp
+ *   [2] 0x02119800  src/unnamed/ov062/0211/func_ov062_02119800.cpp
+ *   [3] 0x02119954  src/unnamed/ov062/0211/func_ov062_02119954.c
+ *   [4] 0x021199ac  src/unnamed/ov062/0211/func_ov062_021199ac.c
+ *   [5] 0x02119af0  src/unnamed/ov062/0211/func_ov062_02119af0.cpp
+ *   [6] 0x02119be0  src/unnamed/ov062/0211/func_ov062_02119be0.c
+ *   [7] 0x0211a0f0  src/unnamed/ov062/0211/func_ov062_0211a0f0.c
+ *   [8] 0x0211a168  src/unnamed/ov062/0211/func_ov062_0211a168.c
+ *   [9] 0x0211a1f4  src/unnamed/ov062/0211/func_ov062_0211a1f4.c
+ *   [10] 0x0211a740  src/unnamed/ov062/0211/func_ov062_0211a740.cpp
+ *   [11] 0x0211a9c4  src/unnamed/ov062/0211/func_ov062_0211a9c4.c
+ *   [12] 0x0211aac0  src/unnamed/ov062/0211/func_ov062_0211aac0.c
+ *   [13] 0x0211ab50  src/game/actors/KoopaTheQuick/_ZN13KoopaTheQuick6RenderEv.cpp
+ *   [14] 0x0211ab88  src/game/actors/KoopaTheQuick/_ZN13KoopaTheQuick8BehaviorEv.cpp
+ *   [15] 0x0211ac10  src/game/actors/KoopaTheQuick/_ZN13KoopaTheQuick16CleanupResourcesEv.cpp
+ *   [16] 0x0211ac94  src/game/actors/KoopaTheQuick/_ZN13KoopaTheQuick13InitResourcesEv.cpp
+ *   [17] 0x0211aee0  src/game/actors/KoopaTheQuick/KoopaTheQuick_Spawn.c
  */
 
 /* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources

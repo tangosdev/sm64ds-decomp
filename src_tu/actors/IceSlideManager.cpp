@@ -16,11 +16,11 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x0211261c  src/_ZN15IceSlideManagerD1Ev.cpp
+ *   [0] 0x0211261c  src/game/actors/IceSlideManager/_ZN15IceSlideManagerD1Ev.cpp
  *   [1] 0x02112640  src/_ZN15IceSlideManagerD0Ev.c
- *   [2] 0x02112678  src/_ZN15IceSlideManager8BehaviorEv.cpp
- *   [3] 0x0211271c  src/_ZN15IceSlideManager13InitResourcesEv.cpp
- *   [4] 0x0211274c  src/IceSlideManager_Spawn.c
+ *   [2] 0x02112678  src/game/actors/IceSlideManager/_ZN15IceSlideManager8BehaviorEv.cpp
+ *   [3] 0x0211271c  src/game/actors/IceSlideManager/_ZN15IceSlideManager13InitResourcesEv.cpp
+ *   [4] 0x0211274c  src/game/actors/IceSlideManager/IceSlideManager_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

@@ -22,7 +22,7 @@
       "symbol": "_ZN15IceSlideManagerD1Ev",
       "address": "0x0211261c",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN15IceSlideManagerD1Ev.cpp",
+      "legacy_source": "src/game/actors/IceSlideManager/_ZN15IceSlideManagerD1Ev.cpp",
       "ordinal": 0
     },
     {
@@ -36,21 +36,21 @@
       "symbol": "_ZN15IceSlideManager8BehaviorEv",
       "address": "0x02112678",
       "size": "0x000000a4",
-      "legacy_source": "src/_ZN15IceSlideManager8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/IceSlideManager/_ZN15IceSlideManager8BehaviorEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN15IceSlideManager13InitResourcesEv",
       "address": "0x0211271c",
       "size": "0x00000030",
-      "legacy_source": "src/_ZN15IceSlideManager13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/IceSlideManager/_ZN15IceSlideManager13InitResourcesEv.cpp",
       "ordinal": 3
     },
     {
       "symbol": "IceSlideManager_Spawn",
       "address": "0x0211274c",
       "size": "0x00000030",
-      "legacy_source": "src/IceSlideManager_Spawn.c",
+      "legacy_source": "src/game/actors/IceSlideManager/IceSlideManager_Spawn.c",
       "ordinal": 4
     }
   ],

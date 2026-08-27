@@ -22,7 +22,7 @@
       "symbol": "_ZN9LightBeamD1Ev",
       "address": "0x021119d0",
       "size": "0x00000038",
-      "legacy_source": "src/_ZN9LightBeamD1Ev.cpp",
+      "legacy_source": "src/game/actors/LightBeam/_ZN9LightBeamD1Ev.cpp",
       "ordinal": 0
     },
     {
@@ -36,7 +36,7 @@
       "symbol": "func_ov010_02111a54",
       "address": "0x02111a54",
       "size": "0x00000040",
-      "legacy_source": "src/func_ov010_02111a54.c",
+      "legacy_source": "src/unnamed/ov010/0211/func_ov010_02111a54.c",
       "ordinal": 2
     },
     {
@@ -50,28 +50,28 @@
       "symbol": "_ZN9LightBeam6RenderEv",
       "address": "0x02111ab8",
       "size": "0x00000028",
-      "legacy_source": "src/_ZN9LightBeam6RenderEv.cpp",
+      "legacy_source": "src/game/actors/LightBeam/_ZN9LightBeam6RenderEv.cpp",
       "ordinal": 4
     },
     {
       "symbol": "_ZN9LightBeam8BehaviorEv",
       "address": "0x02111ae0",
       "size": "0x00000240",
-      "legacy_source": "src/_ZN9LightBeam8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/LightBeam/_ZN9LightBeam8BehaviorEv.cpp",
       "ordinal": 5
     },
     {
       "symbol": "_ZN9LightBeam13InitResourcesEv",
       "address": "0x02111d20",
       "size": "0x000000b0",
-      "legacy_source": "src/_ZN9LightBeam13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/LightBeam/_ZN9LightBeam13InitResourcesEv.cpp",
       "ordinal": 6
     },
     {
       "symbol": "LightBeam_Spawn",
       "address": "0x02111dd0",
       "size": "0x00000040",
-      "legacy_source": "src/LightBeam_Spawn.c",
+      "legacy_source": "src/game/actors/LightBeam/LightBeam_Spawn.c",
       "ordinal": 7
     }
   ],

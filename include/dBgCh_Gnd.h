@@ -59,7 +59,7 @@ struct dBgCh_Gnd : dBgCh, dBgPi {
      */
     virtual ~dBgCh_Gnd();
 
-    /* DECLARED, defined out of line in src/_ZN9dBgCh_GndC1Ev.cpp as real
+    /* DECLARED, defined out of line in src/game/actors/dBgCh_Gnd/_ZN9dBgCh_GndC1Ev.cpp as real
      * C++ -- complete-object context for every ROM caller, hence C1.
      * The ROM kept no C2 sibling: nothing derives from dBgCh_Gnd.
      */

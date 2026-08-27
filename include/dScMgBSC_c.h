@@ -19,10 +19,10 @@
  * elements -- left as raw bytes, element type not evidenced.
  *
  * OWN TAIL, 0x51b8..0x51d0: one field is real matched access
- * (src/func_ov006_0212527c.cpp, .../02125364.c), the rest stays pad.
+ * (src/unnamed/ov006/0212/func_ov006_0212527c.cpp, .../02125364.c), the rest stays pad.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN10dScMgBSC_cD1Ev.cpp; D0Ev.cpp
+ * its own. Defined for real in src/minigames/dScMgBSC_c/_ZN10dScMgBSC_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
  * dScMgBase_c, two levels up, already provides one. */
 #ifndef DSCMGBSC_C_H
@@ -40,7 +40,7 @@ struct dScMgBSC_c : dScMgSingle3DBase_c {
        Re-overrides of slots fBase_c already owns, NOT new virtuals: the
        table stays the base's width and no field moves. Declared AFTER the
        destructor so the destructor is still the first virtual declared. */
-    virtual s32 InitResources(); /* slot 0 -- src/_ZN10dScMgBSC_c13InitResourcesEv.cpp */
+    virtual s32 InitResources(); /* slot 0 -- src/minigames/dScMgBSC_c/_ZN10dScMgBSC_c13InitResourcesEv.cpp */
     virtual s32 Behavior();   /* slot 6 -- ov006 0x021254c0 */
     virtual s32 Render();     /* slot 9 -- ov006 0x021253bc */
 

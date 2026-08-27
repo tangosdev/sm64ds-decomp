@@ -26,7 +26,7 @@ reconstruction is a separate publication gate.
 `__sinit_ov002_02100adc` copies fourteen 8-byte PMF descriptors into
 `data_ov002_0210dc00` (`0x70` bytes).  Its only ROM consumer relocation is
 `0x020b01bc -> 0x0210dc00`, in `OneUpMushroom::Behavior`; the only source
-consumer is `src/_ZN13OneUpMushroom8BehaviorEv.cpp`.  There are no unmapped or
+consumer is `src/game/actors/OneUpMushroom/_ZN13OneUpMushroom8BehaviorEv.cpp`.  There are no unmapped or
 external consumers.
 
 The descriptor copy order and relocated method targets are:
@@ -149,7 +149,7 @@ The second half copies four PMFs into `data_ov063_0211efbc` in this order:
 
 All four targets are in MadPiano's TU.  The two table consumers are
 `0x0211ddf0` and `0x0211de38`, in
-`src/unnamed/ov063/func_ov063_0211ddac.cpp` and `...0211ddf4.cpp`; they expose
+`src/unnamed/ov063/0211/func_ov063_0211ddac.cpp` and `...0211ddf4.cpp`; they expose
 the destination as two entries of two PMFs.  All resource consumers also remain
 inside MadPiano: CleanupResources consumes all three handles and InitResources
 loads the model/animation/collision handles.  No external or unmapped consumer

@@ -230,12 +230,12 @@ Also spelled `u16 *p = (u16*)(((int)c + 0x4c0c) & 0xFFFFFFFFFFFFFFFFULL); *p = *
    #define M(a) (*(int*)(((long long)(unsigned)(a)) & 0xFFFFFFFFFFFFFFFFLL))
    #define N(a) (*(int*)(((long long)(long)(a))     & 0xFFFFFFFFFFFFFFFFLL))
    ```
-   (verbatim from `src/func_ov006_02114c04.c`, which needs all three)
+   (verbatim from `src/unnamed/ov006/0211/func_ov006_02114c04.c`, which needs all three)
 
 **Landed examples** (all byte-identical, strict relocs, linkcheck VERIFIED):
-`src/func_ov006_02114c04.c` (the clearest -- RMW/single-use split across a whole loop body),
-`src/func_ov006_0211fe78.c` (63 divergences -> 0 in one edit),
-`src/func_ov006_020d8d84.c`, `src/func_ov006_0211e8a8.c`.
+`src/unnamed/ov006/0211/func_ov006_02114c04.c` (the clearest -- RMW/single-use split across a whole loop body),
+`src/unnamed/ov006/0211/func_ov006_0211fe78.c` (63 divergences -> 0 in one edit),
+`src/unnamed/ov006/020d/func_ov006_020d8d84.c`, `src/unnamed/ov006/0211/func_ov006_0211e8a8.c`.
 
 **Cost of the stale note.** `func_ov006_0211e8a8` was worked to 12 divergences, correctly diagnosed
 as the "first-access-fold wall" per the old text, and abandoned as unmatchable. Pointed at the
@@ -250,7 +250,7 @@ own fix -- **do not pre-fold the base**. Modelling `self + 0x4694 + (i<<6)` as a
 mwcc pool-load it and hoist the result into callee-saved registers (observed: 7-register push).
 Modelling the same thing as a **stride-0x40 struct array** indexed `[i]` yields the ROM's
 `add rX,self,i,lsl#6; add rX,rX,#0x4000; ldrb [rX,#0x694]` and rematerializes per region.
-(`src/func_ov006_020d69b8.c`, `src/func_ov006_020d816c.c`.)
+(`src/unnamed/ov006/020d/func_ov006_020d69b8.c`, `src/unnamed/ov006/020d/func_ov006_020d816c.c`.)
 
 Related: write the cast **inline** at each use. Hoisting it into a local pointer (`Ent *ents = ...`)
 forces one addressing form everywhere; inline lets mwcc pick per context, which is what the ROM does.
@@ -346,7 +346,7 @@ same subsystem -- neither fell to search:
 - `func_020316d8` was floored at **23 divergences after ~5600 compiles** of declaration-order,
   statement-order, type and pragma hill-climbing, and diagnosed as a pure allocator rotation. The
   supporting finding was even correct: decl order and `register`/type knobs have *zero* effect on
-  that function. It was not an allocator floor. The matched sibling `src/func_0201b100.c` contains
+  that function. It was not an allocator floor. The matched sibling `src/unnamed/arm9/0201/func_0201b100.c` contains
   the same blit loop and carries the load-bearing spellings directly -- a `(short)(int)` double cast
   to defeat the range-folder, the slow path as an `else` block with block-scoped locals, a char-cast
   third store that breaks an mla-coalesce. ~650 compiles from that start.
@@ -371,8 +371,8 @@ greppable feature of the *residual* and scan every matched function for it:
 | function | address-nearest siblings | what signature search found |
 |---|---|---|
 | `func_ov063_02119074` | nothing on frame padding | scan for prologue `push {r4,lr}; sub sp,#0x10` + near-zero sp traffic (dead frame space) -> the `volatile int dummy[N]` idiom |
-| `func_ov006_02109aac` | no useful idiom | scan matched ov006 ROM bytes for `add rD, rN, rD, lsl #3` -> `src/func_ov006_02108f2c.c`, same table/compares/callee; 7 words closed in one edit |
-| `func_ov006_021082fc` | adjacent twin 0x38 away, useless | `grep -l Matrix4x3_ApplyInPlaceToTranslation src/*.c` filtered to callers passing a stack Vec3 -> `src/func_ov006_02107ea8.c`; 11 -> 0 |
+| `func_ov006_02109aac` | no useful idiom | scan matched ov006 ROM bytes for `add rD, rN, rD, lsl #3` -> `src/unnamed/ov006/0210/func_ov006_02108f2c.c`, same table/compares/callee; 7 words closed in one edit |
+| `func_ov006_021082fc` | adjacent twin 0x38 away, useless | `grep -l Matrix4x3_ApplyInPlaceToTranslation src/*.c` filtered to callers passing a stack Vec3 -> `src/unnamed/ov006/0210/func_ov006_02107ea8.c`; 11 -> 0 |
 
 Practical recipes: grep `src/` for a **callee name** your function also calls (then filter by
 argument shape); scan matched ROM bytes for a distinctive **instruction pattern** from your residual;
@@ -404,7 +404,7 @@ your target before starting.**
 > `volatile` is the one to reach for last: it preserves the stores but pins their order and
 > introduces extra *named webs*, which cost an 11-word rotation on `func_ov006_021082fc`
 > that no declaration-order permutation could fix. Swapping it for form #1 (taken verbatim
-> from the twin `src/func_ov006_02107ea8.c`) closed that function 11 -> 0 in one edit.
+> from the twin `src/unnamed/ov006/0210/func_ov006_02107ea8.c`) closed that function 11 -> 0 in one edit.
 > Form #2 beat `volatile` on `func_ov060_02117db8` for the same reason: dropping `volatile`
 > alone deleted the stores as dead, but merging two stack Vec3s into one `int v[6]` whose
 > address escapes into a call kept them *and* let the scheduler hoist the call-arg setup the
@@ -417,7 +417,7 @@ your target before starting.**
   struct PVec { s32 x, y, z; ~PVec() {} };
   ```
   Probed and rejected as the cause first: 4-byte structs, non-POD classes, `Vector3`-by-value,
-  varargs, 7-arg models. It is not a struct-ABI effect. (`src/func_ov002_020d869c.cpp`)
+  varargs, 7-arg models. It is not a struct-ABI effect. (`src/unnamed/ov002/020d/func_ov002_020d869c.cpp`)
 - Where the ROM keeps several apparently-dead stores to locals, wrap **all the locals in one
   enclosing struct whose address is taken**. That blocks SROA/register promotion for the whole
   aggregate so the dead stores survive, while store-to-load forwarding still supplies the registers.
@@ -434,12 +434,12 @@ offsets; block depth and scope-close order are irrelevant; and **compiler temps 
 all declared locals**. Therefore a ROM slot at the *top* of the frame that is used *first* cannot be
 a declared local -- it must be a temp, i.e. a C99 compound literal (`obj->v = (Vec3){0,0,0};`).
 Deriving the construct from a frame-layout contradiction beats permuting spellings.
-(`src/func_ov007_020ca010.c`)
+(`src/unnamed/ov007/020c/func_ov007_020ca010.c`)
 
 **All-zero aggregate init triggers materialized-base stack zeroing.** `Vec3 v = {0,0,0};` gives
 `add rN,sp,#off; str r,[rN]; str r,[rN,#4]; str r,[rN,#8]`. Field assignments, a pointer local, an
 inlined `VecSet(&v,0,0,0)` and a `void*` helper all fold to `[sp,#off]`. A **non-zero** aggregate
-init instead emits a pool `ldm`/`stm` copy. (`src/func_ov007_020ca010.c`)
+init instead emits a pool `ldm`/`stm` copy. (`src/unnamed/ov007/020c/func_ov007_020ca010.c`)
 
 **Pointer difference carries no conversion node.** To get a base-0 array stride offset into a
 register as an int, `(int)&((char(*)[0x24])0)[idx][0]` emits a surplus `add rX,rY,#0` that mwcc will
@@ -448,25 +448,25 @@ not fold away (~12 cast spellings all did). Spell it as a **pointer difference**
 off = ((char (*)[0x24])0)[idx] - (char*)0;
 ```
 Operand order then matters: the pointer base must be the left operand of the following add, or you
-get the operands swapped. (`src/func_ov006_0211e8a8.c`)
+get the operands swapped. (`src/unnamed/ov006/0211/func_ov006_0211e8a8.c`)
 
 **`if/else` vs ternary has NON-LOCAL regalloc effects.** The existing "preserve ternaries" guidance
 is not universal. A case written as a ternary poisoned the whole function's r1/r2 assignment for two
 unrelated locals -- *despite* the ROM emitting the classic `moveq/movne` ternary shape. Rewriting it
 as `if/else` fixed a 20-instruction coloring residual far from the ternary itself. When a predicated
 pair is the only construct adjacent to a coloring residual, **try both forms**.
-(`src/func_ov007_020b5f64.c`)
+(`src/unnamed/ov007/020b/func_ov007_020b5f64.c`)
 
 **Parallel loops want their own locals.** Six structurally identical zero-init loops sharing one
 `i`/`p` pair gave correct instruction shape with permuted registers; giving each loop its own counter
 and pointer fixed the allocation exactly. A declaration-order swap did not.
-(`src/func_ov006_020feba8.c`)
+(`src/unnamed/ov006/020f/func_ov006_020feba8.c`)
 
 **Assignment order, not declaration order.** Where a 24-permutation *declaration*-order sweep is
 inert, reordering the **assignment / first use** can still flip the entire callee-saved assignment
 (observed: 33 divergences -> 0 from moving one assignment). Source position of the first *use* sets
 web rank. Corollary: an inert decl-order sweep means the lever is **gated**, not dead -- try
-`#pragma opt_lifetimes off` and re-sweep. (`src/func_ov006_020fe750.c`)
+`#pragma opt_lifetimes off` and re-sweep. (`src/unnamed/ov006/020f/func_ov006_020fe750.c`)
 
 **Prefer a respelling to a pragma.** `#pragma opt_strength_reduction off` and the address-tree
 respelling `((int*)c + k)[0x1510]` both killed a spurious induction variable; the respelling was

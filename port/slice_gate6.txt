@@ -4,11 +4,11 @@
 # the ov-coupled entry points (RenderOamBothScreens, OAM::SECOND) wait for
 # the overlay story.
 
-src/_ZN3OAM5ResetEv.cpp
-src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi.c
-src/_ZN3OAM11GetObjWidthEii.cpp
-src/_ZN3OAM12GetObjHeightEii.cpp
-src/_ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2.cpp
-src/_ZN3OAM5FlushEv.cpp
-src/func_020566dc.c
-src/func_02056674.c
+src/game/actors/OAM/_ZN3OAM5ResetEv.cpp
+src/game/actors/OAM/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi.c
+src/game/actors/OAM/_ZN3OAM11GetObjWidthEii.cpp
+src/game/actors/OAM/_ZN3OAM12GetObjHeightEii.cpp
+src/game/actors/OAM/_ZN3OAM16LoadAffineParamsEP7OamAttrPiP9Matrix2x2.cpp
+src/game/actors/OAM/_ZN3OAM5FlushEv.cpp
+src/unnamed/arm9/0205/func_020566dc.c
+src/unnamed/arm9/0205/func_02056674.c

@@ -22,147 +22,147 @@
       "symbol": "_ZN8daKpFr_cD1Ev",
       "address": "0x02121b48",
       "size": "0x00000040",
-      "legacy_source": "src/_ZN8daKpFr_cD1Ev.cpp",
+      "legacy_source": "src/game/actors/daKpFr_c/_ZN8daKpFr_cD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN8daKpFr_cD0Ev",
       "address": "0x02121b88",
       "size": "0x00000054",
-      "legacy_source": "src/_ZN8daKpFr_cD0Ev.cpp",
+      "legacy_source": "src/game/actors/daKpFr_c/_ZN8daKpFr_cD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN8daKpFr_c13OnYoshiTryEatEv",
       "address": "0x02121bdc",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN8daKpFr_c13OnYoshiTryEatEv.cpp",
+      "legacy_source": "src/game/actors/daKpFr_c/_ZN8daKpFr_c13OnYoshiTryEatEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "func_ov070_02121be4",
       "address": "0x02121be4",
       "size": "0x000000a8",
-      "legacy_source": "src/func_ov070_02121be4.cpp",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02121be4.cpp",
       "ordinal": 3
     },
     {
       "symbol": "func_ov070_02121c8c",
       "address": "0x02121c8c",
       "size": "0x00000030",
-      "legacy_source": "src/func_ov070_02121c8c.c",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02121c8c.c",
       "ordinal": 4
     },
     {
       "symbol": "func_ov070_02121cbc",
       "address": "0x02121cbc",
       "size": "0x00000094",
-      "legacy_source": "src/func_ov070_02121cbc.c",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02121cbc.c",
       "ordinal": 5
     },
     {
       "symbol": "func_ov070_02121d50",
       "address": "0x02121d50",
       "size": "0x000000c4",
-      "legacy_source": "src/func_ov070_02121d50.cpp",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02121d50.cpp",
       "ordinal": 6
     },
     {
       "symbol": "func_ov070_02121e14",
       "address": "0x02121e14",
       "size": "0x0000009c",
-      "legacy_source": "src/func_ov070_02121e14.cpp",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02121e14.cpp",
       "ordinal": 7
     },
     {
       "symbol": "func_ov070_02121eb0",
       "address": "0x02121eb0",
       "size": "0x00000048",
-      "legacy_source": "src/func_ov070_02121eb0.c",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02121eb0.c",
       "ordinal": 8
     },
     {
       "symbol": "func_ov070_02121ef8",
       "address": "0x02121ef8",
       "size": "0x00000020",
-      "legacy_source": "src/func_ov070_02121ef8.c",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02121ef8.c",
       "ordinal": 9
     },
     {
       "symbol": "func_ov070_02121f18",
       "address": "0x02121f18",
       "size": "0x00000098",
-      "legacy_source": "src/func_ov070_02121f18.cpp",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02121f18.cpp",
       "ordinal": 10
     },
     {
       "symbol": "func_ov070_02121fb0",
       "address": "0x02121fb0",
       "size": "0x00000020",
-      "legacy_source": "src/func_ov070_02121fb0.c",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02121fb0.c",
       "ordinal": 11
     },
     {
       "symbol": "func_ov070_02121fd0",
       "address": "0x02121fd0",
       "size": "0x0000003c",
-      "legacy_source": "src/func_ov070_02121fd0.cpp",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02121fd0.cpp",
       "ordinal": 12
     },
     {
       "symbol": "func_ov070_0212200c",
       "address": "0x0212200c",
       "size": "0x00000038",
-      "legacy_source": "src/func_ov070_0212200c.cpp",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_0212200c.cpp",
       "ordinal": 13
     },
     {
       "symbol": "func_ov070_02122044",
       "address": "0x02122044",
       "size": "0x0000001c",
-      "legacy_source": "src/func_ov070_02122044.c",
+      "legacy_source": "src/unnamed/ov070/0212/func_ov070_02122044.c",
       "ordinal": 14
     },
     {
       "symbol": "_ZN8daKpFr_c16CleanupResourcesEv",
       "address": "0x02122060",
       "size": "0x00000008",
-      "legacy_source": "src/_ZN8daKpFr_c16CleanupResourcesEv.cpp",
+      "legacy_source": "src/game/actors/daKpFr_c/_ZN8daKpFr_c16CleanupResourcesEv.cpp",
       "ordinal": 15
     },
     {
       "symbol": "_ZN8daKpFr_c16OnPendingDestroyEv",
       "address": "0x02122068",
       "size": "0x00000004",
-      "legacy_source": "src/_ZN8daKpFr_c16OnPendingDestroyEv.cpp",
+      "legacy_source": "src/game/actors/daKpFr_c/_ZN8daKpFr_c16OnPendingDestroyEv.cpp",
       "ordinal": 16
     },
     {
       "symbol": "_ZN8daKpFr_c6RenderEv",
       "address": "0x0212206c",
       "size": "0x00000098",
-      "legacy_source": "src/_ZN8daKpFr_c6RenderEv.cpp",
+      "legacy_source": "src/game/actors/daKpFr_c/_ZN8daKpFr_c6RenderEv.cpp",
       "ordinal": 17
     },
     {
       "symbol": "_ZN8daKpFr_c8BehaviorEv",
       "address": "0x02122104",
       "size": "0x00000020",
-      "legacy_source": "src/_ZN8daKpFr_c8BehaviorEv.cpp",
+      "legacy_source": "src/game/actors/daKpFr_c/_ZN8daKpFr_c8BehaviorEv.cpp",
       "ordinal": 18
     },
     {
       "symbol": "_ZN8daKpFr_c13InitResourcesEv",
       "address": "0x02122124",
       "size": "0x000000d8",
-      "legacy_source": "src/_ZN8daKpFr_c13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/daKpFr_c/_ZN8daKpFr_c13InitResourcesEv.cpp",
       "ordinal": 19
     },
     {
       "symbol": "daKpFr_c_Spawn",
       "address": "0x021221fc",
       "size": "0x00000048",
-      "legacy_source": "src/daKpFr_c_Spawn.c",
+      "legacy_source": "src/game/actors/daKpFr_c/daKpFr_c_Spawn.c",
       "ordinal": 20
     }
   ],

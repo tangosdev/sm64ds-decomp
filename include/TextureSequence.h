@@ -62,7 +62,7 @@ struct TextureSequence : Animation {
     /* --- vtable: the destructor pair only. --- */
     virtual ~TextureSequence();                       /* slots 0 (D1), 1 (D0) */
 
-    /* DECLARED, never defined as a method here -- src/_ZN15TextureSequenceC1Ev.cpp
+    /* DECLARED, never defined as a method here -- src/runtime/audio/TextureSequence/_ZN15TextureSequenceC1Ev.cpp
        owns C1 (notes/ctor-migration.md section 2). */
     TextureSequence();
 

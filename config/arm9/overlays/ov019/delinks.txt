@@ -4,150 +4,150 @@
     .ctor       start:0x02112b64 end:0x02112b6c kind:rodata align:4
     .data       start:0x02112b80 end:0x02113460 kind:data align:32
     .bss        start:0x02113460 end:0x02113600 kind:bss align:32
-src/_ZN13RacingPenguinD1Ev.cpp:
+src/game/actors/RacingPenguin/_ZN13RacingPenguinD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111f0
 
-src/_ZN13RacingPenguinD0Ev.cpp:
+src/game/actors/RacingPenguin/_ZN13RacingPenguinD0Ev.cpp:
     complete
     .text start:0x021111f0 end:0x02111254
 
-src/func_ov019_02111254.c:
+src/unnamed/ov019/0211/func_ov019_02111254.c:
     complete
     .text start:0x02111254 end:0x0211127c
 
-src/func_ov019_0211127c.cpp:
+src/unnamed/ov019/0211/func_ov019_0211127c.cpp:
     complete
     .text start:0x0211127c end:0x021112b8
 
-src/func_ov019_021112b8.c:
+src/unnamed/ov019/0211/func_ov019_021112b8.c:
     complete
     .text start:0x021112b8 end:0x0211131c
 
-src/func_ov019_0211131c.c:
+src/unnamed/ov019/0211/func_ov019_0211131c.c:
     complete
     .text start:0x0211131c end:0x021113b0
 
-src/func_ov019_021113b0.c:
+src/unnamed/ov019/0211/func_ov019_021113b0.c:
     complete
     .text start:0x021113b0 end:0x0211140c
 
-src/func_ov019_0211140c.cpp:
+src/unnamed/ov019/0211/func_ov019_0211140c.cpp:
     complete
     .text start:0x0211140c end:0x021114ec
 
-src/func_ov019_021114ec.cpp:
+src/unnamed/ov019/0211/func_ov019_021114ec.cpp:
     complete
     .text start:0x021114ec end:0x02111558
 
-src/func_ov019_02111558.c:
+src/unnamed/ov019/0211/func_ov019_02111558.c:
     complete
     .text start:0x02111558 end:0x02111754
 
-src/func_ov019_02111754.cpp:
+src/unnamed/ov019/0211/func_ov019_02111754.cpp:
     complete
     .text start:0x02111754 end:0x021117a8
 
-src/func_ov019_021117a8.c:
+src/unnamed/ov019/0211/func_ov019_021117a8.c:
     complete
     .text start:0x021117a8 end:0x02111904
 
-src/func_ov019_02111904.c:
+src/unnamed/ov019/0211/func_ov019_02111904.c:
     complete
     .text start:0x02111904 end:0x0211197c
 
-src/func_ov019_0211197c.c:
+src/unnamed/ov019/0211/func_ov019_0211197c.c:
     complete
     .text start:0x0211197c end:0x02111d58
 
-src/func_ov019_02111d58.c:
+src/unnamed/ov019/0211/func_ov019_02111d58.c:
     complete
     .text start:0x02111d58 end:0x02111dec
 
-src/func_ov019_02111dec.c:
+src/unnamed/ov019/0211/func_ov019_02111dec.c:
     complete
     .text start:0x02111dec end:0x02111f54
 
-src/func_ov019_02111f54.c:
+src/unnamed/ov019/0211/func_ov019_02111f54.c:
     complete
     .text start:0x02111f54 end:0x02111fec
 
-src/func_ov019_02111fec.c:
+src/unnamed/ov019/0211/func_ov019_02111fec.c:
     complete
     .text start:0x02111fec end:0x0211213c
 
-src/func_ov019_0211213c.c:
+src/unnamed/ov019/0211/func_ov019_0211213c.c:
     complete
     .text start:0x0211213c end:0x02112168
 
-src/func_ov019_02112168.c:
+src/unnamed/ov019/0211/func_ov019_02112168.c:
     complete
     .text start:0x02112168 end:0x021121f8
 
-src/func_ov019_021121f8.c:
+src/unnamed/ov019/0211/func_ov019_021121f8.c:
     complete
     .text start:0x021121f8 end:0x02112268
 
-src/func_ov019_02112268.cpp:
+src/unnamed/ov019/0211/func_ov019_02112268.cpp:
     complete
     .text start:0x02112268 end:0x021122a4
 
-src/func_ov019_021122a4.cpp:
+src/unnamed/ov019/0211/func_ov019_021122a4.cpp:
     complete
     .text start:0x021122a4 end:0x021122dc
 
-src/func_ov019_021122dc.c:
+src/unnamed/ov019/0211/func_ov019_021122dc.c:
     complete
     .text start:0x021122dc end:0x021122f8
 
-src/_ZN13RacingPenguin16CleanupResourcesEv.cpp:
+src/game/actors/RacingPenguin/_ZN13RacingPenguin16CleanupResourcesEv.cpp:
     complete
     .text start:0x021122f8 end:0x0211235c
 
-src/_ZN13RacingPenguin16OnPendingDestroyEv.cpp:
+src/game/actors/RacingPenguin/_ZN13RacingPenguin16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0211235c end:0x02112360
 
-src/_ZN13RacingPenguin6RenderEv.cpp:
+src/game/actors/RacingPenguin/_ZN13RacingPenguin6RenderEv.cpp:
     complete
     .text start:0x02112360 end:0x02112394
 
-src/_ZN13RacingPenguin8BehaviorEv.cpp:
+src/game/actors/RacingPenguin/_ZN13RacingPenguin8BehaviorEv.cpp:
     complete
     .text start:0x02112394 end:0x021123d4
 
-src/_ZN13RacingPenguin13InitResourcesEv.cpp:
+src/game/actors/RacingPenguin/_ZN13RacingPenguin13InitResourcesEv.cpp:
     complete
     .text start:0x021123d4 end:0x021125bc
 
-src/RacingPenguin_Spawn.c:
+src/game/actors/RacingPenguin/RacingPenguin_Spawn.c:
     complete
     .text start:0x021125bc end:0x0211261c
 
-src/_ZN15IceSlideManagerD1Ev.cpp:
+src/game/actors/IceSlideManager/_ZN15IceSlideManagerD1Ev.cpp:
     complete
     .text start:0x0211261c end:0x02112640
 
-src/_ZN15IceSlideManagerD0Ev.cpp:
+src/game/actors/IceSlideManager/_ZN15IceSlideManagerD0Ev.cpp:
     complete
     .text start:0x02112640 end:0x02112678
 
-src/_ZN15IceSlideManager8BehaviorEv.cpp:
+src/game/actors/IceSlideManager/_ZN15IceSlideManager8BehaviorEv.cpp:
     complete
     .text start:0x02112678 end:0x0211271c
 
-src/_ZN15IceSlideManager13InitResourcesEv.cpp:
+src/game/actors/IceSlideManager/_ZN15IceSlideManager13InitResourcesEv.cpp:
     complete
     .text start:0x0211271c end:0x0211274c
 
-src/IceSlideManager_Spawn.c:
+src/game/actors/IceSlideManager/IceSlideManager_Spawn.c:
     complete
     .text start:0x0211274c end:0x0211277c
 
-src/__sinit_ov019_021127a4.c:
+src/unnamed/ov019/0211/__sinit_ov019_021127a4.c:
     complete
     .init start:0x021127a4 end:0x02112b14
 
-src/__sinit_ov019_02112b14.c:
+src/unnamed/ov019/0211/__sinit_ov019_02112b14.c:
     complete
     .init start:0x02112b14 end:0x02112b64

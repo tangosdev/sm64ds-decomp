@@ -117,7 +117,7 @@ breaking — they are the disagreements finally being forced into the open. Ever
 a real question that has to be answered by a person: does `func_ov007_020b7948` return
 `void` as its definition says, or `int` as its callers say?
 
-**Declaration form can change codegen.** `src/func_ov002_020f2aec.c` only matches with
+**Declaration form can change codegen.** `src/unnamed/ov002/020f/func_ov002_020f2aec.c` only matches with
 `int` as the last parameter of `_ZN3G2x13SetBlendAlphaEPVttttt`; the header's `u16`
 forces a truncation at the call site and the function grows `0x108 -> 0x110`. Rare —
 1 in 25 — but real. Only the byte gate catches it, so every file must be byte-verified

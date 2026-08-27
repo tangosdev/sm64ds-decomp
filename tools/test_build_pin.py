@@ -76,8 +76,8 @@ def test_missing_overrides_file_fails_closed(monkeypatch=None):
         BP.VERSIONS_FILE = REPO / "config" / "no-such-versions-file.txt"
         BP._pins = None
         assert BP.pins() is None
-        assert BP.version_for("src/func_02062428.c") is None
-        v, why = BP.compiler_for("src/func_02062428.c")
+        assert BP.version_for("src/unnamed/arm9/0206/func_02062428.c") is None
+        v, why = BP.compiler_for("src/unnamed/arm9/0206/func_02062428.c")
         assert v is None and "missing" in why
     finally:
         BP.VERSIONS_FILE, BP._pins = saved_file, saved_cache
@@ -141,12 +141,12 @@ def _strict(rows=None, exc=None):
 def test_bytes_matching_is_not_a_pass_when_a_relocation_points_elsewhere():
     """The observed failure, in miniature. `match.compare` treats every relocated word
     as a wildcard, so a call to the wrong function compares clean; only the link sees
-    it. src/func_ov006_020cb030.cpp passed a byte-only check, was enrolled, and the ROM
+    it. src/unnamed/ov006/020c/func_ov006_020cb030.cpp passed a byte-only check, was enrolled, and the ROM
     build reported ov006 mismatching at a `bl` going to func_ov006_020c9024 where the
     ROM's relocation records 0x020cb134."""
     if not _toolchain():
         return
-    rel = "src/func_ov006_020cb030.cpp"
+    rel = "src/unnamed/ov006/020c/func_ov006_020cb030.cpp"
     name, addr, size, label = "func_ov006_020cb030", 0x020cb030, 0x104, "ov006"
     ok, _ = BP.verify(REPO / rel, name, addr, size, label)
     assert ok, "precondition: this file's BYTES reproduce under the pinned compiler"
@@ -159,7 +159,7 @@ def test_bytes_matching_is_not_a_pass_when_a_relocation_points_elsewhere():
 def test_a_destination_check_that_could_not_run_is_not_a_pass():
     if not _toolchain():
         return
-    rel = "src/func_ov006_020cb030.cpp"
+    rel = "src/unnamed/ov006/020c/func_ov006_020cb030.cpp"
     args = ("func_ov006_020cb030", 0x020cb030, 0x104, "ov006")
     for strict in (_strict(None), _strict(exc=RuntimeError("index unavailable"))):
         ok, why = BP.verify(REPO / rel, *args, strict=strict)

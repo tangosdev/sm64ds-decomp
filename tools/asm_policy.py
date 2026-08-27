@@ -25,7 +25,7 @@ game -- so this textual gate is the honesty mechanism.
   "unbannered-asm"  -- the file has an asm body (mnemonics, no dcd) and no banner.
                        WARN only: real C with an embedded asm hatch (CP15
                        intrinsics inside a C function, e.g.
-                       src/_ZN6Player13InitResourcesEv.cpp) lives in this gray
+                       src/game/player/Player/_ZN6Player13InitResourcesEv.cpp) lives in this gray
                        zone, so demoting it wholesale would rescind legitimate
                        matches. These are surfaced for a human to banner or
                        reclassify deliberately.
@@ -67,7 +67,7 @@ def has_draft_banner(text):
     Callers scanned `text[:200]` (chaos_db_ci, cluster_targets, coddog, enroll,
     pr_linkcheck), `text[:400]` (nearmiss_db, prepush_linkcheck), or the whole file
     (classify, below). So one file could be a draft to one gate and matched to another,
-    which is exactly what happened: src/func_ov091_021339fc.c says "does NOT count as
+    which is exactly what happened: src/unnamed/ov091/0213/func_ov091_021339fc.c says "does NOT count as
     matched" at byte 246 -- past the 200-byte window -- and the progress bar counted it
     as matched regardless of what its author wrote.
 

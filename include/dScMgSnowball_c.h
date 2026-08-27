@@ -37,10 +37,10 @@
  * indexes 0xb0d8 as `*(int*)(c + i*4 + ...)`, 0xb2d8 and 0xb358 as
  * `*(u8*)(c + i + ...)`, and 0xb3d8 as `*(int*)(c + i*4 + ...)`; 0x80
  * elements each gives 0x200 + 0x80 + 0x80 + 0x200 = 0x500, landing on
- * mArray2. src/func_ov006_02125bbc.c writes the first two the same way.
+ * mArray2. src/unnamed/ov006/0212/func_ov006_02125bbc.c writes the first two the same way.
  *
  * 0xbe94..0xc59c IS A FIFTH ARRAY, and it is why this class has NO trailing
- * slack at all: src/func_ov006_02129690.c already carries the full element
+ * slack at all: src/unnamed/ov006/0212/func_ov006_02129690.c already carries the full element
  * layout (two s32 then three u8 at +0x1e/0x1f/0x20, stride 0x24) as a local
  * `Elem arr[50]` at exactly this offset, and 50 * 0x24 = 0x708 closes
  * precisely on the allocation literal. At least eight further ov006 files
@@ -53,11 +53,11 @@
  *
  * mMenuOpen, which the old auto-generated header declared, is dScMgBase_c's
  * own and is already declared there; it is dropped from this file, not
- * lost. src/func_ov006_02128fb8.c reads it through this class and keeps
+ * lost. src/unnamed/ov006/0212/func_ov006_02128fb8.c reads it through this class and keeps
  * working because it inherits it.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN15dScMgSnowball_cD1Ev.cpp; D0Ev.cpp
+ * its own. Defined for real in src/minigames/dScMgSnowball_c/_ZN15dScMgSnowball_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
  * dScMgBase_c, two levels up, already provides one. */
 #ifndef DSCMGSNOWBALL_C_H
@@ -120,7 +120,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
                                Render indexes as i*8 + 0 / i*8 + 4 */
     s32   mArray1Kind[0x80]; /* 0xb0d8 -- 1 picks the 8-frame animated sprite
                                 table, anything else the static one */
-    u8    mArray1Hit[0x80]; /* 0xb2d8 -- src/func_ov006_02125bbc.c sets it on
+    u8    mArray1Hit[0x80]; /* 0xb2d8 -- src/unnamed/ov006/0212/func_ov006_02125bbc.c sets it on
                                contact; Render then offsets the frame by 8 */
     u8    mArray2Active[0x80]; /* 0xb358 -- 1 = this mArray2 slot is live */
     s32   mArray2Kind[0x80]; /* 0xb3d8 -- Render switches 0..2 against 3 to

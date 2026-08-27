@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020b2ba0  src/_ZN11WingFeatherD1Ev.cpp
+ *   [0] 0x020b2ba0  src/game/actors/WingFeather/_ZN11WingFeatherD1Ev.cpp
  *   [1] 0x020b2be8  src/_ZN11WingFeatherD0Ev.c
- *   [2] 0x020b2c44  src/func_ov002_020b2c44.cpp
- *   [3] 0x020b2e30  src/_ZN11WingFeather16CleanupResourcesEv.cpp
- *   [4] 0x020b2e54  src/_ZN11WingFeather6RenderEv.cpp
- *   [5] 0x020b2e9c  src/_ZN11WingFeather8BehaviorEv.cpp
- *   [6] 0x020b311c  src/_ZN11WingFeather13InitResourcesEv.cpp
- *   [7] 0x020b3248  src/WingFeather_Spawn.c
+ *   [2] 0x020b2c44  src/unnamed/ov002/020b/func_ov002_020b2c44.cpp
+ *   [3] 0x020b2e30  src/game/actors/WingFeather/_ZN11WingFeather16CleanupResourcesEv.cpp
+ *   [4] 0x020b2e54  src/game/actors/WingFeather/_ZN11WingFeather6RenderEv.cpp
+ *   [5] 0x020b2e9c  src/game/actors/WingFeather/_ZN11WingFeather8BehaviorEv.cpp
+ *   [6] 0x020b311c  src/game/actors/WingFeather/_ZN11WingFeather13InitResourcesEv.cpp
+ *   [7] 0x020b3248  src/game/actors/WingFeather/WingFeather_Spawn.c
  */
 
 /* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources

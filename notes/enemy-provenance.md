@@ -16,12 +16,12 @@ Convention: instance members `mFoo`.
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x34c | `mState` | `src/_ZN5Unagi8BehaviorEv.cpp` loads it as a pointer to a descriptor and calls the pointer-to-member-function at `+8` through `this`; the same file compares it against `&data_ov016_02114dbc`, and `func_ov016_02111bf0(this, &data_ov016_02114d8c)` in `src/_ZN5Unagi13InitResourcesEv.cpp` is the setter. |
+| 0x34c | `mState` | `src/game/actors/Unagi/_ZN5Unagi8BehaviorEv.cpp` loads it as a pointer to a descriptor and calls the pointer-to-member-function at `+8` through `this`; the same file compares it against `&data_ov016_02114dbc`, and `func_ov016_02111bf0(this, &data_ov016_02114d8c)` in `src/game/actors/Unagi/_ZN5Unagi13InitResourcesEv.cpp` is the setter. |
 | 0x3f0/0x3f4/0x3f8 | `mHomePosX/Y/Z` | `InitResources` writes them from `mPosX/mPosY/mPosZ` at spawn, then the `mVariant == 2` branch subtracts `0x80000` from `mHomePosY` and writes it back into `mPosY`. Written from the position and read back into the position: a home/spawn point. |
 | 0x40c | `mPathNodeCount` | `InitResources`: `mPathNodeCount = PathPtr::NumNodes(&path1)`. |
 | 0x410 | `mPathNodeIndex` | `InitResources` sets it to 1, then to 8, and clamps it to 4 when `mPathNodeIndex >= mPathNodeCount`. Only meaning consistent with being bounded by the node count. |
 | 0x414 | `mStarParam` | `InitResources`: `mStarParam = (param1 >> 0xc) & 0xf`. Its only two reads are `mStarParam \| 0x50` (`InitResources`) and `mStarParam \| 0x40` (`Behavior`), each the spawn parameter of actor `0xb2`, the star. |
-| 0x418..0x426 | `s16 mSegmentAngle[8]` | `InitResources` zeroes indices 0..6 through the base of 0x418 and then element 7 at 0x426 explicitly; `src/_ZN5Unagi6RenderEv.cpp` reads elements 1..6, multiplies each by `data_ov016_02114908[i].angleScale` and adds the result into the bone's rotation word at `bone + 0x1e`. Eight `s16`s, driving one bone angle each. |
+| 0x418..0x426 | `s16 mSegmentAngle[8]` | `InitResources` zeroes indices 0..6 through the base of 0x418 and then element 7 at 0x426 explicitly; `src/game/actors/Unagi/_ZN5Unagi6RenderEv.cpp` reads elements 1..6, multiplies each by `data_ov016_02114908[i].angleScale` and adds the result into the bone's rotation word at `bone + 0x1e`. Eight `s16`s, driving one bone angle each. |
 | 0x428/0x42a/0x42c | `mInitAngleX/Y/Z` | last three statements of `InitResources`: copied verbatim from `mAngleX/Y/Z`. Named for the capture, and `func_ov016_02111534` does read all three back, restoring them into `mPrevAngleX/Y/Z`. |
 | 0x43c | `Vector3 mStarPos` | `Behavior` passes `&mStarPos` to `Vec3_Dist` against the closest player's `+0x5c` (a position), passes `mStarPos` by reference as the spawn position of actor `0xb2`, and every frame copies its three words into the tracked star's `+0x5c/+0x60/+0x64`. Three consecutive words used only as a world position, and only ever the star's. |
 | 0x448 | `Vector3 mSegmentPos[7]` | already typed `Vector3[7]` — the ROM destroys it with `__destroy_arr(ptr, 7, 0xc, Vector3::~Vector3)`. `InitResources`' tail loop writes the actor's position into all seven. Renamed from `unk_448` to match `mSegmentAngle`; the loop's `char*` walker was replaced with `mSegmentPos[i].x/y/z`, byte-neutral. |
@@ -44,7 +44,7 @@ were dropped in favour of `mStarPos`.
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x420 | `void *mState` | `src/KingBobOmb_SetState.cpp` is exactly `c->pp = p; if (*c->pp) return (c->**c->pp)();` with `pp` at 0x420, and `src/_ZN10KingBobOmb8BehaviorEv.cpp` compares the same word against four ov078 state tables (`data_ov078_0212703c`, `_0212707c`, `_021270bc`, `_021270fc`) to pick its per-state path. Previously unnamed inside `pad_420`. |
+| 0x420 | `void *mState` | `src/game/objects/KingBobOmb_SetState.cpp` is exactly `c->pp = p; if (*c->pp) return (c->**c->pp)();` with `pp` at 0x420, and `src/game/actors/KingBobOmb/_ZN10KingBobOmb8BehaviorEv.cpp` compares the same word against four ov078 state tables (`data_ov078_0212703c`, `_0212707c`, `_021270bc`, `_021270fc`) to pick its per-state path. Previously unnamed inside `pad_420`. |
 | 0x4d4/0x4d8/0x4dc | `mArenaPosX/Y/Z` | `InitResources` stores the Fix12 triple `0xb1d000 / 0x1060000 / 0xfee15000` — a fixed world point. `Behavior`'s only read is `(mArenaPosY - 0x28000) > mPosY`, which forces `SetState(data_ov078_021270bc)`, the same state that switches position updates to `UpdatePosWithOnlySpeed`: a "fell below the arena floor" test. The ov078 handlers read the whole triple: `func_ov078_02123d3c` loads all three into a `Vector3`, and `func_ov078_021240a0`/`_021243c0` pass `&mArenaPosX` to `Vec3_Dist` and `Vec3_HorzAngle` against `mPos`. |
 | 0x4e0/0x4e4/0x4e8 | `mHomePosX/Y/Z` | `InitResources` writes them from `mPosX/mPosY/mPosZ` at spawn. |
 | 0x4f8 | `mInitAngleY` | `InitResources`' `*(short*)(this + 0x400 + 0xf8) = mAngleY;`, now spelled `mInitAngleY = mAngleY;`. Previously unnamed inside `pad_4ec`. |
@@ -74,7 +74,7 @@ Left `unk_`:
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x35c | `mVariant` | `src/_ZN10BowserFire13InitResourcesEv.cpp`: `mVariant = param1 & 7`. It is then the index into both behaviour tables — `data_ov060_0211af74[mVariant]` (called once at init) and `data_ov060_0211afb4[mVariant].pmf` (called every frame in `Behavior`) — and `mVariant == 0` is what disables the collider by setting `mdCcAc_c.flags \|= 1`. |
+| 0x35c | `mVariant` | `src/game/actors/BowserFire/_ZN10BowserFire13InitResourcesEv.cpp`: `mVariant = param1 & 7`. It is then the index into both behaviour tables — `data_ov060_0211af74[mVariant]` (called once at init) and `data_ov060_0211afb4[mVariant].pmf` (called every frame in `Behavior`) — and `mVariant == 0` is what disables the collider by setting `mdCcAc_c.flags \|= 1`. |
 | 0x364 | `mGroundY` | `InitResources` casts a `dBgCh_Gnd` ray down from the actor's position and stores `rc.clsnY` on a hit, `mPosY` on a miss. |
 | 0x374 | `mFrameCount` (`u16`) | zeroed in `InitResources`, incremented by 1 at the top of every `Behavior`. Widened from `s16` to `u16` to match the `unsigned short` the ROM's read-modify-write used, which is now spelled `mFrameCount += 1;`. |
 
@@ -99,8 +99,8 @@ Left `unk_`:
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x3f8 | `void *mState` | `src/_ZN10MrBlizzard8BehaviorEv.cpp`'s local shadow places `PMF *pp` at 0x3f8, calls the pointer-to-member-function at `pp[1]` through `this`, and compares the word against four ov081 state tables (`data_ov081_02128e24 / _02128e64 / _02128e84 / _02128e94`). `func_ov081_02125488(this, ...)` in `InitResources` is the setter. Previously unnamed inside `pad_398`. |
-| 0x400 | `mCapUniqueID` | `Behavior` spawns actor `0x10d` only when `SaveData::HasPlayerLostCap()` and this word is 0, then stores the spawned actor's unique id (`*(int*)(spawned + 4)`, the same `+4` `Unagi` uses for `mStarUniqueID`) into it. `src/_ZN10MrBlizzard6RenderEv.cpp` hides material 2 when it is non-zero — the head is bare once the cap actor exists. |
+| 0x3f8 | `void *mState` | `src/game/actors/MrBlizzard/_ZN10MrBlizzard8BehaviorEv.cpp`'s local shadow places `PMF *pp` at 0x3f8, calls the pointer-to-member-function at `pp[1]` through `this`, and compares the word against four ov081 state tables (`data_ov081_02128e24 / _02128e64 / _02128e84 / _02128e94`). `func_ov081_02125488(this, ...)` in `InitResources` is the setter. Previously unnamed inside `pad_398`. |
+| 0x400 | `mCapUniqueID` | `Behavior` spawns actor `0x10d` only when `SaveData::HasPlayerLostCap()` and this word is 0, then stores the spawned actor's unique id (`*(int*)(spawned + 4)`, the same `+4` `Unagi` uses for `mStarUniqueID`) into it. `src/game/actors/MrBlizzard/_ZN10MrBlizzard6RenderEv.cpp` hides material 2 when it is non-zero — the head is bare once the cap actor exists. |
 | 0x414 | `mInitAngleY` | `InitResources`, immediately after `mAngleY = mPrevAngleY`: `mInitAngleY = mAngleY`. |
 | 0x420 | `mPathNodeCount` | `InitResources` (`mType == 0` branch): `= PathPtr::NumNodes()`. |
 | 0x424 | `mPathNodeIndex` | passed to `PathPtr::GetNode(pos, index)` and then set to 1 in the same branch. |
@@ -129,7 +129,7 @@ corresponding raw `c + 0xNNN` pokes in `Behavior`.
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x370 | `mState` | `src/_ZN5Shark8BehaviorEv.cpp` reads it as a `SharkBehaviorState *` and calls the pointer-to-member-function at `+8` through `this`; `func_ov090_021338b4(this, data_ov090_021345cc)` at the end of `InitResources` is the setter. |
+| 0x370 | `mState` | `src/game/actors/Shark/_ZN5Shark8BehaviorEv.cpp` reads it as a `SharkBehaviorState *` and calls the pointer-to-member-function at `+8` through `this`; `func_ov090_021338b4(this, data_ov090_021345cc)` at the end of `InitResources` is the setter. |
 | 0x374 | `Vector3 mClsnOffset` | `InitResources` zeroes all three words and then passes `&mClsnOffset` as the `const Vector3 &` argument of `dCcAcPos_c::Init` — the collider's offset from the actor. |
 | 0x38c | `mPathNodeCount` | `InitResources`: `= PathPtr::NumNodes()`. `Behavior` wraps `mPathNodeIdx` to 0 when it reaches this value. |
 
@@ -139,7 +139,7 @@ corresponding raw `c + 0xNNN` pokes in `Behavior`.
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x428 | `Vector3 mPipeScale` | `src/_ZN12PiranhaPlant6RenderEv.cpp` passes `&mPipeScale` as the `Vector3 *` argument of `mModel.Render` — the same slot `mModelAnim.Render` gets `&mScaleX` in. Twelve bytes of what used to be `u8 unk_428` plus `pad_429[0xb]`. |
+| 0x428 | `Vector3 mPipeScale` | `src/game/actors/PiranhaPlant/_ZN12PiranhaPlant6RenderEv.cpp` passes `&mPipeScale` as the `Vector3 *` argument of `mModel.Render` — the same slot `mModelAnim.Render` gets `&mScaleX` in. Twelve bytes of what used to be `u8 unk_428` plus `pad_429[0xb]`. |
 | 0x434 | `Vector3 mFirePos` | `InitResources`' tail computes it: `0xe0` along the facing angle out of the shared sin/cos table `data_02082214`, plus `0x37800` above the spawn Y. The file's own header comment already called it "where the plant's fire comes from". |
 | 0x440 | `Vector3 mSpawnPos` | `InitResources` writes `mPosX/Y/Z` into it; `Behavior` passes `&mSpawnPos` to `dCcAcPos_c::SetPosRelativeToActor`. |
 | 0x44c | `Vector3 mHomePos` | copied wholesale from `mSpawnPos` in `InitResources`; `Behavior` restores `mPosX/Y/Z` from it when `UpdateKillByInvincibleChar` returns 2 (the plant zeroes its scale and goes home). Two separate copies of the spawn point, distinguished by which one is read back into the position. |
@@ -207,8 +207,8 @@ remaining `unk_` fields resolve; the header's own prose already described two of
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x110 | `mCapBank` | `src/_ZN11dCapEnemy_c6AddCapEj.cpp` sets it to 1 when the six-way cap selector is `>= 3` and to 0 otherwise. `src/_ZN11dCapEnemy_c10ReleaseCapERK7Vector3.cpp` picks marker bit 3 vs bit 7 of `mCapId` by it, and `src/_ZN11dCapEnemy_c16GetCapEatenOffItERK7Vector3.cpp` re-binds the model only for bank 0. |
-| 0x111 | `mIsDormant` | `src/_ZN11dCapEnemy_c15RespawnIfHasCapEv.cpp` sets it to 1 on the *replacement* actor it spawns; `AddCap` clears it. `src/_ZN11dCapEnemy_c11GetCapStateEv.cpp` returns 2 while it is clear (the ordinary enemy path), and while it is set returns 0 — or, once the cap's release bit is up, clears it, restores `mFlags` from field 0xf4, and returns 1. `src/_ZN7daKrb_c6RenderEv.cpp` draws nothing while it is set, and `daKrb_c::Behavior` treats `GetCapState() == 1` as the wake-up (poof dust + flag). |
+| 0x110 | `mCapBank` | `src/game/actors/dCapEnemy_c/_ZN11dCapEnemy_c6AddCapEj.cpp` sets it to 1 when the six-way cap selector is `>= 3` and to 0 otherwise. `src/game/actors/dCapEnemy_c/_ZN11dCapEnemy_c10ReleaseCapERK7Vector3.cpp` picks marker bit 3 vs bit 7 of `mCapId` by it, and `src/game/actors/dCapEnemy_c/_ZN11dCapEnemy_c16GetCapEatenOffItERK7Vector3.cpp` re-binds the model only for bank 0. |
+| 0x111 | `mIsDormant` | `src/game/actors/dCapEnemy_c/_ZN11dCapEnemy_c15RespawnIfHasCapEv.cpp` sets it to 1 on the *replacement* actor it spawns; `AddCap` clears it. `src/game/actors/dCapEnemy_c/_ZN11dCapEnemy_c11GetCapStateEv.cpp` returns 2 while it is clear (the ordinary enemy path), and while it is set returns 0 — or, once the cap's release bit is up, clears it, restores `mFlags` from field 0xf4, and returns 1. `src/game/actors/daKrb_c/_ZN7daKrb_c6RenderEv.cpp` draws nothing while it is set, and `daKrb_c::Behavior` treats `GetCapState() == 1` as the wake-up (poof dust + flag). |
 | 0x112 | `mHadBank1Cap` | `AddCap` latches it to 1 the first time it selects bank 1 and never clears it; it is passed as the fourth argument of `func_ov001_020ab228`, the cap-icon setup. |
 
 ---
@@ -217,7 +217,7 @@ remaining `unk_` fields resolve; the header's own prose already described two of
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x410 | `Vector3 mSafePos` | `src/_ZN7daKrb_c8BehaviorEv.cpp`: when `dEnemyBase_c::IsGoingOffCliff` reports true the actor's position is restored from it, and otherwise the current position is written into it. The last position known not to be over a ledge. |
+| 0x410 | `Vector3 mSafePos` | `src/game/actors/daKrb_c/_ZN7daKrb_c8BehaviorEv.cpp`: when `dEnemyBase_c::IsGoingOffCliff` reports true the actor's position is restored from it, and otherwise the current position is written into it. The last position known not to be over a ledge. |
 | 0x41c | `Vector3 mHomePos` | written from `mPosX/Y/Z` in `InitResources`; `Behavior` restores `mPosX/Y/Z` from it on both respawn paths — after `UpdateKillByInvincibleChar` returns 2, and after the stuck timer expires — each immediately before `dCapEnemy_c::RespawnIfHasCap`. |
 | 0x428 | `Vector3 mStuckCheckPos` | written from `mPosX/Y/Z` in `InitResources`; `Behavior` compares `Vec3_Dist(&mPosX, &mStuckCheckPos) < 0xa000` and, while the enemy stays inside that radius, ticks the already-named `mStuckTimer`; the moment it leaves, the timer is zeroed and this field is re-recorded from the current position. |
 | 0x44c | `mSavedParam` | last statement of `InitResources`: a copy of `param1`, taken *after* the earlier `param1 &= 0xf0ff` masking. Named for what it holds; no matched body reads it back. |
@@ -252,7 +252,7 @@ Left `unk_`:
   `UpdateWMClsn` flag 3 over flag 2. Naming it would mean naming the table, and nothing
   in a matched body says what the table holds.
 
-Note: `src/_ZN7daKrb_c13InitResourcesEv.cpp` is a NONMATCHING `extern "C"` free function
+Note: `src/game/actors/daKrb_c/_ZN7daKrb_c13InitResourcesEv.cpp` is a NONMATCHING `extern "C"` free function
 working raw `char *c` offsets (916 bytes against the ROM's 912 — a pre-existing four-byte
 near-miss, documented at the top of the file). It names no fields, so the renames above do
 not reach it; every citation to it above is a citation to a raw offset in that file.

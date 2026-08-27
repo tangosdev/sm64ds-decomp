@@ -29,7 +29,7 @@
  * old header declared below 0x4f38 are dScMgBase_c's own.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN14dScMgMemory2_cD1Ev.cpp; D0Ev.cpp
+ * its own. Defined for real in src/minigames/dScMgMemory2_c/_ZN14dScMgMemory2_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
  * dScMgBase_c, two levels up, already provides one. */
 #ifndef DSCMGMEMORY2_C_H
@@ -49,9 +49,9 @@ struct dScMgMemory2_c : dScMgSingle3DBase_c {
        field, and the 0x5410 assert below still holds. The destructor above is
        declared first and out of line, so it stays this class's KEY FUNCTION and
        none of these translation units emits _ZTV14dScMgMemory2_c. */
-    s32 InitResources();   /* slot  0 -- src/_ZN14dScMgMemory2_c13InitResourcesEv.cpp */
-    s32 Behavior();        /* slot  6 -- src/_ZN14dScMgMemory2_c8BehaviorEv.cpp */
-    s32 Render();          /* slot  9 -- src/_ZN14dScMgMemory2_c6RenderEv.cpp */
+    s32 InitResources();   /* slot  0 -- src/minigames/dScMgMemory2_c/_ZN14dScMgMemory2_c13InitResourcesEv.cpp */
+    s32 Behavior();        /* slot  6 -- src/minigames/dScMgMemory2_c/_ZN14dScMgMemory2_c8BehaviorEv.cpp */
+    s32 Render();          /* slot  9 -- src/minigames/dScMgMemory2_c/_ZN14dScMgMemory2_c6RenderEv.cpp */
 
     u8  pad_4f38[0x270];   /* 0x4f38 -- shared table, opaque here; see banner */
     u8  pad_51a8[0x22c];   /* 0x51a8 -- no matched access, see banner */

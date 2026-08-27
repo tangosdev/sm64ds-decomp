@@ -16,14 +16,14 @@
  * exception (a destructor's D0/D1/D2 group has compiler-chosen order).
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02112e0c  src/_ZN15ChainChompFenceD1Ev.cpp
- *   [1] 0x02112e50  src/_ZN15ChainChompFenceD0Ev.cpp
- *   [2] 0x02112ea8  src/func_ov014_02112ea8.cpp
- *   [3] 0x02112f3c  src/_ZN15ChainChompFence16CleanupResourcesEv.cpp
- *   [4] 0x02112f80  src/_ZN15ChainChompFence6RenderEv.cpp
- *   [5] 0x02112fc0  src/_ZN15ChainChompFence8BehaviorEv.cpp
- *   [6] 0x02112ffc  src/_ZN15ChainChompFence13InitResourcesEv.cpp
- *   [7] 0x0211307c  src/ChainChompFence_Spawn.c
+ *   [0] 0x02112e0c  src/game/actors/ChainChompFence/_ZN15ChainChompFenceD1Ev.cpp
+ *   [1] 0x02112e50  src/game/actors/ChainChompFence/_ZN15ChainChompFenceD0Ev.cpp
+ *   [2] 0x02112ea8  src/unnamed/ov014/0211/func_ov014_02112ea8.cpp
+ *   [3] 0x02112f3c  src/game/actors/ChainChompFence/_ZN15ChainChompFence16CleanupResourcesEv.cpp
+ *   [4] 0x02112f80  src/game/actors/ChainChompFence/_ZN15ChainChompFence6RenderEv.cpp
+ *   [5] 0x02112fc0  src/game/actors/ChainChompFence/_ZN15ChainChompFence8BehaviorEv.cpp
+ *   [6] 0x02112ffc  src/game/actors/ChainChompFence/_ZN15ChainChompFence13InitResourcesEv.cpp
+ *   [7] 0x0211307c  src/game/actors/ChainChompFence/ChainChompFence_Spawn.c
  */
 
 /* Includes: union of the legacy files', first-seen in ROM-ascending

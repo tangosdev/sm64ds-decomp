@@ -22,28 +22,28 @@
       "symbol": "_ZN32FloatOnWaterPlatformWdwRectangleD1Ev",
       "address": "0x02111ea4",
       "size": "0x00000050",
-      "legacy_source": "src/_ZN32FloatOnWaterPlatformWdwRectangleD1Ev.cpp",
+      "legacy_source": "src/game/actors/FloatOnWaterPlatformWdwRectangle/_ZN32FloatOnWaterPlatformWdwRectangleD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN32FloatOnWaterPlatformWdwRectangleD0Ev",
       "address": "0x02111ef4",
       "size": "0x00000064",
-      "legacy_source": "src/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.cpp",
+      "legacy_source": "src/game/actors/FloatOnWaterPlatformWdwRectangle/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.cpp",
       "ordinal": 1
     },
     {
       "symbol": "_ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv",
       "address": "0x02111f58",
       "size": "0x000000ec",
-      "legacy_source": "src/_ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv.cpp",
+      "legacy_source": "src/game/actors/FloatOnWaterPlatformWdwRectangle/_ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "FloatOnWaterPlatformWdwRectangle_Spawn",
       "address": "0x02112044",
       "size": "0x0000003c",
-      "legacy_source": "src/FloatOnWaterPlatformWdwRectangle_Spawn.c",
+      "legacy_source": "src/game/actors/FloatOnWaterPlatformWdwRectangle/FloatOnWaterPlatformWdwRectangle_Spawn.c",
       "ordinal": 3
     }
   ],

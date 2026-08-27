@@ -36,7 +36,7 @@ from rombuild import CFLAGS as _BUILD_CFLAGS
 # an "exception specification list mismatch" against the implicit throw()
 # declaration.  Asked through this tool, CodeWarrior therefore appeared to
 # refuse a plain operator delete, and the tree recorded that refusal as a
-# compiler restriction (src/_Znwj.cpp, include/fBase_c.h) when it is purely
+# compiler restriction (src/game/objects/_Znwj.cpp, include/fBase_c.h) when it is purely
 # an artefact of the wrong flag set.  Under the build's own flags it compiles
 # and emits _ZdlPv.
 CPP_FLAGS = _BUILD_CFLAGS.replace("-lang c99", "-lang c++")

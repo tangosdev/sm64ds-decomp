@@ -1,12 +1,12 @@
 /* class QuestionSwitch : dBgActor_c. Real C++ form.
  *
- * Base and size from the factory (src/QuestionSwitch_Spawn.c):
+ * Base and size from the factory (src/game/actors/QuestionSwitch/QuestionSwitch_Spawn.c):
  * fBase_c::operator new(0x724), then dBgActor_c::dBgActor_c(), then stores
  * _ZTV14QuestionSwitch. No intermediate base: one non-base vtable store.
  *
  * dBgActor_c ends at 0x320. Two dBgW_KcMbg members follow back to
  * back (0x324..0x4ec..0x6b4, each 0x1c8 -- confirmed by
- * src/QuestionSwitch_Spawn.c constructing both and src/_ZN14QuestionSwitchD1Ev.cpp
+ * src/game/actors/QuestionSwitch/QuestionSwitch_Spawn.c constructing both and src/game/actors/QuestionSwitch/_ZN14QuestionSwitchD1Ev.cpp
  * destroying both before chaining to dBgActor_c), then a ModelAnim at 0x6b4
  * (0x64 bytes, ends exactly at 0x718). Field names below keep what
  * src/_ZN14QuestionSwitch*.cpp already call them (mStaticMeshCollider, mMovingMeshCollider)

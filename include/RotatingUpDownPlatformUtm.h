@@ -1,6 +1,6 @@
 /* class RotatingUpDownPlatformUtm : dBgActor_c. Real C++ form.
  *
- * Base and size from the factory (src/RotatingUpDownPlatformUtm_Spawn.c):
+ * Base and size from the factory (src/game/actors/RotatingUpDownPlatformUtm/RotatingUpDownPlatformUtm_Spawn.c):
  * fBase_c::operator new(936) -- 0x3a8 -- then dBgActor_c::dBgActor_c(), then
  * stores _ZTV25RotatingUpDownPlatformUtm. No intermediate base: one non-base
  * vtable store, matching the D1 destructor below.
