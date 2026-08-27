@@ -1129,6 +1129,22 @@
     "src/game/actors/SwitchActivatedPlank.cpp#_ZN20SwitchActivatedPlank6RenderEv": "tangosdev",
     "src/game/actors/SwitchActivatedPlank.cpp#_ZN20SwitchActivatedPlank8BehaviorEv": "tangosdev",
     "src/game/actors/SwitchActivatedPlank.cpp#_ZN20SwitchActivatedPlank13InitResourcesEv": "tangosdev",
-    "src/game/actors/SwitchActivatedPlank.cpp#SwitchActivatedPlank_Spawn": "tangosdev"
+    "src/game/actors/SwitchActivatedPlank.cpp#SwitchActivatedPlank_Spawn": "tangosdev",
+    "src/game/actors/RickshawPlatformBs.cpp#_ZN18RickshawPlatformBsD1Ev": "tangosdev",
+    "src/game/actors/RickshawPlatformBs.cpp#_ZN18RickshawPlatformBsD0Ev": "tangosdev",
+    "src/game/actors/RickshawPlatformBs.cpp#_ZN18RickshawPlatformBs16CleanupResourcesEv": "lunavyqo",
+    "src/game/actors/RickshawPlatformBs.cpp#_ZN18RickshawPlatformBs13InitResourcesEv": "lunavyqo",
+    "src/game/actors/RickshawPlatformBs.cpp#StairsBs_Spawn": "tangosdev",
+    "src/game/actors/IceSlideManager.cpp#_ZN15IceSlideManagerD1Ev": "tangosdev",
+    "src/game/actors/IceSlideManager.cpp#_ZN15IceSlideManagerD0Ev": "tangosdev",
+    "src/game/actors/IceSlideManager.cpp#_ZN15IceSlideManager8BehaviorEv": "tangosdev",
+    "src/game/actors/IceSlideManager.cpp#_ZN15IceSlideManager13InitResourcesEv": "tangosdev",
+    "src/game/actors/IceSlideManager.cpp#IceSlideManager_Spawn": "tangosdev",
+    "src/game/actors/ShutterBob.cpp#_ZN10ShutterBobD1Ev": "tangosdev",
+    "src/game/actors/ShutterBob.cpp#_ZN10ShutterBobD0Ev": "tangosdev",
+    "src/game/actors/ShutterBob.cpp#_ZN10ShutterBob16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/ShutterBob.cpp#_ZN10ShutterBob8BehaviorEv": "tangosdev",
+    "src/game/actors/ShutterBob.cpp#_ZN10ShutterBob13InitResourcesEv": "tangosdev",
+    "src/game/actors/ShutterBob.cpp#ShutterBob_Spawn": "tangosdev"
   }
 }
