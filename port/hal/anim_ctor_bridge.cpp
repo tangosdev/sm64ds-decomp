@@ -25,7 +25,7 @@ void _ZN9AnimationC2Ev(void *self) { ::new (self) Animation(); }
 
 // ModelAnim, same shape as Model in hal/ctor_bridge.cpp: the port dispatches
 // it through the synthetic _ZTV9ModelAnim that hal/model_host.cpp provides and
-// src/_ZN9ModelAnimC2Ev.c installs, so the constructor runs for its member
+// src/_ZN9ModelAnimC2Ev.cpp installs, so the constructor runs for its member
 // initialization and the vptr goes back to the table the port dispatches
 // through rather than the one placement new leaves.
 extern "C" void *_ZTV9ModelAnim[10];

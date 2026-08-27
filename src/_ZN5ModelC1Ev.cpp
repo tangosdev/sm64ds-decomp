@@ -22,9 +22,9 @@
  *   block move of all twelve words.
  *
  * The compiler emits this TU's object with THREE functions: C1, an identical
- * C2, and a local Matrix4x3 destructor helper. objisolate keeps only the C1,
- * so _ZN5ModelC2Ev.c continues to provide the base-object variant, exactly as
- * a real ~Class() coexists with its hand-written D0.
+ * C2, and a local Matrix4x3 destructor helper. objisolate keeps only C1 here;
+ * _ZN5ModelC2Ev.cpp binds the same source-level constructor to the base-object
+ * variant.
  */
 #include "common.h"
 #include "Model.h"

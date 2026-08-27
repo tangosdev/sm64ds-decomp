@@ -2260,7 +2260,7 @@ src/_ZN9ModelAnimC1Ev.cpp:
     complete
     .text start:0x02016958 end:0x02016998
 
-src/_ZN9ModelAnimC2Ev.c:
+src/_ZN9ModelAnimC2Ev.cpp:
     complete
     .text start:0x02016998 end:0x020169d8
 

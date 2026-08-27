@@ -1,17 +1,16 @@
 //cpp
 // @symbol _ZN5ModelC2Ev
+/* Recovered base-object constructor.
+ *
+ * This is the same source-level constructor as _ZN5ModelC1Ev. CodeWarrior
+ * emits both ABI variants from this definition; objisolate keeps C2 here.
+ */
+#include "common.h"
 #include "Model.h"
 
-extern "C" Matrix4x3 IDENTITY_MATRIX4X3;
+extern Matrix4x3 IDENTITY_MATRIX4X3;
 
-/* The copy has to go through a struct whose only member is an array. Model.h
- * reaches math/Matrix.h, where Matrix4x3 is spelled `Matrix3x3 r; Vector3 t;`
- * rather than flat -- and a C++ member-wise copy of that scalarises the Vector3
- * tail into four ldr/str pairs where the ROM issues a third ldm/stm. */
-struct Matrix4x3Words { s32 w[12]; };
-
-Model::Model()
+Model::Model() : transformsBuf(0)
 {
-    transformsBuf = 0;
-    *(Matrix4x3Words *)&mat4x3 = *(Matrix4x3Words *)&IDENTITY_MATRIX4X3;
+    mat4x3 = IDENTITY_MATRIX4X3;
 }

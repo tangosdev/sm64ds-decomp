@@ -3,7 +3,7 @@
 # instead of a harness counter. Sits on the gate-4/5 stack.
 
 src/_ZN9ModelAnimC1Ev.cpp
-src/_ZN9ModelAnimC2Ev.c
+src/_ZN9ModelAnimC2Ev.cpp
 src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c
 src/_ZN9ModelAnim11UpdateVertsEv.cpp
 src/_ZN9ModelAnim6RenderEPK7Vector3.cpp
