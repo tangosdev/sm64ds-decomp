@@ -1278,6 +1278,14 @@ src/func_0200d954.c
 src/func_02011b7c.c
 src/func_0201267c.cpp
 src/func_02013524.c
+# func_02012d64 is the first line of the game's sound frame: it ramps the MAIN
+# music volume data_0209b490 toward its target data_0208e42c<<12 and pushes the
+# new volume at the music player. Nothing in the port ramped it, so every
+# Sound::PlaySub duck was stamped as a target and never travelled. Called from
+# sd_sound_fade_host, which is where the ROM's func_020132d8 calls it. Matched
+# src, was in no slice; its two callees (_Z14ApproachLinearRiii, func_02013524)
+# are both already linked.
+src/func_02012d64.c
 src/func_020229f0.c
 src/func_ov002_020bea7c.c
 src/func_ov002_020cd448.cpp

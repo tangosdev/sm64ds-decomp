@@ -97,6 +97,26 @@ void func_0204fafc(void);
 int func_0205b274(int blocking);
 void func_020119c8(void *table);     /* the per-frame looping-handle reaper */
 void func_02011974(void *table);     /* the level-change looping-handle reaper */
+
+/* The game's music/jingle crossfade, the half of func_020132d8 that runs in
+ * sd_sound_fade_host below.
+ *
+ * data_0209b490 is the MAIN music player's (data_0209b4a0) volume and
+ * data_0209b49c is the SUB-music, i.e. jingle, player's (data_0209b4b0)
+ * volume. Sound::PlaySub stamps their TARGETS -- data_0208e42c for the main
+ * duck, data_0209b470 for the jingle -- and a shared step data_0209b494, then
+ * reports back "have both arrived yet". func_02012d64 walks the first pair and
+ * the ApproachLinear here walks the second. data_0208e430 is the latched
+ * jingle id; the ROM releases it to -1 exactly when the jingle volume has
+ * ramped all the way down. */
+void func_02012d64(void);            /* the main-music volume ramp */
+void func_02013524(void *player, int vol, int mode);  /* push a volume */
+void func_0204fa2c(int *player, int fade);            /* stop a player */
+void _Z14ApproachLinearRiii(int *ref, int target, int step);
+extern int data_0208e430;            /* the latched jingle id, -1 when free */
+extern signed char data_0209b470;    /* the jingle volume TARGET */
+extern int data_0209b494[];          /* the shared ramp step */
+extern int data_0209b49c[];          /* the jingle volume, ramped here */
 }
 
 // The ARM9 half of the voice trace. The switch and the printer live in
@@ -426,8 +446,75 @@ void publish_player_status(void)
 // the reaper's stop commands go into the queue behind everything
 // func_0204f03c already flushed, and the ARM7 picks them up on its own. Here
 // sd_consumer_tick drains immediately after, which is the same order.
+// AND THE HALF OF func_020132d8 THAT COMES BEFORE ALL OF THAT.
+//
+// func_0204f03c is only func_020132d8's second-to-last line. Everything above
+// it in that function is the game's music/jingle crossfade, and the port has
+// never run any of it. src/func_020132d8.cpp:22-39, in order:
+//
+//   RUN  the data_0209b480 gate       the master SFX flag. sd_sound_init_host
+//                                     sets it, so this is not a no-op; it is
+//                                     the ROM's own early-out and it is kept.
+//   RUN  func_02012d64                ramp data_0209b490 toward
+//                                     data_0208e42c<<12 and push it at the
+//                                     main music player. Linked from src now
+//                                     (slice_gate10.txt).
+//   RUN  the data_0208e430 >= 0 arm   ramp data_0209b49c toward
+//                                     data_0209b470<<12, push it at the jingle
+//                                     player, and when it reaches 0 release
+//                                     the latch (data_0208e430 = -1) and stop
+//                                     the player. Written out here rather than
+//                                     linked because func_020132d8.cpp cannot
+//                                     be linked whole -- see the three SKIPs.
+//
+//   SKIP func_02013078   |            the underwater music filter, and it is
+//   SKIP func_020494cc   |- one unit  one mechanism in three parts: 02013078
+//   SKIP func_020490b0   |            reports a change in the player's swim
+//                        state, 020494cc programs a two-channel ramp table
+//                        (data_020a4c48/4c/54) from it, and 020490b0 advances
+//                        that table and pushes it at the player. It is skipped
+//                        as a UNIT and for one reason: func_020494cc reads
+//                        data_02082200, _02082204, _02082208, _0208220c and
+//                        _02082210, and not one of those five is defined
+//                        anywhere in the port, so it would not link.
+//                        Running only func_02013078 -- which does link --
+//                        would be worse than skipping all three: it latches
+//                        its answer in data_0208e438 and returns -1 on every
+//                        later frame that agrees, so it would consume the
+//                        state changes that the filter, once seated, needs to
+//                        see. If the port grows the underwater filter, the
+//                        three come back here together.
+//
+// This is why func_020132d8 is written out instead of linked: two of its seven
+// calls have no port-side home, and its body calls them unconditionally.
+//
+// Its position is the ROM's. On hardware func_020132d8 is phase 9 of the main
+// game loop (src/func_020197b8.c:60-63), the last thing in the frame after the
+// VBlank wait, and these ramps are the FIRST thing in it -- so the volume
+// commands they queue are flushed by the func_0205b070 below in the same
+// frame, exactly as func_0204f03c flushes them on hardware.
+void sd_sound_fade_host(void)
+{
+    if (data_0209b480 == 0)
+        return;
+
+    func_02012d64();
+
+    if (data_0208e430 >= 0) {
+        _Z14ApproachLinearRiii(&data_0209b49c[0],
+                               (int)data_0209b470 << 12,
+                               data_0209b494[0]);
+        func_02013524(data_0209b4b0, data_0209b49c[0] >> 12, 0);
+        if (data_0209b49c[0] == 0) {
+            data_0208e430 = -1;
+            func_0204fa2c(data_0209b4b0, 0);
+        }
+    }
+}
+
 void sd_sound_frame_host(void)
 {
+    sd_sound_fade_host();
     publish_player_status();
     while (func_0205b274(0) != 0)
         ;
