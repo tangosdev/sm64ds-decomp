@@ -20,8 +20,8 @@ python tools/cpp_tu_state.py --check-note
 | --- | ---: |
 | MATCHED functions | 11230 / 11401 (98.50%) |
 | MATCHED code bytes | 2116772 / 2238108 (94.58%) |
-| Strict CONVERTED source functions | 2117 / 11303 (18.73%) |
-| Physical production source files | 11302 |
+| Strict CONVERTED source functions | 2093 / 11303 (18.52%) |
+| Physical production source files | 10866 |
 
 MATCHED is recomputed from committed config symbols and `src/` through
 `progress.synced_from_src()`; no ambient or gitignored chaos database is accepted.
@@ -32,19 +32,19 @@ weighted by enrolled function ownership so TU consolidation does not move it.
 
 | Measure | Live value |
 | --- | ---: |
-| Tracked production source files | 11302 |
-| Tracked `.c` files | 6742 |
-| Tracked `.cpp` files | 4560 |
-| `.cpp` files missing first-line `//cpp` | 10 |
-| Mangled-symbol source files | 3334 |
-| Genuinely migrated C++ symbol files | 2965 |
-| Not semantically migrated | 367 |
-| `.cpp` files still hand-spelling their symbol | 155 |
+| Tracked production source files | 11359 |
+| Tracked `.c` files | 6529 |
+| Tracked `.cpp` files | 4830 |
+| `.cpp` files missing first-line `//cpp` | 0 |
+| Mangled-symbol source files | 3859 |
+| Genuinely migrated C++ symbol files | 3634 |
+| Not semantically migrated | 222 |
+| `.cpp` files still hand-spelling their symbol | 143 |
 | Nonmatching C++-symbol drafts | 14 |
-| Delinks path-owned function-symbol records | 11192 |
+| Delinks path-owned function-symbol records | 11196 |
 | Path-owned records still supplied from ROM bytes | 128 |
-| Source-built (`complete`) function-symbol records | 11064 |
-| Source-built (`complete`) source files | 11058 |
+| Source-built (`complete`) function-symbol records | 11068 |
+| Source-built (`complete`) source files | 11062 |
 | Complete sources owning more than one function | 2 |
 | Source-built records inside multi-function sources | 8 |
 | Largest function-symbol-records-per-source count | 6 |
@@ -67,25 +67,35 @@ mangle native declarations; unmigrated files still spell a mangled symbol themse
 Nonmatching drafts are shown as a separate, overlapping warning count, not a third
 partition to add to the migrated and unmigrated rows.
 
-## Shadow TU reconstruction
+## TU reconstruction and production
 
 | Measure | Live value |
 | --- | ---: |
-| Tracked `src_tu/` source files | 71 |
-| Manifest entries | 72 |
-| Functions named by manifest entries | 923 |
-| Unique functions named by the manifest | 923 |
-| Modules represented | 22 |
-| Manifest shadow sources present in git | 72 |
+| Tracked `src_tu/` source files | 30 |
+| Manifest entries | 88 |
+| Functions named by manifest entries | 1085 |
+| Unique functions named by the manifest | 1085 |
+| Modules represented | 27 |
+| Manifest source files present in git | 88 |
 | Entries licensing non-text sections | 3 |
 | Entries actually production-enrolled at `promoted_source` | 1 |
 | Existing promotion paths that disagree with delinks | 0 |
+| Default partitioned production TUs | 3 |
+| Functions supplied by partitioned production TUs | 17 |
+| Default derived-text production TUs | 54 |
+| Functions supplied by derived-text production TUs | 476 |
+| Invalid configured production entries | 0 |
 
-Manifest statuses: `link-verified` 5, `promoted` 1, `text-verified` 66.
+Manifest statuses: `link-verified` 5, `promoted` 1, `text-verified` 82.
 
-`config/tu_manifest.d/` records reconstruction evidence and licensed ranges. It does
-not enroll a TU. The production number above counts an entry as promoted only when every
-manifest function is owned by that entry's tracked `promoted_source` in live delinks.
+`config/tu_manifest.d/` records reconstruction evidence and licensed ranges; it does
+not enroll a TU by itself. Direct
+promotion is counted only when every manifest function is owned by the tracked
+`promoted_source` in live delinks. `config/production-tus.json` is the separate
+fail-closed authority for default TU production. Partitioned TUs compile once
+and supply exact derived text plus licensed compiler-emitted non-text output;
+derived-text TUs compile once and supply only their exact manifest functions while
+their explicitly inventoried extra compiler output remains unowned.
 
 ## Production TU compatibility
 

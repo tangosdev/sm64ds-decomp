@@ -670,7 +670,7 @@
       "symbol": "_ZN8dActor_cD0Ev",
       "address": "0x02011314",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN8dActor_cD0Ev.c",
+      "legacy_source": "src/game/actors/dActor_c/_ZN8dActor_cD0Ev.cpp",
       "ordinal": 92
     },
     {
@@ -882,7 +882,7 @@
       "src/game/actors/dActor_c/_ZN8dActor_c18AfterInitResourcesEj.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_c19BeforeInitResourcesEv.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_cD2Ev.cpp",
-      "src/_ZN8dActor_cD0Ev.c",
+      "src/game/actors/dActor_c/_ZN8dActor_cD0Ev.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_cD1Ev.cpp",
       "src/game/actors/dActor_c/_ZN8dActor_cC1Ev.cpp",
       "src/runtime/math/Vector3s/_ZN8Vector3sD1Ev.cpp",

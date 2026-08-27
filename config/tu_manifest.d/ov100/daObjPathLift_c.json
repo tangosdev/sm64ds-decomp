@@ -124,7 +124,7 @@
       "src/game/actors/daObjPathLift_c/_ZN15daObjPathLift_c8BehaviorEv.cpp",
       "src/game/actors/daObjPathLift_c/_ZN15daObjPathLift_c13InitResourcesEv.cpp"
     ],
-    "extraInertImports": 55,
+    "extraInertImports": 102,
     "extraImportsWithNoHome": [],
     "result": "partial-link-verified",
     "phases": {
@@ -146,7 +146,8 @@
     "symbolCheckNewVsBaseline": [],
     "rom": {
       "bytes": 16777216,
-      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "matchesStockRom": true
     },
     "scratch": "build/tu/ov100-daObjPathLift_c/link-partial (gitignored)",
     "state": "partial-link-verified",
@@ -160,12 +161,98 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "text": [
       {
+        "symbol": "_ZN15daObjPathLift_cD2Ev",
+        "size": "0x70",
+        "binding": "STB_GLOBAL"
+      },
+      {
         "symbol": "_ZN7Vector3D1Ev",
         "size": "0x4",
         "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZN8PathLiftD0Ev",
+        "size": "0x70",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZN8PathLiftD1Ev",
+        "size": "0x5c",
+        "binding": "STB_LOPROC"
       }
     ],
-    "data": [],
+    "data": [
+      {
+        "symbol": "_ZTI10dBgActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI15daObjPathLift_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "size": "0x8",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI8PathLift",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS10dBgActor_c",
+        "size": "0xd",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS15daObjPathLift_c",
+        "size": "0x12",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS8PathLift",
+        "size": "0xa",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "size": "0xa",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTV15daObjPathLift_c",
+        "size": "0x88",
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "symbol": "_ZTV8PathLift",
+        "size": "0x88",
+        "binding": "STB_LOPROC"
+      }
+    ],
     "bss": [],
     "init": [],
     "rodata": [],

@@ -262,7 +262,7 @@ class SrcPath(unittest.TestCase):
     # --- the enrolment table: the answer the convention cannot give ---------
     def test_merged_tu_owns_both_of_its_symbols(self):
         """The case the whole index exists for. Neither symbol names the file."""
-        tu = self.write("actors/ActorBase_SceneNode.cpp")
+        tu = self.write("game/actors/ActorBase_SceneNode.cpp")
         self.enrol([("src/game/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
                    [("_ZN7fBase_c9SceneNode5ResetEv", 0x0203b4ac),
                     ("_ZN7fBase_c9SceneNodeC1Ev", 0x0203b4c4)])
@@ -271,7 +271,7 @@ class SrcPath(unittest.TestCase):
 
     def test_symbols_for_lists_a_tus_functions_in_rom_order(self):
         """Written high-address-first in the source; ROM order is what is reported."""
-        self.write("actors/ActorBase_SceneNode.cpp")
+        self.write("game/actors/ActorBase_SceneNode.cpp")
         self.enrol([("src/game/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
                    [("_ZN7fBase_c9SceneNodeC1Ev", 0x0203b4c4),
                     ("_ZN7fBase_c9SceneNode5ResetEv", 0x0203b4ac)])
@@ -284,7 +284,7 @@ class SrcPath(unittest.TestCase):
 
     def test_build_index_names_the_symbols_inside_a_merged_tu(self):
         """A stem-keyed index cannot see either function; the enrolment pass adds both."""
-        self.write("actors/ActorBase_SceneNode.cpp")
+        self.write("game/actors/ActorBase_SceneNode.cpp")
         self.enrol([("src/game/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
                    [("_ZN7fBase_c9SceneNode5ResetEv", 0x0203b4ac),
                     ("_ZN7fBase_c9SceneNodeC1Ev", 0x0203b4c4)])
@@ -297,7 +297,7 @@ class SrcPath(unittest.TestCase):
     def test_enrolment_beats_a_stale_one_function_file(self):
         """A leftover src/<symbol>.c beside a promoted TU is a file nothing compiles.
         Answering with it would report a match the ROM build never made."""
-        tu = self.write("actors/ActorBase_SceneNode.cpp")
+        tu = self.write("game/actors/ActorBase_SceneNode.cpp")
         self.write("_ZN7fBase_c9SceneNodeC1Ev.c")
         self.enrol([("src/game/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
                    [("_ZN7fBase_c9SceneNodeC1Ev", 0x0203b4c4)])

@@ -234,7 +234,7 @@ int _ZN8dActor_cD1Ev(struct dActor_c *self) {
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 92 -- _ZN8dActor_cD0Ev
- * 0x02011314  size 0x60   legacy src/_ZN8dActor_cD0Ev.c */
+ * 0x02011314  size 0x60   legacy src/game/actors/dActor_c/_ZN8dActor_cD0Ev.cpp */
 extern "C" struct dActor_c *_ZN8dActor_cD0Ev(struct dActor_c *thiz)
 {
     *(void **)thiz = (void *)_ZTV8dActor_c;
