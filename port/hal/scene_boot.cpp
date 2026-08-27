@@ -4921,6 +4921,100 @@ extern "C" int port_scene_begin(void *hwnd, int zoom)
    What the pause does NOT stop is the display scan-out below. The DS's beam
    does not care that a debug menu is open, and the level loop makes the same
    call outside its own pause. */
+/* ---- THE TITLE STATE WALK, run mg16 lane TITLE ---------------------------
+ *
+ * The slot census at the end of a run says HOW MANY frames the title was
+ * ticked and nothing about WHERE IT WENT, and those come apart the moment the
+ * title starts working. A run that ticks 1477 of 2400 frames can be a menu
+ * that finished and is waiting to be carried forward, or a state machine that
+ * walked into a state with no exit; the census prints the same number for
+ * both. This prints the walk itself.
+ *
+ * The words are the ROM's own, read at the offsets its own matched TUs read
+ * them at, so this reports the game's state rather than the port's opinion of
+ * it. src/func_ov007_020b0548.c dispatches on *(short*)(*(char**)(g + 8)) and
+ * src/func_ov007_020b166c.c reads both records:
+ *
+ *     g + 8  -> the TOP-LEVEL state record   +0 current, +2 requested
+ *     g + 4  -> the ELEMENT/animation record +0 current, +2 requested
+ *     g + 0x1c                                the phase word the keystone
+ *                                             (src/func_ov007_020b1718.c)
+ *                                             writes 2 into on completion
+ *
+ * ON CHANGE ONLY, which is what makes it affordable on a 2400-frame run: the
+ * title sits in a state for hundreds of frames at a time, so the output is a
+ * dozen lines, not a dozen thousand. Printing every frame would bury the two
+ * transitions that matter under the ones that never happen.
+ *
+ * Env-gated and inert unset, one getenv and a compare, same shape as the other
+ * per-frame instruments in the tree (SM64DS_MTX_BALANCE, SM64DS_TEXPX). It
+ * reads and never writes: a probe that perturbs the machine it is measuring
+ * would answer a different question than the one asked. */
+extern "C" char *data_ov007_0210342c;
+
+static void port_title_state_trace(int frame)
+{
+    static int on = -1;
+    if (on < 0) on = std::getenv("SM64DS_TITLE_TRACE") != 0;
+    if (!on) return;
+    char *g = data_ov007_0210342c;
+    if (!g) return;                       /* not the title, or not built yet */
+    char *sp = *(char **)(g + 8);
+    char *ep = *(char **)(g + 4);
+    if (!sp || !ep) return;
+    const int st    = *(short *)(sp + 0);
+    const int req   = *(short *)(sp + 2);
+    const int est   = *(short *)(ep + 0);
+    const int ereq  = *(short *)(ep + 2);
+    const int phase = *(int *)(g + 0x1c);
+    /* THE VERDICT SIDE, and it is the half the state words cannot show.
+     * src/func_ov007_020b7090.c returns the context's +0x10 gated on +0x14
+     * (`if (ip->f14 != 0 || ip->f10 == 1) ret = ip->f10;`) and
+     * src/func_ov007_020cc2cc.c switches on that return: 3/4/5 are the three
+     * save files, 6 is VS, 7 is the Rec Room, 2 restarts the title. +0x180 is
+     * where src/func_ov007_020b63e4.c parks the id of the element the stylus
+     * actually hit. So these three say, in order, "was anything picked", "is
+     * the verdict armed" and "what did the router see".
+     *
+     * data_02092664 is carried here as well as at exit because the exit read
+     * is an ENDPOINT and cannot tell "never asked" from "asked and something
+     * put the sentinel back". Sampled every frame and reported on change, a
+     * request that appears and is then cleared leaves two lines behind. */
+    const int pick  = *(int *)(g + 0x180);
+    const int f10   = *(int *)(g + 0x10);
+    const int f14   = *(int *)(g + 0x14);
+    const int pend  = (int)data_02092664;
+    /* IS THE SCENE STILL BEING DISPATCHED. g_ti_hits[6] is bumped by the
+     * Behavior thunk, so its per-frame delta is 1 while the ROM's processing
+     * list still carries this actor and 0 the moment it stops. Without this
+     * the trace going quiet is ambiguous: a state that stopped CHANGING and an
+     * actor that stopped RUNNING produce exactly the same silence, and they
+     * are opposite findings. The transition to 0 is forced out as its own line
+     * below rather than waiting for some other word to move. */
+    static unsigned l_beh = 0;
+    static int l_live = -99;
+    const int live = (g_ti_hits[6] != l_beh) ? 1 : 0;
+    l_beh = g_ti_hits[6];
+    static int l_st = -99, l_req = -99, l_est = -99, l_ereq = -99, l_ph = -99;
+    static int l_pick = -99, l_f10 = -99, l_f14 = -99, l_pend = -99;
+    if (st == l_st && req == l_req && est == l_est && ereq == l_ereq &&
+        phase == l_ph && pick == l_pick && f10 == l_f10 && f14 == l_f14 &&
+        pend == l_pend && live == l_live)
+        return;
+    if (live != l_live && l_live != -99)
+        std::printf("[title] f%-6d DISPATCH %s\n", frame,
+                    live ? "RESUMED" : "STOPPED (Behavior slot no longer "
+                                       "entered; the actor left the list)");
+    l_live = live;
+    std::printf("[title] f%-6d state %d req %d | elem %d req %d | phase %d | "
+                "pick %d verdict %d armed %d | pending %d%s\n",
+                frame, st, req, est, ereq, phase, pick, f10, f14, pend,
+                pend == 0x187 ? " (none)" : "  <-- SCENE REQUESTED");
+    std::fflush(stdout);
+    l_st = st; l_req = req; l_est = est; l_ereq = ereq; l_ph = phase;
+    l_pick = pick; l_f10 = f10; l_f14 = f14; l_pend = pend;
+}
+
 extern "C" void port_scene_tick(int frame, int tick_game)
 {
     ntr::Framebuffer &fb = scn_fb;
@@ -4950,6 +5044,9 @@ extern "C" void port_scene_tick(int frame, int tick_game)
         port_scene_comms_publish();
         if (tick_game) {
             port_actor_tick();
+            /* AFTER the actor phases, so it reports the state the frame ended
+               in rather than the one it started in. */
+            port_title_state_trace(frame);
             /* THE FRAME CLOCK, func_020197b8 phase 6 (hal/fader_wipes.cpp).
                After the actor phases and before the render. NOT the ROM's exact
                slot: the ROM steps it at phase 6, after phase 5 and so after its
@@ -5193,6 +5290,35 @@ extern "C" int port_scene_finish(int frames_run)
                     t ? "ov007" : "ov003",
                     h[0], h[6], h[9], h[3], h[12],
                     sk ? "  [RENDER SLOT NO-OP'd: SM64DS_SCENE_SLOT9=0]" : "");
+        /* THE ROUTING WITNESS, run mg16 lane TITLE.
+         *
+         * "The title stopped ticking" and "the title asked to go somewhere"
+         * look identical from the slot census above: both are a behavior count
+         * short of the frame count. They are completely different findings --
+         * the first is a hang, the second is a working menu the scene path
+         * never carried out -- and the difference is one halfword.
+         *
+         * data_02092664 is Scene::SetSceneToSpawn's PENDING SCENE ID and 0x187
+         * is its "none" sentinel (hal/level_change.cpp documents both).
+         * Scene::SpawnIfNecessary is what would consume it and write 0x187
+         * back; on the SCENE path nothing pumps it, so a request just sits
+         * here to be read. That makes this a lifecycle reading, not an
+         * endpoint: the value survives precisely because nobody acted on it.
+         *
+         * Printed unconditionally, including the sentinel, because "the title
+         * asked for nothing" is exactly as much of a measurement as "the title
+         * asked for scene 5" and a line that only appeared on success would
+         * make the silent case unreadable. */
+        {
+            const unsigned pend = data_02092664;
+            if (pend == 0x187)
+                std::printf("[scene] scene request at exit: NONE "
+                            "(data_02092664 == 0x187, the sentinel)\n");
+            else
+                std::printf("[scene] scene request at exit: SCENE %u "
+                            "(data_02092664; nothing pumps it on the scene "
+                            "path, so it is still pending)\n", pend);
+        }
         if (g_ti_init_skipped)
             std::printf("[scene] INIT SLOT NO-OP'd: SM64DS_SCENE_SLOT0=0, %u "
                         "time(s)\n", g_ti_init_skipped);
