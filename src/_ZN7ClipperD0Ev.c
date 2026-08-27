@@ -1,21 +1,27 @@
+//cpp
 // @symbol _ZN7ClipperD0Ev
-/* recovered: named members + shared header, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header */
-#include "Clipper.h"
-extern void* _ZTV7Clipper[];
-/* _ZN7ClipperD0Ev at 0x020156fc
- * Single-vtable destructor (CodeWarrior 1.2):
- *   write own vtable to [this], call base/helper destructor, return this.
- * Call target: 0x0203cbcc
- */
-struct Obj { void *vtable; };
-/* Declared by decl_common.h as taking void*. This used to be a local declaration of
-   `base_dtor_Clipper`, a name no module defines: the call at 0x0203cbcc goes to
-   Memory::operator_delete2, not to a Clipper base destructor. */
-struct Obj *_ZN7ClipperD0Ev(struct Obj *thiz)
+/* D0, the deleting destructor. Same shadow as the D1 file beside this one; one
+ * destructor definition emits D0/D1/D2 and objisolate keeps the variant this
+ * file's delinks entry names. */
+#include "types.h"
+
+extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+
+/* A shadow with the members spelled as raw padding, on purpose. Clipper's real
+ * header gives it Vector3 members, and include/types.h declares ~Vector3() {}
+ * because the ROM's __destroy_arr calls prove the element type is non-POD -- so
+ * the real header makes mwcc emit member teardown the cartridge's destructor
+ * does not have. The ROM's Clipper::~Clipper is a single vptr store and nothing
+ * else, which is what padding reproduces. */
+struct Clipper {
+    virtual ~Clipper();
+    /* Clipper deallocates through Memory::operator_delete2 (0x0203cbcc), not the
+     * actor heap and not the global _ZdlPv. CW inlines operator delete into the
+     * deleting destructor only when it finds one on the class or its immediate
+     * base, so it has to live here. */
+    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+};
+
+Clipper::~Clipper()
 {
-    thiz->vtable = (void *)_ZTV7Clipper;
-    _ZN6Memory16operator_delete2EPv(thiz);
-    return thiz;
 }

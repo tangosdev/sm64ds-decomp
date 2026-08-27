@@ -1,22 +1,20 @@
+//cpp
 // @symbol _ZN20TtcConveyorBeltLargeD1Ev
-/* recovered: named members + shared header, vtable identified, declarations from a shared header */
-#include "decl_Actor.h"
-#include "decl_Model.h"
-#include "decl_dBgW_KcMbg.h"
-#include "decl_ShadowModel.h"
-#include "decl_TextureTransformer.h"
-#include "decl_common.h"
-extern int _ZTV10dBgActor_c[];
-/* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV16daObjCtMecha04_c; VT1 = _ZTV10dBgActor_c */
-int *_ZN20TtcConveyorBeltLargeD1Ev(int *t)
+/* D1, the complete-object destructor, generated from an empty body against a
+ * shadow struct that names the real base and the real member types. */
+#include "dBgActor_c.h"
+#include "TextureTransformer.h"
+#include "ShadowModel.h"
+
+struct TtcConveyorBeltLarge : dBgActor_c {
+    TextureTransformer mTexXf;          /* 0x320 */
+    ShadowModel mShadowModel;           /* 0x334 */
+    u8 pad_35c[0x44];
+    virtual ~TtcConveyorBeltLarge();
+};
+
+typedef char TtcConveyorBeltLarge_size_must_be_0x3a0[sizeof(TtcConveyorBeltLarge) == 0x3a0 ? 1 : -1];
+
+TtcConveyorBeltLarge::~TtcConveyorBeltLarge()
 {
-    t[0] = (int)_ZTV16daObjCtMecha04_c;
-    _ZN11ShadowModelD1Ev((char *)t + 0x334);
-    _ZN18TextureTransformerD1Ev((char *)t + 0x320);
-    t[0] = (int)_ZTV10dBgActor_c;
-    _ZN10dBgW_KcMbgD1Ev((char *)t + 0x124);
-    _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN8dActor_cD2Ev(t);
-    return t;
 }

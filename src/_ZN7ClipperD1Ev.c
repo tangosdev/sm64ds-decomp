@@ -1,14 +1,26 @@
+//cpp
 // @symbol _ZN7ClipperD1Ev
-/* recovered: named members + shared header */
-#include "Clipper.h"
-/* Clipper::~Clipper() at 0x02015720
- * Trivial destructor: stores the Clipper vtable pointer into self->vtable
- * (slot 0x0) and returns. No members need teardown.
- */
+/* D1, the complete-object destructor, generated from an empty body against a
+ * shadow struct that names the real base and the real member types. */
+#include "types.h"
 
-extern int _ZTV7Clipper[];  /* vtable for Clipper */
+extern "C" void _ZN6Memory16operator_delete2EPv(void *);
 
-void _ZN7ClipperD1Ev(int *self)
+/* A shadow with the members spelled as raw padding, on purpose. Clipper's real
+ * header gives it Vector3 members, and include/types.h declares ~Vector3() {}
+ * because the ROM's __destroy_arr calls prove the element type is non-POD -- so
+ * the real header makes mwcc emit member teardown the cartridge's destructor
+ * does not have. The ROM's Clipper::~Clipper is a single vptr store and nothing
+ * else, which is what padding reproduces. */
+struct Clipper {
+    virtual ~Clipper();
+    /* Clipper deallocates through Memory::operator_delete2 (0x0203cbcc), not the
+     * actor heap and not the global _ZdlPv. CW inlines operator delete into the
+     * deleting destructor only when it finds one on the class or its immediate
+     * base, so it has to live here. */
+    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+};
+
+Clipper::~Clipper()
 {
-    self[0] = (int)_ZTV7Clipper;  /* +0x00 vptr */
 }
