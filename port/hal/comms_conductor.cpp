@@ -67,6 +67,7 @@
 // ===========================================================================
 
 #include "comms_seam.h"
+#include "comms_loopback.h"   // the carrier's role, for the retry
 #include "os_thread.h"
 
 #include <windows.h>   // ::Sleep, for the pump's one-millisecond yield
@@ -497,8 +498,64 @@ bool comms_inject_touch(int *down, int *x, int *y) {
     return true;
 }
 
+// ===========================================================================
+// THE SESSION DROPPED, AND NOBODY WAS GOING TO ASK AGAIN -- HOLE 5, in the
+// shape it actually bites.
+//
+// src/func_0203ea5c.c:487 drops the session back to solo when the wait bound
+// runs out: `data_020a0f04 = 0`. That is correct ROM behaviour and it must
+// stay. What was missing is what happens NEXT. On the DS the player is sitting
+// in the multiplayer menu, which re-requests a session; in this port nothing
+// re-seated the role byte, so the first bound expiry was permanent. Once
+// data_020a0f04 reached 0, src/func_0203df40.c's switch took its solo arm on
+// every frame forever and the transport was never asked for anything again.
+//
+// RUNG 7 IS WHAT THAT LOOKS LIKE FROM OUTSIDE, and it is the reason this exists
+// rather than a theory about reconnects. That rung starts the CHILD two seconds
+// before the parent. The child spends its whole 0x4B0 bound knocking at a port
+// nobody has bound yet, gives up, drops to solo -- and then the parent comes
+// up, binds, and finds a peer that has stopped talking. Neither side ever
+// joined. The same rung passed for MP2, whose transcription re-decided the role
+// itself on every tick and so retried by accident.
+//
+// So the seam notices the drop and does the two things the menu would: it tells
+// the TRANSPORT (abandon(), so the carrier forgets the round the game walked
+// away from) and it re-seats the request. This runs once per frame from
+// comms_publish_pad, which is already the one call that lands upstream of the
+// dispatcher.
+//
+// IT IS GATED ON A TRANSPORT BEING INSTALLED, so a single-player session never
+// reaches it and the ROM's own solo behaviour is untouched. And it is gated on
+// the transport still being CONNECTED: if the peer has genuinely gone, the link
+// state is not 3 or 4, and re-requesting would spin the ROM's bound forever
+// instead of letting the session end.
+void comms_retry_dropped_session() {
+    const CommsTransport *t = comms_transport();
+    if (!t) return;                        // solo: the ROM's own behaviour
+    if (data_020a0f04[0] != kCommsRoleSolo) return;   // still in session
+
+    const int st = t->state();
+    if (st != kCommsParentConnected && st != kCommsChildConnected) return;
+
+    t->abandon();                          // forget the round the game left
+
+    static unsigned long long n = 0;
+    if (++n == 1)
+        std::fprintf(stderr,
+                     "[comms:conductor] the ROM dropped the session to solo "
+                     "(src/func_0203ea5c.c:487) while the transport is still "
+                     "connected (link=%d). Re-seating the request the way the "
+                     "DS's multiplayer menu would; this message is printed "
+                     "once.\n", st);
+
+    const CommsLoopbackStats ls = comms_loopback_stats();
+    comms_seat_session_request(ls.role == 1 ? kCommsRoleParent
+                                            : kCommsRoleChild);
+}
+
 void comms_publish_pad(unsigned held) {
     inject_parse();
+    comms_retry_dropped_session();
     if (g_inject_on) held = g_inj_key;
 
     // ACTIVE LOW, which is the entire point. See THE STUCK CONTROLLER at the

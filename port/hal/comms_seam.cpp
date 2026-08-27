@@ -49,7 +49,7 @@ bool comms_set_transport(const CommsTransport *t) {
     if (!t) { g_transport = nullptr; return true; }
     if (!t->open || !t->close || !t->become_parent || !t->become_child ||
         !t->state || !t->slot || !t->player_count || !t->exchange ||
-        !t->peer_block || !t->poll) {
+        !t->peer_block || !t->poll || !t->abandon) {
         std::fprintf(stderr, "[comms] transport '%s' REFUSED: an entry is null. "
                      "Every entry of CommsTransport is required.\n",
                      t->name ? t->name : "(unnamed)");
