@@ -1363,6 +1363,19 @@ Ranked by blast radius.
     around it by hand, which is exactly the reading a tool is supposed to spare
     the next person.
 
+    FIXED 2026-08-27, in both symbolizers. resolve_crash.py now reads
+    SizeOfImage from the exe next to the map (faultmap's own reader) and
+    prints `<outside the module: image ends at +0xNNN, not resolvable>` in
+    the slot a resolution would have occupied. Both tools additionally refuse
+    a hit more than 0x40000 past its symbol -- the widest genuine gap between
+    code symbols on the linked map is 0x1dff0, the flagged resolution sat
+    0x83657c past its symbol -- which covers the exe-missing case and, in
+    resolve_crash.py's code-only view, the in-image data tail past the last
+    code symbol. faultmap's old "past the next symbol's start" warning was
+    removed outright: the bisect guarantees the offset is before the next
+    symbol, so that branch could never fire. Both tools carry a `--selftest`
+    with the report-7447e46c shape as a fixture arm.
+
   * A CLEAN ZERO-OPEN RUN DOES NOT MEAN A PATH WAS EXERCISED. Lane RF1
     measured this the hard way on section 6 items 1 and 2: with a probe in all
     four entry points, thirty-three separate drives -- two full level-entry ->
