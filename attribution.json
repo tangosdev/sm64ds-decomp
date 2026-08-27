@@ -810,6 +810,15 @@
     "src/game/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c16CleanupResourcesEv": "tangosdev",
     "src/game/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c6RenderEv": "tangosdev",
     "src/game/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c8BehaviorEv": "tangosdev",
-    "src/game/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c13InitResourcesEv": "tangosdev"
+    "src/game/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_c13InitResourcesEv": "tangosdev",
+    "src/game/actors/BlueCoinSwitch.cpp#_ZN14BlueCoinSwitchD1Ev": "tangosdev",
+    "src/game/actors/BlueCoinSwitch.cpp#_ZN14BlueCoinSwitchD0Ev": "tangosdev",
+    "src/game/actors/BlueCoinSwitch.cpp#_ZN14BlueCoinSwitch16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/BlueCoinSwitch.cpp#_ZN14BlueCoinSwitch6RenderEv": "tangosdev",
+    "src/game/actors/BlueCoinSwitch.cpp#_ZN14BlueCoinSwitch8BehaviorEv": "ruspecial",
+    "src/game/actors/BlueCoinSwitch.cpp#_ZN14BlueCoinSwitch13InitResourcesEv": "lunavyqo",
+    "src/game/actors/BlueCoinSwitch.cpp#func_ov002_020f1578": "tangosdev",
+    "src/game/actors/BlueCoinSwitch.cpp#func_ov002_020f15b8": "ruspecial",
+    "src/game/actors/BlueCoinSwitch.cpp#BlueCoinSwitch_Spawn": "tangosdev"
   }
 }

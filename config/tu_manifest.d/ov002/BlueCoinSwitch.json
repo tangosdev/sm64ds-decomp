@@ -1,8 +1,8 @@
 {
   "id": "ov002/BlueCoinSwitch",
   "module": "ov002",
-  "source": "src_tu/actors/BlueCoinSwitch.cpp",
-  "promoted_source": "src/actors/BlueCoinSwitch.cpp",
+  "source": "src/game/actors/BlueCoinSwitch.cpp",
+  "promoted_source": "src/game/actors/BlueCoinSwitch.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -359,5 +359,79 @@
       "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by ov002 (dBgActor_c is an ov002-local class, unlike fBase_c/dBase_c/dActor_c which are arm9-resident)",
       "relocations": []
     }
-  ]
+  ],
+  "production_mode": "derived-text",
+  "unlicensed_output_observed": {
+    "note": "Pinned-compiler inventory stamped by tools/promote_derived_tus.py --stamp-discarded-output before default production admission. These definitions are not ROM ownership claims; every build requires an exact inventory match, exact derived text contributions, exact modules, and an exact ROM.",
+    "toolchain": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "text": [
+      {
+        "symbol": "_ZN14BlueCoinSwitchD2Ev",
+        "size": "0x44",
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "data": [
+      {
+        "symbol": "_ZTI10dBgActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI14BlueCoinSwitch",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "size": "0x8",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS10dBgActor_c",
+        "size": "0xd",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS14BlueCoinSwitch",
+        "size": "0x11",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "size": "0xa",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTV14BlueCoinSwitch",
+        "size": "0x88",
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "bss": [],
+    "init": [],
+    "rodata": [],
+    "ctor": []
+  }
 }
