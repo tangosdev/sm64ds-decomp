@@ -1054,6 +1054,9 @@ void port_input_probe_sign_trigger(int frame);
 void port_probe_alcheck(void);
 void port_probe_sign_yaw(void);
 void port_probe_chomp(int frame);
+void port_probe_rabbit_key(int frame);   /* TEMPORARY: SM64DS_TRACE_RABBITKEY */
+void port_probe_rabbit_trigger(int frame); /* TEMPORARY: SM64DS_RABBIT_TRIGGER */
+void port_probe_key_spawn(int frame);      /* TEMPORARY: SM64DS_KEY_SPAWN_AT */
 /* the scene-fade request the title-select hands off with. Recorded by the port
    in hal/level_change.cpp and acted on by this frame loop. */
 int port_scene_fade_pending(int *sceneId);
@@ -8690,6 +8693,8 @@ int main(void)
             port_probe_alcheck();
             port_probe_sign_yaw();
             port_probe_chomp(frame);
+            port_probe_rabbit_trigger(frame);  /* TEMPORARY: SM64DS_RABBIT_TRIGGER */
+            port_probe_key_spawn(frame);       /* TEMPORARY: SM64DS_KEY_SPAWN_AT */
             port_actor_tick();
         } else if (*(void **)(c + 0x370)) {
             hal_player_behavior(player);
@@ -8761,6 +8766,7 @@ int main(void)
         port_message_pump();
         port_input_probe_trace_msg(frame);   /* TEMPORARY: SM64DS_TRACE_MSG */
         port_input_probe_trace_cannon(frame);/* TEMPORARY: SM64DS_TRACE_CANNON */
+        port_probe_rabbit_key(frame);        /* TEMPORARY: SM64DS_TRACE_RABBITKEY */
         /* the real boot seats the path table, so the tracking's own binding
            stands -- except where the port's unfilled floor record invents
            one the level cannot produce (hal/level_boot.cpp) */
