@@ -42,6 +42,7 @@ extern int data_020a0e5a[];              /* the pressed-word split symbol */
 extern unsigned char data_020a0e40;      /* the local player index */
 extern unsigned char data_0209d6bc;      /* the Message box state (Message::Update) */
 extern unsigned char data_0209d660;      /* nonzero while a message is active */
+extern unsigned char data_0209d684;      /* the choice box's answer (0 = unanswered) */
 
 }  /* extern "C" */
 
@@ -509,4 +510,206 @@ extern "C" void port_probe_chomp(int frame)
         *(int *)(ch + 0x60) >> 12, *(int *)(ch + 0x5f0) >> 12,
         (int)*(unsigned char *)(ch + 0x605),
         post ? (int)*(unsigned char *)(post + 0x31e) : -1);
+}
+
+/* TEMPORARY rabbit-catch trigger, the RABBIT half of the same seam the buddy
+ * and the sign already stand in for.
+ *
+ * func_ov085_0212a828 is the rabbit's own grab check, called unconditionally
+ * from Rabbit::Behavior (src/_ZN6Rabbit8BehaviorEv.c:204, reloc 0x0212c778 ->
+ * 0x0212a828). It reads the rabbit's grab-trigger fields -- +0x134 (the id of
+ * the actor on its collision cylinder) and +0x130 & 0x1000 (the trigger flag) --
+ * confirms that actor is the player (0xbf), runs the REAL Player::TryGrab, and
+ * on success writes the player at rabbit+0x45c and hands the rabbit to its
+ * caught state. Those two trigger fields are set by the collision cylinder
+ * detecting a punch, which the port does not drive for a headless run, so this
+ * stands in for JUST that detection. Everything from func_ov085_0212a828 down
+ * -- TryGrab, the +0x45c write, the caught dialogue, the key spawn -- is the
+ * matched code, in the ROM's own order.
+ *
+ *   SM64DS_RABBIT_TRIGGER=<frame>   arm from that frame (default 60)
+ *
+ * It also parks the rabbit on the player, because the headless player never
+ * walks to it, and it reports the refusal reason on the first few attempts so a
+ * run that cannot grab says why instead of going quiet.
+ */
+extern "C" {
+extern void func_ov085_0212a828(void *rabbit);
+extern int _ZN6Player7IsStateERNS_5StateE(void *p, void *st);
+extern char data_ov002_02110574, data_ov002_0211067c, data_ov002_021105bc;
+}
+
+extern "C" void port_probe_rabbit_trigger(int frame)
+{
+    const char *e = std::getenv("SM64DS_RABBIT_TRIGGER");
+    if (!e) return;
+    int from = std::atoi(e);
+    if (from <= 0) from = 60;
+    if (frame < from) return;
+
+    char *rb = (char *)find_actor_by_class(187);
+    char *player = (char *)find_actor_by_class(0xbf);
+    if (!rb || !player) return;
+
+    static int caught, tries;
+    if (caught) {
+        /* post-grab: follow the rabbit's own caught states, so a run that never
+           reaches the key spawn says where it stopped instead of going quiet. */
+        static void *p_state; static int p_step = -99, p_talk = -99, p_last;
+        void *st = *(void **)(rb + 0x364);
+        int step = *(int *)(rb + 0x41c);
+        int talk = _ZN6Player12GetTalkStateEv(player);
+        if (st == p_state && step == p_step && talk == p_talk && frame - p_last < 120)
+            return;
+        p_state = st; p_step = step; p_talk = talk; p_last = frame;
+        std::fprintf(stderr, "  [rabbit] f%d state=%p step=%d talk=%d +426=%d "
+                     "+427=%d +429=%d +43c=%d +45c=%p d660=%d\n", frame, st, step,
+                     talk, (int)*(unsigned char *)(rb + 0x426),
+                     (int)*(unsigned char *)(rb + 0x427),
+                     (int)*(unsigned char *)(rb + 0x429),
+                     *(int *)(rb + 0x43c), *(void **)(rb + 0x45c),
+                     (int)data_0209d660);
+        return;
+    }
+    if (*(void **)(rb + 0x45c) != 0) {          /* the real grab took */
+        caught = 1;
+        std::fprintf(stderr, "  [rabbit] f%d GRABBED: Player::TryGrab succeeded, "
+                     "rabbit+0x45c = %p (the field the stale comment in "
+                     "Ov085_Rabbit_b8dc.cpp says nothing writes)\n", frame,
+                     *(void **)(rb + 0x45c));
+        return;
+    }
+
+    /* park the rabbit on the player: the headless player never runs it down, and
+       the grab check itself is distance-free (the cylinder is what carries the
+       distance, and the cylinder is what this stands in for). */
+    *(int *)(rb + 0x5c) = *(int *)(player + 0x5c);
+    *(int *)(rb + 0x60) = *(int *)(player + 0x60);
+    *(int *)(rb + 0x64) = *(int *)(player + 0x64);
+
+    *(unsigned int *)(rb + 0x134) = *(unsigned int *)(player + 0x4); /* player uid */
+    *(int *)(rb + 0x130) |= 0x1000;                                  /* trigger */
+
+    if (++tries <= 5 || (tries % 60) == 0) {
+        std::fprintf(stderr, "  [rabbit] f%d arming grab (try %d): holding=%d "
+                     "grabbable=%d st574=%d st67c=%d st5bc=%d p6e2=%d\n", frame,
+                     tries, *(int *)(player + 0x358) != 0,
+                     (*(int *)(rb + 0xb0) & 0x80) != 0,
+                     _ZN6Player7IsStateERNS_5StateE(player, &data_ov002_02110574),
+                     _ZN6Player7IsStateERNS_5StateE(player, &data_ov002_0211067c),
+                     _ZN6Player7IsStateERNS_5StateE(player, &data_ov002_021105bc),
+                     (int)*(unsigned char *)(player + 0x6e2));
+    }
+    func_ov085_0212a828(rb);        /* the rabbit's own real grab check */
+}
+
+/* TEMPORARY frame-scheduled RABBIT_KEY spawn.
+ *
+ * SM64DS_SPAWN_ACTOR only fires at boot, and the whole question about this
+ * actor is a TIMING one: on the ROM the key is spawned by the rabbit's own
+ * caught-dialogue state (src/func_ov085_0212ae08.c:235) in the same breath as
+ * the talk ending, so it reaches its caught state while the player may still be
+ * flagged mIsNoControl. A boot spawn always lands on an idle player and can
+ * never ask that question. This drops a key at a chosen frame instead.
+ *
+ *   SM64DS_KEY_SPAWN_AT=<frame>[:<param>]   param default 0
+ *
+ * It uses the harness's own port_debug_spawn_at, which goes through the level's
+ * real Actor::Spawn -- the same call func_ov085_0212ae08 makes, with the same
+ * class id 0xe5 and the same param word.
+ */
+extern "C" {
+extern void *port_debug_spawn_at(unsigned id, unsigned param,
+                                 int x, int y, int z, int yaw, int area);
+}
+
+extern "C" void port_probe_key_spawn(int frame)
+{
+    const char *e = std::getenv("SM64DS_KEY_SPAWN_AT");
+    if (!e) return;
+    static int fired;
+    if (fired) return;
+    int at = std::atoi(e);
+    unsigned param = 0;
+    const char *colon = std::strchr(e, ':');
+    if (colon) param = (unsigned)std::strtoul(colon + 1, 0, 0);
+    if (at <= 0 || frame < at) return;
+    char *player = (char *)find_actor_by_class(0xbf);
+    if (!player) return;
+    fired = 1;
+    std::fprintf(stderr, "  [rkey] f%d spawning RABBIT_KEY param 0x%x at the "
+                 "player (mIsNoControl=%d kind=%d, d660=%d)\n", frame, param,
+                 (int)*(unsigned char *)(player + 0x709),
+                 (int)*(unsigned char *)(player + 0x70a), (int)data_0209d660);
+    port_debug_spawn_at(0xe5, param, *(int *)(player + 0x5c),
+                        *(int *)(player + 0x60) + 0x32000,
+                        *(int *)(player + 0x64),
+                        (int)*(short *)(player + 0x8e),
+                        (int)*(char *)(player + 0x10));
+}
+
+/* TEMPORARY rabbit-key teardown trace.
+ *
+ * RABBIT_KEY (229, ov085) hovers over the player's head after it is collected
+ * and follows them for the rest of the session (two independent 0.2.13
+ * reporters, TRIAGE14 report 2). The hover itself is the ROM's own caught
+ * animation -- func_ov085_0212cd80 pins the key to the player's X/Z at his
+ * Y + 0xc8000 every frame -- so what a run has to show is the state machine
+ * BESIDE the hover: whether the caught state ever leaves case 1.
+ *
+ * That machine's only exits run through data_0209d684, the answer to the choice
+ * box func_ov085_0212d038 opens, and data_0209d660, the message-active flag.
+ * Both are globals, and the key's own step word is +0x194, so one line carries
+ * the whole question:
+ *
+ *   SM64DS_TRACE_RABBITKEY=1
+ *     step   the key's +0x194 (0/1 caught-wait, 2/3 answered, 6 the two-option
+ *            variants, 10 the HasFinishedTalking wait; gone = destroyed)
+ *   +0x198   the "came from the minigame door" flag the gb==3 arm reads
+ *   +0x19c   the spawn param func_ov085_0212d038 switches the message id on
+ *     d684   the choice answer (0 = unanswered, 1..3 = the picked option)
+ *     d660   1 while a message box is up
+ *    noctl   the player's mIsNoControl (+0x709) and mNoCtrlKind (+0x70a):
+ *            SetNoControlState REFUSES for kind <= 3 while mIsNoControl is
+ *            already set, and the ov085 caller ignores that refusal.
+ *
+ * Change-driven with a 60-frame heartbeat, and it announces the destroy, so a
+ * headless run shows the cleanup completing rather than only the hover.
+ */
+extern "C" void port_probe_rabbit_key(int frame)
+{
+    if (!std::getenv("SM64DS_TRACE_RABBITKEY")) return;
+    char *k = (char *)find_actor_by_class(229);
+    char *player = (char *)find_actor_by_class(0xbf);
+    static int seen, gone_announced;
+    static int p_step = -99, p_d684 = -99, p_d660 = -99, p_noctl = -99;
+    static int last;
+
+    if (!k) {
+        if (seen && !gone_announced) {
+            gone_announced = 1;
+            std::fprintf(stderr, "  [rkey] f%d KEY DESTROYED: no RABBIT_KEY on "
+                         "the live-actor list -- the caught state reached "
+                         "func_ov085_0212cd0c -> MarkForDestruction\n", frame);
+        }
+        return;
+    }
+    seen = 1;
+
+    int step  = *(int *)(k + 0x194);
+    int f198  = *(int *)(k + 0x198);
+    int f19c  = *(int *)(k + 0x19c);
+    int d684  = (int)data_0209d684;
+    int d660  = (int)data_0209d660;
+    int noctl = player ? (int)*(unsigned char *)(player + 0x709) : -1;
+    int kind  = player ? (int)*(unsigned char *)(player + 0x70a) : -1;
+
+    if (step == p_step && d684 == p_d684 && d660 == p_d660 && noctl == p_noctl
+        && frame - last < 60)
+        return;
+    p_step = step; p_d684 = d684; p_d660 = d660; p_noctl = noctl; last = frame;
+
+    std::fprintf(stderr, "  [rkey] f%d step=%d +198=%d +19c=0x%x d684=%d "
+                 "d660=%d noctl=%d kind=%d\n", frame, step, f198, f19c,
+                 d684, d660, noctl, kind);
 }
