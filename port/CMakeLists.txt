@@ -3166,17 +3166,6 @@ endforeach()
 # the two callers that pass a REAL index rather than riding slot 0 through r0.
 # A face that ignores its argument would have served all four players slot 0's
 # record and the four-slot path would have looked like it worked.
-# THE CUT IS HERE AND NOT IN THE SLICE FILE, which is this block's own rule
-# above: the slice line is the only thing that puts the matched TU in the
-# build, so cutting it in the file and adding the host copy here would be two
-# facts that can drift into an LNK2005 or an undefined symbol.
-foreach(displaced "src/func_0203dabc.c" "src/func_0203dae4.c")
-    list(REMOVE_ITEM SLICE_OV007_SOURCES
-         "${CMAKE_CURRENT_SOURCE_DIR}/../${displaced}")
-endforeach()
-list(APPEND SLICE_OV007_SOURCES
-    "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Comms_SlotIndex_0203dabc.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Comms_SlotIndex_0203dae4.cpp")
 if(TIDEP_B4B5C_DISPLACED)
     list(APPEND SLICE_OV007_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov007_ImplicitR1_020b4b5c.cpp")
