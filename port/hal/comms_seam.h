@@ -333,6 +333,17 @@ void comms_install_pump();
 // the mod standing in for the menu the port does not have on this path.
 void comms_seat_session_request(int role);
 
+// The DS touch-panel ring's write index, at data_020a80cc[6] as a halfword.
+// hal/sub_screen.cpp's poll_touch writes one entry per frame and advances it;
+// src/func_0203b9bc.c reads the four entries behind it. Nine entries.
+int touch_ring_index();
+void touch_ring_advance();
+
+// SM64DS_COMMS_INJECT's stylus half, for hal/sub_screen.cpp's poll_touch to
+// honour where it already honours SM64DS_TOUCH_PROBE. Returns false when no
+// stylus injection is configured, leaving the real touch source alone.
+bool comms_inject_touch(int *down, int *x, int *y);
+
 }  // namespace port
 
 extern "C" {

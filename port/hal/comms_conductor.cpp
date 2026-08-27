@@ -286,7 +286,18 @@ extern unsigned char data_020a0e40[];
 // The ROLE byte, hosted by hal/stage_slot0.cpp. src/func_0203df40.c switches
 // on it and nothing in the port was seating it; see HOLE 3 below.
 extern unsigned char data_020a0f04[];
+// The touch-panel scratch block, hosted by hal/scene_boot.cpp as int[6]. Word
+// 6 AS A HALFWORD (byte +12) is the ring write index; see section 6.
+extern int data_020a80cc[];
 }
+
+namespace port {
+namespace {
+inline unsigned char *data_020a80cc_bytes() {
+    return reinterpret_cast<unsigned char *>(&data_020a80cc[0]);
+}
+}  // namespace
+}  // namespace port
 
 extern "C" int port_comms_conductor_check_layout(void) {
     struct { const char *what; long got, want; } rows[] = {
@@ -434,6 +445,26 @@ enum : unsigned {
     kDsKeyMask    = 0x2fffu,
 };
 
+// THE STYLUS HALF OF THE INJECTION, fed to the TOUCH PANEL rather than to the
+// record. hal/sub_screen.cpp's poll_touch calls this exactly where it already
+// honours SM64DS_TOUCH_PROBE's poke, so an injected stylus enters the game at
+// the same place a finger would: poll_touch writes it into the ROM's four-deep
+// ring, src/func_0203b9bc.c reads the ring, src/func_0203df40.c puts what it
+// returns into the local record, and the conductor stages that onto the wire.
+// Not one of those steps is the port's.
+//
+// AN EARLIER REVISION OF THIS FILE ACCEPTED THE STYLUS FIELDS AND DROPPED THEM,
+// and said so loudly in its log line, because nothing filled the ring. Filling
+// the ring is what made them carryable, so the log line changed with the code.
+bool comms_inject_touch(int *down, int *x, int *y) {
+    inject_parse();
+    if (!g_inject_on || !g_inj_touch) return false;
+    *down = 1;
+    *x = (int)g_inj_x;
+    *y = (int)g_inj_y;
+    return true;
+}
+
 void comms_publish_pad(unsigned held) {
     inject_parse();
     if (g_inject_on) held = g_inj_key;
@@ -448,6 +479,43 @@ void comms_publish_pad(unsigned held) {
     // are not visible at 0x04000130; the port has no ARM7 publishing it, and 0
     // is the correct "none of those pressed" value once the OR is taken.
     *reinterpret_cast<volatile unsigned short *>(kDsSharedPad) = 0;
+}
+
+// ===========================================================================
+// 6. THE TOUCH RING'S WRITE INDEX.
+//
+// hal/sub_screen.cpp's poll_touch writes one ring entry per frame (see the note
+// at its store); these two own the index it writes at. The index lives at
+// data_020a80cc[6] as a HALFWORD, which is what src/func_0205edc8.c returns and
+// what src/func_0203b9bc.c reads backwards from -- so it is kept in the DS's
+// own word rather than in a static here, or the ROM's reader and the port's
+// writer would be walking two different rings.
+//
+// data_020a80cc is hosted by hal/scene_boot.cpp as int[6] = 24 bytes, and index
+// 6 as a HALFWORD is byte offset 12, comfortably inside it. Spelled as a
+// halfword read at +12 rather than as data_020a80cc[6] on the hosted int array,
+// which would be element 6 of 6 and out of bounds.
+//
+// NINE ENTRIES, not four. func_0203b9bc looks at four (idx-4 .. idx-1) but its
+// index fixup is `if (k < 0) k += 9`, and the ROM span of data_020a0df8 is
+// 0x48 = 9 * 8. Two independent facts agreeing is why the modulus is 9.
+// ===========================================================================
+
+namespace {
+enum : int { kTouchRingEntries = 9 };
+unsigned short *touch_ring_index_word() {
+    return reinterpret_cast<unsigned short *>(data_020a80cc_bytes() + 12);
+}
+}  // namespace
+
+int touch_ring_index() {
+    const int i = (int)*touch_ring_index_word();
+    return (i >= 0 && i < kTouchRingEntries) ? i : 0;
+}
+
+void touch_ring_advance() {
+    unsigned short *w = touch_ring_index_word();
+    *w = (unsigned short)((touch_ring_index() + 1) % kTouchRingEntries);
 }
 
 // ===========================================================================

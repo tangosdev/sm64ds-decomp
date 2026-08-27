@@ -81,7 +81,10 @@
 
 #include <windows.h>
 
+#include <cstring>       /* run mg16 lane MP3: the touch-ring store */
+
 #include "ntr/ppu.h"
+#include "hal/comms_seam.h"   /* run mg16 lane MP3: touch_ring_index/advance */
 
 #include "hal/screen_gap.h"
 
@@ -156,6 +159,12 @@ extern short data_0209d47c, data_0209d470, data_0209d474, data_0209d488;
    one 16-byte run so a write here reaches every one of them; the touch probe
    below is what proves it. */
 extern unsigned char data_020a0de8[];   /* +0 touched */
+/* run mg16 lane MP3: the ROM's four-deep touch RING, hosted by
+   hal/comms_conductor.cpp. This is link 3's input -- src/func_0203b9bc.c reads
+   it and settles data_020a0dd8 -- and is a different thing from the TouchInfo
+   block above, which is link 5's output. The store at the bottom of poll_touch
+   is what fills it. */
+extern unsigned char data_020a0df8[];
 extern unsigned char data_020a0de9[];   /* +1 edge    */
 extern unsigned char data_020a0dea[];   /* +2 x       */
 extern unsigned char data_020a0deb[];   /* +3 y       */
@@ -482,6 +491,23 @@ void poll_touch(void)
         }
     }
 
+    /* run mg16 lane MP3: SM64DS_COMMS_INJECT's stylus half, honoured in the
+       same place and the same way as the touch probe above. It exists for the
+       two-instance proofs, where there is no hand on the panel and the
+       harness's own SM64DS_PAD_TEST / SM64DS_CLICK_TEST are read as unset
+       under SM64DS_WINDOW_SELFTEST. Landing it HERE rather than in the comms
+       record is the point: from this line on, the injected touch is
+       indistinguishable from a real one and travels the ROM's own path --
+       ring, func_0203b9bc, func_0203df40, the wire. */
+    {
+        int idown = 0, ix = 0, iy = 0;
+        if (port::comms_inject_touch(&idown, &ix, &iy)) {
+            down = (unsigned char)idown;
+            sx = (unsigned char)ix;
+            sy = (unsigned char)iy;
+        }
+    }
+
     /* ---- BYTE +1 IS THE ROM'S CHANGE EDGE, NOT "HELD FOR TWO FRAMES" ------
      *
      * This is link 5 of the chain port/touch_map.txt maps, and the ROM's own
@@ -547,6 +573,52 @@ void poll_touch(void)
     if (down) {
         data_020a0de8[2] = sx;
         data_020a0de8[3] = sy;
+    }
+
+    /* ---- AND THE SAME SAMPLE INTO THE ROM'S OWN RING (run mg16, lane MP3) --
+     *
+     * Everything above writes link 5's OUTPUT directly. src/func_0203b9bc.c is
+     * link 3, and it does not read any of it: it reads the four-deep touch RING
+     * at data_020a0df8 and settles the answer into data_020a0dd8. Nothing in
+     * this port had ever written that ring, so the moment src/func_0203df40.c
+     * was linked -- it calls func_0203b9bc to fill the local comms record's
+     * stylus fields -- the ROM published its IDLE QUAD every frame and the
+     * stylus could not cross the wire. Measured: rung 3's parent saw
+     * stylus={255,255,0} on all 300 frames while the injected KEY crossed
+     * perfectly, because the key goes through a register this lane does write.
+     *
+     * So the port writes the ring the way the touch-panel driver does, and
+     * func_0203b9bc reads it the way the ROM does. That is the same shape as
+     * the key register: put the value where the hardware puts it and let the
+     * ROM's own code do the rest, rather than teaching the game to skip a read.
+     *
+     * THE ENCODING IS THE ONE THIS FILE ALREADY DOCUMENTS twenty lines up, and
+     * src/func_0203b9bc.c is where it was read off: {u16 x, u16 y, u16 touched,
+     * u16 validity}, nine entries, and `d` is a VALIDITY MASK where any set bit
+     * makes src/func_ov007_020c1db0.c drop the sample -- so a live touch
+     * publishes d = 0 or the reader cancels it.
+     *
+     * THREE CONSECUTIVE SAMPLES ARE NEEDED before func_0203b9bc accepts one:
+     * both of its accept branches test three of the four entries it looks at.
+     * That is the ROM's own debounce and it is left alone. A one-frame tap
+     * therefore does NOT cross the wire, which is correct DS behaviour rather
+     * than a limitation of this store.
+     *
+     * The write index is data_020a80cc[6], which func_0205edc8 returns and
+     * func_0203b9bc reads backwards from. It is advanced here because the
+     * driver that would advance it is ARM7's. */
+    {
+        const int wi = port::touch_ring_index();
+        unsigned char *e = data_020a0df8 + wi * 8;
+        const unsigned short rx = down ? sx : 0;
+        const unsigned short ry = down ? sy : 0;
+        const unsigned short rc = down ? 1u : 0u;   /* +4: touched   */
+        const unsigned short rd = 0;                /* +6: in range  */
+        std::memcpy(e + 0, &rx, 2);
+        std::memcpy(e + 2, &ry, 2);
+        std::memcpy(e + 4, &rc, 2);
+        std::memcpy(e + 6, &rd, 2);
+        port::touch_ring_advance();
     }
 
     /* ---- THE STYLUS IN THE FLIGHT RECORDER (run link60, lane TCH2) ---------
