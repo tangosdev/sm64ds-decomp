@@ -1,27 +1,22 @@
 //cpp
-#include "types.h"
 // @symbol _ZN22ClockPaintingHandShort13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* recovered: typed actor, model, and shared-file ownership */
 #include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "ClockPaintingHandShort.h"
-extern "C" {
-extern int _ZN5Model8LoadFileER13SharedFilePtr(void*);
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, int, int, int);
-}
+#include "SharedFilePtr.h"
 
 int ClockPaintingHandShort::InitResources()
 {
-    int eq = (int)(*(unsigned short*)((char*)&actorID) == 0x125);
-    if (eq != 0)
-        *(unsigned char*)((char*)&mHandIndex) = 0;
+    int isShortHand = (int)(actorID == 0x125);
+    if (isShortHand != 0)
+        mHandIndex = 0;
     else
-        *(unsigned char*)((char*)&mHandIndex) = 1;
+        mHandIndex = 1;
     {
-        unsigned char i = *(unsigned char*)((char*)&mHandIndex);
-        int file = _ZN5Model8LoadFileER13SharedFilePtr((void*)data_ov013_021116b0[i]);
-        _ZN9ModelBase7SetFileEP8BMD_Fileii((char*)((void*)this) + 0xd4, file, 1, -1);
+        unsigned char index = mHandIndex;
+        SharedFilePtr &file = *(SharedFilePtr *)data_ov013_021116b0[index];
+        mModel.SetFile((BMD_File *)Model::LoadFile(file), 1, -1);
     }
-    func_ov013_02111430((char*)((void*)this));
+    func_ov013_02111430((char *)this);
     return 1;
 }
