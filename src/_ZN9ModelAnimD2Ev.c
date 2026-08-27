@@ -1,30 +1,25 @@
-/* ModelAnim::~ModelAnim (D2/base) at 0x0201689c
+//cpp
+// @symbol _ZN9ModelAnimD2Ev
+/* D2, not D1. This file carries the same definition as
+ * src/_ZN9ModelAnimD1Ev.cpp, and deliberately so: ModelAnim has no virtual
+ * bases, so mwcc emits D1 and D2 as byte-identical code. Only the way the
+ * ROM REACHES an address separates them -- a vtable slot holds D1, a derived
+ * destructor's base-chain `bl` reaches D2 -- so comparing the two bodies
+ * proves nothing and the binding in config/arm9/delinks.txt is what decides.
+ * objisolate keeps the D2 variant; the C2/D0/D1 siblings stay in their own
+ * files. */
+/* recovered: real C++ destructor -- defined out of line, D1 bound here
  *
- * ModelAnim : Model, with an Animation member subobject at +0x50.
- *   [this+0]    = _ZTV9ModelAnim                  (0x0208e980)
- *   [this+0x50] = VTable_Animation_ModelAnimThunk (0x0208e9a4)
- *   bl 0x02015cb4 = Animation::~Animation(this+0x50)
- *   bl 0x02016ca8 = Model::~Model(this)
- * returns this.
+ * ModelAnim.h declares `virtual ~ModelAnim();` but defines it nowhere, so
+ * this TU's empty body is what emits the symbol. The compiler then writes
+ * the two vptr stores (_ZTV9ModelAnim primary, VTable_Animation_ModelAnimThunk
+ * at +0x50), runs the Animation member step and the Model base step -- the
+ * same body the ROM carries at 0x0201691c. objisolate keeps only the D1
+ * variant this file is bound to; the C2/D0 siblings stay in their own files
+ * (notes/dtor-migration.md section 1).
  */
+#include "ModelAnim.h"
 
-struct ModelAnim {
-    void **vtable;       /* 0x00 */
-    char pad[0x50 - 4];
-    void **animVtable;   /* 0x50: Animation subobject vtable */
-};
-
-extern void *_ZTV9ModelAnim[];
-extern void *VTable_Animation_ModelAnimThunk[];
-
-extern void *_ZN9AnimationD2Ev(void *anim);
-extern void *_ZN5ModelD2Ev(struct ModelAnim *thiz);
-
-struct ModelAnim *_ZN9ModelAnimD2Ev(struct ModelAnim *thiz)
+ModelAnim::~ModelAnim()
 {
-    thiz->vtable = (void **)_ZTV9ModelAnim;
-    thiz->animVtable = (void **)VTable_Animation_ModelAnimThunk;
-    _ZN9AnimationD2Ev((char *)thiz + 0x50);
-    _ZN5ModelD2Ev(thiz);
-    return thiz;
 }
