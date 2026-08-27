@@ -15,6 +15,38 @@ one, add it here AND, if it recurs, as a rule in `swarm.py` so the free tier can
 
 ---
 
+## 6ay. The C++ struct-copy lever reaches load ORDER, not just load width
+
+The known divergence is that `v = *(T *)p` is a blind byte move in C and scalarises
+to the members' own types in C++. The documented fix -- copy through a struct whose
+only member is an array -- is usually described as restoring the `ldm`/`stm` pair.
+It does more than that, and `RollingRock::Behavior` (ov021 0x02112854, 0x2d8) is the
+case that shows it.
+
+Copying a `Vector3_16` out of an actor at +0x92 as a method scalarised to three
+`ldrsh` where the ROM has `ldrh` -- four words out. Retyping the destination to an
+unsigned-member struct fixed the width and left THREE words: mwcc then reused one
+register and interleaved `strh r1,[sp,#8]` between the two loads, where the ROM
+batches `ldrh r2,[r4,#0x92]` and `ldrh r1,[r4,#0x94]` and stores after. The file's
+note ruled out ten spellings -- named temps, pointer derefs, const references,
+laundering the address, splitting the copy, reordering it -- and concluded
+"spelling alone does not reach it".
+
+    struct AngleWords { u16 w[3]; };
+    *(AngleWords *)&v16 = *(AngleWords *)(c + 0x92);
+
+matches exactly. The address is not 4-aligned so no `ldm` is involved: what the
+array member buys here is that the copy stops being three member assignments at
+all, and with it goes the register reuse that forced the interleave. Note the
+lever is applied AT THE COPY, through a cast, not by retyping the destination --
+retyping to an unsigned struct is the variant that leaves three words.
+
+**How to apply.** When a C-to-C++ conversion misses at a struct copy, try the
+array-member cast before any of the ten spellings above; it is one line and it
+addresses both the width and the order. Reading the copy into a local of the
+array-struct type first is NOT the same thing and is much worse (188 instructions
+against 182).
+
 ## 6az. Class-typed by-value parameters are homed to the stack (the Fix12 wall)
 
 Declaring a parameter as a by-value class - including the real `Fix12<int>`
@@ -25,16 +57,55 @@ Identical on 1.2/sp2p3 and 2004/b56; `register`, `const`, and an inline conversi
 operator instead of direct member access change nothing. Nor does declaring the
 aggregate a `union` rather than a `struct`, or copying each parameter to a local
 before use -- re-measured on Actor::SetRanges (0x02010e08, target 0x24), where every
-aggregate form costs the same +0x14 and only a scalar parameter reproduces. The cost
-is in the parameter passing, not in how the member is reached.
+aggregate form costs the same +0x14 and only a scalar parameter reproduces.
 
-The retail ROM's own `5Fix12IiE` functions read their arguments straight from
-registers, so the original build had a lever we have not found. Until someone
-finds it, a function whose mangled name carries `5Fix12IiE` cannot be DEFINED as
-a real C++ method; keep the definition an extern-C mangled free function with
-scalar args, and declare the true template signature in the class header for
-callers (a call emits the same substituted symbol either way, which the byte
-gate confirms - the S3_ repeats only fall out of a real template-id).
+### CORRECTED 2026-08-27: the cost is per USE, and the wall was partly self-inflicted
+
+The paragraph above used to end "The cost is in the parameter passing, not in how
+the member is reached." That is wrong, and the correction matters because it turns
+an unexplained wall into an ordinary one.
+
+**A by-value class parameter that a body never reads costs nothing.**
+`dEnemyBase_c::KillByInvincibleChar` takes `(const Vector3_16 &, Player &,
+Fix12<int>)`, reads only the first two, and reproduces ov002 0x020ada40 exactly as
+a real C++ method -- no homing, no prologue change. Homing is emitted in response
+to a use, not by the calling convention. On `IsGoingOffCliff`, which has two such
+parameters, reading one costs +0x8 and reading both +0x10: **two words per USED
+class parameter.** So the lever, if one existed, would have to remove the read.
+
+Which leaves the question the old note asked -- "the retail ROM's own `5Fix12IiE`
+functions read their arguments straight from registers, so the original build had
+a lever we have not found" -- resting on a premise worth checking. It does not
+survive:
+
+**The image contains zero `_Z...` strings and zero occurrences of `5Fix12IiE`.**
+Both censused over arm9 and all 105 overlays. A stripped ROM has no function
+symbol table; its RTTI carries length-prefixed CLASS names (`7daKrb_c`) and
+nothing else. So no function's mangled name in this tree is ROM-derived --
+every one is reconstructed, `include/types.h`'s "the ROM's own mangled symbols
+spell it out" included -- and a `5Fix12IiE` in a name is a decision somebody
+made, not evidence.
+
+When that decision contradicts the bytes, the bytes win. `dEnemyBase_c::
+IsGoingOffCliff` was the standing example of the wall: 17 spellings swept, best
++0x8, "cannot be a real method". Renamed to
+`_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi` -- `Fix12i`, a plain
+`s32` typedef that mangles as `i`, keeping the fixed-point intent -- it matches
+0x020ae2b8/0x19c as a real method. The wall was the name.
+
+Two practical notes from that migration. The parameters must be USED DIRECTLY:
+aliasing them into locals at entry (`int fix2 = down_;`) keeps both the parameter
+and the copy live and cost two extra callee-saved registers, r7 and r8, plus a
+spill reload. And `self` becomes `this`, not a `dEnemyBase_c *self = this;` local,
+for the same reason.
+
+**How to apply.** Before calling a `5Fix12IiE` symbol a wall, ask what anchors the
+class spelling. If the answer is "the convention", and the ROM reads the argument
+straight from a register, the honest signature is scalar. Where the spelling IS
+anchored -- a shared-library entry point whose type is established elsewhere --
+keep the extern-C definition with scalar args and declare the true signature in
+the class header for callers; a call emits the same substituted symbol either way,
+which the byte gate confirms.
 
 ## 1. Ground rules of the build
 

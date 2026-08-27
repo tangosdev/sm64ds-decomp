@@ -1,27 +1,20 @@
 //cpp
 // @symbol _ZN8Particle14SimpleCallbackC2Ev
-/* recovered: real C++ base-object constructor
+/* recovered: real C++ constructor
  *
- * The ROM's steps are: store base vtable, overwrite with derived vtable,
- * and initialize the short member at offset 4 to zero -- exactly what
- * `Particle::SimpleCallback : Particle::Callback` with a member initializer
- * for the short would mean.
+ * `self` is a Particle::SimpleCallback, NOT the SysTracker -- eight bytes of
+ * {Particle::Callback vtable; s16}. No Particle::Callback type is modeled
+ * (see include/Particle.h), so the base vtable store and the derived
+ * override both stay explicit in this one body, same as the ROM.
  */
 #include "Particle.h"
 
+extern void *data_0208f3b4;
 extern void *data_0208f3c4;
-
-namespace Particle {
-    struct SimpleCallback {
-        void* vtable;  // Inherited from base
-        short unk_004;  // Member at offset 4
-
-        SimpleCallback();
-    };
-}
 
 Particle::SimpleCallback::SimpleCallback()
 {
-    *(void**)this = &data_0208f3c4;  // Set derived vtable directly
-    unk_004 = 0;                    // Initialize member
+    *(void**)this = &data_0208f3b4;
+    *(void**)this = &data_0208f3c4;
+    unk_004 = 0;
 }
