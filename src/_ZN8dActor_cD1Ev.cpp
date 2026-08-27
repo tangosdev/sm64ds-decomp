@@ -1,24 +1,16 @@
 //cpp
 // @symbol _ZN8dActor_cD1Ev
-/* recovered: named members + shared header, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header */
+/* D1, the complete-object destructor. One `dActor_c::~dActor_c()` definition makes mwcc
+ * emit D0, D1 and D2 together; objisolate keeps the one this file is bound to
+ * by its delinks entry, so the siblings carry the same definition. */
 #include "dActor_c.h"
-extern "C" {
-extern int _ZTV8dActor_c[];
-extern int data_0209b468[];         /* the global actor list */
-extern int _ZTV7dBase_c[];
-extern void _ZN7fBase_cD2Ev(int c);
-/* Unlinks the actor from the global list, then chains the bases. dBase_c's
-   destructor is inlined, which is why its vtable is stored on the way out. */
-int _ZN8dActor_cD1Ev(struct dActor_c *self) {
-  *(int*)((int)self) = (int)_ZTV8dActor_c;
-  /* Spelt as an offset, not as `&self->mListPrev`: the named form costs bytes
-     here even though it is free in the constructors. Measured, do not "clean". */
-  func_0203b27c((int)data_0209b468, ((int)self)+0x50);
-  func_02044104((int)&self->mListPrev);
-  *(int*)((int)self) = (int)_ZTV7dBase_c;
-  _ZN7fBase_cD2Ev(((int)self));
-  return ((int)self);
-}
+
+extern "C" void func_0203b27c(void *list, void *node);
+extern "C" void func_02044104(void *node);
+extern "C" void *data_0209b468;
+
+dActor_c::~dActor_c()
+{
+    func_0203b27c(&data_0209b468, (char *)this + 0x50);
+    func_02044104(&mListPrev);
 }
