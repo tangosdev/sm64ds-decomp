@@ -729,6 +729,13 @@
     "src/game/actors/ShipWater.cpp#_ZN9ShipWater6RenderEv": "tangosdev",
     "src/game/actors/ShipWater.cpp#_ZN9ShipWater8BehaviorEv": "lunavyqo",
     "src/game/actors/ShipWater.cpp#_ZN9ShipWater13InitResourcesEv": "tangosdev",
-    "src/game/actors/ShipWater.cpp#ShipWater_Spawn": "tangosdev"
+    "src/game/actors/ShipWater.cpp#ShipWater_Spawn": "tangosdev",
+    "src/game/actors/PoleLift.cpp#_ZN8PoleLiftD1Ev": "tangosdev",
+    "src/game/actors/PoleLift.cpp#_ZN8PoleLiftD0Ev": "tangosdev",
+    "src/game/actors/PoleLift.cpp#_ZN8PoleLift16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/PoleLift.cpp#_ZN8PoleLift6RenderEv": "tangosdev",
+    "src/game/actors/PoleLift.cpp#_ZN8PoleLift8BehaviorEv": "tangosdev",
+    "src/game/actors/PoleLift.cpp#_ZN8PoleLift13InitResourcesEv": "tangosdev",
+    "src/game/actors/PoleLift.cpp#PoleLift_Spawn": "tangosdev"
   }
 }
