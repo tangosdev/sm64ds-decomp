@@ -191,6 +191,21 @@ class WorkListTests(unittest.TestCase):
             self.assertFalse(report["ok"])
             self.assertTrue(failures_of(report, "coverage"))
 
+    def test_a_declared_source_outside_the_scan_root_is_not_stranded(self):
+        """A TU PROMOTED out of src_tu into the real build tree (status "promoted",
+        source under src/) is absent from a walk of src_tu while being perfectly
+        present -- and the gate compiles it either way, so "one fewer TU checked"
+        was false as well. The scan root is a place to look, not the definition of
+        existence."""
+        with Scratch() as s:
+            s.write("Probe.h", HEADER_OK).write("Probe.cpp", UNIT)
+            (s.dir / "elsewhere").mkdir()
+            report = CC.check(s.manifest(s.entry()), s.dir / "elsewhere",
+                              include_dirs=[s.dir])
+            self.assertEqual(failures_of(report, "coverage"), [])
+            self.assertTrue(report["ok"])
+            self.assertEqual(report["checked"]["compiled"], 1)
+
     def test_a_missing_manifest_fails(self):
         report = CC.check(REPO / "build" / "no-such-manifest.json", REPO / "src_tu")
         self.assertFalse(report["ok"])
