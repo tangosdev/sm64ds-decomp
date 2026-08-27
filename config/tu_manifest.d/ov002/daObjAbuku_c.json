@@ -1,9 +1,10 @@
 {
   "id": "ov002/daObjAbuku_c",
   "module": "ov002",
-  "source": "src_tu/actors/daObjAbuku_c.cpp",
-  "promoted_source": "src/actors/daObjAbuku_c.cpp",
+  "source": "src/game/actors/daObjAbuku_c.cpp",
+  "promoted_source": "src/game/actors/daObjAbuku_c.cpp",
   "status": "text-verified",
+  "production_mode": "partitioned",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20b3298..0x20b35a0, 7 function(s), from build/tu_map.json (tools/tu_map.py)",
