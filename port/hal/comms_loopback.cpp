@@ -307,6 +307,10 @@ int      g_slot       = 0;
 int      g_port_base  = kCommsLoopbackPortBase;
 int      g_my_port    = 0;
 int      g_pinned     = -1;          // SM64DS_COMMS_SLOT, or -1
+// Has the GAME asked to be parent yet? The socket is bound in open() and the
+// role is requested a few statements later, in the same first tick, with a
+// drain() in between -- so a JOIN can be handled while this is still false.
+bool     g_parent_requested = false;
 int      g_state      = kCommsIdle;
 unsigned g_live       = 0;           // bit k set when slot k is live
 unsigned g_round      = 0;
@@ -386,7 +390,18 @@ void on_parent_packet(const Packet &p, const sockaddr_in &from) {
     case kTypeJoin: {
         const bool fresh = (g_live & (1u << k)) == 0;
         g_live |= (1u << k);
-        if (g_state == kCommsConnecting) g_state = kCommsParentConnected;
+        // ACCEPT IT EVEN IF THE GAME HAS NOT ASKED TO BE PARENT YET, but do not
+        // fake the state. open() binds the socket and become_parent() is a few
+        // statements later in the SAME first tick, with the drain() that
+        // handles this packet in between -- so a child that reached its frame
+        // loop first can land a JOIN in that window. Dropping it would be safe
+        // (the child re-knocks every 50 ms) but it would also be a join thrown
+        // away for no reason; recording it and letting become_parent()
+        // reconcile loses nothing. What must NOT happen is advancing to
+        // parent-connected before the game asked, which would report a session
+        // the ROM never requested.
+        if (g_parent_requested && g_state != kCommsParentConnected)
+            g_state = kCommsParentConnected;
         // The accept carries the CURRENT round, so a child that joins mid
         // session adopts the parent's clock instead of starting at 0 and
         // asking for a round the cache retired long ago.
@@ -643,6 +658,7 @@ void lb_open(unsigned mode) {
     g_slot    = bound;
     g_my_port = g_port_base + bound;
     g_open    = true;
+    g_parent_requested = false;
     g_state   = kCommsIdle;      // open() does not connect anything
     g_live    = 0;
     g_round   = 0;
@@ -673,6 +689,7 @@ void lb_close() {
     g_state = kCommsIdle;
     g_live  = 0;
     g_slot  = 0;
+    g_parent_requested = false;
     g_latched_mask = 0;
     g_stage_mask   = 0;
     std::fprintf(stderr, "[comms:loopback] closed after %u rounds\n", g_round);
@@ -694,8 +711,15 @@ void lb_become_parent() {
         return;
     }
     g_slot  = 0;
-    g_live  = 1u;                       // the parent is always live
-    g_state = kCommsConnecting;         // 3 only once a child is actually in
+    g_parent_requested = true;
+    // |= NOT =. A plain assignment here WIPES a child that already joined in
+    // the window described at kTypeJoin, and the failure it produces is
+    // permanent and asymmetric: the child has its accept, believes it is in,
+    // and stops knocking, while the parent sits at link 2 with players=1 and
+    // role never leaving 0. Reconcile instead: keep whoever is already in, and
+    // if that is anybody, this session is already up.
+    g_live |= 1u;                       // the parent is always live
+    g_state = (g_live & ~1u) ? kCommsParentConnected : kCommsConnecting;
 }
 
 void lb_become_child() {
