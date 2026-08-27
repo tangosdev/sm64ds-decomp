@@ -1,19 +1,19 @@
-#include "types.h"
+//cpp
 // @symbol _ZN18NestedHeapIteratorC1Ej
-/* recovered: named members + shared header */
-#include "NestedHeapIterator.h"
-struct Iter {
-    void* head;
-    void* tail;
-    u16 count;
-    u16 off;
+#include "types.h"
+
+struct NestedHeapIterator {
+    void *mHead;                /* 0x00 */
+    void *mTail;                /* 0x04 */
+    u16 mCount;                 /* 0x08 */
+    u16 mLinkOffset;            /* 0x0a */
+    NestedHeapIterator(u32 linkOffset);
 };
 
-void _ZN18NestedHeapIteratorC1Ej(void* self, u32 off)
+NestedHeapIterator::NestedHeapIterator(u32 linkOffset)
 {
-    struct Iter* it = (struct Iter*)self;
-    it->head = 0;
-    it->tail = 0;
-    it->count = 0;
-    it->off = (u16)off;
+    mHead = 0;
+    mTail = 0;
+    mCount = 0;
+    mLinkOffset = (u16)linkOffset;
 }

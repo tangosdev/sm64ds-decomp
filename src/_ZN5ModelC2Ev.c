@@ -1,42 +1,17 @@
-typedef unsigned int u32;
-typedef int Fix12i;
+//cpp
+// @symbol _ZN5ModelC2Ev
+#include "Model.h"
 
-struct BMD_File;
+extern "C" Matrix4x3 IDENTITY_MATRIX4X3;
 
-struct ModelComponents {
-    struct BMD_File *modelFile;
-    void *materials;
-    void *bones;
-    void *transforms;
-    char *unk10;
-};
+/* The copy has to go through a struct whose only member is an array. Model.h
+ * reaches math/Matrix.h, where Matrix4x3 is spelled `Matrix3x3 r; Vector3 t;`
+ * rather than flat -- and a C++ member-wise copy of that scalarises the Vector3
+ * tail into four ldr/str pairs where the ROM issues a third ldm/stm. */
+struct Matrix4x3Words { s32 w[12]; };
 
-struct Matrix4x3 {
-    Fix12i r[12];
-};
-
-struct ModelBase {
-    u32 *vtable;
-    u32 unk04;
-};
-
-struct Model {
-    u32 *vtable;
-    u32 unk04;
-    struct ModelComponents data;
-    struct Matrix4x3 mat4x3;
-    struct Matrix4x3 *unkMatPtr;
-};
-
-extern u32 _ZTV5Model[];
-extern struct Matrix4x3 IDENTITY_MATRIX4X3;
-extern void _ZN9ModelBaseC2Ev(struct ModelBase *thiz);
-
-struct Model *_ZN5ModelC2Ev(struct Model *thiz)
+Model::Model()
 {
-    _ZN9ModelBaseC2Ev((struct ModelBase *)thiz);
-    thiz->vtable = _ZTV5Model;
-    thiz->unkMatPtr = 0;
-    thiz->mat4x3 = IDENTITY_MATRIX4X3;
-    return thiz;
+    transformsBuf = 0;
+    *(Matrix4x3Words *)&mat4x3 = *(Matrix4x3Words *)&IDENTITY_MATRIX4X3;
 }
