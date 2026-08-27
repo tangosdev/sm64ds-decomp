@@ -226,6 +226,11 @@ VTABLE_FIXTURES = [
     ("bp_egg", 19, "Yoshi tries to turn a Baby Penguin into an egg"),
     ("fb_slot27", 27, "a Mega character hits the WF fall block"),
     ("whomp_s30", 30, "egg-aim query against a Whomp"),
+    # The EXTENSION slot. Not reachable by the header authority at all until
+    # ACTOR_EXT_SLOT_ARGS existed, and invisible to consensus while all three
+    # slot-32 thunks were wrong together -- report 7447e46c, level 46.
+    ("pl_after_clsn", 32, "stand on a PATH_LIFT (Luigi's Key Course and LLL)"),
+    ("bly_v32", 32, "a Bully's collider finishes a collision step"),
 ]
 
 
