@@ -537,6 +537,27 @@ extern "C" {
 extern void func_ov085_0212a828(void *rabbit);
 extern int _ZN6Player7IsStateERNS_5StateE(void *p, void *st);
 extern char data_ov002_02110574, data_ov002_0211067c, data_ov002_021105bc;
+/* the four gates St_HoldLight_Main's carry-bit write sits behind */
+extern int func_ov002_020c0434(void *p);
+extern int _ZN6Player6IsAnimEj(void *p, unsigned int anim);
+extern int _ZN6Player12FinishedAnimEv(void *p);
+extern unsigned int _ZNK6Player14GetBodyModelIDEjb(void *p, unsigned int a, char b);
+extern int _ZNK9Animation12WillHitFrameEi(void *anim, int f);
+/* the nine Player::State objects StartTalk's b==1 path tests */
+extern char data_ov002_0211046c, data_ov002_0211013c, data_ov002_02110154,
+            data_ov002_021104e4, data_ov002_02110514, data_ov002_02110364,
+            data_ov002_02110424, data_ov002_021105a4, data_ov002_0211043c;
+/* the rabbit's four caught-side State objects */
+extern char data_ov085_021306ac, data_ov085_021306bc, data_ov085_021306cc,
+            data_ov085_0213068c;
+/* the caught state's own pair: Init 0x0212b3fc, Main 0x0212ae08. Printing their
+   host addresses beside the words the live State object carries is what tells a
+   "the dialogue refused" reading apart from "a different function is seated". */
+extern int func_ov085_0212ae08(char *c);
+extern int func_ov085_0212b3fc(char *c);
+/* the two globals Rabbit::Behavior's own top-of-body gate reads */
+extern unsigned char data_0209f2f8;   /* the current level word */
+extern int data_0209caa0[];           /* the save/global flag block */
 }
 
 extern "C" void port_probe_rabbit_trigger(int frame)
@@ -551,10 +572,132 @@ extern "C" void port_probe_rabbit_trigger(int frame)
     char *player = (char *)find_actor_by_class(0xbf);
     if (!rb || !player) return;
 
+    /* THE RABBIT-HUNT-IS-ON FLAG, the second half of this stand-in.
+     *
+     * Rabbit::Behavior returns before its own state dispatch unless
+     * data_0209caa0[2] & 0x20000 is set (src/_ZN6Rabbit8BehaviorEv.c:50-65). On
+     * a level other than 0x32 the rabbit sits on the +0x428 == 1 arm and only
+     * leaves it once that bit is on, so with the bit clear the actor is inert:
+     * measured, its Animation at +0x350 (30 frames, speed 0x1000) never advances
+     * across a 900-frame run, before or after a grab.
+     *
+     * The ROM's writer of the bit is func_ov085_0212e2ec, the LakituBro state
+     * seated at 0x021302a4 (ov085 relocs.txt:1238) -- the cameraman's intro that
+     * starts the rabbit hunt. Driving that whole actor is a separate chain and
+     * has nothing to do with the timing question this rig asks, so the trigger
+     * sets the bit directly, exactly as walk_window.cpp:6149 already seats
+     * data_0209caa0[2] |= 0x80 for its own stand-in. This makes the rabbit LIVE;
+     * everything after it -- the grab, the caught dialogue, the talk, the key
+     * spawn -- is the matched code in the ROM's own order. */
+    if ((data_0209caa0[2] & 0x20000) == 0) {
+        data_0209caa0[2] |= 0x20000;
+        std::fprintf(stderr, "  [rabbit] f%d set data_0209caa0[2] |= 0x20000 "
+                     "(stands in for the LakituBro intro func_ov085_0212e2ec; "
+                     "without it Rabbit::Behavior returns at its own line 53 and "
+                     "the actor never ticks)\n", frame);
+    }
+
     static int caught, tries;
     if (caught) {
         /* post-grab: follow the rabbit's own caught states, so a run that never
            reaches the key spawn says where it stopped instead of going quiet. */
+
+        /* CARRY-BIT GATE (lane C2). func_ov085_0212ae08.c:65-69 opens the caught
+           dialogue only when rabbit+0xb0 & 0x4000 is set, and the ROM's writer of
+           that bit is Player::St_HoldLight_Main (ov002 0x020d1a1c,
+           src/_ZN6Player17St_HoldLight_MainEv.cpp:61-68), which needs FOUR things
+           true on the same frame: not the func_ov002_020c0434 early-out,
+           mStateStep == 0, the pickup anim (0x2f or 0x86) playing and not
+           finished, and the anim cursor crossing frame 6. This prints all four
+           beside the bit so a run that never sets it says WHICH gate it missed
+           instead of only that the dialogue stayed shut. Every call here is a
+           read: Animation::WillHitFrame is const and pure
+           (src/_ZNK9Animation12WillHitFrameEi.cpp), IsAnim/FinishedAnim compare
+           fields, and func_ov002_020c0434 is the state's own test. */
+        {
+            static int hl_left = 60;   /* per-frame for the pickup window */
+            if (hl_left > 0) {
+                --hl_left;
+                int held = *(int *)(player + 0x358) != 0;
+                unsigned mdl = _ZNK6Player14GetBodyModelIDEjb(
+                                   player, (unsigned)(*(int *)(player + 8) & 0xff), 0);
+                char *anim = *(char **)(player + 0xdc + mdl * 4);
+                std::fprintf(stderr,
+                    "  [hold] f%d st370=%p step6e3=%d held358=%d 0c0434=%d "
+                    "isanim2f=%d isanim86=%d finished=%d willhit6=%d rb0xb0=0x%08x "
+                    "carried=%d\n",
+                    frame, *(void **)(player + 0x370),
+                    (int)*(unsigned char *)(player + 0x6e3), held,
+                    func_ov002_020c0434(player),
+                    _ZN6Player6IsAnimEj(player, 0x2f),
+                    _ZN6Player6IsAnimEj(player, 0x86),
+                    _ZN6Player12FinishedAnimEv(player),
+                    anim ? _ZNK9Animation12WillHitFrameEi(anim + 0x50, 6) : -1,
+                    (unsigned)*(int *)(rb + 0xb0),
+                    (*(int *)(rb + 0xb0) & 0x4000) != 0);
+
+                /* STARTTALK GATE. With the carry bit set the rabbit's caught
+                   dialogue calls Player::StartTalk(pl, c, 1) every frame and
+                   only writes rabbit+0x41c when it returns nonzero. StartTalk's
+                   b==1 path returns 0 only when the player is in NONE of eight
+                   allowed states, or is in 02110424 / 021105a4. Print which of
+                   the nine (talk + the eight) the player's +0x370 names, so a
+                   refusal says which. Reads only. */
+                std::fprintf(stderr,
+                    "  [talkgate] f%d p370=%p talk46c=%d s13c=%d s154=%d s4e4=%d "
+                    "s514=%d s364=%d s424=%d s5a4=%d s43c=%d noctl709=%d kind70a=%d\n",
+                    frame, *(void **)(player + 0x370),
+                    _ZN6Player7IsStateERNS_5StateE(player, &data_ov002_0211046c),
+                    _ZN6Player7IsStateERNS_5StateE(player, &data_ov002_0211013c),
+                    _ZN6Player7IsStateERNS_5StateE(player, &data_ov002_02110154),
+                    _ZN6Player7IsStateERNS_5StateE(player, &data_ov002_021104e4),
+                    _ZN6Player7IsStateERNS_5StateE(player, &data_ov002_02110514),
+                    _ZN6Player7IsStateERNS_5StateE(player, &data_ov002_02110364),
+                    _ZN6Player7IsStateERNS_5StateE(player, &data_ov002_02110424),
+                    _ZN6Player7IsStateERNS_5StateE(player, &data_ov002_021105a4),
+                    _ZN6Player7IsStateERNS_5StateE(player, &data_ov002_0211043c),
+                    (int)*(unsigned char *)(player + 0x709),
+                    (int)*(unsigned char *)(player + 0x70a));
+
+                /* WHICH RABBIT STATE IS LIVE. rabbit+0x364 is the State object
+                   Rabbit::Behavior dispatches through (its .b pair at +8 is the
+                   Main). Only 021306ac's Main is func_ov085_0212ae08, the caught
+                   dialogue that spawns the key, so print the four candidates'
+                   addresses beside the live pointer and the Main word the
+                   dispatch will actually call. */
+                if (hl_left == 59) {
+                    std::fprintf(stderr,
+                        "  [rbstate] 06ac=%p 06bc=%p 06cc=%p 068c=%p\n",
+                        (void *)&data_ov085_021306ac, (void *)&data_ov085_021306bc,
+                        (void *)&data_ov085_021306cc, (void *)&data_ov085_0213068c);
+                }
+                {
+                    /* +0x350 is the rabbit's Animation (numFramesAndFlags +0x04,
+                       currFrame +0x08, speed +0x0c, per include/Animation.h).
+                       Rabbit::Behavior calls Animation::Advance on it every
+                       tick, so a MOVING currFrame is proof Behavior itself is
+                       running and the state Main really is being dispatched --
+                       without which every other reading here is vacuous. */
+                    int *sp = *(int **)(rb + 0x364);
+                    std::fprintf(stderr,
+                        "  [rbstate] f%d +364=%p is06ac=%d mainfn=0x%08x "
+                        "maindelta=%d animcur=%d animspd=%d anim100=%d\n",
+                        frame, (void *)sp,
+                        (void *)sp == (void *)&data_ov085_021306ac,
+                        sp ? (unsigned)sp[2] : 0u, sp ? sp[3] : 0,
+                        *(int *)(rb + 0x350 + 0x08), *(int *)(rb + 0x350 + 0x0c),
+                        (int)*(short *)(rb + 0x100));
+                    if (hl_left == 59)
+                        std::fprintf(stderr,
+                            "  [rbstate] &func_ov085_0212ae08=0x%08x "
+                            "&func_ov085_0212b3fc=0x%08x animlen=0x%08x\n",
+                            (unsigned)(size_t)&func_ov085_0212ae08,
+                            (unsigned)(size_t)&func_ov085_0212b3fc,
+                            (unsigned)*(int *)(rb + 0x350 + 0x04));
+                }
+            }
+        }
+
         static void *p_state; static int p_step = -99, p_talk = -99, p_last;
         void *st = *(void **)(rb + 0x364);
         int step = *(int *)(rb + 0x41c);
@@ -591,10 +734,30 @@ extern "C" void port_probe_rabbit_trigger(int frame)
     *(int *)(rb + 0x130) |= 0x1000;                                  /* trigger */
 
     if (++tries <= 5 || (tries % 60) == 0) {
+        /* animcur is the rabbit's Animation::currFrame (+0x350+0x08). Rabbit::
+           Behavior advances it every tick, so printing it BEFORE the grab as
+           well as after says whether the actor was ever ticked at all -- the
+           difference between "the caught dialogue refused" and "the caught
+           dialogue never ran". */
         std::fprintf(stderr, "  [rabbit] f%d arming grab (try %d): holding=%d "
-                     "grabbable=%d st574=%d st67c=%d st5bc=%d p6e2=%d\n", frame,
+                     "grabbable=%d b0=0x%08x animcur=%d "
+                     "lvlf2f8=%d caa0_2=0x%08x bit20000=%d rb428=%d rb440=%d "
+                     "pl6d9=%d "
+                     "st574=%d st67c=%d st5bc=%d p6e2=%d\n", frame,
                      tries, *(int *)(player + 0x358) != 0,
                      (*(int *)(rb + 0xb0) & 0x80) != 0,
+                     (unsigned)*(int *)(rb + 0xb0),
+                     *(int *)(rb + 0x350 + 0x08),
+                     /* THE BEHAVIOR GATE. src/_ZN6Rabbit8BehaviorEv.c:50-65
+                        returns before the state dispatch unless the level word
+                        data_0209f2f8 and these fields agree. Off level 0x32 the
+                        only question is rabbit+0x428; on level 0x32 it is the
+                        0x20000 save bit plus rabbit+0x440 == player+0x6d9. */
+                     (int)data_0209f2f8, (unsigned)data_0209caa0[2],
+                     (data_0209caa0[2] & 0x20000) != 0,
+                     (int)*(unsigned char *)(rb + 0x428),
+                     *(int *)(rb + 0x440),
+                     (int)*(unsigned char *)(player + 0x6d9),
                      _ZN6Player7IsStateERNS_5StateE(player, &data_ov002_02110574),
                      _ZN6Player7IsStateERNS_5StateE(player, &data_ov002_0211067c),
                      _ZN6Player7IsStateERNS_5StateE(player, &data_ov002_021105bc),
