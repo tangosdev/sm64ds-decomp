@@ -516,7 +516,6 @@ src/UkikiCage_Spawn.c	S1-stores-rom-vptr	ov030			stores _ZTV9UkikiCage	1		None	_
 src/UkikiStar_Spawn.c	WEAK-refs-only	ov030				1		None		-
 src/UkikiThief_Spawn.c	WEAK-refs-only	ov030				1		None		-
 src/Unagi_Spawn.c	S1-stores-rom-vptr	ov016			stores _ZTV5Unagi	1		None	_ZTV5Unagi	-
-src/UnchainedChomp_Spawn.c	S1-stores-rom-vptr	ov100			stores _ZTV14UnchainedChomp	1		None	_ZTV14UnchainedChomp	-
 src/UnloadArchive.c	PURE-C	arm9				1		None		-
 src/UnloadArchives.c	PURE-C	arm9				1		None		-
 src/UnloadBlueCoinModel.c	WEAK-refs-only	arm9				1		None		-

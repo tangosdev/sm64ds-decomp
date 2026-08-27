@@ -2826,7 +2826,7 @@
     "src/_ZN14UnchainedChomp8BehaviorEv.cpp",
     "src/_ZN14UnchainedChomp13InitResourcesEv.cpp",
     "src/_ZN14UnchainedChomp16OnAimedAtWithEggEv.cpp",
-    "src/UnchainedChomp_Spawn.c"
+    "src/UnchainedChomp_Spawn.cpp"
    ],
    "ext_mix": {
     ".cpp": 12,

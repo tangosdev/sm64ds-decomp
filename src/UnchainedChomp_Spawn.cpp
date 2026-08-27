@@ -1,34 +1,46 @@
-extern void *_ZN7fBase_cnwEj(unsigned int);
-extern void _ZN12dEnemyBase_cC2Ev(void *);
-extern void _ZN10dCcAcPos_cC1Ev(void *);
-extern void _ZN10dBgCh_ActrC1Ev(void *);
-extern void _ZN9ModelAnimC1Ev(void *);
-extern void _ZN11ShadowModelC1Ev(void *);
-extern void func_020733a8(void *p, int n, int sz, void *ctor, void *dtor);
-extern int _ZTV14UnchainedChomp;
-extern void _ZN5ModelC1Ev(void);
-extern void _ZN5ModelD1Ev(void);
-extern void _ZN11ShadowModelD1Ev(void);
-extern void _ZN7Vector3D1Ev(void);
-extern void func_0203d384(void);
-extern void _ZN8Vector3sD1Ev(void);
-extern void func_0203d73c(void);
+//cpp
+// @symbol UnchainedChomp_Spawn
+#include "UnchainedChomp.h"
 
-void *UnchainedChomp_Spawn(void)
+extern "C" {
+void *_ZN7fBase_cnwEj(unsigned int size);
+void _ZN12dEnemyBase_cC2Ev(void *self);
+void _ZN10dCcAcPos_cC1Ev(void *self);
+void _ZN10dBgCh_ActrC1Ev(void *self);
+void _ZN9ModelAnimC1Ev(void *self);
+void _ZN11ShadowModelC1Ev(void *self);
+void func_020733a8(void *array, int count, int stride, void *ctor, void *dtor);
+extern void *_ZTV14UnchainedChomp;
+void _ZN5ModelC1Ev();
+void _ZN5ModelD1Ev();
+void _ZN11ShadowModelD1Ev();
+void _ZN7Vector3D1Ev();
+void func_0203d384();
+void _ZN8Vector3sD1Ev();
+void func_0203d73c();
+}
+
+extern "C" UnchainedChomp *UnchainedChomp_Spawn()
 {
-    char *p = (char *)_ZN7fBase_cnwEj(0x7a4);
-    if (p) {
-        _ZN12dEnemyBase_cC2Ev(p);
-        *(int *)p = (int)&_ZTV14UnchainedChomp;
-        _ZN10dCcAcPos_cC1Ev(p + 0x110);
-        _ZN10dBgCh_ActrC1Ev(p + 0x150);
-        _ZN9ModelAnimC1Ev(p + 0x30c);
-        func_020733a8(p + 0x370, 6, 0x50, (void *)_ZN5ModelC1Ev, (void *)_ZN5ModelD1Ev);
-        func_020733a8(p + 0x550, 6, 0x28, (void *)_ZN11ShadowModelC1Ev, (void *)_ZN11ShadowModelD1Ev);
-        _ZN11ShadowModelC1Ev(p + 0x640);
-        func_020733a8(p + 0x6d8, 6, 0xc, (void *)func_0203d384, (void *)_ZN7Vector3D1Ev);
-        func_020733a8(p + 0x720, 6, 0xc, (void *)func_0203d384, (void *)_ZN7Vector3D1Ev);
-        func_020733a8(p + 0x768, 6, 6, (void *)func_0203d73c, (void *)_ZN8Vector3sD1Ev);
+    UnchainedChomp *actor =
+        (UnchainedChomp *)_ZN7fBase_cnwEj(sizeof(UnchainedChomp));
+    if (actor) {
+        _ZN12dEnemyBase_cC2Ev(actor);
+        *(void **)actor = &_ZTV14UnchainedChomp;
+        _ZN10dCcAcPos_cC1Ev(&actor->mdCcAcPos_c);
+        _ZN10dBgCh_ActrC1Ev(&actor->mWithMeshClsn);
+        _ZN9ModelAnimC1Ev(&actor->mModelAnim);
+        func_020733a8(actor->mModels, 6, sizeof(Model),
+            (void *)_ZN5ModelC1Ev, (void *)_ZN5ModelD1Ev);
+        func_020733a8(actor->mShadowModels, 6, sizeof(ShadowModel),
+            (void *)_ZN11ShadowModelC1Ev, (void *)_ZN11ShadowModelD1Ev);
+        _ZN11ShadowModelC1Ev(&actor->mShadowModel);
+        func_020733a8(actor->mUnk_6d8, 6, sizeof(Vector3),
+            (void *)func_0203d384, (void *)_ZN7Vector3D1Ev);
+        func_020733a8(actor->mUnk_720, 6, sizeof(Vector3),
+            (void *)func_0203d384, (void *)_ZN7Vector3D1Ev);
+        func_020733a8(actor->mUnk_768, 6, sizeof(Vector3s),
+            (void *)func_0203d73c, (void *)_ZN8Vector3sD1Ev);
     }
-    return p;
+    return actor;
 }
