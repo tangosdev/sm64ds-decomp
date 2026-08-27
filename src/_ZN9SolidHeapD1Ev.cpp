@@ -1,13 +1,7 @@
-extern void *_ZTV9SolidHeap;
-extern void *_ZN4HeapD2Ev(void *self);
+//cpp
+// @symbol _ZN9SolidHeapD1Ev
+#include "SolidHeap.h"
 
-struct SolidHeap {
-    void *vtable;
-};
-
-void *_ZN9SolidHeapD1Ev(struct SolidHeap *self)
+SolidHeap::~SolidHeap()
 {
-    self->vtable = &_ZTV9SolidHeap;
-    _ZN4HeapD2Ev(self);
-    return self;
 }

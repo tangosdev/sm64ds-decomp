@@ -92,9 +92,13 @@ struct SolidHeap : Heap {
                                        is why Heap::CreateSolidHeapAllocator
                                        constructs it at the arena's own start. */
 
-    /* Declared first to hold slots 0/1, and never defined -- see the same note
-       in include/Heap.h. The D0/D1 pair remains C files bound to their ROM
-       addresses. */
+    /* The constructor's initializer list is the ROM body: construct Heap, then
+       store the allocator pointer. CodeWarrior owns the intervening vptr store. */
+    SolidHeap(void* start, u32 size, Heap* root,
+              SolidHeapAllocator* allocator);
+
+    /* D1 and D0 are independently enrolled compiler-owned variants of this
+       empty real destructor; Heap's teardown is generated, not hand-called. */
     virtual ~SolidHeap();
 
     virtual void  VDestroy();                       /*  2 */
