@@ -1104,7 +1104,24 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
 L2_UNMATCHED(func_ov007_020b8188)
 L2_UNMATCHED(func_ov007_020ba05c)
 L2_UNMATCHED(func_ov007_020c19cc)
-L2_UNMATCHED(func_ov007_020c20b8)
+/* func_ov007_020c20b8 WAS HERE, AND IT IS THE TITLE'S INPUT SAMPLER. Run mg16
+   matched it byte for byte at 2004/b56 with a result this overlay has not
+   produced before: 122 of 122 words OK and ZERO reloc wildcards -- the body has
+   no relocations at all, its literal pool holding raw constants (0x04000130,
+   0x027fffa8, 0x00002fff) -- so every word was compared as a real instruction
+   and nothing at all is hidden behind a wildcard. linkcheck VERIFIED, 0 blind.
+   A trap here would now be an LNK2005 against src/func_ov007_020c20b8.c.
+
+   Its ONE caller is the verdict producer src/func_ov007_020b7090.c, which calls
+   it before reading the verdict words, so it sits directly on the menu path.
+   The body maintains an Ov007Input record (0x6e bytes): held/prev at +0/+2, a
+   12-entry heldFrames array at +4, a 12-entry releasedFrames array at +0x34, a
+   volatile flags word at +0x64 whose bit 0 is the suppress-input latch, and
+   three signed axis pairs at +0x68/+0x6a/+0x6c.
+
+   TRAPPED, IT RETURNED 0 AND LEFT BOTH COUNTER ARRAYS UNTOUCHED, and the fault
+   that produced was a fill through a bad destination: MultiStore_Int+0x1c, an
+   access violation at frame 1299, quarantined and frozen like the last one. */
 L2_UNMATCHED(func_ov007_020c368c)
 /* func_ov007_020c4684 WAS HERE AND IT LEFT THE SAME WAY 0x020c9688 DID, on a
    host transcription rather than a decomp. It is still unmatched on main, so it
