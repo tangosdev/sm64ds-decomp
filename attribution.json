@@ -784,6 +784,14 @@
     "src/game/actors/Seaweed.cpp#_ZN7Seaweed6RenderEv": "tangosdev",
     "src/game/actors/Seaweed.cpp#_ZN7Seaweed8BehaviorEv": "tangosdev",
     "src/game/actors/Seaweed.cpp#_ZN7Seaweed13InitResourcesEv": "tangosdev",
-    "src/game/actors/Seaweed.cpp#Seaweed_Spawn": "tangosdev"
+    "src/game/actors/Seaweed.cpp#Seaweed_Spawn": "tangosdev",
+    "src/game/actors/VirtualDoor.cpp#_ZN11VirtualDoorD1Ev": "tangosdev",
+    "src/game/actors/VirtualDoor.cpp#_ZN11VirtualDoorD0Ev": "tangosdev",
+    "src/game/actors/VirtualDoor.cpp#_ZN11VirtualDoor16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/VirtualDoor.cpp#_ZN11VirtualDoor16OnPendingDestroyEv": "tangosdev",
+    "src/game/actors/VirtualDoor.cpp#_ZN11VirtualDoor6RenderEv": "andrewboudreau",
+    "src/game/actors/VirtualDoor.cpp#_ZN11VirtualDoor8BehaviorEv": "ruspecial",
+    "src/game/actors/VirtualDoor.cpp#_ZN11VirtualDoor13InitResourcesEv": "andrew",
+    "src/game/actors/VirtualDoor.cpp#VirtualDoor_Spawn": "tangosdev"
   }
 }
