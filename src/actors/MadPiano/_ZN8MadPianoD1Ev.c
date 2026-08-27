@@ -1,28 +1,32 @@
+//cpp
 // @symbol _ZN8MadPianoD1Ev
-/* recovered: named members + shared header, declarations from a shared header */
-#include "decl_Actor.h"
-#include "decl_Model.h"
-#include "decl_ModelAnim.h"
-#include "decl_dBgW_KcMbg.h"
-#include "decl_ShadowModel.h"
-#include "decl_dBgCh_Actr.h"
-/* recovered: named members + shared header */
-#include "MadPiano.h"
-extern int __destroy_arr(void*, int, int, void*);
-extern void _ZN10dCcAcPos_cD1Ev(void*);
-extern void* _ZTV8MadPiano;
-extern void* _ZTV10dBgActor_c;
-void* _ZN8MadPianoD1Ev(struct MadPiano *self) {
-  *(void**)((void*)self) = &_ZTV8MadPiano;
-  _ZN10dBgCh_ActrD1Ev((char*)&self->mWithMeshClsn);
-  __destroy_arr((char*)((void*)self)+0x48c, 2, 0x40, &_ZN10dCcAcPos_cD1Ev);
-  _ZN11ShadowModelD1Ev((char*)&self->mShadowModel3);
-  _ZN11ShadowModelD1Ev((char*)&self->mShadowModel2);
-  _ZN11ShadowModelD1Ev((char*)&self->mShadowModel1);
-  _ZN9ModelAnimD1Ev((char*)&self->mModelAnim);
-  *(void**)((void*)self) = &_ZTV10dBgActor_c;
-  _ZN10dBgW_KcMbgD1Ev((char*)&self->mMeshCollider);
-  _ZN5ModelD1Ev((char*)&self->mModel);
-  _ZN8dActor_cD2Ev(((void*)self));
-  return ((void*)self);
+/* D1, the complete-object destructor. The shadow struct below is the point: the
+ * shared header spells this class FLAT, with the base's fields restated as padding,
+ * so nothing in it tells mwcc there are subobjects to tear down. Naming the real
+ * base and the real member types makes the compiler generate the ROM's teardown --
+ * every member destroyed in reverse declaration order, then the base chain -- from
+ * an empty body. The shared header is left alone; it has matched functions compiled
+ * against its flat form. */
+#include "dBgActor_c.h"
+#include "ModelAnim.h"
+#include "ShadowModel.h"
+#include "dCcAcPos_c.h"
+#include "dBgCh_Actr.h"
+
+struct MadPiano : dBgActor_c {
+    ModelAnim mModelAnim;               /* 0x320 */
+    ShadowModel mShadowModel1;          /* 0x384 */
+    ShadowModel mShadowModel2;          /* 0x3ac */
+    ShadowModel mShadowModel3;          /* 0x3d4 */
+    u8 pad_3fc[0x90];
+    dCcAcPos_c mAcPos[2];               /* 0x48c */
+    dBgCh_Actr mWithMeshClsn;           /* 0x50c */
+    u8 pad_6c8[0x1c];
+    virtual ~MadPiano();
+};
+
+typedef char MadPiano_size_must_be_0x6e4[sizeof(MadPiano) == 0x6e4 ? 1 : -1];
+
+MadPiano::~MadPiano()
+{
 }
