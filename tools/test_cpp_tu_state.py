@@ -112,6 +112,7 @@ class CppTuStateTests(unittest.TestCase):
             {"src/Together.cpp": ["One", "Two"]},
         )
         self.assertEqual(report["tu_reconstruction"]["production_promoted_entries"], 1)
+        self.assertEqual(report["tu_reconstruction"]["production_partitioned_entries"], 0)
         self.assertEqual(report["semantic_language_mode"]["mangled_symbol_files"], 2)
         self.assertEqual(report["semantic_language_mode"]["unmigrated"], 1)
         self.assertEqual(report["semantic_language_mode"]["genuinely_migrated"], 1)
@@ -122,6 +123,41 @@ class CppTuStateTests(unittest.TestCase):
         self.assertEqual(report["converted_tier"]["source_files"], 3)
         self.assertEqual(report["converted_tier"]["percent"], 50.0)
         self.assertEqual(report["production_tu_compatibility"]["blockers"], ["rombuild"])
+
+    def test_collect_reports_configured_canonical_partitioned_tu(self):
+        temp, repo = self.fixture()
+        self.addCleanup(temp.cleanup)
+        source = repo / "src" / "Partitioned.cpp"
+        source.write_text("//cpp\nint Partitioned() { return 1; }\n", encoding="utf-8")
+        manifest = repo / "config" / "tu_manifest.d" / "ov002-Partitioned.json"
+        manifest.write_text(json.dumps({
+            "id": "ov002/Partitioned",
+            "module": "ov002",
+            "source": "src/Partitioned.cpp",
+            "promoted_source": "src/Partitioned.cpp",
+            "status": "text-verified",
+            "production_mode": "partitioned",
+            "partitioned_link": {"state": "partitioned-link-verified"},
+            "sections": [
+                {"name": ".text", "start": "0x2000", "end": "0x2010"},
+                {"name": ".data", "start": "0x3000", "end": "0x3010"},
+            ],
+            "functions": [{"symbol": "Partitioned"}],
+        }), encoding="utf-8")
+        registry = repo / "config" / "production-tus.json"
+        registry.write_text(json.dumps({
+            "schema_version": 1,
+            "partitioned_tus": ["ov002/Partitioned"],
+        }), encoding="utf-8")
+        subprocess.run(
+            ["git", "-C", str(repo), "add", str(source), str(manifest), str(registry)],
+            check=True)
+
+        report = STATE.collect(repo, **self.readers())
+        tu = report["tu_reconstruction"]
+        self.assertEqual(tu["production_partitioned_entries"], 1)
+        self.assertEqual(tu["production_partitioned_functions"], 1)
+        self.assertEqual(tu["partitioned_mismatch_entries"], [])
 
     def test_dirty_authority_inputs_are_refused_by_default(self):
         temp, repo = self.fixture()
