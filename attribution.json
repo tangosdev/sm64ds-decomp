@@ -933,6 +933,10 @@
     "src/game/actors/daObjRc_Dorifu_c.cpp#_ZN16daObjRc_Dorifu_cD1Ev": "tangosdev",
     "src/game/actors/daObjRc_Dorifu_c.cpp#_ZN16daObjRc_Dorifu_cD0Ev": "tangosdev",
     "src/game/actors/daObjRc_Dorifu_c.cpp#_ZN16daObjRc_Dorifu_c16CleanupResourcesEv": "andrewboudreau",
-    "src/game/actors/daObjRc_Dorifu_c.cpp#_ZN16daObjRc_Dorifu_c13InitResourcesEv": "andrewboudreau"
+    "src/game/actors/daObjRc_Dorifu_c.cpp#_ZN16daObjRc_Dorifu_c13InitResourcesEv": "andrewboudreau",
+    "src/game/actors/daObjKm1_Dorifu_c.cpp#_ZN17daObjKm1_Dorifu_cD1Ev": "andrewboudreau",
+    "src/game/actors/daObjKm1_Dorifu_c.cpp#_ZN17daObjKm1_Dorifu_cD0Ev": "andrewboudreau",
+    "src/game/actors/daObjKm1_Dorifu_c.cpp#_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv": "lunavyqo",
+    "src/game/actors/daObjKm1_Dorifu_c.cpp#_ZN17daObjKm1_Dorifu_c13InitResourcesEv": "lunavyqo"
   }
 }
