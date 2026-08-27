@@ -26,6 +26,7 @@
     "ov002/Warp",
     "ov100/daObjPathLift_c",
     "ov002/BlueCoinSwitch",
-    "ov002/Exit"
+    "ov002/Exit",
+    "ov002/Platform"
   ]
 }
