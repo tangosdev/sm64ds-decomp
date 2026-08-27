@@ -690,7 +690,7 @@ Per `tubuild.py inspect` (authoritative over the census): **6 functions without
 `complete`**, of which **3 have no legacy source at all** — `func_ov063_021166ac`,
 `func_ov063_02117cdc`, `_ZN3Boo6RenderEv`/`_ZN3Boo8BehaviorEv`/`_ZN3Boo13InitResourcesEv`
 region. Boo has no legacy source anywhere and no directory of its own; the nearest
-named relatives are `src/actors/BigBoo` and `src/actors/BooCage`.
+named relatives are `src/game/actors/BigBoo` and `src/game/actors/BooCage`.
 3 members carry `opt_propagation off` / `opt_common_subs off` / `optimize_for_size on`.
 **Swallower: 97 functions, 69% of ov063**, carrying 4 class labels, **3 separate vtables**
 (`_ZTV3Boo`, `_ZTV7BooCage`, `_ZTV10BigBooIcon`) and 3 destructor pairs. 94 members is
@@ -835,7 +835,7 @@ p[0] = (int)_ZTV8Squasher + 8;     /* WRONG -- mwcc emits an extra ADD; the func
                                     * changes (999 word(s) differ) and the addend stays 0 */
 ```
 
-**The `+ 2` must be inside the cast.** `src_tu/actors/PoleLift.cpp` documents this in a
+**The `+ 2` must be inside the cast.** `src/game/actors/PoleLift.cpp` documents this in a
 17-line comment that predates this plan; roughly **88 of the 100 Tier-1 TUs** hand-store a
 vtable their own TU owns and will need the same edit. It is the most common reconcile step
 in the queue — a known step, not a blocker. *(An earlier revision of this section claimed

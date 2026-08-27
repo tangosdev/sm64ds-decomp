@@ -145,9 +145,9 @@ class SrcPath(unittest.TestCase):
         self.assertEqual(SP.new_path_for("func_0205c410", "c"), SP.SRC / "func_0205c410.c")
 
     def test_unnamed_ignores_a_hand_placed_subsystem_directory(self):
-        """src/engine/message/ holds two arm9 func_* by deliberate choice. That must not
+        """src/ui/messages/ holds two arm9 func_* by deliberate choice. That must not
         drag every future arm9 function in after them."""
-        self.write("engine/message/func_0201cb2c.c")
+        self.write("ui/messages/func_0201cb2c.c")
         self.assertEqual(SP.new_path_for("func_02012345", "c"), SP.SRC / "func_02012345.c")
 
     def test_a_class_follows_its_siblings(self):

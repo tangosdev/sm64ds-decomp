@@ -11,7 +11,8 @@ own "WHAT IT DOES NOT CHECK" section names the other half:
     renaming anything.
 
 That is not hypothetical, it is what happened. #1583 retyped three `dActor_c` virtuals
-from `int` to `void` and swept only `src/`. `src_tu/actors/Actor.cpp` still declared them
+from `int` to `void` and swept only `src/`. The then-shadow TU now promoted at
+`src/game/actors/Actor.cpp` still declared them
 `int`, so it stopped compiling -- and NOTHING WENT RED, for the same reason #1643's
 rename went unnoticed: an unbuildable source file is not a failing file, it is an ABSENT
 one. It produces no object, so it produces no mismatch, and `rombuild.py` went on
