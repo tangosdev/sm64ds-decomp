@@ -161,10 +161,21 @@ def _partitioned_production():
         raise RuntimeError(f"unreadable production TU registry: {exc}") from exc
     if registry.get("schema_version") != 1:
         raise RuntimeError("production TU registry needs schema_version 1")
-    ids = registry.get("partitioned_tus")
-    if not isinstance(ids, list) or any(not isinstance(row, str) or not row
-                                        for row in ids):
-        raise RuntimeError("production TU registry needs non-empty string ids")
+    configured = []
+    modes = {
+        "partitioned_tus": ("partitioned", "partitioned_link",
+                            "partitioned-link-verified"),
+        "derived_text_tus": ("derived-text", "partial_isolation",
+                             "partial-link-verified"),
+    }
+    for key, mode_state in modes.items():
+        rows = registry.get(key, [])
+        if not isinstance(rows, list) or any(not isinstance(row, str) or not row
+                                             for row in rows):
+            raise RuntimeError(
+                f"production TU registry needs a {key} list of non-empty ids")
+        configured.extend((tu_id, *mode_state) for tu_id in rows)
+    ids = [row[0] for row in configured]
     if len(ids) != len(set(ids)):
         raise RuntimeError("production TU registry contains duplicate ids")
 
@@ -185,15 +196,15 @@ def _partitioned_production():
 
     entries, by_symbol, legacy_by_symbol = [], {}, {}
     legacy_sources, sources = set(), set()
-    for tu_id in ids:
+    for tu_id, expected_mode, state_block, expected_state in configured:
         entry = manifests.get(tu_id)
         if entry is None:
             raise RuntimeError(f"production TU {tu_id!r} has no manifest")
-        state = (entry.get("partitioned_link") or {}).get("state")
-        if entry.get("production_mode") != "partitioned" \
-                or state != "partitioned-link-verified":
+        state = (entry.get(state_block) or {}).get("state")
+        if entry.get("production_mode") != expected_mode \
+                or state != expected_state:
             raise RuntimeError(
-                f"production TU {tu_id!r} is not partitioned-link-verified")
+                f"production TU {tu_id!r} is not {expected_state}")
         source = entry.get("source")
         if source != entry.get("promoted_source") \
                 or not isinstance(source, str) or not source.startswith("src/") \
@@ -240,19 +251,26 @@ def _partitioned_production():
     return _partitioned_production_cache
 
 
-def partitioned_legacy_path_for(symbol):
+def production_legacy_path_for(symbol):
     """Comparison-oracle path for a compiler-emitted production member, if any."""
     return _partitioned_production()["legacy_by_symbol"].get(symbol)
 
 
-def partitioned_legacy_sources():
+def production_legacy_sources():
     """Repo-relative one-function sources retained only as partitioning oracles."""
     return set(_partitioned_production()["legacy_sources"])
 
 
-def partitioned_production_sources():
+def production_tu_sources():
     """Repo-relative canonical sources enabled in the default partitioned build."""
     return set(_partitioned_production()["sources"])
+
+
+# Compatibility names for callers introduced with the first non-text partitioned
+# production slice. Their result now includes both production modes.
+partitioned_legacy_path_for = production_legacy_path_for
+partitioned_legacy_sources = production_legacy_sources
+partitioned_production_sources = production_tu_sources
 
 
 # One delinks entry opens with an unindented `<path>:` and owns the indented

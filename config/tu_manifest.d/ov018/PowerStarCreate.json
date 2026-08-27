@@ -1,8 +1,8 @@
 {
   "id": "ov018/PowerStarCreate",
   "module": "ov018",
-  "source": "src_tu/actors/PowerStarCreate.cpp",
-  "promoted_source": "src/actors/PowerStarCreate.cpp",
+  "source": "src/game/actors/PowerStarCreate.cpp",
+  "promoted_source": "src/game/actors/PowerStarCreate.cpp",
   "status": "text-verified",
   "boundary_confidence": "high",
   "boundary_evidence": [
@@ -191,5 +191,6 @@
       "matchesStockRom": true
     },
     "scratch": "build/tu/ov018-PowerStarCreate/link-partial (gitignored)"
-  }
+  },
+  "production_mode": "derived-text"
 }

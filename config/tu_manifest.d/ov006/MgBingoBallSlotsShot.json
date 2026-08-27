@@ -1,9 +1,10 @@
 {
   "id": "ov006/MgBingoBallSlotsShot",
   "module": "ov006",
-  "source": "src_tu/actors/MgBingoBallSlotsShot.cpp",
-  "promoted_source": "src/actors/MgBingoBallSlotsShot.cpp",
+  "source": "src/minigames/MgBingoBallSlotsShot.cpp",
+  "promoted_source": "src/minigames/MgBingoBallSlotsShot.cpp",
   "status": "text-verified",
+  "production_mode": "derived-text",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x02119824..0x02119904, 2 function(s), from config/arm9/overlays/ov006/delinks.txt and symbols.txt (hand-built manifest entry -- NOT re-derivable from a fresh build/tu_map.json run)",
@@ -58,5 +59,53 @@
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
     }
+  },
+  "partial_isolation": {
+    "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+    "delinksChanged": false,
+    "derivedObjects": 2,
+    "contributionEquivalent": "2/2",
+    "comparedFields": [
+      "keptSection",
+      "keptBytes",
+      "relocs",
+      "defined",
+      "mapping",
+      "live",
+      "undefReferenced"
+    ],
+    "substitutedObjectPaths": [
+      "src/minigames/MgBingoBallSlotsShot/MgBingoBallSlotsShot_Spawn.cpp",
+      "src/unnamed/ov006/0211/func_ov006_02119900.c"
+    ],
+    "extraInertImports": 8,
+    "extraImportsWithNoHome": [],
+    "result": "partial-link-verified",
+    "phases": {
+      "delink": true,
+      "lcf": true,
+      "compile": true,
+      "link": true,
+      "checkModules": true,
+      "checkSymbols": false,
+      "rom": true
+    },
+    "tuRange": {
+      "start": "0x02119824",
+      "end": "0x02119904",
+      "differingBytes": 0,
+      "firstDiff": null
+    },
+    "moduleFidelityPassed": true,
+    "symbolCheckNewVsBaseline": [],
+    "rom": {
+      "bytes": 16777216,
+      "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+      "matchesStockRom": true
+    },
+    "scratch": "build/tu/ov006-MgBingoBallSlotsShot/link-partial (gitignored)",
+    "state": "partial-link-verified",
+    "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
+    "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
   }
 }

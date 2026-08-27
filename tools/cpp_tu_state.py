@@ -49,21 +49,35 @@ class StateError(RuntimeError):
     pass
 
 
-def configured_partitioned_tus(repo: pathlib.Path) -> list[str]:
-    """Manifest ids enabled by the default production ROM build."""
+def configured_production_tus(repo: pathlib.Path) -> dict[str, list[str]]:
+    """Manifest ids enabled by each default production ROM-build mode."""
     path = repo / "config" / "production-tus.json"
     if not path.is_file():
-        return []
+        return {"partitioned_tus": [], "derived_text_tus": []}
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise StateError(f"{path} is unreadable: {exc}") from exc
-    rows = data.get("partitioned_tus") if data.get("schema_version") == 1 else None
-    if (not isinstance(rows, list)
-            or any(not isinstance(row, str) or not row for row in rows)
-            or len(rows) != len(set(rows))):
-        raise StateError(f"{path} has an invalid partitioned_tus registry")
-    return rows
+    if data.get("schema_version") != 1:
+        raise StateError(f"{path} has an invalid schema_version")
+    out = {}
+    all_ids = []
+    for key in ("partitioned_tus", "derived_text_tus"):
+        rows = data.get(key, [])
+        if (not isinstance(rows, list)
+                or any(not isinstance(row, str) or not row for row in rows)
+                or len(rows) != len(set(rows))):
+            raise StateError(f"{path} has an invalid {key} registry")
+        out[key] = rows
+        all_ids.extend(rows)
+    if len(all_ids) != len(set(all_ids)):
+        raise StateError(f"{path} configures one TU in more than one mode")
+    return out
+
+
+def configured_partitioned_tus(repo: pathlib.Path) -> list[str]:
+    """Compatibility view for the first production mode."""
+    return configured_production_tus(repo)["partitioned_tus"]
 
 
 def dirty_authority_inputs(repo: pathlib.Path) -> list[str]:
@@ -285,9 +299,13 @@ def collect(repo: pathlib.Path = REPO, *, progress_reader=None,
     shadow_present = 0
     production_promoted = 0
     promotion_mismatch = []
-    configured_partitioned = set(configured_partitioned_tus(repo))
+    configured = configured_production_tus(repo)
+    configured_partitioned = set(configured["partitioned_tus"])
+    configured_derived = set(configured["derived_text_tus"])
     production_partitioned = 0
     production_partitioned_functions = 0
+    production_derived = 0
+    production_derived_functions = 0
     partitioned_mismatch = []
     seen_entries = set()
     non_text_entries = 0
@@ -320,6 +338,19 @@ def collect(repo: pathlib.Path = REPO, *, progress_reader=None,
             else:
                 partitioned_mismatch.append(entry_id)
 
+        if entry_id in configured_derived:
+            derived_state = (entry.get("partial_isolation") or {}).get("state")
+            canonical = entry.get("source")
+            if (entry.get("production_mode") == "derived-text"
+                    and derived_state == "partial-link-verified"
+                    and canonical == entry.get("promoted_source")
+                    and canonical in tracked_set
+                    and all(section.get("name") == ".text" for section in sections)):
+                production_derived += 1
+                production_derived_functions += len(symbols)
+            else:
+                partitioned_mismatch.append(entry_id)
+
         promoted = entry.get("promoted_source")
         if entry.get("status") != "promoted" or not promoted or promoted not in tracked_set:
             continue
@@ -329,6 +360,7 @@ def collect(repo: pathlib.Path = REPO, *, progress_reader=None,
         else:
             promotion_mismatch.append(entry_id)
     partitioned_mismatch.extend(sorted(configured_partitioned - seen_entries))
+    partitioned_mismatch.extend(sorted(configured_derived - seen_entries))
 
     production_counts = _suffix_counts(production_tracked)
     production_counts["cpp_marker_missing"] = len(marker_missing)
@@ -383,6 +415,8 @@ def collect(repo: pathlib.Path = REPO, *, progress_reader=None,
             "promotion_mismatch_entries": sorted(promotion_mismatch),
             "production_partitioned_entries": production_partitioned,
             "production_partitioned_functions": production_partitioned_functions,
+            "production_derived_text_entries": production_derived,
+            "production_derived_text_functions": production_derived_functions,
             "partitioned_mismatch_entries": sorted(partitioned_mismatch),
         },
         "commands": {
@@ -504,7 +538,9 @@ def render_markdown(report: dict) -> str:
             ("Existing promotion paths that disagree with delinks", len(tu["promotion_mismatch_entries"])),
             ("Default partitioned production TUs", tu["production_partitioned_entries"]),
             ("Functions supplied by partitioned production TUs", tu["production_partitioned_functions"]),
-            ("Invalid configured partitioned production entries", len(tu["partitioned_mismatch_entries"])),
+            ("Default derived-text production TUs", tu["production_derived_text_entries"]),
+            ("Functions supplied by derived-text production TUs", tu["production_derived_text_functions"]),
+            ("Invalid configured production entries", len(tu["partitioned_mismatch_entries"])),
         ]),
         "",
         f"Manifest statuses: {status or '(none)'}.",
@@ -513,8 +549,10 @@ def render_markdown(report: dict) -> str:
         "not enroll a TU by itself. Direct",
         "promotion is counted only when every manifest function is owned by the tracked",
         "`promoted_source` in live delinks. `config/production-tus.json` is the separate",
-        "fail-closed authority for default partitioned production: those canonical TUs compile",
-        "once and supply exact derived text plus licensed compiler-emitted non-text output.",
+        "fail-closed authority for default TU production. Partitioned TUs compile once",
+        "and supply exact derived text plus licensed compiler-emitted non-text output;",
+        "derived-text TUs compile once and supply only their exact manifest functions while",
+        "their explicitly inventoried extra compiler output remains unowned.",
         "",
         "## Production TU compatibility",
         "",

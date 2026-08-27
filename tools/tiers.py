@@ -271,7 +271,7 @@ def converted(src_root=None):
     passes_hist = {}
     readable = core = 0
     ownership = srcpath.source_definition_index()
-    comparison_only = srcpath.partitioned_legacy_sources()
+    comparison_only = srcpath.production_legacy_sources()
     repo_root = srcpath.REPO.absolute()
 
     source_readable = scored_sources = 0

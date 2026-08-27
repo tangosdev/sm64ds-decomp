@@ -17,8 +17,10 @@ class ProductionTuAdmission(unittest.TestCase):
             path.write_text(json.dumps({
                 "schema_version": 1,
                 "partitioned_tus": ["ov002/A", "ov047/B"],
+                "derived_text_tus": ["ov006/C"],
             }), encoding="utf-8")
-            self.assertEqual(TP.configured_ids(path), ["ov002/A", "ov047/B"])
+            self.assertEqual(TP.configured_ids(path),
+                             ["ov002/A", "ov047/B", "ov006/C"])
             path.write_text(json.dumps({
                 "schema_version": 1,
                 "partitioned_tus": ["ov002/A", "ov002/A"],
@@ -37,6 +39,14 @@ class ProductionTuAdmission(unittest.TestCase):
                                     "partitioned-link-verified"):
             TP._entry(data, "ov002/Thing")
 
+    def test_derived_text_entry_requires_partial_link_verified(self):
+        data = {"entries": [{"id": "ov006/Thing",
+                              "production_mode": "derived-text",
+                              "partial_isolation": {"state": "attempted"}}]}
+        with self.assertRaisesRegex(TP.ProductionTuError,
+                                    "partial-link-verified"):
+            TP._entry(data, "ov006/Thing")
+
     def test_missing_content_bound_baseline_refuses(self):
         with tempfile.TemporaryDirectory() as td, \
                 mock.patch.object(TP.TB, "BASELINE_LINK", pathlib.Path(td)):
@@ -46,6 +56,45 @@ class ProductionTuAdmission(unittest.TestCase):
 
 
 class ProductionTuObjects(unittest.TestCase):
+    def test_derived_text_discarded_output_is_exactly_inventory_bound(self):
+        entry = {
+            "functions": [{"symbol": "Owned"}],
+            "unlicensed_output_observed": {
+                "text": [{"symbol": "CompilerOnly", "size": "0x4",
+                          "binding": "STB_GLOBAL"}],
+                "data": [{"symbol": "_ZTI4Thing", "size": "0xc",
+                          "binding": "STB_LOPROC"}],
+            },
+        }
+        inventory = {
+            "sections": [{"index": 7, "name": ".data"}],
+            "symbols": [],
+        }
+        unlicensed = (
+            [{"name": "CompilerOnly", "size": 4, "bind": "STB_GLOBAL",
+              "shndx": 3}],
+            [{"name": "_ZTI4Thing", "size": 12, "bind": "STB_LOPROC",
+              "shndx": 7}],
+            [],
+        )
+        with mock.patch.object(TP.TB, "elf_inventory", return_value=inventory), \
+                mock.patch.object(TP.TB, "unlicensed_inventory",
+                                  return_value=unlicensed):
+            result = TP._derived_text_output_audit(entry, b"object")
+        self.assertTrue(result["ok"])
+
+    def test_derived_text_discarded_output_refuses_drift(self):
+        inventory = {"sections": [], "symbols": []}
+        unlicensed = ([{"name": "NewOutput", "size": 4,
+                        "bind": "STB_GLOBAL", "shndx": 3}], [], [])
+        with mock.patch.object(TP.TB, "elf_inventory", return_value=inventory), \
+                mock.patch.object(TP.TB, "unlicensed_inventory",
+                                  return_value=unlicensed):
+            result = TP._derived_text_output_audit(
+                {"functions": [], "unlicensed_output_observed": {}}, b"object")
+        self.assertFalse(result["ok"])
+        self.assertIn("new discarded output", result["errors"][0])
+
     def test_compile_one_installs_prepared_object_without_compiler(self):
         with tempfile.TemporaryDirectory() as td:
             root = pathlib.Path(td)
