@@ -1,8 +1,8 @@
 {
   "id": "ov002/Platform",
   "module": "ov002",
-  "source": "src_tu/actors/Platform.cpp",
-  "promoted_source": "src/actors/Platform.cpp",
+  "source": "src/game/actors/Platform.cpp",
+  "promoted_source": "src/game/actors/Platform.cpp",
   "status": "text-verified",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -37,7 +37,7 @@
       "symbol": "_ZN10dBgActor_c14KillByMegaCharER6Player",
       "address": "0x020ee4b0",
       "size": "0x000000ac",
-      "legacy_source": "src/_ZN10dBgActor_c14KillByMegaCharER6Player.c",
+      "legacy_source": "src/game/actors/dBgActor_c/_ZN10dBgActor_c14KillByMegaCharER6Player.cpp",
       "ordinal": 2
     },
     {
@@ -93,7 +93,7 @@
       "symbol": "_ZN10dBgActor_cC2Ev",
       "address": "0x020eea50",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN10dBgActor_cC2Ev.c",
+      "legacy_source": "src/game/actors/dBgActor_c/_ZN10dBgActor_cC2Ev.cpp",
       "ordinal": 10
     }
   ],
@@ -153,7 +153,7 @@
     "substitutedObjectPaths": [
       "src/game/actors/dBgActor_c/_ZN10dBgActor_cD1Ev.cpp",
       "src/game/actors/dBgActor_c/_ZN10dBgActor_cD0Ev.cpp",
-      "src/_ZN10dBgActor_c14KillByMegaCharER6Player.c",
+      "src/game/actors/dBgActor_c/_ZN10dBgActor_c14KillByMegaCharER6Player.cpp",
       "src/game/actors/dBgActor_c/_ZN10dBgActor_c4KillEv.cpp",
       "src/unnamed/ov002/020e/func_ov002_020ee5d0.c",
       "src/game/actors/dBgActor_c/_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE.cpp",
@@ -161,7 +161,7 @@
       "src/game/actors/dBgActor_c/_ZN10dBgActor_c21UpdateModelPosAndRotYEv.cpp",
       "src/game/actors/dBgActor_c/_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_.cpp",
       "src/game/actors/dBgActor_c/_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_.cpp",
-      "src/_ZN10dBgActor_cC2Ev.c"
+      "src/game/actors/dBgActor_c/_ZN10dBgActor_cC2Ev.cpp"
     ],
     "result": "partial-link-verified",
     "phases": {
@@ -186,5 +186,69 @@
       "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
     },
     "scratch": "build/tu/ov002-Platform/link-partial (gitignored)"
+  },
+  "production_mode": "derived-text",
+  "unlicensed_output_observed": {
+    "note": "Pinned-compiler inventory stamped by tools/promote_derived_tus.py --stamp-discarded-output before default production admission. These definitions are not ROM ownership claims; every build requires an exact inventory match, exact derived text contributions, exact modules, and an exact ROM.",
+    "toolchain": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "text": [
+      {
+        "symbol": "_ZN7Vector3D1Ev",
+        "size": "0x4",
+        "binding": "STB_LOPROC"
+      }
+    ],
+    "data": [
+      {
+        "symbol": "_ZTI10dBgActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "size": "0x8",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS10dBgActor_c",
+        "size": "0xd",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "size": "0xa",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTV10dBgActor_c",
+        "size": "0x88",
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "bss": [],
+    "init": [],
+    "rodata": [],
+    "ctor": []
   }
 }

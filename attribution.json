@@ -8,6 +8,8 @@
     "mitch.cairns": "mitchellcairns"
   },
   "overrides": {
+    "src/_ZN10dBgActor_c14KillByMegaCharER6Player.c": "tangosdev",
+    "src/game/actors/dBgActor_c/_ZN10dBgActor_c14KillByMegaCharER6Player.cpp": "tangosdev",
     "src/game/actors/ActorBase_SceneNode.cpp#_ZN7fBase_c9SceneNode5ResetEv": "tangosdev",
     "src/game/actors/ActorBase_SceneNode.cpp#_ZN7fBase_c9SceneNodeC1Ev": "tangosdev",
     "src/_ZN14KnockDownPlank8BehaviorEv.c": "lunavyqo",
@@ -828,6 +830,17 @@
     "src/game/actors/Exit.cpp#_ZN4Exit6RenderEv": "tangosdev",
     "src/game/actors/Exit.cpp#_ZN4Exit8BehaviorEv": "andrewboudreau",
     "src/game/actors/Exit.cpp#_ZN4Exit13InitResourcesEv": "andrewboudreau",
-    "src/game/actors/Exit.cpp#Exit_Spawn": "tangosdev"
+    "src/game/actors/Exit.cpp#Exit_Spawn": "tangosdev",
+    "src/game/actors/Platform.cpp#_ZN10dBgActor_cD1Ev": "tangosdev",
+    "src/game/actors/Platform.cpp#_ZN10dBgActor_cD0Ev": "tangosdev",
+    "src/game/actors/Platform.cpp#_ZN10dBgActor_c14KillByMegaCharER6Player": "tangosdev",
+    "src/game/actors/Platform.cpp#_ZN10dBgActor_c4KillEv": "tangosdev",
+    "src/game/actors/Platform.cpp#func_ov002_020ee5d0": "tangosdev",
+    "src/game/actors/Platform.cpp#_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE": "ruspecial",
+    "src/game/actors/Platform.cpp#_ZN10dBgActor_c19UpdateClsnPosAndRotEv": "tangosdev",
+    "src/game/actors/Platform.cpp#_ZN10dBgActor_c21UpdateModelPosAndRotYEv": "tangosdev",
+    "src/game/actors/Platform.cpp#_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_": "tangosdev",
+    "src/game/actors/Platform.cpp#_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_": "tangosdev",
+    "src/game/actors/Platform.cpp#_ZN10dBgActor_cC2Ev": "tangosdev"
   }
 }
