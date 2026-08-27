@@ -57,6 +57,9 @@
     "ov029/SwitchActivatedPlank",
     "ov047/RickshawPlatformBs",
     "ov019/IceSlideManager",
-    "ov014/ShutterBob"
+    "ov014/ShutterBob",
+    "ov009/Flag",
+    "ov009/CastleWater",
+    "ov009/MetalNet"
   ]
 }
