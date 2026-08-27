@@ -6632,7 +6632,14 @@ list(APPEND SLICE10_CAM_SOURCES
 # gate-10 rows filtered out above.
 #
 # slice_comms.txt is the ROM's four-player fan-out, linked but not yet driven.
-set(SLICE_COMMS_SOURCES hal/comms_seam.cpp hal/os_thread.cpp)
+# run mg16 lane MP2: hal/comms_loopback.cpp is the first REAL transport written
+# against the seam's contract -- UDP on 127.0.0.1, two copies of the game on one
+# machine as DS parent and child. hal/comms_lockstep.cpp drives the eight faces
+# in src/func_0203ea5c.c's own order, because that TU is still in no slice and
+# an invented order would prove nothing about the contract. BOTH ARE INERT
+# WITHOUT SM64DS_COMMS_ROLE: nothing installs, and the seam answers solo.
+set(SLICE_COMMS_SOURCES hal/comms_seam.cpp hal/os_thread.cpp
+                        hal/comms_loopback.cpp hal/comms_lockstep.cpp)
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_comms.txt" SLICE_COMMS_LINES)
 foreach(line IN LISTS SLICE_COMMS_LINES)
     string(STRIP "${line}" line)
