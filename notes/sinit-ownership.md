@@ -36,6 +36,16 @@ referenced while copying aggregate data are recorded, but cannot establish an
 owner. If the source does not expose a directional target, the report falls back
 to all referenced globals and caps that inference at `medium`.
 
+`ownership_globals` lists every directional target. `mapped_ownership_globals`
+lists the subset with a recovered source consumer that maps to a candidate TU,
+while `unconsumed_ownership_globals` lists targets with no recovered source
+consumer. A `high` row means the observed consumer edges agree on one TU; it does
+not claim that every directional target already has a recovered consumer.
+`consumer_coverage` is `full`, `partial`, or `none` by that direct-source measure.
+Use full-coverage rows as the first bulk-audit queue. For partial rows, invert ROM
+relocations through intermediate data tables before treating the unconsumed
+targets as owned; the source scan intentionally does not guess those indirections.
+
 Constructor/destructor class names, an optional asset-layout report, and module
 ordering provide independent evidence. The classifications mean:
 

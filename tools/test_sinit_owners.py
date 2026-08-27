@@ -95,6 +95,30 @@ class SinitOwnersTests(unittest.TestCase):
             ["data_copy", "data_object"],
         )
 
+    def test_consumer_coverage_does_not_count_unconsumed_globals_as_mapped(self):
+        mapped, unconsumed = SO.consumer_coverage(
+            {
+                "data_mapped": ["src/Owner.cpp"],
+                "data_unmapped": ["src/Unknown.cpp"],
+                "data_unused": [],
+            },
+            {
+                "data_mapped": ["ov001:2"],
+                "data_unmapped": [],
+                "data_unused": [],
+            },
+        )
+        self.assertEqual(mapped, ["data_mapped"])
+        self.assertEqual(unconsumed, ["data_unused"])
+        ownership_globals = ["data_mapped", "data_unused"]
+        self.assertEqual(
+            SO.coverage_status(ownership_globals, ["data_mapped"]), "partial"
+        )
+        self.assertEqual(
+            SO.coverage_status(ownership_globals, ownership_globals), "full"
+        )
+        self.assertEqual(SO.coverage_status(ownership_globals, []), "none")
+
 
 if __name__ == "__main__":
     unittest.main()

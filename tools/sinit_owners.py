@@ -393,6 +393,26 @@ def choose_classification(*, proven_owner: str, curated_owner: str,
     return "count-only", ""
 
 
+def consumer_coverage(global_sources: dict[str, list[str]],
+                      consumer_units_by_global: dict[str, list[str]]) -> tuple[list[str], list[str]]:
+    """Return ownership globals with mapped TU consumers and with no consumers at all."""
+    mapped = sorted(
+        name for name, units in consumer_units_by_global.items() if units
+    )
+    unconsumed = sorted(
+        name for name, paths in global_sources.items() if not paths
+    )
+    return mapped, unconsumed
+
+
+def coverage_status(ownership_globals: list[str], mapped_globals: list[str]) -> str:
+    if not mapped_globals:
+        return "none"
+    if len(mapped_globals) == len(ownership_globals):
+        return "full"
+    return "partial"
+
+
 def analyse(initializers: list[dict], tu_modules: dict, tu_by_symbol: dict,
             tu_by_id: dict, manifests: dict, assets: dict,
             repo: pathlib.Path = REPO) -> list[dict]:
@@ -416,12 +436,15 @@ def analyse(initializers: list[dict], tu_modules: dict, tu_by_symbol: dict,
             name: sorted(consumers.get(name, set())) for name in ownership_globals
         }
         consumer_units = set()
+        consumer_units_by_global = {}
         unmapped_consumer_sources = set()
         external_consumer_sources = set()
-        for paths in global_sources.values():
+        for name, paths in global_sources.items():
+            units_for_global = set()
             for path in paths:
                 local_units = source_unit(path, module, tu_by_symbol, ownership)
                 if local_units:
+                    units_for_global.update(local_units)
                     consumer_units.update(local_units)
                     continue
                 symbols = ownership.get(path) or [pathlib.PurePosixPath(path).stem]
@@ -433,6 +456,11 @@ def analyse(initializers: list[dict], tu_modules: dict, tu_by_symbol: dict,
                     external_consumer_sources.add(path)
                 else:
                     unmapped_consumer_sources.add(path)
+            consumer_units_by_global[name] = sorted(units_for_global)
+
+        mapped_ownership_globals, unconsumed_ownership_globals = consumer_coverage(
+            global_sources, consumer_units_by_global
+        )
 
         referenced_classes = sorted({
             cls for symbol in row["constructors"] + row["destructors"]
@@ -477,8 +505,14 @@ def analyse(initializers: list[dict], tu_modules: dict, tu_by_symbol: dict,
             evidence.append(f"curated by {curated['manifest']}: {detail}")
         if consumer_units:
             evidence.append(
-                f"{len(ownership_globals)} ownership global(s) map through consumers to "
+                f"{len(mapped_ownership_globals)} of {len(ownership_globals)} ownership "
+                "global(s) map through consumers to "
                 + ", ".join(sorted(consumer_units))
+            )
+        if unconsumed_ownership_globals:
+            evidence.append(
+                f"{len(unconsumed_ownership_globals)} ownership global(s) have no "
+                "recovered source consumer"
             )
         if ownership_fallback and row["globals"]:
             evidence.append(
@@ -533,6 +567,12 @@ def analyse(initializers: list[dict], tu_modules: dict, tu_by_symbol: dict,
             "candidate": candidate,
             "candidate_display": candidate_unit["display"] if candidate_unit else candidate,
             "consumer_units": sorted(consumer_units),
+            "consumer_units_by_global": consumer_units_by_global,
+            "mapped_ownership_globals": mapped_ownership_globals,
+            "unconsumed_ownership_globals": unconsumed_ownership_globals,
+            "consumer_coverage": coverage_status(
+                ownership_globals, mapped_ownership_globals
+            ),
             "type_units": sorted(type_units),
             "referenced_classes": referenced_classes,
             "order_candidate": order_id,
@@ -592,10 +632,16 @@ def validate_rows(rows: list[dict]) -> None:
 def write_json(path: pathlib.Path, rows: list[dict], tu_map: pathlib.Path) -> None:
     counts = collections.Counter(row["classification"] for row in rows)
     causes = collections.Counter(cause for row in rows for cause in row["causes"])
+    high_coverage = collections.Counter(
+        row["consumer_coverage"] for row in rows if row["classification"] == "high"
+    )
     payload = {
         "meta": {
             "initializers": len(rows),
             "classifications": {name: counts.get(name, 0) for name in CLASSIFICATIONS},
+            "high_consumer_coverage": {
+                name: high_coverage.get(name, 0) for name in ("full", "partial", "none")
+            },
             "causes": dict(sorted(causes.items())),
             "tu_map": repo_relative(tu_map) if tu_map.is_relative_to(REPO) else str(tu_map),
             "classification_contract": {
@@ -616,8 +662,10 @@ def write_tsv(path: pathlib.Path, rows: list[dict]) -> None:
     fields = (
         "module", "ordinal", "symbol", "address", "size", "source",
         "classification", "candidate", "candidate_display", "order_candidate",
+        "consumer_coverage",
         "causes", "globals", "constructors", "destructors", "registered_globals",
-        "ownership_globals", "asset_handles", "consumer_units", "referenced_classes",
+        "ownership_globals", "mapped_ownership_globals", "unconsumed_ownership_globals",
+        "asset_handles", "consumer_units", "referenced_classes",
         "evidence", "blockers",
     )
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -630,7 +678,8 @@ def write_tsv(path: pathlib.Path, rows: list[dict]) -> None:
             flat["address"] = f"0x{row['address']:08x}"
             flat["size"] = f"0x{row['size']:x}"
             for key in ("causes", "globals", "constructors", "destructors",
-                        "registered_globals", "ownership_globals", "asset_handles",
+                        "registered_globals", "ownership_globals", "mapped_ownership_globals",
+                        "unconsumed_ownership_globals", "asset_handles",
                         "consumer_units",
                         "referenced_classes", "evidence", "blockers"):
                 flat[key] = "; ".join(str(value) for value in row.get(key, []))
@@ -642,6 +691,12 @@ def print_report(rows: list[dict], show: str, limit: int) -> None:
     causes = collections.Counter(cause for row in rows for cause in row["causes"])
     print(f"sinit_owners: {len(rows)} initializer(s)")
     print("  " + "  ".join(f"{name}={counts.get(name, 0)}" for name in CLASSIFICATIONS))
+    high_coverage = collections.Counter(
+        row["consumer_coverage"] for row in rows if row["classification"] == "high"
+    )
+    print("  high consumer coverage: "
+          + "  ".join(f"{name}={high_coverage.get(name, 0)}"
+                       for name in ("full", "partial", "none")))
     print("  causes: " + "  ".join(f"{name}={count}"
                                     for name, count in sorted(causes.items())))
     if show == "none":
