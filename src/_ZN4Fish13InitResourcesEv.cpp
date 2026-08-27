@@ -17,7 +17,7 @@ int Fish::InitResources()
 {
   u8 v;
   _ZN9Animation8LoadFileER13SharedFilePtr(data_ov100_021489cc);
-  mModelIndex = (mParam >> 4) & 7;
+  mModelIndex = (param1 >> 4) & 7;
   v = mModelIndex;
   if (v > 2) {
     if (v < 6) mVariant = v - 2;
