@@ -636,7 +636,7 @@ src/_ZN4Clam13InitResourcesEv.cpp:
     complete
     .text start:0x0211acc4 end:0x0211ad70
 
-src/Clam_Spawn.c:
+src/Clam_Spawn.cpp:
     complete
     .text start:0x0211ad70 end:0x0211adb0
 
