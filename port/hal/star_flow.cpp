@@ -285,11 +285,19 @@ void port_boot_course_sound(int level)
    so this no longer seats it. Called once from the harness after the boot.
 
    ONCE PER SESSION IS CORRECT, AND THE ONE-SHOT IS NOT A RESPAWN BUG. Read the
-   relocs before "fixing" this: SetPlayerGlobals (0x0202acfc) has exactly three
-   callers in the whole game -- StartFile (0x0202ae88), PrepareVsMode and the
-   ov003 menu path func_ov003_020ad814 -- and none of them is a level entry. It
-   is the NEW FILE seat: lives to 4, health to 0x880 for all four players. This
+   relocs before "fixing" this: SetPlayerGlobals (0x0202acfc) has three callers
+   in the ROM -- StartFile (0x0202ae88), PrepareVsMode and the ov003
+   title-confirm path func_ov003_020ad814 -- plus two the port adds, this one
+   and hal/level_change.cpp:1415 (the port's copy of that ov003 path). It is
+   the NEW FILE seat: lives to 4, health to 0x880 for all four players. This
    call stands in for StartFile's, so it belongs exactly where it is.
+
+   Two of the ROM's three DO enter a level -- StartFile and func_ov003_020ad814
+   both call LoadLevelNoReturn immediately before it, so do not repeat the
+   earlier claim here that "none is a level entry". The distinction that
+   matters is narrower and is the whole reason this stays a one-shot: none of
+   them is on the PER-ENTRY OR RESPAWN path. They run when a file is started,
+   never when a running file re-enters a level.
 
    Re-running it per entry would be WORSE than the bug it looks like it causes:
    it would restore lives to 4 on every respawn, so HitDeathPlane's

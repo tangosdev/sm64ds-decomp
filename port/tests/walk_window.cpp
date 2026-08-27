@@ -1171,6 +1171,7 @@ extern "C" unsigned char data_0209f2fc[]; /* the LATCHED entry reason, the copy
                                              Stage::InitResources:201 makes and
                                              the boot now seats */
 extern "C" signed char data_0209f2f4[];  /* remaining lives */
+extern "C" unsigned char NumStars(void); /* the save's star total */
 
 /* ---- THE EXIT PROBE: the painting warp, reproducible without a keyboard ----
    Two players walked into the Snowman's Land painting on castle_2f and the
@@ -8387,6 +8388,39 @@ int main(void)
                     if (frame == cp_frame) {
                         port_star_collect(0);
                         cp_done = 1;
+                    }
+                } else if (!strcmp(cp_what, "starbox")) {
+                    /* THE MILESTONE-STAR BOX, driven organically.
+                       port_star_collect ends in ExitLevel -> SetNextLevel(1),
+                       so the hub is re-entered with reason 1. Once the boot
+                       latches that reason into data_0209f2fc, the level-enter
+                       step func_ov002_020c71e0:21 can take its
+                       `data_0209f2fc[0] == 1` branch for the first time and
+                       call func_ov002_020c6e14, the 1st/3rd/8th/12th/30th/50th
+                       /80th-star message. Every callee is linked, but nothing
+                       had ever reached it, because the gate always read 0.
+
+                       Observed through data_0209d660, the message-active flag,
+                       rather than by instrumenting game code. Never sets
+                       cp_done: the point is what happens AFTER the exit. */
+                    static int sb_fired = -1;
+                    if (frame == cp_frame)
+                        port_star_collect(0);
+                    if (frame > cp_frame) {
+                        if (sb_fired < 0 && data_0209d660 != 0) {
+                            sb_fired = frame;
+                            fprintf(stderr, "[starbox] MESSAGE BOX OPEN at "
+                                    "frame %d: stars=%d entry-reason=%d "
+                                    "level=%d\n", frame, (int)NumStars(),
+                                    (int)data_0209f2fc[0], (int)data_0209f2f8);
+                        }
+                        if (frame % 60 == 0)
+                            fprintf(stderr, "[starbox] f%d level=%d stars=%d "
+                                    "entry-reason=%d msg-active=%d "
+                                    "(box-opened-at=%d)\n", frame,
+                                    (int)data_0209f2f8, (int)NumStars(),
+                                    (int)data_0209f2fc[0],
+                                    (int)data_0209d660, sb_fired);
                     }
                 } else if (!strcmp(cp_what, "kuppa")) {
                     /* STAR1 repro: launch the REAL star-get camera kuppa script

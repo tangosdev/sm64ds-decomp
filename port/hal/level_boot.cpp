@@ -2820,15 +2820,60 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
        :117). So health restore and life loss are the same seat, and this is it.
 
        NOT SetPlayerGlobals. That function seats lives to 4 and health to 0x880
-       for all four players and has exactly three callers game-wide -- StartFile,
-       PrepareVsMode and an ov003 menu path -- none of them a level entry. It is
-       the NEW FILE seat, which is why hal/star_flow.cpp's port_course_seat is
-       correctly a once-per-session one-shot. Running it per entry would restore
-       lives to 4 on every respawn and make game over unreachable a second way.
+       for all four players. In the ROM it has three callers -- StartFile,
+       PrepareVsMode and the ov003 title-confirm path func_ov003_020ad814 --
+       and the port adds two more, hal/star_flow.cpp:152 (inside
+       seat_player_globals, which is port_course_seat's whole body) and
+       hal/level_change.cpp:1415 (the port's copy of that same ov003 path).
 
-       Unconditional, as the ROM's is: the A1 geometry regression has no HUD and
-       no Player, so nothing there reads it either way. Listed as missing, with
-       its live readers named, in port/stage_lifecycle_map.txt:258. */
+       Be precise about what those callers are, because an earlier version of
+       this note said "none of them a level entry" and that is wrong: StartFile
+       and func_ov003_020ad814 both call LoadLevelNoReturn immediately before
+       SetPlayerGlobals, so they ARE first-entry paths. (PrepareVsMode is not
+       one at all -- it is VS setup and loads no level.) What is true, and is
+       the only thing this seat needs, is that NONE OF THEM IS ON THE PER-ENTRY
+       OR RESPAWN PATH: they run when a file is started or a mode is prepared,
+       never when an already-running file re-enters a level. That is why
+       port_course_seat is correctly a once-per-session one-shot, and why
+       running it per entry would restore lives to 4 on every respawn and make
+       game over unreachable a second way.
+
+       WHY THIS IS UNCONDITIONAL HERE. The ROM's latch is not unconditional in
+       its own frame: it sits inside InitResources' once-per-init guard,
+       `if (*(s32*)(thiz + 0x9c4) == 0)`. Writing it unguarded here is
+       equivalent only because this boot body IS the port's init slot -- it is
+       the code that runs where that guarded block runs, once per entry. If the
+       boot ever grows a second, non-init caller, this needs the guard back.
+       (The A1 geometry regression has no HUD and no Player, so nothing there
+       reads the byte either way.) Listed as missing, with its live readers
+       named, in port/stage_lifecycle_map.txt:258.
+
+       ONLY THE FIRST OF THE ROM'S THREE STATEMENTS IS PORTED HERE. The ROM
+       site is:
+
+           data_0209f2fc = data_0209f26c;
+           if (data_0209f2fc == 1) {
+               data_02092124 = data_0209f2f8;   <- the level being LEFT
+               data_02092118 = -1;
+           }
+
+       The `== 1` half is deliberately NOT ported. It is harmless today:
+       data_02092124 and data_02092118 are romdata-hosted and the port neither
+       writes nor reads them (stage_lifecycle_map.txt:1223), and the image ships
+       6 and -1 -- 6 being exactly what StartFile writes -- so the values are
+       already the ones a fresh file would have. What the port gives up is that
+       data_02092124 is now PERMANENTLY PINNED at 6 instead of tracking the
+       level you came from on a fresh entry. Its ROM readers are Stage::Render,
+       Stage::LC_Render and Stage::LC_Update, all of which only ask
+       SublevelToLevel(it) >= 0xf, so a pinned 6 reads as "not a boss course"
+       forever.
+
+       DO NOT COMPLETE THIS AS A TIDY-UP. Writing the missing two lines is not
+       two lines of consequence: a data_02092124 that tracks the previous level
+       arms func_ov002_020c7cbc -> LoadKeyModels -> the actor 0x11a spawn ->
+       func_ov089_0213115c, which has no null check and has never executed on
+       the port. That wants its own lane with a fault-fatal run, not a commit
+       that is nominally about a comment. */
     data_0209f2fc[0] = data_0209f26c;
 
     data_0209f2f8 = (signed char)port_level_id();
