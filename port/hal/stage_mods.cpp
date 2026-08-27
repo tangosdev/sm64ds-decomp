@@ -317,10 +317,19 @@ void stage_mod_load(void)
         return;
     }
     if (g_blob[4] != 1) {
-        release();
+        /* THE MESSAGE IS BUILT BEFORE release(), and every refusal below does
+           the same. release() frees the blob AND zeroes g_blob_len and
+           g_nsection, so a message composed after it reads a freed pointer or
+           reports zero. Both shapes shipped in the first draft of this file and
+           both were caught by the refusal battery: the version arm faulted
+           c0000005 reading g_blob[4] through the freed pointer, and the
+           overrun arm printed "4294967284 bytes are left" from 0 - (cur + 4).
+           A refusal path is the one path least likely to be exercised, so it
+           is the one that has to be ordered right by construction. */
         std::snprintf(msg, sizeof msg,
                       "%s is level-edits version %u and this build reads "
                       "version 1", g_shown, g_blob[4]);
+        release();
         refuse(msg);
         return;
     }
@@ -335,10 +344,10 @@ void stage_mod_load(void)
         u32 need;
 
         if (cur + 4 > g_blob_len) {
-            release();
             std::snprintf(msg, sizeof msg,
                           "%s says %u section(s) and section %u's header runs "
                           "past the end of the file", g_shown, g_nsection, s);
+            release();
             refuse(msg);
             return;
         }
@@ -347,51 +356,52 @@ void stage_mod_load(void)
         count = rd16(g_blob, cur + 2);
         rs = record_size(type);
         if (!rs) {
-            release();
             std::snprintf(msg, sizeof msg,
                           "%s section %u names sub-table type %u, and this "
                           "build only writes 0 standard, 1 entrance and 5 "
                           "simple", g_shown, s, type);
+            release();
             refuse(msg);
             return;
         }
         if (scope != SCOPE_MISC && scope > 7) {
-            release();
             std::snprintf(msg, sizeof msg,
                           "%s section %u names scope %u, and a scope is an "
                           "area 0..7 or 0xFF for the misc table",
                           g_shown, s, scope);
+            release();
             refuse(msg);
             return;
         }
         if (count > 255) {
-            release();
             std::snprintf(msg, sizeof msg,
                           "%s section %u carries %u entries and a sub-table's "
                           "count is one byte, so 255 is the ceiling",
                           g_shown, s, count);
+            release();
             refuse(msg);
             return;
         }
         need = count * (u32)rs;
         if (cur + 4 + need > g_blob_len) {
-            release();
             std::snprintf(msg, sizeof msg,
                           "%s section %u says %u %s entries (%u bytes) and "
                           "only %u bytes are left in the file",
                           g_shown, s, count, type_name(type), need,
-                          g_blob_len - (cur + 4));
+                          g_blob_len - (cur + 4 <= g_blob_len
+                                        ? cur + 4 : g_blob_len));
+            release();
             refuse(msg);
             return;
         }
         cur += 4 + need;
     }
     if (cur != g_blob_len) {
-        u32 extra = g_blob_len - cur;
-        release();
         std::snprintf(msg, sizeof msg,
                       "%s has %u byte(s) left over after its last section, so "
-                      "it is not the file it says it is", g_shown, extra);
+                      "it is not the file it says it is",
+                      g_shown, g_blob_len - cur);
+        release();
         refuse(msg);
         return;
     }
