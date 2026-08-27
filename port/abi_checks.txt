@@ -1214,31 +1214,67 @@ Ranked by blast radius.
     and unanimously wrong. Both detectors read clean over it and the port
     shipped report 7447e46c -- a level 46 return into the stack, walker PLAYER,
     `ebp` holding the un-popped Actor.
-    CLOSED 2026-08-27, run mg16 lane FIXD, three arms:
-      (a) ACTOR_EXT_SLOT_ARGS, an authority for slots past 30 keyed on the
-          EMITTED DISPATCH rather than a header, because what decides a pop is
-          how many words the call site pushed and a call site reaches a slot by
-          OFFSET. Slot 32 = 1 argument, off src/func_ov002_020eff90.cpp's
-          `push` / `call [eax+80h]` / no-cleanup sequence, agreed by the only
-          other slot-32 site in the tree (src/_ZN6Lakitu6RenderEv.cpp). Nothing
-          goes in that table without a site named beside it.
-      (b) a new EXT_UNJUDGED verdict for an extension slot with no dispatch
-          evidence, reported in its own block and counted in the exit status.
-          It is UNCHECKED, not passed, and it says so. 35 distinct rows on this
-          tree today, dominated by slot 31 (Platform::Kill); each needs its
-          dispatch site read, and none of them is cleared by this work.
-      (c) a CONSENSUS-VS-AUTHORITY arm, which fires when the WHOLE peer group
-          disagrees with the slot's authority. This is the arm consensus alone
-          cannot have: it speaks precisely when nothing is an outlier because
-          everything is wrong together.
-    Proved both ways. --selftest gained a slot-32 fill that must read UNDERPOP
-    (it read NO_AUTHORITY before), an unknown slot-34 fill that must read
-    EXT_UNJUDGED, and a two-table fixture that pins the blind spot itself: two
-    slot-32 fills agreeing with each other, ZERO consensus outliers, and the
-    authority arm reporting the pair. On the real tree the new authority
-    immediately found the two instances the fix for 7447e46c did not touch,
-    bly_v32 and bbly_v32, with the consensus block still reporting 0 outliers
-    over them -- which is the hole demonstrating itself on live data.
+    AND THE FIRST ATTEMPT AT CLOSING IT WAS ITSELF WRONG, THREE WAYS. Kept
+    here in full, because every one of the three is a shape a checker author
+    will reach for again.
+      (i)   IT NEVER SAW THE SEAT THE BUG SHIPPED FROM. port/hal seats most
+            Actor tables through one helper per overlay (pl_fill_shared,
+            ov63_fill_shared) which writes twenty-odd slots through a pointer
+            it was HANDED, so no register in that function names a table and
+            VTSTORE's binding dropped the lot. Measured: pl_after_clsn had
+            ZERO rows out of 2376, as did pl_kill, pl_pounded and pl_atk1. The
+            closure was written, and reported green, on a checker blind to the
+            exact thunk it was written for.
+      (ii)  IT KEYED THE AUTHORITY ON THE SLOT NUMBER. A virtual a derived
+            class ADDS is that class's own, so a slot index is not a contract.
+            Asserting "slot 32 takes one argument" widened Bully's thunk to
+            ret 4 against a site that pushes nothing -- the same wild execute,
+            mirrored into a second class by the fix for the first.
+      (iii) IT COULD NEVER EXIT 0 AGAIN, because EXT_UNJUDGED counted toward
+            the exit status over rows the tree already carries. That
+            permanently fails abi_prove's "GREEN on this build" arm, and a
+            checker that always fails proves as little as one that always
+            passes.
+    A fourth error was in the EVIDENCE rather than the code, and is the reason
+    (ii) looked safe: the claim that src/_ZN6Lakitu6RenderEv.cpp was a second,
+    agreeing slot-32 dispatch site. Its VObj declares SIX virtuals, so its
+    `m(0)` is slot 5 at +0x14, and the TU appears in no slice file and is not
+    linked. It was neither slot 32 nor in the build.
+
+    CLOSED PROPERLY 2026-08-27, run mg16 lane FIXD, after that review:
+      (a) THE PARAMETER BINDING. `push offset TAB` / `call FILLER` is recorded
+          as a fill edge and resolved after every object is parsed, so a slot
+          seated through a shared filler is attributed to every table its
+          callers hand it. 3326 fills recovered from 29 fillers; the census
+          goes 2376 -> 5702 and coverage 46% -> 77%. This is what makes
+          pl_after_clsn visible at all.
+      (b) ACTOR_EXT_SLOT_AUTHORITY, keyed on (TABLE, slot), each row naming the
+          site it came off. The site census is the evidence and it is written
+          down: sweeping the linked binary for `call dword ptr [reg+000000
+          80h]` finds exactly three slot-32 dispatches --
+            func_ov004_020b08f0 +0xb    pushes 0
+            func_ov002_020eff90 +0xb    pushes 1
+            func_ov064_02116d1c +0x129  pushes 0
+          -- so only the two PathLift tables have a row.
+      (c) EXT_UNJUDGED for an extension slot with no per-table authority, LOUD
+          and RATCHETED against port/tools/abicheck_extslot_baseline.txt. 78
+          rows frozen today, dominated by slot 31 (Platform::Kill). UNCHECKED
+          DEBT, not clearance; the set may shrink freely and only a NEW row
+          fails the run.
+      (d) consensus peers for an extension slot are scoped to its OWN TABLE.
+          Pooled across ACTOR31 it flagged the CORRECT pl_after_clsn as an
+          outlier, because Bully's two equally-correct bare rets outvoted it on
+          a 2-versus-2 split settled by tie-break.
+      (e) a CONSENSUS-VS-AUTHORITY arm, which fires when a whole peer group
+          disagrees with its slot's authority -- the case consensus alone
+          cannot raise, since nothing is an outlier when everything agrees.
+    Proved both ways. --selftest gained a filler fixture (a table pushed to a
+    helper that stores through [ebp+8], which must bind), a slot-32 fill on the
+    authoritative table that must read UNDERPOP, and a second table's slot 32
+    with no authority that must stay EXT_UNJUDGED rather than being judged by
+    its neighbour. abi_prove carries pl_after_clsn as a vtable fixture, which it
+    could not before: with the fill invisible, re-breaking it changed nothing
+    and the red arm could not fire. 33 of 33 proofs pass.
   * aritycheck's full census (2075 rows since the else/return misparse fix;
     2106 when this was written) does not gate and its parser is a regex over
     C and C++ text. The honest route to gating it is to read arity out of
