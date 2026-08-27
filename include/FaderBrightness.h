@@ -32,7 +32,7 @@ struct FaderBrightness : Fader {
        therefore starts fully opaque and stationary. Inline because the ROM has
        no out-of-line constructor for this class: it is emitted into
        FaderWipe's. */
-    FaderBrightness() { currInterp = 0x1000; speed = 0; }
+    FaderBrightness();
 
     /* Declared first among the virtuals -- key function. The D0/D1/D2 sources
        now define the real destructor and isolate the requested variant from
@@ -48,6 +48,13 @@ struct FaderBrightness : Fader {
     virtual void SetToEnd();                    /* slot 8 */
     virtual void SetToStart();                  /* slot 9 */
 };
+
+/* Defined out of line so the declaration inside the struct is a plain
+   declaration -- tools/check_header_offsets.py cannot parse a member with an
+   inline body and reports the whole header UNPARSED. `inline` keeps the
+   emission identical: the body still goes wherever it is used, and the ROM
+   has no out-of-line constructor for this class. */
+inline FaderBrightness::FaderBrightness() { currInterp = 0x1000; speed = 0; }
 
 typedef char FaderBrightness_size_must_be_0xc[sizeof(FaderBrightness) == 0xc ? 1 : -1];
 #else
