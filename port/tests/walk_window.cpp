@@ -4716,9 +4716,12 @@ static HWND host_window_open(int stacked, HDC *out_hdc, const char *title)
        SM64DS_INSTANCE names an instance its tag leads the title, so the pair
        reads "[P1] SM64DS | ..." and "[P2] SM64DS | ...". With the env unset the
        tag is empty and the title is byte-for-byte the string the caller passed,
-       which is what every existing run still gets. The same env already
-       separates the four exe-adjacent files (hal/instance_tag.h), so one knob
-       does both jobs and there is no second name to keep in sync. */
+       which is what every existing run still gets. The same env separates the
+       exe-adjacent files that ARE separated -- startup_error.txt,
+       savestate.bin and settings.json's sibling temp, but NOT crash.txt or
+       exit.txt, and hal/instance_tag.h's survey says exactly which and why --
+       so one knob does both jobs and there is no second name to keep in
+       sync. */
     char titlebuf[320];
     if (port_instance_tag()[0]) {
         _snprintf(titlebuf, sizeof titlebuf, "[%s] %s",

@@ -603,6 +603,14 @@ static void port_crash_write_file(EXCEPTION_POINTERS *ep)
         DWORD n = GetModuleFileNameA(0, path, MAX_PATH);
         while (n && path[n - 1] != 92 /* '\\' */)
             --n;
+        /* run mg16 lane MP2: this name is NOT per-instance, and that is a
+           measured decision rather than an oversight -- two copies of the game
+           in one folder share crash.txt and exit.txt, so the second to fault
+           overwrites the first. Editing this file to suffix them cost the port
+           its fixed DS address ranges at startup, bisected and written up in
+           the banner of port/hal/instance_tag.h. Read the per-instance rich
+           dumps under %TEMP%\sm64ds-crashes when two copies are running.
+           COMMENT ONLY: no code in this file changed. */
         lstrcpyA(path + n, "crash.txt");
     }
     {

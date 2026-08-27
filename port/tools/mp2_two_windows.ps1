@@ -36,10 +36,14 @@
       * its own TEMP each                   -> %TEMP%\sm64ds-crashes, which every
                                                boot prunes to four, so a shared
                                                one has P2 deleting P1's dumps
-      * SM64DS_INSTANCE=P1 / P2             -> startup_error.txt, crash.txt,
-                                               exit.txt and savestate.bin, which
-                                               live NEXT TO THE EXE where no cwd
-                                               and no TEMP can separate them
+      * SM64DS_INSTANCE=P1 / P2             -> the exe-adjacent files that ARE
+                                               separated: startup_error.txt,
+                                               savestate.bin, and settings.json's
+                                               sibling temp. NOT crash.txt or
+                                               exit.txt -- those stay shared and
+                                               hal/instance_tag.h says why. The
+                                               same value puts [P1]/[P2] in the
+                                               window title.
 #>
 
 [CmdletBinding()]
@@ -100,6 +104,18 @@ function Start-Instance {
     $psi.Arguments        = '/c ""' + $exe + '" 2> "' + $log + '""'
     $psi.WorkingDirectory = $d
     $psi.UseShellExecute  = $false
+    # THE SHOW MODE, and why "Minimized" here is not the activating one.
+    # .NET's ProcessWindowStyle has no SW_SHOWMINNOACTIVE spelling -- Minimized
+    # is SW_SHOWMINIMIZED, which DOES activate, and port/tools/mp2_proof.py asks
+    # for 7 (SW_SHOWMINNOACTIVE) directly through STARTUPINFO because Python can.
+    # What makes the two agree is the TARGET: walk_window.cpp's host_show_mode()
+    # normalises SW_SHOWMINIMIZED, SW_MINIMIZE and SW_SHOWMINNOACTIVE all to
+    # SW_SHOWMINNOACTIVE, and SM64DS_NO_FOCUS (set below on this path) composes
+    # with it as WS_EX_NOACTIVATE + SW_SHOWNOACTIVATE. So the effective mode is
+    # SW_SHOWMINNOACTIVE either way. That is a RELIANCE ON THE TARGET rather
+    # than on this line, which is why it is written down: if host_show_mode ever
+    # stops normalising, this script starts activating windows and only the
+    # comment will say so.
     $psi.WindowStyle      = if ($showMinimized) { "Minimized" } else { "Normal" }
     $psi.CreateNoWindow   = $showMinimized
 

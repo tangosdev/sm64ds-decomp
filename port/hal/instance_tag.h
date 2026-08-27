@@ -15,19 +15,37 @@
  *      two deletes instance one's dumps. ALSO ALREADY SEPARABLE: give each
  *      instance its own TEMP. No code change, and the launcher does it.
  *
- *   3. EXE-DIRECTORY RELATIVE -- startup_error.txt and savestate.bin here,
- *      plus crash.txt and exit.txt which are NOT handled (see the banner
- *      below). THESE ARE THE ONLY ONES THAT NEED CODE, because both instances
- *      are the same exe in the same folder and no amount of working directory
- *      or TEMP separates them. savestate.bin is the dangerous one:
- *      port/tests/smoke_persist.cpp:249 already names the exact hazard, "a
- *      separate process picking up the first one's savestate.bin".
+ *   3. EXE-DIRECTORY RELATIVE. Both instances are the same exe in the same
+ *      folder, so no working directory and no TEMP separates these. This is
+ *      the group that needs code, and it is worth being exact about which
+ *      members actually got it:
+ *
+ *        startup_error.txt  SUFFIXED (walk_window.cpp, asset_root_refuse.cpp)
+ *        savestate.bin      SUFFIXED (lk7_persist.cpp). The dangerous one, and
+ *                           the tree already knew it: smoke_persist.cpp:249
+ *                           names the hazard, "a separate process picking up
+ *                           the first one's savestate.bin".
+ *        crash.txt          NOT SUFFIXED -- see the banner below.
+ *        exit.txt           NOT SUFFIXED -- see the banner below.
+ *        settings.json      DELIBERATELY SHARED, not suffixed. Its sibling
+ *                           TEMP is suffixed (host_settings.cpp write_text),
+ *                           which fixes a real interleave: two overlapping
+ *                           saves used to write one shared settings.json.tmp
+ *                           and rename the MIXTURE into place. The file itself
+ *                           stays shared because its job is to carry launcher
+ *                           settings into the game, and splitting it would end
+ *                           that. THE COST, which is real and unfixed: the
+ *                           save is a read-modify-write of the whole document,
+ *                           so if P1 changes a setting and P2 then saves, P1's
+ *                           change is silently lost. LAST WRITER WINS. The
+ *                           same note is at the site.
  *
  * So this is the smallest change that makes group 3 safe, and it is one env
  * var and one suffix:
  *
- *   SM64DS_INSTANCE=p1   ->  startup_error.p1.txt, savestate.p1.bin, and
- *                            "[p1] " in front of the window title
+ *   SM64DS_INSTANCE=p1   ->  startup_error.p1.txt, savestate.p1.bin,
+ *                            settings.json.p1.tmp, and "[p1] " in front of
+ *                            the window title
  *   (unset)              ->  every name is EXACTLY what it has always been.
  *
  * HEADER-ONLY AND static ON PURPOSE. fault_probe.h is included by targets that
