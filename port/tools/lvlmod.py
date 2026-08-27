@@ -17,6 +17,7 @@ JSON in:
       "level": 6,
       "sections": [
         { "scope": "misc",        # or 0..7 for an area, or "area 0"
+          "star": 0,              # the sub-table's star filter, 0..7
           "type": 0,              # 0 standard, 1 entrance, 5 simple
           "entries": [
             {"raw": 28, "x": -100, "y": 0, "z": 200,
@@ -32,9 +33,12 @@ JSON in:
     u8     version = 1
     u8     level id     the SM64DS_LEVEL id space
     u16    section count
-    then per section:
+    then per section (SIX bytes):
     u8     scope        0xFF the misc table, 0..7 an area index
     u8     type         the sub-loader index: 0 standard, 1 entrance, 5 simple
+    u8     star         the sub-table's star filter, 0..7, verbatim from the
+                        high three bits of the ROM's own descriptor byte
+    u8     reserved     must be 0; anything else refuses the whole file
     u16    count        entries that follow (255 is the ceiling -- the ROM's
                         own sub-table count field is one byte)
     count * recordsize bytes, in the EXACT ROM record layout:
@@ -49,14 +53,15 @@ a simple entry the ROM splits it further: raw & 0x1ff indexes the table and
 raw >> 9 is the parameter, so a simple entry may give "id" and "param"
 separately instead of "raw" and this tool packs them.
 
-SCOPE IS THE AREA, and the star is not addressable. The ROM packs two fields
-into a sub-table descriptor's first byte: the low five bits are the sub-loader
-(this file's `type`) and the high three are a star filter compared against
-data_0209f220. A section names (scope, type) only; the star filter of the
-sub-table it lands on is the level's own and is never rewritten. If a level
-carries two sub-tables of one type in one area -- which is how a level gives a
-mission its own object set -- the game refuses the file rather than guessing
-which one an editor meant.
+SCOPE IS THE AREA AND STAR IS THE MISSION, and a section needs both. The ROM
+packs two fields into a sub-table descriptor's first byte: the low five bits
+are the sub-loader (this file's `type`) and the high three are a star filter
+compared against data_0209f220. A level gives each mission its own object list,
+so one area routinely carries eight standard sub-tables that differ ONLY in
+that star value -- Bob-omb Battlefield's area 0 has exactly that. Naming a
+sub-table therefore takes the whole triple (scope, star, type), which is the
+ROM's own key, and measured over the forty-six mounted levels it names all 366
+editable sub-tables with no collisions.
 
 Modes:
     compile  spec.json out.lvlm       the normal path
@@ -95,6 +100,13 @@ def parse_scope(v):
 
 def scope_name(b):
     return "misc" if b == SCOPE_MISC else "area %d" % b
+
+
+def star_value(v):
+    v = int(v)
+    if not 0 <= v <= 7:
+        raise ValueError("star %d is not 0..7" % v)
+    return v
 
 
 def s16(v, what):
@@ -164,11 +176,15 @@ def compile_spec(spec_path, out_path):
         if type_id not in TYPES:
             sys.exit("section %d: type %d is not one of %s"
                      % (i, type_id, ", ".join(str(t) for t in sorted(TYPES))))
-        key = (scope, type_id)
+        try:
+            star = star_value(sec.get("star", 0))
+        except ValueError as err:
+            sys.exit("section %d: %s" % (i, err))
+        key = (scope, star, type_id)
         if key in seen:
-            sys.exit("section %d: %s type %d appears twice, and a section "
-                     "replaces a sub-table wholesale"
-                     % (i, scope_name(scope), type_id))
+            sys.exit("section %d: %s star %d type %d appears twice, and a "
+                     "section replaces a sub-table wholesale"
+                     % (i, scope_name(scope), star, type_id))
         seen.add(key)
         entries = sec["entries"]
         if len(entries) > 255:
@@ -178,7 +194,8 @@ def compile_spec(spec_path, out_path):
             packed = b"".join(pack_entry(type_id, e) for e in entries)
         except ValueError as err:
             sys.exit("section %d: %s" % (i, err))
-        body += struct.pack("<BBH", scope, type_id, len(entries)) + packed
+        body += (struct.pack("<BBBBH", scope, type_id, star, 0, len(entries))
+                 + packed)
 
     blob = MAGIC + struct.pack("<BBH", VERSION, level, len(sections)) + body
     with open(out_path, "wb") as f:
@@ -186,9 +203,10 @@ def compile_spec(spec_path, out_path):
     print("%s: level %d, %d section(s), %d bytes"
           % (out_path, level, len(sections), len(blob)))
     for sec in sections:
-        print("  %-7s type %d %-8s %3d entries"
-              % (scope_name(parse_scope(sec["scope"])), int(sec["type"]),
-                 TYPES[int(sec["type"])][1], len(sec["entries"])))
+        print("  %-7s star %d type %d %-8s %3d entries"
+              % (scope_name(parse_scope(sec["scope"])), int(sec.get("star", 0)),
+                 int(sec["type"]), TYPES[int(sec["type"])][1],
+                 len(sec["entries"])))
 
 
 def dump_blob(path):
@@ -200,12 +218,15 @@ def dump_blob(path):
           % (path, version, level, nsec, len(b)))
     cur = 8
     for i in range(nsec):
-        scope, type_id, count = struct.unpack_from("<BBH", b, cur)
+        scope, type_id, star, reserved, count = struct.unpack_from("<BBBBH",
+                                                                   b, cur)
         rs = TYPES.get(type_id, (0, "unknown"))[0]
-        print("  section %d: %s type %d %s, %d entries"
-              % (i, scope_name(scope), type_id,
-                 TYPES.get(type_id, (0, "unknown"))[1], count))
-        cur += 4
+        print("  section %d: %s star %d type %d %s, %d entries%s"
+              % (i, scope_name(scope), star, type_id,
+                 TYPES.get(type_id, (0, "unknown"))[1], count,
+                 "" if reserved == 0 else
+                 "  RESERVED=%d (the game refuses this)" % reserved))
+        cur += 6
         if not rs:
             sys.exit("    unknown type %d, cannot walk further" % type_id)
         for j in range(count):
@@ -277,9 +298,12 @@ def from_dump(dump_path, spec_path, want_level=None):
                      % ", ".join(str(x) for x in levels))
         want_level = levels[0]
 
-    # (scope, type) is the section key, so a scope carrying two sub-tables of
-    # one type cannot be addressed -- say so here rather than emitting a spec
-    # the game will refuse.
+    # (scope, star, type) is the section key and it is the ROM's own key for a
+    # sub-table, so every editable sub-table in the dump is addressable. A
+    # collision here would mean the ROM itself carries two sub-tables with the
+    # same descriptor byte in one table, which no mounted level does -- it is
+    # reported rather than resolved, because inventing a tie-break would be
+    # inventing a format.
     by_key = {}
     for k in order:
         if k[0] != want_level:
@@ -287,18 +311,16 @@ def from_dump(dump_path, spec_path, want_level=None):
         st = subs[k]
         if st["type"] not in TYPES:
             continue
-        by_key.setdefault((k[1], st["type"]), []).append(k)
+        by_key.setdefault((k[1], st["star"], st["type"]), []).append(k)
 
     sections = []
-    for (scope, type_id), keys in sorted(by_key.items()):
+    for (scope, star, type_id), keys in sorted(by_key.items()):
         if len(keys) > 1:
-            print("  skipping %s type %d: %d sub-tables of that type "
-                  "(stars %s) -- the format cannot address one of them"
-                  % (scope, type_id, len(keys),
-                     ", ".join(str(subs[k]["star"]) for k in keys)),
-                  file=sys.stderr)
-            continue
-        sections.append({"scope": scope, "type": type_id,
+            sys.exit("%s star %d type %d names %d sub-tables in the dump -- "
+                     "the (scope, star, type) key does not identify one, and "
+                     "this tool will not guess"
+                     % (scope, star, type_id, len(keys)))
+        sections.append({"scope": scope, "star": star, "type": type_id,
                          "entries": subs[keys[0]]["entries"]})
 
     spec = {"version": VERSION, "level": want_level, "sections": sections}

@@ -120,12 +120,26 @@
    carries the same table in its docstring.
 
        "LVLM"  u8 version=1  u8 level_id  u16 section count
-       then per section:
-       u8 scope   u8 type   u16 count
+       then per section, SIX bytes of header:
+       u8 scope   u8 type   u8 star   u8 reserved   u16 count
        count * recordsize bytes, in the EXACT ROM record layout for that type
 
-   A section REPLACES that (scope, type) sub-table's entry list wholesale. A
-   sub-table the file does not name is left exactly as the ROM has it.
+   A section REPLACES the (scope, star, type) sub-table's entry list wholesale.
+   A sub-table the file does not name is left exactly as the ROM has it.
+
+   THE STAR IS PART OF THE KEY BECAUSE THE ROM MAKES IT PART OF THE KEY, and
+   this was measured before it was written. A level gives each mission its own
+   object list, so one area routinely carries several sub-tables of the same
+   type differing only in the star filter: Bob-omb Battlefield's area 0 holds
+   eight standard sub-tables and eight simple ones, stars 0 through 7. Over the
+   forty-six levels this build mounts there are 366 sub-tables of an editable
+   type; a (scope, type) key names only 147 of them and leaves 219 unreachable,
+   while (scope, star, type) names all 366 with no collisions. So the section
+   key is the whole of the ROM's own descriptor byte, split across two fields
+   for readability, and find_descriptor below matches that byte exactly.
+
+   The reserved byte must be zero. It is the format's only room to grow and a
+   reader that ignored it would silently mis-load a future file.
 
    ONE CAVEAT THIS FILE CANNOT CHECK, written down rather than guarded because
    the check is not available where the guard would have to go. Type 1 is the
@@ -339,11 +353,11 @@ void stage_mod_load(void)
     /* Walk every section header and prove the whole file is accounted for. */
     cur = 8;
     for (s = 0; s < g_nsection; ++s) {
-        unsigned scope, type, count;
+        unsigned scope, type, star, reserved, count;
         int rs;
         u32 need;
 
-        if (cur + 4 > g_blob_len) {
+        if (cur + 6 > g_blob_len) {
             std::snprintf(msg, sizeof msg,
                           "%s says %u section(s) and section %u's header runs "
                           "past the end of the file", g_shown, g_nsection, s);
@@ -353,7 +367,9 @@ void stage_mod_load(void)
         }
         scope = g_blob[cur];
         type = g_blob[cur + 1];
-        count = rd16(g_blob, cur + 2);
+        star = g_blob[cur + 2];
+        reserved = g_blob[cur + 3];
+        count = rd16(g_blob, cur + 4);
         rs = record_size(type);
         if (!rs) {
             std::snprintf(msg, sizeof msg,
@@ -373,6 +389,28 @@ void stage_mod_load(void)
             refuse(msg);
             return;
         }
+        if (star > 7) {
+            std::snprintf(msg, sizeof msg,
+                          "%s section %u names star %u, and a star filter is "
+                          "0..7 -- it is the top three bits of the ROM's own "
+                          "sub-table byte", g_shown, s, star);
+            release();
+            refuse(msg);
+            return;
+        }
+        /* The reserved byte is refused rather than ignored ON PURPOSE. It is
+           the format's only room to grow, and a reader that skips it now would
+           happily load a future file whose extra field it does not implement --
+           silently doing the wrong thing with someone's level. Refusing costs
+           nothing today and is the whole value of the byte. */
+        if (reserved != 0) {
+            std::snprintf(msg, sizeof msg,
+                          "%s section %u has %u in its reserved byte and this "
+                          "build only reads 0 there", g_shown, s, reserved);
+            release();
+            refuse(msg);
+            return;
+        }
         if (count > 255) {
             std::snprintf(msg, sizeof msg,
                           "%s section %u carries %u entries and a sub-table's "
@@ -383,18 +421,18 @@ void stage_mod_load(void)
             return;
         }
         need = count * (u32)rs;
-        if (cur + 4 + need > g_blob_len) {
+        if (cur + 6 + need > g_blob_len) {
             std::snprintf(msg, sizeof msg,
                           "%s section %u says %u %s entries (%u bytes) and "
                           "only %u bytes are left in the file",
                           g_shown, s, count, type_name(type), need,
-                          g_blob_len - (cur + 4 <= g_blob_len
-                                        ? cur + 4 : g_blob_len));
+                          g_blob_len - (cur + 6 <= g_blob_len
+                                        ? cur + 6 : g_blob_len));
             release();
             refuse(msg);
             return;
         }
-        cur += 4 + need;
+        cur += 6 + need;
     }
     if (cur != g_blob_len) {
         std::snprintf(msg, sizeof msg,
@@ -425,15 +463,25 @@ ObjTable *scope_table(LvlOverlay *ovl, unsigned scope)
     return *(ObjTable **)(ovl->subTables + scope * 0x0c);
 }
 
-/* The one descriptor in `scope` whose sub-loader is `type`, or 0 with `why`
-   set. Ambiguity is a refusal rather than a pick: a level that carries two
-   standard sub-tables in one area carries them under different STAR filters,
-   and a format whose section key is (scope, type) cannot say which of them the
-   editor meant. Guessing would silently edit the wrong mission. */
-ObjSubTable *find_descriptor(LvlOverlay *ovl, unsigned scope, unsigned type,
-                             const char **why)
+/* The one descriptor in `scope` whose ROM byte is `star`:`type`, or 0 with
+   `why` set.
+
+   THE MATCH IS ON THE WHOLE BYTE, which is the ROM's own key for a sub-table:
+   the sub-loader in the low five bits and the star filter in the high three.
+   Nothing is masked off and nothing is inferred, so a section names exactly
+   what the level data names.
+
+   The duplicate check below is kept even though the whole byte is matched now.
+   Over the forty-six mounted levels no two descriptors in one table share a
+   byte -- measured, not assumed -- so it cannot fire on stock data. It stays
+   because the alternative to refusing an impossible case is silently taking
+   the last one, and editing a different sub-table than the one named is the
+   worst failure this file could have. */
+ObjSubTable *find_descriptor(LvlOverlay *ovl, unsigned scope, unsigned star,
+                             unsigned type, const char **why)
 {
     ObjTable *t = scope_table(ovl, scope);
+    const u8 want = (u8)((star << 5) | type);
     ObjSubTable *hit = 0;
     unsigned i, n = 0;
 
@@ -449,18 +497,19 @@ ObjSubTable *find_descriptor(LvlOverlay *ovl, unsigned scope, unsigned type,
     }
     for (i = 0; i < t->count; ++i) {
         ObjSubTable *d = &t->entries[i];
-        if ((d->kind & 0x1f) == type) {
+        if (d->kind == want) {
             hit = d;
             ++n;
         }
     }
     if (n == 0) {
-        *why = "this level has no sub-table of that type there to replace";
+        *why = "this level has no sub-table with that star and type there to "
+               "replace";
         return 0;
     }
     if (n > 1) {
-        *why = "this level has more than one sub-table of that type there "
-               "(they differ by star filter) and a section cannot say which";
+        *why = "this level carries more than one sub-table with that exact "
+               "star and type, which no stock level does";
         return 0;
     }
     return hit;
@@ -478,6 +527,7 @@ void apply_sections(LvlOverlay *ovl, int level_id)
         u32 bytes;
         u16 count;
         u8 scope;
+        u8 star;
         u8 type;
     };
     Plan plan[64];
@@ -501,21 +551,24 @@ void apply_sections(LvlOverlay *ovl, int level_id)
     for (s = 0; s < g_nsection; ++s) {
         unsigned scope = g_blob[cur];
         unsigned type = g_blob[cur + 1];
-        unsigned count = rd16(g_blob, cur + 2);
+        unsigned star = g_blob[cur + 2];
+        unsigned count = rd16(g_blob, cur + 4);
         u32 need = count * (u32)record_size(type);
         const char *why = 0;
-        ObjSubTable *d = find_descriptor(ovl, scope, type, &why);
+        ObjSubTable *d = find_descriptor(ovl, scope, star, type, &why);
 
         if (!d) {
             g_arena_used = arena_mark;
             if (scope == SCOPE_MISC)
                 std::snprintf(msg, sizeof msg,
-                              "%s section %u wants the misc %s sub-table and "
-                              "%s", g_shown, s, type_name(type), why);
+                              "%s section %u wants the misc star %u %s "
+                              "sub-table and %s",
+                              g_shown, s, star, type_name(type), why);
             else
                 std::snprintf(msg, sizeof msg,
-                              "%s section %u wants area %u's %s sub-table and "
-                              "%s", g_shown, s, scope, type_name(type), why);
+                              "%s section %u wants area %u's star %u %s "
+                              "sub-table and %s",
+                              g_shown, s, scope, star, type_name(type), why);
             refuse(msg);
             return;
         }
@@ -529,12 +582,13 @@ void apply_sections(LvlOverlay *ovl, int level_id)
             return;
         }
         plan[s].desc = d;
-        plan[s].src = g_blob + cur + 4;
+        plan[s].src = g_blob + cur + 6;
         plan[s].bytes = need;
         plan[s].count = (u16)count;
         plan[s].scope = (u8)scope;
+        plan[s].star = (u8)star;
         plan[s].type = (u8)type;
-        cur += 4 + need;
+        cur += 6 + need;
     }
 
     /* PASS TWO: commit. The arena is rewound to the mark and re-taken in the
@@ -554,14 +608,15 @@ void apply_sections(LvlOverlay *ovl, int level_id)
         plan[s].desc->entries = dst;
 
         if (plan[s].scope == SCOPE_MISC)
-            std::fprintf(stderr, "[mods] StageMod: level %d misc %s sub-table "
-                                 "replaced with %u entry(s)\n",
-                         level_id, type_name(plan[s].type), plan[s].count);
-        else
-            std::fprintf(stderr, "[mods] StageMod: level %d area %u %s "
+            std::fprintf(stderr, "[mods] StageMod: level %d misc star %u %s "
                                  "sub-table replaced with %u entry(s)\n",
-                         level_id, plan[s].scope, type_name(plan[s].type),
+                         level_id, plan[s].star, type_name(plan[s].type),
                          plan[s].count);
+        else
+            std::fprintf(stderr, "[mods] StageMod: level %d area %u star %u %s "
+                                 "sub-table replaced with %u entry(s)\n",
+                         level_id, plan[s].scope, plan[s].star,
+                         type_name(plan[s].type), plan[s].count);
     }
     std::fflush(stderr);
 }
