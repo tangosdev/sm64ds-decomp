@@ -43,6 +43,11 @@ extern unsigned char data_020a0e40;      /* the local player index */
 extern unsigned char data_0209d6bc;      /* the Message box state (Message::Update) */
 extern unsigned char data_0209d660;      /* nonzero while a message is active */
 extern unsigned char data_0209d684;      /* the choice box's answer (0 = unanswered) */
+extern int data_0209b454[];              /* persistent freeze-request word */
+extern unsigned int data_0209b464;       /* this frame's copy of it (the mask) */
+extern int data_0208e430;                /* the track id Sound::PlaySub latched */
+extern int data_0209b490[];              /* music volume fade word */
+extern int data_0209b49c[];              /* music state fade word */
 
 }  /* extern "C" */
 
@@ -927,7 +932,16 @@ extern "C" void port_probe_rabbit_key(int frame)
     /* while the key is still descending (its own step word 0) print EVERY frame:
        the descent is only about ten frames and the whole question is which of it
        and the rabbit's second dialogue lands first. */
-    if (step != 0 &&
+    /* ...and print EVERY frame while a message is up too (d660 != 0). That is
+       the window lane C4 measures: the ROM freezes the key's Behavior for its
+       whole length, so cd100/ky/kvy must not move across it. A change-driven
+       line cannot show a value NOT changing. */
+    /* SM64DS_RKEY_EVERY=1 drops the change filter entirely. A stall is a value
+       NOT changing, so a change-driven line cannot show one. */
+    static int every = -1;
+    if (every < 0) every = std::getenv("SM64DS_RKEY_EVERY") != 0;
+
+    if (!every && step != 0 && d660 == 0 &&
         step == p_step && d684 == p_d684 && d660 == p_d660 && noctl == p_noctl
         && frame - last < 60)
         return;
@@ -940,9 +954,39 @@ extern "C" void port_probe_rabbit_key(int frame)
        +0x60 is the key's Y and +0xa8 its vertical speed: the handover test is
        purely geometric, player.y + 0x64000 > key.y, with no control-state check
        anywhere in it. */
+    /* b454/b464 ARE THE FREEZE MASK, lane C4's whole subject. data_0209b454 is
+       the persistent freeze-request word the message code ORs 0x800000 into
+       (func_ov002_020c8540.c:51 and friends); data_0209b464 is the per-frame
+       copy Stage::Behavior latches from it (_ZN5Stage8BehaviorEv.cpp:105) and
+       the ONLY word Actor::BeforeBehavior reads
+       (_ZN5Actor14BeforeBehaviorEv.cpp:74). kf is the key's own mFlags & 0x800000
+       -- its opt-out of the freeze, which it does not have. So the three
+       together say whether this frame's key Behavior should have run at all. */
     std::fprintf(stderr, "  [rkey] f%d step=%d +198=%d +19c=0x%x d684=%d "
-                 "d660=%d noctl=%d kind=%d cd100=%d ky=%d kvy=%d\n",
+                 "d660=%d noctl=%d kind=%d cd100=%d ky=%d kvy=%d "
+                 "b454=%08x b464=%08x kf800=%d d6bc=%d kx=%d px=%d ticked=%d "
+                 "e430=%d b490=%x b49c=%x\n",
                  frame, step, f198, f19c, d684, d660, noctl, kind,
                  (int)*(unsigned short *)(k + 0x100),
-                 *(int *)(k + 0x60), *(int *)(k + 0xa8));
+                 *(int *)(k + 0x60), *(int *)(k + 0xa8),
+                 (unsigned)data_0209b454[0], (unsigned)data_0209b464,
+                 (*(unsigned *)(k + 0xb0) & 0x800000) ? 1 : 0,
+                 (int)data_0209d6bc,
+                 /* kx/px: the caught state's Main copies the PLAYER's x and z
+                    into the key's own +0x5c/+0x64 on every call
+                    (func_ov085_0212cd80.c:33-35). So kx == px is a direct
+                    read-out of "the key's Behavior ran this frame", which is
+                    what the freeze is supposed to stop. */
+                 *(int *)(k + 0x5c),
+                 player ? *(int *)(player + 0x5c) : 0,
+                 (player && *(int *)(k + 0x5c) == *(int *)(player + 0x5c)) ? 1 : 0,
+                 /* the three globals Sound::PlaySub reads. Case 6 of the key's
+                    caught state (func_ov085_0212cd80.c:95) is gated on
+                    PlaySub(0x28, 0x12, 0x7f, ...), which on the ld4 path
+                    returns false unless data_0208e430 == 0x28 (=40) and the two
+                    fade words have converged to b490 == 0x12000 and
+                    b49c == 0x7f000. Case 1 has no such gate, which is why the
+                    param-0 key tears down and the glowing one does not. */
+                 (int)data_0208e430, (unsigned)data_0209b490[0],
+                 (unsigned)data_0209b49c[0]);
 }
