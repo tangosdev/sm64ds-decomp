@@ -4432,11 +4432,11 @@ src/func_0202fc40.c:
     complete
     .text start:0x0202fc40 end:0x0202fc98
 
-src/_ZN4ViewD1Ev.c:
+src/_ZN4ViewD1Ev.cpp:
     complete
     .text start:0x0202fc98 end:0x0202fcc8
 
-src/_ZN4ViewD0Ev.c:
+src/_ZN4ViewD0Ev.cpp:
     complete
     .text start:0x0202fcc8 end:0x0202fd0c
 

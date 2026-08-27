@@ -24,7 +24,7 @@ src/actors/BigBooIcon/_ZN10BigBooIconD1Ev.cpp:
     complete
     .text start:0x02116068 end:0x0211608c
 
-src/actors/BigBooIcon/_ZN10BigBooIconD0Ev.c:
+src/actors/BigBooIcon/_ZN10BigBooIconD0Ev.cpp:
     complete
     .text start:0x0211608c end:0x021160c4
 
@@ -387,7 +387,7 @@ src/actors/MansionSteps/_ZN12MansionStepsD1Ev.cpp:
     complete
     .text start:0x0211c600 end:0x0211c638
 
-src/actors/MansionSteps/_ZN12MansionStepsD0Ev.c:
+src/actors/MansionSteps/_ZN12MansionStepsD0Ev.cpp:
     complete
     .text start:0x0211c638 end:0x0211c684
 
