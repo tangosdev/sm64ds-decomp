@@ -2340,7 +2340,7 @@ src/_ZN5ModelC1Ev.cpp:
     complete
     .text start:0x02016d58 end:0x02016da8
 
-src/_ZN5ModelC2Ev.c:
+src/_ZN5ModelC2Ev.cpp:
     complete
     .text start:0x02016da8 end:0x02016df8
 
@@ -7838,7 +7838,7 @@ src/_ZN18NestedHeapIterator4InitEP13HeapAllocator.cpp:
     complete
     .text start:0x0204dee0 end:0x0204df20
 
-src/_ZN18NestedHeapIteratorC1Ej.c:
+src/_ZN18NestedHeapIteratorC1Ej.cpp:
     complete
     .text start:0x0204df20 end:0x0204df38
 
