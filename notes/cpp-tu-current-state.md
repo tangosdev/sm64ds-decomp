@@ -20,7 +20,7 @@ python tools/cpp_tu_state.py --check-note
 | --- | ---: |
 | MATCHED functions | 11230 / 11401 (98.50%) |
 | MATCHED code bytes | 2116772 / 2238108 (94.58%) |
-| Strict CONVERTED source functions | 2093 / 11303 (18.52%) |
+| Strict CONVERTED source functions | 2100 / 11303 (18.58%) |
 | Physical production source files | 10866 |
 
 MATCHED is recomputed from committed config symbols and `src/` through
@@ -33,12 +33,12 @@ weighted by enrolled function ownership so TU consolidation does not move it.
 | Measure | Live value |
 | --- | ---: |
 | Tracked production source files | 11359 |
-| Tracked `.c` files | 6529 |
-| Tracked `.cpp` files | 4830 |
+| Tracked `.c` files | 6520 |
+| Tracked `.cpp` files | 4839 |
 | `.cpp` files missing first-line `//cpp` | 0 |
 | Mangled-symbol source files | 3859 |
-| Genuinely migrated C++ symbol files | 3634 |
-| Not semantically migrated | 222 |
+| Genuinely migrated C++ symbol files | 3643 |
+| Not semantically migrated | 213 |
 | `.cpp` files still hand-spelling their symbol | 143 |
 | Nonmatching C++-symbol drafts | 14 |
 | Delinks path-owned function-symbol records | 11196 |

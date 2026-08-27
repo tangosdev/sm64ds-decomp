@@ -680,7 +680,7 @@ src/_ZN11daBgSnwmn_c16CleanupResourcesEv.c	P1-vtable+mangled	ov072	daBgSnwmn_c	d
 src/_ZN11daBgSnwmn_c16OnPendingDestroyEv.c	P1-vtable+mangled	ov072	daBgSnwmn_c	daBgSnwmn_c	vtable daBgSnwmn_c slot 12 @0x21209bc | _ZN11daBgSnwmn_c16OnPendingDestroyEv	1		True		-
 src/_ZN11daBgSnwmn_cD0Ev.c	DTOR-ONLY	ov072	daBgSnwmn_c	daBgSnwmn_c	_ZN11daBgSnwmn_cD0Ev	1		True		-
 src/_ZN11daBgSnwmn_cD1Ev.c	DTOR-ONLY	ov072	daBgSnwmn_c	daBgSnwmn_c	_ZN11daBgSnwmn_cD1Ev	1		True		-
-src/game/actors/daDsnBase_c/_ZN11daDsnBase_cD0Ev.c	DTOR-ONLY	ov091	daDsn_c	daDsnBase_c/daDsn_c	_ZN11daDsnBase_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV11daDsnBase_c	-
+src/game/actors/daDsnBase_c/_ZN11daDsnBase_cD0Ev.cpp	DTOR-ONLY	ov091	daDsn_c	daDsnBase_c/daDsn_c	_ZN11daDsnBase_cD0Ev	1		True	_ZTV10dBgActor_c/_ZTV11daDsnBase_c	-
 src/_ZN11daDsnBase_cD1Ev.c	DTOR-ONLY	ov091	daDsn_c	daDsnBase_c/daDsn_c	_ZN11daDsnBase_cD1Ev	1		True	_ZTV10dBgActor_c/_ZTV11daDsnBase_c	-
 src/_ZN12CylinderClsnD0Ev.c	DTOR-ONLY	arm9	dCc_c	CylinderClsn/dCc_c	_ZN12CylinderClsnD0Ev	1		True		-
 src/_ZN12CylinderClsnD1Ev.c	DTOR-ONLY	arm9	dCc_c	CylinderClsn/dCc_c	_ZN12CylinderClsnD1Ev	1		True		-
@@ -742,8 +742,8 @@ src/_ZN13SharedFilePtr9ConstructEj.c	P3-mangled-method-only	arm9		SharedFilePtr	
 src/_ZN13SnowmanBreath16CleanupResourcesEv.c	P1-vtable+mangled	ov027	daSnmBth_c	SnowmanBreath/daSnmBth_c	vtable daSnmBth_c slot 3 @0x2112700 | _ZN13SnowmanBreath16CleanupResourcesEv	1		True		-
 src/_ZN13SnowmanBreath16OnPendingDestroyEv.c	P1-vtable+mangled	ov027	daSnmBth_c	SnowmanBreath/daSnmBth_c	vtable daSnmBth_c slot 12 @0x211273c | _ZN13SnowmanBreath16OnPendingDestroyEv	1		True		-
 src/_ZN13TreasureChestD0Ev.c	DTOR-ONLY	ov064	daObjTbox_c	TreasureChest/daObjTbox_c	_ZN13TreasureChestD0Ev	1		True		-
-src/game/actors/UpDownLiftBbh/_ZN13UpDownLiftBbhD0Ev.c	DTOR-ONLY	ov095	daUdlift_c	UpDownLiftBbh/daUdlift_c	_ZN13UpDownLiftBbhD0Ev	1		True	_ZTV10dBgActor_c/_ZTV13UpDownLiftBbh	-
-src/game/actors/UpDownLiftBbh/_ZN13UpDownLiftBbhD1Ev.c	DTOR-ONLY	ov095	daUdlift_c	UpDownLiftBbh/daUdlift_c	_ZN13UpDownLiftBbhD1Ev	1		True	_ZTV10dBgActor_c/_ZTV13UpDownLiftBbh	-
+src/game/actors/UpDownLiftBbh/_ZN13UpDownLiftBbhD0Ev.cpp	DTOR-ONLY	ov095	daUdlift_c	UpDownLiftBbh/daUdlift_c	_ZN13UpDownLiftBbhD0Ev	1		True	_ZTV10dBgActor_c/_ZTV13UpDownLiftBbh	-
+src/game/actors/UpDownLiftBbh/_ZN13UpDownLiftBbhD1Ev.cpp	DTOR-ONLY	ov095	daUdlift_c	UpDownLiftBbh/daUdlift_c	_ZN13UpDownLiftBbhD1Ev	1		True	_ZTV10dBgActor_c/_ZTV13UpDownLiftBbh	-
 src/_ZN13dScGameOver_c13InitResourcesEv.c	P1-vtable+mangled	ov003	dScGameOver_c	dScGameOver_c	vtable dScGameOver_c slot 0 @0x20b0b3c | _ZN13dScGameOver_c13InitResourcesEv	1		True		-
 src/_ZN13dScGameOver_c16CleanupResourcesEv.c	P1-vtable+mangled	ov003	dScGameOver_c	dScGameOver_c	vtable dScGameOver_c slot 3 @0x20b0b34 | _ZN13dScGameOver_c16CleanupResourcesEv	1		True		-
 src/_ZN13dScGameOver_c16OnPendingDestroyEv.c	P1-vtable+mangled	ov003	dScGameOver_c	dScGameOver_c	vtable dScGameOver_c slot 12 @0x20b0810 | _ZN13dScGameOver_c16OnPendingDestroyEv	1		True		-
@@ -926,8 +926,8 @@ src/_ZN4ToadD0Ev.c	DTOR-ONLY	ov085	daKinopio_c	Toad/daKinopio_c	_ZN4ToadD0Ev	1		
 src/_ZN4Trap13InitResourcesEv.c	P1-vtable+mangled	ov010	daObjC1_Trap_c	Trap/daObjC1_Trap_c	vtable daObjC1_Trap_c slot 0 @0x2111654 | _ZN4Trap13InitResourcesEv	1		True		-
 src/_ZN4Tree16OnPendingDestroyEv.c	P1-vtable+mangled	ov002	daTree_c	Tree/daTree_c	vtable daTree_c slot 12 @0x20ec0a0 | _ZN4Tree16OnPendingDestroyEv	1		True		-
 src/game/actors/View/_ZN4View6RenderEv.c	P1-vtable+mangled	arm9	dView_c	View/dView_c	vtable dView_c slot 9 @0x202fd0c | _ZN4View6RenderEv	1		False		no-header:View/dView_c
-src/game/actors/View/_ZN4ViewD0Ev.c	DTOR-ONLY	arm9	dView_c	View/dView_c	_ZN4ViewD0Ev	1		False	_ZTV4View	no-header:View/dView_c
-src/game/actors/View/_ZN4ViewD1Ev.c	DTOR-ONLY	arm9	dView_c	View/dView_c	_ZN4ViewD1Ev	1		False	_ZTV4View	no-header:View/dView_c
+src/game/actors/View/_ZN4ViewD0Ev.cpp	DTOR-ONLY	arm9	dView_c	View/dView_c	_ZN4ViewD0Ev	1		False	_ZTV4View	no-header:View/dView_c
+src/game/actors/View/_ZN4ViewD1Ev.cpp	DTOR-ONLY	arm9	dView_c	View/dView_c	_ZN4ViewD1Ev	1		False	_ZTV4View	no-header:View/dView_c
 src/_ZN4WarpD0Ev.c	DTOR-ONLY	ov002	daWarpkun_c	Warp/daWarpkun_c	_ZN4WarpD0Ev	1		True	_ZTV4Warp	-
 src/game/actors/cstd/_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE.c	P3-mangled-method-only	arm9		cstd	_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE	1		False		by-value-class-param;no-header:cstd
 src/game/actors/cstd/_ZN4cstd16reciprocal_asyncE5Fix12IiE.c	P3-mangled-method-only	arm9		cstd	_ZN4cstd16reciprocal_asyncE5Fix12IiE	1		False		by-value-class-param;no-header:cstd
@@ -970,8 +970,8 @@ src/_ZN6Lakitu16OnPendingDestroyEv.c	P1-vtable+mangled	ov077	daJgm_c	Lakitu/daJg
 src/_ZN6LakituD0Ev.c	DTOR-ONLY	ov077	daJgm_c	Lakitu/daJgm_c	_ZN6LakituD0Ev	1		True		-
 src/_ZN6Memory8AllocateEjiP4Heap.c	P3-mangled-method-only	arm9		Memory	_ZN6Memory8AllocateEjiP4Heap	1	active	False		no-header:Memory
 src/_ZN6NumberD0Ev.c	DTOR-ONLY	ov002	daObjNumber_c	Number/daObjNumber_c	_ZN6NumberD0Ev	1		True		-
-src/game/actors/ShipUp/_ZN6ShipUpD0Ev.c	DTOR-ONLY	ov016	daObjKi_Fune_c	ShipUp/daObjKi_Fune_c	_ZN6ShipUpD0Ev	1		True	_ZTV10dBgActor_c/_ZTV6ShipUp	-
-src/game/actors/ShipUp/_ZN6ShipUpD1Ev.c	DTOR-ONLY	ov016	daObjKi_Fune_c	ShipUp/daObjKi_Fune_c	_ZN6ShipUpD1Ev	1		True	_ZTV10dBgActor_c/_ZTV6ShipUp	-
+src/game/actors/ShipUp/_ZN6ShipUpD0Ev.cpp	DTOR-ONLY	ov016	daObjKi_Fune_c	ShipUp/daObjKi_Fune_c	_ZN6ShipUpD0Ev	1		True	_ZTV10dBgActor_c/_ZTV6ShipUp	-
+src/game/actors/ShipUp/_ZN6ShipUpD1Ev.cpp	DTOR-ONLY	ov016	daObjKi_Fune_c	ShipUp/daObjKi_Fune_c	_ZN6ShipUpD1Ev	1		True	_ZTV10dBgActor_c/_ZTV6ShipUp	-
 src/_ZN6ThwompD0Ev.c	DTOR-ONLY	ov091	daDsn_c	Thwomp/daDsn_c	_ZN6ThwompD0Ev	1		True	_ZTV10dBgActor_c/_ZTV11daDsnBase_c/_ZTV6Thwomp	-
 src/_ZN6ToxBox13InitResourcesEv.c	P1-vtable+mangled	ov092	daOnms_c	ToxBox/daOnms_c	vtable daOnms_c slot 0 @0x2131da0 | _ZN6ToxBox13InitResourcesEv	1		True		-
 src/_ZN7Clipper13Func_020150E8ER7Vector35Fix12IiEPh.c	P3-mangled-method-only	arm9		Clipper	_ZN7Clipper13Func_020150E8ER7Vector35Fix12IiEPh	1		True		by-value-class-param
@@ -1413,7 +1413,7 @@ src/runtime/math/_ll_sdiv.c	PURE-C					0		None		not-in-delinks
 src/runtime/math/_s32_div_f.c	PURE-C					0		None		not-in-delinks
 src/runtime/math/_u32_div_f.c	PURE-C					0		None		not-in-delinks
 src/game/actors/BigBooIcon/BigBooIcon_Spawn.c	WEAK-refs-only	ov063				1		None		-
-src/game/actors/BigBooIcon/_ZN10BigBooIconD0Ev.c	DTOR-ONLY	ov063	daTrsIcon_c	BigBooIcon/daTrsIcon_c	_ZN10BigBooIconD0Ev	1		False	_ZTV10BigBooIcon	no-header:BigBooIcon/daTrsIcon_c
+src/game/actors/BigBooIcon/_ZN10BigBooIconD0Ev.cpp	DTOR-ONLY	ov063	daTrsIcon_c	BigBooIcon/daTrsIcon_c	_ZN10BigBooIconD0Ev	1		False	_ZTV10BigBooIcon	no-header:BigBooIcon/daTrsIcon_c
 src/actors/Boo/_ZN3Boo13InitResourcesEv.c	P1-vtable+mangled	ov063	daTrs_c	Boo/daTrs_c	vtable daTrs_c slot 0 @0x211b9bc | _ZN3Boo13InitResourcesEv	1		True		-
 src/actors/Boo/_ZN3Boo16OnPendingDestroyEv.c	P1-vtable+mangled	ov063	daTrs_c	Boo/daTrs_c	vtable daTrs_c slot 12 @0x211af6c | _ZN3Boo16OnPendingDestroyEv	1		True		-
 src/game/actors/BooCage/BooCage_Spawn.c	WEAK-refs-only	ov063				1		None		-
@@ -1425,7 +1425,7 @@ src/game/actors/MadPiano/_ZN8MadPianoD1Ev.c	DTOR-ONLY	ov063	daPiano_c	MadPiano/d
 src/game/actors/MadPiano/__sinit_ov063_0211e5fc.c	WEAK-refs-only	ov063				0		None		extra-sections:init
 src/game/actors/MansionSteps/MansionSteps_Spawn.c	WEAK-refs-only	ov063				1		None		-
 src/game/actors/MansionSteps/_ZN12MansionSteps16OnPendingDestroyEv.c	P1-vtable+mangled	ov063	daTrsTrap_c	MansionSteps/daTrsTrap_c	vtable daTrsTrap_c slot 12 @0x211ce30 | _ZN12MansionSteps16OnPendingDestroyEv	1		True		-
-src/game/actors/MansionSteps/_ZN12MansionStepsD0Ev.c	DTOR-ONLY	ov063	daTrsTrap_c	MansionSteps/daTrsTrap_c	_ZN12MansionStepsD0Ev	1		True		-
+src/game/actors/MansionSteps/_ZN12MansionStepsD0Ev.cpp	DTOR-ONLY	ov063	daTrsTrap_c	MansionSteps/daTrsTrap_c	_ZN12MansionStepsD0Ev	1		True		-
 src/game/actors/MerryGoRound/MerryGoRound_Spawn.c	WEAK-refs-only	ov063				1		None		-
 src/game/actors/TrapDoor/TrapDoor_Spawn.c	WEAK-refs-only	ov063				1		None		-
 src/minigames/dScMgJump2_c/dScMgJump2_c_Spawn.c	P2-vtable-only	ov006	dScMgJump_c	dScMgJump_c	vtable dScMgJump_c slot 38 @0x20efaf0	1		True	_ZTV12dScMgJump2_c/_ZTV14dScMgD3DBase_c	-
