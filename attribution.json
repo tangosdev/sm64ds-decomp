@@ -710,6 +710,11 @@
     "src/game/actors/daObjKm3_Kuruma_c.cpp#_ZN17daObjKm3_Kuruma_cD1Ev": "tangosdev",
     "src/game/actors/daObjKm3_Kuruma_c.cpp#_ZN17daObjKm3_Kuruma_cD0Ev": "tangosdev",
     "src/game/actors/daObjKm3_Kuruma_c.cpp#_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv": "lunavyqo",
-    "src/game/actors/daObjKm3_Kuruma_c.cpp#_ZN17daObjKm3_Kuruma_c13InitResourcesEv": "lunavyqo"
+    "src/game/actors/daObjKm3_Kuruma_c.cpp#_ZN17daObjKm3_Kuruma_c13InitResourcesEv": "lunavyqo",
+    "src/game/actors/WaterfallMist.cpp#_ZN13WaterfallMistD1Ev": "andrewboudreau",
+    "src/game/actors/WaterfallMist.cpp#_ZN13WaterfallMistD0Ev": "tangosdev",
+    "src/game/actors/WaterfallMist.cpp#_ZN13WaterfallMist8BehaviorEv": "tangosdev",
+    "src/game/actors/WaterfallMist.cpp#_ZN13WaterfallMist13InitResourcesEv": "tangosdev",
+    "src/game/actors/WaterfallMist.cpp#WaterfallMist_Spawn": "tangosdev"
   }
 }
