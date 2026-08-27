@@ -1,30 +1,45 @@
-struct ShadowModel {
-    void **vtable;       /* 0x0  */
-    char pad[0x1c];
-    struct ShadowModel *prev;   /* 0x20 */
-    struct ShadowModel *next;   /* 0x24 */
-};
-extern void *_ZTV11ShadowModel[];
-extern struct ShadowModel *data_0209cef4;   /* 0x0209cef4 */
-extern void _ZN9ModelBaseD2Ev(struct ShadowModel *thiz);
-extern void _ZN6Memory16operator_delete2EPv(void *ptr);
+//cpp
+// @symbol _ZN11ShadowModelD0Ev
+/* D0, the DELETING destructor. Unlike the D1/D2 pair these are NOT the
+ * same code -- D0 runs the destructor and then hands the object to
+ * operator delete, so it is longer. What is shared is the SOURCE: one
+ * `ShadowModel::~ShadowModel()` makes mwcc emit D0, D1 and D2 together, and
+ * objisolate keeps the one this file is bound to by config/arm9/delinks.txt.
+ * That is why this file carries the same definition as
+ * src/_ZN11ShadowModelD1Ev.cpp -- it is not duplication, it is how
+ * one-symbol-per-file enrolment meets a compiler that emits three. */
+/* recovered: real C++ destructor -- only the unlink is written by hand
+ *
+ * Every live ShadowModel sits on a global intrusive doubly-linked list whose
+ * head is data_0209cef4; InitModel links in, RenderAll walks it, CleanAll
+ * empties it, and this destructor takes one node back out. That unlink is the
+ * only part of these 0x70 bytes that is really source: the vtable store at the
+ * top and the ModelBase subobject call at the bottom are what `struct
+ * ShadowModel : ModelBase` and `virtual ~ShadowModel()` already mean, and the
+ * compiler emits them around the body.
+ *
+ * The list is singly-headed, so removing the first node is the case that needs
+ * the head compared against `this`; every other node is reached through its
+ * predecessor. Clearing both links afterwards is what lets CleanAll use a null
+ * `next` as its terminator.
+ *
+ * The unlink is also the layout evidence for the two pointers: it is what pins
+ * prev at 0x20 and next at 0x24.
+ */
+#include "ShadowModel.h"
 
-struct ShadowModel *_ZN11ShadowModelD0Ev(struct ShadowModel *thiz)
+extern ShadowModel *data_0209cef4;  /* head of the live-shadow list */
+
+ShadowModel::~ShadowModel()
 {
-    thiz->vtable = (void **)_ZTV11ShadowModel;
+    if (prev)
+        prev->next = next;
+    else if (data_0209cef4 == this)
+        data_0209cef4 = next;
 
-    if (thiz->prev)
-        thiz->prev->next = thiz->next;
-    else if (data_0209cef4 == thiz)
-        data_0209cef4 = thiz->next;
+    if (next)
+        next->prev = prev;
 
-    if (thiz->next)
-        thiz->next->prev = thiz->prev;
-
-    thiz->prev = 0;
-    thiz->next = 0;
-
-    _ZN9ModelBaseD2Ev(thiz);
-    _ZN6Memory16operator_delete2EPv(thiz);
-    return thiz;
+    prev = 0;
+    next = 0;
 }

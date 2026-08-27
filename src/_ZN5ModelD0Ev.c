@@ -1,30 +1,28 @@
-/* Model::~Model (deleting / D0) at 0x02016ce0
+//cpp
+// @symbol _ZN5ModelD0Ev
+/* D0, the DELETING destructor. Unlike the D1/D2 pair these are NOT the
+ * same code -- D0 runs the destructor and then hands the object to
+ * operator delete, so it is longer. What is shared is the SOURCE: one
+ * `Model::~Model()` makes mwcc emit D0, D1 and D2 together, and
+ * objisolate keeps the one this file is bound to by config/arm9/delinks.txt.
+ * That is why this file carries the same definition as
+ * src/_ZN5ModelD1Ev.cpp -- it is not duplication, it is how
+ * one-symbol-per-file enrolment meets a compiler that emits three. */
+/* recovered: real C++ destructor
  *
- * Model : ModelBase, with an owned pointer at +0x4c.
- *   [this+0] = _ZTV5Model (0x0208e90c)
- *   if (this->unk4c) operator delete(this->unk4c)  (bl 0x0203cbc0 -> func_0203cbc0)
- *   bl 0x020170b8 = ModelBase::~ModelBase(this)    (D2/base)
- *   bl 0x0203cbcc = Memory::operator_delete2(this)
- *   return this;
+ * Model owns the transformed-vertex buffer allocated by DoSetFile. Releasing
+ * that buffer through the game's delete veneer is the only part of destruction
+ * written by this class: C++ emits the Model vtable restore before the body and
+ * the ModelBase destructor call after it. The class-specific operator delete
+ * inherited from ModelBase also gives the compiler-generated deleting
+ * destructor its ROM callee.
  */
+#include "Model.h"
 
-struct Model {
-    void **vtable;   /* 0x00 */
-    char pad[0x4c - 4];
-    void *unk4c;     /* 0x4c: owned pointer */
-};
+extern "C" void func_0203cbc0(void *ptr);
 
-extern void *_ZTV5Model[];
-extern void func_0203cbc0(void *ptr);                          /* 0x0203cbc0 */
-extern void *_ZN9ModelBaseD2Ev(struct Model *self);     /* 0x020170b8 */
-extern void _ZN6Memory16operator_delete2EPv(void *p);   /* 0x0203cbcc */
-
-struct Model *_ZN5ModelD0Ev(struct Model *self)
+Model::~Model()
 {
-    self->vtable = (void **)_ZTV5Model;
-    if (self->unk4c)
-        func_0203cbc0(self->unk4c);
-    _ZN9ModelBaseD2Ev(self);
-    _ZN6Memory16operator_delete2EPv(self);
-    return self;
+    if (transformsBuf)
+        func_0203cbc0(transformsBuf);
 }
