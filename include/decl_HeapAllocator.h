@@ -20,7 +20,7 @@
 extern "C" {
 #endif
 
-extern void _ZN13HeapAllocatorC1EjPvPvj(void*, u32, void*, void*, u32);
+extern void func_0204df54(void*, u32, void*, void*, u32);
 
 
 #ifdef __cplusplus

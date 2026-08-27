@@ -31,16 +31,22 @@
 #ifndef SOLIDHEAPALLOCATOR_H
 #define SOLIDHEAPALLOCATOR_H
 #include "types.h"
+#include "HeapAllocator.h"
 
-struct SolidHeapAllocator {
-    u8  pad_000[0x18];
-    s32 mStart;            /* 0x018 */
-    s32 mEnd;               /* 0x01c */
-    s32 unk_020;            /* 0x020 */
-    u8  mFreeRegion;        /* 0x024 -- really a {begin, end, tail} triple; the
-                               struct's evidenced extent stops here, so callers
-                               take its address and re-view it. */
+struct SolidHeapFreeRegion {
+    void* begin;
+    void* end;
+    u32 flags;
+};
+
+typedef char SolidHeapFreeRegion_size_must_be_0xc[
+    sizeof(struct SolidHeapFreeRegion) == 0xc ? 1 : -1];
+
+struct SolidHeapAllocator : HeapAllocator {
+    SolidHeapFreeRegion mFreeRegion; /* 0x024 */
 #ifdef __cplusplus
+    SolidHeapAllocator(void* heapEnd, u32 flags);
+
     /* Instance methods. Parameter types are read off the mangled name: `Ej` is
        (unsigned int), `Ei` is (int), `EPvj` is (void*, unsigned int), `Eji` is
        (unsigned int, int), `Ev` is (). */
@@ -62,5 +68,8 @@ struct SolidHeapAllocator {
     static void* AllocateBackwards(void* freeBlockPair, u32 size, u32 align);
 #endif
 };
+
+typedef char SolidHeapAllocator_size_must_be_0x30[
+    sizeof(struct SolidHeapAllocator) == 0x30 ? 1 : -1];
 
 #endif
