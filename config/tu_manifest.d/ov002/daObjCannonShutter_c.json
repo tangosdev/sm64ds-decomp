@@ -1,8 +1,8 @@
 {
   "id": "ov002/daObjCannonShutter_c",
   "module": "ov002",
-  "source": "src_tu/actors/daObjCannonShutter_c.cpp",
-  "promoted_source": "src/actors/daObjCannonShutter_c.cpp",
+  "source": "src/game/actors/daObjCannonShutter_c.cpp",
+  "promoted_source": "src/game/actors/daObjCannonShutter_c.cpp",
   "status": "text-verified",
   "boundary_confidence": "medium",
   "boundary_evidence": [
@@ -352,5 +352,84 @@
         }
       ]
     }
-  ]
+  ],
+  "production_mode": "derived-text",
+  "unlicensed_output_observed": {
+    "note": "Pinned-compiler inventory stamped by tools/promote_derived_tus.py --stamp-discarded-output before default production admission. These definitions are not ROM ownership claims; every build requires an exact inventory match, exact derived text contributions, exact modules, and an exact ROM.",
+    "toolchain": "2004/b56",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "text": [
+      {
+        "symbol": "_ZN20daObjCannonShutter_cD2Ev",
+        "size": "0x44",
+        "binding": "STB_GLOBAL"
+      },
+      {
+        "symbol": "_ZN7Vector3D1Ev",
+        "size": "0x4",
+        "binding": "STB_LOPROC"
+      }
+    ],
+    "data": [
+      {
+        "symbol": "_ZTI10dBgActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI20daObjCannonShutter_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7dBase_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI7fBase_c",
+        "size": "0x8",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTI8dActor_c",
+        "size": "0xc",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS10dBgActor_c",
+        "size": "0xd",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS20daObjCannonShutter_c",
+        "size": "0x17",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7dBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS7fBase_c",
+        "size": "0x9",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTS8dActor_c",
+        "size": "0xa",
+        "binding": "STB_LOPROC"
+      },
+      {
+        "symbol": "_ZTV20daObjCannonShutter_c",
+        "size": "0x88",
+        "binding": "STB_GLOBAL"
+      }
+    ],
+    "bss": [],
+    "init": [],
+    "rodata": [],
+    "ctor": []
+  }
 }

@@ -752,6 +752,14 @@
     "src/game/actors/CameraTag.cpp#_ZN9CameraTag6RenderEv": "tangosdev",
     "src/game/actors/CameraTag.cpp#_ZN9CameraTag8BehaviorEv": "tangosdev",
     "src/game/actors/CameraTag.cpp#_ZN9CameraTag13InitResourcesEv": "tangosdev",
-    "src/game/actors/CameraTag.cpp#CameraTag_Spawn": "tangosdev"
+    "src/game/actors/CameraTag.cpp#CameraTag_Spawn": "tangosdev",
+    "src/game/actors/daObjCannonShutter_c.cpp#_ZN20daObjCannonShutter_cD1Ev": "tangosdev",
+    "src/game/actors/daObjCannonShutter_c.cpp#_ZN20daObjCannonShutter_cD0Ev": "tangosdev",
+    "src/game/actors/daObjCannonShutter_c.cpp#func_ov002_020bc990": "tangosdev",
+    "src/game/actors/daObjCannonShutter_c.cpp#_ZN20daObjCannonShutter_c16CleanupResourcesEv": "tangosdev",
+    "src/game/actors/daObjCannonShutter_c.cpp#_ZN20daObjCannonShutter_c6RenderEv": "tangosdev",
+    "src/game/actors/daObjCannonShutter_c.cpp#_ZN20daObjCannonShutter_c8BehaviorEv": "tangosdev",
+    "src/game/actors/daObjCannonShutter_c.cpp#_ZN20daObjCannonShutter_c13InitResourcesEv": "tangosdev",
+    "src/game/actors/daObjCannonShutter_c.cpp#daObjCannonShutter_c_Spawn": "tangosdev"
   }
 }
