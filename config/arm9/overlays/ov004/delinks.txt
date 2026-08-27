@@ -191,7 +191,7 @@ src/func_ov004_020ae858.cpp:
     complete
     .text start:0x020ae858 end:0x020aea30
 
-src/_ZN12dEnemyBase_c12KillByAttackER8dActor_c.cpp:
+src/func_ov004_020aea30.cpp:
     complete
     .text start:0x020aea30 end:0x020aea78
 
