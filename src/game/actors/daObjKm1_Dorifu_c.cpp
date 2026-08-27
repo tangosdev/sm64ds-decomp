@@ -26,10 +26,10 @@ struct ResourceDescriptor {
 };
 
 extern "C" {
-int func_ov002_020b4b6c(daObjKm1_Dorifu_c *self,
-                        ResourceDescriptor *descriptor);
-int func_ov002_020b4d58(daObjKm1_Dorifu_c *self,
-                        ResourceDescriptor *descriptor);
+int _ZN13daObjDorifu_c16CleanupResourcesEP20daObjDorifuResources(
+    daObjKm1_Dorifu_c *self, ResourceDescriptor *descriptor);
+int _ZN13daObjDorifu_c13InitResourcesEP20daObjDorifuResources(
+    daObjKm1_Dorifu_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov043_02112518;
 }
 
@@ -39,7 +39,8 @@ extern ResourceDescriptor data_ov043_02112518;
 // @symbol _ZN17daObjKm1_Dorifu_c13InitResourcesEv
 int daObjKm1_Dorifu_c::InitResources()
 {
-    return func_ov002_020b4d58(this, &data_ov043_02112518);
+    return _ZN13daObjDorifu_c13InitResourcesEP20daObjDorifuResources(
+        this, &data_ov043_02112518);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -48,7 +49,8 @@ int daObjKm1_Dorifu_c::InitResources()
 // @symbol _ZN17daObjKm1_Dorifu_c16CleanupResourcesEv
 int daObjKm1_Dorifu_c::CleanupResources()
 {
-    return func_ov002_020b4b6c(this, &data_ov043_02112518);
+    return _ZN13daObjDorifu_c16CleanupResourcesEP20daObjDorifuResources(
+        this, &data_ov043_02112518);
 }
 
 /* -------------------------------------------------------------------------- */
