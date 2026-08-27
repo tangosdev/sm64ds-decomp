@@ -1413,7 +1413,6 @@ src/_ll_sdiv.c	PURE-C					0		None		not-in-delinks
 src/_s32_div_f.c	PURE-C					0		None		not-in-delinks
 src/_u32_div_f.c	PURE-C					0		None		not-in-delinks
 src/actors/BigBooIcon/BigBooIcon_Spawn.c	WEAK-refs-only	ov063				1		None		-
-src/actors/BigBooIcon/_ZN10BigBooIconD0Ev.c	DTOR-ONLY	ov063	daTrsIcon_c	BigBooIcon/daTrsIcon_c	_ZN10BigBooIconD0Ev	1		False	_ZTV10BigBooIcon	no-header:BigBooIcon/daTrsIcon_c
 src/actors/Boo/_ZN3Boo13InitResourcesEv.c	P1-vtable+mangled	ov063	daTrs_c	Boo/daTrs_c	vtable daTrs_c slot 0 @0x211b9bc | _ZN3Boo13InitResourcesEv	1		True		-
 src/actors/Boo/_ZN3Boo16OnPendingDestroyEv.c	P1-vtable+mangled	ov063	daTrs_c	Boo/daTrs_c	vtable daTrs_c slot 12 @0x211af6c | _ZN3Boo16OnPendingDestroyEv	1		True		-
 src/actors/BooCage/BooCage_Spawn.c	WEAK-refs-only	ov063				1		None		-
