@@ -132,20 +132,30 @@ def rungA():
     gap0 = abs(r1[0]["x"] - r0[0]["x"])
     gapN = abs(r1[-1]["x"] - r0[-1]["x"])
     # 40.0 and 80.0 units in Fix12 (<< 12).
+    ok &= M.verdict(gap0 < 80 * 4096,
+                    "rungA they SPAWN OVERLAPPING | gap %.1f units against a "
+                    "combined body radius of 80.0, so the solver has real work "
+                    "on frame 0" % (gap0 / 4096.0))
     ok &= M.verdict(gapN > gap0,
-                    "rungA THE SOLVER PUSHED THEM APART | gap %d -> %d Fix12 "
-                    "(%.1f -> %.1f units); spawned overlapping by %.1f"
-                    % (gap0, gapN, gap0 / 4096.0, gapN / 4096.0,
-                       (80 * 4096 - gap0) / 4096.0))
-    ok &= M.verdict(abs(gapN - 80 * 4096) < 4096,
-                    "rungA and STOPPED at the sum of the radii | %d Fix12 = "
-                    "%.2f units, expected 80.00 (40.0 + 40.0), which is where "
-                    "CylinderClsn::Process's overlap goes to zero"
-                    % (gapN, gapN / 4096.0))
-    ok &= M.verdict(span(r0, "x") > 0 and span(r1, "x") > 0,
-                    "rungA BOTH bodies moved, not just one | slot0 x-span=%d "
-                    "slot1 x-span=%d (a one-sided push would move one)"
-                    % (span(r0, "x"), span(r1, "x")))
+                    "rungA THE SOLVER PUSHED THEM APART | gap %.1f -> %.1f units"
+                    % (gap0 / 4096.0, gapN / 4096.0))
+
+    # THE DECISIVE ONE, and it got sharper when the per-player input gate went
+    # in. Slot 1 has NO INPUT AT ALL in this rung: one process, no transport,
+    # and data_0209fc68 set so each Player reads its own (empty) pad rather than
+    # mirroring player 0's. A body with no input does not walk. So every unit
+    # slot 1 travels sideways is a unit something PUSHED it, and the only thing
+    # in contact with it is player 0's body cylinder.
+    #
+    # An earlier version of this rung asserted the pair ended at exactly the sum
+    # of the radii, which was true while both players mirrored one pad and both
+    # walked together. With independent input the local player walks away and
+    # the resting distance stops being the observable. The push is.
+    ok &= M.verdict(span(r1, "x") > 0,
+                    "rungA THE UN-DRIVEN BODY WAS PUSHED | slot1 has no input "
+                    "of its own and still travelled %d Fix12 (%.1f units) on "
+                    "x; the only thing touching it is slot0's body cylinder"
+                    % (span(r1, "x"), span(r1, "x") / 4096.0))
     print("      evidence: %s" % os.path.join(d, "run.log"))
     return ok
 
@@ -327,15 +337,35 @@ def rung11():
     if not (p0 and p1):
         return False
 
+    # THE GAP IS THE EVIDENCE, not the contact flag, and the reason is a real
+    # behaviour rather than a convenience. The flag this probe reads is the body
+    # cylinder's otherOwner at +0x2f8, which CylinderClsn::Process writes on a
+    # pair hit and Player::Behavior CLEARS at the top of its own next tick. The
+    # probe runs before the actor tick, so it reliably samples the flag after
+    # the clear and reads 0 even on frames where a push happened. Asserting on
+    # it would be asserting on the sampling point.
+    #
+    # The separation is not sampled, it is a state: two bodies that started
+    # overlapping and are now exactly the sum of their radii apart were pushed
+    # there, and nothing else in the game moves two players to precisely that
+    # distance and holds them.
     gap0 = abs(p1[0]["x"] - p0[0]["x"])
     gapN = abs(p1[-1]["x"] - p0[-1]["x"])
     contact = any(r["touched"] for r in p0) or any(r["touched"] for r in p1)
     ok &= M.verdict(span(p0, "x") > 0 and span(p1, "x") > 0,
                     "rung11 BOTH characters moved in the host world | slot0 "
                     "x-span=%d slot1 x-span=%d" % (span(p0, "x"), span(p1, "x")))
-    ok &= M.verdict(gapN > gap0 or contact,
-                    "rung11 THE CONTACT DID SOMETHING | gap %.1f -> %.1f units, "
-                    "cylinder contact seen=%s"
+    ok &= M.verdict(gap0 < 80 * 4096,
+                    "rung11 they START OVERLAPPING, so the solver has work to "
+                    "do | gap %.1f units against a combined radius of 80.0"
+                    % (gap0 / 4096.0))
+    ok &= M.verdict(gapN >= 80 * 4096 - 4096,
+                    "rung11 AND THE CONTACT PUSHED THEM APART | gap %.1f -> "
+                    "%.1f units; 80.0 is where CylinderClsn::Process's overlap "
+                    "reaches zero and it stops pushing. The remote body is "
+                    "driven by the OTHER PROCESS's input the whole time. "
+                    "(cylinder contact flag sampled non-zero: %s -- see the "
+                    "note above, the flag is cleared before this probe runs)"
                     % (gap0 / 4096.0, gapN / 4096.0, contact))
     return ok
 
