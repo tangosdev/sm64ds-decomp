@@ -29,7 +29,7 @@
       "symbol": "_ZN13PeachPaintingD0Ev",
       "address": "0x02111e40",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN13PeachPaintingD0Ev.c",
+      "legacy_source": "src/_ZN13PeachPaintingD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -43,7 +43,7 @@
       "symbol": "_ZN13PeachPainting16CleanupResourcesEv",
       "address": "0x02111ec4",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN13PeachPainting16CleanupResourcesEv.c",
+      "legacy_source": "src/_ZN13PeachPainting16CleanupResourcesEv.cpp",
       "ordinal": 3
     },
     {

@@ -29,7 +29,7 @@
       "symbol": "_ZN9LightBeamD0Ev",
       "address": "0x02111a08",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN9LightBeamD0Ev.c",
+      "legacy_source": "src/_ZN9LightBeamD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -43,7 +43,7 @@
       "symbol": "_ZN9LightBeam16CleanupResourcesEv",
       "address": "0x02111a94",
       "size": "0x00000024",
-      "legacy_source": "src/_ZN9LightBeam16CleanupResourcesEv.c",
+      "legacy_source": "src/_ZN9LightBeam16CleanupResourcesEv.cpp",
       "ordinal": 3
     },
     {

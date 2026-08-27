@@ -1,9 +1,9 @@
 {
   "id": "ov002/Platform",
   "module": "ov002",
-  "source": "src_tu/actors/Platform.cpp",
+  "source": "src/actors/Platform.cpp",
   "promoted_source": "src/actors/Platform.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x20ee42c..0x20eea84, 11 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -37,7 +37,7 @@
       "symbol": "_ZN10dBgActor_c14KillByMegaCharER6Player",
       "address": "0x020ee4b0",
       "size": "0x000000ac",
-      "legacy_source": "src/_ZN10dBgActor_c14KillByMegaCharER6Player.c",
+      "legacy_source": "src/_ZN10dBgActor_c14KillByMegaCharER6Player.cpp",
       "ordinal": 2
     },
     {
@@ -93,7 +93,7 @@
       "symbol": "_ZN10dBgActor_cC2Ev",
       "address": "0x020eea50",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN10dBgActor_cC2Ev.c",
+      "legacy_source": "src/_ZN10dBgActor_cC2Ev.cpp",
       "ordinal": 10
     }
   ],
@@ -186,5 +186,14 @@
       "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
     },
     "scratch": "build/tu/ov002-Platform/link-partial (gitignored)"
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "vague-linkage copy of _ZN7Vector3D1Ev, re-emitted by every TU that needs it; the cartridge keeps one at arm9:0x020072c0 and another enrolled source owns it. rombuild proves this object's body against the cartridge before discarding it."
+    }
+  ]
 }

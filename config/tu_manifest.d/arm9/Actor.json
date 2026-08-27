@@ -362,7 +362,7 @@
       "symbol": "_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j",
       "address": "0x020102b0",
       "size": "0x00000054",
-      "legacy_source": "src/_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.c",
+      "legacy_source": "src/_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.cpp",
       "ordinal": 48
     },
     {
@@ -397,7 +397,7 @@
       "symbol": "_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s",
       "address": "0x02010428",
       "size": "0x00000034",
-      "legacy_source": "src/_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s.c",
+      "legacy_source": "src/_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s.cpp",
       "ordinal": 53
     },
     {
@@ -411,7 +411,7 @@
       "symbol": "_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i",
       "address": "0x02010498",
       "size": "0x00000044",
-      "legacy_source": "src/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.c",
+      "legacy_source": "src/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.cpp",
       "ordinal": 55
     },
     {
@@ -453,7 +453,7 @@
       "symbol": "_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs",
       "address": "0x02010714",
       "size": "0x00000130",
-      "legacy_source": "src/_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs.c",
+      "legacy_source": "src/_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs.cpp",
       "ordinal": 61
     },
     {
@@ -523,14 +523,14 @@
       "symbol": "_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j",
       "address": "0x02010b9c",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.c",
+      "legacy_source": "src/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.cpp",
       "ordinal": 71
     },
     {
       "symbol": "_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j",
       "address": "0x02010be8",
       "size": "0x00000048",
-      "legacy_source": "src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c",
+      "legacy_source": "src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.cpp",
       "ordinal": 72
     },
     {
@@ -670,7 +670,7 @@
       "symbol": "_ZN8dActor_cD0Ev",
       "address": "0x02011314",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN8dActor_cD0Ev.c",
+      "legacy_source": "src/_ZN8dActor_cD0Ev.cpp",
       "ordinal": 92
     },
     {
