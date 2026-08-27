@@ -2404,6 +2404,7 @@ data_ov002_0210ba7c kind:data(any) addr:0x0210ba7c
 data_ov002_0210ba9c kind:data(any) addr:0x0210ba9c
 _ZTIN8daDemo_c10anmModel_cE kind:data(any) addr:0x0210babc
 data_ov002_0210bae4 kind:data(any) addr:0x0210bae4
+_ZTVN8daDemo_c13simpleModel_cE kind:data(any) addr:0x0210bae0
 _ZTIN8daDemo_c13simpleModel_cE kind:data(any) addr:0x0210bafc
 data_ov002_0210bb1c kind:data(any) addr:0x0210bb1c
 data_ov002_0210bb3c kind:data(any) addr:0x0210bb3c
@@ -2416,6 +2417,7 @@ data_ov002_0210bc28 kind:data(any) addr:0x0210bc28
 data_ov002_0210bc58 kind:data(any) addr:0x0210bc58
 data_ov002_0210bc88 kind:data(any) addr:0x0210bc88
 data_ov002_0210bcc4 kind:data(any) addr:0x0210bcc4
+_ZTVN8daDemo_c10anmModel_cE kind:data(any) addr:0x0210bcc0
 data_ov002_0210bce8 kind:data(any) addr:0x0210bce8
 data_ov002_0210bcf0 kind:data(any) addr:0x0210bcf0
 data_ov002_0210bd24 kind:data(any) addr:0x0210bd24

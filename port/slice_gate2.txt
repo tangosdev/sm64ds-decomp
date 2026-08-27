@@ -24,7 +24,7 @@ src/runtime/memory/MemoryNode/_ZN10MemoryNode6TargetC1EP10MemoryNode.cpp
 
 # NestedHeapIterator: the HeapAllocator base ctor registers every allocator
 # in the global nesting registry, so the iterator family rides along.
-src/runtime/memory/NestedHeapIterator/_ZN18NestedHeapIteratorC1Ej.c
+src/runtime/memory/NestedHeapIterator/_ZN18NestedHeapIteratorC1Ej.cpp
 src/runtime/memory/NestedHeapIterator/_ZN18NestedHeapIterator10FindNestedEPv.cpp
 src/runtime/memory/NestedHeapIterator/_ZN18NestedHeapIterator19RecursiveFindNestedEPv.cpp
 src/runtime/memory/NestedHeapIterator/_ZN18NestedHeapIterator7AddLastEP13HeapAllocator.cpp

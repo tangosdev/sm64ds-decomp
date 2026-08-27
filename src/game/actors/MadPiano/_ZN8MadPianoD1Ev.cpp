@@ -1,9 +1,12 @@
 //cpp
-// @symbol _ZN8MadPianoD0Ev
-/* D0, the deleting destructor. Same shadow struct as the D1 file beside this one;
- * mwcc emits D0, D1 and D2 together from one destructor definition and objisolate
- * keeps the variant this file's delinks entry names. The trailing operator delete
- * comes from the base -- see the inline one in include/dActor_c.h. */
+// @symbol _ZN8MadPianoD1Ev
+/* D1, the complete-object destructor. The shadow struct below is the point: the
+ * shared header spells this class FLAT, with the base's fields restated as padding,
+ * so nothing in it tells mwcc there are subobjects to tear down. Naming the real
+ * base and the real member types makes the compiler generate the ROM's teardown --
+ * every member destroyed in reverse declaration order, then the base chain -- from
+ * an empty body. The shared header is left alone; it has matched functions compiled
+ * against its flat form. */
 #include "dBgActor_c.h"
 #include "ModelAnim.h"
 #include "ShadowModel.h"

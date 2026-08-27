@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern void func_ov007_020b46b0(int a, int b);
+extern void func_ov007_020b46b0(void* elem, void* tp);
 extern void func_ov007_020b7a78(void);
 extern void func_ov007_020c92d0(int o);
 extern void func_ov007_020c934c(int o, int v);
@@ -33,7 +33,7 @@ void func_ov007_020aed98(void)
 
     for (i = 0; i < 0x18; i++) {
         char *gg = data_ov007_0210342c;
-        func_ov007_020b46b0(*(int*)(gg + i * 4 + 0x114), *(int*)(gg + 0x50));
+        func_ov007_020b46b0(*(void**)(gg + i * 4 + 0x114), *(void**)(gg + 0x50));
     }
 
     func_ov007_020b7a78();

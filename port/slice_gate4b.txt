@@ -5,7 +5,7 @@
 
 # Model
 src/runtime/graphics/Model/_ZN5ModelC1Ev.cpp
-src/runtime/graphics/Model/_ZN5ModelC2Ev.c
+src/runtime/graphics/Model/_ZN5ModelC2Ev.cpp
 src/runtime/graphics/Model/_ZN5Model8LoadFileER13SharedFilePtr.cpp
 src/runtime/graphics/Model/_ZN5Model9DoSetFileEPcii.cpp
 src/runtime/graphics/Model/_ZN5Model17UpdateFileOffsetsER8BMD_File.cpp
