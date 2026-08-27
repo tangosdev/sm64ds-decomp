@@ -23,7 +23,7 @@
  *     0x768, 0x774, 0x780, 0x78c, 0x798, 0x7a4, 0x7b0, 0x7c0 -- and no
  *     others, which is the same ten that sit four bytes below a Callback.
  *   * Every Callback subobject is constructed by storing the base
- *     Particle::Callback vtable data_0208f3b4 and then overwriting it with a
+ *     dPa_c::level_c::callback_c vtable at 0x0208f3b4 and then overwriting it with a
  *     derived one, which is exactly what Particle::SimpleCallback's own
  *     constructor does.
  * Where no New* helper survives to name the effect, the field keeps its

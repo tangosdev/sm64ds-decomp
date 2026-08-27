@@ -924,8 +924,8 @@ _ZN8Particle13ScaleCallback14SpawnParticlesERNS_6SystemE kind:function(arm,size=
 func_020225fc kind:function(arm,size=0x34) addr:0x020225fc
 _ZN8Particle14SimpleCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x10) addr:0x02022630
 _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE kind:function(arm,size=0x40) addr:0x02022640
-_ZN8Particle14SimpleCallbackC2Ev kind:function(arm,size=0x24) addr:0x02022680
-func_020226a4 kind:function(arm,size=0x24) addr:0x020226a4
+_ZN5dPa_c7level_c16simpleCallback_cC1Ev kind:function(arm,size=0x24) addr:0x02022680
+_ZN5dPa_c7level_c16simpleCallback_cC2Ev kind:function(arm,size=0x24) addr:0x020226a4
 _ZN8Particle8Callback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x8) addr:0x020226c8
 _ZN8Particle8Callback14SpawnParticlesERNS_6SystemE kind:function(arm,size=0x4) addr:0x020226d0
 _ZN8Particle19SetSelfDestructFlagEj kind:function(arm,size=0x28) addr:0x020226d4
@@ -3719,8 +3719,8 @@ _ZTIN5dPa_c7level_c24fitWaterSimpleCallback_cE kind:data(any) addr:0x0208f378
 _ZTIN5dPa_c7level_c23cleanParticleCallback_cE kind:data(any) addr:0x0208f384
 _ZTIN5dPa_c7level_c18fitWaterCallback_cE kind:data(any) addr:0x0208f390
 data_0208f3a4 kind:data(any) addr:0x0208f3a4
-data_0208f3b4 kind:data(any) addr:0x0208f3b4
-data_0208f3c4 kind:data(any) addr:0x0208f3c4
+_ZTVN5dPa_c7level_c10callback_cE kind:data(any) addr:0x0208f3b4
+_ZTVN5dPa_c7level_c16simpleCallback_cE kind:data(any) addr:0x0208f3c4
 data_0208f3d4 kind:data(any) addr:0x0208f3d4
 data_0208f3e4 kind:data(any) addr:0x0208f3e4
 data_0208f3f4 kind:data(any) addr:0x0208f3f4
