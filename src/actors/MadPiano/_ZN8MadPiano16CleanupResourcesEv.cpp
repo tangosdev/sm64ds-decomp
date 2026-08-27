@@ -1,22 +1,21 @@
 //cpp
 // @symbol _ZN8MadPiano16CleanupResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
+/* Release the three shared assets after removing the inherited moving mesh
+ * collider from the collision world. */
 #include "MadPiano.h"
 #include "SharedFilePtr.h"
-#include "dBgW.h"
-extern int MadPiano_AnimFile[];
-extern int MadPiano_ClsnFile[];
-extern int MadPiano_ModelFile[];
+
+extern SharedFilePtr MadPiano_AnimFile;
+extern SharedFilePtr MadPiano_ClsnFile;
+extern SharedFilePtr MadPiano_ModelFile;
 
 int MadPiano::CleanupResources()
 {
-    if (((dBgW *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((dBgW *)((char *)&mMeshCollider))->Disable();
+    if (mMeshCollider.IsEnabled()) {
+        mMeshCollider.Disable();
     }
-    ((SharedFilePtr *)(MadPiano_ModelFile))->Release();
-    ((SharedFilePtr *)(MadPiano_AnimFile))->Release();
-    ((SharedFilePtr *)(MadPiano_ClsnFile))->Release();
+    MadPiano_ModelFile.Release();
+    MadPiano_AnimFile.Release();
+    MadPiano_ClsnFile.Release();
     return 1;
 }
