@@ -1,3 +1,8 @@
+/* Deliberately remains a C/manual factory. A natural C++
+ * `return new QuestionSwitch` reproduces the instruction bytes, but mwccarm
+ * relocates the allocation call to unresolved `_Znwm` instead of the ROM's
+ * fBase_c::operator new at 0x02043444 (linkcheck BLIND-1). The explicit call
+ * below preserves the allocator identity rather than hiding that ABI wall. */
 extern void *_ZN7fBase_cnwEj(unsigned);
 extern void _ZN10dBgActor_cC2Ev(void *);
 extern void _ZN10dBgW_KcMbgC1Ev(void *);

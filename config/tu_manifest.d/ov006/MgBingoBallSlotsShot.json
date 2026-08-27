@@ -1,0 +1,62 @@
+{
+  "id": "ov006/MgBingoBallSlotsShot",
+  "module": "ov006",
+  "source": "src_tu/actors/MgBingoBallSlotsShot.cpp",
+  "promoted_source": "src/actors/MgBingoBallSlotsShot.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x02119824..0x02119904, 2 function(s), from config/arm9/overlays/ov006/delinks.txt and symbols.txt (hand-built manifest entry -- NOT re-derivable from a fresh build/tu_map.json run)",
+    "no class label (unattributed run; two plain functions, no vtable/RTTI anchor)",
+    "HAND-WRITTEN ENTRY, NOT tubuild.py create output: a freshly regenerated build/tu_map.json (rtti_extract -> rtti_vtables -> tu_map, this same commit) no longer isolates this address range as its own unit -- it now falls INSIDE a 132-function, 14-class run (0x210d740-0x2119900: cMgSmartball_* family + dScMgSmartball_c) that tu_map's own meta.under_segmented list flags for module ov006 (TU count is a LOWER BOUND, per decomp-tu-slicing). The original tier1_under_cliff candidate (notes/data/tu-merge-candidates.json) was generated from an EARLIER tu_map snapshot that cut this module much finer (87 units vs 71 now) -- the same stale-map-over-cut failure mode notes/stale-tu-map-overcut-ov006.md documents elsewhere in ov006. This TU's 2-function boundary is therefore UNCONFIRMED by the current tool: text-level compile/verify below is real, but do not read it as proof this is the ROM's actual original TU cut -- it may be a fragment of the larger unresolved run."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02119824",
+      "end": "0x02119904"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "MgBingoBallSlotsShot_Spawn",
+      "address": "0x02119824",
+      "size": "0x000000dc",
+      "legacy_source": "src/MgBingoBallSlotsShot_Spawn.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov006_02119900",
+      "address": "0x02119900",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_02119900.c",
+      "ordinal": 1
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-built manifest entry (tools.build_manifest_entry's schema, not its code path): tools/tubuild.py create ov006/MgBingoBallSlotsShot now fails with 'no candidate TU in build/tu_map.json' because the freshly regenerated map no longer isolates this range -- see boundary_evidence above.",
+    "The src_tu/actors/MgBingoBallSlotsShot.cpp shadow file already existed (generated in an earlier session against the older, finer-cut map) and was reconciled/verified in place against this hand-written entry."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-MgBingoBallSlotsShot/MgBingoBallSlotsShot.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 2,
+    "functions_declared": 2,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

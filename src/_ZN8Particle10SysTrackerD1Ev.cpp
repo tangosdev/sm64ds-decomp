@@ -1,21 +1,30 @@
 //cpp
 // @symbol _ZN8Particle10SysTrackerD1Ev
-/* recovered: named members + shared header, declarations from a shared header */
+/* recovered: real C++ destructor -- the compiler spells the mangled name.
+ *
+ * SysTracker has no bases and no virtuals, so mwcc emits D1 and D2 from this
+ * one definition and objisolate keeps the one this file is bound to. */
+/* declarations from a shared header */
 #include "decl_common.h"
-/* recovered: named members + shared header */
-#include "Particle.h"
+/* recovered: real class form */
+#include "Particle__SysTracker.h"
+
 extern "C" void func_0203cbc0(void *p);
 extern void *data_0209ee74;
 
-extern "C" void *_ZN8Particle10SysTrackerD1Ev(struct Particle *self) {
+namespace Particle {
+
+SysTracker::~SysTracker()
+{
     if (data_0209ee80 != 0) {
-        func_02021b98((char *)&self->mContents);
+        func_02021b98((char *)&mContents);
         func_0203cbc0(data_0209ee80);
         data_0209ee80 = 0;
     }
-    if (*(void **)((char *)self) != (void *)data_02075f14) {
-        _ZN6Memory10DeallocateEPv(*(void **)((char *)self));
+    if (mResourceFile != (void *)data_02075f14) {
+        _ZN6Memory10DeallocateEPv(mResourceFile);
     }
     data_0209ee74 = 0;
-    return ((char *)self);
+}
+
 }

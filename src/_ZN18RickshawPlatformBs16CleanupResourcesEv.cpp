@@ -3,14 +3,9 @@
 // @symbol _ZN18RickshawPlatformBs16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "RickshawPlatformBs.h"
-struct Arg { void *m[3]; };
-
-extern "C" {
-extern int func_ov002_020b4b6c(u8 *self, struct Arg *arg);
-}
-extern struct Arg data_ov047_02112508;
+extern daObjDorifuResources data_ov047_02112508[5];
 
 int RickshawPlatformBs::CleanupResources()
 {
-    return func_ov002_020b4b6c(((u8 *)this), &data_ov047_02112508);
+    return daObjDorifu_c::CleanupResources(data_ov047_02112508);
 }

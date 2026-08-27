@@ -1,23 +1,14 @@
 //cpp
-struct dActor_c {
-    ~dActor_c();
-};
+// @symbol _ZN15RecRoomCupboardD0Ev
+/* recovered: real C++ deleting destructor -- the compiler emits the whole body.
+ *
+ * D0 is the DELETING destructor: run the destructor -- vptr store, the
+ * five-element dCcAcPos_c array destroy at +0xd4, then the dActor_c base step
+ * -- and hand the object back to its heap. The deallocation is dActor_c's
+ * inline `operator delete`, which is why nothing below mentions a heap.
+ */
+#include "RecRoomCupboard.h"
 
-struct Heap;
-
-struct Memory {
-    static void Deallocate(void *, Heap *);
-};
-
-extern int _ZTV15RecRoomCupboard;
-extern int _ZN10dCcAcPos_cD1Ev;
-extern int data_020a0eac;
-extern "C" int __destroy_arr(char *, int, int, int);
-
-extern "C" void *_ZN15RecRoomCupboardD0Ev(char *c) {
-    *(int *)c = (int)&_ZTV15RecRoomCupboard;
-    __destroy_arr(c + 0xd4, 5, 0x40, (int)&_ZN10dCcAcPos_cD1Ev);
-    ((dActor_c *)c)->~dActor_c();
-    Memory::Deallocate(c, (Heap *)*(int *)&data_020a0eac);
-    return c;
+RecRoomCupboard::~RecRoomCupboard()
+{
 }

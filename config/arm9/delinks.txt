@@ -3490,7 +3490,7 @@ src/func_02021a74.c:
     complete
     .text start:0x02021a74 end:0x02021b58
 
-src/_ZNK8Particle10SysTracker8Contents8FindDataEj.c:
+src/_ZNK8Particle10SysTracker8Contents8FindDataEj.cpp:
     complete
     .text start:0x02021b58 end:0x02021b98
 
@@ -3702,7 +3702,7 @@ src/_ZN8Particle9RenderAllEv.cpp:
     complete
     .text start:0x02022ee0 end:0x02022f20
 
-src/_ZN8Particle10SysTracker6UpdateEv.c:
+src/_ZN8Particle10SysTracker6UpdateEv.cpp:
     complete
     .text start:0x02022f20 end:0x02022f40
 
@@ -3726,7 +3726,7 @@ src/_ZN8Particle10SysTrackerD1Ev.cpp:
     complete
     .text start:0x02023194 end:0x02023204
 
-src/_ZN8Particle10SysTrackerC1Ev.c:
+src/_ZN8Particle10SysTrackerC1Ev.cpp:
     complete
     .text start:0x02023204 end:0x020233d4
 
@@ -4688,15 +4688,15 @@ src/func_02034b1c.c:
     complete
     .text start:0x02034b1c end:0x02034b40
 
-src/_ZN7dScMB_c15graphCallback_c14GraphCallback3Ev.c:
+src/_ZN7dScMB_c15graphCallback_c14GraphCallback3Ev.cpp:
     complete
     .text start:0x02034b40 end:0x02034d24
 
-src/_ZN7dScMB_c15graphCallback_c14GraphCallback2Ev.c:
+src/_ZN7dScMB_c15graphCallback_c14GraphCallback2Ev.cpp:
     complete
     .text start:0x02034d24 end:0x02034d2c
 
-src/_ZN7dScMB_c15graphCallback_c14GraphCallback0Ev.c:
+src/_ZN7dScMB_c15graphCallback_c14GraphCallback0Ev.cpp:
     complete
     .text start:0x02034d2c end:0x02034d34
 

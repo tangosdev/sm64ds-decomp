@@ -29,8 +29,9 @@
  * this class's vtable between its own and _ZTV10dBgActor_c, which is the same fact
  * the RTTI records, arrived at from the other direction.
  *
- * THE TWO ARRAYS ARE THIS CLASS'S. Its own destructor -- ov002 0x020b4af8, whose
- * body is still under a func_ov002_ name -- destroys a dBgW_KcMbg[5] at
+ * THE TWO ARRAYS ARE THIS CLASS'S. Its own destructor --
+ * daObjDorifu_c::~daObjDorifu_c at ov002 0x020b4af8 -- destroys a
+ * dBgW_KcMbg[5] at
  * 0x4b0 and a Model[5] at 0x320 while the vptr is this class's, before storing
  * dBgActor_c's and destroying dBgActor_c's own two. Both arrays close exactly on the
  * next thing: 0x320 + 5 * sizeof(Model) = 0x320 + 5 * 0x50 = 0x4b0, and
@@ -39,11 +40,11 @@
  * dBgW_KcMbg.h; they agree without being told to.
  *
  * THE FOUR BYTES AT 0xdc8 ARE THIS CLASS'S TOO, for the same reason:
- * `func_ov002_020b4bfc` is this class's own Behavior, in this class's own
+ * `daObjDorifu_c::Behavior` is this class's own slot-6 override, in its own
  * overlay, and it reads all four. It is a small state machine -- 0xdca selects
  * the state, 0xdcb indexes an Event bit, 0xdc9 counts down between steps, and
  * 0xdc8 walks 0..4 to pick which of the five colliders is enabled. Render
- * (`func_ov002_020b4bc4`) indexes the Model array at 0x320 with the same 0xdc8.
+ * (`daObjDorifu_c::Render`) indexes the Model array at 0x320 with the same 0xdc8.
  * The names below are coined from that; nothing in the ROM names them.
  *
  * SIZE 0xdcc closes the class: all three factories that build a descendant of it
@@ -61,13 +62,20 @@
 
 #include "dBgActor_c.h"
 #include "Model.h"
+#include "SharedFilePtr.h"
 #include "dBgW_KcMbg.h"
+
+struct daObjDorifuResources {
+    SharedFilePtr *modelFile;
+    SharedFilePtr *clsnFile;
+    CLPS_Block *clps;
+};
 
 struct daObjDorifu_c : dBgActor_c {
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
     Model mPlankModels[5];                  /* 0x320 */
     dBgW_KcMbg mPlankClsn[5];       /* 0x4b0 */
-    u8  pad_d98[0x30];
+    Matrix4x3 mPlatformMat;                 /* 0xd98 */
     u8  mActivePlank;       /* 0xdc8 - 0..4, which collider is enabled */
     u8  mStepTimer;         /* 0xdc9 - frames until the next step */
     u8  mState;             /* 0xdca - 0..3, see Behavior */
@@ -76,10 +84,16 @@ struct daObjDorifu_c : dBgActor_c {
     /* --- vtable --- */
     /* INLINE ON PURPOSE, for the reason include/dBgActor_c.h gives for its own:
        every descendant's destructor inlines this body rather than calling
-       _ZN13daObjDorifu_cD1Ev (which does exist out of line, at ov002 0x020b4af8,
-       still under its func_ov002_ name). An out-of-line declaration here would
+       _ZN13daObjDorifu_cD1Ev (which does exist out of line at ov002 0x020b4af8).
+       An out-of-line declaration here would
        make each descendant emit a `bl` the ROM does not have. */
     virtual ~daObjDorifu_c() {}
+
+    /* The base is abstract in the cartridge: these two inherited slots are
+       null in _ZTV13daObjDorifu_c. Each concrete descendant supplies the
+       no-argument override and forwards to the resource-table overloads. */
+    virtual s32 InitResources() = 0;        /* slot 0 */
+    virtual s32 CleanupResources() = 0;     /* slot 3 */
 
     /* Slot 6, ov002 0x020b4bfc -- the state machine the banner above describes.
        An override of the virtual fBase_c already declared, so it occupies a
@@ -95,9 +109,15 @@ struct daObjDorifu_c : dBgActor_c {
        a null scale pointer (spelled 0, matching every other Render(0) call
        in the tree). */
     s32 Render();
+
+    /* Shared implementations used by all three concrete descendants. */
+    s32 InitResources(daObjDorifuResources *resources);
+    s32 CleanupResources(daObjDorifuResources *resources);
 };
 
 typedef char daObjDorifu_c_size_must_be_0xdcc[sizeof(daObjDorifu_c) == 0xdcc ? 1 : -1];
+typedef char daObjDorifu_Resource_size_must_be_0xc[
+    sizeof(daObjDorifuResources) == 0xc ? 1 : -1];
 
 #else
 

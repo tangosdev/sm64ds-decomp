@@ -1,0 +1,375 @@
+{
+  "id": "ov062/Koopa+KoopaSmall",
+  "module": "ov062",
+  "source": "src_tu/actors/Koopa+KoopaSmall.cpp",
+  "promoted_source": "src/actors/Koopa+KoopaSmall.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x21174cc..0x211975c, 39 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): Koopa, KoopaSmall",
+    "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021174cc",
+      "end": "0x0211975c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN5KoopaD1Ev",
+      "address": "0x021174cc",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN5KoopaD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN5KoopaD0Ev",
+      "address": "0x02117514",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN5KoopaD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov062_02117570",
+      "address": "0x02117570",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov062_02117570.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov062_021175c0",
+      "address": "0x021175c0",
+      "size": "0x00000164",
+      "legacy_source": "src/func_ov062_021175c0.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov062_02117724",
+      "address": "0x02117724",
+      "size": "0x00000270",
+      "legacy_source": "src/func_ov062_02117724.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov062_02117994",
+      "address": "0x02117994",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov062_02117994.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov062_021179e4",
+      "address": "0x021179e4",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov062_021179e4.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov062_02117a3c",
+      "address": "0x02117a3c",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov062_02117a3c.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov062_02117acc",
+      "address": "0x02117acc",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov062_02117acc.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov062_02117b48",
+      "address": "0x02117b48",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov062_02117b48.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov062_02117b60",
+      "address": "0x02117b60",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov062_02117b60.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov062_02117b9c",
+      "address": "0x02117b9c",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov062_02117b9c.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov062_02117bf4",
+      "address": "0x02117bf4",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov062_02117bf4.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov062_02117c98",
+      "address": "0x02117c98",
+      "size": "0x0000036c",
+      "legacy_source": "src/func_ov062_02117c98.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov062_02118004",
+      "address": "0x02118004",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov062_02118004.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov062_02118058",
+      "address": "0x02118058",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov062_02118058.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov062_021180d4",
+      "address": "0x021180d4",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov062_021180d4.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov062_0211811c",
+      "address": "0x0211811c",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov062_0211811c.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov062_021181a0",
+      "address": "0x021181a0",
+      "size": "0x000000b8",
+      "legacy_source": "src/func_ov062_021181a0.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov062_02118258",
+      "address": "0x02118258",
+      "size": "0x000000dc",
+      "legacy_source": "src/func_ov062_02118258.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov062_02118334",
+      "address": "0x02118334",
+      "size": "0x000000ac",
+      "legacy_source": "src/func_ov062_02118334.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov062_021183e0",
+      "address": "0x021183e0",
+      "size": "0x000001a8",
+      "legacy_source": "src/func_ov062_021183e0.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov062_02118588",
+      "address": "0x02118588",
+      "size": "0x00000190",
+      "legacy_source": "src/func_ov062_02118588.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov062_02118718",
+      "address": "0x02118718",
+      "size": "0x000002e8",
+      "legacy_source": "src/func_ov062_02118718.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov062_02118a00",
+      "address": "0x02118a00",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov062_02118a00.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov062_02118a50",
+      "address": "0x02118a50",
+      "size": "0x000000fc",
+      "legacy_source": "src/func_ov062_02118a50.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov062_02118b4c",
+      "address": "0x02118b4c",
+      "size": "0x00000190",
+      "legacy_source": "src/func_ov062_02118b4c.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov062_02118cdc",
+      "address": "0x02118cdc",
+      "size": "0x0000010c",
+      "legacy_source": "src/func_ov062_02118cdc.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov062_02118de8",
+      "address": "0x02118de8",
+      "size": "0x0000011c",
+      "legacy_source": "src/func_ov062_02118de8.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "_ZN5Koopa16CleanupResourcesEv",
+      "address": "0x02118f04",
+      "size": "0x0000007c",
+      "legacy_source": "src/_ZN5Koopa16CleanupResourcesEv.cpp",
+      "ordinal": 29
+    },
+    {
+      "symbol": "_ZN5Koopa16OnPendingDestroyEv",
+      "address": "0x02118f80",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN5Koopa16OnPendingDestroyEv.cpp",
+      "ordinal": 30
+    },
+    {
+      "symbol": "_ZN5Koopa6RenderEv",
+      "address": "0x02118f84",
+      "size": "0x00000168",
+      "legacy_source": "src/_ZN5Koopa6RenderEv.cpp",
+      "ordinal": 31
+    },
+    {
+      "symbol": "_ZN5Koopa8BehaviorEv",
+      "address": "0x021190ec",
+      "size": "0x00000334",
+      "legacy_source": "src/_ZN5Koopa8BehaviorEv.cpp",
+      "ordinal": 32
+    },
+    {
+      "symbol": "_ZN5Koopa13InitResourcesEv",
+      "address": "0x02119420",
+      "size": "0x000001e8",
+      "legacy_source": "src/_ZN5Koopa13InitResourcesEv.cpp",
+      "ordinal": 33
+    },
+    {
+      "symbol": "_ZN5Koopa16OnAimedAtWithEggEv",
+      "address": "0x02119608",
+      "size": "0x00000020",
+      "legacy_source": "src/_ZN5Koopa16OnAimedAtWithEggEv.cpp",
+      "ordinal": 34
+    },
+    {
+      "symbol": "_ZN5Koopa13OnTurnIntoEggER6Player",
+      "address": "0x02119628",
+      "size": "0x00000080",
+      "legacy_source": "src/_ZN5Koopa13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 35
+    },
+    {
+      "symbol": "_ZN5Koopa13OnYoshiTryEatEv",
+      "address": "0x021196a8",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN5Koopa13OnYoshiTryEatEv.cpp",
+      "ordinal": 36
+    },
+    {
+      "symbol": "KoopaSmall_Spawn",
+      "address": "0x021196bc",
+      "size": "0x00000050",
+      "legacy_source": "src/KoopaSmall_Spawn.c",
+      "ordinal": 37
+    },
+    {
+      "symbol": "Koopa_Spawn",
+      "address": "0x0211970c",
+      "size": "0x00000050",
+      "legacy_source": "src/Koopa_Spawn.c",
+      "ordinal": 38
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov062_02117570.cpp (func_ov062_02117570) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov062_021179e4.cpp (func_ov062_021179e4) did not split (scanned to end of file without finding a function body); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: CONFLICT: macro 'AT' differs between the legacy file that used to hold func_ov062_02117c98 and the one that held func_ov062_02118258; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE' differs between the legacy file that used to hold func_ov062_021175c0 and the one that held func_ov062_02117724; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8Particle19SetSelfDestructFlagEj' differs between the legacy file that used to hold func_ov062_021175c0 and the one that held func_ov062_02117724; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8Particle6System12FromUniqueIDEj' differs between the legacy file that used to hold func_ov062_021175c0 and the one that held func_ov062_02117724; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov062_02118a00' differs between the legacy file that used to hold func_ov062_02117a3c and the one that held func_ov062_02117acc; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov062_02118de8' differs between the legacy file that used to hold func_ov062_02117a3c and the one that held func_ov062_02117acc; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov062_02117b60 and the one that held func_ov062_02117b9c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov062_02117724 and the one that held func_ov062_02117bf4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov062_02117724 and the one that held func_ov062_02117c98; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov062_02117b60 and the one that held func_ov062_02118058; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_02118058; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov062_02118004 and the one that held func_ov062_021180d4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_021180d4; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_0211811c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov062_02118004 and the one that held func_ov062_021181a0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_021181a0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov062_02117b60 and the one that held func_ov062_02118258; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov062_021180d4 and the one that held func_ov062_021183e0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_021183e0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov062_02117b60 and the one that held func_ov062_021183e0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov062_02118258 and the one that held func_ov062_021183e0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c14GetSubtractionEss' differs between the legacy file that used to hold func_ov062_02118058 and the one that held func_ov062_021183e0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov062_02118004 and the one that held func_ov062_021183e0; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov062_02117c98 and the one that held func_ov062_02118588; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_02118588; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZNK9Animation12WillHitFrameEi' differs between the legacy file that used to hold func_ov062_0211811c and the one that held func_ov062_02118588; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov062_021180d4 and the one that held func_ov062_02118588; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov062_02117b60 and the one that held func_ov062_02118718; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov062_02118258 and the one that held func_ov062_02118718; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c14GetSubtractionEss' differs between the legacy file that used to hold func_ov062_02118058 and the one that held func_ov062_02118718; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov062_02118004 and the one that held func_ov062_02118718; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_02118718; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_02118a00; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov062_021175c0' differs between the legacy file that used to hold func_ov062_02118588 and the one that held func_ov062_02118a00; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov062_021180d4 and the one that held func_ov062_02118a50; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov062_02118004 and the one that held func_ov062_02118b4c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold func_ov062_021183e0 and the one that held func_ov062_02118b4c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_02118b4c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov062_021180d4 and the one that held func_ov062_02118de8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_02118de8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZNK9Animation13GetFrameCountEv' differs between the legacy file that used to hold func_ov062_0211811c and the one that held func_ov062_02118de8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZNK9Animation12WillHitFrameEi' differs between the legacy file that used to hold func_ov062_0211811c and the one that held func_ov062_02118de8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'func_ov062_02118058' differs between the legacy file that used to hold func_ov062_021183e0 and the one that held func_ov062_02118de8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov062_021181a0 and the one that held func_ov062_02118de8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration 'data_0209e650' differs between the legacy file that used to hold func_ov062_021181a0 and the one that held func_ov062_02118de8; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c8PoofDustEv' differs between the legacy file that used to hold func_ov062_02117c98 and the one that held _ZN5Koopa8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c24KillAndTrackInDeathTableEv' differs between the legacy file that used to hold func_ov062_02117c98 and the one that held _ZN5Koopa8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov062_021175c0 and the one that held func_ov062_02117b9c; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov062_021175c0 and the one that held func_ov062_02118258; kept the first, the other is commented out for review",
+    "tubuild create warning: CONFLICT: local declaration ('struct', 'dBgCh_Actr') differs between the legacy file that used to hold func_ov062_02118004 and the one that held func_ov062_02118a00; kept the first, the other is commented out for review"
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov062-Koopa+KoopaSmall/Koopa+KoopaSmall.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 39,
+    "functions_declared": 39,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 13 unlicensed section/symbol(s), 2 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+      "relocation_destinations_verified": "PASS"
+    },
+    "compilerOnlyOutput": {
+      "requested": [],
+      "unhandled": [
+        "_ZN5KoopaD2Ev",
+        "_ZN7Vector3D1Ev"
+      ]
+    }
+  }
+}

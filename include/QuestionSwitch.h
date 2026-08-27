@@ -24,7 +24,7 @@
 #include "ModelAnim.h"
 
 struct QuestionSwitch : dBgActor_c {
-    s32 mActiveMeshCollider;            /* 0x320 -- points at whichever MMC below is live */
+    dBgW_KcMbg *mActiveMeshCollider;     /* 0x320 -- whichever collider below is live */
     /* The switch owns two colliders. mActiveMeshCollider points at this one
        until the switch fires, at whichever one InitResources picked from the
        saved bit, and at mMovingMeshCollider afterwards. */
@@ -40,15 +40,26 @@ struct QuestionSwitch : dBgActor_c {
     u8  mTalking;           /* 0x71b -- gates the whole Player::StartTalk/ShowMessage/EndTalk block */
     u16 mSoundDelay;        /* 0x71c -- 0x4b at talk start, run down by DecIfAbove0_Short */
     u8  pad_71e[0x2];
-    s32 mTalkingPlayer;            /* 0x720 */
+    Player *mTalkingPlayer;        /* 0x720 */
 
     /* --- vtable --- */
     virtual ~QuestionSwitch();
 
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    int Render();
+    virtual int Behavior();
+    virtual int CleanupResources();
+    virtual int InitResources();
+    virtual int Render();
+
+    /* Names for the five formerly address-only helpers are descriptive
+       inferences. Ownership is stronger than the names: every direct call is
+       inside 0x020b4ed8..0x020b5734, and AfterClsnCallback is installed only
+       into this object's static moving-mesh collider. */
+    int UpdateClsnState();
+    void UpdateClsnTransform();
+    void UpdateModelTransform();
+    void HandleClsn(dActor_c &other);
+    static void AfterClsnCallback(dBgW *collider, dActor_c *owner,
+                                  dActor_c *other);
 
     /* Slot 21, dActor_c's combat-callback override (include/dActor_c.h).
        Attributed by the vtable: _ZTV14QuestionSwitch + 4*21 = 0x02108e5c + 0x54
