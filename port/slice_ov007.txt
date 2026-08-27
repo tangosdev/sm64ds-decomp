@@ -241,6 +241,7 @@ src/func_ov007_020b4438.c
 src/func_ov007_020b4464.c
 src/func_ov007_020b44ec.c
 src/func_ov007_020b45b0.c
+src/func_ov007_020b46b0.c
 src/func_ov007_020b4b5c.c
 src/func_ov007_020b4bd4.cpp
 src/func_ov007_020b4c04.c

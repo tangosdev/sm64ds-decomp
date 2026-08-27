@@ -1086,7 +1086,21 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
    a trap here would be an LNK2005 against it. This is the OTHER way an address
    leaves this list, and it is the one the port wants: 020c9688 below left on a
    host transcription, this one left on the ROM's own C. */
-L2_UNMATCHED(func_ov007_020b46b0)
+/* func_ov007_020b46b0 WAS HERE, AND IT WAS THE MENU'S HANDLE. Run mg16 lane
+   CRACK matched it byte for byte at 2004/b56 (299 words, 284 exact, 15 reloc
+   wildcards, 0 mismatches) with linkcheck VERIFIED at 0 blind slots, and
+   src/func_ov007_020b46b0.c carries the body, so a trap here would be an
+   LNK2005 against it. Re-verified in this lane before seating, against the
+   known-matched neighbour func_ov007_020b63e4 as the alignment control.
+
+   This is the PER-ELEMENT STYLUS HIT TEST, entered 24 times a frame -- once
+   per element -- from func_ov007_020aed98. Trapped it returned 0 before it
+   ever tested a rectangle, so func_ov007_020b63e4 was never called, ctx+0x180
+   was never written, and the verdict func_ov007_020b7090 hands the router
+   never became 3/4/5 (the save files), 6 (VS) or 7 (the Rec Room). The title
+   could be started and then nothing on it could be PICKED. Measured on this
+   tree before the seat: scene 1, 2400 frames, pick -1 and verdict 0 on every
+   single frame. */
 L2_UNMATCHED(func_ov007_020b8188)
 L2_UNMATCHED(func_ov007_020ba05c)
 L2_UNMATCHED(func_ov007_020c19cc)
@@ -4980,10 +4994,35 @@ static void port_title_state_trace(int frame)
      * is an ENDPOINT and cannot tell "never asked" from "asked and something
      * put the sentinel back". Sampled every frame and reported on change, a
      * request that appears and is then cleared leaves two lines behind. */
+    /* +0x180 IS A SINGLE-FRAME SIGNAL AND THIS SAMPLE CANNOT SEE IT.
+     * func_ov007_020b63e4 writes the chosen item's id there, and
+     * func_ov007_020aed98 writes -1 back LATER IN THE SAME FRAME, after the
+     * state dispatch has consumed it. This trace runs after port_actor_tick(),
+     * i.e. after that whole pass, so it reads -1 BY CONSTRUCTION whether or not
+     * anything was picked. It is printed for completeness and is NOT evidence:
+     * a -1 here says nothing at all about whether the hit test fired.
+     *
+     * (It was evidence before the hit test was seated, but only accidentally --
+     * the body was a trap returning 0, so nothing could be picked for a reason
+     * this sample was not actually measuring. Recording that here so the next
+     * reader does not re-derive the same false confidence.)
+     *
+     * THE TRUSTWORTHY END-TO-END SIGNAL IS data_02092664, and it is latched:
+     * on the scene path nothing pumps it (port_scene_request_release's only
+     * caller is hal/level_change.cpp, on the LEVEL path), so a request stands
+     * until the run ends. It is latched again here anyway, so that even a
+     * request cleared by some future pump still leaves a mark. */
     const int pick  = *(int *)(g + 0x180);
     const int f10   = *(int *)(g + 0x10);
     const int f14   = *(int *)(g + 0x14);
     const int pend  = (int)data_02092664;
+    static int ever_req = -1;
+    if (pend != 0x187 && ever_req < 0) {
+        ever_req = pend;
+        std::printf("[title] f%-6d SCENE REQUESTED: %d (latched; first frame "
+                    "data_02092664 left the 0x187 sentinel)\n", frame, pend);
+        std::fflush(stdout);
+    }
     /* IS THE SCENE STILL BEING DISPATCHED. g_ti_hits[6] is bumped by the
      * Behavior thunk, so its per-frame delta is 1 while the ROM's processing
      * list still carries this actor and 0 the moment it stops. Without this
@@ -5007,7 +5046,7 @@ static void port_title_state_trace(int frame)
                                        "entered; the actor left the list)");
     l_live = live;
     std::printf("[title] f%-6d state %d req %d | elem %d req %d | phase %d | "
-                "pick %d verdict %d armed %d | pending %d%s\n",
+                "pick(wiped) %d verdict %d armed %d | pending %d%s\n",
                 frame, st, req, est, ereq, phase, pick, f10, f14, pend,
                 pend == 0x187 ? " (none)" : "  <-- SCENE REQUESTED");
     std::fflush(stdout);
