@@ -706,7 +706,7 @@ src/_ZN12WithMeshClsnD1Ev.c	DTOR-ONLY	arm9	dBgCh_Actr	WithMeshClsn/dBgCh_Actr	_Z
 src/_ZN12WorkElevator8BehaviorEv.c	P3-mangled-method-only			WorkElevator	_ZN12WorkElevator8BehaviorEv	0		True		NONMATCHING-draft;not-in-delinks
 src/_ZN12WorkElevatorD0Ev.c	DTOR-ONLY	ov021	daObjCvNewsLift_c	WorkElevator/daObjCvNewsLift_c	_ZN12WorkElevatorD0Ev	1		True	_ZTV10dBgActor_c/_ZTV12WorkElevator	-
 src/_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player.c	P3-mangled-method-only	ov004		dEnemyBase_c	_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player	1		True		-
-src/_ZN12dEnemyBase_cD2Ev.c	DTOR-ONLY	ov002		dEnemyBase_c	_ZN12dEnemyBase_cD2Ev	1		True		-
+src/_ZN12dEnemyBase_cD2Ev.cpp	DTOR-ONLY	ov002		dEnemyBase_c	_ZN12dEnemyBase_cD2Ev	1		True		-
 src/_ZN12dScStarSel_c13InitResourcesEv.c	P3-mangled-method-only			dScStarSel_c	_ZN12dScStarSel_c13InitResourcesEv	0		True		NONMATCHING-draft;not-in-delinks
 src/_ZN12dScStarSel_c16OnPendingDestroyEv.c	P1-vtable+mangled	ov003	dScStarSel_c	dScStarSel_c	vtable dScStarSel_c slot 12 @0x20ae6f0 | _ZN12dScStarSel_c16OnPendingDestroyEv	1		True		-
 src/_ZN12dScStarSel_cD0Ev.c	DTOR-ONLY	ov003	dScStarSel_c	dScStarSel_c	_ZN12dScStarSel_cD0Ev	1		True	_ZTV12dScStarSel_c	-
@@ -1054,7 +1054,7 @@ src/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.c	P3-mangled-method-only	arm9
 src/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.c	P3-mangled-method-only	arm9		dActor_c	_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j	1		True		by-value-class-param
 src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c	P3-mangled-method-only	arm9		dActor_c	_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j	1		True		by-value-class-param
 src/_ZN8dActor_cD0Ev.c	DTOR-ONLY	arm9	dActor_c	dActor_c	_ZN8dActor_cD0Ev	1		True	_ZTV7dBase_c/_ZTV8dActor_c	-
-src/_ZN8dM3dGSphD2Ev.c	DTOR-ONLY	arm9		dM3dGSph	_ZN8dM3dGSphD2Ev	1		False		no-header:dM3dGSph
+src/_ZN8dM3dGSphD2Ev.cpp	DTOR-ONLY	arm9		dM3dGSph	_ZN8dM3dGSphD2Ev	1		False		no-header:dM3dGSph
 src/_ZN9AnimationD0Ev.c	DTOR-ONLY	arm9	dExtFrameCtrl_c	Animation/dExtFrameCtrl_c	_ZN9AnimationD0Ev	1		True	_ZTV9Animation	-
 src/_ZN9AnimationD1Ev.c	DTOR-ONLY	arm9	dExtFrameCtrl_c	Animation/dExtFrameCtrl_c	_ZN9AnimationD1Ev	1		True	_ZTV9Animation	-
 src/_ZN9AnimationD2Ev.c	DTOR-ONLY	arm9		Animation	_ZN9AnimationD2Ev	1		True	_ZTV9Animation	-
@@ -1079,7 +1079,7 @@ src/_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj.c	P3-mangled-method-only	arm9		M
 src/_ZN9ModelAnimC1Ev.c	P3-mangled-method-only	arm9		ModelAnim	_ZN9ModelAnimC1Ev	1		True	_ZTV9ModelAnim	-
 src/_ZN9ModelAnimC2Ev.c	P3-mangled-method-only	arm9		ModelAnim	_ZN9ModelAnimC2Ev	1		True	_ZTV9ModelAnim	-
 src/_ZN9ModelAnimD0Ev.c	DTOR-ONLY	arm9	dExtAnmModel_c	ModelAnim/dExtAnmModel_c	_ZN9ModelAnimD0Ev	1		True	_ZTV9ModelAnim	-
-src/_ZN9ModelAnimD2Ev.c	DTOR-ONLY	arm9		ModelAnim	_ZN9ModelAnimD2Ev	1		True	_ZTV9ModelAnim	-
+src/_ZN9ModelAnimD2Ev.cpp	DTOR-ONLY	arm9		ModelAnim	_ZN9ModelAnimD2Ev	1		True	_ZTV9ModelAnim	-
 src/_ZN9ModelBaseC1Ev.c	P3-mangled-method-only	arm9		ModelBase	_ZN9ModelBaseC1Ev	1		True		-
 src/_ZN9ModelBaseD0Ev.c	DTOR-ONLY	arm9	dExtModel_c	ModelBase/dExtModel_c	_ZN9ModelBaseD0Ev	1		True		-
 src/_ZN9ModelBaseD1Ev.c	DTOR-ONLY	arm9	dExtModel_c	ModelBase/dExtModel_c	_ZN9ModelBaseD1Ev	1		True		-

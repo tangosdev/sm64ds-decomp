@@ -112,7 +112,7 @@ src/_ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj.cpp:
     complete
     .text start:0x020aebf8 end:0x020aed18
 
-src/_ZN12dEnemyBase_cD2Ev.c:
+src/_ZN12dEnemyBase_cD2Ev.cpp:
     complete
     .text start:0x020aed18 end:0x020aed3c
 

@@ -1856,7 +1856,7 @@ src/_ZN7dCcAc_c6GetPosEv.cpp:
     complete
     .text start:0x02014948 end:0x02014954
 
-src/_ZN7dCcAc_cD2Ev.c:
+src/_ZN7dCcAc_cD2Ev.cpp:
     complete
     .text start:0x02014954 end:0x02014978
 
@@ -2244,7 +2244,7 @@ src/_ZN9ModelAnim11UpdateVertsEv.cpp:
     complete
     .text start:0x0201686c end:0x0201689c
 
-src/_ZN9ModelAnimD2Ev.c:
+src/_ZN9ModelAnimD2Ev.cpp:
     complete
     .text start:0x0201689c end:0x020168d8
 
@@ -5271,7 +5271,7 @@ src/func_02037eb0.c:
     complete
     .text start:0x02037eb0 end:0x02037ee4
 
-src/_ZN5dBgPcD2Ev.c:
+src/_ZN5dBgPcD2Ev.cpp:
     complete
     .text start:0x02037ee4 end:0x02037ee8
 
@@ -5627,7 +5627,7 @@ src/func_020397dc.c:
     complete
     .text start:0x020397dc end:0x020397fc
 
-src/_ZN7dBgW_KcD2Ev.c:
+src/_ZN7dBgW_KcD2Ev.cpp:
     complete
     .text start:0x020397fc end:0x0203982c
 
@@ -5711,7 +5711,7 @@ src/_ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block.c:
     complete
     .text start:0x0203a1e0 end:0x0203a420
 
-src/_ZN10dBgW_KcMbgD2Ev.c:
+src/_ZN10dBgW_KcMbgD2Ev.cpp:
     complete
     .text start:0x0203a420 end:0x0203a444
 
@@ -5799,7 +5799,7 @@ src/func_0203ac00.c:
     complete
     .text start:0x0203ac00 end:0x0203ac1c
 
-src/_ZN8dM3dGSphD2Ev.c:
+src/_ZN8dM3dGSphD2Ev.cpp:
     complete
     .text start:0x0203ac1c end:0x0203ac2c
 
