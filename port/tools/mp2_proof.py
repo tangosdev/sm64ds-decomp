@@ -430,14 +430,15 @@ def rung4(root, exe, out):
     ok = True
     for who, t, r in (("parent", tp, rp), ("child", tc, rc)):
         unh = t.count("FAULT code")
-        lk = last(r"^\[lockstep:level\] .*$", t)
-        rounds = field(lk, "rounds", int) or 0
-        touts = field(lk, "timeouts", int) or 0
+        # run mg16 lane MP3: reads the CARRIER's round counter, not the retired
+        # transcription's. Same reasoning as rung 2 -- src/func_0203ea5c.c
+        # drives itself now and its internal counters would have to be measured
+        # from inside a byte-matched TU.
+        lk = last(r"^\[loopback:level\] .*$", t)
+        rounds = field(lk, "round", int) or 0
         ok &= verdict(r == 0 and unh == 0 and rounds > 100,
                       "rung4 VS %-6s rc=%d unhandled=%d over %s frames | %s"
-                      % (who, r, unh, frames, lk or "NO LOCKSTEP LINE"))
-        if touts:
-            print("      note: %s reported %d wait-bound timeouts" % (who, touts))
+                      % (who, r, unh, frames, lk or "NO CARRIER LINE"))
     return ok
 
 
@@ -539,11 +540,13 @@ def rung_childfirst(root, exe, out):
 
     jp = joined(tp, "1", "0", "3")
     jc = joined(tc, "2", "1", "4")
-    kp = last(r"^\[lockstep:level\] .*$", tp)
+    # run mg16 lane MP3: the carrier's line, for the retired-counter reason
+    # rung 2 records.
+    kp = last(r"^\[loopback:level\] .*$", tp)
     ok = bool(jp) and bool(jc) and rp == 0 and rc == 0
     return verdict(ok,
                    "rung7 CHILD STARTED FIRST (2s before the parent): parent %s "
-                   "| child %s | parent lockstep %s"
+                   "| child %s | parent carrier %s"
                    % (jp or "NEVER FULLY JOINED", jc or "NEVER FULLY JOINED",
                       kp or "none"))
 
