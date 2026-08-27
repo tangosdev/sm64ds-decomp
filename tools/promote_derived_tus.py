@@ -21,6 +21,7 @@ REGISTRY = REPO / "config" / "production-tus.json"
 ATTRIBUTION = REPO / "attribution.json"
 sys.path.insert(0, str(REPO / "tools"))
 import chaos_db_ci as CDB  # noqa: E402
+import tubuild as TB  # noqa: E402
 
 
 class PromotionError(RuntimeError):
@@ -189,6 +190,63 @@ def sync_attribution(entries, ids):
     return added
 
 
+def stamp_discarded_output(entries, ids):
+    """Record the exact raw compiler surface intentionally omitted by text mode."""
+    stamped = 0
+    for tu_id in ids:
+        found = entries.get(tu_id)
+        if found is None:
+            raise PromotionError(f"discarded-output stamp has no manifest {tu_id!r}")
+        manifest_path, entry = found
+        if (entry.get("partial_isolation") or {}).get("state") \
+                != "partial-link-verified":
+            raise PromotionError(f"{tu_id}: no partial-link-verified proof")
+        if entry.get("unlicensed_output_observed") is not None:
+            raise PromotionError(
+                f"{tu_id}: discarded-output inventory already exists; refusing overwrite")
+        raw, version, flags, _build_dir, _obj_path = TB._compile_tu(entry)
+        inv = TB.elf_inventory(raw)
+        funcs, objects, anonymous = TB.unlicensed_inventory(entry, inv)
+        if anonymous:
+            detail = [f"{row['name']} size=0x{row['size']:x}" for row in anonymous]
+            raise PromotionError(
+                f"{tu_id}: anonymous discarded content cannot be symbol-bound: {detail}")
+        section_by_index = {row["index"]: row["name"] for row in inv["sections"]}
+        observed = {
+            "note": ("Pinned-compiler inventory stamped by "
+                     "tools/promote_derived_tus.py --stamp-discarded-output before "
+                     "default production admission. These definitions are not ROM "
+                     "ownership claims; every build requires an exact inventory match, "
+                     "exact derived text contributions, exact modules, and an exact ROM."),
+            "toolchain": version,
+            "flags": flags,
+            "text": [], "data": [], "bss": [], "init": [], "rodata": [], "ctor": [],
+        }
+        for row in funcs:
+            observed["text"].append({
+                "symbol": row["name"], "size": f"0x{int(row['size']):x}",
+                "binding": row["bind"],
+            })
+        for row in objects:
+            category = section_by_index.get(row["shndx"], "").lstrip(".")
+            if category not in observed or category in ("note", "toolchain", "flags"):
+                raise PromotionError(
+                    f"{tu_id}: discarded object {row['name']} is in unsupported "
+                    f"section {category!r}")
+            observed[category].append({
+                "symbol": row["name"], "size": f"0x{int(row['size']):x}",
+                "binding": row["bind"],
+            })
+        for category in ("text", "data", "bss", "init", "rodata", "ctor"):
+            observed[category].sort(key=lambda row: row["symbol"])
+        entry["unlicensed_output_observed"] = observed
+        manifest_path.write_text(json.dumps(entry, indent=2) + "\n",
+                                 encoding="utf-8", newline="\n")
+        print(f"{tu_id}: stamped {len(funcs) + len(objects)} discarded definition(s)")
+        stamped += 1
+    return stamped
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("ids", nargs="*", help="manifest TU ids to promote")
@@ -198,6 +256,8 @@ def main():
                         help="perform the moves and JSON edits (default: dry run)")
     parser.add_argument("--sync-attribution", action="store_true",
                         help="write path#symbol credit for every configured production TU")
+    parser.add_argument("--stamp-discarded-output", action="store_true",
+                        help="compile selected ids and record their exact unowned output")
     args = parser.parse_args()
     entries = load_entries()
     ids = list(args.ids)
@@ -213,7 +273,11 @@ def main():
     ids = list(dict.fromkeys(ids))
     if not ids and not args.sync_attribution:
         parser.error("pass TU ids or --all-verified")
-    rows = plan(ids) if ids else []
+    if args.stamp_discarded_output:
+        stamp_discarded_output(entries, ids)
+        rows = []
+    else:
+        rows = plan(ids) if ids else []
     for tu_id, _path, _entry, source, target, _target_rel in rows:
         print(f"{tu_id}: {source.relative_to(REPO).as_posix()} -> "
               f"{target.relative_to(REPO).as_posix()}")
