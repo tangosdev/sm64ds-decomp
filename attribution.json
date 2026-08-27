@@ -8,6 +8,15 @@
     "mitch.cairns": "mitchellcairns"
   },
   "overrides": {
+    "src/game/actors/BigBooIcon/_ZN10BigBooIconD0Ev.cpp#_ZN10BigBooIconD0Ev": "tangosdev",
+    "src/game/actors/MansionSteps/_ZN12MansionStepsD0Ev.cpp#_ZN12MansionStepsD0Ev": "tangosdev",
+    "src/game/actors/ShipUp/_ZN6ShipUpD0Ev.cpp#_ZN6ShipUpD0Ev": "tangosdev",
+    "src/game/actors/ShipUp/_ZN6ShipUpD1Ev.cpp#_ZN6ShipUpD1Ev": "tangosdev",
+    "src/game/actors/UpDownLiftBbh/_ZN13UpDownLiftBbhD0Ev.cpp#_ZN13UpDownLiftBbhD0Ev": "tangosdev",
+    "src/game/actors/UpDownLiftBbh/_ZN13UpDownLiftBbhD1Ev.cpp#_ZN13UpDownLiftBbhD1Ev": "tangosdev",
+    "src/game/actors/View/_ZN4ViewD0Ev.cpp#_ZN4ViewD0Ev": "tangosdev",
+    "src/game/actors/View/_ZN4ViewD1Ev.cpp#_ZN4ViewD1Ev": "tangosdev",
+    "src/game/actors/daDsnBase_c/_ZN11daDsnBase_cD0Ev.cpp#_ZN11daDsnBase_cD0Ev": "tangosdev",
     "src/_ZN10dBgActor_c14KillByMegaCharER6Player.c": "tangosdev",
     "src/game/actors/dBgActor_c/_ZN10dBgActor_c14KillByMegaCharER6Player.cpp": "tangosdev",
     "src/game/actors/ActorBase_SceneNode.cpp#_ZN7fBase_c9SceneNode5ResetEv": "tangosdev",
