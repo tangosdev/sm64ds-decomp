@@ -103,7 +103,7 @@ because both objects start with a pointer-sized word. It now takes `char *`.
 
 `include/Particle__SysTracker.h` is a *third* declaration of this class, and it
 is what `src/_ZN8Particle10SysTracker10InitialiseEv.cpp` and
-`src/_ZN8Particle10SysTracker6UpdateEv.c` include. A later pass that owned the
+`src/_ZN8Particle10SysTracker6UpdateEv.cpp` include. A later pass that owned the
 file finished it: its three fields now read `mResourceFile` / `mManager` /
 `mContents`, with the same types `include/Particle.h` carries, so all three
 declarations of the class spell the head identically.
