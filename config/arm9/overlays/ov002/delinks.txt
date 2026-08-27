@@ -1100,7 +1100,7 @@ src/_ZN15daObjMarioCap_cD1Ev.cpp:
     complete
     .text start:0x020b6f18 end:0x020b6f68
 
-src/_ZN15daObjMarioCap_cD0Ev.c:
+src/_ZN15daObjMarioCap_cD0Ev.cpp:
     complete
     .text start:0x020b6f68 end:0x020b6fcc
 

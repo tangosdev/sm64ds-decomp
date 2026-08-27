@@ -15606,7 +15606,7 @@
    "n_files": 30,
    "files": [
     "src/_ZN15daObjMarioCap_cD1Ev.cpp",
-    "src/_ZN15daObjMarioCap_cD0Ev.c",
+    "src/_ZN15daObjMarioCap_cD0Ev.cpp",
     "src/func_ov002_020b6fcc.cpp",
     "src/func_ov002_020b71e8.c",
     "src/func_ov002_020b71f0.c",
