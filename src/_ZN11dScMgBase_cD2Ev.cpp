@@ -1,23 +1,21 @@
 //cpp
-extern int data_ov004_020bc0c0[];
-extern int data_ov004_020beb68[];
-extern int _ZTV8dScene_c[];
-extern int data_0208e4b8[];
-extern "C" {
-extern void *func_ov004_020b929c(void *);
-/* The ROM calls the base-object destructor D2. The explicit destructor call
-   this replaces compiled to the complete-object destructor D1 instead --
-   0x02043dbc where the ROM branches to 0x02043d48. Same shape as the sibling
-   func_ov004_020b2a18. */
-extern void _ZN7fBase_cD2Ev(void *);
-}
-
-extern "C" void *_ZN11dScMgBase_cD2Ev(void *c) {
-    *(int *)c = (int)data_ov004_020bc0c0;
-    *(int *)data_ov004_020beb68 = 0;
-    func_ov004_020b929c((char *)c + 0xf4);
-    *(int *)c = (int)_ZTV8dScene_c;
-    *(int *)c = (int)data_0208e4b8;
-    _ZN7fBase_cD2Ev(c);
-    return c;
+// @symbol _ZN11dScMgBase_cD2Ev
+/* D2, not D1. This file carries the same definition as
+ * src/_ZN11dScMgBase_cD1Ev.cpp, and deliberately so: dScMgBase_c has no virtual
+ * bases, so mwcc emits D1 and D2 as byte-identical code. Only the way the
+ * ROM REACHES an address separates them -- a vtable slot holds D1, a derived
+ * destructor's base-chain `bl` reaches D2 -- so comparing the two bodies
+ * proves nothing and the binding in config/arm9/overlays/ov004/delinks.txt is what decides.
+ * objisolate keeps the D2 variant; the C2/D0/D1 siblings stay in their own
+ * files. */
+/* ~dScMgBase_c() is declared, NOT defined inline, in dScMgBase_c.h -- see
+   the header's own note. mwcc doesn't inline a body this size into a
+   descendant (measured against dScMgD3DBase_c), so this is a REAL
+   out-of-line definition, same shape Stage.h uses for a leaf -- except
+   here D0Ev.cpp carries an identical copy for its own key-function TU. */
+#include "dScMgBase_c.h"
+dScMgBase_c::~dScMgBase_c()
+{
+    data_ov004_020beb68 = 0;
+    func_ov004_020b929c((char *)this + 0xf4);
 }

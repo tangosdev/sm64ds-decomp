@@ -6,14 +6,6 @@
    "ref": "tools/CI/docs"
   },
   {
-   "file": "AGENTS.md",
-   "ref": "tools/claims_key.txt"
-  },
-  {
-   "file": "CONTRIBUTING.md",
-   "ref": "tools/claims_key.txt"
-  },
-  {
    "file": "notes/actor-leaf-provenance.md",
    "ref": "src_tu/actors/EnemySpawner"
   },
@@ -60,10 +52,6 @@
   {
    "file": "notes/archive/crack-loop-runbook.md",
    "ref": "notes/pret-idioms.md"
-  },
-  {
-   "file": "notes/archive/crack-loop-runbook.md",
-   "ref": "tools/claims_key.txt"
   },
   {
    "file": "notes/archive/func_02059d8c-asm-origin.md",
@@ -126,14 +114,6 @@
    "ref": "src/_ZN5EnemyD0Ev.c"
   },
   {
-   "file": "notes/dtor-migration.md",
-   "ref": "src/_ZN5ModelD1Ev.cpp"
-  },
-  {
-   "file": "notes/emu-trace-build.md",
-   "ref": "asm/target_hex"
-  },
-  {
    "file": "notes/emu-trace-build.md",
    "ref": "nearmiss/ledger"
   },
@@ -152,10 +132,6 @@
   {
    "file": "notes/global-data-migration.md",
    "ref": "src/testbssmid.c"
-  },
-  {
-   "file": "notes/global-data-migration.md",
-   "ref": "src/testbssmid.o"
   },
   {
    "file": "notes/global-data-migration.md",
@@ -234,6 +210,10 @@
    "ref": "port/ov009_syms.txt"
   },
   {
+   "file": "notes/port-selftest-bmp-gate.md",
+   "ref": "port/tools/battery.py"
+  },
+  {
    "file": "notes/research-matching-levers.md",
    "ref": "src/randomizer.py"
   },
@@ -264,10 +244,6 @@
   {
    "file": "notes/translation-unit-reconstruction-plan.md",
    "ref": "src/actors/Chuckya.cpp"
-  },
-  {
-   "file": "notes/translation-unit-reconstruction-plan.md",
-   "ref": "src_tu/actors/Chuckya.cpp"
   },
   {
    "file": "notes/tu-reconstruction-pilot-2-report.md",
@@ -386,14 +362,6 @@
    "ref": "include/Enemy.h"
   },
   {
-   "file": "tools/claims.py",
-   "ref": "tools/claims_handle.txt"
-  },
-  {
-   "file": "tools/claims.py",
-   "ref": "tools/claims_key.txt"
-  },
-  {
    "file": "tools/d0_migrate.py",
    "ref": "src/_ZN5EnemyD0Ev.c"
   },
@@ -508,10 +476,6 @@
   {
    "file": "tools/rtti_vtables.py",
    "ref": "src/_ZN12CylinderClsn7ProcessEv.cpp"
-  },
-  {
-   "file": "tools/srcpath.py",
-   "ref": "src/actors/ActorBase_SceneNode.cpp"
   },
   {
    "file": "tools/srcpath.py",

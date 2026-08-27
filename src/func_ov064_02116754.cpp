@@ -26,7 +26,7 @@ struct fBase_c {
 extern "C" {
 extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov064_02115f98(void* c, void* p);
-extern int func_ov002_020ada40(void* c, void* v, void* r4, s32 flag);
+extern int _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void* c, void* v, void* r4, s32 flag);
 extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void* c, void* clsn, void* player);
 extern int _ZN6Player9IsOnShellEv(void* p);
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, Fix12 f, u32 b, u32 c, u32 d);
@@ -88,7 +88,7 @@ extern "C" void func_ov064_02116754(char* c)
             v[0] = 0x2000;
             v[1] = 0;
             v[2] = 0;
-            func_ov002_020ada40(c, v, r4, *(s32*)(*(char**)(c + 0x330) + 0x24));
+            _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, v, r4, *(s32*)(*(char**)(c + 0x330) + 0x24));
             ((fBase_c*)c)->ChangeState();
             return;
         }

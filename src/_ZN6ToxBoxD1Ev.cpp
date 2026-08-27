@@ -1,23 +1,27 @@
 //cpp
 // @symbol _ZN6ToxBoxD1Ev
-/* recovered: named members + shared header */
-#include "ToxBox.h"
-extern "C" {
-extern int _ZN10dCcAcPos_cD1Ev(void*);
-extern int _ZN10dBgCh_ActrD1Ev(void*);
-extern int _ZN10dBgW_KcMbgD1Ev(void*);
-extern int _ZN5ModelD1Ev(void*);
-extern int _ZN8dActor_cD2Ev(void*);
-extern void* _ZTV6ToxBox;
-extern void* _ZTV10dBgActor_c;
-void* _ZN6ToxBoxD1Ev(struct ToxBox *self) {
-  *(void**)((char*)self) = &_ZTV6ToxBox;
-  _ZN10dCcAcPos_cD1Ev((char*)&self->mdCcAcPos_c);
-  _ZN10dBgCh_ActrD1Ev((char*)&self->mWithMeshClsn);
-  *(void**)((char*)self) = &_ZTV10dBgActor_c;
-  _ZN10dBgW_KcMbgD1Ev((char*)&self->mMeshCollider);
-  _ZN5ModelD1Ev((char*)&self->mModel);
-  _ZN8dActor_cD2Ev(((char*)self));
-  return ((char*)self);
-}
+/* D1, the complete-object destructor. The shadow struct below is the point: the
+ * shared header spells this class FLAT, with the base's fields restated as padding,
+ * so nothing in it tells mwcc there are subobjects to tear down. Naming the real
+ * base and the real member types makes the compiler generate the ROM's teardown --
+ * every member destroyed in reverse declaration order, then the base chain -- from
+ * an empty body. The shared header is left alone; it has matched functions compiled
+ * against its flat form. */
+#include "dBgActor_c.h"
+#include "dBgCh_Actr.h"
+#include "dCcAcPos_c.h"
+
+struct ToxBox : dBgActor_c {
+    s32 mPlayerActor;                   /* 0x320 */
+    dBgCh_Actr mWithMeshClsn;           /* 0x324 */
+    u8 pad_4e0[0x8];
+    dCcAcPos_c mdCcAcPos_c;             /* 0x4e8 */
+    u8 pad_528[0x6c];
+    virtual ~ToxBox();
+};
+
+typedef char ToxBox_size_must_be_0x594[sizeof(ToxBox) == 0x594 ? 1 : -1];
+
+ToxBox::~ToxBox()
+{
 }

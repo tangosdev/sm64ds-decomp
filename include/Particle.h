@@ -106,6 +106,19 @@ struct Particle {
     u8  pad_815[0x3];
     u8  mCallback_818;      /* 0x818 - vtable data_0208f464;
                                        System::NewUnkCallback818 passes it */
+
+#ifdef __cplusplus
+    /* Particle::SimpleCallback -- one of the 8-byte {vtable; s16} objects the
+       mCallback_* bytes above mark the offset of. No base is modeled, so its
+       constructor stores both the base Particle::Callback vtable and its own
+       explicitly, matching what the ROM's constructor does in one flat body. */
+    struct SimpleCallback {
+        void *vtable;   /* 0x00 */
+        s16 unk_004;    /* 0x04 */
+
+        SimpleCallback();
+    };
+#endif
 };
 
 #endif

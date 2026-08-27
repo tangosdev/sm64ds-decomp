@@ -3,7 +3,7 @@ extern void func_ov002_020aea30(char* c, void* p, int a, int b);
 extern void func_02012694(int a, void* b);
 extern int _ZN8dActor_c24BumpedUnderneathByPlayerER6Player(char* c, void* p);
 extern void func_ov065_0211691c(char* c, void* pmf);
-extern void func_ov002_020ada40(char* c, void* v, void* p, int a);
+extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(char* c, void* v, void* p, int a);
 extern int _ZN6Player9IsOnShellEv(void* p);
 extern void func_ov065_02115f84(char* c);
 extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(char* c, void* cyl, void* p);
@@ -53,7 +53,7 @@ void func_ov065_02115ff0(char* c)
         v[0] = -0x2000;
         v[1] = 0;
         v[2] = 0;
-        func_ov002_020ada40(c, v, p, 0);
+        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, v, p, 0);
         func_02012694(0x11e, c + 0x74);
         return;
     }

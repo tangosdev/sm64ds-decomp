@@ -5,7 +5,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
-extern void func_ov002_020ada40(void *c, void *v, void *a, int flag);
+extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void *c, void *v, void *a, int flag);
 extern void func_02012694(int a, void *p);
 extern int _ZN8dActor_c18HorzAngleToCPlayerEv(void *c);
 extern int _ZN6Player7TryGrabER8dActor_c(void *p, void *a);
@@ -30,7 +30,7 @@ void func_ov062_02116010(char *c)
         v.x = 0x1000;
         v.y = 0;
         v.z = 0;
-        func_ov002_020ada40(c, &v, a, 0);
+        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, &v, a, 0);
         func_02012694(0x125, c + 0x74);
         return;
     }

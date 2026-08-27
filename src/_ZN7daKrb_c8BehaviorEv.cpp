@@ -25,7 +25,7 @@ extern int _ZN4cstd4fdivEii(int a, int b);
 extern void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(char* c, void* cyl);
 extern void _ZN9Animation7AdvanceEv(void* c);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(char* c, void* cyl);
-extern int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(char* c, void* w, int f, int s, int b1, int b2, int g);
+extern int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(char* c, void* w, int f, int s, int b1, int b2, int g);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(char* c, void* w, u32 j);
 extern void _ZN5dCc_c5ClearEv(void* c);
 extern void _ZN5dCc_c6UpdateEv(void* c);
@@ -131,7 +131,7 @@ int daKrb_c::Behavior()
         _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), ((char*)this) + 0x180);
 
     if (mDeathState == 0 && mState != 2 && mState != 3) {
-        if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(((char*)this), ((char*)this) + 0x1b4, 0x32000, 0x1f49, 0, 1, 0x32000) != 0) {
+        if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(((char*)this), ((char*)this) + 0x1b4, 0x32000, 0x1f49, 0, 1, 0x32000) != 0) {
             mPosX = mSafePos.x;
             mPosY = mSafePos.y;
             mPosZ = mSafePos.z;
