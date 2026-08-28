@@ -1302,6 +1302,42 @@ def rule_frame_call_bool(name, ins, b, addr, relocs, syms):
     return (decls + f"int {name}({params}) {{ return {X}({a}) != 0; }}\n"), "frame_call_bool"
 
 
+def native_deleting_dtor(name):
+    """Use an existing class model before transcribing a D0 by hand.
+
+    A deleting destructor is source-level ``X::~X()``.  When the matching class
+    header already records the real inheritance and declares the virtual destructor,
+    emitting a second local class model is duplicate ownership of the same
+    symbol.  Return the native source in that case; the oracle remains the
+    authority on whether the header is complete enough to reproduce the ROM.
+
+    A flat/generated header is not sufficient: without a real base declaration
+    it cannot make CodeWarrior generate the base chain or inherited operator
+    delete, so the ordinary transcription rule remains available for it.
+    """
+    m = re.fullmatch(r"_ZN(\d+)([A-Za-z_]\w*)D0Ev", name)
+    if not m:
+        return None
+    n, cls = int(m.group(1)), m.group(2)
+    if len(cls) != n:
+        return None
+    header = REPO / "include" / f"{cls}.h"
+    if not header.is_file():
+        return None
+    text = header.read_text(errors="replace")
+    real_class = re.search(
+        r"^\s*(?:struct|class)\s+" + re.escape(cls)
+        + r"\s*:\s*(?:(?:public|protected|private)\s+)?[A-Za-z_]\w*",
+        text,
+        re.M,
+    )
+    virtual_dtor = re.search(r"\bvirtual\s+~" + re.escape(cls) + r"\s*\(\s*\)\s*;", text)
+    if not (real_class and virtual_dtor):
+        return None
+    return (f"//cpp\n// @symbol {name}\n#include \"{cls}.h\"\n\n"
+            f"{cls}::~{cls}()\n{{\n}}\n")
+
+
 def rule_deleting_dtor(name, ins, b, addr, relocs, syms):
     # push{r4,lr}; ldr r1,[pc]; mov r4,r0; str r1,[r4]; bl D1; ldr r1,[pc]; mov r0,r4;
     #   ldr r1,[r1]; bl D2; mov r0,r4; pop; bx; .word VT, &HEAP
@@ -1320,6 +1356,13 @@ def rule_deleting_dtor(name, ins, b, addr, relocs, syms):
     d1, d2 = R.name_for_reloc(e1, syms), R.name_for_reloc(e2, syms)
     if d1 == d2 or name in (d1, d2):
         return None
+    native = native_deleting_dtor(name)
+    if native is not None:
+        # Do not silently fall through to a competing hand-written class model
+        # when the real header is incomplete: a native miss is useful evidence,
+        # while a shadow match creates the duplicate-work conflict this guard
+        # exists to prevent.
+        return native, "deleting_dtor_native"
     decls = (f"extern int VT[];\nextern void {d1}(void *);\n"
              f"extern void {d2}(void *, void *);\nextern void *HEAP;\n")
     return (decls + f"int *{name}(int *t)\n{{\n    t[0] = (int)VT;\n    {d1}(t);\n"
