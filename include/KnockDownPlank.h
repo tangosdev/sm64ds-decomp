@@ -32,7 +32,7 @@ struct KnockDownPlank : dBgActor_c {
     s32 mFrontFloorY;                      /* 0x384 */
     s32 mOriginalPosY;                      /* 0x388 */
     s32 mJumpSpeed;                      /* 0x38c */
-    u16 mWobbleAng;                      /* 0x390 */
+    s16 mWobbleAng;                      /* 0x390 */
     s16 mFallAngVel;                      /* 0x392 */
     s16 mWobbleTimer;                      /* 0x394 */
     s8 mKnockDir;                       /* 0x396 */
@@ -47,6 +47,7 @@ struct KnockDownPlank : dBgActor_c {
 
     int InitResources();
     int CleanupResources();
+    int Behavior();
     int Render();
 
     virtual int  OnAttacked2(dActor_c &other);       /* slot 23 */
@@ -86,7 +87,7 @@ struct KnockDownPlank {
     s32 mFrontFloorY;            /* 0x384 */
     s32 mOriginalPosY;            /* 0x388 */
     s32 mJumpSpeed;            /* 0x38c */
-    u16 mWobbleAng;            /* 0x390 */
+    s16 mWobbleAng;            /* 0x390 */
     s16 mFallAngVel;            /* 0x392 */
     s16 mWobbleTimer;            /* 0x394 */
     s8  mKnockDir;            /* 0x396 */

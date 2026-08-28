@@ -1,75 +1,78 @@
 //cpp
+// @symbol _ZN14KnockDownPlank8BehaviorEv
+#include "KnockDownPlank.h"
+#include "Sound.h"
+
 extern "C" {
-struct Vector3 { int x, y, z; };
-
 extern short data_02082214[];
-extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *self, struct Vector3 *v, int f);
-extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, struct Vector3 *v);
-extern void func_ov015_0211166c(char *t);
-extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
-extern int func_ov015_021114f0(char *c);
+void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(
+    dActor_c *self, const Vector3 *pos, Fix12i strength);
+s32 _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(
+    dBgActor_c *self, Fix12i rangeOffset, Fix12i drawDistance);
+void func_ov015_0211166c(KnockDownPlank *plank);
+s32 func_ov015_021114f0(KnockDownPlank *plank);
+}
 
-int _ZN14KnockDownPlank8BehaviorEv(char *c)
+int KnockDownPlank::Behavior()
 {
-    switch (*(unsigned char *)(c + 0x397)) {
+    switch (mState) {
     case 0:
         break;
     case 1: {
-        unsigned short ang = *(unsigned short *)(c + 0x390);
+        unsigned short ang = mWobbleAng;
         int idx = ang >> 4;
-        int s = *(short *)((char *)data_02082214 + (idx << 2));
-        int amp = *(signed char *)(c + 0x396);
+        int s = data_02082214[idx * 2];
+        int amp = mKnockDir;
         int prod = amp * s;
-        int d = (int)(((long long)prod * *(short *)(c + 0x394) + 0x800) >> 0xc);
-        *(short *)(c + 0x8c) = d;
-        if (*(short *)(c + 0x394) <= 0) {
-            *(short *)(c + 0x8c) = 0;
-            *(short *)(c + 0x390) = 0;
-            *(unsigned char *)(c + 0x397) = 0;
+        int d = (int)(((long long)prod * mWobbleTimer + 0x800) >> 0xc);
+        mAngleX = d;
+        if (mWobbleTimer <= 0) {
+            mAngleX = 0;
+            mWobbleAng = 0;
+            mState = 0;
         } else {
-            *(short *)((int)c + 0x394) -= 8;
+            mWobbleTimer -= 8;
         }
-        *(short *)((int)c + 0x390) += 0x400;
+        mWobbleAng += 0x400;
         break;
     }
     case 2: {
-        short *p392 = (short *)(c + 0x392);
-        short *p8c = (short *)(c + 0x8c);
-        int amt = *(signed char *)(c + 0x396) << 0x17;
-        *p392 = *p392 + (amt >> 16);
-        *p8c = *p8c + *(short *)(c + 0x300 + 0x92);
-        if (*(signed char *)(c + 0x396) == -1) {
-            if (*(short *)(c + 0x8c) < -0x4000) {
-                *(short *)(c + 0x8c) = -0x4000;
-                *(short *)(c + 0x392) = 0;
-                (*(unsigned char *)((int)c + 0x397))++;
-                struct Vector3 pos;
-                pos.x = *(int *)(c + 0x5c);
-                pos.y = *(int *)(c + 0x60);
-                pos.z = *(int *)(c + 0x64);
-                _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(c, &pos, 0x2000000);
-                _ZN5Sound9PlayBank3EjRK7Vector3(0x44, (struct Vector3 *)(c + 0x74));
+        int amt = mKnockDir << 0x17;
+        mFallAngVel += amt >> 16;
+        mAngleX += mFallAngVel;
+        if (mKnockDir == -1) {
+            if (mAngleX < -0x4000) {
+                mAngleX = -0x4000;
+                mFallAngVel = 0;
+                mState++;
+
+                Vector3 pos;
+                pos.x = mPosX;
+                pos.y = mPosY;
+                pos.z = mPosZ;
+                _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(
+                    this, &pos, 0x2000000);
+                Sound::PlayBank3(0x44, *(Vector3 *)&mCamSpacePosX);
             }
         } else {
-            *(int *)((int)c + 0x38c) += 0x2000;
-            *(int *)((int)c + 0x60) += *(int *)(c + 0x38c);
-            {
-                int lim = *(int *)(c + 0x388) + 0x46000;
-                if (*(int *)(c + 0x60) > lim) {
-                    *(int *)(c + 0x60) = lim;
-                }
+            mJumpSpeed += 0x2000;
+            mPosY += mJumpSpeed;
+            int limit = mOriginalPosY + 0x46000;
+            if (mPosY > limit) {
+                mPosY = limit;
             }
-            if (*(short *)(c + 0x8c) > 0x4000) {
-                *(short *)(c + 0x8c) = 0x4000;
-                *(short *)(c + 0x392) = 0;
-                (*(unsigned char *)((int)c + 0x397))++;
-                struct Vector3 pos;
-                pos.x = *(int *)(c + 0x5c);
-                pos.y = *(int *)(c + 0x60);
-                pos.z = *(int *)(c + 0x64);
-                _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(c, &pos, 0x2000000);
-                _ZN5Sound9PlayBank3EjRK7Vector3(0x44, (struct Vector3 *)(c + 0x74));
+            if (mAngleX > 0x4000) {
+                mAngleX = 0x4000;
+                mFallAngVel = 0;
+                mState++;
+
+                Vector3 pos;
+                pos.x = mPosX;
+                pos.y = mPosY;
+                pos.z = mPosZ;
+                _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(
+                    this, &pos, 0x2000000);
+                Sound::PlayBank3(0x44, *(Vector3 *)&mCamSpacePosX);
             }
         }
         break;
@@ -80,10 +83,9 @@ int _ZN14KnockDownPlank8BehaviorEv(char *c)
         break;
     }
 
-    func_ov015_0211166c(c);
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0))
-        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
-    func_ov015_021114f0(c);
+    func_ov015_0211166c(this);
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
+        UpdateClsnPosAndRot();
+    func_ov015_021114f0(this);
     return 1;
-}
 }
