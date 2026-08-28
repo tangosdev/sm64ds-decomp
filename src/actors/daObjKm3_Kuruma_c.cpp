@@ -46,4 +46,5 @@ int daObjKm3_Kuruma_c::CleanupResources()
 
 /* ROM ordinal 0 -- _ZN17daObjKm3_Kuruma_cD1Ev */
 // @symbol _ZN17daObjKm3_Kuruma_cD1Ev
-/* The compiler emits D2, D0 and D1 from this one class definition. */
+/* The compiler emits D1 and D0 from the inline body in the header; the ROM has
+ * no D2 and neither does this object. */

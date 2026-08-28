@@ -57,7 +57,7 @@ struct BookShot : dEnemyBase_c {
     u8  pad_451[0x3];
 
     /* --- vtable --- */
-    virtual ~BookShot();
+    virtual ~BookShot() {}
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */

@@ -55,7 +55,7 @@ struct Koopa : dEnemyBase_c {
     u8  pad_3cf[0x1];
 
     /* --- vtable --- */
-    virtual ~Koopa();
+    virtual ~Koopa() {}
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
     virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */

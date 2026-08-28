@@ -160,7 +160,7 @@ An illustrative entry:
 {
   "id": "ov062/Chuckya",
   "module": "ov062",
-  "source": "src/actors/Chuckya.cpp",
+  "source": "src_tu/actors/Chuckya.cpp",
   "promoted_source": "src/actors/Chuckya.cpp",
   "status": "shadow",
   "boundary_confidence": "high",
@@ -181,14 +181,14 @@ An illustrative entry:
       "symbol": "_ZN7Chuckya8BehaviorEv",
       "address": "0x021xxxxx",
       "size": "0x000xxxxx",
-      "legacy_source": "src/actors/Chuckya.cpp",
+      "legacy_source": "src/_ZN7Chuckya8BehaviorEv.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN7Chuckya6RenderEv",
       "address": "0x021xxxxx",
       "size": "0x000xxxxx",
-      "legacy_source": "src/actors/Chuckya.cpp",
+      "legacy_source": "src/_ZN7Chuckya6RenderEv.cpp",
       "ordinal": 1
     }
   ],

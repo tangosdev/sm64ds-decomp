@@ -36,7 +36,7 @@ struct EnemySwitchTag : dActor_c {
     u8  mIsReusable;            /* 0x10c */
     u8  mEventID;            /* 0x10d */
 
-    virtual ~EnemySwitchTag();
+    virtual ~EnemySwitchTag() {}
 
     virtual s32 InitResources();
     virtual s32 CleanupResources();
