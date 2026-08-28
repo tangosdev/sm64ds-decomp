@@ -1,8 +1,15 @@
-// HOST-AUTHORITATIVE STATE SYNC. Run mg16 lane MP4.
+// OWNER-AUTHORITATIVE STATE SYNC. Run mg16 lane MP4; authority reshaped by
+// the mp-sync-coopdx lane (item 1).
 //
-// THE DESIGN IS runs/mg16/status/MP4-DESIGN.md and this file implements it.
-// Read that first: it says what this does, what it deliberately does NOT do,
-// and what the correction constants are guesses about.
+// THE DESIGN IS runs/mg16/status/MP4-DESIGN.md and this file implements it,
+// with one deliberate amendment that document predates: authority is PER
+// BODY, not the host's. Each console publishes its OWN body -- the one it
+// simulates from its own input with zero latency -- and applies every peer's
+// view of that peer's body. The design doc's host-only rule corrected in one
+// direction only; the host's copy of every client measured recvd=0 applied=0
+// forever. Read the doc first for everything else: what this does, what it
+// deliberately does NOT do, and what the correction constants are guesses
+// about.
 //
 // WHAT THIS FILE IS NOW: the whole layer -- the enable decision, the contract
 // check, the refusal, the message, the send, the apply, the readout. It was
@@ -232,9 +239,9 @@ void sync_decide() {
         g_enabled = true;
         std::fprintf(stderr,
                      "[sync] enabled on transport '%s' (contract v%u): %d Hz, "
-                     "lerp %d%%/frame, snap over %d units. The host is "
-                     "authoritative for REMOTE bodies only; local input and the "
-                     "DS lockstep are unchanged.\n",
+                     "lerp %d%%/frame, snap over %d units. Each console is "
+                     "authoritative for its OWN body and corrects only remote "
+                     "ones; local input and the DS lockstep are unchanged.\n",
                      t->name ? t->name : "(unnamed)", ver, g_cfg.hz,
                      g_cfg.lerp_pct, g_cfg.snap_units);
         if (g_cfg.delay_ms > 0)
@@ -296,13 +303,13 @@ struct SyncPlayerV1 {
 struct SyncMsgV1 {
     unsigned       magic;     // kSyncMagic -- framing, never changes
     unsigned       version;   // kSyncVersion -- payload shape
-    // THE HOST'S OWN SEND COUNTER, not the session frame MP4-DESIGN.md's
+    // THE SENDER'S OWN SEND COUNTER, not the session frame MP4-DESIGN.md's
     // sketch called for. Named `seq` because that is what it is: it increments
-    // once per send on the host and means nothing on any other console. The
-    // design wanted a SESSION frame so a client could tell how stale a message
-    // was in game-time; that needs the comms frame counter
-    // (data_020a1040+0) and is a v2 field. Nothing reads this today -- it is
-    // carried so the wire format has the slot when someone does.
+    // once per send on its sender and means nothing on any other console. The
+    // design wanted a SESSION frame so a receiver could tell how stale a
+    // message was in game-time; that needs the comms frame counter
+    // (data_020a1040+0) and is a later field. Nothing reads this today -- it
+    // is carried so the wire format has the slot when someone does.
     unsigned       seq;
     unsigned char  count;
     unsigned char  pad[3];
@@ -467,58 +474,72 @@ void apply_pose(void *a, const SyncPlayerV1 *e) {
 }
 
 // ---------------------------------------------------------------------------
-// THE SEND SIDE -- host only.
+// THE SEND SIDE -- every console, its OWN body only. mp-sync-coopdx item 1.
 //
-// AUTHORITY IS THE HOST'S, so only the host sends. A client that sent would be
-// asserting its own view of a body the host owns, which is how two authorities
-// and a fight over one actor happen.
+// AUTHORITY IS THE OWNER'S. The console whose player a body is simulates that
+// body from its own input with zero latency, so its view of that one body is
+// the best view that exists anywhere -- and it publishes exactly that one.
+// Nobody ever asserts a view of a body it does not own, so there are never
+// two authorities over one actor; the fight the old host-only rule guarded
+// against cannot happen under this rule either, and this rule also closes the
+// direction the old one left open. MEASURED, that direction: in every
+// pre-item-1 session the host's counters read recvd=0 applied=0 -- on the
+// host's screen a remote body got ZERO corrections, ever, because only the
+// host sent and the host discarded. Half of "the two screens disagree" lived
+// in exactly that half of the wire.
+//
+// (The idea is sm64coopdx's -- each client authoritative for its own Mario --
+// taken as an idea only; their netcode is unlicensed and their whole
+// architecture solves a determinism problem our lockstep does not have. The
+// slice adopted here is the authority rule, nothing else.)
 //
 // ORDERING: this runs AFTER the conductor's exchange has returned for the
 // frame, so the input record is always on the wire first. That is the
 // contract's ordering rule and it is satisfied by call position rather than by
 // a comment -- rung SY6 measures the consequence.
 // ---------------------------------------------------------------------------
-void sync_send_if_host() {
+void sync_send_own() {
     if (!g_enabled) return;
     const CommsTransport *t = comms_transport();
     if (!t || !t->send_aux) return;
-    if (t->slot() != 0) return;                 // host only
     if (++g_frame % (unsigned)g_send_every) return;
+
+    /* MY body is the one at MY world slot -- data_0209f250, the same index
+       apply_snapshot's never-local skip reads, so the sender's "mine" and the
+       receiver's "not mine" can never disagree about which body that is. */
+    const int me = (int)data_0209f250;
+    if (me < 0 || me >= kCommsMaxPlayers) return;
+    void *a = data_0209f394[me];
+    if (!a) return;
 
     unsigned char buf[kSyncBufBytes];
     SyncMsgV1 *m = (SyncMsgV1 *)buf;
     m->magic = kSyncMagic;
     m->version = kSyncVersion;
     m->seq = g_frame;
-    m->count = 0;
+    m->count = 1;
     m->pad[0] = m->pad[1] = m->pad[2] = 0;
 
     SyncPlayerV1 *e = (SyncPlayerV1 *)(buf + sizeof(SyncMsgV1));
-    const int n = (int)data_0209f21c;
-    for (int i = 0; i < n && i < kCommsMaxPlayers; ++i) {
-        void *a = data_0209f394[i];
-        if (!a) continue;
-        e->slot  = (unsigned char)i;
-        e->flags = (unsigned char)(kFlagLive |
-                                   (player::on_ground(a) ? kFlagGrounded : 0));
-        e->yaw   = *player::facing(a);
-        e->x     = *player::pos_x(a);
-        e->y     = *player::pos_y(a);
-        e->z     = *player::pos_z(a);
-        e->anim_id    = player::anim_id(a);
-        e->state_id   = player::state_id(a);
-        e->anim_frame = player::anim_frame(a);
-        ++e;
-        ++m->count;
-    }
-    if (m->count == 0) return;
+    e->slot  = (unsigned char)me;
+    e->flags = (unsigned char)(kFlagLive |
+                               (player::on_ground(a) ? kFlagGrounded : 0));
+    e->yaw   = *player::facing(a);
+    e->x     = *player::pos_x(a);
+    e->y     = *player::pos_y(a);
+    e->z     = *player::pos_z(a);
+    e->anim_id    = player::anim_id(a);
+    e->state_id   = player::state_id(a);
+    e->anim_frame = player::anim_frame(a);
 
-    const int len = (int)sizeof(SyncMsgV1) + m->count * (int)sizeof(SyncPlayerV1);
+    const int len = (int)sizeof(SyncMsgV1) + (int)sizeof(SyncPlayerV1);
     if (t->send_aux(buf, len) == len) ++g_stats.sent;
 }
 
 // ---------------------------------------------------------------------------
-// THE APPLY SIDE -- clients only, REMOTE bodies only.
+// THE APPLY SIDE -- every console, REMOTE bodies only. (Item 1: the host
+// stopped being a special case; it applies its peers' own-body snapshots like
+// anyone else.)
 //
 // THE LOCAL BODY IS NEVER TOUCHED, and that is the single most important line
 // in this file. Your own character is simulated from your own input with no
@@ -540,10 +561,11 @@ void sync_send_if_host() {
 // per-(sender, kind) slots can legitimately hold several messages at once.
 // ---------------------------------------------------------------------------
 void apply_snapshot(const unsigned char *buf, int n) {
-    const CommsTransport *t = comms_transport();
-    if (!t) return;
-    if (t->slot() == 0) return;                 // the host has nothing to apply
-
+    /* EVERY console applies now -- mp-sync-coopdx item 1 removed the
+       `slot() == 0` early-out that made the host discard everything. What
+       protects the local body is not that gate and never really was: it is
+       the `slot == me` skip in the loop below, which survives this refactor
+       and every future one (spec trap 3). */
     if (n < (int)sizeof(SyncMsgV1)) { ++g_stats.dropped; return; }
     const SyncMsgV1 *m = (const SyncMsgV1 *)buf;
     if (m->magic != kSyncMagic) { ++g_stats.dropped; return; }
@@ -568,11 +590,39 @@ void apply_snapshot(const unsigned char *buf, int n) {
     ++g_stats.recvd;
 
     const int me = (int)data_0209f250;
+
+    /* THE LOCAL-BODY WITNESS. Read the local player's fields before the entry
+       loop and compare after: the frame loop is single-threaded, so a change
+       across this window can only be this function writing the local body.
+       rungSY2 asserts the counter stays 0 under live corrections, which is a
+       mechanism-level probe -- its predecessor (sync-on vs sync-off trajectory
+       equality) turned out to measure the SIM instead: the two bodies spawn
+       overlapping, the pushback that separates them runs while early
+       corrections move the remote copy, and a standing session came out 2.49
+       units apart at frame 34 with zero input and zero local writes. */
+    void *a_me = (me >= 0 && me < kCommsMaxPlayers) ? data_0209f394[me] : 0;
+    int wx = 0, wy = 0, wz = 0;
+    short wyaw = 0;
+    if (a_me) {
+        wx = *player::pos_x(a_me);
+        wy = *player::pos_y(a_me);
+        wz = *player::pos_z(a_me);
+        wyaw = *player::facing(a_me);
+    }
+
     const SyncPlayerV1 *e = (const SyncPlayerV1 *)(buf + sizeof(SyncMsgV1));
     for (int i = 0; i < (int)m->count; ++i, ++e) {
         const int slot = e->slot;
         if (slot < 0 || slot >= kCommsMaxPlayers) continue;
-        if (slot == me) continue;               // NEVER the local body
+        if (slot == me) {
+            /* NEVER the local body -- spec trap 3, the line every refactor
+               must keep. Under owner authority nobody publishes another
+               console's body, so an entry naming OUR slot is a peer claiming
+               authority it does not have; counted so rungSY2 can assert the
+               count stays zero rather than trusting the skip silently. */
+            ++g_stats.own_claims;
+            continue;
+        }
         void *a = data_0209f394[slot];
         if (!a) continue;
 
@@ -603,6 +653,20 @@ void apply_snapshot(const unsigned char *buf, int n) {
         *player::facing(a) = e->yaw;
         apply_pose(a, e);
         ++g_stats.applied;
+    }
+
+    if (a_me && (wx != *player::pos_x(a_me) || wy != *player::pos_y(a_me) ||
+                 wz != *player::pos_z(a_me) || wyaw != *player::facing(a_me))) {
+        ++g_stats.local_writes;
+        static bool said;
+        if (!said) {
+            said = true;
+            std::fprintf(stderr,
+                         "[sync] BUG: the local body (slot %d) changed across "
+                         "apply_snapshot. The layer wrote the local player, "
+                         "which it must never do. Counted in local_writes; "
+                         "said once.\n", me);
+        }
     }
 }
 
@@ -730,7 +794,7 @@ void sync_send_ping() {
 void sync_tick() {
     if (!g_enabled) return;
     sync_recv_pump();      // take what has arrived (and is due) first
-    sync_send_if_host();   // then publish ours, after the input record
+    sync_send_own();       // then publish OUR body, after the input record
     sync_send_ping();      // and the rig's probe last, behind the state
 }
 
@@ -745,7 +809,8 @@ void sync_report(const char *tag) {
     std::fprintf(stderr,
                  "[sync:%s] enabled=%s sent=%llu recvd=%llu dropped=%llu "
                  "applied=%llu lerps=%llu snaps=%llu worst_err=%d "
-                 "delay=%d rtt_last=%d rtt_avg=%d pings=%llu pongs=%llu\n",
+                 "delay=%d rtt_last=%d rtt_avg=%d pings=%llu pongs=%llu "
+                 "own_claims=%llu local_writes=%llu\n",
                  tag ? tag : "-", g_enabled ? "yes" : "no",
                  (unsigned long long)g_stats.sent,
                  (unsigned long long)g_stats.recvd,
@@ -756,7 +821,9 @@ void sync_report(const char *tag) {
                  g_stats.worst_error,
                  g_cfg.delay_ms, g_stats.rtt_last_ms, g_stats.rtt_avg_ms,
                  (unsigned long long)g_stats.pings,
-                 (unsigned long long)g_stats.pongs);
+                 (unsigned long long)g_stats.pongs,
+                 (unsigned long long)g_stats.own_claims,
+                 (unsigned long long)g_stats.local_writes);
 }
 
 }  // namespace port

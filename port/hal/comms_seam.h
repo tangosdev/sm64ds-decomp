@@ -484,12 +484,15 @@ int vs_player_count();
 void vs_probe(int frame);
 
 // ---------------------------------------------------------------------------
-// HOST-AUTHORITATIVE STATE SYNC (run mg16 lane MP4, hal/comms_sync.cpp).
+// OWNER-AUTHORITATIVE STATE SYNC (run mg16 lane MP4, hal/comms_sync.cpp;
+// authority reshaped per body by the mp-sync-coopdx lane).
 //
 // A PORT LAYER, NOT A ROM ONE. It sits above the seam and outside src/
 // entirely: the DS input-lockstep remains the shipped default and runs
-// unchanged whether this is on or off. Design and its honest limits are in
-// runs/mg16/status/MP4-DESIGN.md.
+// unchanged whether this is on or off. Each console publishes its OWN body
+// and corrects only remote ones. Design and its honest limits are in
+// runs/mg16/status/MP4-DESIGN.md, plus the authority amendment in
+// hal/comms_sync.cpp's own banner.
 // ---------------------------------------------------------------------------
 struct SyncStats {
     unsigned long long sent, recvd, dropped, applied, lerps, snaps;
@@ -500,6 +503,18 @@ struct SyncStats {
     unsigned long long pongs; // RTT samples received back
     int rtt_last_ms;          // most recent measured round trip
     int rtt_avg_ms;           // EMA (7/8 old + 1/8 new) of the same
+    // Received snapshot entries naming THIS console's own slot, refused by the
+    // never-correct-local skip. Under per-body owner authority nobody
+    // publishes another console's body, so a healthy session holds this at 0
+    // -- rungSY2 asserts exactly that. Nonzero means a peer claimed authority
+    // over the local body and the skip is the only thing that saved it.
+    unsigned long long own_claims;
+    // Times the local body's pos/yaw changed ACROSS one apply_snapshot call,
+    // measured by reading them before and after. The frame loop is single-
+    // threaded, so any change across that window is the layer writing the
+    // local player -- the one thing it must never do. Held at 0 by
+    // construction; rungSY2 asserts it stayed 0 under live corrections.
+    unsigned long long local_writes;
 };
 
 // Decide whether the layer runs this session. Requires SM64DS_SYNC=1, an
@@ -511,10 +526,10 @@ bool sync_forced_v1();
 SyncStats sync_stats();
 void sync_report(const char *tag);
 
-// One frame of the sync layer: apply the host's view to REMOTE bodies, then (on
-// the host) publish ours. Call AFTER the conductor has run, so the input record
-// is always on the wire first -- the contract's ordering rule. No-op when the
-// layer is not enabled.
+// One frame of the sync layer: apply each peer's view of its own body to that
+// REMOTE body, then publish ours. Call AFTER the conductor has run, so the
+// input record is always on the wire first -- the contract's ordering rule.
+// No-op when the layer is not enabled.
 void sync_tick();
 
 }  // namespace port
