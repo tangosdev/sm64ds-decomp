@@ -91,9 +91,11 @@ data. An override takes its base's slot wherever it is declared, so putting
 virtuals still take 18..30 from their declaration order, because new slots append
 after the inherited table.
 
-What makes that safe is NOT that the destructor lives in a C translation unit --
-`src/actors/Actor.cpp` and `_ZN8dActor_cD2Ev.cpp` are C++ and do include the
-header; only `_ZN8dActor_cD0Ev.cpp` is C. The invariant is that all three define
+What makes that safe is NOT that the destructor lives in a C translation unit.
+All three variants now live together in `src/actors/Actor.cpp`, which is `//cpp`
+and does include the header -- when they were three separate per-function files,
+two of them were C++ and only the D0 one was C, and the invariant held then too.
+The invariant is that all three define
 `extern "C"` free functions under the mangled names and none defines
 `dActor_c::~dActor_c`, so no TU is ever the key function's definition.
 

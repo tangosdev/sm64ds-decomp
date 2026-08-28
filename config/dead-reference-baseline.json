@@ -242,12 +242,28 @@
    "ref": "include/cMgSmartball_"
   },
   {
+   "file": "notes/translation-unit-reconstruction-plan.md",
+   "ref": "src/_ZN7Chuckya6RenderEv.cpp"
+  },
+  {
+   "file": "notes/translation-unit-reconstruction-plan.md",
+   "ref": "src/_ZN7Chuckya8BehaviorEv.cpp"
+  },
+  {
+   "file": "notes/translation-unit-reconstruction-plan.md",
+   "ref": "src_tu/actors/Chuckya.cpp"
+  },
+  {
    "file": "notes/tu-reconstruction-pilot-2-report.md",
    "ref": "include/Actor.h"
   },
   {
    "file": "notes/tu-reconstruction-pilot-2-report.md",
    "ref": "include/ActorDerived.h"
+  },
+  {
+   "file": "notes/tu-reconstruction-pilot-2-report.md",
+   "ref": "src_tu/stage/LevelObjects.cpp"
   },
   {
    "file": "notes/tu-reconstruction-pilot-2-report.md",

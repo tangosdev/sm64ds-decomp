@@ -1101,8 +1101,8 @@ int func_ov062_02115f84(char* c) {
  *
  * D0 is the DELETING destructor: destroy through this class and its bases, then
  * return the object to its heap. Nobody writes that; declaring `~Chuckya()` is
- * enough, because mwcc emits D2, D0 and D1 together and objisolate keeps the
- * one this file is bound to.
+ * enough, because mwcc emits D1 and D0 together from the inline body in
+ * the header, and objisolate keeps the one this file is bound to.
  *
  * The deallocation is an inline operator delete -- dEnemyBase_c's, reachable because
  * dEnemyBase_c is this class's IMMEDIATE base.

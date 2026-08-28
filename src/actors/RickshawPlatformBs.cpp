@@ -29,12 +29,6 @@
 #include "RickshawPlatformBs.h"
 #include "types.h"
 
-/* Local shadow declarations carried from the legacy files verbatim.
- * NOT reconciled against real project headers -- check include/*.h for
- * each of these before compiling; a real header should usually win. */
-/* shadow struct 'Arg' */
-struct Arg { void *m[3]; };
-
 extern daObjDorifuResources data_ov047_02112508[5];
 
 /* -------------------------------------------------------------------------- */

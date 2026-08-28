@@ -15,7 +15,7 @@ struct EnemySpawner : dActor_c {
     u8  mEventBit;          /* 0x0dc */
     u8  pad_0dd[0x3];
 
-    virtual ~EnemySpawner();
+    virtual ~EnemySpawner() {}
 
     virtual int InitResources();
     virtual int CleanupResources();

@@ -209,8 +209,8 @@ carry the rename.
 | 0x16c | `mAnimSpeed` | seeded 0x1000 (1.0), eased toward 0x8000 while the heal cooldown is above 0x2d and back toward 0x1000 otherwise, then copied into `mModelAnim.speed`. The heart spins slowly while idle and fast just after it heals. |
 | 0x171 | `mWasTouched` | edge detector on the collider: latched to 1 (and `mHealTimer` zeroed, so the heal fires that frame) the first frame the `dCcAc_c` reports an occupant, cleared the frame it reports none. |
 
-Sources: `src/actors/HealingHeart.cpp`,
-`src/actors/HealingHeart.cpp`, and `src/actors/HealingHeart.cpp`.
+Sources: `src/actors/HealingHeart.cpp` -- its `InitResources` and `Behavior`
+members, and the reconstructed TU itself.
 
 ## WingFeather -- include/WingFeather.h
 
@@ -221,9 +221,8 @@ Sources: `src/actors/HealingHeart.cpp`,
 | 0x380 | `mParticle` | the particle-handle shape above, effect 0x4a. |
 | 0x384 | `mLifeTimer` | 0xb4 at init, counted down only while on the ground, destroys at 0, blinks below 0x2d. |
 
-Sources: `src/actors/WingFeather.cpp`,
-`src/actors/WingFeather.cpp`, `src/actors/WingFeather.cpp`,
-`src/actors/WingFeather.cpp`.
+Sources: `src/actors/WingFeather.cpp` -- its `InitResources`, `Behavior` and
+`Render` members, and the reconstructed TU itself.
 
 ## daObjAbuku_c -- include/daObjAbuku_c.h
 
@@ -260,8 +259,8 @@ Sources: `src/_ZN8daEyBm_c13InitResourcesEv.cpp`,
 | 0x324 | `mParticle1` | particle-handle shape, effect 0x7f, emitted at `mPosY + 0x4b000`. |
 | 0x328 | `mParticle2` | same, effect 0x80. |
 
-Sources: `src/actors/daKpFr_c.cpp`,
-`src/actors/daKpFr_c.cpp`, `src/actors/daKpFr_c.cpp`.
+Sources: `src/actors/daKpFr_c.cpp` -- its `InitResources` and `Render` members,
+and the reconstructed TU itself.
 
 ## daKrpa_c -- include/daKrpa_c.h
 
@@ -270,7 +269,8 @@ Sources: `src/actors/daKpFr_c.cpp`,
 | 0x35c | `mMatrix` | identity-matrix shape. |
 | 0x3a8 | `mHeightAboveGnd` | `InitResources` raycasts a `dBgCh_Gnd` down from `mPos` and stores `(mPosY - hit height) + 0x1e000`, or the constant 0x1f4000 when nothing is hit. |
 
-Sources: `src/actors/daKrpa_c.cpp`, `src/actors/daKrpa_c.cpp`.
+Sources: `src/actors/daKrpa_c.cpp` -- its `InitResources` member, and the
+reconstructed TU itself.
 
 ## Spiny -- include/Spiny.h
 
@@ -280,8 +280,8 @@ Sources: `src/actors/daKrpa_c.cpp`, `src/actors/daKrpa_c.cpp`.
 | 0x3d8 | `mState` | `Render` draws the still `Model` in states 0 and 4 and the `ModelAnim` otherwise; `Behavior` treats 1 (once on the ground), 4 and 5 as states that must keep running whatever the distance to the player. |
 | 0x3e9 | `mDespawnTimer` | 0x2c (44 frames) at init, counted down ONLY on the frames Spiny is too far from the player to behave, destroys at 0. Not a plain life timer -- being near the player refills nothing but stops the count. |
 
-Sources: `src/actors/Spiny.cpp`, `src/actors/Spiny.cpp`,
-`src/actors/Spiny.cpp`, `src/actors/Spiny.cpp`.
+Sources: `src/actors/Spiny.cpp` -- its `InitResources`, `Render` and `Behavior`
+members, and the reconstructed TU itself.
 
 ## EnemySwitchTag -- include/EnemySwitchTag.h
 
@@ -293,9 +293,8 @@ The tag sets an `Event` bit while something stands in its collider.
 | 0x10a | `mHoldTimer` | counts `mHoldDuration` down; at 0 it clears the collider flag and `Event::ClearBit(mEventID)`. |
 | 0x10c | `mIsReusable` | bit 5 of `param1`. Set: the tag re-arms by reloading `mHoldTimer` from `mHoldDuration`. Clear: it marks itself for destruction after firing once. |
 
-Sources: `src/_ZN14EnemySwitchTag13InitResourcesEv.cpp`,
-`src/_ZN14EnemySwitchTag8BehaviorEv.cpp`,
-`src_tu/actors/EnemySpawner+EnemySwitchTag.cpp`.
+Sources: `src/actors/EnemySpawner_EnemySwitchTag.cpp` -- `EnemySwitchTag`'s
+`InitResources` and `Behavior` members, and the reconstructed TU itself.
 
 ## daDossyCap_c -- include/daDossyCap_c.h
 
