@@ -62,6 +62,13 @@
 #include <cstring>
 
 extern "C" {
+// SPELLED EXACTLY AS THE MATCHED SOURCES SPELL THEM. Do not respell: competing
+// declarations of one extern "C" symbol is its own bug class, and SetAnim
+// already has a return-type disagreement (declared int, defined void) that
+// POSEFIELDS.md documents.
+int _ZN6Player7SetAnimEji5Fix12IiEj(void *, unsigned int, int, int, unsigned int);
+void _ZN6Player11ChangeStateERNS_5StateE(char *, void *);
+
 // The per-slot Player pointers, the count, and which slot this console is.
 extern void *data_0209f394[];
 extern unsigned char data_0209f21c;
@@ -235,9 +242,25 @@ struct SyncPlayerV1 {
     unsigned char  flags;     // bit0 live, bit2 teleport (see kFlag*)
     short          yaw;       // facing, player_fields::facing
     int            x, y, z;   // Fix12, player_fields::pos_*
+
+    // ---- v2, THE POSE FIELDS ------------------------------------------
+    // Offsets and semantics from runs/mg16/status/POSEFIELDS.md, which is the
+    // authority and supersedes MP4-DESIGN.md's sketch where they disagree.
+    unsigned short anim_id;    // player_fields::anim_id, already unscaled
+    // The state's Main-function address: an OBSERVATION id, carried for
+    // diagnosis and NOT applied. See player_fields.h's banner -- the port does
+    // not preserve the ROM's contiguous state table, so there is no safe
+    // decode back to a State *. u32 because it is an address, not an index.
+    unsigned       state_id;
+    // THE CURSOR IS 20.12 FIXED POINT AND s32, NOT the design's s16. A
+    // 100-frame animation reaches 409600 in 20.12, which overflows a short by
+    // two orders of magnitude -- the design's field would have wrapped every
+    // animation past frame 8. Four bytes rather than lose the whole value.
+    int            anim_frame;
 };
 struct SyncMsgV1 {
-    unsigned       magic;     // kSyncMagic
+    unsigned       magic;     // kSyncMagic -- framing, never changes
+    unsigned       version;   // kSyncVersion -- payload shape
     // THE HOST'S OWN SEND COUNTER, not the session frame MP4-DESIGN.md's
     // sketch called for. Named `seq` because that is what it is: it increments
     // once per send on the host and means nothing on any other console. The
@@ -252,13 +275,96 @@ struct SyncMsgV1 {
 };
 #pragma pack(pop)
 
-enum : unsigned { kSyncMagic = 0x314e5953u };   // 'S','Y','N','1'
-enum : unsigned char { kFlagLive = 1, kFlagTeleport = 4 };
+// THE FRAMING TAG IS STABLE AND THE VERSION IS A FIELD, and an earlier
+// revision had them as the same four bytes. That was wrong in a way worth
+// keeping: hal/comms_loopback.cpp's drain() recognises an aux datagram by this
+// tag, so bumping the tag for a payload change silently UNFRAMED the channel --
+// the host sent 247 messages and the child received 0, with every one of them
+// charged to the carrier's drop counter. Transport framing and payload
+// versioning are different jobs and coupling them breaks the transport on every
+// bump.
+//
+// So: 'S','Y','N','1' means "this datagram is a sync message" FOREVER, and
+// kSyncVersion says what shape it is. A peer running the other version is
+// recognised, counted, and DROPPED at the version check -- no half-understood
+// message reaches the apply path, which is what the unreliable channel needs.
+enum : unsigned { kSyncMagic = 0x314e5953u };
+enum : unsigned { kSyncVersion = 2u };
+enum : unsigned char { kFlagLive = 1, kFlagGrounded = 2, kFlagTeleport = 4 };
 enum : int { kSyncBufBytes = 256 };
 
 // One DS unit is 4096 in Fix12. The thresholds are in units and converted here
 // so the constants read the way the design note states them.
 inline int units(int n) { return n * 4096; }
+
+// ---------------------------------------------------------------------------
+// THE POSE, APPLIED THROUGH THE ROM'S OWN FACES. Never by raw store.
+//
+// runs/mg16/status/POSEFIELDS.md settled this and the reasons are not stylistic:
+//
+//   Player::SetAnim does REFCOUNTED FILE I/O for the animation, forces the
+//   cursor reset that makes the following ModelAnim::SetAnim take its slow
+//   path, drives the eye TextureSequence, and sets a refusal flag
+//   (mStateFlags |= 0x80) that Player::Behavior REACTS TO by forcing a state
+//   change. A raw store to +0x63c gets none of that and leaves the object
+//   describing an animation whose file was never loaded.
+//
+//   Player::ChangeState is a TRANSACTION: two veto paths, a silent target
+//   substitution while the player is holding something, roughly twenty field
+//   resets, and a camera side effect. A raw store to +0x370 skips all of it.
+//
+// AND THE CAMERA SIDE EFFECT IS THE SECOND LOAD-BEARING REASON FOR THE
+// NEVER-CORRECT-LOCAL RULE. ChangeState's camera work is gated on the locally
+// viewed player, so applying a state to the LOCAL body would yank the player's
+// own camera once per packet. The rule already existed for feel; it now also
+// exists for that, and sync_apply's `slot == me` skip is what enforces both.
+// ---------------------------------------------------------------------------
+void apply_pose(void *a, const SyncPlayerV1 *e) {
+    // ---- STATE IS NOT APPLIED, and that is a measured decision rather than
+    // caution. POSEFIELDS.md's 0..77 encoding needs the ROM's contiguous state
+    // table; this port hosts those 78 records as separate objects and the
+    // linker scatters them, so a received id cannot be range-checked back into
+    // a State *. ChangeState on a wrong pointer is a call through a garbage
+    // pointer-to-member -- an arbitrary jump. player_fields.h::state_from_id
+    // refuses by construction, and the field is carried for diagnosis only.
+    //
+    // The animation below is what the owner actually sees, and it applies
+    // safely because SetAnim takes an ID and validates it itself.
+
+    // ---- ANIMATION. Only on an id CHANGE, and seeded through SetAnim's own
+    // startFrame, which costs nothing extra and avoids the cursor trap below.
+    //
+    // THE SAME-ANIMATION CASE IS DELIBERATELY NOT CORRECTED. ModelAnim::SetAnim
+    // has a same-file fast path that IGNORES startFrame, so re-seeding a cursor
+    // within one animation needs a direct write to ModelAnim+0x58 -- and a
+    // direct write perturbs Animation::WillHitFrame, which is how the ROM fires
+    // footsteps, hitboxes and animation-timed sounds. Moving it can skip such
+    // an event or fire it twice.
+    //
+    // The derivation recommends direct-writing only on LARGE drift, and the
+    // threshold for "large" HAS NO MEASURED VALUE -- like the position
+    // constants, it needs the latency tool nobody has built. So v2 does the
+    // half that is free and correct, and leaves the half that needs a number
+    // until there is a number. A remote body whose animation is right but whose
+    // phase is a few frames off is the residual, and it is a much smaller
+    // artifact than the wrong animation entirely, which is what the owner sees
+    // today.
+    if (e->anim_id != player::anim_id(a)) {
+        // Argument shape copied from a real call site rather than guessed:
+        // src/_ZN6Player11St_Fly_InitEv.cpp:26 is
+        // SetAnim(this, 0x49, 0, 0x1000, 0) -- id, flags, speed 1.0 in Fix12,
+        // startFrame. The received cursor is 20.12, so its integer frame is
+        // >> 12.
+        const unsigned start = (unsigned)(e->anim_frame >> 12);
+        _ZN6Player7SetAnimEji5Fix12IiEj(a, e->anim_id, 0, 0x1000, start);
+        // The return value is DISCARDED ON PURPOSE. POSEFIELDS.md flags that
+        // the shared declaration says `int` while the linked definition returns
+        // void, so the value is stack garbage; consuming it would be reading an
+        // unwritten slot. Left as the matched sources declare it rather than
+        // respelled here, because competing declarations of one extern "C"
+        // symbol is its own bug class.
+    }
+}
 
 // ---------------------------------------------------------------------------
 // THE SEND SIDE -- host only.
@@ -282,6 +388,7 @@ void sync_send_if_host() {
     unsigned char buf[kSyncBufBytes];
     SyncMsgV1 *m = (SyncMsgV1 *)buf;
     m->magic = kSyncMagic;
+    m->version = kSyncVersion;
     m->seq = g_frame;
     m->count = 0;
     m->pad[0] = m->pad[1] = m->pad[2] = 0;
@@ -292,11 +399,15 @@ void sync_send_if_host() {
         void *a = data_0209f394[i];
         if (!a) continue;
         e->slot  = (unsigned char)i;
-        e->flags = kFlagLive;
+        e->flags = (unsigned char)(kFlagLive |
+                                   (player::on_ground(a) ? kFlagGrounded : 0));
         e->yaw   = *player::facing(a);
         e->x     = *player::pos_x(a);
         e->y     = *player::pos_y(a);
         e->z     = *player::pos_z(a);
+        e->anim_id    = player::anim_id(a);
+        e->state_id   = player::state_id(a);
+        e->anim_frame = player::anim_frame(a);
         ++e;
         ++m->count;
     }
@@ -347,6 +458,22 @@ void sync_apply() {
     }
     const SyncMsgV1 *m = (const SyncMsgV1 *)buf;
     if (m->magic != kSyncMagic) { ++g_stats.dropped; return; }
+    if (m->version != kSyncVersion) {
+        /* A peer on a different message shape. Recognised as ours, counted, and
+           dropped -- never parsed. Said once so a version skew is diagnosable
+           from a playlog instead of looking like packet loss. */
+        static bool said;
+        if (!said) {
+            said = true;
+            std::fprintf(stderr,
+                         "[sync] peer is sending message version %u and this "
+                         "build speaks %u; dropping its state. Positions will "
+                         "not correct. Both sides need the same build.\n",
+                         m->version, kSyncVersion);
+        }
+        ++g_stats.dropped;
+        return;
+    }
     const int want = (int)sizeof(SyncMsgV1) + m->count * (int)sizeof(SyncPlayerV1);
     if (n < want) { ++g_stats.dropped; return; }
     ++g_stats.recvd;
@@ -385,6 +512,7 @@ void sync_apply() {
             ++g_stats.lerps;
         }
         *player::facing(a) = e->yaw;
+        apply_pose(a, e);
         ++g_stats.applied;
     }
 }
