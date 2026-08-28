@@ -112,6 +112,10 @@ struct SyncCfg {
     int  drop_pct;    // SM64DS_SYNC_DROP -- deliberate aux loss, for rung SY5
     int  delay_ms;    // SM64DS_SYNC_DELAY_MS -- deliberate aux LATENCY; the
                       // tuning rig this file's own banner asked for
+    bool no_events;   // SM64DS_SYNC_NO_EVENTS -- test scaffolding in the
+                      // FORCE_V1/DROP class: disables item 3's event-triggered
+                      // sends so one build can measure cadence-only ("before")
+                      // against event-driven ("after") transition latency
 };
 
 SyncCfg g_cfg;
@@ -161,6 +165,7 @@ void parse_cfg() {
     g_cfg.delay_ms   = env_int("SM64DS_SYNC_DELAY_MS", 0);
     if (g_cfg.delay_ms < 0) g_cfg.delay_ms = 0;
     if (g_cfg.delay_ms > 2000) g_cfg.delay_ms = 2000;
+    g_cfg.no_events  = env_int("SM64DS_SYNC_NO_EVENTS", 0) != 0;
     if (g_cfg.hz < 1) g_cfg.hz = 1;
     if (g_cfg.hz > 60) g_cfg.hz = 60;
     if (g_cfg.lerp_pct < 1) g_cfg.lerp_pct = 1;
@@ -402,6 +407,36 @@ DelayedAux g_delayq[kDelayRing];  // FIFO: constant delay keeps due times sorted
 int      g_dq_head = 0;
 int      g_dq_count = 0;
 unsigned g_last_ping_ms = 0;
+
+// ---------------------------------------------------------------------------
+// EVENT-TRIGGERED SENDS (mp-sync-coopdx item 3, idea from sm64coopdx's
+// action-change trigger, idea only). A fixed 30 Hz cadence means a transition
+// -- jump, land, sleep, wake -- waits up to a full cadence interval before
+// the peers hear about it, on top of the wire. So a change of the local
+// body's anim id or grounded flag publishes a snapshot THAT frame, and the
+// cadence remains the floor underneath.
+//
+// BUDGETED, newest-change-wins-nothing: a token bucket of kEvBurst refilled
+// one per 30 frames caps event sends at ~2/s sustained with a small burst
+// allowance, so a flapping grounded bit (stairs, slopes) degrades to the
+// cadence instead of flooding the channel. A change that finds the bucket
+// empty is not lost -- the next cadence send carries it, at most two frames
+// later at the default rate.
+// ---------------------------------------------------------------------------
+enum : int { kEvBurst = 4 };
+int            g_ev_tokens = kEvBurst;
+bool           g_ev_seeded = false;
+unsigned short g_ev_anim = 0;
+unsigned char  g_ev_ground = 0;
+
+// Receiver-side transition arrivals, per slot, for the latency measurement:
+// the anim-arrive line fires when a received entry's anim id differs from the
+// last one received for that slot -- the moment the WIRE delivered the
+// transition, whether or not the world needed correcting (on a healthy
+// deterministic pair the peer's own sim has already made the change, so
+// apply_pose no-ops and wire arrival is the only measurable edge).
+bool           g_arr_seen[kCommsMaxPlayers];
+unsigned short g_arr_anim[kCommsMaxPlayers];
 }  // namespace
 
 // One DS unit is 4096 in Fix12. The thresholds are in units and converted here
@@ -470,6 +505,13 @@ void apply_pose(void *a, const SyncPlayerV1 *e) {
         _ZN6Player7SetAnimEji5Fix12IiEj(a, e->anim_id, 0, 0x1000, start);
         // Declared void above, so there is no return value to discard and no
         // way for a later edit here to start reading an unwritten slot.
+        if (g_cfg.report)
+            /* GetTickCount is machine-wide, so on a one-machine rig this line
+               and the sender's anim-event line are on ONE clock: their delta
+               is the measured transition latency. */
+            std::fprintf(stderr, "[sync] anim-apply slot=%u id=%u t=%u\n",
+                         (unsigned)e->slot, (unsigned)e->anim_id,
+                         GetTickCount());
     }
 }
 
@@ -502,7 +544,6 @@ void sync_send_own() {
     if (!g_enabled) return;
     const CommsTransport *t = comms_transport();
     if (!t || !t->send_aux) return;
-    if (++g_frame % (unsigned)g_send_every) return;
 
     /* MY body is the one at MY world slot -- data_0209f250, the same index
        apply_snapshot's never-local skip reads, so the sender's "mine" and the
@@ -511,6 +552,40 @@ void sync_send_own() {
     if (me < 0 || me >= kCommsMaxPlayers) return;
     void *a = data_0209f394[me];
     if (!a) return;
+
+    ++g_frame;
+    if (g_frame % 30u == 0 && g_ev_tokens < kEvBurst) ++g_ev_tokens;
+
+    /* Item 3: a transition of the local body publishes NOW, budget allowing;
+       the cadence below stays the floor. Detection is edge-triggered off the
+       last OBSERVED pair, seeded on the first frame so boot state is not
+       itself an event. */
+    const unsigned short anim_now = player::anim_id(a);
+    const unsigned char  ground_now = player::on_ground(a);
+    const bool changed = g_ev_seeded &&
+                         (anim_now != g_ev_anim || ground_now != g_ev_ground);
+    bool event = false;
+    if (changed && !g_cfg.no_events && g_ev_tokens > 0) {
+        --g_ev_tokens;
+        event = true;
+        ++g_stats.evsends;
+    }
+    if (changed && g_cfg.report)
+        /* Logged on DETECTION, whether or not an event send follows, so a
+           cadence-only arm (SM64DS_SYNC_NO_EVENTS) produces the same pairing
+           line and the receiver's anim-apply minus this is the measured
+           transition latency in both arms. One machine, one GetTickCount. */
+        std::fprintf(stderr,
+                     "[sync] anim-change slot=%d id=%u grounded=%d send=%s "
+                     "t=%u\n",
+                     me, anim_now, (int)ground_now,
+                     event ? "now" : "cadence", GetTickCount());
+    g_ev_seeded = true;
+    g_ev_anim = anim_now;
+    g_ev_ground = ground_now;
+
+    const bool cadence = (g_frame % (unsigned)g_send_every) == 0;
+    if (!cadence && !event) return;
 
     unsigned char buf[kSyncBufBytes];
     SyncMsgV1 *m = (SyncMsgV1 *)buf;
@@ -626,6 +701,15 @@ void apply_snapshot(const unsigned char *buf, int n) {
         void *a = data_0209f394[slot];
         if (!a) continue;
 
+        if (g_cfg.report) {
+            if (g_arr_seen[slot] && e->anim_id != g_arr_anim[slot])
+                std::fprintf(stderr,
+                             "[sync] anim-arrive slot=%d id=%u t=%u\n",
+                             slot, (unsigned)e->anim_id, GetTickCount());
+            g_arr_seen[slot] = true;
+            g_arr_anim[slot] = e->anim_id;
+        }
+
         int *px = player::pos_x(a);
         int *py = player::pos_y(a);
         int *pz = player::pos_z(a);
@@ -634,9 +718,19 @@ void apply_snapshot(const unsigned char *buf, int n) {
         if (err > g_stats.worst_error) g_stats.worst_error = err;
 
         if (err < units(2)) {
-            /* Below visible. Applying it would be jitter, not correction. */
+            /* Below visible. Applying the POSITION would be jitter, not
+               correction -- but the POSE still applies. Found by item 3's
+               latency rig: this branch used to `continue` above apply_pose,
+               so a body whose position matched while its pose had forked
+               (which is the shape of the sleep-divergence complaint: both
+               bodies standing still, one asleep) could NEVER have its
+               animation corrected -- the safety net existed only for bodies
+               that were also in the wrong place. apply_pose is id-change-
+               gated, so on a healthy pair this is a comparison and nothing
+               else. */
             ++g_stats.applied;
             *player::facing(a) = e->yaw;
+            apply_pose(a, e);
             continue;
         }
         if (err > units(g_cfg.snap_units) || (e->flags & kFlagTeleport)) {
@@ -810,7 +904,7 @@ void sync_report(const char *tag) {
                  "[sync:%s] enabled=%s sent=%llu recvd=%llu dropped=%llu "
                  "applied=%llu lerps=%llu snaps=%llu worst_err=%d "
                  "delay=%d rtt_last=%d rtt_avg=%d pings=%llu pongs=%llu "
-                 "own_claims=%llu local_writes=%llu\n",
+                 "own_claims=%llu local_writes=%llu evsends=%llu\n",
                  tag ? tag : "-", g_enabled ? "yes" : "no",
                  (unsigned long long)g_stats.sent,
                  (unsigned long long)g_stats.recvd,
@@ -823,7 +917,8 @@ void sync_report(const char *tag) {
                  (unsigned long long)g_stats.pings,
                  (unsigned long long)g_stats.pongs,
                  (unsigned long long)g_stats.own_claims,
-                 (unsigned long long)g_stats.local_writes);
+                 (unsigned long long)g_stats.local_writes,
+                 (unsigned long long)g_stats.evsends);
 }
 
 }  // namespace port

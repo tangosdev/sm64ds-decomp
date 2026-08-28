@@ -515,6 +515,10 @@ struct SyncStats {
     // local player -- the one thing it must never do. Held at 0 by
     // construction; rungSY2 asserts it stayed 0 under live corrections.
     unsigned long long local_writes;
+    // Event-triggered sends (mp-sync-coopdx item 3): snapshots published
+    // outside the SM64DS_SYNC_HZ cadence because the local body's anim id or
+    // grounded flag just changed. Budgeted, so a flapping flag cannot flood.
+    unsigned long long evsends;
 };
 
 // Decide whether the layer runs this session. Requires SM64DS_SYNC=1, an

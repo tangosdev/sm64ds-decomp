@@ -201,7 +201,7 @@ function Start-Instance {
     foreach ($k in @("SM64DS_SYNC", "SM64DS_SYNC_HZ", "SM64DS_SYNC_LERP",
                      "SM64DS_SYNC_SNAP", "SM64DS_SYNC_REPORT",
                      "SM64DS_SYNC_FORCE_V1", "SM64DS_SYNC_DROP",
-                     "SM64DS_SYNC_DELAY_MS",
+                     "SM64DS_SYNC_DELAY_MS", "SM64DS_SYNC_NO_EVENTS",
                      "SM64DS_FORCE_ANALOG", "SM64DS_PAD_TEST")) {
         $v = (Get-Item -Path ("env:" + $k) -ErrorAction SilentlyContinue).Value
         if ($v) { $psi.EnvironmentVariables[$k] = $v }
