@@ -46,7 +46,8 @@ void SysTracker::Initialise()
     data_0209ee84 = func_02045cf0();
     data_0209ee8c = func_02045ce0();
 
-    mManager = func_0204a4c8(func_02023178, countA, countB, 0x1a, 0x3e);
+    mManager = (Manager*)func_0204a4c8(
+        func_02023178, countA, countB, 0x1a, 0x3e);
     *(int*)((char*)mManager + 0x30) = 0x8000;
 
     if (func_0206e28c((u8*)data_02075f14, data_0208f668, 4) != 0) {
