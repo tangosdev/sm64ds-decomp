@@ -5960,7 +5960,7 @@ int main(void)
         }
         if (boot_spawns) {
             port_stage_tree_probe(data_0209f394[0], "PLAYER");
-            /* SM64DS_SPAWN_ACTOR=<id>[:<param>][,...]: put one actor of each
+            /* SM64DS_SPAWN_ACTOR=<id>[:<param>][@<area>][,...]: put one actor of each
                named class at the player, through the level's own spawn path.
                Fired here, after the entrance made the player and before the
                census, so an env-spawned class is counted with the rest. */

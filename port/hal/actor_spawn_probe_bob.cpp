@@ -13,7 +13,7 @@
 // sits at the origin, or gets culled, or never reaches its own Render, looks
 // identical in the census; it does not look identical here.
 //
-//   SM64DS_SPAWN_ACTOR=<id>[:<param>][,...]   (hal/level_boot.cpp)
+//   SM64DS_SPAWN_ACTOR=<id>[:<param>][@<area>][,...]   (hal/level_boot.cpp)
 //
 // One line per live instance of every id that env named: position, heading and
 // the flags Actor::BeforeBehavior wrote, which is what says whether an actor is
@@ -40,6 +40,10 @@ extern "C" void port_bob_spawn_report(void)
         e = end;
         if (*e == ':')
             std::strtoul(e + 1, &end, 0), e = end;
+        /* the @<area> suffix (hal/level_boot.cpp's spelling) -- skipped the
+           same way, so a multi-entry list keeps parsing past it */
+        if (*e == '@')
+            std::strtol(e + 1, &end, 0), e = end;
         for (int *node = (int *)(size_t)data_020a4b78[0]; node && n < 4096;
              node = (int *)(size_t)node[1]) {
             const char *o = (const char *)(size_t)node[2];
