@@ -866,11 +866,15 @@ extern "C" void port_probe_key_spawn(int frame)
                  "player (mIsNoControl=%d kind=%d, d660=%d)\n", frame, param,
                  (int)*(unsigned char *)(player + 0x709),
                  (int)*(unsigned char *)(player + 0x70a), (int)data_0209d660);
+    /* The player's area is mAreaId, the s8 at Actor+0xcc -- the same byte
+       hal/level_boot.cpp's port_actor_area and hal/editor_channel.cpp's
+       OFF_ACTOR_AREA read. +0x10, which this line used to read, is the
+       boolean AfterInitResources keeps, not an area. */
     port_debug_spawn_at(0xe5, param, *(int *)(player + 0x5c),
                         *(int *)(player + 0x60) + 0x32000,
                         *(int *)(player + 0x64),
                         (int)*(short *)(player + 0x8e),
-                        (int)*(char *)(player + 0x10));
+                        (int)*(signed char *)(player + 0xcc));
 }
 
 /* TEMPORARY rabbit-key teardown trace.

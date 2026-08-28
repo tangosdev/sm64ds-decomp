@@ -3770,6 +3770,20 @@ port_level_owned_class[] = {
     {343, 1, "BIRD (ov009)"},
 };
 
+/* The actor's own area: mAreaId, the s8 at Actor+0xcc (include/Actor.h),
+   seated by the Actor constructor from data_0209b44c -- the byte
+   func_02010e78 writes from Actor::Spawn's area argument. NOT the byte at
+   +0x10: the ActorBase constructor never writes +0x10 (its stores are
+   0x00/0x04/0x08/0x0c/0x12/0x13), AfterInitResources keeps a boolean there,
+   and this path read that boolean as the area for a while -- masked because
+   area 0 is the common case and the boolean usually reads 0.
+   hal/actor_vtables.cpp's GetMinimapID bridge and hal/editor_channel.cpp's
+   OFF_ACTOR_AREA read the same +0xcc. */
+static int port_actor_area(const void *actor)
+{
+    return *(const signed char *)((const char *)actor + 0xcc);
+}
+
 /* Spawn `id` at an explicit world position (Fix12i, i.e. units << 12) facing
    `yaw`. Returns the ActorBase* the spine built, or 0 when the registry gate
    turned the class away -- which it reports itself, on stdout. */
@@ -3799,35 +3813,59 @@ extern "C" void *port_debug_spawn_at(unsigned id, unsigned param,
     data_ov002_0211118c = (short)(seq + 1);
     a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(id, param, &pos, &rot,
                                                      area, seq);
+    /* Regression assertion for the +0x10/+0xcc confusion above: the area this
+       call asked for must be the one the constructor seated. The report line
+       below prints the READBACK, not the argument, so "area N" in the log is
+       the actor's own field -- spawn one at a nonzero area and the log has to
+       say so or this fires. */
+    if (a && port_actor_area(a) != (int)(signed char)area)
+        std::fprintf(stderr, "  [dbgspawn] REGRESSION: asked for area %d and "
+                     "the spawned actor's mAreaId (+0xcc) reads %d -- some "
+                     "part of the spawn path is on the wrong byte again\n",
+                     area, port_actor_area(a));
     std::printf("[dbgspawn] actor %u (%s) param 0x%x at (%d, %d, %d) yaw %04x "
                 "area %d -> %p\n", id, port_actor_class_name(id), param,
-                x >> 12, y >> 12, z >> 12, (unsigned short)yaw, area, a);
+                x >> 12, y >> 12, z >> 12, (unsigned short)yaw,
+                a ? port_actor_area(a) : area, a);
     return a;
 }
 
 /* The common case: at the local player, facing the way he faces, in his area.
-   Player pos is +0x5c..0x64 and his facing yaw is +0x8e; area is the byte the
-   ActorBase constructor kept at +0x10. Falls back to the world origin when no
-   player exists yet, so an early call still reaches the registry gate rather
-   than dereferencing null. */
-extern "C" void *port_debug_spawn(unsigned id, unsigned param)
+   Player pos is +0x5c..0x64 and his facing yaw is +0x8e; the area is his own
+   mAreaId, read through port_actor_area above (it used to be the +0x10
+   boolean -- see that comment). `has_area` overrides his area with `area`,
+   which is what the @<area> spelling of SM64DS_SPAWN_ACTOR feeds through.
+   Falls back to the world origin when no player exists yet, so an early call
+   still reaches the registry gate rather than dereferencing null. */
+static void *port_debug_spawn_area(unsigned id, unsigned param,
+                                   int area, int has_area)
 {
     const char *p = (const char *)data_0209f394[0];
     if (!p) {
         std::fprintf(stderr, "  [dbgspawn] no player yet, spawning actor %u "
                      "at the origin\n", id);
-        return port_debug_spawn_at(id, param, 0, 0, 0, 0, 0);
+        return port_debug_spawn_at(id, param, 0, 0, 0, 0,
+                                   has_area ? area : 0);
     }
     return port_debug_spawn_at(id, param, *(const int *)(p + 0x5c),
                                *(const int *)(p + 0x60),
                                *(const int *)(p + 0x64),
                                *(const short *)(p + 0x8e),
-                               *(const unsigned char *)(p + 0x10));
+                               has_area ? area : port_actor_area(p));
 }
 
-/* SM64DS_SPAWN_ACTOR=<id>[:<param>][,<id>[:<param>]...] fires the same hook
-   once, right after the boot, so a class can be exercised from the command
-   line with no rebuild. Ids are decimal or 0x-prefixed. */
+extern "C" void *port_debug_spawn(unsigned id, unsigned param)
+{
+    return port_debug_spawn_area(id, param, 0, 0);
+}
+
+/* SM64DS_SPAWN_ACTOR=<id>[:<param>][@<area>][,<id>[:<param>][@<area>]...]
+   fires the same hook once, right after the boot, so a class can be exercised
+   from the command line with no rebuild. Ids are decimal or 0x-prefixed. An
+   explicit @<area> spawns at the player's spot but seats that area instead of
+   his own -- the headless probe for the mAreaId read: spawn one @2 and the
+   [dbgspawn] line must report area 2 (it prints the spawned actor's readback,
+   and port_debug_spawn_at cries REGRESSION on a mismatch). */
 extern "C" void port_debug_spawn_env(void)
 {
     const char *s = std::getenv("SM64DS_SPAWN_ACTOR");
@@ -3837,6 +3875,7 @@ extern "C" void port_debug_spawn_env(void)
         char *end;
         unsigned id = (unsigned)std::strtoul(s, &end, 0);
         unsigned param = 0;
+        int area = 0, has_area = 0;
         if (end == s) {
             std::fprintf(stderr, "  [dbgspawn] SM64DS_SPAWN_ACTOR: cannot read "
                          "an id at \"%s\"\n", s);
@@ -3845,7 +3884,11 @@ extern "C" void port_debug_spawn_env(void)
         s = end;
         if (*s == ':')
             param = (unsigned)std::strtoul(s + 1, (char **)&s, 0);
-        port_debug_spawn(id, param);
+        if (*s == '@') {
+            area = (int)std::strtol(s + 1, (char **)&s, 0);
+            has_area = 1;
+        }
+        port_debug_spawn_area(id, param, area, has_area);
         if (*s == ',')
             ++s;
         else

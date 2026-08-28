@@ -491,11 +491,12 @@ void exec_objrot(const Cmd &c)
  *            wrong. +0x12 is the 4th ActorDerived::Spawn argument, which
  *            Actor::Spawn hardcodes to 2, so it carries no area at all. +0x10
  *            is a boolean written by ActorBase::AfterInitResources meaning
- *            "init'd while data_02099f24[0] == 3". port/hal/level_boot.cpp:3809
- *            says the area is the byte at +0x10 and reads it at :3825; that is
- *            a live bug in a file this lane does not own, so it is reported
- *            rather than edited. It is invisible in most testing because area
- *            0 is the common case and that boolean is usually 0 too.
+ *            "init'd while data_02099f24[0] == 3". port/hal/level_boot.cpp's
+ *            port_debug_spawn read +0x10 as the area for a while -- this
+ *            lane reported it, and it is FIXED: that file now reads mAreaId
+ *            through its port_actor_area helper and asserts the readback on
+ *            every debug spawn. It was invisible in most testing because
+ *            area 0 is the common case and that boolean is usually 0 too.
  *
  *   yaw      Actor+0x8e when the caller did not give one, so a plain
  *            reposition keeps the facing it had.
