@@ -3610,7 +3610,7 @@ src/_ZN8Particle8Callback14SpawnParticlesERNS_6SystemE.c:
     complete
     .text start:0x020226d0 end:0x020226d4
 
-src/_ZN8Particle19SetSelfDestructFlagEj.c:
+src/_ZN8Particle19SetSelfDestructFlagEj.cpp:
     complete
     .text start:0x020226d4 end:0x020226fc
 
@@ -7627,7 +7627,7 @@ src/func_02049d78.c:
     complete
     .text start:0x02049d78 end:0x02049e0c
 
-src/_ZN8Particle7Manager9AddSystemEiR7Vector3.c:
+src/_ZN8Particle7Manager9AddSystemEiR7Vector3.cpp:
     complete
     .text start:0x02049e0c end:0x02049ee8
 

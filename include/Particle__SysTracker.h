@@ -41,6 +41,7 @@
 namespace Particle {
 
 struct System;
+struct Manager;
 
 struct SysTracker {
     /* Particle::SysTracker::Contents -- the live-system registry. Only its
@@ -64,7 +65,7 @@ struct SysTracker {
     };
 
     void    *mResourceFile;  /* 0x000 */
-    void    *mManager;       /* 0x004 */
+    Manager *mManager;       /* 0x004 */
     Contents mContents;      /* 0x008 */
     /* --- callback bank --- */
     s32 mRunningSlidingDustSystemID;  /* 0x750 */
