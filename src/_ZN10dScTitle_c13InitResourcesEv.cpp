@@ -1,11 +1,7 @@
 //cpp
-#include "types.h"
 // @symbol _ZN10dScTitle_c13InitResourcesEv
-/* recovered: renamed to Class_Method */
-/* dScTitle_c::InitResources() -- vtable slot 0. extern "C" carries the
- * literal mangled name unmangled -- see include/dScTitle_c.h. This body
- * never touches its own fields (only forwards `this` on to
- * func_ov003_020ad6ec), so it does not need the header. */
+#include "dScTitle_c.h"
+/* dScTitle_c::InitResources() -- vtable slot 0. */
 extern "C" {
 extern void UnloadArchives(void);
 extern void Enable3dEngines(void);
@@ -33,7 +29,7 @@ namespace GX {
 namespace G2 { unsigned short *GetBG0ScrPtr(); }
 namespace Sound { void LoadInitialGroup(int); void LoadAndSetMusic_Layer1(int); }
 
-extern "C" int _ZN10dScTitle_c13InitResourcesEv(int arg)
+s32 dScTitle_c::InitResources()
 {
     UnloadArchives();
     Enable3dEngines();
@@ -59,7 +55,7 @@ extern "C" int _ZN10dScTitle_c13InitResourcesEv(int arg)
     *(u8*)data_0209d45c = 0x11;
     *(volatile u32*)0x4000000 = (*(volatile u32*)0x4000000 & ~0x1f00) | 0x1100;
     *(int*)data_0208ee44 = 2;
-    func_ov003_020ad6ec(arg);
+    func_ov003_020ad6ec((int)this);
     *(volatile u32*)0x4000010 = 0;
     *(u8*)(data_0209ee90 + 0x340) = 0;
     *(u8*)(data_0209ee90 + 0x341) = 0;

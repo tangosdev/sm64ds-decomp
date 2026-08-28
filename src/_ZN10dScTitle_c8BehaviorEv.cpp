@@ -1,14 +1,9 @@
 //cpp
-#include "types.h"
 // @symbol _ZN10dScTitle_c8BehaviorEv
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations
-   from a shared header */
-#include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScTitle_c.h"
-/* dScTitle_c::Behavior() -- vtable slot 6. extern "C" carries the literal
- * mangled name unmangled -- see include/dScTitle_c.h.
- * Level-select cursor update: on confirm (or minigame-active flag) starts the
+#include "decl_common.h"
+/* dScTitle_c::Behavior() -- vtable slot 6. Level-select cursor update: on
+ * confirm (or minigame-active flag) starts the
  * scene fade / loads the picked level from the 8-byte entry table at
  * data_ov003_020b1180; otherwise moves the cursor by row (+0x35) or column
  * (+1) with repeat delay at unk_050, wrapping the index modulo 0x36.
@@ -37,10 +32,10 @@ extern void _ZN8dScene_c14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
 extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(u32 a);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern void func_ov003_020ad6ec(char *c);
+}
 
-int _ZN10dScTitle_c8BehaviorEv(char *c)
+s32 dScTitle_c::Behavior()
 {
-    dScTitle_c *self = (dScTitle_c *)(void *)c;
     if (data_0209f5bc->v5()) {
         int r3 = 0;
         u8 idx = data_020a0e40;
@@ -90,19 +85,19 @@ int _ZN10dScTitle_c8BehaviorEv(char *c)
         if (v & 0x40) {
             int h = data_020a0e58[1] & 0x40;
             if (h == 0) {
-                if (self->unk_050 != 0)
+                if (unk_050 != 0)
                     goto tail;
             }
-            self->unk_050 = h ? 8 : 2;
+            unk_050 = h ? 8 : 2;
             data_0209b2f4 += 0x35;
             func_02012790(0);
         } else if (v & 0x80) {
             int h = data_020a0e58[1] & 0x80;
             if (h == 0) {
-                if (self->unk_050 != 0)
+                if (unk_050 != 0)
                     goto tail;
             }
-            self->unk_050 = h ? 8 : 2;
+            unk_050 = h ? 8 : 2;
             data_0209b2f4 += 1;
             func_02012790(0);
         }
@@ -110,8 +105,7 @@ int _ZN10dScTitle_c8BehaviorEv(char *c)
 
 tail:
     data_0209b2f4 = data_0209b2f4 % 0x36;
-    DecIfAbove0_Short(&self->unk_050);
-    func_ov003_020ad6ec(c);
+    DecIfAbove0_Short(&unk_050);
+    func_ov003_020ad6ec((char *)this);
     return 1;
-}
 }
