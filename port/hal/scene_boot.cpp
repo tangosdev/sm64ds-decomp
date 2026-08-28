@@ -276,6 +276,7 @@ extern void **data_020a4bb8;                     /* hal/actor_vtables.cpp */
 int _ZN5Scene15SetSceneToSpawnEjj(unsigned id, unsigned param);
 int _ZN5Scene16SpawnIfNecessaryEv(void);
 extern unsigned short data_02092664;             /* the pending scene id */
+extern unsigned char data_020a4b4c;   /* func_02043098's progress byte */
 extern signed char data_02092110;                /* the CURRENT SUBLEVEL */
 extern signed char SUBLEVEL_LEVEL_TABLE[];       /* arm9 0x02075298 */
 extern unsigned char data_02092660;              /* "a scene has spawned";
@@ -5637,6 +5638,68 @@ extern "C" void port_scene_tick(int frame, int tick_game)
            the record from the ring, func_0203e0ac broadcasts it, and the
            scene's Behavior reads the broadcast, all in one frame. */
         port_scene_comms_publish();
+        /* THE SCENE-REQUEST CARRIER, run mg16 arc 3.
+         *
+         * The port ran HALF of the ROM's scene change. Scene::SetSceneToSpawn
+         * parks an id in data_02092664 and Scene::SpawnIfNecessary is what
+         * consumes it; the port called the pair ONCE, at boot, to bring the
+         * first scene up, and then never asked again. So a scene the running
+         * game asked for just sat there. Measured: the title's file-select
+         * chain drives data_02092664 to 3 and it is STILL 3, unserviced, at the
+         * end of a 6600-frame run.
+         *
+         * POSITION IS THE POINT. This sits where hal/level_change.cpp's
+         * port_level_change_poll sits on the level path, and that file's own
+         * header says where that is: "where Scene::SpawnIfNecessary sits in the
+         * ROM's own frame (func_020197b8 phase 3): after input, before the
+         * actor phases". port_scene_comms_publish above is the input half, and
+         * port_actor_tick below is the actor phases, so this is that seam.
+         *
+         * IT ADDS NO POLICY, and that is deliberate. Every guard is the ROM's
+         * own, inside src/_ZN5Scene16SpawnIfNecessaryEv.c:
+         *     if (data_02092660 != 0 || (h = data_02092664) == 0x187) return 0;
+         * -- so it declines when the already-spawned latch is set or when
+         * nothing is pending, and on success IT clears the pending id back to
+         * the 0x187 sentinel and sets the latch itself. The latch is cleared by
+         * the ROM's own Scene::AfterCleanupResources when the outgoing scene
+         * tears down (x == 2), which the title demonstrably does: the milestone
+         * run reports cleanup 1, pending-destroy 1.
+         *
+         * SO THIS IS NOT A NEW MECHANISM, it is the second half of one the port
+         * already links and already calls at boot. Contrast level_change.cpp's
+         * port_scene_request_release, which is the same seam on the level path
+         * but deliberately RELEASES a pending id without spawning; this is that
+         * shape with the behaviour inverted, which is what the level path could
+         * not do because it has no scene spine to spawn into.
+         *
+         * SM64DS_SCENE_NOCARRY=1 puts the old behaviour back on the same
+         * binary, so a run that regresses can be bisected without a rebuild. */
+        if (tick_game) {
+            static int nocarry = -1;
+            if (nocarry < 0)
+                nocarry = std::getenv("SM64DS_SCENE_NOCARRY") != 0;
+            if (!nocarry && data_02092664 != 0x187 && data_02092660 == 0) {
+                const unsigned want = data_02092664;
+                const int spawned = _ZN5Scene16SpawnIfNecessaryEv();
+                /* WHICH REFUSAL, not merely that there was one.
+                   src/func_02043098.c steps data_020a4b4c through 2, 3, 4, 5 as
+                   it goes, and its TWO failure exits leave it in DIFFERENT
+                   states: the early guard (func_02043060(idx) == 3) returns with
+                   the byte still 2, while the factory-returned-null path RESETS
+                   it to 0 first. So one byte separates "the spawner refused the
+                   id outright" from "the scene class factory produced nothing",
+                   which are different bugs with different fixes. The factory
+                   slot is printed beside it because a null there is a third
+                   answer again -- a class that was never registered. */
+                std::printf("[scene] CARRIER: scene %u pending -> "
+                            "SpawnIfNecessary %s (frame %d, progress %u, "
+                            "factory %p)\n",
+                            want, spawned ? "SPAWNED" : "declined", frame,
+                            (unsigned)data_020a4b4c,
+                            data_020a4bb8 ? data_020a4bb8[want & 0x3f] : 0);
+                std::fflush(stdout);
+            }
+        }
         if (tick_game) {
             port_actor_tick();
             /* AFTER the actor phases, so it reports the state the frame ended
