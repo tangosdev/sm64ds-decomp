@@ -505,6 +505,12 @@ bool sync_forced_v1();
 SyncStats sync_stats();
 void sync_report(const char *tag);
 
+// One frame of the sync layer: apply the host's view to REMOTE bodies, then (on
+// the host) publish ours. Call AFTER the conductor has run, so the input record
+// is always on the wire first -- the contract's ordering rule. No-op when the
+// layer is not enabled.
+void sync_tick();
+
 }  // namespace port
 
 extern "C" {

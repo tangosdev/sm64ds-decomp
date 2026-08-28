@@ -9092,6 +9092,13 @@ int main(void)
                fan-out. See THE STUCK CONTROLLER in hal/comms_conductor.cpp. */
             port::comms_publish_pad(port_raw_pad_bits());
             func_0203df40();
+            /* run mg16 lane MP4: one frame of the state-sync layer, AFTER the
+               conductor. Call position is the contract's ordering rule made
+               structural: func_0203df40 above has already put this frame's
+               input record on the wire, so aux can never delay the thing the
+               lockstep blocks on. No-op unless SM64DS_SYNC=1 and the transport
+               reports contract v2. */
+            port::sync_tick();
             /* run mg16 lane MP3: the VS probe, read out of the game's own
                per-slot actor array. Here rather than at the report site
                because it must run whether or not SM64DS_COMMS_REPORT is on:
@@ -9141,6 +9148,12 @@ int main(void)
                            counters are unaffected. Saying which numbers went
                            away is more useful than quietly printing fewer. */
                         port::comms_loopback_report("level");
+                        /* run mg16 lane MP4: the sync layer's own counters,
+                           beside the carrier's. Silent-ish when the layer is
+                           off (it prints enabled=no), which is what lets rung
+                           SY4 assert the off path stays quiet on the SOLO run
+                           where no report is requested at all. */
+                        port::sync_report("level");
                     }
                 }
             }

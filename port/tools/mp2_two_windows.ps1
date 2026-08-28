@@ -200,7 +200,7 @@ function Start-Instance {
     # is also a readable list of what the rungs are allowed to vary.
     foreach ($k in @("SM64DS_SYNC", "SM64DS_SYNC_HZ", "SM64DS_SYNC_LERP",
                      "SM64DS_SYNC_SNAP", "SM64DS_SYNC_REPORT",
-                     "SM64DS_SYNC_FORCE_V1")) {
+                     "SM64DS_SYNC_FORCE_V1", "SM64DS_SYNC_DROP")) {
         $v = (Get-Item -Path ("env:" + $k) -ErrorAction SilentlyContinue).Value
         if ($v) { $psi.EnvironmentVariables[$k] = $v }
     }
