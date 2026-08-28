@@ -1,20 +1,27 @@
-// NONMATCHING -- compiles, but the result is 916 bytes against the ROM's 912.
-// Four bytes, so this is a near-miss and not a wrong reconstruction; it is one
-// instruction over. The `Fix12` -> `Fix12i` retype below was needed just to make the
-// file compile at all (Fix12 became a template, and the declarations still used the
-// bare name), and it is correct: include/math/Fix12.h records that a Fix12 passes in a
-// single register bit-identical to an int, and these are extern declarations whose
-// symbol names are spelled literally, so the parameter type only decides the call ABI.
-// Fixing the compile is what revealed the size gap -- it was hidden behind the error.
-//
-// NOTE, pre-existing and left alone: this file's `//cpp` marker is on line 2, behind an
-// #include, so `text.startswith("//cpp")` -- the whole test, in rombuild.compile_one and
-// build_pin.flags_for alike -- is FALSE for it. Every tool in the tree therefore selects
-// -lang c99 for a file whose body is C++. It is left as-is because moving it changes
-// nothing measurable: 916 bytes comes out identical under -lang c99 and -lang c++, so
-// the marker's position is not what stands between this file and a match.
-#include "MaterialChanger.h"
 //cpp
+// @symbol _ZN7daKrb_c13InitResourcesEv
+/* recovered: real C++ method
+ *
+ * MATCHED 2026-08-27, after standing as a 4-byte near-miss (916 against the ROM's
+ * 912) long enough for the file to carry a NONMATCHING banner. The whole gap was
+ * one instruction, and the cause is the field-address CSE: written with the load
+ * and the store spelled identically, mwcc computes `c + 8` once into a register
+ * and uses it twice, where the ROM re-issues `[r4, #8]` on both. Spelling the two
+ * sides differently is enough -- six variants were swept and all six match, the
+ * three that keep one spelling on both sides all miss by the same word.
+ *
+ * The file's `//cpp` marker also used to sit on line 2, behind an #include, which
+ * makes it inert: `text.startswith("//cpp")` is the whole language-mode test, so
+ * every tool selected -lang c99 for a C++ body. That was not what stood between
+ * this file and a match -- the size was the same either way -- but it did stop
+ * fdiff and the permuter from compiling it at all.
+ *
+ * The body keeps its raw-offset spellings deliberately. Raw-cast versus named
+ * member is decided per function by the byte gate, and this one matches as
+ * written; `char *c = (char *)this` is the whole cost of making it a method.
+ */
+#include "MaterialChanger.h"
+#include "daKrb_c.h"
 
 struct SharedFilePtr { int id; void* file; };
 
@@ -47,8 +54,9 @@ extern int data_ov084_02130228[];
 extern int data_ov084_02130238[];
 }
 
-extern "C" int _ZN7daKrb_c13InitResourcesEv(char* c)
+int daKrb_c::InitResources()
 {
+    char *c = (char *)this;
     int i;
 
     *(unsigned char*)(c + 0x464) = (*(unsigned int*)(c + 8) >> 4) & 0xf;
@@ -73,7 +81,10 @@ extern "C" int _ZN7daKrb_c13InitResourcesEv(char* c)
     _ZN11dCapEnemy_c6AddCapEj(c, (unsigned char)(*(int*)(c + 8) & 0xf));
 
     if ((*(unsigned char*)(c + 0x113) & 0xf) < 6)
-        *(int*)(c + 8) = *(int*)(c + 8) & 0xf0ff;
+        /* The load and the store must not be spelled the same way: mwcc CSEs the
+           field address across an RMW and the ROM re-issues it. See
+           notes/mwccarm-codegen.md. */
+        ((int*)c)[2] = *(int*)(c + 8) & 0xf0ff;
 
     if (_ZN11dCapEnemy_c21DestroyIfCapNotNeededEv(c) == 0)
         return 0;

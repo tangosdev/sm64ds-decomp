@@ -93,7 +93,7 @@ after the inherited table.
 
 What makes that safe is NOT that the destructor lives in a C translation unit --
 `src/_ZN8dActor_cD1Ev.cpp` and `_ZN8dActor_cD2Ev.cpp` are C++ and do include the
-header; only `_ZN8dActor_cD0Ev.c` is C. The invariant is that all three define
+header; only `_ZN8dActor_cD0Ev.cpp` is C. The invariant is that all three define
 `extern "C"` free functions under the mangled names and none defines
 `dActor_c::~dActor_c`, so no TU is ever the key function's definition.
 

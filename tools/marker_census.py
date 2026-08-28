@@ -6,10 +6,16 @@ in the tree with the programme's own gold-standard evidence attached.
 `tools/gen_header.py` files a `u8` marker as **confirmed** when a pass observed the
 declared 1-byte width at that offset -- which is true, and which quietly removes it
 from the marker bucket. So the markers with the BEST evidence fell off the worklist
-precisely because the evidence was good. `daKrb_c.mModelAnim @0x370` is the case that
-proves it: `src/_ZN7daKrb_cD1Ev.c` D1-calls `_ZN9ModelAnimD1Ev((char *)t + 0x370)` --
-the very relocation notes/archive/plan-gen-header.md 3 uses as its worked example -- and the
-field is still a bare `u8`.
+precisely because the evidence was good. `daKrb_c.mModelAnim @0x370` was the case that
+proved it: `src/_ZN7daKrb_cD1Ev.cpp` D1-called `_ZN9ModelAnimD1Ev((char *)t + 0x370)` --
+the very relocation notes/archive/plan-gen-header.md 3 uses as its worked example --
+while the field was still a bare `u8`.
+
+That one has since been typed: `include/daKrb_c.h` declares `ModelAnim mModelAnim`
+at 0x370, and the destructor is now `daKrb_c::~daKrb_c() {}` with the compiler
+emitting the whole teardown. Which is the standing caveat for this tool -- it reads
+D-calls out of destructor SOURCE, so every destructor that becomes compiler-generated
+takes its evidence out of reach here even though the ROM still contains the call.
 
 This counts the tree directly rather than a report's bucket, and asks one question
 per marker: does the owning class's own destructor name a type at this exact offset?

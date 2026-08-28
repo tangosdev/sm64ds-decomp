@@ -4,11 +4,11 @@
     .ctor       start:0x02130860 end:0x0213086c kind:rodata align:4
     .data       start:0x02130880 end:0x02130cc0 kind:data align:32
     .bss        start:0x02130cc0 end:0x02130ee0 kind:bss align:32
-src/_ZN7daKrb_cD1Ev.c:
+src/_ZN7daKrb_cD1Ev.cpp:
     complete
     .text start:0x02129020 end:0x02129070
 
-src/_ZN7daKrb_cD0Ev.c:
+src/_ZN7daKrb_cD0Ev.cpp:
     complete
     .text start:0x02129070 end:0x021290d4
 
@@ -122,6 +122,10 @@ src/_ZN7daKrb_c6RenderEv.cpp:
 src/_ZN7daKrb_c8BehaviorEv.cpp:
     complete
     .text start:0x0212b6ec end:0x0212bc30
+
+src/_ZN7daKrb_c13InitResourcesEv.cpp:
+    complete
+    .text start:0x0212bc30 end:0x0212bfc0
 
 src/_ZN7daKrb_c13OnYoshiTryEatEv.cpp:
     complete

@@ -1734,20 +1734,17 @@ extern "C" int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(dActor_c *self, in
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 0 -- _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b
  * 0x0200f658  size 0xb4   legacy src/_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b.cpp */
-/* This legacy member used a 0x78-byte stack view plus explicit ABI calls.
- * Keep that storage model distinct from the now-shared real dBgCh_Lin class,
- * whose evidenced complete-object size is 0x84. */
-struct RaycastLineStorage { char data[0x78]; };
+struct dBgCh_LinPad { char data[0x78]; };
 extern "C" {
-extern void _ZN9dBgCh_LinC1Ev(RaycastLineStorage*);
-extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(RaycastLineStorage*, const Vector3*, const Vector3*, dActor_c*);
-extern int _ZN9dBgCh_Lin10DetectClsnEv(RaycastLineStorage*);
+extern void _ZN9dBgCh_LinC1Ev(dBgCh_LinPad*);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(dBgCh_LinPad*, const Vector3*, const Vector3*, dActor_c*);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(dBgCh_LinPad*);
 extern Vector3* func_02037dc4(void*);
-extern void _ZN9dBgCh_LinD1Ev(RaycastLineStorage*);
+extern void _ZN9dBgCh_LinD1Ev(dBgCh_LinPad*);
 }
 extern "C" {
 int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(dActor_c *self, Vector3 *a, Vector3 *out, int doStore){
-  RaycastLineStorage rl;
+  dBgCh_LinPad rl;
   _ZN9dBgCh_LinC1Ev(&rl);
   _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&rl, a, (const Vector3*)out, 0);
   if(_ZN9dBgCh_Lin10DetectClsnEv(&rl)){

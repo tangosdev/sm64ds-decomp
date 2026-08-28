@@ -111,7 +111,7 @@ src/_ZN11RollingRock6RenderEv.cpp:
     complete
     .text start:0x0211281c end:0x02112854
 
-src/_ZN11RollingRock8BehaviorEv.c:
+src/_ZN11RollingRock8BehaviorEv.cpp:
     complete
     .text start:0x02112854 end:0x02112b2c
 
