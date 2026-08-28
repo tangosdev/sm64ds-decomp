@@ -2963,7 +2963,11 @@ set(AE1_BBFF0_COMPILED FALSE)      # and the NEXT blocker's caller: compiled,
                                    # the line is read
 set(TS1_B6EB4_IN_SLICE FALSE)      # run link60 Stage 5 lane TS1, the third
 set(TS1_B6EB4_DISPLACED FALSE)     # displacement: listed, and cut
-set(IR1_C2B9C_IN_SLICE FALSE)      # run mg15 lane IMPLICITR, the fourth
+set(IR1_C2B9C_IN_SLICE TRUE)       # mg16 arc 4: the matched TU is back in the
+                                   # slice as itself, so the VOID_DEF guard far
+                                   # below can still fire if anyone reintroduces
+                                   # the `void` spelling. Left TRUE deliberately:
+                                   # with it FALSE the guard is silently dead.      # run mg15 lane IMPLICITR, the fourth
 set(IR1_C2B9C_DISPLACED FALSE)     # displacement and the first on the RETURN
                                    # side: listed, and cut
 set(TIDEP_B4B5C_DISPLACED FALSE)   # run mg15 lane TITLEDEPTH, the fourth
@@ -3086,11 +3090,11 @@ foreach(line IN LISTS SLICE_OV007_LINES)
     # THE FLAGS ARE NOT BOOKKEEPING, same as the three blocks above: the
     # IMPLICITR predicate near the marker blocks reads them, so the cut and
     # what the predicate says about it cannot drift.
-    if(line MATCHES "^src/func_ov007_020c2b9c\\.c$")
-        set(IR1_C2B9C_IN_SLICE TRUE)
-        set(IR1_C2B9C_DISPLACED TRUE)
-        continue()
-    endif()
+    # RETIRED, run mg16 arc 4: src/func_ov007_020c2b9c.c now SPELLS its return
+    # (void*, `return r;`) and still byte-matches at 2004/b56, so the matched TU
+    # is built as itself and the host copy is gone. The VOID_DEF regex guard
+    # below is what makes that safe to assert rather than hope: it stops matching
+    # the moment the definition is no longer spelled `void`.
     # run mg15 lane TITLEDEPTH: THE FOURTH DISPLACEMENT IN THIS SLICE, and the
     # same frame shape as add3c above -- one register over.
     #
@@ -3128,10 +3132,9 @@ foreach(line IN LISTS SLICE_OV007_LINES)
     # configure in BOTH directions, because run mg15's SQRT lane proved a CMake
     # option() caches and a switch that only announces one arm silently keeps
     # the wrong one.
-    if(line MATCHES "^src/func_ov007_020b4b5c\\.c$" AND NOT TIDEP_ARITY_PLAIN)
-        set(TIDEP_B4B5C_DISPLACED TRUE)
-        continue()
-    endif()
+    # RETIRED, run mg16 arc 4: src/func_ov007_020b4b5c.c now FORWARDS the camera
+    # -- its own second argument, which the ROM leaves in r1 across the branch --
+    # and still byte-matches at 2004/b56, so the matched TU is back as itself.
     # run link60 lane AE1: THE NEXT BLOCKER'S CALLER, and this flag is placed
     # where it is on purpose.
     #
@@ -3166,29 +3169,19 @@ endforeach()
 # the two callers that pass a REAL index rather than riding slot 0 through r0.
 # A face that ignores its argument would have served all four players slot 0's
 # record and the four-slot path would have looked like it worked.
-if(TIDEP_B4B5C_DISPLACED)
-    list(APPEND SLICE_OV007_SOURCES
-        "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov007_ImplicitR1_020b4b5c.cpp")
-    message(STATUS "TIDEP: func_ov007_020b4b5c is DISPLACED to "
-                   "unmatched/Ov007_ImplicitR1_020b4b5c.cpp, which forwards its "
-                   "own second argument, so the title's cell sizes are computed "
-                   "against the REAL camera")
-elseif(TIDEP_ARITY_PLAIN)
-    message(STATUS "TIDEP: TIDEP_ARITY_PLAIN=ON -- src/func_ov007_020b4b5c.c "
-                   "is back in the slice and the implicit-r1 host copy is out. "
-                   "This is the PRE-FIX arm: the title's cell sizer is called "
-                   "without its camera and reads an unfilled stack slot, and "
-                   "the title's art draws about 3.49x too large.")
-else()
-    # The third state, said separately, because "the slice stopped listing it"
-    # and "the pre-fix arm is selected" read the same in a build log and are
-    # not the same tree. This one is an undefined symbol at the link, not a
-    # silent wrong picture: neither definition is left.
-    message(STATUS "TIDEP: slice_ov007.txt no longer lists "
-                   "src/func_ov007_020b4b5c.c, so the implicit-r1 host copy is "
-                   "NOT added and the link will fail on it. Restore the line: "
-                   "this block does the cutting, not the slice file")
-endif()
+# RETIRED, run mg16 arc 4. src/func_ov007_020b4b5c.c now forwards the camera --
+# its own second argument, the one the ROM leaves in r1 across the branch at
+# 0x020b4b80 -- and it STILL byte-matches at 2004/b56 (30 words, 0 MISMATCH,
+# verified against func_ov007_020b63e4 as the alignment control). So the matched
+# TU is in the build as itself, unmatched/Ov007_ImplicitR1_020b4b5c.cpp is
+# deleted, and TIDEP_ARITY_PLAIN is gone with it: the pre-fix arm it selected
+# cannot be reconstructed from a source that no longer contains the defect.
+#
+# THE DISPLACEMENT WAS NEVER WRONG -- it was correct for a tree where the fix
+# could not be spelled in the matched source. What changed is that it can:
+# three implicit-argument defects in a row (020c78b0, 020cc600, the
+# 02013edc/02042fe4 veneer pair) recovered with the byte match intact, which is
+# what made this worth re-attempting rather than assuming settled.
 if(AE1_ADD3C_DISPLACED)
     list(APPEND SLICE_OV007_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov007_ImplicitR0_020add3c.cpp")
@@ -3203,20 +3196,15 @@ elseif(NOT RT1_ADD3C_IN_SLICE)
                    "NOT added and the link will fail on it. Restore the line: "
                    "this block does the cutting, not the slice file")
 endif()
-if(IR1_C2B9C_DISPLACED)
-    list(APPEND SLICE_OV007_SOURCES
-        "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov007_ImplicitReturn_020c2b9c.cpp")
-elseif(NOT IR1_C2B9C_IN_SLICE)
-    # The two opposite states the branches beside this one distinguish, for the
-    # same reason: the slice line is the only thing that puts the matched TU in
-    # the build, so if the line is gone the host copy must not be added blind.
-    # Two bodies for one address is an LNK2005 and none is a silent undefined
-    # symbol.
-    message(STATUS "IR1: slice_ov007.txt no longer lists "
-                   "src/func_ov007_020c2b9c.c, so the implicit-return host copy "
-                   "is NOT added and the link will fail on it. Restore the line: "
-                   "this block does the cutting, not the slice file")
-endif()
+# RETIRED, run mg16 arc 4. src/func_ov007_020c2b9c.c now SPELLS the return its two
+# matched callers already declare -- `void*` and `return r;` -- and STILL
+# byte-matches at 2004/b56 (23 words, 0 MISMATCH). The matched TU is in the build
+# as itself and unmatched/Ov007_ImplicitReturn_020c2b9c.cpp is deleted.
+#
+# The VOID_DEF regex guard further down is deliberately LEFT IN PLACE: it greps
+# the source for a `void func_ov007_020c2b9c(` definition, so it stops matching
+# now and starts matching again the moment anyone reintroduces the void spelling.
+# That is the check that makes this retirement safe to assert rather than hope.
 if(TS1_B6EB4_DISPLACED)
     list(APPEND SLICE_OV007_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov007_BdPending_020b6eb4.cpp")
