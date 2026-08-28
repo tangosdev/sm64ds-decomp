@@ -1,3 +1,5 @@
+overlay_100 kind:data(any) addr:0x00000064
+overlay_102 kind:data(any) addr:0x00000066
 Div kind:function(thumb,size=0x4) addr:0x0200406a
 IntrWait kind:function(thumb,size=0x4) addr:0x020040f4
 SoftReset kind:function(thumb,size=0x4) addr:0x0200414c
