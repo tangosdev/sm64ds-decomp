@@ -14,7 +14,7 @@ extern char data_ov102_0214ea78;
 
 extern "C" {
 extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
-extern void func_ov002_020ada40(void* c, void* v, void* r4, s32 flag);
+extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void* c, void* v, void* r4, s32 flag);
 extern int _ZN6Player7TryGrabER8dActor_c(void* p, void* actor);
 extern void func_ov102_0214d1f8(void* c, void* p);
 extern void func_020105cc(void* c, u32 flags);
@@ -52,7 +52,7 @@ extern "C" void func_ov102_0214cbec(char* c)
         v[0] = 0x2000;
         v[1] = 0;
         v[2] = 0;
-        func_ov002_020ada40(c, v, r4, *(s32*)(c + 0x118) >> 1);
+        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, v, r4, *(s32*)(c + 0x118) >> 1);
         return;
     }
 

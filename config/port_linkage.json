@@ -28,11 +28,11 @@
     "Enrolling free TUs does nothing, because the release build dead-strips whatever the",
     "linked closure never references."
   ],
-  "linkedTus": 5831,
-  "matchedTus": 11250,
-  "measuredAt": "2026-08-18",
+  "linkedTus": 7718,
+  "matchedTus": 11307,
+  "measuredAt": "2026-08-27",
   "branch": "port-mount-noseat-cluster",
-  "commit": "0fe9c7f62",
+  "commit": "b8df12b7d",
   "stale": false,
-  "basis": "single lane cons at its pushed tip, measured against its own walk_window.map from the tip's gate build (tree clean, battery ALL GREEN, no scene blocks or level skips). +960 over the 4871 stamp, all from the 60% campaign landing on this lane: the ov007 title-screen mount and seat, the ov004/ov006 minigame framework with the first seated minigame (dScMgCurling_c, scene 374), the arm9 fader seat, the stage lifecycle closures, and the gate/course-loop waves. The 45 stem SHADOWS + 13 MSVC-name SHADOWS the tool reports remain the replacement backlog and are not counted as linked."
+  "basis": "single lane cons at its pushed tip b8df12b7d (the 0.2.14 release tip), measured against the tip's own gate build walk_window.map (tree clean, battery ALL GREEN twice on 2026-08-27, the run that shipped 0.2.14). +1887 over the 5831 stamp, from the mg11-mg15 waves landing on this lane: all 30 minigame scenes seated with the ov004/ov006 framework, the minigame menu scene, the trampoline chain, the title-screen mounts and touch feed, and the savestate guard-class closure. The replacement queue now reads 675 symbols across 243 host objects: 301 documented host-ABI exceptions, 240 faces, 134 SHADOWS; the shadows remain the replacement backlog and are not counted as linked."
 }
