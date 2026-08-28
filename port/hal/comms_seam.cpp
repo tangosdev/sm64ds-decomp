@@ -35,6 +35,9 @@ const CommsTransport *g_transport = nullptr;
 uint16_t g_boot_indicator = 0;      // 0 = cartridge boot. See comms_seam.h.
 uint64_t g_exchanges = 0;
 uint64_t g_rounds = 0;
+uint64_t g_wire_activity = 0;       // bumped per accepted session datagram;
+                                    // read by the conductor's pump. See
+                                    // comms_note_wire_activity in the header.
 
 // The seam's own state when no transport is installed. These mirror the ROM
 // globals func_02040704 and func_02040714 return (data_020a0f24 and
@@ -64,6 +67,9 @@ bool comms_set_transport(const CommsTransport *t) {
 }
 
 const CommsTransport *comms_transport() { return g_transport; }
+
+void comms_note_wire_activity() { ++g_wire_activity; }
+uint64_t comms_wire_activity() { return g_wire_activity; }
 
 void comms_set_boot_indicator(uint16_t value) {
     g_boot_indicator = value;

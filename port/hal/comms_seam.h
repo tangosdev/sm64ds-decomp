@@ -32,11 +32,17 @@
 //           installs a pump that calls poll() once per turn of the ROM's own
 //           wait. The sentence in this file is now true.
 //           A TRAP FOR THE NEXT PUMP AUTHOR, paid for once: a pump that returns
-//           "keep going" burns the whole pump limit on every sleep, because
-//           nothing clears the sleep queue word on this path. 600 turns times
-//           the ROM's 1200-turn bound is 720,000 pump calls inside one frame,
-//           and the game appears to hang. The pump services the transport and
-//           gives the turn straight back.
+//           "keep going" UNCONDITIONALLY burns the whole pump limit on every
+//           sleep, because nothing clears the sleep queue word on this path.
+//           600 turns times the ROM's 1200-turn bound is 720,000 pump calls
+//           inside one frame, and the game appears to hang. The pump services
+//           the transport and ends the turn quickly -- since the 2026-08-28
+//           field collapse it holds a CONNECTED turn open for one DS VBlank
+//           (a bounded ~17 "keep going"s, ended early by wire activity), so
+//           the ROM's wait bound means the twenty wall seconds it means on
+//           the DS instead of the two the old 1 ms pace compressed it to.
+//           The measurement and both directions of the reasoning are at
+//           conductor_pump's banner in hal/comms_conductor.cpp.
 //
 //   HOLE 2  THE LIFECYCLE.  CLOSED as MP2 proposed; the real caller agreed with
 //           every line, so the proposal is simply promoted:
@@ -367,6 +373,22 @@ enum : unsigned { kCommsContractV1 = 1, kCommsContractV2 = 2 };
 // if any entry is null.
 bool comms_set_transport(const CommsTransport *t);
 const CommsTransport *comms_transport();
+
+// ---------------------------------------------------------------------------
+// THE WIRE-ACTIVITY COUNTER -- port plumbing, NOT a contract change. The
+// CommsTransport struct is untouched: a transport that never calls this
+// simply gets no early wakes, and the conductor's pump paces every connected
+// wait turn at the full VBlank, which is correct and merely slower.
+//
+// A carrier SHOULD call comms_note_wire_activity() once for every session
+// datagram it accepts. The pump reads the counter to end a connected wait
+// turn the moment the wire moved -- the host stand-in for the DS radio IRQ's
+// OS_WakeupThread, which is what keeps the lockstep's round latency at the
+// datagram's arrival rather than at the next VBlank. See the pump's banner
+// in hal/comms_conductor.cpp for the field failure this closed.
+// ---------------------------------------------------------------------------
+void comms_note_wire_activity();
+uint64_t comms_wire_activity();
 
 // ---------------------------------------------------------------------------
 // THE BOOT INDICATOR, honestly.
