@@ -848,10 +848,56 @@ def rungP7(seconds):
     return ok
 
 
+def rungP8(seconds):
+    """THE ANALOG STICK PATH ROUTES TO ITS OWN SLOT -- the fourth writer's rung.
+
+    THIS BLOCK WAS INVISIBLE TO EVERY PREVIOUS RUNG BY CONSTRUCTION. The
+    RUN_ANALOG stick publish is guarded on pad_live, which is XInputGetState
+    succeeding, and no harness has a physical gamepad -- so every green ladder
+    in this campaign ran with it switched off. It writes the local stick into
+    Ctrl slot 0 after the fan, the same shape as the three button/pad writers
+    already gated, and on a child it would drive the HOST's character.
+
+    IT IS REACHABLE WITHOUT HARDWARE, and that is worth more than a comment
+    naming the hole. SM64DS_PAD_TEST fakes a pad and sets pad_live=1
+    (walk_window.cpp:3442) and is deliberately live in PLAY mode; the run-mode
+    half needed a knob, so SM64DS_FORCE_ANALOG forces it -- the same class of
+    test scaffolding as SM64DS_SYNC_FORCE_V1 and SM64DS_SYNC_DROP.
+
+    Asserted differentially, like every input rung here: with the analog path
+    forced on both instances and the CHILD holding a stick direction, the host's
+    body in the child's world must end where it ends when nobody holds anything.
+    """
+    env = {"SM64DS_FORCE_ANALOG": "1", "SM64DS_PAD_TEST": "0x1@30"}
+    t1a, t2a, _ = play_session("p8_analog_child", seconds,
+                               inj_c="key=0x20", extra_env=env)
+    t1b, t2b, _ = play_session("p8_analog_idle", seconds,
+                               inj_c="key=0x0", extra_env=env)
+    ok = isolated("rungP8(pressed)", t1a)
+    ok &= isolated("rungP8(idle)", t1b)
+    host_a, host_b = rows(t2a, 0), rows(t2b, 0)
+    own_a = rows(t2a, 1)
+    ok &= M.verdict(bool(host_a) and bool(host_b) and bool(own_a),
+                    "rungP8 both bodies observed in both arms")
+    if not (host_a and host_b and own_a):
+        return False
+    mine = span(own_a, "x") + span(own_a, "z")
+    host_delta = (abs(host_a[-1]["x"] - host_b[-1]["x"]) +
+                  abs(host_a[-1]["z"] - host_b[-1]["z"]))
+    ok &= M.verdict(host_delta < max(4096, mine // 4),
+                    "rungP8 THE ANALOG PATH DID NOT DRIVE THE HOST'S BODY | "
+                    "with the analog stick publish forced live, holding a "
+                    "direction on the child moved the host's character %.2f "
+                    "units versus not holding it, against %.1f units of the "
+                    "child's own travel."
+                    % (host_delta / 4096.0, mine / 4096.0))
+    return ok
+
+
 RUNGS = [("P0", rungP0), ("P1", rungP1), ("P2", rungP2), ("P3", rungP3),
          ("P4", rungP4), ("P5", rungP5), ("SY4", rungSY4), ("SY0", rungSY0), ("SY1", rungSY1),
          ("SY2", rungSY2), ("SY3", rungSY3), ("SY5", rungSY5),
-         ("SY6", rungSY6), ("P6", rungP6), ("P7", rungP7)]
+         ("SY6", rungSY6), ("P6", rungP6), ("P7", rungP7), ("P8", rungP8)]
 
 
 def main(argv):

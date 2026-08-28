@@ -7549,7 +7549,38 @@ int main(void)
                answer untouched, which is button mode -- so analog mode on a
                keyboard, or with the pad put down, is exactly the program that
                shipped before. */
-            if (!selftest && run_mode() == RUN_ANALOG && pad_live && !menu_on) {
+            /* ---- THE FOURTH SLOT-0 WRITER, AND THE ONE NO RUNG COULD SEE
+             *
+             * Run mg16 lane MP4. Same shape as the three already gated -- it
+             * writes THIS console's stick straight into Ctrl slot 0, on the
+             * level path, AFTER the per-player fan -- and it is the stick
+             * family rather than the buttons, so on a child it would drive the
+             * HOST's character and destroy the host's own stick values in one
+             * store.
+             *
+             * IT WAS INVISIBLE TO EVERY RUNG BY CONSTRUCTION. The guard
+             * includes pad_live, which is XInputGetState succeeding, and no
+             * harness has a physical gamepad -- so every green ladder in this
+             * campaign ran with this block switched off. It would have bitten
+             * the owner the first time he played multiplayer with a controller
+             * in analog mode, which is a configuration no proof had ever
+             * entered. The reviewer found it by reading, which is the only way
+             * it could have been found.
+             *
+             * SM64DS_FORCE_ANALOG makes it reachable from a proof: it forces
+             * the run-mode half of the condition, and SM64DS_PAD_TEST already
+             * forces the pad_live half in play mode (it fakes a pad and sets
+             * pad_live=1 at walk_window.cpp:3442, and is deliberately disabled
+             * under selftest). Together they cover the block with no hardware.
+             * Test scaffolding of the same class as SM64DS_SYNC_FORCE_V1 and
+             * SM64DS_SYNC_DROP, and named here so it is not mistaken for a
+             * player-facing setting. */
+            static int force_analog = -1;
+            if (force_analog < 0)
+                force_analog = getenv("SM64DS_FORCE_ANALOG") ? 1 : 0;
+            const int analog_mode = force_analog || run_mode() == RUN_ANALOG;
+            if (!selftest && analog_mode && pad_live && !menu_on &&
+                !(port::comms_transport() && comms_fanout_on())) {
                 const int DEAD = 7849;      /* XInput's left-stick floor */
                 const int FULL = 32767;
                 const int dxs = pad.lx;

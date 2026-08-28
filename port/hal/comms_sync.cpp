@@ -62,11 +62,20 @@
 #include <cstring>
 
 extern "C" {
-// SPELLED EXACTLY AS THE MATCHED SOURCES SPELL THEM. Do not respell: competing
-// declarations of one extern "C" symbol is its own bug class, and SetAnim
-// already has a return-type disagreement (declared int, defined void) that
-// POSEFIELDS.md documents.
-int _ZN6Player7SetAnimEji5Fix12IiEj(void *, unsigned int, int, int, unsigned int);
+// SetAnim IS DECLARED void HERE, WHICH IS ITS ACTUAL RETURN TYPE.
+// src/_ZN6Player7SetAnimEji5Fix12IiEj.cpp:14 defines it `void`; 74 matched
+// sources declare it `extern int`. Those 74 are BYTE-VERIFIED ROM TUs and are
+// not mine to edit -- and their callers all discard the result, so the lie
+// costs them nothing. This declaration is the port's own, so it gets to be
+// correct, and being correct here is what makes it impossible for anything in
+// this file to start consuming a return value that is stack garbage.
+//
+// Link-compatible either way: the name is already Itanium-mangled and used as
+// a plain identifier inside extern "C", so no C++ mangling participates and the
+// linker sees one symbol. The earlier note here argued for matching the wrong
+// declaration to avoid competing spellings; that reasoning kept a copy of
+// exactly the declaration defect the first commit of this lane fixed three of.
+void _ZN6Player7SetAnimEji5Fix12IiEj(void *, unsigned int, int, int, unsigned int);
 void _ZN6Player11ChangeStateERNS_5StateE(char *, void *);
 
 // The per-slot Player pointers, the count, and which slot this console is.
@@ -357,12 +366,8 @@ void apply_pose(void *a, const SyncPlayerV1 *e) {
         // >> 12.
         const unsigned start = (unsigned)(e->anim_frame >> 12);
         _ZN6Player7SetAnimEji5Fix12IiEj(a, e->anim_id, 0, 0x1000, start);
-        // The return value is DISCARDED ON PURPOSE. POSEFIELDS.md flags that
-        // the shared declaration says `int` while the linked definition returns
-        // void, so the value is stack garbage; consuming it would be reading an
-        // unwritten slot. Left as the matched sources declare it rather than
-        // respelled here, because competing declarations of one extern "C"
-        // symbol is its own bug class.
+        // Declared void above, so there is no return value to discard and no
+        // way for a later edit here to start reading an unwritten slot.
     }
 }
 
