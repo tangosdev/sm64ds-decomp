@@ -1,91 +1,81 @@
 //cpp
-#include "types.h"
-extern "C" {
-void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
-void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b);
-void _ZN11ShadowModel10InitCuboidEv(void* self);
-void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* self);
-void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
-void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void* fp);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* f, void* m, int fx, short s, void* b);
-void func_020393d4(int* p, int v);
-void func_020393c4(int* p, int v);
-void _ZN9dBgCh_GndC1Ev(void* self);
-void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void* self, void* pos, void* actor);
-int _ZN9dBgCh_Gnd10DetectClsnEv(void* self);
-void _ZN9dBgCh_GndD1Ev(void* self);
-void func_ov015_021123c8(char* c);
-int IsStarCollectedInCurLevel(int a);
-}
+// @symbol _ZN9TowerStep13InitResourcesEv
+#include "TowerStep.h"
+#include "SharedFilePtr.h"
+#include "dBgCh_Gnd.h"
 
-extern void* data_ov015_02114a64;
-extern void* data_ov015_02114a5c;
-extern void* data_ov015_02113594;
-extern "C" {
-extern void _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
-extern void func_ov015_021128f8();
-}
+extern SharedFilePtr data_ov015_02114a64;
+extern SharedFilePtr data_ov015_02114a5c;
+extern CLPS_Block data_ov015_02113594;
 extern s16 data_02082214[];
-extern signed char data_0209f2f8;
+extern s8 data_0209f2f8;
 extern u8 data_0209f220;
 
-struct V3 { int x, y, z; };
-struct RG { char b[0x4c]; };
+extern "C" {
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
+    Fix12i scale, s16 angle, CLPS_Block *clps);
+void func_020393d4(dBgW *collider, void *callback);
+void func_020393c4(dBgW *collider, void *callback);
+void _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
+void func_ov015_021128f8();
+void func_ov015_021123c8(TowerStep *step);
+int IsStarCollectedInCurLevel(int starID);
+}
 
-extern "C" int _ZN9TowerStep13InitResourcesEv(char* self) {
-  RG rc;
-  V3 v;
-  int r2;
+int TowerStep::InitResources()
+{
+    mModel.SetFile((BMD_File *)Model::LoadFile(data_ov015_02114a64), 1, -1);
+    mShadowModel.InitCuboid();
+    UpdateModelPosAndRotY();
+    UpdateClsnPosAndRot();
 
-  _ZN9ModelBase7SetFileEP8BMD_Fileii(self+0xd4, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov015_02114a64), 1, -1);
-  _ZN11ShadowModel10InitCuboidEv(self+0x320);
-  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(self);
-  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
-  _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-      self+0x124, _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov015_02114a5c),
-      self+0x2ec, 0x199, *(short*)(self+0x8e), &data_ov015_02113594);
-  func_020393d4((int*)(self+0x124), (int)&_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
-  func_020393c4((int*)(self+0x124), (int)&func_ov015_021128f8);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        &mMeshCollider,
+        (KCL_File *)dBgW_Kc::LoadFile(data_ov015_02114a5c),
+        &mClsnMat, 0x199, mAngleY, &data_ov015_02113594);
+    func_020393d4(&mMeshCollider,
+        (void *)&_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+    func_020393c4(&mMeshCollider, (void *)&func_ov015_021128f8);
 
-  v.x = *(int*)(self+0x5c);
-  v.y = *(int*)(self+0x60);
-  v.z = *(int*)(self+0x64);
-  v.y -= 0x14000;
+    Vector3 probePos;
+    probePos.x = mPosX;
+    probePos.y = mPosY;
+    probePos.z = mPosZ;
+    probePos.y -= 0x14000;
 
-  _ZN9dBgCh_GndC1Ev(&rc);
-  _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rc, &v, 0);
-  *(int*)(self+0x378) = v.y;
-  if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc) != 0) {
-    *(int*)(self+0x378) = *(int*)((char*)&rc + 0x44);
-  }
+    dBgCh_Gnd ground;
+    ground.SetObjAndPos(probePos, 0);
+    mFloorPosY = probePos.y;
+    if (ground.DetectClsn())
+        mFloorPosY = ground.clsnY;
 
-  {
-    int s0 = data_02082214[(*(unsigned short*)(self+0x8e) >> 4) * 2];
-    *(int*)(self+0x384) = (int)(((s64)s0 * 0xc8000 + 0x800) >> 12);
-    int s1 = data_02082214[(*(unsigned short*)(self+0x8e) >> 4) * 2 + 1];
-    *(int*)(self+0x388) = (int)(((s64)s1 * 0xc8000 + 0x800) >> 12);
-  }
+    u16 angle = mAngleY;
+    int sine = data_02082214[(angle >> 4) * 2];
+    mShadowOffsetX = (int)(((s64)sine * 0xc8000 + 0x800) >> 12);
+    angle = mAngleY;
+    int cosine = data_02082214[(angle >> 4) * 2 + 1];
+    mShadowOffsetY = (int)(((s64)cosine * 0xc8000 + 0x800) >> 12);
 
-  func_ov015_021123c8(self);
+    func_ov015_021123c8(this);
 
-  *(short*)(self+0x94) = *(short*)(self+0x8e) + 0x8000;
-  *(u8*)(self+0x390) = 0x87;
+    mPrevAngleY = mAngleY + 0x8000;
+    mMoveTimer = 0x87;
 
-  r2 = *(int*)(self+8) & 0xff;
-  if (r2 != 2) {
-    *(int*)(self+0x98) = 0x3000;
-  } else {
-    *(int*)(self+0x37c) = *(int*)(self+0x60);
-    *(int*)(self+0x380) = *(int*)(self+0x37c) + 0x1f4000;
-    *(int*)(self+0xa0) = -0x3c000;
-    *(int*)(self+0xa8) = 0xa000;
-  }
+    int kind = param1 & 0xff;
+    if (kind != 2) {
+        mHorzSpeed = 0x3000;
+    } else {
+        mMinPosY = mPosY;
+        mMaxPosY = mMinPosY + 0x1f4000;
+        mTerminalVelocity = -0x3c000;
+        mVertSpeed = 0xa000;
+    }
 
-  if (data_0209f2f8 == 7 && (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) && *(int*)(self+0x60) >= 0xdac000) {
-    _ZN9dBgCh_GndD1Ev(&rc);
-    return 0;
-  }
+    if (data_0209f2f8 == 7
+        && (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0)
+        && mPosY >= 0xdac000)
+        return 0;
 
-  _ZN9dBgCh_GndD1Ev(&rc);
-  return 1;
+    return 1;
 }

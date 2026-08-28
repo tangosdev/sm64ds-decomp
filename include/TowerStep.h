@@ -36,6 +36,7 @@ struct TowerStep : dBgActor_c {
     /* --- vtable --- */
     virtual ~TowerStep();
 
+    int InitResources();
     int CleanupResources();
     int Behavior();
     int Render();
