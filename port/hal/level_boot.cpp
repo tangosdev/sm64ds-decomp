@@ -3777,8 +3777,9 @@ port_level_owned_class[] = {
    0x00/0x04/0x08/0x0c/0x12/0x13), AfterInitResources keeps a boolean there,
    and this path read that boolean as the area for a while -- masked because
    area 0 is the common case and the boolean usually reads 0.
-   hal/actor_vtables.cpp's GetMinimapID bridge and hal/editor_channel.cpp's
-   OFF_ACTOR_AREA read the same +0xcc. */
+   hal/editor_channel.cpp's OFF_ACTOR_AREA is the same byte, and the ROM's
+   own GetMinimapID reads obj->+0xcc as this area index -- see the minimap
+   prose further down this file. */
 static int port_actor_area(const void *actor)
 {
     return *(const signed char *)((const char *)actor + 0xcc);
