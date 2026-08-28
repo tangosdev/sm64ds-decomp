@@ -5360,6 +5360,23 @@ extern "C" int port_scene_begin(void *hwnd, int zoom)
  * reads and never writes: a probe that perturbs the machine it is measuring
  * would answer a different question than the one asked. */
 extern "C" char *data_ov007_0210342c;
+/* THE DIALOG/MESSAGE STATE WORD, run mg16 lane TITLE.
+ *
+ * Top-state 9 is the Start confirmation prompt, and it is where every run of
+ * this lane wedges. Its handler src/func_ov007_020b0834.c opens with
+ * `if (func_ov007_020b79c8() == 0) return;` and that predicate is exactly
+ * `data_ov007_02102ddc[1] == 2`; the sibling func_ov007_020b79e4 is
+ * `data_ov007_02102ddc[1] != 4`. So the prompt needs this word to reach 2 and
+ * then 4 to proceed, and until it does the handler early-returns before ever
+ * reaching its call to the verdict setter func_ov007_020aec94 at 0x020b0a0c.
+ *
+ * That call site matters: top-state 6 and 11 are the verdict setter's ONLY two
+ * outputs, and neither has ever been requested in any run of this lane, which
+ * proves the setter has never executed. Watching this word says whether the
+ * dialog subsystem is the reason. All eight ov007 TUs that touch it are seated
+ * and none is a stub, so this is a measurement, not a missing body. */
+extern "C" int func_ov007_020b79c8(void);   /* data_ov007_02102ddc[1] == 2 */
+extern "C" int func_ov007_020b79e4(void);   /* data_ov007_02102ddc[1] != 4 */
 
 static void port_title_state_trace(int frame)
 {
@@ -5411,6 +5428,17 @@ static void port_title_state_trace(int frame)
     const int f10   = *(int *)(g + 0x10);
     const int f14   = *(int *)(g + 0x14);
     const int pend  = (int)data_02092664;
+    /* THE STATE-9 GATE, read through the ROM's OWN seated accessors rather
+     * than through a declaration of mine for the mounted symbol. Two
+     * reasons: it measures exactly what src/func_ov007_020b0834.c measures,
+     * and a direct `extern int data_ov007_02102ddc[]` read here faulted the
+     * process at scene bring-up (exit 0xC0000005, before frame 0, only with
+     * the trace enabled) even though the symbol resolves to real hosted
+     * storage in ov007_syms.c.obj. Encoded as one number: bit 0 = the ==2
+     * gate, bit 1 = the !=4 gate. 2 means "not yet 2, and not yet 4".
+     * 3 means the ==2 gate is open. */
+    const int dlg = (func_ov007_020b79c8() ? 1 : 0) |
+                    (func_ov007_020b79e4() ? 2 : 0);
     static int ever_req = -1;
     if (pend != 0x187 && ever_req < 0) {
         ever_req = pend;
@@ -5431,9 +5459,10 @@ static void port_title_state_trace(int frame)
     l_beh = g_ti_hits[6];
     static int l_st = -99, l_req = -99, l_est = -99, l_ereq = -99, l_ph = -99;
     static int l_pick = -99, l_f10 = -99, l_f14 = -99, l_pend = -99;
+    static int l_dlg = -99;
     if (st == l_st && req == l_req && est == l_est && ereq == l_ereq &&
         phase == l_ph && pick == l_pick && f10 == l_f10 && f14 == l_f14 &&
-        pend == l_pend && live == l_live)
+        pend == l_pend && live == l_live && dlg == l_dlg)
         return;
     if (live != l_live && l_live != -99)
         std::printf("[title] f%-6d DISPATCH %s\n", frame,
@@ -5441,12 +5470,12 @@ static void port_title_state_trace(int frame)
                                        "entered; the actor left the list)");
     l_live = live;
     std::printf("[title] f%-6d state %d req %d | elem %d req %d | phase %d | "
-                "pick(wiped) %d verdict %d armed %d | pending %d%s\n",
-                frame, st, req, est, ereq, phase, pick, f10, f14, pend,
+                "pick(wiped) %d verdict %d armed %d | pending %d | dlg %d%s\n",
+                frame, st, req, est, ereq, phase, pick, f10, f14, pend, dlg,
                 pend == 0x187 ? " (none)" : "  <-- SCENE REQUESTED");
     std::fflush(stdout);
     l_st = st; l_req = req; l_est = est; l_ereq = ereq; l_ph = phase;
-    l_pick = pick; l_f10 = f10; l_f14 = f14; l_pend = pend;
+    l_pick = pick; l_f10 = f10; l_f14 = f14; l_pend = pend; l_dlg = dlg;
 }
 
 extern "C" void port_scene_tick(int frame, int tick_game)
