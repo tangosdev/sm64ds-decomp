@@ -1,10 +1,11 @@
 //cpp
 // @symbol _ZN4dBgWD2Ev
-/* D2, the base-object destructor. dBgW has no virtual bases, so mwcc emits
- * D1 and D2 as byte-identical code -- only how the ROM REACHES an address
- * separates them (a vtable slot holds D1; a derived destructor's base-chain
- * `bl` reaches D2). Comparing the two bodies proves nothing; the binding in
- * the delinks entry is what decides. */
+/* recovered: real C++ base-subobject destructor
+ *
+ * dBgW is the root of its hierarchy, so the empty body only makes mwccarm
+ * restore dBgW's vptr. The compiler emits the byte-identical D1 and D2 pair;
+ * objisolate retains this D2 body for the direct calls from derived classes.
+ */
 #include "dBgW.h"
 
 dBgW::~dBgW()

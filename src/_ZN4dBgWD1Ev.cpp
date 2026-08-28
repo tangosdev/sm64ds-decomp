@@ -1,9 +1,11 @@
 //cpp
 // @symbol _ZN4dBgWD1Ev
-/* D1, the complete-object destructor. One `dBgW::~dBgW()` definition makes
- * mwcc emit D0, D1 and D2 together; objisolate keeps the one this file is
- * bound to by its delinks entry, so the D0/D2 siblings carry the same
- * definition in their own files. */
+/* recovered: real C++ complete-object destructor
+ *
+ * dBgW is the root of its hierarchy, so the empty body only makes mwccarm
+ * restore dBgW's vptr. The compiler emits the byte-identical D1 and D2 pair;
+ * objisolate retains this D1 body for vtable slot 0.
+ */
 #include "dBgW.h"
 
 dBgW::~dBgW()
