@@ -54,13 +54,18 @@ header's size comments.
 ---
 - *decomp-refs/sm64* (**n64decomp/sm64**, clone locally): SM64DS reimplements the
   N64 game's design. When a target is identifiable object logic, read the N64
-  behavior first: `src/game/behaviors/<name>.inc.c` (**226** files, descriptive
-  names), behavior index in `data/behavior_data.c`. Field vocabulary in
-  `include/object_fields.h` (**oPosX**/*oAction*/`oTimer`...), Mario actions in
-  `include/sm64.h`. Physics constants: `src/game/mario_step.c`.
+  behavior first:
+
+  1. `src/game/behaviors/<name>.inc.c` (**226** files, descriptive names);
+  1. The behavior index in `data/behavior_data.c`;
+  1. Field vocabulary in `include/object_fields.h` (**oPosX**/*oAction*/`oTimer`);
+  1. Mario actions in `include/s4.h`;
+  1. Physics constants: `src/game/mario_step.c`.
 ---
 - *decomp-refs/nsmb* (**NSMB-Decomp/nsmb**): same engine lineage and toolchain
-  family (`mwccarm 1.2 sp3, -O4,p`). `src/objectid.hpp` annotates scene ids with
+  family (`mwccarm 1.2 sp3, -O4,p`).
+  
+  `src/objectid.hpp` annotates scene ids with
   their SM64DS names; `src/Bases/*` mirrors our *Actor* hierarchy; their
   `Vec.hpp` notes on member-init order affecting `LDR/STR` order match our
   codegen notes. No SDK source there by policy - names only.
