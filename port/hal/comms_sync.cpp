@@ -121,6 +121,10 @@ struct SyncCfg {
                       // what turns this from a guess into a number: measure
                       // phase_worst on a healthy pair at the target latency
                       // and keep the threshold above that noise floor.
+    bool no_dr;       // SM64DS_SYNC_NO_DR -- test scaffolding in the
+                      // NO_EVENTS class: corrections aim at the raw received
+                      // position instead of the reckoned one, so one build
+                      // can A/B item 2 by avg_err/snaps
 };
 
 SyncCfg g_cfg;
@@ -174,6 +178,7 @@ void parse_cfg() {
     g_cfg.phase_frames = env_int("SM64DS_SYNC_PHASE", 8);
     if (g_cfg.phase_frames < 1) g_cfg.phase_frames = 1;
     if (g_cfg.phase_frames > 120) g_cfg.phase_frames = 120;
+    g_cfg.no_dr      = env_int("SM64DS_SYNC_NO_DR", 0) != 0;
     if (g_cfg.hz < 1) g_cfg.hz = 1;
     if (g_cfg.hz > 60) g_cfg.hz = 60;
     if (g_cfg.lerp_pct < 1) g_cfg.lerp_pct = 1;
@@ -288,8 +293,10 @@ bool sync_forced_v1() { parse_cfg(); return g_cfg.force_v1; }
 // under the design's own versioning rule -- the pose fields arrive in v2 when
 // the matched setters have named the storage.
 //
-// SIZE: 12 + 16 * players. Four players is 76 bytes, far under any MTU, so the
-// contract's one-datagram rule is satisfied with room to spare.
+// SIZE, as of v3: a 16-byte header plus one 38-byte entry -- under owner
+// authority each console sends only its own body, so a snapshot is 54 bytes
+// regardless of player count. Far under any MTU; the contract's one-datagram
+// rule is satisfied with room to spare.
 // ===========================================================================
 #pragma pack(push, 1)
 struct SyncPlayerV1 {
@@ -312,6 +319,18 @@ struct SyncPlayerV1 {
     // two orders of magnitude -- the design's field would have wrapped every
     // animation past frame 8. Four bytes rather than lose the whole value.
     int            anim_frame;
+
+    // ---- v3, DEAD RECKONING (mp-sync-coopdx item 2) -------------------
+    // The sender's own per-frame position delta, Fix12 per frame, derived by
+    // differencing its body's position between consecutive frames -- no new
+    // Player offsets involved (the named-gap rule stands; there may well be a
+    // velocity field on the object, but nobody has evidenced one and the
+    // delta is just as true). The receiver advances the correction target by
+    // vel * age instead of chasing a point that is always one latency old.
+    // Zeroed, and the teleport flag set, when one frame moved the body
+    // further than the snap threshold -- extrapolating through a warp would
+    // aim at a place nobody is.
+    int            vx, vy, vz;
 };
 struct SyncMsgV1 {
     unsigned       magic;     // kSyncMagic -- framing, never changes
@@ -344,7 +363,11 @@ struct SyncMsgV1 {
 // recognised, counted, and DROPPED at the version check -- no half-understood
 // message reaches the apply path, which is what the unreliable channel needs.
 enum : unsigned { kSyncMagic = 0x314e5953u };
-enum : unsigned { kSyncVersion = 2u };
+// v3: dead reckoning added vx/vy/vz to the entry (item 2). THE VERSION FIELD
+// BUMPS, THE MAGIC NEVER DOES -- spec trap 8, paid for once already when a
+// tag bump unframed the whole channel (247 sent, 0 received). Both sides
+// ship together; a mismatched peer is recognised, counted, dropped loudly.
+enum : unsigned { kSyncVersion = 3u };
 enum : unsigned char { kFlagLive = 1, kFlagGrounded = 2, kFlagTeleport = 4 };
 enum : int { kSyncBufBytes = 256 };
 
@@ -451,6 +474,17 @@ unsigned short g_arr_anim[kCommsMaxPlayers];
 // change. See the wrap note in apply_pose.
 unsigned short g_ph_id[kCommsMaxPlayers];
 int            g_ph_hw[kCommsMaxPlayers];
+
+// Item 2's sender-side velocity sample: the local body's position last frame,
+// differenced each frame. Seeded on first sight so the first frame's
+// "velocity" is zero rather than the distance from the origin to the spawn.
+bool g_vel_seeded = false;
+int  g_vel_prev[3];
+int  g_vel[3];
+// A warp is STICKY until a send ships it: the warp frame is not necessarily
+// a send frame, and a warp whose flag never reached the wire would be counted
+// by the receiver as a correction bug (a snap) instead of honoured as a warp.
+bool g_warp_pending = false;
 }  // namespace
 
 // One DS unit is 4096 in Fix12. The thresholds are in units and converted here
@@ -638,6 +672,33 @@ void sync_send_own() {
     ++g_frame;
     if (g_frame % 30u == 0 && g_ev_tokens < kEvBurst) ++g_ev_tokens;
 
+    /* Item 2: the per-frame velocity sample, taken EVERY frame whether or not
+       this frame sends, so a cadence send never ships a delta spanning
+       several frames as if it were one. A single frame further than the snap
+       threshold is a warp: velocity is zeroed and the entry will carry the
+       teleport flag, because extrapolating through a warp aims at a place
+       nobody is. */
+    const int cx = *player::pos_x(a), cy = *player::pos_y(a),
+              cz = *player::pos_z(a);
+    bool warped = false;
+    if (g_vel_seeded) {
+        g_vel[0] = cx - g_vel_prev[0];
+        g_vel[1] = cy - g_vel_prev[1];
+        g_vel[2] = cz - g_vel_prev[2];
+        const int step = (g_vel[0] < 0 ? -g_vel[0] : g_vel[0]) +
+                         (g_vel[1] < 0 ? -g_vel[1] : g_vel[1]) +
+                         (g_vel[2] < 0 ? -g_vel[2] : g_vel[2]);
+        if (step > units(g_cfg.snap_units)) {
+            g_warp_pending = true;
+            g_vel[0] = g_vel[1] = g_vel[2] = 0;
+        }
+    } else {
+        g_vel[0] = g_vel[1] = g_vel[2] = 0;
+    }
+    g_vel_seeded = true;
+    g_vel_prev[0] = cx; g_vel_prev[1] = cy; g_vel_prev[2] = cz;
+    warped = g_warp_pending;
+
     /* Item 3: a transition of the local body publishes NOW, budget allowing;
        the cadence below stays the floor. Detection is edge-triggered off the
        last OBSERVED pair, seeded on the first frame so boot state is not
@@ -680,17 +741,24 @@ void sync_send_own() {
     SyncPlayerV1 *e = (SyncPlayerV1 *)(buf + sizeof(SyncMsgV1));
     e->slot  = (unsigned char)me;
     e->flags = (unsigned char)(kFlagLive |
-                               (player::on_ground(a) ? kFlagGrounded : 0));
+                               (player::on_ground(a) ? kFlagGrounded : 0) |
+                               (warped ? kFlagTeleport : 0));
     e->yaw   = *player::facing(a);
-    e->x     = *player::pos_x(a);
-    e->y     = *player::pos_y(a);
-    e->z     = *player::pos_z(a);
+    e->x     = cx;
+    e->y     = cy;
+    e->z     = cz;
     e->anim_id    = player::anim_id(a);
     e->state_id   = player::state_id(a);
     e->anim_frame = player::anim_frame(a);
+    e->vx = g_vel[0];
+    e->vy = g_vel[1];
+    e->vz = g_vel[2];
 
     const int len = (int)sizeof(SyncMsgV1) + (int)sizeof(SyncPlayerV1);
-    if (t->send_aux(buf, len) == len) ++g_stats.sent;
+    if (t->send_aux(buf, len) == len) {
+        ++g_stats.sent;
+        g_warp_pending = false;        // the flag reached the wire
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -795,9 +863,41 @@ void apply_snapshot(const unsigned char *buf, int n) {
         int *px = player::pos_x(a);
         int *py = player::pos_y(a);
         int *pz = player::pos_z(a);
-        const int dx = e->x - *px, dy = e->y - *py, dz = e->z - *pz;
+
+        /* Item 2, DEAD RECKONING: the correction aims at where the sender IS
+           NOW (estimated), not where it was one latency ago. The received
+           position is advanced by the sender's own per-frame delta times the
+           message age in frames -- before this, the lerp chased a point that
+           was always ~one latency stale, so a walking body's error grew
+           between snapshots and released as the visible slide-then-snap. Age
+           is rtt/2 off the rig's probe; with no RTT sample yet the age is 0
+           and this degenerates to exactly the old behaviour. A teleport
+           carries zero velocity and is never extrapolated. */
+        /* GROUND AXES ONLY, VELOCITY CLAMPED -- both measured, not cautious.
+           The first cut extrapolated all three axes with the raw delta and
+           made the session WORSE than no reckoning at all (worst error 442
+           units against the un-reckoned 98): a legitimate high-speed frame --
+           a fall, a knockback -- passes the warp guard at up to 60 units and
+           times ten frames of age it aims the target across the map. And
+           vertical motion is a parabola under gravity, so extrapolating it
+           linearly is wrong by construction, not just by magnitude. So Y
+           takes the received value untouched, and X/Z velocity is clamped to
+           3 units/frame -- above any locomotion, below the spikes. */
+        int tx = e->x, ty = e->y, tz = e->z;
+        if (!(e->flags & kFlagTeleport) && !g_cfg.no_dr) {
+            const int age_frames = (g_stats.rtt_avg_ms / 2) * 60 / 1000;
+            int vx = e->vx, vz = e->vz;
+            const int vcap = units(3);
+            if (vx > vcap) vx = vcap; else if (vx < -vcap) vx = -vcap;
+            if (vz > vcap) vz = vcap; else if (vz < -vcap) vz = -vcap;
+            tx += vx * age_frames;
+            tz += vz * age_frames;
+        }
+        const int dx = tx - *px, dy = ty - *py, dz = tz - *pz;
         int err = (dx < 0 ? -dx : dx) + (dy < 0 ? -dy : dy) + (dz < 0 ? -dz : dz);
         if (err > g_stats.worst_error) g_stats.worst_error = err;
+        g_stats.err_sum += err;
+        ++g_stats.err_n;
 
         if (err < units(2)) {
             /* Below visible. Applying the POSITION would be jitter, not
@@ -816,7 +916,7 @@ void apply_snapshot(const unsigned char *buf, int n) {
             continue;
         }
         if (err > units(g_cfg.snap_units) || (e->flags & kFlagTeleport)) {
-            *px = e->x; *py = e->y; *pz = e->z;
+            *px = tx; *py = ty; *pz = tz;
             /* A teleport is a real warp and is not a bug; anything else this
                far out is, and is counted so rung SY3 can insist on zero. */
             if (!(e->flags & kFlagTeleport)) ++g_stats.snaps;
@@ -987,7 +1087,7 @@ void sync_report(const char *tag) {
                  "applied=%llu lerps=%llu snaps=%llu worst_err=%d "
                  "delay=%d rtt_last=%d rtt_avg=%d pings=%llu pongs=%llu "
                  "own_claims=%llu local_writes=%llu evsends=%llu "
-                 "reseeds=%llu phase_worst=%d\n",
+                 "reseeds=%llu phase_worst=%d avg_err=%d\n",
                  tag ? tag : "-", g_enabled ? "yes" : "no",
                  (unsigned long long)g_stats.sent,
                  (unsigned long long)g_stats.recvd,
@@ -1003,7 +1103,10 @@ void sync_report(const char *tag) {
                  (unsigned long long)g_stats.local_writes,
                  (unsigned long long)g_stats.evsends,
                  (unsigned long long)g_stats.reseeds,
-                 g_stats.phase_worst);
+                 g_stats.phase_worst,
+                 (int)(g_stats.err_n ? g_stats.err_sum /
+                                           (long long)g_stats.err_n
+                                     : 0));
 }
 
 }  // namespace port

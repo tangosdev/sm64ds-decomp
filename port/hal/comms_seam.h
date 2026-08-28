@@ -526,6 +526,11 @@ struct SyncStats {
     // The largest age-corrected same-id cursor delta ever seen, 20.12 --
     // the healthy-pair noise floor the phase threshold must sit above.
     int phase_worst;
+    // Mean position error per applied entry (Fix12), the tuning metric the
+    // worst_error max is too noisy for: err_sum accumulates the same error
+    // worst_error takes its max over, err_n counts entries.
+    long long err_sum;
+    unsigned long long err_n;
 };
 
 // Decide whether the layer runs this session. Requires SM64DS_SYNC=1, an
