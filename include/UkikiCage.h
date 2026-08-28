@@ -35,7 +35,7 @@ struct dActor_c;
 
 struct UkikiCage : dBgActor_c {
     dBgCh_Actr mWithMeshClsn;       /* 0x320 */
-    s32 mStarActor;                 /* 0x4dc -- the dActor_c * that InitResources' Spawn(0xb2, ...) returned */
+    dActor_c *mStarActor;            /* 0x4dc -- Spawn(0xb2, ...) result */
 
     /* --- vtable --- */
     virtual ~UkikiCage();
