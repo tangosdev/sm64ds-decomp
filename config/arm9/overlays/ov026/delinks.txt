@@ -36,7 +36,7 @@ src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111598 end:0x02111678
 
-src/func_ov026_02111678.c:
+src/func_ov026_02111678.cpp:
     complete
     .text start:0x02111678 end:0x021116c8
 

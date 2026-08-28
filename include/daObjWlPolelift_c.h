@@ -69,9 +69,9 @@ struct daObjWlPolelift_c : dActor_c {
     s32  groundY;                    /* 0x1e0 */
 
     /* Declared first -- key function; see the family convention discussed in
-       dActor_c.h. Never defined as a real method in any TU: both D1 and D0
-       are plain functions carrying their literal mangled name
-       (src/_ZN17daObjWlPolelift_cD1Ev.c, src/_ZN17daObjWlPolelift_cD0Ev.c). */
+       dActor_c.h. The D1 and D0 translation units both define this real empty
+       method; CodeWarrior generates their complete-object/member teardown and
+       objisolate retains the enrolled variant from each object. */
     virtual ~daObjWlPolelift_c();                        /* slots 16 (D1), 17 (D0) */
 
     /* --- overrides, in _ZTV8dActor_c/_ZTV7fBase_c order. --- */
