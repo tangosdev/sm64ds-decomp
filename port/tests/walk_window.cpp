@@ -6191,8 +6191,21 @@ int main(void)
         rg[4] |= 1;   /* BgCh collide-ordinary (the gate-8 predicate bit) */
         *(int *)(rg + 0x4c) = 0x100000;   /* reach: 256 units down */
         int hit = _ZN13RaycastGround10DetectClsnEv(rg);
-        printf("ground probe at spawn: hit=%d ground_y=%d (%.1f units)\n",
-               hit, *(int *)(rg + 0x3c), *(int *)(rg + 0x3c) / 4096.0f);
+        /* +0x44 is the HIT, +0x3c is where the ray STARTED. This line printed
+           +0x3c under the name "ground_y" and was read as a collision signal
+           for exactly as long as nobody checked it: include/RaycastGround.h
+           pins 0x038 as the probe position (so +0x3c is its .y) and 0x044 as
+           "the collision height in Fix12i: the search seed on entry, the hit
+           on exit", with 0x048 the has-collision byte. The tell was in the
+           data -- the old number read 1700.0 in every level-6 arm of the
+           stage-geom proof, stock and fully-replaced collision alike, and a
+           real hit height cannot be invariant across that. Both are printed
+           now, each under its own name, because the origin is still worth
+           seeing next to the hit. */
+        printf("ground probe at spawn: hit=%d clsn_y=%d (%.1f units) "
+               "has_clsn=%d ray_origin_y=%.1f\n",
+               hit, *(int *)(rg + 0x44), *(int *)(rg + 0x44) / 4096.0f,
+               rg[0x48], *(int *)(rg + 0x3c) / 4096.0f);
         {
             extern void *data_020a0c80[];
             int direct = ((int(__fastcall *)(void *, void *, void *))(
