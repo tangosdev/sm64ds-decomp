@@ -1,13 +1,10 @@
 //cpp
 // @symbol _ZN5dBgPcD2Ev
-/* D2, not D1. This file carries the same definition as
- * src/_ZN5dBgPcD1Ev.cpp, and deliberately so: dBgPc has no virtual
- * bases, so mwcc emits D1 and D2 as byte-identical code. Only the way the
- * ROM REACHES an address separates them -- a vtable slot holds D1, a derived
- * destructor's base-chain `bl` reaches D2 -- so comparing the two bodies
- * proves nothing and the binding in config/arm9/delinks.txt is what decides.
- * objisolate keeps the D2 variant; the C2/D0/D1 siblings stay in their own
- * files. */
+/* recovered: real C++ base-subobject destructor
+ *
+ * dBgPc is non-polymorphic and its SurfaceInfo member is trivially
+ * destructible, so CodeWarrior emits the ROM's empty D2 body directly.
+ */
 #include "dBgPc.h"
 
 dBgPc::~dBgPc()
