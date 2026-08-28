@@ -1,11 +1,11 @@
 func_ov002_020ad660 kind:function(arm,size=0x1d8) addr:0x020ad660
 _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj kind:function(arm,size=0x208) addr:0x020ad838
-func_ov002_020ada40 kind:function(arm,size=0x100) addr:0x020ada40
+_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE kind:function(arm,size=0x100) addr:0x020ada40
 _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc kind:function(arm,size=0x280) addr:0x020adb40
 _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c kind:function(arm,size=0xb8) addr:0x020addc0
 _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr kind:function(arm,size=0x3cc) addr:0x020ade78
 _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs kind:function(arm,size=0x74) addr:0x020ae244
-_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_ kind:function(arm,size=0x19c) addr:0x020ae2b8
+_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi kind:function(arm,size=0x19c) addr:0x020ae2b8
 func_ov002_020ae454 kind:function(arm,size=0x78) addr:0x020ae454
 func_ov002_020ae4cc kind:function(arm,size=0xfc) addr:0x020ae4cc
 func_ov002_020ae5c8 kind:function(arm,size=0x40) addr:0x020ae5c8
@@ -30,7 +30,7 @@ _ZN12dEnemyBase_cD2Ev kind:function(arm,size=0x24) addr:0x020aed18
 _ZN12dEnemyBase_cD0Ev kind:function(arm,size=0x38) addr:0x020aed3c
 _ZN12dEnemyBase_cD1Ev kind:function(arm,size=0x24) addr:0x020aed74
 _ZN12dEnemyBase_cC2Ev kind:function(arm,size=0x24) addr:0x020aed98
-_ZN11dCapEnemy_cD1Ev kind:function(arm,size=0x38) addr:0x020aedbc
+_ZN11dCapEnemy_cD2Ev kind:function(arm,size=0x38) addr:0x020aedbc
 _ZN11dCapEnemy_cD0Ev kind:function(arm,size=0x4c) addr:0x020aedf4
 _ZN13OneUpMushroomD1Ev kind:function(arm,size=0x48) addr:0x020aee40
 _ZN13OneUpMushroomD0Ev kind:function(arm,size=0x5c) addr:0x020aee88
@@ -2404,6 +2404,7 @@ data_ov002_0210ba7c kind:data(any) addr:0x0210ba7c
 data_ov002_0210ba9c kind:data(any) addr:0x0210ba9c
 _ZTIN8daDemo_c10anmModel_cE kind:data(any) addr:0x0210babc
 data_ov002_0210bae4 kind:data(any) addr:0x0210bae4
+_ZTVN8daDemo_c13simpleModel_cE kind:data(any) addr:0x0210bae0
 _ZTIN8daDemo_c13simpleModel_cE kind:data(any) addr:0x0210bafc
 data_ov002_0210bb1c kind:data(any) addr:0x0210bb1c
 data_ov002_0210bb3c kind:data(any) addr:0x0210bb3c
@@ -2416,6 +2417,7 @@ data_ov002_0210bc28 kind:data(any) addr:0x0210bc28
 data_ov002_0210bc58 kind:data(any) addr:0x0210bc58
 data_ov002_0210bc88 kind:data(any) addr:0x0210bc88
 data_ov002_0210bcc4 kind:data(any) addr:0x0210bcc4
+_ZTVN8daDemo_c10anmModel_cE kind:data(any) addr:0x0210bcc0
 data_ov002_0210bce8 kind:data(any) addr:0x0210bce8
 data_ov002_0210bcf0 kind:data(any) addr:0x0210bcf0
 data_ov002_0210bd24 kind:data(any) addr:0x0210bd24

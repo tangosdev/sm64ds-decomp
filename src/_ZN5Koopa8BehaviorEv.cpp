@@ -17,7 +17,7 @@ extern void _ZN5dCc_c6UpdateEv(void *c);
 extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *c);
 extern int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void *self, int d);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *c);
-extern int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(void *self, void *wm, int a, s16 b, int c, int d, int e);
+extern int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(void *self, void *wm, int a, s16 b, int c, int d, int e);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *wm, unsigned int j);
 extern void _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(void *self, void *wm);
 }
@@ -102,7 +102,7 @@ int Koopa::Behavior()
         _ZN8dActor_c9UpdatePosEP5dCc_c(((char *)this), ((char *)this) + 0x110);
 
         if (mDeathState == 0 && mState != 0) {
-            if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(
+            if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(
                     ((char *)this), ((char *)this) + 0x144, 0x32000, 0x3800, 0, 1, 0x32000) != 0) {
                 mPosX = unk_3a8;
                 mPosY = unk_3ac;

@@ -23,7 +23,9 @@
  *                  renamed daKrb_c, so the compiler still emits _ZTV7daKrb_c.
  *
  * DERIVES FROM dCapEnemy_c. _ZN7daKrb_cD1Ev tears down its own five members and then
- * chains to `_ZN11dCapEnemy_cD1Ev`, dCapEnemy_c's out-of-line complete destructor. Goomba_Spawn
+ * chains to _ZN11dCapEnemy_cD2Ev (ov002 0x020aedbc), dCapEnemy_c's out-of-line
+ * base-object destructor -- see include/daTrs_c.h for why that address carried the
+ * placeholder name func_ov002_020aedbc until 2026-08-27. Goomba_Spawn
  * (and GoombaSmall_Spawn, GoombaLarge_Spawn -- all three build the identical class,
  * differing only in spawn param) call _ZN11dCapEnemy_cC2Ev(p) before storing this
  * class's own vtable, the same forward/backward pair CapEnemy's own header documents.
@@ -103,6 +105,11 @@ struct daKrb_c : dCapEnemy_c {
     /* methods */
     int Behavior();
     int CleanupResources();
+    /* Declared here so src/_ZN7daKrb_c13InitResourcesEv.cpp can be a real method
+       rather than an extern "C" free function under the mangled name. ~daKrb_c is
+       still the first virtual DECLARED, so the key function -- and with it
+       _ZTV7daKrb_c -- stays where it already was. */
+    int InitResources();
     void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
     int Render();
 

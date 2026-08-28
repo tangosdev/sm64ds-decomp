@@ -4,7 +4,7 @@ extern int data_0209b308[];
 extern int func_ov004_020adc1c(void);
 extern void func_ov004_020adc00(int v);
 
-void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player(int thiz, int a1, int a2)
+void func_ov004_020ada40(int thiz, int a1, int a2)
 {
     char *g = (char*)data_ov004_020beb68;
     if (g == 0) return;

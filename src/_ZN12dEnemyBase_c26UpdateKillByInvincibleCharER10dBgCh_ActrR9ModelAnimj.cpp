@@ -4,7 +4,7 @@
  *
  * One frame of the death an invincible (mega) character inflicts.
  * dEnemyBase_c::KillByInvincibleChar -- ov002 0x020ada40, still named
- * func_ov002_020ada40 in this tree -- starts it by writing mDeathState = 8 and
+ * _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE in this tree -- starts it by writing mDeathState = 8 and
  * mDeathTimer = 0x1e; this runs only in that state and ends it either when the
  * timer expires or when the corpse lands (on ground while falling).
  *
