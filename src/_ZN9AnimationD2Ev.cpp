@@ -1,8 +1,10 @@
 //cpp
 // @symbol _ZN9AnimationD2Ev
-/* The same real destructor definition emits all ABI variants; objisolate
- * retains the base-object destructor for this enrollment.
- */
+/* D2, the base-object destructor. Animation has no virtual bases, so mwcc emits
+ * D1 and D2 as byte-identical code -- only how the ROM REACHES an address
+ * separates them (a vtable slot holds D1; a derived destructor's base-chain
+ * `bl` reaches D2). Comparing the two bodies proves nothing; the binding in
+ * the delinks entry is what decides. */
 #include "Animation.h"
 
 Animation::~Animation()

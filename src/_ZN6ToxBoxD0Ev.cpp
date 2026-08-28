@@ -1,27 +1,24 @@
 //cpp
 // @symbol _ZN6ToxBoxD0Ev
-/* recovered: named members + shared header, declarations from a shared header */
-#include "decl_Actor.h"
-#include "decl_Model.h"
-#include "decl_dBgW_KcMbg.h"
-#include "decl_dBgCh_Actr.h"
-#include "decl_common.h"
-/* recovered: named members + shared header */
-#include "ToxBox.h"
-extern "C" {
-extern void _ZN10dCcAcPos_cD1Ev(void*);
-extern int _ZTV6ToxBox[];
-extern int _ZTV10dBgActor_c[];
-extern void* data_020a0eac;
-void* _ZN6ToxBoxD0Ev(struct ToxBox *self) {
-  *(int**)(((char*)self))=_ZTV6ToxBox;
-  _ZN10dCcAcPos_cD1Ev((char*)&self->mdCcAcPos_c);
-  _ZN10dBgCh_ActrD1Ev((char*)&self->mWithMeshClsn);
-  *(int**)(((char*)self))=_ZTV10dBgActor_c;
-  _ZN10dBgW_KcMbgD1Ev((char*)&self->mMeshCollider);
-  _ZN5ModelD1Ev((char*)&self->mModel);
-  _ZN8dActor_cD2Ev(((char*)self));
-  _ZN6Memory10DeallocateEPvP4Heap(((char*)self), data_020a0eac);
-  return ((char*)self);
-}
+/* D0, the deleting destructor. Same shadow struct as the D1 file beside this one;
+ * mwcc emits D0, D1 and D2 together from one destructor definition and objisolate
+ * keeps the variant this file's delinks entry names. The trailing operator delete
+ * comes from the base -- see the inline one in include/dActor_c.h. */
+#include "dBgActor_c.h"
+#include "dBgCh_Actr.h"
+#include "dCcAcPos_c.h"
+
+struct ToxBox : dBgActor_c {
+    s32 mPlayerActor;                   /* 0x320 */
+    dBgCh_Actr mWithMeshClsn;           /* 0x324 */
+    u8 pad_4e0[0x8];
+    dCcAcPos_c mdCcAcPos_c;             /* 0x4e8 */
+    u8 pad_528[0x6c];
+    virtual ~ToxBox();
+};
+
+typedef char ToxBox_size_must_be_0x594[sizeof(ToxBox) == 0x594 ? 1 : -1];
+
+ToxBox::~ToxBox()
+{
 }

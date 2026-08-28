@@ -3,7 +3,7 @@ extern "C" {
 int func_ov004_020adafc(void);
 int func_ov004_020ad6fc(void* c, int v);
 void func_ov004_020ada20(void);
-void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player(int);
+void func_ov004_020ada40(int);
 int func_ov004_020adc3c(void *c);
 int func_02013580(int a, int b);
 void func_02013568(int a, int b, int v);
@@ -17,7 +17,7 @@ void func_ov004_020ad940(char* c)
     if (*(int*)(c+0x64) < 0) {
         func_ov004_020ada20();
         *(int*)(c+0x4000+0x658) = func_ov004_020adafc();
-        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player(0);
+        func_ov004_020ada40(0);
         return;
     }
     int i;
@@ -33,6 +33,6 @@ void func_ov004_020ad940(char* c)
     data_0209b300[0] = 1;
     func_ov004_020ada20();
     *(int*)(c+0x4000+0x658) = func_ov004_020adafc();
-    _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player(0);
+    func_ov004_020ada40(0);
 }
 }

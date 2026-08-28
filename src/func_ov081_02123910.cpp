@@ -51,7 +51,7 @@ extern "C" void func_ov081_02123910(char* c)
         kv.y = 0;
         kv.z = 0;
         tmp = ((VObj*)c)->m29();
-        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player(c, &kv, other, tmp);
+        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, &kv, other, tmp);
         return;
     }
 

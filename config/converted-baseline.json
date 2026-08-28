@@ -448,7 +448,7 @@
     "src/_ZN11WingFeatherD1Ev.cpp",
     "src/_ZN11dCapEnemy_c14RenderCapModelEPK7Vector3.cpp",
     "src/_ZN11dCapEnemy_cC2Ev.cpp",
-    "src/_ZN11dCapEnemy_cD2Ev.cpp",
+    "src/_ZN11dCapEnemy_cD1Ev.cpp",
     "src/_ZN11dScMgBase_c16OnPendingDestroyEv.cpp",
     "src/_ZN11dScMgBase_c18AfterInitResourcesEj.cpp",
     "src/_ZN11dScMgBase_c6RenderEv.cpp",
