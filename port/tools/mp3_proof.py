@@ -175,6 +175,53 @@ def rungA():
 # ---------------------------------------------------------------------------
 # RUNG 9 -- THE CHILD'S INPUT MOVES THE PARENT'S COPY OF THE CHILD
 # ---------------------------------------------------------------------------
+SHADOW = re.compile(r"^\[shadow\] frame (\d+): (\d+) triangles", re.M)
+
+
+def rungS():
+    """ONE SHADOW PER BODY. The orphan-caster rung.
+
+    A tester saw the remote player walking with a SECOND shadow attached. The
+    cause was not the shadow pass -- ShadowModel::RenderAll walks a linked list
+    and is already correctly per-caster. It was an ORPHAN ACTOR: the ROM's
+    entrance loop spawns player i from entrance record p3 + i, this level has
+    one player start, and for i=1 it spawned whatever record 1 names, discarded
+    the pointer (data_0209f394[1] measured NULL), and left the actor LINKED
+    INTO THE PROCESSING LIST. It ticked, registered a shadow, and no body was
+    ever drawn for it.
+
+    The census is arithmetic and that is what makes it a rung rather than an
+    eyeball: a player casts 64 shadow triangles and this level's scenery casts
+    24, so one player is 88 and two players must be 152. It measured 216 --
+    one whole extra player-sized caster. Anything that reintroduces a
+    phantom actor moves this number by a multiple of 64.
+    """
+    ok = True
+    counts = {}
+    for players in (1, 2):
+        rc, t, d = one_instance("rS_shadow_%d" % players, "240",
+                                {"SM64DS_VS_PLAYERS": str(players),
+                                 "SM64DS_SHADOW_TRIS": "1"})
+        # AT A FIXED FRAME, not the peak. A shadow's triangle count varies
+        # with the ground it falls on, so a peak over 240 frames compares two
+        # different bits of terrain and drifts (measured: 152 at frame 2, 166
+        # as a peak). Frame 2 is the first frame with geometry and is the same
+        # ground in both runs.
+        byframe = {int(m.group(1)): int(m.group(2)) for m in SHADOW.finditer(t)}
+        counts[players] = byframe.get(2, 0)
+        ok &= M.verdict(rc == 0 and counts[players] > 0,
+                        "rungS %d-player run produced shadow geometry | peak "
+                        "%d triangles" % (players, counts[players]))
+    one, two = counts.get(1, 0), counts.get(2, 0)
+    ok &= M.verdict(one > 0 and two == one + 64,
+                    "rungS EXACTLY ONE CASTER PER BODY | 1 player %d "
+                    "triangles, 2 players %d; the second body must add exactly "
+                    "64 (one player-sized caster). A multiple of 64 over that "
+                    "is a phantom actor casting a shadow with no body."
+                    % (one, two))
+    return ok
+
+
 def rung9():
     """Inject movement on the CHILD; assert it in the PARENT's world.
 
@@ -382,7 +429,7 @@ def rung11():
     return ok
 
 
-RUNGS = [("A", rungA), ("9", rung9), ("10", rung10), ("11", rung11)]
+RUNGS = [("A", rungA), ("S", rungS), ("9", rung9), ("10", rung10), ("11", rung11)]
 
 
 def main(argv):

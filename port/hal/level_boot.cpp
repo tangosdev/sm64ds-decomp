@@ -2069,8 +2069,72 @@ static void port_load1(void *t, int a, unsigned b)
        camera reads the index per frame, so it follows the right player from
        the first tick; nothing downstream sees the temporary value. */
     const unsigned char saved_local = data_0209f250;
+    const unsigned char saved_count = data_0209f21c;
     data_0209f250 = 0;
+    /* AND THE COUNT IS HELD AT 1 ACROSS THE LOAD -- the orphan-shadow fix.
+       Run mg16 lane MP3, field failure 3.
+
+       The ROM's loop spawns player i from entrance record p3 + i, and this
+       level has ONE player start; record 1 is a different door. For i=1 it
+       therefore called Actor::Spawn on whatever that record names, got
+       something back that was not a usable player, and discarded the pointer
+       (data_0209f394[1] measured NULL) -- but THE ACTOR IT CREATED IS ALREADY
+       LINKED INTO THE PROCESSING LIST. It ticks, its Behavior registers a
+       ShadowModel node, and nothing ever draws a body for it, because the
+       render loop draws data_0209f394[] and that slot points at the player
+       port_vs_spawn_extra_players makes instead.
+
+       An actor that casts a shadow and has no body is exactly the owner's
+       "a shadow as if a third thing should be there", and it is attached to
+       the remote player because that is the slot whose start was missing.
+
+       MEASURED, with SM64DS_SHADOW_TRIS: one player draws 88 shadow triangles
+       (64 player + 24 scenery), so two players should draw 152. It drew 216 --
+       one whole extra player-sized caster.
+
+       Holding the count at 1 makes the ROM's loop spawn exactly the starts the
+       level really has, and port_vs_spawn_extra_players then supplies the rest
+       from player 0's record. Same shape as the local-index hold above, and it
+       retires itself the same way: on a real VS arena whose table carries four
+       consecutive starts, the count should NOT be held, because the loop is
+       then right.
+
+       ##################################################################
+       #  IT IS NOT KEYED ON THAT. IT HOLDS ON EVERY MULTIPLAYER BOOT.  #
+       ##################################################################
+
+       AND THAT IS A KNOWN, FILED LIMITATION rather than an oversight. Two
+       versions of a condition were tried and neither works:
+
+         `port_entrance_count() > 0` is the level's TOTAL record count -- 14 on
+         castle grounds -- so it is true wherever an entrance table exists and
+         the condition collapsed to "multiplayer is on". It only ever LOOKED
+         conditional.
+
+         Comparing entrance records by CLASS (does record p3+1 name the same
+         actor as p3?) is the question this comment wants to ask, and it does
+         not answer it: MEASURED on castle grounds, records p3 and p3+1 carry
+         the SAME raw, so the predicate returned true, the hold stopped
+         happening, and the orphan caster came straight back -- rungS went from
+         152 shadow triangles to 216 in the run that tried it. Class equality
+         does not distinguish a player start from a different door on this
+         level, so it cannot be the test.
+
+       What actually distinguishes them is whether Actor::Spawn PRODUCES a
+       usable player from the record, and that is not knowable until the loop
+       has already run and made the orphan.
+
+       THE ARENA-DAY CONSEQUENCE, filed in port/ov002_frontier.txt: on a real VS
+       arena whose table carries four consecutive player starts, this hold will
+       ignore them and supply three copies of record 0 instead -- every player
+       spawning on top of the first. Correct on every level the port loads
+       today, wrong the day an arena mounts, and written down where the arena
+       lane will find it rather than left as a surprise. */
+    const int want_players = (int)data_0209f21c;
+    if (want_players > 1)
+        data_0209f21c = 1;
     _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij(t, a, b);
+    data_0209f21c = saved_count;
     port_vs_spawn_extra_players(t, b);
     data_0209f250 = saved_local;
     if (saved_local != 0 && std::getenv("SM64DS_VS_PROBE"))

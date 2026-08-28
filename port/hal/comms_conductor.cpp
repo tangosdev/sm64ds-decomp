@@ -327,6 +327,11 @@ int  func_02040704(int ignored);
 // MY COMMS SLOT, hosted by hal/actor_vtables.cpp. src/func_0203da9c.c returns
 // it and hal/level_boot.cpp seats the world's local player index from that.
 extern unsigned char data_020a0f10[];
+// The local comms record. Offset 0 is the frame counter that doubles as the
+// ROM's only non-constant RNG seed; see the session reset above.
+extern unsigned char data_020a1040[];
+// The world RNG seed, hosted by hal/auto_bss.cpp.
+extern int data_0209e650[];
 // The ROLE byte, hosted by hal/stage_slot0.cpp. src/func_0203df40.c switches
 // on it and nothing in the port was seating it; see HOLE 3 below.
 extern unsigned char data_020a0f04[];
@@ -369,6 +374,9 @@ inline unsigned char data_0209f250_byte() { return data_0209f250[0]; }
 
 namespace port {
 namespace {
+inline int *data_020a1040_word() {
+    return reinterpret_cast<int *>(&data_020a1040[0]);
+}
 inline unsigned char *data_020a80cc_bytes() {
     return reinterpret_cast<unsigned char *>(&data_020a80cc[0]);
 }
@@ -646,6 +654,14 @@ void comms_publish_pad(unsigned held) {
     static bool checked = false;
     if (!checked) {
         checked = true;
+        /* run mg16 lane MP4: decide once whether the state-sync layer runs.
+           HERE rather than in the frame loop, and the reason is a measurement:
+           the frame-loop site sat inside `if (real_camera)` on the level path
+           and never logged at all, in solo OR in a session. This one-shot is
+           reached on every path that has input -- the band guard beside it
+           proves so in every playlog -- and it runs after the transport
+           install, which is what sync_decide needs to look at. */
+        sync_decide();
         if (port_comms_conductor_check_layout())
             std::fprintf(stderr,
                          "  [conductor] bands OK -- A spans 0x20 at "
@@ -961,6 +977,43 @@ bool comms_wait_for_session(int frames) {
             // accessor and its hosted parameter is named `ignored` precisely
             // because the ROM passes it a masked flag it does not use.
             data_020a0f10[0] = func_02040704(0);
+
+            // AND ZERO THE SESSION CLOCK, which is what makes the two worlds
+            // DETERMINISTIC REPLICAS rather than merely input-synchronised.
+            //
+            // Derived from the ROM, not invented. data_020a1040+0 is the comms
+            // frame counter; src/func_0203df40.c:65 ticks it once per frame and
+            // src/func_0203ea5c.c:419 slaves it to the PARENT's value whenever a
+            // peer disagrees. It is a local counter continuously converged onto
+            // a session one. src/func_0203db64.c:59 -- the ROM's session-start
+            // path -- ZEROES the whole 0x24 record, counter included, so both
+            // consoles enter a session from the same clock.
+            //
+            // WHY IT DECIDES DETERMINISM, and this is the part that is not
+            // obvious: that counter is the ROM's ONLY non-constant random seed.
+            // _ZN5Stage13InitResourcesEv.cpp:424 seeds the world RNG with
+            // func_0203dad4(), which is `return data_020a1040`, and :427 picks
+            // the VS star order as func_0203dad4() % 6. Two consoles that seed
+            // from their own free-running counters get a different RNG stream
+            // and a different star order -- two different worlds being fed
+            // identical inputs, which is exactly the shape of "the two
+            // characters fall asleep at different times".
+            //
+            // The port burns a console-local number of frames before the join
+            // (boot time differs), so without this each side arrives at the
+            // level with its own count. Zeroing here is the ROM's own session
+            // reset, applied at the point the port stands in for the menu.
+            data_020a1040_word()[0] = 0;
+
+            // THE WORLD RNG, seeded the way the ROM seeds it. The port
+            // hand-rolls the boot and skips Stage::InitResources, so the seed
+            // has been sitting at its static-init value (1, from
+            // src/__sinit_02074e44.c:9) forever. That is IDENTICAL on both
+            // consoles and so has never caused a desync -- it is right by
+            // accident rather than by construction, and the accident ends the
+            // moment anything reseeds. Do what :424 does, from the counter that
+            // was just made common.
+            data_0209e650[0] = (int)data_020a1040_word()[0];
             std::fprintf(stderr,
                          "[comms:conductor] session up after %d turns: link=%d "
                          "slot=%d players=%d -- seated data_020a0f10 = %d and "

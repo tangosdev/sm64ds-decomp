@@ -194,6 +194,16 @@ function Start-Instance {
     # which is what input-isolation and one-way-link rungs are made of.
     $inj = if ($Tag -eq "P1") { $env:MP3_INJECT_P1 } else { $env:MP3_INJECT_P2 }
     if ($inj) { $psi.EnvironmentVariables["SM64DS_COMMS_INJECT"] = $inj }
+    # run mg16 lane MP4: the state-sync knobs, forwarded past the SM64DS_* scrub
+    # above. The scrub is right -- a proof run must not inherit another lane's
+    # knobs -- so anything a rung needs has to be named here deliberately, which
+    # is also a readable list of what the rungs are allowed to vary.
+    foreach ($k in @("SM64DS_SYNC", "SM64DS_SYNC_HZ", "SM64DS_SYNC_LERP",
+                     "SM64DS_SYNC_SNAP", "SM64DS_SYNC_REPORT",
+                     "SM64DS_SYNC_FORCE_V1", "SM64DS_SYNC_DROP")) {
+        $v = (Get-Item -Path ("env:" + $k) -ErrorAction SilentlyContinue).Value
+        if ($v) { $psi.EnvironmentVariables[$k] = $v }
+    }
     $psi.EnvironmentVariables["SM64DS_NO_DIALOG"]   = "1"
     $psi.EnvironmentVariables["TEMP"]               = (Join-Path $d "tmp")
     $psi.EnvironmentVariables["TMP"]                = (Join-Path $d "tmp")

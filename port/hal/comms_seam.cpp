@@ -50,6 +50,10 @@ bool comms_set_transport(const CommsTransport *t) {
     if (!t->open || !t->close || !t->become_parent || !t->become_child ||
         !t->state || !t->slot || !t->player_count || !t->exchange ||
         !t->peer_block || !t->poll || !t->abandon) {
+        /* v2's send_aux/recv_aux are deliberately NOT in this list: they are
+           the optional half of the extension, and a v1 transport that predates
+           them leaves them null and must still install. Everything above is a
+           v1 entry and stays required. */
         std::fprintf(stderr, "[comms] transport '%s' REFUSED: an entry is null. "
                      "Every entry of CommsTransport is required.\n",
                      t->name ? t->name : "(unnamed)");
