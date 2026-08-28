@@ -12,22 +12,30 @@ defect that made the rule necessary.
 ## The rule
 
 **Compare selftest BMPs byte-exact only between builds whose `.dsstate` section
-lands at the same base address.** If the bases differ, the comparison says nothing.
+lands at the same base address with the same interior layout.** An equal base is
+necessary and not sufficient (the doctrine block in `port/tools/battery.py`,
+measured 2026-08-16): an insertion inside `.dsstate` shifts every hosted global
+past it while leaving the section base exactly where it was, and the frame follows
+the addresses. If base or span differ, the comparison says nothing.
 
 `.dsstate` is the PE section holding the hosted DS globals (`hal/dsstate_seg.cpp`
 brackets it with the `dsstate_lo` / `dsstate_hi` sentinels). Any change that grows
 port code or data past a 4 KB page boundary moves that base, and a naive byte
 compare then reports a difference with nothing wrong in the change. The difference
 looks exactly like a rendering regression: a handful of pixels, plausible colours,
-in a plausible place.
+in a plausible place. A change that adds or grows a hosted global moves the
+interior instead, to the same effect, with no base movement to flag it.
 
-To compare across a base change, pad the smaller build with an inert file-scope
-`.data` blob in 4 KB steps, outside any DSSTATE bracket, until the bases agree, then
-compare. Read the base from `dumpbin /headers`, or from the layout line the selftest
-prints beside the BMP.
+To compare across a layout change, pad the smaller build with an inert file-scope
+`.data` blob in 4 KB steps, outside any DSSTATE bracket, until base and span both
+agree, then compare. Read both from the `dsstate_guard` line the link prints, or
+from the layout line the selftest prints beside the BMP. Verify any pad is actually
+present in the .obj or the map before trusting what it measures; the retired row
+below is what happens otherwise.
 
-Do not answer a base-shift failure by adopting a pixel budget. A tolerance would hide
-the class of defect described below, which is what the gate exists to catch.
+Do not answer a base- or span-shift failure by adopting a pixel budget. A tolerance
+would hide the class of defect described below, which is what the gate exists to
+catch.
 
 ## The measurement that established it
 
@@ -37,9 +45,15 @@ all reaching an identical final player position (-4915200, 2805556, 9342995):
 | build | `.dsstate` base | BMP md5 |
 |---|---|---|
 | base as-is | 0x9ee000 | eb32dcab491562c27348aad32273cd8a |
-| base + 16B inert `.bss` | 0x9ee000 | eb32dcab491562c27348aad32273cd8a |
+| base + 16B inert `.bss` (retired) | 0x9ee000 | eb32dcab491562c27348aad32273cd8a |
 | base + 4KB inert `.data` | 0x9ef000 | 518ba22ae2604117409491e0c4f38056 |
 | base + 8KB inert `.data` | 0x9f0000 | 15fde8a893d010d8d46e3c7dc284ac47 |
+
+The `.bss` row is retired as a null result (measured 2026-08-16, recorded in
+`battery.py`): a volatile `.bss` pad is dropped by the compiler, absent from the
+recompiled .obj and not merely from the map, so that build was the base build under
+another name and its row measures nothing. Check any pad for presence in the .obj
+or the map before believing what it measures.
 
 Padding used: `extern "C" __declspec(dllexport) unsigned char rev_pad_data[4096] = {1};`
 

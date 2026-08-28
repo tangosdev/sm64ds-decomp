@@ -1,6 +1,6 @@
+//cpp
 // @symbol _ZN14BlueCoinSwitch13InitResourcesEv
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
-//cpp
 // @symbol _ZN14BlueCoinSwitch13InitResourcesEv
 /* recovered: named members + shared header, real C++ method
  *
