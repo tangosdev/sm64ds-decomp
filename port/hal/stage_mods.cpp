@@ -154,7 +154,66 @@
    into the level -- so a short entrance section cannot be refused here, and
    an editor that trims one below what the boot indexes will walk the loader
    off the end of its own array. Standard and simple sub-tables have no such
-   rule: both loop from zero to count and a section of any length is safe. */
+   rule: both loop from zero to count and a section of any length is safe.
+
+   ---- SECTION TYPE 0xF0: STAGE PROPERTIES ---------------------------------
+
+   A properties section does not name a sub-table at all. It is scope 0xFF,
+   type 0xF0, star 0, reserved 0, a u16 count, then count FOUR-byte records:
+
+       u8 field   u8 value   u16 pad (must be 0)
+
+   Field 0 is the skybox. Value 0 means no skybox and 1..11 are the ROM's own
+   sky ids. An unknown FIELD id refuses the whole file, which is the same
+   never-half-apply law the rest of this file runs on and is the reason the
+   field space can grow later without a new section type: a build that predates
+   a field says so and serves stock rather than applying the half it knows.
+
+   WHERE THE SKYBOX ACTUALLY LIVES, derived off the matched TUs and then
+   checked against the ROM's own bytes, because the format note this was
+   written from said "+0x78" and that is an offset in the level header FILE,
+   not in the record the game reads.
+
+     src/_ZN5Stage11GetSkyboxIDEv.c is the whole of the read:
+
+         extern int data_0209f340[];
+         int _ZN5Stage11GetSkyboxIDEv(void){
+           unsigned int *p=*(unsigned int**)data_0209f340;
+           return (p[6] >> 4) & 0x1f;
+         }
+
+     data_0209f340 holds the CURRENT LVL_Overlay pointer -- hal/level_boot.cpp
+     :3075 sets it to the very pointer this file is handed, and the ROM sets it
+     from data_02092208[level] at src/_ZN5Stage13InitResourcesEv.cpp:360. So
+     p is the LVL_Overlay and p[6] is the WORD AT +0x18. The skybox is bits
+     4..8 of that word.
+
+     THE FIELD IS FIVE BITS AND IT CROSSES A BYTE BOUNDARY. Bit 8 is the low
+     bit of the byte at +0x19, so this is a read-modify-write of the whole
+     32-bit word and not a byte poke. Writing one byte would leave bit 8 as
+     the level had it and turn a requested id 3 into 19.
+
+     Checked against extracted/arm9_dec.bin and the overlay images rather than
+     believed: ov009's LVL_Overlay (0x02112bdc, level 1) and ov014's
+     (0x02113434, level 6) both carry 0x0000001f at +0x18, which is skybox 1 --
+     and port/tests/walk_window.cpp:6152 independently says the castle grounds
+     sky is id 1. The two agree.
+
+   WHY 1..11 IS THE CEILING. Stage::LoadSkybox indexes data_02075620 at
+   skyboxID - 1 (src/_ZN5Stage10LoadSkyboxEv.c:26). That table runs to the next
+   symbol at 0x02075638, so it is twelve u16 slots, and the ROM's bytes are
+   2040..2050 in the first eleven and ZERO in the twelfth. Eleven real vrbox
+   handles, then a slot that would hand Model::LoadAndSetFile file 0. The ROM's
+   own mask is 0x1f, so the hardware would carry 12..31 straight off the end of
+   that table; this file refuses them instead.
+
+   WHEN IT LANDS. Stage::InitResources runs its loaders in one order
+   (src/_ZN5Stage13InitResourcesEv.cpp): :361 LoadModel, :363
+   LoadClsnAndObjects, :388 LoadTextureTransformers, :389 LoadSkybox. The
+   object tables this file already rewrites are read at :363 and the skybox id
+   is read at :389, so a skybox patch made in the same mount window as the
+   object patch is not merely early enough, it is LATER-consumed than the edit
+   this file has always made. */
 
 #include <cstdio>
 #include <cstdlib>
@@ -179,6 +238,11 @@ struct LvlOverlay {
     u8 *subTables;          /* 0x10  LVL_SubTbl[], stride 0x0c */
     u8 subCount;            /* 0x14 */
     u8 flags;               /* 0x15 */
+    u8 pad16[2];            /* 0x16 */
+    /* 0x18. Stage::GetSkyboxID reads this as p[6] and takes bits 4..8; the
+       rest of the word belongs to the level and is never written here.
+       hal/level_boot.cpp's PortLvlOverlay carries the same word as unk18. */
+    u32 settings;
 };
 
 /* One 8-byte descriptor out of an ObjTable's entry array. */
@@ -199,6 +263,21 @@ struct ObjTable {
 
 const unsigned SCOPE_MISC = 0xFF;
 
+/* The properties section. Not a sub-loader index: 0xF0 is outside the ROM's
+   five-bit sub-table kind entirely, which is what lets it share the section
+   header without ever colliding with a real sub-table type. */
+const unsigned TYPE_PROPS = 0xF0;
+const int PROPS_RECSIZE = 4;
+
+/* Property field ids. One so far; the space grows here rather than by adding
+   section types. */
+const unsigned FIELD_SKYBOX = 0;
+const unsigned SKYBOX_MAX = 11;     /* data_02075620 holds eleven vrbox handles */
+
+/* Where the skybox sits inside the LVL_Overlay's settings word. */
+const u32 SKYBOX_SHIFT = 4;
+const u32 SKYBOX_MASK = 0x1Fu << SKYBOX_SHIFT;
+
 /* Record size for a sub-loader index, 0 for one this build does not write.
    Refusing an unknown type is the point: the ROM has fifteen sub-loaders and
    this build has read the record shape off exactly three of them. Writing a
@@ -213,12 +292,31 @@ int record_size(unsigned type)
     }
 }
 
+/* The size of one record in a section of `type`, properties included. Every
+   bounds check in the loader goes through this so a properties section is
+   accounted for in the file walk exactly like any other. */
+int section_recsize(unsigned type)
+{
+    if (type == TYPE_PROPS)
+        return PROPS_RECSIZE;
+    return record_size(type);
+}
+
 const char *type_name(unsigned type)
 {
     switch (type) {
     case 0:  return "standard";
     case 1:  return "entrance";
     case 5:  return "simple";
+    case TYPE_PROPS: return "properties";
+    default: return "unknown";
+    }
+}
+
+const char *field_name(unsigned field)
+{
+    switch (field) {
+    case FIELD_SKYBOX: return "skybox";
     default: return "unknown";
     }
 }
@@ -250,6 +348,10 @@ u32 g_blob_len;
 int g_blob_level;
 u32 g_nsection;
 char g_shown[1024];
+/* Which stage-property fields the file has already set, so a field named twice
+   anywhere in it is refused rather than resolved by ordering. Indexed by the
+   record's field byte, so it covers the whole 0..255 space a file can spell. */
+u8 g_seen_field[256];
 
 u16 rd16(const u8 *p, u32 at) { return (u16)(p[at] | (p[at + 1] << 8)); }
 short rds16(const u8 *p, u32 at) { return (short)rd16(p, at); }
@@ -351,6 +453,7 @@ void stage_mod_load(void)
     g_nsection = rd16(g_blob, 6);
 
     /* Walk every section header and prove the whole file is accounted for. */
+    std::memset(g_seen_field, 0, sizeof g_seen_field);
     cur = 8;
     for (s = 0; s < g_nsection; ++s) {
         unsigned scope, type, star, reserved, count;
@@ -370,12 +473,35 @@ void stage_mod_load(void)
         star = g_blob[cur + 2];
         reserved = g_blob[cur + 3];
         count = rd16(g_blob, cur + 4);
-        rs = record_size(type);
+        rs = section_recsize(type);
         if (!rs) {
             std::snprintf(msg, sizeof msg,
                           "%s section %u names sub-table type %u, and this "
-                          "build only writes 0 standard, 1 entrance and 5 "
-                          "simple", g_shown, s, type);
+                          "build only writes 0 standard, 1 entrance, 5 simple "
+                          "and 240 stage properties", g_shown, s, type);
+            release();
+            refuse(msg);
+            return;
+        }
+        /* A properties section is addressed to the level rather than to one of
+           its sub-tables, so the two key bytes that name a sub-table have
+           exactly one legal spelling. Refusing anything else keeps a future
+           reader from having to guess what an editor meant by "area 3's
+           properties", which is not a thing. */
+        if (type == TYPE_PROPS && scope != SCOPE_MISC) {
+            std::snprintf(msg, sizeof msg,
+                          "%s section %u is a stage-properties section with "
+                          "scope %u, and stage properties belong to the level, "
+                          "so their scope is 255", g_shown, s, scope);
+            release();
+            refuse(msg);
+            return;
+        }
+        if (type == TYPE_PROPS && star != 0) {
+            std::snprintf(msg, sizeof msg,
+                          "%s section %u is a stage-properties section with "
+                          "star %u, and stage properties are not per-mission, "
+                          "so their star is 0", g_shown, s, star);
             release();
             refuse(msg);
             return;
@@ -431,6 +557,69 @@ void stage_mod_load(void)
             release();
             refuse(msg);
             return;
+        }
+        /* PROPERTY RECORDS ARE VALIDATED HERE, in the file pass, because
+           nothing about them depends on the level: a field id and a value are
+           either ones this build knows or they are not. Doing it here means an
+           editor's mistake is refused before a level is even mounted, and it
+           means apply_sections cannot fail on a properties section at all. */
+        if (type == TYPE_PROPS) {
+            unsigned r;
+            for (r = 0; r < count; ++r) {
+                const u8 *rec = g_blob + cur + 6 + r * PROPS_RECSIZE;
+                unsigned field = rec[0];
+                unsigned value = rec[1];
+                unsigned pad = rd16(rec, 2);
+
+                if (pad != 0) {
+                    std::snprintf(msg, sizeof msg,
+                                  "%s section %u property %u has %u in its "
+                                  "padding and this build only reads 0 there",
+                                  g_shown, s, r, pad);
+                    release();
+                    refuse(msg);
+                    return;
+                }
+                /* THE UNKNOWN FIELD IS THE WHOLE POINT OF THE RULE. A build
+                   that skipped a field it did not implement would apply the
+                   half of someone's level it understood and silently drop the
+                   rest, which is the one outcome this file exists to prevent.
+                   Refusing means a newer file meets an older build with a
+                   message instead of a mystery. */
+                if (field != FIELD_SKYBOX) {
+                    std::snprintf(msg, sizeof msg,
+                                  "%s section %u property %u sets stage field "
+                                  "%u and this build only knows field 0, the "
+                                  "skybox", g_shown, s, r, field);
+                    release();
+                    refuse(msg);
+                    return;
+                }
+                if (value > SKYBOX_MAX) {
+                    std::snprintf(msg, sizeof msg,
+                                  "%s section %u asks for skybox %u, and the "
+                                  "game has 0 for none and 1 to %u for the "
+                                  "vrbox skies", g_shown, s, value,
+                                  SKYBOX_MAX);
+                    release();
+                    refuse(msg);
+                    return;
+                }
+                /* One field, one answer. A scalar property named twice is a
+                   file that does not know what it wants, and quietly taking
+                   the last record would make which one won depend on the
+                   writer's ordering. */
+                if (g_seen_field[field]) {
+                    std::snprintf(msg, sizeof msg,
+                                  "%s sets the %s more than once, and a stage "
+                                  "property has one value", g_shown,
+                                  field_name(field));
+                    release();
+                    refuse(msg);
+                    return;
+                }
+                g_seen_field[field] = 1;
+            }
         }
         cur += 6 + need;
     }
@@ -553,9 +742,28 @@ void apply_sections(LvlOverlay *ovl, int level_id)
         unsigned type = g_blob[cur + 1];
         unsigned star = g_blob[cur + 2];
         unsigned count = rd16(g_blob, cur + 4);
-        u32 need = count * (u32)record_size(type);
+        u32 need = count * (u32)section_recsize(type);
         const char *why = 0;
-        ObjSubTable *d = find_descriptor(ovl, scope, star, type, &why);
+        ObjSubTable *d;
+
+        /* A properties section resolves against nothing: it names no
+           sub-table, spends no arena, and every record in it was already
+           proved legal by the file pass. So it cannot fail here, which is
+           what lets it ride the same two-pass commit without weakening the
+           all-or-nothing guarantee. */
+        if (type == TYPE_PROPS) {
+            plan[s].desc = 0;
+            plan[s].src = g_blob + cur + 6;
+            plan[s].bytes = need;
+            plan[s].count = (u16)count;
+            plan[s].scope = (u8)scope;
+            plan[s].star = (u8)star;
+            plan[s].type = (u8)type;
+            cur += 6 + need;
+            continue;
+        }
+
+        d = find_descriptor(ovl, scope, star, type, &why);
 
         if (!d) {
             g_arena_used = arena_mark;
@@ -597,8 +805,34 @@ void apply_sections(LvlOverlay *ovl, int level_id)
     g_arena_used = arena_mark;
     for (s = 0; s < g_nsection; ++s) {
         u32 need = plan[s].bytes;
-        u8 *dst = arena_take(need ? need : 4);
+        u8 *dst;
 
+        if (plan[s].type == TYPE_PROPS) {
+            unsigned r;
+            for (r = 0; r < plan[s].count; ++r) {
+                const u8 *rec = plan[s].src + r * PROPS_RECSIZE;
+                unsigned value = rec[1];
+                unsigned was;
+
+                /* rec[0] is FIELD_SKYBOX: the file pass refused every other
+                   field id, so there is nothing else this loop can be asked
+                   to write. */
+                was = (ovl->settings & SKYBOX_MASK) >> SKYBOX_SHIFT;
+                /* READ-MODIFY-WRITE OF THE WORD, not a byte poke. The field is
+                   five bits at 4..8, so it straddles the +0x18/+0x19 boundary
+                   and a byte write would leave bit 8 as the level had it. The
+                   other twenty-seven bits are the level's and are preserved
+                   exactly. */
+                ovl->settings = (ovl->settings & ~SKYBOX_MASK)
+                              | ((u32)value << SKYBOX_SHIFT);
+                std::fprintf(stderr, "[mods] StageMod: level %d skybox %u -> "
+                                     "%u%s\n", level_id, was, value,
+                             value ? "" : " (none)");
+            }
+            continue;
+        }
+
+        dst = arena_take(need ? need : 4);
         if (need)
             std::memcpy(dst, plan[s].src, need);
         /* The kind byte is left exactly as the ROM wrote it: the sub-loader
@@ -705,6 +939,19 @@ void dump_level_tables(int level_id, LvlOverlay *ovl)
         return;
     std::fprintf(stderr, "[lvldump] level %d: subCount %u flags 0x%02x\n",
                  level_id, ovl->subCount, ovl->flags);
+    /* The stage properties, read back through the SAME word Stage::GetSkyboxID
+       will read, after any edit has been applied. That is what makes it a
+       proof instrument as well as the way an editor learns the stock value:
+       the number printed here is the number the game is about to use. The
+       whole settings word rides along at dump level 2 because the other
+       twenty-seven bits are the level's and a properties edit must be seen not
+       to have moved them. */
+    std::fprintf(stderr, "[lvldump] level %d properties: skybox %u\n",
+                 level_id,
+                 (unsigned)((ovl->settings & SKYBOX_MASK) >> SKYBOX_SHIFT));
+    if (dump_level() >= 2)
+        std::fprintf(stderr, "[lvldump] level %d settings word: 0x%08x\n",
+                     level_id, (unsigned)ovl->settings);
     dump_table(level_id, SCOPE_MISC, (ObjTable *)ovl->objTable);
     for (a = 0; a < ovl->subCount; ++a)
         dump_table(level_id, a, scope_table(ovl, a));
