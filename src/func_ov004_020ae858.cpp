@@ -9,7 +9,7 @@ int func_ov004_020b8f18(void *c);
 int GetGameLanguage(void);
 int func_02053200(int x);
 int func_ov004_020aea78(void *a, void *b, void *c, void *d);
-void _ZN12dEnemyBase_c12KillByAttackER8dActor_c(void *self, int a1, int a2, int a3);
+void func_ov004_020aea30(void *self, int a1, int a2, int a3);
 }
 
 extern int *data_ov004_020bc020[];
@@ -78,12 +78,12 @@ extern "C" void func_ov004_020ae858(char *self)
             } while (v != 0xffff);
 
             pos = tbl[i];
-            _ZN12dEnemyBase_c12KillByAttackER8dActor_c((void *)data_ov006_021346bc, pos[0], pos[1], zero0);
+            func_ov004_020aea30((void *)data_ov006_021346bc, pos[0], pos[1], zero0);
         } else {
             s16 *pos = tbl[i];
             char *ep = (char *)extra[i];
-            _ZN12dEnemyBase_c12KillByAttackER8dActor_c((void *)ep, pos[0], pos[1], zero1);
-            _ZN12dEnemyBase_c12KillByAttackER8dActor_c((void *)data_ov006_021346bc, pos[0], pos[1], zero2);
+            func_ov004_020aea30((void *)ep, pos[0], pos[1], zero1);
+            func_ov004_020aea30((void *)data_ov006_021346bc, pos[0], pos[1], zero2);
         }
     }
 }

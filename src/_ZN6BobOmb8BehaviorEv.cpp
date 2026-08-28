@@ -21,7 +21,7 @@ extern void _ZN5dCc_c5ClearEv(void*);
 extern void _ZN5dCc_c6UpdateEv(void*);
 extern void func_ov102_0214b03c(void*);
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned int);
-extern void func_ov002_020ada40(void*,void*,void*,unsigned int);
+extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void*,void*,void*,unsigned int);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void*,void*);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void*,void*,unsigned int);
 extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void*);
@@ -85,7 +85,7 @@ int BobOmb::Behavior()
                 v[0] = -0x2000;
                 v[1] = 0;
                 v[2] = 0;
-                func_ov002_020ada40(this, v, other, 0x32000);
+                _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(this, v, other, 0x32000);
                 _ZN8dActor_c9UpdatePosEP5dCc_c(this, (char *)&mdCc_c);
                 _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(this, (char *)&mWithMeshClsn, 0);
                 _ZN5dCc_c5ClearEv((char *)&mdCc_c);

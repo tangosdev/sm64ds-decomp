@@ -1,14 +1,14 @@
 //cpp
 // @symbol _ZN8PathLiftD1Ev
-/* recovered: real C++ destructor -- the compiler emits the whole body
- *
- * One array cleanup and dBgActor_c's two members, in reverse declaration order.
- * The array at 0x320 is Model[3]: the ROM destroys it with
- * __destroy_arr(ptr, 3, 0x50, _ZN5ModelD1Ev), where 0x50 is sizeof(Model) and
- * the element destructor is a name the tree already had.
+/* PathLift's destructor is defined INLINE in include/PathLift.h, so that
+ * subclasses inline its cleanup the way the ROM's daObjPathLift_c and
+ * daObjRcCarpet_c do. The vtable still needs an out-of-line address for slot
+ * 0, and this uncalled helper is what makes mwcc materialise it; objisolate
+ * keeps the D1 variant this file is bound to and discards the helper.
  */
 #include "PathLift.h"
 
-PathLift::~PathLift()
+void PathLift_EmitDestructor(PathLift *p)
 {
+    p->~PathLift();
 }
