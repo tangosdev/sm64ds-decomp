@@ -271,6 +271,9 @@ struct Packet {
 };
 
 enum : int { kPacketBytes = 0x90 };
+// run mg16 lane MP4: the aux channel's tag, 'S','Y','N','1' as it sits on
+// the wire. Distinct from kMagic so one socket can carry both kinds.
+const unsigned kAuxMagicLE = 0x314e5953u;
 
 static_assert(sizeof(Packet) == kPacketBytes,
               "the loopback wire packet grew padding; the length check is the "
@@ -304,6 +307,20 @@ bool     g_installed  = false;
 bool     g_open       = false;
 SOCKET   g_sock       = INVALID_SOCKET;
 int      g_slot       = 0;
+
+// run mg16 lane MP4: THE AUX QUEUE, one message deep.
+//
+// ONE DEEP ON PURPOSE. Aux carries the HOST's latest view of the world, so a
+// backlog is worthless by definition -- if two arrive before the game reads
+// one, the older is stale and the newer supersedes it completely. Queueing
+// them would deliver a correction toward a position the host has already left.
+// Overwriting is the correct policy for state, and it is the opposite of what
+// the input records need (every one of those matters, which is why they have a
+// four-deep cache). The two channels share a socket and nothing else.
+enum : int { kAuxMaxBytes = 256 };
+unsigned char g_aux[kAuxMaxBytes];
+int      g_aux_len    = 0;
+unsigned long long g_aux_superseded = 0;
 int      g_port_base  = kCommsLoopbackPortBase;
 int      g_my_port    = 0;
 int      g_pinned     = -1;          // SM64DS_COMMS_SLOT, or -1
@@ -496,12 +513,36 @@ void on_child_packet(const Packet &p, const sockaddr_in &from) {
 void drain() {
     if (g_sock == INVALID_SOCKET) return;
     for (;;) {
-        Packet p;
+        /* ONE BUFFER, TWO MESSAGE KINDS. Run mg16 lane MP4: the aux channel
+           shares this socket (one NAT mapping for internet play, ruled at the
+           MP4 gate), so the read has to be big enough for either and the kinds
+           are told apart by their first four bytes AFTER the read.
+
+           THE OLD SHAPE WOULD HAVE MISCOUNTED THEM. This read asked for
+           exactly kPacketBytes and charged anything else to g_dropped, so every
+           aux message would have arrived, been discarded, and shown up in the
+           carrier's drop counter -- a channel that works while its own
+           instrument says the wire is failing. */
+        union { Packet p; unsigned char raw[kAuxMaxBytes]; } msg;
         sockaddr_in from;
         int fromlen = (int)sizeof from;
-        const int n = WS.recvfrom(g_sock, (char *)&p, kPacketBytes, 0,
-                                  (sockaddr *)&from, &fromlen);
+        const int n = WS.recvfrom(g_sock, (char *)msg.raw, (int)sizeof msg.raw,
+                                  0, (sockaddr *)&from, &fromlen);
         if (n < 0) break;                       // WSAEWOULDBLOCK, or nothing
+
+        if (n >= 4 && std::memcmp(msg.raw, &kAuxMagicLE, 4) == 0) {
+            /* Newest wins; see the queue's own note. A superseded message is
+               counted rather than silently forgotten, because "sync looks
+               laggy" and "sync is being outrun by its own send rate" are
+               different problems and the counter is what tells them apart. */
+            if (g_aux_len != 0) ++g_aux_superseded;
+            const int keep = n < kAuxMaxBytes ? n : kAuxMaxBytes;
+            std::memcpy(g_aux, msg.raw, (size_t)keep);
+            g_aux_len = keep;
+            continue;
+        }
+
+        Packet &p = msg.p;
         if (n != kPacketBytes) { ++g_dropped; continue; }
         if (std::memcmp(p.magic, kMagic, 4) != 0) { ++g_dropped; continue; }
         if (p.version != kWireVersion)          { ++g_dropped; continue; }
@@ -853,6 +894,61 @@ void lb_poll() { service(); }
 // waiting for this one frame. What goes is the ROUND: the latched blocks and
 // the mask that says which of them are fresh, so the next exchange() starts
 // clean instead of trying to finish a frame the game has forgotten.
+// ===========================================================================
+// THE AUX CHANNEL -- contract v2. Run mg16 lane MP4.
+//
+// ONE SOCKET, MULTIPLEXED BY MESSAGE KIND, ruled at the MP4 gate. The input
+// records and the aux messages share g_sock and are told apart by their first
+// four bytes. The reasoning is internet play: one socket is one NAT mapping,
+// and a second port per instance multiplies hole-punching. Head-of-line
+// blocking is not a real risk at these sizes -- a four-player sync message is
+// 136 bytes, nothing fragments, and UDP datagrams are independent.
+//
+// THE ORDERING RULE IS A REQUIREMENT, NOT ADVICE: the input record goes out
+// FIRST on every pump and aux after it, always. The lockstep is what the game
+// blocks on. Enforced by construction here -- lb_send_aux is only ever called
+// from the sync layer, which runs after the conductor's exchange has returned
+// -- and asserted from outside by rung SY6, which measures that input round
+// times with sync on match sync off within noise.
+//
+// A ONE-DATAGRAM RULE, and it is why this returns 0 rather than fragmenting: a
+// message that does not fit is a bug in the caller, and silently splitting it
+// would turn an unreliable-but-whole channel into an unreliable-and-partial
+// one, which is much harder to reason about.
+// ===========================================================================
+int lb_send_aux(const void *buf, int len) {
+    if (!buf || len <= 0) return 0;
+    if (g_sock == INVALID_SOCKET) return 0;
+    if (len > kAuxMaxBytes) return 0;          // one datagram or nothing
+
+    int sent = 0;
+    for (int i = 0; i < kCommsMaxPlayers; ++i) {
+        if (i == g_slot) continue;
+        if ((g_live & (1u << i)) == 0) continue;
+        /* slot_addr, not a hand-built sockaddr: this file reaches ws2_32
+           through the WS wrapper and its own hton helpers ON PURPOSE. A STATIC
+           ws2_32 import breaks the port's fixed-range reservation, because the
+           loader resolves imports before the TLS callback that claims
+           0x02000000 -- banked in MP2's traps, and htonl/htons are imports like
+           any other. Reusing the existing helper keeps that property. */
+        sockaddr_in to = slot_addr(i);
+        const int n = WS.sendto(g_sock, (const char *)buf, len, 0,
+                                (sockaddr *)&to, (int)sizeof to);
+        if (n == len) sent = len;
+    }
+    return sent;
+}
+
+int lb_recv_aux(void *buf, int cap) {
+    if (!buf || cap <= 0) return 0;
+    service();                      // drain; aux messages land in the queue
+    if (g_aux_len <= 0) return 0;
+    const int n = g_aux_len < cap ? g_aux_len : cap;
+    std::memcpy(buf, g_aux, (size_t)n);
+    g_aux_len = 0;
+    return n;
+}
+
 void lb_abandon() {
     if (g_latched_mask == 0 && g_stage_mask == 0) return;   // nothing open
     std::fprintf(stderr,
@@ -878,6 +974,9 @@ const CommsTransport kLoopback = {
     lb_peer_block,
     lb_poll,
     lb_abandon,
+    lb_send_aux,
+    lb_recv_aux,
+    kCommsContractV2,
 };
 
 }  // namespace

@@ -6663,6 +6663,10 @@ endforeach()
 # conflict and a lane's TUs silently leave the link, which links fine and runs
 # wrong).
 list(APPEND SLICE_COMMS_SOURCES hal/comms_conductor.cpp)
+# run mg16 lane MP4: the host-authoritative state-sync layer. Port-side
+# only -- nothing in src/ knows it exists -- and OFF unless SM64DS_SYNC=1,
+# so linking it changes no behaviour. See runs/mg16/status/MP4-DESIGN.md.
+list(APPEND SLICE_COMMS_SOURCES hal/comms_sync.cpp)
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_mp3.txt" SLICE_MP3_LINES)
 foreach(line IN LISTS SLICE_MP3_LINES)
     string(STRIP "${line}" line)

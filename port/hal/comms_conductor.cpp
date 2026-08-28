@@ -654,6 +654,14 @@ void comms_publish_pad(unsigned held) {
     static bool checked = false;
     if (!checked) {
         checked = true;
+        /* run mg16 lane MP4: decide once whether the state-sync layer runs.
+           HERE rather than in the frame loop, and the reason is a measurement:
+           the frame-loop site sat inside `if (real_camera)` on the level path
+           and never logged at all, in solo OR in a session. This one-shot is
+           reached on every path that has input -- the band guard beside it
+           proves so in every playlog -- and it runs after the transport
+           install, which is what sync_decide needs to look at. */
+        sync_decide();
         if (port_comms_conductor_check_layout())
             std::fprintf(stderr,
                          "  [conductor] bands OK -- A spans 0x20 at "

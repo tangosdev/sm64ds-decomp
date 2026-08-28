@@ -92,7 +92,7 @@ def span(rs, key):
     return max(v) - min(v)
 
 
-def play_session(name, seconds, inj_p=None, inj_c=None):
+def play_session(name, seconds, inj_p=None, inj_c=None, extra_env=None):
     """A REAL play-mode two-window session, minimized and muted, bounded by time.
 
     Driven through the two-window script rather than around it, so what is
@@ -116,6 +116,9 @@ def play_session(name, seconds, inj_p=None, inj_c=None):
         env["MP3_INJECT_P1"] = inj_p
     if inj_c:
         env["MP3_INJECT_P2"] = inj_c
+    # Forwarded to BOTH instances by the script's own environment inheritance.
+    for k, v in (extra_env or {}).items():
+        env[k] = v
     log = os.path.join(d, "script.log")
     with open(log, "wb") as f:
         subprocess.run(cmd, cwd=d, stdout=f, stderr=subprocess.STDOUT,
@@ -451,8 +454,95 @@ def rungP5(seconds):
     return ok
 
 
+# ---------------------------------------------------------------------------
+# THE MP4 STATE-SYNC CHECKPOINT RUNGS.
+#
+# Ordered by the gate: SY4 and SY0 run BEFORE any sync code sends anything.
+# That order is the point. SY4 proves the layer costs nothing when off, which is
+# what makes "the DS path is the shipped default" a measured claim rather than a
+# stated intention; SY0 proves the refusal path works, so a transport that
+# cannot carry sync degrades to the DS path loudly instead of half-enabling.
+# ---------------------------------------------------------------------------
+SYNCLINE = re.compile(r"^\[sync\] (.*)$", re.M)
+
+
+def rungSY4(seconds):
+    """SYNC OFF IS UNCHANGED -- the regression gate for the whole layer.
+
+    A new TU is in the link and a new call is in the frame loop. With
+    SM64DS_SYNC unset, neither may cost anything: the solo selftest's POSITION
+    must be identical to the pre-MP4 baseline, which is the same signal rung 1
+    has always used and the only one that is layout-independent.
+
+    Asserted here rather than trusted to rung 1 because rung 1 predates the
+    layer: this rung names MP4 as the thing on trial.
+    """
+    d = os.path.join(OUT, "sy4_off")
+    os.makedirs(os.path.join(d, "tmp"), exist_ok=True)
+    env = M.env_base(ROOT, d, "sy4")
+    env["SM64DS_WINDOW_SELFTEST"] = "300"
+    log = os.path.join(d, "run.log")
+    rc = M.run_one(os.path.join(ROOT, "build", "port", "walk_window.exe"),
+                   d, env, log)
+    t = M.text(log)
+    pos = re.search(r"^selftest: \d+ frames, pos=\(([^)]*)\)", t, re.M)
+    got = pos.group(1) if pos else "MISSING"
+    want = M.PRECHANGE["300"]["pos"]
+    ok = M.verdict(rc == 0 and got == want,
+                   "rungSY4 SYNC OFF IS BYTE-IDENTICAL TO THE BASELINE | "
+                   "pos=(%s), expected (%s). The sync TU is linked and its "
+                   "decide() runs every frame; with the knob unset neither may "
+                   "move the game." % (got, want))
+    quiet = "[sync]" not in t
+    ok &= M.verdict(quiet,
+                    "rungSY4 and the layer is SILENT when off | no [sync] line "
+                    "in a 300-frame solo run (a default-off layer that "
+                    "announces itself is still a behaviour change)")
+    return ok
+
+
+def rungSY0(seconds):
+    """A v1 TRANSPORT IS REFUSED, LOUDLY, AND THE SESSION STILL WORKS.
+
+    The contract's v2 entries are optional, so the SEAM installs a v1 transport
+    happily -- this layer is the only place the difference is noticed. The
+    failure mode being guarded against is a half-enabled sync: a session where
+    remote bodies mysteriously never correct and nothing says why.
+
+    SM64DS_SYNC_FORCE_V1 makes the carrier present as v1. It is test
+    scaffolding and hal/comms_sync.cpp says so at the knob: the only transport
+    in this tree is v2, and the alternative to a knob is shipping a second
+    crippled carrier, which is more code and less honest.
+
+    THE SECOND HALF IS THE IMPORTANT HALF: refused must mean DEGRADED, not
+    broken. The two instances must still join and run the DS lockstep.
+    """
+    t1, t2, _ = play_session("sy0_refuse", seconds,
+                             extra_env={"SM64DS_SYNC": "1",
+                                        "SM64DS_SYNC_FORCE_V1": "1"})
+    ok = True
+    ok &= isolated("rungSY0", t1)
+    refusal = [m.group(1) for m in SYNCLINE.finditer(t1) if "REFUSED" in m.group(1)]
+    ok &= M.verdict(bool(refusal),
+                    "rungSY0 THE v1 TRANSPORT WAS REFUSED WITH A REASON | %s"
+                    % (refusal[0][:150] if refusal else "NO [sync] REFUSED LINE"))
+    ok &= M.verdict(len(refusal) <= 1,
+                    "rungSY0 and said so ONCE, not every frame | %d refusal "
+                    "lines in the whole session" % len(refusal))
+    # And the session is still a session.
+    l1, l2 = LINK.search(t1), LINK.search(t2)
+    ok &= M.verdict(bool(l1) and bool(l2),
+                    "rungSY0 REFUSED MEANS DEGRADED, NOT BROKEN | both "
+                    "instances still joined and ran the DS lockstep")
+    a1, b1 = rows(t1, 0), rows(t1, 1)
+    ok &= M.verdict(bool(a1) and bool(b1),
+                    "rungSY0 and both bodies are still in the host's world | "
+                    "slot0 rows=%d slot1 rows=%d" % (len(a1), len(b1)))
+    return ok
+
+
 RUNGS = [("P0", rungP0), ("P1", rungP1), ("P2", rungP2), ("P3", rungP3),
-         ("P4", rungP4), ("P5", rungP5)]
+         ("P4", rungP4), ("P5", rungP5), ("SY4", rungSY4), ("SY0", rungSY0)]
 
 
 def main(argv):

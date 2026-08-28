@@ -305,7 +305,63 @@ struct CommsTransport {
     // has nothing to reset may leave this empty, but it may not be null --
     // every entry here is required, and a null one is refused at install.
     void (*abandon)();
+
+    // =======================================================================
+    // CONTRACT v2. Run mg16 lane MP4.
+    //
+    // THE FREEZE IS NOT BROKEN, IT IS SUPERSEDED ON A DECLARED BOUNDARY. v1
+    // above is exactly what it was and a v1 transport still works: both entries
+    // below may be NULL and comms_set_transport accepts null FOR THESE TWO
+    // SPECIFICALLY, where it refuses null for every v1 entry.
+    //
+    // WHY AN EXTENSION AND NOT A REINTERPRETATION. The obvious move is to carry
+    // sync state inside the existing exchange(): it already moves bytes both
+    // ways. It cannot. exchange() moves EXACTLY kCommsBlockBytes and this
+    // header's own wire-format section forbids a transport from reinterpreting
+    // any of them; the only slack is the 17-byte game payload at +0x0F, which
+    // is the ROM's shared per-player flag channel (GetPlayerFlagByte reads it)
+    // and is far too small regardless. Widening the block would change the
+    // ROM's own wire format, which is the one thing the seam exists to keep.
+    //
+    // THE AUX CHANNEL IS UNRELIABLE AND UNORDERED. It is UDP under the loopback
+    // carrier today and UDP over the internet later. It carries WHOLE messages,
+    // never fragments -- a sender that cannot fit a message in one datagram
+    // must not send it. There is no ack, no retransmit, and no ordering
+    // guarantee; a lost aux message is a slightly staler remote body and
+    // nothing else. Anything that needs reliability does not belong here.
+    //
+    // ONE SOCKET, MULTIPLEXED BY MESSAGE KIND, for loopback and internet alike.
+    // Ruled at the MP4 gate and the reasoning belongs with the contract:
+    // internet play means NAT traversal, one socket is one NAT mapping, and a
+    // second port per instance multiplies the hole-punching problem. Head-of-
+    // line blocking is not a real risk at these sizes -- a four-player sync
+    // message is 136 bytes, nothing fragments, and UDP datagrams are
+    // independent on the wire.
+    //
+    // THE ORDERING RULE THAT COMES WITH IT, and it is a requirement on the
+    // TRANSPORT, not advice: the input record is sent FIRST on every pump and
+    // aux after it, always. The lockstep is what the game blocks on; aux is
+    // what makes it look right. rung SY6 asserts the consequence by measuring
+    // that input round times with sync on match sync off within noise.
+    // =======================================================================
+
+    // Send one whole aux message. Returns the bytes accepted, or 0 if the
+    // message could not be sent as a single datagram. NULL if unsupported.
+    int (*send_aux)(const void *buf, int len);
+
+    // Receive one whole aux message into `buf`, at most `cap` bytes. Returns
+    // the byte count, or 0 when nothing is waiting. Never blocks. NULL if
+    // unsupported.
+    int (*recv_aux)(void *buf, int cap);
+
+    // 1 or 2. A transport that leaves this 0 is read as 1, so a v1 transport
+    // written before this field existed is still correctly described by its
+    // own zeroed storage.
+    unsigned contract_version;
 };
+
+// What a transport must report to carry the sync layer.
+enum : unsigned { kCommsContractV1 = 1, kCommsContractV2 = 2 };
 
 // Install a transport, or null for solo. Returns false and installs nothing
 // if any entry is null.
@@ -426,6 +482,28 @@ int vs_player_count();
 // instrument rungs 9 to 11 read their verdicts off, and it deliberately reads
 // the GAME'S OWN actor array rather than any wire counter.
 void vs_probe(int frame);
+
+// ---------------------------------------------------------------------------
+// HOST-AUTHORITATIVE STATE SYNC (run mg16 lane MP4, hal/comms_sync.cpp).
+//
+// A PORT LAYER, NOT A ROM ONE. It sits above the seam and outside src/
+// entirely: the DS input-lockstep remains the shipped default and runs
+// unchanged whether this is on or off. Design and its honest limits are in
+// runs/mg16/status/MP4-DESIGN.md.
+// ---------------------------------------------------------------------------
+struct SyncStats {
+    unsigned long long sent, recvd, dropped, applied, lerps, snaps;
+    int worst_error;          // Fix12, the largest correction ever needed
+};
+
+// Decide whether the layer runs this session. Requires SM64DS_SYNC=1, an
+// installed transport, and a transport reporting contract v2 WITH both aux
+// entries. Anything else falls back to the DS path, loudly for the v2 case.
+void sync_decide();
+bool sync_enabled();
+bool sync_forced_v1();
+SyncStats sync_stats();
+void sync_report(const char *tag);
 
 }  // namespace port
 
