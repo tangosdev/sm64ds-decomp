@@ -71,21 +71,9 @@ src/RickshawPlatformBdw_Spawn.c:
     complete
     .text start:0x021115f4 end:0x02111630
 
-src/_ZN17daObjKm1_Dorifu_cD1Ev.cpp:
+src/actors/daObjKm1_Dorifu_c.cpp:
     complete
-    .text start:0x02111630 end:0x021116b0
-
-src/_ZN17daObjKm1_Dorifu_cD0Ev.cpp:
-    complete
-    .text start:0x021116b0 end:0x02111744
-
-src/_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111744 end:0x02111758
-
-src/_ZN17daObjKm1_Dorifu_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111758 end:0x0211176c
+    .text start:0x02111630 end:0x0211176c
 
 src/StairsBdw_Spawn.cpp:
     complete

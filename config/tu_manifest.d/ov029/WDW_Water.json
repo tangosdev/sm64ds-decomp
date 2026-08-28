@@ -1,9 +1,9 @@
 {
   "id": "ov029/WDW_Water",
   "module": "ov029",
-  "source": "src_tu/actors/WDW_Water.cpp",
+  "source": "src/actors/WDW_Water.cpp",
   "promoted_source": "src/actors/WDW_Water.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x21121a4..0x2112630, 9 function(s), from build/tu_map.json (tools/tu_map.py)",

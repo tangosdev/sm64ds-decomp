@@ -52,7 +52,7 @@ struct Number : dActor_c {
        itself for destruction. [_ZN6Number8BehaviorEv.cpp] */
     u8  mState;            /* 0x14e */
 
-    virtual ~Number();
+    virtual ~Number() {}
 
     virtual s32 InitResources();
     virtual s32 CleanupResources();

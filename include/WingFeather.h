@@ -56,7 +56,7 @@ struct WingFeather : dActor_c {
         _ZN11WingFeather6RenderEv.cpp] */
     u8  mLifeTimer;            /* 0x384 */
 
-    virtual ~WingFeather();
+    virtual ~WingFeather() {}
 
     virtual s32 InitResources();        /* slot  0 */
     virtual s32 CleanupResources();     /* slot  3 */

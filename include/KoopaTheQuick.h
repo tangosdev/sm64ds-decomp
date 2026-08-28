@@ -66,7 +66,7 @@ struct KoopaTheQuick : dEnemyBase_c {
     PathPtr                      mPathPtr;              /* 0x3d8 */
 
     /* --- vtable --- */
-    virtual ~KoopaTheQuick();
+    virtual ~KoopaTheQuick() {}
 
     int Behavior();
     int CleanupResources();

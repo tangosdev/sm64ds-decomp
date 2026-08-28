@@ -8,7 +8,7 @@ by recommending that the next one deliberately avoid that shape, so the first
 whole-range link is not confounded by the destructor-emission-order problem it
 found. This is that candidate.
 
-**What it is not:** a build change. `src_tu/stage/LevelObjects.cpp` is not
+**What it is not:** a build change. `src/stage/LevelObjects.cpp` is not
 enrolled, `config/**/delinks.txt` is untouched, and the seventeen one-function
 sources under `src/` remain the sole enrolled owners of
 `0x020fe190..0x020fea4c`. No `rombuild.py`, no `eligible.py`, no link.
@@ -259,7 +259,7 @@ easy to get backwards:
 ```text
 compiled section order = ROM address order = reverse of SOURCE order
   =>  the ORIGINAL file's reading order = reverse of the ROM's addresses
-  =>  the original file read exactly the way src_tu/stage/LevelObjects.cpp
+  =>  the original file read exactly the way src/stage/LevelObjects.cpp
       reads top-to-bottom
 ```
 
@@ -627,7 +627,7 @@ efforts will need reconciling — a useful first test for it would be whether
 
 | Path | |
 | --- | --- |
-| `src_tu/stage/LevelObjects.cpp` | new — the shadow TU, not enrolled |
+| `src/stage/LevelObjects.cpp` | new — the shadow TU, not enrolled |
 | `config/tu_manifest.d/` | modified — one entry appended, `ov002/LevelObjects`, status `text-verified` |
 | `notes/tu-reconstruction-pilot-2-report.md` | new — this file |
 

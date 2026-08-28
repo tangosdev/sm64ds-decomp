@@ -58,7 +58,7 @@ struct HeaveHo : dEnemyBase_c {
     u8  pad_427[0x5];
 
     /* --- vtable --- */
-    virtual ~HeaveHo();
+    virtual ~HeaveHo() {}
 
     int Behavior();
     int InitResources();

@@ -1,9 +1,9 @@
 {
   "id": "ov029/CageLift",
   "module": "ov029",
-  "source": "src_tu/actors/CageLift.cpp",
+  "source": "src/actors/CageLift.cpp",
   "promoted_source": "src/actors/CageLift.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x2111ac4..0x2111ea4, 9 function(s), from build/tu_map.json (tools/tu_map.py)",

@@ -46,7 +46,7 @@ struct Spiny : dActor_c {
     u8  mDespawnTimer;            /* 0x3e9 */
     u8  pad_3ea[0x2];
 
-    virtual ~Spiny();            /* slots 16 (D1), 17 (D0) */
+    virtual ~Spiny() {}            /* slots 16 (D1), 17 (D0) */
 
     virtual int   OnYoshiTryEat();               /* slot 18 */
     virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */

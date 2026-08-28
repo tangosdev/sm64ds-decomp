@@ -36,7 +36,7 @@
 
 struct RickshawPlatformBs : daObjDorifu_c {
     /* --- vtable --- */
-    virtual ~RickshawPlatformBs();     /* slots 16 (D1), 17 (D0) */
+    virtual ~RickshawPlatformBs() {}     /* slots 16 (D1), 17 (D0) */
 
     int CleanupResources();            /* slot  3 */
     int InitResources();               /* slot  0 */

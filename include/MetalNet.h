@@ -21,7 +21,7 @@ struct MetalNet : dBgActor_c {
     /* no fields of its own */
 
     /* --- vtable --- */
-    virtual ~MetalNet();
+    virtual ~MetalNet() {}
 
     int Behavior();
     int CleanupResources();

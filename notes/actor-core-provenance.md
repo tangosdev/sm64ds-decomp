@@ -15,7 +15,7 @@ See also `notes/actor-vtables.md`, `notes/mwccarm-codegen.md`, `notes/actor-nami
 `fBase_c`'s code is one contiguous run, `0x02043444..0x02043f4c`, 25 functions.
 
 That range is a correction. The banner used to say `0x02043494..0x02043e04` and
-both ends were wrong; `src_tu/actors/ActorBase.cpp` reconciled it against the
+both ends were wrong; `src/actors/ActorBase.cpp` reconciled it against the
 cartridge while rebuilding the translation unit.
 
 * `0x02043444` is the real start: `_ZN7fBase_cnwEj`, this class's own
@@ -92,7 +92,7 @@ virtuals still take 18..30 from their declaration order, because new slots appen
 after the inherited table.
 
 What makes that safe is NOT that the destructor lives in a C translation unit --
-`src/_ZN8dActor_cD1Ev.cpp` and `_ZN8dActor_cD2Ev.cpp` are C++ and do include the
+`src/actors/Actor.cpp` and `_ZN8dActor_cD2Ev.cpp` are C++ and do include the
 header; only `_ZN8dActor_cD0Ev.cpp` is C. The invariant is that all three define
 `extern "C"` free functions under the mangled names and none defines
 `dActor_c::~dActor_c`, so no TU is ever the key function's definition.
@@ -101,7 +101,7 @@ Stated precisely: the key function -- the first non-inline virtual declared --
 must never be defined as a real method in any translation unit. Declaring the
 destructor first pins that role to TUs which by construction never will.
 `include/fBase_c.h` reaches the same end differently: it does declare
-`InitResources` (slot 0) in-class, but `src/_ZN7fBase_c13InitResourcesEv.cpp`
+`InitResources` (slot 0) in-class, but `src/actors/ActorBase.cpp`
 deliberately defines it as an `extern "C"` free function rather than a method. Do
 not "fix" that file into a real method, and do not remove the declaration from
 `fBase_c.h` -- removing it would delete slot 0 and shift all 18 slots.
@@ -125,7 +125,7 @@ D1 body plus those instructions:
     fBase_c::~fBase_c [D0]  0x02043d78  0x44 = D1's 0x30 + 0x14
     dBase_c::~dBase_c [D0]  0x02013ea4  0x38 = D1's 0x24 + 0x14
 
-Compiled without the declaration, `src_tu/actors/ActorDerived.cpp`'s D0 came out the
+Compiled without the declaration, `src/actors/ActorDerived.cpp`'s D0 came out the
 wrong SIZE (`999 word(s) differ`); with it, 5/5 MATCH.
 
 Why it is declared on `dActor_c` as well as on `fBase_c`: mwcc inlines
@@ -157,7 +157,7 @@ once, for every caller at the same time.
 
 CW 1.2 rejects an in-class declaration of `operator new` ("illegal 'operator'
 declaration"), and it is neither virtual nor layout-affecting, so
-`src/_ZN7fBase_cnwEj.cpp` defines it under its mangled name instead.
+`src/actors/ActorBase.cpp` defines it under its mangled name instead.
 
 ## 7. `dActor_c` field widths -- the `0x080..0x0ab` block
 

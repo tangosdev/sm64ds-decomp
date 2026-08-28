@@ -52,7 +52,7 @@ struct daObjCtMecha05_c : dBgActor_c {
     ShadowModel mShadowModel;         /* 0x33c */
 
     /* --- vtable --- */
-    virtual ~daObjCtMecha05_c();
+    virtual ~daObjCtMecha05_c() {}
 
     int CleanupResources();
     int InitResources();

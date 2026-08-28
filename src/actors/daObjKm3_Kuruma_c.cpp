@@ -1,5 +1,5 @@
 //cpp
-/* Manually curated shadow translation unit.
+/* Manually curated translation unit, reconstructed and promoted.
  * ov047/daObjKm3_Kuruma_c  (4 function(s))
  *
  * CANONICAL. The readable class and member definitions below are what the ROM

@@ -1,9 +1,9 @@
 {
   "id": "ov009/MetalNet",
   "module": "ov009",
-  "source": "src_tu/actors/MetalNet.cpp",
+  "source": "src/actors/MetalNet.cpp",
   "promoted_source": "src/actors/MetalNet.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x2111dc4..0x2112078, 8 function(s), from build/tu_map.json (tools/tu_map.py)",

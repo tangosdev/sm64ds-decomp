@@ -63,7 +63,7 @@ struct Chuckya : dEnemyBase_c {
     s32                          unk_434;               /* 0x434 */
 
     /* --- vtable --- */
-    virtual ~Chuckya();
+    virtual ~Chuckya() {}
 
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 

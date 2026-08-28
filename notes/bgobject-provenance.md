@@ -432,7 +432,7 @@ Two actors share this class: `FortressWallBreakable_Spawn` (actorID 0x30) and
 | Offset | Name | Evidence |
 | --- | --- | --- |
 | 0x31e | `mVariant` | `InitResources` sets 0 when `actorID == 0x30` and 1 otherwise, then uses it to index all three ov079 file tables — `data_ov079_02128058` (model), `data_ov079_0212805c` (KCL), `data_ov079_02128060` (CLPS block). `CleanupResources` indexes the first two again to `Release()` them. |
-| 0x31f | `mStarId` | `param1 & 0xff`, with `0xff` read as 0. `Behavior` passes it as `dActor_c::Spawn(0xb2, mStarId \| 0x40, …)`; actor 0xb2 is the star and its spawn word is `starID \| (howToSpawnStar << 4)` (`src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp`), so the low nibble this contributes is a star index and the `0x40` is that call's spawn style. |
+| 0x31f | `mStarId` | `param1 & 0xff`, with `0xff` read as 0. `Behavior` passes it as `dActor_c::Spawn(0xb2, mStarId \| 0x40, …)`; actor 0xb2 is the star and its spawn word is `starID \| (howToSpawnStar << 4)` (`src/actors/Actor.cpp`), so the low nibble this contributes is a star index and the `0x40` is that call's spawn style. |
 | 0x321 | `mBroken` | `Kill()` sets it on actorID 0x30 *instead of* calling `MarkForDestruction` — the breakable wall survives its own Kill. `Render` draws nothing while it is set, and `Behavior` runs the break sequence (disable the collider, wait for the sound, spawn the star, destroy) only while it is set. |
 | 0x322 | `mBreakSoundState` | `Behavior` passes `&mBreakSoundState` as the `u16 *state` argument of `Sound::PlaySecretSound(dActor_c *, u16 *)` and spawns the star on the frame that returns nonzero. **Declared `u16`, not the `u8` the header had**: the parameter type is `u16 *`, and the byte at 0x323 was the struct's tail padding, so the field span now lands exactly on the ROM's 0x324 instead of being rounded up to it. |
 
@@ -466,7 +466,7 @@ mismatching, 106/106 exact) and `tools/check_src_tu_compiles.py` (72/72).
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x4dc | `mStarActor` | `src/_ZN9UkikiCage13InitResourcesEv.cpp` stores what `dActor_c::Spawn(0xb2, (param1 & 0xf) or 0x50, ...)` returned; actor `0xb2` is the star (`src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp`). `src/_ZN9UkikiCage8BehaviorEv.cpp` writes that actor's `+0x5c/+0x60/+0x64` — `dActor_c::mPosX/Y/Z` — from the cage's own position plus `0x3c000` in Y on every falling frame. Declared type left `s32`; the store is still a cast. |
+| 0x4dc | `mStarActor` | `src/_ZN9UkikiCage13InitResourcesEv.cpp` stores what `dActor_c::Spawn(0xb2, (param1 & 0xf) or 0x50, ...)` returned; actor `0xb2` is the star (`src/actors/Actor.cpp`). `src/_ZN9UkikiCage8BehaviorEv.cpp` writes that actor's `+0x5c/+0x60/+0x64` — `dActor_c::mPosX/Y/Z` — from the cage's own position plus `0x3c000` in Y on every falling frame. Declared type left `s32`; the store is still a cast. |
 
 In the `#else` C twin, ten offsets already named at exactly those offsets in
 `include/dActor_c.h` were repointed to those names: `mPosX/Y/Z` (0x05c),
@@ -707,7 +707,7 @@ In the C twin, `0x00c` becomes `actorID` and `0x08e` `mAngleY`.
 | `ChainChompFence` (ov060) | 0x31e | `mDisabled` | both `Behavior` and `Render` return immediately while it is nonzero, and nothing else in a matched body touches it. |
 | `LavaPlank` (ov022) | 0x324 | `mPhaseAngle` | `InitResources` seeds it from `mAngleX`; `Behavior` adds `0x400` per frame and uses `(u16)mPhaseAngle >> 4` as the sine-table index. |
 
-`PathLift::mAfterClsnRan` also carried into `src/_ZN15daObjRcCarpet_c8BehaviorEv.cpp`,
+`PathLift::mAfterClsnRan` also carried into `src/actors/daObjRcCarpet_c.cpp`,
 a subclass that reads the inherited field — the kind of cross-file breakage a header
 rename in this family causes, and which `tools/rombuild.py` catches while
 `build_pin.verify` on the renamed class alone does not.

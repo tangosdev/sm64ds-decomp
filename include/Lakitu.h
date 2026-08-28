@@ -53,7 +53,7 @@ struct Lakitu : dActor_c {
     s32 unk_410;            /* 0x410 */
     u8  pad_414[0xc];
 
-    virtual ~Lakitu();            /* slots 16 (D1), 17 (D0) */
+    virtual ~Lakitu() {}            /* slots 16 (D1), 17 (D0) */
 
     virtual int   OnYoshiTryEat();               /* slot 18 */
     virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */

@@ -32,7 +32,7 @@
 
 struct daObjKm1_Dorifu_c : daObjDorifu_c {
     /* --- vtable --- */
-    virtual ~daObjKm1_Dorifu_c();      /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjKm1_Dorifu_c() {}      /* slots 16 (D1), 17 (D0) */
 
     int CleanupResources();            /* slot  3 */
     int InitResources();               /* slot  0 */

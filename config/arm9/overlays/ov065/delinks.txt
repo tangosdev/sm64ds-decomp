@@ -420,77 +420,13 @@ src/TtcConveyorBeltSmall_Spawn.c:
     complete
     .text start:0x0211ab20 end:0x0211ab60
 
-src/_ZN16daObjCtMecha05_cD1Ev.cpp:
+src/actors/daObjCtMecha05_c.cpp:
     complete
-    .text start:0x0211ab60 end:0x0211abac
+    .text start:0x0211ab60 end:0x0211b360
 
-src/_ZN16daObjCtMecha05_cD0Ev.cpp:
+src/actors/TTC_MovingBar.cpp:
     complete
-    .text start:0x0211abac end:0x0211ac0c
-
-src/func_ov065_0211ac0c.c:
-    complete
-    .text start:0x0211ac0c end:0x0211ad04
-
-src/_ZN16daObjCtMecha05_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211ad04 end:0x0211ad48
-
-src/_ZN16daObjCtMecha05_c6RenderEv.cpp:
-    complete
-    .text start:0x0211ad48 end:0x0211ad70
-
-src/func_ov065_0211ad70.c:
-    complete
-    .text start:0x0211ad70 end:0x0211ae08
-
-src/_ZN16daObjCtMecha05_c8BehaviorEv.cpp:
-    complete
-    .text start:0x0211ae08 end:0x0211b1d4
-
-src/_ZN16daObjCtMecha05_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211b1d4 end:0x0211b328
-
-src/TTC_MovingBar_Spawn.c:
-    complete
-    .text start:0x0211b328 end:0x0211b360
-
-src/_ZN13TTC_MovingBarD1Ev.cpp:
-    complete
-    .text start:0x0211b360 end:0x0211b3ac
-
-src/_ZN13TTC_MovingBarD0Ev.cpp:
-    complete
-    .text start:0x0211b3ac end:0x0211b40c
-
-src/func_ov065_0211b40c.c:
-    complete
-    .text start:0x0211b40c end:0x0211b47c
-
-src/_ZN13TTC_MovingBar16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x0211b47c end:0x0211b4e0
-
-src/_ZN13TTC_MovingBar6RenderEv.cpp:
-    complete
-    .text start:0x0211b4e0 end:0x0211b508
-
-src/_ZN13TTC_MovingBar8BehaviorEv.cpp:
-    complete
-    .text start:0x0211b508 end:0x0211b640
-
-src/_ZN13TTC_MovingBar13InitResourcesEv.cpp:
-    complete
-    .text start:0x0211b640 end:0x0211b780
-
-src/TtcRotatingTriangle_Spawn.c:
-    complete
-    .text start:0x0211b780 end:0x0211b7b8
-
-src/TtcRotatingGear_Spawn.c:
-    complete
-    .text start:0x0211b7b8 end:0x0211b7f0
+    .text start:0x0211b360 end:0x0211b7f0
 
 src/_ZN15TtcRotatingGearD1Ev.cpp:
     complete

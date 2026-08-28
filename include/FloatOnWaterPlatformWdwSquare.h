@@ -26,7 +26,7 @@
 
 struct FloatOnWaterPlatformWdwSquare : daObjFloatBoard_c {
     /* --- vtable --- */
-    virtual ~FloatOnWaterPlatformWdwSquare(); /* slots 16 (D1), 17 (D0) */
+    virtual ~FloatOnWaterPlatformWdwSquare() {} /* slots 16 (D1), 17 (D0) */
 
     int InitResources();               /* slot  0 */
 };

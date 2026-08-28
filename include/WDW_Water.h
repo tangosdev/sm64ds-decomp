@@ -31,7 +31,7 @@ struct WDW_Water : dBgActor_c {
     s32 mWaterHeight;                      /* 0x344 */
 
     /* --- vtable --- */
-    virtual ~WDW_Water();
+    virtual ~WDW_Water() {}
 
     int Behavior();
     int CleanupResources();
