@@ -10,7 +10,6 @@
 extern "C" {
 void _ZN10MemoryNode6TargetC1EPS_(struct MemoryNode::Target* t, struct MemoryNode* node);
 void MultiStore_Int(int val, void* dst, int len);
-int _ZN22ExpandingHeapAllocator8FreeNodeEP10MemoryNodePNS0_6TargetE(void* list, struct MemoryNode::Target* t);
 }
 
 static inline struct MemoryNode** GetList(void* t) { return (struct MemoryNode**)((char*)t + 0x24); }
@@ -78,7 +77,7 @@ u32 ExpandingHeapAllocator::Reallocate(void* ptrRaw, u32 size)
         tgt2.start = (char*)(size + (u32)ptr);
         tgt2.end = (char*)(node->size + ((u32)node + 0x10));
         node->size = size;
-        if (!_ZN22ExpandingHeapAllocator8FreeNodeEP10MemoryNodePNS0_6TargetE(list, &tgt2)) {
+        if (!FreeNode((MemoryNode*)list, &tgt2)) {
             node->size = blockSize;
         }
     }

@@ -70,15 +70,18 @@ struct ExpandingHeapAllocator : HeapAllocator {
     typedef void (*DeallocationFunction)(void*, ExpandingHeapAllocator*, u32);
     void* DeallocateAll(DeallocationFunction fn, u32 arg);
 
-    /* The node-list layer. These were the last five unmigratable methods of this class:
+    /* The node-list layer. These were the last five unmigrated methods of this class:
        their parameters mangle `P10MemoryNode` and `PNS0_6TargetE`, so they could not be
        declared as members until MemoryNode existed as a class with a nested Target --
        see include/MemoryNode.h.
 
-       Four are static by the arity test (declared parameters == body arguments, no room
-       for `this`); FreeNode declares two and takes three, so it is an instance method.
+       All five are static. That property is not encoded in an Itanium function name;
+       FreeNode's two exact callers settle it by passing only the list sentinel in r0 and
+       the Target in r1. Its old hand-spelled definition invented an unused r2 parameter
+       to preserve an assumed `this`, but the body never read it. A native two-parameter
+       static definition emits the same symbol and every retail instruction exactly.
 
-       NOTE the first parameter of the static four is typed MemoryNode* because that is
+       NOTE the first parameter of these helpers is typed MemoryNode* because that is
        what the ROM's mangled name says, but every caller passes the allocator's embedded
        node-list at `this + 0x24`, not a real node. The original evidently treated that
        list head as a sentinel node. The bodies cast it back to the shape they use; the
@@ -86,6 +89,7 @@ struct ExpandingHeapAllocator : HeapAllocator {
     static void*       CreateNode(MemoryNode::Target* extent, u16 tag);
     static void*       LinkNode(MemoryNode* list, MemoryNode* node, MemoryNode* prev);
     static void*       UnlinkNode(MemoryNode* list, MemoryNode* node);
+    static int         FreeNode(MemoryNode* list, MemoryNode::Target* extent);
 
     /* THE LAST PARAMETER IS u16, NOT u32, AND THE IMPORTED SYMBOL WAS WRONG. It ended
        `Pvjj`. Declared that way this member is ONE WORD off, at +0x10c:
@@ -116,10 +120,6 @@ struct ExpandingHeapAllocator : HeapAllocator {
     static void* AllocateNode(MemoryNode* list, MemoryNode* node, void* address,
                               u32 size, u16 fromHighEnd);
 
-    /* FreeNode is still not declared. The type no longer blocks it -- it would mangle
-       correctly now -- but it has not been attempted, and a declared-but-undefined
-       member is a landmine. It declares two parameters and takes three, so when it does
-       land it is an instance method. */
 #endif
 };
 
