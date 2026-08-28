@@ -30,6 +30,22 @@ namespace Sound {
    sources that call it. Declared here so callers stop hand-mangling the name. */
 void PlayBank3(u32 id, const Vector3 &pos);
 
+/* Sequence archive metadata returned by InfoSequenceEntry::GetWithID. The
+   recovered consumers account for every byte through playerNumber: fileId is
+   loaded as the sequence resource, bankId selects the instrument bank, volume
+   and channelPriority are installed on the player, and the final pair is passed
+   into the player-allocation path. */
+struct InfoSequenceEntry {
+    u32 fileId;
+    u16 bankId;
+    u8 volume;
+    u8 channelPriority;
+    u8 playerPriority;
+    u8 playerNumber;
+
+    static InfoSequenceEntry *GetWithID(u32 id);
+};
+
 struct Player {
     /* STATIC, and the bytes are what say so. A non-static member would take
      * `this` in r0; the ROM body multiplies r0 by 0x1c and uses it as a table
