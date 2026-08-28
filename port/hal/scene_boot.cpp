@@ -4152,7 +4152,27 @@ extern "C" void port_scene_layout_propose(void)
         return;
     proposed = 1;
     const int scene = port_scene_env_want();
-    hal_sub_screen_set_stacked(scene >= 0 && IsMinigameActorID((unsigned)scene));
+    /* THE TITLE IS STACKED TOO, run mg16 lane TITLE, on the owner's ruling
+       after judging the first journey captures: "looks good other than it
+       should be laid out dual screen like the minigames".
+
+       IsMinigameActorID stays exactly what it is -- the ROM's own predicate,
+       and the block above is right that the title is not a minigame by it.
+       What is being decided here is not "is this a minigame" but "is this
+       scene a TWO-SCREEN experience", and for the title the answer is yes on
+       the hardware's own terms: the artwork is on the top screen and the menu
+       the player touches is on the bottom. Rendering it into a corner inset
+       panel is the port's convenience for LEVELS, where the bottom screen is a
+       minimap and the corner is doing a job. On the title it throws away half
+       the presentation.
+
+       So the predicate is left alone and the title is named separately, which
+       also keeps the two reasons legible: a minigame is stacked because the
+       ROM says it is a minigame, and the title is stacked because it is a
+       two-screen scene. SM64DS_DUAL_SCREEN still overrides either way. */
+    const int two_screen = scene >= 0 &&
+                           (IsMinigameActorID((unsigned)scene) || scene == 1);
+    hal_sub_screen_set_stacked(two_screen);
 }
 
 /* How many frames the run was asked for, readable before begin() so a windowed
