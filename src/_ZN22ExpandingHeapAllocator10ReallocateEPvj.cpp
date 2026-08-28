@@ -1,5 +1,5 @@
 //cpp
-#include "MemoryNode.h"
+#include "ExpandingHeapAllocator.h"
 /* ExpandingHeapAllocator::Reallocate(void* ptr, u32 size) at 0x0204e1e8
  * Grows a block in place by swallowing the free node that directly follows it,
  * or shrinks it and hands the tail back to the free list.
@@ -9,15 +9,13 @@
  * low bit asks for freshly-gained bytes to be zero filled. */
 extern "C" {
 void _ZN10MemoryNode6TargetC1EPS_(struct MemoryNode::Target* t, struct MemoryNode* node);
-struct MemoryNode* _ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_(void* list, struct MemoryNode* node);
-struct MemoryNode* _ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt(struct MemoryNode::Target* t, u16 tag);
-void _ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_(void* list, struct MemoryNode* node, struct MemoryNode* prev);
 void MultiStore_Int(int val, void* dst, int len);
 int _ZN22ExpandingHeapAllocator8FreeNodeEP10MemoryNodePNS0_6TargetE(void* list, struct MemoryNode::Target* t);
+}
 
 static inline struct MemoryNode** GetList(void* t) { return (struct MemoryNode**)((char*)t + 0x24); }
 
-u32 _ZN22ExpandingHeapAllocator10ReallocateEPvj(void* thiz, char* ptr, u32 size)
+u32 ExpandingHeapAllocator::Reallocate(void* ptrRaw, u32 size)
 {
     struct MemoryNode::Target tgt;
     struct MemoryNode::Target tgt2;
@@ -26,10 +24,11 @@ u32 _ZN22ExpandingHeapAllocator10ReallocateEPvj(void* thiz, char* ptr, u32 size)
     u32 blockSize;
     struct MemoryNode* node;
     struct MemoryNode** list;
+    char* ptr = (char*)ptrRaw;
 
     node = (struct MemoryNode*)ptr;
     node = (struct MemoryNode*)((char*)node - 0x10);
-    list = GetList(thiz);
+    list = GetList(this);
     blockSize = node->size;
     size = (size + 3) & ~3u;
 
@@ -56,7 +55,7 @@ u32 _ZN22ExpandingHeapAllocator10ReallocateEPvj(void* thiz, char* ptr, u32 size)
          * this point changes mwccarm's slot coloring, while this compiler cannot
          * express placement new; keep the single typed constructor ABI seam. */
         _ZN10MemoryNode6TargetC1EPS_(&tgt, block);
-        prev = _ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_(list, block);
+        prev = (MemoryNode*)UnlinkNode((MemoryNode*)list, block);
         oldStart = tgt.start;
         tgt.start = (char*)(size + (u32)ptr);
         if ((u32)(tgt.end - tgt.start) < 0x10) {
@@ -64,11 +63,11 @@ u32 _ZN22ExpandingHeapAllocator10ReallocateEPvj(void* thiz, char* ptr, u32 size)
         }
         node->size = tgt.start - ptr;
         if ((u32)(tgt.end - tgt.start) >= 0x10) {
-            struct MemoryNode* newNode = _ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt(&tgt, 0x4652);
-            _ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_(list, newNode, prev);
+            struct MemoryNode* newNode = (MemoryNode*)CreateNode(&tgt, 0x4652);
+            LinkNode((MemoryNode*)list, newNode, prev);
         }
         {
-            u16 opt = (u16)(*(u32*)((char*)thiz + 0x20) & 0xff);
+            u16 opt = (u16)(mFlags & 0xff);
             u32 len = (u32)(tgt.start - oldStart);
             if (opt & 1) {
                 fill = 0;
@@ -85,6 +84,4 @@ u32 _ZN22ExpandingHeapAllocator10ReallocateEPvj(void* thiz, char* ptr, u32 size)
     }
 
     return node->size;
-}
-
 }
