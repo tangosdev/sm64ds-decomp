@@ -1,53 +1,39 @@
 //cpp
 // @symbol _ZN13daObjEmmLog_c13InitResourcesEv
-// recovered name: daObjEmmLog_c_InitResources
-/* recovered: renamed to Class_Method */
-/* daObjEmmLog_c::InitResources - name recovered from the vtable slot it fills.
-   The body is a decompilation verified against the ROM, not an
-   inferred stub. */
-typedef int Fix12i;
-struct SharedFilePtr; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
-struct Model { int d; };
-struct ModelBase { int d; };
-struct dBgW_Kc { int d; };
-struct dBgW_KcMbg { int d; };
+#include "daObjEmmLog_c.h"
 
-extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr&);
-extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(ModelBase*, BMD_File*, int, int);
-extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
-extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
-extern "C" KCL_File* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(SharedFilePtr&);
+struct daObjEmmLog_c_Resources {
+    SharedFilePtr *model;
+    SharedFilePtr *collision;
+    CLPS_Block *clps;
+};
+
+extern daObjEmmLog_c_Resources data_ov052_021124d4;
+
+/* 2004/b56 homes the real Fix12<int>-by-value member form through a literal
+ * pool instead of passing the immediate found in the ROM. Keep this one ABI
+ * seam until the shared fixed-point compiler wall is solved. */
 extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    dBgW_KcMbg*, KCL_File*, const Matrix4x3&, Fix12i, short, CLPS_Block&);
+    dBgW_KcMbg *, KCL_File *, const Matrix4x3 *, Fix12i, s16, CLPS_Block *);
 
-struct DataT { SharedFilePtr* a; SharedFilePtr* b; CLPS_Block* c; };
-extern DataT data_ov052_021124d4;
-
-extern "C" int _ZN13daObjEmmLog_c13InitResourcesEv(char* thiz)
+int daObjEmmLog_c::InitResources()
 {
-    char* c = thiz;
-    {
-        BMD_File* bmd = _ZN5Model8LoadFileER13SharedFilePtr(*data_ov052_021124d4.a);
-        _ZN9ModelBase7SetFileEP8BMD_Fileii((ModelBase*)(c + 0xd4), bmd, 1, -1);
-    }
-    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
-    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
-    {
-        KCL_File* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*data_ov052_021124d4.b);
-        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            (dBgW_KcMbg*)(c + 0x124), kcl, *(const Matrix4x3*)(c + 0x2ec),
-            0x1000, *(short*)(c + 0x8e), *data_ov052_021124d4.c);
-    }
-    *(int*)(c + 0x320) = *(int*)(c + 0x60);
-    {
-        int v = *(int*)(c + 8);
-        int b = v & 0xff;
-        if (b == 0xff || v == 0) {
-            *(int*)(c + 0x324) = 0x64000;
-        } else {
-            *(int*)(c + 0x324) = b * 0xa000;
-        }
-    }
-    *(short*)(c + 0x31e) = *(short*)(c + 0x8c);
+    mModel.SetFile((BMD_File *)Model::LoadFile(*data_ov052_021124d4.model), 1, -1);
+    UpdateModelPosAndRotY();
+    UpdateClsnPosAndRot();
+
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        &mMeshCollider,
+        (KCL_File *)dBgW_Kc::LoadFile(*data_ov052_021124d4.collision),
+        &mClsnMat, 0x1000, mAngleY, data_ov052_021124d4.clps);
+
+    mBasePosY = mPosY;
+    u8 amplitude = param1 & 0xff;
+    if (amplitude == 0xff || param1 == 0)
+        mBobAmplitude = 0x64000;
+    else
+        mBobAmplitude = amplitude * 0xa000;
+
+    mSpinAngle = mAngleX;
     return 1;
 }

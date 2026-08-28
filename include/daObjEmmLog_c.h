@@ -7,11 +7,11 @@
  * No new virtual is added (Kill is inherited unmodified from dBgActor_c), so
  * the out-of-line destructor is this class's key function.
  *
- * SIZE 0x328, the literal the factory passes to operator new: dBgActor_c ends
- * 0x320 and this class adds exactly two plain s32 fields with no constructor
- * or destructor calls of their own -- InitResources (func_ov052_02111348)
- * writes both, Behavior (func_ov052_021112ac) reads both. Field NAMES are
- * placeholders. */
+ * SIZE 0x328, the literal the factory passes to operator new. dBgActor_c's
+ * final named field ends at 0x31e and the base rounds to 0x320, so this class
+ * reuses that tail padding for its spin angle before adding two s32 fields.
+ * InitResources seeds all three; Behavior advances the angle and reads the
+ * two words. */
 #ifndef DAOBJEMMLOG_C_H
 #define DAOBJEMMLOG_C_H
 
@@ -22,6 +22,7 @@
 #include "dBgActor_c.h"
 
 struct daObjEmmLog_c : dBgActor_c {
+    s16 mSpinAngle;         /* 0x31e -- seeded from mAngleX, += 0x200 per Behavior */
     s32 mBasePosY;          /* 0x320 -- InitResources copies mPosY; Behavior computes mPosY = mBasePosY + sine * mBobAmplitude */
     s32 mBobAmplitude;      /* 0x324 -- 0x64000, or the spawn byte * 0xa000 */
 
@@ -41,7 +42,8 @@ typedef char daObjEmmLog_c_size_must_be_0x328[sizeof(daObjEmmLog_c) == 0x328 ? 1
 struct daObjEmmLog_c {
     u8  pad_000[0x60];
     s32 mPosY;            /* 0x060 */
-    u8  pad_064[0x2bc];
+    u8  pad_064[0x2ba];
+    s16 mSpinAngle;         /* 0x31e */
     s32 mBasePosY;          /* 0x320 -- InitResources copies mPosY; Behavior computes mPosY = mBasePosY + sine * mBobAmplitude */
     s32 mBobAmplitude;      /* 0x324 -- 0x64000, or the spawn byte * 0xa000 */
 };
