@@ -40,14 +40,27 @@
 
 namespace Particle {
 
+struct System;
+
 struct SysTracker {
     /* Particle::SysTracker::Contents -- the live-system registry. Only its
        bucket array is reached from source; everything below it is opaque. */
     struct Contents {
-        u8    pad_000[0x708];
-        void *mBuckets[16];  /* 0x708 - chain heads, indexed by uniqueID & 0xf */
+        /* One live-system registry node. The two names are inferred; the
+           offsets are fixed by FindData (+0x00/+0x18) and FromUniqueID
+           (+0x0c). */
+        struct Entry {
+            u32 uniqueID;      /* 0x00 */
+            u8  pad_004[0x8];
+            System *system;    /* 0x0c */
+            u8  pad_010[0x8];
+            Entry *next;       /* 0x18 */
+        };
 
-        void *FindData(u32 uniqueID) const;
+        u8    pad_000[0x708];
+        Entry *mBuckets[16]; /* 0x708 - chain heads, indexed by uniqueID & 0xf */
+
+        Entry *FindData(u32 uniqueID) const;
     };
 
     void    *mResourceFile;  /* 0x000 */

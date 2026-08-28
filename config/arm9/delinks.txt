@@ -3694,7 +3694,7 @@ src/_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE.c:
     complete
     .text start:0x02022d80 end:0x02022e68
 
-src/_ZN8Particle6System12FromUniqueIDEj.c:
+src/_ZN8Particle6System12FromUniqueIDEj.cpp:
     complete
     .text start:0x02022e68 end:0x02022e98
 
