@@ -387,6 +387,14 @@ unsigned long long g_sent = 0, g_recvd = 0, g_dropped = 0;
 unsigned long long g_resends = 0, g_stale_serves = 0;
 // run mg16 lane MP3: how many rounds the game walked away from (HOLE 5).
 unsigned long long g_abandons = 0;
+// mp-sync-coopdx item 5: DELIBERATE LOCKSTEP LOSS, test scaffolding in the
+// SM64DS_SYNC_DROP class. Applied on the receive side to LOCKSTEP packets
+// only (aux has its own knob), so induced loss looks exactly like the wire
+// eating datagrams. This is the instrument that measured whether loss stalls
+// the lockstep at all on this carrier -- see the redundancy finding at the
+// bottom of this file.
+int g_test_drop_pct = 0;              // SM64DS_COMMS_DROP, 0..99
+unsigned long long g_test_drops = 0;
 
 bool g_wsa_up = false;
 
@@ -595,6 +603,17 @@ void drain() {
         if (n != kPacketBytes) { ++g_dropped; continue; }
         if (std::memcmp(p.magic, kMagic, 4) != 0) { ++g_dropped; continue; }
         if (p.version != kWireVersion)          { ++g_dropped; continue; }
+        if (g_test_drop_pct > 0) {
+            /* Deterministic-per-run LCG, same discipline as the sync layer's
+               drop knob: a proof that behaves differently every run is not a
+               proof. */
+            static unsigned r = 0x2468ace1u;
+            r = r * 1664525u + 1013904223u;
+            if ((int)((r >> 16) % 100u) < g_test_drop_pct) {
+                ++g_test_drops;
+                continue;
+            }
+        }
         ++g_recvd;
         if (g_role == kRoleParent) on_parent_packet(p, from);
         else                       on_child_packet(p, from);
@@ -1081,6 +1100,17 @@ bool comms_loopback_install_from_env() {
                           "of range; using %d\n", p, g_port_base);
     }
 
+    if (const char *d = std::getenv("SM64DS_COMMS_DROP")) {
+        int v = std::atoi(d);
+        if (v < 0) v = 0;
+        if (v > 99) v = 99;
+        g_test_drop_pct = v;
+        if (v > 0)
+            std::fprintf(stderr, "[comms:loopback] TEST SCAFFOLDING: dropping "
+                         "%d%% of received lockstep packets "
+                         "(SM64DS_COMMS_DROP)\n", v);
+    }
+
     if (const char *s = std::getenv("SM64DS_COMMS_SLOT")) {
         const int v = std::atoi(s);
         if (g_role != kRoleChild)
@@ -1156,12 +1186,14 @@ void comms_loopback_report(const char *tag) {
     const CommsLoopbackStats s = comms_loopback_stats();
     std::fprintf(stderr,
         "[loopback:%s] role=%s slot=%d port=%d live=0x%x round=%lu "
-        "sent=%llu recvd=%llu dropped=%llu resends=%llu stale=%llu\n",
+        "sent=%llu recvd=%llu dropped=%llu resends=%llu stale=%llu "
+        "testdrop=%llu\n",
         tag ? tag : "-",
         s.role == kRoleParent ? "parent" : (s.role == kRoleChild ? "child"
                                                                  : "none"),
         s.slot, s.port, s.live_mask, s.round,
-        s.sent, s.recvd, s.dropped, s.resends, s.stale_serves);
+        s.sent, s.recvd, s.dropped, s.resends, s.stale_serves,
+        g_test_drops);
 }
 
 }  // namespace port
@@ -1326,4 +1358,45 @@ void comms_loopback_report(const char *tag) {
 //   no opinion about that word, and moving it into CommsTransport would add a
 //   required entry with no implementation to give it. Propose closing gap 4 as
 //   "stays seam-owned", which is a decision rather than a change.
+// ===========================================================================
+//
+// ===========================================================================
+// THE REDUNDANCY FINDING (mp-sync-coopdx item 5): per-datagram round history
+// was SPECIFIED, MEASURED AGAINST, AND REFUSED. Read before reintroducing it.
+//
+// The adoption list called for each lockstep datagram to carry the last ~3
+// rounds' 0x20-byte blocks so a receiver could recover a missed round from
+// the next datagram instead of waiting a resend round trip -- the GGPO
+// family's input-redundancy trick, flagged in the spec's own honesty note as
+// standard lockstep netcode rather than anything sm64coopdx does.
+//
+// IT CANNOT HELP THIS PROTOCOL, structurally: the ROM's lockstep is
+// STOP-AND-WAIT. Nobody advances past an incomplete round -- the parent
+// completes round R only when every live child's R block is in, a child
+// leaves R only on the parent's R broadcast, and rollback (what lets GGPO
+// pipeline past a hole) is an explicit non-adoption because the ROM is the
+// contract. So every datagram this carrier sends carries, as its MAIN
+// payload, exactly the round its receiver is stuck on: the child republishes
+// its open round every kPublishResendMs, and the parent answers a stale
+// round with the cached broadcast. A history block bolted onto those
+// datagrams could never contain a round the main payload does not already
+// carry. Dead machinery by construction, not by tuning.
+//
+// MEASURED, not just argued -- SM64DS_COMMS_DROP is the instrument (receive-
+// side lockstep loss, deterministic, both instances), two-window sessions,
+// 40 s arms:
+//
+//   loss  0%   1216 rounds   resends  58   stale serves  55
+//   loss 10%   1212 rounds   resends 319   stale serves 189
+//   loss 20%   1170 rounds   resends 673   stale serves 325
+//
+// Twenty percent loss costs 3.8% of the round rate; the 4 ms republish and
+// the stale-serve cache heal every hole sub-frame, which is the "stall" the
+// item targeted not existing on this carrier. WHERE THE IDEA DOES APPLY: a
+// future internet carrier must back its republish off toward the RTT (a 4 ms
+// republish over the internet is flooding), and once the resend interval is
+// RTT-scaled, loss recovery costs a visible hitch -- the lever THERE is
+// spatial redundancy of the IN-FLIGHT round (send each datagram k times),
+// not history of past rounds, which stays structurally dead as long as the
+// lockstep is stop-and-wait.
 // ===========================================================================
