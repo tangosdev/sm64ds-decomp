@@ -8545,6 +8545,11 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # (LovesMeCharacter). Game-shaped targets only; every smoke keeps the
     # null hooks and stock file serving.
     hal/fs_mods.cpp
+    # SM64DS_STAGE_GEOM: a level's stage model and collision served out of an
+    # external folder. CHAINS onto the hook above rather than replacing it --
+    # its installer sits in .CRT$XCV so it runs after every ordinary one -- so
+    # it goes beside hal/fs_mods.cpp on the same targets and nowhere else.
+    hal/stage_geom.cpp
     # the scene's hand-drawn gap band and the band's per-scene continuity
     # table, both asked for at the same latch hal/screen_gap.cpp does
     hal/gap_art.cpp hal/gap_continuity.cpp
@@ -8742,6 +8747,11 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # (LovesMeCharacter). Game-shaped targets only; every smoke keeps the
     # null hooks and stock file serving.
     hal/fs_mods.cpp
+    # SM64DS_STAGE_GEOM: a level's stage model and collision served out of an
+    # external folder. CHAINS onto the hook above rather than replacing it --
+    # its installer sits in .CRT$XCV so it runs after every ordinary one -- so
+    # it goes beside hal/fs_mods.cpp on the same targets and nowhere else.
+    hal/stage_geom.cpp
     # the scene's hand-drawn gap band and the band's per-scene continuity
     # table, both asked for at the same latch hal/screen_gap.cpp does
     hal/gap_art.cpp hal/gap_continuity.cpp
