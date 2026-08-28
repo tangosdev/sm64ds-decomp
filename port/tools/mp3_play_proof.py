@@ -574,18 +574,25 @@ SYNC_ON = {"SM64DS_SYNC": "1", "SM64DS_SYNC_REPORT": "1"}
 def rungSY1(seconds):
     """THE LAYER RUNS END TO END. PLUMBING ONLY -- it does not test correction.
 
-    Sync on, both instances: the host must send, the child must receive and
-    apply to a REMOTE body, and the host must apply nothing. A run where the
-    layer is enabled and applied nothing is not a pass, it is a layer that did
-    not run, and the counters are what tell those apart.
+    Sync on, both instances: under per-body owner authority (mp-sync-coopdx
+    item 1) BOTH consoles must send their own body and BOTH must receive and
+    apply the peer's -- the wire corrects in both directions now. A run where
+    the layer is enabled and either direction applied nothing is not a pass,
+    it is half a layer, which is exactly the defect item 1 closed: before it,
+    the host's counters read recvd=0 applied=0 in every session and remote
+    bodies on the host's screen were never corrected at all. What must still
+    be zero is each console's correction of its OWN body, which rungSY2
+    asserts trajectory-for-trajectory.
 
     WHAT THIS RUNG DOES NOT ASSERT, said plainly because an earlier version of
     this docstring claimed it: that corrections are LERPs rather than snaps. It
     cannot, because over loopback neither ever happens -- worst error is about
     1.26 units against a 2.0 ignore threshold, so lerps=0 in every run and the
     2..60-unit band has never executed. Asserting lerps > 0 here would fail on a
-    correct build. The band needs induced LATENCY to reach, which is a tool
-    nobody has built; see the banner in hal/comms_sync.cpp.
+    correct build. The band needs induced LATENCY to reach, and that tool now
+    exists: SM64DS_SYNC_DELAY_MS (the mp-sync-coopdx item 6 rig; see the banner
+    in hal/comms_sync.cpp). This rung deliberately keeps running WITHOUT it, so
+    what it proves stays what it proved.
     """
     t1, t2, _ = play_session("sy1_converge", seconds,
                              inj_c="key=0x20", extra_env=SYNC_ON)
@@ -596,53 +603,90 @@ def rungSY1(seconds):
                     "child=%s" % (st1, st2))
     if not (st1 and st2):
         return False
-    ok &= M.verdict(st1["sent"] > 0,
-                    "rungSY1 THE HOST SENT STATE | %d messages" % st1["sent"])
+    ok &= M.verdict(st1["sent"] > 0 and st2["sent"] > 0,
+                    "rungSY1 BOTH CONSOLES SENT THEIR OWN BODY | host=%d "
+                    "child=%d messages" % (st1["sent"], st2["sent"]))
     ok &= M.verdict(st2["recvd"] > 0 and st2["applied"] > 0,
-                    "rungSY1 AND THE CHILD APPLIED IT TO A REMOTE BODY | "
+                    "rungSY1 the child applied the host's body | "
                     "recvd=%d applied=%d" % (st2["recvd"], st2["applied"]))
-    ok &= M.verdict(st1["sent"] == 0 or st1["applied"] == 0,
-                    "rungSY1 the HOST applied nothing | applied=%d (the host is "
-                    "authoritative; a host that corrects itself has two "
-                    "authorities)" % st1["applied"])
+    ok &= M.verdict(st1["recvd"] > 0 and st1["applied"] > 0,
+                    "rungSY1 AND THE HOST APPLIED THE CHILD'S BODY | "
+                    "recvd=%d applied=%d -- this direction measured 0/0 for "
+                    "the whole life of the host-authority design"
+                    % (st1["recvd"], st1["applied"]))
     return ok
 
 
 def rungSY2(seconds):
     """THE LOCAL BODY IS NEVER CORRECTED.
 
-    The single most important property of the layer. Asserted by comparing the
-    CHILD's OWN body between a sync-on and a sync-off run with identical input:
-    if the local body is never touched, those two trajectories are the same, and
-    any difference is the layer reaching somewhere it must not.
+    The single most important property of the layer, asserted twice, and the
+    SHAPE of the assertion changed with per-body authority (mp-sync-coopdx
+    item 1) for a reason worth the docstring it costs.
 
-    This is stronger than watching for a visible twitch, and it does not need a
-    way to inject disagreeing authority: the host's view of the child necessarily
-    lags the child's own simulation, so if the layer applied to the local body at
-    all the two runs would diverge.
+    The old shape -- the walker's own trajectory byte-identical between a
+    sync-on and a sync-off run -- is NOT a property this system has any more,
+    and measuring it red is not a local write. Under owner authority both
+    directions correct, a correction drags a remote COPY toward a stale point
+    (~30-100 ms old), the perturbed copy touches that console's sim (camera,
+    proximity, collision pushback), and the LOCKSTEP republishes the
+    perturbed console's record every frame -- so the perturbation rides the
+    wire back into the walker's own sim. Measured while item 1 landed: both-
+    walking arms diverged ~18-29 units; even one-walker arms kept ~0.4-2.3
+    units of wire-feedback residue. That is corrections doing their job.
+
+    Even zero motion does not rescue trajectory equality: the two bodies
+    SPAWN OVERLAPPING and the collision pushback that separates them runs
+    during the same frames the first corrections land on the remote copy, so
+    a standing on/off pair measured 2.49 units apart from frame 34 forever,
+    with zero input and zero local writes. The probe was measuring the sim.
+
+    What IS asserted, and it is mechanism-level rather than end-to-end:
+
+      * ZERO LOCAL WRITES: apply_snapshot reads the local body's pos/yaw
+        before its entry loop and compares after (single-threaded frame loop,
+        so any change across that window is the layer writing the local
+        player). local_writes must be 0 on both consoles, under live
+        corrections, in both arms.
+      * ZERO OWN-CLAIMS: both consoles must report own_claims=0 -- no
+        received entry EVER named the local slot. Under owner authority
+        nobody publishes another console's body, so the never-correct-local
+        skip must go the whole session with nothing to refuse. Not only did
+        the layer not correct the local body, nothing on the wire asked it to.
     """
-    t1a, t2a, _ = play_session("sy2_on", seconds, inj_c="key=0x20",
-                               extra_env=SYNC_ON)
-    t1b, t2b, _ = play_session("sy2_off", seconds, inj_c="key=0x20")
-    ok = isolated("rungSY2(on)", t1a)
-    ok &= isolated("rungSY2(off)", t1b)
-    own_on, own_off = rows(t2a, 1), rows(t2b, 1)
-    ok &= M.verdict(bool(own_on) and bool(own_off),
-                    "rungSY2 the child's own body was observed in both runs")
-    if not (own_on and own_off):
-        return False
-    f = min(own_on[-1]["f"], own_off[-1]["f"])
-    a = [r for r in own_on if r["f"] == f]
-    b = [r for r in own_off if r["f"] == f]
-    if not (a and b):
-        return M.verdict(False, "rungSY2 no common frame to compare")
-    d = (abs(a[-1]["x"] - b[-1]["x"]) + abs(a[-1]["y"] - b[-1]["y"]) +
-         abs(a[-1]["z"] - b[-1]["z"]))
-    ok &= M.verdict(d == 0,
-                    "rungSY2 THE CHILD'S OWN BODY IS BYTE-IDENTICAL WITH SYNC "
-                    "ON AND OFF | %d Fix12 apart at frame %d. Anything but zero "
-                    "means the layer corrected the local player, which is what "
-                    "makes a netcode feel like rubber." % (d, f))
+    # Arm A: both stand (the spawn-pushback window still runs corrections).
+    t1a, t2a, _ = play_session("sy2_still_on", seconds, extra_env=SYNC_ON)
+    # Arm B: both walk (apart -- host left, child right): live corrections
+    # on both screens for the whole session.
+    t1c, t2c, _ = play_session("sy2_walk_on", seconds, inj_p="key=0x20",
+                               inj_c="key=0x10", extra_env=SYNC_ON)
+    ok = isolated("rungSY2(still)", t1a)
+    ok &= isolated("rungSY2(walk)", t1c)
+
+    OWN = re.compile(r"own_claims=(\d+)")
+    LOCW = re.compile(r"local_writes=(\d+)")
+    APPL = re.compile(r"applied=(\d+)")
+    for arm, tag, t in (("still", "host", t1a), ("still", "child", t2a),
+                        ("walk", "host", t1c), ("walk", "child", t2c)):
+        applied = [int(x) for x in APPL.findall(t)]
+        ok &= M.verdict(bool(applied) and max(applied) > 0,
+                        "rungSY2(%s) the %s applied corrections, so the "
+                        "assertions below are exercised | applied=%s"
+                        % (arm, tag, max(applied) if applied else -1))
+        claims = [int(x) for x in OWN.findall(t)]
+        worstc = max(claims) if claims else -1
+        ok &= M.verdict(worstc == 0,
+                        "rungSY2(%s) NOTHING ON THE WIRE CLAIMED THE %s'S OWN "
+                        "BODY | own_claims=%s (nonzero means a peer published "
+                        "a body it does not own; -1 means no report line)"
+                        % (arm, tag.upper(), worstc))
+        writes = [int(x) for x in LOCW.findall(t)]
+        worstw = max(writes) if writes else -1
+        ok &= M.verdict(worstw == 0,
+                        "rungSY2(%s) AND THE LAYER NEVER WROTE THE %s'S OWN "
+                        "BODY | local_writes=%s measured across every "
+                        "apply_snapshot call (-1 means no report line)"
+                        % (arm, tag.upper(), worstw))
     return ok
 
 

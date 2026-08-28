@@ -271,9 +271,21 @@ struct Packet {
 };
 
 enum : int { kPacketBytes = 0x90 };
-// run mg16 lane MP4: the aux channel's tag, 'S','Y','N','1' as it sits on
-// the wire. Distinct from kMagic so one socket can carry both kinds.
-const unsigned kAuxMagicLE = 0x314e5953u;
+// run mg16 lane MP4: the aux channel's tags as they sit on the wire, distinct
+// from kMagic so one socket can carry every kind. The carrier CLASSIFIES on
+// these four bytes and never reads past them -- classification is not
+// reinterpretation. 'SYN1' is the sync layer's state snapshot; 'SYNP' and
+// 'SYNQ' (mp-sync-coopdx item 6) are its RTT probe and the echo.
+//
+// PING AND PONG ARE SEPARATE KINDS, and that is measured rather than tidy:
+// with one shared tag, a peer's echo of OUR probe and that peer's own next
+// probe landed in the same one-deep slot, and at delay 0 the two are
+// phase-locked to the frame boundary -- the readout lost roughly half its
+// RTT samples to newest-wins (37 of 80 one way, 52 of 80 the other, measured
+// on the first rig session). Distinct kinds cannot supersede each other.
+const unsigned kAuxMagicLE = 0x314e5953u;   // 'S','Y','N','1'
+const unsigned kAuxPingLE  = 0x504e5953u;   // 'S','Y','N','P'
+const unsigned kAuxPongLE  = 0x514e5953u;   // 'S','Y','N','Q'
 
 static_assert(sizeof(Packet) == kPacketBytes,
               "the loopback wire packet grew padding; the length check is the "
@@ -308,18 +320,41 @@ bool     g_open       = false;
 SOCKET   g_sock       = INVALID_SOCKET;
 int      g_slot       = 0;
 
-// run mg16 lane MP4: THE AUX QUEUE, one message deep.
+// run mg16 lane MP4, reshaped by mp-sync-coopdx item 6: THE AUX QUEUE,
+// one message deep PER (SENDER, KIND).
 //
-// ONE DEEP ON PURPOSE. Aux carries the HOST's latest view of the world, so a
-// backlog is worthless by definition -- if two arrive before the game reads
-// one, the older is stale and the newer supersedes it completely. Queueing
-// them would deliver a correction toward a position the host has already left.
-// Overwriting is the correct policy for state, and it is the opposite of what
-// the input records need (every one of those matters, which is why they have a
-// four-deep cache). The two channels share a socket and nothing else.
+// ONE DEEP PER SLOT ON PURPOSE, for the same reason the original single slot
+// was: aux carries a peer's LATEST view, so a backlog of one sender's one kind
+// is worthless by definition -- the newer message supersedes the older
+// completely, and queueing both would deliver a correction toward a position
+// the sender has already left. Overwriting is the correct policy for state,
+// and it is the opposite of what the input records need (every one of those
+// matters, which is why they have a four-deep cache). The two channels share
+// a socket and nothing else.
+//
+// WHY THE SLOT SPLIT, and both halves were measured needs rather than polish:
+//
+//   BY KIND: the sync layer now sends ping/pong probes ('SYNP') beside the
+//   state snapshots ('SYN1'), and with a single slot a probe landing in the
+//   same pump window as a snapshot silently ate it -- the RTT readout the
+//   probes exist for would undercount in exact proportion to how busy the
+//   channel is, which is when the number matters. A kind never supersedes
+//   another kind.
+//
+//   BY SENDER: per-body owner authority (item 1 of the same lane) makes every
+//   console a snapshot sender, so a receiver can hold one in-flight snapshot
+//   PER PEER. With a single slot, peer A's body would freeze whenever peer B's
+//   messages happened to arrive later in the pump -- newest-wins across
+//   senders is starvation, not policy. The sender is identified by the source
+//   port the datagram ACTUALLY arrived from (the slot-is-the-port rule), never
+//   by reading the payload, so the bytes stay uninspected beyond the 4-byte
+//   kind tag this file already classified on.
 enum : int { kAuxMaxBytes = 256 };
-unsigned char g_aux[kAuxMaxBytes];
-int      g_aux_len    = 0;
+enum : int { kAuxKinds = 3 };        // 0 = 'SYN1' state, 1 = 'SYNP' ping,
+                                     // 2 = 'SYNQ' pong -- see the tag note
+struct AuxSlot { int len; unsigned char buf[kAuxMaxBytes]; };
+AuxSlot  g_aux[kCommsMaxPlayers][kAuxKinds];
+int      g_aux_rr     = 0;           // recv_aux round-robin cursor, see below
 unsigned long long g_aux_superseded = 0;
 int      g_port_base  = kCommsLoopbackPortBase;
 int      g_my_port    = 0;
@@ -352,6 +387,14 @@ unsigned long long g_sent = 0, g_recvd = 0, g_dropped = 0;
 unsigned long long g_resends = 0, g_stale_serves = 0;
 // run mg16 lane MP3: how many rounds the game walked away from (HOLE 5).
 unsigned long long g_abandons = 0;
+// mp-sync-coopdx item 5: DELIBERATE LOCKSTEP LOSS, test scaffolding in the
+// SM64DS_SYNC_DROP class. Applied on the receive side to LOCKSTEP packets
+// only (aux has its own knob), so induced loss looks exactly like the wire
+// eating datagrams. This is the instrument that measured whether loss stalls
+// the lockstep at all on this carrier -- see the redundancy finding at the
+// bottom of this file.
+int g_test_drop_pct = 0;              // SM64DS_COMMS_DROP, 0..99
+unsigned long long g_test_drops = 0;
 
 bool g_wsa_up = false;
 
@@ -530,15 +573,29 @@ void drain() {
                                   0, (sockaddr *)&from, &fromlen);
         if (n < 0) break;                       // WSAEWOULDBLOCK, or nothing
 
-        if (n >= 4 && std::memcmp(msg.raw, &kAuxMagicLE, 4) == 0) {
-            /* Newest wins; see the queue's own note. A superseded message is
+        int aux_kind = -1;
+        if (n >= 4 && std::memcmp(msg.raw, &kAuxMagicLE, 4) == 0) aux_kind = 0;
+        else if (n >= 4 && std::memcmp(msg.raw, &kAuxPingLE, 4) == 0) aux_kind = 1;
+        else if (n >= 4 && std::memcmp(msg.raw, &kAuxPongLE, 4) == 0) aux_kind = 2;
+        if (aux_kind >= 0) {
+            /* The sender is the SOURCE PORT, the same slot-is-the-port rule
+               the input records are verified by. A source port outside our
+               slot range is not a peer of this session. */
+            const int sender = (int)ntoh16(from.sin_port) - g_port_base;
+            if (sender < 0 || sender >= kCommsMaxPlayers || sender == g_slot) {
+                ++g_dropped;
+                continue;
+            }
+            /* Newest wins WITHIN one sender's one kind; see the queue's own
+               note for why the slots are split. A superseded message is
                counted rather than silently forgotten, because "sync looks
                laggy" and "sync is being outrun by its own send rate" are
                different problems and the counter is what tells them apart. */
-            if (g_aux_len != 0) ++g_aux_superseded;
+            AuxSlot &slot = g_aux[sender][aux_kind];
+            if (slot.len != 0) ++g_aux_superseded;
             const int keep = n < kAuxMaxBytes ? n : kAuxMaxBytes;
-            std::memcpy(g_aux, msg.raw, (size_t)keep);
-            g_aux_len = keep;
+            std::memcpy(slot.buf, msg.raw, (size_t)keep);
+            slot.len = keep;
             continue;
         }
 
@@ -546,6 +603,17 @@ void drain() {
         if (n != kPacketBytes) { ++g_dropped; continue; }
         if (std::memcmp(p.magic, kMagic, 4) != 0) { ++g_dropped; continue; }
         if (p.version != kWireVersion)          { ++g_dropped; continue; }
+        if (g_test_drop_pct > 0) {
+            /* Deterministic-per-run LCG, same discipline as the sync layer's
+               drop knob: a proof that behaves differently every run is not a
+               proof. */
+            static unsigned r = 0x2468ace1u;
+            r = r * 1664525u + 1013904223u;
+            if ((int)((r >> 16) % 100u) < g_test_drop_pct) {
+                ++g_test_drops;
+                continue;
+            }
+        }
         ++g_recvd;
         if (g_role == kRoleParent) on_parent_packet(p, from);
         else                       on_child_packet(p, from);
@@ -746,6 +814,7 @@ void lb_close() {
     g_parent_requested = false;
     g_latched_mask = 0;
     g_stage_mask   = 0;
+    std::memset(g_aux, 0, sizeof g_aux);   // pending aux dies with the session
     std::fprintf(stderr, "[comms:loopback] closed after %u rounds\n", g_round);
 }
 
@@ -950,12 +1019,26 @@ int lb_send_aux(const void *buf, int len) {
 
 int lb_recv_aux(void *buf, int cap) {
     if (!buf || cap <= 0) return 0;
-    service();                      // drain; aux messages land in the queue
-    if (g_aux_len <= 0) return 0;
-    const int n = g_aux_len < cap ? g_aux_len : cap;
-    std::memcpy(buf, g_aux, (size_t)n);
-    g_aux_len = 0;
-    return n;
+    service();                      // drain; aux messages land in the slots
+    /* ROUND-ROBIN over the (sender, kind) slots, resuming after the last one
+       served, so no sender and no kind can starve another: a reader that
+       always scanned from slot zero would hand the parent's messages out
+       first every call and a busy parent could shadow a quiet child forever.
+       One whole message per call, exactly as the frozen contract words it --
+       a caller that wants everything pending loops until 0, which is what the
+       sync layer's pump does. */
+    const int total = kCommsMaxPlayers * kAuxKinds;
+    for (int i = 0; i < total; ++i) {
+        const int idx = (g_aux_rr + i) % total;
+        AuxSlot &slot = g_aux[idx / kAuxKinds][idx % kAuxKinds];
+        if (slot.len <= 0) continue;
+        const int n = slot.len < cap ? slot.len : cap;
+        std::memcpy(buf, slot.buf, (size_t)n);
+        slot.len = 0;
+        g_aux_rr = (idx + 1) % total;
+        return n;
+    }
+    return 0;
 }
 
 void lb_abandon() {
@@ -1015,6 +1098,17 @@ bool comms_loopback_install_from_env() {
         if (v > 1024 && v < 65536 - kCommsMaxPlayers) g_port_base = v;
         else std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_PORT=%s out "
                           "of range; using %d\n", p, g_port_base);
+    }
+
+    if (const char *d = std::getenv("SM64DS_COMMS_DROP")) {
+        int v = std::atoi(d);
+        if (v < 0) v = 0;
+        if (v > 99) v = 99;
+        g_test_drop_pct = v;
+        if (v > 0)
+            std::fprintf(stderr, "[comms:loopback] TEST SCAFFOLDING: dropping "
+                         "%d%% of received lockstep packets "
+                         "(SM64DS_COMMS_DROP)\n", v);
     }
 
     if (const char *s = std::getenv("SM64DS_COMMS_SLOT")) {
@@ -1092,12 +1186,14 @@ void comms_loopback_report(const char *tag) {
     const CommsLoopbackStats s = comms_loopback_stats();
     std::fprintf(stderr,
         "[loopback:%s] role=%s slot=%d port=%d live=0x%x round=%lu "
-        "sent=%llu recvd=%llu dropped=%llu resends=%llu stale=%llu\n",
+        "sent=%llu recvd=%llu dropped=%llu resends=%llu stale=%llu "
+        "testdrop=%llu\n",
         tag ? tag : "-",
         s.role == kRoleParent ? "parent" : (s.role == kRoleChild ? "child"
                                                                  : "none"),
         s.slot, s.port, s.live_mask, s.round,
-        s.sent, s.recvd, s.dropped, s.resends, s.stale_serves);
+        s.sent, s.recvd, s.dropped, s.resends, s.stale_serves,
+        g_test_drops);
 }
 
 }  // namespace port
@@ -1262,4 +1358,45 @@ void comms_loopback_report(const char *tag) {
 //   no opinion about that word, and moving it into CommsTransport would add a
 //   required entry with no implementation to give it. Propose closing gap 4 as
 //   "stays seam-owned", which is a decision rather than a change.
+// ===========================================================================
+//
+// ===========================================================================
+// THE REDUNDANCY FINDING (mp-sync-coopdx item 5): per-datagram round history
+// was SPECIFIED, MEASURED AGAINST, AND REFUSED. Read before reintroducing it.
+//
+// The adoption list called for each lockstep datagram to carry the last ~3
+// rounds' 0x20-byte blocks so a receiver could recover a missed round from
+// the next datagram instead of waiting a resend round trip -- the GGPO
+// family's input-redundancy trick, flagged in the spec's own honesty note as
+// standard lockstep netcode rather than anything sm64coopdx does.
+//
+// IT CANNOT HELP THIS PROTOCOL, structurally: the ROM's lockstep is
+// STOP-AND-WAIT. Nobody advances past an incomplete round -- the parent
+// completes round R only when every live child's R block is in, a child
+// leaves R only on the parent's R broadcast, and rollback (what lets GGPO
+// pipeline past a hole) is an explicit non-adoption because the ROM is the
+// contract. So every datagram this carrier sends carries, as its MAIN
+// payload, exactly the round its receiver is stuck on: the child republishes
+// its open round every kPublishResendMs, and the parent answers a stale
+// round with the cached broadcast. A history block bolted onto those
+// datagrams could never contain a round the main payload does not already
+// carry. Dead machinery by construction, not by tuning.
+//
+// MEASURED, not just argued -- SM64DS_COMMS_DROP is the instrument (receive-
+// side lockstep loss, deterministic, both instances), two-window sessions,
+// 40 s arms:
+//
+//   loss  0%   1216 rounds   resends  58   stale serves  55
+//   loss 10%   1212 rounds   resends 319   stale serves 189
+//   loss 20%   1170 rounds   resends 673   stale serves 325
+//
+// Twenty percent loss costs 3.8% of the round rate; the 4 ms republish and
+// the stale-serve cache heal every hole sub-frame, which is the "stall" the
+// item targeted not existing on this carrier. WHERE THE IDEA DOES APPLY: a
+// future internet carrier must back its republish off toward the RTT (a 4 ms
+// republish over the internet is flooding), and once the resend interval is
+// RTT-scaled, loss recovery costs a visible hitch -- the lever THERE is
+// spatial redundancy of the IN-FLIGHT round (send each datagram k times),
+// not history of past rounds, which stays structurally dead as long as the
+// lockstep is stop-and-wait.
 // ===========================================================================
