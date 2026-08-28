@@ -4755,6 +4755,48 @@ static void t3w_tick(int frame, const char *when)
         t3w_arm(g + 0x130, 1, "&scene[0x130] -- who FILLS the slot");
         return;
     }
+    /* THE TOP-LEVEL STATE WORD AND THE TWO THINGS THAT SHARE ITS FRAME.
+       Run mg16 lane TITLE: the Start prompt's input edge is consumed twice in
+       one frame -- the dialog advances (correct) and the top-level state leaves
+       9 for 0 (the defect) -- and neither the dispatcher nor any grep-visible
+       writer of the request halfword accounts for the second one. Three dwords
+       name both consumers from their own EIPs:
+         w0  *(g+8)+0   the state/req PAIR, one dword: state at +0, req at +2
+         w1  *(g+8)+4   the SUB-state, which func_ov007_020b0834 sets to 1
+         w2  *(g+4)+0   the element machine, which went to 0x3038/0x3030 on the
+                        same frame -- a value no state machine can request, so
+                        whatever writes it is not requesting a state at all
+       The block pointers are printed as well, so a follow-up run can re-arm on
+       the absolute addresses (the arena is pinned, the order deterministic). */
+    if (!std::strcmp(spec, "s9")) {
+        char *sp = *(char **)(g + 8);
+        char *ep = *(char **)(g + 4);
+        char *cp = *(char **)(g + 0xc);
+        if (!sp || !ep) return;
+        std::fprintf(stderr,
+                     "[t3watch] title blocks: g=%p  state(g+8)=%p  "
+                     "elem(g+4)=%p  third(g+0xc)=%p\n",
+                     (void *)g, (void *)sp, (void *)ep, (void *)cp);
+        t3w_arm(sp, 1, "*(g+8)+0 -- top-level state/req");
+        CONTEXT ctx;
+        std::memset(&ctx, 0, sizeof ctx);
+        ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
+        HANDLE th = GetCurrentThread();
+        GetThreadContext(th, &ctx);
+        DWORD *dr[4] = {&ctx.Dr0, &ctx.Dr1, &ctx.Dr2, &ctx.Dr3};
+        char *w[3] = {sp, sp + 4, ep};
+        t3w_n = 3;
+        for (int i = 0; i < 3; ++i) {
+            t3w_addr[i] = (unsigned)(uintptr_t)w[i];
+            t3w_last[i] = *(volatile unsigned *)(uintptr_t)t3w_addr[i];
+            *dr[i] = (DWORD)t3w_addr[i];
+            ctx.Dr7 |= (1u << (2 * i));
+            ctx.Dr7 |= (0x1u << (16 + 4 * i));
+            ctx.Dr7 |= (0x3u << (18 + 4 * i));
+        }
+        SetThreadContext(th, &ctx);
+        return;
+    }
     char *p130 = *(char **)(g + 0x130);
     if (!p130) return;
     if (!std::strcmp(spec, "p130ptr")) {
