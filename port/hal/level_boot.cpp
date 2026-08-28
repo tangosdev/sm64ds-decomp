@@ -2003,6 +2003,7 @@ static void port_load0(void *t, int a, unsigned b)
    file's main extern block for them is a thousand lines further down. */
 extern "C" {
 extern unsigned char data_0209f21c;
+extern unsigned char data_0209f250;
 extern int data_0209fc5c[];
 extern unsigned char data_02092128[];
 extern unsigned char data_0209caa0[];
@@ -2040,8 +2041,37 @@ static void port_load1(void *t, int a, unsigned b)
                      "chars=%d,%d\n",
                      (int)data_0209f21c, b, data_0209fc5c[0], data_0209fc5c[1],
                      (int)data_02092128[0], (int)data_02092128[1]);
+    /* THE LOCAL SLOT IS HELD AT 0 ACROSS THE ENTRANCE LOAD, and restored the
+       moment every slot has a body. Run mg16 lane MP3, field failure.
+
+       Camera::InitResources runs INSIDE the loop below and reads
+       data_0209f394[data_0209f250] -- the local player's actor. On the child
+       that index is 1, and slot 1 has no body yet: the ROM's loop takes its
+       player starts from consecutive entrance records and this level has only
+       one, which is why port_vs_spawn_extra_players exists at all. So the
+       camera dereferenced a null and the child died at
+       Camera::InitResources+0x98 reading 0x000000cc, every boot.
+
+       The fill-in cannot simply move earlier: the loop ASSIGNS
+       data_0209f394[i] for every slot it visits, so anything pre-spawned is
+       overwritten a moment later.
+
+       Holding the index at 0 for the duration is the small, honest answer.
+       Slot 0 always has a body -- it is the one start every level does have --
+       so the camera initialises against a real actor exactly as it does in
+       single player, and the true slot is restored before any frame runs. The
+       camera reads the index per frame, so it follows the right player from
+       the first tick; nothing downstream sees the temporary value. */
+    const unsigned char saved_local = data_0209f250;
+    data_0209f250 = 0;
     _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij(t, a, b);
     port_vs_spawn_extra_players(t, b);
+    data_0209f250 = saved_local;
+    if (saved_local != 0 && std::getenv("SM64DS_VS_PROBE"))
+        std::fprintf(stderr,
+                     "[vs] local slot restored to %d after the entrance load "
+                     "(held at 0 so Camera::InitResources had a body to "
+                     "follow)\n", (int)saved_local);
 }
 static void port_load2(void *t, int a, unsigned b)
 { port_loader_enter(2, t); _Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij(t, a, b); }

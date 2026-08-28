@@ -247,8 +247,10 @@ Write-Host ("MP2 TWO-WINDOW: starting {0}, level {1}, udp base {2}, frames {3}" 
 # re-knocks every 50 ms until it is accepted, so the gap only has to be small,
 # not exact.
 $p1 = Start-Instance -Tag "P1" -Role "parent"
+Write-Host ("MP2 TWO-WINDOW: P1 pid {0} port {1}" -f $p1.OwnPid, $Port)
 Start-Sleep -Milliseconds 600
 $p2 = Start-Instance -Tag "P2" -Role "child"
+Write-Host ("MP2 TWO-WINDOW: P2 pid {0} port {1}" -f $p2.OwnPid, ($Port + 1))
 
 function Read-One([string]$path) {
     if (-not (Test-Path $path)) { return "" }

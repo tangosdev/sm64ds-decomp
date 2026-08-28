@@ -27,7 +27,12 @@ WHAT PLAY MODE CHANGES, measured rather than assumed:
     so a play-mode instance sits still unless something drives it. That is why
     these rungs drive with SM64DS_COMMS_INJECT, which enters at the hardware.
 
-FOUR RUNGS, one per symptom the owner reported:
+FIVE RUNGS. P0 is a gate on the others; P1..P4 are one per symptom the owner
+reported.
+
+  P0  PORT ISOLATION. This run's two instances are the ONLY consoles on this
+      wire, for the whole cycle. Everything below it is meaningless if it is
+      red -- see its own banner, which is the lane's most expensive lesson.
 
   P1  EACH WINDOW IS ITS OWN PLAYER. The parent's local index is 0 and the
       child's is 1, and each window's local character matches its slot.
@@ -122,6 +127,75 @@ def play_session(name, seconds, inj_p=None, inj_c=None):
 
 
 # ---------------------------------------------------------------------------
+# RUNG P0 -- PORT ISOLATION. THE GATE EVERY OTHER RUNG DEPENDS ON.
+#
+# WHY THIS EXISTS, and it is the most expensive lesson in the lane.
+# kCommsLoopbackPortBase is 51765 and every harness in this tree bound it,
+# including a play-mode loop that was cycling two-window sessions every twenty
+# seconds while the owner was live-driving a DIFFERENT two-window session on
+# the same machine and the same base. Two unrelated runs on one loopback base do
+# not fail to connect -- they SUCCEED, and form one session out of four
+# instances. Nothing logs an error. Both runs report connected=yes and keep
+# going, and every measurement either side takes is contaminated.
+#
+# So this rung runs FIRST and everything after it is only trustworthy if it is
+# green. It asserts, for the WHOLE cycle rather than at one sample:
+#   * the parent never saw more than two players -- a third joiner is somebody
+#     else's console arriving on our wire,
+#   * the carrier's live mask never went past our two slots (0x3),
+#   * both instances are on the port base THIS run derived from its own pid.
+#
+# A FAILURE HERE INVALIDATES THE REST OF THE FILE and says so, rather than
+# letting a contaminated run produce plausible numbers.
+PIDLINE = re.compile(r"^MP2 TWO-WINDOW: (P\d) pid (\d+) port (\d+)", re.M)
+PLAYERS = re.compile(r"^\[comms:level\] transport=loopback.*?players=(\d+)", re.M)
+LIVE = re.compile(r"^\[loopback:level\].*?live=0x([0-9a-fA-F]+)", re.M)
+
+
+def rungP0(seconds):
+    t1, t2, script = play_session("pP0_isolation", seconds)
+    ok = True
+
+    pids = PIDLINE.findall(script)
+    ok &= M.verdict(len(pids) == 2,
+                    "rungP0 this run started exactly two instances | %s"
+                    % (", ".join("%s pid=%s port=%s" % p for p in pids) or "NONE"))
+
+    ok &= M.verdict(bool(t1) and bool(t2),
+                    "rungP0 both wrote playlogs | P1=%d P2=%d bytes"
+                    % (len(t1), len(t2)))
+    if not (t1 and t2):
+        return False
+
+    # THE WHOLE CYCLE, not a sample. A stranger joining halfway through is
+    # exactly the case a single end-of-run reading would miss.
+    counts = [int(x) for x in PLAYERS.findall(t1)]
+    worst = max(counts) if counts else 0
+    ok &= M.verdict(bool(counts) and worst == 2,
+                    "rungP0 THE PARENT NEVER SAW A THIRD CONSOLE | max "
+                    "players=%d across %d reports (3+ means another session's "
+                    "instance joined our wire and every measurement in this "
+                    "file is contaminated)" % (worst, len(counts)))
+
+    masks = [int(x, 16) for x in LIVE.findall(t1)]
+    worstmask = max(masks) if masks else 0
+    ok &= M.verdict(bool(masks) and worstmask <= 0x3,
+                    "rungP0 and the carrier's live mask stayed our two slots | "
+                    "widest mask 0x%x across %d reports (anything above 0x3 is "
+                    "a slot we did not start)" % (worstmask, len(masks)))
+
+    ports = set(int(p[2]) for p in pids)
+    ok &= M.verdict(bool(ports) and min(ports) >= 56000,
+                    "rungP0 on this run's OWN port base, clear of the shipped "
+                    "default 51765 a human's session binds | %s"
+                    % sorted(ports))
+    if not ok:
+        print("      *** rungP0 FAILED: the wire was not ours alone, so every "
+              "verdict below this line is meaningless. Fix isolation first. ***")
+    return ok
+
+
+# ---------------------------------------------------------------------------
 def rungP1(seconds):
     """EACH WINDOW IS ITS OWN PLAYER.
 
@@ -179,28 +253,51 @@ def rungP2(seconds):
     Injected on the CHILD only. In the CHILD's own world, its own body must
     move and the host's body must not. His report: from P2 he could move both.
     """
-    t1, t2, _ = play_session("pP2_isolation", seconds, inj_c="key=0x20")
+    # DIFFERENTIAL, because "the host's body did not move at all" is the wrong
+    # question and asserting it produced a red on a correct build.
+    #
+    # The two bodies are spawned deliberately OVERLAPPING (40.0 units apart
+    # against 40.0-unit radii, see hal/level_boot.cpp), so the ROM's cylinder
+    # solver pushes them apart on the first frames whatever anybody presses --
+    # and a child that walks into the host shoves it, which is rung 11's whole
+    # point and is CORRECT multiplayer. A raw "the host moved 41.4 units"
+    # cannot tell that push apart from one pad driving two characters.
+    #
+    # So run it twice, pressed and explicitly idle, and compare the HOST's
+    # motion between the two. Collision is present in both arms and cancels;
+    # what survives is the part the child's INPUT added to the host's body,
+    # which is the thing that must be zero.
+    t1a, t2a, _ = play_session("pP2_child_presses", seconds, inj_c="key=0x20")
+    t1b, t2b, _ = play_session("pP2_child_idle", seconds, inj_c="key=0x0")
     ok = True
-    ok &= M.verdict(bool(t2), "rungP2 the child wrote a playlog")
-    if not t2:
+    ok &= M.verdict(bool(t2a) and bool(t2b),
+                    "rungP2 the child wrote a playlog in both arms")
+    if not (t2a and t2b):
         return False
-    own = rows(t2, 1)      # the child's own body, in the child's world
-    host = rows(t2, 0)     # the host's body, in the child's world
-    ok &= M.verdict(bool(own) and bool(host),
-                    "rungP2 the child's world has both bodies | slot1 rows=%d "
-                    "slot0 rows=%d" % (len(own), len(host)))
-    if not (own and host):
+    own_a, host_a = rows(t2a, 1), rows(t2a, 0)
+    own_b, host_b = rows(t2b, 1), rows(t2b, 0)
+    ok &= M.verdict(bool(own_a) and bool(host_a) and bool(own_b) and bool(host_b),
+                    "rungP2 the child's world has both bodies in both arms | "
+                    "pressed slot1=%d slot0=%d ;; idle slot1=%d slot0=%d"
+                    % (len(own_a), len(host_a), len(own_b), len(host_b)))
+    if not (own_a and host_a and own_b and host_b):
         return False
-    mine = span(own, "x") + span(own, "z")
-    theirs = span(host, "x") + span(host, "z")
+
+    mine = span(own_a, "x") + span(own_a, "z")
     ok &= M.verdict(mine > 4096,
-                    "rungP2 the child's OWN body moved | %.1f units" % (mine / 4096.0))
-    ok &= M.verdict(theirs < 4096,
-                    "rungP2 AND IT DID NOT DRIVE THE HOST'S BODY | the host's "
-                    "character moved %.1f units in the child's world while "
-                    "only the child was pressing anything; anything above 1.0 "
-                    "means one pad is driving two characters"
-                    % (theirs / 4096.0))
+                    "rungP2 the child's OWN body moved when it pressed | %.1f "
+                    "units" % (mine / 4096.0))
+
+    # Where the HOST's body ends up, pressed arm vs idle arm.
+    host_delta = (abs(host_a[-1]["x"] - host_b[-1]["x"]) +
+                  abs(host_a[-1]["z"] - host_b[-1]["z"]))
+    ok &= M.verdict(host_delta < mine / 4,
+                    "rungP2 AND THE CHILD'S INPUT DID NOT DRIVE THE HOST'S BODY "
+                    "| pressing moved the host's character %.1f units versus "
+                    "not pressing, against %.1f units of the child's own "
+                    "travel. A pad driving two characters puts those two "
+                    "numbers in the same class; contact between them does not."
+                    % (host_delta / 4096.0, mine / 4096.0))
     return ok
 
 
@@ -272,7 +369,10 @@ def rungP4(seconds):
     return ok
 
 
-RUNGS = [("P1", rungP1), ("P2", rungP2), ("P3", rungP3), ("P4", rungP4)]
+# P0 FIRST AND ALWAYS. It is the gate: if the wire was not ours alone, nothing
+# below it measured this build.
+RUNGS = [("P0", rungP0), ("P1", rungP1), ("P2", rungP2), ("P3", rungP3),
+         ("P4", rungP4)]
 
 
 def main(argv):
