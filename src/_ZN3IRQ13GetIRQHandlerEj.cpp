@@ -4,15 +4,9 @@
 // handler-table entry shape now come from IRQ.h. Codegen remains exact.
 #include "IRQ.h"
 
-struct IRQEntry {
-  IRQ::Handler handler;
-  u32 enabled;
-  u32 argument;
-};
-
 extern "C" {
 extern IRQ::Handler data_02099fe4[];
-extern IRQEntry data_020a60c4[];
+extern IRQ::HandlerEntry data_020a60c4[];
 }
 
 namespace IRQ {
