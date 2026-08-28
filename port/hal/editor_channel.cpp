@@ -570,10 +570,13 @@ void exec_objrot(const Cmd &c)
  * mark and reads nothing off the old object afterwards.
  *
  * THE OLD POINTER IS STILL IN THE LIST when this returns -- marking is not
- * freeing -- so the reply's new pointer is guaranteed distinct from it, and an
- * objlist a few frames later shows the old one gone and the new one present.
- * That gap is the editor's cue to rebind, which is why the reply carries the
- * new pointer at all.
+ * freeing -- so the reply's new pointer is guaranteed distinct from it. That
+ * overlap is THE SAME FRAME only: it is visible to an objlist pipelined into
+ * the same drain, and a client that waits for `respawned <ptr>` before asking
+ * again has already let a frame pass and sees the old one gone. Either way the
+ * new pointer in the reply is the editor's cue to rebind, which is why the
+ * reply carries it at all. (Same wording rule as objkill below; the loose
+ * "a few frames later" version of this sentence was measured wrong.)
  */
 void exec_objrespawn(const Cmd &c)
 {
@@ -721,11 +724,26 @@ void exec_objspawn(const Cmd &c)
  * MARKING IS NOT FREEING, and the reply says `ok` rather than pretending the
  * object is already gone. ActorBase::MarkForDestruction sets +0x0f and runs
  * OnPendingDestroy synchronously through the vptr; the game's own cleanup phase
- * moves the actor onto the cleanup list and frees it on a LATER frame. So an
- * objlist taken immediately after this still shows the object, and one taken a
- * frame or two later does not. That is the ROM's own lifecycle and this file
- * does not get to shortcut it -- hal/level_change.cpp's stated contract is that
- * nothing frees an actor by hand.
+ * moves the actor onto the cleanup list and frees it on a LATER frame. That is
+ * the ROM's own lifecycle and this file does not get to shortcut it --
+ * hal/level_change.cpp's stated contract is that nothing frees an actor by
+ * hand.
+ *
+ * WHAT A CLIENT ACTUALLY OBSERVES, stated precisely because the loose version
+ * of this sentence was wrong. The window in which the killed object is still
+ * listed is THE SAME FRAME, not "the next objlist":
+ *
+ *   objlist PIPELINED WITH THE KILL, in one write, so both run in the same
+ *   drain -- the object IS still listed. That is the real window and it is one
+ *   frame wide.
+ *   objlist SENT AFTER READING THE `ok` -- a round trip, so at least one frame
+ *   has passed and the cleanup phase has run. The object is ALREADY GONE.
+ *
+ * Measured, not reasoned: the review of this lane sent the round-tripped form
+ * and saw it gone immediately, which contradicts the "still in the next
+ * objlist" wording this banner used to carry. An editor that waits for the
+ * reply -- which is every normal client -- should expect the object to be
+ * absent from its very next query.
  *
  * It is idempotent by construction: MarkForDestruction returns early if
  * shouldBeKilled is already set or aliveState is 2, so a client that sends the
