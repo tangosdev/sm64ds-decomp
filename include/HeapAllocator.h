@@ -16,6 +16,7 @@ struct HeapAllocator {
     HeapAllocator() {}
 
     void Remove();
+    void Destroy();
 #endif
 };
 
