@@ -196,7 +196,7 @@ src/Thwomp_Spawn.c:
     complete
     .text start:0x02132cb8 end:0x02132d04
 
-src/_ZN11daDsnBase_cD0Ev.c:
+src/_ZN11daDsnBase_cD0Ev.cpp:
     complete
     .text start:0x02132d04 end:0x02132d6c
 

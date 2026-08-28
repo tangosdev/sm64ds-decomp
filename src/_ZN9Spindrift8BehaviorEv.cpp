@@ -19,7 +19,7 @@ extern void _Z14ApproachLinearRsss(void *, int, int);
 extern void _ZN9Animation7AdvanceEv(void *);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *, void *);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *, void *, unsigned);
-extern int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(void *, void *, int, short, int, int, int);
+extern int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(void *, void *, int, short, int, int, int);
 /* sig: (this, dBgCh_Actr&, Fix12, short, bool, bool, Fix12) */
 }
 
@@ -80,7 +80,7 @@ int Spindrift::Behavior()
     _ZN8dActor_c9UpdatePosEP5dCc_c(((char *)this), 0);
     _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char *)this), ((char *)this) + 0x1d0, 0);
 
-    if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(((char *)this), ((char *)this) + 0x1d0, 0x3c000, 0x2888, 1, 1, 0x32000) != 0) {
+    if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(((char *)this), ((char *)this) + 0x1d0, 0x3c000, 0x2888, 1, 1, 0x32000) != 0) {
         mPosX = mPrevPosX;
         mPosY = mPrevPosY;
         mPosZ = mPrevPosZ;

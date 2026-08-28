@@ -24,7 +24,7 @@ src/actors/BigBooIcon/_ZN10BigBooIconD1Ev.cpp:
     complete
     .text start:0x02116068 end:0x0211608c
 
-src/actors/BigBooIcon/_ZN10BigBooIconD0Ev.c:
+src/actors/BigBooIcon/_ZN10BigBooIconD0Ev.cpp:
     complete
     .text start:0x0211608c end:0x021160c4
 
@@ -387,7 +387,7 @@ src/actors/MansionSteps/_ZN12MansionStepsD1Ev.cpp:
     complete
     .text start:0x0211c600 end:0x0211c638
 
-src/actors/MansionSteps/_ZN12MansionStepsD0Ev.c:
+src/actors/MansionSteps/_ZN12MansionStepsD0Ev.cpp:
     complete
     .text start:0x0211c638 end:0x0211c684
 
@@ -471,7 +471,7 @@ src/actors/FallBlockBbh/_ZN12FallBlockBbhD1Ev.cpp:
     complete
     .text start:0x0211d3a0 end:0x0211d3f0
 
-src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.c:
+src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.cpp:
     complete
     .text start:0x0211d3f0 end:0x0211d454
 
@@ -487,7 +487,7 @@ src/actors/FallBlockBbh/FallBlockBbh_Spawn.c:
     complete
     .text start:0x0211d47c end:0x0211d4b8
 
-src/actors/MadPiano/_ZN8MadPianoD1Ev.c:
+src/actors/MadPiano/_ZN8MadPianoD1Ev.cpp:
     complete
     .text start:0x0211d4b8 end:0x0211d54c
 

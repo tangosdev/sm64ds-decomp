@@ -1,5 +1,5 @@
-#include "TextureSequence.h"
 //cpp
+#include "TextureSequence.h"
 // @symbol _ZN6Number13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "Number.h"

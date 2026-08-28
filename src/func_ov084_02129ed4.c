@@ -8,7 +8,7 @@ typedef struct { s32 x, y, z; } Vector3;
 
 extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(void* thiz, const Vector3* v);
-extern void* func_ov002_020ada40(void* thiz, s16* v, void* r6, s32 flag);
+extern void* _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void* thiz, s16* v, void* r6, s32 flag);
 extern void func_02012694(s32 a, void* b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, s32 i, s32 fx, u32 j);
 extern s32 _ZN6Player9IsOnShellEv(void* p);
@@ -69,11 +69,11 @@ void func_ov084_02129ed4(void* c)
         var_r0 = (s32)(U16f(c, 0xc) == 0xc8);
         if (var_r0 != 0) {
             aC[0] = -0x2000; aC[1] = 0; aC[2] = 0;
-            func_ov002_020ada40(c, aC, r6, 0x41000);
+            _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, aC, r6, 0x41000);
             return;
         }
         a12[0] = -0x1800; a12[1] = 0; a12[2] = 0;
-        func_ov002_020ada40(c, a12, r6, 0x96000);
+        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, a12, r6, 0x96000);
         return;
     }
 
@@ -131,7 +131,7 @@ void func_ov084_02129ed4(void* c)
                     v44.x = 0; v44.y = 0x6c000; v44.z = 0;
                     _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(c, &v44);
                     a18[0] = 0x2000; a18[1] = 0; a18[2] = 0;
-                    func_ov002_020ada40(c, a18, r6, 0x41000);
+                    _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, a18, r6, 0x41000);
                     return;
                 }
                 { Vector3* pp = (Vector3*)(((int)r6 + 0x5c) & 0xffffffffffffffffULL); v20.x = pp->x; v20.y = pp->y; v20.z = pp->z; }

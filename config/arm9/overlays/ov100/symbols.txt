@@ -223,6 +223,7 @@ _ZTI15daObjPathLift_c kind:data(any) addr:0x02148538
 _ZTS15daObjPathLift_c kind:data(any) addr:0x02148544
 PathLift_SpawnInfo kind:data(any) addr:0x02148558
 data_ov100_0214857c kind:data(any) addr:0x0214857c
+_ZTV15daObjPathLift_c kind:data(any) addr:0x0214857c
 data_ov100_02148600 kind:bss addr:0x02148600
 data_ov100_02148608 kind:bss addr:0x02148608
 data_ov100_02148610 kind:bss addr:0x02148610
