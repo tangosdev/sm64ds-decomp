@@ -7,18 +7,15 @@
  * so it is established by hand, the same way as its sibling daKrb_c:
  *
  *   - Backward: daTrs_c's own destructor (_ZN7daTrs_cD1Ev, src/actors/daTrs_c/_ZN7daTrs_cD1Ev.cpp)
- *     tears down its own six members, then calls `_ZN11dCapEnemy_cD1Ev` -- the
- *     exact function _ZN7daKrb_cD1Ev (src/_ZN7daKrb_cD1Ev.c) calls after tearing
- *     down its own members. `_ZN11dCapEnemy_cD1Ev` sits at 0x020aedbc and is
- *     immediately followed, at 0x020aedf4, by the already-matched
- *     _ZN11dCapEnemy_cD0Ev -- so 0x020aedbc is dCapEnemy_c's own out-of-line D1, and
- *     both sibling destructors chain to it.
+ *     tears down its own six members, then calls _ZN11dCapEnemy_cD2Ev -- the
+ *     exact function _ZN7daKrb_cD1Ev (src/_ZN7daKrb_cD1Ev.cpp) calls after tearing
+ *     down its own members. It sits at 0x020aedbc and is immediately followed,
+ *     at 0x020aedf4, by the already-matched _ZN11dCapEnemy_cD0Ev -- so 0x020aedbc
+ *     is dCapEnemy_c's own out-of-line base-object destructor, and both sibling
+ *     destructors chain to it.
  *   - Forward: Boo_Spawn (src/actors/daTrs_c/Boo_Spawn.cpp) calls
  *     _ZN11dCapEnemy_cC2Ev(t) before storing _ZTV7daTrs_c -- exactly Goomba_Spawn's
  *     shape, which calls the same _ZN11dCapEnemy_cC2Ev before storing _ZTV7daKrb_c.
- *
- * The base destructor's mangled identity is now enrolled with its own
- * config/delinks entry, so derived teardown links to the C++ symbol directly.
  *
  * SIZE 0x5e0, the literal Boo_Spawn passes to fBase_c::operator new
  * (src/actors/daTrs_c/Boo_Spawn.cpp: `_ZN7fBase_cnwEj(0x5e0)`). dCapEnemy_c ends at
@@ -45,12 +42,21 @@
  * constructor) rather than through a daTrs_c::daTrs_c(), so declaring one risks an
  * implicit body the compiler would inline somewhere the ROM does not.
  *
- * ~daTrs_c() is declared but not defined in-class -- the destructor's actual
- * bodies are the existing hand-written _ZN7daTrs_cD1Ev / _ZN7daTrs_cD0Ev, kept as
- * manual `extern "C"` definitions rather than compiler-synthesized ones so
- * the overlay base-chain call targets `_ZN11dCapEnemy_cD1Ev` at 0x020aedbc.
- * `_ZN11dCapEnemy_cD2Ev` remains the distinct ARM9 base-object variant at
- * 0x0200651c.
+ * ~daTrs_c() is declared but not defined in-class, so _ZN7daTrs_cD1Ev /
+ * _ZN7daTrs_cD0Ev are the compiler's own synthesized bodies (2026-08-27).
+ *
+ * They spent a while as hand-written `extern "C"` definitions because a
+ * synthesized destructor spells its base-chain call `_ZN11dCapEnemy_cD2Ev`,
+ * and that name pointed at arm9 0x0200651c while the ROM's call here goes to
+ * ov002 0x020aedbc. The two are byte-identical -- dCapEnemy_c has no virtual
+ * bases, so its D1 and D2 are the same code -- and the older note in this file
+ * read that as evidence they were different functions. They are not; they are
+ * the two ABI variants, and the NAMES were swapped. Slot 16 of
+ * _ZTV11dCapEnemy_c (ov002 0x021082c4) holds 0x0200651c, which makes that one
+ * D1; 0x020aedbc has no vtable slot and is reached only by `bl` from this
+ * class's and daKrb_c's destructors tearing down their base sub-object, which
+ * is what D2 is for. Renaming both accordingly is what let these two bodies
+ * become real C++.
  */
 #ifndef DATRS_C_H
 #define DATRS_C_H

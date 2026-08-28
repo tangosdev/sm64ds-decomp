@@ -178,13 +178,13 @@ def check(manifest_path=MANIFEST, root=None, only=(), version_override=None,
                                   "a translation unit on disk that the manifest does not "
                                   "declare -- nothing knows its compiler pin, so nothing "
                                   "compiles it and this gate cannot vouch for it"))
-        # Promoted TUs live under src/, while shadow TUs live under src_tu/.
-        # `on_disk` intentionally scans only the shadow root so it can detect
-        # undeclared shadow files; it cannot decide whether a manifest source
-        # outside that root exists. Check every declared repo-relative path at
-        # its actual location instead.
-        for stranded in sorted(path for path in declared
-                               if not (REPO / path).is_file()):
+        # `on_disk` only walks `root`, so a TU that has been PROMOTED out of src_tu
+        # into the real build tree (status "promoted", source under src/) is absent
+        # from it while being perfectly present -- and it is still compiled below, so
+        # the "one fewer TU checked" half of the claim is false too. Ask the disk.
+        for stranded in sorted(declared - on_disk):
+            if (REPO / stranded).is_file():
+                continue
             failures.append(_fail("coverage", stranded,
                                   "the manifest declares this source and it is not on "
                                   "disk -- a stranded record, and one fewer TU checked "

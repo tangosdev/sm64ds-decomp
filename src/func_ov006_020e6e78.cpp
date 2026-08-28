@@ -1,10 +1,10 @@
+//cpp
 extern "C" {
     extern unsigned char data_0209d464;
     extern int data_ov006_02141a44;
     extern void func_ov006_020e7508(void);
     extern void func_ov006_020e759c(void);
 }
-//cpp
 // @symbol func_ov006_020e6e78
 // recovered name: dScMgJump2_c_OnKicked
 /* recovered: renamed to Class_Method, declarations from a shared header */

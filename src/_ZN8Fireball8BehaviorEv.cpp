@@ -1,12 +1,17 @@
 //cpp
-/* _ZN8Fireball8BehaviorEv at 0x020f8c94 */
-typedef int s32;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef signed short s16;
-typedef unsigned char u8;
+// @symbol _ZN8Fireball8BehaviorEv
+/* _ZN8Fireball8BehaviorEv at 0x020f8c94 -- a real Fireball:: method now.
+ *
+ * The file-local POD `struct Vector3` is renamed `Vec3F` rather than dropped.
+ * types.h's Vector3 is NOT a POD, and the two cannot both be named Vector3 in one
+ * TU; keeping the POD spelling is deliberate (a C++ struct copy scalarises to the
+ * members' own types, which is what a non-POD substitution would change here).
+ * Renaming a file-local type cannot move a byte -- see the same note in
+ * src_tu/actors/Enemy.cpp, where the merge forced the identical choice.
+ */
+#include "Fireball.h"
 
-struct Vector3 { int x, y, z; };
+struct Vec3F { int x, y, z; };
 struct Vec3P { int x, y, z; Vec3P() {} };
 enum Bool { FALSE, TRUE };
 
@@ -24,7 +29,7 @@ struct Obj {
 extern "C" {
 void func_ov002_020f8b24(void* self);
 int func_ov002_020ad660(void* cc, void* pp, void* r5p, int flags);
-void _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(void* self, const struct Vector3* v);
+void _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(void* self, const struct Vec3F* v);
 void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 s16 Vec3_HorzAngle(const void* a, const void* b);
 void* _ZN8dActor_c10FindWithIDEj(u32 id);
@@ -45,11 +50,11 @@ void func_ov002_020f88ec(void* self);
 extern s16 data_02082214[];
 }
 
-extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
-    char* c = (char*)arg0;
-    struct Vector3 v1;
-    volatile struct Vector3 pt;
-    struct Vector3 v2, v3, w1, w2, w3;
+int Fireball::Behavior() {
+    char* c = (char*)this;
+    struct Vec3F v1;
+    volatile struct Vec3F pt;
+    struct Vec3F v2, v3, w1, w2, w3;
     int f;
     int res;
     void* found;
