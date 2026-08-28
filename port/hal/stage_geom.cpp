@@ -80,6 +80,22 @@
    the ROM's own files stand in as substitutes for a proof while a future writer
    emitting raw bytes works the same way. Which form each file took is reported.
 
+   ---- AND THE FILE HAS TO ACTUALLY BE ONE OF THESE FILES -------------------
+
+   Existence, non-emptiness, a size cap and a sane LZ77 header are not a format
+   parse, and the difference is not academic: a substitute that passes all four
+   and is not a KCL gets served, and the game dies in the collision walker with
+   an access violation, because Stage::LoadClsnAndObjects turns four header
+   words into pointers with no check and nothing in src/ or port/ bounds-checks
+   a single KCL field afterwards. That was measured on this file, not imagined.
+
+   So every substitute is PARSED at latch, on the decompressed bytes that would
+   be served -- sections in order and inside the file, records dividing evenly,
+   every surface index inside its own section, and the whole collision octree
+   walked to its leaves. A file that fails drops the whole folder like any other
+   complaint. The check costs one pass per file at latch and nothing per load.
+   See the block above load_sub for the layouts and where each rule comes from.
+
    ---- HOW THIS TU CLAIMS THE FILTER WITHOUT EDITING hal/fs_mods.cpp ---------
 
    port_fs_mod_filter is ONE function pointer and hal/fs_mods.cpp already
@@ -342,6 +358,414 @@ int probe_dir(const char *want)
     return 0;
 }
 
+/* ---- IS THIS ACTUALLY ONE OF THESE FILES? -------------------------------
+
+   WHY THIS BLOCK EXISTS, measured rather than imagined. The independent review
+   of the lane that wrote this file fed it a substitute that passed every check
+   above -- it opened, it was not empty, it was under the cap, its LZ77 header
+   was sane -- and was nevertheless not a KCL. The mod announced itself
+   correctly and the game then died:
+
+       [mods] StageGeom: ...\fix\rawkcl/bombhei_map.kcl serves
+              data/stage/bombhei_map/bombhei_map.kcl (used as it is, 1620 bytes)
+       rc=3221225477     (0xC0000005, caught by the port's fault probe)
+
+   That is not a surprise once the load path is read. Stage::LoadClsnAndObjects
+   hands the buffer to MeshCollider::UpdateFileOffsets, which turns the four
+   header words into POINTERS by adding the file's own address to each --
+
+       file.positions = (s32 (*)[3])((char *)&file + (int)file.positions);
+       file.normals   = (s16 (*)[3])((char *)&file + (int)file.normals);
+       file.tris      = (KCL_Tri *)((char *)&file + (int)file.tris);
+       file.unk_0c    = (char *)&file + (int)file.unk_0c;
+
+   -- with no check of any kind, and there is not one bounds test on any KCL
+   field anywhere in src/ or port/. The very next collision query walks
+   `node[idx]` off that fourth wild pointer. By then the damage is done and the
+   only question is which garbage address the process dies on.
+
+   So the substitute is parsed HERE, once, at latch, on the decompressed bytes
+   that are about to be served. Nothing is checked per load: the filter's hot
+   path is untouched.
+
+   WHAT "STRUCTURALLY VALID" MEANS HERE. Enough that every pointer the game
+   forms lands inside the buffer and every index it follows lands inside its
+   own section -- which, for these two formats, is most of what "valid" can
+   mean, because neither carries a magic number, a version or a length. There
+   is nothing to sniff except self-consistency.
+
+   THE LAYOUTS ARE THE REPO'S OWN, not a format wiki's. KCL is
+   include/MeshCollider.h:49-71 (the header) and KCL_Tri at :33-47 (the plane
+   record), with the walk taken from the byte-matched
+   src/_ZN12MeshCollider10DetectClsnER13RaycastGround.cpp:130-151. BMD is
+   include/BMD_File.h:61-76 with the section walk taken from
+   src/_ZN5Model17UpdateFileOffsetsER8BMD_File.cpp, which is the function that
+   decides which BMD words are offsets at all -- a word it relocates is an
+   offset and a word it steps over is not, which is how the display-list record
+   below is known to be {count, offset, SIZE, offset} rather than four offsets.
+
+   THE MODEL WAS TESTED BEFORE IT WAS TRUSTED. Every one of this ROM's 48 .kcl
+   files and 48 .bmd files was run through exactly these rules; 48 of 48 pass
+   each. That matters in the direction people forget: a validator that refuses
+   a real file is worse than no validator, because it turns a working mod
+   folder into a mystery. Two findings came out of that pass and are encoded
+   below rather than papered over -- the normal section's padding, and the
+   plane section's -0x10 bias. */
+
+/* Little-endian reads by hand. The data is LE and so is the host, but the
+   offsets these walk to are not all aligned, and assembling the bytes is both
+   portable and impossible to get subtly wrong. */
+u32 rd32(const u8 *d, u32 off)
+{
+    return (u32)d[off] | ((u32)d[off + 1] << 8) | ((u32)d[off + 2] << 16) |
+           ((u32)d[off + 3] << 24);
+}
+
+u16 rd16(const u8 *d, u32 off)
+{
+    return (u16)((u32)d[off] | ((u32)d[off + 1] << 8));
+}
+
+/* The octree walk is recursive over a structure the FILE describes, so both of
+   its dimensions have to be bounded by us rather than by it: depth, in case a
+   branch word points back at its own block, and total work, in case a shallow
+   tree is impossibly wide. Neither bound can reject a real file -- the deepest
+   octree in this ROM descends 13 levels and the busiest visits a few thousand
+   nodes. */
+enum { KCL_MAX_DEPTH = 32, KCL_MAX_NODES = 1u << 22 };
+
+struct KclWalk {
+    const u8 *d;
+    u32 n;
+    u32 ntri;
+    long budget;
+    int failed;
+    const char *why;
+};
+
+void kcl_node(KclWalk *w, u32 block, u32 idx, u32 shift, int depth)
+{
+    unsigned long long wo, p;
+    u32 word;
+
+    if (w->failed)
+        return;
+    if (--w->budget < 0) {
+        w->failed = 1;
+        w->why = "its collision octree is larger than any real level's";
+        return;
+    }
+    if (depth > KCL_MAX_DEPTH) {
+        w->failed = 1;
+        w->why = "its collision octree never stops descending";
+        return;
+    }
+    wo = (unsigned long long)block + 4ull * idx;
+    if (wo + 4 > w->n) {
+        w->failed = 1;
+        w->why = "its collision octree steps outside the file";
+        return;
+    }
+    word = rd32(w->d, (u32)wo);
+
+    if (word & 0x80000000u) {
+        /* A LEAF: the low 31 bits are a byte offset from THIS BLOCK to a
+           zero-terminated list of u16 triangle indices. The game reads it with
+           a pre-increment (`while (*++leaf)`), so the stored offset is biased
+           by -2 and the first real entry sits at offset + 2. The line and
+           sphere walkers additionally read leaf[1] BEFORE testing the
+           terminator, so two entries past the biased base must exist even for
+           an empty list -- hence the +4 here and not +2. */
+        p = (unsigned long long)block + (word & 0x7FFFFFFFu);
+        if (p + 4 > w->n) {
+            w->failed = 1;
+            w->why = "its collision octree points a leaf outside the file";
+            return;
+        }
+        for (;;) {
+            u16 v;
+            p += 2;
+            if (p + 2 > w->n) {
+                w->failed = 1;
+                w->why = "a collision octree leaf runs off the end of the file";
+                return;
+            }
+            v = rd16(w->d, (u32)p);
+            if (v == 0)
+                return;
+            /* ONE-BASED, and that is not a typo. Header word 0x08 stores the
+               plane section offset MINUS 0x10 and the leaf lists store index +
+               1; the two cancel, so the game indexes tris[stored] directly.
+               A stored 0 is the terminator and can never be a triangle. */
+            if (v > w->ntri) {
+                w->failed = 1;
+                w->why = "its collision data names a surface that is not in "
+                         "the file";
+                return;
+            }
+            if (--w->budget < 0) {
+                w->failed = 1;
+                w->why = "its collision octree is larger than any real level's";
+                return;
+            }
+        }
+    }
+
+    /* A BRANCH: the whole word is a byte offset from THIS BLOCK to a child
+       block of eight words, and one bit of each axis is consumed per level. */
+    if (shift == 0) {
+        w->failed = 1;
+        w->why = "its collision octree branches past its own smallest cell";
+        return;
+    }
+    {
+        unsigned long long child = (unsigned long long)block + word;
+        int j;
+        if (child + 32 > w->n) {
+            w->failed = 1;
+            w->why = "its collision octree points a branch outside the file";
+            return;
+        }
+        for (j = 0; j < 8; ++j) {
+            kcl_node(w, (u32)child, (u32)j, shift - 1, depth + 1);
+            if (w->failed)
+                return;
+        }
+    }
+}
+
+/* 1 when `d` is a structurally sound KCL, else 0 with `why` set to a plain
+   sentence naming what is wrong. */
+int kcl_ok(const u8 *d, u32 n, const char **why)
+{
+    u32 o_vert, o_norm, o_tri, o_oct;
+    u32 mx, my, mz, cshift, yshift, zshift;
+    u32 nvert, nnorm, ntri, nx, ny, nz;
+    unsigned long long nroot;
+    KclWalk w;
+    u32 i;
+
+    if (n < 0x38) {
+        *why = "it is smaller than a collision file's own header";
+        return 0;
+    }
+    o_vert = rd32(d, 0x00);
+    o_norm = rd32(d, 0x04);
+    /* THE -0x10 BIAS. Header word 0x08 is the plane section's offset minus
+       0x10, because leaf indices are 1-based; undo it here so every bound
+       below is about real bytes. */
+    o_tri = rd32(d, 0x08) + 0x10;
+    o_oct = rd32(d, 0x0C);
+    mx = rd32(d, 0x20);
+    my = rd32(d, 0x24);
+    mz = rd32(d, 0x28);
+    cshift = rd32(d, 0x2C);
+    yshift = rd32(d, 0x30);
+    zshift = rd32(d, 0x34);
+
+    /* The four sections must appear in order, start after the header and end
+       inside the file. Everything downstream divides these differences, so
+       this test comes first or the counts are nonsense. */
+    if (!(o_vert >= 0x38 && o_vert <= o_norm && o_norm <= o_tri &&
+          o_tri <= o_oct && o_oct <= n)) {
+        *why = "its four sections are not laid out in order inside the file";
+        return 0;
+    }
+    if ((o_norm - o_vert) % 12) {
+        *why = "its collision points do not divide into whole points";
+        return 0;
+    }
+    if ((o_oct - o_tri) % 16) {
+        *why = "its collision surfaces do not divide into whole surfaces";
+        return 0;
+    }
+    /* The normal section is DELIBERATELY not required to divide exactly.
+       Records are 6 bytes and the section after it is 4-aligned, so a real
+       file may pad. Measured: 17 of this ROM's 48 collision files leave
+       exactly 2 bytes there, and an exact-division rule refused all 17. The
+       index bounds below are what actually constrains this section. */
+    nvert = (o_norm - o_vert) / 12;
+    nnorm = (o_tri - o_norm) / 6;
+    ntri = (o_oct - o_tri) / 16;
+    if (nvert == 0 || nnorm == 0 || ntri == 0) {
+        *why = "it has no collision geometry in it at all";
+        return 0;
+    }
+    if (cshift >= 32 || yshift >= 32 || zshift >= 32) {
+        *why = "its collision grid is described by impossible numbers";
+        return 0;
+    }
+
+    /* Root block size, from the masks. ~mask is the extent minus one in whole
+       world units, so the axis divides into (~mask + 1) >> coordShift cells.
+       The file's own yShift and zShift must then be exactly log2(nx) and
+       log2(nx*ny) -- they are how the game indexes this same block, so a file
+       that disagrees with itself here would send the walk somewhere else. */
+    nx = (~mx + 1u) >> cshift;
+    ny = (~my + 1u) >> cshift;
+    nz = (~mz + 1u) >> cshift;
+    if (nx == 0 || ny == 0 || nz == 0) {
+        *why = "its collision grid has an empty side";
+        return 0;
+    }
+    if ((1u << yshift) != nx || (1u << zshift) != nx * ny) {
+        *why = "its collision grid does not agree with its own dimensions";
+        return 0;
+    }
+    nroot = (unsigned long long)nx * ny * nz;
+    if ((unsigned long long)o_oct + 4ull * nroot > n) {
+        *why = "its collision grid is bigger than the file holding it";
+        return 0;
+    }
+
+    /* Every surface's five indices must land in their own section. This is the
+       check that gives the loose normal-section bound its teeth. */
+    for (i = 0; i < ntri; ++i) {
+        u32 off = o_tri + 16 * i;
+        if (rd16(d, off + 0x04) >= nvert) {
+            *why = "a collision surface refers to a point that is not there";
+            return 0;
+        }
+        if (rd16(d, off + 0x06) >= nnorm || rd16(d, off + 0x08) >= nnorm ||
+            rd16(d, off + 0x0A) >= nnorm || rd16(d, off + 0x0C) >= nnorm) {
+            *why = "a collision surface refers to a direction that is not "
+                   "there";
+            return 0;
+        }
+    }
+
+    /* And the whole octree, every root cell, the way the reviewer's checker
+       walked it -- not a spot check of the root. */
+    w.d = d;
+    w.n = n;
+    w.ntri = ntri;
+    w.budget = KCL_MAX_NODES;
+    w.failed = 0;
+    w.why = 0;
+    for (i = 0; i < nroot; ++i) {
+        kcl_node(&w, o_oct, i, cshift, 0);
+        if (w.failed) {
+            *why = w.why;
+            return 0;
+        }
+    }
+    return 1;
+}
+
+/* BMD. Bounds only, as commissioned: every section the loader relocates has to
+   sit inside the file, and every count has to be one the file can hold. The GX
+   command stream's CONTENTS are not examined -- that is a different and much
+   larger job, and the crash this block exists to stop is a wild pointer, not a
+   bad opcode.
+
+   Which words are offsets is not a guess either: it is exactly the set
+   Model::UpdateFileOffsets rebases. A word it steps over is a count or a size.
+   That is how the 0x10-byte display-list record is known to be
+   {count, offset, size, offset} -- the loader relocates +0x04 and +0x0c and
+   deliberately skips +0x08. */
+int bmd_ok(const u8 *d, u32 n, const char **why)
+{
+    /* 0x3c, not the 0x38 sizeof(BMD_File) in the header: word 0x38 is a real
+       header word (the texture block's offset) that the game never reads. It
+       is not validated for that reason, but the header must still be there. */
+    if (n < 0x3C) {
+        *why = "it is smaller than a model file's own header";
+        return 0;
+    }
+
+    /* {count at `c`, offset at `o`, records of `sz`} -- zero offset means the
+       section is absent, which is legal everywhere in this format. */
+    {
+        static const struct { u32 c, o, sz; const char *what; } SEC[] = {
+            { 0x04, 0x08, 0x40, "bones" },
+            { 0x14, 0x18, 0x14, "textures" },
+            { 0x1C, 0x20, 0x10, "colour tables" },
+            { 0x24, 0x28, 0x30, "materials" },
+        };
+        unsigned s;
+        for (s = 0; s < sizeof SEC / sizeof SEC[0]; ++s) {
+            u32 cnt = rd32(d, SEC[s].c), off = rd32(d, SEC[s].o);
+            if (off == 0)
+                continue;
+            if (off >= n ||
+                (unsigned long long)off + (unsigned long long)cnt * SEC[s].sz
+                    > n) {
+                *why = "its model sections do not fit inside the file";
+                return 0;
+            }
+        }
+    }
+
+    /* The display lists, walked the way the loader walks them: a table of
+       8-byte groups, each naming an array of 0x10-byte records, each of which
+       names a transform list and a command stream. Both levels are bounded,
+       and so is every stream, which is the part a truncated file gets wrong. */
+    {
+        u32 ngrp = rd32(d, 0x0C), grp = rd32(d, 0x10), i;
+        if (grp) {
+            if (grp >= n ||
+                (unsigned long long)grp + 8ull * ngrp > n) {
+                *why = "its display list table does not fit inside the file";
+                return 0;
+            }
+            for (i = 0; i < ngrp; ++i) {
+                u32 m = grp + 8 * i;
+                u32 nlist = rd32(d, m), lst = rd32(d, m + 4), k;
+                if (lst == 0)
+                    continue;
+                if (lst >= n ||
+                    (unsigned long long)lst + 0x10ull * nlist > n) {
+                    *why = "a display list runs outside the file";
+                    return 0;
+                }
+                for (k = 0; k < nlist; ++k) {
+                    u32 t = lst + 0x10 * k;
+                    u32 ntf = rd32(d, t), tf = rd32(d, t + 4);
+                    u32 dsz = rd32(d, t + 8), dat = rd32(d, t + 0x0C);
+                    if (tf &&
+                        (tf >= n || (unsigned long long)tf + ntf > n)) {
+                        *why = "a display list's bone table runs outside the "
+                               "file";
+                        return 0;
+                    }
+                    if (dat &&
+                        (dat >= n ||
+                         (unsigned long long)dat + dsz > n)) {
+                        *why = "a display list's drawing commands run outside "
+                               "the file";
+                        return 0;
+                    }
+                }
+            }
+        }
+    }
+
+    /* Texture and colour-table payloads. Each record carries its own offset
+       and byte count, and a truncated file is exactly where those stop
+       agreeing with the file's real length. */
+    {
+        u32 nt = rd32(d, 0x14), to = rd32(d, 0x18);
+        u32 np = rd32(d, 0x1C), po = rd32(d, 0x20), i;
+        for (i = 0; to && i < nt; ++i) {
+            u32 e = to + 0x14 * i;
+            u32 dp = rd32(d, e + 4), sz = rd32(d, e + 8);
+            if (dp && (dp >= n || (unsigned long long)dp + sz > n)) {
+                *why = "a texture's pixels are not inside the file";
+                return 0;
+            }
+        }
+        for (i = 0; po && i < np; ++i) {
+            u32 e = po + 0x10 * i;
+            u32 dp = rd32(d, e + 4), sz = rd32(d, e + 8);
+            if (dp && (dp >= n || (unsigned long long)dp + sz > n)) {
+                *why = "a colour table is not inside the file";
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
 /* ---- reading one substitute --------------------------------------------- */
 
 /* Read <g_dir>/<leaf> into the slot, decompressing if it carries the LZ77
@@ -416,6 +840,29 @@ int load_sub(const char *leaf, const char *stage, int kind, Sub *s,
         s->len = (u32)len;
         s->packed = 0;
     }
+
+    /* THE STRUCTURE CHECK, on the bytes that would actually be served -- after
+       any unpacking, because the unpacked image is what the game parses, and
+       before anything is announced, because a file that fails here must not
+       look for one line like it worked.
+
+       This is where the whole-file rule earns its keep a second time: the
+       caller turns a 0 from here into a complaint that drops the ENTIRE
+       folder, so a level never gets a valid model with a broken floor. */
+    {
+        const char *why = 0;
+        int ok = (kind == K_KCL) ? kcl_ok(s->bytes, s->len, &why)
+                                 : bmd_ok(s->bytes, s->len, &why);
+        if (!ok) {
+            free(s->bytes);
+            s->bytes = 0;
+            snprintf(msg, cap, "%s is not a usable %s file: %s", full,
+                     kind == K_KCL ? "collision" : "model",
+                     why ? why : "it is not laid out like one");
+            return 0;
+        }
+    }
+
     snprintf(s->stage, sizeof s->stage, "%s", stage);
     snprintf(s->shown, sizeof s->shown, "%s", full);
     s->kind = kind;
