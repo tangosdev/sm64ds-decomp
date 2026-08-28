@@ -73,11 +73,10 @@ extern "C" void *_ZTV14ArrowSignRight[20] = {
     0, 0,
 };
 
-// Base vtables the ctor chain installs transiently: storage only.
+// ExclamationSwitch still uses a literal ROM-vtable boundary. The dBase_c and
+// dActor_c installs are now compiler-owned by the native constructor sources.
 extern "C" {
 void *_ZTV17ExclamationSwitch[20];
-int data_0208e4b8[20];   /* fBase_c-era vtable-ish install in dActor_c ctor */
-int data_0208e3a4[20];
 }
 
 // ---- fBase_c::fBase_c() transcription ---------------------------------
