@@ -1,9 +1,9 @@
 {
   "id": "ov006/MgPairAGoneAndOn",
   "module": "ov006",
-  "source": "src_tu/actors/MgPairAGoneAndOn.cpp",
+  "source": "src/actors/MgPairAGoneAndOn.cpp",
   "promoted_source": "src/actors/MgPairAGoneAndOn.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20fa6ac..0x20fa740, 2 function(s), from build/tu_map.json (tools/tu_map.py)",

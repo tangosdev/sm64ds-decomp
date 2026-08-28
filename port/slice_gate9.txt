@@ -4,18 +4,16 @@
 
 src/actors/ArrowSignRight.cpp
 src/actors/Platform.cpp
-src/_ZN8dActor_cC2Ev.cpp
+src/actors/Actor.cpp
 # SceneNode's constructor and Reset now share their production translation unit.
 src/actors/ActorBase_SceneNode.cpp
 src/func_0203b438.c
-src/func_02043810.c
-src/_ZN7fBase_cnwEj.cpp
+src/actors/ActorBase.cpp
 src/_ZN11ShadowModelC1Ev.cpp
 src/_ZN10dBgW_KcMbgC1Ev.cpp
 src/_ZN4dBgW7DisableEv.cpp
 src/_ZN4dBgW9IsEnabledEv.cpp
 src/_ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block.c
-src/_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_.cpp
 src/_ZN9ModelBase7SetFileEP8BMD_Fileii.cpp
 src/func_02039394.c
 src/func_020393a4.c
@@ -29,7 +27,6 @@ src/_ZN10dBgW_KcMbg9TransformERK9Matrix4x3s.cpp
 src/func_0203b244.c
 src/LenVec3.c
 src/func_020396d0.c
-src/_ZN8dActor_c13ClosestPlayerEv.cpp
 src/Matrix4x3_FromRotationY.c
 src/func_01ffb07c.cpp
 src/func_01ffb098.cpp
@@ -39,15 +36,6 @@ src/func_01ffb0bc.cpp
 src/func_01ffb0c8.cpp
 src/func_020393fc.c
 src/func_020395fc.c
-src/_ZN7fBase_c19BeforeInitResourcesEv.cpp
-src/_ZN7fBase_c18AfterInitResourcesEj.cpp
-src/_ZN7fBase_c22BeforeCleanupResourcesEv.cpp
-src/_ZN7fBase_c14BeforeBehaviorEv.cpp
-src/_ZN7fBase_c13AfterBehaviorEj.cpp
-src/_ZN7fBase_c12BeforeRenderEv.cpp
-src/_ZN7fBase_c11AfterRenderEj.cpp
-src/_ZN7fBase_c16OnPendingDestroyEv.cpp
-src/_ZN7fBase_c13OnHeapCreatedEv.cpp
 src/func_0203b27c.c
 src/func_0204405c.c
 src/func_0203b3c0.c

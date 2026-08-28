@@ -2,9 +2,8 @@
 /* Manually curated shadow translation unit.
  * ov018/PowerStarCreate  (4 function(s))
  *
- * NOT ENROLLED and NOT CANONICAL.  The readable class and member definitions
- * are compiled only by tubuild's scratch pipeline while the four legacy
- * production sources remain authoritative.
+ * CANONICAL. The readable class and member definitions below are what the ROM
+ * build compiles; the four legacy production sources they replaced are gone.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
  * emits one .text section per function, in the REVERSE of source order, so

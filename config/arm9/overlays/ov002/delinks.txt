@@ -4272,37 +4272,9 @@ src/PowerStar_Spawn.c:
     complete
     .text start:0x020ebf30 end:0x020ebf8c
 
-src/_ZN4TreeD1Ev.cpp:
+src/actors/Tree.cpp:
     complete
-    .text start:0x020ebf8c end:0x020ebfcc
-
-src/_ZN4TreeD0Ev.cpp:
-    complete
-    .text start:0x020ebfcc end:0x020ec020
-
-src/_ZN4Tree16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020ec020 end:0x020ec0a0
-
-src/_ZN4Tree16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x020ec0a0 end:0x020ec0a4
-
-src/_ZN4Tree6RenderEv.cpp:
-    complete
-    .text start:0x020ec0a4 end:0x020ec1d8
-
-src/_ZN4Tree8BehaviorEv.cpp:
-    complete
-    .text start:0x020ec1d8 end:0x020ec22c
-
-src/_ZN4Tree13InitResourcesEv.cpp:
-    complete
-    .text start:0x020ec22c end:0x020ec32c
-
-src/Tree_Spawn.cpp:
-    complete
-    .text start:0x020ec32c end:0x020ec388
+    .text start:0x020ebf8c end:0x020ec388
 
 src/actors/Warp.cpp:
     complete
@@ -5487,73 +5459,9 @@ src/_ZN3HUDC1Ev.c:
     complete
     .text start:0x020fe154 end:0x020fe190
 
-src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp:
+src/stage/LevelObjects.cpp:
     complete
-    .text start:0x020fe190 end:0x020fe33c
-
-src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp:
-    complete
-    .text start:0x020fe33c end:0x020fe3cc
-
-src/_Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
-    complete
-    .text start:0x020fe3cc end:0x020fe3e4
-
-src/_Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
-    complete
-    .text start:0x020fe3e4 end:0x020fe3f8
-
-src/_Z23LoadMinimapScaleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
-    complete
-    .text start:0x020fe3f8 end:0x020fe40c
-
-src/_Z22LoadMinimapTileObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
-    complete
-    .text start:0x020fe40c end:0x020fe420
-
-src/_Z15LoadExitObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
-    complete
-    .text start:0x020fe420 end:0x020fe4f0
-
-src/_Z15LoadDoorObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
-    complete
-    .text start:0x020fe4f0 end:0x020fe5cc
-
-src/_Z14LoadFogObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
-    complete
-    .text start:0x020fe5cc end:0x020fe5e0
-
-src/_Z23LoadTeleportDestObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
-    complete
-    .text start:0x020fe5e0 end:0x020fe5f4
-
-src/_Z25LoadTeleportSourceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
-    complete
-    .text start:0x020fe5f4 end:0x020fe690
-
-src/_Z15LoadViewObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
-    complete
-    .text start:0x020fe690 end:0x020fe6a4
-
-src/_Z15LoadPathObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
-    complete
-    .text start:0x020fe6a4 end:0x020fe6b8
-
-src/_Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
-    complete
-    .text start:0x020fe6b8 end:0x020fe6c8
-
-src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
-    complete
-    .text start:0x020fe6c8 end:0x020fe8ac
-
-src/_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
-    complete
-    .text start:0x020fe8ac end:0x020fe960
-
-src/_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp:
-    complete
-    .text start:0x020fe960 end:0x020fea4c
+    .text start:0x020fe190 end:0x020fea4c
 
 src/func_ov002_020fea4c.c:
     complete

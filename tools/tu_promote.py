@@ -226,6 +226,9 @@ def main():
     lineage = PA.lineage("HEAD")
     for p, entry in zip(plans, entries):
         rewrite_delinks(p)
+        # `git mv` will not create the destination directory, and a promoted_source
+        # may name one src/ does not have yet (src/stage/ was the first).
+        (REPO / p["dest"]).parent.mkdir(parents=True, exist_ok=True)
         git("mv", p["source"], p["dest"])
         for source in p["legacy"]:
             git("rm", "-q", source)

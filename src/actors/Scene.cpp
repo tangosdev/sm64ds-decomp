@@ -1,13 +1,13 @@
 //cpp
-/* SHADOW translation unit -- arm9 / dScene_c (the ROM's own name for the class is
+/* Translation unit, reconstructed and promoted -- arm9 / dScene_c (the ROM's own name for the class is
  * dScene_c; see include/dScene_c.h reading 4).
  *
- * NOT ENROLLED, AND NOT CANONICAL. This file contributes nothing to the ROM
- * build. The twenty-one one-function sources under src/ remain the enrolled
- * owners of 0x0202e140..0x0202ec9c. See notes/translation-unit-reconstruction-plan.md
- * (the design) and notes/tu-reconstruction-pilot-report.md (the worked example
- * this file was hand-assembled against, because `tubuild.py create` has no
- * candidate to offer here -- see BOUNDARY below).
+ * CANONICAL. The ROM build compiles this file and takes all 21 functions from
+ * this one object; the one-function sources that owned 0x0202e140..0x0202ec9c
+ * are gone. See notes/translation-unit-reconstruction-plan.md (the design) and
+ * notes/tu-reconstruction-pilot-report.md (the worked example this file was
+ * hand-assembled against, because `tubuild.py create` has no candidate to
+ * offer here -- see BOUNDARY below).
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S.
  * mwccarm 2004/b56 emits one `.text` section per function and lays those
