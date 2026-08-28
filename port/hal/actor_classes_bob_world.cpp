@@ -1467,6 +1467,9 @@ static void port_bob_watch_arm(void)
         if (end == p) break;
         p = end;
         if (*p == ':') std::strtol(p + 1, &end, 0), p = end;
+        /* the @<area> suffix (hal/level_boot.cpp's spelling), skipped so the
+           watch keeps parsing a multi-entry list past it */
+        if (*p == '@') std::strtol(p + 1, &end, 0), p = end;
         while (*p == ',' || *p == ' ') ++p;
         g_watch[g_watch_n++] = (unsigned short)id;
     }

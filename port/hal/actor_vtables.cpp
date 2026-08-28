@@ -484,7 +484,27 @@ unsigned char data_02092128[0x40];
    byte-identical with this non-null. */
 __declspec(align(8)) static unsigned char HAL_CAMERA[0x400];
 void *data_0209f318 = HAL_CAMERA;
-unsigned short data_0209f49c, data_0209f49e, data_0209f4a0;
+/* run mg16 lane MP3, field failure 2: FULL-EXTENT BACKING, for exactly the
+   reason the paragraph below already gives for data_0209f4ac/data_0209f4ae.
+   These three are per-player Ctrl fields on the DS -- held buttons at
+   Ctrl+0x04, pressed-this-frame at +0x06, stick x at +0x08, all striding
+   0x18 -- and hosting them as BARE SHORTS gave player 0 two bytes and every
+   other player somebody else's memory.
+
+   THE SYMPTOM WAS A BUTTON BLEEDING BETWEEN WORLDS. Crouch pressed in the
+   child's window made MARIO crouch in the child's world: the crouch reader
+   takes its buttons from these, the port fanned only the STICK fields per
+   player, and with no storage past offset 0 there was nowhere for the
+   child's own buttons to go. The stick fanned correctly and the buttons did
+   not, which is why movement looked right and one button family did not.
+
+   It was also an OUT-OF-BOUNDS WRITE the moment the port started fanning
+   data_0209f4a0 at stride 0x18: a two-byte write 24 bytes past a two-byte
+   object, into whatever the linker put next -- the same stray this file's
+   next paragraph documents catching once already. */
+unsigned char data_0209f49c[0x18 * 4];
+unsigned char data_0209f49e[0x18 * 4];
+unsigned char data_0209f4a0[0x18 * 4];
 unsigned char data_0209f4ab;
 /* Per-player controller records, stride 0x18, four players. The matched
    writers index BOTH bases by player: InitControllerMode stores the mode

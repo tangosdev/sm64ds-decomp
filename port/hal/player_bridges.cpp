@@ -284,9 +284,65 @@ static void hal_render_head_group(char *c, char *head, unsigned hid,
         ((void ***)head)[0][4]))(head, 0, 0);
 }
 
+/* run mg16 lane MP3: the two globals Player::Render's own gates read. */
+extern "C" {
+extern unsigned char data_0209f2d8;   /* VS mode flag */
+extern int data_0209fc5c[];           /* per-slot "this slot is live" */
+}
+
 void hal_render_player_world(void *player)
 {
     char *c = (char *)player;
+
+    /* ---- THE GATES Player::Render KEEPS, AND THIS DID NOT ------------------
+     *
+     * Run mg16 lane MP3, field failure 3. This function draws the body; the
+     * SHADOW is a different path entirely -- Player::Behavior registers a
+     * ShadowModel node (func_ov002_020e4bb8 -> func_ov002_020e444c ->
+     * Actor::DropShadowRadHeight) and one global ShadowModel::RenderAll walk
+     * draws every node. That path honours its OWN gates. This one honoured
+     * none of src/_ZN6Player6RenderEv.cpp's, so the two could disagree about
+     * whether a player should be drawn AT ALL -- and a caster whose body is
+     * gated out is precisely "a shadow with no body".
+     *
+     * The four gates, in the ROM's own order (_ZN6Player6RenderEv.cpp:44-58):
+     *   VS mode and this slot not live  -> not drawn
+     *   the invincibility blink          -> not drawn on alternating frames
+     *   fully transparent                -> not drawn  (NOT reproduced here,
+     *                                       see the note at the gate: the
+     *                                       field offset is unconfirmed and a
+     *                                       guessed offset is worse than a
+     *                                       named gap)
+     *   mFlags & 0x10                    -> the ROM skips the body block
+     *
+     * The blink one matters most here: it is a PER-FRAME alternation, so a
+     * body that ignores it while its shadow does not gives a shadow that
+     * flickers away from a body that never does.
+     *
+     * NOT A NEW POLICY -- this is the matched TU's own logic, applied where the
+     * port draws instead of it. hal_render_player_world exists because
+     * Player::Render's vtable slot is a no-op in this port
+     * (hal/level_boot.cpp's ps_render), so every gate that slot would have
+     * applied has to be applied here or it is not applied anywhere. */
+    {
+        const unsigned char no = *(const unsigned char *)(c + 0x6d8);
+        if (data_0209f2d8 == 1 && no < 4 && data_0209fc5c[no] == 0)
+            return;
+        const unsigned short inv = *(const unsigned short *)(c + 0x6a6);
+        /* The ROM picks bit 1 or bit 0 off Player::IsState(the hurt state).
+           That state object is ov002's and is not reachable from here, so the
+           port takes the conservative half: blink on bit 0, which is the arm
+           the ROM uses everywhere except that one state. Stated rather than
+           silently simplified. */
+        if (inv & 1)
+            return;
+        /* mOpacity's offset is NOT confirmed from the header here, so the
+           ROM's `if (mOpacity == 0) return` gate is deliberately NOT
+           reproduced rather than guessed at an offset. Named so the gap is
+           visible: a fully transparent player would still have its body
+           drawn by this function. */
+    }
+
     unsigned id = _ZNK6Player14GetBodyModelIDEjb(c, *(int *)(c + 8) & 0xff, 0);
     ModelAnim *ma = ((ModelAnim **)(c + 0xdc))[id];
     if (!ma) return;

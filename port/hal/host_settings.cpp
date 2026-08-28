@@ -12,6 +12,9 @@
 
 #include "hal/host_settings.h"
 
+/* run mg16 lane MP2: the instance suffix on the sibling temp file. */
+#include "instance_tag.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -349,12 +352,21 @@ char *json_set(const char *s, const char *key, const char *val)
    A settings.json truncated by a crash mid-write would read as malformed and
    throw away every launcher key in it, and the launcher's own loader would
    do the same; going via a temp means the file a reader sees is either the
-   old one or the new one. */
+   old one or the new one.
+
+   run mg16 lane MP2: THE TEMP NAME CARRIES THE INSTANCE SUFFIX, and that is a
+   BUG FIX rather than tidiness. Two copies of the game share one settings.json,
+   so with a single shared "settings.json.tmp" two overlapping saves both open
+   the SAME temp, interleave their bytes into it, and then each rename it into
+   place -- so MoveFileExA publishes a MIXTURE of two writes and the atomicity
+   this comment claims is defeated exactly when it is needed. A per-instance
+   temp restores it: each writer has its own file, and the rename is still the
+   single atomic publish. Unset, the name is "settings.json.tmp" as before. */
 int write_text(const char *path, const char *text)
 {
     char tmp[1024];
-    if (strlen(path) + 5 >= sizeof tmp) return 0;
-    snprintf(tmp, sizeof tmp, "%s.tmp", path);
+    if (strlen(path) + 24 >= sizeof tmp) return 0;
+    snprintf(tmp, sizeof tmp, "%s%s.tmp", path, port_instance_tag());
     {
         FILE *f = fopen(tmp, "wb");
         size_t n = strlen(text);
@@ -1026,6 +1038,18 @@ extern "C" int host_settings_poll(void)
    folder is read-only, and the failure is on stderr rather than in their
    face. Every key this program did not write is carried across untouched
    (see json_set). */
+/* run mg16 lane MP2: A KNOWN, DELIBERATE LIMITATION WITH TWO INSTANCES.
+   This is a READ-MODIFY-WRITE over a file both copies of the game share: it
+   reloads, edits three keys and rewrites the WHOLE document. So if P1 changes
+   its volume and then P2 saves anything, P2 rewrites the file from the state it
+   loaded and P1's change is gone -- LAST WRITER WINS, silently.
+   That is left as it is on purpose. Giving each instance its own settings.json
+   would mean the launcher's own keys stop being shared, which is the wrong
+   trade for a file whose whole job is to carry launcher settings into the game.
+   The TEMP-FILE interleave that used to sit underneath this is a different
+   thing and IS fixed, in write_text above.
+   hal/instance_tag.h's survey carries the same note for a reader who arrives
+   from the other direction. */
 extern "C" int host_setting_save_run(int mode, int key, int pad)
 {
     load_once();

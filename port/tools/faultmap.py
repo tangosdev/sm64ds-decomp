@@ -22,6 +22,7 @@ playlog at once.
     python port/tools/faultmap.py --id 0xec                (decode an actor id)
     python port/tools/faultmap.py --map OTHER.map +0x1234  (another build's map)
     python port/tools/faultmap.py --all +0x3ec80           (list every folded name)
+    python port/tools/faultmap.py --selftest
 
 With no --map this reads build/port/walk_window.map from the checkout the
 SCRIPT lives in, not the current directory. Same rule as linkage.py: a tool
@@ -53,6 +54,16 @@ in the crash to contradict it. So this prints EVERY symbol sharing an address
 and says FOLDED when there is more than one. Which sibling was really running
 is not in the map; the walker's actor id usually settles it, which is the other
 half of what this tool prints.
+
+AN OFFSET THE MAP CANNOT ANSWER IS REFUSED, NOT RESOLVED. Past the image's
+end (SizeOfImage, from the exe next to the map) an offset is a system-DLL
+frame or a stack/heap address the probe made module-relative anyway, and it
+reads as OUTSIDE. When the exe is missing and the size unknown, the same
+class of offset is caught by distance instead: the widest genuine gap between
+consecutive symbols on the linked map is 0x1dff0, so a hit implausibly far
+past its symbol is refused rather than attributed. tools/resolve_crash.py
+applies the same two bounds; report 7447e46c's execute-at-stack eip is the
+incident both guards exist for.
 
 THE ACTOR ID. `id 0xec` in the walker line is the ROM actor id at +0xc of the
 actor object. The names come from the registry's own rows -- hal/actor_classes.inc
@@ -90,6 +101,35 @@ def default_root():
     return os.path.dirname(os.path.dirname(here))
 
 
+def parse_map(lines):
+    """(entries, preferred_base or None) from /MAP text lines.
+
+    The file-level refusals (missing, tiny, header-less, row-less) live in
+    load_map; this is the pure row walk, which is also what --selftest runs
+    its fixture through.
+    """
+    base = None
+    at = {}
+    for line in lines:
+        if base is None:
+            m = PREFERRED.search(line)
+            if m:
+                base = int(m.group(1), 16)
+                continue
+        m = ROW.match(line)
+        if not m:
+            continue
+        sect, sect_off, sym, addr, flags, obj = m.groups()
+        if base is None:
+            continue  # rows cannot be converted before the header is seen
+        off = int(addr, 16) - base
+        if off < 0:
+            continue
+        at.setdefault(off, []).append(
+            (sym, int(sect, 16), int(sect_off, 16), obj, flags.split()))
+    return sorted(at.items()), base
+
+
 def load_map(mapfile):
     """(entries, preferred_base) for an MSVC /MAP.
 
@@ -103,32 +143,14 @@ def load_map(mapfile):
         sys.exit("faultmap: map at %s is %d bytes, which is a failed or "
                  "truncated link, not a build to symbolize"
                  % (mapfile, os.path.getsize(mapfile)))
-    base = None
-    at = {}
     with open(mapfile, errors="replace") as f:
-        for line in f:
-            if base is None:
-                m = PREFERRED.search(line)
-                if m:
-                    base = int(m.group(1), 16)
-                    continue
-            m = ROW.match(line)
-            if not m:
-                continue
-            sect, sect_off, sym, addr, flags, obj = m.groups()
-            if base is None:
-                continue  # rows cannot be converted before the header is seen
-            off = int(addr, 16) - base
-            if off < 0:
-                continue
-            at.setdefault(off, []).append(
-                (sym, int(sect, 16), int(sect_off, 16), obj, flags.split()))
+        entries, base = parse_map(f)
     if base is None:
         sys.exit("faultmap: no 'Preferred load address' header in %s -- that is "
                  "not an MSVC /MAP" % mapfile)
-    if not at:
+    if not entries:
         sys.exit("faultmap: %s parsed to zero symbol rows" % mapfile)
-    return sorted(at.items()), base
+    return entries, base
 
 
 def actor_names(root):
@@ -192,6 +214,15 @@ def lookup(entries, off):
 
 FOLD_SHOWN = 6
 
+# A hit more than this past its symbol is not a resolution. Mid-map the
+# bisect bounds the distance by the real gap to the next symbol -- 0x1dff0 at
+# the widest measured on the linked map -- so this can only fire past the
+# LAST symbol, where nothing else bounds it: an ntdll frame with no exe
+# beside the map to refuse it by image size lands there with a distance of
+# gigabytes. Mirrored in tools/resolve_crash.py MAX_CODE_DELTA -- change both
+# together.
+MAX_SYM_DELTA = 0x40000
+
 
 def describe(entries, off, indent="", show_all=False, size=None):
     """Print one offset's resolution."""
@@ -206,6 +237,14 @@ def describe(entries, off, indent="", show_all=False, size=None):
     prev, dist, nxt = lookup(entries, off)
     if prev is None:
         print("%s  before the first symbol in the map" % indent)
+        return
+    if dist > MAX_SYM_DELTA:
+        print("%s  +0x%x past the nearest preceding symbol (+0x%08x %s): "
+              "nothing real is that far past its symbol."
+              % (indent, dist, prev[0], prev[1][0][0]))
+        print("%s  A system DLL frame or a stack/heap address the probe made "
+              "module-relative anyway, most likely with no exe next to the "
+              "map to refuse it by image size. Not resolvable." % indent)
         return
     syms = prev[1]
     if len(syms) > 1:
@@ -224,9 +263,6 @@ def describe(entries, off, indent="", show_all=False, size=None):
         more = "  (+%d more folded)" % (len(nxt[1]) - 1) if len(nxt[1]) > 1 else ""
         print("%s  next symbol: +0x%08x %s%s  [%s]"
               % (indent, nxt[0], nname, more, nxt[1][0][3]))
-        if dist > nxt[0] - prev[0]:
-            print("%s  WARNING: the offset is past the next symbol's start, so "
-                  "the map has a gap here and this attribution is unsafe" % indent)
     else:
         print("%s  next symbol: none, this is the last symbol in the map" % indent)
 
@@ -244,8 +280,76 @@ def decode_id(names, aid, indent=""):
               "for this id)" % (indent, aid, aid, " / ".join(got), len(got)))
 
 
+# ---------------------------------------------------------------------------
+# selftest: fixture map, so the refusal arms are pinned (the style of
+# port/tools/abicheck.py --selftest)
+# ---------------------------------------------------------------------------
+FIX_MAP = """\
+ Preferred load address is 00400000
+
+ 0001:00001000       _bootstrap                 00401000 f   boot.cpp.obj
+ 0001:00001100       ?Render@Trap@@QAEHXZ       00401100 f   trap.cpp.obj
+ 0001:00001100       ?Render@MontyMole@@QAEHXZ  00401100 f   monty.cpp.obj
+ 0001:00002000       _last_sym                  00402000 f   tail.cpp.obj
+"""
+# fixture image: symbols end at +0x2000, the image runs out to here
+FIX_SIZE = 0x100000
+
+
+def selftest():
+    import io
+    from contextlib import redirect_stdout
+    bad = 0
+    print("faultmap --selftest")
+    entries, base = parse_map(FIX_MAP.splitlines())
+
+    def run(off, size):
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            describe(entries, off, indent="  ", size=size)
+        return buf.getvalue()
+
+    def want(note, got, needle, absent=None):
+        nonlocal bad
+        ok = needle in got and (absent is None or absent not in got)
+        bad += 0 if ok else 1
+        print("  %-4s %s" % ("ok" if ok else "FAIL", note))
+        if not ok:
+            print("       got:\n%s" % got)
+
+    ok = base == 0x400000 and len(entries) == 3 \
+        and len(dict(entries)[0x1100]) == 2
+    bad += 0 if ok else 1
+    print("  %-4s fixture parses: 3 addresses, base 0x400000, one folded pair"
+          % ("ok" if ok else "FAIL"))
+
+    # normal resolution is untouched, folding stays visible
+    want("a folded in-code offset resolves and says FOLDED",
+         run(0x1104, FIX_SIZE), "FOLDED, 2 symbols")
+
+    # THE FLAGGED SHAPE, report 7447e46c: an offset past the image end must
+    # read OUTSIDE and never name a symbol
+    want("past the image end reads OUTSIDE, no symbol named",
+         run(0x200000, FIX_SIZE), "OUTSIDE the module", absent="_last_sym")
+
+    # exe missing, size unknown: the distance bound must catch the same
+    # offset instead of resolving it to the last symbol +0x1fe000
+    want("size unknown: the distance bound alone still refuses",
+         run(0x200000, None), "Not resolvable", absent="tail.cpp.obj")
+
+    # and a sane delta past the last symbol stays resolvable without a size,
+    # so the bound cannot eat real resolutions when the exe is missing
+    want("size unknown: a sane delta still resolves",
+         run(0x2010, None), "_last_sym")
+
+    print("SELFTEST %s" % ("PASSED" if not bad else "FAILED (%d)" % bad))
+    return 1 if bad else 0
+
+
 def main():
     args = list(sys.argv[1:])
+    if "--selftest" in args:
+        return selftest()
     mapfile = None
     if "--map" in args:
         i = args.index("--map")
@@ -284,7 +388,8 @@ def main():
     print("image size : %s"
           % ("0x%x from the PE next to the map" % size if size
              else "unknown, no readable exe next to the map -- offsets past "
-                  "the module cannot be refused"))
+                  "the module are caught only by the +0x%x distance bound"
+                  % MAX_SYM_DELTA))
     print()
 
     for aid in ids:

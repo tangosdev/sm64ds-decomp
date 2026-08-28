@@ -30,10 +30,25 @@ extern void *func_0204068c(u16 a);
 extern s32 func_0204271c(void *o);
 extern s32 func_02042748(void *a, void *b);
 extern s32 func_02040a84(void);
-extern void func_02040a5c(void);
+/* DEFECT D1, fixed here: the declaration follows the definition.
+   src/func_02040a5c.c:11 is `void func_02040a5c(u32 val)` -- one argument,
+   IRQ-guarded, and it stores `val & ~1u`. This TU used to declare it (void)
+   and call it with nothing at the pair below, which is correct only on ARM,
+   where func_02040a84's return is still sitting in r0 when the second bl
+   lands. On a stack ABI it reads an unwritten slot. See the pair at the
+   call site for the ROM-faithful shape. */
+extern void func_02040a5c(u32 val);
 extern s32 func_0203fd64(void);
 extern void func_02042778(void);
-extern void func_0203f604(void);
+/* DEFECT D3, fixed here, and it is the one nobody had named: this TU declared
+   func_0203f604 as `void (void)` against src/func_0203f604.c:15's
+   `void *func_0203f604(int unused, unsigned int size, void *ptr)` -- wrong
+   return type AND three missing parameters. It matters more than the other two
+   because this symbol is ADDRESS-TAKEN (passed to func_02040c34 at :194 and
+   :197), so no call-site edit can reach it; the declaration is the only place
+   the type exists. func_0203f604 is a combined allocate/free helper, so a call
+   through a mis-typed pointer reaches Memory::Allocate with a garbage size. */
+extern void *func_0203f604(int unused, unsigned int size, void *ptr);
 extern void func_0203f644(void);
 
 extern u8 data_02099e1c;
@@ -355,8 +370,20 @@ loop_90:
                                     }
                                     if ((var_r3 != 0) && !(data_020a1154[0].unkC & 0x2000) && !(data_020a1040.unkC & 0x2000)) {
                                         if ((u32) data_02099e18 > 2U) {
-                                            func_02040a84();
-                                            func_02040a5c();
+                                            /* DEFECT D1's call site. The ROM
+                                               leaves func_02040a84's return in
+                                               r0 and lets the next bl read it
+                                               as its own argument -- the same
+                                               idiom src/func_ov007_020cc2cc.c
+                                               carries for func_0203da9c. Two
+                                               bare calls are the same two bl's
+                                               on ARM and an unwritten stack
+                                               slot on x86; nesting them is the
+                                               only shape that is both. It is
+                                               also what the pair MEANS: read
+                                               the WM status word, clear bit 0,
+                                               write it back. */
+                                            func_02040a5c(func_02040a84());
                                         }
                                         data_020a0f2c = 0;
                                         do {

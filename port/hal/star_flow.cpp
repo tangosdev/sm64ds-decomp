@@ -282,7 +282,34 @@ void port_boot_course_sound(int level)
 /* Seat what the course loop reads that the boot does NOT: the player globals
    (SetPlayerGlobals, which InitResources does not call -- the handoff and the
    title path do). The sound row moved into the boot (port_boot_course_sound),
-   so this no longer seats it. Called once from the harness after the boot. */
+   so this no longer seats it. Called once from the harness after the boot.
+
+   ONCE PER SESSION IS CORRECT, AND THE ONE-SHOT IS NOT A RESPAWN BUG. Read the
+   relocs before "fixing" this: SetPlayerGlobals (0x0202acfc) has three callers
+   in the ROM -- StartFile (0x0202ae88), PrepareVsMode and the ov003
+   title-confirm path func_ov003_020ad814 -- plus two the port adds, this one
+   and hal/level_change.cpp:1415 (the port's copy of that ov003 path). It is
+   the NEW FILE seat: lives to 4, health to 0x880 for all four players. This
+   call stands in for StartFile's, so it belongs exactly where it is.
+
+   Two of the ROM's three DO enter a level -- StartFile and func_ov003_020ad814
+   both call LoadLevelNoReturn immediately before it, so do not repeat the
+   earlier claim here that "none is a level entry". The distinction that
+   matters is narrower and is the whole reason this stays a one-shot: none of
+   them is on the PER-ENTRY OR RESPAWN path. They run when a file is started,
+   never when a running file re-enters a level.
+
+   Re-running it per entry would be WORSE than the bug it looks like it causes:
+   it would restore lives to 4 on every respawn, so HitDeathPlane's
+   `data_0209f2f4[0] != 0` game-over branch below could never be taken.
+
+   The ROM's PER-ENTRY health restore is a different mechanism entirely and does
+   not pass through here: the Player's own level-enter step heals to full when
+   the latched entry reason says fresh-or-death (src/func_ov002_020c75f0.c:29),
+   and the boot latches that reason -- see the data_0209f2fc seat in
+   hal/level_boot.cpp. TRIAGE14 read this one-shot as the cause of the infinite
+   death loop; the cause was the missing latch, and this note is here so the
+   next reader does not walk the same path. */
 void port_course_seat(void)
 {
     if (g_seated) return;

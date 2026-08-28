@@ -228,3 +228,161 @@ class than the actor the port seats -- hal/actor_classes_bob_world.cpp derives
 the shift by address at its head. So e.g. the seven _ZN13InvisiblePole* TUs are
 not the class the port fills as INVISIBLE_POLE, and they will link when the
 class they really belong to is mounted, not before.
+
+
+================================================================================
+VS MULTIPLAYER: WHAT ov002 STILL OWES (run mg16, lane MP3)
+================================================================================
+
+MP3 linked the ROM's multiplayer conductor and got two Player actors into one
+world, driven by two processes, physically colliding. Two things it went looking
+for in ov002 and did NOT find are recorded here rather than only in a lane's
+status file, because this is where the next person will look.
+
+1. THE VS STAR-STEAL LOGIC IS NOT LOCATED. In DS VS mode a player who is hit
+   drops a star and the attacker can take it. Searched for and not found: no
+   ov002 symbol matches a steal/drop/transfer shape, and the only VS star
+   symbols in the tree are RENDER-side (the HUD's star count). The PvP hit
+   consumer func_ov002_020d869c was read end to end -- it refuses any collision
+   whose partner is not actor id 0xbf (Player) -- and it does not move a star.
+   THIS IS AN OPEN QUESTION, NOT A MEASURED NEGATIVE: the search was by symbol
+   name and by reading the hit path, not by tracing the star count backwards
+   from its writer, which is what would settle it. Anyone picking up VS scoring
+   should start there.
+
+2. THE PER-PLAYER Ctrl SPLIT SYMBOLS CAP THE GAME AT TWO PLAYERS, and the cap
+   is in the PORT, not in ov002. On the DS data_0209f4a0/a2/a4/a6/ac are
+   interior addresses of the Ctrl block (data_0209f498 + 8/0xa/0xc/0xe/0x14,
+   stride 0x18), which is why Player::Behavior reads its stick angle as
+   `&data_0209f4a6 + data_020a0e40 * 0x18`. hal/auto_bss.cpp hosts them as five
+   separate int[8] arrays, so that walk only lands correctly for slot 0 (offset
+   zero) and slot 1 (+0x18, still inside 32 bytes). Slot 2 would write at +0x30,
+   off the end. tests/walk_window.cpp REFUSES above two players loudly rather
+   than corrupting a neighbour.
+   THE FIX is to host the five as interior addresses of data_0209f498 the way
+   hal/camera_bridges.cpp hosts the comms records. It is a band migration with a
+   real regression surface: those symbols sit INTERIOR to .dsstate$mmm, so
+   growing or moving them shifts every hosted global above them and retires
+   every BMP baseline in the tree.
+
+3. THE VS MODE FLAG IS DELIBERATELY OFF. data_0209f2d8 == 1 is not "two players
+   are present", it is DS VS MODE, and eleven attack-cylinder wrappers in ov002
+   branch on it (VS ground-pound radius 0x82000 against single-player's
+   0x32000), as do func_ov002_020dd908's shockwave, Stage, StarMarker, the HUD
+   and the fader. MP3 moved the player COUNT and left the mode alone, so two
+   players run on mode-0 code that was already proven. Turning the flag on is a
+   lane of its own and it wants ov075 (the VS menu) mounted first, because
+   src/PrepareVsMode.c is what the ROM sets it from.
+
+
+================================================================================
+BANKED OPEN QUESTION: VS DETERMINISM AND THE ROM'S RNG SEED (run mg16, lane MP3)
+================================================================================
+
+DOWNGRADED TO A BANKED QUESTION by coordinator order once host-authoritative
+state sync was sanctioned: under state sync the host's world is authoritative
+and small simulation divergences stop being correctness bugs. The archaeology
+was already done when the order landed, so it is recorded here rather than
+thrown away. NOBODY SHOULD CHASE THIS until the sync layer's shape is settled.
+
+WHAT THE ROM ACTUALLY DOES, derived from src and not invented:
+
+  THE RNG is one LCG, src/RandomIntInternal.c (0x0203b990):
+      *seed = *seed * 0x19660d + 0x3c6ef35f
+  Three seed globals, all bss (zero at boot): data_0209e650 (world/actor),
+  data_0209d4b8 (minigame), data_ov002_0210e160 (Player-local anim variation).
+
+  EVERY SEED WRITER IS A CONSTANT EXCEPT ONE. __sinit_02074e44.c:9 and
+  __sinit_02074dc4.c:12 write 1; func_020196cc.c:14 and
+  __sinit_ov002_021019d0.c:1085 write 0x4d2. The single non-constant seed in the
+  whole ROM is
+
+      _ZN5Stage13InitResourcesEv.cpp:424
+          func_0203b9b4(&data_0209e650, func_0203dad4());
+
+  and src/func_0203dad4.c is `return data_020a1040` -- THE COMMS FRAME COUNTER.
+  The same line's neighbour at :427 picks the VS star order as
+  func_0203dad4() % 6 into data_0209f344.
+
+  THAT COUNTER IS A SESSION VALUE, not a local one. src/func_0203df40.c:65 ticks
+  it once per frame, and src/func_0203ea5c.c:419 overwrites it with the PARENT's
+  value whenever any live peer disagrees -- a local counter continuously slaved
+  to the session clock. src/func_0203db64.c:59, the session-start path, zeroes
+  the whole 0x24 record including the counter.
+
+  SO THE ROM'S DETERMINISM CONTRACT IS: zero the clock at session start, converge
+  it on the parent every frame, and seed the world from it at level load -- by
+  which time it is common to every console. Identical seeds plus identical
+  inputs give identical worlds, which is what makes input-lockstep sound.
+
+  THE SLEEP TIMER IS NOT RNG-DRIVEN and is a red herring taken alone: it is a
+  plain 900-frame countdown (mStateTimer at Player+0x6a4, set 0x384 in
+  _ZN6Player12St_Wait_InitEv.cpp:38, decremented in Player::Behavior:127). It is
+  however a SENSITIVE INDICATOR, because St_Wait is reached through transitions
+  that depend on RNG-driven world objects. "The two characters fall asleep at
+  different times" is a symptom of seed divergence, not of a timer bug.
+
+  AND THE ROM SHIPS ITS OWN DESYNC DETECTOR, which is worth knowing whatever
+  architecture wins: _ZN5Stage6RenderEv.cpp:132-141 XORs every player's position
+  vector and writes it into the shared payload at index 0x10, which lands at
+  Rec.unk22; src/func_0203ea5c.c:457-463 compares it across consoles and raises
+  bit 8 of data_020a0f1c on a mismatch. A free per-frame "which frame did the
+  worlds part company" instrument. (Two ROM quirks: :141 clobbers :140's write,
+  and the else-if at :462 repeats the same test so one branch is dead.)
+
+WHERE THE PORT STOOD WHEN THIS WAS BANKED:
+
+  * The port skips Stage::InitResources entirely, so data_0209e650 sat at its
+    static-init 1 forever. Identical on both consoles, so never a desync -- right
+    by accident rather than by construction.
+  * hal/level_boot.cpp seats data_0209f344 from `data_020a1040 % 6` directly.
+    In single player that counter is 0 and the row is 0, which is correct. IN A
+    SESSION each console's counter is whatever its own boot burned before the
+    join, so THE TWO CONSOLES CAN PICK DIFFERENT STAR ORDERS. That is a real
+    divergence source and it is the concrete thing this archaeology found.
+  * hal/comms_conductor.cpp now zeroes the clock and seeds data_0209e650 from it
+    at the point the port stands in for the multiplayer menu, which is the ROM's
+    own ordering. Gated on a transport being installed, so single player is
+    untouched. That change predates the downgrade order; if the sync layer makes
+    it moot it can go, but it costs nothing and it makes the port do what the
+    ROM does rather than rely on a coincidence.
+
+
+================================================================================
+ARENA DAY: THE PLAYER-COUNT HOLD WILL IGNORE A REAL VS ARENA'S OWN STARTS
+================================================================================
+Run mg16, lane MP3/MP4. Filed here because it is correct today and wrong the day
+somebody mounts a VS arena, which is exactly the kind of thing a lane file loses.
+
+WHAT THE PORT DOES NOW. hal/level_boot.cpp's port_load1 holds data_0209f21c at 1
+across _Z19LoadEntranceObjects... on EVERY multiplayer boot, then
+port_vs_spawn_extra_players supplies the other players from player 0's entrance
+record, 40 units apart.
+
+WHY. The ROM's loop spawns player i from entrance record p3 + i. Levels the port
+loads today carry ONE player start, so for i>0 it spawns whatever the next
+record names, returns nothing usable, discards the pointer -- and leaves the
+actor it created linked into the processing list, ticking and casting a shadow
+with no body. That is the orphan caster the owner saw as "a third thing".
+
+WHY IT IS NOT CONDITIONAL, having tried twice:
+  * port_entrance_count() > 0 is the level's TOTAL record count (14 on castle
+    grounds), so it is true everywhere and only looked like a condition.
+  * Comparing records by class does not work either: MEASURED, castle grounds'
+    records p3 and p3+1 carry the SAME raw, so the predicate passed, the hold
+    stopped, and the shadow census went 152 -> 216 in that run.
+  What actually separates the cases is whether Actor::Spawn produces a usable
+  player, which is not knowable until the loop has already made the orphan.
+
+THE CONSEQUENCE. A real VS arena whose entrance table carries four consecutive
+player starts will have those starts IGNORED: the hold pins the count at 1, the
+loop spawns only player 0, and three copies of record 0 are supplied -- every
+player spawning on top of the first, in an arena that had perfectly good starts.
+
+WHAT THE ARENA LANE SHOULD DO. Once a level with real consecutive starts exists,
+the honest test becomes available: boot it once WITHOUT the hold and read the
+shadow census (port/tools/mp3_proof.py rungS) and the per-slot actor pointers. If
+every slot spawns a real player and the census is 88 + 64*(n-1), the arena needs
+no hold and the condition can finally be written against a level that
+distinguishes the two cases. Until such a level exists the test cannot be
+written, which is why this is filed rather than guessed at.

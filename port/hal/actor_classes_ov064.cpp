@@ -273,7 +273,35 @@ static int __fastcall bly_clean(void *s, void *)
 { return _ZN5Bully16CleanupResourcesEv(s); }
 static int __fastcall bly_aimed(void *s, void *)
 { (void)s; return func_ov064_02115f84(); }      /* slot 29, Bully's own stub */
-/* slots 31..36: the six extension virtuals, Bully's own */
+/* slots 31..36: the six extension virtuals, Bully's own.
+
+   SLOT 32 STAYS THE TWO-PARAMETER SHAPE, AND THE REASON IS MEASURED. It was
+   briefly widened to three parameters on the theory that slot 32 means
+   AfterClsn everywhere and AfterClsn is always dispatched with a pushed Actor.
+   That theory is FALSE, and the widening was the PathLift bug mirrored: a
+   callee popping four bytes nobody pushed.
+
+   THE CENSUS. Every call through a slot-32 vtable word in the linked binary,
+   swept over `dumpbin /disasm:nobytes walk_window.exe` for
+   `call dword ptr [reg+00000080h]`. There are exactly THREE, and they do not
+   agree:
+
+     func_ov004_020b08f0 +0xb    mov ecx,esi / call [eax+80h]     pushes 0
+     func_ov002_020eff90 +0xb    push [ebp+10h] / call [eax+80h]  pushes 1
+     func_ov064_02116d1c +0x129  mov ecx,esi / call [eax+80h]     pushes 0
+
+   Only the middle one pushes, and that one is the PathLift collider veneer.
+   BULLY IS DISPATCHED BY THE THIRD, which pushes nothing, so its slot-32
+   callee must emit a bare `ret`. Widening it made the callee pop four bytes
+   the caller never pushed, and func_ov064_02116d1c's epilogue cannot absorb
+   that -- it unwinds by `add esp,0Ch` and four explicit pops with no
+   `mov esp,ebp`, so every pop reads one slot high and its own `ret` takes the
+   wrong word. Same wild execute as report 7447e46c, pointing the other way.
+
+   SO SLOT NUMBER IS NOT A CONTRACT. An extension virtual is per-class by
+   definition, and three classes' slot 32 are three different methods. Only the
+   dispatch SITE fixes a pop, which is why abicheck's authority is keyed on the
+   site and why slot 32 as a whole is left UNJUDGED there. */
 static int __fastcall bly_v31(void *s, void *) { return func_ov064_021171b0(s); }
 static int __fastcall bly_v32(void *s, void *) { return func_ov064_02117220(s); }
 static int __fastcall bly_v33(void *s, void *) { return func_ov064_02117168(s); }
@@ -352,7 +380,8 @@ static int __fastcall bbly_behavior(void *s, void *)
 static int __fastcall bbly_render(void *s, void *)
 { port_actor_render_probe("BIG_BULLY", (char *)s + 0x110);
   return _ZN8BigBully6RenderEv(s); }
-/* BigBully's own six extension virtuals */
+/* BigBully's own six extension virtuals. Slot 32 stays the two-parameter shape
+   for bly_v32's measured reason: its dispatch site pushes nothing. */
 static int __fastcall bbly_v31(void *s, void *) { return func_ov064_0211755c(s); }
 static int __fastcall bbly_v32(void *s, void *) { return func_ov064_021175cc(s); }
 static int __fastcall bbly_v33(void *s, void *) { return func_ov064_02116374(s); }

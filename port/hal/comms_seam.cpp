@@ -49,7 +49,11 @@ bool comms_set_transport(const CommsTransport *t) {
     if (!t) { g_transport = nullptr; return true; }
     if (!t->open || !t->close || !t->become_parent || !t->become_child ||
         !t->state || !t->slot || !t->player_count || !t->exchange ||
-        !t->peer_block || !t->poll) {
+        !t->peer_block || !t->poll || !t->abandon) {
+        /* v2's send_aux/recv_aux are deliberately NOT in this list: they are
+           the optional half of the extension, and a v1 transport that predates
+           them leaves them null and must still install. Everything above is a
+           v1 entry and stays required. */
         std::fprintf(stderr, "[comms] transport '%s' REFUSED: an entry is null. "
                      "Every entry of CommsTransport is required.\n",
                      t->name ? t->name : "(unnamed)");
@@ -190,7 +194,7 @@ int func_02040714(void) {
 
 // src/func_02040704.c is `return data_020a0f24`, my slot index.
 // THE ROM'S CALLER PASSES AN ARGUMENT IT DOES NOT DECLARE:
-// src/func_0203ea5c.c:236 is `data_020a0f10 = func_02040704(temp_r0_5)`, which
+// src/func_0203ea5c.c:252 is `data_020a0f10 = func_02040704(temp_r0_5)`, which
 // on ARM is a dead r0 write the callee overwrites. Declared with the argument
 // here so a stack ABI agrees with the ROM's own call sites.
 int func_02040704(int ignored) {
@@ -223,8 +227,13 @@ const void *func_0204068c(unsigned short aid) {
 
 // src/func_02040c34.c: starts the DS's wireless THREAD with two callbacks,
 // which are the ROM's own src/func_0203f644.c and src/func_0203f604.c. A host
-// transport has no thread to start -- it is polled from the seam's own pump --
-// so this records the request and returns. The callbacks are deliberately NOT
+// transport has no thread to start -- it is polled from the seam's own pump,
+// which EXISTS as of run mg16 lane MP3: hal/comms_conductor.cpp installs it on
+// hal/os_thread.h's hook and the ROM's own wait sleeps through it, so poll()
+// runs once per turn of src/func_0203ea5c.c's real wait loop. HOLE 1 is CLOSED
+// in the frozen contract at the top of comms_seam.h. The annotation that stood
+// here said no such pump existed; that was true when it was written and is not
+// now. So this records the request and returns. The callbacks are deliberately NOT
 // invoked: on the DS they run in the wireless thread's context and mutate the
 // same state the poll path does, so calling them from here would double-apply
 // it. A transport that wants them driven does it from poll().

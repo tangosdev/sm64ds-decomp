@@ -1125,9 +1125,12 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self)
 #pragma comment(linker, "/alternatename:?data_ov002_0210e150@@3HA=_data_ov002_0210e150")
 #pragma comment(linker, "/alternatename:?data_ov002_0210f89c@@3HA=_data_ov002_0210f89c")
 #pragma comment(linker, "/alternatename:?data_ov002_0210f8cc@@3PAHA=_data_ov002_0210f8cc")
-/* return-type-only variant of the Animation::WillHitFrame face the port
-   already has (bool vs int; same __thiscall shape, result in EAX) */
-#pragma comment(linker, "/alternatename:?WillHitFrame@Animation@@QBEHH@Z=?WillHitFrame@Animation@@QBE_NH@Z")
+/* The int-returning Animation::WillHitFrame face needs no alias any more.
+   It used to be bridged onto a bool-returning definition, which the callers
+   read as a full int: the body wrote AL and left numFramesAndFlags in the
+   upper 24 bits of EAX, so a false answer came back true. The definition is
+   int now (include/Animation.h, and the ROM writes the whole of r0 on every
+   return path), so every int-declaring shim resolves to it directly. */
 
 /* gate 13, the real Camera: the C++-mangled references its TUs emit (they
    declare their externs outside extern "C") -> the C-named definitions, plus

@@ -1,5 +1,8 @@
 /* HOST COPY of src/func_ov064_02117220.cpp -- BULLY's AfterClsn extension
- * virtual (daDonketu_c::AfterClsn, vtable slot 35), the coin pop on the
+ * virtual (daDonketu_c::AfterClsn, vtable SLOT 32 -- this comment said 35 and
+ * that was wrong; hal/actor_classes_ov064.cpp fills this body at vt[32], which
+ * is also where PathLift carries the same extension virtual, and the slot is
+ * what its pop contract is read from), the coin pop on the
  * knocked-into-lava path plus the mole-style group census bump. The matched
  * .cpp cannot be compiled verbatim on the MSVC host: after declaring its
  * local `struct Actor` shadow with the two statics, it RE-declares both at

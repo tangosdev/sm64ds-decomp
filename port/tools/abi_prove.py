@@ -226,6 +226,17 @@ VTABLE_FIXTURES = [
     ("bp_egg", 19, "Yoshi tries to turn a Baby Penguin into an egg"),
     ("fb_slot27", 27, "a Mega character hits the WF fall block"),
     ("whomp_s30", 30, "egg-aim query against a Whomp"),
+    # THE EXTENSION SLOT, and the one fixture here that needed two separate
+    # repairs to abicheck before it could exist at all: a per-TABLE authority
+    # for slots past 30, and the parameter binding that makes a fill seated
+    # through a shared filler visible in the first place. Before those,
+    # pl_after_clsn had zero rows -- re-breaking it changed nothing and the
+    # fixture could not go red. Report 7447e46c, level 46.
+    #
+    # Bully's slot 32 is deliberately NOT a fixture. Its dispatch site
+    # (func_ov064_02116d1c +0x129) pushes nothing, so a bare ret is CORRECT
+    # there and re-breaking it to a bare ret is a no-op that could never go red.
+    ("pl_after_clsn", 32, "stand on a PATH_LIFT (Luigi's Key Course and LLL)"),
 ]
 
 

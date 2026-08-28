@@ -7096,9 +7096,43 @@ list(APPEND SLICE10_CAM_SOURCES
 # gate-10 rows filtered out above.
 #
 # slice_comms.txt is the ROM's four-player fan-out, linked but not yet driven.
-set(SLICE_COMMS_SOURCES hal/comms_seam.cpp hal/os_thread.cpp)
+# run mg16 lane MP2: hal/comms_loopback.cpp is the first REAL transport written
+# against the seam's contract -- UDP on 127.0.0.1, two copies of the game on one
+# machine as DS parent and child. hal/comms_lockstep.cpp drives the eight faces
+# in src/func_0203ea5c.c's own order, because that TU is still in no slice and
+# an invented order would prove nothing about the contract. BOTH ARE INERT
+# WITHOUT SM64DS_COMMS_ROLE: nothing installs, and the seam answers solo.
+set(SLICE_COMMS_SOURCES hal/comms_seam.cpp hal/os_thread.cpp
+                        hal/comms_loopback.cpp)
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_comms.txt" SLICE_COMMS_LINES)
 foreach(line IN LISTS SLICE_COMMS_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_COMMS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+# run mg16 lane MP3: the REAL conductor, src/func_0203ea5c.c, and the dispatcher
+# that switches to it. slice_mp3.txt says what is in it and why the seam line did
+# not move to accommodate it. hal/comms_conductor.cpp is the host side: the DS
+# globals the conductor needs that nothing had hosted, the one WM face that stays
+# below the seam, the DS key register the dispatcher reads, and the pump that
+# finally makes the contract's `poll` entry true.
+#
+# APPENDED TO SLICE_COMMS_SOURCES ON PURPOSE rather than given a list of its own:
+# every consumer of the comms slice needs the conductor too, and three separate
+# target lists each having to remember a new variable is exactly the shape
+# FINDING 5 of the TITLE lane got bitten by (take one side of a generator-list
+# conflict and a lane's TUs silently leave the link, which links fine and runs
+# wrong).
+list(APPEND SLICE_COMMS_SOURCES hal/comms_conductor.cpp)
+# run mg16 lane MP4: the host-authoritative state-sync layer. Port-side
+# only -- nothing in src/ knows it exists -- and OFF unless SM64DS_SYNC=1,
+# so linking it changes no behaviour. See runs/mg16/status/MP4-DESIGN.md.
+list(APPEND SLICE_COMMS_SOURCES hal/comms_sync.cpp)
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_mp3.txt" SLICE_MP3_LINES)
+foreach(line IN LISTS SLICE_MP3_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
         continue()
@@ -8832,7 +8866,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     # sitting in slice_gate16.txt line 178 all along, dropped by /OPT:REF for
     # want of a reference edge. Removing the stub from here is what makes the
     # matched body reachable; leaving it would be a duplicate definition.
-    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/scene_boot.cpp hal/scene_actor_faces.cpp unmatched/Scene_AfterCleanupResources.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
+    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/stage_mods.cpp hal/scene_boot.cpp hal/scene_actor_faces.cpp unmatched/Scene_AfterCleanupResources.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
     # run link60 lane L2: hal/w8a_stage_storage.cpp is pure zero arm9 BSS and it
     # owns data_0209d4a8, which dScDSMT_c's InitResources and CleanupResources
     # both touch. walk_window already had it; smoke_player and walk_window_hires
@@ -8964,10 +8998,22 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # the launcher's settings.json, read by the game (camera turn direction,
     # and the four screen-gap keys hal/screen_gap.cpp reads)
     hal/host_settings.cpp hal/screen_gap.cpp
+    # run lvled lane B: the editor control channel on 127.0.0.1:7355, the link
+    # the Studio's editor talks to. Compiled in unconditionally but INERT unless
+    # SM64DS_EDITOR_CHANNEL=1 -- no thread, no socket, no listener without it.
+    # It is on BOTH targets that compile tests/walk_window.cpp (walk_window and
+    # walk_window_hires), because the frame loop's drain call lives in that
+    # shared file and a target without this source fails the link.
+    hal/editor_channel.cpp
     # the Mods panel's file-layer half: installs hal/fs.cpp's mod hooks
     # (LovesMeCharacter). Game-shaped targets only; every smoke keeps the
     # null hooks and stock file serving.
     hal/fs_mods.cpp
+    # SM64DS_STAGE_GEOM: a level's stage model and collision served out of an
+    # external folder. CHAINS onto the hook above rather than replacing it --
+    # its installer sits in .CRT$XCV so it runs after every ordinary one -- so
+    # it goes beside hal/fs_mods.cpp on the same targets and nowhere else.
+    hal/stage_geom.cpp
     # the scene's hand-drawn gap band and the band's per-scene continuity
     # table, both asked for at the same latch hal/screen_gap.cpp does
     hal/gap_art.cpp hal/gap_continuity.cpp
@@ -8986,7 +9032,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # sitting in slice_gate16.txt line 178 all along, dropped by /OPT:REF for
     # want of a reference edge. Removing the stub from here is what makes the
     # matched body reachable; leaving it would be a duplicate definition.
-    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/scene_boot.cpp hal/scene_actor_faces.cpp unmatched/Scene_AfterCleanupResources.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
+    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/stage_mods.cpp hal/scene_boot.cpp hal/scene_actor_faces.cpp unmatched/Scene_AfterCleanupResources.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
     # run link60 lane L2: hal/w8a_stage_storage.cpp is pure zero arm9 BSS and it
     # owns data_0209d4a8, which dScDSMT_c's InitResources and CleanupResources
     # both touch. walk_window already had it; smoke_player and walk_window_hires
@@ -9154,10 +9200,22 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # the launcher's settings.json, read by the game (camera turn direction,
     # and the four screen-gap keys hal/screen_gap.cpp reads)
     hal/host_settings.cpp hal/screen_gap.cpp
+    # run lvled lane B: the editor control channel on 127.0.0.1:7355, the link
+    # the Studio's editor talks to. Compiled in unconditionally but INERT unless
+    # SM64DS_EDITOR_CHANNEL=1 -- no thread, no socket, no listener without it.
+    # It is on BOTH targets that compile tests/walk_window.cpp (walk_window and
+    # walk_window_hires), because the frame loop's drain call lives in that
+    # shared file and a target without this source fails the link.
+    hal/editor_channel.cpp
     # the Mods panel's file-layer half: installs hal/fs.cpp's mod hooks
     # (LovesMeCharacter). Game-shaped targets only; every smoke keeps the
     # null hooks and stock file serving.
     hal/fs_mods.cpp
+    # SM64DS_STAGE_GEOM: a level's stage model and collision served out of an
+    # external folder. CHAINS onto the hook above rather than replacing it --
+    # its installer sits in .CRT$XCV so it runs after every ordinary one -- so
+    # it goes beside hal/fs_mods.cpp on the same targets and nowhere else.
+    hal/stage_geom.cpp
     # the scene's hand-drawn gap band and the band's per-scene continuity
     # table, both asked for at the same latch hal/screen_gap.cpp does
     hal/gap_art.cpp hal/gap_continuity.cpp
@@ -9176,7 +9234,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # sitting in slice_gate16.txt line 178 all along, dropped by /OPT:REF for
     # want of a reference edge. Removing the stub from here is what makes the
     # matched body reachable; leaving it would be a duplicate definition.
-    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/scene_boot.cpp hal/scene_actor_faces.cpp unmatched/Scene_AfterCleanupResources.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
+    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/stage_mods.cpp hal/scene_boot.cpp hal/scene_actor_faces.cpp unmatched/Scene_AfterCleanupResources.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
     # run link60 lane L2: hal/w8a_stage_storage.cpp is pure zero arm9 BSS and it
     # owns data_0209d4a8, which dScDSMT_c's InitResources and CleanupResources
     # both touch. walk_window already had it; smoke_player and walk_window_hires

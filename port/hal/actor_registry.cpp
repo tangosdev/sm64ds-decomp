@@ -70,6 +70,13 @@ extern int data_020a4b98[8];
 extern int data_020a4ba8[8];
 extern int data_02099f24[4];       /* the current phase */
 
+/* the actor freeze mask. b454 is the persistent freeze-REQUEST word (storage:
+   hal/auto_bss.cpp); b464 is this frame's copy of it and the only word
+   Actor::BeforeBehavior reads (storage: hal/actor_vtables.cpp). Latched at the
+   head of phase 3 below -- see the long note there. */
+extern int data_0209b454[8];
+extern unsigned int data_0209b464;
+
 /* the four Process wrappers (host copies in port/unmatched/) and the
    scene-tree housekeeping pass (matched src) */
 int func_0204335c(void *self);
@@ -832,6 +839,59 @@ extern "C" void port_actor_tick(void)
     data_02099f24[0] = 2;
     port_list_trace("pending", data_020a4b88);
     func_02043fdc(data_020a4b88);
+    /* THE FREEZE MASK LATCH -- Stage::Behavior's FIRST statement, arm9
+       0x0202bbbc, src/_ZN5Stage8BehaviorEv.cpp:105:
+
+           data_0209b464 = data_0209b454;
+
+       and it belongs exactly here. data_0209b454 is the persistent
+       freeze-REQUEST word; data_0209b464 is this frame's copy of it, and it is
+       the only word Actor::BeforeBehavior reads
+       (src/_ZN5Actor14BeforeBehaviorEv.cpp:74):
+
+           if ((f & 9) != 9 && (data_0209b464 == 0 || (f & data_0209b464) != 0))
+               goto do_copy;             // -> return 1, Behavior runs
+           if (data_0209fc68 != 0)
+               goto do_copy;             // cutscene override: think anyway
+           return 0;                     // Behavior is SKIPPED this frame
+
+       Zero means "no freeze, every actor thinks". Nonzero means "only actors
+       whose own mFlags intersect the mask think" -- and slot 7 returning 0
+       means ActorBase::Process (func_02043288) never calls slot 6 at all, so
+       the actor's whole state machine stands still for the frame.
+
+       WHAT USES IT. The message system. The Player talk state's Main
+       (src/func_ov002_020c8540.c:45-52, the state Player::ShowMessage2 puts the
+       player into) sets its OWN mFlags |= 0x800000, CLEARS the talk partner's,
+       ORs 0x800000 into data_0209b454, and only then opens the box. So a
+       dialogue freezes every actor in the level except the player reading it,
+       and unfreezes them at :58-59 when data_0209d660 goes back to 0. Same
+       set/clear pair at func_ov002_020c4188.c:43/64/83, func_ov002_020c92fc.c:35,
+       func_ov002_020c91bc.c:12, func_020345b0.c:66. The message code itself is
+       unaffected because it runs from Stage, not from the actor lists.
+
+       WHY IT WAS MISSING. The port already sets data_0209b454 correctly -- the
+       setters above are all live matched code -- but nothing in port/ ever
+       COPIED it into data_0209b464, because all twenty Stage slots trap
+       (hal/stage_bridges.cpp) and the port hand-hosts only Stage::Behavior's
+       LAST statement (tests/walk_window.cpp). So the mask read 0 forever, the
+       `data_0209b464 == 0` arm always passed, and no actor was ever frozen by a
+       dialogue. Measured, castle grounds, glowing rabbit: b454 went 00800000
+       the frame the box opened and b464 stayed 00000000 for all 900 frames
+       while the RabbitKey kept falling.
+
+       WHY AT THE HEAD OF PHASE 3 rather than the head of the whole tick. On the
+       ROM the Stage is IN the behaviour list -- its spawn record at 0x0209213c
+       carries behaviour priority 3 against the hundreds every other class uses
+       -- so Stage::Behavior is the first body phase 3 runs and every actor
+       walked after it sees the value it just latched. Phases 4 and 2 are
+       cleanup and init; neither dispatches slot 7. This line is therefore the
+       same statement, in the same position in the frame, reaching the same
+       word. Stage::VE_Init, Stage::LC_Update and Stage::PS_Update re-latch it
+       at their own points on the ROM; those paths are not hosted here and are
+       named in runs/mg16/status/FIXC4.md as an honest gap. */
+    data_0209b464 = (unsigned)data_0209b454[0];
+
     data_02099f24[0] = 3;
     port_list_trace("behaviour", data_020a4b78);
     func_02043fdc(data_020a4b78);
@@ -874,7 +934,24 @@ extern "C" void port_actor_tick(void)
    Process reading slots 2 and 3 directly instead of dispatching. That is a
    0x49c-byte transcription and a gate of its own. Turning the switch on
    without it faults on the first frame with a jump to +0xffed0000, which is
-   the null at MSVC slot 1 of an unfilled table. */
+   the null at MSVC slot 1 of an unfilled table.
+
+   THAT TRANSCRIPTION WAS WRITTEN AND THE CYLINDER PASS RUNS. Everything above
+   is still true of THIS SYMBOL and this switch, and reading it as "the port
+   does not do cylinder collision" -- which is what it says on a quick read --
+   is now wrong enough to send the next debugger somewhere else entirely.
+   Corrected in passing by run mg16 lane MP3, which needed the answer and had
+   to go and find it:
+
+     port/unmatched/CylinderClsn_Process.cpp is the ROM-shaped host copy the
+     paragraph above prescribes, port/slice_gate181.txt:22-25 records it, and
+     tests/walk_window.cpp calls port_cylinder_clsn_process() UNCONDITIONALLY
+     once per frame. SM64DS_CYLINDER_PASS gates only the MATCHED symbol below,
+     which stays off for the dispatch reason given.
+
+   So actor-vs-actor cylinder collision is LIVE by default, and MP3's rungs
+   depend on it: two Player body cylinders land on the one list at
+   data_0209cee8 and the host Process's symmetric branch pushes them apart. */
 extern "C" void _ZN12CylinderClsn7ProcessEv(void);
 
 static int port_cylinder_pass_on(void)
