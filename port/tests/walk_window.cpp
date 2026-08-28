@@ -5335,6 +5335,21 @@ static int port_scene_want_window(void)
    counter and nothing on the scene path fed it, so a scene crash reported
    frame -1. This loop feeds it. The headless loop deliberately still does not
    -- it is the battery's, and it is left alone. */
+/* THE WINDOW A TITLE-ENTRY RUN HANDS FORWARD (run lvled).
+   A windowed title run that ends in a save-file pick does not end the process:
+   main falls through to its own level boot. That boot opens a window of its
+   own, and without this the title's window would be left standing while a
+   second one appeared beside it -- two windows for one game, the first of them
+   dead. The player picked a file; he should keep looking at the same window.
+
+   Recorded unconditionally and read only when port_title_entry_taken() says
+   the fall-through happened, so an ordinary scene session sets two statics
+   nobody reads. The layout was latched by the scene runner (it is the one that
+   proposes), which is why main's own latch comment still holds: the window is
+   created once and the mode with it. */
+static HWND g_entry_hwnd;
+static HDC  g_entry_hdc;
+
 static int scene_window_run(void)
 {
     /* THE LAYOUT FIRST, because the window has to be sized for the picture it
@@ -5361,6 +5376,9 @@ static int scene_window_run(void)
                 "back to the headless run\n", (unsigned long)GetLastError());
         return port_scene_run();
     }
+    /* kept for a title-entry fall-through; see the banner above */
+    g_entry_hwnd = hwnd;
+    g_entry_hdc = hdc;
 
     const int rc = port_scene_begin(hwnd, ZOOM);
     if (rc)
@@ -6469,12 +6487,24 @@ int main(void)
        main hands over to well above this line. */
     const int stacked = hal_sub_screen_stacked();
     HDC hdc = 0;
-    HWND hwnd = host_window_open(
-        stacked, &hdc,
-        "SM64DS   |   WASD move   Shift dash   Space jump"
-        "   X punch   Ctrl crouch   |   Q/E turn   R/F"
-        " tilt   |   F1 camera   F3 stats   F5 or Esc menu"
-        "   F12 fullscreen   Tab panel");
+    HWND hwnd = 0;
+    /* A TITLE-ENTRY RUN ARRIVES HERE WITH A WINDOW ALREADY OPEN and reuses it,
+       rather than leaving the title's window standing and opening a second one
+       beside it. Only a windowed title run can satisfy both tests; a headless
+       one recorded no handle and takes the ordinary open below. */
+    if (port_title_entry_taken() && g_entry_hwnd) {
+        hwnd = g_entry_hwnd;
+        hdc = g_entry_hdc;
+        fprintf(stderr, "[title-entry] reusing the title's own window for the "
+                        "adventure (one window, one game)\n");
+    } else {
+        hwnd = host_window_open(
+            stacked, &hdc,
+            "SM64DS   |   WASD move   Shift dash   Space jump"
+            "   X punch   Ctrl crouch   |   Q/E turn   R/F"
+            " tilt   |   F1 camera   F3 stats   F5 or Esc menu"
+            "   F12 fullscreen   Tab panel");
+    }
     if (!hwnd) {
         fprintf(stderr, "the window did not open (win32 %lu)\n",
                 (unsigned long)GetLastError());
