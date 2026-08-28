@@ -1,35 +1,30 @@
-// NOT MIGRATED to a real RollingRock:: method, measured 2026-08-22. Every
-// offset here has a named member and the body converts, but it settles at
-// THREE WORDS and they are one register-allocation choice:
-//
-//   ROM   ldrh r2,[r4,#0x92] / ldrh r1,[r4,#0x94] / strh r2,[sp,#8]
-//   C++   ldrh r1,[r4,#0x92] / strh r1,[sp,#8]    / ldrh r1,[r4,#0x94]
-//
-// i.e. the ROM batches both loads into two registers before the first store and
-// the C++ form reuses r1. Same opcodes, same offsets, same stack slots.
-//
-// GETTING THAT FAR NEEDED ONE REAL FINDING, worth keeping: `v16 =
-// *(struct Vector3_16 *)(c + 0x92)' is a blind byte move in C and emits ldrh,
-// but in C++ a struct copy SCALARISES to the members' own types -- Vector3_16's
-// are s16 -- so the identical line becomes three LDRSH and misses by four. A
-// copy through a `struct { u16 x, y, z; }' restores the unsigned loads and takes
-// the miss from 4 words to 3.
-//
-// Ruled out by test, all still 3 (or worse): a named temp, a pointer deref, a
-// const reference, laundering the source address through an int, splitting the
-// copy into an {x,y} pair plus z (either order), three separate assignments,
-// declaring the local as the unsigned struct end to end, declaring it last, and
-// moving the copy above the unk_3bf increment. Re-open only with a lever that
-// changes pressure at the copy -- spelling alone does not reach it.
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef signed char s8;
-typedef short s16;
-
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { s16 x, y, z; };
-
+//cpp
+// @symbol _ZN11RollingRock8BehaviorEv
+/* recovered: real C++ method
+ *
+ * MIGRATED 2026-08-27. The file's own note said this settled at THREE WORDS as a
+ * method and that "spelling alone does not reach it" -- the ROM batches
+ * `ldrh r2,[r4,#0x92]` and `ldrh r1,[r4,#0x94]` before the first store while the
+ * C++ form reused r1 and interleaved. It reaches it; the lever is the one already
+ * written down for C++ struct copies, applied at the copy rather than to the
+ * destination type. See the comment on AngleWords below.
+ *
+ * The ten spellings the old note ruled out were all variations on WHERE the
+ * scalarised copy happened. The fix is to stop it scalarising.
+ */
+#include "RollingRock.h"
+#include "common.h"
+/* The copy at 0x92 has to go through a struct whose only member is an ARRAY.
+   In C `v16 = *(Vector3_16 *)(c + 0x92)` is a blind byte move; in C++ a struct
+   copy scalarises to the members' own types, and Vector3_16's are s16, so the
+   identical line becomes three LDRSH where the ROM has LDRH -- and mwcc then
+   reuses one register, interleaving the store between the loads where the ROM
+   batches both loads first. An array member restores both at once: unsigned
+   halfword loads, and the ROM's load-load-store order. This was the last of the
+   documented C++-vs-C struct-copy divergences to be measured on a real function;
+   see notes/mwccarm-codegen.md. */
+struct AngleWords { u16 w[3]; };
+extern "C" {
 extern void func_0200f760(char *c, void *p);
 extern void func_ov021_021123b0(char *c);
 extern void func_ov021_021127b4(char *c);
@@ -49,8 +44,11 @@ extern int RandomIntInternal(int *seed);
 extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const struct Vector3 *pos, const struct Vector3_16 *ang, int e, int f);
 extern int data_0209e650;
 
-int _ZN11RollingRock8BehaviorEv(char *c)
+}
+
+int RollingRock::Behavior()
 {
+    char *c = (char *)this;
     if (*(u8*)(c + 0x3be) >= 2) {
         func_0200f760(c, c + 0x1b8);
         func_ov021_021123b0(c);
@@ -106,7 +104,7 @@ int _ZN11RollingRock8BehaviorEv(char *c)
                 p3bf = (u8 *)(int)(c + 0x3bf);
                 *p3bf = (u8)(*p3bf + 1);
                 *(u16*)(c + 0x100) = 0;
-                v16 = *(struct Vector3_16*)(c + 0x92);
+                *(AngleWords *)&v16 = *(AngleWords *)(c + 0x92);
                 rnd = (u32)RandomIntInternal(&data_0209e650);
                 v16.y = v16.y + (rnd >> 16) % 0xc00;
                 if (*(u8*)(c + 0x3be) == 1 && *(u8*)(c + 0x3bf) >= 5 && *(u8*)(c + 0x3c2) == 0) {

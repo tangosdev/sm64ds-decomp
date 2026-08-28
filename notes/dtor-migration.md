@@ -29,6 +29,22 @@
 > passing is not sufficient evidence a destructor migration lands; only the full
 > relink is.**
 
+> **2026-08-27 correction, from the enemy-family sweep** (`notes/cpp-conversion-enemies.md`):
+> two of the nine D0s the 2026-08-24 sweep could not keep now migrate cleanly.
+> `dCapEnemy_c` and `daObjMarioCap_c` were listed as blocked by "a member whose type's
+> destructor is still a `func_` shell (the CapIcon ordering)"; `d0_migrate.py` keeps
+> both today and `rombuild -j16` reports 106/106 exact. Re-test a blocked class before
+> trusting the list above -- these entries were fixed underneath the note, not by it.
+>
+> The daKrb_c wall in the paragraph above is **not class-specific**. `daTrs_c`'s D0+D1
+> hit the identical rejection (`cand _ZN11dCapEnemy_cD2Ev (0x0200651c) != config
+> 0x020aedbc:ov002`), so the cross-module `dCapEnemy_c::~dCapEnemy_c` duplicate blocks
+> the destructor pair of **every** `dCapEnemy_c` descendant, not just daKrb_c.
+>
+> Operational note: `d0_migrate.py` performs the `.c` -> `.cpp` rename but does NOT
+> re-point `delinks.txt`. It reports `OK` anyway; the next `rombuild` fails in
+> `layout_check`. Fix the enrolment path by hand after every run.
+
 **Scope:** what actually blocks a `D1` file from becoming `Class::~Class()`, measured
 rather than assumed. Companion to `runbook-type-reconstruction.md` §7, which recorded
 the wall before objisolate came down and is no longer the whole story.
