@@ -82,6 +82,21 @@ void     io_write(uint32_t addr, uint64_t value, unsigned width);
 // path that already does a 64-bit integer square root.
 unsigned long sqrt_runs();
 
+// Write the geometry-engine-owned half of GXSTAT back into the mapped window:
+// the FIFO status and the two MATRIX STACK LEVELS, from the levels ntr/gx.cpp
+// is holding. On hardware those bits are driven continuously by the geometry
+// engine and no store can change them, so the truthful moment to call this is
+// the moment the engine changes what they report -- MTX_PUSH, MTX_POP and the
+// per-frame reset, which is where ntr/gx.cpp calls it from.
+//
+// It exists because the same fixup inside io_read/io_write is not enough. That
+// one runs only on accesses routed through this proxy, and the game's two
+// stack-level readers (func_02055464 and func_02055490) are built plain -- they
+// read the mapped window directly and get whatever the last proxied touch left
+// there. Safe before io_init: it brings the mapping up itself and does nothing
+// if that fails.
+void io_gxstat_publish();
+
 // Proxy standing in for `*(volatile T *)addr`. Reads and writes are dispatched so
 // that write-triggered registers run their side effect.
 template <class T>

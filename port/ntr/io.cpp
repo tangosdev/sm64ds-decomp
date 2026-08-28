@@ -140,14 +140,15 @@ constexpr uint32_t SQRTCNT = 0x40002B0, SQRT_RESULT = 0x40002B4, SQRT_PARAM = 0x
 // linked. On that day the two pops become real against gx.cpp's live sp
 // counters instead of no-ops against zeros, which is the point of the fix.
 //
-// WHAT THIS IS NOT. gxstat_normalize runs only on accesses that come THROUGH
-// this proxy, and almost nothing on the 2D or 3D surface does. So bits 8..14
-// are not live: they are a snapshot taken at the last hostgen'd touch of
-// GXSTAT, and a reader reaching mapped memory directly sees whatever that
-// snapshot left. That is strictly better than the dead latch, which never
-// tracked anything at all, and it is not the same as modelling the register.
-// Making it live needs the stack write-through to happen in gx.cpp at push and
-// pop time, which is that file's lane, not this one's.
+// BITS 8..14 ARE NOW LIVE, and this paragraph used to say they were not.
+// gxstat_normalize runs only on accesses that come THROUGH this proxy, and
+// almost nothing on the 2D or 3D surface does, so on its own it leaves the
+// field a SNAPSHOT taken at the last hostgen'd touch -- and both of the game's
+// readers are plain, so they read the mapped window directly and got whatever
+// that snapshot had left. The write-through this note asked for is in
+// ntr/gx.cpp now: it calls io_gxstat_publish() (below) at MTX_PUSH, at MTX_POP
+// and at the per-frame reset, which are the three moments the geometry engine
+// changes what these bits report. SM64DS_GXSTAT_LIVE=0 puts the snapshot back.
 //
 // Bits 0..7, the box-test result, stay a latch. The host runs no box test, so
 // there is nothing truthful to report and no linked reader asks (the sweep in
@@ -624,6 +625,16 @@ static void gxstat_normalize() {
     const uint32_t stack = (pos << 8) | (proj << 13);
     const uint32_t fixed = (v & ~GXSTAT_HW) | GXSTAT_IDLE | stack;
     if (fixed != v) raw_write(GXSTAT, fixed, 4);
+}
+
+// THE PUBLIC HALF, called by the geometry engine itself. See ntr/mmio.h for
+// why the fixup above is not enough on its own, and the GXSTAT note above the
+// constants for what "the game's readers are plain" costs without it. The
+// init guard is here rather than at the call site so ntr/gx.cpp never has to
+// know whether the window is up yet.
+void io_gxstat_publish() {
+    if (!g_io && !io_init()) return;
+    gxstat_normalize();
 }
 
 static bool hits_gxstat(uint32_t addr, unsigned width) {

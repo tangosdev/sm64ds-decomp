@@ -83,6 +83,7 @@
 // ===========================================================================
 
 #include "comms_seam.h"
+#include "player_fields.h"   // run mg16 lane MP4: state_id for the VS probe
 /* hal/comms_loopback.h is deliberately NOT included: nothing in this file may
    know which transport is installed. The re-seat used to read the loopback
    carrier's stats struct for the role and now takes it from state(), which is
@@ -778,10 +779,11 @@ void vs_probe(int frame) {
         // this is the one that settles it.
         std::fprintf(stderr,
                      "[vs] f%d slot%d actor=%p no=%d char=%d pos=(%d,%d,%d) "
-                     "touched=%u pad=%04x ctrl0=%08x ang=%04x\n",
+                     "touched=%u pad=%04x ctrl0=%08x ang=%04x state=%08x\n",
                      frame, i, (const void *)a, (int)a[0x6d8],
                      (int)(a[0x6d9] & 3), px, py, pz,
-                     other, pad, (unsigned)cheld, (unsigned)(cang & 0xffff));
+                     other, pad, (unsigned)cheld, (unsigned)(cang & 0xffff),
+                     port::player::state_id(a));
     }
 }
 

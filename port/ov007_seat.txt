@@ -4010,3 +4010,74 @@ WHAT LANE TJG DID NOT DO, AND WHAT THE GUARD DOES NOT PROVE
   - NOTHING WAS RUN. Scene 1 still cannot run; this lane added no runtime
     evidence of any kind and every statement above is read off a linked binary,
     a map, a build file or the ROM image.
+
+
+9. THE TITLE RUNS. WHERE IT STOPS NOW (run mg16 lane TITLE)
+-----------------------------------------------------------------------
+
+SECTION 8'S CLOSING LINE -- "Scene 1 still cannot run" -- IS RETIRED. It was
+true when written. Scene 1 now boots, draws, takes a tap, walks its whole menu
+chain and asks for the next scene, and this section records where the boundary
+moved to so the next lane does not re-derive it.
+
+WHAT NOW WORKS, each measured on a finished run (the completion gate below):
+
+  * touch-to-start completes. func_ov007_020b1718 (title state 4) is matched and
+    seated; at the base a tap entered state 4 and was still there on the last
+    frame of the run.
+  * the menu can be PICKED. func_ov007_020b46b0, the per-element stylus hit
+    test, is matched and seated -- it was a trap returning 0 before it ever
+    tested a rectangle, so nothing on the title could be selected at all.
+  * the Start prompt runs its two-gate sequence (top-state 9, sub-state 0 -> 1,
+    the message word reaching 2 then 4) and calls the verdict setter.
+  * the FILE SELECT page is reachable and a save slot can be picked, which
+    produces verdict 3 and drives data_02092664 to SCENE 3.
+  * the title then TEARS ITSELF DOWN -- cleanup 1, pending-destroy 1 -- which is
+    a scene that has correctly handed off, not a hang.
+  * the scene presents STACKED, both DS screens full size, on the owner's ruling.
+
+FOUR IMPLICIT-ARGUMENT DEFECTS WERE THE SPINE OF THIS, and the shape is worth
+carrying: the ROM passes a value in a register and the port's C never passes it.
+  020b4b5c  the cell sizer's CAMERA        (displaced; the "big glitched yellow
+                                            texture" -- every cell 3.4877x large)
+  020c2b9c  an implicit r0 RETURN value    (displaced)
+  020c78b0  the block a fill writes through (fixed in the matched TU)
+  020cc600  the SAVE-RECORDS BASE          (fixed in the matched TU) -- this one
+            let SetDefaultValues memset the title's own context, flattening all
+            three of its state machines and writing the ASCII save magic "8000"
+            onto a state word.
+The last two needed NO displacement, which is a live lead: the first two may be
+recoverable the same way, putting two more matched TUs back in the port as
+themselves.
+
+WHERE IT STOPS, and it is TWO PORT-PLUMBING GAPS, not a decomp gap:
+  A. THE PORT NEVER BOOTS THE TITLE. port_scene_env_want() returns -1 without
+     SM64DS_SCENE and walk_window.cpp:5833 falls through to the level boot, so a
+     cold start lands in castle grounds. The title is reachable only through the
+     scene harness.
+  B. NOTHING CARRIES OUT THE SCENE REQUEST. Scene::SetSceneToSpawn writes
+     data_02092664 and Scene::SpawnIfNecessary would consume it; the port runs
+     the first half only. hal/level_change.cpp's port_scene_request_release is
+     LEVEL-path only and deliberately releases without spawning.
+Every ROM body either gap needs is already seated and matched.
+
+THE NEW TRAP FRONTIER, measured on a 6600-frame run once the chain completes.
+Traps rise sharply as the title reaches ground it never previously touched --
+this is progress, since a stub can only be entered once its caller runs:
+    func_ov007_020cb4b0   93240   <- the leader, and the next target
+    func_ov007_020c19cc   58614   render slot
+    func_ov007_020b8fd4    1980   render slot, draft is SIZE-MATCHED at 36/120
+    func_ov007_020caeac     886
+    func_ov007_020cb7c0     444
+
+TWO READING RULES THIS LANE PAID FOR, both about false negatives:
+  * "N frames of scene 1, clean" and exit 0 mean THE HARNESS survived, not the
+    game. The port's quarantine catches a fault, freezes the actor and lets the
+    frame continue, so a crashed run still prints clean. Read the playlog.
+  * A run must END with its "[scene] N frames of scene 1 (SCENE_TITLE)" line and
+    the launcher must report exit 0 before any NEGATIVE from it counts. A
+    truncated run and a clean run that never reached the thing you were looking
+    for produce identical shapes.
+
+Full campaign record, evidence and BMPs: runs/mg16/status/TITLE.md and
+runs/mg16/out/TITLE/.

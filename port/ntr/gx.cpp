@@ -6,6 +6,7 @@
 
 #include "ntr/gx.h"
 
+#include "ntr/mmio.h"
 #include "ntr/texture.h"
 
 #include <chrono>
@@ -73,7 +74,17 @@ struct State {
     Mat proj_stack[2];
     Mat pos_stack[32];
     Mat vec_stack[32];
-    int proj_sp = 0, pos_sp = 0;
+    /* The TEXTURE matrix stack is its own single entry and its own pointer.
+       GBATEK gives mode 3 a one-level stack, and GXSTAT's bits 8..12 report
+       the POSITION/VECTOR pointer alone -- there is no field for this one.
+       It is separate here because it used to not be: MTX_PUSH and MTX_POP in
+       mode 3 fell into the position branch, so a texture-matrix bracket moved
+       the position stack pointer and saved the position matrix. That was
+       invisible while GXSTAT's stack field was a dead latch and stops being
+       invisible the moment the field is published, which is what this lane
+       does below. SM64DS_MTX_TEXSTACK=0 puts the old behaviour back. */
+    Mat tex_stack;
+    int proj_sp = 0, pos_sp = 0, tex_sp = 0;
 
     uint32_t color = 0xFFFFFFFFu;
     float u = 0, v = 0;                 // current TEXCOORD, in texels
@@ -108,6 +119,93 @@ struct State {
 State g;
 int g_store_count;
 int g_tex_decodes;            // VRAM texture decodes since the last perf report
+
+/* MTX_PUSH / MTX_POP / MTX_STORE / MTX_RESTORE, counted BY MATRIX MODE.
+   Always counted, printed only under SM64DS_MTX_BALANCE. The mode is the whole
+   question for the two behaviours below it: whether the texture stack ever
+   moves, and whether a bracket the game opens in one mode is closed in
+   another. A per-port count cannot answer either -- MTX_PUSH is one port for
+   four stacks. */
+unsigned g_mtx_push_mode[4], g_mtx_pop_mode[4];
+unsigned g_mtx_store_mode[4], g_mtx_restore_mode[4];
+/* Attempts refused because the stack was already at its end. GBATEK sets
+   GXSTAT bit 15 on these; this counts them so a refusal is a number rather
+   than a silent clamp. */
+unsigned g_mtx_stack_refusals;
+
+/* SM64DS_GXSTAT_LIVE=0: the geometry engine stops publishing its matrix-stack
+   level into the mapped I/O window, which is the state every build before this
+   lane was in -- GXSTAT bits 8..14 refreshed only when something happened to
+   touch the register THROUGH ntr::io_write, and held a stale snapshot the rest
+   of the time. DEFAULT ON, and the OFF arm announces itself: run mg15's SQRT
+   lane proved a switch that only prints one arm silently keeps the wrong one.
+   Runtime rather than a CMake option for the same reason -- option() caches. */
+int gxstat_live() {
+    static int on = -1;
+    if (on < 0) {
+        const char *e = getenv("SM64DS_GXSTAT_LIVE");
+        on = (e && *e && *e == '0') ? 0 : 1;
+        if (!on)
+            fprintf(stderr, "  [gx] SM64DS_GXSTAT_LIVE=0: GXSTAT's matrix-stack "
+                    "level is a stale snapshot again\n");
+    }
+    return on;
+}
+
+/* SM64DS_MTX_TEXSTACK=0: mode 3 pushes and pops go back to sharing the
+   POSITION stack, which is what this file did before this lane. See the
+   tex_stack member. DEFAULT ON, OFF arm announces itself. */
+int mtx_texstack() {
+    static int on = -1;
+    if (on < 0) {
+        const char *e = getenv("SM64DS_MTX_TEXSTACK");
+        on = (e && *e && *e == '0') ? 0 : 1;
+        if (!on)
+            fprintf(stderr, "  [gx] SM64DS_MTX_TEXSTACK=0: mode-3 matrix "
+                    "brackets move the POSITION stack pointer again\n");
+    }
+    return on;
+}
+
+/* Publish the two stack pointers into GXSTAT, at the moment the geometry
+   engine changes them. This is the half io.cpp's own note said was missing:
+   gxstat_normalize() runs only on accesses routed through the MMIO proxy, and
+   the game's two stack-level readers -- func_02055464 and func_02055490,
+   src TUs in port/slice_w1l2.txt -- are PLAIN, so they read the mapped window
+   directly and saw whatever the last proxied touch had left there.
+   ntr::io_gxstat_publish() is gxstat_normalize() with io.cpp's own init guard
+   in front of it, so the register model stays in the file that owns it. */
+void gxstat_publish() {
+    if (gxstat_live()) io_gxstat_publish();
+}
+
+/* SM64DS_GXSTAT_WITNESS=1: does the mapped I/O window AGREE with the geometry
+   engine about the stack level, at a moment nothing has just refreshed it?
+   DEFAULT OFF.
+   THE SAMPLE POINT IS MTX_MULT, deliberately. It is the most common geometry
+   command on this path (17,951 in a 300-frame scene 1), it never touches
+   GXSTAT, and it is never adjacent to a publish -- so a sample taken there is
+   what a PLAIN reader would have got if it had read the register at that
+   instant, which is the whole question func_02055464 and func_02055490 ask.
+   Sampling at push or pop time would read the value just written and agree in
+   both arms, which is the vacuous version of this measurement. */
+unsigned g_gxw_agree, g_gxw_disagree, g_gxw_worst_true, g_gxw_worst_read;
+int gxstat_witness() {
+    static int on = -1;
+    if (on < 0) on = getenv("SM64DS_GXSTAT_WITNESS") ? 1 : 0;
+    return on;
+}
+void gxstat_witness_sample() {
+    if (!gxstat_witness()) return;
+    const uint32_t v = *reinterpret_cast<volatile uint32_t *>(
+        static_cast<uintptr_t>(0x04000600u));
+    const unsigned read_pos = (v & 0x1f00u) >> 8, read_proj = (v & 0x2000u) >> 13;
+    const unsigned true_pos = (unsigned)(g.pos_sp < 0 ? 0 : (g.pos_sp > 31 ? 31 : g.pos_sp));
+    const unsigned true_proj = (unsigned)(g.proj_sp < 0 ? 0 : (g.proj_sp > 1 ? 1 : g.proj_sp));
+    if (read_pos == true_pos && read_proj == true_proj) { ++g_gxw_agree; return; }
+    ++g_gxw_disagree;
+    if (true_pos > g_gxw_worst_true) { g_gxw_worst_true = true_pos; g_gxw_worst_read = read_pos; }
+}
 
 /* SM64DS_MAT_LOG census storage -- see mat_report() below for what it is for.
    Declared here because exec() feeds it and exec() comes first. */
@@ -417,26 +515,46 @@ void exec(uint8_t cmd, const uint32_t *p, int np) {
         case 0x00: break;                                        // NOP
         case 0x10: g.mode = p[0] & 3; break;                     // MTX_MODE
         case 0x11:                                               // MTX_PUSH
-            if (g.mode == MTX_PROJ) { if (g.proj_sp < 1) g.proj_stack[g.proj_sp++] = g.proj; }
-            else if (g.pos_sp < 31) { g.pos_stack[g.pos_sp] = g.pos; g.vec_stack[g.pos_sp] = g.vec; ++g.pos_sp; }
+            ++g_mtx_push_mode[g.mode & 3];
+            if (g.mode == MTX_PROJ) {
+                if (g.proj_sp < 1) g.proj_stack[g.proj_sp++] = g.proj;
+                else ++g_mtx_stack_refusals;
+            } else if (g.mode == MTX_TEX && mtx_texstack()) {
+                /* One entry, one pointer, and neither is the position
+                   stack's. GBATEK gives GXSTAT no field for this level. */
+                if (g.tex_sp < 1) { g.tex_stack = g.tex; ++g.tex_sp; }
+                else ++g_mtx_stack_refusals;
+            } else if (g.pos_sp < 31) {
+                g.pos_stack[g.pos_sp] = g.pos; g.vec_stack[g.pos_sp] = g.vec; ++g.pos_sp;
+            } else ++g_mtx_stack_refusals;
+            gxstat_publish();
             break;
         case 0x12: {                                             // MTX_POP
             int n = static_cast<int32_t>(p[0] << 26) >> 26;      // signed 6-bit
+            ++g_mtx_pop_mode[g.mode & 3];
             if (g.mode == MTX_PROJ) { if (g.proj_sp > 0) g.proj = g.proj_stack[--g.proj_sp]; }
-            else { g.pos_sp -= n; if (g.pos_sp < 0) g.pos_sp = 0;
+            else if (g.mode == MTX_TEX && mtx_texstack()) {
+                if (g.tex_sp > 0) { g.tex = g.tex_stack; --g.tex_sp; }
+            }
+            else { g.pos_sp -= n; if (g.pos_sp < 0) { g.pos_sp = 0; ++g_mtx_stack_refusals; }
                    if (g.pos_sp < 31) { g.pos = g.pos_stack[g.pos_sp]; g.vec = g.vec_stack[g.pos_sp]; } }
+            gxstat_publish();
             break;
         }
         case 0x13: {                                             // MTX_STORE
             ++g_store_count;
+            ++g_mtx_store_mode[g.mode & 3];
             const int i = p[0] & 31;
             if (g.mode == MTX_PROJ) g.proj_stack[0] = g.proj;
+            else if (g.mode == MTX_TEX && mtx_texstack()) g.tex_stack = g.tex;
             else { g.pos_stack[i] = g.pos; g.vec_stack[i] = g.vec; }
             break;
         }
         case 0x14: {                                             // MTX_RESTORE
             const int i = p[0] & 31;
+            ++g_mtx_restore_mode[g.mode & 3];
             if (g.mode == MTX_PROJ) g.proj = g.proj_stack[0];
+            else if (g.mode == MTX_TEX && mtx_texstack()) g.tex = g.tex_stack;
             else { g.pos = g.pos_stack[i]; g.vec = g.vec_stack[i]; }
             break;
         }
@@ -454,6 +572,7 @@ void exec(uint8_t cmd, const uint32_t *p, int np) {
             break;
         }
         case 0x18: case 0x19: case 0x1A: {                       // MTX_MULT_4x4 / 4x3 / 3x3
+            gxstat_witness_sample();
             mtx_load_log(cmd, p);
             Mat m;
             if (cmd == 0x1A) m = mat_3x3(p);
@@ -1103,12 +1222,25 @@ void gx_reset() {
         g.vec_stack[i] = Mat::identity();
     }
     g.proj_stack[0] = g.proj_stack[1] = Mat::identity();
+    g.tex_stack = Mat::identity();
     g_queued = g_qpos = g_have = 0;
     g_port_cmd = 0; g_port_have = 0;
+    /* `g = State{}` above put both stack pointers back to 0, so the register
+       has to say so too or the first reader of the new frame is told the last
+       frame's depth. */
+    gxstat_publish();
 }
 
 void gx_debug_proj(float out[16]) {
     for (int i = 0; i < 16; ++i) out[i] = g.proj.m[i];
+}
+
+/* The live POSITION matrix, for a caller that needs to say what a vertex it is
+   about to submit will be transformed BY. gx_debug_proj's counterpart: the
+   projection alone cannot tell an object placed at the wrong depth from one
+   scaled wrong at the right depth, and those two have the same symptom. */
+void gx_debug_pos(float out[16]) {
+    for (int i = 0; i < 16; ++i) out[i] = g.pos.m[i];
 }
 
 // GXSTAT bits 8-12 and 13 want these. Clamped to the widths the register has
@@ -1183,6 +1315,105 @@ static void mat_report() {
            "NEVER REACHED THE ENGINE.\n");
 }
 
+/* SM64DS_MTX_BALANCE=1: the MATRIX half of mat_report's question, per frame
+   and then once at exit. DEFAULT OFF.
+
+   WHY IT EXISTS. mat_report already separates "the game never asked" from "the
+   game asked and the ask did not arrive" for the four material registers, and
+   the separation is the same one every plain-built MMIO defect turns on: ntr
+   maps real memory across 0x04000000, so a translation unit that reaches a
+   geometry command port with a plain store latches a word there and the engine
+   never receives the command. The MATRIX ports are the half nothing reported,
+   and they are the half where a miss is unbounded rather than local: a
+   MTX_PUSH that does not arrive does not lose one object's bracket, it leaves
+   every MTX_MULT the bracket was meant to contain applied to the live matrix
+   for the rest of the frame.
+
+   THE TWO NUMBERS THAT DECIDE IT, side by side per port:
+     exec   commands the engine actually ran (gx_debug_commands, no take, so
+            this never disturbs a census another reader owns)
+     latch  the word sitting in the mapped I/O window at that same port
+   A NONZERO LATCH UNDER A ZERO EXEC IS A STORE THAT NEVER ARRIVED. A nonzero
+   latch under a nonzero exec says only that both kinds of writer exist, which
+   is why the per-frame stack line below it is printed as well: an engine whose
+   position stack level never leaves 0 while thousands of MTX_MULTs run is an
+   unbalanced bracket whatever the latch says. */
+static void mtx_report(bool at_exit);
+static void mtx_report_atexit() { mtx_report(true); }
+static void mtx_report(bool at_exit) {
+    static int on = -1;
+    if (on < 0) {
+        on = getenv("SM64DS_MTX_BALANCE") ? 1 : 0;
+        if (on) std::atexit(mtx_report_atexit);
+    }
+    if (!on) return;
+    static const struct { uint8_t cmd; const char *name; } kPorts[] = {
+        {0x10, "MTX_MODE"},     {0x11, "MTX_PUSH"},   {0x12, "MTX_POP"},
+        {0x13, "MTX_STORE"},    {0x14, "MTX_RESTORE"},{0x15, "MTX_IDENTITY"},
+        {0x16, "MTX_LOAD_4x4"}, {0x17, "MTX_LOAD_4x3"},
+        {0x18, "MTX_MULT_4x4"}, {0x19, "MTX_MULT_4x3"},
+        {0x1A, "MTX_MULT_3x3"}, {0x1B, "MTX_SCALE"},  {0x1C, "MTX_TRANS"},
+        {0x20, "COLOR"},        {0x21, "NORMAL"},     {0x22, "TEXCOORD"},
+        {0x23, "VTX_16"},       {0x24, "VTX_10"},
+        {0x29, "POLYGON_ATTR"}, {0x2A, "TEXIMAGE_PARAM"}, {0x2B, "PLTT_BASE"},
+        {0x40, "BEGIN_VTXS"},   {0x41, "END_VTXS"},   {0x50, "SWAP_BUFFERS"},
+        {0x60, "VIEWPORT"},
+    };
+    uint32_t counts[256];
+    uint32_t ports, fifo, swap, resets;
+    gx_debug_commands(counts, ports, fifo, swap, resets, /*take=*/false);
+    unsigned pos_level = 0, proj_level = 0;
+    gx_matrix_stack_levels(pos_level, proj_level);
+    if (!at_exit) {
+        /* One line per frame, and the STACK LEVEL is the point of it: a
+           lifecycle rather than an endpoint, because a level read once at the
+           end cannot tell a bracket that balanced from one that never ran. */
+        static unsigned f;
+        printf("[mtxbal] f%-4u pos_sp=%u proj_sp=%u  push=%u pop=%u "
+               "mult4x3=%u mult4x4=%u scale=%u trans=%u  begin=%u\n",
+               f++, pos_level, proj_level, counts[0x11], counts[0x12],
+               counts[0x19], counts[0x18], counts[0x1B], counts[0x1C],
+               counts[0x40]);
+        return;
+    }
+    printf("[mtxbal] EXEC vs LATCH, whole run (%u port writes, %u fifo words, "
+           "%u gx_reset)\n", ports, fifo, resets);
+    for (const auto &r : kPorts) {
+        const uint32_t addr = 0x04000400u + (uint32_t)r.cmd * 4u;
+        const uint32_t latch = *reinterpret_cast<volatile uint32_t *>(
+            static_cast<uintptr_t>(addr));
+        printf("[mtxbal]   %-15s %08x  exec %8u  latch %08x%s\n", r.name, addr,
+               counts[r.cmd], latch,
+               (counts[r.cmd] == 0 && latch != 0)
+                   ? "   <-- STORED, NEVER EXECUTED" : "");
+    }
+    printf("[mtxbal] A NONZERO LATCH UNDER A ZERO EXEC IS A PLAIN STORE THAT "
+           "NEVER REACHED THE ENGINE.\n");
+    /* BY MATRIX MODE, because MTX_PUSH is one port over four stacks and the
+       per-port count above cannot tell them apart. Mode 3 is the row that
+       decides whether the texture stack sharing the position stack was ever
+       more than a latent wrong: a nonzero mode-3 push count means the
+       position stack pointer -- the number GXSTAT publishes and the number
+       func_02055624 pops by -- was being moved by texture-matrix brackets. */
+    static const char *kMode[4] = {"proj(0)", "pos(1)", "posvec(2)", "tex(3)"};
+    for (int m = 0; m < 4; ++m)
+        printf("[mtxbal]   mode %-10s push %7u  pop %7u  store %7u  "
+               "restore %7u\n", kMode[m], g_mtx_push_mode[m], g_mtx_pop_mode[m],
+               g_mtx_store_mode[m], g_mtx_restore_mode[m]);
+    printf("[mtxbal] stack refusals (end of stack, GBATEK sets GXSTAT bit 15): "
+           "%u\n", g_mtx_stack_refusals);
+    if (gxstat_witness())
+        printf("[mtxbal] GXSTAT witness at MTX_MULT: agree %u  DISAGREE %u  "
+               "(worst: engine level %u, register said %u)\n", g_gxw_agree,
+               g_gxw_disagree, g_gxw_worst_true, g_gxw_worst_read);
+    printf("[mtxbal] GXSTAT now %08x  (bits 8..12 pos level, 13 proj level, "
+           "14 busy)\n",
+           *reinterpret_cast<volatile uint32_t *>(
+               static_cast<uintptr_t>(0x04000600u)));
+    printf("[mtxbal] final pos_sp=%u proj_sp=%u tex_sp=%u\n", pos_level,
+           proj_level, (unsigned)g.tex_sp);
+}
+
 /* SM64DS_TRI_LOG=1: once, after the first full frame is assembled, the
    per-material picture the RASTER sees -- how many triangles carried each
    TEXIMAGE_PARAM, whether a decoded texture came with it, and the texel
@@ -1218,6 +1449,73 @@ static void tri_report() {
                kv.first, kv.second.n, kv.second.textured, kv.second.tw,
                kv.second.th, kv.second.u0, kv.second.u1, kv.second.v0,
                kv.second.v1);
+}
+
+/* SM64DS_TEXPX=<frame>: THE DECISION NUMBER FOR THE TITLE'S SCALE, measured on
+   the assembled frame rather than argued from matrices. DEFAULT OFF (0).
+
+   A DS 2D-in-3D surface is drawn ONE TEXEL TO ONE PIXEL, and that is a
+   property of the finished triangle, not of any one stage: it is the screen
+   distance between two vertices divided by the texel distance between the same
+   two vertices. Every transform between the record and the raster is already
+   folded into both halves, so this number cannot be fooled by a wrong
+   projection, a wrong depth, a scale left in the position matrix or a wrong
+   quad size -- if it reads 1.00 the art is at the ROM's own proportions and if
+   it reads 2.43 the art is 2.43x oversized, whatever the cause.
+
+   DS PIXELS, not host pixels: the interactive tier rasters at 2x, so the raw
+   ratio is halved. Reported per bound texture, with the eye-space depth beside
+   it, because the depth is the lever the lane was pointed at and this says
+   whether it is the one that is off.
+
+   Edges shorter than half a texel are skipped -- they carry no information and
+   their ratio is numerically meaningless. A quad whose texel span is zero
+   (the untextured backdrop fills) reports no rows at all, which is correct:
+   there is no texel to be one pixel. */
+static void texpx_report() {
+    static int want = -1;
+    static unsigned f;
+    if (want < 0) {
+        const char *e = getenv("SM64DS_TEXPX");
+        want = e ? atoi(e) : 0;
+    }
+    const unsigned this_frame = f++;
+    if (want <= 0 || (int)this_frame != want) return;
+    struct Acc {
+        int n; double lo, hi, sum; int tw, th; double w_lo, w_hi;
+    };
+    std::map<uint32_t, Acc> acc;
+    for (const GxTriangle &t : g.tris) {
+        for (int e = 0; e < 3; ++e) {
+            const GxVertex &a = t.v[e], &b = t.v[(e + 1) % 3];
+            const double du = b.u - a.u, dv = b.v - a.v;
+            const double dtex = std::sqrt(du * du + dv * dv);
+            if (dtex < 0.5) continue;
+            const double dx = b.x - a.x, dy = b.y - a.y;
+            const double dpx = std::sqrt(dx * dx + dy * dy) * 0.5;  // host -> DS
+            const double r = dpx / dtex;
+            auto it = acc.find(t.dbg_tex);
+            if (it == acc.end())
+                it = acc.emplace(t.dbg_tex, Acc{0, 1e30, -1e30, 0.0, t.tw, t.th,
+                                                1e30, -1e30}).first;
+            Acc &q = it->second;
+            ++q.n; q.sum += r;
+            if (r < q.lo) q.lo = r;
+            if (r > q.hi) q.hi = r;
+            const double w = (a.w + b.w) * 0.5;
+            if (w < q.w_lo) q.w_lo = w;
+            if (w > q.w_hi) q.w_hi = w;
+        }
+    }
+    printf("[texpx] frame %u: DS PIXELS PER TEXEL per bound texture. 1.00 is "
+           "one texel one pixel.\n", this_frame);
+    for (const auto &kv : acc)
+        printf("[texpx]   tex=%08x %3dx%-3d edges=%5d  px/texel min %6.3f  "
+               "max %6.3f  mean %6.3f   w[%8.3f..%8.3f]\n",
+               kv.first, kv.second.tw, kv.second.th, kv.second.n,
+               kv.second.lo, kv.second.hi, kv.second.sum / kv.second.n,
+               kv.second.w_lo, kv.second.w_hi);
+    std::fflush(stdout);
 }
 
 // One texel coordinate under the DS wrap rules (GBATEK TEXIMAGE_PARAM 16-19):
@@ -1353,7 +1651,9 @@ void gx_render(Framebuffer &fb) {
     std::chrono::steady_clock::time_point t_enter;
     if (tm) t_enter = std::chrono::steady_clock::now();
     tri_report();
+    texpx_report();
     mat_report();
+    mtx_report(false);
     /* Depth clear: 768KB at the window's 2x tier, every frame. 1e30f is not a
        repeating byte pattern so memset cannot do it, but one row can be built
        scalar and the rest copied from it, which is memcpy's problem rather
