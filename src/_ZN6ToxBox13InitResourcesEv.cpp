@@ -2,6 +2,7 @@
 // @symbol _ZN6ToxBox13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "ToxBox.h"
+#include "SharedFilePtr.h"
 
 typedef struct { int x, y, z; } Vec3;
 typedef struct { int m[12]; } Mtx43;
@@ -9,25 +10,25 @@ typedef struct { int m[12]; } Mtx43;
 #define LA(p) (p)
 
 extern "C" {
-void *_ZN5Model8LoadFileER13SharedFilePtr(void *);
-void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, void *, int, int);
-void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, void *, int, int, void *, int);
-void _ZN10dBgCh_Actr13SetLimMovFlagEv(void *);
-void _ZN7PathPtr6FromIDEj(void *, unsigned int);
-int _ZNK7PathPtr8NumNodesEv(void *);
-void _ZNK7PathPtr7GetNodeER7Vector3j(void *, void *, unsigned int);
+void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+    dBgCh_Actr *self, dActor_c *actor, int radius, int height,
+    void *a, int b);
+void _ZN7PathPtr6FromIDEj(PathPtr *path, unsigned int id);
 void func_ov092_021313b0(void *);
 void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void func_ov092_02131a88(char *self);
-void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *);
-void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, void *, void *, int, short, void *);
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    dBgW_KcMbg *self, KCL_File *file, const Matrix4x3 *mat,
+    int scale, short angY, void *clps);
 void func_020393d4(void *p, void *v);
-void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *, void *, void *, int, int, unsigned int, unsigned int);
+void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+    dCcAcPos_c *self, dActor_c *actor, const Vector3 *offset,
+    int radius, int height, unsigned int flags, unsigned int vulnFlags);
 }
 
-extern char data_ov092_02132540;
-extern char data_ov092_02132548;
+extern SharedFilePtr data_ov092_02132540;
+extern SharedFilePtr data_ov092_02132548;
 extern char data_ov092_02132220;
 extern char data_ov092_02132294;
 extern Mtx43 data_020a0e68;
@@ -39,33 +40,33 @@ int ToxBox::InitResources()
     Vec3 tmp;
     unsigned int idx;
 
-    f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov092_02132540);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii((char *)&mModel, f, 1, -1);
+    f = Model::LoadFile(data_ov092_02132540);
+    mModel.SetFile((BMD_File *)f, 1, -1);
 
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((char *)&mWithMeshClsn, (char *)this, 0xfa000, 0, 0, 0);
-    _ZN10dBgCh_Actr13SetLimMovFlagEv((char *)&mWithMeshClsn);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+        &mWithMeshClsn, this, 0xfa000, 0, 0, 0);
+    mWithMeshClsn.SetLimMovFlag();
 
-    idx = mParam & 3;
+    idx = param1 & 3;
     mMoveKind = (unsigned char)idx;
     idx = mMoveKind;
     if (idx != 3) {
-        int v = ((int *)&data_ov092_02132294)[idx];
-        mMoveSeq = v;
+        mMoveSeq = ((s32 **)&data_ov092_02132294)[idx];
         mMoveSeqIndex = 0;
-        mMoveDir = *(int *)mMoveSeq;
+        mMoveDir = *mMoveSeq;
     } else {
-        _ZN7PathPtr6FromIDEj((char *)this + 0x58c, ((unsigned int)mParam >> 8) & 0xf);
-        mPathNodeCount = _ZNK7PathPtr8NumNodesEv((char *)this + 0x58c);
+        _ZN7PathPtr6FromIDEj(&mPathPtr, (param1 >> 8) & 0xf);
+        mPathNodeCount = mPathPtr.NumNodes();
         mPathNodeIndex = 0;
-        _ZNK7PathPtr7GetNodeER7Vector3j((char *)this + 0x58c, (char *)this + 0x580, mPathNodeIndex);
-        func_ov092_021313b0((char *)this);
+        mPathPtr.GetNode(mPathNode, mPathNodeIndex);
+        func_ov092_021313b0(this);
     }
 
     {
         mPosY += 0xfa000;
-        mRestPosX = mPosX;
-        mRestPosY = mPosY;
-        mRestPosZ = mPosZ;
+        mRestPos.x = mPosX;
+        mRestPos.y = mPosY;
+        mRestPos.z = mPosZ;
         Vec3_Asr(&tmp, (Vec3 *)&mPosX, 3);
     }
 
@@ -75,9 +76,10 @@ int ToxBox::InitResources()
 
     func_ov092_02131a88((char *)this);
 
-    f = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov092_02132548);
+    f = dBgW_Kc::LoadFile(data_ov092_02132548);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        (char *)&mMeshCollider, f, (char *)this + 0x2ec, 0x1000, mAngleY, &data_ov092_02132220);
+        &mMeshCollider, (KCL_File *)f, &mClsnMat,
+        0x1000, mAngleY, &data_ov092_02132220);
     func_020393d4((char *)&mMeshCollider, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
 
     mOrientBits = (unsigned char)((mAngleX >> 0xe) & 3);
@@ -93,7 +95,8 @@ int ToxBox::InitResources()
         stk[1] = -0xfa000;
         stk[2] = 0;
         _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-            (char *)&mdCcAcPos_c, (char *)this, (void *)&stk[0], 0xc8000, 0x190000, 2, 0x6003c0);
+            &mdCcAcPos_c, this, (const Vector3 *)&stk[0],
+            0xc8000, 0x190000, 2, 0x6003c0);
     }
 
     mPlayerActor = 0;

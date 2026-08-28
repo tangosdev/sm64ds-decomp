@@ -21,7 +21,7 @@
  *
  * Offsets/widths are observed (evidence_history + evidence_rom, both passes
  * agreeing on 4-byte accesses at 0x00/0x04/0x08/0x0c/0x10). Names come from the
- * constructor's own body, not from a guess: _ZN4HeapC1EPvjPS_ writes start,
+ * constructor's own body, not from a guess: _ZN4HeapC2EPvjPS_ writes start,
  * size and root into 0x04/0x08/0x0c in that order and then zeroes 0x10.
  *
  * TWO CORRECTIONS TO THE SKELETON THIS REPLACES:

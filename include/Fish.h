@@ -1,42 +1,38 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Fish: 6 matched functions, 11 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef FISH_H
 #define FISH_H
+
 #include "types.h"
+#include "dActor_c.h"
 #include "ModelAnim.h"
 
-struct Fish {
-    u8  pad_000[0x4];
-    s32 uniqueID;            /* 0x004 */
-    u32 mParam;            /* 0x008 */
-    u8  pad_00c[0x54];
-    s32 mPosY;            /* 0x060 */
-    u8  pad_064[0x70];
-    /* ModelAnim member. The cartridge's own ~Fish calls _ZN9ModelAnimD1Ev at +0x0d4
-       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
-       D1 and not D2, so it is this type and not an inlined base. */
-    ModelAnim mModelAnim;            /* 0x0d4 */
-    u8  pad_138[0x4];
-    s32 mUniqueID_13c;            /* 0x13c */
-    s32 mTopY;            /* 0x140 */
-    u8  pad_144[0x8];
+/* daFish_c is the ROM RTTI alias. D1/D0 call ModelAnim's complete destructor at
+ * +0xd4 and dActor_c's base destructor, while Fish_Spawn constructs the same
+ * subobject after dActor_c. Together those relocations establish the inheritance
+ * and ownership below; dActor_c supplies uniqueID, param1, position, and angles.
+ */
+struct Fish : dActor_c {
+    u8 pad_0d0[0x4];       /* 0x0d0 */
+    ModelAnim mModelAnim;  /* 0x0d4 */
+    s32 unk_138;           /* 0x138 */
+    s32 mUniqueID_13c;     /* 0x13c */
+    s32 mTopY;             /* 0x140 */
+    u8 pad_144[0x8];       /* 0x144 */
     s32 mState;            /* 0x14c */
-    s32 unk_150;            /* 0x150 */
-    u8  pad_154[0x5];
-    u8  mHidden;            /* 0x159 */
-    u8  pad_15a[0x1];
-    u8  mModelIndex;            /* 0x15b */
-    u8  mVariant;            /* 0x15c */
-#ifdef __cplusplus
-    /* methods */
+    s32 unk_150;           /* 0x150 */
+    u8 pad_154[0x5];       /* 0x154 */
+    u8 mHidden;            /* 0x159 */
+    u8 pad_15a;            /* 0x15a */
+    u8 mModelIndex;        /* 0x15b */
+    u8 mVariant;           /* 0x15c */
+    u8 pad_15d[0x3];       /* 0x15d */
+
+    virtual ~Fish();
+    virtual void OnPendingDestroy(); /* slot 12 */
+
     int Behavior();
     int CleanupResources();
     int InitResources();
-    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
     int Render();
-#endif
 };
 
 typedef char Fish_size_must_be_0x160[sizeof(struct Fish) == 0x160 ? 1 : -1];

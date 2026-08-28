@@ -232,7 +232,22 @@ def check_object(obj_path, rel, names=None):
                  "note": f"{type(exc).__name__}: {exc}"}]
 
 
-RANK = {UNNAMED: 0, DIFFERS: 1, PARTIAL: 2, VERIFIED: 3}
+def _symbol_key(r):
+    """Identity a verdict record is deduped on.
+
+    Vague linkage means the same cartridge data symbol -- a vtable, a typeinfo record --
+    is independently emitted by every object that needs it, so counting RECORDS makes the
+    headline a function of how many files the tree happens to be split into rather than
+    how much data is actually proven. `symbol == "?"` is check_object's own catch-all for
+    an object it could not even parse; it carries no real identity, so those never dedupe
+    against each other -- keying them by `src` too would be wrong the other direction.
+    """
+    if r["symbol"] == "?":
+        return (r.get("module"), r["symbol"], r["src"])
+    return (r.get("module"), r["symbol"])
+
+
+_VERDICT_RANK = {UNNAMED: 0, PARTIAL: 1, VERIFIED: 2}
 
 
 def summarize(records):
@@ -255,35 +270,46 @@ def summarize(records):
     an older report.
     """
     counts = collections.Counter(r["verdict"] for r in records)
-    verified_bytes = sum(r.get("bytes", 0) for r in records if r["verdict"] == VERIFIED)
-    partial_bytes = sum(r.get("bytes", 0) for r in records if r["verdict"] == PARTIAL)
-    best, bytes_for = {}, {}
+
+    # One verdict per unique data symbol: DIFFERS wins outright over every other record
+    # for that symbol -- a class whose vtable is right in one file and wrong in another
+    # is still a wrong class model, so a correct copy must not hide a bad sibling. Absent
+    # a DIFFERS record, the best of what is left (VERIFIED over PARTIAL over UNNAMED).
+    best = {}
     for r in records:
-        sym, verdict = r["symbol"], r["verdict"]
-        if RANK.get(verdict, -1) > RANK.get(best.get(sym), -1):
-            best[sym] = verdict
-            bytes_for[sym] = r.get("bytes", 0)
-    differing_syms = {r["symbol"] for r in records if r["verdict"] == DIFFERS}
-    unique = collections.Counter(
-        v for s, v in best.items() if s not in differing_syms)
+        key = _symbol_key(r)
+        cur = best.get(key)
+        if cur is None:
+            best[key] = r
+        elif cur["verdict"] == DIFFERS:
+            continue
+        elif r["verdict"] == DIFFERS:
+            best[key] = r
+        elif _VERDICT_RANK[r["verdict"]] > _VERDICT_RANK[cur["verdict"]]:
+            best[key] = r
+    symbol_counts = collections.Counter(r["verdict"] for r in best.values())
+    verified_bytes = sum(r.get("bytes", 0) for r in best.values()
+                         if r["verdict"] == VERIFIED)
+    partial_bytes = sum(r.get("bytes", 0) for r in best.values()
+                        if r["verdict"] == PARTIAL)
     return {
         "symbols": len(best),
-        "verified": unique[VERIFIED],
-        "partial": unique[PARTIAL],
-        "differs": len(differing_syms),
-        "unnamed": unique[UNNAMED],
-        "verifiedBytes": sum(b for s, b in bytes_for.items()
-                             if best[s] == VERIFIED and s not in differing_syms),
-        "partialBytes": sum(b for s, b in bytes_for.items()
-                            if best[s] == PARTIAL and s not in differing_syms),
-        "records": len(records),
+        "verified": symbol_counts[VERIFIED],
+        "partial": symbol_counts[PARTIAL],
+        "differs": symbol_counts[DIFFERS],
+        "unnamed": symbol_counts[UNNAMED],
+        "verifiedBytes": verified_bytes,
+        "partialBytes": partial_bytes,
+        # Per-object-record totals, kept for visibility -- these move with file topology
+        # (a TU merge or a duplicate-file cleanup changes them without a symbol's verdict
+        # changing) and are not what validate_merge ratchets.
         "verifiedRecords": counts[VERIFIED],
         "partialRecords": counts[PARTIAL],
         "differsRecords": counts[DIFFERS],
         "unnamedRecords": counts[UNNAMED],
-        "verifiedBytesRecords": verified_bytes,
-        "partialBytesRecords": partial_bytes,
+        "totalRecords": len(records),
         # The actionable list: a class model whose vtable disagrees with the cartridge.
+        # Left per-record (not deduped) so it still names every file carrying a bad copy.
         "differing": sorted(
             ({"src": r["src"], "symbol": r["symbol"], "module": r.get("module"),
               "addr": r.get("addr"), "differingBytes": r.get("differingBytes")}

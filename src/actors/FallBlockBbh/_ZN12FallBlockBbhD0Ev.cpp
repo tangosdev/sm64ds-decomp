@@ -1,9 +1,10 @@
 //cpp
 // @symbol _ZN12FallBlockBbhD0Ev
-/* D0, the DELETING destructor: run the destructor body, then hand the object
- * to operator delete. Longer than the D1/D2 pair, but built from the same
- * one `FallBlockBbh::~FallBlockBbh()` definition. The class `operator delete` in the header
- * is what makes the tail call land on the right deallocator. */
+/* recovered: native deleting destructor -- the compiler emits the whole body
+ *
+ * The empty class body owns all three vptr transitions and the inherited
+ * dBgW_KcMbg, Model, dActor_c, and actor-heap teardown already proven by D1.
+ */
 #include "FallBlockBbh.h"
 
 FallBlockBbh::~FallBlockBbh()

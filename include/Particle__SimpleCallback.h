@@ -1,14 +1,10 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Particle::SimpleCallback: 1 matched functions, 1 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef PARTICLE__SIMPLECALLBACK_H
 #define PARTICLE__SIMPLECALLBACK_H
-#include "types.h"
+#include "dPa_c.h"
 
-struct Particle__SimpleCallback {
-    u8  pad_000[0x4];
-    s16 unk_004;            /* 0x004 */
-};
+/* Compatibility spelling for the one method still enrolled under its imported
+ * Particle::SimpleCallback assertion. ROM RTTI proves the class declaration in
+ * dPa_c.h; remove this alias when that method's parameter name is verified. */
+typedef dPa_c::level_c::simpleCallback_c Particle__SimpleCallback;
 
 #endif

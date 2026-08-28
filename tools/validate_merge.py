@@ -599,15 +599,19 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     if he["stats"]["sourceFunctions"] < be["stats"]["sourceFunctions"]:
         reasons.append("source-built function coverage decreased")
     dropped_enrollment = sorted(set(be["source"]) - set(he["source"]))
-    # The attribution-override label (carried on the job by tangos-backend) makes every
-    # attribution finding advisory for this one pull request.  The finding is still
-    # computed and still named -- an override says "I know, and I meant it", not "do not
-    # look" -- it just stops being a reason the merge cannot land.
+    # Reassignment alone (a name moving from one contributor to another, credit_changes)
+    # is never a blocker: a rebase, a rename, or resolving someone else's merge conflict
+    # all relabel a function's "last touched by" without losing anything, and this project
+    # spends no tokens defending credit. Only an outright LOSS (lost_credit: a function
+    # that had a contributor and now has none) is a real regression, and the
+    # attribution-override label (carried on the job by tangos-backend) makes that one
+    # finding advisory too -- an override says "I know, and I meant it", not "do not
+    # look" -- for this one pull request.
     credit_moved = bool(credit_changes or lost_credit)
     new_unattributed = (ha["stats"]["unattributedFunctions"]
                         > ba["stats"]["unattributedFunctions"])
-    if credit_moved and not allow_attribution_change:
-        reasons.append("contributor attribution changed or was lost "
+    if lost_credit and not allow_attribution_change:
+        reasons.append("contributor attribution was lost "
                        f"({_credit_detail(credit_changes, lost_credit)}); label the pull "
                        "request attribution-override to accept it")
     if new_unattributed and not allow_attribution_change:
@@ -655,9 +659,14 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
             "none was byte-verified -- "
             + ", ".join(w["path"] for w in withdrawn[:3])
             + (f", +{len(withdrawn) - 3} more" if len(withdrawn) > 3 else ""))
-    if allow_attribution_change and credit_moved:
-        warnings.append("attribution-override label: contributor attribution changed or "
-                        f"was lost ({_credit_detail(credit_changes, lost_credit)}), "
+    if credit_changes:
+        # Never a blocker (see above) -- reported so a reader can still see whose credit
+        # moved, without needing the attribution-override label to get a passing merge.
+        warnings.append("contributor attribution changed, not a blocker "
+                        f"({_credit_detail(credit_changes, [])})")
+    if allow_attribution_change and lost_credit:
+        warnings.append("attribution-override label: contributor attribution was lost "
+                        f"({_credit_detail([], lost_credit)}), "
                         "accepted without failing the pull request")
     if allow_attribution_change and new_unattributed:
         warnings.append("attribution-override label: the merge introduced an "
@@ -724,11 +733,16 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         if hf["stats"]["totalBytes"] else 0.0)
     if reasons:
         summary = "Validation failed: " + "; ".join(reasons)
-    elif allow_attribution_change and (credit_moved or new_unattributed):
-        # Passing *because* of the label is not the same verdict as nothing having
-        # moved, and the one-liner is what most people read.
+    elif allow_attribution_change and (lost_credit or new_unattributed):
+        # Passing *because* of the label is not the same verdict as nothing having been
+        # lost, and the one-liner is what most people read.
         summary = ("Committed merge passes; the attribution-override label accepted "
-                   f"{len(credit_changes)} credit change(s), {len(lost_credit)} lost.")
+                   f"{len(lost_credit)} lost credit(s)"
+                   + (", including an unattributed match" if new_unattributed else "")
+                   + ".")
+    elif credit_changes:
+        summary = (f"Committed merge passes; {len(credit_changes)} contributor credit "
+                   "reassignment(s) noted, not a blocker.")
     else:
         summary = "Committed merge introduces no reconstruction or attribution regression."
     # tangos-backend refuses a result whose summary runs past 500 characters, and a refused
@@ -813,11 +827,16 @@ def render_markdown(r):
             f"({s['head']['sourceBytesPercent']:.2f}%, {_signed(d['sourceBuiltBytes'])}) "
             f"-- differs from byte-verified by "
             f"{s['head']['sourceFunctions'] - h['verifiedFunctions']:+,} |")
+    # "(override label)" only when the label actually waived something -- a pure
+    # reassignment (changed, no lost) already passes on its own, so tagging it here
+    # would read as "this needed permission" when it did not.
+    overrode_something = bool(r["attribution"].get("overridden")
+                              and r["attribution"]["lost"])
     lines += [
              f"| Contributor credit | {len(r['attribution']['added'])} added, "
              f"{len(r['attribution']['changed'])} changed, "
              f"{len(r['attribution']['lost'])} lost"
-             f"{' (override label)' if r['attribution'].get('overridden') else ''} |",
+             f"{' (override label)' if overrode_something else ''} |",
              f"| Relocation check | {l['checked']} checked; {relocation_summary} |"]
     # Optional phase: no row at all when it did not run, so an older worker's
     # report reads exactly as it did before.

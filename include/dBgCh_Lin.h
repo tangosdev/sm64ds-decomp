@@ -95,13 +95,11 @@ struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
                                artefacts, not sizeof evidence. */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    /* DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the key-function
-     * arrangement from include/ModelBase.h / include/dBgCh.h. With MI this is
-     * doubly load-bearing: a TU that DID define it out of line would emit both
-     * vtable blocks AND the _ZTh thunks, all of which the ROM already supplies
-     * as data (see include/ModelAnim.h for that exact trap). Slots: primary
-     * D1/D0 at _ZTV9dBgCh_Lin, secondary D1/D0 at VTable_dBgPi_dBgCh_LinThunk.
-     */
+    /* DECLARED FIRST and defined as real C++ in the separate D1/D0 source
+     * files. Each TU initially emits both MI vtable blocks and thunks;
+     * objisolate retains only the selected destructor variant and binds its
+     * vptr stores to the ROM data. Slots: primary D1/D0 at _ZTV9dBgCh_Lin,
+     * secondary D1/D0 at VTable_dBgPi_dBgCh_LinThunk. */
     virtual ~dBgCh_Lin();
 
     /* DECLARED, defined out of line in src/_ZN9dBgCh_LinC1Ev.cpp as real C++
@@ -116,9 +114,9 @@ struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
        Declaring it here picks the same deallocator both bases name
        (Memory::operator_delete2, 0x0203cbcc) and satisfies the rule in
        include/dActor_c.h that mwcc only inlines the member when it is in the
-       class or its immediate base. Byte-neutral: the ROM kept no D0 for this
-       class -- nothing ever deletes one -- and a non-virtual inline member
-       adds no field and no vtable slot. */
+       class or its immediate base. This is load-bearing for the D0 at
+       0x02037710, which ends at Memory::operator_delete2; a non-virtual inline
+       member adds no field and no vtable slot. */
     void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 
     /* methods */
@@ -132,14 +130,14 @@ struct dBgCh_Lin {
     u8  mBgPiBase;            /* 0x010 - the dBgPi base starts here */
     u8  pad_011[0x27];
     /* NOT a bare Vector3, despite DetectClsn reading three words here: the
-       destructor destroys something at 0x38 via func_ov002_020feab8, so a
+       destructor destroys something at 0x38 via _ZN8dM3dGLinD2Ev, so a
        sub-object lives here whose first member is the line start.
 
        RECOVERED 2026-08-19. The type is the cartridge's own `dM3dGLin', named
        in the ROM's RTTI (_ZTS8dM3dGLin at 0x02099284) and listed as a base of
        dBgCh_Lin -- this class -- at offset 56 = 0x38. It is 0x18 bytes, two
        Vector3: start at 0x38, end at 0x44. Non-polymorphic, so no vptr, and
-       func_ov002_020feab8 is a 4-byte `bx lr' -- the trivial ~dM3dGLin. Its
+       _ZN8dM3dGLinD2Ev is a 4-byte `bx lr' -- the trivial base destructor. Its
        RTTI lives in arm9, so the TYPE is not overlay-resident even though
        those three method bodies are. See notes/collision-system.md.
 

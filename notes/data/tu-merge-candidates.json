@@ -309,7 +309,7 @@
     "src/_ZN6ToxBox6RenderEv.cpp",
     "src/_ZN6ToxBox8BehaviorEv.cpp",
     "src/_ZN6ToxBox13InitResourcesEv.c",
-    "src/ToxBox_Spawn.c"
+    "src/ToxBox_Spawn.cpp"
    ],
    "ext_mix": {
     ".cpp": 11,
@@ -364,8 +364,8 @@
    "n_functions_map": 22,
    "n_files": 21,
    "files": [
-    "src/actors/MansionSteps/_ZN12MansionStepsD1Ev.cpp",
-    "src/actors/MansionSteps/_ZN12MansionStepsD0Ev.cpp",
+    "src/actors/MansionSteps/_ZN11daTrsTrap_cD1Ev.cpp",
+    "src/actors/MansionSteps/_ZN11daTrsTrap_cD0Ev.cpp",
     "src/unnamed/ov063/func_ov063_0211c684.c",
     "src/unnamed/ov063/func_ov063_0211c6f8.cpp",
     "src/unnamed/ov063/func_ov063_0211c770.c",
@@ -2826,7 +2826,7 @@
     "src/_ZN14UnchainedChomp8BehaviorEv.cpp",
     "src/_ZN14UnchainedChomp13InitResourcesEv.cpp",
     "src/_ZN14UnchainedChomp16OnAimedAtWithEggEv.cpp",
-    "src/UnchainedChomp_Spawn.c"
+    "src/UnchainedChomp_Spawn.cpp"
    ],
    "ext_mix": {
     ".cpp": 12,
@@ -5530,7 +5530,7 @@
     "src/_ZN4Clam6RenderEv.cpp",
     "src/_ZN4Clam8BehaviorEv.cpp",
     "src/_ZN4Clam13InitResourcesEv.cpp",
-    "src/Clam_Spawn.c"
+    "src/Clam_Spawn.cpp"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -5911,7 +5911,7 @@
     "src/_ZN22ClockPaintingHandShort6RenderEv.cpp",
     "src/_ZN22ClockPaintingHandShort8BehaviorEv.cpp",
     "src/_ZN22ClockPaintingHandShort13InitResourcesEv.cpp",
-    "src/ClockPaintingHandShort_Spawn.c"
+    "src/ClockPaintingHandShort_Spawn.cpp"
    ],
    "ext_mix": {
     ".cpp": 5,
@@ -11955,7 +11955,7 @@
     "src/_ZN8Particle25EndingStarGlitterCallback8OnUpdateERNS_6SystemEb.c",
     "src/_ZN8Particle25EndingStarGlitterCallback14SpawnParticlesERNS_6SystemE.c",
     "src/func_02022260.c",
-    "src/func_02022298.c",
+    "src/_ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev.cpp",
     "src/_ZN8Particle17CheckLavaCallback8OnUpdateERNS_6SystemEb.c",
     "src/_ZN8Particle17CheckLavaCallback14SpawnParticlesERNS_6SystemE.cpp",
     "src/_ZN8Particle22FitWaterSimpleCallback8OnUpdateERNS_6SystemEb.c",
@@ -11963,11 +11963,11 @@
     "src/_ZN8Particle14SplashCallback8OnUpdateERNS_6SystemEb.cpp",
     "src/_ZN8Particle13ScaleCallback8OnUpdateERNS_6SystemEb.c",
     "src/_ZN8Particle13ScaleCallback14SpawnParticlesERNS_6SystemE.c",
-    "src/func_020225fc.c",
+    "src/_ZN5dPa_c7level_c15scaleCallback_cC1Ev.cpp",
     "src/_ZN8Particle14SimpleCallback8OnUpdateERNS_6SystemEb.cpp",
     "src/_ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE.cpp",
-    "src/_ZN8Particle14SimpleCallbackC2Ev.cpp",
-    "src/func_020226a4.c",
+    "src/_ZN5dPa_c7level_c16simpleCallback_cC1Ev.cpp",
+    "src/_ZN5dPa_c7level_c16simpleCallback_cC2Ev.cpp",
     "src/_ZN8Particle8Callback8OnUpdateERNS_6SystemEb.c",
     "src/_ZN8Particle8Callback14SpawnParticlesERNS_6SystemE.c",
     "src/_ZN8Particle19SetSelfDestructFlagEj.c",
@@ -13056,7 +13056,7 @@
     "src/_ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt.cpp",
     "src/_ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_.cpp",
     "src/_ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_.cpp",
-    "src/_ZN10MemoryNode6TargetC1EP10MemoryNode.cpp",
+    "src/_ZN10MemoryNode6TargetC1EPS_.cpp",
     "src/_ZN18SolidHeapAllocator10ReallocateEPvj.cpp",
     "src/_ZN18SolidHeapAllocator14TryResizeToFitEv.cpp",
     "src/_ZN18SolidHeapAllocator9LoadStateEj.cpp",
@@ -15606,7 +15606,7 @@
    "n_files": 30,
    "files": [
     "src/_ZN15daObjMarioCap_cD1Ev.cpp",
-    "src/_ZN15daObjMarioCap_cD0Ev.c",
+    "src/_ZN15daObjMarioCap_cD0Ev.cpp",
     "src/func_ov002_020b6fcc.cpp",
     "src/func_ov002_020b71e8.c",
     "src/func_ov002_020b71f0.c",
@@ -26639,10 +26639,10 @@
    "files": [
     "src/actors/Boo/_ZN3BooD1Ev.cpp",
     "src/actors/Boo/_ZN3BooD0Ev.cpp",
-    "src/actors/BooCage/_ZN7BooCageD1Ev.cpp",
-    "src/actors/BooCage/_ZN7BooCageD0Ev.c",
-    "src/actors/BigBooIcon/_ZN10BigBooIconD1Ev.cpp",
-    "src/actors/BigBooIcon/_ZN10BigBooIconD0Ev.cpp",
+    "src/actors/BooCage/_ZN11daTBasket_cD1Ev.cpp",
+    "src/actors/BooCage/_ZN11daTBasket_cD0Ev.cpp",
+    "src/actors/BigBooIcon/_ZN11daTrsIcon_cD1Ev.cpp",
+    "src/actors/BigBooIcon/_ZN11daTrsIcon_cD0Ev.cpp",
     "src/actors/Boo/_ZN3Boo16OnAimedAtWithEggEv.cpp",
     "src/unnamed/ov063/func_ov063_021160d4.c",
     "src/unnamed/ov063/func_ov063_02116190.c",
@@ -30202,7 +30202,7 @@
     "src/_ZN6Cannon6RenderEv.cpp",
     "src/_ZN6Cannon8BehaviorEv.cpp",
     "src/_ZN6Cannon13InitResourcesEv.cpp",
-    "src/Cannon_Spawn.c"
+    "src/Cannon_Spawn.cpp"
    ],
    "ext_mix": {
     ".cpp": 6,
@@ -32312,7 +32312,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/func_ov002_020aedbc.c"
+    "src/_ZN11dCapEnemy_cD1Ev.cpp"
    ],
    "ext_mix": {
     ".c": 1
@@ -32362,7 +32362,7 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/_ZN11dCapEnemy_cD0Ev.c"
+    "src/_ZN11dCapEnemy_cD0Ev.cpp"
    ],
    "ext_mix": {
     ".c": 1
@@ -33179,12 +33179,12 @@
    "n_functions_map": 1,
    "n_files": 1,
    "files": [
-    "src/func_ov002_020feab8.c"
+    "src/_ZN8dM3dGLinD2Ev.cpp"
    ],
    "ext_mix": {
-    ".c": 1
+    ".cpp": 1
    },
-   "ext_kind": "c",
+   "ext_kind": "cpp",
    "n_asm_files": 0,
    "n_incomplete": 0,
    "n_files_with_extra_sections": 0,
@@ -37333,7 +37333,7 @@
     "src/_ZN6ToxBox6RenderEv.cpp",
     "src/_ZN6ToxBox8BehaviorEv.cpp",
     "src/_ZN6ToxBox13InitResourcesEv.c",
-    "src/ToxBox_Spawn.c"
+    "src/ToxBox_Spawn.cpp"
    ],
    "ext_mix": {
     ".cpp": 11,
@@ -37359,8 +37359,8 @@
     "TrapDoor"
    ],
    "files": [
-    "src/actors/MansionSteps/_ZN12MansionStepsD1Ev.cpp",
-    "src/actors/MansionSteps/_ZN12MansionStepsD0Ev.cpp",
+    "src/actors/MansionSteps/_ZN11daTrsTrap_cD1Ev.cpp",
+    "src/actors/MansionSteps/_ZN11daTrsTrap_cD0Ev.cpp",
     "src/unnamed/ov063/func_ov063_0211c684.c",
     "src/unnamed/ov063/func_ov063_0211c6f8.cpp",
     "src/unnamed/ov063/func_ov063_0211c770.c",

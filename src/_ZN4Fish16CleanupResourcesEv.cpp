@@ -1,27 +1,20 @@
 //cpp
 // @symbol _ZN4Fish16CleanupResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* recovered: typed actor and shared-file ownership */
 #include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "Fish.h"
-struct SharedFilePtr { unsigned int data[4]; };
-extern "C" {
-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *self);
-extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
-}
+#include "SharedFilePtr.h"
 
-extern struct SharedFilePtr data_ov100_021489cc;
-extern struct SharedFilePtr *data_ov100_021473a4[];
-extern struct SharedFilePtr *data_ov100_021473b0[];
+extern SharedFilePtr data_ov100_021489cc;
+extern SharedFilePtr *data_ov100_021473a4[];
+extern SharedFilePtr *data_ov100_021473b0[];
 
 int Fish::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov100_021489cc);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov100_021473a4[mModelIndex]);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov100_021473b0[mModelIndex]);
-    if (mHidden == 0) {
-        if (_ZN8dActor_c10FindWithIDEj(mUniqueID_13c))
-            func_ov100_02146280();
-    }
+    data_ov100_021489cc.Release();
+    data_ov100_021473a4[mModelIndex]->Release();
+    data_ov100_021473b0[mModelIndex]->Release();
+    if (mHidden == 0 && dActor_c::FindWithID(mUniqueID_13c))
+        func_ov100_02146280();
     return 1;
 }

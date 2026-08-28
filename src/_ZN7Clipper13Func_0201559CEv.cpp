@@ -34,12 +34,12 @@ void Clipper::Func_0201559C()
     v1.x = -c; v1.y = b;  v1.z = -mNearZ;
     v2.x = c;  v2.y = b;  v2.z = -mNearZ;
     v3.x = c;  v3.y = -b; v3.z = -mNearZ;
-    CrossVec3(&v1, &v0, &mPlaneNormals[0]);
-    CrossVec3(&v2, &v1, &mPlaneNormals[1]);
-    CrossVec3(&v3, &v2, &mPlaneNormals[2]);
-    CrossVec3(&v0, &v3, &mPlaneNormals[3]);
-    NormalizeVec3(&mPlaneNormals[0], &mPlaneNormals[0]);
-    NormalizeVec3(&mPlaneNormals[1], &mPlaneNormals[1]);
-    NormalizeVec3(&mPlaneNormals[2], &mPlaneNormals[2]);
-    NormalizeVec3(&mPlaneNormals[3], &mPlaneNormals[3]);
+    CrossVec3(&v1, &v0, (Vector3 *)&mPlaneNormals[0]);
+    CrossVec3(&v2, &v1, (Vector3 *)&mPlaneNormals[1]);
+    CrossVec3(&v3, &v2, (Vector3 *)&mPlaneNormals[2]);
+    CrossVec3(&v0, &v3, (Vector3 *)&mPlaneNormals[3]);
+    NormalizeVec3((Vector3 *)&mPlaneNormals[0], (Vector3 *)&mPlaneNormals[0]);
+    NormalizeVec3((Vector3 *)&mPlaneNormals[1], (Vector3 *)&mPlaneNormals[1]);
+    NormalizeVec3((Vector3 *)&mPlaneNormals[2], (Vector3 *)&mPlaneNormals[2]);
+    NormalizeVec3((Vector3 *)&mPlaneNormals[3], (Vector3 *)&mPlaneNormals[3]);
 }

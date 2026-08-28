@@ -1,42 +1,27 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class ClockPaintingHandShort: 6 matched functions, 5 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef CLOCKPAINTINGHANDSHORT_H
 #define CLOCKPAINTINGHANDSHORT_H
+
 #include "types.h"
+#include "dActor_c.h"
 #include "Model.h"
 
-struct ClockPaintingHandShort {
-    u8  pad_000[0xc];
-    /* 0x00c..0x090 is fBase_c's, and fBase_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    u16 actorID;                 /* 0x00c */
-    u8  aliveState;              /* 0x00e */
-    u8  shouldBeKilled;          /* 0x00f */
-    u8  unk_010;                 /* 0x010 */
-    u8  unk_011;                 /* 0x011 */
-    u8  unk_012;                 /* 0x012 */
-    u8  pauseFlags;                 /* 0x013 */
-    u8  sceneNode[0x14];               /* 0x014 */
-    u8  behavNode[0x10];               /* 0x028 */
-    u8  renderNode[0x10];              /* 0x038 */
-    u8  pad_048[0x48];
-    s16 mAngleZ;            /* 0x090 */
-    u8  pad_092[0x3a];
-    s8  mAreaId;            /* 0x0cc */
-    u8  pad_0cd[0x7];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x0d4 */
-    u8  mHandIndex;            /* 0x124 */
-#ifdef __cplusplus
-    /* methods */
+/* daObjClock_c is an alias at the same vtable address. The ROM's D1/D0 symbols,
+ * vtable, base teardown, constructor call, and 0xd4 Model construction together
+ * establish the actual leaf class: dActor_c occupies 0x000..0x0cf, four bytes of
+ * derived padding precede the owned Model, and the one-byte hand index follows it.
+ */
+struct ClockPaintingHandShort : dActor_c {
+    u8 pad_0d0[0x4];       /* 0x0d0 */
+    Model mModel;          /* 0x0d4 */
+    u8 mHandIndex;         /* 0x124 */
+    u8 pad_125[0x3];       /* 0x125 */
+
+    virtual ~ClockPaintingHandShort();
+
     int Behavior();
     int CleanupResources();
     int InitResources();
     int Render();
-#endif
 };
 
 typedef char ClockPaintingHandShort_size_must_be_0x128[

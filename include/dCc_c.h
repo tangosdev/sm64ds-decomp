@@ -21,9 +21,11 @@
  * (dCcAc_c) and, one level further down, dCcAcPos_c
  * (dCcAcPos_c, based on dCcAc_c).
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the
- * key-function arrangement from include/ModelBase.h. D0/D1/D2 stay
- * self-contained translation units.
+ * THE DESTRUCTOR IS DECLARED FIRST and defined as real C++ in each dedicated
+ * lifecycle source. mwccarm emits the D2/D0/D1 variant group from that one
+ * definition; objisolate retains the variant enrolled at each ROM address.
+ * The destructor body performs the intrusive-list unlink described below,
+ * and the class-local operator delete makes D0 use the cartridge's allocator.
  *
  * func_02014fa4 IS NOT A BASE DESTRUCTOR, whatever the old comments in the
  * D1/D2 files said. There is no base. It is the intrusive-list unlink that
@@ -69,10 +71,9 @@ struct dCc_c {
     virtual Vector3 &GetPos() = 0;      /* slot 2 - null in the ROM table */
     virtual u32 GetOwnerID() = 0;       /* slot 3 - null in the ROM table */
 
-    /* DECLARED, never defined here -- src/_ZN5dCc_cC2Ev.cpp provides the base
-     * step every derived constructor calls. Declaring it is what makes a real
-     * derived constructor emit `bl _ZN5dCc_cC2Ev` instead of synthesising the
-     * base inline (notes/ctor-migration.md section 2). */
+    /* Defined as real C++ in src/_ZN5dCc_cC2Ev.cpp. Every derived constructor
+     * calls this base step, whose member-initializer list leaves a newly
+     * constructed collision node unlinked. */
     dCc_c();
 
     /* --- non-virtual --- */

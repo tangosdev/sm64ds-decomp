@@ -1,6 +1,6 @@
 _ZN14UnknownVsEntryD1Ev kind:function(arm,size=0x74) addr:0x02113ee0
 _ZN14UnknownVsEntryD0Ev kind:function(arm,size=0x88) addr:0x02113f54
-func_ov075_02113fdc kind:function(arm,size=0x34) addr:0x02113fdc
+_ZN15UnknownVsPlayerD1Ev kind:function(arm,size=0x34) addr:0x02113fdc
 func_ov075_02114010 kind:function(arm,size=0xd4) addr:0x02114010
 func_ov075_021140e4 kind:function(arm,size=0xd4) addr:0x021140e4
 func_ov075_021141b8 kind:function(arm,size=0x60) addr:0x021141b8
@@ -40,7 +40,7 @@ _ZN14UnknownVsEntry6RenderEv kind:function(arm,size=0x90) addr:0x021154cc
 _ZN14UnknownVsEntry8BehaviorEv kind:function(arm,size=0x184) addr:0x0211555c
 _ZN14UnknownVsEntry13InitResourcesEv kind:function(arm,size=0x314) addr:0x021156e0
 UnknownVsEntry_Spawn kind:function(arm,size=0x94) addr:0x021159f4
-func_ov075_02115a88 kind:function(arm,size=0x30) addr:0x02115a88
+_ZN15UnknownVsPlayerC1Ev kind:function(arm,size=0x30) addr:0x02115a88
 _ZN10dScEntry_cD1Ev kind:function(arm,size=0x70) addr:0x02115ab8
 _ZN10dScEntry_cD0Ev kind:function(arm,size=0x84) addr:0x02115b28
 func_ov075_02115bac kind:function(arm,size=0x1c) addr:0x02115bac

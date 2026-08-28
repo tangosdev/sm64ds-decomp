@@ -458,14 +458,16 @@ asm transcription, or absent.
 4. **Leaf singles, config module**: `ClipperC1Ev` 0x02015730 ·
    `MaterialChangerC1Ev` 0x02015850 · `TextureTransformerC1Ev` 0x02015950 ·
    `TextureSequenceC1Ev` 0x02015a50 · `AnimationC1/C2Ev` 0x02015cf8/18 ·
-   `Particle14SimpleCallbackC2Ev` 0x02022680 ·
+   ~~`Particle14SimpleCallbackC2Ev` 0x02022680~~ corrected to the RTTI-backed
+   `dPa_c::level_c::simpleCallback_c` C1/C2 pair at 0x02022680/0x020226a4 ·
 3. ~~**Collision family, continued**~~ mostly DONE (§8: dBgW C2, Kc, KcMbg,
    KcMbgSclY, Actr). Still open: `dBgCh_C2Ev` 0x02035514 (base step, small)
    and `dBgPiC1/C2Ev` 0x0203816c/9c — the pair §5f walls until its +0x04
    base is probed.
 4. ~~**Leaf singles, config module**: Clipper, MaterialChanger,
    TextureTransformer, TextureSequence, Animation C1/C2~~ DONE (§8).
-   Remaining: `Particle14SimpleCallbackC2Ev` 0x02022680 ·
+   `dPa_c::level_c::simpleCallback_c` C1/C2 DONE: RTTI class/base names,
+   call-site variant choice, and compiler-emitted vptr stores. Remaining:
    `Particle10SysTrackerC1Ev` 0x02023204 (0x1d0 — the biggest body on the
    list; expect member-ctor synthesis work). Shape-check before attempting:
    if the disassembly starts `operator new` → null-check, it is a factory
@@ -565,3 +567,11 @@ resolution (their −8 is PC bias, not addressing). Measured on all four shapes
 in-tree: three-block SphCrr, two-block Lin, single-inheritance Clipper,
 no-base Animation, plus ModelAnim2 D0 (the documented 44-addend case) — all
 MATCH under strict relocs now, where the MI ones could never pass before.
+
+**Deleting destructors need the original deallocation surface.** The
+RTTI-correct `daTrsTrap_c` D1 is an empty body over typed `Model` and
+`dBgW_KcMbg` members. Its first native D0 compiled 12 bytes short because a
+minimal `dActor_c` shadow fell back to global `operator delete`. Restoring the
+inherited inline operator that calls `Memory::Deallocate(ptr, data_020a0eac)`
+made CodeWarrior emit the ROM's heap load and direct deallocation call after
+member/base teardown. Both D1 and D0 then linked VERIFIED with no blind slots.

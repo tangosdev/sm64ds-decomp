@@ -1,13 +1,12 @@
 //cpp
 // @symbol _ZN13UpDownLiftBbhD1Ev
-/* D1, the complete-object destructor. The base chain, the intermediate vptr
- * stores and the member teardown are all the compiler's -- the class is spelt
- * against its real base header rather than a flat shadow. */
-#include "dBgActor_c.h"
-
-struct UpDownLiftBbh : dBgActor_c {
-    virtual ~UpDownLiftBbh();
-};
+/* recovered: real C++ destructor -- the compiler emits the entire teardown
+ *
+ * UpDownLiftBbh owns no class-typed members of its own. Its empty destructor
+ * changes to the derived vtable, then the inline dBgActor_c destructor changes
+ * to the base vtable and destroys the moving collider, model and actor base.
+ */
+#include "UpDownLiftBbh.h"
 
 UpDownLiftBbh::~UpDownLiftBbh()
 {

@@ -23,7 +23,7 @@
  *     0x768, 0x774, 0x780, 0x78c, 0x798, 0x7a4, 0x7b0, 0x7c0 -- and no
  *     others, which is the same ten that sit four bytes below a Callback.
  *   * Every Callback subobject is constructed by storing the base
- *     Particle::Callback vtable data_0208f3b4 and then overwriting it with a
+ *     dPa_c::level_c::callback_c vtable at 0x0208f3b4 and then overwriting it with a
  *     derived one, which is exactly what Particle::SimpleCallback's own
  *     constructor does.
  * Where no New* helper survives to name the effect, the field keeps its
@@ -77,14 +77,14 @@ struct Particle {
     u8  mCallback_7a8;      /* 0x7a8 - SimpleCallback */
     u8  pad_7a9[0x7];
     s32 mSystemID_7b0;      /* 0x7b0 */
-    u8  mCallback_7b4;      /* 0x7b4 - built by func_020225fc */
+    u8  mCallback_7b4;      /* 0x7b4 - scaleCallback_c */
     u8  pad_7b5[0xb];
     s32 mSystemID_7c0;      /* 0x7c0 */
-    u8  mCallback_7c4;      /* 0x7c4 - built by func_020225fc */
+    u8  mCallback_7c4;      /* 0x7c4 - scaleCallback_c */
     u8  pad_7c5[0xf];
-    u8  mCallback_7d4;      /* 0x7d4 - built by func_020225fc */
+    u8  mCallback_7d4;      /* 0x7d4 - scaleCallback_c */
     u8  pad_7d5[0xf];
-    u8  mCallback_7e4;      /* 0x7e4 - built by func_020225fc */
+    u8  mCallback_7e4;      /* 0x7e4 - scaleCallback_c */
     u8  pad_7e5[0xb];
     u8  mCallback_7f0;      /* 0x7f0 - vtable data_0208f3f4 */
     u8  pad_7f1[0x3];
@@ -106,6 +106,19 @@ struct Particle {
     u8  pad_815[0x3];
     u8  mCallback_818;      /* 0x818 - vtable data_0208f464;
                                        System::NewUnkCallback818 passes it */
+
+#ifdef __cplusplus
+    /* Particle::SimpleCallback -- one of the 8-byte {vtable; s16} objects the
+       mCallback_* bytes above mark the offset of. No base is modeled, so its
+       constructor stores both the base Particle::Callback vtable and its own
+       explicitly, matching what the ROM's constructor does in one flat body. */
+    struct SimpleCallback {
+        void *vtable;   /* 0x00 */
+        s16 unk_004;    /* 0x04 */
+
+        SimpleCallback();
+    };
+#endif
 };
 
 #endif

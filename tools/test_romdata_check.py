@@ -25,7 +25,7 @@ class SummarizeCountsSymbols(unittest.TestCase):
                            rec("_ZTI7fBase_c", RDC.VERIFIED, "src/c.cpp")])
         self.assertEqual(s["verified"], 1)
         self.assertEqual(s["verifiedBytes"], 4)
-        self.assertEqual(s["records"], 3)
+        self.assertEqual(s["totalRecords"], 3)
         self.assertEqual(s["verifiedRecords"], 3)
 
     def test_consolidating_sources_does_not_move_the_ratchet(self):
@@ -53,9 +53,21 @@ class SummarizeCountsSymbols(unittest.TestCase):
         self.assertEqual((s["symbols"], s["verified"], s["partial"], s["unnamed"]),
                          (3, 1, 1, 1))
 
+    def test_same_name_in_two_modules_is_two_symbols(self):
+        """The same spelling in two overlays is two cartridge symbols, not one."""
+        s = RDC.summarize([dict(rec("_ZTV4Foo", RDC.VERIFIED), module="ov006"),
+                           dict(rec("_ZTV4Foo", RDC.DIFFERS), module="ov084")])
+        self.assertEqual((s["symbols"], s["verified"], s["differs"]), (2, 1, 1))
+
+    def test_unparsable_objects_never_dedupe_against_each_other(self):
+        """check_object's `?` catch-all carries no symbol identity, only a source."""
+        s = RDC.summarize([rec("?", RDC.UNNAMED, "src/a.cpp"),
+                           rec("?", RDC.UNNAMED, "src/b.cpp")])
+        self.assertEqual((s["symbols"], s["unnamed"]), (2, 2))
+
     def test_empty_input_is_all_zero(self):
         s = RDC.summarize([])
-        self.assertEqual((s["symbols"], s["verified"], s["differs"], s["records"]),
+        self.assertEqual((s["symbols"], s["verified"], s["differs"], s["totalRecords"]),
                          (0, 0, 0, 0))
 
 

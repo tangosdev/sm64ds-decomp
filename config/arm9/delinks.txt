@@ -2260,7 +2260,7 @@ src/_ZN9ModelAnimC1Ev.cpp:
     complete
     .text start:0x02016958 end:0x02016998
 
-src/_ZN9ModelAnimC2Ev.c:
+src/_ZN9ModelAnimC2Ev.cpp:
     complete
     .text start:0x02016998 end:0x020169d8
 
@@ -2327,6 +2327,10 @@ src/_ZN5Model9DoSetFileEPcii.cpp:
 src/_ZN5Model11UpdateVertsEv.cpp:
     complete
     .text start:0x02016c98 end:0x02016ca8
+
+src/_ZN5ModelD2Ev.cpp:
+    complete
+    .text start:0x02016ca8 end:0x02016ce0
 
 src/_ZN5ModelD0Ev.cpp:
     complete
@@ -3546,7 +3550,7 @@ src/func_02022260.c:
     complete
     .text start:0x02022260 end:0x02022298
 
-src/func_02022298.c:
+src/_ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev.cpp:
     complete
     .text start:0x02022298 end:0x020222f0
 
@@ -3578,7 +3582,7 @@ src/_ZN8Particle13ScaleCallback14SpawnParticlesERNS_6SystemE.c:
     complete
     .text start:0x020225d0 end:0x020225fc
 
-src/func_020225fc.c:
+src/_ZN5dPa_c7level_c15scaleCallback_cC1Ev.cpp:
     complete
     .text start:0x020225fc end:0x02022630
 
@@ -3590,11 +3594,11 @@ src/_ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE.cpp:
     complete
     .text start:0x02022640 end:0x02022680
 
-src/_ZN8Particle14SimpleCallbackC2Ev.cpp:
+src/_ZN5dPa_c7level_c16simpleCallback_cC1Ev.cpp:
     complete
     .text start:0x02022680 end:0x020226a4
 
-src/func_020226a4.c:
+src/_ZN5dPa_c7level_c16simpleCallback_cC2Ev.cpp:
     complete
     .text start:0x020226a4 end:0x020226c8
 
@@ -4440,7 +4444,7 @@ src/_ZN4ViewD0Ev.cpp:
     complete
     .text start:0x0202fcc8 end:0x0202fd0c
 
-src/_ZN4View6RenderEv.c:
+src/_ZN4View6RenderEv.cpp:
     complete
     .text start:0x0202fd0c end:0x0202fd2c
 
@@ -5098,11 +5102,11 @@ src/_ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c.cpp:
     complete
     .text start:0x02037670 end:0x02037710
 
-src/func_02037710.c:
+src/_ZN9dBgCh_LinD0Ev.cpp:
     complete
     .text start:0x02037710 end:0x02037764
 
-src/_ZN9dBgCh_LinD1Ev.c:
+src/_ZN9dBgCh_LinD1Ev.cpp:
     complete
     .text start:0x02037764 end:0x020377b0
 
@@ -6334,15 +6338,15 @@ src/_ZN4HeapD1Ev.cpp:
     complete
     .text start:0x0203ca44 end:0x0203ca54
 
-src/_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator.c:
+src/_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator.cpp:
     complete
     .text start:0x0203ca54 end:0x0203ca80
 
-src/_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator.c:
+src/_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator.cpp:
     complete
     .text start:0x0203ca80 end:0x0203caac
 
-src/_ZN4HeapC1EPvjPS_.cpp:
+src/_ZN4HeapC2EPvjPS_.cpp:
     complete
     .text start:0x0203caac end:0x0203cae8
 
@@ -7846,7 +7850,7 @@ src/_ZN13HeapAllocator6RemoveEv.cpp:
     complete
     .text start:0x0204df38 end:0x0204df54
 
-src/_ZN13HeapAllocatorC1EjPvPvj.cpp:
+src/func_0204df54.cpp:
     complete
     .text start:0x0204df54 end:0x0204dfe8
 
@@ -7918,7 +7922,7 @@ src/_ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjt.cpp:
     complete
     .text start:0x0204e690 end:0x0204e828
 
-src/_ZN22ExpandingHeapAllocatorC1EPvj.c:
+src/_ZN22ExpandingHeapAllocatorC1EPvj.cpp:
     complete
     .text start:0x0204e828 end:0x0204e8b0
 
@@ -7934,7 +7938,7 @@ src/_ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_.cpp:
     complete
     .text start:0x0204e910 end:0x0204e938
 
-src/_ZN10MemoryNode6TargetC1EP10MemoryNode.cpp:
+src/_ZN10MemoryNode6TargetC1EPS_.cpp:
     complete
     .text start:0x0204e938 end:0x0204e964
 
@@ -7990,7 +7994,7 @@ src/_ZN18SolidHeapAllocator16AllocateForwardsEPvjj.cpp:
     complete
     .text start:0x0204ecd4 end:0x0204ed54
 
-src/_ZN18SolidHeapAllocatorC1EPvj.c:
+src/_ZN18SolidHeapAllocatorC1EPvj.cpp:
     complete
     .text start:0x0204ed54 end:0x0204eda4
 

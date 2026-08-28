@@ -913,7 +913,7 @@ _ZN8Particle18CheckWaterCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0
 _ZN8Particle25EndingStarGlitterCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x50) addr:0x020221dc
 _ZN8Particle25EndingStarGlitterCallback14SpawnParticlesERNS_6SystemE kind:function(arm,size=0x34) addr:0x0202222c
 func_02022260 kind:function(arm,size=0x38) addr:0x02022260
-func_02022298 kind:function(arm,size=0x58) addr:0x02022298
+_ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev kind:function(arm,size=0x58) addr:0x02022298
 _ZN8Particle17CheckLavaCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x38) addr:0x020222f0
 _ZN8Particle17CheckLavaCallback14SpawnParticlesERNS_6SystemE kind:function(arm,size=0xf0) addr:0x02022328
 _ZN8Particle22FitWaterSimpleCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x4c) addr:0x02022418
@@ -921,11 +921,11 @@ _ZN8Particle14BubbleCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x98)
 _ZN8Particle14SplashCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0xac) addr:0x020224fc
 _ZN8Particle13ScaleCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x28) addr:0x020225a8
 _ZN8Particle13ScaleCallback14SpawnParticlesERNS_6SystemE kind:function(arm,size=0x2c) addr:0x020225d0
-func_020225fc kind:function(arm,size=0x34) addr:0x020225fc
+_ZN5dPa_c7level_c15scaleCallback_cC1Ev kind:function(arm,size=0x34) addr:0x020225fc
 _ZN8Particle14SimpleCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x10) addr:0x02022630
 _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE kind:function(arm,size=0x40) addr:0x02022640
-_ZN8Particle14SimpleCallbackC2Ev kind:function(arm,size=0x24) addr:0x02022680
-func_020226a4 kind:function(arm,size=0x24) addr:0x020226a4
+_ZN5dPa_c7level_c16simpleCallback_cC1Ev kind:function(arm,size=0x24) addr:0x02022680
+_ZN5dPa_c7level_c16simpleCallback_cC2Ev kind:function(arm,size=0x24) addr:0x020226a4
 _ZN8Particle8Callback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x8) addr:0x020226c8
 _ZN8Particle8Callback14SpawnParticlesERNS_6SystemE kind:function(arm,size=0x4) addr:0x020226d0
 _ZN8Particle19SetSelfDestructFlagEj kind:function(arm,size=0x28) addr:0x020226d4
@@ -1306,7 +1306,7 @@ _ZN9dBgCh_Lin10GetClsnPosEv kind:function(arm,size=0x1c) addr:0x020375d0
 func_020375ec kind:function(arm,size=0x1c) addr:0x020375ec
 func_02037608 kind:function(arm,size=0x68) addr:0x02037608
 _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c kind:function(arm,size=0xa0) addr:0x02037670
-func_02037710 kind:function(arm,size=0x54) addr:0x02037710
+_ZN9dBgCh_LinD0Ev kind:function(arm,size=0x54) addr:0x02037710
 _ZN9dBgCh_LinD1Ev kind:function(arm,size=0x4c) addr:0x02037764
 _ZN9dBgCh_LinC1Ev kind:function(arm,size=0x5c) addr:0x020377b0
 func_0203780c kind:function(arm,size=0x10) addr:0x0203780c
@@ -1622,7 +1622,7 @@ _ZN4HeapD0Ev kind:function(arm,size=0x24) addr:0x0203ca20
 _ZN4HeapD1Ev kind:function(arm,size=0x10) addr:0x0203ca44
 _ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator kind:function(arm,size=0x2c) addr:0x0203ca54
 _ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator kind:function(arm,size=0x2c) addr:0x0203ca80
-_ZN4HeapC1EPvjPS_ kind:function(arm,size=0x3c) addr:0x0203caac
+_ZN4HeapC2EPvjPS_ kind:function(arm,size=0x3c) addr:0x0203caac
 _ZN4Heap18InitializeRootHeapEv kind:function(arm,size=0x1c) addr:0x0203cae8
 _ZN4Heap13SetupRootHeapEv kind:function(arm,size=0xbc) addr:0x0203cb04
 func_0203cbc0 kind:function(arm,size=0xc) addr:0x0203cbc0
@@ -2001,7 +2001,7 @@ _ZN18NestedHeapIterator7AddLastEP13HeapAllocator kind:function(arm,size=0x6c) ad
 _ZN18NestedHeapIterator4InitEP13HeapAllocator kind:function(arm,size=0x40) addr:0x0204dee0
 _ZN18NestedHeapIteratorC1Ej kind:function(arm,size=0x18) addr:0x0204df20
 _ZN13HeapAllocator6RemoveEv kind:function(arm,size=0x1c) addr:0x0204df38
-_ZN13HeapAllocatorC1EjPvPvj kind:function(arm,size=0x94) addr:0x0204df54
+func_0204df54 kind:function(arm,size=0x94) addr:0x0204df54
 _ZN18NestedHeapIterator10FindNestedEPv kind:function(arm,size=0x2c) addr:0x0204dfe8
 _ZN18NestedHeapIterator19RecursiveFindNestedEPv kind:function(arm,size=0x70) addr:0x0204e014
 _ZN22ExpandingHeapAllocator14SizeofInternalEPv kind:function(arm,size=0x8) addr:0x0204e084
@@ -2023,7 +2023,7 @@ _ZN22ExpandingHeapAllocatorC1EPvj kind:function(arm,size=0x88) addr:0x0204e828
 _ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt kind:function(arm,size=0x30) addr:0x0204e8b0
 _ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_ kind:function(arm,size=0x30) addr:0x0204e8e0
 _ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_ kind:function(arm,size=0x28) addr:0x0204e910
-_ZN10MemoryNode6TargetC1EP10MemoryNode kind:function(arm,size=0x2c) addr:0x0204e938
+_ZN10MemoryNode6TargetC1EPS_ kind:function(arm,size=0x2c) addr:0x0204e938
 _ZN18SolidHeapAllocator10ReallocateEPvj kind:function(arm,size=0xa4) addr:0x0204e964
 _ZN18SolidHeapAllocator14TryResizeToFitEv kind:function(arm,size=0x34) addr:0x0204ea08
 _ZN18SolidHeapAllocator9LoadStateEj kind:function(arm,size=0x5c) addr:0x0204ea3c
@@ -3719,13 +3719,13 @@ _ZTIN5dPa_c7level_c24fitWaterSimpleCallback_cE kind:data(any) addr:0x0208f378
 _ZTIN5dPa_c7level_c23cleanParticleCallback_cE kind:data(any) addr:0x0208f384
 _ZTIN5dPa_c7level_c18fitWaterCallback_cE kind:data(any) addr:0x0208f390
 data_0208f3a4 kind:data(any) addr:0x0208f3a4
-data_0208f3b4 kind:data(any) addr:0x0208f3b4
-data_0208f3c4 kind:data(any) addr:0x0208f3c4
-data_0208f3d4 kind:data(any) addr:0x0208f3d4
+_ZTVN5dPa_c7level_c10callback_cE kind:data(any) addr:0x0208f3b4
+_ZTVN5dPa_c7level_c16simpleCallback_cE kind:data(any) addr:0x0208f3c4
+_ZTVN5dPa_c7level_c20edStarKiraCallback_cE kind:data(any) addr:0x0208f3d4
 data_0208f3e4 kind:data(any) addr:0x0208f3e4
 data_0208f3f4 kind:data(any) addr:0x0208f3f4
 data_0208f404 kind:data(any) addr:0x0208f404
-data_0208f414 kind:data(any) addr:0x0208f414
+_ZTVN5dPa_c7level_c15scaleCallback_cE kind:data(any) addr:0x0208f414
 data_0208f424 kind:data(any) addr:0x0208f424
 data_0208f434 kind:data(any) addr:0x0208f434
 data_0208f444 kind:data(any) addr:0x0208f444

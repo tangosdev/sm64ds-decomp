@@ -851,8 +851,8 @@ def main():
             print(f"ROM data from source: {rd['verified']:,} symbol(s) verified, "
                   f"{rd['partial']:,} partial, {rd['differs']:,} differ, "
                   f"{rd['unnamed']:,} unnamed by config"
-                  + (f" (from {rd['records']:,} object records)"
-                     if rd.get("records") else ""))
+                  + (f" (from {rd['totalRecords']:,} object records)"
+                     if rd.get("totalRecords") else ""))
         report["analysis"] = analysis
         report["status"] = "passed" if analysis["passed"] else "failed"
         save_report()

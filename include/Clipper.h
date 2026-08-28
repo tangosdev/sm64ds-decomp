@@ -9,7 +9,15 @@
 #ifdef __cplusplus
 struct Matrix4x3;
 #include "math/Fix12.h"
+extern "C" void _ZN6Memory16operator_delete2EPv(void *);
 #endif
+
+/* Same 0xc coordinate layout as Vector3, but deliberately POD. A Vector3[4]
+ * member makes mwccarm emit __destroy_arr in Clipper's D1/D0; the cartridge's
+ * trivial destructors prove these plane records have no element destructor. */
+struct ClipperPlane {
+    Fix12i x, y, z;
+};
 
 struct Clipper {
 #ifdef __cplusplus
@@ -25,8 +33,9 @@ struct Clipper {
     /* The four clip-plane normals, written as a run by Func_0201559C: it builds
        the frustum's four corner vectors on the stack, cross-multiplies adjacent
        pairs into 0x004/0x010/0x01c/0x028 and normalises each in place. Four
-       consecutive Vector3 is the only shape those eight calls can be. */
-    Vector3 mPlaneNormals[4];   /* 0x004 */
+       consecutive 0xc coordinate records are the only shape those calls can
+       be; the lifecycle evidence above decides their POD spelling. */
+    ClipperPlane mPlaneNormals[4];   /* 0x004 */
     u8  pad_034[0x18];
     /* SIGNED. Func_0201559C sign-extends it into a 64-bit multiply, which a u32
        cannot do; the only other user just stores to it, so nothing disagrees. */
@@ -37,9 +46,10 @@ struct Clipper {
 #ifdef __cplusplus
     /* methods */
 
-    /* THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the
-       key-function arrangement from include/ModelBase.h: no TU emits the
-       vtable or the D2 variant, and D0/D1 stay self-contained C files. */
+    /* Declared first so the compiler emits the two ROM-retained lifecycle
+       variants from the empty out-of-line body: D1 restores this vptr, while
+       D0 also takes the class-specific delete path below. There is no D2 in
+       the image because nothing derives from Clipper. */
     virtual ~Clipper();     /* slots 0 (D1), 1 (D0) */
 
     /* DECLARED, never defined as a method here -- src/_ZN7ClipperC1Ev.cpp owns
@@ -60,6 +70,10 @@ struct Clipper {
        tracked separately. */
     int  Func_020150E8(Vector3 &v, Fix12<int> clip, u8 *hint);
     void Func_02015560(Matrix4x3 &mat, Vector3 &srcVec, Fix12<int> scale, Vector3 &dstVec);
+
+    /* D0 calls 0x0203cbcc, Memory::operator_delete2, rather than the global
+       delete at 0x0203cbf0. Inline class lookup makes that choice exactly. */
+    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 #endif
 };
 

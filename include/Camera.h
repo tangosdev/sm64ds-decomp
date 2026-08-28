@@ -1,35 +1,21 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Camera: 12 matched functions, 17 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* Camera's evidenced object layout and real View inheritance.
+ * Offsets and widths are observed from matched functions; gaps remain explicit.
+ * Field names are descriptive and do not affect code generation. */
 #ifndef CAMERA_H
 #define CAMERA_H
-#include "types.h"
+#include "View.h"
 
-/* fwd */
-struct j;
-struct Camera {
+struct Camera : View {
     /* Nested, and only ever needed as a pointer -- Camera::ChangeState is
        mangled `PNS_5StateE`, which IS the nesting, so the declaration is
        evidence rather than convention. Layout not recovered; nothing here
        dereferences one.
 
-       Spelled WITHOUT a preprocessor guard, and the field below is
-       `struct State*` rather than `State*`, because both forms have to survive
-       C as well: src/_ZN6CameraC1Ev.c is a C file that includes this header.
-       The elaborated form works in both languages and means the same thing --
-       in C++ it finds the nested Camera::State, in C the tag declared here.
-
-       Bare `State*` cost _ZN6CameraC1Ev its eligibility (caught by the
-       eligible.py bracket -- the only gate that sees a header edit break
-       another file). Wrapping this in `#ifdef __cplusplus` fixed that and
-       broke something worse: a `#` inside the body ends check_header_offsets'
-       field walk, so Camera.h reported "0 commented fields ... spans 0x0" and
-       exited 0 -- a clean-looking pass that checked nothing. Keep both this
-       line and the field free of the preprocessor. */
+       The mangling is the evidence for the nesting. Layout is unnecessary:
+       every use is through a pointer. */
     struct State;
 
-    u8  pad_000[0x80];
+    /* View occupies 0x00..0x7f; its Matrix4x3 is at 0x50. */
     /* The camera proper: where it looks and where it is. Both are twelve-byte
        Vector3s -- Camera::SetLookAt and Camera::SetPos each write exactly three
        words, at 0x80 and 0x8c. */
@@ -61,18 +47,23 @@ struct Camera {
     u32 mFlags;            /* 0x154 */
     u8  pad_158[0x4e];
     u8  unk_1a6;            /* 0x1a6 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
+    Camera();
+    virtual ~Camera();
+
+    /* fBase_c virtual overrides, in their inherited slots. */
+    virtual s32 InitResources();
+    virtual s32 CleanupResources();
+    virtual s32 Behavior();
+    virtual s32 Render();
+    virtual void OnPendingDestroy();
+
+    /* Non-virtual camera operations. */
     int ChangeState(State * state);
-    int CleanupResources();
-    void GoBehindPlayer(unsigned int j);
+    void GoBehindPlayer(u32 playerID);
     int IsUnderwater() const;
-    void OnPendingDestroy();
     void SaveCameraStateBeforeTalk();
     void SetLookAt(const Vector3 & lookAt_);
     void SetPos(const Vector3 & pos_);
-#endif
 };
 
 typedef char Camera_size_must_be_0x1a8[sizeof(struct Camera) == 0x1a8 ? 1 : -1];

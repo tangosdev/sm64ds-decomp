@@ -1,9 +1,9 @@
 _ZN7daTrs_cD1Ev kind:function(arm,size=0x68) addr:0x02115ee0
 _ZN7daTrs_cD0Ev kind:function(arm,size=0x7c) addr:0x02115f48
-_ZN7BooCageD1Ev kind:function(arm,size=0x48) addr:0x02115fc4
-_ZN7BooCageD0Ev kind:function(arm,size=0x5c) addr:0x0211600c
-_ZN10BigBooIconD1Ev kind:function(arm,size=0x24) addr:0x02116068
-_ZN10BigBooIconD0Ev kind:function(arm,size=0x38) addr:0x0211608c
+_ZN11daTBasket_cD1Ev kind:function(arm,size=0x48) addr:0x02115fc4
+_ZN11daTBasket_cD0Ev kind:function(arm,size=0x5c) addr:0x0211600c
+_ZN11daTrsIcon_cD1Ev kind:function(arm,size=0x24) addr:0x02116068
+_ZN11daTrsIcon_cD0Ev kind:function(arm,size=0x38) addr:0x0211608c
 _ZN7daTrs_c16OnAimedAtWithEggEv kind:function(arm,size=0x10) addr:0x021160c4
 func_ov063_021160d4 kind:function(arm,size=0xbc) addr:0x021160d4
 func_ov063_02116190 kind:function(arm,size=0xb4) addr:0x02116190
@@ -95,8 +95,8 @@ BigBooIcon_Spawn kind:function(arm,size=0x30) addr:0x0211c4a0
 BooCage_Spawn kind:function(arm,size=0x50) addr:0x0211c4d0
 BigBoo_Spawn kind:function(arm,size=0x70) addr:0x0211c520
 Boo_Spawn kind:function(arm,size=0x70) addr:0x0211c590
-_ZN12MansionStepsD1Ev kind:function(arm,size=0x38) addr:0x0211c600
-_ZN12MansionStepsD0Ev kind:function(arm,size=0x4c) addr:0x0211c638
+_ZN11daTrsTrap_cD1Ev kind:function(arm,size=0x38) addr:0x0211c600
+_ZN11daTrsTrap_cD0Ev kind:function(arm,size=0x4c) addr:0x0211c638
 func_ov063_0211c684 kind:function(arm,size=0x74) addr:0x0211c684
 func_ov063_0211c6f8 kind:function(arm,size=0x78) addr:0x0211c6f8
 func_ov063_0211c770 kind:function(arm,size=0x40) addr:0x0211c770
@@ -171,6 +171,7 @@ BigBooIcon_SpawnInfo kind:data(any) addr:0x0211e7c4
 data_ov063_0211e7e0 kind:data(any) addr:0x0211e7e0
 _ZTV7daTrs_c kind:data(any) addr:0x0211e828
 _ZTV10BigBooIcon kind:data(any) addr:0x0211e8ac
+_ZTV11daTrsIcon_c kind:data(any) addr:0x0211e8ac
 _ZTV7BooCage kind:data(any) addr:0x0211e930
 _ZTV11daTBasket_c kind:data(any) addr:0x0211e930
 data_ov063_0211e9ac kind:data(any) addr:0x0211e9ac

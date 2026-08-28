@@ -70,18 +70,26 @@ facts carry them:
   so they are parameters of the callbacks at 0x7f8 and 0x800, and they are
   named `mCallbackParam_*`.
 * **Every callback subobject is constructed by storing the base
-  `Particle::Callback` vtable `data_0208f3b4` and then overwriting it with a
-  derived vtable**, which is exactly what
-  `_ZN8Particle14SimpleCallbackC2Ev` does. That is the "this is a Callback"
+  `dPa_c::level_c::callback_c` vtable at 0x0208f3b4 and then overwriting it with a
+  derived vtable**, which is exactly what the real
+  `dPa_c::level_c::simpleCallback_c` C1/C2 pair does. That is the "this is a Callback"
   evidence for the `mCallback_*` fields. The derived vtables also pair objects
   up: 0x76c and 0x778 both take `data_0208f3e4`, and 0x7f8 and 0x800 both take
   `data_0208f454`, so each pair is two instances of one callback class — which
   is why 0x7fc and 0x804 (their `+4` parameters) exist in the same shape.
 
 Constructed by helper, so the class is known but not the role:
-`_ZN8Particle14SimpleCallbackC2Ev` builds 0x754, 0x760, 0x79c, 0x7a8;
-`func_020226a4` builds 0x76c, 0x778, 0x784, 0x790, 0x808; `func_020225fc`
-builds 0x7b4, 0x7c4, 0x7d4, 0x7e4.
+`_ZN5dPa_c7level_c16simpleCallback_cC1Ev` builds the complete objects at
+0x754, 0x760, 0x79c, 0x7a8; its C2 sibling at 0x020226a4 builds the base
+subobjects at 0x76c, 0x778, 0x784, 0x790, 0x808; the RTTI-backed
+`dPa_c::level_c::scaleCallback_c` C1 builds 0x7b4, 0x7c4, 0x7d4, 0x7e4.
+
+Outside `SysTracker`, ROM RTTI and the vtable slots identify the constructor at
+0x02022298 as `dPa_c::level_c::edStarKiraCallback_c` C1. Its 64 tracking
+records begin at 0x8: compiling byte-aligned storage instead places them in the
+base class's 0x6 tail padding, so the ROM's address proves the original record
+type had at least four-byte alignment. The record initializer remains unnamed
+until separate evidence supports its historical type name.
 
 ### Shadow structs collapsed onto the header
 
@@ -94,10 +102,11 @@ byte-identical. The exception is
 opens `namespace Particle { ... }` — including `Particle.h` there makes the
 struct name and the namespace name collide, so it keeps its local shadow.
 
-`src/_ZN8Particle14SimpleCallbackC2Ev.cpp` was typed `struct Particle *self`
+The old hand-written constructor was typed `struct Particle *self`
 and reached the callback's own `s16` as `&self->unk_004`. That was never a
-`SysTracker`: it is a `Particle::SimpleCallback`, and the two only agreed
-because both objects start with a pointer-sized word. It now takes `char *`.
+`SysTracker`: ROM RTTI names it `dPa_c::level_c::simpleCallback_c`, and the two
+objects only agreed because both start with a pointer-sized word. Its two ROM
+constructor variants are now generated from the real nested C++ class.
 
 ### The third shadow — collapsed onto the real names
 
