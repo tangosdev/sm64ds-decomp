@@ -854,14 +854,50 @@ extern "C" int _ZN8SaveData14SaveDataToCartEPcjj(char *, unsigned, unsigned)
 // 0x020171c8, 0x02017684, 0x02017670, 0x02017628, 0x0201761c, 0x02017610, a
 // non-code word at +0x2c, 0x02017450.
 //
-// IT IS TRAP-FILLED, NOT ROM-FILLED, and that is a deliberate difference from
-// its three siblings. data_0208eafc, data_0208eacc and data_0208eb2c -- the
-// other three vptrs func_02017278 writes -- are already in the build carrying
-// their raw ROM bytes, so a dispatch through any of them today jumps to a DS
-// address. This one goes the other way, on hal/sub_actors.cpp's precedent: a
-// dispatch lands on a named trap instead of on 0x02017254 interpreted as a
-// host address. NOTHING DISPATCHED THROUGH IT IN ANY RUN THIS LANE MADE.
-// Filling the twelve for real is twelve more bodies and is not this lane's.
+// IT IS SEATED NOW, AND THE SENTENCE THAT STOOD HERE WAS FALSE OF THE TITLE.
+// This paragraph used to end "NOTHING DISPATCHED THROUGH IT IN ANY RUN THIS
+// LANE MADE", which was true of that lane's runs and is not a property of the
+// table. A 2400-frame SM64DS_SCENE=1 run on the build immediately before this
+// block entered the trap 4799 times -- almost exactly twice a frame -- and the
+// two are Scene::BeforeBehavior asking the installed fader IsAtEnd every frame
+// and SetBackwardTime whenever the answer is yes (see the slot map at the foot
+// of this section). The ten function slots run the ROM's own bodies now.
+//
+// ITS THREE SIBLINGS ARE UNCHANGED AND STILL TRAP. data_0208eafc,
+// data_0208eacc and data_0208eb2c -- the other three vptrs func_02017278
+// writes -- keep their raw ROM bytes or the shared trap, on
+// hal/sub_actors.cpp's precedent: a dispatch through them lands on a named
+// trap instead of on 0x02017254 interpreted as a host address.
+//
+// AND THE CLASS HAS A NAME. The ROM's own RTTI says so, with
+// config/arm9/relocs.txt applied to extracted/arm9_dec.bin (flat, base
+// 0x02004000, the same reading port/fader_boot_map.txt section 1 makes):
+//
+//     0x0208ea0c  __si_class_type_info  "10dFdDummy_c"       base 0x0208ea00
+//     0x0208ea00  __si_class_type_info  "10dFdColor_c"       base 0x0208ea24
+//     0x0208ea24  __si_class_type_info  "15dFdBrightness_c"  base 0x0208e9e0
+//     0x0208e9e0  __class_type_info     "8dFader_c"
+//
+// so data_0208ea6c is _ZTV10dFdDummy_c and FaderBrightness (dFdBrightness_c)
+// is its GRANDBASE, two levels up. That is why five of its ten slots ARE the
+// _ZN15FaderBrightness* bodies config/arm9/symbols.txt names, word for word
+// the same five the three sibling tables carry: they are inherited, not
+// overridden. A successor told "the FaderBrightness vtable" goes looking for
+// ten FaderBrightness bodies and only five of them exist.
+//
+// A dFdDummy_c IS AN INSTANT FADER, which its own two setters are the proof
+// of: SetForwardTime and SetBackwardTime IGNORE the frame count they are
+// handed and write speed = +/-1.0 flat, so one AdvanceFade takes currInterp
+// the whole way. Nothing here interpolates; that is the class, not a stub.
+//
+// IT IS TEN SLOTS, NOT TWELVE, and the array is twelve for the same reason
+// hal/fdr_arm9_fader_seat.cpp's data_020926f0 is. An Itanium vtable symbol
+// starts at the FIRST VIRTUAL -- the reloc at 0x0208ea68 is this table's own
+// typeinfo word and sits one word BEFORE the symbol -- so the two words after
+// slot 9 belong to the next table's header: 0x0208ea94 is its offset-to-top
+// (zero, and the one word in the run with no relocation) and 0x0208ea98 is its
+// typeinfo, pointing at 0x0208ea18 = "9dFdWipe_c". They are not this class's
+// slots, nothing may dispatch them, and they keep the trap.
 static void l2_trap(const char *name);
 static void l2_vt_trap(void) { l2_trap("data_0208ea6c vtable slot"); }
 DSSTATE_BEGIN
@@ -922,13 +958,334 @@ int data_020a80cc[6];                              /* bss, 24 by ROM span */
    than the dsd symbol. Only the mangled spelling below is added. */
 }
 DSSTATE_END
+/* ---- data_0208ea6c SEATED: ten slots, and the skew that would eat two ------
+
+   THE SLOT MAP IS THE ROM'S, read two ways that had to agree. First
+   config/arm9/relocs.txt, every `from:` inside 0x0208ea6c..0x0208ea90. Second
+   the bodies themselves, disassembled out of extracted/arm9_dec.bin rather
+   than taken from the comment at the top of each src TU:
+
+     +0x00  0x02017254  func_02017254     D1: vptr = this table, Color::~Color
+     +0x04  0x02017228  func_02017228     D0: the same, then operator_delete2
+     +0x08  0x0201721c  func_0201721c     ldr ip,[pc]; bx ip -> 0x020175e8
+     +0x0c  0x020171f0  func_020171f0     speed = -0x1000, then vt[+0x14]
+     +0x10  0x020171c8  func_020171c8     speed = +0x1000, then vt[+0x18]
+     +0x14  0x02017684  FaderBrightness::IsAtStart
+     +0x18  0x02017670  FaderBrightness::IsAtEnd
+     +0x1c  0x02017628  FaderBrightness::IsBetweenStartAndEnd
+     +0x20  0x0201761c  FaderBrightness::SetToEnd
+     +0x24  0x02017610  FaderBrightness::SetToStart
+
+   THE HAZARD, and it is the whole reason this is a veneer table and not five
+   /alternatename directives. The ROM's table is ITANIUM-SHAPED: two destructor
+   slots, D1 at +0x00 and D0 at +0x04. MSVC folds those into one. So a host
+   virtual call compiled against include/FaderBrightness.h puts IsAtStart at
+   byte 0x10 and IsAtEnd at 0x14, one slot EARLIER than this table keeps them,
+   and src/engine/fader/_ZN15FaderBrightness20IsBetweenStartAndEndEv.cpp calls
+   both of them UNQUALIFIED -- through the live object's vptr, which is this
+   table. Let that dispatch land here and "IsAtStart" reaches +0x10, which is
+   SetForwardTime: an answer that is quietly the neighbour's, plus a write of
+   +1.0 into speed, plus a `ret 8` against a caller that pushed nothing.
+   port/fader_boot_map.txt sections 9c and 9e are the audit, and
+   port/ov007_seat.txt's ruling is the shape: AN ALIAS CANNOT CHANGE A CALLING
+   CONVENTION, so the answer is a face that re-lands the arguments.
+
+   SO EVERY SLOT BELOW IS A VENEER: ROM-shaped on the outside, and inside it
+   calls its body QUALIFIED (or through a flat C face that does), so no MSVC
+   vtable is ever consulted. Slot +0x1c is the one that cannot simply call the
+   matched method, because the matched method is the thing with the skew: it
+   goes through hal/fdr_arm9_fader_seat.cpp's flat face, which builds an
+   MSVC-ORDERED VIEW whose 0x10 and 0x14 dispatch the real receiver's 0x14 and
+   0x18. That face already exists for the dWipe_c table and it is receiver-
+   agnostic, so this table reuses it rather than growing a second copy.
+
+   THE CALLING CONVENTIONS ARE THE CALL SITES', NOT THE BODIES'. Every entry is
+   __fastcall with a dummy second parameter -- ecx carries `this` exactly as
+   __thiscall does and the dummy absorbs fastcall's edx, which is
+   hal/actor_classes.cpp's shim idiom -- EXCEPT +0x08, and the two setters
+   clean eight bytes. Both exceptions are read off port/fader_boot_map.txt
+   section 9c, which enumerated every dispatch site in the image that can reach
+   an installed fader (they dispatch data_0209f5bc / data_0209d4ac, so the
+   audit is about the POINTER and applies to this table unchanged):
+
+     +0x08  ONE site, shape C: src/func_02018efc.c's
+            `((void(*)(void*))vt[2])(o)`. The receiver is a cdecl ARGUMENT
+            there, not a `this`, so this slot is __cdecl and reads it off the
+            stack -- correct by the language instead of by what the codegen
+            happened to leave in ecx.
+     +0x0c  ONE site, shape B: Scene::BeforeBehavior's
+     +0x10  `data_0209f5bc->v3(0x1e, 0)` / `->v4(0x1e, 0)`. __thiscall is
+            CALLEE-CLEANS and the caller cleans neither push, so these two
+            clean eight. The ROM bodies read no arguments at all; the two
+            counts answer different questions and both are right.
+     +0x14  shapes A and C, +0x18 shapes A and C, +0x1c/+0x20/+0x24 shape A:
+            all clean zero, which is what a no-stack-parameter __fastcall does.
+
+   WHAT IS IN THE LINK ALREADY AND WHAT IS NOT. Nine of the ten bodies are
+   compiled into every target that compiles this file (walk_window,
+   smoke_player, walk_window_hires): src/func_02017254.c rides slice_ov007.txt,
+   the five FaderBrightness methods ride slice_w1l3.txt and slice_fdr.txt, and
+   Fader::AdvanceInterp rides slice_w1l3.txt. Nothing here adds a source file.
+   The exceptions are named at their slots. */
+
+#include "FaderBrightness.h"
+
+extern "C" {
+/* The ROM body and the four receiver-bridging faces this fill reaches. Every
+   one is already defined in these links; none is declared into existence here.
+     func_02017254                              src/func_02017254.c
+     _ZN5Fader13AdvanceInterpEv                 hal/fdr_arm9_fader_seat.cpp
+     _ZN15FaderBrightness9IsAtStartEv           hal/fdr_arm9_fader_seat.cpp
+     _ZN15FaderBrightness20IsBetweenStartAndEndEv  hal/fdr_arm9_fader_seat.cpp
+     _ZN15FaderBrightness7IsAtEndEv             hal/method_faces.cpp        */
+void *func_02017254(void *self);
+void  _ZN5Fader13AdvanceInterpEv(void *self);
+int   _ZN15FaderBrightness9IsAtStartEv(void *self);
+int   _ZN15FaderBrightness7IsAtEndEv(void *self);
+int   _ZN15FaderBrightness20IsBetweenStartAndEndEv(void *self);
+}
+
+/* SM64DS_EA6C_TRACE=1: one line the first time each seated slot is entered,
+   and nothing at all when the variable is unset -- one getenv, cached, the
+   shape port_title_state_trace below already uses. Ten lines for a whole run
+   at most. Without it a seat that nothing dispatches and a seat that runs
+   every frame produce exactly the same silence, which are opposite findings. */
+static int l2_ea6c_quiet;              /* set while the selftest drives slots */
+
+static void l2_ea6c_note(int slot)
+{
+    static int on = -1;
+    static unsigned char said[12];
+    if (on < 0) on = std::getenv("SM64DS_EA6C_TRACE") != 0;
+    if (!on || l2_ea6c_quiet || slot < 0 || slot > 11 || said[slot]) return;
+    said[slot] = 1;
+    std::printf("  [ea6c] slot +0x%02x entered for the first time\n", slot * 4);
+    std::fflush(stdout);
+}
+
+/* The residual traps keep the ORIGINAL string, "data_0208ea6c vtable slot", on
+   purpose: the number of those lines in a playlog is directly comparable with
+   the pre-seat run's, and a slot this block did not seat is still exactly what
+   the string says. WHICH slot is the env-gated line above, not a new name. */
+
+/* +0x00. D1. src/func_02017254.c writes this table back into the receiver and
+   calls Color::~Color, which is the ROM body verbatim; it is in the link on
+   slice_ov007.txt line 778. Section 9c lists NO call site for either
+   destructor slot, so the shape is the no-argument default. */
+static void *__fastcall l2_ea6c_s00(void *s, void *)
+{ l2_ea6c_note(0); return func_02017254(s); }
+
+/* +0x04. D0, AND THE ONE SLOT THIS BLOCK DOES NOT SEAT. The reason is a slice
+   line, not a missing body: src/func_02017228.c is matched and is the same
+   three writes as D1 plus Memory::operator_delete2, and it is on NO slice, so
+   it is not in this link. Putting it on one is a port/slice_*.txt edit, which
+   is outside this change's one-file scope. TRANSCRIBING A DELETING DESTRUCTOR
+   HERE INSTEAD WOULD FREE THE RECEIVER ON THIS FILE'S AUTHORITY -- the trap
+   leaks the object and announces itself, which is the direction every unseated
+   slot in hal/fdr_arm9_fader_seat.cpp takes. */
+static void *__fastcall l2_ea6c_s04(void *, void *)
+{ l2_trap("data_0208ea6c vtable slot"); return 0; }
+
+/* +0x08. AdvanceFade, and the one slot here that is not __fastcall, for
+   hal/fdr_arm9_fader_seat.cpp's fdr_s08 reason exactly (shape C above).
+   THE ROM BODY IS A VENEER AND ITS RECEIVER IS NOT DISCARDED:
+
+       0x0201721c  e59fc000  ldr ip, [pc, #0]
+       0x02017220  e12fff1c  bx  ip
+       0x02017224  020175e8  .word  _ZN5Fader13AdvanceInterpEv
+
+   two instructions, r0 untouched, so the target reads the SAME receiver the
+   veneer was entered with. src/func_0201721c.c spells that `void
+   func_0201721c(void)` calling `_ZN5Fader13AdvanceInterpEv()` with no argument
+   at all, which is byte-correct under mwccarm -- r0 falls through a bx -- and
+   loses the receiver on any host that does not pass arguments in the same
+   register. That is the identical defect slice_fdr.txt records for
+   src/func_0202ed08.c and hal/lk4_solidheap_seat.cpp for Heap::_Destroy, and
+   it takes the identical answer: FORWARD TO THE VENEER'S OWN TARGET, WITH THE
+   RECEIVER, and leave the src TU out of the link. Discarding it would hand
+   Fader::AdvanceInterp whatever the host left in ecx and let it write
+   currInterp through that.
+
+   The wrong-receiver check is fdr_s08's, and it earns its place for the same
+   reason: a shape A caller would leave the stack balanced and hand this stub a
+   word off its own frame, so the stub says so rather than running on it. */
+static void __cdecl l2_ea6c_s08(void *s)
+{
+    if (s == 0 || *(void **)s != (void *)data_0208ea6c) {
+        l2_trap("data_0208ea6c vtable slot");
+        return;
+    }
+    l2_ea6c_note(2);
+    _ZN5Fader13AdvanceInterpEv(s);
+}
+
+/* The ROM-ordered dispatch the two setters end in. Byte offsets, because that
+   is what the ARM encodes; the same helper shape hal/fdr_arm9_fader_seat.cpp's
+   fdr_view_dispatch uses. */
+typedef int(__fastcall *L2Ea6cSlot)(void *, void *);
+
+static int l2_ea6c_dispatch(void *s, unsigned rom_byte)
+{
+    void **vt = *(void ***)s;
+    return ((L2Ea6cSlot)vt[rom_byte / 4])(s, 0);
+}
+
+/* +0x0c and +0x10. SetBackwardTime and SetForwardTime, AND THESE TWO ARE
+   TRANSCRIBED RATHER THAN FORWARDED. Say that plainly: src/func_020171f0.cpp
+   and src/func_020171c8.cpp are matched and they are on NO slice, so unlike
+   the other eight bodies they are not in this link, and adding them is the
+   same out-of-scope slice edit slot +0x04 declines. The difference is that
+   these two are LOAD-BEARING -- Scene::BeforeBehavior calls one of them every
+   frame the title runs, and with them trapped `speed` stays 0, AdvanceFade
+   moves nothing, and no fade this object drives can ever complete. So they are
+   transcribed from the disassembly, which is quoted here in full so a reader
+   can check it against the two src TUs without leaving the file:
+
+       0x020171f0  e92d4000  push {lr}          func_020171f0
+       0x020171f4  e24dd004  sub  sp, sp, #4
+       0x020171f8  e3a01a01  mov  r1, #0x1000
+       0x020171fc  e2611000  rsb  r1, r1, #0
+       0x02017200  e5801008  str  r1, [r0, #8]      speed = -1.0
+       0x02017204  e5901000  ldr  r1, [r0]
+       0x02017208  e5911014  ldr  r1, [r1, #0x14]   the RECEIVER's own +0x14
+       0x0201720c  e12fff31  blx  r1
+
+       0x020171c8  e92d4000  push {lr}          func_020171c8
+       0x020171cc  e24dd004  sub  sp, sp, #4
+       0x020171d0  e3a01a01  mov  r1, #0x1000
+       0x020171d4  e5801008  str  r1, [r0, #8]      speed = +1.0
+       0x020171d8  e5901000  ldr  r1, [r0]
+       0x020171dc  e5911018  ldr  r1, [r1, #0x18]   the RECEIVER's own +0x18
+       0x020171e0  e12fff31  blx  r1
+
+   and the tails are `add sp,#4 / pop {lr} / bx lr`, so r0 from the blx is the
+   return value. The dispatch is through the RECEIVER's table and not through
+   data_0208ea6c directly, because that is what the ARM does; for this class
+   they are the same table, and writing it the ROM's way costs nothing and
+   survives a derived class that is not in the image today.
+
+   THE DAY EITHER TU IS SLICED IN, THESE TWO BECOME PLAIN FORWARDS and this
+   paragraph comes out. Whoever does that owns both lines. */
+static int __fastcall l2_ea6c_s0c(void *s, void *, int, int)
+{
+    l2_ea6c_note(3);
+    *(int *)((char *)s + 8) = -0x1000;
+    return l2_ea6c_dispatch(s, 0x14);
+}
+static int __fastcall l2_ea6c_s10(void *s, void *, int, int)
+{
+    l2_ea6c_note(4);
+    *(int *)((char *)s + 8) = 0x1000;
+    return l2_ea6c_dispatch(s, 0x18);
+}
+
+/* +0x14 and +0x18. The matched predicates, through the flat faces two other
+   hal files already own, each of which makes a QUALIFIED call so nothing
+   re-dispatches. */
+static int __fastcall l2_ea6c_s14(void *s, void *)
+{ l2_ea6c_note(5); return _ZN15FaderBrightness9IsAtStartEv(s); }
+static int __fastcall l2_ea6c_s18(void *s, void *)
+{ l2_ea6c_note(6); return _ZN15FaderBrightness7IsAtEndEv(s); }
+
+/* +0x1c. THE SLOT THE SKEW IS ABOUT, and the one that must NOT call the
+   matched method the way its five neighbours do. hal/fdr_arm9_fader_seat.cpp's
+   flat face runs the matched body against an MSVC-ordered VIEW of the
+   receiver, so the body's two unqualified calls -- host bytes 0x10 and 0x14 --
+   land on thunks that dispatch this object's ROM 0x14 and 0x18, i.e. on the
+   two slots directly above. A qualified call here instead would reach +0x10,
+   which is l2_ea6c_s10: a wrong answer, a clobbered `speed`, and eight bytes
+   off the caller's frame. l2_ea6c_selftest below measures exactly that. */
+static int __fastcall l2_ea6c_s1c(void *s, void *)
+{ l2_ea6c_note(7); return _ZN15FaderBrightness20IsBetweenStartAndEndEv(s); }
+
+/* +0x20 and +0x24. Both matched, both non-virtual in the header, so a
+   qualified call is a direct call and the host vtable is not read. */
+static void __fastcall l2_ea6c_s20(void *s, void *)
+{ l2_ea6c_note(8); ((FaderBrightness *)s)->FaderBrightness::SetToEnd(); }
+static void __fastcall l2_ea6c_s24(void *s, void *)
+{ l2_ea6c_note(9); ((FaderBrightness *)s)->FaderBrightness::SetToStart(); }
+
+/* +0x28 and +0x2c are the next table's header, not this class's slots (see the
+   head of section 2b). Nothing may dispatch them; they keep the trap so that
+   something which does says so instead of jumping into the offset-to-top. */
+static int __fastcall l2_ea6c_over(void *, void *)
+{ l2_trap("data_0208ea6c vtable slot"); return 0; }
+
+/* SM64DS_EA6C_SELFTEST=1: DOES +0x1c REACH THE REAL PREDICATES? Env-gated and
+   inert unset, and it is a measurement rather than an assertion that the fill
+   is right.
+
+   The probe is a three-word stand-in laid out like a Fader -- vptr, currInterp
+   at +0x04, speed at +0x08, which include/Fader.h pins out of the ROM -- with
+   its vptr pointed at this table. For each of the three interesting interp
+   values it dispatches +0x14, +0x18 and +0x1c THROUGH THE TABLE and compares
+   each answer with a direct qualified call on the same storage.
+
+   THE ANSWER ALONE WOULD NOT CATCH THE SKEW, which is why `speed` is the third
+   column. Work it through: skewed, "IsAtStart" reaches +0x10 (SetForwardTime),
+   which returns IsAtEnd(), and "IsAtEnd" reaches +0x14 (IsAtStart) -- and at
+   all three interp values the two wrongs produce the same final 0/1/0 that the
+   right pair does. What the skew CANNOT hide is the write: +0x10 stores +1.0
+   into speed. So the probe seeds speed with a sentinel and reports whether it
+   survived. (It would also lose eight bytes off this function's frame to that
+   slot's `ret 8`, which is the louder half of the same failure and would
+   likely take the process with it.) */
+static void l2_ea6c_selftest(void)
+{
+    if (std::getenv("SM64DS_EA6C_SELFTEST") == 0) return;
+    struct Probe { void **vt; int currInterp; int speed; } p;
+    const int sentinel = 0x0bad0bad;
+    static const int cases[3] = { 0, 0x800, 0x1000 };
+    int fails = 0;
+    l2_ea6c_quiet = 1;
+    for (int i = 0; i < 3; ++i) {
+        p.vt = (void **)data_0208ea6c;
+        p.currInterp = cases[i];
+        p.speed = sentinel;
+        FaderBrightness *fb = (FaderBrightness *)(void *)&p;
+        const int want_start = fb->FaderBrightness::IsAtStart();
+        const int want_end = fb->FaderBrightness::IsAtEnd();
+        const int want_between = (want_start == 0 && want_end == 0) ? 1 : 0;
+        const int got_start = ((L2Ea6cSlot)data_0208ea6c[5])(&p, 0);
+        const int got_end = ((L2Ea6cSlot)data_0208ea6c[6])(&p, 0);
+        const int got_between = ((L2Ea6cSlot)data_0208ea6c[7])(&p, 0);
+        const int kept = (p.speed == sentinel);
+        const int ok = got_start == want_start && got_end == want_end &&
+                       got_between == want_between && kept;
+        if (!ok) ++fails;
+        std::printf("  [ea6c] selftest currInterp 0x%04x: +0x14 %d(want %d)  "
+                    "+0x18 %d(want %d)  +0x1c %d(want %d)  speed %s  %s\n",
+                    cases[i], got_start, want_start, got_end, want_end,
+                    got_between, want_between,
+                    kept ? "intact" : "CLOBBERED (+0x10 ran: the skew is live)",
+                    ok ? "OK" : "FAIL");
+    }
+    l2_ea6c_quiet = 0;
+    std::printf("  [ea6c] selftest: %d of 3 cases FAILED -- "
+                "IsBetweenStartAndEnd %s the real predicates through +0x14 and "
+                "+0x18\n", fails, fails ? "does NOT reach" : "reaches");
+    std::fflush(stdout);
+}
+
 static void l2_fill_0208ea6c(void)
 {
-    for (int i = 0; i < 12; ++i) data_0208ea6c[i] = (void *)l2_vt_trap;
+    data_0208ea6c[0]  = (void *)l2_ea6c_s00;
+    data_0208ea6c[1]  = (void *)l2_ea6c_s04;
+    data_0208ea6c[2]  = (void *)l2_ea6c_s08;
+    data_0208ea6c[3]  = (void *)l2_ea6c_s0c;
+    data_0208ea6c[4]  = (void *)l2_ea6c_s10;
+    data_0208ea6c[5]  = (void *)l2_ea6c_s14;
+    data_0208ea6c[6]  = (void *)l2_ea6c_s18;
+    data_0208ea6c[7]  = (void *)l2_ea6c_s1c;
+    data_0208ea6c[8]  = (void *)l2_ea6c_s20;
+    data_0208ea6c[9]  = (void *)l2_ea6c_s24;
+    data_0208ea6c[10] = (void *)l2_ea6c_over;
+    data_0208ea6c[11] = (void *)l2_ea6c_over;
     for (int i = 0; i < 10; ++i) data_0208eb2c[i] = (void *)l2_vt_trap;
     for (int i = 0; i < 12; ++i) data_0208eacc[i] = (void *)l2_vt_trap;
     ((void **)data_0208eafc)[0] = (void *)l2_vt_trap;
     ((void **)data_0208eafc)[1] = (void *)l2_vt_trap;
+    l2_ea6c_selftest();
 }
 
 // ---- 3. NINETEEN TRAPPING SITES, AND HOW THEY COUNT ------------------------
