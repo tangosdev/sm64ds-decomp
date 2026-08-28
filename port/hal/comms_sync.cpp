@@ -4,12 +4,32 @@
 // Read that first: it says what this does, what it deliberately does NOT do,
 // and what the correction constants are guesses about.
 //
-// WHAT THIS STAGE IS. The gate ruled the build order: SY4 and SY0 before any
-// sync sends. So this file currently implements the LAYER -- the enable
-// decision, the contract check, the refusal, the readout -- and NOT the sending
-// or applying of state. That is deliberate and it is the checkpoint: prove that
-// OFF is unchanged and that a v1 transport is refused cleanly, before any code
-// exists that could move a remote body.
+// WHAT THIS FILE IS NOW: the whole layer -- the enable decision, the contract
+// check, the refusal, the message, the send, the apply, the readout. It was
+// built in that order on purpose, with SY4 and SY0 green before any code
+// existed that could move a remote body.
+//
+// ##########################################################################
+// #  THE CORRECTION POLICY BELOW HAS NEVER RUN. READ THIS BEFORE TUNING.   #
+// ##########################################################################
+//
+// Every loopback session measured so far reports lerps=0 and a worst error of
+// about 1.26 units, against a 2.0-unit ignore threshold. The two simulations
+// stay so close on one machine that the entire 2..60-unit LERP band -- the
+// path that WILL run over the internet, and the only reason this layer exists
+// -- has never executed once. Neither has the snap path.
+//
+// SO WHAT THE SY RUNGS PROVE IS PLUMBING: built, sent, received, applied to the
+// right body, never to the wrong one, survives 20% loss, does not tax the
+// lockstep. They prove NOTHING about whether 25%-per-frame and a 60-unit snap
+// are good numbers, because neither constant has been exercised.
+//
+// THE MISSING TOOL IS LATENCY INDUCTION, not more loss. SM64DS_SYNC_DROP makes
+// messages disappear, which makes a remote body staler but leaves the error
+// under the threshold. What would stretch the band is DELAYING messages by tens
+// of milliseconds -- a delay queue on the receive side, which does not exist.
+// Whoever takes the internet-play lane should build that first and tune these
+// constants against it, before trusting them in front of a player.
 //
 // ============================ WHERE THIS SITS ==============================
 //
@@ -161,12 +181,14 @@ void sync_decide() {
             g_said_refusal = true;
             std::fprintf(stderr,
                          "[sync] REFUSED: transport '%s' reports contract v%u "
-                         "and %s an aux channel, so it cannot carry state "
-                         "sync. FALLING BACK TO THE DS INPUT-LOCKSTEP PATH, "
+                         "%s, so it cannot carry state sync. FALLING "
+                         "BACK TO THE DS INPUT-LOCKSTEP PATH, "
                          "which is complete and is the shipped default -- this "
                          "is a downgrade, not a failure.\n",
                          t->name ? t->name : "(unnamed)", ver,
-                         (t->send_aux && t->recv_aux) ? "has" : "lacks");
+                         (ver < kCommsContractV2)
+                             ? "which is below the v2 this layer needs"
+                             : "and is missing an aux entry");
         }
         return;
     }
@@ -216,7 +238,14 @@ struct SyncPlayerV1 {
 };
 struct SyncMsgV1 {
     unsigned       magic;     // kSyncMagic
-    unsigned       frame;     // the session frame this state is FROM
+    // THE HOST'S OWN SEND COUNTER, not the session frame MP4-DESIGN.md's
+    // sketch called for. Named `seq` because that is what it is: it increments
+    // once per send on the host and means nothing on any other console. The
+    // design wanted a SESSION frame so a client could tell how stale a message
+    // was in game-time; that needs the comms frame counter
+    // (data_020a1040+0) and is a v2 field. Nothing reads this today -- it is
+    // carried so the wire format has the slot when someone does.
+    unsigned       seq;
     unsigned char  count;
     unsigned char  pad[3];
     // SyncPlayerV1 follows, `count` of them
@@ -253,7 +282,7 @@ void sync_send_if_host() {
     unsigned char buf[kSyncBufBytes];
     SyncMsgV1 *m = (SyncMsgV1 *)buf;
     m->magic = kSyncMagic;
-    m->frame = g_frame;
+    m->seq = g_frame;
     m->count = 0;
     m->pad[0] = m->pad[1] = m->pad[2] = 0;
 
@@ -298,6 +327,14 @@ void sync_apply() {
     if (!t || !t->recv_aux) return;
     if (t->slot() == 0) return;                 // the host has nothing to apply
 
+    /* ONE MESSAGE PER TICK, and the rate arithmetic is why that is enough:
+       the host sends at SM64DS_SYNC_HZ (30 by default) and this runs once per
+       frame (60), so the reader is twice as fast as the writer and never falls
+       behind. If the send rate is ever raised above the frame rate this would
+       start consuming a backlog one frame at a time -- except the carrier's aux
+       queue is one deep and overwrites, so what actually happens is the older
+       message is superseded and counted, which is the correct behaviour for
+       state. Stated because the assumption is invisible otherwise. */
     unsigned char buf[kSyncBufBytes];
     const int n = t->recv_aux(buf, sizeof buf);
     if (n < (int)sizeof(SyncMsgV1)) return;

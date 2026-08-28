@@ -2097,10 +2097,41 @@ static void port_load1(void *t, int a, unsigned b)
        from player 0's record. Same shape as the local-index hold above, and it
        retires itself the same way: on a real VS arena whose table carries four
        consecutive starts, the count should NOT be held, because the loop is
-       then right. That is why this is keyed on the level lacking the starts
-       rather than on multiplayer being on. */
+       then right.
+
+       ##################################################################
+       #  IT IS NOT KEYED ON THAT. IT HOLDS ON EVERY MULTIPLAYER BOOT.  #
+       ##################################################################
+
+       AND THAT IS A KNOWN, FILED LIMITATION rather than an oversight. Two
+       versions of a condition were tried and neither works:
+
+         `port_entrance_count() > 0` is the level's TOTAL record count -- 14 on
+         castle grounds -- so it is true wherever an entrance table exists and
+         the condition collapsed to "multiplayer is on". It only ever LOOKED
+         conditional.
+
+         Comparing entrance records by CLASS (does record p3+1 name the same
+         actor as p3?) is the question this comment wants to ask, and it does
+         not answer it: MEASURED on castle grounds, records p3 and p3+1 carry
+         the SAME raw, so the predicate returned true, the hold stopped
+         happening, and the orphan caster came straight back -- rungS went from
+         152 shadow triangles to 216 in the run that tried it. Class equality
+         does not distinguish a player start from a different door on this
+         level, so it cannot be the test.
+
+       What actually distinguishes them is whether Actor::Spawn PRODUCES a
+       usable player from the record, and that is not knowable until the loop
+       has already run and made the orphan.
+
+       THE ARENA-DAY CONSEQUENCE, filed in port/ov002_frontier.txt: on a real VS
+       arena whose table carries four consecutive player starts, this hold will
+       ignore them and supply three copies of record 0 instead -- every player
+       spawning on top of the first. Correct on every level the port loads
+       today, wrong the day an arena mounts, and written down where the arena
+       lane will find it rather than left as a surprise. */
     const int want_players = (int)data_0209f21c;
-    if (want_players > 1 && port_entrance_count() > 0)
+    if (want_players > 1)
         data_0209f21c = 1;
     _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij(t, a, b);
     data_0209f21c = saved_count;

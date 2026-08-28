@@ -346,3 +346,43 @@ WHERE THE PORT STOOD WHEN THIS WAS BANKED:
     untouched. That change predates the downgrade order; if the sync layer makes
     it moot it can go, but it costs nothing and it makes the port do what the
     ROM does rather than rely on a coincidence.
+
+
+================================================================================
+ARENA DAY: THE PLAYER-COUNT HOLD WILL IGNORE A REAL VS ARENA'S OWN STARTS
+================================================================================
+Run mg16, lane MP3/MP4. Filed here because it is correct today and wrong the day
+somebody mounts a VS arena, which is exactly the kind of thing a lane file loses.
+
+WHAT THE PORT DOES NOW. hal/level_boot.cpp's port_load1 holds data_0209f21c at 1
+across _Z19LoadEntranceObjects... on EVERY multiplayer boot, then
+port_vs_spawn_extra_players supplies the other players from player 0's entrance
+record, 40 units apart.
+
+WHY. The ROM's loop spawns player i from entrance record p3 + i. Levels the port
+loads today carry ONE player start, so for i>0 it spawns whatever the next
+record names, returns nothing usable, discards the pointer -- and leaves the
+actor it created linked into the processing list, ticking and casting a shadow
+with no body. That is the orphan caster the owner saw as "a third thing".
+
+WHY IT IS NOT CONDITIONAL, having tried twice:
+  * port_entrance_count() > 0 is the level's TOTAL record count (14 on castle
+    grounds), so it is true everywhere and only looked like a condition.
+  * Comparing records by class does not work either: MEASURED, castle grounds'
+    records p3 and p3+1 carry the SAME raw, so the predicate passed, the hold
+    stopped, and the shadow census went 152 -> 216 in that run.
+  What actually separates the cases is whether Actor::Spawn produces a usable
+  player, which is not knowable until the loop has already made the orphan.
+
+THE CONSEQUENCE. A real VS arena whose entrance table carries four consecutive
+player starts will have those starts IGNORED: the hold pins the count at 1, the
+loop spawns only player 0, and three copies of record 0 are supplied -- every
+player spawning on top of the first, in an arena that had perfectly good starts.
+
+WHAT THE ARENA LANE SHOULD DO. Once a level with real consecutive starts exists,
+the honest test becomes available: boot it once WITHOUT the hold and read the
+shadow census (port/tools/mp3_proof.py rungS) and the per-slot actor pointers. If
+every slot spawns a real player and the census is 88 + 64*(n-1), the arena needs
+no hold and the condition can finally be written against a level that
+distinguishes the two cases. Until such a level exists the test cannot be
+written, which is why this is filed rather than guessed at.

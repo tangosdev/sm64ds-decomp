@@ -564,12 +564,20 @@ SYNC_ON = {"SM64DS_SYNC": "1", "SM64DS_SYNC_REPORT": "1"}
 
 
 def rungSY1(seconds):
-    """A REMOTE BODY CONVERGES, and the layer actually ran.
+    """THE LAYER RUNS END TO END. PLUMBING ONLY -- it does not test correction.
 
-    Sync on, both instances. The CHILD must receive the host's view, apply it to
-    the host's body, and correct with LERPs rather than snaps. A run where the
-    layer is enabled and applied nothing is not a pass -- it is a layer that did
+    Sync on, both instances: the host must send, the child must receive and
+    apply to a REMOTE body, and the host must apply nothing. A run where the
+    layer is enabled and applied nothing is not a pass, it is a layer that did
     not run, and the counters are what tell those apart.
+
+    WHAT THIS RUNG DOES NOT ASSERT, said plainly because an earlier version of
+    this docstring claimed it: that corrections are LERPs rather than snaps. It
+    cannot, because over loopback neither ever happens -- worst error is about
+    1.26 units against a 2.0 ignore threshold, so lerps=0 in every run and the
+    2..60-unit band has never executed. Asserting lerps > 0 here would fail on a
+    correct build. The band needs induced LATENCY to reach, which is a tool
+    nobody has built; see the banner in hal/comms_sync.cpp.
     """
     t1, t2, _ = play_session("sy1_converge", seconds,
                              inj_c="key=0x20", extra_env=SYNC_ON)

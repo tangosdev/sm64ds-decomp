@@ -916,6 +916,15 @@ void lb_poll() { service(); }
 // would turn an unreliable-but-whole channel into an unreliable-and-partial
 // one, which is much harder to reason about.
 // ===========================================================================
+/* RETURNS len IF AT LEAST ONE LIVE PEER TOOK IT, else 0.
+ *
+ * The contract says "the bytes accepted", which is unambiguous for a
+ * point-to-point transport and needs saying for this one: a loopback carrier
+ * fans a message to every live peer, so there is no single "accepted" count.
+ * Reporting len on a partial fan-out is the honest choice for an UNRELIABLE
+ * channel -- a peer that missed this message is exactly the case the channel
+ * already tolerates, and returning 0 there would make the caller treat a
+ * mostly-delivered broadcast as a total failure. */
 int lb_send_aux(const void *buf, int len) {
     if (!buf || len <= 0) return 0;
     if (g_sock == INVALID_SOCKET) return 0;
