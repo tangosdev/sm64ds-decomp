@@ -913,7 +913,7 @@ _ZN8Particle18CheckWaterCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0
 _ZN8Particle25EndingStarGlitterCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x50) addr:0x020221dc
 _ZN8Particle25EndingStarGlitterCallback14SpawnParticlesERNS_6SystemE kind:function(arm,size=0x34) addr:0x0202222c
 func_02022260 kind:function(arm,size=0x38) addr:0x02022260
-func_02022298 kind:function(arm,size=0x58) addr:0x02022298
+_ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev kind:function(arm,size=0x58) addr:0x02022298
 _ZN8Particle17CheckLavaCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x38) addr:0x020222f0
 _ZN8Particle17CheckLavaCallback14SpawnParticlesERNS_6SystemE kind:function(arm,size=0xf0) addr:0x02022328
 _ZN8Particle22FitWaterSimpleCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x4c) addr:0x02022418
@@ -921,7 +921,7 @@ _ZN8Particle14BubbleCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x98)
 _ZN8Particle14SplashCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0xac) addr:0x020224fc
 _ZN8Particle13ScaleCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x28) addr:0x020225a8
 _ZN8Particle13ScaleCallback14SpawnParticlesERNS_6SystemE kind:function(arm,size=0x2c) addr:0x020225d0
-func_020225fc kind:function(arm,size=0x34) addr:0x020225fc
+_ZN5dPa_c7level_c15scaleCallback_cC1Ev kind:function(arm,size=0x34) addr:0x020225fc
 _ZN8Particle14SimpleCallback8OnUpdateERNS_6SystemEb kind:function(arm,size=0x10) addr:0x02022630
 _ZN8Particle14SimpleCallback14SpawnParticlesERNS_6SystemE kind:function(arm,size=0x40) addr:0x02022640
 _ZN5dPa_c7level_c16simpleCallback_cC1Ev kind:function(arm,size=0x24) addr:0x02022680
@@ -3721,11 +3721,11 @@ _ZTIN5dPa_c7level_c18fitWaterCallback_cE kind:data(any) addr:0x0208f390
 data_0208f3a4 kind:data(any) addr:0x0208f3a4
 _ZTVN5dPa_c7level_c10callback_cE kind:data(any) addr:0x0208f3b4
 _ZTVN5dPa_c7level_c16simpleCallback_cE kind:data(any) addr:0x0208f3c4
-data_0208f3d4 kind:data(any) addr:0x0208f3d4
+_ZTVN5dPa_c7level_c20edStarKiraCallback_cE kind:data(any) addr:0x0208f3d4
 data_0208f3e4 kind:data(any) addr:0x0208f3e4
 data_0208f3f4 kind:data(any) addr:0x0208f3f4
 data_0208f404 kind:data(any) addr:0x0208f404
-data_0208f414 kind:data(any) addr:0x0208f414
+_ZTVN5dPa_c7level_c15scaleCallback_cE kind:data(any) addr:0x0208f414
 data_0208f424 kind:data(any) addr:0x0208f424
 data_0208f434 kind:data(any) addr:0x0208f434
 data_0208f444 kind:data(any) addr:0x0208f444

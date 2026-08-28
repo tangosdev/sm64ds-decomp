@@ -81,8 +81,15 @@ facts carry them:
 Constructed by helper, so the class is known but not the role:
 `_ZN5dPa_c7level_c16simpleCallback_cC1Ev` builds the complete objects at
 0x754, 0x760, 0x79c, 0x7a8; its C2 sibling at 0x020226a4 builds the base
-subobjects at 0x76c, 0x778, 0x784, 0x790, 0x808; `func_020225fc`
-builds 0x7b4, 0x7c4, 0x7d4, 0x7e4.
+subobjects at 0x76c, 0x778, 0x784, 0x790, 0x808; the RTTI-backed
+`dPa_c::level_c::scaleCallback_c` C1 builds 0x7b4, 0x7c4, 0x7d4, 0x7e4.
+
+Outside `SysTracker`, ROM RTTI and the vtable slots identify the constructor at
+0x02022298 as `dPa_c::level_c::edStarKiraCallback_c` C1. Its 64 tracking
+records begin at 0x8: compiling byte-aligned storage instead places them in the
+base class's 0x6 tail padding, so the ROM's address proves the original record
+type had at least four-byte alignment. The record initializer remains unnamed
+until separate evidence supports its historical type name.
 
 ### Shadow structs collapsed onto the header
 

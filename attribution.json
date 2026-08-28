@@ -8,6 +8,10 @@
     "mitch.cairns": "mitchellcairns"
   },
   "overrides": {
+    "src/_ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev.cpp": "tangosdev",
+    "src/_ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev.cpp#func_02022298": "tangosdev",
+    "src/_ZN5dPa_c7level_c15scaleCallback_cC1Ev.cpp": "tangosdev",
+    "src/_ZN5dPa_c7level_c15scaleCallback_cC1Ev.cpp#func_020225fc": "tangosdev",
     "src/_ZN5dPa_c7level_c16simpleCallback_cC1Ev.cpp": "tangosdev",
     "src/_ZN5dPa_c7level_c16simpleCallback_cC1Ev.cpp#_ZN8Particle14SimpleCallbackC2Ev": "tangosdev",
     "src/_ZN5dPa_c7level_c16simpleCallback_cC2Ev.cpp": "tangosdev",

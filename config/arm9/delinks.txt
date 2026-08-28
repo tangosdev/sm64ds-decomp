@@ -3550,7 +3550,7 @@ src/func_02022260.c:
     complete
     .text start:0x02022260 end:0x02022298
 
-src/func_02022298.c:
+src/_ZN5dPa_c7level_c20edStarKiraCallback_cC1Ev.cpp:
     complete
     .text start:0x02022298 end:0x020222f0
 
@@ -3582,7 +3582,7 @@ src/_ZN8Particle13ScaleCallback14SpawnParticlesERNS_6SystemE.c:
     complete
     .text start:0x020225d0 end:0x020225fc
 
-src/func_020225fc.c:
+src/_ZN5dPa_c7level_c15scaleCallback_cC1Ev.cpp:
     complete
     .text start:0x020225fc end:0x02022630
 
