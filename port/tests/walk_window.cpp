@@ -7562,7 +7562,38 @@ int main(void)
                answer untouched, which is button mode -- so analog mode on a
                keyboard, or with the pad put down, is exactly the program that
                shipped before. */
-            if (!selftest && run_mode() == RUN_ANALOG && pad_live && !menu_on) {
+            /* ---- THE FOURTH SLOT-0 WRITER, AND THE ONE NO RUNG COULD SEE
+             *
+             * Run mg16 lane MP4. Same shape as the three already gated -- it
+             * writes THIS console's stick straight into Ctrl slot 0, on the
+             * level path, AFTER the per-player fan -- and it is the stick
+             * family rather than the buttons, so on a child it would drive the
+             * HOST's character and destroy the host's own stick values in one
+             * store.
+             *
+             * IT WAS INVISIBLE TO EVERY RUNG BY CONSTRUCTION. The guard
+             * includes pad_live, which is XInputGetState succeeding, and no
+             * harness has a physical gamepad -- so every green ladder in this
+             * campaign ran with this block switched off. It would have bitten
+             * the owner the first time he played multiplayer with a controller
+             * in analog mode, which is a configuration no proof had ever
+             * entered. The reviewer found it by reading, which is the only way
+             * it could have been found.
+             *
+             * SM64DS_FORCE_ANALOG makes it reachable from a proof: it forces
+             * the run-mode half of the condition, and SM64DS_PAD_TEST already
+             * forces the pad_live half in play mode (it fakes a pad and sets
+             * pad_live=1 at walk_window.cpp:3442, and is deliberately disabled
+             * under selftest). Together they cover the block with no hardware.
+             * Test scaffolding of the same class as SM64DS_SYNC_FORCE_V1 and
+             * SM64DS_SYNC_DROP, and named here so it is not mistaken for a
+             * player-facing setting. */
+            static int force_analog = -1;
+            if (force_analog < 0)
+                force_analog = getenv("SM64DS_FORCE_ANALOG") ? 1 : 0;
+            const int analog_mode = force_analog || run_mode() == RUN_ANALOG;
+            if (!selftest && analog_mode && pad_live && !menu_on &&
+                !(port::comms_transport() && comms_fanout_on())) {
                 const int DEAD = 7849;      /* XInput's left-stick floor */
                 const int FULL = 32767;
                 const int dxs = pad.lx;
@@ -7799,9 +7830,48 @@ int main(void)
                camera-rotate readers do not (mask to bits 0-1). SM64DS_PROBE_INPUT. */
             if (!menu_on)
                 btn |= (unsigned short)(port_input_probe_bits(frame) & 0x3);
-            *(unsigned short *)(data_0209f49c + 0) = btn;
-            *(unsigned short *)(data_0209f49e + 0) =
-                (unsigned short)(btn & (unsigned short)~btn_was);
+            /* ---- THE THIRD BUTTON WRITER, AND THE ONE HIS HANDS FOUND ------
+             *
+             * Run mg16 lane MP4, second field re-test. This is the LEVEL path's
+             * copy of the publish the scene path does further up, and it was
+             * left ungated when that one was gated. It runs AFTER the
+             * per-player Ctrl fan below, so every frame it overwrote slot 0's
+             * button words -- the ones the fan had just filled from the comms
+             * records -- with THIS console's local buttons.
+             *
+             * Both of his surviving symptoms are this one line:
+             *
+             *   PUNCHING ON THE CHILD MADE MARIO PUNCH. Mario is slot 0, the
+             *   matched state code reads its buttons as
+             *   `data_0209f49c + data_020a0e40 * 0x18` with data_020a0e40 set
+             *   to that actor's mPlayerNo, so on the child Mario correctly read
+             *   slot 0 -- and slot 0 was holding the CHILD's own buttons
+             *   because of this store.
+             *
+             *   AND THE HOST'S CROUCH NEVER CROSSED. The fan delivers the
+             *   host's buttons into slot 0 on the child, and this overwrote
+             *   them a few thousand instructions later. The stick crossed the
+             *   whole time, which is why rungP3 was green: the stick fields are
+             *   written by the fan and nothing clobbers them.
+             *
+             * THE ROM'S SIDE WAS CORRECT THROUGHOUT. Every matched reader
+             * indexes by data_020a0e40 * 0x18 -- St_Jump_Main:34,
+             * St_Shell_Main:95, St_Spin_Main:28, func_ov002_020ca940:35 -- and
+             * hal_call_state_fn runs inside Player::Behavior's window where
+             * data_020a0e40 is that actor's own slot. The wrong turn was
+             * entirely on the port's write side, in three places, of which this
+             * was the third.
+             *
+             * Gated exactly like the other two: with a transport up and the
+             * ROM's fan-out driving, the local buttons reach this console's own
+             * slot the ROM's way -- key register, local record, wire, fan-out,
+             * Stage::CheckInput, the per-player fan -- and this store must not
+             * put them anywhere else. */
+            if (!(port::comms_transport() && comms_fanout_on())) {
+                *(unsigned short *)(data_0209f49c + 0) = btn;
+                *(unsigned short *)(data_0209f49e + 0) =
+                    (unsigned short)(btn & (unsigned short)~btn_was);
+            }
             btn_was = btn;
         }
 
