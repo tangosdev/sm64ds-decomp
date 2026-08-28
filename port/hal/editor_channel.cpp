@@ -17,6 +17,7 @@
  *   objspawn <actorid> <x> <y> <z> <ry> <param>
  *                                         -> spawned <PTR>
  *   objkill <ptr>                         -> ok
+ *   skyset <id>                           -> ok        (0 none, 1..11)
  *   warp <level> [entrance]               -> ok
  *   peek32 / poke32                       -> err unsupported
  *   anything else                         -> err unknown
@@ -220,6 +221,15 @@ void _ZN9ActorBase18MarkForDestructionEv(void *self);
    second spawn path would be a second thing to keep true. */
 void *port_debug_spawn_at(unsigned id, unsigned param, int x, int y, int z,
                           int yaw, int area);
+/* hal/editor_sky.cpp. Live skybox switching, and it is inert until
+   port_editor_sky_arm() is called -- which happens in editor_channel_init
+   below, only on the same SM64DS_EDITOR_CHANNEL test that arms everything
+   else here. A build carrying that file but launched without the channel
+   never reaches one line of it. */
+void port_editor_sky_arm(void);
+int  port_editor_sky_set(int id, const char **why);
+int  port_editor_sky_current(void);
+void port_editor_sky_stats(void);
 extern signed char data_0209f2f8;       /* current level */
 extern signed char data_02092110;       /* staged next level, -1 = none */
 extern unsigned char data_02092128[];   /* per-player character; [0] is active */
@@ -353,7 +363,8 @@ inline unsigned long hton32(unsigned long v)
 
 struct Cmd {
     enum Kind { PING, INFO, OBJLIST, OBJMOVE, OBJROT, OBJRESPAWN, OBJSPAWN,
-                OBJKILL, WARP, ERR } kind;
+                OBJKILL, SKYSET, WARP, ERR } kind;
+    int sky;                    /* SKYSET: 0..11 */
     unsigned objptr;            /* OBJMOVE, OBJROT, OBJRESPAWN, OBJKILL */
     int x, y, z;                /* OBJMOVE, OBJRESPAWN, OBJSPAWN, Fix12 */
     int rx, ry, rz;             /* OBJROT, and OBJRESPAWN/OBJSPAWN's ry */
@@ -738,6 +749,39 @@ void exec_objkill(const Cmd &c)
     push_reply("ok\n");
 }
 
+/* ---- skyset ----------------------------------------------------------------
+ *
+ * OK-AFTER-APPLY. The reply is produced here, at the frame drain, AFTER
+ * hal/editor_sky.cpp has done the work -- so an `ok` means the sky the next
+ * frame draws is the one that was asked for, not that a request was accepted.
+ * A refusal carries that file's own plain-words reason rather than a generic
+ * one, because the interesting refusals (no level up, not enough texture
+ * memory left for another sky) are things only it can know.
+ *
+ * The applied id is announced on the game's log as well as the wire. A switch
+ * is a visual change with no other trace, so a run log that does not say when
+ * it happened cannot be read afterwards.
+ */
+void exec_skyset(const Cmd &c)
+{
+    const char *why = "the sky could not be changed";
+    if (!port_editor_sky_set(c.sky, &why)) {
+        char ln[256];
+        std::snprintf(ln, sizeof ln, "err %s\n", why);
+        push_reply(ln);
+        return;
+    }
+    std::fprintf(stderr, "[editor] skyset: now drawing sky %d\n",
+                 port_editor_sky_current());
+    /* The arena figures on EVERY switch, not just on the ones that load. That
+       is what makes "no other actor's textures were harmed" checkable rather
+       than asserted: after each sky has been loaded once, these numbers must
+       stop moving, and a switch that still moved them would be doing
+       allocation it has no business doing. */
+    port_editor_sky_stats();
+    push_reply("ok\n");
+}
+
 void exec_warp(const Cmd &c)
 {
     if (c.level < 0 || c.level > 51) {
@@ -801,6 +845,7 @@ void exec(const Cmd &c)
     case Cmd::OBJRESPAWN: exec_objrespawn(c); return;
     case Cmd::OBJSPAWN: exec_objspawn(c); return;
     case Cmd::OBJKILL:  exec_objkill(c);  return;
+    case Cmd::SKYSET:   exec_skyset(c);   return;
     case Cmd::WARP:     exec_warp(c);     return;
     case Cmd::ERR:
         /* A refusal the socket thread decided on, emitted HERE so it takes its
@@ -1049,6 +1094,23 @@ void handle_line(const std::string &line)
         return;
     }
 
+    if (verb == "skyset") {
+        std::string a;
+        int id = 0;
+        if (!next_tok(line, i, a) || !parse_int(a, id)) {
+            enqueue_err("err skyset <id> (0 for no sky, 1..11 for the game's "
+                        "own skies)\n");
+            return;
+        }
+        /* The range is checked in hal/editor_sky.cpp rather than here, so
+           there is one copy of it and it is next to the table that justifies
+           it (data_02075620 holds eleven handles). */
+        c.kind = Cmd::SKYSET;
+        c.sky = id;
+        enqueue(c);
+        return;
+    }
+
     if (verb == "warp") {
         std::string a, b;
         int level = 0, entrance = 0;
@@ -1208,6 +1270,12 @@ void editor_channel_init(void)
        SM64DS_NO_FOCUS, and for the same reason. */
     g_armed = e && std::atoi(e) != 0;
     if (!g_armed) return;    /* no thread, no LoadLibrary, no socket, no listen */
+    /* ARM THE LIVE-SKY FILE HERE AND NOWHERE ELSE. This is the same test that
+       decides whether a socket exists at all, so hal/editor_sky.cpp's whole
+       surface is behind the one flag: unarmed, that file never runs a line,
+       never allocates, and never writes a word of game state. The battery runs
+       unarmed, which is what proves it. */
+    port_editor_sky_arm();
     std::thread(server_thread).detach();
 }
 
