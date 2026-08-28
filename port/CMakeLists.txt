@@ -9005,6 +9005,14 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # walk_window_hires), because the frame loop's drain call lives in that
     # shared file and a target without this source fails the link.
     hal/editor_channel.cpp
+    # run lvled lane g3: live skybox switching for the editor's `skyset` verb.
+    # Same story as the channel and the same flag: compiled in unconditionally,
+    # INERT until editor_channel_init calls port_editor_sky_arm(), which it
+    # does only under SM64DS_EDITOR_CHANNEL=1. Unarmed it runs no line,
+    # allocates nothing and writes no game state, which is what lets the
+    # battery -- which runs unarmed -- stand as the proof that it changed
+    # nothing. On both walk_window targets for the channel's reason.
+    hal/editor_sky.cpp
     # the Mods panel's file-layer half: installs hal/fs.cpp's mod hooks
     # (LovesMeCharacter). Game-shaped targets only; every smoke keeps the
     # null hooks and stock file serving.
@@ -9207,6 +9215,14 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # walk_window_hires), because the frame loop's drain call lives in that
     # shared file and a target without this source fails the link.
     hal/editor_channel.cpp
+    # run lvled lane g3: live skybox switching for the editor's `skyset` verb.
+    # Same story as the channel and the same flag: compiled in unconditionally,
+    # INERT until editor_channel_init calls port_editor_sky_arm(), which it
+    # does only under SM64DS_EDITOR_CHANNEL=1. Unarmed it runs no line,
+    # allocates nothing and writes no game state, which is what lets the
+    # battery -- which runs unarmed -- stand as the proof that it changed
+    # nothing. On both walk_window targets for the channel's reason.
+    hal/editor_sky.cpp
     # the Mods panel's file-layer half: installs hal/fs.cpp's mod hooks
     # (LovesMeCharacter). Game-shaped targets only; every smoke keeps the
     # null hooks and stock file serving.

@@ -11,6 +11,7 @@
 #include "BgCh.h"
 #include "NestedHeapIterator.h"
 #include "Player.h"
+#include "player_fields.h"   /* run mg16 lane MP4: the one place field offsets live */
 #include "ShadowModel.h"
 #include "TextureSequence.h"
 #include "Heap.h"
@@ -328,7 +329,12 @@ void hal_render_player_world(void *player)
         const unsigned char no = *(const unsigned char *)(c + 0x6d8);
         if (data_0209f2d8 == 1 && no < 4 && data_0209fc5c[no] == 0)
             return;
-        const unsigned short inv = *(const unsigned short *)(c + 0x6a6);
+        /* THROUGH THE ACCESSOR, and this line is why the accessor block
+           exists. It read 0x6a6 as a raw offset -- mStateWaitTimer, not
+           mInvincibleTimer -- so the blink gate was culling the body on a
+           timer that ticks constantly. One named constant, one place to fix,
+           and the raw offset that hid the bug is gone. */
+        const unsigned short inv = port::player::invincible_timer(c);
         /* The ROM picks bit 1 or bit 0 off Player::IsState(the hurt state).
            That state object is ov002's and is not reachable from here, so the
            port takes the conservative half: blink on bit 0, which is the arm
@@ -593,7 +599,7 @@ extern "C" int hal_call_state_fn(void *self, unsigned ds_addr)
                              *(unsigned char *)(c + 0x6e5),
                              *(unsigned char *)(c + 0x6de),
                              *(unsigned char *)data_0209f2bc,
-                             *(unsigned short *)(c + 0x6a6),
+                             port::player::invincible_timer(c),
                              *(int *)(anim + 8), *(unsigned *)(anim + 4),
                              ((Animation *)anim)->Animation::Finished());
             }

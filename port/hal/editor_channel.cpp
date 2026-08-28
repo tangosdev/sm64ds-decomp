@@ -2,8 +2,32 @@
  *
  * A loopback line-protocol server on 127.0.0.1:7355, wire-compatible with the
  * Studio's editor link. It lets an external editor list the live objects of a
- * running level, move one, turn one, replace one where it stands, ask what
- * level is up, and warp.
+ * running level, move one, turn one, replace one where it stands, create one,
+ * destroy one, ask what level is up, and warp.
+ *
+ * THE WIRE, in full, because the Studio builds against it and a protocol that
+ * lives only in the parser is a protocol nobody can implement:
+ *
+ *   ping                                  -> pong
+ *   info                                  -> level <N> char <M>
+ *   objlist                               -> obj <PTR> <id> <x> <y> <z> ... end
+ *   objmove <ptr> <x> <y> <z>             -> ok
+ *   objrot  <ptr> <rx> <ry> <rz>          -> ok
+ *   objrespawn <ptr> <x> <y> <z> [ry]     -> respawned <PTR>
+ *   objspawn <actorid> <x> <y> <z> <ry> <param>
+ *                                         -> spawned <PTR>
+ *   objkill <ptr>                         -> ok
+ *   skyset <id>                           -> ok        (0 none, 1..11)
+ *   warp <level> [entrance]               -> ok
+ *   peek32 / poke32                       -> err unsupported
+ *   anything else                         -> err unknown
+ *
+ * POINTERS ARE HEX AND EVERYTHING ELSE IS DECIMAL, with one documented
+ * exception: objspawn's <param> is base 0, so 0x1f00 and 7936 both work (see
+ * parse_u32any). Positions are raw Fix12 integers -- the Studio divides by 4096
+ * itself -- and rotations are 16-bit angle units, 65536 to the full turn.
+ * Every reply is a single line except objlist's block, which ends with `end`.
+ * Every failure is `err ` followed by plain words.
  *
  * =============================================================================
  * WHY objrespawn EXISTS WHEN objmove ALREADY MOVES THINGS
@@ -197,6 +221,15 @@ void _ZN9ActorBase18MarkForDestructionEv(void *self);
    second spawn path would be a second thing to keep true. */
 void *port_debug_spawn_at(unsigned id, unsigned param, int x, int y, int z,
                           int yaw, int area);
+/* hal/editor_sky.cpp. Live skybox switching, and it is inert until
+   port_editor_sky_arm() is called -- which happens in editor_channel_init
+   below, only on the same SM64DS_EDITOR_CHANNEL test that arms everything
+   else here. A build carrying that file but launched without the channel
+   never reaches one line of it. */
+void port_editor_sky_arm(void);
+int  port_editor_sky_set(int id, const char **why);
+int  port_editor_sky_current(void);
+void port_editor_sky_stats(void);
 extern signed char data_0209f2f8;       /* current level */
 extern signed char data_02092110;       /* staged next level, -1 = none */
 extern unsigned char data_02092128[];   /* per-player character; [0] is active */
@@ -329,16 +362,30 @@ inline unsigned long hton32(unsigned long v)
 /* ---- shared state ---------------------------------------------------------*/
 
 struct Cmd {
-    enum Kind { PING, INFO, OBJLIST, OBJMOVE, OBJROT, OBJRESPAWN, WARP,
-                ERR } kind;
-    unsigned objptr;            /* OBJMOVE, OBJROT, OBJRESPAWN */
-    int x, y, z;                /* OBJMOVE, OBJRESPAWN, Fix12 */
-    int rx, ry, rz;             /* OBJROT, and OBJRESPAWN's ry, angle units */
+    enum Kind { PING, INFO, OBJLIST, OBJMOVE, OBJROT, OBJRESPAWN, OBJSPAWN,
+                OBJKILL, SKYSET, WARP, ERR } kind;
+    int sky;                    /* SKYSET: 0..11 */
+    unsigned objptr;            /* OBJMOVE, OBJROT, OBJRESPAWN, OBJKILL */
+    int x, y, z;                /* OBJMOVE, OBJRESPAWN, OBJSPAWN, Fix12 */
+    int rx, ry, rz;             /* OBJROT, and OBJRESPAWN/OBJSPAWN's ry */
     int has_rot;                /* OBJRESPAWN: was a yaw given at all */
+    unsigned spawn_id;          /* OBJSPAWN: the actor id */
+    unsigned spawn_param;       /* OBJSPAWN: ActorBase+0x08's word */
     int level, entrance;        /* WARP */
     const char *msg;            /* ERR: always a string literal (static
                                    lifetime), so the queue never owns storage */
 };
+
+/* The largest actor id this channel will pass to the spawn path. 512 is not a
+   guess: hal/actor_registry.cpp:145 sizes its per-id counters
+   `enum { PORT_ACTOR_IDS = 512 }`, and the LEVEL DATA agrees from the other
+   side -- a simple sub-table record packs the actor-table index into nine bits
+   (`raw & 0x1ff`, src/_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij and
+   hal/stage_mods.cpp both say so). An id past that is not a class the game can
+   name, and handing it to Actor::Spawn would index the spawn-info table out of
+   bounds inside matched ROM code, which is a crash this channel must not be
+   able to cause on a typo. */
+const unsigned MAX_ACTOR_ID = 511;
 
 std::mutex g_mtx;               /* guards everything below */
 std::deque<Cmd> g_queue;
@@ -524,10 +571,13 @@ void exec_objrot(const Cmd &c)
  * mark and reads nothing off the old object afterwards.
  *
  * THE OLD POINTER IS STILL IN THE LIST when this returns -- marking is not
- * freeing -- so the reply's new pointer is guaranteed distinct from it, and an
- * objlist a few frames later shows the old one gone and the new one present.
- * That gap is the editor's cue to rebind, which is why the reply carries the
- * new pointer at all.
+ * freeing -- so the reply's new pointer is guaranteed distinct from it. That
+ * overlap is THE SAME FRAME only: it is visible to an objlist pipelined into
+ * the same drain, and a client that waits for `respawned <ptr>` before asking
+ * again has already let a frame pass and sees the old one gone. Either way the
+ * new pointer in the reply is the editor's cue to rebind, which is why the
+ * reply carries it at all. (Same wording rule as objkill below; the loose
+ * "a few frames later" version of this sentence was measured wrong.)
  */
 void exec_objrespawn(const Cmd &c)
 {
@@ -593,6 +643,164 @@ void exec_objrespawn(const Cmd &c)
     push_reply(ln);
 }
 
+/* ---- objspawn ---------------------------------------------------------------
+ *
+ * objrespawn's second half with the first half removed: no object is read, no
+ * object is killed, the game simply builds one where it is told. Everything it
+ * needs comes off the wire except the AREA, which does not, and that is the one
+ * decision in this verb worth writing down.
+ *
+ * THE AREA IS READ FROM THE PLAYER'S Actor+0xCC, AND THAT IS DELIBERATELY NOT
+ * WHAT hal/level_boot.cpp's port_debug_spawn DOES.
+ *
+ * The obvious move is to copy the base's own convenience helper, which spawns
+ * "at the local player, facing the way he faces, in his area" and reads that
+ * area at hal/level_boot.cpp:3825 as `*(const unsigned char *)(p + 0x10)`. That
+ * read is WRONG, and this file already says so in exec_objrespawn's banner
+ * above rather than having discovered it here: Actor+0x10 is a BOOLEAN written
+ * by ActorBase::AfterInitResources meaning "init'd while data_02099f24[0] == 3",
+ * not an area. The area is Actor+0xcc -- include/Actor.h:110 types it
+ * `s8 mAreaId`, and src/_ZN5ActorC1Ev.cpp:49 is literally
+ * `self->mAreaId = data_0209b44c;`, the global src/func_02010e78.c stages from
+ * Actor::Spawn's areaID argument. exec_objrespawn reads +0xcc for exactly this
+ * reason and has done since it shipped.
+ *
+ * So this verb resolves the area the way the file's OWN spawn verb already
+ * does, not the way the shared helper does. Copying a read that the same file
+ * documents as a bug would put the bug in a second place and make the two spawn
+ * verbs disagree about which area an object lands in. hal/level_boot.cpp is not
+ * this lane's file to fix, so the divergence is stated here instead of edited
+ * there -- and it is a divergence in the correct direction.
+ *
+ * SIGNED, because include/Actor.h says a negative mAreaId means "not
+ * area-bound"; reading it unsigned would turn that into area 255.
+ *
+ * WITH NO PLAYER there is no area to inherit and no level worth spawning into,
+ * so the verb refuses before it gets here -- same guard exec_warp uses, and for
+ * the same reason: data_0209f2f8 <= 0 means menus or boot, not a level.
+ */
+int current_area(void)
+{
+    const char *p = (const char *)data_0209f394[0];
+    return p ? *(const signed char *)(p + OFF_ACTOR_AREA) : 0;
+}
+
+void exec_objspawn(const Cmd &c)
+{
+    /* Not in a level: Actor::Spawn would run with no Stage under it. The
+       reference the ROM hands ActorDerived::Spawn (data_0209f5c0) is only
+       meaningful inside a booted level. */
+    if (data_0209f2f8 <= 0 || !data_0209f394[0]) {
+        push_reply("err not in a level\n");
+        return;
+    }
+
+    /* port_debug_spawn_at is REUSED rather than re-derived, exactly as
+       exec_objrespawn reuses it: it runs the ROM's Actor::Spawn with an
+       explicit position, yaw and area, allocates the death-table sequence the
+       ROM allocates, and refuses in its own words when the class belongs to an
+       overlay this level never booted. A second spawn path would be a second
+       thing to keep true. */
+    void *n = port_debug_spawn_at(c.spawn_id, c.spawn_param,
+                                  c.x, c.y, c.z, c.ry, current_area());
+    if (!n) {
+        push_reply("err the game would not spawn that class here\n");
+        return;
+    }
+    char ln[48];
+    std::snprintf(ln, sizeof ln, "spawned %08X\n", (unsigned)(uintptr_t)n);
+    push_reply(ln);
+}
+
+/* ---- objkill ---------------------------------------------------------------
+ *
+ * The kill half of objrespawn on its own. Same pointer rule as every other verb
+ * that writes through a client-supplied pointer -- revalidated against a walk
+ * of the live list THIS frame, because the client's pointer came from an
+ * objlist that may be many frames old and the memory may have been reused.
+ *
+ * Same player guard, too, and it is not paranoia: killing the Player out from
+ * under the camera and the controller is not an edit.
+ *
+ * MARKING IS NOT FREEING, and the reply says `ok` rather than pretending the
+ * object is already gone. ActorBase::MarkForDestruction sets +0x0f and runs
+ * OnPendingDestroy synchronously through the vptr; the game's own cleanup phase
+ * moves the actor onto the cleanup list and frees it on a LATER frame. That is
+ * the ROM's own lifecycle and this file does not get to shortcut it --
+ * hal/level_change.cpp's stated contract is that nothing frees an actor by
+ * hand.
+ *
+ * WHAT A CLIENT ACTUALLY OBSERVES, stated precisely because the loose version
+ * of this sentence was wrong. The window in which the killed object is still
+ * listed is THE SAME FRAME, not "the next objlist":
+ *
+ *   objlist PIPELINED WITH THE KILL, in one write, so both run in the same
+ *   drain -- the object IS still listed. That is the real window and it is one
+ *   frame wide.
+ *   objlist SENT AFTER READING THE `ok` -- a round trip, so at least one frame
+ *   has passed and the cleanup phase has run. The object is ALREADY GONE.
+ *
+ * Measured, not reasoned: the review of this lane sent the round-tripped form
+ * and saw it gone immediately, which contradicts the "still in the next
+ * objlist" wording this banner used to carry. An editor that waits for the
+ * reply -- which is every normal client -- should expect the object to be
+ * absent from its very next query.
+ *
+ * It is idempotent by construction: MarkForDestruction returns early if
+ * shouldBeKilled is already set or aliveState is 2, so a client that sends the
+ * same kill twice in one frame gets two `ok`s and the game does the work once.
+ */
+void exec_objkill(const Cmd &c)
+{
+    struct Actor *a = find_live(c.objptr);
+    if (!a) {
+        push_reply("err no such object\n");
+        return;
+    }
+    char *o = (char *)a;
+    for (int s = 0; s < 4; ++s) {
+        if (data_0209f394[s] == (void *)o) {
+            push_reply("err that is a player, not scenery\n");
+            return;
+        }
+    }
+    _ZN9ActorBase18MarkForDestructionEv(o);
+    push_reply("ok\n");
+}
+
+/* ---- skyset ----------------------------------------------------------------
+ *
+ * OK-AFTER-APPLY. The reply is produced here, at the frame drain, AFTER
+ * hal/editor_sky.cpp has done the work -- so an `ok` means the sky the next
+ * frame draws is the one that was asked for, not that a request was accepted.
+ * A refusal carries that file's own plain-words reason rather than a generic
+ * one, because the interesting refusals (no level up, not enough texture
+ * memory left for another sky) are things only it can know.
+ *
+ * The applied id is announced on the game's log as well as the wire. A switch
+ * is a visual change with no other trace, so a run log that does not say when
+ * it happened cannot be read afterwards.
+ */
+void exec_skyset(const Cmd &c)
+{
+    const char *why = "the sky could not be changed";
+    if (!port_editor_sky_set(c.sky, &why)) {
+        char ln[256];
+        std::snprintf(ln, sizeof ln, "err %s\n", why);
+        push_reply(ln);
+        return;
+    }
+    std::fprintf(stderr, "[editor] skyset: now drawing sky %d\n",
+                 port_editor_sky_current());
+    /* The arena figures on EVERY switch, not just on the ones that load. That
+       is what makes "no other actor's textures were harmed" checkable rather
+       than asserted: after each sky has been loaded once, these numbers must
+       stop moving, and a switch that still moved them would be doing
+       allocation it has no business doing. */
+    port_editor_sky_stats();
+    push_reply("ok\n");
+}
+
 void exec_warp(const Cmd &c)
 {
     if (c.level < 0 || c.level > 51) {
@@ -654,6 +862,9 @@ void exec(const Cmd &c)
     case Cmd::OBJMOVE:  exec_objmove(c);  return;
     case Cmd::OBJROT:   exec_objrot(c);   return;
     case Cmd::OBJRESPAWN: exec_objrespawn(c); return;
+    case Cmd::OBJSPAWN: exec_objspawn(c); return;
+    case Cmd::OBJKILL:  exec_objkill(c);  return;
+    case Cmd::SKYSET:   exec_skyset(c);   return;
     case Cmd::WARP:     exec_warp(c);     return;
     case Cmd::ERR:
         /* A refusal the socket thread decided on, emitted HERE so it takes its
@@ -704,6 +915,29 @@ bool parse_u32hex(const std::string &t, unsigned &v)
     errno = 0;
     char *end = 0;
     unsigned long r = std::strtoul(t.c_str(), &end, 16);
+    if (errno || !end || *end) return false;
+    v = (unsigned)r;
+    return true;
+}
+
+/* objspawn's param, the ONE field on this channel that is neither a pointer nor
+   a plain quantity. Base 0, so both `7936` and `0x1f00` are accepted and mean
+   the same word.
+
+   The channel's rule everywhere else is "pointers are hex, everything else is
+   decimal", and this does not break it: a spawn param is a BITFIELD -- the
+   level data prints it as `param 0x%04x` and every actor that reads one masks
+   and shifts it -- so a caller copying a value out of a level dump has a hex
+   string in hand and a caller computing one has a number. Refusing one of those
+   two spellings would be refusing the format the value is normally written in.
+   The refusal text says base 0 rather than leaving it to be discovered. */
+bool parse_u32any(const std::string &t, unsigned &v)
+{
+    if (t.empty() || t.size() > 20) return false;
+    if (t.find('\0') != std::string::npos) return false;
+    errno = 0;
+    char *end = 0;
+    unsigned long r = std::strtoul(t.c_str(), &end, 0);
     if (errno || !end || *end) return false;
     v = (unsigned)r;
     return true;
@@ -827,6 +1061,71 @@ void handle_line(const std::string &line)
         }
         c.kind = Cmd::OBJRESPAWN;
         c.objptr = ptr; c.x = x; c.y = y; c.z = z; c.ry = ry;
+        enqueue(c);
+        return;
+    }
+
+    if (verb == "objspawn") {
+        /* Six arguments, all required. objrespawn's yaw is optional because it
+           has an old actor to inherit a facing from; this verb has nothing to
+           inherit, so leaving one out would mean picking a default silently. */
+        static const char *usage =
+            "err objspawn <actorid> <x> <y> <z> <ry> <param> "
+            "(actorid 0..511 decimal, position in Fix12, ry in 16-bit angle "
+            "units with 65536 = one full turn, param decimal or 0x-prefixed)\n";
+        std::string a, b, d, e, f, g;
+        int id = 0, x = 0, y = 0, z = 0, ry = 0;
+        unsigned param = 0;
+        if (!next_tok(line, i, a) || !next_tok(line, i, b) ||
+            !next_tok(line, i, d) || !next_tok(line, i, e) ||
+            !next_tok(line, i, f) || !next_tok(line, i, g) ||
+            !parse_int(a, id) || !parse_int(b, x) || !parse_int(d, y) ||
+            !parse_int(e, z) || !parse_int(f, ry) || !parse_u32any(g, param)) {
+            enqueue_err(usage);
+            return;
+        }
+        /* Bounded HERE, on the socket thread, so a typo never reaches the frame
+           boundary at all. See MAX_ACTOR_ID for why 511 and not something
+           larger: past it, Actor::Spawn indexes its own table out of range
+           inside matched ROM code. */
+        if (id < 0 || (unsigned)id > MAX_ACTOR_ID) {
+            enqueue_err("err objspawn actorid is 0..511\n");
+            return;
+        }
+        c.kind = Cmd::OBJSPAWN;
+        c.spawn_id = (unsigned)id;
+        c.spawn_param = param;
+        c.x = x; c.y = y; c.z = z; c.ry = ry;
+        enqueue(c);
+        return;
+    }
+
+    if (verb == "objkill") {
+        std::string a;
+        unsigned ptr = 0;
+        if (!next_tok(line, i, a) || !parse_u32hex(a, ptr)) {
+            enqueue_err("err objkill <ptr>\n");
+            return;
+        }
+        c.kind = Cmd::OBJKILL;
+        c.objptr = ptr;
+        enqueue(c);
+        return;
+    }
+
+    if (verb == "skyset") {
+        std::string a;
+        int id = 0;
+        if (!next_tok(line, i, a) || !parse_int(a, id)) {
+            enqueue_err("err skyset <id> (0 for no sky, 1..11 for the game's "
+                        "own skies)\n");
+            return;
+        }
+        /* The range is checked in hal/editor_sky.cpp rather than here, so
+           there is one copy of it and it is next to the table that justifies
+           it (data_02075620 holds eleven handles). */
+        c.kind = Cmd::SKYSET;
+        c.sky = id;
         enqueue(c);
         return;
     }
@@ -990,6 +1289,12 @@ void editor_channel_init(void)
        SM64DS_NO_FOCUS, and for the same reason. */
     g_armed = e && std::atoi(e) != 0;
     if (!g_armed) return;    /* no thread, no LoadLibrary, no socket, no listen */
+    /* ARM THE LIVE-SKY FILE HERE AND NOWHERE ELSE. This is the same test that
+       decides whether a socket exists at all, so hal/editor_sky.cpp's whole
+       surface is behind the one flag: unarmed, that file never runs a line,
+       never allocates, and never writes a word of game state. The battery runs
+       unarmed, which is what proves it. */
+    port_editor_sky_arm();
     std::thread(server_thread).detach();
 }
 
