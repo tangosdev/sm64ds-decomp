@@ -7786,9 +7786,48 @@ int main(void)
                camera-rotate readers do not (mask to bits 0-1). SM64DS_PROBE_INPUT. */
             if (!menu_on)
                 btn |= (unsigned short)(port_input_probe_bits(frame) & 0x3);
-            *(unsigned short *)(data_0209f49c + 0) = btn;
-            *(unsigned short *)(data_0209f49e + 0) =
-                (unsigned short)(btn & (unsigned short)~btn_was);
+            /* ---- THE THIRD BUTTON WRITER, AND THE ONE HIS HANDS FOUND ------
+             *
+             * Run mg16 lane MP4, second field re-test. This is the LEVEL path's
+             * copy of the publish the scene path does further up, and it was
+             * left ungated when that one was gated. It runs AFTER the
+             * per-player Ctrl fan below, so every frame it overwrote slot 0's
+             * button words -- the ones the fan had just filled from the comms
+             * records -- with THIS console's local buttons.
+             *
+             * Both of his surviving symptoms are this one line:
+             *
+             *   PUNCHING ON THE CHILD MADE MARIO PUNCH. Mario is slot 0, the
+             *   matched state code reads its buttons as
+             *   `data_0209f49c + data_020a0e40 * 0x18` with data_020a0e40 set
+             *   to that actor's mPlayerNo, so on the child Mario correctly read
+             *   slot 0 -- and slot 0 was holding the CHILD's own buttons
+             *   because of this store.
+             *
+             *   AND THE HOST'S CROUCH NEVER CROSSED. The fan delivers the
+             *   host's buttons into slot 0 on the child, and this overwrote
+             *   them a few thousand instructions later. The stick crossed the
+             *   whole time, which is why rungP3 was green: the stick fields are
+             *   written by the fan and nothing clobbers them.
+             *
+             * THE ROM'S SIDE WAS CORRECT THROUGHOUT. Every matched reader
+             * indexes by data_020a0e40 * 0x18 -- St_Jump_Main:34,
+             * St_Shell_Main:95, St_Spin_Main:28, func_ov002_020ca940:35 -- and
+             * hal_call_state_fn runs inside Player::Behavior's window where
+             * data_020a0e40 is that actor's own slot. The wrong turn was
+             * entirely on the port's write side, in three places, of which this
+             * was the third.
+             *
+             * Gated exactly like the other two: with a transport up and the
+             * ROM's fan-out driving, the local buttons reach this console's own
+             * slot the ROM's way -- key register, local record, wire, fan-out,
+             * Stage::CheckInput, the per-player fan -- and this store must not
+             * put them anywhere else. */
+            if (!(port::comms_transport() && comms_fanout_on())) {
+                *(unsigned short *)(data_0209f49c + 0) = btn;
+                *(unsigned short *)(data_0209f49e + 0) =
+                    (unsigned short)(btn & (unsigned short)~btn_was);
+            }
             btn_was = btn;
         }
 

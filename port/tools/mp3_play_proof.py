@@ -60,7 +60,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 OUT = os.path.join(ROOT, "runs", "mg16", "out", "MP3", "play")
 
 VS = re.compile(r"^\[vs\] f(\d+) slot(\d) actor=([0-9A-Fa-f]+) no=(\d) char=(\d) "
-                r"pos=\((-?\d+),(-?\d+),(-?\d+)\) touched=(\d+)", re.M)
+                r"pos=\((-?\d+),(-?\d+),(-?\d+)\) touched=(\d+) "
+                r"pad=([0-9a-f]+) ctrl0=([0-9a-f]+) ang=([0-9a-f]+) "
+                r"state=([0-9a-f]+)", re.M)
 SEAT = re.compile(r"^\s*\[a2\] VS: (\d+) players, I am slot (\d+)", re.M)
 LINK = re.compile(r"^\[comms:level\] transport=loopback.*?slot=(\d+) players=(\d+) role=(\d+)",
                   re.M)
@@ -81,7 +83,13 @@ def rows(t, slot):
         out.append(dict(f=int(m.group(1)), actor=m.group(3), no=int(m.group(4)),
                         char=int(m.group(5)), x=int(m.group(6)),
                         y=int(m.group(7)), z=int(m.group(8)),
-                        touched=int(m.group(9))))
+                        touched=int(m.group(9)),
+                        # THE STATE THE PLAYER IS RUNNING, as a DS address --
+                        # the word Player::Behavior's own dispatcher switches
+                        # on. rungP6 asserts on this because a button press is
+                        # a STATE CHANGE and barely moves a body, which is how
+                        # three button seams survived a position-only rung.
+                        state=int(m.group(13), 16)))
     return out
 
 
@@ -724,10 +732,126 @@ def rungSY6(seconds):
     return ok
 
 
+def rungP6(seconds):
+    """BUTTONS CROSS THE WIRE AND FIRE ACTIONS -- the coverage hole his hands found.
+
+    THE EXISTING RUNGS PROVED STICKS AND NEVER BUTTONS, and that is exactly why
+    three button seams survived three green ladders. rungP3 asserts the host's
+    movement reaches the child, and movement rides the STICK fields, which
+    nothing was clobbering. rungP5 asserted a button did not move the host's
+    BODY -- and a punch barely moves a body, so it passed while the bug was
+    live. Position was the wrong observable for a button.
+
+    THE RIGHT ONE IS STATE. A crouch, a backflip and a punch are all STATE
+    CHANGES, and hal/player_fields.h::state_id reads the DS address of the state
+    the player is currently running -- the same word Player::Behavior's own
+    dispatcher switches on, so this asserts on the thing the game branches on
+    rather than on an invented enum.
+
+    TWO DIRECTIONS, because the two failures were different:
+      the host presses -> the HOST's body changes state IN THE CHILD's world
+      the child presses -> the CHILD's body changes state in the HOST's world,
+                           and the host's body does NOT
+    """
+    # 0x400 is a button bit the state machine branches on (St_Crawl_Main:45 and
+    # St_Shell_Main:103 both test data_0209f49c & 0x400). Held, so the state has
+    # time to change and the assertion is not racing a one-frame edge.
+    t1a, t2a, _ = play_session("p6_host_presses", seconds, inj_p="key=0x400")
+    t1b, t2b, _ = play_session("p6_child_presses", seconds, inj_c="key=0x400")
+    ok = isolated("rungP6(host)", t1a)
+    ok &= isolated("rungP6(child)", t1b)
+
+    def states(t, slot):
+        return set(r["state"] for r in rows(t, slot) if r["state"])
+
+    # --- host presses: the child's copy of the HOST must react ---------------
+    host_in_child = states(t2a, 0)
+    host_in_host = states(t1a, 0)
+    ok &= M.verdict(len(host_in_child) > 1,
+                    "rungP6 THE HOST'S BUTTON FIRED AN ACTION IN THE CHILD'S "
+                    "WORLD | the host's body ran %d distinct states in the "
+                    "child's window (one state for the whole session means the "
+                    "buttons never crossed)" % len(host_in_child))
+    ok &= M.verdict(bool(host_in_child & host_in_host),
+                    "rungP6 and they are the SAME states the host ran | %d "
+                    "shared of %d/%d" % (len(host_in_child & host_in_host),
+                                         len(host_in_child), len(host_in_host)))
+
+    # --- child presses: the host's body must NOT react ------------------------
+    #
+    # DIFFERENTIAL, and the first version of this half was not -- it asserted
+    # the host's body ran at most ONE state while only the child pressed, and
+    # went red on a correct build showing three. A body with no input does not
+    # sit in one state: it falls, it lands, it drops into wait. "No input" and
+    # "no state changes" are different claims and only the second one is wrong.
+    #
+    # THAT IS THE THIRD TIME THIS LANE HAS MADE THE SAME MISTAKE (rung 9's first
+    # two versions, rungP2's first version, this). The shape is always the same:
+    # asserting an absolute where the world has its own motion. The control arm
+    # is what separates "the game did this" from "the input did this", and it is
+    # cheap enough that there is no excuse for skipping it.
+    own_in_child = states(t2b, 1)
+    ok &= M.verdict(len(own_in_child) > 1,
+                    "rungP6 THE CHILD'S BUTTON FIRED ITS OWN ACTION | %d "
+                    "distinct states on the child's own body" % len(own_in_child))
+
+    t1c, t2c, _ = play_session("p6_nobody_presses", seconds)
+    ok &= isolated("rungP6(control)", t1c)
+    pressed = states(t2b, 0)      # host's body, child pressing
+    control = states(t2c, 0)      # host's body, nobody pressing
+    extra = pressed - control
+    ok &= M.verdict(not extra,
+                    "rungP6 AND IT DID NOT FIRE THE HOST'S | the host's body "
+                    "ran %d states in the child's world with the child "
+                    "pressing and %d with nobody pressing, and the pressed set "
+                    "adds NOTHING (%s). A state the control does not have is "
+                    "the punch-bleed: one pad driving two characters."
+                    % (len(pressed), len(control),
+                       ",".join("%08x" % x for x in sorted(extra)) or "none"))
+    return ok
+
+
+def rungP7(seconds):
+    """SNAPS RETURN TO ZERO ONCE BUTTONS ROUTE -- the field counter, as a rung.
+
+    Ordered after the owner's first sync session, which reported lerps=103 and
+    SNAPS=123 with a worst error of about 174 units. Those snaps were not a
+    sync defect: every un-delivered crouch and backflip ran the child's copy of
+    Mario into a different life, the two worlds genuinely parted, and the layer
+    did exactly what it should -- yanked the remote body back. THE BUTTON FIX IS
+    THEREFORE THE SNAP FIX, and this rung is what stops that regressing.
+
+    It is SY3's healthy-session invariant extended to the case SY3 could not
+    reach: SY3 runs with no button traffic at all, so it proves zero snaps in a
+    session where nothing could diverge. This one exercises buttons on both
+    sides -- the pattern that produced 123 snaps in the field -- and requires
+    zero anyway.
+    """
+    env = dict(SYNC_ON)
+    t1, t2, _ = play_session("p7_snapfree", seconds, inj_p="key=0x400",
+                             inj_c="key=0x400", extra_env=env)
+    ok = isolated("rungP7", t1)
+    st = sync_stats(t2)
+    ok &= M.verdict(bool(st), "rungP7 the child reported sync counters")
+    if not st:
+        return False
+    ok &= M.verdict(st["applied"] > 0,
+                    "rungP7 the layer was actually running | applied=%d"
+                    % st["applied"])
+    ok &= M.verdict(st["snaps"] == 0,
+                    "rungP7 ZERO SNAPS WITH BUTTONS EXERCISED ON BOTH SIDES | "
+                    "snaps=%d lerps=%d worst error %.1f units. The owner's "
+                    "pre-fix session showed 123 snaps at ~174 units on this "
+                    "same pattern; a snap here means a button is diverging the "
+                    "worlds again." % (st["snaps"], st["lerps"],
+                                       st["worst"] / 4096.0))
+    return ok
+
+
 RUNGS = [("P0", rungP0), ("P1", rungP1), ("P2", rungP2), ("P3", rungP3),
          ("P4", rungP4), ("P5", rungP5), ("SY4", rungSY4), ("SY0", rungSY0), ("SY1", rungSY1),
          ("SY2", rungSY2), ("SY3", rungSY3), ("SY5", rungSY5),
-         ("SY6", rungSY6)]
+         ("SY6", rungSY6), ("P6", rungP6), ("P7", rungP7)]
 
 
 def main(argv):

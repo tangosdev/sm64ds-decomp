@@ -49,8 +49,37 @@ enum : unsigned {
     kStateTimer = 0x6a4,
 
     // mInvincibleTimer, read by src/_ZN6Player6RenderEv.cpp:50-54's blink gate.
-    kInvincibleTimer = 0x6a6,
+    //
+    // 0x6a0, NOT 0x6a6, AND THE WRONG ONE WAS LIVE. include/Player.h:170 puts
+    // the named member at 0x6a0; 0x6a6 is mStateWaitTimer, a different field
+    // entirely. This was not a dormant typo -- hal/player_bridges.cpp's body
+    // draw gate reads it, so the port was culling a player's body on bit 0 of a
+    // STATE TIMER, which ticks constantly. A body that blinks for no reason,
+    // and the shadow path (which has its own correct gates) would have kept
+    // drawing through it: a shadow with no body, from the very fix that was
+    // meant to stop shadows without bodies.
+    kInvincibleTimer = 0x6a0,
+
+    // THE CURRENT STATE POINTER. Player::Behavior reaches the state machine as
+    // `State *st = *(State **)&unk_370;` and dispatches on
+    // `*(unsigned *)((char *)st + 8)` -- the DS address of the state's Main
+    // function (port/unmatched/Player_Behavior.cpp:191-193). That address is a
+    // stable, readable identity for "which state is this player in", which is
+    // exactly what a button-action assertion needs: a punch or a crouch is a
+    // STATE CHANGE, and position barely moves.
+    kStatePtr = 0x370,
+    kStateFnOff = 8,
 };
+
+// The DS address of the state this player is currently running, or 0 if it has
+// none. NOT an invented enum -- it is the same word the port's own dispatcher
+// switches on, so a rung asserting on it is asserting on the thing the game
+// actually branches on.
+inline unsigned state_id(const void *p) {
+    const void *st = *(const void *const *)((const char *)p + kStatePtr);
+    if (!st) return 0u;
+    return *(const unsigned *)((const char *)st + kStateFnOff);
+}
 
 inline int   *pos_x(void *p)     { return (int *)((char *)p + kPosX); }
 inline int   *pos_y(void *p)     { return (int *)((char *)p + kPosY); }
