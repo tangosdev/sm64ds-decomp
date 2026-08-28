@@ -1,0 +1,63 @@
+name: Cancel PR validation
+
+# A manual "cancel button" for the tangos.dev validation queue. The relay already
+# supports POST /api/pr-validate/{id}/cancel (see notes/pr-validation.md), but nothing
+# surfaces a job's ID: the /validator dashboard shows PR numbers only, and the relay
+# token that both list and cancel require lives only as this repo's secret. This
+# workflow is dispatched by hand from the Actions tab, takes a PR number, resolves it
+# to a job ID against the relay's own queue listing, and cancels it -- so a maintainer
+# never needs the token or a job ID directly.
+#
+# workflow_dispatch is only offered to accounts with write access to this repo, which
+# is the same population that can already label a PR attribution-override, so this
+# adds no new privilege surface.
+on:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: "PR number whose queued/running validation job should be cancelled"
+        required: true
+        type: number
+
+permissions: {}
+
+jobs:
+  cancel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Look up and cancel the job for this PR
+        env:
+          RELAY: ${{ secrets.PR_VALIDATE_RELAY }}
+          TOKEN: ${{ secrets.PR_VALIDATE_TOKEN }}
+          PR: ${{ inputs.pr }}
+        run: |
+          set -euo pipefail
+
+          queue=$(curl -sS -H "X-Api-Key: $TOKEN" "$RELAY/api/pr-validate/queue")
+          echo "Queue response:"
+          echo "$queue" | jq '.' 2>/dev/null || echo "$queue"
+
+          # Field names are a best-effort guess (jobId/pr/status, with common
+          # fallbacks) since the queue endpoint's shape has not been observed yet --
+          # the raw dump above is there so a mismatch is diagnosable from the log
+          # instead of failing silently.
+          jobId=$(echo "$queue" | jq -r --argjson pr "$PR" '
+            [.. | objects
+              | select((.pr // .prNumber // .pullRequest // .number) == $pr)
+              | select((.status // .state // "") | ascii_downcase
+                  | (. == "queued" or . == "running" or . == "validating" or . == "received"))
+            ] | first | (.jobId // .id // empty)
+          ')
+
+          if [ -z "$jobId" ] || [ "$jobId" = "null" ]; then
+            echo "::error::No in-flight job found for PR #$PR. Check the queue dump above --" \
+                 "either it already finished/was superseded, or the field names in this" \
+                 "workflow's jq filter don't match the relay's actual response shape."
+            exit 1
+          fi
+
+          echo "Cancelling job $jobId (PR #$PR)"
+          curl -sS -X POST -H "X-Api-Key: $TOKEN" "$RELAY/api/pr-validate/$jobId/cancel"
+          echo
+          echo "Requested cancellation of $jobId. The PR's check will move to GitHub's"
+          echo "'cancelled' conclusion once the relay/worker process it."
