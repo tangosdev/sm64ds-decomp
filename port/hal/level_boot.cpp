@@ -4004,6 +4004,16 @@ static void port_a2_seat_body(int make_stage)
      * driven the same actor and neither would have driven the other.
      * func_0203da9c has been linked and never called for the whole life of this
      * port; this is the call site it was waiting for. */
+    /* THE SESSION COMES FIRST, THEN THE WORLD. Run mg16 lane MP3, field
+       failure. Everything below asks the seam who I am and how many of us
+       there are, and neither answer exists until the link is up:
+       data_020a0f10 is written by src/func_0203ea5c.c:237, which runs only
+       once a round has completed. Seating a world before that read 0 on BOTH
+       consoles, so both believed they were player 0 and the child drove the
+       host's character. On the DS the menu joins before anything loads a
+       level; this is that ordering, restored. No-op with no transport. */
+    port::comms_wait_for_session(600);
+
     const int vs_players = port::vs_player_count();
     /* ---- THE PER-PLAYER INPUT GATE (run mg16, lane MP3) -------------------
      *

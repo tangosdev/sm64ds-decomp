@@ -71,7 +71,19 @@ SELFTEST_FRAMES = "300"
 # so rung 1 compares BOTH and treats a disagreement at either as a red.
 LAYOUT_FRAMES = "296"
 
-PORT_BASE = 51765               # kCommsLoopbackPortBase
+# A PORT BASE OF THIS RUN'S OWN, NOT THE SHIPPED DEFAULT.
+#
+# Run mg16 lane MP3. kCommsLoopbackPortBase is 51765 and every harness in this
+# tree used it, which means two harnesses -- or a harness and the owner playing
+# a two-window session -- bind the SAME loopback ports at the same time. Their
+# instances then find each other on the wire and form one session out of two
+# unrelated runs: a proof measures somebody else's game, and tearing a proof
+# down pulls the parent out from under a session a human is playing.
+#
+# Derived from this process's PID so concurrent runs cannot collide, and kept
+# well clear of 51765 so a proof never lands on the shipped default a human's
+# session is using. The rungs' own +8/+16/... offsets still fit below 65536.
+PORT_BASE = 56000 + (os.getpid() % 400) * 16
 
 
 def sha(path):

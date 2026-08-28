@@ -71,6 +71,14 @@ param(
     # otherwise, because the failure this is guarding against was noise on his
     # desk, not a window.
     [switch]$Audio,
+    # PLAY MODE, FOR A BOUNDED TIME. Run mg16 lane MP3, field-failure lane.
+    # Play mode (no SM64DS_WINDOW_SELFTEST) is what the owner actually runs and
+    # what the world rungs must measure, but it has no frame budget: the game
+    # runs until someone closes it. -PlaySeconds runs a real play session for N
+    # seconds and then closes both, so a headless proof can watch the WORLD in
+    # the same configuration the owner plays in. -ExitWhenConnected only ever
+    # proved the wire, which is how four world defects reached his hands.
+    [int]$PlaySeconds = 0,
     [int]$Frames = 0,             # 0 = play until closed; >0 = a scripted run
     [int]$Level  = 1,
     [int]$Port   = 51765,         # kCommsLoopbackPortBase
@@ -163,6 +171,29 @@ function Start-Instance {
     $psi.EnvironmentVariables["SM64DS_COMMS_PORT"]  = "$Port"
     $psi.EnvironmentVariables["SM64DS_COMMS_FANOUT"]= "1"
     $psi.EnvironmentVariables["SM64DS_COMMS_REPORT"]= "1"
+    # THE WORLD SEAT, folded in from the coordinator's field-test patch.
+    #
+    # This script wired the two instances to each other and never told either
+    # one to BOOT A TWO-PLAYER WORLD, so both came up single-player and the
+    # only thing the session could be shown to do was exchange blocks. The
+    # coordinator added this by hand to get a second body on screen at all,
+    # which is what surfaced four world defects the ladder could not see.
+    #
+    # SM64DS_VS_PLAYERS is a proof knob (hal/comms_conductor.cpp's
+    # vs_player_count), not the shipping path: with no transport installed the
+    # count is 1 and nothing changes. It is set here because a two-window run
+    # is by definition a two-player run, and the alternative -- remembering to
+    # pass it -- is what a script is for.
+    $psi.EnvironmentVariables["SM64DS_VS_PLAYERS"] = "2"
+    $psi.EnvironmentVariables["SM64DS_VS_PROBE"]   = "1"
+    # PER-INSTANCE SCRIPTED INPUT, for the play-mode world rungs. In play mode
+    # nothing drives the characters -- the selftest's automatic walk is not
+    # running and SM64DS_PAD_TEST is a selftest-gated knob -- so a headless
+    # proof needs a way to press a direction on ONE window and watch the other.
+    # MP3_INJECT_P1/P2 name the instance so a rung can drive exactly one side,
+    # which is what input-isolation and one-way-link rungs are made of.
+    $inj = if ($Tag -eq "P1") { $env:MP3_INJECT_P1 } else { $env:MP3_INJECT_P2 }
+    if ($inj) { $psi.EnvironmentVariables["SM64DS_COMMS_INJECT"] = $inj }
     $psi.EnvironmentVariables["SM64DS_NO_DIALOG"]   = "1"
     $psi.EnvironmentVariables["TEMP"]               = (Join-Path $d "tmp")
     $psi.EnvironmentVariables["TMP"]                = (Join-Path $d "tmp")
@@ -196,7 +227,8 @@ function Start-Instance {
               [System.IO.FileShare]::Read)
     $copy = $p.StandardError.BaseStream.CopyToAsync($fs)
     return [pscustomobject]@{ Proc = $p; Log = $log; Tag = $Tag;
-                             Stream = $fs; Copy = $copy }
+                             Stream = $fs; Copy = $copy;
+                             OwnPid = $p.Id; OwnExe = $exe }
 }
 
 # Finish the stderr pump and close the file, so Read-Log below sees everything
@@ -279,6 +311,37 @@ while ((Get-Date) -lt $deadline) {
     Start-Sleep -Milliseconds 500
 }
 
+# ===========================================================================
+# NEVER KILL A PROCESS THIS SCRIPT DID NOT START.
+#
+# Run mg16 lane MP3, after this harness twice ended a game instance the owner
+# was LIVE-DRIVING in another session on the same machine. Another
+# walk_window.exe on this desktop is HIS GAME until proven otherwise, and a
+# proof harness has no business ending one.
+#
+# Every kill below already targeted a .NET Process object this script started
+# rather than an image name -- there is no taskkill and no Get-Process here,
+# and there never was. That was not enough to make the rule visible, so it is
+# enforced rather than assumed: Stop-Mine refuses anything whose PID is not the
+# one we recorded at spawn AND whose image is not the exact exe we launched.
+# A handle we hold cannot have its PID recycled underneath us, so the pair is
+# a complete identity check.
+function Stop-Mine($h) {
+    if ($h.Proc.HasExited) { return }
+    $ok = $false
+    try {
+        $ok = ($h.Proc.Id -eq $h.OwnPid) -and
+              ($h.Proc.MainModule.FileName -eq $h.OwnExe)
+    } catch { $ok = ($h.Proc.Id -eq $h.OwnPid) }
+    if (-not $ok) {
+        Write-Host ("  REFUSING to kill pid {0}: it is not the process this " +
+                    "script started ({1}). Another session's game is not " +
+                    "ours to close." -f $h.Proc.Id, $h.OwnPid)
+        return
+    }
+    $h.Proc.Kill()
+}
+
 # THESE KILLS NOW REACH THE GAME. Run mg16 lane MP3, review fix 1: while this
 # script launched through a cmd.exe shim, $h.Proc WAS THE SHIM, so Kill() ended
 # cmd and left walk_window running -- orphaned, still holding its UDP port and
@@ -287,13 +350,17 @@ while ((Get-Date) -lt $deadline) {
 # teardown below does what it has always said it does.
 if ($connected -and $ExitWhenConnected) {
     Write-Host "MP2 TWO-WINDOW: join confirmed, closing both (-ExitWhenConnected)"
-    foreach ($h in @($p1,$p2)) { if (-not $h.Proc.HasExited) { $h.Proc.Kill() } }
+    foreach ($h in @($p1,$p2)) { Stop-Mine $h }
+} elseif ($PlaySeconds -gt 0) {
+    Write-Host ("MP2 TWO-WINDOW: play session, closing both after {0}s" -f $PlaySeconds)
+    Start-Sleep -Seconds $PlaySeconds
+    foreach ($h in @($p1,$p2)) { Stop-Mine $h }
 } elseif ($Frames -gt 0) {
     foreach ($h in @($p1,$p2)) { $h.Proc.WaitForExit(900000) | Out-Null }
 } elseif (-not $connected) {
     # Only tear down what we started, and only when the point of the run (the
     # join) did not happen. A play session is the human's to close.
-    foreach ($h in @($p1,$p2)) { if (-not $h.Proc.HasExited) { $h.Proc.Kill() } }
+    foreach ($h in @($p1,$p2)) { Stop-Mine $h }
 }
 
 foreach ($h in @($p1,$p2)) { Close-Log $h }

@@ -5965,7 +5965,35 @@ int main(void)
            0 -- position, rotation, area and entrance type all the level's
            own, and Player::InitResources already run through the spawn
            spine's init Process. */
-        player = data_0209f394[0];
+        /* run mg16 lane MP3, field failure: THE LOCAL PLAYER IS NOT ALWAYS
+           SLOT 0. This took data_0209f394[0] unconditionally, which is right on
+           a console that is player 1 and wrong on every other one. On the child
+           it made the harness's whole notion of "me" -- the camera target, the
+           body the walk states drive, the actor every debug readout follows --
+           point at the HOST's character. That is the owner's "P2 shows me as
+           Mario when I should be Luigi", and it is a different bug from the pad
+           clobber that shared the symptom.
+
+           data_0209f250 is the ROM's own "which player am I", seated from
+           func_0203da9c() (my comms slot). Falls back to slot 0 when the slot
+           is out of range or its actor did not spawn, because a harness that
+           refuses to boot is worse than one that boots as player 0 and says
+           so. */
+        {
+            int me = (int)data_0209f250;
+            if (me < 0 || me >= 4 || !data_0209f394[me]) {
+                if (me != 0)
+                    fprintf(stderr,
+                            "[vs] local player index %d has no actor; the "
+                            "harness is falling back to slot 0\n", me);
+                me = 0;
+            }
+            player = data_0209f394[me];
+            if (me != 0)
+                fprintf(stderr,
+                        "[vs] this window is player %d; the camera and the "
+                        "walk states follow data_0209f394[%d]\n", me, me);
+        }
         if (!player) {
             fprintf(stderr, "the entrance spawned no player\n");
             return 3;
@@ -7335,9 +7363,46 @@ int main(void)
                into itself. Stashing the source value is what makes the
                ordering a fact rather than a comment. */
             port_raw_pad_stash(raw);
-            *(unsigned short *)((char *)data_020a0e58 + 0) = raw;
-            *(unsigned short *)((char *)data_020a0e58 + 2) =
-                (unsigned short)(raw & (unsigned short)~raw_prev);
+            /* THE ROM'S FAN-OUT OWNS PadData[4] ONCE A SESSION IS UP, and this
+               line must get out of its way. Run mg16 lane MP3, field failure.
+
+               These two stores put the LOCAL pad into slot 0 of the mirror,
+               every frame, immediately before Stage::CheckInput. That is right
+               for a single-player port -- the local player IS slot 0 -- and it
+               is two separate bugs in a session:
+
+                 ON THE CHILD the local player is slot 1, so the local pad drove
+                 the HOST'S character. That is the owner's "from P2 I can move
+                 both Mario and Luigi".
+                 ON BOTH SIDES it CLOBBERED what func_0203bc7c had just fanned
+                 out into slot 0 from the comms records -- the other console's
+                 real input -- so the remote player's presses were overwritten
+                 by the local pad before any reader saw them. That is his
+                 "nothing I do on P1 shows up on P2".
+
+               The local pad is NOT lost by skipping this: it reaches the mirror
+               the ROM's own way, and that is the entire point of the lane.
+               port::comms_publish_pad puts it in the DS key register,
+               src/func_0203df40.c reads the register into the local comms
+               record, src/func_0203ea5c.c stages that onto the wire, and
+               src/func_0203bc7c.c fans all four records back out into
+               data_020a0e58 -- into THIS console's own slot, whichever that is.
+               A frame later, which is what lockstep means.
+
+               port/slice_comms.txt predicted this exact hand-off and named it:
+               "the port's own input path still writes TouchInfo and PadData
+               directly, and replacing that is MP2's change because that is the
+               one with a regression surface." It was never done, and the
+               regression surface is where the owner found it.
+
+               GATED, so single player is untouched: with no transport, or with
+               the fan-out off, nothing writes those records and these stores
+               stay exactly what they were. */
+            if (!(port::comms_transport() && comms_fanout_on())) {
+                *(unsigned short *)((char *)data_020a0e58 + 0) = raw;
+                *(unsigned short *)((char *)data_020a0e58 + 2) =
+                    (unsigned short)(raw & (unsigned short)~raw_prev);
+            }
             raw_prev = raw;
             /* the angle FROM Mario TO the camera (what the name
                GetAngleToCamera means): the D-pad table's "up" entry is
