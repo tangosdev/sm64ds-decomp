@@ -176,7 +176,8 @@ struct Sub {
     u32 len;
     char shown[PATH_CAP];
     int packed;         /* the source file carried the LZ77 magic */
-    int said;
+    int said;           /* the "serves" line, once per file */
+    int said_oom;
 };
 
 int g_state;            /* 0 not tried, 1 on, -1 off, absent or refused */
@@ -419,6 +420,7 @@ int load_sub(const char *leaf, const char *stage, int kind, Sub *s,
     snprintf(s->shown, sizeof s->shown, "%s", full);
     s->kind = kind;
     s->said = 0;
+    s->said_oom = 0;
     return 1;
 }
 
@@ -645,7 +647,13 @@ u32 stage_geom_apply(unsigned fileID, u8 **data, u32 size)
            image has to survive for the next load of the same level. */
         copy = (u8 *)malloc(s->len);
         if (!copy) {
-            if (!s->said++)
+            /* Its own flag, not `said`: a run that hit this and then recovered
+               must still be able to say when the file DID go in. This is the
+               one place a folder that validated whole can serve only part of
+               itself, and it is unreachable short of the process running out
+               of memory over a few kilobytes -- everything a folder can get
+               wrong was already read and checked at latch. */
+            if (!s->said_oom++)
                 fprintf(stderr, "[mods] StageGeom: there was not enough memory "
                                 "to put %s in place, so %s keeps its stock "
                                 "file\n", s->shown, path);
