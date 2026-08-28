@@ -2020,7 +2020,13 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3);
    the VS menu offers and what makes two players tellable apart in a capture. */
 static unsigned char g_vs_character[4] = {0, 1, 2, 3};
 extern "C" void port_vs_set_character(int slot, int ch) {
-    if (slot >= 0 && slot < 4) g_vs_character[slot] = (unsigned char)(ch & 3);
+    /* & 7, not & 3: src/_ZN6Player13InitResourcesEv.cpp:76 reads the
+       character as `b & 7`, so the field is THREE bits. Masking to two
+       costs nothing for the four characters the game ships and would
+       silently fold any value above 3 onto a different character, which
+       is exactly the kind of narrowing that survives review because the
+       test data never exercises it. Match the ROM's width. */
+    if (slot >= 0 && slot < 4) g_vs_character[slot] = (unsigned char)(ch & 7);
 }
 extern "C" int port_vs_character(int slot) {
     return (slot >= 0 && slot < 4) ? (int)g_vs_character[slot] : 0;
@@ -4037,7 +4043,7 @@ static void port_a2_seat_body(int make_stage)
     /* THE SESSION COMES FIRST, THEN THE WORLD. Run mg16 lane MP3, field
        failure. Everything below asks the seam who I am and how many of us
        there are, and neither answer exists until the link is up:
-       data_020a0f10 is written by src/func_0203ea5c.c:237, which runs only
+       data_020a0f10 is written by src/func_0203ea5c.c:252, which runs only
        once a round has completed. Seating a world before that read 0 on BOTH
        consoles, so both believed they were player 0 and the child drove the
        host's character. On the DS the menu joins before anything loads a

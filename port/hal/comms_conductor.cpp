@@ -895,7 +895,7 @@ void touch_ring_advance() {
 // data_0209f250 from func_0203da9c(), which is `return data_020a0f10` -- MY
 // COMMS SLOT -- and that is the ROM's own spelling, taken from
 // Stage::InitResources:154. But data_020a0f10 is written by
-// src/func_0203ea5c.c:237, which runs only once a ROUND HAS COMPLETED. The port
+// src/func_0203ea5c.c:252, which runs only once a ROUND HAS COMPLETED. The port
 // boots its level immediately at startup, and a UDP join takes a few frames, so
 // the seat read the pre-join default of 0 on BOTH instances. Every downstream
 // question -- which character is mine, which Ctrl slot do I read, who does the
@@ -950,13 +950,13 @@ bool comms_wait_for_session(int frames) {
         if (st == kCommsParentConnected || st == kCommsChildConnected) {
             // AND SEAT THE SLOT, or the wait accomplishes nothing. Bringing the
             // link up is not the same as knowing my slot: data_020a0f10 is
-            // written by src/func_0203ea5c.c:237, and the conductor has not run
+            // written by src/func_0203ea5c.c:252, and the conductor has not run
             // a round yet. Measured -- the first version of this waited
             // successfully ("session up after 1 turns: link=4 slot=1") and the
             // very next line still said "I am slot 0", because it had brought
             // the session up and then read a variable nothing had written.
             //
-            // This is the ROM's own line from :237, run where the menu would
+            // This is the ROM's own line from :252, run where the menu would
             // have run it, off the same seam face: func_02040704 is the slot
             // accessor and its hosted parameter is named `ignored` precisely
             // because the ROM passes it a masked flag it does not use.

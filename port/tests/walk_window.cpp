@@ -7374,11 +7374,17 @@ int main(void)
                  ON THE CHILD the local player is slot 1, so the local pad drove
                  the HOST'S character. That is the owner's "from P2 I can move
                  both Mario and Luigi".
-                 ON BOTH SIDES it CLOBBERED what func_0203bc7c had just fanned
-                 out into slot 0 from the comms records -- the other console's
-                 real input -- so the remote player's presses were overwritten
-                 by the local pad before any reader saw them. That is his
-                 "nothing I do on P1 shows up on P2".
+                 AND ON THE CHILD IT ALSO CLOBBERED what func_0203bc7c had just
+                 fanned out into slot 0 -- which on a child is the HOST'S record
+                 -- so the other console's presses were overwritten by the local
+                 pad before any reader saw them. That is his "nothing I do on P1
+                 shows up on P2".
+                 ON THE PARENT the same store is not destructive, and saying so
+                 is the point: slot 0 IS the parent's own record, so the write
+                 duplicates the value the fan-out would have delivered a frame
+                 later. Both defects above are the CHILD's, and an earlier
+                 version of this comment said "on both sides", which would send
+                 the next reader looking for a host-side bug that is not there.
 
                The local pad is NOT lost by skipping this: it reaches the mirror
                the ROM's own way, and that is the entire point of the lane.

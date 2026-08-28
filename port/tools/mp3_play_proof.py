@@ -152,6 +152,34 @@ PLAYERS = re.compile(r"^\[comms:level\] transport=loopback.*?players=(\d+)", re.
 LIVE = re.compile(r"^\[loopback:level\].*?live=0x([0-9a-fA-F]+)", re.M)
 
 
+def isolated(tag, t1, script=""):
+    """Assert THIS rung's own cycle was ours alone. Every rung calls it.
+
+    rungP0 proves isolation for the cycle rungP0 ran. It says nothing about the
+    cycle rungP1 ran, or P3's, because each rung starts its own pair of
+    instances -- so a stranger joining midway through any LATER cycle was
+    invisible, and that cycle's numbers would look perfectly reasonable. The
+    data was already sitting in every rung's playlog; it just was not read.
+
+    Cheap enough to run everywhere: two regex sweeps of the parent's log.
+    """
+    counts = [int(x) for x in PLAYERS.findall(t1)]
+    masks = [int(x, 16) for x in LIVE.findall(t1)]
+    worst = max(counts) if counts else 0
+    worstmask = max(masks) if masks else 0
+    ok = bool(counts) and worst == 2 and worstmask <= 0x3
+    if script:
+        ports = [int(m[2]) for m in PIDLINE.findall(script)]
+        if ports and min(ports) < 56000:
+            ok = False
+    return M.verdict(ok,
+                     "%s THIS CYCLE'S WIRE WAS OURS ALONE | max players=%d, "
+                     "widest live mask 0x%x across %d reports%s"
+                     % (tag, worst, worstmask, len(counts),
+                        "" if ok else "  -- A STRANGER WAS ON THE WIRE, so "
+                        "every other verdict in this rung is meaningless"))
+
+
 def rungP0(seconds):
     t1, t2, script = play_session("pP0_isolation", seconds)
     ok = True
@@ -210,6 +238,8 @@ def rungP1(seconds):
                     "P2=%d bytes" % (len(t1), len(t2)))
     if not (t1 and t2):
         return False
+
+    ok &= isolated("rungP1", t1)
 
     s1, s2 = SEAT.search(t1), SEAT.search(t2)
     l1, l2 = LINK.search(t1), LINK.search(t2)
@@ -274,6 +304,9 @@ def rungP2(seconds):
                     "rungP2 the child wrote a playlog in both arms")
     if not (t2a and t2b):
         return False
+    ok &= isolated("rungP2(pressed)", t1a)
+    ok &= isolated("rungP2(idle)", t1b)
+
     own_a, host_a = rows(t2a, 1), rows(t2a, 0)
     own_b, host_b = rows(t2b, 1), rows(t2b, 0)
     ok &= M.verdict(bool(own_a) and bool(host_a) and bool(own_b) and bool(host_b),
@@ -311,6 +344,8 @@ def rungP3(seconds):
     ok = True
     if not t2:
         return M.verdict(False, "rungP3 the child wrote no playlog")
+    ok &= isolated("rungP3", t1)
+
     host_in_child = rows(t2, 0)
     ok &= M.verdict(bool(host_in_child),
                     "rungP3 the child has a body for the host | rows=%d"
@@ -337,6 +372,8 @@ def rungP4(seconds):
     ok = True
     if not (t1 and t2):
         return M.verdict(False, "rungP4 both instances did not write playlogs")
+    ok &= isolated("rungP4", t1)
+
     out = []
     for slot in (0, 1):
         r1, r2 = rows(t1, slot), rows(t2, slot)
