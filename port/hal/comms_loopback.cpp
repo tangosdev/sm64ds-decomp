@@ -615,6 +615,13 @@ void drain() {
             }
         }
         ++g_recvd;
+        // The pump's radio IRQ: a session datagram landed, so a connected
+        // wait turn may end now instead of at its VBlank. Counted for EVERY
+        // accepted lockstep packet (blocks, joins, byes alike -- each one is
+        // proof the peer's radio is alive); aux deliberately does not count,
+        // because sync chatter must not hold the ROM's wait bound open. See
+        // conductor_pump's banner in hal/comms_conductor.cpp.
+        comms_note_wire_activity();
         if (g_role == kRoleParent) on_parent_packet(p, from);
         else                       on_child_packet(p, from);
     }

@@ -1081,43 +1081,104 @@ namespace {
 
 ThreadPump g_prev_pump = nullptr;
 
-// ONE TURN PER SLEEP, AND THE FIRST VERSION OF THIS FUNCTION HUNG THE GAME.
+// ONE VBLANK PER SILENT CONNECTED TURN, and the field failure that ordered it
+// (owner live, 2026-08-28 13:03; runs/mg16/out/MP2/two_windows, the
+// play_20260828_1303* pair; reproduced headless by
+// port/tools/mp_stall_proof.py).
 //
-// It returned true -- "keep pumping" -- which is the obvious thing for a pump
-// to do and is wrong here for a reason worth writing down. OS_SleepThread's
-// loop (hal/os_thread.cpp:88-101) ends when the queue word clears, when the
-// pump says stop, or when the pump limit is reached. The queue word is
-// data_0209d4fc and the only thing that clears it is OS_WakeupThread from
-// IRQ::VBlankHandler, which is not running on this path -- so a pump that
-// never says stop burns the WHOLE limit, 600 turns, on EVERY sleep. The ROM's
-// wait loop takes up to 1200 turns and sleeps once per turn, so the honest
-// worst case was 720,000 pump calls inside a single game frame. Measured, not
-// reasoned about: the parent sent exactly ONE datagram and then stopped
-// reporting, while the child knocked 160 times and resent 158 of them.
+// THE ROM'S WAIT BOUND IS A WALL-CLOCK PROMISE AND THIS PUMP OWNS THE CLOCK.
+// src/func_0203ea5c.c bounds its wait at 0x4B0 turns (0x12C once
+// data_020a0ef0 is set, which nothing on the port's session path ever sets),
+// and on the DS a turn is one OS_SleepThread on the per-VBlank queue -- one
+// sixtieth of a second -- so the bound means TWENTY SECONDS of a silent peer
+// before the ROM gives up and drops to solo (:487). The previous body of
+// this function paced a turn at ::Sleep(1): the same 1200 turns burned in
+// about two wall seconds, so the port had quietly rewritten the ROM's
+// twenty-second promise as two.
 //
-// os_thread.h's own header predicts the good case ("PUMP INSTALLED -> a real
-// wait, one host frame per turn, bounded") and it is right for a pump that
-// advances the thing being waited on. This one is not: the thing being waited
-// on is ANOTHER PROCESS, and no amount of raising VBlank edges in this one
-// makes the peer's datagram arrive sooner. What makes it arrive is wall-clock
-// time and a recv, which is exactly the two lines below.
+// WHAT THAT DID IN THE FIELD: the owner grabbed a window by its title bar.
+// The Win32 modal move loop stops that instance's frame loop -- the grabbed
+// side is PAUSED, not gone, and a 2-4 second drag is ordinary. The peer's
+// playlog carries the whole failure in three lines: exchanges 161 -> 1361
+// (+0x4B0 exactly, the bound burned inside one frame), link=0 connected=no
+// role=0, "[comms:loopback] closed after 83 rounds". Bound expiry is
+// permanent -- the re-seat above only fires while the transport is still
+// connected, and the dispatcher's tail (src/func_0203df40.c) has already
+// closed it -- so every title-bar hold longer than the compressed bound
+// killed the session for good, three seconds into a clean run.
 //
-// So: service the transport, yield a millisecond, and give the turn back to
-// the ROM's own loop -- whose bound (0x4B0 before the session is up, 0x12C
-// after) is then the thing that governs the wait, which is what MP2's
-// ::Sleep(1) achieved and what the ROM intends. The difference from MP2 is
-// that poll() is now genuinely called, once per turn of the ROM's own wait,
-// which is the sentence comms_seam.h has always made.
+// THE FIX IS THE DS'S OWN SEMANTICS, in both directions:
+//
+//   A SILENT CONNECTED TURN IS A VBLANK. While the transport reports a live
+//   session (link 3 or 4), a wait turn that saw no session datagram ends
+//   only when kVBlankMs have passed: Sleep(1), keep pumping, stop at the
+//   VBlank boundary. The ROM's bound then means what it means on the DS --
+//   about twenty seconds of genuine silence -- and a peer paused for a
+//   window drag comes back long before it fires.
+//
+//   A DATAGRAM IS THE RADIO IRQ. On the DS the wireless thread wakes the
+//   sleeper through OS_WakeupThread the moment a frame arrives; it does not
+//   wait out the VBlank. comms_wire_activity() is that wake -- the carrier
+//   bumps it for every accepted session datagram -- so the turn ends the
+//   moment the wire moves and the ROM re-asks its exchange() at once. That
+//   is what keeps the happy path at the old latency: a round still
+//   completes within a millisecond of the peer's block arriving.
+//
+//   AN UNCONNECTED TURN KEEPS THE OLD ONE-MILLISECOND PACE, deliberately,
+//   and it is the lesser fidelity, written down so nobody reads it as an
+//   oversight. On the DS every turn is a VBlank, so a child would knock for
+//   its whole bound (twenty seconds) and a parent whose last peer said Bye
+//   would spin the same before falling solo. The port has always run those
+//   phases at millisecond turns -- rung 7's child gives up in about two
+//   seconds -- and keeping them fast is what makes a genuine peer QUIT
+//   (Bye -> live mask drops -> state leaves connected) resolve to solo in a
+//   couple of seconds instead of hanging a playable window for twenty. The
+//   field failure lived entirely in the CONNECTED wait, and the fix stays
+//   inside it.
+//
+// THE FIRST VERSION OF THIS FUNCTION HUNG THE GAME by returning true --
+// "keep pumping" -- unconditionally: nothing on this path clears the sleep
+// queue word, so every sleep burned the whole 600-turn pump limit and the
+// ROM's 1200-turn wait became 720,000 pump calls inside one frame. The
+// bounded keep-pumping below is not that: it says true for at most a VBlank
+// of milliseconds (~17 turns of the 600), then stops. The trap note at
+// comms_seam.h HOLE 1 is about the unconditional form and still stands.
 //
 // A PREVIOUSLY INSTALLED PUMP KEEPS ITS VOTE. Nothing in the shipped binaries
 // installs one today (only tests/mp_sleepwake.cpp does), but if something ever
 // does it knows how many turns it needs and this must not overrule it.
+enum : unsigned { kVBlankMs = 16 };   // the DS frame, floor(1000 / 59.83)
+unsigned      g_turn_start_ms = 0;
+uint64_t      g_turn_act      = 0;
+bool          g_turn_open     = false;
+
 bool conductor_pump(unsigned spin) {
-    if (const CommsTransport *t = comms_transport())
+    const CommsTransport *t = comms_transport();
+    if (t)
         t->poll();                       // THE CONTRACT'S OWN SENTENCE, honoured
     if (g_prev_pump) return g_prev_pump(spin);
-    ::Sleep(1);                          // wall time, so the peer can answer
-    return false;                        // one turn; the ROM's bound governs
+
+    const int st = t ? t->state() : kCommsIdle;
+    if (st == kCommsParentConnected || st == kCommsChildConnected) {
+        const unsigned now = (unsigned)GetTickCount();
+        if (!g_turn_open) {
+            g_turn_open     = true;
+            g_turn_start_ms = now;
+            g_turn_act      = comms_wire_activity();
+        }
+        if (comms_wire_activity() != g_turn_act) {
+            g_turn_open = false;         // the radio IRQ: a datagram landed
+            return false;
+        }
+        if ((unsigned)(now - g_turn_start_ms) < kVBlankMs) {
+            ::Sleep(1);                  // wall time, so the peer can answer
+            return true;                 // the VBlank has not come yet
+        }
+        g_turn_open = false;
+        return false;                    // one silent VBlank; the bound ticks
+    }
+    ::Sleep(1);                          // unconnected: the old pace, see above
+    return false;
 }
 
 }  // namespace
