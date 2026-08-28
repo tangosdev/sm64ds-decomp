@@ -893,6 +893,75 @@ static void port_level_latch(void)
     data_02092110 = -1;
 }
 
+/* THE SAME LATCH, FOR A BOOT RATHER THAN A CHANGE (run lvled, title entry).
+   hal/title_entry.cpp needs exactly the four lines above and none of the rest
+   of port_level_change_apply: coming off the title there is no level to tear
+   down, no Stage to re-seat and no host state to reset, because no level has
+   run yet in this process. What there IS is a request -- StartFile's own
+   LoadLevelNoReturn(1, 0, 1, 0) wrote data_02092110 and data_0209f268 before
+   the title tore itself down -- and the direct boot in tests/walk_window.cpp
+   would otherwise ignore it and resolve the level from SM64DS_LEVEL instead.
+
+   IT IS EXPORTED RATHER THAN COPIED so there is one latch in the port and not
+   two. A second copy is how data_0209f2f8 and data_0209f264 drift apart.
+
+   Returns the level it latched, or -1 when nothing was pending -- which the
+   caller must treat as a refusal, not as level -1.
+
+   WHAT THIS DOES NOT DO, and the caller must not assume it does: the direct
+   boot re-seats data_0209f264[0] and data_0209f220[0] from SM64DS_ENTRANCE and
+   SM64DS_STAR_FILTER itself (hal/level_boot.cpp, the block above the star
+   filter comment), so on the boot path those two writes are overwritten a
+   moment later. They are made anyway because this is the ROM's latch and a
+   partial copy of it is worse than a redundant one -- and on the title route
+   the two agree by value in any case: StartFile asks for entrance 0 and star 1,
+   which are precisely the boot's own defaults. The one write that survives and
+   matters is data_0209f2f8, which is what port_level_set_target is handed. */
+extern "C" int port_level_entry_latch(void)
+{
+    if (data_02092110 < 0)
+        return -1;
+
+    /* ---- WHAT A SCENE LEAVES BEHIND THAT A LEVEL CANNOT INHERIT -----------
+     *
+     * Three of the four things port_level_change_apply does before it latches
+     * are owed here too, for exactly the reasons that function gives, and they
+     * are owed because the TITLE IS A REAL SCENE: it loaded models, it filled
+     * the shared-model array and it started sounds, the same way a level does.
+     * Measured rather than assumed -- without the two model lines the level
+     * boot dies in the ROM's own panic, three frames into the castle grounds:
+     *
+     *     FATAL: game Crash() reached
+     *       Heap::Crash <- Model::LoadTexAndPal <- Model::AddToCommonModelData
+     *       Arr <- Model::LoadFile
+     *
+     * which is the failure the comment above port_model_vram_reset in
+     * port_level_change_apply predicts in so many words: "Without it the second
+     * boot exhausts the arena and Model::GetVramOffset reaches the game's
+     * Crash()." The title's textures were still holding the VRAM cursors.
+     *
+     * WHAT IS *NOT* DONE HERE, and why: port_level_teardown. There is no level
+     * to tear down -- this is the first one this process will boot -- and the
+     * title has already destroyed itself through the ROM's own path (cleanup 1,
+     * pending-destroy 1 in the scene census). Marking a torn-down cast for
+     * destruction a second time is how a double free is written. */
+    {
+        const int loops_before = port_course_loop_live();
+        sd_sound_level_reap();
+        const int loops_after = port_course_loop_live();
+        if (loops_before || loops_after)
+            std::fprintf(stderr, "  [title-entry] looping-sound reap: %d live "
+                         "-> %d\n", loops_before, loops_after);
+    }
+    CleanCommonModelDataArr();
+    port_model_vram_reset();
+    port_level_reset_host();
+
+    port_level_latch();
+    port_level_set_target((int)data_0209f2f8);
+    return (int)data_0209f2f8;
+}
+
 /* ---- WHAT A DECLINE OWES THE PLAYER ---------------------------------------
    Consuming the request is not the whole of a decline. Whatever asked for the
    level had already begun handing the player over, and on the ROM it never has

@@ -692,6 +692,18 @@ void port_scene_tick(int frame, int tick_game);
 int port_scene_finish(int frames_run);
 int port_scene_frames_wanted(void);
 const void *port_scene_framebuffer(void);
+/* THE TITLE-TO-ADVENTURE BRIDGE (hal/title_entry.cpp), behind
+   SM64DS_TITLE_ENTRY=1 and only on SM64DS_SCENE=1. Picking a save file drives
+   the ROM's own StartFile, which stages a level and asks for scene 3 -- the
+   Stage, which lives on the LEVEL path and which the scene spawner therefore
+   declines honestly. These four let the scene run stop on that handoff and
+   this file fall through to its own level boot instead of returning. With the
+   flag unset every one of them answers 0 without reading anything else. */
+int port_title_entry_armed(void);
+int port_title_entry_should_stop(void);
+int port_title_entry_commit(void);
+int port_title_entry_taken(void);
+int port_title_entry_run(void);
 /* and the registry question that boot refuses on, asked ahead of time: the
    debug menu's minigame row uses it to decide which of the ROM's thirty
    minigame ids can be selected (hal/scene_boot.cpp). */
@@ -5563,6 +5575,17 @@ static int scene_window_run(void)
         fflush(stdout);
         if (budget && frame >= budget)
             break;
+        /* THE TITLE HANDOFF (hal/title_entry.cpp), tested here for the same
+           reason the headless bridge tests it after its tick: the title writes
+           the request from inside port_actor_tick, so the words are only
+           settled once the frame has run. Answers 0 unless SM64DS_TITLE_ENTRY
+           is set on a title run, so this costs an unarmed session one compare
+           of a cached int. */
+        if (port_title_entry_should_stop()) {
+            fprintf(stderr, "[title-entry] a save file was picked; leaving the "
+                            "title after %d frame(s)\n", frame);
+            break;
+        }
         /* THE PACE, off the scene's own divider and not off a constant. A
            minigame writes data_0208ee44 = 1 in its InitResources and therefore
            runs at 60; the 33.3ms this block used to hardcode is the 3D level
@@ -5578,7 +5601,12 @@ static int scene_window_run(void)
     click_test_finish();
 #endif
     fprintf(stderr, "[scene] window closed after %d frame(s)\n", frame);
-    return port_scene_finish(frame);
+    const int scene_rc = port_scene_finish(frame);
+    /* AFTER the census, so a run that enters the adventure still leaves the
+       title's own slot hits, captures and trap counts behind. Answers 0 and
+       prints nothing unless the bridge is armed AND the handoff completed. */
+    port_title_entry_commit();
+    return scene_rc;
 }
 
 /* PORT_HOST_ABI: the host program entry point (window + ntr bring-up + frame
@@ -5830,8 +5858,27 @@ int main(void)
        with a pump, live input, the debug menu and a present between the ticks.
        The battery names a count on every scene row and DBG1's minigame picker
        names none, so neither of them needed an edit for this. */
-    if (port_scene_env_want() >= 0)
-        return port_scene_want_window() ? scene_window_run() : port_scene_run();
+    /* SM64DS_TITLE_ENTRY=1 (hal/title_entry.cpp) IS THE ONE WAY THIS BRANCH
+       DOES NOT OWN THE REST OF THE PROCESS. Armed, a title run stops on the
+       ROM's own handoff -- a save file was picked, StartFile staged a level
+       and asked for scene 3 -- and falls THROUGH to the level boot below,
+       carrying the request the game itself wrote. Unarmed, and on every scene
+       that is not the title, this is the same two lines it has always been.
+
+       The fall-through is safe here for the reason the block above gives: this
+       is the end of the host bring-up, everything below is the level's own,
+       and a title run that has torn itself down has no Player to lose. */
+    if (port_scene_env_want() >= 0) {
+        const int scene_rc =
+            port_scene_want_window()
+                ? scene_window_run()          /* carries the stop test itself */
+                : (port_title_entry_armed() ? port_title_entry_run()
+                                            : port_scene_run());
+        if (!port_title_entry_taken())
+            return scene_rc;
+        fprintf(stderr, "[title-entry] scene run over; falling through to the "
+                        "level boot in this process\n");
+    }
 
     /* THE GAME'S OWN LEVEL BOOT, now the default: ov009 mounted,
        Stage::LoadClsnAndObjects run against it, and the level's own entrance

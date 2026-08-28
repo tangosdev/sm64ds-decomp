@@ -4086,8 +4086,80 @@ extern "C" void port_scene_registry_install(void);   /* hal/scene_boot.cpp */
    spawn is what becomes the tree root, exactly the way the Stage does on a
    level, through the same no-parent branch in func_0203b438.
    Everything else here is bring-up both modes need, so both take it. */
+/* THE STAGE HALF, lifted out so it can be reached on its own. Called from the
+   body below in its original position on a first call, and on its own when the
+   title-entry bridge asks for a Stage after a scene run already took the seat.
+   Its own guard is in port_stage_create, which refuses to build a second one. */
+static void port_a2_seat_stage(void)
+{
+    /* the scene tree root the spawn spine links under -- the real Stage.
+       Constructing it IS the seating: Stage::Stage runs with data_020a4b6c[0]
+       still null, so func_0203b438 takes its no-parent branch and writes the
+       Stage's own SceneNode into the tree head, which is how the ROM's tree
+       gets its root. port_stage_create asserts that it did. */
+    void *stage = port_stage_create();
+    /* Scene::ResetFadersAndSound OWNS THIS LINE NOW (_ZTV5Stage slot 1,
+       run link60 lane L4): its first statement is `data_0209f5c0 = self`
+       and it runs on every level entry through the init Process. This seat
+       stays because the port can spawn before the first level boot -- the
+       scene registry is installed here too -- and func_02042ffc refuses to
+       spawn anything under a null parent. It is a bootstrap for the window
+       between process start and the first boot, not a per-entry stand-in. */
+    data_0209f5c0[0] = (int)(size_t)stage;
+}
+
+/* ---- THE SEAT RUNS ITS SHARED HALF ONCE PER PROCESS (run lvled) ------------
+ *
+ * Until the title-entry bridge existed, exactly one of the two callers ran, one
+ * time: a level run took port_stage_a2_seat and a scene run took
+ * port_scene_a2_seat, and neither could follow the other. So "once" was a
+ * property of the call sites and nothing here had to hold it.
+ *
+ * SM64DS_TITLE_ENTRY=1 makes a run take BOTH, in order: the title comes up on
+ * the scene path, a save file is picked, and tests/walk_window.cpp falls
+ * through to its own level boot in the same process. That second call used to
+ * abort, and the abort was correct rather than incidental:
+ *
+ *     FATAL: SignPost state 0 Init: the sinit left 004308b0, the ROM's own
+ *     table says 020bba24 -- WRONG BYTES
+ *
+ * port_actor_registry_install's vtable fills carry VERIFY-THEN-REWRITE seats --
+ * port_sign_post_states_seat is the one that fired, and it is not alone -- which
+ * read the DS address a static initialiser left, assert it, and overwrite it
+ * with the host body. Run a second time they find their own host address where
+ * they expect the ROM's and refuse. THAT REFUSAL IS A REAL DRIFT DETECTOR and
+ * hal/actor_classes.inc's wave-10 note is the tree already saying so in print:
+ * "A sibling's fill may only be reused from another row when it is IDEMPOTENT;
+ * one carrying a seat is not." Blunting those guards to allow a second pass
+ * would trade a live check for a convenience.
+ *
+ * So the seat is not made idempotent -- it is made SINGLE. This is a bring-up,
+ * it belongs to the process rather than to the mode, and running it once is
+ * what both call sites already believed they were getting. For every path that
+ * existed before this lane the guard is a no-op: one caller, one call, one run.
+ * ------------------------------------------------------------------------- */
 static void port_a2_seat_body(int make_stage)
 {
+    static int seat_done;
+    static int stage_done;
+
+    if (seat_done) {
+        /* A SECOND CALL, which today only the title-entry bridge can produce.
+           The shared bring-up is already standing; what a level still needs and
+           a scene run did not build is the Stage. */
+        if (make_stage && !stage_done) {
+            stage_done = 1;
+            port_a2_seat_stage();
+            std::printf("[a2] scene root %p (Stage seated after a scene run; "
+                        "the shared bring-up was already done)\n",
+                        port_stage_object());
+        }
+        return;
+    }
+    seat_done = 1;
+    if (make_stage)
+        stage_done = 1;
+
     port_message_archive_seat();
     port_stage_preload_shared_models();
 
@@ -4096,22 +4168,8 @@ static void port_a2_seat_body(int make_stage)
        the registry and the sinits below it. */
     port_level_mounts_install();
 
-    /* the scene tree root the spawn spine links under -- the real Stage.
-       Constructing it IS the seating: Stage::Stage runs with data_020a4b6c[0]
-       still null, so func_0203b438 takes its no-parent branch and writes the
-       Stage's own SceneNode into the tree head, which is how the ROM's tree
-       gets its root. port_stage_create asserts that it did. */
-    if (make_stage) {
-        void *stage = port_stage_create();
-        /* Scene::ResetFadersAndSound OWNS THIS LINE NOW (_ZTV5Stage slot 1,
-           run link60 lane L4): its first statement is `data_0209f5c0 = self`
-           and it runs on every level entry through the init Process. This seat
-           stays because the port can spawn before the first level boot -- the
-           scene registry is installed here too -- and func_02042ffc refuses to
-           spawn anything under a null parent. It is a bootstrap for the window
-           between process start and the first boot, not a per-entry stand-in. */
-        data_0209f5c0[0] = (int)(size_t)stage;
-    }
+    if (make_stage)
+        port_a2_seat_stage();
 
     /* ---- HOW MANY PLAYERS, AND WHICH ONE AM I (run mg16, lane MP3) ---------
      *
