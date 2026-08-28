@@ -779,11 +779,20 @@ void vs_probe(int frame) {
         // this is the one that settles it.
         std::fprintf(stderr,
                      "[vs] f%d slot%d actor=%p no=%d char=%d pos=(%d,%d,%d) "
-                     "touched=%u pad=%04x ctrl0=%08x ang=%04x state=%08x\n",
+                     "touched=%u pad=%04x ctrl0=%08x ang=%04x state=%08x "
+                     "st_timer=%u\n",
                      frame, i, (const void *)a, (int)a[0x6d8],
                      (int)(a[0x6d9] & 3), px, py, pz,
                      other, pad, (unsigned)cheld, (unsigned)(cang & 0xffff),
-                     port::player::state_id(a));
+                     port::player::state_id(a),
+                     /* mp-sync-coopdx item 7: mStateTimer, the 0x384-frame
+                        idle countdown that decides when a character falls
+                        asleep. The owner's field report is the two screens
+                        sleeping at different times; under lockstep that is a
+                        determinism leak, and this column diffed between the
+                        two instances' logs is what locates the first frame
+                        the sims fork. */
+                     (unsigned)port::player::state_timer(a));
     }
 }
 
