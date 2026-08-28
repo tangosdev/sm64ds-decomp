@@ -854,14 +854,50 @@ extern "C" int _ZN8SaveData14SaveDataToCartEPcjj(char *, unsigned, unsigned)
 // 0x020171c8, 0x02017684, 0x02017670, 0x02017628, 0x0201761c, 0x02017610, a
 // non-code word at +0x2c, 0x02017450.
 //
-// IT IS TRAP-FILLED, NOT ROM-FILLED, and that is a deliberate difference from
-// its three siblings. data_0208eafc, data_0208eacc and data_0208eb2c -- the
-// other three vptrs func_02017278 writes -- are already in the build carrying
-// their raw ROM bytes, so a dispatch through any of them today jumps to a DS
-// address. This one goes the other way, on hal/sub_actors.cpp's precedent: a
-// dispatch lands on a named trap instead of on 0x02017254 interpreted as a
-// host address. NOTHING DISPATCHED THROUGH IT IN ANY RUN THIS LANE MADE.
-// Filling the twelve for real is twelve more bodies and is not this lane's.
+// IT IS SEATED NOW, AND THE SENTENCE THAT STOOD HERE WAS FALSE OF THE TITLE.
+// This paragraph used to end "NOTHING DISPATCHED THROUGH IT IN ANY RUN THIS
+// LANE MADE", which was true of that lane's runs and is not a property of the
+// table. A 2400-frame SM64DS_SCENE=1 run on the build immediately before this
+// block entered the trap 4799 times -- almost exactly twice a frame -- and the
+// two are Scene::BeforeBehavior asking the installed fader IsAtEnd every frame
+// and SetBackwardTime whenever the answer is yes (see the slot map at the foot
+// of this section). The ten function slots run the ROM's own bodies now.
+//
+// ITS THREE SIBLINGS ARE UNCHANGED AND STILL TRAP. data_0208eafc,
+// data_0208eacc and data_0208eb2c -- the other three vptrs func_02017278
+// writes -- keep their raw ROM bytes or the shared trap, on
+// hal/sub_actors.cpp's precedent: a dispatch through them lands on a named
+// trap instead of on 0x02017254 interpreted as a host address.
+//
+// AND THE CLASS HAS A NAME. The ROM's own RTTI says so, with
+// config/arm9/relocs.txt applied to extracted/arm9_dec.bin (flat, base
+// 0x02004000, the same reading port/fader_boot_map.txt section 1 makes):
+//
+//     0x0208ea0c  __si_class_type_info  "10dFdDummy_c"       base 0x0208ea00
+//     0x0208ea00  __si_class_type_info  "10dFdColor_c"       base 0x0208ea24
+//     0x0208ea24  __si_class_type_info  "15dFdBrightness_c"  base 0x0208e9e0
+//     0x0208e9e0  __class_type_info     "8dFader_c"
+//
+// so data_0208ea6c is _ZTV10dFdDummy_c and FaderBrightness (dFdBrightness_c)
+// is its GRANDBASE, two levels up. That is why five of its ten slots ARE the
+// _ZN15FaderBrightness* bodies config/arm9/symbols.txt names, word for word
+// the same five the three sibling tables carry: they are inherited, not
+// overridden. A successor told "the FaderBrightness vtable" goes looking for
+// ten FaderBrightness bodies and only five of them exist.
+//
+// A dFdDummy_c IS AN INSTANT FADER, which its own two setters are the proof
+// of: SetForwardTime and SetBackwardTime IGNORE the frame count they are
+// handed and write speed = +/-1.0 flat, so one AdvanceFade takes currInterp
+// the whole way. Nothing here interpolates; that is the class, not a stub.
+//
+// IT IS TEN SLOTS, NOT TWELVE, and the array is twelve for the same reason
+// hal/fdr_arm9_fader_seat.cpp's data_020926f0 is. An Itanium vtable symbol
+// starts at the FIRST VIRTUAL -- the reloc at 0x0208ea68 is this table's own
+// typeinfo word and sits one word BEFORE the symbol -- so the two words after
+// slot 9 belong to the next table's header: 0x0208ea94 is its offset-to-top
+// (zero, and the one word in the run with no relocation) and 0x0208ea98 is its
+// typeinfo, pointing at 0x0208ea18 = "9dFdWipe_c". They are not this class's
+// slots, nothing may dispatch them, and they keep the trap.
 static void l2_trap(const char *name);
 static void l2_vt_trap(void) { l2_trap("data_0208ea6c vtable slot"); }
 DSSTATE_BEGIN
@@ -922,13 +958,334 @@ int data_020a80cc[6];                              /* bss, 24 by ROM span */
    than the dsd symbol. Only the mangled spelling below is added. */
 }
 DSSTATE_END
+/* ---- data_0208ea6c SEATED: ten slots, and the skew that would eat two ------
+
+   THE SLOT MAP IS THE ROM'S, read two ways that had to agree. First
+   config/arm9/relocs.txt, every `from:` inside 0x0208ea6c..0x0208ea90. Second
+   the bodies themselves, disassembled out of extracted/arm9_dec.bin rather
+   than taken from the comment at the top of each src TU:
+
+     +0x00  0x02017254  func_02017254     D1: vptr = this table, Color::~Color
+     +0x04  0x02017228  func_02017228     D0: the same, then operator_delete2
+     +0x08  0x0201721c  func_0201721c     ldr ip,[pc]; bx ip -> 0x020175e8
+     +0x0c  0x020171f0  func_020171f0     speed = -0x1000, then vt[+0x14]
+     +0x10  0x020171c8  func_020171c8     speed = +0x1000, then vt[+0x18]
+     +0x14  0x02017684  FaderBrightness::IsAtStart
+     +0x18  0x02017670  FaderBrightness::IsAtEnd
+     +0x1c  0x02017628  FaderBrightness::IsBetweenStartAndEnd
+     +0x20  0x0201761c  FaderBrightness::SetToEnd
+     +0x24  0x02017610  FaderBrightness::SetToStart
+
+   THE HAZARD, and it is the whole reason this is a veneer table and not five
+   /alternatename directives. The ROM's table is ITANIUM-SHAPED: two destructor
+   slots, D1 at +0x00 and D0 at +0x04. MSVC folds those into one. So a host
+   virtual call compiled against include/FaderBrightness.h puts IsAtStart at
+   byte 0x10 and IsAtEnd at 0x14, one slot EARLIER than this table keeps them,
+   and src/engine/fader/_ZN15FaderBrightness20IsBetweenStartAndEndEv.cpp calls
+   both of them UNQUALIFIED -- through the live object's vptr, which is this
+   table. Let that dispatch land here and "IsAtStart" reaches +0x10, which is
+   SetForwardTime: an answer that is quietly the neighbour's, plus a write of
+   +1.0 into speed, plus a `ret 8` against a caller that pushed nothing.
+   port/fader_boot_map.txt sections 9c and 9e are the audit, and
+   port/ov007_seat.txt's ruling is the shape: AN ALIAS CANNOT CHANGE A CALLING
+   CONVENTION, so the answer is a face that re-lands the arguments.
+
+   SO EVERY SLOT BELOW IS A VENEER: ROM-shaped on the outside, and inside it
+   calls its body QUALIFIED (or through a flat C face that does), so no MSVC
+   vtable is ever consulted. Slot +0x1c is the one that cannot simply call the
+   matched method, because the matched method is the thing with the skew: it
+   goes through hal/fdr_arm9_fader_seat.cpp's flat face, which builds an
+   MSVC-ORDERED VIEW whose 0x10 and 0x14 dispatch the real receiver's 0x14 and
+   0x18. That face already exists for the dWipe_c table and it is receiver-
+   agnostic, so this table reuses it rather than growing a second copy.
+
+   THE CALLING CONVENTIONS ARE THE CALL SITES', NOT THE BODIES'. Every entry is
+   __fastcall with a dummy second parameter -- ecx carries `this` exactly as
+   __thiscall does and the dummy absorbs fastcall's edx, which is
+   hal/actor_classes.cpp's shim idiom -- EXCEPT +0x08, and the two setters
+   clean eight bytes. Both exceptions are read off port/fader_boot_map.txt
+   section 9c, which enumerated every dispatch site in the image that can reach
+   an installed fader (they dispatch data_0209f5bc / data_0209d4ac, so the
+   audit is about the POINTER and applies to this table unchanged):
+
+     +0x08  ONE site, shape C: src/func_02018efc.c's
+            `((void(*)(void*))vt[2])(o)`. The receiver is a cdecl ARGUMENT
+            there, not a `this`, so this slot is __cdecl and reads it off the
+            stack -- correct by the language instead of by what the codegen
+            happened to leave in ecx.
+     +0x0c  ONE site, shape B: Scene::BeforeBehavior's
+     +0x10  `data_0209f5bc->v3(0x1e, 0)` / `->v4(0x1e, 0)`. __thiscall is
+            CALLEE-CLEANS and the caller cleans neither push, so these two
+            clean eight. The ROM bodies read no arguments at all; the two
+            counts answer different questions and both are right.
+     +0x14  shapes A and C, +0x18 shapes A and C, +0x1c/+0x20/+0x24 shape A:
+            all clean zero, which is what a no-stack-parameter __fastcall does.
+
+   WHAT IS IN THE LINK ALREADY AND WHAT IS NOT. Nine of the ten bodies are
+   compiled into every target that compiles this file (walk_window,
+   smoke_player, walk_window_hires): src/func_02017254.c rides slice_ov007.txt,
+   the five FaderBrightness methods ride slice_w1l3.txt and slice_fdr.txt, and
+   Fader::AdvanceInterp rides slice_w1l3.txt. Nothing here adds a source file.
+   The exceptions are named at their slots. */
+
+#include "FaderBrightness.h"
+
+extern "C" {
+/* The ROM body and the four receiver-bridging faces this fill reaches. Every
+   one is already defined in these links; none is declared into existence here.
+     func_02017254                              src/func_02017254.c
+     _ZN5Fader13AdvanceInterpEv                 hal/fdr_arm9_fader_seat.cpp
+     _ZN15FaderBrightness9IsAtStartEv           hal/fdr_arm9_fader_seat.cpp
+     _ZN15FaderBrightness20IsBetweenStartAndEndEv  hal/fdr_arm9_fader_seat.cpp
+     _ZN15FaderBrightness7IsAtEndEv             hal/method_faces.cpp        */
+void *func_02017254(void *self);
+void  _ZN5Fader13AdvanceInterpEv(void *self);
+int   _ZN15FaderBrightness9IsAtStartEv(void *self);
+int   _ZN15FaderBrightness7IsAtEndEv(void *self);
+int   _ZN15FaderBrightness20IsBetweenStartAndEndEv(void *self);
+}
+
+/* SM64DS_EA6C_TRACE=1: one line the first time each seated slot is entered,
+   and nothing at all when the variable is unset -- one getenv, cached, the
+   shape port_title_state_trace below already uses. Ten lines for a whole run
+   at most. Without it a seat that nothing dispatches and a seat that runs
+   every frame produce exactly the same silence, which are opposite findings. */
+static int l2_ea6c_quiet;              /* set while the selftest drives slots */
+
+static void l2_ea6c_note(int slot)
+{
+    static int on = -1;
+    static unsigned char said[12];
+    if (on < 0) on = std::getenv("SM64DS_EA6C_TRACE") != 0;
+    if (!on || l2_ea6c_quiet || slot < 0 || slot > 11 || said[slot]) return;
+    said[slot] = 1;
+    std::printf("  [ea6c] slot +0x%02x entered for the first time\n", slot * 4);
+    std::fflush(stdout);
+}
+
+/* The residual traps keep the ORIGINAL string, "data_0208ea6c vtable slot", on
+   purpose: the number of those lines in a playlog is directly comparable with
+   the pre-seat run's, and a slot this block did not seat is still exactly what
+   the string says. WHICH slot is the env-gated line above, not a new name. */
+
+/* +0x00. D1. src/func_02017254.c writes this table back into the receiver and
+   calls Color::~Color, which is the ROM body verbatim; it is in the link on
+   slice_ov007.txt line 778. Section 9c lists NO call site for either
+   destructor slot, so the shape is the no-argument default. */
+static void *__fastcall l2_ea6c_s00(void *s, void *)
+{ l2_ea6c_note(0); return func_02017254(s); }
+
+/* +0x04. D0, AND THE ONE SLOT THIS BLOCK DOES NOT SEAT. The reason is a slice
+   line, not a missing body: src/func_02017228.c is matched and is the same
+   three writes as D1 plus Memory::operator_delete2, and it is on NO slice, so
+   it is not in this link. Putting it on one is a port/slice_*.txt edit, which
+   is outside this change's one-file scope. TRANSCRIBING A DELETING DESTRUCTOR
+   HERE INSTEAD WOULD FREE THE RECEIVER ON THIS FILE'S AUTHORITY -- the trap
+   leaks the object and announces itself, which is the direction every unseated
+   slot in hal/fdr_arm9_fader_seat.cpp takes. */
+static void *__fastcall l2_ea6c_s04(void *, void *)
+{ l2_trap("data_0208ea6c vtable slot"); return 0; }
+
+/* +0x08. AdvanceFade, and the one slot here that is not __fastcall, for
+   hal/fdr_arm9_fader_seat.cpp's fdr_s08 reason exactly (shape C above).
+   THE ROM BODY IS A VENEER AND ITS RECEIVER IS NOT DISCARDED:
+
+       0x0201721c  e59fc000  ldr ip, [pc, #0]
+       0x02017220  e12fff1c  bx  ip
+       0x02017224  020175e8  .word  _ZN5Fader13AdvanceInterpEv
+
+   two instructions, r0 untouched, so the target reads the SAME receiver the
+   veneer was entered with. src/func_0201721c.c spells that `void
+   func_0201721c(void)` calling `_ZN5Fader13AdvanceInterpEv()` with no argument
+   at all, which is byte-correct under mwccarm -- r0 falls through a bx -- and
+   loses the receiver on any host that does not pass arguments in the same
+   register. That is the identical defect slice_fdr.txt records for
+   src/func_0202ed08.c and hal/lk4_solidheap_seat.cpp for Heap::_Destroy, and
+   it takes the identical answer: FORWARD TO THE VENEER'S OWN TARGET, WITH THE
+   RECEIVER, and leave the src TU out of the link. Discarding it would hand
+   Fader::AdvanceInterp whatever the host left in ecx and let it write
+   currInterp through that.
+
+   The wrong-receiver check is fdr_s08's, and it earns its place for the same
+   reason: a shape A caller would leave the stack balanced and hand this stub a
+   word off its own frame, so the stub says so rather than running on it. */
+static void __cdecl l2_ea6c_s08(void *s)
+{
+    if (s == 0 || *(void **)s != (void *)data_0208ea6c) {
+        l2_trap("data_0208ea6c vtable slot");
+        return;
+    }
+    l2_ea6c_note(2);
+    _ZN5Fader13AdvanceInterpEv(s);
+}
+
+/* The ROM-ordered dispatch the two setters end in. Byte offsets, because that
+   is what the ARM encodes; the same helper shape hal/fdr_arm9_fader_seat.cpp's
+   fdr_view_dispatch uses. */
+typedef int(__fastcall *L2Ea6cSlot)(void *, void *);
+
+static int l2_ea6c_dispatch(void *s, unsigned rom_byte)
+{
+    void **vt = *(void ***)s;
+    return ((L2Ea6cSlot)vt[rom_byte / 4])(s, 0);
+}
+
+/* +0x0c and +0x10. SetBackwardTime and SetForwardTime, AND THESE TWO ARE
+   TRANSCRIBED RATHER THAN FORWARDED. Say that plainly: src/func_020171f0.cpp
+   and src/func_020171c8.cpp are matched and they are on NO slice, so unlike
+   the other eight bodies they are not in this link, and adding them is the
+   same out-of-scope slice edit slot +0x04 declines. The difference is that
+   these two are LOAD-BEARING -- Scene::BeforeBehavior calls one of them every
+   frame the title runs, and with them trapped `speed` stays 0, AdvanceFade
+   moves nothing, and no fade this object drives can ever complete. So they are
+   transcribed from the disassembly, which is quoted here in full so a reader
+   can check it against the two src TUs without leaving the file:
+
+       0x020171f0  e92d4000  push {lr}          func_020171f0
+       0x020171f4  e24dd004  sub  sp, sp, #4
+       0x020171f8  e3a01a01  mov  r1, #0x1000
+       0x020171fc  e2611000  rsb  r1, r1, #0
+       0x02017200  e5801008  str  r1, [r0, #8]      speed = -1.0
+       0x02017204  e5901000  ldr  r1, [r0]
+       0x02017208  e5911014  ldr  r1, [r1, #0x14]   the RECEIVER's own +0x14
+       0x0201720c  e12fff31  blx  r1
+
+       0x020171c8  e92d4000  push {lr}          func_020171c8
+       0x020171cc  e24dd004  sub  sp, sp, #4
+       0x020171d0  e3a01a01  mov  r1, #0x1000
+       0x020171d4  e5801008  str  r1, [r0, #8]      speed = +1.0
+       0x020171d8  e5901000  ldr  r1, [r0]
+       0x020171dc  e5911018  ldr  r1, [r1, #0x18]   the RECEIVER's own +0x18
+       0x020171e0  e12fff31  blx  r1
+
+   and the tails are `add sp,#4 / pop {lr} / bx lr`, so r0 from the blx is the
+   return value. The dispatch is through the RECEIVER's table and not through
+   data_0208ea6c directly, because that is what the ARM does; for this class
+   they are the same table, and writing it the ROM's way costs nothing and
+   survives a derived class that is not in the image today.
+
+   THE DAY EITHER TU IS SLICED IN, THESE TWO BECOME PLAIN FORWARDS and this
+   paragraph comes out. Whoever does that owns both lines. */
+static int __fastcall l2_ea6c_s0c(void *s, void *, int, int)
+{
+    l2_ea6c_note(3);
+    *(int *)((char *)s + 8) = -0x1000;
+    return l2_ea6c_dispatch(s, 0x14);
+}
+static int __fastcall l2_ea6c_s10(void *s, void *, int, int)
+{
+    l2_ea6c_note(4);
+    *(int *)((char *)s + 8) = 0x1000;
+    return l2_ea6c_dispatch(s, 0x18);
+}
+
+/* +0x14 and +0x18. The matched predicates, through the flat faces two other
+   hal files already own, each of which makes a QUALIFIED call so nothing
+   re-dispatches. */
+static int __fastcall l2_ea6c_s14(void *s, void *)
+{ l2_ea6c_note(5); return _ZN15FaderBrightness9IsAtStartEv(s); }
+static int __fastcall l2_ea6c_s18(void *s, void *)
+{ l2_ea6c_note(6); return _ZN15FaderBrightness7IsAtEndEv(s); }
+
+/* +0x1c. THE SLOT THE SKEW IS ABOUT, and the one that must NOT call the
+   matched method the way its five neighbours do. hal/fdr_arm9_fader_seat.cpp's
+   flat face runs the matched body against an MSVC-ordered VIEW of the
+   receiver, so the body's two unqualified calls -- host bytes 0x10 and 0x14 --
+   land on thunks that dispatch this object's ROM 0x14 and 0x18, i.e. on the
+   two slots directly above. A qualified call here instead would reach +0x10,
+   which is l2_ea6c_s10: a wrong answer, a clobbered `speed`, and eight bytes
+   off the caller's frame. l2_ea6c_selftest below measures exactly that. */
+static int __fastcall l2_ea6c_s1c(void *s, void *)
+{ l2_ea6c_note(7); return _ZN15FaderBrightness20IsBetweenStartAndEndEv(s); }
+
+/* +0x20 and +0x24. Both matched, both non-virtual in the header, so a
+   qualified call is a direct call and the host vtable is not read. */
+static void __fastcall l2_ea6c_s20(void *s, void *)
+{ l2_ea6c_note(8); ((FaderBrightness *)s)->FaderBrightness::SetToEnd(); }
+static void __fastcall l2_ea6c_s24(void *s, void *)
+{ l2_ea6c_note(9); ((FaderBrightness *)s)->FaderBrightness::SetToStart(); }
+
+/* +0x28 and +0x2c are the next table's header, not this class's slots (see the
+   head of section 2b). Nothing may dispatch them; they keep the trap so that
+   something which does says so instead of jumping into the offset-to-top. */
+static int __fastcall l2_ea6c_over(void *, void *)
+{ l2_trap("data_0208ea6c vtable slot"); return 0; }
+
+/* SM64DS_EA6C_SELFTEST=1: DOES +0x1c REACH THE REAL PREDICATES? Env-gated and
+   inert unset, and it is a measurement rather than an assertion that the fill
+   is right.
+
+   The probe is a three-word stand-in laid out like a Fader -- vptr, currInterp
+   at +0x04, speed at +0x08, which include/Fader.h pins out of the ROM -- with
+   its vptr pointed at this table. For each of the three interesting interp
+   values it dispatches +0x14, +0x18 and +0x1c THROUGH THE TABLE and compares
+   each answer with a direct qualified call on the same storage.
+
+   THE ANSWER ALONE WOULD NOT CATCH THE SKEW, which is why `speed` is the third
+   column. Work it through: skewed, "IsAtStart" reaches +0x10 (SetForwardTime),
+   which returns IsAtEnd(), and "IsAtEnd" reaches +0x14 (IsAtStart) -- and at
+   all three interp values the two wrongs produce the same final 0/1/0 that the
+   right pair does. What the skew CANNOT hide is the write: +0x10 stores +1.0
+   into speed. So the probe seeds speed with a sentinel and reports whether it
+   survived. (It would also lose eight bytes off this function's frame to that
+   slot's `ret 8`, which is the louder half of the same failure and would
+   likely take the process with it.) */
+static void l2_ea6c_selftest(void)
+{
+    if (std::getenv("SM64DS_EA6C_SELFTEST") == 0) return;
+    struct Probe { void **vt; int currInterp; int speed; } p;
+    const int sentinel = 0x0bad0bad;
+    static const int cases[3] = { 0, 0x800, 0x1000 };
+    int fails = 0;
+    l2_ea6c_quiet = 1;
+    for (int i = 0; i < 3; ++i) {
+        p.vt = (void **)data_0208ea6c;
+        p.currInterp = cases[i];
+        p.speed = sentinel;
+        FaderBrightness *fb = (FaderBrightness *)(void *)&p;
+        const int want_start = fb->FaderBrightness::IsAtStart();
+        const int want_end = fb->FaderBrightness::IsAtEnd();
+        const int want_between = (want_start == 0 && want_end == 0) ? 1 : 0;
+        const int got_start = ((L2Ea6cSlot)data_0208ea6c[5])(&p, 0);
+        const int got_end = ((L2Ea6cSlot)data_0208ea6c[6])(&p, 0);
+        const int got_between = ((L2Ea6cSlot)data_0208ea6c[7])(&p, 0);
+        const int kept = (p.speed == sentinel);
+        const int ok = got_start == want_start && got_end == want_end &&
+                       got_between == want_between && kept;
+        if (!ok) ++fails;
+        std::printf("  [ea6c] selftest currInterp 0x%04x: +0x14 %d(want %d)  "
+                    "+0x18 %d(want %d)  +0x1c %d(want %d)  speed %s  %s\n",
+                    cases[i], got_start, want_start, got_end, want_end,
+                    got_between, want_between,
+                    kept ? "intact" : "CLOBBERED (+0x10 ran: the skew is live)",
+                    ok ? "OK" : "FAIL");
+    }
+    l2_ea6c_quiet = 0;
+    std::printf("  [ea6c] selftest: %d of 3 cases FAILED -- "
+                "IsBetweenStartAndEnd %s the real predicates through +0x14 and "
+                "+0x18\n", fails, fails ? "does NOT reach" : "reaches");
+    std::fflush(stdout);
+}
+
 static void l2_fill_0208ea6c(void)
 {
-    for (int i = 0; i < 12; ++i) data_0208ea6c[i] = (void *)l2_vt_trap;
+    data_0208ea6c[0]  = (void *)l2_ea6c_s00;
+    data_0208ea6c[1]  = (void *)l2_ea6c_s04;
+    data_0208ea6c[2]  = (void *)l2_ea6c_s08;
+    data_0208ea6c[3]  = (void *)l2_ea6c_s0c;
+    data_0208ea6c[4]  = (void *)l2_ea6c_s10;
+    data_0208ea6c[5]  = (void *)l2_ea6c_s14;
+    data_0208ea6c[6]  = (void *)l2_ea6c_s18;
+    data_0208ea6c[7]  = (void *)l2_ea6c_s1c;
+    data_0208ea6c[8]  = (void *)l2_ea6c_s20;
+    data_0208ea6c[9]  = (void *)l2_ea6c_s24;
+    data_0208ea6c[10] = (void *)l2_ea6c_over;
+    data_0208ea6c[11] = (void *)l2_ea6c_over;
     for (int i = 0; i < 10; ++i) data_0208eb2c[i] = (void *)l2_vt_trap;
     for (int i = 0; i < 12; ++i) data_0208eacc[i] = (void *)l2_vt_trap;
     ((void **)data_0208eafc)[0] = (void *)l2_vt_trap;
     ((void **)data_0208eafc)[1] = (void *)l2_vt_trap;
+    l2_ea6c_selftest();
 }
 
 // ---- 3. NINETEEN TRAPPING SITES, AND HOW THEY COUNT ------------------------
@@ -1060,21 +1417,109 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
    strict relocs and src/func_ov007_020ae834.c is in slice_ov007.txt now, so a
    trap here would be an LNK2005 against the body. See the census note above:
    this is the name that made "none of the four left is a blocker" false. */
-L2_UNMATCHED(func_ov007_020b1718)
+/* func_ov007_020b1718 WAS HERE. mg15 run STATE4 matched it byte for byte at
+   2004/b56 (0 of 269 words differ, strict relocs, linkcheck VERIFIED) and
+   src/func_ov007_020b1718.c carries the body, so a trap here would be an
+   LNK2005 against it -- measured, not assumed: a merge that keeps both this
+   line and the seated TU fails the link loudly rather than shadowing it.
+   This is the title element state machine's state 4, the start sequence.
+   With the trap in place a tap ENTERED state 4 and never left it -- the
+   body returned 0, so neither of its completion writes ran and the scene
+   machine was never handed forward. Run mg16 lane TITLE reproduced exactly
+   that on this base before seating: scene 1, 2400 frames, a touch probe at
+   frames 1200-1260, the trap entered 1199 times and still being entered on
+   the last frame of the run.
+   It is on the artwork path too, but NOT by hiding elements. The draw gate
+   is element+0x20, checked at the tail of src/func_ov007_020b44ec.c, and
+   its only writer on that path is func_ov007_020ae834's case 1. Elements
+   sit hidden because the phase machine at data_ov007_0210342c+0xc never
+   leaves state 0 on the attract path, and the element requesters only ask
+   on a phase state's first frame. This body is one of that phase word's
+   writers -- on state 4's first frame it requests phase 2 -- and phase 2
+   is reached only when it runs. */
 /* func_ov007_020b2998 WAS HERE AND IT CAME OUT ON A REAL DECOMP. The decomp's
    main matched it as db0c4960635e on 2026-08-16 (PR #1536) and run link60's
    PC2 lane brought the matched TU across by address, so src/ has the body and
    a trap here would be an LNK2005 against it. This is the OTHER way an address
    leaves this list, and it is the one the port wants: 020c9688 below left on a
    host transcription, this one left on the ROM's own C. */
-L2_UNMATCHED(func_ov007_020b46b0)
+/* func_ov007_020b46b0 WAS HERE, AND IT WAS THE MENU'S HANDLE. Run mg16 lane
+   CRACK matched it byte for byte at 2004/b56 (299 words, 284 exact, 15 reloc
+   wildcards, 0 mismatches) with linkcheck VERIFIED at 0 blind slots, and
+   src/func_ov007_020b46b0.c carries the body, so a trap here would be an
+   LNK2005 against it. Re-verified in this lane before seating, against the
+   known-matched neighbour func_ov007_020b63e4 as the alignment control.
+
+   This is the PER-ELEMENT STYLUS HIT TEST, entered 24 times a frame -- once
+   per element -- from func_ov007_020aed98. Trapped it returned 0 before it
+   ever tested a rectangle, so func_ov007_020b63e4 was never called, ctx+0x180
+   was never written, and the verdict func_ov007_020b7090 hands the router
+   never became 3/4/5 (the save files), 6 (VS) or 7 (the Rec Room). The title
+   could be started and then nothing on it could be PICKED. Measured on this
+   tree before the seat: scene 1, 2400 frames, pick -1 and verdict 0 on every
+   single frame. */
 L2_UNMATCHED(func_ov007_020b8188)
 L2_UNMATCHED(func_ov007_020ba05c)
 L2_UNMATCHED(func_ov007_020c19cc)
-L2_UNMATCHED(func_ov007_020c20b8)
+/* func_ov007_020c20b8 WAS HERE, AND IT IS THE TITLE'S INPUT SAMPLER. Run mg16
+   matched it byte for byte at 2004/b56 with a result this overlay has not
+   produced before: 122 of 122 words OK and ZERO reloc wildcards -- the body has
+   no relocations at all, its literal pool holding raw constants (0x04000130,
+   0x027fffa8, 0x00002fff) -- so every word was compared as a real instruction
+   and nothing at all is hidden behind a wildcard. linkcheck VERIFIED, 0 blind.
+   A trap here would now be an LNK2005 against src/func_ov007_020c20b8.c.
+
+   Its ONE caller is the verdict producer src/func_ov007_020b7090.c, which calls
+   it before reading the verdict words, so it sits directly on the menu path.
+   The body maintains an Ov007Input record (0x6e bytes): held/prev at +0/+2, a
+   12-entry heldFrames array at +4, a 12-entry releasedFrames array at +0x34, a
+   volatile flags word at +0x64 whose bit 0 is the suppress-input latch, and
+   three signed axis pairs at +0x68/+0x6a/+0x6c.
+
+   TRAPPED, IT RETURNED 0 AND LEFT BOTH COUNTER ARRAYS UNTOUCHED, and the fault
+   that produced was a fill through a bad destination: MultiStore_Int+0x1c, an
+   access violation at frame 1299, quarantined and frozen like the last one. */
 L2_UNMATCHED(func_ov007_020c368c)
-L2_UNMATCHED(func_ov007_020c4684)
-L2_UNMATCHED(func_ov007_020c6e68)
+/* func_ov007_020c4684 WAS HERE AND IT LEFT THE SAME WAY 0x020c9688 DID, on a
+   host transcription rather than a decomp. It is still unmatched on main, so it
+   is still one of section 3a's fifteen; what changed is that this address now
+   has a body in the port and no longer needs a trap.
+
+   THE TRAP WAS NOT HARMLESS AND THE COUNTER SAID SO. A 300-frame scene-1 run
+   entered it SIXTEEN THOUSAND TWO HUNDRED times -- 54 a frame -- and returned 0
+   every time. Its literal pool is twelve geometry command ports and nothing
+   else (COLOR, POLYGON_ATTR, MTX_PUSH, MTX_TRANS, MTX_SCALE, BEGIN_VTXS,
+   TEXCOORD, VTX_16, VTX_YZ, VTX_XZ, END_VTXS, MTX_POP): it is the routine the
+   title screen draws THROUGH, and refusing it is why the owner's title screen
+   has a background, its sparkles and its TOUCH TO START row on it and nothing
+   else. A trap is the right answer while nobody has read the ROM at an address.
+   It stops being the right answer once somebody has.
+
+   port/unmatched/Ov007_CellQuad_020c4684.cpp carries the derivation, the four
+   resolved relocations and the alignment control. Its CMake block is guarded on
+   src/ not having the match, so a real decomp retires it automatically. */
+/* func_ov007_020c6e68 WAS HERE, AND ITS TRAP WAS A LIVE CRASH RATHER THAN A
+   MISSING PICTURE. Run mg16 matched it byte for byte at 2004/b56 (121 words,
+   109 exact, 12 reloc wildcards, 0 mismatches) with linkcheck VERIFIED at 0
+   blind slots, against func_ov007_020b63e4 as the alignment control, so a trap
+   here would now be an LNK2005 against src/func_ov007_020c6e68.c.
+
+   THIS BODY ALLOCATES THE MENU'S GEOMETRY. It fills the per-index arrays at
+   self+0x28, +0x2c, +0x34, +0x3c, +0x40 and +0x44, and the +0x28 one is the
+   Vec3 array src/func_ov007_020c2f14.c walks to build a bounding box. Trapped,
+   it returned 0 without allocating, so that array stayed null and
+   func_ov007_020c2f14's very first statement -- `tmp = points[0]` -- read
+   through it.
+
+   WHAT THAT LOOKED LIKE FROM THE OUTSIDE, and it is the reason this took a
+   playlog to find: an access violation (c0000005) at func_ov007_020c2f14+0x12,
+   caught by the port's quarantine, which freezes the faulting actor and lets
+   the frame continue. The scene run then reported "2400 frames of scene 1
+   (SCENE_TITLE), clean" and exited 0. The title's Behavior and Render slots
+   simply stopped being entered at frame 1478 and its cleanup slot never ran --
+   a frozen actor is refused on every list, which is exactly why the census
+   showed behaviour and render stopping together with cleanup at 0. EXIT 0 AND
+   THE WORD "clean" SAY THE HARNESS SURVIVED, NOT THE GAME. */
 /* func_ov007_020c9688 WAS HERE AND IT IS THE ONE THAT CAME OUT WITHOUT A
    DECOMP. It is still unmatched on main, so it is still one of section 3a's
    fifteen; what changed is that this address now has a body in the port and no
@@ -3707,7 +4152,27 @@ extern "C" void port_scene_layout_propose(void)
         return;
     proposed = 1;
     const int scene = port_scene_env_want();
-    hal_sub_screen_set_stacked(scene >= 0 && IsMinigameActorID((unsigned)scene));
+    /* THE TITLE IS STACKED TOO, run mg16 lane TITLE, on the owner's ruling
+       after judging the first journey captures: "looks good other than it
+       should be laid out dual screen like the minigames".
+
+       IsMinigameActorID stays exactly what it is -- the ROM's own predicate,
+       and the block above is right that the title is not a minigame by it.
+       What is being decided here is not "is this a minigame" but "is this
+       scene a TWO-SCREEN experience", and for the title the answer is yes on
+       the hardware's own terms: the artwork is on the top screen and the menu
+       the player touches is on the bottom. Rendering it into a corner inset
+       panel is the port's convenience for LEVELS, where the bottom screen is a
+       minimap and the corner is doing a job. On the title it throws away half
+       the presentation.
+
+       So the predicate is left alone and the title is named separately, which
+       also keeps the two reasons legible: a minigame is stacked because the
+       ROM says it is a minigame, and the title is stacked because it is a
+       two-screen scene. SM64DS_DUAL_SCREEN still overrides either way. */
+    const int two_screen = scene >= 0 &&
+                           (IsMinigameActorID((unsigned)scene) || scene == 1);
+    hal_sub_screen_set_stacked(two_screen);
 }
 
 /* How many frames the run was asked for, readable before begin() so a windowed
@@ -4310,6 +4775,48 @@ static void t3w_tick(int frame, const char *when)
         t3w_arm(g + 0x130, 1, "&scene[0x130] -- who FILLS the slot");
         return;
     }
+    /* THE TOP-LEVEL STATE WORD AND THE TWO THINGS THAT SHARE ITS FRAME.
+       Run mg16 lane TITLE: the Start prompt's input edge is consumed twice in
+       one frame -- the dialog advances (correct) and the top-level state leaves
+       9 for 0 (the defect) -- and neither the dispatcher nor any grep-visible
+       writer of the request halfword accounts for the second one. Three dwords
+       name both consumers from their own EIPs:
+         w0  *(g+8)+0   the state/req PAIR, one dword: state at +0, req at +2
+         w1  *(g+8)+4   the SUB-state, which func_ov007_020b0834 sets to 1
+         w2  *(g+4)+0   the element machine, which went to 0x3038/0x3030 on the
+                        same frame -- a value no state machine can request, so
+                        whatever writes it is not requesting a state at all
+       The block pointers are printed as well, so a follow-up run can re-arm on
+       the absolute addresses (the arena is pinned, the order deterministic). */
+    if (!std::strcmp(spec, "s9")) {
+        char *sp = *(char **)(g + 8);
+        char *ep = *(char **)(g + 4);
+        char *cp = *(char **)(g + 0xc);
+        if (!sp || !ep) return;
+        std::fprintf(stderr,
+                     "[t3watch] title blocks: g=%p  state(g+8)=%p  "
+                     "elem(g+4)=%p  third(g+0xc)=%p\n",
+                     (void *)g, (void *)sp, (void *)ep, (void *)cp);
+        t3w_arm(sp, 1, "*(g+8)+0 -- top-level state/req");
+        CONTEXT ctx;
+        std::memset(&ctx, 0, sizeof ctx);
+        ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
+        HANDLE th = GetCurrentThread();
+        GetThreadContext(th, &ctx);
+        DWORD *dr[4] = {&ctx.Dr0, &ctx.Dr1, &ctx.Dr2, &ctx.Dr3};
+        char *w[3] = {sp, sp + 4, ep};
+        t3w_n = 3;
+        for (int i = 0; i < 3; ++i) {
+            t3w_addr[i] = (unsigned)(uintptr_t)w[i];
+            t3w_last[i] = *(volatile unsigned *)(uintptr_t)t3w_addr[i];
+            *dr[i] = (DWORD)t3w_addr[i];
+            ctx.Dr7 |= (1u << (2 * i));
+            ctx.Dr7 |= (0x1u << (16 + 4 * i));
+            ctx.Dr7 |= (0x3u << (18 + 4 * i));
+        }
+        SetThreadContext(th, &ctx);
+        return;
+    }
     char *p130 = *(char **)(g + 0x130);
     if (!p130) return;
     if (!std::strcmp(spec, "p130ptr")) {
@@ -4885,6 +5392,154 @@ extern "C" int port_scene_begin(void *hwnd, int zoom)
    What the pause does NOT stop is the display scan-out below. The DS's beam
    does not care that a debug menu is open, and the level loop makes the same
    call outside its own pause. */
+/* ---- THE TITLE STATE WALK, run mg16 lane TITLE ---------------------------
+ *
+ * The slot census at the end of a run says HOW MANY frames the title was
+ * ticked and nothing about WHERE IT WENT, and those come apart the moment the
+ * title starts working. A run that ticks 1477 of 2400 frames can be a menu
+ * that finished and is waiting to be carried forward, or a state machine that
+ * walked into a state with no exit; the census prints the same number for
+ * both. This prints the walk itself.
+ *
+ * The words are the ROM's own, read at the offsets its own matched TUs read
+ * them at, so this reports the game's state rather than the port's opinion of
+ * it. src/func_ov007_020b0548.c dispatches on *(short*)(*(char**)(g + 8)) and
+ * src/func_ov007_020b166c.c reads both records:
+ *
+ *     g + 8  -> the TOP-LEVEL state record   +0 current, +2 requested
+ *     g + 4  -> the ELEMENT/animation record +0 current, +2 requested
+ *     g + 0x1c                                the phase word the keystone
+ *                                             (src/func_ov007_020b1718.c)
+ *                                             writes 2 into on completion
+ *
+ * ON CHANGE ONLY, which is what makes it affordable on a 2400-frame run: the
+ * title sits in a state for hundreds of frames at a time, so the output is a
+ * dozen lines, not a dozen thousand. Printing every frame would bury the two
+ * transitions that matter under the ones that never happen.
+ *
+ * Env-gated and inert unset, one getenv and a compare, same shape as the other
+ * per-frame instruments in the tree (SM64DS_MTX_BALANCE, SM64DS_TEXPX). It
+ * reads and never writes: a probe that perturbs the machine it is measuring
+ * would answer a different question than the one asked. */
+extern "C" char *data_ov007_0210342c;
+/* THE DIALOG/MESSAGE STATE WORD, run mg16 lane TITLE.
+ *
+ * Top-state 9 is the Start confirmation prompt, and it is where every run of
+ * this lane wedges. Its handler src/func_ov007_020b0834.c opens with
+ * `if (func_ov007_020b79c8() == 0) return;` and that predicate is exactly
+ * `data_ov007_02102ddc[1] == 2`; the sibling func_ov007_020b79e4 is
+ * `data_ov007_02102ddc[1] != 4`. So the prompt needs this word to reach 2 and
+ * then 4 to proceed, and until it does the handler early-returns before ever
+ * reaching its call to the verdict setter func_ov007_020aec94 at 0x020b0a0c.
+ *
+ * That call site matters: top-state 6 and 11 are the verdict setter's ONLY two
+ * outputs, and neither has ever been requested in any run of this lane, which
+ * proves the setter has never executed. Watching this word says whether the
+ * dialog subsystem is the reason. All eight ov007 TUs that touch it are seated
+ * and none is a stub, so this is a measurement, not a missing body. */
+extern "C" int func_ov007_020b79c8(void);   /* data_ov007_02102ddc[1] == 2 */
+extern "C" int func_ov007_020b79e4(void);   /* data_ov007_02102ddc[1] != 4 */
+
+static void port_title_state_trace(int frame)
+{
+    static int on = -1;
+    if (on < 0) on = std::getenv("SM64DS_TITLE_TRACE") != 0;
+    if (!on) return;
+    char *g = data_ov007_0210342c;
+    if (!g) return;                       /* not the title, or not built yet */
+    char *sp = *(char **)(g + 8);
+    char *ep = *(char **)(g + 4);
+    if (!sp || !ep) return;
+    const int st    = *(short *)(sp + 0);
+    const int req   = *(short *)(sp + 2);
+    const int est   = *(short *)(ep + 0);
+    const int ereq  = *(short *)(ep + 2);
+    const int phase = *(int *)(g + 0x1c);
+    /* THE VERDICT SIDE, and it is the half the state words cannot show.
+     * src/func_ov007_020b7090.c returns the context's +0x10 gated on +0x14
+     * (`if (ip->f14 != 0 || ip->f10 == 1) ret = ip->f10;`) and
+     * src/func_ov007_020cc2cc.c switches on that return: 3/4/5 are the three
+     * save files, 6 is VS, 7 is the Rec Room, 2 restarts the title. +0x180 is
+     * where src/func_ov007_020b63e4.c parks the id of the element the stylus
+     * actually hit. So these three say, in order, "was anything picked", "is
+     * the verdict armed" and "what did the router see".
+     *
+     * data_02092664 is carried here as well as at exit because the exit read
+     * is an ENDPOINT and cannot tell "never asked" from "asked and something
+     * put the sentinel back". Sampled every frame and reported on change, a
+     * request that appears and is then cleared leaves two lines behind. */
+    /* +0x180 IS A SINGLE-FRAME SIGNAL AND THIS SAMPLE CANNOT SEE IT.
+     * func_ov007_020b63e4 writes the chosen item's id there, and
+     * func_ov007_020aed98 writes -1 back LATER IN THE SAME FRAME, after the
+     * state dispatch has consumed it. This trace runs after port_actor_tick(),
+     * i.e. after that whole pass, so it reads -1 BY CONSTRUCTION whether or not
+     * anything was picked. It is printed for completeness and is NOT evidence:
+     * a -1 here says nothing at all about whether the hit test fired.
+     *
+     * (It was evidence before the hit test was seated, but only accidentally --
+     * the body was a trap returning 0, so nothing could be picked for a reason
+     * this sample was not actually measuring. Recording that here so the next
+     * reader does not re-derive the same false confidence.)
+     *
+     * THE TRUSTWORTHY END-TO-END SIGNAL IS data_02092664, and it is latched:
+     * on the scene path nothing pumps it (port_scene_request_release's only
+     * caller is hal/level_change.cpp, on the LEVEL path), so a request stands
+     * until the run ends. It is latched again here anyway, so that even a
+     * request cleared by some future pump still leaves a mark. */
+    const int pick  = *(int *)(g + 0x180);
+    const int f10   = *(int *)(g + 0x10);
+    const int f14   = *(int *)(g + 0x14);
+    const int pend  = (int)data_02092664;
+    /* THE STATE-9 GATE, read through the ROM's OWN seated accessors rather
+     * than through a declaration of mine for the mounted symbol. Two
+     * reasons: it measures exactly what src/func_ov007_020b0834.c measures,
+     * and a direct `extern int data_ov007_02102ddc[]` read here faulted the
+     * process at scene bring-up (exit 0xC0000005, before frame 0, only with
+     * the trace enabled) even though the symbol resolves to real hosted
+     * storage in ov007_syms.c.obj. Encoded as one number: bit 0 = the ==2
+     * gate, bit 1 = the !=4 gate. 2 means "not yet 2, and not yet 4".
+     * 3 means the ==2 gate is open. */
+    const int dlg = (func_ov007_020b79c8() ? 1 : 0) |
+                    (func_ov007_020b79e4() ? 2 : 0);
+    static int ever_req = -1;
+    if (pend != 0x187 && ever_req < 0) {
+        ever_req = pend;
+        std::printf("[title] f%-6d SCENE REQUESTED: %d (latched; first frame "
+                    "data_02092664 left the 0x187 sentinel)\n", frame, pend);
+        std::fflush(stdout);
+    }
+    /* IS THE SCENE STILL BEING DISPATCHED. g_ti_hits[6] is bumped by the
+     * Behavior thunk, so its per-frame delta is 1 while the ROM's processing
+     * list still carries this actor and 0 the moment it stops. Without this
+     * the trace going quiet is ambiguous: a state that stopped CHANGING and an
+     * actor that stopped RUNNING produce exactly the same silence, and they
+     * are opposite findings. The transition to 0 is forced out as its own line
+     * below rather than waiting for some other word to move. */
+    static unsigned l_beh = 0;
+    static int l_live = -99;
+    const int live = (g_ti_hits[6] != l_beh) ? 1 : 0;
+    l_beh = g_ti_hits[6];
+    static int l_st = -99, l_req = -99, l_est = -99, l_ereq = -99, l_ph = -99;
+    static int l_pick = -99, l_f10 = -99, l_f14 = -99, l_pend = -99;
+    static int l_dlg = -99;
+    if (st == l_st && req == l_req && est == l_est && ereq == l_ereq &&
+        phase == l_ph && pick == l_pick && f10 == l_f10 && f14 == l_f14 &&
+        pend == l_pend && live == l_live && dlg == l_dlg)
+        return;
+    if (live != l_live && l_live != -99)
+        std::printf("[title] f%-6d DISPATCH %s\n", frame,
+                    live ? "RESUMED" : "STOPPED (Behavior slot no longer "
+                                       "entered; the actor left the list)");
+    l_live = live;
+    std::printf("[title] f%-6d state %d req %d | elem %d req %d | phase %d | "
+                "pick(wiped) %d verdict %d armed %d | pending %d | dlg %d%s\n",
+                frame, st, req, est, ereq, phase, pick, f10, f14, pend, dlg,
+                pend == 0x187 ? " (none)" : "  <-- SCENE REQUESTED");
+    std::fflush(stdout);
+    l_st = st; l_req = req; l_est = est; l_ereq = ereq; l_ph = phase;
+    l_pick = pick; l_f10 = f10; l_f14 = f14; l_pend = pend; l_dlg = dlg;
+}
+
 extern "C" void port_scene_tick(int frame, int tick_game)
 {
     ntr::Framebuffer &fb = scn_fb;
@@ -4914,6 +5569,9 @@ extern "C" void port_scene_tick(int frame, int tick_game)
         port_scene_comms_publish();
         if (tick_game) {
             port_actor_tick();
+            /* AFTER the actor phases, so it reports the state the frame ended
+               in rather than the one it started in. */
+            port_title_state_trace(frame);
             /* THE FRAME CLOCK, func_020197b8 phase 6 (hal/fader_wipes.cpp).
                After the actor phases and before the render. NOT the ROM's exact
                slot: the ROM steps it at phase 6, after phase 5 and so after its
@@ -5157,6 +5815,35 @@ extern "C" int port_scene_finish(int frames_run)
                     t ? "ov007" : "ov003",
                     h[0], h[6], h[9], h[3], h[12],
                     sk ? "  [RENDER SLOT NO-OP'd: SM64DS_SCENE_SLOT9=0]" : "");
+        /* THE ROUTING WITNESS, run mg16 lane TITLE.
+         *
+         * "The title stopped ticking" and "the title asked to go somewhere"
+         * look identical from the slot census above: both are a behavior count
+         * short of the frame count. They are completely different findings --
+         * the first is a hang, the second is a working menu the scene path
+         * never carried out -- and the difference is one halfword.
+         *
+         * data_02092664 is Scene::SetSceneToSpawn's PENDING SCENE ID and 0x187
+         * is its "none" sentinel (hal/level_change.cpp documents both).
+         * Scene::SpawnIfNecessary is what would consume it and write 0x187
+         * back; on the SCENE path nothing pumps it, so a request just sits
+         * here to be read. That makes this a lifecycle reading, not an
+         * endpoint: the value survives precisely because nobody acted on it.
+         *
+         * Printed unconditionally, including the sentinel, because "the title
+         * asked for nothing" is exactly as much of a measurement as "the title
+         * asked for scene 5" and a line that only appeared on success would
+         * make the silent case unreadable. */
+        {
+            const unsigned pend = data_02092664;
+            if (pend == 0x187)
+                std::printf("[scene] scene request at exit: NONE "
+                            "(data_02092664 == 0x187, the sentinel)\n");
+            else
+                std::printf("[scene] scene request at exit: SCENE %u "
+                            "(data_02092664; nothing pumps it on the scene "
+                            "path, so it is still pending)\n", pend);
+        }
         if (g_ti_init_skipped)
             std::printf("[scene] INIT SLOT NO-OP'd: SM64DS_SCENE_SLOT0=0, %u "
                         "time(s)\n", g_ti_init_skipped);

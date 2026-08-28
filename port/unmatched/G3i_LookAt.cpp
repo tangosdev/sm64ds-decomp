@@ -18,6 +18,9 @@
  */
 #include "ntr/mmio.h"
 
+#include <cstdio>
+#include <cstdlib>
+
 struct Vector3 { int x, y, z; };
 struct Matrix4x3_ { int m[12]; };
 
@@ -69,6 +72,37 @@ extern "C" void _ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3(
         NTR_MMIO(int, 0x400045c) = tx;
         NTR_MMIO(int, 0x400045c) = ty;
         NTR_MMIO(int, 0x400045c) = tz;
+    }
+
+    /* SM64DS_LOOKAT_LOG=<n>: the first n calls' three vectors and the
+       translation row they produce. DEFAULT OFF, PerspectiveW_'s SM64DS_
+       PERSP_LOG next door is the same instrument for the other half of the
+       camera.
+       tz IS THE ONE TO READ. It is the eye-space depth of the world origin,
+       so a 2D-in-3D surface drawn about the origin sits at -tz, and the
+       number of screen pixels one of its texels covers is decided by tz and
+       the projection's cotangent together. A UI that comes out oversized and
+       a camera that is too close are the same measurement, and without this
+       they are two arguments. */
+    {
+        static int budget = -1;
+        if (budget < 0) {
+            const char *e = std::getenv("SM64DS_LOOKAT_LOG");
+            budget = e ? std::atoi(e) : 0;
+        }
+        if (budget > 0) {
+            --budget;
+            std::fprintf(stderr,
+                         "[lookat] at=(%d,%d,%d)=(%.4f,%.4f,%.4f) "
+                         "eye=(%d,%d,%d) up=(%d,%d,%d) draw=%d -> "
+                         "fwd=(%.4f,%.4f,%.4f) t=(%.4f,%.4f,%.4f)\n",
+                         at->x, at->y, at->z, at->x / 4096.0, at->y / 4096.0,
+                         at->z / 4096.0, eye->x, eye->y, eye->z, up->x, up->y,
+                         up->z, (int)draw, forward.x / 4096.0,
+                         forward.y / 4096.0, forward.z / 4096.0, tx / 4096.0,
+                         ty / 4096.0, tz / 4096.0);
+            std::fflush(stderr);
+        }
     }
 
     if (mat == 0)

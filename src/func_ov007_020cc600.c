@@ -9,7 +9,24 @@ extern void _ZN8SaveData13EraseSaveFileEjPc(u32 a, char *b);
 extern int func_02013c84(u32 charID, void *dest, s32 fileIndex, void *src);
 extern int func_ov007_020cc118(int a, u32 b);
 extern void *_ZN6Memory13operator_new2Ej(u32 sz);
-extern void func_ov007_020cc0e4(void);
+/* func_ov007_020cc0e4 IS THE SETTER FOR data_0209b33c AND IT TAKES ITS VALUE
+ * IN r0. The ROM leaves the hand-off implicit and mwccarm reproduces that with
+ * no argument setup at all, because r0 already holds it:
+ *
+ *   020cc964  mov  r0, #0xcc
+ *   020cc968  bl   #0x203cbd8   Memory::operator new -- returns in r0
+ *   020cc96c  mov  sb, r0       saves it, does NOT move it out of r0
+ *   020cc970  bl   #0x20cc0e4   r0 still holds the allocation
+ *
+ * Declaring this `(void)` reproduced those bytes just as well, so the TU stayed
+ * matched while the argument was only ever implicit. Spelling the parameter is
+ * ALSO byte-identical on 2004/b56 (verified with tools/match.py, strict relocs,
+ * the `mov sb, r0` / `bl` pair above unchanged), and it is the spelling any
+ * host whose ABI passes arguments on the stack needs -- without it the PC port
+ * called the setter with nothing pushed, stored a stale stack word into
+ * data_0209b33c, and the three 0x44-byte save records then aliased whatever
+ * that word pointed at. */
+extern void func_ov007_020cc0e4(void *base);
 extern int _ZN8SaveData12ReadFileDataEjP12FileSaveData(u32 charID, void *dst);
 extern void func_ov007_020cc168(u32 idx);
 extern int _ZN8SaveData16ReadMinigameDataEP16MinigameSaveData(void *p);
@@ -79,7 +96,7 @@ u8 func_ov007_020cc600(s32 arg)
     } else if (arg == 20) {
         u8 *sb = (u8 *)_ZN6Memory13operator_new2Ej(0xcc);
         u32 i;
-        func_ov007_020cc0e4();
+        func_ov007_020cc0e4(sb);
         for (i = 0; (s32)i < 3; i++, sb += 0x44) {
             if (_ZN8SaveData12ReadFileDataEjP12FileSaveData(i, sb) == 0)
                 r = 1;
