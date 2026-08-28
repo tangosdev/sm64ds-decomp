@@ -9254,7 +9254,7 @@ src/_ZN3IRQ13GetIRQHandlerEj.cpp:
     complete
     .text start:0x02056ee4 end:0x02056f70
 
-src/_ZN3IRQ13SetIRQHandlerEjPFvvE.c:
+src/_ZN3IRQ13SetIRQHandlerEjPFvvE.cpp:
     complete
     .text start:0x02056f70 end:0x02057000
 

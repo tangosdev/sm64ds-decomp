@@ -8,14 +8,13 @@
  * H-blank IRQ (func_0202f2c4) with IME briefly masked around the install. */
 #include "dWipe_c.h"
 #include "decl_common.h"
+#include "IRQ.h"
 
 extern "C" {
 void _ZN4CP1527FlushAndInvalidateDataCacheEjj(unsigned int addr, unsigned int len);
 void _ZN2GX10LoadBGPlttEPKvjj(const void *data, unsigned int offset, unsigned int size);
 void _ZN3GXS10LoadBGPlttEPKvjj(const void *data, unsigned int offset, unsigned int size);
 void func_0202f58c(void *self);
-void _ZN3IRQ13SetIRQHandlerEjPFvvE(unsigned int irq, void (*handler)(void));
-void _ZN3IRQ10EnableIRQsEj(unsigned int irq);
 }
 
 int dWipe_c::SetForwardTime(u32 frames)
@@ -63,8 +62,8 @@ int dWipe_c::SetForwardTime(u32 frames)
 
         saved = *(volatile u16 *)0x4000208;
         *(volatile u16 *)0x4000208 = 0;
-        _ZN3IRQ13SetIRQHandlerEjPFvvE(2, func_0202f2c4);
-        _ZN3IRQ10EnableIRQsEj(2);
+        IRQ::SetIRQHandler(2, func_0202f2c4);
+        IRQ::EnableIRQs(2);
         func_02053c10(1);
         if (saved != 0) {
             u16 tmp = *(volatile u16 *)0x4000208;
