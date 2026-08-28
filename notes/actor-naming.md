@@ -65,10 +65,10 @@ header's size comments.
 - *decomp-refs/nsmb* (**NSMB-Decomp/nsmb**): same engine lineage and toolchain
   family (`mwccarm 1.2 sp3, -O4,p`).
   
-  `src/objectid.hpp` annotates scene ids with
-  their SM64DS names; `src/Bases/*` mirrors our *Actor* hierarchy; their
-  `Vec.hpp` notes on member-init order affecting `LDR/STR` order match our
-  codegen notes. No SDK source there by policy - names only.
+  1. `src/objectid.hpp` annotates scene ids with their SM64DS names;
+  2. `src/Bases/*` mirrors our *Actor* hierarchy;
+  3. Their `Vec.hpp` notes on member-init order affecting `LDR/STR` order match our codegen notes;
+  4. No SDK source there by policy - names only.
 ---
 - The game's own scene name registry follows the spawn table in arm9 data
   (`BOOT/TITLE/STAGE/STAR_SELECT`... strings) - internal EAD names, not yet
