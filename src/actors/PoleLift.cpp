@@ -1,10 +1,10 @@
 //cpp
-/* SHADOW translation unit -- ov045 / PoleLift (RTTI name daObjKm2_Ami_Bou_c).
+/* Translation unit, reconstructed and promoted -- ov045 / PoleLift (RTTI name daObjKm2_Ami_Bou_c).
  *
- * NOT ENROLLED, AND NOT CANONICAL. This file contributes nothing to the ROM
- * build. The seven one-function sources under src/ remain the enrolled owners of
- * 0x0211150c..0x02111840. See notes/translation-unit-reconstruction-plan.md
- * (the design) and notes/tu-reconstruction-pilot-report.md (what this measured).
+ * CANONICAL. The ROM build compiles this file and takes all 7 functions from
+ * this one object; the one-function sources that owned 0x0211150c..0x02111840
+ * are gone. See notes/translation-unit-reconstruction-plan.md (the design) and
+ * notes/tu-reconstruction-pilot-report.md (what this measured).
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S.
  * mwccarm 2004/b56 emits one `.text` section per function and lays those

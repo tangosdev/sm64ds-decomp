@@ -1,10 +1,10 @@
 //cpp
-/* SHADOW translation unit -- ov002 / dBgActor_c (RTTI name dBgActor_c).
+/* Translation unit, reconstructed and promoted -- ov002 / dBgActor_c (RTTI name dBgActor_c).
  *
- * NOT ENROLLED, AND NOT CANONICAL. This file contributes nothing to the ROM
- * build. The eleven one-function sources under src/ remain the enrolled owners
- * of 0x020ee42c..0x020eea84. See notes/translation-unit-reconstruction-plan.md
- * (the design) and notes/tu-reconstruction-pilot-report.md (the worked example).
+ * CANONICAL. The ROM build compiles this file and takes all 11 functions from
+ * this one object; the one-function sources that owned 0x020ee42c..0x020eea84
+ * are gone. See notes/translation-unit-reconstruction-plan.md (the design) and
+ * notes/tu-reconstruction-pilot-report.md (the worked example).
  *
  * HAND-ASSEMBLED. `tubuild.py create` refuses this TU: three of the eleven
  * legacy sources wrap their body in `extern "C" { ... }`, which its splitter

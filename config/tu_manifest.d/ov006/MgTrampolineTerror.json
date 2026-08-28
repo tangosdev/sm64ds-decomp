@@ -1,9 +1,9 @@
 {
   "id": "ov006/MgTrampolineTerror",
   "module": "ov006",
-  "source": "src_tu/actors/MgTrampolineTerror.cpp",
+  "source": "src/actors/MgTrampolineTerror.cpp",
   "promoted_source": "src/actors/MgTrampolineTerror.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x212471c..0x21248a8, 2 function(s), from build/tu_map.json (tools/tu_map.py)",

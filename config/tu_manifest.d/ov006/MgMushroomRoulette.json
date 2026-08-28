@@ -1,9 +1,9 @@
 {
   "id": "ov006/MgMushroomRoulette",
   "module": "ov006",
-  "source": "src_tu/actors/MgMushroomRoulette.cpp",
+  "source": "src/actors/MgMushroomRoulette.cpp",
   "promoted_source": "src/actors/MgMushroomRoulette.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x210a400..0x210a4ac, 2 function(s), from build/tu_map.json (tools/tu_map.py)",

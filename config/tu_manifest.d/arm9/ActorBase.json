@@ -1,9 +1,9 @@
 {
   "id": "arm9/ActorBase",
   "module": "arm9",
-  "source": "src_tu/actors/ActorBase.cpp",
+  "source": "src/actors/ActorBase.cpp",
   "promoted_source": "src/actors/ActorBase.cpp",
-  "status": "link-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "NOT FROM tu_map. tools/tu_map.py reports the arm9 `main` module as UNDER-SEGMENTED: one unit 0x20049f0..0x20707a4 with 2984 functions and 73 class labels, because the module's class address-spans interleave and cluster() unions them all. There is no tu_map boundary here and no `tubuild.py create` candidate id; every line below is hand-derived and independently checkable.",

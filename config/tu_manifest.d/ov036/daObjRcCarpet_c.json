@@ -1,9 +1,9 @@
 {
   "id": "ov036/daObjRcCarpet_c",
   "module": "ov036",
-  "source": "src_tu/actors/daObjRcCarpet_c.cpp",
+  "source": "src/actors/daObjRcCarpet_c.cpp",
   "promoted_source": "src/actors/daObjRcCarpet_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x2112158..0x21125b0, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
