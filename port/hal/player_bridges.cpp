@@ -291,6 +291,61 @@ extern unsigned char data_0209f2d8;   /* VS mode flag */
 extern int data_0209fc5c[];           /* per-slot "this slot is live" */
 }
 
+/* ---- THE ROM'S PER-FRAME TEXTURE-SEQUENCE UPDATES --------------------------
+   Player::Render (src/_ZN6Player6RenderEv.cpp:80-83, 129-135) runs three
+   TextureSequence::Update calls every frame, and this port's replacement
+   render ran none of them, so every material a BTP drives stayed at its
+   BMD-authored default forever. For Luigi that default is the WRONG variant:
+   luigi_head_cap.bmd's head material is authored pointing at 'luigi_head_2'
+   -- the vanish-power stipple -- and only the every-frame Update pulls it
+   back to 'luigi_head_1' (L_tx_headtrans.btp frame 0). His body file is
+   authored the other way round (default 'luigi_body_tr_1', the normal skin),
+   which is why the body looked right while the head rendered see-through
+   from the port's first boot. Measured: [btpprep] resolves the trans pairs at
+   boot, and no [btp] material patch ever ran before this block existed.
+
+   The three updates, the ROM's own gates and order:
+     after the body render,  param1==1 (Luigi):  seq +0x254 -> body model
+       (+0xe0, slot 1)'s components, then currFrame(+0x25c) = unk_6fc<<12
+       (unk_6fc is the vanish-power progress; 0 in normal play = frame 0 =
+       the normal texture)
+     after the head render,  param1==1 (Luigi):  seq +0x268 -> head-with-cap
+       (+0x158)'s components, then currFrame(+0x270) = unk_6fc<<12
+     after the head render,  face timer +0x73c == 0 (func_ov002_020bea7c):
+       the per-character face/blink seq (+0x1dc + char*0x14) -> the CURRENT
+       head model's components (the eye-blink everyone gets, all characters)
+
+   The null guards are port hygiene only (the ROM would crash there too); the
+   gates and destinations are the matched TU's, byte for byte of intent. */
+extern "C" void _ZN15TextureSequence6UpdateER15ModelComponents(void *seq,
+                                                               void *mc);
+extern "C" int func_ov002_020bea7c(char *self);
+
+static void hal_player_texseq_body(char *c)
+{
+    if (*(int *)(c + 0x8) != 1) return;            /* param1: Luigi only */
+    char *mdl = *(char **)(c + 0xe0);              /* body model, slot 1 */
+    if (mdl)
+        _ZN15TextureSequence6UpdateER15ModelComponents(c + 0x254, mdl + 8);
+    *(int *)(c + 0x25c) = (int)*(unsigned char *)(c + 0x6fc) << 12;
+}
+
+static void hal_player_texseq_head(char *c, unsigned hid)
+{
+    if (*(int *)(c + 0x8) == 1) {                  /* param1: Luigi only */
+        char *mdl = *(char **)(c + 0x158);         /* head with cap */
+        if (mdl)
+            _ZN15TextureSequence6UpdateER15ModelComponents(c + 0x268, mdl + 8);
+        *(int *)(c + 0x270) = (int)*(unsigned char *)(c + 0x6fc) << 12;
+    }
+    if (func_ov002_020bea7c(c) == 0) {             /* face timer idle */
+        char *head = ((char **)(c + 0x154))[hid];
+        if (head)
+            _ZN15TextureSequence6UpdateER15ModelComponents(
+                c + 0x1dc + *(unsigned char *)(c + 0x6db) * 0x14, head + 8);
+    }
+}
+
 void hal_render_player_world(void *player)
 {
     char *c = (char *)player;
@@ -368,12 +423,14 @@ void hal_render_player_world(void *player)
     for (int i = 0; i < 12; ++i) ((int *)&ma->mat4x3)[i] = scene[i];
     ma->ModelAnim::UpdateVerts();
     ma->ModelAnim::Render(0);
+    hal_player_texseq_body(c);
 
     unsigned hid = func_ov002_020becf4(c, *(unsigned char *)(c + 0x6db), 1);
     if (hid != 8 && hid != 9) {
         char *head = ((char **)(c + 0x154))[hid];
         if (head) {
             hal_render_head_group(c, head, hid, ma, scene);
+            hal_player_texseq_head(c, hid);
         }
     }
 
@@ -478,6 +535,7 @@ void hal_render_player_body_ex(void *player, int with_head)
     ((int *)&ma->mat4x3)[8] = 0x1000;
     ma->ModelAnim::UpdateVerts();
     ma->ModelAnim::Render(0);
+    hal_player_texseq_body(c);
 
     /* the head is its own model; Player::Render seats it by copying the
        body's neck-bone matrix (+0x2d0 in the bone array) into the head's
@@ -495,6 +553,7 @@ void hal_render_player_body_ex(void *player, int with_head)
                     ((int *)(head + 0x1c))[i] = ((const int *)src)[i];
             ((void(__fastcall *)(void *, void *, const void *))(
                 ((void ***)head)[0][4]))(head, 0, 0);
+            hal_player_texseq_head(c, hid);
         }
     }
 }
