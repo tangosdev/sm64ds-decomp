@@ -1,9 +1,9 @@
 {
   "id": "ov047/RickshawPlatformBs",
   "module": "ov047",
-  "source": "src_tu/actors/RickshawPlatformBs.cpp",
+  "source": "src/actors/RickshawPlatformBs.cpp",
   "promoted_source": "src/actors/RickshawPlatformBs.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x2111510..0x21116dc, 5 function(s), from build/tu_map.json (tools/tu_map.py)",

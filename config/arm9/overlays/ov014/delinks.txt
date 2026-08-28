@@ -3,29 +3,9 @@
     .ctor       start:0x02113368 end:0x02113374 kind:rodata align:4
     .data       start:0x02113380 end:0x02114940 kind:data align:32
     .bss        start:0x02114940 end:0x021149e0 kind:bss align:32
-src/_ZN10ShutterBobD1Ev.cpp:
+src/actors/ShutterBob.cpp:
     complete
-    .text start:0x021111a0 end:0x021111f0
-
-src/_ZN10ShutterBobD0Ev.cpp:
-    complete
-    .text start:0x021111f0 end:0x02111254
-
-src/_ZN10ShutterBob16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111254 end:0x02111268
-
-src/_ZN10ShutterBob8BehaviorEv.cpp:
-    complete
-    .text start:0x02111268 end:0x02111294
-
-src/_ZN10ShutterBob13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111294 end:0x021112cc
-
-src/ShutterBob_Spawn.c:
-    complete
-    .text start:0x021112cc end:0x02111308
+    .text start:0x021111a0 end:0x02111308
 
 src/_ZN10ChainChompD1Ev.cpp:
     complete
@@ -143,38 +123,6 @@ src/ChainChomp_Spawn.cpp:
     complete
     .text start:0x02112d1c end:0x02112e0c
 
-src/_ZN15ChainChompFenceD1Ev.cpp:
-    complete
-    .text start:0x02112e0c end:0x02112e50
-
-src/_ZN15ChainChompFenceD0Ev.cpp:
-    complete
-    .text start:0x02112e50 end:0x02112ea8
-
-src/func_ov014_02112ea8.cpp:
-    complete
-    .text start:0x02112ea8 end:0x02112f3c
-
-src/_ZN15ChainChompFence16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02112f3c end:0x02112f80
-
-src/_ZN15ChainChompFence6RenderEv.cpp:
-    complete
-    .text start:0x02112f80 end:0x02112fc0
-
-src/_ZN15ChainChompFence8BehaviorEv.cpp:
-    complete
-    .text start:0x02112fc0 end:0x02112ffc
-
-src/_ZN15ChainChompFence13InitResourcesEv.cpp:
-    complete
-    .text start:0x02112ffc end:0x0211307c
-
-src/ChainChompFence_Spawn.c:
-    complete
-    .text start:0x0211307c end:0x021130ac
-
 src/__sinit_ov014_021130ac.c:
     complete
     .init start:0x021130ac end:0x02113118
@@ -186,3 +134,8 @@ src/__sinit_ov014_02113118.c:
 src/__sinit_ov014_021132fc.c:
     complete
     .init start:0x021132fc end:0x02113368
+
+src/actors/ChainChompFence.cpp:
+    complete
+    .text start:0x02112e0c end:0x021130ac
+

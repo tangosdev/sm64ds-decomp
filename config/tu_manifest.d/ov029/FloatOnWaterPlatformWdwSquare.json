@@ -1,9 +1,9 @@
 {
   "id": "ov029/FloatOnWaterPlatformWdwSquare",
   "module": "ov029",
-  "source": "src_tu/actors/FloatOnWaterPlatformWdwSquare.cpp",
+  "source": "src/actors/FloatOnWaterPlatformWdwSquare.cpp",
   "promoted_source": "src/actors/FloatOnWaterPlatformWdwSquare.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x21111a0..0x211137c, 4 function(s), from build/tu_map.json (tools/tu_map.py)",

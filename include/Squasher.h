@@ -27,7 +27,7 @@ struct Squasher : dBgActor_c {
     ShadowModel mShadowModel;         /* 0x324 */
 
     /* --- vtable --- */
-    virtual ~Squasher();
+    virtual ~Squasher() {}
 
     int Behavior();
     int CleanupResources();

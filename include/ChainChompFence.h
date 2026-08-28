@@ -22,7 +22,7 @@ struct ChainChompFence : dBgActor_c {
     u8 mDisabled;                     /* 0x31e -- both Behavior and Render return immediately while it is set */
 
     /* --- vtable --- */
-    virtual ~ChainChompFence();
+    virtual ~ChainChompFence() {}
 
     int Behavior();
     int CleanupResources();

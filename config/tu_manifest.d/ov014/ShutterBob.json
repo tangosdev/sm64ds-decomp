@@ -1,9 +1,9 @@
 {
   "id": "ov014/ShutterBob",
   "module": "ov014",
-  "source": "src_tu/actors/ShutterBob.cpp",
+  "source": "src/actors/ShutterBob.cpp",
   "promoted_source": "src/actors/ShutterBob.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x21111a0..0x2111308, 6 function(s), from build/tu_map.json (tools/tu_map.py)",

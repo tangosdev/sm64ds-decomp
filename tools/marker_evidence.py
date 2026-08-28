@@ -702,7 +702,7 @@ _SKIP_MEMBER_TY = set(EH._W1) | set(EH._W2) | set(EH._W4) | set(EH._W8) | {"void
 def scan_local_layout(code, cls, origin, path):
     """A migrated file that declares its own layout IS a member-type table.
 
-    `src/_ZN3AmpD1Ev.cpp` says `struct Amp : Actor { ModelAnim m0; /* 0xd4 */ ... }`
+    `src/actors/Amp.cpp` says `struct Amp : Actor { ModelAnim m0; /* 0xd4 */ ... }`
     and that file byte-matches, so both the offsets and the class names in it are
     pinned by the ROM's own relocations.
     """

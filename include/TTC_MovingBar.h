@@ -26,7 +26,7 @@ struct TTC_MovingBar : dBgActor_c {
     ShadowModel mShadowModel;         /* 0x324 */
 
     /* --- vtable --- */
-    virtual ~TTC_MovingBar();
+    virtual ~TTC_MovingBar() {}
 
     int Behavior();
     int CleanupResources();

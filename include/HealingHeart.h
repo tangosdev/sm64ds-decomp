@@ -47,7 +47,7 @@ struct HealingHeart : dActor_c {
        [_ZN12HealingHeart8BehaviorEv.cpp] */
     u8  mWasTouched;            /* 0x171 */
 
-    virtual ~HealingHeart();
+    virtual ~HealingHeart() {}
     virtual s32 InitResources();       /* slot  0 */
     virtual s32 CleanupResources();    /* slot  3 */
     virtual s32 Behavior();            /* slot  6 */

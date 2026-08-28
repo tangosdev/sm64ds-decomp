@@ -1,9 +1,9 @@
 {
   "id": "ov002/Number",
   "module": "ov002",
-  "source": "src_tu/actors/Number.cpp",
+  "source": "src/actors/Number.cpp",
   "promoted_source": "src/actors/Number.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20f0894..0x20f0dd0, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -151,13 +151,6 @@
     "stateMeaning": "N per-function objects were extracted from one compiled TU object; their equivalence to the production objects was not established",
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
   },
-  "compiler_only_output": [
-    {
-      "symbol": "_ZN6NumberD2Ev",
-      "disposition": "deadstrip",
-      "reason": "compiler-generated base-object destructor is byte-identical to D1, has no configured ROM symbol, and has no inbound relocation"
-    }
-  ],
   "externalized_output": [
     {
       "symbol": "_ZTI7fBase_c",

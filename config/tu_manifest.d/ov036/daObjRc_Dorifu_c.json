@@ -1,9 +1,9 @@
 {
   "id": "ov036/daObjRc_Dorifu_c",
   "module": "ov036",
-  "source": "src_tu/actors/daObjRc_Dorifu_c.cpp",
+  "source": "src/actors/daObjRc_Dorifu_c.cpp",
   "promoted_source": "src/actors/daObjRc_Dorifu_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x2111f8c..0x21120c8, 4 function(s), from build/tu_map.json (tools/tu_map.py)",

@@ -1,9 +1,9 @@
 {
   "id": "ov077/Lakitu",
   "module": "ov077",
-  "source": "src_tu/actors/Lakitu.cpp",
+  "source": "src/actors/Lakitu.cpp",
   "promoted_source": "src/actors/Lakitu.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x2123740..0x2124b64, 32 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -265,5 +265,14 @@
       "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
       "relocation_destinations_verified": "PASS"
     }
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "vague-linkage copy of _ZN7Vector3D1Ev, re-emitted by every TU that needs it; the cartridge keeps one at arm9:0x020072c0 and another enrolled source owns it. rombuild proves this object's body against the cartridge before discarding it."
+    }
+  ]
 }

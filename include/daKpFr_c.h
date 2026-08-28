@@ -47,7 +47,7 @@ struct daKpFr_c : dActor_c {
 
     /* Declared first on purpose, same reasoning as dActor_c.h: the key
        function pins where mwcc anchors the vtable. */
-    virtual ~daKpFr_c();
+    virtual ~daKpFr_c() {}
 
     virtual s32  InitResources();       /* slot 0 */
     virtual s32  CleanupResources();    /* slot 3 */

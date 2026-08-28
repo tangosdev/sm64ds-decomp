@@ -428,37 +428,9 @@ src/Coin_Spawn.c:
     complete
     .text start:0x020b2b48 end:0x020b2ba0
 
-src/_ZN11WingFeatherD1Ev.cpp:
+src/actors/WingFeather.cpp:
     complete
-    .text start:0x020b2ba0 end:0x020b2be8
-
-src/_ZN11WingFeatherD0Ev.cpp:
-    complete
-    .text start:0x020b2be8 end:0x020b2c44
-
-src/func_ov002_020b2c44.cpp:
-    complete
-    .text start:0x020b2c44 end:0x020b2e30
-
-src/_ZN11WingFeather16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020b2e30 end:0x020b2e54
-
-src/_ZN11WingFeather6RenderEv.cpp:
-    complete
-    .text start:0x020b2e54 end:0x020b2e9c
-
-src/_ZN11WingFeather8BehaviorEv.cpp:
-    complete
-    .text start:0x020b2e9c end:0x020b311c
-
-src/_ZN11WingFeather13InitResourcesEv.cpp:
-    complete
-    .text start:0x020b311c end:0x020b3248
-
-src/WingFeather_Spawn.c:
-    complete
-    .text start:0x020b3248 end:0x020b3298
+    .text start:0x020b2ba0 end:0x020b3298
 
 src/_ZN12daObjAbuku_cD1Ev.cpp:
     complete
@@ -1439,37 +1411,9 @@ src/actors/Seaweed.cpp:
     complete
     .text start:0x020bc414 end:0x020bc5e0
 
-src/_ZN12HealingHeartD1Ev.cpp:
+src/actors/HealingHeart.cpp:
     complete
-    .text start:0x020bc5e0 end:0x020bc618
-
-src/_ZN12HealingHeartD0Ev.cpp:
-    complete
-    .text start:0x020bc618 end:0x020bc664
-
-src/func_ov002_020bc664.c:
-    complete
-    .text start:0x020bc664 end:0x020bc6a4
-
-src/_ZN12HealingHeart16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020bc6a4 end:0x020bc6d4
-
-src/_ZN12HealingHeart6RenderEv.cpp:
-    complete
-    .text start:0x020bc6d4 end:0x020bc6fc
-
-src/_ZN12HealingHeart8BehaviorEv.cpp:
-    complete
-    .text start:0x020bc6fc end:0x020bc81c
-
-src/_ZN12HealingHeart13InitResourcesEv.cpp:
-    complete
-    .text start:0x020bc81c end:0x020bc8b4
-
-src/HealingHeart_Spawn.c:
-    complete
-    .text start:0x020bc8b4 end:0x020bc8f4
+    .text start:0x020bc5e0 end:0x020bc8f4
 
 src/actors/daObjCannonShutter_c.cpp:
     complete
@@ -4590,37 +4534,9 @@ src/daSCoin_c_Spawn.c:
     complete
     .text start:0x020f085c end:0x020f0894
 
-src/_ZN6NumberD1Ev.cpp:
+src/actors/Number.cpp:
     complete
-    .text start:0x020f0894 end:0x020f08cc
-
-src/_ZN6NumberD0Ev.cpp:
-    complete
-    .text start:0x020f08cc end:0x020f0918
-
-src/func_ov002_020f0918.c:
-    complete
-    .text start:0x020f0918 end:0x020f093c
-
-src/_ZN6Number16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020f093c end:0x020f0994
-
-src/_ZN6Number6RenderEv.cpp:
-    complete
-    .text start:0x020f0994 end:0x020f0a60
-
-src/_ZN6Number8BehaviorEv.cpp:
-    complete
-    .text start:0x020f0a60 end:0x020f0bd4
-
-src/_ZN6Number13InitResourcesEv.cpp:
-    complete
-    .text start:0x020f0bd4 end:0x020f0d90
-
-src/Number_Spawn.c:
-    complete
-    .text start:0x020f0d90 end:0x020f0dd0
+    .text start:0x020f0894 end:0x020f0dd0
 
 src/actors/OneUpLogo.cpp:
     complete

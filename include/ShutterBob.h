@@ -40,7 +40,7 @@ struct ShutterBob : daObjSwdoor_c {
     u8  pad_320[0x4];
 
     /* --- vtable --- */
-    virtual ~ShutterBob();             /* slots 16 (D1), 17 (D0) */
+    virtual ~ShutterBob() {}             /* slots 16 (D1), 17 (D0) */
 
     int Behavior();                    /* slot  6 */
     int CleanupResources();            /* slot  3 */

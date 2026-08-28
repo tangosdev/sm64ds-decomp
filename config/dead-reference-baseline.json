@@ -242,10 +242,6 @@
    "ref": "include/cMgSmartball_"
   },
   {
-   "file": "notes/translation-unit-reconstruction-plan.md",
-   "ref": "src/actors/Chuckya.cpp"
-  },
-  {
    "file": "notes/tu-reconstruction-pilot-2-report.md",
    "ref": "include/Actor.h"
   },
@@ -360,6 +356,18 @@
   {
    "file": "tools/check_header_offsets.py",
    "ref": "include/Enemy.h"
+  },
+  {
+   "file": "tools/check_src_tu.py",
+   "ref": "src_tu/actors/Actor.cpp"
+  },
+  {
+   "file": "tools/check_src_tu.py",
+   "ref": "src_tu/actors/CastleWater.cpp"
+  },
+  {
+   "file": "tools/check_src_tu_compiles.py",
+   "ref": "src_tu/actors/Actor.cpp"
   },
   {
    "file": "tools/d0_migrate.py",

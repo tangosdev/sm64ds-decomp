@@ -1,9 +1,9 @@
 {
   "id": "ov062/Chuckya",
   "module": "ov062",
-  "source": "src_tu/actors/Chuckya.cpp",
+  "source": "src/actors/Chuckya.cpp",
   "promoted_source": "src/actors/Chuckya.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x2115ee0..0x21174cc, 36 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -332,5 +332,14 @@
         "_ZN7Vector3D1Ev"
       ]
     }
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "vague-linkage copy of _ZN7Vector3D1Ev, re-emitted by every TU that needs it; the cartridge keeps one at arm9:0x020072c0 and another enrolled source owns it. rombuild proves this object's body against the cartridge before discarding it."
+    }
+  ]
 }

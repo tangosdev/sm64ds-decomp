@@ -58,7 +58,7 @@ struct FlyGuy : dEnemyBase_c {
     u8  pad_3e4[0x4];
 
     /* --- vtable --- */
-    virtual ~FlyGuy();
+    virtual ~FlyGuy() {}
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
     virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */

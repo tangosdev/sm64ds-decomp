@@ -1,9 +1,9 @@
 {
   "id": "ov023/Squasher",
   "module": "ov023",
-  "source": "src_tu/actors/Squasher.cpp",
+  "source": "src/actors/Squasher.cpp",
   "promoted_source": "src/actors/Squasher.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x21111a0..0x2111760, 9 function(s), from build/tu_map.json (tools/tu_map.py)",

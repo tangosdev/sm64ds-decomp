@@ -109,8 +109,8 @@ frame the penguin is near the player, never read).
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x3c0 | `mMatrix` | `*(Matrix4x3*)&unk_3c0 = IDENTITY_MATRIX4X3` in `src/_ZN6Lakitu13InitResourcesEv.cpp`. The pad after it runs to 0x3f3, four bytes past the matrix's own 0x30. |
-| 0x3f4 | `mState` | `src/_ZN6Lakitu6RenderEv.cpp` draws the second `Model` only when this is 1. |
+| 0x3c0 | `mMatrix` | `*(Matrix4x3*)&unk_3c0 = IDENTITY_MATRIX4X3` in `src/actors/Lakitu.cpp`. The pad after it runs to 0x3f3, four bytes past the matrix's own 0x30. |
+| 0x3f4 | `mState` | `src/actors/Lakitu.cpp` draws the second `Model` only when this is 1. |
 | 0x3f8 | `mSpawnPosX` | `InitResources` copies `this + 0x5c` (`mPosX`) in. |
 | 0x3fc | `mSpawnPosY` | same, `this + 0x60` (`mPosY`). |
 | 0x400 | `mSpawnPosZ` | same, `this + 0x64` (`mPosZ`); this is the only one of the three spelt as a member, the other two are raw `this + 0xNN` stores. |
@@ -131,7 +131,7 @@ Deliberately left `unk_`: 0x410 (zeroed, never read).
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x3ab | `mSpawnFilter` | `param1` bits 4..6 for a red (0x121) or blue (0x122) coin, 0xff otherwise. The same three-bit value `LoadObjects` compares against `data_0209f220` to decide whether an object belongs to the entrance the level was started from (`src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp`). A red coin claims a star-marker slot only when it matches (or `SublevelToLevel` is 0x13); a blue coin whose filter is under 8 clears bit 0 of `mCoinFlags`. |
+| 0x3ab | `mSpawnFilter` | `param1` bits 4..6 for a red (0x121) or blue (0x122) coin, 0xff otherwise. The same three-bit value `LoadObjects` compares against `data_0209f220` to decide whether an object belongs to the entrance the level was started from (`src/stage/LevelObjects.cpp`). A red coin claims a star-marker slot only when it matches (or `SublevelToLevel` is 0x13); a blue coin whose filter is under 8 clears bit 0 of `mCoinFlags`. |
 | 0x3ae | `mCoinFlags` | the flag byte `src/_ZN4Coin13InitResourcesEv.cpp` already documented as such: bit 0 gates `Render` outright, `Behavior` tests bits 0 and 1. Named `mCoinFlags` and NOT `mFlags`, which is `dActor_c`'s own field 0x0b0. |
 
 The read-modify-write sites keep their raw `*(u8*)((int)c + 0x3ae)` spelling --
@@ -153,8 +153,8 @@ one up, and its parameter list is half the evidence here.
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x138 | `mOwnerUniqueID` | `src/_ZN6Number8BehaviorEv.cpp` resolves it through `dActor_c::FindWithID` and, when the actor still exists, takes the popup's draw position from that actor's own `mPos` triple. 0 means "not following anything" -- the `owner` argument of `SpawnNumber`. |
-| 0x13c | `mStartPosX` | copied from `mPosX` in `src/_ZN6Number13InitResourcesEv.cpp`, alongside the already-named `mStartPosY` at 0x140. |
+| 0x138 | `mOwnerUniqueID` | `src/actors/Number.cpp` resolves it through `dActor_c::FindWithID` and, when the actor still exists, takes the popup's draw position from that actor's own `mPos` triple. 0 means "not following anything" -- the `owner` argument of `SpawnNumber`. |
+| 0x13c | `mStartPosX` | copied from `mPosX` in `src/actors/Number.cpp`, alongside the already-named `mStartPosY` at 0x140. |
 | 0x144 | `mStartPosZ` | same, `mPosZ`. |
 | 0x148 | `mFollowOffsetY` | added to `mPosY - mStartPosY` -- how far the popup has risen -- when the position is taken from the owner. |
 | 0x14c | `mDelay` | the `delay` argument of `SpawnNumber`: while nonzero `Behavior` returns immediately and `Render` decrements it and draws nothing. |
@@ -209,8 +209,8 @@ carry the rename.
 | 0x16c | `mAnimSpeed` | seeded 0x1000 (1.0), eased toward 0x8000 while the heal cooldown is above 0x2d and back toward 0x1000 otherwise, then copied into `mModelAnim.speed`. The heart spins slowly while idle and fast just after it heals. |
 | 0x171 | `mWasTouched` | edge detector on the collider: latched to 1 (and `mHealTimer` zeroed, so the heal fires that frame) the first frame the `dCcAc_c` reports an occupant, cleared the frame it reports none. |
 
-Sources: `src/_ZN12HealingHeart13InitResourcesEv.cpp`,
-`src/_ZN12HealingHeart8BehaviorEv.cpp`, and `src_tu/actors/HealingHeart.cpp`.
+Sources: `src/actors/HealingHeart.cpp`,
+`src/actors/HealingHeart.cpp`, and `src/actors/HealingHeart.cpp`.
 
 ## WingFeather -- include/WingFeather.h
 
@@ -221,9 +221,9 @@ Sources: `src/_ZN12HealingHeart13InitResourcesEv.cpp`,
 | 0x380 | `mParticle` | the particle-handle shape above, effect 0x4a. |
 | 0x384 | `mLifeTimer` | 0xb4 at init, counted down only while on the ground, destroys at 0, blinks below 0x2d. |
 
-Sources: `src/_ZN11WingFeather13InitResourcesEv.cpp`,
-`src/_ZN11WingFeather8BehaviorEv.cpp`, `src/_ZN11WingFeather6RenderEv.cpp`,
-`src_tu/actors/WingFeather.cpp`.
+Sources: `src/actors/WingFeather.cpp`,
+`src/actors/WingFeather.cpp`, `src/actors/WingFeather.cpp`,
+`src/actors/WingFeather.cpp`.
 
 ## daObjAbuku_c -- include/daObjAbuku_c.h
 
@@ -260,8 +260,8 @@ Sources: `src/_ZN8daEyBm_c13InitResourcesEv.cpp`,
 | 0x324 | `mParticle1` | particle-handle shape, effect 0x7f, emitted at `mPosY + 0x4b000`. |
 | 0x328 | `mParticle2` | same, effect 0x80. |
 
-Sources: `src/_ZN8daKpFr_c13InitResourcesEv.cpp`,
-`src/_ZN8daKpFr_c6RenderEv.cpp`, `src_tu/actors/daKpFr_c.cpp`.
+Sources: `src/actors/daKpFr_c.cpp`,
+`src/actors/daKpFr_c.cpp`, `src/actors/daKpFr_c.cpp`.
 
 ## daKrpa_c -- include/daKrpa_c.h
 
@@ -270,7 +270,7 @@ Sources: `src/_ZN8daKpFr_c13InitResourcesEv.cpp`,
 | 0x35c | `mMatrix` | identity-matrix shape. |
 | 0x3a8 | `mHeightAboveGnd` | `InitResources` raycasts a `dBgCh_Gnd` down from `mPos` and stores `(mPosY - hit height) + 0x1e000`, or the constant 0x1f4000 when nothing is hit. |
 
-Sources: `src/_ZN8daKrpa_c13InitResourcesEv.cpp`, `src_tu/actors/daKrpa_c.cpp`.
+Sources: `src/actors/daKrpa_c.cpp`, `src/actors/daKrpa_c.cpp`.
 
 ## Spiny -- include/Spiny.h
 
@@ -280,8 +280,8 @@ Sources: `src/_ZN8daKrpa_c13InitResourcesEv.cpp`, `src_tu/actors/daKrpa_c.cpp`.
 | 0x3d8 | `mState` | `Render` draws the still `Model` in states 0 and 4 and the `ModelAnim` otherwise; `Behavior` treats 1 (once on the ground), 4 and 5 as states that must keep running whatever the distance to the player. |
 | 0x3e9 | `mDespawnTimer` | 0x2c (44 frames) at init, counted down ONLY on the frames Spiny is too far from the player to behave, destroys at 0. Not a plain life timer -- being near the player refills nothing but stops the count. |
 
-Sources: `src/_ZN5Spiny13InitResourcesEv.cpp`, `src/_ZN5Spiny6RenderEv.cpp`,
-`src/_ZN5Spiny8BehaviorEv.cpp`, `src_tu/actors/Spiny.cpp`.
+Sources: `src/actors/Spiny.cpp`, `src/actors/Spiny.cpp`,
+`src/actors/Spiny.cpp`, `src/actors/Spiny.cpp`.
 
 ## EnemySwitchTag -- include/EnemySwitchTag.h
 

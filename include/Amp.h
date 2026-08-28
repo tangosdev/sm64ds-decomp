@@ -36,7 +36,7 @@ struct Amp : dActor_c {
     s32                       mState;                        /* 0x420 */
     u8                        pad_424[0x10];
 
-    virtual ~Amp();
+    virtual ~Amp() {}
 
     virtual s32 InitResources();
     virtual s32 CleanupResources();

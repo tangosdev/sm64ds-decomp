@@ -1,9 +1,9 @@
 {
   "id": "ov065/TTC_MovingBar",
   "module": "ov065",
-  "source": "src_tu/actors/TTC_MovingBar.cpp",
+  "source": "src/actors/TTC_MovingBar.cpp",
   "promoted_source": "src/actors/TTC_MovingBar.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x211b360..0x211b7f0, 9 function(s), from build/tu_map.json (tools/tu_map.py)",

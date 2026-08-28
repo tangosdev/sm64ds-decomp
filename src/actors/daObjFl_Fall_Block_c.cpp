@@ -1,5 +1,5 @@
 //cpp
-/* Manually curated shadow translation unit.
+/* Manually curated translation unit, reconstructed and promoted.
  * ov022/daObjFl_Fall_Block_c  (4 function(s))
  *
  * CANONICAL. The readable class and member definitions below are what the ROM
