@@ -1067,8 +1067,58 @@ void sync_send_ping() {
     if (t->send_aux(&p, (int)sizeof p) == (int)sizeof p) ++g_stats.pings;
 }
 
+// ---------------------------------------------------------------------------
+// THE LIVENESS GATE, and the field failure that ordered it (owner live,
+// 2026-08-28 13:03, runs/mg16/out/MP2/two_windows, the play_20260828_1303*
+// pair). The lockstep session died at round 83 -- both instances fell to solo,
+// connected=no players=1 role=0 -- and this layer had no opinion about that:
+// enabled once at sync_decide, it would keep ticking against whatever the
+// carrier still had, correcting remote bodies between two sims that no longer
+// share a wire. The carrier's own guards (live-mask fan-out, close() clearing
+// the aux slots) happened to keep the traffic at zero in that session, but
+// "the carrier happened to save us" is not a policy, and a future carrier --
+// or a half-dead session where one side still holds a live mask -- would sync
+// two solo worlds against each other.
+//
+// So the layer asks the SEAM the same question the [comms:level] report line
+// prints -- comms_readout(), whose `connected` is link state 3 or 4 off the
+// transport's own state() and whose `players` is the live count -- and goes
+// QUIET when the answer is not a live session: no receive, no apply, no
+// snapshot, no ping. Counted per frame in `gated` (on the report line, so a
+// playlog shows the gate working), said once per transition in each
+// direction. On (re)connect it resumes by itself: the gate re-reads the seam
+// every frame and g_enabled was never touched. Held aux in the delay rig dies
+// with the session -- a message describing a body from the dead session must
+// not apply into the next one.
+// ---------------------------------------------------------------------------
+namespace {
+bool g_gated_now = false;
+}
+
 void sync_tick() {
     if (!g_enabled) return;
+    const CommsReadout r = comms_readout();
+    if (!r.connected || r.players <= 1) {
+        ++g_stats.gated;
+        if (!g_gated_now) {
+            g_gated_now = true;
+            g_dq_head = 0;
+            g_dq_count = 0;            // held aux dies with the session
+            std::fprintf(stderr,
+                         "[sync] gated: the lockstep session is not live "
+                         "(link=%d players=%d); the sync layer goes quiet "
+                         "until it is\n",
+                         r.link_state, r.players);
+        }
+        return;
+    }
+    if (g_gated_now) {
+        g_gated_now = false;
+        std::fprintf(stderr,
+                     "[sync] resumed: the lockstep session is live again "
+                     "after %llu gated frames\n",
+                     (unsigned long long)g_stats.gated);
+    }
     sync_recv_pump();      // take what has arrived (and is due) first
     sync_send_own();       // then publish OUR body, after the input record
     sync_send_ping();      // and the rig's probe last, behind the state
@@ -1087,7 +1137,7 @@ void sync_report(const char *tag) {
                  "applied=%llu lerps=%llu snaps=%llu worst_err=%d "
                  "delay=%d rtt_last=%d rtt_avg=%d pings=%llu pongs=%llu "
                  "own_claims=%llu local_writes=%llu evsends=%llu "
-                 "reseeds=%llu phase_worst=%d avg_err=%d\n",
+                 "reseeds=%llu phase_worst=%d avg_err=%d gated=%llu\n",
                  tag ? tag : "-", g_enabled ? "yes" : "no",
                  (unsigned long long)g_stats.sent,
                  (unsigned long long)g_stats.recvd,
@@ -1106,7 +1156,8 @@ void sync_report(const char *tag) {
                  g_stats.phase_worst,
                  (int)(g_stats.err_n ? g_stats.err_sum /
                                            (long long)g_stats.err_n
-                                     : 0));
+                                     : 0),
+                 (unsigned long long)g_stats.gated);
 }
 
 }  // namespace port

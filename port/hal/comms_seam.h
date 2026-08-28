@@ -531,6 +531,13 @@ struct SyncStats {
     // worst_error takes its max over, err_n counts entries.
     long long err_sum;
     unsigned long long err_n;
+    // Frames the LIVENESS GATE held the layer quiet because the lockstep
+    // session was not live -- comms_readout() said connected=no or players<=1,
+    // the same truth the [comms:level] report line prints. Ordered by the
+    // 2026-08-28 field collapse: after a session death the layer used to keep
+    // ticking against two solo sims. On the report line as gated=N so a
+    // playlog shows the gate holding; see sync_tick's own banner.
+    unsigned long long gated;
 };
 
 // Decide whether the layer runs this session. Requires SM64DS_SYNC=1, an
@@ -545,7 +552,11 @@ void sync_report(const char *tag);
 // One frame of the sync layer: apply each peer's view of its own body to that
 // REMOTE body, then publish ours. Call AFTER the conductor has run, so the
 // input record is always on the wire first -- the contract's ordering rule.
-// No-op when the layer is not enabled.
+// No-op when the layer is not enabled, and GATED QUIET -- no send, no apply,
+// no ping -- while the lockstep session is not live (comms_readout() says
+// connected=no or players<=1, the same truth the [comms:level] line prints).
+// It resumes by itself when the session is live again; the gated frames are
+// counted on the sync report line as gated=N.
 void sync_tick();
 
 }  // namespace port
