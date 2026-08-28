@@ -122,7 +122,7 @@ extern "C" void Copy48BytesFixed(int *src, int *dst) {
 }
 
 // The FIFO flush primitive: 32 no-writeback stmia of four zeroed registers,
-// 128 NOP command words that push any partially-packed command through.
+// 128 NOP command words that push any partially-packed command through.
 // PORT_HOST_ABI: hand-asm primitive (banner-marked in src/), a raw stmia
 // loop into the GXFIFO port; the ntr layer models the flush, not the
 // instruction stream. Tag added at the wave-3 close after a Scene seat gave
@@ -241,8 +241,40 @@ extern "C" void _ZN3IRQ15ClearInterruptsEj(unsigned) {}
 //                FIFO seam and synthesises the completion IRQ instead.
 extern "C" void DMAStartTransfer(int ch, int src, int dst, int ctrl) {
     const int words = ctrl & 0x1FFFFF;
+    /* CONTROL BIT 24 IS DMA_CONTROL_SRC_FIXED: the source address does NOT
+       advance, so the transfer REPEATS one word. That is what a FILL is, and
+       it is what DMASyncFillTransfer asks for.
+       Ignoring it made every fill a memcpy FROM THE SOURCE ADDRESS ONWARDS,
+       and on this hardware model the source it is handed is the mapped MMIO
+       window at 0x040000EC -- so a fill walked the live I/O registers into
+       its destination instead of clearing it.
+       On the title that destination is the two OAM shadow buffers, every
+       frame, and the 3D geometry-port latches landed in entries 64..127. All
+       three of the owner's visual complaints are that one memcpy:
+         * the bottom-screen star correct on half the frames and MASSIVE and
+           rotated 90 degrees on the others -- garbage attr0 rotation/scale
+           and double-size bits, alternating with the buffer swap;
+         * identical corruption top-left of BOTH screens -- same source
+           address feeding both engines;
+         * random glitched LETTERS there on the attract's Yoshi switch --
+           garbage attr2 tile index pointing into the swapped character sheet.
+       Four other live callers (func_02053c40, func_020554bc, func_020616e8
+       and the title's own path) were doing the same MMIO memcpy; honouring
+       the bit heals all of them, because it is the primitive that was wrong
+       rather than any one caller. */
+    if (ctrl & 0x01000000) {
+        const uint32_t v =
+            *reinterpret_cast<const uint32_t *>(static_cast<uintptr_t>(src));
+        uint32_t *d = reinterpret_cast<uint32_t *>(static_cast<uintptr_t>(dst));
+        if (static_cast<uintptr_t>(dst) == GXFIFO) {
+            for (int i = 0; i < words; ++i) ntr::gx_write_fifo(v);
+        } else {
+            for (int i = 0; i < words; ++i) d[i] = v;
+        }
+    } else {
     copy_words(reinterpret_cast<const uint32_t *>(static_cast<uintptr_t>(src)),
                reinterpret_cast<uint32_t *>(static_cast<uintptr_t>(dst)), words);
+    }
     if (static_cast<uintptr_t>(dst) == 0x04000400u) {
         if (ctrl & 0x40000000) {
             const unsigned h = data_020a60c4[ch & 7].handler;

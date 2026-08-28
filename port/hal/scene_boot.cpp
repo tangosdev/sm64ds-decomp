@@ -838,8 +838,30 @@ extern "C" unsigned _ZN4CP1510EnableDTCMEv(void) { return 0x10000u; }
    0x2e4-byte default the Mg sibling writes needed the save block hosted at
    its real ROM width first (hal/level_boot.cpp's fifth SAVEBLK row).
    port/ov007_seat.txt section 5g carries the trace and the run. */
+/* 2, NOT 1, AND THE DIFFERENCE IS THE OWNER'S SOFTLOCK. Run mg16 arc 2, family A.
+   Both the adventure route and the Rec Room route raised the ROM's own "data is
+   corrupted / mini-game data is lost" dialog and then wedged. The integrity check
+   was doing its job: this face was telling it the save is DAMAGED.
+
+   The ROM's own body (src/_ZN8SaveData16ReadDataFromCartEPcjj.cpp) distinguishes
+   two failures on the magic compare:
+
+       for (i = 0; i < 8; i++, pd++, pm++)
+           if (*pm != *pd)
+               return (ok == 1) ? 1 : 2;
+
+   1 means "one copy read back, and its magic is wrong" -- a save that EXISTS and is
+   damaged, which is exactly when the game should tell the player so. 2 means the
+   magic mismatched on BOTH copies, which is not damage at all: it is a blank
+   medium, a virgin cart. The callers install defaults for 2 and raise the dialog
+   for 1.
+
+   The port has no cart. It has no save at all, which is the 2 case and never the 1
+   case, so returning 1 made every fresh run look like a corrupted save. Returning 2
+   lets the callers do what they do on a new cartridge: write the defaults and carry
+   on silently, with no dialog and no top-state 9 to wedge in. */
 extern "C" int _ZN8SaveData16ReadDataFromCartEPcjj(char *, unsigned, unsigned)
-{ return 1; }
+{ return 2; }
 extern "C" int _ZN8SaveData14SaveDataToCartEPcjj(char *, unsigned, unsigned)
 { return 1; }
 
@@ -1460,7 +1482,23 @@ extern "C" unsigned port_l2_trap_hits(void) { return g_l2_trap_hits; }
    single frame. */
 L2_UNMATCHED(func_ov007_020b8188)
 L2_UNMATCHED(func_ov007_020ba05c)
-L2_UNMATCHED(func_ov007_020c19cc)
+/* func_ov007_020c19cc WAS HERE, AND IT IS THE DOODLE. Run mg16 arc 2, family D.
+   This is the title's bottom-screen stroke renderer, and the OWNER'S OWN TAP is
+   what put it on the map: he toured the title live, tapped the face toy, and the
+   port printed this trap's line back at him. That was the first entry it had ever
+   had -- every other component of the toy was already seated and matched (the face
+   constructor func_ov007_020b2bd4, the +0xF4 writer func_ov007_020b2998, the full
+   stylus driver func_ov007_020c1db0 with its drag origin and per-frame delta, and
+   the touch-to-start gate func_ov007_020b1cf0), so this one body was the whole
+   remaining distance between the stylus and the drawing.
+
+   Matched at 2004/b56, re-verified here against func_ov007_020b63e4 as the
+   alignment control: 235 rows, 231 OK, 4 reloc wildcards, 0 MISMATCH. linkcheck
+   reports BENIGN with 0 diffs and 0 blind slots (not VERIFIED -- recorded as it
+   came back rather than rounded up). Enrolled at
+   .text start:0x020c19cc end:0x020c1d78, which is exactly the 0x3ac hole the
+   config already had between func_ov007_020c184c and func_ov007_020c1d78, so the
+   size is confirmed by the delink map independently of the symbol table. */
 /* func_ov007_020c20b8 WAS HERE, AND IT IS THE TITLE'S INPUT SAMPLER. Run mg16
    matched it byte for byte at 2004/b56 with a result this overlay has not
    produced before: 122 of 122 words OK and ZERO reloc wildcards -- the body has
@@ -4214,6 +4252,7 @@ extern unsigned char data_020a104c[2];   /* 0x020a104c  flag word       */
 extern unsigned char data_020a104e[2];   /* 0x020a104e  key word        */
 extern unsigned char data_020a0de8[4];   /* TouchInfo[0], poll_touch's  */
 extern unsigned char data_020a1154[];    /* the four per-player records */
+extern unsigned short data_020a0e58[];   /* PadData[4]: [i*2] held, [i*2+1] pressed */
 extern int data_020a0f10[];              /* the comms slot index        */
 void func_0203e0ac(void);
 int func_ov007_020c1da0(int i);
@@ -4295,7 +4334,38 @@ static void port_scene_comms_publish(void)
     *(unsigned short *)data_020a1046 = (unsigned short)(down ? sy : 0xff);
     *(unsigned short *)data_020a1048 = (unsigned short)(down ? 1u : 0u);
     *(unsigned short *)(data_020a1048 + 2) = 0;      /* validity: in range */
-    *(unsigned short *)data_020a104e = 0;            /* keys: see above    */
+    /* THE KEY WORD, run mg16 arc 2 family A. The block above explains why this
+       was published as a literal 0, and ONE OF ITS PREMISES HAS SINCE GONE
+       STALE: it says the title's key tracker func_ov007_020c20b8 'is one of the
+       fifteen unmatched ov007 bodies and returns 0, so the button half of the
+       title is dead'. That body is MATCHED and seated now (this campaign, 122 of
+       122 words, zero reloc wildcards), so the key word reaches a live tracker
+       and every ROM prompt that waits on a button edge is now waiting on THIS.
+
+       WHAT DOES NOT CHANGE is the reason zero was chosen. The ROM computes this
+       as ((KEYINPUT | SHARED_PAD) ^ 0x2fff) & 0x2fff and the DS's KEYINPUT is
+       ACTIVE LOW, so transcribing that formula against the port's hosted
+       KEYINPUT -- measured reading 0 on every frame of a scene run -- yields
+       0x2fff, which is EVERY BUTTON HELD. A stuck controller is worse than a
+       dead one, and that trap is still open.
+
+       SO THE SOURCE IS THE PAD RECORD, NOT THE HARDWARE MIRROR. data_020a0e58 is
+       PadData[4] as {held, pressed} halfwords, written fresh each frame by the
+       port's own input layer (hal/message_pump.cpp reads it the same way), and
+       its HELD mask is already ACTIVE HIGH -- which is what the ROM's xor exists
+       to produce. So the correct publish is that mask, narrowed to the twelve
+       key bits the formula keeps.
+
+       THIS IS SAFE WHETHER OR NOT THE INPUT LAYER RUNS ON THIS PATH. If nothing
+       fills the pad record on a scene run the mask is 0 and this publishes 0,
+       exactly as before and with no regression; if it does, the title finally
+       gets real buttons. Either way it cannot invent a held key, which the
+       literal transcription would have done on frame one. */
+    {
+        const int pidx = 0;   /* slot 0: the local player on the scene path */
+        const unsigned short held = data_020a0e58[pidx * 2];
+        *(unsigned short *)data_020a104e = (unsigned short)(held & 0x2fff);
+    }
     /* func_0203df40's own last statement on the record. func_0203e0ac masks
        it straight back off, so it is faithfulness rather than a signal. */
     *(unsigned short *)data_020a104c |= 0x8000;
