@@ -125,7 +125,9 @@
    The directory is looked for as given first, then beside the exe, then under
    the asset root, which is hal/fs_mods.cpp's probe order for the palettes
    folder minus the working-directory step (the as-given open IS that step when
-   the path is relative). The one that opened is named in the latch line. */
+   the path is relative). A shipping build has no asset root unless
+   SM64DS_ASSET_ROOT names one, so there the probe stops after two. The one
+   that opened is named in the latch line. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -213,10 +215,24 @@ void release(void)
     g_nsub = 0;
 }
 
+/* The third probe location, or 0 when there is not a trustworthy one.
+
+   A SHIPPING BUILD GETS NO PORT_REPO_ROOT FALLBACK, for the reason
+   hal/asset_root_refuse.cpp gives at length: a compiled-in repo path is
+   invisible on every machine that can test it and wrong on every machine that
+   cannot. It does not call that refusal, though, because that one aborts, and
+   an optional mod's third-choice folder is not worth ending a run over -- the
+   probe simply stops one step early and the caller refuses in words. */
 const char *asset_root(void)
 {
     const char *env = getenv("SM64DS_ASSET_ROOT");
-    return env && *env ? env : PORT_REPO_ROOT;
+    if (env && *env)
+        return env;
+#ifdef PORT_ROM_CLEAN
+    return 0;
+#else
+    return PORT_REPO_ROOT;
+#endif
 }
 
 /* ---- what stages this ROM actually has ---------------------------------- */
@@ -312,10 +328,15 @@ int probe_dir(const char *want)
         }
     }
 #endif
-    snprintf(path, sizeof path, "%s/%s", asset_root(), want);
-    if (is_dir(path)) {
-        snprintf(g_dir, sizeof g_dir, "%s", path);
-        return 1;
+    {
+        const char *root = asset_root();
+        if (root) {
+            snprintf(path, sizeof path, "%s/%s", root, want);
+            if (is_dir(path)) {
+                snprintf(g_dir, sizeof g_dir, "%s", path);
+                return 1;
+            }
+        }
     }
     return 0;
 }
