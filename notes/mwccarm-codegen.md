@@ -3891,3 +3891,57 @@ order is documented in this file as controlling regalloc; it does not control
 FRAME LAYOUT here. What actually shifts every stack reference in that body is
 the scalar block below the vectors coming out 0x14 bytes wider than the ROM's,
 and no reordering of the vectors touches that.
+
+
+## 6bq. Six levers off the title's doodle stroke renderer, and the negatives that bound them (func_ov007_020c19cc MATCHED, 0x3ac, 2026-08-28)
+
+The title screen's bottom-screen stroke renderer, 235 words, matched at 2004/b56 with
+strict relocs. Its DB row claimed divergences:220 and the saved source compiled to 0x164 --
+barely a third of the body -- so that number was never a word diff. THIRD phantom row this
+campaign; the row was pruned on landing and nothing was ingested for this address.
+
+**1. Double truncation is the joint smoothing, and both casts are load-bearing.**
+The ROM's angle blend is `(s16)prev + (s16)((s16)(ang - prev) / 2)`. Dropping either cast
+changes the arithmetic AND the codegen: the inner one makes the halved delta wrap in 16
+bits before the add, which is what the ROM does, and the outer one re-truncates the sum.
+Writing it as a single s16 expression, or promoting to int and truncating once at the end,
+both diverge. A smoothing step that "looks like" averaging two angles is not averaging
+them -- it is wrapping twice, and that is the shape to try first on any interpolation
+that refuses to match.
+
+**2. Declaration order colours registers, INCLUDING spill-slot order.**
+The usual decl-order lever, with the extra half that is easy to miss: when the body spills,
+the ORDER of the spill slots follows declaration order too, so a decl-order sweep that only
+scores register assignment can walk past the answer. Score the whole function, not the
+block you think is wrong.
+
+**3. The no-named-local inline cast prevents DCE of the entry sign-extension.**
+Binding an incoming value to a named local lets mwcc see the sign-extension at entry is
+dead and delete it; using the cast expression inline at each use keeps it. That is the
+opposite of the usual "hoist it to a local" advice and it is worth trying in both
+directions whenever an entry-side `mov rX, rX, lsl #16 / asr #16` pair is present in the
+ROM and absent from the candidate.
+
+**4. Respelling a negation flips CSE remat against spill reload.**
+The same negated value written two ways decides whether mwcc REMATERIALISES it at each use
+or spills and reloads it. Neither is universally right -- it is a coin the function
+chooses -- so when a body is one or two instructions long around a negated term, try the
+other spelling before touching anything structural.
+
+**5. A u16 shifted high folds into `orr` as `lsr #16`.**
+Packing a halfword into the high half of a word does not emit a shift and an or; mwcc
+folds it into the `orr`'s shifter operand. If the ROM shows `orr rD, rN, rM, lsr #16` and
+the candidate shows a separate shift, the source is packing in the wrong direction.
+
+**6. do-while plus a DUAL-POINTER walk, not an index.**
+The stroke loop is `do { ... } while (--n)` with TWO pointers advanced in step rather than
+one base and an index. The single-pointer-plus-index shape costs the address arithmetic the
+ROM does not have, and the `for` shape costs the entry test (the redundant-loop-guard defect
+this campaign hit twice elsewhere).
+
+**NEGATIVE, and it bounds levers 2 and 3:** none of these fires in isolation on this body.
+The size gap closed only once the loop shape (6) and the double truncation (1) were BOTH
+right; with either wrong, sweeping decl order and cast placement moves the divergence count
+around without ever reaching the size. Levers that arbitrate register colouring cannot be
+scored at all until the instruction sequence is already the ROM's -- which is the same
+lesson 6bm records for decl order and statement order, in a new place.
