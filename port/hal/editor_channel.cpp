@@ -2,7 +2,36 @@
  *
  * A loopback line-protocol server on 127.0.0.1:7355, wire-compatible with the
  * Studio's editor link. It lets an external editor list the live objects of a
- * running level, move one, ask what level is up, and warp.
+ * running level, move one, turn one, replace one where it stands, ask what
+ * level is up, and warp.
+ *
+ * =============================================================================
+ * WHY objrespawn EXISTS WHEN objmove ALREADY MOVES THINGS
+ * =============================================================================
+ *
+ * Because for a great deal of a level, objmove does not move anything you can
+ * see. A moving actor -- a Goomba, a platform on a path -- reads its position
+ * out of Actor+0x5c every frame, so writing that word moves it and the picture
+ * follows. FURNITURE DOES NOT. A sign, a brick, a tree: the class bakes its
+ * world transform once, at InitResources, out of the position it was spawned
+ * at, and afterwards nothing reads +0x5c again. objmove on one of those writes
+ * three words that are true and inert -- objlist reports the new position, the
+ * object stays exactly where it was drawn, and the editor looks broken.
+ *
+ * objrespawn is the answer that does not require knowing which classes are
+ * which: DESTROY the actor and let the game BUILD A NEW ONE at the new place,
+ * through the game's own spawn path, so whatever InitResources bakes gets baked
+ * from the new position. The furniture case is the whole reason the verb is
+ * here, and the proof for it is the pair of arms that shows a BMP moving under
+ * objrespawn where the same object under objmove leaves the BMP untouched.
+ *
+ * The cost is honest and is stated in the reply: the object is NOT the same
+ * object afterwards. It has a new heap address and a new uniqueID, so the verb
+ * answers `respawned <newptr>` and the editor rebinds. Anything the old
+ * instance had accumulated at runtime -- animation phase, state machine
+ * progress, whatever it was carrying -- is gone. That is a rebirth, not a move,
+ * and calling it anything softer would be a lie an editor would then have to
+ * debug.
  *
  * =============================================================================
  * ws2_32 IS NOT LINKED. IT IS LoadLibrary'd. DO NOT "FIX" THIS.
@@ -154,6 +183,20 @@ void LoadLevelNoReturn(int level, unsigned entrance, unsigned star,
                        unsigned reason);
 int port_level_is_mounted(int level);
 int port_actor_live_count(void);        /* hal/level_change.cpp, cross-check */
+/* The ROM's own "kill this actor", src/_ZN9ActorBase18MarkForDestructionEv.cpp,
+   declared for host callers exactly as hal/level_change.cpp:127 declares it.
+   Idempotent and self-guarding; it marks +0x0f and runs OnPendingDestroy, and
+   the game's own cleanup phase frees the object on a later frame. Nothing here
+   frees an actor by hand -- that is hal/level_change.cpp's stated contract and
+   this file does not get an exception to it. */
+void _ZN9ActorBase18MarkForDestructionEv(void *self);
+/* hal/level_boot.cpp:3776. Runs the ROM's Actor::Spawn with an explicit
+   position, yaw and area, allocates the death-table sequence the ROM allocates,
+   and refuses (returning 0, in its own words on stdout) when the class belongs
+   to an overlay this level never booted. Reused rather than re-derived: a
+   second spawn path would be a second thing to keep true. */
+void *port_debug_spawn_at(unsigned id, unsigned param, int x, int y, int z,
+                          int yaw, int area);
 extern signed char data_0209f2f8;       /* current level */
 extern signed char data_02092110;       /* staged next level, -1 = none */
 extern unsigned char data_02092128[];   /* per-player character; [0] is active */
@@ -165,6 +208,45 @@ extern void *data_0209f394[];           /* per-player Actor* */
 static const unsigned OFF_ACTOR_ID = 0x0C;
 static const unsigned OFF_ACTOR_POS = 0x5C;
 static const unsigned OFF_PLAYER_CHARACTER = 0x6D9;
+
+/* ROTATION. include/Actor.h:91-93 is the authority, and it is the same kind of
+   authority the position read above already leans on:
+
+       s16 mAngleX;            / * 0x08c * /
+       s16 mAngleY;            / * 0x08e * /
+       s16 mAngleZ;            / * 0x090 * /
+
+   SIXTEEN-BIT ANGLE UNITS, not degrees and not radians: the whole turn is
+   65536, so 0x4000 is a quarter turn. That is the game's own convention and
+   not a choice made here -- include/Actor.h:185 cites `ldrsh [r4,#0x8e]`, a
+   SIGNED halfword load of mAngleY, in the matched player-proximity code, and
+   port/hal/level_boot.cpp:3797 builds a spawn rotation as
+   `rot.y = (short)yaw` off the same units. Reading the field signed is
+   therefore right and the value wraps rather than saturating.
+
+   WHY THE THREE *PREVIOUS* ANGLES AT 0x092/0x094/0x096 ARE NOT WRITTEN. They
+   are separate fields (include/Actor.h:94-96), and the parallel with objmove
+   is exact: exec_objmove writes mPosX/Y/Z and deliberately leaves unk_068,
+   the previous position, alone. A verb that also rewrote history would hide
+   the very frame-to-frame delta some behaviours compute. Same rule here. */
+static const unsigned OFF_ACTOR_ANGLE = 0x8C;
+
+/* SPAWN IDENTITY, for objrespawn. include/ActorBase.h:57 `u32 param1;` at
+   0x08 -- and that name is not a guess by this file:
+   src/_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii.c declares its own second
+   parameter `param1` and hands it straight to
+   `ActorDerived::Spawn(actorID, data_0209f5c0, param1, 2)`. So the word this
+   file reads back at +0x08 is the same word a spawn was given. */
+static const unsigned OFF_ACTOR_PARAM = 0x08;
+
+/* The area the actor was spawned into. include/Actor.h:110 `s8 mAreaId;` at
+   0x0cc, and src/_ZN5ActorC1Ev.cpp:49 is literally
+   `self->mAreaId = data_0209b44c;` -- the global src/func_02010e78.c stages
+   from Actor::Spawn's areaID argument. SIGNED, because the header says a
+   negative value means "not area-bound" and passing 0xff back as 255 would
+   turn that into a real area number. See exec_objrespawn for why the two
+   nearby candidates (+0x10, +0x12) are both wrong. */
+static const unsigned OFF_ACTOR_AREA = 0xCC;
 
 namespace {
 
@@ -247,9 +329,12 @@ inline unsigned long hton32(unsigned long v)
 /* ---- shared state ---------------------------------------------------------*/
 
 struct Cmd {
-    enum Kind { PING, INFO, OBJLIST, OBJMOVE, WARP, ERR } kind;
-    unsigned objptr;            /* OBJMOVE */
-    int x, y, z;                /* OBJMOVE, Fix12 */
+    enum Kind { PING, INFO, OBJLIST, OBJMOVE, OBJROT, OBJRESPAWN, WARP,
+                ERR } kind;
+    unsigned objptr;            /* OBJMOVE, OBJROT, OBJRESPAWN */
+    int x, y, z;                /* OBJMOVE, OBJRESPAWN, Fix12 */
+    int rx, ry, rz;             /* OBJROT, and OBJRESPAWN's ry, angle units */
+    int has_rot;                /* OBJRESPAWN: was a yaw given at all */
     int level, entrance;        /* WARP */
     const char *msg;            /* ERR: always a string literal (static
                                    lifetime), so the queue never owns storage */
@@ -322,30 +407,189 @@ void exec_objlist()
     push_reply("end\n");
 }
 
-void exec_objmove(const Cmd &c)
+/* VALIDATE THE POINTER AGAINST THE LIVE LIST FIRST -- every verb that writes
+   through a client-supplied pointer starts here, and there is exactly one copy
+   of the rule so there is exactly one place for it to be right.
+
+   The client's pointer came from an objlist that may be many frames old, and
+   the actor it named may have been killed and its memory reused since. Writing
+   through a stale pointer would corrupt whatever now occupies that address -- a
+   game crash caused by an editor holding a slightly old list, which is the
+   normal case and not an exotic one. So a write is applied only to an object
+   still in the list THIS frame. (The recomp's channel wrote unconditionally; it
+   could afford to be wrong about an emulator's RAM in a way this cannot be
+   about the host's heap.)
+
+   Returns 0 when the pointer is stale; every caller answers `err no such
+   object`, which is the reply objmove has always given and the one objrot and
+   objrespawn give too. */
+struct Actor *find_live(unsigned ptr)
 {
-    /* VALIDATE THE POINTER AGAINST THE LIVE LIST FIRST.
-       The client's pointer came from an objlist that may be many frames old,
-       and the actor it named may have been killed and its memory reused since.
-       Writing three words through a stale pointer would corrupt whatever now
-       occupies that address -- a game crash caused by an editor holding a
-       slightly old list, which is the normal case and not an exotic one. So a
-       move is applied only to an object still in the list THIS frame. (The
-       recomp's channel wrote unconditionally; it could afford to be wrong about
-       an emulator's RAM in a way this cannot be about the host's heap.) */
     std::vector<struct Actor *> live;
     walk_actors(live);
-    for (size_t i = 0; i < live.size(); ++i) {
-        if ((unsigned)(uintptr_t)live[i] != c.objptr)
-            continue;
-        int *p = (int *)((char *)live[i] + OFF_ACTOR_POS);
-        p[0] = c.x;
-        p[1] = c.y;
-        p[2] = c.z;
-        push_reply("ok\n");
+    for (size_t i = 0; i < live.size(); ++i)
+        if ((unsigned)(uintptr_t)live[i] == ptr)
+            return live[i];
+    return 0;
+}
+
+void exec_objmove(const Cmd &c)
+{
+    struct Actor *a = find_live(c.objptr);
+    if (!a) {
+        push_reply("err no such object\n");
         return;
     }
-    push_reply("err no such object\n");
+    int *p = (int *)((char *)a + OFF_ACTOR_POS);
+    p[0] = c.x;
+    p[1] = c.y;
+    p[2] = c.z;
+    push_reply("ok\n");
+}
+
+void exec_objrot(const Cmd &c)
+{
+    struct Actor *a = find_live(c.objptr);
+    if (!a) {
+        push_reply("err no such object\n");
+        return;
+    }
+    /* Three signed halfwords, exactly as the header lays them out. The casts
+       truncate to 16 bits, which is the correct behaviour for an angle and not
+       a lost error: the unit wraps at a full turn, so 0x14000 and 0x4000 name
+       the same facing and both mean a quarter turn. */
+    short *r = (short *)((char *)a + OFF_ACTOR_ANGLE);
+    r[0] = (short)c.rx;
+    r[1] = (short)c.ry;
+    r[2] = (short)c.rz;
+    push_reply("ok\n");
+}
+
+/* ---- objrespawn ------------------------------------------------------------
+ *
+ * Kill the actor at `ptr` and let the game build a fresh one of the same class,
+ * with the same spawn param, at the new position. Everything below is read off
+ * the LIVE object, so the identity is recovered rather than remembered.
+ *
+ * WHERE EACH FIELD COMES FROM, traced rather than assumed:
+ *
+ *   actorID  ActorBase+0x0c. Already what exec_objlist reports.
+ *
+ *   param    ActorBase+0x08. src/func_02043180.c stores Spawn's `param1`
+ *            (r2) to data_020a4b60, and src/_ZN9ActorBaseC1Ev.cpp loads that
+ *            global and does `str r2, [r4, #8]`. Copied 32 bits wide with no
+ *            mask, shift or merge anywhere on that path -- see OFF_ACTOR_PARAM.
+ *            THE TWO EXCEPTIONS ARE HANDLED BELOW; they are real.
+ *
+ *   area     Actor+0xcc. src/_ZN5ActorC1Ev.cpp:49 is
+ *            `self->mAreaId = data_0209b44c;`, and data_0209b44c is exactly
+ *            what src/func_02010e78.c staged from Spawn's areaID argument.
+ *            include/Actor.h:110 types it `s8 mAreaId` and says a negative
+ *            value means "not area-bound", so it is read SIGNED.
+ *
+ *            NOT +0x10 and NOT +0x12, both of which look plausible and are
+ *            wrong. +0x12 is the 4th ActorDerived::Spawn argument, which
+ *            Actor::Spawn hardcodes to 2, so it carries no area at all. +0x10
+ *            is a boolean written by ActorBase::AfterInitResources meaning
+ *            "init'd while data_02099f24[0] == 3". port/hal/level_boot.cpp:3809
+ *            says the area is the byte at +0x10 and reads it at :3825; that is
+ *            a live bug in a file this lane does not own, so it is reported
+ *            rather than edited. It is invisible in most testing because area
+ *            0 is the common case and that boolean is usually 0 too.
+ *
+ *   yaw      Actor+0x8e when the caller did not give one, so a plain
+ *            reposition keeps the facing it had.
+ *
+ * WHY ONLY THE YAW IS CARRIED. port_debug_spawn_at takes a single yaw and
+ * builds `rot.x = 0; rot.y = yaw; rot.z = 0` (hal/level_boot.cpp:3797), which
+ * is the game's own host spawn shape. Writing the other two angles onto the
+ * new actor AFTERWARDS would be the exact inert write this verb exists to
+ * avoid -- InitResources has already baked its transform by then -- so a
+ * pitch or roll is not silently half-applied. Callers that want those use
+ * objrot and accept that it may not move a baked actor.
+ *
+ * THE KILL is ActorBase::MarkForDestruction, the ROM's own
+ * (src/_ZN9ActorBase18MarkForDestructionEv.cpp), declared for host callers at
+ * hal/level_change.cpp:127. It is idempotent and self-guarding: it returns
+ * early if shouldBeKilled is already set or aliveState is 2. Nothing here
+ * frees an actor by hand -- marking sets +0x0f, and the game's own cleanup
+ * phase moves the actor onto the cleanup list and dispatches its teardown on a
+ * later frame, which is hal/level_change.cpp's stated contract.
+ *
+ * MarkForDestruction calls OnPendingDestroy SYNCHRONOUSLY through the vptr,
+ * and an OnPendingDestroy may mark OTHER actors, relinking list nodes. That is
+ * why this runs at the frame drain and why the pointer was revalidated against
+ * a fresh walk immediately before. It is also why the spawn happens AFTER the
+ * mark and reads nothing off the old object afterwards.
+ *
+ * THE OLD POINTER IS STILL IN THE LIST when this returns -- marking is not
+ * freeing -- so the reply's new pointer is guaranteed distinct from it, and an
+ * objlist a few frames later shows the old one gone and the new one present.
+ * That gap is the editor's cue to rebind, which is why the reply carries the
+ * new pointer at all.
+ */
+void exec_objrespawn(const Cmd &c)
+{
+    struct Actor *a = find_live(c.objptr);
+    if (!a) {
+        push_reply("err no such object\n");
+        return;
+    }
+    char *o = (char *)a;
+
+    /* NEVER THE PLAYER. Two independent reasons, either one sufficient: the
+       Player's +0x08 is not a spawn param at all but a character bitfield
+       (src/_ZN6Player13InitResourcesEv.cpp:93 writes it, and four more methods
+       rewrite it), so the "same param" this verb promises cannot be honoured;
+       and killing the Player out from under the camera and the controller is
+       not an edit, it is a crash with extra steps. data_0209f394 is the
+       per-slot Player pointer array, declared int[8] in hal/cxxname_bridge.cpp
+       with at most kCommsMaxPlayers = 4 slots used, so this walk is in
+       bounds. */
+    for (int s = 0; s < 4; ++s) {
+        if (data_0209f394[s] == (void *)o) {
+            push_reply("err that is a player, not scenery\n");
+            return;
+        }
+    }
+
+    unsigned id = *(const unsigned short *)(o + OFF_ACTOR_ID);
+    unsigned param = *(const unsigned *)(o + OFF_ACTOR_PARAM);
+    int area = *(const signed char *)(o + OFF_ACTOR_AREA);
+    int yaw = c.has_rot ? c.ry
+                        : *(const short *)(o + OFF_ACTOR_ANGLE + 2);
+
+    /* GOOMBA EDITS ITS OWN PARAM. src/_ZN6Goomba13InitResourcesEv.cpp:59-60
+       does `*(int *)(c + 8) &= 0xf0ff` under a condition, so the word read
+       back above is the MASKED one and not what the goomba was spawned with.
+       The respawn still works and still produces a goomba; what it cannot
+       promise is that the new one carries the original param bits. Said out
+       loud on the game's log rather than silently, and NOT folded into the
+       wire reply, which stays the single line the protocol promises. */
+    if (id == 200)
+        std::fprintf(stderr, "[editor] objrespawn: actor 200 (GOOMBA) rewrites "
+                             "its own param at InitResources, so the param "
+                             "carried over is the masked one, not necessarily "
+                             "the one it was first spawned with\n");
+
+    _ZN9ActorBase18MarkForDestructionEv(o);
+
+    void *n = port_debug_spawn_at(id, param, c.x, c.y, c.z, yaw, area);
+    if (!n) {
+        /* port_debug_spawn_at refuses, on stdout and in its own words, when
+           the class belongs to an overlay this level did not boot. The old
+           actor is already marked at this point and that is not undone: it
+           stays dead, which is the honest outcome of "replace this" when the
+           replacement cannot be built, and saying so is better than pretending
+           the object survived. */
+        push_reply("err the game would not spawn that class here; the old "
+                   "object is gone\n");
+        return;
+    }
+    char ln[48];
+    std::snprintf(ln, sizeof ln, "respawned %08X\n",
+                  (unsigned)(uintptr_t)n);
+    push_reply(ln);
 }
 
 void exec_warp(const Cmd &c)
@@ -407,6 +651,8 @@ void exec(const Cmd &c)
     }
     case Cmd::OBJLIST:  exec_objlist();   return;
     case Cmd::OBJMOVE:  exec_objmove(c);  return;
+    case Cmd::OBJROT:   exec_objrot(c);   return;
+    case Cmd::OBJRESPAWN: exec_objrespawn(c); return;
     case Cmd::WARP:     exec_warp(c);     return;
     case Cmd::ERR:
         /* A refusal the socket thread decided on, emitted HERE so it takes its
@@ -526,6 +772,60 @@ void handle_line(const std::string &line)
         }
         c.kind = Cmd::OBJMOVE;
         c.objptr = ptr; c.x = x; c.y = y; c.z = z;
+        enqueue(c);
+        return;
+    }
+
+    if (verb == "objrot") {
+        std::string a, b, d, e;
+        unsigned ptr = 0;
+        int rx = 0, ry = 0, rz = 0;
+        if (!next_tok(line, i, a) || !next_tok(line, i, b) ||
+            !next_tok(line, i, d) || !next_tok(line, i, e) ||
+            !parse_u32hex(a, ptr) || !parse_int(b, rx) ||
+            !parse_int(d, ry) || !parse_int(e, rz)) {
+            /* THE UNIT IS IN THE REFUSAL, because it is the one thing a caller
+               cannot guess and objlist never tells them: the obj line carries
+               position and no rotation at all, so an editor writing its first
+               objrot has nothing to copy the convention from. 65536 to the
+               turn, and the message says so rather than making them read this
+               file. */
+            enqueue_err("err objrot <ptr> <rx> <ry> <rz> "
+                        "(16-bit angle units, 65536 = one full turn, "
+                        "so 16384 = a quarter turn)\n");
+            return;
+        }
+        c.kind = Cmd::OBJROT;
+        c.objptr = ptr; c.rx = rx; c.ry = ry; c.rz = rz;
+        enqueue(c);
+        return;
+    }
+
+    if (verb == "objrespawn") {
+        std::string a, b, d, e, f;
+        unsigned ptr = 0;
+        int x = 0, y = 0, z = 0, ry = 0;
+        if (!next_tok(line, i, a) || !next_tok(line, i, b) ||
+            !next_tok(line, i, d) || !next_tok(line, i, e) ||
+            !parse_u32hex(a, ptr) || !parse_int(b, x) ||
+            !parse_int(d, y) || !parse_int(e, z)) {
+            enqueue_err("err objrespawn <ptr> <x> <y> <z> [ry] "
+                        "(position in Fix12, ry in 16-bit angle units)\n");
+            return;
+        }
+        /* The yaw is optional, and a PRESENT-BUT-BROKEN yaw is an error rather
+           than a silently ignored word -- the same shape warp uses for its
+           optional entrance just below. */
+        if (next_tok(line, i, f)) {
+            if (!parse_int(f, ry)) {
+                enqueue_err("err objrespawn <ptr> <x> <y> <z> [ry] "
+                            "(position in Fix12, ry in 16-bit angle units)\n");
+                return;
+            }
+            c.has_rot = 1;
+        }
+        c.kind = Cmd::OBJRESPAWN;
+        c.objptr = ptr; c.x = x; c.y = y; c.z = z; c.ry = ry;
         enqueue(c);
         return;
     }
