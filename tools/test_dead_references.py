@@ -2,6 +2,7 @@
 import json
 import pathlib
 import subprocess
+import sys
 import tempfile
 import pytest
 
@@ -84,6 +85,40 @@ class TestGitIgnored:
         ignored = _git_ignored(["tools/mwccarm"], REPO)
         # Should be treated as matching the directory pattern
         assert "tools/mwccarm" in ignored or len(ignored) > 0
+
+    def test_a_path_no_rule_covers_is_not_reported_ignored(self):
+        """The positive control the other tests in this class lack.
+
+        Every assertion above is `len(ignored) > 0`, which a function returning its
+        whole input satisfies -- and on git 2.50.1.windows.1 that is precisely what
+        _git_ignored did, because the trailing-slash probe matched a BLANK LINE in
+        .gitignore. The gate reported 0 dead references on every tree for months while
+        CI reported 130. Assert the other direction too.
+        """
+        ignored = _git_ignored(["src/no_rule_covers_this_zzz.c",
+                                "notes/no_rule_covers_this_zzz.md"], REPO)
+        assert ignored == set()
+
+    def test_an_empty_matching_pattern_is_not_a_hit(self):
+        """A blank .gitignore line names no pattern, so it ignores nothing."""
+        import subprocess as _sp
+
+        class _Out:
+            returncode = 0
+            # -v -z: source, line, pattern, pathname -- the middle entry has no pattern
+            stdout = NUL.join([b".gitignore", b"11", b"build/", b"build/x.o",
+                               b".gitignore", b"111", b"", b"src/dead_zzz.c/",
+                               b".gitignore", b"12", b"*.pyc", b"tools/x.pyc",
+                               b""])
+
+        real = _sp.run
+        CDR_mod = sys.modules[_git_ignored.__module__]
+        CDR_mod.subprocess.run = lambda *a, **k: _Out()
+        try:
+            hits = _git_ignored(["build/x.o", "src/dead_zzz.c", "tools/x.pyc"], REPO)
+        finally:
+            CDR_mod.subprocess.run = real
+        assert hits == {"build/x.o", "tools/x.pyc"}
 
     def test_deduplicates_candidates(self):
         """Duplicate candidates don't cause issues."""
