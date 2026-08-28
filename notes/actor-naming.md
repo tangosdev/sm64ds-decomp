@@ -1,6 +1,6 @@
 # Actor class naming from the ROM's spawn table
 
-How **2,241** symbols across **68** modules got real names [`tools/actor_names.py`](tools/actor_names.py),
+How **2,241** symbols across **68** modules got real names [tools/actor_names.py](tools/actor_names.py),
 and where to look things up when drafting.
 
 ## Method
@@ -30,10 +30,10 @@ US-region address and reads as zeros here). `SpawnInfo` layout (credit:
 ```
 Slots pointing into arm9 are inherited defaults and stay unnamed. Functions
 shared between sibling classes (identical-code folding) are claimed by the
-lowest **actor id**; see [`symbols/actor_renames_report.txt`](symbols/actor_renames_report.txt) for the audit trail.
+lowest **actor id**; see [symbols/actor_renames_report.txt](symbols/actor_renames_report.txt) for the audit trail.
 
-Artifacts: [`symbols/actor_renames.tsv`](symbols/actor_renames.tsv) (what was renamed and why),
-[`symbols/overlay_actors.md`](symbols/overlay_actors.md) (which actors live in which overlay).
+Artifacts: [symbols/actor_renames.tsv](symbols/actor_renames.tsv) (what was renamed and why),
+[symbols/overlay_actors.md](symbols/overlay_actors.md) (which actors live in which overlay).
 
 After pulling the renames, sync your local gitignored ledgers once:
 run `python tools/actor_names.py --apply` (idempotent) or re-derive them.
