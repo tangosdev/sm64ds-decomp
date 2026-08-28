@@ -5,7 +5,7 @@ extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char* m, void* f, int a, Fix12i fix, unsigned sp0);
 extern void func_ov002_020aea30(char* c, char* p, int r2);
 extern void func_02012694(int a, char* b);
-extern void func_ov002_020ada40(char* c, short* v, char* p);
+extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(char* c, short* v, char* p);
 extern int _ZN8dActor_c24BumpedUnderneathByPlayerER6Player(char* c, char* p);
 extern int _ZN6Player9IsOnShellEv(char* p);
 extern void _ZN8dActor_c13SmallPoofDustEv(char* c);
@@ -43,7 +43,7 @@ void func_ov065_0211704c(char* c)
         v[0] = -0x2000;
         v[1] = 0;
         v[2] = 0;
-        func_ov002_020ada40(c, v, p);
+        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, v, p);
         func_02012694(0x112, c + 0x74);
         return;
     }

@@ -42,6 +42,8 @@
 
 #ifdef __cplusplus
 
+extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+
 struct dM3dGSph {
     /* --- members --- */
     Vector3 centre;         /* 0x04 */
@@ -55,6 +57,15 @@ struct dM3dGSph {
     /* Declared here and defined out of line so each constructor ABI variant can
      * be isolated at its own ROM address. */
     dM3dGSph();
+
+    /* This family deallocates through Memory::operator_delete2 (0x0203cbcc),
+     * not the actor heap and not the global _ZdlPv. CW inlines operator delete
+     * into the deleting destructor (D0) only when it finds one on the class
+     * itself or its immediate base, so it has to live here: without it D0 emits
+     * a call to _ZdlPv (0x0203cbf0), which BYTE-MATCHES -- match.compare
+     * wildcards every relocated word -- while calling the wrong function. Only
+     * objisolate's reloc-destination check sees the difference. */
+    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 };
 
 typedef char dM3dGSph_size_must_be_0x14[sizeof(dM3dGSph) == 0x14 ? 1 : -1];

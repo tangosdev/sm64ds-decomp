@@ -1,5 +1,5 @@
-#include "TextureSequence.h"
 //cpp
+#include "TextureSequence.h"
 struct BMD_File;
 struct BTP_File;
 extern "C" {

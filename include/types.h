@@ -14,9 +14,13 @@ typedef signed long long   s64;
 
 /* 20.12 fixed-point scalar, as used by the SDK/game maths.
 
-   NOT named `Fix12`. In the original C++ that is a class TEMPLATE, not a scalar typedef --
-   the ROM's own mangled symbols spell it out, e.g. `_ZN4cstd5atan2E5Fix12IiES1_` demangles
-   to `cstd::atan2(Fix12<int>, Fix12<int>)`. Taking the name here for a plain `s32` would
+   NOT named `Fix12`. In the original C++ that is a class TEMPLATE, not a scalar typedef;
+   this tree's convention spells it out in mangled names, e.g.
+   `_ZN4cstd5atan2E5Fix12IiES1_` for `cstd::atan2(Fix12<int>, Fix12<int>)`. That is a
+   convention and not evidence: the image holds zero `_Z...` strings, so no function's
+   mangled name here is ROM-derived (its RTTI carries class names only). Where a
+   by-value `5Fix12IiE` parameter contradicts the bytes, the bytes win -- see
+   notes/mwccarm-codegen.md 6az. Taking the name here for a plain `s32` would
    collide with the real type the moment it is reconstructed, and every consumer would have
    to be edited and re-verified to give it back. `Fix12i` is already the spelling most src/
    files use and is not a real C++ type name, so it stays free.

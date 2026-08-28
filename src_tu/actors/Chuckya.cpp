@@ -153,7 +153,7 @@ extern int _ZN5Model6RenderEPK7Vector3(void *m, void *v);
 int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(void* self, void* wm, void* anim, unsigned int n);
 unsigned short DecIfAbove0_Short(unsigned short* p);
 void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, dCc_c* cc);
-int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(void* self, dBgCh_Actr* wm, int a, s16 b, int c, int d, void* e);
+int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(void* self, dBgCh_Actr* wm, int a, s16 b, int c, int d, void* e);
 void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void* self, dBgCh_Actr* wm, unsigned int j);
 void func_ov062_02116010(void* self);
 void _ZN5dCc_c5ClearEv(dCc_c* self);
@@ -345,7 +345,7 @@ int Chuckya::Behavior()
             }
             if (r2 != 0
                 || (mHorzSpeed != 0
-                    && _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(
+                    && _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(
                            c, (dBgCh_Actr*)&mMeshClsn, 0x3c000, (s16)0x2888, 0, 1, (void*)0x32000))) {
                 mHorzSpeed = 0;
                 unk_3e4 = 1;
