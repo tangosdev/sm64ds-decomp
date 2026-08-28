@@ -5,7 +5,7 @@
 
 # Model
 src/_ZN5ModelC1Ev.cpp
-src/_ZN5ModelC2Ev.c
+src/_ZN5ModelC2Ev.cpp
 src/_ZN5Model8LoadFileER13SharedFilePtr.cpp
 src/_ZN5Model9DoSetFileEPcii.cpp
 src/_ZN5Model17UpdateFileOffsetsER8BMD_File.cpp

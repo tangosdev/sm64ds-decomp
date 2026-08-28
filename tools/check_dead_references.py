@@ -244,6 +244,15 @@ def _git_ignored(candidates, root=REPO):
     does not, so the bare form MISSES and only `tools/mwccarm/` matches. Asking both is
     what makes the answer independent of whether the input happens to be present.
 
+    `-v`, and a hit is kept only when git names a NON-EMPTY pattern. That is not
+    decoration. On git 2.50.1.windows.1 a trailing-slash probe matches a BLANK LINE in
+    .gitignore -- asking it about ANY path with a trailing slash answers with the line
+    number of a blank line and an empty pattern -- so every probe came back ignored, `_git_ignored` returned the
+    whole candidate set, and the gate reported 0 dead references on any tree. It was
+    green locally and red in CI for months, which is how two stale paths landed. An
+    empty pattern is never a real rule, so dropping it costs nothing and restores the
+    answer git actually means.
+
     LIMIT, stated rather than papered over: `git check-ignore` answers from the ignore
     RULES, not from the filesystem, so it reports a path under `tools/mwccarm/` as
     ignored whether or not that file exists. A genuinely dead reference INSIDE an
@@ -260,16 +269,21 @@ def _git_ignored(candidates, root=REPO):
     # on Windows, git takes the CR as part of the filename, and every answer
     # comes back quoted with a stray carriage return -- so nothing matches and every
     # gitignored input looks dead again. -z sidesteps the newline question entirely.
-    out = subprocess.run(["git", "check-ignore", "-z", "--stdin"], cwd=root,
+    out = subprocess.run(["git", "check-ignore", "-v", "-z", "--stdin"], cwd=root,
                          input=NUL.join(c.encode("utf-8") for c in probes),
                          capture_output=True)
     # exit 0 = at least one ignored, 1 = none ignored; both are normal. Anything
     # else (128: not a repo) means we could not classify, so claim nothing.
     if out.returncode not in (0, 1):
         return set()
+    # -v -z emits four NUL-separated fields per hit: source, line, pattern, pathname.
+    fields = out.stdout.split(NUL)
     hits = set()
-    for raw in out.stdout.split(NUL):
-        name = raw.decode("utf-8", "replace").strip().replace("\\", "/")
+    for i in range(0, len(fields) - 3, 4):
+        pattern = fields[i + 2].decode("utf-8", "replace").strip()
+        if not pattern:
+            continue          # a blank .gitignore line matches nothing; see the docstring
+        name = fields[i + 3].decode("utf-8", "replace").strip().replace("\\", "/")
         if name:
             hits.add(name.rstrip("/"))
     return hits

@@ -3,6 +3,16 @@
  "version": "2004/b56",
  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
  "failing": {
+  "_ZN10MemoryNode6TargetC1EP10MemoryNode": {
+   "verdict": "MISMATCH",
+   "reason": "emitted ['_ZN10MemoryNode6TargetC1EPS_', '_ZN10MemoryNode6TargetC2EPS_'], claimed _ZN10MemoryNode6TargetC1EP10MemoryNode",
+   "cause": "Itanium substitution not applied: the name spells a type out in full where the ABI requires an S_/S0_ back-reference.  Hand-derived, not compiler-derived",
+   "module": "arm9",
+   "addr": "0x0204e938",
+   "proposed": [
+    "_ZN10MemoryNode6TargetC1EPS_"
+   ]
+  },
   "_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE": {
    "verdict": "MISMATCH",
    "reason": "emitted ['_ZN4cstd10fdiv_asyncE5Fix12IiES1_'], claimed _ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE",

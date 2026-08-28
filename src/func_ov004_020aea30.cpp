@@ -1,11 +1,11 @@
 //cpp
 #include "types.h"
-// @symbol _ZN12dEnemyBase_c12KillByAttackER8dActor_c
+// @symbol func_ov004_020aea30
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "dEnemyBase_c.h"
-extern "C" void _ZN12dEnemyBase_c12KillByAttackER8dActor_c(void *self, void *actor, void *c2, void *c3)
+extern "C" void func_ov004_020aea30(void *self, void *actor, void *c2, void *c3)
 {
     void *r8 = self;
     void *r7 = actor;

@@ -157,6 +157,35 @@ inference:
 |---|---|---|---|
 | `_ZN7Clipper13Func_020156DCEv` | 0 | **5** | `src/Camera_UpdateMatrices.c` declares `(void*,int,int,int,int)` and matches the ROM |
 | `_ZN12dEnemyBase_c12KillByAttackER8dActor_c` | 1 (+`this`) | **4** | its own definition takes 4, and three call sites pass 4 |
+| `_ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player` | 2 (+`this`) | **3** | 15 call sites outside ov004 materialise r3; the four inside it do not |
+
+### And two of the three were on the wrong function entirely (2026-08-27)
+
+Both `dEnemyBase_c` rows above sat on an **ov004** address, and ov002 and ov004 are
+alternates in one overlay slot -- both based at 0x020ad3e0 -- so a single address is
+two unrelated functions and every actor overlay's `relocs.txt` records the call as
+the ambiguous `module:overlays(2,4)`. The config cannot disambiguate it; the code
+can.
+
+`KillByInvincibleChar` was on ov004 0x020ada40, which reads only r0 and range-checks
+it as a scalar. The ov002 body at the same address consumes r0/r1/r2 as (enemy,
+Vector3_16 &, Player &). Moved, given its third parameter, and migrated to a real
+method that matches -- which is the strongest form of check this note describes.
+
+`KillByAttack` was on ov004 0x020aea30, whose body walks an 8-byte table to an
+0xffff sentinel: r0 is a table base, not an actor. The ov002 function at the same
+address dispatches a pointer-to-member from `data_ov002_0210db80[mDeathState - 1]`
+after clearing bit 0x10000000 of mFlags and zeroing mDeathTimer -- an enemy method,
+and the one all 34 enemy-overlay call sites reach. ov004's is now
+`func_ov004_020aea30`; ov002's keeps its placeholder rather than inherit a name
+coined against the wrong body, but its arity is settled: an unused fourth argument
+makes it match, and the call sites spell the first three
+`(dActor_c *attacker, dBgCh_Actr *clsn, int kind)`.
+
+**The lesson for this note.** An arity disagreement is worth treating as a symptom,
+not just a defect in the count. Both of these turned out to be the name pointing at
+a different function, and in both cases the ambiguity was visible in `relocs.txt`
+as `module:overlays(2,4)` before anyone disassembled anything. Grep for that.
 
 So the arity test is sound *as a test* — it reads the ROM, not the name — but the name's
 count is an input that can itself be wrong, and when the two disagree the ROM wins. Run it

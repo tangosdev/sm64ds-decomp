@@ -5,7 +5,7 @@ typedef struct { s16 x, y, z; } V16;
 #define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
 extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
-extern void func_ov002_020ada40(void* self, void* v, void* a, int f);
+extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void* self, void* v, void* a, int f);
 extern void func_ov062_02117bf4(void* self);
 extern void func_ov002_020aea30(void* self, void* a, int b);
 extern int _ZN6Player9IsOnShellEv(void* p);
@@ -41,7 +41,7 @@ void func_ov062_02117c98(void* self)
         v.x = (s16)-0x2000;
         v.y = (s16)r5;
         v.z = (s16)r5;
-        func_ov002_020ada40(self, &v, found, 0x46000);
+        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(self, &v, found, 0x46000);
         return;
     }
     if (flags & 0x22400) {

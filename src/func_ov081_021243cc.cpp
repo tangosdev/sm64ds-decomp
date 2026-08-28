@@ -10,7 +10,7 @@ extern "C" {
     s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void* self);
     void func_02012694(int a, void* p);
     void func_ov081_02125488(void* self, void* p);
-    void func_ov002_020ada40(void* self, void* v, void* a);
+    void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void* self, void* v, void* a);
     void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, void* v, u32 a, int f, u32 c, u32 d, u32 e);
     void func_ov081_02124134(void* self);
 }
@@ -62,7 +62,7 @@ extern "C" void func_ov081_021243cc(void* self)
             vv.x = (s16)-0x1200;
             vv.y = 0;
             vv.z = 0;
-            func_ov002_020ada40(self, &vv, found);
+            _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(self, &vv, found);
             func_02012694(0x1d, (void*)(c+0x74));
             hit = 1;
         }

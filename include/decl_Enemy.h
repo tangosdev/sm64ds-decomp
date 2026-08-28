@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 extern int _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(void*, void*);
-extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player(void*, Vector3_16*, void*, int);
+extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void*, Vector3_16*, void*, int);
 extern void _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc(void*, void*, char*);
 extern void _ZN12dEnemyBase_cC2Ev(void*);
 
