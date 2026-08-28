@@ -318,6 +318,15 @@ MP3_BSS(".dsstate$ymp3t0002", data_020a0df8, 0x48);   // nine eight-byte ring en
 // are hosted by other files and land elsewhere in the image, so those rows
 // would have failed a correct build; the reasoning is at the guard itself.
 extern "C" {
+// The three seam faces the pre-level session request drives, in the ROM's own
+// order and off the same role byte. Hosted in hal/comms_seam.cpp.
+void func_020408b0(unsigned short mode);
+void func_02040820(void);
+void func_02040790(void);
+int  func_02040704(int ignored);
+// MY COMMS SLOT, hosted by hal/actor_vtables.cpp. src/func_0203da9c.c returns
+// it and hal/level_boot.cpp seats the world's local player index from that.
+extern unsigned char data_020a0f10[];
 // The ROLE byte, hosted by hal/stage_slot0.cpp. src/func_0203df40.c switches
 // on it and nothing in the port was seating it; see HOLE 3 below.
 extern unsigned char data_020a0f04[];
@@ -868,6 +877,107 @@ void touch_ring_advance() {
 // the byte, so "who wins" was never the question. The question is who SEATS it,
 // and the answer is: whatever stands in for the menu.
 // ===========================================================================
+
+// ===========================================================================
+// WAIT FOR THE SESSION BEFORE SEATING A WORLD.
+//
+// THE FIELD FAILURE THIS CLOSES. The owner ran two windows and the CHILD came
+// up as the HOST'S character. His own playlog says why, in one line:
+//
+//     [a2] VS: 2 players, I am slot 0, characters 0 1     <- the world seat
+//     [comms:level] ... slot=1 players=2 role=2           <- the wire
+//
+// The child seated a world believing it was player 0, and the wire then told it
+// it was player 1. Both statements were made by the same process about the same
+// session, ninety lines apart.
+//
+// IT IS AN ORDERING BUG, NOT AN ARITHMETIC ONE. hal/level_boot.cpp seats
+// data_0209f250 from func_0203da9c(), which is `return data_020a0f10` -- MY
+// COMMS SLOT -- and that is the ROM's own spelling, taken from
+// Stage::InitResources:154. But data_020a0f10 is written by
+// src/func_0203ea5c.c:252, which runs only once a ROUND HAS COMPLETED. The port
+// boots its level immediately at startup, and a UDP join takes a few frames, so
+// the seat read the pre-join default of 0 on BOTH instances. Every downstream
+// question -- which character is mine, which Ctrl slot do I read, who does the
+// camera follow -- then had the same wrong answer on both consoles.
+//
+// ON THE DS THIS CANNOT HAPPEN, and that is what makes the fix obvious rather
+// than invented: you pick VS in the menu, the consoles find each other, and
+// only then does anybody load a level. The session precedes the world. The port
+// had no menu, so it loaded the world first and asked afterwards.
+//
+// So the port waits, which is the port standing in for the menu's ordering the
+// same way it already stands in for the menu's role byte. Bounded, because a
+// session that never comes up must still boot a playable single-player level
+// rather than hang: on expiry it returns false, the caller seats the world it
+// would have seated anyway, and the log says the wait expired.
+// ===========================================================================
+
+bool comms_wait_for_session(int frames) {
+    const CommsTransport *t = comms_transport();
+    if (!t) return false;                  // solo: nothing to wait for
+
+    const int st0 = t->state();
+    if (st0 == kCommsParentConnected || st0 == kCommsChildConnected)
+        return true;                       // already in
+
+    std::fprintf(stderr,
+                 "[comms:conductor] holding the world seat until the session "
+                 "joins, because data_020a0f10 (my comms slot) is not written "
+                 "until a round completes and seating a world before that "
+                 "makes every console believe it is player 0\n");
+
+    // AND IT HAS TO BRING THE LINK UP ITSELF, or this would wait for something
+    // that cannot happen. The conductor is what normally calls open() and then
+    // become_parent/become_child -- out of src/func_0203ea5c.c:138 and its
+    // case-0 arm -- and the conductor does not run until the frame loop does,
+    // which is after the level boot this is holding. Waiting without asking
+    // would spin the whole bound and then seat the wrong world anyway.
+    //
+    // These are the same three faces in the same order the ROM uses, chosen off
+    // the same role byte, and that is exactly what the DS's multiplayer menu
+    // does before it loads anything. The frozen contract makes it safe to do
+    // here: a second open() while open is a documented no-op, so the
+    // conductor's own open() a few frames later costs nothing and does not drop
+    // the live session.
+    func_020408b0(2);
+    if (data_020a0f04[0] == kCommsRoleParent)      func_02040820();
+    else if (data_020a0f04[0] == kCommsRoleChild)  func_02040790();
+
+    for (int i = 0; i < frames; ++i) {
+        t->poll();                         // service the carrier
+        const int st = t->state();
+        if (st == kCommsParentConnected || st == kCommsChildConnected) {
+            // AND SEAT THE SLOT, or the wait accomplishes nothing. Bringing the
+            // link up is not the same as knowing my slot: data_020a0f10 is
+            // written by src/func_0203ea5c.c:252, and the conductor has not run
+            // a round yet. Measured -- the first version of this waited
+            // successfully ("session up after 1 turns: link=4 slot=1") and the
+            // very next line still said "I am slot 0", because it had brought
+            // the session up and then read a variable nothing had written.
+            //
+            // This is the ROM's own line from :252, run where the menu would
+            // have run it, off the same seam face: func_02040704 is the slot
+            // accessor and its hosted parameter is named `ignored` precisely
+            // because the ROM passes it a masked flag it does not use.
+            data_020a0f10[0] = func_02040704(0);
+            std::fprintf(stderr,
+                         "[comms:conductor] session up after %d turns: link=%d "
+                         "slot=%d players=%d -- seated data_020a0f10 = %d and "
+                         "the world can boot now\n",
+                         i, st, t->slot(), t->player_count(),
+                         (int)data_020a0f10[0]);
+            return true;
+        }
+        ::Sleep(4);
+    }
+    std::fprintf(stderr,
+                 "[comms:conductor] the session did not come up within %d "
+                 "turns; seating a single-player world. THIS IS NOT A HANG: "
+                 "the level boots normally and the ROM's own solo arm runs.\n",
+                 frames);
+    return false;
+}
 
 void comms_seat_session_request(int role) {
     data_020a0f04[0] = (unsigned char)role;   // 1 = parent, 2 = child

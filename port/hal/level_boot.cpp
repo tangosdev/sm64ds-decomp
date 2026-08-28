@@ -2003,6 +2003,7 @@ static void port_load0(void *t, int a, unsigned b)
    file's main extern block for them is a thousand lines further down. */
 extern "C" {
 extern unsigned char data_0209f21c;
+extern unsigned char data_0209f250;
 extern int data_0209fc5c[];
 extern unsigned char data_02092128[];
 extern unsigned char data_0209caa0[];
@@ -2019,7 +2020,13 @@ extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3);
    the VS menu offers and what makes two players tellable apart in a capture. */
 static unsigned char g_vs_character[4] = {0, 1, 2, 3};
 extern "C" void port_vs_set_character(int slot, int ch) {
-    if (slot >= 0 && slot < 4) g_vs_character[slot] = (unsigned char)(ch & 3);
+    /* & 7, not & 3: src/_ZN6Player13InitResourcesEv.cpp:76 reads the
+       character as `b & 7`, so the field is THREE bits. Masking to two
+       costs nothing for the four characters the game ships and would
+       silently fold any value above 3 onto a different character, which
+       is exactly the kind of narrowing that survives review because the
+       test data never exercises it. Match the ROM's width. */
+    if (slot >= 0 && slot < 4) g_vs_character[slot] = (unsigned char)(ch & 7);
 }
 extern "C" int port_vs_character(int slot) {
     return (slot >= 0 && slot < 4) ? (int)g_vs_character[slot] : 0;
@@ -2040,8 +2047,37 @@ static void port_load1(void *t, int a, unsigned b)
                      "chars=%d,%d\n",
                      (int)data_0209f21c, b, data_0209fc5c[0], data_0209fc5c[1],
                      (int)data_02092128[0], (int)data_02092128[1]);
+    /* THE LOCAL SLOT IS HELD AT 0 ACROSS THE ENTRANCE LOAD, and restored the
+       moment every slot has a body. Run mg16 lane MP3, field failure.
+
+       Camera::InitResources runs INSIDE the loop below and reads
+       data_0209f394[data_0209f250] -- the local player's actor. On the child
+       that index is 1, and slot 1 has no body yet: the ROM's loop takes its
+       player starts from consecutive entrance records and this level has only
+       one, which is why port_vs_spawn_extra_players exists at all. So the
+       camera dereferenced a null and the child died at
+       Camera::InitResources+0x98 reading 0x000000cc, every boot.
+
+       The fill-in cannot simply move earlier: the loop ASSIGNS
+       data_0209f394[i] for every slot it visits, so anything pre-spawned is
+       overwritten a moment later.
+
+       Holding the index at 0 for the duration is the small, honest answer.
+       Slot 0 always has a body -- it is the one start every level does have --
+       so the camera initialises against a real actor exactly as it does in
+       single player, and the true slot is restored before any frame runs. The
+       camera reads the index per frame, so it follows the right player from
+       the first tick; nothing downstream sees the temporary value. */
+    const unsigned char saved_local = data_0209f250;
+    data_0209f250 = 0;
     _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij(t, a, b);
     port_vs_spawn_extra_players(t, b);
+    data_0209f250 = saved_local;
+    if (saved_local != 0 && std::getenv("SM64DS_VS_PROBE"))
+        std::fprintf(stderr,
+                     "[vs] local slot restored to %d after the entrance load "
+                     "(held at 0 so Camera::InitResources had a body to "
+                     "follow)\n", (int)saved_local);
 }
 static void port_load2(void *t, int a, unsigned b)
 { port_loader_enter(2, t); _Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij(t, a, b); }
@@ -4004,6 +4040,16 @@ static void port_a2_seat_body(int make_stage)
      * driven the same actor and neither would have driven the other.
      * func_0203da9c has been linked and never called for the whole life of this
      * port; this is the call site it was waiting for. */
+    /* THE SESSION COMES FIRST, THEN THE WORLD. Run mg16 lane MP3, field
+       failure. Everything below asks the seam who I am and how many of us
+       there are, and neither answer exists until the link is up:
+       data_020a0f10 is written by src/func_0203ea5c.c:252, which runs only
+       once a round has completed. Seating a world before that read 0 on BOTH
+       consoles, so both believed they were player 0 and the child drove the
+       host's character. On the DS the menu joins before anything loads a
+       level; this is that ordering, restored. No-op with no transport. */
+    port::comms_wait_for_session(600);
+
     const int vs_players = port::vs_player_count();
     /* ---- THE PER-PLAYER INPUT GATE (run mg16, lane MP3) -------------------
      *

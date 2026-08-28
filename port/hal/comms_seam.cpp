@@ -190,7 +190,7 @@ int func_02040714(void) {
 
 // src/func_02040704.c is `return data_020a0f24`, my slot index.
 // THE ROM'S CALLER PASSES AN ARGUMENT IT DOES NOT DECLARE:
-// src/func_0203ea5c.c:236 is `data_020a0f10 = func_02040704(temp_r0_5)`, which
+// src/func_0203ea5c.c:252 is `data_020a0f10 = func_02040704(temp_r0_5)`, which
 // on ARM is a dead r0 write the callee overwrites. Declared with the argument
 // here so a stack ABI agrees with the ROM's own call sites.
 int func_02040704(int ignored) {

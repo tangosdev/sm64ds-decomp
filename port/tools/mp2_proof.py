@@ -71,7 +71,32 @@ SELFTEST_FRAMES = "300"
 # so rung 1 compares BOTH and treats a disagreement at either as a red.
 LAYOUT_FRAMES = "296"
 
-PORT_BASE = 51765               # kCommsLoopbackPortBase
+# A PORT BASE OF THIS RUN'S OWN, NOT THE SHIPPED DEFAULT.
+#
+# Run mg16 lane MP3. kCommsLoopbackPortBase is 51765 and every harness in this
+# tree used it, which means two harnesses -- or a harness and the owner playing
+# a two-window session -- bind the SAME loopback ports at the same time. Their
+# instances then find each other on the wire and form one session out of two
+# unrelated runs: a proof measures somebody else's game, and tearing a proof
+# down pulls the parent out from under a session a human is playing.
+#
+# Derived from this process's PID and kept well clear of 51765, so a proof never
+# lands on the shipped default a human's session is using.
+#
+# THE STRIDE HAS TO EXCEED THE FOOTPRINT, and the first version's did not. A
+# harness run reaches PORT_BASE + 48 and each two-window session binds its port
+# and port+1, so one run occupies roughly a hundred ports; a stride of 16 meant
+# ADJACENT buckets overlapped and two runs a few pids apart still collided. 128
+# clears the footprint with room to spare.
+#
+# WHAT THIS DOES AND DOES NOT GUARANTEE, stated to the arithmetic rather than
+# hopefully: 70 buckets of 128 span 56000..64960, inside the port range. Runs in
+# DIFFERENT buckets can no longer overlap at all. Two runs whose pids are
+# congruent mod 70 still land on the same base -- roughly a 1-in-70 chance
+# rather than the near-certainty a 16-wide stride gave. rungP0 is what catches
+# that case if it ever happens, which is why isolation is asserted and not
+# assumed.
+PORT_BASE = 56000 + (os.getpid() % 70) * 128
 
 
 def sha(path):
@@ -576,6 +601,11 @@ def rung5(root, out):
     log = os.path.join(d, "run.log")
     cmd = ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass",
            "-File", script, "-Minimized", "-Frames", "600",
+           # ON THIS RUN'S OWN PORTS. This rung invoked the script with
+           # no -Port and fell through to its 51765 default, so the one
+           # branch whose purpose is to eliminate the shared-base
+           # collision still ran a 600-frame session on the shared base.
+           "-Port", str(PORT_BASE + 48),
            "-Root", root, "-RunDir", d]
     with open(log, "wb") as f:
         p = subprocess.run(cmd, cwd=d, stdout=f, stderr=subprocess.STDOUT,

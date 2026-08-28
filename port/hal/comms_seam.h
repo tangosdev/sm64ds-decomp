@@ -393,6 +393,16 @@ void comms_install_pump();
 // the mod standing in for the menu the port does not have on this path.
 void comms_seat_session_request(int role);
 
+// Hold the world seat until the session joins, bringing the link up the way the
+// DS's multiplayer menu would (open, then request the seated role). Returns
+// true if the session came up. BOUNDED: on expiry it returns false and the
+// caller seats a single-player world, which is a normal boot and not a hang.
+//
+// It exists because data_020a0f10 -- my comms slot -- is not written until a
+// round completes, so a world seated before the join has every console
+// believing it is player 0.
+bool comms_wait_for_session(int frames);
+
 // The DS touch-panel ring's write index, at data_020a80cc[6] as a halfword.
 // hal/sub_screen.cpp's poll_touch writes one entry per frame and advances it;
 // src/func_0203b9bc.c reads the four entries behind it. Nine entries.
