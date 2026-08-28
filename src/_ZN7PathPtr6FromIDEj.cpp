@@ -1,10 +1,12 @@
 //cpp
-struct PathPtr { int a; int b; };
+#include "PathPtr.h"
+
 extern "C" {
 extern int data_020a0d84;
-PathPtr func_0203ad6c(int v);
-
-PathPtr _ZN7PathPtr6FromIDEj(unsigned int id) {
-    return func_0203ad6c(data_020a0d84 + id * 6);
+void func_0203ad6c(PathPtr *path, int defAddr);
 }
+
+void PathPtr::FromID(unsigned int id)
+{
+    func_0203ad6c(this, data_020a0d84 + id * 6);
 }

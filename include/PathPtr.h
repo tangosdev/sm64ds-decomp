@@ -29,6 +29,7 @@ struct PathPtr {
        section 2. The ROM body is two zero stores at 0x0203ad74, 0x10 bytes --
        exactly this declaration plus the init list below it. */
     PathPtr();
+    void FromID(unsigned int id);
     unsigned int Loops() const;
     unsigned int NumNodes() const;
     void GetNode(Vector3 &node, unsigned int idx) const;
