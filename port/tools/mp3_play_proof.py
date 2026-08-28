@@ -408,8 +408,51 @@ def rungP4(seconds):
 
 # P0 FIRST AND ALWAYS. It is the gate: if the wire was not ours alone, nothing
 # below it measured this build.
+def rungP5(seconds):
+    """BUTTONS ROUTE TO THE PRESSER'S OWN SLOT -- the crouch-bleed rung.
+
+    The tester's precise repro: crouch pressed in the CHILD's window made
+    MARIO crouch in the CHILD's world, and not in the host's. So a whole button
+    family routed to the wrong slot, on the child only, and inconsistently
+    between the two worlds.
+
+    Two seams caused it and both were the PadData[0] clobber's shape one layer
+    in: the harness published the local BUTTONS into Ctrl slot 0 unconditionally
+    (tests/walk_window.cpp), and the per-player split-symbol fan copied only the
+    STICK fields, leaving the button words with nowhere per-player to live --
+    hal/actor_vtables.cpp hosted data_0209f49c/f49e as BARE SHORTS.
+
+    Asserted the way rungP2 asserts the stick: differentially. A button held on
+    the child must move the child's own body relative to not holding it, and
+    must NOT move the host's body relative to not holding it -- in the CHILD's
+    own world, which is where the bleed showed.
+    """
+    # 0x08 is START-adjacent in DS bit order; 0x100 is R, the crouch modifier.
+    # Held rather than tapped so a one-frame edge cannot be the difference.
+    t1a, t2a, _ = play_session("pP5_btn_pressed", seconds, inj_c="key=0x100")
+    t1b, t2b, _ = play_session("pP5_btn_idle", seconds, inj_c="key=0x0")
+    ok = True
+    ok &= isolated("rungP5(pressed)", t1a)
+    ok &= isolated("rungP5(idle)", t1b)
+    own_a, host_a = rows(t2a, 1), rows(t2a, 0)
+    own_b, host_b = rows(t2b, 1), rows(t2b, 0)
+    ok &= M.verdict(bool(own_a) and bool(host_a) and bool(own_b) and bool(host_b),
+                    "rungP5 the child's world has both bodies in both arms")
+    if not (own_a and host_a and own_b and host_b):
+        return False
+    host_delta = (abs(host_a[-1]["x"] - host_b[-1]["x"]) +
+                  abs(host_a[-1]["z"] - host_b[-1]["z"]))
+    ok &= M.verdict(host_delta < 4096,
+                    "rungP5 A BUTTON ON THE CHILD DID NOT REACH THE HOST'S "
+                    "CHARACTER | holding it moved the host's body %.2f units "
+                    "versus not holding it, in the child's own world. Above "
+                    "1.0 means a button family is still routing to slot 0."
+                    % (host_delta / 4096.0))
+    return ok
+
+
 RUNGS = [("P0", rungP0), ("P1", rungP1), ("P2", rungP2), ("P3", rungP3),
-         ("P4", rungP4)]
+         ("P4", rungP4), ("P5", rungP5)]
 
 
 def main(argv):

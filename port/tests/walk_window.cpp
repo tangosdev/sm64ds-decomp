@@ -5482,9 +5482,27 @@ static int scene_window_run(void)
                     if (pad.buttons & 0x0010) btn |= 0x08;   /* START       */
                 }
             }
-            *(unsigned short *)(data_0209f49c + 0) = btn;
-            *(unsigned short *)(data_0209f49e + 0) =
-                (unsigned short)(btn & (unsigned short)~btn_was);
+            /* SLOT 0 ONLY, AND ONLY WHEN THE ROM'S FAN-OUT IS NOT DRIVING.
+               Run mg16 lane MP3, field failure 2. This publishes the LOCAL
+               buttons into Ctrl slot 0's held and pressed words, which is
+               right for a single-player port and is the crouch bleed in a
+               session: on the CHILD it put the child's own buttons into the
+               HOST's Ctrl record, so crouch pressed in the child's window
+               crouched MARIO in the child's world -- and only in that world,
+               because the host was never told. Same shape as the PadData[0]
+               clobber and gated the same way.
+
+               With a transport up, these words come from the ROM's own path
+               instead: the key register, the local comms record, the wire, the
+               fan-out into all four PadData slots, Stage::CheckInput into all
+               four Ctrl records, and the per-player split-symbol copy further
+               down this file. The local player's buttons still arrive -- into
+               the slot this console actually is. */
+            if (!(port::comms_transport() && comms_fanout_on())) {
+                *(unsigned short *)(data_0209f49c + 0) = btn;
+                *(unsigned short *)(data_0209f49e + 0) =
+                    (unsigned short)(btn & (unsigned short)~btn_was);
+            }
             btn_was = btn;
         }
 
@@ -7453,38 +7471,35 @@ int main(void)
                which puts player N's values exactly where the ROM's walk looks
                for them.
 
-               THE CEILING IS TWO PLAYERS AND IT IS A LAYOUT FACT, not a
-               judgement. hal/auto_bss.cpp hosts these as int[8] -- 32 bytes --
-               so player 1 at +0x18 (24) fits and player 2 at +0x30 (48) would
-               run off the end into whatever the linker put next. Enlarging
-               them is not free either: they sit INTERIOR to .dsstate$mmm, so
-               growing them shifts every hosted global above them and retires
-               every BMP baseline in the tree (port/tools/battery.py's own
-               doctrine). The real fix is to host the five as interior
-               addresses of data_0209f498, the way hal/camera_bridges.cpp hosts
-               the comms records, and that is a band migration with its own
-               regression surface. Until then this refuses above two loudly
-               rather than corrupting a neighbour quietly. */
+               THE CEILING IS GONE, and it was never a layout fact. An
+               earlier revision of this comment said the split symbols could
+               not be enlarged because they sit interior to .dsstate and
+               growing them retires every BMP baseline. The first half was
+               wrong: they are SEPARATE host symbols, not interior addresses,
+               and this tree already sizes two of the family
+               (data_0209f4ac/data_0209f4ae) at 0x18 * 4 for exactly this
+               reason -- hal/actor_vtables.cpp carries the note about the stray
+               that taught it. The rest now match. Baselines do move, which is
+               what rung 1's position check is for. */
             {
                 const char *q = (const char *)data_0209f498;
                 int np = (int)data_0209f21c;
-                if (np > 2) {
-                    static bool said;
-                    if (!said) {
-                        said = true;
-                        fprintf(stderr,
-                                "[vs] REFUSING to fan the Ctrl split symbols "
-                                "past 2 players: hal/auto_bss.cpp hosts "
-                                "data_0209f4a0..ac as int[8] and player 2 "
-                                "would write at +0x30, off the end. Host them "
-                                "as interior addresses of data_0209f498 first. "
-                                "Clamping to 2.\n");
-                    }
-                    np = 2;
-                }
+                if (np < 1) np = 1;
+                if (np > 4) np = 4;
                 for (int pi = 0; pi < np; ++pi) {
                     const char *r = q + pi * 0x18;
                     const int o = pi * 0x18;
+                    /* THE BUTTONS, and leaving them out was the second input
+                       seam. Ctrl+0x04 is the HELD word and +0x06 is
+                       pressed-this-frame, and they are what every button
+                       reader in the game uses -- crouch among them. Fanning
+                       the stick fields and not these meant movement routed to
+                       the right player and one button family did not: crouch
+                       in the child's window crouched MARIO in the child's
+                       world. Same one-line character as the PadData[0]
+                       clobber, one layer further in. */
+                    *(short *)((char *)data_0209f49c + o) = *(const short *)(r + 0x04);
+                    *(short *)((char *)data_0209f49e + o) = *(const short *)(r + 0x06);
                     *(short *)((char *)data_0209f4a0 + o) = *(const short *)(r + 0x08);
                     *(short *)((char *)data_0209f4a2 + o) = *(const short *)(r + 0x0a);
                     *(short *)((char *)data_0209f4a4 + o) = *(const short *)(r + 0x0c);
@@ -8385,7 +8400,18 @@ int main(void)
                     fprintf(stderr, "[fade] scene %d: covered, level booted, "
                             "fading in\n", scene_id);
                 }
-                player = data_0209f394[0];
+                /* run mg16 lane MP3: THE LOCAL SLOT, not slot 0. The
+                   render loop below assumes `player` IS
+                   data_0209f394[data_0209f250]; it skips that index and draws
+                   `player` separately. Re-seating this to slot 0 after a level
+                   change breaks that on any console whose slot is not 0: slot
+                   0 gets submitted twice and the local player is never drawn
+                   at all. */
+                {
+                    int me2 = (int)data_0209f250;
+                    if (me2 < 0 || me2 >= 4 || !data_0209f394[me2]) me2 = 0;
+                    player = data_0209f394[me2];
+                }
                 if (!player) {
                     fprintf(stderr, "[lvl] the new level spawned no player\n");
                     return 3;

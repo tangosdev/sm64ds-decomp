@@ -100,9 +100,16 @@ int data_0209f2c4[8];
    hal/bob_enemy_bridges.cpp; the definition lives here, which is where the
    link sweep grows BSS. */
 unsigned char data_0209f30d[4];
-int data_0209f4a2[8];
-int data_0209f4a4[8];
-int data_0209f4a6[8];
+/* run mg16 lane MP3: FULL-EXTENT, 0x18 * 4 bytes. These are per-player Ctrl
+   fields (stick nx at Ctrl+0x0a, ny at +0x0c, world angle at +0x0e) and
+   every matched reader indexes them by player * 0x18 as BYTES -- e.g.
+   Player::Behavior's `*(s16 *)((char *)&data_0209f4a6 + data_020a0e40 *
+   0x18)`. int[8] is 32 bytes, which held players 0 and 1 and put player 2
+   at byte 48, off the end. That was the two-player ceiling the port used to
+   refuse at; the storage is the whole record now, so the refusal goes. */
+unsigned char data_0209f4a2[0x18 * 4];
+unsigned char data_0209f4a4[0x18 * 4];
+unsigned char data_0209f4a6[0x18 * 4];
 /* Stage::CheckInput's own view of the pad records: the matched TU
    accesses the whole 0x18-stride Ctrl block through this ONE symbol
    while older TUs read the per-field splits above -- the harness
