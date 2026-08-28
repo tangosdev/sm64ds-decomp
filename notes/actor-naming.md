@@ -57,10 +57,10 @@ header's size comments.
   behavior first:
 
   1. `src/game/behaviors/<name>.inc.c` (**226** files, descriptive names);
-  1. The behavior index in `data/behavior_data.c`;
-  1. Field vocabulary in `include/object_fields.h` (**oPosX**/*oAction*/`oTimer`);
-  1. Mario actions in `include/s4.h`;
-  1. Physics constants: `src/game/mario_step.c`.
+  2. The behavior index in `data/behavior_data.c`;
+  3. Field vocabulary in `include/object_fields.h` (**oPosX**/*oAction*/`oTimer`);
+  4. Mario actions in `include/s4.h`;
+  5. Physics constants: `src/game/mario_step.c`.
 ---
 - *decomp-refs/nsmb* (**NSMB-Decomp/nsmb**): same engine lineage and toolchain
   family (`mwccarm 1.2 sp3, -O4,p`).
