@@ -116,6 +116,11 @@ struct SyncCfg {
                       // FORCE_V1/DROP class: disables item 3's event-triggered
                       // sends so one build can measure cadence-only ("before")
                       // against event-driven ("after") transition latency
+    int  phase_frames;// SM64DS_SYNC_PHASE -- item 4's same-animation reseed
+                      // threshold, in whole frames (default 8). The rig is
+                      // what turns this from a guess into a number: measure
+                      // phase_worst on a healthy pair at the target latency
+                      // and keep the threshold above that noise floor.
 };
 
 SyncCfg g_cfg;
@@ -166,6 +171,9 @@ void parse_cfg() {
     if (g_cfg.delay_ms < 0) g_cfg.delay_ms = 0;
     if (g_cfg.delay_ms > 2000) g_cfg.delay_ms = 2000;
     g_cfg.no_events  = env_int("SM64DS_SYNC_NO_EVENTS", 0) != 0;
+    g_cfg.phase_frames = env_int("SM64DS_SYNC_PHASE", 8);
+    if (g_cfg.phase_frames < 1) g_cfg.phase_frames = 1;
+    if (g_cfg.phase_frames > 120) g_cfg.phase_frames = 120;
     if (g_cfg.hz < 1) g_cfg.hz = 1;
     if (g_cfg.hz > 60) g_cfg.hz = 60;
     if (g_cfg.lerp_pct < 1) g_cfg.lerp_pct = 1;
@@ -437,6 +445,12 @@ unsigned char  g_ev_ground = 0;
 // apply_pose no-ops and wire arrival is the only measurable edge).
 bool           g_arr_seen[kCommsMaxPlayers];
 unsigned short g_arr_anim[kCommsMaxPlayers];
+
+// Item 4's per-slot wire-side animation-length estimate: the high-water
+// received cursor for the id currently playing on that slot. Reset on id
+// change. See the wrap note in apply_pose.
+unsigned short g_ph_id[kCommsMaxPlayers];
+int            g_ph_hw[kCommsMaxPlayers];
 }  // namespace
 
 // One DS unit is 4096 in Fix12. The thresholds are in units and converted here
@@ -477,24 +491,25 @@ void apply_pose(void *a, const SyncPlayerV1 *e) {
     // The animation below is what the owner actually sees, and it applies
     // safely because SetAnim takes an ID and validates it itself.
 
-    // ---- ANIMATION. Only on an id CHANGE, and seeded through SetAnim's own
-    // startFrame, which costs nothing extra and avoids the cursor trap below.
+    // ---- ANIMATION. On an id CHANGE, seeded through SetAnim's own
+    // startFrame; on a SAME-ID PHASE FORK past a threshold, RESEEDED through
+    // the same face (mp-sync-coopdx item 4).
     //
-    // THE SAME-ANIMATION CASE IS DELIBERATELY NOT CORRECTED. ModelAnim::SetAnim
-    // has a same-file fast path that IGNORES startFrame, so re-seeding a cursor
-    // within one animation needs a direct write to ModelAnim+0x58 -- and a
-    // direct write perturbs Animation::WillHitFrame, which is how the ROM fires
-    // footsteps, hitboxes and animation-timed sounds. Moving it can skip such
-    // an event or fire it twice.
+    // THE CURSOR IS NEVER WRITTEN DIRECTLY. ModelAnim+0x58 is live machinery:
+    // Animation::WillHitFrame tests whether [currFrame, currFrame + speed)
+    // crosses a given frame, which is how the ROM fires footsteps, hitboxes
+    // and animation-timed sounds -- a raw store can skip such an event or
+    // fire it twice (spec trap 2). Player::SetAnim with a startFrame is the
+    // legal road: it forces the cursor reset that makes the following
+    // ModelAnim::SetAnim take its slow path, so the startFrame lands even for
+    // the same file (POSEFIELDS.md; the same-file fast path only ignores
+    // startFrame when the cursor reset is absent).
     //
-    // The derivation recommends direct-writing only on LARGE drift, and the
-    // threshold for "large" HAS NO MEASURED VALUE -- like the position
-    // constants, it needs the latency tool nobody has built. So v2 does the
-    // half that is free and correct, and leaves the half that needs a number
-    // until there is a number. A remote body whose animation is right but whose
-    // phase is a few frames off is the residual, and it is a much smaller
-    // artifact than the wrong animation entirely, which is what the owner sees
-    // today.
+    // The old note here left the same-id half undone because the threshold
+    // for "large drift" had no measured value and the latency tool to measure
+    // it did not exist. The tool exists now (item 6), the threshold is
+    // SM64DS_SYNC_PHASE (default 8 frames), and the rig's phase_worst readout
+    // is what keeps it above the healthy-pair noise floor.
     if (e->anim_id != player::anim_id(a)) {
         // Argument shape copied from a real call site rather than guessed:
         // src/_ZN6Player11St_Fly_InitEv.cpp:26 is
@@ -511,6 +526,73 @@ void apply_pose(void *a, const SyncPlayerV1 *e) {
                is the measured transition latency. */
             std::fprintf(stderr, "[sync] anim-apply slot=%u id=%u t=%u\n",
                          (unsigned)e->slot, (unsigned)e->anim_id,
+                         GetTickCount());
+        return;
+    }
+
+    // ---- SAME ID: the phase check, two corrections deep before it dares
+    // compare anything:
+    //
+    //   AGE: the received cursor is one-way-stale, so it is advanced at
+    //   nominal speed 1.0 first -- without that, any latency past the
+    //   threshold makes every snapshot look like a fork and the reseed loops,
+    //   planting the cursor a latency behind each time. rtt/2 in ms becomes
+    //   20.12 frames as ms * 4096 / (1000/60) ~= 246. Approximate (anims can
+    //   play off-1.0 speeds), which a THRESHOLD absorbs.
+    //
+    //   WRAP: looping animations reset their cursor, so a plain delta reads
+    //   ~one animation length once per loop and would reseed spuriously on a
+    //   perfectly healthy pair. The wire itself supplies a length estimate --
+    //   the HIGH-WATER received cursor for the current id -- and the delta is
+    //   taken modulo that. No new Player offsets involved (the named-gap rule
+    //   stands); the estimate undershoots until one full loop has been
+    //   observed, which the threshold absorbs the same way.
+    int *cursor = player::anim_frame_ptr(a);   // read-only use; see trap 2
+    if (!cursor) return;
+    /* No RTT sample yet means no age correction, and an uncorrected
+       comparison at any real latency reads as a fork that is not there --
+       measured: the only reseeds in a default-threshold rig session were in
+       the first half-second, before the first pong landed. The probe is ~2 Hz
+       so the blind window is short; a session-boot fork the window hides is
+       caught by the first check after it closes. */
+    if (g_stats.rtt_avg_ms == 0) return;
+    const int slot = e->slot;
+    if (g_ph_id[slot] != e->anim_id) {
+        g_ph_id[slot] = e->anim_id;
+        g_ph_hw[slot] = 0;
+    }
+    if (e->anim_frame > g_ph_hw[slot]) g_ph_hw[slot] = e->anim_frame;
+
+    const int age_2012 = (g_stats.rtt_avg_ms / 2) * 246;
+    int est = e->anim_frame + age_2012;
+    const int hw = g_ph_hw[slot];
+    if (hw > (2 << 12) && est > hw) est %= hw;
+    int d = est - *cursor;
+    if (d < 0) d = -d;
+    if (hw > (2 << 12)) {
+        const int ph = d % hw;
+        d = ph < hw - ph ? ph : hw - ph;       // circular distance
+    }
+    if (d > g_stats.phase_worst) g_stats.phase_worst = d;
+    /* THE THRESHOLD CARRIES THE AGE CORRECTION'S OWN UNCERTAINTY. The
+       correction assumed speed 1.0 and real anims play off it -- a full-run
+       cycle near 2.0 leaves a residual of about age * (speed - 1), which at
+       360 ms simulated RTT measured 8-11 frames and tripped a fixed 8-frame
+       threshold on a perfectly healthy pair (clustered in the first second
+       of each new cycle, before the wrap estimate matures). So the slack
+       scales with the thing that causes it: base + age. A real fork grows
+       without bound and crosses any such line within a second; a latency
+       artifact never leaves the band. */
+    if (d > (g_cfg.phase_frames << 12) + age_2012) {
+        /* Reseed at the age-corrected frame, through the ROM's own face. */
+        _ZN6Player7SetAnimEji5Fix12IiEj(a, e->anim_id, 0, 0x1000,
+                                        (unsigned)(est >> 12));
+        ++g_stats.reseeds;
+        if (g_cfg.report)
+            std::fprintf(stderr,
+                         "[sync] phase-reseed slot=%u id=%u drift=%d frames "
+                         "t=%u\n",
+                         (unsigned)e->slot, (unsigned)e->anim_id, d >> 12,
                          GetTickCount());
     }
 }
@@ -904,7 +986,8 @@ void sync_report(const char *tag) {
                  "[sync:%s] enabled=%s sent=%llu recvd=%llu dropped=%llu "
                  "applied=%llu lerps=%llu snaps=%llu worst_err=%d "
                  "delay=%d rtt_last=%d rtt_avg=%d pings=%llu pongs=%llu "
-                 "own_claims=%llu local_writes=%llu evsends=%llu\n",
+                 "own_claims=%llu local_writes=%llu evsends=%llu "
+                 "reseeds=%llu phase_worst=%d\n",
                  tag ? tag : "-", g_enabled ? "yes" : "no",
                  (unsigned long long)g_stats.sent,
                  (unsigned long long)g_stats.recvd,
@@ -918,7 +1001,9 @@ void sync_report(const char *tag) {
                  (unsigned long long)g_stats.pongs,
                  (unsigned long long)g_stats.own_claims,
                  (unsigned long long)g_stats.local_writes,
-                 (unsigned long long)g_stats.evsends);
+                 (unsigned long long)g_stats.evsends,
+                 (unsigned long long)g_stats.reseeds,
+                 g_stats.phase_worst);
 }
 
 }  // namespace port

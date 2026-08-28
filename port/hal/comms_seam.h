@@ -519,6 +519,13 @@ struct SyncStats {
     // outside the SM64DS_SYNC_HZ cadence because the local body's anim id or
     // grounded flag just changed. Budgeted, so a flapping flag cannot flood.
     unsigned long long evsends;
+    // Same-animation phase reseeds (item 4): SetAnim re-issued with a
+    // startFrame because a remote body's age-corrected cursor sat more than
+    // SM64DS_SYNC_PHASE frames from the local copy's. 0 on a healthy pair.
+    unsigned long long reseeds;
+    // The largest age-corrected same-id cursor delta ever seen, 20.12 --
+    // the healthy-pair noise floor the phase threshold must sit above.
+    int phase_worst;
 };
 
 // Decide whether the layer runs this session. Requires SM64DS_SYNC=1, an

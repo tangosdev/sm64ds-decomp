@@ -231,8 +231,11 @@ inline unsigned short invincible_timer(const void *p) {
 //     and headers, which is strong but is not the same as reading the image;
 //   * the ov002 state table's DS addresses are assumed to be the addresses the
 //     port's hosted ov002 actually uses;
-//   * the cursor-correction threshold has NO measured value. See the sync
-//     layer's own note: it is a guess until the latency tool exists.
+//   * the cursor-correction threshold now HAS a measurement path: the
+//     mp-sync-coopdx lane built the latency rig (SM64DS_SYNC_DELAY_MS + RTT
+//     readout) and the reseed threshold is SM64DS_SYNC_PHASE, tuned against
+//     the rig's phase_worst readout. The reseed goes through Player::SetAnim
+//     with a startFrame -- the cursor is still never written directly.
 
 }  // namespace player
 }  // namespace port
