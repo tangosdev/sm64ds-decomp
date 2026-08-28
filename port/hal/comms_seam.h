@@ -494,6 +494,12 @@ void vs_probe(int frame);
 struct SyncStats {
     unsigned long long sent, recvd, dropped, applied, lerps, snaps;
     int worst_error;          // Fix12, the largest correction ever needed
+    // ---- the tuning rig (mp-sync-coopdx item 6). New fields append here so
+    // the sync_report prefix the SY rungs parse stays byte-identical.
+    unsigned long long pings; // ping probes sent (one per ~500 ms when enabled)
+    unsigned long long pongs; // RTT samples received back
+    int rtt_last_ms;          // most recent measured round trip
+    int rtt_avg_ms;           // EMA (7/8 old + 1/8 new) of the same
 };
 
 // Decide whether the layer runs this session. Requires SM64DS_SYNC=1, an

@@ -10,26 +10,26 @@
 // existed that could move a remote body.
 //
 // ##########################################################################
-// #  THE CORRECTION POLICY BELOW HAS NEVER RUN. READ THIS BEFORE TUNING.   #
+// #  THE CORRECTION CONSTANTS ARE STILL GUESSES, BUT THE TOOL EXISTS NOW.  #
 // ##########################################################################
 //
-// Every loopback session measured so far reports lerps=0 and a worst error of
-// about 1.26 units, against a 2.0-unit ignore threshold. The two simulations
-// stay so close on one machine that the entire 2..60-unit LERP band -- the
-// path that WILL run over the internet, and the only reason this layer exists
-// -- has never executed once. Neither has the snap path.
+// The paragraph that used to stand here named the missing tool: every loopback
+// session reported lerps=0 and a worst error of about 1.26 units against the
+// 2.0-unit ignore threshold, so the entire 2..60-unit LERP band -- the path
+// that WILL run over the internet, and the only reason this layer exists --
+// had never executed, and neither had the snap path. The SY rungs proved
+// PLUMBING (built, sent, received, applied to the right body, never the wrong
+// one, survives 20% loss, does not tax the lockstep) and nothing about the
+// numbers.
 //
-// SO WHAT THE SY RUNGS PROVE IS PLUMBING: built, sent, received, applied to the
-// right body, never to the wrong one, survives 20% loss, does not tax the
-// lockstep. They prove NOTHING about whether 25%-per-frame and a 60-unit snap
-// are good numbers, because neither constant has been exercised.
-//
-// THE MISSING TOOL IS LATENCY INDUCTION, not more loss. SM64DS_SYNC_DROP makes
-// messages disappear, which makes a remote body staler but leaves the error
-// under the threshold. What would stretch the band is DELAYING messages by tens
-// of milliseconds -- a delay queue on the receive side, which does not exist.
-// Whoever takes the internet-play lane should build that first and tune these
-// constants against it, before trusting them in front of a player.
+// THE TOOL IS THE RIG (mp-sync-coopdx item 6), and it is exactly the one the
+// old banner asked for: SM64DS_SYNC_DELAY_MS holds every received aux message
+// in a FIFO for N ms, receive-side, so the correction band stretches the way
+// real latency stretches it -- and a 'SYNP' ping/pong probe feeds a MEASURED
+// round trip into sync_report (rtt_last/rtt_avg), so a rigged run states its
+// own conditions. Tune the constants against the rig at 0/50/150 ms before
+// trusting them in front of a player; the numbers below are still the
+// design's starting guesses until someone does.
 //
 // ============================ WHERE THIS SITS ==============================
 //
@@ -56,6 +56,10 @@
 
 #include "comms_seam.h"
 #include "player_fields.h"
+
+#include <windows.h>   // GetTickCount, for the delay rig and the RTT probe --
+                       // kernel32 only, which every object here already
+                       // imports; the static-DLL trap is about NEW libraries.
 
 #include <cstdio>
 #include <cstdlib>
@@ -99,6 +103,8 @@ struct SyncCfg {
     bool report;      // SM64DS_SYNC_REPORT
     bool force_v1;    // SM64DS_SYNC_FORCE_V1 -- test scaffolding, see below
     int  drop_pct;    // SM64DS_SYNC_DROP -- deliberate aux loss, for rung SY5
+    int  delay_ms;    // SM64DS_SYNC_DELAY_MS -- deliberate aux LATENCY; the
+                      // tuning rig this file's own banner asked for
 };
 
 SyncCfg g_cfg;
@@ -135,6 +141,19 @@ void parse_cfg() {
     g_cfg.drop_pct   = env_int("SM64DS_SYNC_DROP", 0);
     if (g_cfg.drop_pct < 0) g_cfg.drop_pct = 0;
     if (g_cfg.drop_pct > 99) g_cfg.drop_pct = 99;
+    /* DELIBERATE AUX LATENCY -- the rig the banner at the top of this file
+       spent a paragraph asking for. Loss (above) makes a remote body staler
+       but leaves the error under the ignore threshold; DELAY is what actually
+       stretches the correction band, because every received position is now
+       describing where the sender was N milliseconds ago. Applied on the
+       RECEIVE side, to every aux message alike, so a delayed pong inflates
+       the measured RTT exactly the way a real network would -- the readout
+       proves the rig from inside. The LOCKSTEP channel is deliberately not
+       delayed: the ROM blocks on it, and stalling the game is not latency
+       induction, it is a different experiment. */
+    g_cfg.delay_ms   = env_int("SM64DS_SYNC_DELAY_MS", 0);
+    if (g_cfg.delay_ms < 0) g_cfg.delay_ms = 0;
+    if (g_cfg.delay_ms > 2000) g_cfg.delay_ms = 2000;
     if (g_cfg.hz < 1) g_cfg.hz = 1;
     if (g_cfg.hz > 60) g_cfg.hz = 60;
     if (g_cfg.lerp_pct < 1) g_cfg.lerp_pct = 1;
@@ -218,6 +237,13 @@ void sync_decide() {
                      "DS lockstep are unchanged.\n",
                      t->name ? t->name : "(unnamed)", ver, g_cfg.hz,
                      g_cfg.lerp_pct, g_cfg.snap_units);
+        if (g_cfg.delay_ms > 0)
+            std::fprintf(stderr,
+                         "[sync] RIG: SM64DS_SYNC_DELAY_MS=%d -- every "
+                         "received aux message is held %d ms before it is "
+                         "processed. This session's corrections are measuring "
+                         "induced latency, not the wire.\n",
+                         g_cfg.delay_ms, g_cfg.delay_ms);
     }
 }
 
@@ -302,6 +328,75 @@ enum : unsigned { kSyncVersion = 2u };
 enum : unsigned char { kFlagLive = 1, kFlagGrounded = 2, kFlagTeleport = 4 };
 enum : int { kSyncBufBytes = 256 };
 
+// ===========================================================================
+// THE TUNING RIG (mp-sync-coopdx item 6): latency induction + a measured RTT.
+//
+// The banner at the top of this file named the missing tool: nothing could
+// stretch the 2..60-unit correction band on loopback, so the band had never
+// executed and every constant in it was an unexercised guess. The rig is two
+// small things:
+//
+//   SM64DS_SYNC_DELAY_MS   every aux message this layer receives is held in a
+//                          FIFO for N ms after arrival before it is processed.
+//                          Receive-side, so the sender stays honest and the
+//                          hold looks exactly like wire latency. 0 (the
+//                          default) short-circuits to today's behaviour.
+//
+//   'SYNP'/'SYNQ' probes   each console sends a 12-byte probe every ~500 ms;
+//                          the peer echoes it back addressed to the pinger;
+//                          the round trip lands in sync_report as rtt_last/
+//                          rtt_avg. Under the delay rig the probes are delayed
+//                          like everything else, so rtt reads ~2N ms -- the
+//                          readout is the proof the rig is on.
+//
+// A SEPARATE MESSAGE KIND, NOT A SNAPSHOT FIELD, and the queue was fixed
+// first: the carrier's aux queue was one message deep for ALL kinds, so a
+// probe could be silently superseded by a snapshot in the same pump window.
+// hal/comms_loopback.cpp's drain() now keeps one-deep slots PER (SENDER,
+// KIND), which is what makes a second kind safe to bolt on at all. The tag is
+// framing and never changes; a payload change here bumps kPingVersion-shaped
+// fields, not the tag -- same discipline as kSyncMagic/kSyncVersion above.
+//
+// THE PONG IS ITS OWN TAG, not a kind byte under the ping's, and the first
+// rig session is why: with one tag, a peer's echo of our probe shared a queue
+// slot with that peer's own next probe, and at delay 0 the two are
+// phase-locked to the frame boundary -- roughly half the RTT samples died to
+// newest-wins (37 of 80 one way, 52 of 80 the other, measured). The kind byte
+// in the struct stays authoritative for the payload; the tag exists so the
+// carrier's slots cannot let one supersede the other.
+// ===========================================================================
+enum : unsigned { kPingMagic = 0x504e5953u };   // 'S','Y','N','P'
+enum : unsigned { kPongMagic = 0x514e5953u };   // 'S','Y','N','Q'
+enum : unsigned char { kPingKindPing = 0, kPingKindPong = 1 };
+
+#pragma pack(push, 1)
+struct SyncPingV1 {
+    unsigned      magic;       // kPingMagic -- framing, never changes
+    unsigned char kind;        // kPingKindPing or kPingKindPong
+    unsigned char from_slot;   // the sender's comms slot
+    unsigned char to_slot;     // pong: the pinger this echo is addressed to.
+                               // send_aux fans a message to EVERY live peer,
+                               // so a pong must name its pinger or a third
+                               // console would compute an RTT from a probe it
+                               // never sent. 0xff on a ping (broadcast).
+    unsigned char pad;
+    unsigned      t_send_ms;   // pinger's GetTickCount at send, echoed back
+};
+#pragma pack(pop)
+
+enum : int { kDelayRing = 32 };   // ~1 s of aux at the default 30 Hz send rate
+struct DelayedAux {
+    unsigned      t_due;          // GetTickCount when this may be processed
+    int           len;
+    unsigned char buf[kSyncBufBytes];
+};
+namespace {
+DelayedAux g_delayq[kDelayRing];  // FIFO: constant delay keeps due times sorted
+int      g_dq_head = 0;
+int      g_dq_count = 0;
+unsigned g_last_ping_ms = 0;
+}  // namespace
+
 // One DS unit is 4096 in Fix12. The thresholds are in units and converted here
 // so the constants read the way the design note states them.
 inline int units(int n) { return n * 4096; }
@@ -326,7 +421,7 @@ inline int units(int n) { return n * 4096; }
 // NEVER-CORRECT-LOCAL RULE. ChangeState's camera work is gated on the locally
 // viewed player, so applying a state to the LOCAL body would yank the player's
 // own camera once per packet. The rule already existed for feel; it now also
-// exists for that, and sync_apply's `slot == me` skip is what enforces both.
+// exists for that, and apply_snapshot's `slot == me` skip is what enforces both.
 // ---------------------------------------------------------------------------
 void apply_pose(void *a, const SyncPlayerV1 *e) {
     // ---- STATE IS NOT APPLIED, and that is a measured decision rather than
@@ -436,31 +531,20 @@ void sync_send_if_host() {
 //   under 2 units    ignore   -- below visible
 //   2 .. snap        LERP     -- 25% of the error per frame, ~4 frames to land
 //   over snap        SNAP     -- and COUNTED, because a snap is a bug report
+//
+// RESHAPED BY THE RIG (item 6): the recv, the deliberate loss, and the delay
+// queue all live in sync_recv_pump below now; this function is handed one
+// whole already-due 'SYN1' datagram and does only the checking and the
+// applying. The one-message-per-tick note that used to sit here is obsolete
+// -- the pump drains everything pending each tick, because the carrier's
+// per-(sender, kind) slots can legitimately hold several messages at once.
 // ---------------------------------------------------------------------------
-void sync_apply() {
-    if (!g_enabled) return;
+void apply_snapshot(const unsigned char *buf, int n) {
     const CommsTransport *t = comms_transport();
-    if (!t || !t->recv_aux) return;
+    if (!t) return;
     if (t->slot() == 0) return;                 // the host has nothing to apply
 
-    /* ONE MESSAGE PER TICK, and the rate arithmetic is why that is enough:
-       the host sends at SM64DS_SYNC_HZ (30 by default) and this runs once per
-       frame (60), so the reader is twice as fast as the writer and never falls
-       behind. If the send rate is ever raised above the frame rate this would
-       start consuming a backlog one frame at a time -- except the carrier's aux
-       queue is one deep and overwrites, so what actually happens is the older
-       message is superseded and counted, which is the correct behaviour for
-       state. Stated because the assumption is invisible otherwise. */
-    unsigned char buf[kSyncBufBytes];
-    const int n = t->recv_aux(buf, sizeof buf);
-    if (n < (int)sizeof(SyncMsgV1)) return;
-    if (g_cfg.drop_pct > 0) {
-        /* A cheap deterministic-per-run LCG, not rand(): a proof that behaves
-           differently every run is not a proof. */
-        static unsigned r = 0x12345678u;
-        r = r * 1664525u + 1013904223u;
-        if ((int)((r >> 16) % 100u) < g_cfg.drop_pct) { ++g_stats.dropped; return; }
-    }
+    if (n < (int)sizeof(SyncMsgV1)) { ++g_stats.dropped; return; }
     const SyncMsgV1 *m = (const SyncMsgV1 *)buf;
     if (m->magic != kSyncMagic) { ++g_stats.dropped; return; }
     if (m->version != kSyncVersion) {
@@ -522,10 +606,132 @@ void sync_apply() {
     }
 }
 
+// ---------------------------------------------------------------------------
+// THE PING HANDLER. A ping is answered with a pong echoing the pinger's own
+// timestamp, addressed to the pinger's slot; a pong addressed to us closes the
+// loop and lands in the stats. Clock arithmetic is all in the PINGER's
+// GetTickCount domain -- the echo is opaque to the peer -- so nothing here
+// assumes the two consoles share a clock, even though on loopback they do.
+// ---------------------------------------------------------------------------
+void handle_ping(const unsigned char *buf, int n) {
+    if (n < (int)sizeof(SyncPingV1)) { ++g_stats.dropped; return; }
+    const SyncPingV1 *p = (const SyncPingV1 *)buf;
+    const CommsTransport *t = comms_transport();
+    if (!t || !t->send_aux) return;
+
+    if (p->kind == kPingKindPing) {
+        SyncPingV1 r;
+        r.magic     = kPongMagic;
+        r.kind      = kPingKindPong;
+        r.from_slot = (unsigned char)t->slot();
+        r.to_slot   = p->from_slot;
+        r.pad       = 0;
+        r.t_send_ms = p->t_send_ms;             // echoed, never interpreted
+        t->send_aux(&r, (int)sizeof r);
+        return;
+    }
+    if (p->kind == kPingKindPong) {
+        if (p->to_slot != (unsigned char)t->slot()) return;  // not our echo
+        const int rtt = (int)(GetTickCount() - p->t_send_ms);
+        g_stats.rtt_last_ms = rtt;
+        g_stats.rtt_avg_ms  = g_stats.rtt_avg_ms
+                                  ? (g_stats.rtt_avg_ms * 7 + rtt) / 8
+                                  : rtt;
+        ++g_stats.pongs;
+    }
+}
+
+// One whole aux message, already past the delay rig, told apart by its tag.
+void process_aux(const unsigned char *buf, int n) {
+    unsigned tag = 0;
+    if (n >= 4) std::memcpy(&tag, buf, 4);
+    if (tag == (unsigned)kPingMagic || tag == (unsigned)kPongMagic) {
+        handle_ping(buf, n);
+        return;
+    }
+    apply_snapshot(buf, n);
+}
+
+// ---------------------------------------------------------------------------
+// THE RECEIVE PUMP -- both roles. Drains EVERYTHING the transport has pending
+// (the carrier's per-(sender, kind) slots can hold several messages), applies
+// the deliberate-loss knob, and either processes each message now (delay 0,
+// the default -- byte-identical behaviour to the pre-rig layer) or holds it
+// in the FIFO until its due time. The host runs this too: pongs come back on
+// aux, and per-body authority (item 1) makes the host a snapshot receiver.
+// ---------------------------------------------------------------------------
+void sync_recv_pump() {
+    const CommsTransport *t = comms_transport();
+    if (!t || !t->recv_aux) return;
+    const unsigned now = GetTickCount();
+
+    unsigned char buf[kSyncBufBytes];
+    int n;
+    while ((n = t->recv_aux(buf, sizeof buf)) > 0) {
+        if (g_cfg.drop_pct > 0) {
+            /* A cheap deterministic-per-run LCG, not rand(): a proof that
+               behaves differently every run is not a proof. */
+            static unsigned r = 0x12345678u;
+            r = r * 1664525u + 1013904223u;
+            if ((int)((r >> 16) % 100u) < g_cfg.drop_pct) {
+                ++g_stats.dropped;
+                continue;
+            }
+        }
+        if (g_cfg.delay_ms <= 0) {
+            process_aux(buf, n);
+            continue;
+        }
+        if (g_dq_count == kDelayRing) {
+            /* Full: the OLDEST entry is the one closest to stale anyway.
+               Counted as dropped, because a rig that silently sheds load
+               would tune constants against traffic that never arrived. */
+            g_dq_head = (g_dq_head + 1) % kDelayRing;
+            --g_dq_count;
+            ++g_stats.dropped;
+        }
+        DelayedAux &d = g_delayq[(g_dq_head + g_dq_count) % kDelayRing];
+        d.t_due = now + (unsigned)g_cfg.delay_ms;
+        d.len = n;
+        std::memcpy(d.buf, buf, (size_t)n);
+        ++g_dq_count;
+    }
+
+    /* Release everything that has served its sentence. Unconditional, so a
+       queue drained after the knob is lowered still empties. */
+    while (g_dq_count > 0) {
+        DelayedAux &d = g_delayq[g_dq_head];
+        if ((int)(now - d.t_due) < 0) break;    // FIFO: later entries due later
+        process_aux(d.buf, d.len);
+        g_dq_head = (g_dq_head + 1) % kDelayRing;
+        --g_dq_count;
+    }
+}
+
+// The RTT probe, ~2 Hz, wall-clock scheduled so it is independent of frame
+// rate and of the snapshot cadence. Sent AFTER the snapshot in the tick so it
+// can never delay state.
+void sync_send_ping() {
+    const CommsTransport *t = comms_transport();
+    if (!t || !t->send_aux) return;
+    const unsigned now = GetTickCount();
+    if (g_last_ping_ms && (unsigned)(now - g_last_ping_ms) < 500u) return;
+    g_last_ping_ms = now;
+    SyncPingV1 p;
+    p.magic     = kPingMagic;
+    p.kind      = kPingKindPing;
+    p.from_slot = (unsigned char)t->slot();
+    p.to_slot   = 0xff;                          // a ping is a broadcast
+    p.pad       = 0;
+    p.t_send_ms = now;
+    if (t->send_aux(&p, (int)sizeof p) == (int)sizeof p) ++g_stats.pings;
+}
+
 void sync_tick() {
     if (!g_enabled) return;
-    sync_apply();          // take the host's view first
+    sync_recv_pump();      // take what has arrived (and is due) first
     sync_send_if_host();   // then publish ours, after the input record
+    sync_send_ping();      // and the rig's probe last, behind the state
 }
 
 
@@ -533,9 +739,13 @@ SyncStats sync_stats() { return g_stats; }
 
 void sync_report(const char *tag) {
     parse_cfg();
+    /* The prefix through worst_err is parsed by the SY rungs
+       (port/tools/mp3_play_proof.py) and stays byte-identical; the rig's
+       fields append after it. */
     std::fprintf(stderr,
                  "[sync:%s] enabled=%s sent=%llu recvd=%llu dropped=%llu "
-                 "applied=%llu lerps=%llu snaps=%llu worst_err=%d\n",
+                 "applied=%llu lerps=%llu snaps=%llu worst_err=%d "
+                 "delay=%d rtt_last=%d rtt_avg=%d pings=%llu pongs=%llu\n",
                  tag ? tag : "-", g_enabled ? "yes" : "no",
                  (unsigned long long)g_stats.sent,
                  (unsigned long long)g_stats.recvd,
@@ -543,7 +753,10 @@ void sync_report(const char *tag) {
                  (unsigned long long)g_stats.applied,
                  (unsigned long long)g_stats.lerps,
                  (unsigned long long)g_stats.snaps,
-                 g_stats.worst_error);
+                 g_stats.worst_error,
+                 g_cfg.delay_ms, g_stats.rtt_last_ms, g_stats.rtt_avg_ms,
+                 (unsigned long long)g_stats.pings,
+                 (unsigned long long)g_stats.pongs);
 }
 
 }  // namespace port

@@ -271,9 +271,21 @@ struct Packet {
 };
 
 enum : int { kPacketBytes = 0x90 };
-// run mg16 lane MP4: the aux channel's tag, 'S','Y','N','1' as it sits on
-// the wire. Distinct from kMagic so one socket can carry both kinds.
-const unsigned kAuxMagicLE = 0x314e5953u;
+// run mg16 lane MP4: the aux channel's tags as they sit on the wire, distinct
+// from kMagic so one socket can carry every kind. The carrier CLASSIFIES on
+// these four bytes and never reads past them -- classification is not
+// reinterpretation. 'SYN1' is the sync layer's state snapshot; 'SYNP' and
+// 'SYNQ' (mp-sync-coopdx item 6) are its RTT probe and the echo.
+//
+// PING AND PONG ARE SEPARATE KINDS, and that is measured rather than tidy:
+// with one shared tag, a peer's echo of OUR probe and that peer's own next
+// probe landed in the same one-deep slot, and at delay 0 the two are
+// phase-locked to the frame boundary -- the readout lost roughly half its
+// RTT samples to newest-wins (37 of 80 one way, 52 of 80 the other, measured
+// on the first rig session). Distinct kinds cannot supersede each other.
+const unsigned kAuxMagicLE = 0x314e5953u;   // 'S','Y','N','1'
+const unsigned kAuxPingLE  = 0x504e5953u;   // 'S','Y','N','P'
+const unsigned kAuxPongLE  = 0x514e5953u;   // 'S','Y','N','Q'
 
 static_assert(sizeof(Packet) == kPacketBytes,
               "the loopback wire packet grew padding; the length check is the "
@@ -308,18 +320,41 @@ bool     g_open       = false;
 SOCKET   g_sock       = INVALID_SOCKET;
 int      g_slot       = 0;
 
-// run mg16 lane MP4: THE AUX QUEUE, one message deep.
+// run mg16 lane MP4, reshaped by mp-sync-coopdx item 6: THE AUX QUEUE,
+// one message deep PER (SENDER, KIND).
 //
-// ONE DEEP ON PURPOSE. Aux carries the HOST's latest view of the world, so a
-// backlog is worthless by definition -- if two arrive before the game reads
-// one, the older is stale and the newer supersedes it completely. Queueing
-// them would deliver a correction toward a position the host has already left.
-// Overwriting is the correct policy for state, and it is the opposite of what
-// the input records need (every one of those matters, which is why they have a
-// four-deep cache). The two channels share a socket and nothing else.
+// ONE DEEP PER SLOT ON PURPOSE, for the same reason the original single slot
+// was: aux carries a peer's LATEST view, so a backlog of one sender's one kind
+// is worthless by definition -- the newer message supersedes the older
+// completely, and queueing both would deliver a correction toward a position
+// the sender has already left. Overwriting is the correct policy for state,
+// and it is the opposite of what the input records need (every one of those
+// matters, which is why they have a four-deep cache). The two channels share
+// a socket and nothing else.
+//
+// WHY THE SLOT SPLIT, and both halves were measured needs rather than polish:
+//
+//   BY KIND: the sync layer now sends ping/pong probes ('SYNP') beside the
+//   state snapshots ('SYN1'), and with a single slot a probe landing in the
+//   same pump window as a snapshot silently ate it -- the RTT readout the
+//   probes exist for would undercount in exact proportion to how busy the
+//   channel is, which is when the number matters. A kind never supersedes
+//   another kind.
+//
+//   BY SENDER: per-body owner authority (item 1 of the same lane) makes every
+//   console a snapshot sender, so a receiver can hold one in-flight snapshot
+//   PER PEER. With a single slot, peer A's body would freeze whenever peer B's
+//   messages happened to arrive later in the pump -- newest-wins across
+//   senders is starvation, not policy. The sender is identified by the source
+//   port the datagram ACTUALLY arrived from (the slot-is-the-port rule), never
+//   by reading the payload, so the bytes stay uninspected beyond the 4-byte
+//   kind tag this file already classified on.
 enum : int { kAuxMaxBytes = 256 };
-unsigned char g_aux[kAuxMaxBytes];
-int      g_aux_len    = 0;
+enum : int { kAuxKinds = 3 };        // 0 = 'SYN1' state, 1 = 'SYNP' ping,
+                                     // 2 = 'SYNQ' pong -- see the tag note
+struct AuxSlot { int len; unsigned char buf[kAuxMaxBytes]; };
+AuxSlot  g_aux[kCommsMaxPlayers][kAuxKinds];
+int      g_aux_rr     = 0;           // recv_aux round-robin cursor, see below
 unsigned long long g_aux_superseded = 0;
 int      g_port_base  = kCommsLoopbackPortBase;
 int      g_my_port    = 0;
@@ -530,15 +565,29 @@ void drain() {
                                   0, (sockaddr *)&from, &fromlen);
         if (n < 0) break;                       // WSAEWOULDBLOCK, or nothing
 
-        if (n >= 4 && std::memcmp(msg.raw, &kAuxMagicLE, 4) == 0) {
-            /* Newest wins; see the queue's own note. A superseded message is
+        int aux_kind = -1;
+        if (n >= 4 && std::memcmp(msg.raw, &kAuxMagicLE, 4) == 0) aux_kind = 0;
+        else if (n >= 4 && std::memcmp(msg.raw, &kAuxPingLE, 4) == 0) aux_kind = 1;
+        else if (n >= 4 && std::memcmp(msg.raw, &kAuxPongLE, 4) == 0) aux_kind = 2;
+        if (aux_kind >= 0) {
+            /* The sender is the SOURCE PORT, the same slot-is-the-port rule
+               the input records are verified by. A source port outside our
+               slot range is not a peer of this session. */
+            const int sender = (int)ntoh16(from.sin_port) - g_port_base;
+            if (sender < 0 || sender >= kCommsMaxPlayers || sender == g_slot) {
+                ++g_dropped;
+                continue;
+            }
+            /* Newest wins WITHIN one sender's one kind; see the queue's own
+               note for why the slots are split. A superseded message is
                counted rather than silently forgotten, because "sync looks
                laggy" and "sync is being outrun by its own send rate" are
                different problems and the counter is what tells them apart. */
-            if (g_aux_len != 0) ++g_aux_superseded;
+            AuxSlot &slot = g_aux[sender][aux_kind];
+            if (slot.len != 0) ++g_aux_superseded;
             const int keep = n < kAuxMaxBytes ? n : kAuxMaxBytes;
-            std::memcpy(g_aux, msg.raw, (size_t)keep);
-            g_aux_len = keep;
+            std::memcpy(slot.buf, msg.raw, (size_t)keep);
+            slot.len = keep;
             continue;
         }
 
@@ -746,6 +795,7 @@ void lb_close() {
     g_parent_requested = false;
     g_latched_mask = 0;
     g_stage_mask   = 0;
+    std::memset(g_aux, 0, sizeof g_aux);   // pending aux dies with the session
     std::fprintf(stderr, "[comms:loopback] closed after %u rounds\n", g_round);
 }
 
@@ -950,12 +1000,26 @@ int lb_send_aux(const void *buf, int len) {
 
 int lb_recv_aux(void *buf, int cap) {
     if (!buf || cap <= 0) return 0;
-    service();                      // drain; aux messages land in the queue
-    if (g_aux_len <= 0) return 0;
-    const int n = g_aux_len < cap ? g_aux_len : cap;
-    std::memcpy(buf, g_aux, (size_t)n);
-    g_aux_len = 0;
-    return n;
+    service();                      // drain; aux messages land in the slots
+    /* ROUND-ROBIN over the (sender, kind) slots, resuming after the last one
+       served, so no sender and no kind can starve another: a reader that
+       always scanned from slot zero would hand the parent's messages out
+       first every call and a busy parent could shadow a quiet child forever.
+       One whole message per call, exactly as the frozen contract words it --
+       a caller that wants everything pending loops until 0, which is what the
+       sync layer's pump does. */
+    const int total = kCommsMaxPlayers * kAuxKinds;
+    for (int i = 0; i < total; ++i) {
+        const int idx = (g_aux_rr + i) % total;
+        AuxSlot &slot = g_aux[idx / kAuxKinds][idx % kAuxKinds];
+        if (slot.len <= 0) continue;
+        const int n = slot.len < cap ? slot.len : cap;
+        std::memcpy(buf, slot.buf, (size_t)n);
+        slot.len = 0;
+        g_aux_rr = (idx + 1) % total;
+        return n;
+    }
+    return 0;
 }
 
 void lb_abandon() {

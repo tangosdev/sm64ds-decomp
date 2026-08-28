@@ -584,8 +584,10 @@ def rungSY1(seconds):
     cannot, because over loopback neither ever happens -- worst error is about
     1.26 units against a 2.0 ignore threshold, so lerps=0 in every run and the
     2..60-unit band has never executed. Asserting lerps > 0 here would fail on a
-    correct build. The band needs induced LATENCY to reach, which is a tool
-    nobody has built; see the banner in hal/comms_sync.cpp.
+    correct build. The band needs induced LATENCY to reach, and that tool now
+    exists: SM64DS_SYNC_DELAY_MS (the mp-sync-coopdx item 6 rig; see the banner
+    in hal/comms_sync.cpp). This rung deliberately keeps running WITHOUT it, so
+    what it proves stays what it proved.
     """
     t1, t2, _ = play_session("sy1_converge", seconds,
                              inj_c="key=0x20", extra_env=SYNC_ON)
