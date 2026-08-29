@@ -58,10 +58,10 @@
     "unmigrated_total": 91
   },
   "shadow_decls": {
-    "local_body_no_include": 1150,
-    "local_body_no_include_cpp": 479,
-    "local_struct_body": 2045,
-    "local_struct_body_cpp": 1131,
+    "local_body_no_include": 1148,
+    "local_body_no_include_cpp": 477,
+    "local_struct_body": 2043,
+    "local_struct_body_cpp": 1129,
     "pad_layout": 512
   },
   "totals": {
