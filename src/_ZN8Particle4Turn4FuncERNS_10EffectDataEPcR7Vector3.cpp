@@ -12,7 +12,7 @@ void MulVec3Mat3x3(const Vector3* in, const Matrix3x3* matrix, Vector3* out);
 
 void Particle::Turn::Func(EffectData& effect, char* particle, Vector3&)
 {
-    BehaviorParticle& state = *(BehaviorParticle*)particle;
+    Element& state = *(Element*)particle;
     Matrix3x3 matrix;
     int idx;
 

@@ -1,7 +1,7 @@
 #ifndef PARTICLE__BEHAVIOR_H
 #define PARTICLE__BEHAVIOR_H
 
-#include "types.h"
+#include "Particle__Element.h"
 
 namespace Particle {
 
@@ -60,17 +60,6 @@ union EffectData {
     u8 raw[0x10];
 };
 
-/* The behavior ABI names this parameter char*. These fields are the common
- * particle state observed by the six behavior functions. */
-struct BehaviorParticle {
-    u8 pad_000[0x8];
-    Vector3 basePosition;
-    Vector3 offset;
-    Vector3 velocity;
-    u16 lifetime;
-    u16 age;
-};
-
 struct Acceleration {
     static void Func(EffectData& effect, char* particle, Vector3& velocity);
 };
@@ -109,9 +98,6 @@ typedef char RadiusConvergeData_size_must_be_0x10[
     sizeof(RadiusConvergeData) == 0x10 ? 1 : -1];
 typedef char EffectData_size_must_be_0x10[
     sizeof(EffectData) == 0x10 ? 1 : -1];
-typedef char BehaviorParticle_size_must_be_0x30[
-    sizeof(BehaviorParticle) == 0x30 ? 1 : -1];
-
 } // namespace Particle
 
 #endif

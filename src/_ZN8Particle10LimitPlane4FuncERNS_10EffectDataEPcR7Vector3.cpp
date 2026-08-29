@@ -3,7 +3,7 @@
 
 void Particle::LimitPlane::Func(EffectData& effect, char* particle, Vector3&)
 {
-    BehaviorParticle& state = *(BehaviorParticle*)particle;
+    Element& state = *(Element*)particle;
 
     switch (effect.limitPlane.mode) {
     case 0:

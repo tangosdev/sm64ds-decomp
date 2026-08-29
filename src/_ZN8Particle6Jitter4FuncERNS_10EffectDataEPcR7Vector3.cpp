@@ -4,7 +4,7 @@
 
 void Particle::Jitter::Func(EffectData& effect, char* particle, Vector3& velocity)
 {
-    BehaviorParticle& state = *(BehaviorParticle*)particle;
+    Element& state = *(Element*)particle;
     u32 s;
     int r;
     int amp;
