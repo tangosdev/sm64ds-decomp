@@ -1,4 +1,4 @@
-// NOT MIGRATED to a real PushBlock:: method, measured 2026-08-22. The body
+// NOT MIGRATED to a real daObjPushblock_c:: method, measured 2026-08-22. The body
 // converts cleanly (every instruction matches with `this` and named members --
 // mPrevAngleY 0x94, mHorzSpeed 0x98), but the C++ form emits TWO EXTRA LITERAL
 // POOL WORDS: 133 words against the ROM's 131, and every mismatch is a
@@ -7,19 +7,19 @@
 // mPrevAngleY raw, mHorzSpeed raw -- all three still 133. Whatever adds the two
 // constants is not the member naming. Its siblings CleanupResources and
 // OnPushed migrated fine, so this is specific to this body.
-// @symbol _ZN9PushBlock8BehaviorEv
+// @symbol _ZN16daObjPushblock_c8BehaviorEv
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header
  *
- * PushBlock::Behavior -- vtable slot 6, ov002 0x020b8dd4. Attributed by the
- * vtable: _ZTV9PushBlock carries this address at slot 6, where
+ * daObjPushblock_c::Behavior -- vtable slot 6, ov002 0x020b8dd4. Attributed by the
+ * vtable: _ZTV16daObjPushblock_c carries this address at slot 6, where
  * _ZTV10dBgActor_c carries fBase_c's generic 0x02043b24.
  *
  * Kept as an extern free function under the literal mangled name, reading the
- * flat C spelling of PushBlock (include/PushBlock.h's #else half) by hand
- * offset -- same shape as _ZN9PushBlock13InitResourcesEv.cpp. */
+ * flat C spelling of daObjPushblock_c (include/daObjPushblock_c.h's #else half) by hand
+ * offset -- same shape as _ZN16daObjPushblock_c13InitResourcesEv.cpp. */
 #include "decl_Platform.h"
 #include "decl_common.h"
-#include "PushBlock.h"
+#include "daObjPushblock_c.h"
 typedef short s16;
 
 extern Matrix4x3 data_020a0e68;
@@ -42,9 +42,9 @@ extern int Vec3_Dist(Vector3 *a, Vector3 *b);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, Vector3 *pos, unsigned int e);
 extern int Vec3_HorzDist(Vector3 *a, Vector3 *b);
 
-int _ZN9PushBlock8BehaviorEv(char *c)
+int _ZN16daObjPushblock_c8BehaviorEv(char *c)
 {
-    struct PushBlock *self = (struct PushBlock *)(void *)c;
+    struct daObjPushblock_c *self = (struct daObjPushblock_c *)(void *)c;
     Vector3 v;
     Vector3 dst;
     volatile Vector3 pos;

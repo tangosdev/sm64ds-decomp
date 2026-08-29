@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN4TrapD0Ev
+// @symbol _ZN14daObjC1_Trap_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
  * D0 is the DELETING destructor: destroy through this class and its bases --
  * which is why more than one vptr store appears -- then return the object to
- * its heap. Nobody writes that; declaring `~Trap()` is enough, because mwcc
+ * its heap. Nobody writes that; declaring `~daObjC1_Trap_c()` is enough, because mwcc
  * emits D2, D0 and D1 together and objisolate keeps the one this file is
  * bound to.
  *
@@ -12,8 +12,8 @@
  * which is why nothing below mentions a heap -- it matches the pre-migration
  * C body's trailing `Memory::Deallocate(t, data_020a0eac)` call.
  */
-#include "Trap.h"
+#include "daObjC1_Trap_c.h"
 
-Trap::~Trap()
+daObjC1_Trap_c::~daObjC1_Trap_c()
 {
 }

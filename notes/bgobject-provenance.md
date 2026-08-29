@@ -281,12 +281,12 @@ re-verified. Two were rejected by the ROM and are documented in place:
 
 ---
 
-## PushBlock (`include/PushBlock.h`, ov002, size 0x4f4)
+## daObjPushblock_c (`include/daObjPushblock_c.h`, ov002, size 0x4f4)
 
-Bodies read: `src/_ZN9PushBlock13InitResourcesEv.cpp`,
-`src/_ZN9PushBlock8BehaviorEv.c`, `src/_ZN9PushBlock6RenderEv.cpp`,
-`src/_ZN9PushBlock8OnPushedER8dActor_c.cpp`, `src/_ZN9PushBlock4KillEv.cpp`,
-`src/_ZN9PushBlock15OnHitByMegaCharER6Player.cpp`.
+Bodies read: `src/_ZN16daObjPushblock_c13InitResourcesEv.cpp`,
+`src/_ZN16daObjPushblock_c8BehaviorEv.c`, `src/_ZN16daObjPushblock_c6RenderEv.cpp`,
+`src/_ZN16daObjPushblock_c8OnPushedER8dActor_c.cpp`, `src/_ZN16daObjPushblock_c4KillEv.cpp`,
+`src/_ZN16daObjPushblock_c15OnHitByMegaCharER6Player.cpp`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
@@ -305,8 +305,8 @@ carried: `mPrevPosX/Y/Z` (0x068) and `mCamSpacePosX/Y/Z` (0x074), both of which
 `mClsnMat` (0x2ec) and `mWithMeshClsn` (0x320) as `u8` markers, which is the idiom the
 other twins in this family use.
 
-`src/_ZN9PushBlock13InitResourcesEv.cpp` was an `extern "C"` free function over a raw
-`char *self`; it is a real `int PushBlock::InitResources()` now, byte-exact, with all
+`src/_ZN16daObjPushblock_c13InitResourcesEv.cpp` was an `extern "C"` free function over a raw
+`char *self`; it is a real `int daObjPushblock_c::InitResources()` now, byte-exact, with all
 fourteen hand offsets on named members. `tools/eligible.py` is unchanged by it.
 
 `Behavior` stays a `.c` file for the reason its own banner records (the C++ form emits
@@ -462,11 +462,11 @@ mismatching, 106/106 exact) and `tools/check_src_tu_compiles.py` (72/72).
 
 ---
 
-## UkikiCage (`include/UkikiCage.h`, ov030, size 0x4e0)
+## daObjHmBskt_c (`include/daObjHmBskt_c.h`, ov030, size 0x4e0)
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x4dc | `mStarActor` | `src/_ZN9UkikiCage13InitResourcesEv.cpp` stores what `dActor_c::Spawn(0xb2, (param1 & 0xf) or 0x50, ...)` returned; actor `0xb2` is the star (`src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp`). `src/_ZN9UkikiCage8BehaviorEv.cpp` writes that actor's `+0x5c/+0x60/+0x64` — `dActor_c::mPosX/Y/Z` — from the cage's own position plus `0x3c000` in Y on every falling frame. Declared type left `s32`; the store is still a cast. |
+| 0x4dc | `mStarActor` | `src/_ZN13daObjHmBskt_c13InitResourcesEv.cpp` stores what `dActor_c::Spawn(0xb2, (param1 & 0xf) or 0x50, ...)` returned; actor `0xb2` is the star (`src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp`). `src/_ZN13daObjHmBskt_c8BehaviorEv.cpp` writes that actor's `+0x5c/+0x60/+0x64` — `dActor_c::mPosX/Y/Z` — from the cage's own position plus `0x3c000` in Y on every falling frame. Declared type left `s32`; the store is still a cast. |
 
 In the `#else` C twin, ten offsets already named at exactly those offsets in
 `include/dActor_c.h` were repointed to those names: `mPosX/Y/Z` (0x05c),
@@ -724,9 +724,9 @@ same offsets:
 * `include/ShipWater.h` — `mAngleY` (0x08e), `mClipOffsetY`, `mClipRadius`,
   `mClipDistance`, `mFarDistance` (0x0b4..0x0c0), `mClipResult` (0x0c4),
   `mDeathTableID` (0x0ce).
-* `include/Trap.h` — `mPosX/Y/Z` (0x05c), `mAngleY` (0x08e), `mAreaId` (0x0cc).
+* `include/daObjC1_Trap_c.h` — `mPosX/Y/Z` (0x05c), `mAngleY` (0x08e), `mAreaId` (0x0cc).
   The same five carried into the TU-local `struct TrapFlat` in
-  `src_tu/actors/Trap.cpp`, which `tools/check_src_tu_compiles.py` proves.
+  `src_tu/actors/daObjC1_Trap_c.cpp`, which `tools/check_src_tu_compiles.py` proves.
 * `include/TowerStep.h` — `mHorzSpeed`, `mTerminalVelocity`, `mVertSpeed`.
 * `include/MetalNet.h` — `param1` (0x008), `mAngleY`, `mClsnMat` (0x2ec).
 * `include/PoleLift.h` — `param1`, `mAngleY`.

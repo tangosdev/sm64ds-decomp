@@ -1,5 +1,5 @@
-#ifndef TRAP_H
-#define TRAP_H
+#ifndef DAOBJC1_TRAP_C_H
+#define DAOBJC1_TRAP_C_H
 
 #include "types.h"
 
@@ -18,8 +18,8 @@
  *
  * THIS IS THE MID-RENAME CLASS. Before this change the header was a flat,
  * auto-generated `struct daObjC1_Trap_c` while the vtable and both
- * destructors already carried the real ROM name "Trap" -- _ZTV4Trap,
- * _ZN4TrapD1Ev, _ZN4TrapD0Ev. Only the RTTI pair, _ZTI14daObjC1_Trap_c and
+ * destructors already carried the real ROM name "daObjC1_Trap_c" -- _ZTV14daObjC1_Trap_c,
+ * _ZN14daObjC1_Trap_cD1Ev, _ZN14daObjC1_Trap_cD0Ev. Only the RTTI pair, _ZTI14daObjC1_Trap_c and
  * _ZTS14daObjC1_Trap_c, still spelled the old placeholder name; this class
  * becoming its own key-function TU is what makes the compiler emit them
  * consistently, so config/arm9/overlays/ov010/symbols.txt renames those two
@@ -36,14 +36,14 @@
 struct dActor_c;
 struct Player;
 
-struct Trap : dBgActor_c {
+struct daObjC1_Trap_c : dBgActor_c {
     /* Bare Model, not dBgCh_Actr -- Trap_Spawn.c calls
        _ZN5ModelC1Ev((char*)p + 0x320) directly, no dBgCh_Actr wrapper. This is
        the door's own model and it is NOT the only one the object carries:
-       dBgActor_c's inherited Model at 0xd4 is live too -- ~Trap destroys both,
-       Model::D1 at +0x320 and again at +0xd4 (see src/_ZN4TrapD1Ev.cpp). So it
+       dBgActor_c's inherited Model at 0xd4 is live too -- ~daObjC1_Trap_c destroys both,
+       Model::D1 at +0x320 and again at +0xd4 (see src/_ZN14daObjC1_Trap_cD1Ev.cpp). So it
        must not be called "mModel": that name is already the base's, and an
-       unqualified mModel inside a Trap method would silently bind to 0x320
+       unqualified mModel inside a daObjC1_Trap_c method would silently bind to 0x320
        while a reader collapsing a +0xd4 poke would expect 0xd4. Named for the
        role InitResources and Render give it, beside mDoorMat below. */
     Model mDoorModel;                 /* 0x320 */
@@ -61,7 +61,7 @@ struct Trap : dBgActor_c {
     s32 mSpawnerID;                      /* 0x3ac */
 
     /* --- vtable --- */
-    virtual ~Trap();
+    virtual ~daObjC1_Trap_c();
 
     int InitResources();
     int CleanupResources();
@@ -69,15 +69,15 @@ struct Trap : dBgActor_c {
     int Render();
 };
 
-typedef char Trap_size_must_be_0x3b0[sizeof(Trap) == 0x3b0 ? 1 : -1];
+typedef char Trap_size_must_be_0x3b0[sizeof(daObjC1_Trap_c) == 0x3b0 ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the four vtable-slot
    override files still read the object by hand offset. The arrangement
-   matches include/PushBlock.h and the other members of this family
+   matches include/daObjPushblock_c.h and the other members of this family
    (DonutBlock.h, BigBrickBlock.h, MetalNet.h, PyramidStep.h). */
-struct Trap {
+struct daObjC1_Trap_c {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
@@ -97,4 +97,4 @@ struct Trap {
 
 #endif /* __cplusplus */
 
-#endif /* TRAP_H */
+#endif /* DAOBJC1_TRAP_C_H */

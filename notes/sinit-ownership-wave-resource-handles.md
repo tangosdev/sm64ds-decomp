@@ -210,7 +210,7 @@ The target data/BSS shape is exact and contiguous:
 
 This is initializer ordinal 8 of 26. Its `.ctor` word at `0x021080f0` sits
 between the words for `__sinit_ov002_02100f84` (daObjKurumajiku_c) and
-`__sinit_ov002_02101478` (PushBlock). This ordering is corroborating only:
+`__sinit_ov002_02101478` (daObjPushblock_c). This ordering is corroborating only:
 ov002 has 26 initializers but 71 candidate text TUs, so the ordinal partition
 correctly refuses to attribute `.init`, `.ctor`, data, or BSS. Several TUs that
 need no static initializer occur between those named owners.

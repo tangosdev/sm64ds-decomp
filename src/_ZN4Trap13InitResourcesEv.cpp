@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN4Trap13InitResourcesEv
-/* Trap::InitResources -- vtable slot 0, ov010 0x02111654.
+// @symbol _ZN14daObjC1_Trap_c13InitResourcesEv
+/* daObjC1_Trap_c::InitResources -- vtable slot 0, ov010 0x02111654.
  *
  * ONE ACTOR ID, TWO ROLES, chosen by the low byte of param1. 0xff makes this a
  * SPAWNER: it places two real traps 0x15d units either side of itself along the
@@ -26,7 +26,7 @@
  * dBgW_KcMbg::SetFile and dActor_c::Spawn's mangled name both carry a by-value
  * class parameter (wall 6az), so those stay extern-C free functions.
  */
-#include "Trap.h"
+#include "daObjC1_Trap_c.h"
 #include "SharedFilePtr.h"
 #include "Model.h"
 #include "common.h"
@@ -40,14 +40,14 @@ extern void func_ov010_02111984(void);
 
 void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 actorID, u32 param, const Vector3 *pos, const void *rot, int areaID, int deathTableID);
-void func_ov010_0211146c(Trap *self);
-void func_ov010_021113f0(Trap *self);
+void func_ov010_0211146c(daObjC1_Trap_c *self);
+void func_ov010_021113f0(daObjC1_Trap_c *self);
 void func_020393c4(int *p, int v);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     dBgW_KcMbg *self, void *kcl, const Matrix4x3 *mat, int scale, s16 angY, void *clps);
 }
 
-int Trap::InitResources()
+int daObjC1_Trap_c::InitResources()
 {
     mTrapActive = 0;
     mSpawnerID = 0;
@@ -72,7 +72,7 @@ int Trap::InitResources()
         v.y = y;
         v.z = z;
         spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x24, 0, &v, &mAngleX, mAreaId, -1);
-        ((Trap *)spawned)->mSpawnerID = uniqueID;
+        ((daObjC1_Trap_c *)spawned)->mSpawnerID = uniqueID;
 
         idx = ((int)(u16)mAngleY >> 4) * 2;
         sz = data_02082214[idx];
@@ -84,7 +84,7 @@ int Trap::InitResources()
         v.y = y;
         v.z = z;
         spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x24, 1, &v, &mAngleX, mAreaId, -1);
-        ((Trap *)spawned)->mSpawnerID = uniqueID;
+        ((daObjC1_Trap_c *)spawned)->mSpawnerID = uniqueID;
 
         return 1;
     }

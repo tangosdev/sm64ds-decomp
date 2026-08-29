@@ -11,7 +11,7 @@ extern "C" void _ZN8dScene_c19ResetFadersAndSoundEv(void);
 /* NO VALUE IS RETURNED, AND THAT IS FAITHFUL. The header declares `bool`; this
  * body sets no return value and the ROM does not either. Adding an explicit
  * `return <v>;` emits a real instruction and breaks the match (measured on
- * PushBlock::OnPushed, 2026-08-22). The legacy .c declared this `void` and never
+ * daObjPushblock_c::OnPushed, 2026-08-22). The legacy .c declared this `void` and never
  * included the header, so nothing checked the disagreement until it became a
  * real method. Harmless for the ROM build; a host-port caller that reads this
  * result gets garbage. Fix upstream in the header's return type if it is wrong --

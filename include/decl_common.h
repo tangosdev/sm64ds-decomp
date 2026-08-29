@@ -733,7 +733,7 @@ extern int _ZTV7Chuckya[];
 extern int _ZTV7HeaveHo[];
 extern int _ZTV12HealingHeart[];
 extern int _ZTV7Skeeter[];
-extern int _ZTV13MotherPenguin[];
+extern int _ZTV10daPgMthr_c[];
 extern int _ZTV7Tornado[];
 extern int _ZTV7dBase_c[];
 extern int _ZTV7da1up_c[];

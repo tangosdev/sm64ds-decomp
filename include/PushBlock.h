@@ -1,5 +1,5 @@
-#ifndef PUSHBLOCK_H
-#define PUSHBLOCK_H
+#ifndef DAOBJPUSHBLOCK_C_H
+#define DAOBJPUSHBLOCK_C_H
 
 #include "types.h"
 
@@ -16,8 +16,8 @@
  *
  * THIS IS THE MID-RENAME CLASS. Before this change the header was a flat,
  * auto-generated `struct daObjPushblock_c` while the vtable and both
- * destructors already carried the real ROM name "PushBlock" --
- * _ZTV9PushBlock, _ZN9PushBlockD1Ev, _ZN9PushBlockD0Ev. Only the RTTI pair,
+ * destructors already carried the real ROM name "daObjPushblock_c" --
+ * _ZTV16daObjPushblock_c, _ZN16daObjPushblock_cD1Ev, _ZN16daObjPushblock_cD0Ev. Only the RTTI pair,
  * _ZTI16daObjPushblock_c and _ZTS16daObjPushblock_c, still spelled the old
  * placeholder name; this class becoming its own key-function TU is what makes
  * the compiler emit them consistently, so config/arm9/overlays/ov002/symbols.txt
@@ -34,7 +34,7 @@
 struct dActor_c;
 struct Player;
 
-struct PushBlock : dBgActor_c {
+struct daObjPushblock_c : dBgActor_c {
     dBgCh_Actr mWithMeshClsn;       /* 0x320 */
     s32 mHomePosX;                      /* 0x4dc */
     s32 mHomePosY;                      /* 0x4e0 */
@@ -44,7 +44,7 @@ struct PushBlock : dBgActor_c {
     s32 mLinkedActor;                      /* 0x4f0 */
 
     /* --- vtable --- */
-    virtual ~PushBlock();
+    virtual ~daObjPushblock_c();
 
     int InitResources();
     int CleanupResources();
@@ -52,36 +52,36 @@ struct PushBlock : dBgActor_c {
     int Render();
 
     /* Slot 25, dActor_c's own OnPushed(dActor_c&) (include/dActor_c.h). Attributed
-       by the vtable: _ZTV9PushBlock (ov002 0x021096b0) carries 0x020b8d3c at
+       by the vtable: _ZTV16daObjPushblock_c (ov002 0x021096b0) carries 0x020b8d3c at
        slot 25 -- vtable + 0x64 -- where _ZTV10dBgActor_c carries dActor_c's generic
        0x02010138 at the same slot. Confirmed with tools/mangle.py, not
-       hand-mangled: _ZN9PushBlock8OnPushedER8dActor_c, NOT ...ERS_ -- the
+       hand-mangled: _ZN16daObjPushblock_c8OnPushedER8dActor_c, NOT ...ERS_ -- the
        Itanium substitution only fires when the parameter type has already
        appeared earlier in the same mangled name, which happens inside
        dActor_c's own methods but not here. */
     int OnPushed(dActor_c &other);         /* slot 25 */
 
     /* Slot 27, dActor_c's own OnHitByMegaChar(Player&). Attributed the same way:
-       _ZTV9PushBlock carries 0x020b8d14 at slot 27 -- vtable + 0x6c -- where
+       _ZTV16daObjPushblock_c carries 0x020b8d14 at slot 27 -- vtable + 0x6c -- where
        _ZTV10dBgActor_c carries dActor_c's generic 0x02010124. Confirmed with
-       tools/mangle.py: _ZN9PushBlock15OnHitByMegaCharER6Player. */
+       tools/mangle.py: _ZN16daObjPushblock_c15OnHitByMegaCharER6Player. */
     void OnHitByMegaChar(Player &player);  /* slot 27 */
 
     /* Slot 31, dBgActor_c's own new virtual (include/dBgActor_c.h). Attributed
-       the same way: _ZTV9PushBlock carries 0x020b8c9c at slot 31 -- vtable +
+       the same way: _ZTV16daObjPushblock_c carries 0x020b8c9c at slot 31 -- vtable +
        0x7c -- where _ZTV10dBgActor_c carries _ZN10dBgActor_c4KillEv. Confirmed
-       with tools/mangle.py: _ZN9PushBlock4KillEv. */
+       with tools/mangle.py: _ZN16daObjPushblock_c4KillEv. */
     void Kill();                           /* slot 31 */
 };
 
-typedef char PushBlock_size_must_be_0x4f4[sizeof(PushBlock) == 0x4f4 ? 1 : -1];
+typedef char PushBlock_size_must_be_0x4f4[sizeof(daObjPushblock_c) == 0x4f4 ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file used to be
    compiler-generated C; the arrangement matches include/ShadowModel.h and the
    other members of this family (DonutBlock.h, BigBrickBlock.h, MetalNet.h). */
-struct PushBlock {
+struct daObjPushblock_c {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
@@ -121,4 +121,4 @@ struct PushBlock {
 
 #endif /* __cplusplus */
 
-#endif /* PUSHBLOCK_H */
+#endif /* DAOBJPUSHBLOCK_C_H */

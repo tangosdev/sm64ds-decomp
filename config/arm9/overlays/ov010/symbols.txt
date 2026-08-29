@@ -1,5 +1,5 @@
-_ZN4TrapD1Ev kind:function(arm,size=0x4c) addr:0x021111a0
-_ZN4TrapD0Ev kind:function(arm,size=0x60) addr:0x021111ec
+_ZN14daObjC1_Trap_cD1Ev kind:function(arm,size=0x4c) addr:0x021111a0
+_ZN14daObjC1_Trap_cD0Ev kind:function(arm,size=0x60) addr:0x021111ec
 func_ov010_0211124c kind:function(arm,size=0x10) addr:0x0211124c
 func_ov010_0211125c kind:function(arm,size=0x28) addr:0x0211125c
 func_ov010_02111284 kind:function(arm,size=0x30) addr:0x02111284
@@ -8,10 +8,10 @@ func_ov010_02111320 kind:function(arm,size=0x7c) addr:0x02111320
 func_ov010_0211139c kind:function(arm,size=0x54) addr:0x0211139c
 func_ov010_021113f0 kind:function(arm,size=0x7c) addr:0x021113f0
 func_ov010_0211146c kind:function(arm,size=0xe8) addr:0x0211146c
-_ZN4Trap16CleanupResourcesEv kind:function(arm,size=0x54) addr:0x02111554
-_ZN4Trap6RenderEv kind:function(arm,size=0x38) addr:0x021115a8
-_ZN4Trap8BehaviorEv kind:function(arm,size=0x74) addr:0x021115e0
-_ZN4Trap13InitResourcesEv kind:function(arm,size=0x1f8) addr:0x02111654
+_ZN14daObjC1_Trap_c16CleanupResourcesEv kind:function(arm,size=0x54) addr:0x02111554
+_ZN14daObjC1_Trap_c6RenderEv kind:function(arm,size=0x38) addr:0x021115a8
+_ZN14daObjC1_Trap_c8BehaviorEv kind:function(arm,size=0x74) addr:0x021115e0
+_ZN14daObjC1_Trap_c13InitResourcesEv kind:function(arm,size=0x1f8) addr:0x02111654
 func_ov010_0211184c kind:function(arm,size=0x138) addr:0x0211184c
 func_ov010_02111984 kind:function(arm,size=0x14) addr:0x02111984
 Trap_Spawn kind:function(arm,size=0x38) addr:0x02111998
@@ -112,13 +112,13 @@ data_ov010_02112a80 kind:data(any) addr:0x02112a80
 data_ov010_02112a88 kind:data(any) addr:0x02112a88
 data_ov010_02112a90 kind:data(any) addr:0x02112a90
 data_ov010_02112a98 kind:data(any) addr:0x02112a98
-_ZTI4Trap kind:data(any) addr:0x02112aa0
+_ZTI14daObjC1_Trap_c kind:data(any) addr:0x02112aa0
 data_ov010_02112aa4 kind:data(any) addr:0x02112aa4 ambiguous
 data_ov010_02112aa8 kind:data(any) addr:0x02112aa8 ambiguous
-_ZTS4Trap kind:data(any) addr:0x02112aac
+_ZTS14daObjC1_Trap_c kind:data(any) addr:0x02112aac
 Trap_SpawnInfo kind:data(any) addr:0x02112ac0 ambiguous
 data_ov010_02112adc kind:data(any) addr:0x02112adc ambiguous
-_ZTV4Trap kind:data(any) addr:0x02112ae4
+_ZTV14daObjC1_Trap_c kind:data(any) addr:0x02112ae4
 data_ov010_02112b08 kind:data(any) addr:0x02112b08 ambiguous
 _ZTI15daObjC1Hikari_c kind:data(any) addr:0x02112b64
 _ZTS15daObjC1Hikari_c kind:data(any) addr:0x02112b70

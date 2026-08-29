@@ -247,7 +247,7 @@ ov006 0x2119824  n=2  L=29   MgBingoBallSlotsShot   NORM1
 ov013 0x21111a0  n=8  L=150  ClockPaintingPendulum  NORM1 pcov=4
 ov027 0x21111a0  n=8  L=204  SlidingIce             NORM1
 ov029 0x21121a4  n=9  L=245  WDW_Water              NORM1
-ov030 0x21111a0  n=8  L=236  UkikiCage              NORM2 pcov=2
+ov030 0x21111a0  n=8  L=236  daObjHmBskt_c              NORM2 pcov=2
 ```
 
 **B11 — R2 tail · 4 TUs / 32 files / net −28 / 759 lines**
@@ -417,7 +417,7 @@ tb.cmd_create(a)
 
 **Validated read-only against the tree**: over all 131 refused safe-pool files this
 recovers **130**. The single residual, `src/func_ov018_021118fc.c` (Tier 2,
-`ov018/MotherPenguin`), fails for a different reason worth naming — its definition is
+`ov018/daPgMthr_c`), fails for a different reason worth naming — its definition is
 `struct dActor_c* func_ov018_021118fc(char* c) {`, and `split_legacy_source`'s first-word
 test sees `struct` in `_DECL_KEYWORDS` and consumes the whole function as a shadow
 declaration. **Any definition whose return type is spelled `struct X*` / `enum X` /

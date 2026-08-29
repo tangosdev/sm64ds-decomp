@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN13MotherPenguinD1Ev
-#include "MotherPenguin.h"
+// @symbol _ZN10daPgMthr_cD1Ev
+#include "daPgMthr_c.h"
 
-MotherPenguin::~MotherPenguin()
+daPgMthr_c::~daPgMthr_c()
 {
 }

@@ -158,7 +158,7 @@
     "Hm": {
       "gloss": "Tall, Tall Mountain",
       "confidence": "low",
-      "note": "Mapping from ov030 (UkikiCage, monkey); letters unread."
+      "note": "Mapping from ov030 (daObjHmBskt_c, monkey); letters unread."
     },
     "Rc": {
       "gloss": "Rainbow Ride",
@@ -289,7 +289,7 @@
       "ja": "丸太",
       "gloss": "log",
       "confidence": "high",
-      "note": "daObjMaruta_c is the base of FallBlockLll (rolling log) and UkikiCage."
+      "note": "daObjMaruta_c is the base of FallBlockLll (rolling log) and daObjHmBskt_c."
     },
     "Wakame": {
       "ja": "わかめ",

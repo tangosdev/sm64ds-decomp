@@ -29,7 +29,7 @@ so the source controls the allocation:
 
 4. **Type choice changes regalloc.** Prefer plain `u32`/`int` locals over `enum` types for
    intermediate values: "purposefully left as u32, using HeapID causes fuckery with regalloc",
-   "doesn't match if declared as enum Trap". (Distinct from the global `-enum int` flag; this
+   "doesn't match if declared as enum daObjC1_Trap_c". (Distinct from the global `-enum int` flag; this
    is about the declared type of a *local*.)
 
 5. **`register`-qualified locals**, including arrays, bias allocation:

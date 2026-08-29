@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN9UkikiCage13InitResourcesEv
-#include "UkikiCage.h"
+// @symbol _ZN13daObjHmBskt_c13InitResourcesEv
+#include "daObjHmBskt_c.h"
 #include "SharedFilePtr.h"
 
 extern "C" {
@@ -16,7 +16,7 @@ extern SharedFilePtr data_ov030_02115c80;
 extern CLPS_Block data_ov030_02114ee4;
 }
 
-s32 UkikiCage::InitResources()
+s32 daObjHmBskt_c::InitResources()
 {
     BMD_File *modelFile = (BMD_File *)Model::LoadFile(data_ov030_02115c88);
     mModel.SetFile(modelFile, 1, -1);

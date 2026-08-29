@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN9PushBlock13InitResourcesEv
+// @symbol _ZN16daObjPushblock_c13InitResourcesEv
 /* recovered: vtable identified, shared common types, declarations from a shared header
  *
- * PushBlock::InitResources -- vtable slot 0, ov002 0x020b8fe0. Attributed by
- * the vtable: _ZTV9PushBlock (ov002 0x021096b0) carries this address at slot
+ * daObjPushblock_c::InitResources -- vtable slot 0, ov002 0x020b8fe0. Attributed by
+ * the vtable: _ZTV16daObjPushblock_c (ov002 0x021096b0) carries this address at slot
  * 0, where _ZTV10dBgActor_c carries fBase_c's generic 0x02043c80.
  *
  * A real method over the shared header. It used to be an extern "C" free
  * function over a raw `char *self` reading every field by hand offset; the
  * conversion is byte-exact under the pinned 2004/b56. */
-#include "PushBlock.h"
+#include "daObjPushblock_c.h"
 #include "decl_common.h"
 struct SharedFilePtr;
 struct BMD_File;
@@ -35,7 +35,7 @@ extern "C" void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *self);
 extern SharedFilePtr data_ov002_0210df9c;
 extern SharedFilePtr data_ov002_0210df94;
 
-int PushBlock::InitResources()
+int daObjPushblock_c::InitResources()
 {
     dBgCh_Gnd rg;
     V3 v;

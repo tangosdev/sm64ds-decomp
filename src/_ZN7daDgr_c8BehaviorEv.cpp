@@ -21,7 +21,7 @@
  *
  * Swept greedily against build_pin.verify -- 33 substitutions, 33 kept once the
  * three real obstacles were fixed: `mAngleY' is read UNSIGNED at the table-index
- * sites (an s16 read costs four words, the same finding Trap::InitResources
+ * sites (an s16 read costs four words, the same finding daObjC1_Trap_c::InitResources
  * produced), the three func_ov025_* helpers are declared `char *' in
  * decl_common.h so `this' needs a cast, and the two-step `b = self + 0x300;
  * b + 0x28' was just mSwingStage reached the long way round.

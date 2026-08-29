@@ -48,11 +48,11 @@ src/SkiLift_Spawn.c:
     complete
     .text start:0x02111818 end:0x02111848
 
-src/_ZN13MotherPenguinD1Ev.cpp:
+src/_ZN10daPgMthr_cD1Ev.cpp:
     complete
     .text start:0x02111848 end:0x02111898
 
-src/_ZN13MotherPenguinD0Ev.cpp:
+src/_ZN10daPgMthr_cD0Ev.cpp:
     complete
     .text start:0x02111898 end:0x021118fc
 
@@ -116,23 +116,23 @@ src/func_ov018_021123d0.c:
     complete
     .text start:0x021123d0 end:0x021123ec
 
-src/_ZN13MotherPenguin16CleanupResourcesEv.cpp:
+src/_ZN10daPgMthr_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x021123ec end:0x02112450
 
-src/_ZN13MotherPenguin16OnPendingDestroyEv.cpp:
+src/_ZN10daPgMthr_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02112450 end:0x02112454
 
-src/_ZN13MotherPenguin6RenderEv.cpp:
+src/_ZN10daPgMthr_c6RenderEv.cpp:
     complete
     .text start:0x02112454 end:0x02112480
 
-src/_ZN13MotherPenguin8BehaviorEv.cpp:
+src/_ZN10daPgMthr_c8BehaviorEv.cpp:
     complete
     .text start:0x02112480 end:0x021124d0
 
-src/_ZN13MotherPenguin13InitResourcesEv.cpp:
+src/_ZN10daPgMthr_c13InitResourcesEv.cpp:
     complete
     .text start:0x021124d0 end:0x0211267c
 

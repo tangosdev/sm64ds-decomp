@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN13MotherPenguin13InitResourcesEv
+// @symbol _ZN10daPgMthr_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "MotherPenguin.h"
+#include "daPgMthr_c.h"
 #include "TextureSequence.h"
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
@@ -22,7 +22,7 @@ extern int data_ov018_02113c00[];
 extern int data_ov018_02112c04[];
 }
 
-int MotherPenguin::InitResources()
+int daPgMthr_c::InitResources()
 {
     void *m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov018_02113c00);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, m, 1, 1);

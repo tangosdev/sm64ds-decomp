@@ -1219,39 +1219,39 @@ src/Cap_Spawn.c:
     complete
     .text start:0x020b8b98 end:0x020b8bf0
 
-src/_ZN9PushBlockD1Ev.cpp:
+src/_ZN16daObjPushblock_cD1Ev.cpp:
     complete
     .text start:0x020b8bf0 end:0x020b8c3c
 
-src/_ZN9PushBlockD0Ev.cpp:
+src/_ZN16daObjPushblock_cD0Ev.cpp:
     complete
     .text start:0x020b8c3c end:0x020b8c9c
 
-src/_ZN9PushBlock4KillEv.cpp:
+src/_ZN16daObjPushblock_c4KillEv.cpp:
     complete
     .text start:0x020b8c9c end:0x020b8d14
 
-src/_ZN9PushBlock15OnHitByMegaCharER6Player.cpp:
+src/_ZN16daObjPushblock_c15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x020b8d14 end:0x020b8d3c
 
-src/_ZN9PushBlock8OnPushedER8dActor_c.cpp:
+src/_ZN16daObjPushblock_c8OnPushedER8dActor_c.cpp:
     complete
     .text start:0x020b8d3c end:0x020b8d68
 
-src/_ZN9PushBlock16CleanupResourcesEv.cpp:
+src/_ZN16daObjPushblock_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b8d68 end:0x020b8dac
 
-src/_ZN9PushBlock6RenderEv.cpp:
+src/_ZN16daObjPushblock_c6RenderEv.cpp:
     complete
     .text start:0x020b8dac end:0x020b8dd4
 
-src/_ZN9PushBlock8BehaviorEv.c:
+src/_ZN16daObjPushblock_c8BehaviorEv.c:
     complete
     .text start:0x020b8dd4 end:0x020b8fe0
 
-src/_ZN9PushBlock13InitResourcesEv.cpp:
+src/_ZN16daObjPushblock_c13InitResourcesEv.cpp:
     complete
     .text start:0x020b8fe0 end:0x020b910c
 

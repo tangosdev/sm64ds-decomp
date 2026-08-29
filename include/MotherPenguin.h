@@ -2,16 +2,16 @@
  * real base and real member types by hand.
  *
  * The ROM RTTI calls this class daPgMthr_c and identifies dActor_c as its base.
- * The readable MotherPenguin name is retained because every recovered method
- * symbol uses it. _ZTV13MotherPenguin and _ZTV10daPgMthr_c are co-address
+ * The readable daPgMthr_c name is retained because every recovered method
+ * symbol uses it. _ZTV10daPgMthr_c and _ZTV10daPgMthr_c are co-address
  * compatibility views of the same ROM table. The compiler-emitted vtable and
  * typeinfo record reproduce that table; only the emitted type-name string says
  * `13MotherPenguin` instead of the cartridge's `10daPgMthr_c`.
  *
  * sizeof is independently pinned by MotherPenguin_Spawn allocating 0x38c.
  * Field names for the unknown tail are placeholders. */
-#ifndef MOTHERPENGUIN_H
-#define MOTHERPENGUIN_H
+#ifndef DAPGMTHR_C_H
+#define DAPGMTHR_C_H
 #include "types.h"
 #include "ModelAnim.h"
 #include "TextureSequence.h"
@@ -23,7 +23,7 @@
 
 #include "dActor_c.h"
 
-struct MotherPenguin : dActor_c {
+struct daPgMthr_c : dActor_c {
     u8  pad_0d0[0x4];
     ModelAnim mModelAnim;            /* 0x0d4 */
     TextureSequence mTextureSequence; /* 0x138 */
@@ -38,7 +38,7 @@ struct MotherPenguin : dActor_c {
     u8  pad_378[0x14];
 
     /* --- vtable overrides. Slots are inherited from fBase_c/dActor_c. --- */
-    virtual ~MotherPenguin();                    /* slots 16 (D1), 17 (D0) */
+    virtual ~daPgMthr_c();                    /* slots 16 (D1), 17 (D0) */
     virtual int InitResources();                 /* slot 0 */
     virtual int CleanupResources();              /* slot 3 */
     virtual int Behavior();                      /* slot 6 */
@@ -46,11 +46,11 @@ struct MotherPenguin : dActor_c {
     virtual void OnPendingDestroy();             /* slot 12 */
 };
 
-typedef char MotherPenguin_size_must_be_0x38c[sizeof(MotherPenguin) == 0x38c ? 1 : -1];
+typedef char MotherPenguin_size_must_be_0x38c[sizeof(daPgMthr_c) == 0x38c ? 1 : -1];
 
 #else
 
-struct MotherPenguin {
+struct daPgMthr_c {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
@@ -71,19 +71,19 @@ struct MotherPenguin {
     ModelAnim mModelAnim;            /* 0x0d4 */
     /* TextureSequence member, named by the class's own destructor calling
        TextureSequence's D1 at +0x138 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN13MotherPenguinD0Ev.cpp] */
+       checks. Was a u8 marker. [_ZN10daPgMthr_cD0Ev.cpp] */
     TextureSequence mTextureSequence;            /* 0x138 */
     /* ShadowModel member, named by the class's own destructor calling
        ShadowModel's D1 at +0x14c -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN13MotherPenguinD0Ev.cpp] */
+       checks. Was a u8 marker. [_ZN10daPgMthr_cD0Ev.cpp] */
     ShadowModel mShadowModel;            /* 0x14c */
     /* dCcAc_c member, named by the class's own destructor calling
        dCcAc_c's D1 at +0x174 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN13MotherPenguinD0Ev.cpp] */
+       checks. Was a u8 marker. [_ZN10daPgMthr_cD0Ev.cpp] */
     dCcAc_c mdCcAc_c;            /* 0x174 */
     /* dBgCh_Actr member, named by the class's own destructor calling
        dBgCh_Actr's D1 at +0x1a8 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN13MotherPenguinD0Ev.cpp] */
+       checks. Was a u8 marker. [_ZN10daPgMthr_cD0Ev.cpp] */
     dBgCh_Actr mWithMeshClsn;            /* 0x1a8 */
     s32 mHomePosX;            /* 0x364 */
     s32 mHomePosY;            /* 0x368 */
@@ -97,7 +97,7 @@ struct MotherPenguin {
     u8  pad_378[0x14];
 };
 
-typedef char MotherPenguin_size_must_be_0x38c[sizeof(struct MotherPenguin) == 0x38c ? 1 : -1];
+typedef char MotherPenguin_size_must_be_0x38c[sizeof(struct daPgMthr_c) == 0x38c ? 1 : -1];
 
 #endif /* __cplusplus */
 

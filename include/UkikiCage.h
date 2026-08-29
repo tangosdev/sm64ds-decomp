@@ -1,5 +1,5 @@
-#ifndef UKIKICAGE_H
-#define UKIKICAGE_H
+#ifndef DAOBJHMBSKT_C_H
+#define DAOBJHMBSKT_C_H
 
 #include "types.h"
 
@@ -16,8 +16,8 @@
  *
  * THIS IS THE MID-RENAME CLASS. Before this change the header was a flat,
  * auto-generated `struct daObjHmBskt_c` while the vtable and both
- * destructors already carried the real ROM name "UkikiCage" --
- * _ZTV9UkikiCage, _ZN9UkikiCageD1Ev, _ZN9UkikiCageD0Ev. Only the RTTI pair,
+ * destructors already carried the real ROM name "daObjHmBskt_c" --
+ * _ZTV13daObjHmBskt_c, _ZN13daObjHmBskt_cD1Ev, _ZN13daObjHmBskt_cD0Ev. Only the RTTI pair,
  * _ZTI13daObjHmBskt_c and _ZTS13daObjHmBskt_c, still spelled the old
  * placeholder name; this class becoming its own key-function TU is what makes
  * the compiler emit them consistently, so config/arm9/overlays/ov030/symbols.txt
@@ -33,12 +33,12 @@
 
 struct dActor_c;
 
-struct UkikiCage : dBgActor_c {
+struct daObjHmBskt_c : dBgActor_c {
     dBgCh_Actr mWithMeshClsn;       /* 0x320 */
     dActor_c *mStarActor;            /* 0x4dc -- Spawn(0xb2, ...) result */
 
     /* --- vtable --- */
-    virtual ~UkikiCage();
+    virtual ~daObjHmBskt_c();
 
     int InitResources();
     int CleanupResources();
@@ -46,15 +46,15 @@ struct UkikiCage : dBgActor_c {
     int Render();
 };
 
-typedef char UkikiCage_size_must_be_0x4e0[sizeof(UkikiCage) == 0x4e0 ? 1 : -1];
+typedef char UkikiCage_size_must_be_0x4e0[sizeof(daObjHmBskt_c) == 0x4e0 ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file used to be
-   compiler-generated C; the arrangement matches include/PushBlock.h and the
+   compiler-generated C; the arrangement matches include/daObjPushblock_c.h and the
    other members of this family (DonutBlock.h, BigBrickBlock.h, MetalNet.h,
-   Trap.h). */
-struct UkikiCage {
+   daObjC1_Trap_c.h). */
+struct daObjHmBskt_c {
     u8  pad_000[0x5c];
     s32 mPosX;              /* 0x05c */
     s32 mPosY;              /* 0x060 */
@@ -77,4 +77,4 @@ struct UkikiCage {
 
 #endif /* __cplusplus */
 
-#endif /* UKIKICAGE_H */
+#endif /* DAOBJHMBSKT_C_H */
