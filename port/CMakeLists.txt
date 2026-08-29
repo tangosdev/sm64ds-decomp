@@ -2962,6 +2962,12 @@ list(APPEND SLICEINTRO_SOURCES
 # Generated and individually checked against relocs.txt; see the file header.
 list(APPEND SLICEINTRO_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/hal/intro_ov002_seat.cpp")
+# The cutscene cast's LOAD SPINE, host-copied to trace the three LoadFile paths
+# per object. The render floor is an unrebased BMD offset and Model::LoadFile
+# only rebases at numRefs == 1; this names which cast member is the FIRST holder
+# of each file and through which class. Src line commented out in slice_intro.txt.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_CutsceneLoad_020f6618.cpp")
 
 # THE SCENE BOOT: the star select, the one non-level scene the port can enter.
 # ov003 carries three scene classes -- dScTitle_c (id 2), dScStarSel_c (id 4)
