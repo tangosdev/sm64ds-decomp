@@ -3122,7 +3122,7 @@ extern "C" int port_intro_wants_play(void)
             std::fprintf(stderr,
                          "  [intro] boot: flags2 bit7 %d | pending %08x | "
                          "running %08x | armed %d\n",
-                         (data_0209caa0[2] & 0x80) ? 1 : 0,
+                         (data_0209caa0[8] & 0x80) ? 1 : 0,
                          (unsigned)data_0209fc4c, (unsigned)data_0209fc48,
                          g_intro_armed);
     }
@@ -3883,7 +3883,7 @@ extern "C" void port_intro_bit_edge(void)
     if (!on)
         return;
     static int last = -1;
-    const int now = (data_0209caa0[2] & 0x80) ? 1 : 0;
+    const int now = (data_0209caa0[8] & 0x80) ? 1 : 0;
     if (now != last) {
         std::fprintf(stderr, "  [intro] flags2 bit 7 %d -> %d\n", last, now);
         last = now;
