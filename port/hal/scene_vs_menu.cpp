@@ -78,7 +78,9 @@ extern void **data_020a4bb8;                     /* hal/actor_vtables.cpp     */
 
 /* the class's own eight, all flat C names out of src/ */
 int   func_ov075_0211a410(char *c);              /* slot  0  InitResources    */
-void  func_ov075_0211a734(void);                 /* slot  1  ResetFaders veneer */
+void  func_ov075_0211a734(void);                 /* slot  1 veneer (unused by
+                                                    the thunk; see vs_reset) */
+int   _ZN5Scene19ResetFadersAndSoundEv(void *self);
 int   func_ov075_0211a210(signed char r0);       /* slot  3  CleanupResources */
 int   func_ov075_0211a2b8(void *c);              /* slot  6  Behavior         */
 int   func_ov075_0211a26c(void *c);              /* slot  9  Render           */
@@ -105,6 +107,8 @@ extern unsigned char data_0209b2e4[];            /* the lobby's map pick      */
 }  /* extern "C" */
 
 #include "UnknownVsEntry.h"                      /* the 4 C++ methods */
+#include "ActorBase.h"      /* the entry actor's shared-slot thunks */
+#include "ActorDerived.h"
 
 /* ---- contested-name storage (slice_vs.txt section 6) ----------------------
    src/__sinit_ov075_0211bb00.c is compiled with
@@ -176,13 +180,33 @@ static unsigned g_ent_hits[18];
 
 static int  __fastcall vs_init(void *s, void *)
 { ++g_vs_hits[0];  return func_ov075_0211a410((char *)s); }
-static void __fastcall vs_reset(void *, void *)
-{ ++g_vs_hits[1];  func_ov075_0211a734(); }
+static int __fastcall vs_reset(void *s, void *)
+{ /* IMPLICIT-REGISTER DEFECT, the eighth of its class: slot 1's matched
+     veneer (src/func_ov075_0211a734.c) is a void(void) tail-call and the
+     ROM rides `self` through r0 into Scene::ResetFadersAndSound -- whose
+     FIRST statement is `data_0209f5c0 = self`, the spawn parent every
+     ActorDerived::Spawn in this scene hangs off. On x86 the void(void)
+     chain drops it, data_0209f5c0 stays null, and the entry-actor spawn at
+     func_ov075_02116ad4:63 quietly returns 0 (measured: Behavior state
+     func_ov075_02119b34 then faults at +0x37 on the null +0x50). The thunk
+     forwards self the way r0 did. */
+  ++g_vs_hits[1];  return _ZN5Scene19ResetFadersAndSoundEv(s); }
 static int  __fastcall vs_clean(void *s, void *)
 { /* the body reads r0 the way the ROM handed it -- forward self */
   ++g_vs_hits[3];  return func_ov075_0211a210((signed char)(long long)s); }
+extern "C" { extern int data_0209f5c0[]; }
 static int  __fastcall vs_beh(void *s, void *)
-{ ++g_vs_hits[6];  return func_ov075_0211a2b8(s); }
+{ /* first-frame census: the two words every VS spawn hangs off. A null
+     +0x50 is the entry actor failing to spawn; a null data_0209f5c0 is the
+     spawn parent never seated (the slot-1 ride-through, or the dispatch
+     order). Printed once, the port's census discipline. */
+  if (!g_vs_hits[6]++)
+      std::fprintf(stderr, "  [vs] first Behavior: self=%p parent(f5c0)=%08x "
+                   "entry(+0x50)=%08x screen(+0xc)=%u\n", s,
+                   (unsigned)data_0209f5c0[0],
+                   *(unsigned *)((char *)s + 0x50),
+                   (unsigned)*(unsigned short *)((char *)s + 0xc));
+  return func_ov075_0211a2b8(s); }
 static int  __fastcall vs_render(void *s, void *)
 { ++g_vs_hits[9];  return func_ov075_0211a26c(s); }
 static void __fastcall vs_pdes(void *, void *)
@@ -204,6 +228,28 @@ static void *__fastcall ent_d1(void *s, void *)
 { ++g_ent_hits[16]; return _ZN14UnknownVsEntryD1Ev(s); }
 static void *__fastcall ent_d0(void *s, void *)
 { ++g_ent_hits[17]; _ZN14UnknownVsEntryD0Ev(s); return s; }
+
+/* the nine ActorBase-shape shared slots, the hal/sub_actors.cpp law: every
+   thunk __fastcall so ecx carries `this`, every call QUALIFIED */
+static int  __fastcall ent_binit(void *s, void *)
+{ return ((ActorBase *)s)->ActorBase::BeforeInitResources(); }
+static void __fastcall ent_ainit(void *s, void *, unsigned a)
+{ ((ActorDerived *)s)->ActorDerived::AfterInitResources(a); }
+static int  __fastcall ent_bclean(void *s, void *)
+{ return ((ActorBase *)s)->ActorBase::BeforeCleanupResources(); }
+static void __fastcall ent_aclean(void *s, void *, unsigned a)
+{ ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+static int  __fastcall ent_bbeh(void *s, void *)
+{ return ((ActorBase *)s)->ActorBase::BeforeBehavior(); }
+static void __fastcall ent_abeh(void *s, void *, unsigned a)
+{ ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
+static int  __fastcall ent_bren(void *s, void *)
+{ return ((ActorBase *)s)->ActorBase::BeforeRender(); }
+static void __fastcall ent_aren(void *s, void *, unsigned a)
+{ ((ActorBase *)s)->ActorBase::AfterRender(a); }
+static void __fastcall ent_pdes(void *s, void *)
+{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); }
+
 
 /* ---- the factories --------------------------------------------------------
    The registry's factory column is void *(*)(void); both matched factories
@@ -248,19 +294,60 @@ extern "C" void port_scene_fill_vs(void)
                      "%u raw DS word(s) in dScEntry_c's 18-slot table, "
                      "expected 8 (the class's own overrides)\n", left);
 
-    /* UnknownVsEntry: twelve shared slots, six written. */
+    /* UnknownVsEntry: NOT a Scene -- an EIGHTEEN-slot ActorBase-shape actor,
+       the dMeter_c arrangement hal/sub_actors.cpp reads out of the ROM (slot
+       2 ActorDerived::AfterInitResources, every other shared slot
+       ActorBase's own). The Scene-keyed fill above knows none of those
+       words -- the first boot measured it as "left 15" -- so this table is
+       filled EXPLICITLY, each slot's ROM word verified against the
+       derivation before it is replaced; a word that disagrees is left
+       standing and reported, never papered over. */
+    static const unsigned kEntRom[18] = {
+        0x021156e0u,   /*  0 InitResources        (class)  */
+        0x02043c78u,   /*  1 ActorBase::BeforeInitResources */
+        0x02013ef4u,   /*  2 ActorDerived::AfterInitResources */
+        0x02115388u,   /*  3 CleanupResources     (class)  */
+        0x02043bacu,   /*  4 ActorBase::BeforeCleanupResources */
+        0x02043b2cu,   /*  5 ActorBase::AfterCleanupResources */
+        0x0211555cu,   /*  6 Behavior             (class)  */
+        0x02043afcu,   /*  7 ActorBase::BeforeBehavior */
+        0x02043af8u,   /*  8 ActorBase::AfterBehavior */
+        0x021154ccu,   /*  9 Render               (class)  */
+        0x02043ac8u,   /* 10 ActorBase::BeforeRender */
+        0x02043ac4u,   /* 11 ActorBase::AfterRender */
+        0x02043ac0u,   /* 12 ActorBase::OnPendingDestroy */
+        0x0204357cu,   /* 13 ActorBase::Virtual34 */
+        0x0204349cu,   /* 14 ActorBase::Virtual38 */
+        0x02043494u,   /* 15 ActorBase::OnHeapCreated */
+        0x02113ee0u,   /* 16 D1                   (class)  */
+        0x02113f54u,   /* 17 D0                   (class)  */
+    };
+    static void *const kEntHost[18] = {
+        (void *)ent_init,  (void *)ent_binit, (void *)ent_ainit,
+        (void *)ent_clean, (void *)ent_bclean,(void *)ent_aclean,
+        (void *)ent_beh,   (void *)ent_bbeh,  (void *)ent_abeh,
+        (void *)ent_render,(void *)ent_bren,  (void *)ent_aren,
+        (void *)ent_pdes,  0,                 0,
+        0,                 (void *)ent_d1,    (void *)ent_d0,
+    };
     void **evt = (void **)_ZTV14UnknownVsEntry;
-    const unsigned eleft = port_scene_fill_rom(evt, 18);
-    evt[0]  = (void *)ent_init;
-    evt[3]  = (void *)ent_clean;
-    evt[6]  = (void *)ent_beh;
-    evt[9]  = (void *)ent_render;
-    evt[16] = (void *)ent_d1;
-    evt[17] = (void *)ent_d0;
-    if (eleft != 6)
-        std::fprintf(stderr, "  [vs] VTABLE SHAPE: port_scene_fill_rom left "
-                     "%u raw DS word(s) in UnknownVsEntry's 18-slot table, "
-                     "expected 6\n", eleft);
+    /* slots 13/14/15 first, through the keyed fill: ActorBase::Virtual34/38
+       are QAE-mangled bodies only hal/scene_boot.cpp's local-struct thunks
+       can name (its own banner explains the QAE/UAE split), and its key
+       table already maps exactly those three words. */
+    (void)port_scene_fill_rom(evt + 13, 3);
+    for (unsigned i = 0; i < 18; ++i) {
+        if (!kEntHost[i])
+            continue;      /* 13/14/15: the keyed pre-pass owns them */
+        const unsigned ds = (unsigned)(size_t)evt[i];
+        if (ds == kEntRom[i] || evt[i] == kEntHost[i]) {
+            evt[i] = kEntHost[i];
+        } else {
+            std::fprintf(stderr, "  [vs] ENTRY VTABLE slot %u holds %08x, "
+                         "the ROM says %08x -- left standing, not "
+                         "replaced\n", i, ds, kEntRom[i]);
+        }
+    }
 
     /* the menu's one sub-actor, registered the way the scene rows are:
        identity checked against the record's own halfword, factory written
@@ -417,12 +504,10 @@ extern "C" void func_02058568(unsigned *ctx, unsigned pc, unsigned sp)
    no-scheduler / nothing-to-unload value, and none pretends progress.
 
    THE VALUES ARE THE IDLE ONES, derived from the callers:
-     func_0203d7b8   "did the overlay load fail" -- 0, it did not
-                     (src/func_0201a694.c returns 3 on nonzero)
-     func_0203d8fc   the conductor's "comms session ready" gate
-                     (src/func_ov075_02118a84.c) -- 0, no session; the lobby
-                     WAITS rather than fabricating a handshake
-     the rest        status polls in the same family -- 0, idle
+     func_0203d9f4   the one wireless-status wrapper that really calls the
+                     wireless manager (func_020618b8); its eleven siblings
+                     turned out to be leaf accessors over comms bss and are
+                     COMPILED, not faced -- see the slice's correction note
      UnloadOverlay   nothing to unload: every hosted overlay is a static
                      build-time mount
      func_02058048 / func_02058158 / func_02058200 / func_02057f38
@@ -443,19 +528,7 @@ static void vs_seam(const char *name)
 #define VS_SEAM(sym)                                                           \
     extern "C" int sym(void);                                                  \
     extern "C" int sym(void) { vs_seam(#sym); return 0; }
-VS_SEAM(func_0203d7b8)
-VS_SEAM(func_0203d854)
-VS_SEAM(func_0203d868)
-VS_SEAM(func_0203d890)
-VS_SEAM(func_0203d8a0)
-VS_SEAM(func_0203d8d4)
-VS_SEAM(func_0203d8e8)
-VS_SEAM(func_0203d8fc)
-VS_SEAM(func_0203d918)
-VS_SEAM(func_0203d930)
-VS_SEAM(func_0203d9b4)
 VS_SEAM(func_0203d9f4)
-VS_SEAM(func_0203da2c)
 VS_SEAM(UnloadOverlay)
 VS_SEAM(func_02057f38)
 VS_SEAM(func_02058048)

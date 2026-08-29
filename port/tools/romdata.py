@@ -312,6 +312,14 @@ NAMED = [
     "data_02097950",
     "data_02097ca4",
     "data_0208f274",
+    # the five per-language VS TEXT BANKS Message::LoadTextVS points
+    # data_0209fd14 at (reloc-free spans; the pointer itself is set by the
+    # matched TU at run time, so nothing here bakes a DS address)
+    "data_020937bc",
+    "data_0209325c",
+    "data_02093d7c",
+    "data_0209289c",
+    "data_02092d3c",
     "data_02092808",
     "data_02092810",
     "data_02092824",

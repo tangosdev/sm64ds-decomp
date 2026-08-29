@@ -280,11 +280,8 @@ src/func_ov075_02119d3c.c
 src/func_ov075_02119d78.c
 src/func_ov075_0211a100.c
 src/func_ov075_0211a148.c
-src/func_ov075_0211a194.cpp
 src/func_ov075_0211a210.c
 src/func_ov075_0211a268.c
-src/func_ov075_0211a26c.cpp
-src/func_ov075_0211a2b8.cpp
 src/func_ov075_0211a410.cpp
 src/func_ov075_0211a734.c
 src/func_ov075_0211a740.c
@@ -375,7 +372,13 @@ src/func_02031e00.c
 # (an `asm void` block MSVC cannot assemble). hal/scene_vs_menu.cpp carries
 # the host body -- the cxx_aliases ITCM/ARMSaveContext treatment.
 # ---- SUBTREES REFUSED, the scene-boot precedent (its LoadOverlay block):
-# the DS WIRELESS-STATUS wrappers (func_0203d7b8..func_0203da2c), the DS
+# CORRECTED one round later: the wireless-status wrappers func_0203d7b8..
+# func_0203da2c (minus d9f4) turned out to be LEAF ACCESSORS over comms bss
+# -- no WM call in any of them -- and the first lobby boot crashed on a face
+# returning 0 where func_0203d8a0 returns a per-slot entry-record pointer
+# (measured: func_02031028+0x19 reading address 1). The twelve are compiled
+# again below; ONLY func_0203d9f4 (which calls the wireless manager,
+# func_020618b8) keeps its face. The refusals that stand: the DS
 # THREAD SCHEDULER (func_02057f38..func_02058538, plus the asm OS_InitContext
 # above), the CARD OVERLAY LOADER tail (UnloadOverlay, func_02017fd0,
 # func_02018c00/cbc, func_0205dc0c/dc60/df40) and the WIRELESS MANAGER
@@ -388,3 +391,28 @@ src/func_02031e00.c
 src/func_0203128c.c
 src/func_02031154.c
 src/func_020313d8.c
+src/LoadFont3D.c
+src/_ZN7Message10LoadTextVSEv.c
+src/_ZN7Message16SetTextGlobalsVSEv.c
+src/func_0203d7b8.c
+src/func_0203d854.c
+src/func_0203d868.c
+src/func_0203d890.c
+src/func_0203d8a0.c
+src/func_0203d8d4.c
+src/func_0203d8e8.c
+src/func_0203d8fc.c
+src/func_0203d918.c
+src/func_0203d930.c
+src/func_0203d9b4.c
+src/func_0203da2c.c
+# ---- THE THREE PMF DISPATCH SITES are OUT of the slice: their matched TUs
+# dispatch states and elements through MSVC pointer-to-member / virtual
+# calls (this in ecx) onto plain cdecl host bodies -- the receiver never
+# arrives (measured: state func_ov075_02119b34 faulting at +0x37 on stack
+# garbage). port/unmatched/VS_EntryDispatch.cpp carries the host copies with
+# the dispatches spelled out as cdecl-through-record; src keeps the
+# byte-matched originals:
+#   src/func_ov075_0211a194.cpp   the state setter (+0x54/+0x5c/+0x64)
+#   src/func_ov075_0211a2b8.cpp   Behavior (pmf + the element v0 walk)
+#   src/func_ov075_0211a26c.cpp   Render (pmf)

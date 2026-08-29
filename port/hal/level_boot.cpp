@@ -1905,6 +1905,13 @@ static void *port_mount_row_lvl30(void) { return port_level_mount_at(42); }
 static void *port_mount_row_lvl32(void) { return port_level_mount_at(43); }
 static void *port_mount_row_lvl34(void) { return port_level_mount_at(44); }
 static void *port_mount_row_lvl46(void) { return port_level_mount_at(45); }
+/* VS wiring lane: the four VS battle maps, table rows appended at the END
+   (the merge-note rule above). Positional: row N takes fns[N]. */
+static void *port_mount_row_lvl51(void) { return port_level_mount_at(35); }
+static void *port_mount_row_lvl43(void) { return port_level_mount_at(36); }
+static void *port_mount_row_lvl29vs(void) { return port_level_mount_at(37); }
+static void *port_mount_row_lvl42vs(void) { return port_level_mount_at(38); }
+
 static void *(*const port_level_mount_fns[PORT_LEVEL_COUNT])(void) = {
     port_mount_row_0, port_mount_row_1, port_mount_row_2, port_mount_row_3,
     port_mount_row_4,
@@ -1949,6 +1956,10 @@ static void *(*const port_level_mount_fns[PORT_LEVEL_COUNT])(void) = {
     port_mount_row_lvl32,
     port_mount_row_lvl34,
     port_mount_row_lvl46,
+    port_mount_row_lvl51,
+    port_mount_row_lvl43,
+    port_mount_row_lvl29vs,
+    port_mount_row_lvl42vs,
 };
 
 // ---- the loader dispatch table ---------------------------------------------

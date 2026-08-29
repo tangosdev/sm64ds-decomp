@@ -2118,16 +2118,17 @@ void hal_touch_client_probe(void)
 // sliced in, and each says so if it is ever actually called -- which would
 // mean the branch analysis is wrong, not that the stub is.
 
-/* Only from LoadGraphics2D(b != 0), and the port passes b = false. Behind it
-   is Message::LoadTextVS and the whole message-box text engine.
-   PORT_HOST_ABI: src drives the card loader + asm copies into an unhosted 3D-font
-   VRAM path; the message-box text engine is not hosted. */
-void LoadFont3D(void)
-{
-    static int said;
-    if (!said++)
-        std::printf("  [sub] LoadFont3D reached: the 3D font is not hosted\n");
-}
+/* LoadFont3D is NOT faced here any more (VS wiring lane, run vs1). The
+   "only from LoadGraphics2D(b != 0)" premise stopped holding when scene 6
+   mounted: dScEntry_c::InitResources calls LoadFont3D DIRECTLY
+   (src/func_ov075_0211a410.cpp:101), and the face swallowed
+   Message::LoadTextVS with the font upload, so the VS text plot read the
+   null data_0209fcf8 -- measured as the c0000005 at func_020341a8+0x23 on
+   the first scene-6 boot. Every dependency is hosted now (LoadFile,
+   DecompressLZ16, MultiCopy_Int, func_02054d88, and the five per-language
+   VS text banks through port/tools/romdata.py NAMED), so the matched
+   src/LoadFont3D.c is the body, compiled by slice_vs. Leaving the stub here
+   would be a duplicate definition -- the wave-C precedent above. */
 
 /* Top-screen furniture: it rasterises the controller-mode caption into
    G2::GetBG2CharPtr through func_0201d590, the main engine's text path. The

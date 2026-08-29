@@ -25,6 +25,8 @@ int data_0209b2ec[8];
 int data_0209b2f0[8];
 int data_0209fc54[8];
 int data_0209fc58[8];
+int data_0209fcfc[8];
+int data_0209fd04[8];
 int data_0209fc80[8];
 int data_0209fcf4[8];
 int data_0209fd18[8];

@@ -6587,7 +6587,11 @@ set_source_files_properties(
 # (the PORT_ACTOR_OVERLAYS append lives beside ov005's, BEFORE the ovdata
 # generation loop reads the list)
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_vs.txt" SLICE_VS_LINES)
-set(SLICE_VS_SOURCES hal/scene_vs_menu.cpp)
+set(SLICE_VS_SOURCES hal/scene_vs_menu.cpp
+                     # the three PMF dispatch sites, host copies; their
+                     # matched src TUs are out of the slice (see the
+                     # manifest's dispatch note and the file's banner)
+                     unmatched/VS_EntryDispatch.cpp)
 foreach(line IN LISTS SLICE_VS_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
