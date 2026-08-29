@@ -237,4 +237,9 @@ src/_ZN5Model9Virtual10ER9Matrix4x3.cpp
 # Model AND a ModelAnim; data_ov002_0210bcc4 is the ModelAnim one and its two
 # destructor slots were matched-but-unoffered.
 src/func_ov002_020f6870.cpp
-src/func_ov002_020f6778.cpp
+# src/func_ov002_020f6778.cpp -- HOST COPY at
+#   unmatched/Ov002_ModelAnimD0_020f6778.cpp. The THIRD instance of the
+#   one-slot shift: it destroys its TextureSequence through a hand-indexed
+#   vtable word at ROM slot 1, which MSVC folds to slot 0 and which
+#   hal/model_dtor_seat.cpp therefore seats at 0 and leaves NULL at 1. The
+#   call convention moves with the index (texseq_d0 is __fastcall).

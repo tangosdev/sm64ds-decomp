@@ -500,6 +500,7 @@ void _ZN5Stage10CheckInputEv(void);
    data_0209fc48 == 0. Transcribed into the game tick below (STAR1). */
 void ProcessKuppaScript(void);
 void EndKuppaScript(void);     /* STAR1 proof: clears data_0209fc48 at cutscene end */
+void port_intro_bit_edge(void); /* hal/level_boot.cpp: flags2 bit 7, edge-triggered */
 /* the ROM's own atan2, the one CheckInput builds the stick record's angle
    with. The analog run mode below fills that record from a host stick, so it
    goes through the same function rather than a host atan2f: same table, same
@@ -9034,6 +9035,15 @@ int main(void)
             no_kuppa_tick = getenv("SM64DS_NO_KUPPA_TICK") ? 1 : 0;
         if (real_boot && !menu_on && !no_kuppa_tick)
             ProcessKuppaScript();
+        /* The intro-seen bit's EDGE, reported once when it moves. The opening's
+           completion bar asks that flags2 bit 7 ends SET and that the PORT
+           never sets it -- the write is the ROM's own, src/func_ov085_0212d5dc
+           .cpp:51, LakituBro's last opening state. A boot-time read cannot show
+           that: on the reload boot the bit is still clear, because the flight's
+           ending state runs during the level that follows. Read next to the
+           cutscene tick because that is the thing whose end sets it. Inert
+           unless SM64DS_INTRO_WATCH (hal/level_boot.cpp). */
+        port_intro_bit_edge();
         if (menu_on) {
             game_ticked = 0;
         } else if (boot_spawns) {

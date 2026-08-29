@@ -3023,6 +3023,12 @@ extern "C" void port_intro_arm_for_entry(void)
    which does the same for __sinit_02074f80. */
 extern "C" void __sinit_02073e6c(void);
 extern "C" void port_intro_seat_dcc(void);   /* hal/intro_dcc_blob.cpp */
+/* The PENDING script word. ProcessKuppaScript's cmd 0x0b stores it next to the
+   closing LoadLevelNoReturn, and ContinueKuppaScriptIfNecessary reads it on the
+   next boot -- which is the mechanism that brings the HUD back. Declared here
+   only to be READ by the boot assertion below; data_0209fc48 is defined further
+   up this file. */
+extern "C" int data_0209fc4c;
 extern "C" {
 extern unsigned data_ov085_02130744[];
 /* declared again here: the file's own declaration is a thousand lines below
@@ -3090,6 +3096,36 @@ static void port_intro_seat_scripts(void)
 /* The decision, consumed once by the boot that follows the crossing. */
 extern "C" int port_intro_wants_play(void)
 {
+    /* THE OPENING'S THREE ROM WORDS, ON EVERY BOOT. This is where the completion
+       bar is asserted rather than eyeballed, because all three live here and
+       all three are the ROM's own:
+
+         flags2 bit 7   data_0209caa0[2] & 0x80 -- "the opening has been seen".
+                        Clear on the boot that plays it; SET afterwards, and set
+                        by src/func_ov085_0212d5dc.cpp:51 (LakituBro's last
+                        opening state), never by the port.
+         pending        data_0209fc4c -- what ProcessKuppaScript's cmd 0x0b
+                        stored alongside the closing LoadLevelNoReturn. Non-zero
+                        on the RELOAD boot is what makes
+                        ContinueKuppaScriptIfNecessary return 1, which makes the
+                        gate's `intro` false, which is HOW THE HUD COMES BACK.
+         running        data_0209fc48 -- the script actually executing.
+
+       Printed before the armed check so the reload boot reports too; that boot
+       is not armed and would otherwise return on the first line.
+       Inert unless SM64DS_INTRO_WATCH. */
+    {
+        static int on = -1;
+        if (on < 0)
+            on = std::getenv("SM64DS_INTRO_WATCH") ? 1 : 0;
+        if (on)
+            std::fprintf(stderr,
+                         "  [intro] boot: flags2 bit7 %d | pending %08x | "
+                         "running %08x | armed %d\n",
+                         (data_0209caa0[2] & 0x80) ? 1 : 0,
+                         (unsigned)data_0209fc4c, (unsigned)data_0209fc48,
+                         g_intro_armed);
+    }
     if (!g_intro_armed)
         return 0;
     g_intro_armed = 0;                  /* one-shot: this boot, not the next */
@@ -3832,6 +3868,28 @@ extern "C" void hal_fill_player_vtable(void)
    and prev pos is the start of every line WithMeshClsn's continuous update
    casts. Driving Behavior bare left prev at the constructor's zero, so the
    first frame at the gate swept a segment from the world origin. */
+/* THE INTRO-SEEN BIT, EDGE-TRIGGERED. The completion bar for the opening asks
+   that flags2 bit 7 ends SET and that the port never sets it -- the write is
+   src/func_ov085_0212d5dc.cpp:51, LakituBro's last opening state, right after
+   it hands control back to the player. A boot-time read cannot show that: on
+   the reload boot the bit is still clear (measured), because the flight's
+   ending state runs during the level that follows. So this reports the EDGE,
+   once, from a place that ticks. Inert unless SM64DS_INTRO_WATCH. */
+extern "C" void port_intro_bit_edge(void)
+{
+    static int on = -1;
+    if (on < 0)
+        on = std::getenv("SM64DS_INTRO_WATCH") ? 1 : 0;
+    if (!on)
+        return;
+    static int last = -1;
+    const int now = (data_0209caa0[2] & 0x80) ? 1 : 0;
+    if (now != last) {
+        std::fprintf(stderr, "  [intro] flags2 bit 7 %d -> %d\n", last, now);
+        last = now;
+    }
+}
+
 extern "C" int hal_player_process(void *self)
 { return func_02043288(self); }
 

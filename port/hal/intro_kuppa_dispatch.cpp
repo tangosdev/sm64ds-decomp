@@ -64,6 +64,10 @@ void func_ov002_020bd4ac(void *, unsigned char *, int, int);
 void func_ov002_020bd4c8(void *, unsigned char *, int, int);
 void func_ov002_020bd4e0(void *, unsigned char *, int, int);
 void func_ov002_020bd600(void *, unsigned char *, int, int);
+/* HOST COPY, unmatched/Ov002_KuppaCmd_020bd480.cpp -- see the trap note
+   below. Same four-word declaration as the other twelve. */
+void func_ov002_020bd480(void *, unsigned char *, int, int);
+void func_ov002_020bd250(void *, unsigned char *, int, int);
 
 /* The fourteen {function, delta} statics, in the ROM's own table order (the
    order func_ov002_020bd664's initialiser lists them, which is the command
@@ -76,19 +80,36 @@ extern PortPmf data_ov002_0210a14c[], data_ov002_0210a124[],
 
 }  /* extern "C" */
 
-/* TWO OF THE FOURTEEN ARE TRAPPED RATHER THAN HOSTED. Each is a generic script
-   command that drags in a subsystem this lane has no business landing, and
-   neither is an opening command:
+/* ALL FOURTEEN ARE HOSTED NOW. TWO WERE TRAPPED, AND THE TRAPS ARE WHAT GOT
+   THEM HOSTED -- which is the whole point of having left them loud.
 
-     0210a44c -> func_ov002_020bd250   needs Player::Hurt
-                 (_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj, 0x020d8e70, unhosted)
-     0210a534 -> func_ov002_020bd480   needs Sound::PlayCharVoice (unhosted)
+     0210a534 -> func_ov002_020bd480   was "needs Sound::PlayCharVoice"
+     0210a44c -> func_ov002_020bd250   was "needs Player::Hurt"
 
-   Both bodies are matched and could be offered the day something needs them.
-   Trapping instead of hosting keeps this lane's link closed while leaving the
-   refusal LOUD: if the opening ever does reach one, the run names the command
-   and the address instead of dying somewhere else later. That is this lane's
-   census continuing at run time rather than a silent no-op. */
+   Both were declared unhosted while the intro bit was force-set in
+   hal/level_boot.cpp and nothing in the port could reach either one. With the
+   script chain running the opening reached both, each trap named its command
+   and address exactly as its last line promised, and in BOTH cases the finding
+   was the same: the premise had gone stale, not the command being exotic. Every
+   callee either needs was already in this binary --
+
+     Sound::PlayCharVoice            slice_gate10.txt:1225
+     Player::Hurt                    slice_gate10.txt:610
+     Vec3_RotateYAndTranslate        slice_gate10.txt:191
+     Particle::System::NewSimple     slice_gate29.txt:83
+
+   -- so hosting them drags in nothing. That is worth recording as a pattern
+   rather than a coincidence: an "unhosted" note written when a path was
+   unreachable is a claim with an expiry date, and nothing re-checks it.
+
+   Both are HOST COPIES (unmatched/Ov002_KuppaCmd_020bd480.cpp and
+   unmatched/Ov002_KuppaCmd_020bd250.cpp) rather than src lines, because each
+   matched TU reaches its callees through a local shadow class or namespace
+   whose MSVC mangling has no alias in hal/cxx_aliases.cpp -- and for Hurt the
+   shadow makes it a THISCALL member, so `this` would have ridden in ecx.
+
+   The trap machinery below is kept, unused. It costs nothing, and the next
+   command this lane cannot host should say so the same way. */
 static void kuppa_cmd_trap(unsigned idx, const char *slot, unsigned rom,
                            const char *needs)
 {
@@ -98,10 +119,6 @@ static void kuppa_cmd_trap(unsigned idx, const char *slot, unsigned rom,
                  "that it did is the finding.\n", idx, slot, rom, needs);
     std::abort();
 }
-static void kc_trap_020bd250(void *, unsigned char *, int, int)
-{ kuppa_cmd_trap(9, "0210a44c", 0x020bd250, "Player::Hurt"); }
-static void kc_trap_020bd480(void *, unsigned char *, int, int)
-{ kuppa_cmd_trap(4, "0210a534", 0x020bd480, "Sound::PlayCharVoice"); }
 
 /* command index -> {the ROM slot, the address the host body was compiled from,
    the host body}. The middle column is what makes a wrong mount loud. */
@@ -115,12 +132,12 @@ static const struct {
     { data_ov002_0210a124, 0x020bd4e0, func_ov002_020bd4e0, "0210a124" },
     { data_ov002_0210a054, 0x020bd4c8, func_ov002_020bd4c8, "0210a054" },
     { data_ov002_0210a0dc, 0x020bd4ac, func_ov002_020bd4ac, "0210a0dc" },
-    { data_ov002_0210a534, 0x020bd480, kc_trap_020bd480, "0210a534" },
+    { data_ov002_0210a534, 0x020bd480, func_ov002_020bd480, "0210a534" },
     { data_ov002_0210a0b4, 0x020bd45c, func_ov002_020bd45c, "0210a0b4" },
     { data_ov002_0210a094, 0x020bd438, func_ov002_020bd438, "0210a094" },
     { data_ov002_0210a40c, 0x020bd3a0, func_ov002_020bd3a0, "0210a40c" },
     { data_ov002_0210a474, 0x020bd354, func_ov002_020bd354, "0210a474" },
-    { data_ov002_0210a44c, 0x020bd250, kc_trap_020bd250, "0210a44c" },
+    { data_ov002_0210a44c, 0x020bd250, func_ov002_020bd250, "0210a44c" },
     { data_ov002_0210a3fc, 0x020bd20c, func_ov002_020bd20c, "0210a3fc" },
     { data_ov002_0210a3c4, 0x020bcd38, func_ov002_020bcd38, "0210a3c4" },
     { data_ov002_0210a064, 0x020bcd18, func_ov002_020bcd18, "0210a064" },

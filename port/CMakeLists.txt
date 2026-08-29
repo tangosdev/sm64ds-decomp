@@ -2985,6 +2985,31 @@ list(APPEND SLICEINTRO_SOURCES
 # slice_intro.txt.
 list(APPEND SLICEINTRO_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/CutsceneObject_CleanupResources.cpp")
+# And the third instance, one layer down: the cutscene ModelAnim's own deleting
+# destructor destroys its TextureSequence through a hand-indexed vtable word at
+# ROM slot 1. MSVC folds D1/D0, so hal/model_dtor_seat.cpp seats that body at
+# index 0 and leaves index 1 NULL -- measured as a call through a null pointer
+# (+ffc00000 is address 0 against this image's 0x00400000 base). The calling
+# convention moves with the index: what is seated there is __fastcall.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_ModelAnimD0_020f6778.cpp")
+# Cutscene-object command 4, the character voice. hal/intro_kuppa_dispatch.cpp
+# trapped it as "needs Sound::PlayCharVoice (unhosted)"; the running chain
+# reached it and the trap said so, which is what the trap was left loud for. The
+# premise was stale -- Sound::PlayCharVoice is in this binary already
+# (slice_gate10.txt:1225, called twice by unmatched/Player_Behavior.cpp) -- so
+# this hosts the command and drags in nothing. A host copy only because the
+# matched TU declares its callee inside `namespace Sound`, whose MSVC mangling
+# has no alias in hal/cxx_aliases.cpp.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_KuppaCmd_020bd480.cpp")
+# And command 9, the knockback, for the same reason on the next run: the trap
+# fired, and Player::Hurt / Vec3_RotateYAndTranslate / Particle::System::
+# NewSimple are all already in this binary too. A host copy because the matched
+# TU reaches Hurt through a local shadow CLASS, which makes MSVC mangle it as a
+# thiscall member and ride `this` in ecx.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_KuppaCmd_020bd250.cpp")
 
 # THE SCENE BOOT: the star select, the one non-level scene the port can enter.
 # ov003 carries three scene classes -- dScTitle_c (id 2), dScStarSel_c (id 4)
