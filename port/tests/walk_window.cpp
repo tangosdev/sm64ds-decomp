@@ -6106,6 +6106,10 @@ int main(void)
     {
         const char *vsm = getenv("SM64DS_VS_MAP");
         if (vsm && vsm[0]) {
+            /* the mount registry fills on the level boot below; asking
+               is_mounted before it is filled refuses every map (measured on
+               the first proof run). The call is idempotent. */
+            port_level_mounts_install();
             const int mi = atoi(vsm) & 3;
             const int vlv = port_vs_map_level(mi);
             const char *vmode = getenv("SM64DS_VS_MODE");
