@@ -381,13 +381,18 @@
     "Kumo": {
       "ja": "雲",
       "gloss": "cloud",
-      "confidence": "medium",
-      "note": "Could also be spider; cloud fits daObjKumo_c's platform role."
+      "confidence": "high",
+      "note": "Could also be spider, but 'cloud' fits daObjKumo_c's platform role and is now doubly corroborated: ACTOR_DEBUG_NAMES index 314 is the literal ROM string OBJ_KUMO, and symbols/overlay_actors.md independently glosses the same index CLOUD(314). Bumped medium -> high."
     },
     "Ana": {
       "ja": "穴",
       "gloss": "hole",
       "confidence": "high"
+    },
+    "Mip": {
+      "gloss": "Mip -- a proper name, not a common noun. The community-facing translation is 'Rabbit', but the ROM's own RTTI (daMip_c, ov085) and ACTOR_DEBUG_NAMES index 187 (literal string MIP) agree on the Nintendo-internal name.",
+      "confidence": "high",
+      "note": "Corroborated three ways at index 187: ACTOR_DEBUG_NAMES string MIP, RTTI class daMip_c (ov085), and symbols/overlay_actors.md's RABBIT(187). The paired key item, daObj_Mip_Key_c (ov085), matches ACTOR_DEBUG_NAMES index 229 (OBJ_MIP_KEY) against overlay_actors.md's RABBIT_KEY(229) the same way."
     },
     "Bou": {
       "ja": "棒",
