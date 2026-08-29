@@ -3,11 +3,11 @@
   "codegen_hacks": {
     "cv_launder": 3,
     "cv_launder_sites": 6,
-    "extern_vtable": 165,
-    "extern_vtable_classes": 159,
+    "extern_vtable": 153,
+    "extern_vtable_classes": 157,
     "inline_asm": 13,
-    "launder_or_forced": 212,
-    "launder_sites": 442
+    "launder_or_forced": 211,
+    "launder_sites": 441
   },
   "exclusions": {
     "by_value_class_param": 54
@@ -16,12 +16,12 @@
     "by_kind": {
       "C1": {
         "draft": 0,
-        "migrated": 42,
+        "migrated": 51,
         "unmigrated": 4
       },
       "C2": {
         "draft": 1,
-        "migrated": 19,
+        "migrated": 21,
         "unmigrated": 1
       },
       "C3": {
@@ -31,42 +31,42 @@
       },
       "D0": {
         "draft": 0,
-        "migrated": 378,
+        "migrated": 389,
         "unmigrated": 0
       },
       "D1": {
         "draft": 0,
-        "migrated": 388,
+        "migrated": 405,
         "unmigrated": 0
       },
       "D2": {
         "draft": 0,
-        "migrated": 23,
+        "migrated": 25,
         "unmigrated": 0
       },
       "method": {
         "draft": 10,
-        "migrated": 2510,
-        "unmigrated": 102
+        "migrated": 2538,
+        "unmigrated": 98
       }
     },
-    "cpp_still_handspelled": 64,
-    "mangled_c": 45,
-    "mangled_cpp": 3427,
-    "mangled_total": 3472,
+    "cpp_still_handspelled": 63,
+    "mangled_c": 42,
+    "mangled_cpp": 3495,
+    "mangled_total": 3537,
     "nonmatching_drafts": 11,
-    "unmigrated_total": 109
+    "unmigrated_total": 105
   },
   "shadow_decls": {
-    "local_body_no_include": 1184,
-    "local_body_no_include_cpp": 499,
-    "local_struct_body": 2086,
-    "local_struct_body_cpp": 1154,
-    "pad_layout": 519
+    "local_body_no_include": 1153,
+    "local_body_no_include_cpp": 482,
+    "local_struct_body": 2054,
+    "local_struct_body_cpp": 1136,
+    "pad_layout": 514
   },
   "totals": {
-    "c_extension": 6478,
-    "cpp_extension": 4825,
+    "c_extension": 6423,
+    "cpp_extension": 4880,
     "src_files": 11303
   }
 }
