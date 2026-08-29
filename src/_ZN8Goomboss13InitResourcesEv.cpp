@@ -4,6 +4,7 @@
 #include "MaterialChanger.h"
 #include "TextureSequence.h"
 #include "types.h"
+#include "dBgCh_Gnd.h"
 struct SharedFilePtr;
 struct BMD_File;
 struct BCA_File;
@@ -35,10 +36,6 @@ extern "C" {
     void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void *self, void *f, int a, s32 fix, u32 c);
     void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         void *self, void *actor, s32 fa, s32 fb, void *v0, void *v1);
-    void _ZN9dBgCh_GndC1Ev(void *self);
-    void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *actor);
-    int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
-    void _ZN9dBgCh_GndD1Ev(void *self);
     void func_ov074_02121300(void *c);
     void func_ov074_0212195c(void *t);
 }
@@ -58,8 +55,6 @@ extern u16 data_ov074_02122e04[];
 extern u16 data_ov074_02122dfc[];
 extern s16 data_02082214[];
 
-struct RG { char pad[0x4c]; };
-
 int Goomboss::InitResources()
 {
     char *self = (char *)this;
@@ -69,8 +64,7 @@ int Goomboss::InitResources()
     char *c5;
     char *c8;
     void *p;
-    RG rg;
-    s32 v[3];
+    Vector3 pos;
 
     if (*(u32 *)(self + 8) == 0x1111) {
         return func_ov074_02122634(self);
@@ -167,15 +161,15 @@ int Goomboss::InitResources()
         a1 = *(s32 *)(self + 0x64);
         a0 = *(s32 *)(self + 0x5c);
         a3 = a2 + 0x64000;
-        v[0] = a0;
-        v[1] = a3;
-        v[2] = a1;
+        pos.x = a0;
+        pos.y = a3;
+        pos.z = a1;
     }
 
-    _ZN9dBgCh_GndC1Ev(&rg);
-    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, v, 0);
-    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0) {
-        *(s32 *)(self + 0x60) = *(s32 *)((char *)&rg + 0x44);
+    dBgCh_Gnd ground;
+    ground.SetObjAndPos(pos, 0);
+    if (ground.DetectClsn() != 0) {
+        *(s32 *)(self + 0x60) = ground.clsnY;
     }
 
     func_ov074_02121300(self);
@@ -184,8 +178,6 @@ int Goomboss::InitResources()
     *(s32 *)(self + 0x5dc) = 0;
     *(u8 *)(self + 0x60a) = 1;
     *(s32 *)(self + 0x5e4) = 0x1000;
-
-    _ZN9dBgCh_GndD1Ev(&rg);
 
     return 1;
 }

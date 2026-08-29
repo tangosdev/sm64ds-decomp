@@ -5,6 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "PowerFlower.h"
+#include "dBgCh_Gnd.h"
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
@@ -12,11 +13,7 @@ extern int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *act, Fix12i a, Fix12i b, unsigned int c2, unsigned int d);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *act, Fix12i a, Fix12i b, void *d, void *e);
 extern void _ZN10dBgCh_Actr19StartDetectingWaterEv(void *self);
-extern void _ZN9dBgCh_GndC1Ev(void *self);
-extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, const struct Vector3 *pos, void *act);
-extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
 extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
-extern void _ZN9dBgCh_GndD1Ev(void *self);
 }
 
 extern void *data_ov002_0210d9d0[];
@@ -25,7 +22,6 @@ extern void *data_ov002_0210d9b0[];
 int PowerFlower::InitResources()
 {
     struct Vector3 pos;
-    char ray[0x54];
     short *angp;
 
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9d0);
@@ -53,18 +49,17 @@ int PowerFlower::InitResources()
     pos.y = mPosY;
     pos.z = mPosZ;
     pos.y += 0x14000;
-    _ZN9dBgCh_GndC1Ev(ray);
-    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(ray, &pos, 0);
+    dBgCh_Gnd ground;
+    ground.SetObjAndPos(pos, 0);
     mGroundY = pos.y;
-    if (_ZN9dBgCh_Gnd10DetectClsnEv(ray))
-        mGroundY = *(int *)(ray + 0x44);
+    if (ground.DetectClsn())
+        mGroundY = ground.clsnY;
     mLifeTimer = 0xb4;
 
     if (param1 == 0xffff) {
         if (*(int *)((char *)_ZN8dActor_c13ClosestPlayerEv(((char *)this)) + 8) == 1 && _ZN8SaveData16HasPlayerLostCapEv() == 0) {
             func_ov002_020b9704(((char *)this), 2);
         } else {
-            _ZN9dBgCh_GndD1Ev(ray);
             return 0;
         }
     } else {
@@ -72,6 +67,5 @@ int PowerFlower::InitResources()
     }
     angp = (short *)(int)((char *)&mAngleY);
     *angp = *angp - 0x4000;
-    _ZN9dBgCh_GndD1Ev(ray);
     return 1;
 }

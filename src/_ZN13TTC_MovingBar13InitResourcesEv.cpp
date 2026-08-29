@@ -4,6 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "TTC_MovingBar.h"
+#include "dBgCh_Gnd.h"
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b);
@@ -18,20 +19,13 @@ extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Bloc
 }
 extern "C" {
 extern void func_020393d4(int *p, int v);
-extern void _ZN9dBgCh_GndC1Ev(void *self);
-extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *actor);
-extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
-extern void _ZN9dBgCh_GndD1Ev(void *self);
 }
 extern int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 
 
-struct Vec3 { int x, y, z; };
-
 int TTC_MovingBar::InitResources()
 {
-    struct Vec3 pos;
-    char raycast[0x50];
+    Vector3 pos;
     int i;
 
     if (actorID != 0x72) {
@@ -67,12 +61,11 @@ int TTC_MovingBar::InitResources()
     pos.z = mPosZ;
     pos.y = pos.y - 0xa000;
 
-    _ZN9dBgCh_GndC1Ev(raycast);
-    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(raycast, &pos, (void *)0);
+    dBgCh_Gnd ground;
+    ground.SetObjAndPos(pos, 0);
     mGroundY = pos.y;
-    if (_ZN9dBgCh_Gnd10DetectClsnEv(raycast))
-        mGroundY = *(int *)(raycast + 0x44);
-    _ZN9dBgCh_GndD1Ev(raycast);
+    if (ground.DetectClsn())
+        mGroundY = ground.clsnY;
 
     return 1;
 }

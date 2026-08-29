@@ -5,19 +5,13 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "StarMarker.h"
-struct Vec3 { s32 x, y, z; };
-struct dBgCh_Gnd { char pad[0x50]; };
+#include "dBgCh_Gnd.h"
 
 extern "C" {
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *actor, const void *v, int d, int e, u32 f, u32 g);
-extern void _ZN9dBgCh_GndC1Ev(void *self);
-extern void _ZN5dBgCh19StartDetectingWaterEv(void *self);
-extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, const void *v, void *actor);
-extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
 extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const void *v, const void *v16, int e, int f);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
-extern void _ZN9dBgCh_GndD1Ev(void *self);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern int IsStarCollectedInCurLevel(u8 x);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
@@ -31,11 +25,10 @@ extern s8 data_0209f2f8;
 
 int StarMarker::InitResources()
 {
-    struct Vec3 pos;
-    struct Vec3 v0;
-    struct Vec3 v4;
-    struct Vec3 v5;
-    struct dBgCh_Gnd rg;
+    Vector3 pos;
+    Vector3 v0;
+    Vector3 v4;
+    Vector3 v5;
     u32 raw;
     u8 kind;
     int r3;
@@ -47,8 +40,8 @@ int StarMarker::InitResources()
     v0.y = -0x50000;
     v0.z = 0;
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char *)this) + 0xd4, ((char *)this), &v0, 0x50000, 0xa0000, 0x100002, 0x8000);
-    _ZN9dBgCh_GndC1Ev(&rg);
-    _ZN5dBgCh19StartDetectingWaterEv(&rg);
+    dBgCh_Gnd ground;
+    ground.StartDetectingWater();
 
     {
         s32 pyb = mPosY;
@@ -59,9 +52,9 @@ int StarMarker::InitResources()
         pos.y = pyy;
         pos.z = pz;
     }
-    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, ((char *)this));
-    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0)
-        mGroundY = *(s32 *)((char *)&rg + (0x80 - 0x3c));
+    ground.SetObjAndPos(pos, this);
+    if (ground.DetectClsn() != 0)
+        mGroundY = ground.clsnY;
 
     r3 = 0;
     mStarID = (u8)(param1 & 0xf);
@@ -75,7 +68,6 @@ int StarMarker::InitResources()
             *p = (u16)(*p | 0x80);
         }
         _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x114, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0211093c), 1, 0x18);
-        _ZN9dBgCh_GndD1Ev(&rg);
         return 0;
     }
 
@@ -114,18 +106,15 @@ int StarMarker::InitResources()
     if (mState != 0) {
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9a8);
         if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x114, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0211092c), 1, 0x19) == 0) {
-            _ZN9dBgCh_GndD1Ev(&rg);
             return 0;
         }
     } else {
         if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x114, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0211093c), 1, 0x18) == 0) {
-            _ZN9dBgCh_GndD1Ev(&rg);
             return 0;
         }
     }
 
     if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0) {
-        _ZN9dBgCh_GndD1Ev(&rg);
         return 0;
     }
 
@@ -145,14 +134,11 @@ int StarMarker::InitResources()
         r3 = 1;
     if (r3 == 0 && SublevelToLevel((s8)data_0209f2f8) == 0x1d && IsStarCollectedInCurLevel(mStarID) != 0) {
         _ZN7fBase_c18MarkForDestructionEv(((char *)this));
-        _ZN9dBgCh_GndD1Ev(&rg);
         return 0;
     }
     if (_ZN8dActor_c18GetBitInDeathTableEv(((char *)this)) != 0) {
         _ZN7fBase_c18MarkForDestructionEv(((char *)this));
-        _ZN9dBgCh_GndD1Ev(&rg);
         return 0;
     }
-    _ZN9dBgCh_GndD1Ev(&rg);
     return 1;
 }
