@@ -1577,8 +1577,21 @@ L2_UNMATCHED(func_ov007_020cb7c0)
 /* 020b8fd4 surfaced only in the SECOND link, because its one caller spells it
    untagged as func_020b8fd4 (face (a) below) and the untagged name resolved
    before the tagged one was ever asked for. It was the nineteenth of the
-   original nineteen and it is the fifteenth of the fifteen. */
-L2_UNMATCHED(func_ov007_020b8fd4)
+   original nineteen and it is the fifteenth of the fifteen.
+
+   run push0829 lane TITLE-DOODLE: IT IS THE TITLE'S DOODLE CANVAS, and its trap
+   is retired. This is the paper/canvas renderer the title's render dispatcher
+   src/func_ov007_020bcf90.c calls in outer states 1..4 (the draw screen) right
+   before the seated stroke hub func_ov007_020b91b4. Trapped it returned 0, so
+   the canvas fields were never sized and the two paper billboards were never
+   positioned -- the drawing surface never came up and the strokes the seated hub
+   draws had no paper. Measured on this tree, scene 1 driven into the doodle
+   screen entered this trap 402 times over 1200 frames. port/unmatched/
+   Ov007_DoodleCanvas_020b8fd4.cpp now carries a host transcription (the
+   fanout-opus near-miss draft, every store and call target byte-identical to the
+   ROM, register coloring unmatched), added by the DOODLE_INTERIM guard in
+   port/CMakeLists.txt and retiring the day src/ gains a byte-matched body. A trap
+   here would now be an LNK2005 against that body. */
 #undef L2_UNMATCHED
 
 /* THE SEVENTEENTH ov007 FUNCTION WITHOUT A BODY HERE GETS NO TRAP, AND THE
@@ -4532,6 +4545,9 @@ extern "C" {
 int func_ov007_020aebac(void);
 int _ZN4cstd3modEii(int a, int b);
 int _ZN4cstd3divEii(int a, int b);
+/* run push0829 lane TITLE-DOODLE: the doodle actor census, defined in
+   hal/title_doodle_probe.cpp. Called from port_scene_tick below. */
+void port_title_doodle_probe(int frame, const char *when);
 }
 static void port_title_attract_probe(int frame, const char *when)
 {
@@ -5797,6 +5813,11 @@ extern "C" void port_scene_tick(int frame, int tick_game)
                this frame's tick left rather than what the previous one did.
                Two integer compares when the variable is unset. */
             port_title_attract_probe(frame, "tick");
+            /* run push0829 lane TITLE-DOODLE: the doodle actor census, so a run
+               can be told whether the draw actor spawned and whether its stroke
+               count moved. Default off; two integer compares when unset.
+               hal/title_doodle_probe.cpp. */
+            port_title_doodle_probe(frame, "tick");
             /* run mg15, lane TITLE3: keep the write-watch's frame tag current
                and arm it the first frame its target resolves. One pointer test
                when SM64DS_T3_WATCH is unset. */
