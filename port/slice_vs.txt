@@ -307,3 +307,84 @@ src/func_ov075_0211b3b8.c
 src/func_ov075_0211b3d8.cpp
 src/func_ov075_0211b418.cpp
 src/func_ov075_0211b458.cpp
+# ---- THE MEASURED GAP (the ov005 pattern): arm9 TUs the 138's external
+# closure needs and no other slice compiles. Enumerated from the first
+# link's own unresolved list, not guessed. func_01ffadf0 (__aeabi_uidiv,
+# ITCM asm) is NOT a line here: MSVC cannot assemble it and the seat
+# carries the host body, the cxx_aliases ITCM-block treatment.
+src/PrepareVsMode.c
+src/SetControllerMode.c
+src/_ZN11ShadowModel9RenderAllEv.cpp
+src/_ZN5Scene14GraphCallback0Ev.c
+src/_ZN7Message17DisplayVsExitTextEt.cpp
+src/func_0200f0bc.c
+src/func_0200f13c.cpp
+src/func_0200f220.c
+src/func_0200f2cc.c
+src/func_0201a1bc.c
+src/func_0201a244.c
+src/func_02020028.c
+src/func_02020078.c
+src/func_020200b8.c
+src/func_020200e0.c
+src/func_02020124.c
+src/func_02020168.c
+src/func_02020190.c
+src/func_020201c0.c
+src/func_020201f0.c
+src/func_0202029c.c
+src/func_020202dc.c
+src/func_02020304.c
+src/func_02020334.c
+src/func_02020364.c
+src/func_0202048c.cpp
+src/func_02020820.c
+src/func_0202deac.c
+src/func_0203083c.c
+src/func_020308b4.c
+src/func_02030958.c
+src/func_02030994.c
+src/func_02030a38.c
+src/func_02030a6c.c
+src/func_02030a78.c
+src/func_02030aa4.c
+src/func_020331fc.c
+src/func_02033390.cpp
+src/func_02033464.c
+src/func_020337ec.c
+src/func_020338b0.cpp
+src/func_02033ae0.c
+src/func_02033bb8.c
+src/func_02034414.cpp
+src/func_0202043c.c
+src/func_02030838.c
+src/func_02031028.c
+src/func_020316d8.c
+src/func_020319fc.c
+src/func_02031b84.c
+src/func_02033a80.c
+src/func_02033e50.c
+src/func_02034098.cpp
+src/func_020341a8.cpp
+src/func_02034504.c
+src/func_0202044c.c
+src/func_020318a4.c
+src/func_02031cd4.c
+src/func_02031e00.c
+# src/func_02058568.c is EXCLUDED: OS_InitContext, a HAND-ASM PRIMITIVE
+# (an `asm void` block MSVC cannot assemble). hal/scene_vs_menu.cpp carries
+# the host body -- the cxx_aliases ITCM/ARMSaveContext treatment.
+# ---- SUBTREES REFUSED, the scene-boot precedent (its LoadOverlay block):
+# the DS WIRELESS-STATUS wrappers (func_0203d7b8..func_0203da2c), the DS
+# THREAD SCHEDULER (func_02057f38..func_02058538, plus the asm OS_InitContext
+# above), the CARD OVERLAY LOADER tail (UnloadOverlay, func_02017fd0,
+# func_02018c00/cbc, func_0205dc0c/dc60/df40) and the WIRELESS MANAGER
+# (func_020618b8). Every one is matched src and every one was in this slice
+# for one build; taking them tunnels under the port's own comms stack
+# (hal/comms_*), thread pump (hal/os_thread.cpp) and static overlay mounts.
+# The seam entry points ov075 actually calls are FACED in
+# hal/scene_vs_menu.cpp, loud-once. TWENTY-NINE MATCHED TUs THIS SLICE COULD
+# HAVE COUNTED AND DID NOT.
+src/func_0203128c.c
+src/func_02031154.c
+src/func_020313d8.c

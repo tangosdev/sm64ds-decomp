@@ -178,3 +178,17 @@ RUNTIME PROOF
   row 51/54  51 (unnamed)             ent  0 ov059 not mounted
   row 52/54  <minigame menu -2>
   row 53/54  <back to file select -1>
+
+CORRECTION (VS wiring lane, run vs1)
+  The "29, 42, 43, 51 -- there is no course behind them" reading above is
+  WRONG for all four of those ids, and the evidence that corrects it is the
+  ROM's own VS map list: data_ov075_0211c6ec, four signed bytes
+  {0x33, 0x2b, 0x1d, 0x2a} = levels 51, 43, 29, 42, indexed by the lobby's
+  map pick and handed straight to LoadLevelNoReturn by func_ov075_02116c8c
+  (the matched VS start). They are the FOUR VS BATTLE MAPS. The name-handle
+  observation stands -- their handles sit past the course-name space BECAUSE
+  a VS map has no course name and no star select -- but the conclusion drawn
+  from it does not. All four now have port_level_table[] rows (ov059, ov051,
+  ov037, ov050) named "VS map 1..4" by list position; the derivation is
+  port/slice_vs.txt section 4. Level 41 (test_map_b, null asset handles)
+  keeps the old verdict.

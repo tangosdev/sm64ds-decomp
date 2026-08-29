@@ -3189,6 +3189,18 @@ void port_scene_fill_trampoline2(void);
 extern unsigned char data_ov005_020c2440[];
 void *port_mgm_spawn(void);
 void port_scene_fill_mgm(void);
+/* VS wiring lane: dScEntry_c, scene id 6 -- the VS / wireless entry menu
+   (ov075). The id is the spawn table's own: relocs.txt from:0x0209087c ->
+   0x0211c880, index (0x0209087c - 0x02090864)/4 = 6, and the loader's id-6
+   special case (src/func_0201a694.c) is what puts ov075 behind it. RTTI at
+   0x0211c8f8 names the class; a DIRECT Scene subclass, 18 slots, the
+   dScMiniGm_c shape. port/slice_vs.txt is the derivation;
+   hal/scene_vs_menu.cpp is the seat. reads_sublevel is 0: the menu WRITES
+   data_02092110 (its start path stages the VS map via LoadLevelNoReturn) and
+   no relocation in ov075 reads it. */
+extern unsigned char data_ov075_0211c880[];
+void *port_vs_spawn(void);
+void port_scene_fill_vs(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -3930,6 +3942,13 @@ static const PortSceneClass port_scene_classes[] = {
        and keeps the one rule the table has intact. */
     {5, "SCENE_MG_MENU", data_ov005_020c2440, port_mgm_spawn,
      port_scene_fill_mgm, 0},
+    /* APPENDED AFTER EVERY EXISTING ROW, the fill-order rule every appended
+       row above restates: the once-per-process gates (the mg constructors,
+       and this seat's own sinit gate) run inside fills, and appending keeps
+       every earlier fill reading the words it read before this row existed.
+       6 is scene id 6, the VS / wireless entry menu; see the extern block. */
+    {6, "SCENE_VS_MENU", data_ov075_0211c880, port_vs_spawn,
+     port_scene_fill_vs, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
@@ -3957,8 +3976,8 @@ extern "C" void port_scene_registry_install(void)
         k->fill();
         ++n;
     }
-    std::printf("[scene] %d scene classes registered (ov003, ov005, ov007, ov006)\n",
-                n);
+    std::printf("[scene] %d scene classes registered (ov003, ov005, ov006, "
+                "ov007, ov075)\n", n);
 }
 
 /* Does the scene the run is booting read data_02092110? Unknown ids answer 0,

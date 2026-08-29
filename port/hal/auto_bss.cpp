@@ -16,6 +16,56 @@ extern "C" {
    real host addresses in hal/message_gen_text.cpp -- a zeroed array here was a
    null call (eip=0) on every multi-page line carrying an embedded-text escape. */
 int VT1[8];
+/* VS wiring lane (ov075): the lobby's selection block (map pick at b2e4, an
+   allocation pointer and two neighbours) and two wireless-status bytes.
+   Generous [8] is the file's own convention; the ROM spans are 4 each. */
+int data_0209b2e4[8];
+int data_0209b2e8[8];
+int data_0209b2ec[8];
+int data_0209b2f0[8];
+int data_0209fc54[8];
+int data_0209fc58[8];
+int data_0209fc80[8];
+int data_0209fcf4[8];
+int data_0209fd18[8];
+int data_0209fc70[8];
+int data_0209fc90[8];
+int data_0209fc98[8];
+int data_0209fca4[8];
+int data_0209fca8[8];
+int data_0209fcbc[8];
+int data_0209fcc4[8];
+int data_0209fcd0[8];
+int data_0209fcd4[8];
+int data_0209fcf8[8];
+int data_0209fd00[8];
+int data_0209fd08[8];
+int data_0209fd0c[8];
+int data_0209fd10[8];
+int data_0209fd14[8];
+int data_0209fd20[8];
+int data_020a0f40[8];
+int data_020a0f70[8];
+int data_020a6148[8];
+int data_0209d3c4[8];
+int data_0209d4f8[8];
+int data_0209d518[8];
+int data_0209d5b8[8];
+int data_0209f278[8];
+int data_0209fc60[8];
+int data_0209fc78[8];
+int data_0209fc7c[8];
+int data_0209fc84[8];
+int data_0209fc88[8];
+int data_0209fc94[8];
+int data_0209fca0[8];
+int data_0209fcb0[8];
+int data_0209fccc[8];
+int data_0209fcd8[8];
+int data_0209fcdc[8];
+int data_0209fce8[8];
+int data_0209fd1c[8];
+int data_0209fd5c[8];
 int data_0209b454[8];
 int data_0209b490[8];
 int data_0209b494[8];
