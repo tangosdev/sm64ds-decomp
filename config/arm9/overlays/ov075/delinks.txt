@@ -188,7 +188,7 @@ src/_ZN10dScEntry_c6icon_cD1Ev.cpp:
     complete
     .text start:0x02115bac end:0x02115bc8
 
-src/func_ov075_02115bc8.c:
+src/_ZN12OamAnimationD1Ev.cpp:
     complete
     .text start:0x02115bc8 end:0x02115bcc
 
@@ -479,7 +479,7 @@ src/func_ov075_0211a740.cpp:
     complete
     .text start:0x0211a740 end:0x0211a834
 
-src/func_ov075_0211a834.c:
+src/_ZN12OamAnimationC1Ev.cpp:
     complete
     .text start:0x0211a834 end:0x0211a838
 

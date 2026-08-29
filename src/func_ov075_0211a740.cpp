@@ -14,8 +14,8 @@ extern char _ZTV10dScEntry_c[];
 extern struct P2 data_02086b58;
 extern void _ZN10dScEntry_c6icon_cD1Ev(void);
 extern void _ZN10dScEntry_c6icon_cC1Ev(void);
-extern void func_ov075_02115bc8(void);
-extern void func_ov075_0211a834(void);
+extern void _ZN12OamAnimationD1Ev(void);
+extern void _ZN12OamAnimationC1Ev(void);
 
 void* func_ov075_0211a740(void)
 {
@@ -42,9 +42,10 @@ void* func_ov075_0211a740(void)
         func_020733a8(p + 0x70, 9, sizeof(dScEntry_c::icon_c),
                       (void *)_ZN10dScEntry_c6icon_cC1Ev,
                       (void *)_ZN10dScEntry_c6icon_cD1Ev);
-        func_020733a8(p + 0x1b4, 4, sizeof(((dScEntry_c *)p)->mUnkArray[0]),
-                      (void *)func_ov075_0211a834,
-                      (void *)func_ov075_02115bc8);
+        func_020733a8(p + 0x1b4, 4,
+                      sizeof(((dScEntry_c *)p)->mOamAnimations[0]),
+                      (void *)_ZN12OamAnimationC1Ev,
+                      (void *)_ZN12OamAnimationD1Ev);
     }
     return p;
 }
