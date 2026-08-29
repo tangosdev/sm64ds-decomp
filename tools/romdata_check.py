@@ -180,8 +180,18 @@ def verify_data_symbol(raw, name, shndx, value, size, names=None):
     if len(body) <= preamble:
         return {"symbol": name, "verdict": PARTIAL, "bytes": 0, "module": module,
                 "addr": addr, "note": "nothing past the vtable preamble"}
-    linked, blind = LC.link_function(body, addr - preamble,
-                                     LC.func_relocs_typed(raw, name, names) or [])
+    relocs = LC.func_relocs_typed(raw, name, names) or []
+    # func_relocs_typed reads the raw ELF addend, which for a `_ZTV<C>` target still
+    # carries mwcc's own preamble skip (offset-to-top + typeinfo, OI.VTABLE_PREAMBLE
+    # bytes) on top of an address already resolved to symbols.txt's post-preamble
+    # convention -- the same double-count reloc_audit.object_reloc_dests already
+    # corrects for "raw" objects. Uncorrected here, any vptr field embedded in a DATA
+    # record (as opposed to a vptr STORE inside compiled code, which objisolate
+    # rewrites before the code ever reaches this comparison) resolves 8 bytes high.
+    for rl in relocs:
+        if rl["sym"].startswith("_ZTV") and rl["add"] >= OI.VTABLE_PREAMBLE:
+            rl["add"] -= OI.VTABLE_PREAMBLE
+    linked, blind = LC.link_function(body, addr - preamble, relocs)
     linked = linked[preamble:]
     blind = {o - preamble for o in blind if o >= preamble}
 
