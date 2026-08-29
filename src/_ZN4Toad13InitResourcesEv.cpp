@@ -18,10 +18,8 @@
  *
  * Finally he is dropped onto the ground: a dBgCh_Gnd is aimed 0x14000
  * above his spawn point and, if it hits, mPosY is snapped to the surface. That
- * `(char *)&ray + 0x44` in the placeholder body is dBgCh_Gnd::clsnY, so it
- * is a member read now; `ray` itself stays a dumb u32 array because the ROM
- * constructs it mid-function and a typed local of the real class would
- * construct at its declaration (notes/ctor-migration.md).
+ * The local dBgCh_Gnd is declared at that exact mid-function construction
+ * point, so the compiler emits both its constructor and destructor naturally.
  *
  * `#pragma opt_propagation off` IS LOAD-BEARING and stays. Without it mwcc
  * propagates the reloaded mMessageID through the 0xffff test and the function
@@ -46,17 +44,10 @@ extern void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3 *pos, const void *rot, int e, int f);
 extern u8 NumStars(void);
 extern int IsStarCollectedInCurLevel(int s);
-extern void _ZN9dBgCh_GndC1Ev(void *thiz);
-extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *thiz);
-extern void _ZN9dBgCh_GndD1Ev(void *thiz);
 }
 
 int Toad::InitResources()
 {
-    /* Dumb word storage, not a typed local: a dBgCh_Gnd local now
-       synthesizes its constructor at the declaration, but the ROM constructs
-       it after the animation setup -- so keep raw words and hand-call below. */
-    u32 ray[sizeof(dBgCh_Gnd) / sizeof(u32)];
     Vector3 objPos;
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov085_02130488);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov085_02130490);
@@ -116,10 +107,11 @@ int Toad::InitResources()
     objPos.y = mPosY;
     objPos.z = mPosZ;
     objPos.y = objPos.y + 0x14000;
-    _ZN9dBgCh_GndC1Ev((dBgCh_Gnd *)ray);
-    ((dBgCh_Gnd &)ray).SetObjAndPos(objPos, 0);
-    if (_ZN9dBgCh_Gnd10DetectClsnEv((dBgCh_Gnd *)ray))
-        mPosY = ((dBgCh_Gnd *)ray)->clsnY;
-    _ZN9dBgCh_GndD1Ev((dBgCh_Gnd *)ray);
+    {
+        dBgCh_Gnd ground;
+        ground.SetObjAndPos(objPos, 0);
+        if (ground.DetectClsn())
+            mPosY = ground.clsnY;
+    }
     return 1;
 }

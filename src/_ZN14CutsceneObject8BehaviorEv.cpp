@@ -5,6 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "CutsceneObject.h"
+#include "dBgCh_Gnd.h"
 typedef struct 
 {
   s32 x;
@@ -15,17 +16,9 @@ typedef struct
 {
   s32 w[12];
 } Mtx43;
-typedef struct 
-{
-  char pad[0x50];
-} dBgCh_Gnd;
 extern "C" {
 extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *c, void *cyl);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *cyl);
-extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *rc);
-extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd *rc, const Vec3 *v, void *actor);
-extern s32 _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *rc);
-extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *rc);
 extern void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);
 extern void Matrix4x3_FromTranslation(Mtx43 *m, s32 x, s32 y, s32 z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z);
@@ -36,9 +29,7 @@ extern Mtx43 data_020a0e68;
 int CutsceneObject::Behavior()
 {
   char *c = (char *) ((void *)this);
-  s32 *new_var;
-  dBgCh_Gnd rc;
-  Vec3 v;
+  Vector3 v;
   Vec3 asr;
   int new_var2;
   s32 t;
@@ -72,18 +63,17 @@ int CutsceneObject::Behavior()
         v.y = new_var2;
         v.z = zz;
       }
-      _ZN9dBgCh_GndC1Ev(&rc);
-      _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rc, &v, 0);
-      if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc) != 0)
+      dBgCh_Gnd ground;
+      ground.SetObjAndPos(v, 0);
+      if (ground.DetectClsn() != 0)
       {
-        s32 h = *(new_var = (s32 *) (((char *) (&rc)) + 0x44));
+        s32 h = ground.clsnY;
         if ((*((s32 *) (c + 0x60))) < h)
         {
           *((s32 *) (c + 0x60)) = h;
           *((u8 *) ((((int) c) + 0x103))) |= 1;
         }
       }
-      _ZN9dBgCh_GndD1Ev(&rc);
     }
   }
   Vec3_Asr(&asr, (Vec3 *) (c + 0x5c), 3);
