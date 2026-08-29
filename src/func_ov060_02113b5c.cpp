@@ -3,13 +3,9 @@
 // @symbol func_ov060_02113b5c
 /* recovered: shared common types */
 #include "common.h"
-struct dBgCh_Gnd { char buf[0x50]; };
+#include "dBgCh_Gnd.h"
 
 extern "C" {
-    void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd* self);
-    void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* self, const Vector3* p, void* a);
-    int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* self);
-    void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);
     void func_ov060_02111cc0(char* c, int a, int b);
     void _Z14ApproachLinearRiii(int* v, int a, int b);
     void func_ov060_02115a84(char* c, char* arg);
@@ -27,9 +23,8 @@ extern "C" void func_ov060_02113b5c(char* c)
 
     int r4 = *(s32*)(c + 0x60);
     if (*(s32*)(c + 0x60) > *(s32*)(c + 0x3b4)) {
-        dBgCh_Gnd rg;
         Vector3 v;
-        _ZN9dBgCh_GndC1Ev(&rg);
+        dBgCh_Gnd rg;
         int base = *(s32*)(c + 0x3b4);
         int zz = *(s32*)(c + 0x64);
         int xx = *(s32*)(c + 0x5c);
@@ -37,12 +32,11 @@ extern "C" void func_ov060_02113b5c(char* c)
         v.x = xx;
         v.y = yy;
         v.z = zz;
-        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, c);
-        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0) {
-            int hy = *(s32*)(rg.buf + 0x44);
+        rg.SetObjAndPos(v, (dActor_c*)c);
+        if (rg.DetectClsn() != 0) {
+            int hy = rg.clsnY;
             if (hy >= *(s32*)(c + 0x3b4) - 0x64000) r4 = hy;
         }
-        _ZN9dBgCh_GndD1Ev(&rg);
     }
 
     if (*(u8*)(c + 0x423) == 0) {

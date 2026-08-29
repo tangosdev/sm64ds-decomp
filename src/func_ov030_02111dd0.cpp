@@ -1,37 +1,33 @@
 //cpp
+#include "dBgCh_Gnd.h"
+
 extern "C" {
 extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* thiz);
-extern void _ZN9dBgCh_GndC1Ev(void* self);
-extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void* self, void* pos, void* act);
 extern int func_02038ea4(void* thiz);
-extern void _ZN9dBgCh_GndD1Ev(void* self);
 
 int func_ov030_02111dd0(char* c)
 {
     if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x194) != 0) {
-        char rg[0x54];
-        int v[3];
+        dBgCh_Gnd rg;
+        Vector3 v;
         int y, z, x, s;
-        _ZN9dBgCh_GndC1Ev(rg);
         y = *(int*)(c + 0x60);
         z = *(int*)(c + 0x64);
         x = *(int*)(c + 0x5c);
         s = y + 0x1e000;
-        v[0] = x;
-        v[1] = s;
-        v[2] = z;
-        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, v, c);
-        if (func_02038ea4(rg) == 0 || *(int*)(c + 0x60) - *(int*)(rg + 0x44) > 0x2000) {
+        v.x = x;
+        v.y = s;
+        v.z = z;
+        rg.SetObjAndPos(v, (dActor_c*)c);
+        if (func_02038ea4(&rg) == 0 || *(int*)(c + 0x60) - rg.clsnY > 0x2000) {
             *(int*)(c + 0x5c) = *(int*)(c + 0x38c);
             *(int*)(c + 0x60) = *(int*)(c + 0x390);
             *(int*)(c + 0x64) = *(int*)(c + 0x394);
-            _ZN9dBgCh_GndD1Ev(rg);
             return 1;
         }
         *(int*)(c + 0x38c) = *(int*)(c + 0x5c);
         *(int*)(c + 0x390) = *(int*)(c + 0x60);
         *(int*)(c + 0x394) = *(int*)(c + 0x64);
-        _ZN9dBgCh_GndD1Ev(rg);
     }
     return 0;
 }
