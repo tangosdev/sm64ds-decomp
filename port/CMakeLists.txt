@@ -2956,6 +2956,12 @@ list(APPEND SLICEINTRO_SOURCES
 # reaches it. Removed from romdata.py's list in the same change.
 list(APPEND SLICEINTRO_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/hal/intro_dcc_blob.cpp")
+# The ov002 mount's POINTER WORDS, seated with host addresses. The mount
+# byte-copies, so the pointer arrays this lane added to port/ov002_syms.txt
+# carried DS addresses -- one of them handed SharedFilePtr::Load 0x02130744.
+# Generated and individually checked against relocs.txt; see the file header.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/intro_ov002_seat.cpp")
 
 # THE SCENE BOOT: the star select, the one non-level scene the port can enter.
 # ov003 carries three scene classes -- dScTitle_c (id 2), dScStarSel_c (id 4)

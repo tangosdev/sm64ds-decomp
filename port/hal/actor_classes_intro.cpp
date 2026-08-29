@@ -306,6 +306,7 @@ void hal_fill_model_vtable(void);
 void hal_fill_modelanim2_vtable(void);  /* fills _ZTV9ModelAnim too */
 void func_ov002_020f6778(void);           /* the ModelAnim class's own D0 */
 extern unsigned data_ov002_0210bcc4[];
+void port_intro_seat_ov002_ptrs(void);    /* hal/intro_ov002_seat.cpp */
 }
 
 static const struct { unsigned rom; const char *what; } g_co_vt2[7] = {
@@ -380,6 +381,10 @@ static void co_seat_model_vtable(void)
 extern "C" void hal_fill_cutscene_object_vtable(void)
 {
     co_seat_model_vtable();
+    /* and the mount's POINTER WORDS, before anything can dereference one.
+       hal/intro_ov002_seat.cpp -- the arrays this lane added to
+       port/ov002_syms.txt are byte-copied, so they carry DS addresses. */
+    port_intro_seat_ov002_ptrs();
     void **vt = _ZTV14CutsceneObject;
     vt[1] = (void *)co_binit;
     vt[2] = (void *)co_ainit;
