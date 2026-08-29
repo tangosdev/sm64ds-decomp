@@ -7,7 +7,7 @@
    6 (Behavior), 9 (Render), 16 (D1), 17 (D0), 18 (OnYoshiTryEat -- this one
    IS genuinely named; the tree-wide OnYoshiTryEat mislabel on this class
    landed on slot 17/D0 instead, see its own source comment). Fields below
-   dScMgBase_c's own 0x465d are INHERITED, not this class's own -- accessed
+   dScMgBase_c's own 0x4660 are INHERITED, not this class's own -- accessed
    via raw offsets on a char* cast of `this` (0xac is inside dScMgBase_c's
    own pad_0ac, not a named field, so it stays raw even though 0xa4/0xa8 are
    named and used directly). */
@@ -18,7 +18,7 @@ struct dScMgCoin_c : dScMgBase_c {
     virtual s32 Render();          /* slot 9 */
     virtual s32 OnYoshiTryEat();   /* slot 18 */
 
-    u8  pad_465d[0xb6b];
+    u8  pad_4660[0xb68];
     s32 unk_51c8;            /* 0x51c8 */
     u8  pad_51cc[0x8];
     s32 unk_51d4;            /* 0x51d4 */

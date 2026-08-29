@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "dBgW.h"
+#include "CLPS_BlockRef.h"
 
 /* The static-mesh collider, vtable _ZTV7dBgW_Kc at 0x020993dc.
  * Thirteen slots: it overrides Virtual08 and supplies the six collision
@@ -14,8 +15,9 @@
  * i.e. GetSurfaceInfo(s16, SurfaceInfo &). Slots 9..12 stay on the base
  * implementations.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- see
- * include/ModelBase.h. The structors stay C files.
+ * The CLPS_BlockRef member owns its one-word lifetime. Its compiler-generated
+ * construction and destruction are the calls visible in all five dBgW_Kc
+ * structor variants; the exact original wrapper spelling is not known.
  *
  * LAYOUT: the base ends at 0x20; SetFile re-runs the shared init
  * func_02039624 and then fills everything from 0x20 up, which is where
@@ -24,7 +26,6 @@
 
 #ifdef __cplusplus
 
-struct CLPS_Block;
 struct SharedFilePtr;
 
 /* Only what the matched code reads is typed. Triangle records are 0x10
@@ -74,7 +75,7 @@ extern "C" void _ZN6Memory16operator_delete2EPv(void *);
 
 struct dBgW_Kc : dBgW {
     KCL_File *kclFile;        /* 0x20 */
-    u32 clps;                 /* 0x24 - set via func_0203821c, released via func_02038224 */
+    CLPS_BlockRef clps;       /* 0x24 - compiler-owned value lifetime */
     /* 0x28..0x30 are ONE Vector3, not three scalars: DetectClsn(dBgCh_SphCrr&)
        hands `this + 0x28` straight to DotVec3 as a vector (0x01ffc278,
        `add r1, sl, #0x28`) and compares the result against a contact angle. It
@@ -117,7 +118,7 @@ struct dBgW_Kc : dBgW {
     virtual int DetectClsn(dBgCh_SphCrr &sphere);           /* slot 8 - ITCM */
 
     /* DECLARED, never defined as a method here -- src/_ZN7dBgW_KcC1Ev.cpp
-       owns C1 and src/_ZN7dBgW_KcC2Ev.c the base-subobject variant
+       owns C1 and src/_ZN7dBgW_KcC2Ev.cpp the base-subobject variant
        (notes/ctor-migration.md section 2). */
     dBgW_Kc();
 

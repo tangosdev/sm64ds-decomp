@@ -11,7 +11,7 @@
 dScMg3DEsp_c::~dScMg3DEsp_c()
 {
     _ZN18TextureTransformerD1Ev(mTextureTransformer);
-    func_ov006_020e80d8((char *)this + 0x4fd8);
+    _ZN15dMg3DEspModel_cD1Ev((char *)this + 0x4fd8);
     _ZN5ModelD1Ev(mModel2);
     _ZN5ModelD1Ev(mModel1);
 }

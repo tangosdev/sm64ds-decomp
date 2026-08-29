@@ -27,9 +27,9 @@
  * The destructor body performs the intrusive-list unlink described below,
  * and the class-local operator delete makes D0 use the cartridge's allocator.
  *
- * func_02014fa4 IS NOT A BASE DESTRUCTOR, whatever the old comments in the
- * D1/D2 files said. There is no base. It is the intrusive-list unlink that
- * D0/D1/D2 all tail into, and its body says so:
+ * Unlink (0x02014fa4) IS NOT A BASE DESTRUCTOR, whatever the old comments in
+ * the D1/D2 files said. There is no base. It is the intrusive-list unlink
+ * that D0/D1/D2 all call, and its body says so:
  *
  *   ldr r2,[r0,#0x28] / strne r1,[r2,#0x2c]   prev->next = next
  *   ldr r2,[r0,#0x2c] / strne r1,[r2,#0x28]   next->prev = prev
@@ -79,6 +79,9 @@ struct dCc_c {
     /* --- non-virtual --- */
     void Init(Fix12i radius, Fix12i height, u32 flags, u32 vulnFlags);
     void Clear();
+    /* Removes this node from the global collision list. The role is proven
+       by the prev/next rewiring; the original member spelling is not. */
+    void Unlink();
     void Update();
     static void Process();
 

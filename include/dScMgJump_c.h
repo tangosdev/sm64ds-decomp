@@ -17,9 +17,9 @@
  *
  * mModel IS A TYPED Model, and here that works. The factory constructs it
  * (`_ZN5ModelC1Ev(p + 0x501c)`), the destructor destroys it, and
- * sizeof(Model) == 0x50 closes exactly on mArray1 at 0x506c. Because mModel
+ * sizeof(Model) == 0x50 closes exactly on mPlayers at 0x506c. Because mModel
  * is declared BEFORE the two arrays, reverse-declaration order destroys
- * mArray2, mArray1, then mModel -- exactly the ROM's order, so the compiler
+ * mArray2, mPlayers, then mModel -- exactly the ROM's order, so the compiler
  * emits the Model call and the body does not. Contrast
  * include/dScMgJump2_c.h, whose ROM destructor destroys its Model FIRST and
  * therefore cannot use a typed member at all. Same class, same member, two
@@ -35,11 +35,11 @@
 #ifndef DSCMGJUMP_C_H
 #define DSCMGJUMP_C_H
 #include "dScMgD3DBase_c.h"
+#include "dMgJump3DMario_c.h"
 #include "Model.h"
 
 extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
 extern "C" void func_ov006_020c6f3c(void);
-extern "C" void func_ov006_020c893c(void);
 
 struct dScMgJump_c : dScMgD3DBase_c {
     virtual ~dScMgJump_c();
@@ -63,7 +63,7 @@ struct dScMgJump_c : dScMgD3DBase_c {
     s16   unk_5014;        /* 0x5014 */
     u8    pad_5016[0x6];   /* 0x5016 */
     Model mModel;          /* 0x501c -- 0x50, destroyed last, see banner */
-    u8    mArray1[0x228];  /* 0x506c -- 3 * 0xb8, elem dtor func_ov006_020c893c */
+    dMgJump3DMario_c mPlayers[3]; /* 0x506c -- RTTI-proven element type */
     u8    mArray2[0x5a0];  /* 0x5294 -- 6 * 0xf0, elem dtor func_ov006_020c6f3c */
 };
 

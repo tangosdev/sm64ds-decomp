@@ -23,6 +23,11 @@ extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
 extern "C" void *data_020a0eac;
 
 struct dScene_c : dBase_c {
+    /* No separate dScene_c constructor exists in the ROM. This body is
+       inlined into scene subclasses between dScene_c's vptr store and the
+       subclass vptr store. */
+    dScene_c();
+
     /* Declared first (key function) and DEFINED INLINE, both deliberately.
        MEASURED: every subclass destructor inlines this one, so a merely
        declared `virtual ~dScene_c();' emits `bl _ZN8dScene_cD2Ev' where the
@@ -64,6 +69,12 @@ struct dScene_c : dBase_c {
     static void ResetHardwareRegisters();
 
 };
+
+inline dScene_c::dScene_c()
+{
+    pauseFlags |= 1;
+    pauseFlags |= 4;
+}
 
 /* Holds fBase_c, dBase_c and dScene_c to the layout the paragraph above
    claims. A silently-added member anywhere in the chain fails this. */

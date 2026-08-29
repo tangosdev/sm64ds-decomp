@@ -14,7 +14,6 @@
 extern "C" {
 int func_ov004_020b8ee0(char *p);
 void func_ov004_020aeb24(char *c);
-void func_ov004_020b8778(char *c);
 void func_ov004_020b321c(char *c);
 void func_ov004_020adf2c(char *c);
 void _Z14ApproachLinearRiii(int *p, int a, int b);
@@ -84,7 +83,7 @@ int dScMgBase_c::BeforeBehavior()
     if (*(int *)(self + 0xf0) == 0) {
         int i;
         char *g;
-        func_ov004_020b8778(self + 0xcc);
+        mStateController.Behavior();
         g = data_ov004_020bf648;
         for (i = 0; i < 3; i++) {
             if (*(int *)(g + 0x20) != 0x1d)

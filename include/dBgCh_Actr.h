@@ -14,7 +14,7 @@ struct dActor_c;
  * VTABLE, 2 slots, read out of the ROM:
  *
  *   slot 0  0x020373f8  ~dBgCh_Actr (D1)
- *   slot 1  0x020373b8  ~dBgCh_Actr (D0)  - currently func_020373b8
+ *   slot 1  0x020373b8  ~dBgCh_Actr (D0)
  *
  * Exactly two: the word after slot 1 is the "5dBgPi" RTTI name string, not a
  * third slot. C1, D1 and the D0 all store the same literal, 0x02099204, into
@@ -31,8 +31,9 @@ struct dActor_c;
  * typeinfo 0x020991e0 at 0x02099200, its own vtable header -- which is why
  * no separate D2 was ever emitted.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the
- * key-function arrangement from include/ModelBase.h.
+ * D1 and D0 are both enrolled from real empty-body C++ definitions. mwcc owns
+ * the reverse member order, the dBgCh base step, and the deleting variant's
+ * collision-heap deallocation.
  *
  * THE TWO MEMBERS ARE TYPED SUB-OBJECTS (2026-08-24; they were flat blobs for
  * a long time because a dozen already-matched bodies reached into their
@@ -97,9 +98,8 @@ struct dBgCh_Actr : dBgCh {
     Fix12i mScale;              /* 0x1b8 - (?) Init sets 0x1000 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    /* DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the key-function
-       arrangement from include/ModelBase.h; nothing derives from this class,
-       and D1/D0/C1 keep their own translation units. */
+    /* Defined out of line in the dedicated D1/D0 sources. Nothing derives
+       from this class, and each source enrolls one compiler-emitted variant. */
     virtual ~dBgCh_Actr();    /* slots 0 (D1), 1 (D0) */
 
     /* DECLARED, never defined as a method here -- src/_ZN10dBgCh_ActrC1Ev.cpp

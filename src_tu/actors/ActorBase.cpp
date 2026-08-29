@@ -170,7 +170,8 @@ extern void  _ZN4Heap11ResizeToFitEv(void *h);
  *
  * fBase_c is the root: there is no base destructor to chain to. Each variant
  * stores the vptr, then destroys the two ProcessingListNode members in REVERSE
- * declaration order (renderNode at 0x38 before behavNode at 0x28), and returns
+ * declaration order (manager.renderNode at 0x38 before
+ * manager.behaviorNode at 0x28), and returns
  * `this`. D0 additionally hands the object back to the actor heap, which is
  * what an inline `operator delete` compiles to -- see include/fBase_c.h.
  * D1 and D2 are byte-identical, which for a root class they must be.
@@ -178,16 +179,16 @@ extern void  _ZN4Heap11ResizeToFitEv(void *h);
 extern "C" fBase_c *_ZN7fBase_cD1Ev(fBase_c *self)
 {
     *(int *)self = (int)_ZTV7fBase_c;
-    func_020440e8(&self->renderNode);
-    func_020440e8(&self->behavNode);
+    func_020440e8(&self->manager.renderNode);
+    func_020440e8(&self->manager.behaviorNode);
     return self;
 }
 
 extern "C" fBase_c *_ZN7fBase_cD0Ev(fBase_c *self)
 {
     *(int *)self = (int)_ZTV7fBase_c;
-    func_020440e8(&self->renderNode);
-    func_020440e8(&self->behavNode);
+    func_020440e8(&self->manager.renderNode);
+    func_020440e8(&self->manager.behaviorNode);
     _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac);
     return self;
 }
@@ -195,8 +196,8 @@ extern "C" fBase_c *_ZN7fBase_cD0Ev(fBase_c *self)
 extern "C" fBase_c *_ZN7fBase_cD2Ev(fBase_c *self)
 {
     *(int *)self = (int)_ZTV7fBase_c;
-    func_020440e8(&self->renderNode);
-    func_020440e8(&self->behavNode);
+    func_020440e8(&self->manager.renderNode);
+    func_020440e8(&self->manager.behaviorNode);
     return self;
 }
 
@@ -303,16 +304,16 @@ s32 fBase_c::CleanupResources()
 /* ------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- fBase_c::BeforeCleanupResources, 0x02043bac, 0x44     */
 /* ------------------------------------------------------------------------- */
-/* vtable slot 4. Refuses cleanup while unk_048 is still busy, or once the
+/* vtable slot 4. Refuses cleanup while lifecycleState is still busy, or once the
  * scene node has been unlinked. */
 int fBase_c::BeforeCleanupResources()
 {
-    int v = (int)unk_048;
+    int v = (int)lifecycleState;
     if (v != 0) {
         if (func_0204424c(v) == 0)
             goto ret0;
     }
-    if (sceneNode.unk_004 == 0)
+    if (manager.sceneNode.child == 0)
         goto ret1;
 ret0:
     return 0;
@@ -325,7 +326,7 @@ ret1:
 /* ------------------------------------------------------------------------- */
 /* vtable slot 5, and the one member that destroys the object. Only runs on
  * VS_SUCCESS (2): unlink the scene node and the behaviour node, tear down the
- * actor's own heap and unk_048, then run the destructor and free.
+ * actor's own heap and lifecycle state, then run the destructor and free.
  *
  * THE DESTRUCTOR CALL IS A VIRTUAL DISPATCH THROUGH vtable+0x40, AND THAT IS
  * SLOT 16 -- the D1 complete-object destructor, NOT OnPendingDestroy, which is
@@ -350,12 +351,12 @@ void fBase_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess != 2)
         return;
-    func_0203b3c0(data_020a4b6c, &sceneNode);
-    func_0203b27c(data_020a4ba8, &behavNode);
+    func_0203b3c0(data_020a4b6c, &manager.sceneNode);
+    func_0203b27c(data_020a4ba8, &manager.behaviorNode);
     if (heap)
         _ZN4Heap8_DestroyEv(heap);
-    if (unk_048)
-        func_02044334(unk_048);
+    if (lifecycleState)
+        func_02044334(lifecycleState);
     this->~fBase_c();   /* vtable+0x40 = slot 16 = D1 */
     _ZN6Memory10DeallocateEPvP4Heap(this, data_020a0eac);
 }
@@ -462,9 +463,9 @@ void fBase_c::OnPendingDestroy()
  * so the next pass can try the real members one at a time and measure:
  *     0x0e state  = aliveState        0x12 pad12 = unk_012
  *     0x0f dirty  = shouldBeKilled    0x13 flags = pauseFlags
- *     0x10 f10    = unk_010           0x18 list  = sceneNode.unk_004, i.e. the
- *     0x11 f11    = unk_011                 scene node's first child
- * and `LNode` is ActorBase_SceneNode seen through its 0x0c nextSibling and 0x10
+ *     0x10 f10    = unk_010           0x18 list  = manager.sceneNode.child
+ *     0x11 f11    = unk_011
+ * and `LNode` is SceneNode seen through its 0x0c next pointer and 0x10
  * owner fields -- so the loop below walks this actor's scene-graph children and
  * marks each one for destruction. */
 struct ActorBase_PListNode {
@@ -623,8 +624,8 @@ void fBase_c::MarkForDestruction()
 /* ------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_02043810, 0x02043810, size 0x14                    */
 /* ------------------------------------------------------------------------- */
-/* The parent-actor accessor: follow sceneNode.unk_004 (0x14 + 0x04 -- the
- * legacy file read it as p[0x14/4], i.e. the first word of sceneNode) and
+/* The parent-actor accessor: follow manager.sceneNode.parent (0x14 -- the
+ * legacy file read it as p[0x14/4], i.e. the first word of the manager) and
  * return the owner back-pointer the constructor writes at its +0x10. Reads as
  * fBase_c but is unnamed in config, and func_02043880 above is its only
  * caller in this run. */

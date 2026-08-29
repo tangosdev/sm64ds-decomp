@@ -13,7 +13,7 @@ extern int _ZN6Player12Unk_020c9e5cEh(struct dActor_c* self, u8 a);
 extern struct dActor_c* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 id, u32 param, const struct Vector3* pos,
     const struct Vector3_16* rot, int a, int b);
-extern void func_ov001_020ab110(char* p);
+extern void _ZN10dCapIcon_c6UnlinkEv(char* p);
 extern void func_ov001_020ab228(char* p, char* self, int a, int b, int c);
 
 int func_ov065_021180d4(char* self)
@@ -60,7 +60,7 @@ int func_ov065_021180d4(char* self)
                 (struct Vector3_16*)(self + 0x8c),
                 *(s8*)(self + 0xcc), -1) != 0)
         {
-            func_ov001_020ab110(self + 0xd4);
+            _ZN10dCapIcon_c6UnlinkEv(self + 0xd4);
             func_ov001_020ab228(self + 0xd4, self, 2, 0, 0);
             *(u16*)(*(char**)(self + 0x174) + 0xe6) = 0x1e;
         }

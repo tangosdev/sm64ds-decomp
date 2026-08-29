@@ -3,7 +3,7 @@ extern void func_ov001_020aa6b0(int* r0, int r1);
 extern void* _ZN8dActor_c10FindWithIDEj(unsigned id);
 extern int func_0202a8e0(int a, unsigned char b);
 extern void func_ov001_020aa6e4(int idx, unsigned r1, int* obj);
-extern void func_ov001_020ab110(int* r0);
+extern void _ZN10dCapIcon_c6UnlinkEv(int* r0);
 
 extern char* data_0209f394;
 extern int data_0209f3e8[];
@@ -54,7 +54,7 @@ void func_ov001_020aadac(void) {
                     *flags |= 2;
                 }
             } else {
-                func_ov001_020ab110(o);
+                _ZN10dCapIcon_c6UnlinkEv(o);
             }
             o = (int*)o[0x10/4];
         } while (o != 0);

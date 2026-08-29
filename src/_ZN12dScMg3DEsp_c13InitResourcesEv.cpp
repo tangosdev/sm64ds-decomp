@@ -1,6 +1,7 @@
 //cpp
 // @symbol _ZN12dScMg3DEsp_c13InitResourcesEv
 #include "decl_common.h"
+#include "dMg3DEspModel_c.h"
 #include "dScMg3DEsp_c.h"
 /* dScMg3DEsp_c::InitResources -- vtable slot 0.
  *
@@ -20,7 +21,6 @@ void Camera_UpdateMatrices(void* self);
 int func_020179b4(void* r0, void* r1, int r2);
 void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void* bmd, void* bta);
 void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void* self, void* bta, int a, int b, unsigned int d);
-int func_ov006_020e7fe8(char* c);
 int LoadFile(int handle);
 unsigned _ZN3G2S13GetBG2CharPtrEv(void);
 void DecompressLZ16(int src, void* dst);
@@ -83,7 +83,7 @@ s32 dScMg3DEsp_c::InitResources()
     _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(*((void**)&data_ov006_02141e9c + 1), &data_ov006_0213c844);
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(c + 0x51f4, &data_ov006_0213c844, 0, 0x1000, 0);
 
-    if (func_ov006_020e7fe8((char*)(c + 0x4fd8)) == 0) return 0;
+    if (((dMg3DEspModel_c*)(c + 0x4fd8))->InitResources() == 0) return 0;
 
     if (func_020179b4(&data_ov006_02141e74, (void*)(c + 0x4f88), 1) == 0) return 0;
 

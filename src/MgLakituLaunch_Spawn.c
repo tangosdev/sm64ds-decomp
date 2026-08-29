@@ -9,7 +9,7 @@ int *MgLakituLaunch_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(22140);
     if (p) {
-        func_ov004_020b2adc(p);
+        _ZN11dScMgBase_cC2Ev(p);
         p[0] = (int)data_ov006_0213dbbc;
     }
     return p;

@@ -10,8 +10,8 @@ fBase_c::SceneNode::SceneNode()
 
 void fBase_c::SceneNode::Reset()
 {
-    unk_000 = 0;
-    unk_004 = 0;
-    unk_008 = 0;
-    unk_00c = 0;
+    parent = 0;
+    child = 0;
+    prev = 0;
+    next = 0;
 }

@@ -17,7 +17,7 @@
  *
  * Assembled from these legacy one-function sources (ROM address order):
  *   [16] 0x020b0a38  src/func_ov004_020b0a38.c
- *   [17] 0x020b0a54  src/func_ov004_020b0a54.c
+ *   [17] 0x020b0a54  src/func_ov004_020b0a54.cpp
  *   [18] 0x020b0aa0  src/FreeGfxSlotsById.c
  *   [19] 0x020b0b1c  src/func_ov004_020b0b1c.c
  *   [20] 0x020b0cac  src/func_ov004_020b0cac.c
@@ -123,7 +123,6 @@ extern "C" {
 /* reconciled survivors -- see the CONFLICT notes below */
 extern char data_0209b308[];
 extern char *data_ov004_020bbfa8[];
-extern void func_ov004_020b87e0(void* a, void* b);
 extern void func_ov004_020b3194(void *c);
 extern unsigned char data_020a0e40;
 extern unsigned char data_020a0de8[][4];
@@ -181,7 +180,6 @@ extern unsigned int LoadCompressedFileAt(int fileID, void *target);
 extern unsigned int _ZN3G2S13GetBG1CharPtrEv(void);
 extern void *_ZN3G2S12GetBG1ScrPtrEv(void);
 extern void _ZN2GX15DisableAllBanksEv(void);
-extern void *func_ov004_020b929c(void *);
 /* TUBUILD CONFLICT -- alternate declaration of data_ov004_020beb68, from the legacy file for func_ov004_020b0b1c, NOT applied: extern int data_ov004_020beb68; */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for func_ov004_020b0e84, NOT applied: extern "C" int GetGameLanguage(void); */
 /* TUBUILD CONFLICT -- alternate declaration of GetGameLanguage, from the legacy file for func_ov004_020b1710, NOT applied: extern int GetGameLanguage(void); */
@@ -216,7 +214,6 @@ extern void *func_ov004_020b929c(void *);
 dScMgBase_c::~dScMgBase_c()
 {
     data_ov004_020beb68 = 0;
-    func_ov004_020b929c((char *)this + 0xf4);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1278,11 +1275,10 @@ void FreeGfxSlotsById(int arg)
 extern "C" {
 void func_ov004_020b0a54(int c_)     /* decl_common.h types this int */
 {
-    void* c = (void*)c_;
-    void* g = data_ov004_020beb68;
-    if (!g) return;
-    func_ov004_020b87e0((char*)g + 0xcc, c);
-    *(int*)((char*)data_ov004_020beb68 + 0x60) = 0;
+    dScMgBase_c *scene = (dScMgBase_c *)data_ov004_020beb68;
+    if (!scene) return;
+    scene->mStateController.SetState(c_);
+    ((dScMgBase_c *)data_ov004_020beb68)->unk_060 = 0;
 }
 
 }

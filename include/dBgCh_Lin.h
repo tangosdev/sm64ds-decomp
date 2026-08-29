@@ -95,10 +95,10 @@ struct dBgCh_Lin : dBgCh, dBgPi, dM3dGLin {
                                artefacts, not sizeof evidence. */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    /* DECLARED FIRST and defined as real C++ in the separate D1/D0 source
-     * files. Each TU initially emits both MI vtable blocks and thunks;
-     * objisolate retains only the selected destructor variant and binds its
-     * vptr stores to the ROM data. Slots: primary D1/D0 at _ZTV9dBgCh_Lin,
+    /* Defined as real C++ in separate D1/D0 source files. Dedicated TUs with
+     * that same definition enroll the compiler-emitted -0x10 adjustment
+     * thunks; objisolate retains one ABI artifact per source and binds its
+     * vptr stores to ROM data. Slots: primary D1/D0 at _ZTV9dBgCh_Lin,
      * secondary D1/D0 at VTable_dBgPi_dBgCh_LinThunk. */
     virtual ~dBgCh_Lin();
 

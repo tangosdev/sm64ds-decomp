@@ -52,11 +52,10 @@ struct dBgCh_Gnd : dBgCh, dBgPi {
     s32 mProbeHeight;            /* 0x04c */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    /* DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the key-function
-     * arrangement from include/dBgCh.h / include/dBgPi.h. No TU defines it
-     * out of line, so no TU emits the vtable blocks either; the ROM supplies
-     * _ZTV9dBgCh_Gnd and VTable_dBgPi_dBgCh_GndThunk as data.
-     */
+    /* Defined as real C++ in separate D1/D0 source files. Dedicated TUs with
+     * that same definition enroll the compiler-emitted -0x10 adjustment
+     * thunks; objisolate keeps one ABI artifact per source and binds its vptr
+     * references to the ROM's existing tables. */
     virtual ~dBgCh_Gnd();
 
     /* DECLARED, defined out of line in src/_ZN9dBgCh_GndC1Ev.cpp as real
@@ -72,9 +71,8 @@ struct dBgCh_Gnd : dBgCh, dBgPi {
        Declaring it here picks the same deallocator both bases name
        (Memory::operator_delete2, 0x0203cbcc) and satisfies the rule in
        include/dActor_c.h that mwcc only inlines the member when it is in the
-       class or its immediate base. Byte-neutral: the ROM kept no D0 for this
-       class -- nothing ever deletes one -- and a non-virtual inline member
-       adds no field and no vtable slot. */
+       class or its immediate base. This is load-bearing for the D0 at
+       0x020374f0; a non-virtual inline member adds no field or vtable slot. */
     void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 
     /* methods */

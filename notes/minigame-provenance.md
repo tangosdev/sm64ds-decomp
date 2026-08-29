@@ -356,8 +356,8 @@ see above) indexes through both of them as byte buffers
 (`ctx->unk470c + y*0x158`), and AfterCleanupResources itself reads them
 through a `*(void**)` cast.
 
-Fields below dScMgBase_c's own last-observed field (0x465c, DATA_SIZE
-0x465d per tools/check_header_offsets.py's own convention -- see
+Fields below dScMgBase_c's own last-observed field (mSceneKind at 0x465e,
+DATA_SIZE 0x4660 per tools/check_header_offsets.py's own convention -- see
 dScMgBase_c.h) are genuinely THIS class's own, drawn only from what
 InitResources/AfterCleanupResources/Behavior/Render/D1/D0 directly touch.
 Fields touched only by the raw slot 18/31/34 helpers (0x46d8..0x4700's

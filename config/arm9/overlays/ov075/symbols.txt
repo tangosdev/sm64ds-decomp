@@ -43,16 +43,16 @@ UnknownVsEntry_Spawn kind:function(arm,size=0x94) addr:0x021159f4
 _ZN15UnknownVsPlayerC1Ev kind:function(arm,size=0x30) addr:0x02115a88
 _ZN10dScEntry_cD1Ev kind:function(arm,size=0x70) addr:0x02115ab8
 _ZN10dScEntry_cD0Ev kind:function(arm,size=0x84) addr:0x02115b28
-func_ov075_02115bac kind:function(arm,size=0x1c) addr:0x02115bac
+_ZN10dScEntry_c6icon_cD1Ev kind:function(arm,size=0x1c) addr:0x02115bac
 func_ov075_02115bc8 kind:function(arm,size=0x4) addr:0x02115bc8
-func_ov075_02115bcc kind:function(arm,size=0x250) addr:0x02115bcc
-func_ov075_02115e1c kind:function(arm,size=0x70) addr:0x02115e1c
+_ZN10dScEntry_c6icon_c6RenderEv kind:function(arm,size=0x250) addr:0x02115bcc
+_ZN10dScEntry_c6icon_c8BehaviorEv kind:function(arm,size=0x70) addr:0x02115e1c
 func_ov075_02115e8c kind:function(arm,size=0x190) addr:0x02115e8c
 func_ov075_0211601c kind:function(arm,size=0xc) addr:0x0211601c
 func_ov075_02116028 kind:function(arm,size=0x8) addr:0x02116028
 func_ov075_02116030 kind:function(arm,size=0x10) addr:0x02116030
 _ZN10dScEntry_c15graphCallback_c14GraphCallback2Ev kind:function(arm,size=0x74) addr:0x02116040
-func_ov075_021160b4 kind:function(arm,size=0x28) addr:0x021160b4
+_ZN10dScEntry_c15graphCallback_cC1Ev kind:function(arm,size=0x28) addr:0x021160b4
 func_ov075_021160dc kind:function(arm,size=0x4c) addr:0x021160dc
 func_ov075_02116128 kind:function(arm,size=0xf4) addr:0x02116128
 func_ov075_0211621c kind:function(arm,size=0x394) addr:0x0211621c
@@ -122,7 +122,7 @@ _ZN10dScEntry_c13InitResourcesEv kind:function(arm,size=0x324) addr:0x0211a410
 _ZN10dScEntry_c19BeforeInitResourcesEv kind:function(arm,size=0xc) addr:0x0211a734
 func_ov075_0211a740 kind:function(arm,size=0xf4) addr:0x0211a740
 func_ov075_0211a834 kind:function(arm,size=0x4) addr:0x0211a834
-func_ov075_0211a838 kind:function(arm,size=0x1c) addr:0x0211a838
+_ZN10dScEntry_c6icon_cC1Ev kind:function(arm,size=0x1c) addr:0x0211a838
 func_ov075_0211a854 kind:function(arm,size=0xf4) addr:0x0211a854
 func_ov075_0211a948 kind:function(arm,size=0xb8) addr:0x0211a948
 func_ov075_0211aa00 kind:function(arm,size=0x94) addr:0x0211aa00
@@ -250,7 +250,7 @@ _ZTS10dScEntry_c kind:data(any) addr:0x0211c904
 data_ov075_0211c914 kind:data(any) addr:0x0211c914
 data_ov075_0211c924 kind:data(any) addr:0x0211c924
 data_ov075_0211c934 kind:data(any) addr:0x0211c934
-data_ov075_0211c94c kind:data(any) addr:0x0211c94c
+_ZTVN10dScEntry_c6icon_cE kind:data(any) addr:0x0211c94c
 data_ov075_0211c954 kind:data(any) addr:0x0211c954
 data_ov075_0211c968 kind:data(any) addr:0x0211c968
 data_ov075_0211c97c kind:data(any) addr:0x0211c97c
@@ -262,7 +262,7 @@ data_ov075_0211c9e0 kind:data(any) addr:0x0211c9e0
 data_ov075_0211c9f4 kind:data(any) addr:0x0211c9f4
 data_ov075_0211ca08 kind:data(any) addr:0x0211ca08
 _ZTSN10dScEntry_c6icon_cE kind:data(any) addr:0x0211ca1c
-data_ov075_0211ca3c kind:data(any) addr:0x0211ca3c
+_ZTVN10dScEntry_c15graphCallback_cE kind:data(any) addr:0x0211ca3c
 data_ov075_0211ca4c kind:data(any) addr:0x0211ca4c
 data_ov075_0211ca64 kind:data(any) addr:0x0211ca64
 data_ov075_0211ca6c kind:data(any) addr:0x0211ca6c

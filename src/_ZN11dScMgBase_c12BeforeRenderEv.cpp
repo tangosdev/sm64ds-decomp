@@ -21,7 +21,7 @@ int dScMgBase_c::BeforeRender()
         return 0;
     }
 
-    if (unk_0f0 == 0) {
+    if (mStateController.unk_024 == 0) {
         p = data_ov004_020bf648;
         for (i = 0; i < 3; i++, p += 0x134) {
             if (*(int *)(p + 0x20) == 0x1d) continue;
@@ -34,7 +34,7 @@ int dScMgBase_c::BeforeRender()
             if (*(s16 *)(p2 + 0x30) == 0) continue;
             func_ov004_020b31b4(p2);
         }
-        func_ov004_020b8714((char *)c + 0xcc);
+        mStateController.Render();
     }
 
     p = data_ov004_020bebe8;

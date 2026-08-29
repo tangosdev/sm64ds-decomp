@@ -15,7 +15,7 @@ struct dScMgCurling2_c : dScMgBase_c {
 
     /* Slot 18 left unnamed -- same reasoning as dScMgCurling_c.h. */
 
-    u8  pad_465d[0xf23];
+    u8  pad_4660[0xf20];
     s32 unk_5580;            /* 0x5580 */
     u8  pad_5584[0x28];
     s32 unk_55ac;            /* 0x55ac */

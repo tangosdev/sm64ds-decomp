@@ -11,7 +11,7 @@
    touches `this` (draws a HUD digit/glyph), same multi-arg shape as
    dScMgAmida_c's own slot 34 -- both point at dScMgBase_c's slot 34 being a
    multi-argument virtual, not reconstructed tree-wide yet. Fields below
-   dScMgBase_c's own 0x465d are INHERITED, not this class's own -- accessed
+   dScMgBase_c's own 0x4660 are INHERITED, not this class's own -- accessed
    via raw offsets on a char* cast of `this` (0xb4 touched here, already
    dScMgBase_c's own). */
 struct dScMgTeresa_c : dScMgBase_c {
@@ -20,7 +20,7 @@ struct dScMgTeresa_c : dScMgBase_c {
     virtual s32 Behavior();       /* slot 6 */
     virtual s32 Render();         /* slot 9 */
 
-    u8  pad_465d[0x58b];
+    u8  pad_4660[0x588];
     s32 unk_4be8;            /* 0x4be8 -- state index for Behavior's pmf dispatch */
     u8  pad_4bec[0x2a];
     s16 unk_4c16;            /* 0x4c16 */

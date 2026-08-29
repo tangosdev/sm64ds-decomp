@@ -47,7 +47,7 @@ src/func_ov001_020aaf40.c:
     complete
     .text start:0x020aaf40 end:0x020ab110
 
-src/func_ov001_020ab110.c:
+src/_ZN10dCapIcon_c6UnlinkEv.cpp:
     .text start:0x020ab110 end:0x020ab228
 
 src/func_ov001_020ab228.c:
@@ -82,11 +82,11 @@ src/TouchArea_Update.c:
     complete
     .text start:0x020ab450 end:0x020ab54c
 
-src/func_ov001_020ab54c.c:
+src/_ZN9dThIcon_c6RenderEv.cpp:
     complete
     .text start:0x020ab54c end:0x020ab550
 
-src/func_ov001_020ab550.c:
+src/_ZN9dThIcon_c8BehaviorEv.cpp:
     complete
     .text start:0x020ab550 end:0x020ab5b0
 

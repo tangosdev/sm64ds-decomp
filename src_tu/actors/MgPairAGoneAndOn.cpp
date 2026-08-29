@@ -22,7 +22,7 @@
 
 extern "C" {
 extern "C" void* _ZN7fBase_cnwEj(unsigned int);
-extern "C" void func_ov004_020b2adc(void*);
+extern "C" void _ZN11dScMgBase_cC2Ev(void*);
 extern "C" void _ZN8Particle10SysTrackerC1Ev(void*);
 extern "C" void func_ov006_020c1d80(void*);
 extern "C" void func_020733a8(void*, int, int, void*, void*);
@@ -50,7 +50,7 @@ void func_ov006_020fa740(int *p) {
 extern "C" void* MgPairAGoneAndOn_Spawn(void){
   char* p = (char*)_ZN7fBase_cnwEj(0x5930);
   if (p) {
-    func_ov004_020b2adc(p);
+    _ZN11dScMgBase_cC2Ev(p);
     *(int*)p = (int)&_ZTV19dScMgSingle3DBase_c;
     _ZN8Particle10SysTrackerC1Ev(p + 0x471c);
     *(int*)p = (int)&_ZTV14dScMgMCarlo2_c;

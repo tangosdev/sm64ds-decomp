@@ -1,8 +1,6 @@
 //cpp
 // @symbol _ZN8dActor_cC2Ev
-/* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: named members + shared header */
 #include "dActor_c.h"
 extern "C" {
 extern int data_0209b468;           /* the global actor list */
@@ -17,15 +15,12 @@ void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void* self, int a, int b, int c, 
 
 /* Base-object constructor. The declared inheritance chain generates fBase_c's
    base step and the dBase_c/dActor_c vptr stores before the spawn-seeding body. */
-dActor_c::dActor_c() {
+dActor_c::dActor_c() : mActorListNode(this) {
     int* info;
     int isMode2;
     int clipDistance;
 
-    mListPrev = 0;
-    mListNext = 0;
-    mListOwner = this;
-    func_0203b244((void*)&data_0209b468, &mListPrev);
+    func_0203b244((void*)&data_0209b468, &mActorListNode);
 
     {
         int* spawnPos = (int*)data_0209b460;

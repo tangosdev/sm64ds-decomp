@@ -281,10 +281,11 @@ inherited at 0x0c).
 `data_ov075_0211d304` (18 slots) against `_ZTV8dScene_c` slot for slot, `dScEntry_c`
 overrides exactly eight — 0, 1, 3, 6, 9, 12, 16, 17.
 
-**Construction.** A real Spawn-style factory: `func_ov075_0211a740` (the complete-object
-constructor) and `func_ov075_0211a854` (an identical base-object variant — the usual
-C1/C2 pair) both open with `_ZN7fBase_cnwEj(0x288)`, i.e. `fBase_c::operator new(0x288)`.
-Size 0x288 is read directly off the allocator call, not inferred from field span.
+**Construction.** Two real Spawn-style factories, `func_ov075_0211a740` and
+`func_ov075_0211a854`, both open with `_ZN7fBase_cnwEj(0x288)`, i.e.
+`fBase_c::operator new(0x288)`. They are not C1/C2 variants: both allocate and return
+a new object. Size 0x288 is read directly off the allocator call, not inferred from
+field span.
 
 The same constructor writes the vtable chain, sets two spawn-flag bits at `fBase_c`'s
 own 0x13, copies an 8-byte template struct into three slots 8 bytes apart at
@@ -294,12 +295,18 @@ own 0x13, copies an 8-byte template struct into three slots 8 bytes apart at
 - `func_020733a8(p+0x70,  9, 0x24, ...)` — 9 elements of 0x24 bytes, spanning 0x70..0x1b4
 - `func_020733a8(p+0x1b4, 4, 0x2c, ...)` — 4 elements of 0x2c bytes, spanning 0x1b4..0x264
 
-These line up with the two nested RTTI classes the ROM's type graph records under this
-class — `dScEntry_c::icon_c` (base `dThIcon_c`) and `dScEntry_c::graphCallback_c` (base
-`dGraph_c::callback_c`) — and the destructor (`func_ov075_02115ab8` / `_02115b28`) tears
-down the same two ranges with a matching `__destroy_arr(ptr, count, stride, dtor)` before
-calling `fBase_c`'s D2. Recovering those two nested classes' own layouts is a separate,
-later pass; the header only holds the byte range they occupy, as opaque storage.
+Only the first range is `dScEntry_c::icon_c`: RTTI proves it derives from dThIcon_c,
+and its paired 0x1c-byte ctor/dtor write the base/derived vtables in mirror order.
+The typed header now represents it as `icon_c mIcons[9]`, and the compiler emits its
+reverse array teardown in dScEntry_c's destructor.
+
+The second range is a distinct trivial type: both element callbacks are four-byte
+no-ops. It does **not** hold `dScEntry_c::graphCallback_c`; equal 0x2c sizes had made
+that an attractive but false inference. The RTTI-proven graphCallback_c is instead the
+separate 0x2c-byte global at ov075:0x0211d71c. `__sinit_ov075_0211bb00` constructs it
+with `_ZN10dScEntry_c15graphCallback_cC1Ev`, which writes the dGraph base and derived
+vptrs and clears its first two fields. The 0x1b4 array remains opaque pending genuine
+type evidence.
 
 **Members below 0x50** are all inherited. The flat header this superseded had an
 `unk_00c` that was actually `fBase_c::actorID` misread as this class's own, because a
@@ -309,9 +316,9 @@ flat struct has no base to attribute it to.
 pair is at slots 16/17, not 0/1 — the `fBase_c`/actor-family convention, not the Fader
 family's.
 
-Only `func_ov075_0211a410`/`InitResources` and `func_ov075_0211a2b8`/`Behavior` include
-this header directly; everything else in the family uses its own local offset-based
-struct, matching convention.
+Native dScEntry_c, icon_c and graphCallback_c methods include this header directly.
+Unidentified plain-C helpers retain local offset views rather than borrowing the class
+name without evidence.
 
 ---
 

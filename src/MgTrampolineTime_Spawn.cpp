@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern void *_ZN7fBase_cnwEj(unsigned int sz);
-extern int func_ov004_020b2adc(void *p);
+extern int _ZN11dScMgBase_cC2Ev(void *p);
 extern void _ZN8Particle10SysTrackerC1Ev(void *);
 extern void func_020733a8(void *p, int a, int b, void *f1, void *f2);
 extern int _ZTV14dScMgD3DBase_c[];
@@ -20,7 +20,7 @@ extern "C" void *MgTrampolineTime_Spawn(void)
     char *p = (char *)_ZN7fBase_cnwEj(0x5dc8);
     if (p) {
         char *it;
-        func_ov004_020b2adc(p);
+        _ZN11dScMgBase_cC2Ev(p);
         *(int *)p = (int)_ZTV14dScMgD3DBase_c;
         *(short *)(p + 0x4664) = 0;
         it = p + 0x466c;

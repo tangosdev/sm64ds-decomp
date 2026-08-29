@@ -3,17 +3,11 @@
 /* dScMgSlot1_c::Render -- the recovered symbol at this address
    (_ZN3OAM7SECONDSE, i.e. "OAM::SECONDS") was a name-recovery-heuristic
    artifact, not a real name; this function genuinely is Render (see
-   include/dScMgSlot1_c.h's file banner). `((UnkVtbl*)(this+0x4660))
-   ->Virtual4()` is a real virtual call through the embedded betIcon_c
-   subobject at 0x4660 -- see the header banner for what that subobject is.
+   include/dScMgSlot1_c.h's file banner). mBetIcon.Render() is the ROM's
+   virtual call through the typed nested betIcon_c member at 0x4660.
    `this+0xa8` is inherited from further up the hierarchy than dScMgBase_c,
    so it stays a raw offset on an unsigned char* cast. */
 #include "dScMgSlot1_c.h"
-
-struct UnkVtbl {
-    virtual void Virtual0();
-    virtual void Virtual4();
-};
 
 extern "C" {
 extern int data_ov006_0213e63c[][2];
@@ -49,7 +43,7 @@ s32 dScMgSlot1_c::Render()
         }
         cur += 0x15;
     }
-    ((UnkVtbl*)(t + 0x4660))->Virtual4();
+    mBetIcon.Render();
     func_ov004_020b2444(0x70, 0xb0, *(int*)(t + 0xa8), 0, 1, 1, 0x14);
     if (*(int*)(t + 0x46b4) >= 5 && (*(t + 0x470a) != 0 || (*(t + 0x470b) != 0 && *(t + 0x470b) < 3))) {
         b = *(t + 0x470b);

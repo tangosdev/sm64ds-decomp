@@ -1,6 +1,7 @@
 //cpp
 // @symbol _ZN12dScMg3DEsp_c8BehaviorEv
 #include "decl_common.h"
+#include "dMg3DEspModel_c.h"
 #include "dScMg3DEsp_c.h"
 /* dScMg3DEsp_c::Behavior -- vtable slot 6, ov006 0x020e9e00.
  *
@@ -35,6 +36,6 @@ s32 dScMg3DEsp_c::Behavior()
     (this->*data_ov006_02141f2c[idx])();
     func_ov006_020e8a44(this);
     _ZN9Animation7AdvanceEv(mTextureTransformer);
-    func_ov006_020e7be8(pad_4fd8);
+    ((dMg3DEspModel_c*)pad_4fd8)->Behavior();
     return 1;
 }

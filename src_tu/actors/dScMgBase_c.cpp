@@ -111,7 +111,6 @@ extern void *data_ov004_020beb60;
 extern void **data_0209d4a8;
 int func_ov004_020b8ee0(char *p);
 void func_ov004_020aeb24(char *c);
-void func_ov004_020b8778(char *c);
 void func_ov004_020b321c(char *c);
 void func_ov004_020adf2c(char *c);
 void _Z14ApproachLinearRiii(int *p, int a, int b);
@@ -270,7 +269,7 @@ int dScMgBase_c::BeforeBehavior()
     if (*(int *)(self + 0xf0) == 0) {
         int i;
         char *g;
-        func_ov004_020b8778(self + 0xcc);
+        mStateController.Behavior();
         g = data_ov004_020bf648;
         for (i = 0; i < 3; i++) {
             if (*(int *)(g + 0x20) != 0x1d)
@@ -337,7 +336,7 @@ int dScMgBase_c::BeforeRender()
         return 0;
     }
 
-    if (unk_0f0 == 0) {
+    if (mStateController.unk_024 == 0) {
         p = data_ov004_020bf648;
         for (i = 0; i < 3; i++, p += 0x134) {
             if (*(int *)(p + 0x20) == 0x1d) continue;
@@ -350,7 +349,7 @@ int dScMgBase_c::BeforeRender()
             if (*(s16 *)(p2 + 0x30) == 0) continue;
             func_ov004_020b31b4(p2);
         }
-        func_ov004_020b8714((char *)c + 0xcc);
+        mStateController.Render();
     }
 
     p = data_ov004_020bebe8;

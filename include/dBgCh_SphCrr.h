@@ -70,12 +70,10 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
                                and the next word to func_02038324 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    /* DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the key-function
-     * arrangement from include/ModelBase.h / include/dBgCh.h. With MI this is
-     * doubly load-bearing: a TU that DID define it out of line would emit both
-     * vtable blocks AND the _ZTh thunks, all of which the ROM already supplies
-     * as data (see include/ModelAnim.h for that exact trap).
-     */
+    /* Defined as real C++ in separate D1/D0 source files. Dedicated TUs with
+     * that same definition enroll the compiler-emitted -0x10 and -0x38
+     * adjustment thunks; objisolate keeps one ABI artifact per source and
+     * binds its vptr references to the ROM's existing tables. */
     virtual ~dBgCh_SphCrr();
 
     /* DECLARED, defined out of line in src/_ZN12dBgCh_SphCrrC1Ev.cpp as real
@@ -90,9 +88,8 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
        Declaring it here picks the same deallocator both bases name
        (Memory::operator_delete2, 0x0203cbcc) and satisfies the rule in
        include/dActor_c.h that mwcc only inlines the member when it is in the
-       class or its immediate base. Byte-neutral: the ROM kept no D0 for this
-       class -- nothing ever deletes one -- and a non-virtual inline member
-       adds no field and no vtable slot. */
+       class or its immediate base. This is load-bearing for the D0 at
+       0x02037c40; a non-virtual inline member adds no field or vtable slot. */
     void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 
     /* methods */

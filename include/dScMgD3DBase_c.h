@@ -98,10 +98,6 @@ struct dScMgD3DBase_c : dScMgBase_c {
        or given signatures to the slots they'd be overriding yet, and a
        derived override can't be declared before its base is. */
 
-    u8   pad_465d[0x3];               /* dScMgBase_c's own data ends 0x465d; the
-                                          Itanium ABI lets a derived class reuse a
-                                          polymorphic base's tail padding (see
-                                          include/dScMgBase_c.h's size note) */
     s32  unk_4660;                    /* 0x4660 */
     u16  unk_4664;                    /* 0x4664 -- both factories zero it right
                                           after the base constructor */

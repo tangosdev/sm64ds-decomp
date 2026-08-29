@@ -5,7 +5,7 @@
  *
  * The ROM's own RTTI names it: _ZTIN8dGraph_c10callback_cE at 0x0208ee04
  * (a __class_type_info root), _ZTS bytes "N8dGraph_c10callback_cE", and its
- * vtable at 0x0208ee14 (currently data_0208ee14) with the canonical
+ * vtable at 0x0208ee14 (_ZTVN8dGraph_c10callback_cE) with the canonical
  * {offset-to-top 0, _ZTI} header. Five nested classes derive from it, one
  * per scene class: dScStage_c/dScMB_c/dScMgBase_c/dScDSMT_c/dScEntry_c
  * ::graphCallback_c, each _ZTI a __si_class_type_info whose one base edge

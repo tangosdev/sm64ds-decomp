@@ -184,7 +184,7 @@ src/_ZN10dScEntry_cD0Ev.cpp:
     complete
     .text start:0x02115b28 end:0x02115bac
 
-src/func_ov075_02115bac.c:
+src/_ZN10dScEntry_c6icon_cD1Ev.cpp:
     complete
     .text start:0x02115bac end:0x02115bc8
 
@@ -192,11 +192,11 @@ src/func_ov075_02115bc8.c:
     complete
     .text start:0x02115bc8 end:0x02115bcc
 
-src/func_ov075_02115bcc.c:
+src/_ZN10dScEntry_c6icon_c6RenderEv.cpp:
     complete
     .text start:0x02115bcc end:0x02115e1c
 
-src/func_ov075_02115e1c.cpp:
+src/_ZN10dScEntry_c6icon_c8BehaviorEv.cpp:
     complete
     .text start:0x02115e1c end:0x02115e8c
 
@@ -220,7 +220,7 @@ src/_ZN10dScEntry_c15graphCallback_c14GraphCallback2Ev.cpp:
     complete
     .text start:0x02116040 end:0x021160b4
 
-src/func_ov075_021160b4.c:
+src/_ZN10dScEntry_c15graphCallback_cC1Ev.cpp:
     complete
     .text start:0x021160b4 end:0x021160dc
 
@@ -475,7 +475,7 @@ src/_ZN10dScEntry_c19BeforeInitResourcesEv.cpp:
     complete
     .text start:0x0211a734 end:0x0211a740
 
-src/func_ov075_0211a740.c:
+src/func_ov075_0211a740.cpp:
     complete
     .text start:0x0211a740 end:0x0211a834
 
@@ -483,11 +483,11 @@ src/func_ov075_0211a834.c:
     complete
     .text start:0x0211a834 end:0x0211a838
 
-src/func_ov075_0211a838.c:
+src/_ZN10dScEntry_c6icon_cC1Ev.cpp:
     complete
     .text start:0x0211a838 end:0x0211a854
 
-src/func_ov075_0211a854.c:
+src/func_ov075_0211a854.cpp:
     complete
     .text start:0x0211a854 end:0x0211a948
 

@@ -29,7 +29,7 @@ extern "C" void func_ov006_020ea324(void);
    function-pointer-shaped value at 0x4660 has been recovered, so both stay
    raw bytes rather than invented types.
 
-   Fields below dScMgBase_c's own 0x465d are INHERITED, not this class's
+   Fields below dScMgBase_c's own 0x4660 are INHERITED, not this class's
    own -- accessed via raw offsets on a char* cast (0xa8/0xac by
    InitResources through a local vtable-shim struct that calls slot 18
    polymorphically, since slot 18 stays unmigrated; 0xbc by the slot 18
@@ -43,7 +43,6 @@ struct dScMgHanachan_c : dScMgBase_c {
     virtual s32 Behavior();           /* slot  6 */
     virtual s32 Render();             /* slot  9 */
 
-    u8  pad_465d[0x3];
     u32 unk_4660;            /* 0x4660 -- Behavior calls through it as a
                                  pointer-to-member-function; Render reads it
                                  as a raw {int,int} pair together with

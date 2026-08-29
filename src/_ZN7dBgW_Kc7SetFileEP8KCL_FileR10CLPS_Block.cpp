@@ -3,14 +3,13 @@
 #include "dBgW_Kc.h"
 extern "C" {
 void func_02039624(dBgW *self);   /* the shared collider init */
-void func_0203821c(u32 *clps, CLPS_Block *block);
 }
 
 void dBgW_Kc::SetFile(KCL_File *file, CLPS_Block &clpsBlock)
 {
     func_02039624(this);
     kclFile = file;
-    func_0203821c(&clps, &clpsBlock);
+    clps = clpsBlock;
     unk_28 = 0;
     unk_2c = 0x1000;
     unk_30 = 0;

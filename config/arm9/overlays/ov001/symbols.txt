@@ -9,7 +9,7 @@ func_ov001_020aa960 kind:function(arm,size=0xf4) addr:0x020aa960
 func_ov001_020aaa54 kind:function(arm,size=0x358) addr:0x020aaa54
 func_ov001_020aadac kind:function(arm,size=0x194) addr:0x020aadac
 func_ov001_020aaf40 kind:function(arm,size=0x1d0) addr:0x020aaf40
-func_ov001_020ab110 kind:function(arm,size=0x118) addr:0x020ab110
+_ZN10dCapIcon_c6UnlinkEv kind:function(arm,size=0x118) addr:0x020ab110
 func_ov001_020ab228 kind:function(arm,size=0xbc) addr:0x020ab228
 func_ov001_020ab2e4 kind:function(arm,size=0x90) addr:0x020ab2e4
 _ZN10dCapIcon_cD0Ev kind:function(arm,size=0x2c) addr:0x020ab374
@@ -18,8 +18,8 @@ _ZN10dCapIcon_cC1Ev kind:function(arm,size=0x2c) addr:0x020ab3c4
 func_ov001_020ab3f0 kind:function(arm,size=0x2c) addr:0x020ab3f0
 func_ov001_020ab41c kind:function(arm,size=0x34) addr:0x020ab41c
 TouchArea_Update kind:function(arm,size=0xfc) addr:0x020ab450
-func_ov001_020ab54c kind:function(arm,size=0x4) addr:0x020ab54c
-func_ov001_020ab550 kind:function(arm,size=0x60) addr:0x020ab550
+_ZN9dThIcon_c6RenderEv kind:function(arm,size=0x4) addr:0x020ab54c
+_ZN9dThIcon_c8BehaviorEv kind:function(arm,size=0x60) addr:0x020ab550
 func_ov001_020ab5b0 kind:function(arm,size=0x48) addr:0x020ab5b0
 data_ov001_020ab5f8 kind:data(any) addr:0x020ab5f8
 data_ov001_020ab5fc kind:data(any) addr:0x020ab5fc
@@ -137,6 +137,7 @@ data_ov001_020ad470 kind:data(any) addr:0x020ad470
 _ZTI9dThIcon_c kind:data(any) addr:0x020ad478
 _ZTS9dThIcon_c kind:data(any) addr:0x020ad480
 data_ov001_020ad494 kind:data(any) addr:0x020ad494 ambiguous
+_ZTV9dThIcon_c kind:data(any) addr:0x020ad494
 data_ov001_020ad49c kind:data(any) addr:0x020ad49c
 data_ov001_020ad4a8 kind:data(any) addr:0x020ad4a8
 data_ov001_020ad4b4 kind:data(any) addr:0x020ad4b4

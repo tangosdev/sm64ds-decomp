@@ -6,9 +6,7 @@
  * a vtable slot holds D1, a derived destructor's base-chain `bl` reaches D2. */
 #include "dCc_c.h"
 
-extern "C" void func_02014fa4(void *self);
-
 dCc_c::~dCc_c()
 {
-    func_02014fa4(this);
+    Unlink();
 }

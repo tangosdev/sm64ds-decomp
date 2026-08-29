@@ -69,7 +69,7 @@ struct dScMgSmartball_c : dScMgBase_c {
     s32  Behavior();       /* slot  6 -- src/_ZN16dScMgSmartball_c8BehaviorEv.cpp */
     s32  Render();         /* slot  9 -- src/_ZN16dScMgSmartball_c6RenderEv.cpp */
 
-    u8 pad_465d[0x16b];   /* 0x465d -- dScMgBase_c's data ends here; real matched
+    u8 pad_4660[0x168];   /* 0x4660 -- dScMgBase_c's data ends here; real matched
                               access inside, see file banner */
     u8 mArray1[0x28];     /* 0x47c8 -- 5 * 8,      elem dtor NullDestructor_0203d47c */
     u8 pad_47f0[0x64];    /* 0x47f0 -- real matched access, see file banner */

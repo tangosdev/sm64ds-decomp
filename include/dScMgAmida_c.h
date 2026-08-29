@@ -48,7 +48,6 @@ struct dScMgAmida_c : dScMgBase_c {
     virtual s32  Render();                               /* slot  9 */
     virtual int  Unk36();                                /* slot 36 */
 
-    u8  pad_465d[0x3];
     u8  unk_4660[4][8];      /* 0x4660 -- only ever passed around whole */
     u8  pad_4680[0x50];
     s32 mState;               /* 0x46d0 -- Behavior's state switch: 0 setup,

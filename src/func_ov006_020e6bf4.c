@@ -9,7 +9,7 @@ int *func_ov006_020e6bf4(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(21956);
     if (p) {
-        func_ov004_020b2adc(p);
+        _ZN11dScMgBase_cC2Ev(p);
         p[0] = (int)data_ov006_0213c510;
     }
     return p;

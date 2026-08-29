@@ -36,35 +36,23 @@
  * see the rename commit -- so the real ROM vtable word for slot 6 is
  * untouched and keeps pointing at func_ov006_0210c9e0 exactly as before).
  *
- * THE EMBEDDED SUBOBJECT AT 0x4660. Pre-migration, dScMgSlot1_c's D1/D0
- * (src/func_ov006_0210a8c0.c and .../func_ov006_0210a900.cpp) wrote two
- * vtables back to back into this+0x4660 with no further calls --
- * data_ov006_0213e5d4 then data_ov001_020ad494 -- the same "most-derived writes
- * its own vtable, then chains to its base which writes ITS OWN vtable, both
- * inlined to nothing but the two writes" idiom dScMgBase_c.h documents for
- * its own touchIcon_0f4. Unlike that case (an array of 8), this is a SINGLE
- * embedded object, and it is a DIFFERENT concrete class: build/rtti.json
- * independently records a distinct nested class, `dScMgSlot1_c::betIcon_c`
- * (mangled N12dScMgSlot1_c9betIcon_cE, ov006:0x0213e594), single-inheriting
- * `dThIcon_c` at offset 0 (ov001:0x020ad478) -- literally the SAME dThIcon_c
- * dScMgBase_c's own TouchIcon_c also inherits (data_ov001_020ad494 is the
- * identical address dScMgBase_c.h cites for dThIcon_c's own vtable).
- * data_ov006_0213e5d4 is betIcon_c's own vtable (build/rtti.json:
- * "ov006:0x0213e594" -> vtable "0x0213e5d4"). The constructor
- * (src/func_ov006_0210d6b8.cpp, already matched, not touched by this
- * migration) confirms the construction order: it writes data_ov001_020ad494 (the
- * dThIcon_c base vtable) into this+0x4660 FIRST, then overwrites it with
- * data_ov006_0213e5d4 (betIcon_c's own vtable) -- ordinary base-then-derived
- * construction, the mirror image of the destructor's derived-then-base
- * teardown -- and shows betIcon_c's real size: the next embedded object
- * starts at this+0x4684, so betIcon_c is exactly 0x24 bytes, the same size
- * as dMgPsOpt_c::TouchIcon_c. Render also confirms it is genuinely
- * polymorphic: it calls `((SomeVtbl*)(this+0x4660))->Virtual4()` (slot 1)
- * directly (src/_ZN12dScMgSlot1_c6RenderEv.cpp). Neither betIcon_c nor
- * dThIcon_c has a header yet (same as dScMgBase_c's own TouchIcon_c/
- * dThIcon_c), so it stays raw bytes here too, and the destructor writes the
- * two vtables explicitly by hand instead of relying on a member destructor
- * call.
+ * THE EMBEDDED SUBOBJECT AT 0x4660. build/rtti.json proves the distinct
+ * nested class `dScMgSlot1_c::betIcon_c` (N12dScMgSlot1_c9betIcon_cE,
+ * ov006:0x0213e594) single-inherits dThIcon_c at offset zero. The ROM's two
+ * vtable entries identify the inherited interface as Behavior then Render;
+ * betIcon_c overrides both. Constructor and destructor code establish the
+ * ordinary base-then-derived / derived-then-base vtable write order, while
+ * the next object at 0x4684 fixes betIcon_c's size at 0x24. It is therefore
+ * represented as the typed member mBetIcon. Empty C++ constructors and
+ * destructors emit those vtable writes exactly; dScMgSlot1_c's own empty
+ * destructor now lets the compiler perform the member teardown. Render calls
+ * mBetIcon.Render() directly and retains the ROM's virtual dispatch.
+ *
+ * func_ov006_0210d6b8 remains an explicit C-ABI factory because this compiler
+ * cannot reproduce the ROM factory with a usable class-specific or placement
+ * operator new spelling (the documented factory wall). Its allocation size,
+ * object pointer, member pointer and vtable symbols are nevertheless typed;
+ * only the codegen-sensitive construction sequence remains explicit.
  *
  * 0x4684 and 0x4690 are two more embedded objects (0xc bytes each,
  * constructed via func_ov006_0210c2b0 in the constructor, ticked via
@@ -108,19 +96,21 @@
 struct Player;
 struct dActor_c;
 
-extern "C" void data_ov001_020ad494(void);
-extern "C" void *data_ov006_0213e5d4;
-
 struct dScMgSlot1_c : dScMgBase_c {
+    struct betIcon_c : dThIcon_c {
+        betIcon_c() {}
+        ~betIcon_c() {}
+        virtual void Behavior();
+        virtual void Render();
+    };
+
     virtual ~dScMgSlot1_c();
     virtual s32 InitResources();                       /* slot  0 */
     virtual s32 Render();                               /* slot  9 */
     virtual void OnHitByMegaChar(Player &player);       /* slot 27 -- void, see include/Stump.h */
     virtual int OnHitFromUnderneath(dActor_c &other);      /* slot 28 */
 
-    u8  betIcon_4660[0x24]; /* 0x4660 -- dScMgSlot1_c::betIcon_c : dThIcon_c,
-                                destroyed by hand in D1/D0; see the file
-                                banner. */
+    betIcon_c mBetIcon;      /* 0x4660 -- RTTI-proven nested touch icon */
     u8  pad_4684[0xc];      /* 0x4684 -- embedded object, own type unknown */
     u8  pad_4690[0xc];      /* 0x4690 -- embedded object, own type unknown */
     u8  pad_469c[0x8];      /* 0x469c -- embedded object, own type unknown */

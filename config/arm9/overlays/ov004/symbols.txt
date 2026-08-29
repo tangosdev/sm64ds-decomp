@@ -122,7 +122,7 @@ func_ov004_020b29a0 kind:function(arm,size=0x20) addr:0x020b29a0
 _ZN11dScMgBase_cD2Ev kind:function(arm,size=0x58) addr:0x020b29c0
 _ZN11dScMgBase_cD0Ev kind:function(arm,size=0x6c) addr:0x020b2a18
 _ZN11dScMgBase_cD1Ev kind:function(arm,size=0x58) addr:0x020b2a84
-func_ov004_020b2adc kind:function(arm,size=0x17c) addr:0x020b2adc
+_ZN11dScMgBase_cC2Ev kind:function(arm,size=0x17c) addr:0x020b2adc
 func_ov004_020b2c58 kind:function(arm,size=0x24) addr:0x020b2c58
 func_ov004_020b2c7c kind:function(arm,size=0x4) addr:0x020b2c7c
 func_ov004_020b2c80 kind:function(arm,size=0x4) addr:0x020b2c80
@@ -260,10 +260,10 @@ func_ov004_020b841c kind:function(arm,size=0x120) addr:0x020b841c
 func_ov004_020b853c kind:function(arm,size=0x24) addr:0x020b853c
 func_ov004_020b8560 kind:function(arm,size=0x128) addr:0x020b8560
 func_ov004_020b8688 kind:function(arm,size=0x8c) addr:0x020b8688
-func_ov004_020b8714 kind:function(arm,size=0x64) addr:0x020b8714
-func_ov004_020b8778 kind:function(arm,size=0x68) addr:0x020b8778
-func_ov004_020b87e0 kind:function(arm,size=0x290) addr:0x020b87e0
-func_ov004_020b8a70 kind:function(arm,size=0x1c) addr:0x020b8a70
+_ZN10dMgState_c6RenderEv kind:function(arm,size=0x64) addr:0x020b8714
+_ZN10dMgState_c8BehaviorEv kind:function(arm,size=0x68) addr:0x020b8778
+_ZN10dMgState_c8SetStateEi kind:function(arm,size=0x290) addr:0x020b87e0
+_ZN10dMgState_cC1Ev kind:function(arm,size=0x1c) addr:0x020b8a70
 func_ov004_020b8a8c kind:function(arm,size=0x18c) addr:0x020b8a8c
 func_ov004_020b8c18 kind:function(arm,size=0x1a8) addr:0x020b8c18
 func_ov004_020b8dc0 kind:function(arm,size=0x120) addr:0x020b8dc0
@@ -272,10 +272,10 @@ func_ov004_020b8f18 kind:function(arm,size=0x60) addr:0x020b8f18
 func_ov004_020b8f78 kind:function(arm,size=0x284) addr:0x020b8f78
 func_ov004_020b91fc kind:function(arm,size=0x24) addr:0x020b91fc
 func_ov004_020b9220 kind:function(arm,size=0x60) addr:0x020b9220
-func_ov004_020b9280 kind:function(arm,size=0x1c) addr:0x020b9280
-func_ov004_020b929c kind:function(arm,size=0x28) addr:0x020b929c
-func_ov004_020b92c4 kind:function(arm,size=0x16c) addr:0x020b92c4
-func_ov004_020b9430 kind:function(arm,size=0x1c) addr:0x020b9430
+_ZN10dMgPsOpt_c11TouchIcon_cD1Ev kind:function(arm,size=0x1c) addr:0x020b9280
+_ZN10dMgPsOpt_cD1Ev kind:function(arm,size=0x28) addr:0x020b929c
+_ZN10dMgPsOpt_cC1Ev kind:function(arm,size=0x16c) addr:0x020b92c4
+_ZN10dMgPsOpt_c11TouchIcon_cC1Ev kind:function(arm,size=0x1c) addr:0x020b9430
 data_ov004_020b944c kind:data(any) addr:0x020b944c
 data_ov004_020b9468 kind:data(any) addr:0x020b9468
 data_ov004_020b9488 kind:data(any) addr:0x020b9488
@@ -783,6 +783,7 @@ data_ov004_020bca58 kind:data(any) addr:0x020bca58
 data_ov004_020bca60 kind:data(any) addr:0x020bca60
 _ZTIN10dMgPsOpt_c11TouchIcon_cE kind:data(any) addr:0x020bca68
 data_ov004_020bca7c kind:data(any) addr:0x020bca7c
+_ZTVN10dMgPsOpt_c11TouchIcon_cE kind:data(any) addr:0x020bca7c
 _ZTSN10dMgPsOpt_c11TouchIcon_cE kind:data(any) addr:0x020bca84
 data_ov004_020bcaa0 kind:data(any) addr:0x020bcaa0
 data_ov004_020bd074 kind:data(any) addr:0x020bd074
@@ -844,7 +845,9 @@ data_ov004_020bfa28 kind:bss addr:0x020bfa28
 data_ov004_020bfa34 kind:bss addr:0x020bfa34
 data_ov004_020bfa56 kind:bss addr:0x020bfa56
 data_ov004_020bfd04 kind:bss addr:0x020bfd04
+_ZGVsEnterTable$19 kind:bss addr:0x020bfd04
 data_ov004_020bfd08 kind:bss addr:0x020bfd08
+sEnterTable$19 kind:bss addr:0x020bfd08
 data_ov004_020bfda8 kind:bss addr:0x020bfda8
 data_ov004_020bfdb4 kind:bss addr:0x020bfdb4
 data_ov004_020bfdc0 kind:bss addr:0x020bfdc0

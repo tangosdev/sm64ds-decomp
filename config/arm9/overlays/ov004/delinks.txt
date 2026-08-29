@@ -327,7 +327,7 @@ src/func_ov004_020b0a38.c:
     complete
     .text start:0x020b0a38 end:0x020b0a54
 
-src/func_ov004_020b0a54.c:
+src/func_ov004_020b0a54.cpp:
     complete
     .text start:0x020b0a54 end:0x020b0aa0
 
@@ -486,7 +486,7 @@ src/_ZN11dScMgBase_cD1Ev.cpp:
     complete
     .text start:0x020b2a84 end:0x020b2adc
 
-src/func_ov004_020b2adc.c:
+src/_ZN11dScMgBase_cC2Ev.cpp:
     complete
     .text start:0x020b2adc end:0x020b2c58
 
@@ -1037,18 +1037,19 @@ src/func_ov004_020b8688.c:
     complete
     .text start:0x020b8688 end:0x020b8714
 
-src/func_ov004_020b8714.cpp:
+src/_ZN10dMgState_c6RenderEv.cpp:
     complete
     .text start:0x020b8714 end:0x020b8778
 
-src/func_ov004_020b8778.cpp:
+src/_ZN10dMgState_c8BehaviorEv.cpp:
     complete
     .text start:0x020b8778 end:0x020b87e0
 
-src/func_ov004_020b87e0.cpp:
+src/_ZN10dMgState_c8SetStateEi.cpp:
+    complete
     .text start:0x020b87e0 end:0x020b8a70
 
-src/func_ov004_020b8a70.c:
+src/_ZN10dMgState_cC1Ev.cpp:
     complete
     .text start:0x020b8a70 end:0x020b8a8c
 
@@ -1084,19 +1085,19 @@ src/func_ov004_020b9220.c:
     complete
     .text start:0x020b9220 end:0x020b9280
 
-src/func_ov004_020b9280.c:
+src/_ZN10dMgPsOpt_c11TouchIcon_cD1Ev.cpp:
     complete
     .text start:0x020b9280 end:0x020b929c
 
-src/func_ov004_020b929c.c:
+src/_ZN10dMgPsOpt_cD1Ev.cpp:
     complete
     .text start:0x020b929c end:0x020b92c4
 
-src/func_ov004_020b92c4.c:
+src/_ZN10dMgPsOpt_cC1Ev.cpp:
     complete
     .text start:0x020b92c4 end:0x020b9430
 
-src/func_ov004_020b9430.c:
+src/_ZN10dMgPsOpt_c11TouchIcon_cC1Ev.cpp:
     complete
     .text start:0x020b9430 end:0x020b944c
 

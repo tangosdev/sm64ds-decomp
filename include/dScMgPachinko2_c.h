@@ -6,7 +6,7 @@
    (no RTTI record names it as a base). Own vtable slots: 0 (InitResources),
    6 (Behavior), 9 (Render), 16 (D1), 17 (D0), 18 (own new slot, not yet
    named -- stays a raw extern "C" helper, not a declared method). Fields
-   below dScMgBase_c's own 0x465d are INHERITED, not this class's own --
+   below dScMgBase_c's own 0x4660 are INHERITED, not this class's own --
    accessed via raw offsets on a char* cast of `this`, same as every other
    dScMgBase_c leaf (0xa4, 0xbc, 0xc0, 0xc3, 0xc4 all touched here, all
    already dScMgBase_c's own). Own fields observed only from slots
@@ -19,7 +19,7 @@ struct dScMgPachinko2_c : dScMgBase_c {
     virtual s32 Behavior();       /* slot 6 */
     virtual s32 Render();         /* slot 9 */
 
-    u8  pad_465d[0x1003];
+    u8  pad_4660[0x1000];
     s32 unk_5660;            /* 0x5660 */
     u8  pad_5664[0x8];
     u16 unk_566c;            /* 0x566c */

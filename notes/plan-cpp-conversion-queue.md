@@ -283,7 +283,7 @@ merge. So S1 legitimately harvests blocked-pool files; S6 does not.
 
 **`src/func_ov027_02111680.c`**, chosen deliberately over the smaller candidates.
 
-Why not the 4-byte `src/func_ov001_020ab54c.c` (an empty `bx lr`): a stub is
+Why not the 4-byte `src/_ZN9dThIcon_c6RenderEv.cpp` (an empty `bx lr`): a stub is
 codegen-identical in both languages by construction and would validate nothing. This file
 is the smallest candidate that puts **real code** through the C→C++ front end while
 holding every other variable fixed:

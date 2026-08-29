@@ -29,7 +29,7 @@
       "symbol": "func_ov004_020b0a54",
       "address": "0x020b0a54",
       "size": "0x0000004c",
-      "legacy_source": "src/func_ov004_020b0a54.c",
+      "legacy_source": "src/func_ov004_020b0a54.cpp",
       "ordinal": 17
     },
     {
@@ -350,7 +350,7 @@
   "partial_isolation": {
     "round": "tools/tubuild.py partial -- one compile of the consolidated source, objisolate.derive per licensed function, compared against rombuild.compile_one + objisolate.isolate of each legacy source",
     "derivedObjects": 41,
-    "contributionEquivalent": "39/41",
+    "contributionEquivalent": "40/41",
     "comparedFields": [
       "keptSection",
       "keptBytes",

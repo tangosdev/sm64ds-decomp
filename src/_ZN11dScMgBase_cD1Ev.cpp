@@ -9,5 +9,4 @@
 dScMgBase_c::~dScMgBase_c()
 {
     data_ov004_020beb68 = 0;
-    func_ov004_020b929c((char *)this + 0xf4);
 }

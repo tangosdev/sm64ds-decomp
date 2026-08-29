@@ -14,25 +14,23 @@
  * destructor (func_ov006_020e7660, pre-migration):
  *
  *   - TWO MODELS at 0x4f38 and 0x4f88, 0x50 bytes each (include/Model.h).
- *   - AN UNTYPED BLOCK at 0x4fd8, size 0x21c: destroyed via
- *     func_ov006_020e80d8 (ModelAnim @ +0xc, TextureSequence @ +0x70, a
- *     helper @ +0x84, plus six Release() calls on unrelated GLOBAL
+ *   - A dMg3DEspModel_c-SHAPED BLOCK at 0x4fd8, size 0x21c: destroyed via
+ *     _ZN15dMg3DEspModel_cD1Ev (ModelAnim @ +0xc, TextureSequence @ +0x70,
+ *     dMg3DEspAnimSet_c @ +0x84, plus six Release() calls on unrelated GLOBAL
  *     SharedFilePtr singletons, not per-instance data). One field within
  *     it is real matched access -- unk_51e4 (src/func_ov006_020e9c20.c)
- *     -- named, the rest stays pad. Not typed further: this exact block
- *     shape isn't shared by any other class in this slice, so inventing
- *     a name for it is a separate slice's work, same reasoning as the
- *     shared table.
+ *     -- named. The inferred helper types now have exact constructor,
+ *     destructor, and ordinary-method definitions, but this scene keeps raw
+ *     storage until its construction and teardown are promoted together.
  *   - A TextureTransformer at 0x51f4, 0x14 bytes (include/TextureTransformer.h).
  *   - OWN TAIL, 0x5208..0x5558: one more field is real matched access
  *     (unk_553c, same file), the rest stays pad.
  *
- * Models are left as raw bytes with explicit destructor calls, not typed
- * auto-destructing members -- the ROM's own order (TextureTransformer,
- * then the untyped block, then Model@0x4f88, then Model@0x4f38) can't be
- * reproduced by Itanium auto-destruction, which always runs strictly
- * after the user body in reverse declaration order. Same reasoning as
- * include/dScMgRoulette_c.h's own note.
+ * The ROM's teardown order -- TextureTransformer, dMg3DEspModel_c, model 2,
+ * model 1 -- is exactly reverse declaration order and therefore supports
+ * eventual compiler-owned member destruction. The members remain raw here
+ * only until the scene-wide construction/destruction boundary is verified as
+ * one change.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
  * its own. Defined for real in src/_ZN12dScMg3DEsp_cD1Ev.cpp; D0Ev.cpp
@@ -44,14 +42,14 @@
 
 extern "C" void _ZN5ModelD1Ev(void *);
 extern "C" void _ZN18TextureTransformerD1Ev(void *);
-extern "C" void func_ov006_020e80d8(void *c); /* decl_common.h's own signature */
+extern "C" void _ZN15dMg3DEspModel_cD1Ev(void *c);
 
 struct dScMg3DEsp_c : dScMgSingle3DBase_c {
     virtual ~dScMg3DEsp_c();
 
     u8  mModel1[0x50];        /* 0x4f38 -- Model, raw bytes, see file banner */
     u8  mModel2[0x50];        /* 0x4f88 -- Model, raw bytes, see file banner */
-    u8  pad_4fd8[0x20c];       /* 0x4fd8 -- untyped block, see file banner */
+    u8  pad_4fd8[0x20c];       /* 0x4fd8 -- raw dMg3DEspModel_c storage */
     s32 unk_51e4;               /* 0x51e4 */
     u8  pad_51e8[0xc];          /* 0x51e8 */
     u8  mTextureTransformer[0x14]; /* 0x51f4 -- TextureTransformer, raw bytes */

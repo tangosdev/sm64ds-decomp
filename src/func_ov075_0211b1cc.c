@@ -3,13 +3,10 @@
 #include "decl_common.h"
 // recovered name: dScEntry_c_OnYoshiTryEat_0211b1cc
 /* recovered: renamed to Class_Method */
-/* dScEntry_c's own header now derives from dScene_c -> dBase_c -> fBase_c,
-   and those headers have no C spelling (see the note in fBase_c.h), so this
-   plain-C file uses a local offset struct instead of including
-   dScEntry_c.h -- matching every other dScEntry_c method in this family
-   (see include/dScEntry_c.h's derivation note: only InitResourcesEv.cpp,
-   which is //cpp, includes the shared header directly). unk_080/unk_0a0/
-   unk_0a4 are dScEntry_c's own fields at those absolute offsets. */
+/* The old heuristic label associated this function with dScEntry_c, but the
+   typed class layout now proves 0x080/0x0a0/0x0a4 lie inside its icon_c array.
+   Keep this function's self type local until its actual owner is established;
+   these offsets are not evidence for fields on dScEntry_c. */
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 struct E { char pad[8]; int r8; int rc; char pad2[8]; };
 struct Self {

@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern void *_ZN7fBase_cnwEj(unsigned int sz);
-extern int func_ov004_020b2adc(void *p);
+extern int _ZN11dScMgBase_cC2Ev(void *p);
 extern void func_020733a8(void *obj, int a, int b, void *cb1, void *cb2);
 extern int _ZTV16dScMgSmartball_c[];
 extern void func_0203d738(void);
@@ -12,7 +12,7 @@ void *MgBingoBallSlotsShot_Spawn(void);
 void *MgBingoBallSlotsShot_Spawn(void) {
     char *o = (char *)_ZN7fBase_cnwEj(0x629c);
     if (o != 0) {
-        func_ov004_020b2adc(o);
+        _ZN11dScMgBase_cC2Ev(o);
         *(int *)o = (int)_ZTV16dScMgSmartball_c;
         func_020733a8(o + 0x47c8, 5, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
         func_020733a8(o + 0x4854, 0x10, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);

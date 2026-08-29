@@ -1,6 +1,7 @@
 //cpp
 // @symbol _ZN12dScMg3DEsp_c6RenderEv
 #include "decl_common.h"
+#include "dMg3DEspModel_c.h"
 #include "dScMg3DEsp_c.h"
 /* dScMg3DEsp_c::Render -- vtable slot 9.
  *
@@ -30,7 +31,7 @@ s32 dScMg3DEsp_c::Render()
     Camera_UpdateMatrices(c + 0x4660);
     ((TextureTransformer *)(c + 0x51f4))->Update(*(ModelComponents *)(c + 0x4f40));
     ((Obj *)(c + 0x4f38))->vcall(0);
-    func_ov006_020e7b44(c + 0x4fd8);
+    ((dMg3DEspModel_c*)(c + 0x4fd8))->Render();
     ((Obj *)(c + 0x4f88))->vcall(0);
     return 1;
 }

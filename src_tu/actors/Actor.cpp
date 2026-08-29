@@ -64,7 +64,7 @@
  *    the span and shifts every later function, which is the one thing that
  *    stood between this file and a whole-range link. Same four bytes either way.
  *  - D0's two `thiz + 0x50` arguments are spelled differently (`((int)thiz)+0x50`
- *    and `&thiz->mListPrev`), exactly as D1 and D2 spell them. Written identically
+ *    and `&thiz->mActorListNode`), exactly as D1 and D2 spell them. Written identically
  *    under decl_common.h's (int) prototypes, mwcc commons them into a fourth
  *    register and D0 comes out 0xc long.
  *
@@ -108,10 +108,10 @@ extern "C" void* _ZN8dActor_cC2Ev(struct dActor_c *self) {
     _ZN7fBase_cC2Ev(((char*)self));
     *(void**)((char*)self) = &data_0208e4b8;
     *(void**)((char*)self) = &data_0208e3a4;
-    self->mListPrev = 0;
-    self->mListNext = 0;
-    *(char**)((char*)&self->mListOwner) = ((char*)self);
-    func_0203b244((void*)&data_0209b468, ((char*)self) + 0x50);
+    self->mActorListNode.prev = 0;
+    self->mActorListNode.next = 0;
+    self->mActorListNode.owner = self;
+    func_0203b244((void*)&data_0209b468, &self->mActorListNode);
     {
         s16* p = data_0209b460;
         if (p != 0) {
@@ -167,10 +167,10 @@ extern "C" void* _ZN8dActor_cC1Ev(struct dActor_c *self) {
   _ZN7fBase_cC2Ev(((char*)self));
   *(void**)((char*)self) = &data_0208e4b8;
   *(void**)((char*)self) = &data_0208e3a4;
-  self->mListPrev = 0;
-  self->mListNext = 0;
-  *(void**)((char*)&self->mListOwner) = ((char*)self);
-  func_0203b244(&data_0209b468, ((char*)self)+0x50);
+  self->mActorListNode.prev = 0;
+  self->mActorListNode.next = 0;
+  self->mActorListNode.owner = self;
+  func_0203b244(&data_0209b468, &self->mActorListNode);
   {
     int* p = (int*)data_0209b460;
     if (p) {
@@ -222,7 +222,7 @@ extern "C" {
 int _ZN8dActor_cD1Ev(struct dActor_c *self) {
   *(int*)((int)self) = (int)_ZTV8dActor_c;
   func_0203b27c((int)data_0209b468, ((int)self)+0x50);
-  func_02044104((int)&self->mListPrev);
+  self->mActorListNode.~fLiNdBa_c();
   *(int*)((int)self) = (int)_ZTV7dBase_c;
   _ZN7fBase_cD2Ev(((int)self));
   return ((int)self);
@@ -236,7 +236,7 @@ extern "C" struct dActor_c *_ZN8dActor_cD0Ev(struct dActor_c *thiz)
 {
     *(void **)thiz = (void *)_ZTV8dActor_c;
     func_0203b27c((int)data_0209b468, ((int)thiz) + 0x50);
-    func_02044104((int)&thiz->mListPrev);
+    thiz->mActorListNode.~fLiNdBa_c();
     *(void **)thiz = (void *)_ZTV7dBase_c;
     _ZN7fBase_cD2Ev((int)thiz);
     _ZN6Memory10DeallocateEPvP4Heap(thiz, data_020a0eac);
@@ -250,7 +250,7 @@ extern "C" {
 int _ZN8dActor_cD2Ev(struct dActor_c *self) {
   *(int*)((int)self) = (int)_ZTV8dActor_c;
   func_0203b27c((int)data_0209b468, ((int)self)+0x50);
-  func_02044104((int)&self->mListPrev);
+  self->mActorListNode.~fLiNdBa_c();
   *(int*)((int)self) = (int)_ZTV7dBase_c;
   _ZN7fBase_cD2Ev(((int)self));
   return ((int)self);
@@ -459,14 +459,13 @@ dActor_c *dActor_c::FindWithActorID(u32 j, dActor_c *after) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 80 -- _ZN8dActor_c4NextEPKS_
  * 0x02010ecc  size 0x24   legacy src/_ZN8dActor_c4NextEPKS_.cpp */
-extern "C" {
-struct dActor_c* _ZN8dActor_c4NextEPKS_(struct dActor_c *self) {
-  struct dActor_c* p;
-  if(((struct dActor_c*)self)) p = *(struct dActor_c**)((char*)&self->mListNext);
-  else  p = *(struct dActor_c**)&data_0209b468;
-  if(p) return *(struct dActor_c**)((char*)p+8);
+dActor_c *dActor_c::Next(const dActor_c *after)
+{
+  fLiNdBa_c *node;
+  if (after) node = after->mActorListNode.next;
+  else node = *(fLiNdBa_c **)&data_0209b468;
+  if (node) return static_cast<dActor_c *>(node->owner);
   return 0;
-}
 }
 
 /* -------------------------------------------------------------------------- */

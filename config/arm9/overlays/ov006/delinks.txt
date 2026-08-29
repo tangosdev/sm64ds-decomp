@@ -374,7 +374,7 @@ src/func_ov006_020c402c.c:
     complete
     .text start:0x020c402c end:0x020c4048
 
-src/func_ov006_020c4048.c:
+src/_ZN22dMg3DHeyhoObjAdapter_cC2Ev.cpp:
     complete
     .text start:0x020c4048 end:0x020c4060
 
@@ -621,15 +621,15 @@ src/func_ov006_020c7574.c:
     complete
     .text start:0x020c7574 end:0x020c762c
 
-src/func_ov006_020c762c.c:
+src/_ZN16dMgJump3DMario_c12Unk_020c762cEv.cpp:
     complete
     .text start:0x020c762c end:0x020c76d0
 
-src/func_ov006_020c76d0.c:
+src/_ZN16dMgJump3DMario_c12Unk_020c76d0Ev.cpp:
     complete
     .text start:0x020c76d0 end:0x020c76d8
 
-src/func_ov006_020c76d8.c:
+src/_ZN16dMgJump3DMario_c12Unk_020c76d8Ev.cpp:
     complete
     .text start:0x020c76d8 end:0x020c76e0
 
@@ -725,11 +725,11 @@ src/func_ov006_020c87d0.cpp:
     complete
     .text start:0x020c87d0 end:0x020c893c
 
-src/func_ov006_020c893c.cpp:
+src/_ZN16dMgJump3DMario_cD1Ev.cpp:
     complete
     .text start:0x020c893c end:0x020c8a04
 
-src/func_ov006_020c8a04.c:
+src/_ZN16dMgJump3DMario_cC1Ev.cpp:
     complete
     .text start:0x020c8a04 end:0x020c8a30
 
@@ -2767,15 +2767,15 @@ src/_ZN12dScMg3DEsp_cD0Ev.cpp:
     complete
     .text start:0x020e76e4 end:0x020e777c
 
-src/func_ov006_020e777c.cpp:
+src/_ZN17dMg3DEspAnimSet_c6RenderEv.cpp:
     complete
     .text start:0x020e777c end:0x020e7818
 
-src/func_ov006_020e7818.c:
+src/_ZN17dMg3DEspAnimSet_c8BehaviorEv.cpp:
     complete
     .text start:0x020e7818 end:0x020e7910
 
-src/func_ov006_020e7910.c:
+src/_ZN17dMg3DEspAnimSet_c5ResetEv.cpp:
     complete
     .text start:0x020e7910 end:0x020e792c
 
@@ -2791,27 +2791,27 @@ src/func_ov006_020e794c.c:
     complete
     .text start:0x020e794c end:0x020e7954
 
-src/func_ov006_020e7954.c:
+src/_ZN17dMg3DEspAnimSet_c13InitResourcesEv.cpp:
     complete
     .text start:0x020e7954 end:0x020e7a50
 
-src/func_ov006_020e7a50.cpp:
+src/_ZN17dMg3DEspAnimSet_cD1Ev.cpp:
     complete
     .text start:0x020e7a50 end:0x020e7aac
 
-src/func_ov006_020e7aac.c:
+src/_ZN17dMg3DEspAnimSet_cC1Ev.cpp:
     complete
     .text start:0x020e7aac end:0x020e7b0c
 
-src/func_ov006_020e7b0c.c:
+src/_ZN15dMg3DEspModel_c14ResetTransformEv.cpp:
     complete
     .text start:0x020e7b0c end:0x020e7b44
 
-src/func_ov006_020e7b44.cpp:
+src/_ZN15dMg3DEspModel_c6RenderEv.cpp:
     complete
     .text start:0x020e7b44 end:0x020e7be8
 
-src/func_ov006_020e7be8.cpp:
+src/_ZN15dMg3DEspModel_c8BehaviorEv.cpp:
     complete
     .text start:0x020e7be8 end:0x020e7cc0
 
@@ -2843,19 +2843,19 @@ src/func_ov006_020e7fac.c:
     complete
     .text start:0x020e7fac end:0x020e7fb0
 
-src/func_ov006_020e7fb0.c:
+src/_ZN15dMg3DEspModel_c5ResetEv.cpp:
     complete
     .text start:0x020e7fb0 end:0x020e7fe8
 
-src/func_ov006_020e7fe8.cpp:
+src/_ZN15dMg3DEspModel_c13InitResourcesEv.cpp:
     complete
     .text start:0x020e7fe8 end:0x020e80d8
 
-src/func_ov006_020e80d8.cpp:
+src/_ZN15dMg3DEspModel_cD1Ev.cpp:
     complete
     .text start:0x020e80d8 end:0x020e814c
 
-src/func_ov006_020e814c.c:
+src/_ZN15dMg3DEspModel_cC1Ev.cpp:
     complete
     .text start:0x020e814c end:0x020e81a4
 
@@ -5314,9 +5314,11 @@ src/func_ov006_0210a708.c:
     .text start:0x0210a708 end:0x0210a8c0
 
 src/_ZN12dScMgSlot1_cD1Ev.cpp:
+    complete
     .text start:0x0210a8c0 end:0x0210a900
 
 src/_ZN12dScMgSlot1_cD0Ev.cpp:
+    complete
     .text start:0x0210a900 end:0x0210a954
 
 src/_ZN12dScMgSlot3_cD1Ev.cpp:
@@ -5430,11 +5432,11 @@ src/func_ov006_0210c354.c:
     complete
     .text start:0x0210c354 end:0x0210c374
 
-src/func_ov006_0210c374.cpp:
+src/_ZN12dScMgSlot1_c9betIcon_c6RenderEv.cpp:
     complete
     .text start:0x0210c374 end:0x0210c410
 
-src/func_ov006_0210c410.c:
+src/_ZN12dScMgSlot1_c9betIcon_c8BehaviorEv.cpp:
     complete
     .text start:0x0210c410 end:0x0210c478
 

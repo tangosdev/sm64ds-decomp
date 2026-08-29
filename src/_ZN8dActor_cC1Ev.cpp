@@ -1,8 +1,6 @@
 //cpp
 // @symbol _ZN8dActor_cC1Ev
-/* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: named members + shared header */
 #include "dActor_c.h"
 extern "C" {
 void func_0203b244(void* l, void* n);
@@ -22,11 +20,8 @@ extern unsigned char data_0209f2d8; /* game mode; 2 pushes the clip distance out
 
    The block nesting at the bottom is load-bearing: it is what puts the info-table
    temporaries in the frame slots the ROM uses. Flattening it costs bytes. */
-dActor_c::dActor_c() {
-  mListPrev = 0;
-  mListNext = 0;
-  mListOwner = this;
-  func_0203b244(&data_0209b468, &mListPrev);
+dActor_c::dActor_c() : mActorListNode(this) {
+  func_0203b244(&data_0209b468, &mActorListNode);
   {
     int* spawnPos = (int*)data_0209b460;
     if (spawnPos) {

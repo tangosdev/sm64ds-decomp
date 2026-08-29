@@ -11,7 +11,7 @@
    table, and relocs.txt cross-references confirm it belongs to a wholly
    different actor's spawn descriptor, not this class) -- excluded, along
    with func_ov006_021019e0 and MgLakituLaunch_Spawn, from this migration.
-   Fields below dScMgBase_c's own 0x465d are INHERITED, not this class's
+   Fields below dScMgBase_c's own 0x4660 are INHERITED, not this class's
    own -- accessed via raw offsets on a char* cast of `this` (0xa4, 0xc0,
    0xc3, 0xc4 all touched here, all already dScMgBase_c's own, same as
    dScMgPachinko2_c's). */
@@ -21,7 +21,7 @@ struct dScMgPachinko_c : dScMgBase_c {
     virtual s32 Behavior();       /* slot 6 */
     virtual s32 Render();         /* slot 9 */
 
-    u8  pad_465d[0x15b3];
+    u8  pad_4660[0x15b0];
     s32 unk_5c10;            /* 0x5c10 */
     u8  pad_5c14[0x4];
     u16 unk_5c18;            /* 0x5c18 */

@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-void func_ov004_020b2adc(void* p);
+void _ZN11dScMgBase_cC2Ev(void* p);
 void _ZN8Particle10SysTrackerC1Ev(void* p);
 void _ZN5ModelC1Ev(void* p);
 void func_020733a8(void* arr, int count, int size, void* ctor, void* dtor);
@@ -14,7 +14,7 @@ void func_ov006_0212968c(void*);
 void func_ov006_02125800(void*);
 }
 extern "C" void* func_ov006_021295ac(char* t){
-  func_ov004_020b2adc(t);
+  _ZN11dScMgBase_cC2Ev(t);
   *(void**)t = &_ZTV19dScMgSingle3DBase_c;
   _ZN8Particle10SysTrackerC1Ev(t + 0x471c);
   *(void**)t = &_ZTV15dScMgSnowball_c;

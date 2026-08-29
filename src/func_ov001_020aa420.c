@@ -35,7 +35,7 @@ extern int func_ov001_020aa79c(int x);
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int func_0202a8e0(int a, u8 b);
 extern void func_ov001_020aa6b0(void *p, int flag);
-extern void func_ov001_020ab110(void *p);
+extern void _ZN10dCapIcon_c6UnlinkEv(void *p);
 extern int func_ov001_020aa7b8(int idx, void *p);
 extern void func_ov001_020aa6e4(int idx, unsigned int val, void *obj);
 extern int _ZN6Player15IsCollectingCapEv(void *self);
@@ -115,7 +115,7 @@ void func_ov001_020aa420(void) {
                         }
                     }
                 } else {
-                    func_ov001_020ab110(node);
+                    _ZN10dCapIcon_c6UnlinkEv(node);
                 }
                 node = node->next;
             } while (node != 0);

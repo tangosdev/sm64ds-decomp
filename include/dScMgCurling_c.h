@@ -29,7 +29,7 @@ struct dScMgCurling_c : dScMgBase_c {
        documented in notes/dscene-c-siblings-census.md section 3): its
        body sets fields and calls helpers, nothing like a destructor. */
 
-    u8  pad_465d[0x84f];
+    u8  pad_4660[0x84c];
     s32 unk_4eac;            /* 0x4eac */
     u8  pad_4eb0[0x28];
     s32 unk_4ed8;            /* 0x4ed8 */

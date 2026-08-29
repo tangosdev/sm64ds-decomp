@@ -6,9 +6,7 @@
  * D0 from the compiler's full destructor group. */
 #include "CapIcon.h"
 
-extern "C" void func_ov001_020ab110(dCapIcon_c *icon);
-
 dCapIcon_c::~dCapIcon_c()
 {
-    func_ov001_020ab110(this);
+    Unlink();
 }

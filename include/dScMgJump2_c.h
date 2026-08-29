@@ -15,26 +15,25 @@
  * name is known for this minigame, unlike dScMgJump_c's own factory
  * MgBounceAndPounce_Spawn.
  *
- * mModel IS DELIBERATELY RAW BYTES, and this is the interesting contrast
- * with dScMgJump_c. The ROM's destructor here destroys the Model FIRST,
- * before all three arrays. A typed member is always destroyed AFTER the
- * user-written body, so a typed `Model mModel` could only ever produce
- * arrays-then-Model -- the opposite order. Left as raw bytes with an
- * explicit `_ZN5ModelD1Ev` call in the measured position instead, the same
- * reasoning include/dScMgRoulette_c.h records for its own two models. The
- * factory's `_ZN5ModelC1Ev(p + 0x5a14)` and sizeof(Model) == 0x50 still fix
- * the offset and the extent.
+ * mPlayers is dMgJump3DMario_c[3], now named by the ROM's own RTTI and its
+ * paired constructor/destructor helpers. The compiler therefore owns the
+ * final array teardown after the still-explicit Model, mArray3 and mArray2
+ * steps. mModel remains raw for now: typing only it would move its automatic
+ * destruction after those two still-opaque arrays, opposite the ROM order.
+ * The factory's `_ZN5ModelC1Ev(p + 0x5a14)` and sizeof(Model) == 0x50 still
+ * fix the model's offset and extent without pretending the other element
+ * type names are known.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf. No separate operator
  * delete is needed: dScMgD3DBase_c, the immediate base, provides one. */
 #ifndef DSCMGJUMP2_C_H
 #define DSCMGJUMP2_C_H
 #include "dScMgD3DBase_c.h"
+#include "dMgJump3DMario_c.h"
 
 extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
 extern "C" void _ZN5ModelD1Ev(void *p);
 extern "C" void func_ov006_020c6f3c(void);
-extern "C" void func_ov006_020c893c(void);
 extern "C" void func_ov006_020eed64(void);
 
 struct dScMgJump2_c : dScMgD3DBase_c {
@@ -49,7 +48,7 @@ struct dScMgJump2_c : dScMgD3DBase_c {
        as the member pointer: naming it would fix a signature for every state
        function in the table, and none of them is recovered. */
     u8  pad_5004[0x8];   /* 0x5004 -- the state callback; see the block above */
-    u8  mArray1[0x228];   /* 0x500c -- 3 * 0xb8,  elem dtor func_ov006_020c893c */
+    dMgJump3DMario_c mPlayers[3]; /* 0x500c -- RTTI-proven element type */
     u8  mArray2[0x5a0];   /* 0x5234 -- 6 * 0xf0,  elem dtor func_ov006_020c6f3c */
     u8  mArray3[0x240];   /* 0x57d4 -- 0x10 * 0x24, elem dtor func_ov006_020eed64 */
     u8  mModel[0x50];     /* 0x5a14 -- a real Model, raw bytes; see banner */

@@ -113,7 +113,7 @@ L9c:
         self->mStateWork = t;
     }
 
-    func_02014fa4((char*)&self->mAttackClsn);
+    self->mAttackClsn.Unlink();
     self->mHurtDamage = b;
 
     if (self->mIsUnderwater == 0) {

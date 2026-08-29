@@ -5,6 +5,7 @@
 
 #ifdef __cplusplus
 #include "dBase_c.h"
+#include "fListNode.h"
 #endif
 
 /* The base of every enemy and object class, 0x020100dc..0x020113e4.
@@ -19,9 +20,9 @@
  * THE DESTRUCTOR IS DECLARED FIRST ON PURPOSE. CW emits the vtable into the TU
  * that defines the first non-inline virtual declared -- the key function -- and
  * that copy collides with the one the module's gap object supplies from ROM.
- * Putting ~dActor_c first pins that role to the D0/D1/D2 files, which by
- * construction define extern "C" free functions and never a real
- * `dActor_c::~dActor_c`. Keep it that way.
+ * Putting ~dActor_c first pins that role to the D0/D1/D2 sources. Each source
+ * carries the same real destructor definition and objisolate retains only its
+ * enrolled variant. Keep it that way.
  *
  * Offsets, widths and vtable slots are pinned by the bytes; field names are not
  * and are safe to improve. Provenance for all of it: notes/actor-core-provenance.md,
@@ -53,10 +54,8 @@ extern "C" void *data_020a0eac;
 struct dActor_c : dBase_c {
     /* The global actor list (data_0209b468) threads through every actor: the
        constructor appends this node, the destructor unlinks it, and Next() walks
-       mListNext and then reads that node's mListOwner to get back to the actor. */
-    void *mListPrev;        /* 0x050 */
-    void *mListNext;        /* 0x054 */
-    dActor_c *mListOwner;   /* 0x058 -- always `this` */
+       the next link and reads its owner to get back to the actor. */
+    fLiNdBa_c mActorListNode; /* 0x050 -- owner is always `this` */
     s32 mPosX;              /* 0x05c */
     s32 mPosY;              /* 0x060 */
     s32 mPosZ;              /* 0x064 */
@@ -101,10 +100,9 @@ struct dActor_c : dBase_c {
            16 (D1) and 17 (D0); position here does not affect that. --- */
     virtual ~dActor_c();
 
-    /* DECLARED, never defined as a method -- src/_ZN8dActor_cC1Ev.cpp and
-       src/_ZN8dActor_cC2Ev.cpp provide the symbol as hand-spelt extern "C"
-       bodies (the rich spawn-seeding logic needs exact frame-slot control).
-       Declaring it is what lets a real derived constructor emit
+    /* C1 and C2 each compile the same real constructor definition in separate
+       one-function sources. The rich spawn-seeding body still needs its exact
+       block structure for frame-slot control. Declaring it lets a real derived constructor emit
        `bl _ZN8dActor_cC2Ev` instead of inlining the implicit base
        construction (notes/ctor-migration.md section 2); it is not the key
        function, so no TU gains a vtable from this. */
@@ -162,6 +160,7 @@ struct dActor_c : dBase_c {
     bool IsPlayerInRange(const Vector3 &pos, s32 maxDist);
 
     static dActor_c *FindWithActorID(u32 actorID, dActor_c *after);
+    static dActor_c *Next(const dActor_c *after);
 
     /* Integrates mHorzSpeed along mAngleY and applies gravity. */
     void UpdatePosWithHorzSpeedAndAng();
@@ -284,7 +283,7 @@ struct dActor_c {
     u8  sceneNode[0x14];    /* 0x014 */
     u8  behavNode[0x10];    /* 0x028 */
     u8  renderNode[0x10];   /* 0x038 */
-    void *unk_048;          /* 0x048 */
+    void *lifecycleState;   /* 0x048 */
     void *heap;             /* 0x04c */
     void *mListPrev;        /* 0x050 */
     void *mListNext;        /* 0x054 */
