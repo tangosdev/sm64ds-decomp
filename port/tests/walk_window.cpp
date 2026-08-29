@@ -1981,6 +1981,16 @@ enum {
     MENU_WARP = 0,
     MENU_LEVEL,
     MENU_MINIGAME,      /* left/right pick one of the ROM's thirty, enter goes */
+    /* ---- VS wiring lane: the section the owner asked for -- choose a VS map
+       and game mode, then boot the ROM's own VS mode. Enter on either row
+       starts VS on the showing map (a relaunch, the minigame row's shape: the
+       child boots the ROM's own start through SM64DS_VS_MAP; see the boot
+       hook past the game-heap init). The ROM's VS has exactly ONE game mode
+       -- the star battle; no mode selector exists in ov075
+       (port/slice_vs.txt section 4) -- so the mode row states it rather than
+       inventing choices. */
+    MENU_VS_MAP,        /* left/right walk the ROM's four VS maps, enter goes */
+    MENU_VS_MODE,       /* the ROM's single mode, stated; enter goes too      */
     MENU_EXIT,
     MENU_CHARACTER,
     MENU_SNAP,
@@ -2265,6 +2275,17 @@ static int menu_entrance;             /* the entrance the warp row is showing */
    Rows the port cannot mount yet are still SHOWN, marked, because the point
    of the list is that it is the game's own and the gap is visible. */
 static int menu_level_row = 1;
+/* the VS row's map cursor, 0..3 into the ROM's own list at
+   data_ov075_0211c6ec (hal/scene_vs_menu.cpp reads it back by index) */
+static int menu_vs_map;
+extern "C" int port_vs_map_level(int mapIdx);   /* hal/scene_vs_menu.cpp */
+/* the VS boot hook's seams (see THE VS BOOT block in main): the ROM's own
+   start, the port's one level latch, and the request release -- all extern
+   "C", declared here because a block-scope extern in C++ mangles */
+extern "C" void port_vs_stage_and_start(int mapIdx);   /* hal/scene_vs_menu.cpp */
+extern "C" int  port_level_entry_latch(void);          /* hal/level_change.cpp  */
+extern "C" int  port_scene_request_release(const char *why);
+extern "C" void port_level_set_target(int level);      /* hal/level_boot.cpp    */
 static int g_overlay_on;              /* F3, and the menu's overlay row */
 static char g_playlog[160] = "off";   /* the flight recorder's current file */
 /* fault_probe.h's rich dump tails this after a crash; a stable pointer at the
@@ -2700,6 +2721,11 @@ static int port_menu_relaunch(int scene_id, int level_id)
     SetEnvironmentVariableA("SM64DS_SCENE", 0);
     SetEnvironmentVariableA("SM64DS_LEVEL", 0);
     SetEnvironmentVariableA("SM64DS_DUAL_SCREEN", 0);
+    /* the VS destination pair travels with the destination class: cleared on
+       every relaunch so a level or minigame child of a VS run does not boot
+       back into VS, set only by the VS rows' own launcher below */
+    SetEnvironmentVariableA("SM64DS_VS_MAP", 0);
+    SetEnvironmentVariableA("SM64DS_VS_MODE", 0);
     if (scene_id >= 0) {
         snprintf(sid, sizeof sid, "%d", scene_id);
         SetEnvironmentVariableA("SM64DS_SCENE", sid);
@@ -2719,6 +2745,40 @@ static int port_menu_relaunch(int scene_id, int level_id)
        a few statements of entering main. Measured -- run both under
        SM64DS_NO_PLAYLOG=1, which is the switch that skips that freopen, and
        the two do interleave on the shared console whatever this flag says. */
+    if (!CreateProcessA(exe, 0, 0, 0, FALSE, 0, 0, 0, &si, &pi))
+        return 0;
+    CloseHandle(pi.hThread);
+    CloseHandle(pi.hProcess);
+    return 1;
+}
+
+/* THE THIRD DESTINATION: a VS boot. Same launcher discipline as the two
+   above -- the shared clear table, the destination class cleared and then
+   set, no forced layout -- and the child does the rest: its boot hook (past
+   the game-heap init) runs the ROM's own VS start off SM64DS_VS_MAP. The
+   mode is NOT an input today because the ROM's VS has exactly one
+   (port/slice_vs.txt section 4); when a second one ever exists this is where
+   its env would be set. */
+static int port_menu_relaunch_vs(int vs_map)
+{
+    char exe[MAX_PATH];
+    char sid[16];
+    STARTUPINFOA si;
+    PROCESS_INFORMATION pi;
+    if (!GetModuleFileNameA(0, exe, (DWORD)sizeof exe))
+        return 0;
+    for (unsigned i = 0; i < sizeof PORT_RELAUNCH_CLEAR /
+                             sizeof *PORT_RELAUNCH_CLEAR; ++i)
+        SetEnvironmentVariableA(PORT_RELAUNCH_CLEAR[i], 0);
+    SetEnvironmentVariableA("SM64DS_SCENE", 0);
+    SetEnvironmentVariableA("SM64DS_LEVEL", 0);
+    SetEnvironmentVariableA("SM64DS_DUAL_SCREEN", 0);
+    SetEnvironmentVariableA("SM64DS_VS_MODE", 0);
+    snprintf(sid, sizeof sid, "%d", vs_map & 3);
+    SetEnvironmentVariableA("SM64DS_VS_MAP", sid);
+    memset(&si, 0, sizeof si);
+    si.cb = sizeof si;
+    memset(&pi, 0, sizeof pi);
     if (!CreateProcessA(exe, 0, 0, 0, FALSE, 0, 0, 0, &si, &pi))
         return 0;
     CloseHandle(pi.hThread);
@@ -2831,6 +2891,20 @@ static void menu_draw(const OvlSurface &fb)
                  port_scene_is_hosted(MG_SCENE[mi].id)
                      ? "enter restarts, stacked"
                      : "not wired yet");
+    }
+    {
+        /* the VS rows. The map line carries the ROM facts (list position,
+           level id, overlay, mount state) the way the level row does; the
+           mode line states the ROM's one mode. Both act on enter. */
+        const int vlv = port_vs_map_level(menu_vs_map);
+        snprintf(ln[MENU_VS_MAP], sizeof ln[0],
+                 "vs map            %d of 4   level %2d ov%03d %s",
+                 menu_vs_map + 1, vlv, port_level_overlay_id(vlv),
+                 port_level_is_mounted(vlv) ? "enter starts VS"
+                                            : "NOT MOUNTED");
+        snprintf(ln[MENU_VS_MODE], sizeof ln[0],
+                 "vs mode           star battle (the ROM's only mode)   "
+                 "enter starts VS");
     }
     snprintf(ln[MENU_EXIT], sizeof ln[0],
              "exit course       ExitLevel() -> level 1 entrance 13   "
@@ -3269,6 +3343,50 @@ static void menu_input(int pad_live, const XPad *pad)
                     menu_mg = (mg_row() + MG_COUNT - 1) % MG_COUNT;
                 } else {
                     menu_mg = (mg_row() + 1) % MG_COUNT;
+                }
+                break;
+            case MENU_VS_MAP:
+            case MENU_VS_MODE:
+                /* left/right walk the ROM's four maps (the map row only);
+                   enter on either row starts VS on the showing map -- the
+                   minigame row's relaunch shape, and the same refusal
+                   discipline: an unmounted map is refused in words BEFORE
+                   the parent commits, because the relaunch is a one-way
+                   door. The mode row moves nothing: the ROM's VS has ONE
+                   mode (port/slice_vs.txt section 4) and a selector with
+                   one entry would be an invented choice. */
+                if (edge & (1u << 5)) {
+                    const int vlv = port_vs_map_level(menu_vs_map);
+                    if (!port_level_is_mounted(vlv)) {
+                        char msg[64];
+                        snprintf(msg, sizeof msg,
+                                 "VS map %d (level %d) is not mounted",
+                                 menu_vs_map + 1, vlv);
+                        ss_note(msg);
+                        fprintf(stderr, "[menu] VS map %d is level %d "
+                                "(overlay %d), NOT mounted -- refused, menu "
+                                "stays open\n", menu_vs_map + 1, vlv,
+                                port_level_overlay_id(vlv));
+                    } else if (port_menu_relaunch_vs(menu_vs_map)) {
+                        fprintf(stderr, "[menu] VS map %d (level %d): "
+                                "started SM64DS_VS_MAP=%d, this process is "
+                                "quitting\n", menu_vs_map + 1, vlv,
+                                menu_vs_map);
+                        W.PostQuitMessage_(0);
+                    } else {
+                        char msg[64];
+                        snprintf(msg, sizeof msg,
+                                 "could not start VS map %d", menu_vs_map + 1);
+                        ss_note(msg);
+                        fprintf(stderr, "[menu] VS map %d: could not start "
+                                "the VS run (win32 %lu)\n", menu_vs_map + 1,
+                                (unsigned long)GetLastError());
+                    }
+                } else if (menu_sel == MENU_VS_MAP) {
+                    if (dec)
+                        menu_vs_map = (menu_vs_map + 3) & 3;
+                    else
+                        menu_vs_map = (menu_vs_map + 1) & 3;
                 }
                 break;
             case MENU_EXIT:
@@ -5967,6 +6085,62 @@ int main(void)
     /* Game mode 0 (adventure) -- LoadClsnAndObjects branches its minimap
        and HUD spawns on this, and Stage::CheckInput reads it later. */
     data_0209f2d8 = 0;
+
+    /* ---- VS wiring lane: THE VS BOOT --------------------------------------
+       SM64DS_VS_MAP=<0..3> makes this boot a VS match on the ROM's own map
+       list. The ORDER IS THE ROM'S (port/slice_vs.txt section 4): one byte
+       (the lobby's own map pick) and one matched call, func_ov075_02116c8c,
+       which runs PrepareVsMode -- data_0209f2d8 back to 1, SetPlayerGlobals,
+       StartSceneFade(3), the save defaults -- then LoadLevelNoReturn(map, 0,
+       2, 0) and the music stop. Placed AFTER the adventure default above so
+       the ROM's own mode write is the one that stands, and after the game
+       heap so the staged path allocates like the DS does.
+
+       The staged level then flows through the port's ONE latch
+       (port_level_entry_latch, the title-entry seam) into the boot target,
+       and the scene-3 request is released because the level path is serving
+       it -- the same two moves hal/title_entry.cpp makes for StartFile. The
+       entrance and star filter the ROM staged (0 and 2) are re-asserted via
+       the env the direct boot re-seats from, so the boot's own defaults
+       cannot overwrite the ROM's values. */
+    {
+        const char *vsm = getenv("SM64DS_VS_MAP");
+        if (vsm && vsm[0]) {
+            const int mi = atoi(vsm) & 3;
+            const int vlv = port_vs_map_level(mi);
+            const char *vmode = getenv("SM64DS_VS_MODE");
+            if (vmode && vmode[0] && atoi(vmode) != 0)
+                fprintf(stderr, "[vs] SM64DS_VS_MODE=%s: the ROM's VS has "
+                        "exactly one mode (the star battle); reported and "
+                        "ignored\n", vmode);
+            if (!port_level_is_mounted(vlv)) {
+                fprintf(stderr, "[vs] REFUSED: VS map %d is level %d "
+                        "(overlay %d), not mounted in this build -- not "
+                        "booting\n", mi + 1, vlv, port_level_overlay_id(vlv));
+                return 2;
+            }
+            port_vs_stage_and_start(mi);
+            {
+                const int staged = port_level_entry_latch();
+                if (staged != vlv) {
+                    fprintf(stderr, "[vs] REFUSED: the ROM's own start staged "
+                            "level %d where the map list says %d -- not "
+                            "booting a level the ROM did not ask for\n",
+                            staged, vlv);
+                    return 2;
+                }
+                port_level_set_target(staged);
+                port_scene_request_release("the VS start staged the map and "
+                                           "the level boot is serving it");
+                SetEnvironmentVariableA("SM64DS_ENTRANCE", "0");
+                SetEnvironmentVariableA("SM64DS_STAR_FILTER", "2");
+                fprintf(stderr, "[vs] ENTERING VS: map %d of 4 -> level %d "
+                        "(overlay %d), star filter 2, VS mode flag %d "
+                        "(PrepareVsMode's own write)\n", mi + 1, staged,
+                        port_level_overlay_id(staged), (int)data_0209f2d8);
+            }
+        }
+    }
 
     /* The collision object itself is the harness's either way; what fills it
        is the question. Under SM64DS_REAL_BOOT the game's own
