@@ -7,13 +7,13 @@
 
 struct Obj { void **vtable; };
 
-extern void *data_0209a754[];
+extern void *_ZTVN3abi21__vmi_class_type_infoE[];
 extern void *func_0207363c(struct Obj *thiz);       /* 0x0207363c */
 extern void _ZN6Memory16operator_delete2EPv(void *ptr); /* 0x0203cbcc */
 
 struct Obj *func_0207359c(struct Obj *thiz)
 {
-    thiz->vtable = (void **)data_0209a754;
+    thiz->vtable = (void **)_ZTVN3abi21__vmi_class_type_infoE;
     func_0207363c(thiz);
     _ZN6Memory16operator_delete2EPv(thiz);
     return thiz;
