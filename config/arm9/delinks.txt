@@ -3734,7 +3734,7 @@ src/_ZN8Particle10SysTrackerC1Ev.cpp:
     complete
     .text start:0x02023204 end:0x020233d4
 
-src/func_020233d4.c:
+src/GetActorDebugName.c:
     complete
     .text start:0x020233d4 end:0x020233f0
 
