@@ -35,8 +35,10 @@
 #include "ShadowModel.h"
 #include "dBgCh_Actr.h"
 
-/* Compatibility view for the five still-imported BooCage method symbols. */
-struct BooCage : dEnemyBase_c {
+/* ROM-authenticated lifecycle identity.  The remaining `BooCage` method names
+ * predate the RTTI recovery, so they use the layout-only compatibility view
+ * below until those imported names can be proved or corrected independently. */
+struct daTBasket_c : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     Model                        mModel;                /* 0x300 */
@@ -47,7 +49,10 @@ struct BooCage : dEnemyBase_c {
     u8  pad_37f[0x1];
 
     /* --- vtable --- */
-    virtual ~BooCage();
+    virtual ~daTBasket_c();
+};
+
+struct BooCage : daTBasket_c {
 
     /* methods */
     int CleanupResources();
@@ -55,6 +60,7 @@ struct BooCage : dEnemyBase_c {
     int Render();
 };
 
+typedef char daTBasket_c_size_must_be_0x380[sizeof(daTBasket_c) == 0x380 ? 1 : -1];
 typedef char BooCage_size_must_be_0x380[sizeof(BooCage) == 0x380 ? 1 : -1];
 
 #endif /* BOOCAGE_H */
