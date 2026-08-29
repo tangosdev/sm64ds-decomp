@@ -22,7 +22,7 @@
  *   0x008 mContents: Particle::SysTracker::Contents, a real nested class --
  *         System::FromUniqueID calls
  *         Particle::SysTracker::Contents::FindData(this + 8, uniqueID), and
- *         Update runs func_02021bec on the same address.
+ *         Update calls Contents::Update on the same address.
  *
  * Contents' extent is pinned from both ends: FindData indexes
  * `contents + 0x708 + (uniqueID & 0xf) * 4`, so the bucket array is sixteen
@@ -37,6 +37,8 @@
 #define PARTICLE__SYSTRACKER_H
 #include "dPa_c.h"
 
+struct Vector3_16f;
+
 namespace Particle {
 
 struct System;
@@ -47,17 +49,24 @@ struct SysTracker {
        extent and stride are fixed by the exact constructor; FindData fixes the
        bucket heads and chain fields. */
     struct Contents {
-        /* One live-system registry node. The two names are inferred; the
-           offsets are fixed by FindData (+0x00/+0x18) and FromUniqueID
-           (+0x0c). */
+        /* One live-system registry node. Field and method names are readable
+           inferences, not ROM-authenticated original spellings. The offsets
+           and relationships are fixed by the contiguous registry routines. */
         struct Entry {
             u32 uniqueID;      /* 0x00 */
-            u8  pad_004[0x6];
+            u32 definitionID;  /* 0x04 - index into Manager::mDefinitions */
+            u16 savedValue;    /* 0x08 - restored when the System is released */
             u8  active;        /* 0x0a; cleared before an entry is removed */
             u8  pad_00b;
             System *system;    /* 0x0c */
-            u8  pad_010[0x8];
+            dPa_c::level_c::callback_c *callback; /* 0x10 */
+            Entry *prev;       /* 0x14 */
             Entry *next;       /* 0x18 */
+
+            void Reset();
+            bool Initialise(u32 newUniqueID, u32 newDefinitionID,
+                            Vector3& position, const Vector3_16f *direction,
+                            dPa_c::level_c::callback_c *newCallback);
         };
 
         u32   unk_000;
@@ -68,6 +77,13 @@ struct SysTracker {
 
         Contents();
         Entry *FindData(u32 uniqueID) const;
+        void Unlink(Entry& entry);
+        void Link(Entry& entry);
+        u32 Create(u32 definitionID, Vector3& position,
+                   const Vector3_16f *direction,
+                   dPa_c::level_c::callback_c *callback);
+        void Clear();
+        void Update();
     };
 
     void    *mResourceFile;  /* 0x000 */

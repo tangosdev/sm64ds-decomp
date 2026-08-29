@@ -5,7 +5,9 @@ struct Params
 };
 struct System;
 extern struct System *_ZNK8Particle10SysTracker8Contents8FindDataEj(void *contents, unsigned int type);
-extern void *func_02021a74(void *table, int u, void *args, const void *pos, void *cb);
+extern void *_ZN8Particle10SysTracker8Contents6CreateEjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE(
+    void *contents, unsigned int definitionID, void *position,
+    const void *direction, void *callback);
 extern void *data_0209ee74;
 struct Vec3
 {
@@ -78,5 +80,6 @@ int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsig
     }
     return sys->f0;
   }
-  return (int) func_02021a74(contents, u, &args, pos, cb);
+  return (int) _ZN8Particle10SysTracker8Contents6CreateEjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE(
+      contents, u, &args, pos, cb);
 }

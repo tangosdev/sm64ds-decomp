@@ -42,12 +42,12 @@ struct Particle {
     void *mResourceFile;    /* 0x000 */
     /* Particle::Manager. Initialise allocates it (func_0204a4c8) and pokes
        0x8000 into its +0x30; Particle::RenderAll and SysTracker::Update pass
-       it straight on, and System::NewSimple / func_02021d1c call
+       it straight on, and the particle registry's Entry::Initialise calls
        Particle::Manager::AddSystem on it. */
     void *mManager;         /* 0x004 */
-    /* Particle::SysTracker::Contents, a real nested class: the constructor and
-       constructor and destructor run its initializer / func_02021b98 on it, and
-       System::FromUniqueID calls
+    /* Particle::SysTracker::Contents, a real nested class: SysTracker's
+       constructor constructs it, the conditional teardown path calls Clear,
+       and System::FromUniqueID calls
        Particle::SysTracker::Contents::FindData(this + 8, uniqueID). */
     u8  mContents;          /* 0x008 */
     u8  pad_009[0x747];

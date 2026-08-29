@@ -4,6 +4,13 @@
 #include "Particle__Manager.h"
 #include "Particle__SysTracker.h"
 
+/* System::New's compiler-produced name distinguishes this six-byte particle
+ * direction from the actor-facing Vector3_16 type. */
+#ifndef VECTOR3_16F_DEFINED
+#define VECTOR3_16F_DEFINED
+struct Vector3_16f { s16 x, y, z; };
+#endif
+
 namespace Particle {
 
 /* The list element's exact source type and member spellings are not
@@ -42,10 +49,12 @@ struct System {
     SystemDefinition *mDefinition; /* 0x18 */
     /* Callback virtuals toggle bit 1 while spawning or suppressing particles. */
     u32 callbackFlags;             /* 0x1c */
-    u8 pad_020[0x1a];
+    Vector3 position;              /* 0x20 */
+    u8 pad_02c[0x0e];
     /* simpleCallback_c copies this value in both directions. */
     s16 callbackValue;             /* 0x3a */
-    u8 pad_03c[0x0c];
+    Vector3_16f direction;         /* 0x3c */
+    u8 pad_042[0x06];
     /* Descriptive names for callback-owned, body-proven fields. */
     s32 callbackParam;             /* 0x48 */
     s32 callbackVelocity;          /* 0x4c */
