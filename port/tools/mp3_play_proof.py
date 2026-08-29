@@ -797,11 +797,19 @@ def rungP6(seconds):
       the child presses -> the CHILD's body changes state in the HOST's world,
                            and the host's body does NOT
     """
-    # 0x400 is a button bit the state machine branches on (St_Crawl_Main:45 and
-    # St_Shell_Main:103 both test data_0209f49c & 0x400). Held, so the state has
-    # time to change and the assertion is not racing a one-frame edge.
-    t1a, t2a, _ = play_session("p6_host_presses", seconds, inj_p="key=0x400")
-    t1b, t2b, _ = play_session("p6_child_presses", seconds, inj_c="key=0x400")
+    # THE INJECTED VALUE IS A RAW PAD BIT, NOT A Ctrl BIT -- the injection
+    # enters at the key register, and Stage::CheckInput's remap (Nintendo's
+    # mode-0 map at data_02075650, hosted since run mg16 lane MPBTN) sits
+    # between the register and the word the state machine reads. The Ctrl bit
+    # the states branch on is 0x400 (St_Crawl_Main:45, St_Shell_Main:103 test
+    # data_0209f49c & 0x400) and the RAW bit the map turns into it is R =
+    # 0x100. An earlier revision injected 0x400 raw -- that is X, which the map
+    # sends to Ctrl 0x8000, a bit no state reads -- an identity-map assumption
+    # from the era when the maps were zeroed and NOTHING crossed. Held, so the
+    # state has time to change and the assertion is not racing a one-frame
+    # edge.
+    t1a, t2a, _ = play_session("p6_host_presses", seconds, inj_p="key=0x100")
+    t1b, t2b, _ = play_session("p6_child_presses", seconds, inj_c="key=0x100")
     ok = isolated("rungP6(host)", t1a)
     ok &= isolated("rungP6(child)", t1b)
 
@@ -872,8 +880,11 @@ def rungP7(seconds):
     zero anyway.
     """
     env = dict(SYNC_ON)
-    t1, t2, _ = play_session("p7_snapfree", seconds, inj_p="key=0x400",
-                             inj_c="key=0x400", extra_env=env)
+    # raw R (0x100) -> Ctrl 0x400 through the mode-0 remap: the crouch family,
+    # the exact pattern that produced the field's 123 snaps. See rungP6's
+    # comment for why the raw bit and the Ctrl bit differ.
+    t1, t2, _ = play_session("p7_snapfree", seconds, inj_p="key=0x100",
+                             inj_c="key=0x100", extra_env=env)
     ok = isolated("rungP7", t1)
     st = sync_stats(t2)
     ok &= M.verdict(bool(st), "rungP7 the child reported sync counters")

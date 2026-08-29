@@ -147,6 +147,9 @@
 #include "ntr/rt.h"
 
 #include "dsstate_seg.h"
+/* the transport query alone (run mg16 lane MPBTN): the scene publisher below
+   must not read the pad record while a session's fan-out owns it */
+#include "comms_seam.h"
 
 // ---- THE LINKAGE FACES ov003's OWN SOURCES NEED -----------------------------
 //
@@ -4320,6 +4323,19 @@ int func_ov007_020c1da0(int i);
  * notes/port-selftest-bmp-gate.md requires before two captures may be compared
  * at all.
  */
+/* run mg16 lane MPBTN: THE HOST KEY WORD, owned here so the publisher below
+   has a source that is the host's and nobody else's. tests/walk_window.cpp's
+   scene loop refreshes it once per frame from the keyboard and the pad --
+   active high, the DS's raw pad convention, d-pad and Start and Select
+   included. On a path with no window loop (port_scene_run, title_entry's
+   headless run) nothing writes it and it stays 0, which is that path's
+   behaviour from before this word existed. */
+static unsigned short g_host_key_bits;
+extern "C" void port_host_keys_set(unsigned short raw)
+{
+    g_host_key_bits = raw;
+}
+
 static void port_scene_comms_publish(void)
 {
     static int off = -1;
@@ -4363,8 +4379,23 @@ static void port_scene_comms_publish(void)
        gets real buttons. Either way it cannot invent a held key, which the
        literal transcription would have done on frame one. */
     {
-        const int pidx = 0;   /* slot 0: the local player on the scene path */
-        const unsigned short held = data_020a0e58[pidx * 2];
+        /* run mg16 lane MPBTN: THE SOURCE MOVED OFF THE PAD RECORD, one step
+           past the block above. That block's premise -- data_020a0e58 is
+           "written fresh each frame by the port's own input layer" -- is a
+           LEVEL-path fact; on a scene run nothing writes it, and in a session
+           the ROM's fan-out writes it FROM the four comms records, so a
+           publisher reading it here would feed the wire back into itself:
+           zero feeds zero forever. The host's own key word (above, refreshed
+           by the scene window loop) is the source now -- already active high
+           in the raw convention, which is what the ROM's xor exists to
+           produce. The pad record still rides along, but ONLY while no
+           session's fan-out owns it: that keeps every headless path that
+           pokes PadData exactly as it was, and cuts the circle the moment a
+           transport is up. Either source can only add held keys the host
+           actually saw; neither can invent one. */
+        unsigned short held = g_host_key_bits;
+        if (!(port::comms_transport() && std::getenv("SM64DS_COMMS_FANOUT")))
+            held |= data_020a0e58[0];
         *(unsigned short *)data_020a104e = (unsigned short)(held & 0x2fff);
     }
     /* func_0203df40's own last statement on the record. func_0203e0ac masks
@@ -4386,10 +4417,15 @@ static void port_scene_comms_publish(void)
         const unsigned short *s0 = (const unsigned short *)(data_020a1154 + 4);
         char *g = data_ov007_0210342c;
         const char *trk = g ? *(const char **)(g + 0x50) : 0;
+        /* key=: the broadcast slot-0 KEY WORD (record +0xe), run mg16 lane
+           MPBTN -- the field the title's key tracker consumes, printed so a
+           headless windowed run driving SM64DS_PAD_TEST can prove the host
+           buttons reach the record without a hand on the keyboard. */
         std::fprintf(stderr,
-                     "[t-comms] de8=%u xy=(%u,%u) idx=%d slot0={%u,%u,%u,%u}",
+                     "[t-comms] de8=%u xy=(%u,%u) idx=%d slot0={%u,%u,%u,%u} "
+                     "key=%04x",
                      down, sx, sy, data_020a0f10[0],
-                     s0[0], s0[1], s0[2], s0[3]);
+                     s0[0], s0[1], s0[2], s0[3], s0[5]);
         if (trk)
             std::fprintf(stderr, "  trk now=%u prev=%u released=%d",
                          *(const unsigned short *)(trk + 0x0c),

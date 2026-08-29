@@ -418,6 +418,41 @@ static unsigned short g_raw_pad_bits;
 static void port_raw_pad_stash(unsigned short raw) { g_raw_pad_bits = raw; }
 static unsigned port_raw_pad_bits(void) { return g_raw_pad_bits; }
 
+/* run mg16 lane MPBTN: the BUTTON half of the same stash, and the reason it
+   was missing is the whole of "no buttons in multiplayer". The d-pad stash
+   above was the only thing comms_publish_pad ever received, so the published
+   key word carried the four direction bits and nothing else -- measured over
+   every playlog pair in runs/mg16/out/MP2/two_windows: the local key word and
+   every fanned pad{held} are drawn from {0000,0010..00a0}, the d-pad nibble,
+   in the 08-27 sessions where buttons "worked" (through the then-ungated
+   direct Ctrl stores) exactly as in the 08-29 session where they died.
+
+   THE CONVENTION CHANGES AT THIS LINE and that is what the translator is for.
+   host_ds_buttons speaks the game's REMAPPED Ctrl convention (jump=2,
+   punch=1, crouch=0x400, run=0x800), because it used to feed the Ctrl words
+   directly. The key register wants the DS's RAW pad convention, because
+   src/func_0203df40.c publishes it and src/_ZN5Stage10CheckInputEv.cpp reads
+   it back through the mode-0 remap map at data_02075650 (ROM bytes: A->1,
+   B->2, R->0x400, Y->0x800, L->0x4000, X->0x8000). So the translation below
+   is that map's exact inverse, row by row, and nothing else crosses:
+   the Ctrl-only camera-rotate bits 0x100/0x200 have NO raw source in mode 0
+   (on the DS they are the touch screen's arrows, Stage::CheckCameraInput),
+   and passing them through as raw bits would land on R and L -- a phantom
+   crouch on every camera turn. */
+static unsigned short g_raw_btn_bits;
+static void port_raw_btn_stash(unsigned short raw) { g_raw_btn_bits = raw; }
+static unsigned port_raw_btn_bits(void) { return g_raw_btn_bits; }
+static unsigned short host_btn_to_raw_keys(unsigned short btn)
+{
+    unsigned short raw = 0;
+    if (btn & 0x0001) raw |= 0x0001;   /* punch : Ctrl 0x0001 <- raw A */
+    if (btn & 0x0002) raw |= 0x0002;   /* jump  : Ctrl 0x0002 <- raw B */
+    if (btn & 0x0400) raw |= 0x0100;   /* crouch: Ctrl 0x0400 <- raw R */
+    if (btn & 0x0800) raw |= 0x0800;   /* run   : Ctrl 0x0800 <- raw Y */
+    if (btn & 0x4000) raw |= 0x0200;   /* snap  : Ctrl 0x4000 <- raw L */
+    return raw;
+}
+
 /* run mg15 lane MP1. SM64DS_COMMS_FANOUT=1 runs the ROM's own steps 0x16 and
    0x17 (src/func_0203bb60.c, src/func_0203bc7c.c) after the comms tick, so
    TouchInfo[4] and PadData[4] come out of the four comms records the way the
@@ -532,6 +567,15 @@ extern unsigned short data_0209b274;
 extern signed char data_0209f224;
 extern int data_0209214c[];    /* button remap pointer table (ROM DS
                                   pointers -- repointed at staging) */
+/* CheckInput's three button remap maps, 16 u16 rows each, hosted as ROM bytes
+   by port/tools/romdata.py. The staging block points data_0209214c's first
+   three entries at them so the remap loop reads Nintendo's rows. */
+extern unsigned char data_02075650[];   /* mode 0: level play  */
+extern unsigned char data_02075670[];   /* mode 1 */
+extern unsigned char data_02075690[];   /* mode 2: touch mode  */
+/* the host key word the scene path's publisher reads (hal/scene_boot.cpp);
+   the scene loop below refreshes it every frame from the host input */
+void port_host_keys_set(unsigned short raw);
 extern char data_0209f49c[];   /* held buttons (bit 1 = A/jump held) */
 extern char data_0209f49e[];   /* pressed-this-frame (bit 1 = jump) */
 extern int data_0209b468[4];   /* actor list head (stomp tracker) */
@@ -5512,6 +5556,17 @@ static int scene_window_run(void)
                     if (pad.buttons & 0x0010) btn |= 0x08;   /* START       */
                 }
             }
+            /* run mg16 lane MPBTN: the host key word for the scene path's
+               publisher (hal/scene_boot.cpp's port_scene_comms_publish),
+               refreshed every frame from the SAME host state the store below
+               uses -- so the title's key word comes from the keyboard and the
+               pad, never from a record something else may be filling. This
+               word is MIXED convention by construction: host_ds_buttons'
+               four bits are Ctrl-convention and go through the translator;
+               the d-pad, Start and Select added above are already raw DS bits
+               (0xf0, 0x08, 0x04) and pass straight through. */
+            port_host_keys_set((unsigned short)(host_btn_to_raw_keys(btn) |
+                                                (btn & 0x00fc)));
             /* SLOT 0 ONLY, AND ONLY WHEN THE ROM'S FAN-OUT IS NOT DRIVING.
                Run mg16 lane MP3, field failure 2. This publishes the LOCAL
                buttons into Ctrl slot 0's held and pressed words, which is
@@ -6368,13 +6423,28 @@ int main(void)
        run. Two seats for one fact, and the later one silently won. */
     data_0209f21c = (unsigned char)port::vs_player_count();
     data_0209f350[0] = 0;
-    /* the ROM's button-remap tables are DS pointers (0x0207xxxx) the
-       host has no image behind; buttons are written directly to the
-       Ctrl fields anyway, so give CheckInput's remap loop zeros */
+    /* run mg16 lane MPBTN: THE REAL REMAP MAPS, and retiring the zeros that
+       sat here. This line used to point all four entries at a zero map,
+       because "buttons are written directly to the Ctrl fields anyway" -- and
+       that premise died the day the direct Ctrl stores were gated off in a
+       session (the third-writer gate below, 0f0d5e134). From then on the ROM's
+       own button path -- key register, local record, wire, fan-out into
+       PadData, CheckInput's remap -- was the ONLY path, and its last step
+       multiplied every button by zero. The maps are Nintendo's own bytes now
+       (port/tools/romdata.py), so a fanned pad word turns into exactly the
+       Ctrl bits the DS would have produced, for every slot.
+
+       The pointer table data_0209214c itself is also hosted ROM bytes, but
+       its words are DS ADDRESSES (0x02075650..) -- the relocated-pointer-table
+       class -- so it is repointed here, never dereferenced as emitted. Mode 3
+       keeps a zero map: the ROM's fourth word is not a map (it points into
+       unrelated data) and no staged pad ever selects mode 3. */
     {
         static unsigned short zero_btn_map[32];
-        for (int i = 0; i < 4; ++i)
-            ((unsigned short **)data_0209214c)[i] = zero_btn_map;
+        ((unsigned short **)data_0209214c)[0] = (unsigned short *)data_02075650;
+        ((unsigned short **)data_0209214c)[1] = (unsigned short *)data_02075670;
+        ((unsigned short **)data_0209214c)[2] = (unsigned short *)data_02075690;
+        ((unsigned short **)data_0209214c)[3] = zero_btn_map;
     }
     /* InitResources parked the state machine in St_LevelEnter, which was a
        no-op state under the fake spawn context: its entrance-anim table read
@@ -7907,6 +7977,18 @@ int main(void)
                camera-rotate readers do not (mask to bits 0-1). SM64DS_PROBE_INPUT. */
             if (!menu_on)
                 btn |= (unsigned short)(port_input_probe_bits(frame) & 0x3);
+            /* run mg16 lane MPBTN: the button half of the published key word,
+               stashed HERE because this is the first line where btn is final
+               (bindings, run-mode AUTO, the selftest probes, the menu's zero,
+               the scripted probe's A/B -- all folded). Taken from the host
+               state and never from a record, so the fan-out cannot feed the
+               wire back into itself; comms_publish_pad below in this frame
+               ORs it with the d-pad stash. The full raw probe word rides
+               along so a scripted crouch (R) or run (Y) crosses the wire in a
+               headless proof exactly like a held key. */
+            port_raw_btn_stash((unsigned short)(
+                host_btn_to_raw_keys(btn) |
+                (menu_on ? 0 : port_input_probe_bits(frame))));
             /* ---- THE THIRD BUTTON WRITER, AND THE ONE HIS HANDS FOUND ------
              *
              * Run mg16 lane MP4, second field re-test. This is the LEVEL path's
@@ -9249,8 +9331,13 @@ int main(void)
 
                ORDERING: comms_publish_pad below is what makes :31 of that TU
                read a real pad, and it must land before this call and before the
-               fan-out. See THE STUCK CONTROLLER in hal/comms_conductor.cpp. */
-            port::comms_publish_pad(port_raw_pad_bits());
+               fan-out. See THE STUCK CONTROLLER in hal/comms_conductor.cpp.
+
+               BOTH HALVES of the host pad go in: the d-pad stash and the
+               button stash (run mg16 lane MPBTN). Publishing only the first
+               is what made every session's key word a d-pad nibble and every
+               button dead once the direct Ctrl stores were gated. */
+            port::comms_publish_pad(port_raw_pad_bits() | port_raw_btn_bits());
             func_0203df40();
             /* run mg16 lane MP4: one frame of the state-sync layer, AFTER the
                conductor. Call position is the contract's ordering rule made
