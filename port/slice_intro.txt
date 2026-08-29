@@ -184,3 +184,41 @@ src/func_ov002_020f396c.c
 src/func_ov002_020f5a6c.c
 src/func_0201ef50.c
 src/func_0201f108.c
+
+# ---- THE SPAWN SPINE'S FACTORY -------------------------------------------
+# With both dispatchers seated the opening got into Actor::Spawn and died on a
+# ROM factory pointer held at ov002 0x0210bae8:
+#   ProcessKuppaScript+0x329 -> func_0200e494+0x22 -> func_0200e4e4+0x36
+#   -> Actor::Spawn+0x27 -> func_02043098+0x7c -> 0x020f69a8
+# Matched, unoffered, same shape as everything else in this file.
+src/func_ov002_020f69a8.cpp
+
+# ---- THE SCRIPT POINTER PATCHER ------------------------------------------
+# The opening is a FOUR-script chain -- data_020890a0 -> data_02088a94 ->
+# data_02089af8 -> data_020876d4 -- and the chain arguments and the
+# argument-blob pointers are stored as ZERO on disc. __sinit_02073e6c writes
+# them at boot, byte by byte because the fields are unaligned, e.g.
+#   data_02089af8[0x2cf..0x2d2] = (unsigned)data_020876d4   (the chain to 4)
+# On the HOST it writes HOST addresses, which is exactly why it has to RUN
+# rather than the pointers being byte-copied.
+#
+# Its 155-symbol closure was audited individually against config/arm9/relocs.txt
+# before any of it was hosted (out/intro-cutscene/reloc_audit.txt): 96 symbols
+# are byte-copy clean and went into port/tools/romdata.py; 55 carry a real
+# pointer at +4 and are hosted with HOST pointers in hal/intro_script_records.cpp;
+# 3 are fader vtables port/hal/fader_wipes.cpp already hosts. Nothing was
+# byte-copied on faith -- that is the data_020876e4 crash romdata.py banks.
+src/__sinit_02073e6c.c
+
+# ---- THE SCRIPT MODEL CLASS'S VTABLE TARGETS -----------------------------
+# data_ov002_0210bae4 is the vtable CutsceneObject's model is built on. Six of
+# its slots are code and four of the six were matched-but-unoffered, so
+# ModelBase::SetFile called through DS addresses. Seated in
+# hal/actor_classes_intro.cpp; the bodies ride in here.
+#   +0x00 func_ov002_020f6a00            +0x04 func_ov002_020f69a8 (D0)
+#   +0x08 Model::DoSetFile               +0x0c Model::UpdateVerts
+#   +0x10 Model::Virtual10               +0x14 Model::Render (already hosted)
+src/func_ov002_020f6a00.cpp
+src/_ZN5Model9DoSetFileEPcii.cpp
+src/_ZN5Model11UpdateVertsEv.cpp
+src/_ZN5Model9Virtual10ER9Matrix4x3.cpp

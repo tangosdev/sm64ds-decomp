@@ -3008,6 +3008,34 @@ extern "C" void port_intro_arm_for_entry(void)
     g_intro_armed = 1;
 }
 
+/* The ROM's own static initialiser for the script blobs. It writes the chain
+   arguments and the argument-blob pointers into the four opening scripts, byte
+   by byte because those fields are unaligned, and on the host it writes HOST
+   addresses. The scripts ship with those fields ZERO, so without it the opening
+   dereferences nulls (measured: a c0000005 inside SharedFilePtr::Release).
+
+   Called from HERE, not from the boot, on purpose. The ROM runs it
+   unconditionally at startup and nothing else in the port reads what it
+   patches, so running it unconditionally would also be correct -- but this lane
+   promised the default path stays byte-identical, and the only path that needs
+   these pointers is the one about to play the opening. Once per process; the
+   precedent for calling an arm9 sinit by hand is hal/fdr_arm9_fader_seat.cpp,
+   which does the same for __sinit_02074f80. */
+extern "C" void __sinit_02073e6c(void);
+extern "C" void port_intro_seat_dcc(void);   /* hal/intro_dcc_blob.cpp */
+
+static void port_intro_seat_scripts(void)
+{
+    static int done;
+    if (done)
+        return;
+    done = 1;
+    /* Seat the one code pointer ptr_audit flagged BEFORE the sinit writes into
+       the same blob, so nothing can read a DS address in between. */
+    port_intro_seat_dcc();
+    __sinit_02073e6c();
+}
+
 /* The decision, consumed once by the boot that follows the crossing. */
 extern "C" int port_intro_wants_play(void)
 {
@@ -3022,6 +3050,7 @@ extern "C" int port_intro_wants_play(void)
         return 0;
     if (data_0209caa0[8] & 0x80)
         return 0;                       /* a used file: the opening is done */
+    port_intro_seat_scripts();          /* the chain pointers, before it starts */
     return 1;
 }
 

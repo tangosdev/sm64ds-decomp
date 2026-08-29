@@ -2943,6 +2943,19 @@ list(APPEND SLICEINTRO_SOURCES
 # C2036. One cast, same address; src line commented out in slice_intro.txt.
 list(APPEND SLICEINTRO_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_CutsceneCmd_020f7780.c")
+# The opening's 55 script ARGUMENT RECORDS, hosted with real host pointers the
+# way ptr_tables.cpp table 2 hosts the 39 camera-script records. They are NOT in
+# romdata.py's byte-copy list on purpose: each carries a relocated word at +4,
+# and a byte-copied pointer is the data_020876e4 crash.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/intro_script_records.cpp")
+# data_02089dcc is hosted rather than byte-copied because port/tools/ptr_audit.py
+# flagged it and was right: its single relocation points at CODE
+# (func_ov007_020c020c, unhosted, and ov007 is outside this lane's grant). The
+# blob is carried with that one word seated to a loud trap; the opening never
+# reaches it. Removed from romdata.py's list in the same change.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/intro_dcc_blob.cpp")
 
 # THE SCENE BOOT: the star select, the one non-level scene the port can enter.
 # ov003 carries three scene classes -- dScTitle_c (id 2), dScStarSel_c (id 4)

@@ -55,6 +55,7 @@
 #include "Actor.h"
 #include "ActorBase.h"
 #include "CutsceneObject.h"
+#include "Model.h"   /* the model class the vtable seat below describes */
 
 extern "C" {
 /* the shared lifecycle halves, the same functions every fill in this tree
@@ -198,8 +199,84 @@ static int __fastcall co_d0(void *s, void *)
     return (int)(size_t)s;
 }
 
+/* ---- A VTABLE SLOT THE SCRIPT'S OWN MODEL CLASS CALLS THROUGH --------------
+   data_ov002_0210bae4 is a VTABLE, not a spawn record -- an earlier version of
+   this comment called it a factory and that was wrong. Reading the body settles
+   it: src/func_ov002_020f69a8.cpp stores data_ov002_0210bae4 into *this, calls
+   SharedFilePtr::Release, then Model::~Model, __destroy_arr and
+   Memory::operator_delete2. That is a DELETING DESTRUCTOR (a D0), and
+   config/arm9/overlays/ov002/relocs.txt puts it in slot 1:
+       from:0x0210bae8 kind:load to:0x020f69a8 module:overlay(2)
+
+   The mount carries the ROM's bytes, which means the DS address, and the class
+   is reached from the opening through
+     ... Actor::Spawn -> func_02043098 -> CutsceneObject::InitResources
+     -> func_ov002_020f6960 -> ModelBase::SetFile -> [this slot]
+   so a DS address here is a jump into unmapped memory. Offering
+   src/func_ov002_020f69a8.cpp put the body in the binary but did NOTHING about
+   the pointer, which is the same lesson romdata.py's header records for
+   data_020876e4.
+
+   Seated here because this fill is what the class registry runs before any
+   spawn can happen, and checked against the ROM's own address first so a mount
+   that ever changes shape says so instead of calling whatever it now holds.
+
+   THIS SLOT IS CORRECT AND THE CLASS IS STILL NOT WHOLE: only slot 1 is seated,
+   because only slot 1 is what the ROM's relocation names. The class's remaining
+   slots are the open floor this lane reports rather than guesses at. */
+extern "C" {
+/* Addresses only -- the seat below stores them, it never calls them, so the
+   arity here is irrelevant to correctness. The three Model faces are DEFINED at
+   the foot of this file with their real signatures; these are just the
+   addresses the vtable words get. */
+void func_ov002_020f6a00(void);
+void func_ov002_020f69a8(void);
+void _ZN5Model6RenderEPK7Vector3(void);
+extern unsigned data_ov002_0210bae4[];
+}
+
+/* The SIX CODE SLOTS, in the ROM's own order, each paired with the address
+   config/arm9/overlays/ov002/relocs.txt says belongs there. Slots +0x18 and
+   +0x1c are DATA (0x0209a754 and 0x0210ba44) and are left exactly as the mount
+   carries them -- this seat only rewrites words that are called. */
+extern "C" {
+int _ZN5Model9DoSetFileEPcii(void *, char *, int, int);
+void _ZN5Model11UpdateVertsEv(void *);
+void _ZN5Model9Virtual10ER9Matrix4x3(void *, Matrix4x3 &);
+}
+
+static const struct { unsigned rom; void *host; const char *what; }
+g_co_vt[6] = {
+    { 0x020f6a00, (void *)&func_ov002_020f6a00,            "+0x00" },
+    { 0x020f69a8, (void *)&func_ov002_020f69a8,            "+0x04 (the deleting dtor)" },
+    { 0x02016bf8, (void *)&_ZN5Model9DoSetFileEPcii,       "+0x08 Model::DoSetFile" },
+    { 0x02016c98, (void *)&_ZN5Model11UpdateVertsEv,       "+0x0c Model::UpdateVerts" },
+    { 0x02016bb8, (void *)&_ZN5Model9Virtual10ER9Matrix4x3,"+0x10 Model::Virtual10" },
+    { 0x02016b78, (void *)&_ZN5Model6RenderEPK7Vector3,    "+0x14 Model::Render" },
+};
+
+static void co_seat_model_vtable(void)
+{
+    static int done;
+    if (done)
+        return;
+    done = 1;
+    for (unsigned i = 0; i < 6; ++i) {
+        if (data_ov002_0210bae4[i] != g_co_vt[i].rom) {
+            std::fprintf(stderr, "FATAL: CUTSCENE_OBJECT model vtable slot %s: "
+                         "the mount holds %08x, the ROM's own reloc says %08x "
+                         "-- WRONG BYTES\n", g_co_vt[i].what,
+                         data_ov002_0210bae4[i], g_co_vt[i].rom);
+            std::abort();
+        }
+        data_ov002_0210bae4[i] = (unsigned)(size_t)g_co_vt[i].host;
+        (void)0;
+    }
+}
+
 extern "C" void hal_fill_cutscene_object_vtable(void)
 {
+    co_seat_model_vtable();
     void **vt = _ZTV14CutsceneObject;
     vt[1] = (void *)co_binit;
     vt[2] = (void *)co_ainit;
@@ -250,6 +327,23 @@ int _ZN14CutsceneObject6RenderEv(void *self)
 { return ((CutsceneObject *)self)->CutsceneObject::Render(); }
 int _ZN14CutsceneObject16CleanupResourcesEv(void *self)
 { return ((CutsceneObject *)self)->CutsceneObject::CleanupResources(); }
+}
+
+// ---- Model's three vtable methods, faced -----------------------------------
+// The model class data_ov002_0210bae4 describes reaches slots 2, 3 and 4 through
+// Model's own methods. Their src TUs define real MSVC __thiscall members
+// (Model::DoSetFile, Model::UpdateVerts, Model::Virtual10, declared virtual in
+// include/Model.h at exactly those slots), while the vtable seat above spells
+// them by Itanium name. A linker alias would hand each body an ecx that never
+// held `this`, so these are faces, not aliases -- the same reason
+// hal/actor_classes_bbh.cpp faces HauntedChair's three.
+extern "C" {
+int _ZN5Model9DoSetFileEPcii(void *self, char *file, int a, int b)
+{ return ((Model *)self)->Model::DoSetFile(file, a, b); }
+void _ZN5Model11UpdateVertsEv(void *self)
+{ ((Model *)self)->Model::UpdateVerts(); }
+void _ZN5Model9Virtual10ER9Matrix4x3(void *self, Matrix4x3 &mat)
+{ ((Model *)self)->Model::Virtual10(mat); }
 }
 
 // ---- the C++/C linkage bridges ---------------------------------------------
