@@ -870,8 +870,19 @@ src/func_0200e55c.c
 src/func_0200e5fc.c
 src/func_0200e6d8.c
 src/func_02011c8c.c
-src/func_ov002_020bd664.cpp
-src/func_ov002_020f7d74.cpp
+# func_ov002_020bd664: HOST COPY at hal/intro_kuppa_dispatch.cpp. It is the
+# kuppa script's command dispatcher and it forms a pointer-to-member over an
+# INCOMPLETE class -- the gate-16 case -- so on MSVC each of its fourteen table
+# initialisers reads sixteen bytes out of an eight-byte ROM record. Harmless
+# while the intro gate was shut and nothing ran a script command; the opening
+# runs one immediately. (run lvled, lane intro-cutscene)
+# src/func_ov002_020bd664.cpp
+# func_ov002_020f7d74: HOST COPY at hal/intro_kuppa_dispatch.cpp. The SECOND
+# kuppa dispatcher -- the cutscene objects' own twenty-four commands, reached
+# through func_0200e494 where the first is reached through func_0200e5ac. Same
+# gate-16 pointer-to-member-over-incomplete-class case as its neighbour above.
+# (run lvled, lane intro-cutscene)
+# src/func_ov002_020f7d74.cpp
 src/SetNextStar.c
 src/_ZN5Scene20SetAndStopColorFaderEv.c
 src/_ZN5Sound6Player19SetPlayableSeqCountEii.c

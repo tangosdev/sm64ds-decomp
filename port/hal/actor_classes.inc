@@ -183,6 +183,10 @@ void hal_fill_rabbit_key_vtable(void);
 extern unsigned char LakituBro_SpawnInfo[];             /* ov085 0x02130320 */
 void *LakituBro_Spawn(void);                            /* ov085 0x0212ed54 */
 void hal_fill_lakitu_bro_vtable(void);
+/* ---- run lvled, lane intro-cutscene: the new-file opening's cast ---- */
+extern unsigned char CutsceneObject_SpawnInfo[];        /* ov002 0x0210ba60 */
+void *CutsceneObject_Spawn(void);                       /* ov002 0x020f8808 */
+void hal_fill_cutscene_object_vtable(void);
 /* ---- gate 19: ov098's CANNON ---- */
 extern unsigned char Cannon_SpawnInfo[];                /* ov098 0x0213c67c */
 void *Cannon_Spawn(void);                               /* ov098 0x0213b43c */
@@ -1491,6 +1495,16 @@ void hal_fill_toad_vtable(void);                     /* _ZTV4Toad, 31 */
       hal_fill_ski_lift_vtable}, \
      {257, "MOTHER_PENGUIN", MotherPenguin_SpawnInfo, MotherPenguin_Spawn, \
       hal_fill_mother_penguin_vtable}, \
+     /* ---- run lvled, lane intro-cutscene: the OPENING's whole cast ---- */ \
+     /* CUTSCENE_OBJECT (0x160) is every visible thing in the new-file opening: \
+        the Peach letter (kuppa cmd 0x17), the Lakitu flight (0x12), Peach \
+        (0x13), the three warp pipes (0x14/0x15/0x16) and the cloud (0x19). \
+        One class, spawned repeatedly by the script with a different model each \
+        time. Fully matched and offered nowhere until port/slice_intro.txt, so \
+        the opening used to log "[spawn-declined] actor 0x160 not registered" \
+        and play to an empty stage. Seat in hal/actor_classes_intro.cpp. */ \
+     {0x160, "CUTSCENE_OBJECT", CutsceneObject_SpawnInfo, CutsceneObject_Spawn, \
+      hal_fill_cutscene_object_vtable}, \
      /* ---- gate 192: ICE_BLOCK (18) + SPINDRIFT (312), ov081 ---- */ \
      /* MR_BLIZZARD (223) is NOT registered here. The ORIGINAL exclusion
         reason (a func_0204488c "unvalidated raw-DMA source" fear) is

@@ -1,0 +1,186 @@
+﻿# slice_intro: what the NEW-FILE OPENING needs, and nothing else.
+#
+# Run lvled, lane intro-cutscene. Every line here is code that was ALREADY
+# MATCHED and simply never offered to the linker, because with the intro bit
+# force-set in hal/level_boot.cpp none of it was reachable.
+#
+# The gate (matched src, Stage::LoadClsnAndObjects):
+#     intro = (data_0209f2d8 == 0)
+#          && ((data_0209caa0[2] & 0x80) == 0)
+#          && (ContinueKuppaScriptIfNecessary() == 0);
+#     if (intro) StartIntroCutscene();     // RunKuppaScript(&data_020890a0)
+#
+# Its OWN slice rather than an append to slice_gate10.txt: another session's VS
+# campaign is seating ov075 actors in the shared files.
+
+# ---- THE KUPPA SCRIPT COMMAND HANDLERS -------------------------------------
+# func_ov002_020bd664 is the script's per-object command dispatcher: p[6] indexes
+# fourteen pointer-to-member handlers held in ov002 .data. All fourteen were
+# matched and none was in the binary, so the first command the opening ran
+# jumped to a DS address:
+#
+#   FAULT c0000005 accessing 020bd600
+#     main -> port_stage_a_boot -> port_stage_lifecycle_boot -> st_init
+#     -> port_stage_boot_body -> StartIntroCutscene -> RunKuppaScript
+#     -> ProcessKuppaScript+0x31b -> func_0200e5ac+0x39
+#     -> func_ov002_020bd664+0x6a -> 0x020bd600
+#
+# TWELVE of the fourteen are here. The other two are TRAPPED in
+# hal/intro_kuppa_dispatch.cpp rather than hosted, because each drags in a
+# subsystem this lane has no business landing and neither is an opening command:
+#   cmd slot 0210a44c -> func_ov002_020bd250  needs Player::Hurt (unhosted)
+#   cmd slot 0210a534 -> func_ov002_020bd480  needs Sound::PlayCharVoice (unhosted)
+# The trap is loud, so if the opening ever does reach one the run says so by
+# name instead of crashing. That is this lane's census continuing at run time.
+src/func_ov002_020bccfc.c
+src/func_ov002_020bcd18.c
+src/func_ov002_020bcd38.c
+src/func_ov002_020bd20c.c
+src/func_ov002_020bd354.c
+src/func_ov002_020bd3a0.c
+src/func_ov002_020bd438.c
+src/func_ov002_020bd45c.cpp
+src/func_ov002_020bd4ac.c
+src/func_ov002_020bd4c8.c
+src/func_ov002_020bd4e0.c
+src/func_ov002_020bd600.c
+# their own closures
+src/func_ov002_020bd06c.c
+src/func_0203db0c.c
+
+# The dispatcher itself is a HOST COPY (hal/intro_kuppa_dispatch.cpp) for the
+# gate-16 reason: it declares `struct C;` and a pointer-to-member over that
+# INCOMPLETE class, which MSVC forms as the four-word general representation
+# while the ROM's records are two words. Src line commented out in
+# slice_gate10.txt:873.
+
+# ---- THE CUTSCENE CAST -----------------------------------------------------
+# actor 0x160 CutsceneObject is every visible thing in the opening: the Peach
+# letter (kuppa cmd 0x17, data/normal_obj/opening/EUR/peach_letter_US.bmd), the
+# Lakitu flight (0x12, c_jugem.bmd), Peach (0x13), the three warp pipes
+# (0x14/0x15/0x16) and the cloud (0x19). Fully matched, offered nowhere, so the
+# run logged "[spawn-declined] actor 0x160 not registered" and the opening
+# played to an empty stage. Registered in hal/actor_classes_intro.cpp.
+#
+# D0 and D1 are deliberately NOT here -- both are host thunks in
+# hal/actor_classes_intro.cpp. D1 is a real C++ destructor over a SHADOW
+# hierarchy, and D0 reaches the vtable and heap through decl_common.h's generic
+# `VT`/`HEAP` placeholders rather than the real symbols, so it would have linked
+# and stored the wrong vtable pointer. See that file's header.
+src/CutsceneObject_Spawn.c
+src/_ZN14CutsceneObject13InitResourcesEv.cpp
+src/_ZN14CutsceneObject8BehaviorEv.cpp
+src/_ZN14CutsceneObject6RenderEv.cpp
+src/_ZN14CutsceneObject16CleanupResourcesEv.cpp
+src/_ZN14CutsceneObject16OnPendingDestroyEv.c
+# its own ov002 closure, all matched and previously unoffered
+src/func_ov002_020f23d0.c
+src/func_ov002_020f23f0.c
+src/func_ov002_020f63a0.c
+src/func_ov002_020f63d4.c
+src/func_ov002_020f64ac.c
+src/func_ov002_020f65b8.c
+src/func_ov002_020f65ec.c
+src/func_ov002_020f6618.cpp
+src/func_ov002_020f6960.cpp
+src/func_ov002_020f6a50.c
+# and that closure's own closure -- the second and last layer the linker asked
+# for. All matched, all previously unoffered for the same reason as everything
+# else in this file.
+src/func_ov002_020f1fcc.c
+src/func_ov002_020f20f4.c
+src/func_ov002_020f2210.c
+src/func_ov002_020f237c.c
+src/func_ov002_020f2340.cpp
+src/func_ov002_020f5f60.c
+src/func_ov002_020f5f8c.c
+src/func_ov002_020f5fb8.c
+src/func_ov002_020f6514.c
+
+# ---- NOT HERE: the script CHAIN, and why ------------------------------------
+# The opening is a FOUR-script chain -- data_020890a0 -> data_02088a94 ->
+# data_02089af8 -> data_020876d4 -- whose chain arguments and camera waypoints
+# are stored as ZERO on disc and written at boot by __sinit_02073e6c (392 byte
+# stores, the fields are unaligned). VERIFIED by reading arm9_dec.bin:
+# data_020890a0+0x103 and +0x62/+0x66/+0x8a/+0x8e are all 00 00 00 00.
+#
+# Offering src/__sinit_02073e6c.c pulls in NINETY arm9 romdata symbols -- it
+# alone accounted for 273 of the 369 unresolved references in this lane's first
+# link -- and those symbols are the script blobs themselves (data_02088a94,
+# data_02089af8 and data_020876d4 among them, i.e. the chain targets are not
+# hosted at all yet).
+#
+# THEY CANNOT SIMPLY BE ADDED TO port/tools/romdata.py's list. That list
+# BYTE-COPIES, and this file's own history says what that costs on a kuppa
+# table: data_020876e4 was removed from it because it held six RELOCATED words,
+# so the byte copy handed ProcessKuppaScript six raw DS addresses and it faulted
+# walking them; it is hosted with real host pointers in hal/ptr_tables.cpp
+# instead. Every one of the ninety needs that relocation check first.
+#
+# So the chain is a follow-on with a known shape, not a line in this file.
+# Without it the opening plays its FIRST script and stops at frame 400.
+
+# ---- LINK CLOSURE, walked by the linker ------------------------------------
+# Appended by the fixpoint loop: each of these was named by the
+# LINKER as the closure of what the opening reaches, and each has a
+# matched src TU that was simply never offered.
+src/func_ov002_020f26e0.c
+src/func_ov002_020f27e8.c
+src/func_ov002_020f2990.c
+# src/func_ov002_020f2dd4.cpp   -- TRAPPED in hal/intro_kuppa_dispatch.cpp (gate-16 PMF site)
+src/func_ov002_020f2eac.c
+# src/func_ov002_020f37a0.cpp   -- TRAPPED in hal/intro_kuppa_dispatch.cpp (gate-16 PMF site)
+src/func_ov002_020f3978.cpp
+# src/func_ov002_020f5990.cpp   -- TRAPPED in hal/intro_kuppa_dispatch.cpp (gate-16 PMF site)
+src/func_ov002_020f2790.c
+src/func_ov002_020f2984.c
+src/func_ov002_020f39ec.c
+
+# ---- THE SECOND DISPATCHER'S TWENTY-FOUR COMMANDS --------------------------
+# func_ov002_020f7d74 is the CUTSCENE OBJECTS' own command table (host copy in
+# hal/intro_kuppa_dispatch.cpp). With the first dispatcher seated the opening
+# reached this one immediately and died on slot 22:
+#   FAULT c0000005 accessing 020f26d4, via ProcessKuppaScript+0x329
+#   -> func_0200e494+0x39 -> func_ov002_020f7d74+0x6a
+# All twenty-four were matched and none offered. Order is the ROM's table order.
+src/func_ov002_020f7bb8.c
+src/func_ov002_020f79c0.c
+# src/func_ov002_020f7780.c   -- HOST COPY at unmatched/Ov002_CutsceneCmd_020f7780.c (void* arithmetic, MSVC C2036)
+src/func_ov002_020f7538.c
+src/func_ov002_020f7410.c
+src/func_ov002_020f7384.c
+src/func_ov002_020f72bc.c
+src/func_ov002_020f71c4.c
+src/func_ov002_020f7038.c
+src/func_ov002_020f7020.c
+src/func_ov002_020f6e48.c
+src/func_ov002_020f6c60.c
+src/func_ov002_020f6c34.c
+src/func_ov002_020f6c24.c
+src/func_ov002_020f6bc0.c
+src/func_ov002_020f6b4c.c
+src/func_ov002_020f6b28.c
+src/func_ov002_020f6ae4.c
+src/func_ov002_020f6ab8.c
+src/func_ov002_020f6a9c.c
+src/func_ov002_020f6448.c
+src/func_ov002_020f63f8.c
+src/func_ov002_020f26d4.c
+src/func_ov002_020f26c4.c
+src/func_0201ef38.c
+src/func_0201f138.cpp
+src/func_ov002_020f2630.c
+# src/func_ov002_020f5dd8.cpp   -- TRAPPED in hal/intro_kuppa_dispatch.cpp (gate-16 PMF site)
+src/func_ov002_020f5fe4.c
+src/func_ov002_020f6424.c
+src/func_ov002_020f6f48.c
+src/func_ov002_020f5ad4.c
+# src/func_ov002_020f5f0c.cpp   -- TRAPPED in hal/intro_kuppa_dispatch.cpp (gate-16 PMF site)
+src/func_ov002_020f2a68.c
+src/func_ov002_020f2e30.c
+src/func_ov002_020f2ea0.c
+src/func_ov002_020f30d4.c
+src/func_ov002_020f396c.c
+src/func_ov002_020f5a6c.c
+src/func_0201ef50.c
+src/func_0201f108.c

@@ -338,3 +338,26 @@ Seaweed_SpawnInfo:0x1c
 # free to carry -- the data_ov002_02108c94 precedent from the wave-15 block.
 # Nothing dereferences them today.
 data_ov002_02109b78 data_ov002_02109b84
+
+# ---- run lvled, lane intro-cutscene: CUTSCENE_OBJECT (actor 0x160) ----------
+# The new-file opening's whole cast is one class, and these are the records its
+# InitResources/Behavior/Render/CleanupResources read. Named by the linker
+# rather than guessed: each one was an unresolved external in this lane's first
+# link once src/_ZN14CutsceneObject*.cpp were offered through slice_intro.txt.
+CutsceneObject_SpawnInfo
+data_ov002_0210b600 data_ov002_0210b604 data_ov002_0210b608 data_ov002_0210b60c data_ov002_0210b610
+data_ov002_0210bae4 data_ov002_0210bb7c data_ov002_0210bc88 data_ov002_0210bcc4
+data_ov002_0210bce8 data_ov002_0210bcf0 data_ov002_0210bd24
+# The closure the linker walked from CutsceneObject's own TUs (round 2-3 of the
+# fixpoint loop, port/hal/intro_kuppa_dispatch.cpp and slice_intro.txt).
+data_ov002_02100140 data_ov002_021002a0 data_ov002_0210b6a8 data_ov002_0210b988
+data_ov002_0210b998 data_ov002_0210bba0 data_ov002_0210be1c data_ov002_0210bddc
+
+# Round-N closure of the cutscene-object command set: data records the
+# commands read. Named by the LINKER, appended by tools/mount_data (run
+# lvled, lane intro-cutscene).
+data_ov002_0210b614 data_ov002_0210b958 data_ov002_0210b964 data_ov002_0210b970
+data_ov002_02110afc data_ov002_02110b04 data_ov002_02110b08 data_ov002_02110b0c
+data_ov002_02110c20 data_ov002_02110dac data_ov002_02110db8 data_ov002_02110ddc
+data_ov002_02110de8 data_ov002_02110df4 data_ov002_02110e00 data_ov002_02110e0c
+data_ov002_02110e18

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+﻿cmake_minimum_required(VERSION 3.16)
 project(sm64ds-port C CXX)
 # Link the static CRT so shipped exes never depend on the VC++ redist (CMP0091).
 # Release 0.1.6 shipped dynamically linked because nothing pinned this and CMake
@@ -2910,6 +2910,39 @@ list(APPEND SLICE31_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/func_02073244_hostcopy.c"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/SetNumPlayers_hostcopy.c"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Door_CleanupResources.cpp")
+
+# ---- the NEW-FILE OPENING (run lvled, lane intro-cutscene) ------------------
+# Everything the ROM's own intro gate reaches once it is allowed to fire. All of
+# it was already MATCHED and simply never offered, because with the intro bit
+# force-set in hal/level_boot.cpp none of it was reachable. See slice_intro.txt
+# for what each group is and the fault that named it.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_intro.txt" SLICEINTRO_LINES)
+set(SLICEINTRO_SOURCES "")
+foreach(line IN LISTS SLICEINTRO_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICEINTRO_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# The kuppa command dispatcher is a HOST COPY (the gate-16 pointer-to-member
+# case; its src line is commented out in slice_gate10.txt), and CUTSCENE_OBJECT
+# gets its own class file rather than an append to actor_classes.cpp.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/intro_kuppa_dispatch.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/actor_classes_intro.cpp")
+# r0-passthrough: func_ov085_0212d5dc is LakituBro's last opening state and it
+# calls func_ov002_020c3e8c() with the player riding ARM r0 -- the fifth
+# instance of the seam its four siblings already have host copies for, and the
+# three lines that END the opening (hand control back, then the ROM's own
+# "intro seen" write). Src line commented out in slice_gate18.txt.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov085_LakituBro_IntroEnd.cpp")
+# void* arithmetic: func_ov002_020f7780 (cutscene-object command slot 2) adds
+# 0x8e to a void*, which mwcc takes as the GNU extension and MSVC C refuses with
+# C2036. One cast, same address; src line commented out in slice_intro.txt.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_CutsceneCmd_020f7780.c")
 
 # THE SCENE BOOT: the star select, the one non-level scene the port can enter.
 # ov003 carries three scene classes -- dScTitle_c (id 2), dScStarSel_c (id 4)
@@ -8902,7 +8935,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     unmatched/Ov070_PmfDispatch.cpp
     unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES} ${SLICE25_SOURCES} ${SLICE26_SOURCES}
-    ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE33_SOURCES} ${GATE6_GEN} ${SLICE31_SOURCES} ${SLICE35_SOURCES}
+    ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE33_SOURCES} ${GATE6_GEN} ${SLICE31_SOURCES} ${SLICE35_SOURCES} ${SLICEINTRO_SOURCES}
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE32_SOURCES}
     ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
@@ -9078,7 +9111,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
     ${SLICE33_SOURCES} ${GATE6_GEN}
-    ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE31_SOURCES} ${GATE6_GEN}
+    ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE31_SOURCES} ${GATE6_GEN} ${SLICEINTRO_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
@@ -9288,7 +9321,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
     ${SLICE33_SOURCES} ${GATE6_GEN}
-    ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE31_SOURCES} ${GATE6_GEN}
+    ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE31_SOURCES} ${GATE6_GEN} ${SLICEINTRO_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}

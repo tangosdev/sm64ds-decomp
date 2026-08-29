@@ -172,7 +172,13 @@ src/func_02013944.c
 # Camera::SetLookAt, so the cameraman drives the real Camera gate 13 hosted.
 src/_ZN9LakituBroD1Ev.c
 src/_ZN9LakituBroD0Ev.c
-src/func_ov085_0212d5dc.cpp
+# func_ov085_0212d5dc: HOST COPY at unmatched/Ov085_LakituBro_IntroEnd.cpp.
+# LakituBro's LAST OPENING STATE. It calls func_ov002_020c3e8c() with no
+# argument, the player riding ARM r0 from ClosestPlayer's return -- the same
+# r0-passthrough as its four siblings below, and already frozen in
+# tools/aritycheck_plainfunc_baseline.txt. Latent until now because the state is
+# only reachable with the intro bit CLEAR. (run lvled, lane intro-cutscene)
+# src/func_ov085_0212d5dc.cpp
 src/func_ov085_0212d724.c
 src/func_ov085_0212d73c.c
 src/func_ov085_0212d8ec.c
