@@ -39,6 +39,9 @@
  * PORT_HOST_ABI: implicit-register-arg (func_ov002_020c3e8c's player rode r0
  * from ClosestPlayer's return; the host passes it). See the header.
  */
+#include <cstdio>
+#include <cstdlib>
+
 #include "common.h"
 
 struct Range { int a, b, c, d, e, f; };
@@ -61,9 +64,33 @@ extern int data_ov085_021307e0;
 
 #define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
+/* ENTRY AND EXIT CONDITIONS, because this function is where the opening's last
+   unmet assertion lives. flags2 bit 7 is written on exactly one line below, and
+   two things gate it: a frame counter at +0x2c8 that has to pass 0x64, and
+   Sound::PlaySub returning non-zero. A run where the bit never moves cannot
+   distinguish "the state is never entered" from "the counter never gets there"
+   from "PlaySub always answers 0", and those are three different problems.
+   First entry, then every 60th frame, then loudly on the branch.
+   Inert unless SM64DS_INTRO_WATCH. */
+static int lb_watch_on(void)
+{
+    static int on = -1;
+    if (on < 0)
+        on = std::getenv("SM64DS_INTRO_WATCH") ? 1 : 0;
+    return on;
+}
+
 extern "C" int func_ov085_0212d5dc(char* c) {
   Range r;
   void* cam = *(void**)&data_0209f318;
+  if (lb_watch_on()) {
+      static int seen;
+      if (!seen) {
+          seen = 1;
+          std::fprintf(stderr, "  [lakitu] intro-end state ENTERED, counter %d\n",
+                       *(int*)(c + 0x2c8));
+      }
+  }
   _ZN6Camera9SetFlag_3Ev(cam);
   r.a = -0x4b0000;
   r.b = 0x19f000;
@@ -76,8 +103,22 @@ extern "C" int func_ov085_0212d5dc(char* c) {
   _ZN6Camera6SetPosERK7Vector3(cam, c+0x2bc);
   Vec3_Dist(c+0x2b0, &r);
   (*(int*)AT(c, 0x2c8))++;
+  if (lb_watch_on() && (*(int*)(c+0x2c8) % 60) == 0)
+      std::fprintf(stderr, "  [lakitu] intro-end counter %d (needs > 0x64)\n",
+                   *(int*)(c + 0x2c8));
   if (*(int*)(c+0x2c8) > 0x64) {
-    if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x4b, 0x7f, 0, 0x7222, false) != 0) {
+    const int played = _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x4b, 0x7f, 0, 0x7222,
+                                                       false);
+    if (lb_watch_on()) {
+        static int last = -2;
+        if (played != last) {
+            std::fprintf(stderr, "  [lakitu] counter past 0x64; Sound::PlaySub "
+                         "returned %d (non-zero is what ends the opening)\n",
+                         played);
+            last = played;
+        }
+    }
+    if (played != 0) {
       *(int*)AT(cam, 0x154) &= ~8;
       *(int*)(c+0x98) = 0;
       *(int*)(c+0x2c8) = 0;
@@ -88,6 +129,9 @@ extern "C" int func_ov085_0212d5dc(char* c) {
       *(short*)(c+0x8c) = 0;
       {
         void* pl = _ZN5Actor13ClosestPlayerEv(c);   /* <-- the ROM's r0 */
+        if (lb_watch_on())
+            std::fprintf(stderr, "  [lakitu] handing control back: "
+                         "ClosestPlayer %p\n", pl);
         if (pl != 0) {
           func_ov002_020c3e8c(pl);
           data_0209caa0[2] |= 0x80;   /* the ROM's own "intro seen" write */
