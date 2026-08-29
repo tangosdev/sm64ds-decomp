@@ -164,8 +164,39 @@ static int __fastcall co_under(void *s, void *, void *o)
 { _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
 
 // ---- the class's own six ---------------------------------------------------
+/* PER-OBJECT BRANCH TRACE. CutsceneObject::InitResources branches on unk8
+   (+0x08) and only two of its branches reach func_ov002_020f6618 -- the Lakitu
+   and the 0x13 Peach, both _Znwj(0x84). The 0x14..0x16 warp pipes take a
+   _Znwj(0x60) route and the 0x17 letter / 0x19 cloud take further ones, so six
+   of the eight cast members are built through paths this lane had not traced.
+   The renderer's garbage Entry belongs to one of those six.
+
+   This logs, per object: unk8 (which branch), the model object it built at
+   +0xE0, that object's ModelComponents (model+0x08, include/Model.h:44) and the
+   Entry table the renderer walks (info+0x10). The ModelComponents address is
+   printed because it is the `self` func_0204488c faults on -- matching it names
+   the wounded object DIRECTLY instead of by elimination.
+   Inert unless SM64DS_INTRO_WATCH. */
 static int __fastcall co_init(void *s, void *)
-{ return _ZN14CutsceneObject13InitResourcesEv(s); }
+{
+    static int on = -1;
+    if (on < 0)
+        on = std::getenv("SM64DS_INTRO_WATCH") ? 1 : 0;
+    const unsigned kind = on ? *(unsigned *)((char *)s + 8) : 0u;
+    const int r = _ZN14CutsceneObject13InitResourcesEv(s);
+    if (on) {
+        char *m = *(char **)((char *)s + 0xE0);
+        char *mc = m ? m + 8 : 0;                 /* the ModelComponents */
+        void *info = mc ? *(void **)mc : 0;
+        void *entries = info ? *(void **)((char *)info + 0x10) : 0;
+        std::fprintf(stderr,
+                     "  [cast] obj %p unk8 0x%02x -> InitResources %d | model %p"
+                     " | ModelComponents %p | info %p | entries %p%s\n",
+                     s, kind, r, (void *)m, (void *)mc, info, entries,
+                     (r != 0 && !entries) ? "   <- VIEW NOT POPULATED" : "");
+    }
+    return r;
+}
 static int __fastcall co_clean(void *s, void *)
 { return _ZN14CutsceneObject16CleanupResourcesEv(s); }
 static int __fastcall co_behavior(void *s, void *)
