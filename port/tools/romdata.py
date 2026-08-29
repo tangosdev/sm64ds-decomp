@@ -292,6 +292,14 @@ NAMED = [
     # HAL made atan2 answer 0 for every off-axis direction.
     "data_020994e0",
     "data_020756b0",   # D-pad direction -> binang table (Stage::CheckInput)
+    # CheckInput's three BUTTON REMAP MAPS: 16 u16 rows each, raw pad bit ->
+    # Ctrl held/pressed mask (mode 0 is level play: A->1 punch, B->2 jump,
+    # R->0x400 crouch, Y->0x800 run, L->0x4000 snap-behind). data_0209214c
+    # below is the per-mode POINTER table over these and its words are DS
+    # addresses (the relocated-pointer-table class), so the level boot
+    # repoints entries 0..2 at these hosted copies rather than dereferencing
+    # it -- tests/walk_window.cpp, the input staging block.
+    "data_02075650", "data_02075670", "data_02075690",
     # Per-character voice-id offset. Sound::PlayCharVoice is
     # Play(1, baseId + data_02075250[ch], v), and the bytes read 00/40/80/c0
     # -- the VOICE SEQARC is laid out in 0x40-entry blocks, one per
