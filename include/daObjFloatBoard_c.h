@@ -79,6 +79,20 @@ struct daObjFloatBoard_c : dBgActor_c {
     int CleanupResources();             /* slot 3, ov002 0x020b5be0 */
     int Behavior();                     /* slot 6, ov002 0x020b5c4c */
     s32 Render();                       /* slot 9, ov002 0x020b5c24 -- mModel.Render(0) */
+    /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
+       mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
+       there is no __cxa_pure_virtual in this image for it to point at -- so a zero
+       word in a ROM vtable IS the `= 0`, and it is the only thing that produces one.
+       Left undeclared, this class silently inherits dBgActor_c's concrete bodies and
+       the vtable it emits disagrees with the cartridge at exactly these slots.
+       Measured by tools/romdata_check.py, which is the only gate that reads them:
+       the ROM build's 106/106 compares .text alone and is blind here.
+
+       DECLARED LAST, AND WITH `virtual` -- unlike the plain overrides above. The
+       pure-specifier is only valid on a declaration carrying the keyword, and a
+       pure virtual has no body to emit, so it can never become the key function:
+       whichever virtual was first and non-inline before is still first now. */
+    virtual int InitResources() = 0;        /* slot  0 */
 };
 
 typedef char daObjFloatBoard_c_size_must_be_0x348[sizeof(daObjFloatBoard_c) == 0x348 ? 1 : -1];

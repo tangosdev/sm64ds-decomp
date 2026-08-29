@@ -66,10 +66,17 @@
  * anywhere referenced any of the five by name, which is what makes a misattributed
  * ROM symbol so easy to leave in place and so cheap to correct.
  *
- * The two pure-virtual slots are deliberately NOT declared `= 0` below. Nothing in
- * the ROM needs them to be: this class's vtable is never emitted (see the inline
- * destructor note), and declaring them would change what the children emit for no
- * gain. The zero words are the evidence; the declaration would only restate it.
+ * The two pure-virtual slots ARE declared `= 0` below, and the note that used to say
+ * they deliberately were not rested on a premise that has since stopped being true.
+ * It argued this class's vtable is never emitted, so nothing could disagree with the
+ * cartridge. That held while the inline destructor left the class without a key
+ * function -- but `virtual int CleanupResources();` is declared non-inline here and
+ * DEFINED in src/_ZN7daOts_c16CleanupResourcesEv.cpp, which makes it the key function
+ * and makes that translation unit emit _ZTV7daOts_c. Measured: the emitted table
+ * carried dEnemyBase_c's concrete InitResources and Behavior in slots 0 and 6 where
+ * the cartridge has zeros, eight bytes wrong, and no byte gate could see it -- the
+ * ROM build compares .text only. The zero words were always the evidence; the
+ * declaration is what makes the compiler act on it.
  */
 struct daOts_c : dEnemyBase_c {
     ModelAnim           mModelAnim;             /* 0x110 */
@@ -96,10 +103,25 @@ struct daOts_c : dEnemyBase_c {
 
     /* The three slots this class owns outright, each named by the diff above rather
        than by any one child's source. InitResources and Behavior are the pure-virtual
-       pair and stay undeclared, for the reason given above the struct. */
+       pair, declared at the end of the class. */
     virtual int CleanupResources();     /* slot  3 */
     virtual int Render();               /* slot  9 */
     virtual int OnAimedAtWithEgg();     /* slot 29 -- still a C file, see its source */
+    /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
+       mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
+       there is no __cxa_pure_virtual in this image for it to point at -- so a zero
+       word in a ROM vtable IS the `= 0`, and it is the only thing that produces one.
+       Left undeclared, this class silently inherits dEnemyBase_c's concrete bodies and
+       the vtable it emits disagrees with the cartridge at exactly these slots.
+       Measured by tools/romdata_check.py, which is the only gate that reads them:
+       the ROM build's 106/106 compares .text alone and is blind here.
+
+       DECLARED LAST, AND WITH `virtual` -- unlike the plain overrides above. The
+       pure-specifier is only valid on a declaration carrying the keyword, and a
+       pure virtual has no body to emit, so it can never become the key function:
+       whichever virtual was first and non-inline before is still first now. */
+    virtual int InitResources() = 0;        /* slot  0 */
+    virtual int Behavior() = 0;             /* slot  6 */
 };
 
 typedef char daOts_c_size_must_be_0x398[sizeof(daOts_c) == 0x398 ? 1 : -1];
