@@ -77,6 +77,8 @@ struct dPa_c {
             /* Descriptive name; the offset and water-height use are body-proven. */
             s32 waterOffset;         /* 0x004 */
 
+            fitWaterCallback_c() : waterOffset(0x3000) {}
+
             virtual void SpawnParticles(Particle::System& system);
             virtual int OnUpdate(Particle::System& system, bool active);
         };
@@ -103,6 +105,8 @@ struct dPa_c {
         public:
             /* Zero expires every active particle; nonzero clips them. */
             u8 enabled;             /* 0x004 */
+
+            clipCallback_c() : enabled(1) {}
 
             virtual void SpawnParticles(Particle::System& system);
             virtual int OnUpdate(Particle::System& system, bool active);

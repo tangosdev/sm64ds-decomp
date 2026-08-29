@@ -27,7 +27,7 @@ SysTracker::SysTracker()
     mSystemID_7a4 = 0;
     mSystemID_7b0 = 0;
     mSystemID_7c0 = 0;
-    mCallback_800.distance = 0x4b000;
+    mCallback_800.waterOffset = 0x4b000;
 }
 
 }
