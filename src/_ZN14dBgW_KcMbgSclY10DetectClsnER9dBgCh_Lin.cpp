@@ -30,9 +30,6 @@ void func_0203aa74(dBgW_KcMbgSclY *self, const Vector3 *v, Vector3 *res);  /* wo
 void func_0203aa10(dBgW_KcMbgSclY *self, const Vector3 *v, Vector3 *res);  /* collider -> world */
 void func_02035394(dBgCh_Lin *dst, dBgCh_Lin *src);
 void func_020375ec(int *dst, const int *src);   /* dst[21..23] = src[0..2], i.e. dst->lineEnd */
-void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(
-    dBgCh_Lin *line, const Vector3 *start, const Vector3 *end, dActor_c *actor);
-void _ZN5dBgPiaSERKS_(dBgPi *dst, const dBgPi *src);
 }
 
 int dBgW_KcMbgSclY::DetectClsn(dBgCh_Lin &ray)
@@ -43,7 +40,7 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_Lin &ray)
     func_0203aa74(this, &ray.lineEnd, &end);
 
     u8 hadClsn = ray.hasClsn;
-    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&data_020a0d0c, &start, &end, 0);
+    data_020a0d0c.SetObjAndLine(start, end, 0);
     if (hadClsn != 0)
         data_020a0d0c.hasClsn = 1;
     func_02035394(&data_020a0d0c, &ray);
@@ -55,7 +52,7 @@ int dBgW_KcMbgSclY::DetectClsn(dBgCh_Lin &ray)
         func_020375ec((int *)&ray, (const int *)&worldPos);
         ray.clsnDist = dist;
         /* the dBgPi base sub-object, at +0x10 */
-        _ZN5dBgPiaSERKS_((dBgPi *)((char *)&ray + 0x10), &data_020a0d1c);
+        (dBgPi &)ray = data_020a0d1c;
         ray.hasClsn = 1;
     }
     return hit;
