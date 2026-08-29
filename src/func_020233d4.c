@@ -1,5 +1,5 @@
-extern int data_02090e80[];
+extern int ACTOR_DEBUG_NAMES[];
 extern int data_020914a0;
-int func_020233d4(unsigned int i) {
-    return (i < 0x188) ? data_02090e80[i] : (int)&data_020914a0;
+int GetActorDebugName(unsigned int i) {
+    return (i < 0x188) ? ACTOR_DEBUG_NAMES[i] : (int)&data_020914a0;
 }

@@ -29,7 +29,7 @@ extern void func_0201a5cc(void);
 
 extern char data_0208ee50[];
 extern char data_0209d574[];
-extern char data_02090864[];
+extern char ACTOR_SPAWN_TABLE[];
 extern void* data_020a4bb8;
 struct S0209ee90 { char pad[0x44]; u32 f44; };
 extern struct S0209ee90 data_0209ee90;
@@ -70,7 +70,7 @@ void func_0201a054(void){
   if (!r4)
     func_020134c8();
   func_0203b684();
-  data_020a4bb8 = data_02090864;
+  data_020a4bb8 = ACTOR_SPAWN_TABLE;
   func_020233f0();
   _ZN8dScene_c18PrepareToSpawnBootEv();
   func_020196cc();
