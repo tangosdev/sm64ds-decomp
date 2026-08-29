@@ -5779,7 +5779,7 @@ src/_ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_.cpp:
     complete
     .text start:0x020fb85c end:0x020fb8bc
 
-src/_ZN7MinimapC1Ev.c:
+src/Minimap_Spawn.cpp:
     complete
     .text start:0x020fb8bc end:0x020fb8f8
 
@@ -5859,7 +5859,7 @@ src/_ZN3HUD13InitResourcesEv.cpp:
     complete
     .text start:0x020fda04 end:0x020fe154
 
-src/_ZN3HUDC1Ev.c:
+src/HUD_Spawn.cpp:
     complete
     .text start:0x020fe154 end:0x020fe190
 

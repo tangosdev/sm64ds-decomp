@@ -57,7 +57,7 @@ struct HUD : dBase_c {
     void RenderVsTimer();
     void UpdateHealthMeter();
 
-    /* Tail padding. The field span stops short of the real size: _ZN3HUDC1Ev
+    /* Tail padding. The field span stops short of the real size: HUD_Spawn
        calls fBase_c::operator new(0x7c), read off the retail
        instruction. A span is only a LOWER BOUND. */
     u8 pad_078[0x4];      /* 0x078, to the ROM's 0x7c */
