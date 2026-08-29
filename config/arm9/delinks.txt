@@ -4260,7 +4260,7 @@ src/_Z17LoadLevelOverlaysi.cpp:
 src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp:
     .text start:0x0202df70 end:0x0202e088
 
-src/_ZN5StageC3Ev.c:
+src/Stage_Spawn.cpp:
     complete
     .text start:0x0202e088 end:0x0202e118
 

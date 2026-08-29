@@ -4134,7 +4134,7 @@ src/func_ov002_020e6bb0.c:
     complete
     .text start:0x020e6bb0 end:0x020e6c0c
 
-src/_ZN6PlayerC3Ev.cpp:
+src/Player_Spawn.cpp:
     complete
     .text start:0x020e6c0c end:0x020e6c40
 
