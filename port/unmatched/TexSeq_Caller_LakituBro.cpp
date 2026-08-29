@@ -32,6 +32,8 @@
  * is unchanged.
  */
 //cpp
+#include <cstdio>
+#include <cstdlib>
 #include "types.h"
 // @symbol _ZN9LakituBro13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
@@ -80,6 +82,29 @@ int LakituBro::InitResources()
   unk_2d0 = unk_008 & 0xff;
   if (unk_2d0 == 0xff)
     unk_2d0 = 0;
+  /* WHICH CHAIN, PER SPAWN. The opening's last unmet assertion is flags2 bit 7,
+     whose only writer is func_ov085_0212d5dc -- the LAST state of the OPENING
+     chain, data_ov085_02130790, which is reachable only through case 1 below and
+     only while the bit is clear. An entry probe on that state printed nothing
+     over 6000 frames, so the question is which arm this switch takes and with
+     what param. Reported per LakituBro spawn. Inert unless SM64DS_INTRO_WATCH.
+     Diagnostic only: no control flow below is changed. */
+  {
+    static int lb_on = -1;
+    if (lb_on < 0)
+        lb_on = std::getenv("SM64DS_INTRO_WATCH") ? 1 : 0;
+    if (lb_on) {
+        const int bit7 = (*(int*)(data_0209caa0 + 8) & 0x80) ? 1 : 0;
+        std::fprintf(stderr,
+                     "  [lakitu] InitResources: param unk_008 0x%x -> case %d"
+                     " | flags2 bit7 %d -> chain %s\n",
+                     (unsigned)unk_008, (int)unk_2d0, bit7,
+                     unk_2d0 == 0 ? "021307d0 (moat)"
+                     : unk_2d0 == 1 ? (bit7 ? "021307e0 (post-intro)"
+                                            : "02130790 (THE OPENING)")
+                     : "NONE -- no case, no chain");
+    }
+  }
   switch (unk_2d0) {
   case 0:
     func_ov085_0212e728(((char*)this), &data_ov085_021307d0);
