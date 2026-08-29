@@ -3,7 +3,7 @@ extern void *_ZN2G212GetBG1ScrPtrEv(void);
 extern u64 func_020427c4(void);
 extern void *func_0202e118(void);
 extern int func_020441bc(int i);
-extern int func_020233d4(unsigned int i);
+extern int GetActorDebugName(unsigned int i);
 extern int _ZN4Heap6IntactEv(void *heap);
 extern int _ZN4Heap21MaxAllocationUnitSizeEv(void *heap);
 
@@ -63,7 +63,7 @@ void ShowCrashScreen(void)
         : *(u16 *)&data_020a4b50;
     if (hp != 0xffff) {
         int bb = data_020a4b4c;
-        nds_printf(scr + 0x1c0, data_0208e59c, hp, bb, func_020233d4(hp));
+        nds_printf(scr + 0x1c0, data_0208e59c, hp, bb, GetActorDebugName(hp));
     }
 
     if (data_0209d3bc != 0)

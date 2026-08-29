@@ -959,7 +959,7 @@ _ZN8Particle7Texture12AllocTexVramEjb kind:function(arm,size=0x44) addr:0x020231
 func_02023178 kind:function(arm,size=0x1c) addr:0x02023178
 _ZN8Particle10SysTrackerD1Ev kind:function(arm,size=0x70) addr:0x02023194
 _ZN8Particle10SysTrackerC1Ev kind:function(arm,size=0x1d0) addr:0x02023204
-func_020233d4 kind:function(arm,size=0x1c) addr:0x020233d4
+GetActorDebugName kind:function(arm,size=0x1c) addr:0x020233d4
 func_020233f0 kind:function(arm,size=0x4) addr:0x020233f0
 func_020233f4 kind:function(arm,size=0x14) addr:0x020233f4
 func_02023408 kind:function(arm,size=0x14) addr:0x02023408
@@ -4137,8 +4137,8 @@ data_02090810 kind:data(any) addr:0x02090810
 data_02090824 kind:data(any) addr:0x02090824
 data_02090838 kind:data(any) addr:0x02090838
 data_0209084c kind:data(any) addr:0x0209084c
-data_02090864 kind:data(any) addr:0x02090864
-data_02090e80 kind:data(any) addr:0x02090e80
+ACTOR_SPAWN_TABLE kind:data(any) addr:0x02090864
+ACTOR_DEBUG_NAMES kind:data(any) addr:0x02090e80
 data_02091000 kind:data(any) addr:0x02091000
 data_020914a0 kind:data(any) addr:0x020914a0
 data_020914a8 kind:data(any) addr:0x020914a8

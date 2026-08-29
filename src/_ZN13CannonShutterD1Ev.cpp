@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN11CannonHatchD1Ev
+// @symbol _ZN13CannonShutterD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * Two vtable stores and three destructor calls, every one a consequence of
- * `struct CannonHatch : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
+ * `struct CannonShutter : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
  * because dBgActor_c's destructor is defined in its class body -- then
  * dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This class adds no
  * member with a destructor of its own.
  */
-#include "CannonHatch.h"
+#include "CannonShutter.h"
 
-CannonHatch::~CannonHatch()
+CannonShutter::~CannonShutter()
 {
 }

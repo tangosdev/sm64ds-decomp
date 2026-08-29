@@ -453,7 +453,7 @@ extern int _ZTV10daPgRcer_c[];
 extern int _ZTV10daUdlift_c[];
 extern int _ZTV11BabyPenguin[];
 extern int _ZTV11BobOmbBuddy[];
-extern int _ZTV11CannonHatch[];
+extern int _ZTV13CannonShutter[];
 extern int _ZTV8MetalNet[];
 extern int _ZTV11CrazedCrate[];
 extern int _ZTV11PyramidStep[];

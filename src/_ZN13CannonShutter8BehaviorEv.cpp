@@ -1,5 +1,5 @@
 //cpp
-#include "CannonHatch.h"
+#include "CannonShutter.h"
 
 extern "C" {
 char *_ZN8dActor_c13ClosestPlayerEv(char *self);
@@ -11,11 +11,11 @@ void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *dst);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *d);
 int Vec3_Dist(void *a, void *b);
 int Vec3_HorzDist(void *a, void *b);
-CannonHatch *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, CannonHatch *after);
+CannonShutter *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, CannonShutter *after);
 extern Matrix4x3 data_020a0e68;
 }
 
-int CannonHatch::Behavior()
+int CannonShutter::Behavior()
 {
     if (unk_32e != 0) {
         if (*(u8 *)(_ZN8dActor_c13ClosestPlayerEv((char *)this) + 0x703) != 0) {
@@ -54,7 +54,7 @@ int CannonHatch::Behavior()
             unk_32d = 1;
         }
         if (Vec3_HorzDist(&unk_320, &mPosX) > 0xc8000) {
-            CannonHatch *a = _ZN8dActor_c15FindWithActorIDEjPS_(0xe, 0);
+            CannonShutter *a = _ZN8dActor_c15FindWithActorIDEjPS_(0xe, 0);
             while (a != 0) {
                 a->unk_32e = 1;
                 a = _ZN8dActor_c15FindWithActorIDEjPS_(0xe, a);
