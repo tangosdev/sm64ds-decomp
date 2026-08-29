@@ -164,19 +164,27 @@ static int __fastcall co_under(void *s, void *, void *o)
 { _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
 
 // ---- the class's own six ---------------------------------------------------
-/* PER-OBJECT BRANCH TRACE. CutsceneObject::InitResources branches on unk8
-   (+0x08) and only two of its branches reach func_ov002_020f6618 -- the Lakitu
-   and the 0x13 Peach, both _Znwj(0x84). The 0x14..0x16 warp pipes take a
-   _Znwj(0x60) route and the 0x17 letter / 0x19 cloud take further ones, so six
-   of the eight cast members are built through paths this lane had not traced.
-   The renderer's garbage Entry belongs to one of those six.
+/* PER-OBJECT BRANCH TRACE, PER SHAPE. CutsceneObject::InitResources branches on
+   unk8 (+0x08) into SEVEN arms of TWO shapes, and they store their model in
+   DIFFERENT members -- which is what made an earlier version of this probe
+   report six false wounds by reading +0xE0 for all eight:
 
-   This logs, per object: unk8 (which branch), the model object it built at
-   +0xE0, that object's ModelComponents (model+0x08, include/Model.h:44) and the
-   Entry table the renderer walks (info+0x10). The ModelComponents address is
-   printed because it is the `self` func_0204488c faults on -- matching it names
-   the wounded object DIRECTLY instead of by elimination.
-   Inert unless SM64DS_INTRO_WATCH. */
+     0x84 shape -> +0xE0 (unk_0e0), set up by func_ov002_020f6618, a ModelAnim
+                   with model + anims + texture sequence
+                   0x12 Lakitu, 0x13 Peach, 0x1A..0x2D
+     0x60 shape -> +0xDC (mModel),  set up by func_ov002_020f6960, a PLAIN Model
+                   with the model file only
+                   0x14/0x15/0x16 the three pipes, 0x17 THE LETTER, 0x18,
+                   0x19 the cloud
+
+   Anything outside 0x12..0x2D takes no arm at all and legitimately builds
+   nothing -- 0x2f, which the script does spawn, is one of those.
+
+   Logged per object: unk8, which member is live, the model object, that
+   object's ModelComponents (model+0x08, include/Model.h:44) and the Entry table
+   the renderer walks (info+0x10). The ModelComponents address is printed
+   because it is the `self` func_0204488c faults on, so a fault names its object
+   DIRECTLY instead of by elimination. Inert unless SM64DS_INTRO_WATCH. */
 static int __fastcall co_init(void *s, void *)
 {
     static int on = -1;
@@ -185,15 +193,24 @@ static int __fastcall co_init(void *s, void *)
     const unsigned kind = on ? *(unsigned *)((char *)s + 8) : 0u;
     const int r = _ZN14CutsceneObject13InitResourcesEv(s);
     if (on) {
-        char *m = *(char **)((char *)s + 0xE0);
+        const int anim  = (kind == 0x12 || kind == 0x13 ||
+                           (kind >= 0x1A && kind <= 0x2D));
+        const int plain = (kind >= 0x14 && kind <= 0x19);
+        const char *where = anim ? "+0xE0 ModelAnim"
+                          : plain ? "+0xDC Model"
+                                  : "no arm";
+        char *m = anim  ? *(char **)((char *)s + 0xE0)
+                : plain ? *(char **)((char *)s + 0xDC)
+                        : 0;
         char *mc = m ? m + 8 : 0;                 /* the ModelComponents */
         void *info = mc ? *(void **)mc : 0;
         void *entries = info ? *(void **)((char *)info + 0x10) : 0;
         std::fprintf(stderr,
-                     "  [cast] obj %p unk8 0x%02x -> InitResources %d | model %p"
-                     " | ModelComponents %p | info %p | entries %p%s\n",
-                     s, kind, r, (void *)m, (void *)mc, info, entries,
-                     (r != 0 && !entries) ? "   <- VIEW NOT POPULATED" : "");
+                     "  [cast] obj %p unk8 0x%02x -> InitResources %d | %s"
+                     " | model %p | ModelComponents %p | info %p | entries %p%s\n",
+                     s, kind, r, where, (void *)m, (void *)mc, info, entries,
+                     ((anim || plain) && r != 0 && !entries)
+                         ? "   <- VIEW NOT POPULATED" : "");
     }
     return r;
 }

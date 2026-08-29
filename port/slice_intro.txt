@@ -70,7 +70,13 @@ src/func_0203db0c.c
 src/CutsceneObject_Spawn.c
 src/_ZN14CutsceneObject13InitResourcesEv.cpp
 src/_ZN14CutsceneObject8BehaviorEv.cpp
-src/_ZN14CutsceneObject6RenderEv.cpp
+# src/_ZN14CutsceneObject6RenderEv.cpp -- HOST COPY at unmatched/CutsceneObject_Render.cpp
+#   It dispatches its model through a LOCAL SHADOW class counted in ROM/Itanium
+#   numbering, so its `m` lands on ROM slot 5 = ModelAnim::Render(Vector3 const*).
+#   MSVC folds D1/D0, so index 5 on the host table is _ZTV9ModelAnim[5] =
+#   ModelAnim::Virtual18(u32, Vector3 const *) -- a different function with a
+#   different arity. hal/cxxname_bridge.cpp predicted this TU by name at the
+#   ModelAnim fill. One dropped declaration in the copy; body otherwise identical.
 src/_ZN14CutsceneObject16CleanupResourcesEv.cpp
 src/_ZN14CutsceneObject16OnPendingDestroyEv.c
 # its own ov002 closure, all matched and previously unoffered

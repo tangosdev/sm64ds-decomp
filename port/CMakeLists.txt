@@ -2968,6 +2968,16 @@ list(APPEND SLICEINTRO_SOURCES
 # of each file and through which class. Src line commented out in slice_intro.txt.
 list(APPEND SLICEINTRO_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_CutsceneLoad_020f6618.cpp")
+# CutsceneObject::Render dispatches its model through a LOCAL SHADOW class
+# counted in ROM/Itanium numbering, so its `m` reaches ROM slot 5 =
+# ModelAnim::Render(Vector3 const *). MSVC folds the D1/D0 pair, so index 5 on
+# the host table is _ZTV9ModelAnim[5] = ModelAnim::Virtual18(u32, Vector3 const*)
+# -- a different function with a different arity, and the renderer then walked an
+# Entry chosen by a garbage index. cxxname_bridge.cpp predicted this TU by name.
+# One dropped declaration; body otherwise the matched source. Src line commented
+# out in slice_intro.txt.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/CutsceneObject_Render.cpp")
 
 # THE SCENE BOOT: the star select, the one non-level scene the port can enter.
 # ov003 carries three scene classes -- dScTitle_c (id 2), dScStarSel_c (id 4)
