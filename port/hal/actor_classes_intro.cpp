@@ -1,4 +1,4 @@
-// ============================================================================
+﻿// ============================================================================
 // THE NEW-FILE OPENING'S CAST -- CUTSCENE_OBJECT (actor 0x160, ov002)
 // ============================================================================
 //
@@ -235,10 +235,45 @@ void _ZN5Model6RenderEPK7Vector3(void);
 extern unsigned data_ov002_0210bae4[];
 }
 
-/* The SIX CODE SLOTS, in the ROM's own order, each paired with the address
-   config/arm9/overlays/ov002/relocs.txt says belongs there. Slots +0x18 and
-   +0x1c are DATA (0x0209a754 and 0x0210ba44) and are left exactly as the mount
-   carries them -- this seat only rewrites words that are called. */
+/* THE SLOT SHIFT, AND WHY THIS TABLE IS FILLED IN MSVC NUMBERING.
+ *
+ * A ROM-shaped fill here is WRONG for this class and cost this lane a full
+ * debugging cycle, so the reasoning is written down.
+ *
+ * The ROM's table is [0] D1, [1] D0, [2] DoSetFile, [3] UpdateVerts,
+ * [4] Virtual10, [5] Render -- include/Model.h documents exactly that. MSVC
+ * FOLDS the Itanium D1/D0 pair into ONE deleting-destructor slot, so a
+ * MSVC-compiled caller indexes DoSetFile at 1, UpdateVerts at 2, and so on: one
+ * slot low against the ROM. The consumer here is matched source compiled by
+ * MSVC -- src/_ZN9ModelBase7SetFileEP8BMD_Fileii.cpp is literally
+ * `DoSetFile((char *)file, a, b);` -- so with the ROM shape in place it indexed
+ * slot 1 and called the DELETING DESTRUCTOR instead. Measured, and it is what
+ * the fault chain showed:
+ *     CutsceneObject::InitResources+0x1c2 -> func_ov002_020f6960+0x1f
+ *     -> ModelBase::SetFile+0x63 -> func_ov002_020f69a8 (the D0)
+ *     -> SharedFilePtr::Release   -> access violation
+ *
+ * [[sm64ds-port-msvc-dtor-slot-shift]] names this class of bug and prescribes
+ * keeping the vtable ROM-shaped and host-copying the CONSUMER
+ * (port/unmatched/CylinderClsn_Process.cpp is that pattern). That is the right
+ * answer for CylinderClsn and the WRONG one here, because Model already has a
+ * settled convention that points the other way: hal/cxxname_bridge.cpp's
+ * hal_fill_model_vtable fills _ZTV5Model in MSVC NUMBERING ([1] DoSetFile,
+ * [2] UpdateVerts, [3] Virtual10, [4] Render) and DUAL-FILLS [5] with Render so
+ * shadow TUs that count in ROM numbering are served by the same array. Every
+ * Model in this port is dispatched that way. Host-copying ModelBase::SetFile to
+ * dispatch ROM slot 2 would have fixed this object and broken every other
+ * Model, which is a much worse trade.
+ *
+ * So this table is filled the way _ZTV5Model is, and for [1] onward it is
+ * filled FROM _ZTV5Model -- this class overrides nothing past the destructors
+ * (its ROM slots 2..5 hold Model's own bodies, 0x02016bf8/c98/bb8/b78), so
+ * reusing those entries also inherits the port's tracing and actor-box wrappers
+ * instead of quietly forking them.
+ *
+ * The ROM addresses are still CHECKED first, so a mount that ever changes shape
+ * says so before anything is rewritten. Slots +0x18 and +0x1c are DATA
+ * (0x0209a754 and 0x0210ba44) and are never touched. */
 extern "C" {
 int _ZN5Model9DoSetFileEPcii(void *, char *, int, int);
 void _ZN5Model11UpdateVertsEv(void *);
@@ -255,23 +290,91 @@ g_co_vt[6] = {
     { 0x02016b78, (void *)&_ZN5Model6RenderEPK7Vector3,    "+0x14 Model::Render" },
 };
 
+/* THE SECOND TABLE. CutsceneObject::InitResources builds TWO model members and
+   they are different classes:
+     data_ov002_0210bae4  a MODEL     (ROM [2..5] are Model's own bodies)
+     data_ov002_0210bcc4  a MODELANIM (ROM [3..6] are ModelAnim::UpdateVerts,
+                          Virtual10, Render, Virtual18 -- 0x0201686c, 0x0201682c,
+                          0x020167f8, 0x020167c4)
+   Same shift, same fix, different base. hal/cxxname_bridge.cpp fills
+   _ZTV9ModelAnim in MSVC numbering too ([0] dtor, [1] DoSetFile,
+   [2] UpdateVerts, [3] Virtual10, [4] Render, [5] Virtual18). */
+extern "C" {
+extern void *_ZTV5Model[8];
+extern void *_ZTV9ModelAnim[10];
+void hal_fill_model_vtable(void);
+void hal_fill_modelanim2_vtable(void);  /* fills _ZTV9ModelAnim too */
+void func_ov002_020f6778(void);           /* the ModelAnim class's own D0 */
+extern unsigned data_ov002_0210bcc4[];
+}
+
+static const struct { unsigned rom; const char *what; } g_co_vt2[7] = {
+    { 0x020f6870, "+0x00 D1" },
+    { 0x020f6778, "+0x04 D0" },
+    { 0x02016bf8, "+0x08 Model::DoSetFile" },
+    { 0x0201686c, "+0x0c ModelAnim::UpdateVerts" },
+    { 0x0201682c, "+0x10 ModelAnim::Virtual10" },
+    { 0x020167f8, "+0x14 ModelAnim::Render" },
+    { 0x020167c4, "+0x18 ModelAnim::Virtual18" },
+};
+
 static void co_seat_model_vtable(void)
 {
     static int done;
     if (done)
         return;
     done = 1;
+
+    /* CHECK both ROM shapes before rewriting either, so a changed mount is
+       loud rather than silently reinterpreted. */
     for (unsigned i = 0; i < 6; ++i) {
         if (data_ov002_0210bae4[i] != g_co_vt[i].rom) {
-            std::fprintf(stderr, "FATAL: CUTSCENE_OBJECT model vtable slot %s: "
+            std::fprintf(stderr, "FATAL: CUTSCENE_OBJECT Model vtable slot %s: "
                          "the mount holds %08x, the ROM's own reloc says %08x "
                          "-- WRONG BYTES\n", g_co_vt[i].what,
                          data_ov002_0210bae4[i], g_co_vt[i].rom);
             std::abort();
         }
-        data_ov002_0210bae4[i] = (unsigned)(size_t)g_co_vt[i].host;
-        (void)0;
     }
+    for (unsigned i = 0; i < 7; ++i) {
+        if (data_ov002_0210bcc4[i] != g_co_vt2[i].rom) {
+            std::fprintf(stderr, "FATAL: CUTSCENE_OBJECT ModelAnim vtable slot "
+                         "%s: the mount holds %08x, the ROM's own reloc says "
+                         "%08x -- WRONG BYTES\n", g_co_vt2[i].what,
+                         data_ov002_0210bcc4[i], g_co_vt2[i].rom);
+            std::abort();
+        }
+    }
+
+    /* Both host tables are filled at boot by hal/cxxname_bridge.cpp; call the
+       fills rather than depend on an ordering this file does not control. Both
+       are idempotent -- plain sequences of stores. */
+    hal_fill_model_vtable();
+    hal_fill_modelanim2_vtable();
+    if (!_ZTV5Model[1] || !_ZTV5Model[4] ||
+        !_ZTV9ModelAnim[1] || !_ZTV9ModelAnim[4]) {
+        std::fprintf(stderr, "FATAL: _ZTV5Model / _ZTV9ModelAnim are not filled "
+                     "-- CUTSCENE_OBJECT's tables are filled FROM them and would "
+                     "inherit nulls\n");
+        std::abort();
+    }
+
+    /* MSVC numbering, the shape both host fills use. Slot 0 is the single
+       folded deleting destructor and is each class's OWN D0; everything past it
+       is inherited from the host base table, which also inherits the port's
+       tracing and actor-box wrappers instead of forking them.
+       For the Model table, [5] repeats Render -- the same dual-fill
+       _ZTV5Model carries, so a shadow TU counting in ROM numbering still lands
+       on Render. For the ModelAnim table, [6] repeats Virtual18 for the same
+       reason: no DS address is left in any code slot of either table. */
+    data_ov002_0210bae4[0] = (unsigned)(size_t)&func_ov002_020f69a8;
+    for (unsigned i = 1; i <= 5; ++i)
+        data_ov002_0210bae4[i] = (unsigned)(size_t)_ZTV5Model[i];
+
+    data_ov002_0210bcc4[0] = (unsigned)(size_t)&func_ov002_020f6778;
+    for (unsigned i = 1; i <= 5; ++i)
+        data_ov002_0210bcc4[i] = (unsigned)(size_t)_ZTV9ModelAnim[i];
+    data_ov002_0210bcc4[6] = (unsigned)(size_t)_ZTV9ModelAnim[5];
 }
 
 extern "C" void hal_fill_cutscene_object_vtable(void)
@@ -373,3 +476,5 @@ void _ZN5Model9Virtual10ER9Matrix4x3(void *self, Matrix4x3 &mat)
 // spelling CutsceneObject::Render reaches it by.
 #pragma comment(linker, "/alternatename:?RenderSub@OAM@@SAXPAUOamAttr@@HH@Z=__ZN3OAM9RenderSubEP7OamAttrii")
 #pragma comment(linker, "/alternatename:?data_ov002_0210bddc@@3UOamAttr@@A=_data_ov002_0210bddc")
+
+

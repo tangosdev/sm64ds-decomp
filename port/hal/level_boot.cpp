@@ -3023,6 +3023,12 @@ extern "C" void port_intro_arm_for_entry(void)
    which does the same for __sinit_02074f80. */
 extern "C" void __sinit_02073e6c(void);
 extern "C" void port_intro_seat_dcc(void);   /* hal/intro_dcc_blob.cpp */
+extern "C" {
+extern unsigned data_ov085_02130744[];
+/* declared again here: the file's own declaration is a thousand lines below
+   this seam, and the seam is the first thing in the boot that needs it */
+void port_actor_overlays_sinits(void);
+}
 
 static void port_intro_seat_scripts(void)
 {
@@ -3034,6 +3040,32 @@ static void port_intro_seat_scripts(void)
        the same blob, so nothing can read a DS address in between. */
     port_intro_seat_dcc();
     __sinit_02073e6c();
+
+    /* THE ov085 FILE POINTERS. The opening's cast loads its models through
+       SharedFilePtrs that live in ov085 BSS and are Constructed by
+       __sinit_ov085_0212fa40 (data_ov085_02130744 gets file id 0x2d8 at its
+       line 65). Those sinits run from port_actor_overlays_sinits(), which the
+       port calls out of port_a2_seat_body -- and the title-entry crossing made
+       that seat SINGLE-RUN (see the title-entry commit: it "ran twice and is
+       not idempotent"). So on this path the construction may already have
+       happened for the TITLE and not for the adventure, which reads as
+       "fs fileID 0 not in catalog (fileptr 02130744)" from the port's own fs.
+       The id is fine and the asset is present -- 0x2d8 is
+       data/normal_obj/obj_pushblock/obj_pushblock.bmd in build/assets/files.tsv
+       -- so this is an unconstructed handle, not a missing file.
+       port_actor_overlays_sinits() carries its own done-guard, so calling it
+       here is a no-op when it has already run and the fix when it has not.
+       The probe reports which of those it was rather than leaving it to
+       inference. */
+    {
+        const unsigned before = data_ov085_02130744[0];
+        port_actor_overlays_sinits();
+        const unsigned after = data_ov085_02130744[0];
+        std::fprintf(stderr, "  [intro] ov085 file pointers: data_ov085_02130744"
+                     " fileID %u -> %u (%s)\n", before, after,
+                     after == before ? "unchanged -- the sinits had already run"
+                                     : "constructed by this call");
+    }
 }
 
 /* The decision, consumed once by the boot that follows the crossing. */
