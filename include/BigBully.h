@@ -26,6 +26,8 @@ struct BigBully : daOts_c {
     int Behavior();
     int InitResources();
     int Render();
+    virtual int UpdateRunState();
+    virtual void UpdateDeathState();
 };
 
 typedef char BigBully_size_must_be_0x400[sizeof(BigBully) == 0x400 ? 1 : -1];

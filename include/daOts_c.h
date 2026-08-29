@@ -45,7 +45,7 @@
  * referenced by no child source at all -- so it stays the children's padding rather
  * than being annexed into the base on no evidence.
  */
-/* THE VTABLE, all 31 slots diffed against dEnemyBase_c's and against all three children's:
+/* THE VTABLE, all 37 slots diffed against dEnemyBase_c's and against all three children's:
  *
  *   slot 0  InitResources    LITERAL ZERO here -- pure virtual. All three children
  *   slot 6  Behavior         override both, which is why they must.
@@ -107,6 +107,16 @@ struct daOts_c : dEnemyBase_c {
     virtual int CleanupResources();     /* slot  3 */
     virtual int Render();               /* slot  9 */
     virtual int OnAimedAtWithEgg();     /* slot 29 -- still a C file, see its source */
+    /* New slots 31..36. Their positions and override ownership are fixed by the
+       four ROM vtables. The spellings describe their call sites; the stripped
+       image carries no original method names. */
+    virtual int  UpdateRunState();      /* slot 31 -- called only from state 1 */
+    virtual void UpdateDeathState();    /* slot 32 -- called only from state 4 */
+    virtual void PlayStepSound();       /* slot 33 -- animation frames 4 and 7 */
+    virtual void PlayHitSound();        /* slot 34 -- entering the hit state */
+    virtual void PlayShellHitSound();   /* slot 35 -- shell/knockback response */
+    virtual void PlayDeathSound();      /* slot 36 -- entering state 4 */
+
     /* THE NULL SLOTS THE NOTE ABOVE ALREADY NAMES, SPELT SO THE COMPILER AGREES.
        mwccarm lays down a bare 0x00000000 with no relocation for a pure virtual --
        there is no __cxa_pure_virtual in this image for it to point at -- so a zero

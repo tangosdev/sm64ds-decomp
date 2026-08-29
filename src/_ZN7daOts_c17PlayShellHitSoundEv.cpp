@@ -1,3 +1,6 @@
-void func_ov064_0211635c(void)
+//cpp
+#include "daOts_c.h"
+
+void daOts_c::PlayShellHitSound()
 {
 }

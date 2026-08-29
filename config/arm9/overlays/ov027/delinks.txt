@@ -48,11 +48,11 @@ src/_ZN10ChillBullyD0Ev.cpp:
     complete
     .text start:0x02111618 end:0x02111680
 
-src/func_ov027_02111680.c:
+src/_ZN10ChillBully14UpdateRunStateEv.cpp:
     complete
     .text start:0x02111680 end:0x021116f0
 
-src/func_ov027_021116f0.cpp:
+src/_ZN10ChillBully16UpdateDeathStateEv.cpp:
     complete
     .text start:0x021116f0 end:0x02111770
 

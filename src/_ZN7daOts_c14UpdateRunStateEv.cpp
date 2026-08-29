@@ -1,3 +1,6 @@
-void func_ov064_021165d4(void)
+//cpp
+#include "daOts_c.h"
+
+int daOts_c::UpdateRunState()
 {
 }

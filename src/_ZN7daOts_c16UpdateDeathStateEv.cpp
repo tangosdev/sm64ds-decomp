@@ -1,3 +1,6 @@
-void func_ov064_021163bc(void)
+//cpp
+#include "daOts_c.h"
+
+void daOts_c::UpdateDeathState()
 {
 }

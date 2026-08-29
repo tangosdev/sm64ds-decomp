@@ -13,9 +13,9 @@
  * four bytes smaller than its siblings rather than larger.
  *
  * Its vtable is at 0x02113930 in ov027; the word before it is 0x021138b0, which is
- * _ZTI12daIDonketu_c. It overrides four slots: InitResources and Behavior, which are
- * PURE VIRTUAL in daOts_c and so must be overridden, and the destructor pair.
- * CleanupResources, Render and OnAimedAtWithEgg it inherits unchanged.
+ * _ZTI12daIDonketu_c. Besides InitResources, Behavior and the destructor pair, it
+ * overrides daOts_c's state-1 and state-4 hooks. CleanupResources, Render, the actor
+ * hooks, and the four sound hooks remain inherited.
  */
 struct ChillBully : daOts_c {
     u8  pad_398[0x62];
@@ -32,6 +32,8 @@ struct ChillBully : daOts_c {
     /* methods */
     int Behavior();
     int InitResources();
+    virtual int UpdateRunState();
+    virtual void UpdateDeathState();
 };
 
 typedef char ChillBully_size_must_be_0x3fc[sizeof(ChillBully) == 0x3fc ? 1 : -1];

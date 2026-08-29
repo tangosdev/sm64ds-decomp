@@ -1,5 +1,9 @@
-extern int func_0201267c(int, void *);
+//cpp
+#include "daOts_c.h"
 
-int func_ov064_02116348(char *c) {
-    return func_0201267c(0xce, c + 0x74);
+extern "C" void func_0201267c(u32 soundID, const Vector3 *pos);
+
+void daOts_c::PlayDeathSound()
+{
+    func_0201267c(0xce, (const Vector3 *)&mCamSpacePosX);
 }

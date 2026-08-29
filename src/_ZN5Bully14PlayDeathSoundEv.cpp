@@ -1,8 +1,9 @@
-// @symbol func_ov064_0211712c
-/* recovered: shared common types */
-#include "common.h"
-extern void func_0201267c(unsigned int id, const struct Vector3 *v);
+//cpp
+#include "Bully.h"
 
-void func_ov064_0211712c(char *p) {
-    func_0201267c(0xC8, (const struct Vector3 *)(p + 0x74));
+extern "C" void func_0201267c(u32 soundID, const Vector3 *pos);
+
+void Bully::PlayDeathSound()
+{
+    func_0201267c(0xc8, (const Vector3 *)&mCamSpacePosX);
 }
