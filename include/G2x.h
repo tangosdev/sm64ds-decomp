@@ -20,12 +20,13 @@
  * more than usual: a wrong width names a symbol that exists nowhere, and this
  * class has already cost one ROM-build failure that way (a shadow `struct G2x`
  * with an `int` parameter). `PVt` is `volatile unsigned short*`, `t` is
- * `unsigned short`, `s` is `short`, `i` is `int`.
+ * `unsigned short`, `s` is `short`, `i` is `int`, and `j` is `unsigned int`.
  *
- * Note SetBlendAlpha takes FIVE parameters (`EPVttttt`), not the six its
- * pre-image declared, and writes 32 bits through a `u16*` -- so the store is
- * cast in the body rather than the parameter being widened, which would change
- * the mangling.
+ * SetBlendAlpha takes FIVE parameters (`EPVttttj`). Its final stack argument
+ * is 32-bit because the ROM loads it with `ldr`; the former trailing `t` made
+ * CodeWarrior emit `ldrh` and proved that old symbol spelling false. It writes
+ * 32 bits through a `u16*`, so the store is cast in the body rather than the
+ * pointer parameter being widened, which would also change the mangling.
  */
 #ifndef G2X_H
 #define G2X_H
@@ -38,7 +39,7 @@ struct G2x {
     /* All static -- see the header note. */
     static void SetBlendBrightness(volatile unsigned short *p, unsigned short val, short amt);
     static void SetBlendAlpha(volatile unsigned short *reg, unsigned short a,
-                              unsigned short b, unsigned short c, unsigned short d);
+                              unsigned short b, unsigned short c, unsigned int d);
     static void SetBGyAffine(volatile unsigned short *p, Matrix2x2 *m,
                              int a, int b, int c, int d);
 #endif

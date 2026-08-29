@@ -1,5 +1,5 @@
 //cpp
-extern "C" void _ZN3G2x13SetBlendAlphaEPVttttt(
+extern "C" void _ZN3G2x13SetBlendAlphaEPVttttj(
     volatile unsigned short *p, int a, int b, int c, int d);
 
 extern "C" void func_ov006_020e8bd0(char *c, int i)
@@ -12,7 +12,7 @@ extern "C" void func_ov006_020e8bd0(char *c, int i)
     *(unsigned char *)(((int)c + 0x554e)) += 1;
     {
         unsigned char ip = *(unsigned char *)(c + 0x554e);
-        _ZN3G2x13SetBlendAlphaEPVttttt(
+        _ZN3G2x13SetBlendAlphaEPVttttj(
             (volatile unsigned short *)0x4001050, 0, 4,
             0x10 - ip, ip);
     }

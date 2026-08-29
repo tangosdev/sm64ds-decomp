@@ -2,7 +2,7 @@
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int id);
 extern void func_ov006_0211f454(char *c, int i);
 extern void func_ov006_0211f34c(char *c, int i);
-extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile unsigned short *p, int a, int b, int c, int d);
+extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile unsigned short *p, int a, int b, int c, int d);
 extern short data_02082214[];
 
 void func_ov006_0211ebdc(char *c, int i)
@@ -61,7 +61,7 @@ void func_ov006_0211ebdc(char *c, int i)
         *fade = *fade + 1;
         *p6e = 0;
         if (i == *(u8 *)(c + 0x4c22)) {
-            _ZN3G2x13SetBlendAlphaEPVttttt((volatile unsigned short *)0x4001050, 0, 4,
+            _ZN3G2x13SetBlendAlphaEPVttttj((volatile unsigned short *)0x4001050, 0, 4,
                 0x10 - *fade, 0x10);
         }
         if (*fade >= 0x10) {

@@ -8974,7 +8974,7 @@ src/_ZN3G2x18SetBlendBrightnessEPVtts.cpp:
     complete
     .text start:0x02055238 end:0x0205525c
 
-src/_ZN3G2x13SetBlendAlphaEPVttttt.cpp:
+src/_ZN3G2x13SetBlendAlphaEPVttttj.cpp:
     complete
     .text start:0x0205525c end:0x02055278
 

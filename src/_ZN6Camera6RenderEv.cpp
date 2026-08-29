@@ -45,7 +45,7 @@ struct OAM {
 extern "C" void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(bool, OamAttr *, int, int, int, int, int, int, int, int);
 
 struct G2x {
-    static void SetBlendAlpha(volatile unsigned short *, u16, u16, u16, u16);
+    static void SetBlendAlpha(volatile unsigned short *, u16, u16, u16, u32);
 };
 struct G3i {
     static void PerspectiveW_(int, int, int, int, int, int, bool, Matrix4x3 *);

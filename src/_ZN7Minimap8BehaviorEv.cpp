@@ -79,7 +79,7 @@ extern s8   data_ov002_02111148;
 
 extern s32  _ZN6Player12Unk_020ca8f8Ev(Obj *p);
 extern void SetSubBg2Offset(s32 a, s32 b);
-extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
+extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
 extern s32  SublevelToLevel(s32 i);
 extern int _ZN4cstd4fdivEii(s32 a, s32 b);
 extern void _ZN7Minimap21FixTHIPaintingRoomPosER7Vector3(Vector3 *v);
@@ -138,7 +138,7 @@ s32 Minimap::Behavior()
             SetSubBg2Offset(0x100 - data_0209f4a8[data_020a0e40 * 0x18],
                             0x80 - data_0209f4a9[data_020a0e40 * 0x18]);
         }
-        _ZN3G2x13SetBlendAlphaEPVttttt((volatile u16 *)0x4001050, 4, 0x28, 4, 0xd);
+        _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16 *)0x4001050, 4, 0x28, 4, 0xd);
         if (data_0209f4ae[data_020a0e40 * 0x18] != 2)
             *(volatile u16 *)0x400100c = (u16)((*(volatile u16 *)0x400100c & 0x43) | 0x5300);
         else

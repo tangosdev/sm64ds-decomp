@@ -15,7 +15,7 @@ extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void func_02056554(const void *src, u32 offset, u32 count);
-extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *p, u16 a, u16 b, u16 c, u16 d);
+extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void *p, u16 a, u16 b, u16 c, u16 d);
 
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
@@ -68,7 +68,7 @@ s32 dScMgBomroom_c::InitResources()
     func_02056554((const void *)f, 0x800, 0x800);
     Deallocate((void *)f);
 
-    _ZN3G2x13SetBlendAlphaEPVttttt((volatile void *)0x4000050, 1, 0x1c, 4, 3);
+    _ZN3G2x13SetBlendAlphaEPVttttj((volatile void *)0x4000050, 1, 0x1c, 4, 3);
 
     r5 = LoadFile(0xb5);
     f = LoadFile(0xb6);

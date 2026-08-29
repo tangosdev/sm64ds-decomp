@@ -8,7 +8,7 @@
 extern "C" {
 // recovered name: dScMgTrampoline_c_OnYoshiTryEat_02121fa4
 /* recovered: renamed to Class_Method */
-extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *reg,
+extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void *reg,
     unsigned short a, unsigned short b, int c, unsigned short d);
 extern void func_ov006_020d0b04(int a);
 extern int GetGameLanguage(void);
@@ -24,7 +24,7 @@ void func_ov006_02121fa4(char *o)
     volatile unsigned short fill;
     int q;
 
-    _ZN3G2x13SetBlendAlphaEPVttttt((volatile void *)0x4000050, 1, 0x3e, 0x10, 0x10);
+    _ZN3G2x13SetBlendAlphaEPVttttj((volatile void *)0x4000050, 1, 0x3e, 0x10, 0x10);
 
     self->mTouchStartX = data_020a0dbc[0];
     self->mTouchStartY = data_020a0dbc[1];

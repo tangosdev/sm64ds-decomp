@@ -68,7 +68,7 @@ extern "C" {
     void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
     void *_ZN3G2S12GetBG3ScrPtrEv(void);
     void *_ZN3G2S12GetBG2ScrPtrEv(void);
-    void _ZN3G2x13SetBlendAlphaEPVttttt(void *p, u16 a, u16 b, u16 c, u16 d);
+    void _ZN3G2x13SetBlendAlphaEPVttttj(void *p, u16 a, u16 b, u16 c, u16 d);
     void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
     void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 
@@ -162,7 +162,7 @@ s32 dScMgAmida_c::InitResources()
         LoadCompressedFileAt(0x19, _ZN3G2S12GetBG2ScrPtrEv());
         LoadCompressedFileAt(0x18, _ZN3G2S12GetBG3ScrPtrEv());
         *(volatile s16 *)0x4000050 = 0;
-        _ZN3G2x13SetBlendAlphaEPVttttt((void *)0x4001050, 4, 8, 6, 0x10);
+        _ZN3G2x13SetBlendAlphaEPVttttj((void *)0x4001050, 4, 8, 6, 0x10);
         data_0209d45c |= 9;
         data_0209d454 |= 0xd;
     }

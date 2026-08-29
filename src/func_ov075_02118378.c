@@ -6,7 +6,7 @@ extern void *_ZN3G2S12GetBG3ScrPtrEv(void);
 extern unsigned int LoadCompressedFileAt(u16 fileID, void *target);
 extern void _ZN7Message17DisplayVsExitTextEt(u16 a);
 extern void func_ov075_02115e8c(void *p, int b, int c, int d, int e);
-extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *p, u16 a, u16 b, u16 c, u16 d);
+extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void *p, u16 a, u16 b, u16 c, u16 d);
 extern void func_02020190(void);
 extern void func_02012790(int a);
 extern void _ZN5Sound22LoadAndSetMusic_Layer1Ei(int a);
@@ -29,7 +29,7 @@ void func_ov075_02118378(void *c) {
     func_ov075_02115e8c((char *)c + 0x70, 0xa, 0, 0x80, 0x48);
     func_ov075_02115e8c((char *)c + 0x94, 0xa, 0, 0x80, 0x78);
     *(unsigned char *)((char *)c + 0x280) = 2;
-    _ZN3G2x13SetBlendAlphaEPVttttt((volatile void *)0x4000050, 4, 0x11, 0xc, 4);
+    _ZN3G2x13SetBlendAlphaEPVttttj((volatile void *)0x4000050, 4, 0x11, 0xc, 4);
     *(unsigned char *)((char *)c + 0x287) = 0xe;
     if (data_0209fc68 != 0)
         data_0209fc68 = 5;

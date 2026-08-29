@@ -18,7 +18,7 @@ void Ov004_Deallocate(void* p);
 void _ZN3GXS11LoadOBJPlttEPKvjj(const void* p, u32 a, u32 b);
 void func_ov006_020e3388(char* self);
 void func_ov006_020e3250(char* c);
-void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16* p, u16 a, u16 b, u16 c, u16 d);
+void _ZN3G2x13SetBlendAlphaEPVttttj(volatile u16* p, u16 a, u16 b, u16 c, u16 d);
 int func_ov004_020adc1c(void);
 
 extern unsigned char data_0209d45c;
@@ -86,8 +86,8 @@ s32 dScMgCurling_c::InitResources()
     func_ov004_020b04d0(0x20);
     *(u16*)(self + 0x4ee2) = 0x40;
     *(int*)(self + 0xa4) = 1;
-    _ZN3G2x13SetBlendAlphaEPVttttt((volatile u16*)0x4000050, 0, 0xd, 2, 0x10);
-    _ZN3G2x13SetBlendAlphaEPVttttt((volatile u16*)0x4001050, 0, 4, 2, 0x10);
+    _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16*)0x4000050, 0, 0xd, 2, 0x10);
+    _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16*)0x4001050, 0, 4, 2, 0x10);
     *(int*)(self + 0x4ed8) = func_ov004_020adc1c();
     return 1;
 }
