@@ -27,7 +27,7 @@ extern int NormalizeVec3IfNonZero(struct Vector3 *v);
 extern int _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(int,int,int,int,int,int,int,struct Matrix4x3_local *);
 extern int _ZN3G3i7LookAt_EPK7Vector3S2_S2_bP9Matrix4x3(struct Vector3 *,struct Vector3 *,struct Vector3 *,int,struct Matrix4x3_local *);
 extern void _Z13CopyToViewMatPK9Matrix4x3(struct Matrix4x3_local *);
-extern int _ZN7Clipper13Func_020156DCEv(void *,int,int,int,int);
+extern void _ZN7Clipper13Func_020156DCEitii(void *, int, int, int, int);
 
 extern short data_02082214[];
 extern char data_0209f43c[];
@@ -67,6 +67,6 @@ void Camera_UpdateMatrices(struct Camera *self)
 
     _Z13CopyToViewMatPK9Matrix4x3(&self->viewMat);
 
-    _ZN7Clipper13Func_020156DCEv(
+    _ZN7Clipper13Func_020156DCEitii(
         data_0209f43c, 0x1555, self->angle, 0x1000, 0x1388000);
 }

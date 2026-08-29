@@ -1952,7 +1952,7 @@ src/_ZN7Clipper13Func_0201559CEv.cpp:
     complete
     .text start:0x0201559c end:0x020156dc
 
-src/_ZN7Clipper13Func_020156DCEv.cpp:
+src/_ZN7Clipper13Func_020156DCEitii.cpp:
     complete
     .text start:0x020156dc end:0x020156fc
 

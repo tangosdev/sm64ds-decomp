@@ -4,6 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
+#include "Clipper.h"
 
 struct Vector3;
 namespace G3i {
@@ -17,16 +18,8 @@ extern "C" void _ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3(int 
     void LookAt_(const Vector3 *eye, const Vector3 *at, const Vector3 *up, bool b, Matrix4x3 *m);
 }
 extern "C" void _Z13CopyToViewMatPK9Matrix4x3(const Matrix4x3 *m);
-namespace Clipper { void Func_020156DC(void *a, int b, int c, int d, int e);
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void _ZN7Clipper13Func_020156DCEv(void *a, int b, int c, int d, int e);
- }
-
 extern "C" short data_02082614[];
-extern "C" int data_0209f43c;
+extern "C" Clipper data_0209f43c;
 
 extern "C" void func_ov075_021152d4(char *self)
 {
@@ -35,5 +28,5 @@ extern "C" void func_ov075_021152d4(char *self)
     G3i::LookAt_((Vector3*)(self + 0xf28), (Vector3*)&data_ov075_0211c660,
                  (Vector3*)(self + 0xf34), true, &view);
     _Z13CopyToViewMatPK9Matrix4x3(&view);
-    Clipper::_ZN7Clipper13Func_020156DCEv(&data_0209f43c, 0x1555, 0x105b, 0x1000, 0x1388000);
+    data_0209f43c.Func_020156DC(0x1555, 0x105b, 0x1000, 0x1388000);
 }
