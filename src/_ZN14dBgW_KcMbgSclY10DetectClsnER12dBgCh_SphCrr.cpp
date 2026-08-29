@@ -1,100 +1,88 @@
 //cpp
-#include "types.h"
-typedef struct {
-    int head[4];         /* 0x00 */
-    char result[0x60];   /* 0x10 */
-    u8 flags;            /* 0x70 */
-    char pad71[3];
-    char floorRes[0x28]; /* 0x74 */
-    char wallRes[0x28];  /* 0x9c */
-    char undRes[0x28];   /* 0xc4 */
-    int f_ec;            /* 0xec */
-    int f_f0[3];         /* 0xf0 */
-    int f_fc;             /* 0xfc */
-    int f_100;             /* 0x100 */
-    int tail[3];           /* 0x104..0x110 */
-} LocSphere;
+/* Slot 8: test a world-space sphere against a vertically scaled collider.
+ * The local query is the real dBgCh_SphCrr, so its C1/D1 calls come from
+ * ordinary automatic storage. SetObjAndSphere retains its measured raw-Fix12
+ * call veneer: spelling that disputed parameter as Fix12<int> grows this
+ * caller by 0xc bytes under the pinned compiler. */
+#include "dBgW_KcMbgSclY.h"
+#include "dBgCh_SphCrr.h"
+#include "dBgPi.h"
 
 extern "C" {
-void func_0203abb0(int* a, int* b);
-void func_0203aa74(void* thiz, int* v, int* res);
-void _ZN12dBgCh_SphCrrC1Ev(void* o);
-void _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(void* o, void* v, int r, void* a);
-void func_02037940(void* p, int v);
-void func_02035394(void* o, void* r);
-int _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr(void* o, void* s);
-void func_02037a04(void* o, void* d1, void* d2);
-void func_02037a6c(void* b, int x1, int y1, int z1, int x2, int y2, int z2);
-void _ZN5dBgPiaSERKS_(void* d, void* s);
-void* func_02037938(void* p);
-void _ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi(void* o, void* r);
-void func_0203794c(void* d, void* s);
-void* func_020378dc(void* p);
-void func_02037888(void* d, void* s);
-void* func_02037880(void* p);
-void func_0203782c(void* d, void* s);
-void _ZN12dBgCh_SphCrrD1Ev(void* o);
+void func_0203abb0(dM3dGSph* sphere, Vector3* centre);
+void func_0203aa74(dBgW_KcMbgSclY* self, Vector3* v, Vector3* res);
+void _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(
+    dBgCh_SphCrr *sphere, const Vector3 *pos, Fix12i radius, dActor_c *actor);
+void func_02037940(dBgCh_SphCrr *sphere, u8 flags);
+void func_02035394(dBgCh_SphCrr *dst, dBgCh_SphCrr *src);
+void func_02037a04(dBgCh_SphCrr *sphere, int *first, int *second);
+void func_02037a6c(dBgCh_SphCrr *sphere,
+    int x1, int y1, int z1, int x2, int y2, int z2);
+dBgPi *func_02037938(dBgCh_SphCrr *sphere);
+void func_0203794c(dBgCh_SphCrr *sphere, s32 *result);
+dBgPi *func_020378dc(dBgCh_SphCrr *sphere);
+void func_02037888(dBgCh_SphCrr *sphere, dBgPi *result);
+dBgPi *func_02037880(dBgCh_SphCrr *sphere);
+void func_0203782c(dBgCh_SphCrr *sphere, dBgPi *result);
 }
 
 #pragma opt_common_subs off
 
 #define FMUL(a, b) ((int)(((s64)(a) * (b) + 0x800) >> 12))
 
-extern "C" int _ZN14dBgW_KcMbgSclY10DetectClsnER12dBgCh_SphCrr(char* self, char* sphere)
+int dBgW_KcMbgSclY::DetectClsn(dBgCh_SphCrr &sphere)
 {
-    int v1[3];
-    int v2[3];
+    Vector3 centre;
+    Vector3 localCentre;
     int d[12];
-    LocSphere loc;
-    int scale;
+    int inverseScale;
     int radius1;
     int radius2;
     int r;
 
-    func_0203abb0((int*)(sphere + 0x38), v1);
-    func_0203aa74(self, v1, v2);
+    func_0203abb0(&(dM3dGSph &)sphere, &centre);
+    func_0203aa74(this, &centre, &localCentre);
 
-    scale = *(int*)(self + 0x164);
-    radius1 = FMUL(*(int*)(sphere + 0x48), scale);
-    radius2 = FMUL(*(int*)(sphere + 0xec), scale);
+    inverseScale = invScale;
+    radius1 = FMUL(sphere.radius, inverseScale);
+    radius2 = FMUL(sphere.unk_0ec, inverseScale);
 
-    _ZN12dBgCh_SphCrrC1Ev(&loc);
-    _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(&loc, v2, radius1, 0);
-    loc.f_ec = radius2;
-    func_02037940(&loc, *(u8*)(sphere + 0x70));
-    func_02035394(&loc, sphere);
-    r = _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr(self, &loc);
+    dBgCh_SphCrr loc;
+    _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(&loc, &localCentre, radius1, 0);
+    loc.unk_0ec = radius2;
+    func_02037940(&loc, sphere.flags);
+    func_02035394(&loc, &sphere);
+    r = dBgW_Kc::DetectClsn(loc);
     if (r) {
         func_02037a04(&loc, d, d + 3);
-        d[6] = FMUL(d[0], *(int*)(self + 0x50));
-        d[7] = FMUL(d[1], *(int*)(self + 0x50));
-        d[8] = FMUL(d[2], *(int*)(self + 0x50));
-        d[9] = FMUL(d[3], *(int*)(self + 0x50));
-        d[10] = FMUL(d[4], *(int*)(self + 0x50));
-        d[11] = FMUL(d[5], *(int*)(self + 0x50));
-        func_02037a6c(sphere, d[6], d[7], d[8], d[9], d[10], d[11]);
-        _ZN5dBgPiaSERKS_(sphere + 0x10, loc.result);
-        *(u8*)(sphere + 0x70) |= 1;
+        d[6] = FMUL(d[0], scale);
+        d[7] = FMUL(d[1], scale);
+        d[8] = FMUL(d[2], scale);
+        d[9] = FMUL(d[3], scale);
+        d[10] = FMUL(d[4], scale);
+        d[11] = FMUL(d[5], scale);
+        func_02037a6c(&sphere, d[6], d[7], d[8], d[9], d[10], d[11]);
+        (dBgPi &)sphere = (dBgPi &)loc;
+        sphere.flags |= 1;
         if (loc.flags & 4) {
-            if (*(u8*)(sphere + 0x70) & 4) {
+            if (sphere.flags & 4) {
                 r &= ~1;
             } else {
-                _ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi(sphere, func_02037938(&loc));
+                sphere.SetFloorResult(*(dBgPi*)func_02037938(&loc));
             }
-            *(u8*)(sphere + 0x70) |= 4;
-            if (*(int*)(sphere + 0x100) < loc.f_100) {
-                func_0203794c(sphere, &loc.f_fc);
+            sphere.flags |= 4;
+            if (sphere.unk_100 < loc.unk_100) {
+                func_0203794c(&sphere, &loc.unk_0fc);
             }
         }
         if (loc.flags & 8) {
-            func_02037888(sphere, func_020378dc(&loc));
-            *(u8*)(sphere + 0x70) |= 8;
+            func_02037888(&sphere, func_020378dc(&loc));
+            sphere.flags |= 8;
         }
         if (loc.flags & 0x10) {
-            func_0203782c(sphere, func_02037880(&loc));
-            *(u8*)(sphere + 0x70) |= 0x10;
+            func_0203782c(&sphere, func_02037880(&loc));
+            sphere.flags |= 0x10;
         }
     }
-    _ZN12dBgCh_SphCrrD1Ev(&loc);
     return r;
 }
