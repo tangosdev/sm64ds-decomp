@@ -2646,6 +2646,31 @@ void port_loadfile_pin_persistent(int handle)
         }
 }
 
+/* PROOF-OF-FIX (temporary, minigame-entry lane): free the non-persistent
+   LoadFile slots so a scene transition starts with an empty table, the same
+   drop-not-release discipline port_level_reset_host uses. */
+extern "C" void port_loadfile_reset_scene(void)
+{
+    int keep = 0;
+    for (int i = 0; i < g_loadfile_used; ++i) {
+        if (g_loadfile_slot[i].pad) {
+            if (keep != i) {
+                g_loadfile_slot[keep] = g_loadfile_slot[i];
+                g_loadfile_loads[keep] = g_loadfile_loads[i];
+            }
+            ++keep;
+        }
+    }
+    for (int i = keep; i < g_loadfile_used; ++i) {
+        g_loadfile_slot[i].fileID = 0;
+        g_loadfile_slot[i].numRefs = 0;
+        g_loadfile_slot[i].filePtr = 0;
+        g_loadfile_slot[i].pad = 0;
+        g_loadfile_loads[i] = 0;
+    }
+    g_loadfile_used = keep;
+}
+
 /* Method faces: the three MeshCollider helpers the boot calls by their
    Itanium names while their definitions are real MSVC members. */
 void _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(void *file)

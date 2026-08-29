@@ -278,6 +278,7 @@ extern "C" {
 extern void **data_020a4bb8;                     /* hal/actor_vtables.cpp */
 int _ZN5Scene15SetSceneToSpawnEjj(unsigned id, unsigned param);
 int _ZN5Scene16SpawnIfNecessaryEv(void);
+void port_loadfile_reset_scene(void);            /* PROOF-OF-FIX temp */
 extern unsigned short data_02092664;             /* the pending scene id */
 extern unsigned char data_020a4b4c;   /* func_02043098's progress byte */
 extern signed char data_02092110;                /* the CURRENT SUBLEVEL */
@@ -5735,6 +5736,7 @@ extern "C" void port_scene_tick(int frame, int tick_game)
                 nocarry = std::getenv("SM64DS_SCENE_NOCARRY") != 0;
             if (!nocarry && data_02092664 != 0x187 && data_02092660 == 0) {
                 const unsigned want = data_02092664;
+                port_loadfile_reset_scene();   /* PROOF-OF-FIX temp */
                 const int spawned = _ZN5Scene16SpawnIfNecessaryEv();
                 /* WHICH REFUSAL, not merely that there was one.
                    src/func_02043098.c steps data_020a4b4c through 2, 3, 4, 5 as
