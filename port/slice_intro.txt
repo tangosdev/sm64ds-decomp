@@ -77,7 +77,11 @@ src/_ZN14CutsceneObject8BehaviorEv.cpp
 #   ModelAnim::Virtual18(u32, Vector3 const *) -- a different function with a
 #   different arity. hal/cxxname_bridge.cpp predicted this TU by name at the
 #   ModelAnim fill. One dropped declaration in the copy; body otherwise identical.
-src/_ZN14CutsceneObject16CleanupResourcesEv.cpp
+# src/_ZN14CutsceneObject16CleanupResourcesEv.cpp -- HOST COPY at
+#   unmatched/CutsceneObject_CleanupResources.cpp. The SAME one-slot shift as
+#   Render, one file over: it destroys its model through a shadow whose `m04` is
+#   index 1, which is the ROM's DELETING destructor and MSVC's Model::DoSetFile.
+#   Cleaning up the cast would have called DoSetFile on a model being freed.
 src/_ZN14CutsceneObject16OnPendingDestroyEv.c
 # its own ov002 closure, all matched and previously unoffered
 src/func_ov002_020f23d0.c

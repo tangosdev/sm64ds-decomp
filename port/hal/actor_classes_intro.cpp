@@ -367,6 +367,30 @@ static const struct { unsigned rom; const char *what; } g_co_vt2[7] = {
     { 0x020167c4, "+0x18 ModelAnim::Virtual18" },
 };
 
+/* THE TWO DELETING DESTRUCTORS, FACED. Both ROM bodies are plain C functions
+   taking `this` as an ordinary first argument (src/func_ov002_020f69a8.cpp and
+   src/func_ov002_020f6778.cpp are both `void *f(char *c)`), and the seat below
+   used to store their raw addresses in slot 0 under a comment saying the seat
+   "never calls them, so the arity here is irrelevant". That stopped being true
+   the moment CutsceneObject::CleanupResources was hosted: it dispatches its
+   model's deleting destructor through the table, and every OTHER slot in these
+   two arrays holds a __fastcall thunk out of hal/cxxname_bridge.cpp. A table
+   that is thiscall in five slots and cdecl in the sixth is a trap with a fuse
+   on it, so slot 0 gets a face like the rest -- the same reason the Model faces
+   at the foot of this file exist. The addresses are unchanged; only the way
+   they are entered is.
+
+   Cast through a pointer rather than redeclaring: both symbols already have
+   address-only declarations above and in the ModelAnim block, and a second
+   declaration with a real signature would be the contradictory-extern hazard
+   this tree reviews for. The real definitions are `void *f(char *)` in their
+   src TUs, which is the type cast to here. */
+typedef void *(*CoRomD0)(char *);
+static void *__fastcall co_model_d0(void *s, void *)
+{ return ((CoRomD0)(void *)&func_ov002_020f69a8)((char *)s); }
+static void *__fastcall co_modelanim_d0(void *s, void *)
+{ return ((CoRomD0)(void *)&func_ov002_020f6778)((char *)s); }
+
 static void co_seat_model_vtable(void)
 {
     static int done;
@@ -416,11 +440,11 @@ static void co_seat_model_vtable(void)
        _ZTV5Model carries, so a shadow TU counting in ROM numbering still lands
        on Render. For the ModelAnim table, [6] repeats Virtual18 for the same
        reason: no DS address is left in any code slot of either table. */
-    data_ov002_0210bae4[0] = (unsigned)(size_t)&func_ov002_020f69a8;
+    data_ov002_0210bae4[0] = (unsigned)(size_t)&co_model_d0;
     for (unsigned i = 1; i <= 5; ++i)
         data_ov002_0210bae4[i] = (unsigned)(size_t)_ZTV5Model[i];
 
-    data_ov002_0210bcc4[0] = (unsigned)(size_t)&func_ov002_020f6778;
+    data_ov002_0210bcc4[0] = (unsigned)(size_t)&co_modelanim_d0;
     for (unsigned i = 1; i <= 5; ++i)
         data_ov002_0210bcc4[i] = (unsigned)(size_t)_ZTV9ModelAnim[i];
     data_ov002_0210bcc4[6] = (unsigned)(size_t)_ZTV9ModelAnim[5];

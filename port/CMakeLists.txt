@@ -2978,6 +2978,13 @@ list(APPEND SLICEINTRO_SOURCES
 # out in slice_intro.txt.
 list(APPEND SLICEINTRO_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/CutsceneObject_Render.cpp")
+# The same one-slot shift, one file over. CutsceneObject::CleanupResources
+# destroys its model through a shadow whose `m04` is index 1 -- the ROM's
+# DELETING destructor, and MSVC's Model::DoSetFile. Cleaning up the cast would
+# have called DoSetFile on a model being freed. Src line commented out in
+# slice_intro.txt.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/CutsceneObject_CleanupResources.cpp")
 
 # THE SCENE BOOT: the star select, the one non-level scene the port can enter.
 # ov003 carries three scene classes -- dScTitle_c (id 2), dScStarSel_c (id 4)
