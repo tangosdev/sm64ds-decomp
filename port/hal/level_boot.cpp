@@ -3030,6 +3030,24 @@ extern unsigned data_ov085_02130744[];
 void port_actor_overlays_sinits(void);
 }
 
+/* The fs-floor watchpoint. data_ov085_02130744 is a SharedFilePtr
+   { u16 fileID; u8 numRefs; void *filePtr; }; this reports the first two so a
+   run can say WHERE the fileID stops being 291. Inert unless SM64DS_INTRO_WATCH
+   is set, so it costs the default path nothing. */
+extern "C" void port_intro_watch(const char *where)
+{
+    static int on = -1;
+    if (on < 0)
+        on = std::getenv("SM64DS_INTRO_WATCH") ? 1 : 0;
+    if (!on)
+        return;
+    const unsigned char *p = (const unsigned char *)data_ov085_02130744;
+    std::fprintf(stderr, "  [watch] %-28s data_ov085_02130744 fileID %u "
+                 "numRefs %u filePtr %p\n", where,
+                 (unsigned)(p[0] | (p[1] << 8)), (unsigned)p[2],
+                 *(void *const *)(p + 4));
+}
+
 static void port_intro_seat_scripts(void)
 {
     static int done;
@@ -3065,6 +3083,7 @@ static void port_intro_seat_scripts(void)
                      " fileID %u -> %u (%s)\n", before, after,
                      after == before ? "unchanged -- the sinits had already run"
                                      : "constructed by this call");
+        port_intro_watch("at the intro seam");
     }
 }
 
@@ -3388,7 +3407,17 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
             _ZN5Stage9LoadModelEv((char *)st);
     }
 
+    /* WATCHPOINT-EQUIVALENT for the fs floor (run lvled, lane intro-cutscene).
+       data_ov085_02130744 reads fileID 291 at the intro seam and 0 by the time
+       SharedFilePtr::Load sees it. Release provably cannot zero fileID
+       (func_02017c24 clears only the +0x04 buffer pointer), so a WRITE does it.
+       These two samples bracket the object pass: if 291 survives the first and
+       not the second, the writer is inside LoadClsnAndObjects; if the first
+       already reads 0, it is in the boot above. Inert unless SM64DS_INTRO_WATCH
+       is set. */
+    port_intro_watch("before LoadClsnAndObjects");
     _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider(o, 0, mc);
+    port_intro_watch("after LoadClsnAndObjects");
     port_scene_canary("after LoadClsnAndObjects");
     if (!intro_seen && std::getenv("SM64DS_INTRO_UNSEEN"))
         data_0209caa0[8] &= ~0x80;
