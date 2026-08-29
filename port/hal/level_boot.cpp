@@ -2955,12 +2955,51 @@ static int g_intro_armed;
 
 /* THE SUPPRESSION SEAM. The one place that says "not this time".
    The direct-entry round gates HERE -- adding its own test to this function --
-   rather than adding a condition anywhere else. SM64DS_INTRO=0 is the manual
-   override and the A/B handle. */
+   rather than adding a condition anywhere else.
+
+   IT DEFAULTS TO SUPPRESSED, and that is a measurement, not caution. With the
+   seam armed the ROM's gate DOES fire -- proven, because the HUD (actor 0x14e)
+   stops being spawned, which is the ROM's own intro branch and nothing else in
+   the port can produce it -- and the opening then reaches four gaps in the port
+   that are outside this seam's reach. Measured on
+   out/intro-cutscene/P2_intro_on.log:
+
+     1. actor 0x160 CutsceneObject is NOT REGISTERED. The log says
+        "[spawn-declined] actor 0x160 not registered". That one class IS the
+        cutscene cast: kuppa cmd 0x17 is the Peach letter (peach_letter_US.bmd),
+        0x12 the Lakitu flight (c_jugem.bmd), 0x13 Peach, 0x14/0x15/0x16 the
+        three warp pipes, 0x19 the cloud. Needs a class seat in
+        hal/actor_classes*.cpp -- not this lane's files.
+
+     2. src/func_ov002_020bd600.c is MATCHED but offered to no slice, so it is
+        absent from the binary. It is reached through the ov002 state descriptor
+        at 0x0210a14c -- a Player state the opening drives into -- and the run
+        dies calling its DS address: "FAULT code c0000005 ... accessing
+        020bd600", eax holding the unrelocated pointer.
+
+     3. src/__sinit_02073e6c.c is in no slice either, so it never runs. It is
+        what patches the script blobs' unaligned pointer fields at boot (392
+        strb). VERIFIED in the ROM image: data_020890a0+0x103 (the cmd-6 chain
+        arg) and the camera waypoint slots at +0x62/+0x66/+0x8a/+0x8e are all
+        ZERO on disc. Without that sinit the opening plays its first script to
+        frame 400 and stops -- no Lakitu flight, no arrival, and no closing
+        LoadLevelNoReturn.
+
+     4. src/func_ov085_0212d5dc.cpp -- LakituBro's last opening state, the one
+        that hands control back and sets the intro-seen bit -- calls
+        func_ov002_020c3e8c() with no argument, relying on the receiver riding
+        ARM r0. The tree already knows: the pair is frozen in
+        port/tools/aritycheck_plainfunc_baseline.txt. Four sibling LakituBro
+        bodies already have host copies for exactly this; this one does not,
+        because nothing reached it until the gate started firing.
+
+   So the honest state is: the DECISION is solved and hosted, the CAST is not.
+   Flipping this default is a one-line change once those four close, and the
+   run above is the worklist. SM64DS_INTRO=1 opts in today for that work. */
 extern "C" int port_intro_suppressed(void)
 {
     const char *e = std::getenv("SM64DS_INTRO");
-    return (e && std::atoi(e) == 0) ? 1 : 0;
+    return (e && std::atoi(e) != 0) ? 0 : 1;
 }
 
 /* Armed by the title bridge's own latch, for the next level boot only. */
@@ -3220,8 +3259,9 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
 
        AND THE ONE ENTRY THAT WANTS IT CLEAR. port_intro_wants_play() (the seam
        above port_stage_boot_body) is true only for a title-bridge crossing into
-       a fresh file. On that one boot the bit is left ALONE, which is the whole
-       fix: LoadClsnAndObjects below then takes its own intro branch, declines to
+       a fresh file, and only with SM64DS_INTRO=1 -- see the seam for the four
+       measured gaps that keep it opt-in. On that one boot the bit is left
+       ALONE: LoadClsnAndObjects below then takes its own intro branch, declines to
        spawn the HUD exactly as the ROM does, and calls StartIntroCutscene. The
        bit gets set by the ROM's own hand at the end of the flight
        (src/func_ov085_0212d5dc.cpp:51), and the HUD comes up on the next boot.
