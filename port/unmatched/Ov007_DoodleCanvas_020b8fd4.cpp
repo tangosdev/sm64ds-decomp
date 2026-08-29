@@ -12,7 +12,8 @@
  * canvas object's +4/+8 fields), runs the two-case slide-in animation on the
  * doodle mode word data_ov007_02104ba0[8], and positions the two paper billboards
  * (data_ov007_02104b9c[3] and [4]) from the doodle object's coordinate pair and
- * the p342c[0x4a] view object, lerping by q1 = min(y/0x1f4, x/0xc8).
+ * the p342c[0x4a] view object, lerping by q1 = MAX(y/0x1f4, x/0xc8) -- max, not
+ * min; see the caught-bug paragraph below.
  *
  * WHY IT NEEDED A BODY. hal/scene_boot.cpp stood an L2_UNMATCHED trap here that
  * named itself and returned 0. Measured on this tree, scene 1 driven into the
@@ -24,31 +25,41 @@
  * paper to sit on. The trap was the right answer while nobody had read the ROM
  * at that address. It is not the right answer once somebody has.
  *
- * THE CRACK SIDE OWNS THE MATCH. This body is NOT a byte-match: the 36 word
- * residual against mwccarm 2004/b56 is a register-coloring cascade in the second
- * block (which register holds q1's min-result, and where x/y live across the two
- * div calls), tracked in nearmiss/db.jsonl. EVERY MEMORY STORE AND EVERY CALL
- * TARGET IN THIS BODY MATCHES THE ROM BYTE FOR BYTE -- verified with
- * tools/match.py: of the 36 diffs, 0 are a str/stm/bl/b, so the observable
- * behaviour (what is written, and what is called) is the ROM's exactly and only
- * the intermediate register choices differ. When src/ gains a byte-matched body
- * for 0x020b8fd4, THIS FILE RETIRES AUTOMATICALLY: the CMake block that adds it
- * is guarded on the src TU not existing (port/CMakeLists.txt, DOODLE_INTERIM_
- * SOURCES), so the matched body wins the day it lands and the interim leaves the
- * binary in the same configure. Its stem is deliberately NOT func_ov007_020b8fd4
- * so port/tools/linkage.py does not count it as the matched TU and
+ * THE CRACK SIDE OWNS THE MATCH. This body is NOT a byte-match: the residual
+ * against mwccarm 2004/b56 is SIX instructions, all one r0/r1 tie-break in the
+ * second block's setup (the ROM colours `flag` into r1 and the p342c transient
+ * into r0; sixty-five source-level variants all land the reverse) plus the
+ * branch offset that shifts with it -- the pure register-permutation residue
+ * class of notes/mwccarm-codegen.md 6aa, recorded as floor(coloring) in
+ * nearmiss/db.jsonl. EVERY MEMORY STORE AND EVERY CALL TARGET IN THIS BODY
+ * MATCHES THE ROM BYTE FOR BYTE -- verified with tools/match.py: of the 6
+ * diffs, 0 are a str/stm/bl/b, so what is written and what is called is the
+ * ROM's exactly and only two intermediate register choices differ.
+ *
+ * ONE REAL BUG WAS CAUGHT ON THE WAY HERE, and it is why this body is the
+ * crack's and not the first draft's: the near-miss draft computed the paper
+ * ratio as min(q1, q2) where the ROM's `movle r8, r0` is a MAX. A conditional
+ * move is neither a store nor a call, so a store/call fidelity check alone
+ * cannot see that class of divergence; the byte-level crack could and did.
+ *
+ * When src/ gains a byte-matched body for 0x020b8fd4, THIS FILE RETIRES
+ * AUTOMATICALLY: the CMake block that adds it is guarded on the src TU not
+ * existing (port/CMakeLists.txt, DOODLE_INTERIM_SOURCES), so the matched body
+ * wins the day it lands and the interim leaves the binary in the same
+ * configure. Its stem is deliberately NOT func_ov007_020b8fd4 so
+ * port/tools/linkage.py does not count it as the matched TU and
  * port/tools/objsrc_check.py cannot read it as one either.
  *
  * ============================ PROVENANCE ==================================
  *
- * The C shape here is the fanout-opus near-miss draft from nearmiss/db.jsonl
- * (addr 0x020b8fd4), re-verified against the ROM at
- * extracted/overlays/overlay_0007.bin, config-aligned base 0x020ad660 (file
- * offset = address - 0x020ad660, which holds across the whole ov007 image;
- * NOT the dsd export, which is short for this overlay). The first block
- * (offsets 0x00..0xb0, through the slide-in switch and the three tail calls of
- * the r4 <= 0x1000 arm) is byte-identical to the ROM; the second block is the
- * coloring residual described above.
+ * The C shape here is the push0829 crack of the fanout-opus near-miss draft
+ * from nearmiss/db.jsonl (addr 0x020b8fd4), 110 candidates deep, verified
+ * against the ROM at extracted/overlays/overlay_0007.bin, config-aligned base
+ * 0x020ad660 (file offset = address - 0x020ad660, which holds across the whole
+ * ov007 image; NOT the dsd export, which is short for this overlay).
+ * Byte-identical to the ROM except the six-instruction r0/r1 tie-break
+ * described above: the head through +0xb0, the whole x/y/a/flag block, both
+ * div calls, the max, and the entire billboard-store tail all match.
  *
  * RELOCATIONS: SIX arm_call plus THREE data loads, from config/arm9/overlays/
  * ov007/relocs.txt (from:0x020b9088..0x020b91b0), all to bodies already linked:
@@ -125,32 +136,36 @@ void func_ov007_020b8fd4(char* sb)
     }
 
     {
+        int q1, q2;
+        char* r7;
+        char* r6;
+        int* r5;
+        int x;
         int* pba0 = data_ov007_02104ba0;
-        int* pb9c = data_ov007_02104b9c;
+        int** pb9c = (int**)data_ov007_02104b9c;
         int* p342c = data_ov007_0210342c;
         int flag = pba0[0xc];
-        int* r5 = (int*)p342c[0x4a];
-        int* r2 = (int*)pba0[0];
-        s16 a;
-        char* r7 = (char*)((int**)pb9c)[3];
-        char* r6 = (char*)((int**)pb9c)[4];
-        int x = r2[2];
+        int* r2;
         int y;
-        int q1, q2;
+        s16 a;
 
-        a = *(s16*)(((int**)(r5[0]))[1]);
+        r2 = (int*)pba0[0];
+        r5 = (int*)p342c[0x4a];
+        r7 = (char*)pb9c[3];
+        r6 = (char*)pb9c[4];
+        x = r2[2];
         y = r2[5];
         if (flag != 0) { x = 0; y = 0; }
+        a = *(s16*)(((int**)(r5[0]))[1]);
         if (a == 1) return;
 
         q1 = _ZN4cstd3divEii(y << 0xc, 0x1f4);
         q2 = _ZN4cstd3divEii(x << 0xc, 0xc8);
-        if (q1 > q2) q1 = q2;
+        if (q1 <= q2) q1 = q2;   /* the ROM's movle: MAX, not min */
 
         {
-            int base = ((int*)r5[0])[2];
             int m = *(u16*)(r7 + 0xc) * q1;
-            *(int*)(r7 + 4) = base + ((m + ((u32)m >> 0x1f)) >> 1);
+            *(int*)(r7 + 4) = ((int*)r5[0])[2] + m / 2;
             *(int*)(r7 + 8) = ((int*)r5[0])[3];
             *(int*)(r7 + 0x3c) = 0x1000 - q1;
             *(int*)(r6 + 4) = ((int*)r5[0])[2];
