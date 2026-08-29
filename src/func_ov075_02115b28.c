@@ -3,7 +3,9 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* dScEntry_c::OnYoshiTryEat - recovered from vtable slot identity */
+/* dScEntry_c::OnYoshiTryEat - byte-matched vs the ROM at mwccarm 2004/b56, strict relocs
+   (tools/match.py, size from ov075 symbols.txt). The old vtable-slot-guess
+   marker was wrong: the body reproduces the ROM's bytes. VS wiring lane. */
 extern void*_ZTV5Scene[];
 extern int data_0208e4b8[];
 extern void __destroy_arr(void*, int, int, void*);

@@ -5,7 +5,9 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* dScEntry_c::Behavior - recovered from vtable slot identity */
+/* dScEntry_c::Behavior - byte-matched vs the ROM at mwccarm 2004/b56, strict relocs
+   (tools/match.py, size from ov075 symbols.txt). The old vtable-slot-guess
+   marker was wrong: the body reproduces the ROM's bytes. VS wiring lane. */
 extern "C" {
     void func_020551f0(void *s, int v);
     int func_ov075_02119dc4(void *c, void *arg);
