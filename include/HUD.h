@@ -32,6 +32,19 @@ struct HUD : dBase_c {
     /* --- vtable --- */
     virtual ~HUD();
 
+    /* Two overrides the cartridge proves and this header never declared -- and both
+       are already decompiled and byte-matching in this tree, which is what makes
+       them worth reading twice. _ZTV3HUD slot 0 pointed at fBase_c::InitResources
+       and slot 6 at fBase_c::Behavior, while the ROM has
+       ov002:_ZN3HUD13InitResourcesEv (0x020fda04) and ov002:_ZN3HUD8BehaviorEv
+       (0x020fd7a4) -- src/_ZN3HUD13InitResourcesEv.cpp and src/_ZN3HUD8BehaviorEv.cpp
+       compiled and matched all along; nothing pointed the vtable at them.
+       No `virtual` keyword, matching the overrides beside it: a derived declaration
+       of a base virtual overrides whether or not it repeats the word.
+       Measured by tools/romdata_check.py, the only gate that reads vtable bytes --
+       objisolate drops every non-.text section, so 106/106 is blind here. */
+    s32 InitResources();
+    s32 Behavior();
     int Render();
     s32 CleanupResources();
     void CalculateDigits(unsigned short value);

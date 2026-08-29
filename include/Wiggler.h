@@ -46,6 +46,15 @@ struct Wiggler : dEnemyBase_c {
 
     virtual ~Wiggler();
 
+    /* An override the cartridge proves and this header never declared. _ZTV7Wiggler
+       slot 6 pointed at fBase_c::Behavior; the ROM has ov034:_ZN7Wiggler8BehaviorEv
+       (0x02112b5c, 0x6e0 bytes), named in symbols.txt but not yet decompiled -- the
+       slot needs the symbol, not a body, so declaring it is the whole fix.
+       No `virtual` keyword, matching the overrides beside it: a derived declaration
+       of a base virtual overrides whether or not it repeats the word.
+       Measured by tools/romdata_check.py, the only gate that reads vtable bytes --
+       objisolate drops every non-.text section, so 106/106 is blind here. */
+    int Behavior();
     int CleanupResources();
     int InitResources();
     int Render();
