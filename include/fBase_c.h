@@ -64,6 +64,44 @@ struct fBase_c {
         SceneNode sceneNode;
         fLiNdBaPr_c behaviorNode;
         fLiNdBaPr_c renderNode;
+
+        Manager(fBase_c *owner_)
+        {
+            sceneNode.owner = owner_;
+            {
+                fLiNdBaPr_c *node = &behaviorNode;
+                node->prev = 0;
+                node->next = 0;
+                node->owner = owner_;
+                node->currentPriority = 0;
+                node->nextPriority = 0;
+            }
+            {
+                fLiNdBaPr_c *node = &renderNode;
+                node->prev = 0;
+                node->next = 0;
+                node->owner = owner_;
+                node->currentPriority = 0;
+                node->nextPriority = 0;
+            }
+        }
+
+        /* Both halves move together when a process enters the behavior/render
+           lists. The method names are inferred; the paired writes are ROM-proven. */
+        void SetBehaviorPriority(u16 priority)
+        {
+            fLiNdBaPr_c *node = &behaviorNode;
+            node->currentPriority = priority;
+            node->nextPriority = priority;
+        }
+
+        void SetRenderPriority(u16 priority)
+        {
+            fLiNdBaPr_c *node = &renderNode;
+            node->currentPriority = priority;
+            node->nextPriority = priority;
+        }
+
     };
 
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */

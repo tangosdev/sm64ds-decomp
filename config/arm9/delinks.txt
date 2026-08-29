@@ -7206,6 +7206,10 @@ src/_ZN7fBase_cD1Ev.cpp:
     complete
     .text start:0x02043dbc end:0x02043dec
 
+src/_ZN7fBase_cC2Ev.cpp:
+    complete
+    .text start:0x02043dec end:0x02043f4c
+
 src/func_02043f4c.c:
     complete
     .text start:0x02043f4c end:0x02043f98

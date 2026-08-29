@@ -30,10 +30,11 @@ cartridge while rebuilding the translation unit.
 The run is bracketed by unlabelled neighbours on both sides -- `func_020433b8`
 ends at `0x02043444`, `func_02043f4c` begins at `0x02043f4c` -- and contains
 exactly two unnamed functions, `func_02043810` and `func_02043880`, both enclosed
-by named members and both reading this layout directly. 24 of the 25 are
-byte-verified together as one TU; the constructor is the exception, and the only
-source the tree has for it is a NONMATCHING hand-written asm transcription that
-`config/arm9/delinks.txt` does not enrol.
+by named members and both reading this layout directly. All 25 are byte-verified
+together as one TU. The former exception, `_ZN7fBase_cC2Ev`, is now a real
+`fBase_c::fBase_c()` definition: the compiler supplies the vptr and member
+lifecycle, while the body performs the ROM-proven registration, priority and
+pause-state work. Its one-function source is enrolled at `0x02043dec..0x02043f4c`.
 
 Separately, the nested class `fBase_c::SceneNode` has two functions of its own
 `0x8000` bytes away at `0x0203b4ac..0x0203b4dc`, sitting next to the intrusive-list

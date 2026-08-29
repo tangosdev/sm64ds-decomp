@@ -4,7 +4,7 @@
  *
  * NOT ENROLLED, AND NOT CANONICAL. This file contributes nothing to the ROM
  * build; the one-function sources under src/ remain the enrolled owners of
- * 0x02043444..0x02043dec. See notes/translation-unit-reconstruction-plan.md and
+ * 0x02043444..0x02043f4c. See notes/translation-unit-reconstruction-plan.md and
  * notes/tu-reconstruction-pilot-report.md.
  *
  * THE SPAN, RECONCILED AGAINST THE ROM. include/fBase_c.h's banner has said
@@ -21,9 +21,8 @@
  *               and the address of func_02043f4c, the next unrelated function.
  *
  * The class's whole contiguous run is therefore 0x02043444..0x02043f4c, 25
- * functions. The header has been corrected. This file licenses 24 of the 25 --
- * everything up to 0x02043dec. The 25th, the constructor, is excluded on
- * purpose: see LICENSED SPAN below.
+ * functions. The header has been corrected, and this file now licenses the
+ * entire run.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S. mwccarm 2004/b56
  * emits one `.text` section per function and orders those sections in the
@@ -65,18 +64,18 @@
  * C++ methods. Confirmed by this round: the compiled object emits NO .data at
  * all, no _ZTV, no _ZTI, no _ZTS.
  *
- * LICENSED SPAN 0x02043444..0x02043dec, 24 of the run's 25 functions. The
- * missing one is `_ZN7fBase_cC2Ev` (0x02043dec, 0x160), and it belongs to
- * this TU by every boundary test -- it is inside the contiguous run, it carries
- * the class's own name, and nothing else claims it. It is left out because the
- * tree has no C++ for it: src/_ZN7fBase_cC2Ev.cpp is a whole-function
- * hand-written `asm` transcription, its own banner says "NONMATCHING ... does
- * NOT count as matched", and config/arm9/delinks.txt has no entry for it at all
- * -- it is neither compiled nor enrolled today. Admitting asm here would let
- * this TU claim a range it has not reproduced from source. The manifest entry
- * records it as the one unadmitted member.
+ * LICENSED SPAN 0x02043444..0x02043f4c, all 25 functions. The last holdout,
+ * `_ZN7fBase_cC2Ev` (0x02043dec, 0x160), is now a real constructor. Its
+ * `Manager` subobject owns the SceneNode and both process nodes, and its two
+ * inline priority setters reproduce the ROM's paired current/next writes.
  */
 #include "fBase_c.h"
+
+struct fBaseActorInfo {
+    u32 unk_000;
+    u16 behaviorPriority;
+    u16 renderPriority;
+};
 
 /* ------------------------------------------------------------------------- *
  * RECONCILED DECLARATIONS
@@ -113,6 +112,7 @@ extern void func_0203b27c(void *list, void *node);
 extern void func_0203b20c(void *list, void *node);
 extern void func_0203b244(void *list, void *node);
 extern void func_0204405c(void *list, void *node);
+extern int  func_0203b438(void *root, void *node, void *parent);
 
 extern int  data_020a4b6c[];
 extern int  data_020a4b78[];
@@ -120,6 +120,12 @@ extern int  data_020a4b88[];
 extern int  data_020a4b98[];
 extern int  data_020a4ba8[];
 extern int  data_02099f24[];
+extern u32  data_02099e70;
+extern u32  data_020a4b60;
+extern u16  data_020a4b54;
+extern u8   data_020a4b48;
+extern void *data_020a4b64;
+extern fBaseActorInfo **data_020a4bb8;
 
 extern void func_02044334(void *p);
 extern int  func_0204424c(int p);
@@ -159,6 +165,32 @@ extern void  _ZN4Heap8_DestroyEv(void *h);
 extern u32   _ZN4Heap21MaxAllocationUnitSizeEv(void *h);
 extern void  _ZN4Heap11ResizeToFitEv(void *h);
 
+}
+
+/* ------------------------------------------------------------------------- */
+/* ROM ordinal 24 -- fBase_c::fBase_c, 0x02043dec, size 0x160             */
+/* ------------------------------------------------------------------------- */
+fBase_c::fBase_c() : manager(this)
+{
+    uniqueID = data_02099e70;
+    data_02099e70++;
+    param1 = data_020a4b60;
+    actorID = data_020a4b54;
+    unk_012 = data_020a4b48;
+
+    func_0203b438(data_020a4b6c, &manager.sceneNode, data_020a4b64);
+
+    fBaseActorInfo *info = data_020a4bb8[actorID];
+    manager.SetBehaviorPriority(info->behaviorPriority);
+    manager.SetRenderPriority(info->renderPriority);
+
+    fBase_c *parent = (fBase_c *)func_02043810(this);
+    if (parent != 0) {
+        if ((parent->pauseFlags & 1) || (parent->pauseFlags & 2))
+            pauseFlags |= 2;
+        if ((parent->pauseFlags & 4) || (parent->pauseFlags & 8))
+            pauseFlags |= 8;
+    }
 }
 
 /* ========================================================================= *
