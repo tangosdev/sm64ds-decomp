@@ -6356,10 +6356,41 @@ int main(void)
     data_020a0e40[0] = 0;
     /* input processor staging: route Stage::CheckInput to its main
        path (mode flags), one controller, pad 0 active, mode 0 (D-pad
-       drives the stick fields) */
-    data_0209caa0[2] |= 0x80;
+       drives the stick fields)
+
+       TWO OF THESE THREE LINES RUN AFTER THE LEVEL BOOT AND UNDO IT.
+       port_stage_a_boot is called ~350 lines above; on the entrance path the
+       ROM's own Stage::LoadClsnAndObjects has by then taken its intro branch
+       and called StartIntroCutscene, which seats data_0209fc48 with the
+       opening's first script. `data_0209fc48 = 0` then throws that script away
+       before its second frame, and `data_0209caa0[2] |= 0x80` marks the
+       opening SEEN before it has played a frame -- the bit the ROM's own ov085
+       state writes at the end of the flight. Measured: the cast spawned, one
+       ProcessKuppaScript ran (cursor 0 -> 1), and the script pointer was 0 at
+       the first CutsceneObject::Behavior, so the cursor froze at 1 and the
+       camera held one pose for 1800 frames.
+
+       This is the same "two seats for one fact, and the later one silently
+       won" shape the player-count note below records, and it is why the intro
+       lane's removal of the force-set in hal/level_boot.cpp was not enough:
+       there was a second one here.
+
+       THE GUARD IS THE ROM'S OWN WORD, not a new flag. data_0209fc48 is
+       non-zero only when a cutscene script is actually running, which on a
+       level boot happens on exactly one path -- the opening. Every other boot
+       reaches this line with it already 0, so both lines run exactly as they
+       always have and the default path is unchanged. data_0209d660 is not part
+       of the pair and is left unconditional. */
+    if (data_0209fc48 == 0) {
+        data_0209caa0[2] |= 0x80;
+        data_0209fc48 = 0;              /* already 0 here; kept for the diff */
+    } else {
+        fprintf(stderr, "[intro] a cutscene script is running (%p): leaving "
+                        "flags2 bit 7 clear and the script seated -- the "
+                        "harness staging would have ended the opening here\n",
+                (void *)(size_t)data_0209fc48);
+    }
     data_0209d660 = 0;
-    data_0209fc48 = 0;
     /* run mg16 lane MP3: THE SECOND SEAT, and the one that was actually
        winning. hal/level_boot.cpp's a2 seat sets the player count too, and this
        line runs after it -- so seating two players there and reading one here

@@ -216,8 +216,85 @@ static int __fastcall co_init(void *s, void *)
 }
 static int __fastcall co_clean(void *s, void *)
 { return _ZN14CutsceneObject16CleanupResourcesEv(s); }
+
+/* THE SCRIPT VM'S OWN CURSOR, read from a place that ticks. ProcessKuppaScript
+   (src/ProcessKuppaScript.cpp) holds the whole opening in two words: the script
+   it is running (data_0209fc48) and the frame cursor into it (data_0209b274),
+   which it resets to 0 and re-points every time a cmd 6 record chains. So the
+   four-script chain is visible as exactly three pointer changes, and a chain
+   that never fires is visible as a cursor that keeps counting on one script.
+
+   Read here rather than at the tick because the tick is in tests/walk_window.cpp
+   and this lane does not own it; a cutscene object's Behavior runs once per
+   object per frame off the same list, which is close enough to name the frame
+   and costs nothing. Printed on a script change (loud, it is the chain) and
+   once every 120 cursor ticks otherwise. Inert unless SM64DS_INTRO_WATCH. */
+extern "C" {
+extern unsigned char *data_0209fc48;   /* the running script */
+extern unsigned short data_0209b274;   /* its frame cursor */
+extern unsigned char data_020890a0[];  /* the opening's first script */
+extern signed char data_02092110;      /* the pending sublevel EndKuppaScript gates on */
+short ReadUnalignedShort(unsigned char *p);
+unsigned int ReadUnalignedInt(unsigned char *p);
+}
+
+/* THE HOSTED SCRIPT, WALKED THE WAY THE VM WALKS IT. ProcessKuppaScript reads
+   +0 len, +1 cmd, +2 beg, +4 end and steps by *s, and it ENDS the script the
+   moment every record has beg <= cursor and end < 0. Those two fields are the
+   whole schedule, so a blob whose cmd bytes are right and whose beg/end are not
+   would spawn the right cast and then finish instantly -- which is the shape
+   this run shows. Printed once. */
+static void co_dump_script1(void)
+{
+    unsigned char *s = data_020890a0;
+    int n = 0;
+    std::fprintf(stderr, "  [script1] hosted at %p, sublevel data_02092110 = %d\n",
+                 (void *)s, (int)data_02092110);
+    while (*s != 0 && n < 40) {
+        const int len = s[0];
+        const int cmd = s[1];
+        const int beg = ReadUnalignedShort(s + 2);
+        const int end = ReadUnalignedShort(s + 4);
+        std::fprintf(stderr,
+                     "  [script1] rec %2d off %4d len %3d cmd 0x%02x beg %6d "
+                     "end %6d%s\n",
+                     n, (int)(s - data_020890a0), len, cmd, beg, end,
+                     cmd == 6 ? "   <- THE CHAIN" : "");
+        if (cmd == 6)
+            std::fprintf(stderr, "  [script1]     chain target %08x\n",
+                         ReadUnalignedInt(s + 6));
+        s += len;
+        ++n;
+    }
+    std::fprintf(stderr, "  [script1] %d records, terminator at off %d\n",
+                 n, (int)(s - data_020890a0));
+}
+
+static void co_script_watch(void)
+{
+    static int on = -1;
+    if (on < 0)
+        on = std::getenv("SM64DS_INTRO_WATCH") ? 1 : 0;
+    if (!on)
+        return;
+    { static int dumped; if (!dumped) { dumped = 1; co_dump_script1(); } }
+    static unsigned char *last_script = (unsigned char *)-1;
+    static int last_print = -1;
+    unsigned char *sc = data_0209fc48;
+    const unsigned t = data_0209b274;
+    if (sc != last_script) {
+        std::fprintf(stderr, "  [script] SCRIPT NOW %p (was %p), cursor %u\n",
+                     (void *)sc, (void *)last_script, t);
+        last_script = sc;
+        last_print = -1;
+    }
+    if (last_print < 0 || (int)t - last_print >= 120 || (int)t < last_print) {
+        std::fprintf(stderr, "  [script] script %p cursor %u\n", (void *)sc, t);
+        last_print = (int)t;
+    }
+}
 static int __fastcall co_behavior(void *s, void *)
-{ return _ZN14CutsceneObject8BehaviorEv(s); }
+{ co_script_watch(); return _ZN14CutsceneObject8BehaviorEv(s); }
 static int __fastcall co_render(void *s, void *)
 { port_actor_render_probe("CUTSCENE_OBJECT", (char *)s + 0xdc);
   return _ZN14CutsceneObject6RenderEv(s); }
