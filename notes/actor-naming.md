@@ -1,6 +1,6 @@
 # Actor class naming from the ROM's spawn table
 
-How **2,241** symbols across **68** modules got real names [tools/actor_names.py](tools/actor_names.py),
+How **2,241** symbols across **68** modules got real names [../tools/actor_names.py](../tools/actor_names.py),
 and where to look things up when drafting.
 
 ## Method
@@ -9,7 +9,7 @@ The EU arm9 statically links `ACTOR_SPAWN_TABLE` at `0x02090864: 391 SpawnInfo`
 pointers, one per *actor ID* (the runtime holder **0x020A4BB8** is assigned the
 static table by the init at **0x0201A128**; the widely-quoted **0x02006590** is the
 US-region address and reads as zeros here). `SpawnInfo` layout (credit:
-**SplattyDS/DynamicAllocationDecomp**, see [CREDITS.md](CREDITS.md)):
+**SplattyDS/DynamicAllocationDecomp**, see [../CREDITS.md](../CREDITS.md)):
 ```c
     +0 spawnFunc   +4 s16 behavPriority   +6 s16 renderPriority
     +8 flags       +c rangeOffsetY  +10 range  +14 drawDist  +18 unk
@@ -30,10 +30,10 @@ US-region address and reads as zeros here). `SpawnInfo` layout (credit:
 ```
 Slots pointing into arm9 are inherited defaults and stay unnamed. Functions
 shared between sibling classes (identical-code folding) are claimed by the
-lowest **actor id**; see [symbols/actor_renames_report.txt](symbols/actor_renames_report.txt) for the audit trail.
+lowest **actor id**; see [../symbols/actor_renames_report.txt](../symbols/actor_renames_report.txt) for the audit trail.
 
-Artifacts: [symbols/actor_renames.tsv](symbols/actor_renames.tsv) (what was renamed and why),
-[symbols/overlay_actors.md](symbols/overlay_actors.md) (which actors live in which overlay).
+Artifacts: [../symbols/actor_renames.tsv](../symbols/actor_renames.tsv) (what was renamed and why),
+[../symbols/overlay_actors.md](../symbols/overlay_actors.md) (which actors live in which overlay).
 
 After pulling the renames, sync your local gitignored ledgers once:
 run `python tools/actor_names.py --apply` (idempotent) or re-derive them.
@@ -42,7 +42,7 @@ run `python tools/actor_names.py --apply` (idempotent) or re-derive them.
 
 Every small overlay is an *actor bundle* (`ov022` = the **Lethal Lava Land**
 platforms, `ov056` = *BigMovingIceBlock* + *ice slide*, ...). Before drafting in an
-overlay, read [`symbols/overlay_actors.md`](symbols/overlay_actors.md) to know what the code IS, and check
+overlay, read [../symbols/overlay_actors.md](../symbols/overlay_actors.md) to know what the code IS, and check
 `reference/DynamicAllocationDecomp/include/Actors/<Class>.h` for the struct
 layout with field offsets - the alloc size in `<Class>_Spawn` should match the
 header's size comments.
@@ -52,7 +52,7 @@ header's size comments.
 - `reference/DynamicAllocationDecomp/include/Actors/*.h` - **182** actor structs
   with field offsets, enums, virtual sets. First stop for any actor overlay.
 ---
-- *decomp-refs/sm64* (**n64decomp/sm64**, clone locally): SM64DS reimplements the
+- *decomp-refs/sm64* ([**n64decomp/sm64**](https://github.com/n64decomp/sm64), clone locally): SM64DS reimplements the
   N64 game's design. When a target is identifiable object logic, read the N64
   behavior first:
 
@@ -62,8 +62,7 @@ header's size comments.
   4. Mario actions in `include/sm64.h`;
   5. Physics constants: `src/game/mario_step.c`.
 ---
-- *decomp-refs/nsmb* (**NSMB-Decomp/nsmb**): same engine lineage and toolchain
-  family (`mwccarm 1.2 sp3, -O4,p`).
+- *decomp-refs/nsmb* ([**NSMB-Decomp/nsmb**](https://github.com/NSMB-Decomp/nsmb)): same engine lineage and toolchain family (`mwccarm 1.2 sp3, -O4,p`).
   
   1. `src/objectid.hpp` annotates scene ids with their SM64DS names;
   2. `src/Bases/*` mirrors our *Actor* hierarchy;
