@@ -3385,8 +3385,16 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
        chain, and it runs inside this object pass, so it has to still be clear
        here rather than restored afterwards. */
     const int play_intro = port_intro_wants_play();
+    /* ...and the boot that CONTINUES an opening. ProcessKuppaScript's cmd 0x0b
+       parked the next script in data_0209fc4c next to the closing
+       LoadLevelNoReturn; ContinueKuppaScriptIfNecessary (inside
+       LoadClsnAndObjects below) is what consumes it. Non-zero HERE means this
+       boot is the opening's second half, and the bit has to stay clear so
+       LakituBro::InitResources picks the opening chain data_ov085_02130790 and
+       the ROM's own func_ov085_0212d5dc:51 writes it. */
+    const int continuing = (data_0209fc4c != 0);
     unsigned char intro_seen = (unsigned char)(data_0209caa0[8] & 0x80);
-    if (!play_intro)
+    if (!play_intro && !continuing)
         data_0209caa0[8] |= 0x80;   /* word 2 bit 7: the intro has played */
     else
         std::fprintf(stderr, "[intro] the opening is ARMED for this entry: "
