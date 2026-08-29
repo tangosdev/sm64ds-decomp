@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+﻿cmake_minimum_required(VERSION 3.16)
 project(sm64ds-port C CXX)
 # Link the static CRT so shipped exes never depend on the VC++ redist (CMP0091).
 # Release 0.1.6 shipped dynamically linked because nothing pinned this and CMake
@@ -883,6 +883,19 @@ set_source_files_properties(
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/__sinit_ov025_02112a44.c"
     PROPERTIES COMPILE_DEFINITIONS "data_ov032_02113acc=data_ov025_02113acc")
+# R7, intro-cutscene landing: the intro's cutscene sprite body
+# src/func_ov002_020f2340.cpp calls OAM::RenderSub(attr,int,int) by its MSVC
+# spelling, and the intro lane's alternatename routed that to the ii ROM body
+# it was verified against. The VS lane's width bridge (vs_aliases.inc, the
+# WHF3 class) targets the SAME spelling and won by DEFINITION: the iiii TU's
+# object exports the HH name, so the alias died at the first merged link
+# (alternatename_guard caught it). Rename the intro reference; the alias for
+# the renamed spelling lives in hal/actor_classes_intro.cpp. A -D cannot be
+# defeated -- the R4/R5 argument. The four ov075 HH callers stay on their
+# bridge, each side bound to the body it was proven against.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020f2340.cpp"
+    PROPERTIES COMPILE_DEFINITIONS "RenderSub=RenderSub_ii")
 
 # run linkw wave 6, lane w6-D: THE SAME DISEASE A THIRD TIME, and this one
 # would have linked SILENTLY on two of its three references.
@@ -2926,6 +2939,106 @@ list(APPEND SLICE31_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/func_02073244_hostcopy.c"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/SetNumPlayers_hostcopy.c"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Door_CleanupResources.cpp")
+
+# ---- the NEW-FILE OPENING (run lvled, lane intro-cutscene) ------------------
+# Everything the ROM's own intro gate reaches once it is allowed to fire. All of
+# it was already MATCHED and simply never offered, because with the intro bit
+# force-set in hal/level_boot.cpp none of it was reachable. See slice_intro.txt
+# for what each group is and the fault that named it.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_intro.txt" SLICEINTRO_LINES)
+set(SLICEINTRO_SOURCES "")
+foreach(line IN LISTS SLICEINTRO_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICEINTRO_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# The kuppa command dispatcher is a HOST COPY (the gate-16 pointer-to-member
+# case; its src line is commented out in slice_gate10.txt), and CUTSCENE_OBJECT
+# gets its own class file rather than an append to actor_classes.cpp.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/intro_kuppa_dispatch.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/actor_classes_intro.cpp")
+# r0-passthrough: func_ov085_0212d5dc is LakituBro's last opening state and it
+# calls func_ov002_020c3e8c() with the player riding ARM r0 -- the fifth
+# instance of the seam its four siblings already have host copies for, and the
+# three lines that END the opening (hand control back, then the ROM's own
+# "intro seen" write). Src line commented out in slice_gate18.txt.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov085_LakituBro_IntroEnd.cpp")
+# void* arithmetic: func_ov002_020f7780 (cutscene-object command slot 2) adds
+# 0x8e to a void*, which mwcc takes as the GNU extension and MSVC C refuses with
+# C2036. One cast, same address; src line commented out in slice_intro.txt.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_CutsceneCmd_020f7780.c")
+# The opening's 55 script ARGUMENT RECORDS, hosted with real host pointers the
+# way ptr_tables.cpp table 2 hosts the 39 camera-script records. They are NOT in
+# romdata.py's byte-copy list on purpose: each carries a relocated word at +4,
+# and a byte-copied pointer is the data_020876e4 crash.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/intro_script_records.cpp")
+# data_02089dcc is hosted rather than byte-copied because port/tools/ptr_audit.py
+# flagged it and was right: its single relocation points at CODE
+# (func_ov007_020c020c, unhosted, and ov007 is outside this lane's grant). The
+# blob is carried with that one word seated to a loud trap; the opening never
+# reaches it. Removed from romdata.py's list in the same change.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/intro_dcc_blob.cpp")
+# The ov002 mount's POINTER WORDS, seated with host addresses. The mount
+# byte-copies, so the pointer arrays this lane added to port/ov002_syms.txt
+# carried DS addresses -- one of them handed SharedFilePtr::Load 0x02130744.
+# Generated and individually checked against relocs.txt; see the file header.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/intro_ov002_seat.cpp")
+# The cutscene cast's LOAD SPINE, host-copied to trace the three LoadFile paths
+# per object. The render floor is an unrebased BMD offset and Model::LoadFile
+# only rebases at numRefs == 1; this names which cast member is the FIRST holder
+# of each file and through which class. Src line commented out in slice_intro.txt.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_CutsceneLoad_020f6618.cpp")
+# CutsceneObject::Render dispatches its model through a LOCAL SHADOW class
+# counted in ROM/Itanium numbering, so its `m` reaches ROM slot 5 =
+# ModelAnim::Render(Vector3 const *). MSVC folds the D1/D0 pair, so index 5 on
+# the host table is _ZTV9ModelAnim[5] = ModelAnim::Virtual18(u32, Vector3 const*)
+# -- a different function with a different arity, and the renderer then walked an
+# Entry chosen by a garbage index. cxxname_bridge.cpp predicted this TU by name.
+# One dropped declaration; body otherwise the matched source. Src line commented
+# out in slice_intro.txt.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/CutsceneObject_Render.cpp")
+# The same one-slot shift, one file over. CutsceneObject::CleanupResources
+# destroys its model through a shadow whose `m04` is index 1 -- the ROM's
+# DELETING destructor, and MSVC's Model::DoSetFile. Cleaning up the cast would
+# have called DoSetFile on a model being freed. Src line commented out in
+# slice_intro.txt.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/CutsceneObject_CleanupResources.cpp")
+# And the third instance, one layer down: the cutscene ModelAnim's own deleting
+# destructor destroys its TextureSequence through a hand-indexed vtable word at
+# ROM slot 1. MSVC folds D1/D0, so hal/model_dtor_seat.cpp seats that body at
+# index 0 and leaves index 1 NULL -- measured as a call through a null pointer
+# (+ffc00000 is address 0 against this image's 0x00400000 base). The calling
+# convention moves with the index: what is seated there is __fastcall.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_ModelAnimD0_020f6778.cpp")
+# Cutscene-object command 4, the character voice. hal/intro_kuppa_dispatch.cpp
+# trapped it as "needs Sound::PlayCharVoice (unhosted)"; the running chain
+# reached it and the trap said so, which is what the trap was left loud for. The
+# premise was stale -- Sound::PlayCharVoice is in this binary already
+# (slice_gate10.txt:1225, called twice by unmatched/Player_Behavior.cpp) -- so
+# this hosts the command and drags in nothing. A host copy only because the
+# matched TU declares its callee inside `namespace Sound`, whose MSVC mangling
+# has no alias in hal/cxx_aliases.cpp.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_KuppaCmd_020bd480.cpp")
+# And command 9, the knockback, for the same reason on the next run: the trap
+# fired, and Player::Hurt / Vec3_RotateYAndTranslate / Particle::System::
+# NewSimple are all already in this binary too. A host copy because the matched
+# TU reaches Hurt through a local shadow CLASS, which makes MSVC mangle it as a
+# thiscall member and ride `this` in ecx.
+list(APPEND SLICEINTRO_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_KuppaCmd_020bd250.cpp")
 
 # THE SCENE BOOT: the star select, the one non-level scene the port can enter.
 # ov003 carries three scene classes -- dScTitle_c (id 2), dScStarSel_c (id 4)
@@ -9009,7 +9122,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     unmatched/Ov070_PmfDispatch.cpp
     unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES} ${SLICE25_SOURCES} ${SLICE26_SOURCES}
-    ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE33_SOURCES} ${GATE6_GEN} ${SLICE31_SOURCES} ${SLICE35_SOURCES}
+    ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE33_SOURCES} ${GATE6_GEN} ${SLICE31_SOURCES} ${SLICE35_SOURCES} ${SLICEINTRO_SOURCES}
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE32_SOURCES}
     ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
@@ -9185,7 +9298,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
     ${SLICE33_SOURCES} ${GATE6_GEN}
-    ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE31_SOURCES} ${GATE6_GEN}
+    ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE31_SOURCES} ${GATE6_GEN} ${SLICEINTRO_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
@@ -9395,7 +9508,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
     ${SLICE33_SOURCES} ${GATE6_GEN}
-    ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE31_SOURCES} ${GATE6_GEN}
+    ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE31_SOURCES} ${GATE6_GEN} ${SLICEINTRO_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}

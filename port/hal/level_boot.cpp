@@ -2059,6 +2059,7 @@ extern unsigned char data_0209f250;
 extern int data_0209fc5c[];
 extern unsigned char data_02092128[];
 extern unsigned char data_0209caa0[];
+extern unsigned char data_0209f2d8;      /* game mode: 0 single file, 1 VS, 2 script */
 extern unsigned short data_ov002_0210cbf4[];
 extern void *data_0209f394[];
 }
@@ -2984,6 +2985,239 @@ void *port_stage_a_boot(void *mc, int spawn)
     return g_boot_result;
 }
 
+/* ---- THE INTRO SEAM -------------------------------------------------------
+   ONE decision point for "does this entry play the ROM's opening", and ONE
+   place to suppress it. Nothing else in the port may test the intro bit to
+   decide this; scattering the condition is what this block exists to prevent.
+
+   THE ROM'S OWN RULE, from matched source
+   (src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider.cpp:76-98):
+
+       intro = (data_0209f2d8 == 0)                 // game mode 0 = single file
+            && ((data_0209caa0[2] & 0x80) == 0)     // flags2 bit 7: not seen yet
+            && (ContinueKuppaScriptIfNecessary() == 0);
+       ... Spawn(0x14f MINIMAP) always; Spawn(0x14e HUD) only when !intro ...
+       if (intro) StartIntroCutscene();             // Sound::LoadInitialGroup(0x25)
+                                                    // + RunKuppaScript(&data_020890a0)
+
+   A FRESH SAVE LEGITIMATELY HAS THAT BIT CLEAR. SaveData::SetDefaultValues
+   (0x02013dc4) memsets the 0x44-byte record and leaves flags2 == 0x8 (bit 3,
+   Yoshi unlocked) -- bit 0x80 clear. An empty slot reaches that through
+   SaveData::ReadFileData when the cart read fails. So the ROM needs no extra
+   state to ask for the opening: the absence of the bit IS the request.
+
+   WHY THE PORT USED TO SET IT UNCONDITIONALLY, and why that is still mostly
+   right: the same bit is what the whole bottom screen renders through
+   (HUD::Behavior and HUD::Render both open with
+   `if ((data_0209caa0[2] & 0x80) == 0) return 1;`), so a level walked around
+   with the bit clear has a correctly-constructed HUD that draws nothing. That
+   is the state the real game is in ONLY during the opening. The fix is not to
+   stop setting the bit -- it is to stop setting it for the ONE entry the ROM
+   would have played the opening on, and let the ROM's own machinery set it
+   when the opening ends.
+
+   WHO SETS IT WHEN THE OPENING ENDS: the ROM does, and it is hosted.
+   src/func_ov085_0212d5dc.cpp:49-51 -- LakituBro's last opening state, after
+   the camera flight settles -- hands control back and does
+   `data_0209caa0[2] |= 0x80;`. The port writes nothing there.
+
+   WHY THIS IS ARMED RATHER THAN DERIVED FROM THE BIT ALONE: every level
+   selftest in the battery boots level 1 directly, and the ROM's gate has no
+   level check (an agent's disassembly pass confirmed this: any level loaded
+   with mode 0 and the bit clear starts the opening). Deriving from the bit
+   alone would fire the opening in all of them. The arm is set only by
+   port_level_entry_latch (hal/level_change.cpp), which only the title bridge
+   calls -- so the default boot cannot reach it. */
+static int g_intro_armed;
+
+/* THE SUPPRESSION SEAM. The one place that says "not this time".
+   The direct-entry round gates HERE -- adding its own test to this function --
+   rather than adding a condition anywhere else.
+
+   IT DEFAULTS TO SUPPRESSED, and that is a measurement, not caution. With the
+   seam armed the ROM's gate DOES fire -- proven, because the HUD (actor 0x14e)
+   stops being spawned, which is the ROM's own intro branch and nothing else in
+   the port can produce it -- and the opening then reaches four gaps in the port
+   that are outside this seam's reach. Measured on
+   out/intro-cutscene/P2_intro_on.log:
+
+     1. actor 0x160 CutsceneObject is NOT REGISTERED. The log says
+        "[spawn-declined] actor 0x160 not registered". That one class IS the
+        cutscene cast: kuppa cmd 0x17 is the Peach letter (peach_letter_US.bmd),
+        0x12 the Lakitu flight (c_jugem.bmd), 0x13 Peach, 0x14/0x15/0x16 the
+        three warp pipes, 0x19 the cloud. Needs a class seat in
+        hal/actor_classes*.cpp -- not this lane's files.
+
+     2. src/func_ov002_020bd600.c is MATCHED but offered to no slice, so it is
+        absent from the binary. It is reached through the ov002 state descriptor
+        at 0x0210a14c -- a Player state the opening drives into -- and the run
+        dies calling its DS address: "FAULT code c0000005 ... accessing
+        020bd600", eax holding the unrelocated pointer.
+
+     3. src/__sinit_02073e6c.c is in no slice either, so it never runs. It is
+        what patches the script blobs' unaligned pointer fields at boot (392
+        strb). VERIFIED in the ROM image: data_020890a0+0x103 (the cmd-6 chain
+        arg) and the camera waypoint slots at +0x62/+0x66/+0x8a/+0x8e are all
+        ZERO on disc. Without that sinit the opening plays its first script to
+        frame 400 and stops -- no Lakitu flight, no arrival, and no closing
+        LoadLevelNoReturn.
+
+     4. src/func_ov085_0212d5dc.cpp -- LakituBro's last opening state, the one
+        that hands control back and sets the intro-seen bit -- calls
+        func_ov002_020c3e8c() with no argument, relying on the receiver riding
+        ARM r0. The tree already knows: the pair is frozen in
+        port/tools/aritycheck_plainfunc_baseline.txt. Four sibling LakituBro
+        bodies already have host copies for exactly this; this one does not,
+        because nothing reached it until the gate started firing.
+
+   So the honest state is: the DECISION is solved and hosted, the CAST is not.
+   Flipping this default is a one-line change once those four close, and the
+   run above is the worklist. SM64DS_INTRO=1 opts in today for that work. */
+extern "C" int port_intro_suppressed(void)
+{
+    const char *e = std::getenv("SM64DS_INTRO");
+    return (e && std::atoi(e) != 0) ? 0 : 1;
+}
+
+/* Armed by the title bridge's own latch, for the next level boot only. */
+extern "C" void port_intro_arm_for_entry(void)
+{
+    g_intro_armed = 1;
+}
+
+/* The ROM's own static initialiser for the script blobs. It writes the chain
+   arguments and the argument-blob pointers into the four opening scripts, byte
+   by byte because those fields are unaligned, and on the host it writes HOST
+   addresses. The scripts ship with those fields ZERO, so without it the opening
+   dereferences nulls (measured: a c0000005 inside SharedFilePtr::Release).
+
+   Called from HERE, not from the boot, on purpose. The ROM runs it
+   unconditionally at startup and nothing else in the port reads what it
+   patches, so running it unconditionally would also be correct -- but this lane
+   promised the default path stays byte-identical, and the only path that needs
+   these pointers is the one about to play the opening. Once per process; the
+   precedent for calling an arm9 sinit by hand is hal/fdr_arm9_fader_seat.cpp,
+   which does the same for __sinit_02074f80. */
+extern "C" void __sinit_02073e6c(void);
+extern "C" void port_intro_seat_dcc(void);   /* hal/intro_dcc_blob.cpp */
+/* The PENDING script word. ProcessKuppaScript's cmd 0x0b stores it next to the
+   closing LoadLevelNoReturn, and ContinueKuppaScriptIfNecessary reads it on the
+   next boot -- which is the mechanism that brings the HUD back. Declared here
+   only to be READ by the boot assertion below; data_0209fc48 is defined further
+   up this file. */
+extern "C" int data_0209fc4c;
+extern "C" {
+extern unsigned data_ov085_02130744[];
+/* declared again here: the file's own declaration is a thousand lines below
+   this seam, and the seam is the first thing in the boot that needs it */
+void port_actor_overlays_sinits(void);
+}
+
+/* The fs-floor watchpoint. data_ov085_02130744 is a SharedFilePtr
+   { u16 fileID; u8 numRefs; void *filePtr; }; this reports the first two so a
+   run can say WHERE the fileID stops being 291. Inert unless SM64DS_INTRO_WATCH
+   is set, so it costs the default path nothing. */
+extern "C" void port_intro_watch(const char *where)
+{
+    static int on = -1;
+    if (on < 0)
+        on = std::getenv("SM64DS_INTRO_WATCH") ? 1 : 0;
+    if (!on)
+        return;
+    const unsigned char *p = (const unsigned char *)data_ov085_02130744;
+    std::fprintf(stderr, "  [watch] %-28s data_ov085_02130744 fileID %u "
+                 "numRefs %u filePtr %p\n", where,
+                 (unsigned)(p[0] | (p[1] << 8)), (unsigned)p[2],
+                 *(void *const *)(p + 4));
+}
+
+static void port_intro_seat_scripts(void)
+{
+    static int done;
+    if (done)
+        return;
+    done = 1;
+    /* Seat the one code pointer ptr_audit flagged BEFORE the sinit writes into
+       the same blob, so nothing can read a DS address in between. */
+    port_intro_seat_dcc();
+    __sinit_02073e6c();
+
+    /* THE ov085 FILE POINTERS. The opening's cast loads its models through
+       SharedFilePtrs that live in ov085 BSS and are Constructed by
+       __sinit_ov085_0212fa40 (data_ov085_02130744 gets file id 0x2d8 at its
+       line 65). Those sinits run from port_actor_overlays_sinits(), which the
+       port calls out of port_a2_seat_body -- and the title-entry crossing made
+       that seat SINGLE-RUN (see the title-entry commit: it "ran twice and is
+       not idempotent"). So on this path the construction may already have
+       happened for the TITLE and not for the adventure, which reads as
+       "fs fileID 0 not in catalog (fileptr 02130744)" from the port's own fs.
+       The id is fine and the asset is present -- 0x2d8 is
+       data/normal_obj/obj_pushblock/obj_pushblock.bmd in build/assets/files.tsv
+       -- so this is an unconstructed handle, not a missing file.
+       port_actor_overlays_sinits() carries its own done-guard, so calling it
+       here is a no-op when it has already run and the fix when it has not.
+       The probe reports which of those it was rather than leaving it to
+       inference. */
+    {
+        const unsigned before = data_ov085_02130744[0];
+        port_actor_overlays_sinits();
+        const unsigned after = data_ov085_02130744[0];
+        std::fprintf(stderr, "  [intro] ov085 file pointers: data_ov085_02130744"
+                     " fileID %u -> %u (%s)\n", before, after,
+                     after == before ? "unchanged -- the sinits had already run"
+                                     : "constructed by this call");
+        port_intro_watch("at the intro seam");
+    }
+}
+
+/* The decision, consumed once by the boot that follows the crossing. */
+extern "C" int port_intro_wants_play(void)
+{
+    /* THE OPENING'S THREE ROM WORDS, ON EVERY BOOT. This is where the completion
+       bar is asserted rather than eyeballed, because all three live here and
+       all three are the ROM's own:
+
+         flags2 bit 7   data_0209caa0[2] & 0x80 -- "the opening has been seen".
+                        Clear on the boot that plays it; SET afterwards, and set
+                        by src/func_ov085_0212d5dc.cpp:51 (LakituBro's last
+                        opening state), never by the port.
+         pending        data_0209fc4c -- what ProcessKuppaScript's cmd 0x0b
+                        stored alongside the closing LoadLevelNoReturn. Non-zero
+                        on the RELOAD boot is what makes
+                        ContinueKuppaScriptIfNecessary return 1, which makes the
+                        gate's `intro` false, which is HOW THE HUD COMES BACK.
+         running        data_0209fc48 -- the script actually executing.
+
+       Printed before the armed check so the reload boot reports too; that boot
+       is not armed and would otherwise return on the first line.
+       Inert unless SM64DS_INTRO_WATCH. */
+    {
+        static int on = -1;
+        if (on < 0)
+            on = std::getenv("SM64DS_INTRO_WATCH") ? 1 : 0;
+        if (on)
+            std::fprintf(stderr,
+                         "  [intro] boot: flags2 bit7 %d | pending %08x | "
+                         "running %08x | armed %d\n",
+                         (data_0209caa0[8] & 0x80) ? 1 : 0,
+                         (unsigned)data_0209fc4c, (unsigned)data_0209fc48,
+                         g_intro_armed);
+    }
+    if (!g_intro_armed)
+        return 0;
+    g_intro_armed = 0;                  /* one-shot: this boot, not the next */
+    if (port_intro_suppressed())
+        return 0;
+    /* The ROM's own two preconditions, re-read rather than assumed. The third
+       (no script already running) is LoadClsnAndObjects' own and is left to it. */
+    if (data_0209f2d8 != 0)
+        return 0;
+    if (data_0209caa0[8] & 0x80)
+        return 0;                       /* a used file: the opening is done */
+    port_intro_seat_scripts();          /* the chain pointers, before it starts */
+    return 1;
+}
+
 extern "C" void *port_stage_boot_body(void *mc, int spawn)
 {
     const double lvlperf_t0 = port_lvlperf_now();
@@ -3214,9 +3448,34 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
        time the entrance started spawning him.
 
        SM64DS_INTRO_UNSEEN=1 puts the old behaviour back, which is also how to
-       see the pre-intro cloud backdrop the bottom screen shows without it. */
+       see the pre-intro cloud backdrop the bottom screen shows without it.
+
+       AND THE ONE ENTRY THAT WANTS IT CLEAR. port_intro_wants_play() (the seam
+       above port_stage_boot_body) is true only for a title-bridge crossing into
+       a fresh file, and only with SM64DS_INTRO=1 -- see the seam for the four
+       measured gaps that keep it opt-in. On that one boot the bit is left
+       ALONE: LoadClsnAndObjects below then takes its own intro branch, declines to
+       spawn the HUD exactly as the ROM does, and calls StartIntroCutscene. The
+       bit gets set by the ROM's own hand at the end of the flight
+       (src/func_ov085_0212d5dc.cpp:51), and the HUD comes up on the next boot.
+       LakituBro::InitResources reads the same bit to choose his intro state
+       chain, and it runs inside this object pass, so it has to still be clear
+       here rather than restored afterwards. */
+    const int play_intro = port_intro_wants_play();
+    /* ...and the boot that CONTINUES an opening. ProcessKuppaScript's cmd 0x0b
+       parked the next script in data_0209fc4c next to the closing
+       LoadLevelNoReturn; ContinueKuppaScriptIfNecessary (inside
+       LoadClsnAndObjects below) is what consumes it. Non-zero HERE means this
+       boot is the opening's second half, and the bit has to stay clear so
+       LakituBro::InitResources picks the opening chain data_ov085_02130790 and
+       the ROM's own func_ov085_0212d5dc:51 writes it. */
+    const int continuing = (data_0209fc4c != 0);
     unsigned char intro_seen = (unsigned char)(data_0209caa0[8] & 0x80);
-    data_0209caa0[8] |= 0x80;   /* word 2 bit 7: the intro has played */
+    if (!play_intro && !continuing)
+        data_0209caa0[8] |= 0x80;   /* word 2 bit 7: the intro has played */
+    else
+        std::fprintf(stderr, "[intro] the opening is ARMED for this entry: "
+                     "flags2 bit 7 left clear, the ROM's own gate decides\n");
 
     /* ---- THE LEVEL MODEL, WHERE THE ROM LOADS IT (run link60, lane SL0) ---
        Stage::InitResources calls Stage::LoadModel at its line 361 and
@@ -3269,7 +3528,17 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
             _ZN5Stage9LoadModelEv((char *)st);
     }
 
+    /* WATCHPOINT-EQUIVALENT for the fs floor (run lvled, lane intro-cutscene).
+       data_ov085_02130744 reads fileID 291 at the intro seam and 0 by the time
+       SharedFilePtr::Load sees it. Release provably cannot zero fileID
+       (func_02017c24 clears only the +0x04 buffer pointer), so a WRITE does it.
+       These two samples bracket the object pass: if 291 survives the first and
+       not the second, the writer is inside LoadClsnAndObjects; if the first
+       already reads 0, it is in the boot above. Inert unless SM64DS_INTRO_WATCH
+       is set. */
+    port_intro_watch("before LoadClsnAndObjects");
     _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider(o, 0, mc);
+    port_intro_watch("after LoadClsnAndObjects");
     port_scene_canary("after LoadClsnAndObjects");
     if (!intro_seen && std::getenv("SM64DS_INTRO_UNSEEN"))
         data_0209caa0[8] &= ~0x80;
@@ -3684,6 +3953,28 @@ extern "C" void hal_fill_player_vtable(void)
    and prev pos is the start of every line WithMeshClsn's continuous update
    casts. Driving Behavior bare left prev at the constructor's zero, so the
    first frame at the gate swept a segment from the world origin. */
+/* THE INTRO-SEEN BIT, EDGE-TRIGGERED. The completion bar for the opening asks
+   that flags2 bit 7 ends SET and that the port never sets it -- the write is
+   src/func_ov085_0212d5dc.cpp:51, LakituBro's last opening state, right after
+   it hands control back to the player. A boot-time read cannot show that: on
+   the reload boot the bit is still clear (measured), because the flight's
+   ending state runs during the level that follows. So this reports the EDGE,
+   once, from a place that ticks. Inert unless SM64DS_INTRO_WATCH. */
+extern "C" void port_intro_bit_edge(void)
+{
+    static int on = -1;
+    if (on < 0)
+        on = std::getenv("SM64DS_INTRO_WATCH") ? 1 : 0;
+    if (!on)
+        return;
+    static int last = -1;
+    const int now = (data_0209caa0[8] & 0x80) ? 1 : 0;
+    if (now != last) {
+        std::fprintf(stderr, "  [intro] flags2 bit 7 %d -> %d\n", last, now);
+        last = now;
+    }
+}
+
 extern "C" int hal_player_process(void *self)
 { return func_02043288(self); }
 

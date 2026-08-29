@@ -184,6 +184,75 @@ NAMED = [
     # (table 3); putting the name back here would define the symbol twice and,
     # if the byte copy won, restore the crash.
     "data_0208e42c",
+# ---- run lvled, lane intro-cutscene: the NEW-FILE OPENING's script data ----
+#
+# src/__sinit_02073e6c.c is what makes the opening's FOUR-script chain work:
+# the chain arguments and the argument-blob pointers are stored as ZERO on
+# disc and it writes them at boot, byte by byte because the fields are
+# unaligned. On the host it writes HOST addresses, which is exactly why it
+# has to run rather than the pointers being byte-copied.
+#
+# EVERY SYMBOL BELOW WAS AUDITED INDIVIDUALLY against config/arm9/relocs.txt
+# before being put here, because this list BYTE-COPIES and a byte-copied
+# relocated word carries a DS address into the host -- the data_020876e4
+# crash this file's own header banks. The audit is
+# out/intro-cutscene/reloc_audit.txt; the closure is 155 symbols and it
+# TERMINATES (level 2 is 54 clean, 1 record, 1 further target).
+#
+# The 96 names here have ZERO relocated words in their spans, with ONE
+# reasoned exception:
+#
+#   data_02089af8 (the third script, the one carrying the closing
+#   LoadLevelNoReturn) is flagged with six relocated words. All six are
+#   FALSE POSITIVES and none is dereferenced. dsd's arm9 relocations are
+#   INFERRED -- arm9 loads at a fixed address, so a data word whose value
+#   looks like an address gets marked. Walking the script record by record
+#   out of arm9_dec.bin (ProcessKuppaScript's own rule: s[0] is the record
+#   length, +1 cmd, +2 beg, +4 end, +6 args) puts all six at ARGUMENT
+#   offsets inside cmd 0x00/0x01/0x02 records -- the player-movement
+#   commands, which func_0200e5ac consumes as VALUES. The values are
+#   0x020b0000, 0x020a0244, 0x02091000, 0x02090800, 0x020f0000 and
+#   0x020f1000: position coordinates that happen to look like DS
+#   addresses. The only kuppa command that dereferences an argument as a
+#   pointer is cmd 6 (the chain), and its arg is ZERO on disc and written
+#   by the sinit. Decode in out/intro-cutscene/script_decode.txt.
+#
+# The 55 POINTER RECORDS that really do carry pointers are NOT here. They
+# are hosted with real host pointers in hal/intro_script_records.cpp, the
+# way table 2 of hal/ptr_tables.cpp hosts the 39 camera-script records.
+#
+# NAMES THE AUDIT PRODUCED THAT ARE DELIBERATELY NOT BELOW:
+#   data_02087c00, data_02088610, data_02088fb8, data_020890a0, data_02089608
+#     already carried by this file above; a second entry is a redefinition.
+#   data_0209b278, data_0209b294
+#     NOT romdata. Both live in the 0x0209xxxx working region and their
+#     spans come out NEGATIVE here (the next symbol is below them).
+#     data_0209b294 is the FaderBrightness OBJECT ProcessKuppaScript drives
+#     through SetToStart/SetForwardTime -- live state hosted as BSS, so
+#     byte-copying it here would be a category error.
+    "data_020876d4", "data_020876fc", "data_0208771c", "data_02087740",
+    "data_02087798", "data_020877c8", "data_020877f8", "data_02087828",
+    "data_02087858", "data_0208788c", "data_020878c0", "data_020878f4",
+    "data_02087928", "data_0208795c", "data_02087990", "data_020879c4",
+    "data_020879f8", "data_02087a2c", "data_02087a60", "data_02087a94",
+    "data_02087ac8", "data_02087afc", "data_02087b30", "data_02087b64",
+    "data_02087b98", "data_02087bcc", "data_02087c34", "data_02087c68",
+    "data_02087ca0", "data_02087cd8", "data_02087d10", "data_02087d48",
+    "data_02087d80", "data_02087db8", "data_02087df0", "data_02087e28",
+    "data_02087e60", "data_02087e98", "data_02087ed0", "data_02087f08",
+    "data_02087f40", "data_02087f80", "data_02087fc0", "data_02088000",
+    "data_02088040", "data_02088080", "data_020880c0", "data_02088100",
+    "data_02088140", "data_02088180", "data_020881c0", "data_02088200",
+    "data_02088240", "data_02088280", "data_020882c0", "data_02088300",
+    "data_02088340", "data_020883d0", "data_02088418", "data_02088460",
+    "data_020884a8", "data_020884f0", "data_02088538", "data_02088580",
+    "data_020885c8", "data_02088660", "data_020886b0", "data_02088700",
+    "data_02088750", "data_020887a0", "data_020887f0", "data_02088840",
+    "data_02088898", "data_0208894c", "data_02088a18", "data_02088a94",
+    "data_02088ba0", "data_02088c2c", "data_02088ccc", "data_02088d80",
+    "data_02088e38", "data_02088ef0", "data_020891a8", "data_020892c0",
+    "data_020893d8", "data_020894f0", "data_02089850", "data_02089af8",
+    
     # FORTY NAMES CAME OUT OF THE LINE ABOVE ON 2026-08-05, and every one of
     # them was a called-through pointer table rather than data.
     # port/tools/ptr_audit.py found them by intersecting this list with
