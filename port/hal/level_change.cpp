@@ -158,6 +158,9 @@ void port_level_reset_host(void);        /* hal/level_boot.cpp (also captures th
                                             registry that points at it) */
 void port_level_set_target(int level);   /* hal/level_boot.cpp: which level the
                                             next port_stage_a_boot mounts */
+void port_intro_arm_for_entry(void);     /* hal/level_boot.cpp: the intro seam --
+                                            says "this entry came off a save-file
+                                            pick"; the seam itself decides */
 void CleanCommonModelDataArr(void);
 void port_model_vram_reset(void);   /* hal/model_host.cpp */
 void sd_sound_level_reap(void);     /* hal/sdat/consumer.cpp: the ROM's
@@ -956,6 +959,21 @@ extern "C" int port_level_entry_latch(void)
     CleanCommonModelDataArr();
     port_model_vram_reset();
     port_level_reset_host();
+
+    /* ---- ARM THE OPENING -------------------------------------------------
+     * This function is the ONE thing only the title bridge calls, which makes
+     * it the honest place to say "this entry came off a save-file pick". The
+     * seam it arms (hal/level_boot.cpp, port_intro_wants_play) then applies the
+     * ROM's own rule -- game mode 0, flags2 bit 7 clear -- and the ROM's own
+     * Stage::LoadClsnAndObjects decides. Arming is not deciding: a used file,
+     * or a suppressed entry, still answers no.
+     *
+     * It is armed HERE rather than in the level boot because the boot cannot
+     * tell a title crossing from the direct SM64DS_LEVEL boot the whole
+     * battery runs, and the ROM's gate has no level check -- deriving the
+     * decision from the bit alone would start the opening in every level
+     * selftest. */
+    port_intro_arm_for_entry();
 
     port_level_latch();
     port_level_set_target((int)data_0209f2f8);

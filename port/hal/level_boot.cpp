@@ -2007,6 +2007,7 @@ extern unsigned char data_0209f250;
 extern int data_0209fc5c[];
 extern unsigned char data_02092128[];
 extern unsigned char data_0209caa0[];
+extern unsigned char data_0209f2d8;      /* game mode: 0 single file, 1 VS, 2 script */
 extern unsigned short data_ov002_0210cbf4[];
 extern void *data_0209f394[];
 }
@@ -2907,6 +2908,84 @@ void *port_stage_a_boot(void *mc, int spawn)
     return g_boot_result;
 }
 
+/* ---- THE INTRO SEAM -------------------------------------------------------
+   ONE decision point for "does this entry play the ROM's opening", and ONE
+   place to suppress it. Nothing else in the port may test the intro bit to
+   decide this; scattering the condition is what this block exists to prevent.
+
+   THE ROM'S OWN RULE, from matched source
+   (src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider.cpp:76-98):
+
+       intro = (data_0209f2d8 == 0)                 // game mode 0 = single file
+            && ((data_0209caa0[2] & 0x80) == 0)     // flags2 bit 7: not seen yet
+            && (ContinueKuppaScriptIfNecessary() == 0);
+       ... Spawn(0x14f MINIMAP) always; Spawn(0x14e HUD) only when !intro ...
+       if (intro) StartIntroCutscene();             // Sound::LoadInitialGroup(0x25)
+                                                    // + RunKuppaScript(&data_020890a0)
+
+   A FRESH SAVE LEGITIMATELY HAS THAT BIT CLEAR. SaveData::SetDefaultValues
+   (0x02013dc4) memsets the 0x44-byte record and leaves flags2 == 0x8 (bit 3,
+   Yoshi unlocked) -- bit 0x80 clear. An empty slot reaches that through
+   SaveData::ReadFileData when the cart read fails. So the ROM needs no extra
+   state to ask for the opening: the absence of the bit IS the request.
+
+   WHY THE PORT USED TO SET IT UNCONDITIONALLY, and why that is still mostly
+   right: the same bit is what the whole bottom screen renders through
+   (HUD::Behavior and HUD::Render both open with
+   `if ((data_0209caa0[2] & 0x80) == 0) return 1;`), so a level walked around
+   with the bit clear has a correctly-constructed HUD that draws nothing. That
+   is the state the real game is in ONLY during the opening. The fix is not to
+   stop setting the bit -- it is to stop setting it for the ONE entry the ROM
+   would have played the opening on, and let the ROM's own machinery set it
+   when the opening ends.
+
+   WHO SETS IT WHEN THE OPENING ENDS: the ROM does, and it is hosted.
+   src/func_ov085_0212d5dc.cpp:49-51 -- LakituBro's last opening state, after
+   the camera flight settles -- hands control back and does
+   `data_0209caa0[2] |= 0x80;`. The port writes nothing there.
+
+   WHY THIS IS ARMED RATHER THAN DERIVED FROM THE BIT ALONE: every level
+   selftest in the battery boots level 1 directly, and the ROM's gate has no
+   level check (an agent's disassembly pass confirmed this: any level loaded
+   with mode 0 and the bit clear starts the opening). Deriving from the bit
+   alone would fire the opening in all of them. The arm is set only by
+   port_level_entry_latch (hal/level_change.cpp), which only the title bridge
+   calls -- so the default boot cannot reach it. */
+static int g_intro_armed;
+
+/* THE SUPPRESSION SEAM. The one place that says "not this time".
+   The direct-entry round gates HERE -- adding its own test to this function --
+   rather than adding a condition anywhere else. SM64DS_INTRO=0 is the manual
+   override and the A/B handle. */
+extern "C" int port_intro_suppressed(void)
+{
+    const char *e = std::getenv("SM64DS_INTRO");
+    return (e && std::atoi(e) == 0) ? 1 : 0;
+}
+
+/* Armed by the title bridge's own latch, for the next level boot only. */
+extern "C" void port_intro_arm_for_entry(void)
+{
+    g_intro_armed = 1;
+}
+
+/* The decision, consumed once by the boot that follows the crossing. */
+extern "C" int port_intro_wants_play(void)
+{
+    if (!g_intro_armed)
+        return 0;
+    g_intro_armed = 0;                  /* one-shot: this boot, not the next */
+    if (port_intro_suppressed())
+        return 0;
+    /* The ROM's own two preconditions, re-read rather than assumed. The third
+       (no script already running) is LoadClsnAndObjects' own and is left to it. */
+    if (data_0209f2d8 != 0)
+        return 0;
+    if (data_0209caa0[8] & 0x80)
+        return 0;                       /* a used file: the opening is done */
+    return 1;
+}
+
 extern "C" void *port_stage_boot_body(void *mc, int spawn)
 {
     const double lvlperf_t0 = port_lvlperf_now();
@@ -3137,9 +3216,25 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
        time the entrance started spawning him.
 
        SM64DS_INTRO_UNSEEN=1 puts the old behaviour back, which is also how to
-       see the pre-intro cloud backdrop the bottom screen shows without it. */
+       see the pre-intro cloud backdrop the bottom screen shows without it.
+
+       AND THE ONE ENTRY THAT WANTS IT CLEAR. port_intro_wants_play() (the seam
+       above port_stage_boot_body) is true only for a title-bridge crossing into
+       a fresh file. On that one boot the bit is left ALONE, which is the whole
+       fix: LoadClsnAndObjects below then takes its own intro branch, declines to
+       spawn the HUD exactly as the ROM does, and calls StartIntroCutscene. The
+       bit gets set by the ROM's own hand at the end of the flight
+       (src/func_ov085_0212d5dc.cpp:51), and the HUD comes up on the next boot.
+       LakituBro::InitResources reads the same bit to choose his intro state
+       chain, and it runs inside this object pass, so it has to still be clear
+       here rather than restored afterwards. */
+    const int play_intro = port_intro_wants_play();
     unsigned char intro_seen = (unsigned char)(data_0209caa0[8] & 0x80);
-    data_0209caa0[8] |= 0x80;   /* word 2 bit 7: the intro has played */
+    if (!play_intro)
+        data_0209caa0[8] |= 0x80;   /* word 2 bit 7: the intro has played */
+    else
+        std::fprintf(stderr, "[intro] the opening is ARMED for this entry: "
+                     "flags2 bit 7 left clear, the ROM's own gate decides\n");
 
     /* ---- THE LEVEL MODEL, WHERE THE ROM LOADS IT (run link60, lane SL0) ---
        Stage::InitResources calls Stage::LoadModel at its line 361 and
