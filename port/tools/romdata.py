@@ -291,6 +291,63 @@ NAMED = [
     # the camera's own rotation, the walk's slope math. Zeroed storage in the
     # HAL made atan2 answer 0 for every off-axis direction.
     "data_020994e0",
+    # ---- VS wiring lane (ov075, scene 6) ----------------------------------
+    # Five OAM/layout records the VS menu's .data table at 0x0211c968 points
+    # at (patched to host addresses in hal/scene_vs_menu.cpp), and the five
+    # LZ-compressed sub-screen tile blobs data_0208a0e4 indexes by language.
+    # All ten are plain arm9 .data with NO relocation inside any span
+    # (checked over config/arm9/relocs.txt by span), so ROM bytes are the
+    # right storage; the two tables that DO carry relocations (0x0208a0e4
+    # itself, and the typeinfo records) are hosted with real host pointers in
+    # hal/scene_vs_menu.cpp instead -- the data_02099fb4 lesson. Plus
+    # data_0208f274, one relocation-free word func_ov075_021192bc reads.
+    "data_02098be8",
+    "data_02098c98",
+    "data_02098dd8",
+    "data_02098ef8",
+    "data_020990f8",
+    "data_02096f08",
+    "data_02097230",
+    "data_020975d4",
+    "data_02097950",
+    "data_02097ca4",
+    "data_0208f274",
+    # the five per-language VS TEXT BANKS Message::LoadTextVS points
+    # data_0209fd14 at (reloc-free spans; the pointer itself is set by the
+    # matched TU at run time, so nothing here bakes a DS address)
+    "data_020937bc",
+    "data_0209325c",
+    "data_02093d7c",
+    "data_0209289c",
+    "data_02092d3c",
+    "data_02092808",
+    "data_02092810",
+    "data_02092824",
+    # VS lobby sub-screen: three palette/tile id runs func_0200f13c walks, and
+    # the five OamAttr lists data_0208a0f8 points at (that table is hosted
+    # with host pointers in hal/scene_vs_menu.cpp). All reloc-free by span.
+    "data_0208a120",
+    "data_0208a148",
+    "data_0208a15c",
+    "data_02098b58",
+    "data_02098d20",
+    "data_02098e60",
+    "data_02098fa0",
+    "data_02099068",
+    "data_02075b14",
+    "data_02075d14",
+    "data_0209283c",
+    "data_0209285c",
+    "data_0209287c",
+    # the four records data_020927a0 points at (table hosted with host
+    # pointers in hal/scene_vs_menu.cpp; records are reloc-free)
+    "data_02092780",
+    "data_02092788",
+    "data_02092790",
+    "data_02092798",
+    "data_0208a10c",
+    "data_0208a134",
+    "data_02092818",
     "data_020756b0",   # D-pad direction -> binang table (Stage::CheckInput)
     # CheckInput's three BUTTON REMAP MAPS: 16 u16 rows each, raw pad bit ->
     # Ctrl held/pressed mask (mode 0 is level play: A->1 punch, B->2 jump,

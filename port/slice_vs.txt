@@ -1,0 +1,418 @@
+# Gate VS: dScEntry_c, scene id 6 -- the VS / wireless entry menu (ov075).
+# Run vs1, lane VS-WIRING. This file is BOTH the recon record and the CMake
+# slice manifest: comments are the derivation, non-comment lines are the src/
+# TUs the slice compiles.
+#
+# ---- 1. THE SCENE ID AND THE CLASS, DERIVED -------------------------------
+#
+# The arm9 spawn table's entry for id 6 is config/arm9/relocs.txt
+# `from:0x0209087c kind:load to:0x0211c880 module:overlays(64,75)`, and
+# (0x0209087c - 0x02090864)/4 = 6. The (64,75) ambiguity is dsd's shared-window
+# honesty (ov063/ov065/ov075 all cover 0x0211c880+; port/ov065_syms.txt) and it
+# resolves to ov075 by the loader itself: src/func_0201a694.c special-cases
+# id 6 -- it loads &overlay_75 BEFORE GetSceneOverlayID runs, latched once on
+# data_0209d4e0 -- so at spawn time the module holding 0x0211c880 is ov075.
+# GetSceneOverlayID(6) then answers &overlay_2, so on the DS scene 6 runs with
+# BOTH ov075 (kept resident) and ov002 (the gameplay overlay, which the port
+# mounts already) in RAM.
+#
+# Everything below was read out of extracted/overlays/overlay_0075.bin at base
+# 0x02113ee0 (the delinks.txt .text start), with the base proven on symbols
+# first: the first word of _ZN14UnknownVsEntryD1Ev (0x02113ee0), of
+# func_ov075_0211a854 and of func_ov075_0211a740 is e92d4010 = push {r4,lr} in
+# all three, so the file offset arithmetic is right.
+#
+#   SpawnInfo      0x0211c880  {0x0211a854 factory, 0x00090006}
+#                              (data_ov075_0211c880, the `ambiguous` row)
+#   RTTI           0x0211c8f8  {0x0209a764 class_type_info vt, 0x0211c904 name,
+#                              0x020914d4 base}, and 0x0211c904 spells
+#                              "10dScEntry_c". The base pointer is Scene's
+#                              typeinfo -- the SAME word dScMiniGm_c's RTTI
+#                              carries -- so this is a DIRECT Scene subclass,
+#                              the dScMiniGm_c / dScStarSel_c / dScDSMT_c shape,
+#                              not a dScMgBase_c minigame.
+#   vtable         0x0211d304  data_ov075_0211d304. Eighteen Scene-shaped slots
+#                              (0x0211d304..0x0211d34c), slots 2/4/5/7/8/10/11/
+#                              13/14/15 holding arm9 Scene::/ActorBase:: words
+#                              (0x0202e62c, 0x0202e5f0, 0x0202e5d0, 0x0202e3d4,
+#                              0x0202e3c8, 0x0202e3a4, 0x0202e398, 0x0204357c,
+#                              0x0204349c, 0x02043494 -- the arrangement the
+#                              keyed fill recognises). PAST slot 17 the .data
+#                              carries three more relocated code words
+#                              interleaved with plain zeros -- from:0x0211d34c
+#                              -> 0x0211b1cc, from:0x0211d354 -> 0x0211b260,
+#                              from:0x0211d35c -> 0x0211afb0 (relocs.txt) --
+#                              a {fn, word} pair run, not proven extra vtable
+#                              slots. The seat treats 18 as the table width and
+#                              the pair run as data; the keyed fill's leftover
+#                              census is the check.
+#   factory        0x0211a854  func_ov075_0211a854 (matched src): operator
+#                              new(0x288), ActorBase ctor, vptr data_0208e4b8
+#                              -> _ZTV5Scene -> data_ov075_0211d304, |=1 |=4 on
+#                              +0x13, then TWO func_020733a8 element arrays
+#                              (9 x 0x24 at +0x70, 4 x 0x2c at +0x1b4).
+#
+# Slot 7 one table over: from:0x02090880 -> 0x0211c788 (also ov075's window),
+# SpawnInfo {0x0211a740, 0x000a0007}. Scene 7 is NOT this lane's scope; noted
+# because both records sit in the same .data run and the mount carries them.
+#
+# ---- 2. THE SOURCE INVENTORY, COUNTED THREE WAYS --------------------------
+#
+# config/arm9/overlays/ov075/symbols.txt names 147 kind:function rows: 144
+# regular functions plus 3 static initialisers (__sinit_ov075_0211b5e0 0x520,
+# _0211bb00 0xa1c, _0211c51c 0x88 -- .ctor at 0x0211c5a4 lists exactly these
+# three, read out of the overlay image).
+#
+#   135  delinked complete to a src/ TU (delinks.txt), sinits included
+#     3  present in src/ but NONMATCHING-bannered, honest and logic-verified:
+#          src/func_ov075_02116128.c  (//cpp; regalloc, div=31)
+#          src/func_ov075_02117d80.c  (idiom, div=5)
+#          src/func_ov075_021190a4.c  (push-set/frame, div=26)
+#        All three compile and are in this slice; a NONMATCHING body is a
+#        decompiled body and the port runs it, the ov005 precedent.
+#     9  MISSING -- no ov075 body anywhere in the tree (tree-wide search by
+#        address, not just src/ globbing):
+#          func_ov075_02115bcc  0x250
+#          func_ov075_0211621c  0x394
+#          func_ov075_021165b0  0x268
+#          func_ov075_02116818  0x2bc
+#          func_ov075_0211705c  0x34c
+#          func_ov075_02117d80 is NOT here (it exists, see above)
+#          func_ov075_0211867c  0x238
+#          func_ov075_021190a4 is NOT here (it exists, see above)
+#          func_ov075_02119dc4  0x33c   src/func_ov006_02119dc4.c is ov006's
+#                                       OWN body at the shared window address;
+#                                       bytes compared, DIFFERENT function
+#          func_ov075_0211a948  0xb8
+#          func_ov075_0211afb0  0x21c   same shared-window story as _02119dc4
+#                                       (src/func_ov006_0211afb0.c differs);
+#                                       ALSO the 0x0211d35c pair-run target
+#        135 + 3 + 9 = 147. The nine get loud L2-pattern faces in the seat,
+#        never silent stubs (hal/scene_boot.cpp's l2_trap is the model).
+#
+# ---- 3. THE MOUNT, ON THE SCENE-5 TEMPLATE --------------------------------
+#
+# dScMiniGm_c (scene 5, ov005) is the working template and its three pieces
+# map one for one, with ONE structural difference:
+#
+#   piece 1  port/ov075_syms.txt + `list(APPEND PORT_ACTOR_OVERLAYS ov075)` in
+#            port/CMakeLists.txt -- the per-symbol packed data mount
+#            (tools/ovdata.py). The vtable data_ov075_0211d304 STAYS IN the
+#            mount (the ov005 treatment) so port_scene_fill_rom can key on the
+#            raw DS words. The SpawnInfo run 0x0211c740..0x0211c8a0 and the
+#            VS map list data_ov075_0211c6ec ride in the same .data mount.
+#   piece 2  this slice: the 138 TUs below (135 delinked + 3 NONMATCHING),
+#            with src/func_ov075_02116128.c and src/func_ov075_021184b0.c
+#            marked LANGUAGE CXX (the comment-stripped token sweep found
+#            exactly these two .c files carrying C++; same sweep the ov005
+#            slice ran).
+#   piece 3  hal/scene_vs_menu.cpp (the seat: factory wrapper over the matched
+#            src factory, keyed vtable fill, the nine loud faces) plus ONE
+#            APPENDED row in hal/scene_boot.cpp's port_scene_classes:
+#            {6, "SCENE_VS_MENU", data_ov075_0211c880, ...}.
+#
+#   THE DIFFERENCE: ov005 had no static initialisers; ov075 HAS THREE (above).
+#   They initialise ov075's own .data/.bss objects, so the mount must run them
+#   once per process before the scene's first fill reads the mounted words --
+#   the ov004/ov006 constructor-gate precedent (port_scene_mg_overlay_load),
+#   scoped to ov075's three.
+#
+# ---- 4. THE ROM'S OWN VS START, AND WHAT "STAGED" MEANS -------------------
+#
+# The lobby's start conductor is func_ov075_02118a84 (matched src): it waits
+# out the comms handshake and a countdown at +0x264, then calls the start
+# function. The start function is func_ov075_02116c8c (matched src) and it is
+# FOUR statements:
+#
+#     PrepareVsMode();                       data_0209f2d8 = 1 (DS VS MODE),
+#                                            SetPlayerGlobals(),
+#                                            Scene::StartSceneFade(3,0,0x7fff),
+#                                            SaveData::SetDefaultValues(active)
+#     LoadLevelNoReturn(
+#         data_ov075_0211c6ec[data_0209b2e4[0]], 0, 2, 0);
+#     Sound::StopLoadedMusic_Layer1(0x3c);
+#     data_02092778 = 1;
+#
+# So the ROM stages the map IN THE SAME FRAME as the scene-3 request:
+# "staged" concretely is data_02092110 = the map's level id (entrance 0,
+# arg2 = 2), written by LoadLevelNoReturn, consumed by the port's change
+# poll / level boot. PrepareVsMode alone stages nothing -- the known trap --
+# and the ROM never calls it alone: func_ov075_02116c8c is its only caller.
+#
+# THE VS MAP LIST lives in ov075's .data: data_ov075_0211c6ec, four signed
+# bytes {0x33, 0x2b, 0x1d, 0x2a} = levels 51, 43, 29, 42, indexed by
+# data_0209b2e4[0] (the lobby's map pick). Their overlays, by the port's own
+# runtime dump (port/debug_stage_names.txt): 51 -> ov059, 43 -> ov051,
+# 29 -> ov037, 42 -> ov050. NONE of the four is in PORT_LEVEL_OVERLAYS today;
+# the "NOT a stage" verdict those ids carry in the level-name lane is now
+# CONTRADICTED for these four by the ROM's own VS list -- they are the VS
+# maps, star-select-less by design, which is exactly why their name handles
+# sit past the ROM's course-name space.
+#
+# THERE IS NO GAME-MODE SELECTOR IN THE ROM'S VS. The only pre-start choice
+# global on the start path is the map index; data_0209b2e8 nearby is an
+# allocation pointer (Deallocate'd in three TUs), not a mode. SM64DS VS is the
+# one star-battle mode; players and characters come from the session
+# (port::vs_player_count(), hal/comms_conductor.cpp -- read, not touched).
+# The debug section therefore offers the map, and "mode" surfaces the ROM's
+# own single mode rather than inventing one.
+#
+# ---- 5. VS-FLAG SURVIVAL, THE TWO CLEAR POINTS ----------------------------
+#
+# data_0209f2d8 = 1 is DS VS MODE (eleven ov002 attack-cylinder wrappers, the
+# shockwave, Stage, StarMarker, HUD and fader all branch on it;
+# port/ov002_frontier.txt section 3). Two matched paths CLEAR it and both are
+# correct to avoid, not patch: src/StartFile.c (the adventure entry) writes 0,
+# and hal/level_change.cpp's port_title_select writes 0 on the title row path
+# (deliberately, its own banner says why). The VS entry must reach the level
+# boot through NEITHER -- the ROM's own order above, then the ordinary staged-
+# level consumption, keeps the flag alive the way the DS does.
+#
+# ---- THE SLICE -----------------------------------------------------------
+src/UnknownVsEntry_Spawn.cpp
+src/_ZN14UnknownVsEntry13InitResourcesEv.cpp
+src/_ZN14UnknownVsEntry16CleanupResourcesEv.cpp
+src/_ZN14UnknownVsEntry6RenderEv.cpp
+src/_ZN14UnknownVsEntry8BehaviorEv.cpp
+src/_ZN14UnknownVsEntryD0Ev.c
+src/_ZN14UnknownVsEntryD1Ev.cpp
+src/__sinit_ov075_0211b5e0.c
+src/__sinit_ov075_0211bb00.c
+src/__sinit_ov075_0211c51c.c
+src/func_ov075_02113fdc.c
+src/func_ov075_02114010.c
+src/func_ov075_021140e4.c
+src/func_ov075_021141b8.c
+src/func_ov075_02114218.c
+src/func_ov075_0211427c.c
+src/func_ov075_021142fc.c
+src/func_ov075_02114300.cpp
+src/func_ov075_02114390.c
+src/func_ov075_021143e4.cpp
+src/func_ov075_02114560.cpp
+src/func_ov075_0211473c.cpp
+src/func_ov075_0211478c.c
+src/func_ov075_021147d4.cpp
+src/func_ov075_02114890.c
+src/func_ov075_02114894.cpp
+src/func_ov075_021148f0.c
+src/func_ov075_02114904.c
+src/func_ov075_02114988.cpp
+src/func_ov075_021149d0.c
+src/func_ov075_02114a58.c
+src/func_ov075_02114a6c.c
+src/func_ov075_02114ac4.cpp
+src/func_ov075_02114b60.c
+src/func_ov075_02114be4.cpp
+src/func_ov075_02114cd8.cpp
+src/func_ov075_02114ddc.cpp
+src/func_ov075_02114fa8.c
+src/func_ov075_0211505c.c
+src/func_ov075_02115098.c
+src/func_ov075_02115134.c
+src/func_ov075_021151b4.c
+src/func_ov075_0211524c.c
+src/func_ov075_02115290.c
+src/func_ov075_021152d4.cpp
+src/func_ov075_02115a88.c
+src/func_ov075_02115ab8.cpp
+src/func_ov075_02115b28.c
+src/func_ov075_02115bac.c
+src/func_ov075_02115bc8.c
+src/func_ov075_02115e1c.cpp
+src/func_ov075_02115e8c.c
+src/func_ov075_0211601c.c
+src/func_ov075_02116028.c
+src/func_ov075_02116030.c
+src/func_ov075_02116040.c
+src/func_ov075_021160b4.c
+src/func_ov075_021160dc.cpp
+src/func_ov075_02116128.c
+src/func_ov075_02116ad4.c
+src/func_ov075_02116c38.c
+src/func_ov075_02116c8c.c
+src/func_ov075_02116ce4.c
+src/func_ov075_02116d40.c
+src/func_ov075_02116d9c.c
+src/func_ov075_02116e00.c
+src/func_ov075_02116e44.c
+src/func_ov075_02116ebc.c
+src/func_ov075_02116f40.cpp
+src/func_ov075_021173a8.c
+src/func_ov075_02117590.cpp
+src/func_ov075_0211763c.c
+src/func_ov075_02117918.c
+src/func_ov075_02117ac4.c
+src/func_ov075_02117b58.cpp
+src/func_ov075_02117bc4.c
+src/func_ov075_02117c0c.c
+src/func_ov075_02117d80.c
+src/func_ov075_02117e84.c
+src/func_ov075_02117f5c.c
+src/func_ov075_02117fe4.c
+src/func_ov075_02118248.c
+src/func_ov075_02118378.c
+src/func_ov075_021184b0.c
+src/func_ov075_021188b4.c
+src/func_ov075_02118a78.c
+src/func_ov075_02118a84.c
+src/func_ov075_02118bf8.c
+src/func_ov075_02118c80.cpp
+src/func_ov075_02118cd0.c
+src/func_ov075_02118d1c.c
+src/func_ov075_02118f38.c
+src/func_ov075_021190a4.c
+src/func_ov075_0211919c.c
+src/func_ov075_021192bc.c
+src/func_ov075_0211944c.c
+src/func_ov075_021194e4.cpp
+src/func_ov075_02119640.c
+src/func_ov075_021196d0.c
+src/func_ov075_0211977c.c
+src/func_ov075_021197dc.c
+src/func_ov075_021197e8.c
+src/func_ov075_02119918.c
+src/func_ov075_021199d8.cpp
+src/func_ov075_02119b34.c
+src/func_ov075_02119c38.c
+src/func_ov075_02119cc0.c
+src/func_ov075_02119d3c.c
+src/func_ov075_02119d78.c
+src/func_ov075_0211a100.c
+src/func_ov075_0211a148.c
+src/func_ov075_0211a210.c
+src/func_ov075_0211a268.c
+src/func_ov075_0211a410.cpp
+src/func_ov075_0211a734.c
+src/func_ov075_0211a740.c
+src/func_ov075_0211a834.c
+src/func_ov075_0211a838.c
+src/func_ov075_0211a854.c
+src/func_ov075_0211aa00.c
+src/func_ov075_0211aa94.c
+src/func_ov075_0211ab38.c
+src/func_ov075_0211abb0.c
+src/func_ov075_0211ad60.c
+src/func_ov075_0211addc.cpp
+src/func_ov075_0211aea4.c
+src/func_ov075_0211aeb8.c
+src/func_ov075_0211af0c.c
+src/func_ov075_0211af84.c
+src/func_ov075_0211b1cc.c
+src/func_ov075_0211b260.c
+src/func_ov075_0211b3b8.c
+src/func_ov075_0211b3d8.cpp
+src/func_ov075_0211b418.cpp
+src/func_ov075_0211b458.cpp
+# ---- THE MEASURED GAP (the ov005 pattern): arm9 TUs the 138's external
+# closure needs and no other slice compiles. Enumerated from the first
+# link's own unresolved list, not guessed. func_01ffadf0 (__aeabi_uidiv,
+# ITCM asm) is NOT a line here: MSVC cannot assemble it and the seat
+# carries the host body, the cxx_aliases ITCM-block treatment.
+src/PrepareVsMode.c
+src/SetControllerMode.c
+src/_ZN11ShadowModel9RenderAllEv.cpp
+src/_ZN5Scene14GraphCallback0Ev.c
+src/_ZN7Message17DisplayVsExitTextEt.cpp
+src/func_0200f0bc.c
+src/func_0200f13c.cpp
+src/func_0200f220.c
+src/func_0200f2cc.c
+src/func_0201a1bc.c
+src/func_0201a244.c
+src/func_02020028.c
+src/func_02020078.c
+src/func_020200b8.c
+src/func_020200e0.c
+src/func_02020124.c
+src/func_02020168.c
+src/func_02020190.c
+src/func_020201c0.c
+src/func_020201f0.c
+src/func_0202029c.c
+src/func_020202dc.c
+src/func_02020304.c
+src/func_02020334.c
+src/func_02020364.c
+src/func_0202048c.cpp
+src/func_02020820.c
+src/func_0202deac.c
+src/func_0203083c.c
+src/func_020308b4.c
+src/func_02030958.c
+src/func_02030994.c
+src/func_02030a38.c
+src/func_02030a6c.c
+src/func_02030a78.c
+src/func_02030aa4.c
+src/func_020331fc.c
+src/func_02033390.cpp
+src/func_02033464.c
+src/func_020337ec.c
+src/func_020338b0.cpp
+src/func_02033ae0.c
+src/func_02033bb8.c
+src/func_02034414.cpp
+src/func_0202043c.c
+src/func_02030838.c
+src/func_02031028.c
+src/func_020316d8.c
+src/func_020319fc.c
+src/func_02031b84.c
+src/func_02033a80.c
+src/func_02033e50.c
+src/func_02034098.cpp
+src/func_020341a8.cpp
+src/func_02034504.c
+src/func_0202044c.c
+src/func_020318a4.c
+src/func_02031cd4.c
+src/func_02031e00.c
+# src/func_02058568.c is EXCLUDED: OS_InitContext, a HAND-ASM PRIMITIVE
+# (an `asm void` block MSVC cannot assemble). hal/scene_vs_menu.cpp carries
+# the host body -- the cxx_aliases ITCM/ARMSaveContext treatment.
+# ---- SUBTREES REFUSED, the scene-boot precedent (its LoadOverlay block):
+# CORRECTED one round later: the wireless-status wrappers func_0203d7b8..
+# func_0203da2c (minus d9f4) turned out to be LEAF ACCESSORS over comms bss
+# -- no WM call in any of them -- and the first lobby boot crashed on a face
+# returning 0 where func_0203d8a0 returns a per-slot entry-record pointer
+# (measured: func_02031028+0x19 reading address 1). The twelve are compiled
+# again below; ONLY func_0203d9f4 (which calls the wireless manager,
+# func_020618b8) keeps its face. The refusals that stand: the DS
+# THREAD SCHEDULER (func_02057f38..func_02058538, plus the asm OS_InitContext
+# above), the CARD OVERLAY LOADER tail (UnloadOverlay, func_02017fd0,
+# func_02018c00/cbc, func_0205dc0c/dc60/df40) and the WIRELESS MANAGER
+# (func_020618b8). Every one is matched src and every one was in this slice
+# for one build; taking them tunnels under the port's own comms stack
+# (hal/comms_*), thread pump (hal/os_thread.cpp) and static overlay mounts.
+# The seam entry points ov075 actually calls are FACED in
+# hal/scene_vs_menu.cpp, loud-once. TWENTY-NINE MATCHED TUs THIS SLICE COULD
+# HAVE COUNTED AND DID NOT.
+src/func_0203128c.c
+src/func_02031154.c
+src/func_020313d8.c
+src/LoadFont3D.c
+src/_ZN7Message10LoadTextVSEv.c
+src/_ZN7Message16SetTextGlobalsVSEv.c
+src/func_0203d7b8.c
+src/func_0203d854.c
+src/func_0203d868.c
+src/func_0203d890.c
+src/func_0203d8a0.c
+src/func_0203d8d4.c
+src/func_0203d8e8.c
+src/func_0203d8fc.c
+src/func_0203d918.c
+src/func_0203d930.c
+src/func_0203d9b4.c
+src/func_0203da2c.c
+# ---- THE THREE PMF DISPATCH SITES are OUT of the slice: their matched TUs
+# dispatch states and elements through MSVC pointer-to-member / virtual
+# calls (this in ecx) onto plain cdecl host bodies -- the receiver never
+# arrives (measured: state func_ov075_02119b34 faulting at +0x37 on stack
+# garbage). port/unmatched/VS_EntryDispatch.cpp carries the host copies with
+# the dispatches spelled out as cdecl-through-record; src keeps the
+# byte-matched originals:
+#   src/func_ov075_0211a194.cpp   the state setter (+0x54/+0x5c/+0x64)
+#   src/func_ov075_0211a2b8.cpp   Behavior (pmf + the element v0 walk)
+#   src/func_ov075_0211a26c.cpp   Render (pmf)

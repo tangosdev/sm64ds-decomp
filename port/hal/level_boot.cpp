@@ -1098,6 +1098,32 @@ void port_ov054_patch(void);
 void *port_ov054_at(unsigned ds);
 extern unsigned char port_ov054_image[];
 extern const unsigned port_ov054_ds_base, port_ov054_ds_end;
+
+/* VS wiring lane: the four VS battle maps, the ROM's own list at
+   data_ov075_0211c6ec = levels {51, 43, 29, 42} (port/slice_vs.txt section
+   4). The "NOT a stage" verdict the wave-C block gave these ids is hereby
+   CORRECTED for exactly these four: they carry name handles past the ROM's
+   course-name space because VS maps have no course name or star select, not
+   because no course is behind them. LVL_Overlay addresses read from the
+   ROM's own data_02092208 (file offsets shifted by the 0x4000 ITCM block,
+   with data_020758c8[3]=11, [38]=46 and data_02092208[4]=0x02111c54 as the
+   three controls). */
+void port_ov059_patch(void);
+void *port_ov059_at(unsigned ds);
+extern unsigned char port_ov059_image[];
+extern const unsigned port_ov059_ds_base, port_ov059_ds_end;
+void port_ov051_patch(void);
+void *port_ov051_at(unsigned ds);
+extern unsigned char port_ov051_image[];
+extern const unsigned port_ov051_ds_base, port_ov051_ds_end;
+void port_ov037_patch(void);
+void *port_ov037_at(unsigned ds);
+extern unsigned char port_ov037_image[];
+extern const unsigned port_ov037_ds_base, port_ov037_ds_end;
+void port_ov050_patch(void);
+void *port_ov050_at(unsigned ds);
+extern unsigned char port_ov050_image[];
+extern const unsigned port_ov050_ds_base, port_ov050_ds_end;
 }
 
 /* LVL_Overlay, the fields the boot uses. */
@@ -1450,6 +1476,21 @@ static const PortLevelDesc port_level_table[] = {
     {46, "Luigi's key course (ex_l_map, course 19)", "ov054", 0x021112b0,
      port_ov054_patch, port_ov054_at,
      &port_ov054_ds_base, &port_ov054_ds_end, 0},
+    /* VS wiring lane: the ROM's four VS battle maps, list order (map 1..4 =
+       levels 51, 43, 29, 42). Named by list position until an asset-derived
+       name lands; the id is what a bug report quotes. */
+    {51, "VS map 1 (level 51)", "ov059", 0x02111548,
+     port_ov059_patch, port_ov059_at,
+     &port_ov059_ds_base, &port_ov059_ds_end, 0},
+    {43, "VS map 2 (level 43)", "ov051", 0x0211150c,
+     port_ov051_patch, port_ov051_at,
+     &port_ov051_ds_base, &port_ov051_ds_end, 0},
+    {29, "VS map 3 (level 29)", "ov037", 0x021111ec,
+     port_ov037_patch, port_ov037_at,
+     &port_ov037_ds_base, &port_ov037_ds_end, 0},
+    {42, "VS map 4 (level 42)", "ov050", 0x02111204,
+     port_ov050_patch, port_ov050_at,
+     &port_ov050_ds_base, &port_ov050_ds_end, 0},
 };
 
 enum { PORT_LEVEL_COUNT = sizeof port_level_table / sizeof port_level_table[0] };
@@ -1864,6 +1905,13 @@ static void *port_mount_row_lvl30(void) { return port_level_mount_at(42); }
 static void *port_mount_row_lvl32(void) { return port_level_mount_at(43); }
 static void *port_mount_row_lvl34(void) { return port_level_mount_at(44); }
 static void *port_mount_row_lvl46(void) { return port_level_mount_at(45); }
+/* VS wiring lane: the four VS battle maps, table rows appended at the END
+   (the merge-note rule above). Positional: row N takes fns[N]. */
+static void *port_mount_row_lvl51(void) { return port_level_mount_at(35); }
+static void *port_mount_row_lvl43(void) { return port_level_mount_at(36); }
+static void *port_mount_row_lvl29vs(void) { return port_level_mount_at(37); }
+static void *port_mount_row_lvl42vs(void) { return port_level_mount_at(38); }
+
 static void *(*const port_level_mount_fns[PORT_LEVEL_COUNT])(void) = {
     port_mount_row_0, port_mount_row_1, port_mount_row_2, port_mount_row_3,
     port_mount_row_4,
@@ -1908,6 +1956,10 @@ static void *(*const port_level_mount_fns[PORT_LEVEL_COUNT])(void) = {
     port_mount_row_lvl32,
     port_mount_row_lvl34,
     port_mount_row_lvl46,
+    port_mount_row_lvl51,
+    port_mount_row_lvl43,
+    port_mount_row_lvl29vs,
+    port_mount_row_lvl42vs,
 };
 
 // ---- the loader dispatch table ---------------------------------------------

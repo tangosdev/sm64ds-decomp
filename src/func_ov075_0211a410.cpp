@@ -7,7 +7,9 @@
 #include "dScEntry_c.h"
 // recovered name: dScEntry_c_InitResources
 /* recovered: renamed to Class_Method */
-/* dScEntry_c::InitResources - recovered from vtable slot identity */
+/* dScEntry_c::InitResources - byte-matched vs the ROM at mwccarm 2004/b56, strict relocs
+   (tools/match.py, size from ov075 symbols.txt). The old vtable-slot-guess
+   marker was wrong: the body reproduces the ROM's bytes. VS wiring lane. */
 extern "C" {
     void Enable3dEngines(void);
     void func_0200f2cc(void);
