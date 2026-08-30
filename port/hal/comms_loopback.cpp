@@ -2232,10 +2232,19 @@ bool comms_loopback_install_from_env() {
         if (v < 0) v = 0;
         if (v > kInputDelayMax) v = kInputDelayMax;
         g_input_delay = v;
-        if (g_net_mode == kNetLoopback && g_input_delay > 0) {
+        // REFUSED ON A BARE LOOPBACK, ALLOWED WHEN THERE IS A ROUND TRIP TO
+        // HIDE -- and the second half of that sentence was missing at first,
+        // which broke the one rig that most needed it. The guard keyed off the
+        // MODE, so an induced-latency run (loopback carrier, delay knob on,
+        // which is the whole controlled experiment) had its input delay
+        // silently thrown away and measured pipelining doing nothing. The
+        // right question is not "which mode is this" but "is there any latency
+        // here at all", and with the induction knobs on there certainly is.
+        if (g_net_mode == kNetLoopback && g_input_delay > 0 &&
+            g_delay_ms <= 0 && g_jitter_ms <= 0) {
             std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_INPUT_DELAY is "
-                         "for a wire with a round trip on it; loopback has "
-                         "none. Ignored.\n");
+                         "for a wire with a round trip on it; a bare loopback "
+                         "has none and no delay is being induced. Ignored.\n");
             g_input_delay = 0;
         }
         if (g_input_delay > 0)

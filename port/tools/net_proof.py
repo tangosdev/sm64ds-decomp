@@ -552,6 +552,20 @@ def rungN7(a):
         p1 = pace(res1, FRAMES, base["wall"])
         starved = [num(report_line(res1[k]), "starved", int, -1)
                    for k in ("tp", "tc")]
+        # DID THE KNOB ACTUALLY TAKE? Asserted because it once did not: the
+        # carrier refused SM64DS_COMMS_INPUT_DELAY on a loopback carrier, which
+        # is exactly what this rig runs, so the pipelined arm quietly ran
+        # unpipelined and the rung reported "pipelining buys nothing". A
+        # mitigation measured through a knob that silently did not apply is the
+        # worst possible result: a real conclusion drawn from a run that never
+        # happened.
+        indelay = [num(report_line(res1[k]), "indelay", int, -1)
+                   for k in ("tp", "tc")]
+        ok &= M.verdict(indelay == [n, n],
+                        "rungN7 RTT %d ms the input-delay knob ACTUALLY TOOK | "
+                        "indelay=%s, wanted [%d, %d]. Anything else means the "
+                        "comparison below is measuring two identical arms."
+                        % (rtt, indelay, n, n))
         rows.append((rtt, n, p0, p1, starved))
         gain = p0["wall"] / p1["wall"] if p1["wall"] else 0.0
         print("      RTT %3d ms: stop-and-wait %6.1fs  ->  input delay %d "
