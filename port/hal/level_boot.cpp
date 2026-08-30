@@ -2203,40 +2203,36 @@ static void port_load1(void *t, int a, unsigned b)
     const unsigned char saved_local = data_0209f250;
     const unsigned char saved_count = data_0209f21c;
     data_0209f250 = 0;
-    /* AND THE COUNT IS HELD AT 1 ACROSS THE LOAD -- the orphan-shadow fix.
-       Run mg16 lane MP3, field failure 3.
+    /* THE COUNT HOLD IS RETIRED (it pinned data_0209f21c at 1 across the
+       load, run mg16 lane MP3, field failure 3 -- the orphan-shadow fix).
 
-       The ROM's loop spawns player i from entrance record p3 + i, and this
-       level has ONE player start; record 1 is a different door. For i=1 it
-       therefore called Actor::Spawn on whatever that record names, got
-       something back that was not a usable player, and discarded the pointer
-       (data_0209f394[1] measured NULL) -- but THE ACTOR IT CREATED IS ALREADY
-       LINKED INTO THE PROCESSING LIST. It ticks, its Behavior registers a
-       ShadowModel node, and nothing ever draws a body for it, because the
-       render loop draws data_0209f394[] and that slot points at the player
-       port_vs_spawn_extra_players makes instead.
+       The orphan it hid: the ROM's loop spawned player i from entrance
+       record p3 + i, then read byte data_0209fc5c[i] as 0 through the old
+       int-stride seat and DISCARDED the pointer (data_0209f394[1] measured
+       NULL) -- but THE ACTOR IT CREATED WAS ALREADY LINKED INTO THE
+       PROCESSING LIST. It ticked, its Behavior registered a ShadowModel
+       node, and nothing ever drew a body for it, because the render loop
+       draws data_0209f394[] and that slot pointed at the player
+       port_vs_spawn_extra_players made instead. An actor that casts a shadow
+       and has no body is exactly the owner's "a shadow as if a third thing
+       should be there". MEASURED, with SM64DS_SHADOW_TRIS: one player draws
+       88 shadow triangles (64 player + 24 scenery), so two players should
+       draw 152; it drew 216, one whole extra player-sized caster. The hold's
+       own comment blamed the level data ("record 1 is a different door, not
+       a Player") -- that was a misread of a correct measurement: the discard
+       was the fc5c width bug, and the record was a player start all along.
 
-       An actor that casts a shadow and has no body is exactly the owner's
-       "a shadow as if a third thing should be there", and it is attached to
-       the remote player because that is the slot whose start was missing.
-
-       MEASURED, with SM64DS_SHADOW_TRIS: one player draws 88 shadow triangles
-       (64 player + 24 scenery), so two players should draw 152. It drew 216 --
-       one whole extra player-sized caster.
-
-       THE HOLD IS RETIRED. The orphan caster it hid was never about the
-       entrance records at all: the discard was byte fc5c[i] reading 0 through
-       the int-stride seat (the width bug fixed in hal/scene_vs_menu.cpp's
-       ready-bytes host). With the flags at the ROM's byte stride the loop
-       KEEPS every player it spawns, so the loop is simply right: player i
-       comes from record p3+i, which is the ROM's whole answer for where the
-       other players start. On the four VS arenas those records exist --
-       decoded from the overlays themselves, level 51/ov059 carries exactly
-       four player records at (-1200,254,6800) (-1387,254,6667) (-987,254,6567)
-       (-1587,254,6467), ov051/ov037/ov050 the same shape -- and on castle
-       grounds record p3+1 is another door carrying the SAME raw (measured, the
-       failed class-equality experiment below), so what the loop spawns there
-       is a real second player at that door, kept and rendered, no orphan.
+       With the flags at the ROM's byte stride (the fix in
+       hal/scene_vs_menu.cpp's ready-bytes host) the loop KEEPS every player
+       it spawns, so the loop is simply right: player i comes from record
+       p3+i, which is the ROM's whole answer for where the other players
+       start. On the four VS arenas those records exist -- decoded from the
+       overlays themselves, level 51/ov059 carries exactly four player
+       records at (-1200,254,6800) (-1387,254,6667) (-987,254,6567)
+       (-1587,254,6467), ov051/ov037/ov050 the same shape -- and castle
+       grounds' records 0-3 are those SAME four player starts, byte-identical
+       to level 51's (param 0x0000, raw 0), so what the loop spawns there is
+       a real second player on its own start, kept and rendered, no orphan.
 
        The two failed conditions this block used to document (total-record
        count; class equality between records p3 and p3+1) failed because they
@@ -4151,13 +4147,15 @@ const char *port_actor_class_name(unsigned id);
  * its `e++` at the bottom of the loop -- and since the fc5c width fix that
  * loop KEEPS what it spawns, so wherever record p3+i exists the ROM's own
  * path fills the slot and this function finds it filled and does nothing.
- * The VS arenas carry four consecutive player records; castle grounds'
- * record p3+1 is another door with the SAME raw, so even there the loop
- * makes a real second player. (This header used to claim that record was
- * "not a Player" and quote a measured slot1=NULL as proof the level data was
- * missing -- both readings were the width bug: byte fc5c[1] read 0 through
- * the int-stride seat, so _Z19LoadEntranceObjects... DISCARDED the player it
- * had spawned. The measurement was real; the mechanism was not the records.)
+ * The VS arenas carry four consecutive player records, and castle grounds'
+ * records 0-3 are those SAME four player starts, byte-identical to level
+ * 51's (param 0x0000, raw 0) -- so there the loop makes a real second
+ * player on its own start. (This header used to claim record p3+1 was "a
+ * different door, not a Player" and quote a measured slot1=NULL as proof
+ * the level data was missing -- both readings were the width bug: byte
+ * fc5c[1] read 0 through the int-stride seat, so
+ * _Z19LoadEntranceObjects... DISCARDED the player it had spawned. The
+ * measurement was real; the mechanism was not the records.)
  *
  * What is left for this function is the case the DS data never exercises: a
  * boot that wants more players than the table has records past p3 -- the

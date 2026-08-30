@@ -102,18 +102,27 @@ def two_instances(name, frames, extra_p=None, extra_c=None, port=PORT_BASE,
 # ---------------------------------------------------------------------------
 # RUNG A -- TWO BODIES IN ONE PROCESS, AND THE ROM'S SOLVER BETWEEN THEM
 # ---------------------------------------------------------------------------
+OVERLAP_AT = 90     # frame the fixture fires: both bodies are out of
+                    # St_LevelEnter_Main (slot 0 leaves around f31) and idle
+
+
 def rungA():
     """No network. Two players, two cylinders, one solver.
 
-    The two are spawned 40.0 units apart against body cylinders of radius 40.0
-    each (hal/level_boot.cpp's port_vs_spawn_extra_players), so they OVERLAP by
-    40.0 on frame 0 and CylinderClsn::Process's symmetric branch has real work
-    to do immediately. The assertion is that it did it: both bodies exist, they
-    carry different mPlayerNo, and the gap between them GREW to the sum of the
-    radii, which is where a correct solver stops pushing.
+    THE FIXTURE IS FORCED, NOT SPAWNED. This rung used to lean on the
+    fabricated stand-in spawn that put the pair 40 units apart at boot; since
+    the fc5c width fix the ROM's own entrance loop seats every player on its
+    real start, and castle grounds' records 0 and 1 -- both PLAYER STARTS,
+    identical to the VS arena's -- are 229 units apart, so two correct spawns
+    never touch and a spawn-time overlap no longer exists to measure. The
+    fixture is SM64DS_VS_OVERLAP_AT instead (hal/input_probe.cpp): at frame
+    90 slot 1 is placed at slot 0 + 40 units against body cylinders of
+    radius 40.0 each, so they overlap by 40.0 and CylinderClsn::Process's
+    symmetric branch has real work to do. The assertion is that it did it.
     """
     rc, t, d = one_instance("rA_two_bodies", "300",
-                            {"SM64DS_VS_PLAYERS": "2"})
+                            {"SM64DS_VS_PLAYERS": "2",
+                             "SM64DS_VS_OVERLAP_AT": str(OVERLAP_AT)})
     r0, r1 = rows(t, 0), rows(t, 1)
     ok = True
     ok &= M.verdict(rc == 0 and bool(r0) and bool(r1),
@@ -130,24 +139,36 @@ def rungA():
     ok &= M.verdict(r0[-1]["actor"] != r1[-1]["actor"],
                     "rungA they are DIFFERENT actors | %s vs %s"
                     % (r0[-1]["actor"], r1[-1]["actor"]))
-    # AND DIFFERENT CHARACTERS, read off the actor's own +0x6d9 rather than off
-    # the table that is supposed to seat it. This is a rung because the two
-    # disagreed once: the seat's comment said slot i gets character i and both
-    # players came up Mario, because the character is spawn-flag bits 0..2 and
-    # the seat was filling bits 3..5. A capture where the owner cannot tell the
-    # two players apart is worth failing a rung over.
-    ok &= M.verdict(r0[-1]["char"] == 0 and r1[-1]["char"] == 1,
-                    "rungA and DIFFERENT CHARACTERS | slot0 char=%d (Mario) "
-                    "slot1 char=%d (Luigi), read off each actor's +0x6d9"
+    # THE CHARACTER CONTRACT IS THE ROM'S, read off each actor's own +0x6d9.
+    # On a non-VS multiplayer boot Player::InitResources takes the character
+    # from spawn-flag bits 0..2, and the entrance loop fills those from
+    # data_0209caa0[0x41] -- the SAVE FILE's character, the SAME for every
+    # slot. Two distinguishable characters was never a ROM property on this
+    # path; it was the retired stand-in's choice. (The VS path's contract --
+    # LoadEntranceObjects forces character 3 on every slot -- is asserted by
+    # vs_slot1_solo_check.py and the online proof against a real arena.)
+    ok &= M.verdict(r0[-1]["char"] == r1[-1]["char"],
+                    "rungA BOTH slots carry the save-file character | slot0 "
+                    "char=%d slot1 char=%d, read off each actor's +0x6d9 "
+                    "(the ROM's non-VS contract: one save, one character, "
+                    "every slot)"
                     % (r0[-1]["char"], r1[-1]["char"]))
 
-    gap0 = abs(r1[0]["x"] - r0[0]["x"])
-    gapN = abs(r1[-1]["x"] - r0[-1]["x"])
+    ok &= M.verdict("[vsfix]" in t,
+                    "rungA the overlap fixture FIRED (SM64DS_VS_OVERLAP_AT=%d)"
+                    % OVERLAP_AT)
+    a0 = [r for r in r0 if r["f"] >= OVERLAP_AT]
+    a1 = [r for r in r1 if r["f"] >= OVERLAP_AT]
+    if not (a0 and a1):
+        M.verdict(False, "rungA no probe rows after the overlap frame")
+        return False
+    gap0 = abs(a1[0]["x"] - a0[0]["x"])
+    gapN = abs(a1[-1]["x"] - a0[-1]["x"])
     # 40.0 and 80.0 units in Fix12 (<< 12).
     ok &= M.verdict(gap0 < 80 * 4096,
-                    "rungA they SPAWN OVERLAPPING | gap %.1f units against a "
-                    "combined body radius of 80.0, so the solver has real work "
-                    "on frame 0" % (gap0 / 4096.0))
+                    "rungA they OVERLAP at the fixture frame | gap %.1f units "
+                    "against a combined body radius of 80.0, so the solver "
+                    "has real work to do" % (gap0 / 4096.0))
     ok &= M.verdict(gapN > gap0,
                     "rungA THE SOLVER PUSHED THEM APART | gap %.1f -> %.1f units"
                     % (gap0 / 4096.0, gapN / 4096.0))
@@ -156,18 +177,16 @@ def rungA():
     # in. Slot 1 has NO INPUT AT ALL in this rung: one process, no transport,
     # and data_0209fc68 set so each Player reads its own (empty) pad rather than
     # mirroring player 0's. A body with no input does not walk. So every unit
-    # slot 1 travels sideways is a unit something PUSHED it, and the only thing
-    # in contact with it is player 0's body cylinder.
-    #
-    # An earlier version of this rung asserted the pair ended at exactly the sum
-    # of the radii, which was true while both players mirrored one pad and both
-    # walked together. With independent input the local player walks away and
-    # the resting distance stops being the observable. The push is.
-    ok &= M.verdict(span(r1, "x") > 0,
+    # slot 1 travels sideways AFTER the fixture frame is a unit something
+    # PUSHED it, and the only thing in contact with it is player 0's body
+    # cylinder. (The span is taken over post-fixture rows only, so the
+    # placement itself contributes nothing to it.)
+    ok &= M.verdict(span(a1, "x") > 0,
                     "rungA THE UN-DRIVEN BODY WAS PUSHED | slot1 has no input "
                     "of its own and still travelled %d Fix12 (%.1f units) on "
-                    "x; the only thing touching it is slot0's body cylinder"
-                    % (span(r1, "x"), span(r1, "x") / 4096.0))
+                    "x after the fixture frame; the only thing touching it is "
+                    "slot0's body cylinder"
+                    % (span(a1, "x"), span(a1, "x") / 4096.0))
     print("      evidence: %s" % os.path.join(d, "run.log"))
     return ok
 
@@ -183,12 +202,16 @@ def rungS():
 
     A tester saw the remote player walking with a SECOND shadow attached. The
     cause was not the shadow pass -- ShadowModel::RenderAll walks a linked list
-    and is already correctly per-caster. It was an ORPHAN ACTOR: the ROM's
-    entrance loop spawns player i from entrance record p3 + i, this level has
-    one player start, and for i=1 it spawned whatever record 1 names, discarded
-    the pointer (data_0209f394[1] measured NULL), and left the actor LINKED
-    INTO THE PROCESSING LIST. It ticked, registered a shadow, and no body was
-    ever drawn for it.
+    and is already correctly per-caster. It was an ORPHAN ACTOR, and the
+    discard was the fc5c stride bug, not the entrance records: the ROM's
+    entrance loop spawns player i from entrance record p3 + i (record 1 here
+    is a real player start, byte-identical to the VS arena's), spawned a real
+    second player, then read byte data_0209fc5c[1] as 0 through the
+    int-stride seat and DISCARDED the pointer (data_0209f394[1] measured
+    NULL) -- leaving the actor LINKED INTO THE PROCESSING LIST. It ticked,
+    registered a shadow, and no body was ever drawn for it. With the flags at
+    the ROM's byte stride the loop keeps what it spawns, which is why this
+    census is green for a real reason and stays a rung.
 
     The census is arithmetic and that is what makes it a rung rather than an
     eyeball: a player casts 64 shadow triangles and this level's scenery casts
@@ -376,17 +399,19 @@ def rung10():
 def rung11():
     """Two processes, and the two characters push each other.
 
-    Both instances spawn their pair overlapping (rung A's arrangement), so the
-    solver acts immediately; what rung 11 adds over rung A is that the SECOND
-    body is being driven from another process. The assertion is that in the
-    PARENT's world both bodies move and end at the solver's resting distance,
-    with the child's own input on the wire the whole time.
+    Both instances force the pair overlapped at frame 90 (rung A's fixture,
+    set in BOTH environments so the lockstep worlds stay identical); what
+    rung 11 adds over rung A is that the SECOND body is being driven from
+    another process. The assertion is that in the PARENT's world both bodies
+    move and the contact pushed the pair out to at least the solver's
+    resting distance, with the child's own input on the wire the whole time.
     """
+    fix = {"SM64DS_VS_PLAYERS": "2",
+           "SM64DS_VS_OVERLAP_AT": str(OVERLAP_AT)}
     rp, rc, tp, tc = two_instances(
         "r11_contact", "600", port=PORT_BASE + 32,
-        extra_c={"SM64DS_COMMS_INJECT": "key=0x40",
-                 "SM64DS_VS_PLAYERS": "2"},
-        extra_p={"SM64DS_VS_PLAYERS": "2"})
+        extra_c=dict(fix, SM64DS_COMMS_INJECT="key=0x40"),
+        extra_p=dict(fix))
     p0, p1 = rows(tp, 0), rows(tp, 1)
     ok = True
     ok &= M.verdict(rp == 0 and rc == 0 and bool(p0) and bool(p1),
@@ -394,6 +419,15 @@ def rung11():
                     "bodies (slot0 rows=%d slot1 rows=%d)"
                     % (rp, rc, len(p0), len(p1)))
     if not (p0 and p1):
+        return False
+
+    ok &= M.verdict("[vsfix]" in tp and "[vsfix]" in tc,
+                    "rung11 the overlap fixture FIRED in both worlds "
+                    "(SM64DS_VS_OVERLAP_AT=%d)" % OVERLAP_AT)
+    a0 = [r for r in p0 if r["f"] >= OVERLAP_AT]
+    a1 = [r for r in p1 if r["f"] >= OVERLAP_AT]
+    if not (a0 and a1):
+        M.verdict(False, "rung11 no probe rows after the overlap frame")
         return False
 
     # THE GAP IS THE EVIDENCE, not the contact flag, and the reason is a real
@@ -404,28 +438,36 @@ def rung11():
     # the clear and reads 0 even on frames where a push happened. Asserting on
     # it would be asserting on the sampling point.
     #
-    # The separation is not sampled, it is a state: two bodies that started
-    # overlapping and are now exactly the sum of their radii apart were pushed
-    # there, and nothing else in the game moves two players to precisely that
-    # distance and holds them.
-    gap0 = abs(p1[0]["x"] - p0[0]["x"])
-    gapN = abs(p1[-1]["x"] - p0[-1]["x"])
-    contact = any(r["touched"] for r in p0) or any(r["touched"] for r in p1)
-    ok &= M.verdict(span(p0, "x") > 0 and span(p1, "x") > 0,
-                    "rung11 BOTH characters moved in the host world | slot0 "
-                    "x-span=%d slot1 x-span=%d" % (span(p0, "x"), span(p1, "x")))
+    # The push is asserted as the LARGEST separation after the fixture frame,
+    # not the final one: both bodies are walking under real input here (the
+    # parent's selftest key, the child's injected key over the wire), so where
+    # they END is geometry, but two bodies that were 40 units overlapped and
+    # later measure at least the sum of their radii apart were pushed there by
+    # the solver -- walking alone cannot be told apart from pushing at any
+    # single later frame, which is exactly why the pre-fixture version of this
+    # assertion went vacuous the day the spawns stopped overlapping.
+    gap0 = abs(a1[0]["x"] - a0[0]["x"])
+    by_f = {r["f"]: r["x"] for r in a0}
+    gap_max = max(abs(r["x"] - by_f[r["f"]])
+                  for r in a1 if r["f"] in by_f)
+    contact = any(r["touched"] for r in a0) or any(r["touched"] for r in a1)
+    ok &= M.verdict(span(a0, "x") > 0 and span(a1, "x") > 0,
+                    "rung11 BOTH characters moved in the host world after the "
+                    "fixture | slot0 x-span=%d slot1 x-span=%d"
+                    % (span(a0, "x"), span(a1, "x")))
     ok &= M.verdict(gap0 < 80 * 4096,
-                    "rung11 they START OVERLAPPING, so the solver has work to "
-                    "do | gap %.1f units against a combined radius of 80.0"
-                    % (gap0 / 4096.0))
-    ok &= M.verdict(gapN >= 80 * 4096 - 4096,
+                    "rung11 they OVERLAP at the fixture frame, so the solver "
+                    "has work to do | gap %.1f units against a combined "
+                    "radius of 80.0" % (gap0 / 4096.0))
+    ok &= M.verdict(gap_max >= 80 * 4096 - 4096,
                     "rung11 AND THE CONTACT PUSHED THEM APART | gap %.1f -> "
-                    "%.1f units; 80.0 is where CylinderClsn::Process's overlap "
-                    "reaches zero and it stops pushing. The remote body is "
-                    "driven by the OTHER PROCESS's input the whole time. "
-                    "(cylinder contact flag sampled non-zero: %s -- see the "
-                    "note above, the flag is cleared before this probe runs)"
-                    % (gap0 / 4096.0, gapN / 4096.0, contact))
+                    "max %.1f units; 80.0 is where CylinderClsn::Process's "
+                    "overlap reaches zero and it stops pushing. The remote "
+                    "body is driven by the OTHER PROCESS's input the whole "
+                    "time. (cylinder contact flag sampled non-zero: %s -- see "
+                    "the note above, the flag is cleared before this probe "
+                    "runs)"
+                    % (gap0 / 4096.0, gap_max / 4096.0, contact))
     return ok
 
 
