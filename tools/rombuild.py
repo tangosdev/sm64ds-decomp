@@ -322,9 +322,11 @@ def _isolate(obj, rel, syms, data_sink=None, compiler_only=None):
         if len(selected) == 1:
             plan = OI.isolate(obj, selected[0])
         else:
-            dead = (compiler_only or {}).get(rel.replace("\\", "/"), [])
+            pol = (compiler_only or {}).get(rel.replace("\\", "/")) or {}
+            dead = pol.get("deadstrip") or []
             if dead:
-                reduced, dead_plan = OI.derive_deadstrip(obj.read_bytes(), dead)
+                reduced, dead_plan = OI.derive_deadstrip(
+                    obj.read_bytes(), dead, pol.get("expect") or {})
                 if reduced is None:
                     return ("compiler-only deadstrip refused: "
                             + str(dead_plan.get("error")))
@@ -374,13 +376,94 @@ def enrolled_symbols():
             for rel, rows in grouped.items()}
 
 
+DISPOSITIONS = ("deadstrip", "deadstrip-duplicate")
+
+_SYM_SIZES = None
+_MOD_IMAGES = {}
+
+
+def _symbol_sizes():
+    """{(module, addr): size} for every sized function symbol in config/.
+
+    Built from the same ``symbols.txt`` files the delink reads, so the size that
+    proves a duplicate body is the size the ROM home is actually carved at.
+    """
+    global _SYM_SIZES
+    if _SYM_SIZES is None:
+        import enroll as E
+        out = {}
+        for path, module in RL.module_universe():
+            for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+                m = E.SYM_RE.match(line)
+                if m:
+                    key = (RL.normalize_module(module), int(m.group(4), 16))
+                    out[key] = int(m.group(3), 16)
+        _SYM_SIZES = out
+    return _SYM_SIZES
+
+
+def _rom_bytes(module, addr, size):
+    """The cartridge's own bytes, or None when the module image is unavailable."""
+    import modules as MOD
+    key = RL.normalize_module(module)
+    if key not in _MOD_IMAGES:
+        hit = next((m for m in MOD.modules()
+                    if RL.normalize_module(m["name"]) == key
+                    or (key == "arm9" and m["name"] == "main")), None)
+        _MOD_IMAGES[key] = (hit["bin"].read_bytes(), hit["base"]) if hit else None
+    img = _MOD_IMAGES[key]
+    if img is None:
+        return None
+    data, base = img
+    off = addr - base
+    return data[off:off + size] if 0 <= off else None
+
+
+def _duplicate_body(symbol, homes_for):
+    """The cartridge's own bytes for a vague-linkage symbol's single configured home.
+
+    Returns ``(bytes, None)`` or ``(None, reason)``.  Several homes means the name is
+    ambiguous and the evidence is refused rather than guessed at.
+    """
+    if len(homes_for) != 1:
+        return None, (f"{symbol} has {len(homes_for)} configured homes "
+                      f"{homes_for}; a duplicate body needs exactly one")
+    module, addr = homes_for[0]
+    size = _symbol_sizes().get((RL.normalize_module(module), addr))
+    if not size:
+        return None, f"{symbol}: no sized function symbol at {module}:0x{addr:08x}"
+    body = _rom_bytes(module, addr, size)
+    if body is None or len(body) != size:
+        return None, f"{symbol}: could not read {size} ROM bytes at {module}:0x{addr:08x}"
+    return body, None
+
+
 def compiler_only_policies(enrolled=None, manifest=None, homes=None):
     """Exact dead-strip allow-lists for promoted multi-function sources.
 
-    The manifest is evidence, not a wildcard: every row must name one homeless,
-    unlicensed function and explicitly request ``deadstrip`` with a reason.  Object
-    surgery remains objisolate's job; this preflight only proves the checked-in policy
-    cannot hide a function that has a retail address.
+    The manifest is evidence, not a wildcard: every row must name one unlicensed
+    function and explicitly request a disposition with a reason.  Object surgery
+    remains objisolate's job; this preflight only proves the checked-in policy cannot
+    hide a function that has a retail address.
+
+    Two dispositions, and the difference is the whole safety argument:
+
+    ``deadstrip``
+        The function is *homeless* -- mwcc emitted a body (a D2 variant, an inline
+        helper) that the retail link discarded and no configured symbol names.
+        Refused the moment it acquires a ROM home.
+
+    ``deadstrip-duplicate``
+        The function *must* have a ROM home, and the row must name it.  This is the
+        vague-linkage case: ``_ZN7Vector3D1Ev`` and friends are re-emitted by every TU
+        that destroys the type, while the cartridge keeps one copy and one enrolled
+        source owns it.  Licensing it here is sound only because the caller hands
+        objisolate the cartridge's bytes for that home and objisolate refuses unless
+        this object's copy is byte-identical vague-linkage output.  Discarding a
+        duplicate cannot lose the address: the owning source still supplies it, and if
+        it did not the link would fail on an undefined symbol rather than quietly
+        producing a hole.  This is what let a reconstructed TU be promoted at all --
+        before it, every TU holding a ``Vector3`` was stuck at text-verified.
     """
     data = TUM.load() if manifest is None else manifest
     active = None if enrolled is None else {
@@ -392,7 +475,11 @@ def compiler_only_policies(enrolled=None, manifest=None, homes=None):
         rows = entry.get("compiler_only_output") or []
         if not rows:
             continue
-        source = str(entry.get("source", "")).replace("\\", "/")
+        # A promoted entry is enrolled under promoted_source; keying on the
+        # src_tu path would let `active` filter the policy out and the build
+        # would then refuse the very object the policy was written for.
+        source = str(entry.get("promoted_source")
+                     or entry.get("source", "")).replace("\\", "/")
         if not source:
             errors.append(f"{entry.get('id', '<unknown>')}: compiler-only policy has no source")
             continue
@@ -402,7 +489,7 @@ def compiler_only_policies(enrolled=None, manifest=None, homes=None):
             errors.append(f"{source}: compiler-only policy is declared by multiple entries")
             continue
         licensed = {row.get("symbol") for row in entry.get("functions", [])}
-        wanted = []
+        wanted, expect = [], {}
         for i, row in enumerate(rows):
             if not isinstance(row, dict):
                 errors.append(f"{source}: compiler_only_output[{i}] is not an object")
@@ -411,19 +498,32 @@ def compiler_only_policies(enrolled=None, manifest=None, homes=None):
             if not symbol:
                 errors.append(f"{source}: compiler_only_output[{i}] has no symbol")
                 continue
-            if row.get("disposition") != "deadstrip":
-                errors.append(f"{source}: {symbol} disposition must be deadstrip")
+            disposition = row.get("disposition")
+            if disposition not in DISPOSITIONS:
+                errors.append(f"{source}: {symbol} disposition must be one of "
+                              f"{list(DISPOSITIONS)}")
             if not str(row.get("reason", "")).strip():
                 errors.append(f"{source}: {symbol} needs a non-empty reason")
             if symbol in licensed:
                 errors.append(f"{source}: {symbol} is licensed by the manifest")
-            if homes.get(symbol):
-                errors.append(f"{source}: {symbol} has configured ROM home(s) "
-                              f"{homes[symbol]}")
             if symbol in wanted:
                 errors.append(f"{source}: duplicate compiler-only symbol {symbol}")
+            if disposition == "deadstrip-duplicate":
+                if not homes.get(symbol):
+                    errors.append(f"{source}: {symbol} is declared a duplicate but has "
+                                  f"no configured ROM home")
+                else:
+                    body, why = _duplicate_body(symbol, homes[symbol])
+                    if why:
+                        errors.append(f"{source}: {why}")
+                    else:
+                        expect[symbol] = body
+            elif homes.get(symbol):
+                errors.append(f"{source}: {symbol} has configured ROM home(s) "
+                              f"{homes[symbol]}; declare it deadstrip-duplicate and "
+                              f"prove the body, or drop the policy")
             wanted.append(symbol)
-        out[source] = wanted
+        out[source] = {"deadstrip": wanted, "expect": expect}
     if errors:
         raise BuildError("compiler-only policy", 1, "\n".join(errors))
     return out

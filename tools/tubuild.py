@@ -2005,7 +2005,7 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
               if s["type"] == "STT_FUNC" and not s["name"].startswith("$")
               and s["name"] not in licensed}
     policy = entry.get("compiler_only_output", [])
-    reasons, wanted = [], []
+    reasons, wanted, duplicates = [], [], set()
     if policy is None:
         policy = []
     if not isinstance(policy, list):
@@ -2018,10 +2018,17 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
         if not sym:
             reasons.append(f"compiler_only_output[{i}] has no symbol")
             continue
-        if row.get("disposition") != "deadstrip":
+        if row.get("disposition") not in ("deadstrip", "deadstrip-duplicate"):
             reasons.append(f"compiler_only_output {sym} has unsupported disposition "
-                           f"{row.get('disposition')!r}; only exact deadstrip is implemented")
+                           f"{row.get('disposition')!r}; expected deadstrip or "
+                           f"deadstrip-duplicate")
             continue
+        if row.get("disposition") == "deadstrip-duplicate":
+            # The vague-linkage case: the symbol MUST have a ROM home that another
+            # source owns. rombuild proves the body against the cartridge before it
+            # discards anything; this scratch path only links, so it accepts the
+            # declaration and leaves the proof to the production build.
+            duplicates.add(sym)
         if not str(row.get("reason", "")).strip():
             reasons.append(f"compiler_only_output {sym} needs a non-empty reason")
         if sym in licensed:
@@ -2037,7 +2044,11 @@ def apply_compiler_only_policy(obj_bytes, entry, homes=None):
         reasons.append(f"unlicensed function {sym} has no compiler_only_output policy")
     homes = all_symbol_homes() if homes is None else homes
     for sym in wanted:
-        if homes.get(sym):
+        if sym in duplicates:
+            if not homes.get(sym):
+                reasons.append(f"compiler_only_output {sym} is declared a duplicate "
+                               f"but has no configured ROM home")
+        elif homes.get(sym):
             reasons.append(f"compiler_only_output {sym} has configured ROM home(s) "
                            f"{homes[sym]}; it is not compiler-only")
     if reasons:

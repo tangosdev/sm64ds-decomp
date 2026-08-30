@@ -182,6 +182,42 @@ class Isolate(unittest.TestCase):
         self.assertIsNone(singular_plan["error"])
         self.assertIsNotNone(singular)
 
+    def test_duplicate_deadstrip_demands_the_cartridge_body(self):
+        """`expect` is what makes discarding a symbol WITH a ROM home sound.
+
+        The vague-linkage case -- types.h's empty ~Vector3, re-emitted by every TU
+        that destroys one -- is not compiler-only: the cartridge has a copy and an
+        enrolled source owns it. Licensing that here is only safe while this object's
+        copy is provably the same body, so a wrong body must refuse rather than warn.
+        """
+        # An INLINE destructor is what makes the variant vague-linkage, which is
+        # exactly the shape this path exists for: every TU that destroys the type
+        # emits its own copy.
+        obj = self.build("struct V { int v; ~V(){} };\n"
+                         "void g(){ V v; v.v = 1; }\n")
+        raw = obj.read_bytes()
+        real = self._section_bytes(raw, "_ZN1VD1Ev")
+
+        out, plan = OI.derive_deadstrip(raw, ["_ZN1VD1Ev"], {"_ZN1VD1Ev": real})
+        self.assertIsNone(plan["error"])
+        self.assertIsNotNone(out)
+
+        _out, plan = OI.derive_deadstrip(raw, ["_ZN1VD1Ev"],
+                                         {"_ZN1VD1Ev": bytes(len(real))})
+        self.assertIn("not the cartridge's body", plan["error"])
+
+        _out, plan = OI.derive_deadstrip(raw, ["_ZN1VD1Ev"], {"_ZN1VD2Ev": real})
+        self.assertIn("was not requested", plan["error"])
+
+    def _section_bytes(self, raw, name):
+        import io
+        from elftools.elf.elffile import ELFFile
+        elf = ELFFile(io.BytesIO(raw))
+        secs = list(elf.iter_sections())
+        sym = next(s for s in elf.get_section_by_name(".symtab").iter_symbols()
+                   if s.name == name and isinstance(s["st_shndx"], int))
+        return bytes(secs[sym["st_shndx"]].data())
+
     def test_exact_deadstrip_removes_unreferenced_compiler_only_d2(self):
         """A whole-TU scratch link may model the retail link's discarded D2.
 

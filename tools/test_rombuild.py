@@ -125,7 +125,7 @@ class RomBuildEnrollment(unittest.TestCase):
     def test_multi_source_applies_exact_compiler_only_deadstrip_first(self):
         obj = self.repo / "Pair.o"
         obj.write_bytes(b"raw object")
-        policy = {"src/Pair.cpp": ["_ZN4PairC2Ev"]}
+        policy = {"src/Pair.cpp": {"deadstrip": ["_ZN4PairC2Ev"], "expect": {}}}
         with mock.patch.object(
                 RB.OI, "derive_deadstrip",
                 return_value=(b"reduced object", {"error": None})) as deadstrip, \
@@ -134,7 +134,7 @@ class RomBuildEnrollment(unittest.TestCase):
             self.assertIsNone(RB._isolate(
                 obj, "src/Pair.cpp", {"src/Pair.cpp": ["First", "Second"]},
                 compiler_only=policy))
-        deadstrip.assert_called_once_with(b"raw object", ["_ZN4PairC2Ev"])
+        deadstrip.assert_called_once_with(b"raw object", ["_ZN4PairC2Ev"], {})
         many.assert_called_once_with(obj, ["First", "Second"])
         self.assertEqual(obj.read_bytes(), b"reduced object")
 
@@ -165,7 +165,65 @@ class RomBuildEnrollment(unittest.TestCase):
         }]}
         self.assertEqual(
             RB.compiler_only_policies(manifest=manifest, homes={}),
-            {"src/Pair.cpp": ["_ZN4PairC2Ev"]})
+            {"src/Pair.cpp": {"deadstrip": ["_ZN4PairC2Ev"], "expect": {}}})
+
+    def test_duplicate_disposition_requires_a_rom_home(self):
+        """The two dispositions have opposite preconditions, deliberately."""
+        manifest = {"entries": [{
+            "id": "arm9/Pair",
+            "source": "src/Pair.cpp",
+            "functions": [{"symbol": "First"}, {"symbol": "Second"}],
+            "compiler_only_output": [{
+                "symbol": "_ZN7Vector3D1Ev", "disposition": "deadstrip-duplicate",
+                "reason": "vague-linkage copy of types.h's empty ~Vector3"
+            }]
+        }]}
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.compiler_only_policies(manifest=manifest, homes={})
+        self.assertIn("no configured ROM home", raised.exception.output)
+
+    def test_duplicate_disposition_refuses_an_ambiguous_home(self):
+        """Two homes means the name is ambiguous; the body proof would be a guess."""
+        manifest = {"entries": [{
+            "id": "arm9/Pair",
+            "source": "src/Pair.cpp",
+            "functions": [{"symbol": "First"}],
+            "compiler_only_output": [{
+                "symbol": "_ZN7Vector3D1Ev", "disposition": "deadstrip-duplicate",
+                "reason": "vague-linkage copy"
+            }]
+        }]}
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.compiler_only_policies(manifest=manifest, homes={
+                "_ZN7Vector3D1Ev": [("arm9", 0x02000008), ("ov002", 0x020f0000)]})
+        self.assertIn("2 configured homes", raised.exception.output)
+
+    def test_an_unknown_disposition_is_refused(self):
+        manifest = {"entries": [{
+            "id": "arm9/Pair", "source": "src/Pair.cpp",
+            "functions": [{"symbol": "First"}],
+            "compiler_only_output": [{"symbol": "X", "disposition": "keep",
+                                      "reason": "why not"}]}]}
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.compiler_only_policies(manifest=manifest, homes={})
+        self.assertIn("disposition must be one of", raised.exception.output)
+
+    def test_policy_keys_on_the_promoted_path_not_the_src_tu_path(self):
+        """A promoted entry is enrolled under promoted_source.
+
+        Keying on `source` would let the enrolled-set filter drop the policy and the
+        build would then refuse the very object it was written for.
+        """
+        manifest = {"entries": [{
+            "id": "ov100/TU",
+            "source": "src_tu/actors/TU.cpp",
+            "promoted_source": "src/actors/TU.cpp",
+            "functions": [{"symbol": "First"}],
+            "compiler_only_output": [{"symbol": "_ZN1PD2Ev", "disposition": "deadstrip",
+                                      "reason": "homeless variant"}]}]}
+        self.assertEqual(
+            RB.compiler_only_policies({"src/actors/TU.cpp"}, manifest=manifest, homes={}),
+            {"src/actors/TU.cpp": {"deadstrip": ["_ZN1PD2Ev"], "expect": {}}})
 
     def test_compiler_only_policy_ignores_unenrolled_shadow_manifests(self):
         manifest = {"entries": [{
