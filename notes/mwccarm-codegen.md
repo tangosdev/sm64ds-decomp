@@ -3750,3 +3750,42 @@ asr r5,r5,#0x10 / asr r0,r0,#0x10`). The rest drift in size (`1.2/sp3`,
 is stable across three years of compiler releases is a property of the SOURCE
 SHAPE, not of the build -- so "wrong build" is not an available explanation for
 this residue, and neither is it for the class.
+
+### 6bn addendum 3: correction to the mechanism claim, and the last closed axes
+
+**Correction, and it matters for whoever picks this up.** Addendum 1 reads as if the
+narrowing conversion IS the ROM's mechanism. It cannot be: the ROM's z truncation
+is lowered at the USE (`lsl #16` before the x|y store, `lsr #16` after it), which
+is exactly the spelling that does NOT flip. So a narrowing is a SUFFICIENT trigger
+for the flipped colouring, not the route the original source took. The ROM reaches
+the same allocator state some other way, and that way is still unknown. Read the
+floor as "the only trigger found so far conflicts with the required lowering",
+not as "only a narrowing can trigger it".
+
+Closed since addendum 2, all inert (byte-identical, div 4, our colouring):
+
+* **Declaration order.** 6bf pairwise-transposition climbing, six restarts
+  (canonical + five shuffles), 10 rounds each: every restart converges to div 4
+  and ZERO of the four window words ever matches. Decl order does not touch this.
+* **Frame layout of the 52-byte matrix local**: `int[13]`, `int[12] + int`,
+  `int[4][3] + int`, `char[52]` all identical.
+* **Pointer qualifiers and load types**: `restrict` on self/base/p0/p1, `const`
+  loads, `s32` vs `int`, `unsigned char` vs `u8`, `&base[off]` vs `base + off`.
+* **An inline function's PARAMETER is not a distinct object.** `static inline int
+  cvt(int v) { return (v << 9) >> 16; }` and its split forms (`shl9`/`sar16`)
+  compile byte-identically to the inline expression -- parameters are flattened
+  before colouring, so "pass it through a parameter" is not a web-splitting lever.
+* **TU context**: neighbour functions before/after, static data plus a user,
+  extra extern declarations -- no effect (this function carries no pragma, so the
+  6ay unscoped-pragma trap does not apply).
+* **Function signature**: 2, 3 and 4 parameters (the 6ab dropped-argument lever)
+  leave it unchanged; giving a callee an extra argument only adds code.
+* **Flags (diagnostic only, not admissible)**: `-opt noschedule`, `-opt schedule`
+  and plain `-O4` all reproduce the same four words, so the residue is purely
+  allocation, not scheduling. `-O4,s` breaks size.
+* **6y-1 self-select boosters** (`v = v ? v : v;` as a statement) on the x, z and
+  shift webs at every position: best div 10, and the flip never appears.
+* **Bitfield type variations**: `int : 16` and `long : 16` at bit offset 7 are
+  byte-identical to the shift pair (the useful new spelling); `short : 16`,
+  `signed short : 16` and `unsigned short : 16` change the access entirely and
+  shrink the function to 524 bytes.
