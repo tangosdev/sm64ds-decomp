@@ -35,14 +35,8 @@ struct daObjKm3_Kurumajiku_c : daObjKurumajiku_c {
     /* --- vtable --- */
     /* Defining this empty destructor in the class body is codegen-significant:
      * mwccarm emits the used D1/D0 pair in retail order and does not materialize
-     * the otherwise homeless D2 body. The guard lets the shadow TU prove that
-     * form while the legacy D1/D0 intake files remain enrolled; promotion removes
-     * those files and makes the inline form unconditional. */
-#ifdef DAOBJKM3_KURUMAJIKU_INLINE_DTOR
+     * the otherwise homeless D2 body. */
     virtual ~daObjKm3_Kurumajiku_c() {}    /* slots 16 (D1), 17 (D0) */
-#else
-    virtual ~daObjKm3_Kurumajiku_c();      /* slots 16 (D1), 17 (D0) */
-#endif
 
     int CleanupResources();                /* slot  3 */
     int InitResources();                   /* slot  0 */
