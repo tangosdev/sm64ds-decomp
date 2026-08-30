@@ -1,6 +1,7 @@
 //cpp
+#include "dBgCh_Lin.h"
+
 template<class T> struct Fix12 { T v; };
-struct Vector3 { int x, y, z; };
 struct Matrix4x3 { int m[12]; };
 struct dCc_c;
 
@@ -15,14 +16,6 @@ extern void Vec3_Add(Vector3* out, Vector3* a, Vector3* b);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void func_ov002_020ee5d0(unsigned char* self, int arg);
 }
-
-struct dBgCh_Lin {
-    dBgCh_Lin();
-    ~dBgCh_Lin();
-    void SetObjAndLine(Vector3 const& a, Vector3 const& b, dActor_c* c);
-    int DetectClsn();
-    char buf[0x78];
-};
 
 /* Only slot 31 (vtable offset 0x7c) is used; the preceding slots are placeholders. */
 struct PlatformVT {

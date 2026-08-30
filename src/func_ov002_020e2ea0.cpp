@@ -1,12 +1,7 @@
 //cpp
+#include "dBgCh_Actr.h"
+
 extern "C" {
-struct dBgCh_Actr {
-    int IsOnGround() const;
-    int GetFloorResult() const;
-};
-struct dBgPi {
-    int GetClsnID() const;
-};
 struct dActor_c {
     static dActor_c* FindWithID(unsigned int id);
 };
@@ -17,6 +12,7 @@ struct Player {
 };
 
 int func_ov002_020e3078(Player *self, Player::State *s);
+dBgPi *_ZNK10dBgCh_Actr14GetFloorResultEv(const dBgCh_Actr *self);
 }
 
 extern signed char data_0209f2f8;
@@ -44,7 +40,7 @@ extern "C" int func_ov002_020e2ea0(Player *self) {
         return 0;
     }
 
-    dBgPi *cr = (dBgPi *)((dBgCh_Actr *)(base + 0x380))->GetFloorResult();
+    dBgPi *cr = _ZNK10dBgCh_Actr14GetFloorResultEv((dBgCh_Actr *)(base + 0x380));
     if (cr->GetClsnID() != -1) {
         if (dActor_c::FindWithID((unsigned int)cr->GetClsnID()) != 0) {
             return 0;

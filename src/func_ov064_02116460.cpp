@@ -1,6 +1,7 @@
 //cpp
+#include "dBgCh_Actr.h"
+
 struct BCA_File;
-struct dBgCh_Actr { int IsOnGround() const; };
 struct ModelAnim { void SetAnim(BCA_File *f, int b, int c, unsigned int d); };
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which

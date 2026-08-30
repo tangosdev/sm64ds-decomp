@@ -1,4 +1,5 @@
 //cpp
+#include "dBgCh_Lin.h"
 
 extern "C" {
 int func_020393b4(void *p);
@@ -35,14 +36,9 @@ struct Info {
     int pB8;
 };
 
-class dBgCh_Lin {
-public:
-    int DetectClsn();
-};
-
-int dBgCh_Lin::DetectClsn()
+bool dBgCh_Lin::DetectClsn()
 {
-    int result = 0;
+    bool result = false;
     int i;
     C *o;
     Info *info;
@@ -56,12 +52,12 @@ int dBgCh_Lin::DetectClsn()
             int mask = ((C *)e)->v7(this);
             if (mask != 0) {
                 func_02037fec((char *)this + 0x10, 0, func_020393ac(e), func_020393b4(e), e);
-                result = 1;
+                result = true;
             }
         }
     }
 
-    char *p64 = (char *)this + 0x64;
+    char *p64 = (char *)&mBoundSphere;
     base = p64 + 4;
     threshold = *(int *)(p64 + 0x10);
     for (i = 1; i < 0x18; i++) {
@@ -94,7 +90,7 @@ int dBgCh_Lin::DetectClsn()
             int mask = o->v7(this);
             if (mask != 0) {
                 func_02037fec((char *)this + 0x10, i, func_020393ac(o), func_020393b4(o), o);
-                result = 1;
+                result = true;
             }
         }
     }

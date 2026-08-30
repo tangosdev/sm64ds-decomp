@@ -663,6 +663,52 @@ def test_compiler_only_policy_is_exact_and_refuses_a_real_rom_home():
     assert any("configured ROM home" in r for r in reasons)
 
 
+def test_compiler_only_policy_reduces_data_before_its_duplicate_destructors():
+    """A licensed vtable must not block removal of a duplicate dtor it names."""
+    if not _toolchain():
+        return
+    obj = _compile_tu_fixture(
+        "struct B { virtual ~B() {} };\n"
+        "struct D : B { virtual ~D() {} virtual void f(); };\n"
+        "void D::f() {}\n")
+    assert obj is not None
+    symbols = {s["name"]: s for s in tubuild.elf_inventory(obj)["symbols"]
+               if s["name"] and not s["name"].startswith("$")}
+    duplicates = sorted(n for n, s in symbols.items()
+                        if s["type"] == "STT_FUNC" and n.startswith("_ZN1BD"))
+    data = sorted(n for n, s in symbols.items()
+                  if s["type"] == "STT_OBJECT"
+                  and n.startswith(("_ZTV", "_ZTI", "_ZTS")))
+    assert "_ZN1BD0Ev" in duplicates
+    assert "_ZTV1B" in data
+
+    # This is the old failure shape: the retained B vtable names B::~B(), so
+    # removing only the function set is correctly refused by objisolate.
+    _out, plan = tubuild.OI.derive_deadstrip(obj, duplicates)
+    assert plan["error"] and "references compiler-only _ZN1BD" in plan["error"]
+
+    licensed = sorted(n for n, s in symbols.items()
+                      if s["type"] == "STT_FUNC" and n not in duplicates)
+    policy = [
+        {"symbol": n, "disposition": "deadstrip-duplicate",
+         "reason": "vague base destructor with a canonical cartridge copy"}
+        for n in duplicates
+    ] + [
+        {"symbol": n, "disposition": "deadstrip-data",
+         "reason": "class data has a canonical cartridge copy"}
+        for n in data
+    ]
+    homes = {n: [("arm9", 0x02010000 + i * 0x20)]
+             for i, n in enumerate(duplicates + data)}
+    entry = {"functions": [{"symbol": n} for n in licensed],
+             "data": [], "bss": [], "compiler_only_output": policy}
+
+    out, report, reasons = tubuild.apply_compiler_only_policy(obj, entry, homes=homes)
+    assert reasons == [] and out is not None
+    assert report["deadstripped"] == duplicates
+    assert report["dataExternalized"] == data
+
+
 def test_unknown_id_fails_closed_with_a_clear_reason():
     code, out = _run("inspect", "ov999/NoSuchClass")
     assert code != 0

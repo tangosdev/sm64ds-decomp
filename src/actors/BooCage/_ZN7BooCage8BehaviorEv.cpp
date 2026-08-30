@@ -1,11 +1,6 @@
 //cpp
-struct Vector3 { int x, y, z; };
-typedef int Fix12i;
+#include "dBgCh_Actr.h"
 
-struct dBgCh_Actr {
-    bool JustHitGround() const;
-    bool IsOnGround() const;
-};
 struct dCc_c;
 struct dActor_c {
     static dActor_c* FindWithID(unsigned int id);

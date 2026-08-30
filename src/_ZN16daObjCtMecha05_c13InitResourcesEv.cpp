@@ -5,6 +5,7 @@
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method */
 #include "daObjCtMecha05_c.h"
+#include "dBgCh_Gnd.h"
 
 /* daObjCtMecha05_c::InitResources - recovered from vtable slot identity.
  *
@@ -62,16 +63,6 @@ struct BMD_File; struct KCL_File; struct dActor_c; struct Vector3; struct Matrix
 struct CLPS_Block; struct SharedFilePtr;
 extern "C" unsigned char data_0209f2c0;
 extern "C" int data_ov035_02112258;
-struct dBgCh_Gnd {
-    int pad[0x11];
-    int result;       // offset 0x44
-    int pad2[3];      // pad to 0x54 total
-    dBgCh_Gnd();
-    void SetObjAndPos(const Vector3 &v, dActor_c *a);
-    int DetectClsn();
-    ~dBgCh_Gnd();
-};
-
 struct V3 { int x, y, z; };
 
 int daObjCtMecha05_c::InitResources()
@@ -105,6 +96,6 @@ int daObjCtMecha05_c::InitResources()
     rg.SetObjAndPos(*(Vector3*)&v, (dActor_c*)0);
     *(int*)(self + 0x338) = v.y;
     if (rg.DetectClsn() != 0)
-        *(int*)(self + 0x338) = rg.result;
+        *(int*)(self + 0x338) = rg.clsnY;
     return 1;
 }

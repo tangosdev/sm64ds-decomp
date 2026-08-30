@@ -4,18 +4,9 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
+#include "dBgCh_Gnd.h"
 
 struct dActor_c;
-struct dBgCh_Gnd {
-    char pad0[0x14];
-    int f14;
-    char pad1[0x38];
-    dBgCh_Gnd();
-    ~dBgCh_Gnd();
-    void SetObjAndPos(const Vector3&, dActor_c*);
-    int DetectClsn();
-};
-extern "C" void _ZN5dBgCh19StartDetectingWaterEv(dBgCh_Gnd*);
 extern "C" int SurfaceInfo_TestFlag0x20(int* p);
 extern int data_0209f32c;
 
@@ -30,15 +21,15 @@ extern "C" void func_ov002_020c72a4(void* thisptr)
     v.x = x;
     v.y = d;
     v.z = z;
-    *(int*)((char*)&rg + 0x4c) = d << 1;
+    rg.mProbeHeight = d << 1;
     rg.SetObjAndPos(v, (dActor_c*)thisptr);
-    _ZN5dBgCh19StartDetectingWaterEv(&rg);
+    rg.StartDetectingWater();
     if (rg.DetectClsn()) {
-        if (SurfaceInfo_TestFlag0x20(&rg.f14) != 0) {
-            *(int*)(r4 + 0x64c) = *(int*)((char*)&rg + 0x44);
+        if (SurfaceInfo_TestFlag0x20((int*)&rg.surface) != 0) {
+            *(int*)(r4 + 0x64c) = rg.clsnY;
             data_0209f32c = *(int*)(r4 + 0x64c);
         }
     }
-    *(int*)((char*)&rg + 0x4c) = 0x1f4000;
+    rg.mProbeHeight = 0x1f4000;
     func_ov002_020c71e0(thisptr);
 }

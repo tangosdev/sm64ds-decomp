@@ -8,9 +8,6 @@ struct ShadowModel;
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
-struct dBgCh_Actr {
-    virtual int v0();
-};
 extern "C" int _ZNK10dBgCh_Actr10IsOnGroundEv(void* x);
 extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* thiz, ShadowModel& sm, Matrix4x3& mtx, Fix12i a, Fix12i b, unsigned int c);

@@ -57,6 +57,7 @@ IGNORE = (".comment", ".debug", ".line", ".note")
 
 SHN_UNDEF = 0
 R_ARM_ABS32 = 2
+SHF_EXECINSTR = 0x4
 
 # "There is nothing here to reduce" -- not a failure. An object whose enrolled symbol
 # is not a defined function in it (an assembly stub, a data entry) simply has no
@@ -429,10 +430,15 @@ def deadstrip_plan(raw, symbol_names, expect=None):
     retail link discarded, while this repository links with ``-nodead``.  A caller may
     model that historical discard only when all of these facts are mechanically true:
 
-    * every requested symbol is a defined function in its own content section;
+    * every requested symbol is a defined function or data object in its own
+      content section;
     * every named, non-mapping symbol in each removed section is requested too;
-    * no relocation from a surviving content section references a requested symbol or
-      an unnamed section symbol for a removed section.
+    * no relocation from a surviving content section references a requested
+      *function* or an unnamed section symbol for a removed section.  A requested
+      *data object* may be referenced by name -- becoming an import is the point, and
+      it is the only way a destructor can go on storing the vptr of a vtable the ROM
+      owns -- but only for ``_ZTV``/``_ZTI``/``_ZTS``, whose relocation shapes are
+      surveyed, and never through an unnamed section symbol.
 
     ``expect`` extends this to the *duplicate* case: a vague-linkage body the compiler
     re-emits in every TU that needs it, while the retail image keeps exactly one copy
@@ -443,6 +449,18 @@ def deadstrip_plan(raw, symbol_names, expect=None):
     produce those bytes must not use this path.  If nothing else defines the symbol the
     link fails loudly on an undefined reference, so this cannot silently drop a function
     that has a retail address.
+
+    ``STT_OBJECT`` is accepted alongside ``STT_FUNC`` because a reconstructed TU that
+    names its key function emits the class's ``_ZTV``/``_ZTI``/``_ZTS`` as well as its
+    code, and an intact multi-symbol object refuses any surviving non-``.text`` content.
+    Without this, promoting a TU meant deleting the out-of-line destructor -- and with
+    it the only thing that makes the vtable comparable to the cartridge at all.  The
+    section-level checks above are linkage-agnostic and carry over unchanged; what does
+    NOT carry over is ``expect``.  A data object's words are relocation targets, so the
+    bytes in this object are addends, not linked addresses, and comparing them against
+    the cartridge would compare two different things.  Raw duplicate-body evidence is
+    therefore refused for data, and the caller proves those bodies the way
+    ``romdata_check`` does: by applying the relocations first.
 
     There are no patterns and no binding-based guesses.  The caller must name every
     symbol, and any ambiguity is an error.  The returned plan has the same shape as
@@ -467,10 +485,10 @@ def deadstrip_plan(raw, symbol_names, expect=None):
         return {"error": f"compiler-only symbol(s) not defined: {missing}"}
 
     bad_type = sorted(n for n in wanted
-                      if defined[n]["st_info"]["type"] != "STT_FUNC")
+                      if defined[n]["st_info"]["type"] not in ("STT_FUNC", "STT_OBJECT"))
     if bad_type:
-        return {"error": f"compiler-only deadstrip currently accepts functions only: "
-                         f"{bad_type}"}
+        return {"error": f"compiler-only deadstrip accepts functions and data objects "
+                         f"only: {bad_type}"}
 
     drop_content = {defined[n]["st_shndx"] for n in wanted}
     if not all(isinstance(i, int) and secs[i].header["sh_type"] in CONTENT
@@ -487,44 +505,121 @@ def deadstrip_plan(raw, symbol_names, expect=None):
             return {"error": f"section[{shndx}] {secs[shndx].name} also defines "
                              f"non-policy symbol(s): {foreign}"}
 
+    funcs = {n for n in wanted if defined[n]["st_info"]["type"] == "STT_FUNC"}
+    objects = wanted - funcs
+
     # A discarded section may have relocations of its own; those disappear with it.
     # Only references from SURVIVING content are load-bearing and therefore blockers.
+    #
+    # `rebase` collects the surviving CODE sections whose vtable relocations still
+    # carry mwcc's preamble skip.  mwcc's `_ZTV<C>` addresses the vtable object's
+    # start, so a vptr store against a definition in this object reads `+8`; the ROM
+    # symbol IS the slot array, so once that definition is externalised the same store
+    # must read `+0`.  `plan` performs the subtraction for the one kept function and
+    # `plan_many` refuses an object that still needs it -- this is the third producer,
+    # and it hands `_apply` a set of sections rather than a single kept index.  Data
+    # sections are deliberately excluded: a surviving `_ZTI` record's link to its ABI
+    # vtable is verified ROM data, not an address-point convention to correct.
+    rebase = set()
     for rel in secs:
         if not isinstance(rel, RelocationSection) or rel.header["sh_info"] in drop_content:
             continue
         source = secs[rel.header["sh_info"]]
         if source.header["sh_type"] not in CONTENT or not source.header["sh_size"]:
             continue
+        executable = bool(source.header["sh_flags"] & SHF_EXECINSTR)
         for r in rel.iter_relocations():
             target = symtab.get_symbol(r["r_info_sym"])
-            names_target = target.name in wanted
+            names_target = target.name in funcs
             section_target = (not target.name and target["st_shndx"] in drop_content)
             if names_target or section_target:
                 label = target.name or f"section[{target['st_shndx']}]"
                 return {"error": f"surviving section[{rel.header['sh_info']}] "
                                  f"{source.name} references compiler-only {label} at "
                                  f"0x{r['r_offset']:x}"}
+            is_rtti = target.name.startswith(("_ZTV", "_ZTI", "_ZTS"))
+            if target.name in objects and not is_rtti:
+                return {"error": f"surviving section[{rel.header['sh_info']}] "
+                                 f"{source.name} references compiler-only data "
+                                 f"{target.name} at 0x{r['r_offset']:x}; only "
+                                 f"_ZTV/_ZTI/_ZTS may be imported this way"}
+            undef = target["st_shndx"] in ("SHN_UNDEF", SHN_UNDEF)
+            if not is_rtti or not (target.name in objects or undef):
+                continue
+            if not rel.is_RELA():
+                return {"error": f"{target.name}: RTTI reloc is REL, not RELA"}
+            addend = r["r_addend"]
+            if not executable:
+                # Only a code section stores a vptr.  A surviving `_ZTI` record's own
+                # `+8` link to the ABI type_info vtable is an ordinary external
+                # reference that this plan does not disturb, so it is left alone; a
+                # data reference to a definition being externalised HERE is outside
+                # the surveyed shape and is refused rather than rewritten on a guess.
+                if addend and target.name in objects:
+                    return {"error": f"{target.name}: RTTI reference with addend "
+                                     f"{addend} from surviving data section "
+                                     f"{source.name}"}
+                continue
+            # Two spellings of a vptr store are legitimate and they differ by one
+            # preamble.  mwcc's `_ZTV<C>` addresses the vtable OBJECT, so a store
+            # against a definition in this object carries `+8` and must lose it once
+            # the definition is externalised.  A source that declares the ROM symbol
+            # itself (`extern int _ZTV10dBgActor_c[];`) is already using symbols.txt's
+            # convention, where the symbol IS the slot array: addend 0, nothing to
+            # correct, and `_apply` leaves it alone.  Anything strictly between the
+            # two is a shape this survey has not seen, and it is not guessed at.
+            shape = ((addend == 0 or addend >= VTABLE_PREAMBLE)
+                     if target.name.startswith("_ZTV") else addend == 0)
+            if r["r_info_type"] != R_ARM_ABS32 or not shape:
+                return {"error": f"{target.name}: unexpected reloc "
+                                 f"type={r['r_info_type']} addend={addend}"}
+            if addend:
+                rebase.add(rel.header["sh_info"])
 
     for name, want in sorted((expect or {}).items()):
         if name not in wanted:
             return {"error": f"{name}: duplicate-body evidence for a symbol that was "
                              f"not requested"}
         sym = defined[name]
+        if sym["st_info"]["type"] != "STT_FUNC":
+            return {"error": f"{name}: raw duplicate-body evidence is function-only; a "
+                             f"data object's words are relocation addends here and "
+                             f"linked addresses in the cartridge, so the two are not "
+                             f"comparable before the link"}
         if sym["st_info"]["bind"] != "STB_LOPROC":
             return {"error": f"{name}: duplicate deadstrip needs vague linkage, got "
                              f"{sym['st_info']['bind']}"}
-        got = bytes(secs[sym["st_shndx"]].data())
-        if got != bytes(want):
+        got, want = bytes(secs[sym["st_shndx"]].data()), bytes(want)
+        if len(got) != len(want):
             return {"error": f"{name}: this object's body ({len(got)} bytes) is not the "
                              f"cartridge's body at its configured home "
-                             f"({len(bytes(want))} bytes)"}
+                             f"({len(want)} bytes)"}
+        # A relocated word holds an addend here and a linked address in the cartridge,
+        # so comparing it raw would report every branch and every vptr store as a
+        # difference -- a 4-byte `bx lr` was the only body flat enough to survive it.
+        # What this module can prove on its own is the instruction stream around them.
+        # Resolving the relocations needs symbols.txt homes, which is a layer above:
+        # see `rombuild._duplicate_body_reasons`, which links the body and compares the
+        # words masked out here.
+        relocated = set()
+        for rel in secs:
+            if isinstance(rel, RelocationSection) and rel.header["sh_info"] == sym["st_shndx"]:
+                relocated.update(r["r_offset"] & ~3 for r in rel.iter_relocations())
+        for off in range(0, len(got) & ~3, 4):
+            if off in relocated:
+                continue
+            if got[off:off + 4] != want[off:off + 4]:
+                return {"error": f"{name}: this object's body differs from the "
+                                 f"cartridge's at its configured home, at "
+                                 f"non-relocated offset 0x{off:x}"}
 
     drop = set(drop_content)
     drop.update(i for i, s in enumerate(secs)
                 if isinstance(s, RelocationSection) and s.header["sh_size"]
                 and s.header["sh_info"] in drop_content)
-    return {"keep": None, "drop": sorted(drop), "externalise": [],
-            "dead": sorted(wanted), "referenced": [], "error": None}
+    return {"keep": None, "drop": sorted(drop), "externalise": sorted(objects),
+            "dead": sorted(funcs), "referenced": [], "rebase": sorted(rebase),
+            "error": None}
 
 
 def derive_deadstrip(raw, symbol_names, expect=None):
@@ -1166,7 +1261,13 @@ def _apply(raw, p, keep_symbol):
     # is part of the verified ROM data (for example an _ZTI record's ABI-vtable link).
     # Section partitioning therefore never opts into this rewrite: it must preserve
     # the already-verified data relocation stream byte-for-byte.
-    keeps = {p["keep"]} if isinstance(p.get("keep"), int) else set()
+    # A plan may name the sections to correct outright (deadstrip_plan does, because
+    # it keeps many and drops the definitions out from under them).  Absent that the
+    # legacy rule stands: the single kept function's section, and nothing else.
+    keeps = p.get("rebase")
+    if keeps is None:
+        keeps = {p["keep"]} if isinstance(p.get("keep"), int) else set()
+    keeps = set(keeps)
     for s in elf.iter_sections():
         if not isinstance(s, RelocationSection) or s.header["sh_info"] not in keeps:
             continue

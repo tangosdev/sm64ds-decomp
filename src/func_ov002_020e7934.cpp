@@ -2,6 +2,7 @@
 // @symbol func_ov002_020e7934
 /* recovered: shared common types */
 #include "common.h"
+#include "dBgCh_Lin.h"
 
 struct dActor_c;
 
@@ -13,14 +14,6 @@ extern unsigned char IsAreaShowing(int idx);
 extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern short data_02082214[];
 }
-
-struct dBgCh_Lin {
-    char pad[0x78];
-    dBgCh_Lin();
-    ~dBgCh_Lin();
-    int DetectClsn();
-    void SetObjAndLine(const Vector3& a, const Vector3& b, dActor_c* obj);
-};
 
 extern "C" void func_ov002_020e7934(char* self, void* cam)
 {

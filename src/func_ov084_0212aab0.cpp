@@ -1,5 +1,6 @@
 //cpp
-struct dBgCh_Actr { int JustHitGround() const; int IsOnGround() const; };
+#include "dBgCh_Actr.h"
+
 struct dActor_c { void HugeLandingDust(bool b); void LandingDust(bool b); };
 void ApproachLinear(short &v, short t, short step);
 

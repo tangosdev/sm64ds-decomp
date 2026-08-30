@@ -1,6 +1,7 @@
 //cpp
+#include "dBgCh_Actr.h"
+
 struct dCc_c { void Clear(); void Update(); };
-struct dBgCh_Actr { int JustHitGround() const; int IsOnGround() const; };
 struct dActor_c { void UpdatePos(dCc_c *cc); };
 
 extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *w);

@@ -2,9 +2,8 @@
 // @symbol func_ov002_020b7e1c
 /* recovered: shared common types */
 #include "common.h"
+#include "dBgCh_Actr.h"
 
-
-struct dBgCh_Actr { int IsOnGround() const; };
 struct fBase_c { void MarkForDestruction(); };
 struct dActor_c : fBase_c {
     static int Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, signed char, short);

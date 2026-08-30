@@ -1,10 +1,11 @@
 //cpp
 #include "types.h"
+#include "dBgCh_Actr.h"
+
 typedef void* (*Vfn)();
 
 struct Animation { void Advance(); };
 struct dCc_c { void Clear(); void Update(); };
-struct dBgCh_Actr { int IsOnGround() const; };
 struct Vector3;
 
 extern "C" void func_ov030_02111a00(void* c);
@@ -19,17 +20,17 @@ struct dActor_c {
 };
 
 typedef struct { int a, b; } P2;
-struct dBgPi {
+struct ClsnResultTmp {
     Vfn* vtb;
     P2 v;
     int a2, a3, a4;
     u16 h0, h1;
     int t0, t1, t2;
-    int GetClsnID() const;
 };
-extern "C" dBgPi* func_0203567c(dBgCh_Actr* w);
-extern "C" int func_02037f44(dBgPi* r);
-extern "C" void _ZN5dBgPiD1Ev(dBgPi* r);
+extern "C" char* func_0203567c(dBgCh_Actr* w);
+extern "C" int func_02037f44(ClsnResultTmp* r);
+extern "C" unsigned _ZNK5dBgPi9GetClsnIDEv(const ClsnResultTmp* r);
+extern "C" void _ZN5dBgPiD1Ev(ClsnResultTmp* r);
 
 extern "C" int func_ov030_02112400(char* c)
 {
@@ -50,8 +51,8 @@ extern "C" int func_ov030_02112400(char* c)
         }
     } else {
         if (((dBgCh_Actr*)(c + 0x194))->IsOnGround()) {
-            char* r = (char*)func_0203567c((dBgCh_Actr*)(c + 0x194));
-            dBgPi res;
+            char* r = func_0203567c((dBgCh_Actr*)(c + 0x194));
+            ClsnResultTmp res;
             int* d = (int*)&res.v;
             *(double*)d = *(double*)(r + 4);
             d[2] = *(int*)(r + 0xc);
@@ -63,7 +64,7 @@ extern "C" int func_ov030_02112400(char* c)
             res.t0 = *(int*)(r + 0x1c);
             res.t1 = *(int*)(r + 0x20);
             res.t2 = *(int*)(r + 0x24);
-            if (res.GetClsnID() == -1 || func_02037f44(&res) == 0) {
+            if (_ZNK5dBgPi9GetClsnIDEv(&res) == -1 || func_02037f44(&res) == 0) {
                 func_ov030_021141a8(c, 0);
             }
             _ZN5dBgPiD1Ev(&res);
