@@ -1491,6 +1491,20 @@ void hal_fill_cheep_cheep_vtable(void);              /* _ZTV10CheepCheep, 31 */
 extern unsigned char Shark_SpawnInfo[];              /* ov090 0x021343c8, +4 = 225 */
 void *Shark_Spawn(void);                             /* ov090 0x02133ca0, 72 B */
 void hal_fill_shark_vtable(void);                    /* _ZTV5Shark, 31 */
+/* run rel0215 wave 2 (lane cast-ov066): OV066's ONE CLASS, EYEROK -- the SSL
+   pyramid boss, and the whole of ov066. The ROM calls it 10daIwante_c (iwa +
+   te = rock hand) and its base 10dBgActor_c = Platform, so its table is
+   32-slot PLATFORM, not 31-slot Actor: slot 31 is a relocation to ov002's
+   Platform::Kill, which the base typeinfo and Eyerok_Spawn's PlatformC2Ev call
+   confirm two more ways. ONE CLASS, NOT THREE -- .data carries exactly one
+   __si_class_type_info, and the two hands and the head are STATES of a
+   NINETEEN-cell pointer-to-member machine (38 source pairs). Level 17 alone
+   loads it. Derivation in port/ov066_syms.txt, fill in
+   hal/actor_classes_ov066.cpp, slice in port/slice_ov066.txt -- which also
+   itemises the SIX /alternatename directives this mount defeats. */
+extern unsigned char Eyerok_SpawnInfo[];             /* ov066 0x0211ad40, +4 = 176 */
+void *Eyerok_Spawn(void);                            /* ov066 0x0211a370, 168 B */
+void hal_fill_eyerok_vtable(void);                   /* _ZTV6Eyerok, 32 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2267,4 +2281,9 @@ void hal_fill_shark_vtable(void);                    /* _ZTV5Shark, 31 */
      hal_fill_manta_ray_vtable}, \
     {227, "CHEEP_CHEEP", CheepCheep_SpawnInfo, CheepCheep_Spawn, \
      hal_fill_cheep_cheep_vtable}, \
-    {225, "SHARK", Shark_SpawnInfo, Shark_Spawn, hal_fill_shark_vtable},
+    {225, "SHARK", Shark_SpawnInfo, Shark_Spawn, hal_fill_shark_vtable}, \
+    /* ---- run rel0215 wave 2 (lane cast-ov066): ov066's ONE class, the SSL \
+       pyramid boss. Level 17's census names id 0xb0 = 176 skipped today. \
+       Both attribution routes agree and the ov060 claim on the same address \
+       is settled from the raw bytes -- see port/ov066_syms.txt ---- */ \
+    {176, "EYEROK", Eyerok_SpawnInfo, Eyerok_Spawn, hal_fill_eyerok_vtable},

@@ -1,0 +1,247 @@
+# run rel0215 wave 2, lane cast-ov066: EYEROK (176, 10daIwante_c) -- ov066,
+# the SSL pyramid boss, wanted by level 17 alone. Fresh per-symbol mount
+# (port/ov066_syms.txt), the ov077/ov079/ov080/ov081 convention. The vtable
+# fill, the nineteen-cell pointer-to-member state seat and the loud faces are
+# hal/actor_classes_ov066.cpp.
+#
+# ==== THE SOURCE INVENTORY, COUNTED THREE WAYS =============================
+#   delinked complete to a src/ TU     65
+#   present but NONMATCHING-bannered    0
+#   MISSING from src/                   0
+#                                     ---
+#                                      65   == symbols.txt's function count
+# ov066 is a FULLY MATCHED overlay. There is not one missing body, so this
+# slice needs not one L2-pattern face for an absent function. The faces
+# hal/actor_classes_ov066.cpp does carry are vtable-slot traps, which is a
+# different thing: they fire only if the ROM ever dispatches a slot this seat
+# did not fill.
+#
+# 13 of the 65 are .cpp and 52 are .c. NO LANGUAGE CXX ROW IS NEEDED, and that
+# is a sweep rather than an absence: all 52 .c files were scanned
+# comment-stripped for a //cpp marker and for class / namespace / template /
+# virtual / public / private / protected / new / delete / this / extern "C" /
+# :: before the first build, and every one came back clean. NO PER-SOURCE -D
+# ROW FOR A PLACEHOLDER EITHER: a sweep of all 65 for the bare G0, G1, G2, VT,
+# VT0, VT1, VT2, HEAP, R0, R1 and R2 spellings returns NOTHING. Only three TUs
+# name a vtable at all and all three name it in full (_ZTV6Eyerok and
+# _ZTV8Platform, both real, both already host storage).
+#
+# ==== FOUR TUs ARE NOT IN THIS LIST ON PURPOSE =============================
+# Each is host-copied under port/unmatched/ and its matched src stays
+# byte-locked in src/ as the proof. Listing both copies would be an LNK2005;
+# listing neither would drop the body silently.
+#
+# (1) src/_ZN6Eyerok8BehaviorEv.cpp  ->  unmatched/Eyerok_Behavior.cpp
+#     The TICK half of the state machine, dispatched INLINE inside Behavior:
+#         struct C; typedef int (C::*PMF)();
+#         struct State { char pad[8]; PMF fn; };
+#         State *st = *(State **)(c + 0x48c);
+#         if (*(int *)((char *)st + 8) != 0) (((C *)c)->*(st->fn))();
+#     a real mwcc pointer-to-member on a deliberately INCOMPLETE class. mwcc's
+#     PMF there is the ROM's own 8-byte {function, delta} pair; MSVC's PMF for
+#     an incomplete class is the "unknown inheritance" form and does not
+#     reproduce it. The Ukiki/BabyPenguin shape (unmatched/Ukiki_StateTick.cpp).
+#
+# (2) src/func_ov066_02119454.cpp  ->  unmatched/Eyerok_StateEnter.cpp
+#     The ENTER half, and the state INSTALLER in the same three statements:
+#         extern "C" int func_ov066_02119454(C *c, PMF *p)
+#         { c->pp = p; PMF *q = c->pp; if (*q == 0) return 1; return (c->**q)(); }
+#     Same PMF representation problem. Note it writes +0x48c FIRST, so
+#     installing a state IS entering it -- the Ukiki func_ov030_021141a8
+#     relationship, here fused into one body.
+#
+# (3) src/_ZN6Eyerok6RenderEv.cpp  ->  unmatched/Eyerok_Render.cpp
+#     THE BlendModelAnim SLOT-5 COLLISION, which hal/blend_vtable.cpp predicted
+#     in writing: "if a shadow-class TU ever dispatches BlendModelAnim::Render
+#     it will land on blend_virtual18 and read its scale off the stack". This
+#     is that TU. It declares a LOCAL SIX-VIRTUAL shadow
+#         struct Sub { virtual int g0(); ... virtual int g5(void*); };
+#     which counts in ROM numbering, and calls g5(0) on TWO different members:
+#     mModel2 at +0x3d0 (a Model -- _ZTV5Model IS dual-filled, so that half
+#     would have survived) and mBlendModelAnim at +0x360 (a BlendModelAnim --
+#     host slot 5 is blend_virtual18, a TWO-argument method reached with one
+#     argument). Hosted whole rather than half, with both dispatches spelled
+#     as the qualified methods the ROM means.
+#
+# (4) src/func_ov066_02119398.cpp  ->  unmatched/Eyerok_ClosestPlayerRead.cpp
+#     A RECEIVER-DROPPING READER: `_ZN5Actor13ClosestPlayerEv()` with empty
+#     parentheses. ClosestPlayer is a thiscall and a zero-argument call leaves
+#     the receiver register holding whatever was there. This TU is already
+#     named in port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp's own
+#     latent list ("ov066, calls ClosestPlayer() no arg") and in
+#     port/tools/aritycheck_receiver_baseline.txt:137. Putting it in a slice
+#     raw would fail port/tools/closestplayer_guard.py before configure, which
+#     is the guard working. It is state cell 0's TICK body, so it is on the
+#     dispatch path the first frame Eyerok is in state 0.
+#
+# ==== THE SIX ALIASES THIS LANE DEFEATS, AND WHAT REPLACES THEM ============
+# THE TREE PREDICTED THIS LANE IN WRITING. port/build-port.cmd:92 and
+# port/tools/alternatename_guard.py:20 both say "EyerokD0 ... flips the same
+# way if their overlays land". Six live /alternatename directives carry an
+# ov066 name as their LHS, and defining that name DEFEATS the alias silently
+# -- no link error, a wrong object at run time, the Coffin/Spindrift shape
+# (T6). Every one is converted to a per-source -D on the FOREIGN CALLER, which
+# is the remedy the tree's own koopa_chuckya note already prescribes for
+# exactly this case (the w5b_review.md R2 func_ov065_02117994 precedent).
+# All six rows are in port/CMakeLists.txt beside this slice's reader block.
+#
+#   #  alias removed from                     foreign caller TU (in a slice)
+#   1  hal/actor_classes_ov065.cpp:151        src/func_ov065_021162c0.c
+#      __ZN6EyerokD0Ev=_func_ov065_02115f84
+#      -> -D_ZN6EyerokD0Ev=func_ov065_02115f84
+#      ov065's Snufit state body calls 0x02115f84, which the reloc
+#      `from:0x02116314 kind:arm_call to:0x02115f84 module:overlay(65)` puts in
+#      ov065's OWN image as func_ov065_02115f84, size 0x6c. Eyerok's D0 at the
+#      same address is size 0xb8 -- a DIFFERENT body; the sizes alone settle
+#      it. Undefeated this calls a destructor on a live Snufit.
+#   2  hal/actor_classes_koopa_chuckya.cpp    src/func_ov062_02117acc.c
+#      _func_ov066_02118cdc=_func_ov062_02118cdc
+#   3  hal/actor_classes_koopa_chuckya.cpp    src/func_ov062_02117acc.c
+#      _func_ov066_02118a50=_func_ov062_02118a50
+#      -> one -D row carrying both, on the one caller TU (slice_gate182).
+#   4  hal/actor_classes_ov060.cpp:215        src/func_ov060_02111c68.c
+#      _data_ov066_0211ac20=_data_ov060_0211ac20
+#   5  hal/actor_classes_ov060.cpp:216        src/func_ov060_02111c68.c
+#      _data_ov066_0211ac68=_data_ov060_0211ac68
+#      -> one -D row carrying both, on the one caller TU (slice_w5e).
+#   6  hal/actor_classes_ov060.cpp:217        src/func_ov060_02112350.c
+#      _data_ov066_0211acd0=_data_ov060_0211acd0
+#      -> its own -D row (slice_w5e).
+#      4/5/6 are ov060's own bss cells at addresses ov066's mount now names as
+#      three of Eyerok's 38 PMF source pairs. Undefeated, ov060 would read
+#      Eyerok's state table.
+#
+# Every one of the six was checked BOTH ways before the conversion: the caller
+# TU is on a live slice (w5b / gate182 / w5e, all three compiled today) and the
+# -D target is defined in the link (func_ov065_02115f84 and func_ov062_02118cdc
+# / _02118a50 are sliced TUs; data_ov060_0211ac20 / _0211ac68 / _0211acd0 are
+# on port/ov060_syms.txt lines 128/131/135). A -D onto an undefined name would
+# have turned a silent bug into a link error, which is better, but neither is
+# what this lane is for.
+#
+# ==== TWO CLPS BLOCKS AND ONE MIS-RECOVERED NAME ===========================
+# src/func_ov066_021166c8.cpp spells THREE symbols nothing in the tree defines,
+# and all three are settled off its own literal pool rather than by name:
+#
+#   func_02112cc8            pool 0x02116890 -> 0x02112cc8
+#   func_02112c88            pool 0x021168a0 -> 0x02112c88
+#   func_02112cd8_updatepos  pool 0x021168a8 -> 0x02039348   <- NOT 0x02112cd8
+#
+# The first two are CLPS_Blocks (the "CLPS" magic reads at +0 of both in the
+# raw ov025 image) handed to MovingMeshCollider::SetFile. Their addresses fall
+# in the LEVEL window and dsd's module column names eleven level overlays,
+# every one `ambiguous` -- but ov066 is loaded on level 17 ALONE
+# (hal/level_boot.cpp:892), and level 17's own overlay is ov025
+# (level_boot.cpp:1255, "Shifting Sand pyramid (desert_py, course 7)"), so
+# ov025's are the ones the ROM means. They join ov025's existing per-symbol
+# mount beside the two CLPS blocks it already carries. The ov046 precedent
+# is the same shape (hal/actor_classes_ov060.cpp:201, "the arena CLPS
+# spelling onto the one-symbol ov046 mount").
+#
+# THE THIRD NAME IS SIMPLY WRONG. There is no reloc to 0x02112cd8 anywhere in
+# ov066. The pool word the second argument of func_020393d4 is loaded from
+# holds 0x02039348, module:main, which config/arm9/symbols.txt names
+# _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_
+# -- an arm9 body, and the callback the collider genuinely wants. The
+# recovered name invented an overlay address out of the "updatepos" role. A -D
+# rename fixes it at the one call site; src/ is not edited.
+#
+# ==== THE EXTERNAL CLOSURE, MEASURED NOT GUESSED ===========================
+# The FIRST link of this seat reported 74 unresolved externals. They decomposed
+# into exactly three kinds, and only ONE of them was a missing body:
+#
+#   69  MSVC-DECORATED SPELLINGS of symbols the link already has. The //cpp TUs
+#       declare mounted storage and arm9 helpers OUTSIDE extern "C", so MSVC
+#       mangles the type into the name while the mount and the arm9 slices
+#       define the plain C one. Bridged with /alternatename rows in
+#       hal/actor_classes_ov066.cpp, every LHS deliberately undefined. The
+#       arity of every FUNCTION row was checked before the bridge, not assumed:
+#       TextureSequence::Prepare and the two LoadFile helpers really are STATIC
+#       members taking no receiver (twelve other TUs across ov002/ov006/ov027/
+#       ov060 declare them the same way), Actor::Spawn is a static factory, and
+#       TrackStar / InitCylinder / MovingCylinderClsnWithPos::Init /
+#       MovingMeshCollider::SetFile all pass their receiver explicitly. No row
+#       here loses a `this`.
+#    3  MORE ov025 CLPS_BLOCKS spelled func_02112c08 / func_02112ca8 /
+#       func_02112d48 in five further TUs -- the same defect as the two the
+#       recon found, two more addresses deep. Renamed per source and added to
+#       ov025's mount; see port/CMakeLists.txt and port/ov025_syms.txt.
+#    2  GENUINELY MISSING BODIES. Both are arm9 helpers no slice in the tree
+#       had reason to pull in before, taken off the link's own list rather than
+#       guessed:
+#         func_020398fc  a one-line MeshColliderBase flag write (p[304] = 1),
+#                        called by five ov066 TUs after every SetFile
+#         func_02011d2c  a tail-call veneer, called once from
+#                        func_ov066_0211903c
+#       The third arm9 name in the same family,
+#       _ZN16MeshColliderBase22UpdatePosWithTransform..., was ALREADY in the
+#       link (slice_gate59.txt) and needed only the decorated bridge.
+#
+# THE SECOND LINK ADDED EXACTLY ONE MORE, one level deeper and again measured:
+# func_02011d2c's veneer target func_02048ef4 (a one-line forwarder to
+# func_02048fd4, which slice_gate10.txt already carries). Three arm9 lines
+# total, none of them predicted.
+src/func_020398fc.c
+src/func_02011d2c.c
+src/func_02048ef4.c
+src/_ZN6EyerokD1Ev.c
+src/_ZN6EyerokD0Ev.c
+src/func_ov066_0211603c.c
+src/func_ov066_021162e8.c
+src/func_ov066_0211632c.c
+src/func_ov066_02116390.c
+src/func_ov066_021164ec.c
+src/func_ov066_021165cc.c
+src/func_ov066_021166c8.cpp
+src/func_ov066_021168b0.c
+src/func_ov066_021168ec.c
+src/func_ov066_02116a68.c
+src/func_ov066_02116ac4.c
+src/func_ov066_02116b78.c
+src/func_ov066_02116c6c.c
+src/func_ov066_02116d14.cpp
+src/func_ov066_02116db0.c
+src/func_ov066_02117190.c
+src/func_ov066_021171b0.c
+src/func_ov066_021175bc.c
+src/func_ov066_021175e8.c
+src/func_ov066_02117bd0.c
+src/func_ov066_02117bf0.c
+src/func_ov066_02118168.c
+src/func_ov066_02118188.c
+src/func_ov066_021184c0.c
+src/func_ov066_021184e0.c
+src/func_ov066_021185e4.c
+src/func_ov066_02118604.c
+src/func_ov066_02118658.c
+src/func_ov066_02118678.c
+src/func_ov066_021187c8.cpp
+src/func_ov066_021188b0.c
+src/func_ov066_02118934.c
+src/func_ov066_02118954.c
+src/func_ov066_021189a0.c
+src/func_ov066_021189c0.c
+src/func_ov066_02118a30.c
+src/func_ov066_02118a50.c
+src/func_ov066_02118b08.c
+src/func_ov066_02118b28.c
+src/func_ov066_02118be0.c
+src/func_ov066_02118c00.c
+src/func_ov066_02118cb8.c
+src/func_ov066_02118cdc.cpp
+src/func_ov066_02118de0.c
+src/func_ov066_02118e04.c
+src/func_ov066_0211901c.c
+src/func_ov066_0211903c.c
+src/func_ov066_02119348.c
+src/func_ov066_0211944c.c
+src/func_ov066_021194a4.cpp
+src/func_ov066_021194fc.cpp
+src/_ZN6Eyerok16CleanupResourcesEv.cpp
+src/_ZN6Eyerok16OnPendingDestroyEv.c
+src/_ZN6Eyerok13InitResourcesEv.cpp
+src/func_ov066_0211a2dc.c
+src/func_ov066_0211a2e4.c
+src/func_ov066_0211a35c.c
+src/Eyerok_Spawn.cpp
+src/__sinit_ov066_0211a418.c

@@ -1056,6 +1056,22 @@ void __sinit_ov090_02133ce8(void);
 void __sinit_ov090_02133ea8(void);
 void __sinit_ov090_02133f4c(void);
 void __sinit_ov090_02134020(void);
+/* run rel0215 wave 2 (lane cast-ov066): ov066 per-symbol -- the overlay's ONE
+   sinit runs, because the overlay has exactly ONE class (EYEROK 176,
+   10daIwante_c) and this lane registers it. ov066's .ctor section is a single
+   word (0x0211abc0..0x0211abc4) naming 0x0211a418, so there is no ROM order to
+   get wrong. That sinit is large (0x7a8 bytes) and does two things, both read
+   out of its body: it builds TWENTY-TWO SharedFilePtrs with their
+   destructor-chain nodes, and it copies the THIRTY-EIGHT pointer-to-member
+   source pairs in .data into NINETEEN 16-byte state records in .bss -- the
+   Ukiki/BabyPenguin/MrBlizzard shape at nineteen cells. Those records are then
+   re-seated with host function pointers by port_eyerok_states_seat()
+   (hal/actor_classes_ov066.cpp), which ABORTS if this sinit left anything but
+   the ROM's own values. ov066 is NOT a level overlay, so there is no whole
+   mount beside this one. */
+void port_ov066_pack_check(void);
+void port_ov066_syms_patch(void);
+void __sinit_ov066_0211a418(void);
 
 /* The six wave-3/4/5 bring-ups, each defined beside the cast it serves and
    each holding its own done-guard. See the consolidation note at the bottom
@@ -1445,6 +1461,15 @@ extern "C" void port_actor_overlays_sinits(void)
     __sinit_ov090_02133ea8();   /* MANTA_RAY: 2 SharedFilePtrs + 1 state cell */
     __sinit_ov090_02133f4c();   /* CHEEP_CHEEP: 2 SharedFilePtrs + 2 cells */
     __sinit_ov090_02134020();   /* SHARK: 2 SharedFilePtrs + 1 state cell */
+    /* run rel0215 wave 2 (lane cast-ov066): ov066's ONE sinit. The overlay has
+       one class and this lane registers it, so nothing is left unrun. It builds
+       twenty-two SharedFilePtrs (three func_02017acc, eleven
+       SharedFilePtr::Construct, four TexSeq, five Clsn) with their twenty-two
+       destructor-chain nodes, then copies the thirty-eight PMF source pairs
+       into the nineteen state records port_eyerok_states_seat() re-seats. */
+    port_ov066_pack_check();
+    port_ov066_syms_patch();
+    __sinit_ov066_0211a418();   /* EYEROK's twenty-two files + nineteen cells */
 
     /* ---- the six bring-ups that used to ride the first registry fill ------
      *

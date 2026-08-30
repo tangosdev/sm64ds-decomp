@@ -1762,3 +1762,25 @@ func_ov090_0213264c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0
 func_ov090_021327e4  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-ov090\adjudication.md  MANTA_RAY PMF state record 0, addr 0x021327e4 size 0x274; match.py MATCHING at 2004/b56 with all eight reloc destinations checked (Animation::Advance, func_ov090_02132730, Actor::Spawn x2, func_02012790 x2, Actor::SpawnNumber x2). NOT A VTABLE SLOT AT ALL and the NAME IS ONE CLASS LATE: the marker says Skeeter_Kill / daMenbo_c::Kill, but 0x021327e4 is inside MANTARAY.s .text block 0x0213269c..0x02132fe8, its PMF source pair is data_ov090_021341e4 in MantaRay.s own .data, and __sinit_ov090_02133ea8 (MantaRay.s) is what copies it. Seated by ADDRESS through port_ov090_states_seat()
 func_ov090_02133200  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-ov090\adjudication.md  CHEEP_CHEEP PMF state record 0, addr 0x02133200 size 0x90; match.py MATCHING at 2004/b56 with all five reloc destinations checked (Vec3_Dist 0x0203cfdc, Vec3_HorzAngle 0x0203b7ac, ApproachAngle 0x0203b008, func_ov090_021332e8, load of data_ov090_02134584). NOT A VTABLE SLOT and the NAME IS ONE CLASS LATE: the marker says MantaRay_Kill / daManta_c::Kill, but 0x02133200 is inside CHEEPCHEEP.s .text block 0x02133034..0x02133634, its PMF pair is data_ov090_021342b8 and the cell it drives is CheepCheep.s own data_ov090_02134584
 func_ov090_0213387c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-ov090\adjudication.md  SHARK PMF state record 0, addr 0x0213387c size 0x38; match.py MATCHING at 2004/b56 with both reloc destinations checked (0x0213389c -> 0x02016748 ModelAnim::SetAnim, 0x021338b0 load -> 0x021345ac Shark.s own SharedFilePtr, file id 0x326). NOT A VTABLE SLOT and the NAME IS ONE CLASS LATE: the marker says CheepCheep_Kill / daPukupuku_c::Kill, but 0x0213387c is inside SHARK.s .text block 0x0213367c..0x02133ca0 and its PMF pair is data_ov090_021343a0
+# ---------------------------------------------------------------------------
+# run rel0215 wave 2 (lane cast-ov066), ov066's EYEROK.
+#
+# ONE marker-carrying body in the whole overlay, and this lane seats it at
+# vtable slot 29 (the class's OWN OnAimedAtWithEgg, overriding the shared arm9
+# 0x02010158). It was disassembled from extracted/overlays/overlay_0066.bin at
+# base 0x02115ee0 -- the shipped image, deliberately not a dsd export -- and
+# read against src/ instruction for instruction, AND put through tools/match.py
+# at the canonical 2004/b56 with --strict-relocs on and --module ov066, so
+# every relocation SLOT'S DESTINATION is checked rather than wildcarded.
+# RESULT: 1 REAL DECOMP, 0 genuine guesses, 0 unverifiable.
+#
+#   ROM 0x0211a2dc size 0x8:  0a09a0e3  mov r0, #0x28000
+#                             1eff2fe1  bx lr
+#   src:  int func_ov066_0211a2dc(void) { return 163840; }   163840 == 0x28000
+#
+# Two instructions, two statements, no relocations to get wrong. It still owes
+# a decomp-side marker correction; this lane does not edit src/, so the
+# correction is owed and not done here.
+#
+# Full evidence, including the match.py transcript: C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-ov066\t5_adjudication.txt
+func_ov066_0211a2dc  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-ov066\t5_adjudication.txt  slot 29 OnAimedAtWithEgg, addr 0x0211a2dc size 0x8; match.py MATCHING at 2004/b56 with --strict-relocs and --module ov066. Two instructions: mov r0,#0x28000 / bx lr, and the C returns 163840 == 0x28000

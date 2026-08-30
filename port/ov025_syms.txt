@@ -97,6 +97,43 @@
 # The two CLPS_Blocks, one per class, both carrying the "CLPS" magic at +0 and
 # both handed to MovingMeshCollider::SetFile by their InitResources.
 data_ov025_02112ce8 data_ov025_02112d08
+# run rel0215 wave 2 (lane cast-ov066): FIVE MORE ov025 CLPS_Blocks, and they
+# belong to a class in a DIFFERENT overlay. EYEROK (176, ov066) is loaded on
+# level 17 alone (hal/level_boot.cpp:892) and level 17's own overlay is ov025
+# (level_boot.cpp:1255), so when SIX ov066 bodies hand
+# MovingMeshCollider::SetFile the blocks their literal pools hold, ov025's are
+# the ones the ROM means. Five distinct addresses, every one read off a pool
+# word rather than off a name:
+#
+#   0x02112c88   src/func_ov066_021166c8.cpp        pool 0x021168a0
+#   0x02112cc8   src/func_ov066_021166c8.cpp        pool 0x02116890
+#   0x02112c08   _ZN6Eyerok13InitResourcesEv.cpp, func_ov066_02116db0.c,
+#                func_ov066_021175e8.c, func_ov066_02117bf0.c,
+#                func_ov066_02118188.c    pools 0x0211a2c0/17160/175e8-.../18498
+#   0x02112ca8   _ZN6Eyerok13InitResourcesEv.cpp    pool 0x0211a2ac
+#   0x02112d48   the same five TUs as 0x02112c08    pools 0x0211a2cc/17170/...
+#
+# dsd's module column on every one of those relocs names NINE TO THIRTEEN
+# level overlays and marks nearly all of them `ambiguous`, because level
+# overlays are alternates at one base and are never co-resident; the level
+# roster is what settles it. 0x02112d48 is the sharpest of the five -- ov060
+# claims that address with a FUNCTION (func_ov060_02112d48, size 0x94), and
+# ov060 is NOT on level 17's roster, so the CLPS block is what is really there
+# when Eyerok runs. All five carry the "CLPS" magic at +0 in
+# extracted/overlays/overlay_0025.bin, same as the two above. The ov066 TUs
+# spell them func_02112c08 / func_02112c88 / func_02112ca8 / func_02112cc8 /
+# func_02112d48, names nothing in the tree defines, and port/CMakeLists.txt
+# renames those spellings onto these names per source -- the ov046 arena-CLPS
+# shape (hal/actor_classes_ov060.cpp:201).
+#
+# TWO ARE PINNED TO 0x20 and it is the T3 trap twice: a CLPS_Block here is 0x20
+# bytes (all seven blocks in this overlay sit 0x20 apart) but dsd also named
+# 0x02112c18 and 0x02112cd0, so the natural next-symbol delta is 0x10 for
+# 0x02112c08 and EIGHT for 0x02112cc8. Unpinned, the collider would read half
+# and a quarter of its own collision-parameter block. The other three deltas
+# are already 0x20 and are correct as inferred.
+data_ov025_02112c08:0x20 data_ov025_02112c88
+data_ov025_02112ca8 data_ov025_02112cc8:0x20 data_ov025_02112d48
 # The two SpawnInfo records, both PINNED to the record's real 0x1c.
 #
 #   PyramidStep_SpawnInfo 0x021138f0 -- the pin that MATTERS. Its natural

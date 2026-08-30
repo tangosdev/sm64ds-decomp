@@ -211,10 +211,20 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:__ZTV11daKpaFire_c=__ZTV10BowserFire")
 
 /* The ov066-window spellings of ov060's own bss cells (ov060_syms.txt's
-   window note): same bytes, one storage, sibling names aliased on. */
-#pragma comment(linker, "/alternatename:_data_ov066_0211ac20=_data_ov060_0211ac20")
-#pragma comment(linker, "/alternatename:_data_ov066_0211ac68=_data_ov060_0211ac68")
-#pragma comment(linker, "/alternatename:_data_ov066_0211acd0=_data_ov060_0211acd0")
+   window note): same bytes, one storage, sibling names aliased on.
+   THE THREE /alternatename ROWS THAT USED TO SIT HERE ARE GONE. run rel0215
+   wave 2, lane cast-ov066 mounted ov066 per symbol, and all three addresses
+   are named there too -- 0x0211ac20, 0x0211ac68 and 0x0211acd0 are three of
+   Eyerok's THIRTY-EIGHT pointer-to-member source pairs. The mount DEFINES
+   data_ov066_0211ac20 / _0211ac68 / _0211acd0, so every one of the three
+   aliases was defeated silently and ov060's two caller TUs would have read
+   Eyerok's state table instead of their own bss. The bindings are now
+   per-source -D renames in port/CMakeLists.txt, on the two TUs that actually
+   spell them:
+     src/func_ov060_02111c68.c   data_ov066_0211ac20, data_ov066_0211ac68
+     src/func_ov060_02112350.c   data_ov066_0211acd0
+   the w5b_review.md R2 recipe. The ov060 storage below is unchanged; only the
+   spelling bridge moved. */
 
 /* The MSVC-decorated spellings C++ TUs in the pack use for the same mounted
    storage (the actor_faces_bob / bowserpuzzle @@3PA precedent; data aliases
