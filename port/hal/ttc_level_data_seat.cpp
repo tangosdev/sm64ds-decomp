@@ -53,14 +53,22 @@
  *   EIGHT are words inside four ov065 DATA blocks, all four already in ov065's
  *   per-symbol mount. Those are this file's eight rewrites.
  *
- *   FOUR are literal-pool words inside ov065 FUNCTION bodies --
- *   func_ov065_0211a358 +0xfc, func_ov065_0211b1d4 +0x140,
- *   _ZN15TtcRotatingGear13InitResourcesEv +0xe0 and
- *   _ZN14TtcMovingCubeA13InitResourcesEv +0x138. The port does not mount
- *   ov065's .text, so there is no word to rewrite: those resolve at LINK time,
- *   because the matched TU names data_ov035_02112118 / _02112198 / _021121b8 /
- *   _02112258 and the dual mount is what makes those names resolve. Nothing to
- *   do here, but they are the other half of why the mount is required.
+ *   FOUR are literal-pool words inside ov065 FUNCTION bodies. The port does not
+ *   mount ov065's .text, so there is no word to rewrite: those resolve at LINK
+ *   time, because the matched TU names the ov035 symbol and the dual mount is
+ *   what makes that name resolve. PAIRED EXPLICITLY, because listing the four
+ *   bodies in address order beside the four names in address order gets three
+ *   of the four pairings wrong -- the two orders are not the same order:
+ *
+ *     func_ov065_0211a358               +0xfc  -> 0x02112198   (id 110)
+ *     func_ov065_0211b1d4               +0x140 -> 0x02112258   (id 113)
+ *     TtcRotatingGear::InitResources    +0xe0  -> 0x021121b8   (ids 116/117)
+ *     TtcMovingCubeA::InitResources     +0x138 -> 0x02112118   (id 118)
+ *
+ *   Each offset is the pool word's address minus the body's own, and each
+ *   target is the word read out of extracted/overlays/overlay_0065.bin at that
+ *   address. Nothing to do here, but they are the other half of why the mount
+ *   is required.
  *
  * The four blocks and their eight words, read out of
  * extracted/overlays/overlay_0065.bin and cross-checked against
@@ -112,13 +120,32 @@
  * WHAT THE RIGHT PER-LEVEL VALUE IS, MEASURED RATHER THAN ASSUMED. The obvious
  * generalisation -- resolve each target through the NOW-LOADED level's own
  * mount, PortLevelDesc::at(rom), the port_ovNN_at shape -- is WRONG HERE, and
- * this seat's own readback is what proves it. Every level overlay is linked at
- * the same base, so at() on level 33 happily returns a host address for
- * 0x02112138; what lives there in ov033's image is not a CLPS block, the
- * readback reads a magic that is not 'CLPS', and the seat aborts. These twelve
- * addresses are not a shared window slot that every level fills in with its own
- * equivalent -- they are Tick Tock Clock's own resource blocks, and no other
- * level has anything at those addresses that these classes could use.
+ * it fails in TWO different ways depending on which level is loaded. Swept over
+ * every overlay sharing the level window base 0x021111a0, for the target
+ * 0x02112138: fifty-two share that base, ov035 owns the block, and of the OTHER
+ * FIFTY-ONE --
+ *
+ *   28 CONTAIN the address, so at() hands back a host pointer quite happily,
+ *      and ALL 28 read something that is not a CLPS block there (ov009 reads
+ *      magic e28dd004, ov014 entrySize 0, and so on -- mostly ARM instructions,
+ *      because at that offset most level overlays are still in .text). The
+ *      seat's readback catches every one of them and aborts.
+ *   23 DO NOT REACH IT at all: the address is past the end of their footprint,
+ *      at() returns 0, and there is no host answer to seat.
+ *
+ * Level 33 is in the SECOND group and is worth naming because it is this
+ * lane's own proof level: level 33 is ov041, whose window ends at 0x02111d40,
+ * so 0x02112138 is 0x3f8 PAST it. at() returns 0 there and the readback is
+ * never reached. (An earlier revision of this paragraph said level 33 was ov033
+ * and that at() resolved into it -- ov033 is level 25, and the sentence was
+ * wrong in both halves while the conclusion it supported was right.)
+ *
+ * ZERO of the fifty-one is a usable answer. These twelve addresses are not a
+ * shared window slot that every level fills in with its own equivalent -- they
+ * are Tick Tock Clock's own resource blocks, and no other level has anything at
+ * those addresses that these classes could use.
+ * Evidence: ...runs/rel0215/out/w3-a2/lvlwindow-sweep.txt (and lvlwindow.py,
+ * which re-derives it from the config and the shipped images).
  *
  * So the per-loaded-level value is TWO-VALUED, not one-per-level:
  *
@@ -160,6 +187,26 @@
  * re-runnable by construction, allocates nothing on the host and registers
  * nothing with the host, which is the test level_boot.cpp applies to every pass
  * that sits inside the bracket.
+ *
+ * IT DEPENDS ON A MOUNT ORDERING NOTHING ASSERTS, and that is written here
+ * because it is the one assumption this pass cannot check for itself. A level
+ * change resolves the OUTGOING level's mount before mounting the INCOMING one
+ * -- hal/level_change.cpp's port_level_capture_kcl looks up the outgoing
+ * LVL_Overlay to save its KCL handle -- so this seat is called twice per
+ * change and THE SECOND CALL IS THE ONE THAT DECIDES. Observed in both
+ * directions in the traced run, on the stderr stream where the ordering is
+ * reliable (runs/rel0215/out/w3-a2/mech-warp-27-33-27-SEATED.log):
+ *
+ *   606 [lvl] change: level 27 -> 33   1008 [lvl] change: level 33 -> 27
+ *   615 [ttc-seat] level 27  SEATED    1017 [ttc-seat] level 33  RELEASED
+ *   624 [ttc-seat] level 33  RELEASED  1026 [ttc-seat] level 27  SEATED
+ *   627 [lvl] level 33 up             1031 [lvl] level 27 up
+ *
+ * Outgoing first, incoming second, both times. If that order were ever
+ * reversed the words would end up describing the level the player just LEFT,
+ * and nothing in the build would say so -- there is no assertion on it, here
+ * or in level_change.cpp. A lane that changes the handoff's mount order owes
+ * this seat a look.
  *
  * WHERE IT IS CALLED FROM. port_level_mount_at(), on BOTH of its paths -- the
  * patch path and the CACHE HIT path. The cache-hit path is load-bearing rather

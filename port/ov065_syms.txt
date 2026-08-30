@@ -346,12 +346,16 @@
 # the raw ROM address everywhere else.
 #
 # The obvious generalisation -- resolve each target through the now-loaded
-# level's own mount, PortLevelDesc::at(rom) -- is WRONG and the seat's own
-# readback proves it: at() on level 33 returns a host address for 0x02112138
-# quite happily and what lives there in ov033's image is not a CLPS block.
+# level's own mount, PortLevelDesc::at(rom) -- is WRONG two different ways.
+# Swept over the 52 overlays sharing the level window base, for target
+# 0x02112138: ov035 owns the block; of the other 51, TWENTY-EIGHT contain the
+# address and all twenty-eight read something that is not a CLPS block there,
+# so the readback aborts, and TWENTY-THREE do not reach it at all, so at()
+# returns 0 and there is nothing to seat. Level 33 is in the second group and
+# is ov041 (ov033 is level 25), whose window ends 0x3f8 short of the target.
 # These are Tick Tock Clock's own resource blocks, not a window slot every
-# level fills in. Releasing is safe by measurement: all fifty mounted levels
-# were run and only level 27's object table names any of ids 108..118.
+# level fills in. Releasing is safe by a second measurement: all fifty mounted
+# levels were run and only level 27's object table names any of ids 108..118.
 #
 # ---- THE TWO MECHA TABLES COME OUT OF THE MOUNT ---------------------------
 # data_ov065_0211d0ec and data_ov065_0211d2b4 were in the list above. Wave 3's

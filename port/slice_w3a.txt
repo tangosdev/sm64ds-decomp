@@ -21,11 +21,14 @@
 # moved the call into port_level_mount_at, on both of its paths, and made it
 # two-valued -- ov035's copy on level 27, the raw ROM address everywhere else.
 # The generalisation that looks right, resolving through the now-loaded level's
-# own mount, is WRONG and the seat's readback proves it: at() on level 33 hands
-# back a host address for 0x02112138 quite happily and what lives there in
-# ov033's image is not a CLPS block. Releasing is safe by measurement -- all
-# fifty mounted levels were run and only level 27's object table names any of
-# ids 108..118.
+# own mount, is WRONG, and it fails two different ways. Swept over the 52
+# overlays sharing the level window base for target 0x02112138: ov035 owns the
+# block, and of the other 51, twenty-eight CONTAIN the address and every one of
+# them reads something that is not a CLPS block there (the readback aborts),
+# while twenty-three do not reach it at all (at() returns 0). Level 33 is in
+# the second group -- it is ov041, whose window ends 0x3f8 short. Releasing is
+# safe by a second measurement: all fifty mounted levels were run and only
+# level 27's object table names any of ids 108..118.
 #
 # PROOF, one process, SM64DS_WARP_SEQ=33@120,27@240 over 400 frames, rc 0:
 # SEATED on 27 (8 written, readbacks 'CLPS' entrySize=8 count=1 and frames=91),
