@@ -524,3 +524,54 @@ extern "C" void hal_fill_shark_vtable(void)
 #pragma comment(linker, "/alternatename:__ZTV9daMenbo_c=__ZTV7Skeeter")
 #pragma comment(linker, "/alternatename:__ZTV12daPukupuku_c=__ZTV10CheepCheep")
 #pragma comment(linker, "/alternatename:__ZTV9daShark_c=__ZTV5Shark")
+
+/* ============================================================================
+ * TEN LINKAGE ALIASES, ALL MEASURED OFF THE FIRST LINK, NONE PREDICTED.
+ *
+ * The gate-10 cxx_aliases shape (hal/cxx_aliases.cpp's own header states it):
+ * a `//cpp` TU that declares a C-named symbol WITHOUT extern "C" emits an MSVC
+ * decoration for what is a C name everywhere else, and the alias closes the gap
+ * without touching src/. Every left-hand side below was copied VERBATIM out of
+ * the link log's LNK2019 lines; every right-hand side is a symbol this link
+ * already defines. None of the ten left-hand sides is defined anywhere, which
+ * is the condition port/tools/alternatename_guard.py re-checks post-link -- a
+ * defined LHS defeats an /alternatename silently, which is the failure this
+ * whole lane had to retire MgBomroom_Faces.cpp's alias over.
+ *
+ * SIX ov090 DATA SYMBOLS this mount defines, each wanted under whatever struct
+ * type its reading TU declared for it. The mount emits one flat C array per
+ * symbol, so all six are the same object under a decorated name.
+ */
+#pragma comment(linker, "/alternatename:?data_ov090_021344e4@@3DA=_data_ov090_021344e4")
+#pragma comment(linker, "/alternatename:?data_ov090_02134504@@3DA=_data_ov090_02134504")
+#pragma comment(linker, "/alternatename:?data_ov090_02134490@@3UData134490@@A=_data_ov090_02134490")
+#pragma comment(linker, "/alternatename:?data_ov090_021342d8@@3UVector3@@A=_data_ov090_021342d8")
+#pragma comment(linker, "/alternatename:?data_ov090_02134564@@3USharedFilePtr@@A=_data_ov090_02134564")
+#pragma comment(linker, "/alternatename:?data_ov090_0213455c@@3UAnimFilePtr@@A=_data_ov090_0213455c")
+
+/* THREE arm9 FREE FUNCTIONS, cdecl on both sides (`@@YAX...@Z`), already in the
+ * link under their flat names. These are three MORE decoration variants of the
+ * same three functions hal/cxx_aliases.cpp:1450/1465/1910 and
+ * hal/actor_classes_ov070.cpp:281 and hal/actor_faces_bob.cpp:100 already carry
+ * -- each TU spells the parameter types slightly differently and each spelling
+ * decorates differently. One line per variant is the tree's convention. */
+#pragma comment(linker, "/alternatename:?_ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj@@YAXPAXPAUActor@@ABUVector3@@HHII@Z=__ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj")
+#pragma comment(linker, "/alternatename:?_ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_@@YAXPAXPAUActor@@HHPAUVector3_16@@H@Z=__ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_")
+#pragma comment(linker, "/alternatename:?_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj@@YAXPAXPAUBCA_File@@HHI@Z=__ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj")
+
+/* ONE __thiscall METHOD, AND IT IS SAFE FOR A REASON WORTH WRITING DOWN.
+ * src/func_ov090_02132620.cpp (SKEETER's slot 19) declares its own
+ * `class Player;` and calls Actor::GivePlayerCoins as a member, so it wants
+ *     ?GivePlayerCoins@Actor@@QAEXAAVPlayer@@EI@Z     (class Player,  V)
+ * while hal/actor_classes_ov070.cpp:782 already DEFINES the same method
+ * against include/Player.h, where Player is a struct:
+ *     ?GivePlayerCoins@Actor@@QAEXAAUPlayer@@EI@Z     (struct Player, U)
+ * -- read out of that TU's own object file with dumpbin /symbols, not guessed.
+ * Both are `QAE` (public __thiscall), same return, same three parameter widths;
+ * only the class/struct tag differs, and MSVC's class-vs-struct tag has no ABI
+ * meaning. So this alias is ABI-IDENTICAL, unlike the GivePlayerCoins alias
+ * hal/actor_classes_ov070.cpp:286 correctly REFUSED -- that one would have
+ * pointed a __thiscall reference at the cdecl C body, which is why ov070 wrote
+ * the forwarding method instead. This one points a __thiscall reference at
+ * ov070's __thiscall method. Same direction, opposite hazard. */
+#pragma comment(linker, "/alternatename:?GivePlayerCoins@Actor@@QAEXAAVPlayer@@EI@Z=?GivePlayerCoins@Actor@@QAEXAAUPlayer@@EI@Z")

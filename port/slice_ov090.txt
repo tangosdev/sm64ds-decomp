@@ -73,8 +73,31 @@
 # and port/CMakeLists.txt for the three set_source_files_properties blocks.
 #
 # ==== THE MEASURED CLOSURE GAP =============================================
-# Taken off the FIRST LINK's own unresolved list, never guessed. Recorded in
-# the section at the end of this header after that link ran.
+# Taken off the FIRST LINK's own unresolved list, never guessed. That link
+# named FIFTEEN unresolved externals, identically on smoke_player, walk_window
+# and walk_window_hires, in three classes:
+#
+#  (i) ONE MISSING arm9 BODY. `_func_0203558c`, referenced by
+#      src/_ZN7Skeeter13InitResourcesEv.cpp. config/arm9/symbols.txt:1241 names
+#      it (0x0203558c, size 0x14), src/func_0203558c.c exists and it was in no
+#      slice on the base tree. Appended to the list below -- that one line is
+#      the whole external closure this pack adds.
+#
+# (ii) ONE MORE PathPtr REFUSAL, predicted by nothing and named by the link:
+#      src/_ZN8MantaRay13InitResourcesEv.cpp builds TWO PathPtr locals and
+#      calls FromID / NumNodes / GetNode as __thiscall members, four
+#      decorations nothing defines. It moved to
+#      unmatched/MantaRay_HostSites.cpp as refusal (4), so THIRTEEN TUs are
+#      host-copied and 57 ride from src.
+#
+#(iii) NINE MSVC-DECORATION MISMATCHES, the gate-10 cxx_aliases shape: `//cpp`
+#      TUs that declare a C-named symbol without extern "C", so the reference
+#      is decorated and the definition is not. Six are ov090 data symbols this
+#      mount defines, three are arm9 free functions already in the link under
+#      their flat names, and one is Actor::GivePlayerCoins wanted with a
+#      `class Player` tag where the defined method has `struct Player`
+#      (identical __thiscall ABI, only the tag differs). All ten alias lines
+#      are at the bottom of hal/actor_classes_ov090.cpp with the reasoning.
 src/_ZN7SkeeterD1Ev.c
 src/_ZN7SkeeterD0Ev.c
 src/func_ov090_02130f94.c
@@ -105,7 +128,6 @@ src/func_ov090_02132a58.cpp
 src/func_ov090_02132b14.c
 src/_ZN8MantaRay16CleanupResourcesEv.c
 src/_ZN8MantaRay16OnPendingDestroyEv.c
-src/_ZN8MantaRay13InitResourcesEv.cpp
 src/MantaRay_Spawn.c
 src/_ZN10CheepCheepD1Ev.c
 src/_ZN10CheepCheepD0Ev.c
@@ -133,3 +155,5 @@ src/__sinit_ov090_02133ce8.c
 src/__sinit_ov090_02133ea8.c
 src/__sinit_ov090_02133f4c.c
 src/__sinit_ov090_02134020.c
+# ---- the measured external closure: the one arm9 body this pack needs ----
+src/func_0203558c.c

@@ -26,6 +26,18 @@
  *       Likewise `ApproachLinear(short&, short, short)` is spelled as a plain
  *       C++ overload in the source and is really _Z14ApproachLinearRsss.
  *     Everything else is the matched source statement for statement.
+ *
+ * (4) src/_ZN8MantaRay13InitResourcesEv.cpp -- THE SAME PathPtr REFUSAL, found
+ *     by the FIRST LINK rather than predicted (the slice_vs.txt "measured gap"
+ *     discipline). It declares the same local `struct PathPtr` with a
+ *     constructor and calls PathPtr::FromID, PathPtr::NumNodes and
+ *     PathPtr::GetNode as __thiscall members; the link named all four
+ *     decorations as unresolved. Nothing in this build defines a PathPtr
+ *     member under those signatures -- include/PathPtr.h declares NumNodes
+ *     returning `unsigned int` where this TU declares `int`, so even a face
+ *     built on that header would decorate differently -- and hal/cxx_aliases
+ *     bridges only the FLAT spellings. Host copy, same remedy as (3): the flat
+ *     arm9 symbols with an explicit self over an 8-byte local.
  */
 #include "ModelAnim.h"
 
@@ -126,6 +138,81 @@ int _ZN8MantaRay8BehaviorEv(void *selfv)
     func_ov090_02132b14(c);
     _ZN12CylinderClsn5ClearEv(c + 0x110);
     _ZN12CylinderClsn6UpdateEv(c + 0x110);
+    return 1;
+}
+
+/* ---- (4) InitResources, the same PathPtr refusal ----------------------- */
+void *_ZN5Model8LoadFileER13SharedFilePtr(void *p);
+int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
+void _ZN9Animation8LoadFileER13SharedFilePtr(void *p);
+void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+        void *self, void *a, const MrVec3 *v, int b, int c, unsigned d, unsigned e);
+unsigned _ZNK7PathPtr8NumNodesEv(const void *self);
+extern char data_ov090_02134524[];
+extern char data_ov002_0210da10[];
+extern char data_ov002_0210d9a8[];
+extern char data_ov090_0213452c[];
+extern MrVec3 data_ov090_02134200;
+extern int data_ov090_0213454c;
+extern unsigned char data_0209f2d8;
+
+/* PORT_HOST_ABI: two PathPtr locals built and walked as real C++ objects. */
+int _ZN8MantaRay13InitResourcesEv(void *selfv)
+{
+    unsigned char *thiz = (unsigned char *)selfv;
+
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(thiz + 0x30c,
+        _ZN5Model8LoadFileER13SharedFilePtr(data_ov090_02134524), 1, -1);
+    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da10);
+    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9a8);
+    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov090_0213452c);
+
+    *(int *)(thiz + 0x37c) = *(int *)(thiz + 8) & 0xff;
+    *(int *)(thiz + 0x388) = (*(unsigned int *)(thiz + 8) >> 0xc) & 0xf;
+    if (*(int *)(thiz + 0x37c) < 0) *(int *)(thiz + 0x37c) = 0;
+
+    {
+        char pp[8];
+        _ZN7PathPtrC1Ev(pp);
+        _ZN7PathPtr6FromIDEj(pp, *(unsigned int *)(thiz + 0x37c));
+        *(int *)(thiz + 0x380) = (int)_ZNK7PathPtr8NumNodesEv(pp);
+    }
+
+    *(int *)(thiz + 0xa0) = -0x3c000;
+
+    {
+        MrVec3 v;
+        v.x = data_ov090_02134200.x;
+        v.y = data_ov090_02134200.y;
+        v.z = data_ov090_02134200.z;
+        _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+            thiz + 0x110, thiz, &v, 0x150000, 0xc8000, 0x200004, 0);
+    }
+
+    {
+        char pp[8];
+        _ZN7PathPtrC1Ev(pp);
+        _ZN7PathPtr6FromIDEj(pp, *(unsigned int *)(thiz + 0x37c));
+        *(int *)(thiz + 0x384) = 1;
+        _ZNK7PathPtr7GetNodeER7Vector3j(pp, (MrVec3 *)(thiz + 0x5c),
+                                        *(unsigned int *)(thiz + 0x384));
+    }
+
+    {
+        int b = (int)(data_0209f2d8 == 2);
+        if (b != 0) {
+            *(int *)(thiz + 0x384) = 3;
+            *(short *)(thiz + 0x92) = (short)0xf303;
+            *(short *)(thiz + 0x94) = 0xb50;
+            *(short *)(thiz + 0x96) = 0;
+            *(int *)(thiz + 0x5c) = (int)0xfdfb8000;
+            *(int *)(thiz + 0x60) = (int)0xff8f8000;
+            *(int *)(thiz + 0x64) = 0x29a000;
+            *(int *)(thiz + 0xb0) = 0;
+        }
+    }
+
+    func_ov090_02132ac4(thiz, &data_ov090_0213454c);
     return 1;
 }
 
