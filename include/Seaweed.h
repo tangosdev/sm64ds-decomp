@@ -21,7 +21,7 @@ struct Seaweed : dActor_c {
     u8  pad_0d0[0x4];
     ModelAnim              mModelAnim;   /* 0x0d4 */
 
-    virtual ~Seaweed();            /* slots 16 (D1), 17 (D0) */
+    virtual ~Seaweed() {}            /* slots 16 (D1), 17 (D0) */
 
     virtual s32   InitResources();         /* slot  0 */
     virtual s32   CleanupResources();      /* slot  3 */

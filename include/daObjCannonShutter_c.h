@@ -27,7 +27,7 @@ struct daObjCannonShutter_c : dBgActor_c {
     u8 mCannonOpen;                       /* 0x32e */
 
     /* --- vtable --- */
-    virtual ~daObjCannonShutter_c();
+    virtual ~daObjCannonShutter_c() {}
 
     int Behavior();
     int CleanupResources();

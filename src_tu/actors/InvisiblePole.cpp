@@ -147,6 +147,3 @@ s32 InvisiblePole::CleanupResources()
  * for the header above it -- dCcAc_c is 0x34 and starts at 0xd4, which
  * closes exactly on the 0x108 the factory allocates.
  */
-InvisiblePole::~InvisiblePole()
-{
-}

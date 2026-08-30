@@ -25,7 +25,7 @@ struct SoundObject : dActor_c {
     u8  unk_0e0;                 /* 0x0e0 */
     u8  pad_0e1[0x3];
 
-    virtual ~SoundObject();            /* slots 16 (D1), 17 (D0) */
+    virtual ~SoundObject() {}            /* slots 16 (D1), 17 (D0) */
 
     int Behavior();
     int InitResources();

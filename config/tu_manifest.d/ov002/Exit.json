@@ -105,13 +105,6 @@
       "relocation_destinations_verified": "PASS"
     }
   },
-  "compiler_only_output": [
-    {
-      "symbol": "_ZN4ExitD2Ev",
-      "disposition": "deadstrip",
-      "reason": "compiler-generated base-object destructor is byte-identical to D1, has no configured ROM symbol, and has no inbound relocation"
-    }
-  ],
   "externalized_output": [
     {
       "symbol": "_ZTI7fBase_c",

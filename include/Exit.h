@@ -80,7 +80,7 @@ struct Exit : dActor_c {
        comparisons. */
     Matrix4x3 mInvMat;            /* 0x0d4 */
 
-    virtual ~Exit();
+    virtual ~Exit() {}
 
     virtual s32 InitResources();
     virtual s32 CleanupResources();

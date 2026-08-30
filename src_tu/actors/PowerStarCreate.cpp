@@ -70,6 +70,3 @@ s32 PowerStarCreate::Behavior()
 /* ROM ordinals 0/1 -- the compiler emits D1 and D0 from this definition. */
 /* recovered: real C++ destructor -- the compiler emits the whole body.
  * Vtable slot 16: one vtable store, the members in reverse, then ~dActor_c. */
-PowerStarCreate::~PowerStarCreate()
-{
-}

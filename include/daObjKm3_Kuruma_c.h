@@ -28,7 +28,7 @@
 
 struct daObjKm3_Kuruma_c : daObjKuruma_c {
     /* --- vtable --- */
-    virtual ~daObjKm3_Kuruma_c();      /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjKm3_Kuruma_c() {}      /* slots 16 (D1), 17 (D0) */
 
     int CleanupResources();            /* slot  3 */
     int InitResources();               /* slot  0 */

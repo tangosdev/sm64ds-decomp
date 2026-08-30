@@ -28,7 +28,7 @@ struct BasementWater : dBgActor_c {
     u8 mWasJustDrained;                       /* 0x33e */
 
     /* --- vtable --- */
-    virtual ~BasementWater();
+    virtual ~BasementWater() {}
 
     int Behavior();
     int CleanupResources();

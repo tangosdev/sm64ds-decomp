@@ -62,6 +62,3 @@ int daObjFl_Fall_Block_c::CleanupResources()
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN20daObjFl_Fall_Block_cD1Ev
 /* The compiler emits D2, D0 and D1 from this one class definition. */
-daObjFl_Fall_Block_c::~daObjFl_Fall_Block_c()
-{
-}

@@ -368,6 +368,3 @@ int BlueCoinSwitch::CleanupResources()
  * dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This class adds no
  * member with a destructor of its own.
  */
-BlueCoinSwitch::~BlueCoinSwitch()
-{
-}
