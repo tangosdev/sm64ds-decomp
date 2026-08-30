@@ -3604,3 +3604,104 @@ unsourced bodies in the VS/wireless entry overlay.
   to `u16` at the store reproduces that split; casting at the assignment keeps
   all four together, and an `s16` intermediate costs two extra words per
   component because mwccarm will not prove `(x << 9) >> 16` fits in 16 bits.
+
+## 6bn. The `<<9` coalesce is a WHOLE-BLOCK flip driven by ONE component, and its trigger lives in a phase window that excludes the split it needs (func_ov075_0211afb0, div 4 -> 2 measured, ~9000 compiles, 2026-08-29)
+
+6bm parked `func_ov075_0211afb0` at div 4 with the verdict "two unrelated source
+shapes converging on one residual is the signature of a real allocator
+preference". That verdict was right about the class and wrong about the space:
+the residue is reachable. This session moved the measured floor to **div 2** and,
+more usefully, identified the exact construct that steers it.
+
+**The residue is ONE allocator decision, not four.** The second unrolled vertex
+emission has three free registers (`sb` = the dying byte offset, `r0` = the dying
+array base, plus `ip`/`lr`); the first emission has none, so its coalescing is
+forced and matches trivially. Under our coloring `z<<9` coalesces into its own
+source (`r5`) and `x<<9` into its own (`r0`); the ROM gives `z<<9` the freed base
+register `r0`, and `x<<9` is then squeezed out to `sb`. Fix `W_z9`'s colour and
+the other three words follow. Live ranges are IDENTICAL in both colourings --
+this is pure colour choice, and `wallcrack` tags all four words `regperm`.
+
+* **Only the Z component's spelling moves the block's colouring.** With the x
+  and y components held fixed, sweeping every component independently over
+  {named-int + cast at the store, 16-bit-typed intermediate, fully inlined}
+  shows x and y are inert in all nine combinations, and z alone flips all four
+  words. The flip is a block-level event: changing z re-colours the X chain too.
+
+* **The trigger is a NARROWING CONVERSION anywhere in the z chain -- nothing
+  else.** Verified inert (byte-identical output, our colouring): `unsigned`,
+  `long`, `unsigned long`, `signed`, `u32`, pointer round trips (`char *` /
+  `void *` + `(int)`), an `enum` round trip, a `long long` round trip, and every
+  cast that does not change width. Verified to flip: `short`/`s16` on the raw z,
+  `u16`/`unsigned short`/`short` on the shift result, and `u16 t = vz << 9`.
+  Width-preserving conversions create no node; only a conversion that emits
+  shifts does.
+
+* **`short vzb` reaches the ROM's four registers EXACTLY, at div 2.** Split the
+  shared `vz` into per-block locals, leave vertex A's `int`, and declare vertex
+  B's `short`: block A stays byte-exact, block B's window becomes
+  `lsl sb,r0,#9 / lsl r0,r5,#0x10 / asr r5,r0,#0x17 / asr r0,sb,#0x10` -- ROM's
+  registers in all four slots, only the two z shift AMOUNTS wrong (0x168,
+  0x16c), because narrowing to k bits folds the pair to `lsl #(32-k)` /
+  `asr #(32-k+7)`. **This shape is NOT a candidate: it computes a different
+  value** (`sign_extend16(z) >> 7`, not `(z<<9)>>16`) and is recorded as a
+  codegen probe only. Solving `32-k = 9` wants a 23-bit type, which C reaches
+  only through a bitfield -- and every bitfield route is closed below.
+
+* **THE FLOOR, stated precisely: the flip construct and the split it needs live
+  in disjoint phase windows.** The ROM splits z's `(u16)` truncation across the
+  x|y store (`lsl #16` early, `lsr #16` after the store); that split needs the
+  cast at the USE (6bm). But every construct that flips the colouring FUSES the
+  four truncation ops at the definition. Placing the 16-bit conversion before
+  the packed store flips and fuses (div 14); placing it after the packed store
+  splits correctly and does not flip (div 4). One construct, two mutually
+  exclusive positions -- the same disjoint-construct-class signature as 6bb's
+  fold-seal vs r2-rank pair. The open angle is a construct that presents a
+  narrowing conversion to the colourer and dissolves before the truncation is
+  lowered; nothing in c99+gccext reaches that intersection.
+
+Closed this session, each a real negative:
+
+* **b56 does not unroll.** The "two emissions came from one 2-iteration loop"
+  hypothesis is dead: `for (k=0;k<2;k++)` and its do-while form stay rolled
+  (540 -> 460 bytes) under every unroll pragma (`opt_unroll_loops`,
+  `opt_unroll_count`, `opt_full_unroll_limit`, `opt_unroll_instr_count`,
+  `opt_findoptimalunrollfactor`, `opt_addgotounrolledlooptest`,
+  `opt_unrollpostloop`). Loop unrolling is not a lever on this compiler.
+* **Inlining is fully flattened before allocation.** A `static inline` emit
+  helper reproduces the straight-line bytes exactly, and so do TWO textually
+  distinct helpers (`emitA`/`emitB`) called once each -- the honest form of
+  "distinct-macro laundering" for a repeated block. Distinct textual origin does
+  NOT buy distinct web ancestry here. Three signatures `(base,off)`,
+  `(p,base,off)`, `(p)` x six inline pragmas: all div 4.
+* **Statement order is not the lever.** All **840** linear extensions of block
+  B's dependence poset compile to 52 distinct windows, none the ROM's, best
+  still 4. Setup-order permutations (including deferring `off1`/`p1` until after
+  block A) and hoisting block B's loads up into block A are all destructive.
+* **Pragmas do not reach it.** The full verified 246-name vocabulary at on/off
+  (492 compiles) and 7000+ PAIRS of the 60 `opt_*` names leave the window
+  untouched; only `opt_dead_assignments off`, `opt_common_subs off` and
+  `opt_propagation off` move it, all far worse.
+* **Also inert (byte-identical):** `volatile` on any or all of the MMIO stores
+  and loads, BB barriers (`do{}while(0)`, `switch(0)`, `if(1)`, a `goto` label,
+  a bare scope) around either block, C++ TU form (`extern "C"`, wrapped block,
+  C++ inline helper), and asymmetric pointer spellings between the two blocks.
+* **NEW EQUIVALENT SPELLING, banked for reuse:** a signed 16-bit bitfield at bit
+  offset 7 -- `struct BF { unsigned lo : 7; int hi : 16; unsigned hz : 9; }`,
+  read as `((BF *)(p + 8))->hi` -- compiles BYTE-IDENTICALLY to
+  `(*(int *)(p + 8) << 9) >> 16`. It is exact, not a launder, and it is a
+  conversion at the source level that the compiler canonicalises into the shift
+  pair before colouring (hence no flip). Useful anywhere a DS fixed-point
+  narrowing reads better as a field than as a shift pair. A 23-bit bitfield
+  (`sign_extend23(z) >> 7`, which IS `(z<<9)>>16` exactly) does not fold its
+  `>> 7` into the extract, and a 23-bit bitfield LOCAL homes to memory (+44
+  bytes), so neither route reaches the amounts the flip needs.
+* **The permuter cannot see it either.** Three seeds (the struct-array shape,
+  the char*/offset do-while shape, and the bitfield shape) plateau at score 20
+  -- exactly the four regalloc words -- over 6000+ iterations each.
+
+Verdict: still parked at div 4 for a SEMANTICALLY VALID source (`// NONMATCHING`),
+with the mechanism now named and the open angle narrowed from "some unexplored
+spelling" to one specific phase-window intersection. Do not re-run component
+naming, decl order, statement order, inline helpers, barriers, volatile, C++
+form, or the pragma vocabulary on this function; they are measured and closed.
