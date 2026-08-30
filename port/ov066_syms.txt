@@ -1,0 +1,210 @@
+# run rel0215 wave 2, lane cast-ov066 (W2-ov066): ov066, the EYEROK pack --
+# EYEROK (176, 10daIwante_c), the SSL pyramid boss. FRESH per-symbol mount,
+# the ov077/ov079/ov080/ov081/ov072 convention: the overlay's WHOLE .data +
+# .bss span MINUS the ONE vtable (a host array hal/actor_classes_ov066.cpp
+# fills) and MINUS dsd's one .p__sinit_ov066_0211a418 .ctor word (not a C
+# identifier; the port calls the sinit by name). ovdata.py --pack pads the gaps.
+#
+# ov066 is not a level overlay, so there is no whole-image half: this is the
+# only mount of it.
+#
+# ==== THE BASE, PROVED BEFORE ANYTHING WAS READ OFF IT ======================
+# Every byte below comes from extracted/overlays/overlay_0066.bin at base
+# 0x02115ee0, never extracted/dsd/arm9_overlays/ (T4: the two disagree on 89
+# of 103 overlays and dsd never scores better). The base is proved, not
+# assumed -- the first word of NINE known functions is a plausible prologue:
+#
+#   0x02115ee0 _ZN6EyerokD1Ev                 e92d4010  push {r4,lr}
+#   0x02115f84 _ZN6EyerokD0Ev                 e92d4010  push {r4,lr}
+#   0x0211603c func_ov066_0211603c            e92d4070  push {r4-r6,lr}
+#   0x02119654 _ZN6Eyerok16CleanupResourcesEv e92d4010  push {r4,lr}
+#   0x021197a4 _ZN6Eyerok6RenderEv            e92d4010  push {r4,lr}
+#   0x02119838 _ZN6Eyerok8BehaviorEv          e92d47f0  push {r4-r10,lr}
+#   0x02119ce8 _ZN6Eyerok13InitResourcesEv    e92d43f0  push {r4-r9,lr}
+#   0x0211a370 Eyerok_Spawn                   e92d4010  push {r4,lr}
+#   0x0211a418 __sinit_ov066_0211a418         e92d4000  push {lr}
+#
+# Sections, from config/arm9/overlays/ov066/delinks.txt:
+#   .text   0x02115ee0..0x0211a418      .init   0x0211a418..0x0211abc0
+#   .ctor   0x0211abc0..0x0211abc4      .data   0x0211abe0..0x0211ae00
+#   .bss    0x0211ae00..0x0211b100
+# There is NO .rodata section. The image is 0x4f20 bytes and ends at
+# 0x0211ae00, exactly .bss's start.
+#
+# ==== ONE CLASS, NOT THREE =================================================
+# A boss overlay can carry several cooperating classes (hand left / hand right
+# / head), and this one DOES NOT. The whole of .data was dumped word by word
+# and there is EXACTLY ONE __si_class_type_info record: 0x0211ad24, whose
+# three words are [0x0209a764 __si_class_type_info][0x0211ad30 name ptr]
+# [0x021089ec base]. Exactly one vtable (_ZTV6Eyerok) and exactly one
+# SpawnInfo follow it. The two hands and the head are STATES of one actor,
+# which is why .data carries a 38-entry pointer-to-member state table rather
+# than three class blocks.
+#
+#   0x0211ad30 name string reads "10daIwante_c"  -- iwa + te, ROCK HAND.
+#   0x021089ec base typeinfo's own name reads "10dBgActor_c"  == Platform.
+#
+# So dsd's _ZTV6Eyerok / _ZN6Eyerok* names and the ROM's daIwante_c are two
+# spellings of ONE class, checked the ov077 way (the table's OWN vtable[-1]
+# read through to its own name string). There is no ov026/ov036-style identity
+# SHIFT in this overlay -- there is only one class for a shift to land on.
+#
+# ==== THE CAST MAP, BOTH ATTRIBUTION ROUTES ================================
+# Both routes are mandatory: EIGHT overlays' spans intersect ov066's ground --
+# ov006, ov060, ov062, ov063, ov064, ov065, ov067 and ov075 (measured from
+# every delinks.txt, not from the campaign plan's four-occupant note, which
+# undercounts). Route 1: the arm9 spawn table word at 0x02090864 + id*4 is a
+# RELOCATION, read out of config/arm9/relocs.txt, and it must land on this
+# overlay's own SpawnInfo. Route 2: that record's own word[1] low halfword must
+# equal the id whose slot reached it, and word[0] must be a spawn function
+# inside ov066's own .text.
+#
+#   id   SpawnInfo   table slot   word[0] spawnFunc        idhalf   module
+#   176  0x0211ad40  0x02090b24   0x0211a370 Eyerok_Spawn     176   overlays(60,66)
+#
+# ==== THE ALIAS RACE ON THE SPAWNINFO: SETTLED =============================
+# dsd marks Eyerok_SpawnInfo `ambiguous` and the reloc's module column names
+# TWO overlays, so this is a real contest with a mounted sibling (ov060 is
+# mounted, port/ov060_syms.txt). It is settled by reading the RAW BYTES of both
+# claimants, not by trusting a label:
+#
+#   ov066 at 0x0211ad40:  0211a370 006300b0 00000000 00064000
+#                         00064000 01000000 00c80000 00000000 0211ad24
+#   ov060 at 0x0211ad40:  NO BYTES AT ALL.
+#
+# ov060's image is 0x92e0 bytes at base 0x02111900 and ends at 0x0211abe0,
+# which is exactly ov060's own .bss start (0x0211abe0..0x0211b240). 0x0211ad40
+# is 0x160 bytes INSIDE that bss, so ov060 cannot be the owner of a statically
+# initialised SpawnInfo there. ov066's record, by contrast, has word[0] =
+# Eyerok_Spawn (a real e92d4010 prologue inside ov066's own .text), word[1]'s
+# low half = 0x00b0 = 176 = exactly the table index that reached it, and
+# word[8] = 0x0211ad24, Eyerok's own __si_class_type_info record.
+# ID 176 IS ov066's EYEROK. This is the ov077 Whomp finding in mirror image:
+# there the CONTESTED address was ov077's bss and ov079's data, here it is
+# ov060's bss and ov066's data.
+#
+# NO BRIDGE AND NO /alternatename IS NEEDED FOR THE RECORD ITSELF: the two
+# mounts emit DIFFERENT C names at different host storage, and the registry
+# reaches its record by C name, never by DS address.
+#
+# ==== THE SIX ALIASES THIS MOUNT DEFEATS ===================================
+# THIS IS THE LANE'S DEFINING HAZARD AND THE TREE PREDICTED IT IN WRITING:
+# port/build-port.cmd:92 says "EyerokD0 and the data_ov075 aliases flip the
+# same way if their overlays land". Six live /alternatename directives have an
+# ov066 name as their LHS. Every one of them is DEFEATED the moment this lane
+# defines that name, and a defeated alias fails SILENTLY at run time and never
+# at link -- the Coffin / Spindrift shape (T6). All six are converted to
+# per-source -D renames on the foreign caller, which is the remedy the tree's
+# own koopa_chuckya note already prescribes for exactly this
+# (the w5b_review.md R2 func_ov065_02117994 precedent). See port/CMakeLists.txt
+# for the six rows and port/slice_ov066.txt for the itemised list.
+#
+# ==== THE VTABLE WIDTH, AND THE TWO ROUTES THAT DISAGREE ===================
+# Read slot by slot out of config/arm9/overlays/ov066/relocs.txt with every
+# target resolved through config/arm9/symbols.txt (the ov072 method), and
+# cross-read against the raw image.
+#
+#   class   table       A reloc run  B next dsd sym  TRUTH  what pins it
+#   Eyerok  0x0211ad64      32            39 LIES      32   tail + 7 zero words
+#
+# ROUTE B LIES. The next dsd symbol after _ZTV6Eyerok is data_ov066_0211ae00,
+# the .bss start, giving 0x9c = 39 slots. Slots 32..38 (0x0211ade4..0x0211adfc)
+# are ZERO in the raw image -- .data's tail padding up to .bss's align-32
+# boundary, not seven null virtuals. The reloc run stops at slot 31, which is
+# the independent confirmation.
+#
+# THIRTY-TWO, NOT THIRTY-ONE, and the 32nd slot is the whole reason:
+#   slot 30 == 0x020100dc Actor::OnAimedAtWithEggReturnVec, the last Actor slot
+#   slot 31 == 0x020ee55c ov002 _ZN8Platform4KillEv
+# A plain Actor stops at 30. Eyerok carries a 32nd because it is PLATFORM-
+# DERIVED -- which the base typeinfo (10dBgActor_c) says independently, and
+# which Eyerok_Spawn says a third time by calling _ZN8PlatformC2Ev. Three
+# independent reads, one answer. Mario stands on the hands; they are platforms.
+#
+# The fourth width shape (a pointer-to-member SOURCE table whose {function, 0}
+# pairs look exactly like more vtable) DOES fire in this overlay, but BELOW the
+# table, not above it: .data's first 0x138 bytes are 38 such pairs at
+# 0x0211abe8..0x0211ad18. All three tells are present -- every other word is
+# zero, dsd names ONE symbol per PAIR at 8-byte stride, and the semantic tail
+# already ended the vtable at 31. They are mounted as data (they are the state
+# machine's source table), never read as vtable.
+#
+# The per-class .data layout is the ov077 one with the PMF block enlarged:
+#     [2 scalars][38 PMF source pairs][3-word vec][typeinfo][name][SpawnInfo][vtable]
+#   0x0211abe0  0x0211abe8  0x0211ad18  0x0211ad24  0x0211ad30  0x0211ad40  0x0211ad64
+#
+# ==== THE ONE VTABLE IS EXCLUDED, AS HOST STORAGE ==========================
+# The ov015/ov016/ov022/ov045/ov077/ov080 rule -- a mounted vtable hands a
+# factory DS code addresses. No dsd symbol falls inside its span, so no
+# interior split has to be excluded with it:
+#   0x0211ad64..0x0211ade4  176  32 slots  _ZTV6Eyerok / _ZTV12daIwante_c
+# The seven trailing zero pad words (0x0211ade4..0x0211ae00) are not mounted
+# either: no symbol names them and .bss starts at 0x0211ae00.
+#
+# ==== WHAT IS MOUNTED ======================================================
+# 112 symbols: every ov066 .data / .bss symbol that is not the vtable and not
+# the .ctor word. Sized by next-symbol delta (ovdata.py's own rule, clamped to
+# the delinks section). THERE IS NOT ONE EXPLICIT PIN, and that is a measured
+# result rather than an omission -- every size was audited for T3 against what
+# the sinit and the class's own bodies actually write:
+#
+#   the 38 rows at 0x0211abe8..0x0211ad10, 0x8 each, are the PMF SOURCE pairs
+#       __sinit_ov066_0211a418 copies into the .bss state records as `S8`, and
+#       its own C declares them `S8` = 8 bytes. Exact.
+#   data_ov066_0211ad18  0xc  the three-word Vector3 _ZN6Eyerok8BehaviorEv
+#       reads as data_ov066_0211ad18[0..2]. Exact, not one word short.
+#   data_ov066_0211ad24  0xc  the 3-word typeinfo record. Exact.
+#   data_ov066_0211ad30  0x10 the name string, 12 chars + NUL, padded. Ample.
+#   Eyerok_SpawnInfo     0x24 the record's nine words, ending on the vtable's
+#       own typeinfo pointer -- the ov077 Lakitu_SpawnInfo sizing exactly.
+#   the twenty-two 0x8 rows (ae14 ae1c ae24 ae2c ae34 ae3c ae44 ae4c ae54 ae5c
+#       ae64 ae6c ae74 ae7c ae84 ae8c ae94 ae9c aea4 aeac aeb4 aebc) are
+#       SharedFilePtr objects, 8 bytes, none split (the ov025 half-SharedFilePtr
+#       trap does not fire in this overlay).
+#   the twenty-two 0xc rows (aec4 aed0 aedc aee8 aef4 af00 af0c af18 af24 af30
+#       af3c af48 af54 af60 af6c af78 af84 af90 af9c afa8 afb4 afc0) are
+#       func_020731dc destructor list NODES, the exact 8d1f9d13b shape, and dsd
+#       sized every one of them 0xc correctly.
+#   the nineteen 0x10 rows (afcc..b0ec) are the STATE records the sinit writes
+#       as `S16 { S8 x, y; }` = 16 bytes, and _ZN6Eyerok8BehaviorEv reads the
+#       tick half at +8. Nineteen states, two PMFs each = 38, which is exactly
+#       the .data pair count. The LAST one (data_ov066_0211b0ec) infers 0x14
+#       because .bss ends at 0x0211b100 -- OVERSIZED by four bytes, harmless,
+#       and left as inferred rather than pinned down (a pin there would be a
+#       claim the ROM does not make).
+#
+# NO PHANTOM SYMBOL SPLITS EITHER, checked the ov077 way and not assumed: every
+# reloc from EVERY module landing inside 0x0211abe0..0x0211b100 was enumerated,
+# and every one of the 112 addresses below is cited by ov066's OWN code
+# (module:overlay(66)). The addresses the siblings cite and ov066 does not
+# (0x0211ac0c, 0x0211ae90, 0x0211aeb8, 0x0211aed4, 0x0211aee0, 0x0211af38,
+# 0x0211af70, 0x0211af74, 0x0211afb0, 0x0211afbc and twenty more) carry NO dsd
+# ov066 symbol at all, so there is no phantom boundary to leave out.
+data_ov066_0211abe0 data_ov066_0211abe4 data_ov066_0211abe8 data_ov066_0211abf0
+data_ov066_0211abf8 data_ov066_0211ac00 data_ov066_0211ac08 data_ov066_0211ac10
+data_ov066_0211ac18 data_ov066_0211ac20 data_ov066_0211ac28 data_ov066_0211ac30
+data_ov066_0211ac38 data_ov066_0211ac40 data_ov066_0211ac48 data_ov066_0211ac50
+data_ov066_0211ac58 data_ov066_0211ac60 data_ov066_0211ac68 data_ov066_0211ac70
+data_ov066_0211ac78 data_ov066_0211ac80 data_ov066_0211ac88 data_ov066_0211ac90
+data_ov066_0211ac98 data_ov066_0211aca0 data_ov066_0211aca8 data_ov066_0211acb0
+data_ov066_0211acb8 data_ov066_0211acc0 data_ov066_0211acc8 data_ov066_0211acd0
+data_ov066_0211acd8 data_ov066_0211ace0 data_ov066_0211ace8 data_ov066_0211acf0
+data_ov066_0211acf8 data_ov066_0211ad00 data_ov066_0211ad08 data_ov066_0211ad10
+data_ov066_0211ad18 data_ov066_0211ad24 data_ov066_0211ad30 Eyerok_SpawnInfo
+data_ov066_0211ae00 data_ov066_0211ae04 data_ov066_0211ae08 data_ov066_0211ae0c
+data_ov066_0211ae10 data_ov066_0211ae14 data_ov066_0211ae1c data_ov066_0211ae24
+data_ov066_0211ae2c data_ov066_0211ae34 data_ov066_0211ae3c data_ov066_0211ae44
+data_ov066_0211ae4c data_ov066_0211ae54 data_ov066_0211ae5c data_ov066_0211ae64
+data_ov066_0211ae6c data_ov066_0211ae74 data_ov066_0211ae7c data_ov066_0211ae84
+data_ov066_0211ae8c data_ov066_0211ae94 data_ov066_0211ae9c data_ov066_0211aea4
+data_ov066_0211aeac data_ov066_0211aeb4 data_ov066_0211aebc data_ov066_0211aec4
+data_ov066_0211aed0 data_ov066_0211aedc data_ov066_0211aee8 data_ov066_0211aef4
+data_ov066_0211af00 data_ov066_0211af0c data_ov066_0211af18 data_ov066_0211af24
+data_ov066_0211af30 data_ov066_0211af3c data_ov066_0211af48 data_ov066_0211af54
+data_ov066_0211af60 data_ov066_0211af6c data_ov066_0211af78 data_ov066_0211af84
+data_ov066_0211af90 data_ov066_0211af9c data_ov066_0211afa8 data_ov066_0211afb4
+data_ov066_0211afc0 data_ov066_0211afcc data_ov066_0211afdc data_ov066_0211afec
+data_ov066_0211affc data_ov066_0211b00c data_ov066_0211b01c data_ov066_0211b02c
+data_ov066_0211b03c data_ov066_0211b04c data_ov066_0211b05c data_ov066_0211b06c
+data_ov066_0211b07c data_ov066_0211b08c data_ov066_0211b09c data_ov066_0211b0ac
+data_ov066_0211b0bc data_ov066_0211b0cc data_ov066_0211b0dc data_ov066_0211b0ec
