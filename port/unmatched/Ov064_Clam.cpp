@@ -31,11 +31,16 @@
  * Vector3 * -- the ROM's own argument, and the no-scale path every Model draw
  * without a scale vector takes.
  *
- * NOT here: _ZN13TreasureChest6RenderEv, which is the identical shape one class
- * over. Its class is blocked for a different reason (an unmatched state body,
- * see hal/actor_classes_ov064_w12.cpp's header), so hosting its Render now
- * would be dead code; when that class lands, this file is where its Render
- * belongs.
+ * ALSO here, since run rel0215 wave 3 (lane w3-c):
+ * _ZN13TreasureChest6RenderEv, the identical shape one class over. The
+ * paragraph that used to sit here said "when that class lands, this file is
+ * where its Render belongs" -- TREASURE_CHEST (13) landed with that lane, its
+ * unmatched state body (func_ov064_0211a4c4) transcribed in
+ * port/unmatched/Ov064_TreasureChest.cpp, so the Render moves in as promised.
+ * TreasureChest_Spawn constructs a ModelAnim at +0xd4 exactly as Clam_Spawn
+ * does and src/_ZN13TreasureChest6RenderEv.cpp carries the same local
+ * six-virtual shadow with the same literal-0 scale, so the two bodies are the
+ * same call with a different receiver.
  */
 #include "ModelAnim.h"
 
@@ -46,6 +51,17 @@ int _ZN4Clam6RenderEv(void *selfv)
 {
     char *c = (char *)selfv;
     /* ((Base *)&mModelAnim)->m(0) -- the ROM slot-5 Render, spelled qualified */
+    ((ModelAnim *)(c + 0xd4))->ModelAnim::Render((const Vector3 *)0);
+    return 1;
+}
+
+/* PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish case.
+   run rel0215 wave 3, lane w3-c. Same shadow, same offset, same literal-0
+   scale as Clam's above; the matched TU stays byte-locked in src/ and out of
+   port/slice_w3c.txt. */
+int _ZN13TreasureChest6RenderEv(void *selfv)
+{
+    char *c = (char *)selfv;
     ((ModelAnim *)(c + 0xd4))->ModelAnim::Render((const Vector3 *)0);
     return 1;
 }
