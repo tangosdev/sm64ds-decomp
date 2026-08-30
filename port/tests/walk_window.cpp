@@ -6203,8 +6203,30 @@ int main(void)
                 port_level_set_target(staged);
                 port_scene_request_release("the VS start staged the map and "
                                            "the level boot is serving it");
-                SetEnvironmentVariableA("SM64DS_ENTRANCE", "0");
-                SetEnvironmentVariableA("SM64DS_STAR_FILTER", "2");
+                /* _putenv_s, NOT SetEnvironmentVariableA, and the difference
+                   is the whole reason the ROM's staged star never arrived.
+                   These two are read back by THIS process -- hal/level_boot.cpp
+                   seats data_0209f264 and data_0209f220 from std::getenv a few
+                   thousand lines into the same run -- and MSVC's getenv answers
+                   out of the CRT's own copy of the environment, which
+                   SetEnvironmentVariableA does not touch. It edits the Win32
+                   block, which is what a CHILD process inherits.
+
+                   THE OTHER SetEnvironmentVariableA CALLS IN THIS FILE ARE
+                   CORRECT AND MUST NOT BE "FIXED" TOO. Every one of them
+                   (port_menu_relaunch_* around 2765-2823) is setting up the
+                   environment of a relaunched child, which is exactly what the
+                   Win32 block is for. This pair is the only place the value has
+                   to reach a getenv in the same process.
+
+                   port/tests/smoke_persist.cpp:423-429 documents this exact
+                   trap, in this tree, in these words -- and it still fired here.
+                   Measured: with SetEnvironmentVariableA the VS boot seated star
+                   1 (the default) instead of the 2 the ROM staged, so
+                   Stage::InitResources' VS sound branch never armed and
+                   LoadObjects filtered the arena's objects on the wrong group. */
+                _putenv_s("SM64DS_ENTRANCE", "0");
+                _putenv_s("SM64DS_STAR_FILTER", "2");
                 fprintf(stderr, "[vs] ENTERING VS: map %d of 4 -> level %d "
                         "(overlay %d), star filter 2, VS mode flag %d "
                         "(PrepareVsMode's own write)\n", mi + 1, staged,
