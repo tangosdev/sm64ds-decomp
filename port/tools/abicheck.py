@@ -176,7 +176,8 @@ ACTOR_EXT_SLOT_AUTHORITY = {
     # SWEEP AND REWRITE THESE before quoting them, and re-run it whenever that
     # host file changes.
     #
-    # Re-measured at 889719a10:
+    # Re-measured at 889719a10, re-verified unchanged at the comment-only
+    # fixup tip (the reviewer's fresh sweep read the same 22 addresses):
     #   0046A49B 00542310 00542316 00543440 00546216 00546306 005877C7
     #   005AF1A4 005B04FD 005B0624 005B4A69 005BAD46 005BE41B 005E2291
     #   005E2371 005E24CF 005E2731 005E2A4E 005E2A8E 005E2BDD 005E2D3C
