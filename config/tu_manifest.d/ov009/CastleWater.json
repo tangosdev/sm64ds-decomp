@@ -22,14 +22,14 @@
       "symbol": "_ZN11CastleWaterD1Ev",
       "address": "0x02111a70",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN11CastleWaterD1Ev.c",
+      "legacy_source": "src/_ZN11CastleWaterD1Ev.cpp",
       "ordinal": 0
     },
     {
       "symbol": "_ZN11CastleWaterD0Ev",
       "address": "0x02111abc",
       "size": "0x00000060",
-      "legacy_source": "src/_ZN11CastleWaterD0Ev.c",
+      "legacy_source": "src/_ZN11CastleWaterD0Ev.cpp",
       "ordinal": 1
     },
     {

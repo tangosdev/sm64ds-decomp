@@ -36,14 +36,14 @@
       "symbol": "_ZN19RotatingPlatformWdw16CleanupResourcesEv",
       "address": "0x02112134",
       "size": "0x00000014",
-      "legacy_source": "src/_ZN19RotatingPlatformWdw16CleanupResourcesEv.c",
+      "legacy_source": "src/_ZN19RotatingPlatformWdw16CleanupResourcesEv.cpp",
       "ordinal": 2
     },
     {
       "symbol": "_ZN19RotatingPlatformWdw13InitResourcesEv",
       "address": "0x02112148",
       "size": "0x00000020",
-      "legacy_source": "src/_ZN19RotatingPlatformWdw13InitResourcesEv.c",
+      "legacy_source": "src/_ZN19RotatingPlatformWdw13InitResourcesEv.cpp",
       "ordinal": 3
     },
     {

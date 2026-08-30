@@ -29,7 +29,7 @@
       "symbol": "_ZN9KoopaFlagD0Ev",
       "address": "0x0211af70",
       "size": "0x0000004c",
-      "legacy_source": "src/_ZN9KoopaFlagD0Ev.c",
+      "legacy_source": "src/_ZN9KoopaFlagD0Ev.cpp",
       "ordinal": 1
     },
     {
@@ -43,7 +43,7 @@
       "symbol": "_ZN9KoopaFlag16CleanupResourcesEv",
       "address": "0x0211b000",
       "size": "0x00000030",
-      "legacy_source": "src/_ZN9KoopaFlag16CleanupResourcesEv.c",
+      "legacy_source": "src/_ZN9KoopaFlag16CleanupResourcesEv.cpp",
       "ordinal": 3
     },
     {
