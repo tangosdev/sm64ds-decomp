@@ -999,6 +999,23 @@ void port_ov030_syms_patch(void);
 void __sinit_ov030_0211484c(void);
 void __sinit_ov030_021148b8(void);
 void __sinit_ov030_02114924(void);
+/* run rel0215 wave 1 (lane cast-ov026): ov026 per-symbol -- level 18's whole
+   five-class cast, so all five of the overlay's sinits run, in the ROM's own
+   .ctor order (0x02112da4..0x02112db8 lists them 02112b7c, 02112bbc, 02112c28,
+   02112c94, 02112d68). ov026 is already whole-mounted (PORT_LEVEL_OVERLAYS);
+   same dual-mount shape as ov012/ov013.
+   port_ov026_states_seat() runs BETWEEN the patch passes and the sinits, the
+   ov063/ov070 order: the last two sinits COPY the six pointer-to-member source
+   pairs into bss, so seating the sources first makes both ends host addresses
+   in one pass and leaves no reachable DS code pointer in the mounted romdata. */
+void port_ov026_pack_check(void);
+void port_ov026_syms_patch(void);
+void port_ov026_states_seat(void);   /* hal/actor_classes_ov026.cpp */
+void __sinit_ov026_02112b7c(void);
+void __sinit_ov026_02112bbc(void);
+void __sinit_ov026_02112c28(void);
+void __sinit_ov026_02112c94(void);
+void __sinit_ov026_02112d68(void);
 
 /* The six wave-3/4/5 bring-ups, each defined beside the cast it serves and
    each holding its own done-guard. See the consolidation note at the bottom
@@ -1336,6 +1353,27 @@ extern "C" void port_actor_overlays_sinits(void)
     __sinit_ov030_021148b8();   /* two SharedFilePtrs (files 1562, 1563) */
     __sinit_ov030_02114924();   /* eleven SharedFilePtrs, four tuning records,
                                    AND the 11-cell PMF state table */
+    /* run rel0215 wave 1 (lane cast-ov026): ov026's five own-class sinits, in
+       the ROM's own .ctor order. ov026 is also whole-mounted
+       (PORT_LEVEL_OVERLAYS) for level 18's object-table walks.
+       THE SEAT GOES FIRST, and it is not a preference: __sinit_ov026_02112c94
+       copies the WHIRLPOOL's four pointer-to-member source pairs
+       (0x02113cec/cf4/cfc/d04) into its two bss state cells and
+       __sinit_ov026_02112d68 copies WATERSUCTION's two (0x02113dd0/dd8) into
+       its one, so seating the SOURCES here makes the destinations host
+       addresses by construction -- the ov063/ov070 order. Seating after would
+       leave the copies holding DS code addresses until a second pass, and
+       WaterSuction::InitResources dispatches its enter half the same frame it
+       runs. */
+    port_ov026_pack_check();
+    port_ov026_syms_patch();
+    port_ov026_states_seat();
+    __sinit_ov026_02112b7c();   /* POLE_LIFT_DDD's SharedFilePtr (file 1755) */
+    __sinit_ov026_02112bbc();   /* BOWSER_SHUTTER's model 1753 + clsn 1754 */
+    __sinit_ov026_02112c28();   /* SUBMARINE's model 1756 + clsn 1757 */
+    __sinit_ov026_02112c94();   /* WHIRLPOOL's model 0x4a9 + anim 0x4a8, then
+                                   its four PMF copies */
+    __sinit_ov026_02112d68();   /* WATER_SUCTION's two PMF copies */
 
     /* ---- the six bring-ups that used to ride the first registry fill ------
      *

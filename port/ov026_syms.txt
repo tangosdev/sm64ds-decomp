@@ -233,3 +233,174 @@ data_ov026_02113f78
 # about them is measured here -- this lane did not seat ov026 and did not wire
 # its mount, so the widths, the PMF-pair finding and the 154-symbol list above
 # are still w20's derivation, untested by any link.
+
+# ============================================================================
+# RUN rel0215 WAVE 1, lane cast-ov026: WIRED AND BUILT. The header's
+# "DERIVED, NOT WIRED -- never been built" no longer holds.
+# ============================================================================
+#
+# This file is now referenced by port/CMakeLists.txt (PORT_ACTOR_OVERLAYS
+# ov026, the --from-list --pack half of the dual mount) and all 154 symbols
+# below are in the shipping binary. All five classes are registered in
+# hal/actor_classes.inc and level 18's census moved
+#   164 spawned (26 classes), 25 skipped (11 classes)
+#   -> 174 spawned (30 classes), 15 skipped (7 classes)
+# with POLE_LIFT_DDD x7, SUBMARINE x1, BOWSER_SHUTTER x1 and WHIRLPOOL x1
+# crossing over. Linkage 8028 -> 8078; ov026 0/54 -> 49/54.
+#
+# EVERY "would" ABOVE HAS NOW MET A COMPILER, and the derivation held up:
+#
+# 1. THE 154-SYMBOL LIST IS EXACTLY RIGHT. All 154 names exist in
+#    config/arm9/overlays/ov026/symbols.txt, none is duplicated, none falls
+#    inside one of the five excluded vtable spans, and together they cover
+#    0x02112490 (.rodata start) to the end of .bss with six gaps: the five
+#    vtable spans and the .init/.ctor block, all six deliberate.
+#
+# 2. THE FIVE WIDTHS ARE CONFIRMED BYTE FOR BYTE -- 31 / 32 / 32 / 31 / 31,
+#    read straight out of extracted/overlays/overlay_0026.bin. The tree's own
+#    port/tools/vtspan.py --sweep independently derives 31 for 0x02113d54 "by
+#    semantic tail (raw run 32, dsd bound 15, terminator 31, typeinfo 35)",
+#    reproducing the typeinfo over-read this file predicted. vtspan --fills
+#    reports all five host arrays as writing every ROM slot; none appears in
+#    its 36-entry "fills leave a slot unwritten" list.
+#
+# 3. THE FIVE TYPEINFO IDENTITIES REPRODUCE. Reading each table's own
+#    vtable[-1] record through to its name string a second time, from the raw
+#    image, gives 17daObjWlPolelift_c / 21daObjWlKoopaShutter_c /
+#    18daObjWlSubmarine_c / 18daWater_Tatumaki_c / 17daWater_Suikomi_c, in
+#    that address order. The identity ruling above stands unchanged.
+#
+# ---- CORRECTION 1: THE PMF PAIRS BELONG TO THE NEXT CLASS ------------------
+#
+# The width finding is right and the ATTRIBUTION is off by one class. The
+# section above reads the four pairs at 0x02113cec..0x02113d04 as "Submarine's"
+# because they sit behind the Submarine's table, and the two at
+# 0x02113dd0..0x02113de0 as "Whirlpool's" for the same reason. They are the
+# NEXT class's in both cases:
+#
+#   0x02113cec..0x02113d04  targets 02111d4c 02111cb4 02111b24 02111ed8
+#                           -- all four inside the WHIRLPOOL's body range
+#                           (02111aa0..021121bc), and __sinit_ov026_02112c94,
+#                           the whirlpool's OWN sinit (it also constructs the
+#                           whirlpool's model 0x4a9 and anim 0x4a8), is what
+#                           copies them into data_ov026_02113f2c/_02113f3c.
+#   0x02113dd0..0x02113de0  targets 021122b0 021122cc -- both inside
+#                           WATERSUCTION's range (021121fc..02112490), copied
+#                           by __sinit_ov026_02112d68 into
+#                           data_ov026_02113f58.
+#
+# The reason is layout, not accident: mwcc emits a class's file-scope statics
+# BEFORE the compiler-generated [typeinfo][name][SpawnInfo][vtable] group for
+# that same class, so each pair table sits between the PREVIOUS class's vtable
+# and its OWN class's typeinfo record. Every width above is unaffected -- the
+# pairs are not vtable either way -- but WHICH CLASS'S SEAT VERIFIES THEM is,
+# and hal/actor_classes_ov026.cpp's port_ov026_states_seat() follows this
+# reading.
+#
+# ---- CORRECTION 2: dsd's METHOD NAMES ARE SWAPPED, NOT JUST ITS _ZTV ROW ---
+#
+# The block above settles the VTABLE labels. The same swap runs through the
+# METHOD names and this file did not say so: every _ZN9Submarine* TU in ov026
+# is the WHIRLPOOL's. Table 0x02113d54 (18daWater_Tatumaki_c) carries
+# _ZN9Submarine13InitResourcesEv at slot 0, _ZN9Submarine16CleanupResourcesEv
+# at 3, _ZN9Submarine8BehaviorEv at 6, _ZN9Submarine6RenderEv at 9,
+# _ZN9Submarine16OnPendingDestroyEv at 12, _ZN9SubmarineD1Ev at 16 and
+# _ZN9SubmarineD0Ev at 17. The real Submarine's table 0x02113c6c carries
+# func_ov026_021119c0 / _02111954 / ActorBase::Behavior / _02111998 /
+# ActorBase::OnPendingDestroy / _021118b8 / _021118fc -- bodies dsd left
+# unnamed. Whirlpool_Spawn calls Enemy's constructor for 444 bytes with a
+# ModelAnim at +0x114; Submarine_Spawn calls Platform's for 800 with a plain
+# Model at +0xd4. Nothing in the class shapes agrees with dsd's naming.
+#
+# ---- THE T3 SIZE AUDIT: NO SYMBOL NEEDS AN EXPLICIT :0xSIZE PIN ------------
+#
+# Every one of the 154 was audited for the ov002 data_ov002_0210ffbc failure
+# (a record hosted narrower than the ROM writes it). None needs a pin, and the
+# reason is structural rather than lucky:
+#
+#   * --pack lays the whole run out at its ROM-relative offsets and emits an
+#     explicit padding block for every gap, so a symbol under-sized by the
+#     next-symbol delta overruns onto the storage of its OWN ROM neighbour,
+#     which is exactly where it overran on the DS. ovdata.py takes its delta
+#     from the FULL config symbol list, not from the mounted subset, so an
+#     excluded vtable never stretches the symbol before it.
+#   * The only positions where an overrun could reach storage that does NOT
+#     reproduce the ROM are the six gap boundaries. The six symbols that end
+#     on one are data_ov026_02112b08 (ends at the .rodata/.init boundary,
+#     clamped by the section rule) and the five records that end exactly at a
+#     vtable start: data_ov026_02113abc, data_ov026_02113b90,
+#     Submarine_SpawnInfo, Whirlpool_SpawnInfo and WaterSuction_SpawnInfo.
+#     The five run up to a span the ROM only ever READS as a vtable and the
+#     port hosts as a separate array, so there is nothing behind them to
+#     trample.
+#   * Two symbols that LOOK like the ov002 failure are safe for the same
+#     reason: data_ov026_02113c24 gets 4 bytes for the Submarine's 12-byte
+#     typeinfo record, and data_ov026_02113b7c gets 4 for the tail of the
+#     shutter's name string. In both cases the rest of the record is the next
+#     mounted symbol and the two are adjacent in the pack.
+#
+#   RELOC COVERAGE, the other half of the same audit: 286 words in
+#   .rodata/.data carry ROM relocations. 80 land inside mounted symbols and
+#   are rebased. 157 are inside the five excluded vtable spans, by design --
+#   those are host arrays the fills write. The remaining 49 are all in
+#   0x02112b7c..0x02112dc0, which is .init (the five sinit bodies, compiled
+#   from src/) and .ctor (the five .p__sinit words this file deliberately does
+#   not list). Nothing is dropped.
+#
+#   port/tools/ptr_audit.py over the built tree reads "0 carry code pointers
+#   AND no host TU names them".
+#
+# ---- FOUR WRONG-OVERLAY SPELLINGS IN ov026's OWN SOURCES -------------------
+#
+# ov026 shares the level load window at 0x021111a0 with a dozen overlays and
+# dsd raced the name four times. Each is routed with a per-source -D in
+# port/CMakeLists.txt (never an /alternatename -- a -D cannot be defeated by a
+# later mount), and each target is ov026's own symbol at the same address:
+#
+#   src/func_ov026_021122b0.c      __sinit_ov045_02112280 -> func_ov026_02112280
+#   src/__sinit_ov026_02112d68.c   data_ov036_02113f58    -> data_ov026_02113f58
+#   src/func_ov026_02111598.cpp    data_ov032_02113a9c    -> ov026's own
+#   src/func_ov026_02111598.cpp    func_ov053_021112a4    -> func_ov026_021112a4
+#
+# THE FIRST WAS A LIVE HAZARD, not a synonym: ___sinit_ov045_02112280 is
+# already DEFINED in walk_window by ov013_syms.c.obj -- a mounted DATA object
+# at that shared address, visible in the 0.2.15 baseline map at 0004:000cc184.
+# Left as it stood, WaterSuction's state-0 tick would have called into mounted
+# data, and an alias would have been defeated silently.
+#
+# ---- WHY POLE_LIFT_DDD SPAWNS AND THEN LEAVES ------------------------------
+#
+# The census moves all seven POLE_LIFT_DDD instances from skipped to spawned,
+# and then they destroy themselves inside their own byte-matched
+# InitResources: func_ov026_02111598 reads
+#   if ((data_0209caa0[1] & 0x204) == 0) return 0;
+# and the mask is clear on a fresh save. That is the ROM's behaviour, not a
+# seat defect, and THREE independent byte-matched sites agree on what 0x204
+# means:
+#
+#   1. func_ov026_02111598 (the poles' InitResources) requires it SET.
+#   2. func_ov026_021117d8 (BowserShutter's InitResources) requires it CLEAR
+#      -- the opposite polarity on the same word, which is why the submarine
+#      and its shutter are the ones standing on a fresh save.
+#   3. _ZN7Minimap19UpdateLevelSpecificEv's case 0x12 -- LEVEL 18's own arm --
+#      returns early unless 0x204 is set, so six minimap tiles appear with the
+#      poles and not before.
+#
+# And src/ContinueKuppaScriptIfNecessary.c is what CLEARS 0x204, in the same
+# breath as CollectStarInLevel(7,1) and CollectStarInLevel(8,1) -- course 8 is
+# this level. So 0x204 is Dire Dire Docks' own submarine-era state pair and the
+# poles are its post-submarine configuration.
+#
+# The port reaches the same answer the DS would because it runs the same bodies
+# over the same save block. What has NOT been done is a hardware comparison,
+# and a reviewer who wants one should ask for a play capture with those two
+# stars collected rather than take the reading on trust.
+#
+# ---- ONE TU THIS LANE LINKED THAT IS NOT ov026's ---------------------------
+#
+# Linkage moved 8028 -> 8078, which is 49 ov026 TUs plus ONE: ov002's
+# _ZN6Player14EnterWhirlpoolEv (0x020c5cc8, 16 bytes). It was already compiled
+# through port/slice_w1l5.txt and was being /OPT:REF-stripped because nothing
+# in the binary called it. src/func_ov026_02111d4c.cpp -- the whirlpool's own
+# state-0 tick, the body that pulls the player in -- is its ONLY caller in the
+# tree, so seating the whirlpool is what makes it reachable.
