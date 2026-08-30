@@ -1,0 +1,73 @@
+# Is the TU reconstruction drifting toward C with class names, or C++?
+#
+# Pilot 2 banked two translation units at 19/19 and 23/23 MATCH, byte-verified and
+# link-verified -- and both are ~80% extern "C" free functions doing hex pointer
+# arithmetic on a member base. One of them shipped a comment claiming the wrong
+# vtable slot; no gate caught it, a review did. Every byte gate the repo runs scores
+# whether a TU's OUTPUT matches the ROM, and nothing scores whether the SOURCE is the
+# period-accurate, idiomatic C++ the reconstruction is actually for. A TU can go
+# fully green while being exactly the C-with-class-names shape the goal excludes.
+#
+# tools/check_tu_idioms.py censuses the idioms instead: memberDefs/externC/free by
+# linkage, raw offsets (the conversion worklist), named-member coverage against the
+# TU's class header, cross-TU extern-signature consistency against the ratified D3
+# spellings (notes/minigame-family-decisions.md), and the manifest's optional `goal`
+# block (plan note sec 6.1) with its zero-or-justified rule.
+#
+# THIS WORKFLOW RUNS THE CENSUS IN REPORT MODE, NOT --strict, and that is deliberate:
+# the two banked pilot TUs are unjustified shadows by design (conversion is the
+# tracked follow-up) and still declare the mangled names D3 retired, so --strict is
+# red on the tree TODAY. --strict becomes the CI mode when the mini-wave converts
+# the pilots -- goal blocks in their manifest entries, true-name declarations in
+# their sources -- and from that day on, no TU enters the manifest as an untracked
+# shadow and no goal claim goes stale silently. Until then, what this workflow buys
+# is the floor: the census runs over every entry on every PR (a scanner regression
+# or an unparseable source shape goes red here, on the runner, before the build box
+# ever sees it), and the gate's own 50 tests run as the gate's failure branches.
+#
+# Costs nothing: stdlib Python over git-tracked files, no compiler and no ROM, about
+# three seconds over 90 entries. WHOLE-TREE, not scoped to changed files: the PR
+# that breaks the census is the one that touches src_tu/ or include/ and never opens
+# tools/ at all.
+name: tu idioms census
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tu-idioms-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  census:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # No history needed: the check reads the working tree and config/.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Census every merged TU (report mode)
+        run: python tools/check_tu_idioms.py --json build/tu_idioms.json
+
+      # unittest, not pytest: pytest is not installed on this runner and the point of
+      # this step is that the gate's FAILURE branches still work, so it must not be the
+      # step that needs a dependency.
+      - name: The gate's own tests
+        if: always()
+        run: python tools/test_check_tu_idioms.py
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tu-idioms
+          path: build/tu_idioms.json
+          if-no-files-found: ignore
