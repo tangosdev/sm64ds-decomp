@@ -1355,6 +1355,20 @@ void hal_fill_squasher_vtable(void);                 /* _ZTV8Squasher, 32 */
 extern unsigned char ShipWater_SpawnInfo[];          /* ov017 0x02111bd4, +4 = 62 */
 void *ShipWater_Spawn(void);                         /* ov017 0x02111480, 56 B */
 void hal_fill_ship_water_vtable(void);               /* _ZTV9ShipWater, 32 */
+/* run rel0215 wave 1 (lane cast-sweep1): OV058's ONE CLASS, the Rec Room's
+   cupboard -- and it is the WHOLE of level 50's skip list, so this row takes
+   that level to zero skipped. A 0x21c-byte Actor holding an array of five
+   MovingCylinderClsnWithPos at +0xd4; it loads no file and ov058 has no static
+   initialiser at all. Its table is 31-slot ACTOR, not 32-slot Platform (the
+   word at slot 31 is a literal zero, not a relocation) -- the ov024
+   PYRAMID_TAG shape -- and dsd's next-symbol landing reads TWO. Slot 9 is the
+   BASE Render; the class has none of its own. No alias race, no resolver
+   placeholder and no class-identity shift: the only overlay in this lane that
+   needed no per-source -D. Derivation in port/ov058_syms.txt, fill in
+   hal/actor_classes_ov058.cpp, slice in port/slice_sweep1_ov058.txt. */
+extern unsigned char RecRoomCupboard_SpawnInfo[];    /* ov058 0x02111a4c, +4 = 182 */
+void *RecRoomCupboard_Spawn(void);                   /* ov058 0x02111688, 92 B */
+void hal_fill_rec_room_cupboard_vtable(void);        /* _ZTV15RecRoomCupboard, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2052,4 +2066,8 @@ void hal_fill_ship_water_vtable(void);               /* _ZTV9ShipWater, 32 */
     /* ---- run rel0215 wave 1 (lane cast-sweep1): ov017, the sunken ship's \
        water. The blocker level_boot.cpp's level-9 block deferred. ---- */ \
     {62, "SHIP_WATER", ShipWater_SpawnInfo, ShipWater_Spawn, \
-     hal_fill_ship_water_vtable},
+     hal_fill_ship_water_vtable}, \
+    /* ---- run rel0215 wave 1 (lane cast-sweep1): ov058, the Rec Room's \
+       cupboard. Level 50's entire skip list, one row. ---- */ \
+    {182, "REC_ROOM_CUPBOARD", RecRoomCupboard_SpawnInfo, \
+     RecRoomCupboard_Spawn, hal_fill_rec_room_cupboard_vtable},

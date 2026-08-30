@@ -1,0 +1,38 @@
+# run rel0215 wave 1, lane cast-sweep1: OV058's OWN CAST (level 50, the Rec
+# Room, data/stage/playroom). Overlay 6 of 6, and the smallest in the lane.
+#
+# The three-way source inventory:
+#     delinked complete to a src/ TU    6
+#     present but NONMATCHING-bannered  0
+#     MISSING                           0
+#                                      --
+#                                       6  == config/arm9/overlays/ov058/
+#                                             symbols.txt's kind:function count
+#
+# All six are here. Nothing to refuse, nothing host-copied, and NOT ONE
+# per-source -D: the comment-stripped placeholder sweep finds no G0/G1/VT
+# reaching code in any of them, no TU spells a sibling overlay's name for an
+# ov058 address, and dsd's one vtable label is on the table its own factory
+# installs. After ov017, ov023, ov033 and ov035 that makes this the clean one.
+#
+# RECROOMCUPBOARD (182) IS THE WHOLE OF LEVEL 50's SKIP LIST -- the level
+# spawns 26 actors and skips exactly one -- so this seat takes the level to
+# zero skipped, the second in this lane after level 15.
+#
+# WHAT THE CLASS IS: a 0x21c-byte Actor holding an ARRAY of five
+# MovingCylinderClsnWithPos at +0xd4, stride 0x40, built by func_020733a8 and
+# torn down by __destroy_arr. It loads no file and has no static initialiser --
+# ov058's .rodata, .init, .ctor and .bss are all empty. InitResources is a
+# five-iteration loop that sizes the cylinders; Behavior is the Rec Room's
+# conversation and minigame-menu entry (Player::GetTalkState,
+# Message::PrepareTalk, ShowMessage2, StartMinigameMenu). CleanupResources is
+# `return 1`, eight bytes.
+#
+# THE MEASURED CLOSURE GAP: none. The first link added no arm9 TU.
+
+src/_ZN15RecRoomCupboardD1Ev.cpp
+src/_ZN15RecRoomCupboardD0Ev.cpp
+src/_ZN15RecRoomCupboard16CleanupResourcesEv.c
+src/_ZN15RecRoomCupboard8BehaviorEv.cpp
+src/_ZN15RecRoomCupboard13InitResourcesEv.c
+src/RecRoomCupboard_Spawn.cpp

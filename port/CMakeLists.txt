@@ -1941,6 +1941,20 @@ list(APPEND PORT_ACTOR_OVERLAYS ov005)
 # ov075 joins for the VS wiring lane (dScEntry_c, scene 6); the slice block
 # and the derivation pointer live beside SLICE_VS_SOURCES further down.
 list(APPEND PORT_ACTOR_OVERLAYS ov075)
+# run rel0215 wave 1 (lane cast-sweep1): ov058 (level 50's own overlay, the Rec
+# Room, already whole-mounted in PORT_LEVEL_OVERLAYS) joins the per-symbol
+# mounts for ONE SYMBOL -- REC_ROOM_CUPBOARD's (182) SpawnInfo record. It is
+# the smallest per-symbol mount in the port and it is one line because ov058
+# has no .rodata, no .init, no .ctor and no .bss: zero static initialisers, and
+# the class loads no file of its own. It is also the WHOLE of level 50's skip
+# list, so this seat takes that level to zero skipped. Its vtable is excluded
+# from the mount and hosted as an array hal/actor_classes_ov058.cpp fills, and
+# it is a 31-slot ACTOR table, not a 32-slot Platform one -- the ov024
+# PYRAMID_TAG shape; dsd's landing on it reads TWO. That file also runs the
+# mount bring-up from the registry fill (the ov025/ov045 lane-ownership
+# pattern), with no sinit and no hal_fill_platform_vtable to run.
+# See port/ov058_syms.txt and port/slice_sweep1_ov058.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov058)
 # run rel0215 wave 1 (lane cast-sweep1): ov017 (level 9's own overlay, Jolly
 # Roger Bay's sunken ship, already whole-mounted in PORT_LEVEL_OVERLAYS) joins
 # the per-symbol mounts so SHIP_WATER (62) reaches its SpawnInfo record, its
@@ -8841,6 +8855,26 @@ set_source_files_properties(
     PROPERTIES COMPILE_DEFINITIONS
     "G0=port_ov017_sw_file0;G1=port_ov017_sw_file1")
 list(APPEND SWEEP1_SOURCES hal/actor_classes_ov017.cpp ${SLICE_SWEEP1_OV017_SOURCES})
+
+# ---- 6/6: ov058, level 50 (the Rec Room) -----------------------------------
+# REC_ROOM_CUPBOARD (182) x1 -- and it is the WHOLE of level 50's skip list, so
+# this seat takes that level to zero skipped, the second in this lane after
+# level 15. All six of the overlay's TUs, no host copy, no refusal and NOT ONE
+# per-source -D: no placeholder reaches code, no TU spells a sibling's name,
+# and dsd's vtable label is on the table its own factory installs. One 31-slot
+# ACTOR table (the ov024 PYRAMID_TAG shape, not a Platform one); dsd's landing
+# reads TWO. See port/ov058_syms.txt and port/slice_sweep1_ov058.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov058.txt" SLICE_SWEEP1_OV058_LINES)
+set(SLICE_SWEEP1_OV058_SOURCES "")
+foreach(line IN LISTS SLICE_SWEEP1_OV058_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SWEEP1_OV058_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SWEEP1_SOURCES hal/actor_classes_ov058.cpp ${SLICE_SWEEP1_OV058_SOURCES}
+    unmatched/RecRoomCupboard_ActorDtorSeam.cpp)
 # ---- end lane cast-sweep1 --------------------------------------------------
 
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'

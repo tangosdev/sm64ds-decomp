@@ -1,0 +1,72 @@
+# run rel0215 wave 1 (lane cast-sweep1): ov058's ONE CLASS, per symbol.
+# Overlay 6 of 6 in this lane, and the smallest mount in the port.
+#
+# ov058 is a LEVEL overlay (level 50, the Rec Room, data/stage/playroom) and is
+# already mounted WHOLE in PORT_LEVEL_OVERLAYS. This is the SECOND mount of the
+# same overlay, per symbol. Same dual-mount shape as ov012/ov013/ov017/ov023/
+# ov024/ov025/ov033/ov035/ov045/ov052/ov056.
+#
+# delinks.txt sections, base 0x021111a0:
+#   .text   0x021111a0..0x021116e4   .ctor  0x021116e4..0x021116e4 (EMPTY)
+#   .data   0x02111700..0x02111b00   .bss   0x02111b00..0x02111b00 (EMPTY)
+# There is no .rodata, no .init, no .ctor and no .bss at all: ov058 has ZERO
+# static initialisers, which is why nothing in hal/actor_classes_ov058.cpp
+# calls a __sinit_ov058_* and why this list is ONE LINE. The class loads no
+# file of its own -- it is five collision cylinders and a conversation.
+# Every raw byte below came out of extracted/overlays/overlay_0058.bin (T4).
+#
+# ==== THE ONE CLASS, both attribution routes ===============================
+#
+#   id   arm9 slot   SpawnInfo   word[0]     factory                +4  x L50
+#   182  0x02090b3c  0x02111a4c  0x02111688  RecRoomCupboard_Spawn  182  1
+#
+# The record's word[0] lands inside ov058 [0x021111a0, 0x02111b00) and is the
+# overlay's only factory; the record reads 182 back at +4. Both routes are
+# required -- slot 182's candidate list reads
+# overlays(8,12,13,17,23,24,31,41,47,52,53,54,55,56,58), fifteen wide, and
+# THREE of those (ov017, ov023, ov024) are overlays this same lane seated.
+#
+# RECROOMCUPBOARD IS THE WHOLE OF LEVEL 50's SKIP LIST. The level spawns 26
+# actors and skips exactly one, so this seat takes it to zero skipped, the
+# second level in this lane to reach that (level 15 was the first).
+#
+# ==== THE TABLE IS 31 SLOTS, NOT 32, AND THE LANDING READS TWO =============
+#
+# _ZTV15RecRoomCupboard  0x02111a70, THIRTY-ONE slots, ends 0x02111aec.
+#   It is an ACTOR table, not a Platform one. RecRoomCupboard_Spawn allocates
+#   0x21c bytes and calls Actor's constructor (not Platform's), and the tail is
+#   the plain Actor close:
+#       slot 29  0x02010124  _ZN5Actor16OnAimedAtWithEggEv
+#       slot 30  0x020100dc  _ZN5Actor25OnAimedAtWithEggReturnVecEv
+#       slot 31  0x00000000  -- NOT a relocation. There is no Platform::Kill.
+#   Same shape as ov024's PYRAMID_TAG, and the second 31-slot table in this
+#   lane against five 32-slot ones.
+#   next dsd symbol 0x02111a78 -- INTERIOR (slot 2). The landing reads TWO,
+#   and 0x02111abc (slot 19) and 0x02111ad4 (slot 25) are interior splits too.
+#   A two-slot host array would have left everything from CleanupResources
+#   onward off the end of storage.
+#   Slot 9 is _ZN9ActorBase6RenderEv, the BASE body: this class has no Render
+#   of its own, so its fill writes 0/3/6/16/17 and takes 9 from the base.
+#   The table is EXCLUDED from this mount and hosted as an array
+#   hal/actor_classes_ov058.cpp fills.
+#
+# ==== ONE T3 WIDTH PIN =====================================================
+#
+#   RecRoomCupboard_SpawnInfo  natural next-symbol delta 0xc (dsd named
+#     0x02111a58 INSIDE the record). A record is 0x1c. Unpinned this mounts
+#     TWELVE bytes of twenty-eight, and the registry's own id check at +4 sits
+#     inside those twelve so it would have passed while the record's last four
+#     words belonged to somebody else. Same shape as ov024's PyramidTag_SpawnInfo
+#     and ov017's ShipWater_SpawnInfo.
+#
+# ==== NO ALIAS RACE, NO PLACEHOLDER, NO SHIFT ==============================
+#
+# The comment-stripped placeholder sweep over all six of this overlay's TUs
+# finds no G0/G1/G2/VT/VT0/VT1/VT2/HEAP/R0/R1/R2 reaching code, and no TU
+# spells a sibling overlay's name for an ov058 address. dsd names the vtable
+# once and the factory installs that table, so there is no class-identity
+# shift either. After ov017, ov023, ov033 and ov035 this is the only overlay in
+# the lane that needed no per-source -D at all.
+
+# ---- .data: the one SpawnInfo record, pinned to the ROM's 0x1c ------------
+RecRoomCupboard_SpawnInfo:0x1c
