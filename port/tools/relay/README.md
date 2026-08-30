@@ -150,6 +150,33 @@ pairs a parent and a child through the relay and measures 100 round trips, so a
 clean run proves the whole path end to end, not just that something is
 listening.
 
+## Two players in one VS match through this relay
+
+The game side, one line per machine. The two must share the code and must not
+share the role.
+
+    SM64DS_VS_MAP=0 SM64DS_COMMS_RELAY=your.server:41234 \
+      SM64DS_COMMS_CODE=SOMECODE SM64DS_COMMS_ROLE=0    walk_window.exe
+
+    SM64DS_VS_MAP=0 SM64DS_COMMS_RELAY=your.server:41234 \
+      SM64DS_COMMS_CODE=SOMECODE SM64DS_COMMS_ROLE=1    walk_window.exe
+
+`SM64DS_COMMS_ROLE` takes the role numbers from the datagram table above (0
+parent, 1 child) or the words `parent` and `child`; they mean the same thing.
+`SM64DS_VS_MAP` is 0 to 3 over the ROM's own four VS maps. A host name works
+here as well as an address.
+
+It worked when both logs carry these, which the game writes into
+`playlog/play_*.log` unless `SM64DS_NO_PLAYLOG=1` is set:
+
+    [comms:loopback] open(mode=2) as parent, ... via RELAY ..., code 'SOMECODE'
+    [comms:relay] paired as parent on code 'SOMECODE'; the relay will forward
+    [comms:conductor] session up after N turns: ... players=2
+
+Any `[comms:loopback]` line saying NOT installing is the game refusing before
+it ever reached the relay, and the line names the knob it refused. The whole
+path is asserted end to end by `port/tools/vs_online_proof.py`.
+
 ## Rollback
 
     sudo systemctl disable --now sm64ds-relay
