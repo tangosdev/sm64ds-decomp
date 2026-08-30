@@ -47,13 +47,43 @@
  *     NULL Vector3, read off the source's literal `m5(0)` -- FWOOSH passes
  *     none, the way MantaRay, CheepCheep and Shark do and Skeeter does not.
  *
- * (3) ONE MSVC FRONT-END REFUSAL. src/func_ov091_021339fc.c is
- *     NONMATCHING-bannered and carries an ARM `asm { ldr ...; mov ... }` hatch.
- *     MSVC's inline assembler is x86 and does not parse it -- measured, eight
- *     errors from C2065 on `asm` to C2181. THE BANNERED src FILE IS UNTOUCHED;
- *     the two hatch lines are written here as the C they assemble to. This is
- *     the one place this lane's host copy is not a pure transcription, so the
- *     substitution is spelled out at the site.
+ * (3) ONE MSVC FRONT-END REFUSAL ON A NONMATCHING BODY, CARRIED ONLY AFTER ITS
+ *     FIDELITY WAS DERIVED. src/func_ov091_021339fc.c is NONMATCHING-bannered
+ *     and carries an ARM `asm { ldr ...; mov ... }` hatch. MSVC's inline
+ *     assembler is x86 and does not parse it -- measured, eight errors from
+ *     C2065 on `asm` to C2181 -- so it cannot ride from src/ at all.
+ *
+ *     THE BANNER IS A REASON TO CHECK, NOT A REASON TO COMPILE. It says the C
+ *     "does NOT count as matched. Reverts to a draft until someone reproduces
+ *     the bytes from real C", so nothing certifies that this C is the ROM's
+ *     body, and compiling a draft behind FWOOSH's Behavior on that basis would
+ *     be putting unknown-fidelity code on a live path. The whole body was
+ *     therefore disassembled out of extracted/overlays/overlay_0091.bin at base
+ *     0x02130f00 and compared against the draft branch by branch:
+ *       155 instructions + ONE literal pool word (0x0000010d, the id it
+ *         spawns); between the chest precedent's 135 and the Klepto refusal's
+ *         322, so it is transcribed rather than refused.
+ *       EXACTLY ONE relocation in the ROM reaches it, from:0x021342cc inside
+ *         _ZN5Stump8BehaviorEv's own span. It is in no vtable slot, so it is
+ *         gating for FWOOSH and reachable from nothing else.
+ *       The draft reproduces the ROM at every branch, every structure offset
+ *         and all seventeen calls. Nothing in the ROM is absent from the C and
+ *         nothing in the C is absent from the ROM.
+ *     The two hatched instructions are `ldr r0,[r5,#8]` and `mov r4,#1`, an
+ *     ordinary load and an ordinary immediate. They are hatched for WHERE THE
+ *     REGISTERS LAND -- `hat` is loaded into r1 before two unrelated byte
+ *     tests, and r4 must still hold 1 at the `orr r1,r4,r2,lsl #8` across the
+ *     SetNewHatCharacter / PlayerLoseCap branch -- which is a mwccarm codegen
+ *     constraint, and mwccarm is not in this build. So this copy carries no
+ *     claim the src file does not: the banner withholds "this C compiles to
+ *     these ROM bytes", and what the port needs is "this C has the ROM body's
+ *     semantics", which is what was derived.
+ *     Derivation, with the full disassembly and the side-by-side:
+ *       ...runs/rel0215/out/w3-f2/f021339fc_fidelity.txt
+ *     THE BANNERED src FILE IS UNTOUCHED and stays out of the slice. The two
+ *     hatch lines are written below as the C they assemble to, and that is the
+ *     one place this lane's host copy is not a pure transcription, so the
+ *     substitution is spelled out again at the site.
  */
 #include <cstddef>
 #include "types.h"

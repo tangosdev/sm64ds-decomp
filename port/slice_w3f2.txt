@@ -99,6 +99,25 @@
 #      merely do not byte-match; it does not cover an ARM asm hatch, which no
 #      x86 front end can read. Measured before it was believed.
 #
+#      AND THE BANNER WAS TREATED AS A REASON TO CHECK, NOT A REASON TO
+#      COMPILE. It says the C "does NOT count as matched. Reverts to a draft
+#      until someone reproduces the bytes from real C", so nothing certifies
+#      the draft is the ROM's body, and FWOOSH's Behavior calls it on every
+#      tick. The whole body was disassembled out of
+#      extracted/overlays/overlay_0091.bin at base 0x02130f00 and compared
+#      against the draft branch by branch BEFORE it was carried:
+#        155 instructions + one literal pool word -- between the chest
+#          precedent's 135 transcribed and the Klepto refusal's 322, so it is
+#          transcribed rather than refused;
+#        exactly ONE relocation in the ROM reaches it, from:0x021342cc, inside
+#          _ZN5Stump8BehaviorEv's own span, and it is in no vtable slot;
+#        the draft reproduces the ROM at every branch, every structure offset
+#          and all seventeen calls, and the two hatched instructions are an
+#          ordinary `ldr r0,[r5,#8]` and `mov r4,#1` hatched for where the
+#          REGISTERS land, not for what they do.
+#      Derivation and full disassembly:
+#        ...runs/rel0215/out/w3-f2/f021339fc_fidelity.txt
+#
 # ==== LANGUAGE =============================================================
 # Ten of these 30 are .cpp and twenty are .c. The comment-stripped sweep for
 # a `//cpp` marker, a top-level `extern "C"` block, `class`, `virtual` and
