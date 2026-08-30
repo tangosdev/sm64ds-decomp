@@ -124,6 +124,137 @@ class NoiseTests(unittest.TestCase):
         self.assertEqual(self._dead("vendor/m2c/main.py"), set())
 
 
+class RelativeLinkTests(unittest.TestCase):
+    """A markdown link resolves against ITS OWN DIRECTORY, not the repo root.
+
+    The positive control here is `test_the_2036_shape_is_detected`: the exact link that
+    landed in the EAD cross-reference note with all four checks green, because the
+    repo-rooted scan resolved the target from the ROOT and found it there. If that test
+    ever starts passing vacuously, this gate is back where it was before #2037.
+    """
+
+    def _broken(self, build, dead=()):
+        with tempfile.TemporaryDirectory() as tmp:
+            t = Tree(tmp)
+            build(t)
+            old = CDR.REPO
+            CDR.REPO = t.root
+            try:
+                _links, broken = CDR.broken_links(t.root, dead)
+            finally:
+                CDR.REPO = old
+            return set(broken)
+
+    def _targets(self, build):
+        with tempfile.TemporaryDirectory() as tmp:
+            t = Tree(tmp)
+            build(t)
+            old = CDR.REPO
+            CDR.REPO = t.root
+            try:
+                links = CDR.collect_links(t.root)
+            finally:
+                CDR.REPO = old
+            return [target for _f, _l, target, _r in links]
+
+    def test_the_2036_shape_is_detected(self):
+        """A link naming `config/...` from inside `notes/` points under `notes/`."""
+        def build(t):
+            t.write("config/rom-name-glossary.json", "{}\n")
+            t.write("notes/crossref.md",
+                    "Bumped in [the glossary](config/rom-name-glossary.json).\n")
+        self.assertEqual(self._broken(build), {
+            ("notes/crossref.md", 1, "config/rom-name-glossary.json",
+             "notes/config/rom-name-glossary.json")})
+
+    def test_a_correct_dotdot_link_resolves(self):
+        def build(t):
+            t.write("config/rom-name-glossary.json", "{}\n")
+            t.write("notes/crossref.md",
+                    "Bumped in [the glossary](../config/rom-name-glossary.json).\n")
+        self.assertEqual(self._broken(build), set())
+
+    def test_a_sibling_link_resolves(self):
+        def build(t):
+            t.write("notes/other.md", "x\n")
+            t.write("notes/crossref.md", "See [the other note](other.md).\n")
+        self.assertEqual(self._broken(build), set())
+
+    def test_an_http_link_is_ignored(self):
+        self.assertEqual(self._broken(lambda t: t.write("notes/n.md", (
+            "Filed as [an issue](https://github.com/tangosdev/sm64ds-decomp/issues/2037)\n"
+            "and raised with [a human](mailto:someone@example.com).\n"))), set())
+
+    def test_an_anchor_only_link_is_ignored(self):
+        self.assertEqual(self._broken(lambda t: t.write(
+            "notes/n.md", "Jump to [the ratchet](#how-it-avoids-crying-wolf).\n")), set())
+
+    def test_a_fragment_is_stripped_before_resolving(self):
+        def build(t):
+            t.write("notes/other.md", "x\n")
+            t.write("notes/n.md", "See [the section](other.md#the-section).\n")
+        self.assertEqual(self._broken(build), set())
+
+    def test_a_link_to_a_directory_resolves(self):
+        def build(t):
+            t.write("include/dEnemyBase_c.h", "struct dEnemyBase_c {};\n")
+            t.write("notes/n.md", "The headers live in [include](../include).\n")
+        self.assertEqual(self._broken(build), set())
+
+    def test_a_link_inside_a_fence_is_not_a_link(self):
+        """Shown, not followed -- unlike a repo-rooted path in the same fence."""
+        self.assertEqual(self._broken(lambda t: t.write("notes/n.md", (
+            "Write it like this:\n\n"
+            "```markdown\n"
+            "[the glossary](config/rom-name-glossary.json)\n"
+            "```\n"))), set())
+
+    def test_a_link_inside_backticks_is_not_a_link(self):
+        """Hand-rolled dispatch reads exactly like a link and is not one."""
+        self.assertEqual(self._broken(lambda t: t.write(
+            "notes/n.md",
+            "Hand-rolling it as `(*(fn**)this)[4](this, ...)` reproduces the\n"
+            "instructions but not the register.\n")), set())
+
+    def test_angle_bracket_and_titled_targets_are_unwrapped(self):
+        def build(t):
+            t.write("notes/a b.md", "x\n")
+            t.write("notes/other.md", "x\n")
+            t.write("notes/n.md",
+                    "See [spaced](<a b.md>) and [titled](other.md \"the note\").\n")
+        self.assertEqual(self._broken(build), set())
+
+    def test_a_reference_style_definition_is_resolved(self):
+        def build(t):
+            t.write("config/rom-name-glossary.json", "{}\n")
+            t.write("notes/n.md",
+                    "Cited as [glossary].\n\n[glossary]: config/rom-name-glossary.json\n")
+        self.assertEqual(self._broken(build), {
+            ("notes/n.md", 3, "config/rom-name-glossary.json",
+             "notes/config/rom-name-glossary.json")})
+
+    def test_a_repo_rooted_dead_link_is_not_reported_twice(self):
+        """A link to a path that is dead BOTH ways belongs to the repo-rooted scan."""
+        build = lambda t: t.write(
+            "notes/n.md", "See [the header](../include/Enemy.h).\n")
+        self.assertEqual(self._broken(build), {
+            ("notes/n.md", 1, "../include/Enemy.h", "include/Enemy.h")})
+        self.assertEqual(self._broken(build, dead=[("notes/n.md", "include/Enemy.h")]),
+                         set())
+
+    def test_link_syntax_in_python_is_not_a_link(self):
+        """A regex character class followed by a group is not a markdown link."""
+        self.assertEqual(self._targets(lambda t: t.write(
+            "tools/thing.py", '"""Matches [a-z]+(?:pp)? in the name."""\n')), [])
+
+    def test_the_tree_has_no_broken_relative_links(self):
+        """Fail-closed: this check banks nothing, so the tree itself must be clean."""
+        _files, _refs, dead = CDR.dead_references()
+        links, broken = CDR.broken_links(REPO, dead)
+        self.assertGreaterEqual(len(links), CDR.MIN_LINKS)
+        self.assertEqual(broken, [], f"broken relative links: {broken}")
+
+
 class FailLoudlyTests(unittest.TestCase):
     """A scan that inspected nothing must not print a pass."""
 

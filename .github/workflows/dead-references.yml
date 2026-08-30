@@ -30,29 +30,26 @@
 # defect #2030 did not introduce; `b309f5d3f` (#2031) removed the string. A gate that
 # reads a file must be triggered by that file.
 #
-# Costs nothing: static analysis over the working tree, no compiler and no ROM.
+# AND A GATE THAT RESOLVES A PATH MUST BE TRIGGERED BY THAT PATH. There is no `paths:`
+# filter here any more, and that is the same lesson one step further out. The filter
+# used to list `**.py`, `**.md`, `include/**`, `src/**`, `src_tu/**`, the baseline JSON
+# and `.github/workflows/**` -- the files the tool READS. But the tool also RESOLVES
+# what that prose names, against the whole tree, so a PR that only deletes or renames a
+# resolution TARGET breaks references without touching anything in the filter. Measured
+# when #2037's relative-link check went in: 99 of the tree's 183 markdown links point
+# outside the old filter -- 89 at a per-overlay `symbols.txt`, the rest under `symbols/`
+# and `nearmiss/` or at top-level `attribution.json` and `LICENSE`. Renaming an overlay
+# symbols file is routine here and would have broken 89 links silently. Enumerating every
+# top-level directory would reproduce the whole tree in a list that goes stale on the
+# next new directory, so the filter is gone instead: this job is static analysis over
+# the working tree with no compiler and no ROM, and running it on every change costs
+# less than one missed rename.
 name: dead references
 
 on:
   pull_request:
-    paths:
-      - "**.py"
-      - "**.md"
-      - "include/**"
-      - "src/**"
-      - "src_tu/**"
-      - "config/dead-reference-baseline.json"
-      - ".github/workflows/**"
   push:
     branches: [main]
-    paths:
-      - "**.py"
-      - "**.md"
-      - "include/**"
-      - "src/**"
-      - "src_tu/**"
-      - "config/dead-reference-baseline.json"
-      - ".github/workflows/**"
   workflow_dispatch:
 
 permissions:

@@ -1,6 +1,6 @@
 # Assessment: reusing `cybervisi0n/pokeplatinum@pc_port` + the libntr suite for an SM64DS PC port
 
-*Status: research + plan, not yet actioned. Slots into [`roadmap.md`](roadmap.md)
+*Status: research + plan, not yet actioned. Slots into [`notes/roadmap.md`](../../notes/roadmap.md)
 Phases 2–3 (LIFT / PORT). Investigated 2026-08-01; revised after adversarial review.*
 
 ---
