@@ -3613,14 +3613,19 @@ preference". That verdict was right about the class and wrong about the space:
 the residue is reachable. This session moved the measured floor to **div 2** and,
 more usefully, identified the exact construct that steers it.
 
-**The residue is ONE allocator decision, not four.** The second unrolled vertex
-emission has three free registers (`sb` = the dying byte offset, `r0` = the dying
-array base, plus `ip`/`lr`); the first emission has none, so its coalescing is
-forced and matches trivially. Under our coloring `z<<9` coalesces into its own
-source (`r5`) and `x<<9` into its own (`r0`); the ROM gives `z<<9` the freed base
-register `r0`, and `x<<9` is then squeezed out to `sb`. Fix `W_z9`'s colour and
-the other three words follow. Live ranges are IDENTICAL in both colourings --
-this is pure colour choice, and `wallcrack` tags all four words `regperm`.
+**The residue is ONE allocator decision, not four.** Under our colouring `z<<9`
+coalesces into its own source register (`r5`) and `x<<9` into its own (`r0`); the
+ROM gives `z<<9` the freed array-base register `r0`, and `x<<9` is then squeezed
+out to `sb`. Fix `W_z9`'s colour and the other three words follow. Live ranges are
+IDENTICAL under both colourings -- this is pure colour choice, and `wallcrack`
+tags all four words `regperm`.
+
+**It is NOT register availability, and an earlier draft of this note was wrong to
+say so.** Block A coalesces both shifts in place, but not because it is starved:
+`r8` holds `i + 1`, is defined at +0xc8 and last read at +0xd8, so it is free for
+the whole of block A -- and the ROM still coalesces there. Both blocks have spare
+registers; the ROM coalesces in the first and not in the second. Availability is
+not the discriminator, so do not reason from it.
 
 * **Only the Z component's spelling moves the block's colouring.** With the x
   and y components held fixed, sweeping every component independently over
