@@ -1267,6 +1267,32 @@ void hal_fill_wall_sign_vtable(void);                /* _ZTV8WallSign, 32 */
 extern unsigned char Toad_SpawnInfo[];               /* ov085 0x0212fe6c, +4 = 185 */
 void *Toad_Spawn(void);                              /* ov085 0x02129cd0, 72 B */
 void hal_fill_toad_vtable(void);                     /* _ZTV4Toad, 31 */
+/* ---- run rel0215 wave 1 (lane cast-ov026): ov026's WHOLE cast, level 18
+   (Dire Dire Docks). Five classes; the SpawnInfo records come from the
+   PER-SYMBOL ov026 mount (port/ov026_syms.txt), not the whole one, for the
+   gate-17 reason -- the registry rewrites the factory word in place and the
+   ActorBase constructor reads the two list priorities back out of the same
+   record. Widths, the two pointer-to-member source tables that over-read the
+   typeinfo route, and the dsd class-identity swap (every `_ZN9Submarine*` TU
+   is the WHIRLPOOL's) are in hal/actor_classes_ov026.cpp's header; the slice
+   is port/slice_ov026cast.txt. Both attribution routes were re-run on all five
+   ids: each SpawnInfo's word[0] lands inside ov026's own image AND the arm9
+   spawn table slot at 0x02090864 + id*4 points back at the record. ---- */
+extern unsigned char data_ov026_02113abc[];          /* ov026 0x02113abc, +4 = 89  */
+void *func_ov026_02111678(void);                     /* ov026 0x02111678, 80 B     */
+void hal_fill_ov026_polelift_vtable(void);           /* _ZTV17daObjWlPolelift_c, 31 */
+extern unsigned char Submarine_SpawnInfo[];          /* ov026 0x02113c48, +4 = 90  */
+void *Submarine_Spawn(void);                         /* ov026 0x02111a70, 48 B     */
+void hal_fill_ov026_submarine_vtable(void);          /* _ZTV18daObjWlSubmarine_c, 32 */
+extern unsigned char BowserShutter_SpawnInfo[];      /* ov026 0x02113b80, +4 = 91  */
+void *BowserShutter_Spawn(void);                     /* ov026 0x02111888, 48 B     */
+void hal_fill_ov026_bowser_shutter_vtable(void);     /* _ZTV21daObjWlKoopaShutter_c, 32 */
+extern unsigned char Whirlpool_SpawnInfo[];          /* ov026 0x02113d30, +4 = 246 */
+void *Whirlpool_Spawn(void);                         /* ov026 0x021121bc, 64 B     */
+void hal_fill_ov026_whirlpool_vtable(void);          /* _ZTV18daWater_Tatumaki_c, 31 */
+extern unsigned char WaterSuction_SpawnInfo[];       /* ov026 0x02113e00, +4 = 247 */
+void *WaterSuction_Spawn(void);                      /* ov026 0x02112450, 64 B     */
+void hal_fill_ov026_water_suction_vtable(void);      /* _ZTV12WaterSuction, 31     */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -1933,4 +1959,17 @@ void hal_fill_toad_vtable(void);                     /* _ZTV4Toad, 31 */
        instances across levels 2, 4, 5 and 50 ---- */ \
     {183, "WALL_SIGN", WallSign_SpawnInfo, WallSign_Spawn, \
      hal_fill_wall_sign_vtable}, \
-    {185, "TOAD", Toad_SpawnInfo, Toad_Spawn, hal_fill_toad_vtable},
+    {185, "TOAD", Toad_SpawnInfo, Toad_Spawn, hal_fill_toad_vtable}, \
+    /* ---- run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18 \
+       (Dire Dire Docks). Ten placed instances on 18 across the first four; \
+       WATER_SUCTION is not placed on 18 and proves by no-regression. ---- */ \
+    {89, "POLE_LIFT_DDD", data_ov026_02113abc, func_ov026_02111678, \
+     hal_fill_ov026_polelift_vtable}, \
+    {90, "SUBMARINE", Submarine_SpawnInfo, Submarine_Spawn, \
+     hal_fill_ov026_submarine_vtable}, \
+    {91, "BOWSER_SHUTTER", BowserShutter_SpawnInfo, BowserShutter_Spawn, \
+     hal_fill_ov026_bowser_shutter_vtable}, \
+    {246, "WHIRLPOOL", Whirlpool_SpawnInfo, Whirlpool_Spawn, \
+     hal_fill_ov026_whirlpool_vtable}, \
+    {247, "WATER_SUCTION", WaterSuction_SpawnInfo, WaterSuction_Spawn, \
+     hal_fill_ov026_water_suction_vtable},

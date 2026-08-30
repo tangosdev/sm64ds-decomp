@@ -1941,6 +1941,29 @@ list(APPEND PORT_ACTOR_OVERLAYS ov005)
 # ov075 joins for the VS wiring lane (dScEntry_c, scene 6); the slice block
 # and the derivation pointer live beside SLICE_VS_SOURCES further down.
 list(APPEND PORT_ACTOR_OVERLAYS ov075)
+# run rel0215 wave 1 (lane cast-ov026): ov026 (level 18's own overlay, Dire
+# Dire Docks, already whole-mounted in PORT_LEVEL_OVERLAYS) joins the
+# per-symbol mounts too, so the level's WHOLE five-class cast --
+# daObjWlPolelift_c (89), Submarine (90), BowserShutter (91), Whirlpool (246)
+# and WaterSuction (247) -- reaches its SpawnInfo records, SharedFilePtr
+# construction statics, CLPS/BTA/BMD blocks and its two pointer-to-member state
+# tables by name. The gate-17 dual-mount shape of ov009/ov012/ov013/ov021/
+# ov035/ov045 applied to a further level overlay; --whole emits
+# port_ov026_image/_patch/_at and nothing by name, --from-list --pack emits the
+# named arrays plus port_ov026_syms_patch.
+# All five vtables are excluded from the mount and are host arrays
+# hal/actor_classes_ov026.cpp fills: _ZTV17daObjWlPolelift_c (31),
+# _ZTV21daObjWlKoopaShutter_c (32), _ZTV18daObjWlSubmarine_c (32),
+# _ZTV18daWater_Tatumaki_c (31) and _ZTV12WaterSuction (31). Two of those five
+# widths are OVER-READ by the typeinfo-terminator route because a
+# pointer-to-member source table is packed behind the vtable; those pairs
+# belong to the NEXT class in each case, and both the widths and that
+# correction are ROM-byte verified in port/ov026_syms.txt.
+# DSD CLASS-IDENTITY SWAP: every `_ZN9Submarine*` TU in this overlay is the
+# WHIRLPOOL's, not the Submarine's -- config/arm9/overlays/ov026/symbols.txt:201
+# puts _ZTV9Submarine on 0x02113d54, whose own typeinfo name string reads
+# 18daWater_Tatumaki_c. See port/ov026_syms.txt and port/slice_ov026cast.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov026)
 # ov084 joins for gate 32: the first ENEMY overlay, GOOMBA and BOB_OMB_BUDDY.
 # ...and ov014, ov062 and ov091 with them. ov014 is a LEVEL overlay (Bob-omb
 # Battlefield's own) and is mounted a second time here, per symbol, because
@@ -8306,6 +8329,153 @@ set_source_files_properties(
 # ActorBase::AfterCleanupResources. Each table is installed by exactly one
 # factory plus its own D1/D0, which is the condition BrickBlock fails. The
 # derivation, the raw-byte table and the sweep output are in slice_gate207.txt.
+# run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18 (Dire Dire
+# Docks). Five classes, 49 of the overlay's 54 matched TUs. Per-symbol ov026
+# mount (port/ov026_syms.txt), fill hal/actor_classes_ov026.cpp. The five TUs
+# NOT in this slice are host-copied and named at the bottom of
+# port/slice_ov026cast.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov026cast.txt" SLICE_OV026_LINES)
+set(SLICE_OV026_SOURCES "")
+foreach(line IN LISTS SLICE_OV026_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_OV026_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+# ---- lane cast-ov026: the per-source renames -------------------------------
+#
+# A. THE SHARED ROLE-NAME PLACEHOLDERS. A comment-stripped sweep of all 54
+# ov026 TUs for VT/VT0/VT1/VT2/G0/G1/G2/R0/R1/R2/HEAP returns exactly five
+# files. hal/cxx_aliases.cpp binds bare G0 -> data_020a0eac (the GAME HEAP) and
+# bare G1 -> data_ov002_0210e05c (SignPost's KCL) for the whole link, so an
+# unrenamed placeholder here does not fail a link -- it releases the wrong
+# storage, the CannonHatch/MetalNet/PathLift shape. Every target below is the
+# address that TU's OWN ROM body loads, read out of the literal pool of
+# extracted/overlays/overlay_0026.bin:
+#
+#   func_ov026_021111e0 (89's D0)   pool 0211122c/1230: VT0=0x02113ae0, G0=0x020a0eac
+#   func_ov026_0211170c (91's D0)   pool 02111758/5c/60: VT0=0x02113ba4,
+#                                     VT1=0x0210ae38 (_ZTV8Platform), G0=0x020a0eac
+#   func_ov026_02111764 (91 Cleanup) pool 021117a0/a4: G0=0x02113ebc, G1=0x02113eb4
+#   func_ov026_021118fc (90's D0)   pool 02111948/4c/50: VT0=0x02113c6c,
+#                                     VT1=0x0210ae38, G0=0x020a0eac
+#   func_ov026_02111954 (90 Cleanup) pool 02111990/94: G0=0x02113ee4, G1=0x02113edc
+#
+# VT0 goes to the HOST ARRAY in each case (all five vtables are excluded from
+# the mount). VT1 is spelled _ZTV10dBgActor_c to match what the sibling D1s
+# (func_ov026_021116c8.c, func_ov026_021118b8.c) already write BY NAME;
+# hal/actor_classes.cpp:591 defines that array and dual-fills it with
+# _ZTV8Platform.
+# The four SharedFilePtr targets and the polelift's collision vector go through
+# PRIVATE NAMES this lane owns, bound in hal/actor_classes_ov026.cpp with a
+# C-name /alternatename, because include/decl_common.h already declares
+# data_ov026_02113ebc/eb4/edc/ee4 as `char[]` and data_ov026_02113a9c as
+# `Vector3` while the TUs declare their placeholders as `extern int G0[];` and
+# a local `struct V3` -- a direct -D is the C2371/C2372 redeclaration the ov006
+# Mg3DEsp block measured. Each private LHS is undefined everywhere else, so
+# those aliases cannot be defeated.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov026_021111e0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=_ZTV17daObjWlPolelift_c;G0=data_020a0eac")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov026_0211170c.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=_ZTV21daObjWlKoopaShutter_c;VT1=_ZTV10dBgActor_c;G0=data_020a0eac")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov026_021118fc.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=_ZTV18daObjWlSubmarine_c;VT1=_ZTV10dBgActor_c;G0=data_020a0eac")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov026_02111764.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=port_ov026_shutter_bmd;G1=port_ov026_shutter_kcl")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov026_02111954.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=port_ov026_submarine_bmd;G1=port_ov026_submarine_kcl")
+#
+# B. THE SECOND SPELLING OF A HOST-ARRAY VTABLE. Three of the five tables are
+# reached under two names by ov026's own sources, and only one host array can
+# exist per table because the object's vptr is one word. A -D rather than an
+# /alternatename on purpose: a -D cannot be defeated by a later mount (the
+# ov071/ov073 R3 failure), and the R5 precedent points the rename AT the host
+# array for exactly this case.
+#   BowserShutter_Spawn.c writes data_ov026_02113ba4, its D1 writes
+#     _ZTV21daObjWlKoopaShutter_c -- same address 0x02113ba4.
+#   Submarine_Spawn.c writes data_ov026_02113c6c, its D1 writes
+#     _ZTV18daObjWlSubmarine_c -- same address 0x02113c6c.
+#   _ZN9SubmarineD1Ev.c and Whirlpool_Spawn.c write _ZTV9Submarine, the D0
+#     writes _ZTV18daWater_Tatumaki_c -- same address 0x02113d54, and the
+#     _ZTV9Submarine row is the WRONG label (that table's own vtable[-1]
+#     typeinfo name string reads 18daWater_Tatumaki_c), so the rename runs
+#     toward the right name.
+#   _ZN12WaterSuctionD0Ev.c writes _ZTV17daWater_Suikomi_c, the D1 and the
+#     Spawn write _ZTV12WaterSuction -- same address 0x02113e24, and here BOTH
+#     labels are correct spellings of one class, so the rename is only picking
+#     the majority spelling.
+# include/decl_common.h declares every one of these as `extern int NAME[];`, so
+# each rename produces a duplicate IDENTICAL declaration, which is legal.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/BowserShutter_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov026_02113ba4=_ZTV21daObjWlKoopaShutter_c")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/Submarine_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov026_02113c6c=_ZTV18daObjWlSubmarine_c")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN9SubmarineD1Ev.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/Whirlpool_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV9Submarine=_ZTV18daWater_Tatumaki_c")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN12WaterSuctionD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV17daWater_Suikomi_c=_ZTV12WaterSuction")
+#
+# C. THE WRONG-OVERLAY CROSSINGS. ov026 shares the level load window at
+# 0x021111a0 with ov014/ov015/ov016/ov020/ov021/ov022/ov029/ov032/ov034/ov036/
+# ov045/ov053 and dsd raced the name on four references inside ov026's own
+# sources. Each target is ov026's own symbol at the identical address.
+#
+#   src/func_ov026_021122b0.c calls __sinit_ov045_02112280 where ov026's own
+#   func_ov026_02112280 (0x02112280, kind:function, size 0x30) is meant. THIS
+#   ONE IS A LIVE HAZARD, not a synonym: ___sinit_ov045_02112280 is ALREADY
+#   DEFINED in walk_window by ov013_syms.c.obj (measured in the 0.2.15 baseline
+#   map, 0004:000cc184) -- a mounted DATA object at the shared address. Left
+#   alone, WaterSuction's state-0 tick would have called into mounted data, and
+#   an /alternatename would have been defeated silently. A -D cannot be.
+#
+#   src/__sinit_ov026_02112d68.c writes data_ov036_02113f58 where ov026's own
+#   bss cell data_ov026_02113f58 is meant -- that sinit is ov026's own .init
+#   code and the cell it builds is the one WaterSuction::InitResources passes to
+#   func_ov026_021122d4. ov036's 0x02113f58 is a real .data symbol of ov036's,
+#   which is exactly why this must not be an alias.
+#
+#   src/func_ov026_02111598.cpp reads data_ov032_02113a9c (ov026's own
+#   0x02113a9c, the polelift's collision half-extents) and calls
+#   func_ov053_021112a4 (ov026's own func_ov026_021112a4, the matrix/scale
+#   helper immediately above it in the same class block). The first goes
+#   through the private name in block A because decl_common.h's own
+#   data_ov026_02113a9c declaration would collide; the second is renamed
+#   directly -- decl_common.h:1566 declares func_ov053_021112a4 and does not
+#   declare func_ov026_021112a4, so there is nothing to conflict with.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov026_021122b0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "__sinit_ov045_02112280=func_ov026_02112280")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/__sinit_ov026_02112d68.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov036_02113f58=data_ov026_02113f58")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov026_02111598.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov032_02113a9c=port_ov026_polelift_clsn;func_ov053_021112a4=func_ov026_021112a4")
+
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate207.txt" SLICE207_LINES)
 set(SLICE207_SOURCES "")
 foreach(line IN LISTS SLICE207_LINES)
@@ -9132,6 +9302,8 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES}
     hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES}
+    # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
+    hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
@@ -9191,6 +9363,7 @@ foreach(line IN LISTS SLICE_W8A_LINES)
     endif()
     list(APPEND SLICE_W8A_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+
 
 # Gate 12: the interactive window (same stack, windowed loop).
 #
@@ -9308,6 +9481,8 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES}
     hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES}
+    # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
+    hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
@@ -9518,6 +9693,8 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES}
     hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES}
+    # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
+    hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp

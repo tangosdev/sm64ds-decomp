@@ -1,0 +1,163 @@
+# run rel0215 wave 1, lane cast-ov026: ov026's whole cast, level 18 (Dire
+# Dire Docks, data/stage/water_land, course 8). Fill is
+# hal/actor_classes_ov026.cpp; the per-symbol mount is port/ov026_syms.txt
+# (wave-20 derivation, wired for the first time by this lane).
+#
+# ============================ THE CLASS MAP =================================
+# Five classes, 49 of the overlay's 54 matched TUs in this slice. The five that
+# are NOT here are host-copied and named at the bottom.
+#
+# EVERY line below is attributed by the ROM's own vtable relocations, read out
+# of extracted/overlays/overlay_0026.bin (never extracted/dsd/arm9_overlays/,
+# trap T4). dsd's method NAMES on this overlay are class-swapped for one class
+# and this slice does not follow them:
+#
+#   table       ROM typeinfo name         id   slots  base
+#   0x02113ae0  17daObjWlPolelift_c       89   31     Actor
+#   0x02113ba4  21daObjWlKoopaShutter_c   91   32     Platform (Kill @31)
+#   0x02113c6c  18daObjWlSubmarine_c      90   32     Platform (Kill @31)
+#   0x02113d54  18daWater_Tatumaki_c     246   31     Enemy
+#   0x02113e24  17daWater_Suikomi_c      247   31     Enemy
+#
+# THE SWAP: every `_ZN9Submarine*` TU in this overlay is the WHIRLPOOL's
+# (18daWater_Tatumaki_c, id 246), not the Submarine's. Table 0x02113d54 holds
+# _ZN9Submarine13InitResourcesEv at slot 0, _ZN9SubmarineD1Ev at 16 and
+# _ZN9SubmarineD0Ev at 17, and its own vtable[-1] typeinfo record's name string
+# reads 18daWater_Tatumaki_c. The real Submarine's table is 0x02113c6c, whose
+# own bodies dsd left unnamed as func_ov026_021118b8/021118fc/02111954/
+# 02111998/021119c0. config/arm9/overlays/ov026/symbols.txt:201 puts
+# _ZTV9Submarine on 0x02113d54 and that row is the wrong one.
+#
+# ---- id 89, daObjWlPolelift_c (31 slots, plain Actor, no own slot 12) -------
+# D1 021111a0, D0 021111e0, Cleanup 021112e4, Render 02111308,
+# Behavior 02111330, InitResources 02111598, Spawn 02111678.
+# Render dispatches slot 5 of a six-virtual ROM-order shadow at +0xd4, which is
+# a plain Model -- _ZTV5Model[5] is DUAL-FILLED (hal/cxxname_bridge.cpp:511) so
+# that dispatch is served correctly and the TU stays in the slice. This is the
+# safe half of the ModelAnim slot-5 collision, the daBgSnwmn_c reading.
+src/func_ov026_021111a0.c
+src/func_ov026_021111e0.c
+src/func_ov026_02111234.cpp
+src/func_ov026_021112a4.c
+src/func_ov026_021112e4.c
+src/func_ov026_02111308.cpp
+src/func_ov026_02111330.cpp
+src/func_ov026_02111598.cpp
+src/func_ov026_02111678.c
+#
+# ---- id 91, daObjWlKoopaShutter_c / BowserShutter (32 slots, Platform) ------
+# D1 021116c8, D0 0211170c, Cleanup 02111764, Render 021117a8,
+# Behavior 021117d0, InitResources 021117d8, Spawn 02111888.
+# Slot 31 is Platform::Kill (0x020ee55c) unchanged. Render is the same plain
+# Model shadow as the polelift's.
+src/func_ov026_021116c8.c
+src/func_ov026_0211170c.c
+src/func_ov026_02111764.c
+src/func_ov026_021117a8.cpp
+src/func_ov026_021117d0.c
+src/func_ov026_021117d8.c
+src/BowserShutter_Spawn.c
+#
+# ---- id 90, daObjWlSubmarine_c / Submarine (32 slots, Platform) ------------
+# D1 021118b8, D0 021118fc, Cleanup 02111954, Render 02111998,
+# InitResources 021119c0, Spawn 02111a70. NO own Behavior: slot 6 is
+# ActorBase::Behavior (0x02043b24). Slot 31 is Platform::Kill. Its four
+# {function,0} pointer-to-member pairs at 0x02113cec..0x02113d04 are NOT its
+# own -- their four targets (02111d4c/02111cb4/02111b24/02111ed8) all land
+# inside the WHIRLPOOL's body range, so that table is the whirlpool's file-
+# scope static emitted ahead of the whirlpool's own typeinfo/vtable group.
+src/func_ov026_021118b8.c
+src/func_ov026_021118fc.c
+src/func_ov026_02111954.c
+src/func_ov026_02111998.cpp
+src/func_ov026_021119c0.c
+src/Submarine_Spawn.c
+#
+# ---- id 246, daWater_Tatumaki_c / Whirlpool (31 slots, Enemy) --------------
+# D1 02111aa0, D0 02111ad8, Cleanup 02111fa4, OnPendingDestroy 02111fd4 (own,
+# empty), Render 02111fd8, Behavior 0211200c, InitResources 021120ec,
+# Spawn 021121bc -- all of them spelled `Submarine` by dsd, see THE SWAP above.
+# Two-state pointer-to-member machine: __sinit_ov026_02112c94 copies the four
+# source pairs into the two bss cells data_ov026_02113f2c (state 0: enter
+# 02111ed8, tick 02111d4c) and data_ov026_02113f3c (state 1: enter 02111cb4,
+# tick 02111b24). The four handler bodies stay in the slice; only the two
+# dispatch sites are host-copied.
+src/_ZN9SubmarineD1Ev.c
+src/_ZN9SubmarineD0Ev.c
+src/func_ov026_02111b24.c
+src/func_ov026_02111cb4.c
+src/func_ov026_02111d4c.cpp
+src/func_ov026_02111ed8.c
+src/func_ov026_02111f30.c
+src/_ZN9Submarine16CleanupResourcesEv.c
+src/_ZN9Submarine16OnPendingDestroyEv.c
+src/_ZN9Submarine13InitResourcesEv.cpp
+src/Whirlpool_Spawn.c
+#
+# ---- id 247, daWater_Suikomi_c / WaterSuction (31 slots, Enemy) ------------
+# D1 021121fc, D0 02112234, Cleanup 02112328, OnPendingDestroy 02112330,
+# Render 02112334, Behavior 0211233c, InitResources 021123c8,
+# Spawn 02112450. One-state machine: __sinit_ov026_02112d68 copies the two
+# source pairs into the bss cell data_ov026_02113f58 (enter 021122cc,
+# tick 021122b0).
+# NOT PLACED ON LEVEL 18 -- it seats and proves by no-regression only. It is
+# registered anyway because its sinit and its mount ride the same overlay and
+# leaving one class of five unregistered is the thing that makes a later lane
+# re-derive all of it.
+src/_ZN12WaterSuctionD1Ev.c
+src/_ZN12WaterSuctionD0Ev.c
+src/func_ov026_02112280.c
+src/func_ov026_021122b0.c
+src/func_ov026_021122cc.c
+src/func_ov026_02112324.c
+src/_ZN12WaterSuction16CleanupResourcesEv.c
+src/_ZN12WaterSuction16OnPendingDestroyEv.c
+src/_ZN12WaterSuction6RenderEv.c
+src/_ZN12WaterSuction13InitResourcesEv.cpp
+src/WaterSuction_Spawn.c
+#
+# ---- the five sinits, all five classes registered, ROM .ctor order ---------
+# .ctor 0x02112da4..0x02112db8 lists them 02112b7c, 02112bbc, 02112c28,
+# 02112c94, 02112d68 and hal/actor_overlays.cpp calls them in that order.
+#   02112b7c  polelift's one SharedFilePtr (file 1755)
+#   02112bbc  shutter's model 1753 + clsn 1754
+#   02112c28  submarine's model 1756 + clsn 1757
+#   02112c94  whirlpool's model 0x4a9 + anim 0x4a8, then the four PMF copies
+#   02112d68  watersuction's two PMF copies
+src/__sinit_ov026_02112b7c.c
+src/__sinit_ov026_02112bbc.c
+src/__sinit_ov026_02112c28.c
+src/__sinit_ov026_02112c94.c
+src/__sinit_ov026_02112d68.c
+#
+# ============================================================================
+# NOT IN THIS SLICE -- five host copies. Each matched TU stays byte-locked in
+# src/ as the proof and is simply absent from the list above.
+#
+#   src/_ZN9Submarine6RenderEv.cpp  -> port/unmatched/Whirlpool_Render.cpp
+#       THE ModelAnim SLOT-5 COLLISION, the Whomp/Butterfly/Fish/BabyPenguin
+#       case. It dispatches slot 5 of a six-virtual ROM-order shadow at +0x114,
+#       which for this class is a ModelAnim (Whirlpool_Spawn constructs
+#       _ZN9ModelAnimC1Ev at +0x114). hal/cxxname_bridge.cpp:554 puts
+#       ma2_virtual18 in _ZTV9ModelAnim[5] and says in its own words that
+#       ModelAnim cannot be dual-filled the way Model is. Virtual18 pops two
+#       stack words where the shadow pushed one.
+#
+#   src/_ZN9Submarine8BehaviorEv.cpp -> port/unmatched/Whirlpool_Behavior.cpp
+#   src/func_ov026_02111ee0.cpp      -> port/unmatched/Whirlpool_StateDispatch.cpp
+#   src/_ZN12WaterSuction8BehaviorEv.cpp -> port/unmatched/WaterSuction_Behavior.cpp
+#   src/func_ov026_021122d4.cpp      -> port/unmatched/WaterSuction_StateDispatch.cpp
+#       REAL C++ POINTER-TO-MEMBER DISPATCH on a deliberately incomplete class
+#       (`struct C; typedef int (C::*PMF)(); struct C { char pad[N]; PMF *pp; };`)
+#       -- the SoundObject/Cap/MrBlizzard/BabyPenguin disease. MSVC picks its
+#       pointer-to-member representation where the type is first named, and a
+#       forward-declared class gets the generalised (multi-word) form, which
+#       does not reproduce the ROM's 8-byte {function, 0} record either in the
+#       cell stride or in the call. WaterSuction's Behavior is worse again: it
+#       embeds a PMF inside `struct Obj { char pad[8]; PMF pmf; }`, so the
+#       member offset is wrong before the call is.
+#
+# All five are the ONLY dispatch shapes in this overlay MSVC cannot deliver.
+# Nothing here is refused for being unmodellable: the overlay contains no asm
+# blocks, no scheduler, no card loader and no wireless, and all 54 TUs are
+# present and none carries a NONMATCHING banner.

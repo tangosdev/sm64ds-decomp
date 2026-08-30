@@ -1520,3 +1520,62 @@ func_ov005_020c0b00  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15
 func_ov005_020c14a0  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 6 Behavior, addr 0x020c14a0 size 0x1b4; match.py MATCHING at 2004/b56 with reloc destinations checked. This is the body hal/scene_mg.cpp RNG seeder replicates
 func_ov005_020c1654  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 3 CleanupResources, addr 0x020c1654 size 0x34; match.py MATCHING at 2004/b56 with reloc destinations checked
 func_ov005_020c1a20  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 0 InitResources, addr 0x020c1a20 size 0x7cc; match.py MATCHING at 2004/b56 with reloc destinations checked
+#
+# ---------------------------------------------------------------------------
+# run rel0215 wave 1 (lane cast-ov026), 2026-08-29.
+#
+# ov026's WHOLE CAST seated for level 18 (Dire Dire Docks): daObjWlPolelift_c
+# (89), Submarine (90), BowserShutter (91), Whirlpool (246) and WaterSuction
+# (247). Lane w16 already ruled the polelift's five bodies above and deferred
+# the seating because it had no ov026 per-symbol mount; this lane built that
+# mount, which brings the other four classes' marker-carrying bodies into the
+# same question.
+#
+# ELEVEN bodies, each rerun through the repo's own byte gate rather than an
+# eyeball disassembly: recompiled at the canonical mwccarm 2004/b56 against
+# extracted/overlays/overlay_0026.bin (deliberately not the dsd export) WITH
+# match.py's reloc-DESTINATION check on, which is its default. That check is
+# not free: with --module misspelled the tool says "bytes match but the
+# reloc-destination check could not run -- NOT a verified match" and reports no
+# matching version, so each green below is the strict verdict.
+#
+# RESULT: 11 REAL DECOMP, 0 genuine guesses, 0 unverifiable. Every one is a
+# body the ROM can be rebuilt from, which is the fear the marker stands in for;
+# the marker here records how the function's NAME was recovered, the same
+# mis-proxy this file's header describes.
+#
+# TWO NAMES THAT LIE, recorded because a wrong name is worse than no name:
+#   * func_ov026_0211170c and func_ov026_021118fc are labelled OnYoshiTryEat by
+#     the RTTI recovery and are the DELETING DESTRUCTORS (slot 17) -- same
+#     mislabel class as func_ov022_021123d0 and func_ov005_020bfefc above.
+#   * func_ov026_02111d4c is labelled daObjWlSubmarine_c::AfterClsn and belongs
+#     to the WHIRLPOOL (daWater_Tatumaki_c, id 246): it is that class's state-0
+#     tick handler, reached through the cell at data_ov026_02113f2c. Every
+#     `_ZN9Submarine*` name in ov026 is class-swapped the same way; the
+#     derivation is in port/ov026_syms.txt and hal/actor_classes_ov026.cpp.
+#   * func_ov026_021122b0 is labelled Submarine_Kill / daWater_Tatumaki_c::Kill
+#     and is WATERSUCTION's state-0 tick. Its one call spells
+#     __sinit_ov045_02112280 where ov026's own func_ov026_02112280 is meant --
+#     a shared-window race the ROM gate cannot see (it checks the DESTINATION
+#     address, which is right); routed with a per-source -D in
+#     port/CMakeLists.txt, and it had to be a -D because that LHS is already
+#     DEFINED in walk_window by ov013_syms.c.obj.
+#
+# Full per-body evidence, every match.py invocation and its complete output:
+# C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov026\ADJUDICATION.md
+#
+# id 91, ov026, 21daObjWlKoopaShutter_c -- SEATED by this lane.
+func_ov026_0211170c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov026\ADJUDICATION.md  slot 17 D0, addr 0x0211170c size 0x58; match.py MATCHING at 2004/b56 with reloc destinations checked. NAME says OnYoshiTryEat and is wrong, body is the D0
+func_ov026_02111764  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov026\ADJUDICATION.md  slot 3 CleanupResources, addr 0x02111764 size 0x44; MeshColliderBase::IsEnabled/Disable then two SharedFilePtr::Release; MATCHING at 2004/b56 with reloc destinations checked
+func_ov026_021117a8  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov026\ADJUDICATION.md  slot 9 Render, addr 0x021117a8 size 0x28; the plain-Model slot-5 dispatch at +0xd4, encoded not guessed; MATCHING at 2004/b56 with reloc destinations checked
+func_ov026_021117d0  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov026\ADJUDICATION.md  slot 6 Behavior, addr 0x021117d0 size 0x8; mov r0,#1 / bx lr; MATCHING at 2004/b56
+func_ov026_021117d8  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov026\ADJUDICATION.md  slot 0 InitResources, addr 0x021117d8 size 0xb0; Model::LoadFile/SetFile(1,-1), Platform::UpdateModelPosAndRotY/UpdateClsnPosAndRot, MovingMeshCollider::SetFile(0x199) and the 0x204 gate; MATCHING at 2004/b56 with reloc destinations checked
+# id 90, ov026, 18daObjWlSubmarine_c -- SEATED by this lane.
+func_ov026_021118fc  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov026\ADJUDICATION.md  slot 17 D0, addr 0x021118fc size 0x58; MATCHING at 2004/b56 with reloc destinations checked. NAME says OnYoshiTryEat and is wrong, body is the D0
+func_ov026_02111954  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov026\ADJUDICATION.md  slot 3 CleanupResources, addr 0x02111954 size 0x44; MATCHING at 2004/b56 with reloc destinations checked
+func_ov026_02111998  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov026\ADJUDICATION.md  slot 9 Render, addr 0x02111998 size 0x28; plain-Model slot-5 dispatch at +0xd4; MATCHING at 2004/b56 with reloc destinations checked
+func_ov026_021119c0  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov026\ADJUDICATION.md  slot 0 InitResources, addr 0x021119c0 size 0xb0; MATCHING at 2004/b56 with reloc destinations checked
+# id 246, ov026, 18daWater_Tatumaki_c -- SEATED by this lane.
+func_ov026_02111d4c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov026\ADJUDICATION.md  state-0 tick (cell data_ov026_02113f2c +8), addr 0x02111d4c size 0x18c; MATCHING at 2004/b56 with reloc destinations checked. NAME says daObjWlSubmarine_c::AfterClsn and is wrong on both halves -- it is the WHIRLPOOL's, and it is a state handler, not a vtable slot
+# id 247, ov026, 17daWater_Suikomi_c -- SEATED by this lane.
+func_ov026_021122b0  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov026\ADJUDICATION.md  state-0 tick (cell data_ov026_02113f58 +8), addr 0x021122b0 size 0x1c; MATCHING at 2004/b56 with reloc destinations checked. NAME says Submarine_Kill / daWater_Tatumaki_c::Kill and is wrong on both halves; its callee spelling is a shared-window race routed by -D
