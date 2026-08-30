@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
-"""Backslide gate for the CONVERTED tier: a readable file may not quietly stop being one.
+"""Backslide gate for the CONVERTED tier: readable source ownership may not regress.
 
 WHAT IT GATES. `tools/tiers.py` scores every source file against the five CONVERTED
 criteria (real function name, no raw offset arithmetic, no `unk_<off>` fields, no
-codegen tricks, no calls through mangled names). This tool banks the SET of file paths
-that pass all five and fails a PR when a path LEAVES that set. It reuses tiers.score_file
-outright -- the classifier has exactly one implementation, and a second copy of those
-regexes would be a second definition of a published percentage.
+codegen tricks, no calls through mangled names). This tool banks the SET of source
+identities that pass all five and fails a PR when an identity LEAVES that set. A
+one-function source keeps its historical path identity. A promoted TU appends
+``#symbol`` to that path for each enrolled member, matching attribution's ownership unit.
+It reuses tiers.score_file outright -- the classifier has exactly one implementation,
+and a second copy of those regexes would be a second definition of a published percentage.
 
 WHY BACKSLIDE-ONLY, AND NOT A COUNT. Two reasons, and the second is the important one.
 
   A count ratchet ("converted may not fall") is satisfied by converting one file while
   wrecking another, which is the trade this gate exists to notice. A set ratchet names
-  the file.
+  the source member.
 
   More importantly, this project's goal ordering is not negotiable: a historically
   accurate C++ source that reproduces the ROM's exact bytes comes FIRST, readability
@@ -122,7 +124,7 @@ Usage:
     python tools/tiers_ratchet.py --check         # exit 1 on any backslide
     python tools/tiers_ratchet.py --update        # re-bank (additions only)
     python tools/tiers_ratchet.py --update --reason "..."   # re-bank with removals
-    python tools/tiers_ratchet.py --list          # the current CONVERTED paths
+    python tools/tiers_ratchet.py --list          # current CONVERTED identities
 
 Exit codes: 0 ok, 1 backslide detected, 2 usage/configuration error (missing baseline,
 removal without a reason). It compiles nothing and reads no ROM: pure source text over
@@ -142,10 +144,12 @@ import tu_manifest  # noqa: E402  (legacy_source -> promoted_source; see promote
 BASELINE = REPO / "config" / "converted-baseline.json"
 EXCEPTIONS = REPO / "config" / "converted-backslide-exceptions.jsonl"
 
-NOTE = ("The CONVERTED file set, banked. tools/tiers_ratchet.py --check fails when a "
-        "path here no longer passes all five criteria in tools/tiers.py. Removals need "
-        "--reason and land in config/converted-backslide-exceptions.jsonl. Regenerate "
-        "with `python tools/tiers_ratchet.py --update`.")
+NOTE = ("The CONVERTED source/member identity set, banked. One-function sources use "
+        "their path; promoted TU members append #symbol to that path. "
+        "tools/tiers_ratchet.py --check fails when an identity no longer passes all "
+        "five criteria in tools/tiers.py. Removals need --reason and land in "
+        "config/converted-backslide-exceptions.jsonl. Regenerate with "
+        "`python tools/tiers_ratchet.py --update`.")
 
 
 def tracked_sources():
@@ -210,17 +214,31 @@ def score(rel):
     return tiers.score_file(rel, text)
 
 
-def scan(paths=None):
-    """(converted_set, scores_by_path) for the whole tracked tree."""
+def scan(paths=None, ownership=None):
+    """(converted identities, scores by identity) for the tracked source tree.
+
+    Physical paths remain the identity for ordinary one-function intake files so the
+    existing baseline stays valid. A production TU owns several enrolled functions;
+    those are independently banked as ``path#symbol`` so consolidating files cannot
+    masquerade as a readability backslide or let one readable member pay for another.
+    """
     scores = {}
     converted = set()
+    if ownership is None:
+        ownership = tiers.srcpath.source_definition_index()
     for rel in (paths if paths is not None else tracked_sources()):
-        s = score(rel)
-        if s is None:
+        file_score = score(rel)
+        if file_score is None:
             continue
-        scores[rel] = s
-        if all(s[k] for k in tiers.CRITERIA):
-            converted.add(rel)
+        members = ownership.get(rel) or [pathlib.PurePosixPath(rel).stem]
+        multi = len(members) > 1
+        for symbol in members:
+            identity = f"{rel}#{symbol}" if multi else rel
+            member_score = dict(file_score)
+            member_score["real_name"] = tiers._real_name_for_symbol(symbol)
+            scores[identity] = member_score
+            if all(member_score[k] for k in tiers.CRITERIA):
+                converted.add(identity)
     return converted, scores
 
 
@@ -263,23 +281,24 @@ def append_exceptions(path, rows):
             f.write(json.dumps(r, sort_keys=True) + "\n")
 
 
-def _failures(rel, scores):
-    """The criteria `rel` fails, as labels, or None when it passes all five."""
-    s = scores.get(rel)
+def _failures(identity, scores):
+    """The criteria `identity` fails, or None when it passes all five."""
+    s = scores.get(identity)
     if s is None:
         return None
     failed = [k for k in tiers.CRITERIA if not s[k]]
     return failed or None
 
 
-def why(rel, scores, tracked, moves=None):
-    """Why a banked path is no longer CONVERTED, in the words of the criteria.
+def why(identity, scores, tracked, moves=None):
+    """Why a banked source/member identity is no longer CONVERTED.
 
     A path that is GONE gets one of two answers, and the difference is the whole
     point: someone deleted readable code, or a TU promotion absorbed it into the file
     it was always part of. The second names the absorbing file and says what that file
     does with the five criteria, because THAT is the thing a reviewer has to judge.
     """
+    rel, marker, symbol = identity.partition("#")
     if rel not in tracked:
         moved = (moves or {}).get(rel)
         if not moved:
@@ -295,9 +314,11 @@ def why(rel, scores, tracked, moves=None):
                     "file passes all five, so nothing readable was lost")
         return (f"MOVED -- absorbed into {dest} by TU promotion ({tu_id}), which "
                 "fails: " + "; ".join(tiers.CRITERION_LABEL[k] for k in failed))
-    failed = _failures(rel, scores)
+    failed = _failures(identity, scores)
     if failed is None:
-        if rel not in scores:
+        if marker:
+            return f"GONE -- {symbol} is no longer an enrolled member of {rel}"
+        if identity not in scores:
             return "UNREADABLE -- the file could not be read"
         # Cannot happen through --check, which derives both sides from one scan; it can
         # happen if a caller passes a hand-edited path list, so say so rather than lie.
@@ -341,7 +362,7 @@ def main():
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--check", action="store_true",
-                    help="exit 1 if any banked path is no longer CONVERTED")
+                    help="exit 1 if any banked identity is no longer CONVERTED")
     ap.add_argument("--update", action="store_true",
                     help="rewrite the baseline from the current tree")
     ap.add_argument("--reason", metavar="TEXT",
@@ -352,7 +373,7 @@ def main():
                          "on purpose: git already dates the commit that adds the row, "
                          "and a live clock would make this tool untestable")
     ap.add_argument("--list", action="store_true",
-                    help="print the current CONVERTED paths, one per line")
+                    help="print the current CONVERTED source/member identities")
     ap.add_argument("--baseline", default=str(BASELINE), metavar="PATH")
     ap.add_argument("--exceptions", default=str(EXCEPTIONS), metavar="PATH")
     args = ap.parse_args()

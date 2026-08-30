@@ -1,9 +1,11 @@
 # Guards the CONVERTED tier against a silent backslide.
 #
-# `tools/tiers.py` scores every file under src/ against five readability criteria (real
+# `tools/tiers.py` scores every function under src/ against five readability criteria (real
 # function name, no raw offset arithmetic, no `unk_<off>` fields, no codegen tricks, no
-# calls through mangled names). `tools/tiers_ratchet.py` banks the SET of paths that pass
-# all five in `config/converted-baseline.json` and fails when a banked path LEAVES it.
+# calls through mangled names). `tools/tiers_ratchet.py` banks the SET of source/member
+# identities that pass all five in `config/converted-baseline.json` and fails when one
+# leaves it. One-function files use the source path itself; promoted TU members append
+# `#symbol` to that path, matching attribution's ownership granularity.
 #
 # A SET, not a count, on purpose: a count ratchet is satisfied by converting one file
 # while wrecking another, which is the exact trade this gate exists to notice.
