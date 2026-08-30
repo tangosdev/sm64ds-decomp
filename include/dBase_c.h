@@ -11,23 +11,12 @@
  * slots 16/17. Every other slot still points at the fBase_c implementation.
  * The class therefore adds NO new virtuals, which has a useful consequence.
  *
- * KEY FUNCTION. CW 1.2 emits the vtable into the TU that DEFINES the first
- * non-inline virtual declared in the class, and that copy collides with the one
- * the module's gap object supplies from ROM data.
- *
- * The rule, stated precisely: the key function must never be defined as a real
- * method in any translation unit. Its declaration in the class is required and
- * harmless -- include/fBase_c.h does declare InitResources (slot 0) in-class,
- * and removing it would delete a slot and shift the other seventeen. What
- * fBase_c.h relies on is that src/_ZN7fBase_c13InitResourcesEv.cpp defines
- * it as an extern "C" free function rather than a method.
- *
- * dBase_c used to get there cheaply: the destructor was declared FIRST,
- * making it the key function, and it was never defined as a method, so no TU
- * was the key function's definition. tools/objisolate.py has since made a
- * key-function TU eligible anyway -- it drops the vtable the TU emits and
- * rebinds the reference to the ROM's own _ZTV symbol -- so that is no longer
- * what protects anything. See include/ModelBase.h.
+ * KEY FUNCTION. AfterInitResources is the first non-inline virtual declared in
+ * this class, so defining the real method makes CW 1.2 emit dBase_c's vtable,
+ * RTTI, and the out-of-line copies of the inline destructor into the same TU.
+ * That is the cartridge's source form: the production ActorDerived TU compiles
+ * all five functions in ROM order and verifies the emitted data against its
+ * canonical ARM9 homes before discarding the duplicate data contributions.
  *
  * THE DESTRUCTOR IS DEFINED INLINE, AND THAT IS LOAD-BEARING FOR SUBCLASSES.
  * dScene_c::~dScene_c in the ROM stores two vptrs and then calls fBase_c's
@@ -44,10 +33,9 @@
  * back out of the class un-matches dScene_c, Stage and every actor destructor
  * below them.
  *
- * The cost is that src/_ZN7dBase_cD1Ev.cpp can no longer define it --
- * that would be a redefinition -- and a TU that merely includes this header
- * emits nothing. That file therefore carries a forcing function instead; see
- * the note in it.
+ * There is no second destructor definition and no forcing function. The key
+ * function's vtable references cause mwccarm to emit D1 then D0, with no D2,
+ * exactly as the ROM records at 0x02013e80..0x02013edc.
  */
 struct dBase_c : fBase_c {
     /* Declared first, deliberately -- see KEY FUNCTION above. Overrides slots
