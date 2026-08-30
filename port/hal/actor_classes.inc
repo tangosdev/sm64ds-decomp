@@ -1513,6 +1513,35 @@ void hal_fill_wiggler_vtable(void);                  /* _ZTV7Wiggler, 31 */
    entered, so the matched TU calls it with NO argument -- the ChiefChilly r0
    ride-through (port/slice_w12.txt) -- and the name it spells, func_020aed98,
    is an arm9-style spelling of ov002's _ZN5EnemyC2Ev. */
+/* run rel0215 wave 2 (lane cast-sweep2): OV047'S OWN CAST, Bowser in the Sky --
+   seven of level 39's nine skipped instances. THE CAMPAIGN PLAN LISTS THREE
+   CLASSES HERE AND THE ROM HAS FOUR: id 156 (RTTI 20daObjKm3_Kaitendai_c, the
+   rotating stand) is a fourth, and tools/actor_names.py already reads it as
+   ROTATING_PLATFORM_BS. dsd names TWO vtables in this overlay and each is
+   attached ONE TABLE LATE in .data address order, so _ZTV10RickshawBs
+   (0x0211237c) is id 156's and _ZTV18RickshawPlatformBs (0x0211254c) is id
+   153's, while ids 152 and 151 own the two tables dsd left as bare data
+   symbols. The factory installs, the RTTI at vtable[-1] and the spawn records
+   all three agree, so the rows below go by ADDRESS and every _ZN10RickshawBs*
+   body serves id 156 while every _ZN18RickshawPlatformBs* body serves id 153.
+   All four tables are 32-slot Platform with the same four own slots (0, 3, 16,
+   17); 6 and 9 are inherited from an ov002 intermediate base. dsd's landings
+   read 0x80 on one and SHORT on the other three. id 151 is not placed on level
+   39 and is registered because both attribution routes name it. Derivation in
+   port/ov047_syms.txt, fills in hal/actor_classes_ov047.cpp, slice in
+   port/slice_sweep2_ov047.txt. */
+extern unsigned char RickshawPlatformBs_SpawnInfo[]; /* ov047 0x02112428, +4 = 151 */
+void *RickshawPlatformBs_Spawn(void);                /* ov047 0x021114d4, 60 B */
+void hal_fill_rickshaw_platform_bs_vtable(void);     /* data_ov047_0211244c, 32 */
+extern unsigned char RickshawBs_SpawnInfo[];         /* ov047 0x0211227c, +4 = 152 */
+void *RickshawBs_Spawn(void);                        /* ov047 0x02111280, 60 B */
+void hal_fill_rickshaw_bs_vtable(void);              /* data_ov047_021122a0, 32 */
+extern unsigned char StairsBs_SpawnInfo[];           /* ov047 0x021124ec, +4 = 153 */
+void *StairsBs_Spawn(void);                          /* ov047 0x0211164c, 144 B */
+void hal_fill_stairs_bs_vtable(void);                /* _ZTV18RickshawPlatformBs, 32 */
+extern unsigned char data_ov047_02112358[];          /* ov047 0x02112358, +4 = 156 */
+void *func_ov047_021113bc(void);                     /* ov047 0x021113bc, 60 B */
+void hal_fill_rotating_platform_bs_vtable(void);     /* _ZTV10RickshawBs, 32 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2286,4 +2315,17 @@ void hal_fill_wiggler_vtable(void);                  /* _ZTV7Wiggler, 31 */
     /* ---- run rel0215 wave 2 (lane cast-sweep2): ov034, Tiny-Huge Island's \
        CAVE. Level 26's whole skip list in one row. ---- */ \
     {248, "WIGGLER", Wiggler_SpawnInfo, port_factory_wiggler, \
-     hal_fill_wiggler_vtable},
+     hal_fill_wiggler_vtable}, \
+    /* ---- run rel0215 wave 2 (lane cast-sweep2): ov047, Bowser in the Sky. \
+       dsd's two vtable names are each attached ONE TABLE LATE, so the rows go \
+       by address; id 156 is a fourth class the campaign plan's inventory does \
+       not list. id 151 is not placed on level 39 and is registered because \
+       both attribution routes name it. ---- */ \
+    {151, "RICKSHAW_PLATFORM_BS", RickshawPlatformBs_SpawnInfo, \
+     RickshawPlatformBs_Spawn, hal_fill_rickshaw_platform_bs_vtable}, \
+    {152, "RICKSHAW_BS", RickshawBs_SpawnInfo, RickshawBs_Spawn, \
+     hal_fill_rickshaw_bs_vtable}, \
+    {153, "STAIRS_BS", StairsBs_SpawnInfo, StairsBs_Spawn, \
+     hal_fill_stairs_bs_vtable}, \
+    {156, "ROTATING_PLATFORM_BS", data_ov047_02112358, \
+     func_ov047_021113bc, hal_fill_rotating_platform_bs_vtable},

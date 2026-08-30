@@ -2163,6 +2163,19 @@ list(APPEND PORT_ACTOR_OVERLAYS ov032)
 # hal/actor_classes_ov034.cpp fills. Derivation in port/ov034_syms.txt, slice in
 # port/slice_sweep2_ov034.txt.
 list(APPEND PORT_ACTOR_OVERLAYS ov034)
+# 3/4: ov047 (level 39, Bowser in the Sky) joins the per-symbol mounts so
+# RICKSHAW_PLATFORM_BS (151), RICKSHAW_BS (152), STAIRS_BS (153) and
+# ROTATING_PLATFORM_BS (156) reach their four SpawnInfo records, their seven
+# CLPS collision blocks, their four resource arguments and their thirty-two
+# sinit-built SharedFilePtrs and destructor chain nodes by name. Seven of level
+# 39's nine skipped instances. THE CAMPAIGN PLAN LISTS THREE CLASSES HERE AND
+# THE ROM HAS FOUR: id 156 (RTTI 20daObjKm3_Kaitendai_c, the rotating stand;
+# tools/actor_names.py reads it as ROTATING_PLATFORM_BS). All four vtables are
+# excluded from the mount and hosted as arrays hal/actor_classes_ov047.cpp
+# fills -- and dsd's two vtable names are each attached ONE TABLE LATE, so
+# _ZTV10RickshawBs is id 156's and _ZTV18RickshawPlatformBs is id 153's. Proven
+# three ways in port/ov047_syms.txt. See port/slice_sweep2_ov047.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov047)
 set(ACTOR_OV_SYMS "")
 foreach(ovn IN LISTS PORT_ACTOR_OVERLAYS)
     set(ovn_out "${CMAKE_BINARY_DIR}/host-src/${ovn}_syms.c")
@@ -9600,6 +9613,101 @@ set_source_files_properties(
 list(APPEND SWEEP2_SOURCES hal/actor_classes_ov034.cpp ${SLICE_SWEEP2_OV034_SOURCES}
     unmatched/Wiggler_StateEnter.cpp unmatched/Wiggler_StateTick.cpp
     unmatched/Wiggler_Render.cpp)
+
+# ---- 3/4: ov047, level 39 (Bowser in the Sky) ------------------------------
+# RICKSHAW_BS (152) x3, STAIRS_BS (153) x1 and ROTATING_PLATFORM_BS (156) x3 --
+# seven of level 39's nine skipped instances -- plus RICKSHAW_PLATFORM_BS (151),
+# which is not placed on this level and is registered because both attribution
+# routes name it. ALL TWENTY-FOUR of the overlay's TUs, no host copy, no face
+# and no refusal, plus EIGHT ov002 bodies that are the measured external
+# closure. Four 32-slot Platform tables, and dsd's two vtable names are each
+# attached ONE TABLE LATE. See port/ov047_syms.txt and
+# port/slice_sweep2_ov047.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep2_ov047.txt" SLICE_SWEEP2_OV047_LINES)
+set(SLICE_SWEEP2_OV047_SOURCES "")
+foreach(line IN LISTS SLICE_SWEEP2_OV047_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SWEEP2_OV047_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# NINE PER-SOURCE BINDINGS, and every one is settled from the TU's OWN literal
+# pool in config/arm9/overlays/ov047/relocs.txt, disassembled out of
+# extracted/overlays/overlay_0047.bin, never by name.
+#
+# THE RECOVERED SOURCE USES THE RTTI-DERIVED VTABLE NAMES AND GETS THE CLASS
+# RIGHT EVERY TIME -- but in the three factories it gets the ORDER backwards.
+# The ROM stores the ov002 INTERMEDIATE BASE first and the class's OWN table
+# second, which is the correct constructor order:
+#   02111298 ldr r1,[pc,#0x14] -> 0x021112b4 -> 0x02109320   the base
+#   0211129c ldr r0,[pc,#0x14] -> 0x021112b8 -> 0x021122a0   its own table
+#   021112a0 str r1,[r4]   021112a4 str r0,[r4]
+# while src/RickshawBs_Spawn.c writes `p[0] = _ZTV21daObjKm3_Kurumajiku_c;`
+# FIRST and `p[0] = VT1;` second. So in the three factories the RTTI name means
+# the BASE and VT1 means the own table; in the six destructors the same RTTI
+# name means the OWN table. Both readings are bound per source. Left alone the
+# factories would install the abstract intermediate LAST, and every one of these
+# actors would dispatch InitResources through a table whose slot 0 is ZERO in
+# the ROM -- a null call on the first frame, invisible to both the byte gate and
+# the linkage count.
+#
+# _ZTV10dBgActor_c IS THE OTHER TRAP, the ov036 (3) one: three destructors spell
+# their ov002 INTERMEDIATE base that way, and the port defines _ZTV10dBgActor_c
+# as the PLATFORM base (0x0210ae38). Unrenamed those bodies would store the
+# Platform table where the ROM stores the intermediate.
+# id 153's five TUs need no rename at all: they spell _ZTV18RickshawPlatformBs,
+# data_ov002_02108d94 and _ZTV8Platform, which are the three addresses the ROM
+# writes, in the ROM's own order.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov047_021111a0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV21daObjKm3_Kurumajiku_c=data_ov047_021122a0;_ZTV10dBgActor_c=data_ov002_02109320;VT2=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov047_021111f0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov047_021122a0;VT1=data_ov002_02109320;VT2=_ZTV8Platform;G0=data_020a0eac")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/RickshawBs_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV21daObjKm3_Kurumajiku_c=data_ov002_02109320;VT1=data_ov047_021122a0")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10RickshawBsD1Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV20daObjKm3_Kaitendai_c=_ZTV10RickshawBs;_ZTV10dBgActor_c=data_ov002_021091d4;VT2=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10RickshawBsD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV20daObjKm3_Kaitendai_c=_ZTV10RickshawBs;_ZTV10dBgActor_c=data_ov002_021091d4;VT2=_ZTV8Platform;G0=data_020a0eac")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov047_021113bc.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV20daObjKm3_Kaitendai_c=data_ov002_021091d4;VT1=_ZTV10RickshawBs")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov047_021113f8.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV17daObjKm3_Kuruma_c=data_ov047_0211244c;_ZTV10dBgActor_c=data_ov002_02109278;VT2=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov047_02111448.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov047_0211244c;VT1=data_ov002_02109278;VT2=_ZTV8Platform;G0=data_020a0eac")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/RickshawPlatformBs_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV17daObjKm3_Kuruma_c=data_ov002_02109278;VT1=data_ov047_0211244c")
+# FOUR WRONG-NAMES AT THE SHARED WINDOW (T6), all in one sinit. STAIRS_BS's file
+# constructor spells FOUR of its own .bss symbols with an OV052 tag, and ov052
+# IS MOUNTED (PORT_ACTOR_OVERLAYS), so all four resolve: the sinit would
+# construct three SharedFilePtrs and register one destructor chain node in
+# MARIO'S KEY COURSE's storage instead of its own. The ROM's own pool words at
+# 0x02111958, 0x02111970, 0x0211197c and 0x0211196c all resolve to
+# module:overlay(47). decl_common.h declares none of the eight names, so the
+# renames are direct.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/__sinit_ov047_0211181c.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov052_02112680=data_ov047_02112680;data_ov052_02112688=data_ov047_02112688;data_ov052_02112690=data_ov047_02112690;data_ov052_021126a8=data_ov047_021126a8")
+list(APPEND SWEEP2_SOURCES hal/actor_classes_ov047.cpp ${SLICE_SWEEP2_OV047_SOURCES})
 # ---- end lane cast-sweep2 --------------------------------------------------
 
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'

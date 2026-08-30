@@ -1782,3 +1782,40 @@ func_ov032_02112544  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0
 func_ov032_02112588  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-sweep2\ov032\t5_disasm.txt  slot 9 Render, addr 0x02112588 size 0x28; match.py MATCHING at 2004/b56 with --strict-relocs. Plain-Model slot-5 bare call over +0xd4 (ldr r2,[r0,#0xd4]; ldr r2,[r2,#0x14]; blx r2), not the ModelAnim collision
 func_ov032_021125b0  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-sweep2\ov032\t5_disasm.txt  slot 6 Behavior, addr 0x021125b0 size 0x24; match.py MATCHING at 2004/b56 with --strict-relocs. One call, Platform::IsClsnInRange(this,0,0), return 1
 func_ov032_021125d4  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-sweep2\ov032\t5_disasm.txt  slot 0 InitResources, addr 0x021125d4 size 0x94; match.py MATCHING at 2004/b56 with --strict-relocs. Model 1717 + KCL 1718 + CLPS 0x02112f98 at fix 0x199, returns Event::GetBit(0xe)==0
+
+# ---------------------------------------------------------------------------
+# run rel0215 wave 2 (lane cast-sweep2), 2026-08-30. OV047's SIX.
+#
+# Seating level 39's RICKSHAW_BS (152) and RICKSHAW_PLATFORM_BS (151) made six
+# marker-carrying bodies visible to this guard at once, for the ov032/ov033
+# reason: dsd's two class names in this overlay are each attached ONE TABLE
+# LATE, so the two classes left unnamed have all six of their lifecycle slots
+# spelled func_ov047_* with names recovered from the slot. Nothing about the
+# BODIES was ever in doubt; the marker records how the NAMES were found.
+#
+# All six were disassembled from extracted/overlays/overlay_0047.bin -- the
+# shipped image at the delinks base 0x021111a0, deliberately not a dsd export --
+# and compared instruction for instruction with src/. Then all six were put
+# through tools/match.py at 2004/b56 with --strict-relocs (the default), which
+# byte-compares the compiled output AND checks every relocation destination.
+#
+# RESULT: 6 REAL DECOMP, 0 genuine guesses, 0 unverifiable, 6 MATCHING.
+#
+# TWO OF THE SIX ARE MISLABELLED DELETING DESTRUCTORS, the same class as
+# func_ov032_021124ec, func_ov033_021111e4 and func_ov005_020bfefc:
+# func_ov047_021111f0 is called "daObjKm3_Kurumajiku_c_OnYoshiTryEat" and
+# func_ov047_02111448 is called "daObjKm3_Kuruma_c_OnYoshiTryEat" by the RTTI
+# recovery, and both are slot 17. Each writes three vptrs (own table, ov002
+# intermediate base, Platform base), tears down its MovingMeshCollider and
+# Model, calls Actor::D2 and ends in Memory::Deallocate, and the ROM parks each
+# at its own table's +0x44.
+#
+# Full per-body disassembly and the match run:
+#   C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-sweep2\ov047\
+#     t5_disasm.txt and t5_match.txt
+func_ov047_021111f0  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-sweep2\ov047\t5_disasm.txt  id 152 slot 17 D0, addr 0x021111f0 size 0x64; match.py MATCHING at 2004/b56 with --strict-relocs. NAME says OnYoshiTryEat and is wrong, body is the deleting destructor; pool 0x021122a0 own / 0x02109320 ov002 intermediate / 0x0210ae38 Platform / 0x020a0eac heap
+func_ov047_02111254  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-sweep2\ov047\t5_disasm.txt  id 152 slot 3 CleanupResources, addr 0x02111254 size 0x14; match.py MATCHING at 2004/b56 with --strict-relocs. One tail call into func_ov002_020b6c54 with the three-word resource argument data_ov047_02112258
+func_ov047_02111268  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-sweep2\ov047\t5_disasm.txt  id 152 slot 0 InitResources, addr 0x02111268 size 0x18; match.py MATCHING at 2004/b56 with --strict-relocs. One tail call into func_ov002_020b6ac8 with the same argument
+func_ov047_02111448  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-sweep2\ov047\t5_disasm.txt  id 151 slot 17 D0, addr 0x02111448 size 0x64; match.py MATCHING at 2004/b56 with --strict-relocs. NAME says OnYoshiTryEat and is wrong, body is the deleting destructor; pool 0x0211244c own / 0x02109278 ov002 intermediate / 0x0210ae38 Platform / 0x020a0eac heap
+func_ov047_021114ac  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-sweep2\ov047\t5_disasm.txt  id 151 slot 3 CleanupResources, addr 0x021114ac size 0x14; match.py MATCHING at 2004/b56 with --strict-relocs. One tail call into func_ov002_020b6958 with the three-word resource argument data_ov047_02112408
+func_ov047_021114c0  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-sweep2\ov047\t5_disasm.txt  id 151 slot 0 InitResources, addr 0x021114c0 size 0x14; match.py MATCHING at 2004/b56 with --strict-relocs. One tail call into func_ov002_020b68b0 with the same argument
