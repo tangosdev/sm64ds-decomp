@@ -54,6 +54,17 @@ class RomBuildEnrollment(unittest.TestCase):
             RB.enrolled(self.config)
         self.assertIn("unsafe complete", raised.exception.output)
 
+    def test_enrolled_rejects_duplicate_complete_source_paths(self):
+        (self.config / "delinks.txt").write_text(
+            "src/Example.c:\n    complete\n"
+            "    .text start:0x02000000 end:0x02000004\n\n"
+            "src/Example.c:\n    complete\n"
+            "    .data start:0x02001000 end:0x02001004\n",
+            encoding="utf-8")
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.enrolled(self.config)
+        self.assertIn("enrolled more than once", raised.exception.output)
+
     def test_enrolled_symbols_group_one_source_in_rom_order(self):
         candidates = [
             (self.config, "Second", "src/Pair.cpp", 0x02000004, 4, ".text"),
@@ -296,25 +307,71 @@ class RomBuildEnrollment(unittest.TestCase):
             "id": "ov047/TU", "status": "promoted",
             "production_mode": "intact-object",
             "source": "src/actors/TU.cpp", "promoted_source": "src/actors/TU.cpp",
-            "sections": [{"name": ".text"}, {"name": ".data"}],
+            "sections": [
+                {"name": ".text", "start": "0x1000", "end": "0x1010"},
+                {"name": ".data", "start": "0x2000", "end": "0x2010"}],
             "verification": {"linkcheck": {
                 "result": "scratch-data-verified",
                 "phases": {name: True for name in
                            ("delink", "lcf", "compile", "link", "checkModules", "rom")},
                 "symbolCheckNewVsBaseline": [],
-                "tuRanges": [{"section": ".text", "differingBytes": 0},
-                             {"section": ".data", "differingBytes": 0}],
-                "rom": {"sha256": "a" * 64},
+                "symbolCheckErrors": ["[ERROR] old"],
+                "symbolCheckBaselineErrors": ["[ERROR] old"],
+                "tuRanges": [
+                    {"section": ".text", "start": "0x1000", "end": "0x1010",
+                     "differingBytes": 0},
+                    {"section": ".data", "start": "0x2000", "end": "0x2010",
+                     "differingBytes": 0}],
+                "rom": {"sha256": "a" * 64, "matchesStockRom": True},
             }},
         }
         manifest = {"entries": [entry]}
         self.assertEqual(RB.intact_tu_policies(
             {"src/actors/TU.cpp"}, manifest=manifest),
             {"src/actors/TU.cpp": entry})
+        duplicate = dict(entry)
+        duplicate["id"] = "ov047/Duplicate"
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.intact_tu_policies({"src/actors/TU.cpp"},
+                                   manifest={"entries": [entry, duplicate]})
+        self.assertIn("declared by multiple entries", raised.exception.output)
+
         entry["verification"]["linkcheck"]["tuRanges"][1]["differingBytes"] = 1
         with self.assertRaises(RB.BuildError) as raised:
             RB.intact_tu_policies({"src/actors/TU.cpp"}, manifest=manifest)
-        self.assertIn("every range exact", raised.exception.output)
+        self.assertIn("every current manifest range exact", raised.exception.output)
+
+        entry["verification"]["linkcheck"]["tuRanges"][1]["differingBytes"] = 0
+        entry["verification"]["linkcheck"]["tuRanges"].pop()
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.intact_tu_policies({"src/actors/TU.cpp"}, manifest=manifest)
+        self.assertIn("every current manifest range exact", raised.exception.output)
+
+        entry["verification"]["linkcheck"]["tuRanges"].append(
+            {"section": ".data", "start": "0x2000", "end": "0x2010",
+             "differingBytes": 0})
+        entry["verification"]["linkcheck"]["rom"]["matchesStockRom"] = False
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.intact_tu_policies({"src/actors/TU.cpp"}, manifest=manifest)
+        self.assertIn("identical to stock", raised.exception.output)
+
+        entry["verification"]["linkcheck"]["rom"]["matchesStockRom"] = True
+        entry["sections"][1]["name"] = ".rodata"
+        entry["sections"][1]["module_section"] = ".data"
+        entry["verification"]["linkcheck"]["tuRanges"][1]["section"] = ".rodata"
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.intact_tu_policies({"src/actors/TU.cpp"}, manifest=manifest)
+        self.assertIn("input-section retargeting", raised.exception.output)
+
+        entry["sections"][1] = {"name": ".data", "start": "0x2000", "end": "0x2010"}
+        entry["verification"]["linkcheck"]["tuRanges"][1]["section"] = ".data"
+        # Every licensed non-text field follows the same fail-closed rule, not just
+        # `.data`; vtables can be represented under `.rodata` in a manifest.
+        entry["rodata"] = [{"symbol": "_ZTV1T", "storage_alias": {
+            "symbol": "data_00002000", "address": "0x2000", "size": "0x8"}}]
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.intact_tu_policies({"src/actors/TU.cpp"}, manifest=manifest)
+        self.assertIn("baseline bootstrapping is non-circular", raised.exception.output)
 
     def test_intact_policy_ignores_unenrolled_shadow(self):
         manifest = {"entries": [{
@@ -324,6 +381,17 @@ class RomBuildEnrollment(unittest.TestCase):
         }]}
         self.assertEqual(RB.intact_tu_policies(
             {"src/actors/Elsewhere.cpp"}, manifest=manifest), {})
+
+    def test_intact_policy_refuses_promoted_source_missing_from_enrollment(self):
+        manifest = {"entries": [{
+            "id": "ov047/Missing", "status": "promoted",
+            "production_mode": "intact-object",
+            "promoted_source": "src/actors/Missing.cpp",
+        }]}
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.intact_tu_policies(
+                ["src/actors/Elsewhere.cpp"], manifest=manifest)
+        self.assertIn("enrolled 0 time(s), expected exactly 1", raised.exception.output)
 
 
 def _compiler():

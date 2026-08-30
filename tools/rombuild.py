@@ -33,12 +33,14 @@ tools/rombuild_cache.py for the key and why it is safe to trust.
 See notes/rom-build.md for the milestones and the enrollment rules.
 """
 import argparse
+import collections
 import concurrent.futures
 import hashlib
 import io
 import json
 import os
 import pathlib
+import re
 import shutil
 import subprocess
 import sys
@@ -253,9 +255,16 @@ def enrolled(config_root=CONFIG_ROOT, extra_roots=()):
         if path and saw_complete:
             files.append(path)
         path, saw_complete = None, False
+    normalized = [pathlib.PurePosixPath(rel.replace("\\", "/")).as_posix()
+                  for rel in files]
+    duplicates = sorted(rel for rel, count in collections.Counter(normalized).items()
+                        if count != 1)
+    if duplicates:
+        raise BuildError("profile", 1, "complete source path enrolled more than once: "
+                         + ", ".join(duplicates))
     checked = []
-    for rel in sorted(set(files)):
-        pure = pathlib.PurePosixPath(rel.replace("\\", "/"))
+    for rel in sorted(normalized):
+        pure = pathlib.PurePosixPath(rel)
         if (pure.is_absolute() or ".." in pure.parts or len(pure.parts) < 2
                 or pure.parts[0] not in ("src", "mods", *extra_roots)
                 or pure.suffix not in (".c", ".cpp")):
@@ -735,18 +744,20 @@ def intact_tu_policies(enrolled=None, manifest=None):
     policy in the first place.
     """
     data = TUM.load() if manifest is None else manifest
-    active = None if enrolled is None else {
-        str(rel).replace("\\", "/") for rel in enrolled
-    }
+    active_counts = None if enrolled is None else collections.Counter(
+        str(rel).replace("\\", "/") for rel in enrolled)
     out, errors = {}, []
     for entry in data.get("entries", []):
         if entry.get("production_mode") != "intact-object":
             continue
         source = str(entry.get("promoted_source")
                      or entry.get("source", "")).replace("\\", "/")
-        if active is not None and source not in active:
-            continue
         label = entry.get("id", source or "<unknown>")
+        if active_counts is not None and active_counts[source] != 1:
+            if entry.get("status") == "promoted":
+                errors.append(f"{label}: promoted intact-object source {source!r} is "
+                              f"enrolled {active_counts[source]} time(s), expected exactly 1")
+            continue
         if not source.startswith("src/"):
             errors.append(f"{label}: intact-object policy has no production src/ path")
             continue
@@ -759,6 +770,20 @@ def intact_tu_policies(enrolled=None, manifest=None):
                          if isinstance(row, dict)}
         if ".text" not in section_names or not (section_names - {".text"}):
             errors.append(f"{label}: intact-object policy needs .text and non-text claims")
+        mapped_sections = [
+            f"{row.get('name')} -> {row.get('module_section')}"
+            for row in entry.get("sections", []) if isinstance(row, dict)
+            and row.get("module_section", row.get("name")) != row.get("name")]
+        if mapped_sections:
+            errors.append(f"{label}: intact-object input-section retargeting is not "
+                          f"implemented: {', '.join(mapped_sections)}")
+        owned_fields = ("rodata", "init", "ctor", "data", "bss")
+        if any(isinstance(entry.get(field), list)
+               and any(isinstance(row, dict) and row.get("storage_alias")
+                       for row in entry[field])
+               for field in owned_fields):
+            errors.append(f"{label}: automatic intact-object storage aliases are not "
+                          "supported until baseline bootstrapping is non-circular")
         linkcheck = (entry.get("verification") or {}).get("linkcheck") or {}
         phases = linkcheck.get("phases") or {}
         if linkcheck.get("result") != "scratch-data-verified":
@@ -769,13 +794,77 @@ def intact_tu_policies(enrolled=None, manifest=None):
                 errors.append(f"{label}: intact-object proof phase {phase} is not green")
         if linkcheck.get("symbolCheckNewVsBaseline") != []:
             errors.append(f"{label}: intact-object proof has new or unknown symbol errors")
+        recorded_errors = linkcheck.get("symbolCheckErrors")
+        baseline_errors = linkcheck.get("symbolCheckBaselineErrors")
+        if not isinstance(recorded_errors, list):
+            errors.append(f"{label}: intact-object proof has no symbol-error inventory")
+        if not isinstance(baseline_errors, list):
+            errors.append(f"{label}: intact-object proof has no baseline symbol-error "
+                          "inventory")
+        if (isinstance(recorded_errors, list) and isinstance(baseline_errors, list)
+                and sorted(set(recorded_errors)) != sorted(set(baseline_errors))):
+            errors.append(f"{label}: intact-object proof's symbol errors differ from its "
+                          "baseline inventory")
         ranges = linkcheck.get("tuRanges") or []
-        if not ranges or any(row.get("differingBytes") != 0 for row in ranges):
-            errors.append(f"{label}: intact-object proof does not show every range exact")
-        sha = (linkcheck.get("rom") or {}).get("sha256")
-        if not isinstance(sha, str) or len(sha) != 64:
+        expected_ranges = []
+        seen_sections = set()
+        for row in entry.get("sections", []):
+            try:
+                name = row["name"]
+                start, end = int(row["start"], 16), int(row["end"], 16)
+            except (KeyError, TypeError, ValueError):
+                errors.append(f"{label}: intact-object manifest has an invalid section claim")
+                continue
+            if name not in (".text", ".data", ".rodata", ".bss") or start >= end:
+                errors.append(f"{label}: intact-object manifest has unsupported/invalid "
+                              f"section claim {name!r}")
+            if name in seen_sections:
+                errors.append(f"{label}: intact-object manifest repeats section {name}")
+            seen_sections.add(name)
+            expected_ranges.append((name, start, end))
+        ordered_ranges = sorted(expected_ranges, key=lambda row: (row[1], row[2]))
+        if any(left[2] > right[1]
+               for left, right in zip(ordered_ranges, ordered_ranges[1:])):
+            errors.append(f"{label}: intact-object manifest section claims overlap")
+        proved_ranges = []
+        ranges_exact = bool(ranges)
+        for row in ranges:
+            try:
+                key = (row["section"], int(row["start"], 16), int(row["end"], 16))
+            except (KeyError, TypeError, ValueError):
+                ranges_exact = False
+                continue
+            proved_ranges.append(key)
+            if key[0] == ".bss":
+                ranges_exact = ranges_exact and row.get("comparison") == \
+                    "NOBITS -- symbol/module gates"
+            else:
+                ranges_exact = ranges_exact and row.get("differingBytes") == 0
+        if (not ranges_exact or sorted(proved_ranges) != sorted(expected_ranges)
+                or len(proved_ranges) != len(expected_ranges)):
+            errors.append(f"{label}: intact-object proof does not show every current "
+                          "manifest range exact")
+        rom = linkcheck.get("rom") or {}
+        sha = rom.get("sha256")
+        if not isinstance(sha, str) or not re.fullmatch(r"[0-9a-fA-F]{64}", sha):
             errors.append(f"{label}: intact-object proof has no full-ROM SHA-256")
+        if rom.get("matchesStockRom") is not True:
+            errors.append(f"{label}: intact-object proof does not show the full ROM "
+                          "identical to stock")
         out[source] = entry
+    proof_shas = {
+        (((entry.get("verification") or {}).get("linkcheck") or {}).get("rom") or {})
+        .get("sha256") for entry in out.values()
+    }
+    if len(proof_shas) > 1:
+        errors.append("promoted intact-object entries disagree on the stock ROM SHA-256")
+    symbol_inventories = {
+        tuple(((entry.get("verification") or {}).get("linkcheck") or {})
+              .get("symbolCheckErrors") or []) for entry in out.values()
+    }
+    if len(symbol_inventories) > 1:
+        errors.append("promoted intact-object entries disagree on the allowed symbol-error "
+                      "inventory")
     if errors:
         raise BuildError("intact TU policy", 1, "\n".join(errors))
     return out
@@ -1086,6 +1175,24 @@ def main():
         intact_tus = intact_tu_policies(srcs)
         report["intactTus"] = sorted(entry.get("id", source)
                                      for source, entry in intact_tus.items())
+        intact_link_verification = None
+        if intact_tus and args.profile == "stock":
+            import tu_production as ITP
+            try:
+                intact_link_verification = ITP.prepare_intact_link_verification(
+                    intact_tus)
+            except ITP.ProductionTuError as exc:
+                raise BuildError("intact TU link control", 1, str(exc)) from exc
+        elif intact_tus:
+            # `mods` deliberately permits module/ROM differences. The stock admission
+            # proof still governs how each intact source object is prepared, while its
+            # final fidelity is judged by rombuild_check's profile-aware allowances.
+            # Running retail-exact final gates here would make the documented mods
+            # profile impossible as soon as the first intact TU is promoted.
+            report["intactTuStockVerification"] = {
+                "status": "not-applicable",
+                "reason": f"{args.profile} profile permits intentional divergences",
+            }
         # Collected during the compile because that is the only point at which the
         # objects still carry the data mwcc emitted -- see _isolate. None switches the
         # measurement off entirely; it never affects what gets linked either way.
@@ -1144,6 +1251,21 @@ def main():
                                  "\n".join(detail) or "unknown verification failure")
             print("      partitioned TU gates: dsd modules PASS, zero new symbol "
                   "errors, storage aliases exact")
+        if intact_link_verification:
+            verification = ITP.verify_link(
+                config_yaml, BUILD / "final_link.o", intact_link_verification)
+            report["intactTuLinkVerification"] = verification
+            if not verification["ok"]:
+                detail = []
+                if not verification["modulesOk"]:
+                    detail.append("dsd check modules --fail did not pass")
+                detail.extend(f"new symbol error: {line}"
+                              for line in verification["newSymbolErrors"])
+                detail.extend(verification["storageAliasErrors"])
+                raise BuildError("intact TU link verification", 1,
+                                 "\n".join(detail) or "unknown verification failure")
+            print("      intact TU gates: dsd modules PASS, zero new symbol errors, "
+                  "storage aliases exact")
 
         if args.no_rom:
             print("[5/6] skipped (--no-rom)")
@@ -1168,6 +1290,23 @@ def main():
                     "bytes": rom_path.stat().st_size,
                     "sha256": rom_sha256,
                 }
+                if intact_link_verification:
+                    expected = {
+                        (((entry.get("verification") or {}).get("linkcheck") or {})
+                         .get("rom") or {}).get("sha256")
+                        for entry in intact_tus.values()
+                    }
+                    expected.add(intact_link_verification["baseline"]["romSha256"])
+                    report["intactTuRom"] = {
+                        "expectedSha256": next(iter(expected)) if len(expected) == 1 else None,
+                        "actualSha256": rom_sha256,
+                        "identical": len(expected) == 1 and rom_sha256 in expected,
+                    }
+                    if len(expected) != 1 or rom_sha256 not in expected:
+                        raise BuildError(
+                            "intact TU ROM comparison", 1,
+                            f"built ROM sha256 {rom_sha256} differs from admitted "
+                            f"stock proof(s) {sorted(expected)}")
                 if tu_prepared:
                     expected = tu_prepared["baseline"]["romSha256"]
                     report["partitionedTuRom"] = {
