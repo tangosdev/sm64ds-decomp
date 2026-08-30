@@ -71,6 +71,22 @@
 #     bodies that name their table and call flat member destructors, so both
 #     stay below as matched source. That asymmetry is the ROM's, not a choice.
 #
+#  D. THE IMPLICIT r1 RIDE-THROUGH (1 TU), FOUND BY THE FIRST BOOT, not by
+#     reading. src/_ZN6Lakitu13InitResourcesEv.cpp:51 calls the state setter
+#     func_ov077_0212478c with ONE argument where it takes two, and
+#     include/decl_common.h:2844 declares the one-argument form so it compiles
+#     clean. Eight of the nine call sites in this overlay pass both. On the DS
+#     the missing `i` was r1, and the ROM proves the value: the instruction
+#     before the branch at 0x02124a44 is `STR r1,[r4,#0x410]`, that method's
+#     own `unk_410 = 0`, so LAKITU enters state 0. On the host the callee read
+#     its index off an uninitialised stack slot and the actor's state pointer
+#     became garbage -- a c0000005 on all four LAKITU levels (24, 28, 43, 44)
+#     and on none of the three HEAVE_HO ones. The CALLER is displaced, the
+#     Ov007_ImplicitR0/Actor_ClosestPlayer idiom:
+#       src/_ZN6Lakitu13InitResourcesEv.cpp -> port/unmatched/Lakitu_HostSites.cpp
+#     src/func_ov077_0212478c.c is NOT touched and stays in the slice: it is
+#     correct and the other eight callers depend on it.
+#
 # NOTHING ELSE IS REFUSED. In particular:
 #   * NO asm primitive, no DS thread scheduler, no card overlay loader tail,
 #     no wireless manager reaches this overlay -- the comment-stripped sweep
@@ -105,7 +121,7 @@
 # live in src/, which this lane must not edit. Nothing was moved into
 # inferred_stub_baseline.txt either. It is reported instead.
 #
-# ==== THE SLICE: 80 TUs (91 - 11 host copies) ==============================
+# ==== THE SLICE: 79 TUs (91 - 12 host copies) =============================
 src/HeaveHo_Spawn.c
 src/Lakitu_Spawn.c
 src/Spiny_Spawn.c
@@ -114,7 +130,6 @@ src/_ZN5Spiny16CleanupResourcesEv.c
 src/_ZN5Spiny16OnPendingDestroyEv.c
 src/_ZN5Spiny8BehaviorEv.cpp
 src/_ZN5SpinyD0Ev.c
-src/_ZN6Lakitu13InitResourcesEv.cpp
 src/_ZN6Lakitu16CleanupResourcesEv.c
 src/_ZN6Lakitu16OnPendingDestroyEv.c
 src/_ZN6Lakitu8BehaviorEv.cpp

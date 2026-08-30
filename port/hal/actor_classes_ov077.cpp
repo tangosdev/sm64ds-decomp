@@ -42,8 +42,10 @@
  * DEFINED NOWHERE ELSE IN THE LINK -- checked before these were written,
  * because an /alternatename whose LHS is already defined is defeated SILENTLY
  * (the wave-5 R1/R2 class). port/tools/alternatename_guard.py re-checks that
- * against walk_window.map after every link, and the three are itemised in
- * port/tools/alternatename_baseline.txt.
+ * against walk_window.map after every link. None of the three belongs in
+ * port/tools/alternatename_baseline.txt: that file is the allowlist of aliases
+ * whose LHS IS deliberately defined, and adding an alias that is not defeated
+ * would blunt the guard rather than record anything.
  *
  * THE STATE SEAT. All three classes run a pointer-to-member state machine and
  * all six of their dispatch sites are host copies (port/unmatched/
@@ -96,7 +98,7 @@ int _ZTV5Spiny[31];     /* == _ZTV7daTgz_c   */
 int _ZTV7HeaveHo[31];   /* == _ZTV9daPopoi_c */
 
 /* ---- LAKITU (265) ------------------------------------------------------ */
-int _ZN6Lakitu13InitResourcesEv(void *self);      /* face, bottom of file  */
+int _ZN6Lakitu13InitResourcesEv(void *self);      /* unmatched/Lakitu_HostSites */
 int _ZN6Lakitu8BehaviorEv(void *self);            /* face, bottom of file  */
 int _ZN6Lakitu6RenderEv(void *self);              /* unmatched/Lakitu_HostSites */
 int *_ZN6LakituD1Ev(int *self);                   /* unmatched/Lakitu_HostSites */
@@ -494,8 +496,10 @@ extern "C" void hal_fill_heave_ho_vtable(void)
 // faced: they are host copies in port/unmatched/, which already define the
 // flat name themselves.
 // ============================================================================
-extern "C" int _ZN6Lakitu13InitResourcesEv(void *self)
-{ return ((Lakitu *)self)->Lakitu::InitResources(); }
+/* Lakitu::InitResources is NOT faced here. It is a HOST COPY in
+ * port/unmatched/Lakitu_HostSites.cpp -- the matched body drops the state
+ * index the ROM passed in r1, which crashed all four LAKITU levels on this
+ * seat's first boot. That file carries the ROM evidence for the value. */
 extern "C" int _ZN6Lakitu8BehaviorEv(void *self)
 { return ((Lakitu *)self)->Lakitu::Behavior(); }
 extern "C" int _ZN5Spiny13InitResourcesEv(void *self)

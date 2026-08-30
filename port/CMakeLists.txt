@@ -833,6 +833,34 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov062_021180d4.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov062_02118a00.cpp"
     PROPERTIES COMPILE_DEFINITIONS "func_ov065_02117994=func_ov062_02117994")
+# R2b, run rel0215 (lane cast-ov077): THE SAME DISEASE, from the ov077 side,
+# and this one was LIVE ON EVERY LEVEL THAT PLACES A LAKITU rather than latent.
+# src/func_ov077_0212390c.cpp is LAKITU's per-frame chase body. Its last
+# statement is written `_ZN9Spindrift8BehaviorEv(c, c + 0x204)` -- two
+# arguments, which Spindrift::Behavior does not take. The ROM's own relocation
+# at 0x02123a04 reads `to:0x02123c6c module:overlay(77)`, and 0x02123c6c is
+# func_ov077_02123c6c (size 0xd4), ov077's own WithMeshClsn update, whose
+# signature IS (actor, WithMeshClsn*). ov081 has _ZN9Spindrift8BehaviorEv
+# (size 0x264) at the SAME address because ov077 and ov081 are alternates in
+# the window at 0x02123740, and dsd raced the name.
+#
+# THE COFFIN/SPINDRIFT SHAPE, and the reason this lane's brief calls the alias
+# race its defining hazard: nothing about it is visible to the byte gate (the
+# ROM bytes are untouched) or to the linkage count (both names are defined, so
+# it links clean). What it does at run time is call ov081's Spindrift body with
+# a Lakitu `this` every frame. It faulted c0000005 in
+# WithMeshClsn::UpdateContinuous on level 43 at frame ~250 and NOT within 300
+# frames on levels 24, 28 or 44 -- which is the point: three of the four levels
+# were running the wrong body and reading green.
+#
+# A per-source rename rather than an /alternatename ON PURPOSE, the R1/R2/R3/R4
+# rule: _ZN9Spindrift8BehaviorEv is DEFINED in this link (ov081 is mounted and
+# hal/actor_classes_ov081.cpp faces it), and an /alternatename onto a defined
+# LHS is defeated silently. Found by sweeping every overlay(77) relocation in
+# all 91 ov077 TUs against what each source spells; this is the only one.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov077_0212390c.cpp"
+    PROPERTIES COMPILE_DEFINITIONS "_ZN9Spindrift8BehaviorEv=func_ov077_02123c6c")
 # R3, run linkw wave 12 (lane w12): THE SAME DISEASE, a fourth time, and this
 # one arrived from the OTHER side -- not a newly sliced body under an alias's
 # LHS but a newly MOUNTED datum under it. src/func_ov071_0211fbf4.c (Scuttlebug's

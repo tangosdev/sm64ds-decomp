@@ -125,6 +125,112 @@ int _ZN6Lakitu6RenderEv(void *selfv)
     return 1;
 }
 
+/* ---- (4) InitResources: THE IMPLICIT r1 RIDE-THROUGH -------------------- */
+/* MEASURED, not reasoned. The first boot of this seat faulted c0000005 on
+ * every one of the four levels that place a LAKITU (24, 28, 43, 44) and on
+ * none of the three that place only a HEAVE_HO, inside func_ov077_02124754 at
+ * +0xf -- `mov eax,[ecx]` with ecx = the actor's own +0x3f0, holding garbage.
+ *
+ * THE CAUSE IS IN THE MATCHED SOURCE AND IT IS A REAL ONE.
+ * src/func_ov077_0212478c.c is the state SETTER and takes two arguments:
+ *     void func_ov077_0212478c(char *c, int i)
+ *     { *(char **)(c + 0x3f0) = data_ov077_02127bc4 + (i << 4);
+ *       func_ov077_02124754(c); }
+ * Eight of the nine call sites in this overlay pass both. The NINTH, in
+ * src/_ZN6Lakitu13InitResourcesEv.cpp:51, is written
+ *     func_ov077_0212478c(((char *)this));
+ * with one -- and include/decl_common.h:2844 declares the one-argument form,
+ * so it compiles clean and the callee reads its `i` off whatever the host
+ * stack happened to hold. On the DS it read r1.
+ *
+ * THE ROM SAYS THE VALUE IS 0, and this is checked rather than assumed. Every
+ * call site was disassembled out of extracted/overlays/overlay_0077.bin:
+ *     0x02123b14 MOV r1,#2   0x02123bbc MOV r1,#4   0x02124190 MOV r1,#0
+ *     0x02124348 MOV r1,#3   0x0212437c MOV r1,#0   0x02124428 MOV r1,#0
+ *     0x021245d4 MOV r1,#1
+ * -- seven explicit setups, and then the InitResources one at 0x02124a44,
+ * whose preceding instruction is
+ *     0x02124a40  e5841410  STR r1, [r4, #0x410]
+ * which is that method's own `unk_410 = 0;`. The same zero was stored to
+ * +0x9c, +0xa0 and +0x410 out of r1 in the lines above it, so r1 IS 0 at the
+ * branch and the ROM enters STATE 0. The decompiled call is faithful to the
+ * ROM's instruction stream and drops an argument the ROM never had to write.
+ *
+ * THE FIX IS THE TREE'S OWN IDIOM FOR THIS SHAPE: displace the CALLER, not the
+ * callee -- port/unmatched/Ov007_ImplicitR0_020add3c.cpp ("forwards its own
+ * argument, so the no-argument call is not in this binary") and
+ * port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp ("HOST COPY passes `c`
+ * explicitly"). The body below is src/_ZN6Lakitu13InitResourcesEv.cpp
+ * statement for statement with Lakitu.h's own offsets, and the ONE difference
+ * is that the state index is spelled out. src/func_ov077_0212478c.c is
+ * untouched and stays in the slice: it is correct, and eight callers rely on
+ * it. The matched InitResources stays byte-locked in src/ and comes out of the
+ * slice; hal/actor_classes_ov077.cpp therefore does NOT face it.
+ *
+ * The three no-op `& 0xFFFFFFFF...LL` masks and the two `(int)(char *)&field`
+ * round-trips in the matched body are mwcc-codegen scaffolding with no effect
+ * on the value stored; they are written here as the plain stores they are. */
+extern "C" {
+void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
+void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
+void *_ZN9Animation8LoadFileER13SharedFilePtr(void *f);
+void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *f);
+void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *bmd, void *btp);
+int _ZN11ShadowModel12InitCylinderEv(void *self);
+void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+        void *self, void *a, void *v, int b, int c, unsigned d, unsigned e);
+void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+        void *self, void *a, int b, int c, void *d, void *e);
+void func_ov077_02123d40(void *c);
+/* the TWO-argument form, which is what src/func_ov077_0212478c.c defines */
+void func_ov077_0212478c(char *c, int i);
+extern int data_ov077_02127b38[], data_ov077_02127b48[], data_ov077_02127b50[];
+extern int data_ov077_02127b88[], data_ov077_02127230[], data_ov077_02127238[];
+struct PortM48 { int w[12]; };
+extern PortM48 data_02082128;
+}
+
+/* PORT_HOST_ABI: the ROM passed this call's second argument in r1 and the
+ * decompiled call site cannot carry it; state 0, read from the ROM. */
+extern "C" int _ZN6Lakitu13InitResourcesEv(void *selfv)
+{
+    char *c = (char *)selfv;
+    _ZN5Model8LoadFileER13SharedFilePtr(data_ov077_02127b38);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(
+        c + 0xd4, _ZN5Model8LoadFileER13SharedFilePtr(data_ov077_02127b50), 1, 1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(
+        c + 0x138, _ZN5Model8LoadFileER13SharedFilePtr(data_ov077_02127b48), 1, 1);
+    for (int i = 0; i < 2; i++)
+        _ZN9Animation8LoadFileER13SharedFilePtr((void *)data_ov077_02127238[i]);
+    for (int i = 0; i < 2; i++) {
+        void *t = (void *)data_ov077_02127230[i];
+        _ZN15TextureSequence8LoadFileER13SharedFilePtr(t);
+        _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(
+            (void *)data_ov077_02127b50[1], (void *)((int *)t)[1]);
+    }
+    if (_ZN11ShadowModel12InitCylinderEv(c + 0x188) == 0)
+        return 0;
+    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+        c + 0x1c4, c, data_ov077_02127b88, 0x41000, 0x78000, 0x200002, 0x6eff0);
+    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+        c + 0x204, c, 0x2d000, 0x2d000, 0, 0);
+
+    *(int *)(c + 0x9c) = 0;
+    *(int *)(c + 0xa0) = 0;
+    *(int *)(c + 0x80) = 0x1000;               /* mScaleX */
+    *(int *)(c + 0x84) = 0x1000;               /* mScaleY */
+    *(int *)(c + 0x88) = 0x1000;               /* mScaleZ */
+    *(int *)(c + 0x3f8) = *(int *)(c + 0x5c);
+    *(int *)(c + 0x3fc) = *(int *)(c + 0x60);
+    *(int *)(c + 0x400) = *(int *)(c + 0x64);
+    *(int *)(c + 0x410) = 0;
+
+    func_ov077_0212478c(c, 0);                 /* <- the r1 the ROM rode in */
+    *(PortM48 *)(c + 0x3c0) = data_02082128;
+    func_ov077_02123d40(c);
+    return 1;
+}
+
 /* ---- (3) the two state dispatch sites ---------------------------------- */
 struct PortOv077Pmf { unsigned int fn; int delta; };
 typedef void (*PortOv077StateFn)(void *);
