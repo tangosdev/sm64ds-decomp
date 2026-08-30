@@ -79,8 +79,8 @@ extern void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(s32 x, s32 y, s32
 extern void _ZN9Animation7AdvanceEv(void *self);
 extern int DecIfAbove0_Byte(u8 *p);
 extern void _Z14ApproachLinearRiii(s32 *p, s32 a, s32 b);
-extern void _ZN5Actor9UpdatePosEP5dCc_c(void *self, void *cyl);
-extern void _ZN5Enemy12UpdateWMClsnER10dBgCh_Actrj(void *self, void *wm, u32 j);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cyl);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *wm, u32 j);
 extern void func_ov034_02112874(void *c);
 extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 a, u32 b, s32 x, s32 y, s32 z, void *v, void *cb);
@@ -221,10 +221,10 @@ int _ZN7Wiggler8BehaviorEv(void *arg0)
     }
 
     *(s16 *)(c + 0x94) = *(s16 *)(c + 0x446);
-    _ZN5Actor9UpdatePosEP5dCc_c(c, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
 
     if (*(u8 *)(c + 0x8df) == 0)
-        _ZN5Enemy12UpdateWMClsnER10dBgCh_Actrj(c, c + 0x708, 0);
+        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, c + 0x708, 0);
 
     *(s32 *)(c + 0x3cc) = *(s32 *)(c + 0x5c);
     *(s32 *)(c + 0x3d0) = *(s32 *)(c + 0x60);
