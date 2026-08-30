@@ -556,6 +556,48 @@ int func_ov081_021260fc(void *self);   /* tick */
    needs: a defined LHS is defeated silently, the R3 ov071/ov073 failure. */
 #pragma comment(linker, "/alternatename:__ZTV12daSnowball_c=__ZTV8Snowball")
 
+/* THE TWO HALVES OF THIS ONE CELL ARE REACHED THROUGH DIFFERENT CALLING
+   CONVENTIONS ON THE HOST, so the seat writes a different kind of host address
+   into each. That asymmetry is not a preference; it is what the two dispatch
+   sites compile to, read out of the objs:
+
+     ENTER, dispatched by func_ov081_021261d4 (the installer InitResources
+       calls). Its `struct C` IS defined in that TU, so MSVC picks the 4-byte
+       single-inheritance PMF, and the whole body is a one-call forwarder that
+       MSVC compiles as a TAIL JUMP:
+           mov eax,[ebp+0Ch] / mov ecx,[ebp+8] / mov [ecx+378h],eax
+           mov eax,[eax] / test eax,eax / jne / mov eax,1 / ret
+           pop ebp / jmp eax
+       The jump reuses the forwarder's own cdecl frame, so the callee reads
+       its receiver off the stack exactly where a plain
+       `int f(void *self)` looks for it. The RAW matched body goes in this
+       half. (This is the frame reuse port/tools/tailjump_guard.py exists to
+       protect, and R9's genuine index-0 case.)
+
+     TICK, dispatched by Snowball::Behavior mid-body. Its `struct Klass` is
+       never completed, so the TU is compiled /vmg /vmm (block R10 in
+       port/CMakeLists.txt, with the disassembly both ways) and MSVC emits a
+       REAL CALL with the receiver in ECX:
+           mov ecx,[esi+378h] / mov eax,[ecx+8] / test eax,eax / je
+           mov ecx,[ecx+0Ch] / add ecx,esi / call eax
+       A real call pushes a new frame, so nothing puts the receiver on the
+       stack and the raw cdecl body would read the caller's saved edi as
+       `self`. This half gets a __fastcall THUNK instead -- the same shape
+       every vtable fill in this port uses, and ABI-compatible with the
+       thiscall MSVC emits here: a no-argument member call passes ecx only and
+       cleans nothing, __fastcall(void *, void *) takes ecx and edx and cleans
+       nothing.
+
+   THE ALTERNATIVE, AND WHY NOT. MrBlizzard's own Behavior one class up is a
+   HOST COPY for the same mid-body dispatch, which is the precedent this could
+   have followed. It costs a matched TU. The thunk costs nothing, keeps the
+   decompiled Behavior running, and rests on a COMPILE OPTION that is pinned in
+   CMakeLists rather than on codegen luck -- so this lane took it. If /vmg /vmm
+   is ever dropped from that TU the width goes wrong again and the class faults
+   on frame 1, loudly, which is how this was found in the first place. */
+static int __fastcall sb_state_tick(void *s, void *)
+{ return func_ov081_021260fc(s); }
+
 /* {ROM address the sinit's own source record carries, host body}, verified
    before the rewrite -- the MrBlizzard seat above, one class over. */
 extern "C" void port_snowball_states_seat(void)
@@ -574,8 +616,8 @@ extern "C" void port_snowball_states_seat(void)
                      cell.tick_fn, cell.tick_delta);
         std::abort();
     }
-    cell.enter_fn = (unsigned)(size_t)func_ov081_021261b8;
-    cell.tick_fn = (unsigned)(size_t)func_ov081_021260fc;
+    cell.enter_fn = (unsigned)(size_t)func_ov081_021261b8;   /* cdecl, tail-jumped */
+    cell.tick_fn = (unsigned)(size_t)sb_state_tick;          /* __fastcall thunk */
 }
 
 static int __fastcall sb_init(void *s, void *)

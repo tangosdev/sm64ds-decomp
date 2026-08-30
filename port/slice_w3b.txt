@@ -64,15 +64,21 @@
 # copy in port/unmatched/ModelAnim_Renders.cpp) and the member type is the only
 # difference.
 #
-# Behavior's PMF read is at INDEX 0 of the record and needs no /vmg /vmm.
-# It spells the cell as `struct M { char pad[8]; PMF pmf; }` and reads
-# `m->pmf` -- a byte offset of 8 into the CELL, not `pp + 1` into a PMF array,
-# so the function word sits at the same offset under mwcc's 8-byte {fn,adj}
-# record and MSVC's 4-byte single-inheritance PMF. This is the R9 predicate's
-# "correct BY LUCK at index 0" case, stated rather than assumed: the R9 sweep
-# lists exactly the TUs with a NONZERO offset applied to a pointer-to-member of
-# an incomplete class, and neither of Snowball's two dispatchers is one.
-# func_ov081_021261d4 (the installer) is index 0 for the same reason.
+# BEHAVIOR NEEDS /vmg /vmm AND THIS LANE'S FIRST READING SAID IT DID NOT.
+# The first draft of this file argued that Behavior's PMF read is at index 0 of
+# the record -- `struct M { char pad[8]; PMF pmf; }`, a byte offset into the
+# CELL rather than `pp + 1` into a PMF array -- and so fell under R9's
+# "correct BY LUCK at index 0". That was WRONG, and a forced spawn found it:
+# FAULT c0000005 at ?Behavior@Snowball@@QAEHXZ+0x37 on frame 1 of
+# SM64DS_LEVEL=19 SM64DS_SPAWN_ACTOR=224. The premise under R9's index-0 rule
+# is that MSVC's PMF is FOUR bytes, and it is four only when the class is
+# DEFINED somewhere in the TU. Behavior's `struct Klass;` never is, so MSVC
+# uses the sixteen-byte general form and reads two words past the end of a
+# sixteen-byte ROM cell. The option is applied in port/CMakeLists.txt (block
+# R10), which carries the disassembly both ways.
+# func_ov081_021261d4 (the installer) IS the genuine index-0 case -- its
+# `struct C` is defined in the TU, MSVC emits the 4-byte form, and the obj was
+# read to confirm it rather than argued from the shape.
 src/_ZN8SnowballD1Ev.c
 src/_ZN8SnowballD0Ev.c
 src/func_ov081_02125fb8.c

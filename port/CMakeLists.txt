@@ -9035,6 +9035,61 @@ foreach(line IN LISTS SLICE_W3B_LINES)
     endif()
     list(APPEND SLICE_W3B_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# R10, run rel0215 wave 3 (lane w3-b): THE R9 PREDICATE IS TOO NARROW BY ONE
+# SHAPE, and this lane found the gap by CRASHING rather than by reading.
+#
+# R9 above defines the pointer-to-member width class as "a pointer-to-member of
+# an INCOMPLETE class AND a NONZERO offset applied to it", and rules the pp[0]
+# siblings "correct BY LUCK and deliberately NOT listed here". That reading has
+# an unstated premise: that MSVC's default representation is the FOUR-BYTE one,
+# so an index-0 read lands on the function word. It is four bytes only when the
+# class is DEFINED SOMEWHERE IN THE SAME TU, which is true of every one of the
+# twenty-one TUs R9 scanned -- they all spell
+#     struct C; typedef void (C::*PMF)(); struct C { char pad[N]; PMF *pp; };
+# and MSVC picks the representation from C's real (single-inheritance) layout.
+#
+# src/_ZN8Snowball8BehaviorEv.cpp NEVER DEFINES ITS CLASS. It spells
+#     struct Klass; typedef void (Klass::*PMF)();
+#     struct M { char pad[8]; PMF pmf; };
+#     M *m = *(M **)&unk_378;  if (m->pmf != 0) (this->*(m->pmf))();
+# and `Klass` is never completed, so MSVC falls back to the MOST GENERAL
+# representation -- SIXTEEN bytes, {fn, delta, vbptr offset, vbindex}. The
+# index is still zero and it still breaks, because the width decides where the
+# FIELDS are, not just the stride. MEASURED, in the obj and then in a crash:
+#
+#   without the option    mov edx,[esi+378h]     ; the cell
+#                         mov edi,[edx+8]        ; fn        -- correct
+#                         mov ebx,[edx+14h]      ; "vbindex" -- ROM garbage
+#                         mov ecx,[edx+10h]      ; "vbptr"   -- ROM garbage
+#                         mov eax,[ecx+esi]
+#                         mov eax,[eax+ebx]      <- FAULT
+#   The ROM cell is SIXTEEN bytes TOTAL (enter {fn,delta} then tick {fn,delta}),
+#   so [edx+10h] and [edx+14h] are past the end of the record entirely.
+#   FAULT c0000005 at ?Behavior@Snowball@@QAEHXZ+0x37 accessing 78531c75,
+#   walker node id 0xe0, frame 1 of
+#   SM64DS_LEVEL=19 SM64DS_SPAWN_ACTOR=224 SM64DS_FAULTS_FATAL=1.
+#
+#   with /vmg /vmm        sizeof(PMF) is 8, so `m->pmf` is {[m+8], [m+0Ch]} --
+#                         exactly the ROM's tick record -- and the call adds
+#                         delta (zero on both of Snowball's records) to `this`
+#                         and jumps to fn. The ROM's own dispatch.
+#
+# THE OTHER THREE PMF SITES IN THIS SEAT WERE DISASSEMBLED TOO rather than
+# assumed, and all three are right as they stand:
+#   func_ov081_021261d4  Snowball's installer -- 4-byte PMF (its `struct C` IS
+#                        defined in the TU), reads [pp] = the enter fn, and
+#                        tail-JUMPS, so the host body reads its receiver off
+#                        the reused cdecl frame. R9's index-0 case, genuinely.
+#   func_ov081_02127744  Moneybag's enter dispatcher -- same shape, same
+#                        4-byte read of [pp], same tail jump.
+#   func_ov081_02127708  Moneybag's tick dispatcher -- ALREADY on R9's list
+#                        above; with the option it reads [pp+0Ch] as delta and
+#                        [pp+8] as fn, which is the tick record. Confirmed in
+#                        the obj, not taken on trust.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8Snowball8BehaviorEv.cpp"
+    PROPERTIES COMPILE_OPTIONS "/vmg;/vmm")
+
 # run rel0215 wave 3, lane w3-b: the ONE fall-off-the-end body in this seat.
 # src/func_ov081_02126950.cpp is declared `int` and never returns. mwccarm
 # accepts that; MSVC refuses the TU with `error C4716: must return a value`.
