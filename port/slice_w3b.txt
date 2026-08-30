@@ -151,7 +151,17 @@ src/func_ov081_021265c0.c
 src/func_ov081_021265c8.c
 src/func_ov081_02126700.cpp
 src/func_ov081_02126758.cpp
-src/func_ov081_02126950.cpp
+# src/func_ov081_02126950.cpp is NOT here -- it rides in through hostgen
+# instead (the W3BGEN block in port/CMakeLists.txt). It is a FALL-OFF-THE-END
+# int body: declared `int`, no return statement anywhere. mwccarm lets r0 carry
+# whatever the last call left; MSVC refuses the whole TU with
+#     error C4716: 'func_ov081_02126950': must return a value
+# -- a language-strictness refusal, not an ABI one. hostgen's FALLS_OFF_RETURN
+# table appends the return, so the object is still named func_ov081_02126950
+# and the TU still counts as linked. The value is unobservable both ends: the
+# ROM sets no r0 at either exit, and all three call sites the relocs name
+# (0x021270f8, 0x021272e8, 0x02127478) call it as a bare statement. The full
+# derivation is in the table's own note in port/tools/hostgen.py.
 src/func_ov081_02126a20.cpp
 src/func_ov081_02126c20.cpp
 src/func_ov081_02126c8c.cpp

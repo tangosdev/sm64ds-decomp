@@ -680,6 +680,29 @@ int func_ov081_02126c20(void *self);   /* state 8 tick  */
    the mount, so the alias cannot be defeated. */
 #pragma comment(linker, "/alternatename:__ZTV8daGmch_c=__ZTV8Moneybag")
 
+/* TWO OF MONEYBAG'S TUs SPELL A MOUNTED C SYMBOL AS A TYPED C++ GLOBAL, so
+   MSVC mangles the reference and the mount's C name does not answer it. Both
+   came off the FIRST LINK'S OWN UNRESOLVED LIST rather than out of a reading
+   (the measured-gap rule), and both are the montymolerock
+   `?data_ov080_021283c8@@3USharedFilePtr@@A` shape:
+
+     src/func_ov081_02126a20.cpp declares `extern Vector3
+       data_ov081_02128ef8;` OUTSIDE its own extern "C" block -- the +0x2000
+       Y-offset record __sinit_ov081_021284f0 initialises. Mounted by
+       port/ov081_syms.txt.
+     src/_ZN8Moneybag13InitResourcesEv.cpp declares `extern int
+       data_ov002_0210d9b8[];` outside extern "C" -- the ov002 bss pair whose
+       word 1 is the shared BMD file the plain Model at +0x138 is given.
+       Mounted by port/ov002_syms.txt, and 8 bytes to its next config symbol
+       (data_ov002_0210d9c0), so the `[1]` read stays inside its own span.
+
+   An /alternatename and not a -D rename because the LHS here is an MSVC
+   MANGLED name, which nothing else in this link can define -- the property
+   the R3/R4/R5 rule demands and the exact reason those cases needed a -D
+   instead. */
+#pragma comment(linker, "/alternatename:?data_ov081_02128ef8@@3UVector3@@A=_data_ov081_02128ef8")
+#pragma comment(linker, "/alternatename:?data_ov002_0210d9b8@@3PAHA=_data_ov002_0210d9b8")
+
 /* {ROM address the sinit's own source record carries, host body}, in the
    sinit's OWN copy order (data_ov081_02128f40[i] <- the source record
    src/__sinit_ov081_021284f0.c names on line i), each fn resolved out of
