@@ -327,7 +327,11 @@ void seat_course_sound(int level)
      * changing them would move adventure levels, which this does not. */
     const int vs_mode = (data_0209f2d8 == 1);
 
-    g_course_music = bgm;
+    /* g_course_music is only read by port_course_sound_probe, and it means
+       "what this file last asked layer 1 for". In a match nothing is asked for
+       here, and func_ov075_02116c8c's StopLoadedMusic_Layer1 has already run,
+       so -1 is the true state until the countdown starts 0x4d. */
+    g_course_music = vs_mode ? -1 : bgm;
     fprintf(stderr, "[course] sublevel %d sound row: group=%d bank=0x%02x "
             "bgm=%d (%s) [%s branch, star=%d]\n", level, group, bank, bgm,
             vs_mode ? "VS: the ROM does not read this column"
@@ -505,6 +509,7 @@ void port_vs_countdown_tick(void)
         func_02012790(0x2a);
         fprintf(stderr, "[vsgo] countdown finished: Sound::Play2D(2, 0x2a) and "
                 "Sound::LoadAndSetMusic_Layer1(0x4d), the arena's own track\n");
+        g_course_music = 0x4d;
         _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x4d);
     }
 }
