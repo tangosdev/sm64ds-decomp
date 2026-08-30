@@ -1505,6 +1505,37 @@ void hal_fill_shark_vtable(void);                    /* _ZTV5Shark, 31 */
 extern unsigned char Eyerok_SpawnInfo[];             /* ov066 0x0211ad40, +4 = 176 */
 void *Eyerok_Spawn(void);                            /* ov066 0x0211a370, 168 B */
 void hal_fill_eyerok_vtable(void);                   /* _ZTV6Eyerok, 32 */
+
+/* ---- run rel0215 wave 2 (lane cast-ov027): Snowman's Land's own cast, FIVE
+   ids on FOUR vtables, level 19. The task sheet named four classes; route 2
+   (the SpawnInfo's own word[1] idhalf plus word[0] landing in ov027's .text)
+   found a fifth, id 258, whose record and factory config leaves unnamed and
+   which owns sixteen of the overlay's 53 functions. Derivation in
+   port/ov027_syms.txt, fill in hal/actor_classes_ov027.cpp, slice in
+   port/slice_ov027cast.txt.
+   IDS 92 AND 93 ARE ONE CLASS: SlidingIce_Spawn and SlidingIceSpawner_Spawn
+   are the same twelve instructions and both store 0x02113824, and the class
+   branches on its own actor id inside Init/Cleanup/Render. Two records, two
+   rows, ONE table and ONE fill -- so hal_fill_sliding_ice_vtable appears
+   twice below, which is deliberate and idempotent.
+   DA_PG_DFDR's name is the ROM's own RTTI string (10daPgDfdr_c) rather than an
+   English one: config names neither its record nor its factory, nothing in the
+   tree carries an English name for 258, and inventing one would be a guess
+   printed in every census. ---- */
+extern unsigned char SlidingIceSpawner_SpawnInfo[];  /* ov027 0x021137e4, +4 = 92 */
+extern unsigned char SlidingIce_SpawnInfo[];         /* ov027 0x02113800, +4 = 93 */
+void *SlidingIceSpawner_Spawn(void);                 /* ov027 0x02111594, 48 B */
+void *SlidingIce_Spawn(void);                        /* ov027 0x02111564, 48 B */
+void hal_fill_sliding_ice_vtable(void);              /* _ZTV10SlidingIce, 32 */
+extern unsigned char ChillBully_SpawnInfo[];         /* ov027 0x021138d8, +4 = 217 */
+void *ChillBully_Spawn(void);                        /* ov027 0x0211186c, 92 B */
+void hal_fill_chill_bully_vtable(void);              /* data_ov027_02113930, 37 */
+extern unsigned char data_ov027_02113a00[];          /* ov027 0x02113a00, +4 = 258 */
+void *func_ov027_0211207c(void);                     /* ov027 0x0211207c, 72 B */
+void hal_fill_da_pg_dfdr_vtable(void);               /* data_ov027_02113a90, 32 */
+extern unsigned char SnowmanBreath_SpawnInfo[];      /* ov027 0x02113b2c, +4 = 275 */
+void *SnowmanBreath_Spawn(void);                     /* ov027 0x02112ab4, 96 B */
+void hal_fill_snowman_breath_vtable(void);           /* _ZTV13SnowmanBreath, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2286,4 +2317,21 @@ void hal_fill_eyerok_vtable(void);                   /* _ZTV6Eyerok, 32 */
        pyramid boss. Level 17's census names id 0xb0 = 176 skipped today. \
        Both attribution routes agree and the ov060 claim on the same address \
        is settled from the raw bytes -- see port/ov066_syms.txt ---- */ \
-    {176, "EYEROK", Eyerok_SpawnInfo, Eyerok_Spawn, hal_fill_eyerok_vtable},
+    {176, "EYEROK", Eyerok_SpawnInfo, Eyerok_Spawn, hal_fill_eyerok_vtable}, \
+    /* ---- run rel0215 wave 2 (lane cast-ov027): ov027's whole Snowman's Land \
+       cast, four placed instances on level 19 (the level's entire own skip \
+       list; the other seven skipped instances are ov081's 223/261 and \
+       ov070/073/074's 232, named lanes elsewhere). Rows in ROM block order, \
+       which is also the order the four vtables sit in .data. FIVE IDS, FOUR \
+       FILLS: 92 and 93 are one class and share hal_fill_sliding_ice_vtable. \
+       See port/ov027_syms.txt for both attribution routes on every id ---- */ \
+    {92, "SLIDING_ICE_SPAWNER", SlidingIceSpawner_SpawnInfo, \
+     SlidingIceSpawner_Spawn, hal_fill_sliding_ice_vtable}, \
+    {93, "SLIDING_ICE", SlidingIce_SpawnInfo, SlidingIce_Spawn, \
+     hal_fill_sliding_ice_vtable}, \
+    {217, "CHILL_BULLY", ChillBully_SpawnInfo, ChillBully_Spawn, \
+     hal_fill_chill_bully_vtable}, \
+    {258, "DA_PG_DFDR", data_ov027_02113a00, func_ov027_0211207c, \
+     hal_fill_da_pg_dfdr_vtable}, \
+    {275, "SNOWMAN_BREATH", SnowmanBreath_SpawnInfo, SnowmanBreath_Spawn, \
+     hal_fill_snowman_breath_vtable},

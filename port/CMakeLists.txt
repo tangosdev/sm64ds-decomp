@@ -2167,6 +2167,22 @@ list(APPEND PORT_ACTOR_OVERLAYS ov090)
 # port/ov066_syms.txt for the derivation and port/slice_ov066.txt for the four
 # host-copied TUs and the SIX /alternatename directives this mount defeats.
 list(APPEND PORT_ACTOR_OVERLAYS ov066)
+# run rel0215 wave 2 (lane cast-ov027): ov027 (level 19's own overlay, already
+# whole-mounted in PORT_LEVEL_OVERLAYS) joins the per-symbol mounts too, so
+# Snowman's Land's whole cast -- SLIDING_ICE_SPAWNER (92), SLIDING_ICE (93),
+# CHILL_BULLY (217), DA_PG_DFDR (258) and SNOWMAN_BREATH (275) -- reaches its
+# SpawnInfo records, SharedFilePtrs, CLPS blocks and per-class file records by
+# name. Same dual-mount shape as ov012/ov013/ov036/ov045.
+# FIVE IDS, NOT THE FOUR THE TASK SHEET NAMED: route 2 found id 258, whose
+# SpawnInfo and factory config leaves unnamed (data_ov027_02113a00 /
+# func_ov027_0211207c) and which owns sixteen of the overlay's 53 functions.
+# dsd's names ARE correct by address on this overlay -- no ov036/ov045
+# off-by-one -- but ids 92 and 93 SHARE ONE VTABLE and one fill. The
+# derivation, both attribution routes, all four widths (including the 37-slot
+# ChillBully table whose tail is a pointer-to-member source table, not more
+# vtable) and the four size pins are in port/ov027_syms.txt. See also
+# port/slice_ov027cast.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov027)
 set(ACTOR_OV_SYMS "")
 foreach(ovn IN LISTS PORT_ACTOR_OVERLAYS)
     set(ovn_out "${CMAKE_BINARY_DIR}/host-src/${ovn}_syms.c")
@@ -9681,6 +9697,224 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020d5e5c.c"
     PROPERTIES COMPILE_DEFINITIONS "data_ov090_021343b0=data_ov006_021343b0")
 
+
+# run rel0215 wave 2 (lane cast-ov027): ov027's Snowman's Land cast --
+# SLIDING_ICE_SPAWNER (92), SLIDING_ICE (93), CHILL_BULLY (217), DA_PG_DFDR
+# (258) and SNOWMAN_BREATH (275), level 19. Per-symbol ov027 mount
+# (port/ov027_syms.txt). The fill is hal/actor_classes_ov027.cpp. Two TUs are
+# NOT in the slice: src/func_ov027_02111d38.cpp and src/func_ov027_02111cfc.cpp,
+# DA_PG_DFDR's two pointer-to-member dispatch sites -- host-copied in
+# unmatched/DaPgDfdr_StateDispatch.cpp, originals byte-locked in src/. There is
+# NO external closure line: every arm9/ov002/ov062/ov064 body this closure
+# reaches was already linked on the base tip, checked against walk_window.map
+# before the first configure and confirmed by the first link's own unresolved
+# list.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov027cast.txt" SLICE_OV027CAST_LINES)
+set(SLICE_OV027CAST_SOURCES "")
+foreach(line IN LISTS SLICE_OV027CAST_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_OV027CAST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# ---- lane cast-ov027: NINE WRONG-OVERLAY NAMES AND SIX PLACEHOLDER BINDINGS -
+# Every one is settled from the TU's OWN literal pool or its own call reloc in
+# config/arm9/overlays/ov027/relocs.txt, disassembled out of
+# extracted/overlays/overlay_0027.bin, never by name.
+#
+# ov009/ov014/ov015/ov016/ov018/ov020/ov021/ov022/ov024/ov025/ov026/ov027/
+# ov029/ov030/ov032/ov033/ov034/ov035/ov036/ov043/ov045/ov053/ov056 all share
+# the level-overlay load window at base 0x021111a0, and dsd's export won the
+# naming race at nine addresses that are ov027's OWN. The task sheet flagged
+# two of them. A sweep of all 53 TUs against every overlay's symbol table found
+# SEVEN MORE SPELLINGS, and five of the nine are SILENT today -- the name is
+# already DEFINED in this link, so the reference binds to another overlay's
+# object with no link error and no byte-gate signal (the Coffin/Spindrift
+# shape, T6). Status measured against build/port/walk_window.map on the base
+# tip, not assumed:
+#
+#   spelling                      really            defined now?  failure mode
+#   data_ov036_02113cb4/cc0/ccc   ov027 bss nodes   YES ov036     SILENT
+#   data_ov035_02112ca4           ov027 rodata      YES ov035     SILENT
+#   func_ov030_02113be8           ov027 bss ptr     YES ov030     SILENT, worst
+#   data_ov043_02112424           ov027 CODE        YES ov043     SILENT
+#   RotatingPlatformRr_SpawnInfo  ov027 vtable      YES ov036     SILENT
+#   data_ov056_02112158           ov027 CODE        no            hard link error
+#   data_ov033_0211233c           ov027 CODE        no            hard link error
+#   data_ov053_021123b0           ov027 CODE        no            hard link error
+#
+# (1) src/__sinit_ov027_02112df8.cpp -- THE TASK SHEET'S FIRST TRAP. Three
+#     names, all ov027's own destructor-chain nodes. Its own literal pool, in
+#     source order, is at 0x02112f08..0x02112f5c and the three rows are:
+#       from:0x02112f30 kind:load to:0x02113cb4 module:overlay(27)
+#       from:0x02112f3c kind:load to:0x02113cc0 module:overlay(27)
+#       from:0x02112f4c kind:load to:0x02113ccc module:overlay(27)
+#     config/arm9/overlays/ov027/symbols.txt lists all three as ov027 bss.
+#     ov036's mount landed in wave 1 and port/ov036_syms.txt:294-295 DEFINES
+#     all three, so unrouted this sinit registers DA_PG_DFDR's three Anim-file
+#     destructor nodes into Rainbow Cruise's mounted cells.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/__sinit_ov027_02112df8.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov036_02113cb4=data_ov027_02113cb4;data_ov036_02113cc0=data_ov027_02113cc0;data_ov036_02113ccc=data_ov027_02113ccc")
+# (2) src/func_ov027_02111d8c.c -- THE TASK SHEET'S SECOND TRAP. DA_PG_DFDR's
+#     CleanupResources, whose three-iteration SharedFilePtr::Release loop reads
+#     data[0..2]. Both of this TU's loads of that address say overlay(27):
+#       from:0x02111df0 kind:load to:0x02112ca4 module:overlay(27)
+#       from:0x02112050 kind:load to:0x02112ca4 module:overlay(27)
+#     and 0x02112ca4's own three words relocate to 0x02113c84/0x02113c74/
+#     0x02113c8c, the three Anim SharedFilePtrs sinit 02112df8 builds -- so the
+#     table is unmistakably this class's. port/ov035_syms.txt:295 DEFINES
+#     data_ov035_02112ca4:0xc (ov035's id-119 collision chain node), so
+#     unrouted this TU Releases Tick Tock Clock's chain node three times.
+#     include/decl_common.h:3079 already declares data_ov027_02112ca4 as
+#     void*[3], which is the right type and the right width.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov027_02111d8c.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov035_02112ca4=data_ov027_02112ca4")
+# (3) SLIDING_ICE's TWO RESOURCE METHODS, and this is the worst of the nine.
+#     Both spell func_ov030_02113be8 for ov027's own model SharedFilePtr, and
+#     ov030's 0x02113be8 is a 0x138-byte FUNCTION that wave 1 linked
+#     (walk_window.map: _func_ov030_02113be8 in func_ov030_02113be8.c.obj).
+#     InitResources passes it to Model::LoadFile and reads [1] back out;
+#     CleanupResources calls SharedFilePtr::Release on it. Unrouted, the port
+#     WRITES the loaded BMD_File pointer into Tall Tall Mountain's code. Each
+#     TU's own pool names the address:
+#       from:0x02111554 kind:load to:0x02113be8 module:overlay(27)   (Init)
+#       from:0x021112ac kind:load to:0x02113be8 module:overlay(27)   (Cleanup)
+#     and __sinit_ov027_02112cb0 constructs 0x02113be8 with asset 1713.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10SlidingIce13InitResourcesEv.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10SlidingIce16CleanupResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_ov030_02113be8=data_ov027_02113be8")
+# (4) src/_ZN13SnowmanBreath6RenderEv.cpp -- a CALL, not a load. The body loops
+#     `data_ov043_02112424(p)` fifty times over the object's fifty sub-elements
+#     at +0xd4 stride 0x60. The reloc is a call and it names this overlay:
+#       from:0x0211277c kind:arm_call to:0x02112424 module:overlay(27)
+#     0x02112424 is func_ov027_02112424, inside ov027's own .text. ov043's
+#     mount DEFINES data_ov043_02112424 (port/ov043_syms.txt:153), so unrouted
+#     this Render executes ov043 romdata BYTES as code, fifty times a frame.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN13SnowmanBreath6RenderEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov043_02112424=func_ov027_02112424")
+# (5) SNOWMAN_BREATH's TWO DESTRUCTORS, two wrong names each. Both spell
+#     RotatingPlatformRr_SpawnInfo for the VPTR STORE -- and that is ov036's id
+#     129 record, at 0x02113b50, which is exactly where ov027 parks
+#     SnowmanBreath's own vtable. Wave 1 mounted it, so unrouted these two
+#     destructors write the address of Rainbow Cruise's SpawnInfo record into
+#     the object's vptr and every virtual after that reads a spawn record as a
+#     table. Both also spell data_ov056_02112158 for the per-element destructor
+#     they hand __destroy_arr, which is ov027's own func_ov027_02112158 (that
+#     one is undefined today, so it would at least fail loudly). Pools:
+#       D1  from:0x021120fc load -> 0x02113b50 module:overlay(27)
+#           from:0x02112100 load -> 0x02112158 module:overlay(27)
+#       D0  from:0x0211214c load -> 0x02113b50 module:overlay(27)
+#           from:0x02112150 load -> 0x02112158 module:overlay(27)
+#     SnowmanBreath_Spawn's own pool holds the same two words and spells them
+#     correctly (_ZTV13SnowmanBreath and func_ov027_02112158), which is the
+#     third read that settles both.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN13SnowmanBreathD1Ev.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN13SnowmanBreathD0Ev.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "RotatingPlatformRr_SpawnInfo=_ZTV13SnowmanBreath;data_ov056_02112158=func_ov027_02112158")
+# (6) src/func_ov027_02112480.cpp -- two calls, two wrong overlays, both really
+#     ov027's own bodies. Neither name is defined in the link today, so this
+#     pair fails loudly rather than silently; routed anyway, by address:
+#       from:0x021124a0 kind:arm_call to:0x021123b0 module:overlay(27)
+#       from:0x021124a8 kind:arm_call to:0x0211233c module:overlay(27)
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov027_02112480.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov033_0211233c=func_ov027_0211233c;data_ov053_021123b0=func_ov027_021123b0")
+# ---- the placeholder half: VT0/VT1 and the host-only _ZTV spellings ---------
+# VT0/VT1 are the dangerous ones: both are DEFINED in this link
+# (hal/actor_classes.cpp, `int VT0[20]` and its sibling), so an unrenamed store
+# lands silently on a twenty-word shared dummy instead of failing at link.
+# Every VT0/VT1 in this overlay's 53 TUs is bound below; the sweep found four
+# TUs using them and no others. G0 is NOT renamed anywhere here: all three
+# bodies that spell it (SlidingIce's D0, CHILL_BULLY's D0, DA_PG_DFDR's D0)
+# carry 0x020a0eac in their pools, which is the game heap Memory::Deallocate
+# takes and exactly what `/alternatename:_G0=_data_020a0eac`
+# (hal/cxx_aliases.cpp:1272) resolves it to. _ZTV10dBgActor_c is NOT renamed
+# either: both pools that spell it hold 0x0210ae38, which is what the port
+# already defines that name as.
+#
+# (7) SLIDING_ICE's D1 and D0 spell _ZTV17daObjSlIceBlock_c (the ROM RTTI name)
+#     for the table config calls _ZTV10SlidingIce. Same address under two
+#     labels; the port needs one storage, so the ROM spelling folds onto the
+#     config one the fill declares. Both pools, in store order (disassembled:
+#     `ldr r2 <- 02113824; ldr r1 <- 0210ae38; str r2,[r4]; str r1,[r4]`):
+#       D1  0x021111dc -> 0x02113824      0x021111e0 -> 0x0210ae38
+#       D0  0x02111230 -> 0x02113824      0x02111234 -> 0x0210ae38
+#                                         0x02111238 -> 0x020a0eac (G0, left)
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10SlidingIceD1Ev.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10SlidingIceD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV17daObjSlIceBlock_c=_ZTV10SlidingIce")
+# (8) CHILL_BULLY's D1: _ZTV12daIDonketu_c is its OWN table and VT1 is ov064's
+#     Bully base. Pool in store order, disassembled at 0x021115c8:
+#       ldr r2 <- @02111610 -> 0x02113930   (own table)
+#       ldr r1 <- @02111614 -> 0x0211b768   (ov064 Bully/BigBully base, 37)
+#       str r2,[r4] ; str r1,[r4]
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov027_021115c4.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV12daIDonketu_c=data_ov027_02113930;VT1=data_ov064_0211b768")
+# (9) CHILL_BULLY's D0: the same two stores in the same order, plus the heap.
+#       0x02111674 -> 0x02113930   0x02111678 -> 0x0211b768
+#       0x0211167c -> 0x020a0eac (G0, left on the cdecl row)
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov027_02111618.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov027_02113930;VT1=data_ov064_0211b768")
+# (10) src/ChillBully_Spawn.c -- THE ONE MIS-BOUND PAIR INSIDE A TU, and it is
+#      the exact inverse of (8). The ROM stores the BASE table first and the
+#      derived one last, which is the correct constructor shape, but the
+#      recovered source calls the FIRST store _ZTV12daIDonketu_c (the derived
+#      class's own name, on the base object) and the LAST one VT1. Settled by
+#      DISASSEMBLY, not by pool order -- the pool is laid out the other way
+#      round from the store order, which is exactly the trap:
+#        02111880  bl 020aed98              Enemy::C2
+#        02111884  ldr r1,[pc,#52] -> @021118c0 -> 0211b768
+#        0211188c  str r1,[r4,#0]           FIRST store  = the ov064 BASE
+#        02111890  bl 02016958              ModelAnim::C1     at +0x110
+#        02111898  bl 02037430              WithMeshClsn::C1  at +0x174
+#        021118a0  bl 020149c8              MovingCylinderClsn::C1 at +0x33c
+#        021118a8  bl 02016068              ShadowModel::C1   at +0x370
+#        021118ac  ldr r0,[pc,#16] -> @021118c4 -> 02113930
+#        021118b0  str r0,[r4,#0]           SECOND store = its OWN table
+#      So the SAME spelling means the opposite table in this TU and in (8),
+#      which is why an /alternatename could never have routed this pair and the
+#      binding has to be per source. Neither definition expands to the other,
+#      so there is no macro rescan.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/ChillBully_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV12daIDonketu_c=data_ov064_0211b768;VT1=data_ov027_02113930")
+# (11) DA_PG_DFDR's D1 and its factory both spell _ZTV10daPgDfdr_c for the
+#      table config calls data_ov027_02113a90. Pools, disassembled:
+#        D1       0x0211191c -> 0x02113a90   then 0x02111920 -> 0x0210ae38
+#                 (store order: own table, four member teardowns, then dBgActor)
+#        factory  0x021120c0 -> 0x02113a90
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov027_021118c8.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov027_0211207c.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV10daPgDfdr_c=data_ov027_02113a90")
+# (12) DA_PG_DFDR's D0: the same two stores as its D1 twin, same order, plus
+#      the heap. 0x02111988 -> 0x02113a90, 0x0211198c -> 0x0210ae38,
+#      0x02111990 -> 0x020a0eac (G0, left).
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov027_02111924.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov027_02113a90;VT1=_ZTV8Platform")
+
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'
 # matched lifecycle closures -- WHOMP (164), WHOMP_KING (165), BULLET_BILL (222),
 # BILL_BLASTER (43), FORTRESS_WALL (47), FORTRESS_WALL_BREAKABLE (48). The two
@@ -10287,6 +10521,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${SLICE_OV090_SOURCES}
     # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
     ${SLICE_OV066_SOURCES}
+    hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/DaPgDfdr_Render.cpp unmatched/Player_BlowAway.cpp
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
@@ -10472,6 +10707,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE_OV090_SOURCES}
     # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
     ${SLICE_OV066_SOURCES}
+    hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/DaPgDfdr_Render.cpp unmatched/Player_BlowAway.cpp
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
@@ -10691,6 +10927,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE_OV090_SOURCES}
     # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
     ${SLICE_OV066_SOURCES}
+    hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/DaPgDfdr_Render.cpp unmatched/Player_BlowAway.cpp
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
