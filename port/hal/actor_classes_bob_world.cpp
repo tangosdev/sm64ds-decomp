@@ -557,8 +557,9 @@ static int __fastcall mmbt_init(void *s, void *)
 { return _ZN10BrickBlock13InitResourcesEv((char *)s); }
 static int __fastcall mmbt_clean(void *s, void *)
 { return ((BrickBlock *)s)->BrickBlock::CleanupResources(); }
+static void itemtag_probe_tick(char *tag);
 static int __fastcall mmbt_behavior(void *s, void *)
-{ return ((BrickBlock *)s)->BrickBlock::Behavior(); }
+{ itemtag_probe_tick((char *)s); return ((BrickBlock *)s)->BrickBlock::Behavior(); }
 static int __fastcall mmbt_render(void *s, void *)
 { return ((ActorBase *)s)->ActorBase::Render(); }
 static int __fastcall mmbt_d1(void *s, void *)
@@ -610,10 +611,83 @@ void func_ov002_020b4250(char *self);
 void func_ov002_020b41f8(char *self);
 void func_ov002_020b42e4(char *self);
 }
-static void __fastcall itemtag_state0(void *s) { func_ov002_020b429c((char *)s); }
-static void __fastcall itemtag_state1(void *s) { func_ov002_020b4250((char *)s); }
-static void __fastcall itemtag_state2(void *s) { func_ov002_020b41f8((char *)s); }
-static void __fastcall itemtag_state3(void *s) { func_ov002_020b42e4((char *)s); }
+
+// ---- SM64DS_TAG_PROBE: the headless exercise -------------------------------
+//
+// There is no headless way to make the game break a block. The tag's dispatch
+// fires when daObjBlockL_c::Kill (src/func_ov002_020b38a0.c) notifies the tag
+// through src/func_ov002_020b363c.c, and Kill runs off a punch, a ground pound
+// or a mega collision -- input this port's scripted runs cannot deliver.
+//
+// So the probe drives the ROM'S OWN break path rather than poking the flag.
+// With SM64DS_TAG_PROBE=1, an ATTACHED tag (unk_0d8 set, meaning its Behavior
+// already found a block and stored itself in that block's +0x328) finds that
+// block again by the same predicate the ROM uses and calls Kill on it. Kill
+// calls the ROM's notifier, the notifier writes unk_0d6, and the tag's very
+// next Behavior takes the dispatch branch on its own. Nothing here writes
+// unk_0d6 and nothing here calls a handler; the only host code in the path is
+// the walk that finds the block.
+//
+// Both ends print, so a run shows which cell was selected and which body it
+// reached: the probe names the tag's id and index before the kill, and each
+// thunk names itself when it is entered.
+//
+// Used with SM64DS_SPAWN_ACTOR=15,322 (a brick block and a tag at the player),
+// because no mounted level's boot census actually carries ids 321-324.
+extern "C" {
+void func_ov002_020b38a0(char *self);          /* daObjBlockL_c::Kill */
+void *_ZN5Actor4NextEPKS_(const void *prev);
+}
+static int itemtag_probe_on(void)
+{
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_TAG_PROBE");
+        v = (e && *e && *e != '0') ? 1 : 0;
+    }
+    return v;
+}
+static void itemtag_probe_note(int idx, void *s)
+{
+    if (!itemtag_probe_on())
+        return;
+    std::printf("[tagprobe] DISPATCHED cell %d -> host body entered, self=%p\n",
+                idx, s);
+}
+static void itemtag_probe_tick(char *tag)
+{
+    if (!itemtag_probe_on())
+        return;
+    if (*(unsigned char *)(tag + 0xd8) == 0)   /* not attached to a block yet */
+        return;
+    if (*(unsigned char *)(tag + 0xd6) != 0)   /* already notified */
+        return;
+    for (char *o = (char *)_ZN5Actor4NextEPKS_(0); o;
+         o = (char *)_ZN5Actor4NextEPKS_(o)) {
+        /* the ROM's own predicate: only 0xf / 0x10 / 0x11 carry a +0x328, and
+           reading it on anything else is a read past the end of the actor */
+        unsigned t = *(unsigned short *)(o + 0xc);
+        if (t != 0xf && t != 0x10 && t != 0x11)
+            continue;
+        if (*(char **)(o + 0x328) != tag)
+            continue;
+        std::printf("[tagprobe] tag %p id %u cell %u attached to block %p "
+                    "id %u -- calling daObjBlockL_c::Kill\n",
+                    (void *)tag, *(unsigned short *)(tag + 0xc),
+                    *(unsigned char *)(tag + 0xd7), (void *)o, t);
+        func_ov002_020b38a0(o);
+        return;
+    }
+}
+
+static void __fastcall itemtag_state0(void *s)
+{ itemtag_probe_note(0, s); func_ov002_020b429c((char *)s); }
+static void __fastcall itemtag_state1(void *s)
+{ itemtag_probe_note(1, s); func_ov002_020b4250((char *)s); }
+static void __fastcall itemtag_state2(void *s)
+{ itemtag_probe_note(2, s); func_ov002_020b41f8((char *)s); }
+static void __fastcall itemtag_state3(void *s)
+{ itemtag_probe_note(3, s); func_ov002_020b42e4((char *)s); }
 
 struct PortItemTagCell { unsigned fn, delta; };
 extern "C" PortItemTagCell data_ov002_0210dd30[4];
