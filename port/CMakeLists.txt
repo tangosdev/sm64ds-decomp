@@ -2106,6 +2106,22 @@ list(APPEND PORT_ACTOR_OVERLAYS ov077)
 # is seated BY ADDRESS. See port/ov030_syms.txt's own header for the ROM
 # evidence and port/slice_ov030cast.txt for the four displaced TUs.
 list(APPEND PORT_ACTOR_OVERLAYS ov030)
+# run rel0215 wave 1 (lane cast-ov036): ov036 (level 28's own overlay, already
+# whole-mounted in PORT_LEVEL_OVERLAYS) joins the per-symbol mounts too, so
+# Rainbow Cruise's whole seven-class platform cast -- SWINGING_PLATFORM (127),
+# ROTATING_PLATFORM_RR (129), SHIP_WING (125), DONUT_BLOCK (126),
+# ARMED_ROTATING_PLATFORM (132), TRICKY_TRIANGLES (123) and FLYING_CARPET (130)
+# -- reaches its SpawnInfo records, SharedFilePtrs, CLPS blocks and per-class
+# file records by name. Same dual-mount shape as ov012/ov013/ov045.
+# THE CONFIG'S C++ METHOD AND _ZTV NAMES ARE ATTACHED ONE CLASS EARLY in this
+# overlay (the ov045 off-by-one, measured here rather than inherited), so the
+# seven host vtable arrays hal/actor_classes_ov036.cpp fills are paired to ids
+# BY ADDRESS: _ZTV18RotatingPlatformRr is SHIP_WING's table, _ZTV8ShipWing is
+# DONUT_BLOCK's, _ZTV10DonutBlock is ARMED_ROTATING_PLATFORM's and
+# _ZTV21ArmedRotatingPlatform is TRICKY_TRIANGLES'. The derivation, both
+# attribution routes, all seven widths and the four size pins are in
+# port/ov036_syms.txt. See also port/slice_ov036cast.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov036)
 set(ACTOR_OV_SYMS "")
 foreach(ovn IN LISTS PORT_ACTOR_OVERLAYS)
     set(ovn_out "${CMAKE_BINARY_DIR}/host-src/${ovn}_syms.c")
@@ -9249,6 +9265,167 @@ list(APPEND SWEEP1_SOURCES hal/actor_classes_ov058.cpp ${SLICE_SWEEP1_OV058_SOUR
     unmatched/RecRoomCupboard_ActorDtorSeam.cpp)
 # ---- end lane cast-sweep1 --------------------------------------------------
 
+
+
+# run rel0215 wave 1 (lane cast-ov036): ov036's Rainbow Cruise cast --
+# SWINGING_PLATFORM (127), ROTATING_PLATFORM_RR (129), SHIP_WING (125),
+# DONUT_BLOCK (126), ARMED_ROTATING_PLATFORM (132), TRICKY_TRIANGLES (123) and
+# FLYING_CARPET (130), level 28. Per-symbol ov036 mount (port/ov036_syms.txt).
+# The fill is hal/actor_classes_ov036.cpp. Two TUs are NOT in the slice:
+# _ZN18RotatingPlatformRrD1Ev.cpp (SHIP_WING's D1, an MSVC-synthesised
+# destructor over a local shadow class that provides no C name -- the chain is
+# spelled as sw_d1 in the fill) and func_ov036_02112378.cpp (FLYING_CARPET's
+# Render, the ModelAnim slot-5 collision -- host copy in
+# unmatched/FlyingCarpet_Render.cpp). The last four lines of the slice are the
+# MEASURED external closure: four ov002 bodies TRICKY_TRIANGLES needs, taken
+# off the map rather than guessed.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov036cast.txt" SLICE_OV036CAST_LINES)
+set(SLICE_OV036CAST_SOURCES "")
+foreach(line IN LISTS SLICE_OV036CAST_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_OV036CAST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# ---- lane cast-ov036: SIX PER-SOURCE PLACEHOLDER AND CROSS-NAME BINDINGS ----
+# Every one is settled from the TU's OWN literal pool in
+# config/arm9/overlays/ov036/relocs.txt, disassembled out of
+# extracted/overlays/overlay_0036.bin, never by name. VT0/VT1/VT2 are the
+# dangerous half: all three are DEFINED in this link (actor_vtables.cpp:407,
+# `int VT0[20]` and its siblings), so an unrenamed store lands silently on a
+# twenty-word shared dummy instead of failing at link -- the CMakeLists:2600
+# class. G1 is the safe half (no cdecl row, so it would be a hard link error),
+# and bare G0 in a .c resolves through `/alternatename:_G0=_data_020a0eac`,
+# which is RIGHT for the three deleting destructors whose pools hold the game
+# heap and WRONG for the one Cleanup whose pool holds its own two files.
+#
+# (1) src/func_ov036_021111e4.c -- SWINGING_PLATFORM's D0. Pool, in store order:
+#     0x02111230 -> 0x02113a98 (its own table, host storage) and
+#     0x02111234 -> 0x0210ae38 (_ZTV8Platform, the dBgActor_c base, already
+#     host-filled by hal_fill_platform_vtable). Its G0 is NOT renamed: the third
+#     pool word 0x02111238 -> 0x020a0eac module:main is the game heap
+#     Memory::Deallocate takes, which is exactly what the cdecl row binds.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov036_021111e4.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov036_02113a98;VT1=_ZTV8Platform")
+# (2) src/func_ov036_02111284.c -- SWINGING_PLATFORM's CleanupResources.
+#     Releases two SharedFilePtrs as G0/G1, and its own pool names them:
+#     0x021112c0 -> 0x02114028 then 0x021112c4 -> 0x02114020, both
+#     module:overlay(36), both in this lane's own mount. Unrenamed, G0 would
+#     Release the game heap and G1 would not link. Renamed straight to the mount
+#     names rather than to private ones: include/decl_common.h declares neither
+#     data_ov036_02114020 nor data_ov036_02114028, so there is nothing to
+#     conflict with (the ov043 TRAP-3 reading; the ov100 C2040 needed private
+#     names only because the target was already declared as a scalar).
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov036_02111284.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=data_ov036_02114028;G1=data_ov036_02114020")
+# (3) src/func_ov036_02111444.c -- ROTATING_PLATFORM_RR's D1, three vptr stores
+#     back to back with no call between them. Pool in store order:
+#     0x02111488 -> 0x02113b74 (its own table), 0x0211148c -> 0x021091d4
+#     (daObjKaitendai_c, the ov002 INTERMEDIATE base, host storage in
+#     hal/actor_classes_ov036.cpp) and 0x02111490 -> 0x0210ae38 (_ZTV8Platform).
+#     The middle one is the trap: the TU spells it _ZTV10dBgActor_c, the
+#     196-speller placeholder the port defines AS the Platform base table, so
+#     unrenamed this body would store 0x0210ae38's host array where the ROM
+#     stores the Kaitendai one. Dead in this body, wrong everywhere it is read.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov036_02111444.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV19daObjRc_Kaitendai_c=data_ov036_02113b74;_ZTV10dBgActor_c=data_ov002_021091d4;VT2=_ZTV8Platform")
+# (4) src/func_ov036_02111494.c -- ROTATING_PLATFORM_RR's D0, the same three
+#     stores as its D1 twin and the same pool order (0x021114e8/ec/f0), with the
+#     game-heap word at 0x021114f4 for G0, which is left on the cdecl row.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov036_02111494.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov036_02113b74;VT1=data_ov002_021091d4;VT2=_ZTV8Platform")
+# (5) src/RotatingPlatformRr_Spawn.c -- THE ONE MIS-BOUND NAME INSIDE A TU.
+#     The ROM stores the BASE table first and the derived one second, which is
+#     the correct constructor order:
+#       0211155c ldr r1,[pc,#0x14] -> 0x02111578 -> 0x021091d4 daObjKaitendai_c
+#       02111560 ldr r0,[pc,#0x14] -> 0x0211157c -> 0x02113b74 its own table
+#       02111564 str r1,[r4]   02111568 str r0,[r4]
+#     but the recovered source calls the FIRST store _ZTV19daObjRc_Kaitendai_c
+#     (the derived class's own name on the base object) and the second VT1. Both
+#     spellings are bound here to the address that TU's own pool carries, so the
+#     store order and both values stay exactly the ROM's. Neither definition
+#     expands to the other, so there is no macro rescan.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/RotatingPlatformRr_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV19daObjRc_Kaitendai_c=data_ov002_021091d4;VT1=data_ov036_02113b74")
+# (6) THE THREE ROM-NAME SPELLINGS OF A TABLE THIS LANE ALREADY HOSTS UNDER ITS
+#     config NAME. Each pair is the SAME address under two labels dsd emitted,
+#     and the port needs one storage, so the ROM spelling is folded onto the
+#     config one the fill declares. Confirmed per TU against its own pool:
+#       _ZN18RotatingPlatformRrD0Ev.c  0x021115ec -> 0x02113c38 == _ZTV18RotatingPlatformRr
+#       _ZN8ShipWingD1Ev.c             0x02111980 -> 0x02113cf8 == _ZTV8ShipWing
+#       _ZN8ShipWingD0Ev.c             0x021119dc -> 0x02113cf8 == _ZTV8ShipWing
+#       _ZN10DonutBlockD1Ev.c          0x02111d50 -> 0x02113dcc == _ZTV10DonutBlock
+#       _ZN10DonutBlockD0Ev.c          0x02111da4 -> 0x02113dcc == _ZTV10DonutBlock
+#       func_ov036_021111a0.c          0x02111230 -> 0x02113a98 == data_ov036_02113a98
+#     The last one goes the OTHER way -- onto the config name rather than onto
+#     the _ZTV one -- because config names 0x02113a98 only data_ov036_02113a98,
+#     and vtspan --sweep can only size an array whose name it can look up.
+#     The _ZTV10dBgActor_c in the four ShipWing/DonutBlock destructors is NOT
+#     renamed: their pools hold 0x0210ae38, which is what the port's own
+#     _ZTV10dBgActor_c array already is (hal/actor_classes.cpp fills it and
+#     _ZTV8Platform with identical contents). Only the ROTATING_PLATFORM_RR pair
+#     above spells that name for a different table.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN18RotatingPlatformRrD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS "_ZTV14daObjRc_Hane_c=_ZTV18RotatingPlatformRr")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8ShipWingD1Ev.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8ShipWingD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS "_ZTV16daObjRc_Tikuwa_c=_ZTV8ShipWing")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10DonutBlockD1Ev.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10DonutBlockD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS "_ZTV18daObjRc_Guruguru_c=_ZTV10DonutBlock")
+#     SwingingPlatform_Spawn.c needs NO rename: it already spells
+#     data_ov036_02113a98, which is the canonical host array name (see the
+#     vtspan note in hal/actor_classes_ov036.cpp -- config names 0x02113a98
+#     only that way, so the host-only _ZTV16daObjRcBuranko_c spelling would
+#     have gone unsized). src/func_ov036_021111a0.c, SWINGING_PLATFORM's D1,
+#     is the one TU that spells the host-only name; its pool at 0x02111230 is
+#     0x02113a98, module:overlay(36).
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov036_021111a0.c"
+    PROPERTIES COMPILE_DEFINITIONS "_ZTV16daObjRcBuranko_c=data_ov036_02113a98")
+# (7) AN ALIAS THIS MOUNT DEFEATS, AND THE ONE LIVE READER IT HAD.
+# ov018, ov022, ov036 and ov056 share the level-overlay base 0x021111a0, and
+# ov036's dsd export won the naming race at 0x021140d4, so
+# src/_ZN21FloatingFloorLllSmall13InitResourcesEv.c (ov022's
+# FLOATING_FLOOR_LLL_SMALL, id 76, level 14, LINKED via
+# port/slice_w8packs.txt:51) reaches ov022's OWN six-word file/CLPS table under
+# ov036's spelling. hal/actor_classes_ov022.cpp routed that with
+# `/alternatename:_data_ov036_021140d4=_data_ov022_021140d4`, and an
+# /alternatename is defeated the moment its LHS is DEFINED -- which is exactly
+# what this lane's mount now does (data_ov036_021140d4 is one of
+# TRICKY_TRIANGLES' ten SharedFilePtrs, built by __sinit_ov036_0211279c).
+# Unfixed, FLOATING_FLOOR_LLL_SMALL on level 14 would load its models out of
+# Rainbow Cruise's cells: no link error, no byte-gate signal, wrong object at
+# run time -- the Coffin/Spindrift shape, caught here by
+# port/tools/alternatename_guard.py's post-link map check.
+# The guard's own remedy, and the wave-5 R1/R2 recipe: the reader gets a
+# per-source -D onto the name it actually means, and the now-inert directive is
+# retired at its own site rather than left reading as live routing.
+# FOUR MORE TUs spell an ov036 name for another overlay's object at the shared
+# base -- src/__sinit_ov025_021129dc.c (02113a98), src/func_ov025_02111384.cpp
+# (02113a60), src/__sinit_ov026_02112d68.c (02113f58) and
+# src/__sinit_ov027_02112df8.cpp (02113cb4/cc0/ccc). NONE of the four is in any
+# slice or in any map, so nothing races today; they are ov025's, ov026's and
+# ov027's names to fix when those lanes land, and alternatename_guard will say
+# so at the link if one arrives.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN21FloatingFloorLllSmall13InitResourcesEv.c"
+    PROPERTIES COMPILE_DEFINITIONS "data_ov036_021140d4=data_ov022_021140d4")
+
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'
 # matched lifecycle closures -- WHOMP (164), WHOMP_KING (165), BULLET_BILL (222),
 # BILL_BLASTER (43), FORTRESS_WALL (47), FORTRESS_WALL_BREAKABLE (48). The two
@@ -9850,6 +10027,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES}
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
+    hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
@@ -10030,6 +10208,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES}
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
+    hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
@@ -10244,6 +10423,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES}
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
+    hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp

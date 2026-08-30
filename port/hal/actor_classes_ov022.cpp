@@ -568,8 +568,21 @@ DSSTATE_END
    ov022, ov036 and ov056 all share level-overlay base 0x021111a0, and ov036's
    dsd export won the naming race at that address (the same class of collision
    hal/actor_classes_ccm.cpp records for SkiLift's data_ov036/ov056/ov022
-   triple). Both names are the same ov022 object. */
-#pragma comment(linker, "/alternatename:_data_ov036_021140d4=_data_ov022_021140d4")
+   triple). Both names are the same ov022 object.
+
+   RETIRED, run rel0215 wave 1 (lane cast-ov036), AND THE ROUTING STILL
+   APPLIES. The directive here used to be
+     /alternatename:_data_ov036_021140d4=_data_ov022_021140d4
+   which worked only while nothing DEFINED the LHS. ov036 now has its own
+   per-symbol mount (port/ov036_syms.txt) and data_ov036_021140d4 is one of
+   TRICKY_TRIANGLES' ten SharedFilePtrs, so the alias became inert and 76 would
+   have loaded its models out of Rainbow Cruise's cells -- silently, with no
+   link error and no byte-gate signal. port/tools/alternatename_guard.py caught
+   it at the link. The routing moved to the guard's own remedy, a per-source -D
+   on the ONE reader (src/_ZN21FloatingFloorLllSmall13InitResourcesEv.c) in
+   port/CMakeLists.txt beside the ov036 slice block. Nothing about 76 changes;
+   what changes is that the binding no longer depends on a name staying
+   undefined somewhere else in the tree. */
 extern "C" void *port_factory_floating_floor_lll_small(void)
 {
     void *p = FloatingFloorLllSmall_Spawn();

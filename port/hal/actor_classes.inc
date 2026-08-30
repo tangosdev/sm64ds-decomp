@@ -170,6 +170,38 @@ void hal_fill_clock_hand_vtable(void);
 extern unsigned char ClockPaintingPendulum_SpawnInfo[];  /* ov013 0x02112104, word[1] reads 294 */
 void *ClockPaintingPendulum_Spawn(void);                 /* ov013 0x02111384 */
 void hal_fill_clock_pendulum_vtable(void);
+/* ---- run rel0215 wave 1 (lane cast-ov036): Rainbow Cruise's own seven-class
+   platform cast, ov036 (level 28), a fresh per-symbol mount (ov036_syms.txt)
+   joining the existing whole level mount. All seven SpawnInfo records come
+   from that mount and all seven fills are in hal/actor_classes_ov036.cpp.
+   THE ROWS ARE PAIRED BY ADDRESS, NOT BY NAME: config attaches this overlay's
+   C++ method and _ZTV names ONE CLASS EARLY (the ov045 off-by-one), so
+   SHIP_WING's own table is the array config calls _ZTV18RotatingPlatformRr,
+   DONUT_BLOCK's is _ZTV8ShipWing, ARMED_ROTATING_PLATFORM's is
+   _ZTV10DonutBlock and TRICKY_TRIANGLES' is _ZTV21ArmedRotatingPlatform. The
+   Spawn and SpawnInfo names below are the ones config got RIGHT; the
+   three-route derivation is in port/ov036_syms.txt. */
+extern unsigned char SwingingPlatform_SpawnInfo[];       /* ov036 0x02113a74, word[1] reads 127 */
+void *SwingingPlatform_Spawn(void);                      /* ov036 0x02111414 */
+void hal_fill_swinging_platform_vtable(void);
+extern unsigned char RotatingPlatformRr_SpawnInfo[];     /* ov036 0x02113b50, word[1] reads 129 */
+void *RotatingPlatformRr_Spawn(void);                    /* ov036 0x02111544 */
+void hal_fill_rotating_platform_rr_vtable(void);
+extern unsigned char ShipWing_SpawnInfo[];               /* ov036 0x02113c14, word[1] reads 125 */
+void *ShipWing_Spawn(void);                              /* ov036 0x02111904 */
+void hal_fill_ship_wing_vtable(void);
+extern unsigned char DonutBlock_SpawnInfo[];             /* ov036 0x02113cd4, word[1] reads 126 */
+void *DonutBlock_Spawn(void);                            /* ov036 0x02111cd8 */
+void hal_fill_donut_block_vtable(void);
+extern unsigned char ArmedRotatingPlatform_SpawnInfo[];  /* ov036 0x02113da8, word[1] reads 132 */
+void *ArmedRotatingPlatform_Spawn(void);                 /* ov036 0x02111f5c */
+void hal_fill_armed_rotating_platform_vtable(void);
+extern unsigned char TrickyTriangles_SpawnInfo[];        /* ov036 0x02113e6c, word[1] reads 123 */
+void *TrickyTriangles_Spawn(void);                       /* ov036 0x021120c8 */
+void hal_fill_tricky_triangles_vtable(void);
+extern unsigned char FlyingCarpet_SpawnInfo[];           /* ov036 0x02113f78, word[1] reads 130 */
+void *FlyingCarpet_Spawn(void);                          /* ov036 0x02112538 */
+void hal_fill_flying_carpet_vtable(void);
 /* ---- gate 18: ov085, the first ACTOR overlay ----
    Not the engine overlay and not the level's -- six classes several levels
    share, of which the castle grounds names two. The SpawnInfo records come
@@ -2172,4 +2204,24 @@ void hal_fill_rec_room_cupboard_vtable(void);        /* _ZTV15RecRoomCupboard, 3
     /* ---- run rel0215 wave 1 (lane cast-sweep1): ov058, the Rec Room's \
        cupboard. Level 50's entire skip list, one row. ---- */ \
     {182, "REC_ROOM_CUPBOARD", RecRoomCupboard_SpawnInfo, \
-     RecRoomCupboard_Spawn, hal_fill_rec_room_cupboard_vtable},
+     RecRoomCupboard_Spawn, hal_fill_rec_room_cupboard_vtable}, \
+    /* ---- run rel0215 wave 1 (lane cast-ov036): ov036's whole Rainbow \
+       Cruise cast, forty-nine placed instances on level 28 (the level's \
+       entire own skip list bar ov077's three). Rows in ROM block order, \
+       which is also the order the seven vtables sit in .data. PAIRED BY \
+       ADDRESS -- see port/ov036_syms.txt for why the fill named after one \
+       class serves the id of another ---- */ \
+    {127, "SWINGING_PLATFORM", SwingingPlatform_SpawnInfo, \
+     SwingingPlatform_Spawn, hal_fill_swinging_platform_vtable}, \
+    {129, "ROTATING_PLATFORM_RR", RotatingPlatformRr_SpawnInfo, \
+     RotatingPlatformRr_Spawn, hal_fill_rotating_platform_rr_vtable}, \
+    {125, "SHIP_WING", ShipWing_SpawnInfo, ShipWing_Spawn, \
+     hal_fill_ship_wing_vtable}, \
+    {126, "DONUT_BLOCK", DonutBlock_SpawnInfo, DonutBlock_Spawn, \
+     hal_fill_donut_block_vtable}, \
+    {132, "ARMED_ROTATING_PLATFORM", ArmedRotatingPlatform_SpawnInfo, \
+     ArmedRotatingPlatform_Spawn, hal_fill_armed_rotating_platform_vtable}, \
+    {123, "TRICKY_TRIANGLES", TrickyTriangles_SpawnInfo, \
+     TrickyTriangles_Spawn, hal_fill_tricky_triangles_vtable}, \
+    {130, "FLYING_CARPET", FlyingCarpet_SpawnInfo, FlyingCarpet_Spawn, \
+     hal_fill_flying_carpet_vtable},
