@@ -2035,3 +2035,47 @@ func_ov025_02111c24  REAL_DECOMP  out/w3-e/ov025/adjudication.txt  id 162 slot 0
 func_ov091_02134498  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w3-f2\t5_ov091_slots.txt  id 231 slot 18 OnYoshiTryEat, addr 0x02134498 size 0x8; match.py MATCHING at 2004/b56 with --strict-relocs --module ov091. Two instructions, mov r0,#4 / bx lr, and src returns 4. Marker name is RIGHT: _ZTV5Stump + 0x48 holds this address
 func_ov091_0213448c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w3-f2\t5_ov091_slots.txt  id 231 slot 19 OnTurnIntoEgg, addr 0x0213448c size 0xc; match.py MATCHING at 2004/b56 with --strict-relocs --module ov091. The ROM's tail-call veneer, ldr ip,[pc] / bx ip / .word 0x02043824 onto _ZN9ActorBase18MarkForDestructionEv, and src calls exactly that; the pool word is reloc-checked, not wildcarded past. Byte-identical to func_ov072_02121fa0 (gate 193) and func_ov030_021145d4. Marker name is RIGHT: _ZTV5Stump + 0x4c holds this address
 func_ov091_02134484  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w3-f2\t5_ov091_slots.txt  id 231 slot 29 OnAimedAtWithEgg, addr 0x02134484 size 0x8; match.py MATCHING at 2004/b56 with --strict-relocs --module ov091. Two instructions, mov r0,#0x1f000 / bx lr, and src returns 126976 == 0x1f000. Marker name is RIGHT: _ZTV5Stump + 0x74 holds this address
+# ---------------------------------------------------------------------------
+# run rel0215 wave 3 (lane w3-a2), 2026-08-30.
+#
+# The TEN marker-carrying bodies ov065's Tick Tock Clock cluster seats. They
+# were invisible to this guard until now for the reason the guard's own
+# docstring gives -- a marker file only counts once a port/hal file NAMES its
+# symbol -- and hal/actor_classes_ov065.cpp's seven Ttc fills name all ten at
+# once. Every one was disassembled from extracted/overlays/overlay_0065.bin at
+# base 0x02115ee0 (the SHIPPED image, deliberately not a dsd export, whose
+# relocated words would make literals read as live pointers) and compared
+# instruction for instruction with its src/ body: constants, structure offsets,
+# branch targets, call sequence and order, instruction count, return value.
+# Every literal-pool word was resolved by reading it out of the image at the
+# address the ldr computes.
+#
+# RESULT: 10 REAL DECOMP, 0 genuine guesses, 0 unverifiable. Register
+# allocation and scheduling differ in places; no constant, offset, branch
+# target or instruction count does.
+#
+# TWO OF THE RECOVERED NAMES ARE WRONG AND THE BODIES ARE NOT.
+# func_ov065_02119f88 and func_ov065_0211abac are headed "OnYoshiTryEat" and
+# are plainly deleting destructors -- the same mis-naming the ov022 and ov047
+# blocks above record. Do not propagate those names into a header.
+#
+# AND THE FINDING THAT CHANGED THE SEAT: four of the ten reach their vtables
+# and file handles through the placeholders VT0/VT1/G0/G1, which are DEFINED in
+# this build (hal/actor_vtables.cpp's `int VT0[20]`, and hal/cxx_aliases.cpp's
+# alternatename rows for bare _G0/_G1). Without a per-source -D each of those
+# four LINKS CLEAN and writes a dummy array as its object's vptr. The six
+# bindings are in port/CMakeLists.txt beside the slice reader, every target
+# read out of the body's own literal pool.
+#
+# Full per-body evidence: runs/rel0215/out/w3-a2/adjudications.txt.
+#
+func_ov065_02119f88  REAL_DECOMP  w3-a2.md#ov065  Deleting dtor: pool 0x02119fdc/e0/e4 = 0x0211d0ec, _ZTV8Platform 0x0210ae38, 0x020a0eac; stores both vptrs then calls ShadowModelD1(this+0x330) 0x02015ff8, MovingMeshColliderD1(this+0x124) 0x0203a470, ModelD1(this+0xd4) 0x02016d20, ActorD2 0x020112c8, Memory::Deallocate 0x0203c1e8 with the heap loaded THROUGH 0x020a0eac; returns this; 21 instructions both sides. Needs VT0=data_ov065_0211d0ec VT1=_ZTV8Platform G0=data_020a0eac.
+func_ov065_0211a15c  REAL_DECOMP  w3-a2.md#ov065  MeshColliderBase::IsEnabled(this+0x124) 0x020393dc, beq 0x0211a17c skipping only Disable(this+0x124) 0x02039140, then SharedFilePtr::Release 0x02017b64 twice on pool 0x0211a198=0x0211d88c and 0x0211a19c=0x0211d894; returns 1; 15 instructions both sides. Needs G0=data_ov065_0211d88c G1=data_ov065_0211d894.
+func_ov065_0211a1a0  REAL_DECOMP  w3-a2.md#ov065  ldr r2,[r0,#0xd4]! then ldr r2,[r2,#0x14] then blx with r1=0: a virtual call on the subobject at +0xd4 through vtable slot 5, one argument 0; src's Base has five virtuals before m(int) and Derived pads 0xd4; mov r0,#1 return; 10 instructions, no literal pool, both sides.
+func_ov065_0211a1c8  REAL_DECOMP  w3-a2.md#ov065  Gate on data_0209f2c0!=3 (pool 0x0211a340) with beq landing exactly on the tail 0x0211a300; DecIfAbove0_Short 0x0203adbc on +0x326 (pool 0x0211a344) and +0x328; Sound::PlayBank3 0x02012664 with 0x38 and this+0x74; smlabb over +0x31e/+0x320/+0x324; RandomIntInternal 0x0203b990 with unsigned %3 via 0xaaaaaaab picking 0xd or 0x2a into +0x320, (r0>>0x1b)+3 into +0x328, +0x328+0xf into +0x326; IsClsnInRange 0x020ee870 with 0x300000/-0x200000; 94 instructions both sides.
+func_ov065_0211a358  REAL_DECOMP  w3-a2.md#ov065  Model::LoadFile 0x02017a3c on 0x0211d88c, ModelBase::SetFile 0x02016fd4 (this+0xd4,1,-1), ShadowModel::InitCuboid 0x02015ed8 on this+0x330, +0x31e=1, +0x320=data_ov065_0211c0b0[data_0209f2c0] via lsl#1/ldrsh, +0x322=0x1964 (pool 0x0211a44c), +0x090 from +0x322, MeshCollider::LoadFile 0x02017afc on 0x0211d894, MovingMeshCollider::SetFile 0x0203a1e0 with r3=0x1000 and stack args ldrsh +0x8e and 0x02112198, func_020393a4 0x300000, func_02039394 -0x200000, and func_020393d4 with 0x02039348 guarded by data_0209f2c0!=3; 58 instructions both sides.
+func_ov065_0211abac  REAL_DECOMP  w3-a2.md#ov065  Mecha05 deleting dtor: pool 0x0211ac00/04/08 = 0x0211d2b4, _ZTV8Platform 0x0210ae38, 0x020a0eac; ShadowModelD1 on this+0x33c (NOT +0x330 as in the Mecha03 twin) 0x02015ff8, MovingMeshColliderD1 this+0x124 0x0203a470, ModelD1 this+0xd4 0x02016d20, ActorD2 0x020112c8, Memory::Deallocate 0x0203c1e8; returns this; 21 instructions both sides. Needs VT0=data_ov065_0211d2b4 VT1=_ZTV8Platform G0=data_020a0eac.
+func_ov065_0211ad04  REAL_DECOMP  w3-a2.md#ov065  IsEnabled(this+0x124) 0x020393dc, beq 0x0211ad24 skipping only Disable 0x02039140, then Release 0x02017b64 twice on pool 0x0211ad40=0x0211d904 and 0x0211ad44=0x0211d90c (a DIFFERENT pair from the 0211a15c twin); returns 1; 15 instructions both sides. Needs G0=data_ov065_0211d904 G1=data_ov065_0211d90c.
+func_ov065_0211ad48  REAL_DECOMP  w3-a2.md#ov065  Byte-identical encoding to func_ov065_0211a1a0: ldr r2,[r0,#0xd4]! then ldr r2,[r2,#0x14] then blx with r1=0, mov r0,#1; virtual slot 5 on the +0xd4 subobject with one zero argument; 10 instructions, no literal pool, both sides.
+func_ov065_0211ae08  REAL_DECOMP  w3-a2.md#ov065  data_0209f2c0==3 arm does two 0xfa000 fixed multiplies of data_02082214[(unk_094>>4)<<1] and [+1] into +0x5c/+0x64 then IsClsnInRange(0,0); other arm runs the addls-pc jump table at 0x0211af0c on the u8 at +0x336 to 0x0211af24/afb4/b00c/b134 with default 0x0211b164; constants 0xbae, 0x1d000, -0x8000, 0x1e, -0x5000, 0x6666/-0x6666 (pool 0x0211b1c8/0x0211b1cc), 0x2599 (pool 0x0211b1d0), 0x51eb851f/100 for %100, +20; tail is Actor::UpdatePos 0x02010c30 with 0, UpdateModelPosAndRotY 0x020ee830, func_ov065_0211ac0c, IsClsnInRange 0x020ee870 with 0x1c0000/0x1000; 233 instructions both sides.
+func_ov065_0211b1d4  REAL_DECOMP  w3-a2.md#ov065  Model::LoadFile 0x02017a3c on 0x0211d904, SetFile 0x02016fd4 (this+0xd4,1,-1), InitCuboid 0x02015ed8 on this+0x33c, UpdateModelPosAndRotY 0x020ee830, UpdateClsnPosAndRot 0x020ee7cc, MeshCollider::LoadFile 0x02017afc on 0x0211d90c, MovingMeshCollider::SetFile 0x0203a1e0 with r3=0x199 (pool 0x0211b318) and stack args ldrsh +0x8e and 0x02112258, func_020393d4 with 0x02039348, func_020393a4 0x1c0000, func_02039394 0x1000, +0x94/+0x320/+0x324/+0x328 copied from +0x8e/+0x5c/+0x60/+0x64, +0x334 from data_ov065_0211c0c8[data_0209f2c0]; RaycastGround at sp+0x14 in a 0x68 frame with ctor 0x02037570, SetObjAndPos 0x0203748c with a NULL Actor, DetectClsn 0x02038f44, result read at sp+0x58 (rg+0x44), dtor 0x02037534, and v.y-0xa000 stored to +0x338 before the test; 78 instructions both sides.

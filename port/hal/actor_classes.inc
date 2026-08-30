@@ -971,6 +971,58 @@ void hal_fill_dorrie_cap_vtable(void);          /* fills _ZTV9DorrieCap, 31+2 */
 void hal_fill_work_elevator_vtable(void);       /* fills _ZTV12WorkElevator, 32 */
 void hal_fill_rolling_rock_vtable(void);        /* fills _ZTV11RollingRock, 31 */
 void hal_fill_shutter_hmc_vtable(void);         /* fills _ZTV10ShutterHmc, 32 */
+/* ---- run rel0215 wave 3 (lane w3-a2): ov065's TICK TOCK CLOCK cluster ----
+   ELEVEN ids over SEVEN classes and seven 32-slot Platform tables. Every row
+   below was fixed FOUR independent ways and the derivation is in
+   port/ov065_syms.txt's wave-3 section: (1) the arm9 spawn table at
+   0x02090864 + id*4 in extracted/arm9_dec.bin BASED AT 0x02004000; (2) each
+   record's own +4 id halfword out of extracted/overlays/overlay_0065.bin;
+   (3) each factory's literal pool, for which table it stores; (4) each D0's
+   pool, for which table it restores. The registry's own boot check is a fifth
+   -- it compares each row's id against the record's +4 halfword and says so.
+
+   READ THE ID, NEVER THE PREFIX. dsd's BODY names are shifted from 0x0211d3b4
+   on and its SpawnInfo names are not, so TtcRotatingGear_Spawn is id 114's
+   FACTORY while _ZN15TtcRotatingGear* are ids 116/117's BODIES. The fill names
+   below are spelled for the RTTI class (daObjCt*), which is the only spelling
+   right on both halves.
+
+   Ids 110 and 113 have no dsd SpawnInfo name and no dsd _ZTV name: dsd
+   labelled both their tables plain data, so their records are reached by
+   address and their factories are func_ov065_*. They are ov065's own classes
+   all the same -- the RTTI strings at each table[-1] read 16daObjCtMecha03_c
+   and 16daObjCtMecha05_c out of ov065's own image, and ovdata.py's cross pass
+   independently found nine __si_class_type_info records in this overlay where
+   the old header accounted for seven. */
+extern unsigned char TtcRotatingCube_SpawnInfo[];      /* 0x0211cfe8, +4 = 108 */
+void *TtcRotatingCube_Spawn(void);                     /* 0x02119efc */
+extern unsigned char TtcRotatingPrism_SpawnInfo[];     /* 0x0211d004, +4 = 109 */
+void *TtcRotatingPrism_Spawn(void);                    /* 0x02119ebc */
+extern unsigned char data_ov065_0211d0c8[];            /* 0x0211d0c8, +4 = 110 */
+void *func_ov065_0211a45c(void);                       /* 0x0211a45c */
+extern unsigned char TtcConveyorBeltLarge_SpawnInfo[]; /* 0x0211d1c8, +4 = 111 */
+void *TtcConveyorBeltLarge_Spawn(void);                /* 0x0211aae0 */
+extern unsigned char TtcConveyorBeltSmall_SpawnInfo[]; /* 0x0211d1ac, +4 = 112 */
+void *TtcConveyorBeltSmall_Spawn(void);                /* 0x0211ab20 */
+extern unsigned char TTC_MovingBar_SpawnInfo[];        /* 0x0211d290, +4 = 113 */
+void *TTC_MovingBar_Spawn(void);                       /* 0x0211b328 */
+extern unsigned char TtcRotatingGear_SpawnInfo[];      /* 0x0211d374, +4 = 114 */
+void *TtcRotatingGear_Spawn(void);                     /* 0x0211b7b8 */
+extern unsigned char TtcRotatingTriangle_SpawnInfo[];  /* 0x0211d390, +4 = 115 */
+void *TtcRotatingTriangle_Spawn(void);                 /* 0x0211b780 */
+extern unsigned char TtcMovingCubeA_SpawnInfo[];       /* 0x0211d454, +4 = 116 */
+void *TtcMovingCubeA_Spawn(void);                      /* 0x0211bbac */
+extern unsigned char TtcMovingCubeB_SpawnInfo[];       /* 0x0211d470, +4 = 117 */
+void *TtcMovingCubeB_Spawn(void);                      /* 0x0211bb7c */
+extern unsigned char TTC_MovingBeam_SpawnInfo[];       /* 0x0211d544, +4 = 118 */
+void *TTC_MovingBeam_Spawn(void);                      /* 0x0211c040 */
+void hal_fill_ct_rotate_block_vtable(void);  /* 0x0211d028, 32, ids 108/109 */
+void hal_fill_ct_mecha03_vtable(void);       /* 0x0211d0ec, 32, id  110     */
+void hal_fill_ct_mecha04_vtable(void);       /* 0x0211d1ec, 32, ids 111/112 */
+void hal_fill_ct_mecha05_vtable(void);       /* 0x0211d2b4, 32, id  113     */
+void hal_fill_ct_kaitendai_vtable(void);     /* 0x0211d3b4, 32, ids 114/115 */
+void hal_fill_ct_mecha08_vtable(void);       /* 0x0211d494, 32, ids 116/117 */
+void hal_fill_ct_mecha09_vtable(void);       /* 0x0211d568, 32, id  118     */
 /* ---- run linkw wave 5 (lane w5-A): ov063, Big Boo's Haunt's own cast ----
    Ten ids, six tables, first ov063 mount (port/ov063_syms.txt). The id map
    was re-derived from the raw image + the arm9 spawn table and this config
@@ -2314,6 +2366,39 @@ void hal_fill_racing_penguin_vtable(void);            /* _ZTV13RacingPenguin, 31
      hal_fill_rolling_rock_vtable}, \
     {67, "SHUTTER_HMC", ShutterHmc_SpawnInfo, port_factory_shutter_hmc, \
      hal_fill_shutter_hmc_vtable}, \
+    /* ---- run rel0215 wave 3 (lane w3-a2): ov065's Tick Tock Clock cluster, \
+       level 27's own cast. ELEVEN ids, SEVEN tables; the pairs share one \
+       array and one idempotent fill, the ov035 ROTATING_COG shape. All eleven \
+       are registered even though only seven appear in level 27's object table \
+       -- the ov019 rule is that a class's static initialiser runs only if its \
+       class is registered, and the seven Ttc sinits are owned across all \
+       eleven ids. TTC_MOVING_BEAM (118) is registered and its Behavior is a \
+       LOUD FACE: the ROM's body at 0x0211bd8c is in no src/ file and no \
+       delink block, so the class quarantines on its first behaviour frame. \
+       See battery.py's LEVEL_SKIPS row for 27, which is the GOOMBOSS shape \
+       and retires itself the day that body is matched. ---- */ \
+    {108, "TTC_ROTATING_CUBE", TtcRotatingCube_SpawnInfo, \
+     TtcRotatingCube_Spawn, hal_fill_ct_rotate_block_vtable}, \
+    {109, "TTC_ROTATING_PRISM", TtcRotatingPrism_SpawnInfo, \
+     TtcRotatingPrism_Spawn, hal_fill_ct_rotate_block_vtable}, \
+    {110, "TTC_PENDULUM", data_ov065_0211d0c8, \
+     func_ov065_0211a45c, hal_fill_ct_mecha03_vtable}, \
+    {111, "TTC_CONVEYOR_BELT_LARGE", TtcConveyorBeltLarge_SpawnInfo, \
+     TtcConveyorBeltLarge_Spawn, hal_fill_ct_mecha04_vtable}, \
+    {112, "TTC_CONVEYOR_BELT_SMALL", TtcConveyorBeltSmall_SpawnInfo, \
+     TtcConveyorBeltSmall_Spawn, hal_fill_ct_mecha04_vtable}, \
+    {113, "TTC_MOVING_BAR", TTC_MovingBar_SpawnInfo, \
+     TTC_MovingBar_Spawn, hal_fill_ct_mecha05_vtable}, \
+    {114, "TTC_ROTATING_GEAR", TtcRotatingGear_SpawnInfo, \
+     TtcRotatingGear_Spawn, hal_fill_ct_kaitendai_vtable}, \
+    {115, "TTC_ROTATING_TRIANGLE", TtcRotatingTriangle_SpawnInfo, \
+     TtcRotatingTriangle_Spawn, hal_fill_ct_kaitendai_vtable}, \
+    {116, "TTC_MOVING_CUBE_A", TtcMovingCubeA_SpawnInfo, \
+     TtcMovingCubeA_Spawn, hal_fill_ct_mecha08_vtable}, \
+    {117, "TTC_MOVING_CUBE_B", TtcMovingCubeB_SpawnInfo, \
+     TtcMovingCubeB_Spawn, hal_fill_ct_mecha08_vtable}, \
+    {118, "TTC_MOVING_BEAM", TTC_MovingBeam_SpawnInfo, \
+     TTC_MovingBeam_Spawn, hal_fill_ct_mecha09_vtable}, \
     /* ---- run linkw wave 5 (lane w5-A): ov063, Big Boo's Haunt's cast ---- */ \
     {209, "BOO", Boo_SpawnInfo, Boo_Spawn, hal_fill_boo_vtable}, \
     {210, "BIG_BOO", BigBoo_SpawnInfo, BigBoo_Spawn, hal_fill_boo_vtable}, \

@@ -311,6 +311,47 @@ ACTOR_EXT_SLOT_AUTHORITY = {
     # the stack, which is report 7447e46c again on a second class.
     # Evidence: ...runs/rel0215/out/cleanup-w2/
     ('_data_ov036_02113f9c', 32): 1,
+    # ------------------------------------------------------------------
+    # run rel0215 wave 3, lane w3-a2. THE SEVEN TICK TOCK CLOCK TABLES, ov065.
+    # Every Ttc class is Platform-derived and its table closes on the slot-31
+    # extension seat, so seating the cluster put seven new (table, 31) pairs in
+    # front of this checker at once. Both halves the header demands were
+    # measured rather than carried from the eighteen rows above.
+    #
+    # HALF ONE, PER TABLE: the slot-31 WORD, read out of
+    # extracted/overlays/overlay_0065.bin at base 0x02115ee0 -- the shipped
+    # image, not a dsd export, whose relocated words would read as live
+    # pointers. All seven hold 0x020ee55c _ZN8Platform4KillEv, an `Ev` method
+    # with no argument past its receiver. The slot word's own address is quoted
+    # per row. Slot 30 of each is 0x020100dc
+    # (Actor::OnAimedAtWithEggReturnVec), which is what makes 31 an EXTENSION
+    # slot rather than part of the Actor tail.
+    #
+    # HALF TWO, THE DISPATCH SITES, re-swept in THIS lane's own binary rather
+    # than inherited -- the seat adds code, and a new dispatch site would not
+    # announce itself. Matching both indirect forms over
+    # `dumpbin /disasm:nobytes walk_window.exe` finds TWENTY-TWO transfers
+    # through vtable offset 0x7c, 14 calls and 8 tail jumps, which is the same
+    # count and the same split the cleanup-w2 sweep reports. NO ARGUMENT PUSH
+    # IS LIVE AT ANY OF THE TWENTY-TWO: a push older than an intervening call
+    # is consumed by that call and retired by its `add esp,N` before the
+    # transfer, and a `push ebp/esi/edi/ebx` is a prologue frame save rather
+    # than an argument. So a zero pop is checked here, not assumed, and
+    # ?ov65_kill@@YIHPAX0@Z's __fastcall(void*, void*) / `ret 0` shape is right
+    # for all seven.
+    #
+    # ONLY THESE SEVEN ARE LISTED. The same sweep would clear other lanes'
+    # slot-31 rows in abicheck_extslot_baseline.txt; retiring another lane's
+    # debt is that lane's call, and a blanket slot-31 rule is the shortcut this
+    # header forbids.
+    # Evidence: ...runs/rel0215/out/w3-a2/slot31_dispatch_sweep.txt
+    ('__ZTV20daObjCtRotateBlock_c', 31): 0,   # ov065 @0x0211d0a4, ids 108/109
+    ('_data_ov065_0211d0ec', 31): 0,          # ov065 @0x0211d168, id  110
+    ('__ZTV16daObjCtMecha04_c', 31): 0,       # ov065 @0x0211d268, ids 111/112
+    ('_data_ov065_0211d2b4', 31): 0,          # ov065 @0x0211d330, id  113
+    ('__ZTV18daObjCtKaitendai_c', 31): 0,     # ov065 @0x0211d430, ids 114/115
+    ('__ZTV16daObjCtMecha08_c', 31): 0,       # ov065 @0x0211d510, ids 116/117
+    ('__ZTV16daObjCtMecha09_c', 31): 0,       # ov065 @0x0211d5e4, id  118
 }
 
 # calls that do not come back: the thunk's own `ret` is unreachable

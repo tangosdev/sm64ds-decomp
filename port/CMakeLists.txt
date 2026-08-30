@@ -2706,6 +2706,110 @@ foreach(line IN LISTS SLICE_W5B_LINES)
     list(APPEND SLICE_W5B_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# run rel0215 wave 3, lane w3-a2: ov065's TICK TOCK CLOCK cluster -- eleven
+# ids, seven classes, seven 32-slot Platform tables, seven static initialisers.
+# Same reader shape, one owner. The cast map is in port/ov065_syms.txt's wave-3
+# section and the fills in hal/actor_classes_ov065.cpp.
+# ONE TU OF THIS SLICE GOES THROUGH hostgen, AND THE REST DO NOT.
+#
+# src/_ZN15TtcRotatingCube13InitResourcesEv.cpp re-declares func_ov065_021198a0
+# and func_ov065_0211990c `(void*)` inside its own extern "C" block, while
+# include/decl_common.h:2777-2778 already declares both `(char*)` inside its.
+# One register on the ROM; to MSVC it is two C2733s and then two C2664s at the
+# call sites, which bind to the header's spelling. Neither src/ nor include/ may
+# be edited for the port, so tools/hostgen.py's HEADER_SHADOW hides the HEADER's
+# two declarations across its own include and leaves every definition alone --
+# the _ZN5Whomp13InitResourcesEv entry's shape exactly. The emitted file keeps
+# the symbol name, so the TU still counts as LINKED.
+#
+# The two colliding names are themselves on this slice and BOTH define
+# themselves `(void*)`, which is the other half of why the header is the odd one
+# out here rather than the TU.
+set(SLICE_W3A_HOSTGEN_SYMS _ZN15TtcRotatingCube13InitResourcesEv)
+set(SLICE_W3A_HOSTGEN_GEN "")
+foreach(sym IN LISTS SLICE_W3A_HOSTGEN_SYMS)
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp"
+                "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND SLICE_W3A_HOSTGEN_GEN "${sym_out}")
+endforeach()
+
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3a.txt" SLICE_W3A_LINES)
+set(SLICE_W3A_SOURCES "")
+foreach(line IN LISTS SLICE_W3A_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    # the one TU hostgen emits: take the generated copy, never the src/ one,
+    # or MSVC gets the unshadowed header and the four errors come back
+    if(line STREQUAL "src/_ZN15TtcRotatingCube13InitResourcesEv.cpp")
+        continue()
+    endif()
+    list(APPEND SLICE_W3A_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SLICE_W3A_SOURCES ${SLICE_W3A_HOSTGEN_GEN})
+
+# ---- THE SIX PER-SOURCE PLACEHOLDER BINDINGS, AND WHY THEY ARE NOT OPTIONAL
+#
+# VT0/VT1/G0/G1 are the resolver's shared-header placeholders. They are NOT
+# undefined symbols that would fail a link: hal/actor_vtables.cpp DEFINES
+# `int VT0[20]` and hal/cxx_aliases.cpp alternatename's bare _G0 onto
+# data_020a0eac (the game heap) and bare _G1 onto data_ov002_0210e05c
+# (SignPost's collision file). So a Ttc TU that spells VT0 and gets no -D LINKS
+# CLEAN and writes hal/actor_vtables.cpp's dummy array as its object's vptr,
+# and nothing in the build says a word. That is the failure mode these six
+# lines exist to remove, and it was found by disassembling the four bodies
+# rather than by a link error.
+#
+# Every target below was read out of the body's OWN literal pool in
+# extracted/overlays/overlay_0065.bin, and each is confirmed from the other
+# side by the sinit that BUILDS the pair (c76c writes 0211d88c.., c890 writes
+# d904.., c9b8 writes d97c.., ca74 writes d9cc..).
+#
+# THE RENAMES ARE LANE-OWNED NAMES, not the mount names directly, which is the
+# ov035 remedy for a C2372: include/decl_common.h already declares
+# data_ov065_0211d904 / _0211d90c as `extern char` scalars and _0211d97c /
+# _0211d98c as `extern char []`, so `-DG0=data_ov065_0211d904` would rewrite
+# that header's own line into a redefinition at a different type. The lane-owned
+# names are declared nowhere and are bound by /alternatename in
+# hal/actor_classes_ov065.cpp. Nothing is host-copied and all four TUs stay
+# matched.
+#
+# TWO OF THESE FILES ARE THE SAME SOURCE TEXT NEEDING DIFFERENT ANSWERS.
+# src/func_ov065_0211a15c.c and src/func_ov065_0211ad04.c are character for
+# character identical and their literal pools hold different pairs
+# (0211d88c/894 against 0211d904/90c). One shared define would silently break
+# one of the two, which is why this is per source.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov065_02119f88.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=_ZTV16daObjCtMecha03_c;VT1=_ZTV10dBgActor_c")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov065_0211abac.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=_ZTV16daObjCtMecha05_c;VT1=_ZTV10dBgActor_c")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov065_0211a15c.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=port_ov065_m03_file0;G1=port_ov065_m03_file1")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov065_0211ad04.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=port_ov065_m05_file0;G1=port_ov065_m05_file1")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN15TtcRotatingGear16CleanupResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=port_ov065_m08_file0;G1=port_ov065_m08_file1")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN14TtcMovingCubeA16CleanupResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=port_ov065_m09_file0;G1=port_ov065_m09_file1")
+
 # run linkw wave 5, lane w5-A: Big Boo's Haunt's cast (ov063 + host copies).
 # See the header of port/slice_w5a.txt for the six exclusions and the four
 # byte-verified host copies.
@@ -11739,6 +11843,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${SLICE_W9HARVEST_SOURCES}
     ${SLICE_W5C_SOURCES} ${SQRTUNIT_GEN} ${OV70GEN}
     ${SLICE_W5B_SOURCES} ${SLICE_W5A_SOURCES} ${SLICE_W6D_SOURCES}
+    ${SLICE_W3A_SOURCES}
     ${SLICE_W7C_SOURCES}
     hal/actor_classes_ov022.cpp ${SLICE_W8PACKS_SOURCES}
     hal/actor_classes_ov031_w10.cpp ${SLICE_W10A_SOURCES}
@@ -11941,6 +12046,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE_W9HARVEST_SOURCES}
     ${SLICE_W5C_SOURCES} ${SQRTUNIT_GEN} ${OV70GEN}
     ${SLICE_W5B_SOURCES} ${SLICE_W5A_SOURCES} ${SLICE_W6D_SOURCES}
+    ${SLICE_W3A_SOURCES}
     ${SLICE_W7C_SOURCES}
     hal/actor_classes_ov022.cpp ${SLICE_W8PACKS_SOURCES}
     hal/actor_classes_ov031_w10.cpp ${SLICE_W10A_SOURCES}
@@ -12179,6 +12285,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE_W9HARVEST_SOURCES}
     ${SLICE_W5C_SOURCES} ${SQRTUNIT_GEN} ${OV70GEN}
     ${SLICE_W5B_SOURCES} ${SLICE_W5A_SOURCES} ${SLICE_W6D_SOURCES}
+    ${SLICE_W3A_SOURCES}
     ${SLICE_W7C_SOURCES}
     hal/actor_classes_ov022.cpp ${SLICE_W8PACKS_SOURCES}
     hal/actor_classes_ov031_w10.cpp ${SLICE_W10A_SOURCES}

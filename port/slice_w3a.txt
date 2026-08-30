@@ -1,15 +1,39 @@
 # run rel0215 wave 3 (lane w3-a): ov065's Ttc CLUSTER.
 #
 # ###########################################################################
-# ##  THIS SLICE IS **NOT WIRED**. NOTHING IN port/CMakeLists.txt READS IT. ##
+# ##  WIRED, run rel0215 wave 3 (lane w3-a2): port/CMakeLists.txt READS IT. ##
 # ###########################################################################
 #
-# It is a complete, checked recipe that MUST NOT be turned on until the
-# per-loaded-level re-patch seat described below exists. Wiring it as it stands
-# reproduces the wave-17 failure exactly: eleven Ttc ids spawn on level 27 and
-# hand MovingMeshCollider::SetFile a DS pointer as their CLPS_Block. Two of
-# them do that SILENTLY. Read correction 5 in port/ov065_syms.txt before
-# touching the CMake side, and see the end of this header for the measurement.
+# THE BLOCKER SECTION BELOW IS KEPT AS THE RECORD AND ITS VERDICT IS STALE.
+# It says the per-loaded-level seat does not exist. It did: run linkw wave 18
+# landed port/hal/ttc_level_data_seat.cpp (commit a7e056087), hal/level_boot.cpp
+# already called it from port_mount_row_lvl27, and the BASELINE level-27 run on
+# this lane's own base printed all eight closures with their readbacks verified
+# before a line of this lane was written. That section measured ovdata.py's
+# CROSS PASS, which does refuse all twelve exactly as it says; it did not check
+# for a HAND SEAT, which is the other route and the one ovdata.py keeps its
+# HAND_SEATED table for. An empty cross pass is not evidence that a word is raw.
+#
+# What was genuinely missing was one DIRECTION. The wave-18 seat only ever
+# PATCHED: hung off level 27's thunk alone it could not be told about any other
+# level, so once Tick Tock Clock had been entered the eight words named ov035
+# for the rest of the process, across a warp anywhere else and back. Lane w3-a2
+# moved the call into port_level_mount_at, on both of its paths, and made it
+# two-valued -- ov035's copy on level 27, the raw ROM address everywhere else.
+# The generalisation that looks right, resolving through the now-loaded level's
+# own mount, is WRONG, and it fails two different ways. Swept over the 52
+# overlays sharing the level window base for target 0x02112138: ov035 owns the
+# block, and of the other 51, twenty-eight CONTAIN the address and every one of
+# them reads something that is not a CLPS block there (the readback aborts),
+# while twenty-three do not reach it at all (at() returns 0). Level 33 is in
+# the second group -- it is ov041, whose window ends 0x3f8 short. Releasing is
+# safe by a second measurement: all fifty mounted levels were run and only
+# level 27's object table names any of ids 108..118.
+#
+# PROOF, one process, SM64DS_WARP_SEQ=33@120,27@240 over 400 frames, rc 0:
+# SEATED on 27 (8 written, readbacks 'CLPS' entrySize=8 count=1 and frames=91),
+# RELEASED on 33 (8 written, every word back to its ROM value), SEATED again on
+# the cache-hit re-entry to 27.
 #
 # Everything else here -- the cast map, the eleven ids, the seven vtables, the
 # language sweep, the four G0/G1 decodes, the two C2372 rulings -- is measured
@@ -37,8 +61,9 @@
 # THEY ARE NOT SUFFICIENT. tools/ovdata.py's cross pass still refuses all
 # twelve, by design, because its ambiguity test is on WINDOWS and ov065 is an
 # actor overlay co-resident with every level overlay -- so every level's whole
-# mount contests every target. Measured on cc10acd4e, from the build's own
-# summary: "cross: 312 pointers rebased across 121 mounts, 9542 left raw (136
+# mount contests every target. Measured on cc10acd4e, and REPRODUCIBLE FROM
+# THE BUILD'S OWN OUTPUT with no extra tool -- the two "cross:" lines the mount
+# pass prints: "cross: 312 pointers rebased across 121 mounts, 9542 left raw (136
 # into a window contested by a co-resident mount, ...)" and "cross: ov065 9
 # pointers rebased onto another mount" -- those nine being ov065's typeinfo
 # words into ov002 gaps (build/port/host-src/ov_cross.c:449-457), with no ov035
@@ -124,11 +149,13 @@
 # `_port_ov065_m08_file1`. Both were checked against the link's own unresolved
 # list rather than left to the derivation.
 #
-# The eight ov065 TUs still unlinked after this lane are NOT this lane's:
+# The EIGHT ov065 TUs still unlinked after this lane are NOT this lane's --
+# the enumeration was always right and only the count above it said five:
 # Snufit/Swoop/Dorrie::Behavior and func_ov065_0211691c/02117944 are wave-5
-# host copies, and Snufit/Swoop/Dorrie::Render are WAVE 19's host copies over a
-# real c0000005 (the ModelAnim slot-5 collision, port/unmatched/
-# W19_Slot5_Renders.cpp). All three sit on port/slice_w5b.txt already.
+# host copies (five), and Snufit/Swoop/Dorrie::Render are WAVE 19's host copies
+# over a real c0000005 (three; the ModelAnim slot-5 collision,
+# port/unmatched/W19_Slot5_Renders.cpp). All eight sit on port/slice_w5b.txt
+# already.
 #
 # THAT TRAP DOES NOT REACH THIS CLUSTER, and it was checked rather than
 # assumed. Every Ttc Render is the same six-virtual local shadow dispatched at

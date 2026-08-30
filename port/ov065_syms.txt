@@ -316,6 +316,67 @@
 # per-level idempotency cache and .dsstate bracketing rule
 # (level_boot.cpp:1660-1730) are the contract any such seat has to meet.
 #
+# ============================================================================
+# RUN REL0215 WAVE 3 (lane w3-a2): TWO CORRECTIONS TO THE ABOVE, MEASURED
+# ============================================================================
+#
+# ---- THE SEAT EXISTS. CORRECTION 5 ABOVE IS STALE. -------------------------
+# "THIS LANE DID NOT BUILD THAT SEAT" is right about the lane and wrong about
+# the tree. port/hal/ttc_level_data_seat.cpp landed in run linkw wave 18
+# (commit a7e056087), closes all eight mounted data words onto ov035 with a
+# ROM-value check and a per-block readback, and was already WIRED -- called
+# from port_mount_row_lvl27 in hal/level_boot.cpp. The BASELINE level-27 run on
+# cons tip 2943efec5, before this lane changed a line, prints:
+#
+#   [ttc-seat] 8 level-window reads closed onto ov035 (8 newly seated,
+#   0 already), all readbacks verified
+#
+# Correction 5 measured ovdata.py's CROSS PASS, which does refuse all twelve
+# exactly as it says, and inferred from that that nothing closed them. A HAND
+# SEAT is the other route and ovdata.py has a name for it: HAND_SEATED, the
+# module-scope table of "sites a hand seat already owns". The cross pass being
+# empty is not evidence that a word is raw.
+#
+# ---- WHAT WAS ACTUALLY MISSING, and this lane built it ---------------------
+# The wave-18 seat only ever PATCHED. Hanging off level 27's thunk alone, it
+# had no way to be told about any other level, so once Tick Tock Clock had been
+# entered the eight words named ov035 for the rest of the process, across a
+# warp anywhere else and back. The seat now runs from port_level_mount_at for
+# EVERY level on both of its paths and is two-valued: ov035's copy on level 27,
+# the raw ROM address everywhere else.
+#
+# The obvious generalisation -- resolve each target through the now-loaded
+# level's own mount, PortLevelDesc::at(rom) -- is WRONG two different ways.
+# Swept over the 52 overlays sharing the level window base, for target
+# 0x02112138: ov035 owns the block; of the other 51, TWENTY-EIGHT contain the
+# address and all twenty-eight read something that is not a CLPS block there,
+# so the readback aborts, and TWENTY-THREE do not reach it at all, so at()
+# returns 0 and there is nothing to seat. Level 33 is in the second group and
+# is ov041 (ov033 is level 25), whose window ends 0x3f8 short of the target.
+# These are Tick Tock Clock's own resource blocks, not a window slot every
+# level fills in. Releasing is safe by a second measurement: all fifty mounted
+# levels were run and only level 27's object table names any of ids 108..118.
+#
+# ---- THE TWO MECHA TABLES COME OUT OF THE MOUNT ---------------------------
+# data_ov065_0211d0ec and data_ov065_0211d2b4 were in the list above. Wave 3's
+# correction 2 established what they are: ids 110's and 113's VTABLES, 32 slots
+# each. "mounting a vtable is the one thing the rule forbids" -- a mounted
+# vtable hands a factory DS code addresses -- which is why the five Ttc tables
+# dsd DID label _ZTV were left out. These two were in only because dsd labelled
+# them plain data, so the same rule now takes them out. They are host arrays
+# _ZTV16daObjCtMecha03_c / _ZTV16daObjCtMecha05_c in
+# hal/actor_classes_ov065.cpp, filled slot by slot.
+#
+# NOTHING READS THE PROLOGUE THE GAP NOW COVERS. Removing them widens the gaps
+# at 0x0211d0e4 and 0x0211d2ac over each table's Itanium prologue
+# (offset-to-top + typeinfo pointer). Measured against ov065's complete
+# relocation list: all 25 relocations naming any of the seven Ttc tables name
+# the TABLE ADDRESS (0x0211d0ec x3, 0x0211d2b4 x3, and 19 more over the other
+# five); not one names a prologue word. No body in the cluster performs a cast
+# or reads vptr[-1], so there is no reloc-invisible route either. This is the
+# same shape as the four HMC host tables above, which are bare arrays with no
+# prologue and have shipped that way since wave 5.
+#
 # THIS LANE DID NOT BUILD THAT SEAT. It is named here with its mechanism, its
 # measurement and its hook so the next lane starts from the real blocker
 # instead of re-deriving a removed one. The cast map above is complete and
@@ -341,11 +402,11 @@ data_ov065_0211cfa4 data_ov065_0211cfa8 data_ov065_0211cfac
 data_ov065_0211cfb8 data_ov065_0211cfd0 data_ov065_0211cfd4
 data_ov065_0211cfd8 TtcRotatingCube_SpawnInfo:0x1c TtcRotatingPrism_SpawnInfo:0x1c
 data_ov065_0211d0a8 data_ov065_0211d0b4 data_ov065_0211d0c8:0x1c
-data_ov065_0211d0ec data_ov065_0211d16c data_ov065_0211d174
+data_ov065_0211d16c data_ov065_0211d174
 data_ov065_0211d180 data_ov065_0211d194 data_ov065_0211d198
 data_ov065_0211d19c TtcConveyorBeltSmall_SpawnInfo:0x1c TtcConveyorBeltLarge_SpawnInfo:0x1c
 data_ov065_0211d26c data_ov065_0211d270 data_ov065_0211d27c
-TTC_MovingBar_SpawnInfo:0x1c data_ov065_0211d2b4 data_ov065_0211d334
+TTC_MovingBar_SpawnInfo:0x1c data_ov065_0211d334
 data_ov065_0211d338 data_ov065_0211d344 data_ov065_0211d35c
 data_ov065_0211d360 data_ov065_0211d364 TtcRotatingGear_SpawnInfo:0x1c
 TtcRotatingTriangle_SpawnInfo:0x1c data_ov065_0211d434 data_ov065_0211d440
