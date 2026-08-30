@@ -43,7 +43,10 @@
  *
  *   src/func_ov018_02111b3c.c                 (ov018, calls ClosestPlayer() no arg)
  *   src/func_ov020_02111fc4.cpp               (ov020, calls ClosestPlayer() no arg)
- *   src/func_ov032_02111350.c                 (ov032, calls ClosestPlayer() no arg)
+ *   [RETIRED, run rel0215 wave 2 lane cast-sweep2: ov032 is hosted now and this
+ *    reader went live. Host copy in port/unmatched/Bubba_ChaseGate.cpp; the src
+ *    TU is out of port/slice_sweep2_ov032.txt.]
+ *   src/func_ov032_02111350.c                 (ov032, HOSTED -- Bubba_ChaseGate.cpp)
  *   src/func_ov060_02111f08.c                 (ov060, calls ClosestPlayer() no arg)
  *   src/func_ov066_02119398.cpp               (ov066, calls ClosestPlayer() no arg)
  *   src/unnamed/ov063/func_ov063_02117650.c   (ov063, calls ClosestPlayer() no arg)

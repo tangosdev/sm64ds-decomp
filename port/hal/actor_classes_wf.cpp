@@ -579,7 +579,15 @@ void *_ZTV14KnockDownPlank[32];
    be an alias onto the __cdecl extern-C bridge (calling-convention mismatch, it
    would read this=0), so it gets a real __thiscall shim in
    port/unmatched/KnockDownPlank_Behavior.cpp. */
-#pragma comment(linker, "/alternatename:_data_ov034_02114538=_data_ov015_02114538")
+/* RETIRED, run rel0215 wave 2 lane cast-sweep2: this routing is now a
+   per-source -D on src/_ZN14KnockDownPlank13InitResourcesEv.cpp in
+   port/CMakeLists.txt. The ov034 mount that lane adds DEFINES
+   data_ov034_02114538 -- it is the Wiggler's eleven-entry state table --
+   and an /alternatename whose LHS is defined is inert, so the alias stopped
+   routing and alternatename_guard said so at the link. The wave-5 R1/R2
+   recipe: delete the dead directive at its own site, move the routing to
+   the reader.
+   was: /alternatename:_data_ov034_02114538=_data_ov015_02114538 */
 #pragma comment(linker, "/alternatename:?data_ov015_02114534@@3PADA=_data_ov015_02114534")
 #pragma comment(linker, "/alternatename:_func_02012664=__ZN5Sound9PlayBank3EjRK7Vector3")
 /* Init/Clean/Render are real C++ methods (the .cpp defines KnockDownPlank::<n>),

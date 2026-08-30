@@ -1,0 +1,120 @@
+# run rel0215 wave 2, lane cast-sweep2: OV055'S OWN CAST (level 47, Luigi's key
+# arena, data/stage/ex_luigi). Overlay 4 of 4 in this lane.
+#
+# The three-way source inventory:
+#     delinked complete to a src/ TU   12
+#     present but NONMATCHING-bannered  0
+#     MISSING                           0
+#     present but NOT DELINKED          1   src/_ZN11MirrorLuigiD1Ev.cpp
+#                                      --
+#                                      13  == config/arm9/overlays/ov055/
+#                                             symbols.txt's kind:function count
+#
+# TEN of the thirteen are listed below. THREE ARE HELD OUT:
+#
+#   src/func_ov055_021112c4.cpp         -> port/unmatched/MirrorLuigi_StateEnter.cpp
+#   src/_ZN11MirrorLuigi8BehaviorEv.cpp -> port/unmatched/MirrorLuigi_Behavior.cpp
+#   src/_ZN11MirrorLuigiD1Ev.cpp        -> ml_d1 in hal/actor_classes_ov055.cpp
+#
+# The first two are the mwcc pointer-to-member state machine, the smallest
+# instance of it in the tree: ONE sixteen-byte cell at data_ov055_02111b70, two
+# 8-byte {function, delta} pairs, an ENTER half func_ov055_021112bc (`return 1`)
+# and a TICK half func_ov055_02111288 (mirror the player's X and Y angle -- the
+# class's whole point). Both form a PMF on an INCOMPLETE class, where MSVC's
+# representation is the "unknown inheritance" form and not the ROM's pair. Same
+# reasoning as port/unmatched/Ukiki_StateEnter.cpp, Bubba_StateEnter.cpp and
+# Wiggler_StateEnter.cpp; here the cell pointer is at +0x1d8 and the enter half
+# takes an extra argument the setter passes through.
+#
+# The third is the //cpp REAL-DESTRUCTOR shape, the one port/slice_sweep1_ov024
+# .txt holds src/_ZN10PyramidTagD1Ev.cpp out for. src/_ZN11MirrorLuigiD1Ev.cpp
+# declares its own local `struct ShadowModel/Model/ModelAnim/Actor` and calls
+# `((ShadowModel *)(c + 0x188))->~ShadowModel();` and three more like it, so
+# MSVC generates THISCALL calls to ??1ShadowModel@@QAE@XZ and friends -- names
+# the port defines only as CDECL C bodies (_ZN11ShadowModelD1Ev, ...). Aliasing
+# across that is a receiver-shape mismatch, not a spelling one. It is also the
+# ONE ov055 function with no delink block, so dsd never counted it either.
+# THE THUNK IN hal/actor_classes_ov055.cpp IS INSTRUCTION-VERIFIED against the
+# ROM body (0x021111a0, 0x58 bytes), disassembled from
+# extracted/overlays/overlay_0055.bin:
+#     021111a0  push {r4,lr}
+#     021111a4  mov  r4, r0
+#     021111a8  ldr  ip, =0x02111ae0        (pool 0x021111f0) the OWN table
+#     021111ac  ldr  r3, =0x02015a2c        (pool 0x021111f4) TextureSequence D1
+#     021111b0  add  r0, r4, #0x1b0        the two TextureSequences
+#     021111b4  mov  r1, #2   021111b8  mov r2, #0x14
+#     021111bc  str  ip, [r4]              install the own table
+#     021111c0  bl   0x0207328c            __destroy_arr
+#     021111c4  add  r0, r4, #0x188 ; bl ShadowModel::~D1
+#     021111cc  add  r0, r4, #0x138 ; bl Model::~D1
+#     021111d4  add  r0, r4, #0xd4  ; bl ModelAnim::~D1
+#     021111dc  mov  r0, r4        ; bl Actor::D2
+#     021111e4  mov  r0, r4  /  return
+# A statement-for-statement transcription, not a re-derivation, and the .cpp
+# says the same thing in C++. Its sibling _ZN11MirrorLuigiD0Ev.c is a plain .c
+# with C names and rides from src unchanged.
+#
+# Nothing else is refused: no asm-void block, no scheduler, no card loader, no
+# wireless wrapper, no r0 ride-through (MirrorLuigi_Spawn.cpp names its own
+# receiver for Actor::C2), and NO ModelAnim slot-5 collision. Render's
+# `((Sub *)&mModel)->m5(0)` dispatches slot 5 over the plain MODEL at +0x138
+# (ROM 0x021114cc: add r0,r5,#0x138; ldr r2,[r0]; ldr r2,[r2,#0x14]; blx r2),
+# and _ZTV5Model[5] is dual-filled in hal/cxxname_bridge.cpp -- the Tree/ov013
+# case, the same one ov032's HUGE_COVER and ov033's pair ride from src on.
+# The ModelAnim at +0xd4 is drawn through a DIRECT _ZN5Model6RenderEPK7Vector3
+# call, not through a slot.
+#
+# NO IDENTITY SHIFT AND NO RESOLVER PLACEHOLDER. _ZTV11MirrorLuigi is on the
+# right class (RTTI "9daLuigi_c", base typeinfo 0x0208e390 = Actor's), and no
+# ov055 TU spells VT0/VT1/VT2 or G0/G1. NO PER-SOURCE -D TRAVELS WITH THIS
+# SLICE -- the only overlay in this lane that needs none.
+#
+# ONE NAME THIS MOUNT DEFINES IS SPELLED BY ANOTHER OVERLAY'S TU, and it is
+# ALREADY ROUTED: src/_ZN9ShipWater13InitResourcesEv.c (ov017, LINKED) spells
+# data_ov055_02111a94 for OV017's object at that shared-window address, and the
+# wave-1 cast-sweep1 lane gave it a per-source -D when it seated ov017 --
+# foreseeing exactly this mount. A -D is not an /alternatename and is not
+# defeated by a definition.
+#
+# THE MEASURED CLOSURE GAP COSTS NO SLICE LINE, and it is the interesting kind.
+# MirrorLuigi::InitResources calls five arm9 methods by their FRIENDLY
+# Class_Method names -- ShadowModel_InitCylinder, ModelAnim_SetAnim,
+# TextureSequence_Prepare, TextureSequence_SetFile, Animation_LoadFile -- which
+# include/decl_common.h declares and nothing defines, so the first link failed
+# on all five. All five matched TUs were ALREADY on a slice
+# (port/slice_gate7.txt and port/slice_gate10.txt) and being compiled, and all
+# five had been stripped by /OPT:REF because nothing in the link referenced
+# them: the map held zero of the five Itanium symbols. Binding each friendly
+# name onto its Itanium one in hal/actor_classes_ov055.cpp is what makes the
+# bodies reachable; each ROM arm_call was read out of
+# config/arm9/overlays/ov055/relocs.txt, not matched by name.
+# The linkage COUNT does not move for those five -- linkage.py keys on the
+# object, and the objects were already in the link -- so this is a correctness
+# gain, not a yield one.
+# Everything else was already there: Actor, ActorBase, Model, ModelAnim,
+# ShadowModel, TextureSequence, SharedFilePtr, Memory, the array
+# construct/destroy helpers, func_ov002_020e496c and func_ov002_020e4374.
+#
+# ONE SLICED TU DOES NOT REACH THE MAP. src/func_ov055_02111264.c (set the
+# mirror flag to 2 and play sound 0x179) has NO caller in the seated set: its
+# only ROM caller is an arm_call from ov063 at 0x02118004, whose module column
+# reads overlays(27,55) -- an unresolved cross-overlay ambiguity in a pack this
+# lane does not seat. So /OPT:REF strips it and linkage counts 9 of 13 rather
+# than 10. It stays on the slice: it is a matched body, it compiles, and it
+# becomes live the day that ov063 caller is seated.
+
+# ---- the class -----------------------------------------------------------
+src/MirrorLuigi_Spawn.cpp
+src/_ZN11MirrorLuigiD0Ev.c
+src/_ZN11MirrorLuigi13InitResourcesEv.cpp
+src/_ZN11MirrorLuigi16CleanupResourcesEv.c
+src/_ZN11MirrorLuigi16OnPendingDestroyEv.c
+src/_ZN11MirrorLuigi6RenderEv.cpp
+
+# ---- the two state halves and the helper that enters the mirror ----------
+src/func_ov055_021112bc.c
+src/func_ov055_02111288.c
+src/func_ov055_02111264.c
+
+# ---- the static initialiser ----------------------------------------------
+src/__sinit_ov055_021118d4.c

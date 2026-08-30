@@ -1,0 +1,276 @@
+# run rel0215 wave 2 (lane cast-sweep2): ov034's ONE CLASS, per symbol.
+# Overlay 2 of 4 in this lane.
+#
+# ov034 is a LEVEL overlay (level 26, Tiny-Huge Island's CAVE,
+# data/stage/tibi_deka_in) and is already mounted WHOLE in PORT_LEVEL_OVERLAYS.
+# This is the SECOND mount of the same overlay, per symbol; --whole emits
+# port_ov034_image/_patch/_at and nothing by name while --from-list --pack
+# emits the named arrays plus port_ov034_syms_patch. Same dual-mount shape as
+# ov012/ov013/ov024/ov025/ov032/ov033/ov035/ov045/ov052/ov056.
+#
+# delinks.txt sections, base 0x021111a0:
+#   .text   0x021111a0..0x02113820   .rodata 0x02113820..0x021138ec
+#   .init   0x021138ec..0x02114078   .ctor   0x02114078..0x0211407c
+#   .data   0x02114080..0x02114620   .bss    0x02114620..0x021148e0
+# Every raw byte below was read out of extracted/overlays/overlay_0034.bin,
+# never the dsd export (T4). BASE PROOF: _ZN7WigglerD1Ev (0x021111a0) and
+# Wiggler_Spawn (0x021136a4) both read e92d4010 = push {r4,lr};
+# _ZN7Wiggler13InitResourcesEv (0x0211323c) and _ZN7Wiggler16CleanupResourcesEv
+# (0x02112a5c) both read e92d4ff0 = push {r4-r11,lr}.
+#
+# ==== THE CAST IS ONE CLASS, BOTH ATTRIBUTION ROUTES ======================
+#
+#   id   arm9 slot   SpawnInfo   word[0]     factory        +4   x on L26
+#   248  0x02090c44  0x02114498  0x021136a4  Wiggler_Spawn  248   1
+#
+# The record's word[0] lands inside ov034 [0x021111a0, 0x021148e0) and
+# relocates to the overlay's own factory; word[1]'s low halfword reads 248, the
+# id the arm9 spawn-table slot was reached from. BOTH routes are required --
+# the level overlays share the load window at 0x021111a0 and id 248's candidate
+# list reads overlays(14,15,16,20,21,22,34). Run over every candidate, exactly
+# one overlay satisfies both, and it is ov034.
+#
+# Level 26 spawns 35 actors and skips 1 on tip 3b4863d9a. That one is this
+# class, so this seat takes level 26 to ZERO skipped.
+#
+# ==== NO IDENTITY SHIFT HERE, AND THE RTTI SAYS SO ========================
+#
+# Unlike ov032, ov033 and ov035, dsd's names in this overlay are on the right
+# class. _ZTV7Wiggler is 0x021144bc, its typeinfo at vtable[-1] is 0x0211445c
+# and the name string at 0x02114478 reads "12daHanachan_c" -- Hanachan is the
+# ROM's own word for the Wiggler. Wiggler_Spawn installs 0x021144bc, and every
+# _ZN7Wiggler* method sits in that table's own slots. Checked, not assumed.
+#
+# _ZTV7Wiggler  0x021144bc, THIRTY-ONE slots, ends 0x02114538.
+#   dsd's next-symbol landing reads 0x7c = 31 slots, which is RIGHT -- the only
+#   width in this lane dsd got right, because the state table starts exactly
+#   where the vtable ends.
+#   Slot 30 is 0x020100dc Actor::OnAimedAtWithEggReturnVec, the last Actor slot,
+#   and there is no slot 31: a Wiggler is an Enemy, which is a plain Actor and
+#   not a Platform. Six own slots, the usual 0/3/6/9/16/17.
+#   The table is EXCLUDED from this mount and hosted as an array
+#   hal/actor_classes_ov034.cpp fills.
+#
+# ==== THE ELEVEN-STATE POINTER-TO-MEMBER TABLE, AND ITS T3 PIN ============
+#
+# data_ov034_02114538 is an ELEVEN-ENTRY table of TWENTY-byte records:
+#   +0x00  the ENTER pmf, an 8-byte mwcc {function, delta} pair
+#   +0x08  the TICK pmf,  the same shape
+#   +0x10  a pointer to the state's own NAME STRING
+# The two pmfs are ZERO in .data and filled by __sinit_ov034_021138ec out of
+# twenty-two 8-byte source pairs at 0x02114358..0x02114408. The ROM's own names,
+# read out of the +0x10 pointers:
+#
+#   idx  name          enter        tick
+#    0   DEMOWAIT      0x02112484   0x02112348
+#    1   DEMOCALL      0x02112330   0x02112284
+#    2   MOVE_STOP     0x02112270   0x021120ac
+#    3   MOVE_START    0x02112020   0x02111e68
+#    4   MOVE          0x02111e4c   0x02111c48
+#    5   DAMAGE        0x02111bb0   0x02111a64
+#    6   DAMAGETALK    0x02111a0c   0x021119ac
+#    7   DEAD          0x02111974   0x02111788
+#    8   DAMAGE_STOP   0x02111720   0x021115cc
+#    9   DAMAGE_WAIT   0x021115c0   0x02111588
+#   10   DAMAGE_START  0x02111520   0x021113d4
+#
+# Every delta word is zero and all twenty-two handlers have matched src TUs.
+# func_ov034_021125b8 writes the index at +0x8c4 and tail-calls the ENTER half;
+# func_ov034_02112604 dispatches the TICK half at entry+8. Both dispatch sites
+# are host copies (MSVC's PMF representation for an incomplete class is not the
+# ROM's {function, delta} pair), and hal/actor_classes_ov034.cpp VERIFIES all
+# twenty-two ROM words in the mounted table before rewriting the function words
+# with host addresses -- a mount pointing at the wrong bytes aborts instead of
+# calling into DS memory.
+#
+# ==== FOURTEEN T3 WIDTH PINS ==============================================
+#
+# .rodata -- the two animation-handle ROWS
+#   data_ov034_0211389c:0x14  five SharedFilePtr pointers, one per body segment,
+#     indexed [i] for i in 0..4 by both _ZN7Wiggler13InitResourcesEv.cpp:92 and
+#     _ZN7Wiggler16CleanupResourcesEv.c:26. dsd named 0x021138a8 THREE pointers
+#     in, so the landing reads 0xc and segments 3 and 4 would load their
+#     animations off whatever the host linker put next. Its five identically
+#     shaped siblings at 0x02113838 / 4c / 60 / 74 / 88 all read 0x14 already,
+#     which is what pins this one.
+#   data_ov034_021138b0:0x14  the same shape one row along; dsd named
+#     0x021138bc three pointers in.
+#
+# .data
+#   data_ov034_021143f8:0x8   a PMF source pair; dsd named 0x021143fc one word
+#     in, so the landing reads FOUR of eight and the sinit would copy a delta
+#     word it does not own.
+#   data_ov034_02114450:0xc   the string "DAMAGE_WAIT", twelve bytes with its
+#     terminator; dsd named 0x02114458 eight bytes in.
+#   Wiggler_SpawnInfo:0x1c    natural 0x24, an OVER-read that would swallow the
+#     vtable's own offset-to-top and typeinfo words at 0x021144b4/0x021144b8.
+#     A record is 0x1c (the ov032/ov033 measurement), and pinning it leaves
+#     those two words to --pack's padding where they belong.
+#   data_ov034_02114538:0xdc  THE STATE TABLE, eleven entries of twenty bytes.
+#     Natural 0x14 -- dsd named 0x0211454c, 0x02114568, 0x02114598 and
+#     0x021145e4 inside it, so the landing reads ONE ENTRY OF ELEVEN. Unpinned,
+#     every state past DEMOWAIT would be dispatched out of whatever the host
+#     linker put after a twenty-byte array. This is the single most important
+#     pin in this overlay. The four interior names are excluded below.
+#
+# .bss -- eight destructor chain nodes and one SharedFilePtr dsd sized short.
+# func_020731dc writes THREE words through its node argument
+# (src/func_020731dc.c), so every node is 0xc; a SharedFilePtr is 8.
+#   data_ov034_02114628:0x8   natural 0x4  (SharedFilePtr)
+#   data_ov034_021147bc:0xc   natural 0x8  (chain node)
+#   data_ov034_0211481c:0xc   natural 0x8
+#   data_ov034_02114858:0xc   natural 0x8
+#   data_ov034_02114870:0xc   natural 0x4
+#   data_ov034_02114888:0xc   natural 0x4
+#   data_ov034_02114894:0xc   natural 0x4
+#   data_ov034_021148ac:0xc   natural 0x8
+# The eight interior names dsd invented inside them -- 0x0211462c, 0x021147c4,
+# 0x02114824, 0x02114860, 0x02114874, 0x0211488c, 0x02114898, 0x021148b4 -- are
+# all marked `ambiguous`, are spelled by NO src TU, and are deliberately not in
+# the list: mounting them alongside the pinned parents is a layout --pack
+# refuses. The other sixty-two .bss symbols already read 8 or 0xc and are left
+# bare, so the diff shows exactly which ones dsd got wrong.
+# data_ov034_021148d0 is the LAST symbol in .bss and its landing runs to the
+# section end (0x10 for a 0xc node); an over-read costs nothing and is left.
+#
+# ==== ONE LIVE WRONG-NAME AT THE SHARED WINDOW (T6) =======================
+#
+# src/func_ov034_02111588.cpp (state 9's tick) and src/func_ov034_021119ac.c
+# (state 6's tick) both CALL a function they spell data_ov052_021125b8 -- an
+# OV052 name, and a data-kind one, for what the ROM's own arm_calls at
+# 0x021115b0, 0x021119ec and 0x02111a00 resolve to as 0x021125b8
+# module:overlay(34), which is func_ov034_021125b8, this overlay's own state
+# setter. OV052 IS MOUNTED (PORT_ACTOR_OVERLAYS), so the name resolves and both
+# TUs would CALL INTO OV052's DATA. Routed by a per-source -D onto the ov034
+# spelling; decl_common.h declares neither name, so the rename is direct.
+#
+# ==== TWO LATENT WRONG-NAMES THIS MOUNT ARMS (T6, for the next lane) ======
+#
+# Sweeping every one of the 223 names this lane's four mounts define against
+# every TU in src/ turns up three spellers outside their own overlay that are
+# NOT in the link today. Two of them are ov034's, and both go from a LOUD
+# failure to a SILENT one the moment their lane seats them, because the name
+# they spell stopped being undefined when this mount landed. Written down here
+# rather than fixed: they are ov006's and ov022's -D to make, in ov006's and
+# ov022's own files.
+#
+#   src/_ZN6Player7ST_WAITE.cpp  (OV006 0x02110154, size 0x68, so its body is
+#     [0x02110154, 0x021101bc). On port/slice_smb.txt and compiled today, but
+#     /OPT:REF strips it because nothing references it, so its object
+#     contributes no symbol to the map.) It declares
+#     `void data_ov034_02114738(void);` and CALLS it.
+#     ST_WAIT CONTAINS EXACTLY ONE SITE FOR THAT NAME: the arm_call at
+#     0x0211015c, which config/arm9/overlays/ov006/relocs.txt resolves to
+#     0x02114738 module:overlay(6) -- func_ov006_02114738, a 0x14-byte function
+#     in OV006's OWN .text (that section runs 0x020bfec0..0x0212b890).
+#     THE NAME HAS TWELVE SITES ACROSS OV006 (ten arm_call, two load), all
+#     module:overlay(6), and the other eleven are in ov006 functions OTHER than
+#     ST_WAIT. So the rename below is NOT a one-body fix: every ov006 TU that
+#     reaches 0x02114738 needs it, and ST_WAIT is only the one that happens to
+#     be compiled today. (An earlier draft of this note quoted 0x0210e0a0,
+#     0x0210e468 and 0x0210f91c as "its three call sites"; those are three of
+#     the other eleven, sitting in func_ov006_0210e098, func_ov006_0210e460 and
+#     func_ov006_0210f914. Re-derived per body rather than per grep hit.)
+#     This mount defines data_ov034_02114738 as a TWELVE-BYTE .bss destructor
+#     chain node. Before this mount the reference was undefined and seating any
+#     of those TUs would have failed the link; after it, seating one CALLS INTO
+#     A DATA ARRAY. The fix when ov006's lane arrives, per source:
+#       -Ddata_ov034_02114738=func_ov006_02114738
+#
+#   src/__sinit_ov022_021130bc.c  (OV022 0x021130bc, size 0x3c, body
+#     [0x021130bc, 0x021130f8). In NO slice today.) It spells
+#     data_ov034_0211442c and data_ov034_02114690 for OV022's own objects at
+#     those shared-window addresses. Inside the sinit's own body there is ONE
+#     site each -- the loads at 0x021130ec and 0x021130f4 -- and ov022's relocs
+#     resolve both to module:overlay(22). 0x02114690 has a SECOND site at
+#     0x02112914, OUTSIDE this sinit and in another ov022 function, so that name
+#     needs the rename in two TUs; 0x0211442c has one site in the whole overlay.
+#     Both targets are DATA on both sides, so this is a wrong-object bind rather
+#     than a call into data -- the Coffin/Spindrift shape. Fix:
+#       -Ddata_ov034_0211442c=data_ov022_0211442c
+#       -Ddata_ov034_02114690=data_ov022_02114690
+#
+# THE THREE THAT WERE ALREADY LIVE ARE ALREADY ROUTED, and this lane checked
+# rather than assumed: src/_ZN14KnockDownPlank13InitResourcesEv.cpp (ov015,
+# LINKED) is re-routed by this very commit; src/func_ov026_02111598.cpp and
+# src/__sinit_ov025_02112a44.c spell two ov032 names and both already carry a
+# per-source -D from their own lanes (port/CMakeLists.txt:8695 and :913).
+#
+# ==== T2: RELOCATED WORDS IN THIS MOUNT ===================================
+#
+# The twenty-two PMF source pairs and the eleven table entries carry code
+# pointers into ov034's own .text, and they are never called through the
+# mounted word: the seat rewrites all twenty-two halves with host addresses
+# before any Wiggler can dispatch. The eleven +0x10 name pointers and the seven
+# .rodata handle rows point at other symbols in THIS list, which
+# port_ov034_syms_patch rebases inside the mount. ptr_audit reads zero.
+#
+# ==== NO T5 MARKERS ======================================================
+#
+# No ov034 body carries "recovered from vtable slot identity", and neither
+# inferred_stub_debt.txt nor inferred_stub_baseline.txt names an ov034 symbol.
+# dsd named this class correctly, so none of its slots needed a slot-identity
+# recovery.
+
+# ---- .rodata: the seven five-element animation handle rows ----------------
+data_ov034_02113820 data_ov034_02113828 data_ov034_0211382c
+data_ov034_02113838 data_ov034_0211384c data_ov034_02113860
+data_ov034_02113874 data_ov034_02113888
+data_ov034_0211389c:0x14 data_ov034_021138b0:0x14
+data_ov034_021138c4 data_ov034_021138d8
+
+# ---- .data: the constant func_ov034_02112348 reads ------------------------
+data_ov034_0211433c
+
+# ---- .data: the eleven state NAME strings --------------------------------
+data_ov034_02114340 data_ov034_02114348 data_ov034_02114350
+data_ov034_02114408 data_ov034_02114414 data_ov034_02114420
+data_ov034_0211442c data_ov034_02114438 data_ov034_02114444
+data_ov034_02114450:0xc data_ov034_02114468
+
+# ---- .data: the twenty-two 8-byte PMF source pairs the sinit copies -------
+data_ov034_02114358 data_ov034_02114360 data_ov034_02114368
+data_ov034_02114370 data_ov034_02114378 data_ov034_02114380
+data_ov034_02114388 data_ov034_02114390 data_ov034_02114398
+data_ov034_021143a0 data_ov034_021143a8 data_ov034_021143b0
+data_ov034_021143b8 data_ov034_021143c0 data_ov034_021143c8
+data_ov034_021143d0 data_ov034_021143d8 data_ov034_021143e0
+data_ov034_021143e8 data_ov034_021143f0 data_ov034_021143f8:0x8
+data_ov034_02114400
+
+# ---- .data: the typeinfo record, the class name and the Fix12 table -------
+data_ov034_0211445c data_ov034_02114478 data_ov034_02114488
+
+# ---- .data: the SpawnInfo record, pinned to the ROM's 0x1c ----------------
+Wiggler_SpawnInfo:0x1c
+
+# ---- .data: the eleven-entry state table ---------------------------------
+data_ov034_02114538:0xdc
+
+# ---- .bss: thirty-five SharedFilePtrs ------------------------------------
+data_ov034_02114620 data_ov034_02114628:0x8 data_ov034_02114630
+data_ov034_02114638 data_ov034_02114640 data_ov034_02114648
+data_ov034_02114650 data_ov034_02114658 data_ov034_02114660
+data_ov034_02114668 data_ov034_02114670 data_ov034_02114678
+data_ov034_02114680 data_ov034_02114688 data_ov034_02114690
+data_ov034_02114698 data_ov034_021146a0 data_ov034_021146a8
+data_ov034_021146b0 data_ov034_021146b8 data_ov034_021146c0
+data_ov034_021146c8 data_ov034_021146d0 data_ov034_021146d8
+data_ov034_021146e0 data_ov034_021146e8 data_ov034_021146f0
+data_ov034_021146f8 data_ov034_02114700 data_ov034_02114708
+data_ov034_02114710 data_ov034_02114718 data_ov034_02114720
+data_ov034_02114728 data_ov034_02114730
+
+# ---- .bss: thirty-five destructor chain nodes ----------------------------
+data_ov034_02114738 data_ov034_02114744 data_ov034_02114750
+data_ov034_0211475c data_ov034_02114768 data_ov034_02114774
+data_ov034_02114780 data_ov034_0211478c data_ov034_02114798
+data_ov034_021147a4 data_ov034_021147b0 data_ov034_021147bc:0xc
+data_ov034_021147c8 data_ov034_021147d4 data_ov034_021147e0
+data_ov034_021147ec data_ov034_021147f8 data_ov034_02114804
+data_ov034_02114810 data_ov034_0211481c:0xc data_ov034_02114828
+data_ov034_02114834 data_ov034_02114840 data_ov034_0211484c
+data_ov034_02114858:0xc data_ov034_02114864 data_ov034_02114870:0xc
+data_ov034_0211487c data_ov034_02114888:0xc data_ov034_02114894:0xc
+data_ov034_021148a0 data_ov034_021148ac:0xc data_ov034_021148b8
+data_ov034_021148c4 data_ov034_021148d0

@@ -310,7 +310,14 @@ DSSTATE_END
    argument and relies on the r0 ride-through, so an alias would hand the
    constructor stack garbage for `this`. That factory is a host copy instead --
    port/unmatched/ChainChomp_Spawn_hostcopy.cpp says what the measurement was. */
-#pragma comment(linker, "/alternatename:_data_ov034_021147ec=__ZTV10ChainChomp")
+/* RETIRED, run rel0215 wave 2 lane cast-sweep2: DEAD, and now defeated.
+   src/_ZN10ChainChompD1Ev.c:21 and src/_ZN10ChainChompD0Ev.cpp:26 both
+   spell _ZTV10ChainChomp directly today, so nothing referenced the ov034
+   name any more; and the ov034 mount that lane adds DEFINES
+   data_ov034_021147ec (a destructor chain node in the Wiggler's .bss),
+   which makes the alias inert as well as unused. Deleted rather than
+   re-routed: there is no reader to route.
+   was: /alternatename:_data_ov034_021147ec=__ZTV10ChainChomp */
 #pragma comment(linker, "/alternatename:?data_ov021_021149b8@@3PAHA=_data_ov014_021149b8")
 #pragma comment(linker, "/alternatename:_data_ov021_021149c0=_data_ov014_021149c0")
 #pragma comment(linker, "/alternatename:?data_ov022_02114558@@3PAHA=_data_ov014_02114558")

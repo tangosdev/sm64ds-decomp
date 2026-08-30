@@ -1602,6 +1602,98 @@ void *Goomboss_Spawn(void);                          /* ov074 0x02122838, 212 B 
 extern unsigned char ExplosionGoomba_SpawnInfo[];    /* ov074 0x02122e94, +4 = 199 */
 void *ExplosionGoomba_Spawn(void);                   /* ov074 0x02122764, 212 B */
 void hal_fill_goomboss_vtable(void);                 /* _ZTV8Goomboss, 31 */
+/* run rel0215 wave 2 (lane cast-sweep2): OV032'S OWN CAST, Tiny-Huge Island's
+   BIG side -- four of level 24's seven skipped instances. THE CAMPAIGN PLAN
+   LISTS TWO CLASSES HERE AND THE ROM HAS THREE: id 228 (RTTI 12daBakubaku_c,
+   the big fish; tools/actor_names.py reads it as BUBBA) carries twenty-four of
+   the overlay's forty-one TUs and dsd named neither its factory nor its table.
+   dsd names ONE vtable ADDRESS in this overlay and puts TWO names on it, both
+   the WATER class's: _ZTV9HugeCover and _ZTV14daObjTdWater_c are both
+   0x021139a4 (RTTI 14daObjTdWater_c). HUGE_COVER's own table is the unnamed
+   data_ov032_021138e0 (RTTI 13daObjTdFuta_c, futa = lid) and BUBBA's is the
+   unnamed data_ov032_02113824. The factory installs, the RTTI strings and the
+   spawn records all three agree, so the rows below go by ADDRESS and every
+   _ZN9HugeCover* body in src/ serves id 107. Widths 32 / 32 / 31 -- BUBBA is
+   Enemy-derived and ends on slot 30 with no Platform::Kill -- and dsd's
+   next-symbol landings read FOUR, THREE and TWO. BUBBA carries EIGHT own
+   slots: 12 OnPendingDestroy is an empty override and 29 OnAimedAtWithEgg
+   returns 0xa0000. Derivation in port/ov032_syms.txt, fills in
+   hal/actor_classes_ov032.cpp, slice in port/slice_sweep2_ov032.txt. */
+extern unsigned char HugeCover_SpawnInfo[];          /* ov032 0x021138bc, +4 = 106 */
+void *HugeCover_Spawn(void);                         /* ov032 0x02112668, 48 B */
+void hal_fill_huge_cover_vtable(void);               /* data_ov032_021138e0, 32 */
+extern unsigned char HugeWater_SpawnInfo[];          /* ov032 0x02113980, +4 = 107 */
+void *HugeWater_Spawn(void);                         /* ov032 0x021128b8, 56 B */
+void hal_fill_huge_water_vtable(void);               /* _ZTV9HugeCover, 32 */
+extern unsigned char data_ov032_02113800[];          /* ov032 0x02113800, +4 = 228 */
+void *func_ov032_0211244c(void);                     /* ov032 0x0211244c, 92 B */
+void hal_fill_bubba_vtable(void);                    /* data_ov032_02113824, 31 */
+/* run rel0215 wave 2 (lane cast-sweep2): OV034'S ONE CLASS, Tiny-Huge Island's
+   CAVE -- and it is the WHOLE of level 26's skip list, so this row takes that
+   level to zero skipped. Unlike ov032 and ov033 there is NO class-identity
+   shift: _ZTV7Wiggler (0x021144bc) is on the right class, its RTTI reads
+   "12daHanachan_c" (Hanachan is the ROM's word for the Wiggler), and dsd's
+   inferred 31-slot width is right -- the state table starts exactly where the
+   vtable ends. A 2280-byte Enemy built out of FIVE of everything (five
+   ModelAnims at +0x110, five MaterialChangers, five TextureSequences, two
+   five-element cylinder arrays), with an eleven-entry pointer-to-member state
+   table at data_ov034_02114538 whose dsd landing reads ONE entry of eleven.
+   ONE SLOT IS UNHOSTED: _ZN7Wiggler8BehaviorEv has no matched body anywhere in
+   the tree and is faced loudly, so the Wiggler renders but holds state
+   DEMOWAIT. Derivation in port/ov034_syms.txt, fill in
+   hal/actor_classes_ov034.cpp, slice in port/slice_sweep2_ov034.txt. */
+extern unsigned char Wiggler_SpawnInfo[];            /* ov034 0x02114498, +4 = 248 */
+void *port_factory_wiggler(void);                    /* ov034 0x021136a4, 380 B */
+void hal_fill_wiggler_vtable(void);                  /* _ZTV7Wiggler, 31 */
+/* src/Wiggler_Spawn.c is HELD OUT of the slice and the factory is spelled by
+   hand: the ROM leaves the object operator new returned in r0 when Enemy::C2 is
+   entered, so the matched TU calls it with NO argument -- the ChiefChilly r0
+   ride-through (port/slice_w12.txt) -- and the name it spells, func_020aed98,
+   is an arm9-style spelling of ov002's _ZN5EnemyC2Ev. */
+/* run rel0215 wave 2 (lane cast-sweep2): OV047'S OWN CAST, Bowser in the Sky --
+   seven of level 39's nine skipped instances. THE CAMPAIGN PLAN LISTS THREE
+   CLASSES HERE AND THE ROM HAS FOUR: id 156 (RTTI 20daObjKm3_Kaitendai_c, the
+   rotating stand) is a fourth, and tools/actor_names.py already reads it as
+   ROTATING_PLATFORM_BS. dsd names TWO vtables in this overlay and each is
+   attached ONE TABLE LATE in .data address order, so _ZTV10RickshawBs
+   (0x0211237c) is id 156's and _ZTV18RickshawPlatformBs (0x0211254c) is id
+   153's, while ids 152 and 151 own the two tables dsd left as bare data
+   symbols. The factory installs, the RTTI at vtable[-1] and the spawn records
+   all three agree, so the rows below go by ADDRESS and every _ZN10RickshawBs*
+   body serves id 156 while every _ZN18RickshawPlatformBs* body serves id 153.
+   All four tables are 32-slot Platform with the same four own slots (0, 3, 16,
+   17); 6 and 9 are inherited from an ov002 intermediate base. dsd's landings
+   read 0x80 on one and SHORT on the other three. id 151 is not placed on level
+   39 and is registered because both attribution routes name it. Derivation in
+   port/ov047_syms.txt, fills in hal/actor_classes_ov047.cpp, slice in
+   port/slice_sweep2_ov047.txt. */
+extern unsigned char RickshawPlatformBs_SpawnInfo[]; /* ov047 0x02112428, +4 = 151 */
+void *RickshawPlatformBs_Spawn(void);                /* ov047 0x021114d4, 60 B */
+void hal_fill_rickshaw_platform_bs_vtable(void);     /* data_ov047_0211244c, 32 */
+extern unsigned char RickshawBs_SpawnInfo[];         /* ov047 0x0211227c, +4 = 152 */
+void *RickshawBs_Spawn(void);                        /* ov047 0x02111280, 60 B */
+void hal_fill_rickshaw_bs_vtable(void);              /* data_ov047_021122a0, 32 */
+extern unsigned char StairsBs_SpawnInfo[];           /* ov047 0x021124ec, +4 = 153 */
+void *StairsBs_Spawn(void);                          /* ov047 0x0211164c, 144 B */
+void hal_fill_stairs_bs_vtable(void);                /* _ZTV18RickshawPlatformBs, 32 */
+extern unsigned char data_ov047_02112358[];          /* ov047 0x02112358, +4 = 156 */
+void *func_ov047_021113bc(void);                     /* ov047 0x021113bc, 60 B */
+void hal_fill_rotating_platform_bs_vtable(void);     /* _ZTV10RickshawBs, 32 */
+/* run rel0215 wave 2 (lane cast-sweep2): OV055'S ONE CLASS, Luigi's key arena
+   -- and it is the WHOLE of level 47's skip list, so this row takes that level
+   to zero skipped. NO identity shift: _ZTV11MirrorLuigi (0x02111ae0) is on the
+   right class, its RTTI reads "9daLuigi_c" and its base typeinfo is ACTOR's,
+   which is why the table is 31 slots with a literal zero where a Platform
+   keeps Kill (the ov024 PYRAMID_TAG shape). dsd's landing reads FIVE. SEVEN
+   own slots: 12 OnPendingDestroy is a four-byte override. A 524-byte Actor
+   with a ModelAnim at +0xd4, a Model at +0x138, a ShadowModel at +0x188 and a
+   ONE-CELL pointer-to-member state machine at +0x1d8 whose tick mirrors the
+   player's X and Y angle -- the smallest instance of that machine in the tree.
+   Derivation in port/ov055_syms.txt, fill in hal/actor_classes_ov055.cpp,
+   slice in port/slice_sweep2_ov055.txt. */
+extern unsigned char MirrorLuigi_SpawnInfo[];        /* ov055 0x02111abc, +4 = 195 */
+void *MirrorLuigi_Spawn(void);                       /* ov055 0x02111860, 116 B */
+void hal_fill_mirror_luigi_vtable(void);             /* _ZTV11MirrorLuigi, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2426,4 +2518,35 @@ void hal_fill_goomboss_vtable(void);                 /* _ZTV8Goomboss, 31 */
     {198, "GOOMBOSS", Goomboss_SpawnInfo, Goomboss_Spawn, \
      hal_fill_goomboss_vtable}, \
     {199, "EXPLOSION_GOOMBA", ExplosionGoomba_SpawnInfo, \
-     ExplosionGoomba_Spawn, hal_fill_goomboss_vtable},
+     ExplosionGoomba_Spawn, hal_fill_goomboss_vtable}, \
+    /* ---- run rel0215 wave 2 (lane cast-sweep2): ov032, Tiny-Huge Island's \
+       BIG side. dsd's one vtable label is on the water twice; the cover's \
+       table and BUBBA's are unnamed, so the rows go by address. BUBBA (228) \
+       is a third class the campaign plan's inventory does not list. ---- */ \
+    {106, "HUGE_COVER", HugeCover_SpawnInfo, HugeCover_Spawn, \
+     hal_fill_huge_cover_vtable}, \
+    {107, "HUGE_WATER", HugeWater_SpawnInfo, HugeWater_Spawn, \
+     hal_fill_huge_water_vtable}, \
+    {228, "BUBBA", data_ov032_02113800, func_ov032_0211244c, \
+     hal_fill_bubba_vtable}, \
+    /* ---- run rel0215 wave 2 (lane cast-sweep2): ov034, Tiny-Huge Island's \
+       CAVE. Level 26's whole skip list in one row. ---- */ \
+    {248, "WIGGLER", Wiggler_SpawnInfo, port_factory_wiggler, \
+     hal_fill_wiggler_vtable}, \
+    /* ---- run rel0215 wave 2 (lane cast-sweep2): ov047, Bowser in the Sky. \
+       dsd's two vtable names are each attached ONE TABLE LATE, so the rows go \
+       by address; id 156 is a fourth class the campaign plan's inventory does \
+       not list. id 151 is not placed on level 39 and is registered because \
+       both attribution routes name it. ---- */ \
+    {151, "RICKSHAW_PLATFORM_BS", RickshawPlatformBs_SpawnInfo, \
+     RickshawPlatformBs_Spawn, hal_fill_rickshaw_platform_bs_vtable}, \
+    {152, "RICKSHAW_BS", RickshawBs_SpawnInfo, RickshawBs_Spawn, \
+     hal_fill_rickshaw_bs_vtable}, \
+    {153, "STAIRS_BS", StairsBs_SpawnInfo, StairsBs_Spawn, \
+     hal_fill_stairs_bs_vtable}, \
+    {156, "ROTATING_PLATFORM_BS", data_ov047_02112358, \
+     func_ov047_021113bc, hal_fill_rotating_platform_bs_vtable}, \
+    /* ---- run rel0215 wave 2 (lane cast-sweep2): ov055, Luigi's key arena. \
+       Level 47's whole skip list in one row. ---- */ \
+    {195, "MIRROR_LUIGI", MirrorLuigi_SpawnInfo, MirrorLuigi_Spawn, \
+     hal_fill_mirror_luigi_vtable},

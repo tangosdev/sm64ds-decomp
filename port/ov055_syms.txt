@@ -1,0 +1,134 @@
+# run rel0215 wave 2 (lane cast-sweep2): ov055's ONE CLASS, per symbol.
+# Overlay 4 of 4 in this lane.
+#
+# ov055 is a LEVEL overlay (level 47, Luigi's key arena, data/stage/ex_luigi)
+# and is already mounted WHOLE in PORT_LEVEL_OVERLAYS. This is the SECOND mount
+# of the same overlay, per symbol; --whole emits port_ov055_image/_patch/_at and
+# nothing by name while --from-list --pack emits the named arrays plus
+# port_ov055_syms_patch. Same dual-mount shape as ov012/ov013/ov024/ov025/ov032/
+# ov033/ov034/ov035/ov045/ov047/ov052/ov056.
+#
+# delinks.txt sections, base 0x021111a0:
+#   .text 0x021111a0..0x021118d4   .init 0x021118d4..0x02111910
+#   .ctor 0x02111910..0x02111914   .data 0x02111920..0x02111b60
+#   .bss  0x02111b60..0x02111b80
+# There is NO .rodata section in this overlay, and it is the smallest in the
+# lane: 13 functions, 0x180 bytes of .data past the vtable, 0x20 of .bss.
+# Every raw byte below was read out of extracted/overlays/overlay_0055.bin,
+# never the dsd export (T4). BASE PROOF: _ZN11MirrorLuigiD1Ev (0x021111a0),
+# _ZN11MirrorLuigiD0Ev (0x021111f8) and MirrorLuigi_Spawn (0x02111860) all read
+# e92d4010 = push {r4,lr}; _ZN11MirrorLuigi13InitResourcesEv (0x02111674) reads
+# e92d41f0 = push {r4-r8,lr}.
+#
+# ==== THE CAST IS ONE CLASS, BOTH ATTRIBUTION ROUTES ======================
+#
+#   id   arm9 slot   SpawnInfo   word[0]     factory            +4   x on L47
+#   195  0x02090b70  0x02111abc  0x02111860  MirrorLuigi_Spawn  195   1
+#
+# The record's word[0] lands inside ov055 [0x021111a0, 0x02111b80) and relocates
+# to the overlay's own factory; word[1]'s low halfword reads 195, the id the
+# arm9 spawn-table slot was reached from. BOTH routes are required -- the level
+# overlays share the load window at 0x021111a0 and id 195's candidate list reads
+# overlays(8,9,13,17,24,41,47,52,53,54,55,56,58). Run over every candidate,
+# exactly one satisfies both, and it is ov055.
+#
+# Level 47 spawns 18 actors and skips 1 on tip 3b4863d9a. That one is this
+# class, so this seat takes level 47 to ZERO skipped.
+#
+# ==== NO IDENTITY SHIFT, AND THE RTTI SAYS SO =============================
+#
+# dsd's names in this overlay are on the right class. _ZTV11MirrorLuigi is
+# 0x02111ae0, its typeinfo at vtable[-1] is 0x02111ab0 and the name string at
+# 0x02111aa4 reads "9daLuigi_c". Its base typeinfo is 0x0208e390, which is
+# ACTOR's -- MirrorLuigi is a direct Actor subclass, not a Platform.
+# MirrorLuigi_Spawn installs 0x02111ae0 and every _ZN11MirrorLuigi* method sits
+# in that table's own slots. Checked against the image, not assumed.
+#
+# _ZTV11MirrorLuigi  0x02111ae0, THIRTY-ONE slots, ends 0x02111b5c.
+#   next dsd symbol 0x02111af4 -- INTERIOR (slot 5). Reads FIVE.
+#   Slot 30 is 0x020100dc Actor::OnAimedAtWithEggReturnVec, the last Actor slot;
+#   0x02111b5c holds a literal ZERO, not a relocation, so there is no slot 31 --
+#   the ov024 PYRAMID_TAG / ov058 RECROOMCUPBOARD shape, and a second
+#   independent pin because 0x02111b60 is the .data/.bss boundary.
+#   SEVEN own slots, one more than usual: 0 InitResources (0x02111674),
+#   3 CleanupResources (0x02111318), 6 Behavior (0x02111508), 9 Render
+#   (0x02111358), 12 OnPendingDestroy (0x02111354 -- a four-byte body that
+#   overrides ActorBase's), 16 D1 (0x021111a0), 17 D0 (0x021111f8).
+#   The table is EXCLUDED from this mount and hosted as an array
+#   hal/actor_classes_ov055.cpp fills.
+#
+# ==== THE TWO-HALF POINTER-TO-MEMBER CELL AND ITS T3 PIN ==================
+#
+# The smallest instance of the machine ov030, ov032 and ov034 all carry: ONE
+# sixteen-byte cell, two 8-byte mwcc {function, delta} pairs.
+#   data_ov055_02111a94 = {0x021112bc func_ov055_021112bc, 0}   the ENTER half
+#   data_ov055_02111a9c = {0x02111288 func_ov055_02111288,  0}   the TICK half
+# __sinit_ov055_021118d4 copies both into data_ov055_02111b70 (its whole body is
+# those four loads and four stores). MirrorLuigi::InitResources then installs
+# the cell through func_ov055_021112c4, which stores it at this+0x1d8 and
+# tail-calls the ENTER half; MirrorLuigi::Behavior reads the cell back from
+# +0x1d8 and dispatches the TICK half at cell+8 every frame. What the tick does
+# is the class's whole point: it mirrors the player's position and Y angle
+# (x = -x, angle = -angle), which is why a MIRROR Luigi.
+# Both dispatch sites are host copies; hal/actor_classes_ov055.cpp VERIFIES all
+# four ROM words in the mounted cell before rewriting the two function words
+# with host addresses.
+#
+#   data_ov055_02111b70:0x10  THE PIN. Natural 0x4 -- dsd named 0x02111b74 four
+#     bytes in, so the landing mounts ONE WORD OF FOUR and the sinit's last
+#     three stores would run off the end of their own storage onto whatever the
+#     host linker put next. It is the same shape as the ov002 incident T3 was
+#     written from (a 12-byte list node hosted as four), one size up.
+#     0x02111b74 is marked `ambiguous`, is spelled by no src TU, and is
+#     deliberately not in the list.
+#
+# ==== ONE MORE T3 PIN =====================================================
+#
+#   MirrorLuigi_SpawnInfo:0x1c  natural 0x18 -- dsd named 0x02111ad4 SIX words
+#     in, one word short of the record's end. A record is 0x1c (the
+#     ov032/ov033/ov034/ov047 measurement) and 0x02111abc+0x1c = 0x02111ad8 is
+#     exactly the vtable's own offset-to-top word, which pins it independently.
+#     Unpinned the sixth field would be read off whatever came next.
+#
+# ==== T6: THE NAME THIS MOUNT DEFINES, AND WHO ELSE SPELLS IT =============
+#
+# data_ov055_02111a94 is spelled by ONE TU outside this overlay:
+# src/_ZN9ShipWater13InitResourcesEv.c (ov017's SHIP_WATER, level 9, LINKED via
+# port/slice_sweep1_ov017.txt). It means OV017's object at that shared-window
+# address, not this one -- config/arm9/overlays/ov017/relocs.txt resolves that
+# TU's own pool word at 0x0211147c to module:overlay(17).
+# THAT ONE IS ALREADY ROUTED and needs nothing from this lane: the wave-1
+# cast-sweep1 lane gave it a per-source -D (port/CMakeLists.txt,
+# "data_ov055_02111a94=data_ov017_02111a94") when it seated ov017, precisely
+# because this mount was foreseen. A -D is not an /alternatename and is not
+# defeated by a definition, so it keeps working now that the name is defined.
+# Recorded here so the next reader does not have to re-derive it.
+# The two NEWLY DEFINED names this mount adds are data_ov055_02111a94 and
+# data_ov055_02111a9c; no other TU in the tree spells either.
+#
+# ==== T2: RELOCATED WORDS IN THIS MOUNT ==================================
+#
+# Three: the SpawnInfo's word[0] (the factory -- code, never called through the
+# mounted word, because the registry calls the host factory named in the class
+# row) and the two PMF pairs' function words (code in ov055's own .text, and the
+# seat rewrites both with host addresses before any actor can dispatch).
+# ptr_audit reads zero.
+#
+# ==== NO T5 MARKERS ======================================================
+#
+# No ov055 body carries "recovered from vtable slot identity", and neither
+# inferred_stub_debt.txt nor inferred_stub_baseline.txt names an ov055 symbol.
+
+# ---- .data: the Behavior/Render flag word --------------------------------
+data_ov055_02111a90
+
+# ---- .data: the two 8-byte PMF source pairs the sinit copies -------------
+data_ov055_02111a94 data_ov055_02111a9c
+
+# ---- .data: the SpawnInfo record, pinned to the ROM's 0x1c ---------------
+MirrorLuigi_SpawnInfo:0x1c
+
+# ---- .bss: four state words and the sixteen-byte cell --------------------
+data_ov055_02111b60 data_ov055_02111b64
+data_ov055_02111b68 data_ov055_02111b6c
+data_ov055_02111b70:0x10

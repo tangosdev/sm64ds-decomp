@@ -1,0 +1,126 @@
+# run rel0215 wave 2, lane cast-sweep2: OV032'S OWN CAST (level 24, Tiny-Huge
+# Island's BIG side, data/stage/tibi_deka_d). Overlay 1 of 4 in this lane.
+#
+# The three-way source inventory:
+#     delinked complete to a src/ TU   41
+#     present but NONMATCHING-bannered  0
+#     MISSING                           0
+#                                      --
+#                                      41  == config/arm9/overlays/ov032/
+#                                             symbols.txt's kind:function count
+#
+# THIRTY-SEVEN of the forty-one are listed below. Nothing is refused in the
+# unmodellable sense -- no asm-void block, no scheduler, no card loader, no
+# wireless wrapper, and no //cpp real-destructor of the ov024 PyramidTag shape.
+# Four TUs are HELD OUT and host-copied because MSVC cannot deliver their
+# dispatch or their receiver, and all four belong to BUBBA (id 228):
+#
+#   src/func_ov032_02111ff4.cpp   -> port/unmatched/Bubba_StateEnter.cpp
+#   src/func_ov032_021121b4.cpp   -> port/unmatched/Bubba_Behavior.cpp
+#   src/func_ov032_02112164.cpp   -> port/unmatched/Bubba_Render.cpp
+#   src/func_ov032_02111350.c     -> port/unmatched/Bubba_ChaseGate.cpp
+#
+# The first two are the mwcc pointer-to-member state machine: both form a PMF
+# type on an INCOMPLETE class, where MSVC's representation is the "unknown
+# inheritance" form and not the ROM's 8-byte {function, delta} pair. That is
+# the Ukiki (port/unmatched/Ukiki_StateEnter.cpp) and BabyPenguin shape with
+# FIVE cells and the cell pointer at +0x3b0. The third is the ModelAnim slot-5
+# collision -- a local six-virtual shadow over the ModelAnim at +0x34c, whose
+# ROM slot 5 the host's MSVC-ordered _ZTV9ModelAnim numbers as Virtual18 (the
+# Koopa / Whomp / MontyMole case, port/unmatched/Koopa_Render.cpp).
+# The fourth is the r0-passthrough seam: it calls Actor::ClosestPlayer with NO
+# argument and rides `this` in r0, which is byte-identical on ARM and a
+# null-base fault on the host. port/unmatched/Actor_ClosestPlayer_OverlayReaders
+# .cpp's LATENT registry names this exact TU as a bug that goes live the instant
+# ov032 is hosted, and port/tools/closestplayer_guard.py failed this lane's
+# first build over it rather than letting it through.
+# All four matched TUs STAY in src/ as the byte proof.
+#
+# THREE CLASSES, THREE TABLES, AND DSD'S ONLY VTABLE LABEL IS ON THE WRONG ONE
+# (and it is on the same address twice). id 106 HUGE_COVER takes 0x021138e0
+# (RTTI 13daObjTdFuta_c) and the func_ov032_02112544/02112588/021125b0/
+# 021125d4/021124a8/021124ec bodies; id 107 HUGE_WATER takes 0x021139a4 (dsd
+# _ZTV9HugeCover AND _ZTV14daObjTdWater_c, RTTI 14daObjTdWater_c) and the
+# _ZN9HugeCover* bodies; id 228 BUBBA takes 0x02113824 (RTTI 12daBakubaku_c)
+# and everything else. Three independent routes agree -- the factory installs,
+# the RTTI strings and the spawn records. The derivation is in
+# port/ov032_syms.txt; the seat in hal/actor_classes_ov032.cpp goes by address.
+#
+# FIVE PER-SOURCE -D RENAMES travel with this slice (port/CMakeLists.txt):
+#
+#   func_ov032_021124ec.c    id 106's D0. VT0 -> the OWN table 0x021138e0,
+#                            VT1 -> Platform's base _ZTV10dBgActor_c
+#                            (0x0210ae38), G0 -> the game heap 0x020a0eac.
+#                            Pool order read off the ROM body: 0x02112538 own,
+#                            0x0211253c base, 0x02112540 heap -- and the ROM
+#                            stores r2 (own) BEFORE r1 (base), which is the
+#                            order the source already writes. Unlike ov033's
+#                            pair the resolver got this one the right way round;
+#                            it was checked, not assumed.
+#   _ZN9HugeCoverD0Ev.c      id 107's D0. G0 -> data_020a0eac, the game heap,
+#                            read off the pool at 0x02112740.
+#   _ZN9HugeCover16CleanupResourcesEv.cpp
+#                            id 107's CleanupResources. G0 -> the model
+#                            SharedFilePtr data_ov032_02113afc, G1 -> the clsn
+#                            SharedFilePtr data_ov032_02113af4, read off the
+#                            pool at 0x02112780/0x02112784.
+#   func_ov032_02111d7c.cpp  BUBBA's state-2 tick. func_ov047_02111254 ->
+#                            func_ov032_02111254. A LIVE wrong-name: OV047 is
+#                            seated by this same lane two commits later, so the
+#                            ov047 spelling would resolve to Bowser-in-the-Sky's
+#                            body. relocs.txt resolves the ROM's own arm_call at
+#                            0x02111d84 to module:overlay(32).
+#
+# THE MEASURED CLOSURE GAP: none. The first link added no arm9 TU -- Actor,
+# ActorBase, Platform, Enemy, Model, ModelAnim, ShadowModel, MovingMeshCollider,
+# MeshColliderBase, MovingCylinderClsnWithPos, WithMeshClsn, CylinderClsn,
+# TextureTransformer, SharedFilePtr, Animation, Event, Memory and the Vec3/
+# Matrix4x3 helpers are all already in the walk_window link for other classes.
+# Measured off the link, not guessed.
+
+# ---- BUBBA (228) -- factory, destructors, lifecycle slots ------------------
+src/func_ov032_021111a0.c
+src/func_ov032_021111f0.c
+src/func_ov032_0211244c.c
+src/func_ov032_021122dc.c
+src/func_ov032_02112124.c
+src/func_ov032_02112160.c
+src/func_ov032_02112444.c
+
+# ---- BUBBA -- the five state cells' ten handler bodies and their helpers ---
+src/func_ov032_02111254.c
+src/func_ov032_021113fc.cpp
+src/func_ov032_02111620.cpp
+src/func_ov032_02111814.c
+src/func_ov032_02111830.c
+src/func_ov032_02111b50.c
+src/func_ov032_02111b9c.cpp
+src/func_ov032_02111d58.c
+src/func_ov032_02111d7c.cpp
+src/func_ov032_02111dd8.c
+src/func_ov032_02111e24.c
+src/func_ov032_02111f9c.c
+src/func_ov032_02112044.cpp
+
+# ---- HUGE_COVER (106) -----------------------------------------------------
+src/HugeCover_Spawn.c
+src/func_ov032_021124a8.c
+src/func_ov032_021124ec.c
+src/func_ov032_02112544.c
+src/func_ov032_02112588.cpp
+src/func_ov032_021125b0.cpp
+src/func_ov032_021125d4.cpp
+
+# ---- HUGE_WATER (107) -----------------------------------------------------
+src/HugeWater_Spawn.c
+src/_ZN9HugeCoverD1Ev.c
+src/_ZN9HugeCoverD0Ev.c
+src/_ZN9HugeCover16CleanupResourcesEv.cpp
+src/_ZN9HugeCover6RenderEv.cpp
+src/_ZN9HugeCover8BehaviorEv.cpp
+src/_ZN9HugeCover13InitResourcesEv.cpp
+
+# ---- the three static initialisers ----------------------------------------
+src/__sinit_ov032_02112c10.c
+src/__sinit_ov032_02112dbc.c
+src/__sinit_ov032_02112e28.c

@@ -1,0 +1,252 @@
+# run rel0215 wave 2 (lane cast-sweep2): ov047's FOUR CLASSES, per symbol.
+# Overlay 3 of 4 in this lane.
+#
+# ov047 is a LEVEL overlay (level 39, Bowser in the Sky,
+# data/stage/koopa3_map) and is already mounted WHOLE in PORT_LEVEL_OVERLAYS.
+# This is the SECOND mount of the same overlay, per symbol; --whole emits
+# port_ov047_image/_patch/_at and nothing by name while --from-list --pack
+# emits the named arrays plus port_ov047_syms_patch. Same dual-mount shape as
+# ov012/ov013/ov024/ov025/ov032/ov033/ov034/ov035/ov045/ov052/ov056.
+#
+# delinks.txt sections, base 0x021111a0:
+#   .text 0x021111a0..0x021116dc   .init 0x021116dc..0x021119c4
+#   .ctor 0x021119c4..0x021119d4   .data 0x021119e0..0x021125e0
+#   .bss  0x021125e0..0x02112720
+# There is NO .rodata section in this overlay.
+# Every raw byte below was read out of extracted/overlays/overlay_0047.bin,
+# never the dsd export (T4). BASE PROOF: func_ov047_021111a0, RickshawBs_Spawn
+# (0x02111280), RickshawPlatformBs_Spawn (0x021114d4) and StairsBs_Spawn
+# (0x0211164c) all read e92d4010 = push {r4,lr}.
+#
+# ==== THE CAST IS FOUR, NOT THREE. BOTH ATTRIBUTION ROUTES =================
+#
+#   id   arm9 slot   SpawnInfo   word[0]     factory                    +4
+#   151  0x02090ac0  0x02112428  0x021114d4  RickshawPlatformBs_Spawn   151
+#   152  0x02090ac4  0x0211227c  0x02111280  RickshawBs_Spawn           152
+#   153  0x02090ac8  0x021124ec  0x0211164c  StairsBs_Spawn             153
+#   156  0x02090ad4  0x02112358  0x021113bc  func_ov047_021113bc        156
+#
+# The campaign plan lists ov047 as "RickshawBs, RickshawPlatformBs, StairsBs".
+# There is a FOURTH class: id 156, whose factory dsd left as
+# func_ov047_021113bc and whose table dsd named after another class.
+# tools/actor_names.py already reads id 156 as ROTATING_PLATFORM_BS, which is
+# what its RTTI says too, and that is the row name.
+#
+# Every record's word[0] lands inside ov047 [0x021111a0, 0x02112720) and
+# relocates to one of the overlay's own factories, and every record reads its
+# own id back at +4. BOTH routes are required -- the level overlays share the
+# load window at 0x021111a0, and id 153's candidate list alone reads
+# overlays(10,12,24,26,32,33,35,43,45,47,52,53,56). Run over every candidate of
+# every id, each of the four has EXACTLY ONE both-routes owner and it is ov047.
+#
+# Level 39 spawns 96 actors and skips 9 across five ids on tip 3b4863d9a.
+# SEVEN of the nine are this overlay's cast (152 x3, 153 x1, 156 x3). The other
+# two skipped are id 157 (ArrowPathLift, both-routes owner ov091) and id 192
+# (PushBlock, ov002) -- other lanes' yield.
+#
+# ID 151 IS NOT IN THE LEVEL'S SKIP LIST AND IS STILL PLACED TWELVE TIMES. It is
+# a RUNTIME CHILD: the three RICKSHAW_BS axles each build four
+# RICKSHAW_PLATFORM_BS carts, so while the parent was itself skipped nothing
+# ever asked the pre-spawn gate for id 151 and it never appeared in a census.
+# Measured after the seat: level 39 goes 96 -> 115 spawned, and TWELVE of the
+# nineteen are id 151's. Registering it because both attribution routes named it
+# is what made that work; left out, the twelve children would have been declined
+# by name one at a time.
+#
+# ==== THE DSD CLASS NAMES ARE ATTACHED ONE TABLE LATE ======================
+#
+# dsd names TWO vtables here, and both are on the wrong class. In .data address
+# order, with the factory install and the RTTI at vtable[-1] read out of the
+# image:
+#
+#   table       installed by              alloc   RTTI (vtable[-1] -> name)
+#   0x021122a0  RickshawBs_Spawn          0x330   21daObjKm3_Kurumajiku_c
+#   0x0211237c  func_ov047_021113bc       0x320   20daObjKm3_Kaitendai_c
+#   0x0211244c  RickshawPlatformBs_Spawn  0x320   17daObjKm3_Kuruma_c
+#   0x0211254c  StairsBs_Spawn            0xdcc   17daObjKm3_Dorifu_c
+#
+# and dsd's two names sit at 0x0211237c (_ZTV10RickshawBs) and 0x0211254c
+# (_ZTV18RickshawPlatformBs) -- one table LATER than the class each names. So:
+#
+#   id 151 RICKSHAW_PLATFORM_BS   -> 0x0211244c (dsd data_ov047_0211244c)
+#   id 152 RICKSHAW_BS            -> 0x021122a0 (dsd data_ov047_021122a0)
+#   id 153 STAIRS_BS              -> 0x0211254c (dsd _ZTV18RickshawPlatformBs)
+#   id 156 ROTATING_PLATFORM_BS   -> 0x0211237c (dsd _ZTV10RickshawBs)
+#
+# and every _ZN10RickshawBs* body in src/ is id 156's while every
+# _ZN18RickshawPlatformBs* body is id 153's. This is the ov036/ov045
+# attached-one-class-early shape, and it is the SECOND naming defect in this
+# overlay: tools/actor_names.py's own report also says "NOVTABLE actor 153
+# StairsBs" (it could not find a table for 153, because the one that is 153's
+# was already claimed) and "AMBIG actor 156 ROTATING_PLATFORM_BS:
+# ['ov033','ov047'] -> ov033" (it tie-broke to ov033; both routes say ov047).
+#
+# THE RECOVERED SOURCE, HOWEVER, USES THE RTTI NAMES AND GETS THEM RIGHT.
+# src/ spells _ZTV21daObjKm3_Kurumajiku_c, _ZTV20daObjKm3_Kaitendai_c and
+# _ZTV17daObjKm3_Kuruma_c, and each maps by RTTI to the correct table. Those
+# three names are declared in include/decl_common.h (lines 696, 689, 647) and
+# defined nowhere, so each is bound per-source in port/CMakeLists.txt --
+# see port/slice_sweep2_ov047.txt for the nine renames and why three of them
+# are INVERTED.
+#
+# ==== ALL FOUR TABLES ARE THIRTY-TWO SLOTS =================================
+#
+# Each closes on the Platform word (slot 29 0x02010124, slot 30 0x020100dc,
+# slot 31 0x020ee55c _ZN8Platform4KillEv) and each carries the SAME FOUR own
+# slots -- 0 InitResources, 3 CleanupResources, 16 D1, 17 D0 -- with slots 6
+# and 9 inherited from an ov002 intermediate base. dsd's next-symbol landings
+# read 0x80 (right, by luck of the layout) on 0x021122a0 and SHORT on the other
+# three: 0x68 on 0x0211237c, 0x18 on 0x0211244c and 0x24 on 0x0211254c.
+# All four are EXCLUDED from this mount and hosted as arrays
+# hal/actor_classes_ov047.cpp fills, so none of the fourteen dsd data symbols
+# inside their spans is listed below.
+#
+# ==== THE OV002 INTERMEDIATE BASES =========================================
+#
+# Each factory installs its ov002 intermediate base FIRST and its own table
+# SECOND, and each destructor writes own -> intermediate -> Platform base back
+# to back with no call between:
+#   id 152  0x02109320   id 156  0x021091d4   id 151  0x02109278
+#   id 153  0x02108d94
+# 0x021091d4 and 0x02108d94 are already hosted and trap-filled by
+# hal/actor_classes_ov036.cpp (daObjKaitendai_c and daObjDorifu_c). The other
+# two are hosted the same way by this lane's own file -- both are the same
+# shape, zero in slots 0 and 3, with the derived class's Behavior and Render in
+# 6 and 9.
+#
+# ==== TEN T3 WIDTH PINS ====================================================
+#
+# .data -- the four SpawnInfo records, all four short and all four with a dsd
+# name INSIDE them:
+#   RickshawBs_SpawnInfo:0x1c          natural 0x18 (0x02112294 inside)
+#   data_ov047_02112358:0x1c           natural 0x10 (0x02112368 inside)
+#   RickshawPlatformBs_SpawnInfo:0x1c  natural 0x0c (0x02112434 inside)
+#   StairsBs_SpawnInfo:0x1c            natural 0x0c (0x021124f8 inside)
+# A record is 0x1c (the ov032/ov033/ov034 measurement), and each pin lands
+# exactly on its vtable's offset-to-top word, which pins it independently.
+#
+# .data -- four CLPS collision blocks dsd cut mid-block. Every one is
+# self-describing ('CLPS' 0x53504c43, then entrySize 8 and a count) and runs
+# 0x20 with 0xffffffff fill, the ROUTE C invariant ov032's and ov033's blocks
+# are pinned by:
+#   data_ov047_02111a74:0x20  natural 0x04 (0x02111a78 inside)
+#   data_ov047_02111ab4:0x20  natural 0x08 (0x02111abc inside)
+#   data_ov047_02111b54:0x20  natural 0x10 (0x02111b64/68/6c inside)
+#   data_ov047_02111bd4:0x20  natural 0x0c (0x02111be0 inside)
+# The other three blocks this mount carries (0x02111b94, 0x02111bb4,
+# 0x02111bf4) already read 0x20 and are left bare, so the diff shows exactly
+# which ones dsd got wrong.
+#
+# .data -- STAIRS_BS's five-triple resource argument:
+#   data_ov047_02112508:0x3c  natural 0x28 (0x02112530 inside). It is FIFTEEN
+#     words, five {model SharedFilePtr, clsn SharedFilePtr, CLPS block}
+#     triples, one per stair -- the same shape as the three-word arguments the
+#     other three classes pass, five times over. Its end is pinned
+#     independently: 0x02112508+0x3c = 0x02112544 is the vtable at 0x0211254c's
+#     own offset-to-top word. Unpinned, StairsBs would hand
+#     func_ov002_020b4d58 ten of its fifteen words and read the last five off
+#     whatever the host linker put next.
+#
+# .bss needs NO pins at all: every one of the thirty-two symbols already reads
+# 8 (a SharedFilePtr) or 0xc (a destructor chain node), which is the only
+# section in this lane where that is true.
+#
+# ==== FOUR LIVE WRONG-NAMES AT THE SHARED WINDOW (T6) =====================
+#
+# src/__sinit_ov047_0211181c.c -- STAIRS_BS's file constructor -- spells FOUR of
+# its own .bss symbols with an OV052 tag: data_ov052_02112680, _02112688,
+# _02112690 and _021126a8. OV052 IS MOUNTED (PORT_ACTOR_OVERLAYS), so all four
+# names resolve, and the sinit would construct four SharedFilePtrs and register
+# one destructor chain node in MARIO'S KEY COURSE's storage instead of its own.
+# relocs.txt resolves the ROM's own pool words at 0x02111958, 0x02111970,
+# 0x0211197c and 0x0211196c to module:overlay(47). Routed by a per-source -D.
+#
+# ==== ONE LATENT WRONG-NAME THIS MOUNT ARMS (T6, for the next lane) =======
+#
+# src/__sinit_ov043_02111940.c (OV043, in NO slice today) spells SIXTEEN of the
+# .bss names this mount defines -- data_ov047_02112658, _02112660, _02112668,
+# _02112670, _02112678, _02112698, _021126a0, _021126b4, _021126c0, _021126cc,
+# _021126d8, _021126e4, _021126f0, _021126fc, _02112708 and _02112714 -- for
+# OV043's OWN objects at those shared-window addresses.
+# THE SINIT'S OWN BODY IS [0x02111940, 0x02111ae8) (size 0x1a8) and holds
+# EXACTLY SIXTEEN SITES, one per name -- 0x02111a6c, 0x02111a78, 0x02111a84,
+# 0x02111a88 and on to 0x02111ae4 -- and config/arm9/overlays/ov043/relocs.txt
+# resolves every one to module:overlay(43). Across the whole overlay those
+# sixteen names carry TWENTY-THREE sites, so SEVEN more sit in ov043 functions
+# OUTSIDE this sinit and need the same rename when their TUs arrive: the fix is
+# not confined to one body. (An earlier draft of this note quoted "0x02111abc,
+# 0x02111ae4, 0x02112528 and the rest" -- the first two are inside the sinit,
+# but 0x02112528 is one of the seven outside it. Re-derived per body rather
+# than per grep hit.)
+# Before this mount those names were undefined and seating that sinit would have
+# failed the link; after it, seating it constructs sixteen of
+# BOWSER-IN-THE-DARK-WORLD's SharedFilePtrs and chain nodes in
+# BOWSER-IN-THE-SKY's storage -- no link error, no byte-gate signal, the
+# Coffin/Spindrift shape. Written down here rather than fixed: it is ov043's
+# lane's -D to make, sixteen renames across ov043's own TUs.
+#
+# THE ONE THAT WAS ALREADY LIVE IS ALREADY ROUTED, and this lane checked rather
+# than assumed: src/func_ov043_02111320.c (LINKED) spells data_ov047_021125e0
+# and _021125e8 and already carries a per-source -D from its own lane
+# (port/CMakeLists.txt:8526).
+#
+# ==== T2: RELOCATED WORDS IN THIS MOUNT ===================================
+#
+# Fourteen symbols carry relocated words: the four SpawnInfo records (word[0],
+# the factory -- code, and never called through the mounted word: the registry
+# calls the host factory named in the class row), the four three-word resource
+# arguments and STAIRS_BS's fifteen-word one (all pointing at other symbols in
+# THIS list, which port_ov047_syms_patch rebases inside the mount), and the
+# .data records at 0x021119e0/0x021119e8/0x02111a14 that the arguments do not
+# reach. ptr_audit reads zero.
+#
+# ==== SIX "recovered from vtable slot identity" MARKERS, ALL ADJUDICATED ====
+#
+# T5: func_ov047_021111f0, 02111254, 02111268, 02111448, 021114ac and 021114c0
+# all carry it -- the six lifecycle bodies of the two classes dsd left unnamed
+# (id 152 and id 151). All six were disassembled from
+# extracted/overlays/overlay_0047.bin and put through tools/match.py at
+# 2004/b56 with --strict-relocs: six MATCHING, zero guesses. Two of them,
+# func_ov047_021111f0 and func_ov047_02111448, are labelled OnYoshiTryEat by the
+# RTTI recovery and are actually the deleting destructors -- the same mislabel
+# class as func_ov032_021124ec and func_ov033_021111e4. The rulings go in
+# port/tools/inferred_stub_adjudicated.txt, never the baseline.
+
+# ---- .data: the seven CLPS collision blocks ------------------------------
+data_ov047_02111a74:0x20 data_ov047_02111ab4:0x20
+data_ov047_02111b54:0x20 data_ov047_02111b94
+data_ov047_02111bb4 data_ov047_02111bd4:0x20
+data_ov047_02111bf4
+
+# ---- .data: the four resource arguments ----------------------------------
+data_ov047_02112258 data_ov047_02112334
+data_ov047_02112408 data_ov047_02112508:0x3c
+
+# ---- .data: id 156's two Fix12 constants ---------------------------------
+data_ov047_02112320 data_ov047_02112324
+
+# ---- .data: the four SpawnInfo records, all pinned to the ROM's 0x1c -----
+RickshawBs_SpawnInfo:0x1c data_ov047_02112358:0x1c
+RickshawPlatformBs_SpawnInfo:0x1c StairsBs_SpawnInfo:0x1c
+
+# ---- .bss: id 152's two SharedFilePtrs and two chain nodes ---------------
+data_ov047_021125e0 data_ov047_021125e8
+data_ov047_021125f0 data_ov047_021125fc
+
+# ---- .bss: id 156's two SharedFilePtrs and two chain nodes ---------------
+data_ov047_02112608 data_ov047_02112610
+data_ov047_02112618 data_ov047_02112624
+
+# ---- .bss: id 151's two SharedFilePtrs and two chain nodes ---------------
+data_ov047_02112630 data_ov047_02112638
+data_ov047_02112640 data_ov047_0211264c
+
+# ---- .bss: id 153's ten SharedFilePtrs and ten chain nodes ---------------
+data_ov047_02112658 data_ov047_02112660 data_ov047_02112668
+data_ov047_02112670 data_ov047_02112678 data_ov047_02112680
+data_ov047_02112688 data_ov047_02112690 data_ov047_02112698
+data_ov047_021126a0
+data_ov047_021126a8 data_ov047_021126b4 data_ov047_021126c0
+data_ov047_021126cc data_ov047_021126d8 data_ov047_021126e4
+data_ov047_021126f0 data_ov047_021126fc data_ov047_02112708
+data_ov047_02112714
