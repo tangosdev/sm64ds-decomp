@@ -558,14 +558,24 @@ LEVEL_SKIPS = {
     #   changing state. Nothing in ov074 sets an initial state, so the bss zero
     #   IS state 0 and the very first Goomboss::Behavior dispatches into it.
     #
-    # THE EVIDENCE, both directions, banked under runs/rel0215/out/w2-ov074/:
-    #   quar_l45_300 / quar_l45_600  bare, no FAULTS_FATAL: rc 0, census
-    #       5 spawned (5 classes) 0 skipped, and EXACTLY ONE quarantined actor,
-    #       named -- "[quarantine] actor id 198 (GOOMBOSS) FROZEN, frame
+    # THE EVIDENCE, both directions. The run logs live in the lane's
+    # orchestration directory, NOT in this repo -- nothing under any
+    # runs/rel0215 path is checked in, and an earlier revision of this comment
+    # cited one as though it were repo-relative. Each run below is reproducible
+    # from the command given, which is the part that has to survive:
+    #   BARE, no FAULTS_FATAL, SM64DS_LEVEL=45, 300 and 600 frames: rc 0,
+    #       census 5 spawned (5 classes) 0 skipped, and EXACTLY ONE quarantined
+    #       actor, named -- "[quarantine] actor id 198 (GOOMBOSS) FROZEN, frame
     #       continues". Spawn, InitResources, the 31-slot fill, Render and the
     #       first Behavior up to the state dispatch all run clean; the shipped
     #       configuration degrades exactly as it is designed to.
-    #   skipgb_l45_300 / skipgb_l45_600  with this skip, FAULTS_FATAL: rc 0.
+    #   WITH THIS SKIP, FAULTS_FATAL=1, level 45, 300 and 600 frames: rc 0.
+    #   THE CLASS ITSELF is proven on its OTHER half, and on a different level
+    #       for the reason hal/actor_classes_ov074.cpp gives at length:
+    #       SM64DS_LEVEL=13 SM64DS_SPAWN_ACTOR=198:0x1111 FAULTS_FATAL=1, 600
+    #       frames -> rc 0, zero faults, zero quarantine lines. Level 45 cannot
+    #       host that probe under FAULTS_FATAL and the skip would make it
+    #       vacuous (SM64DS_SKIP_CLASS matches by substring).
     # The class stays REGISTERED, so the day func_ov074_021201f0 is matched the
     # bare re-probe below goes green and this row retires itself with no
     # further port work.

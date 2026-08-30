@@ -80,6 +80,37 @@
 // model and the ov030 func_ov030_021136b0 precedent: a silent stub here would
 // read as "Goomboss is standing still" rather than as a hole.
 //
+// ---- THE PROBE THAT EXERCISES THIS CLASS WITHOUT THE HOLE, AND ITS LEVEL --
+//
+// State 0's tick is reached on the FIRST Behavior frame, so on level 45 the
+// placed boss quarantines before anything else of this class runs. The mParam
+// == 0x1111 half takes a different path at all three own slots
+// (func_ov074_02122634 for InitResources, func_ov074_021223bc for Behavior,
+// func_ov074_021222e0 for Render) and never touches the state machine, so it
+// is the half that CAN be proven, and the probe for it is:
+//
+//     SM64DS_LEVEL=13 SM64DS_SPAWN_ACTOR=198:0x1111
+//     SM64DS_FAULTS_FATAL=1 SM64DS_WINDOW_SELFTEST=600 walk_window.exe
+//     -> rc 0, census 189 spawned (43 classes) 0 skipped, + 198 x1 GOOMBOSS,
+//        zero faults and zero quarantine lines over 600 frames.
+//
+// LEVEL 13, NOT 45, AND THE LEVEL IS PART OF THE PROBE. On 45 this cannot run
+// under FAULTS_FATAL at all -- the placed boss reaches the hole first and
+// aborts the run -- and adding SM64DS_SKIP_CLASS=GOOMBOSS to get past it makes
+// the probe vacuous, because the skip matches by SUBSTRING and turns away the
+// forced instance too. Bare (quarantine net) on 45 it does run, but the log
+// then carries a quarantine line for the placed instance that a reader has to
+// attribute by actor address before the clean instance means anything. Level
+// 13 places no Goomboss, so the forced instance is the only one and the run is
+// unambiguous. Both forms were measured; the level-45 one is the weaker
+// evidence and this is the one to cite.
+//
+// WHAT THIS PROBE DOES NOT REACH: the ModelAnim slot-5 dispatch in either host
+// copy. func_ov074_02122634 never writes +0x60a, so func_ov074_021222e0
+// returns at its `unk_60a == 0` gate before the dispatch line. Both slot-5
+// sites are reasoned from the member's own constructor/destructor pair and
+// from the fourteen prior instances of the shape, not measured.
+//
 // ---- NOTHING IN THIS OVERLAY NEEDED A PLACEHOLDER RENAME -----------------
 //
 // The comment-stripped sweep for G0..G3 / VT / VT0..VT3 / HEAP / R0..R3 over

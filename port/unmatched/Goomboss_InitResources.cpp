@@ -15,19 +15,45 @@
  * TU opens a top-level `extern "C" {` block and declares `RG rg;` without the
  * struct keyword.
  *
- * THIS FILE IS THE MATCHED SOURCE VERBATIM WITH ONE STATEMENT CHANGED. Every
- * other line is character for character the src TU. The change is line 71:
+ * THIS FILE IS THE MATCHED SOURCE WITH FIVE BODY STATEMENTS CHANGED, TWO
+ * DECLARATIONS CORRECTED AND ONE BLOCK MOVED. Nothing else differs; every
+ * other line is character for character the src TU. An earlier revision of
+ * this header said "one statement changed", which was wrong, and a headline
+ * like this one is exactly what tells the next reviewer they need not diff the
+ * file -- so here is the whole list, each item argued where it is made.
  *
- *     src:   func_ov074_02122634(self);  return;
- *     here:  return func_ov074_02122634(self);
+ * BODY STATEMENTS (5)
+ *  1. line 71, the C2561 itself:
+ *         src:   func_ov074_02122634(self);  return;
+ *         here:  return func_ov074_02122634(self);
+ *     and that is what the ROM does, not a guess: the src TU declares
+ *     func_ov074_02122634 `void` (the decompiler dropped the result), but
+ *     src/func_ov074_02122634.cpp -- byte-matched, complete in delinks -- is
+ *     `int` and its last statement is `return 1;`. So on the ROM's own path r0
+ *     holds 1 when InitResources returns, which is what this form produces.
+ *  2. func_01ffa344(x) -> func_01ffa344(x, 0). See the declaration note below:
+ *     the host body takes two arguments and discards the second, and
+ *     port/tools/aritycheck.py's plain-name ratchet refuses a call that leaves
+ *     the slot unwritten. It cannot change the result.
+ *  3. MaterialChanger::Prepare's second argument, &func_021123f4  ->
+ *     port_ov053_at(0x021123f4)
+ *  4. MaterialChanger::SetFile's second argument, &func_021123f4  ->
+ *     port_ov053_at(0x021123f4)
+ *  5. TextureTransformer::SetFile's second argument, &func_021124ac ->
+ *     port_ov053_at(0x021124ac)
+ *     3-5 are one ruling applied three times; see the port_ov053_at note below.
  *
- * and that is what the ROM does, not a guess. The src TU declares
- * func_ov074_02122634 `void` (the decompiler dropped the result), but
- * src/func_ov074_02122634.cpp -- byte-matched, complete in delinks -- is
- * `int` and its last statement is `return 1;`. So on the ROM's own path r0
- * holds 1 when InitResources returns, which is exactly what this form
- * produces. The only other difference is the declaration of that callee,
- * corrected from `void` to `int` so the value can be named.
+ * DECLARATIONS (2)
+ *  6. func_ov074_02122634, `void` -> `int`, so item 1's value can be named.
+ *  7. func_01ffa344, `s32 (s32)` -> `int (int, int)`, matching its host body.
+ *
+ * ONE BLOCK MOVED
+ *  8. the twelve file-scope `extern` declarations move INSIDE the existing
+ *     extern "C" block (and the two for func_021123f4 / func_021124ac are
+ *     dropped, since items 3-5 no longer name them). That is the fix for
+ *     twelve of the first link's LNK2019s; see the note on the block itself.
+ *
+ * The //cpp marker line is also absent, because this file is already .cpp.
  *
  * The matched source stays byte-locked in src/ as proof and is dropped from
  * port/slice_ov074.txt. Delete this and put it back in the slice the moment
