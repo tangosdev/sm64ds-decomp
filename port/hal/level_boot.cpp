@@ -2135,7 +2135,7 @@ static void port_load0(void *t, int a, unsigned b)
 extern "C" {
 extern unsigned char data_0209f21c;
 extern unsigned char data_0209f250;
-extern int data_0209fc5c[];
+extern unsigned char data_0209fc5c[];
 extern unsigned char data_02092128[];
 extern unsigned char data_0209caa0[];
 extern unsigned char data_0209f2d8;      /* game mode: 0 single file, 1 VS, 2 script */
@@ -4407,7 +4407,11 @@ extern "C" {
 extern int data_0208ee44;              /* vblanks per game tick */
 extern unsigned char data_0209f21c;    /* controller count */
 extern unsigned char data_0209f250;    /* local player index */
-extern int data_0209fc5c[];            /* per-player "this slot is live" */
+/* BYTE view, the only correct one: the ROM strides this at 1 (u8 in every
+   src reader and in func_020308d0, the seat). The int[] extern this used to
+   be made the seat loop below write int strides, which read back as byte
+   fc5c[1] == 0 -- the frozen second player on every VS map. */
+extern unsigned char data_0209fc5c[];  /* per-player "this slot is live" */
 extern unsigned char data_02092128[];  /* per-player character */
 /* run mg16 lane MP3: the per-player input gate Player::Behavior tests before it
    will point data_020a0e40 at its own slot. Hosted by hal/auto_bss.cpp. */
@@ -4761,8 +4765,14 @@ static void port_a2_seat_body(int make_stage)
     SetNumPlayers(vs_players);
     data_0209f21c = (unsigned char)vs_players;
     data_0209f250 = (unsigned char)func_0203da9c();
+    /* The live flags are NOT seated here: func_020308d0, which SetNumPlayers
+       just called, is the ROM's own writer of data_0209fc5c[0..3] and it
+       already wrote them as bytes. A second seat here is where the freeze
+       came from -- through the old int[] extern, `data_0209fc5c[i] = 1`
+       wrote int strides, and the ROM's byte readers saw fc5c[1] == 0:
+       Player::Behavior's VS gate returned before a single tick, so player 2
+       stood in St_LevelEnter_Main forever on every VS map. */
     for (int i = 0; i < vs_players; ++i) {
-        data_0209fc5c[i] = 1;          /* this slot is live */
         data_02092128[i] = (unsigned char)i;   /* character: see below */
         port_vs_set_character(i, i);   /* and the port's own copy: see below */
     }

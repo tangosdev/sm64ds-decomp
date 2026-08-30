@@ -347,8 +347,12 @@ extern unsigned char data_0209f250[];
 // The per-slot "this slot is live" flags. _Z19LoadEntranceObjects... DISCARDS
 // the actor it just spawned when this is 0 (`data_0209f394[i] = 0`), so a slot
 // with a spawned actor and a clear flag looks identical to a slot that never
-// spawned. The probe prints it for exactly that reason.
-extern int data_0209fc5c[];
+// spawned. The probe prints it for exactly that reason -- and it prints the
+// BYTES the ROM reads, not the int view this extern used to be: the old
+// int-stride read said live=1,1 while the ROM's byte read saw fc5c[1] == 0,
+// which is precisely the lie that sent the frozen-player hunt to the wire
+// and the entrance table before it found the stride.
+extern unsigned char data_0209fc5c[];
 // hal/level_boot.cpp's own accessor for the level's entrance-record count.
 int port_entrance_count(void);
 // The fanned-out pad mirror and Stage::CheckInput's Ctrl block, for the probe's

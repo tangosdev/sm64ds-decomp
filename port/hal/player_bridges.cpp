@@ -291,7 +291,8 @@ static void hal_render_head_group(char *c, char *head, unsigned hid,
 /* run mg16 lane MP3: the two globals Player::Render's own gates read. */
 extern "C" {
 extern unsigned char data_0209f2d8;   /* VS mode flag */
-extern int data_0209fc5c[];           /* per-slot "this slot is live" */
+extern unsigned char data_0209fc5c[]; /* per-slot "this slot is live"; BYTE
+                                         stride, the ROM's own width */
 }
 
 /* ---- THE ROM'S PER-FRAME TEXTURE-SEQUENCE UPDATES --------------------------

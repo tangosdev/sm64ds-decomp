@@ -419,17 +419,18 @@ identical shape:
       grouped-section pair in hal/scene_vs_menu.cpp now, gated by the 'vsrank'
       band above, measured at f310+1 on all three maps.
   data_0209fc5c (1) + data_0209fc5d (3), the per-slot ready bytes, 0x0209fc60
-      next. NOT FIXED, and the reason is recorded rather than papered over:
-      data_0209fc5c is already hosted as `int data_0209fc5c[8]` and the tree
-      reads that host through TWO INCOMPATIBLE VIEWS which predate this lane --
-      int[] in hal/comms_conductor.cpp, hal/level_boot.cpp (which WRITES
-      data_0209fc5c[i] = 1 per slot) and hal/player_bridges.cpp; u8[] in
-      src/_Z19LoadEntranceObjects...c, port/unmatched/LoadEntranceObjects.cpp,
-      Player_Behavior.cpp and now src/func_ov075_021165b0.c. Four-byte and
-      one-byte strides over one object cannot both be right, so slots 1..3
-      already disagree between the port's writer and the ROM's readers.
-      Reconciling it changes hal/level_boot.cpp, which lane prop15 was barred
-      from touching, and it is a bigger question than a propagation.
+      next. FIXED by the fc5c width reconciliation (port/vs-fc5c-width): the
+      pair is a grouped-section block in hal/scene_vs_menu.cpp now, gated by
+      the 'ready' band, and every accessor in the tree is on the byte view.
+      The int/u8 split this entry used to record was live game-breakage, not
+      a latent hazard: hal/level_boot.cpp's VS seat wrote the flags at int
+      stride, the ROM's byte readers saw fc5c[1] == 0, and Player::Behavior's
+      VS gate (`data_0209f2d8 == 1 && data_0209fc5c[mPlayerNo] == 0`) froze
+      player 2 in St_LevelEnter_Main on every VS map -- the frozen-slot1
+      symptom the vs-online lane measured for 900 frames. The same byte read
+      is why _Z19LoadEntranceObjects... discarded the second player it
+      spawned (the orphan shadow-caster), which is what the ARENA DAY section
+      below is really about.
       data_0209fc5d is hosted at its ROM span and DISJOINT from fc5c; the three
       bytes read zero, which is what the DS reads in single player too. The
       note in hal/scene_vs_menu.cpp is where the next lane picks it up.

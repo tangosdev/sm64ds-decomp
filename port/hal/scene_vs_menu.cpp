@@ -167,35 +167,35 @@ __declspec(allocate(".dsstate$hvsrank0001")) __declspec(align(1))
 unsigned char data_0209b2ed[3];
 }
 
-/* THE PER-SLOT READY BYTES ARE THE SAME SPLIT AND ARE NOT FIXED HERE, and that
-   is a scope boundary rather than an oversight. dsd names data_0209fc5c
-   (1 byte) and data_0209fc5d (3), 0x0209fc60 is the next object, and
-   func_ov075_021165b0 walks both names over that one four-byte run exactly the
-   way it walks the ranking pair. But data_0209fc5c is ALREADY hosted, as
-   hal/auto_bss.cpp's `int data_0209fc5c[8]`, and the tree reads that host
-   through TWO INCOMPATIBLE VIEWS that predate this lane:
+/* THE PER-SLOT READY BYTES, the data_0209b2ec shape a third time and the one
+   whose split was LIVE GAME-BREAKAGE rather than a latent hazard. dsd names
+   data_0209fc5c (1 byte) and data_0209fc5d (3), 0x0209fc60 is the next
+   object, and func_ov075_021165b0 walks both names over that one four-byte
+   run exactly the way it walks the ranking pair.
 
-     as int[]  hal/comms_conductor.cpp, hal/level_boot.cpp (which WRITES
-               data_0209fc5c[i] = 1 per slot) and hal/player_bridges.cpp
-     as u8[]   src/_Z19LoadEntranceObjects...c, port/unmatched/
-               LoadEntranceObjects.cpp, Player_Behavior.cpp, and now
-               src/func_ov075_021165b0.c
+   Until this pair moved here, data_0209fc5c was hal/auto_bss.cpp's generic
+   `int data_0209fc5c[8]`, and hal/level_boot.cpp's VS seat wrote it at INT
+   stride while every ROM body reads it at BYTE stride. Player::Behavior's
+   own VS gate is `if (data_0209f2d8 == 1 && data_0209fc5c[mPlayerNo] == 0)
+   return 1;` -- so byte 1 read 0, and player 2's actor froze in
+   St_LevelEnter_Main on every VS map, forever, while level-1 controls (VS
+   flag clear, gate never taken) looked fine. The same byte-0 read is why
+   _Z19LoadEntranceObjects... discarded the second player it had already
+   spawned into the world -- the orphan shadow-caster port_load1's count hold
+   was built to hide. One stride bug, three symptoms.
 
-   Four-byte strides and one-byte strides over the same object cannot both be
-   right, so slots 1..3 already disagree between the port's own writer and the
-   ROM's readers. Reconciling it means changing hal/level_boot.cpp, which this
-   lane is explicitly not allowed to touch, and it is a bigger question than a
-   propagation. data_0209fc5d is therefore hosted at its ROM span and DISJOINT
-   from fc5c, which is honest about what it is: the three bytes are zero and
-   func_ov075_021165b0's second loop reads zeros. In single player every one of
-   those bytes is zero on the DS too, so nothing observable changes today; in a
-   real VS session it is wrong, and it is wrong in the same direction the
-   int/u8 split already makes it wrong. Named here so the lane that reconciles
-   fc5c retires this paragraph and the disjoint definition together. */
+   Now every accessor in the tree is on the byte view (the int-view externs in
+   hal/comms_conductor.cpp, hal/level_boot.cpp and hal/player_bridges.cpp are
+   converted; the seat itself is SetNumPlayers -> func_020308d0, the ROM's own
+   byte writer), and the pair is one four-byte block, align(4) head and
+   align(1) member, asserted by gxband_guard's 'ready' band. */
+#pragma section(".dsstate$hready0000", read, write)
+#pragma section(".dsstate$hready0001", read, write)
 extern "C" {
-DSSTATE_BEGIN
+__declspec(allocate(".dsstate$hready0000")) __declspec(align(4))
+unsigned char data_0209fc5c[1];
+__declspec(allocate(".dsstate$hready0001")) __declspec(align(1))
 unsigned char data_0209fc5d[3];
-DSSTATE_END
 }
 
 /* The ROM's NULL pointer-to-member pair at 0x02086b58 (kind:data(any), 8 bytes
