@@ -2070,12 +2070,34 @@ bool comms_loopback_install_from_env() {
     const char *role = std::getenv("SM64DS_COMMS_ROLE");
     if (!role || !*role) return false;      // nothing installed, nothing moved
 
+    // TWO SPELLINGS, AND BOTH OF THEM ARE THIS TREE'S OWN. Run rel0215, lane
+    // vsnet.
+    //
+    // 'parent'/'child' is the seam's vocabulary and has been since MP2. '0'/'1'
+    // is the RELAY WIRE'S vocabulary -- the role byte at offset 5 of the HELLO,
+    // frozen in the handshake contract above and written down as
+    // "role: 0 parent, 1 child" in port/tools/relay/README.md's own datagram
+    // table. Somebody who has read the relay's documentation and is setting up
+    // a relay session types the number, because the number is what that
+    // document taught him, and the 0.2.15 demo is what happens next: the role
+    // check refuses, nothing installs, and two windows sit in the same arena
+    // with no idea the other exists.
+    //
+    // THIS IS NOT A SECOND IDIOM, it is one knob that accepts the two
+    // vocabularies the tree already publishes for the same fact. The numbers
+    // mean what the wire says they mean and nothing else is accepted -- a
+    // 'host', a 'p1', a '2' still refuse, loudly, with both spellings named in
+    // the refusal so the next person does not have to read this file to find
+    // out what to type.
     if (std::strcmp(role, "parent") == 0)      g_role = kRoleParent;
     else if (std::strcmp(role, "child") == 0)  g_role = kRoleChild;
+    else if (std::strcmp(role, "0") == 0)      g_role = kRoleParent;
+    else if (std::strcmp(role, "1") == 0)      g_role = kRoleChild;
     else {
         std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_ROLE='%s' is not "
-                     "'parent' or 'child'; nothing installed, the seam keeps "
-                     "its solo answers\n", role);
+                     "'parent'/'child' (the seam's spelling) or '0'/'1' (the "
+                     "relay wire's, 0 parent 1 child); nothing installed, the "
+                     "seam keeps its solo answers\n", role);
         return false;
     }
 

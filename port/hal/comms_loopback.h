@@ -19,6 +19,12 @@
 //
 //   SM64DS_COMMS_ROLE=parent   bind the parent port, wait for children
 //   SM64DS_COMMS_ROLE=child    claim the first free child port, join the parent
+//   SM64DS_COMMS_ROLE=0 / =1   THE SAME TWO ROLES in the relay wire's own
+//                              spelling (0 parent, 1 child), which is what
+//                              port/tools/relay/README.md's datagram table
+//                              teaches whoever is setting up a relay session.
+//                              Accepted so the document a player reads and the
+//                              knob he then sets agree. Nothing else is.
 //   (unset)                    NOTHING IS INSTALLED. Every existing solo path
 //                              runs the seam's own solo answers, untouched.
 //
