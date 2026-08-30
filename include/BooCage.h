@@ -1,5 +1,5 @@
-#ifndef BOOCAGE_H
-#define BOOCAGE_H
+#ifndef DATBASKET_C_H
+#define DATBASKET_C_H
 
 #include "types.h"
 
@@ -35,9 +35,11 @@
 #include "ShadowModel.h"
 #include "dBgCh_Actr.h"
 
-/* ROM-authenticated lifecycle identity.  The remaining `BooCage` method names
- * predate the RTTI recovery, so they use the layout-only compatibility view
- * below until those imported names can be proved or corrected independently. */
+/* ROM-authenticated lifecycle identity.  `_ZTI11daTBasket_c` / `_ZTS11daTBasket_c`
+ * exist in ov063; no `_ZTI7BooCage` / `_ZTS7BooCage` ever did, so the cartridge
+ * names this class and `BooCage` was only ever the actor's coined name -- which
+ * is why `BooCage_Spawn` / `BooCage_SpawnInfo` keep it, exactly as ov018 keeps
+ * `MotherPenguin_Spawn` for `daPgMthr_c`. */
 struct daTBasket_c : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
@@ -48,19 +50,17 @@ struct daTBasket_c : dEnemyBase_c {
     u8                           mMuteSecretSound;      /* 0x37e -- nonzero skips Sound::PlaySecretSound */
     u8  pad_37f[0x1];
 
-    /* --- vtable --- */
-    virtual ~daTBasket_c();
-};
-
-struct BooCage : daTBasket_c {
-
-    /* methods */
-    int CleanupResources();
-    int InitResources();
-    int Render();
+    /* --- vtable ---
+     * Overrides of fBase_c virtuals, so each takes the base's slot regardless of
+     * the order declared here; the ROM's _ZTV11daTBasket_c @ 0x0211e930 puts
+     * ov063 code in exactly these five and inherits every other entry. */
+    virtual ~daTBasket_c();          /* slots 16 (D1), 17 (D0) */
+    virtual s32 InitResources();     /* slot  0 -- ov063:0x0211c35c */
+    virtual s32 CleanupResources();  /* slot  3 -- ov063:0x0211ae1c */
+    virtual s32 Behavior();          /* slot  6 -- ov063:0x0211b888 */
+    virtual s32 Render();            /* slot  9 -- ov063:0x0211b078 */
 };
 
 typedef char daTBasket_c_size_must_be_0x380[sizeof(daTBasket_c) == 0x380 ? 1 : -1];
-typedef char BooCage_size_must_be_0x380[sizeof(BooCage) == 0x380 ? 1 : -1];
 
-#endif /* BOOCAGE_H */
+#endif /* DATBASKET_C_H */

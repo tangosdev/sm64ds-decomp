@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN7BooCage13InitResourcesEv
+// @symbol _ZN11daTBasket_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_dBgCh_Actr.h"
 /* recovered: named members + shared header, real C++ method */
-#include "BooCage.h"
+#include "daTBasket_c.h"
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
@@ -13,7 +13,7 @@ extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *se
 }
 extern void *data_ov063_0211edec;
 
-int BooCage::InitResources()
+int daTBasket_c::InitResources()
 {
     void *m = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov063_0211edec);
     if (!_ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x300, m, 1, -1)) return 0;

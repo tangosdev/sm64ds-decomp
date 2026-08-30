@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN12MansionSteps16CleanupResourcesEv
+// @symbol _ZN11daTrsTrap_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "MansionSteps.h"
+#include "daTrsTrap_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 
-int MansionSteps::CleanupResources()
+int daTrsTrap_c::CleanupResources()
 {
     ((dBgW *)((char *)&mMovingMeshCollider))->Disable();
     int idx = *(int*)((char*)&mIndex);

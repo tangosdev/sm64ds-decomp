@@ -27,11 +27,11 @@ extern "C" unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16f
 extern "C" int _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void* a, unsigned short* t);
 extern "C" void func_ov063_021169c4(char* c);
 
-struct BooCage {
+struct daTBasket_c {
     int Behavior();
 };
 
-int BooCage::Behavior()
+int daTBasket_c::Behavior()
 {
     char* self = (char*)this;
     int r4 = 0;

@@ -1251,31 +1251,31 @@ ov062	0x0211dd38	data_ov062_0211dd38	Klepto_SpawnInfo	spawninfo
 ov062	0x0211dd5c	data_ov062_0211dd5c	_ZTV6Klepto	vtable alloc=0x490
 ov063	0x02115ee0	func_ov063_02115ee0	_ZN7daTrs_cD1Ev	vtable slot 16
 ov063	0x02115f48	func_ov063_02115f48	_ZN7daTrs_cD0Ev	vtable slot 17
-ov063	0x02115fc4	func_ov063_02115fc4	_ZN7BooCageD1Ev	vtable slot 16
-ov063	0x0211600c	func_ov063_0211600c	_ZN7BooCageD0Ev	vtable slot 17
+ov063	0x02115fc4	func_ov063_02115fc4	_ZN11daTBasket_cD1Ev	vtable slot 16
+ov063	0x0211600c	func_ov063_0211600c	_ZN11daTBasket_cD0Ev	vtable slot 17
 ov063	0x02116068	func_ov063_02116068	_ZN10BigBooIconD1Ev	vtable slot 16
 ov063	0x0211608c	func_ov063_0211608c	_ZN10BigBooIconD0Ev	vtable slot 17
-ov063	0x0211ae1c	func_ov063_0211ae1c	_ZN7BooCage16CleanupResourcesEv	vtable slot 3
+ov063	0x0211ae1c	func_ov063_0211ae1c	_ZN11daTBasket_c16CleanupResourcesEv	vtable slot 3
 ov063	0x0211ae40	func_ov063_0211ae40	_ZN7daTrs_c16CleanupResourcesEv	vtable slot 3
 ov063	0x0211af6c	func_ov063_0211af6c	_ZN7daTrs_c16OnPendingDestroyEv	vtable slot 12
 ov063	0x0211af70	func_ov063_0211af70	_ZN7daTrs_c6RenderEv	vtable slot 9
-ov063	0x0211b078	func_ov063_0211b078	_ZN7BooCage6RenderEv	vtable slot 9
+ov063	0x0211b078	func_ov063_0211b078	_ZN11daTBasket_c6RenderEv	vtable slot 9
 ov063	0x0211b0a4	func_ov063_0211b0a4	_ZN7daTrs_c8BehaviorEv	vtable slot 6
-ov063	0x0211b888	func_ov063_0211b888	_ZN7BooCage8BehaviorEv	vtable slot 6
+ov063	0x0211b888	func_ov063_0211b888	_ZN11daTBasket_c8BehaviorEv	vtable slot 6
 ov063	0x0211b9bc	func_ov063_0211b9bc	_ZN7daTrs_c13InitResourcesEv	vtable slot 0
-ov063	0x0211c35c	func_ov063_0211c35c	_ZN7BooCage13InitResourcesEv	vtable slot 0
+ov063	0x0211c35c	func_ov063_0211c35c	_ZN11daTBasket_c13InitResourcesEv	vtable slot 0
 ov063	0x0211c444	func_ov063_0211c444	_ZN10BigBooIcon13InitResourcesEv	vtable slot 0
 ov063	0x0211c4a0	func_ov063_0211c4a0	BigBooIcon_Spawn	spawnfunc
 ov063	0x0211c4d0	func_ov063_0211c4d0	BooCage_Spawn	spawnfunc
 ov063	0x0211c520	func_ov063_0211c520	BigBoo_Spawn	spawnfunc
 ov063	0x0211c590	func_ov063_0211c590	Boo_Spawn	spawnfunc
-ov063	0x0211c600	func_ov063_0211c600	_ZN12MansionStepsD1Ev	vtable slot 16
-ov063	0x0211c638	func_ov063_0211c638	_ZN12MansionStepsD0Ev	vtable slot 17
-ov063	0x0211cdec	func_ov063_0211cdec	_ZN12MansionSteps16CleanupResourcesEv	vtable slot 3
-ov063	0x0211ce30	func_ov063_0211ce30	_ZN12MansionSteps16OnPendingDestroyEv	vtable slot 12
-ov063	0x0211ce34	func_ov063_0211ce34	_ZN12MansionSteps6RenderEv	vtable slot 9
-ov063	0x0211ce74	func_ov063_0211ce74	_ZN12MansionSteps8BehaviorEv	vtable slot 6
-ov063	0x0211cf00	func_ov063_0211cf00	_ZN12MansionSteps13InitResourcesEv	vtable slot 0
+ov063	0x0211c600	func_ov063_0211c600	_ZN11daTrsTrap_cD1Ev	vtable slot 16
+ov063	0x0211c638	func_ov063_0211c638	_ZN11daTrsTrap_cD0Ev	vtable slot 17
+ov063	0x0211cdec	func_ov063_0211cdec	_ZN11daTrsTrap_c16CleanupResourcesEv	vtable slot 3
+ov063	0x0211ce30	func_ov063_0211ce30	_ZN11daTrsTrap_c16OnPendingDestroyEv	vtable slot 12
+ov063	0x0211ce34	func_ov063_0211ce34	_ZN11daTrsTrap_c6RenderEv	vtable slot 9
+ov063	0x0211ce74	func_ov063_0211ce74	_ZN11daTrsTrap_c8BehaviorEv	vtable slot 6
+ov063	0x0211cf00	func_ov063_0211cf00	_ZN11daTrsTrap_c13InitResourcesEv	vtable slot 0
 ov063	0x0211d2a0	func_ov063_0211d2a0	TrapDoor_Spawn	spawnfunc
 ov063	0x0211d2e0	func_ov063_0211d2e0	MerryGoRound_Spawn	spawnfunc
 ov063	0x0211d320	func_ov063_0211d320	Bookshelf_Spawn	spawnfunc
@@ -1298,12 +1298,12 @@ ov063	0x0211e7a8	data_ov063_0211e7a8	BooCage_SpawnInfo	spawninfo
 ov063	0x0211e7c4	data_ov063_0211e7c4	BigBooIcon_SpawnInfo	spawninfo
 ov063	0x0211e828	data_ov063_0211e828	_ZTV7daTrs_c	vtable alloc=0x5e0
 ov063	0x0211e8ac	data_ov063_0211e8ac	_ZTV10BigBooIcon	vtable alloc=0x380
-ov063	0x0211e930	data_ov063_0211e930	_ZTV7BooCage	vtable alloc=0x380
+ov063	0x0211e930	data_ov063_0211e930	_ZTV11daTBasket_c	vtable alloc=0x380
 ov063	0x0211ea10	data_ov063_0211ea10	MansionSteps_SpawnInfo	spawninfo
 ov063	0x0211ea2c	data_ov063_0211ea2c	Bookshelf_SpawnInfo	spawninfo
 ov063	0x0211ea48	data_ov063_0211ea48	MerryGoRound_SpawnInfo	spawninfo
 ov063	0x0211ea64	data_ov063_0211ea64	TrapDoor_SpawnInfo	spawninfo
-ov063	0x0211ea88	data_ov063_0211ea88	_ZTV12MansionSteps	vtable alloc=0x354
+ov063	0x0211ea88	data_ov063_0211ea88	_ZTV11daTrsTrap_c	vtable alloc=0x354
 ov063	0x0211eb34	data_ov063_0211eb34	FallBlockBbh_SpawnInfo	spawninfo
 ov063	0x0211eb58	data_ov063_0211eb58	_ZTV12FallBlockBbh	vtable alloc=0x34c
 ov063	0x0211ed10	data_ov063_0211ed10	MadPiano_SpawnInfo	spawninfo

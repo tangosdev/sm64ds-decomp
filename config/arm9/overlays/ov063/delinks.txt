@@ -323,7 +323,7 @@ src/unnamed/ov063/func_ov063_0211adfc.c:
     complete
     .text start:0x0211adfc end:0x0211ae1c
 
-src/actors/BooCage/_ZN7BooCage16CleanupResourcesEv.cpp:
+src/actors/BooCage/_ZN11daTBasket_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211ae1c end:0x0211ae40
 
@@ -339,7 +339,7 @@ src/actors/daTrs_c/_ZN7daTrs_c6RenderEv.cpp:
     complete
     .text start:0x0211af70 end:0x0211b078
 
-src/actors/BooCage/_ZN7BooCage6RenderEv.cpp:
+src/actors/BooCage/_ZN11daTBasket_c6RenderEv.cpp:
     complete
     .text start:0x0211b078 end:0x0211b0a4
 
@@ -347,7 +347,7 @@ src/actors/daTrs_c/_ZN7daTrs_c8BehaviorEv.cpp:
     complete
     .text start:0x0211b0a4 end:0x0211b888
 
-src/actors/BooCage/_ZN7BooCage8BehaviorEv.cpp:
+src/actors/BooCage/_ZN11daTBasket_c8BehaviorEv.cpp:
     complete
     .text start:0x0211b888 end:0x0211b9bc
 
@@ -355,7 +355,7 @@ src/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211b9bc end:0x0211c35c
 
-src/actors/BooCage/_ZN7BooCage13InitResourcesEv.cpp:
+src/actors/BooCage/_ZN11daTBasket_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211c35c end:0x0211c444
 
@@ -427,19 +427,19 @@ src/unnamed/ov063/func_ov063_0211cc18.c:
     complete
     .text start:0x0211cc18 end:0x0211cdec
 
-src/actors/MansionSteps/_ZN12MansionSteps16CleanupResourcesEv.cpp:
+src/actors/MansionSteps/_ZN11daTrsTrap_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211cdec end:0x0211ce30
 
-src/actors/MansionSteps/_ZN12MansionSteps16OnPendingDestroyEv.cpp:
+src/actors/MansionSteps/_ZN11daTrsTrap_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0211ce30 end:0x0211ce34
 
-src/actors/MansionSteps/_ZN12MansionSteps6RenderEv.cpp:
+src/actors/MansionSteps/_ZN11daTrsTrap_c6RenderEv.cpp:
     complete
     .text start:0x0211ce34 end:0x0211ce74
 
-src/actors/MansionSteps/_ZN12MansionSteps8BehaviorEv.cpp:
+src/actors/MansionSteps/_ZN11daTrsTrap_c8BehaviorEv.cpp:
     complete
     .text start:0x0211ce74 end:0x0211cf00
 

@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN12MansionSteps8BehaviorEv
+// @symbol _ZN11daTrsTrap_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "MansionSteps.h"
+#include "daTrsTrap_c.h"
 extern "C" {
 extern int func_ov063_0211c6f8(char* c);
 }
@@ -11,7 +11,7 @@ struct C;
 typedef void (C::*PMF)();
 extern PMF data_ov063_0211ef38[];
 
-int MansionSteps::Behavior()
+int daTrsTrap_c::Behavior()
 {
   unsigned char before = mState;
   int idx = mIndex;

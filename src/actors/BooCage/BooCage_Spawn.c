@@ -8,13 +8,13 @@
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV7BooCage */
+/* resolved: VT0 = _ZTV11daTBasket_c */
 int *BooCage_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(896);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
-        p[0] = (int)_ZTV7BooCage;
+        p[0] = (int)_ZTV11daTBasket_c;
         _ZN7dCcAc_cC1Ev((char *)p + 0x110);
         _ZN10dBgCh_ActrC1Ev((char *)p + 0x144);
         _ZN5ModelC1Ev((char *)p + 0x300);

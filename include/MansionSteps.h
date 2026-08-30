@@ -1,10 +1,12 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * Compatibility view of ROM RTTI class daTrsTrap_c: 5 still-imported
- * MansionSteps method symbols, 6 evidenced fields.
+/* Seeded by tools/gen_header.py from matched-function evidence; the class name
+ * and the five vtable slots below are ROM RTTI, not generated guesses.
+ * daTrsTrap_c is shared by four actors -- MansionSteps, Bookshelf, MerryGoRound
+ * and TrapDoor all store _ZTV11daTrsTrap_c @ 0x0211ea88 -- which is why the
+ * one-actor spelling `MansionSteps` could never have been the class.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef MANSIONSTEPS_H
-#define MANSIONSTEPS_H
+#ifndef DATRSTRAP_C_H
+#define DATRSTRAP_C_H
 #include "types.h"
 #include "Model.h"
 #include "dBgW_KcMbg.h"
@@ -20,7 +22,7 @@
 struct daTrsTrap_c : dActor_c {
     u32 pad_0d0;
 #else
-struct MansionSteps {
+struct daTrsTrap_c {
     u8  pad_000[0xd4];
 #endif
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
@@ -47,23 +49,19 @@ struct MansionSteps {
        the SetFile call would be, is still a near miss and not in the tree. */
     Matrix4x3 mClsnMat;            /* 0x324 */
 #ifdef __cplusplus
-    virtual ~daTrsTrap_c();
-};
-
-/* Layout-only compatibility view for imported method names that predate the
- * RTTI recovery.  Do not treat `MansionSteps` as ROM-authenticated spelling. */
-struct MansionSteps : daTrsTrap_c {
-    int Behavior();
-    int CleanupResources();
-    int Render();
-    void OnPendingDestroy();
-};
-
-typedef char daTrsTrap_c_size_must_be_0x354[sizeof(daTrsTrap_c) == 0x354 ? 1 : -1];
-#else
-};
+    /* --- vtable ---
+     * Overrides of fBase_c virtuals, so each takes the base's slot whatever the
+     * order here; the destructor stays first-declared because it is the ABI key
+     * function and picks the TU that emits _ZTV11daTrsTrap_c. */
+    virtual ~daTrsTrap_c();          /* slots 16 (D1), 17 (D0) */
+    virtual s32 InitResources();     /* slot  0 -- ov063:0x0211cf00, still delinked */
+    virtual s32 CleanupResources();  /* slot  3 -- ov063:0x0211cdec */
+    virtual s32 Behavior();          /* slot  6 -- ov063:0x0211ce74 */
+    virtual s32 Render();            /* slot  9 -- ov063:0x0211ce34 */
+    virtual void OnPendingDestroy(); /* slot 12 -- ov063:0x0211ce30 */
 #endif
+};
 
-typedef char MansionSteps_size_must_be_0x354[sizeof(struct MansionSteps) == 0x354 ? 1 : -1];
+typedef char daTrsTrap_c_size_must_be_0x354[sizeof(struct daTrsTrap_c) == 0x354 ? 1 : -1];
 
 #endif

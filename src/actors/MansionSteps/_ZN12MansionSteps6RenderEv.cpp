@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN12MansionSteps6RenderEv
+// @symbol _ZN11daTrsTrap_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "MansionSteps.h"
+#include "daTrsTrap_c.h"
 struct Base {
     virtual int vf0(int);
     virtual int vf1(int);
@@ -15,7 +15,7 @@ struct Obj {
     Base sub;
 };
 
-int MansionSteps::Render()
+int daTrsTrap_c::Render()
 {
     if (*(unsigned char*)((char*)&mVisible) == 0) return 1;
     ((Obj *)this)->sub.vfunc(0);

@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN12MansionSteps16OnPendingDestroyEv
-#include "MansionSteps.h"
+// @symbol _ZN11daTrsTrap_c16OnPendingDestroyEv
+#include "daTrsTrap_c.h"
 
-void MansionSteps::OnPendingDestroy()
+void daTrsTrap_c::OnPendingDestroy()
 {
 }
