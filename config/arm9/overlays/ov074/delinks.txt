@@ -112,6 +112,10 @@ src/func_ov074_02120474.cpp:
     complete
     .text start:0x02120474 end:0x021204c0
 
+src/func_ov074_021204c0.c:
+    complete
+    .text start:0x021204c0 end:0x021206c8
+
 src/func_ov074_021206c8.c:
     complete
     .text start:0x021206c8 end:0x021207b8
