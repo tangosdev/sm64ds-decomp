@@ -223,6 +223,39 @@ ACTOR_EXT_SLOT_AUTHORITY = {
     ('__ZTV21ArmedRotatingPlatform', 31): 0,  # ov036  @0x02113f48
     ('_data_ov036_02113f9c', 31): 0,          # ov036  @0x02114018
     ('__ZTV6ToxBox', 31): 0,                  # ov092  @0x0213234c
+    # ------------------------------------------------------------------
+    # run rel0215 wave 3, lane w3-e. SIX MORE, and they are CHECKED rather than
+    # baselined for the reason the block above gives: a slot-31 row is only
+    # clear if the dispatch sites say so, and a blanket slot-31 rule is the
+    # shortcut this header forbids.
+    #
+    # THE SWEEP WAS RE-RUN ON THIS BRANCH'S OWN BINARY rather than cited from
+    # the lane above, because this branch is what changed: six new 32-slot
+    # tables, and their fills are what abicheck reported. Matching indirect
+    # transfers of BOTH forms -- `call dword ptr [reg+7Ch]` and
+    # `jmp dword ptr [reg+7Ch]` -- over walk_window.exe finds TWENTY-TWO sites,
+    # fourteen calls and eight tail jumps, and NOT ONE has an argument pushed
+    # and live at the transfer. The calls are all
+    #   `mov ecx,<reg> / mov eax,dword ptr [<reg>] / call dword ptr [eax+7Ch]`
+    # and the jumps are cdecl forwarders that unwind their own frame first.
+    # TWO windows LOOK like they push (005AFC24 and 005E857B) and neither does:
+    # both are `push ebp / mov ebp,esp / push esi` followed by
+    # `mov esi,dword ptr [ebp+8]` -- a prologue frame save READING its argument
+    # off the frame, not pushing one. That is the same false positive the
+    # cleanup-w2 note above warns about, hit again and read again.
+    #
+    # PER TABLE, NOT PER SLOT: the word at slot 31 was read out of
+    # extracted/overlays/overlay_0022.bin and overlay_0025.bin at each table
+    # address + 31*4, and all six hold 0x020ee55c _ZN8Platform4KillEv -- an
+    # `Ev` method with no argument past its receiver, so ?ov22e_kill /
+    # ?ov25e_kill's __fastcall(void*, void*) / ret 0 shape is right.
+    # Evidence: ...runs/rel0215/out/w3-e/slot31_adjudication.txt
+    ('_data_ov022_02113de8', 31): 0,          # ov022 id 80   @0x02113e64
+    ('_data_ov022_02113f70', 31): 0,          # ov022 id 73   @0x02113fec
+    ('_data_ov022_02114034', 31): 0,          # ov022 id 77   @0x021140b0
+    ('__ZTV12FallBlockLll', 31): 0,           # ov022 id 70   @0x02114420
+    ('_data_ov025_02113760', 31): 0,          # ov025 id 163  @0x021137dc
+    ('_data_ov025_02113850', 31): 0,          # ov025 id 162  @0x021138cc
     # THE NINETEENTH IS THE SLOT-32 ONE AND IT IS THE OPPOSITE ANSWER.
     # FLYING_CARPET (130, ov036, 15daObjRcCarpet_c) owns a THIRTY-THREE slot
     # table, and its slot 32 word, read at 0x0211401c -- the last word of
