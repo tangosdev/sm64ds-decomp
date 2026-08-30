@@ -28,11 +28,11 @@
     "Enrolling free TUs does nothing, because the release build dead-strips whatever the",
     "linked closure never references."
   ],
-  "linkedTus": 8775,
+  "linkedTus": 9121,
   "matchedTus": 11324,
   "measuredAt": "2026-08-30",
   "branch": "port-mount-noseat-cluster",
-  "commit": "0cf94f562",
+  "commit": "ce1afba51",
   "stale": false,
-  "basis": "single lane cons at its pushed tip 0cf94f562, measured against the tip's own battery build walk_window.map (tree clean, battery ALL GREEN, the tip that closed cast-campaign wave 2). +400 over the morning's 8375 stamp: seven reviewed merges seating the water enemy pack, Eyerok, Snowman's Land, the Goomboss, Shifting Sand Land's remaining cast, four small overlays (THI big+cave, Bowser in the Sky, the mirror arena), and the final ov075 propagation that retired the last VS faces - every function in ov075 now runs recovered source. Two disclosed holes remain the decomp's: func_ov074_021201f0 (Goomboss state-0) and _ZN7Wiggler8BehaviorEv, both filed as crack targets. Remaining frontier: wave 3 partial-overlay tails (~776), then arm9/ov002/ov006."
+  "basis": "single lane cons at its pushed tip ce1afba51, measured against the tip's own battery build walk_window.map (tree clean, battery ALL GREEN, the merge that closed cast-campaign wave 3). +346 over the morning's 8775 stamp: eight reviewed merges seating ov064's last three classes, Princess Peach, Snowball and Moneybag, the snowmen and the Fly Guy, three level-overlay tails (ov025 the first overlay at 100%), the ov091 lifts and Fwoosh, and the Tick Tock Clock cluster behind a per-level re-patch mechanism; plus the two Goomboss state bodies and the declared Wiggler Behavior propagated from main by address. The tree crosses 80 percent. Two disclosed holes remain and both matched on main today: func_ov074_02121380 (declared, div 11, execution-audited) and _ZN14TTC_MovingBeam8BehaviorEv (byte-matched, PR #2026) -- seating lanes for both are in flight. Remaining frontier: wave-4 partial-overlay tails, then arm9/ov002/ov006."
 }
