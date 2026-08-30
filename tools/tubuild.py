@@ -3610,7 +3610,8 @@ def shared_build_bin_snapshot():
             for path in sorted((REPO / "build").glob("*.bin")) if path.is_file()}
 
 
-def compile_linkcheck_sources(srcs, vers, cache, init_srcs, syms, build_root, jobs):
+def compile_linkcheck_sources(srcs, vers, cache, init_srcs, syms, build_root, jobs,
+                              intact_tus_override=None):
     """Compile a scratch linkcheck with the normal production object policies.
 
     A baseline substitutes no candidate TU, but it still compiles production's
@@ -3620,7 +3621,8 @@ def compile_linkcheck_sources(srcs, vers, cache, init_srcs, syms, build_root, jo
     normal ROM build accepts and verifies the same objects.
     """
     compiler_only = RB.compiler_only_policies(srcs)
-    intact_tus = RB.intact_tu_policies(srcs)
+    intact_tus = (RB.intact_tu_policies(srcs) if intact_tus_override is None
+                  else intact_tus_override)
     failures, outcomes = [], collections.Counter()
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as ex:
         for rel, err, outcome in ex.map(
@@ -3918,7 +3920,8 @@ def cmd_linkcheck(args):
     syms = RB.enrolled_symbols()
     t0 = time.time()
     failures, outcomes = compile_linkcheck_sources(
-        srcs, vers, cache, init_srcs, syms, scratch, args.jobs)
+        srcs, vers, cache, init_srcs, syms, scratch, args.jobs,
+        intact_tus_override={} if baseline else None)
     dt = time.time() - t0
     report["phases"]["compile"] = {"ok": not failures, "seconds": round(dt, 1),
                                    "outcomes": dict(outcomes)}
