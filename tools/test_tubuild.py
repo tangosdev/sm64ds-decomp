@@ -774,6 +774,49 @@ def test_linkcheck_compile_passes_all_production_object_policies():
                      policy, intact)]
 
 
+def test_strict_control_demotes_only_requested_complete_sources():
+    with tempfile.TemporaryDirectory() as td:
+        root = pathlib.Path(td)
+        path = root / "overlays/ov047/delinks.txt"
+        path.parent.mkdir(parents=True)
+        path.write_text(
+            "src/actors/Promoted.cpp:\n"
+            "    complete\n"
+            "    .text start:0x1000 end:0x1010\n"
+            "    .data start:0x2000 end:0x2010\n\n"
+            "src/Other.cpp:\n"
+            "    complete\n"
+            "    .text start:0x1010 end:0x1020\n",
+            encoding="utf-8")
+
+        demoted, errors = tubuild.demote_complete_sources(
+            root, ["src/actors/Promoted.cpp"])
+
+        assert errors == []
+        assert demoted == ["src/actors/Promoted.cpp"]
+        text = path.read_text(encoding="utf-8")
+        promoted = text.split("src/Other.cpp:", 1)[0]
+        assert "complete" not in promoted
+        assert ".text start:0x1000 end:0x1010" in promoted
+        assert ".data start:0x2000 end:0x2010" in promoted
+        assert "src/Other.cpp:\n    complete" in text
+
+
+def test_strict_control_refuses_a_source_that_was_not_complete():
+    with tempfile.TemporaryDirectory() as td:
+        root = pathlib.Path(td)
+        path = root / "delinks.txt"
+        path.write_text(
+            "src/actors/Promoted.cpp:\n"
+            "    .text start:0x1000 end:0x1010\n",
+            encoding="utf-8")
+        demoted, errors = tubuild.demote_complete_sources(
+            root, ["src/actors/Promoted.cpp"])
+        assert demoted == []
+        assert errors == [
+            "src/actors/Promoted.cpp: delinks entry is not complete"]
+
+
 def test_linkcheck_symbol_verdict_uses_the_stock_failure_inventory():
     assert tubuild.linkcheck_symbol_verdict(True, False, None)
     assert tubuild.linkcheck_symbol_verdict(False, False, [])

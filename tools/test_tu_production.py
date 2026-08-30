@@ -1,3 +1,4 @@
+import json
 import pathlib
 import sys
 import tempfile
@@ -27,6 +28,70 @@ class ProductionTuAdmission(unittest.TestCase):
             with self.assertRaisesRegex(TP.ProductionTuError,
                                         "missing strict stock control"):
                 TP._strict_baseline()
+
+    def test_clean_worker_bootstraps_rom_gap_control(self):
+        entries = {"src/actors/Thing.cpp": {
+            "id": "ov047/Thing", "module": "ov047"}}
+        baseline = {"symbolErrors": [], "romSha256": "ab" * 32}
+        with mock.patch.object(
+                TP, "_strict_baseline",
+                side_effect=[TP.ProductionTuError("missing"), baseline]) as strict, \
+                mock.patch.object(TP.subprocess, "run",
+                                  return_value=mock.Mock(returncode=0)) as run:
+            self.assertIs(
+                TP._current_or_bootstrapped_intact_baseline(entries, 7), baseline)
+
+        self.assertEqual(strict.call_count, 2)
+        self.assertEqual(strict.call_args_list,
+                         [mock.call(entries), mock.call(entries)])
+        command = run.call_args.args[0]
+        self.assertIn("--baseline", command)
+        self.assertIn("ov047", command)
+        self.assertIn("7", command)
+        self.assertIs(run.call_args.kwargs["check"], False)
+
+    def test_clean_worker_refuses_failed_control_bootstrap(self):
+        entries = {"src/actors/Thing.cpp": {
+            "id": "ov047/Thing", "module": "ov047"}}
+        with mock.patch.object(
+                TP, "_strict_baseline",
+                side_effect=TP.ProductionTuError("missing")), \
+                mock.patch.object(TP.subprocess, "run",
+                                  return_value=mock.Mock(returncode=3)):
+            with self.assertRaisesRegex(
+                    TP.ProductionTuError, "baseline command exited 3"):
+                TP._current_or_bootstrapped_intact_baseline(entries, 7)
+
+    def test_rom_gap_control_requires_exact_intact_inventory(self):
+        entries = {"src/actors/Thing.cpp": {
+            "id": "ov047/Thing", "module": "ov047"}}
+        with tempfile.TemporaryDirectory() as td:
+            root = pathlib.Path(td)
+            (root / "final_link.o").write_bytes(b"independent linked control")
+            report = {
+                "baseline": True,
+                "analysis": {"passed": True},
+                "phases": {
+                    "checkModules": {"ok": True},
+                    "checkSymbols": {"errors": ["[ERROR] old"]},
+                },
+                "intactTusDemoted": [{
+                    "id": "ov047/Thing", "source": "src/actors/Thing.cpp"}],
+                "rom": {"sha256": "ab" * 32},
+            }
+            (root / "linkcheck.json").write_text(
+                json.dumps(report), encoding="utf-8")
+            with mock.patch.object(TP.TB, "BASELINE_LINK", root), \
+                    mock.patch.object(
+                        TP.TB, "validate_partition_baseline_evidence",
+                        return_value=("cd" * 32, None)):
+                baseline = TP._strict_baseline(entries)
+                self.assertEqual(baseline["romSha256"], "ab" * 32)
+                with self.assertRaisesRegex(
+                        TP.ProductionTuError, "current intact TU inventory"):
+                    TP._strict_baseline({
+                        "src/actors/Other.cpp": {
+                            "id": "ov047/Other", "module": "ov047"}})
 
 
 class ProductionTuObjects(unittest.TestCase):
