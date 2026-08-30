@@ -5183,8 +5183,7 @@ set_source_files_properties(
 # implying it.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sos.txt" SLICE_SOS_LINES)
 set(SLICE_SOS_SOURCES hal/scene_mg_bomroom.cpp
-                      unmatched/MgBomroom_StateDispatch.cpp
-                      unmatched/MgBomroom_Faces.cpp)
+                      unmatched/MgBomroom_StateDispatch.cpp)
 
 # THE DELETING DESTRUCTOR SPELLS ITS OWN TABLE AS THE SHARED PLACEHOLDER `VT`,
 # and this is the failure that links cleanly. src/func_ov006_020d5a78.c is
@@ -9842,12 +9841,36 @@ list(APPEND SLICE_OV090_SOURCES
 #     SHARK's typeinfo NAME STRING, "9daShark_c".
 #     port/unmatched/MgBomroom_Faces.cpp routed that with
 #       /alternatename:_data_ov090_021343b0=_data_ov006_021343b0
-#     whose own header records that its LHS is "DEFINED NOWHERE ELSE IN THE
+#     whose own header recorded that its LHS is "DEFINED NOWHERE ELSE IN THE
 #     LINK". THIS MOUNT DEFINES IT, so the alias goes inert and mg6's
 #     dScMgBomroom_c would read Shark's name string as an OAM table -- no link
-#     error, no byte-gate signal, wrong object at run time. The routing moves
-#     here, to the guard's own remedy, and the now-inert directive is retired
-#     at its own site rather than left reading as live routing.
+#     error, no byte-gate signal, wrong object at run time. The routing is the
+#     -D below, the guard's own remedy, and it survives the LHS becoming
+#     defined the way the alias could not.
+#
+#     WHAT THE RETIRED SEAT FILE SAID, folded here because the file is gone.
+#     port/unmatched/MgBomroom_Faces.cpp was deleted in run rel0215 (lane
+#     cleanup-w2): the ov090 lane took its one directive out and left 68 lines
+#     of comment compiling to an empty object, and prose belongs beside the
+#     routing that is live rather than in a translation unit that emits
+#     nothing. Three things it recorded that are not obvious from the -D:
+#       * AN ADDRESS ALONE DOES NOT NAME A SYMBOL. 0x021343b0 is a live symbol
+#         in BOTH config trees -- ov090/symbols.txt:108 data_ov090_021343b0 and
+#         ov006/symbols.txt:2381 data_ov006_021343b0 -- because the two
+#         overlays share an address window. Only the relocation's module field
+#         decides, which is why every one of these three notes quotes it. It is
+#         the finding lane CCN's closure walker hit when resolving by address
+#         reported the overlay window four times over.
+#       * THE DECOMP-SIDE FIX IS ROUTED, NOT TAKEN. src/func_ov006_020d5e5c.c
+#         should declare data_ov006_021343b0; whether it still builds
+#         byte-identically under mwccarm is a byte-gated-tree question. src/ is
+#         not edited from here, so the -D is the whole port-side answer.
+#       * ov090 IS NOT CO-RESIDENT WITH A MINIGAME SCENE ANYWAY. The resident
+#         set for scene 370 is main + itcm + ov001 + ov004 + ov006, which is
+#         what makes this mount define the ov006 name and nothing define the
+#         ov090 one.
+#     Same retirement, same reason, as lane cast-ov036's on
+#     hal/actor_classes_ov022.cpp's data_ov036_021140d4 alias one wave earlier.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov090_02131608.cpp"
     PROPERTIES COMPILE_DEFINITIONS "func_ov091_02134498=data_ov090_02134498")

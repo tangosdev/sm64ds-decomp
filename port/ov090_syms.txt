@@ -104,9 +104,9 @@
 # 0x020d5eb4 is that TU's own literal pool. The spelling is a wrong-overlay
 # crossing in the decomp, not a port question.
 #
-# The tree ALREADY routes it, in port/unmatched/MgBomroom_Faces.cpp:
+# The tree USED TO route it from port/unmatched/MgBomroom_Faces.cpp, with
 #     #pragma comment(linker, "/alternatename:_data_ov090_021343b0=_data_ov006_021343b0")
-# and that alias's own header says, correctly, that its LHS is "DEFINED NOWHERE
+# and that alias's own header said, correctly, that its LHS is "DEFINED NOWHERE
 # ELSE IN THE LINK". THIS MOUNT DEFINES IT. An /alternatename whose LHS is
 # defined is defeated SILENTLY, so on this branch the alias would stop working
 # and func_ov006_020d5e5c would bind to Shark's name string instead of ov006's
@@ -117,7 +117,10 @@
 # set_source_files_properties on src/func_ov006_020d5e5c.c with
 # `data_ov090_021343b0=data_ov006_021343b0`. Same destination, same evidence,
 # and it survives the LHS becoming defined. port/tools/alternatename_guard.py
-# is what would have caught the alternative; it is not asked to.
+# is what would have caught the alternative; it is not asked to. The seat file
+# is gone as of run rel0215 (lane cleanup-w2) -- with its one directive removed
+# it was 68 lines of comment compiling to an empty object -- and everything it
+# recorded is folded into port/CMakeLists.txt note (c), beside the -D.
 #
 # ==== TWO OUTBOUND NAME RACES, BOTH ov090-TU-SPELLS-ov091 ==================
 # The same sweep run the other way -- every name ov090's own 70 TUs spell,
