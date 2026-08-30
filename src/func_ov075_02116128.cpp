@@ -1,7 +1,12 @@
 //cpp
-// NONMATCHING: register allocation (div=31). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
+// NONMATCHING: register allocation (div=31 on the canonical mwccarm 2004/b56, and the
+// same 31 on the 1.2 line this banner originally cited). Logic verified correct vs ROM.
 // Counts as decompiled, not matched.
+//
+// The schedule is not the problem: the ROM's instruction order is reproducible from C
+// and the whole residue is one register rotation. A closer draft (div 19) is banked in
+// nearmiss/db.jsonl; see notes/mwccarm-codegen.md 6bo for the three attractors, the
+// pragma x source-shape lever that reached it, and what has already been ruled out.
 extern "C" {
 unsigned short *_ZN2G212GetBG1ScrPtrEv();
 int func_02030958(int val);
