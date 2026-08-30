@@ -1,0 +1,255 @@
+{
+  "id": "ov071/daEyBm_c",
+  "module": "ov071",
+  "source": "src/actors/daEyBm_c.cpp",
+  "promoted_source": "src/actors/daEyBm_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x02121a6c..0x02121fe4, 13 functions, ending immediately before Coffin D1",
+    "ROM class identity: _ZTI8daEyBm_c at 0x02122db8 and _ZTS8daEyBm_c at 0x02122dac",
+    "the separately enrolled __sinit_ov071_02122a1c, ctor table entry, and resource BSS remain outside this class TU"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02121a6c",
+      "end": "0x02121fe4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN8daEyBm_cD1Ev",
+      "address": "0x02121a6c",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN8daEyBm_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN8daEyBm_cD0Ev",
+      "address": "0x02121aac",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN8daEyBm_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN8daEyBm_c13OnYoshiTryEatEv",
+      "address": "0x02121b00",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN8daEyBm_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN8daEyBm_c18SpawnDestroyEffectEv",
+      "address": "0x02121b08",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov071_02121b08.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN8daEyBm_c15UpdateCollisionER10dBgCh_Actr",
+      "address": "0x02121b50",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov071_02121b50.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN8daEyBm_c10HurtPlayerEv",
+      "address": "0x02121ba4",
+      "size": "0x000000c8",
+      "legacy_source": "src/func_ov071_02121ba4.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN8daEyBm_c12UpdateShadowEv",
+      "address": "0x02121c6c",
+      "size": "0x0000009c",
+      "legacy_source": "src/func_ov071_02121c6c.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN8daEyBm_c16CleanupResourcesEv",
+      "address": "0x02121d08",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN8daEyBm_c16CleanupResourcesEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN8daEyBm_c16OnPendingDestroyEv",
+      "address": "0x02121d10",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN8daEyBm_c16OnPendingDestroyEv.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN8daEyBm_c6RenderEv",
+      "address": "0x02121d14",
+      "size": "0x0000006c",
+      "legacy_source": "src/_ZN8daEyBm_c6RenderEv.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN8daEyBm_c8BehaviorEv",
+      "address": "0x02121d80",
+      "size": "0x00000134",
+      "legacy_source": "src/_ZN8daEyBm_c8BehaviorEv.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN8daEyBm_c13InitResourcesEv",
+      "address": "0x02121eb4",
+      "size": "0x000000e8",
+      "legacy_source": "src/_ZN8daEyBm_c13InitResourcesEv.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "MrI_Projectile_Spawn",
+      "address": "0x02121f9c",
+      "size": "0x00000048",
+      "legacy_source": "src/MrI_Projectile_Spawn.c",
+      "ordinal": 12
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy at its canonical arm9 home before text isolation."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves its exact canonical bytes before text isolation."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves its exact canonical bytes before text isolation."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves its exact canonical bytes before text isolation."
+    },
+    {
+      "symbol": "_ZTS8daEyBm_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov071",
+      "canonical_address": "0x02122dac",
+      "reason": "InitResources naturally emits the ROM-proven class type-name string at the start of the owned data band."
+    },
+    {
+      "symbol": "_ZTI8daEyBm_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov071",
+      "canonical_address": "0x02122db8",
+      "reason": "InitResources naturally emits the class single-inheritance RTTI; romdata_check proves its kind, name and dActor_c base relocations."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the canonical arm9 object and relocations before text isolation."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the canonical arm9 object and relocations before text isolation."
+    },
+    {
+      "symbol": "MrI_Projectile_SpawnInfo",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov071",
+      "canonical_address": "0x02122dc4",
+      "reason": "The typed actor descriptor naturally owns its factory relocation and exact priorities, flags and culling words."
+    },
+    {
+      "symbol": "_ZTV8daEyBm_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov071",
+      "canonical_address": "0x02122de8",
+      "reason": "InitResources naturally emits the complete class vtable; romdata_check applies the measured eight-byte public address-point bias and proves every slot through 0x02122e64."
+    }
+  ],
+  "notes": [
+    "Genuine lifecycle source form: the real header defines the virtual destructor inline and the TU defines InitResources as the key function. mwccarm owns retail D1/D0 and class data with no D2, manual metadata or forcing output.",
+    "SpawnDestroyEffect, UpdateCollision, HurtPlayer and UpdateShadow are truthful inferred private spellings. Their class ownership, inbound calls, bodies, layout, relocations and codegen are proven; the exact original English names and UpdateCollision reference spelling are not.",
+    "MrI_Projectile_Spawn and MrI_Projectile_SpawnInfo remain evidence-bounded C ABI aliases. The typed factory retains retail's measured allocator, base/member constructors and vptr seam because natural new selects the wrong allocator.",
+    "The retained __sinit_ov071_02122a1c, ctor table entry, and BSS at 0x021230b8..0x021230d0 remain separately enrolled and are not claimed by this class TU."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov071-daEyBm_c/daEyBm_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 13,
+    "functions_declared": 13,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS8daEyBm_c",
+        "_ZTI8daEyBm_c",
+        "_ZTI8dActor_c",
+        "_ZTI7dBase_c",
+        "MrI_Projectile_SpawnInfo",
+        "_ZTV8daEyBm_c"
+      ],
+      "dataExternalized": [
+        "MrI_Projectile_SpawnInfo",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI8daEyBm_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS8daEyBm_c",
+        "_ZTV8daEyBm_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

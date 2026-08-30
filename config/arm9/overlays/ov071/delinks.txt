@@ -243,57 +243,9 @@ src/MrI_Spawn.c:
     complete
     .text start:0x02121a1c end:0x02121a6c
 
-src/_ZN8daEyBm_cD1Ev.cpp:
+src/actors/daEyBm_c.cpp:
     complete
-    .text start:0x02121a6c end:0x02121aac
-
-src/_ZN8daEyBm_cD0Ev.cpp:
-    complete
-    .text start:0x02121aac end:0x02121b00
-
-src/_ZN8daEyBm_c13OnYoshiTryEatEv.cpp:
-    complete
-    .text start:0x02121b00 end:0x02121b08
-
-src/func_ov071_02121b08.c:
-    complete
-    .text start:0x02121b08 end:0x02121b50
-
-src/func_ov071_02121b50.c:
-    complete
-    .text start:0x02121b50 end:0x02121ba4
-
-src/func_ov071_02121ba4.cpp:
-    complete
-    .text start:0x02121ba4 end:0x02121c6c
-
-src/func_ov071_02121c6c.cpp:
-    complete
-    .text start:0x02121c6c end:0x02121d08
-
-src/_ZN8daEyBm_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02121d08 end:0x02121d10
-
-src/_ZN8daEyBm_c16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x02121d10 end:0x02121d14
-
-src/_ZN8daEyBm_c6RenderEv.cpp:
-    complete
-    .text start:0x02121d14 end:0x02121d80
-
-src/_ZN8daEyBm_c8BehaviorEv.cpp:
-    complete
-    .text start:0x02121d80 end:0x02121eb4
-
-src/_ZN8daEyBm_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02121eb4 end:0x02121f9c
-
-src/MrI_Projectile_Spawn.c:
-    complete
-    .text start:0x02121f9c end:0x02121fe4
+    .text start:0x02121a6c end:0x02121fe4
 
 src/_ZN6CoffinD1Ev.cpp:
     complete
