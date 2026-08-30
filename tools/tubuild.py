@@ -2348,6 +2348,16 @@ def verify_externalized_output(obj_bytes, entry, policies=None, homes=None,
                     candidate_module = (RL.normalize_module(resolved[0])
                                         if resolved[0] is not None else None)
                     candidate_address = resolved[1] + emitted["addend"]
+                    # mwcc's raw `_ZTV` relocation is relative to the storage
+                    # object, while symbols.txt names the public slot-array address
+                    # after the two-word ABI preamble.  This is the same raw-object
+                    # convention used by reloc_audit.object_reloc_dests: addend 8
+                    # resolves to the configured address point, not eight bytes past
+                    # it.  Explicit addend-zero references already use the public
+                    # convention and remain unchanged.
+                    if emitted["symbol"].startswith("_ZTV") \
+                            and emitted["addend"] >= OI.VTABLE_PREAMBLE:
+                        candidate_address -= OI.VTABLE_PREAMBLE
                     if (candidate_module, candidate_address) != \
                             (expected["target_module"], expected["target_address"]):
                         row_reasons.append(f"relocation +0x{offset:x} resolves to "
