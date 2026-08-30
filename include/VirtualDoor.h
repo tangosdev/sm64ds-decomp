@@ -11,7 +11,7 @@
 struct VirtualDoor : dActor_c {
     u8 pad_0d0[0x4];
 
-    virtual ~VirtualDoor();
+    virtual ~VirtualDoor() {}
 
     virtual s32 InitResources();
     virtual s32 CleanupResources();

@@ -202,6 +202,3 @@ int ChillBully::UpdateRunState()
  * Byte-for-byte the same shape as Bully's and BigBully's, which is what three
  * siblings sharing a base look like.
  */
-ChillBully::~ChillBully()
-{
-}

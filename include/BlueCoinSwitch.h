@@ -30,7 +30,7 @@ struct BlueCoinSwitch : dBgActor_c {
     u8 mHomeAreaId;                       /* 0x32e */
 
     /* --- vtable --- */
-    virtual ~BlueCoinSwitch();
+    virtual ~BlueCoinSwitch() {}
 
     s32 Behavior();
     int CleanupResources();

@@ -145,6 +145,3 @@ int AmbientSoundEffects::CleanupResources()
 }
 
 /* ROM ordinals 0/1 -- the compiler emits D1 and D0 from this definition. */
-AmbientSoundEffects::~AmbientSoundEffects()
-{
-}

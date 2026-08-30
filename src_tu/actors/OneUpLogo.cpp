@@ -210,6 +210,3 @@ void func_ov002_020f0e54(char *a, char *b)
 /* ROM ordinal 0 -- _ZN9OneUpLogoD1Ev, 0x020f0dd0, size 0x38 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN9OneUpLogoD1Ev
-OneUpLogo::~OneUpLogo()
-{
-}

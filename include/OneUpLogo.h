@@ -21,7 +21,7 @@ struct OneUpLogo : dActor_c {
     u8              mState;             /* 0x14e */
     u8              pad_14f;
 
-    virtual ~OneUpLogo();
+    virtual ~OneUpLogo() {}
 
     virtual s32 InitResources();
     virtual s32 CleanupResources();

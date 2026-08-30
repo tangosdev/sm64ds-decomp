@@ -51,7 +51,7 @@
 struct CameraTag : dActor_c {
     u8 unk_0d0[0x4];                  /* 0x0d0 */
 
-    virtual ~CameraTag();             /* slots 16 (D1), 17 (D0) */
+    virtual ~CameraTag() {}             /* slots 16 (D1), 17 (D0) */
 
     virtual s32  InitResources();     /* slot  0 */
     virtual s32  CleanupResources();  /* slot  3 */

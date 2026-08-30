@@ -369,6 +369,3 @@ void func_ov002_020b0a0c(void *c)
 /* ROM ordinal 0 -- _ZN4ExitD1Ev, 0x020b09b0, size 0x24 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN4ExitD1Ev
-Exit::~Exit()
-{
-}

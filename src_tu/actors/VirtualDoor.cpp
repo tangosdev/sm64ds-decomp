@@ -150,6 +150,3 @@ int VirtualDoor::CleanupResources()
 /* ROM ordinal 0 -- _ZN11VirtualDoorD1Ev, 0x020b07f8, size 0x24 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN11VirtualDoorD1Ev
-VirtualDoor::~VirtualDoor()
-{
-}

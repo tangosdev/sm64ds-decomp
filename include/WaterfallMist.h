@@ -18,7 +18,7 @@ struct WaterfallMist : dActor_c {
        one would be invention, not recovery. */
     void *mParticle;         /* 0x0d8 */
 
-    virtual ~WaterfallMist();
+    virtual ~WaterfallMist() {}
 
     virtual int InitResources();
     virtual int Behavior();

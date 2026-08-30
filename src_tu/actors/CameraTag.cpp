@@ -147,6 +147,3 @@ int CameraTag::CleanupResources()
 /* ROM ordinal 0 -- _ZN9CameraTagD1Ev, 0x020b0748, size 0x24 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN9CameraTagD1Ev
-CameraTag::~CameraTag()
-{
-}
