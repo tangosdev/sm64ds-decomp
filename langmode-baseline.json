@@ -26,13 +26,13 @@
       },
       "D0": {
         "draft": 0,
-        "migrated": 388,
-        "unmigrated": 1
+        "migrated": 389,
+        "unmigrated": 0
       },
       "D1": {
         "draft": 0,
-        "migrated": 405,
-        "unmigrated": 1
+        "migrated": 406,
+        "unmigrated": 0
       },
       "D2": {
         "draft": 0,
@@ -45,12 +45,12 @@
         "unmigrated": 70
       }
     },
-    "cpp_still_handspelled": 43,
+    "cpp_still_handspelled": 41,
     "mangled_c": 30,
     "mangled_cpp": 3528,
     "mangled_total": 3558,
     "nonmatching_drafts": 10,
-    "unmigrated_total": 73
+    "unmigrated_total": 71
   },
   "shadow_decls": {
     "local_body_no_include": 1103,
