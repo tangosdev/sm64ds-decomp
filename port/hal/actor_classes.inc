@@ -1306,6 +1306,24 @@ void hal_fill_pyramid_top_vtable(void);              /* _ZTV10PyramidTop, 32 */
 extern unsigned char PyramidTag_SpawnInfo[];         /* ov024 0x02113820, +4 = 86 */
 void *PyramidTag_Spawn(void);                        /* ov024 0x0211183c, 56 B */
 void hal_fill_pyramid_tag_vtable(void);              /* _ZTV10PyramidTag, 31 */
+/* run rel0215 wave 1 (lane cast-sweep1): OV033's OWN CAST, Tiny-Huge Island's
+   small side -- two of level 25's three skipped instances. dsd names ONE
+   vtable in this overlay and it is on the WRONG class: _ZTV9TinyCover
+   (0x02112440, RTTI 14daObjTtWater_c) is TINY_WATER's, and TINY_COVER's own
+   table is the unnamed data_ov033_0211237c (RTTI 13daObjTtFuta_c, futa = lid).
+   The factory installs, the RTTI strings and the spawn records all three agree,
+   so the rows below go by ADDRESS and every _ZN9TinyCover* body in src/ serves
+   id 105. Both tables are 32-slot Platform; dsd's landings read 26 and THREE.
+   Id 104 carries SEVEN own slots, not six -- slot 21 is a real OnGroundPounded
+   override and pounding the lid is the class's whole purpose. Derivation in
+   port/ov033_syms.txt, fills in hal/actor_classes_ov033.cpp, slice in
+   port/slice_sweep1_ov033.txt. */
+extern unsigned char TinyCover_SpawnInfo[];          /* ov033 0x02112358, +4 = 104 */
+void *TinyCover_Spawn(void);                         /* ov033 0x021113a4, 48 B */
+void hal_fill_tiny_cover_vtable(void);               /* data_ov033_0211237c, 32 */
+extern unsigned char TinyWater_SpawnInfo[];          /* ov033 0x0211241c, +4 = 105 */
+void *TinyWater_Spawn(void);                         /* ov033 0x02111690, 56 B */
+void hal_fill_tiny_water_vtable(void);               /* _ZTV9TinyCover, 32 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -1989,4 +2007,10 @@ void hal_fill_pyramid_tag_vtable(void);              /* _ZTV10PyramidTag, 31 */
     {85, "PYRAMID_TOP", PyramidTop_SpawnInfo, PyramidTop_Spawn, \
      hal_fill_pyramid_top_vtable}, \
     {86, "PYRAMID_TAG", PyramidTag_SpawnInfo, PyramidTag_Spawn, \
-     hal_fill_pyramid_tag_vtable},
+     hal_fill_pyramid_tag_vtable}, \
+    /* ---- run rel0215 wave 1 (lane cast-sweep1): ov033, Tiny-Huge Island's \
+       small side. The dsd vtable label is on the water, not the cover. ---- */ \
+    {104, "TINY_COVER", TinyCover_SpawnInfo, TinyCover_Spawn, \
+     hal_fill_tiny_cover_vtable}, \
+    {105, "TINY_WATER", TinyWater_SpawnInfo, TinyWater_Spawn, \
+     hal_fill_tiny_water_vtable},

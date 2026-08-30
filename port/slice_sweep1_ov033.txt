@@ -1,0 +1,74 @@
+# run rel0215 wave 1, lane cast-sweep1: OV033's OWN CAST (level 25, Tiny-Huge
+# Island's small side, data/stage/tibi_deka_t). Overlay 3 of 6 in this lane.
+#
+# The three-way source inventory:
+#     delinked complete to a src/ TU   17
+#     present but NONMATCHING-bannered  0
+#     MISSING                           0
+#                                      --
+#                                      17  == config/arm9/overlays/ov033/
+#                                             symbols.txt's kind:function count
+#
+# All seventeen are here. Nothing to refuse: no asm-void block, no scheduler,
+# no card loader, no wireless wrapper, and no //cpp real-destructor of the
+# ov024 PyramidTag shape -- both destructor pairs are plain .c files with C
+# names and both ride from src.
+#
+# TWO CLASSES, TWO TABLES, AND THE DSD LABEL IS ON THE WRONG ONE.
+# id 104 TINY_COVER takes 0x0211237c (unnamed by dsd, RTTI 13daObjTtFuta_c) and
+# the func_ov033_* bodies; id 105 TINY_WATER takes 0x02112440 (dsd
+# _ZTV9TinyCover, RTTI 14daObjTtWater_c) and the _ZN9TinyCover* bodies. Three
+# independent routes agree -- the factory installs, the RTTI strings and the
+# spawn records. The derivation is in port/ov033_syms.txt; the seat in
+# hal/actor_classes_ov033.cpp goes by address.
+#
+# SEVEN PER-SOURCE -D RENAMES travel with this slice (port/CMakeLists.txt),
+# and four of them exist because the resolver's placeholder names mean
+# different objects in different TUs:
+#
+#   func_ov033_021111e4.c    id 104's D0.  VT0 -> the OWN table 0x0211237c,
+#                            VT1 -> Platform's base 0x0210ae38, G0 -> the game
+#                            heap 0x020a0eac. Pool order read off the ROM body:
+#                            0x02111230 own, 0x02111234 base, 0x02111238 heap.
+#   _ZN9TinyCoverD1Ev.c      id 105's D1.  Its two stores are LABELLED
+#   _ZN9TinyCoverD0Ev.c      id 105's D0.  BACKWARDS by the resolver: the
+#                            source writes _ZTV10dBgActor_c first and VT1
+#                            second, but the ROM writes the OWN table first
+#                            (0x021113e4 stores the word at pool 0x02111418 =
+#                            0x02112440) and the base second (0x021113f4
+#                            stores pool 0x0211141c = 0x0210ae38). Left alone
+#                            the destructor would install Platform's base table
+#                            before the TextureTransformer teardown and leave
+#                            the OWN table installed after Actor::D2 -- exactly
+#                            inverted. Both spellings go to private names this
+#                            lane owns and hal/actor_classes_ov033.cpp binds
+#                            each; a direct -D is impossible anyway because
+#                            _ZTV10dBgActor_c is a live host array for every
+#                            other Platform in the port.
+#   func_ov033_02111310.cpp  id 104's InitResources. data_ov035_02111bfc ->
+#                            data_ov033_02111bfc. A LIVE wrong-object bug: the
+#                            ov035 name is MOUNTED, so it resolves, and the
+#                            collider would take level 27's data as its CLPS.
+#
+# THE MEASURED CLOSURE GAP: none. The first link added no arm9 TU -- Actor,
+# ActorBase, Platform, Model, MovingMeshCollider, MeshColliderBase,
+# TextureTransformer, SharedFilePtr, Event, Sound and Particle::System are all
+# already in the walk_window link for other classes. Measured off the link.
+
+src/func_ov033_021111a0.c
+src/func_ov033_021111e4.c
+src/func_ov033_0211123c.c
+src/func_ov033_02111280.c
+src/func_ov033_021112c4.cpp
+src/func_ov033_021112ec.cpp
+src/func_ov033_02111310.cpp
+src/TinyCover_Spawn.c
+src/_ZN9TinyCoverD1Ev.c
+src/_ZN9TinyCoverD0Ev.c
+src/_ZN9TinyCover16CleanupResourcesEv.cpp
+src/_ZN9TinyCover6RenderEv.cpp
+src/_ZN9TinyCover8BehaviorEv.c
+src/_ZN9TinyCover13InitResourcesEv.cpp
+src/TinyWater_Spawn.c
+src/__sinit_ov033_021119e8.c
+src/__sinit_ov033_02111a54.c
