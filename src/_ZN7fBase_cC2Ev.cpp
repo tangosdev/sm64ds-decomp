@@ -1,105 +1,49 @@
 //cpp
-// NONMATCHING: hand-written asm, not a C decompilation. Whole-function mnemonic
-// transcription of compiled-C-shaped code (stmdb prolog, plain ldr/str/bl body, ldmia
-// epilog - no C-inexpressible instruction), so the asm-primitive policy does not apply;
-// does NOT count as matched. Reverts to a draft until someone reproduces the bytes from
-// real C++ (fBase_c::fBase_c() - the inheritance chain and callees are already known).
 // @symbol _ZN7fBase_cC2Ev
-/* recovered: named members + shared header, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header */
+/* recovered: real C++ constructor -- mwcc emits both C1 and C2 from this
+ * definition; this file is enrolled against the base-object C2 variant. */
 #include "fBase_c.h"
+
+struct fBaseActorInfo {
+    u32 unk_000;
+    u16 behaviorPriority;
+    u16 renderPriority;
+};
+
 extern "C" {
-void _ZN7fBase_c9SceneNodeC1Ev(void);
-int func_0203b438(void);
-int func_02043810(void);
-extern int data_020a4bb8;
+extern u32 data_02099e70;
+extern u32 data_020a4b60;
+extern u16 data_020a4b54;
+extern u8 data_020a4b48;
+extern fBase_c::SceneNode *data_020a4b64;
+extern fBase_c::SceneNode data_020a4b6c;
+extern fBaseActorInfo **data_020a4bb8;
+
+int func_0203b438(fBase_c::SceneNode *root,
+                  fBase_c::SceneNode *node,
+                  fBase_c::SceneNode *parent);
+fBase_c *func_02043810(fBase_c *self);
 }
 
-extern "C" asm void* _ZN7fBase_cC2Ev(void* self) {
-    // r4 = this, r5 = &sceneNode (this + 0x14).
-    stmdb sp!, {r4, r5, lr}
-    sub sp, sp, #4
-    mov r4, r0
-    ldr r1, =data_02099edc
-    add r5, r4, #0x14
-    mov r0, r5
-    str r1, [r4]
-    bl _ZN7fBase_c9SceneNodeC1Ev
-    str r4, [r5, #0x10]
-    add r0, r5, #0x14
-    mov r2, #0
-    str r2, [r0]
-    str r2, [r0, #4]
-    str r4, [r0, #8]
-    strh r2, [r0, #0xc]
-    strh r2, [r0, #0xe]
-    add r0, r5, #0x24
-    str r2, [r0]
-    str r2, [r0, #4]
-    str r4, [r0, #8]
-    strh r2, [r0, #0xc]
-    strh r2, [r0, #0xe]
-    ldr r1, =data_02099e70
-    ldr r0, =data_020a4b60
-    ldr r2, [r1]
-    str r2, [r4, #4]
-    ldr r3, [r1]
-    ldr r2, [r0]
-    add r0, r3, #1
-    str r0, [r1]
-    str r2, [r4, #8]
-    ldr r0, =data_020a4b54
-    ldr r2, =data_020a4b64
-    ldrh r1, [r0]
-    ldr r0, =data_020a4b48
-    strh r1, [r4, #0xc]
-    ldrb r3, [r0]
-    ldr r0, =data_020a4b6c
-    mov r1, r5
-    strb r3, [r4, #0x12]
-    ldr r2, [r2]
-    bl func_0203b438
-    ldr r0, =data_020a4bb8
-    ldrh r1, [r4, #0xc]
-    ldr r0, [r0]
-    add r2, r4, #0x28
-    ldr ip, [r0, r1, lsl #2]
-    add r1, r4, #0x38
-    ldrh r3, [ip, #4]
-    mov r0, r4
-    strh r3, [r2, #0xc]
-    strh r3, [r2, #0xe]
-    ldrh r2, [ip, #6]
-    strh r2, [r1, #0xc]
-    strh r2, [r1, #0xe]
-    bl func_02043810
-    cmp r0, #0
-    beq Ldone
-    ldrb r2, [r0, #0x13]
-    ands r1, r2, #1
-    bne Lset1
-    ands r1, r2, #2
-    beq Lcheck4
-Lset1:
-    add r2, r4, #0x13
-    ldrb r1, [r2]
-    orr r1, r1, #2
-    strb r1, [r2]
-Lcheck4:
-    ldrb r1, [r0, #0x13]
-    ands r0, r1, #4
-    bne Lset2
-    ands r0, r1, #8
-    beq Ldone
-Lset2:
-    add r1, r4, #0x13
-    ldrb r0, [r1]
-    orr r0, r0, #8
-    strb r0, [r1]
-Ldone:
-    mov r0, r4
-    add sp, sp, #4
-    ldmia sp!, {r4, r5, lr}
-    bx lr
+fBase_c::fBase_c() : manager(this)
+{
+    uniqueID = data_02099e70;
+    data_02099e70++;
+    param1 = data_020a4b60;
+    actorID = data_020a4b54;
+    unk_012 = data_020a4b48;
+
+    func_0203b438(&data_020a4b6c, &manager.sceneNode, data_020a4b64);
+
+    fBaseActorInfo *info = data_020a4bb8[actorID];
+    manager.SetBehaviorPriority(info->behaviorPriority);
+    manager.SetRenderPriority(info->renderPriority);
+
+    fBase_c *parent = func_02043810(this);
+    if (parent != 0) {
+        if ((parent->pauseFlags & 1) || (parent->pauseFlags & 2))
+            pauseFlags |= 2;
+        if ((parent->pauseFlags & 4) || (parent->pauseFlags & 8))
+            pauseFlags |= 8;
+    }
 }

@@ -28,6 +28,12 @@ struct Bully : daOts_c {
     int CleanupResources();
     int Render();
     int InitResources();
+    virtual int UpdateRunState();
+    virtual void UpdateDeathState();
+    virtual void PlayStepSound();
+    virtual void PlayHitSound();
+    virtual void PlayShellHitSound();
+    virtual void PlayDeathSound();
 };
 
 typedef char Bully_size_must_be_0x400[sizeof(Bully) == 0x400 ? 1 : -1];

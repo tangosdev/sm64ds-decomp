@@ -71,7 +71,7 @@ extern int GetGameLanguage(void);
 extern void DecompressLZ16(void *, u32);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(void *, u32, u32);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(void *, u32, u32);
-extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *, int, int, int, int);
+extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile u16 *, int, int, int, int);
 extern void func_ov006_020c0aa8(char *);
 extern int func_ov006_020c1a88(char *);
 }
@@ -99,7 +99,7 @@ s32 dScMgCard_c::InitResources()
     Deallocate(f6);
     Deallocate(f5);
     Deallocate(f4);
-    _ZN3G2x13SetBlendAlphaEPVttttt((volatile u16 *)0x04000050, 0, 1, 0x10, 8);
+    _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16 *)0x04000050, 0, 1, 0x10, 8);
     *(volatile u16 *)0x04001050 = 0;
 
     {

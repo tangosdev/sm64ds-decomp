@@ -8,9 +8,21 @@
 #include "types.h"
 #include "Model.h"
 #include "dBgW_KcMbg.h"
+#ifdef __cplusplus
+#include "dActor_c.h"
+#endif
 
+#ifdef __cplusplus
+
+/* ROM RTTI and the destructor symbols authenticate daTrsTrap_c as the real
+ * lifecycle type.  The extra word is evidenced by the first member beginning
+ * at +0xd4 while dActor_c closes at +0xd0. */
+struct daTrsTrap_c : dActor_c {
+    u32 pad_0d0;
+#else
 struct MansionSteps {
     u8  pad_000[0xd4];
+#endif
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel;            /* 0x0d4 */
@@ -35,13 +47,22 @@ struct MansionSteps {
        the SetFile call would be, is still a near miss and not in the tree. */
     Matrix4x3 mClsnMat;            /* 0x324 */
 #ifdef __cplusplus
-    /* methods */
+    virtual ~daTrsTrap_c();
+};
+
+/* Layout-only compatibility view for imported method names that predate the
+ * RTTI recovery.  Do not treat `MansionSteps` as ROM-authenticated spelling. */
+struct MansionSteps : daTrsTrap_c {
     int Behavior();
     int CleanupResources();
     int Render();
     void OnPendingDestroy();
-#endif
 };
+
+typedef char daTrsTrap_c_size_must_be_0x354[sizeof(daTrsTrap_c) == 0x354 ? 1 : -1];
+#else
+};
+#endif
 
 typedef char MansionSteps_size_must_be_0x354[sizeof(struct MansionSteps) == 0x354 ? 1 : -1];
 

@@ -874,13 +874,13 @@
    "start": "0x2111848",
    "end": "0x21126d4",
    "classes": [
-    "MotherPenguin"
+    "daPgMthr_c"
    ],
    "n_functions_map": 23,
    "n_files": 23,
    "files": [
-    "src/_ZN13MotherPenguinD1Ev.cpp",
-    "src/_ZN13MotherPenguinD0Ev.c",
+    "src/_ZN10daPgMthr_cD1Ev.cpp",
+    "src/_ZN10daPgMthr_cD0Ev.c",
     "src/func_ov018_021118fc.c",
     "src/func_ov018_02111968.c",
     "src/func_ov018_02111a48.c",
@@ -896,11 +896,11 @@
     "src/func_ov018_0211235c.cpp",
     "src/func_ov018_02112398.cpp",
     "src/func_ov018_021123d0.c",
-    "src/_ZN13MotherPenguin16CleanupResourcesEv.cpp",
-    "src/_ZN13MotherPenguin16OnPendingDestroyEv.c",
-    "src/_ZN13MotherPenguin6RenderEv.cpp",
-    "src/_ZN13MotherPenguin8BehaviorEv.cpp",
-    "src/_ZN13MotherPenguin13InitResourcesEv.cpp",
+    "src/_ZN10daPgMthr_c16CleanupResourcesEv.cpp",
+    "src/_ZN10daPgMthr_c16OnPendingDestroyEv.c",
+    "src/_ZN10daPgMthr_c6RenderEv.cpp",
+    "src/_ZN10daPgMthr_c8BehaviorEv.cpp",
+    "src/_ZN10daPgMthr_c13InitResourcesEv.cpp",
     "src/MotherPenguin_Spawn.c"
    ],
    "ext_mix": {
@@ -1382,13 +1382,13 @@
    "start": "0x21111a0",
    "end": "0x21119d0",
    "classes": [
-    "Trap"
+    "daObjC1_Trap_c"
    ],
    "n_functions_map": 17,
    "n_files": 17,
    "files": [
-    "src/_ZN4TrapD1Ev.cpp",
-    "src/_ZN4TrapD0Ev.cpp",
+    "src/_ZN14daObjC1_Trap_cD1Ev.cpp",
+    "src/_ZN14daObjC1_Trap_cD0Ev.cpp",
     "src/func_ov010_0211124c.c",
     "src/func_ov010_0211125c.c",
     "src/func_ov010_02111284.c",
@@ -1397,10 +1397,10 @@
     "src/func_ov010_0211139c.cpp",
     "src/func_ov010_021113f0.c",
     "src/func_ov010_0211146c.c",
-    "src/_ZN4Trap16CleanupResourcesEv.cpp",
-    "src/_ZN4Trap6RenderEv.cpp",
-    "src/_ZN4Trap8BehaviorEv.cpp",
-    "src/_ZN4Trap13InitResourcesEv.c",
+    "src/_ZN14daObjC1_Trap_c16CleanupResourcesEv.cpp",
+    "src/_ZN14daObjC1_Trap_c6RenderEv.cpp",
+    "src/_ZN14daObjC1_Trap_c8BehaviorEv.cpp",
+    "src/_ZN14daObjC1_Trap_c13InitResourcesEv.c",
     "src/func_ov010_0211184c.c",
     "src/func_ov010_02111984.c",
     "src/Trap_Spawn.c"
@@ -5958,18 +5958,18 @@
    "start": "0x21111a0",
    "end": "0x211155c",
    "classes": [
-    "UkikiCage"
+    "daObjHmBskt_c"
    ],
    "n_functions_map": 8,
    "n_files": 8,
    "files": [
-    "src/_ZN9UkikiCageD1Ev.cpp",
-    "src/_ZN9UkikiCageD0Ev.cpp",
+    "src/_ZN13daObjHmBskt_cD1Ev.cpp",
+    "src/_ZN13daObjHmBskt_cD0Ev.cpp",
     "src/func_ov030_0211124c.cpp",
-    "src/_ZN9UkikiCage16CleanupResourcesEv.c",
-    "src/_ZN9UkikiCage6RenderEv.cpp",
-    "src/_ZN9UkikiCage8BehaviorEv.cpp",
-    "src/_ZN9UkikiCage13InitResourcesEv.cpp",
+    "src/_ZN13daObjHmBskt_c16CleanupResourcesEv.c",
+    "src/_ZN13daObjHmBskt_c6RenderEv.cpp",
+    "src/_ZN13daObjHmBskt_c8BehaviorEv.cpp",
+    "src/_ZN13daObjHmBskt_c13InitResourcesEv.cpp",
     "src/UkikiCage_Spawn.c"
    ],
    "ext_mix": {
@@ -8846,20 +8846,20 @@
    "start": "0x20b8bf0",
    "end": "0x20b9148",
    "classes": [
-    "PushBlock"
+    "daObjPushblock_c"
    ],
    "n_functions_map": 10,
    "n_files": 10,
    "files": [
-    "src/_ZN9PushBlockD1Ev.cpp",
-    "src/_ZN9PushBlockD0Ev.cpp",
-    "src/_ZN9PushBlock4KillEv.cpp",
-    "src/_ZN9PushBlock15OnHitByMegaCharER6Player.cpp",
-    "src/_ZN9PushBlock8OnPushedER8dActor_c.c",
-    "src/_ZN9PushBlock16CleanupResourcesEv.c",
-    "src/_ZN9PushBlock6RenderEv.cpp",
-    "src/_ZN9PushBlock8BehaviorEv.c",
-    "src/_ZN9PushBlock13InitResourcesEv.cpp",
+    "src/_ZN16daObjPushblock_cD1Ev.cpp",
+    "src/_ZN16daObjPushblock_cD0Ev.cpp",
+    "src/_ZN16daObjPushblock_c4KillEv.cpp",
+    "src/_ZN16daObjPushblock_c15OnHitByMegaCharER6Player.cpp",
+    "src/_ZN16daObjPushblock_c8OnPushedER8dActor_c.c",
+    "src/_ZN16daObjPushblock_c16CleanupResourcesEv.c",
+    "src/_ZN16daObjPushblock_c6RenderEv.cpp",
+    "src/_ZN16daObjPushblock_c8BehaviorEv.c",
+    "src/_ZN16daObjPushblock_c13InitResourcesEv.cpp",
     "src/PushBlock_Spawn.c"
    ],
    "ext_mix": {
@@ -37666,11 +37666,11 @@
    "start": "0x2111848",
    "end": "0x21126d4",
    "classes": [
-    "MotherPenguin"
+    "daPgMthr_c"
    ],
    "files": [
-    "src/_ZN13MotherPenguinD1Ev.cpp",
-    "src/_ZN13MotherPenguinD0Ev.c",
+    "src/_ZN10daPgMthr_cD1Ev.cpp",
+    "src/_ZN10daPgMthr_cD0Ev.c",
     "src/func_ov018_021118fc.c",
     "src/func_ov018_02111968.c",
     "src/func_ov018_02111a48.c",
@@ -37686,11 +37686,11 @@
     "src/func_ov018_0211235c.cpp",
     "src/func_ov018_02112398.cpp",
     "src/func_ov018_021123d0.c",
-    "src/_ZN13MotherPenguin16CleanupResourcesEv.cpp",
-    "src/_ZN13MotherPenguin16OnPendingDestroyEv.c",
-    "src/_ZN13MotherPenguin6RenderEv.cpp",
-    "src/_ZN13MotherPenguin8BehaviorEv.cpp",
-    "src/_ZN13MotherPenguin13InitResourcesEv.cpp",
+    "src/_ZN10daPgMthr_c16CleanupResourcesEv.cpp",
+    "src/_ZN10daPgMthr_c16OnPendingDestroyEv.c",
+    "src/_ZN10daPgMthr_c6RenderEv.cpp",
+    "src/_ZN10daPgMthr_c8BehaviorEv.cpp",
+    "src/_ZN10daPgMthr_c13InitResourcesEv.cpp",
     "src/MotherPenguin_Spawn.c"
    ],
    "ext_mix": {
@@ -37971,11 +37971,11 @@
    "start": "0x21111a0",
    "end": "0x21119d0",
    "classes": [
-    "Trap"
+    "daObjC1_Trap_c"
    ],
    "files": [
-    "src/_ZN4TrapD1Ev.cpp",
-    "src/_ZN4TrapD0Ev.cpp",
+    "src/_ZN14daObjC1_Trap_cD1Ev.cpp",
+    "src/_ZN14daObjC1_Trap_cD0Ev.cpp",
     "src/func_ov010_0211124c.c",
     "src/func_ov010_0211125c.c",
     "src/func_ov010_02111284.c",
@@ -37984,10 +37984,10 @@
     "src/func_ov010_0211139c.cpp",
     "src/func_ov010_021113f0.c",
     "src/func_ov010_0211146c.c",
-    "src/_ZN4Trap16CleanupResourcesEv.cpp",
-    "src/_ZN4Trap6RenderEv.cpp",
-    "src/_ZN4Trap8BehaviorEv.cpp",
-    "src/_ZN4Trap13InitResourcesEv.c",
+    "src/_ZN14daObjC1_Trap_c16CleanupResourcesEv.cpp",
+    "src/_ZN14daObjC1_Trap_c6RenderEv.cpp",
+    "src/_ZN14daObjC1_Trap_c8BehaviorEv.cpp",
+    "src/_ZN14daObjC1_Trap_c13InitResourcesEv.c",
     "src/func_ov010_0211184c.c",
     "src/func_ov010_02111984.c",
     "src/Trap_Spawn.c"

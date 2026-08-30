@@ -28,7 +28,7 @@ void func_ov006_020d122c(void *sb, int v);
 void func_ov004_020b04d0(int v);
 int func_ov004_020ae5c4(void *a, int b, int c, int d, int e, int f, int g);
 void func_ov006_020d3668(void *sb);
-void _ZN3G2x13SetBlendAlphaEPVttttt(void *reg, unsigned short a, unsigned short b, unsigned short c, unsigned short d);
+void _ZN3G2x13SetBlendAlphaEPVttttj(void *reg, unsigned short a, unsigned short b, unsigned short c, unsigned short d);
 void func_ov004_020b0cac(int c, int a1, int a2, int a3, int arg5, short arg6);
 
 extern int data_0209d4b8;
@@ -287,7 +287,7 @@ extern "C" void func_ov006_020d3ba0(char *sb)
     func_ov006_020d3668(sb);
     *(s32 *)(sb + 0x5370) = 1;
     *(volatile u16 *)0x04000050 = 0;
-    _ZN3G2x13SetBlendAlphaEPVttttt((void *)0x04001050, 4, 8, 6, 0x10);
+    _ZN3G2x13SetBlendAlphaEPVttttj((void *)0x04001050, 4, 8, 6, 0x10);
     func_ov004_020b0cac(0xd, 0x80, 0x60, 1, -1, 0xd);
 
     *(s32 *)(sb + 0x53c4) = 0x3c;

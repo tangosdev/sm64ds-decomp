@@ -23,7 +23,7 @@ extern void *_ZN3G2S12GetBG2ScrPtrEv(void);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 a, u32 b);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
+extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
 extern int RandomIntInternal(int *seed);
 
 extern u8 data_0209d45c;
@@ -109,7 +109,7 @@ s32 dScMgSlot3_c::InitResources()
     }
 
     data_0209d454 = 0x14;
-    _ZN3G2x13SetBlendAlphaEPVttttt((volatile u16 *)0x4000050, 0, 0xc, 0xc, 4);
+    _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16 *)0x4000050, 0, 0xc, 0xc, 4);
 
     func_ov006_020c2154(c + 0x4f38);
     func_ov006_020c1eb4(c + 0x4660);

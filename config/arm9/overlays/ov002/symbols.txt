@@ -303,15 +303,15 @@ _ZN15daObjMarioCap_c6RenderEv kind:function(arm,size=0xe4) addr:0x020b83c4
 _ZN15daObjMarioCap_c8BehaviorEv kind:function(arm,size=0x228) addr:0x020b84a8
 _ZN15daObjMarioCap_c13InitResourcesEv kind:function(arm,size=0x4c8) addr:0x020b86d0
 Cap_Spawn kind:function(arm,size=0x58) addr:0x020b8b98
-_ZN9PushBlockD1Ev kind:function(arm,size=0x4c) addr:0x020b8bf0
-_ZN9PushBlockD0Ev kind:function(arm,size=0x60) addr:0x020b8c3c
-_ZN9PushBlock4KillEv kind:function(arm,size=0x78) addr:0x020b8c9c
-_ZN9PushBlock15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x020b8d14
-_ZN9PushBlock8OnPushedER8dActor_c kind:function(arm,size=0x2c) addr:0x020b8d3c
-_ZN9PushBlock16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x020b8d68
-_ZN9PushBlock6RenderEv kind:function(arm,size=0x28) addr:0x020b8dac
-_ZN9PushBlock8BehaviorEv kind:function(arm,size=0x20c) addr:0x020b8dd4
-_ZN9PushBlock13InitResourcesEv kind:function(arm,size=0x12c) addr:0x020b8fe0
+_ZN16daObjPushblock_cD1Ev kind:function(arm,size=0x4c) addr:0x020b8bf0
+_ZN16daObjPushblock_cD0Ev kind:function(arm,size=0x60) addr:0x020b8c3c
+_ZN16daObjPushblock_c4KillEv kind:function(arm,size=0x78) addr:0x020b8c9c
+_ZN16daObjPushblock_c15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x020b8d14
+_ZN16daObjPushblock_c8OnPushedER8dActor_c kind:function(arm,size=0x2c) addr:0x020b8d3c
+_ZN16daObjPushblock_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x020b8d68
+_ZN16daObjPushblock_c6RenderEv kind:function(arm,size=0x28) addr:0x020b8dac
+_ZN16daObjPushblock_c8BehaviorEv kind:function(arm,size=0x20c) addr:0x020b8dd4
+_ZN16daObjPushblock_c13InitResourcesEv kind:function(arm,size=0x12c) addr:0x020b8fe0
 PushBlock_Spawn kind:function(arm,size=0x3c) addr:0x020b910c
 _ZN11PowerFlowerD1Ev kind:function(arm,size=0x50) addr:0x020b9148
 _ZN11PowerFlowerD0Ev kind:function(arm,size=0x64) addr:0x020b9198
@@ -1038,7 +1038,7 @@ func_ov002_020e6ad4 kind:function(arm,size=0x68) addr:0x020e6ad4
 func_ov002_020e6b3c kind:function(arm,size=0x38) addr:0x020e6b3c
 func_ov002_020e6b74 kind:function(arm,size=0x3c) addr:0x020e6b74
 func_ov002_020e6bb0 kind:function(arm,size=0x5c) addr:0x020e6bb0
-_ZN6PlayerC3Ev kind:function(arm,size=0x34) addr:0x020e6c0c
+Player_Spawn kind:function(arm,size=0x34) addr:0x020e6c0c
 _ZN9PowerStarD1Ev kind:function(arm,size=0x50) addr:0x020e6c40
 _ZN9PowerStarD0Ev kind:function(arm,size=0x64) addr:0x020e6c90
 _ZN10StarMarkerD1Ev kind:function(arm,size=0x40) addr:0x020e6cf4
@@ -1454,7 +1454,7 @@ _ZN7Minimap8BehaviorEv kind:function(arm,size=0xcfc) addr:0x020fa690
 _ZN7Minimap13InitResourcesEv kind:function(arm,size=0x478) addr:0x020fb38c
 _ZN7Minimap20GetPosFromMinimapPosER7Vector3S1_5Fix12IiEsS1_ kind:function(arm,size=0x58) addr:0x020fb804
 _ZN7Minimap15GetPosOnMinimapER7Vector3S1_5Fix12IiEsS1_ kind:function(arm,size=0x60) addr:0x020fb85c
-_ZN7MinimapC1Ev kind:function(arm,size=0x3c) addr:0x020fb8bc
+Minimap_Spawn kind:function(arm,size=0x3c) addr:0x020fb8bc
 _ZN3HUDD1Ev kind:function(arm,size=0x30) addr:0x020fb8f8
 _ZN3HUDD0Ev kind:function(arm,size=0x44) addr:0x020fb928
 _ZN3HUD15RenderTimeTimerEv kind:function(arm,size=0x440) addr:0x020fb96c
@@ -1474,7 +1474,7 @@ _ZN3HUD16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020fd5dc
 _ZN3HUD6RenderEv kind:function(arm,size=0x1c4) addr:0x020fd5e0
 _ZN3HUD8BehaviorEv kind:function(arm,size=0x260) addr:0x020fd7a4
 _ZN3HUD13InitResourcesEv kind:function(arm,size=0x750) addr:0x020fda04
-_ZN3HUDC1Ev kind:function(arm,size=0x3c) addr:0x020fe154
+HUD_Spawn kind:function(arm,size=0x3c) addr:0x020fe154
 _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc kind:function(arm,size=0x1ac) addr:0x020fe190
 _Z11LoadObjectsRN11LVL_Overlay8ObjTableEij kind:function(arm,size=0x90) addr:0x020fe33c
 _Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij kind:function(arm,size=0x18) addr:0x020fe3cc
@@ -1826,10 +1826,10 @@ _ZTI15daObjMarioCap_c kind:data(any) addr:0x021095ac
 _ZTS15daObjMarioCap_c kind:data(any) addr:0x021095b8
 Cap_SpawnInfo kind:data(any) addr:0x021095cc ambiguous
 _ZTV15daObjMarioCap_c kind:data(any) addr:0x021095f0
-_ZTI9PushBlock kind:data(any) addr:0x0210966c
-_ZTS9PushBlock kind:data(any) addr:0x02109678
+_ZTI16daObjPushblock_c kind:data(any) addr:0x0210966c
+_ZTS16daObjPushblock_c kind:data(any) addr:0x02109678
 PushBlock_SpawnInfo kind:data(any) addr:0x0210968c
-_ZTV9PushBlock kind:data(any) addr:0x021096b0
+_ZTV16daObjPushblock_c kind:data(any) addr:0x021096b0
 data_ov002_02109730 kind:data(any) addr:0x02109730
 data_ov002_02109738 kind:data(any) addr:0x02109738
 data_ov002_02109740 kind:data(any) addr:0x02109740

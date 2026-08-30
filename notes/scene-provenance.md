@@ -300,13 +300,19 @@ and its paired 0x1c-byte ctor/dtor write the base/derived vtables in mirror orde
 The typed header now represents it as `icon_c mIcons[9]`, and the compiler emits its
 reverse array teardown in dScEntry_c's destructor.
 
-The second range is a distinct trivial type: both element callbacks are four-byte
-no-ops. It does **not** hold `dScEntry_c::graphCallback_c`; equal 0x2c sizes had made
-that an attractive but false inference. The RTTI-proven graphCallback_c is instead the
-separate 0x2c-byte global at ov075:0x0211d71c. `__sinit_ov075_0211bb00` constructs it
-with `_ZN10dScEntry_c15graphCallback_cC1Ev`, which writes the dGraph base and derived
-vptrs and clears its first two fields. The 0x1b4 array remains opaque pending genuine
-type evidence.
+The second range is four non-polymorphic 0x2c-byte OAM animation players. Its
+constructor and destructor are both no-ops, while `func_02020820`, `func_02020768`,
+and the OAM rendering callers use the fields through 0x28. `OamAnimation` and its
+member names are descriptive inferences, not ROM-authenticated source spellings.
+
+It does **not** hold `dScEntry_c::graphCallback_c`; equal 0x2c sizes had made that an
+attractive but false inference. The RTTI-proven graph callback is instead the separate
+0x2c-byte global at ov075:0x0211d71c. `__sinit_ov075_0211bb00` constructs it with
+`_ZN10dScEntry_c15graphCallback_cC1Ev`, which writes the dGraph base and derived vptrs
+and clears its first two fields.
+
+With both member arrays typed, an empty `dScEntry_c::~dScEntry_c()` makes mwccarm emit
+the ROM's two reverse-order array-destruction calls and base destruction byte-for-byte.
 
 **Members below 0x50** are all inherited. The flat header this superseded had an
 `unk_00c` that was actually `fBase_c::actorID` misread as this class's own, because a

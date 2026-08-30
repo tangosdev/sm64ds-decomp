@@ -4,7 +4,7 @@
 void Particle::Converge::Func(EffectData& effect, char* particle,
                               Vector3& acceleration)
 {
-    BehaviorParticle& state = *(BehaviorParticle*)particle;
+    Element& state = *(Element*)particle;
 
     acceleration.x += effect.converge.strength
         * ((effect.converge.targetX - state.offset.x) - state.velocity.x) >> 12;

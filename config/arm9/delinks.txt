@@ -700,7 +700,7 @@ src/_ZN6Camera13InitResourcesEv.cpp:
     complete
     .text start:0x0200e338 end:0x0200e444
 
-src/_ZN6CameraC1Ev.c:
+src/Camera_Spawn.cpp:
     complete
     .text start:0x0200e444 end:0x0200e494
 
@@ -1952,7 +1952,7 @@ src/_ZN7Clipper13Func_0201559CEv.cpp:
     complete
     .text start:0x0201559c end:0x020156dc
 
-src/_ZN7Clipper13Func_020156DCEv.cpp:
+src/_ZN7Clipper13Func_020156DCEitii.cpp:
     complete
     .text start:0x020156dc end:0x020156fc
 
@@ -3482,15 +3482,15 @@ src/_ZN3OAM12EnableSubOAMEv.cpp:
     complete
     .text start:0x020219f0 end:0x02021a04
 
-src/func_02021a04.c:
+src/_ZN8Particle10SysTracker8Contents6UnlinkERNS1_5EntryE.cpp:
     complete
     .text start:0x02021a04 end:0x02021a48
 
-src/func_02021a48.c:
+src/_ZN8Particle10SysTracker8Contents4LinkERNS1_5EntryE.cpp:
     complete
     .text start:0x02021a48 end:0x02021a74
 
-src/func_02021a74.c:
+src/_ZN8Particle10SysTracker8Contents6CreateEjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE.cpp:
     complete
     .text start:0x02021a74 end:0x02021b58
 
@@ -3498,23 +3498,23 @@ src/_ZNK8Particle10SysTracker8Contents8FindDataEj.cpp:
     complete
     .text start:0x02021b58 end:0x02021b98
 
-src/func_02021b98.c:
+src/_ZN8Particle10SysTracker8Contents5ClearEv.cpp:
     complete
     .text start:0x02021b98 end:0x02021bec
 
-src/func_02021bec.c:
+src/_ZN8Particle10SysTracker8Contents6UpdateEv.cpp:
     complete
     .text start:0x02021bec end:0x02021c90
 
-src/func_02021c90.c:
+src/_ZN8Particle10SysTracker8ContentsC1Ev.cpp:
     complete
     .text start:0x02021c90 end:0x02021cd4
 
-src/func_02021cd4.c:
+src/_ZN8Particle10SysTracker8Contents5Entry5ResetEv.cpp:
     complete
     .text start:0x02021cd4 end:0x02021d1c
 
-src/func_02021d1c.cpp:
+src/_ZN8Particle10SysTracker8Contents5Entry10InitialiseEjjR7Vector3PK11Vector3_16fPN5dPa_c7level_c10callback_cE.cpp:
     complete
     .text start:0x02021d1c end:0x02021e40
 
@@ -3734,7 +3734,7 @@ src/_ZN8Particle10SysTrackerC1Ev.cpp:
     complete
     .text start:0x02023204 end:0x020233d4
 
-src/func_020233d4.c:
+src/GetActorDebugName.c:
     complete
     .text start:0x020233d4 end:0x020233f0
 
@@ -4260,7 +4260,7 @@ src/_Z17LoadLevelOverlaysi.cpp:
 src/_Z26LoadOrUnloadObjectOverlaysPFviEi.cpp:
     .text start:0x0202df70 end:0x0202e088
 
-src/_ZN5StageC3Ev.c:
+src/Stage_Spawn.cpp:
     complete
     .text start:0x0202e088 end:0x0202e118
 
@@ -7206,6 +7206,10 @@ src/_ZN7fBase_cD1Ev.cpp:
     complete
     .text start:0x02043dbc end:0x02043dec
 
+src/_ZN7fBase_cC2Ev.cpp:
+    complete
+    .text start:0x02043dec end:0x02043f4c
+
 src/func_02043f4c.c:
     complete
     .text start:0x02043f4c end:0x02043f98
@@ -8970,7 +8974,7 @@ src/_ZN3G2x18SetBlendBrightnessEPVtts.cpp:
     complete
     .text start:0x02055238 end:0x0205525c
 
-src/_ZN3G2x13SetBlendAlphaEPVttttt.cpp:
+src/_ZN3G2x13SetBlendAlphaEPVttttj.cpp:
     complete
     .text start:0x0205525c end:0x02055278
 

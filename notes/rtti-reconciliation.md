@@ -156,7 +156,7 @@ Each row: the tree named an ancestor and skipped the class in between.
     daObjWc_Obj07_c                  : daObjKaitendai_c   tree said Platform
     daObjKm1_Kuruma_c                : daObjKuruma_c      tree said Platform
     daObjFlMaruta_c  (FallBlockLll)  : daObjMaruta_c      tree said dBgActor_c
-    daObjHmMaruta_c  (UkikiCage)     : daObjMaruta_c      tree said dBgActor_c
+    daObjHmMaruta_c  (daObjHmBskt_c)     : daObjMaruta_c      tree said dBgActor_c
     daObjBSwdoor_c   (ShutterBob)    : daObjSwdoor_c      tree said Platform
     daObjCvShutter_c (ShutterHmc)    : daObjSwdoor_c      tree said Platform
     daObjFl_Ukiyuka_c                : daObjUkiyuka_c     tree said Platform

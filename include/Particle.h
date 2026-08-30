@@ -42,12 +42,12 @@ struct Particle {
     void *mResourceFile;    /* 0x000 */
     /* Particle::Manager. Initialise allocates it (func_0204a4c8) and pokes
        0x8000 into its +0x30; Particle::RenderAll and SysTracker::Update pass
-       it straight on, and System::NewSimple / func_02021d1c call
+       it straight on, and the particle registry's Entry::Initialise calls
        Particle::Manager::AddSystem on it. */
     void *mManager;         /* 0x004 */
-    /* Particle::SysTracker::Contents, a real nested class: the constructor and
-       destructor run func_02021c90 / func_02021b98 on it, and
-       System::FromUniqueID calls
+    /* Particle::SysTracker::Contents, a real nested class: SysTracker's
+       constructor constructs it, the conditional teardown path calls Clear,
+       and System::FromUniqueID calls
        Particle::SysTracker::Contents::FindData(this + 8, uniqueID). */
     u8  mContents;          /* 0x008 */
     u8  pad_009[0x747];
@@ -59,16 +59,16 @@ struct Particle {
     u8  mCallback_760;      /* 0x760 - SimpleCallback */
     u8  pad_761[0x7];
     s32 mBigSplashSystemID; /* 0x768 */
-    u8  mBigSplashCallback; /* 0x76c - vtable data_0208f3e4; effect 0xdd */
+    u8  mBigSplashCallback; /* 0x76c - splashCallback_c; effect 0xdd */
     u8  pad_76d[0x7];
     s32 mSystemID_774;      /* 0x774 */
-    u8  mCallback_778;      /* 0x778 - vtable data_0208f3e4, same class as 0x76c */
+    u8  mCallback_778;      /* 0x778 - splashCallback_c, same class as 0x76c */
     u8  pad_779[0x7];
     s32 mSystemID_780;      /* 0x780 */
-    u8  mCallback_784;      /* 0x784 - vtable data_0208f3a4 */
+    u8  mCallback_784;      /* 0x784 - bubbleCallback_c */
     u8  pad_785[0x7];
     s32 mRippleSystemID;    /* 0x78c */
-    u8  mRippleCallback;    /* 0x790 - vtable data_0208f444; effect 0x109 */
+    u8  mRippleCallback;    /* 0x790 - fitWaterSimpleCallback_c; effect 0x109 */
     u8  pad_791[0x7];
     s32 mSystemID_798;      /* 0x798 */
     u8  mCallback_79c;      /* 0x79c - SimpleCallback */
@@ -86,25 +86,25 @@ struct Particle {
     u8  pad_7d5[0xf];
     u8  mCallback_7e4;      /* 0x7e4 - scaleCallback_c */
     u8  pad_7e5[0xb];
-    u8  mCallback_7f0;      /* 0x7f0 - vtable data_0208f3f4 */
+    u8  mCallback_7f0;      /* 0x7f0 - checkWaterCallback_c */
     u8  pad_7f1[0x3];
-    u8  mCallback_7f4;      /* 0x7f4 - vtable data_0208f424 */
+    u8  mCallback_7f4;      /* 0x7f4 - checkWaterRippleCallback_c */
     u8  pad_7f5[0x3];
-    u8  mCallback_7f8;      /* 0x7f8 - vtable data_0208f454 */
+    u8  mCallback_7f8;      /* 0x7f8 - fitWaterCallback_c */
     u8  pad_7f9[0x3];
     s32 mCallbackParam_7fc; /* 0x7fc - +4 of the 0x7f8 callback; ctor sets 0x3000 */
-    u8  mCallback_800;      /* 0x800 - vtable data_0208f454, same class as 0x7f8 */
+    u8  mCallback_800;      /* 0x800 - fitWaterCallback_c, same class as 0x7f8 */
     u8  pad_801[0x3];
     s32 mCallbackParam_804; /* 0x804 - +4 of the 0x800 callback; ctor ends at 0x4b000 */
-    u8  mCallback_808;      /* 0x808 - vtable data_0208f404 */
+    u8  mCallback_808;      /* 0x808 - checkYoganCallback_c */
     u8  pad_809[0x7];
-    u8  mWeatherCallback;   /* 0x810 - vtable data_0208f434; System::NewWeather */
+    u8  mWeatherCallback;   /* 0x810 - clipCallback_c; System::NewWeather */
     u8  pad_811[0x3];
     /* System::NewWeather writes its numWeatherEffectsNow argument to
        mWeatherCallback + 4, which is this byte; the constructor seeds it 1. */
     u8  mWeatherCallbackCount; /* 0x814 */
     u8  pad_815[0x3];
-    u8  mCallback_818;      /* 0x818 - vtable data_0208f464;
+    u8  mCallback_818;      /* 0x818 - cleanParticleCallback_c;
                                        System::NewUnkCallback818 passes it */
 
 #ifdef __cplusplus

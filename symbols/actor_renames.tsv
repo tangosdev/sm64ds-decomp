@@ -116,12 +116,12 @@ ov002	0x020b84a8	func_ov002_020b84a8	_ZN13WaterfallMist8BehaviorEv	vtable slot 6
 ov002	0x020b86d0	func_ov002_020b86d0	_ZN13WaterfallMist13InitResourcesEv	vtable slot 0
 ov002	0x020b8b98	func_ov002_020b8b98	Cap_Spawn	spawnfunc
 ov002	0x020b910c	func_ov002_020b910c	PushBlock_Spawn	spawnfunc
-ov002	0x020b9148	func_ov002_020b9148	_ZN9PushBlockD1Ev	vtable slot 16
-ov002	0x020b9198	func_ov002_020b9198	_ZN9PushBlockD0Ev	vtable slot 17
-ov002	0x020b9a7c	func_ov002_020b9a7c	_ZN9PushBlock16CleanupResourcesEv	vtable slot 3
-ov002	0x020b9aac	func_ov002_020b9aac	_ZN9PushBlock6RenderEv	vtable slot 9
-ov002	0x020b9b70	func_ov002_020b9b70	_ZN9PushBlock8BehaviorEv	vtable slot 6
-ov002	0x020b9c00	func_ov002_020b9c00	_ZN9PushBlock13InitResourcesEv	vtable slot 0
+ov002	0x020b9148	func_ov002_020b9148	_ZN16daObjPushblock_cD1Ev	vtable slot 16
+ov002	0x020b9198	func_ov002_020b9198	_ZN16daObjPushblock_cD0Ev	vtable slot 17
+ov002	0x020b9a7c	func_ov002_020b9a7c	_ZN16daObjPushblock_c16CleanupResourcesEv	vtable slot 3
+ov002	0x020b9aac	func_ov002_020b9aac	_ZN16daObjPushblock_c6RenderEv	vtable slot 9
+ov002	0x020b9b70	func_ov002_020b9b70	_ZN16daObjPushblock_c8BehaviorEv	vtable slot 6
+ov002	0x020b9c00	func_ov002_020b9c00	_ZN16daObjPushblock_c13InitResourcesEv	vtable slot 0
 ov002	0x020b9e0c	func_ov002_020b9e0c	PowerFlower_Spawn	spawnfunc
 ov002	0x020b9e64	func_ov002_020b9e64	_ZN10StarSwitchD1Ev	vtable slot 16
 ov002	0x020b9ea8	func_ov002_020b9ea8	_ZN10StarSwitchD0Ev	vtable slot 17
@@ -297,7 +297,7 @@ ov002	0x021095cc	data_ov002_021095cc	Cap_SpawnInfo	spawninfo
 ov002	0x021095f0	data_ov002_021095f0	_ZTV13WaterfallMist	vtable alloc=0xdc
 ov002	0x0210968c	data_ov002_0210968c	PushBlock_SpawnInfo	spawninfo
 ov002	0x021097a0	data_ov002_021097a0	PowerFlower_SpawnInfo	spawninfo
-ov002	0x02109800	data_ov002_02109800	_ZTV9PushBlock	vtable alloc=?
+ov002	0x02109800	data_ov002_02109800	_ZTV16daObjPushblock_c	vtable alloc=?
 ov002	0x02109900	data_ov002_02109900	ExclamationSwitch_SpawnInfo	spawninfo
 ov002	0x0210991c	data_ov002_0210991c	StarSwitch_SpawnInfo	spawninfo
 ov002	0x02109940	data_ov002_02109940	_ZTV10StarSwitch	vtable alloc=0x354
@@ -430,12 +430,12 @@ ov009	0x02113ae0	data_ov009_02113ae0	_ZTV11CastleWater	vtable alloc=0x338
 ov009	0x02113b7c	data_ov009_02113b7c	Flag_SpawnInfo	spawninfo
 ov009	0x02113ba0	data_ov009_02113ba0	_ZTV8DockPole	vtable alloc=0x320
 ov010	0x02111998	func_ov010_02111998	Trap_Spawn	spawnfunc
-ov010	0x021119d0	func_ov010_021119d0	_ZN4TrapD1Ev	vtable slot 16
-ov010	0x02111a08	func_ov010_02111a08	_ZN4TrapD0Ev	vtable slot 17
-ov010	0x02111a94	func_ov010_02111a94	_ZN4Trap16CleanupResourcesEv	vtable slot 3
-ov010	0x02111ab8	func_ov010_02111ab8	_ZN4Trap6RenderEv	vtable slot 9
-ov010	0x02111ae0	func_ov010_02111ae0	_ZN4Trap8BehaviorEv	vtable slot 6
-ov010	0x02111d20	func_ov010_02111d20	_ZN4Trap13InitResourcesEv	vtable slot 0
+ov010	0x021119d0	func_ov010_021119d0	_ZN14daObjC1_Trap_cD1Ev	vtable slot 16
+ov010	0x02111a08	func_ov010_02111a08	_ZN14daObjC1_Trap_cD0Ev	vtable slot 17
+ov010	0x02111a94	func_ov010_02111a94	_ZN14daObjC1_Trap_c16CleanupResourcesEv	vtable slot 3
+ov010	0x02111ab8	func_ov010_02111ab8	_ZN14daObjC1_Trap_c6RenderEv	vtable slot 9
+ov010	0x02111ae0	func_ov010_02111ae0	_ZN14daObjC1_Trap_c8BehaviorEv	vtable slot 6
+ov010	0x02111d20	func_ov010_02111d20	_ZN14daObjC1_Trap_c13InitResourcesEv	vtable slot 0
 ov010	0x02111dd0	func_ov010_02111dd0	LightBeam_Spawn	spawnfunc
 ov010	0x02111e10	func_ov010_02111e10	_ZN13PeachPaintingD1Ev	vtable slot 16
 ov010	0x02111e40	func_ov010_02111e40	_ZN13PeachPaintingD0Ev	vtable slot 17
@@ -446,7 +446,7 @@ ov010	0x02111fc0	func_ov010_02111fc0	_ZN13PeachPainting13InitResourcesEv	vtable 
 ov010	0x02112004	func_ov010_02112004	PeachPainting_Spawn	spawnfunc
 ov010	0x02112ac0	data_ov010_02112ac0	Trap_SpawnInfo	spawninfo
 ov010	0x02112b84	data_ov010_02112b84	LightBeam_SpawnInfo	spawninfo
-ov010	0x02112ba8	data_ov010_02112ba8	_ZTV4Trap	vtable alloc=0x3b0
+ov010	0x02112ba8	data_ov010_02112ba8	_ZTV14daObjC1_Trap_c	vtable alloc=0x3b0
 ov010	0x02112c44	data_ov010_02112c44	PeachPainting_SpawnInfo	spawninfo
 ov010	0x02112c68	data_ov010_02112c68	_ZTV13PeachPainting	vtable alloc=0x128
 ov012	0x02111420	func_ov012_02111420	SwitchPillar_Spawn	spawnfunc
@@ -886,11 +886,11 @@ ov029	0x021140dc	data_ov029_021140dc	_ZTV19RotatingPlatformWdw	vtable alloc=0x32
 ov029	0x0211417c	data_ov029_0211417c	SwitchActivatedPlank_SpawnInfo	spawninfo
 ov029	0x021141a0	data_ov029_021141a0	_ZTV20SwitchActivatedPlank	vtable alloc=0x3a8
 ov030	0x02111524	func_ov030_02111524	UkikiCage_Spawn	spawnfunc
-ov030	0x0211155c	func_ov030_0211155c	_ZN9UkikiCageD1Ev	vtable slot 16
-ov030	0x021115ac	func_ov030_021115ac	_ZN9UkikiCageD0Ev	vtable slot 17
-ov030	0x02111610	func_ov030_02111610	_ZN9UkikiCage16CleanupResourcesEv	vtable slot 3
-ov030	0x02111624	func_ov030_02111624	_ZN9UkikiCage8BehaviorEv	vtable slot 6
-ov030	0x02111638	func_ov030_02111638	_ZN9UkikiCage13InitResourcesEv	vtable slot 0
+ov030	0x0211155c	func_ov030_0211155c	_ZN13daObjHmBskt_cD1Ev	vtable slot 16
+ov030	0x021115ac	func_ov030_021115ac	_ZN13daObjHmBskt_cD0Ev	vtable slot 17
+ov030	0x02111610	func_ov030_02111610	_ZN13daObjHmBskt_c16CleanupResourcesEv	vtable slot 3
+ov030	0x02111624	func_ov030_02111624	_ZN13daObjHmBskt_c8BehaviorEv	vtable slot 6
+ov030	0x02111638	func_ov030_02111638	_ZN13daObjHmBskt_c13InitResourcesEv	vtable slot 0
 ov030	0x0211164c	func_ov030_0211164c	RollingLogTtm_Spawn	spawnfunc
 ov030	0x02111688	func_ov030_02111688	_ZN13RollingLogTtmD1Ev	vtable slot 16
 ov030	0x021116d0	func_ov030_021116d0	_ZN13RollingLogTtmD0Ev	vtable slot 17
@@ -903,7 +903,7 @@ ov030	0x021145e0	func_ov030_021145e0	UkikiStar_Spawn	spawnfunc
 ov030	0x02114638	func_ov030_02114638	UkikiThief_Spawn	spawnfunc
 ov030	0x02115950	data_ov030_02115950	UkikiCage_SpawnInfo	spawninfo
 ov030	0x02115a24	data_ov030_02115a24	RollingLogTtm_SpawnInfo	spawninfo
-ov030	0x02115a48	data_ov030_02115a48	_ZTV9UkikiCage	vtable alloc=0x4e0
+ov030	0x02115a48	data_ov030_02115a48	_ZTV13daObjHmBskt_c	vtable alloc=0x4e0
 ov030	0x02115b90	data_ov030_02115b90	UkikiThief_SpawnInfo	spawninfo
 ov030	0x02115bac	data_ov030_02115bac	UkikiStar_SpawnInfo	spawninfo
 ov030	0x02115bfc	data_ov030_02115bfc	_ZTV13RollingLogTtm	vtable alloc=0x344

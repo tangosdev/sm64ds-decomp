@@ -235,12 +235,12 @@ contradicted until derived constructors were migrated for real. Renamed to
 17 caller files' externs, `include/fBase_c.h`, `tu_manifest.json`, and
 `port/hal/actor_vtables.cpp`. Eligible 11064 → 11065; ROM 106/106 exact.
 
-Status caveat preserved by the rename: the function itself is still
-**NONMATCHING hand-written asm** — its file header says so and asks for
-reproduction from real C++ (`fBase_c::fBase_c()`; inheritance chain and
-callees are known). The rename changes only the label, but it is what lets
-derived-constructor candidates reference the base step by its real variant
-name instead of a placeholder extern.
+The naming pass did not initially change the function's hand-written asm. That
+follow-up is now complete: `_ZN7fBase_cC2Ev.cpp` defines a real
+`fBase_c::fBase_c()`, and the compiler owns its vptr plus the `Manager` member's
+`SceneNode` and process-node lifecycle. The 0x160-byte function matches directly
+with relocation destinations verified (`blind: 0`), is enrolled, and completes
+the 25-function `ActorBase` shadow TU at 25/25 exact.
 
 ## 5. What does NOT generalise yet — the measured walls
 
@@ -285,9 +285,9 @@ three globals, and calls its own `SetRanges`. None of that is a wall by
 itself — bodies stay hand-written either way — but the synthesized part must
 already match, and today the hand-written form stores TWO different vtables
 to `+0` in sequence (`data_0208e4b8` then `data_0208e3a4`), which reads as
-an undeclared intermediate base. Settle the fBase_c chain's declarations
-first; note it also calls `_ZN7fBase_cC1Ev`, whose complete-vs-base variant
-choice deserves the §4 treatment before anything builds on it.
+an undeclared intermediate base. The fBase_c step is now settled and named
+`_ZN7fBase_cC2Ev`; the remaining work is to express `dBase_c` and then recover
+the two rich `dActor_c` variants without hand-written vptr stores.
 
 ### 5c. There are no allocating constructors in this ROM — the "C3"s are factories
 
@@ -445,8 +445,10 @@ constructors are landed (nine above, plus `dCapEnemy_c::dCapEnemy_c`, which
 arrived from main with #1614); everything below is still a hand-mangled shell,
 asm transcription, or absent.
 
-1. ~~**fBase_c / dActor_c chain**~~ DONE as a naming step (2026-08-23):
-   `_ZN7fBase_cC1Ev` renamed C2 per §4b, 17 callers audited, ROM green.
+1. **fBase_c / dActor_c chain**: the root is DONE -- `_ZN7fBase_cC1Ev` was
+   renamed C2 per §4b, all 17 callers were audited, and the function is now a
+   real, enrolled 0x160-byte constructor. Next are the `dBase_c` declaration
+   and `dActor_c`'s C1/C2 pair.
 2. ~~**dBgCh_Gnd**~~ DONE (ninth, above).
 3. **Collision family, continued** — the natural next slice; each is one §6
    application once its header un-flattens:
@@ -486,11 +488,9 @@ asm transcription, or absent.
    derived ones emit the base step by name. `dBgPcC2Ev` landed the same day:
    byte-identical to its C1 sibling, same five stores.
 7. **Hierarchy-rooted, hardest last**: `fBase_c9SceneNodeC1Ev` 0x0203b4c4
-   (nested class, independent of the chain — try early if 3–6 stall);
-   `fBase_cC2Ev` 0x02043dec is a 0x160 NONMATCHING asm transcription today —
-   reproducing it from real C++ needs the `dBase_c` intermediate declared
-   (§5b/§5e facts) and is the root of everything below it:
-   `dActor_cC1/C2Ev` 0x020113c0/0x0201150c · `dEnemyBase_cC2Ev` 0x020aed98 ·
+   and `fBase_cC2Ev` 0x02043dec are DONE as real C++; the latter completes the
+   root TU and removes the chain's former asm dependency. Continue upward with
+   `dActor_cC1/C2Ev` 0x020113c0/0x0201150c and `dEnemyBase_cC2Ev` 0x020aed98 ·
    ~~`dBgActor_cC2Ev` 0x020eea50~~ DONE (2026-08-24): real and empty-bodied
    once `dActor_c()` was DECLARED in include/dActor_c.h -- the declaration
    points at the hand-spelt extern "C" C1/C2 pair (not the key function, so

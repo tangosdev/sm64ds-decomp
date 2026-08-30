@@ -31,6 +31,14 @@ struct TTC_MovingBeam : dBgActor_c {
     /* --- vtable --- */
     virtual ~TTC_MovingBeam();
 
+    /* An override the cartridge proves and this header never declared.
+       _ZTV14TTC_MovingBeam slot 6 pointed at fBase_c::Behavior; the ROM has
+       ov065:_ZN14TTC_MovingBeam8BehaviorEv (0x0211bd8c, 0x178 bytes), named in
+       symbols.txt but not yet decompiled -- the slot needs the symbol, not a body.
+       No `virtual` keyword, matching the overrides beside it: a derived declaration
+       of a base virtual overrides whether or not it repeats the word.
+       Measured by tools/romdata_check.py, the only gate that reads vtable bytes. */
+    int Behavior();
     int CleanupResources();
     int InitResources();
     int Render();

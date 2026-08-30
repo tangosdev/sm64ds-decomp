@@ -33,7 +33,7 @@ char *_ZN3G2S12GetBG3ScrPtrEv(void);
 void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 addr, u32 size);
 void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
+void _ZN3G2x13SetBlendAlphaEPVttttj(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
 void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 
@@ -94,7 +94,7 @@ s32 dScMgFlower_c::InitResources()
     Ov004_Deallocate(h);
 
     *(volatile u16 *)0x4000050 = 0;
-    _ZN3G2x13SetBlendAlphaEPVttttt((volatile u16 *)0x4001050, 4, 8, 6, 0xa);
+    _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16 *)0x4001050, 4, 8, 6, 0xa);
 
     data_0209d45c |= 4;
     data_0209d454 |= 0xc;

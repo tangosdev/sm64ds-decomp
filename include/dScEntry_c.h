@@ -1,6 +1,7 @@
 #ifndef DSCENTRY_C_H
 #define DSCENTRY_C_H
 
+#include "OamAnimation.h"
 #include "dScene_c.h"
 #include "dGraph_c.h"
 #include "dThIcon_c.h"
@@ -14,8 +15,10 @@
  * RTTI and the paired array construction/destruction prove the icon_c[9]
  * member at 0x70 derives from dThIcon_c. Its constructor, destructor and two
  * virtual slots are now native C++, so the compiler owns that array's reverse
- * destruction. The separate 0x1b4 array has no type evidence beyond four
- * trivial 0x2c-byte elements and remains explicitly opaque.
+ * destruction. The separate 0x1b4 array contains four non-polymorphic
+ * 0x2c-byte OAM animation players. That class spelling is descriptive and
+ * inferred from the fields' consumers; its layout and member lifecycle are
+ * byte-proven.
  *
  * RTTI also proves graphCallback_c derives from dGraph_c::callback_c, but it
  * is not the 0x1b4 array: its constructor operates on the separate 0x2c-byte
@@ -37,7 +40,7 @@ struct dScEntry_c : dScene_c {
 
     u8  unk_050[0x20];           /* 0x050 */
     icon_c mIcons[9];            /* 0x070..0x1b4 */
-    u8  mUnkArray[4][0x2c];      /* 0x1b4..0x264 -- distinct trivial type */
+    OamAnimation mOamAnimations[4]; /* 0x1b4..0x264 */
     u8  unk_264[0x1f];           /* 0x264 */
     u8  mFadeBrightness;           /* 0x283 -- driven into the sub engine's MASTER_BRIGHT */
     u8  mFadeTick;                 /* 0x284 -- steps the fade every other frame */
@@ -70,6 +73,8 @@ struct dScEntry_c::graphCallback_c : dGraph_c::callback_c {
 typedef char dScEntry_c_size_must_be_0x288[sizeof(dScEntry_c) == 0x288 ? 1 : -1];
 typedef char icon_c_size_must_be_0x24[
     sizeof(dScEntry_c::icon_c) == 0x24 ? 1 : -1];
+typedef char dScEntry_oam_animation_size_must_be_0x2c[
+    sizeof(OamAnimation) == 0x2c ? 1 : -1];
 typedef char dScEntry_graphCallback_c_size_must_be_0x2c[
     sizeof(dScEntry_c::graphCallback_c) == 0x2c ? 1 : -1];
 

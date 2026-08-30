@@ -69,6 +69,27 @@ header's size comments.
   3. Their `Vec.hpp` notes on member-init order affecting `LDR/STR` order match our codegen notes;
   4. No SDK source there by policy - names only.
 ---
-- The game's own scene name registry follows the spawn table in arm9 data
-  (`BOOT/TITLE/STAGE/STAR_SELECT`... strings) - internal EAD names, not yet
-  harvested.
+- **Harvested.** The registry isn't separate from `ACTOR_SPAWN_TABLE` (EU
+  `0x02090864`) - scenes and actors share the same 391-slot table. A parallel
+  `char*` array, `ACTOR_DEBUG_NAMES` (EU `0x02090e80`, immediately after the
+  spawn table), gives Nintendo's own EAD debug-build name for every slot -
+  `GetActorDebugName()` (src/GetActorDebugName.c, formerly `func_020233d4`) is
+  the accessor, called from `ShowCrashScreen.c:66` to print the offending
+  actor/scene's name on a crash. All 391 names + the `END_OF` sentinel are
+  captured in `symbols/actor_debug_names.tsv` (index, name, string address).
+  Indices 0-8 are the scene cluster (BOOT/DSMT/TITLE/STAGE/STAR_SELECT/
+  MINIGAME/ENTRY/RESULT/GAME_OVER), 9-359 are world actors, 360 is MULTIBOOT,
+  361-390 are minigame names, 391 is the END_OF sentinel used by the `i < 0x188`
+  bounds check in the accessor.
+
+  This is **Tier-A-grade evidence** (a literal ROM string, see
+  `notes/symbol-name-provenance.md`) for something Tier B explicitly couldn't
+  prove: `ACTOR_SPAWN_TABLE`'s wiring proves *which vtable* a slot spawns, but
+  "nothing in the binary says what \[a class\] means" - English glosses in
+  `config/rom-name-glossary.json` and `symbols/overlay_actors.md` were
+  community readings. This table is where the binary finally does say. It
+  won't always agree word-for-word (EAD's internal codes are terser than the
+  community's expanded English, e.g. raw `BC_SWITCH` vs. glossed
+  `BLUE_COIN_SWITCH`). The first cross-reference is recorded in
+  [`ead-debug-name-crossref.md`](ead-debug-name-crossref.md); it is deliberately
+  partial, so check both sources before promoting another gloss.

@@ -9,8 +9,8 @@ _ZN7SkiLift13InitResourcesEv kind:function(arm,size=0x134) addr:0x021116b4
 func_ov018_021117e8 kind:function(arm,size=0x1c) addr:0x021117e8
 func_ov018_02111804 kind:function(arm,size=0x14) addr:0x02111804
 SkiLift_Spawn kind:function(arm,size=0x30) addr:0x02111818
-_ZN13MotherPenguinD1Ev kind:function(arm,size=0x50) addr:0x02111848
-_ZN13MotherPenguinD0Ev kind:function(arm,size=0x64) addr:0x02111898
+_ZN10daPgMthr_cD1Ev kind:function(arm,size=0x50) addr:0x02111848
+_ZN10daPgMthr_cD0Ev kind:function(arm,size=0x64) addr:0x02111898
 func_ov018_021118fc kind:function(arm,size=0x6c) addr:0x021118fc
 func_ov018_02111968 kind:function(arm,size=0xe0) addr:0x02111968
 func_ov018_02111a48 kind:function(arm,size=0xf4) addr:0x02111a48
@@ -26,11 +26,11 @@ func_ov018_021122ec kind:function(arm,size=0x70) addr:0x021122ec
 func_ov018_0211235c kind:function(arm,size=0x3c) addr:0x0211235c
 func_ov018_02112398 kind:function(arm,size=0x38) addr:0x02112398
 func_ov018_021123d0 kind:function(arm,size=0x1c) addr:0x021123d0
-_ZN13MotherPenguin16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x021123ec
-_ZN13MotherPenguin16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02112450
-_ZN13MotherPenguin6RenderEv kind:function(arm,size=0x2c) addr:0x02112454
-_ZN13MotherPenguin8BehaviorEv kind:function(arm,size=0x50) addr:0x02112480
-_ZN13MotherPenguin13InitResourcesEv kind:function(arm,size=0x1ac) addr:0x021124d0
+_ZN10daPgMthr_c16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x021123ec
+_ZN10daPgMthr_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02112450
+_ZN10daPgMthr_c6RenderEv kind:function(arm,size=0x2c) addr:0x02112454
+_ZN10daPgMthr_c8BehaviorEv kind:function(arm,size=0x50) addr:0x02112480
+_ZN10daPgMthr_c13InitResourcesEv kind:function(arm,size=0x1ac) addr:0x021124d0
 MotherPenguin_Spawn kind:function(arm,size=0x58) addr:0x0211267c
 _ZN15PowerStarCreateD1Ev kind:function(arm,size=0x24) addr:0x021126d4
 _ZN15PowerStarCreateD0Ev kind:function(arm,size=0x38) addr:0x021126f8
@@ -140,13 +140,10 @@ data_ov018_02113964 kind:data(any) addr:0x02113964
 data_ov018_0211396c kind:data(any) addr:0x0211396c
 data_ov018_02113974 kind:data(any) addr:0x02113974
 _ZTI10daPgMthr_c kind:data(any) addr:0x0211397c
-_ZTI13MotherPenguin kind:data(any) addr:0x0211397c
 data_ov018_02113980 kind:data(any) addr:0x02113980 ambiguous
 _ZTS10daPgMthr_c kind:data(any) addr:0x02113988
-_ZTS13MotherPenguin kind:data(any) addr:0x02113988
 MotherPenguin_SpawnInfo kind:data(any) addr:0x02113998 ambiguous
 data_ov018_021139b0 kind:data(any) addr:0x021139b0 ambiguous
-_ZTV13MotherPenguin kind:data(any) addr:0x021139bc
 _ZTV10daPgMthr_c kind:data(any) addr:0x021139bc
 data_ov018_021139f4 kind:data(any) addr:0x021139f4 ambiguous
 BridgePenguin_SpawnInfo kind:data(any) addr:0x02113a00 ambiguous

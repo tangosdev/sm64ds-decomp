@@ -3,7 +3,7 @@
 
 void Particle::RadiusConverge::Func(EffectData& effect, char* particle, Vector3&)
 {
-    BehaviorParticle& state = *(BehaviorParticle*)particle;
+    Element& state = *(Element*)particle;
 
     state.offset.x += (int)(((s64)effect.radiusConverge.strength
         * (effect.radiusConverge.targetX - state.offset.x) + 0x800) >> 12);

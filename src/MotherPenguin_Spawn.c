@@ -9,13 +9,13 @@
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV13MotherPenguin */
+/* resolved: VT0 = _ZTV10daPgMthr_c */
 int *MotherPenguin_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(908);
     if (p) {
         _ZN8dActor_cC2Ev(p);
-        p[0] = (int)_ZTV13MotherPenguin;
+        p[0] = (int)_ZTV10daPgMthr_c;
         _ZN9ModelAnimC1Ev((char *)p + 0xd4);
         _ZN15TextureSequenceC1Ev((char *)p + 0x138);
         _ZN11ShadowModelC1Ev((char *)p + 0x14c);

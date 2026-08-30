@@ -22,21 +22,22 @@
  *   0x008 mContents: Particle::SysTracker::Contents, a real nested class --
  *         System::FromUniqueID calls
  *         Particle::SysTracker::Contents::FindData(this + 8, uniqueID), and
- *         Update runs func_02021bec on the same address.
+ *         Update calls Contents::Update on the same address.
  *
  * Contents' extent is pinned from both ends: FindData indexes
  * `contents + 0x708 + (uniqueID & 0xf) * 4`, so the bucket array is sixteen
  * words at +0x708, and 0x708 + 16*4 = 0x748 lands exactly on the callback bank
  * that Particle.h's evidence places at object offset 0x750 = 0x8 + 0x748. The
  * bucket entries are chained through a node whose unique ID is at +0x00 and
- * whose next pointer is at +0x18; the node's total size is NOT evidenced by
- * anything reached from here, so no node type is declared and FindData walks
- * the chain by those two proven offsets.
+ * whose next pointer is at +0x18. The constructor's 0x40-entry walk from +0x8
+ * to the bucket array at +0x708 proves the node's 0x1c stride.
  *
  * Field NAMES cannot change codegen. */
 #ifndef PARTICLE__SYSTRACKER_H
 #define PARTICLE__SYSTRACKER_H
-#include "types.h"
+#include "dPa_c.h"
+
+struct Vector3_16f;
 
 namespace Particle {
 
@@ -44,24 +45,45 @@ struct System;
 struct Manager;
 
 struct SysTracker {
-    /* Particle::SysTracker::Contents -- the live-system registry. Only its
-       bucket array is reached from source; everything below it is opaque. */
+    /* Particle::SysTracker::Contents -- the live-system registry. Its pool
+       extent and stride are fixed by the exact constructor; FindData fixes the
+       bucket heads and chain fields. */
     struct Contents {
-        /* One live-system registry node. The two names are inferred; the
-           offsets are fixed by FindData (+0x00/+0x18) and FromUniqueID
-           (+0x0c). */
+        /* One live-system registry node. Field and method names are readable
+           inferences, not ROM-authenticated original spellings. The offsets
+           and relationships are fixed by the contiguous registry routines. */
         struct Entry {
             u32 uniqueID;      /* 0x00 */
-            u8  pad_004[0x8];
+            u32 definitionID;  /* 0x04 - index into Manager::mDefinitions */
+            u16 savedValue;    /* 0x08 - restored when the System is released */
+            u8  active;        /* 0x0a; cleared before an entry is removed */
+            u8  pad_00b;
             System *system;    /* 0x0c */
-            u8  pad_010[0x8];
+            dPa_c::level_c::callback_c *callback; /* 0x10 */
+            Entry *prev;       /* 0x14 */
             Entry *next;       /* 0x18 */
+
+            void Reset();
+            bool Initialise(u32 newUniqueID, u32 newDefinitionID,
+                            Vector3& position, const Vector3_16f *direction,
+                            dPa_c::level_c::callback_c *newCallback);
         };
 
-        u8    pad_000[0x708];
+        u32   unk_000;
+        u8    mCurrentIndex;
+        u8    pad_005[0x3];
+        Entry mEntries[0x40];
         Entry *mBuckets[16]; /* 0x708 - chain heads, indexed by uniqueID & 0xf */
 
+        Contents();
         Entry *FindData(u32 uniqueID) const;
+        void Unlink(Entry& entry);
+        void Link(Entry& entry);
+        u32 Create(u32 definitionID, Vector3& position,
+                   const Vector3_16f *direction,
+                   dPa_c::level_c::callback_c *callback);
+        void Clear();
+        void Update();
     };
 
     void    *mResourceFile;  /* 0x000 */
@@ -69,59 +91,36 @@ struct SysTracker {
     Contents mContents;      /* 0x008 */
     /* --- callback bank --- */
     s32 mRunningSlidingDustSystemID;  /* 0x750 */
-    u8  mRunningSlidingDustCallback;  /* 0x754 - SimpleCallback; effect 0xda */
-    u8  pad_755[0x7];
+    dPa_c::level_c::simpleCallback_c mRunningSlidingDustCallback; /* 0x754 */
     s32 mSystemID_75c;      /* 0x75c */
-    u8  mCallback_760;      /* 0x760 - SimpleCallback */
-    u8  pad_761[0x7];
+    dPa_c::level_c::simpleCallback_c mCallback_760; /* 0x760 */
     s32 mBigSplashSystemID; /* 0x768 */
-    u8  mBigSplashCallback; /* 0x76c - vtable data_0208f3e4; effect 0xdd */
-    u8  pad_76d[0x7];
+    dPa_c::level_c::splashCallback_c mBigSplashCallback; /* 0x76c */
     s32 mSystemID_774;      /* 0x774 */
-    u8  mCallback_778;      /* 0x778 - vtable data_0208f3e4, same class as 0x76c */
-    u8  pad_779[0x7];
+    dPa_c::level_c::splashCallback_c mCallback_778; /* 0x778 */
     s32 mSystemID_780;      /* 0x780 */
-    u8  mCallback_784;      /* 0x784 - vtable data_0208f3a4 */
-    u8  pad_785[0x7];
+    dPa_c::level_c::bubbleCallback_c mCallback_784; /* 0x784 */
     s32 mRippleSystemID;    /* 0x78c */
-    u8  mRippleCallback;    /* 0x790 - vtable data_0208f444; effect 0x109 */
-    u8  pad_791[0x7];
+    dPa_c::level_c::fitWaterSimpleCallback_c mRippleCallback; /* 0x790 */
     s32 mSystemID_798;      /* 0x798 */
-    u8  mCallback_79c;      /* 0x79c - SimpleCallback */
-    u8  pad_79d[0x7];
+    dPa_c::level_c::simpleCallback_c mCallback_79c; /* 0x79c */
     s32 mSystemID_7a4;      /* 0x7a4 */
-    u8  mCallback_7a8;      /* 0x7a8 - SimpleCallback */
-    u8  pad_7a9[0x7];
+    dPa_c::level_c::simpleCallback_c mCallback_7a8; /* 0x7a8 */
     s32 mSystemID_7b0;      /* 0x7b0 */
-    u8  mCallback_7b4;      /* 0x7b4 - scaleCallback_c */
-    u8  pad_7b5[0xb];
+    dPa_c::level_c::scaleCallback_c mCallback_7b4; /* 0x7b4 */
     s32 mSystemID_7c0;      /* 0x7c0 */
-    u8  mCallback_7c4;      /* 0x7c4 - scaleCallback_c */
-    u8  pad_7c5[0xf];
-    u8  mCallback_7d4;      /* 0x7d4 - scaleCallback_c */
-    u8  pad_7d5[0xf];
-    u8  mCallback_7e4;      /* 0x7e4 - scaleCallback_c */
-    u8  pad_7e5[0xb];
-    u8  mCallback_7f0;      /* 0x7f0 - vtable data_0208f3f4 */
-    u8  pad_7f1[0x3];
-    u8  mCallback_7f4;      /* 0x7f4 - vtable data_0208f424 */
-    u8  pad_7f5[0x3];
-    u8  mCallback_7f8;      /* 0x7f8 - vtable data_0208f454 */
-    u8  pad_7f9[0x3];
-    s32 mCallbackParam_7fc; /* 0x7fc - +4 of the 0x7f8 callback; ctor sets 0x3000 */
-    u8  mCallback_800;      /* 0x800 - vtable data_0208f454, same class as 0x7f8 */
-    u8  pad_801[0x3];
-    s32 mCallbackParam_804; /* 0x804 - +4 of the 0x800 callback; ctor ends at 0x4b000 */
-    u8  mCallback_808;      /* 0x808 - vtable data_0208f404 */
-    u8  pad_809[0x7];
-    u8  mWeatherCallback;   /* 0x810 - vtable data_0208f434; System::NewWeather */
-    u8  pad_811[0x3];
-    /* System::NewWeather writes its numWeatherEffectsNow argument to
-       mWeatherCallback + 4, which is this byte; the constructor seeds it 1. */
-    u8  mWeatherCallbackCount; /* 0x814 */
-    u8  pad_815[0x3];
-    u8  mCallback_818;      /* 0x818 - vtable data_0208f464;
-                                       System::NewUnkCallback818 passes it */
+    dPa_c::level_c::scaleCallback_c mCallback_7c4; /* 0x7c4 */
+    u8 pad_7d0[0x4];
+    dPa_c::level_c::scaleCallback_c mCallback_7d4; /* 0x7d4 */
+    u8 pad_7e0[0x4];
+    dPa_c::level_c::scaleCallback_c mCallback_7e4; /* 0x7e4 */
+    dPa_c::level_c::checkWaterCallback_c mCallback_7f0; /* 0x7f0 */
+    dPa_c::level_c::checkWaterRippleCallback_c mCallback_7f4; /* 0x7f4 */
+    dPa_c::level_c::fitWaterCallback_c mCallback_7f8; /* 0x7f8 */
+    dPa_c::level_c::fitWaterCallback_c mCallback_800; /* 0x800 */
+    dPa_c::level_c::checkYoganCallback_c mCallback_808; /* 0x808 */
+    dPa_c::level_c::clipCallback_c mWeatherCallback; /* 0x810 */
+    dPa_c::level_c::cleanParticleCallback_c mCallback_818; /* 0x818 */
 
     SysTracker();
     ~SysTracker();

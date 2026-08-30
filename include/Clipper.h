@@ -53,14 +53,16 @@ struct Clipper {
     virtual ~Clipper();     /* slots 0 (D1), 1 (D0) */
 
     /* DECLARED, never defined as a method here -- src/_ZN7ClipperC1Ev.cpp owns
-       C1 (notes/ctor-migration.md section 2). Its body calls the shared init
-       helper, whose definition keeps its extern "C" spelling: the ROM symbol
-       ends in Ev because it is enrolled under that literal name, not because
-       the source had zero parameters, so a real member declaration would
-       mangle differently and cannot be used. */
+       C1 (notes/ctor-migration.md section 2). */
     Clipper();
 
     void Func_0201559C();
+    /* All five callers pass these four scalar arguments, and the body reads
+       them from r1/r2/r3/[sp]. The old address-derived `...Ev` symbol was
+       therefore impossible; this declaration lets CodeWarrior generate the
+       truthful signature and the exact ROM body. */
+    void Func_020156DC(Fix12i aspectRatio, u16 fovAngle,
+                       Fix12i nearZ, Fix12i farZ);
 
     /* Methods whose mangled names carry a by-value class parameter (5Fix12IiE)
        are deliberately NOT definable as real methods -- see

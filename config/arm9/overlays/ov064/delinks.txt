@@ -32,23 +32,23 @@ src/func_ov064_02116220.cpp:
     complete
     .text start:0x02116220 end:0x02116348
 
-src/func_ov064_02116348.c:
+src/_ZN7daOts_c14PlayDeathSoundEv.cpp:
     complete
     .text start:0x02116348 end:0x0211635c
 
-src/func_ov064_0211635c.c:
+src/_ZN7daOts_c17PlayShellHitSoundEv.cpp:
     complete
     .text start:0x0211635c end:0x02116360
 
-src/func_ov064_02116360.c:
+src/_ZN7daOts_c12PlayHitSoundEv.cpp:
     complete
     .text start:0x02116360 end:0x02116374
 
-src/func_ov064_02116374.cpp:
+src/_ZN7daOts_c13PlayStepSoundEv.cpp:
     complete
     .text start:0x02116374 end:0x021163bc
 
-src/func_ov064_021163bc.c:
+src/_ZN7daOts_c16UpdateDeathStateEv.cpp:
     complete
     .text start:0x021163bc end:0x021163c0
 
@@ -64,7 +64,7 @@ src/func_ov064_02116560.cpp:
     complete
     .text start:0x02116560 end:0x021165d4
 
-src/func_ov064_021165d4.c:
+src/_ZN7daOts_c14UpdateRunStateEv.cpp:
     complete
     .text start:0x021165d4 end:0x021165d8
 
@@ -108,27 +108,27 @@ src/_ZN5BullyD0Ev.cpp:
     complete
     .text start:0x021170c4 end:0x0211712c
 
-src/func_ov064_0211712c.c:
+src/_ZN5Bully14PlayDeathSoundEv.cpp:
     complete
     .text start:0x0211712c end:0x02117140
 
-src/func_ov064_02117140.c:
+src/_ZN5Bully17PlayShellHitSoundEv.cpp:
     complete
     .text start:0x02117140 end:0x02117154
 
-src/func_ov064_02117154.c:
+src/_ZN5Bully12PlayHitSoundEv.cpp:
     complete
     .text start:0x02117154 end:0x02117168
 
-src/func_ov064_02117168.c:
+src/_ZN5Bully13PlayStepSoundEv.cpp:
     complete
     .text start:0x02117168 end:0x021171b0
 
-src/func_ov064_021171b0.c:
+src/_ZN5Bully14UpdateRunStateEv.cpp:
     complete
     .text start:0x021171b0 end:0x02117220
 
-src/func_ov064_02117220.cpp:
+src/_ZN5Bully16UpdateDeathStateEv.cpp:
     complete
     .text start:0x02117220 end:0x02117310
 
@@ -152,11 +152,11 @@ src/_ZN8BigBullyD0Ev.cpp:
     complete
     .text start:0x021174f4 end:0x0211755c
 
-src/func_ov064_0211755c.c:
+src/_ZN8BigBully14UpdateRunStateEv.cpp:
     complete
     .text start:0x0211755c end:0x021175cc
 
-src/func_ov064_021175cc.cpp:
+src/_ZN8BigBully16UpdateDeathStateEv.cpp:
     complete
     .text start:0x021175cc end:0x0211764c
 

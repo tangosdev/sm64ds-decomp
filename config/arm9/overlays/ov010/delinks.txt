@@ -3,11 +3,11 @@
     .ctor       start:0x0211219c end:0x021121a8 kind:rodata align:4
     .data       start:0x021121c0 end:0x02112d00 kind:data align:32
     .bss        start:0x02112d00 end:0x02112d80 kind:bss align:32
-src/_ZN4TrapD1Ev.cpp:
+src/_ZN14daObjC1_Trap_cD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111ec
 
-src/_ZN4TrapD0Ev.cpp:
+src/_ZN14daObjC1_Trap_cD0Ev.cpp:
     complete
     .text start:0x021111ec end:0x0211124c
 
@@ -43,19 +43,19 @@ src/func_ov010_0211146c.c:
     complete
     .text start:0x0211146c end:0x02111554
 
-src/_ZN4Trap16CleanupResourcesEv.cpp:
+src/_ZN14daObjC1_Trap_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111554 end:0x021115a8
 
-src/_ZN4Trap6RenderEv.cpp:
+src/_ZN14daObjC1_Trap_c6RenderEv.cpp:
     complete
     .text start:0x021115a8 end:0x021115e0
 
-src/_ZN4Trap8BehaviorEv.cpp:
+src/_ZN14daObjC1_Trap_c8BehaviorEv.cpp:
     complete
     .text start:0x021115e0 end:0x02111654
 
-src/_ZN4Trap13InitResourcesEv.cpp:
+src/_ZN14daObjC1_Trap_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111654 end:0x0211184c
 

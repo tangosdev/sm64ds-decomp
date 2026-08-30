@@ -24,7 +24,7 @@ typedef struct {
     s16 unk7BA8;
 } T;
 
-extern "C" void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *p, u16 a, u16 b, u16 c, u16 d);
+extern "C" void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void *p, u16 a, u16 b, u16 c, u16 d);
 extern "C" void func_ov006_020d0b04(u32 a);
 extern "C" s32 GetGameLanguage(void);
 extern "C" void MultiStore16(u16 val, char *dst, int nbytes);
@@ -34,7 +34,7 @@ extern volatile s16 data_020a0dbc[];
 
 extern "C" void func_ov006_021242cc(T *self)
 {
-    _ZN3G2x13SetBlendAlphaEPVttttt((volatile void *)0x4000050, 1, 0x2e, 0x10, 0x10);
+    _ZN3G2x13SetBlendAlphaEPVttttj((volatile void *)0x4000050, 1, 0x2e, 0x10, 0x10);
 
     self->unk7BA0 = data_020a0dbc[0];
     self->unk7BA2 = data_020a0dbc[1];

@@ -1,27 +1,7 @@
 //cpp
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
+#include "daOts_c.h"
 
-typedef struct { s32 x, y, z; } Vector3;
-typedef s32 Fix12;
 struct BCA_File;
-
-struct fBase_c {
-    virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
-    virtual void v04(); virtual void v05(); virtual void v06(); virtual void v07();
-    virtual void v08(); virtual void v09(); virtual void v0a(); virtual void v0b();
-    virtual void v0c(); virtual void v0d(); virtual void v0e(); virtual void v0f();
-    virtual void v10(); virtual void v11(); virtual void v12(); virtual void v13();
-    virtual void v14(); virtual void v15(); virtual void v16(); virtual void v17();
-    virtual void v18(); virtual void v19(); virtual void v1a(); virtual void v1b();
-    virtual void v1c(); virtual void v1d(); virtual void v1e(); virtual void v1f();
-    virtual void v20(); virtual void v21();
-    virtual void ChangeState();     // 0x88
-    virtual void OnStateEntered();  // 0x8c
-};
 
 extern "C" {
 extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
@@ -29,8 +9,8 @@ extern void func_ov064_02115f98(void* c, void* p);
 extern int _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void* c, void* v, void* r4, s32 flag);
 extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void* c, void* clsn, void* player);
 extern int _ZN6Player9IsOnShellEv(void* p);
-extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, Fix12 f, u32 b, u32 c, u32 d);
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, BCA_File* f, int i, Fix12 fx, u32 j);
+extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, s32 f, u32 b, u32 c, u32 d);
+extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, BCA_File* f, int i, s32 fx, u32 j);
 }
 
 extern "C" void func_ov064_02116754(char* c)
@@ -66,7 +46,7 @@ extern "C" void func_ov064_02116754(char* c)
         func_ov064_02115f98(c, r4);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        ((fBase_c*)c)->ChangeState();
+        ((daOts_c*)c)->PlayHitSound();
         return;
     }
 
@@ -77,7 +57,7 @@ extern "C" void func_ov064_02116754(char* c)
         func_ov064_02115f98(c, r4);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        ((fBase_c*)c)->ChangeState();
+        ((daOts_c*)c)->PlayHitSound();
         return;
     }
 
@@ -89,7 +69,7 @@ extern "C" void func_ov064_02116754(char* c)
             v[1] = 0;
             v[2] = 0;
             _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, v, r4, *(s32*)(*(char**)(c + 0x330) + 0x24));
-            ((fBase_c*)c)->ChangeState();
+            ((daOts_c*)c)->PlayHitSound();
             return;
         }
     }
@@ -101,7 +81,7 @@ extern "C" void func_ov064_02116754(char* c)
         func_ov064_02115f98(c, r4);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        ((fBase_c*)c)->ChangeState();
+        ((daOts_c*)c)->PlayHitSound();
         return;
     }
 
@@ -115,7 +95,7 @@ extern "C" void func_ov064_02116754(char* c)
         func_ov064_02115f98(c, r4);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        ((fBase_c*)c)->ChangeState();
+        ((daOts_c*)c)->PlayHitSound();
         return;
     }
 
@@ -124,11 +104,11 @@ extern "C" void func_ov064_02116754(char* c)
         *(s16*)(c + 0x94) = (s16)(*(s16*)(c + 0x8e) + 0x8000);
         *(s32*)(c + 0x98) = 0x28000;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, *(BCA_File**)(*(char**)(*(char**)(c + 0x330) + 0x10) + 4), 0, 0x1000, 0);
-        ((fBase_c*)c)->OnStateEntered();
+        ((daOts_c*)c)->PlayShellHitSound();
         func_ov064_02115f98(c, r4);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        ((fBase_c*)c)->ChangeState();
+        ((daOts_c*)c)->PlayHitSound();
         return;
     }
 
@@ -137,7 +117,7 @@ extern "C" void func_ov064_02116754(char* c)
 
     *(s32*)(c + 0x398) = 2;
     *(u8*)(c + 0x3f9) = 0;
-    ((fBase_c*)c)->ChangeState();
+    ((daOts_c*)c)->PlayHitSound();
 
     {
         Vector3 v;
@@ -158,5 +138,5 @@ extern "C" void func_ov064_02116754(char* c)
             *(s32*)(c + 0x98) = 0xa000;
     }
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, *(BCA_File**)(*(char**)(*(char**)(c + 0x330) + 0x10) + 4), 0, 0x1000, 0);
-    ((fBase_c*)c)->OnStateEntered();
+    ((daOts_c*)c)->PlayShellHitSound();
 }

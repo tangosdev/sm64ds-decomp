@@ -23,28 +23,6 @@
     "_ZN4cstd10fdiv_asyncE5Fix12IiES1_"
    ]
   },
-  "_ZN5StageC3Ev": {
-   "verdict": "MISMATCH",
-   "reason": "emitted ['_ZN5StageC1Ev', '_ZN5StageC2Ev'], claimed _ZN5StageC3Ev",
-   "cause": "constructor variant C3 (the allocating constructor); mwccarm emits C1 and C2 only, so no build can have produced this name",
-   "module": "arm9",
-   "addr": "0x0202e088",
-   "proposed": [
-    "_ZN5StageC1Ev",
-    "_ZN5StageC2Ev"
-   ]
-  },
-  "_ZN6PlayerC3Ev": {
-   "verdict": "MISMATCH",
-   "reason": "emitted ['_ZN6PlayerC1Ev', '_ZN6PlayerC2Ev'], claimed _ZN6PlayerC3Ev",
-   "cause": "constructor variant C3 (the allocating constructor); mwccarm emits C1 and C2 only, so no build can have produced this name",
-   "module": "ov002",
-   "addr": "0x020e6c0c",
-   "proposed": [
-    "_ZN6PlayerC1Ev",
-    "_ZN6PlayerC2Ev"
-   ]
-  },
   "_ZN7fBase_cnwEj": {
    "verdict": "REJECTED",
    "reason": "line 4: illegal 'operator' declaration",

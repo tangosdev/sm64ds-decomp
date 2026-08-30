@@ -325,7 +325,7 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 | `bhvPiranhaPlant` | → | `PiranhaPlant` (+`FirePiranhaPlantBig/Small`) | ov084 |
 | `bhvEnemyLakitu` / camera Lakitu | → | `Lakitu` / `LakituBro` | ov077 / ov085 |
 | `bhvBowser` | → | `Bowser` (+`BowserTail`, `BowserFire`) | ov060 |
-| `bhvUkikiCage` | → | `UkikiCage` — **but see trap below** | ov030 |
+| `bhvUkikiCage` | → | `daObjHmBskt_c` — **but see trap below** | ov030 |
 | (Eyerok boss) | → | `Eyerok` | ov066 |
 | — | | `CheepCheep` ov090, `Skeeter` ov090 | |
 

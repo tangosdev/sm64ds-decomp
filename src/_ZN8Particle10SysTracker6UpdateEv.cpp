@@ -1,15 +1,15 @@
 //cpp
 // @symbol _ZN8Particle10SysTracker6UpdateEv
-/* declarations from a shared header */
-#include "decl_common.h"
 /* recovered: real class form -- the compiler spells the mangled name */
 #include "Particle__SysTracker.h"
+
+#include "decl_common.h"
 
 namespace Particle {
 
 void SysTracker::Update()
 {
-    func_02021bec((char *)&mContents);
+    mContents.Update();
     func_02049f58(mManager);
 }
 
