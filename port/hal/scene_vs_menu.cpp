@@ -46,7 +46,8 @@
  * seven of them from the decomp's main by address (lane prop15) and the last
  * two plus a replaced 02116128 body in lane prop16; slice_vs.txt sections 2b
  * and 2c are the record. The face machinery is still here with an empty list,
- * so a zero from port_vs_face_hits is a measurement rather than an absence.
+ * and a zero out of it is a STRUCTURAL fact rather than a measurement -- the
+ * block above the VS_FACE macro says what the linker does with it and why.
  * WHAT REPLACED THE FACES AS THE FIRST SUSPECT: four of the propagated bodies
  * reach the geometry engine through literal MMIO and are compiled raw out of
  * src/, so their register writes latch and trigger nothing. slice_vs.txt
@@ -246,12 +247,22 @@ DSSTATE_END
                           its one ov075 caller (relocs.txt from:0x0211b01c) was
                           inside this face. Both are in the map now.
 
-   THE MACHINERY STAYS with no rows in it, and that is deliberate rather than
-   leftover. ov075 has no bodiless function left, but the counter is the seam's
-   proof surface (port_vs_face_hits below, and the "[vs] MISSING ov075 body
-   entered" line the runtime proofs grep for), and the next overlay this seat
-   grows into will want the same loud-once shape rather than a reinvented one.
-   A zero here is now a MEASUREMENT, not an absence of instrumentation.
+   THE MACHINERY STAYS with no rows in it, and it is a SOURCE-LEVEL keepsake
+   for the next overlay this seat grows into, NOT a live proof surface. Be
+   exact about what an empty list does, because the obvious reading is wrong:
+   with no VS_FACE row, nothing calls vs_face and nothing calls
+   port_vs_face_hits, so both are gone from walk_window.map -- vs_face folded
+   away as an unreferenced static, port_vs_face_hits by /OPT:REF -- and the
+   only survivor is g_vs_face_hits, four bytes of .bss at 0x00b3ade0 that
+   nothing reads or writes. The format string is not in the binary either:
+   searching walk_window.exe for "MISSING ov075 body entered" finds nothing.
+
+   SO A ZERO HERE IS A STRUCTURAL FACT, NOT A PRINTED MEASUREMENT. Grepping a
+   run log for the face line cannot match, because no code that could emit it
+   exists; the honest claim is "there are no faces", never "the faces did not
+   fire". The two are the same number and completely different evidence, and a
+   later lane that re-adds one row turns the counter back into a real
+   measurement -- until then, read the map, not the log.
 
    src/func_ov075_02116128 also changed underneath this seat in the same lane:
    the tree carried main's pre-#1266 revision under the old .c spelling, banner
@@ -334,20 +345,56 @@ extern "C" {
    is the function's ONLY entry point and the thunk is complete.
 
    THE OTHER TWO PAIRS IN THE SAME RECORD ARE LEFT EXACTLY AS THE BASE HAS
-   THEM, and that is a scope line rather than a verdict. __sinit_ov075_0211c51c
-   copies three pairs into data_ov075_0211d994 -- 0x0211d354 (func_ov075_
-   0211b260, dispatched from src/func_ov075_0211b458.cpp's own inline member
-   call) and 0x0211d34c (func_ov075_0211b1cc, dispatched from
-   src/func_ov075_0211b418.cpp) are the other two, and they have the identical
-   receiver defect today. They do not fault: 0211b1cc bails on
-   DecIfAbove0_Short and 0211b260 bails on a non-positive count, both off
-   whatever the stack happened to hold. Giving either one a real receiver turns
-   on code paths this lane did not measure -- 0211b1cc walks 400 elements
-   through func_ov075_0211addc -- and 0211b458's site is a THIRD shape anyway
-   (its `struct Foo;` is never completed, so MSVC gives that member pointer the
-   most-general representation and the call adjusts `this` before the branch; a
-   thunk on the target does not reach that). Named here so the lane that fixes
-   the entry record fixes all three together and measures what wakes up. */
+   THEM, and the reason is SCOPE, not difficulty. __sinit_ov075_0211c51c copies
+   three pairs into data_ov075_0211d994: 0x0211d354 (func_ov075_0211b260,
+   dispatched by src/func_ov075_0211b458.cpp's own inline member call) and
+   0x0211d34c (func_ov075_0211b1cc, dispatched by src/func_ov075_0211b418.cpp)
+   are the other two, and both carry the identical receiver defect today.
+
+   ALL THREE SITES ARE THUNK-REACHABLE. An earlier revision of this comment
+   claimed 0211b458's was a third shape that a target-side thunk could not
+   reach, because its `struct Foo;` is never completed and MSVC therefore gives
+   that member pointer the most-general representation. The representation part
+   is right and the conclusion was WRONG; corrected here after reading the
+   emitted dispatch rather than reasoning about the language rule.
+
+   Disassembled out of walk_window.exe (capstone, 32-bit):
+
+     0211b3d8 / 0211b418   two-word form
+       mov ecx,[edx+0x14]   ; the pair's SECOND word
+       add ecx,eax          ; ecx = this + that word
+       mov eax,[edx+0x10]   ; the pair's FIRST word
+       call eax
+
+     0211b458              four-word (most-general) form
+       mov edx,[ep+0x0c]    ; vbtable index
+       test edx,edx
+       jne  <vbtable path>  ; NOT TAKEN
+       mov eax,[ep+0x04]    ; the adjustment
+       lea ecx,[eax+esi]    ; ecx = this + adjustment
+       call dword ptr [ep]  ; the pair's FIRST word
+
+   Every ROM pair in this record is {function, LITERAL ZERO} -- slice_vs.txt
+   section 1 measures exactly that, three pairs at 8-byte stride with no
+   relocation on any partner word -- and vs_apply_data_patch writes offset 0
+   only. So for 0211b458, ep+0x0c and ep+0x04 are both zero: the vbtable branch
+   is dead, the adjustment is zero, and `lea ecx,[eax+esi]` hands over `this`
+   exactly. (The 16-byte read does span into the next pair, so ep+0x08 is
+   pair[1]'s function word -- harmless, because ep+0x08 is only read on the
+   dead branch.) The call goes through ep+0, which is the word the patch owns,
+   so a __fastcall thunk at 0x0211d354 or 0x0211d34c would receive the correct
+   receiver exactly the way the one at 0x0211d35c does.
+
+   THE REASON THEY STAY IS THAT ENABLING THEM IS AN UNMEASURED RENDERING
+   CHANGE. Neither faults today: 0211b1cc bails on DecIfAbove0_Short and
+   0211b260 bails on a non-positive count, both off whatever the stack happened
+   to hold. Handing them a real receiver wakes up code this lane did not run --
+   0211b1cc's 400-element walk through func_ov075_0211addc, and 0211b260's
+   20x20 vertex-grid initialisation -- and that is a picture change nobody has
+   looked at, on a mesh whose register writes still latch (see slice_vs.txt 2c
+   on the eight raw-MMIO TUs). This lane fixed the one site its own change made
+   lethal and measured that. Named here so the lane that takes the entry record
+   does all three together and measures what wakes up. */
 /* (func_ov075_0211afb0 is declared with the other propagated bodies above) */
 static void __fastcall vs_pmf_grid_render(void *self, void *)
 {

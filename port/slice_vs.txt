@@ -192,6 +192,14 @@
 #             six stores, same masks, same (v << 0x1c) >> 0x10 palette splice;
 #             the host behaviour does not change, the provenance does.
 #
+# AND MAKING 0211afb0 REAL EXPOSED A CRASH, which is recorded in the seat and
+# not repeated here: its caller reaches it through an MSVC member pointer (a
+# __thiscall, receiver in ecx) and the mount's 0x0211d35c word pointed straight
+# at the cdecl C body, so the receiver never arrived. The face had survived
+# that call for a year only because it was int(void). hal/scene_vs_menu.cpp
+# carries the one __fastcall thunk that fixes it, the disassembly of all three
+# of this record's dispatch sites, and why the other two are left alone.
+#
 # RE-VERIFIED HERE against extracted/overlays/overlay_0075.bin at the config
 # base, not taken on main's word -- tools/match.py at 2004/b56 with strict
 # relocs, one run per file:
