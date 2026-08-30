@@ -2741,7 +2741,15 @@ static const char *const PORT_RELAUNCH_CLEAR[] = {
        still running it also fails a bind and prints a refusal nobody asked
        for. The other three are its arguments and travel with it -- an
        inherited PORT would aim the child at the wrong session and an inherited
-       INJECT would put scripted stylus values on a wire the player is using. */
+       INJECT would put scripted stylus values on a wire the player is using.
+
+       ONE DESTINATION OVERRIDES THIS, and only one: port_menu_relaunch_vs
+       carries ROLE, PORT, SLOT and FANOUT back across the clear, because VS
+       *is* the multiplayer mode and a VS child is the one child that is
+       supposed to be in the session its parent was in. Its own banner has the
+       argument, including why FANOUT belongs with the other three rather than
+       with REPORT. The reasoning above is unchanged for the level and minigame
+       destinations, which are the ones it was written about. */
     "SM64DS_COMMS_ROLE",    "SM64DS_COMMS_PORT",
     "SM64DS_COMMS_SLOT",    "SM64DS_COMMS_INJECT",
 };
@@ -2806,7 +2814,56 @@ static int port_menu_relaunch(int scene_id, int level_id)
    the game-heap init) runs the ROM's own VS start off SM64DS_VS_MAP. The
    mode is NOT an input today because the ROM's VS has exactly one
    (port/slice_vs.txt section 4); when a second one ever exists this is where
-   its env would be set. */
+   its env would be set.
+
+   THE SESSION RIDES ALONG, AND THIS ONE IS THE EXCEPTION TO THE CLEAR TABLE.
+   Run rel0215, lane vsnet. PORT_RELAUNCH_CLEAR strips SM64DS_COMMS_ROLE and
+   _PORT because a MINIGAME or LEVEL child of a multiplayer run has no business
+   inheriting a session it was not launched into -- read its own banner. A VS
+   child is the opposite case and the only one: VS *is* the multiplayer mode,
+   so a player who started the game with a role and a session code and then
+   picks a VS map from the debug menu is asking for that session, and dropping
+   it here is how the menu route into VS came to be the one route that could
+   never pair. Carried by hand, after the shared clear, so the table itself
+   keeps saying what it says for the other two destinations.
+
+   FOUR ARE CARRIED AND TWO ARE NOT, deliberately.
+   SM64DS_COMMS_RELAY / _CODE / _HOST / _BIND_ANY were never in the clear table
+   and already survive. ROLE, PORT and SLOT are carried here because they name
+   WHO THIS CONSOLE IS in the session.
+
+   AND SM64DS_COMMS_FANOUT WITH THEM, which is the one that turns a paired
+   session into a played one. It is not a diagnostic: walk_window.cpp:456 and
+   hal/scene_boot.cpp:4460 make it the switch that hands TouchInfo[4] and
+   PadData[4] to the ROM's four-slot route (func_0203bc7c) instead of the
+   port's direct single-player writes.
+
+   MEASURED, because "it would probably break" is not a reason to change a
+   launcher. Two instances through the live relay with ROLE, RELAY and CODE set
+   and FANOUT deliberately absent -- the exact environment a menu-relaunched VS
+   child used to get:
+
+       [comms:relay] paired as parent ... on both ends
+       [comms:conductor] session up after 148 turns: ... players=2
+       [vs] f599 count=2 me=0        the arena is a two-player arena
+       [vs] f599 slot0 pad=0040      my own key, off the port's direct write
+       [vs] f599 slot1 pad=0000      THE REMOTE PLAYER'S PAD IS EMPTY
+
+   Every health indicator green and the remote player inert. That is the worst
+   shape a defect can take, and it is why FANOUT belongs with the three names
+   above rather than with the diagnostics below.
+
+   WHY NO TEST CAUGHT IT, which is the part worth writing down: port/tools/
+   vs_online_proof.py sets SM64DS_COMMS_FANOUT itself on both instances, so
+   every proof this lane ran had it whatever this function did. The env-boot
+   path a proof drives and the menu path a player drives differ exactly here.
+   Found in review.
+
+   TWO STAY CLEARED. SM64DS_COMMS_INJECT is test scaffolding that pins a held
+   key, and the clear table's own note says an inherited one would put scripted
+   values on a wire a player is using. SM64DS_COMMS_REPORT is pure logging --
+   four lines a frame into the child's playlog -- so a player who never asked
+   for it should not inherit it, and nothing about the session depends on it. */
 static int port_menu_relaunch_vs(int vs_map)
 {
     char exe[MAX_PATH];
@@ -2815,9 +2872,35 @@ static int port_menu_relaunch_vs(int vs_map)
     PROCESS_INFORMATION pi;
     if (!GetModuleFileNameA(0, exe, (DWORD)sizeof exe))
         return 0;
+    /* read BEFORE the shared clear runs over them, written back after. One
+       table rather than four named locals so a fifth name is one row, and so
+       the log line below cannot drift out of step with what was carried. */
+    static const char *const VS_CARRY[] = {
+        "SM64DS_COMMS_ROLE", "SM64DS_COMMS_PORT",
+        "SM64DS_COMMS_SLOT", "SM64DS_COMMS_FANOUT",
+    };
+    enum { VS_CARRY_N = sizeof VS_CARRY / sizeof *VS_CARRY };
+    char carry[VS_CARRY_N][64];
+    for (unsigned i = 0; i < VS_CARRY_N; ++i) {
+        carry[i][0] = 0;
+        GetEnvironmentVariableA(VS_CARRY[i], carry[i], sizeof carry[i]);
+    }
     for (unsigned i = 0; i < sizeof PORT_RELAUNCH_CLEAR /
                              sizeof *PORT_RELAUNCH_CLEAR; ++i)
         SetEnvironmentVariableA(PORT_RELAUNCH_CLEAR[i], 0);
+    for (unsigned i = 0; i < VS_CARRY_N; ++i)
+        if (carry[i][0])
+            SetEnvironmentVariableA(VS_CARRY[i], carry[i]);
+    /* Says what was carried AND what was not, because "the session rode
+       along" is the claim, and a role that arrived without a fan-out is the
+       failure this line has to be able to show. */
+    if (carry[0][0]) {
+        fprintf(stderr, "[menu] VS relaunch carries the session:");
+        for (unsigned i = 0; i < VS_CARRY_N; ++i)
+            fprintf(stderr, " %s=%s", VS_CARRY[i],
+                    carry[i][0] ? carry[i] : "(unset)");
+        fprintf(stderr, "\n");
+    }
     SetEnvironmentVariableA("SM64DS_SCENE", 0);
     SetEnvironmentVariableA("SM64DS_LEVEL", 0);
     SetEnvironmentVariableA("SM64DS_DUAL_SCREEN", 0);
