@@ -66,7 +66,7 @@
 #include <cstring>
 
 #include "dsstate_seg.h"
-#include "comms_loopback.h"   /* lane vsnet: the radio, engaged at the VS start */
+#include "comms_loopback.h"   /* lane vsnet: the VS radio seam (inert today) */
 
 extern "C" {
 
@@ -634,42 +634,66 @@ extern "C" void port_scene_fill_vs(void)
    signed bytes (levels 51, 43, 29, 42) and the lobby's own picker never
    hands func_ov075_02116c8c anything past 3.
 
-   ---- AND THE RADIO COMES UP HERE, BECAUSE THIS IS WHERE THE DS'S DOES ------
+   ---- THE RADIO SEAM, AND IT IS INERT TODAY ---------------------------------
    Run rel0215, lane vsnet.
 
-   SM64DS VS IS A WIRELESS MODE. There is no offline VS on the cartridge: the
-   ROM's route into a match is dScEntry_c (scene 6, this file's own seat), and
-   its start conductor func_ov075_02118a84 WAITS OUT THE COMMS HANDSHAKE and a
-   countdown before it calls func_ov075_02116c8c at all (slice_vs.txt section
-   4). So on the DS the radio is already up, the peers are already known, and
-   the start function below runs on a console that is in a session.
+   READ THIS BEFORE BELIEVING THE COMMIT MESSAGE THAT ADDED IT. The commit
+   "Engage the radio at the ROM's own VS start, not only at process start"
+   presented the install below as the thing that makes a VS boot pair. IT IS
+   NOT, AND THE CLAIM WAS WRONG. Review measured the ordering that the original
+   banner should have measured and did not:
 
-   THE PORT'S VS BOOT HAS NO LOBBY. SM64DS_VS_MAP goes straight to this
-   function -- that is the whole point of it, and the debug menu's VS row
-   reaches the same place -- which means the one moment the DS uses to engage
-   its wireless layer does not exist on this path unless it is put here. So the
-   transport install goes at the top of this function, ahead of the ROM's own
-   start, and this function is the ONE funnel: the env boot, the debug row and
-   any later real lobby all come through it.
+       tests/walk_window.cpp:5984   port::comms_loopback_install_from_env()
+       tests/walk_window.cpp:6233   port_vs_stage_and_start(mi)
 
-   IT IS THE INSTALL, NOT A SECOND ONE. comms_loopback_install_from_env is
-   documented safe to call more than once and returns early once a transport is
-   in; tests/walk_window.cpp's own call at process start is untouched and still
-   the one that serves every non-VS path (the level selftests, the minigame MP
-   runs, port/tools/net_proof.py's whole ladder). With no comms env this is a
-   getenv and a return, so a bare VS boot is byte-for-byte the run it was.
+   main() installs 249 lines before the VS section reaches this function, on
+   EVERY path that exists today -- the env boot, the debug row, and the
+   relaunched child alike, because all three are processes whose main() ran.
+   So the call below always finds g_installed already true and returns
+   immediately, and a build with this line deleted passes all ten assertions in
+   port/tools/vs_online_proof.py. What actually fixed the demo was the other two
+   commits on this branch: the Winsock start that lets a hostname resolve, and
+   the role spelling the relay's own README teaches.
 
-   ORDERING, AND IT IS LOAD-BEARING BOTH WAYS. It must be BEFORE
-   func_ov075_02116c8c, because that call ends in LoadLevelNoReturn and the
-   staged level is consumed by hal/level_boot.cpp, which asks
-   port::comms_wait_for_session() who is in the session before it seats a
-   world -- a world seated ahead of the join makes every console believe it is
-   player 0. And it must be AFTER the process has io_init'd, which it is:
-   walk_window's VS section runs past the game-heap init, and the debug row
-   runs from a frame loop. */
+   SO WHAT IS IT FOR. Two things, both real and neither of them a fix:
+
+     IT IS WHERE THE DS'S RADIO COMES UP, written at the seam rather than in a
+     comment. SM64DS VS is a wireless mode -- there is no offline VS on the
+     cartridge. The ROM's route into a match is dScEntry_c (scene 6, this
+     file's own seat) and its start conductor func_ov075_02118a84 WAITS OUT THE
+     COMMS HANDSHAKE and a countdown before it calls func_ov075_02116c8c at all
+     (slice_vs.txt section 4), so on the DS the start function runs on a console
+     that is already in a session. This function is the port's one funnel into
+     that start.
+
+     IT IS THE HOOK A REAL LOBBY WILL NEED. The install living in main() is a
+     property of the harness, not of the game: it happens because every process
+     starts, not because anything asked for a session. When ov075's lobby is
+     driven for real -- a player picking VS in-game rather than an env naming a
+     map -- the session has to come up at THAT moment, and this is the line that
+     will already be in the right place. Until then it is scaffolding.
+
+   IT CANNOT MISBEHAVE, which is why it is kept rather than deleted.
+   comms_loopback_install_from_env is documented safe to call more than once and
+   returns early once a transport is in, so it cannot open a second socket or
+   re-seat a live session. With no comms env in the environment it is a getenv
+   and a return. Measured: a bare VS boot is rc 0, zero [comms] lines, and the
+   same end position as the pre-change build.
+
+   IF IT EVER STOPS BEING INERT, the ordering it needs is already right and here
+   is why. It must be BEFORE func_ov075_02116c8c, because that call ends in
+   LoadLevelNoReturn and the staged level is consumed by hal/level_boot.cpp,
+   which asks port::comms_wait_for_session() who is in the session before it
+   seats a world -- a world seated ahead of the join makes every console believe
+   it is player 0. And it must be AFTER io_init, which both callers are:
+   walk_window's VS section runs past the game-heap init and the debug row runs
+   from a frame loop. */
 extern "C" void port_vs_stage_and_start(int mapIdx)
 {
-    /* the radio, at the ROM's own moment for it -- see the block above */
+    /* The radio, at the ROM's own moment for it. INERT TODAY -- main() has
+       always already installed by the time any current caller arrives here --
+       and kept for the lobby that will need it. The block above measures the
+       ordering and says why this is not the fix the commit claimed. */
     port::comms_loopback_install_from_env();
     data_0209b2e4[0] = (unsigned char)(mapIdx & 3);
     func_ov075_02116c8c();
