@@ -1101,6 +1101,20 @@ void __sinit_ov027_02112d1c(void);
 void __sinit_ov027_02112df8(void);
 void __sinit_ov027_02112f70(void);
 
+/* run rel0215 wave 2 (lane w2-ov074): ov074 per-symbol -- the GOOMBOSS pack's
+   fourteen SharedFilePtrs, its fourteen destructor-chain nodes and the
+   eighteen pointer-to-member source records its nine-cell state machine
+   dispatches through, all built by ONE 0x3f8-byte static initialiser. The
+   seat below is not optional and its position is not free (see the call
+   sequence); it lives in hal/actor_classes_ov074.cpp beside the table it
+   names. ov074 is NOT a level overlay, so there is no whole-image half: this
+   is the only mount of it. */
+void port_ov074_pack_check(void);
+void port_ov074_syms_patch(void);
+void port_ov074_states_seat(void);        /* hal/actor_classes_ov074.cpp */
+void port_ov074_level_files_seat(void);   /* hal/actor_classes_ov074.cpp */
+void __sinit_ov074_02122978(void);
+
 /* The six wave-3/4/5 bring-ups, each defined beside the cast it serves and
    each holding its own done-guard. See the consolidation note at the bottom
    of port_actor_overlays_sinits(). */
@@ -1510,6 +1524,30 @@ extern "C" void port_actor_overlays_sinits(void)
     __sinit_ov027_02112d1c();   /* CHILL_BULLY's five */
     __sinit_ov027_02112df8();   /* DA_PG_DFDR's six, then its four PMF copies */
     __sinit_ov027_02112f70();   /* SNOWMAN_BREATH's Vector3 constant */
+    /* run rel0215 wave 2 (lane w2-ov074): ov074's ONE sinit -- the overlay's
+       .init section holds a single 0x3f8-byte initialiser and its .ctor table
+       one word. It builds FOURTEEN SharedFilePtrs, registers each with a
+       12-byte destructor-chain node, and then copies EIGHTEEN PMF source
+       records into data_ov074_021230f8, the nine {enter, tick} cells
+       Goomboss's state machine dispatches through.
+       THE SEAT GOES FIRST and its position is not free, the ov026/ov077
+       reason: port_ov074_states_seat() rewrites each mounted source record's
+       fn word from the DS address the mount emitted to the host body's, and it
+       has to happen after port_ov074_syms_patch() has laid the records down
+       and BEFORE the sinit copies them. Seating after the copies would leave
+       the bss cells holding DS addresses while the sources read correct, which
+       is the quiet half of this failure mode. The seat validates every record
+       against the ROM's own address and aborts rather than seat garbage; it is
+       idempotent, and hal_fill_goomboss_vtable calls it again for the reason
+       ov045's guard exists. */
+    port_ov074_pack_check();
+    port_ov074_syms_patch();
+    port_ov074_states_seat();
+    port_ov074_level_files_seat();   /* the twenty words that point into
+                                        ov053's whole-image mount; the ovdata
+                                        cross pass cannot see a whole mount */
+    __sinit_ov074_02122978();   /* 14 SharedFilePtrs + 14 dtor nodes + the
+                                   18-record, nine-cell PMF state table */
 
     /* ---- the six bring-ups that used to ride the first registry fill ------
      *

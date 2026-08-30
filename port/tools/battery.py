@@ -534,12 +534,54 @@ SCENE_BLOCKED = {
 # like this stays honest. Deleting a retired entry is the whole maintenance
 # burden.
 LEVEL_SKIPS = {
-    # Empty since wave C closed. Level 33's SNUFIT entry retired 2026-08-15:
-    # the w19 slot-5 fix and the level-33 mount met at the wave's final
-    # merge, the bare run went 300 frames clean, and the battery printed
-    # SKIP RETIRED on its first run over the combined tree. The entry shape
-    # is documented in this file's skip section; new debts go here with the
-    # class, the owning lane, and the evidence, never a raw fault offset.
+    # Level 33's SNUFIT entry retired 2026-08-15: the w19 slot-5 fix and the
+    # level-33 mount met at the wave's final merge, the bare run went 300
+    # frames clean, and the battery printed SKIP RETIRED on its first run over
+    # the combined tree. The entry shape is documented in this file's skip
+    # section; new debts go here with the class, the owning lane, and the
+    # evidence, never a raw fault offset.
+    #
+    # THIS ROW IS NOT A PORT DEFECT AND NO PORT LANE CAN CLOSE IT.
+    # run rel0215 wave 2, lane w2-ov074 seated ov074's whole cast and took
+    # level 45 to zero skipped -- census 5 spawned (5 classes), 0 skipped --
+    # and GOOMBOSS then quarantines on its FIRST behaviour frame because the
+    # DECOMP does not have the body its first state ticks:
+    #
+    #   func_ov074_021201f0 (0x1f0 bytes, ROM 0x021201f0) is Goomboss's state
+    #   0 TICK. It has no delink block in config/arm9/overlays/ov074/
+    #   delinks.txt and no src file anywhere in the tree -- one of three ov074
+    #   function symbols in that state, and the only one the boot walk reaches.
+    #   Its own relocations name Camera::SetPos, Camera::SetLookAt,
+    #   Camera::SetFlag_3, Actor::ClosestPlayer, Sound::LoadAndSetMusic_Layer3,
+    #   Message::PrepareTalk, Player::ShowMessage, Player::StartTalk and
+    #   func_ov074_021203e4: the fight's opening cutscene, which ends by
+    #   changing state. Nothing in ov074 sets an initial state, so the bss zero
+    #   IS state 0 and the very first Goomboss::Behavior dispatches into it.
+    #
+    # THE EVIDENCE, both directions. The run logs live in the lane's
+    # orchestration directory, NOT in this repo -- nothing under any
+    # runs/rel0215 path is checked in, and an earlier revision of this comment
+    # cited one as though it were repo-relative. Each run below is reproducible
+    # from the command given, which is the part that has to survive:
+    #   BARE, no FAULTS_FATAL, SM64DS_LEVEL=45, 300 and 600 frames: rc 0,
+    #       census 5 spawned (5 classes) 0 skipped, and EXACTLY ONE quarantined
+    #       actor, named -- "[quarantine] actor id 198 (GOOMBOSS) FROZEN, frame
+    #       continues". Spawn, InitResources, the 31-slot fill, Render and the
+    #       first Behavior up to the state dispatch all run clean; the shipped
+    #       configuration degrades exactly as it is designed to.
+    #   WITH THIS SKIP, FAULTS_FATAL=1, level 45, 300 and 600 frames: rc 0.
+    #   THE CLASS ITSELF is proven on its OTHER half, and on a different level
+    #       for the reason hal/actor_classes_ov074.cpp gives at length:
+    #       SM64DS_LEVEL=13 SM64DS_SPAWN_ACTOR=198:0x1111 FAULTS_FATAL=1, 600
+    #       frames -> rc 0, zero faults, zero quarantine lines. Level 45 cannot
+    #       host that probe under FAULTS_FATAL and the skip would make it
+    #       vacuous (SM64DS_SKIP_CLASS matches by substring).
+    # The class stays REGISTERED, so the day func_ov074_021201f0 is matched the
+    # bare re-probe below goes green and this row retires itself with no
+    # further port work.
+    45: ("GOOMBOSS", "the decomp (func_ov074_021201f0 has no matched body)",
+         "quarantines on frame 0 of Goomboss::Behavior, in the state-0 tick "
+         "the loud face in hal/actor_classes_ov074.cpp names"),
 }
 # The bare re-probe is expected to FAULT while the debt stands, and a fault
 # under FAULTS_FATAL exits fast. A probe that instead hangs is not evidence of

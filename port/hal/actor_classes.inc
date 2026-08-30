@@ -1584,6 +1584,24 @@ void hal_fill_pokey_vtable(void);                    /* _ZTV5Pokey == _ZTV9daSan
 extern unsigned char Tornado_SpawnInfo[];            /* ov096 0x02137a6c, +4 low = 308 */
 void *Tornado_Spawn(void);                           /* ov096 0x021376bc, 80 B */
 void hal_fill_tornado_vtable(void);                  /* _ZTV7Tornado == _ZTV7daTor_c, 31 */
+
+/* ---- run rel0215 wave 2 (lane w2-ov074): the ov074 GOOMBOSS PACK, a fresh
+   per-symbol mount (port/ov074_syms.txt). TWO IDS AND ONE FILL:
+   src/Goomboss_Spawn.cpp and src/ExplosionGoomba_Spawn.cpp are the same 0xd4
+   body twice -- both allocate 0x610, both store _ZTV8Goomboss into p[0] and
+   both run the identical member-construction sequence -- and ov074 holds
+   exactly one vtable and one typeinfo record, whose name string reads
+   "12daKuriKing_c". So both rows point at hal_fill_goomboss_vtable.
+   Both SpawnInfo records come from the mount, and both ids were confirmed on
+   BOTH routes (the arm9 spawn-table relocation at 0x02090864 + id*4 AND the
+   record's own +4 halfword) -- required here because ov074 is the fourth
+   occupant of the 0x0211f000 window and eleven other spawn-table slots
+   relocate into its span. ---- */
+extern unsigned char Goomboss_SpawnInfo[];           /* ov074 0x02122e78, +4 = 198 */
+void *Goomboss_Spawn(void);                          /* ov074 0x02122838, 212 B */
+extern unsigned char ExplosionGoomba_SpawnInfo[];    /* ov074 0x02122e94, +4 = 199 */
+void *ExplosionGoomba_Spawn(void);                   /* ov074 0x02122764, 212 B */
+void hal_fill_goomboss_vtable(void);                 /* _ZTV8Goomboss, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2398,4 +2416,14 @@ void hal_fill_tornado_vtable(void);                  /* _ZTV7Tornado == _ZTV7daT
     {240, "POKEY", Pokey_SpawnInfo, Pokey_Spawn, hal_fill_pokey_vtable}, \
     {241, "POKEY_SEGMENT", PokeySegment_SpawnInfo, PokeySegment_Spawn, \
      hal_fill_pokey_vtable}, \
-    {308, "TORNADO", Tornado_SpawnInfo, Tornado_Spawn, hal_fill_tornado_vtable},
+    {308, "TORNADO", Tornado_SpawnInfo, Tornado_Spawn, hal_fill_tornado_vtable}, \
+    /* ---- run rel0215 wave 2 (lane w2-ov074): the ov074 GOOMBOSS pack. \
+       GOOMBOSS is the whole of level 45's skip list, one placed instance; \
+       EXPLOSION_GOOMBA is placed on no level of the fifty-two and is \
+       spawned by the fight, so the boot walk registers it and does not \
+       exercise it (see port/slice_ov074.txt). ONE FILL for both rows: the \
+       two factories are the same body and store the same table. ---- */ \
+    {198, "GOOMBOSS", Goomboss_SpawnInfo, Goomboss_Spawn, \
+     hal_fill_goomboss_vtable}, \
+    {199, "EXPLOSION_GOOMBA", ExplosionGoomba_SpawnInfo, \
+     ExplosionGoomba_Spawn, hal_fill_goomboss_vtable},

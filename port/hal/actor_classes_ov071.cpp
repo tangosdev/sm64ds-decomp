@@ -220,8 +220,23 @@ int _ZTV14MrI_Projectile[31];
        from:0x02120a1c kind:load to:0x02123038 module:overlay(71)
    -- ov071's OWN bss pointer, mounted in port/ov071_syms.txt. The ov074
    spelling is another module's dsd export winning the race at a shared-window
-   address. Alias by address; the config rename goes upstream as its own PR. */
-#pragma comment(linker, "/alternatename:_data_ov074_02123038=_data_ov071_02123038")
+   address. Alias by address; the config rename goes upstream as its own PR.
+
+   RETIRED, run rel0215 wave 2 (lane w2-ov074), AND THE RULING ABOVE STILL
+   APPLIES UNCHANGED. The directive here used to be
+     /alternatename:_data_ov074_02123038=_data_ov071_02123038
+   which worked only while nothing DEFINED the LHS. ov074 now has its own
+   per-symbol mount (port/ov074_syms.txt) and data_ov074_02123038 is one of
+   Goomboss's fourteen SharedFilePtrs -- its own relocations cite the address
+   three times as module:overlay(74) and src/__sinit_ov074_02122978.c
+   Constructs it with file id 0x38f -- so the alias became inert and
+   func_ov071_021209c8 would have set its TextureSequence's file out of
+   GOOMBOSS's cell: silently, with no link error and no byte-gate signal, the
+   Coffin/Spindrift shape. port/tools/alternatename_guard.py catches it at the
+   link. The routing moved to the guard's own remedy, a per-source -D on the
+   ONE reader (src/func_ov071_021209c8.cpp) in port/CMakeLists.txt beside the
+   ov074 slice block. Nothing about ov071 changes; what changes is that the
+   binding no longer depends on a name staying undefined somewhere else. */
 
 /* C++-MANGLED DATA SPELLINGS, the data_02082128 / data_020a0e68 precedent.
    src/_ZN3MrI13InitResourcesEv.c and the two MrI_Projectile method TUs declare
