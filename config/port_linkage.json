@@ -28,11 +28,11 @@
     "Enrolling free TUs does nothing, because the release build dead-strips whatever the",
     "linked closure never references."
   ],
-  "linkedTus": 8028,
-  "matchedTus": 11312,
-  "measuredAt": "2026-08-29",
+  "linkedTus": 8775,
+  "matchedTus": 11324,
+  "measuredAt": "2026-08-30",
   "branch": "port-mount-noseat-cluster",
-  "commit": "f77f01169",
+  "commit": "0cf94f562",
   "stale": false,
-  "basis": "single lane cons at its pushed tip f77f01169 (the 0.2.15 release tip), measured against the tip's own gate build walk_window.map (tree clean, battery ALL GREEN twice on 2026-08-29, the run that shipped 0.2.15). +310 over the 7718 stamp: the title campaign (menus, file select, doodle canvas), the scene-request carrier, the opening cutscene chain with the intro dispatch, VS mode (ov075 seated as scene 6 with four arenas mounted), the MP conductor and sync batches, and the Rec Room minigame entry. The replacement queue now reads 730 rows across 257 host objects: 301 documented host-ABI exceptions, 243 faces, 170 shadows plus 15 MSVC-name shadows and 1 MSVC-name exception; the shadows remain the replacement backlog and are not counted as linked."
+  "basis": "single lane cons at its pushed tip 0cf94f562, measured against the tip's own battery build walk_window.map (tree clean, battery ALL GREEN, the tip that closed cast-campaign wave 2). +400 over the morning's 8375 stamp: seven reviewed merges seating the water enemy pack, Eyerok, Snowman's Land, the Goomboss, Shifting Sand Land's remaining cast, four small overlays (THI big+cave, Bowser in the Sky, the mirror arena), and the final ov075 propagation that retired the last VS faces - every function in ov075 now runs recovered source. Two disclosed holes remain the decomp's: func_ov074_021201f0 (Goomboss state-0) and _ZN7Wiggler8BehaviorEv, both filed as crack targets. Remaining frontier: wave 3 partial-overlay tails (~776), then arm9/ov002/ov006."
 }

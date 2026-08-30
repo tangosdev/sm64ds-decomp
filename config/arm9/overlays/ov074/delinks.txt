@@ -92,6 +92,10 @@ src/func_ov074_021201ec.c:
     complete
     .text start:0x021201ec end:0x021201f0
 
+src/func_ov074_021201f0.c:
+    complete
+    .text start:0x021201f0 end:0x021203e0
+
 src/func_ov074_021203e0.c:
     complete
     .text start:0x021203e0 end:0x021203e4
@@ -107,6 +111,10 @@ src/func_ov074_0212042c.cpp:
 src/func_ov074_02120474.cpp:
     complete
     .text start:0x02120474 end:0x021204c0
+
+src/func_ov074_021204c0.c:
+    complete
+    .text start:0x021204c0 end:0x021206c8
 
 src/func_ov074_021206c8.c:
     complete
