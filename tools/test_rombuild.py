@@ -291,6 +291,40 @@ class RomBuildEnrollment(unittest.TestCase):
             enrolled=["src/Pair.cpp"], manifest=manifest,
             homes={"ConfiguredElsewhere": [("arm9", 0x02000008)]}), {})
 
+    def test_intact_policy_requires_promoted_full_ordinary_link_proof(self):
+        entry = {
+            "id": "ov047/TU", "status": "promoted",
+            "production_mode": "intact-object",
+            "source": "src/actors/TU.cpp", "promoted_source": "src/actors/TU.cpp",
+            "sections": [{"name": ".text"}, {"name": ".data"}],
+            "verification": {"linkcheck": {
+                "result": "scratch-data-verified",
+                "phases": {name: True for name in
+                           ("delink", "lcf", "compile", "link", "checkModules", "rom")},
+                "symbolCheckNewVsBaseline": [],
+                "tuRanges": [{"section": ".text", "differingBytes": 0},
+                             {"section": ".data", "differingBytes": 0}],
+                "rom": {"sha256": "a" * 64},
+            }},
+        }
+        manifest = {"entries": [entry]}
+        self.assertEqual(RB.intact_tu_policies(
+            {"src/actors/TU.cpp"}, manifest=manifest),
+            {"src/actors/TU.cpp": entry})
+        entry["verification"]["linkcheck"]["tuRanges"][1]["differingBytes"] = 1
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.intact_tu_policies({"src/actors/TU.cpp"}, manifest=manifest)
+        self.assertIn("every range exact", raised.exception.output)
+
+    def test_intact_policy_ignores_unenrolled_shadow(self):
+        manifest = {"entries": [{
+            "id": "ov047/Shadow", "status": "text-verified",
+            "production_mode": "intact-object",
+            "promoted_source": "src/actors/Shadow.cpp",
+        }]}
+        self.assertEqual(RB.intact_tu_policies(
+            {"src/actors/Elsewhere.cpp"}, manifest=manifest), {})
+
 
 def _compiler():
     exe = RB.MW / RB.VERSION / "mwccarm.exe"

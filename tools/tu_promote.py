@@ -12,7 +12,7 @@ tree carries a file per mangled symbol, every structor has to be hand-placed und
 The mechanical steps, all of which this performs and none of which it guesses at:
 
 * replace the entry's per-function ``delinks.txt`` entries with one ``complete``
-  entry spanning the manifest's sections;
+  entry spanning every manifest-owned section;
 * ``git mv`` the ``src_tu/`` source to its ``promoted_source`` path (R100, so the
   file's own credit follows) and ``git rm`` every ``legacy_source``;
 * rewrite the manifest entry to ``status: promoted`` with ``source`` at the
@@ -87,19 +87,34 @@ def plan(entry):
     if (REPO / dest).exists():
         raise PromoteError(f"{ident}: {dest} already exists")
 
-    sections = [s for s in entry.get("sections", []) if s.get("name") == ".text"]
+    raw_sections = [s for s in entry.get("sections", []) if isinstance(s, dict)]
+    sections = [s for s in raw_sections if s.get("name") == ".text"]
     if not sections:
         raise PromoteError(f"{ident}: no .text section in the manifest")
-    if entry.get("data") or entry.get("bss"):
+    owns_nontext = any(s.get("name") != ".text" for s in raw_sections) \
+        or bool(entry.get("data") or entry.get("rodata") or entry.get("bss"))
+    if owns_nontext and entry.get("production_mode") != "intact-object":
         # Production isolation zeroes an object's data and rebinds the symbols to the
-        # cartridge's addresses; a TU that OWNS delinked data is a different problem
-        # and is not what this path models.
-        raise PromoteError(f"{ident}: entry owns data/bss; not a text-only promotion")
+        # cartridge's addresses unless the normal build has explicitly admitted this
+        # manifest-backed intact-object policy.
+        raise PromoteError(f"{ident}: entry owns non-text data without "
+                           "production_mode: intact-object")
+
+    claims = []
+    for section in raw_sections:
+        name = section.get("name")
+        try:
+            lo, hi = int(section["start"], 16), int(section["end"], 16)
+        except (KeyError, TypeError, ValueError):
+            raise PromoteError(f"{ident}: invalid section claim {section!r}") from None
+        if not isinstance(name, str) or not name.startswith(".") or lo >= hi:
+            raise PromoteError(f"{ident}: invalid section claim {section!r}")
+        claims.append((name, lo, hi))
 
     funcs = entry.get("functions", [])
     if not funcs:
         raise PromoteError(f"{ident}: entry licenses no functions")
-    spans = [(int(s["start"], 16), int(s["end"], 16)) for s in sections]
+    spans = [(lo, hi) for name, lo, hi in claims if name == ".text"]
     legacy = []
     for f in funcs:
         addr, size = int(f["address"], 16), int(f["size"], 16)
@@ -122,7 +137,7 @@ def plan(entry):
             raise PromoteError(f"{ident}: {source} has {n} entries in "
                                f"{dl.relative_to(REPO)}, expected exactly 1")
     return {"id": ident, "source": src, "dest": dest, "delinks": dl,
-            "legacy": legacy, "spans": spans, "functions": funcs}
+            "legacy": legacy, "spans": spans, "claims": claims, "functions": funcs}
 
 
 def rewrite_delinks(p):
@@ -130,7 +145,8 @@ def rewrite_delinks(p):
     text = p["delinks"].read_text(encoding="utf-8")
     for source in p["legacy"]:
         text = _entry_re(source).sub("", text, count=1)
-    body = "".join(f"    .text start:0x{lo:08x} end:0x{hi:08x}\n" for lo, hi in p["spans"])
+    body = "".join(f"    {name} start:0x{lo:08x} end:0x{hi:08x}\n"
+                   for name, lo, hi in p["claims"])
     entry = f"{p['dest']}:\n    complete\n{body}\n"
     # Address order is not cosmetic: it is how a reader of delinks.txt finds the entry
     # that owns an address, and dsd emits the file sorted.
