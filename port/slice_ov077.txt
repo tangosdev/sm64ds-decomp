@@ -19,8 +19,8 @@
 # virtual/access-specifier/extern "C"/::/new/delete and the //cpp marker), so
 # this slice needs no set_source_files_properties(... LANGUAGE CXX) row.
 #
-# ==== ELEVEN TUs ARE HOST-COPIED, AND EACH IS REFUSED FOR A NAMED REASON ===
-# All eleven stay BYTE-LOCKED in src/ as the matched proof; they are simply
+# ==== TWELVE TUs ARE HOST-COPIED, AND EACH IS REFUSED FOR A NAMED REASON ==
+# All twelve stay BYTE-LOCKED in src/ as the matched proof; they are simply
 # not listed below. Nothing is refused for being awkward -- the smallest
 # genuinely unmodellable subtree, per the VS lane's correction (it refused
 # twelve wireless wrappers, eleven of which were leaf accessors, and its first

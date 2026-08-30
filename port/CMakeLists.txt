@@ -8585,10 +8585,12 @@ endforeach()
 
 # run rel0215 wave 1 (lane cast-ov077): HEAVE_HO (238) + SPINY (260) +
 # LAKITU (265), ov077. Fresh per-symbol ov077 mount (port/ov077_syms.txt). The
-# fill and the PMF state seat are hal/actor_classes_ov077.cpp; the eleven
+# fill and the PMF state seat are hal/actor_classes_ov077.cpp; the twelve
 # host-copied TUs (three ModelAnim slot-5 Renders, six PMF dispatch sites, two
-# real-C++ destructors MSVC cannot name) are the three unmatched/*_HostSites.cpp
-# files, each refusal itemised in port/slice_ov077.txt.
+# real-C++ destructors MSVC cannot name, one implicit-r1 caller) are the three
+# unmatched/*_HostSites.cpp files, each refusal itemised in
+# port/slice_ov077.txt; unmatched/Lakitu_ShadowFaces.cpp carries the slice's
+# measured closure gap, which was eight naming mismatches and no missing body.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov077.txt" SLICE_OV077_LINES)
 set(SLICE_OV077_SOURCES "")
 foreach(line IN LISTS SLICE_OV077_LINES)
