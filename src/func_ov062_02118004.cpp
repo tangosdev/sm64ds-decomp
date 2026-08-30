@@ -1,8 +1,6 @@
 //cpp
-struct dBgCh_Actr {
-    char pad[1];
-    bool IsOnGround() const;
-};
+#include "dBgCh_Actr.h"
+
 extern "C" int _Z14ApproachLinearRiii(int &r, int target, int speed);
 struct Particle {
     static void RunningSlidingDustAt(int a, int b, int c);

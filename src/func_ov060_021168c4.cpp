@@ -4,11 +4,10 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-typedef int Fix12i;
+#include "dBgCh_Actr.h"
 
 struct dCc_c;
 struct dActor_c;
-struct dBgCh_Actr { int JustHitGround() const; };
 struct dActor_c {
     static dActor_c* FindWithActorID(unsigned int id, dActor_c* a);
     static dActor_c* FindWithID(unsigned int id);

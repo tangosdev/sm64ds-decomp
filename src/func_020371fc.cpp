@@ -2,11 +2,10 @@
 // @symbol func_020371fc
 /* recovered: shared common types */
 #include "common.h"
+#include "dBgCh_Actr.h"
 #include "dBgCh_Gnd.h"
 
 struct dActor_c;
-
-struct dBgCh_Actr { void SetGroundFlag(); };
 
 extern "C" bool _ZN6Player7IsInAirEv(void* p);
 extern "C" void _ZN5dBgPiaSERKS_(dBgPi* d, const dBgPi* s);

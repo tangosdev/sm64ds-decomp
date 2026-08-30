@@ -1,10 +1,7 @@
 //cpp
+#include "dBgCh_Actr.h"
+
 struct dCc_c;
-struct dBgCh_Actr {
-    int IsOnGround() const;
-    int JustHitGround() const;
-    int IsOnWall() const;
-};
 struct dActor_c {
     void UpdatePosWithHorzSpeedAndAng();
     void UpdatePosWithOnlySpeed(dCc_c*);

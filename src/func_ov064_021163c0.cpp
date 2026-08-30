@@ -1,13 +1,14 @@
 //cpp
-typedef int Fix12;
+#include "dBgCh_Actr.h"
+
+typedef int RawFix12;
 struct BCA_File;
-struct dBgCh_Actr { int IsOnGround() const; };
-struct ModelAnim { void SetAnim(BCA_File *f, int a, Fix12 b, unsigned int c); };
+struct ModelAnim { void SetAnim(BCA_File *f, int a, RawFix12 b, unsigned int c); };
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File *f, int a, Fix12 b, unsigned int c);
+extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File *f, int a, RawFix12 b, unsigned int c);
 
 
 void ApproachLinear(short &v, short t, short step);
