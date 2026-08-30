@@ -1520,3 +1520,38 @@ func_ov005_020c0b00  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15
 func_ov005_020c14a0  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 6 Behavior, addr 0x020c14a0 size 0x1b4; match.py MATCHING at 2004/b56 with reloc destinations checked. This is the body hal/scene_mg.cpp RNG seeder replicates
 func_ov005_020c1654  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 3 CleanupResources, addr 0x020c1654 size 0x34; match.py MATCHING at 2004/b56 with reloc destinations checked
 func_ov005_020c1a20  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 0 InitResources, addr 0x020c1a20 size 0x7cc; match.py MATCHING at 2004/b56 with reloc destinations checked
+#
+# ---------------------------------------------------------------------------
+# run rel0215 wave 1 (lane cast-ov036), ov036's Rainbow Cruise cast.
+#
+# Eight marker-carrying bodies -- five of SWINGING_PLATFORM's (127) own slots
+# and three of ROTATING_PLATFORM_RR's (129) -- refused the lane's first build.
+# All eight were disassembled from extracted/overlays/overlay_0036.bin at base
+# 0x021111a0 (the shipped image, deliberately not a dsd export) and read
+# against src/ instruction for instruction, AND put through tools/match.py at
+# the canonical 2004/b56 with --strict-relocs on, so every relocation SLOT'S
+# DESTINATION is checked against config/arm9/overlays/ov036/relocs.txt rather
+# than wildcarded. RESULT: 8 REAL DECOMP, 0 genuine guesses, 0 unverifiable.
+# A body that byte-reproduces the ROM at the canonical compiler with every
+# reloc destination checked is not a behavioural guess.
+#
+# Two are the standing NAME mislabel (the func_ov022_021123d0 /
+# func_ov005_020bfefc class): the RTTI recovery read the Itanium D1/D0 pair as
+# one slot and called the DELETING DESTRUCTOR "OnYoshiTryEat".
+#
+# Each of the eight still owes a decomp-side marker correction. This lane does
+# not edit src/, so the correction is owed and not done here.
+#
+# Full per-body evidence and the exact match.py invocation: C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov036\adjudication.md
+#
+# id 127, ov036, 16daObjRcBuranko_c -- SEATED by this lane.
+func_ov036_021111e4  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov036\adjudication.md  slot 17 D0, addr 0x021111e4 size 0x58; match.py MATCHING at 2004/b56 with reloc destinations checked. NAME says OnYoshiTryEat and is wrong, body is the D0: two vptr stores (02113a98 then ov002 0210ae38), MovingMeshCollider::D1 +0x124, Model::D1 +0xd4, Actor::D2, Memory::Deallocate(this,*020a0eac)
+func_ov036_02111284  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov036\adjudication.md  slot 3 CleanupResources, addr 0x02111284 size 0x44; match.py MATCHING at 2004/b56 with reloc destinations checked; MeshColliderBase::IsEnabled/Disable at +0x124 then two SharedFilePtr::Release on 02114028/02114020
+func_ov036_021112c8  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov036\adjudication.md  slot 9 Render, addr 0x021112c8 size 0x28; match.py MATCHING at 2004/b56 with reloc destinations checked; ldr r2,[r0,#0xd4]! / ldr r2,[r2,#0x14] / blx r2 with r1=0 -- the plain-Model slot-5 dispatch, encoded not guessed
+func_ov036_021112f0  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov036\adjudication.md  slot 6 Behavior, addr 0x021112f0 size 0x8c; match.py MATCHING at 2004/b56 with reloc destinations checked; the +0x31e step, the +0x90 accumulate, func_ov036_0211123c, then Platform::IsClsnInRange/UpdateClsnPosAndRot
+func_ov036_0211137c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov036\adjudication.md  slot 0 InitResources, addr 0x0211137c size 0x98; match.py MATCHING at 2004/b56 with reloc destinations checked; Model::LoadFile/ModelBase::SetFile(1,-1), MeshCollider::LoadFile/MovingMeshCollider::SetFile, func_020393d4 with the UpdatePosWithTransform callback
+#
+# id 129, ov036, 19daObjRc_Kaitendai_c -- SEATED by this lane.
+func_ov036_02111494  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov036\adjudication.md  slot 17 D0, addr 0x02111494 size 0x64; match.py MATCHING at 2004/b56 with reloc destinations checked. NAME says OnYoshiTryEat and is wrong, body is the D0: three vptr stores (02113b74, ov002 021091d4, ov002 0210ae38) then the same teardown chain as 127's
+func_ov036_021114f8  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov036\adjudication.md  slot 3 CleanupResources, addr 0x021114f8 size 0x14; match.py MATCHING at 2004/b56 with reloc destinations checked; a five-word ARM veneer, ldr ip / ldr r1 / bx ip into func_ov002_020b66a8 with data_ov036_02113b2c in r1
+func_ov036_0211150c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov036\adjudication.md  slot 0 InitResources, addr 0x0211150c size 0x38; match.py MATCHING at 2004/b56 with reloc destinations checked; the same veneer shape into func_ov002_020b676c with a third argument selected from 02113b18/02113b1c on the +8 low byte

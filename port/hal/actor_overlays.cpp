@@ -973,6 +973,32 @@ void port_ov013_syms_patch(void);
 void __sinit_ov013_021116b8(void);
 void __sinit_ov013_021116f8(void);
 
+/* run rel0215 wave 1 (lane cast-ov036): ov036 per-symbol -- ALL SEVEN of the
+   overlay's own sinits, one per class, and every one of the seven classes is
+   registered by this lane, so none is left unrun. Each builds only its own
+   class's SharedFilePtrs in ov036 bss and registers the matching
+   destructor-chain nodes; there is no PMF source table anywhere in ov036
+   (swept -- the ov026 fourth width shape is absent). Verified by reading the
+   bodies and by which bss cells each one's relocs name:
+     021125b0 -> 02114020/02114028                 SWINGING_PLATFORM
+     0211261c -> 02114048/02114050                 ROTATING_PLATFORM_RR
+     02112688 -> 02114070                          SHIP_WING
+     021126c8 -> 02114084/0211408c                 DONUT_BLOCK
+     02112730 -> 021140ac/021140b4                 ARMED_ROTATING_PLATFORM
+     0211279c -> 021140d4..0211411c (ten pointers) TRICKY_TRIANGLES
+     02112944 -> 0211419c/021141a4/021141ac        FLYING_CARPET
+   ov036 is already whole-mounted (PORT_LEVEL_OVERLAYS) for the level's own
+   object-table walks; same dual-mount shape as ov012/ov013/ov045. */
+void port_ov036_pack_check(void);
+void port_ov036_syms_patch(void);
+void __sinit_ov036_021125b0(void);
+void __sinit_ov036_0211261c(void);
+void __sinit_ov036_02112688(void);
+void __sinit_ov036_021126c8(void);
+void __sinit_ov036_02112730(void);
+void __sinit_ov036_0211279c(void);
+void __sinit_ov036_02112944(void);
+
 /* The six wave-3/4/5 bring-ups, each defined beside the cast it serves and
    each holding its own done-guard. See the consolidation note at the bottom
    of port_actor_overlays_sinits(). */
@@ -1278,6 +1304,22 @@ extern "C" void port_actor_overlays_sinits(void)
     port_ov013_syms_patch();
     __sinit_ov013_021116b8();   /* CLOCK_PENDULUM's SharedFilePtr */
     __sinit_ov013_021116f8();   /* the two CLOCK_HAND SharedFilePtrs */
+
+    /* run rel0215 wave 1 (lane cast-ov036): ov036's seven own-class sinits,
+       in ROM ORDER (the .init section lays them out at 021125b0, 0211261c,
+       02112688, 021126c8, 02112730, 0211279c, 02112944 and the .ctor table
+       lists them in that order too). All seven belong to classes this lane
+       registers, so all seven run. ov036 is also whole-mounted
+       (PORT_LEVEL_OVERLAYS) for level 28's own object-table walks. */
+    port_ov036_pack_check();
+    port_ov036_syms_patch();
+    __sinit_ov036_021125b0();   /* SWINGING_PLATFORM's two SharedFilePtrs */
+    __sinit_ov036_0211261c();   /* ROTATING_PLATFORM_RR's two */
+    __sinit_ov036_02112688();   /* SHIP_WING's one */
+    __sinit_ov036_021126c8();   /* DONUT_BLOCK's two */
+    __sinit_ov036_02112730();   /* ARMED_ROTATING_PLATFORM's two */
+    __sinit_ov036_0211279c();   /* TRICKY_TRIANGLES' ten */
+    __sinit_ov036_02112944();   /* FLYING_CARPET's three */
 
     /* ---- the six bring-ups that used to ride the first registry fill ------
      *
