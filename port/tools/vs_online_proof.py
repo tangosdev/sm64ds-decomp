@@ -24,11 +24,13 @@ and asserts the three things a player would call "it worked":
               have come from anywhere but the wire. THESE TWO ASSERTIONS ARE
               THE PROOF. Everything else here can pass without a transport.
 
-WHICH IS NOT A FIGURE OF SPEECH. A control pair with NO comms env at all --
-zero [comms] lines in either log -- passes every other check in this file,
-including the DETERMINISM one at the bottom, with the identical distinct
-position count a live run scores. Only the two WIRE assertions fail. So the
-determinism result is reported as CORROBORATING, its verdict line states
+WHICH IS NOT A FIGURE OF SPEECH, AND THE PRECISE CLAIM IS THIS. A control pair
+with NO comms env at all -- zero [comms] lines in either log, plus
+SM64DS_VS_PLAYERS=2 so the census has two actors to compare -- fails INSTALL,
+fails PAIRING and fails both WIRE assertions, exactly as it should. It PASSES
+the DETERMINISM check at the bottom, with the identical distinct-position count
+a live run scores. So DETERMINISM is the one assertion here that carries no
+signal by itself: it is reported as CORROBORATING, its verdict line states
 whether the WIRE assertions held, and echo_of's docstring carries the numbers.
 
 IF A LATER RUNG IS ADDED HERE, hold it to the same question before believing
@@ -165,8 +167,8 @@ def echo_of(tp, tc, slot):
 
     THE ASSERTION IS VACUOUS ON ITS OWN, and that is MEASURED rather than
     argued. A control pair with NO SM64DS_COMMS_* IN THE ENVIRONMENT AT ALL --
-    no role, no relay, no code, no fan-out, zero [comms] lines in either log --
-    passes it:
+    no role, no relay, no code, no fan-out, zero [comms] lines in either log,
+    with SM64DS_VS_PLAYERS=2 so there are two actors to compare -- passes it:
 
         600 frames, no transport   DETERMINISM PASS, 569 distinct positions
         600 frames, live relay     DETERMINISM PASS, 569 distinct positions
@@ -297,9 +299,10 @@ def main():
     ok &= M.verdict(two_actors(tp) >= 0 and two_actors(tc) >= 0,
                     "two player actors in each census (last frame %d/%d)"
                     % (two_actors(tp), two_actors(tc)))
-    # THE TWO THAT ACTUALLY PROVE THE WIRE. Everything above them is about a
-    # session having formed; these are the only assertions in this file that a
-    # no-transport pair fails.
+    # THE TWO THAT ACTUALLY PROVE TRAFFIC. The assertions above prove a SESSION
+    # FORMED -- a no-transport control fails INSTALL and PAIRING too -- but
+    # none of them shows a byte of game state crossing. These do, and they are
+    # the only ones the DETERMINISM check below can lean on.
     f = remote_pad_seen(tp, mp_, CHILD_KEY)
     wire_p = M.verdict(f >= 0,
                        "WIRE: the parent reads the CHILD's injected pad %04x "
