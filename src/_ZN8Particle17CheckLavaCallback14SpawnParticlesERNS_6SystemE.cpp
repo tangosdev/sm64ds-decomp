@@ -1,16 +1,8 @@
 //cpp
 #include "dPa_c.h"
+#include "dBgCh_Gnd.h"
 
 struct dActor_c;
-
-struct dBgCh_Gnd {
-    char pad0[0x14];
-    unsigned int sub[(0x50 - 0x14) / 4];
-    dBgCh_Gnd();
-    ~dBgCh_Gnd();
-    void SetObjAndPos(const Vector3 &pos, dActor_c *obj);
-    int DetectClsn();
-};
 
 struct Node {
     Node *next;
@@ -52,11 +44,11 @@ void CheckLavaCallback::SpawnParticles(System &sys)
         rg.SetObjAndPos(v, 0);
         if (rg.DetectClsn() == 0)
             goto Lac;
-        if (func_02037e38(rg.sub) != 1) {
+        if (func_02037e38((u32*)&rg.surface) != 1) {
         Lac:
             n->f2e = n->f2c;
         } else {
-            n->f18 = ((int)rg.sub[12] + 0x7000 >> 3) - n->fc;
+            n->f18 = (rg.clsnY + 0x7000 >> 3) - n->fc;
         }
     }
 }

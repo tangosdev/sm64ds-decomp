@@ -2,32 +2,9 @@
 // @symbol func_ov084_02129238
 /* recovered: shared common types */
 #include "common.h"
-typedef int s32;
+#include "dBgCh_Gnd.h"
 
 struct dActor_c;
-
-struct dBgCh_Gnd {
-    char pad0[0x14];
-    int field14;     /* 0x14 */
-    char pad18[0x44 - 0x18];
-    int field44;     /* 0x44 */
-    char pad48[0x50 - 0x48];
-    dBgCh_Gnd();
-    ~dBgCh_Gnd();
-    void StartDetectingWater();
-    void StartDetectingToxic();
-    void StopDetectingOrdinary();
-    void SetObjAndPos(const Vector3& pos, dActor_c* a);
-    int DetectClsn();
-};
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void _ZN5dBgCh19StartDetectingWaterEv(void *);
-extern "C" void _ZN5dBgCh19StartDetectingToxicEv(void *);
-extern "C" void _ZN5dBgCh21StopDetectingOrdinaryEv(void *);
-
 
 extern "C" {
 int _ZNK10dBgCh_Actr10IsOnGroundEv(void* p);
@@ -54,14 +31,14 @@ void func_ov084_02129238(char* c)
             pos.z = vz;
         }
         dBgCh_Gnd rg;
-        _ZN5dBgCh19StartDetectingWaterEv(&(rg));
-        _ZN5dBgCh19StartDetectingToxicEv(&(rg));
-        _ZN5dBgCh21StopDetectingOrdinaryEv(&(rg));
+        rg.StartDetectingWater();
+        rg.StartDetectingToxic();
+        rg.StopDetectingOrdinary();
         rg.SetObjAndPos(pos, (dActor_c*)c);
         if (rg.DetectClsn() != 0) {
-            if (func_02037e20(&rg.field14) != 0) {
-                if (rg.field44 != (int)0x80000000) {
-                    if (*(int*)(c + 0x60) < rg.field44) {
+            if (func_02037e20((int*)&rg.surface) != 0) {
+                if (rg.clsnY != (int)0x80000000) {
+                    if (*(int*)(c + 0x60) < rg.clsnY) {
                         _ZN12dEnemyBase_c9SpawnCoinEv(c);
                         _ZN8dActor_c8PoofDustEv(c);
                         func_ov084_02129498(c);

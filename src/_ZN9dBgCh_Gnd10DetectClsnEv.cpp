@@ -1,4 +1,6 @@
 //cpp
+#include "dBgCh_Gnd.h"
+
 struct Vec3 { int x, y, z; };
 struct ClsnObj { char pad[0x5c]; int vec[3]; char pad2[0x48]; int flags; int hb4; int hb8; };
 struct ClsnActor { virtual int v0(); virtual int v1(); virtual int v2(); virtual int v3(); virtual int v4(); virtual int v5(); virtual int v6(void*); };
@@ -11,7 +13,6 @@ extern "C" int func_02035354(void*, ClsnObj*);
 extern "C" void func_02037fec(char*, int, int, int, ClsnActor*);
 extern "C" int Vec3_HorzDist(Vec3*, Vec3*);
 extern "C" ClsnActor* data_020a0c80[];
-class dBgCh_Gnd { public: char pad[0x38]; Vec3 f38; int DetectClsn(); };
 
 int dBgCh_Gnd::DetectClsn()
 {
@@ -43,7 +44,7 @@ int dBgCh_Gnd::DetectClsn()
             } else {
                 pos.y = pos.y + func_0203938c(obj);
             }
-            Vec3* selfpos = (Vec3*)((long long)(int)&this->f38);
+            Vec3* selfpos = (Vec3*)((long long)(int)&this->pos);
             if (selfpos->y < pos.y - thr) continue;
             if (Vec3_HorzDist(selfpos, &pos) > thr) continue;
         }

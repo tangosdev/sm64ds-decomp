@@ -2,20 +2,9 @@
 // @symbol func_020371fc
 /* recovered: shared common types */
 #include "common.h"
+#include "dBgCh_Gnd.h"
 
 struct dActor_c;
-struct dBgPi { char data[0x34]; };
-
-struct dBgCh_Gnd {
-    char pad0[0x10];
-    dBgPi clsn;   /* 0x10 */
-    int field44;       /* 0x44 */
-    char pad48[0x50 - 0x48];
-    dBgCh_Gnd();
-    ~dBgCh_Gnd();
-    void SetObjAndPos(const Vector3& pos, dActor_c* a);
-    int DetectClsn();
-};
 
 struct dBgCh_Actr { void SetGroundFlag(); };
 
@@ -39,12 +28,12 @@ void func_020371fc(char* self)
         pos.z = objpos->z;
         rg.SetObjAndPos(pos, *(dActor_c**)(self + 0x14));
         if (rg.DetectClsn() != 0) {
-            int cy = rg.field44;
+            int cy = rg.clsnY;
             int diff = objpos->y - cy;
             if (diff > 0 && diff < (*(int*)(self + 0x18) << 1)) {
                 objpos->y = cy;
                 *(unsigned char*)(((int)self + 0x90)) |= 4;
-                _ZN5dBgPiaSERKS_((dBgPi*)(self + 0x94), &rg.clsn);
+                _ZN5dBgPiaSERKS_((dBgPi*)(self + 0x94), &rg);
                 ((dBgCh_Actr*)self)->SetGroundFlag();
             }
         }

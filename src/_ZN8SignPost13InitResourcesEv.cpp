@@ -4,6 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "SignPost.h"
+#include "dBgCh_Gnd.h"
 /* Model::LoadFile and dBgW_Kc::LoadFile by their real ROM symbols, carried
    forward from #1554. decl_common.h's ModelLoadFile / MeshColliderLoadFile are
    phantoms -- names no module defines -- and match.py compares relocated words as
@@ -30,10 +31,8 @@ extern "C" void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *);
                            match.py compares relocated words as wildcards, so
                            nothing caught it.
 
-   The remaining shadows -- ShadowModel, dCcAc_c, dBgCh_Actr,
-   dBgCh_Gnd -- are untouched: dBgActor_c.h does not pull those headers in, so
-   they still compile, and dCcAc_c::Init and dBgCh_Actr::Init have
-   the same Fix12<int> problem with no collision forcing the issue yet. */
+   The remaining ABI-only calls are dCcAc_c::Init and dBgCh_Actr::Init; they
+   have the same Fix12<int> problem with no collision forcing the issue yet. */
 struct BMD_File; struct KCL_File; struct dActor_c; struct Vector3; struct Matrix4x3;
 struct CLPS_Block; struct SharedFilePtr; struct Vector3_16;
 extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
@@ -44,15 +43,6 @@ extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, dActor_c *a, s32 radius, s32 height, Vector3_16 *v, Vector3_16 *v2);
 /* dBgCh_Actr is the real class now, through this actor's header, and it
    declares StartDetectingWater itself. */
-struct dBgCh_Gnd {
-    int pad[0x11];
-    int result;       // offset 0x44
-    int pad2[2];      // pad to 0x50 total
-    dBgCh_Gnd();
-    void SetObjAndPos(const Vector3 &v, dActor_c *a);
-    int DetectClsn();
-    ~dBgCh_Gnd();
-};
 extern "C" CLPS_Block data_ov002_0210d714;
 
 struct V3 { int x, y, z; };
@@ -71,7 +61,7 @@ int SignPost::InitResources()
     dBgCh_Gnd rg;
     rg.SetObjAndPos(*(Vector3*)&v, (dActor_c*)0);
     if (rg.DetectClsn() != 0)
-        mPosY = rg.result;
+        mPosY = rg.clsnY;
 
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
