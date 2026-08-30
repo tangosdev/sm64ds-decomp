@@ -2122,6 +2122,31 @@ list(APPEND PORT_ACTOR_OVERLAYS ov030)
 # attribution routes, all seven widths and the four size pins are in
 # port/ov036_syms.txt. See also port/slice_ov036cast.txt.
 list(APPEND PORT_ACTOR_OVERLAYS ov036)
+# run rel0215 wave 2 (lane w2-ov074): ov074, THE GOOMBOSS PACK -- GOOMBOSS
+# (198) and EXPLOSION_GOOMBA (199), both 12daKuriKing_c. Fresh per-symbol
+# mount, the ov077/ov079/ov080/ov081/ov072/ov094 shape; ov074 is not a level
+# overlay so there is no whole-image half. Level 45 (Mario's key arena,
+# ex_mario, ov053) is the only level of the fifty-two that names it, and its
+# skip list is exactly one row.
+# TWO IDS, ONE CLASS: src/Goomboss_Spawn.cpp and src/ExplosionGoomba_Spawn.cpp
+# are the same 0xd4 body twice and both store the SAME table, so the overlay
+# has ONE vtable (_ZTV8Goomboss, 31 slots, host array
+# hal/actor_classes_ov074.cpp fills) and ONE typeinfo record, whose own
+# vtable[-1] reads through to "12daKuriKing_c" -- no label shift here.
+#
+# THE FOURTH OCCUPANT of the 0x0211f000 window, joining ov070, ov071 and
+# ov073. It adds NO new ground -- ov074 ends 0x021231a0, inside ov073's
+# 0x021234e0 -- but eight of its symbols are marked `ambiguous` by dsd and
+# thirteen arm9 spawn-table slots relocate into its span. Both attribution
+# routes were run on every one: exactly TWO are ov074's (198, 199) and the
+# other eleven belong to a mounted sibling, including one (id 264 ->
+# 0x02122dc4) whose word[0] IS a real ov074 function and which only route 2
+# rejects. FIVE of the eight ambiguous rows are PHANTOM SPLITS inside ov074
+# objects -- one splits a 0x30 pointer run, one a 0xc destructor list node,
+# and THREE split the 0x90 nine-cell state table dsd sizes 0x4c. All three
+# heads are pinned and all five phantoms left out of the list. See
+# port/ov074_syms.txt and port/slice_ov074.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov074)
 set(ACTOR_OV_SYMS "")
 foreach(ovn IN LISTS PORT_ACTOR_OVERLAYS)
     set(ovn_out "${CMAKE_BINARY_DIR}/host-src/${ovn}_syms.c")
@@ -9426,6 +9451,91 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN21FloatingFloorLllSmall13InitResourcesEv.c"
     PROPERTIES COMPILE_DEFINITIONS "data_ov036_021140d4=data_ov022_021140d4")
 
+# run rel0215 wave 2 (lane w2-ov074): GOOMBOSS (198) + EXPLOSION_GOOMBA (199),
+# ov074, level 45 (Mario's key arena). Fresh per-symbol ov074 mount
+# (port/ov074_syms.txt). The fill, the nine-cell PMF state seat and the three
+# loud faces for the overlay's three missing bodies are
+# hal/actor_classes_ov074.cpp; the four host-copied TUs (two ModelAnim slot-5
+# Renders, two PMF dispatch sites) are unmatched/Goomboss_HostSites.cpp and
+# unmatched/Goomboss_StateDispatch.cpp, each refusal itemised in
+# port/slice_ov074.txt. The gate-64 shape: the hal file and the host copies
+# ride in the slice's own SOURCES list, so the target lists take one token.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov074.txt" SLICE_OV074_LINES)
+set(SLICE_OV074_SOURCES "")
+foreach(line IN LISTS SLICE_OV074_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_OV074_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SLICE_OV074_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/actor_classes_ov074.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Goomboss_HostSites.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Goomboss_StateDispatch.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Goomboss_InitResources.cpp")
+
+# lane w2-ov074: THE TWO .c FILES IN THIS SLICE THAT ARE REALLY C++.
+# The comment-stripped token sweep (`extern "C"`, virtual, class, namespace,
+# bool, new, delete, template, true, false, ::) plus the //cpp marker check was
+# run over all the .c lines rather than waiting for a compile error. A third
+# file hit the sweep and is a HOST COPY rather than a slice line
+# (src/_ZN8Goomboss13InitResourcesEv.c -- MSVC C2561, see
+# unmatched/Goomboss_InitResources.cpp). A fourth matched and is NOT C++:
+# src/func_ov074_02120d74.c matches `false` because it DEFINES it
+# (`#define false 0`), which is the false positive that sweep has to tolerate
+# to stay cheap -- and compiling it as C++ would break on the macro.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov074_0211f5b8.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov074_02121800.c"
+    PROPERTIES LANGUAGE CXX)
+
+# lane w2-ov074: THE ENEMY CONSTRUCTOR, one of the three plain C names off the
+# first link's own unresolved list. Both factories call `func_020aed98(p)` --
+# ov074's relocation reads `to:0x020aed98 module:overlays(2,7)`, ambiguous, and
+# the class settles it: _ZTV8Goomboss's vtable[-1] typeinfo names base
+# 0x021081c0, whose name string reads "12dEnemyBase_c". The port's spelling of
+# that constructor is _ZN5EnemyC2Ev (hal/cxx_aliases.cpp:1434, and the ov073
+# lane's port_factory_chief_chilly calls it under that name).
+# BOTH FACTORIES NAME THE RECEIVER, so the ChainChomp / ChiefChilly r0
+# ride-through problem (port/hal/bob_enemy_bridges.cpp:308) does not apply here
+# and neither factory needs a host copy -- a rename is enough.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/Goomboss_Spawn.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/ExplosionGoomba_Spawn.cpp"
+    PROPERTIES COMPILE_DEFINITIONS "func_020aed98=_ZN5EnemyC2Ev")
+
+# lane w2-ov074: TWO ALIASES THIS MOUNT DEFEATS, AND BOTH HAVE A LIVE READER.
+# ov070, ov071, ov073 and ov074 share the load window at base 0x0211f000, and
+# two /alternatename pragmas in the tree have an ov074 NAME as their LHS. An
+# /alternatename is defeated the moment its LHS is DEFINED, which is exactly
+# what this lane's mount and slice now do. The wave-5 R1/R2 recipe, the same
+# one the ov036 block above applies: the reader gets a per-source -D onto the
+# name it actually means, and the now-inert directive is retired at its own
+# site rather than left reading as live routing. Unfixed, neither would fail at
+# link and neither would show in the byte gate -- the Coffin/Spindrift shape,
+# caught by port/tools/alternatename_guard.py's post-link map check.
+#
+# (4a) src/func_ov071_021209c8.cpp spells its texture-sequence SharedFilePtr
+#      `data_ov074_02123038`. ov071's own relocation from 0x02120a1c is
+#      module:overlay(71), so it means ov071's bss -- the ruling
+#      hal/actor_classes_ov071.cpp already recorded, unchanged. ov074's own
+#      relocations cite the same address three times as module:overlay(74) and
+#      its sinit Constructs it with file id 0x38f, so this mount defines the
+#      name for real. The TU includes no headers, so the rename is direct.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov071_021209c8.cpp"
+    PROPERTIES COMPILE_DEFINITIONS "data_ov074_02123038=data_ov071_02123038")
+# (4b) src/_ZN3Amp16CleanupResourcesEv.c reads
+#      `struct SharedFilePtr *func_ov074_021222e0[2]` -- ov070's own
+#      two-pointer file table at the same window address -- under the ov074
+#      FUNCTION spelling. hal/cxx_aliases.cpp's own comment predicted this
+#      collision word for word. ov074's function there is real (0xdc bytes) and
+#      Goomboss::Render calls it, so the name has to resolve to CODE now.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN3Amp16CleanupResourcesEv.c"
+    PROPERTIES COMPILE_DEFINITIONS "func_ov074_021222e0=data_ov070_021222e0")
+
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'
 # matched lifecycle closures -- WHOMP (164), WHOMP_KING (165), BULLET_BILL (222),
 # BILL_BLASTER (43), FORTRESS_WALL (47), FORTRESS_WALL_BREAKABLE (48). The two
@@ -10028,6 +10138,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
+    ${SLICE_OV074_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
@@ -10209,6 +10320,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
+    ${SLICE_OV074_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
@@ -10424,6 +10536,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
+    ${SLICE_OV074_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp

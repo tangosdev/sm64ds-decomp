@@ -991,8 +991,24 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self)
    The use is address-only -- indexed reads, never a call -- so the alias is
    storage identity, not a code seam. src/func_ov074_021222e0.cpp is ov074's
    real function at the same window address, a different object under a shared
-   name; linking it would collide with this storage rather than replace it. */
-#pragma comment(linker, "/alternatename:_func_ov074_021222e0=_data_ov070_021222e0")
+   name; linking it would collide with this storage rather than replace it.
+
+   RETIRED, run rel0215 wave 2 (lane w2-ov074), AND THE RULING ABOVE STILL
+   APPLIES UNCHANGED -- including its own prediction, which came true exactly
+   as written. The directive here used to be
+     /alternatename:_func_ov074_021222e0=_data_ov070_021222e0
+   which worked only while nothing DEFINED the LHS. ov074 is now seated and
+   func_ov074_021222e0 is real code in this link: Goomboss::Render calls it on
+   the mParam == 0x1111 path, and port/unmatched/Goomboss_HostSites.cpp defines
+   it (the ModelAnim slot-5 collision took that TU out of src/). The alias
+   became inert and Amp::CleanupResources would have walked GOOMBOSS'S
+   INSTRUCTIONS as a two-pointer SharedFilePtr table and Released whatever they
+   decoded to -- no link error, no byte-gate signal.
+   port/tools/alternatename_guard.py catches it at the link. The routing moved
+   to the guard's own remedy, a per-source -D on the ONE reader
+   (src/_ZN3Amp16CleanupResourcesEv.c) in port/CMakeLists.txt beside the ov074
+   slice block. Nothing about Amp changes; what changes is that its storage no
+   longer depends on ov074 staying unmounted. */
 
 /* Return-type-only variants of methods the port already faces. __thiscall,
    same argument list, result in EAX -- the existing face is ABI-identical

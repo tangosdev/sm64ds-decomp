@@ -1465,6 +1465,24 @@ void hal_fill_ship_water_vtable(void);               /* _ZTV9ShipWater, 32 */
 extern unsigned char RecRoomCupboard_SpawnInfo[];    /* ov058 0x02111a4c, +4 = 182 */
 void *RecRoomCupboard_Spawn(void);                   /* ov058 0x02111688, 92 B */
 void hal_fill_rec_room_cupboard_vtable(void);        /* _ZTV15RecRoomCupboard, 31 */
+
+/* ---- run rel0215 wave 2 (lane w2-ov074): the ov074 GOOMBOSS PACK, a fresh
+   per-symbol mount (port/ov074_syms.txt). TWO IDS AND ONE FILL:
+   src/Goomboss_Spawn.cpp and src/ExplosionGoomba_Spawn.cpp are the same 0xd4
+   body twice -- both allocate 0x610, both store _ZTV8Goomboss into p[0] and
+   both run the identical member-construction sequence -- and ov074 holds
+   exactly one vtable and one typeinfo record, whose name string reads
+   "12daKuriKing_c". So both rows point at hal_fill_goomboss_vtable.
+   Both SpawnInfo records come from the mount, and both ids were confirmed on
+   BOTH routes (the arm9 spawn-table relocation at 0x02090864 + id*4 AND the
+   record's own +4 halfword) -- required here because ov074 is the fourth
+   occupant of the 0x0211f000 window and eleven other spawn-table slots
+   relocate into its span. ---- */
+extern unsigned char Goomboss_SpawnInfo[];           /* ov074 0x02122e78, +4 = 198 */
+void *Goomboss_Spawn(void);                          /* ov074 0x02122838, 212 B */
+extern unsigned char ExplosionGoomba_SpawnInfo[];    /* ov074 0x02122e94, +4 = 199 */
+void *ExplosionGoomba_Spawn(void);                   /* ov074 0x02122764, 212 B */
+void hal_fill_goomboss_vtable(void);                 /* _ZTV8Goomboss, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2224,4 +2242,14 @@ void hal_fill_rec_room_cupboard_vtable(void);        /* _ZTV15RecRoomCupboard, 3
     {123, "TRICKY_TRIANGLES", TrickyTriangles_SpawnInfo, \
      TrickyTriangles_Spawn, hal_fill_tricky_triangles_vtable}, \
     {130, "FLYING_CARPET", FlyingCarpet_SpawnInfo, FlyingCarpet_Spawn, \
-     hal_fill_flying_carpet_vtable},
+     hal_fill_flying_carpet_vtable}, \
+    /* ---- run rel0215 wave 2 (lane w2-ov074): the ov074 GOOMBOSS pack. \
+       GOOMBOSS is the whole of level 45's skip list, one placed instance; \
+       EXPLOSION_GOOMBA is placed on no level of the fifty-two and is \
+       spawned by the fight, so the boot walk registers it and does not \
+       exercise it (see port/slice_ov074.txt). ONE FILL for both rows: the \
+       two factories are the same body and store the same table. ---- */ \
+    {198, "GOOMBOSS", Goomboss_SpawnInfo, Goomboss_Spawn, \
+     hal_fill_goomboss_vtable}, \
+    {199, "EXPLOSION_GOOMBA", ExplosionGoomba_SpawnInfo, \
+     ExplosionGoomba_Spawn, hal_fill_goomboss_vtable},

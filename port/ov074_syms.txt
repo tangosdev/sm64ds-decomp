@@ -1,0 +1,247 @@
+# run rel0215 wave 2, lane cast-ov074 (w2-ov074): ov074, the GOOMBOSS pack --
+# GOOMBOSS (198) and EXPLOSION_GOOMBA (199), both 12daKuriKing_c, wanted by
+# level 45 (Mario's key arena, ex_mario, ov053).
+# FRESH per-symbol mount, the ov077/ov079/ov080/ov081/ov072/ov094 convention:
+# the overlay's WHOLE .rodata + .data + .bss span MINUS the one vtable and its
+# own prologue (host arrays hal/actor_classes_ov074.cpp fills), MINUS dsd's
+# .p__sinit_ov074_02122978 .ctor word (not a C identifier; the port calls the
+# sinit by name), MINUS FIVE PHANTOM SPLITS derived below. ovdata.py --pack
+# pads the gaps.
+#
+# ov074 is not a level overlay, so there is no whole-image half: this is the
+# only mount of it.
+#
+# ==== THE BASE, PROVED BEFORE ANYTHING WAS READ OFF IT ======================
+# Every byte below comes from extracted/overlays/overlay_0074.bin at base
+# 0x0211f000, never extracted/dsd/arm9_overlays/ (T4: the two disagree on 89
+# of 103 overlays and dsd never scores better). The base is proved, not
+# assumed -- the first word of eight known functions is a plausible prologue:
+#
+#   0x0211f000 _ZN8GoombossD1Ev                e92d4010  push {r4,lr}
+#   0x0211f0a0 _ZN8GoombossD0Ev                e92d4010  push {r4,lr}
+#   0x02121abc _ZN8Goomboss16CleanupResourcesEv e92d4030 push {r4,r5,lr}
+#   0x02121b70 _ZN8Goomboss6RenderEv           e92d4010  push {r4,lr}
+#   0x02121bf0 _ZN8Goomboss8BehaviorEv         e92d4070  push {r4,r5,r6,lr}
+#   0x02121e98 _ZN8Goomboss13InitResourcesEv   e92d47f0  push {r4-r10,lr}
+#   0x02122764 ExplosionGoomba_Spawn           e92d4010  push {r4,lr}
+#   0x02122838 Goomboss_Spawn                  e92d4010  push {r4,lr}
+#
+# Sections, from config/arm9/overlays/ov074/delinks.txt:
+#   .text   0x0211f000..0x0212290c      .rodata 0x0212290c..0x02122978
+#   .init   0x02122978..0x02122d70      .ctor   0x02122d70..0x02122d74
+#   .data   0x02122d80..0x02122fe0      .bss    0x02122fe0..0x021231a0
+# The image is 0x3fe0 bytes and ends at 0x02122fe0, exactly .bss's start.
+#
+# ==== THE CAST MAP, BOTH ATTRIBUTION ROUTES ================================
+# Both routes are mandatory here because FOUR overlays share the load window
+# at base 0x0211f000 -- ov074 (this one) plus ov070, ov071 and ov073, all
+# three already mounted (T6). Route 1: the arm9 spawn table word at
+# 0x02090864 + id*4 is a RELOCATION, read out of config/arm9/relocs.txt, and
+# it must land on this overlay's own SpawnInfo. Route 2: that record's own
+# word[1] low halfword must equal the id whose slot reached it, and word[0]
+# must be a spawn function inside ov074's own .text.
+#
+#   id   SpawnInfo   table slot   word[0] spawnFunc            idhalf  module
+#  198   0x02122e78  0x02090b7c   0x02122838 Goomboss_Spawn        198  overlays(71,74)
+#  199   0x02122e94  0x02090b80   0x02122764 ExplosionGoomba_Spawn 199  overlays(71,74)
+#
+# THIRTEEN arm9 spawn-table slots relocate into this window's span. Eleven of
+# them fail at least one route for ov074 and belong to a mounted sibling; the
+# sweep is banked whole in the lane's evidence. The eleven, and why each is
+# NOT ov074's:
+#   64  -> 0x02122eb0  word[0] is 0 and word[1] is a typeinfo pointer: this is
+#                      _ZTV8Goomboss's own offset-to-top/typeinfo prologue,
+#                      not a SpawnInfo. ov071's.
+#   170 -> 0x02123168  ov074 .bss: past the image end at 0x02122fe0, so ov074
+#   171 -> 0x02123184  has NO BYTES there and cannot own a SpawnInfo. ov073
+#   218 -> 0x0212306c  names all four (CccArena 170, CccBigIce 171,
+#   232 -> 0x02123144  ChiefChilly 218, and ov070 reaches 0x02123168 from its
+#                      own .text three times).
+#   255, 256, 262, 263, 273, 274 -> ov074 .text or .data words whose word[1]
+#                      low half is not the slot id (12384, 4652, 12440, 12264,
+#                      4188, 17152 against 255/256/262/263/273/274). ov070's,
+#                      ov071's and ov072's.
+#   264 -> 0x02122dc4  THE CLOSEST CALL and the one that earns the second
+#                      route: word[0] IS 0x0212018c, a real ov074 function
+#                      inside ov074's own .text, so route 1 alone would seat
+#                      it. word[1] is 0, so the id halfword is 0, not 264.
+#                      0x02122dc4 is one of the eighteen 8-byte {fn, 0}
+#                      pointer-to-member records below, not a SpawnInfo.
+#
+# TWO IDS, ONE CLASS. src/Goomboss_Spawn.cpp and src/ExplosionGoomba_Spawn.cpp
+# are the same body twice (0xd4 each): both allocate 0x610, both store
+# _ZTV8Goomboss into p[0], and both run the identical member-construction
+# sequence. ov074 has exactly ONE vtable and ONE typeinfo record. The two ids
+# differ only in their SpawnInfo record's word[2] (0x34800000 vs 0x24800002)
+# and the id halfword. So this mount has two registry rows and ONE fill.
+#
+# ==== NO IDENTITY SHIFT IN THIS OVERLAY, CHECKED THE HARD WAY ==============
+# dsd's _ZTV8Goomboss is at 0x02122eb8. Its own vtable[-1] at 0x02122eb4 is
+# 0x02122e30, an __si_class_type_info record
+# [0x0209a764][0x02122e3c][0x021081c0]; the name string at 0x02122e3c reads
+# "12daKuriKing_c" -- Kuri (Goomba) King, the ROM's own name for Goomboss --
+# and the base typeinfo is data_ov002_021081c0. The label and the class agree,
+# so the ov026/ov030/ov036 label-shift does not fire here. Confirmed a second
+# way: slot 0 of that table is 0x02121e98, which config names
+# _ZN8Goomboss13InitResourcesEv, and both factories store that table.
+#
+# ==== THE VTABLE WIDTH: 31 SLOTS, PINNED BY THE SEMANTIC TAIL ==============
+# Read slot by slot out of config/arm9/overlays/ov074/relocs.txt with every
+# target resolved through config/arm9/symbols.txt (the ov072/ov077 method).
+#
+#   class     table       reloc run  next dsd sym  TRUTH  what pins it
+#   Goomboss  0x02122eb8     31          31          31   semantic tail
+#
+# Slot 30 == 0x020100dc Actor::OnAimedAtWithEggReturnVec is the last Actor
+# slot and the class is not Platform-derived, so there is no 32nd. The FOURTH
+# width shape (a pointer-to-member SOURCE table masquerading as more vtable)
+# does NOT fire here, and the check that proves it is worth writing down: the
+# words at slots 31.. are 0x02123038, 0x02112404, 0x40000000, 0x02123008,
+# 0x0211244c, 0x40000000 ... -- a 12-byte stride, not an 8-byte one, every
+# third word a flag rather than a zero, and no dsd symbol at 8-byte stride.
+# That is the THIRTEEN-ENTRY FILE TABLE below, not vtable and not PMF.
+# Own bodies:
+#   slot  0  Goomboss::InitResources    slot  3  Goomboss::CleanupResources
+#   slot  6  Goomboss::Behavior         slot  9  Goomboss::Render
+#   slot 16  GoombossD1                 slot 17  GoombossD0
+# Every other slot is the shared Actor/ActorBase half, byte-identical to
+# ov072's and ov077's shared halves; slot 12 is ActorBase::OnPendingDestroy
+# itself (0x02043ac0), not an own body, so this class does not override it.
+#
+# ==== THE VTABLE AND ITS PROLOGUE ARE EXCLUDED, AS HOST STORAGE ============
+# The ov015/ov016/ov022/ov045/ov077/ov080 rule -- a mounted vtable hands a
+# factory DS code addresses.
+#   0x02122eb0..0x02122eb8  the {offset-to-top 0, typeinfo ptr} prologue
+#   0x02122eb8..0x02122f34  31 slots, _ZTV8Goomboss / _ZTV12daKuriKing_c
+# The prologue goes with the table: it is the same object, dsd just names its
+# two words separately because arm9's spawn slot 64 (ov071's) cites the
+# address. Nothing in the port reads a vtable's -8/-4 words, and the typeinfo
+# record they point at (data_ov074_02122e30) IS mounted, so the RTTI bytes are
+# not lost. No dsd symbol falls inside the 31-slot span, so there is no
+# interior split to exclude with it.
+#
+# ==== FIVE PHANTOM SPLITS, AND THE THREE PINS THEY FORCE (T3) ==============
+# Every one of these is dsd inventing a boundary inside an ov074 object
+# because an ARM9 RELOCATION CITES THAT ADDRESS FOR A DIFFERENT OVERLAY. Each
+# was checked by asking what cites it: none of the five is referenced by any
+# ov074 relocation, and each of the three pinned heads IS.
+#
+# (1) 0x02122954 splits the RODATA FILE-POINTER RUN.
+#     data_ov074_02122948 is the head of a twelve-entry array of pointers to
+#     this overlay's own SharedFilePtrs: 0x02122948..0x02122978 (0x30), the
+#     twelve words 0x02123038 0x02123008 0x02123018 0x02122ff0 0x02123048
+#     0x02122ff8 0x02123028 0x02123030 0x02123020 0x02122fe0 0x02122fe8
+#     0x02123010 -- the SAME twelve pointers, in the SAME order, that the
+#     thirteen-entry .data file table at 0x02122f34 carries. dsd's next-symbol
+#     delta gives it 0xc, THREE entries, because arm9's spawn slot 272
+#     (ov070's / ov072's) cites 0x02122954.
+#     FIX: data_ov074_02122948:0x30, and 0x02122954 left out.
+#
+# (2) 0x0212306c splits a DESTRUCTOR-CHAIN LIST NODE.
+#     src/__sinit_ov074_02122978.c registers fourteen SharedFilePtrs with
+#     func_020731dc, and each registration takes a 12-BYTE list node:
+#     0x02123050 0x0212305c 0x02123068 0x02123074 0x02123080 0x0212308c
+#     0x02123098 0x021230a4 0x021230b0 0x021230bc 0x021230c8 0x021230d4
+#     0x021230e0 0x021230ec -- fourteen at 0xc stride, 0x02123050..0x021230f8,
+#     and dsd sizes THIRTEEN of them 0xc correctly. The fourteenth,
+#     0x02123068, comes back 0x4 because arm9's spawn slot 218 (ov073's
+#     ChiefChilly) cites 0x0212306c. This is the 8d1f9d13b shape exactly:
+#     mounted unpinned, the node's own 12-byte write runs off its storage.
+#     FIX: data_ov074_02123068:0xc, and 0x0212306c left out.
+#
+# (3)(4)(5) 0x02123144, 0x02123168 and 0x02123184 split THE STATE TABLE, and
+#     this is the one that would have hurt most. src/__sinit_ov074_02122978.c
+#     declares `struct P2 { int a, b; } data_ov074_021230f8[18]` and writes
+#     ALL EIGHTEEN entries -- 0x90 bytes, 0x021230f8..0x02123188, the nine
+#     {enter, tick} pointer-to-member cells Goomboss's state machine
+#     dispatches through. dsd's next-symbol delta is 0x4c, NINE AND A HALF
+#     entries, because three arm9 spawn slots (232, 170, 171 -- ov073's and
+#     ov070's) cite addresses inside it. Mounted unpinned, the sinit's own
+#     writes run 0x44 bytes past the host object, over whatever the linker put
+#     next, and the last four states would dispatch through it.
+#     FIX: data_ov074_021230f8:0x90, and all three left out. Leaving them in
+#     is not merely redundant: ovdata.py --pack REFUSES the layout ("overlaps
+#     the symbol ending at"), which is the loud failure this pin is meant to
+#     produce if anyone re-adds them.
+#
+# ==== THE ALIAS RACE: TWO LIVE CROSS-BINDINGS, BOTH SETTLED ================
+# This window already carries two /alternatename pragmas whose LHS is an ov074
+# NAME, put there by lanes that mounted a sibling while ov074 was unmounted.
+# Both are DEFEATED THE MOMENT THIS LANE LANDS (the wave-5 R1/R2 class), and
+# port/tools/alternatename_guard.py fails the build post-link when they are.
+# Neither is fixed by dropping a symbol from this list -- ov074 genuinely owns
+# both objects -- so both are re-cut as per-source -D renames on the SIBLING's
+# consumer, which is the PLAN's own remedy. See port/slice_ov074.txt sections
+# 4a and 4b for the two hunks.
+#
+#   0x02123038  ov071 bss vs ov074 bss. src/func_ov071_021209c8.cpp spells its
+#               texture-sequence SharedFilePtr `data_ov074_02123038` (a dsd
+#               naming race at a shared-window address) and
+#               hal/actor_classes_ov071.cpp aliased that spelling onto
+#               data_ov071_02123038. ov074's OWN relocations cite 0x02123038
+#               three times (from 0x02122948 rodata, 0x02122c9c in the sinit
+#               and 0x02122f34 in the file table) as module:overlay(74), and
+#               the sinit Constructs it with file id 0x38f, so the address is
+#               a real ov074 object and the mount keeps it.
+#   0x021222e0  ov070 rodata vs ov074 CODE. src/_ZN3Amp16CleanupResourcesEv.c
+#               reads `struct SharedFilePtr *func_ov074_021222e0[2]` -- ov070's
+#               two-pointer file table -- under the ov074 FUNCTION spelling,
+#               and hal/cxx_aliases.cpp aliased it onto data_ov070_021222e0.
+#               src/func_ov074_021222e0.cpp is ov074's real 0xdc-byte function
+#               at that window address and Goomboss::Render CALLS it.
+#
+# ==== WHAT IS MOUNTED ======================================================
+# 64 symbols: every ov074 .rodata / .data / .bss symbol that is not the
+# vtable, not its prologue, not the .ctor word and not one of the five phantom
+# splits. Sized by next-symbol delta (ovdata.py's own rule, clamped to the
+# delinks section) except the three explicit pins derived above.
+#
+# EVERY OTHER SIZE WAS AUDITED FOR T3 AND IS CORRECT AS INFERRED, checked
+# against what the sinit and the overlay's own code actually write:
+#   the fourteen 0x8 rows in bss (fe0 fe8 ff0 ff8 000 008 010 018 020 028 030
+#       038 040 048) are SharedFilePtr objects, 8 bytes, none split (the ov025
+#       half-SharedFilePtr trap does not fire in this overlay)
+#   the thirteen 0xc rows (050 05c 074 080 08c 098 0a4 0b0 0bc 0c8 0d4 0e0 0ec)
+#       are the func_020731dc destructor list NODES sized correctly by dsd;
+#       0x02123068 is the fourteenth and is pinned above
+#   data_ov074_02122f34/f38/f3c are the THIRTEEN-ENTRY, 12-byte-stride file
+#       table (SharedFilePtr*, BTA/BMD file pointer, flags), 0x9c bytes
+#       0x02122f34..0x02122fd0 with 0x10 of .data tail padding after it. dsd
+#       splits it into 4 + 4 + 0xa4 because the overlay's code takes three
+#       separate base pointers into it, one per column, and walks all three at
+#       stride 12. NO PIN IS NEEDED and none is possible: the three are
+#       CONTIGUOUS and --pack reproduces the ROM's relative offsets exactly,
+#       so a walk that starts at any of the three lands on the right words.
+#       A pin on the head would overlap its two successors and ovdata would
+#       refuse it.
+#   the eighteen 0x8 rows in .data (d84 d8c d94 d9c da4 dac db4 dbc dc4 dcc
+#       dd4 ddc de4 dec df4 e0c e14 e1c) are the {fn, 0} PMF SOURCE records
+#       the sinit copies into data_ov074_021230f8; every one carries a
+#       function address, and hal/actor_classes_ov074.cpp's
+#       port_ov074_states_seat() rewrites each fn word with its HOST body
+#       before the sinit runs
+#   data_ov074_02122d80 (0x4) is a lone constant 0x03060910, not a PMF record
+#   data_ov074_02122dfc and _02122e04 (0x8 each) are tuning tuples, not PMFs:
+#       0x02122e04 is the u16 table func_ov074_02120474 indexes by the byte at
+#       self+0x604, and it is READ AS FOUR HALFWORDS, which its 0x8 covers
+#   data_ov074_02122e30 (0xc) is the __si_class_type_info record and
+#       _02122e3c (0x10) the "12daKuriKing_c" name string
+#   data_ov074_02122e5c (0x1c) is the seven-pointer level-overlay file table
+#       (0x02112404 0x0211244c 0x02112494 0x021124c4 0x02112464 0x02112434
+#       0x021124ac), addresses in the LEVEL window that ov053 owns on level 45
+data_ov074_0212290c data_ov074_0212291c data_ov074_0212292c data_ov074_02122948:0x30
+data_ov074_02122d80 data_ov074_02122d84 data_ov074_02122d8c data_ov074_02122d94
+data_ov074_02122d9c data_ov074_02122da4 data_ov074_02122dac data_ov074_02122db4
+data_ov074_02122dbc data_ov074_02122dc4 data_ov074_02122dcc data_ov074_02122dd4
+data_ov074_02122ddc data_ov074_02122de4 data_ov074_02122dec data_ov074_02122df4
+data_ov074_02122dfc data_ov074_02122e04 data_ov074_02122e0c data_ov074_02122e14
+data_ov074_02122e1c data_ov074_02122e24 data_ov074_02122e30 data_ov074_02122e3c
+data_ov074_02122e4c data_ov074_02122e5c Goomboss_SpawnInfo ExplosionGoomba_SpawnInfo
+data_ov074_02122f34 data_ov074_02122f38 data_ov074_02122f3c data_ov074_02122fe0
+data_ov074_02122fe8 data_ov074_02122ff0 data_ov074_02122ff8 data_ov074_02123000
+data_ov074_02123008 data_ov074_02123010 data_ov074_02123018 data_ov074_02123020
+data_ov074_02123028 data_ov074_02123030 data_ov074_02123038 data_ov074_02123040
+data_ov074_02123048 data_ov074_02123050 data_ov074_0212305c data_ov074_02123068:0xc
+data_ov074_02123074 data_ov074_02123080 data_ov074_0212308c data_ov074_02123098
+data_ov074_021230a4 data_ov074_021230b0 data_ov074_021230bc data_ov074_021230c8
+data_ov074_021230d4 data_ov074_021230e0 data_ov074_021230ec data_ov074_021230f8:0x90

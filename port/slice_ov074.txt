@@ -1,0 +1,228 @@
+# run rel0215 wave 2, lane w2-ov074: ov074, the GOOMBOSS pack.
+# GOOMBOSS (198) and EXPLOSION_GOOMBA (199), both 12daKuriKing_c, level 45
+# (Mario's key arena, ex_mario, ov053). Fresh per-symbol mount, Phases A-E.
+#
+# ==== 1. THE SOURCE INVENTORY, COUNTED THREE WAYS ==========================
+# config/arm9/overlays/ov074/symbols.txt has 56 kind:function rows.
+# config/arm9/overlays/ov074/delinks.txt has 52 file blocks. The three sums:
+#
+#   48  delinked COMPLETE to a src TU
+#    4  present but NOT complete in delinks
+#         _ZN8Goomboss13InitResourcesEv.c   (0x404, the resource load)
+#         ExplosionGoomba_Spawn.cpp         (0xd4)
+#         Goomboss_Spawn.cpp                (0xd4)
+#         __sinit_ov074_02122978.c          (0x3f8, the static initialiser)
+#    4  no delink block at all
+#         func_ov074_02121800  0x15c  -- src EXISTS, //cpp NONMATCHING banner
+#                                        ("base materialization / addressing
+#                                        (div=21). Logic verified correct vs
+#                                        ROM"). A decompiled body; the port
+#                                        runs it, the ov005/ov075 precedent.
+#         func_ov074_021201f0  0x1f0  -- MISSING, no src anywhere
+#         func_ov074_021204c0  0x208  -- MISSING, no src anywhere
+#         func_ov074_02121380  0x374  -- MISSING, no src anywhere
+#   ---
+#    56  = 48 + 4 + 4.  Sum checks against symbols.txt.
+#
+# So 53 source TUs exist (52 delink blocks + func_ov074_02121800.c), which is
+# exactly linkage.py's ov074 total: 53 TUs, 1 linked, 52 unlinked.
+#
+# ==== 2. WHAT IS AND IS NOT IN THIS SLICE ==================================
+# 47 of the 53. The six held out, each for a named reason:
+#
+#   src/func_ov074_0212087c.c        ALREADY LINKED. port/slice_gate32.txt:356
+#       compiles it -- the goomba's knocked-back state asks the Goomboss
+#       overlay for a launch vector, and gate 32 took the CODE while ov074 was
+#       unmounted. It is the "1 linked" in ov074's 1/53 and is not this lane's
+#       yield. Re-listing it would be a second absolute path for the same file
+#       and CMake would dedupe it, but leaving it out keeps the slice honest
+#       about what this lane adds.
+#   src/_ZN8Goomboss6RenderEv.cpp    HOST COPY (ModelAnim slot 5), see 3 below
+#   src/func_ov074_021222e0.cpp      HOST COPY (ModelAnim slot 5), see 3 below
+#   src/func_ov074_021203e4.cpp      HOST COPY (PMF state ENTER), see 3 below
+#   src/func_ov074_0212042c.cpp      HOST COPY (PMF state TICK),  see 3 below
+#   src/_ZN8Goomboss13InitResourcesEv.c  HOST COPY (MSVC C2561), see 3 below
+#
+# ==== 3. THE REFUSALS, SMALLEST SUBTREE EACH ===============================
+# (a) TWO ModelAnim slot-5 dispatch sites -> port/unmatched/Goomboss_HostSites.cpp
+#     Goomboss HOLDS a ModelAnim at +0x210 (both factories construct it there,
+#     both destructors tear it down there) and both TUs dispatch its ROM slot 5
+#     through a LOCAL six-virtual shadow. hal/cxxname_bridge.cpp fills
+#     _ZTV9ModelAnim in MSVC numbering, where slot 5 is Virtual18 -- a
+#     two-argument method reached with the shadow's one. Model's table is
+#     dual-filled and would serve; ModelAnim's cannot be. The fifteenth
+#     instance of this shape; see port/unmatched/ModelAnim_Renders.cpp.
+# (b) TWO pointer-to-member state dispatch sites ->
+#     port/unmatched/Goomboss_StateDispatch.cpp
+#     mwcc's PMF is an 8-byte {fn, delta}; MSVC's PMF for an INCOMPLETE class
+#     is the generalised 16-byte one dispatched through a thunk. Nine
+#     {enter, tick} cells; the eighteen source records are seated with host
+#     bodies by hal/actor_classes_ov074.cpp's port_ov074_states_seat().
+# (c) ONE MSVC C2561 -> port/unmatched/Goomboss_InitResources.cpp
+#     src/_ZN8Goomboss13InitResourcesEv.c is declared int-returning and uses
+#     mwccarm's bare `return;` on its mParam == 0x1111 early exit. MSVC's C++
+#     front end rejects that outright ("function must return a value") -- an
+#     ERROR, not a warning, so there is no /wd -- and it cannot be compiled as
+#     C either (top-level `extern "C" {`, `RG rg;` without the struct keyword).
+#     The host copy is the src TU VERBATIM with one statement changed,
+#     `func_ov074_02122634(self); return;` -> `return func_ov074_02122634(self);`,
+#     which is what the ROM does: src/func_ov074_02122634.cpp is byte-matched,
+#     `int`, and ends `return 1;`, so r0 holds 1 on that path either way.
+#     The WaterBomb_State0 / Cannon_Behavior / Coin_Behavior idiom.
+# NO ARM ASM, no thread scheduler, no card loader, no wireless: the sweep for
+# `asm` over all 53 TUs comes back empty, so no other subtree is refused.
+#
+# ==== 4. THE TWO ALIAS RACES THIS MOUNT SETTLES (T6) =======================
+# ov074 shares the load window at base 0x0211f000 with ov070, ov071 and ov073,
+# all three already mounted. Two /alternatename pragmas in the tree today have
+# an ov074 NAME as their LHS, put there by lanes that mounted a sibling while
+# ov074 was unmounted. Both are DEFEATED THE MOMENT THIS LANE LANDS (a defined
+# LHS defeats /alternatename silently -- the wave-5 R1/R2 class), and
+# port/tools/alternatename_guard.py fails the build post-link when they are.
+# Neither is fixable by dropping a symbol: ov074 genuinely owns both objects.
+# Both are re-cut as per-source -D renames on the SIBLING's consumer TU, which
+# is the PLAN's own remedy, and both dead pragmas are deleted.
+#
+# (4a) 0x02123038 -- ov071 bss vs ov074 bss.
+#      src/func_ov071_021209c8.cpp spells its texture-sequence SharedFilePtr
+#      `data_ov074_02123038`; hal/actor_classes_ov071.cpp:224 aliased that
+#      spelling onto data_ov071_02123038 and its own comment records the
+#      ruling (ov071's relocation from 0x02120a1c is module:overlay(71)).
+#      That ruling is unchanged and stays right -- only the mechanism moves.
+#      ov074's OWN relocations cite 0x02123038 three times as
+#      module:overlay(74) (from 0x02122948 rodata, 0x02122c9c in the sinit,
+#      0x02122f34 in the file table) and src/__sinit_ov074_02122978.c
+#      Constructs it with file id 0x38f, so the mount keeps the symbol.
+#      NEW:     set_source_files_properties(src/func_ov071_021209c8.cpp
+#                   COMPILE_DEFINITIONS data_ov074_02123038=data_ov071_02123038)
+#      DELETED: hal/actor_classes_ov071.cpp:224 pragma
+#
+# (4b) 0x021222e0 -- ov070 rodata vs ov074 CODE.
+#      src/_ZN3Amp16CleanupResourcesEv.c reads
+#      `struct SharedFilePtr *func_ov074_021222e0[2]` -- ov070's own
+#      two-pointer file table -- under the ov074 FUNCTION spelling;
+#      hal/cxx_aliases.cpp:995 aliased it onto data_ov070_021222e0 and its own
+#      comment predicts this exact collision ("linking it would collide with
+#      this storage rather than replace it"). ov074's function at that address
+#      is real, 0xdc bytes, and Goomboss::Render CALLS it, so the name has to
+#      resolve to CODE in this link.
+#      NEW:     set_source_files_properties(src/_ZN3Amp16CleanupResourcesEv.c
+#                   COMPILE_DEFINITIONS func_ov074_021222e0=data_ov070_021222e0)
+#      DELETED: hal/cxx_aliases.cpp:995 pragma
+#
+# The reverse direction was swept too: every ov074 TU was scanned for a
+# sibling-overlay symbol name. Six references, none in this window --
+# data_ov002_0210da30, func_ov002_020aed18, data_ov084_0213089c,
+# data_ov084_02130cc8, data_ov084_02130cf8 and func_ov084_021296b0. ov002 and
+# ov084 are both mounted and both are genuinely co-resident with ov074 on
+# level 45 (its roster is ov067 ov074 ov084 ov089 ov098 ov102), so all six are
+# real cross-overlay reads and none is a race.
+#
+# ==== 5. NO PLACEHOLDER RENAMES ============================================
+# The comment-stripped sweep for G0..G9 / VT / VT0..VT9 / HEAP / R0..R2 over
+# all 53 TUs comes back EMPTY -- the first cast lane of either wave with no
+# placeholder at all. Both destructors spell _ZTV8Goomboss directly, both
+# factories store that same table, and the table's own vtable[-1] typeinfo
+# reads through to "12daKuriKing_c", so dsd's label is on the right class and
+# the ov026/ov030/ov036 label shift does not fire. src/_ZN8GoombossD0Ev.c even
+# spells the game heap `data_020a0eac` outright instead of G0.
+#
+# ==== 6. LANGUAGE ==========================================================
+# 18 of the 47 slice lines are .cpp. Of the 29 .c lines, the comment-stripped
+# token sweep (`extern "C"`, virtual, class, namespace, bool, new, delete,
+# template, true, false, ::) plus the //cpp marker check finds TWO that are
+# really C++ and get LANGUAGE CXX in port/CMakeLists.txt (a third,
+# src/_ZN8Goomboss13InitResourcesEv.c, is a host copy and not a slice line):
+#     src/func_ov074_0211f5b8.c             //cpp + a top-level extern "C"
+#     src/func_ov074_02121800.c             //cpp + the NONMATCHING banner
+# One more file matched the sweep and is NOT C++: src/func_ov074_02120d74.c
+# matches `false` because it DEFINES it (`#define false 0` on line 7), which
+# is the false positive the sweep has to tolerate to stay cheap -- and
+# compiling that file as C++ would break on the macro.
+#
+# ==== 7. THE MEASURED EXTERNAL CLOSURE =====================================
+# THREE plain C names off the FIRST link's own LNK2019/LNK2001 list, taken from
+# the linker rather than guessed (slice_vs.txt section 3, "THE MEASURED GAP").
+# Two are missing bodies and are appended at the end of the slice below; the
+# third is a name, not a body.
+#
+#   _func_02011d20        src/func_02011d20.c exists and was in no slice.
+#                         func_ov074_0212018c (state 1's tick) calls it.
+#   _func_ov084_021296b0  src/func_ov084_021296b0.c exists and was in no
+#                         slice. func_ov074_0211fd74 (state 2's tick) calls
+#                         it; ov084 is co-resident with ov074 on level 45.
+#   _func_020aed98        NOT A MISSING BODY. It is the ENEMY CONSTRUCTOR,
+#                         which both factories call as `func_020aed98(p)`.
+#                         ov074's own relocation reads
+#                         `from:0x02122850 kind:arm_call to:0x020aed98
+#                         module:overlays(2,7)` -- ambiguous, and the class's
+#                         own base typeinfo settles it: _ZTV8Goomboss's
+#                         vtable[-1] names base 0x021081c0, whose name string
+#                         reads "12dEnemyBase_c". The port's spelling of that
+#                         constructor is _ZN5EnemyC2Ev (hal/cxx_aliases.cpp
+#                         :1434 and the ov073 lane's port_factory_chief_chilly,
+#                         which calls it by that name), so the two factory TUs
+#                         get a per-source -D onto it in port/CMakeLists.txt.
+#                         BOTH OF THIS LANE'S FACTORIES NAME THE RECEIVER
+#                         (`func_020aed98(p)`), so the ChainChomp/ChiefChilly
+#                         r0-ride-through problem does not apply and no host
+#                         copy is needed here.
+#
+# EIGHT C++-MANGLED SPELLINGS were on the same list, the ov025/ov058 class: a
+# //cpp TU declares a global at file scope with no extern "C", so MSVC
+# decorates it with its declared type while the mount emits the one C name.
+# Fourteen of them were in the InitResources host copy and were fixed by moving
+# its declarations INSIDE its extern "C" block. The remaining eight come from
+# two slice TUs this lane does not own and are bridged in
+# hal/actor_classes_ov074.cpp; every LHS is declared-and-never-defined, so
+# alternatename_guard stays clean.
+src/ExplosionGoomba_Spawn.cpp
+src/Goomboss_Spawn.cpp
+src/_ZN8Goomboss16CleanupResourcesEv.cpp
+src/_ZN8Goomboss8BehaviorEv.cpp
+src/_ZN8GoombossD0Ev.c
+src/_ZN8GoombossD1Ev.c
+src/__sinit_ov074_02122978.c
+src/func_ov074_0211f154.c
+src/func_ov074_0211f244.cpp
+src/func_ov074_0211f344.c
+src/func_ov074_0211f38c.c
+src/func_ov074_0211f5b8.c
+src/func_ov074_0211fa08.c
+src/func_ov074_0211fa74.c
+src/func_ov074_0211fb84.c
+src/func_ov074_0211fbd0.c
+src/func_ov074_0211fc34.c
+src/func_ov074_0211fc38.c
+src/func_ov074_0211fd48.c
+src/func_ov074_0211fd74.cpp
+src/func_ov074_0211ffac.c
+src/func_ov074_0211ffcc.c
+src/func_ov074_0212007c.c
+src/func_ov074_02120080.cpp
+src/func_ov074_0212016c.c
+src/func_ov074_0212018c.cpp
+src/func_ov074_021201ec.c
+src/func_ov074_021203e0.c
+src/func_ov074_02120474.cpp
+src/func_ov074_021206c8.c
+src/func_ov074_021207b8.c
+src/func_ov074_02120808.cpp
+src/func_ov074_02120b24.c
+src/func_ov074_02120b90.c
+src/func_ov074_02120bb8.c
+src/func_ov074_02120d74.c
+src/func_ov074_02121270.c
+src/func_ov074_02121300.cpp
+src/func_ov074_021216f4.c
+src/func_ov074_02121800.c
+src/func_ov074_0212195c.c
+src/func_ov074_0212199c.c
+src/func_ov074_02121a20.c
+src/func_ov074_02121a4c.cpp
+src/func_ov074_0212229c.c
+src/func_ov074_021223bc.cpp
+src/func_ov074_02122634.cpp
+src/func_02011d20.c
+src/func_ov084_021296b0.c
+src/_ZN5Sound13Func_02048ee4Ev.cpp
