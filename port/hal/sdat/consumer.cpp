@@ -698,9 +698,66 @@ extern "C" unsigned int func_0205b5d4(void)
 extern "C" void _ZN5Sound22LoadAndSetMusic_Layer1Ei(int seqId);
 extern "C" void func_0205a8c4(void *c);   /* Snd_SendCommand(0x13, c, 0,0,0) */
 
+/* ---- SM64DS_SND_COINPROBE=<period>: THE COIN, ON DEMAND -------------------
+ *
+ * "Coins do not play in the VS arenas" is a claim about ONE request, and the
+ * only honest way to compare an arena against a normal level is to make the
+ * two runs issue THE SAME request from the same place and read the two
+ * verdicts. Collecting a real coin cannot be scripted identically in both, so
+ * this fires the ROM's own coin call instead, unchanged:
+ *
+ *     Actor::GivePlayerCoins  ->  Sound::PlayBank3(0x11, actor + 0x74)
+ *     (src/_ZN5Actor15GivePlayerCoinsER6Playerhj.c:44-48, and the three ov002
+ *      collect paths func_ov002_020af684 / 020b16c4 / 020b1884 make the same
+ *      two calls with the same two ids)
+ *
+ * at the PLAYER's own +0x74 -- the camera-space position Actor::BeforeBehavior
+ * computes -- which is what a coin standing next to him would carry. Nothing
+ * about the request is invented: same entry point, same kind, same id, same
+ * kind of vector. 0x12 is the id the ROM uses when the player has the +0x706
+ * byte set, so both are probed and the pair is what a real pickup would pick
+ * between. Everything after the call is the game's.
+ *
+ * It rides sdat_host_tick because that is the one per-frame hook this file
+ * already owns; the harness needs no change to arm it. */
+extern "C" {
+extern void *data_0209f394[];             /* per-player Actor* */
+extern unsigned char data_0209f250;       /* local player index */
+extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void *camSpacePos);
+}
+
+static void snd_coin_probe(void)
+{
+    static int period = -1;
+    static int frame;
+    if (period < 0) {
+        const char *e = getenv("SM64DS_SND_COINPROBE");
+        period = e ? atoi(e) : 0;
+        if (period > 0)
+            fprintf(stderr, "[coinprobe] armed: the ROM's own "
+                    "Sound::PlayBank3(0x11/0x12, player+0x74) every %d "
+                    "frames\n", period);
+    }
+    if (period <= 0) return;
+    if (++frame % period) return;
+
+    void *player = data_0209f394[data_0209f250];
+    if (!player) {
+        fprintf(stderr, "[coinprobe] frame %d: no local player yet\n", frame);
+        return;
+    }
+    void *cam = (char *)player + 0x74;
+    const int *c = (const int *)cam;
+    fprintf(stderr, "[coinprobe] frame %d: player camera-space (%d,%d,%d)\n",
+            frame, c[0] >> 12, c[1] >> 12, c[2] >> 12);
+    _ZN5Sound9PlayBank3EjRK7Vector3(0x11, cam);
+    _ZN5Sound9PlayBank3EjRK7Vector3(0x12, cam);
+}
+
 extern "C" void sdat_host_tick(void)
 {
     sd_consumer_init();
+    snd_coin_probe();
     // The ARM9's sound frame first, then the ARM7's: that is the order on
     // hardware (func_020132d8 -> func_0204f03c runs in the game's update, the
     // other core consumes after), and it matters here because the recycle and
