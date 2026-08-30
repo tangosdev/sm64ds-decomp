@@ -1290,6 +1290,22 @@ extern unsigned char RotatingCogSmall_SpawnInfo[];   /* ov035 0x02112adc, +4 = 1
 void *RotatingCogSmall_Spawn(void);                  /* ov035 0x0211165c, 48 B */
 void hal_fill_rotating_cog_vtable(void);             /* 0x02112b00, 32 slots */
 void hal_fill_spinning_platform_vtable(void);        /* 0x02112bcc, 32 slots */
+/* run rel0215 wave 1 (lane cast-sweep1): OV024's OWN CAST, level 16's pyramid
+   pair -- five of Shifting Sand Land's nineteen skipped instances. TWO tables
+   of TWO DIFFERENT LENGTHS: PYRAMID_TOP is Platform-derived and its table
+   closes on the slot-31 Platform::Kill (32), PYRAMID_TAG is a plain Actor and
+   its table has no slot 31 at all (31). dsd's landings under-read both, at 4
+   and 25. The widths, both attribution routes, the four T3 pins and the one
+   held-out //cpp destructor are derived in port/ov024_syms.txt and
+   port/slice_sweep1_ov024.txt; the fills are hal/actor_classes_ov024.cpp.
+   PYRAMID_TAG finds PYRAMID_TOP by actor id and destroys itself if it is
+   absent, so the two rows land together or neither is worth anything. */
+extern unsigned char PyramidTop_SpawnInfo[];         /* ov024 0x02113804, +4 = 85 */
+void *PyramidTop_Spawn(void);                        /* ov024 0x02111874, 56 B */
+void hal_fill_pyramid_top_vtable(void);              /* _ZTV10PyramidTop, 32 */
+extern unsigned char PyramidTag_SpawnInfo[];         /* ov024 0x02113820, +4 = 86 */
+void *PyramidTag_Spawn(void);                        /* ov024 0x0211183c, 56 B */
+void hal_fill_pyramid_tag_vtable(void);              /* _ZTV10PyramidTag, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -1967,4 +1983,10 @@ void hal_fill_spinning_platform_vtable(void);        /* 0x02112bcc, 32 slots */
     {121, "ROTATING_COG_BIG", data_ov035_02112ac0, \
      func_ov035_0211168c, hal_fill_rotating_cog_vtable}, \
     {122, "ROTATING_COG_SMALL", RotatingCogSmall_SpawnInfo, \
-     RotatingCogSmall_Spawn, hal_fill_rotating_cog_vtable},
+     RotatingCogSmall_Spawn, hal_fill_rotating_cog_vtable}, \
+    /* ---- run rel0215 wave 1 (lane cast-sweep1): ov024, level 16's pyramid \
+       pair. Two tables, two different widths -- 32 and 31. ---- */ \
+    {85, "PYRAMID_TOP", PyramidTop_SpawnInfo, PyramidTop_Spawn, \
+     hal_fill_pyramid_top_vtable}, \
+    {86, "PYRAMID_TAG", PyramidTag_SpawnInfo, PyramidTag_Spawn, \
+     hal_fill_pyramid_tag_vtable},

@@ -1941,6 +1941,19 @@ list(APPEND PORT_ACTOR_OVERLAYS ov005)
 # ov075 joins for the VS wiring lane (dScEntry_c, scene 6); the slice block
 # and the derivation pointer live beside SLICE_VS_SOURCES further down.
 list(APPEND PORT_ACTOR_OVERLAYS ov075)
+# run rel0215 wave 1 (lane cast-sweep1): ov024 (level 16's own overlay,
+# Shifting Sand Land, already whole-mounted in PORT_LEVEL_OVERLAYS) joins the
+# per-symbol mounts so PYRAMID_TOP (85) and PYRAMID_TAG (86) reach their
+# SpawnInfo records, id 85's CLPS block and both sinit-built SharedFilePtrs by
+# name. Same dual-mount shape as ov012/ov013/ov025/ov035/ov045/ov052/ov056.
+# Five of level 16's nineteen skipped instances. Both vtables are excluded from
+# the mount and hosted as arrays hal/actor_classes_ov024.cpp fills -- and they
+# are DIFFERENT LENGTHS, 31 for the Actor-derived tag and 32 for the
+# Platform-derived top, which is the width finding this overlay carries. That
+# file also runs the mount bring-up, hal_fill_platform_vtable and the overlay's
+# single sinit from the registry fill (the ov025/ov045 lane-ownership pattern).
+# See port/ov024_syms.txt and port/slice_sweep1_ov024.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov024)
 # ov084 joins for gate 32: the first ENEMY overlay, GOOMBA and BOB_OMB_BUDDY.
 # ...and ov014, ov062 and ov091 with them. ov014 is a LEVEL overlay (Bob-omb
 # Battlefield's own) and is mounted a second time here, per symbol, because
@@ -8613,6 +8626,32 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN17RotatingClockHandD0Ev.c"
     PROPERTIES COMPILE_DEFINITIONS "G0=data_020a0eac")
 list(APPEND SWEEP1_SOURCES hal/actor_classes_ov035.cpp ${SLICE_SWEEP1_OV035_SOURCES})
+
+# ---- 2/6: ov024, level 16 (Shifting Sand Land) -----------------------------
+# PYRAMID_TOP (85) x1 and PYRAMID_TAG (86) x4 -- five of level 16's nineteen
+# skipped instances. SIXTEEN of the overlay's seventeen TUs; the seventeenth,
+# src/_ZN10PyramidTagD1Ev.cpp, is the //cpp real-destructor shape MSVC cannot
+# deliver (it would call ??1Actor@@UAE@XZ and ??1MovingCylinderClsn@@QAE@XZ as
+# thiscall against cdecl C bodies) and is transcribed from the ROM in
+# hal/actor_classes_ov024.cpp -- the gate-199/200 treatment ov013 used on
+# ClockPaintingHandShort's D1. Two host vtables of DIFFERENT lengths, 31 and
+# 32. See port/ov024_syms.txt and port/slice_sweep1_ov024.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov024.txt" SLICE_SWEEP1_OV024_LINES)
+set(SLICE_SWEEP1_OV024_SOURCES "")
+foreach(line IN LISTS SLICE_SWEEP1_OV024_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SWEEP1_OV024_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# G0 in id 85's deleting destructor is the GAME HEAP, 0x020a0eac, read off that
+# body's own literal pool at 0x02111240. No alias race in this overlay: every
+# ov024 symbol its TUs name is spelled with ov024's own prefix.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10PyramidTopD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS "G0=data_020a0eac")
+list(APPEND SWEEP1_SOURCES hal/actor_classes_ov024.cpp ${SLICE_SWEEP1_OV024_SOURCES})
 # ---- end lane cast-sweep1 --------------------------------------------------
 
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'

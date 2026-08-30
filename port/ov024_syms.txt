@@ -1,0 +1,125 @@
+# run rel0215 wave 1 (lane cast-sweep1): ov024's TWO PYRAMID CLASSES, per
+# symbol. Overlay 2 of 6 in this lane.
+#
+# ov024 is a LEVEL overlay (level 16, Shifting Sand Land, data/stage/
+# desert_land) and is already mounted WHOLE in PORT_LEVEL_OVERLAYS. This is the
+# SECOND mount of the same overlay, per symbol, and the two do not conflict:
+# tools/ovdata.py --whole emits port_ov024_image/_patch/_at and nothing by
+# name, while --from-list --pack emits the named arrays plus
+# port_ov024_syms_patch. Same dual-mount shape as ov012/ov013/ov025/ov035/
+# ov045/ov052/ov056.
+#
+# delinks.txt sections, base 0x021111a0:
+#   .text   0x021111a0..0x021118ac   .rodata 0x021118ac..0x02112808
+#   .init   0x02112808..0x02112874   .ctor   0x02112874..0x02112878
+#   .data   0x02112880..0x02113960   .bss    0x02113960..0x021139a0
+# Every raw byte quoted below was read out of extracted/overlays/
+# overlay_0024.bin, never the dsd export (T4).
+#
+# ==== THE TWO CLASSES, both attribution routes =============================
+#
+#   id  arm9 slot   SpawnInfo   word[0]     factory           +4  x on L16
+#   85  0x020909b8  0x02113804  0x02111874  PyramidTop_Spawn  85   1
+#   86  0x020909bc  0x02113820  0x0211183c  PyramidTag_Spawn  86   4
+#
+# Both records' word[0] lands inside ov024 [0x021111a0, 0x02113960) and is one
+# of this overlay's own two factories; both read their own id back at +4, the
+# halfword the registry re-checks at install. Both routes are required: the
+# level overlays share the load window at 0x021111a0 and the arm9 relocs'
+# candidate lists are over-broad. There is no third id here -- unlike ov035,
+# every other in-image factory reference in this overlay is a literal-pool word
+# inside .text, not a record in .data.
+#
+# Level 16 spawns 69 actors and skips 19 across seven ids on tip f77f01169.
+# These two are five of those instances.
+#
+# ==== IDENTITY: THE DSD LABELS AGREE HERE ==================================
+#
+# dsd names each table twice and the RTTI spellings match the class spellings:
+#   0x02113844  _ZTV10PyramidTag == _ZTV21daObjDlPyramidDummy_c
+#   0x021138c8  _ZTV10PyramidTop == _ZTV16daObjDlPyramid_c
+# DL is the level's own prefix (Desert Land), "PyramidDummy" is the tag and
+# "Pyramid" the top. Both factories install the table their own methods sit in
+# -- PyramidTag_Spawn 0x02113844, PyramidTop_Spawn 0x021138c8, both verified
+# in the ROM -- so there is no ov035/ov045/ov060-style class-identity shift.
+#
+# ==== THE WIDTHS ARE 31 AND 32, AND THEY ARE DIFFERENT WIDTHS ==============
+#
+# The two classes do NOT share a base, and reading one off the other would be
+# an error in both directions:
+#
+# _ZTV10PyramidTag  0x02113844, THIRTY-ONE slots, ends 0x021138c0.
+#   It is an ACTOR table, not a Platform one. PyramidTag_Spawn allocates 268
+#   bytes and calls Actor's constructor (not Platform's), and the table's tail
+#   is the plain Actor close:
+#       slot 29  0x02010124  _ZN5Actor16OnAimedAtWithEggEv
+#       slot 30  0x020100dc  _ZN5Actor25OnAimedAtWithEggReturnVecEv
+#       slot 31  0x00000000  -- NOT a relocation. There is no Platform::Kill.
+#   The eight bytes at 0x021138c0 are the next table's Itanium prologue
+#   (offset-to-top 0, typeinfo 0x02113830), which is what pins the end
+#   independently of dsd. Its slots 3 and 9 are the BASE bodies
+#   (ActorBase::CleanupResources, ActorBase::Render) -- this class has no
+#   Cleanup and no Render of its own, so its host fill writes only 0/6/16/17.
+#   next dsd symbol 0x021138a8 -- INTERIOR (slot 25). The landing reads 25.
+#
+# _ZTV10PyramidTop  0x021138c8, THIRTY-TWO slots, ends 0x02113948.
+#   PyramidTop_Spawn allocates 952 bytes and calls Platform's constructor, and
+#   the table closes on the Platform word:
+#       slot 31  0x020ee55c  _ZN8Platform4KillEv   (ov002 symbols.txt:1175)
+#   the same close ov025's two, ov035's two, ov045's six, ov052's two and
+#   ov056's one all end on.
+#   next dsd symbol 0x021138d8 -- INTERIOR (slot 4), and 0x021138f0,
+#   0x021138fc and 0x02113934 are interior splits too. The landing reads FOUR.
+#
+# A four-slot host array for id 85 would have left Behavior, Render, the D1/D0
+# pair, the whole Actor interaction list and Platform::Kill off the end of
+# storage, every one of them dispatched. BOTH tables are EXCLUDED from this
+# mount and hosted as arrays hal/actor_classes_ov024.cpp fills.
+#
+# ==== THE T3 WIDTH PINS ====================================================
+#
+#   PyramidTag_SpawnInfo  natural next-symbol delta 0xc: dsd named 0x0211382c
+#     INSIDE the record. A record is 0x1c. Unpinned this mounts TWELVE bytes of
+#     a twenty-eight byte record, and the registry's own id check at +4 sits
+#     inside those twelve, so it would have passed while the last four words
+#     belonged to somebody else.
+#   PyramidTop_SpawnInfo  natural 0x1c already; pinned so both records read
+#     identically in the diff.
+#   data_ov024_021129f0   natural 0x20 already. It is the CLPS collision block
+#     id 85's InitResources hands MovingMeshCollider::SetFile -- 'CLPS' magic
+#     0x53504c43, entrySize 8, count 1, 0xffffffff fill out to 0x20 -- and it
+#     is pinned by its own header rather than left to the next-symbol landing,
+#     the ROUTE C invariant port/ov035_syms.txt derives.
+#   data_ov024_0211397c   natural 0x4 (dsd named 0x02113980 inside it). It is a
+#     destructor chain node and func_020731dc writes THREE words through its
+#     node argument (src/func_020731dc.c), so it is 0xc. Its sibling
+#     0x02113970 already reads 0xc and is left bare, so the diff shows which
+#     one dsd got wrong.
+#
+# The two SharedFilePtrs are eight bytes each and both read eight from their
+# neighbour, so neither is pinned.
+#
+# WHICH SINIT BUILDS WHAT, read off the one matched body
+# (src/__sinit_ov024_02112808.c -- ov024 has exactly one):
+#   02113968  file 1501  model      node 02113970
+#   02113960  file 1502  collision  node 0211397c
+# Both belong to id 85; id 86 loads no file of its own (it is an invisible
+# cylinder tag that finds id 85 by actor id and rides it).
+#
+# ==== NO ALIAS RACE HERE ===================================================
+#
+# Every ov024 symbol the six linked TUs name is spelled with ov024's own
+# prefix. Unlike ov035 -- where two TUs reached ov035's bytes through
+# data_ov045_/data_ov056_ spellings -- nothing in this overlay's source carries
+# a sibling's name at the shared 0x021111a0 window. alias_audit.py is still run
+# for the lane and reads clean.
+
+# ---- .data: the two SpawnInfo records, both pinned to the ROM's 0x1c -------
+PyramidTop_SpawnInfo:0x1c PyramidTag_SpawnInfo:0x1c
+
+# ---- .data: id 85's CLPS collision block, pinned by its own header ---------
+data_ov024_021129f0:0x20
+
+# ---- .bss 0x02113960..0x021139a0: two SharedFilePtrs and two chain nodes ---
+data_ov024_02113960 data_ov024_02113968
+data_ov024_02113970 data_ov024_0211397c:0xc
