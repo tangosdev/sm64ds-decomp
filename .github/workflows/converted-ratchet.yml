@@ -1,6 +1,6 @@
 # Guards the CONVERTED tier against a silent backslide.
 #
-# `tools/tiers.py` scores every function under src/ against five readability criteria (real
+# `tools/tiers.py` scores every enrolled member under src/ against five readability criteria (real
 # function name, no raw offset arithmetic, no `unk_<off>` fields, no codegen tricks, no
 # calls through mangled names). `tools/tiers_ratchet.py` banks the SET of source/member
 # identities that pass all five in `config/converted-baseline.json` and fails when one

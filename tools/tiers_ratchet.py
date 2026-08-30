@@ -44,14 +44,11 @@ So a GONE path is now resolved through the TU manifest (`config/tu_manifest.d/`,
 entry with `"status": "promoted"` lists it as a `legacy_source`, the path is reported
 as a MOVE naming the `promoted_source` that absorbed it, and:
 
-  * if the absorbing file passes all five, that is NOT a backslide -- the same readable
-    code is simply scored under a different path, and the absorbing file enters the
-    baseline as an ordinary addition on the next `--update`;
-  * if it does not, that IS a backslide and still fails. The criteria are file-wide, so
-    merging a clean function into a file with one bad line genuinely costs it its
-    status, and the message says which criterion, e.g. "absorbed into
-    src/actors/<Class>.cpp by TU promotion (ov100/daObjPathLift_c), which fails: Calls
-    things by real names, not mangled _Z".
+  * if the absorbing source's enrolled members each pass all five, that is NOT a
+    backslide -- the same readable code is simply scored under member identities;
+  * if any member does not, that IS a backslide and still fails. The message names the
+    exact member and criterion, e.g. "src/actors/<Class>.cpp#<symbol> fails: Calls things
+    by real names, not mangled _Z".
 
 A promotion is therefore never silently free. In practice it lands in the second case
 by construction: a reconstructed TU MUST spell vague-linkage symbols directly
@@ -292,7 +289,36 @@ def _failures(identity, scores):
     return failed or None
 
 
-def why(identity, scores, tracked, moves=None):
+def _member_result(rel, scores, ownership):
+    """Return (passes, detail) for a source scored through member identities.
+
+    A legacy baseline can still contain the physical path of a source which is now
+    scored as ``path#symbol``. Keep that identity transition observable: all members
+    passing is a lossless rewrite, while a mixed result names the exact member and
+    criterion that regressed.
+    """
+    members = (ownership or {}).get(rel) or []
+    if len(members) <= 1:
+        return None
+    failures = []
+    identities = [f"{rel}#{symbol}" for symbol in members]
+    for member in identities:
+        score = scores.get(member)
+        if score is None:
+            failures.append(f"{member} is not scored")
+            continue
+        failed = [k for k in tiers.CRITERIA if not score[k]]
+        if failed:
+            failures.append(
+                f"{member} fails: "
+                + "; ".join(tiers.CRITERION_LABEL[k] for k in failed))
+    if failures:
+        return False, "; ".join(failures)
+    return True, (f"rewritten as {len(identities)} independently passing member "
+                  f"identities: {', '.join(identities)}")
+
+
+def why(identity, scores, tracked, moves=None, ownership=None):
     """Why a banked source/member identity is no longer CONVERTED.
 
     A path that is GONE gets one of two answers, and the difference is the whole
@@ -311,15 +337,33 @@ def why(identity, scores, tracked, moves=None):
             return (f"MOVED -- TU {tu_id} names {dest} as the file that absorbed it, "
                     "but that file is not tracked; treat as a deletion")
         failed = _failures(dest, scores)
-        if failed is None:
+        if failed:
+            return (f"MOVED -- absorbed into {dest} by TU promotion ({tu_id}), which "
+                    "fails: " + "; ".join(
+                        tiers.CRITERION_LABEL[k] for k in failed))
+        if dest in scores:
             return (f"MOVED -- absorbed into {dest} by TU promotion ({tu_id}); that "
                     "file passes all five, so nothing readable was lost")
-        return (f"MOVED -- absorbed into {dest} by TU promotion ({tu_id}), which "
-                "fails: " + "; ".join(tiers.CRITERION_LABEL[k] for k in failed))
+        member_result = _member_result(dest, scores, ownership)
+        if member_result:
+            passes, detail = member_result
+            if passes:
+                return (f"MOVED -- absorbed into {dest} by TU promotion ({tu_id}); "
+                        f"{detail}, so nothing readable was lost")
+            return (f"MOVED -- absorbed into {dest} by TU promotion ({tu_id}); "
+                    f"member regression: {detail}")
+        return (f"MOVED -- absorbed into {dest} by TU promotion ({tu_id}), but the "
+                "tracked destination has no source or member score")
     failed = _failures(identity, scores)
     if failed is None:
         if marker:
             return f"GONE -- {symbol} is no longer an enrolled member of {rel}"
+        member_result = _member_result(rel, scores, ownership)
+        if member_result:
+            passes, detail = member_result
+            if passes:
+                return f"IDENTITY UPGRADE -- {rel} was {detail}"
+            return f"IDENTITY UPGRADE INCOMPLETE -- member regression: {detail}"
         if identity not in scores:
             return "UNREADABLE -- the file could not be read"
         # Cannot happen through --check, which derives both sides from one scan; it can
@@ -331,22 +375,17 @@ def why(identity, scores, tracked, moves=None):
 def classify_missing(missing, current, tracked, moves, ownership=None):
     """Split banked identities into clean ownership transitions and backslides.
 
-    `absorbed_clean` is a banked path that stopped existing ONLY because a promoted
-    TU absorbed it, and whose absorbing file is itself CONVERTED. Nothing left the
-    CONVERTED set: the same readable code is scored under a different path, and the
-    absorbing file enters the baseline as a plain addition on the next `--update`. So
-    it is not a backslide and does not need an exception row.
+    `absorbed_clean` is either a banked path rewritten as independently passing member
+    identities, or a banked path that stopped existing only because a promoted TU
+    absorbed it and every destination member is CONVERTED. Nothing readable left the
+    set, so this is not a backslide and does not need an exception row.
 
-    Everything else is `backslid`, and that deliberately INCLUDES a path absorbed into
-    a file that fails a criterion. The five criteria are file-wide, so consolidating a
-    clean function into a file with one bad line really does cost that function its
-    status, and this project's whole reason for a set ratchet is to name that instead
-    of averaging it away. In practice a reconstructed TU fails `no_mangled_refs` by
-    construction -- it MUST spell `_ZN7fBase_cnwEj`, `_ZN8dActor_cC2Ev` and
-    `_ZN8dActor_cD2Ev` directly or the range will not link -- so a promotion normally
-    lands here and is banked with a `--reason` saying exactly that. That is the
-    correct outcome and not a thing to "fix" by exempting mangled refs: byte-match
-    outranks readability, and the exception log is where that trade gets recorded.
+    Everything else is `backslid`, including a path absorbed into a TU with one member
+    that fails a criterion. Member scoring keeps that failure local and the diagnostic
+    names it instead of averaging it away. Reconstructed members may still need direct
+    vague-linkage spellings such as `_ZN7fBase_cnwEj`, `_ZN8dActor_cC2Ev` and
+    `_ZN8dActor_cD2Ev` to link their range. Such a byte-match-driven regression belongs
+    in the exception log; it must not be hidden by the ownership transition.
     """
     if ownership is None:
         ownership = tiers.srcpath.source_definition_index()
@@ -364,7 +403,12 @@ def classify_missing(missing, current, tracked, moves, ownership=None):
         moved = moves.get(rel)
         if moved and rel not in tracked:
             _, dest = moved
-            if dest in current:
+            dest_members = ownership.get(dest) or []
+            dest_member_ids = {
+                f"{dest}#{symbol}" for symbol in dest_members
+            } if len(dest_members) > 1 else set()
+            if (dest in current
+                    or (dest_member_ids and dest_member_ids.issubset(current))):
                 absorbed_clean.append(rel)
                 continue
         backslid.append(rel)
@@ -397,7 +441,8 @@ def main():
         pass
 
     tracked = tracked_sources()
-    current, scores = scan(tracked)
+    ownership = tiers.srcpath.source_definition_index()
+    current, scores = scan(tracked, ownership)
     tracked_set = set(tracked)
     moves = promoted_moves()
 
@@ -414,15 +459,16 @@ def main():
         if removed and not args.reason:
             print(f"REFUSING to bank {len(removed)} removal(s) without --reason:\n")
             for rel in removed:
-                print(f"  {rel}\n      {why(rel, scores, tracked_set, moves)}")
+                print(f"  {rel}\n      "
+                      f"{why(rel, scores, tracked_set, moves, ownership)}")
             print("\nA path leaving the CONVERTED set is allowed -- byte-match outranks\n"
                   "readability and sometimes requires it -- but it is not allowed to be\n"
                   "silent. Re-run with --reason \"<why the match needed it>\"; the reason\n"
                   f"is appended to {args.exceptions} for every path above.")
             if absorbed_clean:
-                print(f"\n({len(absorbed_clean)} further path(s) left the baseline by TU\n"
-                      "promotion into a file that is itself CONVERTED. Those are moves,\n"
-                      "not backslides, and need no reason.)")
+                print(f"\n({len(absorbed_clean)} further path(s) made a lossless "
+                      "ownership transition.\nThose are not backslides and need no "
+                      "reason.)")
             return 2
         if removed:
             append_exceptions(args.exceptions,
@@ -456,11 +502,12 @@ def main():
             print(f"CONVERTED backslide: {len(missing)} banked file(s) no longer pass "
                   f"all {len(tiers.CRITERIA)} criteria\n")
             for rel in missing:
-                print(f"  {rel}\n      {why(rel, scores, tracked_set, moves)}")
+                print(f"  {rel}\n      "
+                      f"{why(rel, scores, tracked_set, moves, ownership)}")
             if absorbed_clean:
-                print(f"\n({len(absorbed_clean)} further banked path(s) were absorbed "
-                      "into a promoted TU that is\nitself CONVERTED -- moves, not "
-                      "backslides. They are not counted above.)")
+                print(f"\n({len(absorbed_clean)} further banked path(s) made a "
+                      "lossless ownership transition.\nThey are not backslides and "
+                      "are not counted above.)")
             print(f"\nbaseline {len(banked)}   current {len(current)}   "
                   f"(+{gained} gained, -{len(missing)} lost)")
             print("\nIf a byte match REQUIRED this -- and it legitimately can; raw-cast\n"
@@ -476,10 +523,13 @@ def main():
                       "outranks readability -- bank it with that as the reason.")
             return 1
         tail = f"   (+{gained} gained, not yet banked)" if gained else ""
-        moved = (f"   ({len(absorbed_clean)} moved into a promoted TU)"
+        moved = (f"   ({len(absorbed_clean)} clean ownership transition(s))"
                  if absorbed_clean else "")
         print(f"CONVERTED ratchet PASS   baseline {len(banked)}   "
               f"current {len(current)}{tail}{moved}")
+        for rel in absorbed_clean:
+            print(f"  {rel}\n      "
+                  f"{why(rel, scores, tracked_set, moves, ownership)}")
         return 0
 
     # No mode flag: a plain report. Says the same things --check would, without an
@@ -494,12 +544,16 @@ def main():
     absorbed_clean, missing = classify_missing(left, current, tracked_set, moves)
     print(f"baseline               {len(banked):6d}   {args.baseline}")
     print(f"gained, not banked     {len(current - banked):6d}")
-    print(f"moved into a TU        {len(absorbed_clean):6d}   "
-          "(absorbed by a promoted TU that is itself CONVERTED)")
+    print(f"ownership transitions {len(absorbed_clean):6d}   "
+          "(lossless TU move or path-to-member identity upgrade)")
+    for rel in absorbed_clean:
+        print(f"    {rel}\n        "
+              f"{why(rel, scores, tracked_set, moves, ownership)}")
     print(f"BACKSLID               {len(missing):6d}"
           f"{'   <- --check would fail' if missing else ''}")
     for rel in missing[:20]:
-        print(f"    {rel}\n        {why(rel, scores, tracked_set, moves)}")
+        print(f"    {rel}\n        "
+              f"{why(rel, scores, tracked_set, moves, ownership)}")
     if len(missing) > 20:
         print(f"    ... and {len(missing) - 20} more")
     return 0

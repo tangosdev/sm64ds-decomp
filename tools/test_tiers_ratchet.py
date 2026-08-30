@@ -126,6 +126,71 @@ class TranslationUnitIdentities(unittest.TestCase):
             [rel], {f"{rel}#First"}, {rel}, {}, ownership)
         self.assertEqual((upgraded, backslid), ([], [rel]))
 
+    def test_legacy_identity_upgrade_names_every_passing_member(self):
+        rel = "src/actors/TU.cpp"
+        ownership = {rel: ["First", "Second"]}
+        clean = dict.fromkeys(TR.tiers.CRITERIA, True)
+        scores = {f"{rel}#First": clean, f"{rel}#Second": clean}
+
+        reason = TR.why(rel, scores, {rel}, ownership=ownership)
+
+        self.assertIn("IDENTITY UPGRADE", reason)
+        self.assertIn("2 independently passing member identities", reason)
+        self.assertIn(f"{rel}#First", reason)
+        self.assertIn(f"{rel}#Second", reason)
+
+    def test_legacy_identity_upgrade_names_the_regressed_member(self):
+        rel = "src/actors/TU.cpp"
+        ownership = {rel: ["First", "Second"]}
+        clean = dict.fromkeys(TR.tiers.CRITERIA, True)
+        dirty = dict(clean, no_mangled_refs=False)
+        scores = {f"{rel}#First": clean, f"{rel}#Second": dirty}
+
+        reason = TR.why(rel, scores, {rel}, ownership=ownership)
+
+        self.assertIn("IDENTITY UPGRADE INCOMPLETE", reason)
+        self.assertIn(f"{rel}#Second", reason)
+        self.assertIn(TR.tiers.CRITERION_LABEL["no_mangled_refs"], reason)
+        self.assertNotIn("UNREADABLE", reason)
+
+    def test_promoted_move_accepts_all_destination_member_identities(self):
+        legacy = "src/Legacy.cpp"
+        dest = "src/actors/TU.cpp"
+        moves = {legacy: ("ov001/TU", dest)}
+        ownership = {dest: ["First", "Second"]}
+        current = {f"{dest}#First", f"{dest}#Second"}
+
+        moved, backslid = TR.classify_missing(
+            [legacy], current, {dest}, moves, ownership)
+
+        self.assertEqual((moved, backslid), ([legacy], []))
+
+    def test_promoted_move_rejects_one_regressed_destination_member(self):
+        legacy = "src/Legacy.cpp"
+        dest = "src/actors/TU.cpp"
+        moves = {legacy: ("ov001/TU", dest)}
+        ownership = {dest: ["First", "Second"]}
+
+        moved, backslid = TR.classify_missing(
+            [legacy], {f"{dest}#First"}, {dest}, moves, ownership)
+
+        self.assertEqual((moved, backslid), ([], [legacy]))
+
+    def test_promoted_move_names_the_regressed_destination_member(self):
+        legacy = "src/Legacy.cpp"
+        dest = "src/actors/TU.cpp"
+        moves = {legacy: ("ov001/TU", dest)}
+        ownership = {dest: ["First", "Second"]}
+        clean = dict.fromkeys(TR.tiers.CRITERIA, True)
+        dirty = dict(clean, no_raw_offset=False)
+        scores = {f"{dest}#First": clean, f"{dest}#Second": dirty}
+
+        reason = TR.why(legacy, scores, {dest}, moves, ownership)
+
+        self.assertIn("MOVED", reason)
+        self.assertIn(f"{dest}#Second", reason)
+        self.assertIn(TR.tiers.CRITERION_LABEL["no_raw_offset"], reason)
+
 
 if __name__ == "__main__":
     unittest.main()
