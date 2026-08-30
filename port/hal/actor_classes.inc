@@ -1536,6 +1536,54 @@ void hal_fill_da_pg_dfdr_vtable(void);               /* data_ov027_02113a90, 32 
 extern unsigned char SnowmanBreath_SpawnInfo[];      /* ov027 0x02113b2c, +4 = 275 */
 void *SnowmanBreath_Spawn(void);                     /* ov027 0x02112ab4, 96 B */
 void hal_fill_snowman_breath_vtable(void);           /* _ZTV13SnowmanBreath, 31 */
+/* ---- run rel0215 wave 2 (lane cast-lvl16pair, sub-job 1 of 2): ov092's ONE
+   class, TOX_BOX, level 16's crushing block. The SpawnInfo record comes from
+   the fresh per-symbol ov092 mount (port/ov092_syms.txt); the fill, the
+   nine-state pointer-to-member seat and the two method faces are in
+   hal/actor_classes_ov092.cpp; the slice is port/slice_ov092.txt. The id is
+   confirmed by BOTH attribution routes -- the arm9 spawn-table relocation at
+   0x02090d38 AND the record's own +4 halfword, which reads 0x0135 = 309 -- and
+   for once the module column is SINGULAR (`module:overlay(92)`, and dsd marks
+   zero ov092 symbols ambiguous), so this row needed no adjudication. The table
+   is a 32-slot PLATFORM close, not the 31-slot Actor close: slot 31 is
+   0x020ee55c _ZN8Platform4KillEv and ToxBox_Spawn calls _ZN8PlatformC2Ev. The
+   mount is brought up from hal_fill_tox_box_vtable's own port_ov92_bringup(),
+   the ov017/ov024/ov035 self-contained shape, so this lane adds NOTHING to
+   hal/actor_overlays.cpp. */
+extern unsigned char ToxBox_SpawnInfo[];             /* ov092 0x021322ac, +4 low = 309 */
+void *ToxBox_Spawn(void);                            /* ov092 0x02132018, 92 B */
+void hal_fill_tox_box_vtable(void);                  /* _ZTV6ToxBox, 32 */
+/* ---- run rel0215 wave 2 (lane cast-lvl16pair, sub-job 2 of 2): ov096's cast,
+   the rest of level 16's. THREE IDS, TWO CLASSES -- 240 and 241 are ONE class
+   (9daSanbo_c) under two spawn entry points, so they share one fill. Proved
+   three ways rather than assumed from the name: src/Pokey_Spawn.c and
+   src/PokeySegment_Spawn.c are identical apart from their own names, both
+   factories' pools relocate to the SAME table 0x021379d8 (0x02136d5c and
+   0x02136dac), and PokeySegment's own record's typeinfo word points at POKEY's
+   __si_class_type_info. The ov030 UKIKI_THIEF / UKIKI_STAR shape.
+   All three SpawnInfo records come from the fresh per-symbol ov096 mount
+   (port/ov096_syms.txt); the two vtable fills, the six-state PMF seat and the
+   seven method faces are hal/actor_classes_ov096.cpp; the slice is
+   port/slice_ov096.txt.
+   ALL THREE IDS ARE CONTESTED AND ALL THREE ARE ADJUDICATED. dsd marks every
+   one `ambiguous`, every arm9 relocation reads `module:overlays(6,96)`, and
+   ov006's mount already hosts all three addresses today -- so both attribution
+   routes were mandatory here and both agree on all three. The raw bytes of
+   both claimants are in port/ov096_syms.txt: ov096 has a real prologue in
+   word[0] and the reaching table index in word[1] at every one, ov006 has GX
+   display-list words at all three.
+   BOTH TABLES ARE 31 SLOTS, the plain Actor close -- not ov092's 32-slot
+   Platform close in the other half of this lane. Tornado's next-symbol landing
+   reads 36 and LIES: slots 31..35 are five zero pad words to .bss's align-32
+   boundary and the reloc run stops at 30. */
+extern unsigned char Pokey_SpawnInfo[];              /* ov096 0x02137998, +4 low = 240 */
+void *Pokey_Spawn(void);                             /* ov096 0x02136d60, 80 B */
+extern unsigned char PokeySegment_SpawnInfo[];       /* ov096 0x021379b4, +4 low = 241 */
+void *PokeySegment_Spawn(void);                      /* ov096 0x02136d10, 80 B */
+void hal_fill_pokey_vtable(void);                    /* _ZTV5Pokey == _ZTV9daSanbo_c, 31 */
+extern unsigned char Tornado_SpawnInfo[];            /* ov096 0x02137a6c, +4 low = 308 */
+void *Tornado_Spawn(void);                           /* ov096 0x021376bc, 80 B */
+void hal_fill_tornado_vtable(void);                  /* _ZTV7Tornado == _ZTV7daTor_c, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2334,4 +2382,20 @@ void hal_fill_snowman_breath_vtable(void);           /* _ZTV13SnowmanBreath, 31 
     {258, "DA_PG_DFDR", data_ov027_02113a00, func_ov027_0211207c, \
      hal_fill_da_pg_dfdr_vtable}, \
     {275, "SNOWMAN_BREATH", SnowmanBreath_SpawnInfo, SnowmanBreath_Spawn, \
-     hal_fill_snowman_breath_vtable},
+     hal_fill_snowman_breath_vtable}, \
+    /* ---- run rel0215 wave 2 (lane cast-lvl16pair, sub-job 1 of 2): ov092's \
+       one class. Placed instances measured from this tree's own baseline \
+       census, not quoted: TOX_BOX x3 on level 16 and on NO other level of \
+       the fifty-two -- id 309 appears in exactly one level's skip list. ---- */ \
+    {309, "TOX_BOX", ToxBox_SpawnInfo, ToxBox_Spawn, hal_fill_tox_box_vtable}, \
+    /* ---- run rel0215 wave 2 (lane cast-lvl16pair, sub-job 2 of 2): ov096, \
+       the rest of level 16's cast. Placed instances measured from this tree's \
+       own baseline census, not quoted: POKEY x4 and TORNADO x3 on level 16, \
+       and neither appears in any other level's skip list. POKEY_SEGMENT (241) \
+       is placed on NO level of the fifty-two -- POKEY spawns its own segments \
+       -- and is registered because it is a real spawn entry point into the \
+       same class, sharing POKEY's fill. ---- */ \
+    {240, "POKEY", Pokey_SpawnInfo, Pokey_Spawn, hal_fill_pokey_vtable}, \
+    {241, "POKEY_SEGMENT", PokeySegment_SpawnInfo, PokeySegment_Spawn, \
+     hal_fill_pokey_vtable}, \
+    {308, "TORNADO", Tornado_SpawnInfo, Tornado_Spawn, hal_fill_tornado_vtable},

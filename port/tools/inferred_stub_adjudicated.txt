@@ -1803,3 +1803,25 @@ func_ov027_02111e34  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0
 func_ov027_02111e00  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-ov027\adjudication.md  slot 9 Render, addr 0x02111e00 size 0x34; match.py MATCHING at 2004/b56 with reloc destinations checked
 func_ov027_02111dfc  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-ov027\adjudication.md  slot 12 OnPendingDestroy, addr 0x02111dfc size 0x4; match.py MATCHING at 2004/b56 with reloc destinations checked; a single-instruction body, the smallest override in this overlay
 func_ov027_02111924  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-ov027\adjudication.md  slot 17 D0, addr 0x02111924 size 0x70; match.py MATCHING at 2004/b56 with reloc destinations checked. NAME says OnYoshiTryEat and is wrong, body is the D0: vptr store 02113a90, MovingCylinderClsn::D1 +0x398, TextureSequence::D1 +0x384, ModelAnim::D1 +0x320, vptr store ov002 0210ae38, MovingMeshCollider::D1 +0x124, Model::D1 +0xd4, Actor::D2, Memory::Deallocate(this,*020a0eac)
+# ---- run rel0215 wave 2, lane cast-lvl16pair (ov092 + ov096, level 16) ----
+#
+# ov092 contributes NOTHING to this file: zero of its 24 TUs carry the marker.
+#
+# ov096 contributes three, and all three are POKEY's own non-default vtable
+# slots. Each was ruled BEFORE it was seated, two independent ways: the ROM's
+# own words read out of extracted/overlays/overlay_0096.bin at base 0x02135700
+# (for the two eight-byte bodies that read IS the whole function), and
+# tools/match.py --module ov096 --strict-relocs, which compiles the src/ body
+# with the pinned mwccarm and checks every relocation destination as well as
+# the instruction bytes. RESULT: 3 MATCH, 0 NOMATCH, 0 genuine guesses.
+#
+# Full per-body evidence and the exact match.py invocations: C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-lvl16pair\ov096\adjudication.md
+#
+# ids 240 / 241, ov096, 9daSanbo_c -- SEATED by this lane.
+func_ov096_021357a4  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-lvl16pair\ov096\adjudication.md  slot 18 OnYoshiTryEat, addr 0x021357a4 size 0x8; match.py MATCH at 2004/b56 with reloc destinations checked. The ROM words ARE the whole function: e3a00004 e12fff1e = MOV r0,#4 ; BX lr, and the src body is `return 4;`. Slot 18 of _ZTV5Pokey (0x02137a20) reads 0x021357a4, so the NAME recovery was right too
+func_ov096_021357ac  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-lvl16pair\ov096\adjudication.md  slot 29 OnAimedAtWithEgg, addr 0x021357ac size 0x8; match.py MATCH at 2004/b56 with reloc destinations checked. e3a0090f e12fff1e = MOV r0,#0x0f ROR 18 = 0x3c000 = 245760 ; BX lr, and the src body is `return 245760;`. Same constant ov077's Lakitu returns from the same slot and a different one from Spiny's, so the encoding is cross-checked across two overlays
+func_ov096_02136cd0  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-lvl16pair\ov096\adjudication.md  slot 19 OnTurnIntoEgg, addr 0x02136cd0 size 0x40; match.py MATCH at 2004/b56 with reloc destinations checked. Both calls are RELOCATION-confirmed: 0x02136cfc -> 0x0201061c _ZN5Actor15GivePlayerCoinsER6Playerhj and 0x02136d04 -> 0x02043824 _ZN9ActorBase18MarkForDestructionEv, with r2=1 r3=2 set immediately before the first. The body opens ldrh r0,[r4,#0xc] / cmp r0,#0xf0 -- testing its own id 240 so POKEY_SEGMENT (241), which shares this very table, does not pay out. A fabricated stub does not test its own id against the one number that separates it from its own second entry point
+#
+# All three markers live in src/, which this lane is not permitted to edit, so
+# each entry still owes its decomp-side marker correction and retires when that
+# line goes. The DEBT list and the baseline are untouched by this lane.
