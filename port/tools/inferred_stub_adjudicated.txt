@@ -1520,3 +1520,36 @@ func_ov005_020c0b00  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15
 func_ov005_020c14a0  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 6 Behavior, addr 0x020c14a0 size 0x1b4; match.py MATCHING at 2004/b56 with reloc destinations checked. This is the body hal/scene_mg.cpp RNG seeder replicates
 func_ov005_020c1654  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 3 CleanupResources, addr 0x020c1654 size 0x34; match.py MATCHING at 2004/b56 with reloc destinations checked
 func_ov005_020c1a20  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 0 InitResources, addr 0x020c1a20 size 0x7cc; match.py MATCHING at 2004/b56 with reloc destinations checked
+# ---------------------------------------------------------------------------
+# run rel0215 wave 1 (lane cast-ov077), 2026-08-29.
+#
+# The ov077 shared enemy pack (HEAVE_HO 238, SPINY 260, LAKITU 265) seats eight
+# marker-carrying bodies: six vtable slots (18/19/29 on Lakitu and on Spiny)
+# and two PMF state handlers the sinits copy into the bss dispatch cells. All
+# eight were compiled with the pinned mwccarm 2004/b56 and byte-compared
+# against extracted/overlays/overlay_0077.bin at base 0x02123740 -- the shipped
+# image, deliberately not a dsd export -- with --strict-relocs so every
+# relocation destination was checked too, not just the instruction bytes.
+# RESULT: 8 MATCH, 0 NOMATCH, 0 genuine guesses.
+#
+# Two of the eight settle the question on their own without any tool: Lakitu's
+# and Spiny's slot 19 bodies are the same shape and the same four call sites,
+# and they differ in exactly two places -- the coin count (5 vs 1) and the kill
+# route (Actor::KillAndTrackInDeathTable vs ActorBase::MarkForDestruction).
+# Both differences are in the ROM's own relocations. A fabricated stub does not
+# differ from its sibling precisely where the ROM does.
+#
+# The marker on all eight records how the NAME was recovered, not where the
+# BODY came from -- Lakitu_OnYoshiTryEat, Spiny_Kill and so on are slot-derived
+# names on real decompiled bodies. This lane did not correct the eight marker
+# lines: they live in src/, which the lane is not permitted to edit. Each entry
+# therefore still owes its decomp-side marker correction and retires when that
+# line goes.
+func_ov077_02123804  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov077\inferred_stub_rulings.txt  Lakitu vtable slot 18, addr 0x02123804 size 0x8; bytes 0600a0e3 1eff2fe1 = MOV r0,#6 / BX LR; match.py MATCH at 2004/b56 with reloc destinations checked
+func_ov077_0212380c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov077\inferred_stub_rulings.txt  Lakitu vtable slot 29, addr 0x0212380c size 0x8; bytes 0f09a0e3 1eff2fe1 = MOV r0,#0x3c000 / BX LR; match.py MATCH at 2004/b56 with reloc destinations checked
+func_ov077_02124aa4  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov077\inferred_stub_rulings.txt  Lakitu vtable slot 19, addr 0x02124aa4 size 0x60; four arm_calls, the named two being Actor::GivePlayerCoins and Actor::KillAndTrackInDeathTable; match.py MATCH at 2004/b56 with reloc destinations checked
+func_ov077_02124c18  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov077\inferred_stub_rulings.txt  Spiny vtable slot 18, addr 0x02124c18 size 0x8; bytes 0600a0e3 1eff2fe1 = MOV r0,#6 / BX LR; match.py MATCH at 2004/b56 with reloc destinations checked
+func_ov077_02124c20  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov077\inferred_stub_rulings.txt  Spiny vtable slot 29, addr 0x02124c20 size 0x8; bytes 1e0aa0e3 1eff2fe1 = MOV r0,#0x1e000 / BX LR; match.py MATCH at 2004/b56 with reloc destinations checked
+func_ov077_021258dc  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov077\inferred_stub_rulings.txt  Spiny PMF state handler (source record data_ov077_021278e8), addr 0x021258dc size 0x2c; match.py MATCH at 2004/b56 with reloc destinations checked
+func_ov077_02126194  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov077\inferred_stub_rulings.txt  Spiny vtable slot 19, addr 0x02126194 size 0x60; the Lakitu slot-19 shape with coin count 1 and ActorBase::MarkForDestruction; match.py MATCH at 2004/b56 with reloc destinations checked
+func_ov077_02126640  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov077\inferred_stub_rulings.txt  HeaveHo PMF state handler (source record data_ov077_02127a00), addr 0x02126640 size 0x118; match.py MATCH at 2004/b56 with reloc destinations checked

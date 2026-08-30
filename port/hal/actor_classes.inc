@@ -1267,6 +1267,23 @@ void hal_fill_wall_sign_vtable(void);                /* _ZTV8WallSign, 32 */
 extern unsigned char Toad_SpawnInfo[];               /* ov085 0x0212fe6c, +4 = 185 */
 void *Toad_Spawn(void);                              /* ov085 0x02129cd0, 72 B */
 void hal_fill_toad_vtable(void);                     /* _ZTV4Toad, 31 */
+/* ---- run rel0215 lane cast-ov077: the ov077 SHARED ENEMY PACK, a fresh
+   per-symbol mount (port/ov077_syms.txt). All three SpawnInfo records come
+   from that mount; all three fills are in hal/actor_classes_ov077.cpp, and
+   each fill calls port_ov077_states_seat() before it writes a slot. Every id
+   below is confirmed by BOTH attribution routes (the arm9 spawn-table
+   relocation AND the record's own +4 halfword) -- required here because ov077
+   is the fourth occupant of the 0x02123740 window and one of the three
+   relocations reads `module:overlays(77,80)`. */
+extern unsigned char HeaveHo_SpawnInfo[];            /* ov077 0x02127a74, +4 = 238 */
+void *HeaveHo_Spawn(void);                           /* ov077 0x021271d4, 92 B */
+void hal_fill_heave_ho_vtable(void);                 /* _ZTV7HeaveHo, 31 */
+extern unsigned char Spiny_SpawnInfo[];              /* ov077 0x02127960, +4 = 260 */
+void *Spiny_Spawn(void);                             /* ov077 0x021261f4, 88 B */
+void hal_fill_spiny_vtable(void);                    /* _ZTV5Spiny, 31 */
+extern unsigned char Lakitu_SpawnInfo[];             /* ov077 0x02127848, +4 = 265 */
+void *Lakitu_Spawn(void);                            /* ov077 0x02124b04, 96 B */
+void hal_fill_lakitu_vtable(void);                   /* _ZTV6Lakitu, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -1933,4 +1950,15 @@ void hal_fill_toad_vtable(void);                     /* _ZTV4Toad, 31 */
        instances across levels 2, 4, 5 and 50 ---- */ \
     {183, "WALL_SIGN", WallSign_SpawnInfo, WallSign_Spawn, \
      hal_fill_wall_sign_vtable}, \
-    {185, "TOAD", Toad_SpawnInfo, Toad_Spawn, hal_fill_toad_vtable},
+    {185, "TOAD", Toad_SpawnInfo, Toad_Spawn, hal_fill_toad_vtable}, \
+    /* ---- run rel0215 wave 1 (lane cast-ov077): the ov077 shared enemy pack. \
+       Placed instances measured from this tree's own baseline census, not \
+       quoted: HEAVE_HO x3 on level 21, x1 on 27, x3 on 42; LAKITU x1 on 24, \
+       x2 on 28, x2 on 43, x1 on 44. SPINY is placed on NO level of the \
+       fifty-two -- it is registered because it is the overlay's third class \
+       and its seat is as derived as the other two, but nothing in a level \
+       walk exercises it (see port/slice_ov077.txt). ---- */ \
+    {238, "HEAVE_HO", HeaveHo_SpawnInfo, HeaveHo_Spawn, \
+     hal_fill_heave_ho_vtable}, \
+    {260, "SPINY", Spiny_SpawnInfo, Spiny_Spawn, hal_fill_spiny_vtable}, \
+    {265, "LAKITU", Lakitu_SpawnInfo, Lakitu_Spawn, hal_fill_lakitu_vtable},

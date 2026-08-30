@@ -1,0 +1,212 @@
+# run rel0215 wave 1, lane cast-ov077 (W1-E): ov077, the shared enemy pack --
+# HEAVE_HO (238, 9daPopoi_c), SPINY (260, 7daTgz_c), LAKITU (265, 7daJgm_c).
+# FRESH per-symbol mount, the ov079/ov080/ov081/ov072/ov094 convention: the
+# overlay's WHOLE .rodata + .data + .bss span MINUS the three vtables (host
+# arrays hal/actor_classes_ov077.cpp fills), MINUS dsd's three .p__sinit_*
+# .ctor words (not C identifiers; the port calls the sinits by name), MINUS
+# two PHANTOM bss splits derived below. ovdata.py --pack pads the gaps.
+#
+# ov077 is not a level overlay, so there is no whole-image half: this is the
+# only mount of it.
+#
+# ==== THE BASE, PROVED BEFORE ANYTHING WAS READ OFF IT ======================
+# Every byte below comes from extracted/overlays/overlay_0077.bin at base
+# 0x02123740, never extracted/dsd/arm9_overlays/ (T4: the two disagree on 89
+# of 103 overlays and dsd never scores better). The base is proved, not
+# assumed -- the first word of seven known functions is a plausible prologue:
+#
+#   0x02123740 _ZN6LakituD1Ev              e92d4010  push {r4,lr}
+#   0x02124b04 Lakitu_Spawn                e92d4010  push {r4,lr}
+#   0x02124b64 _ZN5SpinyD1Ev               e92d4010  push {r4,lr}
+#   0x021261f4 Spiny_Spawn                 e92d4010  push {r4,lr}
+#   0x0212624c _ZN7HeaveHoD1Ev             e92d4010  push {r4,lr}
+#   0x021271d4 HeaveHo_Spawn               e92d4010  push {r4,lr}
+#   0x02124908 _ZN6Lakitu13InitResourcesEv e92d41f0  push {r4-r8,lr}
+#
+# Sections, from config/arm9/overlays/ov077/delinks.txt:
+#   .text   0x02123740..0x02127230      .rodata 0x02127230..0x02127240
+#   .init   0x02127240..0x021277cc      .ctor   0x021277cc..0x021277d8
+#   .data   0x021277e0..0x02127b20      .bss    0x02127b20..0x02127d40
+# The image is 0x43e0 bytes and ends at 0x02127b20, exactly .bss's start.
+#
+# ==== THE CAST MAP, BOTH ATTRIBUTION ROUTES ================================
+# Both routes are mandatory here because FOUR overlays share the load window
+# at base 0x02123740 -- ov077 (this one) plus ov079, ov080 and ov081, all
+# three already mounted (T6). Route 1: the arm9 spawn table word at
+# 0x02090864 + id*4 is a RELOCATION, read out of config/arm9/relocs.txt, and
+# it must land on this overlay's own SpawnInfo. Route 2: that record's own
+# word[1] low halfword must equal the id whose slot reached it, and word[0]
+# must be a spawn function inside ov077's own .text.
+#
+#   id   SpawnInfo   table slot   word[0] spawnFunc   idhalf   module: field
+#  238   0x02127a74  0x02090c1c   0x021271d4 HeaveHo_Spawn  238  overlay(77)
+#  260   0x02127960  0x02090c74   0x021261f4 Spiny_Spawn    260  overlay(77)
+#  265   0x02127848  0x02090c88   0x02124b04 Lakitu_Spawn   265  overlays(77,80)
+#
+# ==== THE ALIAS RACE: THREE CONTESTED ADDRESSES, ALL THREE SETTLED =========
+# This is the lane's defining hazard (T6, the Coffin/Spindrift shape: a
+# silently wrong-object binding that neither the byte gate nor the linkage
+# count can see). dsd marks three ov077 rows `ambiguous`, and every one of
+# them is a real contest with a mounted sibling. Each is settled by reading
+# the RAW BYTES of both claimants, not by trusting a label.
+#
+# (1) 0x02127848 -- Lakitu_SpawnInfo vs data_ov080_02127848.
+#     `from:0x02090c88 kind:load to:0x02127848 module:overlays(77,80)`, and
+#     port/ov080_syms.txt ALREADY MOUNTS data_ov080_02127848 (its line 46).
+#     So the address is live in the build today under ov080's name.
+#     ov077's bytes there:  02124b04 007c0109 10000006 0001e000 00064000
+#                           01000000 01000000 00000000 0212783c
+#     ov080's bytes there:  0003a000 00001111 0016c000 00384000 00000064
+#                           0003a000 00001111 0016c000 00384000
+#     ov077's word[0] is Lakitu_Spawn, a real e92d4010 prologue inside
+#     ov077's own .text; word[1]'s low half is 0x0109 = 265, exactly the
+#     table index that reached it; word[8] is 0x0212783c, Lakitu's own
+#     __si_class_type_info record. ov080's is a five-word tuning tuple
+#     repeating at 0x14 stride with no plausible function pointer anywhere,
+#     and 0x02127848 falls in ov080's .rodata (0x0212766c..0x021278c0), not
+#     its .data. ID 265 IS ov077's LAKITU. dsd's `ambiguous` is a window
+#     artifact: the two overlays are alternates at one base and are never
+#     co-resident, so both dumps claim every address in the overlap.
+#     NO BRIDGE AND NO /alternatename IS NEEDED: the two mounts emit
+#     DIFFERENT C names (Lakitu_SpawnInfo vs data_ov080_02127848) at
+#     different host storage, and the registry reaches its record by C name,
+#     never by DS address. Nothing in this lane spells a placeholder that
+#     cxx_aliases.cpp binds, so there is no G0/G1-class collision to bridge.
+#
+# (2) and (3) 0x02127c40 and 0x02127c5c -- ov077 bss vs ov079's Whomp pair.
+#     `from:0x02090af8 -> 0x02127c40 module:overlays(77,79)`  (id 165)
+#     `from:0x02090af4 -> 0x02127c5c module:overlays(77,79)`  (id 164)
+#     config names them WhompKing_SpawnInfo and Whomp_SpawnInfo in ov079 and
+#     data_ov077_02127c40 / _02127c5c in ov077. ov079's bytes:
+#       0x02127c40: 02126588 004b00a5 ...  word[1] low half 0xa5 = 165
+#       0x02127c5c: 021265e8 004a00a4 ...  word[1] low half 0xa4 = 164
+#     both routes agree and both land in ov079's .data (0x02127ba0..
+#     0x02128140). In ov077 those addresses are .bss -- past the image end at
+#     0x02127b20, so ov077 has NO BYTES there at all and cannot be the owner
+#     of a SpawnInfo. IDS 164 AND 165 ARE ov079's WHOMP FAMILY.
+#
+#     THE CONSEQUENCE FOR THIS MOUNT, and it is the T3 trap: those two
+#     ov077 rows are PHANTOM SYMBOL SPLITS. dsd invented a boundary at
+#     0x02127c40 and 0x02127c5c inside ov077's bss only because arm9
+#     relocations happen to cite those addresses -- for the OTHER overlay.
+#     What actually lives there is ONE contiguous 0x60-byte array:
+#     src/__sinit_ov077_0212749c.c declares `struct Dst { Pair p0..p11; }`
+#     over data_ov077_02127c28 and writes TWELVE 8-byte pairs, 0x60 bytes,
+#     0x02127c28..0x02127c88. dsd's next-symbol delta for 0x02127c28 is
+#     0x18 -- THREE pairs. Mounted unpinned, Spiny's twelve-state dispatch
+#     table would be hosted as a quarter of itself and the sinit's own
+#     writes would run off the end of it, the 8d1f9d13b shape exactly.
+#     FIX: `data_ov077_02127c28:0x60` pinned below, and 0x02127c40 and
+#     0x02127c5c LEFT OUT of the list -- they are interior to it. Leaving
+#     them in is not merely redundant, ovdata.py --pack REFUSES the layout
+#     ("overlaps the symbol ending at"), which is the loud failure this pin
+#     is supposed to produce if anyone re-adds them.
+#
+# ==== THE THREE VTABLE WIDTHS, AND THE FOURTH-SHAPE TRAP ON TWO OF THEM ====
+# Read slot by slot out of config/arm9/overlays/ov077/relocs.txt with every
+# target resolved through config/arm9/symbols.txt (the ov072 method).
+#
+#   class    table       A reloc run  B next dsd sym  TRUTH  what pins it
+#   Lakitu   0x0212786c      40+           31          31    semantic tail
+#   Spiny    0x02127984      40+           31          31    semantic tail
+#   HeaveHo  0x02127a98      31            34 LIES     31    tail + 3 zero words
+#
+# ALL THREE ARE 31 SLOTS, the plain Actor layout, identical slot for slot to
+# ov072's two tables except for each class's own bodies. The SEMANTIC TAIL is
+# what pins every one: slot 30 == 0x020100dc Actor::OnAimedAtWithEggReturnVec
+# is the last Actor slot, and none of the three is Platform-derived, so none
+# carries a 32nd. Own bodies per class:
+#
+#   slot  Lakitu               Spiny                HeaveHo
+#    0    Lakitu::InitResources Spiny::InitResources HeaveHo::InitResources
+#    3    ::CleanupResources    ::CleanupResources   ::CleanupResources
+#    6    ::Behavior            ::Behavior           ::Behavior
+#    9    ::Render              ::Render             ::Render
+#   12    ::OnPendingDestroy    ::OnPendingDestroy   ::OnPendingDestroy
+#   16    LakituD1              SpinyD1              HeaveHoD1
+#   17    LakituD0              SpinyD0              HeaveHoD0
+#   18    func_ov077_02123804   func_ov077_02124c18  Actor::OnYoshiTryEat
+#   19    func_ov077_02124aa4   func_ov077_02126194  Actor::OnTurnIntoEgg
+#   29    func_ov077_0212380c   func_ov077_02124c20  Actor::OnAimedAtWithEgg
+# every other slot is the shared Actor/ActorBase half, byte-identical across
+# all three and to ov072's own shared half.
+#
+# ROUTE B LIES ON HeaveHo. Its next dsd symbol is data_ov077_02127b20, the
+# .bss start, giving 0x88 = 34 slots. Slots 31, 32 and 33 (0x02127b14/b18/b1c)
+# are ZERO in the raw image -- .data's tail padding up to .bss's align-32
+# boundary, not three null virtuals. The reloc run stops at slot 30 for this
+# table, which is the independent confirmation.
+#
+# ROUTE A LIES ON Lakitu AND Spiny, and it is the FOURTH width shape the
+# ov026 lane pinned (a POINTER-TO-MEMBER SOURCE TABLE, whose closure looks
+# exactly like more vtable). What follows each of those two tables is the
+# NEXT class's 8-byte {function, 0} PMF records:
+#   after Lakitu's table:  0x021278e8.. -> 0x021258dc, 0x02125a54, ... all
+#                          inside SPINY's .text range (0x02124b64..0x0212624c)
+#   after Spiny's table:   0x02127a00.. -> 0x02126640, 0x0212679c, ... all
+#                          inside HEAVEHO's range (0x0212624c..0x02127230)
+# All three tells fire: every other word is ZERO; dsd names ONE symbol per
+# PAIR at 8-byte stride; and the semantic tail already ended the table at 30.
+# HeaveHo's own PMF records sit before ITS typeinfo and after Spiny's table,
+# so the per-class .data layout is uniform and self-checking:
+#     [PMF source pairs][name string][typeinfo][SpawnInfo][vtable]
+#   Lakitu   0x021277e0(10 pairs) 0x02127830 0x0212783c 0x02127848 0x0212786c
+#   Spiny    0x021278e8(12 pairs) 0x02127948 0x02127954 0x02127960 0x02127984
+#   HeaveHo  0x02127a00(10 pairs) 0x02127a50 0x02127a68 0x02127a74 0x02127a98
+# Each typeinfo record is [0x0209a764 __si_class_type_info][name ptr][base],
+# and each name string read through gives the ROM's own class name:
+#   0x0212783c -> "7daJgm_c"   0x02127954 -> "7daTgz_c"   0x02127a68 ->
+#   "9daPopoi_c". dsd's _ZTV6Lakitu/_ZTV7daJgm_c, _ZTV5Spiny/_ZTV7daTgz_c and
+# _ZTV7HeaveHo/_ZTV9daPopoi_c are two spellings of ONE class each -- no
+# ov026-style identity swap in this overlay, checked table by table the same
+# way (each table's OWN vtable[-1] read through to its own name string).
+#
+# ==== THE THREE VTABLES ARE EXCLUDED, AS HOST STORAGE ======================
+# The ov015/ov016/ov022/ov045/ov080 rule -- a mounted vtable hands a factory
+# DS code addresses. No dsd symbol falls inside any of the three spans, so no
+# interior split has to be excluded with them:
+#   0x0212786c..0x021278e8  265  31 slots  _ZTV6Lakitu  / _ZTV7daJgm_c
+#   0x02127984..0x02127a00  260  31 slots  _ZTV5Spiny   / _ZTV7daTgz_c
+#   0x02127a98..0x02127b14  238  31 slots  _ZTV7HeaveHo / _ZTV9daPopoi_c
+# HeaveHo's three trailing zero pad words (0x02127b14..0x02127b20) are not
+# mounted either: no symbol names them and .bss starts at 0x02127b20.
+#
+# ==== WHAT IS MOUNTED ======================================================
+# 77 symbols: every ov077 .rodata / .data / .bss symbol that is not a vtable,
+# not a .ctor word, and not one of the two phantom bss splits. Sized by
+# next-symbol delta (ovdata.py's own rule, clamped to the delinks section)
+# except the one explicit pin derived above.
+#
+# EVERY OTHER SIZE WAS AUDITED FOR T3 AND IS CORRECT AS INFERRED, checked
+# against what the three sinits actually write:
+#   data_ov077_02127bc4  0x50  Lakitu's 10-pair table; sinit writes [0..9] =
+#                              0x50 exactly (the C declares [6] and indexes
+#                              to [9]; the ROM span is the truth)
+#   data_ov077_02127cd8/ce8/cf8/d08  0x10 each  HeaveHo's five 2-entry cells
+#   data_ov077_02127d18  0x28 inferred, 0x10 needed -- oversized, harmless
+#   the thirteen 0xc rows (b58 b64 b70 b7c b94 ba0 bac bb8 c1c ca8 cb4 cc0
+#   ccc) are func_020731dc destructor list NODES, the exact 8d1f9d13b shape,
+#   and dsd sized every one of them 0xc correctly
+#   the twelve 0x8 rows (b20 b28 b30 b38 b40 b48 b50 c14 c88 c90 c98 ca0) are
+#   SharedFilePtr objects, 8 bytes, none split (the ov025 half-SharedFilePtr
+#   trap does not fire in this overlay)
+data_ov077_02127230 data_ov077_02127238 data_ov077_021277e0 data_ov077_021277e8
+data_ov077_021277f0 data_ov077_021277f8 data_ov077_02127800 data_ov077_02127808
+data_ov077_02127810 data_ov077_02127818 data_ov077_02127820 data_ov077_02127828
+data_ov077_02127830 data_ov077_0212783c Lakitu_SpawnInfo data_ov077_021278e8
+data_ov077_021278f0 data_ov077_021278f8 data_ov077_02127900 data_ov077_02127908
+data_ov077_02127910 data_ov077_02127918 data_ov077_02127920 data_ov077_02127928
+data_ov077_02127930 data_ov077_02127938 data_ov077_02127940 data_ov077_02127948
+data_ov077_02127954 Spiny_SpawnInfo data_ov077_02127a00 data_ov077_02127a08
+data_ov077_02127a10 data_ov077_02127a18 data_ov077_02127a20 data_ov077_02127a28
+data_ov077_02127a30 data_ov077_02127a38 data_ov077_02127a40 data_ov077_02127a48
+data_ov077_02127a50 data_ov077_02127a5c data_ov077_02127a68 HeaveHo_SpawnInfo
+data_ov077_02127b20 data_ov077_02127b28 data_ov077_02127b30 data_ov077_02127b38
+data_ov077_02127b40 data_ov077_02127b48 data_ov077_02127b50 data_ov077_02127b58
+data_ov077_02127b64 data_ov077_02127b70 data_ov077_02127b7c data_ov077_02127b88
+data_ov077_02127b94 data_ov077_02127ba0 data_ov077_02127bac data_ov077_02127bb8
+data_ov077_02127bc4 data_ov077_02127c14 data_ov077_02127c1c data_ov077_02127c28:0x60
+data_ov077_02127c88 data_ov077_02127c90 data_ov077_02127c98 data_ov077_02127ca0
+data_ov077_02127ca8 data_ov077_02127cb4 data_ov077_02127cc0 data_ov077_02127ccc
+data_ov077_02127cd8 data_ov077_02127ce8 data_ov077_02127cf8 data_ov077_02127d08
+data_ov077_02127d18

@@ -972,6 +972,18 @@ void port_ov013_pack_check(void);
 void port_ov013_syms_patch(void);
 void __sinit_ov013_021116b8(void);
 void __sinit_ov013_021116f8(void);
+/* run rel0215 lane cast-ov077: ov077 per-symbol -- the shared enemy pack's
+   three own sinits, one per class, in ROM order (0x02127240 Lakitu,
+   0x0212749c Spiny, 0x021275fc HeaveHo). ALL THREE build a PMF state table as
+   well as their SharedFilePtrs, which is why port_ov077_states_seat() has to
+   run between the patch and the first sinit -- see the call site below and
+   hal/actor_classes_ov077.cpp. Not a level overlay, so no whole-image half. */
+void port_ov077_pack_check(void);
+void port_ov077_syms_patch(void);
+void port_ov077_states_seat(void);   /* hal/actor_classes_ov077.cpp */
+void __sinit_ov077_02127240(void);
+void __sinit_ov077_0212749c(void);
+void __sinit_ov077_021275fc(void);
 
 /* The six wave-3/4/5 bring-ups, each defined beside the cast it serves and
    each holding its own done-guard. See the consolidation note at the bottom
@@ -1278,6 +1290,27 @@ extern "C" void port_actor_overlays_sinits(void)
     port_ov013_syms_patch();
     __sinit_ov013_021116b8();   /* CLOCK_PENDULUM's SharedFilePtr */
     __sinit_ov013_021116f8();   /* the two CLOCK_HAND SharedFilePtrs */
+
+    /* run rel0215 lane cast-ov077: ov077's THREE own-class sinits, in the
+       ROM's own order. Each builds its class's SharedFilePtrs AND copies that
+       class's PMF source records into the bss cells its state machine
+       dispatches through, so the seat below is not optional and its POSITION
+       is not free: port_ov077_states_seat() rewrites each mounted source
+       record's fn word from the DS address the mount emitted to the host
+       body's, and it has to happen after port_ov077_syms_patch() has laid the
+       records down and BEFORE the first sinit copies them. Seating after the
+       copies would leave the bss cells holding DS addresses while the sources
+       read correct, which is the quiet half of this failure mode. The seat
+       validates every record against the ROM's own address and aborts rather
+       than seat garbage; it is idempotent, and the three vtable fills call it
+       again for the reason ov045's guard exists (a fill is reachable from the
+       registry install, and this function is not the only way in). */
+    port_ov077_pack_check();
+    port_ov077_syms_patch();
+    port_ov077_states_seat();
+    __sinit_ov077_02127240();   /* LAKITU: 7 SharedFilePtrs + the 10-pair table */
+    __sinit_ov077_0212749c();   /* SPINY: 1 SharedFilePtr + the 12-pair table */
+    __sinit_ov077_021275fc();   /* HEAVE_HO: 4 SharedFilePtrs + the 5 cells */
 
     /* ---- the six bring-ups that used to ride the first registry fill ------
      *

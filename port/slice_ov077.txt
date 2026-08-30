@@ -1,0 +1,188 @@
+# run rel0215 wave 1, lane cast-ov077 (W1-E): ov077, the shared enemy pack --
+# HEAVE_HO (238, daPopoi_c), SPINY (260, daTgz_c), LAKITU (265, daJgm_c).
+# Fresh per-symbol mount (port/ov077_syms.txt, which carries the whole
+# derivation: the base proof, both attribution routes, the three contested
+# addresses, the three 31-slot widths and the four width routes of which two
+# lie). The fill and the state seat are hal/actor_classes_ov077.cpp.
+#
+# ==== THE SOURCE INVENTORY, COUNTED THREE WAYS =============================
+# config/arm9/overlays/ov077/symbols.txt has 91 function rows (88 class bodies
+# + 3 sinits) and config's delinks.txt names 91 src TUs. Counted the three
+# ways slice_vs.txt section 2 asks for:
+#     delinked complete to a src TU ......... 91
+#     present but NONMATCHING-bannered ....... 0
+#     MISSING ................................ 0
+# The sums agree with symbols.txt exactly. THIS OVERLAY IS 100% MATCHED with
+# no bannered bodies at all, which is why the whole 91-TU ceiling is real
+# rather than a target. 44 TUs are .cpp, 47 are .c, and NONE of the 47 .c files
+# carries a C++ token (comment-stripped sweep over class/template/namespace/
+# virtual/access-specifier/extern "C"/::/new/delete and the //cpp marker), so
+# this slice needs no set_source_files_properties(... LANGUAGE CXX) row.
+#
+# ==== ELEVEN TUs ARE HOST-COPIED, AND EACH IS REFUSED FOR A NAMED REASON ===
+# All eleven stay BYTE-LOCKED in src/ as the matched proof; they are simply
+# not listed below. Nothing is refused for being awkward -- the smallest
+# genuinely unmodellable subtree, per the VS lane's correction (it refused
+# twelve wireless wrappers, eleven of which were leaf accessors, and its first
+# boot crashed on a face returning 0 where the real body returns a pointer).
+#
+#  A. THE ModelAnim SLOT-5 COLLISION (3 TUs). hal/cxxname_bridge.cpp fills
+#     _ZTV9ModelAnim in MSVC numbering, where slot 5 is Virtual18 (two
+#     arguments) and NOT Render, and it cannot be dual-filled because
+#     something real occupies the slot. All three Renders dispatch
+#     `((LocalShadow *)&mModelAnim)->slot5(0)` through a six-virtual local
+#     shadow that counts in the ROM's numbering. The Whomp/Fish/Butterfly/
+#     HootTheOwl case, measured (not reasoned) when Butterfly::Render faulted
+#     c0000005 in Model::Virtual10.
+#       src/_ZN6Lakitu6RenderEv.cpp   -> port/unmatched/Lakitu_HostSites.cpp
+#       src/_ZN5Spiny6RenderEv.cpp    -> port/unmatched/Spiny_HostSites.cpp
+#       src/_ZN7HeaveHo6RenderEv.cpp  -> port/unmatched/HeaveHo_HostSites.cpp
+#
+#  B. THE PMF DISEASE (6 TUs). Each forms a real C++ pointer-to-member on a
+#     DELIBERATELY INCOMPLETE class and calls through it; MSVC's "unknown
+#     inheritance" general form is not the ROM's 8-byte {function, delta}
+#     record. Read off each recovered source's own struct declaration, not
+#     inferred from a crash. The SoundObject/Cap/MrBlizzard/BabyPenguin/Unagi/
+#     HootTheOwl shape, sixth instance.
+#       src/func_ov077_02124754.cpp  Lakitu  cell[0] enter, cell ptr at +0x3f0
+#       src/func_ov077_02124718.cpp  Lakitu  cell[1] tick
+#       src/func_ov077_02125e5c.cpp  Spiny   cell[0] enter, cell ptr at +0x3d0
+#       src/func_ov077_02125e20.cpp  Spiny   cell[1] tick
+#       src/func_ov077_02126d5c.cpp  HeaveHo setter + enter, ptr at +0x3fc,
+#                                    and the only one of the six with a null
+#                                    guard, which the host copy keeps
+#       src/_ZN7HeaveHo8BehaviorEv.cpp       the SAME PMF dispatched INLINE
+#                                    (`M{char pad[8]; PMF pmf;}`, +8 = the
+#                                    tick record), so the whole method is
+#                                    host-copied line for line
+#
+#  C. THE C++-MANGLING WALL (2 TUs). src/_ZN6LakituD1Ev.cpp and
+#     src/_ZN5SpinyD1Ev.cpp are REAL C++ class definitions ending
+#     `virtual ~X();` with an empty body. mwccarm mangles that Itanium and
+#     emits the name vtable slot 16 needs; MSVC emits ??1Lakitu@@UAE@XZ and
+#     NOTHING by that name, plus its own COMDAT vtable which the destructor
+#     would store at this[0] over the ROM-shaped table the registry fills,
+#     plus member-destructor calls under MSVC mangling this port does not
+#     define. Three failures from one TU, and the only fully MSVC-invisible
+#     ones in the overlay. The replacement bodies are relocation-confirmed
+#     against the ROM (both D1s make exactly their own D0's calls in their own
+#     D0's order, minus Memory::Deallocate) -- see the two host files.
+#     HEAVEHO'S DESTRUCTORS NEED NOTHING: its D1 and D0 are already plain C
+#     bodies that name their table and call flat member destructors, so both
+#     stay below as matched source. That asymmetry is the ROM's, not a choice.
+#
+# NOTHING ELSE IS REFUSED. In particular:
+#   * NO asm primitive, no DS thread scheduler, no card overlay loader tail,
+#     no wireless manager reaches this overlay -- the comment-stripped sweep
+#     found zero `asm`/`__asm` blocks in all 91 TUs.
+#   * NO Actor::ClosestPlayer() no-argument r0 ride-through anywhere (the
+#     ov094 func_ov094_02136024 shape does not occur here).
+#   * FOUR TUs dispatch a virtual on the ACTOR ITSELF through a THIRTY-virtual
+#     destructor-free local shadow, reaching slot 29 -- func_ov077_02123d40,
+#     func_ov077_02124038, func_ov077_021251d0, func_ov077_02125480. These
+#     look like the Render case and are NOT: MSVC numbers a destructor-free
+#     shadow linearly, so index 29 lands on ROM slot 29 in the ROM-shaped host
+#     table, and all four are correct straight out of src/. Refusing them would
+#     have been the VS lane's mistake exactly.
+#
+# ==== T5 ADJUDICATION: SIX BODIES CARRY THE OVERLOADED MARKER, ALL SIX REAL =
+# Six TUs carry `/* ... - recovered from vtable slot identity */`, the marker
+# port/tools/inferred_stub_guard.py exists for. That marker sits both on
+# genuine guesses and on bodies whose NAME ALONE came from slot identity. Each
+# was adjudicated by disassembling the ROM, not by reading the marker:
+#   func_ov077_02123804  e3a00006 e12fff1e  MOV r0,#6      BX LR   src says 6
+#   func_ov077_0212380c  e3a0090f e12fff1e  MOV r0,#0x3c000 BX LR  src 245760
+#   func_ov077_02124c18  e3a00006 e12fff1e  MOV r0,#6      BX LR   src says 6
+#   func_ov077_02124c20  e3a00a1e e12fff1e  MOV r0,#0x1e000 BX LR  src 122880
+#   func_ov077_02124aa4  four arm_calls, and the two the config names are
+#     GivePlayerCoins and KillAndTrackInDeathTable, exactly the source's
+#   func_ov077_02126194  the same four call sites, and the fourth is
+#     ActorBase::MarkForDestruction where Lakitu's is KillAndTrackInDeathTable
+#     -- the two bodies differ precisely where the sources differ, which no
+#     fabricated stub does
+# ALL SIX ARE REAL DECOMP and are seated. The marker is wrong on all six and
+# only the NAME was slot-derived. THIS LANE DID NOT CORRECT THE MARKERS: they
+# live in src/, which this lane must not edit. Nothing was moved into
+# inferred_stub_baseline.txt either. It is reported instead.
+#
+# ==== THE SLICE: 80 TUs (91 - 11 host copies) ==============================
+src/HeaveHo_Spawn.c
+src/Lakitu_Spawn.c
+src/Spiny_Spawn.c
+src/_ZN5Spiny13InitResourcesEv.cpp
+src/_ZN5Spiny16CleanupResourcesEv.c
+src/_ZN5Spiny16OnPendingDestroyEv.c
+src/_ZN5Spiny8BehaviorEv.cpp
+src/_ZN5SpinyD0Ev.c
+src/_ZN6Lakitu13InitResourcesEv.cpp
+src/_ZN6Lakitu16CleanupResourcesEv.c
+src/_ZN6Lakitu16OnPendingDestroyEv.c
+src/_ZN6Lakitu8BehaviorEv.cpp
+src/_ZN6LakituD0Ev.c
+src/_ZN7HeaveHo13InitResourcesEv.cpp
+src/_ZN7HeaveHo16CleanupResourcesEv.c
+src/_ZN7HeaveHo16OnPendingDestroyEv.c
+src/_ZN7HeaveHoD0Ev.c
+src/_ZN7HeaveHoD1Ev.c
+src/__sinit_ov077_02127240.c
+src/__sinit_ov077_0212749c.c
+src/__sinit_ov077_021275fc.c
+src/func_ov077_02123804.c
+src/func_ov077_0212380c.c
+src/func_ov077_02123814.c
+src/func_ov077_02123880.c
+src/func_ov077_021238bc.cpp
+src/func_ov077_0212390c.cpp
+src/func_ov077_02123a1c.cpp
+src/func_ov077_02123a74.cpp
+src/func_ov077_02123c6c.cpp
+src/func_ov077_02123d40.cpp
+src/func_ov077_02123fcc.c
+src/func_ov077_02124038.cpp
+src/func_ov077_02124118.cpp
+src/func_ov077_021241ac.c
+src/func_ov077_021242f0.c
+src/func_ov077_02124394.c
+src/func_ov077_021243c0.cpp
+src/func_ov077_021244d4.cpp
+src/func_ov077_02124564.c
+src/func_ov077_02124698.c
+src/func_ov077_0212478c.c
+src/func_ov077_02124aa4.cpp
+src/func_ov077_02124c18.c
+src/func_ov077_02124c20.c
+src/func_ov077_02124c28.cpp
+src/func_ov077_02124ce4.c
+src/func_ov077_02124d08.cpp
+src/func_ov077_02124eb0.cpp
+src/func_ov077_021250a8.cpp
+src/func_ov077_021251d0.cpp
+src/func_ov077_02125290.c
+src/func_ov077_02125304.cpp
+src/func_ov077_021253a4.cpp
+src/func_ov077_02125480.cpp
+src/func_ov077_02125550.cpp
+src/func_ov077_021256b4.c
+src/func_ov077_02125830.c
+src/func_ov077_021258dc.c
+src/func_ov077_02125908.c
+src/func_ov077_02125a0c.c
+src/func_ov077_02125a54.c
+src/func_ov077_02125b1c.cpp
+src/func_ov077_02125bb4.c
+src/func_ov077_02125dd4.c
+src/func_ov077_02125e94.c
+src/func_ov077_02126194.cpp
+src/func_ov077_02126300.c
+src/func_ov077_02126528.cpp
+src/func_ov077_02126640.cpp
+src/func_ov077_02126758.cpp
+src/func_ov077_0212679c.c
+src/func_ov077_02126930.cpp
+src/func_ov077_021269a8.cpp
+src/func_ov077_02126a04.c
+src/func_ov077_02126a50.c
+src/func_ov077_02126a84.c
+src/func_ov077_02126ad0.c
+src/func_ov077_02126cd4.cpp
+src/func_ov077_02126dac.c
