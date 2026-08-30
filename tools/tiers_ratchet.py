@@ -241,12 +241,26 @@ def scan(paths=None, ownership=None):
     return converted, scores
 
 
+class BaselineError(Exception):
+    """The baseline file parsed, but its contents contradict themselves.
+
+    Deliberately NOT the None return below. None means "no usable baseline", and
+    --update treats that as "bake a new one", rewriting the whole file without the
+    --reason gate that removals normally require. Routing corruption through None
+    would therefore let a damaged baseline be replaced by whatever the tree happens to
+    look like -- turning the evidence of the damage into the new baseline. A
+    self-contradicting file is a fact about the file, so it stops both paths.
+    """
+
+
 def load_baseline(path):
     """The banked set, or None when there is no usable baseline file.
 
     A malformed or absent baseline is a configuration error, never an empty set: an
     empty set makes --check pass forever, so a deleted baseline would silently disable
     the gate rather than break it.
+
+    Raises BaselineError when the file parses but contradicts itself.
     """
     p = pathlib.Path(path)
     if not p.is_file():
@@ -258,6 +272,27 @@ def load_baseline(path):
     got = d.get("converted")
     if not isinstance(got, list):
         return None
+
+    # write_baseline() emits sorted(converted) from a set alongside count=len(converted),
+    # so in a file this tool wrote, these numbers agree by construction. A disagreement
+    # means something other than --update edited the file, and both shapes are silent
+    # without this check: set() below swallows duplicates, and nothing has ever read
+    # `count` back. That silence is a real weakening, not a tidiness issue -- an
+    # identity can be dropped from the array and the drop hidden by duplicating
+    # another, leaving a gate that watches less than its own count claims.
+    if len(set(got)) != len(got):
+        dupes = sorted({x for x in got if got.count(x) > 1})
+        shown = ", ".join(dupes[:5])
+        more = f", and {len(dupes) - 5} more" if len(dupes) > 5 else ""
+        raise BaselineError(
+            f"{path} lists {len(got)} identities but only {len(set(got))} are "
+            f"distinct.\nDuplicated: {shown}{more}")
+    count = d.get("count")
+    if isinstance(count, int) and count != len(got):
+        raise BaselineError(
+            f"{path} declares count={count} but its `converted` array holds "
+            f"{len(got)} identities.\nThe two are written together by --update, so "
+            "they can only disagree if the file was edited by hand.")
     return set(got)
 
 
@@ -450,7 +485,14 @@ def main():
         print("\n".join(sorted(current)))
         return 0
 
-    banked = load_baseline(args.baseline)
+    try:
+        banked = load_baseline(args.baseline)
+    except BaselineError as e:
+        print(f"baseline is internally inconsistent:\n\n{e}\n\n"
+              "Refusing to run. Fix the file in git rather than re-running --update:\n"
+              "--update would bank whatever the tree looks like now, which discards\n"
+              "the very difference this check exists to show you.")
+        return 2
 
     if args.update:
         left = sorted((banked or set()) - current)

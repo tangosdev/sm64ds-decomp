@@ -1,3 +1,4 @@
+import json
 import pathlib
 import sys
 import tempfile
@@ -191,6 +192,74 @@ class TranslationUnitIdentities(unittest.TestCase):
         self.assertIn(f"{dest}#Second", reason)
         self.assertIn(TR.tiers.CRITERION_LABEL["no_raw_offset"], reason)
 
+
+class BaselineIntegrity(unittest.TestCase):
+    """A baseline that contradicts itself must stop the tool, not be absorbed by it."""
+
+    def _write(self, body):
+        td = tempfile.mkdtemp()
+        path = pathlib.Path(td) / "converted-baseline.json"
+        path.write_text(json.dumps(body, indent=2) + "\n", encoding="utf-8")
+        return str(path)
+
+    def test_duplicate_identity_is_refused(self):
+        path = self._write({"count": 3, "converted": ["a.cpp", "b.cpp", "a.cpp"]})
+
+        with self.assertRaises(TR.BaselineError) as caught:
+            TR.load_baseline(path)
+
+        self.assertIn("a.cpp", str(caught.exception))
+
+    def test_count_disagreeing_with_the_array_is_refused(self):
+        path = self._write({"count": 99, "converted": ["a.cpp", "b.cpp"]})
+
+        with self.assertRaises(TR.BaselineError) as caught:
+            TR.load_baseline(path)
+
+        self.assertIn("99", str(caught.exception))
+
+    def test_a_dropped_identity_hidden_by_a_duplicate_is_caught(self):
+        """The shape this check exists for: `count` still matches, the set is smaller.
+
+        Removing one identity and duplicating another keeps len(array) == count, so the
+        count check alone would pass it. Only the distinctness check sees it.
+        """
+        path = self._write({"count": 3, "converted": ["a.cpp", "b.cpp", "b.cpp"]})
+
+        with self.assertRaises(TR.BaselineError):
+            TR.load_baseline(path)
+
+    def test_consistent_baseline_still_loads(self):
+        path = self._write({"count": 2, "converted": ["a.cpp", "b.cpp"]})
+
+        self.assertEqual(TR.load_baseline(path), {"a.cpp", "b.cpp"})
+
+    def test_absent_count_field_is_not_an_error(self):
+        """`count` is metadata; only a PRESENT and WRONG one is evidence of an edit."""
+        path = self._write({"converted": ["a.cpp", "b.cpp"]})
+
+        self.assertEqual(TR.load_baseline(path), {"a.cpp", "b.cpp"})
+
+    def test_missing_file_still_returns_None_rather_than_raising(self):
+        """The absent case keeps its old contract -- main() prints its own guidance."""
+        with tempfile.TemporaryDirectory() as td:
+            self.assertIsNone(TR.load_baseline(str(pathlib.Path(td) / "nope.json")))
+
+    def test_unparsable_file_still_returns_None_rather_than_raising(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = pathlib.Path(td) / "bad.json"
+            path.write_text("{not json", encoding="utf-8")
+
+            self.assertIsNone(TR.load_baseline(str(path)))
+
+    def test_write_then_load_round_trips(self):
+        """--update's own output must never trip the check it now has to pass."""
+        with tempfile.TemporaryDirectory() as td:
+            path = str(pathlib.Path(td) / "baseline.json")
+            TR.write_baseline(path, {"b.cpp", "a.cpp", "a.cpp#Member"})
+
+            self.assertEqual(TR.load_baseline(path),
+                             {"a.cpp", "b.cpp", "a.cpp#Member"})
 
 if __name__ == "__main__":
     unittest.main()
