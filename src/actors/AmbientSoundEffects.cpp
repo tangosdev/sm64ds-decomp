@@ -1,10 +1,10 @@
 //cpp
-/* Manually curated shadow translation unit.
+/* Production translation unit, manually curated.
  * ov002/AmbientSoundEffects  (8 function(s))
  *
- * NOT ENROLLED and NOT CANONICAL.  The readable class and member definitions
- * are compiled only by tubuild's scratch pipeline while the eight legacy
- * production sources remain authoritative.
+ * ENROLLED AND CANONICAL. The module's delinks.txt licenses the .text range
+ * below to this path, so the ROM build compiles this file in place of the
+ * legacy one-function sources listed at the foot of this comment.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
  * emits one .text section per function, in the REVERSE of source order, so
