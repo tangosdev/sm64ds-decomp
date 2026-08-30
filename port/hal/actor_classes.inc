@@ -1465,6 +1465,32 @@ void hal_fill_ship_water_vtable(void);               /* _ZTV9ShipWater, 32 */
 extern unsigned char RecRoomCupboard_SpawnInfo[];    /* ov058 0x02111a4c, +4 = 182 */
 void *RecRoomCupboard_Spawn(void);                   /* ov058 0x02111688, 92 B */
 void hal_fill_rec_room_cupboard_vtable(void);        /* _ZTV15RecRoomCupboard, 31 */
+/* ---- run rel0215 wave 2 (lane cast-ov090): ov090, THE WATER ENEMY PACK.
+   Four ids, four classes, all Enemy-derived and all 31-slot ACTOR tables (the
+   semantic tail pins every one at slot 30 Actor::OnAimedAtWithEggReturnVec;
+   Shark's dsd next-symbol landing reads 37 and the extra six words are zero
+   pad). All four SpawnInfo records come from the fresh per-symbol ov090 mount
+   (port/ov090_syms.txt); the fills and the sixteen-record PMF state seat are
+   in hal/actor_classes_ov090.cpp; the slice is port/slice_ov090.txt.
+   NO CLASS-IDENTITY SHIFT in this overlay -- each table's own vtable[-1]
+   typeinfo record reads through to the RTTI name dsd gives that same address,
+   and each table's slot 0 is that class's own InitResources. Levels 18 and 21
+   both name this pack: 18 places SHARK, CHEEP_CHEEP and SKEETER, 21 places
+   SKEETER. MANTA_RAY is placed on neither and is seated for the pack's sake.
+   The dsd `ambiguous` mark on all four records is an ov006 dual-dump artifact,
+   settled from ov006's own raw bytes in port/ov090_syms.txt. */
+extern unsigned char Skeeter_SpawnInfo[];            /* ov090 0x02134144, +4 = 230 */
+void *Skeeter_Spawn(void);                           /* ov090 0x02132654, 72 B */
+void hal_fill_skeeter_vtable(void);                  /* _ZTV7Skeeter, 31 */
+extern unsigned char MantaRay_SpawnInfo[];           /* ov090 0x02134218, +4 = 226 */
+void *MantaRay_Spawn(void);                          /* ov090 0x02132fe8, 76 B */
+void hal_fill_manta_ray_vtable(void);                /* _ZTV8MantaRay, 31 */
+extern unsigned char CheepCheep_SpawnInfo[];         /* ov090 0x02134300, +4 = 227 */
+void *CheepCheep_Spawn(void);                        /* ov090 0x02133634, 72 B */
+void hal_fill_cheep_cheep_vtable(void);              /* _ZTV10CheepCheep, 31 */
+extern unsigned char Shark_SpawnInfo[];              /* ov090 0x021343c8, +4 = 225 */
+void *Shark_Spawn(void);                             /* ov090 0x02133ca0, 72 B */
+void hal_fill_shark_vtable(void);                    /* _ZTV5Shark, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2224,4 +2250,21 @@ void hal_fill_rec_room_cupboard_vtable(void);        /* _ZTV15RecRoomCupboard, 3
     {123, "TRICKY_TRIANGLES", TrickyTriangles_SpawnInfo, \
      TrickyTriangles_Spawn, hal_fill_tricky_triangles_vtable}, \
     {130, "FLYING_CARPET", FlyingCarpet_SpawnInfo, FlyingCarpet_Spawn, \
-     hal_fill_flying_carpet_vtable},
+     hal_fill_flying_carpet_vtable}, \
+    /* ---- run rel0215 wave 2 (lane cast-ov090): ov090's whole four-class \
+       WATER ENEMY PACK, the pack levels 18 and 21 both name. Rows in ROM \
+       block order, which is also the order the four vtables sit in .data. \
+       Both attribution routes agree on every id and NOTHING is shifted -- \
+       see port/ov090_syms.txt for the derivation and for why dsd marks all \
+       four SpawnInfo records `ambiguous` (ov006 dual-dump, not a contest). \
+       Placed instances: level 18 has SHARK, CHEEP_CHEEP and SKEETER; level \
+       21 has SKEETER. MANTA_RAY is placed on neither of the two proof \
+       levels and is registered for the spawn path rather than for a census \
+       count ---- */ \
+    {230, "SKEETER", Skeeter_SpawnInfo, Skeeter_Spawn, \
+     hal_fill_skeeter_vtable}, \
+    {226, "MANTA_RAY", MantaRay_SpawnInfo, MantaRay_Spawn, \
+     hal_fill_manta_ray_vtable}, \
+    {227, "CHEEP_CHEEP", CheepCheep_SpawnInfo, CheepCheep_Spawn, \
+     hal_fill_cheep_cheep_vtable}, \
+    {225, "SHARK", Shark_SpawnInfo, Shark_Spawn, hal_fill_shark_vtable},

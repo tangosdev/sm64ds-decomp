@@ -1,0 +1,132 @@
+/* PORT_HOST_ABI. MANTA_RAY (226, 9daManta_c), ov090. Run rel0215 wave 2, lane
+ * cast-ov090. Three sites, same three shapes as Skeeter's; see
+ * unmatched/Skeeter_HostSites.cpp for the full derivation of each.
+ *
+ * (1) src/_ZN8MantaRay6RenderEv.cpp -- the ModelAnim slot-5 collision (T1).
+ *     MantaRay draws unconditionally and passes a NULL scale, so its host copy
+ *     is the bare dispatch; the 0x40000 flag guard Skeeter and CheepCheep have
+ *     is not in MantaRay's source and is not invented here.
+ *
+ * (2) src/func_ov090_02132ac4.cpp -- the state setter, record 0 (ENTER),
+ *     cell pointer at self+0x370. The PMF disease, incomplete-class form.
+ *
+ * (3) src/_ZN8MantaRay8BehaviorEv.cpp -- TWO refusals in one body, which is
+ *     why the whole TU is hosted rather than just its dispatch:
+ *       (a) the record-1 (TICK) pointer-to-member call, and
+ *       (b) PathPtr AS A REAL C++ OBJECT. The source declares
+ *             struct PathPtr { char pad[8]; PathPtr(); void FromID(unsigned);
+ *                              void GetNode(Vector3&, unsigned) const; };
+ *           and constructs one on the stack. Those are __thiscall member calls
+ *           under MSVC and mangle to ?FromID@PathPtr@@..., which nothing in
+ *           this link defines; hal/cxx_aliases.cpp bridges only the FLAT
+ *           spellings (?_ZN7PathPtr6FromIDEj@@YAXPAXI@Z -> __ZN7PathPtr6FromIDEj),
+ *           not the member ones. The host copy calls the flat arm9 symbols
+ *           with an explicit self, the level_boot.cpp:4940 shape, over an
+ *           8-byte local -- PathPtr's own size, from its pad[8].
+ *       Likewise `ApproachLinear(short&, short, short)` is spelled as a plain
+ *       C++ overload in the source and is really _Z14ApproachLinearRsss.
+ *     Everything else is the matched source statement for statement.
+ */
+#include "ModelAnim.h"
+
+extern "C" {
+
+/* ---- (1) Render -------------------------------------------------------- */
+/* PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch. */
+int _ZN8MantaRay6RenderEv(void *selfv)
+{
+    ((ModelAnim *)((char *)selfv + 0x30c))->ModelAnim::Render(0);
+    return 1;
+}
+
+/* ---- (2) and (3) ------------------------------------------------------- */
+struct PortOv090Pmf { unsigned int fn; int delta; };
+typedef int (*PortOv090StateFn)(void *);
+
+/* PORT_HOST_ABI: mwcc pointer-to-member through an incomplete class. */
+int func_ov090_02132ac4(void *cv, void *pv)   /* record 0, the ENTER half */
+{
+    *(void **)((char *)cv + 0x370) = pv;
+    PortOv090Pmf *q = (PortOv090Pmf *)pv;
+    if (q[0].fn == 0)
+        return 1;
+    return ((PortOv090StateFn)(size_t)q[0].fn)(cv);
+}
+
+struct MrVec3 { int x, y, z; };
+
+unsigned short DecIfAbove0_Short(unsigned short *p);
+void Vec3_Sub(MrVec3 *out, MrVec3 *a, MrVec3 *b);
+int  LenVec3(MrVec3 *v);
+short Vec3_HorzAngle(MrVec3 *v0, MrVec3 *v1);
+short Vec3_VertAngle(MrVec3 *v0, MrVec3 *v1);
+void Matrix4x3_FromRotationY(void *m, int angle);
+void Matrix4x3_ApplyInPlaceToRotationX(void *m, short angle);
+void MulVec3Mat4x3(MrVec3 *v, void *m, MrVec3 *out);
+void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *thiz, void *clsn);
+void func_ov090_02132b14(void *c);
+void _ZN12CylinderClsn5ClearEv(void *c);
+void _ZN12CylinderClsn6UpdateEv(void *c);
+void _Z14ApproachLinearRsss(short *v, short target, short step);
+void _ZN7PathPtrC1Ev(void *self);
+void _ZN7PathPtr6FromIDEj(void *self, unsigned id);
+void _ZNK7PathPtr7GetNodeER7Vector3j(const void *self, MrVec3 *out, unsigned idx);
+extern char data_020a0e68[];
+
+/* PORT_HOST_ABI: mwcc pointer-to-member through an incomplete class, plus
+ * three PathPtr __thiscall member calls MSVC cannot name. */
+int _ZN8MantaRay8BehaviorEv(void *selfv)
+{
+    char *c = (char *)selfv;
+    DecIfAbove0_Short((unsigned short *)(c + 0x100));
+    {
+        PortOv090Pmf *o = *(PortOv090Pmf **)(c + 0x370);
+        if (o[1].fn != 0)
+            ((PortOv090StateFn)(size_t)o[1].fn)(c);
+    }
+    {
+        char p[8];
+        MrVec3 node;
+        MrVec3 diff;
+        MrVec3 v;
+        int len;
+
+        _ZN7PathPtrC1Ev(p);
+        _ZN7PathPtr6FromIDEj(p, *(unsigned int *)(c + 0x37c));
+        _ZNK7PathPtr7GetNodeER7Vector3j(p, &node, *(unsigned int *)(c + 0x384));
+        Vec3_Sub(&diff, (MrVec3 *)(c + 0x5c), &node);
+        len = LenVec3(&diff);
+        if (len == 0 || len <= 0x258000) {
+            (*(int *)(((int)c + 0x384)))++;
+            if (*(int *)(c + 0x384) >= *(int *)(c + 0x380))
+                *(int *)(c + 0x384) = 0;
+        }
+        _Z14ApproachLinearRsss((short *)(c + 0x94),
+                               Vec3_HorzAngle((MrVec3 *)(c + 0x5c), &node), 0x60);
+        _Z14ApproachLinearRsss((short *)(c + 0x92),
+                               Vec3_VertAngle((MrVec3 *)(c + 0x5c), &node), 0x40);
+        *(short *)(c + 0x8c) = *(short *)(c + 0x92);
+        *(short *)(c + 0x8e) = *(short *)(c + 0x94);
+        *(short *)(c + 0x90) = *(short *)(c + 0x96);
+        v.y = v.x = v.z = 0;
+        v.z = 0xa000;
+        Matrix4x3_FromRotationY(data_020a0e68, *(short *)(c + 0x94));
+        Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, *(short *)(c + 0x92));
+        MulVec3Mat4x3(&v, data_020a0e68, (MrVec3 *)(c + 0xa4));
+    }
+    {
+        int s = *(int *)(c + 0xa8) + *(int *)(c + 0x9c);
+        int m2 = *(int *)(c + 0xa0);
+        int ac = *(int *)(c + 0xac);
+        if (s >= m2) m2 = s;
+        *(int *)(c + 0xa8) = m2;
+        *(int *)(c + 0xac) = ac;
+    }
+    _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(c, c + 0x110);
+    func_ov090_02132b14(c);
+    _ZN12CylinderClsn5ClearEv(c + 0x110);
+    _ZN12CylinderClsn6UpdateEv(c + 0x110);
+    return 1;
+}
+
+}  /* extern "C" */

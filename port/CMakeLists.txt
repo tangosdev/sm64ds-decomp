@@ -2122,6 +2122,36 @@ list(APPEND PORT_ACTOR_OVERLAYS ov030)
 # attribution routes, all seven widths and the four size pins are in
 # port/ov036_syms.txt. See also port/slice_ov036cast.txt.
 list(APPEND PORT_ACTOR_OVERLAYS ov036)
+# run rel0215 wave 2 (lane cast-ov090): ov090, THE WATER ENEMY PACK -- SKEETER
+# (230, 9daMenbo_c), MANTA_RAY (226, 9daManta_c), CHEEP_CHEEP (227,
+# 12daPukupuku_c) and SHARK (225, 9daShark_c). Fresh per-symbol mount, the
+# ov077/ov079/ov080/ov081/ov072/ov094 shape; ov090 is not a level overlay so
+# there is no whole-image half. All four classes reach their SpawnInfo records,
+# their ten SharedFilePtr construction statics and their sixteen
+# pointer-to-member state records by name. Their four vtables (_ZTV7Skeeter ==
+# _ZTV9daMenbo_c, _ZTV10CheepCheep == _ZTV12daPukupuku_c, _ZTV5Shark ==
+# _ZTV9daShark_c -- three RTTI-spelling pairs, each confirmed by reading that
+# table's OWN vtable[-1] typeinfo record through to its name string; MantaRay
+# has only one spelling) are host arrays hal/actor_classes_ov090.cpp fills, and
+# all four of the overlay's sinits run.
+#
+# THE WINDOW (T6): base 0x02130f00 with ov091 mounted and ov092 not. ov090 ends
+# 0x021345e0, STRICTLY INSIDE ov091's 0x021356e0, so it adds no new ground and
+# cannot take a resolved target away from another mount. ov006's much larger
+# span (0x020bfec0..0x021430a0) also contains all of it, which is why dsd marks
+# all four SpawnInfos `ambiguous` and the arm9 spawn-table relocations read
+# `module:overlays(6,90)`. That is a dual-dump artifact, not a contest: ov006's
+# own raw bytes at all four addresses are minigame tuning tuples with no
+# plausible function pointer, while ov090's are real SpawnInfos whose word[0]
+# is an e92d4010 prologue in ov090's own .text and whose word[1] low halfword
+# is the id that reached them. IDS 225/226/227/230 ARE ALL ov090's -- the
+# derivation, both routes and ov006's own bytes are in port/ov090_syms.txt.
+#
+# NO SIZE PIN IS NEEDED in this overlay, which is measured rather than assumed:
+# every mounted symbol's next-symbol delta was checked against what the four
+# sinits and the bodies actually write through it. See port/ov090_syms.txt and
+# port/slice_ov090.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov090)
 set(ACTOR_OV_SYMS "")
 foreach(ovn IN LISTS PORT_ACTOR_OVERLAYS)
     set(ovn_out "${CMAKE_BINARY_DIR}/host-src/${ovn}_syms.c")
@@ -9426,6 +9456,83 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN21FloatingFloorLllSmall13InitResourcesEv.c"
     PROPERTIES COMPILE_DEFINITIONS "data_ov036_021140d4=data_ov022_021140d4")
 
+# run rel0215 wave 2 (lane cast-ov090): SKEETER (230) + MANTA_RAY (226) +
+# CHEEP_CHEEP (227) + SHARK (225), ov090, the water enemy pack levels 18 and 21
+# both name. Fresh per-symbol ov090 mount (port/ov090_syms.txt). The four
+# vtable fills and the sixteen-record PMF state seat are
+# hal/actor_classes_ov090.cpp; the twelve host-copied TUs (four ModelAnim
+# slot-5 Renders, four PMF state setters, four Behaviors whose tick half
+# dispatches the same way, two of which additionally construct a PathPtr as a
+# real C++ object) are the four unmatched/*_HostSites.cpp files, each refusal
+# itemised in port/slice_ov090.txt. The gate-64 shape: the hal file and the
+# host copies ride in the slice's own SOURCES list, so the target lists take
+# one token. ov090 has NO missing and NO NONMATCHING body -- 70 of 70 present
+# -- so there is no loud L2 face in this pack.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov090.txt" SLICE_OV090_LINES)
+set(SLICE_OV090_SOURCES "")
+foreach(line IN LISTS SLICE_OV090_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_OV090_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SLICE_OV090_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/actor_classes_ov090.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Skeeter_HostSites.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/MantaRay_HostSites.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/CheepCheep_HostSites.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Shark_HostSites.cpp")
+
+# ---- lane cast-ov090: THREE CROSS-OVERLAY NAME BINDINGS, ALL BY ADDRESS ----
+# Every one is settled from the crossing TU's OWN relocation in
+# config/arm9/overlays/<ov>/relocs.txt -- the `module:` column, read against
+# the raw bytes in extracted/overlays/ -- never from a dsd label. Two point
+# outward from ov090 and one points inward at it. All three are -D renames
+# rather than /alternatename for the same reason the ov036 lane's (7) is: this
+# lane's mount DEFINES the names an alias would need to leave undefined.
+#
+# (a) src/func_ov090_02131608.cpp spells func_ov091_02134498 for ov090's OWN
+#     data_ov090_02134498. ov090's own pool reloc is
+#     `from:0x02131644 kind:load to:0x02134498 module:overlay(90)`. 0x02134498
+#     is a SharedFilePtr in ov090's .bss that __sinit_ov090_02133ce8 constructs
+#     with file id 0x3a3, and the TU reads its second word as a FILE POINTER
+#     and hands it to ModelAnim::SetAnim. ov091's .text runs to 0x021344e8, so
+#     the ov091 name is a real FUNCTION there and src/func_ov091_02134498.c
+#     exists -- left alone this links clean and calls the wrong thing.
+#
+# (b) src/func_ov090_02133830.c spells func_ov091_02133710 for ov090's OWN
+#     func_ov090_02133710. ov090's own pool reloc is
+#     `from:0x02133874 kind:load to:0x02133710 module:overlay(90)`, and
+#     0x02133710 sits inside SHARK's .text block (0x0213367c..0x02133ca0) --
+#     as does 0x02133830 itself, which is Shark's own body. src/
+#     func_ov091_02133710.cpp exists, so this too links clean and runs the
+#     wrong body on any level that loads both overlays.
+#
+# (c) AN ALIAS THIS MOUNT DEFEATS, AND ITS ONE LIVE READER -- the ov036 (7)
+#     shape exactly. src/func_ov006_020d5e5c.c declares
+#     `extern int data_ov090_021343b0[]` for what is ov006's own minigame table
+#     (`from:0x020d5eb4 kind:load to:0x021343b0 module:overlay(6)`, and
+#     0x020d5eb4 is that TU's own literal pool). In ov090 the same address is
+#     SHARK's typeinfo NAME STRING, "9daShark_c".
+#     port/unmatched/MgBomroom_Faces.cpp routed that with
+#       /alternatename:_data_ov090_021343b0=_data_ov006_021343b0
+#     whose own header records that its LHS is "DEFINED NOWHERE ELSE IN THE
+#     LINK". THIS MOUNT DEFINES IT, so the alias goes inert and mg6's
+#     dScMgBomroom_c would read Shark's name string as an OAM table -- no link
+#     error, no byte-gate signal, wrong object at run time. The routing moves
+#     here, to the guard's own remedy, and the now-inert directive is retired
+#     at its own site rather than left reading as live routing.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov090_02131608.cpp"
+    PROPERTIES COMPILE_DEFINITIONS "func_ov091_02134498=data_ov090_02134498")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov090_02133830.c"
+    PROPERTIES COMPILE_DEFINITIONS "func_ov091_02133710=func_ov090_02133710")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020d5e5c.c"
+    PROPERTIES COMPILE_DEFINITIONS "data_ov090_021343b0=data_ov006_021343b0")
+
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'
 # matched lifecycle closures -- WHOMP (164), WHOMP_KING (165), BULLET_BILL (222),
 # BILL_BLASTER (43), FORTRESS_WALL (47), FORTRESS_WALL_BREAKABLE (48). The two
@@ -10028,6 +10135,8 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
+    # run rel0215 wave 2 (lane cast-ov090): ov090's whole four-class water cast.
+    ${SLICE_OV090_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
@@ -10209,6 +10318,8 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
+    # run rel0215 wave 2 (lane cast-ov090): ov090's whole four-class water cast.
+    ${SLICE_OV090_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
@@ -10424,6 +10535,8 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
+    # run rel0215 wave 2 (lane cast-ov090): ov090's whole four-class water cast.
+    ${SLICE_OV090_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp

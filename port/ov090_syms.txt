@@ -1,0 +1,336 @@
+# run rel0215 wave 2, lane cast-ov090 (w2-ov090): ov090, THE WATER ENEMY PACK --
+# SKEETER (230, 9daMenbo_c), MANTA_RAY (226, 9daManta_c), CHEEP_CHEEP
+# (227, 12daPukupuku_c) and SHARK (225, 9daShark_c).
+#
+# FRESH per-symbol mount, the ov077/ov079/ov080/ov081/ov072/ov094 convention:
+# the overlay's WHOLE .data + .bss span MINUS the four vtables (host arrays
+# hal/actor_classes_ov090.cpp fills), MINUS dsd's four .p__sinit_* .ctor words
+# (not C identifiers; the port calls the sinits by name). ovdata.py --pack pads
+# the gaps. ov090 has no .rodata section at all.
+#
+# ov090 is not a level overlay, so there is no whole-image half: this is the
+# only mount of it.
+#
+# ==== THE BASE, PROVED BEFORE ANYTHING WAS READ OFF IT ======================
+# Every byte below comes from extracted/overlays/overlay_0090.bin at base
+# 0x02130f00, never extracted/dsd/arm9_overlays/ (T4: the two disagree on 89 of
+# 103 overlays and dsd never scores better). The base is proved, not assumed --
+# the first word of ten known functions is a plausible prologue, and every one
+# of them is e92d4010 (push {r4,lr}):
+#
+#   0x02130f00 _ZN7SkeeterD1Ev                e92d4010
+#   0x02132654 Skeeter_Spawn                  e92d4010
+#   0x0213269c _ZN8MantaRayD1Ev               e92d4010
+#   0x02132fe8 MantaRay_Spawn                 e92d4010
+#   0x02133034 _ZN10CheepCheepD1Ev            e92d4010
+#   0x02133634 CheepCheep_Spawn               e92d4010
+#   0x0213367c _ZN5SharkD1Ev                  e92d4010
+#   0x02133ca0 Shark_Spawn                    e92d4010
+#   0x0213235c _ZN7Skeeter13InitResourcesEv   e92d4010
+#   0x02132e38 _ZN8MantaRay13InitResourcesEv  e92d4010
+#
+# Sections, from config/arm9/overlays/ov090/delinks.txt:
+#   .text   0x02130f00..0x02133ce8      .init   0x02133ce8..0x021340c4
+#   .ctor   0x021340c4..0x021340d4      .data   0x021340e0..0x02134480
+#   .bss    0x02134480..0x021345e0
+# The image is 13696 = 0x3580 bytes and ends at 0x02134480, exactly .bss's
+# start. (No .rodata: the four class-name strings live in .data.)
+#
+# ==== THE CAST MAP, BOTH ATTRIBUTION ROUTES ================================
+# Route 1: the arm9 spawn-table word at 0x02090864 + id*4 is a RELOCATION, read
+# out of config/arm9/relocs.txt, and it must land on this overlay's own
+# SpawnInfo. Route 2: that record's own word[1] low halfword must equal the id
+# whose slot reached it, and word[0] must be a spawn function inside ov090's
+# own .text (0x02130f00..0x02133ce8).
+#
+#   id   SpawnInfo   table slot   word[0] spawnFunc         idhalf  module
+#  225   0x021343c8  0x02090be8   0x02133ca0 Shark_Spawn      225   overlays(6,90)
+#  226   0x02134218  0x02090bec   0x02132fe8 MantaRay_Spawn   226   overlays(6,90)
+#  227   0x02134300  0x02090bf0   0x02133634 CheepCheep_Spawn 227   overlays(6,90)
+#  230   0x02134144  0x02090bfc   0x02132654 Skeeter_Spawn    230   overlays(6,90)
+#
+# ==== ID 230 AND ITS THREE SIBLINGS: THE "ov006-or-ov090" QUESTION, SETTLED =
+# A wave-1 review flagged id 230's attribution as ambiguous between ov006 and
+# ov090. It is not ambiguous; dsd marks ALL FOUR of these records `ambiguous`
+# and the reason is structural, not a real contest.
+#
+# ov006 IS NOT A WINDOW SIBLING OF ov090. It is the twenty-three-minigame pack
+# and it spans 0x020bfec0..0x021430a0 -- 525344 bytes -- so its .data
+# (0x02133600..0x021402e0) simply CONTAINS ov090's whole .data. dsd dumps both
+# overlays and both claim every address in the overlap, which is what the
+# `overlays(6,90)` module column and the four `ambiguous` marks record. The two
+# are never co-resident: ov006 loads for a minigame scene, ov090 for a water
+# level.
+#
+# BOTH ROUTES WERE RUN ON ALL FOUR, in both directions:
+#
+#   (a) word[0] inside ov090's own image. All four SpawnInfo word[0]s are
+#       functions in ov090's own .text and all four are e92d4010 prologues
+#       (table above). Route 2's idhalf matches the reaching slot index in all
+#       four cases.
+#   (b) the arm9 slot reads back the id. 0x02090864 + 225*4 = 0x02090be8 and
+#       its reloc target is 0x021343c8, whose word[1] low half is 0xe1 = 225.
+#       Same for 226/0x02090bec, 227/0x02090bf0, 230/0x02090bfc.
+#   (c) ov006's OWN RAW BYTES at those four addresses, read out of
+#       extracted/overlays/overlay_0006.bin -- the check route (a) and (b)
+#       cannot make on their own:
+#         0x02134144  41b880f0 00000106 404080f0 00000108
+#         0x02134218  02134274 02134224 02134200 01f500f7
+#         0x02134300  01f040f8 0000003c 000040f8 ffff003d
+#         0x021343c8  00001017 402780f4 00001019 91d980f4
+#       Not one of those is a SpawnInfo. Three are the repeating fixed-point
+#       tuples the minigame data is full of (0x...80f0 / 0x...40f8 pairs at a
+#       regular stride); the fourth (0x02134218) holds ov006-internal pointers
+#       and no plausible ARM prologue at word[0]. ov090's bytes at the same
+#       four addresses are the SpawnInfos in the table above, each with a real
+#       function pointer at word[0], its own id in word[1] and its own typeinfo
+#       record address at word[8].
+#
+# VERDICT: ids 225, 226, 227 and 230 are ALL ov090's, and the id set this lane
+# genuinely owns is those four. The census residuals the coordinator named
+# (225 / 227 / 230) are the three of the four that levels 18 and 21 actually
+# place; MANTA_RAY (226) is a real ov090 class that neither level places, so it
+# links and registers here but spawns on neither proof level.
+#
+# ==== THE ONE INBOUND NAME RACE, AND WHY IT COSTS AN ALIAS RETIREMENT ======
+# A full sweep of every src/ TU outside ov090 for every ov090 symbol name found
+# exactly ONE crossing, and it is already live in the tree:
+#
+#   src/func_ov006_020d5e5c.c declares `extern int data_ov090_021343b0[]`
+#
+# 0x021343b0 is SHARK's typeinfo NAME STRING in ov090 ("9daShark_c") and
+# minigame table data in ov006, and the relocation's own module field settles
+# it -- `from:0x020d5eb4 kind:load to:0x021343b0 module:overlay(6)`, where
+# 0x020d5eb4 is that TU's own literal pool. The spelling is a wrong-overlay
+# crossing in the decomp, not a port question.
+#
+# The tree ALREADY routes it, in port/unmatched/MgBomroom_Faces.cpp:
+#     #pragma comment(linker, "/alternatename:_data_ov090_021343b0=_data_ov006_021343b0")
+# and that alias's own header says, correctly, that its LHS is "DEFINED NOWHERE
+# ELSE IN THE LINK". THIS MOUNT DEFINES IT. An /alternatename whose LHS is
+# defined is defeated SILENTLY, so on this branch the alias would stop working
+# and func_ov006_020d5e5c would bind to Shark's name string instead of ov006's
+# table -- the Coffin/Spindrift wrong-object shape, invisible to the byte gate
+# and to the linkage count.
+#
+# So this lane RETIRES the alias and routes the same crossing by -D instead:
+# set_source_files_properties on src/func_ov006_020d5e5c.c with
+# `data_ov090_021343b0=data_ov006_021343b0`. Same destination, same evidence,
+# and it survives the LHS becoming defined. port/tools/alternatename_guard.py
+# is what would have caught the alternative; it is not asked to.
+#
+# ==== TWO OUTBOUND NAME RACES, BOTH ov090-TU-SPELLS-ov091 ==================
+# The same sweep run the other way -- every name ov090's own 70 TUs spell,
+# checked against the module column of ov090's own relocation to that address --
+# found two, both the same shape and both pointing at ov090's OWN symbols under
+# ov091's spelling. ov091 shares the 0x02130f00 window and its .text runs to
+# 0x021344e8, so both addresses are code in ov091 and data-or-code in ov090:
+#
+#   src/func_ov090_02131608.cpp  spells func_ov091_02134498
+#       ov090's reloc: from:0x02131644 -> 0x02134498 module:overlay(90)
+#       0x02134498 in ov090 is data_ov090_02134498, a SharedFilePtr in .bss
+#       that __sinit_ov090_02133ce8 constructs with file id 0x3a3. The TU reads
+#       `.w[1]` off it and hands it to ModelAnim::SetAnim -- a FILE POINTER,
+#       which is what a SharedFilePtr's second word is. It is not a function.
+#
+#   src/func_ov090_02133830.c    spells func_ov091_02133710
+#       ov090's reloc: from:0x02133874 -> 0x02133710 module:overlay(90)
+#       0x02133710 in ov090 is func_ov090_02133710, Shark's own helper, inside
+#       Shark's .text block (0x0213367c..0x02133ca0). The call sits at the end
+#       of func_ov090_02133830, which is Shark's own body.
+#
+# Both are routed by -D on the crossing TU, by address, never by label. Left
+# alone they would link (both ov091 names exist as real ov091 TUs) and run the
+# WRONG BODY on a level that loads both overlays.
+#
+# ==== THE FOUR VTABLE WIDTHS: ALL 31, AND THE ONE ROUTE THAT LIES ==========
+# Read slot by slot out of config/arm9/overlays/ov090/relocs.txt with every
+# target resolved through config/arm9/symbols.txt (the ov072/ov077 method).
+#
+#   class       table       A reloc run  B next dsd sym  TRUTH  what pins it
+#   Skeeter     0x02134168      31            31          31    both agree
+#   MantaRay    0x0213423c      31            31          31    both agree
+#   CheepCheep  0x02134324      31            31          31    both agree
+#   Shark       0x021343ec      31            37 LIES      31    tail + 6 zeros
+#
+# ALL FOUR ARE 31 SLOTS, the plain Actor layout. The SEMANTIC TAIL pins every
+# one: slot 30 == 0x020100dc Actor::OnAimedAtWithEggReturnVec is the last Actor
+# slot, and none of the four is Platform-derived, so none carries a 32nd. All
+# four derive from Enemy (each _Spawn calls _ZN5EnemyC2Ev), not from
+# Model/ModelAnim -- they EMBED a ModelAnim at +0x30c -- so T1's DEFAULT
+# applies and all four tables stay ROM-SHAPED.
+#
+# ROUTE B LIES ON Shark ONLY. Its next dsd symbol is data_ov090_02134480, the
+# .bss start, giving 0x94 = 37 slots. Slots 31..36 (0x02134468..0x02134480) are
+# ZERO in the raw image -- .data's tail padding up to .bss's align-32 boundary,
+# not six null virtuals. The reloc run stops at slot 30 for that table, which is
+# the independent confirmation. The identical shape as ov077's HeaveHo.
+#
+# Own bodies per class (every other slot is the shared Actor/ActorBase half,
+# byte-identical across all four):
+#
+#   slot  Skeeter               MantaRay              CheepCheep            Shark
+#    0    Skeeter::InitRes      MantaRay::InitRes     CheepCheep::InitRes   Shark::InitRes
+#    3    ::CleanupResources    ::CleanupResources    ::CleanupResources    ::CleanupResources
+#    6    ::Behavior            ::Behavior            ::Behavior            ::Behavior
+#    9    ::Render              ::Render              ::Render              ::Render
+#   12    ::OnPendingDestroy    ::OnPendingDestroy    ::OnPendingDestroy    ::OnPendingDestroy
+#   16    SkeeterD1             MantaRayD1            CheepCheepD1          SharkD1
+#   17    SkeeterD0             MantaRayD0            CheepCheepD0          SharkD0
+#   18    func_ov090_0213264c   Actor::OnYoshiTryEat  Actor::OnYoshiTryEat  Actor::OnYoshiTryEat
+#   19    func_ov090_02132620   Actor::OnTurnIntoEgg  Actor::OnTurnIntoEgg  Actor::OnTurnIntoEgg
+#   29    func_ov090_02132618   Actor::OnAimedAtWithEgg (x3)
+# Skeeter is the only one of the four with own bodies in 18/19/29; the other
+# three take the arm9 Actor defaults there. MantaRay additionally lacks
+# Skeeter's slot-18/19 pair, so its table's slots 18/19/29 are all arm9.
+#
+# ==== CLASS IDENTITY: NO dsd SHIFT IN THIS OVERLAY (checked, not assumed) ==
+# The wave-1 lanes hit a dsd class-identity shift in four of five overlays, so
+# every identity here was derived from that table's OWN vtable[-1] typeinfo
+# record read through to its name string, never from a dsd label:
+#
+#   table       vtable[-1]  typeinfo record                     name string
+#   0x02134168  0x02134138  0209a764 02134120 021081c0  ->  "9daMenbo_c"
+#   0x0213423c  0x0213420c  0209a764 021341f4 021081c0  ->  "9daManta_c"
+#   0x02134324  0x021342e4  0209a764 021342f0 021081c0  ->  "12daPukupuku_c"
+#   0x021343ec  0x021343bc  0209a764 021343b0 021081c0  ->  "9daShark_c"
+#
+# Each record is [__si_class_type_info][name ptr][base 0x021081c0], and every
+# base is the SAME ov002 record -- the shared Enemy typeinfo, consistent with
+# all four deriving from Enemy. Cross-checked against slot 0 of each table:
+# 0x02134168[0] is _ZN7Skeeter13InitResourcesEv, 0x0213423c[0] is
+# _ZN8MantaRay13InitResourcesEv, 0x02134324[0] is
+# _ZN10CheepCheep13InitResourcesEv, 0x021343ec[0] is
+# _ZN5Shark13InitResourcesEv. Identity, RTTI name and method prefix agree on
+# all four. THE CONFIG'S LABELS ARE CORRECT HERE; the seat is still by address.
+#
+# THREE RTTI-SPELLING PAIRS, one per class except MantaRay. dsd names three of
+# the four tables twice -- _ZTV7Skeeter == _ZTV9daMenbo_c, _ZTV10CheepCheep ==
+# _ZTV12daPukupuku_c, _ZTV5Shark == _ZTV9daShark_c -- and each pair is ONE table
+# under two spellings, which is what the typeinfo read above proves. The src
+# TUs use both: each D1 and each _Spawn spells the C++ name, each D0 spells the
+# RTTI name. MantaRay has only _ZTV8MantaRay in config (no _ZTV9daManta_c row)
+# and every MantaRay TU spells that one name, so it needs no bridge.
+# hal/actor_classes_ov090.cpp defines the C++ name and aliases the RTTI name
+# onto it, the _ZTV10dBgActor_c / _ZTV8Platform shape.
+#
+# ==== THE PER-CLASS .data LAYOUT IS UNIFORM AND SELF-CHECKING ==============
+#     [PMF source pairs][name string][tuning triple][typeinfo][SpawnInfo][vtable]
+#   Skeeter     0x021340e0 (8 pairs)  0x02134120  0x0213412c  0x02134138  0x02134144  0x02134168
+#   MantaRay    0x021341e4 (2 pairs)  0x021341f4  0x02134200  0x0213420c  0x02134218  0x0213423c
+#   CheepCheep  0x021342b8 (4 pairs)  0x021342f0  0x021342d8  0x021342e4  0x02134300  0x02134324
+#   Shark       0x021343a0 (2 pairs)  0x021343b0     --       0x021343bc  0x021343c8  0x021343ec
+# (CheepCheep's name string sorts after its triple because it is 15 bytes and
+# padded to 0x10; Shark has no tuning triple at all.)
+#
+# The sixteen {function, 0} PMF SOURCE pairs are the fourth width shape the
+# ov026 lane pinned, and here dsd bounded every one of them correctly at 8-byte
+# stride -- so route B did NOT over-read any of the four tables the way it did
+# for ov077's Lakitu and Spiny. Every pair's word[0] lands inside its own
+# class's .text block, which is the check:
+#   Skeeter's 8    -> 02131648 02131a74 02131608 02131ac4 02131584 02131c48
+#                     02131db0 02131b94   (all in 0x02130f00..0x02132654)
+#   MantaRay's 2   -> 021327e4 02132a58   (all in 0x0213269c..0x02132fe8)
+#   CheepCheep's 4 -> 02133200 02133290 02133190 021331c4  (0x02133034..0x02133634)
+#   Shark's 2      -> 0213387c 02133830   (all in 0x0213367c..0x02133ca0)
+# All sixteen delta words are ZERO in the ROM, so a plain call through the fn
+# word is the same call -- which is what makes the eight host-copied dispatch
+# sites legal. hal/actor_classes_ov090.cpp's port_ov090_states_seat() rewrites
+# each pair's fn word with its HOST body's address, validating the mounted word
+# against the ROM's own address first, BEFORE the four sinits copy them into
+# the eight bss cells.
+#
+# ==== THE FOUR VTABLES ARE EXCLUDED, AS HOST STORAGE ======================
+# The ov015/ov016/ov022/ov045/ov077/ov080 rule -- a mounted vtable hands a
+# factory DS code addresses. No dsd symbol falls inside any of the four spans,
+# so no interior split has to be excluded with them:
+#   0x02134168..0x021341e4  230  31 slots  _ZTV7Skeeter    / _ZTV9daMenbo_c
+#   0x0213423c..0x021342b8  226  31 slots  _ZTV8MantaRay
+#   0x02134324..0x021343a0  227  31 slots  _ZTV10CheepCheep/ _ZTV12daPukupuku_c
+#   0x021343ec..0x02134468  225  31 slots  _ZTV5Shark      / _ZTV9daShark_c
+# Shark's six trailing zero pad words (0x02134468..0x02134480) are not mounted
+# either: no symbol names them and .bss starts at 0x02134480.
+#
+# Excluding a vtable does NOT stretch the symbol before it: ovdata.py sizes
+# every entry off the next symbol in the overlay's own symbols.txt, not off the
+# next MOUNTED one (tools/ovdata.py, the `nxt = next((s for s, _ in syms ...`
+# line, where `syms` is the full config list), clamped to the delinks section
+# end. So each SpawnInfo is 0x24 and stops at its vtable, and --pack's padding
+# stands in for the four excluded spans.
+#
+# ==== WHAT IS MOUNTED, AND THE T3 AUDIT ====================================
+# 61 symbols: every ov090 .data and .bss symbol that is not a vtable and not a
+# .ctor word. There are no phantom splits in this overlay and NO EXPLICIT SIZE
+# PIN IS NEEDED -- which is a measured result, not an omission. Every size was
+# checked against what the overlay's own code writes through it:
+#
+#   the sixteen 0x8 .data rows    the PMF source pairs, {fn, 0}, 8 bytes each,
+#                                 dsd bounded every one at 8-byte stride
+#   the four name strings         0xc / 0xc / 0x10 / 0xc; "12daPukupuku_c" is
+#                                 15 bytes with its nul and takes the 0x10
+#   the three tuning triples      0xc each, three words, no code writes past
+#   the four typeinfo records     0xc each, exactly [kind][name][base]
+#   the four SpawnInfos           0x24 each, nine words, the ROM record
+#   the ten 0x8 .bss rows         SharedFilePtr objects (480/488/490/498/4a0,
+#                                 524/52c, 55c/564, 5a4/5ac) -- 8 bytes, none
+#                                 split; the ov025 half-SharedFilePtr trap does
+#                                 not fire here. Each is constructed by name in
+#                                 a sinit with its own file id (0x39d..0x3a3,
+#                                 0x325/0x326, 0x418/0x419)
+#   the ten 0xc .bss rows         func_020731dc destructor list NODES (4a8 4b4
+#                                 4c0 4cc 4d8, 534 540, 56c 578, 5b4 5c0) --
+#                                 the exact 8d1f9d13b shape, and dsd sized every
+#                                 one of them 0xc correctly
+#   the eight 0x10 .bss cells     the two-record PMF state cells (4e4 4f4 504
+#                                 514, 54c, 584 594, 5cc). Each sinit writes
+#                                 exactly TWO 8-byte records into its cell, so
+#                                 0x10 is exactly right for seven of them
+#   data_ov090_021345cc           0x14 inferred (last .bss symbol, so the
+#                                 fallback is the section end 0x021345e0) where
+#                                 only 0x10 is written. OVERSIZED, HARMLESS --
+#                                 the ov077 data_ov077_02127d18 shape. Left
+#                                 unpinned deliberately: pinning it down would
+#                                 be a guess about the four bytes nothing names.
+#
+# ==== SOURCE INVENTORY, COUNTED THREE WAYS =================================
+# config/arm9/overlays/ov090/symbols.txt has 70 kind:function rows and
+# delinks.txt names 70 src/ TUs. All 70 exist in the tree. ZERO are
+# NONMATCHING-bannered and ZERO are MISSING, so this overlay needs no loud L2
+# face for a missing body -- the first pack in the campaign where that is true.
+# 29 of the 70 are .cpp and 41 are .c; seven carry no `complete` line in
+# delinks (func_ov090_021310b4, Skeeter::Behavior, CheepCheep::InitResources
+# and the four sinits) and all seven still have a full body in the tree.
+#   delinked-complete-to-a-src-TU  63
+#   present but not marked complete 7
+#   NONMATCHING-bannered            0
+#   MISSING                         0
+#                                  --
+#                                   70   == symbols.txt's function count
+#
+# ==== THE WINDOW (T6) ======================================================
+# Measured from config/arm9/overlays/*/delinks.txt: the 0x02130f00 window holds
+# ov090 (ends 0x021345e0), ov091 (ends 0x021356e0, MOUNTED) and ov092 (ends
+# 0x021325c0, unmounted). ov090 is STRICTLY INSIDE ov091's span, so it adds no
+# new ground and cannot take a resolved target away from another mount -- the
+# footprint argument, not a full ovdata.py --cross re-run. ov006's much larger
+# span also contains all of it; ov006 is mounted per-symbol and the one address
+# the two mounts both name is 0x021343b0, settled above. alias_audit.py is run
+# anyway and read, because a shared window with a mounted sibling is exactly the
+# Coffin/Spindrift condition.
+data_ov090_021340e0 data_ov090_021340e8 data_ov090_021340f0 data_ov090_021340f8
+data_ov090_02134100 data_ov090_02134108 data_ov090_02134110 data_ov090_02134118
+data_ov090_02134120 data_ov090_0213412c data_ov090_02134138 Skeeter_SpawnInfo
+data_ov090_021341e4 data_ov090_021341ec data_ov090_021341f4 data_ov090_02134200
+data_ov090_0213420c MantaRay_SpawnInfo
+data_ov090_021342b8 data_ov090_021342c0 data_ov090_021342c8 data_ov090_021342d0
+data_ov090_021342d8 data_ov090_021342e4 data_ov090_021342f0 CheepCheep_SpawnInfo
+data_ov090_021343a0 data_ov090_021343a8 data_ov090_021343b0 data_ov090_021343bc
+Shark_SpawnInfo
+data_ov090_02134480 data_ov090_02134488 data_ov090_02134490 data_ov090_02134498
+data_ov090_021344a0 data_ov090_021344a8 data_ov090_021344b4 data_ov090_021344c0
+data_ov090_021344cc data_ov090_021344d8 data_ov090_021344e4 data_ov090_021344f4
+data_ov090_02134504 data_ov090_02134514 data_ov090_02134524 data_ov090_0213452c
+data_ov090_02134534 data_ov090_02134540 data_ov090_0213454c data_ov090_0213455c
+data_ov090_02134564 data_ov090_0213456c data_ov090_02134578 data_ov090_02134584
+data_ov090_02134594 data_ov090_021345a4 data_ov090_021345ac data_ov090_021345b4
+data_ov090_021345c0 data_ov090_021345cc

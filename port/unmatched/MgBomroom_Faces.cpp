@@ -45,7 +45,24 @@
 // port/tools/alternatename_guard.py checks post-link. A defined LHS defeats an
 // /alternatename silently, and that is exactly the class the guard exists to
 // catch; this one has no definition anywhere, on any target.
-
-/* data_ov090_021343b0 -> data_ov006_021343b0. Same address, and the ov006
-   spelling is the one the relocation names and the mount defines. */
-#pragma comment(linker, "/alternatename:_data_ov090_021343b0=_data_ov006_021343b0")
+//
+// ---------------------------------------------------------------------------
+// RETIRED, run rel0215 wave 2 (lane cast-ov090), AND THE ROUTING STILL APPLIES.
+// The directive here used to be
+//     /alternatename:_data_ov090_021343b0=_data_ov006_021343b0
+// which worked only while nothing DEFINED the left-hand side -- exactly the
+// condition the paragraph above records. ov090 now has its own per-symbol mount
+// (port/ov090_syms.txt) and data_ov090_021343b0 is SHARK's typeinfo name string
+// "9daShark_c", so the alias became inert and func_ov006_020d5e5c would have
+// read that string as its OAM table: no link error, no byte-gate signal, wrong
+// object at run time -- the Coffin/Spindrift shape.
+//
+// The routing moved to the guard's own remedy, a per-source -D on the ONE
+// reader (src/func_ov006_020d5e5c.c) in port/CMakeLists.txt beside the ov090
+// slice block, note (c). Nothing about the ruling changes: the relocation's
+// module field still says overlay(6), the ov006 spelling is still the one the
+// ROM names, and src/ is still not edited. What changes is that the binding no
+// longer depends on a name staying undefined somewhere else in the tree. This
+// is the same retirement, for the same reason, that lane cast-ov036 made to
+// hal/actor_classes_ov022.cpp's data_ov036_021140d4 alias one wave earlier.
+// ---------------------------------------------------------------------------

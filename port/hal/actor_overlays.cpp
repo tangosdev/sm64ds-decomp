@@ -1042,6 +1042,20 @@ void __sinit_ov036_021126c8(void);
 void __sinit_ov036_02112730(void);
 void __sinit_ov036_0211279c(void);
 void __sinit_ov036_02112944(void);
+/* run rel0215 wave 2, lane cast-ov090: ov090 per-symbol -- the water enemy
+   pack's four own sinits, one per class, in ROM order (0x02133ce8 Skeeter,
+   0x02133ea8 MantaRay, 0x02133f4c CheepCheep, 0x02134020 Shark). ALL FOUR
+   build a PMF state cell as well as their SharedFilePtrs, which is why
+   port_ov090_states_seat() has to run between the patch and the first sinit --
+   see the call site below and hal/actor_classes_ov090.cpp. Not a level
+   overlay, so no whole-image half. */
+void port_ov090_pack_check(void);
+void port_ov090_syms_patch(void);
+void port_ov090_states_seat(void);   /* hal/actor_classes_ov090.cpp */
+void __sinit_ov090_02133ce8(void);
+void __sinit_ov090_02133ea8(void);
+void __sinit_ov090_02133f4c(void);
+void __sinit_ov090_02134020(void);
 
 /* The six wave-3/4/5 bring-ups, each defined beside the cast it serves and
    each holding its own done-guard. See the consolidation note at the bottom
@@ -1415,6 +1429,22 @@ extern "C" void port_actor_overlays_sinits(void)
     __sinit_ov036_02112730();   /* ARMED_ROTATING_PLATFORM's two */
     __sinit_ov036_0211279c();   /* TRICKY_TRIANGLES' ten */
     __sinit_ov036_02112944();   /* FLYING_CARPET's three */
+
+    /* run rel0215 wave 2, lane cast-ov090: ov090's FOUR own-class sinits, in
+       ROM order. This lane registers every class in the overlay, so all four
+       run; nothing here is left unrun the way gate 193's note describes.
+       THE ORDER INSIDE THIS BLOCK IS NOT FREE: port_ov090_states_seat()
+       rewrites each of the sixteen mounted PMF source records' fn word from
+       the ROM's DS address to the host body's, and it has to happen after
+       port_ov090_syms_patch() has laid the mount down and BEFORE the first
+       sinit copies those records into the eight bss cells. */
+    port_ov090_pack_check();
+    port_ov090_syms_patch();
+    port_ov090_states_seat();
+    __sinit_ov090_02133ce8();   /* SKEETER: 5 SharedFilePtrs + 4 state cells */
+    __sinit_ov090_02133ea8();   /* MANTA_RAY: 2 SharedFilePtrs + 1 state cell */
+    __sinit_ov090_02133f4c();   /* CHEEP_CHEEP: 2 SharedFilePtrs + 2 cells */
+    __sinit_ov090_02134020();   /* SHARK: 2 SharedFilePtrs + 1 state cell */
 
     /* ---- the six bring-ups that used to ride the first registry fill ------
      *
