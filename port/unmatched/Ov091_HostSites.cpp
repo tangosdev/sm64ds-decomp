@@ -42,7 +42,10 @@
  *     c0000005 accessing 00000000, and the frames resolve exactly through the
  *     collision: Stump::Render+0x26 -> ModelAnim::Virtual18 ->
  *     ModelAnim::Virtual10 -> Model::Virtual10. So this host copy names
- *     ModelAnim::Render outright, the ov090 remedy. Offsets are Stump.h's own:
+ *     ModelAnim::Render outright, the ov090 remedy. The hazard class itself is
+ *     documented at the source -- hal/cxxname_bridge.cpp:517-520, beside the
+ *     ModelAnim2 fill -- so a reader ruling on the next such Render should
+ *     start there rather than at a fault. Offsets are Stump.h's own:
  *     mVariant 0x374, unk_0b0 0xb0, mModelAnim 0x300. The scale argument is a
  *     NULL Vector3, read off the source's literal `m5(0)` -- FWOOSH passes
  *     none, the way MantaRay, CheepCheep and Shark do and Skeeter does not.
@@ -345,15 +348,22 @@ extern "C" int _ZN5Stump6RenderEv(void *selfv)
  *
  * A SIXTH NAME NEEDED NO BRIDGE AND IS THE ONE WORTH WRITING DOWN.
  * main's TU calls `func_ov002_020aea30`, and 0x020aea30 is a SHARED-WINDOW
- * address that names two different functions:
- *     this tree  ov002/symbols.txt:26  func_ov002_020aea30            size 0x8c
- *     this tree  ov004/symbols.txt:50  _ZN5Enemy12KillByAttackER5Actor size 0x48
- * and main's config attaches the name `func_ov004_020aea30` to the ov002 body.
- * The ov091 relocation itself says `to:0x020aea30 module:overlays(2,4)` -- dsd
- * declining to choose. ov002 is the resident one at level time, and this link
- * already defines `_func_ov002_020aea30` (port/unmatched/Enemy_UpdateDeath.cpp),
- * so main's spelling resolves here unchanged and no bridge is written. Reading
- * the address alone would have picked KillByAttack, which is a different
+ * address at which TWO DIFFERENT FUNCTIONS live, one per overlay. Read per
+ * file, never merged -- a merged lookup over both symbol tables returns
+ * whichever was read last, which is how an earlier draft of this note got the
+ * attribution backwards:
+ *     ov002/symbols.txt:26   func_ov002_020aea30   0x8c   both trees agree
+ *     ov004/symbols.txt:50   0x48                  this tree calls it
+ *                            _ZN5Enemy12KillByAttackER5Actor, main calls it
+ *                            func_ov004_020aea30
+ * So the two trees AGREE about the ov002 body and differ only about the ov004
+ * one, and main's spelling is this tree's spelling for the function this TU
+ * actually calls. The ov091 relocation itself says
+ * `to:0x020aea30 module:overlays(2,4)` -- dsd declining to choose. ov002 is the
+ * resident one at level time, and this link already defines
+ * `_func_ov002_020aea30` (port/unmatched/Enemy_UpdateDeath.cpp), so main's
+ * spelling resolves here unchanged and no bridge is written. Resolving by the
+ * ADDRESS alone could have picked the ov004 body instead, which is a different
  * function of a different size.
  * ==========================================================================*/
 extern "C" void func_ov091_021339fc(char *c)

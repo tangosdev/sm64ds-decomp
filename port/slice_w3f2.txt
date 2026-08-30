@@ -79,8 +79,13 @@
 #      FOUND BY RUNNING IT. The first level-22 run with this seat in faulted on
 #      frame 1 with c0000005 accessing 00000000, and the frames resolved
 #      Stump::Render+0x26 -> ModelAnim::Virtual18 -> ModelAnim::Virtual10 ->
-#      Model::Virtual10. Nothing static in this lane's checks would have caught
-#      it: the TU compiles, it links, and vtspan sizes the table correctly.
+#      Model::Virtual10. None of this lane's checks would have caught it -- the
+#      TU compiles, it links, and vtspan sizes the table correctly -- but the
+#      HAZARD CLASS is documented at the source: hal/cxxname_bridge.cpp:517-520
+#      states it next to the ModelAnim2 fill ("No dual-fill here: Render's ROM
+#      slot (5) is Virtual18's MSVC slot, so shadow-TU Render dispatch cannot be
+#      served by the same array"). Read that before ruling on any Render that
+#      shadows a ModelAnim rather than a Model.
 #
 #  (3) ONE MSVC FRONT-END REFUSAL.
 #        src/func_ov091_021339fc.c is NONMATCHING-bannered ("hand-written asm,

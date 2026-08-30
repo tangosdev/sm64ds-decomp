@@ -94,6 +94,12 @@
  * Stump::Render+0x26 -> ModelAnim::Virtual18 -> ModelAnim::Virtual10 ->
  * Model::Virtual10. The lifts' Render was left in the slice on the same
  * evidence: it was run and it does not fault.
+ * The HAZARD CLASS was already written down, though, and the next reader should
+ * start there rather than at a fault: hal/cxxname_bridge.cpp:517-520 states it
+ * beside the ModelAnim2 fill -- "No dual-fill here: Render's ROM slot (5) is
+ * Virtual18's MSVC slot, so shadow-TU Render dispatch cannot be served by the
+ * same array". A Render shadowing a ModelAnim is that case; a Render shadowing
+ * a plain Model is not.
  *
  * THE STATE SEAT, NINE RECORDS, TWO SINITS.
  * Both classes run pointer-to-member state machines whose SOURCE records the

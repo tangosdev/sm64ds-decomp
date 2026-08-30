@@ -160,11 +160,27 @@ ACTOR_EXT_SLOT_AUTHORITY = {
     # rows and not keyed off the slot number: this binary was swept for
     # indirect transfers through offset 0x7c in BOTH forms, the wider sweep
     # lane cleanup-w2 established, and it finds TWENTY-TWO sites -- FOURTEEN
-    # calls and EIGHT tail jumps:
+    # calls and EIGHT tail jumps.
+    #
+    # THE ADDRESS LIST BELOW IS MEASURED AT A SPECIFIC TIP AND GOES STALE ON ANY
+    # CHANGE TO port/unmatched/Ov091_HostSites.cpp. It is a list of RVAs in
+    # walk_window.exe, so anything that changes the SIZE of a function linked
+    # ahead of these sites slides them. That already happened once inside this
+    # lane and it is the reason this paragraph exists: the sweep was recorded,
+    # then the next commit replaced func_ov091_021339fc's body in that object
+    # with the shorter one propagated from origin/main, and every site above
+    # 0x005D6B20 moved down by exactly 0x30 while the recorded list did not.
+    # Nine of the twenty-two were wrong for one commit. The COUNTS and the SHAPE
+    # -- 22 through +0x7c, 14 calls, 8 tail jumps, 0 live pushes -- were
+    # unaffected, so the ruling never moved; only the evidence did. RE-RUN THE
+    # SWEEP AND REWRITE THESE before quoting them, and re-run it whenever that
+    # host file changes.
+    #
+    # Re-measured at 889719a10:
     #   0046A49B 00542310 00542316 00543440 00546216 00546306 005877C7
-    #   005AF1A4 005B04FD 005B0624 005B4A69 005BAD46 005BE41B 005E22C1
-    #   005E23A1 005E24FF 005E2761 005E2A7E 005E2ABE 005E2C0D 005E2D6C
-    #   005EA5FB
+    #   005AF1A4 005B04FD 005B0624 005B4A69 005BAD46 005BE41B 005E2291
+    #   005E2371 005E24CF 005E2731 005E2A4E 005E2A8E 005E2BDD 005E2D3C
+    #   005EA5CB
     # NO ARGUMENT PUSH IS LIVE AT THE TRANSFER IN ANY OF THE TWENTY-TWO -- the
     # narrow claim, not "no window contains a push": the sweep retires a push
     # at an intervening `call` or `add esp`, drops the window at a `ret`, and
