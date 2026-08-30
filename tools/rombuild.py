@@ -291,7 +291,7 @@ def init_section_sources():
     return {rel for (_d, _name, rel, _addr, _size, sec) in cands if sec == ".init"}
 
 
-def _isolate(obj, rel, syms, data_sink=None, compiler_only=None):
+def _isolate(obj, rel, syms, data_sink=None, compiler_only=None, intact_tus=None):
     """Reduce a compiled `src/` object to its declared function(s).
 
     A legacy source owns one function and takes the unchanged singular isolation path.
@@ -319,6 +319,17 @@ def _isolate(obj, rel, syms, data_sink=None, compiler_only=None):
         # can fail the build. See tools/romdata_check.py for why it is not a gate.
         data_sink.extend(RDC.check_object(obj, rel))
     selected = (syms or {}).get(rel, pathlib.Path(rel).stem)
+    intact = (intact_tus or {}).get(rel.replace("\\", "/"))
+    if intact is not None:
+        if not isinstance(selected, (list, tuple)) or not selected:
+            return "intact TU policy requires one or more enrolled function symbols"
+        try:
+            import tu_production as TP  # noqa: PLC0415 - only intact TUs need it
+            prepared, _evidence = TP.prepare_intact_object(obj.read_bytes(), intact)
+        except Exception as exc:  # noqa: BLE001 - one source gets one build verdict
+            return f"intact TU preparation refused: {exc}"
+        obj.write_bytes(prepared)
+        return None
     if isinstance(selected, (list, tuple)):
         if not selected:
             return "source owns no enrolled functions"
@@ -713,6 +724,63 @@ def compiler_only_policies(enrolled=None, manifest=None, homes=None):
     return out
 
 
+def intact_tu_policies(enrolled=None, manifest=None):
+    """Manifest entries admitted to the normal build as one intact compiler object.
+
+    This is deliberately opt-in.  A non-text manifest is not enough: the entry must
+    be promoted, request ``production_mode: intact-object``, and carry a successful
+    ordinary scratch link proving every claimed range, all modules, and the full ROM.
+    The compile path re-runs the exact object/data/relocation checks on every raw object;
+    this admission record prevents an unverified research manifest from selecting the
+    policy in the first place.
+    """
+    data = TUM.load() if manifest is None else manifest
+    active = None if enrolled is None else {
+        str(rel).replace("\\", "/") for rel in enrolled
+    }
+    out, errors = {}, []
+    for entry in data.get("entries", []):
+        if entry.get("production_mode") != "intact-object":
+            continue
+        source = str(entry.get("promoted_source")
+                     or entry.get("source", "")).replace("\\", "/")
+        if active is not None and source not in active:
+            continue
+        label = entry.get("id", source or "<unknown>")
+        if not source.startswith("src/"):
+            errors.append(f"{label}: intact-object policy has no production src/ path")
+            continue
+        if source in out:
+            errors.append(f"{source}: intact-object policy is declared by multiple entries")
+            continue
+        if entry.get("status") != "promoted":
+            errors.append(f"{label}: enrolled intact-object entry is not promoted")
+        section_names = {row.get("name") for row in entry.get("sections", [])
+                         if isinstance(row, dict)}
+        if ".text" not in section_names or not (section_names - {".text"}):
+            errors.append(f"{label}: intact-object policy needs .text and non-text claims")
+        linkcheck = (entry.get("verification") or {}).get("linkcheck") or {}
+        phases = linkcheck.get("phases") or {}
+        if linkcheck.get("result") != "scratch-data-verified":
+            errors.append(f"{label}: intact-object policy needs scratch-data-verified "
+                          "ordinary link evidence")
+        for phase in ("delink", "lcf", "compile", "link", "checkModules", "rom"):
+            if phases.get(phase) is not True:
+                errors.append(f"{label}: intact-object proof phase {phase} is not green")
+        if linkcheck.get("symbolCheckNewVsBaseline") != []:
+            errors.append(f"{label}: intact-object proof has new or unknown symbol errors")
+        ranges = linkcheck.get("tuRanges") or []
+        if not ranges or any(row.get("differingBytes") != 0 for row in ranges):
+            errors.append(f"{label}: intact-object proof does not show every range exact")
+        sha = (linkcheck.get("rom") or {}).get("sha256")
+        if not isinstance(sha, str) or len(sha) != 64:
+            errors.append(f"{label}: intact-object proof has no full-ROM SHA-256")
+        out[source] = entry
+    if errors:
+        raise BuildError("intact TU policy", 1, "\n".join(errors))
+    return out
+
+
 def _definition_symbols(rel, rows):
     """Collapse owned records only for one exact legacy outer-owner alias shape.
 
@@ -784,7 +852,7 @@ def retarget_text_section(obj, section=".init"):
 
 
 def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_root=None,
-                data_sink=None, prebuilt=None, compiler_only=None):
+                data_sink=None, prebuilt=None, compiler_only=None, intact_tus=None):
     """Compile one enrolled source file to the object path dsd's objects.txt names.
 
     Returns (rel, error-or-None, outcome), where outcome is how the object was
@@ -824,7 +892,7 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_roo
             err = _retarget(obj, rel, init_srcs)
             if err:
                 return rel, f"retarget: {err}", "error"
-            err = _isolate(obj, rel, syms, data_sink, compiler_only)
+            err = _isolate(obj, rel, syms, data_sink, compiler_only, intact_tus)
             if err:
                 return rel, f"isolate: {err}", "error"
             return rel, None, "hit"
@@ -858,18 +926,18 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_roo
         if err:
             return rel, f"retarget: {err}", "error"
         if key is None:
-            err = _isolate(obj, rel, syms, data_sink, compiler_only)
+            err = _isolate(obj, rel, syms, data_sink, compiler_only, intact_tus)
             return (rel, f"isolate: {err}", "error") if err else (rel, None, "miss")
         deps = cache.deps_from(scratch)
         if deps is None:
-            err = _isolate(obj, rel, syms, data_sink, compiler_only)
+            err = _isolate(obj, rel, syms, data_sink, compiler_only, intact_tus)
             return (rel, f"isolate: {err}", "error") if err else (rel, None, "uncacheable")
         # Cache the RAW object, then isolate the working copy. Storing the reduced
         # form instead would bake this transformation into every entry, so any later
         # fix to it would be masked by isolate()'s own idempotence -- which is exactly
         # how the STB_LOPROC bug survived a rebuild and forced SCHEMA 2.
         cache.put(key, deps, obj)
-        err = _isolate(obj, rel, syms, data_sink, compiler_only)
+        err = _isolate(obj, rel, syms, data_sink, compiler_only, intact_tus)
         return (rel, f"isolate: {err}", "error") if err else (rel, None, "miss")
     finally:
         if scratch:
@@ -1015,6 +1083,9 @@ def main():
         init_srcs = init_section_sources()
         syms = enrolled_symbols()
         compiler_only = compiler_only_policies(srcs)
+        intact_tus = intact_tu_policies(srcs)
+        report["intactTus"] = sorted(entry.get("id", source)
+                                     for source, entry in intact_tus.items())
         # Collected during the compile because that is the only point at which the
         # objects still carry the data mwcc emitted -- see _isolate. None switches the
         # measurement off entirely; it never affects what gets linked either way.
@@ -1033,6 +1104,7 @@ def main():
                         lambda s: compile_one(s, vers, cache, init_srcs, syms,
                                               data_sink=data_sink,
                                               compiler_only=compiler_only,
+                                              intact_tus=intact_tus,
                                               prebuilt=tu_overrides.get(
                                                   s.replace("\\", "/"))), srcs):
                     outcomes[outcome] = outcomes.get(outcome, 0) + 1
