@@ -754,10 +754,92 @@ static void snd_coin_probe(void)
     _ZN5Sound9PlayBank3EjRK7Vector3(0x12, cam);
 }
 
+/* ---- SM64DS_SND_BREAKPROBE=<frame>: THE STAR CONTAINER, ON DEMAND ---------
+ *
+ * "Breaking the star container is silent" is a claim about one request that a
+ * walking harness never issues: the container has to be hit, and a hit cannot
+ * be scripted the same way twice. So this runs the ROM's own break, unchanged,
+ * on a real container off the behaviour list:
+ *
+ *     StarMarker::Behavior          -- src/_ZN10StarMarker8BehaviorEv.cpp:78-84
+ *       -> func_ov002_020e7d84      -- the break: Sound::Play(3, 0x53) through
+ *          func_02012694(0x53, actor + 0x74), the cylinder cleared, and the
+ *          three Particle::NewSimple bursts 0x12c/0x12d/0x12e
+ *
+ * 0x53 is NCS_SE_SCT_GLASS_BROKEN in the SDAT's own symbol block, and the
+ * marker it fires from is the container: StarMarker::InitResources gives every
+ * mState != 0 marker the second model (data_ov002_0211092c) and a
+ * MovingCylinderClsnWithPos, where mState == 0 gets the plain glow. Both
+ * functions are in the port's link (port/slice_gate79.txt:11 and :21).
+ *
+ * THE SECOND CALL IS NOT A SECOND SOUND, IT IS THE SAME ONE IN RANGE. The four
+ * containers on arena map 0 stand thousands of units from where the player
+ * enters, and Sound::Play's own 3D cull (func_02048720, `if (dist > lim)` with
+ * lim = data_02099fac = 550) refuses anything past its limit -- which is the
+ * DS's answer too, and tells us nothing about whether the sound would sound.
+ * So the ROM's own break call is issued a second time at the PLAYER's own
+ * +0x74, the camera-space position the coin probe already uses for the same
+ * reason. Same entry point, same kind, same id. Nothing after either call is
+ * the probe's. */
+extern "C" {
+extern int data_020a4b78[];               /* the behaviour list head */
+extern void func_ov002_020e7d84(char *c); /* StarMarker's own break */
+extern void func_02012694(unsigned int id, const void *camSpacePos);
+}
+
+static void snd_break_probe(void)
+{
+    static int at = -1;
+    static int frame, fired;
+    if (at < 0) {
+        const char *e = getenv("SM64DS_SND_BREAKPROBE");
+        at = e ? atoi(e) : 0;
+        if (at > 0)
+            fprintf(stderr, "[breakprobe] armed for frame %d: the ROM's own "
+                    "func_ov002_020e7d84 on a live STAR_MARKER container\n",
+                    at);
+    }
+    if (at <= 0) return;
+    if (++frame != at || fired) return;
+    fired = 1;
+
+    char *hit = 0;
+    for (int *node = (int *)(size_t)data_020a4b78[0]; node;
+         node = (int *)(size_t)node[1]) {
+        char *o = (char *)(size_t)node[2];
+        if (!o || *(unsigned short *)(o + 0xc) != 180) continue;
+        if (*(unsigned char *)(o + 0x1d8) == 0) continue;   /* not a container */
+        hit = o;
+        break;
+    }
+    if (hit) {
+        const int *p = (const int *)(hit + 0x5c);
+        const int *c = (const int *)(hit + 0x74);
+        fprintf(stderr, "[breakprobe] frame %d: STAR_MARKER %p state %d at "
+                "(%d,%d,%d), camera-space (%d,%d,%d) -- running the break\n",
+                frame, (void *)hit, (int)*(unsigned char *)(hit + 0x1d8),
+                p[0] >> 12, p[1] >> 12, p[2] >> 12,
+                c[0] >> 12, c[1] >> 12, c[2] >> 12);
+        func_ov002_020e7d84(hit);
+    } else {
+        fprintf(stderr, "[breakprobe] frame %d: no STAR_MARKER with "
+                "mState != 0 on the behaviour list\n", frame);
+    }
+
+    void *player = data_0209f394[data_0209f250];
+    if (player) {
+        fprintf(stderr, "[breakprobe] frame %d: and the same break call, "
+                "func_02012694(0x53), at the player's own +0x74 so the 3D cull "
+                "cannot be the answer\n", frame);
+        func_02012694(0x53, (char *)player + 0x74);
+    }
+}
+
 extern "C" void sdat_host_tick(void)
 {
     sd_consumer_init();
     snd_coin_probe();
+    snd_break_probe();
     // The ARM9's sound frame first, then the ARM7's: that is the order on
     // hardware (func_020132d8 -> func_0204f03c runs in the game's update, the
     // other core consumes after), and it matters here because the recycle and

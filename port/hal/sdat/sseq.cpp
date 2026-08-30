@@ -580,9 +580,42 @@ int run_track(Player &pl, int pi, int ti)
             if (condition) tk.wait = (int)d;
             break;
         }
-        case 0x81: {                            // program / bank change
+        case 0x81: {                            // program change
+            // NOT `& 0x7f`. That mask is the general-MIDI habit and it is
+            // wrong for THIS SDAT, which the data says plainly:
+            //
+            //   * the SBNKs are bigger than 128 instruments. Slot counts in
+            //     data/sound_data.sdat run 209, 210, 212, 221, 301 and 491,
+            //     and the instrument records past 127 are real -- bank 0x36
+            //     (NCS_BANK_SE_T_VS, the one the VS arenas load) carries
+            //     instruments at 131, 200 and 209. Under a 7-bit mask no
+            //     sequence can ever address them, so they would be dead bytes
+            //     in a shipped ROM.
+            //   * the sequences encode exactly those numbers. The whole body
+            //     of SEQARC_SCENE entry 0x53, NCS_SE_SCT_GLASS_BROKEN -- the
+            //     star container shattering -- is `81 81 48 3c 6e 00 ff`: a
+            //     program change whose varlen is two bytes and works out to
+            //     200, then one note, then end of track. Bank 0x36 has 200.
+            //   * and the masked value is unreachable. 200 & 0x7f is 72, and
+            //     program 72 is present in NOT ONE of the SDAT's 134 banks.
+            //     A read that produces an index no bank in the game can
+            //     answer is the wrong read, and start_note's own
+            //     "program %d has no note there" is where it ended: the
+            //     request arrived, the voice was allocated, and the note was
+            //     dropped one step later, without a sound.
+            //
+            // A conservative count -- only entries whose FIRST command is the
+            // program change, so no jump or call is followed -- puts 141
+            // SEQARC entries on the wrong side of that mask, 60 of them in
+            // SEQARC_SCENE. Three of those resolve in bank 0x36 unmasked and
+            // in nothing masked: FIRE_GO_OUT and KTL_FIRE_GO_OUT (program
+            // 131) and GLASS_BROKEN (200).
+            //
+            // sdat_bank_note already bounds the index against the bank's own
+            // instrument count, so an out-of-range program still refuses --
+            // it just refuses for the bank's reason instead of a made-up one.
             sd_u32 v = argVarlen();
-            if (condition) tk.prog = (int)(v & 0x7f);
+            if (condition) tk.prog = (int)v;
             break;
         }
         case 0x93: {                            // open track
