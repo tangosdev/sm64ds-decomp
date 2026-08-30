@@ -95,6 +95,78 @@
  * two animation descriptors must read a nonzero frame count -- which is exactly
  * the field whose zero divided by zero in Animation::Advance. A pointer that
  * lands on plausible-looking garbage fails here instead of ticking quietly.
+ *
+ * ===========================================================================
+ * RUN REL0215 WAVE 3 (lane w3-a2): THE SEAT BECOMES PER LOADED LEVEL
+ * ===========================================================================
+ *
+ * WHAT WAS MISSING, and it is one direction rather than the whole mechanism.
+ * The pass above seats on level 27 and NEVER RELEASES. It hung off
+ * port_mount_row_lvl27 alone, so once Tick Tock Clock had been entered the
+ * eight words named ov035's copy for the rest of the process -- across a warp
+ * to any other level and back. ovdata.py's cross_mode() asks for "a seat that
+ * RE-PATCHES PER LOADED LEVEL"; a seat that patches on one level and is never
+ * told about the others is half of that, and the half it is missing is the one
+ * that makes the words honest everywhere else.
+ *
+ * WHAT THE RIGHT PER-LEVEL VALUE IS, MEASURED RATHER THAN ASSUMED. The obvious
+ * generalisation -- resolve each target through the NOW-LOADED level's own
+ * mount, PortLevelDesc::at(rom), the port_ovNN_at shape -- is WRONG HERE, and
+ * this seat's own readback is what proves it. Every level overlay is linked at
+ * the same base, so at() on level 33 happily returns a host address for
+ * 0x02112138; what lives there in ov033's image is not a CLPS block, the
+ * readback reads a magic that is not 'CLPS', and the seat aborts. These twelve
+ * addresses are not a shared window slot that every level fills in with its own
+ * equivalent -- they are Tick Tock Clock's own resource blocks, and no other
+ * level has anything at those addresses that these classes could use.
+ *
+ * So the per-loaded-level value is TWO-VALUED, not one-per-level:
+ *
+ *     loaded level 27  ->  ov035's copy, seated and readback-verified
+ *     any other level  ->  the RAW ROM address, released
+ *
+ * and "raw is the honest answer" is ovdata.py's own words for the second row.
+ *
+ * WHY RELEASING IS SAFE, and it is a measurement rather than an argument. Lane
+ * w3-a2 swept ALL FIFTY mounted levels (walk_window, 20 frames each) and
+ * grepped each level's spawn census for ids 108..118. Exactly ONE level names
+ * any of them: level 27, with 108 x8, 110 x4, 111 x3, 112 x1, 113 x11, 114 x5,
+ * 118 x3. The other forty-nine name none. Evidence:
+ * runs/rel0215/out/w3-a2/ttc-id-sweep.txt. Nothing off Tick Tock Clock reads
+ * these words, which is the same fact the wave-18 note above states and now has
+ * a number behind it.
+ *
+ * THE FOUR .text WORDS STAY BOUND TO ov035, AND THAT IS WHY THIS IS COHERENT.
+ * The other four of ov065's twelve level-window reads are literal-pool words
+ * inside compiled TUs; a compiled TU takes the block's ADDRESS, so that address
+ * is fixed at LINK time and no per-level pass can move it. They resolve by name
+ * onto data_ov035_02112118 / _02112198 / _021121b8 / _02112258. Making the
+ * eight follow the loaded level while the four cannot would put the two halves
+ * of one cluster on different storage on every level but 27. The two-valued
+ * rule above keeps all twelve on ov035 exactly where the classes run and off it
+ * everywhere else, so the cluster is never split.
+ *
+ * NO ONE-SHOT GUARD, WHICH IS THIS PASS'S ANSWER TO THE .dsstate QUESTION.
+ * level_boot.cpp states the rule: "A ONE-SHOT GUARD BELONGS ON THE SAME SIDE OF
+ * THE CAPTURED SECTION AS THE WORK IT GUARDS", because a guard on the far side
+ * of a save-state restore and the bytes it describes can disagree. The eight
+ * words ARE .dsstate -- ovdata.py routes every mounted byte into the captured
+ * section -- so a host-side guard here would be exactly that defect, and a
+ * bracketed one would only move the problem. This pass carries NO guard of any
+ * kind: the value it must write is a pure function of the loaded level id, and
+ * what it accepts before writing is the ROM address or the host address it
+ * would itself write. There is no second description of the bytes, so there is
+ * nothing for a restore to desynchronise, whichever way it moves them. It is
+ * re-runnable by construction, allocates nothing on the host and registers
+ * nothing with the host, which is the test level_boot.cpp applies to every pass
+ * that sits inside the bracket.
+ *
+ * WHERE IT IS CALLED FROM. port_level_mount_at(), on BOTH of its paths -- the
+ * patch path and the CACHE HIT path. The cache-hit path is load-bearing rather
+ * than an optimisation: a session that goes 27 -> 33 -> 27 gets a cache hit on
+ * the third mount, and the words at that moment hold whatever level 33 left
+ * them holding. A seat that only ran when an overlay was freshly patched would
+ * put Tick Tock Clock's second visit on released words.
  */
 #include <cstdio>
 #include <cstdlib>
@@ -117,7 +189,7 @@ extern unsigned char data_ov035_02112158[];
 extern unsigned char data_ov035_02112178[];
 extern unsigned char data_ov035_021121f8[];
 
-void port_ttc_level_data_seat(void);
+void port_ttc_level_data_seat(int level_id);
 
 }  /* extern "C" */
 
@@ -191,45 +263,89 @@ bool readback_ok(const Seat &s, char *why, unsigned long whyLen)
     return true;
 }
 
+void wr32(unsigned char *p, unsigned v)
+{
+    p[0] = (unsigned char)(v & 0xff);
+    p[1] = (unsigned char)((v >> 8) & 0xff);
+    p[2] = (unsigned char)((v >> 16) & 0xff);
+    p[3] = (unsigned char)((v >> 24) & 0xff);
+}
+
+/* Tick Tock Clock. The only level whose object table names a Ttc id -- swept
+   over all fifty mounted levels, see the header. */
+const int TTC_LEVEL = 27;
+
+/* SM64DS_TRACE_TTCSEAT=1: one line per word per mount, carrying the VALUE
+   written. Quiet by default because this now runs on every level mount rather
+   than only on Tick Tock Clock's, and forty-nine of the fifty have nothing to
+   say. The summary line below is unconditional and names the level, so a log
+   still shows which way each mount went. */
+int trace_on(void)
+{
+    static int on = -1;
+    if (on < 0)
+        on = std::getenv("SM64DS_TRACE_TTCSEAT") != 0;
+    return on;
+}
+
 }  /* namespace */
 
-extern "C" void port_ttc_level_data_seat(void)
+extern "C" void port_ttc_level_data_seat(int level_id)
 {
-    int seated = 0, already = 0;
+    const bool ttc = (level_id == TTC_LEVEL);
+    int wrote = 0, held = 0;
     for (int i = 0; i < SEAT_COUNT; ++i) {
         const Seat &s = g_seats[i];
         unsigned char *word = s.block + s.off;
         unsigned have = rd32(word);
         unsigned host = (unsigned)(size_t)s.host;
-        if (have == host) {
-            ++already;                     /* re-entry, .dsstate not reset */
-        } else if (have == s.rom) {
-            word[0] = (unsigned char)(host & 0xff);
-            word[1] = (unsigned char)((host >> 8) & 0xff);
-            word[2] = (unsigned char)((host >> 16) & 0xff);
-            word[3] = (unsigned char)((host >> 24) & 0xff);
-            ++seated;
+        /* THE TWO VALUES THIS WORD MAY EVER HOLD. Anything else is a third
+           value nobody predicted -- another pass writing here, a mount that
+           moved, a rolled-back image that did not roll back whole -- and it
+           aborts rather than being overwritten quietly. This is the same
+           abort-on-mismatch discipline port_jrb_staticrock_clps_seat and
+           port_ov089_keymodels_fixup use, widened by one accepted value
+           because this seat now writes in both directions. */
+        if (have != s.rom && have != host) {
+            std::fprintf(stderr,
+                         "FATAL: Ttc level-data seat: %s+%#x holds %08x on level "
+                         "%d; the ROM says %08x and this seat writes %08x or "
+                         "%08x -- WRONG BYTES\n",
+                         s.blockName, s.off, have, level_id, s.rom, s.rom, host);
+            std::abort();
+        }
+        unsigned want = ttc ? host : s.rom;
+        if (have != want) {
+            wr32(word, want);
+            ++wrote;
         } else {
-            std::fprintf(stderr,
-                         "FATAL: Ttc level-data seat: %s+%#x holds %08x, the ROM "
-                         "says %08x and this seat writes %08x -- WRONG BYTES\n",
-                         s.blockName, s.off, have, s.rom, host);
-            std::abort();
+            ++held;
         }
+        /* THE READBACK IS THE PROOF, and it only has a subject when the word
+           names host storage. Released, the word carries a raw DS address that
+           this process deliberately does not provide -- there is nothing to
+           dereference and dereferencing it is the wave-17 failure. */
         char why[96];
-        if (!readback_ok(s, why, sizeof why)) {
-            std::fprintf(stderr,
-                         "FATAL: Ttc level-data seat: %s+%#x now names %08x for "
-                         "%s, but that storage reads %s\n",
-                         s.blockName, s.off, host, s.what, why);
-            std::abort();
+        if (ttc) {
+            if (!readback_ok(s, why, sizeof why)) {
+                std::fprintf(stderr,
+                             "FATAL: Ttc level-data seat: %s+%#x now names %08x "
+                             "for %s, but that storage reads %s\n",
+                             s.blockName, s.off, host, s.what, why);
+                std::abort();
+            }
+        } else {
+            std::snprintf(why, sizeof why, "raw, level %d provides no such block",
+                          level_id);
         }
-        std::fprintf(stderr, "  [ttc-seat] %s+%#-4x -> %s  (%s, %s)\n",
-                     s.blockName, s.off, s.what, why,
-                     have == host ? "already seated" : "seated");
+        if (trace_on())
+            std::fprintf(stderr, "  [ttc-seat] %s+%#-4x = %08x -> %s  (%s, %s)\n",
+                         s.blockName, s.off, want, s.what, why,
+                         have == want ? "held" : (ttc ? "seated" : "released"));
     }
     std::fprintf(stderr,
-                 "  [ttc-seat] %d level-window reads closed onto ov035 (%d newly "
-                 "seated, %d already), all readbacks verified\n",
-                 SEAT_COUNT, seated, already);
+                 "  [ttc-seat] level %d: 8 ov065 level-window reads %s (%d "
+                 "written, %d already right)%s\n",
+                 level_id, ttc ? "SEATED onto ov035" : "RELEASED to raw",
+                 wrote, held, ttc ? ", all readbacks verified" : "");
 }

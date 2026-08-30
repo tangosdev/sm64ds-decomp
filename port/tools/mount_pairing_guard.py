@@ -32,8 +32,12 @@ the naming convention that caught wave 8 by eye is now enforced by the build.
 
 Exit 0 with a one-line verdict, 1 and a per-row diagnosis on any disagreement.
 Source-parsing on purpose: the alternative is calling each thunk at boot to see
-which index it uses, and a thunk that mounts is not safe to call speculatively
-(level 27's carries the ov035/Ttc data seat behind it).
+which index it uses, and a thunk that mounts is not safe to call speculatively:
+every one of them patches an overlay image in place, and port_level_mount_at
+re-patches ov065's Ttc level-window words to whatever level id it is handed.
+(The example this line used to give -- "level 27's carries the ov035/Ttc data
+seat behind it" -- retired with lane w3-a2, which moved that call off the thunk
+and into port_level_mount_at. The reason stands; the thunks are uniform now.)
 """
 
 import os

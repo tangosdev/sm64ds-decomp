@@ -1782,6 +1782,16 @@ static int port_mount_trace(void)
     return on;
 }
 
+/* run rel0215 wave 3 (lane w3-a2): the ov065 Tick Tock Clock level-data seat,
+   which is the one pass here that must run on EVERY level rather than on its
+   own. It re-patches ov065's eight level-window reads per loaded level -- onto
+   ov035's copy on level 27, back to their raw ROM addresses on every other
+   level -- so a warp off Tick Tock Clock does not leave them naming ov035 for
+   the rest of the process. It carries no guard of its own and is a pure
+   function of the level id, which is what makes calling it twice below correct
+   rather than merely harmless. See hal/ttc_level_data_seat.cpp. */
+extern "C" void port_ttc_level_data_seat(int level_id);
+
 static void *port_level_mount_at(int idx)
 {
     void **mounted = g_level_mounted;
@@ -1790,6 +1800,11 @@ static void *port_level_mount_at(int idx)
             std::fprintf(stderr, "[mount] level %d: CACHE HIT %p (the patch "
                          "pass does not run)\n", port_level_table[idx].id,
                          mounted[idx]);
+        /* NOT under the cache. The cache describes whether this level's IMAGE
+           has been patched; the Ttc words are ov065's, they are whatever the
+           previously loaded level left them, and a re-entry to 27 after a trip
+           through 33 arrives here rather than below. */
+        port_ttc_level_data_seat(port_level_table[idx].id);
         return mounted[idx];
     }
     if (port_mount_trace())
@@ -1824,6 +1839,7 @@ static void *port_level_mount_at(int idx)
        matched src. Off (no SM64DS_STAGE_MOD) it reads one env var and
        returns. */
     port_stage_mod_apply(d->id, lvl);
+    port_ttc_level_data_seat(d->id);
     return lvl;
 }
 
@@ -1901,23 +1917,24 @@ static void *port_mount_row_lvl50(void) { return port_level_mount_at(34); }
 /* run linkw wave 18 (lane w18): level 27 is the only level the ov065 Ttc
    classes can run on, which is the disambiguation ovdata.py's cross pass is
    missing -- it drops these targets because each lands inside EIGHTEEN
-   mounted overlay windows. Seating from here closes ov065's eight
-   level-window reads onto ov035's own copy and verifies the storage each
-   one now names. See hal/ttc_level_data_seat.cpp and port/ov035_syms.txt. */
-extern "C" void port_ttc_level_data_seat(void);
-static void *port_mount_row_lvl27(void)
-{
-    void *p = port_level_mount_at(35);
-    port_ttc_level_data_seat();
-    return p;
-}
+   mounted overlay windows. Seating closes ov065's eight level-window reads
+   onto ov035's own copy and verifies the storage each one now names. See
+   hal/ttc_level_data_seat.cpp and port/ov035_syms.txt.
+
+   run rel0215 wave 3 (lane w3-a2): the seat call MOVED OFF THIS THUNK and into
+   port_level_mount_at, where it runs for every level on both paths. Hanging it
+   here made it one-directional -- it seated on 27 and nothing ever released,
+   so the words named ov035 for the rest of the process across a warp anywhere
+   else. This thunk is a plain row again. */
+static void *port_mount_row_lvl27(void) { return port_level_mount_at(35); }
 /* run linkw wave 21 (lane w21): five more stage ids, table indices 36..40 in
    the order the table lists them. Named by level like every thunk since wave 8,
    so a merge that renumbers the table cannot silently point one of these at
    another level's row -- and port/tools/mount_pairing_guard.py now checks that
-   by parsing this file rather than leaving it to the eye. Index 35 and
-   port_mount_row_lvl27 above are untouched: lane w19's ov035/Ttc seat call
-   hangs off that thunk. */
+   by parsing this file rather than leaving it to the eye. (Index 35 and
+   port_mount_row_lvl27 above once carried the ov035/Ttc seat call and were
+   called out here as the one thunk with a body; lane w3-a2 moved that call into
+   port_level_mount_at, so every thunk in this block is now the plain shape.) */
 static void *port_mount_row_lvl16(void) { return port_level_mount_at(36); }
 static void *port_mount_row_lvl21(void) { return port_level_mount_at(37); }
 static void *port_mount_row_lvl25(void) { return port_level_mount_at(38); }
@@ -1950,8 +1967,12 @@ static void *port_mount_row_lvl46(void) { return port_level_mount_at(45); }
    WHAT IT COST, so the next reader does not have to re-derive it.
    port_level_mounts_install pairs table[i] with mount_fns[i] positionally, so
    the mount REGISTRY (hal/level_change.cpp) held, for VS level 51, a function
-   that mounts Tick Tock Clock and runs port_ttc_level_data_seat() with it. The
-   registry's reader is port_level_overlay(level), and its live caller is
+   that mounts Tick Tock Clock and ran port_ttc_level_data_seat() with it (the
+   seat hung off that thunk at the time; lane w3-a2 has since moved it into
+   port_level_mount_at, where the level id it is passed comes from the row the
+   mount actually used, so this particular symptom cannot recur even with the
+   indices wrong). The registry's reader is port_level_overlay(level), and its
+   live caller is
    port_level_capture_kcl, which resolves the OUTGOING level's LVL_Overlay
    during a level change: leaving a VS map would have mounted an unrelated
    overlay mid-teardown and then looked up that overlay's KCL handle instead of
