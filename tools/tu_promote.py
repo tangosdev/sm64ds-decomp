@@ -22,17 +22,16 @@ The mechanical steps, all of which this performs and none of which it guesses at
 * migrate banked CONVERTED legacy paths to ``promoted-path#symbol`` identities,
   preserving the readability ratchet at function rather than physical-file granularity.
 
-It deliberately does NOT compile anything. The proof that a promotion is sound is
-``rombuild.py`` reporting 106/106 with ``mismatching: 0`` afterwards, and running it
-once over a batch is far cheaper than once per entry. Refusals here are only about
-facts that can be checked without a compiler: a missing file, a delinks entry that
-does not look the way the manifest says it does, a section span that does not cover
-the functions claimed inside it.
+It deliberately does NOT compile anything. It preflights the tracked full-ROM proof;
+after promotion, refresh the content-bound stock control, then require ``rombuild.py``
+to reproduce that stock ROM and report 106/106 with ``mismatching: 0`` plus the final
+linked-symbol/address-point gates. Refusals here need no candidate compile.
 """
 
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import pathlib
 import re
@@ -44,6 +43,8 @@ sys.path.insert(0, str(REPO / "tools"))
 
 import tu_manifest as TUM  # noqa: E402
 import tiers_ratchet as TR  # noqa: E402
+import rombuild as RB  # noqa: E402
+import tubuild as TB  # noqa: E402
 
 CONFIG = REPO / "config"
 
@@ -57,11 +58,6 @@ def delinks_path(module):
     if module in ("arm9", "main"):
         return CONFIG / "arm9" / "delinks.txt"
     return CONFIG / "arm9" / "overlays" / module / "delinks.txt"
-
-
-def _entry_re(source):
-    """One whole delinks entry: the path line plus its indented body."""
-    return re.compile(re.escape(source) + r":\n(?:[ \t]+[^\n]*\n)+\n?")
 
 
 def plan(entry):
@@ -90,11 +86,11 @@ def plan(entry):
     if (REPO / dest).exists():
         raise PromoteError(f"{ident}: {dest} already exists")
 
-    raw_sections = [s for s in entry.get("sections", []) if isinstance(s, dict)]
-    sections = [s for s in raw_sections if s.get("name") == ".text"]
-    if not sections:
-        raise PromoteError(f"{ident}: no .text section in the manifest")
-    owns_nontext = any(s.get("name") != ".text" for s in raw_sections) \
+    normalized_claims, claim_reasons = TB.manifest_section_claims(entry)
+    if claim_reasons:
+        raise PromoteError(f"{ident}: invalid manifest section claims: "
+                           + "; ".join(claim_reasons))
+    owns_nontext = any(s["name"] != ".text" for s in normalized_claims) \
         or bool(entry.get("data") or entry.get("rodata") or entry.get("bss"))
     if owns_nontext and entry.get("production_mode") != "intact-object":
         # Production isolation zeroes an object's data and rebinds the symbols to the
@@ -104,20 +100,23 @@ def plan(entry):
                            "production_mode: intact-object")
 
     claims = []
-    for section in raw_sections:
-        name = section.get("name")
-        try:
-            lo, hi = int(section["start"], 16), int(section["end"], 16)
-        except (KeyError, TypeError, ValueError):
-            raise PromoteError(f"{ident}: invalid section claim {section!r}") from None
-        if not isinstance(name, str) or not name.startswith(".") or lo >= hi:
-            raise PromoteError(f"{ident}: invalid section claim {section!r}")
-        claims.append((name, lo, hi))
+    spans = []
+    for section in normalized_claims:
+        name = section["name"]
+        module_section = section["module_section"]
+        lo, hi = section["start"], section["end"]
+        if (entry.get("production_mode") == "intact-object"
+                and module_section != name):
+            raise PromoteError(f"{ident}: intact-object claim {name} -> "
+                               f"{module_section} needs input-section retargeting, "
+                               "which is not implemented")
+        claims.append((module_section, lo, hi))
+        if name == ".text":
+            spans.append((lo, hi))
 
     funcs = entry.get("functions", [])
     if not funcs:
         raise PromoteError(f"{ident}: entry licenses no functions")
-    spans = [(lo, hi) for name, lo, hi in claims if name == ".text"]
     legacy = []
     for f in funcs:
         addr, size = int(f["address"], 16), int(f["size"], 16)
@@ -133,37 +132,42 @@ def plan(entry):
     dl = delinks_path(entry["module"])
     if not dl.is_file():
         raise PromoteError(f"{ident}: {dl} does not exist")
-    text = dl.read_text(encoding="utf-8")
-    for source in legacy:
-        n = len(_entry_re(source).findall(text))
-        if n != 1:
-            raise PromoteError(f"{ident}: {source} has {n} entries in "
-                               f"{dl.relative_to(REPO)}, expected exactly 1")
-    return {"id": ident, "source": src, "dest": dest, "delinks": dl,
-            "legacy": legacy, "spans": spans, "claims": claims, "functions": funcs}
+    if len(spans) != 1:
+        raise PromoteError(f"{ident}: production promotion needs exactly one .text "
+                           f"span, got {len(spans)}")
+    _header, _entries, _inside, _validated_claims, splice_reasons = \
+        TB.validate_tu_entry_splice(dl, spans[0][0], spans[0][1], dest, legacy,
+                                    normalized_claims)
+    if splice_reasons:
+        raise PromoteError(f"{ident}: current delinks ownership is not safe to splice: "
+                           + "; ".join(splice_reasons))
+    if entry.get("production_mode") == "intact-object":
+        prospective = copy.deepcopy(entry)
+        prospective["status"] = "promoted"
+        prospective["source"] = dest
+        try:
+            RB.intact_tu_policies([dest], manifest={"entries": [prospective]})
+        except RB.BuildError as exc:
+            raise PromoteError(f"{ident}: production admission preflight failed: "
+                               f"{exc.output}") from exc
+
+    return {"id": ident, "module": entry["module"], "source": src, "dest": dest,
+            "delinks": dl,
+            "legacy": legacy, "spans": spans, "claims": claims,
+            "section_claims": normalized_claims, "functions": funcs}
 
 
 def rewrite_delinks(p):
-    """N per-function entries out, one spanning entry in, in address order."""
-    text = p["delinks"].read_text(encoding="utf-8")
-    for source in p["legacy"]:
-        text = _entry_re(source).sub("", text, count=1)
-    body = "".join(f"    {name} start:0x{lo:08x} end:0x{hi:08x}\n"
-                   for name, lo, hi in p["claims"])
-    entry = f"{p['dest']}:\n    complete\n{body}\n"
-    # Address order is not cosmetic: it is how a reader of delinks.txt finds the entry
-    # that owns an address, and dsd emits the file sorted.
-    after = min(hi for _lo, hi in p["spans"])
-    nxt = None
-    for m in re.finditer(
-            r"^[^\s:][^\n]*:\n[ \t]+complete\n[ \t]+\.text start:0x([0-9a-fA-F]{8})",
-            text, re.M):
-        if int(m.group(1), 16) >= after:
-            nxt = m
-            break
-    text = (text[:nxt.start()] + entry + text[nxt.start():]) if nxt \
-        else text.rstrip("\n") + "\n\n" + entry
-    p["delinks"].write_text(text, encoding="utf-8", newline="")
+    """N per-function entries out, one spanning entry in, using the shared gate."""
+    replaced, reasons = TB.splice_tu_entry(
+        p["delinks"], p["spans"][0][0], p["spans"][0][1], p["dest"],
+        p["legacy"], p["section_claims"])
+    if reasons:
+        raise PromoteError(f"{p['id']}: delinks ownership changed after preflight: "
+                           + "; ".join(reasons))
+    if set(replaced) != set(p["legacy"]):
+        raise PromoteError(f"{p['id']}: shared splice replaced {replaced}, expected "
+                           f"{p['legacy']}")
 
 
 def rewrite_manifest(entry, p):
@@ -174,16 +178,21 @@ def rewrite_manifest(entry, p):
                     encoding="utf-8", newline="")
 
 
-def rewrite_attribution(plans, lineage):
-    """One override per absorbed symbol, so the consolidation keeps its authors.
+def attribution_update(plans, lineage):
+    """Prepare attribution overrides without changing the worktree.
 
     Without these, prepush_attribution reports every legacy basename as CREDIT LOST
     and the merge gate needs a label to pass -- for a change that took nothing away
     from anyone.
     """
     path = REPO / "attribution.json"
-    data = json.loads(path.read_text(encoding="utf-8"))
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise PromoteError(f"attribution data is unreadable: {exc}") from exc
     ov = data.setdefault("overrides", {})
+    if not isinstance(ov, dict):
+        raise PromoteError("attribution overrides must be an object")
     added = 0
     for p in plans:
         for f in p["functions"]:
@@ -196,6 +205,12 @@ def rewrite_attribution(plans, lineage):
                 ov[key] = who
                 added += 1
     data["overrides"] = dict(sorted(ov.items()))
+    return path, data, added
+
+
+def rewrite_attribution(plans, lineage, prepared=None):
+    """Write a preflighted attribution update."""
+    path, data, added = prepared or attribution_update(plans, lineage)
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n",
                     encoding="utf-8", newline="")
     return added
@@ -228,7 +243,9 @@ def converted_baseline_update(plans):
             if not any(key in converted for key in old_keys):
                 continue
             converted.difference_update(old_keys)
-            converted.add(f"{p['dest']}#{symbol}")
+            target = p["dest"] if len(p["functions"]) == 1 \
+                else f"{p['dest']}#{symbol}"
+            converted.add(target)
             moved += 1
 
     data["_note"] = TR.NOTE
@@ -248,6 +265,56 @@ def rewrite_converted_baseline(plans, prepared=None):
 def git(*args):
     subprocess.run(["git", *args], cwd=REPO, check=True,
                    stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+
+
+def batch_preflight(plans):
+    """Refuse a promotion batch before its first mutation if ownership is ambiguous."""
+    errors = []
+    destinations = {}
+    consumed = {}
+    claims_by_delinks = {}
+    required = set()
+    for p in plans:
+        dest = p["dest"]
+        if dest in destinations:
+            errors.append(f"{dest} is the destination of both {destinations[dest]} "
+                          f"and {p['id']}")
+        destinations[dest] = p["id"]
+        inputs = [("shadow source", p["source"])]
+        inputs.extend(("legacy source", rel) for rel in p["legacy"])
+        for role, rel in inputs:
+            required.add(rel)
+            owner = consumed.get(rel)
+            if owner and owner != p["id"]:
+                errors.append(f"{rel} is consumed by both {owner} and {p['id']}")
+            consumed[rel] = p["id"]
+            if not (REPO / rel).is_file():
+                errors.append(f"{p['id']}: {role} {rel} is not on disk")
+        owned = claims_by_delinks.setdefault(str(p["delinks"]), [])
+        for section, start, end in p.get("claims", []):
+            for other_start, other_end, other_id, other_section in owned:
+                if max(start, other_start) < min(end, other_end):
+                    errors.append(
+                        f"{p['id']} {section} 0x{start:08x}..0x{end:08x} overlaps "
+                        f"{other_id} {other_section} 0x{other_start:08x}.."
+                        f"0x{other_end:08x} in the same delinks file")
+            owned.append((start, end, p["id"], section))
+    for dest, owner in destinations.items():
+        if dest in consumed:
+            errors.append(f"{owner}: destination {dest} is also a source consumed "
+                          f"by {consumed[dest]}")
+
+    if errors:
+        raise PromoteError("batch preflight failed: " + "; ".join(errors))
+
+    for rel in sorted(required):
+        tracked = subprocess.run(
+            ["git", "ls-files", "--error-unmatch", "--", rel], cwd=REPO,
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
+        if not tracked:
+            errors.append(f"{rel} is not tracked by git")
+    if errors:
+        raise PromoteError("batch preflight failed: " + "; ".join(errors))
 
 
 def main():
@@ -274,9 +341,16 @@ def main():
 
     for why in refused:
         print(f"  refused  {why}")
-    if not plans:
+    if refused or not plans:
         print("tu_promote: nothing to promote.")
         return 1 if refused else 0
+
+    try:
+        batch_preflight(plans)
+    except PromoteError as exc:
+        print(f"  refused  {exc}")
+        print("tu_promote: nothing to promote.")
+        return 1
 
     for p in plans:
         print(f"  promote  {p['id']:38s} {len(p['functions'])} function(s), "
@@ -294,6 +368,11 @@ def main():
 
     import prepush_attribution as PA
     lineage = PA.lineage("HEAD")
+    try:
+        attribution = attribution_update(plans, lineage)
+    except PromoteError as exc:
+        print(f"  refused  {exc}")
+        return 1
     for p, entry in zip(plans, entries):
         rewrite_delinks(p)
         # `git mv` will not create the destination directory, and a promoted_source
@@ -304,13 +383,16 @@ def main():
             git("rm", "-q", source)
         rewrite_manifest(entry, p)
     converted = rewrite_converted_baseline(plans, converted_update)
-    added = rewrite_attribution(plans, lineage)
+    added = rewrite_attribution(plans, lineage, attribution)
     print(f"tu_promote: {len(plans)} entry(ies) promoted, "
           f"{sum(len(p['functions']) for p in plans)} function(s) consolidated, "
           f"{added} attribution override(s) added, "
           f"{converted} CONVERTED member identity/identities retained.")
-    print("tu_promote: now run `python tools/rombuild.py -j16 --no-rom` -- "
-          "106/106 with mismatching 0 is the proof.")
+    print("tu_promote: now refresh the content-bound control with "
+          f"`python tools/tubuild.py linkcheck --baseline --module "
+          f"{plans[0]['module']} -j16 --clean`, then run "
+          "`python tools/rombuild.py -j16` -- 106/106, mismatching 0, zero new "
+          "symbol errors, exact address points, and a stock-identical ROM are the proof.")
     return 1 if refused else 0
 
 

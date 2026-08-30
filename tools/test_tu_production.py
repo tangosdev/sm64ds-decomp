@@ -30,6 +30,42 @@ class ProductionTuAdmission(unittest.TestCase):
 
 
 class ProductionTuObjects(unittest.TestCase):
+    def test_automatic_intact_link_plan_uses_current_control_and_vtable_biases(self):
+        claims = [{"name": ".text", "start": 0x1000, "end": 0x1010},
+                  {"name": ".data", "start": 0x2000, "end": 0x2010}]
+        baseline = {"symbolErrors": ["[ERROR] old"], "romSha256": "ab" * 32}
+        entries = {"src/actors/Thing.cpp": {
+            "id": "ov047/Thing",
+            "verification": {"linkcheck": {
+                "symbolCheckErrors": ["[ERROR] old"],
+                "rom": {"sha256": "ab" * 32}}},
+        }}
+        with mock.patch.object(TP, "_strict_baseline", return_value=baseline), \
+                mock.patch.object(TP.TB, "manifest_section_claims",
+                                  return_value=(claims, [])), \
+                mock.patch.object(TP.TB, "partition_vtable_rebiases",
+                                  return_value=({"_ZTV1T": {"bias": 8}}, [])):
+            prepared = TP.prepare_intact_link_verification(entries)
+        self.assertIs(prepared["baseline"], baseline)
+        self.assertEqual(prepared["entries"], [{
+            "id": "ov047/Thing", "source": "src/actors/Thing.cpp",
+            "biases": {"_ZTV1T": {"bias": 8}},
+        }])
+
+    def test_automatic_intact_link_plan_rejects_laundered_control_error(self):
+        baseline = {"symbolErrors": ["[ERROR] old", "[ERROR] new"],
+                    "romSha256": "ab" * 32}
+        entries = {"src/actors/Thing.cpp": {
+            "id": "ov047/Thing",
+            "verification": {"linkcheck": {
+                "symbolCheckErrors": ["[ERROR] old"],
+                "rom": {"sha256": "ab" * 32}}},
+        }}
+        with mock.patch.object(TP, "_strict_baseline", return_value=baseline):
+            with self.assertRaisesRegex(TP.ProductionTuError,
+                                         "pre-promotion inventory"):
+                TP.prepare_intact_link_verification(entries)
+
     def test_intact_object_runs_all_fail_closed_policy_gates(self):
         entry = {"id": "ov047/Thing"}
         claims = [{"name": ".text", "start": 0x1000, "end": 0x1010},
@@ -78,7 +114,7 @@ class ProductionTuObjects(unittest.TestCase):
         }
         calls = [
             (True, "modules ok", 0.1),
-            (False, "[ERROR] old\nError: Some symbol(s) did not match.", 0.1),
+            (True, "[ERROR] old\nError: Some symbol(s) did not match.", 0.1),
         ]
         with mock.patch.object(TP.TB, "_run_dsd", side_effect=calls), \
                 mock.patch.object(TP.TB, "verify_linked_storage_aliases",
@@ -98,6 +134,15 @@ class ProductionTuObjects(unittest.TestCase):
             result = TP.verify_link("config.yaml", "final_link.o", prepared)
         self.assertFalse(result["ok"])
         self.assertEqual(result["newSymbolErrors"], ["[ERROR] new"])
+
+    def test_final_gate_rejects_symbol_check_operational_failure(self):
+        prepared = {"baseline": {"symbolErrors": []}, "entries": []}
+        calls = [(True, "modules ok", 0.1),
+                 (False, "tool crashed before producing an inventory", 0.1)]
+        with mock.patch.object(TP.TB, "_run_dsd", side_effect=calls):
+            result = TP.verify_link("config.yaml", "final_link.o", prepared)
+        self.assertFalse(result["ok"])
+        self.assertFalse(result["symbolsCommandOk"])
 
 
 if __name__ == "__main__":
