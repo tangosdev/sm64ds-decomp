@@ -10599,6 +10599,65 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov022_02112790.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN13RollingLogLll8BehaviorEv.cpp"
     PROPERTIES COMPILE_OPTIONS "/vmg;/vmm")
+# ---- w3-e / ov025, level 17 (SSL, the pyramid interior) -------------------
+#
+# The two ids wave 15 did not take: GRINDEL (162, x3) and SPINDEL (163, x1) --
+# together the whole of level 17's own remaining skip list, and the last of
+# ov025's four-id cast. The both-route derivation, the widths, the nine
+# inferred-stub rulings and the reclaimed host thunk are in
+# port/slice_w3e_ov025.txt and hal/actor_classes_ov025_w3e.cpp.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3e_ov025.txt" SLICE_W3E_OV025_LINES)
+set(SLICE_W3E_OV025_SOURCES "")
+foreach(line IN LISTS SLICE_W3E_OV025_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W3E_OV025_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND W3E_SOURCES hal/actor_classes_ov025_w3e.cpp ${SLICE_W3E_OV025_SOURCES})
+
+# W7, THREE MORE CROSS-NAME RENAMES, the same silent shape as W1/W2. Each TU
+# spells another overlay's name for an object ov025's own relocs resolve to
+# ov025, and ov027's / ov036's mounts DEFINE those names, so an /alternatename
+# would be defeated without a diagnostic:
+#   src/__sinit_ov025_021129dc.c   (162's model/collision pair)
+#     from:0x02112a34 kind:load to:0x02113a90 module:overlay(25)  spelled ov027
+#     from:0x02112a30 kind:load to:0x02113a98 module:overlay(25)  spelled ov036
+#   src/func_ov025_02111384.cpp    (163's CleanupResources)
+#     from:0x021113c4 kind:load to:0x02113a60 module:overlay(25)  spelled ov036
+# All three right-hand names join port/ov025_syms.txt with this lane.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/__sinit_ov025_021129dc.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov027_02113a90=data_ov025_02113a90;data_ov036_02113a98=data_ov025_02113a98")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov025_02111384.cpp"
+    PROPERTIES COMPILE_DEFINITIONS "data_ov036_02113a60=data_ov025_02113a60")
+#
+# W8, GRINDEL'S FACTORY, the same VT1 shape as ov022's 80 and 70. The ROM's two
+# stores are `str r1,[r4]` with the ov091 base 0x021351fc and then, after the
+# TextureSequence and ShadowModel constructors, `str r0,[r4]` with its own
+# 0x02113850 (pool words 0x02111d38 and 0x02111d3c). The recovered source has
+# the RTTI name on the dead first store and VT1 on the live second one.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/Grindel_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS "VT1=data_ov025_02113850")
+#
+# W9, THE RECLAIM W4 COULD NOT DO. src/_ZN11PyramidStep16CleanupResourcesEv.cpp
+# (id 87, slot 3) is the same G0/G1 SharedFilePtr shape as ov022's LAVA_PLANK
+# body, and wave 15 host-thunked it for the same reason. Here the rename
+# COMPILES, and the difference is exactly the test W4 records: this body's
+# targets are NOT declared in include/decl_common.h, so -DG1=... rewrites only
+# that header's own `extern int G1[]` and collides with nothing. The pool:
+#   from:0x02111ea0 kind:load to:0x02113ab8 module:overlay(25)   model file
+#   from:0x02111ea4 kind:load to:0x02113ab0 module:overlay(25)   collision file
+# Both are already in port/ov025_syms.txt (0x02113ab8 pinned to 8 there).
+# hal/actor_classes_ov025.cpp's slot-3 fill now calls the method.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN11PyramidStep16CleanupResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=data_ov025_02113ab8;G1=data_ov025_02113ab0")
 # ---- end lane w3-e ---------------------------------------------------------
 
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'

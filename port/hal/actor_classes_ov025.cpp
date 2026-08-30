@@ -316,14 +316,22 @@ extern "C" void port_ov25_bringup(void)
 // says the player is near. Its files are 1503 (model) and 1504 (collision).
 static int __fastcall ps_init(void *s, void *)
 { return _ZN11PyramidStep13InitResourcesEv(s); }
-/* Slot 3, held out of the slice and transcribed; see this file's header. */
+/* Slot 3, THE MATCHED TU -- run rel0215 wave 3 (lane w3-e) retired the
+   transcription this was. The ruling that held it out stands: the body spells
+   its two SharedFilePtrs as the shared placeholders G0/G1, and
+   hal/cxx_aliases.cpp binds those to the game heap and to SignPost's ov002
+   file pointers, so linking it as written Released live pointers. What changed
+   is the binding. Its own pool names the two objects --
+   0x02111ea0 -> 0x02113ab8 and 0x02111ea4 -> 0x02113ab0, both
+   module:overlay(25), both already mounted above -- and neither is declared in
+   include/decl_common.h, so the per-source -D compiles here. (The identical
+   rename on ov022's LAVA_PLANK body does NOT compile, because ITS targets are
+   in that header; the W4/W9 blocks in port/CMakeLists.txt carry both halves of
+   the test.) The transcription below is what proved the two addresses.
+     _ZN16MeshColliderBase7DisableEv(this + 0x124);
+     SharedFilePtr::Release(0x02113ab8);  SharedFilePtr::Release(0x02113ab0); */
 static int __fastcall ps_clean(void *s, void *)
-{
-    _ZN16MeshColliderBase7DisableEv((char *)s + 0x124);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov025_02113ab8);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov025_02113ab0);
-    return 1;
-}
+{ return ((PyramidStep *)s)->PyramidStep::CleanupResources(); }
 static int __fastcall ps_behavior(void *s, void *)
 { return _ZN11PyramidStep8BehaviorEv(s); }
 static int __fastcall ps_render(void *s, void *)

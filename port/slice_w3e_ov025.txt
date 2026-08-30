@@ -1,0 +1,117 @@
+# run rel0215 wave 3, lane w3-e: THE REST OF ov025's CAST (level 17, Shifting
+# Sand Land's pyramid interior). Wave 15 (slice_w15c.txt) seated PYRAMID_STEP
+# (87) and PYRAMID_LIFT (88) and wave 2's ov066 lane seated EYEROK (176, a
+# different overlay on the same level). This slice takes the TWO ids ov025 has
+# left -- GRINDEL (162) and SPINDEL (163) -- and closes the overlay.
+#
+# THE GAP CENSUS THIS LANE STARTED FROM. Every kind:function row in
+# config/arm9/overlays/ov025/symbols.txt joined to its delinks.txt src TU and
+# to walk_window's own object list in build/port/build.ninja:
+#     41 function rows, 41 distinct src TUs, 19 LINKED, 22 UNLINKED.
+#     0 MISSING bodies, 0 NONMATCHING banners, 0 rows without a delink row.
+# All 22 are below. ov025's cast is FOUR ids, not the "four classes" the
+# campaign plan's inventory listed (PyramidTag and PyramidTop are not spawn
+# -table ids at all; nothing in the arm9 table reaches them).
+#
+# ==== THE TWO IDS, BOTH ATTRIBUTION ROUTES =================================
+#
+# Route 1 = the arm9 spawn table word at 0x02090864 + id*4 out of
+# config/arm9/relocs.txt, then the SpawnInfo record's word[0] must land inside
+# ov025's own image AND the record's word[1] low halfword must equal the id the
+# slot was reached from. Raw bytes from extracted/overlays/overlay_0025.bin
+# (10432 B, decompressed -- T4).
+#
+#   id   SpawnInfo   word[0] spawnFunc          idhalf   x on L17
+#   162  0x0211382c  0x02111cf4 Grindel_Spawn      162   x3
+#   163  0x0211373c  0x02111898 func_ov025_02111898 163   x1
+#
+# Route 2, each Spawn's own final vtable store, and route 3, the RTTI typeinfo
+# at vtable[-1]:
+#   162 -> 0x02113850, typeinfo 0x021137ec -> "7daDkk_c",  base "11daDsnBase_c"
+#   163 -> 0x02113760, typeinfo 0x02113730 -> "7daDgr_c",  base "10dBgActor_c"
+#
+# THE BASELINE SKIP LIST AGREES. Level 17 on cons cc10acd4e: 91 spawned (23
+# classes), 5 skipped (3 classes) -- 162 x3, 163 x1, 348 x1. 348 is not ov025's
+# and stays skipped, named with its owner in the lane's report.
+#
+# THE NAMES ARE THE GAME'S OWN, and 163's ambiguity is settled here rather than
+# carried. symbols/actor_renames_report.txt reads
+#   NOVTABLE actor 162 Grindel (alloc=0x3a0)
+#   AMBIG actor 163 SPINDEL: ['ov021','ov025'] -> ov021
+#   NOVTABLE actor 163 Spindel (alloc=?)
+# The alloc figure confirms 162 independently: Grindel_Spawn asks
+# ActorBase::operator new for 928 bytes = 0x3a0. The AMBIG line resolves the
+# WRONG WAY, and both routes say so: at 0x0211373c ov021's image holds
+# w0=0x021136c8 (inside ov021, so route 1 passes) but w1 low half = 0, while
+# ov025's holds w0=0x02111898 (inside ov025) AND w1 low half = 163. Route 2 is
+# the whole point of requiring both. ID 163 IS ov025's SPINDEL.
+#
+# ==== NINE MARKER-CARRYING BODIES, ALL RULED ===============================
+#
+# Nine of the 22 carry `recovered from vtable slot identity`. Each was rebuilt
+# with tools/match.py at 2004/b56 against extracted/overlays/overlay_0025.bin
+# with --strict-relocs --module ov025: ALL NINE ARE MATCHING, so the recovered
+# source reproduces the ROM's bytes and every relocation destination. Rulings
+# in port/tools/inferred_stub_adjudicated.txt; run in
+# out/w3-e/ov025/adjudication.txt.
+#
+# ==== GRINDEL'S SLOTS 3 AND 9 ARE THWOMP'S, AND THEY ARE ALREADY LINKED ====
+#
+# 162 derives from daDsnBase_c, which is ov091's Thwomp base, so its table
+# takes slot 3 from 0x021331b8 (_ZN6Thwomp16CleanupResourcesEv) and slot 9 from
+# 0x02133210 (_ZN6Thwomp6RenderEv), and its Behavior and InitResources call
+# eight more ov091 bodies. All TEN are in walk_window.map on this lane's
+# baseline -- checked in the map, so this slice needs no ov091 line and no
+# ov091 mount edit.
+#
+# 162 also overrides slot 29 (Actor::OnAimedAtWithEgg) with an eight-byte body
+# that returns 0xce000, src/func_ov025_0211199c.c. Read off the table, not
+# inferred from the name.
+#
+# ==== ONE TU COMES BACK FROM A HOST THUNK ==================================
+#
+# src/_ZN11PyramidStep16CleanupResourcesEv.cpp (id 87, slot 3) was held out by
+# wave 15 and transcribed as ps_clean, because it spells its two SharedFilePtrs
+# as the shared placeholders G0/G1 and hal/cxx_aliases.cpp binds those to the
+# game heap and to SignPost's ov002 file pointers. Its own literal pool says
+# what they are: 0x02111ea0 -> 0x02113ab8 and 0x02111ea4 -> 0x02113ab0, both
+# module:overlay(25) and both already in port/ov025_syms.txt. Neither target is
+# declared in include/decl_common.h, so the per-source -D compiles here -- the
+# test that separates this from ov022's LAVA_PLANK body, which is the same
+# shape and cannot be renamed. hal/actor_classes_ov025.cpp's slot-3 fill now
+# calls the method.
+#
+# 22 lines below = the whole 22-row census tail.
+
+# ---- SPINDEL (163), table 0x02113760 --------------------------------------
+src/func_ov025_021111a0.c
+src/func_ov025_021111e4.c
+src/func_ov025_0211123c.cpp
+src/func_ov025_021112e0.cpp
+src/func_ov025_02111344.c
+src/func_ov025_02111384.cpp
+src/func_ov025_021113c8.cpp
+src/func_ov025_021113f0.c
+src/func_ov025_021117dc.cpp
+src/func_ov025_02111898.c
+
+# ---- GRINDEL (162), table 0x02113850 --------------------------------------
+src/func_ov025_021118c8.c
+src/func_ov025_02111928.c
+src/func_ov025_0211199c.c
+src/func_ov025_021119a4.cpp
+src/func_ov025_021119f4.c
+src/func_ov025_02111a84.cpp
+src/func_ov025_02111b64.cpp
+src/func_ov025_02111c24.cpp
+src/Grindel_Spawn.c
+
+# ---- PYRAMID_STEP (87)'s slot 3, reclaimed from wave 15's host thunk -------
+src/_ZN11PyramidStep16CleanupResourcesEv.cpp
+
+# ---- the two static initialisers these classes need ------------------------
+# ov025 has four; wave 15 runs two (87's and 88's). These are the other two:
+#   02112970  163's model/collision pair 0x02113a68 / 0x02113a60 (files 730/731)
+#   021129dc  162's                      0x02113a88 / 0x02113a90 (0x2dc/0x2dd)
+src/__sinit_ov025_02112970.c
+src/__sinit_ov025_021129dc.c

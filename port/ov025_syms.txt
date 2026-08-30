@@ -147,6 +147,31 @@ data_ov025_02112ca8 data_ov025_02112cc8:0x20 data_ov025_02112d48
 #   PyramidLift_SpawnInfo 0x021139b0 -- natural delta 0x24, the usual 8 bytes
 #   of vtable prologue past the end; pinned to 0x1c the same way.
 PyramidStep_SpawnInfo:0x1c PyramidLift_SpawnInfo:0x1c
+# run rel0215 wave 3 (lane w3-e): ov025's OTHER TWO IDS, GRINDEL (162) and
+# SPINDEL (163) -- the rest of level 17's own skip list. Additive only; no
+# existing line is touched.
+#
+# THE TWO SpawnInfo RECORDS, pinned to the same real 0x1c, so the +4 id
+# halfword the registry cross-checks reads out of the right bytes (162 = 0xa2,
+# 163 = 0xa3). Both classes' vtables (0x02113850 and 0x02113760) are
+# deliberately NOT here -- they are host arrays hal/actor_classes_ov025_w3e.cpp
+# fills, the ov015/ov016/ov045 rule -- and neither pin can reach one:
+# 0x0211382c + 0x1c = 0x02113848 and 0x0211373c + 0x1c = 0x02113758, both short
+# of their table.
+Grindel_SpawnInfo:0x1c data_ov025_0211373c:0x1c
+# THE TWO CLPS_BLOCKS, one per class, both carrying the "CLPS" magic at +0 and
+# both reaching MovingMeshCollider::SetFile -- 163's by literal out of its
+# InitResources, 162's through the three-word resource table below. Pinned to
+# 0x20 for the same reason the two above are: the raw image puts the magic at
+# 0x02112c28 and 0x02112d28 on a 0x20 stride, and both natural deltas over-read
+# (0x60 and 0x40) into the neighbouring blocks.
+data_ov025_02112c28:0x20 data_ov025_02112d28:0x20
+# 162's THREE-WORD RESOURCE TABLE, { model SharedFilePtr 0x02113a88, collision
+# SharedFilePtr 0x02113a90, CLPS_Block 0x02112d28 }, which func_ov025_02111c24
+# stores at +0x320. All three targets are mounted, so ovdata's pointer pass
+# rebases all three words rather than leaving DS addresses -- T2 satisfied by
+# construction. Next-symbol delta is 0xc, which is exact.
+data_ov025_02113814
 
 # ---- .bss 0x02113a60..0x02113b00 ------------------------------------------
 # Two SharedFilePtr pairs and their destructor-chain nodes, one pair per class,
@@ -165,6 +190,29 @@ PyramidStep_SpawnInfo:0x1c PyramidLift_SpawnInfo:0x1c
 # next-symbol delta for 0x02113ab8 is FOUR. Unpinned, the model file pointer's
 # second word would have landed outside its own host array while the sinit
 # wrote it.
+# run rel0215 wave 3 (lane w3-e): THE OTHER TWO PAIRS AND THEIR FOUR NODES,
+# built by the two sinits this lane links:
+#   02112970 -> model 02113a68 (file 730) + clsn 02113a60 (731)     id 163
+#   021129dc -> model 02113a88 (0x2dc)    + clsn 02113a90 (0x2dd)   id 162
+# T3: every delta here is exact and none needs a pin -- 8 for each
+# SharedFilePtr, 0xc for each chain node, and the last of them lands on
+# data_ov025_02113ab0 below, so nothing runs to the section end.
+#   02113a60  8    02113a68  8    02113a70  0xc  02113a7c  0xc
+#   02113a88  8    02113a90  8    02113a98  0xc  02113aa4  0xc
+# TWO of the eight are spelled by ANOTHER OVERLAY'S name in the recovered
+# source, and a third is spelled that way outside the sinit. All three are
+# renamed PER SOURCE rather than aliased, because ov027's and ov036's mounts
+# DEFINE those names and an /alternatename would be defeated silently -- the
+# Coffin/Spindrift shape. ov025's own relocs resolve all three to ov025:
+#   from:0x02112a34 kind:load to:0x02113a90 module:overlay(25)
+#     src/__sinit_ov025_021129dc.c spells data_ov027_02113a90
+#   from:0x02112a30 kind:load to:0x02113a98 module:overlay(25)
+#     src/__sinit_ov025_021129dc.c spells data_ov036_02113a98
+#   from:0x021113c4 kind:load to:0x02113a60 module:overlay(25)
+#     src/func_ov025_02111384.cpp spells data_ov036_02113a60
+data_ov025_02113a60 data_ov025_02113a68 data_ov025_02113a70
+data_ov025_02113a7c data_ov025_02113a88 data_ov025_02113a90
+data_ov025_02113a98 data_ov025_02113aa4
 data_ov025_02113ab0 data_ov025_02113ab8:0x8
 data_ov025_02113ac0 data_ov025_02113acc
 data_ov025_02113ad8 data_ov025_02113ae0

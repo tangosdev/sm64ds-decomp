@@ -1719,6 +1719,23 @@ void hal_fill_rolling_log_lll_vtable(void);           /* _ZTV12FallBlockLll, 32 
 extern unsigned char VolcanoFire_SpawnInfo[];         /* ov022 0x02114458, +4 = 243 */
 void *VolcanoFire_Spawn(void);                        /* ov022 0x02112918, 56 B */
 void hal_fill_volcano_fire_vtable(void);              /* _ZTV13RollingLogLll, 31 */
+/* run rel0215 wave 3 (lane w3-e): ov025's OTHER TWO IDS, level 17's pyramid
+   interior -- and the last of that overlay's four-id cast. 162 is GRINDEL by
+   the game's own id table (symbols/actor_renames_report.txt, confirmed a
+   second way by Grindel_Spawn's 928-byte allocation matching that file's
+   alloc=0x3a0) and derives from ov091's Thwomp base, taking its slots 3 and 9
+   from bodies already linked for THWOMP. 163 is SPINDEL, and that report
+   resolves it to ov021 -- wrongly: at 0x0211373c ov021's record passes route 1
+   and FAILS route 2 (w1 low halfword 0), while ov025's passes both. Neither
+   record is named <Class>_SpawnInfo by dsd for 163, so its row goes by the
+   mounted address. Derivation in port/slice_w3e_ov025.txt, fill in
+   hal/actor_classes_ov025_w3e.cpp. */
+extern unsigned char Grindel_SpawnInfo[];             /* ov025 0x0211382c, +4 = 162 */
+void *Grindel_Spawn(void);                            /* ov025 0x02111cf4, 76 B */
+void hal_fill_grindel_vtable(void);                   /* 0x02113850, 32 */
+extern unsigned char data_ov025_0211373c[];           /* ov025 0x0211373c, +4 = 163 */
+void *func_ov025_02111898(void);                      /* ov025 0x02111898, 48 B */
+void hal_fill_spindel_vtable(void);                   /* 0x02113760, 32 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2589,4 +2606,12 @@ void hal_fill_volcano_fire_vtable(void);              /* _ZTV13RollingLogLll, 31
     {70, "ROLLING_LOG_LLL", RollingLogLll_SpawnInfo, RollingLogLll_Spawn, \
      hal_fill_rolling_log_lll_vtable}, \
     {243, "VOLCANO_FIRE", VolcanoFire_SpawnInfo, VolcanoFire_Spawn, \
-     hal_fill_volcano_fire_vtable},
+     hal_fill_volcano_fire_vtable}, \
+    /* ---- run rel0215 wave 3 (lane w3-e): ov025's OTHER TWO IDS, the rest of \
+       level 17's own skip list. 163's row goes by ADDRESS because dsd names no \
+       SpawnInfo for it; 162's factory writes its own table through a \
+       per-source -DVT1 and registers directly. ---- */ \
+    {162, "GRINDEL", Grindel_SpawnInfo, Grindel_Spawn, \
+     hal_fill_grindel_vtable}, \
+    {163, "SPINDEL", data_ov025_0211373c, func_ov025_02111898, \
+     hal_fill_spindel_vtable},
