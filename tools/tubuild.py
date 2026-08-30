@@ -2887,15 +2887,43 @@ def content_tree_sha256(root):
     return digest.hexdigest()
 
 
+BASELINE_CONTROL_TOOLS = tuple(
+    REPO / "tools" / name for name in (
+        "objisolate.py", "reloc_audit.py", "rombuild.py", "rombuild_cache.py",
+        "rombuild_check.py", "rombuild_profile.py", "tu_manifest.py",
+        "tu_production.py", "tubuild.py"))
+
+
+def content_files_sha256(paths):
+    """Hash an ordered set of tool paths and bytes without timestamps."""
+    rows = []
+    for path in map(pathlib.Path, paths):
+        try:
+            label = path.resolve().relative_to(REPO.resolve()).as_posix()
+        except ValueError:
+            label = path.name
+        rows.append((label, path))
+    digest = hashlib.sha256()
+    for label, path in sorted(rows):
+        raw_label = label.encode("utf-8")
+        raw = path.read_bytes()
+        digest.update(len(raw_label).to_bytes(4, "big"))
+        digest.update(raw_label)
+        digest.update(len(raw).to_bytes(8, "big"))
+        digest.update(raw)
+    return digest.hexdigest()
+
+
 def partition_baseline_fingerprints(linked_elf, config_root=CFG_ARM9,
                                     dsd_path=None, linker_path=None,
-                                    rom_inputs=None):
+                                    rom_inputs=None, control_tools=None):
     """Content identities that bind a baseline report to its actual inputs/output."""
     linked_elf = pathlib.Path(linked_elf)
     dsd_path = pathlib.Path(dsd_path or RB.DSD)
     linker_path = pathlib.Path(linker_path or (RB.MW / RB.LD_VERSION / "mwldarm.exe"))
     rom_inputs = pathlib.Path(rom_inputs or (REPO / "extracted" / "dsd"))
-    required = [linked_elf, dsd_path, linker_path]
+    control_tools = tuple(control_tools or BASELINE_CONTROL_TOOLS)
+    required = [linked_elf, dsd_path, linker_path, *control_tools]
     missing = [str(path) for path in required if not path.is_file()]
     if not rom_inputs.is_dir():
         missing.append(str(rom_inputs))
@@ -2904,6 +2932,7 @@ def partition_baseline_fingerprints(linked_elf, config_root=CFG_ARM9,
     return {
         "configArm9Sha256": content_tree_sha256(config_root),
         "romInputsSha256": content_tree_sha256(rom_inputs),
+        "controlToolsSha256": content_files_sha256(control_tools),
         "linkedElfSha256": hashlib.sha256(linked_elf.read_bytes()).hexdigest(),
         "linkedElfBytes": linked_elf.stat().st_size,
         "dsdSha256": hashlib.sha256(dsd_path.read_bytes()).hexdigest(),
@@ -2913,7 +2942,7 @@ def partition_baseline_fingerprints(linked_elf, config_root=CFG_ARM9,
 
 def validate_partition_baseline_evidence(report, linked_elf, config_root=CFG_ARM9,
                                          dsd_path=None, linker_path=None,
-                                         rom_inputs=None):
+                                         rom_inputs=None, control_tools=None):
     """Refuse a baseline whose report is detached from current bytes or tools."""
     evidence = report.get("baselineEvidence")
     if not isinstance(evidence, dict):
@@ -2921,7 +2950,7 @@ def validate_partition_baseline_evidence(report, linked_elf, config_root=CFG_ARM
     try:
         current = partition_baseline_fingerprints(
             linked_elf, config_root, dsd_path=dsd_path, linker_path=linker_path,
-            rom_inputs=rom_inputs)
+            rom_inputs=rom_inputs, control_tools=control_tools)
     except (OSError, ValueError) as exc:
         return None, f"cannot fingerprint baseline: {exc}"
     mismatched = [key for key, value in current.items() if evidence.get(key) != value]
