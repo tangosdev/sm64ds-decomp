@@ -3130,11 +3130,11 @@ static int g_intro_armed;
 
    SO THE DEFAULT INVERTS: the opening PLAYS unless something says not this
    time. It is still the ONE suppression seam and it still gates here rather
-   than anywhere else. Two names say not this time and they are the same
-   answer: SM64DS_SKIP_INTRO=1, the owner's "option to skip opening cutscene",
-   and SM64DS_INTRO=0, which is the name the tree already documents. Both are
-   resolved in hal/title_entry.cpp's port_boot_skip_intro so there is one
-   reader of both spellings.
+   than anywhere else. Exactly one name says not this time --
+   SM64DS_SKIP_INTRO, the owner's "option to skip opening cutscene" -- and it
+   is read by PRESENCE, which is both the launcher's contract and the idiom the
+   rest of the game reads its environment with. hal/title_entry.cpp's
+   port_boot_skip_intro is the single reader.
 
    NOTHING ELSE MOVES, and this is the half worth being precise about, because
    a default that fires an opening in forty-six level selftests would be a

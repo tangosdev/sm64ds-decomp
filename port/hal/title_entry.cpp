@@ -93,13 +93,20 @@
  * environment at all -- still goes straight to the level, never reaching this
  * file. Nothing here is on a path the shipped default takes.
  *
- * ^^ THAT LAST PARAGRAPH IS RETIRED. It was true when it was written and the
- * boot-flow seam at the bottom of this file is what retires it: the shipped
- * default now DOES reach this file, through the title, and SM64DS_TITLE_ENTRY
- * has become the developer opt-OUT rather than the opt-in. The paragraph is
- * kept rather than deleted because the next reader will find it quoted in the
- * lane records and in port/tools/*.py comments, and a quote whose source has
- * silently changed is worse than one that says so. See THE BOOT FLOW below.
+ * ^^ ONE SENTENCE OF THAT IS RETIRED, and only one. "The default boot still
+ * goes straight to the level, never reaching this file" was true when it was
+ * written; the shipped default now DOES reach this file, through the title,
+ * and THE BOOT FLOW below is what changed it.
+ *
+ * THE REST OF THE PARAGRAPH STANDS EXACTLY AS WRITTEN. SM64DS_TITLE_ENTRY=1
+ * still arms the bridge for an explicit SM64DS_SCENE=1 and still means only
+ * that; it did not become an opt-out and it reads its value the way it always
+ * did. The opt-out is SM64DS_BOOT_CLASSIC and it is the only one.
+ *
+ * The paragraph is corrected in place rather than deleted because the next
+ * reader will find it quoted in the lane records and in port/tools comments,
+ * and a quote whose source has silently changed is worse than one that says
+ * so. See THE BOOT FLOW below.
  */
 
 #include <cstdio>
@@ -211,10 +218,33 @@ static int g_taken;        /* did a run end by entering the adventure */
  * same question asked one layer down. */
 static int g_boot_default = -1;    /* -1 = not yet resolved */
 
-static int bf_flag(const char *name, int missing)
+/* ---- PRESENCE, NOT VALUE, AND IT IS A CONTRACT RATHER THAN A PREFERENCE --
+ *
+ * A boot knob is ON when its name is THERE and OFF when it is not. The value
+ * is never read.
+ *
+ * THE LAUNCHER BINDS THIS. It expresses a toggle that is off by REMOVING the
+ * name from the child's environment; it never writes "0". And it is the
+ * codebase's own idiom already -- the game reads its environment this way at
+ * roughly fifty sites, `getenv("X") != 0` and nothing more.
+ *
+ * AN EARLIER CUT OF THIS FILE READ THE VALUE, with `atoi(e) != 0` and a
+ * per-knob default for the absent case, so that a present "0" meant off. That
+ * was wrong twice over and both halves are worth naming, because the first
+ * looks harmless:
+ *
+ *   It invented a SECOND idiom. Two ways to spell "off" in one program is how
+ *   a knob ends up half-working, and the half that breaks is whichever one the
+ *   next reader did not know about.
+ *
+ *   It gave SM64DS_TITLE_ENTRY=0 a meaning it has never had anywhere in this
+ *   tree. That spelling was being used as an alias for "boot the old way",
+ *   which is a decision the name does not carry. SM64DS_BOOT_CLASSIC is the
+ *   opt-out and it is the only one; SM64DS_TITLE_ENTRY keeps the meaning it
+ *   has always had, below, and is no longer consulted here at all. */
+static int bf_present(const char *name)
 {
-    const char *e = std::getenv(name);
-    return e ? (std::atoi(e) != 0) : missing;
+    return std::getenv(name) != 0;
 }
 
 /* The destination a bare boot takes: SCENE_TITLE, or -1 for "the level path,
@@ -223,11 +253,9 @@ static int bf_flag(const char *name, int missing)
 extern "C" int port_boot_default_scene(void)
 {
     if (g_boot_default < 0) {
-        g_boot_default =
-            (std::getenv("SM64DS_LEVEL")  == 0 &&
-             std::getenv("SM64DS_VS_MAP") == 0 &&
-             !bf_flag("SM64DS_BOOT_CLASSIC", 0) &&
-             bf_flag("SM64DS_TITLE_ENTRY", 1)) ? 1 : 0;
+        g_boot_default = (!bf_present("SM64DS_LEVEL") &&
+                          !bf_present("SM64DS_VS_MAP") &&
+                          !bf_present("SM64DS_BOOT_CLASSIC")) ? 1 : 0;
     }
     return g_boot_default ? SCENE_TITLE : -1;
 }
@@ -253,10 +281,9 @@ extern "C" int port_boot_is_default_title(void)
  * So AN ABSENT NAME MUST READ AS OFF, and a reader that needed a
  * present-but-zero value to mean off would break the pairing silently -- the
  * player unticks the box, the launcher deletes the variable, and the game
- * carries on doing the thing he just turned off. bf_flag's second argument is
- * that rule made explicit: it is the answer for a name that is not there, and
- * for both skip knobs it is 0. A present "0" is also honoured, because a
- * developer typing it means off and there is no reason to surprise him.
+ * carries on doing the thing he just turned off. bf_present is that rule made
+ * whole: the name is the signal and the value is never consulted, which is
+ * also the idiom the rest of the game already reads its environment with.
  *
  * ONE KNOWN, ACCEPTED HOLE. The already-shipped launcher neither sets nor
  * removes these names, so a player who has exported SM64DS_SKIP_MENU=1 in his
@@ -267,27 +294,27 @@ extern "C" int port_boot_is_default_title(void)
  * would also scrub the launcher's own legitimate set of it, and the two are
  * indistinguishable from inside this process.
  *
- * SM64DS_SKIP_MENU=1 -- "boot to file". The player lands on the file select
- * with A, B and C in front of him instead of walking the attract, the
- * press-start and the menu. HOW it gets there is hal/title_skip.cpp's problem
- * and the honesty rule lives in that file's banner; this is only the knob. */
+ * SM64DS_SKIP_MENU -- "boot to file". The player lands on the file select
+ * with A, B and C in front of him instead of touching the title and then
+ * picking a menu row. HOW it gets there is the skip driver's problem, at the
+ * bottom of this file, and the honesty rule lives in its banner. This is only
+ * the knob. */
 extern "C" int port_boot_skip_menu(void)
 {
     static int v = -1;
-    if (v < 0) v = bf_flag("SM64DS_SKIP_MENU", 0);
+    if (v < 0) v = bf_present("SM64DS_SKIP_MENU");
     return v;
 }
 
 /* SM64DS_SKIP_INTRO=1 -- "skip opening cutscene". Read by
    hal/level_boot.cpp's port_intro_suppressed, which is the ONE suppression
-   seam and stays the one. SM64DS_INTRO=0 is accepted as the second spelling
-   for the reason SM64DS_TITLE_ENTRY=0 is above: it is the name already in the
-   tree for "not this time". */
+   seam and stays the one. ONE SPELLING ONLY: the name is present or it is
+   not, per the contract above, and there is no second variable that also
+   means "not this time". */
 extern "C" int port_boot_skip_intro(void)
 {
     static int v = -1;
-    if (v < 0)
-        v = (bf_flag("SM64DS_SKIP_INTRO", 0) || !bf_flag("SM64DS_INTRO", 1));
+    if (v < 0) v = bf_present("SM64DS_SKIP_INTRO");
     return v;
 }
 
@@ -307,7 +334,8 @@ extern "C" int port_title_entry_armed(void)
         } else {
             /* An explicit SM64DS_SCENE=1 is somebody measuring the title
                scene. It behaves exactly as it did before this lane. */
-            g_armed = bf_flag("SM64DS_TITLE_ENTRY", 0);
+            const char *e = std::getenv("SM64DS_TITLE_ENTRY");
+            g_armed = (e && std::atoi(e) != 0) ? 1 : 0;
         }
     }
     return g_armed;
