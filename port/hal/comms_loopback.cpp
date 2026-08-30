@@ -655,6 +655,48 @@ int g_handshake_rtt_ms = -1;
 
 bool g_wsa_up = false;
 
+// THE OTHER HALF OF "WINSOCK IS AVAILABLE", and it used to live inline in
+// lb_open. Run rel0215 lane vsnet; this is what cost the 0.2.15 demo its
+// evening.
+//
+// LoadLibrary + GetProcAddress make the ENTRY POINTS callable. They do not
+// make them WORK: ws2_32 refuses every call out of a process that has not
+// called WSAStartup, with WSANOTINITIALISED. lb_open did that call itself
+// right under its own ws_load(), so the SOCKET path was always correct -- but
+// the ADDRESS MODES resolve their target at INSTALL time, a whole game boot
+// before any socket is opened, and the gethostbyname in parse_host_port was
+// reaching a Winsock nothing had started.
+//
+// WHAT THAT LOOKS LIKE FROM OUTSIDE IS THE WORST POSSIBLE SHAPE, BECAUSE IT IS
+// SELECTIVE. inet_addr is pure text arithmetic and needs no Winsock at all, so
+// SM64DS_COMMS_RELAY=135.148.26.201:41234 installed and paired perfectly while
+// SM64DS_COMMS_RELAY=tangos.dev:41234 said "could not resolve" and refused --
+// the same knob, the same service, one of them spelled as a name. Every proof
+// in this tree that ever reached a live relay named an ADDRESS, which is why
+// nothing caught it; the first person to type the hostname was the owner, in
+// front of two windows that then never paired.
+//
+// Factored out rather than duplicated so there is ONE place Winsock comes up.
+// g_wsa_up keeps it a one-shot, so the loopback carrier's own sequence
+// (ws_load, WSAStartup, socket) is exactly the sequence it always made, in the
+// same order, with the same message on failure. And nothing calls either of
+// these without a role in the environment, so a SOLO boot still never touches
+// ws2_32 at all.
+bool ws_start() {
+    if (!ws_load()) return false;
+    if (g_wsa_up) return true;
+    WSADATA wsa;
+    if (WS.WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
+        std::fprintf(stderr, "[comms:loopback] WSAStartup failed; staying "
+                     "idle so the ROM's own bound fires and drops to solo\n");
+        return false;
+    }
+    g_wsa_up = true;   // left up for the process lifetime on purpose: a
+                       // WSACleanup here would tear down Winsock under any
+                       // other user of it, and process exit does the job.
+    return true;
+}
+
 unsigned now_ms() { return (unsigned)GetTickCount(); }
 
 int popcount4(unsigned m) {
@@ -691,7 +733,11 @@ const char *addr_text(const sockaddr_in &a, char *buf, int cap) {
 // for anyway.
 bool parse_host_port(const char *s, int default_port, sockaddr_in *out) {
     if (!s || !*s || !out) return false;
-    if (!ws_load()) return false;
+    // ws_start, not ws_load: the gethostbyname below is a WINSOCK call and
+    // fails with WSANOTINITIALISED out of a process that has not started
+    // Winsock. See ws_start's own banner -- this one line is the whole of the
+    // "the relay works by IP and not by name" defect.
+    if (!ws_start()) return false;
 
     char host[256];
     int  port = default_port;
@@ -1528,20 +1574,9 @@ void lb_open(unsigned mode) {
         return;
     }
 
-    if (!ws_load()) return;
-
-    if (!g_wsa_up) {
-        WSADATA wsa;
-        if (WS.WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
-            std::fprintf(stderr, "[comms:loopback] WSAStartup failed; staying "
-                         "idle so the ROM's own bound fires and drops to "
-                         "solo\n");
-            return;
-        }
-        g_wsa_up = true;   // left up for the process lifetime on purpose: a
-                           // WSACleanup here would tear down Winsock under any
-                           // other user of it, and process exit does the job.
-    }
+    // ws_start is ws_load plus the one-shot WSAStartup this block used to do
+    // inline; the sequence and the failure message are unchanged.
+    if (!ws_start()) return;
 
     g_sock = WS.socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (g_sock == INVALID_SOCKET) {
