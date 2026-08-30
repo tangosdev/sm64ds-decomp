@@ -1001,11 +1001,15 @@ void __sinit_ov018_02112e00(void);
 void __sinit_ov018_02112c14(void);
 void __sinit_ov018_02112c80(void);
 /* gate 192: ov081 per-symbol -- the trio's own sinits (Spindrift, MrBlizzard,
-   IceBlock, each self-contained). Snowball's/Moneybag's stay off. */
+   IceBlock, each self-contained). run rel0215 wave 3 (lane w3-b) turns the
+   other two ON with the classes they belong to: all five of ov081's sinits
+   now run, in the ROM's own .ctor order (0x02128824..0x02128834). */
 void port_ov081_pack_check(void);
 void port_ov081_syms_patch(void);
 void __sinit_ov081_021280e8(void);
 void __sinit_ov081_02128154(void);
+void __sinit_ov081_021284b4(void);
+void __sinit_ov081_021284f0(void);
 void __sinit_ov081_021287b8(void);
 /* gate 193: ov072 per-symbol -- daBgSnwmn_c's ("SNOWMAN") and
    BabyPenguin's own sinits, each self-contained. SnowmanBody's/
@@ -1448,12 +1452,22 @@ extern "C" void port_actor_overlays_sinits(void)
 
     /* gate 192: ov081's three own-class sinits (Spindrift, MrBlizzard,
        IceBlock -- each self-contained, verified by reading their bodies).
-       Snowball's (021284b4) and Moneybag's (021284f0) stay OFF -- neither
-       class is hosted. */
+       run rel0215 wave 3 (lane w3-b) adds Snowball's (021284b4) and
+       Moneybag's (021284f0) now that both classes are hosted, in the ROM's
+       own .ctor order: the five .p__sinit_ov081_* words at 0x02128824,
+       0x02128828, 0x0212882c, 0x02128830 and 0x02128834 name them in exactly
+       this sequence. Both are self-contained (Snowball's is a two-record
+       copy; Moneybag's is five SharedFilePtr constructions, the
+       eighteen-record copy and one Vector3 initialisation) and both leave DS
+       code addresses in the tables they build -- hal/actor_classes_ov081.cpp
+       reseats those with a verify-then-abort inside each class's fill,
+       BEFORE any instance can dispatch through them. */
     port_ov081_pack_check();
     port_ov081_syms_patch();
     __sinit_ov081_021280e8();   /* SPINDRIFT */
     __sinit_ov081_02128154();   /* MR_BLIZZARD: also builds the 10-cell PMF table */
+    __sinit_ov081_021284b4();   /* SNOWBALL: the 2-record PMF cell */
+    __sinit_ov081_021284f0();   /* MONEYBAG: 5 SharedFilePtrs + the 18-record table */
     __sinit_ov081_021287b8();   /* ICE_BLOCK */
 
     /* gate 193: ov072's two own-class sinits (daBgSnwmn_c/"SNOWMAN",

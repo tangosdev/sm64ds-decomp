@@ -495,13 +495,382 @@ extern "C" void hal_fill_ice_block_vtable(void)
     vt[31] = (void *)icb_kill;       /* own Kill */
 }
 
+// ============================================================================
+// SNOWBALL (224), an Enemy, 31 slots (plain Actor tail -- no own Kill)
+// ============================================================================
+// LANE w3-b (run rel0215), the partial-module finish. Gate 192 mounted ov081
+// for the trio and left SNOWBALL and MONEYBAG unregistered "since neither
+// class is hosted"; this is the lane that hosts them. Nothing about the mount
+// changes except that _ZTV8Snowball and _ZTV8Moneybag leave port/ov081_syms.txt
+// and become the host arrays below -- the rule the same file already applies
+// to _ZTV9Spindrift, _ZTV10MrBlizzard and _ZTV8IceBlock.
+//
+// WIDTH 31, NOT 32, and the difference is load-bearing: these two are plain
+// Actor subclasses (slot 30 is Actor::OnAimedAtWithEggReturnVec, slot 31 is
+// not a code pointer) where the trio are Enemy/Platform shapes with an own
+// Kill at 31. `python port/tools/vtspan.py . _ZTV8Snowball` reads tail 31 /
+// terminator 31 / next-dsd 31 and a RAW RUN of 32 -- that 32nd word is
+// 0x021273e8, MONEYBAG's own state-2 enter body, reached because Moneybag's
+// {function, 0} PMF SOURCE table begins at 0x02128b38 right where Snowball's
+// table ends. Trap T4's fourth width trap, read off the real bytes rather
+// than walked into. _ZTV8Moneybag's five routes all agree on 31.
+//
+// ov81_fill_shared writes 1..30 and is reused unchanged: slots 13/14 trap
+// (ActorBase::Virtual34/38, the pair every sibling fill traps) and slot 30
+// traps (Actor::OnAimedAtWithEggReturnVec, the SRET body no fill's thunk
+// shape models -- hal/actor_classes_montymolerock.cpp's ruling, verbatim).
+// Slot 31 is simply never written for these two, so their arrays are 31 long.
+extern "C" {
+int _ZN8Snowball13InitResourcesEv(void *self);        /* slot 0,  faced below */
+int _ZN8Snowball16CleanupResourcesEv(void);           /* slot 3,  .c, takes void */
+int _ZN8Snowball8BehaviorEv(void *self);              /* slot 6,  faced below */
+int _ZN8Snowball6RenderEv(void *self);                /* slot 9,  faced below */
+void _ZN8Snowball16OnPendingDestroyEv(void);          /* slot 12, OWN, .c, empty */
+int _ZN8SnowballD1Ev(void *self);                     /* slot 16, .c, own table */
+int _ZN8SnowballD0Ev(void *self);                     /* slot 17, .c, RTTI spelling */
+void *Snowball_Spawn(void);                           /* installs _ZTV8Snowball */
+int _ZTV8Snowball[31];
+
+/* The class's TWO PMF halves. func_ov081_021261d4 (InitResources' last call)
+   stores &data_ov081_02128eb4 at self+0x378 and dispatches the ENTER half
+   (index 0) in the same statement; Snowball::Behavior reads the TICK half
+   every frame as `((M *)cell)->pmf`, byte offset 8 of the same cell. Both are
+   index-0 reads of an 8-byte {function, delta} record, so neither needs
+   /vmg /vmm -- port/slice_w3b.txt has why that is a statement about run
+   linkw wave 18's R9 predicate and not an assumption. */
+struct PortSnowballPair { unsigned enter_fn, enter_delta, tick_fn, tick_delta; };
+extern PortSnowballPair data_ov081_02128eb4;
+/* enter = func_ov081_021261b8, ALREADY declared above as MrBlizzard's own Kill
+   (slot 31): one real ROM address, two roles, the func_ov081_02124e64 shape
+   this file already documents at length. Not redeclared. */
+int func_ov081_021260fc(void *self);   /* tick */
+}
+
+/* D0 stores the RTTI spelling _ZTV12daSnowball_c (dsd dual-names it at the
+   same address 0x02128abc; D1 and the factory both spell _ZTV8Snowball).
+   Both references are C linkage, so point the underscore spelling at the one
+   host array -- the daChoropu_c / daObj1UpLogo_c treatment. The LHS is
+   UNDEFINED everywhere in this link now that the vtable has left the mount
+   (ov081_syms.txt listed the dual-named pair ONCE, under _ZTV8Snowball, so
+   dropping that line drops both spellings), which is what an /alternatename
+   needs: a defined LHS is defeated silently, the R3 ov071/ov073 failure. */
+#pragma comment(linker, "/alternatename:__ZTV12daSnowball_c=__ZTV8Snowball")
+
+/* THE TWO HALVES OF THIS ONE CELL ARE REACHED THROUGH DIFFERENT CALLING
+   CONVENTIONS ON THE HOST, so the seat writes a different kind of host address
+   into each. That asymmetry is not a preference; it is what the two dispatch
+   sites compile to, read out of the objs:
+
+     ENTER, dispatched by func_ov081_021261d4 (the installer InitResources
+       calls). Its `struct C` IS defined in that TU, so MSVC picks the 4-byte
+       single-inheritance PMF, and the whole body is a one-call forwarder that
+       MSVC compiles as a TAIL JUMP:
+           mov eax,[ebp+0Ch] / mov ecx,[ebp+8] / mov [ecx+378h],eax
+           mov eax,[eax] / test eax,eax / jne / mov eax,1 / ret
+           pop ebp / jmp eax
+       The jump reuses the forwarder's own cdecl frame, so the callee reads
+       its receiver off the stack exactly where a plain
+       `int f(void *self)` looks for it. The RAW matched body goes in this
+       half. (This is the frame reuse port/tools/tailjump_guard.py exists to
+       protect, and R9's genuine index-0 case.)
+
+     TICK, dispatched by Snowball::Behavior mid-body. Its `struct Klass` is
+       never completed, so the TU is compiled /vmg /vmm (block R10 in
+       port/CMakeLists.txt, with the disassembly both ways) and MSVC emits a
+       REAL CALL with the receiver in ECX:
+           mov ecx,[esi+378h] / mov eax,[ecx+8] / test eax,eax / je
+           mov ecx,[ecx+0Ch] / add ecx,esi / call eax
+       A real call pushes a new frame, so nothing puts the receiver on the
+       stack and the raw cdecl body would read the caller's saved edi as
+       `self`. This half gets a __fastcall THUNK instead -- the same shape
+       every vtable fill in this port uses, and ABI-compatible with the
+       thiscall MSVC emits here: a no-argument member call passes ecx only and
+       cleans nothing, __fastcall(void *, void *) takes ecx and edx and cleans
+       nothing.
+
+   THE ALTERNATIVE, AND WHY NOT. MrBlizzard's own Behavior one class up is a
+   HOST COPY for the same mid-body dispatch, which is the precedent this could
+   have followed. It costs a matched TU. The thunk costs nothing, keeps the
+   decompiled Behavior running, and rests on a COMPILE OPTION that is pinned in
+   CMakeLists rather than on codegen luck -- so this lane took it. If /vmg /vmm
+   is ever dropped from that TU the width goes wrong again and the class faults
+   on frame 1, loudly, which is how this was found in the first place. */
+static int __fastcall sb_state_tick(void *s, void *)
+{ return func_ov081_021260fc(s); }
+
+/* {ROM address the sinit's own source record carries, host body}, verified
+   before the rewrite -- the MrBlizzard seat above, one class over. */
+extern "C" void port_snowball_states_seat(void)
+{
+    static int done;
+    if (done)
+        return;
+    done = 1;
+    PortSnowballPair &cell = data_ov081_02128eb4;
+    if (cell.enter_fn != 0x021261b8u || cell.enter_delta != 0 ||
+        cell.tick_fn != 0x021260fcu || cell.tick_delta != 0) {
+        std::fprintf(stderr, "FATAL: Snowball state cell: the sinit left "
+                     "%08x/%u %08x/%u, the ROM's own records say "
+                     "021261b8/0 021260fc/0 -- WRONG BYTES\n",
+                     cell.enter_fn, cell.enter_delta,
+                     cell.tick_fn, cell.tick_delta);
+        std::abort();
+    }
+    cell.enter_fn = (unsigned)(size_t)func_ov081_021261b8;   /* cdecl, tail-jumped */
+    cell.tick_fn = (unsigned)(size_t)sb_state_tick;          /* __fastcall thunk */
+}
+
+static int __fastcall sb_init(void *s, void *)
+{ return _ZN8Snowball13InitResourcesEv(s); }
+static int __fastcall sb_clean(void *s, void *)
+{ (void)s; return _ZN8Snowball16CleanupResourcesEv(); }
+static int __fastcall sb_behavior(void *s, void *)
+{ return _ZN8Snowball8BehaviorEv(s); }
+/* Render is the MATCHED TU, not a host copy: its six-virtual ROM-order shadow
+   sits over a plain Model at +0x300 (constructed by _ZN5ModelC1Ev in
+   Snowball_Spawn, filled through ModelBase::SetFile in InitResources,
+   destroyed by _ZN5ModelD1Ev in both destructors -- three witnesses, all
+   matched src, the MontyMoleRock adjudication-from-construction), and
+   _ZTV5Model is DUAL-FILLED at [4] and [5] by hal/cxxname_bridge.cpp so its
+   slot 5 lands on Model::Render. The opposite ruling from Spindrift's Render
+   in this same file; the member type is the only difference. */
+static int __fastcall sb_render(void *s, void *)
+{ port_actor_render_probe("SNOWBALL", (char *)s + 0x300);
+  return _ZN8Snowball6RenderEv(s); }
+static int __fastcall sb_pdes(void *s, void *)
+{ (void)s; _ZN8Snowball16OnPendingDestroyEv(); return 0; }
+static int __fastcall sb_d1(void *s, void *)
+{ return _ZN8SnowballD1Ev(s); }
+static int __fastcall sb_d0(void *s, void *)
+{ return _ZN8SnowballD0Ev(s); }
+
+extern "C" void hal_fill_snowball_vtable(void)
+{
+    /* seat the two PMF halves BEFORE InitResources can dispatch the enter
+       half -- func_ov081_021261d4 dispatches it in the same statement that
+       installs the cell pointer. */
+    port_snowball_states_seat();
+    void **vt = (void **)_ZTV8Snowball;
+    ov81_fill_shared(vt);
+    vt[0]  = (void *)sb_init;
+    vt[3]  = (void *)sb_clean;
+    vt[6]  = (void *)sb_behavior;
+    vt[9]  = (void *)sb_render;
+    vt[12] = (void *)sb_pdes;        /* own OnPendingDestroy, NOT the shared default */
+    vt[16] = (void *)sb_d1;
+    vt[17] = (void *)sb_d0;
+}
+
+// ============================================================================
+// MONEYBAG (261), an Actor, 31 slots
+// ============================================================================
+extern "C" {
+int _ZN8Moneybag13InitResourcesEv(void *self);        /* slot 0,  faced below */
+int _ZN8Moneybag16CleanupResourcesEv(void);           /* slot 3,  .c, takes void */
+int _ZN8Moneybag8BehaviorEv(void *self);              /* slot 6,  faced below */
+int _ZN8Moneybag6RenderEv(void *self);                /* slot 9,  HOST COPY in
+                                                           port/unmatched/
+                                                           ModelAnim_Renders.cpp */
+void _ZN8Moneybag16OnPendingDestroyEv(void);          /* slot 12, OWN, .c, empty */
+/* slot 16 is a HOST THUNK below -- the matched _ZN8MoneybagD1Ev.cpp is the
+   auto-emitted-member-dtor .cpp form (the MontyMole gate-174 case). */
+int _ZN8MoneybagD0Ev(void *self);                     /* slot 17, .c, RTTI spelling */
+int func_ov081_021265b8(void);                        /* slot 18, OnYoshiTryEat --
+                                                           no args, returns 6 */
+void func_ov081_02127a7c(void *self, void *p);        /* slot 19, OnTurnIntoEgg */
+int func_ov081_021265c0(void);                        /* slot 29, OnAimedAtWithEgg --
+                                                           no args, returns a radius */
+void *Moneybag_Spawn(void);                           /* installs _ZTV8Moneybag */
+int _ZTV8Moneybag[31];
+
+void _ZN9ModelAnimD1Ev(void *);                       /* ModelAnim at +0xd4 */
+void _ZN11ShadowModelD1Ev(void *);                    /* ShadowModel at +0x188 */
+void _ZN12WithMeshClsnD1Ev(void *);                   /* WithMeshClsn at +0x1e4 */
+
+/* NINE STATES x {enter, tick}: the eighteen records __sinit_ov081_021284f0
+   copies out of the mounted source records at 0x02128b38..0x02128bc0 into the
+   mutable table at 0x02128f40. func_ov081_0212777c sets
+   `pp = &table + (state << 4)`; func_ov081_02127744 dispatches index 0
+   (enter) and func_ov081_02127708 index 1 (tick -- the /vmg /vmm row run
+   linkw wave 18 put in port/CMakeLists.txt ahead of this lane). */
+struct PortMoneybagRec { unsigned fn, delta; };
+extern PortMoneybagRec data_ov081_02128f40[18];
+int func_ov081_021276b0(void *self);   /* state 0 enter */
+int func_ov081_02127558(void *self);   /* state 0 tick  */
+int func_ov081_021274c8(void *self);   /* state 1 enter */
+int func_ov081_02127440(void *self);   /* state 1 tick  */
+int func_ov081_021273e8(void *self);   /* state 2 enter */
+int func_ov081_02127398(void *self);   /* state 2 tick  */
+int func_ov081_02127314(void *self);   /* state 3 enter */
+int func_ov081_02127240(void *self);   /* state 3 tick  */
+int func_ov081_021271e8(void *self);   /* state 4 enter */
+int func_ov081_02127188(void *self);   /* state 4 tick  */
+int func_ov081_02127134(void *self);   /* state 5 enter */
+int func_ov081_02127070(void *self);   /* state 5 tick  */
+int func_ov081_02127044(void *self);   /* state 6 enter */
+int func_ov081_02126fa4(void *self);   /* state 6 tick  */
+int func_ov081_02126e28(void *self);   /* state 7 enter */
+int func_ov081_02126d64(void *self);   /* state 7 tick  */
+int func_ov081_02126c8c(void *self);   /* state 8 enter */
+int func_ov081_02126c20(void *self);   /* state 8 tick  */
+}
+
+/* D0 stores the RTTI spelling _ZTV8daGmch_c; D1's ROM body and the factory
+   both store _ZTV8Moneybag (0x02128c04, read off ov081's relocs at 0x02126550,
+   0x021265b0 and Moneybag_Spawn's own store). Same alias argument as
+   Snowball's above -- the LHS is undefined everywhere once the vtable leaves
+   the mount, so the alias cannot be defeated. */
+#pragma comment(linker, "/alternatename:__ZTV8daGmch_c=__ZTV8Moneybag")
+
+/* TWO OF MONEYBAG'S TUs SPELL A MOUNTED C SYMBOL AS A TYPED C++ GLOBAL, so
+   MSVC mangles the reference and the mount's C name does not answer it. Both
+   came off the FIRST LINK'S OWN UNRESOLVED LIST rather than out of a reading
+   (the measured-gap rule), and both are the montymolerock
+   `?data_ov080_021283c8@@3USharedFilePtr@@A` shape:
+
+     src/func_ov081_02126a20.cpp declares `extern Vector3
+       data_ov081_02128ef8;` OUTSIDE its own extern "C" block -- the +0x2000
+       Y-offset record __sinit_ov081_021284f0 initialises. Mounted by
+       port/ov081_syms.txt.
+     src/_ZN8Moneybag13InitResourcesEv.cpp declares `extern int
+       data_ov002_0210d9b8[];` outside extern "C" -- the ov002 bss pair whose
+       word 1 is the shared BMD file the plain Model at +0x138 is given.
+       Mounted by port/ov002_syms.txt, and 8 bytes to its next config symbol
+       (data_ov002_0210d9c0), so the `[1]` read stays inside its own span.
+
+   An /alternatename and not a -D rename because the LHS here is an MSVC
+   MANGLED name, which nothing else in this link can define -- the property
+   the R3/R4/R5 rule demands and the exact reason those cases needed a -D
+   instead. */
+#pragma comment(linker, "/alternatename:?data_ov081_02128ef8@@3UVector3@@A=_data_ov081_02128ef8")
+#pragma comment(linker, "/alternatename:?data_ov002_0210d9b8@@3PAHA=_data_ov002_0210d9b8")
+
+/* {ROM address the sinit's own source record carries, host body}, in the
+   sinit's OWN copy order (data_ov081_02128f40[i] <- the source record
+   src/__sinit_ov081_021284f0.c names on line i), each fn resolved out of
+   ov081's relocs.txt rather than inferred from the copy order. */
+typedef int (*PortMnFn)(void *);
+static const struct { unsigned rom; PortMnFn host; } g_mn_recs[18] = {
+    {0x021276b0, func_ov081_021276b0},   /* [ 0] <- 02128b58, state 0 enter */
+    {0x02127558, func_ov081_02127558},   /* [ 1] <- 02128b68, state 0 tick  */
+    {0x021274c8, func_ov081_021274c8},   /* [ 2] <- 02128b40, state 1 enter */
+    {0x02127440, func_ov081_02127440},   /* [ 3] <- 02128b48, state 1 tick  */
+    {0x021273e8, func_ov081_021273e8},   /* [ 4] <- 02128b38, state 2 enter */
+    {0x02127398, func_ov081_02127398},   /* [ 5] <- 02128bc0, state 2 tick  */
+    {0x02127314, func_ov081_02127314},   /* [ 6] <- 02128bb8, state 3 enter */
+    {0x02127240, func_ov081_02127240},   /* [ 7] <- 02128bb0, state 3 tick  */
+    {0x021271e8, func_ov081_021271e8},   /* [ 8] <- 02128ba8, state 4 enter */
+    {0x02127188, func_ov081_02127188},   /* [ 9] <- 02128ba0, state 4 tick  */
+    {0x02127134, func_ov081_02127134},   /* [10] <- 02128b88, state 5 enter */
+    {0x02127070, func_ov081_02127070},   /* [11] <- 02128b98, state 5 tick  */
+    {0x02127044, func_ov081_02127044},   /* [12] <- 02128b90, state 6 enter */
+    {0x02126fa4, func_ov081_02126fa4},   /* [13] <- 02128b70, state 6 tick  */
+    {0x02126e28, func_ov081_02126e28},   /* [14] <- 02128b50, state 7 enter */
+    {0x02126d64, func_ov081_02126d64},   /* [15] <- 02128b60, state 7 tick  */
+    {0x02126c8c, func_ov081_02126c8c},   /* [16] <- 02128b80, state 8 enter */
+    {0x02126c20, func_ov081_02126c20},   /* [17] <- 02128b78, state 8 tick  */
+};
+
+extern "C" void port_moneybag_states_seat(void)
+{
+    static int done;
+    if (done)
+        return;
+    done = 1;
+    for (int i = 0; i < 18; ++i) {
+        PortMoneybagRec &r = data_ov081_02128f40[i];
+        if (r.fn != g_mn_recs[i].rom || r.delta != 0) {
+            std::fprintf(stderr, "FATAL: Moneybag state record %d: the sinit "
+                         "left %08x/%u, the ROM's own record says %08x/0 -- "
+                         "WRONG BYTES\n", i, r.fn, r.delta, g_mn_recs[i].rom);
+            std::abort();
+        }
+        r.fn = (unsigned)(size_t)g_mn_recs[i].host;
+    }
+}
+
+static int __fastcall mn_init(void *s, void *)
+{ return _ZN8Moneybag13InitResourcesEv(s); }
+static int __fastcall mn_clean(void *s, void *)
+{ (void)s; return _ZN8Moneybag16CleanupResourcesEv(); }
+static int __fastcall mn_behavior(void *s, void *)
+{ return _ZN8Moneybag8BehaviorEv(s); }
+static int __fastcall mn_render(void *s, void *)
+{ port_actor_render_probe("MONEYBAG", (char *)s + 0xd4);
+  return _ZN8Moneybag6RenderEv(s); }
+static int __fastcall mn_pdes(void *s, void *)
+{ (void)s; _ZN8Moneybag16OnPendingDestroyEv(); return 0; }
+/* D1 host thunk: the matched .cpp is the auto-emitted-member-dtor form. The
+   chain is D0's own matched .c minus the Deallocate, in the ROM's order --
+   confirmed against ov081's relocs for 0x02126504..0x02126554: the table
+   store is 0x02128c04 (_ZTV8Moneybag, NOT the RTTI spelling D0 uses), then
+   WithMeshClsn +0x1e4, MovingCylinderClsn +0x1b0, ShadowModel +0x188,
+   Model +0x138, ModelAnim +0xd4, then Actor's own D2. */
+static int __fastcall mn_d1(void *s, void *)
+{
+    char *t = (char *)s;
+    *(void **)t = (void *)_ZTV8Moneybag;
+    _ZN12WithMeshClsnD1Ev(t + 0x1e4);
+    _ZN18MovingCylinderClsnD1Ev(t + 0x1b0);
+    _ZN11ShadowModelD1Ev(t + 0x188);
+    _ZN5ModelD1Ev(t + 0x138);
+    _ZN9ModelAnimD1Ev(t + 0xd4);
+    _ZN5ActorD2Ev(t);
+    return (int)(size_t)s;
+}
+static int __fastcall mn_d0(void *s, void *)
+{ return _ZN8MoneybagD0Ev(s); }
+static int __fastcall mn_yoshi(void *s, void *)
+{ (void)s; return func_ov081_021265b8(); }
+static int __fastcall mn_egg(void *s, void *, void *p)
+{ func_ov081_02127a7c(s, p); return 0; }
+static int __fastcall mn_aimed(void *s, void *)
+{ (void)s; return func_ov081_021265c0(); }
+
+extern "C" void hal_fill_moneybag_vtable(void)
+{
+    /* seat the eighteen records BEFORE InitResources can dispatch through
+       them -- its own func_ov081_0212777c(this, 0) call selects state 0 and
+       runs the enter half immediately. */
+    port_moneybag_states_seat();
+    void **vt = (void **)_ZTV8Moneybag;
+    ov81_fill_shared(vt);
+    vt[0]  = (void *)mn_init;
+    vt[3]  = (void *)mn_clean;
+    vt[6]  = (void *)mn_behavior;
+    vt[9]  = (void *)mn_render;
+    vt[12] = (void *)mn_pdes;        /* own OnPendingDestroy, NOT the shared default */
+    vt[16] = (void *)mn_d1;
+    vt[17] = (void *)mn_d0;
+    vt[18] = (void *)mn_yoshi;       /* own OnYoshiTryEat */
+    vt[19] = (void *)mn_egg;         /* own OnTurnIntoEgg */
+    vt[29] = (void *)mn_aimed;       /* own OnAimedAtWithEgg */
+}
+
 // ---- method faces ------------------------------------------------------
 // The C-named references the thunks above take onto the real MSVC methods
 // against include/, the IceSheet/gate-190 treatment.
 #include "Spindrift.h"
 #include "MrBlizzard.h"
 #include "IceBlock.h"
+#include "Snowball.h"
+#include "Moneybag.h"
 extern "C" {
+int _ZN8Snowball13InitResourcesEv(void *self)
+{ return ((Snowball *)self)->Snowball::InitResources(); }
+int _ZN8Snowball8BehaviorEv(void *self)
+{ return ((Snowball *)self)->Snowball::Behavior(); }
+int _ZN8Snowball6RenderEv(void *self)
+{ return ((Snowball *)self)->Snowball::Render(); }
+int _ZN8Moneybag13InitResourcesEv(void *self)
+{ return ((Moneybag *)self)->Moneybag::InitResources(); }
+int _ZN8Moneybag8BehaviorEv(void *self)
+{ return ((Moneybag *)self)->Moneybag::Behavior(); }
+/* _ZN8Moneybag6RenderEv is NOT faced here -- the ModelAnim slot-5 collision.
+   The matched Moneybag::Render dispatches ROM slot 5 through a six-virtual
+   shadow off mModelAnim (+0xd4); host copy in
+   port/unmatched/ModelAnim_Renders.cpp spells it as qualified
+   ModelAnim::Render. */
 int _ZN9Spindrift13InitResourcesEv(void *self)
 { return ((Spindrift *)self)->Spindrift::InitResources(); }
 int _ZN9Spindrift8BehaviorEv(void *self)

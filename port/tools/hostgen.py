@@ -566,11 +566,44 @@ def mmio_extern_patch(text, sym):
 # FlyGuy's state dispatcher, and FlyGuy is unregistered (no bootable level
 # spawns it), so the value is dead until a FlyGuy lane lands -- which should
 # re-derive it before trusting it.
+#
+# THE SECOND ENTRY IS THE CASE THIS TABLE WAS ADVERTISED FOR AND THEN NOT USED.
+# port/slice_ov096.txt section D and port/unmatched/Pokey_HostSites.cpp both
+# record a fall-off-the-end body (func_ov096_02135e2c) that lane w5-c's
+# mechanism could have kept in the linkage count, and both say out loud that
+# the lane host-copied it instead only because hostgen.py was outside its
+# append scope -- "the only one given up for a reason that is not a real wall".
+# func_ov081_02126950 is the SAME BODY one overlay over (the ov081/ov096
+# collision helper: func_02038414, then a floor-normal slope correction, then
+# a wall-normal read), so lane w3-b takes the cheap route rather than making
+# the same trade a second time.
+#
+# THE RETURNED VALUE IS UNOBSERVABLE, checked rather than assumed, both ends:
+#   * THE ROM SETS NO r0 ON THE WAY OUT. The tail at 0x02126a08..0x02126a1c is
+#     `add r1,sp,#0xc / add r0,r0,#4 / bl 0x02037dcc (SurfaceInfo::CopyNormalTo,
+#     void) / add sp,sp,#0x1c / pop {r4-r7,lr} / bx lr`, and the conditional
+#     early exit at 0x021269f4 leaves whatever the IsOnWall test returned.
+#     Neither path computes a result.
+#   * ALL THREE CALLERS DISCARD IT. The ov081 relocs name exactly three call
+#     sites -- 0x021270f8, 0x021272e8, 0x02127478 -- and their matched sources
+#     (src/func_ov081_02127070.cpp:46, src/func_ov081_02127240.cpp:31,
+#     src/func_ov081_02127440.cpp:16) each call it as a bare statement.
+# So 0 is as faithful as any other value, and the `int` in the TU's own
+# signature is the recovery's placeholder rather than something the ROM
+# produces. A later lane that owns port/slice_ov096.txt should give the twin
+# the same treatment and delete its host copy; this lane does not edit another
+# lane's slice.
 FALLS_OFF_RETURN = {
     "func_ov070_0211f0a4": [
         ("    a->KillAndTrackInDeathTable();\n}",
          "    a->KillAndTrackInDeathTable();\n"
          "    return 1;  /* hostgen FALLS_OFF_RETURN: see the table's note */\n"
+         "}"),
+    ],
+    "func_ov081_02126950": [
+        ("_ZNK12WithMeshClsn13GetWallResultEv(clsn)+4, n1);\n    }\n}",
+         "_ZNK12WithMeshClsn13GetWallResultEv(clsn)+4, n1);\n    }\n"
+         "    return 0;  /* hostgen FALLS_OFF_RETURN: see the table's note */\n"
          "}"),
     ],
 }
