@@ -1553,3 +1553,57 @@ func_ov077_02124c20  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0
 func_ov077_021258dc  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov077\inferred_stub_rulings.txt  Spiny PMF state handler (source record data_ov077_021278e8), addr 0x021258dc size 0x2c; match.py MATCH at 2004/b56 with reloc destinations checked
 func_ov077_02126194  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov077\inferred_stub_rulings.txt  Spiny vtable slot 19, addr 0x02126194 size 0x60; the Lakitu slot-19 shape with coin count 1 and ActorBase::MarkForDestruction; match.py MATCH at 2004/b56 with reloc destinations checked
 func_ov077_02126640  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov077\inferred_stub_rulings.txt  HeaveHo PMF state handler (source record data_ov077_02127a00), addr 0x02126640 size 0x118; match.py MATCH at 2004/b56 with reloc destinations checked
+#
+# ---------------------------------------------------------------------------
+# run rel0215 wave 1 (lane cast-ov030), 2026-08-29.
+#
+# ov030's Tall Tall Mountain cast (RollingLogTtm 102, UkikiCage 103, and the one
+# 7daMky_c class behind UkikiThief 267 and UkikiStar 268) was refused on its
+# first link with EIGHT NEW SEATS, every one of them marker-carrying. All eight
+# were rebuilt from their own src/ file with the CANONICAL compiler and
+# byte-compared against extracted/overlays/overlay_0030.bin at base 0x021111a0
+# -- the shipped image, deliberately not a dsd export -- with the relocation
+# destinations checked rather than wildcarded (match.py's --strict-relocs
+# default). RESULT: 8 REAL DECOMP, 0 genuine guesses, 0 unverifiable.
+#
+# THE BASE WAS PROVEN BEFORE ANYTHING WAS READ OFF IT, on eight PROBE addresses
+# chosen for having a known prologue -- NOT on the eight adjudicated bodies, and
+# an earlier revision of this paragraph read as though it were. The probes:
+#   0x021111a0 0x0211155c 0x02111524 0x0211164c 0x021145e0 0x02114638
+#       read e92d4010  push {r4,lr}
+#   0x02114378 0x02112578
+#       read e92d4070  push {r4,r5,r6,lr}
+#
+# THE ADJUDICATED BODIES' OWN FIRST WORDS are a different tally, and two of the
+# eight are deliberately not prologues at all:
+#   e92d4010  push {r4,lr}   0x021111ec 0x0211130c 0x02111350 0x02111384
+#                            0x02111410 0x02112a14                    (six)
+#   e3a00007  mov r0,#7      0x0211172c -- a two-instruction body, no frame
+#   e59fc000  ldr ip,[pc]    0x021145d4 -- the tail-call veneer below
+#
+# TWO CORRECTIONS THE DISASSEMBLY FORCED, recorded because neither is something
+# a byte gate can catch:
+#   - func_ov030_021145d4 is a tail-call VENEER (ldr ip,[pc]; bx ip; .word
+#     0x02043824 -> _ZN9ActorBase18MarkForDestructionEv) and is byte-for-byte
+#     the same function as func_ov072_02121fa0, which gate 193 already seats at
+#     its own class's slot 19. src declares it (void); the fill must declare it
+#     WITH a self parameter, because a veneer is a tail jump on the host too and
+#     pushing nothing leaves MarkForDestruction reading the thunk's own return
+#     address as its self. This lane's first draft got that wrong and it is
+#     fixed in hal/actor_classes_ov030.cpp.
+#   - func_ov030_0211172c is `mov r0,#7; bx lr`, the same non-default answer
+#     BabyPenguin's own slot 18 gives, so the slot 18 override is the ROM's.
+#
+# Full per-body evidence, including the raw target bytes match.py printed:
+# C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md
+#
+# All eight still owe a DECOMP-SIDE marker correction; this lane does not edit
+# src/, so these entries stay live until those comment lines go.
+func_ov030_021111ec  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md  UkikiCage slot 17 D0, addr 0x021111ec size 0x60; match.py MATCHING at 2004/b56 with reloc destinations checked
+func_ov030_0211130c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md  UkikiCage slot 3 CleanupResources, addr 0x0211130c size 0x44; match.py MATCHING at 2004/b56 with reloc destinations checked
+func_ov030_02111350  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md  UkikiCage slot 9 Render, addr 0x02111350 size 0x34; match.py MATCHING at 2004/b56 with reloc destinations checked. Six-virtual plain-Model shadow calling index 5, which cxxname_bridge.cpp:511 dual-fills as Render
+func_ov030_02111384  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md  UkikiCage slot 6 Behavior, addr 0x02111384 size 0x8c; match.py MATCHING at 2004/b56 with reloc destinations checked
+func_ov030_02111410  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md  UkikiCage slot 0 InitResources, addr 0x02111410 size 0x114; match.py MATCHING at 2004/b56 with reloc destinations checked
+func_ov030_0211172c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md  daMky_c slot 18 OnYoshiTryEat, addr 0x0211172c size 0x8; mov r0,#7 / bx lr; match.py MATCHING at 2004/b56
+func_ov030_02112a14  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md  daMky_c state cell 8 enter half, addr 0x02112a14 size 0x70; match.py MATCHING at 2004/b56 with reloc destinations checked
+func_ov030_021145d4  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md  daMky_c slot 19 OnTurnIntoEgg, addr 0x021145d4 size 0xc; tail-call veneer onto 0x02043824 ActorBase::MarkForDestruction, byte-identical to func_ov072_02121fa0; match.py MATCHING at 2004/b56 with reloc destinations checked

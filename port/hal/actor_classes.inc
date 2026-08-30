@@ -1284,6 +1284,27 @@ void hal_fill_spiny_vtable(void);                    /* _ZTV5Spiny, 31 */
 extern unsigned char Lakitu_SpawnInfo[];             /* ov077 0x02127848, +4 = 265 */
 void *Lakitu_Spawn(void);                            /* ov077 0x02124b04, 96 B */
 void hal_fill_lakitu_vtable(void);                   /* _ZTV6Lakitu, 31 */
+/* ---- run rel0215 wave 1 (lane cast-ov030): ov030's TALL TALL MOUNTAIN cast.
+   FOUR ids, THREE classes -- UKIKI_THIEF (267) and UKIKI_STAR (268) are ONE
+   class (7daMky_c) under two spawn entry points, so they share one fill. All
+   four SpawnInfo records come from the fresh per-symbol ov030 mount
+   (port/ov030_syms.txt); the three vtable fills are in
+   hal/actor_classes_ov030.cpp; the slice is port/slice_ov030cast.txt.
+   THE CONFIG'S _ZTV LABELS AND METHOD NAMES ARE SHIFTED ONE CLASS in this
+   overlay (the ov012/ov072 dsd class-identity shape, third instance) and
+   everything is seated BY ADDRESS -- ov030_syms.txt's header carries the ROM
+   evidence. Nothing in config/ or src/ is renamed by that lane. */
+extern unsigned char RollingLogTtm_SpawnInfo[];      /* ov030 0x02115a24, +4 low = 102 */
+void *RollingLogTtm_Spawn(void);                     /* ov030 0x0211164c, 60 B */
+void hal_fill_rollinglogttm_vtable(void);            /* _ZTV15daObjHmMaruta_c, 32 */
+extern unsigned char UkikiCage_SpawnInfo[];          /* ov030 0x02115950, +4 low = 103 */
+void *UkikiCage_Spawn(void);                         /* ov030 0x02111524, 56 B */
+void hal_fill_ukikicage_vtable(void);                /* _ZTV13daObjHmBskt_c, 32 */
+extern unsigned char UkikiThief_SpawnInfo[];         /* ov030 0x02115b90, +4 low = 267 */
+void *UkikiThief_Spawn(void);                        /* ov030 0x02114638, 88 B */
+extern unsigned char UkikiStar_SpawnInfo[];          /* ov030 0x02115bac, +4 low = 268 */
+void *UkikiStar_Spawn(void);                         /* ov030 0x021145e0, 88 B */
+void hal_fill_ukiki_vtable(void);                    /* _ZTV13RollingLogTtm == _ZTV7daMky_c, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -1961,4 +1982,18 @@ void hal_fill_lakitu_vtable(void);                   /* _ZTV6Lakitu, 31 */
     {238, "HEAVE_HO", HeaveHo_SpawnInfo, HeaveHo_Spawn, \
      hal_fill_heave_ho_vtable}, \
     {260, "SPINY", Spiny_SpawnInfo, Spiny_Spawn, hal_fill_spiny_vtable}, \
-    {265, "LAKITU", Lakitu_SpawnInfo, Lakitu_Spawn, hal_fill_lakitu_vtable},
+    {265, "LAKITU", Lakitu_SpawnInfo, Lakitu_Spawn, hal_fill_lakitu_vtable}, \
+    /* ---- run rel0215 wave 1 (lane cast-ov030): ov030's Tall Tall Mountain \
+       cast. Four ids, three classes: 267 and 268 are one class under two \
+       spawn entry points and share hal_fill_ukiki_vtable. On level 22 only \
+       102 and 267 are placed (x1 each); 103 and 268 have no placed instance \
+       there and are registered for the spawn path rather than for a census \
+       count ---- */ \
+    {102, "ROLLING_LOG_TTM", RollingLogTtm_SpawnInfo, RollingLogTtm_Spawn, \
+     hal_fill_rollinglogttm_vtable}, \
+    {103, "UKIKI_CAGE", UkikiCage_SpawnInfo, UkikiCage_Spawn, \
+     hal_fill_ukikicage_vtable}, \
+    {267, "UKIKI_THIEF", UkikiThief_SpawnInfo, UkikiThief_Spawn, \
+     hal_fill_ukiki_vtable}, \
+    {268, "UKIKI_STAR", UkikiStar_SpawnInfo, UkikiStar_Spawn, \
+     hal_fill_ukiki_vtable},
