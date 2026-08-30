@@ -10619,8 +10619,13 @@ list(APPEND W3E_SOURCES hal/actor_classes_ov025_w3e.cpp ${SLICE_W3E_OV025_SOURCE
 
 # W7, THREE MORE CROSS-NAME RENAMES, the same silent shape as W1/W2. Each TU
 # spells another overlay's name for an object ov025's own relocs resolve to
-# ov025, and ov027's / ov036's mounts DEFINE those names, so an /alternatename
-# would be defeated without a diagnostic:
+# ov025, and those names are DEFINED elsewhere in this link, so an
+# /alternatename would be defeated without a diagnostic. Where, exactly:
+# data_ov027_02113a90 is hal/actor_classes_ov027.cpp:327's 32-slot host
+# vtable array (DA_PG_DFDR's live dispatch table), data_ov036_02113a98 is
+# hal/actor_classes_ov036.cpp:413's (SWINGING_PLATFORM's), and
+# data_ov036_02113a60 is on the ov036 mount (ov036_syms.txt:289). Unrouted,
+# ov025's sinit would write into the first two LIVE dispatch tables:
 #   src/__sinit_ov025_021129dc.c   (162's model/collision pair)
 #     from:0x02112a34 kind:load to:0x02113a90 module:overlay(25)  spelled ov027
 #     from:0x02112a30 kind:load to:0x02113a98 module:overlay(25)  spelled ov036
@@ -10636,7 +10641,9 @@ set_source_files_properties(
     PROPERTIES COMPILE_DEFINITIONS "data_ov036_02113a60=data_ov025_02113a60")
 #
 # W8, GRINDEL'S FACTORY, the same VT1 shape as ov022's 80 and 70. The ROM's two
-# stores are `str r1,[r4]` with the ov091 base 0x021351fc and then, after the
+# stores are `str r1,[r4]` with the base 0x021351fc (the reloc reads
+# module:overlays(6,91) -- ambiguous between the two base-sharing overlays,
+# and nothing depends on it, being the dead first store) and then, after the
 # TextureSequence and ShadowModel constructors, `str r0,[r4]` with its own
 # 0x02113850 (pool words 0x02111d38 and 0x02111d3c). The recovered source has
 # the RTTI name on the dead first store and VT1 on the live second one.
