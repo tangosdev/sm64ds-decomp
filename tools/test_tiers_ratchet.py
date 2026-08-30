@@ -114,6 +114,18 @@ class TranslationUnitIdentities(unittest.TestCase):
         why = TR.why("src/actors/TU.cpp#Missing", {}, {"src/actors/TU.cpp"})
         self.assertIn("no longer an enrolled member", why)
 
+    def test_legacy_multi_function_path_upgrades_only_when_every_member_passes(self):
+        rel = "src/actors/TU.cpp"
+        ownership = {rel: ["First", "Second"]}
+        current = {f"{rel}#First", f"{rel}#Second"}
+        upgraded, backslid = TR.classify_missing(
+            [rel], current, {rel}, {}, ownership)
+        self.assertEqual((upgraded, backslid), ([rel], []))
+
+        upgraded, backslid = TR.classify_missing(
+            [rel], {f"{rel}#First"}, {rel}, {}, ownership)
+        self.assertEqual((upgraded, backslid), ([], [rel]))
+
 
 if __name__ == "__main__":
     unittest.main()
