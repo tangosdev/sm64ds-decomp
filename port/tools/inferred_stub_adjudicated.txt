@@ -1520,3 +1520,45 @@ func_ov005_020c0b00  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15
 func_ov005_020c14a0  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 6 Behavior, addr 0x020c14a0 size 0x1b4; match.py MATCHING at 2004/b56 with reloc destinations checked. This is the body hal/scene_mg.cpp RNG seeder replicates
 func_ov005_020c1654  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 3 CleanupResources, addr 0x020c1654 size 0x34; match.py MATCHING at 2004/b56 with reloc destinations checked
 func_ov005_020c1a20  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\mg15\status\MENU.md  slot 0 InitResources, addr 0x020c1a20 size 0x7cc; match.py MATCHING at 2004/b56 with reloc destinations checked
+#
+# ---------------------------------------------------------------------------
+# run rel0215 wave 1 (lane cast-ov030), 2026-08-29.
+#
+# ov030's Tall Tall Mountain cast (RollingLogTtm 102, UkikiCage 103, and the one
+# 7daMky_c class behind UkikiThief 267 and UkikiStar 268) was refused on its
+# first link with EIGHT NEW SEATS, every one of them marker-carrying. All eight
+# were rebuilt from their own src/ file with the CANONICAL compiler and
+# byte-compared against extracted/overlays/overlay_0030.bin at base 0x021111a0
+# -- the shipped image, deliberately not a dsd export -- with the relocation
+# destinations checked rather than wildcarded (match.py's --strict-relocs
+# default). RESULT: 8 REAL DECOMP, 0 genuine guesses, 0 unverifiable.
+#
+# The base was proven before anything was read off it: six ov030 entry points
+# read e92d4010 (push {r4,lr}) and two read e92d4070 (push {r4,r5,r6,lr}).
+#
+# TWO CORRECTIONS THE DISASSEMBLY FORCED, recorded because neither is something
+# a byte gate can catch:
+#   - func_ov030_021145d4 is a tail-call VENEER (ldr ip,[pc]; bx ip; .word
+#     0x02043824 -> _ZN9ActorBase18MarkForDestructionEv) and is byte-for-byte
+#     the same function as func_ov072_02121fa0, which gate 193 already seats at
+#     its own class's slot 19. src declares it (void); the fill must declare it
+#     WITH a self parameter, because a veneer is a tail jump on the host too and
+#     pushing nothing leaves MarkForDestruction reading the thunk's own return
+#     address as its self. This lane's first draft got that wrong and it is
+#     fixed in hal/actor_classes_ov030.cpp.
+#   - func_ov030_0211172c is `mov r0,#7; bx lr`, the same non-default answer
+#     BabyPenguin's own slot 18 gives, so the slot 18 override is the ROM's.
+#
+# Full per-body evidence, including the raw target bytes match.py printed:
+# C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md
+#
+# All eight still owe a DECOMP-SIDE marker correction; this lane does not edit
+# src/, so these entries stay live until those comment lines go.
+func_ov030_021111ec  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md  UkikiCage slot 17 D0, addr 0x021111ec size 0x60; match.py MATCHING at 2004/b56 with reloc destinations checked
+func_ov030_0211130c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md  UkikiCage slot 3 CleanupResources, addr 0x0211130c size 0x44; match.py MATCHING at 2004/b56 with reloc destinations checked
+func_ov030_02111350  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md  UkikiCage slot 9 Render, addr 0x02111350 size 0x34; match.py MATCHING at 2004/b56 with reloc destinations checked. Six-virtual plain-Model shadow calling index 5, which cxxname_bridge.cpp:511 dual-fills as Render
+func_ov030_02111384  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md  UkikiCage slot 6 Behavior, addr 0x02111384 size 0x8c; match.py MATCHING at 2004/b56 with reloc destinations checked
+func_ov030_02111410  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md  UkikiCage slot 0 InitResources, addr 0x02111410 size 0x114; match.py MATCHING at 2004/b56 with reloc destinations checked
+func_ov030_0211172c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md  daMky_c slot 18 OnYoshiTryEat, addr 0x0211172c size 0x8; mov r0,#7 / bx lr; match.py MATCHING at 2004/b56
+func_ov030_02112a14  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md  daMky_c state cell 8 enter half, addr 0x02112a14 size 0x70; match.py MATCHING at 2004/b56 with reloc destinations checked
+func_ov030_021145d4  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov030\adjudication.md  daMky_c slot 19 OnTurnIntoEgg, addr 0x021145d4 size 0xc; tail-call veneer onto 0x02043824 ActorBase::MarkForDestruction, byte-identical to func_ov072_02121fa0; match.py MATCHING at 2004/b56 with reloc destinations checked

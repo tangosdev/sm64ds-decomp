@@ -8628,6 +8628,42 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov030_021111ec.c"
     PROPERTIES COMPILE_DEFINITIONS
     "VT0=_ZTV13daObjHmBskt_c;VT1=_ZTV8Platform;G0=data_020a0eac")
+# lane cast-ov030, the SECOND rename shape: src/func_ov030_02112ff8.c calls
+# three arm9 helpers by their func_ADDRESS PLACEHOLDER while config names all
+# three and the port already links them under those real names. Measured off
+# the first link's own unresolved list, then read back out of
+# config/arm9/symbols.txt rather than guessed from the call site:
+#   0x0203cfdc  line 1644  Vec3_Dist
+#   0x0200f97c  line  234  _ZN5Actor13SpawnSoundObjEj
+#   0x02015024  line  500  _ZN12CylinderClsn5ClearEv
+# All three are already in walk_window.map on the BASE tree as _Vec3_Dist,
+# __ZN5Actor13SpawnSoundObjEj and __ZN12CylinderClsn5ClearEv, so this is a
+# spelling bridge onto bodies that already link and adds no TU to the count.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov030_02112ff8.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_0203cfdc=Vec3_Dist;func_0200f97c=_ZN5Actor13SpawnSoundObjEj;func_02015024=_ZN12CylinderClsn5ClearEv")
+# lane cast-ov030, THE G0/G1 TRAP, LIVE, and this row is the whole reason
+# port/tools/alias_audit.py exists (its own docstring opens on this shape).
+# src/func_ov030_0211130c.c is UkikiCage's CleanupResources and it Releases TWO
+# SharedFilePtrs, spelled G0 and G1. hal/cxx_aliases.cpp binds those names ONCE
+# for the whole link -- _G0 to _data_020a0eac (the GAME HEAP POINTER, line 1272)
+# and _G1 to _data_ov002_0210e05c (an ov002 SharedFilePtr, line 1721) -- so
+# without this row that function would have called SharedFilePtr::Release on the
+# game heap pointer and on another overlay's object every time the cage tore
+# down. It fails at NO link, shows in NO map, and no byte gate can see it.
+# WHAT THE TU ACTUALLY MEANS, decoded from its own literal pool in the shipped
+# image rather than from the placeholder's usual meaning:
+#   0x0211132c  ldr r0,[pc,#0x14] -> 0x02111348 = 0x02115c88  = G0
+#   0x02111334  ldr r0,[pc,#0x10] -> 0x0211134c = 0x02115c80  = G1
+# Both are ov030's own .bss SharedFilePtrs and both are mounted by
+# port/ov030_syms.txt. A comment-stripped sweep of all 67 slice TUs for
+# G0/G1/G2/VT/VT0/VT1/VT2/HEAP/R0/R1/R2 finds placeholders in exactly five
+# files, and all five are bound per source by the rows above and this one.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov030_0211130c.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=data_ov030_02115c88;G1=data_ov030_02115c80")
 
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'
 # matched lifecycle closures -- WHOMP (164), WHOMP_KING (165), BULLET_BILL (222),

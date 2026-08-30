@@ -164,7 +164,6 @@ void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o);
 void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);
 void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);
 int _ZN5Actor16OnAimedAtWithEggEv(void *self);
-int _ZN9ActorBase16OnPendingDestroyEv(void *self);       /* slot 12 default, 0x02043ac0 */
 void _ZN8Platform4KillEv(void *self);                    /* slot 31, 0x020ee55c */
 void _ZN5ActorD2Ev(void *self);
 extern int data_02099f24[];          /* the frame phase the lists are in */
@@ -205,12 +204,20 @@ extern unsigned char RollingLogTtm_SpawnInfo[];
 /* ---- the Ukiki (267 + 268, 7daMky_c), own bodies.
         Same shift the other way: every _ZN13RollingLogTtm*Ev is a Ukiki
         method. ---- */
+int _ZN13RollingLogTtm13InitResourcesEv(void *self);  /* slot 0, FACED at the bottom of this file */
+int _ZN13RollingLogTtm6RenderEv(void *self);          /* slot 9, FACED at the bottom of this file */
 int _ZN13RollingLogTtm16CleanupResourcesEv(void);    /* slot 3, .c body takes void */
 int _ZN13RollingLogTtm8BehaviorEv(void *self);       /* slot 6, HOST COPY (Ukiki_Behavior.cpp) */
 void _ZN13RollingLogTtm16OnPendingDestroyEv(void);   /* slot 12, .c body takes void */
 int *_ZN13RollingLogTtmD0Ev(int *self);              /* slot 17 */
 int func_ov030_0211172c(void);                       /* slot 18, own OnYoshiTryEat, takes void */
-void func_ov030_021145d4(void);                      /* slot 19, own OnTurnIntoEgg, takes void */
+/* Slot 19's body is a tail-call VENEER (ldr ip,[pc]; bx ip; .word 0x02043824
+   onto _ZN9ActorBase18MarkForDestructionEv) and src declares it (void). It is
+   declared WITH a self parameter here, exactly as gate 193 declares the
+   byte-identical func_ov072_02121fa0: a veneer is a tail jump on the host too,
+   so it forwards whatever this thunk pushed, and pushing nothing would leave
+   MarkForDestruction reading the thunk's own return address as its self. */
+void func_ov030_021145d4(void *self);                /* slot 19, own OnTurnIntoEgg */
 void *UkikiStar_Spawn(void);
 void *UkikiThief_Spawn(void);
 extern unsigned char UkikiStar_SpawnInfo[];
@@ -243,6 +250,38 @@ int _ZTV13RollingLogTtm[31];    /* vtspan: data_ov030_02115bfc, really _ZTV7daMk
    host TU defines it. This is the _ZTV10dBgActor_c / _ZTV8Platform shape at
    hal/actor_classes.cpp:591, one storage reached under both spellings. */
 #pragma comment(linker, "/alternatename:__ZTV9UkikiCage=__ZTV15daObjHmMaruta_c")
+
+/* ONE STORAGE, TWO NAMES, for 0x02115bfc as well. config gives that address
+   BOTH _ZTV13RollingLogTtm and _ZTV7daMky_c (symbols.txt lines 143 and 144),
+   and src uses whichever its own TU happened to be recovered under:
+   UkikiStar_Spawn.c and UkikiThief_Spawn.c spell _ZTV13RollingLogTtm, while
+   src/_ZN13RollingLogTtmD0Ev.c spells _ZTV7daMky_c. The host array carries the
+   first name (decl_common.h:524 declares it), so this alias points the second
+   at the same storage. Measured, not predicted: the FIRST link of this seat
+   failed with exactly this unresolved external and no other spelling.
+   _ZTV7daMky_c is the name that is actually RIGHT about the class -- see this
+   file's header -- and it is the one this lane could not use as the array's own
+   name, because src/ reaches the table under the other one from two TUs. */
+#pragma comment(linker, "/alternatename:__ZTV7daMky_c=__ZTV13RollingLogTtm")
+
+/* FIVE C-LINKAGE FLIPS. Five mounted data symbols are declared WITHOUT
+   extern "C" by a //cpp TU in this slice, so MSVC mangles the reference while
+   the mount defines the plain C name. The hal/cxx_aliases.cpp recipe applied
+   verbatim; each was measured off the first link's own unresolved list, with
+   the mangling MSVC actually produced, never predicted from the declaration:
+     src/func_ov030_0211360c.cpp     extern int data_ov030_02115ce0[];
+     src/func_ov030_02113b38.cpp     extern int data_ov030_02115d18[];
+     src/func_ov030_02113ff0.cpp     the same symbol again (LNK2001)
+     src/_ZN13RollingLogTtm13InitResourcesEv.cpp  extern char data_ov002_*;
+   All five are already mounted and already in the map as plain C symbols --
+   the first two by port/ov030_syms.txt, the last three by port/ov002_syms.txt
+   -- so this is a spelling bridge and not a new definition. Every LHS is
+   deliberately undefined, which is what alternatename_guard.py checks. */
+#pragma comment(linker, "/alternatename:?data_ov030_02115ce0@@3PAHA=_data_ov030_02115ce0")
+#pragma comment(linker, "/alternatename:?data_ov030_02115d18@@3PAHA=_data_ov030_02115d18")
+#pragma comment(linker, "/alternatename:?data_ov002_0210da40@@3DA=_data_ov002_0210da40")
+#pragma comment(linker, "/alternatename:?data_ov002_0210d9a0@@3DA=_data_ov002_0210d9a0")
+#pragma comment(linker, "/alternatename:?data_ov002_0210d9c0@@3DA=_data_ov002_0210d9c0")
 
 extern "C" {
 
@@ -372,8 +411,13 @@ static int __fastcall ov30_under(void *s, void *, void *o)
 { _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
 static int __fastcall ov30_aimed(void *s, void *)
 { return _ZN5Actor16OnAimedAtWithEggEv(s); }
-static int __fastcall ov30_pdes_default(void *s, void *)
-{ return _ZN9ActorBase16OnPendingDestroyEv(s); }
+/* Slot 12's ROM word on both Platform-derived tables is 0x02043ac0,
+   ActorBase::OnPendingDestroy -- an empty 4-byte body. The port links it as an
+   MSVC METHOD (?OnPendingDestroy@ActorBase@@UAEXXZ), never under the Itanium
+   C name, so it is reached through the class exactly as hal/actor_classes.cpp's
+   own ac_pdes_base does, and it returns void. */
+static void __fastcall ov30_pdes_default(void *s, void *)
+{ ((ActorBase *)s)->ActorBase::OnPendingDestroy(); }
 static int __fastcall ov30_kill(void *s, void *)
 { _ZN8Platform4KillEv(s); return 0; }
 
@@ -572,7 +616,7 @@ static int __fastcall mky_yoshi(void *s, void *)
    takes nothing of its own. The BabyPenguin slot-19 reasoning applies
    unchanged. */
 static int __fastcall mky_egg(void *s, void *, void *)
-{ (void)s; func_ov030_021145d4(); return 0; }
+{ func_ov030_021145d4(s); return 0; }
 
 extern "C" void hal_fill_ukiki_vtable(void)
 {

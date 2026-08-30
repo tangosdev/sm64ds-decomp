@@ -118,15 +118,34 @@
 # run `_ZN5ModelD1Ev(t + 0xd4)`, so both +0xd4 members are plain Models.
 #
 # ===========================================================================
-# 4. THE MEASURED CLOSURE GAP -- TWO ov080 LINES
+# 4. THE MEASURED CLOSURE GAP -- SEVEN LINES, ALL OF THEM MEASURED
 # ===========================================================================
-# RollingLogTtm's table takes TWO slots from ov080 rather than from arm9:
+# TWO ov080 LINES COME FROM THE VTABLE. RollingLogTtm's table takes two slots
+# from ov080 rather than from arm9:
 #   slot  9 (Render)             0x02127124  func_ov080_02127124
 #   slot 27 (OnHitByMegaChar)    0x02127058  func_ov080_02127058
 # Both resolve `module:overlays(78,80)` in relocs.txt, and level 22's roster
-# loads ov080 and not ov078, so the ov080 spelling is the live one. Neither is
-# in any existing slice, so both are appended here. They raise ov080's linked
-# count, not ov030's; recorded so the delta reconciles.
+# loads ov080 and not ov078, so the ov080 spelling is the live one.
+#
+# THE OTHER FIVE CAME OFF THE FIRST LINK'S OWN UNRESOLVED LIST, never guessed
+# -- slice_vs.txt section 3's "THE MEASURED GAP" discipline. That link reported
+# FIFTEEN unresolved externals and these five were the ones with a matched src
+# TU nobody had sliced:
+#   func_ov080_021270dc   from RollingLogTtm's CleanupResources
+#   func_ov080_0212714c   from RollingLogTtm's Behavior
+#   func_ov080_021274ac   from RollingLogTtm's InitResources
+#   func_02038ea4         from func_ov030_02111dd0
+#   func_02037f44         from func_ov030_02112400
+# The other ten were not missing bodies at all and needed no slice line: three
+# were arm9 helpers this overlay's src calls by their func_ADDRESS placeholder
+# while the port links them under their real names (renamed per source, see
+# port/CMakeLists.txt), six were C-linkage or vtable-name spelling flips fixed
+# with /alternatename in hal/actor_classes_ov030.cpp, and one was
+# ActorBase::OnPendingDestroy, which the port links as an MSVC method and which
+# the fill therefore reaches through the class.
+#
+# The five ov080/arm9 lines raise ov080's and arm9's linked counts, not
+# ov030's; recorded here so the linkage delta reconciles exactly.
 #
 # ===========================================================================
 # 5. NO LANGUAGE CXX ROWS ARE OWED
@@ -204,3 +223,11 @@ src/__sinit_ov030_021148b8.c
 src/__sinit_ov030_02114924.c
 src/func_ov080_02127124.cpp
 src/func_ov080_02127058.c
+src/func_ov080_021270dc.c
+src/func_ov080_0212714c.c
+src/func_ov080_021274ac.c
+src/func_02038ea4.cpp
+src/func_02037f44.c
+src/func_ov080_02127094.c
+src/func_ov080_02127658.c
+src/func_ov080_0212758c.c
