@@ -110,8 +110,58 @@ UNK_FIELD = re.compile(r"\bunk_[0-9a-fA-F]+\b")
 
 # Codegen steering that exists only to make the compiler emit given bytes.
 LAUNDER = re.compile(r"&\s*0xFFFFFFFFFFFFFFFF")
-VOLATILE = re.compile(r"\bvolatile\b")
 ASM = re.compile(r"\b(__asm|asm\s*\()")
+
+# `volatile`, but only in the shape that is a MATCH HACK.
+#
+# The bare `\bvolatile\b` this used to be could not tell a Nintendo DS hardware
+# register from a spill-forcing trick, and the tree is full of the former. A DS
+# decomp reaches VRAM, the geometry engine and the IPC/DMA/divider registers the
+# only way any DS program can -- through a `volatile`-qualified pointer -- and that
+# is not codegen steering, it is the only way to write the hardware at all.
+# `_ZN8dScene_c22ResetHardwareRegistersEv.cpp` carries 74 `volatile` hits and every
+# one is a store to 0x0400xxxx or a VRAM bank register; `GX::SetBankForTex` has 25
+# of the same; `G2x::SetBGyAffine(volatile unsigned short *, Matrix2x2 *, ...)`
+# takes the register block as a parameter. Scoring those as tricks failed the
+# criterion for code that had no alternative, and a reconstructed TU that absorbs
+# them inherits the failure whole.
+#
+# The two shapes are distinguishable by WHAT is volatile-qualified:
+#
+#   MMIO        the POINTED-TO type is volatile, so a `*` follows the type --
+#               `*(volatile u32 *)0x4000400`, `volatile u16 *ime`,
+#               `volatile DMAChannelRegs *reg`, `f(volatile void *dst)`.
+#   MATCH HACK  a volatile OBJECT, no `*` -- `volatile int li;`,
+#               `volatile Vector3 v;`, `volatile s32 zero = 0;`, the cast
+#               round-trip `(s32)(volatile s32)rsc` that demotes a local out of a
+#               register (notes: volatile-roundtrip-demotes-a-local), and
+#               `Node *volatile arr[4]`, where the POINTER, not the pointee, is
+#               volatile.
+#
+# So: `volatile` whose next character that is not a word character, space or `:`
+# is not a `*`. The negative lookahead does that scan without backtracking into
+# the type name, which the equivalent greedy form would -- `[\s\w:]*` followed by
+# a literal `*` would happily stop mid-identifier and call `volatile u32 *p` a
+# scalar.
+#
+# Measured on this tree: 655 -> 254 files score a codegen trick through this
+# regex. BOTH directions were checked rather than assumed. Every one of the 401
+# released files was confirmed MMIO-only, and the 254 that remain still include
+# every `volatile int li;` spill pad, every `volatile Vector3 v;` stack reserver,
+# every `volatile int dummy[4];` frame filler and the `(volatile s32)` round-trip
+# -- the technique this criterion exists to catch is caught in full. Adding `&` to
+# the excluded set (for a C++ `volatile T &` register reference) changes 0 files
+# today, so it is left out rather than carried untested.
+#
+# KNOWN CONSERVATIVE READING, stated rather than hidden: `typedef volatile u32
+# vu32;` is MMIO when `vu32` is only ever used as `vu32 *` (DMASyncFillTransfer.c
+# does exactly that), but the typedef itself declares a scalar and still scores as
+# a trick -- 4 files tree-wide. Excluding typedefs outright was rejected because it
+# opens a real evasion: `typedef volatile int vi; vi dummy;` would then contain no
+# `volatile` token at the use site at all, so the file would pass while doing the
+# exact thing the criterion forbids. A false positive on 4 files is the cheaper
+# error than a hole a match hack can walk through.
+VOLATILE = re.compile(r"\bvolatile\b(?![\s\w:]*\*)")
 
 # A call to another function under its mangled name: readable code calls
 # Player::SpinBounce, not _ZN6Player10SpinBounceE5Fix12IiE.
@@ -133,7 +183,7 @@ CRITERION_LABEL = {
     "real_name": "Real function name (not func_<addr>, Unk_<addr>, Virtual<n>)",
     "no_raw_offset": "No raw offset arithmetic (*(u32*)(c + 0x74))",
     "no_unk_field": "No unk_<off> fields",
-    "no_codegen_trick": "No codegen tricks (launder mask, volatile, asm)",
+    "no_codegen_trick": "No codegen tricks (launder, volatile object, asm)",
     "no_mangled_refs": "Calls things by real names, not mangled _Z",
 }
 
