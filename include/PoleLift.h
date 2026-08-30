@@ -25,7 +25,7 @@ struct PoleLift : dBgActor_c {
     u16 mHeightAng;                      /* 0x354 */
 
     /* --- vtable --- */
-    virtual ~PoleLift() {}
+    virtual ~PoleLift();
 
     int Behavior();
     int CleanupResources();

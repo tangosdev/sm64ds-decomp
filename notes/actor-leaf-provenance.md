@@ -332,4 +332,4 @@ Source: `src/_ZN10BowserTail8BehaviorEv.cpp`.
   same twelve-byte table row that fills `mLevelID`, `mTimerThreshold` and
   `mTimerReset` -- so it is the fourth column of the sound table, but nothing
   enrolled reads it, and which column is which is not something the table
-  itself says. [`src/_ZN11SoundObject13InitResourcesEv.cpp`]
+  itself says. [`src/actors/SoundObject.cpp`, `InitResources`]
