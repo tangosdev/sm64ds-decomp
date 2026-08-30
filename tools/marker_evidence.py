@@ -702,9 +702,9 @@ _SKIP_MEMBER_TY = set(EH._W1) | set(EH._W2) | set(EH._W4) | set(EH._W8) | {"void
 def scan_local_layout(code, cls, origin, path):
     """A migrated file that declares its own layout IS a member-type table.
 
-    `src/actors/Amp.cpp` says `struct Amp : Actor { ModelAnim m0; /* 0xd4 */ ... }`
-    and that file byte-matches, so both the offsets and the class names in it are
-    pinned by the ROM's own relocations.
+    A byte-matching revision of `src/_ZN3AmpD1Ev.cpp` declared
+    `struct Amp : Actor { ModelAnim m0; /* 0xd4 */ ... }`, so both the offsets
+    and the class names in it are pinned by the ROM's own relocations.
     """
     texts = EH.find_struct_texts(code)
     if cls not in texts:
@@ -895,9 +895,10 @@ def main():
             return sizes[cls][0], sizes[cls][1]
         if cls in layout_sizes:
             n, k = layout_sizes[cls].most_common(1)[0]
-            # UPPER BOUND ONLY.  `src/actors/PoleLift.cpp` pads Model to 0x80 so the
-            # next member lands at 0x158; the real class is 0x50 and the 0x30 between
-            # them is unknown space.  Never let this override an assertion.
+            # UPPER BOUND ONLY.  A revision of `src/_ZN8PoleLiftD1Ev.cpp` padded
+            # Model to 0x80 so the next member landed at 0x158; the real class is
+            # 0x50 and the 0x30 between them is unknown space.  Never let this
+            # override an assertion.
             return n, "inferred (UPPER BOUND) from %d local layout(s)" % k
         return None, None
 
