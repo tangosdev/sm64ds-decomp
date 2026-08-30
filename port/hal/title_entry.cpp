@@ -334,12 +334,12 @@ extern "C" int port_title_entry_taken(void)
  * five-tap chain, out/boot-title/A1_probe_short.log). Top-state on the left,
  * the ROM's own words on the right:
  *
- *   f0     state 11   the title's opening animation. NOTHING SKIPS IT HERE --
- *                     the taps at f200 and f400 changed nothing, because the
- *                     ROM's own skip in src/func_ov007_020b0a20.c needs
- *                     func_ov007_020aebac() == 0 and on this save state it is
- *                     not. The state times out on its own.
- *   f504   req 10     state 11's own exit: `unk8->unk2 = 0xA`.
+ *   f0     state 11   THE TITLE SCREEN, and it WAITS. See the correction
+ *                     below: it does not time out, it is waiting to be
+ *                     touched, and the tap at f200 is what starts it leaving.
+ *   f504   req 10     state 11's own exit: `unk8->unk2 = 0xA`. Exactly 304
+ *                     frames after the tap, and the 4000-frame run agrees to
+ *                     the frame -- its tap is at f1700 and its exit at f2004.
  *   f505   state 10   times out at its 0x3c frame into a screen fade.
  *   f634   state 1    then asks for 0.
  *   f666   state 0    THE TITLE'S FRONT SCREEN. Live, waiting.
@@ -397,33 +397,55 @@ extern "C" int port_title_entry_taken(void)
  * player is supposed to be looking at. Firing again there would take the file
  * select away from him.
  *
+ * ---- THE CORRECTION THAT SHAPED THIS, AND IT IS WORTH READING ------------
+ *
+ * A first cut of this file said top-state 11 was an attract sequence that
+ * "times out on its own", and built the skip on that. IT IS NOT TRUE. Top-
+ * state 11 IS THE TITLE SCREEN AND IT WAITS FOREVER. Measured directly rather
+ * than inferred: out/boot-title/P0_attract_noinput.log is a default boot with
+ * no input at all, 3000 frames, and its state trace has one line at f1 and
+ * then silence -- the machine never leaves 11. The reading that produced "it
+ * times out" came from two runs that BOTH tapped, and the 504 and 2004 they
+ * exited at are both exactly 304 frames after their own first tap.
+ *
+ * That is correct behaviour and it is what a title screen does. It also means
+ * there is no state the port can ASK for to get past it: src/func_ov007_-
+ * 020b0a20.c's only ways out are its animation reaching its end and an INPUT
+ * EDGE. So step 1 below supplies the edge -- through the same poll a real
+ * stylus goes through -- and leaves every one of the ROM's own conditions in
+ * place to decide what to do with it, including its own reading of its own
+ * save slots through func_ov007_020aebac. If the ROM refuses, the title stays
+ * up and the player taps it himself.
+ *
  * ---- WHAT IT DELIBERATELY DOES NOT DO ------------------------------------
  *
- * It does not touch the title's opening animation. The owner's ruling is "boot
- * to title", and states 11, 10 and 1 above ARE the title arriving -- roughly
- * eleven seconds of the ROM's own timing that no input in the measured run
- * shortened, because the ROM's own skip gate refused it. Forcing that gate
- * would be the port overruling the game about its own save state, which is
- * exactly the class of fix port/tools/linkage.py's north star refuses.
- *
- * And it does not pick a file. That is the player's, which is the whole point
- * of the toggle. */
+ * It does not pick a file. That is the player's, and it is the whole point of
+ * the toggle. */
 extern "C" {
 extern char *data_ov007_0210342c;      /* dScDSMT_c's scene global */
 void func_ov007_020aec94(int choice);  /* src/func_ov007_020aec94.c */
+/* hal/sub_screen.cpp: a press consumed by poll_touch in the same place the
+   scripted probe and the comms injection are, so from that line on it is
+   indistinguishable from a stylus. */
+void port_touch_force_press(int x, int y, int frames);
 }
 
 enum { TITLE_CHOICE_FILE_SELECT = 9 };
 
-/* Is the title's own menu idle? src/func_ov007_020b1224.c's own opening test,
-   with the null checks a host has to add because the port can be ticking this
-   scene before the chain is built and a fault here would be the port's. */
-static int title_menu_idle(char *g)
+/* src/func_ov007_020b1224.c's own opening test, READ AND REPORTED RATHER THAN
+   GATED ON. It was a gate in the first cut of this file and that was wrong:
+   measured over a whole SKIP_MENU run (out/boot-title/P2_skipmenu_elems.log,
+   first attempt) the word is never zero while the menu is up, so gating on it
+   meant the pick never fired at all. It gates the ROUTER -- the path a stylus
+   hit takes -- and this file does not use the router. Kept as a printed
+   number because the next reader will find the same three lines in the ROM
+   and wonder, and -1 for a chain that is not built yet. */
+static int title_router_word(char *g)
 {
     char *p1 = *(char **)(g + 0x134);
     char *p2 = p1 ? *(char **)(p1) : 0;
     char *p3 = p2 ? *(char **)(p2 + 4) : 0;
-    return p3 && *(short *)p3 == 0;
+    return p3 ? (int)*(short *)p3 : -1;
 }
 
 /* ---- SM64DS_TITLE_ELEMS=<frame>: WHERE THE MENU'S BOXES ARE --------------
@@ -494,8 +516,9 @@ extern "C" void port_title_elems_dump(int frame)
 extern "C" void port_title_skip_tick(int frame)
 {
     port_title_elems_dump(frame);
-    static int done;
-    if (done || !port_boot_skip_menu())
+    static int tapped;      /* the title screen has been touched */
+    static int chosen;      /* the menu row has been picked */
+    if (chosen || !port_boot_skip_menu())
         return;
     /* Only on the title. port_scene_env_want is the same test the bridge
        makes, and it is cheap and cached. */
@@ -507,23 +530,77 @@ extern "C" void port_title_skip_tick(int frame)
     char *sp = *(char **)(g + 8);
     if (!sp)
         return;
-    if (*(short *)(sp + 0) != 0)
-        return;                       /* not the front screen yet */
-    if (*(short *)(sp + 2) != -1)
+    const int state = *(short *)(sp + 0);
+    const int req   = *(short *)(sp + 2);
+
+    /* ---- STEP 1: THE TITLE SCREEN WANTS A TOUCH, SO GIVE IT ONE ----------
+     *
+     * Top-state 11 is the title screen and it waits. MEASURED, and it is the
+     * measurement that shaped this whole function: a default boot with no
+     * input sits there for 3000 frames and never leaves --
+     * out/boot-title/P0_attract_noinput.log has one state line at f1 and then
+     * nothing. There is no state to ask for here; src/func_ov007_020b0a20.c's
+     * only exits are its own animation ending and an INPUT EDGE, so the port
+     * supplies the edge and the ROM's own gate decides what to do with it.
+     *
+     * The press goes in through hal/sub_screen.cpp's poll, beside the scripted
+     * probe and the comms injection, which is early enough in the frame for
+     * func_ov007_020c1db0 to have built the panel record the title reads. The
+     * centre of the touch screen because the title takes a touch ANYWHERE --
+     * its gate reads the down edge and not a rectangle -- and because that is
+     * the point every proven chain in this tree taps.
+     *
+     * The state's own frame counter must be past 4 before the ROM will look
+     * (`mode >= 4` in its gate), so this waits for it rather than tapping into
+     * a screen that is still arriving and then wondering why nothing moved. */
+    if (state == 11) {
+        if (!tapped && *(int *)(sp + 0xc) >= 8) {
+            tapped = 1;
+            port_touch_force_press(128, 96, 2);
+            std::printf("[skip-menu] f%d: the title screen is waiting for a "
+                        "touch (top-state 11, its own frame %d). Supplying "
+                        "one at (128,96) through the same poll a real stylus "
+                        "goes through; src/func_ov007_020b0a20.c's own gate "
+                        "decides whether to take it.\n",
+                        frame, *(int *)(sp + 0xc));
+            std::fflush(stdout);
+        }
+        return;
+    }
+    if (state != 0)
+        return;                       /* still in transit: 10, 1 */
+    if (req != -1)
         return;                       /* a transition is already requested */
     if (*(int *)(g + 0x10) != 0)
         return;                       /* something has already been chosen */
-    if (!title_menu_idle(g))
-        return;                       /* the ROM's own idle test says wait */
+    /* THE TWO POINTERS src/func_ov007_020aec94.c WILL DEREFERENCE. It reads
+       two save bytes through g+0x28 and writes the request through g+8, and it
+       carries no null check of its own because on the DS it is only ever
+       reached from a live menu. A host can tick this scene before the chain is
+       built, so the fault would be the port's to answer for. */
+    if (!*(char **)(g + 0x28))
+        return;
+    /* AND THE STATE'S OWN FRAME COUNTER, which is the ROM's own idea of "this
+       state has settled": src/func_ov007_020b0a20.c gates its input on
+       `mode >= 4` off exactly this word, and src/func_ov007_020b10dc.c and
+       src/func_ov007_020b0834.c both run their entry work on its zero frame.
+       Eight rather than four for the reason the title tap uses eight: it costs
+       an eighth of a second and it puts the choice after every handler in the
+       chain has had its zero frame. */
+    if (*(int *)(sp + 0xc) < 8)
+        return;
 
-    done = 1;
+    /* ---- STEP 2: THE MENU ROW, THROUGH THE ROM'S OWN CHOICE -------------- */
+    chosen = 1;
+    const int router = title_router_word(g);
     func_ov007_020aec94(TITLE_CHOICE_FILE_SELECT);
     std::printf("[skip-menu] f%d: chose %d through the ROM's own "
                 "func_ov007_020aec94, which asked its own top-state machine "
                 "for %d. The file select comes up on the chain's own "
-                "transition; A, B and C are the player's.\n",
+                "transition; A, B and C are the player's. (router word %d, "
+                "reported not gated on -- see title_router_word)\n",
                 frame, TITLE_CHOICE_FILE_SELECT,
-                (int)*(short *)(sp + 2));
+                (int)*(short *)(sp + 2), router);
     std::fflush(stdout);
 }
 
