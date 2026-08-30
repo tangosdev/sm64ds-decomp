@@ -144,6 +144,45 @@
 # TUs would CALL INTO OV052's DATA. Routed by a per-source -D onto the ov034
 # spelling; decl_common.h declares neither name, so the rename is direct.
 #
+# ==== TWO LATENT WRONG-NAMES THIS MOUNT ARMS (T6, for the next lane) ======
+#
+# Sweeping every one of the 223 names this lane's four mounts define against
+# every TU in src/ turns up three spellers outside their own overlay that are
+# NOT in the link today. Two of them are ov034's, and both go from a LOUD
+# failure to a SILENT one the moment their lane seats them, because the name
+# they spell stopped being undefined when this mount landed. Written down here
+# rather than fixed: they are ov006's and ov022's -D to make, in ov006's and
+# ov022's own files.
+#
+#   src/_ZN6Player7ST_WAITE.cpp  (OV006 0x02110154, on port/slice_smb.txt and
+#     compiled today, but /OPT:REF strips it because nothing references it, so
+#     its object contributes no symbol to the map.) It declares
+#     `void data_ov034_02114738(void);` and CALLS it.
+#     config/arm9/overlays/ov006/relocs.txt resolves its three call sites
+#     (0x0210e0a0, 0x0210e468, 0x0210f91c) to 0x02114738 module:overlay(6),
+#     which is func_ov006_02114738, a 0x14-byte function in OV006's OWN .text
+#     (that section runs 0x020bfec0..0x0212b890). This mount defines
+#     data_ov034_02114738 as a TWELVE-BYTE .bss destructor chain node. Before
+#     this mount the reference was undefined and seating that TU would have
+#     failed the link; after it, seating that TU CALLS INTO A DATA ARRAY.
+#     The fix when ov006's lane arrives is one line:
+#       -Ddata_ov034_02114738=func_ov006_02114738
+#
+#   src/__sinit_ov022_021130bc.c  (OV022, in NO slice today.) It spells
+#     data_ov034_0211442c and data_ov034_02114690 for OV022's own objects at
+#     those shared-window addresses; ov022's relocs resolve 0x021130ec and
+#     0x021130f4/0x02112914 to module:overlay(22). Both are DATA on both sides,
+#     so this one is a wrong-object bind rather than a call into data -- the
+#     Coffin/Spindrift shape. Fix:
+#       -Ddata_ov034_0211442c=data_ov022_0211442c
+#       -Ddata_ov034_02114690=data_ov022_02114690
+#
+# THE THREE THAT WERE ALREADY LIVE ARE ALREADY ROUTED, and this lane checked
+# rather than assumed: src/_ZN14KnockDownPlank13InitResourcesEv.cpp (ov015,
+# LINKED) is re-routed by this very commit; src/func_ov026_02111598.cpp and
+# src/__sinit_ov025_02112a44.c spell two ov032 names and both already carry a
+# per-source -D from their own lanes (port/CMakeLists.txt:8695 and :913).
+#
 # ==== T2: RELOCATED WORDS IN THIS MOUNT ===================================
 #
 # The twenty-two PMF source pairs and the eleven table entries carry code
