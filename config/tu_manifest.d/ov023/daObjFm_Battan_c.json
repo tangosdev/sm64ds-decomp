@@ -1,0 +1,250 @@
+{
+  "id": "ov023/daObjFm_Battan_c",
+  "module": "ov023",
+  "source": "src/actors/daObjFm_Battan_c.cpp",
+  "promoted_source": "src/actors/daObjFm_Battan_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x21111a0..0x2111760, 9 functions, from build/tu_map.json (tools/tu_map.py)",
+    "ROM class identity: _ZTI16daObjFm_Battan_c at 0x02111fa0 and _ZTS16daObjFm_Battan_c at 0x02111fac",
+    "the separately enrolled __sinit_ov023_02111aa8 and its .ctor/resources remain outside this text-only class TU"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021111a0",
+      "end": "0x02111760"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN16daObjFm_Battan_cD1Ev",
+      "address": "0x021111a0",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN8SquasherD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16daObjFm_Battan_cD0Ev",
+      "address": "0x021111ec",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN8SquasherD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN16daObjFm_Battan_c12UpdateShadowEv",
+      "address": "0x0211124c",
+      "size": "0x000000bc",
+      "legacy_source": "src/func_ov023_0211124c.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN16daObjFm_Battan_c20UpdateModelTransformEv",
+      "address": "0x02111308",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov023_02111308.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN16daObjFm_Battan_c16CleanupResourcesEv",
+      "address": "0x02111350",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN8Squasher16CleanupResourcesEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN16daObjFm_Battan_c6RenderEv",
+      "address": "0x02111388",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN8Squasher6RenderEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN16daObjFm_Battan_c8BehaviorEv",
+      "address": "0x021113b0",
+      "size": "0x000002c0",
+      "legacy_source": "src/_ZN8Squasher8BehaviorEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN16daObjFm_Battan_c13InitResourcesEv",
+      "address": "0x02111670",
+      "size": "0x000000b8",
+      "legacy_source": "src/_ZN8Squasher13InitResourcesEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "Squasher_Spawn",
+      "address": "0x02111728",
+      "size": "0x00000038",
+      "legacy_source": "src/Squasher_Spawn.c",
+      "ordinal": 8
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Immediate-base vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its ov002 home before isolation."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Immediate-base vague-linkage type-name string; romdata_check proves the natural compiler copy at its ov002 home before isolation."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTI16daObjFm_Battan_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov023",
+      "canonical_address": "0x02111fa0",
+      "reason": "InitResources naturally emits the ROM-proven class RTTI. romdata_check proves its complete record and relocations before text-only isolation discards the copy."
+    },
+    {
+      "symbol": "_ZTS16daObjFm_Battan_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov023",
+      "canonical_address": "0x02111fac",
+      "reason": "InitResources naturally emits the ROM-proven class type-name string. romdata_check proves the exact payload before text-only isolation discards the copy."
+    },
+    {
+      "symbol": "Squasher_SpawnInfo",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov023",
+      "canonical_address": "0x02111fc0",
+      "reason": "The typed actor descriptor is naturally defined beside its factory. romdata_check proves the factory relocation and every descriptor word before isolation."
+    },
+    {
+      "symbol": "_ZTV16daObjFm_Battan_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov023",
+      "canonical_address": "0x02111fe4",
+      "reason": "InitResources naturally emits the complete class vtable. romdata_check applies the measured eight-byte address-point bias and proves every slot before isolation."
+    }
+  ],
+  "notes": [
+    "Genuine lifecycle source form: daObjFm_Battan_c defines its virtual destructor inline and InitResources as the key function. The compiler, not hand-written RTTI/vtable or a forcing object, owns the class destructor variants and class data.",
+    "UpdateShadow and UpdateModelTransform are truthful inferred private spellings. Their class ownership, inbound calls, bodies, layout, relocations, and codegen are proven; the exact original English names are not.",
+    "Squasher_Spawn and Squasher_SpawnInfo remain evidence-bounded C ABI aliases. Natural new was measured elsewhere in this actor family to target the wrong global allocator, so the factory retains retail's narrow allocator/base/member-constructor/vptr seam.",
+    "The ov023 SharedFilePtr at 0x02112080 is the collision resource proved by retained __sinit_ov023_02111aa8. The old RotatingPlatformWdw symbol at the same virtual address in ov029 was a cross-overlay collision and is not used here.",
+    "The retained initializer, ctor word, resource BSS, and unrelated read-only data remain separately enrolled and are not claimed by this text-only class TU.",
+    "Legacy per-function contribution comparison is intentionally inapplicable across this atomic identity correction: those objects define the old Squasher mangles while this genuine object defines ROM-proven daObjFm_Battan_c mangles. Production evidence is the 9/9 byte+relocation+order proof, nine blind:0 linked-function checks, fail-closed derived eligibility, and exact normal 106/106 ROM link."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov023-daObjFm_Battan_c/daObjFm_Battan_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 9,
+    "functions_declared": 9,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTI16daObjFm_Battan_c",
+        "_ZTS16daObjFm_Battan_c",
+        "Squasher_SpawnInfo",
+        "_ZTV16daObjFm_Battan_c"
+      ],
+      "dataExternalized": [
+        "Squasher_SpawnInfo",
+        "_ZTI10dBgActor_c",
+        "_ZTI16daObjFm_Battan_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS16daObjFm_Battan_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV16daObjFm_Battan_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

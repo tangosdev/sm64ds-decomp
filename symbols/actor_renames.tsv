@@ -741,15 +741,17 @@ ov022	0x02114380	data_ov022_02114380	RollingLogLll_SpawnInfo	spawninfo
 ov022	0x021143a4	data_ov022_021143a4	_ZTV12FallBlockLll	vtable alloc=0x34c
 ov022	0x02114458	data_ov022_02114458	VolcanoFire_SpawnInfo	spawninfo
 ov022	0x0211447c	data_ov022_0211447c	_ZTV13RollingLogLll	vtable alloc=0x344
-ov023	0x021111a0	func_ov023_021111a0	_ZN8SquasherD1Ev	vtable slot 16
-ov023	0x021111ec	func_ov023_021111ec	_ZN8SquasherD0Ev	vtable slot 17
-ov023	0x02111350	func_ov023_02111350	_ZN8Squasher16CleanupResourcesEv	vtable slot 3
-ov023	0x02111388	func_ov023_02111388	_ZN8Squasher6RenderEv	vtable slot 9
-ov023	0x021113b0	func_ov023_021113b0	_ZN8Squasher8BehaviorEv	vtable slot 6
-ov023	0x02111670	func_ov023_02111670	_ZN8Squasher13InitResourcesEv	vtable slot 0
-ov023	0x02111728	func_ov023_02111728	Squasher_Spawn	spawnfunc
-ov023	0x02111fc0	data_ov023_02111fc0	Squasher_SpawnInfo	spawninfo
-ov023	0x02111fe4	data_ov023_02111fe4	_ZTV8Squasher	vtable alloc=0x37c
+ov023	0x021111a0	func_ov023_021111a0	_ZN16daObjFm_Battan_cD1Ev	vtable slot 16; class identity proven by ov023 RTTI/ZTS
+ov023	0x021111ec	func_ov023_021111ec	_ZN16daObjFm_Battan_cD0Ev	vtable slot 17; class identity proven by ov023 RTTI/ZTS
+ov023	0x0211124c	func_ov023_0211124c	_ZN16daObjFm_Battan_c12UpdateShadowEv	inferred private spelling; class ownership/calls/codegen proven
+ov023	0x02111308	func_ov023_02111308	_ZN16daObjFm_Battan_c20UpdateModelTransformEv	inferred private spelling; class ownership/calls/codegen proven
+ov023	0x02111350	func_ov023_02111350	_ZN16daObjFm_Battan_c16CleanupResourcesEv	vtable slot 3; class identity proven by ov023 RTTI/ZTS
+ov023	0x02111388	func_ov023_02111388	_ZN16daObjFm_Battan_c6RenderEv	vtable slot 9; class identity proven by ov023 RTTI/ZTS
+ov023	0x021113b0	func_ov023_021113b0	_ZN16daObjFm_Battan_c8BehaviorEv	vtable slot 6; class identity proven by ov023 RTTI/ZTS
+ov023	0x02111670	func_ov023_02111670	_ZN16daObjFm_Battan_c13InitResourcesEv	vtable slot 0; class identity proven by ov023 RTTI/ZTS
+ov023	0x02111728	func_ov023_02111728	Squasher_Spawn	spawnfunc; evidence-bounded C ABI alias
+ov023	0x02111fc0	data_ov023_02111fc0	Squasher_SpawnInfo	spawninfo; evidence-bounded C ABI alias
+ov023	0x02111fe4	data_ov023_02111fe4	_ZTV16daObjFm_Battan_c	vtable alloc=0x37c; class identity proven by RTTI/ZTS
 ov024	0x021111a0	func_ov024_021111a0	_ZN10PyramidTopD1Ev	vtable slot 16
 ov024	0x021111ec	func_ov024_021111ec	_ZN10PyramidTopD0Ev	vtable slot 17
 ov024	0x0211124c	func_ov024_0211124c	_ZN10PyramidTagD1Ev	vtable slot 16

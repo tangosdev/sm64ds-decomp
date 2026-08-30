@@ -8,8 +8,29 @@ instructions). When a better model or a new idiom lands, we start from 95%-done,
 
 The DB lives at nearmiss/db.jsonl (committed, so the work survives). Each record:
   {module, addr, name, size, target_hex, lang, divergences, c_source, source}
+plus, on rows the evaluator has touched:
+  cand_size   assembled byte size of c_source's function (size is the TARGET's byte
+              size, so cand_size - size is the seed's size gap; retrieval ranks by
+              (divergences, |gap|) -- see seed_rank)
+  evaluator   fingerprint of the evaluator that produced divergences, "2004/b56|m1"
+and, on rows whose stored source NO LONGER scores under the current evaluator:
+  status      "noncompile" (the source stopped compiling -- header churn under it)
+              or "func-absent" (compiles, but the symbol is missing from the object)
+  error       trimmed compiler/extract detail
+  stale_divergences  the last score before it went unscorable (divergences itself
+              becomes null, so every consumer ranks the row last instead of serving
+              poisoned bait at the top of a closest-first worklist)
 plus an optional "floor" object on entries whose residual is verified compiler-internal:
   {"class": "ordering", "evidence": "...", "date": "YYYY-MM-DD"}
+
+Scores are only comparable while the evaluator that produced them still exists:
+include/ churn under the stored sources, a canonical-compiler bump, or a metric change
+all silently invalidate the ranking (2026-08-30: 5 of 8 sampled rows re-scored
+differently under the then-current evaluator; two rows recorded at divergence 13 no
+longer compiled at all). nearmiss/eval_pin.json records the evaluator of the last full
+`reeval` pass; every ranking consumer warns when the live evaluator no longer matches
+it, and tools/test_nearmiss_db.py holds the pin to tools/match.py's CANONICAL and
+METRIC_REV below so the drift is a CI failure, not a quiet lie.
 Floored entries are excluded from export-close and refine_wl.py by default -- the
 permuter provably cannot flip pure instruction-ordering residuals (see
 notes/mwccarm-codegen.md), so automated tiers stop burning compute on them. They stay
@@ -23,6 +44,7 @@ Usage:
   python tools/nearmiss_db.py list --max-div 12
   python tools/nearmiss_db.py export-close --max-div 8 --out progress/close.jsonl   # permuter seeds
   python tools/nearmiss_db.py bank-matches      # re-check every entry; bank any that now score 0
+  python tools/nearmiss_db.py reeval            # re-score every row; mark unscorable ones; write the eval pin
   python tools/nearmiss_db.py prune-matched     # drop ghosts already matched in committed src/
   python tools/nearmiss_db.py mark-floor --name <func> --class ordering --evidence "levers tried ..."
   python tools/nearmiss_db.py unmark-floor --name <func>
@@ -44,7 +66,78 @@ import ledger as L
 
 DB = REPO / "nearmiss" / "db.jsonl"
 LOCKDIR = REPO / "nearmiss" / ".lock"
+PIN = REPO / "nearmiss" / "eval_pin.json"
 REG = re.compile(r"\b(r\d+|sb|sl|fp|ip|sp|lr|pc)\b")
+
+# Version of the divergence METRIC itself (the disasm normalization + the differ in
+# evaluate_full). Bump it whenever a change here would re-score an unchanged source,
+# then run `reeval` on a main-tip checkout and commit db.jsonl + eval_pin.json with
+# the bump -- tools/test_nearmiss_db.py fails until the pin agrees.
+METRIC_REV = 1
+
+_PIN_CACHE = {}
+
+
+def _fingerprint(canonical, metric):
+    return f"{canonical}|m{metric}"
+
+
+def pin_fingerprint():
+    """Evaluator fingerprint recorded by the last full `reeval` pass
+    (nearmiss/eval_pin.json), or None if no pass was ever recorded. Deliberately
+    light -- no compile stack -- so dedupe on a bare interpreter (the union-merge
+    cleanup in CI) can still rank stamped rows against stale ones."""
+    key = str(PIN)
+    if key not in _PIN_CACHE:
+        fp = None
+        try:
+            pin = json.loads(PIN.read_text(encoding="utf-8"))
+            fp = _fingerprint(pin["canonical"], pin["metric"])
+        except (OSError, ValueError, KeyError, TypeError):
+            pass
+        _PIN_CACHE[key] = fp
+    return _PIN_CACHE[key]
+
+
+def current_fingerprint():
+    """Fingerprint of the LIVE evaluator, or None where the compile stack is absent
+    (bare interpreters running the metadata-only subcommands)."""
+    try:
+        import match as M
+    except ImportError:
+        return None
+    return _fingerprint(M.CANONICAL, METRIC_REV)
+
+
+def warn_stale_pin():
+    """One loud stderr line when the live evaluator no longer matches the recorded
+    pin: every stored divergence is then suspect until `reeval` runs. Quiet on bare
+    interpreters (they cannot know the live evaluator; the CI pin test still gates
+    canonical/metric bumps there)."""
+    cur = current_fingerprint()
+    if cur is None:
+        return
+    rec = pin_fingerprint()
+    if rec is None:
+        print("nearmiss_db: WARNING no nearmiss/eval_pin.json -- stored divergences have "
+              "no recorded evaluator; run `python tools/nearmiss_db.py reeval` on a "
+              "main-tip checkout", file=sys.stderr)
+        return
+    if rec != cur:
+        print(f"nearmiss_db: WARNING stored divergences were scored under {rec} but the "
+              f"live evaluator is {cur}; scores and rankings are stale -- run "
+              f"`python tools/nearmiss_db.py reeval` on a main-tip checkout",
+              file=sys.stderr)
+        return
+    try:
+        pin = json.loads(PIN.read_text(encoding="utf-8"))
+        import match as M
+        if pin.get("flags") != M.DEFAULT_FLAGS:
+            print("nearmiss_db: WARNING build flags changed since the last reeval pass "
+                  "(nearmiss/eval_pin.json disagrees with match.DEFAULT_FLAGS); re-run "
+                  "`python tools/nearmiss_db.py reeval`", file=sys.stderr)
+    except (OSError, ValueError):
+        pass
 
 
 def locked():
@@ -66,47 +159,164 @@ def _disasm(code, relocs):
     return out
 
 
-def evaluate(src, name, target):
-    """Return (divergences, ok) for a candidate vs the target bytes. divergences is the
-    count of differing instructions (reloc-wildcarded); ok is a true RELOC-AWARE oracle
-    match (swarm.oracle_ok -- NOT exact byte-equality, since reloc slots are wildcarded).
-    Returns (None, False) if it does not compile or the function is absent."""
-    import tempfile, os, difflib
+def _trim_error(text, limit=240):
+    """Compiler chatter -> one storable line. compile_c prints its detail with a
+    '! compile failed (<version>):' prefix; strip it, drop warning lines when a real
+    error line exists (every run leads with an inert MWCIncludes warning), collapse."""
+    m = re.search(r"! compile failed \([^)]*\):\s*(.*)", text, re.S)
+    if m:
+        text = m.group(1)
+    lines = [l.strip() for l in text.splitlines() if l.strip()]
+    keep = [l for l in lines if "warning:" not in l] or lines
+    text = " | ".join(keep)
+    # The temp compile dir is machine-local noise (and carries a home-dir path into a
+    # committed file); keep only the candidate file name and line.
+    text = re.sub(r"\S*[\\/](cand\.c(?:pp)?)", r"\1", text)
+    return text[:limit] if text else "compile failed (no diagnostic captured)"
+
+
+def evaluate_full(src, name, target):
+    """Evaluate a candidate against the target bytes with the live evaluator. Returns
+      {divergences, ok, cand_size, status, error}
+    divergences  count of differing instructions (reloc-wildcarded), None if unscorable
+    ok           true RELOC-AWARE oracle match (reloc slots wildcarded, NOT raw equality)
+    cand_size    assembled byte size of the candidate function, None if unscorable
+    status/error None on a scorable row; "noncompile"/"func-absent" + detail otherwise
+    resolved   the symbol actually scored, when it is not the row's stored `name`
+    ONE compile: the oracle object is reused for the divergence count, so the metric and
+    the oracle can never disagree about what the compiler emitted (the old two-compile
+    shape also doubled the cost of every ingest/bank-matches/reeval pass).
+
+    A name miss falls back to the object's SOLE sized STT_FUNC before it is called an
+    absence: the stored `name` goes stale against its own `c_source` (a symbol import
+    renames the row to the C++ symbol while the source still spells func_<addr>), and
+    the repo's substitution-compressed manglings are not the spelling mwccarm emits.
+    Both look identical to an exact-string lookup and both demote a perfectly good,
+    often size-exact seed to last place in every worklist. See match.sole_func_symbol."""
+    import contextlib
+    import difflib
+    import io
     import match as M
     import swarm as S
-    cpp = src.startswith("//cpp")
+    unscorable = {"divergences": None, "ok": False, "cand_size": None}
+    chat = io.StringIO()
+    resolved = None
     try:
-        ok = S.oracle_ok(src, name, target)        # definitive, reloc-aware
-    except Exception:
-        ok = False
-    if ok:
-        return 0, True
-    fd, tmp = tempfile.mkstemp(suffix=".cpp" if cpp else ".c")
-    os.close(fd)
-    pathlib.Path(tmp).write_text(src)
-    try:
-        obj = M.compile_c(pathlib.Path(tmp), M.CANONICAL, S.CPP_FLAGS if cpp else M.DEFAULT_FLAGS)
-    finally:
-        pathlib.Path(tmp).unlink(missing_ok=True)
-    if obj is None:
-        return None, False
-    cand, crel = M.extract_func(obj, name)
+        with contextlib.redirect_stdout(chat):    # compile_c prints; capture the detail
+            ok, obj = S.oracle_check(src, name, target)
+        if obj is None:
+            return dict(unscorable, status="noncompile", error=_trim_error(chat.getvalue()))
+        cand, crel = M.extract_func(obj, name)
+        if cand is None:
+            # oracle_check looked the same name up and returned ok=False for the same
+            # reason, so the byte verdict has to be recomputed against the resolved
+            # symbol -- otherwise a fallback row could never read as a match.
+            resolved = M.sole_func_symbol(obj)
+            if resolved is not None:
+                cand, crel = M.extract_func(obj, resolved)
+                ok, _ = M.compare(target, cand, crel or set(), verbose=False) \
+                    if cand is not None and len(cand) == len(target) else (False, 0)
+    except Exception as e:                        # malformed object, ELF parse crash, ...
+        return dict(unscorable, status="noncompile",
+                    error=_trim_error(f"{type(e).__name__}: {e}"))
     if cand is None:
-        return None, False
+        return dict(unscorable, status="func-absent",
+                    error=f"function {name!r} absent from the compiled object")
+    if ok:
+        return {"divergences": 0, "ok": True, "cand_size": len(cand),
+                "status": None, "error": None, "resolved": resolved}
     crel = crel or set()
     c = _disasm(cand, crel)
     t = _disasm(target, crel)
     sm = difflib.SequenceMatcher(a=c, b=t, autojunk=False)
     div = sum(max(i2 - i1, j2 - j1) for op, i1, i2, j1, j2 in sm.get_opcodes() if op != "equal")
-    return div, False
+    return {"divergences": div, "ok": False, "cand_size": len(cand),
+            "status": None, "error": None, "resolved": resolved}
+
+
+def evaluate(src, name, target):
+    """Back-compat shape: (divergences, ok). (None, False) if the source does not
+    compile or the function is absent. Callers that also want the candidate size or
+    the failure detail use evaluate_full."""
+    r = evaluate_full(src, name, target)
+    return r["divergences"], r["ok"]
+
+
+def apply_eval(r, full):
+    """Fold an evaluate_full result into a row, in place: re-score + stamp, or mark
+    it unscorable (status/error, divergences=None) keeping the last good score as
+    stale_divergences. Never deletes the row -- a broken source is still the record
+    of an attempt, it just must not sit in a closest-first worklist as bait."""
+    if full["status"]:
+        if r.get("divergences") is not None:
+            r["stale_divergences"] = r["divergences"]
+        r["divergences"] = None
+        r.pop("cand_size", None)
+        r["status"] = full["status"]
+        r["error"] = full["error"]
+    else:
+        r["divergences"] = full["divergences"]
+        r["cand_size"] = full["cand_size"]
+        for k in ("status", "error", "stale_divergences"):
+            r.pop(k, None)
+    fp = current_fingerprint()
+    if fp:
+        r["evaluator"] = fp
+
+
+def _size_gap(r):
+    """|cand_size - size| in bytes; huge when either side is unknown so unmeasured
+    rows never outrank measured ones on the size axis."""
+    cs, ts = r.get("cand_size"), r.get("size")
+    if isinstance(ts, str):
+        try:
+            ts = int(ts, 0)
+        except ValueError:
+            ts = None
+    if not isinstance(cs, int) or not isinstance(ts, int):
+        return 1 << 30
+    return abs(cs - ts)
+
+
+def closeness(r):
+    """The strictly-improving upsert key: (divergences, size gap). Edit distance still
+    leads -- an upsert never regresses divergences -- but of two equally-close drafts
+    the one assembling nearer the target size wins. Edit distance alone is
+    NON-MONOTONIC in candidate size (measured 2026-08-30 on one ov065 family: a
+    ten-instruction-SHORT draft scored 225 while the one-instruction-off draft scored
+    267 and four-over drafts scored 241), and the permuter cannot add or remove
+    instructions, so a size-blind keep-best can hold materially worse permuter fuel."""
+    div = r.get("divergences")
+    return (div if isinstance(div, int) else 1 << 30, _size_gap(r))
+
+
+def seed_rank(r):
+    """Total retrieval order for worklists and exports: closeness, then (module, addr)
+    so equal-closeness rows land in a deterministic, diff-stable order."""
+    return closeness(r) + (str(r.get("module")), str(r.get("addr")))
 
 
 def _rank(r):
-    """Collapse order for duplicate rows of one (module, addr): lower divergences wins;
-    a floor mark breaks a divergence tie (the more-informed verdict). Unscored rows
-    rank last."""
+    """Collapse order for duplicate rows of one (module, addr). A row stamped by the
+    CURRENT eval pin outranks any other row FIRST: a LOCAL union merge (db.jsonl is
+    merge=union; GitHub does not honour the driver, so on the server this shows as a
+    real conflict instead) resurrects copies scored under an older evaluator, or never
+    re-scored at all, and a stale score that happens to be LOWER would otherwise win
+    the collapse and silently undo a reeval correction.
+
+    Stale is not a synonym for lower -- drift goes both ways, measured 25 up / 22 down
+    across the 2026-08-30 full pass (230->354 and 205->217 up; ov015 78->18 down). The
+    stamp is what makes the collapse safe, not an assumed direction: it prefers the
+    row scored by the evaluator we can still reproduce, whichever number is smaller.
+
+    Then lower divergences wins; a floor mark breaks a divergence tie (the more-informed
+    verdict); a smaller size gap breaks what remains. Unscored rows rank last within
+    their stamp class. With no pin recorded this reduces to the old order."""
+    pin = pin_fingerprint()
+    stamped = 0 if (pin is not None and r.get("evaluator") == pin) else 1
     div = r.get("divergences")
-    return (div if isinstance(div, int) else 1 << 30, 0 if r.get("floor") else 1)
+    return (stamped, div if isinstance(div, int) else 1 << 30,
+            0 if r.get("floor") else 1, _size_gap(r))
 
 
 def load_db():
@@ -146,7 +356,7 @@ def save_db(db):
     truncate it. Write a sibling temp then os.replace."""
     import os
     DB.parent.mkdir(parents=True, exist_ok=True)
-    items = sorted(db.values(), key=lambda r: (r.get("divergences") if r.get("divergences") is not None else 1e9))
+    items = sorted(db.values(), key=seed_rank)   # deterministic: closeness, then key
     tmp = DB.with_name(DB.name + ".tmp")
     tmp.write_text("".join(json.dumps(r) + "\n" for r in items), encoding="utf-8")
     os.replace(tmp, DB)
@@ -185,6 +395,12 @@ def resolve_name(name):
 def merge_batch(db, drops, updates):
     """Apply one ingest batch to a loaded db dict, in place. Returns (added, improved).
 
+    Strictly-improving in the closeness() key: an upsert never regresses divergences,
+    and on a divergence tie a candidate replaces the incumbent only when its assembled
+    size is strictly closer to the target (see closeness for why size-blind keep-best
+    holds worse permuter fuel). A row marked unscorable (status set, divergences null)
+    ranks worst, so any compiling candidate replaces it.
+
     Drops win over updates. A dropped key means the function is matched (the ledger or
     committed src/ says so), and one seeds file can carry two names for one (module,
     addr) -- a stale func_ADDR placeholder next to the real symbol -- where the
@@ -200,8 +416,7 @@ def merge_batch(db, drops, updates):
         if key in dropped:
             continue
         cur = db.get(key)
-        curdiv = cur.get("divergences") if cur and cur.get("divergences") is not None else 1e9
-        if cur is None or rec["divergences"] < curdiv:
+        if cur is None or closeness(rec) < closeness(cur):
             db[key] = rec
             added += cur is None
             improved += cur is not None
@@ -211,6 +426,7 @@ def merge_batch(db, drops, updates):
 def ingest(args):
     import worklist as WL
     import names as NM
+    warn_stale_pin()
     db = load_db()
     meta = load_meta(args.worklist)
     # MATCHED only, not load_done(): parked functions keep their pending drafts
@@ -261,14 +477,19 @@ def ingest(args):
             # 2026-07-12). Skip before the expensive evaluate().
             drops.append(key)
             continue
-        div, ok = evaluate(src, name, bytes.fromhex(thex))
-        if div is None or ok:           # ok shouldn't happen for an unmatched func; skip if so
+        full = evaluate_full(src, name, bytes.fromhex(thex))
+        if full["divergences"] is None or full["ok"]:   # broken seed, or already a match; skip
             continue
+        rec = {"module": mod, "addr": addr, "name": name, "size": size,
+               "target_hex": thex, "lang": "cpp" if src.startswith("//cpp") else "c",
+               "divergences": full["divergences"], "cand_size": full["cand_size"],
+               "c_source": src, "source": args.label or "fanout"}
+        fp = current_fingerprint()
+        if fp:
+            rec["evaluator"] = fp
         best = updates.get(key)
-        if best is None or div < best["divergences"]:
-            updates[key] = {"module": mod, "addr": addr, "name": name, "size": size,
-                            "target_hex": thex, "lang": "cpp" if src.startswith("//cpp") else "c",
-                            "divergences": div, "c_source": src, "source": args.label or "fanout"}
+        if best is None or closeness(rec) < closeness(best):
+            updates[key] = rec
     # merge under the lock: evaluate() above is slow, so the read-modify-write
     # happens against a FRESH db snapshot to not clobber concurrent crunchers
     with locked():
@@ -280,6 +501,7 @@ def ingest(args):
 
 
 def stats(args):
+    warn_stale_pin()
     db = load_db()
     ds = [r["divergences"] for r in db.values() if r.get("divergences") is not None]
     ds.sort()
@@ -295,18 +517,28 @@ def stats(args):
     floored = [r for r in db.values() if r.get("floor")]
     if floored:
         print(f"  floored        {len(floored)} (verified compiler-internal residual; hand-fix backlog)")
+    bad = [r for r in db.values() if r.get("status")]
+    if bad:
+        print(f"  unscorable     {len(bad)} (status set: stored source no longer evaluates; "
+              f"excluded from every worklist until a better ingest replaces it)")
 
 
 def _list(args):
+    warn_stale_pin()
     db = load_db()
-    rows = sorted(db.values(), key=lambda r: (r.get("divergences") if r.get("divergences") is not None else 1e9))
+    rows = sorted(db.values(), key=seed_rank)
     for r in rows:
-        if args.max_div is not None and (r.get("divergences") or 1e9) > args.max_div:
+        div = r.get("divergences")
+        # isinstance, not truthiness: `or 1e9` treated a bankable div=0 row as
+        # unscored and hid it from every --max-div listing.
+        if args.max_div is not None and (div if isinstance(div, int) else 1 << 30) > args.max_div:
             continue
         if getattr(args, "floor_only", False) and not r.get("floor"):
             continue
         tag = f"  FLOOR({r['floor'].get('class', '?')})" if r.get("floor") else ""
-        print(f"  div={r.get('divergences'):<4} {r['module']:6} {r['name'][:46]:46} {r['lang']}{tag}")
+        if r.get("status"):
+            tag += f"  {r['status'].upper()}({r.get('error', '')[:60]})"
+        print(f"  div={str(div):<4} {r['module']:6} {r['name'][:46]:46} {r['lang']}{tag}")
 
 
 def mark_floor(args):
@@ -342,6 +574,7 @@ def unmark_floor(args):
 
 
 def export_close(args):
+    warn_stale_pin()
     db = load_db()
     out = [r for r in db.values()
            if r.get("divergences") is not None and 0 < r["divergences"] <= args.max_div]
@@ -374,9 +607,11 @@ def export_close(args):
                 kept.append(r)
         cachep.write_text(json.dumps(cache))
         out = kept
-    out.sort(key=lambda r: r["divergences"])
+    out.sort(key=seed_rank)                       # closest first, size gap breaks ties
     pathlib.Path(args.out).write_text(
         "".join(json.dumps({"module": r["module"], "addr": r["addr"], "name": r["name"],
+                            "divergences": r["divergences"], "size": r.get("size"),
+                            "cand_size": r.get("cand_size"),
                             "c_source": r["c_source"]}) + "\n" for r in out))
     print(f"exported {len(out)} close seeds (div<={args.max_div}) -> {args.out}")
 
@@ -423,10 +658,13 @@ def prune_matched(args):
 def dedupe(args):
     """Collapse duplicate rows for the same (module, addr), keeping the BEST tip.
 
-    nearmiss/db.jsonl is `merge=union` in .gitattributes: two PRs that both bank a tip for
-    the same function land both rows on main instead of a merge conflict. That is the point -
-    GitHub can auto-merge concurrent match PRs - but it leaves duplicate rows for whatever
-    functions both sides touched. This is the automatic cleanup: for each (module, addr) keep
+    nearmiss/db.jsonl is `merge=union` in .gitattributes: two sides that both bank a tip for
+    the same function land both rows instead of a merge conflict. That is the point - a LOCAL
+    merge of concurrent match work resolves itself - but it leaves duplicate rows for whatever
+    functions both sides touched. (Only local: GitHub's own merge does not honour the union
+    driver and shows a real conflict, see .gitattributes.) This is the automatic cleanup, and
+    the update-chaos-data workflow's rewrite of this file on main goes through it: for each
+    (module, addr) keep
     the row with the LOWEST divergence (a floored entry outranks a same-div non-floored one,
     since the floor mark is the more-informed verdict), drop the rest. A merge never regresses
     a tip anyone improved. Idempotent; run in CI after every push to main.
@@ -506,12 +744,15 @@ def resync_names(args):
 
 
 def bank_matches(args):
-    """Re-evaluate every entry; bank any that now byte-match (score 0)."""
+    """Re-evaluate every entry; bank any that now byte-match (score 0). Everything
+    else is re-scored and stamped in passing (same shape as reeval, minus the pin)."""
     import swarm as S
+    warn_stale_pin()
     db = load_db()
     banked, banked_keys, rescored = 0, [], {}
     for key, r in list(db.items()):
-        div, ok = evaluate(r["c_source"], r["name"], bytes.fromhex(r["target_hex"]))
+        full = evaluate_full(r["c_source"], r["name"], bytes.fromhex(r["target_hex"]))
+        div, ok = full["divergences"], full["ok"]
         if ok and not getattr(args, "no_strict", False):
             # the byte oracle wildcards reloc slots; refuse a draft whose relocations
             # point somewhere other than the config/**/relocs.txt records
@@ -539,19 +780,98 @@ def bank_matches(args):
             if st != "refused":         # dup = matched meanwhile; drop either way
                 banked_keys.append(key)
                 banked += st == "banked"
-        elif div is not None:
-            rescored[key] = div
-    # merge under the lock so a concurrent cruncher's improvements survive
+        else:
+            rescored[key] = (r["c_source"], full)
+    # merge under the lock so a concurrent cruncher's improvements survive; a rescore
+    # only lands if the row still holds the SOURCE it was computed from (a cruncher
+    # may have replaced c_source mid-pass, and this score is not that source's score)
     with locked():
         cur = load_db()
         for key in banked_keys:
             cur.pop(key, None)
-        for key, div in rescored.items():
-            if key in cur:
-                cur[key]["divergences"] = div
+        for key, (src, full) in rescored.items():
+            tgt = cur.get(key)
+            if tgt is not None and tgt.get("c_source") == src:
+                apply_eval(tgt, full)
         save_db(cur)
         remaining = len(cur)
     print(f"banked {banked} now-matching entries; DB now {remaining}.")
+
+
+def reeval(args):
+    """Re-score EVERY row with the live evaluator, stamp the results, and record the
+    evaluator in nearmiss/eval_pin.json.
+
+    This is the corrective pass for score drift: stored divergences go stale when
+    include/ churns under the stored sources, when the canonical compiler moves, or
+    when the metric changes. Rows whose stored source no longer scores are KEPT but
+    marked (status/error, divergences=None, prior score in stale_divergences) so they
+    rank last everywhere instead of topping a closest-first worklist; a later
+    strictly-improving ingest replaces them and clears the mark.
+
+    Only a MAIN-TIP pass is authoritative (the stale-lane rule): run on a checkout of
+    current origin/main and commit db.jsonl together with eval_pin.json."""
+    import datetime
+    import match as M
+    exe = M.MW / M.CANONICAL / "mwccarm.exe"
+    if not exe.is_file():
+        sys.exit(f"reeval: canonical compiler {M.CANONICAL} is not installed at {exe}; "
+                 f"a pass without it would mark every row noncompiling")
+    db = load_db()
+    order = sorted(db.items(), key=lambda kv: seed_rank(kv[1]))
+    results, n = {}, len(order)
+    same = drifted = broke = recovered = bankable = 0
+    for i, (key, r) in enumerate(order, 1):
+        full = evaluate_full(r["c_source"], r["name"], bytes.fromhex(r["target_hex"]))
+        results[key] = (r["c_source"], full)
+        old, new = r.get("divergences"), full["divergences"]
+        label = f"[{i}/{n}] {r['module']:6} {r['name'][:46]:46}"
+        if full.get("resolved"):
+            # the stored name did not resolve but the object holds exactly one function;
+            # say so, because the row is now scored against a symbol it does not spell
+            print(f"{label} NAME: scored against {full['resolved']!r} "
+                  f"(stored name absent from the object)", flush=True)
+        if full["status"]:
+            broke += 1
+            print(f"{label} div {old} -> UNSCORABLE {full['status']}: {full['error']}",
+                  flush=True)
+        elif old is None:
+            recovered += 1
+            print(f"{label} recovered: div None -> {new}", flush=True)
+        elif new != old:
+            drifted += 1
+            note = "  (floor claim may be stale)" if r.get("floor") else ""
+            bank = "  BANKABLE -- run bank-matches" if full["ok"] else ""
+            print(f"{label} div {old} -> {new} DRIFT{note}{bank}", flush=True)
+        else:
+            same += 1
+        bankable += full["ok"]
+    print(f"\nreeval: {n} rows -- {same} unchanged, {drifted} drifted, {broke} unscorable, "
+          f"{recovered} recovered, {bankable} bankable (run bank-matches)")
+    if args.dry_run:
+        print("dry run: nothing written")
+        return
+    # merge under the lock against a FRESH snapshot; a result only lands on a row that
+    # still holds the source it was computed from (concurrent crunchers improve rows)
+    with locked():
+        cur = load_db()
+        applied = skipped = 0
+        for key, (src, full) in results.items():
+            tgt = cur.get(key)
+            if tgt is None or tgt.get("c_source") != src:
+                skipped += 1
+                continue
+            apply_eval(tgt, full)
+            applied += 1
+        save_db(cur)
+    pin = {"canonical": M.CANONICAL, "flags": M.DEFAULT_FLAGS,
+           "cpp_flags": M.DEFAULT_FLAGS.replace("-lang c99", "-lang c++"),
+           "metric": METRIC_REV,
+           "reevaluated": str(datetime.date.today()), "rows": n}
+    PIN.write_text(json.dumps(pin, indent=2) + "\n", encoding="utf-8")
+    _PIN_CACHE.clear()
+    print(f"applied {applied} rows ({skipped} changed under the pass and were left "
+          f"alone); pinned evaluator {_fingerprint(M.CANONICAL, METRIC_REV)} in {PIN.name}")
 
 
 def main():
@@ -586,6 +906,10 @@ def main():
     p.add_argument("--no-strict", action="store_true",
                    help="skip the reloc-destination gate (bytes-only banking)")
     p.set_defaults(fn=bank_matches)
+    p = sub.add_parser("reeval")
+    p.add_argument("--dry-run", action="store_true",
+                   help="print the drift report without writing db.jsonl or the pin")
+    p.set_defaults(fn=reeval)
     p = sub.add_parser("prune-matched")
     p.add_argument("--dry-run", action="store_true",
                    help="list the ghost entries without dropping them")

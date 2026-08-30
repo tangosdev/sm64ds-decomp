@@ -79,7 +79,7 @@ or used as a DMA destination — it cannot be redirected by redefining an lvalue
 
 ## Address-passed sites (not lvalue-redirectable)
 
-- `src/_ZN8Squasher8BehaviorEv.cpp:48` — `_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE((char *)this, &pos, 0x4000000);`
+- `src/actors/daObjFm_Battan_c.cpp:148` — `_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(this, &pos, 0x04000000);`
 - `src/func_02053c40.c:19` — `DMASyncFillTransfer((&data_02099fd0)[0], 0x4000008, 0, 0x60);`
 - `src/func_02053c40.c:21` — `DMASyncFillTransfer((&data_02099fd0)[0], 0x4001000, 0, 0x70);`
 - `src/func_020554bc.c:10` — `func_0205a064((&data_02099fd0)[0], 0x4000330, 0, 0x10, 0, 0);`

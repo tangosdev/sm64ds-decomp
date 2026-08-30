@@ -378,10 +378,12 @@ In the C twin, the `u8` marker at `0x2ec` became `mClsnMat`, the name
 `include/dBgActor_c.h` gives that offset and what `InitResources` passes to
 `dBgW_KcMbg::SetFile`.
 
-The rename carried into `src_tu/actors/daObjCannonShutter_c.cpp`, along with the same
-raw-offset collapses: `Render`'s whole-object `struct Obj { char pad[0xd4]; Sub sub; }`
-shadow is gone in favour of `&mModel`, and `InitResources` reaches `mModel`,
-`mMeshCollider` and `mClsnMat` by name.
+The rename carried into the promoted translation unit
+`src/actors/daObjCannonShutter_c.cpp` -- it lived under `src_tu/` as a shadow TU until
+`config/arm9/overlays/ov002/delinks.txt` enrolled it as the production source -- along
+with the same raw-offset collapses: `Render`'s whole-object `struct Obj { char pad[0xd4]; Sub
+sub; }` shadow is gone in favour of `mModel.Render(0)`, and `InitResources` reaches
+`mModel`, `mMeshCollider` and `mClsnMat` by name.
 
 ---
 
@@ -731,7 +733,7 @@ same offsets:
 * `include/PoleLift.h` — `param1`, `mAngleY`.
 * `include/IceSheet.h` and `include/RotatingFirebar.h` — `mAngleY`, and `mFlags`
   (0x0b0).
-* `include/Squasher.h` — `mCamSpacePosX` (0x074), `mClsnMat` (0x2ec).
+* `include/daObjFm_Battan_c.h` — `mCamSpacePosX` (0x074), `mClsnMat` (0x2ec).
 * `include/FortressTower.h` — `actorID` (0x00c).
 * `include/BasementWater.h` — `mCamSpacePosX`.
 * `include/TTC_MovingBeam.h` — `mTerminalVelocity`, `mVertSpeed`, `mClsnMat`.

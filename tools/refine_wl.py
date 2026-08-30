@@ -27,6 +27,7 @@ import categorize_misses as CAT
 import knowledge as KB
 import ledger as L
 import modules as MOD
+import nearmiss_db as NDB
 import relocs as R
 import worklist as WL
 
@@ -63,7 +64,15 @@ def main():
                     help="do not skip names in refine_attempted.txt (mass sweeps by a "
                          "DIFFERENT model tier that never saw them)")
     args = ap.parse_args()
+    NDB.warn_stale_pin()         # a stale evaluator means this whole pool is mis-ranked
 
+    # NOTE: this reads the file directly rather than through NDB.load_db, so it is the
+    # ONE ranking consumer the duplicate-collapse safety net does not cover. After a
+    # LOCAL union merge (db.jsonl is merge=union) the file can hold two rows for one
+    # (module, addr); load_db collapses them stamp-first, this does not -- it sees both
+    # and orders them with seed_rank, which has no stamp term, so a resurrected
+    # stale-lower-divergence copy can top the pool. Run
+    # `python tools/nearmiss_db.py dedupe` after any union merge before trusting this.
     rows = [json.loads(l) for l in (REPO / "nearmiss" / "db.jsonl")
             .read_text(encoding="utf-8").splitlines() if l.strip()]
     for r in rows:                       # addr/size are hex strings in some records
@@ -92,7 +101,7 @@ def main():
             and (min_size is None or r["size"] >= min_size)
             and (max_size is None or r["size"] < max_size)
             and unmatched(r["name"])]
-    pool.sort(key=lambda r: r["divergences"])
+    pool.sort(key=NDB.seed_rank)   # closest first; size gap breaks divergence ties
 
     cache = json.loads(CACHE.read_text()) if CACHE.exists() else {}
     chosen, checked = [], 0

@@ -1,0 +1,8 @@
+{
+  "canonical": "2004/b56",
+  "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -w illpragmas",
+  "cpp_flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -w illpragmas",
+  "metric": 1,
+  "reevaluated": "2026-08-30",
+  "rows": 164
+}

@@ -1839,7 +1839,11 @@ def oracle_check(c_source, name, target):
     cpp = c_source.startswith("//cpp")
     with tempfile.TemporaryDirectory() as td:
         cfile = pathlib.Path(td) / ("cand.cpp" if cpp else "cand.c")
-        cfile.write_text(c_source)
+        # utf-8 explicitly: the platform default (cp1252 on Windows) cannot encode
+        # e.g. an arrow character in a comment, so the same candidate scored on Linux
+        # but raised out of the temp-file write here -- an environment-dependent
+        # verdict from a function whose job is to be the oracle.
+        cfile.write_text(c_source, encoding="utf-8")
         obj = M.compile_c(cfile, M.CANONICAL, CPP_FLAGS if cpp else M.DEFAULT_FLAGS)
     if obj is None:
         return False, None
