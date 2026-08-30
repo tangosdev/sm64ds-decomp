@@ -145,6 +145,36 @@
 # eight. A sweep of the whole .rodata+.data for the same shape found this run
 # and no other.
 #
+# port/tools/vtspan.py --sweep DISAGREES WITH THE 37 AND IT IS THE TOOL THAT IS
+# SHORT. Its sweep line reads
+#   data_ov027_02113930  host 37  ROM 32  bound 1  term
+#   data_ov027_02113930  32 by terminator (raw run 38, dsd bound 1,
+#                                          terminator 32, typeinfo 45)
+# and the cause is named in vtspan's own source. tail_width() declines this
+# table on purpose -- its docstring says "Inconclusive on purpose for a deeper
+# hierarchy of its own (Bully and BigBully are 37)" -- so the terminator route
+# decides, and span() breaks at the first slot >= 31 that dsd NAMES and that is
+# not Platform::Kill (vtspan.py:467-470). dsd names data_ov027_021139b0, which
+# is slot 32, in the MIDDLE of this table. That is exactly the disease the code
+# comments above that break call out ("THE SYMBOL TERMINATOR HAS THE SAME
+# DISEASE THE SYMBOL BOUND HAS"), and the residual gap it states.
+#
+# THE 37 IS PROVEN THREE WAYS, none of them vtspan's:
+#   (1) the raw run is 38 -- vtspan's own first column -- and slot 37 is the
+#       first PMF pair, whose partner word at slot 38 is the literal zero that
+#       ends the run;
+#   (2) BOTH ov064 Bully tables terminate at 37. Read out of
+#       extracted/overlays/overlay_0064.bin at base 0x02115ee0: _ZTV5Bully
+#       (0x0211b870) and the base table data_ov064_0211b768 each carry a code
+#       pointer in slots 0..36 and 0x0209a764 __si_class_type_info at slot 37;
+#   (3) ChillBully's slots 33/34/35/36 are 0x02116374 / 0x02116360 /
+#       0x0211635c / 0x02116348, which are BYTE-IDENTICAL to the Bully base
+#       table's own slots 33/34/35/36. The derived class inherits those four
+#       unchanged, which it could not do if its table stopped at 32.
+# Nothing fails on this: the host array is declared 37, which is the ROM width
+# and is also >= vtspan's estimate, so the sweep passes. Declaring 32 would
+# have been the bug -- the fill writes vt[36].
+#
 # ChillBully derives from Bully (ov064): slot 3 is _ZN5Bully16CleanupResourcesEv,
 # slot 9 is _ZN5Bully6RenderEv, and slots 33/34/35/36 are ov064 bodies.
 # SnowmanBreath is a plain Actor (base typeinfo 0x0208e390, arm9) and stops at

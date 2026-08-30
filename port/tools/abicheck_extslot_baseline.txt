@@ -91,3 +91,73 @@ _data_ov052_02112520 slot 31 ?ov52_kill@@YIHPAX0@Z
 _data_ov060_0211a9b0 slot 31 ?ov60_kill@@YIHPAX0@Z
 _data_ov079_02127fb8 slot 31 ?blz_kill@@YIHPAX0@Z
 _data_ov100_0214857c slot 31 ?pl_kill@@YIHPAX0@Z
+#
+# run rel0215 wave 2 (lane cast-ov027), ov027's Snowman's Land cast.
+#
+# EIGHT ROWS IN TWO SHAPES.
+#
+# SHAPE ONE, two rows: slot 31 on this overlay's two Platform-derived tables
+# (SLIDING_ICE's, shared by ids 92 and 93, and DA_PG_DFDR's), both seating
+# ov27_kill -- a __fastcall thunk whose whole body is
+# `_ZN8Platform4KillEv(s); return 0;`, the same body as bw_kill, ov22_kill,
+# ov25_kill, ov45_kill, ov52_kill, ov56_kill, ov63_kill, ov65_kill and the rest
+# of the 78 rows above. ov027's other two classes are CHILL_BULLY (Enemy-derived,
+# below) and SNOWMAN_BREATH, a plain 31-slot Actor with no slot 31 at all and
+# therefore no row here.
+#
+# SHAPE TWO, six rows and it is NEW to this file: slots 31..36 on CHILL_BULLY's
+# 37-slot table. These are not Platform::Kill -- they are Bully/Enemy's own
+# extension virtuals, two of them ov027 bodies and four of them ov064's, parked
+# directly in the ROM table.
+#
+# WHAT WAS ACTUALLY CHECKED, so these are rulings and not shrugs.
+#
+# (1) NONE of the seven targets has a direct call site anywhere in the ROM.
+#     Swept across config/arm9/relocs.txt and all 103
+#     config/arm9/overlays/*/relocs.txt, counting by kind:
+#         0x020ee55c Platform::Kill        115 load, 0 arm_call
+#         0x02111680 func_ov027_02111680     5 load, 0 arm_call
+#         0x021116f0 func_ov027_021116f0     2 load, 0 arm_call
+#         0x02116374 func_ov064_02116374     3 load, 0 arm_call
+#         0x02116360 func_ov064_02116360     3 load, 0 arm_call
+#         0x0211635c func_ov064_0211635c     3 load, 0 arm_call
+#         0x02116348 func_ov064_02116348     3 load, 0 arm_call
+#     Every reference is a vtable load. So there is no direct-call site whose
+#     push could be read, and the pop contract for these slots rests on the same
+#     dispatch site the 78 rows above are already waiting on. Recorded as
+#     unchecked debt rather than cleared -- the ov029 lane's ruling, reached the
+#     same way.
+#
+# (2) THE ARITY OF ALL SIX SHAPE-TWO BODIES WAS READ OFF THEIR OWN src TUs, and
+#     it turned up two receiver-less ones the fill was initially declaring
+#     wrongly (now corrected in hal/actor_classes_ov027.cpp):
+#         func_ov027_02111680  int  (char *self)   receiver only
+#         func_ov027_021116f0  int  (char *self)   receiver only
+#         func_ov064_02116374  void (char *self)   receiver only, returns void
+#         func_ov064_02116360  int  (char *self)   receiver only
+#         func_ov064_0211635c  void (void)         NO RECEIVER AT ALL
+#         func_ov064_02116348  int  (char *self)   receiver only
+#     Not one of the six takes an argument past the receiver, so no dispatch
+#     site can be pushing one for them to pop, and `ret 0` is the right shape
+#     for all six. That is a stronger statement than shape one gets, and it is
+#     why these six are recorded rather than left to fail.
+#
+# TWENTY-FIVE MORE ROWS ARE NEW IN THE SAME RUN AND ARE NOT THIS LANE'S. They
+# are wave 1's, one per lane, and abicheck is RED ON THE BASE TIP 3b4863d9a
+# without any of this lane's changes: that commit's copy of this file contains
+# ZERO rows for ov017, ov023, ov024, ov026, ov029, ov030, ov033, ov035 or ov036,
+# and the last commit to touch it is cc7a1c114, an abicheck tooling change. The
+# ov029 lane wrote its own rows on its own branch (a5192e657) and that branch is
+# NOT an ancestor of 3b4863d9a. Each of the 25 is attributable from abicheck's
+# own output by the thunk it names -- ov36_kill (6), ov29_kill (6), ov30_kill,
+# ov35_kill, ov26_kill, ov33_kill (2 each), ov24_kill, ov23_kill, ov17_kill
+# (1 each) and ov36_after_clsn (1). This lane does not adopt them: they belong
+# to lanes that can rule on their own tables.
+__ZTV10SlidingIce slot 31 ?ov27_kill@@YIHPAX0@Z
+_data_ov027_02113a90 slot 31 ?ov27_kill@@YIHPAX0@Z
+_data_ov027_02113930 slot 31 ?cb_v31@@YIHPAX0@Z
+_data_ov027_02113930 slot 32 ?cb_v32@@YIHPAX0@Z
+_data_ov027_02113930 slot 33 ?cb_v33@@YIHPAX0@Z
+_data_ov027_02113930 slot 34 ?cb_v34@@YIHPAX0@Z
+_data_ov027_02113930 slot 35 ?cb_v35@@YIHPAX0@Z
+_data_ov027_02113930 slot 36 ?cb_v36@@YIHPAX0@Z

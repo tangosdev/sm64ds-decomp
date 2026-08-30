@@ -180,6 +180,25 @@
 // slot 31 of SLIDING_ICE's OWN ROM-shaped table, where the shadow's numbering
 // and the ROM's already agree (see TRAP T1 above). It stays compiled.
 
+// ============================================================================
+// THREE BODIES IN THIS CAST TAKE NO RECEIVER, AND THE DECLARATIONS SAY SO.
+// ============================================================================
+// Read off each TU's own definition, not assumed from the slot:
+//   src/func_ov027_02111dfc.c                     void (void)   empty body
+//   src/_ZN13SnowmanBreath16CleanupResourcesEv.c  int  (void)   releases three
+//       ov002 SharedFilePtrs (0x0210da40 / 0x0210d9a0 / 0x0210d9c0) and touches
+//       no member, so it genuinely needs no `this`
+//   src/_ZN13SnowmanBreath16OnPendingDestroyEv.c  void (void)   empty body
+// and one more that returns void where the slot's neighbours return int:
+//   src/func_ov064_02116374.cpp                   void (char *)
+// plus src/func_ov064_0211635c.cpp, void (void), the other receiver-less one.
+// Their thunks call them with the arity they have. Passing an ignored argument
+// would have linked and run -- cdecl, the caller cleans -- but a declaration
+// that disagrees with its definition is exactly what aritycheck and abicheck
+// exist to catch, and the six extension-slot rulings this lane recorded in
+// port/tools/abicheck_extslot_baseline.txt rest on these arities being read
+// rather than guessed.
+
 #include <cstdio>
 
 #include "dsstate_seg.h"
@@ -257,33 +276,33 @@ void *SlidingIce_Spawn(void);
 void *SlidingIceSpawner_Spawn(void);
 
 /* ---- CHILL_BULLY (217), 0x02113930 ---- */
-int func_ov027_0211181c(void *self);                /* slot 0  */
+int func_ov027_0211181c(char *self);                /* slot 0  */
 int func_ov027_02111770(char *self);                /* slot 6  */
 int _ZN5Bully6RenderEv(void *self);                 /* slot 9, ov064, a C name */
 int *func_ov027_021115c4(int *self);                /* slot 16, D1 */
 int *func_ov027_02111618(int *self);                /* slot 17, D0 */
-int func_ov062_02115f84(void *self);                /* slot 29 override, ov062 */
-int func_ov027_02111680(void *self);                /* slot 31 */
-int func_ov027_021116f0(void *self);                /* slot 32 */
-int func_ov064_02116374(void *self);                /* slot 33 */
-int func_ov064_02116360(void *self);                /* slot 34 */
-int func_ov064_0211635c(void *self);                /* slot 35 */
-int func_ov064_02116348(void *self);                /* slot 36 */
+int func_ov062_02115f84(char *self);                /* slot 29 override, ov062 */
+int func_ov027_02111680(char *self);                /* slot 31 */
+int func_ov027_021116f0(char *self);                /* slot 32 */
+void func_ov064_02116374(char *self);               /* slot 33, returns void */
+int func_ov064_02116360(char *self);                /* slot 34 */
+void func_ov064_0211635c(void);                     /* slot 35, NO receiver */
+int func_ov064_02116348(char *self);                /* slot 36 */
 void *ChillBully_Spawn(void);
 
 /* ---- DA_PG_DFDR (258), 0x02113a90 ---- */
 int func_ov027_02111eb4(void *self);                /* slot 0  */
 int func_ov027_02111d8c(char *self);                /* slot 3  */
-int func_ov027_02111e34(void *self);                /* slot 6  */
+int func_ov027_02111e34(char *self);                /* slot 6  */
 int func_ov027_02111e00(void *self);                /* slot 9  */
-int func_ov027_02111dfc(void *self);                /* slot 12 override */
+void func_ov027_02111dfc(void);                     /* slot 12 override, NO receiver */
 int *func_ov027_021118c8(int *self);                /* slot 16, D1 */
 int *func_ov027_02111924(int *self);                /* slot 17, D0 */
 void *func_ov027_0211207c(void);                    /* the UNNAMED factory */
 
 /* ---- SNOWMAN_BREATH (275), 0x02113b50 ---- */
-int _ZN13SnowmanBreath16CleanupResourcesEv(void *self);   /* slot 3, a C name */
-void _ZN13SnowmanBreath16OnPendingDestroyEv(void *self);  /* slot 12, a C name */
+int _ZN13SnowmanBreath16CleanupResourcesEv(void);         /* slot 3, NO receiver */
+void _ZN13SnowmanBreath16OnPendingDestroyEv(void);        /* slot 12, NO receiver */
 int _ZN13SnowmanBreathD1Ev(char *self);                   /* slot 16 */
 void *_ZN13SnowmanBreathD0Ev(char *self);                 /* slot 17 */
 void *SnowmanBreath_Spawn(void);
@@ -534,7 +553,7 @@ extern "C" void hal_fill_sliding_ice_vtable(void)
 // the ROM parks directly in the table, and 33..36 are ov064's too.
 // ============================================================================
 static int __fastcall cb_init(void *s, void *)
-{ return func_ov027_0211181c(s); }
+{ return func_ov027_0211181c((char *)s); }
 static int __fastcall cb_clean(void *s, void *)
 { return ((Bully *)s)->Bully::CleanupResources(); }
 static int __fastcall cb_behavior(void *s, void *)
@@ -547,19 +566,19 @@ static int __fastcall cb_d1(void *s, void *)
 static int __fastcall cb_d0(void *s, void *)
 { return (int)(size_t)func_ov027_02111618((int *)s); }
 static int __fastcall cb_aimed(void *s, void *)
-{ return func_ov062_02115f84(s); }
+{ return func_ov062_02115f84((char *)s); }
 static int __fastcall cb_v31(void *s, void *)
-{ return func_ov027_02111680(s); }
+{ return func_ov027_02111680((char *)s); }
 static int __fastcall cb_v32(void *s, void *)
-{ return func_ov027_021116f0(s); }
+{ return func_ov027_021116f0((char *)s); }
 static int __fastcall cb_v33(void *s, void *)
-{ return func_ov064_02116374(s); }
+{ func_ov064_02116374((char *)s); return 0; }
 static int __fastcall cb_v34(void *s, void *)
-{ return func_ov064_02116360(s); }
+{ return func_ov064_02116360((char *)s); }
 static int __fastcall cb_v35(void *s, void *)
-{ return func_ov064_0211635c(s); }
+{ func_ov064_0211635c(); return 0; }
 static int __fastcall cb_v36(void *s, void *)
-{ return func_ov064_02116348(s); }
+{ return func_ov064_02116348((char *)s); }
 
 extern "C" void hal_fill_chill_bully_vtable(void)
 {
@@ -596,12 +615,12 @@ static int __fastcall pd_init(void *s, void *)
 static int __fastcall pd_clean(void *s, void *)
 { return func_ov027_02111d8c((char *)s); }
 static int __fastcall pd_behavior(void *s, void *)
-{ return func_ov027_02111e34(s); }
+{ return func_ov027_02111e34((char *)s); }
 static int __fastcall pd_render(void *s, void *)
 { port_actor_render_probe("DA_PG_DFDR", (char *)s + 0xd4);
   return func_ov027_02111e00(s); }
 static int __fastcall pd_pdes(void *s, void *)
-{ return func_ov027_02111dfc(s); }
+{ func_ov027_02111dfc(); return 0; }
 static int __fastcall pd_d1(void *s, void *)
 { return (int)(size_t)func_ov027_021118c8((int *)s); }
 static int __fastcall pd_d0(void *s, void *)
@@ -636,14 +655,14 @@ extern "C" void hal_fill_da_pg_dfdr_vtable(void)
 static int __fastcall sb_init(void *s, void *)
 { return ((SnowmanBreath *)s)->SnowmanBreath::InitResources(); }
 static int __fastcall sb_clean(void *s, void *)
-{ return _ZN13SnowmanBreath16CleanupResourcesEv(s); }
+{ return _ZN13SnowmanBreath16CleanupResourcesEv(); }
 static int __fastcall sb_behavior(void *s, void *)
 { return ((SnowmanBreath *)s)->SnowmanBreath::Behavior(); }
 static int __fastcall sb_render(void *s, void *)
 { port_actor_render_probe("SNOWMAN_BREATH", (char *)s + 0xd4);
   return ((SnowmanBreath *)s)->SnowmanBreath::Render(); }
 static int __fastcall sb_pdes(void *s, void *)
-{ _ZN13SnowmanBreath16OnPendingDestroyEv(s); return 0; }
+{ _ZN13SnowmanBreath16OnPendingDestroyEv(); return 0; }
 static int __fastcall sb_d1(void *s, void *)
 { return _ZN13SnowmanBreathD1Ev((char *)s); }
 static int __fastcall sb_d0(void *s, void *)
