@@ -1337,6 +1337,24 @@ void hal_fill_tiny_water_vtable(void);               /* _ZTV9TinyCover, 32 */
 extern unsigned char Squasher_SpawnInfo[];           /* ov023 0x02111fc0, +4 = 84 */
 void *Squasher_Spawn(void);                          /* ov023 0x02111728, 56 B */
 void hal_fill_squasher_vtable(void);                 /* _ZTV8Squasher, 32 */
+/* run rel0215 wave 1 (lane cast-sweep1): OV017's ONE CLASS, the sunken ship's
+   water surface -- one of level 9's two skipped instances, and a blocker
+   hal/level_boot.cpp's level-9 block wrote down and deferred. Its table is
+   32-slot Platform and dsd's landing reads TEN. dsd's two names for it agree
+   with the RTTI ("14daObjKsWater_c"), so unlike ov033 and ov035 there is no
+   class-identity shift here. What there IS is three alias races in one
+   function, one of them live on this tip: the collision SharedFilePtr is
+   spelled &_ZN16FloatingFloorBfsD0Ev, an ov045 FUNCTION that is in the map
+   today. All three are pinned to the ROM's own literal pool and routed by
+   per-source -D. Derivation in port/ov017_syms.txt, fill in
+   hal/actor_classes_ov017.cpp, slice in port/slice_sweep1_ov017.txt.
+   NOTE its Behavior gates on TREASURE_CHEST (id 13, ov064, still unregistered):
+   with no id-13 actor to find, the "all chests opened" test is vacuously true
+   and the water drains from frame one. Visible, not fatal, and owned by the
+   OTHER class's seat -- see the ov017 syms header. */
+extern unsigned char ShipWater_SpawnInfo[];          /* ov017 0x02111bd4, +4 = 62 */
+void *ShipWater_Spawn(void);                         /* ov017 0x02111480, 56 B */
+void hal_fill_ship_water_vtable(void);               /* _ZTV9ShipWater, 32 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2030,4 +2048,8 @@ void hal_fill_squasher_vtable(void);                 /* _ZTV8Squasher, 32 */
     /* ---- run rel0215 wave 1 (lane cast-sweep1): ov023, the volcano \
        squasher. Level 15's entire skip list, one row. ---- */ \
     {84, "SQUASHER", Squasher_SpawnInfo, Squasher_Spawn, \
-     hal_fill_squasher_vtable},
+     hal_fill_squasher_vtable}, \
+    /* ---- run rel0215 wave 1 (lane cast-sweep1): ov017, the sunken ship's \
+       water. The blocker level_boot.cpp's level-9 block deferred. ---- */ \
+    {62, "SHIP_WATER", ShipWater_SpawnInfo, ShipWater_Spawn, \
+     hal_fill_ship_water_vtable},

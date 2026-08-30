@@ -1941,6 +1941,21 @@ list(APPEND PORT_ACTOR_OVERLAYS ov005)
 # ov075 joins for the VS wiring lane (dScEntry_c, scene 6); the slice block
 # and the derivation pointer live beside SLICE_VS_SOURCES further down.
 list(APPEND PORT_ACTOR_OVERLAYS ov075)
+# run rel0215 wave 1 (lane cast-sweep1): ov017 (level 9's own overlay, Jolly
+# Roger Bay's sunken ship, already whole-mounted in PORT_LEVEL_OVERLAYS) joins
+# the per-symbol mounts so SHIP_WATER (62) reaches its SpawnInfo record, its
+# BTA file descriptor, its CLPS block and both sinit-built SharedFilePtrs by
+# name. This is the mount hal/level_boot.cpp's own level-9 block asked for by
+# name and deferred: "hosting it needs a per-symbol ov017 mount
+# (ShipWater_SpawnInfo, _ZTV9ShipWater, data_ov017_02111c88) PLUS an
+# alias-by-address that resolves the ov055/ov056 spellings onto ov017's host
+# bytes". Its vtable is excluded from the mount and hosted as an array
+# hal/actor_classes_ov017.cpp fills; that file also runs the mount bring-up,
+# hal_fill_platform_vtable and the overlay's single sinit from the registry
+# fill (the ov025/ov045 lane-ownership pattern). The block named two raced
+# spellings; there are three, and the third is LIVE on this tip. See
+# port/ov017_syms.txt and port/slice_sweep1_ov017.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov017)
 # run rel0215 wave 1 (lane cast-sweep1): ov023 (level 15's own overlay, Lethal
 # Lava Land's volcano interior, already whole-mounted in PORT_LEVEL_OVERLAYS)
 # joins the per-symbol mounts so SQUASHER (84) reaches its SpawnInfo record and
@@ -8779,6 +8794,53 @@ set_source_files_properties(
     PROPERTIES COMPILE_DEFINITIONS
     "func_ov026_02111308=port_ov023_xform;_ZN32FloatOnWaterPlatformWdwRectangleD1Ev=port_ov023_clsn_file")
 list(APPEND SWEEP1_SOURCES hal/actor_classes_ov023.cpp ${SLICE_SWEEP1_OV023_SOURCES})
+
+# ---- 5/6: ov017, level 9 (Jolly Roger Bay's sunken ship) -------------------
+# SHIP_WATER (62) x1 -- one of level 9's two skipped instances, and a blocker
+# hal/level_boot.cpp's own level-9 block named and deferred. All eight of the
+# overlay's TUs, no host copy and no refusal. One 32-slot Platform table; dsd's
+# landing reads TEN. See port/ov017_syms.txt and port/slice_sweep1_ov017.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov017.txt" SLICE_SWEEP1_OV017_LINES)
+set(SLICE_SWEEP1_OV017_SOURCES "")
+foreach(line IN LISTS SLICE_SWEEP1_OV017_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SWEEP1_OV017_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# THREE ALIAS RACES IN ONE FUNCTION (T6), every one pinned to the ROM's own
+# literal pool at 0x02111470..0x0211147c, over which the relocations resolve
+# ALL FOUR of InitResources's objects to OV017 symbols:
+#     pool 0x02111474 -> 0x02111a60  spelled data_ov056_02111a60
+#     pool 0x02111478 -> 0x02111c80  spelled &_ZN16FloatingFloorBfsD0Ev
+#     pool 0x0211147c -> 0x02111a94  spelled data_ov055_02111a94
+# THE MIDDLE ONE IS LIVE ON THIS TIP: src/_ZN16FloatingFloorBfsD0Ev.c is in
+# port/slice_w1l4.txt and the symbol is in build/port/walk_window.map, so
+# without this rename MeshCollider::LoadFile is handed the ADDRESS OF AN OV045
+# DESTRUCTOR as a file pointer -- resolving cleanly, failing nowhere at link.
+# The other two are undefined today and latent, but ov056 IS mounted and a
+# later lane adding either name turns them live silently. The TU includes no
+# headers at all, so all three renames are direct.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN9ShipWater13InitResourcesEv.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov056_02111a60=data_ov017_02111a60;_ZN16FloatingFloorBfsD0Ev=data_ov017_02111c80;data_ov055_02111a94=data_ov017_02111a94")
+# G0 in the deleting destructor is the game heap. Note this overlay's D1/D0 get
+# their TWO VTABLE STORES IN THE RIGHT ORDER, unlike ov023's and ov033's: pool
+# 0x021111e4 holds the own table and 0x021111e8 Platform's base, which is the
+# order the source writes them, so neither store needs renaming.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN9ShipWaterD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS "G0=data_020a0eac")
+# CleanupResources releases the model file then the collision one (pool
+# 0x02111288 then 0x0211128c). Private names because that TU includes
+# decl_common.h, which already declares both.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN9ShipWater16CleanupResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=port_ov017_sw_file0;G1=port_ov017_sw_file1")
+list(APPEND SWEEP1_SOURCES hal/actor_classes_ov017.cpp ${SLICE_SWEEP1_OV017_SOURCES})
 # ---- end lane cast-sweep1 --------------------------------------------------
 
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'
