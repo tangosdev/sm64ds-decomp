@@ -445,6 +445,29 @@ extern "C" int port_title_entry_taken(void)
  * save slots through func_ov007_020aebac. If the ROM refuses, the title stays
  * up and the player taps it himself.
  *
+ * ---- WHAT THIS ROUTE COSTS, DISCLOSED RATHER THAN DISCOVERED -------------
+ *
+ * SM64DS_SKIP_MENU REACHES THE FILE-SELECT SCREEN, AND THAT SCREEN ENTERS TWO
+ * UNMATCHED-BODY TRAPS. They are ov007 floors that were already known and
+ * already trapping; nothing here made them, and this is the first route that
+ * spends time in front of them. Measured on this lane's own runs:
+ *
+ *   default route, 300 frames   "unmatched-body traps entered: 0
+ *                                (none of the 24 trapping sites was reached)"
+ *   SKIP_MENU, tap on f700      986, all of them func_ov007_020c368c and
+ *                               func_ov007_020caeac
+ *   SKIP_MENU, never tapped     2546 over a 1200-frame scene
+ *
+ * SO THE COUNT IS A DWELL, NOT A SEVERITY. It scales with how long the file
+ * select is on screen because both sites sit on that screen's per-frame work,
+ * which is why two runs of this route legitimately report different totals and
+ * why a number quoted without its tap frame means nothing. rc stays 0 and the
+ * census stays clean in every one of them: a trap here returns rather than
+ * faulting, so what it costs is fidelity on that screen, not stability.
+ *
+ * IT IS WRITTEN DOWN so the next release's triage does not meet it as a
+ * surprise regression. The default route is unaffected and still reports 0.
+ *
  * ---- WHAT IT DELIBERATELY DOES NOT DO ------------------------------------
  *
  * It does not pick a file. That is the player's, and it is the whole point of

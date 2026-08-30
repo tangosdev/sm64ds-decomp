@@ -3526,8 +3526,16 @@ extern "C" void *port_stage_boot_body(void *mc, int spawn)
 
        AND THE ONE ENTRY THAT WANTS IT CLEAR. port_intro_wants_play() (the seam
        above port_stage_boot_body) is true only for a title-bridge crossing into
-       a fresh file, and only with SM64DS_INTRO=1 -- see the seam for the four
-       measured gaps that keep it opt-in. On that one boot the bit is left
+       a fresh file.
+       (run rel0215 lane boot-title: this used to add "and only with
+       SM64DS_INTRO=1 -- see the seam for the four measured gaps that keep it
+       opt-in". BOTH HALVES ARE NOW FALSE. The four gaps closed, the seam's
+       default inverted, and the opening PLAYS unless SM64DS_SKIP_INTRO is
+       present; SM64DS_INTRO no longer exists as a knob. What is unchanged is
+       the sentence this correction interrupts -- the crossing into a fresh file
+       is still the only thing that makes this true, so no level boot that named
+       its own level can reach it.)
+       On that one boot the bit is left
        ALONE: LoadClsnAndObjects below then takes its own intro branch, declines to
        spawn the HUD exactly as the ROM does, and calls StartIntroCutscene. The
        bit gets set by the ROM's own hand at the end of the flight

@@ -45,6 +45,14 @@ removing the name rather than writing `0`, and this is the same idiom the rest
 of the game already reads its environment with, so `SM64DS_SKIP_MENU=0` is
 **on** -- the name is there. Unset it to turn it off.
 
+`SM64DS_SKIP_MENU` reaches the file-select screen, which enters two known ov007
+unmatched-body traps (`func_ov007_020c368c`, `func_ov007_020caeac`). They were
+already there and already trapping; this is the first route that spends time in
+front of them. The count is a **dwell, not a severity** -- it scales with how
+long that screen is up (986 with a tap on frame 700, 2546 with no tap over 1200
+frames), a trap returns rather than faulting, and `rc` stays 0 with a clean
+census. The default route still reports 0.
+
 There is **no save medium yet**, so the file select offers three fresh files on
 every boot. All three are selectable and all three start a new adventure.
 Persistence is deliberately out of scope.

@@ -1020,7 +1020,8 @@ extern "C" void port_scene_mg_overlay_load(void)
      gate covers it with no edit. Since the owner's boot-to-title ruling a
      launch that names NO destination answers 1 rather than -1, so "a level
      run" is no longer the same claim as "no SM64DS_SCENE". IsMinigameActorID
-     declines 1 exactly as it declines -1 -- the minigame ids are 361..389 --
+     declines 1 exactly as it declines -1 -- src/IsMinigameActorID.c accepts
+     0x169..0x186, that is 361..390 inclusive --
      so the forbidden thing still cannot happen. Corrected here rather than
      left to be re-derived, because the sentence is load-bearing.)
      The ORDER is preserved as
