@@ -103,10 +103,19 @@
 //      SM64DS_ANALOG_CAMERA=1  put a selftest in the analog camera
 //      SM64DS_OVERLAY=1     boot with the F3 stats overlay already on
 //      SM64DS_MENU=1        boot with the F5 debug menu open
-//      SM64DS_TRACE_PACE=1  per-frame pacer trace: the work time, the sleep
-//                           that was asked for and the sleep that happened.
-//                           The third number is the one that matters -- see
-//                           the pacer block for what makes it lie.
+//      SM64DS_TRACE_PACE=1  the frame clock's report, once per 120 frames:
+//                           the rate, and the DISTRIBUTION of the frame
+//                           periods behind it (avg, p50, p95, max in ms) --
+//                           a mean cannot tell a steady 30 fps from one that
+//                           stalls every fourth frame. =2 adds the per-frame
+//                           pacer line (the sleep asked for and the sleep that
+//                           happened), which costs an unbuffered write every
+//                           frame and distorts what it measures.
+//      SM64DS_PACE_SELFTEST=1  keep the frame pace during a selftest, which
+//                           is normally unpaced. The one way to measure how an
+//                           online session FEELS: the input pipeline's budget
+//                           is N frames of wall time, so an unpaced arm gives
+//                           it a fraction of the cover a player's run does.
 //      SM64DS_TRACE_CAM=1   per-frame camera input trace: the pad words the
 //                           rotate logic reads, the camera's heading, its
 //                           two latches, the rig, and the published angle
@@ -1484,8 +1493,6 @@ static int port_frame_divider(void)
 static void frame_pace(void)
 {
     static LARGE_INTEGER qpf, next;
-    static LARGE_INTEGER rep_t0;
-    static int rep_n;
     static int trace = -1;
     LARGE_INTEGER now;
 
@@ -1529,16 +1536,104 @@ static void frame_pace(void)
     if (trace >= 2)
         fprintf(stderr, "[pace] div=%d budget=%.2f slept=%.2f\n",
                 div, budget, slept);
-    if (!rep_t0.QuadPart) { rep_t0 = now; rep_n = 0; return; }
-    if (++rep_n >= 120) {
-        const double s =
-            (now.QuadPart - rep_t0.QuadPart) / (double)qpf.QuadPart;
-        fprintf(stderr, "[fps] %d frames in %.3fs = %.2f fps "
-                "(divider %d, budget %.2fms)\n",
-                rep_n, s, s > 0.0 ? rep_n / s : 0.0, div, budget);
-        rep_t0 = now;
-        rep_n = 0;
+}
+
+/* THE FRAME CLOCK'S OWN REPORT, and it is deliberately NOT part of frame_pace
+   any more.
+
+   frame_pace is the SLEEPER, and the level loop skips it entirely on a
+   selftest -- "a selftest stays UNPACED", see that call site. That is exactly
+   the arm a latency measurement wants, because an unpaced frame period IS the
+   frame's cost with no sleep padding it out, and a report that lived inside
+   the sleeper could never see it. So the report is its own call, made once per
+   frame by BOTH loops whether or not the pace is being kept, and frame_pace
+   went back to doing one thing.
+
+   WHAT IT PRINTS under SM64DS_TRACE_PACE=1, once per 120 frames: the rate, and
+   then the DISTRIBUTION behind it. A mean cannot tell a steady 30 fps from one
+   that stalls every fourth frame, and the online lockstep this was written for
+   is entirely a question about the tail: a frame that waits out a round trip
+   costs a whole round trip, and the average hides how many did. p95 over a
+   120-frame window is the sixth-slowest frame in it.
+
+   READ THE PERIODS AGAINST THE BUDGET ON THE SAME LINE. Under the pacer a
+   healthy run reads avg ~= budget; unpaced, a healthy run reads well UNDER it,
+   and the frame rate a player would then see is min(1000/budget, 1000/period).
+
+   Costs an unset run one cached int compare per frame. */
+enum { PORT_FRAME_WIN = 120 };
+
+static int frame_stat_cmp(const void *a, const void *b)
+{
+    const double x = *(const double *)a, y = *(const double *)b;
+    return x < y ? -1 : (x > y ? 1 : 0);
+}
+
+static void frame_stat(void)
+{
+    static LARGE_INTEGER qpf, prev, t0;
+    static double win[PORT_FRAME_WIN];
+    static int n;
+    static int trace = -1;
+    LARGE_INTEGER now;
+
+    if (trace < 0) {
+        const char *e = getenv("SM64DS_TRACE_PACE");
+        trace = e ? atoi(e) : 0;
     }
+    if (!trace) return;
+    if (!qpf.QuadPart) QueryPerformanceFrequency(&qpf);
+    QueryPerformanceCounter(&now);
+    /* The first call has no predecessor, so it starts the window rather than
+       contributing a period measured from zero. */
+    if (!t0.QuadPart) { t0 = now; prev = now; n = 0; return; }
+
+    win[n] = (now.QuadPart - prev.QuadPart) * 1000.0 / (double)qpf.QuadPart;
+    prev = now;
+    if (++n < PORT_FRAME_WIN) return;
+
+    double sorted[PORT_FRAME_WIN], sum = 0.0;
+    for (int i = 0; i < PORT_FRAME_WIN; ++i) {
+        sorted[i] = win[i];
+        sum += win[i];
+    }
+    qsort(sorted, PORT_FRAME_WIN, sizeof sorted[0], frame_stat_cmp);
+    const double s = (now.QuadPart - t0.QuadPart) / (double)qpf.QuadPart;
+    const int div = port_frame_divider();
+    fprintf(stderr, "[fps] %d frames in %.3fs = %.2f fps (divider %d, budget "
+            "%.2fms) frame ms avg %.2f p50 %.2f p95 %.2f max %.2f\n",
+            n, s, s > 0.0 ? n / s : 0.0, div, PORT_VBLANK_MS * div,
+            sum / n, sorted[n / 2], sorted[(n * 95) / 100], sorted[n - 1]);
+    t0 = now;
+    n = 0;
+}
+
+/* SM64DS_PACE_SELFTEST=1 -- KEEP THE PACE ON A SELFTEST TOO.
+
+   The level loop drops frame_pace on a selftest because a selftest is the
+   deterministic comparator run and a sleep in it only makes the battery
+   slower. That is right for every question the battery asks and WRONG for the
+   one question a comparator run cannot answer: HOW A SESSION FEELS.
+
+   The reason is specific and it bit this lane. The online input pipeline's
+   budget is N frames of WALL TIME, not N frames of work -- frame R waits for
+   round R-N, so the wire has N frame periods to deliver it. Paced, N=4 is
+   4 * 33.3 = 133 ms of cover. Unpaced, the same N=4 over frames that cost 6 ms
+   each is 24 ms of cover, so the pipeline starves and the measurement reports
+   a mitigation doing a fraction of what it does in a player's hands. An
+   unpaced arm cannot measure pacing. This knob is how the two arms are made
+   comparable.
+
+   Default off, so every existing selftest -- the battery, the BMP comparators,
+   the whole gauntlet -- runs exactly as it did. */
+static int port_pace_selftest(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = getenv("SM64DS_PACE_SELFTEST");
+        on = e ? atoi(e) : 0;
+    }
+    return on;
 }
 
 /* ---- THE DEBUG OVERLAY (port mod) -------------------------------------
@@ -5870,6 +5965,7 @@ static int scene_window_run(void)
            runs at 60; the 33.3ms this block used to hardcode is the 3D level
            path's number, and pacing a minigame to it ran the whole minigame at
            EXACTLY HALF SPEED. See frame_pace's banner. */
+        frame_stat();
         frame_pace();
     }
     /* THE ORDINARY EXIT. A window close, an Esc, or the minigame row's own
@@ -11006,7 +11102,13 @@ int main(void)
            that the constant is now the game's own word rather than the host's
            guess, which is what the scene loop needed. A selftest stays
            UNPACED: it is the deterministic comparator run and a sleep in it
-           only makes the battery slower. */
-        if (!selftest) frame_pace();
+           only makes the battery slower. THE REPORT IS NOT SKIPPED WITH IT --
+           an unpaced frame period is the frame's raw cost, which is the one
+           number the online-lockstep work needs; see frame_stat. And
+           SM64DS_PACE_SELFTEST=1 puts the pace back on a selftest, which is
+           the only way to measure an online session the way a player runs
+           one; see port_pace_selftest. */
+        frame_stat();
+        if (!selftest || port_pace_selftest()) frame_pace();
     }
 }
