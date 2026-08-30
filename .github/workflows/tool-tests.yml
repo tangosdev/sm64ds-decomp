@@ -37,7 +37,7 @@
 #      `tools.test_pr_monitor` both fail on a clean origin/main with ImportError -- they
 #      use bare `from check_dead_references import ...` / `from pr_monitor import ...`,
 #      which only resolves with `tools/` on sys.path. Both are PYTEST modules that pass
-#      when invoked as `python tools/test_X.py` (their __main__ calls pytest.main), so
+  #      when invoked directly by filename (their __main__ calls pytest.main), so
 #      this is an invocation mismatch, not a broken tool. They are named here rather
 #      than fixed: repairing them is a `tools/` change and this workflow deliberately
 #      touches nothing but itself.
