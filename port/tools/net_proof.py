@@ -580,10 +580,14 @@ def rungN7(a):
                         "worth the input lag it costs."
                         % (rtt, n, p0["wall"], p1["wall"], gain))
     with open(os.path.join(OUT, "pipelining.txt"), "w") as f:
-        f.write("rtt_ms\tinput_delay\tfps_stopwait\tfps_pipelined\tstarved\n")
+        f.write("# %s frames per arm, both arms under the same induced RTT.\n"
+                "# gain is wall_stopwait / wall_pipelined.\n" % FRAMES)
+        f.write("rtt_ms\tinput_delay\twall_stopwait_s\twall_pipelined_s\t"
+                "gain\tstarved\n")
         for rtt, n, p0, p1, st in rows:
-            f.write("%d\t%d\t%.2f\t%.2f\t%s\n"
-                    % (rtt, n, p0["fps"], p1["fps"], st))
+            f.write("%d\t%d\t%.1f\t%.1f\t%.2f\t%s\n"
+                    % (rtt, n, p0["wall"], p1["wall"],
+                       p0["wall"] / p1["wall"] if p1["wall"] else 0.0, st))
     return ok
 
 
