@@ -1731,6 +1731,25 @@ void hal_fill_water_ring_vtable(void);           /* _ZTV9WaterRing, 31 */
 extern unsigned char TreasureChest_SpawnInfo[];  /* ov064 0x0211c4e8, +4 = 13 */
 void *TreasureChest_Spawn(void);                 /* ov064 0x0211a8f0, 64 B */
 void hal_fill_treasure_chest_vtable(void);       /* _ZTV13TreasureChest, 31 */
+/* run rel0215 wave 3 (lane w3-f): ov085's SIXTH AND LAST class, PRINCESS_PEACH
+   (186, 9daPeach_c). Identity taken both ways rather than inherited: the record
+   at 0x0212ff9c holds factory 0x0212a684 and the +4 halfword 186, and the arm9
+   spawn table slot at 0x02090864 + 186*4 = 0x02090b4c holds that same record.
+   The mount and all six sinits have been in place since gate 18, so this row
+   costs code and nothing else -- the same shape gate 205's two rows had.
+
+   PLACED ON NO LEVEL OF THE FIFTY-TWO, and that was measured on this lane's own
+   baseline rather than assumed: the pre-spawn census over every id in
+   port_level_table[] declines 0xe7, 0x90 and 0x9d and never 0xba. She is a
+   CUTSCENE actor; a level walk does not exercise her. Registered for the SPINY
+   reason four blocks down -- she is the overlay's last class, her seat is as
+   derived as the other five, and an unregistered factory is a ROM-faithful body
+   the port declines for no reason. The width (31), her own slot 12, the hosted
+   slot 6 and the hosted slot 16 are in hal/actor_classes_ov085.cpp; the slice is
+   port/slice_w3f.txt. */
+extern unsigned char PrincessPeach_SpawnInfo[];      /* ov085 0x0212ff9c, +4 = 186 */
+void *PrincessPeach_Spawn(void);                     /* ov085 0x0212a684, 80 B */
+void hal_fill_princess_peach_vtable(void);           /* _ZTV13PrincessPeach, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2599,3 +2618,33 @@ void hal_fill_treasure_chest_vtable(void);       /* _ZTV13TreasureChest, 31 */
      hal_fill_water_ring_vtable}, \
     {13, "TREASURE_CHEST", TreasureChest_SpawnInfo, TreasureChest_Spawn, \
      hal_fill_treasure_chest_vtable},
+    /* ---- run rel0215 wave 3 (lane w3-f): ov085's SIXTH AND LAST class. \
+       PLACED ON NO LEVEL of the fifty-two, measured on this lane's own \
+       baseline census over every id in port_level_table[] -- it declines \
+       0xe7, 0x90 and 0x9d and never 0xba. She is a CUTSCENE actor, so a \
+       level walk does not exercise her; registered for the SPINY reason, \
+       and because this row leaves ov085 with no unregistered factory \
+       standing behind its own mount. \
+       AND SHE HAS AN EXERCISER, so "no level dispatches this fill" is closed \
+       rather than open. The seat lane reported the gap; the review found the \
+       run and it reproduces: \
+         SM64DS_LEVEL=50 SM64DS_SPAWN_ACTOR=186 SM64DS_FAULTS_FATAL=1 \
+         SM64DS_WINDOW_SELFTEST=600 \
+       gives rc 0, census 27 -> 28 (12 classes, 0 skipped) with `+ 186 x1 \
+       PRINCESS_PEACH`, the watch probe still reading `186 x1 @(945,600,-1750)` \
+       at frame 540, and the instance still on the teardown census at 600. No \
+       fault, no quarantine, no UNHOSTED line. \
+       WHICH SLOTS THAT ACTUALLY DISPATCHES, measured rather than argued. Add \
+       SM64DS_ACTOR_PROBE=1 to the same run and it prints \
+         [actor] PRINCESS_PEACH model 30037280 file 300D9238 \
+                 transforms 300D8E48 mat.t (118,75,-219) scene \
+       -- so slot 9 runs, and its non-null file and transforms say slot 0 \
+       finished the load rather than bailing. Slot 6 is the hosted Behavior, \
+       and it runs every frame: it tail-calls the MAIN pointer-to-member \
+       dispatcher, which reads the ten-pair seat, so a wrong PMF stride or an \
+       unseated DS address would fault on the first frame under FAULTS_FATAL \
+       instead of surviving 600. Evidence: \
+       runs/rel0215/out/w3-f/exerciser_186_level50.txt and \
+       ..._actorprobe.txt. Do not re-open this as an unexercised seat. ---- */ \
+    {186, "PRINCESS_PEACH", PrincessPeach_SpawnInfo, PrincessPeach_Spawn, \
+     hal_fill_princess_peach_vtable},

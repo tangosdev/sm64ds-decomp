@@ -60,6 +60,16 @@ extern PortPmf data_ov085_02130174[], data_ov085_0213017c[],
    The names are ASCII in the overlay at 0x0212fe28 and 0x0212fe20. */
 extern PortPmf data_ov085_0212fe30[], data_ov085_0212fe38[],
     data_ov085_0212fe40[], data_ov085_0212fe48[];
+/* PRINCESS_PEACH's TEN (run rel0215 wave 3, lane w3-f): __sinit_ov085_0212f3a0
+   copies them into the FIVE records of data_ov085_0213055c, stride 0x10, each
+   {enter pair at +0, Main pair at +8}. These are the same ten words the
+   gate-205 header read from TOAD's side and called "a pointer-to-member SOURCE
+   table, not more vtable" -- they sit between TOAD's 31-slot table and this
+   class's own SpawnInfo, and the sinit that consumes them is hers. */
+extern PortPmf data_ov085_0212ff34[], data_ov085_0212ff3c[],
+    data_ov085_0212ff44[], data_ov085_0212ff4c[], data_ov085_0212ff54[],
+    data_ov085_0212ff5c[], data_ov085_0212ff64[], data_ov085_0212ff6c[],
+    data_ov085_0212ff74[], data_ov085_0212ff7c[];
 
 void func_ov085_0212a904(void *); void func_ov085_0212aaa4(void *);
 void func_ov085_0212aaec(void *); void func_ov085_0212ac3c(void *);
@@ -75,6 +85,12 @@ void func_ov085_0212d108(void *); void func_ov085_0212d24c(void *);
 /* TOAD's four (run link60, lane A1) */
 void func_ov085_021294f0(void *); void func_ov085_02129470(void *);
 void func_ov085_0212943c(void *); void func_ov085_021291ac(void *);
+/* PRINCESS_PEACH's ten (run rel0215 wave 3, lane w3-f), five enter/main pairs */
+void func_ov085_0212a3ec(void *); void func_ov085_0212a37c(void *);
+void func_ov085_0212a328(void *); void func_ov085_0212a220(void *);
+void func_ov085_0212a1d4(void *); void func_ov085_0212a19c(void *);
+void func_ov085_0212a150(void *); void func_ov085_0212a148(void *);
+void func_ov085_0212a0e8(void *); void func_ov085_0212a0b8(void *);
 
 /* LakituBro's twenty-two {function, delta} statics carry DS code addresses,
    and __sinit_ov085_0212fa40 copies them into his eleven State objects. Seat
@@ -799,6 +815,56 @@ static void port_toad_states_seat(void)
     }
 }
 
+/* PRINCESS_PEACH's TEN pairs (run rel0215 wave 3, lane w3-f), the same seat as
+   TOAD's four and the RABBIT_KEY's four, and the largest of the three.
+
+   __sinit_ov085_0212f3a0 copies these ten eight-byte statics into
+   data_ov085_0213055c -- BSS, so nothing is there until it runs -- as five
+   0x10 records, {enter pair at +0, Main pair at +8}. The order below is the
+   sinit's OWN literal pool (0x0212f5c4..0x0212f5e8) read against its store
+   offsets 0x00..0x4c, and each ENTER body writing its own index to +0x354
+   confirms it a second, independent way: 0212a3ec writes 0, 0212a328 writes 1,
+   0212a1d4 writes 2, 0212a150 writes 3, 0212a0e8 writes 4.
+
+   Every adj is zero, so every one is the plain nonvirtual form. The two
+   dispatchers that read them back are host copies for the gate-16 reason
+   (port/unmatched/Ov085_PrincessPeach_States.cpp); this is what makes what
+   they read a host address rather than a DS one.
+
+   THESE TEN PAIRS ARE ALSO WHAT ENDS TOAD'S VTABLE AT 31. The gate-205 header
+   adjudicated 0x0212ff34 onward as a pointer-to-member SOURCE table from its
+   shape; this sinit names its owner. */
+static const struct { PortPmf *slot; unsigned rom; void (*host)(void *); }
+g_princess_peach_states[] = {
+    {data_ov085_0212ff7c, 0x0212a3ec, func_ov085_0212a3ec},  /* 0 enter */
+    {data_ov085_0212ff64, 0x0212a37c, func_ov085_0212a37c},  /* 0 main  */
+    {data_ov085_0212ff44, 0x0212a328, func_ov085_0212a328},  /* 1 enter */
+    {data_ov085_0212ff6c, 0x0212a220, func_ov085_0212a220},  /* 1 main  */
+    {data_ov085_0212ff4c, 0x0212a1d4, func_ov085_0212a1d4},  /* 2 enter */
+    {data_ov085_0212ff74, 0x0212a19c, func_ov085_0212a19c},  /* 2 main  */
+    {data_ov085_0212ff54, 0x0212a150, func_ov085_0212a150},  /* 3 enter */
+    {data_ov085_0212ff5c, 0x0212a148, func_ov085_0212a148},  /* 3 main  */
+    {data_ov085_0212ff3c, 0x0212a0e8, func_ov085_0212a0e8},  /* 4 enter */
+    {data_ov085_0212ff34, 0x0212a0b8, func_ov085_0212a0b8},  /* 4 main  */
+};
+
+static void port_princess_peach_states_seat(void)
+{
+    for (unsigned i = 0;
+         i < sizeof g_princess_peach_states / sizeof g_princess_peach_states[0];
+         ++i) {
+        PortPmf *p = g_princess_peach_states[i].slot;
+        if (p->fn != g_princess_peach_states[i].rom || p->delta != 0) {
+            std::fprintf(stderr, "FATAL: PrincessPeach state %u: the mount "
+                         "holds %08x/%d, the ROM's own table says %08x/0 -- "
+                         "WRONG BYTES\n", i, p->fn, p->delta,
+                         g_princess_peach_states[i].rom);
+            std::abort();
+        }
+        p->fn = (unsigned)(size_t)g_princess_peach_states[i].host;
+    }
+}
+
 /* ov080 0x021261f4 IS NOT HOSTED, and it is the one hole in the painting. It
    is state record index 5's function -- the Render half a painting at spawn
    flag mi=3 would reach (Render reads +0x10 off the object's +0x1a4 dispatch
@@ -1150,6 +1216,9 @@ extern "C" void port_actor_overlays_sinits(void)
     port_rabbit_states_seat();
     port_rabbit_key_states_seat();
     port_toad_states_seat();
+    /* run rel0215 wave 3 (lane w3-f): BEFORE __sinit_ov085_0212f3a0 copies
+       PRINCESS_PEACH's ten {code, adj} pairs into data_ov085_0213055c. */
+    port_princess_peach_states_seat();
     __sinit_ov085_0212f2a8();
     __sinit_ov085_0212f3a0();
     __sinit_ov085_0212f5ec();

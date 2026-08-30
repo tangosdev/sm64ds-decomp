@@ -8575,6 +8575,34 @@ foreach(line IN LISTS SLICE205_LINES)
     endif()
     list(APPEND SLICE205_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+
+# run rel0215 wave 3 (lane w3-f): ov085's PRINCESS_PEACH (186, 9daPeach_c), the
+# overlay's sixth and last class. The mount and all six sinits have been in
+# place since gate 18, so this slice is code only -- the same shape gate 205
+# had. TWENTY-ONE matched TUs; FOUR bodies are held out and each is named in
+# port/slice_w3f.txt with the reason:
+#   * Behavior dispatches its ModelAnim's ROM SLOT 3 and the matched TU spells
+#     MSVC index 3, which on an MSVC-numbered _ZTV9ModelAnim is Virtual10 -- one
+#     slot high, wrong arity. The wave-19 collision, TWO slots below where
+#     LAKITU_BRO and the RABBIT hit it. HOST COPY.
+#   * D1 is the shadow-class MSVC destructor shape TOAD's D1 has, spelled inline
+#     in the fill from the ROM D1's own five relocs.
+#   * the two mwcc pointer-to-member dispatchers, the gate-16 case for the sixth
+#     time. HOST COPIES with the {value, adjustment} dispatch hand-rolled, plus
+#     a ten-pair state seat in hal/actor_overlays.cpp that runs before
+#     __sinit_ov085_0212f3a0 copies them.
+# Her Render LINKS: the ROM calls Model::Render non-virtually, so no vtable
+# numbering comes into it -- the other half of the same ruling.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3f.txt" SLICEW3F_LINES)
+set(SLICEW3F_SOURCES "")
+foreach(line IN LISTS SLICEW3F_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICEW3F_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
 # Gate 208 (run link60, lane A2): MONTY_MOLE_ROCK (311), ov080's second enemy
 # class after gate 174's mole. The mole's throw state spawns 0x137, the port
 # declined it and the ROM-faithful thrower stored through the NULL, so
@@ -11180,6 +11208,13 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${SLICE180_SOURCES} ${SLICE203_SOURCES} ${SLICE204_SOURCES}
     hal/actor_classes_ov085.cpp ${SLICE205_SOURCES}
     unmatched/Ov085_Behaviors.cpp unmatched/Ov085_Toad_StateSeat.cpp
+    # run rel0215 wave 3 (lane w3-f): ov085's PRINCESS_PEACH, the sixth
+    # and last class. Two host copies ride beside the slice: slot 6 (the
+    # ModelAnim slot-3 numbering) and the two PMF dispatchers.
+    ${SLICEW3F_SOURCES}
+    unmatched/Ov085_PrincessPeach_Behavior.cpp
+    unmatched/Ov085_PrincessPeach_States.cpp
+    unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
@@ -11370,6 +11405,13 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE180_SOURCES} ${SLICE203_SOURCES} ${SLICE204_SOURCES}
     hal/actor_classes_ov085.cpp ${SLICE205_SOURCES}
     unmatched/Ov085_Behaviors.cpp unmatched/Ov085_Toad_StateSeat.cpp
+    # run rel0215 wave 3 (lane w3-f): ov085's PRINCESS_PEACH, the sixth
+    # and last class. Two host copies ride beside the slice: slot 6 (the
+    # ModelAnim slot-3 numbering) and the two PMF dispatchers.
+    ${SLICEW3F_SOURCES}
+    unmatched/Ov085_PrincessPeach_Behavior.cpp
+    unmatched/Ov085_PrincessPeach_States.cpp
+    unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
@@ -11594,6 +11636,13 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE180_SOURCES} ${SLICE203_SOURCES} ${SLICE204_SOURCES}
     hal/actor_classes_ov085.cpp ${SLICE205_SOURCES}
     unmatched/Ov085_Behaviors.cpp unmatched/Ov085_Toad_StateSeat.cpp
+    # run rel0215 wave 3 (lane w3-f): ov085's PRINCESS_PEACH, the sixth
+    # and last class. Two host copies ride beside the slice: slot 6 (the
+    # ModelAnim slot-3 numbering) and the two PMF dispatchers.
+    ${SLICEW3F_SOURCES}
+    unmatched/Ov085_PrincessPeach_Behavior.cpp
+    unmatched/Ov085_PrincessPeach_States.cpp
+    unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
