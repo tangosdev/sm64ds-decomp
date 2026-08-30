@@ -1,9 +1,9 @@
 {
   "id": "ov047/daObjKm3_Kurumajiku_c",
   "module": "ov047",
-  "source": "src_tu/actors/daObjKm3_Kurumajiku_c.cpp",
+  "source": "src/actors/daObjKm3_Kurumajiku_c.cpp",
   "promoted_source": "src/actors/daObjKm3_Kurumajiku_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "manually corrected contiguous linker run: 0x021111a0..0x021112bc, five functions; build/tu_map.json stopped at 0x02111280 and omitted the immediately adjacent factory RickshawBs_Spawn",

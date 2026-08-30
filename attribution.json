@@ -908,6 +908,11 @@
     "src/actors/daKrpa_c.cpp#func_ov070_02121848": "tangosdev",
     "src/actors/daKrpa_c.cpp#func_ov070_02121880": "tangosdev",
     "src/actors/daKrpa_c.cpp#func_ov070_02121a64": "tangosdev",
-    "src/actors/daKrpa_c.cpp#func_ov070_02121ae0": "tangosdev"
+    "src/actors/daKrpa_c.cpp#func_ov070_02121ae0": "tangosdev",
+    "src/actors/daObjKm3_Kurumajiku_c.cpp#RickshawBs_Spawn": "tangosdev",
+    "src/actors/daObjKm3_Kurumajiku_c.cpp#_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv": "lunavyqo",
+    "src/actors/daObjKm3_Kurumajiku_c.cpp#_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv": "lunavyqo",
+    "src/actors/daObjKm3_Kurumajiku_c.cpp#_ZN21daObjKm3_Kurumajiku_cD0Ev": "tangosdev",
+    "src/actors/daObjKm3_Kurumajiku_c.cpp#_ZN21daObjKm3_Kurumajiku_cD1Ev": "tangosdev"
   }
 }
