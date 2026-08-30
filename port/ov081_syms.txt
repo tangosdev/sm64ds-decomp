@@ -36,15 +36,30 @@
 #     InitResources calls MovingMeshCollider::SetFile with a CLPS_Block read
 #     from ov002 (data_ov002_0210d8d4, added to port/ov002_syms.txt).
 #
-# SNOWBALL and MONEYBAG stay UNREGISTERED this gate (disjoint ranges from
-# the three hosted classes, no own-class sinit runs for them) -- their own
-# SpawnInfo/vtable words are still present as plain packed data (harmless,
-# never installed by any factory this gate calls) since excluding them would
-# just be extra bookkeeping for the same --pack contiguity ovdata.py already
-# handles. Each vtable's own RTTI-alias spelling (_ZTV12daSnowball_c ==
-# _ZTV8Snowball, _ZTV8daGmch_c == _ZTV8Moneybag) is listed ONCE, not twice --
-# both names share the identical address, and --pack's overlap guard rejects
-# two symbols claiming the same bytes.
+# SNOWBALL and MONEYBAG stayed UNREGISTERED at gate 192, and their vtable
+# words rode along as plain packed data because nothing installed them. LANE
+# w3-b (run rel0215) REGISTERS BOTH, so both tables have to leave the mount:
+# a registered class's factory stores the table into slot 0 of a live object,
+# and the mounted bytes are the ROM's own words holding DS code addresses.
+# _ZTV8Snowball (0x02128abc, 31 slots) and _ZTV8Moneybag (0x02128c04, 31
+# slots) are now HOST ARRAYS hal/actor_classes_ov081.cpp declares and fills,
+# the same rule this list already applies to the trio's three tables. Each
+# vtable's own RTTI-alias spelling (_ZTV12daSnowball_c == _ZTV8Snowball,
+# _ZTV8daGmch_c == _ZTV8Moneybag) shares the identical address, so dropping
+# the one listed name drops BOTH spellings from the link -- which is what
+# lets that file route the RTTI spelling with an /alternatename whose LHS is
+# undefined everywhere, the IceBlock/daObj1UpLogo_c shape rather than the
+# Spindrift/MrBlizzard one two lines up (those two keep the RTTI spelling
+# MOUNTED, so their D0's first store lands on the ROM's raw words; inert
+# because it is immediately followed by the teardown, but not a shape to
+# copy).
+#
+# --pack pads the two resulting gaps (0x7c bytes each, the exact table
+# widths) by itself. The two SpawnInfo records that PRECEDE the removed
+# tables are pinned :0x24 -- their real ROM span, the delta to the table
+# that used to follow them -- so the mount emits the same bytes it did
+# before rather than letting the next-symbol floor stretch each record over
+# the hole the removal left (trap T3, in the direction that oversizes).
 #
 # ovdata.py's --pack size floor is max(4, next-symbol-delta): two adjacent
 # 2-byte fields (data_ov081_021289a4/a6, part of MrBlizzard's SpawnInfo
@@ -55,4 +70,4 @@
 # IceBlock SpawnInfo 0x02128ca0 / vtable 0x02128cc4; MrBlizzard SpawnInfo
 # 0x021289cc / vtable 0x021289f0; Spindrift SpawnInfo 0x02128858 / vtable
 # 0x0212887c.
-data_ov081_021280d8 data_ov081_02128840 data_ov081_0212884c Spindrift_SpawnInfo _ZTV8daHuwa_c data_ov081_021288f8 data_ov081_02128900 data_ov081_02128908 data_ov081_02128910 data_ov081_02128918 data_ov081_02128920 data_ov081_02128928 data_ov081_02128930 data_ov081_02128938 data_ov081_02128940 data_ov081_02128948 data_ov081_02128950 data_ov081_02128958 data_ov081_02128960 data_ov081_02128968 data_ov081_02128970 data_ov081_02128978 data_ov081_02128980 data_ov081_02128988 data_ov081_02128990 data_ov081_02128998 data_ov081_021289a4:0x2 data_ov081_021289a6:0x2 data_ov081_021289a8 data_ov081_021289b0 data_ov081_021289bc MrBlizzard_SpawnInfo _ZTV11daSnowman_c data_ov081_02128a6c data_ov081_02128a74 data_ov081_02128a7c data_ov081_02128a88 Snowball_SpawnInfo _ZTV8Snowball data_ov081_02128b38 data_ov081_02128b40 data_ov081_02128b48 data_ov081_02128b50 data_ov081_02128b58 data_ov081_02128b60 data_ov081_02128b68 data_ov081_02128b70 data_ov081_02128b78 data_ov081_02128b80 data_ov081_02128b88 data_ov081_02128b90 data_ov081_02128b98 data_ov081_02128ba0 data_ov081_02128ba8 data_ov081_02128bb0 data_ov081_02128bb8 data_ov081_02128bc0 data_ov081_02128bc8 data_ov081_02128bd4 Moneybag_SpawnInfo _ZTV8Moneybag data_ov081_02128c80 data_ov081_02128c8c IceBlock_SpawnInfo data_ov081_02128d60 data_ov081_02128d68 data_ov081_02128d70 data_ov081_02128d7c data_ov081_02128d88 data_ov081_02128d90 data_ov081_02128d98 data_ov081_02128da0 data_ov081_02128da8 data_ov081_02128db0 data_ov081_02128db8 data_ov081_02128dc0 data_ov081_02128dcc data_ov081_02128dd8 data_ov081_02128de4 data_ov081_02128df0 data_ov081_02128dfc data_ov081_02128e08 data_ov081_02128e14 data_ov081_02128e24 data_ov081_02128e34 data_ov081_02128e44 data_ov081_02128e54 data_ov081_02128e64 data_ov081_02128e74 data_ov081_02128e84 data_ov081_02128e94 data_ov081_02128ea4 data_ov081_02128eb4 data_ov081_02128ec4 data_ov081_02128ecc data_ov081_02128ed4 data_ov081_02128edc data_ov081_02128ee4 data_ov081_02128eec data_ov081_02128ef8 data_ov081_02128f04 data_ov081_02128f10 data_ov081_02128f1c data_ov081_02128f28 data_ov081_02128f34 data_ov081_02128f40 data_ov081_02128fd0 data_ov081_02128fd8 data_ov081_02128fe0 data_ov081_02128fec
+data_ov081_021280d8 data_ov081_02128840 data_ov081_0212884c Spindrift_SpawnInfo _ZTV8daHuwa_c data_ov081_021288f8 data_ov081_02128900 data_ov081_02128908 data_ov081_02128910 data_ov081_02128918 data_ov081_02128920 data_ov081_02128928 data_ov081_02128930 data_ov081_02128938 data_ov081_02128940 data_ov081_02128948 data_ov081_02128950 data_ov081_02128958 data_ov081_02128960 data_ov081_02128968 data_ov081_02128970 data_ov081_02128978 data_ov081_02128980 data_ov081_02128988 data_ov081_02128990 data_ov081_02128998 data_ov081_021289a4:0x2 data_ov081_021289a6:0x2 data_ov081_021289a8 data_ov081_021289b0 data_ov081_021289bc MrBlizzard_SpawnInfo _ZTV11daSnowman_c data_ov081_02128a6c data_ov081_02128a74 data_ov081_02128a7c data_ov081_02128a88 Snowball_SpawnInfo:0x24 data_ov081_02128b38 data_ov081_02128b40 data_ov081_02128b48 data_ov081_02128b50 data_ov081_02128b58 data_ov081_02128b60 data_ov081_02128b68 data_ov081_02128b70 data_ov081_02128b78 data_ov081_02128b80 data_ov081_02128b88 data_ov081_02128b90 data_ov081_02128b98 data_ov081_02128ba0 data_ov081_02128ba8 data_ov081_02128bb0 data_ov081_02128bb8 data_ov081_02128bc0 data_ov081_02128bc8 data_ov081_02128bd4 Moneybag_SpawnInfo:0x24 data_ov081_02128c80 data_ov081_02128c8c IceBlock_SpawnInfo data_ov081_02128d60 data_ov081_02128d68 data_ov081_02128d70 data_ov081_02128d7c data_ov081_02128d88 data_ov081_02128d90 data_ov081_02128d98 data_ov081_02128da0 data_ov081_02128da8 data_ov081_02128db0 data_ov081_02128db8 data_ov081_02128dc0 data_ov081_02128dcc data_ov081_02128dd8 data_ov081_02128de4 data_ov081_02128df0 data_ov081_02128dfc data_ov081_02128e08 data_ov081_02128e14 data_ov081_02128e24 data_ov081_02128e34 data_ov081_02128e44 data_ov081_02128e54 data_ov081_02128e64 data_ov081_02128e74 data_ov081_02128e84 data_ov081_02128e94 data_ov081_02128ea4 data_ov081_02128eb4 data_ov081_02128ec4 data_ov081_02128ecc data_ov081_02128ed4 data_ov081_02128edc data_ov081_02128ee4 data_ov081_02128eec data_ov081_02128ef8 data_ov081_02128f04 data_ov081_02128f10 data_ov081_02128f1c data_ov081_02128f28 data_ov081_02128f34 data_ov081_02128f40 data_ov081_02128fd0 data_ov081_02128fd8 data_ov081_02128fe0 data_ov081_02128fec

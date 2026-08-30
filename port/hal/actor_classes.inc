@@ -1694,6 +1694,22 @@ void hal_fill_rotating_platform_bs_vtable(void);     /* _ZTV10RickshawBs, 32 */
 extern unsigned char MirrorLuigi_SpawnInfo[];        /* ov055 0x02111abc, +4 = 195 */
 void *MirrorLuigi_Spawn(void);                       /* ov055 0x02111860, 116 B */
 void hal_fill_mirror_luigi_vtable(void);             /* _ZTV11MirrorLuigi, 31 */
+/* run rel0215 wave 3 (lane w3-b): THE TWO CLASSES GATE 192 LEFT BEHIND when
+   it mounted ov081 for ICE_BLOCK / MR_BLIZZARD / SPINDRIFT. Nothing about
+   that mount is re-done -- ov081 is already on PORT_ACTOR_OVERLAYS and both
+   fills go in the same hal/actor_classes_ov081.cpp. Both ids are confirmed
+   BOTH ROUTES: arm9 ACTOR_SPAWN_TABLE 0x02090864 + id*4 relocates to the
+   record below (module:overlay(81), not an ambiguous pair), and each
+   record's +0 word is ov081's own factory with its +4 halfword reading the
+   id back. Both tables are the plain 31-slot Actor shape, re-derived with
+   port/tools/vtspan.py on this tree; the derivation and the two held-out
+   TUs are in port/slice_w3b.txt. */
+extern unsigned char Snowball_SpawnInfo[];           /* ov081 0x02128a98, +4 = 224 */
+void *Snowball_Spawn(void);                          /* ov081 0x021264b4, 80 B */
+void hal_fill_snowball_vtable(void);                 /* _ZTV8Snowball, 31 */
+extern unsigned char Moneybag_SpawnInfo[];           /* ov081 0x02128be0, +4 = 261 */
+void *Moneybag_Spawn(void);                          /* ov081 0x02127adc, 88 B */
+void hal_fill_moneybag_vtable(void);                 /* _ZTV8Moneybag, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2549,4 +2565,13 @@ void hal_fill_mirror_luigi_vtable(void);             /* _ZTV11MirrorLuigi, 31 */
     /* ---- run rel0215 wave 2 (lane cast-sweep2): ov055, Luigi's key arena. \
        Level 47's whole skip list in one row. ---- */ \
     {195, "MIRROR_LUIGI", MirrorLuigi_SpawnInfo, MirrorLuigi_Spawn, \
-     hal_fill_mirror_luigi_vtable},
+     hal_fill_mirror_luigi_vtable}, \
+    /* ---- run rel0215 wave 3 (lane w3-b): ov081's last two classes, the \
+       partial-module finish of the overlay gate 192 mounted. MR_BLIZZARD \
+       (223) is STILL not here and this lane does not touch that refusal: \
+       the register-skew blocker in the gate-192 comment above is measured \
+       and its instrument has not been run. ---- */ \
+    {224, "SNOWBALL", Snowball_SpawnInfo, Snowball_Spawn, \
+     hal_fill_snowball_vtable}, \
+    {261, "MONEYBAG", Moneybag_SpawnInfo, Moneybag_Spawn, \
+     hal_fill_moneybag_vtable},

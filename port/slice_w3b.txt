@@ -1,0 +1,188 @@
+# Lane w3-b (run rel0215): SNOWBALL (224) and MONEYBAG (261), the two classes
+# gate 192 left unregistered when it mounted ov081 for the trio ICE_BLOCK (18),
+# MR_BLIZZARD (223) and SPINDRIFT (312).
+#
+# THIS IS A PARTIAL-MODULE FINISH, NOT A FRESH MOUNT. ov081 is already mounted
+# per symbol (port/ov081_syms.txt, gate 192's list, `list(APPEND
+# PORT_ACTOR_OVERLAYS ov081)`), so nothing here re-mounts it. What this lane
+# changes in the mount is exactly two lines: _ZTV8Snowball and _ZTV8Moneybag
+# come OUT of the symbol list, because a registered class's vtable has to be
+# the host array its factory stores -- the ov079/ov080/ov081 rule the same file
+# already applies to the trio's three tables. --pack pads the two resulting
+# address gaps by itself.
+#
+# BOTH IDS CONFIRMED BOTH ROUTES (the PLAN section 3 step 2 requirement):
+#   SNOWBALL  arm9 ACTOR_SPAWN_TABLE 0x02090864 + 224*4 = 0x02090be4
+#             -> reloc to:0x02128a98 module:overlay(81)  = Snowball_SpawnInfo
+#             Snowball_SpawnInfo +0 = 0x021264b4 = Snowball_Spawn (inside ov081)
+#             Snowball_SpawnInfo +4 halfword = 0x00e0 = 224
+#   MONEYBAG  arm9 ACTOR_SPAWN_TABLE 0x02090864 + 261*4 = 0x02090c78
+#             -> reloc to:0x02128be0 module:overlay(81)  = Moneybag_SpawnInfo
+#             Moneybag_SpawnInfo +0 = 0x02127adc = Moneybag_Spawn (inside ov081)
+#             Moneybag_SpawnInfo +4 halfword = 0x0105 = 261
+# Neither reloc is a `module:overlays(a,b)` pair, so the window race that
+# produced the Spindrift/Lakitu misroute cannot arise on these two.
+#
+# THE OVERLAY BASE WAS PROVED BEFORE ANYTHING WAS READ OFF IT (trap T4):
+# extracted/overlays/overlay_0081.bin, base 0x02123740, first word e92d4010
+# (`push {r4,lr}`) at 0x02123740, 0x02125f14, 0x02126504, 0x021264b4,
+# 0x02127adc and 0x021262ec. dsd's copy under extracted/dsd/ was not read.
+#
+# ==== THE TWO VTABLES, EVERY SLOT RESOLVED =================================
+# `python port/tools/vtspan.py . _ZTV8Snowball` / `. _ZTV8Moneybag`:
+#
+#   _ZTV8Snowball  ov081 0x02128abc  31 slots (plain Actor)
+#     routes: tail 31  typeinfo 70  terminator 31  raw run 32  next dsd 31
+#     The semantic tail is the resolved number and it is right: word 31 is
+#     0x021273e8 == func_ov081_021273e8, which is MONEYBAG's state-2 enter
+#     body, reached because slot 31 is where Moneybag's own {function, 0} PMF
+#     SOURCE table (data_ov081_02128b38) begins -- trap T4's fourth width trap
+#     exactly, one class over. typeinfo's 70 is the documented over-read.
+#     Owns 0 Init, 3 Cleanup, 6 Behavior, 9 Render, 12 OnPendingDestroy,
+#     16 D1, 17 D0. Every other slot is the shared Actor/ActorBase body.
+#
+#   _ZTV8Moneybag  ov081 0x02128c04  31 slots (plain Actor)
+#     every route agrees on 31.
+#     Owns 0 Init, 3 Cleanup, 6 Behavior, 9 Render, 12 OnPendingDestroy,
+#     16 D1, 17 D0, 18 OnYoshiTryEat (func_ov081_021265b8),
+#     19 OnTurnIntoEgg (func_ov081_02127a7c), 29 OnAimedAtWithEgg
+#     (func_ov081_021265c0).
+#
+# ==== SNOWBALL (daSnowball_c), an Enemy ====================================
+# Object 908 bytes; MovingCylinderClsn +0x110, WithMeshClsn +0x144, Model
+# +0x300, ShadowModel +0x350, the PMF cell pointer at +0x378.
+#
+# Render IS IN THE SLICE and that is a ruling, not an oversight. It is the
+# wave-19 six-virtual ROM-order shadow (`Base *b; b->m(0)`) over the member at
+# +0x300 -- and that member is a plain Model, adjudicated FROM CONSTRUCTION the
+# MontyMoleRock way, three witnesses in matched src: Snowball_Spawn calls
+# _ZN5ModelC1Ev(p + 0x300), InitResources feeds Model::LoadFile through
+# ModelBase::SetFile at this + 0x300, and D1/D0 both call
+# _ZN5ModelD1Ev(t + 0x300). hal/cxxname_bridge.cpp DUAL-FILLS _ZTV5Model at [4]
+# AND [5], so the shadow's slot 5 lands on Model::Render. This is the OPPOSITE
+# ruling from Spindrift's Render one class over (a ModelAnim at +0x110, host
+# copy in port/unmatched/ModelAnim_Renders.cpp) and the member type is the only
+# difference.
+#
+# Behavior's PMF read is at INDEX 0 of the record and needs no /vmg /vmm.
+# It spells the cell as `struct M { char pad[8]; PMF pmf; }` and reads
+# `m->pmf` -- a byte offset of 8 into the CELL, not `pp + 1` into a PMF array,
+# so the function word sits at the same offset under mwcc's 8-byte {fn,adj}
+# record and MSVC's 4-byte single-inheritance PMF. This is the R9 predicate's
+# "correct BY LUCK at index 0" case, stated rather than assumed: the R9 sweep
+# lists exactly the TUs with a NONZERO offset applied to a pointer-to-member of
+# an incomplete class, and neither of Snowball's two dispatchers is one.
+# func_ov081_021261d4 (the installer) is index 0 for the same reason.
+src/_ZN8SnowballD1Ev.c
+src/_ZN8SnowballD0Ev.c
+src/func_ov081_02125fb8.c
+src/func_ov081_021260fc.cpp
+src/func_ov081_021261d4.cpp
+src/func_ov081_02126224.c
+src/_ZN8Snowball16CleanupResourcesEv.c
+src/_ZN8Snowball16OnPendingDestroyEv.c
+src/_ZN8Snowball6RenderEv.cpp
+src/_ZN8Snowball8BehaviorEv.cpp
+src/_ZN8Snowball13InitResourcesEv.cpp
+src/Snowball_Spawn.c
+# Snowball's own sinit: it copies the class's TWO {function, delta} source
+# records (data_ov081_02128a6c -> 0x021261b8, data_ov081_02128a74 ->
+# 0x021260fc, both read out of ov081's relocs.txt) into the mutable cell
+# data_ov081_02128eb4. Those function words are DS code addresses; the seat in
+# hal/actor_classes_ov081.cpp rewrites them to host bodies with a
+# verify-then-abort, the MrBlizzard treatment in the same file.
+#
+# THE ENTER HALF IS ALREADY IN THE BINARY UNDER ANOTHER NAME. 0x021261b8 is
+# src/func_ov081_021261b8.c, which gate 192 sliced as MR_BLIZZARD's own Kill
+# (vtable slot 31, confirmed by reloc). One ROM body, two roles -- the same
+# shape as func_ov081_02124e64, which is Spindrift's Kill AND MrBlizzard's PMF
+# cell-0 tick, and which gate 192 documents at length. It is NOT re-listed
+# here; the seat references it by the name it already has.
+src/__sinit_ov081_021284b4.c
+#
+# ==== MONEYBAG (daGmch_c), an Actor ========================================
+# Object 1012 bytes; ModelAnim +0xd4, Model +0x138, ShadowModel +0x188,
+# MovingCylinderClsn +0x1b0, WithMeshClsn +0x1e4, the PMF cell pointer +0x3dc.
+#
+# NINE STATES, TWO PMF RECORDS EACH, and this is where the width matters.
+# func_ov081_0212777c sets `c->pp = &data_ov081_02128f40 + (state << 4)` --
+# 0x10 bytes per state, i.e. two 8-byte {function, delta} records -- then
+# func_ov081_02127744 dispatches `*(c->pp)` (the ENTER half, index 0) and
+# func_ov081_02127708 dispatches `*(c->pp + 1)` (the TICK half, index 1).
+#
+# THE TICK DISPATCHER IS THE R9 CASE AND ITS FIX IS ALREADY ON THE TIP.
+# src/func_ov081_02127708.cpp is one of the twenty-one TUs run linkw wave 18's
+# R9 sweep put on `COMPILE_OPTIONS "/vmg;/vmm"` in port/CMakeLists.txt, listed
+# there under "inert today: no host copy, no reference, /OPT:REF strips them --
+# a trap disarmed ahead of the lane that mounts the class." This is that lane.
+# With the option, sizeof(PMF) is 8 and `pp + 1` strides onto the tick record's
+# function word; without it MSVC's 4-byte PMF would stride 4 and call the
+# ENTER record's delta word, which is zero on every one of the eighteen
+# records -- a jmp 0, the wave-17 failure exactly. Nothing is added to
+# CMakeLists for it; the existing row is what makes this slice safe.
+# func_ov081_02127744 (index 0) needs no option, the Snowball argument.
+#
+# TWO TUs ARE HELD OUT, both for reasons this tree has already ruled on:
+#
+#   src/_ZN8MoneybagD1Ev.cpp  -- the AUTO-EMITTED-MEMBER-DTOR .cpp form. It
+#     declares ModelAnim/Model/ShadowModel/MovingCylinderClsn/WithMeshClsn as
+#     local structs with private destructors and writes `Moneybag::~Moneybag()
+#     {}`, leaving MSVC to emit calls to five member destructors that exist in
+#     this build only under their ROM C names. It cannot link, and it would not
+#     define the C symbol slot 16 needs even if it did. Slot 16 is a HOST THUNK
+#     in hal/actor_classes_ov081.cpp running the same chain D0's matched .c
+#     runs minus the Deallocate -- the MontyMole gate-174 and IceBlock gate-192
+#     treatment. The matched file stays byte-locked in src/ as proof.
+#
+#   src/_ZN8Moneybag6RenderEv.cpp -- the ModelAnim slot-5 collision, the
+#     fourteenth walk into it. It dispatches `((Sub *)&mModelAnim)->m(0)`
+#     through a LOCAL six-virtual ROM-order shadow off the ModelAnim at +0xd4
+#     (constructed by _ZN9ModelAnimC1Ev in Moneybag_Spawn, destroyed by
+#     _ZN9ModelAnimD1Ev in D0 -- adjudicated from construction, not from a
+#     header name), so its "slot 5" is the ROM's ModelAnim::Render while the
+#     host _ZTV9ModelAnim's slot 5 is Virtual18. HOST COPY in
+#     port/unmatched/ModelAnim_Renders.cpp beside its thirteen siblings. Its
+#     SECOND draw, off the Model at +0x138, is safe through the dual-filled
+#     _ZTV5Model and is spelled qualified there anyway so the file reads the
+#     same way twice.
+src/_ZN8MoneybagD0Ev.c
+src/func_ov081_021265b8.c
+src/func_ov081_021265c0.c
+src/func_ov081_021265c8.c
+src/func_ov081_02126700.cpp
+src/func_ov081_02126758.cpp
+src/func_ov081_02126950.cpp
+src/func_ov081_02126a20.cpp
+src/func_ov081_02126c20.cpp
+src/func_ov081_02126c8c.cpp
+src/func_ov081_02126d64.c
+src/func_ov081_02126e28.c
+src/func_ov081_02126fa4.cpp
+src/func_ov081_02127044.c
+src/func_ov081_02127070.cpp
+src/func_ov081_02127134.c
+src/func_ov081_02127188.c
+src/func_ov081_021271e8.c
+src/func_ov081_02127240.cpp
+src/func_ov081_02127314.cpp
+src/func_ov081_02127398.c
+src/func_ov081_021273e8.c
+src/func_ov081_02127440.cpp
+src/func_ov081_021274c8.cpp
+src/func_ov081_02127558.c
+src/func_ov081_021276b0.cpp
+src/func_ov081_02127708.cpp
+src/func_ov081_02127744.cpp
+src/func_ov081_0212777c.c
+src/_ZN8Moneybag16CleanupResourcesEv.c
+src/_ZN8Moneybag16OnPendingDestroyEv.c
+src/_ZN8Moneybag8BehaviorEv.cpp
+src/_ZN8Moneybag13InitResourcesEv.cpp
+src/func_ov081_02127a7c.cpp
+src/Moneybag_Spawn.c
+# Moneybag's own sinit: five SharedFilePtr constructions (fileIDs 0x2fd..0x301,
+# one model and four animations), the eighteen-record copy into
+# data_ov081_02128f40, and the +0x2000 Vector3 offset record. The eighteen
+# function words it copies are DS code addresses; the seat in
+# hal/actor_classes_ov081.cpp rewrites them with a verify-then-abort.
+src/__sinit_ov081_021284f0.c

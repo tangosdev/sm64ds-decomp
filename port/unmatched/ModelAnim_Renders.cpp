@@ -379,6 +379,40 @@ int _ZN9Spindrift6RenderEv(void *selfv)
     return 1;
 }
 
+/* ---- MONEYBAG (actor 261, ov081, lane w3-b) ------------------------------
+   The same collision as SPINDRIFT above, one class over in the same overlay.
+   src/_ZN8Moneybag6RenderEv.cpp dispatches through a LOCAL six-virtual
+   ROM-order shadow (`struct Sub { virtual int v0..v4(); virtual int m(void*);
+   }`) TWICE: once off mModelAnim at +0xd4 and once off mModel at +0x138. Only
+   the FIRST is exposed -- the host _ZTV9ModelAnim's slot 5 is Virtual18, a
+   two-arg method called with the shadow's one arg; _ZTV5Model IS dual-filled
+   at [4] and [5], so the second draw would be correct either way and is
+   spelled qualified here anyway so the file reads the same way twice.
+
+   The member types are adjudicated FROM CONSTRUCTION, not from a header name
+   (the MontyMoleRock rule): Moneybag_Spawn calls _ZN9ModelAnimC1Ev(p + 0xd4)
+   and _ZN5ModelC1Ev(p + 0x138); _ZN8MoneybagD0Ev calls _ZN9ModelAnimD1Ev(t +
+   0xd4) and _ZN5ModelD1Ev(t + 0x138); InitResources feeds ModelBase::SetFile
+   at both. +0xd4 is a ModelAnim, so it is the Whomp/Fish case.
+
+   Control flow line for line: the +0xb0 & 0x40000 cull bit, then the +0x3f0
+   crossfade counter -- the same byte func_ov081_02126a20 hands
+   ModelBase::ApplyOpacity as the anim model's opacity and (0x20 - it) as the
+   plain model's, so the two draws overlap across the fade. Both dispatches
+   pass a null scale.
+   PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish case. */
+int _ZN8Moneybag6RenderEv(void *selfv)
+{
+    char *c = (char *)selfv;
+    if (*(unsigned int *)(c + 0xb0) & 0x40000)
+        return 1;
+    if (*(unsigned char *)(c + 0x3f0) > 1)
+        ((ModelAnim *)(c + 0xd4))->ModelAnim::Render(0);
+    if (*(unsigned char *)(c + 0x3f0) <= 0x1f)
+        ((Model *)(c + 0x138))->Model::Render(0);
+    return 1;
+}
+
 /* ---- PUSH_BLOCK (306, ov002, gate 200) -----------------------------------
    src/_ZN9PushBlock6RenderEv.cpp dispatches through a LOCAL six-virtual
    ROM-order shadow (`struct Sub { virtual int g0..g4(); virtual void
