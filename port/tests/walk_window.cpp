@@ -1134,6 +1134,7 @@ void port_probe_chomp(int frame);
 void port_probe_rabbit_key(int frame);   /* TEMPORARY: SM64DS_TRACE_RABBITKEY */
 void port_probe_rabbit_trigger(int frame); /* TEMPORARY: SM64DS_RABBIT_TRIGGER */
 void port_probe_key_spawn(int frame);      /* TEMPORARY: SM64DS_KEY_SPAWN_AT */
+void port_probe_vs_overlap(int frame);     /* test fixture: SM64DS_VS_OVERLAP_AT */
 /* the scene-fade request the title-select hands off with. Recorded by the port
    in hal/level_change.cpp and acted on by this frame loop. */
 int port_scene_fade_pending(int *sceneId);
@@ -9483,6 +9484,7 @@ int main(void)
             port_probe_chomp(frame);
             port_probe_rabbit_trigger(frame);  /* TEMPORARY: SM64DS_RABBIT_TRIGGER */
             port_probe_key_spawn(frame);       /* TEMPORARY: SM64DS_KEY_SPAWN_AT */
+            port_probe_vs_overlap(frame);      /* test fixture: SM64DS_VS_OVERLAP_AT */
             port_actor_tick();
         } else if (*(void **)(c + 0x370)) {
             hal_player_behavior(player);

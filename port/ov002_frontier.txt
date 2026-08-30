@@ -419,20 +419,22 @@ identical shape:
       grouped-section pair in hal/scene_vs_menu.cpp now, gated by the 'vsrank'
       band above, measured at f310+1 on all three maps.
   data_0209fc5c (1) + data_0209fc5d (3), the per-slot ready bytes, 0x0209fc60
-      next. NOT FIXED, and the reason is recorded rather than papered over:
-      data_0209fc5c is already hosted as `int data_0209fc5c[8]` and the tree
-      reads that host through TWO INCOMPATIBLE VIEWS which predate this lane --
-      int[] in hal/comms_conductor.cpp, hal/level_boot.cpp (which WRITES
-      data_0209fc5c[i] = 1 per slot) and hal/player_bridges.cpp; u8[] in
-      src/_Z19LoadEntranceObjects...c, port/unmatched/LoadEntranceObjects.cpp,
-      Player_Behavior.cpp and now src/func_ov075_021165b0.c. Four-byte and
-      one-byte strides over one object cannot both be right, so slots 1..3
-      already disagree between the port's writer and the ROM's readers.
-      Reconciling it changes hal/level_boot.cpp, which lane prop15 was barred
-      from touching, and it is a bigger question than a propagation.
-      data_0209fc5d is hosted at its ROM span and DISJOINT from fc5c; the three
-      bytes read zero, which is what the DS reads in single player too. The
-      note in hal/scene_vs_menu.cpp is where the next lane picks it up.
+      next. FIXED by the fc5c width reconciliation (port/vs-fc5c-width): the
+      pair is a grouped-section block in hal/scene_vs_menu.cpp now, gated by
+      the 'ready' band, and every accessor in the tree is on the byte view.
+      The int/u8 split this entry used to record was live game-breakage, not
+      a latent hazard: hal/level_boot.cpp's VS seat wrote the flags at int
+      stride, the ROM's byte readers saw fc5c[1] == 0, and Player::Behavior's
+      VS gate (`data_0209f2d8 == 1 && data_0209fc5c[mPlayerNo] == 0`) froze
+      player 2 in St_LevelEnter_Main on every VS map -- the frozen-slot1
+      symptom the vs-online lane measured for 900 frames. The same byte read
+      is why _Z19LoadEntranceObjects... discarded the second player it
+      spawned (the orphan shadow-caster), which is what the ARENA DAY section
+      below is really about. data_0209fc5d is the member half of the same
+      grouped-section pair now -- one four-byte block, fc5c the head byte and
+      fc5d the other three, adjacency asserted by the 'ready' band -- so
+      func_ov075_021165b0's walk over both names reads the one run the DS
+      reads.
 
 
 ================================================================================
@@ -509,40 +511,38 @@ WHERE THE PORT STOOD WHEN THIS WAS BANKED:
 
 
 ================================================================================
-ARENA DAY: THE PLAYER-COUNT HOLD WILL IGNORE A REAL VS ARENA'S OWN STARTS
+ARENA DAY: RESOLVED -- THE COUNT HOLD IS RETIRED, THE ROM'S LOOP SEATS EVERYONE
 ================================================================================
-Run mg16, lane MP3/MP4. Filed here because it is correct today and wrong the day
-somebody mounts a VS arena, which is exactly the kind of thing a lane file loses.
+Resolved on port/vs-fc5c-width. Filed by run mg16 lane MP3/MP4 as "the
+player-count hold will ignore a real VS arena's own starts"; the arena day came
+and the hold was retired, though not by the condition the original entry
+wanted, because the premise fell first.
 
-WHAT THE PORT DOES NOW. hal/level_boot.cpp's port_load1 holds data_0209f21c at 1
-across _Z19LoadEntranceObjects... on EVERY multiplayer boot, then
-port_vs_spawn_extra_players supplies the other players from player 0's entrance
-record, 40 units apart.
+WHAT THE PORT DOES NOW. hal/level_boot.cpp's port_load1 lets the ROM's loop run
+at the real player count: player i spawns from entrance record p3 + i and is
+KEPT. The only remaining guard clamps the count to the records the table has
+past p3 (a test boot that outruns the table gets the extra slots from
+port_vs_spawn_extra_players, as before). The four arenas' records, decoded from
+the overlays (ov059/ov051/ov037/ov050): four consecutive player records each,
+raw 0, p3=0 -- level 51's at (-1200,254,6800) (-1387,254,6667) (-987,254,6567)
+(-1587,254,6467). Castle grounds' records 0-3 are those SAME four starts,
+byte-identical to level 51's.
 
-WHY. The ROM's loop spawns player i from entrance record p3 + i. Levels the port
-loads today carry ONE player start, so for i>0 it spawns whatever the next
-record names, returns nothing usable, discards the pointer -- and leaves the
-actor it created linked into the processing list, ticking and casting a shadow
-with no body. That is the orphan caster the owner saw as "a third thing".
+WHAT THE HOLD WAS ACTUALLY HIDING. The orphan shadow-caster that justified it
+was the fc5c stride bug (the split-symbol entry above): the loop spawned a
+real second player, read byte data_0209fc5c[1] as 0 through the int-stride
+seat, and discarded the pointer -- leaving the actor ticking and casting a
+shadow with no body. The entry's original explanation, "record p3+1 is a
+different door / not a Player", was a misread of a correct measurement: EVERY
+entrance record in the game names the player (raw 0), and castle grounds'
+record 1 is a player start with param 0x0000. Both conditional predicates the
+original entry recorded as failures (total-record count; class equality
+between records p3 and p3+1) failed because they were asked to predict which
+spawn the loop would DISCARD, and the discard was the width bug, not a
+property of the records. The 152 -> 216 shadow-census jump in the
+class-equality experiment was the width bug casting its shadow.
 
-WHY IT IS NOT CONDITIONAL, having tried twice:
-  * port_entrance_count() > 0 is the level's TOTAL record count (14 on castle
-    grounds), so it is true everywhere and only looked like a condition.
-  * Comparing records by class does not work either: MEASURED, castle grounds'
-    records p3 and p3+1 carry the SAME raw, so the predicate passed, the hold
-    stopped, and the shadow census went 152 -> 216 in that run.
-  What actually separates the cases is whether Actor::Spawn produces a usable
-  player, which is not knowable until the loop has already made the orphan.
-
-THE CONSEQUENCE. A real VS arena whose entrance table carries four consecutive
-player starts will have those starts IGNORED: the hold pins the count at 1, the
-loop spawns only player 0, and three copies of record 0 are supplied -- every
-player spawning on top of the first, in an arena that had perfectly good starts.
-
-WHAT THE ARENA LANE SHOULD DO. Once a level with real consecutive starts exists,
-the honest test becomes available: boot it once WITHOUT the hold and read the
-shadow census (port/tools/mp3_proof.py rungS) and the per-slot actor pointers. If
-every slot spawns a real player and the census is 88 + 64*(n-1), the arena needs
-no hold and the condition can finally be written against a level that
-distinguishes the two cases. Until such a level exists the test cannot be
-written, which is why this is filed rather than guessed at.
+THE HONEST TEST the original entry wanted now runs green for real reasons:
+port/tools/mp3_proof.py rungS's census reads 88 + 64*(n-1) with the loop
+unheld, and the collision rungs measure the solver against a forced overlap
+fixture (SM64DS_VS_OVERLAP_AT) instead of the retired stand-in spawn.

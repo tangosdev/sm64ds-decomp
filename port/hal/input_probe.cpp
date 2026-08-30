@@ -877,6 +877,54 @@ extern "C" void port_probe_key_spawn(int frame)
                         (int)*(signed char *)(player + 0xcc));
 }
 
+/* TEST SCAFFOLDING: frame-scheduled two-player overlap fixture.
+ *
+ *   SM64DS_VS_OVERLAP_AT=<frame>[:<units>]   units default 40
+ *
+ * Places slot 1's body at slot 0's position plus <units> on x, once, at the
+ * chosen frame -- the fixture port/tools/mp3_proof.py's collision rungs need.
+ * It exists because the fixture those rungs USED to lean on is gone for a
+ * good reason: they measured the solver against the fabricated stand-in
+ * spawn that put the pair 40 units apart, and since the fc5c width fix the
+ * ROM's own entrance loop seats every player on its real start -- castle
+ * grounds' records 0 and 1 are 229 units apart, so two correct spawns never
+ * touch and a rung that waits for a spawn-time overlap measures nothing.
+ * Forcing the overlap at a chosen frame keeps the rungs measuring the thing
+ * they were built for (CylinderClsn::Process pushing two live bodies apart)
+ * without depending on where any level puts its starts.
+ *
+ * Writes mPosX/Y/Z only (+0x5c/+0x60/+0x64), before the actor tick like
+ * every probe in this block, so the same frame's Behavior carries the forced
+ * position into its own pre-clsn snapshot and cylinder update. One-shot, and
+ * it says so on stderr so a harness can anchor its post-overlap window on
+ * the line rather than on trust.
+ */
+extern "C" {
+extern void *data_0209f394[];            /* the per-slot Player pointers */
+}
+
+extern "C" void port_probe_vs_overlap(int frame)
+{
+    const char *e = std::getenv("SM64DS_VS_OVERLAP_AT");
+    if (!e) return;
+    static int fired;
+    if (fired) return;
+    int at = std::atoi(e);
+    int units = 40;
+    if (const char *colon = std::strchr(e, ':'))
+        units = std::atoi(colon + 1);
+    if (at <= 0 || frame < at) return;
+    char *p0 = (char *)data_0209f394[0];
+    char *p1 = (char *)data_0209f394[1];
+    if (!p0 || !p1) return;
+    fired = 1;
+    *(int *)(p1 + 0x5c) = *(int *)(p0 + 0x5c) + (units << 12);
+    *(int *)(p1 + 0x60) = *(int *)(p0 + 0x60);
+    *(int *)(p1 + 0x64) = *(int *)(p0 + 0x64);
+    std::fprintf(stderr, "  [vsfix] f%d slot1 placed at slot0 + %d units on x "
+                 "(SM64DS_VS_OVERLAP_AT)\n", frame, units);
+}
+
 /* TEMPORARY rabbit-key teardown trace.
  *
  * RABBIT_KEY (229, ov085) hovers over the player's head after it is collected

@@ -327,6 +327,40 @@ BANDS = (
             'bytes no writer touches for players 1..3 --\n'
             '     silently, with no fault and no corruption.',
     },
+    {
+        # fc5c width reconciliation. THE PER-SLOT READY BYTES, the fourth
+        # band and the one whose breakage was LIVE: dsd splits the four-byte
+        # run at 0x0209fc5c into data_0209fc5c (1 byte) and data_0209fc5d
+        # (3); 0x0209fc60 is the next object. func_020308d0 (the ROM's seat)
+        # writes fc5c[0..3] as bytes, Player::Behavior's VS gate reads
+        # fc5c[mPlayerNo] as a byte, _Z19LoadEntranceObjects... keeps or
+        # discards each spawned Player on the same byte, and
+        # func_ov075_021165b0 walks BOTH names over the one four-byte run.
+        #
+        # Until the pair moved to hal/scene_vs_menu.cpp it was
+        # hal/auto_bss.cpp's generic `int data_0209fc5c[8]`, written at int
+        # stride by hal/level_boot.cpp's VS seat: byte fc5c[1] read 0, and
+        # player 2 froze in St_LevelEnter_Main on every VS map while the
+        # int-view probe insisted the slot was live.
+        'key': 'ready',
+        'module': 'arm9',
+        'start': 0x0209fc5c,
+        'end': 0x0209fc60,
+        'end_source': 'config',
+        'members': 2,
+        'hosts': ('smoke_player.map', 'walk_window.map',
+                  'walk_window_hires.map'),
+        'host': 'port/hal/scene_vs_menu.cpp',
+        'what': 'the per-slot ready bytes',
+        'remedy':
+            'keep the pair in .dsstate$hready0000 / $hready0001 with '
+            '__declspec(align(4)) on the head and __declspec(align(1))\n'
+            '     on the member, the GXBANK arrangement in '
+            'port/hal/cxx_aliases.cpp. Hosting data_0209fc5c anywhere as an\n'
+            '     int[] is what this failure looks like: the seat and the '
+            'ROM\'s byte readers then walk different memory, and the\n'
+            '     symptom is a second player that spawns and never ticks.',
+    },
 )
 
 

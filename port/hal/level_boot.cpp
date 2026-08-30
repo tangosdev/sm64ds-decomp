@@ -2135,7 +2135,7 @@ static void port_load0(void *t, int a, unsigned b)
 extern "C" {
 extern unsigned char data_0209f21c;
 extern unsigned char data_0209f250;
-extern int data_0209fc5c[];
+extern unsigned char data_0209fc5c[];
 extern unsigned char data_02092128[];
 extern unsigned char data_0209caa0[];
 extern unsigned char data_0209f2d8;      /* game mode: 0 single file, 1 VS, 2 script */
@@ -2203,68 +2203,59 @@ static void port_load1(void *t, int a, unsigned b)
     const unsigned char saved_local = data_0209f250;
     const unsigned char saved_count = data_0209f21c;
     data_0209f250 = 0;
-    /* AND THE COUNT IS HELD AT 1 ACROSS THE LOAD -- the orphan-shadow fix.
-       Run mg16 lane MP3, field failure 3.
+    /* THE COUNT HOLD IS RETIRED (it pinned data_0209f21c at 1 across the
+       load, run mg16 lane MP3, field failure 3 -- the orphan-shadow fix).
 
-       The ROM's loop spawns player i from entrance record p3 + i, and this
-       level has ONE player start; record 1 is a different door. For i=1 it
-       therefore called Actor::Spawn on whatever that record names, got
-       something back that was not a usable player, and discarded the pointer
-       (data_0209f394[1] measured NULL) -- but THE ACTOR IT CREATED IS ALREADY
-       LINKED INTO THE PROCESSING LIST. It ticks, its Behavior registers a
-       ShadowModel node, and nothing ever draws a body for it, because the
-       render loop draws data_0209f394[] and that slot points at the player
-       port_vs_spawn_extra_players makes instead.
+       The orphan it hid: the ROM's loop spawned player i from entrance
+       record p3 + i, then read byte data_0209fc5c[i] as 0 through the old
+       int-stride seat and DISCARDED the pointer (data_0209f394[1] measured
+       NULL) -- but THE ACTOR IT CREATED WAS ALREADY LINKED INTO THE
+       PROCESSING LIST. It ticked, its Behavior registered a ShadowModel
+       node, and nothing ever drew a body for it, because the render loop
+       draws data_0209f394[] and that slot pointed at the player
+       port_vs_spawn_extra_players made instead. An actor that casts a shadow
+       and has no body is exactly the owner's "a shadow as if a third thing
+       should be there". MEASURED, with SM64DS_SHADOW_TRIS: one player draws
+       88 shadow triangles (64 player + 24 scenery), so two players should
+       draw 152; it drew 216, one whole extra player-sized caster. The hold's
+       own comment blamed the level data ("record 1 is a different door, not
+       a Player") -- that was a misread of a correct measurement: the discard
+       was the fc5c width bug, and the record was a player start all along.
 
-       An actor that casts a shadow and has no body is exactly the owner's
-       "a shadow as if a third thing should be there", and it is attached to
-       the remote player because that is the slot whose start was missing.
+       With the flags at the ROM's byte stride (the fix in
+       hal/scene_vs_menu.cpp's ready-bytes host) the loop KEEPS every player
+       it spawns, so the loop is simply right: player i comes from record
+       p3+i, which is the ROM's whole answer for where the other players
+       start. On the four VS arenas those records exist -- decoded from the
+       overlays themselves, level 51/ov059 carries exactly four player
+       records at (-1200,254,6800) (-1387,254,6667) (-987,254,6567)
+       (-1587,254,6467), ov051/ov037/ov050 the same shape -- and castle
+       grounds' records 0-3 are those SAME four player starts, byte-identical
+       to level 51's (param 0x0000, raw 0), so what the loop spawns there is
+       a real second player on its own start, kept and rendered, no orphan.
 
-       MEASURED, with SM64DS_SHADOW_TRIS: one player draws 88 shadow triangles
-       (64 player + 24 scenery), so two players should draw 152. It drew 216 --
-       one whole extra player-sized caster.
+       The two failed conditions this block used to document (total-record
+       count; class equality between records p3 and p3+1) failed because they
+       were both asked to predict which spawn the loop would DISCARD -- and the
+       discard was the width bug, not a property of the records. Kept in the
+       history rather than here; rungS's 216-triangle measurement was the
+       width bug casting its shadow.
 
-       Holding the count at 1 makes the ROM's loop spawn exactly the starts the
-       level really has, and port_vs_spawn_extra_players then supplies the rest
-       from player 0's record. Same shape as the local-index hold above, and it
-       retires itself the same way: on a real VS arena whose table carries four
-       consecutive starts, the count should NOT be held, because the loop is
-       then right.
-
-       ##################################################################
-       #  IT IS NOT KEYED ON THAT. IT HOLDS ON EVERY MULTIPLAYER BOOT.  #
-       ##################################################################
-
-       AND THAT IS A KNOWN, FILED LIMITATION rather than an oversight. Two
-       versions of a condition were tried and neither works:
-
-         `port_entrance_count() > 0` is the level's TOTAL record count -- 14 on
-         castle grounds -- so it is true wherever an entrance table exists and
-         the condition collapsed to "multiplayer is on". It only ever LOOKED
-         conditional.
-
-         Comparing entrance records by CLASS (does record p3+1 name the same
-         actor as p3?) is the question this comment wants to ask, and it does
-         not answer it: MEASURED on castle grounds, records p3 and p3+1 carry
-         the SAME raw, so the predicate returned true, the hold stopped
-         happening, and the orphan caster came straight back -- rungS went from
-         152 shadow triangles to 216 in the run that tried it. Class equality
-         does not distinguish a player start from a different door on this
-         level, so it cannot be the test.
-
-       What actually distinguishes them is whether Actor::Spawn PRODUCES a
-       usable player from the record, and that is not knowable until the loop
-       has already run and made the orphan.
-
-       THE ARENA-DAY CONSEQUENCE, filed in port/ov002_frontier.txt: on a real VS
-       arena whose table carries four consecutive player starts, this hold will
-       ignore them and supply three copies of record 0 instead -- every player
-       spawning on top of the first. Correct on every level the port loads
-       today, wrong the day an arena mounts, and written down where the arena
-       lane will find it rather than left as a surprise. */
+       What remains guarded is the one thing the DS data never exercises: a
+       boot that wants more players than the table has records past p3. The
+       ROM reads records p3+i unguarded because on the DS every VS level has
+       them; a port test boot (VS_PLAYERS=4 on a two-record level) is not owed
+       that, so the count is clamped to the records that exist and
+       port_vs_spawn_extra_players supplies the slots past the table, exactly
+       as it always did. Floor of 1 keeps slot 0's unguarded record-p3 read
+       identical to every boot before this one. */
     const int want_players = (int)data_0209f21c;
-    if (want_players > 1)
-        data_0209f21c = 1;
+    {
+        const int have_records = (int)((const unsigned char *)t)[1] - (int)b;
+        int fit = have_records < 1 ? 1 : have_records;
+        if (want_players > fit)
+            data_0209f21c = (unsigned char)fit;
+    }
     _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij(t, a, b);
     data_0209f21c = saved_count;
     port_vs_spawn_extra_players(t, b);
@@ -4150,23 +4141,26 @@ const char *port_actor_class_name(unsigned id);
 }
 
 /* ===========================================================================
- * THE SECOND PLAYER'S SPAWN POINT, and why the port has to supply one.
+ * THE SECOND PLAYER'S SPAWN POINT, for slots past the end of the table.
  *
  * _Z19LoadEntranceObjects... spawns player i from ENTRANCE RECORD p3 + i --
- * its `e++` at the bottom of the loop -- so a level whose entrance table
- * carries four consecutive player starts spawns four players and one that does
- * not, does not. SM64DS's VS arenas have those consecutive records. Castle
- * grounds does not: record p3+1 is entrance 1 of 14, a different door, and
- * Actor::Spawn makes whatever that record names, which is not a Player.
+ * its `e++` at the bottom of the loop -- and since the fc5c width fix that
+ * loop KEEPS what it spawns, so wherever record p3+i exists the ROM's own
+ * path fills the slot and this function finds it filled and does nothing.
+ * The VS arenas carry four consecutive player records, and castle grounds'
+ * records 0-3 are those SAME four player starts, byte-identical to level
+ * 51's (param 0x0000, raw 0) -- so there the loop makes a real second
+ * player on its own start. (This header used to claim record p3+1 was "a
+ * different door, not a Player" and quote a measured slot1=NULL as proof
+ * the level data was missing -- both readings were the width bug: byte
+ * fc5c[1] read 0 through the int-stride seat, so
+ * _Z19LoadEntranceObjects... DISCARDED the player it had spawned. The
+ * measurement was real; the mechanism was not the records.)
  *
- * MEASURED, not assumed, and this is the shape the bug presents in:
- *     [vs] LoadEntranceObjects: count=2 p3=0 live=1,1 chars=0,1
- *     [vs] f0 count=2 me=0 live=1,1,0,0
- *     [vs] f0 slot1 actor=NULL
- * Every input the loop reads is correct and the slot is still empty, because
- * the thing that is wrong is the DATA the loop reads, not the loop.
- *
- * So the port supplies the missing starts, from player 0's OWN record, and
+ * What is left for this function is the case the DS data never exercises: a
+ * boot that wants more players than the table has records past p3 -- the
+ * caller clamps the loop to the records that exist, and this supplies the
+ * slots past the table, from player 0's OWN record, and
  * says so rather than pretending the level had them. Everything else about
  * each spawn is the ROM's: the same Actor::Spawn, the same class id out of
  * data_ov002_0210cbf4, the same flag packing including `(i << 6)` -- which is
@@ -4181,9 +4175,10 @@ const char *port_actor_class_name(unsigned id);
  * characters together, and it is a legitimate arena start: VS arenas spawn
  * players close and the ROM's own solver is what separates them.
  *
- * RETIREMENT: when ov075 (the VS menu) is mounted and a real VS arena is
- * loaded, its entrance table carries the consecutive starts and this function
- * finds every slot already filled and does nothing. It is a stand-in for
+ * RETIREMENT, updated: the arena half already happened -- on the four VS
+ * arenas (and any level whose table reaches record p3+i) the ROM's loop
+ * seats every slot and this function does nothing. It remains only as the
+ * fallback for a test boot that outruns the table. It is a stand-in for
  * missing level data, not a replacement for the ROM's spawn path.
  * =========================================================================== */
 extern "C" void port_vs_spawn_extra_players(void *tbl, unsigned p3)
@@ -4407,7 +4402,11 @@ extern "C" {
 extern int data_0208ee44;              /* vblanks per game tick */
 extern unsigned char data_0209f21c;    /* controller count */
 extern unsigned char data_0209f250;    /* local player index */
-extern int data_0209fc5c[];            /* per-player "this slot is live" */
+/* BYTE view, the only correct one: the ROM strides this at 1 (u8 in every
+   src reader and in func_020308d0, the seat). The int[] extern this used to
+   be made the seat loop below write int strides, which read back as byte
+   fc5c[1] == 0 -- the frozen second player on every VS map. */
+extern unsigned char data_0209fc5c[];  /* per-player "this slot is live" */
 extern unsigned char data_02092128[];  /* per-player character */
 /* run mg16 lane MP3: the per-player input gate Player::Behavior tests before it
    will point data_020a0e40 at its own slot. Hosted by hal/auto_bss.cpp. */
@@ -4761,8 +4760,14 @@ static void port_a2_seat_body(int make_stage)
     SetNumPlayers(vs_players);
     data_0209f21c = (unsigned char)vs_players;
     data_0209f250 = (unsigned char)func_0203da9c();
+    /* The live flags are NOT seated here: func_020308d0, which SetNumPlayers
+       just called, is the ROM's own writer of data_0209fc5c[0..3] and it
+       already wrote them as bytes. A second seat here is where the freeze
+       came from -- through the old int[] extern, `data_0209fc5c[i] = 1`
+       wrote int strides, and the ROM's byte readers saw fc5c[1] == 0:
+       Player::Behavior's VS gate returned before a single tick, so player 2
+       stood in St_LevelEnter_Main forever on every VS map. */
     for (int i = 0; i < vs_players; ++i) {
-        data_0209fc5c[i] = 1;          /* this slot is live */
         data_02092128[i] = (unsigned char)i;   /* character: see below */
         port_vs_set_character(i, i);   /* and the port's own copy: see below */
     }

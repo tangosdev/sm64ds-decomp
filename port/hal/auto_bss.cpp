@@ -176,7 +176,13 @@ int data_0209f350[8];
 /* the actor the player is CARRYING. Rabbit::Behavior parks itself here when
    it is caught and Minimap::Behavior reads it back; engine BSS either way. */
 int data_0209f33c[8];
-int data_0209fc5c[8];
+/* data_0209fc5c MOVED to hal/scene_vs_menu.cpp (fc5c width reconciliation),
+   for the reason data_0209b2ec moved: dsd splits the four-byte run at
+   0x0209fc5c into data_0209fc5c (1 byte) and data_0209fc5d (3), the ROM walks
+   both names over those same four BYTES, and the generic int[8] here let
+   hal/level_boot.cpp seat it at int stride -- which read as byte
+   fc5c[1] == 0 and froze player 2 on every VS map (Player::Behavior's VS
+   gate). Grouped-section pair there, gated by gxband_guard's 'ready' band. */
 int data_0209fc68[8];
 int data_020a0d84[8];
 int data_020a0d88[8];
@@ -382,8 +388,9 @@ int data_0209f320;
    stomp: when two streams want one symbol, the symbol table decides, not
    whichever declaration is more generous. */
 unsigned char data_0209f228[4];
-/* gate 31: the two SetNumPlayers seats beside data_0209fc5c, which is already
-   above -- the player count and the per-slot controller index. kind:bss. */
+/* gate 31: the two SetNumPlayers seats beside data_0209fc5c (hosted in
+   hal/scene_vs_menu.cpp since the width reconciliation) -- the player count
+   and the per-slot controller index. kind:bss. */
 unsigned char data_0209fc50[4];
 char data_0209fc64[4];
 /* gate 31: the second word CleanCommonModelDataArr resets. Its two siblings
