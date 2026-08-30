@@ -28,11 +28,11 @@
     "Enrolling free TUs does nothing, because the release build dead-strips whatever the",
     "linked closure never references."
   ],
-  "linkedTus": 8375,
-  "matchedTus": 11322,
+  "linkedTus": 8775,
+  "matchedTus": 11324,
   "measuredAt": "2026-08-30",
   "branch": "port-mount-noseat-cluster",
-  "commit": "3b4863d9a",
+  "commit": "0cf94f562",
   "stale": false,
-  "basis": "single lane cons at its pushed tip 3b4863d9a, measured against the tip's own battery build walk_window.map (tree clean, battery ALL GREEN, run_checks fully green, the tip that closed cast-campaign wave 1). +347 over the 8028 stamp in one day: seven reviewed merges seating the casts of Dire Dire Docks, Tall Tall Mountain, the water city, Rainbow Cruise, the ov077 enemy pack, six small overlays (Tick Tock Clock, Shifting Sand Land, THI small, LLL volcano, JRB ship, the Rec Room), plus eleven by-address propagated TUs and the VS star-band fix. The replacement queue's shadows shrink accordingly; the remaining frontier is wave 2 of the cast campaign (ov090/ov066/ov027/ov074/ov096/ov032/ov034/ov047/ov092/ov055), then arm9/ov002/ov006."
+  "basis": "single lane cons at its pushed tip 0cf94f562, measured against the tip's own battery build walk_window.map (tree clean, battery ALL GREEN, the tip that closed cast-campaign wave 2). +400 over the morning's 8375 stamp: seven reviewed merges seating the water enemy pack, Eyerok, Snowman's Land, the Goomboss, Shifting Sand Land's remaining cast, four small overlays (THI big+cave, Bowser in the Sky, the mirror arena), and the final ov075 propagation that retired the last VS faces - every function in ov075 now runs recovered source. Two disclosed holes remain the decomp's: func_ov074_021201f0 (Goomboss state-0) and _ZN7Wiggler8BehaviorEv, both filed as crack targets. Remaining frontier: wave 3 partial-overlay tails (~776), then arm9/ov002/ov006."
 }
