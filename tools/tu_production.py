@@ -19,6 +19,8 @@ from __future__ import annotations
 import hashlib
 import json
 import pathlib
+import subprocess
+import sys
 
 import tubuild as TB
 
@@ -85,7 +87,46 @@ def _raise(label, reasons):
     raise ProductionTuError(f"{label}: {detail or 'refused without a reason'}")
 
 
-def prepare_intact_link_verification(entries):
+def _demoted_inventory(entries):
+    return sorted(({"id": entry.get("id", source), "source": source}
+                   for source, entry in entries.items()),
+                  key=lambda row: row["source"])
+
+
+def _current_or_bootstrapped_intact_baseline(entries, jobs):
+    """Return a current source-independent control, building it if necessary.
+
+    The baseline command removes every promoted intact source's ``complete`` marker
+    in its disposable config, so those ranges come directly from extracted retail
+    gap bytes. This makes the control independent of the C++ objects it will judge
+    and safe to create on a clean CI worker with no gitignored build artifacts.
+    """
+    try:
+        return _strict_baseline(entries)
+    except ProductionTuError as first_error:
+        modules = sorted({entry.get("module") for entry in entries.values()
+                          if entry.get("module")})
+        module = modules[0] if modules else "ov002"
+        print("strict stock control is missing or stale; generating a fresh "
+              f"ROM-gap control for {module}")
+        command = [
+            sys.executable, str(TB.REPO / "tools" / "tubuild.py"),
+            "linkcheck", "--baseline", "--module", module,
+            "-j", str(jobs), "--clean",
+        ]
+        result = subprocess.run(command, check=False)
+        if result.returncode:
+            raise ProductionTuError(
+                "could not bootstrap strict stock control: "
+                f"{first_error}; baseline command exited {result.returncode}")
+        try:
+            return _strict_baseline(entries)
+        except ProductionTuError as fresh_error:
+            raise ProductionTuError(
+                f"fresh strict stock control is invalid: {fresh_error}") from fresh_error
+
+
+def prepare_intact_link_verification(entries, jobs=4):
     """Bind supported automatic intact TUs to the current strict stock control.
 
     Object preparation proves the compiler contribution before the link. This plan
@@ -94,7 +135,6 @@ def prepare_intact_link_verification(entries):
     intact admission refuses storage aliases until their baseline bootstrap is
     non-circular, so refreshing this control never depends on the control being kept.
     """
-    baseline = _strict_baseline()
     admitted_errors = set()
     admitted_roms = set()
     for entry in entries.values():
@@ -107,6 +147,7 @@ def prepare_intact_link_verification(entries):
                 "symbol-error inventory or stock ROM SHA-256")
         admitted_errors.add(tuple(sorted(set(errors))))
         admitted_roms.add(rom_sha)
+    baseline = _current_or_bootstrapped_intact_baseline(entries, jobs)
     current_errors = tuple(baseline["symbolErrors"])
     if admitted_errors != {current_errors}:
         raise ProductionTuError(
@@ -131,7 +172,7 @@ def prepare_intact_link_verification(entries):
     return {"baseline": baseline, "entries": prepared}
 
 
-def _strict_baseline():
+def _strict_baseline(expected_intact=None):
     """Return the content-bound stock baseline or refuse stale/missing evidence."""
     report_path = TB.BASELINE_LINK / "linkcheck.json"
     linked_elf = TB.BASELINE_LINK / "final_link.o"
@@ -147,9 +188,21 @@ def _strict_baseline():
             or (report.get("analysis") or {}).get("passed") is not True \
             or ((report.get("phases") or {}).get("checkModules") or {}).get("ok") is not True:
         raise ProductionTuError("stock control did not pass module fidelity")
+    expected_demoted = _demoted_inventory(expected_intact or {})
+    actual_demoted = report.get("intactTusDemoted")
+    if actual_demoted != expected_demoted:
+        raise ProductionTuError(
+            "stock control did not exclude the current intact TU inventory: "
+            f"expected={expected_demoted!r}, actual={actual_demoted!r}")
     rom = report.get("rom") or {}
-    if rom.get("matchesStockRom") is not True or not rom.get("sha256"):
-        raise ProductionTuError("stock control did not prove a ROM identical to build/sm64ds.nds")
+    if not rom.get("sha256"):
+        raise ProductionTuError("stock control did not produce a ROM SHA-256")
+    compared = rom.get("matchesStockRom")
+    if compared is False:
+        raise ProductionTuError("stock control ROM differs from build/sm64ds.nds")
+    if not expected_demoted and compared is not True:
+        raise ProductionTuError(
+            "stock control did not prove a ROM identical to build/sm64ds.nds")
     _sha, error = TB.validate_partition_baseline_evidence(report, linked_elf)
     if error:
         raise ProductionTuError(f"stock control is stale: {error}")
@@ -297,7 +350,8 @@ def prepare(tu_ids, config_root, work_root, jobs=1):
         return {"entries": [], "overrides": {}, "baseline": None}
     if len(ids) != len(set(ids)):
         raise ProductionTuError("duplicate --partitioned-tu id")
-    baseline = _strict_baseline()
+    enrolled = TB.RB.enrolled(TB.CFG_ARM9)
+    baseline = _strict_baseline(TB.RB.intact_tu_policies(enrolled))
     data = TB.load_manifest()
     config_root = pathlib.Path(config_root)
     work_root = pathlib.Path(work_root)

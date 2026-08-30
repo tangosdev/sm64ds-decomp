@@ -3633,6 +3633,42 @@ def compile_linkcheck_sources(srcs, vers, cache, init_srcs, syms, build_root, jo
     return failures, outcomes
 
 
+def demote_complete_sources(config_root, sources):
+    """Make exact enrolled sources ROM-gap-owned in a disposable config tree.
+
+    The section claims remain unchanged; only the indented ``complete`` marker is
+    removed. dsd then supplies those ranges from the extracted retail binaries.
+    Every requested path must name exactly one complete entry or the control build
+    is refused rather than silently compiling the source it was meant to exclude.
+    """
+    wanted = {str(source).replace("\\", "/") for source in sources}
+    found, demoted = set(), set()
+    for path in sorted(pathlib.Path(config_root).rglob("delinks.txt")):
+        lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+        out, current, changed = [], None, False
+        for line in lines:
+            stripped = line.strip()
+            if line and not line[0].isspace() and stripped.endswith(":"):
+                current = stripped[:-1].replace("\\", "/")
+                if current in wanted:
+                    found.add(current)
+            elif line and not line[0].isspace():
+                current = None
+            if current in wanted and stripped == "complete":
+                if current in demoted:
+                    return [], [f"{current}: duplicate complete marker"]
+                demoted.add(current)
+                changed = True
+                continue
+            out.append(line)
+        if changed:
+            path.write_text("\n".join(out) + "\n", encoding="utf-8", newline="\n")
+    errors = [f"{source}: no delinks entry" for source in sorted(wanted - found)]
+    errors.extend(f"{source}: delinks entry is not complete"
+                  for source in sorted(found - demoted))
+    return sorted(demoted), errors
+
+
 def linkcheck_symbol_verdict(baseline, command_ok, new_errors):
     """Whether the symbol phase is attributable-clean for this linkcheck.
 
@@ -3702,6 +3738,24 @@ def cmd_linkcheck(args):
           f"({len(profile['modReplacements'])} mod entr(y/ies) redirected to src/, "
           f"{len(profile['modGapFallbacks'])} demoted to ROM gap bytes -- "
           f"rombuild_profile.prepare_profile, the same stock semantics as a real build)")
+
+    if baseline:
+        enrolled_before = RB.enrolled(cfg_root)
+        intact_before = RB.intact_tu_policies(enrolled_before)
+        demoted, reasons = demote_complete_sources(cfg_root, intact_before)
+        if reasons:
+            print("\nREFUSED -- strict control could not exclude every intact TU:")
+            for reason in reasons:
+                print(f"  {reason}")
+            return 1
+        report["intactTusDemoted"] = [
+            {"id": intact_before[source].get("id", source), "source": source}
+            for source in demoted]
+        if demoted:
+            print(f"      strict control demoted {len(demoted)} intact TU source(s) "
+                  "to independently extracted ROM gap bytes:")
+            for source in demoted:
+                print(f"        {source}")
 
     span_start = span_end = None
     claims = []
