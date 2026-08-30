@@ -306,13 +306,129 @@ def score_file(path, text):
     }
 
 
+def _marked_member_fragment(text, symbol):
+    """Return one explicitly marked member's source, or None if ambiguous.
+
+    Production TUs put ``// @symbol <linker-name>`` immediately before each
+    hand-written member.  The marker is stronger evidence than trying to parse
+    C++, and slicing at the next marker keeps an unrelated member's temporary
+    names or codegen constraints from changing this member's readability score.
+    """
+    markers = list(SYMBOL.finditer(text))
+    matches = [i for i, marker in enumerate(markers)
+               if marker.group(1) == symbol]
+    if len(matches) != 1:
+        return None
+    i = matches[0]
+    start = markers[i].end()
+    stop = markers[i + 1].start() if i + 1 < len(markers) else len(text)
+    return text[start:stop]
+
+
+def _balanced_lifecycle_fragment(text, class_name, method_name):
+    """Find an inline ctor/dtor declaration or definition in one header.
+
+    This is deliberately a small recognizer, not a C++ parser.  It searches the
+    comment/string-masked text and returns only a balanced inline body. A mere
+    declaration is not ownership evidence. If the evidence is not this simple the
+    caller falls back to the whole
+    TU, which can under-credit a member but can never grant it speculatively.
+    """
+    code = _code_only(text)
+    unqualified = class_name.rsplit("::", 1)[-1]
+    token = f"~{unqualified}" if method_name.startswith("~") else unqualified
+    pattern = re.compile(r"(?<![A-Za-z0-9_~])" + re.escape(token) + r"\s*\(")
+    matches = list(pattern.finditer(code))
+    if len(matches) != 1:
+        return None
+
+    start = matches[0].start()
+    open_paren = code.find("(", matches[0].start(), matches[0].end())
+    depth = 0
+    close_paren = None
+    for i in range(open_paren, len(code)):
+        if code[i] == "(":
+            depth += 1
+        elif code[i] == ")":
+            depth -= 1
+            if depth == 0:
+                close_paren = i
+                break
+    if close_paren is None:
+        return None
+
+    semi = code.find(";", close_paren + 1)
+    brace = code.find("{", close_paren + 1)
+    if semi >= 0 and (brace < 0 or semi < brace):
+        return None
+    if brace < 0:
+        return None
+
+    depth = 0
+    for i in range(brace, len(code)):
+        if code[i] == "{":
+            depth += 1
+        elif code[i] == "}":
+            depth -= 1
+            if depth == 0:
+                return text[start:i + 1]
+    return None
+
+
+def _lifecycle_member_fragment(path, text, symbol, repo_root=None):
+    """Return an inline compiler-generated ctor/dtor's direct-header source."""
+    parsed = demangle.demangle(symbol)
+    if not parsed or not (parsed.get("ctor") or parsed.get("dtor")):
+        return None
+
+    root = pathlib.Path(repo_root or REPO)
+    source = pathlib.Path(path)
+    include_names = re.findall(r'^\s*#\s*include\s+"([^"]+)"', text, re.MULTILINE)
+    for name in include_names:
+        candidates = []
+        if source.is_absolute():
+            candidates.append(source.parent / name)
+        else:
+            candidates.append(root / source.parent / name)
+        candidates.append(root / "include" / name)
+        for header in candidates:
+            try:
+                header_text = header.read_text(errors="replace")
+            except OSError:
+                continue
+            fragment = _balanced_lifecycle_fragment(
+                header_text, parsed["class"], parsed["method"])
+            if fragment is not None:
+                return fragment
+    return None
+
+
+def score_member(path, text, symbol, repo_root=None):
+    """Score one member of a promoted multi-function translation unit.
+
+    Hand-written members use exact ``@symbol`` boundaries.  Compiler-generated
+    ctor/dtor variants use the inline lifecycle definition in a directly included
+    class header.  Anything without either form of evidence is scored against the
+    entire file, preserving the old conservative behavior.
+    """
+    fragment = _marked_member_fragment(text, symbol)
+    if fragment is None:
+        fragment = _lifecycle_member_fragment(path, text, symbol, repo_root)
+    score = score_file(path, fragment if fragment is not None else text)
+    score["real_name"] = _real_name_for_symbol(symbol)
+    # Header use describes the production source, not an individual body slice.
+    score["shared_header"] = bool(SHARED_HEADER.search(text))
+    return score
+
+
 def converted(src_root=None):
     """Score every source-owned function. Returns CONVERTED plus its breakdown.
 
     Reads committed source only - no ROM, no build, no local state - so it
-    reproduces on a fresh checkout, which is what CI needs. File-wide criteria are
-    applied to every function the enrollment table assigns to that source; the name
-    criterion is evaluated per symbol.
+    reproduces on a fresh checkout, which is what CI needs. Ordinary intake files
+    retain file-wide scoring. Members of a promoted production TU are independently
+    scored from explicit source markers or inline lifecycle definitions, with a
+    conservative file-wide fallback when neither boundary is evidenced.
     """
     root = pathlib.Path(src_root or SRC)
     files = sorted(str(p) for p in root.rglob("*")
@@ -328,17 +444,19 @@ def converted(src_root=None):
     for p in files:
         with open(p, errors="replace") as f:
             text = f.read()
-        file_score = score_file(p, text)
         path = pathlib.Path(p)
         try:
             rel = path.absolute().relative_to(repo_root).as_posix()
         except ValueError:
             rel = None
         members = ownership.get(rel) or [path.stem]
+        multi = len(members) > 1
         all_readable = True
         for sym in members:
-            s = dict(file_score)
-            s["real_name"] = _real_name_for_symbol(sym)
+            s = (score_member(p, text, sym, repo_root)
+                 if multi else score_file(p, text))
+            if not multi:
+                s["real_name"] = _real_name_for_symbol(sym)
             total += 1
             for k in counts:
                 counts[k] += s[k]
