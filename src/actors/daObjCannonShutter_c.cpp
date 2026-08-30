@@ -56,6 +56,13 @@ extern Matrix4x3 data_020a0e68;
    the shape include/dBgActor_c.h records as wall 6az. */
 int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
 
+/* dBgW_KcMbg::SetFile -- same wall: include/dBgW_KcMbg.h declares the real
+   signature, but its by-value Fix12<int> makes a member call cost stack the
+   ROM does not spend. See the call site in InitResources. */
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    dBgW_KcMbg *self, KCL_File *kcl, const Matrix4x3 &mat, int scale, s16 angY,
+    CLPS_Block &clps);
+
 /* Render's two global gates: the current scene and level state words. */
 extern signed char   data_0209f2f8;
 extern unsigned char data_0209f220;
@@ -104,9 +111,17 @@ int daObjCannonShutter_c::InitResources()
     UpdateClsnPosAndRot();
     {
         KCL_File *kcl = (KCL_File *)dBgW_Kc::LoadFile(data_ov002_0210e124);
-        Fix12<int> clsnScale;
-        clsnScale.val = 0x199;              /* 409/4096 == 0.0999, i.e. 0.1 */
-        mMeshCollider.SetFile(kcl, mClsnMat, clsnScale, mAngleY, data_ov002_0210d7f4);
+        /* MEASURED: this one call has to keep the mangled spelling. Its third
+           parameter is a by-value Fix12<int> -- wall 6az, the case
+           include/dBgW_KcMbg.h already records -- and Fix12<int> is a bare
+           aggregate with no constructor, so materialising one costs 12 bytes of
+           stack traffic the ROM does not have. Written as a real member call
+           this function came out 0xb8 against the cartridge's 0xac, and because
+           ov002 is the overlay every later overlay loads behind, those 12 bytes
+           moved 69 modules (106/106 -> 20/106). 0x199 is 409/4096, i.e. a
+           collider scale of 0.1. */
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+            &mMeshCollider, kcl, mClsnMat, 0x199, mAngleY, data_ov002_0210d7f4);
     }
     mHomePosX = mPosX;
     mHomePosY = mPosY;
