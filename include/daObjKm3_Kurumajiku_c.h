@@ -20,7 +20,7 @@
  *
  *   _ZTI21daObjKm3_Kurumajiku_c  ov047 0x0211224c
  *   _ZTS21daObjKm3_Kurumajiku_c  ov047 0x02112264
- *   _ZTV21daObjKm3_Kurumajiku_c  ov047 0x021122a0  (its record sits at V-4)
+ *   _ZTV21daObjKm3_Kurumajiku_c  ov047 0x021122a0  (storage starts at 0x02112298)
  *   kind  __si_class_type_info, ONE base, subobject offset 0
  *   base  daObjKurumajiku_c, ov002 0x021092f8
  *
@@ -33,7 +33,16 @@
 
 struct daObjKm3_Kurumajiku_c : daObjKurumajiku_c {
     /* --- vtable --- */
+    /* Defining this empty destructor in the class body is codegen-significant:
+     * mwccarm emits the used D1/D0 pair in retail order and does not materialize
+     * the otherwise homeless D2 body. The guard lets the shadow TU prove that
+     * form while the legacy D1/D0 intake files remain enrolled; promotion removes
+     * those files and makes the inline form unconditional. */
+#ifdef DAOBJKM3_KURUMAJIKU_INLINE_DTOR
+    virtual ~daObjKm3_Kurumajiku_c() {}    /* slots 16 (D1), 17 (D0) */
+#else
     virtual ~daObjKm3_Kurumajiku_c();      /* slots 16 (D1), 17 (D0) */
+#endif
 
     int CleanupResources();                /* slot  3 */
     int InitResources();                   /* slot  0 */
