@@ -4310,3 +4310,89 @@ sincos index) changes the instruction count, so it is caught by SIZE alone and n
 exercises the comparator. A control that the byte gate would have rejected anyway proves
 nothing about the interpreter, so count only the size-neutral ones when claiming what the
 audit can detect.
+
+### 6bs TERNARY ORIENTATION is a colouring lever: two rigid regimes, and the bridge between them
+
+Measured on `_ZN14TTC_MovingBeam8BehaviorEv` (ov065, 0x0211bd8c, 0x178), lane TTC of run
+vsdec, ~700 compiled variants across 11 product sweeps. The whole body reproduced on the
+first try except one trailing clamp block, which cost the entire session and turned out to
+be a single lever nobody had written down.
+
+THE SHAPE. A range test followed by a clamp:
+
+    int y = *(s32 *)(c + 0x60);
+    int lo = *(s32 *)(c + 0x320);
+    int hi = *(s32 *)(c + 0x324);
+    int in = 0;
+    if (y >= lo)
+        in = (y <= hi);
+    if (in == 0) {
+        *(s32 *)(c + 0x60) = <clamp>;
+        ...
+    }
+
+TWO RIGID REGIMES. How you spell `<clamp>` decides the colouring of ALL FOUR values, and
+there are exactly two outcomes. Writing the clamp as open-coded `if`s:
+
+    y = r0   in = r3   hi = r2   lo = r1
+
+Writing it as a single ternary expression:
+
+    y = r2   in = r1   hi = r0   lo = r3
+
+These are not tendencies, they are absolute over every spelling measured. The regime is
+chosen by the clamp, and then nothing else moves it.
+
+WHAT IS INERT (measure once, never pay for it again). None of these changed the colouring
+OR the score, in any combination:
+  - declaration order of the flag: 4 slots x 6 orders of the loads
+  - flag type: `int` / `u8` / `s32` / `bool` / `s16`
+  - `if (!in)` vs `if (in == 0)`
+  - wrapping the block in an extra nested scope
+  - hoisting all four locals to FUNCTION scope, all 24 permutations
+  - `static inline` / `inline` / `static __inline` helper for the range test: the inlined
+    helper is BYTE-IDENTICAL to the open-coded form, so "extract it into an inline
+    function" is not a distinct lever here, only a different way to write the same IR
+  - a dead extra load: mwcc eliminates it, so it cannot be used as a colouring shim
+
+Within a regime, declaration order does one thing and one thing only: the memory-loaded
+locals take their registers in REVERSE order of declaration. A constant-initialised flag is
+excluded from that chain and appended at the end. That rule held on all six orders.
+
+THE ROM SAT BETWEEN THE REGIMES: `y=r0 in=r1 hi=r2 lo=r3` -- the ternary regime's flag and
+low bound, with the open-coded regime's other two. 0 of 198 spellings in the widest cross
+reached it, and the permuter could not either (two structurally different seeds, 4000+ and
+2500+ iterations, both flat at their base score).
+
+THE LEVER. The bridge is the ARM ORIENTATION of the inner ternary. These are semantically
+identical and compile differently:
+
+    (y <= hi) ? y : hi      ->  movgt <y's reg>, <hi's reg>     select lands in y
+    (y >  hi) ? hi : y      ->  movle <hi's reg>, <y's reg>     select lands in hi
+
+mwcc materialises the FIRST arm into the result register and conditionally moves the second
+into it. So the arm you write first decides which operand's register the result occupies,
+and therefore which register is free for everything downstream. Swapping the arms of an
+inner ternary is a free, semantics-preserving colouring move that no other axis reproduces.
+
+The match was:
+
+    *(s32 *)(c + 0x60) = (y < lo) ? lo : ((y > hi) ? hi : y);
+
+with the plain block-scope declarations in order y, lo, hi. Changing `(y > hi) ? hi : y`
+back to `(y <= hi) ? y : hi` and nothing else moves it from a byte match to four words off.
+
+HOW TO USE IT. On any near-miss whose residue is conditional moves plus the registers
+around them, sweep BOTH arm orders of every ternary and every `if/else` that selects a
+value, as a product with the open-coded-vs-expression choice. Two axes, four cells, and
+they are cheap. Do not sweep declaration order first -- on this family it is nearly inert
+and it burned most of the session.
+
+METHOD NOTE worth keeping. What actually solved this was instrumenting the sweep to report
+the COLOURING each spelling produced (which register each load and the flag landed in), not
+just the divergence count. The score alone said 7, 8, 9, 13 with no gradient to climb; the
+colouring table showed two attractors and made the missing cell obvious. Score-only sweeps
+hide the structure. Also: the permuter needs a C-shaped base (pycparser cannot parse
+`extern "C"` or `class`), and for a body like this one a C file with the mangled name as a
+plain identifier and `this` as an explicit first parameter reproduces the C++ output
+word-for-word, so the residue can be worked in C and ported back.
