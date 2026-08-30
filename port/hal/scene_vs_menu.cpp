@@ -304,6 +304,56 @@ extern "C" {
 #include "vs_data_patch.inc"
 }
 
+/* ---- ONE CALLING-CONVENTION THUNK, over the entry record's third PMF -------
+   MEASURED, not predicted. Retiring the func_ov075_0211afb0 face made the ROM's
+   own body live, and the first scene-6 boot after that faulted at
+   func_ov075_0211afb0 +0xdc reading 0x15, under SM64DS_FAULTS_FATAL=1; without
+   it the playlog reads
+
+     [quarantine] actor 307FEE20 id 346 (?) faulted (code c0000005 +000dbb8c)
+                  -- FROZEN, frame continues
+
+   id 346 = 0x15a = UnknownVsEntry, frozen for the remaining 299 frames, which
+   is why the run still exited 0 and looked clean. The face survived the same
+   call for a year because it was `int(void)`: a cdecl body that reads no
+   argument does not care that the caller passed none.
+
+   THE SEAM IS THE ONE THIS SEAT ALREADY CROSSES EVERYWHERE (the thunks below,
+   and hal/scene_mg_menu.cpp section 4). UnknownVsEntry::Render calls
+   src/func_ov075_0211b3d8.cpp, a byte-matched TU whose whole body is
+   `(c->*c->ep->pmf)()` over a complete single-inheritance class, so MSVC emits
+   a __thiscall: the receiver rides in ecx and NOTHING goes to the stack. The
+   word behind that member pointer is the mount's 0x0211d35c, which
+   vs_apply_data_patch points at the plain cdecl C body, and a cdecl body reads
+   its first argument off the stack. The receiver never arrives.
+   __fastcall(self, edx) takes ecx as its first argument and cleans the same
+   zero bytes __thiscall does, so the thunk is the exact shape of the seam.
+
+   ONE ROW, DELIBERATELY. relocs.txt has exactly two references to 0x0211afb0
+   and one of them is ov006's storage at the shared window, so this record word
+   is the function's ONLY entry point and the thunk is complete.
+
+   THE OTHER TWO PAIRS IN THE SAME RECORD ARE LEFT EXACTLY AS THE BASE HAS
+   THEM, and that is a scope line rather than a verdict. __sinit_ov075_0211c51c
+   copies three pairs into data_ov075_0211d994 -- 0x0211d354 (func_ov075_
+   0211b260, dispatched from src/func_ov075_0211b458.cpp's own inline member
+   call) and 0x0211d34c (func_ov075_0211b1cc, dispatched from
+   src/func_ov075_0211b418.cpp) are the other two, and they have the identical
+   receiver defect today. They do not fault: 0211b1cc bails on
+   DecIfAbove0_Short and 0211b260 bails on a non-positive count, both off
+   whatever the stack happened to hold. Giving either one a real receiver turns
+   on code paths this lane did not measure -- 0211b1cc walks 400 elements
+   through func_ov075_0211addc -- and 0211b458's site is a THIRD shape anyway
+   (its `struct Foo;` is never completed, so MSVC gives that member pointer the
+   most-general representation and the call adjusts `this` before the branch; a
+   thunk on the target does not reach that). Named here so the lane that fixes
+   the entry record fixes all three together and measures what wakes up. */
+/* (func_ov075_0211afb0 is declared with the other propagated bodies above) */
+static void __fastcall vs_pmf_grid_render(void *self, void *)
+{
+    func_ov075_0211afb0((char *)self);
+}
+
 static void vs_apply_data_patch(void)
 {
     const unsigned n = sizeof vs_data_patch / sizeof vs_data_patch[0];
@@ -420,6 +470,15 @@ extern "C" void port_scene_fill_vs(void)
         port_ov075_pack_check();
         port_ov075_syms_patch();
         vs_apply_data_patch();
+        /* and then ONE word back over the generated table's own answer: the
+           0x0211d35c pair is reached by an MSVC member-pointer call, so the
+           record holds the __fastcall thunk rather than the bare cdecl body.
+           It has to happen HERE, between the patch and the sinits, because
+           __sinit_ov075_0211c51c copies this word into data_ov075_0211d994[2]
+           and everything downstream reads the copy. The generated .inc is left
+           alone on purpose -- it is the ROM's own mapping and says to
+           regenerate rather than hand-edit; the convention seam is the seat's. */
+        *(void **)data_ov075_0211d35c = (void *)vs_pmf_grid_render;
         /* the excluded c800 record, rebuilt from the pinned mount extent --
            one code pointer (patched above) and a zero */
         std::memcpy(&port_vs_data_0211c800, data_ov075_0211c7f8 + 8, 8);
