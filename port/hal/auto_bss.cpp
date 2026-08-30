@@ -21,7 +21,12 @@ int VT1[8];
    Generous [8] is the file's own convention; the ROM spans are 4 each. */
 int data_0209b2e4[8];
 int data_0209b2e8[8];
-int data_0209b2ec[8];
+/* data_0209b2ec MOVED to hal/scene_vs_menu.cpp (run rel0215 lane prop15), for
+   the reason data_0209f310 moved out of hal/actor_vtables.cpp: dsd splits the
+   four-byte run at 0x0209b2ec into data_0209b2ec (1 byte) and data_0209b2ed
+   (3), src/func_ov075_021165b0.c walks BOTH names over those same four bytes,
+   and a split run cannot be hosted as two disjoint objects. It is a
+   grouped-section pair there, gated by gxband_guard's 'vsrank' band. */
 int data_0209b2f0[8];
 int data_0209fc54[8];
 int data_0209fc58[8];

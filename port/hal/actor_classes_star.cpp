@@ -196,15 +196,62 @@ int _ZN5Actor16OnAimedAtWithEggEv(void *self);     /* slot 29 */
    from &data_0209f311, the ROM's own next byte (f310 is 1 byte, f311 the next
    3, then f314 begins a DIFFERENT symbol -- the level area table, hosted in
    camera_bridges.cpp). f310 and f311 must therefore be the first two bytes of
-   ONE contiguous block. MSVC grouped sections place them adjacently: two
-   $NNNN contributions to one section, laid out in address order, the same
-   idiom romdata.py's CONTIG runs use. A generous 8-byte head keeps room for
-   the 4-byte ROM run (f310..f313) plus slack. */
+   ONE contiguous block. MSVC grouped sections put them in ADDRESS ORDER: two
+   $NNNN contributions to one section, laid out by suffix, the same idiom
+   romdata.py's CONTIG runs use. (This note used to say "adjacently"; order and
+   adjacency are not the same claim and only the first one was true. See
+   below.) A generous 8-byte head keeps room for the 4-byte ROM run
+   (f310..f313) plus slack.
+
+   THE ALIGNMENT WAS THE MISSING HALF, and the block was NOT adjacent. Measured
+   by run rel0215 lane prop15 out of the release build's own maps, all three
+   hosting targets, before any change:
+
+       walk_window.map        _data_0209f310 00d280d4   _data_0209f311 00d280d8
+       smoke_player.map       _data_0209f310 009fd0d0   _data_0209f311 009fd0d4
+       walk_window_hires.map  _data_0209f310 015980d4   _data_0209f311 015980d8
+
+   f311 four bytes behind f310, where the ROM puts it ONE. Grouped sections put
+   contributions in suffix order, which is what the note above claims and is
+   true; they do NOT make them adjacent, because each contribution still gets
+   the linker's default four-byte alignment. hal/cxx_aliases.cpp's GXBANK macro
+   already carries the other half -- "align(4) on every member would pad each
+   one to four and put +0x18 at +0x30" -- and this pair was written without it.
+
+   WHAT THAT COST, and it is a read/write SPLIT rather than a clobber: every
+   writer indexes data_0209f310[i] (GiveVsStars, Stage::InitResources' p2 walk,
+   func_ov002_020d94cc's drop test, the three HUD readers, and
+   func_ov075_021165b0's explicit [0][1][2][3] scan), landing on host +0..+3.
+   NumVsStarsObtained -- whose sum IS the VS win test, `== 5` -- starts at f310
+   for player 0 and then walks from &data_0209f311, landing on +4..+6 for
+   players 1, 2 and 3. Three bytes of inter-contribution padding that nothing
+   writes sat between them. Player 0 read back correctly, players 1-3 always
+   read zero, and nothing was corrupted, which is why no run ever faulted on it.
+
+   align(1) on the member is the fix and align(4) on the head keeps the block's
+   own placement deterministic, exactly the GXBANK arrangement. */
 #pragma section(".dsstate$hvsstar0000", read, write)
 #pragma section(".dsstate$hvsstar0001", read, write)
 extern "C" {
-__declspec(allocate(".dsstate$hvsstar0000")) signed char data_0209f310[1];
-__declspec(allocate(".dsstate$hvsstar0001")) signed char data_0209f311[31];
+__declspec(allocate(".dsstate$hvsstar0000")) __declspec(align(4))
+signed char data_0209f310[1];
+__declspec(allocate(".dsstate$hvsstar0001")) __declspec(align(1))
+signed char data_0209f311[31];
+}
+/* Reads the layout back at run time the way port_gxbank_layout_check does, so
+   a section trick that stops working fails loudly instead of quietly reading
+   another byte. The link-time answer is port/tools/gxband_guard.py's 'vsstar'
+   band, which checks every hosting target's map rather than the one code path
+   that calls this. */
+extern "C" int port_vsstar_layout_check(void)
+{
+    const long d = (long)(data_0209f311 - data_0209f310);
+    if (d == 1)
+        return 1;
+    std::printf("  [vs] STAR BAND NOT CONTIGUOUS: f311 at f310+%ld (want 1) --"
+                " NumVsStarsObtained reads bytes no writer touches for players"
+                " 1..3\n", d);
+    return 0;
 }
 /* func_ov002_020d94cc declares data_0209f310 as a bare `signed char` outside
    extern "C" (a second, C++-mangled spelling); alias it onto the C symbol. */

@@ -129,8 +129,11 @@ DSSTATE_END
 
        data_0209f344 = &data_02075720[func_0203dad4() % 6];
 
-   which is the line hal/level_boot.cpp:2328 hand-rolls today against the same
-   host array. So there is one object and two spellings, and the fix is to tie
+   which is the line hal/level_boot.cpp:3384 hand-rolls today against the same
+   host array (the derivation is the comment block above it at 3367). The 2328
+   this note used to cite is an unrelated LoadFile-dedupe paragraph; corrected
+   by run rel0215 lane prop15, which read both lines rather than either name.
+   So there is one object and two spellings, and the fix is to tie
    the spellings together -- adding the address name to romdata.py's NAMED list
    would emit a SECOND copy of the bytes, and then the ROM's line and the
    port's stand-in would seat data_0209f344 into two different arrays.

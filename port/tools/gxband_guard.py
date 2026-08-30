@@ -252,6 +252,81 @@ BANDS = (
             'another\n     symbol, and inside .dsstate it is captured by save '
             'states too.',
     },
+    {
+        # run rel0215 lane prop15, the SECOND instance of the same disease and
+        # the reason the vsstar row above is not a one-off.
+        #
+        # dsd splits the four-byte run at 0x0209b2ec into data_0209b2ec (1
+        # byte) and data_0209b2ed (3); 0x0209b2f0 is a different object. These
+        # are the VS ranking counters, and src/func_ov075_021165b0.c walks BOTH
+        # names over the SAME four bytes -- `pb = data_0209b2ec` for i<4 to
+        # increment them, then `pb = data_0209b2ed` for i in 1..3 to read them
+        # back -- so the two names must be the first two BYTES of one block.
+        # src/func_ov075_02116e00.c clears data_0209b2ec[0..3] the same way.
+        #
+        # The pair had no host at all until the propagation put those bodies in
+        # the link; it is a grouped-section block in
+        # hal/scene_vs_menu.cpp now, and this band is what keeps it one.
+        'key': 'vsrank',
+        'module': 'arm9',
+        'start': 0x0209b2ec,
+        'end': 0x0209b2f0,
+        'end_source': 'config',
+        'members': 2,
+        'hosts': ('smoke_player.map', 'walk_window.map',
+                  'walk_window_hires.map'),
+        'host': 'port/hal/scene_vs_menu.cpp',
+        'what': 'the VS ranking counters',
+        'remedy':
+            'keep the pair in .dsstate$hvsrank0000 / $hvsrank0001 with '
+            '__declspec(align(4)) on the head and __declspec(align(1))\n'
+            '     on the member, the GXBANK arrangement in '
+            'port/hal/cxx_aliases.cpp. Hosting data_0209b2ec back in\n'
+            '     hal/auto_bss.cpp as a generic int[8] is what this failure '
+            'looks like: the increment loop and the read-back loop\n'
+            '     then walk different memory, silently.',
+    },
+    {
+        # run rel0215 lane prop15. THE VS CARRIED-STAR ARRAY, and it is the
+        # third band because it was ALREADY BROKEN and nothing said so.
+        #
+        # The DS run is four bytes, 0x0209f310..0x0209f313, split by dsd into
+        # data_0209f310 (1 byte) and data_0209f311 (the other 3); 0x0209f314 is
+        # a different symbol, the level area table, hosted in
+        # hal/camera_bridges.cpp. Every writer indexes data_0209f310[player],
+        # and the win test's summand source NumVsStarsObtained starts at f310
+        # for player 0 and then walks from &data_0209f311 -- so the two names
+        # must be the first two BYTES of one block, or the writers and the
+        # reader are looking at different memory.
+        #
+        # They were not. Measured off the 0.2.15 release build's own maps,
+        # before the fix, on all three hosting targets: f311 sat at f310+4.
+        # hal/actor_classes_star.cpp had the grouped-section half of the idiom
+        # (two $NNNN contributions in suffix order) and not the alignment half,
+        # so the linker's default four-byte contribution alignment padded the
+        # one-byte head out to four. Players 1..3 wrote +1..+3 and were read
+        # back from +4..+6, three bytes of padding no writer touches. Nothing
+        # was clobbered and nothing ever faulted, which is exactly why this
+        # needed a gate rather than a run.
+        'key': 'vsstar',
+        'module': 'arm9',
+        'start': 0x0209f310,
+        'end': 0x0209f314,
+        'end_source': 'config',
+        'members': 2,
+        'hosts': ('smoke_player.map', 'walk_window.map',
+                  'walk_window_hires.map'),
+        'host': 'port/hal/actor_classes_star.cpp',
+        'what': 'the VS carried-star array',
+        'remedy':
+            'keep the pair in .dsstate$hvsstar0000 / $hvsstar0001 with '
+            '__declspec(align(4)) on the head and __declspec(align(1)) on\n'
+            '     the member, which is the GXBANK arrangement in '
+            'port/hal/cxx_aliases.cpp. Dropping either align() puts\n'
+            '     data_0209f311 at f310+4, and NumVsStarsObtained then reads '
+            'bytes no writer touches for players 1..3 --\n'
+            '     silently, with no fault and no corruption.',
+    },
 )
 
 
