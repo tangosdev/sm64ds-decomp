@@ -8591,7 +8591,7 @@ endforeach()
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov036_021111e4.c"
     PROPERTIES COMPILE_DEFINITIONS
-    "VT0=_ZTV16daObjRcBuranko_c;VT1=_ZTV8Platform")
+    "VT0=data_ov036_02113a98;VT1=_ZTV8Platform")
 # (2) src/func_ov036_02111284.c -- SWINGING_PLATFORM's CleanupResources.
 #     Releases two SharedFilePtrs as G0/G1, and its own pool names them:
 #     0x021112c0 -> 0x02114028 then 0x021112c4 -> 0x02114020, both
@@ -8649,7 +8649,10 @@ set_source_files_properties(
 #       _ZN8ShipWingD0Ev.c             0x021119dc -> 0x02113cf8 == _ZTV8ShipWing
 #       _ZN10DonutBlockD1Ev.c          0x02111d50 -> 0x02113dcc == _ZTV10DonutBlock
 #       _ZN10DonutBlockD0Ev.c          0x02111da4 -> 0x02113dcc == _ZTV10DonutBlock
-#       SwingingPlatform_Spawn.c       0x02111440 -> 0x02113a98 == _ZTV16daObjRcBuranko_c
+#       func_ov036_021111a0.c          0x02111230 -> 0x02113a98 == data_ov036_02113a98
+#     The last one goes the OTHER way -- onto the config name rather than onto
+#     the _ZTV one -- because config names 0x02113a98 only data_ov036_02113a98,
+#     and vtspan --sweep can only size an array whose name it can look up.
 #     The _ZTV10dBgActor_c in the four ShipWing/DonutBlock destructors is NOT
 #     renamed: their pools hold 0x0210ae38, which is what the port's own
 #     _ZTV10dBgActor_c array already is (hal/actor_classes.cpp fills it and
@@ -8666,9 +8669,16 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10DonutBlockD1Ev.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN10DonutBlockD0Ev.c"
     PROPERTIES COMPILE_DEFINITIONS "_ZTV18daObjRc_Guruguru_c=_ZTV10DonutBlock")
+#     SwingingPlatform_Spawn.c needs NO rename: it already spells
+#     data_ov036_02113a98, which is the canonical host array name (see the
+#     vtspan note in hal/actor_classes_ov036.cpp -- config names 0x02113a98
+#     only that way, so the host-only _ZTV16daObjRcBuranko_c spelling would
+#     have gone unsized). src/func_ov036_021111a0.c, SWINGING_PLATFORM's D1,
+#     is the one TU that spells the host-only name; its pool at 0x02111230 is
+#     0x02113a98, module:overlay(36).
 set_source_files_properties(
-    "${CMAKE_CURRENT_SOURCE_DIR}/../src/SwingingPlatform_Spawn.c"
-    PROPERTIES COMPILE_DEFINITIONS "data_ov036_02113a98=_ZTV16daObjRcBuranko_c")
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov036_021111a0.c"
+    PROPERTIES COMPILE_DEFINITIONS "_ZTV16daObjRcBuranko_c=data_ov036_02113a98")
 # (7) AN ALIAS THIS MOUNT DEFEATS, AND THE ONE LIVE READER IT HAD.
 # ov018, ov022, ov036 and ov056 share the level-overlay base 0x021111a0, and
 # ov036's dsd export won the naming race at 0x021140d4, so

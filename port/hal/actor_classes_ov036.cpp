@@ -13,7 +13,7 @@
 // typeinfo name string cross-checked against each SpawnInfo's word[8]):
 //
 //   id   registry name            ROM RTTI name          host vtable array
-//   127  SWINGING_PLATFORM        16daObjRcBuranko_c      _ZTV16daObjRcBuranko_c      (0x02113a98, 32)
+//   127  SWINGING_PLATFORM        16daObjRcBuranko_c      data_ov036_02113a98         (0x02113a98, 32)
 //   129  ROTATING_PLATFORM_RR     19daObjRc_Kaitendai_c   data_ov036_02113b74         (0x02113b74, 32)
 //   125  SHIP_WING                14daObjRc_Hane_c        _ZTV18RotatingPlatformRr    (0x02113c38, 31)
 //   126  DONUT_BLOCK              16daObjRc_Tikuwa_c      _ZTV8ShipWing               (0x02113cf8, 32)
@@ -403,6 +403,7 @@ static void ov36_fill_shared(void *volatile *vt)
 // so one DSSTATE_BEGIN/END pair covers the set.
 extern "C" {
 DSSTATE_BEGIN
+void *data_ov036_02113a98[32];  /* vtspan: data_ov036_02113a98, SWINGING_PLATFORM */
 void *data_ov002_021091d4[32];  /* vtspan: daObjKaitendai_c, ov002 0x021091d4 */
 void *data_ov002_02108d94[32];  /* vtspan: daObjDorifu_c, ov002 0x02108d94 */
 int data_ov036_02113b74[32];   /* vtspan: data_ov036_02113b74, ROTATING_PLATFORM_RR */
@@ -459,7 +460,15 @@ int func_ov036_021112c8(void *self);       /* slot 9, +0xd4 plain Model draw */
 int *func_ov036_021111a0(int *self);       /* slot 16, D1 */
 int *func_ov036_021111e4(int *self);       /* slot 17, D0 */
 void *SwingingPlatform_Spawn(void);
-int _ZTV16daObjRcBuranko_c[32];  /* vtspan: data_ov036_02113a98 */
+/* data_ov036_02113a98[32] is declared in the DSSTATE block above. THE ROM NAME
+   IS THE CANONICAL ONE HERE, not _ZTV16daObjRcBuranko_c, and that is not
+   cosmetic: port/tools/vtspan.py --sweep sizes a host array against the ROM by
+   looking its name up in config, and config names 0x02113a98 only
+   data_ov036_02113a98 -- _ZTV16daObjRcBuranko_c is a host-only spelling that
+   comes from include/decl_common.h. Declared under the host-only name, this
+   32-slot array would not have been sized by the one tool that sizes them, the
+   _ZTV13daObjWakame_c / _ZTV20daObjFl_Fall_Block_c shape. The two TUs that
+   spell the host-only name get a per-source -D onto this one. */
 }
 
 static int __fastcall swp_init(void *s, void *)
@@ -478,7 +487,7 @@ static int __fastcall swp_d0(void *s, void *)
 
 extern "C" void hal_fill_swinging_platform_vtable(void)
 {
-    void *volatile *vt = (void *volatile *)_ZTV16daObjRcBuranko_c;
+    void *volatile *vt = (void *volatile *)data_ov036_02113a98;
     ov36_fill_shared(vt);
     vt[0]  = (void *)swp_init;
     vt[3]  = (void *)swp_clean;
