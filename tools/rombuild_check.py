@@ -14,6 +14,7 @@ Usage:
 """
 import argparse
 import collections
+import hashlib
 import json
 import pathlib
 import re
@@ -215,6 +216,7 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
     source_functions = source_bytes = mod_functions = mod_bytes = 0
     source_data_bytes = 0
     reproducing = reproducing_bytes = bad = bad_function_bytes = differing_source_bytes = 0
+    module_set_digest = hashlib.sha256()
 
     for sym in sorted(config_root.rglob("symbols.txt")):
         d = sym.parent
@@ -235,6 +237,11 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
             continue
         base = min(s[1] for s in secs)
         built, retail = built_p.read_bytes(), retail_p.read_bytes()
+        label_bytes = label.encode("utf-8")
+        module_set_digest.update(len(label_bytes).to_bytes(4, "big"))
+        module_set_digest.update(label_bytes)
+        module_set_digest.update(len(built).to_bytes(8, "big"))
+        module_set_digest.update(built)
         allowed_mod_ranges = [(addr - base, end - base)
                               for rel, _name, addr, end in entry_sections
                               if rel.startswith("mods/")]
@@ -319,6 +326,8 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
             "unexpectedDifferingBytes": unexpected_module_bytes,
             "percent": (100.0 * (compared_module_bytes - differing_module_bytes)
                         / compared_module_bytes) if compared_module_bytes else 0.0,
+            "moduleSetSha256": (module_set_digest.hexdigest()
+                                if module_results else None),
             "results": module_results,
         },
         # What the 106 module images are MADE OF, so the headline percentages cannot be
