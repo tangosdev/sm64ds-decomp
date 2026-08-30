@@ -6072,9 +6072,20 @@ int main(void)
                         "level boot in this process\n");
     }
 
-    /* THE GAME'S OWN LEVEL BOOT, now the default: ov009 mounted,
+    /* THE GAME'S OWN LEVEL BOOT: ov009 mounted,
        Stage::LoadClsnAndObjects run against it, and the level's own entrance
-       record spawning the Player and the Camera. SM64DS_LEGACY_BOOT=1 goes
+       record spawning the Player and the Camera.
+
+       IT IS NO LONGER "THE DEFAULT", and that phrase used to be here. Since
+       the owner's boot-to-title ruling this block is reached three ways --
+       SM64DS_LEVEL naming a level, SM64DS_VS_MAP naming a VS match, or the
+       SM64DS_BOOT_CLASSIC opt-out -- plus the one that matters most, a title
+       run FALLING THROUGH after a save file was picked, which is the branch
+       just above. A launch with no environment at all goes to the title now;
+       hal/title_entry.cpp's port_boot_default_scene is where that is decided
+       and its banner carries the whole derivation.
+
+       SM64DS_LEGACY_BOOT=1 goes
        back to the harness staging (hand-built spawn context, KCL mounted by
        hand); SM64DS_BOOT_NOSPAWN=1 holds the entrance table off, which is
        stage A1, the same boot with nothing spawning. SM64DS_REAL_BOOT is

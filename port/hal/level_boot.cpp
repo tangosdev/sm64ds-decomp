@@ -3055,7 +3055,15 @@ void *port_stage_a_boot(void *mc, int spawn)
    with mode 0 and the bit clear starts the opening). Deriving from the bit
    alone would fire the opening in all of them. The arm is set only by
    port_level_entry_latch (hal/level_change.cpp), which only the title bridge
-   calls -- so the default boot cannot reach it. */
+   and the VS start call -- so a level boot that names its own level cannot
+   reach it.
+   (run rel0215 lane boot-title: that last clause used to read "so the default
+   boot cannot reach it", and the default is now the title, which DOES reach
+   it. The protection is unchanged and the sentence above is its real form:
+   what cannot reach the arm is a boot that named a level, which is every one
+   of the forty-six selftests. The VS start reaches the arm and is then refused
+   by the ROM's own first precondition below, data_0209f2d8 != 0, because
+   PrepareVsMode writes mode 1.) */
 static int g_intro_armed;
 
 /* THE SUPPRESSION SEAM. The one place that says "not this time".

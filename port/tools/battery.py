@@ -1011,8 +1011,19 @@ def default_boot_env():
     and adds four names.
     """
     env = {k: v for k, v in os.environ.items() if not k.startswith("SM64DS_")}
-    # The three the harness owes every run in this file: a bounded headless run
-    # (WINDOW_SELFTEST also forces the scene path headless -- see
+    # SM64DS_ASSET_ROOT IS PUT BACK, and it is the one exception. It is a
+    # LOCATION, not a behaviour knob: it says where the game's data is, the
+    # launcher passes it on every real launch, and the other arms in this file
+    # inherit it because they build from os.environ without popping it. Dropping
+    # it here would make this the only row that resolves assets differently from
+    # the forty-six above it, which is a divergence that would surface as a
+    # confusing red rather than as the thing this row is asking about. Unset in
+    # the caller's environment it stays unset, which is the developer build's
+    # normal state -- hal/fs_names.cpp then resolves against the tree.
+    if "SM64DS_ASSET_ROOT" in os.environ:
+        env["SM64DS_ASSET_ROOT"] = os.environ["SM64DS_ASSET_ROOT"]
+    # The rest are what the harness owes every run in this file: a bounded
+    # headless run (WINDOW_SELFTEST also forces the scene path headless -- see
     # port_scene_want_window), faults that end the process instead of being
     # quarantined and counted, and the quiet rule.
     env["SM64DS_WINDOW_SELFTEST"] = SELFTEST_FRAMES

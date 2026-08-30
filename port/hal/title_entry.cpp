@@ -161,7 +161,7 @@ static int g_taken;        /* did a run end by entering the adventure */
  * screen. Everything that makes that work was already here and already
  * matched; what was missing was one answer to one question, and this is it.
  *
- * ---- THE ROM'S ORDER, MEASURED, AND IT IS NOT WHAT THE BRIEF ASSUMED -----
+ * ---- THE ROM'S ORDER, AND IT IS NOT THE OBVIOUS ONE ----------------------
  *
  * The opening cutscene does NOT come before the title. It comes LAST:
  *
