@@ -1,0 +1,169 @@
+# run rel0215 wave 3, lane w3-e: THE REST OF ov022's CAST (level 14, Lethal
+# Lava Land). Wave 8 (slice_w8packs.txt) seated five ids and wave 16
+# (slice_w16a.txt) seated a sixth; this slice takes the FIVE that were left --
+# ROLLING_LOG_LLL (70), LAVA_BRIDGE (73), LAVA_SEESAW (77),
+# ROTATING_PLATFORM_LLL (80) and VOLCANO_FIRE (243) -- and closes ov022.
+#
+# THE GAP CENSUS THIS LANE STARTED FROM. Every kind:function row in
+# config/arm9/overlays/ov022/symbols.txt joined to its delinks.txt src TU and
+# to walk_window's own object list in build/port/build.ninja:
+#     83 function rows, 83 distinct src TUs, 40 LINKED, 43 UNLINKED.
+#     0 MISSING bodies, 0 NONMATCHING banners, 0 rows without a delink row.
+# So the whole ov022 tail was one class of gap -- UNSLICED -- and none of it
+# was missing decomp. 41 of the 43 are below; the other two are named -- one
+# here (VolcanoFire's D1) and one at the bottom (LAVA_PLANK's slot 3).
+#
+# ==== THE FIVE IDS, BOTH ATTRIBUTION ROUTES, RE-DERIVED ON THIS TIP =========
+#
+# Route 1 = the arm9 spawn table word at 0x02090864 + id*4, read out of
+# config/arm9/relocs.txt (it is a relocation, not a literal), then the
+# SpawnInfo record's word[0] must land inside ov022's own image AND the
+# record's word[1] low halfword must equal the id the slot was reached from.
+# Raw bytes from extracted/overlays/overlay_0022.bin (13152 B, the
+# decompressed image -- T4, never the dsd export).
+#
+#   id   SpawnInfo   word[0] spawnFunc              idhalf   x on L14
+#    70  0x02114380  0x021125a4 RollingLogLll_Spawn      70   x1
+#    73  0x02113f4c  0x02111c7c LavaBridge_Spawn         73   x2
+#    77  0x02114010  0x02111f3c LavaSeesaw_Spawn         77   x1
+#    80  0x02113dc4  0x02111688 RotatingPlatformLll_Spawn 80  x1
+#   243  0x02114458  0x02112918 VolcanoFire_Spawn       243   (not placed)
+#
+# Route 2 = each Spawn's own final vtable-store relocation, and route 3 = the
+# RTTI typeinfo at vtable[-1]. Both are in port/ov022_syms.txt's header and
+# were re-read here rather than carried:
+#    70 -> 0x021143a4  15daObjFlMaruta_c        (log/maruta)
+#    73 -> 0x02113f70  16daObjFl_London_c       (London bridge)
+#    77 -> 0x02114034  16daObjFl_Seesaw_c
+#    80 -> 0x02113de8  16daObjFl_Koma_D_c       (koma = spinning top)
+#   243 -> 0x0211447c  21daObj_volcanoCannon_c
+#
+# THE BASELINE SKIP LIST AGREES EXACTLY. Level 14 on cons cc10acd4e:
+# 204 spawned (35 classes), 5 skipped (4 classes) -- 70 x1, 73 x2, 77 x1,
+# 80 x1. Those four ARE this slice's placed ids and there is nothing else in
+# the list.
+#
+# ==== WHY THE FOUR "BLOCKED" IDS ARE NOT BLOCKED ANY MORE ==================
+#
+# hal/actor_classes_ov022.cpp refused 73/77/80 because SIXTEEN of their slot
+# bodies carry the `recovered from vtable slot identity` marker and
+# port/tools/inferred_stub_guard.py freezes the seated-guess set. That marker
+# records how the NAME was recovered, not where the BODY came from, and the
+# wave-16 route answers the real question: FOURTEEN bodies (the thirteen for
+# 73/77/80 plus VolcanoFire's func_ov022_021126ac) were each rebuilt with
+# tools/match.py at 2004/b56 against extracted/overlays/overlay_0022.bin with
+# --strict-relocs --module ov022. ALL FOURTEEN ARE MATCHING -- the recovered
+# source reproduces the ROM's bytes AND every relocation destination. Rulings
+# are in port/tools/inferred_stub_adjudicated.txt; the run is in
+# out/w3-e/ov022/adjudication.txt.
+#
+# ROLLING_LOG_LLL's other blocker is gone too, and it was gone before this
+# lane started: wave 8 deferred 70 because its slot 9 (func_ov080_02127124),
+# its slot 27 (func_ov080_02127058) and the func_ov080_021274ac its
+# InitResources tail-calls were unlinked. slice_ov030cast.txt (RollingLogTtm,
+# the SAME ROM class in ov030) sliced all three plus func_ov080_021270dc,
+# 0212714c, 02127094, 02127658 and 0212758c. Checked in the map, not assumed.
+#
+# ==== THE NAMING SHIFT BITES TWICE HERE ====================================
+#
+# dsd lays each mwcc class block out as [bodies..., Spawn] and names the block
+# from the PRECEDING Spawn label. Two of this slice's five blocks are shifted:
+#    70 RollingLogLll  bodies spelled _ZN12FallBlockLll*   table _ZTV12FallBlockLll
+#   243 VolcanoFire    bodies spelled _ZN13RollingLogLll*  table _ZTV13RollingLogLll
+# The other three (73/77/80) sit in unnamed func_ov022_* blocks. Every row is
+# pinned by the vtable's own slot 0/3/6/9/16/17 relocations landing inside the
+# block that ENDS at that class's Spawn.
+#
+# ==== ONE TU IS HELD OUT, AND IT IS NOT A REFUSAL OF THE BODY ==============
+#
+#   src/_ZN13RollingLogLllD1Ev.cpp  (VolcanoFire's slot 16)
+# is a real MSVC-synthesised destructor over a shadow class with no vtable
+# store of its own. MSVC mangles `RollingLogLll::~RollingLogLll` as
+# ??1RollingLogLll@@UAE@XZ and never as the Itanium _ZN13RollingLogLllD1Ev the
+# slot needs -- the MotherPenguin / OneUpLogo / BabyPenguin shape that gate 191,
+# gate 193 and slice_ov030cast.txt (for this class's ov030 twin
+# _ZN13RollingLogTtmD1Ev) all keep out for the same reason. The chain is
+# spelled directly in hal/actor_classes_ov022_w3e.cpp, HIGH ADDRESS FIRST,
+# from this file's own member list and the ROM body at 0x021125e0.
+#
+# 41 lines below; 41 + 2 held out (this one and LAVA_PLANK's slot 3 at the
+# bottom) = the 43-row census tail.
+
+# ---- ROTATING_PLATFORM_LLL (80), table 0x02113de8 -------------------------
+src/func_ov022_021115a8.c
+src/func_ov022_021115f8.c
+src/func_ov022_0211165c.c
+src/func_ov022_02111670.c
+src/RotatingPlatformLll_Spawn.c
+
+# ---- LAVA_BRIDGE (73), table 0x02113f70 ----------------------------------
+src/func_ov022_02111980.c
+src/func_ov022_021119c4.c
+src/func_ov022_02111a1c.c
+src/func_ov022_02111a64.c
+src/func_ov022_02111aa8.cpp
+src/func_ov022_02111ad0.c
+src/func_ov022_02111bdc.cpp
+src/LavaBridge_Spawn.c
+
+# ---- LAVA_SEESAW (77), table 0x02114034 ----------------------------------
+src/func_ov022_02111cac.c
+src/func_ov022_02111cf0.c
+src/func_ov022_02111d48.c
+src/func_ov022_02111d90.c
+src/func_ov022_02111dd4.cpp
+src/func_ov022_02111dfc.c
+src/func_ov022_02111ea0.cpp
+src/LavaSeesaw_Spawn.c
+
+# ---- ROLLING_LOG_LLL (70), table 0x021143a4 (bodies spelled FallBlockLll) --
+src/_ZN12FallBlockLllD1Ev.c
+src/_ZN12FallBlockLllD0Ev.c
+src/_ZN12FallBlockLll16CleanupResourcesEv.cpp
+src/_ZN12FallBlockLll8BehaviorEv.cpp
+src/_ZN12FallBlockLll13InitResourcesEv.cpp
+src/RollingLogLll_Spawn.c
+
+# ---- VOLCANO_FIRE (243), table 0x0211447c (bodies spelled RollingLogLll) --
+# 243 is NOT on level 14's object list, and it is still live: VolcanoRing's
+# Behavior (src/func_ov022_021112ac.c, linked and running on level 14 since
+# wave 8) calls Actor_Spawn(0xf3, ...) -- the ring's fireball. It is registered
+# for that reason, not for a placement row.
+src/_ZN13RollingLogLllD0Ev.c
+src/func_ov022_02112654.cpp
+src/func_ov022_021126ac.c
+src/func_ov022_02112710.c
+src/func_ov022_02112790.cpp
+src/_ZN13RollingLogLll16CleanupResourcesEv.c
+src/_ZN13RollingLogLll8BehaviorEv.cpp
+src/_ZN13RollingLogLll13InitResourcesEv.cpp
+src/VolcanoFire_Spawn.c
+
+# ---- LAVA_PLANK (82)'s last body: NOT HERE, and the refusal is measured ---
+# src/_ZN19FloatingFloorLllBig16CleanupResourcesEv.cpp is wave 8's one host
+# thunk (lp_clean in hal/actor_classes_ov022.cpp): it spells its two
+# SharedFilePtrs as the shared placeholders G0/G1, and hal/cxx_aliases.cpp
+# binds those to the game heap and to SignPost's ov002 file pointers. The pool
+# says what they really are -- 0x02112208 -> 0x02114620, 0x0211220c ->
+# 0x02114618, both module:overlay(22) and both already mounted -- so the
+# per-source -D this lane uses on 73's and 77's identically-shaped
+# CleanupResources is exactly the right fix and IT DOES NOT COMPILE HERE: both
+# targets AND G1 are declared in include/decl_common.h, so the rename makes one
+# a redefinition of the other with a different type (error C2371, measured).
+# See the W4 block in port/CMakeLists.txt. The TU stays out; the owner stays
+# wave 8's thunk.
+
+# ---- the five static initialisers these classes need ---------------------
+# ov022 has ten; wave 8 runs four. These five are the rest, and each is named
+# against the class that reads what it builds:
+#   02112d14  80's model/collision pair 0x02114530 / 0x02114528 (files 1525/1526)
+#   02112dec  73's                      0x02114580 / 0x02114578 (1533/1534)
+#   02112e58  77's                      0x021145a8 / 0x021145a0 (1552/1553)
+#   02113050  70's                      0x02114668 / 0x02114670 (1531/1532)
+#   021130bc  243's TWO pointer-to-member state records, copied from the .data
+#             pairs at 0x02114424 and 0x0211442c into the bss at 0x02114690
+src/__sinit_ov022_02112d14.c
+src/__sinit_ov022_02112dec.c
+src/__sinit_ov022_02112e58.c
+src/__sinit_ov022_02113050.c
+src/__sinit_ov022_021130bc.c

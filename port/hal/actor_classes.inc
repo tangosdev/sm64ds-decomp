@@ -1694,6 +1694,31 @@ void hal_fill_rotating_platform_bs_vtable(void);     /* _ZTV10RickshawBs, 32 */
 extern unsigned char MirrorLuigi_SpawnInfo[];        /* ov055 0x02111abc, +4 = 195 */
 void *MirrorLuigi_Spawn(void);                       /* ov055 0x02111860, 116 B */
 void hal_fill_mirror_luigi_vtable(void);             /* _ZTV11MirrorLuigi, 31 */
+/* run rel0215 wave 3 (lane w3-e): THE REST OF ov022, Lethal Lava Land's cast.
+   Wave 8 seated five ids and wave 16 a sixth; these five close the overlay and
+   take level 14's skip list to zero. 73/77/80 were held back on the
+   inferred-stub ratchet, and all fourteen marker-carrying bodies now rule
+   REAL_DECOMP on a tools/match.py rebuild at 2004/b56 with --strict-relocs
+   (port/tools/inferred_stub_adjudicated.txt); 70 was held back on three ov080
+   bodies that slice_ov030cast.txt has since sliced for the same ROM class in
+   ov030. 243 is on no placement row and is registered because VolcanoRing's
+   Behavior spawns it at run time. Derivation in port/slice_w3e_ov022.txt, fill
+   in hal/actor_classes_ov022_w3e.cpp. */
+extern unsigned char RotatingPlatformLll_SpawnInfo[]; /* ov022 0x02113dc4, +4 = 80 */
+void *RotatingPlatformLll_Spawn(void);                /* ov022 0x02111688, 60 B */
+void hal_fill_rotating_platform_lll_vtable(void);     /* 0x02113de8, 32 */
+extern unsigned char LavaBridge_SpawnInfo[];          /* ov022 0x02113f4c, +4 = 73 */
+void *LavaBridge_Spawn(void);                         /* ov022 0x02111c7c, 48 B */
+void hal_fill_lava_bridge_vtable(void);               /* 0x02113f70, 32 */
+extern unsigned char LavaSeesaw_SpawnInfo[];          /* ov022 0x02114010, +4 = 77 */
+void *LavaSeesaw_Spawn(void);                         /* ov022 0x02111f3c, 48 B */
+void hal_fill_lava_seesaw_vtable(void);               /* 0x02114034, 32 */
+extern unsigned char RollingLogLll_SpawnInfo[];       /* ov022 0x02114380, +4 = 70 */
+void *RollingLogLll_Spawn(void);                      /* ov022 0x021125a4, 60 B */
+void hal_fill_rolling_log_lll_vtable(void);           /* _ZTV12FallBlockLll, 32 */
+extern unsigned char VolcanoFire_SpawnInfo[];         /* ov022 0x02114458, +4 = 243 */
+void *VolcanoFire_Spawn(void);                        /* ov022 0x02112918, 56 B */
+void hal_fill_volcano_fire_vtable(void);              /* _ZTV13RollingLogLll, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2549,4 +2574,19 @@ void hal_fill_mirror_luigi_vtable(void);             /* _ZTV11MirrorLuigi, 31 */
     /* ---- run rel0215 wave 2 (lane cast-sweep2): ov055, Luigi's key arena. \
        Level 47's whole skip list in one row. ---- */ \
     {195, "MIRROR_LUIGI", MirrorLuigi_SpawnInfo, MirrorLuigi_Spawn, \
-     hal_fill_mirror_luigi_vtable},
+     hal_fill_mirror_luigi_vtable}, \
+    /* ---- run rel0215 wave 3 (lane w3-e): ov022's LAST FIVE IDS. 70/73/77/80 \
+       are the whole of level 14's baseline skip list (5 instances, 4 classes); \
+       243 is placed nowhere and is spawned at run time by VolcanoRing. All \
+       five Spawns are registered directly -- 80's and 70's write their own \
+       table through a per-source -DVT1 rather than a port_factory wrapper. --- */ \
+    {80, "ROTATING_PLATFORM_LLL", RotatingPlatformLll_SpawnInfo, \
+     RotatingPlatformLll_Spawn, hal_fill_rotating_platform_lll_vtable}, \
+    {73, "LAVA_BRIDGE", LavaBridge_SpawnInfo, LavaBridge_Spawn, \
+     hal_fill_lava_bridge_vtable}, \
+    {77, "LAVA_SEESAW", LavaSeesaw_SpawnInfo, LavaSeesaw_Spawn, \
+     hal_fill_lava_seesaw_vtable}, \
+    {70, "ROLLING_LOG_LLL", RollingLogLll_SpawnInfo, RollingLogLll_Spawn, \
+     hal_fill_rolling_log_lll_vtable}, \
+    {243, "VOLCANO_FIRE", VolcanoFire_SpawnInfo, VolcanoFire_Spawn, \
+     hal_fill_volcano_fire_vtable},
