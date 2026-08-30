@@ -4,18 +4,14 @@
 #include "decl_SaveData.h"
 #include "BobOmbBuddy.h"
 #include "SharedFilePtr.h"
-struct dBgCh_Gnd { char buf0[0x14]; int floor[12]; char buf1[0x50-0x14-0x30]; };
+#include "dBgCh_Gnd.h"
 
 extern "C" {
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, Fix12i b, Fix12i c, unsigned int d, unsigned int e);
 extern void func_ov084_0212c960(void* c, int i);
-extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd* self);
-extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* self, const Vector3& v, void* actor);
-extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* self);
 extern int func_ov084_0212ca60(void* p);
 extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern int IsStarCollected(int r0, int r1);
-extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);
 extern int SublevelToLevel(int sublevelID);
 extern int func_ov084_0212cac0(void *c);
 
@@ -28,7 +24,6 @@ extern SharedFilePtr data_ov084_02130d9c;
 
 int BobOmbBuddy::InitResources()
 {
-    dBgCh_Gnd rc;
     Vector3 pos;
 
     BMD_File *modelFile = (BMD_File *)Model::LoadFile(data_ov084_02130da4);
@@ -47,10 +42,10 @@ int BobOmbBuddy::InitResources()
         pos.z = z;
     }
 
-    _ZN9dBgCh_GndC1Ev(&rc);
-    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rc, pos, 0);
-    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc) != 0)
-        mPosY = rc.floor[(0x44 - 0x14) / 4];
+    dBgCh_Gnd ground;
+    ground.SetObjAndPos(pos, 0);
+    if (ground.DetectClsn() != 0)
+        mPosY = ground.clsnY;
 
     if (func_ov084_0212ca60(this) != 0) {
         void* player = _ZN8dActor_c13ClosestPlayerEv(this);
@@ -75,7 +70,6 @@ int BobOmbBuddy::InitResources()
             goto after_lostcap;
 
     state_return0:
-        _ZN9dBgCh_GndD1Ev(&rc);
         return 0;
     }
 
@@ -90,10 +84,8 @@ after_lostcap:
         goto return1;
 
 return0_2:
-    _ZN9dBgCh_GndD1Ev(&rc);
     return 0;
 
 return1:
-    _ZN9dBgCh_GndD1Ev(&rc);
     return 1;
 }

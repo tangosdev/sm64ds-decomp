@@ -421,7 +421,7 @@ def derive(raw, keep_symbol):
     return _apply(raw, p, keep_symbol), p
 
 
-def deadstrip_plan(raw, symbol_names):
+def deadstrip_plan(raw, symbol_names, expect=None):
     """Plan removal of exact, explicitly named compiler-only output sections.
 
     This is intentionally narrower than a linker dead-strip pass.  TU reconstruction
@@ -433,6 +433,16 @@ def deadstrip_plan(raw, symbol_names):
     * every named, non-mapping symbol in each removed section is requested too;
     * no relocation from a surviving content section references a requested symbol or
       an unnamed section symbol for a removed section.
+
+    ``expect`` extends this to the *duplicate* case: a vague-linkage body the compiler
+    re-emits in every TU that needs it, while the retail image keeps exactly one copy
+    at a configured address.  Such a symbol is NOT compiler-only -- it has a ROM home --
+    so discarding it is only sound when this object's copy is provably the same body.
+    ``{symbol: bytes}`` demands exactly that: ``STB_LOPROC`` binding and a section whose
+    content equals the cartridge's own bytes at the home address.  A caller that cannot
+    produce those bytes must not use this path.  If nothing else defines the symbol the
+    link fails loudly on an undefined reference, so this cannot silently drop a function
+    that has a retail address.
 
     There are no patterns and no binding-based guesses.  The caller must name every
     symbol, and any ambiguity is an error.  The returned plan has the same shape as
@@ -495,6 +505,20 @@ def deadstrip_plan(raw, symbol_names):
                                  f"{source.name} references compiler-only {label} at "
                                  f"0x{r['r_offset']:x}"}
 
+    for name, want in sorted((expect or {}).items()):
+        if name not in wanted:
+            return {"error": f"{name}: duplicate-body evidence for a symbol that was "
+                             f"not requested"}
+        sym = defined[name]
+        if sym["st_info"]["bind"] != "STB_LOPROC":
+            return {"error": f"{name}: duplicate deadstrip needs vague linkage, got "
+                             f"{sym['st_info']['bind']}"}
+        got = bytes(secs[sym["st_shndx"]].data())
+        if got != bytes(want):
+            return {"error": f"{name}: this object's body ({len(got)} bytes) is not the "
+                             f"cartridge's body at its configured home "
+                             f"({len(bytes(want))} bytes)"}
+
     drop = set(drop_content)
     drop.update(i for i, s in enumerate(secs)
                 if isinstance(s, RelocationSection) and s.header["sh_size"]
@@ -503,14 +527,14 @@ def deadstrip_plan(raw, symbol_names):
             "dead": sorted(wanted), "referenced": [], "error": None}
 
 
-def derive_deadstrip(raw, symbol_names):
+def derive_deadstrip(raw, symbol_names, expect=None):
     """Return an object with exact declared compiler-only sections discarded.
 
     ``None`` is returned instead of bytes when :func:`deadstrip_plan` refuses.  The
     input is never mutated.  This exists for scratch TU links; production one-function
     isolation continues to use :func:`derive` unchanged.
     """
-    p = deadstrip_plan(raw, symbol_names)
+    p = deadstrip_plan(raw, symbol_names, expect)
     if p.get("error"):
         return None, p
     return _apply(raw, p, None), p

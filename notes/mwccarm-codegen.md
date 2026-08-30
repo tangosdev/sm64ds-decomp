@@ -3482,3 +3482,125 @@ reaches the band. Full data: notes/collision-system.md Phase 3b.
   warning match.compile_c surfaces; `opt_generateconditionalassignments on`
   ICEs this build. On this function all 81 x on/off were inert or
   regressions -- the census exists so nobody re-guesses pragma names.
+
+## 6bl. A memory-homed local always sorts ABOVE every spilled scalar, and that is a frame-layout floor (func_ov075_0211621c, div 44 -> 40, 2026-08-29)
+
+`func_ov075_0211621c` (ov075, 0x394) is the VS/course-entry results row: for each
+player slot it draws the star icon, patches the star-count digit into the returned
+OAM entry from `data_0209f310[pid]`, then lays out a three-digit time from
+`data_0209f358[pid]`. Two independent near-misses (grok-4.6, div 49 then 44) stalled
+on the same residual.
+
+**The lever that moved it (44 -> 40).** Hoisting the pooled table read above the
+stride arithmetic fixes a two-register coloring swap at the top of the function.
+The ROM holds the `data_ov075_0211c6e8` base in `r2` and `d * 16` in `r1`; every
+spelling that computes the stride first gets them the other way round. The source
+order of two *independent* pooled reads in the prologue picks which one takes the
+lower scratch register, even though neither feeds the other:
+
+```c
+xbase  = data_ov075_0211c6e8[d];     /* must come first */
+stride = (d * 16) + 0x38;
+```
+
+That is the general form: when a prologue has two unrelated pool loads and one is
+mis-colored, permute their *statement* order before reaching for anything else.
+It cost four words here and is free to try anywhere.
+
+**The floor (40 words, one paired swap).** The ROM frame is
+`0x18 count, 0x1c stride, 0x20 hundreds, 0x24 i`, and `hundreds` (the `n / 100`
+digit) is memory-homed: mwcc writes the division back to its slot after every
+sub-step, three `str [sp, #0x20]` in a row. Reproducing that homing requires an
+aggregate spelling (`int hv[1]`); a plain scalar keeps the value in `fp` and the
+function comes out 0x390, one instruction short. But **mwccarm places a
+memory-homed aggregate above every spilled scalar in the frame, unconditionally**,
+so the array can only land at `0x24` and `i` takes `0x20`. The ROM wants the
+opposite order, which no aggregate spelling can produce.
+
+**Measured, per 6bg, by identity rather than by count.** Reading the allocated
+register out of word `+0x48` and the slot out of word `+0x180` across ~900 compiles:
+
+- all 720 function-top declaration permutations: `xoff` is `sb` in **720/720** and
+  `hundreds` is at `0x24` in **720/720**. What declaration order *does* move is
+  `i`'s slot, freely and uselessly, 240 each at `0x18` / `0x1c` / `0x20`. The count
+  reads 40 throughout, which is exactly the 6bg trap: the lever is alive, it just
+  never touches the web that is wrong.
+- 12 further positions for the `xoff` declaration inside the loop block: `sb`, 12/12.
+- the full pragma census from 6bk, all 69 `opt_*` names extracted from
+  `mwccarm.exe` x on/off on both the aggregate and the scalar base: 124 inert,
+  6 size regressions, 7 illegal-token (those take an argument), and **zero** that
+  moved either web.
+- seven memory-homing spellings (1-element array, plain scalar, `volatile` scalar,
+  address-taken through a pointer, innermost-scope array, a 2-element array holding
+  both values, two separate 1-element arrays), the access-expression levers from
+  section 2, and associativity/commutation on all four `(xbase + k) + xoff` sites.
+
+**Not marked as a floor** in the DB, per the 6bg convention. What would break it is
+a spelling that memory-homes a value *without* making it an aggregate, so it sorts
+with the spilled scalars. `opt_decomposeaggregates` / `opt_scalarize` /
+`opt_marknonregtemps` were the obvious candidates and all three are inert here. The
+near-miss stays live at div 40.
+## 6bm. Named-web birth order cracks a pool-pointer rotation, and a two-source-shape floor (ov075 VS-entry pair, 2026-08-29)
+
+Two ov075 functions matched and one floor confirmed while closing the last
+unsourced bodies in the VS/wireless entry overlay.
+
+* **A pool pointer that colors one register off is a MISSING NAME, not a
+  coloring wall.** `func_ov075_02119dc4` sat at div 5 with the whole function
+  otherwise exact: the ROM held the pooled global's address in r2 while every
+  spelling of the draft put it in r0, and the two loaded values rotated with
+  it. The rule from 6ab ("named-local webs color descending from r3 in
+  FIRST-DEFINITION order") reads forwards as well as backwards: the ROM's
+  r3/r2/r1/r0 descent means BOTH the struct pointer and the pool pointer were
+  named locals, defined in that order. Giving the pool address a name defined
+  immediately after the struct pointer -- inside the same comma group so it
+  still lands after the short-circuit -- took div 5 to 0 in one step. Its type
+  (`int *`, `const int *`, `u32 *`, `struct P2 *`) was irrelevant; only the
+  existence and the position of the name mattered.
+
+* **A comma-group assignment sinks a named pointer into a `||` right
+  operand.** Declaring the pointer at the top of the enclosing block hoists
+  its `add rD, base, #imm` above the guard calls, which is four instructions
+  early. `if (A || ((p = expr), B(p)))` computes it exactly where the ROM does
+  without changing a byte anywhere else. This is the placement knob that
+  block scoping cannot express in C.
+
+* **A `symbol + nonzero addend` data reloc false-flags in the strict-reloc
+  gate.** `reloc_audit.object_reloc_dests` is addend-aware only for `_ZTV`
+  names; every other reloc resolves by symbol name alone. A loop that
+  strength-reduces to a running pointer one byte into a global therefore
+  reports `cand data_0209fc5c (0x0209fc5c) != config 0x0209fc5d` on bytes that
+  are exact -- `linkcheck.py` (which does apply addends, and says so in its
+  own docstring) returned VERIFIED on the same object. If the interior address
+  has its own `data_<addr>` symbol, walking an explicit pointer from THAT
+  symbol keeps the bytes and clears the gate; here `data_0209fc5d` was already
+  in symbols.txt. Note the spelling is load-bearing: `q[0]; ...; q++;` as
+  separate statements reproduces the ROM's `ldrb`/`add #1` pair, while
+  `*q++` costs a word and `arr[i - 1]` kills the strength reduction outright.
+
+* **FLOOR (func_ov075_0211afb0, div 4): a two-instruction coalescing
+  preference in the SECOND of two unrolled vertex emissions.** The ROM routes
+  `x << 9` through the dying index register (`lsl sb, r0, #9`) and `z << 9`
+  through the freed raw-x register (`lsl r0, r5, #9`); mwccarm coalesces both
+  shifts in place (`lsl r0, r0, #9` / `lsl r5, r5, #9`). The first vertex
+  block, from the identical source, is exact. Everything else in the function
+  -- schedule, all other registers, the whole prologue and both loops -- is
+  byte-exact. ~50 shapes were probed across two independent authors: locals vs
+  inline member reads, `s16`-then-`(u16)`-at-use vs `(u16)` at assignment,
+  named intermediate shifts, the three address-expression trees from 6aa #5,
+  `&arr[k]` / `arr + k` / byte-cast arithmetic, C and C++ TU form, a `static
+  inline` emit helper, equal-arm ternaries, volatile statement-level inits,
+  reversed decl order, and `opt_propagation` / `opt_strength_reduction`. The
+  near-miss DB's pre-existing row (do-while loops, `char *` bases, explicit
+  byte offsets) and this campaign's struct-array shape produce the SAME four
+  wrong words at the SAME offsets. Two unrelated source shapes converging on
+  one residual is the signature of a real allocator preference, not of an
+  unexplored spelling: hand it to the permuter, not to another rewrite.
+
+* **`(u16)((v << 9) >> 16)` is a four-instruction unit the scheduler splits.**
+  For DS vertex packing the ROM emits `lsl #9 / asr #16 / lsl #16 / lsr #16`
+  and sinks the final `lsr` of the z component below the x|y store. Writing
+  the z value into a named `int` (holding only `(v << 9) >> 16`) and casting
+  to `u16` at the store reproduces that split; casting at the assignment keeps
+  all four together, and an `s16` intermediate costs two extra words per
+  component because mwccarm will not prove `(x << 9) >> 16` fits in 16 bits.

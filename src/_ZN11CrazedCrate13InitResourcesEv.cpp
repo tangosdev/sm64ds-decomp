@@ -4,23 +4,18 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "CrazedCrate.h"
-struct dBgCh_Gnd { char buf0[0x14]; int floor[12]; char buf1[0x50-0x14-0x30]; };
+#include "dBgCh_Gnd.h"
 
 extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* file, int a, int b);
 extern "C" void _ZN11ShadowModel10InitCuboidEv(void* self);
 extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, int a, int b, unsigned int c, unsigned int d);
-extern "C" void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd* self);
-extern "C" void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* self, const Vector3& v, void* actor);
-extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* self);
 extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* actor, int a, int b, void* v, int c);
 extern "C" void func_ov080_02124c3c(void* self);
-extern "C" void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);
 
 
 int CrazedCrate::InitResources()
 {
-    dBgCh_Gnd rc;
     Vector3 pos;
     void* file = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov080_02128468);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, file, 1, 1);
@@ -36,10 +31,10 @@ int CrazedCrate::InitResources()
         pos.z = mPosZ;
         pos.y = p60 + 0xc8000;
     }
-    _ZN9dBgCh_GndC1Ev(&rc);
-    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rc, pos, 0);
-    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc))
-        mPosY = rc.floor[(0x44 - 0x14) / 4];
+    dBgCh_Gnd ground;
+    ground.SetObjAndPos(pos, 0);
+    if (ground.DetectClsn())
+        mPosY = ground.clsnY;
     else
         mPosY = pos.y;
     mScaleX = 0x1000;
@@ -49,6 +44,5 @@ int CrazedCrate::InitResources()
     unk_374 = 0;
     func_ov080_0212513c(((char*)this));
     func_ov080_02124c3c(((char*)this));
-    _ZN9dBgCh_GndD1Ev(&rc);
     return 1;
 }

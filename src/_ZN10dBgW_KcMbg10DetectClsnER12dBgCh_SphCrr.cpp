@@ -25,100 +25,77 @@
  * `#pragma opt_common_subs off` is original and load-bearing: the six FMULs
  * against `scale` are deliberately not CSE'd.
  *
- * STILL A SHADOW: the local query object. It needs an exact 0x110 footprint
- * with explicit C1/D1 calls, while dBgCh_SphCrr as declared spans 0x10c and
- * declares no structors -- giving it real ones is its own slice, since it
- * changes every by-value use of the type. Kept as a byte-exact stand-in and
- * flagged rather than half-converted.
+ * The scratch query is now the real dBgCh_SphCrr. Its 0x110-byte layout and
+ * C1/D1 lifecycle are both reconstructed, so ordinary automatic storage emits
+ * the same constructor/destructor calls without a local shadow type.
  */
 #include "types.h"
 #include "dBgW_KcMbg.h"
 #include "dBgCh_SphCrr.h"
 #include "dBgPi.h"
 
-typedef struct {
-    int head[4];        /* 0x00 */
-    char result[0x60];  /* 0x10 */
-    u8 flags;           /* 0x70 */
-    char pad71[3];
-    char floorRes[0x28];/* 0x74 */
-    char wallRes[0x28]; /* 0x9c */
-    char undRes[0x28];  /* 0xc4 */
-    int f_ec;           /* 0xec */
-    int f_f0[3];        /* 0xf0 */
-    int f_fc;           /* 0xfc */
-    int f_100;          /* 0x100 */
-    int tail[3];        /* 0x104..0x110 */
-} LocSphere;
-
 extern "C" {
-extern void _ZN12dBgCh_SphCrrC1Ev(void* o);
-extern void func_02039e48(void* m, void* v, void* c);
-extern void _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(void* o, void* v, int r, void* a);
-extern void func_02037940(void* p, int v);
-extern void func_02035394(void* o, void* r);
-extern void func_02037a04(void* o, void* d1, void* d2);
-extern void func_02037a6c(void* b, int x1, int y1, int z1, int x2, int y2, int z2);
-extern void _ZN5dBgPiaSERKS_(void* d, void* s);
-extern void func_0203794c(void* d, void* s);
-extern void func_02037888(void* d, void* s);
-extern void func_0203782c(void* d, void* s);
-extern void _ZN12dBgCh_SphCrrD1Ev(void* o);
+extern void _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(
+    dBgCh_SphCrr *sphere, const Vector3 *pos, Fix12i radius, dActor_c *actor);
+extern void func_02039e48(dBgW_KcMbg *self, const Vector3 *v, Vector3 *res);
+extern void func_02037940(dBgCh_SphCrr *sphere, u8 flags);
+extern void func_02035394(dBgCh_SphCrr *dst, dBgCh_SphCrr *src);
+extern void func_02037a04(dBgCh_SphCrr *sphere, int *first, int *second);
+extern void func_02037a6c(dBgCh_SphCrr *sphere,
+    int x1, int y1, int z1, int x2, int y2, int z2);
+extern void func_0203794c(dBgCh_SphCrr *sphere, s32 *result);
+extern void func_02037888(dBgCh_SphCrr *sphere, dBgPi *result);
+extern void func_0203782c(dBgCh_SphCrr *sphere, dBgPi *result);
 }
 
 #pragma opt_common_subs off
 
 #define FMUL(a, b) ((int)(((s64)(a) * (b) + 0x800) >> 12))
 
-int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr & sphere_)
+int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr &sphere)
 {
-    dBgCh_SphCrr* sphere = &sphere_;
-    int pos[3];
+    Vector3 pos;
     int d[12];
-    LocSphere loc;
+    dBgCh_SphCrr loc;
     int r;
 
-    _ZN12dBgCh_SphCrrC1Ev(&loc);
-    func_02039e48(this, &sphere->centre, pos);
-    _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(&loc, pos,
-        FMUL(*(int*)&sphere->radius, invScale), 0);
-    loc.f_ec = FMUL(sphere->unk_0ec, invScale);
-    func_02037940(&loc, sphere->flags);
-    func_02035394(&loc, sphere);
-    r = dBgW_Kc::DetectClsn(*(dBgCh_SphCrr*)&loc);
+    func_02039e48(this, &sphere.centre, &pos);
+    _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(&loc, &pos,
+        FMUL(sphere.radius, invScale), 0);
+    loc.unk_0ec = FMUL(sphere.unk_0ec, invScale);
+    func_02037940(&loc, sphere.flags);
+    func_02035394(&loc, &sphere);
+    r = dBgW_Kc::DetectClsn(loc);
     if (r) {
         func_02037a04(&loc, d, d + 3);
-        d[6] = FMUL(d[0], *(int*)&scale);
-        d[7] = FMUL(d[1], *(int*)&scale);
-        d[8] = FMUL(d[2], *(int*)&scale);
-        d[9] = FMUL(d[3], *(int*)&scale);
-        d[10] = FMUL(d[4], *(int*)&scale);
-        d[11] = FMUL(d[5], *(int*)&scale);
-        func_02037a6c(sphere, d[6], d[7], d[8], d[9], d[10], d[11]);
-        /* through the REFERENCE: a pointer-level upcast makes mwcc emit the
-           null-checked MI adjustment (cmp/addne), the ROM's is unconditional */
-        _ZN5dBgPiaSERKS_(&(dBgPi &)sphere_, loc.result);
-        *(u8*)(&sphere->flags) |= 1;
+        d[6] = FMUL(d[0], scale);
+        d[7] = FMUL(d[1], scale);
+        d[8] = FMUL(d[2], scale);
+        d[9] = FMUL(d[3], scale);
+        d[10] = FMUL(d[4], scale);
+        d[11] = FMUL(d[5], scale);
+        func_02037a6c(&sphere, d[6], d[7], d[8], d[9], d[10], d[11]);
+        (dBgPi &)sphere = (dBgPi &)loc;
+        sphere.flags |= 1;
         if (loc.flags & 4) {
-            if (sphere->flags & 4) {
+            if (sphere.flags & 4) {
                 r &= ~1;
             } else {
-                sphere->SetFloorResult(*(dBgPi*)loc.floorRes);
+                sphere.SetFloorResult(loc.mClsnResult1);
             }
-            *(u8*)(&sphere->flags) |= 4;
-            if (sphere->unk_100 < loc.f_100) {
-                func_0203794c(sphere, &loc.f_fc);
+            sphere.flags |= 4;
+            if (sphere.unk_100 < loc.unk_100) {
+                func_0203794c(&sphere, &loc.unk_0fc);
             }
         }
         if (loc.flags & 8) {
-            func_02037888(sphere, loc.wallRes);
-            *(u8*)(&sphere->flags) |= 8;
+            func_02037888(&sphere, &loc.mClsnResult2);
+            sphere.flags |= 8;
         }
         if (loc.flags & 0x10) {
-            func_0203782c(sphere, loc.undRes);
-            *(u8*)(&sphere->flags) |= 0x10;
+            func_0203782c(&sphere, &loc.mClsnResult3);
+            sphere.flags |= 0x10;
         }
     }
-    _ZN12dBgCh_SphCrrD1Ev(&loc);
     return r;
 }

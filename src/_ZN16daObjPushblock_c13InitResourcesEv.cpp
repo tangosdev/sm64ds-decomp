@@ -11,6 +11,7 @@
  * conversion is byte-exact under the pinned 2004/b56. */
 #include "daObjPushblock_c.h"
 #include "decl_common.h"
+#include "dBgCh_Gnd.h"
 struct SharedFilePtr;
 struct BMD_File;
 struct KCL_File;
@@ -25,20 +26,12 @@ extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_
 extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, void *a, int b, int c, void *d, int e);
 
-struct V3 { int x, y, z; };
-struct dBgCh_Gnd { char buf[0x44]; int f44; char rest[8]; };
-extern "C" void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *self);
-extern "C" void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd *self, V3 *v, void *a);
-extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *self);
-extern "C" void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *self);
-
 extern SharedFilePtr data_ov002_0210df9c;
 extern SharedFilePtr data_ov002_0210df94;
 
 int daObjPushblock_c::InitResources()
 {
-    dBgCh_Gnd rg;
-    V3 v;
+    Vector3 v;
     BMD_File *bmd;
     KCL_File *kcl;
 
@@ -58,14 +51,13 @@ int daObjPushblock_c::InitResources()
     v.y = mPosY;
     v.z = mPosZ;
     v.y = v.y + 0x14000;
-    _ZN9dBgCh_GndC1Ev(&rg);
-    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, 0);
+    dBgCh_Gnd ground;
+    ground.SetObjAndPos(v, 0);
     mGroundY = v.y;
-    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg))
-        mGroundY = rg.f44;
+    if (ground.DetectClsn())
+        mGroundY = ground.clsnY;
     mHomePosX = mPosX;
     mHomePosY = mPosY;
     mHomePosZ = mPosZ;
-    _ZN9dBgCh_GndD1Ev(&rg);
     return 1;
 }

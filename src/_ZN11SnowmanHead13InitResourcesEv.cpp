@@ -5,6 +5,7 @@
 #include "TextureSequence.h"
 /* recovered: named members + shared header, real C++ method */
 #include "SnowmanHead.h"
+#include "dBgCh_Gnd.h"
 
 struct BMD_File;
 struct BTP_File;
@@ -15,17 +16,12 @@ extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *base, void *file, int a, in
 extern void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *ref);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *t, void *a, int b, int c, unsigned int d, unsigned int e);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *t, void *a, int b, int c, void *d, void *e);
-extern void _ZN9dBgCh_GndC1Ev(void *t);
-extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *t, const struct Vector3 *pos, void *actor);
-extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *t);
-extern void _ZN9dBgCh_GndD1Ev(void *t);
 
 }
 
 int SnowmanHead::InitResources()
 {
     struct Vector3 pos;
-    char ray[0x54];
     int i;
 
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4,
@@ -48,15 +44,14 @@ int SnowmanHead::InitResources()
     pos.y = mPosY;
     pos.z = mPosZ;
     pos.y += 0x14000;
-    _ZN9dBgCh_GndC1Ev(ray);
-    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(ray, &pos, 0);
-    if (_ZN9dBgCh_Gnd10DetectClsnEv(ray) != 0)
-        mPosY = *(int *)(ray + 0x44);
+    dBgCh_Gnd ground;
+    ground.SetObjAndPos(pos, 0);
+    if (ground.DetectClsn() != 0)
+        mPosY = ground.clsnY;
     else
         mPosY = pos.y;
 
     SetState(0);
     UpdateModel();
-    _ZN9dBgCh_GndD1Ev(ray);
     return 1;
 }

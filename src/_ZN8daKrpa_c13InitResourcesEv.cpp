@@ -4,11 +4,10 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "daKrpa_c.h"
+#include "dBgCh_Gnd.h"
 /* was `typedef int Fix12;` -- collides with the real Fix12<> template, which
    daKrpa_c.h now reaches via Model.h. The typedef WAS int, so spelling it
    int below is byte-neutral. */
-struct RG { char pad[0x44]; int f44; char pad2[8]; };
-
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* f);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b);
@@ -23,18 +22,13 @@ extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void* self, void* actor, int a, int b, void* v, int c);
 }
 extern "C" {
-extern void _ZN9dBgCh_GndC1Ev(struct RG* rg);
-extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(struct RG* rg, const struct Vector3* v, void* a);
-extern int _ZN9dBgCh_Gnd10DetectClsnEv(struct RG* rg);
 extern void func_ov070_02121310(void* c);
-extern void _ZN9dBgCh_GndD1Ev(struct RG* rg);
 }
 
 extern struct Matrix4x3 IDENTITY_MATRIX4X3;
 
 int daKrpa_c::InitResources()
 {
-    struct RG rg;
     struct Vector3 v;
     void* bmd;
     int t;
@@ -61,14 +55,13 @@ int daKrpa_c::InitResources()
     mScaleZ = 0x1000;
     *(struct Matrix4x3*)((char*)&mMatrix) = IDENTITY_MATRIX4X3;
 
-    _ZN9dBgCh_GndC1Ev(&rg);
-    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, (struct Vector3*)((char*)&mPosX), ((char*)this));
-    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg))
-        t = (mPosY - rg.f44) + 0x1e000;
+    dBgCh_Gnd ground;
+    ground.SetObjAndPos(*(Vector3 *)&mPosX, this);
+    if (ground.DetectClsn())
+        t = (mPosY - ground.clsnY) + 0x1e000;
     else
         t = 0x1f4000;
     mHeightAboveGnd = t;
     func_ov070_02121310(((char*)this));
-    _ZN9dBgCh_GndD1Ev(&rg);
     return 1;
 }

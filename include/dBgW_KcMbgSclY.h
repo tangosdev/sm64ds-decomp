@@ -19,12 +19,10 @@
  * 6az), so those two definitions stay extern-C free functions; the declarations
  * here are the real ones.
  *
- * THE "DetectClsn triple is launder-heavy" CLAIM IS RETIRED for slot 7.
- * src/_ZN14dBgW_KcMbgSclY10DetectClsnER9dBgCh_Lin.cpp is a real method as of
- * 2026-08-22 and needs no launder at all -- every access is a named dBgCh_Lin
- * member and the base call is the ordinary qualified `dBgW_Kc::DetectClsn'.
- * Slots 6 and 8 have not been retried; the claim was never measured per slot,
- * so treat it as untested there rather than as a finding.
+ * The complete DetectClsn overload set is real C++. Slot 7 uses named line
+ * members; slots 6 and 8 also use the reconstructed query classes and their
+ * ordinary automatic C1/D1 lifetimes. All three call dBgW_Kc::DetectClsn with
+ * a qualified base call so the override cannot dispatch back into itself.
  */
 
 #ifdef __cplusplus
@@ -39,9 +37,9 @@ struct dBgW_KcMbgSclY : dBgW_KcMbg {
     virtual ~dBgW_KcMbgSclY();                     /* slots 0/1 */
     virtual void Virtual08();                             /* slot 2 */
     virtual void GetNormal(s16 triID, Vector3 &res);      /* slot 4 */
-    virtual int DetectClsn(dBgCh_Gnd &ray);           /* slot 6 - free def */
-    virtual int DetectClsn(dBgCh_Lin &ray);             /* slot 7 - free def */
-    virtual int DetectClsn(dBgCh_SphCrr &sphere);           /* slot 8 - free def */
+    virtual int DetectClsn(dBgCh_Gnd &ray);               /* slot 6 */
+    virtual int DetectClsn(dBgCh_Lin &ray);               /* slot 7 */
+    virtual int DetectClsn(dBgCh_SphCrr &sphere);         /* slot 8 */
 
     /* DECLARED, never defined as a method here -- src/_ZN14dBgW_KcMbgSclYC1Ev.cpp
        owns C1; the C2 variant has no ROM counterpart because nothing derives
