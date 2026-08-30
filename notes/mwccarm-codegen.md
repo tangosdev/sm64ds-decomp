@@ -3905,12 +3905,24 @@ the same colouring, so the sibling settles the SPELLING but not the allocation.
 * **Not a bitfield.** A `u16 tile:12 / pal:4` struct makes mwccarm emit `bic` +
   `orr ..., lsl #12`; the ROM has `and #0xfff` + `orr ..., lsr #16`. The source masks
   explicitly.
-* **TU shape is codegen-neutral here.** `tu_map.py` puts this function and
-  `func_ov075_0211621c` in one TU, but that TU is 82 functions
-  (0x02115ab8-0x0211a854), not a two-function unit. Compiling the body with neighbour
-  functions and file-scope statics before and after it, in six configurations, changes
-  nothing - same size, same divergence, same colouring. A "these two functions shared a
-  TU" argument is true here and still buys nothing.
+* **TU shape is codegen-neutral here, tested in its strong form.** `tu_map.py` does put
+  this function and `func_ov075_0211621c` in one TU - but that TU is 82 functions
+  (0x02115ab8-0x0211a854), so a two-function unit is not the ROM's unit either. Both
+  forms were measured. Weak form: filler neighbours and file-scope statics before and
+  after the body, six configurations, no change. Strong form: the two ROM-adjacent
+  functions compiled as ONE translation unit from their real bodies, both size-exact (244
+  and 916), in both orderings. `func_ov075_02116128` comes out div 20 / div 24 with a
+  byte-identical six-register assignment to compiling it alone, and `func_ov075_0211621c`
+  comes out div 40 in the combined unit - exactly its standalone value, so the shared TU
+  does not disturb its frame layout either, which is what the 6bl floor would have needed.
+  Sharing a TU is true here and buys nothing in either direction.
+
+* **The extra web has to be in the value's OWN chain.** A second named local anywhere
+  else - in the index chain (`s = t*0x20+0xa0`), in the pointer chain (`q = bg+m; p = q`),
+  a copy of the call result, of `bg`, of `t`, of `b` - leaves the palette web on r0, with
+  and without `opt_lifetimes off`, `opt_common_subs off` and `opt_dead_assignments off`
+  (28 combinations). The lever is not "add register pressure" or "add a web"; it is
+  specifically a second name on the dataflow the value passes through.
 
 ### 6bo addendum: score the ROLES, not the count, and sample before you climb
 
