@@ -426,11 +426,74 @@ static int title_menu_idle(char *g)
     return p3 && *(short *)p3 == 0;
 }
 
+/* ---- SM64DS_TITLE_ELEMS=<frame>: WHERE THE MENU'S BOXES ARE --------------
+ *
+ * READ-ONLY, DEFAULT OFF, one dump on the named frame. It exists because the
+ * A/B/C entry proofs have to tap the three save files at real DS pixels, and
+ * the alternative to this was guessing coordinates and reading the resulting
+ * save-slot number back -- which is a search, not a measurement, and which
+ * cannot tell "I missed the box" from "the box is not there".
+ *
+ * The arithmetic is src/func_ov007_020b46b0.c's own, copied from its armed
+ * branch rather than reinvented: the element record's [1] is the placement,
+ * whose 20.12 x/y at +4/+8 shift down into screen pixels, and the object's
+ * +0x28 points at a box whose +4/+8/+0xc/+0x10 are min x, min y, max x, max y
+ * RELATIVE to that placement. The centre printed beside each box is the point
+ * a tap should aim at, and it is the arithmetic mean of the ROM's own edges
+ * rather than a number anybody chose.
+ *
+ * The element list is the same one func_ov007_020aed98 walks: 24 records at
+ * ctx+0x114, four bytes apart. Every dereference is guarded, because this can
+ * be asked of a frame on which the page is half-built. */
+extern "C" void port_title_elems_dump(int frame)
+{
+    static int at = -2;
+    if (at == -2) {
+        const char *e = std::getenv("SM64DS_TITLE_ELEMS");
+        at = e ? std::atoi(e) : -1;
+    }
+    if (at < 0 || frame != at)
+        return;
+    char *g = data_ov007_0210342c;
+    if (!g) {
+        std::printf("[elems] f%d: no scene global\n", frame);
+        std::fflush(stdout);
+        return;
+    }
+    char *sp = *(char **)(g + 8);
+    char *ep = *(char **)(g + 4);
+    std::printf("[elems] f%d: top-state %d, element-machine %d, choice %d\n",
+                frame, sp ? (int)*(short *)sp : -1,
+                ep ? (int)*(short *)ep : -1, *(int *)(g + 0x10));
+    for (int i = 0; i < 24; ++i) {
+        char **rec = *(char ***)(g + 0x114 + i * 4);
+        if (!rec)
+            continue;
+        char *obj = rec[0];
+        char *place = rec[1];
+        if (!obj || !place)
+            continue;
+        char *box = *(char **)(obj + 0x28);
+        if (!box)
+            continue;
+        const int px = *(int *)(place + 4) >> 12;
+        const int py = *(int *)(place + 8) >> 12;
+        const int x0 = *(int *)(box + 4) + px, y0 = *(int *)(box + 8) + py;
+        const int x1 = *(int *)(box + 0xc) + px, y1 = *(int *)(box + 0x10) + py;
+        std::printf("[elems]   slot %2d  id %3u  box x %4d..%-4d y %4d..%-4d"
+                    "  centre (%d,%d)\n",
+                    i, (unsigned)*(unsigned short *)obj, x0, x1, y0, y1,
+                    (x0 + x1) / 2, (y0 + y1) / 2);
+    }
+    std::fflush(stdout);
+}
+
 /* Called once per frame from hal/scene_boot.cpp's port_scene_tick, beside the
    state trace and for the same reason: after the actor phases, so it reads the
    state the frame ended in. Inert unless SM64DS_SKIP_MENU is set. */
 extern "C" void port_title_skip_tick(int frame)
 {
+    port_title_elems_dump(frame);
     static int done;
     if (done || !port_boot_skip_menu())
         return;
