@@ -505,6 +505,26 @@ void hal_fill_sliding_platform_wf_vtable(void);
 extern unsigned char RotatingUpDownPlatform_SpawnInfo[]; /* ov091 0x02134bf8, id 29 */
 void *RotatingUpDownPlatform_Spawn(void);
 void hal_fill_rotating_up_down_platform_vtable(void);
+/* run rel0215 wave 3 (lane w3-f2): the OTHER ov091 lift class, the one gate 73
+   does NOT reach. ARROW_PATH_LIFT (157) and SQUARE_METAL_NET_LIFT (144) both
+   install _ZTV22RotatingUpDownPlatform (ov091 0x02134ec0, RTTI 13daLinelift2_c,
+   32 slots), which is a DIFFERENT table from gate 73's Utm one at 0x02134c5c --
+   two ids, one class, one fill. The nine-record PMF state seat that serves both
+   this class and FWOOSH is in the same file. See hal/actor_classes_ov091.cpp
+   and port/slice_w3f2.txt. */
+extern unsigned char ArrowPathLift_SpawnInfo[];      /* ov091 0x02134e80, id 157 */
+extern unsigned char SquareMetalNetLift_SpawnInfo[]; /* ov091 0x02134e9c, id 144 */
+void *ArrowPathLift_Spawn(void);                     /* ov091 0x021323cc */
+void *SquareMetalNetLift_Spawn(void);                /* ov091 0x02132394 */
+void hal_fill_rotating_up_down_platform_lift_vtable(void);  /* 32 slots */
+/* run rel0215 wave 3 (lane w3-f2): FWOOSH (231), Stump / 10daHyuhyu_c, ov091
+   0x021353ac, 31 slots, an Enemy subclass. NOT actor 27's table -- the config
+   name _ZTV5Stump sits on FWOOSH's table and actor 27's is the unnamed
+   0x021352bc the registry already fills, which port/ov091_syms.txt derived and
+   this lane re-checked from the bytes. */
+extern unsigned char Fwoosh_SpawnInfo[];             /* ov091 0x02135388, id 231 */
+void *Fwoosh_Spawn(void);                            /* ov091 0x021344a0 */
+void hal_fill_fwoosh_vtable(void);                   /* 31 slots */
 /* gate 71: FIRE_PIRANHA_PLANT (253). The ov015 name shift: its factory installs
    the FirePiranhaPlantBig table, so it runs that class. No state seat. */
 extern unsigned char FirePiranhaPlant_SpawnInfo[];  /* ov084 0x02130acc, id 253 */
@@ -2801,4 +2821,18 @@ void hal_fill_racing_penguin_vtable(void);            /* _ZTV13RacingPenguin, 31
        any mounted level's object list and not spawned at run time, so this row \
        is linkage and moves no census -- see the note above the externs. ---- */ \
     {259, "RACING_PENGUIN", RacingPenguin_SpawnInfo, RacingPenguin_Spawn, \
-     hal_fill_racing_penguin_vtable},
+     hal_fill_racing_penguin_vtable}, \
+    /* ---- run rel0215 wave 3 (lane w3-f2): ov091's three declined ids. \
+       ARROW_PATH_LIFT (157) and SQUARE_METAL_NET_LIFT (144) SHARE ONE CLASS \
+       and therefore ONE FILL -- both 0x38-byte factories install ov091 \
+       0x02134ec0, RTTI 13daLinelift2_c, and the variant they differ by is \
+       read at run time out of each instance's own parameter word. Both \
+       attribution routes agree on all three ids and nothing is shifted; the \
+       derivation is hal/actor_classes_ov091.cpp's header. Placed instances: \
+       level 39 has ARROW_PATH_LIFT, level 37 SQUARE_METAL_NET_LIFT and level \
+       22 FWOOSH, and each was a declined line on that level before this. ---- */ \
+    {157, "ARROW_PATH_LIFT", ArrowPathLift_SpawnInfo, ArrowPathLift_Spawn, \
+     hal_fill_rotating_up_down_platform_lift_vtable}, \
+    {144, "SQUARE_METAL_NET_LIFT", SquareMetalNetLift_SpawnInfo, \
+     SquareMetalNetLift_Spawn, hal_fill_rotating_up_down_platform_lift_vtable}, \
+    {231, "FWOOSH", Fwoosh_SpawnInfo, Fwoosh_Spawn, hal_fill_fwoosh_vtable},

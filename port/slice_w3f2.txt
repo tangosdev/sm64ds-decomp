@@ -1,0 +1,212 @@
+# run rel0215 wave 3, lane w3-f2: ov091's THREE DECLINED IDS --
+# ARROW_PATH_LIFT (157) and SQUARE_METAL_NET_LIFT (144), which share one class,
+# and FWOOSH (231). Executing lane w3-f's banked recon, with every load-bearing
+# fact re-derived on the ROM before use.
+#
+# Read at CONFIGURE time by port/CMakeLists.txt, so an edit here needs a cmake
+# re-run. The identity derivation is hal/actor_classes_ov091.cpp's header; this
+# file records the SOURCE decisions -- what rides from src/ and what is refused,
+# with the reason for every refusal.
+#
+# ==== THE INVENTORY, COUNTED BY .text BLOCK ================================
+# ov091 has 97 matched TUs in src/ and 59 of them were linked before this lane.
+# The 38 unlinked ones are exactly THREE things:
+#
+#   15  the RotatingUpDownPlatform block, 0x02131c14..0x02132404
+#         the six _ZN22RotatingUpDownPlatform* bodies, seven func_ov091_*
+#         (02131cb0 02131db8 02131ef0 02131f9c 02132000 02132360 02132380),
+#         and the two 0x38-byte factories ArrowPathLift_Spawn (0x021323cc) and
+#         SquareMetalNetLift_Spawn (0x02132394)
+#   20  the Stump block, 0x02133968..0x021344e8
+#         the seven _ZN5Stump* bodies, eleven func_ov091_*, and Fwoosh_Spawn
+#    3  THREE STRAYS THAT ARE NOT THIS LANE'S -- see the last section
+#   --
+#   38
+#
+# All 35 of this lane's TUs exist in src/. Exactly ONE carries a NONMATCHING
+# banner (func_ov091_021339fc) and NONE is missing. Every one of the 35 was
+# syntax-checked as this build would compile it (cl /Zs, the slice's own flags,
+# .c as C11 and .cpp/`//cpp` as C++17) and exactly one is a front-end refusal.
+#
+# ==== THE FIVE REFUSALS ====================================================
+# 30 TUs ride from src/. Five are host-copied into
+# port/unmatched/Ov091_HostSites.cpp and dropped from the list below; the
+# byte-matched originals STAY in src/ and are not edited. Three shapes, and
+# only the first was predicted by the banked recon:
+#
+#  (1) THREE POINTER-TO-MEMBER DISPATCH SITES -- gate 16, the ov090 disease in
+#      both halves. The ROM's state record is EIGHT bytes {function, delta} and
+#      every delta in this overlay is 0; MSVC has no representation that
+#      matches, and either representation it does pick makes the call
+#      __thiscall against a flat cdecl body.
+#        src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp   the lifts' TICK,
+#            `typedef void (Platform::*PMF)(); struct PmfRow { PMF pmf; };`
+#            over a COMPLETE class -- 4 bytes, so index 1 reads record 0's
+#            delta word.
+#        src/_ZN5Stump8BehaviorEv.cpp                     FWOOSH's TICK, the
+#            `struct Holder { char pad[8]; PMF fn; }` view of the same cell.
+#        src/func_ov091_02134044.cpp                      FWOOSH's ENTER,
+#            `struct C;` forward-declared at the typedef -- the sixteen-byte
+#            unknown-inheritance form.
+#
+#      AND THE LIFTS' BEHAVIOR HAS A SECOND, INDEPENDENT REASON, which is the
+#      one thing in this slice that would have been a LINK error rather than a
+#      wrong-behaviour one. It spells TWO names that are declared in
+#      include/decl_common.h and DEFINED NOWHERE IN THIS LINK:
+#        UpdatePosWithVelocitySym (decl_common.h:1967) -- the TU's own literal
+#            pool at 0x02132208 reads 0x0203923c, which config/arm9/symbols.txt
+#            :1403 names MeshColliderBase::UpdatePosWithVelocity. Its two
+#            sibling state bodies (func_ov091_02131ef0 and _02131f9c, both in
+#            the list below) already spell that symbol in full.
+#        ApproachLinearI (decl_common.h:1896) -- the call at 0x021321a8
+#            relocates to 0x0203ae58, config/arm9/symbols.txt:1508
+#            _Z14ApproachLinearRiii.
+#      The host copy names both by address. Nothing in src/ is edited.
+#
+#  (2) ONE ModelAnim SLOT-5 COLLISION, AND THE RECON RULED IT THE OTHER WAY.
+#        src/_ZN5Stump6RenderEv.cpp                       FWOOSH's Render.
+#      w3-f banked "Render LINKS PLAIN because _ZTV5Model is dual-filled -- do
+#      not host-copy it". TRUE OF THE LIFTS, FALSE OF FWOOSH, and the split is
+#      the MEMBER the shadow sits over rather than the shadow:
+#        RotatingUpDownPlatform::Render shadows the plain MODEL at +0xd4 (its
+#          D1 calls _ZN5ModelD1Ev there) and hal/cxxname_bridge.cpp:507/511
+#          dual-fills _ZTV5Model at [4] AND [5], so it serves from src/ and
+#          does -- levels 39 and 37 run 300 frames rc 0 with it in this list.
+#        Stump::Render shadows the MODELANIM at +0x300 (Fwoosh_Spawn calls
+#          _ZN9ModelAnimC1Ev there). _ZTV9ModelAnim is filled in MSVC numbering
+#          where slot 5 is Virtual18, and it is NOT dual-filled, so index 5
+#          lands on the wrong body. The ov090 / Whomp / Fish / Spiny case (T1).
+#      FOUND BY RUNNING IT. The first level-22 run with this seat in faulted on
+#      frame 1 with c0000005 accessing 00000000, and the frames resolved
+#      Stump::Render+0x26 -> ModelAnim::Virtual18 -> ModelAnim::Virtual10 ->
+#      Model::Virtual10. None of this lane's checks would have caught it -- the
+#      TU compiles, it links, and vtspan sizes the table correctly -- but the
+#      HAZARD CLASS is documented at the source: hal/cxxname_bridge.cpp:517-520
+#      states it next to the ModelAnim2 fill ("No dual-fill here: Render's ROM
+#      slot (5) is Virtual18's MSVC slot, so shadow-TU Render dispatch cannot be
+#      served by the same array"). Read that before ruling on any Render that
+#      shadows a ModelAnim rather than a Model.
+#
+#  (3) ONE MSVC FRONT-END REFUSAL.
+#        src/func_ov091_021339fc.c is NONMATCHING-bannered ("hand-written asm,
+#            not a C decompilation ... asm hatch on a proven mwccarm 1.2
+#            register-allocation/scheduling wall") and the hatch is TWO ARM
+#            instructions, `ldr curHat0,[a,#8]` and `mov newHat,#1`, inside an
+#            otherwise ordinary C body. MSVC's inline assembler is x86 and does
+#            not parse it -- measured, eight errors from C2065 on `asm` through
+#            C2181. THE BANNER AND THE FILE ARE UNTOUCHED and it stays out of
+#            this list. The host copy writes those two instructions as the C
+#            they assemble to and is identical everywhere else.
+#
+#      This is where this lane's execution departs from the banked recon, which
+#      expected the NONMATCHING body to ride "per the ov005/ov075 precedent,
+#      honest banner intact". That precedent covers TUs that are honest C and
+#      merely do not byte-match; it does not cover an ARM asm hatch, which no
+#      x86 front end can read. Measured before it was believed.
+#
+#      AND THE BANNER WAS TREATED AS A REASON TO CHECK, NOT A REASON TO
+#      COMPILE. It says the C "does NOT count as matched. Reverts to a draft
+#      until someone reproduces the bytes from real C", so nothing certifies
+#      the draft is the ROM's body, and FWOOSH's Behavior calls it on every
+#      tick. The whole body was disassembled out of
+#      extracted/overlays/overlay_0091.bin at base 0x02130f00 and compared
+#      against the draft branch by branch BEFORE it was carried:
+#        155 instructions + one literal pool word -- between the chest
+#          precedent's 135 transcribed and the Klepto refusal's 322, so it is
+#          transcribed rather than refused;
+#        exactly ONE relocation in the ROM reaches it, from:0x021342cc, inside
+#          _ZN5Stump8BehaviorEv's own span, and it is in no vtable slot;
+#        the draft reproduces the ROM at every branch, every structure offset
+#          and all seventeen calls, and the two hatched instructions are an
+#          ordinary `ldr r0,[r5,#8]` and `mov r4,#1` hatched for where the
+#          REGISTERS land, not for what they do.
+#      Derivation and full disassembly:
+#        ...runs/rel0215/out/w3-f2/f021339fc_fidelity.txt
+#
+# ==== LANGUAGE =============================================================
+# Ten of these 30 are .cpp and twenty are .c. The comment-stripped sweep for
+# a `//cpp` marker, a top-level `extern "C"` block, `class`, `virtual` and
+# `::` over all twenty .c files finds ONE that is really C++:
+# src/func_ov091_02133c6c.c opens with `//cpp` and declares `extern "C"`
+# functions at file scope. It is marked LANGUAGE CXX in port/CMakeLists.txt.
+#
+# ==== NO MOUNT ROWS, AND WHY ===============================================
+# ov091 is already mounted WHOLE, per symbol, by port/ov091_syms.txt (gate 32,
+# the mount ChainChomp::InitResources drags in). Both vtable spans this lane
+# hosts are already gaps in that list -- 0x02134ec0..0x02134f40
+# (_ZTV22RotatingUpDownPlatform, 32 slots) sits between
+# SquareMetalNetLift_SpawnInfo:0x1c and data_ov091_02134f40:0xc, and
+# 0x021353a4..0x02135440 (_ZTV5Stump, 31 slots) between Fwoosh_SpawnInfo:0x1c
+# and data_ov091_02135440:0x8. All nine PMF source records and all three of
+# FWOOSH's bss cells are already mounted at their true sizes. So this seat adds
+# ZERO syms rows and there is no T3 size audit to run: nothing was added.
+#
+# ==== THREE STRAYS THAT ARE NOT THIS LANE'S ================================
+# func_ov091_02132d04, func_ov091_02132d6c and func_ov091_02133440 are the
+# other three unlinked ov091 TUs and they stay unlinked. Read off the ROM
+# tables directly: 02132d6c is slot 16 and 02132d04 slot 17 of
+# data_ov091_021351fc (daDsnBase_c, Thwomp's and Grindel's base table), and
+# 02133440 is slot 17 of data_ov091_021352bc (actor 27, daObjPile_c). Both
+# tables are MOUNTED DATA rather than host arrays, so nothing in this link
+# reads a host address out of them and /OPT:REF strips a sliced body that
+# nothing references. Slicing them alone would link nothing.
+#
+# w3-f's reading of func_ov091_02133440's T5 marker is CONFIRMED here by
+# address: slot 17 is the DELETING DESTRUCTOR, so the marker's recovered name
+# (daObjPile_c::OnYoshiTryEat, which would be slot 18) is wrong. This lane does
+# not adjudicate it -- the body is in no slice of this lane and touching
+# another lane's adjudication row from here would be a claim with no build
+# behind it.
+#
+# ==== THE LIST =============================================================
+# 14 lifts + 16 FWOOSH = 30.
+
+# ---- ARROW_PATH_LIFT (157) + SQUARE_METAL_NET_LIFT (144) ------------------
+# the two factories: byte-identical 0x38-byte bodies, one pool literal each,
+# both 0x02134ec0
+src/ArrowPathLift_Spawn.c
+src/SquareMetalNetLift_Spawn.c
+# the class: four real C++ methods (Behavior host-copied), two flat-C dtors
+src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp
+src/_ZN22RotatingUpDownPlatform16CleanupResourcesEv.cpp
+src/_ZN22RotatingUpDownPlatform6RenderEv.cpp
+src/_ZN22RotatingUpDownPlatformD1Ev.c
+src/_ZN22RotatingUpDownPlatformD0Ev.c
+# the three state bodies the seat rewrites, plus the path-follow helper they
+# share and the geometry helper it calls
+src/func_ov091_02131ef0.c
+src/func_ov091_02131f9c.c
+src/func_ov091_02132000.c
+src/func_ov091_02131db8.c
+src/func_ov091_02131cb0.c
+# the collider callback pair: 02132380 is an arg-shifting tail-call veneer
+# (`e59fc008 e1a00001 e1a01002 e12fff1c 02132360` -- it drops the first
+# argument and forwards the next two) and 02132360 is what it forwards to.
+# It names all three parameters and forwards two, so it is ordinary cdecl and
+# needs no tailjump row.
+src/func_ov091_02132360.cpp
+src/func_ov091_02132380.c
+
+# ---- FWOOSH (231) ---------------------------------------------------------
+src/Fwoosh_Spawn.c
+src/_ZN5Stump13InitResourcesEv.cpp
+src/_ZN5Stump16CleanupResourcesEv.cpp
+# (Render is NOT here -- the ModelAnim slot-5 collision, refusal (2) above)
+src/_ZN5Stump16OnPendingDestroyEv.c
+src/_ZN5StumpD1Ev.c
+src/_ZN5StumpD0Ev.c
+# the six state bodies the seat rewrites (three enter / three tick pairs)
+src/func_ov091_0213400c.c
+src/func_ov091_02133f60.c
+src/func_ov091_02133f24.c
+src/func_ov091_02133d30.cpp
+src/func_ov091_02133d1c.c
+src/func_ov091_02133c6c.c
+# the per-frame matrix helper both Behavior arms call
+src/func_ov091_02134094.c
+# vtable slots 18 / 19 / 29, all three FWOOSH's own. 0213448c is the ROM's
+# `ldr ip,[pc]; bx ip` veneer onto ActorBase::MarkForDestruction and is
+# declared WITH a self parameter at the seat for that reason.
+src/func_ov091_02134498.c
+src/func_ov091_0213448c.c
+src/func_ov091_02134484.c

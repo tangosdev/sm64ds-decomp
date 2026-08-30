@@ -154,6 +154,43 @@ ACTOR_EXT_SLOT_AUTHORITY = {
     # a blanket slot-31 rule is exactly the shortcut this header forbids.
     # Evidence: ...runs/rel0215/out/w2-ov066/slot31_dispatch_sweep.txt
     ('__ZTV6Eyerok', 31): 0,
+    # ARROW_PATH_LIFT (157) + SQUARE_METAL_NET_LIFT (144), ov091, ONE class and
+    # ONE table; slot 31 = Platform::Kill. run rel0215 wave 3, lane w3-f2.
+    # MEASURED, not inherited from the twenty-one baselined slot-31 `*_kill`
+    # rows and not keyed off the slot number: this binary was swept for
+    # indirect transfers through offset 0x7c in BOTH forms, the wider sweep
+    # lane cleanup-w2 established, and it finds TWENTY-TWO sites -- FOURTEEN
+    # calls and EIGHT tail jumps.
+    #
+    # THE ADDRESS LIST BELOW IS MEASURED AT A SPECIFIC TIP AND GOES STALE ON ANY
+    # CHANGE TO port/unmatched/Ov091_HostSites.cpp. It is a list of RVAs in
+    # walk_window.exe, so anything that changes the SIZE of a function linked
+    # ahead of these sites slides them. That already happened once inside this
+    # lane and it is the reason this paragraph exists: the sweep was recorded,
+    # then the next commit replaced func_ov091_021339fc's body in that object
+    # with the shorter one propagated from origin/main, and every site above
+    # 0x005D6B20 moved down by exactly 0x30 while the recorded list did not.
+    # Nine of the twenty-two were wrong for one commit. The COUNTS and the SHAPE
+    # -- 22 through +0x7c, 14 calls, 8 tail jumps, 0 live pushes -- were
+    # unaffected, so the ruling never moved; only the evidence did. RE-RUN THE
+    # SWEEP AND REWRITE THESE before quoting them, and re-run it whenever that
+    # host file changes.
+    #
+    # Re-measured at 889719a10, re-verified unchanged at the comment-only
+    # fixup tip (the reviewer's fresh sweep read the same 22 addresses):
+    #   0046A49B 00542310 00542316 00543440 00546216 00546306 005877C7
+    #   005AF1A4 005B04FD 005B0624 005B4A69 005BAD46 005BE41B 005E2291
+    #   005E2371 005E24CF 005E2731 005E2A4E 005E2A8E 005E2BDD 005E2D3C
+    #   005EA5CB
+    # NO ARGUMENT PUSH IS LIVE AT THE TRANSFER IN ANY OF THE TWENTY-TWO -- the
+    # narrow claim, not "no window contains a push": the sweep retires a push
+    # at an intervening `call` or `add esp`, drops the window at a `ret`, and
+    # does not count an ebp/esi/edi/ebx frame save. So ?lift_kill's
+    # __fastcall(void*, void*) / ret 0 shape is right, the same reading and the
+    # same count the Eyerok row above and the cleanup-w2 block below reached
+    # independently on their own builds.
+    # Evidence: ...runs/rel0215/out/w3-f2/slot31_dispatch_sweep.txt
+    ('__ZTV22RotatingUpDownPlatform', 31): 0,
     # ------------------------------------------------------------------
     # run rel0215, lane cleanup-w2. THE NINETEEN ROWS WAVE 1 AND WAVE 2 LEFT
     # UNJUDGED, retired here on measurement rather than parked as debt.

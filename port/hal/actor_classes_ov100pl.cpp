@@ -125,10 +125,15 @@
 //          reloc-pinned to the same 0x020eff18, and its Behavior/Init call
 //          BaseBehavior/the base init. It is the second customer for
 //          everything this lane lands.
-//   ids 144/157 (ov091, MOUNTED, gate 73's _ZTV13daLinelift2_c) are NOT
-//          PathLift-derived: 32-slot table, no base-body relocs. See the
-//          lane report -- 144 is in level 37's skip residue and is a
-//          separate, near-free row on the gate-73 fill.
+//   ids 144/157 (ov091, MOUNTED, _ZTV13daLinelift2_c) are NOT
+//          PathLift-derived: 32-slot table, no base-body relocs. This lane's
+//          finding still holds and was re-derived on the ROM by run rel0215
+//          wave 3 lane w3-f2, which SEATED both ids -- so "144 is in level
+//          37's skip residue" is retired (level 37's skip list is empty now)
+//          and the fill is not gate 73's: the two share a class of their own,
+//          _ZTV22RotatingUpDownPlatform at ov091 0x02134ec0, which is a
+//          DIFFERENT table from gate 73's Utm one at 0x02134c5c. See
+//          hal/actor_classes_ov091.cpp.
 #include <cstdio>
 #include "dsstate_seg.h"
 

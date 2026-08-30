@@ -2010,3 +2010,28 @@ func_ov025_02111928  REAL_DECOMP  out/w3-e/ov025/adjudication.txt  id 162 slot 1
 func_ov025_0211199c  REAL_DECOMP  out/w3-e/ov025/adjudication.txt  id 162 slot 29 OnAimedAtWithEgg, addr 0x0211199c size 0x8; MATCHING. `mov r0, #0xce000; bx lr` -- takes no receiver on the ROM either, which is why the host thunk drops this
 func_ov025_02111b64  REAL_DECOMP  out/w3-e/ov025/adjudication.txt  id 162 slot 6 Behavior, addr 0x02111b64 size 0xc0; MATCHING. Seven calls into ov091's Thwomp bodies, all seven already linked
 func_ov025_02111c24  REAL_DECOMP  out/w3-e/ov025/adjudication.txt  id 162 slot 0 InitResources, addr 0x02111c24 size 0xd0; MATCHING. Seats the three-word resource table data_ov025_02113814 at +0x320, calls ov091 0x02133254, then a RaycastLine to find the floor
+# ---------------------------------------------------------------------------
+# run rel0215 wave 3 (lane w3-f2), 2026-08-30. FWOOSH (231), ov091.
+#
+# _ZTV5Stump (ov091 0x021353ac, 31 slots, RTTI 10daHyuhyu_c) carries three
+# bodies of its own past the destructors, and all three names were recovered
+# from the slot rather than from a symbol, so all three carry the marker.
+#
+# UNLIKE THE ov047 PAIR ABOVE, ALL THREE MARKER NAMES ARE CORRECT. The slot
+# each body sits in was read out of extracted/overlays/overlay_0091.bin at base
+# 0x02130f00 -- the shipped image, deliberately not a dsd export -- and slot 18
+# is OnYoshiTryEat, 19 OnTurnIntoEgg and 29 OnAimedAtWithEgg on every
+# Actor-derived table in this tree, which is what each src marker says. What was
+# in doubt was never the bodies; the marker records how the NAMES were found.
+#
+# All three were then put through tools/match.py at 2004/b56 with
+# --strict-relocs (the default) and --module ov091, byte-compared against that
+# same raw image rather than against arm9_dec.bin.
+#
+# RESULT: 3 REAL DECOMP, 0 genuine guesses, 0 unverifiable, 3 MATCHING.
+#
+# Full slot readout, raw bytes and the three match runs:
+#   C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w3-f2\t5_ov091_slots.txt
+func_ov091_02134498  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w3-f2\t5_ov091_slots.txt  id 231 slot 18 OnYoshiTryEat, addr 0x02134498 size 0x8; match.py MATCHING at 2004/b56 with --strict-relocs --module ov091. Two instructions, mov r0,#4 / bx lr, and src returns 4. Marker name is RIGHT: _ZTV5Stump + 0x48 holds this address
+func_ov091_0213448c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w3-f2\t5_ov091_slots.txt  id 231 slot 19 OnTurnIntoEgg, addr 0x0213448c size 0xc; match.py MATCHING at 2004/b56 with --strict-relocs --module ov091. The ROM's tail-call veneer, ldr ip,[pc] / bx ip / .word 0x02043824 onto _ZN9ActorBase18MarkForDestructionEv, and src calls exactly that; the pool word is reloc-checked, not wildcarded past. Byte-identical to func_ov072_02121fa0 (gate 193) and func_ov030_021145d4. Marker name is RIGHT: _ZTV5Stump + 0x4c holds this address
+func_ov091_02134484  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w3-f2\t5_ov091_slots.txt  id 231 slot 29 OnAimedAtWithEgg, addr 0x02134484 size 0x8; match.py MATCHING at 2004/b56 with --strict-relocs --module ov091. Two instructions, mov r0,#0x1f000 / bx lr, and src returns 126976 == 0x1f000. Marker name is RIGHT: _ZTV5Stump + 0x74 holds this address
