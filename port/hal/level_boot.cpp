@@ -1906,11 +1906,39 @@ static void *port_mount_row_lvl32(void) { return port_level_mount_at(43); }
 static void *port_mount_row_lvl34(void) { return port_level_mount_at(44); }
 static void *port_mount_row_lvl46(void) { return port_level_mount_at(45); }
 /* VS wiring lane: the four VS battle maps, table rows appended at the END
-   (the merge-note rule above). Positional: row N takes fns[N]. */
-static void *port_mount_row_lvl51(void) { return port_level_mount_at(35); }
-static void *port_mount_row_lvl43(void) { return port_level_mount_at(36); }
-static void *port_mount_row_lvl29vs(void) { return port_level_mount_at(37); }
-static void *port_mount_row_lvl42vs(void) { return port_level_mount_at(38); }
+   (the merge-note rule above). Positional: row N takes fns[N].
+
+   AND THAT IS THE ONE RULE THESE FOUR BROKE, fixed here (run rel0215, lane
+   gatefix). They shipped mounting 35, 36, 37 and 38 -- the rows of levels 27,
+   16, 21 and 25 (Tick Tock Clock ov035, Shifting Sand Land ov024, Dire Dire
+   Docks city ov029, Tiny-Huge tiny ov033), each of which already has its own
+   thunk above. Their own rows are 46..49.
+
+   NOT A MERGE RENUMBER, which is the failure the comment block above predicts
+   and the one a reader would assume. Checked against the parent of the commit
+   that added them (110188b9a^): the four VS rows had ALREADY landed at 46..49
+   in an earlier commit, so the table these were written against is the table
+   they are in. The indices were simply wrong when typed, and the comment above
+   them stated the rule they broke.
+
+   WHAT IT COST, so the next reader does not have to re-derive it.
+   port_level_mounts_install pairs table[i] with mount_fns[i] positionally, so
+   the mount REGISTRY (hal/level_change.cpp) held, for VS level 51, a function
+   that mounts Tick Tock Clock and runs port_ttc_level_data_seat() with it. The
+   registry's reader is port_level_overlay(level), and its live caller is
+   port_level_capture_kcl, which resolves the OUTGOING level's LVL_Overlay
+   during a level change: leaving a VS map would have mounted an unrelated
+   overlay mid-teardown and then looked up that overlay's KCL handle instead of
+   the VS map's. It stayed invisible because the VS BOOT itself never reads the
+   registry -- SM64DS_VS_MAP goes through port_level_set_target and
+   port_level_desc(), which finds the row by id -- so all four maps booted
+   clean over a registry that was wrong. port/tools/mount_pairing_guard.py is
+   what named it; the guard's model of the table was right and the code was
+   wrong. */
+static void *port_mount_row_lvl51(void) { return port_level_mount_at(46); }
+static void *port_mount_row_lvl43(void) { return port_level_mount_at(47); }
+static void *port_mount_row_lvl29vs(void) { return port_level_mount_at(48); }
+static void *port_mount_row_lvl42vs(void) { return port_level_mount_at(49); }
 
 static void *(*const port_level_mount_fns[PORT_LEVEL_COUNT])(void) = {
     port_mount_row_0, port_mount_row_1, port_mount_row_2, port_mount_row_3,
