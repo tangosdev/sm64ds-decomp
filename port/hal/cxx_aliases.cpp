@@ -148,11 +148,107 @@ int func_01ff98f4(int a, int b)
 /* float greater-than: the slide friction gate (i2f(speed) > 48.0f) */
 int func_01ff99a4(int a, int b)
 { float x, y; memcpy(&x, &a, 4); memcpy(&y, &b, 4); return x > y; }
-/* f2i truncation; one caller's two-arg decl is an r1 ride-through */
-/* PORT_HOST_ABI: ARM asm primitive (ITCM soft-float block), MSVC cannot
+/* ---- THE SINGLE-PRECISION ADD/SUB PAIR ---------------------------------
+   run rel0215 lane prop17, first host callers: src/func_ov074_021204c0.c
+   (the Goomboss scale interpolation) calls both, and it is the only TU in
+   either line that does.
+
+   WHICH IS WHICH WAS READ OFF THE ROM, not off the caller's prose. The two
+   are one routine wearing two hats and they prove each other -- carved the
+   ITCM autoload block out of extracted/arm9_dec.bin (autoload list at
+   file+0x9cf60 says ram 0x01ff8000, size 0x5f40; the block lands at
+   file+0x097000, and config/arm9/itcm/symbols.txt's 46 symbols all fall
+   inside it) and disassembled both heads:
+
+     func_01ff9378        mov r2,#1        <- the operation tag
+       +0x08  eors r2,r0,r1               <- do the signs differ?
+       +0x0c  eormi r1,r1,#0x80000000     <- if so, flip b's sign
+       +0x10  bmi  0x01ffa5a8             <- ...and finish in a594's body
+       +0x14  subs ip,r0,r1               <- same-sign path, no sign fixup
+
+     func_01ffa594        mov r2,#2        <- the other tag
+       +0x08  eors r2,r0,r1
+       +0x0c  eormi r1,r1,#0x80000000
+       +0x10  bmi  0x01ff938c             <- ...and finish in 9378's body
+       +0x14  subs ip,r0,r1
+       +0x18  eorlo ip,ip,#0x80000000     <- THE DISTINGUISHING LINE: the
+                                             |a| < |b| sign fixup only a
+                                             SUBTRACT needs
+
+   So 9378 is ADD and a594 is SUBTRACT, each delegating to the other when the
+   signs disagree. That matches what the caller does with them independently:
+   it takes a594(table[k], table[k+1]) as the GAP between two sizes and feeds
+   9378(table[k+1], step) back as the stepped-toward value.
+
+   Both take and return RAW IEEE-754 SINGLE BIT PATTERNS in r0/r1, the same
+   convention as func_01ff98f4 and func_01ff99a4 above, so the host bodies go
+   through memcpy the same way.
+
+   WHAT THE HOST BODIES DO AND DO NOT REPRODUCE, stated rather than implied.
+   The ROM bodies are 0x460 and 0x448 bytes because they carry their own
+   denormal and NaN handling AND their own IEEE STATUS-FLAG bookkeeping -- the
+   tails call out to an FP status block and OR a bit in (the `bl #0x207322c`
+   at 0x01ffa624 and the `ldr r3,[ip] / orr r3,r3,#0x10 / str r3,[ip]` that
+   follows it; 0x01ffa5b8 is `mov r2, #0x80000000`). The host bodies are
+   native `float` add/subtract. This build takes MSVC's x86 default, which is
+   /arch:SSE2 (no /arch: or /fp: appears in port/CMakeLists.txt -- only /Oy-),
+   so the arithmetic is single-precision SSE with round-to-nearest-even and
+   agrees with the ROM on every normal value. It does NOT set the status flags,
+   and NaN payloads are not guaranteed to match.
+
+   THAT DIFFERENCE IS NOT OBSERVABLE, and here is the whole chain rather than an
+   assurance. The status block is data_020aa3f4, kind:bss. Across all 106 module
+   reloc files there is EXACTLY ONE reference to that address in the entire game:
+   the literal-pool word at 0x02073234, inside its own getter func_0207322c
+   (`ldr r0,[pc] / bx lr`, twelve bytes). So the only route to it is through that
+   getter -- and the getter has 47 callers game-wide, of which ZERO lie outside
+   0x01ff8000..0x01ffb078. Every caller IS the soft-float block, writing its own
+   flags. No game code reads them.
+   On the host the question does not arise at all: neither _func_0207322c nor
+   _data_020aa3f4 appears in walk_window.map, and src/func_0207322c.c is in no
+   slice and no CMake source list, because the port does not host the ROM's
+   soft-float block -- every primitive in it is a native body like these two.
+   The status word does not exist on the host, so nothing can read it.
+   A documented non-observable difference, and the standing trade for this whole
+   block rather than a new one this pair introduces.
+
+   PORT_HOST_ABI: ARM asm primitives (the ITCM soft-float runtime block),
+   MSVC cannot assemble -- see the block comment above. */
+int func_01ff9378(int a, int b)
+{ float x, y, r; memcpy(&x, &a, 4); memcpy(&y, &b, 4); r = x + y;
+  { int o; memcpy(&o, &r, 4); return o; } }
+int func_01ffa594(int a, int b)
+{ float x, y, r; memcpy(&x, &a, 4); memcpy(&y, &b, 4); r = x - y;
+  { int o; memcpy(&o, &r, 4); return o; } }
+/* f2i truncation. ONE PARAMETER, and that is the ROM's own answer.
+   This used to be `int (int a, int b)` with `(void)b`, carrying a comment
+   that called the second word "one caller's r1 ride-through" -- the caller
+   being src/func_ov002_020dc560.c, which spells the prototype with two.
+   run rel0215 lane prop17 disassembled the ROM body instead of taking that
+   on trust, and the FIRST INSTRUCTION settles it:
+
+     01FFA344  bic r1, r0, #0x80000000     <- r1 is WRITTEN before it is read
+     01FFA348  mov r2, #0x9e
+     01FFA34C  subs r2, r2, r1, lsr #23    <- exponent, straight out of r0
+
+   Nothing on entry reads r1, so there is no ride-through and there never
+   was: this takes ONE argument. The two-parameter host body was a fiction
+   that the tree then had to keep feeding, and it cost real edits -- the
+   host copy port/unmatched/Goomboss_InitResources.cpp lists "func_01ffa344(x)
+   -> func_01ffa344(x, 0)" among the changes it makes to a matched TU, and two
+   rows sat in port/tools/aritycheck_plainfunc_baseline.txt for src TUs that
+   declared the honest one-parameter form.
+
+   Narrowing it is safe in both directions under __cdecl: a caller that still
+   pushes two words (func_ov002_020dc560.c, and the InitResources host copy)
+   has the callee read the first and cleans its own stack, exactly as the ROM
+   discards r1. Both baseline rows are deleted with this change; the list only
+   shrinks.
+
+   PORT_HOST_ABI: ARM asm primitive (ITCM soft-float block), MSVC cannot
    assemble -- see the block comment above. */
-int func_01ffa344(int a, int b)
-{ float x; memcpy(&x, &a, 4); (void)b; return (int)x; }
+int func_01ffa344(int a)
+{ float x; memcpy(&x, &a, 4); return (int)x; }
 /* ITCM signed divide (walk-speed scaling) */
 /* PORT_HOST_ABI: ARM asm primitive (ITCM soft-float block), MSVC cannot
    assemble -- see the block comment above. */

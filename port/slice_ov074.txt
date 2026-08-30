@@ -18,17 +18,28 @@
 #                                        (div=21). Logic verified correct vs
 #                                        ROM"). A decompiled body; the port
 #                                        runs it, the ov005/ov075 precedent.
-#         func_ov074_021201f0  0x1f0  -- MISSING, no src anywhere
-#         func_ov074_021204c0  0x208  -- MISSING, no src anywhere
-#         func_ov074_02121380  0x374  -- MISSING, no src anywhere
+#         func_ov074_021201f0  0x1f0  -- MATCHED on the decomp line and
+#                                        PROPAGATED here by run rel0215 lane
+#                                        prop17, off main 6906f2af5 (PR #2006).
+#                                        Still no delink block, so it stays in
+#                                        this count, but src/ has it and the
+#                                        port runs it.
+#         func_ov074_021204c0  0x208  -- same, same commit, same lane.
+#         func_ov074_02121380  0x374  -- MISSING, no src anywhere. The
+#                                        collision-cylinder rebuild; an honest
+#                                        div-11 near-miss is banked on the
+#                                        decomp side and a siege is queued.
 #   ---
 #    56  = 48 + 4 + 4.  Sum checks against symbols.txt.
 #
-# So 53 source TUs exist (52 delink blocks + func_ov074_02121800.c), which is
-# exactly linkage.py's ov074 total: 53 TUs, 1 linked, 52 unlinked.
+# So 55 source TUs now exist (52 delink blocks + func_ov074_02121800.c + the
+# two prop17 propagations). Before prop17 there were 53, which was linkage.py's
+# ov074 total of 53 TUs, 1 linked, 52 unlinked.
 #
 # ==== 2. WHAT IS AND IS NOT IN THIS SLICE ==================================
-# 47 of the 53. The six held out, each for a named reason:
+# 49 of the 55 (it was 47 of the 53 before lane prop17 added
+# src/func_ov074_021201f0.c and src/func_ov074_021204c0.c). The six held out,
+# each for a named reason, and prop17 held out none of them:
 #
 #   src/func_ov074_0212087c.c        ALREADY LINKED. port/slice_gate32.txt:356
 #       compiles it -- the goomba's knocked-back state asks the Goomboss
@@ -70,7 +81,23 @@
 #     `int`, and ends `return 1;`, so r0 holds 1 on that path either way.
 #     The WaterBomb_State0 / Cannon_Behavior / Coin_Behavior idiom.
 # NO ARM ASM, no thread scheduler, no card loader, no wireless: the sweep for
-# `asm` over all 53 TUs comes back empty, so no other subtree is refused.
+# `asm` over all 53 TUs comes back empty, so no other subtree is refused. Lane
+# prop17 re-ran that sweep over its two additions and it is still empty.
+#
+# (d) THE ONE BODY STILL MISSING, and what its absence costs.
+#     func_ov074_02121380 (0x374) is the collision-cylinder rebuild. Its single
+#     reference is an arm_call at 0x02121ccc, inside Goomboss::Behavior, which
+#     runs it unconditionally every frame; it in turn is the only caller of
+#     func_ov074_02121270 (its own arm_call at 0x02121548). It is faced loudly
+#     in hal/actor_classes_ov074.cpp under the ROM's own name.
+#     EXPECTATION, recorded before anyone measures the fight: with the state
+#     machine complete the boss now animates, talks, scales and moves, and the
+#     four MovingCylinderClsnWithPos members at +0x110 stride 0x40 stay where
+#     the constructor left them. The fight may LOOK right and not HIT right.
+#     A clean-looking level 45 is NOT evidence that this hole is closed; the
+#     UNHOSTED line the face prints is the only thing that speaks to it.
+#     Because 02121270's only caller stays faced, seating 021201f0 and 021204c0
+#     does not un-strip it -- it stays out of the link, and that is expected.
 #
 # ==== 4. THE TWO ALIAS RACES THIS MOUNT SETTLES (T6) =======================
 # ov074 shares the load window at base 0x0211f000 with ov070, ov071 and ov073,
@@ -215,8 +242,10 @@ src/func_ov074_02120080.cpp
 src/func_ov074_0212016c.c
 src/func_ov074_0212018c.cpp
 src/func_ov074_021201ec.c
+src/func_ov074_021201f0.c
 src/func_ov074_021203e0.c
 src/func_ov074_02120474.cpp
+src/func_ov074_021204c0.c
 src/func_ov074_021206c8.c
 src/func_ov074_021207b8.c
 src/func_ov074_02120808.cpp

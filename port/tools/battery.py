@@ -552,43 +552,66 @@ LEVEL_SKIPS = {
     # run rel0215 wave 2, lane w2-ov074 seated ov074's whole cast and took
     # level 45 to zero skipped -- census 5 spawned (5 classes), 0 skipped --
     # and GOOMBOSS then quarantines on its FIRST behaviour frame because the
-    # DECOMP does not have the body its first state ticks:
+    # DECOMP does not have a body Goomboss::Behavior needs.
     #
-    #   func_ov074_021201f0 (0x1f0 bytes, ROM 0x021201f0) is Goomboss's state
-    #   0 TICK. It has no delink block in config/arm9/overlays/ov074/
-    #   delinks.txt and no src file anywhere in the tree -- one of three ov074
-    #   function symbols in that state, and the only one the boot walk reaches.
-    #   Its own relocations name Camera::SetPos, Camera::SetLookAt,
-    #   Camera::SetFlag_3, Actor::ClosestPlayer, Sound::LoadAndSetMusic_Layer3,
-    #   Message::PrepareTalk, Player::ShowMessage, Player::StartTalk and
-    #   func_ov074_021203e4: the fight's opening cutscene, which ends by
-    #   changing state. Nothing in ov074 sets an initial state, so the bss zero
-    #   IS state 0 and the very first Goomboss::Behavior dispatches into it.
+    # THE REASON MOVED ON 2026-08-30 (run rel0215, lane prop17) AND THE ROW DID
+    # NOT RETIRE. Until then the blocker was func_ov074_021201f0, the state-0
+    # tick. main 6906f2af5 (PR #2006) matched it and prop17 propagated it here
+    # by address, along with func_ov074_021204c0. The state machine is now
+    # complete and the boss gets further into its own frame than it ever has --
+    # and it quarantines on frame 0 anyway, one call later:
+    #
+    #   func_ov074_02121380 (0x374 bytes, ROM 0x02121380) is the COLLISION-
+    #   CYLINDER REBUILD. It has no delink block in config/arm9/overlays/ov074/
+    #   delinks.txt and no src file anywhere in the tree, and it is the LAST
+    #   ov074 symbol in that state. Goomboss::Behavior calls it UNCONDITIONALLY
+    #   (the single arm_call at 0x02121ccc) right after func_ov074_02120d74 --
+    #   which is AFTER the state dispatch func_ov074_0212042c, so it was
+    #   unreachable while the state-0 face froze the actor first. It is what
+    #   would move the four MovingCylinderClsnWithPos members at +0x110 stride
+    #   0x40; while it declines, the boss's collision volumes stay where the
+    #   constructor put them. An honest div-11 near-miss is banked on the
+    #   decomp side.
     #
     # THE EVIDENCE, both directions. The run logs live in the lane's
     # orchestration directory, NOT in this repo -- nothing under any
     # runs/rel0215 path is checked in, and an earlier revision of this comment
     # cited one as though it were repo-relative. Each run below is reproducible
-    # from the command given, which is the part that has to survive:
+    # from the command given, which is the part that has to survive. All four
+    # were re-measured by prop17 on the tree that has the two new bodies:
     #   BARE, no FAULTS_FATAL, SM64DS_LEVEL=45, 300 and 600 frames: rc 0,
     #       census 5 spawned (5 classes) 0 skipped, and EXACTLY ONE quarantined
-    #       actor, named -- "[quarantine] actor id 198 (GOOMBOSS) FROZEN, frame
-    #       continues". Spawn, InitResources, the 31-slot fill, Render and the
-    #       first Behavior up to the state dispatch all run clean; the shipped
-    #       configuration degrades exactly as it is designed to.
-    #   WITH THIS SKIP, FAULTS_FATAL=1, level 45, 300 and 600 frames: rc 0.
+    #       actor, named -- "[quarantine] actor 30039760 id 198 (GOOMBOSS)
+    #       faulted -- FROZEN, frame continues", now attributed to
+    #       func_ov074_02121380 rather than to the state-0 tick.
+    #   BARE + FAULTS_FATAL (what retire_probe below runs): rc 3221226505,
+    #       "UNHOSTED: func_ov074_02121380 ... -> hard abort". THE ROW IS STILL
+    #       NEEDED, and that is the measurement, not an assumption.
+    #   WITH THIS SKIP, FAULTS_FATAL=1, level 45, 300 and 600 frames: rc 0,
+    #       census 4 spawned (4 classes) 1 skipped, zero UNHOSTED lines, zero
+    #       quarantine lines.
     #   THE CLASS ITSELF is proven on its OTHER half, and on a different level
     #       for the reason hal/actor_classes_ov074.cpp gives at length:
     #       SM64DS_LEVEL=13 SM64DS_SPAWN_ACTOR=198:0x1111 FAULTS_FATAL=1, 600
-    #       frames -> rc 0, zero faults, zero quarantine lines. Level 45 cannot
+    #       frames -> rc 0, census 189 spawned (43 classes) 0 skipped + 198 x1
+    #       GOOMBOSS, zero faults and zero quarantine lines. Level 45 cannot
     #       host that probe under FAULTS_FATAL and the skip would make it
     #       vacuous (SM64DS_SKIP_CLASS matches by substring).
-    # The class stays REGISTERED, so the day func_ov074_021201f0 is matched the
+    #   AND THE STATE-0 TICK IS PROVEN TO RUN, quantitatively, off the bare
+    #       run's own camera trace. The boss stands at (516.5, 300, 1247.2) and
+    #       the tick pins the camera to look-at = boss + (+304, ., -672) with y
+    #       forced to 461.0 and eye = boss + (-752, +32, +596). Frame 0 shows
+    #       the entrance camera; from frame 1 to the end of the run the trace
+    #       reads eye(-235.5,332.0,1843.2) at(820.5,461.0,575.2) and never
+    #       changes again -- all six components exactly what the body computes.
+    #       So this row is no longer "the cutscene does not run". It does.
+    # The class stays REGISTERED, so the day func_ov074_02121380 is matched the
     # bare re-probe below goes green and this row retires itself with no
     # further port work.
-    45: ("GOOMBOSS", "the decomp (func_ov074_021201f0 has no matched body)",
-         "quarantines on frame 0 of Goomboss::Behavior, in the state-0 tick "
-         "the loud face in hal/actor_classes_ov074.cpp names"),
+    45: ("GOOMBOSS", "the decomp (func_ov074_02121380 has no matched body)",
+         "quarantines on frame 0 of Goomboss::Behavior, in the collision-"
+         "cylinder rebuild the loud face in hal/actor_classes_ov074.cpp names "
+         "-- the state machine itself is complete and its cutscene runs"),
 }
 # The bare re-probe is expected to FAULT while the debt stands, and a fault
 # under FAULTS_FATAL exits fast. A probe that instead hangs is not evidence of
