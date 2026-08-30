@@ -58,7 +58,7 @@
 # `ambiguous`, every arm9 relocation above reads `module:overlays(6,96)`, and
 # -- unlike ov077's three, two of which were latent -- ALL THREE ARE LIVE IN
 # THE BUILD TODAY: port/ov006_syms.txt already hosts data_ov006_02137998,
-# data_ov006_021379b4 and data_ov006_02137a6c, and ov006 hosts 426 symbols
+# data_ov006_021379b4 and data_ov006_02137a6c, and ov006 hosts 338 symbols
 # inside ov096's span in total. Each is settled by reading the RAW BYTES of
 # both claimants, not by trusting a label.
 #

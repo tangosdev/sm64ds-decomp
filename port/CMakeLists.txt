@@ -2170,7 +2170,7 @@ list(APPEND PORT_ACTOR_OVERLAYS ov092)
 # and 0x02137be0 is exactly ov098's base, so the extension is ADJACENT, not
 # overlapping. But ov006 ALSO covers this window -- its span is
 # 0x020bfec0..0x021430a0, it is mounted, and port/ov006_syms.txt already hosts
-# 426 symbols inside ov096's range -- so every byte ov096 "adds" is already
+# 338 symbols inside ov096's range -- so every byte ov096 "adds" is already
 # inside a mounted window and the extension cannot flip a --cross target from
 # resolved to raw for anyone. The census was re-run both ways regardless,
 # because that is what the plan asked of this lane; the numbers are in the
