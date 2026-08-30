@@ -242,6 +242,18 @@
    "ref": "include/cMgSmartball_"
   },
   {
+   "file": "notes/src-domain-buckets.md",
+   "ref": "src/game/actors"
+  },
+  {
+   "file": "notes/src-domain-buckets.md",
+   "ref": "src/runtime/graphics/fader"
+  },
+  {
+   "file": "notes/src-domain-buckets.md",
+   "ref": "src/ui/messages"
+  },
+  {
    "file": "notes/translation-unit-reconstruction-plan.md",
    "ref": "src/actors/Chuckya.cpp"
   },

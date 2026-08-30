@@ -148,3 +148,85 @@ See also `[[validator-what-it-proves]]`, `[[langmode-metric-is-textual]]` and
 `[[reformat-silently-disables-gates]]` — this is the fourth measured instance of a
 gate in this tree rewarding the wrong thing, and the second where documenting or
 doing the work correctly made the number worse.
+
+---
+
+# Two more, measured 2026-08-30 on `d08ac657b`
+
+Both are the same species as the defect above — the gate counting something other
+than what it says it counts — and neither is a hole left open. They are fixed in
+the PR that adds this section.
+
+## `no_codegen_trick` could not tell MMIO from a match hack
+
+The criterion ORed three regexes and one of them was a bare `\bvolatile\b`. On a
+Nintendo DS the only way to reach VRAM, the geometry engine or the IPC/DMA/divider
+registers is a `volatile`-qualified pointer, so the criterion failed the code that
+had no alternative:
+
+```sh
+src/_ZN8dScene_c22ResetHardwareRegistersEv.cpp   74 volatile hits, all 0x0400xxxx
+src/_ZN2GX13SetBankForTexEt.cpp                  25 volatile hits, all VRAM banks
+src/_ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii.cpp  the register block is a PARAMETER
+```
+
+A reconstructed TU that absorbs any of those inherits the failure for the whole
+file, so this compounds with the TU work rather than sitting still.
+
+The two shapes are separable by **what is volatile-qualified**. MMIO qualifies the
+pointed-to type, so a `*` follows it. A match hack qualifies an object — the
+`volatile int li;` spill pad, the `volatile Vector3 v;` stack reserver, the
+`(s32)(volatile s32)rsc` round-trip of `[[volatile-roundtrip-demotes-a-local]]`,
+and `Node *volatile arr[4]` where the pointer rather than the pointee is volatile.
+
+```py
+VOLATILE = re.compile(r"\bvolatile\b(?![\s\w:]*\*)")
+```
+
+Files scoring a codegen trick: **655 -> 254**. Every one of the 401 released was
+checked to be MMIO-only, and the 254 kept still contain every match-hack form
+above — the negative direction was measured, not assumed, because a `volatile`
+regex that stops catching hacks is a worse defect than the one being fixed.
+CONVERTED **2,511 -> 2,568 functions (22.20% -> 22.71%)**; additions only.
+
+Known conservative reading: `typedef volatile u32 vu32;` used only as `vu32 *`
+(4 files) still scores. Excluding typedefs opens a real evasion — `typedef
+volatile int vi; vi dummy;` would carry no `volatile` at the use site at all.
+
+## The ratchet reported a TU promotion as a vanished file
+
+`tools/tiers_ratchet.py` banks the SET of CONVERTED paths and fails when one
+leaves. A TU promotion consolidates N per-symbol `src/_ZN....cpp` files into the
+one `src/actors/<Class>.cpp` they always were, which git records as N deletions plus one
+addition. Every one read as
+
+```sh
+GONE -- not a tracked source file any more (deleted, renamed or moved)
+```
+
+Measured on PR #1882 (`tu/inline-dtor-order`, `9c6396c5f`): **90 of 90** backslid
+paths were TU `legacy_source` entries whose TU is `"status": "promoted"` and whose
+`promoted_source` exists on the branch. **Zero** were real deletions. A gate whose
+entire output is false alarms trains people to re-bank without reading it.
+
+A GONE path is now resolved through the manifest (via `tools/tu_manifest.py`, per
+`[[tu-manifest-split]]`) before it is called a deletion, and reported as a MOVE
+naming the absorbing file:
+
+```sh
+MOVED -- absorbed into src/actors/daObjPathLift_c.cpp by TU promotion
+         (ov100/daObjPathLift_c), which fails: No raw offset arithmetic ...;
+         Calls things by real names, not mangled _Z
+```
+
+**A promotion is not free.** The five criteria are file-wide, so a clean function
+merged into a file with one bad line really does lose its status, and that case
+still exits 1. Only a move into a file that itself passes all five is silent. In
+practice a promotion lands in the failing case *by construction*: a reconstructed
+TU must spell `_ZN7fBase_cnwEj`, `_ZN8dActor_cC2Ev` and `_ZN8dActor_cD2Ev`
+directly or its range will not link, so `no_mangled_refs` can never pass for one.
+That is structural, and the answer is `--update --reason`, never exempting mangled
+refs — byte-match outranks readability here.
+
+Both readings are pinned in both directions by `tools/test_tiers.py`, which
+`converted-ratchet.yml` now runs.

@@ -29,6 +29,34 @@ WHY BACKSLIDE-ONLY, AND NOT A COUNT. Two reasons, and the second is the importan
   ought to exist. The gate's job is to make a backslide LOUD and ATTRIBUTED, not to make
   it impossible.
 
+A PATH CAN LEAVE WITHOUT ANYTHING BEING LOST. The one legitimate way is a TU
+promotion: `tubuild.py` consolidates N per-symbol `src/_ZN....cpp` files into the one
+`src/actors/<Class>.cpp` the original translation unit was, and git records N deletions plus
+one addition. A set ratchet reads all N as `GONE`. Measured on PR #1882
+(`tu/inline-dtor-order`, 9c6396c5f), 90 of 90 backslid paths were exactly that and
+none was a deletion, which is a report no one can read.
+
+So a GONE path is now resolved through the TU manifest (`config/tu_manifest.d/`, via
+`tools/tu_manifest.py` -- never off the files) before it is called a deletion. If some
+entry with `"status": "promoted"` lists it as a `legacy_source`, the path is reported
+as a MOVE naming the `promoted_source` that absorbed it, and:
+
+  * if the absorbing file passes all five, that is NOT a backslide -- the same readable
+    code is simply scored under a different path, and the absorbing file enters the
+    baseline as an ordinary addition on the next `--update`;
+  * if it does not, that IS a backslide and still fails. The criteria are file-wide, so
+    merging a clean function into a file with one bad line genuinely costs it its
+    status, and the message says which criterion, e.g. "absorbed into
+    src/actors/<Class>.cpp by TU promotion (ov100/daObjPathLift_c), which fails: Calls
+    things by real names, not mangled _Z".
+
+A promotion is therefore never silently free. In practice it lands in the second case
+by construction: a reconstructed TU MUST spell vague-linkage symbols directly
+(`_ZN7fBase_cnwEj`, `_ZN8dActor_cC2Ev`, `_ZN8dActor_cD2Ev`) or its range will not link,
+so `no_mangled_refs` cannot pass for one. That is structural, not sloppiness, and it is
+not fixed by exempting mangled refs -- byte-match outranks readability here, and the
+override below is where that trade is recorded with a name against it.
+
 HOW TO OVERRIDE (the escape hatch)
 
     python tools/tiers_ratchet.py --update --reason "St_WallJump_Init: named members
@@ -87,6 +115,7 @@ import sys
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 import tiers  # noqa: E402
+import tu_manifest  # noqa: E402  (legacy_source -> promoted_source; see promoted_moves)
 
 BASELINE = REPO / "config" / "converted-baseline.json"
 EXCEPTIONS = REPO / "config" / "converted-backslide-exceptions.jsonl"
@@ -108,6 +137,46 @@ def tracked_sources():
     out = subprocess.run(["git", "-C", str(REPO), "ls-files", "src"],
                          capture_output=True, text=True, check=True).stdout.split()
     return sorted(p for p in out if p.endswith((".c", ".cpp")))
+
+
+def promoted_moves(root=None):
+    """`legacy_source` -> (tu_id, promoted_source) for every PROMOTED TU entry.
+
+    A TU promotion is the one way a banked path legitimately stops existing without
+    anything being deleted. `tubuild.py` consolidates N per-symbol `src/_ZN....cpp`
+    files into the single `src/actors/<Class>.cpp` the original translation unit was, and
+    git records that as N deletions plus one addition -- so every one of the N banked
+    paths reads to a set ratchet exactly like a file someone threw away. Measured on
+    PR #1882 (`tu/inline-dtor-order`, 9c6396c5f): 90 of 90 backslid paths were TU
+    `legacy_source` entries whose TU is `"status": "promoted"` and whose
+    `promoted_source` exists on the branch. Zero were real deletions. A gate whose
+    entire output is 90 false alarms teaches people to re-bank without reading it,
+    which is the failure mode that costs a ratchet its value.
+
+    So the checker resolves a GONE path through the manifest before calling it a
+    deletion. It does NOT make the promotion free -- see `classify_missing`. It only
+    lets the report say WHICH of the two things happened.
+
+    Read through tools/tu_manifest.py, never off `config/tu_manifest.d/**/*.json`
+    directly: that directory's on-disk shape is this repo's second attempt at it (it
+    used to be one file) and tu_manifest is the only place allowed to know the layout.
+    """
+    moves = {}
+    try:
+        data = tu_manifest.load(root)
+    except (OSError, ValueError):
+        return moves
+    for entry in data.get("entries") or []:
+        if entry.get("status") != "promoted":
+            continue
+        dest = entry.get("promoted_source")
+        if not dest:
+            continue
+        for fn in entry.get("functions") or []:
+            legacy = fn.get("legacy_source")
+            if legacy and legacy != dest:
+                moves[legacy] = (entry.get("id"), dest)
+    return moves
 
 
 def score(rel):
@@ -172,19 +241,78 @@ def append_exceptions(path, rows):
             f.write(json.dumps(r, sort_keys=True) + "\n")
 
 
-def why(rel, scores, tracked):
-    """Why a banked path is no longer CONVERTED, in the words of the criteria."""
-    if rel not in tracked:
-        return "GONE -- not a tracked source file any more (deleted, renamed or moved)"
+def _failures(rel, scores):
+    """The criteria `rel` fails, as labels, or None when it passes all five."""
     s = scores.get(rel)
     if s is None:
-        return "UNREADABLE -- the file could not be read"
+        return None
     failed = [k for k in tiers.CRITERIA if not s[k]]
-    if not failed:
+    return failed or None
+
+
+def why(rel, scores, tracked, moves=None):
+    """Why a banked path is no longer CONVERTED, in the words of the criteria.
+
+    A path that is GONE gets one of two answers, and the difference is the whole
+    point: someone deleted readable code, or a TU promotion absorbed it into the file
+    it was always part of. The second names the absorbing file and says what that file
+    does with the five criteria, because THAT is the thing a reviewer has to judge.
+    """
+    if rel not in tracked:
+        moved = (moves or {}).get(rel)
+        if not moved:
+            return ("GONE -- not a tracked source file any more "
+                    "(deleted, renamed or moved)")
+        tu_id, dest = moved
+        if dest not in tracked:
+            return (f"MOVED -- TU {tu_id} names {dest} as the file that absorbed it, "
+                    "but that file is not tracked; treat as a deletion")
+        failed = _failures(dest, scores)
+        if failed is None:
+            return (f"MOVED -- absorbed into {dest} by TU promotion ({tu_id}); that "
+                    "file passes all five, so nothing readable was lost")
+        return (f"MOVED -- absorbed into {dest} by TU promotion ({tu_id}), which "
+                "fails: " + "; ".join(tiers.CRITERION_LABEL[k] for k in failed))
+    failed = _failures(rel, scores)
+    if failed is None:
+        if rel not in scores:
+            return "UNREADABLE -- the file could not be read"
         # Cannot happen through --check, which derives both sides from one scan; it can
         # happen if a caller passes a hand-edited path list, so say so rather than lie.
         return "no criterion fails -- baseline and scan disagree, re-run --check"
     return "; ".join(tiers.CRITERION_LABEL[k] for k in failed)
+
+
+def classify_missing(missing, current, tracked, moves):
+    """Split the banked-but-not-CONVERTED paths into (absorbed_clean, backslid).
+
+    `absorbed_clean` is a banked path that stopped existing ONLY because a promoted
+    TU absorbed it, and whose absorbing file is itself CONVERTED. Nothing left the
+    CONVERTED set: the same readable code is scored under a different path, and the
+    absorbing file enters the baseline as a plain addition on the next `--update`. So
+    it is not a backslide and does not need an exception row.
+
+    Everything else is `backslid`, and that deliberately INCLUDES a path absorbed into
+    a file that fails a criterion. The five criteria are file-wide, so consolidating a
+    clean function into a file with one bad line really does cost that function its
+    status, and this project's whole reason for a set ratchet is to name that instead
+    of averaging it away. In practice a reconstructed TU fails `no_mangled_refs` by
+    construction -- it MUST spell `_ZN7fBase_cnwEj`, `_ZN8dActor_cC2Ev` and
+    `_ZN8dActor_cD2Ev` directly or the range will not link -- so a promotion normally
+    lands here and is banked with a `--reason` saying exactly that. That is the
+    correct outcome and not a thing to "fix" by exempting mangled refs: byte-match
+    outranks readability, and the exception log is where that trade gets recorded.
+    """
+    absorbed_clean, backslid = [], []
+    for rel in missing:
+        moved = moves.get(rel)
+        if moved and rel not in tracked:
+            _, dest = moved
+            if dest in current:
+                absorbed_clean.append(rel)
+                continue
+        backslid.append(rel)
+    return absorbed_clean, backslid
 
 
 def main():
@@ -215,6 +343,7 @@ def main():
     tracked = tracked_sources()
     current, scores = scan(tracked)
     tracked_set = set(tracked)
+    moves = promoted_moves()
 
     if args.list:
         print("\n".join(sorted(current)))
@@ -223,16 +352,21 @@ def main():
     banked = load_baseline(args.baseline)
 
     if args.update:
-        removed = sorted((banked or set()) - current)
+        left = sorted((banked or set()) - current)
+        absorbed_clean, removed = classify_missing(left, current, tracked_set, moves)
         added = sorted(current - (banked or set()))
         if removed and not args.reason:
             print(f"REFUSING to bank {len(removed)} removal(s) without --reason:\n")
             for rel in removed:
-                print(f"  {rel}\n      {why(rel, scores, tracked_set)}")
+                print(f"  {rel}\n      {why(rel, scores, tracked_set, moves)}")
             print("\nA path leaving the CONVERTED set is allowed -- byte-match outranks\n"
                   "readability and sometimes requires it -- but it is not allowed to be\n"
                   "silent. Re-run with --reason \"<why the match needed it>\"; the reason\n"
                   f"is appended to {args.exceptions} for every path above.")
+            if absorbed_clean:
+                print(f"\n({len(absorbed_clean)} further path(s) left the baseline by TU\n"
+                      "promotion into a file that is itself CONVERTED. Those are moves,\n"
+                      "not backslides, and need no reason.)")
             return 2
         if removed:
             append_exceptions(args.exceptions,
@@ -244,7 +378,10 @@ def main():
             print(f"baked {len(current)} CONVERTED path(s) into {args.baseline} (new baseline)")
         else:
             print(f"wrote {args.baseline}: {len(banked)} -> {len(current)} "
-                  f"(+{len(added)} / -{len(removed)})")
+                  f"(+{len(added)} / -{len(left)})")
+            if absorbed_clean:
+                print(f"{len(absorbed_clean)} of those left by TU promotion into a "
+                      f"CONVERTED file (a move, not a removal)")
             if removed:
                 print(f"logged {len(removed)} removal(s) to {args.exceptions}")
         return 0
@@ -256,23 +393,37 @@ def main():
                   "baseline is a configuration error, not an empty set: treating it as\n"
                   "empty would make this gate pass forever.")
             return 2
-        missing = sorted(banked - current)
+        left = sorted(banked - current)
+        absorbed_clean, missing = classify_missing(left, current, tracked_set, moves)
         gained = len(current - banked)
         if missing:
             print(f"CONVERTED backslide: {len(missing)} banked file(s) no longer pass "
                   f"all {len(tiers.CRITERIA)} criteria\n")
             for rel in missing:
-                print(f"  {rel}\n      {why(rel, scores, tracked_set)}")
+                print(f"  {rel}\n      {why(rel, scores, tracked_set, moves)}")
+            if absorbed_clean:
+                print(f"\n({len(absorbed_clean)} further banked path(s) were absorbed "
+                      "into a promoted TU that is\nitself CONVERTED -- moves, not "
+                      "backslides. They are not counted above.)")
             print(f"\nbaseline {len(banked)}   current {len(current)}   "
                   f"(+{gained} gained, -{len(missing)} lost)")
             print("\nIf a byte match REQUIRED this -- and it legitimately can; raw-cast\n"
                   "versus named member is decided per function by the byte gate -- bank\n"
                   "it with a reason instead of reverting readable code:\n"
                   '  python tools/tiers_ratchet.py --update --reason "<why>"')
+            if any(rel in moves for rel in missing):
+                print("\nMOVED lines above are a TU promotion, not a deletion: the file\n"
+                      "named absorbed the code and then failed a criterion for the whole\n"
+                      "TU. A reconstructed TU must spell vague-linkage symbols directly\n"
+                      "(_ZN7fBase_cnwEj, _ZN8dActor_cC2Ev, _ZN8dActor_cD2Ev) or the range\n"
+                      "will not link, so no_mangled_refs cannot pass for one. Byte-match\n"
+                      "outranks readability -- bank it with that as the reason.")
             return 1
         tail = f"   (+{gained} gained, not yet banked)" if gained else ""
+        moved = (f"   ({len(absorbed_clean)} moved into a promoted TU)"
+                 if absorbed_clean else "")
         print(f"CONVERTED ratchet PASS   baseline {len(banked)}   "
-              f"current {len(current)}{tail}")
+              f"current {len(current)}{tail}{moved}")
         return 0
 
     # No mode flag: a plain report. Says the same things --check would, without an
@@ -283,13 +434,16 @@ def main():
     if banked is None:
         print(f"baseline               (none at {args.baseline}; run --update)")
         return 0
-    missing = sorted(banked - current)
+    left = sorted(banked - current)
+    absorbed_clean, missing = classify_missing(left, current, tracked_set, moves)
     print(f"baseline               {len(banked):6d}   {args.baseline}")
     print(f"gained, not banked     {len(current - banked):6d}")
+    print(f"moved into a TU        {len(absorbed_clean):6d}   "
+          "(absorbed by a promoted TU that is itself CONVERTED)")
     print(f"BACKSLID               {len(missing):6d}"
           f"{'   <- --check would fail' if missing else ''}")
     for rel in missing[:20]:
-        print(f"    {rel}\n        {why(rel, scores, tracked_set)}")
+        print(f"    {rel}\n        {why(rel, scores, tracked_set, moves)}")
     if len(missing) > 20:
         print(f"    ... and {len(missing) - 20} more")
     return 0

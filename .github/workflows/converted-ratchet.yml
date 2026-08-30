@@ -52,6 +52,13 @@ on:
       - "tools/tiers.py"
       - "tools/tiers_ratchet.py"
       - "tools/delaunder.py"
+      # The checker resolves a GONE path through the TU manifest before it calls that
+      # path a deletion, so the manifest reader and the manifest itself are inputs to
+      # the verdict now. A promotion PR trips `src/**` anyway (it deletes N files and
+      # adds one), but a PR that only re-labels an entry `"status": "promoted"` would
+      # not, and that alone changes what this gate says about an existing baseline.
+      - "tools/tu_manifest.py"
+      - "config/tu_manifest.d/**"
       - "config/converted-baseline.json"
       - ".github/workflows/converted-ratchet.yml"
   workflow_dispatch:
@@ -77,6 +84,12 @@ jobs:
         # moving under a gate that touched no Python is indistinguishable from a regression.
         with:
           python-version: "3.12"
+      - name: Classifier unit tests
+        # The criteria decide a published percentage, so the two readings that were
+        # measurably wrong once are pinned in BOTH directions: MMIO must not score as a
+        # codegen trick, a volatile match hack still must, a TU promotion must read as a
+        # MOVE, and a move into a file that fails a criterion must still fail the gate.
+        run: python -m unittest tools.test_tiers -v
       - name: Current CONVERTED state
         # Report only, no exit-code meaning: prints the tier percentage and names anything
         # that backslid, so the log says what happened before the gate says whether it passed.

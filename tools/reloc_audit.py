@@ -146,22 +146,34 @@ def rel_section_for(elf, shndx):
 # vptr store's addend for the ROM link.
 _VT_PREAMBLE = 8
 
+# The one data-relocation type mwccarm emits. Branch types (R_ARM_PC24/CALL/
+# JUMP24) carry a PC-bias addend, not addressing; see linkcheck.BRANCH_TYPES
+# (linkcheck imports this module, so the constant cannot come from there).
+_R_ARM_ABS32 = 2
+
 
 def object_reloc_dests(obj, func, name_index, vt_form="raw"):
     """[(offset, symname, resolved_module, resolved_addr)] for relocs inside func.
 
     Returns (None, reason) if the function symbol isn't in the object.
 
-    Everything is resolved by symbol NAME alone except `_ZTV<C>` data relocs,
-    which are ADDEND-AWARE. A synthesized vptr store names the class's one
-    `_ZTV` symbol for every block it stores -- primary AND each inherited
-    secondary -- and encodes which block in the RELA addend: 8 for the primary
-    (the preamble) plus 0x10 per secondary block past it. Resolving those by
-    name alone sends every block to the same address and reports WRONG-DEST on
-    an object whose linked form is exact (measured on _ZN9dBgCh_LinC1Ev:
-    addends 8/0x18 against _ZTV9dBgCh_Lin 0x020992a4, config destinations
-    0x020992a4/0x020992b4). The destination the build links is
-    sym + addend - _VT_PREAMBLE.
+    Data relocs (R_ARM_ABS32) are ADDEND-AWARE: config records the DESTINATION
+    the linked word points to, and mwccarm encodes any base+offset access -- a
+    struct field, an array element, a strength-reduced pointer into a global --
+    as the symbol's base plus a nonzero RELA addend. Resolving by name alone
+    drops that offset and reports WRONG-DEST on byte-exact code (measured on
+    func_ov075_02119dc4: data_0209fc5c with addend 1 against config
+    0x0209fc5d:arm9, linkcheck VERIFIED). linkcheck.func_relocs_typed states
+    the same rule for the linking side; this is the destination-compare copy.
+
+    `_ZTV<C>` data relocs need their own arithmetic, not the straight add. A
+    synthesized vptr store names the class's one `_ZTV` symbol for every block
+    it stores -- primary AND each inherited secondary -- and encodes which
+    block in the RELA addend: 8 for the primary (the preamble) plus 0x10 per
+    secondary block past it, while symbols.txt's `_ZTV<C>` is already the slot
+    array (measured on _ZN9dBgCh_LinC1Ev: addends 8/0x18 against
+    _ZTV9dBgCh_Lin 0x020992a4, config destinations 0x020992a4/0x020992b4).
+    The destination the build links is sym + addend - _VT_PREAMBLE.
 
     Branch relocs keep name-only resolution: their nonzero addends are PC-bias
     encoding (-8), not addressing, and must not be added on.
@@ -193,12 +205,15 @@ def object_reloc_dests(obj, func, name_index, vt_form="raw"):
             tsym = syms[r["r_info_sym"]]
             res = resolve_candidate(tsym.name, name_index)
             mod, addr = (res if res else (None, None))
-            if is_rela and res is not None and tsym.name.startswith("_ZTV"):
+            if is_rela and res is not None:
                 addend = r["r_addend"]
-                if vt_form == "isolated":
+                if tsym.name.startswith("_ZTV"):
+                    if vt_form == "isolated":
+                        addr += addend
+                    elif addend >= _VT_PREAMBLE:
+                        addr += addend - _VT_PREAMBLE
+                elif r["r_info_type"] == _R_ARM_ABS32:
                     addr += addend
-                elif addend >= _VT_PREAMBLE:
-                    addr += addend - _VT_PREAMBLE
             dests.append((o & ~3, tsym.name, mod, addr))
     return dests, size
 
