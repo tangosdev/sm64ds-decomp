@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN6Thwomp6RenderEv
+// @symbol _ZN11daDsnBase_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "Thwomp.h"
+#include "daDsnBase_c.h"
 extern "C" {
 extern int _ZN15TextureSequence6UpdateER15ModelComponents(void*, void*);
 }
 struct Sub { virtual int g0(); virtual int g1(); virtual int g2(); virtual int g3(); virtual int g4(); virtual int g5(int); };
 
-int Thwomp::Render()
+int daDsnBase_c::Render()
 {
   int check = *(int*)(mFileTable+0xc);
   if (check != 0)

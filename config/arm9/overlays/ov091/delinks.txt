@@ -232,11 +232,11 @@ src/func_ov091_02133098.cpp:
     complete
     .text start:0x02133098 end:0x021331b8
 
-src/_ZN6Thwomp16CleanupResourcesEv.cpp:
+src/_ZN11daDsnBase_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x021331b8 end:0x02133210
 
-src/_ZN6Thwomp6RenderEv.cpp:
+src/_ZN11daDsnBase_c6RenderEv.cpp:
     complete
     .text start:0x02133210 end:0x02133254
 

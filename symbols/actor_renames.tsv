@@ -2007,8 +2007,8 @@ ov091	0x02132998	func_ov091_02132998	_ZN6ThwompD0Ev	vtable slot 17
 ov091	0x02132ab0	func_ov091_02132ab0	_ZN6Thwomp8BehaviorEv	vtable slot 6
 ov091	0x02132c84	func_ov091_02132c84	_ZN6Thwomp13InitResourcesEv	vtable slot 0
 ov091	0x02132cb8	func_ov091_02132cb8	Thwomp_Spawn	spawnfunc
-ov091	0x021331b8	func_ov091_021331b8	_ZN6Thwomp16CleanupResourcesEv	vtable slot 3
-ov091	0x02133210	func_ov091_02133210	_ZN6Thwomp6RenderEv	vtable slot 9
+ov091	0x021331b8	func_ov091_021331b8	_ZN11daDsnBase_c16CleanupResourcesEv	vtable slot 3
+ov091	0x02133210	func_ov091_02133210	_ZN11daDsnBase_c6RenderEv	vtable slot 9
 ov091	0x02133938	func_ov091_02133938	Stump_Spawn	spawnfunc
 ov091	0x02133968	func_ov091_02133968	_ZN5StumpD1Ev	vtable slot 16
 ov091	0x021339a8	func_ov091_021339a8	_ZN5StumpD0Ev	vtable slot 17

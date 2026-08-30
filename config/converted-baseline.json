@@ -1295,7 +1295,7 @@
     "src/_ZN6Snufit6RenderEv.cpp",
     "src/_ZN6SnufitD0Ev.cpp",
     "src/_ZN6SnufitD1Ev.cpp",
-    "src/_ZN6Thwomp16CleanupResourcesEv.cpp",
+    "src/_ZN11daDsnBase_c16CleanupResourcesEv.cpp",
     "src/_ZN6Thwomp16OnAimedAtWithEggEv.cpp",
     "src/_ZN6ThwompD0Ev.cpp",
     "src/_ZN6ThwompD1Ev.cpp",

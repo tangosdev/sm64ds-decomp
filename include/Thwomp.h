@@ -18,16 +18,17 @@
  *   kind  __si_class_type_info, ONE base, subobject offset 0
  *   base  daDsnBase_c, ov025 0x021137f8 -- whose vtable is in ov091
  *
- * TWO OF THE METHODS BELOW ARE NOT THIS CLASS'S, and the header says so rather
- * than moving them. CleanupResources and Render are slots 3 and 9, and those
- * words live in daDsnBase_c's vtable; this class does not override either, it
- * inherits both. The ROM symbols are `_ZN6Thwomp16CleanupResourcesEv` and
- * `_ZN6Thwomp6RenderEv` all the same, so the declarations stay here: moving them
- * to daDsnBase_c would change the mangled names and stop two byte-matched files
- * reproducing. Same shape as the crossed ov047 "Bs" names #1521 recorded, and the
- * same answer -- a method rename is a config change and its own piece of work.
- * InitResources and Behavior, slots 0 and 6, really are this class's: the base
- * leaves both null.
+ * TWO OF THE METHODS THIS HEADER USED TO DECLARE WERE NOT THIS CLASS'S, and they
+ * have been moved. CleanupResources and Render are slots 3 and 9, and the
+ * cartridge puts those words in _ZTV11daDsnBase_c; this class does not override
+ * either, it inherits both. The ROM spelled the symbols `_ZN6Thwomp*`, which is
+ * the only reason they were parked here -- and leaving them here was not free:
+ * daDsnBase_c declared neither, so both its vtable and daDkk_c's inherited
+ * fBase_c's bodies in those slots and disagreed with the ROM. The config change
+ * that note called "its own piece of work" is done; the two are now
+ * `_ZN11daDsnBase_c16CleanupResourcesEv` and `_ZN11daDsnBase_c6RenderEv`, and
+ * both still reproduce at the same addresses. InitResources and Behavior, slots
+ * 0 and 6, really are this class's: the base declares both `= 0`.
  *
  * SIZE 0x3a4, from Thwomp_Spawn's literal 932.
  *
@@ -75,13 +76,12 @@ struct Thwomp : daDsnBase_c {
     /* --- vtable --- */
     virtual ~Thwomp();                 /* slots 16 (D1), 17 (D0) */
 
+    /* The two the base declares `= 0`; this class supplies both. */
     int Behavior();                    /* slot  6 */
     int InitResources();               /* slot  0 */
 
-    /* SLOTS 3 AND 9 ARE daDsnBase_c'S -- see the note above. Declared here
-       because the ROM's symbols are _ZN6Thwomp*, not _ZN11daDsnBase_c*. */
-    int CleanupResources();            /* slot  3, daDsnBase_c's word */
-    int Render();                      /* slot  9, daDsnBase_c's word */
+    /* Slots 3 and 9 are daDsnBase_c's and are declared there -- see the note
+       above. This class inherits both words. */
 
     virtual void OnHitByMegaChar(Player &player); /* slot 27 */
     virtual int  OnAimedAtWithEgg();              /* slot 29 */
