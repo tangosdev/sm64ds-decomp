@@ -196,3 +196,26 @@ __ZTV10RickshawBs slot 31 ?ov47_kill@@YIHPAX0@Z
 __ZTV18RickshawPlatformBs slot 31 ?ov47_kill@@YIHPAX0@Z
 _data_ov047_021122a0 slot 31 ?ov47_kill@@YIHPAX0@Z
 _data_ov047_0211244c slot 31 ?ov47_kill@@YIHPAX0@Z
+# ---------------------------------------------------------------------------
+# run rel0215 (lane cleanup-w2), 2026-08-30. NINETEEN ROWS DID NOT LAND HERE.
+#
+# The eighteen slot-31 fills wave 1 left unbaselined (ov017, ov023, ov024,
+# ov026 x2, ov030 x2, ov033 x2, ov035 x2, ov036 x6, ov092) and FLYING_CARPET's
+# slot 32 were adjudicated into ACTOR_EXT_SLOT_AUTHORITY in abicheck.py
+# instead, because their dispatch sites WERE read: eighteen zero-pop rows and
+# one one-word-pop row, each keyed on (table, slot), each with the ROM word at
+# that slot quoted from extracted/overlays. This file is for fills whose pop
+# nobody has measured, and those nineteen no longer qualify.
+#
+# ONE SENTENCE ABOVE IS WRONG AND IT IS LOAD-BEARING. The cast-sweep2
+# paragraph reads "nothing in this binary dispatches slot 31 -- Platform::Kill
+# is reached directly, never through the table -- so there is no site to read."
+# There are TWENTY-TWO slot-31 dispatch sites in walk_window.exe: the fourteen
+# `call dword ptr [reg+7Ch]` the cast-ov066 lane had already listed in
+# abicheck.py, plus eight `jmp dword ptr [reg+7Ch]` tail dispatches that a
+# call-only pattern misses. All twenty-two are enumerated in abicheck.py's
+# ACTOR_EXT_SLOT_AUTHORITY header and none of them pushes. The six rows that
+# paragraph adds are left in place -- they are that lane's file to shrink, and
+# their ret 0 is right for the reason the measurement gives rather than the
+# reason the prose gives -- but no further row should be parked here on the
+# strength of that sentence, because there IS a site to read.
