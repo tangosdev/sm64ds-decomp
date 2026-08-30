@@ -1746,3 +1746,26 @@ func_ov036_0211137c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0
 func_ov036_02111494  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov036\adjudication.md  slot 17 D0, addr 0x02111494 size 0x64; match.py MATCHING at 2004/b56 with reloc destinations checked. NAME says OnYoshiTryEat and is wrong, body is the D0: three vptr stores (02113b74, ov002 021091d4, ov002 0210ae38) then the same teardown chain as 127's
 func_ov036_021114f8  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov036\adjudication.md  slot 3 CleanupResources, addr 0x021114f8 size 0x14; match.py MATCHING at 2004/b56 with reloc destinations checked; a five-word ARM veneer, ldr ip / ldr r1 / bx ip into func_ov002_020b66a8 with data_ov036_02113b2c in r1
 func_ov036_0211150c  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\cast-ov036\adjudication.md  slot 0 InitResources, addr 0x0211150c size 0x38; match.py MATCHING at 2004/b56 with reloc destinations checked; the same veneer shape into func_ov002_020b676c with a third argument selected from 02113b18/02113b1c on the +8 low byte
+#
+# ---------------------------------------------------------------------------
+# run rel0215 wave 2 (lane cast-ov066), ov066's EYEROK.
+#
+# ONE marker-carrying body in the whole overlay, and this lane seats it at
+# vtable slot 29 (the class's OWN OnAimedAtWithEgg, overriding the shared arm9
+# 0x02010158). It was disassembled from extracted/overlays/overlay_0066.bin at
+# base 0x02115ee0 -- the shipped image, deliberately not a dsd export -- and
+# read against src/ instruction for instruction, AND put through tools/match.py
+# at the canonical 2004/b56 with --strict-relocs on and --module ov066, so
+# every relocation SLOT'S DESTINATION is checked rather than wildcarded.
+# RESULT: 1 REAL DECOMP, 0 genuine guesses, 0 unverifiable.
+#
+#   ROM 0x0211a2dc size 0x8:  0a09a0e3  mov r0, #0x28000
+#                             1eff2fe1  bx lr
+#   src:  int func_ov066_0211a2dc(void) { return 163840; }   163840 == 0x28000
+#
+# Two instructions, two statements, no relocations to get wrong. It still owes
+# a decomp-side marker correction; this lane does not edit src/, so the
+# correction is owed and not done here.
+#
+# Full evidence, including the match.py transcript: C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-ov066\t5_adjudication.txt
+func_ov066_0211a2dc  REAL_DECOMP  C:\Users\bmanu\.claude\orchestration\runs\rel0215\out\w2-ov066\t5_adjudication.txt  slot 29 OnAimedAtWithEgg, addr 0x0211a2dc size 0x8; match.py MATCHING at 2004/b56 with --strict-relocs and --module ov066. Two instructions: mov r0,#0x28000 / bx lr, and the C returns 163840 == 0x28000

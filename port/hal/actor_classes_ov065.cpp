@@ -148,7 +148,17 @@ OV65_TRAP(13) OV65_TRAP(14) OV65_TRAP(17) OV65_TRAP(30)
 // OWN func_ov065_02115f84, in this lane's slice. Slicing Eyerok's real D0
 // (the probe's class-b suggestion) would have called another overlay's
 // destructor on a live Snufit -- the window trap, caught by re-deriving.
-#pragma comment(linker, "/alternatename:__ZN6EyerokD0Ev=_func_ov065_02115f84")
+//
+// THE /alternatename THAT USED TO SIT HERE IS GONE. run rel0215 wave 2, lane
+// cast-ov066 landed ov066 and with it src/_ZN6EyerokD0Ev.c, so
+// __ZN6EyerokD0Ev became a DEFINED symbol and the alias was defeated silently
+// -- which is exactly what port/build-port.cmd:92 and
+// port/tools/alternatename_guard.py:20 both predicted would happen "if their
+// overlays land". The binding is now a per-source -D on the one caller,
+// -D_ZN6EyerokD0Ev=func_ov065_02115f84 in port/CMakeLists.txt, the
+// func_ov065_02117994 / w5b_review.md R2 recipe. Eyerok's D0 is size 0xb8 and
+// ov065's body at the same address is size 0x6c; the sizes alone settle which
+// one this TU means.
 //
 // (2) DECORATED-DATA spellings. The cast's .cpp TUs declare mounted storage
 // without extern "C", so MSVC mangles the type into the name; every one

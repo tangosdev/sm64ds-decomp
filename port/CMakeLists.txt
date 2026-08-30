@@ -2122,6 +2122,21 @@ list(APPEND PORT_ACTOR_OVERLAYS ov030)
 # attribution routes, all seven widths and the four size pins are in
 # port/ov036_syms.txt. See also port/slice_ov036cast.txt.
 list(APPEND PORT_ACTOR_OVERLAYS ov036)
+# run rel0215 wave 2 (lane cast-ov066): ov066, the EYEROK pack -- EYEROK (176,
+# 10daIwante_c), the SSL pyramid boss, wanted by level 17 alone. Fresh
+# per-symbol mount, the ov077/ov079/ov080/ov081 shape; ov066 is not a level
+# overlay, so this is its only mount. Its 112 data and bss symbols -- one
+# SpawnInfo, one typeinfo record, THIRTY-EIGHT pointer-to-member source pairs,
+# twenty-two SharedFilePtrs, twenty-two destructor list nodes and NINETEEN
+# 16-byte state records -- reach the class by name. Its ONE vtable
+# (_ZTV6Eyerok == _ZTV12daIwante_c, 32 slots because Eyerok is Platform-derived,
+# confirmed three ways) is a host array hal/actor_classes_ov066.cpp fills, and
+# its one sinit runs.
+# ONE CLASS, NOT THREE: the two hands and the head are STATES, which is why
+# .data carries a 38-entry PMF table instead of three class blocks. See
+# port/ov066_syms.txt for the derivation and port/slice_ov066.txt for the four
+# host-copied TUs and the SIX /alternatename directives this mount defeats.
+list(APPEND PORT_ACTOR_OVERLAYS ov066)
 set(ACTOR_OV_SYMS "")
 foreach(ovn IN LISTS PORT_ACTOR_OVERLAYS)
     set(ovn_out "${CMAKE_BINARY_DIR}/host-src/${ovn}_syms.c")
@@ -9288,6 +9303,139 @@ foreach(line IN LISTS SLICE_OV036CAST_LINES)
     endif()
     list(APPEND SLICE_OV036CAST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+
+# run rel0215 wave 2 (lane cast-ov066): EYEROK (176, 10daIwante_c), ov066, the
+# SSL pyramid boss. Fresh per-symbol ov066 mount (port/ov066_syms.txt). The
+# 32-slot vtable fill, the NINETEEN-cell pointer-to-member state seat and the
+# three slot traps are in hal/actor_classes_ov066.cpp; four TUs are host-copied
+# (the PMF enter half, the PMF tick half inside Behavior, the BlendModelAnim
+# slot-5 Render and the receiver-dropping ClosestPlayer reader), each refusal
+# itemised in port/slice_ov066.txt. The gate-64 / cast-ov030 shape: the hal file
+# and the four host copies ride in the slice's own SOURCES list, so the three
+# target lists take ONE token.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov066.txt" SLICE_OV066_LINES)
+set(SLICE_OV066_SOURCES "")
+foreach(line IN LISTS SLICE_OV066_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_OV066_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SLICE_OV066_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/actor_classes_ov066.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Eyerok_StateEnter.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Eyerok_Behavior.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Eyerok_Render.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Eyerok_ClosestPlayerRead.cpp")
+foreach(dup IN ITEMS src/_ZN6Eyerok8BehaviorEv.cpp src/_ZN6Eyerok6RenderEv.cpp
+                     src/func_ov066_02119454.cpp src/func_ov066_02119398.cpp)
+    if(dup IN_LIST SLICE_OV066_LINES)
+        message(FATAL_ERROR
+            "slice_ov066.txt lists ${dup}, which port/unmatched/ host-copies. "
+            "Both would define the same symbol (LNK2005). Remove the slice line.")
+    endif()
+endforeach()
+
+# ---- lane cast-ov066: THE SIX ALIASES THIS MOUNT DEFEATS --------------------
+# THE TREE PREDICTED THIS LANE IN WRITING. port/build-port.cmd:92 and
+# port/tools/alternatename_guard.py:20 both say "EyerokD0 and the data_ov075
+# aliases flip the same way if their overlays land". SIX live /alternatename
+# directives carried an ov066 name as their LHS, and defining that name defeats
+# the alias SILENTLY -- no link error, a wrong object at run time, the
+# Coffin/Spindrift shape. All six are removed from their hal files and replaced
+# by per-source -D renames on the FOREIGN CALLER, which is the remedy
+# hal/actor_classes_koopa_chuckya.cpp's own note already prescribes for exactly
+# this case (the w5b_review.md R2 func_ov065_02117994 precedent).
+#
+# Every one was checked BOTH ways before the conversion: the caller TU is on a
+# live slice, and the -D target is defined in the link. A -D onto an undefined
+# name would have turned a silent bug into a link error, which is better, but
+# neither is what this lane is for.
+#
+# (1) src/func_ov065_021162c0.c (slice_w5b) -- a Snufit state body. It calls
+#     0x02115f84 and the reloc `from:0x02116314 kind:arm_call to:0x02115f84
+#     module:overlay(65)` puts that body in ov065's OWN image as
+#     func_ov065_02115f84, size 0x6c. Eyerok's D0 at the same address is size
+#     0xb8 -- a DIFFERENT body, and the sizes alone settle it. Undefeated this
+#     calls a destructor on a live Snufit.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov065_021162c0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZN6EyerokD0Ev=func_ov065_02115f84")
+# (2) src/func_ov062_02117acc.c (slice_gate182) -- a Chuckya/Koopa body whose
+#     callees dsd named under ov066 because it saw that overlay first. Both
+#     targets are ov062's own and both are sliced by gate 182.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov062_02117acc.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_ov066_02118cdc=func_ov062_02118cdc;func_ov066_02118a50=func_ov062_02118a50")
+# (3) src/func_ov060_02111c68.c (slice_w5e) and (4) src/func_ov060_02112350.c
+#     (slice_w5e) -- three of ov060's OWN bss cells at addresses ov066's mount
+#     now names as Eyerok PMF source pairs (port/ov060_syms.txt lines 128/131/
+#     135 carry the ov060 storage). Undefeated, ov060 would read Eyerok's state
+#     table.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov060_02111c68.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov066_0211ac20=data_ov060_0211ac20;data_ov066_0211ac68=data_ov060_0211ac68")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov060_02112350.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov066_0211acd0=data_ov060_0211acd0")
+
+# ---- lane cast-ov066: THREE MIS-SPELLED NAMES IN ONE OWN TU -----------------
+# src/func_ov066_021166c8.cpp (InitResources' resource half) spells three
+# symbols nothing in the tree defines. All three are settled off that TU's OWN
+# literal pool in config/arm9/overlays/ov066/relocs.txt, disassembled out of
+# extracted/overlays/overlay_0066.bin, never by name -- the ov036/ov043 trap-4
+# discipline.
+#
+#   func_02112cc8            pool 0x02116890 -> 0x02112cc8   an ov025 CLPS_Block
+#   func_02112c88            pool 0x021168a0 -> 0x02112c88   an ov025 CLPS_Block
+#   func_02112cd8_updatepos  pool 0x021168a8 -> 0x02039348   NOT 0x02112cd8
+#
+# The first two are collision-parameter blocks handed to
+# MovingMeshCollider::SetFile. Their addresses fall in the LEVEL window and
+# dsd's module column names eleven level overlays, every one `ambiguous`; ov066
+# is loaded on level 17 alone and level 17's overlay is ov025, so ov025's are
+# the ones the ROM means. Both joined port/ov025_syms.txt with this lane (one
+# of them pinned to 0x20, see that file). This is the ov046 arena-CLPS shape
+# (hal/actor_classes_ov060.cpp:201) with the alias written as a -D instead.
+#
+# THE THIRD NAME IS SIMPLY WRONG. There is NO reloc to 0x02112cd8 anywhere in
+# ov066. The pool word func_020393d4's second argument is loaded from holds
+# 0x02039348, module:main, which config/arm9/symbols.txt names
+# MeshColliderBase::UpdatePosWithTransform -- an arm9 body, and the callback
+# the collider genuinely wants. The recovered name invented an overlay address
+# out of the "updatepos" role. src/ is not edited; the rename fixes the one
+# call site.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov066_021166c8.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_02112cc8=data_ov025_02112cc8;func_02112c88=data_ov025_02112c88;func_02112cd8_updatepos=_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_")
+# THREE MORE OF THE SAME BLOCKS, in five more TUs, MEASURED off the FIRST
+# link's own unresolved list rather than predicted: _func_02112c08,
+# _func_02112ca8 and _func_02112d48 came back undefined from
+# _ZN6Eyerok13InitResourcesEv.cpp.obj, func_ov066_02116db0.c.obj,
+# func_ov066_021175e8.c.obj, func_ov066_02117bf0.c.obj and
+# func_ov066_02118188.c.obj. Every one is another ov025 CLPS_Block handed to
+# MovingMeshCollider::SetFile, settled the same way -- the TU's own pool word,
+# then the level-17 roster. 0x02112d48 is the sharpest of the five: ov060
+# claims that address with a real FUNCTION (func_ov060_02112d48, size 0x94)
+# and ov060 is NOT on level 17's roster, so the CLPS block is what is resident
+# when Eyerok runs. The four .c TUs declare them with C linkage and the one
+# .cpp declares them inside its extern "C" block, so all five come out
+# undecorated and the rename lands directly on the mount's C name.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN6Eyerok13InitResourcesEv.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov066_02116db0.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov066_021175e8.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov066_02117bf0.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov066_02118188.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_02112c08=data_ov025_02112c08;func_02112ca8=data_ov025_02112ca8;func_02112d48=data_ov025_02112d48")
+
 # ---- lane cast-ov036: SIX PER-SOURCE PLACEHOLDER AND CROSS-NAME BINDINGS ----
 # Every one is settled from the TU's OWN literal pool in
 # config/arm9/overlays/ov036/relocs.txt, disassembled out of
@@ -10028,6 +10176,8 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
+    # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
+    ${SLICE_OV066_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
@@ -10209,6 +10359,8 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
+    # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
+    ${SLICE_OV066_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
@@ -10424,6 +10576,8 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
+    # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
+    ${SLICE_OV066_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
