@@ -366,8 +366,12 @@ extern unsigned char data_ov074_02122f38[];   /* the file table's column 1 */
    for ClosestPlayer and six port call sites pass `self` that way,
    hal/message_probe.cpp:28 defines ShowMessage in that shape, and
    port/unmatched/Ov085_Behaviors.cpp:122 declares StartTalk in it. The
-   propagated body calls all three with the receiver first, so each alias is a
-   pure rename across the seam and drops nothing.
+   propagated body calls all three with the receiver first, so each alias
+   drops nothing. ClosestPlayer and StartTalk are pure renames across the
+   seam; ShowMessage is a rename PLUS a width delta -- the last two parameter
+   types differ (`hh` vs `jj`, unsigned char where the caller declares
+   unsigned int), harmless under cdecl because both ride 4-byte stack slots
+   and the passed values are 0 and 2.
 
    Every LHS below is DEFINED NOWHERE in this branch -- that is the whole
    reason the bridge exists -- so no alias here can be defeated by a real

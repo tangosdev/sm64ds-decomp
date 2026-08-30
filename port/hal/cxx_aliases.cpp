@@ -187,8 +187,9 @@ int func_01ff99a4(int a, int b)
    WHAT THE HOST BODIES DO AND DO NOT REPRODUCE, stated rather than implied.
    The ROM bodies are 0x460 and 0x448 bytes because they carry their own
    denormal and NaN handling AND their own IEEE STATUS-FLAG bookkeeping -- the
-   tails call out to an FP status block and OR a bit in (visible at 0x01ffa5b8's
-   `bl` and the `ldr r3,[ip] / orr / str` that follows it). The host bodies are
+   tails call out to an FP status block and OR a bit in (the `bl #0x207322c`
+   at 0x01ffa624 and the `ldr r3,[ip] / orr r3,r3,#0x10 / str r3,[ip]` that
+   follows it; 0x01ffa5b8 is `mov r2, #0x80000000`). The host bodies are
    native `float` add/subtract. This build takes MSVC's x86 default, which is
    /arch:SSE2 (no /arch: or /fp: appears in port/CMakeLists.txt -- only /Oy-),
    so the arithmetic is single-precision SSE with round-to-nearest-even and
