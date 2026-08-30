@@ -37,7 +37,10 @@ struct daObjKinokoTag_c : dActor_c {
     u8       mLinkedMushroomGone;  /* 0x010c */
     u8       pad_10d[0x3];
 
-    virtual ~daObjKinokoTag_c();      /* slots 16, 17 */
+    /* InitResources is the first out-of-line virtual/key function. Together
+     * with this inline destructor, mwccarm owns the retail D1/D0 pair and the
+     * complete class RTTI/vtable group without retaining a D2 body. */
+    virtual ~daObjKinokoTag_c() {}    /* slots 16, 17 */
 
     virtual s32 InitResources();      /* slot 0 */
     virtual s32 CleanupResources();   /* slot 3 */
@@ -53,5 +56,33 @@ struct daObjKinokoTag_c : dActor_c {
 
 typedef char daObjKinokoTag_c_size_must_be_0x110[
     sizeof(daObjKinokoTag_c) == 0x110 ? 1 : -1];
+
+/* POD view used only to preserve the three-word Vector3 call ABI without
+ * emitting Vector3's vague-linkage destructor. */
+struct KinokoPositionWords {
+    Fix12i x;
+    Fix12i y;
+    Fix12i z;
+};
+
+typedef char KinokoPositionWords_size_must_be_0xc[
+    sizeof(KinokoPositionWords) == 0xc ? 1 : -1];
+
+/* Typed owner for the two 0x1c actor descriptors at ov002:0x02108cb4 and
+ * 0x02108cd0. Their English global spellings remain evidence-bounded ABI
+ * aliases; the structure and factory relationships are ROM-proven. */
+struct KinokoTagSpawnInfo {
+    daObjKinokoTag_c *(*spawn)();
+    s16 behaviorPriority;
+    s16 renderPriority;
+    u32 flags;
+    Fix12i rangeOffsetY;
+    Fix12i range;
+    Fix12i drawDistance;
+    u32 unk_18;
+};
+
+typedef char KinokoTagSpawnInfo_size_must_be_0x1c[
+    sizeof(KinokoTagSpawnInfo) == 0x1c ? 1 : -1];
 
 #endif

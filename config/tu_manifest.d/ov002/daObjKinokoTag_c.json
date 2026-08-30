@@ -1,0 +1,239 @@
+{
+  "id": "ov002/daObjKinokoTag_c",
+  "module": "ov002",
+  "source": "src/actors/daObjKinokoTag_c.cpp",
+  "promoted_source": "src/actors/daObjKinokoTag_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20b46a0..0x20b4a70, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjKinokoTag_c",
+    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020b46a0",
+      "end": "0x020b4a70"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN16daObjKinokoTag_cD1Ev",
+      "address": "0x020b46a0",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN16daObjKinokoTag_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16daObjKinokoTag_cD0Ev",
+      "address": "0x020b46d0",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN16daObjKinokoTag_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN16daObjKinokoTag_c17SpawnMegaMushroomEv",
+      "address": "0x020b4714",
+      "size": "0x000000d8",
+      "legacy_source": "src/_ZN16daObjKinokoTag_c17SpawnMegaMushroomEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN16daObjKinokoTag_c20TrySpawnMegaMushroomEv",
+      "address": "0x020b47ec",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN16daObjKinokoTag_c20TrySpawnMegaMushroomEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN16daObjKinokoTag_c16CleanupResourcesEv",
+      "address": "0x020b482c",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN16daObjKinokoTag_c16CleanupResourcesEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN16daObjKinokoTag_c8BehaviorEv",
+      "address": "0x020b4850",
+      "size": "0x00000158",
+      "legacy_source": "src/_ZN16daObjKinokoTag_c8BehaviorEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN16daObjKinokoTag_c13InitResourcesEv",
+      "address": "0x020b49a8",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN16daObjKinokoTag_c13InitResourcesEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "daObjKinokoTag_c_Spawn",
+      "address": "0x020b4a00",
+      "size": "0x00000038",
+      "legacy_source": "src/daObjKinokoTag_c_Spawn.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "MegaMushroomTag_Spawn",
+      "address": "0x020b4a38",
+      "size": "0x00000038",
+      "legacy_source": "src/MegaMushroomTag_Spawn.c",
+      "ordinal": 8
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTI16daObjKinokoTag_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108c94",
+      "reason": "InitResources naturally emits the ROM-proven class RTTI. romdata_check proves its complete single-inheritance record and relocations before isolation."
+    },
+    {
+      "symbol": "_ZTS16daObjKinokoTag_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108ca0",
+      "reason": "InitResources naturally emits the ROM-proven class type-name string. romdata_check proves its exact payload before isolation."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "MegaMushroomTag_SpawnInfo",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108cb4",
+      "reason": "The first typed actor descriptor is naturally defined beside its factory. romdata_check proves the factory relocation and every descriptor word before isolation."
+    },
+    {
+      "symbol": "MegaMushroomCreateTag_SpawnInfo",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108cd0",
+      "reason": "The second typed actor descriptor retains its evidence-bounded ABI name. romdata_check proves its daObjKinokoTag_c_Spawn relocation and every descriptor word before isolation."
+    },
+    {
+      "symbol": "_ZTV16daObjKinokoTag_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108cf4",
+      "reason": "InitResources naturally emits the complete 0x84-byte class vtable storage. romdata_check applies the measured eight-byte public-address-point bias and proves every slot before isolation."
+    }
+  ],
+  "notes": [
+    "Genuine class form: the real header's inline destructor and this TU's out-of-line InitResources key function make mwccarm own retail D1/D0 plus the complete daObjKinokoTag_c RTTI/vtable group; no hand-mangled member definition or forcing object remains.",
+    "SpawnMegaMushroom and TrySpawnMegaMushroom are readable inferred private spellings. Their class ownership, call graph, bodies, relocations, and codegen are proven; their exact original English spellings are not.",
+    "Both factories retain narrow typed C ABI boundaries and the measured fBase allocator, dActor base construction, dCcAc member construction, and vptr sequence because natural new targets the wrong global allocator relocation.",
+    "The external mushroom backlink at offset 0x32c remains a measured seam because no trustworthy real header for that external actor exists on this base.",
+    "The resource SharedFilePtr at 0x0210da30 and __sinit_ov002_02100560 are external to this class TU and are not claimed."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-daObjKinokoTag_c/daObjKinokoTag_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 9,
+    "functions_declared": 9,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI16daObjKinokoTag_c",
+        "_ZTS16daObjKinokoTag_c",
+        "_ZTI8dActor_c",
+        "MegaMushroomTag_SpawnInfo",
+        "MegaMushroomCreateTag_SpawnInfo",
+        "_ZTV16daObjKinokoTag_c"
+      ],
+      "dataExternalized": [
+        "MegaMushroomCreateTag_SpawnInfo",
+        "MegaMushroomTag_SpawnInfo",
+        "_ZTI16daObjKinokoTag_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS16daObjKinokoTag_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV16daObjKinokoTag_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}
