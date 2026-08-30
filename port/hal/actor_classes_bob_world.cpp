@@ -541,13 +541,21 @@ void _ZN9ModelAnimD1Ev(void *);
 void _ZN5ModelD1Ev(void *);
 }
 
-// ---- MEGA_MUSHROOM_BLOCK_TAG (322, ov002) x8 -------------------------------
+// ---- MEGA_MUSHROOM_BLOCK_TAG (322, ov002) x4 -------------------------------
 //
 // _ZTV10BrickBlock, ov002 0x02108c18, RTTI 19daObjBlockItemTag_c. A tag rather
 // than a block: 220 bytes, no model of its own (slot 9 is ActorBase::Render in
-// the ROM's own table), and Bob-omb Battlefield puts eight of them on top of
-// other objects. Slot 16 is the ROM's D0 minus its Deallocate, which for this
-// class is the vtable store and Actor's D2 -- it has no members to destroy.
+// the ROM's own table), parked on top of another object. Slot 16 is the ROM's
+// D0 minus its Deallocate, which for this class is the vtable store and
+// Actor's D2 -- it has no members to destroy.
+//
+// THE COUNT AND THE LEVELS ARE COUNTED, not read off an object table. A boot
+// of all fifty mounted levels reading each census puts 322 on level 0 x1,
+// level 13 x2 and level 44 x1 -- FOUR, and NOT ONE ON LEVEL 6. The "x8 on
+// Bob-omb Battlefield" this header carried came from ov014's object tables
+// rather than from a boot; no level-6 census has ever produced one. The other
+// three ids of this class sit at 321 (levels 0/7/42), 323 (0/8/10) and
+// 324 (0/42x2), and level 0 is the only level carrying all four.
 #include "BrickBlock.h"
 extern "C" {
 int _ZN10BrickBlock13InitResourcesEv(char *self);
@@ -557,8 +565,9 @@ static int __fastcall mmbt_init(void *s, void *)
 { return _ZN10BrickBlock13InitResourcesEv((char *)s); }
 static int __fastcall mmbt_clean(void *s, void *)
 { return ((BrickBlock *)s)->BrickBlock::CleanupResources(); }
+static void itemtag_probe_tick(char *tag);
 static int __fastcall mmbt_behavior(void *s, void *)
-{ return ((BrickBlock *)s)->BrickBlock::Behavior(); }
+{ itemtag_probe_tick((char *)s); return ((BrickBlock *)s)->BrickBlock::Behavior(); }
 static int __fastcall mmbt_render(void *s, void *)
 { return ((ActorBase *)s)->ActorBase::Render(); }
 static int __fastcall mmbt_d1(void *s, void *)
@@ -567,8 +576,168 @@ static int __fastcall mmbt_d1(void *s, void *)
     _ZN5ActorD2Ev(s);
     return (int)(size_t)s;
 }
+
+// ---- THE FOUR-CELL ITEM-TAG DISPATCH SEAT ----------------------------------
+//
+// BrickBlock::Behavior's last act is to dispatch through
+// data_ov002_0210dd30[unk_0d7] and destroy itself. __sinit_ov002_02100e50
+// fills that bss table from four ROM {fn, adj} records, and the function word
+// of each is a RAW DS TEXT ADDRESS: ovdata.py rebases only words inside its
+// data window (0x02100000 up), and ov002's .text ends at 0x020ff014, so a
+// pointer into .text is outside the window by construction and no pass
+// rewrites it. Calling one on the host is a jump into mapped-but-NX memory.
+//
+// So the table is rewritten here, the Ukiki way (hal/actor_classes_ov030.cpp):
+// {the ROM address the sinit's own source record carries, the host body}, with
+// the ROM column CHECKED against the mounted bytes before anything is written.
+// A mount that ever points at the wrong bytes aborts rather than calling into
+// garbage. The rewrite is idempotent by VALUE rather than by a `done` flag, so
+// a re-run over an already-seated table is a no-op and a re-run after a fresh
+// sinit re-seats.
+//
+// THE THUNKS ARE __fastcall AND THAT IS MEASURED, NOT ASSUMED (R11). The
+// dispatch site in the built object is
+//     mov ecx,_data_ov002_0210dd30[eax+4] / mov eax,_data_ov002_0210dd30[eax]
+//     add ecx,edi / call eax
+// -- a real call with the receiver in ECX and nothing pushed, which is what
+// R11 says needs a thunk. It cannot be a tail-jump forwarder: the TU calls
+// MarkForDestruction after the dispatch and returns 1.
+//
+// The stride the site uses is the other half of the fix and lives in
+// port/CMakeLists.txt (R12): without /vmg /vmm MSVC gives this TU's PMF the
+// sixteen-byte general representation and `shl eax,4` walks off the end of a
+// thirty-two-byte table.
+//
+// The four ids share this one class and pick their cell at InitResources:
+//   idx 0  id 321 ONE_UP_MUSHROOM_BLOCK_TAG   ROM 0x020b429c  spawns 0x114
+//   idx 1  id 322 MEGA_MUSHROOM_BLOCK_TAG     ROM 0x020b4250  spawns 0x115
+//   idx 2  id 323 GREEN_SHELL_BLOCK_TAG       ROM 0x020b41f8  spawns 0x11d
+//   idx 3  id 324 SILVER_STAR_BLOCK_TAG       ROM 0x020b42e4  star + marker
+extern "C" {
+void func_ov002_020b429c(char *self);
+void func_ov002_020b4250(char *self);
+void func_ov002_020b41f8(char *self);
+void func_ov002_020b42e4(char *self);
+}
+
+// ---- SM64DS_TAG_PROBE: the headless exercise -------------------------------
+//
+// There is no headless way to make the game break a block. The tag's dispatch
+// fires when daObjBlockL_c::Kill (src/func_ov002_020b38a0.c) notifies the tag
+// through src/func_ov002_020b363c.c, and Kill runs off a punch, a ground pound
+// or a mega collision -- input this port's scripted runs cannot deliver.
+//
+// So the probe drives the ROM'S OWN break path rather than poking the flag.
+// With SM64DS_TAG_PROBE=1, an ATTACHED tag (unk_0d8 set, meaning its Behavior
+// already found a block and stored itself in that block's +0x328) finds that
+// block again by the same predicate the ROM uses and calls Kill on it. Kill
+// calls the ROM's notifier, the notifier writes unk_0d6, and the tag's very
+// next Behavior takes the dispatch branch on its own. Nothing here writes
+// unk_0d6 and nothing here calls a handler; the only host code in the path is
+// the walk that finds the block.
+//
+// Both ends print, so a run shows which cell was selected and which body it
+// reached: the probe names the tag's id and index before the kill, and each
+// thunk names itself when it is entered.
+//
+// THE STANDING EXERCISE IS SM64DS_LEVEL=0 SM64DS_TAG_PROBE=1, on SHIPPED
+// placements and with no spawn override: level 0 is the only level carrying
+// all four ids, one of each, so a single run drives cells 0, 1, 2 and 3 in
+// order. Measured rc 0 under FAULTS_FATAL.
+//
+// SM64DS_SPAWN_ACTOR=15,<id> (a brick block and a tag together at the player)
+// is the fallback for exercising one id on a level that does not place it.
+extern "C" {
+void func_ov002_020b38a0(char *self);          /* daObjBlockL_c::Kill */
+void *_ZN5Actor4NextEPKS_(const void *prev);
+}
+static int itemtag_probe_on(void)
+{
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_TAG_PROBE");
+        v = (e && *e && *e != '0') ? 1 : 0;
+    }
+    return v;
+}
+static void itemtag_probe_note(int idx, void *s)
+{
+    if (!itemtag_probe_on())
+        return;
+    std::printf("[tagprobe] DISPATCHED cell %d -> host body entered, self=%p\n",
+                idx, s);
+}
+static void itemtag_probe_tick(char *tag)
+{
+    if (!itemtag_probe_on())
+        return;
+    if (*(unsigned char *)(tag + 0xd8) == 0)   /* not attached to a block yet */
+        return;
+    if (*(unsigned char *)(tag + 0xd6) != 0)   /* already notified */
+        return;
+    for (char *o = (char *)_ZN5Actor4NextEPKS_(0); o;
+         o = (char *)_ZN5Actor4NextEPKS_(o)) {
+        /* the ROM's own predicate: only 0xf / 0x10 / 0x11 carry a +0x328, and
+           reading it on anything else is a read past the end of the actor */
+        unsigned t = *(unsigned short *)(o + 0xc);
+        if (t != 0xf && t != 0x10 && t != 0x11)
+            continue;
+        if (*(char **)(o + 0x328) != tag)
+            continue;
+        std::printf("[tagprobe] tag %p id %u cell %u attached to block %p "
+                    "id %u -- calling daObjBlockL_c::Kill\n",
+                    (void *)tag, *(unsigned short *)(tag + 0xc),
+                    *(unsigned char *)(tag + 0xd7), (void *)o, t);
+        func_ov002_020b38a0(o);
+        return;
+    }
+}
+
+static void __fastcall itemtag_state0(void *s)
+{ itemtag_probe_note(0, s); func_ov002_020b429c((char *)s); }
+static void __fastcall itemtag_state1(void *s)
+{ itemtag_probe_note(1, s); func_ov002_020b4250((char *)s); }
+static void __fastcall itemtag_state2(void *s)
+{ itemtag_probe_note(2, s); func_ov002_020b41f8((char *)s); }
+static void __fastcall itemtag_state3(void *s)
+{ itemtag_probe_note(3, s); func_ov002_020b42e4((char *)s); }
+
+struct PortItemTagCell { unsigned fn, delta; };
+extern "C" PortItemTagCell data_ov002_0210dd30[4];
+
+typedef void(__fastcall *PortItemTagFn)(void *);
+static const struct { unsigned rom; PortItemTagFn host; } g_itemtag_cells[4] = {
+    { 0x020b429cu, itemtag_state0 },
+    { 0x020b4250u, itemtag_state1 },
+    { 0x020b41f8u, itemtag_state2 },
+    { 0x020b42e4u, itemtag_state3 },
+};
+
+extern "C" void port_itemtag_states_seat(void)
+{
+    for (int i = 0; i < 4; ++i) {
+        PortItemTagCell &cell = data_ov002_0210dd30[i];
+        unsigned host = (unsigned)(size_t)g_itemtag_cells[i].host;
+        if (cell.fn == host && cell.delta == 0)
+            continue;                       /* already seated */
+        if (cell.fn != g_itemtag_cells[i].rom || cell.delta != 0) {
+            std::fprintf(stderr, "FATAL: item-tag state cell %d: the sinit "
+                         "left %08x/%u, the ROM's own record says %08x/0 -- "
+                         "WRONG BYTES\n", i, cell.fn, cell.delta,
+                         g_itemtag_cells[i].rom);
+            std::abort();
+        }
+        cell.fn = host;
+    }
+}
+
 extern "C" void hal_fill_mega_mushroom_block_tag_vtable(void)
 {
+    /* Seat and verify the four cells BEFORE anything can dispatch through
+       them. The registry runs every fill on each level boot, which is after
+       main() has run ov002's constructors, so the ROM words are in place by
+       the time this reads them. */
+    port_itemtag_states_seat();
     void **vt = _ZTV10BrickBlock;
     bw_fill_shared(vt);
     vt[0] = (void *)mmbt_init;

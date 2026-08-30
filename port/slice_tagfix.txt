@@ -1,0 +1,100 @@
+# Run rel0215, lane tagfix: THE FOUR ITEM-TAG HANDLERS AND THEIR SHARED
+# POSITION HELPER -- the bodies gate 33 registered a dispatcher for and never
+# seated.
+#
+# ---- what the class is -----------------------------------------------------
+#
+# BrickBlock here is NOT the breakable brick. Its RTTI is 19daObjBlockItemTag_c
+# (ov002 vtable 0x02108c18) and it is the item TAG: a 220-byte marker with no
+# model of its own, parked on top of a real block. Four actor ids share the one
+# class body and the one vtable:
+#
+#     0x141  321  ONE_UP_MUSHROOM_BLOCK_TAG
+#     0x142  322  MEGA_MUSHROOM_BLOCK_TAG
+#     0x143  323  GREEN_SHELL_BLOCK_TAG
+#     0x144  324  SILVER_STAR_BLOCK_TAG
+#
+# ---- where they actually are, and the exercise level ------------------------
+#
+# COUNTED, not carried: a boot of all fifty mounted levels reading each census
+# (SM64DS_WINDOW_SELFTEST=2, hal/level_boot.cpp's own list).
+#
+#     321   level 0 x1, level 7 x2, level 42 x1     4 placements
+#     322   level 0 x1, level 13 x2, level 44 x1    4 placements
+#     323   level 0 x1, level 8 x1, level 10 x1     3 placements
+#     324   level 0 x1, level 42 x2                 3 placements
+#
+# LEVEL 0 IS THE EXERCISE LEVEL: it is the only level carrying all four, one
+# of each, so one run covers every cell on SHIPPED placements with no
+# SM64DS_SPAWN_ACTOR involved. SM64DS_LEVEL=0 SM64DS_TAG_PROBE=1 dispatches
+# cells 0, 1, 2 and 3 in order, rc 0 under FAULTS_FATAL.
+#
+# LEVEL 6 CARRIES NONE OF THE FOUR. The "x8 on Bob-omb Battlefield" this file's
+# gate-33 neighbour and hal/actor_classes_bob_world.cpp both used to claim came
+# from reading ov014's object tables rather than from a boot, and no level-6
+# census has ever produced one. Both sites are corrected in the same commit.
+#
+# ---- the chain, end to end, all four links read out of the tree -------------
+#
+# 1. src/_ZN10BrickBlock13InitResourcesEv.cpp writes the DISPATCH INDEX from
+#    the actor id: 0x141 -> unk_0d7 = 0, 0x142 -> 1, 0x143 -> 2, 0x144 -> 3.
+#
+# 2. src/_ZN10BrickBlock8BehaviorEv.cpp spends its first frames finding the
+#    block it belongs to (an actor of type 0xf / 0x10 / 0x11 within
+#    Vec3_Dist < 0x32000), stores ITSELF in that block's +0x328 and sets
+#    unk_0d8. If it finds nothing it destroys itself on frame one.
+#
+# 3. When the block is broken, src/func_ov002_020b38a0.c (daObjBlockL_c::Kill)
+#    calls src/func_ov002_020b363c.c, which reads the block's +0x328, checks
+#    the tag's id is one of the four, and writes tag+0xd6 = 1.
+#
+# 4. The NEXT tick of the tag's Behavior takes the unk_0d6 branch and
+#    dispatches through data_ov002_0210dd30[unk_0d7], then destroys itself.
+#
+# ---- what the four records hold, and why the bodies had to come with them ---
+#
+# src/__sinit_ov002_02100e50.c fills the bss table with four eight-byte
+# {fn, adj} records, and config/arm9/overlays/ov002/relocs.txt 13732-13735
+# names the four function words:
+#
+#     dd30[0] = data_ov002_02108b6c  ->  func_ov002_020b429c   (idx 0, id 321)
+#     dd30[1] = data_ov002_02108b5c  ->  func_ov002_020b4250   (idx 1, id 322)
+#     dd30[2] = data_ov002_02108b74  ->  func_ov002_020b41f8   (idx 2, id 323)
+#     dd30[3] = data_ov002_02108b64  ->  func_ov002_020b42e4   (idx 3, id 324)
+#
+# All four records are already on port/ov002_syms.txt, so the sinit runs
+# against real hosted storage and really does write those four words. What it
+# writes are RAW DS TEXT ADDRESSES: ovdata.py's rebase window starts at
+# 0x02100000 and ov002's .text ends at 0x020ff014, so a word pointing into
+# .text is outside the window by construction and no pass rewrites it. Until
+# this lane the four bodies were in NO slice and had zero presence in
+# walk_window.map, so there was nothing for those words to be rewritten TO.
+# hal/actor_classes_bob_world.cpp's port_itemtag_states_seat() is the rewrite;
+# it verifies the four ROM words first and aborts rather than guess.
+#
+# ---- the fifth file -------------------------------------------------------
+#
+# func_ov002_020b41b8 is not a handler. It is the shared position helper all
+# four call first: it reads the tag's x/y/z at +0x5c and lifts y by
+# data_ov002_020ff090[unk_0d7], a four-int table indexed by the SAME dispatch
+# index (0x020ff090..0x020ff0a0, sixteen bytes, one per id). Seating the four
+# without it is an unresolved external, so it comes in the same slice and
+# data_ov002_020ff090 joins port/ov002_syms.txt in the same commit.
+#
+# ---- dup screen -----------------------------------------------------------
+#
+# All five symbols were screened against port/unmatched and port/hal before
+# this file existed: no host copy of any of them, no /alternatename naming any
+# of them, and none of the five appears in walk_window.map on the base build.
+# Nothing here can collide (LNK2005) and nothing here is a face.
+#
+# ---- match gate ------------------------------------------------------------
+#
+# Every line below byte-matches at 2004/b56 with --strict-relocs against
+# extracted/overlays/overlay_0002.bin based at 0x020ad660.
+#
+src/func_ov002_020b41b8.c
+src/func_ov002_020b41f8.cpp
+src/func_ov002_020b4250.cpp
+src/func_ov002_020b429c.cpp
+src/func_ov002_020b42e4.c

@@ -172,7 +172,14 @@ src/func_02016e70.c
 # registry row and a factory and nothing else.
 src/BrickBlock_Spawn.c
 
-# MEGA_MUSHROOM_BLOCK_TAG (322) x8 -- _ZTV10BrickBlock, RTTI daObjBlockItemTag_c
+# MEGA_MUSHROOM_BLOCK_TAG (322) x4, AND NOT ON THIS LEVEL -- _ZTV10BrickBlock,
+# RTTI daObjBlockItemTag_c. The x8 this line carried was read off ov014's own
+# object tables rather than off a boot, and no level-6 census has ever produced
+# one. Counted over all fifty mounted levels (run rel0215, lane tagfix): 322 is
+# level 0 x1, level 13 x2, level 44 x1. The class stays in this gate because
+# gate 33 is what first linked its dispatcher; port/slice_tagfix.txt seats the
+# four handlers that dispatcher indexes and carries the full placement table
+# for all four ids.
 src/MegaMushroomBlockTag_Spawn.c
 src/_ZN10BrickBlock13InitResourcesEv.cpp
 src/_ZN10BrickBlock16CleanupResourcesEv.cpp

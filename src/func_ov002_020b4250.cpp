@@ -2,7 +2,7 @@
 // @symbol func_ov002_020b4250
 // recovered name: BigBrickBlock_AfterClsn
 /* recovered: shared common types, renamed to Class_Method */
-/* daObjBlockL_c::AfterClsn - recovered from vtable slot identity */
+/* daObjBlockL_c::AfterClsn - verified 2004/b56 byte-match (ov002), strict-reloc */
 struct V3{int x,y,z;};
 extern "C" {
 void func_ov002_020b41b8(struct V3*, char*);
