@@ -45,9 +45,9 @@
 #  198   0x02122e78  0x02090b7c   0x02122838 Goomboss_Spawn        198  overlays(71,74)
 #  199   0x02122e94  0x02090b80   0x02122764 ExplosionGoomba_Spawn 199  overlays(71,74)
 #
-# THIRTEEN arm9 spawn-table slots relocate into this window's span. Eleven of
+# FIFTEEN arm9 spawn-table slots relocate into this window's span. THIRTEEN of
 # them fail at least one route for ov074 and belong to a mounted sibling; the
-# sweep is banked whole in the lane's evidence. The eleven, and why each is
+# sweep is banked whole in the lane's evidence. The thirteen, and why each is
 # NOT ov074's:
 #   64  -> 0x02122eb0  word[0] is 0 and word[1] is a typeinfo pointer: this is
 #                      _ZTV8Goomboss's own offset-to-top/typeinfo prologue,
@@ -61,6 +61,10 @@
 #                      low half is not the slot id (12384, 4652, 12440, 12264,
 #                      4188, 17152 against 255/256/262/263/273/274). ov070's,
 #                      ov071's and ov072's.
+#   272 -> 0x02122954  ov074 rodata, but the words there are 0x02122ff0 and
+#                      0x02123048, two of this overlay's own bss
+#                      SharedFilePtrs -- interior to the twelve-entry pointer
+#                      run below, not a record. ov070's or ov072's.
 #   264 -> 0x02122dc4  THE CLOSEST CALL and the one that earns the second
 #                      route: word[0] IS 0x0212018c, a real ov074 function
 #                      inside ov074's own .text, so route 1 alone would seat

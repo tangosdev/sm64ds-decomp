@@ -2137,9 +2137,9 @@ list(APPEND PORT_ACTOR_OVERLAYS ov036)
 # THE FOURTH OCCUPANT of the 0x0211f000 window, joining ov070, ov071 and
 # ov073. It adds NO new ground -- ov074 ends 0x021231a0, inside ov073's
 # 0x021234e0 -- but eight of its symbols are marked `ambiguous` by dsd and
-# thirteen arm9 spawn-table slots relocate into its span. Both attribution
+# fifteen arm9 spawn-table slots relocate into its span. Both attribution
 # routes were run on every one: exactly TWO are ov074's (198, 199) and the
-# other eleven belong to a mounted sibling, including one (id 264 ->
+# other thirteen belong to a mounted sibling, including one (id 264 ->
 # 0x02122dc4) whose word[0] IS a real ov074 function and which only route 2
 # rejects. FIVE of the eight ambiguous rows are PHANTOM SPLITS inside ov074
 # objects -- one splits a 0x30 pointer run, one a 0xc destructor list node,
