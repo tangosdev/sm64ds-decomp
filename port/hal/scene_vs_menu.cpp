@@ -40,12 +40,17 @@
  * own body under port_vs_body_0211478c and the generated patch points the
  * one .data record that dispatches it (0x0211c618) at the renamed symbol.
  *
- * THE NINE MISSING BODIES get loud faces below -- both streams, flushed,
- * the l2_trap discipline -- never silent stubs. Anything VS fails to do has
- * these nine as its first suspects, in this order of likelihood:
- * func_ov075_0211705c (the c800 record's target, copied into bss by the
- * sinit) and func_ov075_0211afb0 (the 0x0211d35c pair-run target) are the
- * two a boot is most likely to walk into.
+ * THERE ARE NO MISSING BODIES LEFT. Nine of ov075's functions had no source
+ * anywhere when this seat was built and got loud faces below -- both streams,
+ * flushed, the l2_trap discipline, never silent stubs. run rel0215 propagated
+ * seven of them from the decomp's main by address (lane prop15) and the last
+ * two plus a replaced 02116128 body in lane prop16; slice_vs.txt sections 2b
+ * and 2c are the record. The face machinery is still here with an empty list,
+ * so a zero from port_vs_face_hits is a measurement rather than an absence.
+ * WHAT REPLACED THE FACES AS THE FIRST SUSPECT: four of the propagated bodies
+ * reach the geometry engine through literal MMIO and are compiled raw out of
+ * src/, so their register writes latch and trigger nothing. slice_vs.txt
+ * section 2c names all eight TUs in that state and why this lane left them.
  *
  * THE ROM'S OWN VS START is at the bottom: port_vs_stage_and_start(map)
  * writes the lobby's own map-pick byte and calls func_ov075_02116c8c -- the
@@ -216,27 +221,44 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:?data_0209fc5d@@3PAEA=_data_0209fc5d")
 #pragma comment(linker, "/alternatename:?data_02086b58@@3PAHA=_data_02086b58")
 
-/* ---- the two loud faces, where there were nine -----------------------------
+/* ---- the face list is EMPTY, where it was nine ------------------------------
    The l2_trap discipline (hal/scene_boot.cpp): both streams, flushed, and a
    counter, because a fault usually follows and stderr goes to the playlog.
 
-   run rel0215 lane prop15 retired SEVEN of the original nine. Every one of
-   them is byte-matched on the decomp's main and was brought across by address
-   into src/ plus slice_vs.txt, so the face would now be an LNK2005 against the
-   body: 02115bcc, 021165b0, 02116818, 0211705c, 0211867c (matched before
-   tonight) and 02119dc4, 0211a948 (PR #1983). Re-verified in this tree with
-   tools/match.py at 2004/b56 (strict relocs) and tools/linkcheck.py (VERIFIED,
-   0 blind slots) rather than taken on main's word. 0211a948's note said it
-   also satisfied ov080's cross-window caller; that caller now reaches the
-   ROM's own body instead of a zero.
+   run rel0215 lane prop15 retired SEVEN of the original nine (02115bcc,
+   021165b0, 02116818, 0211705c, 0211867c, 02119dc4, 0211a948), all byte-matched
+   on the decomp's main and brought across by address into src/ plus
+   slice_vs.txt. LANE prop16 RETIRED THE LAST TWO. They were floors with names
+   and the decomp's run vsdec closed both:
 
-   THE TWO THAT STAY ARE FLOORS WITH NAMES, not oversights:
-     func_ov075_0211621c  the VS results row -- NONMATCHING at 40 of 229 words
-                          on main (run vsdec lane SS), no source anywhere.
-     func_ov075_0211afb0  named a floor by PR #1983: two independent source
-                          shapes produce the same four wrong words at the same
-                          offsets, an allocator preference rather than a
-                          missing idea. Also the 0x0211d35c pair-run target. */
+     func_ov075_0211621c  src/func_ov075_0211621c.c, from main 52d681683.
+                          The VS results row. First source it has ever had;
+                          NONMATCHING div 40 and the whole residue is routing
+                          (30 register-field words, 10 sp displacements, no
+                          opcode/immediate/mode/condition changed).
+     func_ov075_0211afb0  src/func_ov075_0211afb0.c, from main 52d681683. The
+                          grid-mesh renderer, and the 0x0211d35c pair-run
+                          target. NONMATCHING div 4 -- the lsl/lsl/asr/asr
+                          quartet at +0x164..+0x170, an allocator preference.
+                          It is also the CALLER func_ov075_0211a948 was waiting
+                          for: that body byte-matches and has been in this
+                          slice since prop15, and /OPT:REF dropped it because
+                          its one ov075 caller (relocs.txt from:0x0211b01c) was
+                          inside this face. Both are in the map now.
+
+   THE MACHINERY STAYS with no rows in it, and that is deliberate rather than
+   leftover. ov075 has no bodiless function left, but the counter is the seam's
+   proof surface (port_vs_face_hits below, and the "[vs] MISSING ov075 body
+   entered" line the runtime proofs grep for), and the next overlay this seat
+   grows into will want the same loud-once shape rather than a reinvented one.
+   A zero here is now a MEASUREMENT, not an absence of instrumentation.
+
+   src/func_ov075_02116128 also changed underneath this seat in the same lane:
+   the tree carried main's pre-#1266 revision under the old .c spelling, banner
+   scored div=31 against mwccarm 1.2/sp2p3 (the wrong compiler for this tree),
+   and main's current .cpp is a different shape at the canonical 2004/b56 with a
+   differential-execution audit behind it. Same six stores, same palette splice;
+   nothing this file does changes. slice_vs.txt section 2c is the record. */
 static unsigned g_vs_face_hits;
 static void vs_face(const char *name)
 {
@@ -252,16 +274,16 @@ extern "C" unsigned port_vs_face_hits(void) { return g_vs_face_hits; }
 #define VS_FACE(sym)                                                           \
     extern "C" int sym(void);                                                  \
     extern "C" int sym(void) { vs_face(#sym); return 0; }
-VS_FACE(func_ov075_0211621c)
-VS_FACE(func_ov075_0211afb0)
+/* (no rows -- every ov075 function this scene reaches has a body in src/) */
 #undef VS_FACE
 
 /* THE FACES WERE ALSO THE DECLARATIONS, and that is why three of the seven
-   retirements broke the compile rather than the link. vs_data_patch.inc below
-   takes the ADDRESS of func_ov075_02115bcc, _0211705c and _0211867c to patch
-   the mount's code-pointer records, and the VS_FACE macro's `extern "C" int
-   sym(void);` line was the only declaration of those names in this TU. Deleting
-   a face therefore deletes a declaration, and the .inc stops compiling.
+   prop15 retirements broke the compile rather than the link. vs_data_patch.inc
+   below takes the ADDRESS of func_ov075_02115bcc, _0211705c, _0211867c and --
+   at 0x0211d35c -- _0211afb0, to patch the mount's code-pointer records, and
+   the VS_FACE macro's `extern "C" int sym(void);` line was the only declaration
+   of those names in this TU. Deleting a face therefore deletes a declaration,
+   and the .inc stops compiling.
 
    Declared here with their REAL signatures out of the propagated src TUs, not
    with the face's placeholder `int sym(void)`: a wrong arity in a live
@@ -271,6 +293,9 @@ extern "C" {
 void func_ov075_02115bcc(char *self);   /* src/func_ov075_02115bcc.c */
 void func_ov075_0211705c(void *thiz);   /* src/func_ov075_0211705c.c */
 void func_ov075_0211867c(char *self);   /* src/func_ov075_0211867c.c */
+void func_ov075_0211afb0(char *self);   /* src/func_ov075_0211afb0.c, and the
+                                           0x0211d35c patch row takes this */
+void func_ov075_0211621c(char *self);   /* src/func_ov075_0211621c.c */
 int  port_vsstar_layout_check(void);    /* hal/actor_classes_star.cpp */
 }
 

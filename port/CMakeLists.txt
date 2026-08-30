@@ -6932,9 +6932,13 @@ foreach(line IN LISTS SLICE_VS_LINES)
     endif()
     list(APPEND SLICE_VS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
-# the two .c files the language sweep found carrying C++ (slice_vs.txt s3)
+# The language sweep found TWO .c files in this slice carrying C++ and this row
+# marked both (slice_vs.txt s3). It marks ONE now: run rel0215 lane prop16 took
+# main's src/func_ov075_02116128.cpp by address, and a .cpp needs no marking --
+# CMake reads the language off the extension. Leaving the dead .c path in the
+# list would have been silent (set_source_files_properties on a path no target
+# compiles does nothing), which is why it goes rather than stays.
 set_source_files_properties(
-    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov075_02116128.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov075_021184b0.c"
     PROPERTIES LANGUAGE CXX)
 # WorkElevator's TUs spell their vtable func_ov075_0211478c; ov075's own body
