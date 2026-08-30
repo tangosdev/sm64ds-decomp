@@ -1,9 +1,9 @@
 {
   "id": "ov002/BlueCoinSwitch",
   "module": "ov002",
-  "source": "src_tu/actors/BlueCoinSwitch.cpp",
+  "source": "src/actors/BlueCoinSwitch.cpp",
   "promoted_source": "src/actors/BlueCoinSwitch.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20f11b0..0x20f15fc, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -351,6 +351,63 @@
       "canonical_address": "0x02108a04",
       "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by ov002 (dBgActor_c is an ov002-local class, unlike fBase_c/dBase_c/dActor_c which are arm9-resident)",
       "relocations": []
+    }
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov002', 34638316)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI14BlueCoinSwitch",
+      "disposition": "deadstrip",
+      "reason": "compiler-generated typeinfo record with no ROM symbol and no surviving reference in this object; the cartridge never carried a separate copy."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34107000)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34106736)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34136976)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov002', 34638340)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS14BlueCoinSwitch",
+      "disposition": "deadstrip",
+      "reason": "compiler-generated typeinfo record with no ROM symbol and no surviving reference in this object; the cartridge never carried a separate copy."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34106964)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34106976)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34136964)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTV14BlueCoinSwitch",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov002', 34648684)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
     }
   ]
 }

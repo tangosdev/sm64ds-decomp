@@ -1,9 +1,9 @@
 {
   "id": "ov002/AmbientSoundEffects",
   "module": "ov002",
-  "source": "src_tu/actors/AmbientSoundEffects.cpp",
+  "source": "src/actors/AmbientSoundEffects.cpp",
   "promoted_source": "src/actors/AmbientSoundEffects.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x20f198c..0x20f1bc4, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -223,5 +223,52 @@
       "matchesStockRom": true
     },
     "scratch": "build/tu/ov002-AmbientSoundEffects/link-partial (gitignored)"
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI19AmbientSoundEffects",
+      "disposition": "deadstrip",
+      "reason": "compiler-generated typeinfo record with no ROM symbol and no surviving reference in this object; the cartridge never carried a separate copy."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34107000)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34106736)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34136976)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS19AmbientSoundEffects",
+      "disposition": "deadstrip",
+      "reason": "compiler-generated typeinfo record with no ROM symbol and no surviving reference in this object; the cartridge never carried a separate copy."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34106964)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34106976)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34136964)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTV19AmbientSoundEffects",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov002', 34649288)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    }
+  ]
 }

@@ -1,9 +1,9 @@
 {
   "id": "ov012/SwitchPillar",
   "module": "ov012",
-  "source": "src_tu/actors/SwitchPillar.cpp",
+  "source": "src/actors/SwitchPillar.cpp",
   "promoted_source": "src/actors/SwitchPillar.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x21111a0..0x2111450, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -116,5 +116,62 @@
     "state": "contribution-equivalent",
     "stateMeaning": "every derived object's linker-visible contribution -- kept section header and bytes, its relocations by symbol name, every defined symbol, every content section still carrying bytes, and every relocation-referenced import -- is byte-identical to what the current per-function compile+isolate pipeline produces for the same function",
     "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov002', 34638316)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI12SwitchPillar",
+      "disposition": "deadstrip",
+      "reason": "compiler-generated typeinfo record with no ROM symbol and no surviving reference in this object; the cartridge never carried a separate copy."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34107000)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34106736)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34136976)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov002', 34638340)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS12SwitchPillar",
+      "disposition": "deadstrip",
+      "reason": "compiler-generated typeinfo record with no ROM symbol and no surviving reference in this object; the cartridge never carried a separate copy."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34106964)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34106976)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34136964)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTV12SwitchPillar",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov012', 34677572)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    }
+  ]
 }

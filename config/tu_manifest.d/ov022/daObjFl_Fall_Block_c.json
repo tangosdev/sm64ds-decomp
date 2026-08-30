@@ -1,9 +1,9 @@
 {
   "id": "ov022/daObjFl_Fall_Block_c",
   "module": "ov022",
-  "source": "src_tu/actors/daObjFl_Fall_Block_c.cpp",
+  "source": "src/actors/daObjFl_Fall_Block_c.cpp",
   "promoted_source": "src/actors/daObjFl_Fall_Block_c.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x2112380..0x211245c, 4 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -119,5 +119,72 @@
       "matchesStockRom": true
     },
     "scratch": "build/tu/ov022-daObjFl_Fall_Block_c/link-partial (gitignored)"
-  }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov002', 34638316)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI16daObjFallBlock_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov015', 34687092)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI20daObjFl_Fall_Block_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov022', 34685552)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34107000)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34106736)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34136976)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov002', 34638340)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS16daObjFallBlock_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov015', 34687116)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS20daObjFl_Fall_Block_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov022', 34685576)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34106964)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34106976)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('arm9', 34136964)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    },
+    {
+      "symbol": "_ZTV20daObjFl_Fall_Block_c",
+      "disposition": "deadstrip-data",
+      "reason": "mwcc emits this typeinfo/vtable record alongside the key function's text. Its ROM home is [('ov022', 34685636)], outside every range this entry claims, so dsd delinks the cartridge's own copy regardless; romdata_check compares this object's relocation-resolved words against that copy before the surgery discards them."
+    }
+  ]
 }

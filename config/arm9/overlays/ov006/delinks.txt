@@ -1894,17 +1894,9 @@ src/_ZN11dScMgCard_c13InitResourcesEv.cpp:
     complete
     .text start:0x020dbaf0 end:0x020dbd54
 
-src/MgPicturePoker_Spawn.cpp:
+src/actors/MgPicturePoker.cpp:
     complete
-    .text start:0x020dbd54 end:0x020dbe14
-
-src/func_ov006_020dbe14.c:
-    complete
-    .text start:0x020dbe14 end:0x020dbe30
-
-src/func_ov006_020dbe30.c:
-    complete
-    .text start:0x020dbe30 end:0x020dbe40
+    .text start:0x020dbd54 end:0x020dbe40
 
 src/_ZN11dScMgCoin_cD1Ev.cpp:
     complete
@@ -3270,13 +3262,9 @@ src/func_ov006_020edcb0.c:
     complete
     .text start:0x020edcb0 end:0x020ede18
 
-src/MgWhichWiggler_Spawn.cpp:
+src/actors/MgWhichWiggler.cpp:
     complete
-    .text start:0x020ede18 end:0x020ede80
-
-src/func_ov006_020ede80.c:
-    complete
-    .text start:0x020ede80 end:0x020edec0
+    .text start:0x020ede18 end:0x020edec0
 
 src/_ZN11dScMgJump_cD1Ev.cpp:
     complete
@@ -4261,13 +4249,9 @@ src/_ZN14dScMgMCarlo2_c13InitResourcesEv.cpp:
     complete
     .text start:0x020fa56c end:0x020fa6ac
 
-src/MgPairAGoneAndOn_Spawn.cpp:
+src/actors/MgPairAGoneAndOn.cpp:
     complete
-    .text start:0x020fa6ac end:0x020fa740
-
-src/func_ov006_020fa740.c:
-    complete
-    .text start:0x020fa740 end:0x020fa75c
+    .text start:0x020fa6ac end:0x020fa75c
 
 src/_ZN15dScMgPachinko_cD1Ev.cpp:
     complete
@@ -5269,13 +5253,9 @@ src/_ZN15dScMgRoulette_c13InitResourcesEv.cpp:
     complete
     .text start:0x0210a194 end:0x0210a400
 
-src/MgMushroomRoulette_Spawn.cpp:
+src/actors/MgMushroomRoulette.cpp:
     complete
-    .text start:0x0210a400 end:0x0210a4ac
-
-src/func_ov006_0210a4ac.c:
-    complete
-    .text start:0x0210a4ac end:0x0210a4b0
+    .text start:0x0210a400 end:0x0210a4b0
 
 src/_ZN19dScMgSingle3DBase_cD1Ev.cpp:
     complete
@@ -5983,13 +5963,9 @@ src/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp:
     complete
     .text start:0x0211944c end:0x02119824
 
-src/MgBingoBallSlotsShot_Spawn.cpp:
+src/actors/MgBingoBallSlotsShot.cpp:
     complete
-    .text start:0x02119824 end:0x02119900
-
-src/func_ov006_02119900.c:
-    complete
-    .text start:0x02119900 end:0x02119904
+    .text start:0x02119824 end:0x02119904
 
 src/_ZN12dScMgSound_cD1Ev.cpp:
     complete
@@ -6965,13 +6941,9 @@ src/func_ov006_021245a8.c:
     complete
     .text start:0x021245a8 end:0x0212471c
 
-src/MgTrampolineTerror_Spawn.cpp:
+src/actors/MgTrampolineTerror.cpp:
     complete
-    .text start:0x0212471c end:0x021248a8
-
-src/func_ov006_021248a8.cpp:
-    complete
-    .text start:0x021248a8 end:0x02124908
+    .text start:0x0212471c end:0x02124908
 
 src/_ZN10dScMgBSC_cD1Ev.cpp:
     complete

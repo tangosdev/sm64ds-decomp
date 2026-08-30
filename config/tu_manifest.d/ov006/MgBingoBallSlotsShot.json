@@ -1,9 +1,9 @@
 {
   "id": "ov006/MgBingoBallSlotsShot",
   "module": "ov006",
-  "source": "src_tu/actors/MgBingoBallSlotsShot.cpp",
+  "source": "src/actors/MgBingoBallSlotsShot.cpp",
   "promoted_source": "src/actors/MgBingoBallSlotsShot.cpp",
-  "status": "text-verified",
+  "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
     "contiguous linker run: 0x02119824..0x02119904, 2 function(s), from config/arm9/overlays/ov006/delinks.txt and symbols.txt (hand-built manifest entry -- NOT re-derivable from a fresh build/tu_map.json run)",
