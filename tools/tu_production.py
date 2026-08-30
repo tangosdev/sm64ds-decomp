@@ -155,10 +155,18 @@ def prepare_intact_link_verification(entries, jobs=4):
             f"pre-promotion inventory: current={list(current_errors)!r}, "
             f"admitted={[list(rows) for rows in sorted(admitted_errors)]!r}")
     if admitted_roms != {baseline["romSha256"]}:
+        report = baseline["report"]
+        diagnostics = {
+            "rom": report.get("rom"),
+            "baselineEvidence": report.get("baselineEvidence"),
+            "intactTusDemoted": report.get("intactTusDemoted"),
+            "scratch": report.get("scratch"),
+        }
         raise ProductionTuError(
             "strict post-promotion control ROM SHA-256 does not equal the admitted "
             f"stock proof: current={baseline['romSha256']}, "
-            f"admitted={sorted(admitted_roms)!r}")
+            f"admitted={sorted(admitted_roms)!r}, "
+            f"control={json.dumps(diagnostics, sort_keys=True)}")
     prepared = []
     for source, entry in sorted(entries.items()):
         claims, reasons = TB.manifest_section_claims(entry)
@@ -203,7 +211,8 @@ def _strict_baseline(expected_intact=None):
     if not expected_demoted and compared is not True:
         raise ProductionTuError(
             "stock control did not prove a ROM identical to build/sm64ds.nds")
-    _sha, error = TB.validate_partition_baseline_evidence(report, linked_elf)
+    _sha, error = TB.validate_partition_baseline_evidence(
+        report, linked_elf, config_root=TB.BASELINE_LINK / "config" / "arm9")
     if error:
         raise ProductionTuError(f"stock control is stale: {error}")
     base_errors = (((report.get("phases") or {}).get("checkSymbols") or {})
