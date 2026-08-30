@@ -4107,7 +4107,48 @@ def cmd_linkcheck(args):
             print(f"      externalized {externalized['externalized']} to their exact "
                   "configured canonical homes in the SCRATCH object only")
 
-        owned = verify_owned_sections(linked_tu, entry, claims)
+        owned_before = verify_owned_sections(linked_tu, entry, claims)
+        report["ownedSectionsBeforeRebias"] = owned_before
+        if not owned_before["ok"]:
+            print("      REFUSED -- licensed non-text contribution is not exact:")
+            for reason in owned_before.get("errors", []):
+                print(f"        {reason}")
+            report["result"] = "data-refused"
+            _write_link_report(scratch, report)
+            _record_linkcheck(data, entry, report, baseline)
+            return 1
+
+        biases, bias_reasons = partition_vtable_rebiases(entry, claims)
+        vtable_policies = biases
+        if bias_reasons:
+            print("      REFUSED -- retained vtable address point is not explicit:")
+            for reason in bias_reasons:
+                print(f"        {reason}")
+            report["result"] = "vtable-rebias-refused"
+            report["vtableRebias"] = {"requested": biases,
+                                       "errors": bias_reasons}
+            _write_link_report(scratch, report)
+            _record_linkcheck(data, entry, report, baseline)
+            return 1
+        rebased_tu, bias_report = OI.rebias_object_symbols(linked_tu, biases)
+        report["vtableRebias"] = bias_report
+        if rebased_tu is None:
+            print(f"      REFUSED -- vtable symbol rebias: {bias_report.get('error')}")
+            report["result"] = "vtable-rebias-refused"
+            _write_link_report(scratch, report)
+            _record_linkcheck(data, entry, report, baseline)
+            return 1
+        if rebased_tu != linked_tu:
+            linked_tu = rebased_tu
+            scratch_rewrite = True
+            tu_obj.write_bytes(linked_tu)
+            print(f"      rebased {len(bias_report.get('rebased', []))} retained vtable "
+                  f"symbol(s) and compensated "
+                  f"{len(bias_report.get('relocations', []))} live relocation addend(s) "
+                  "in the SCRATCH object only")
+
+        owned = verify_owned_sections(linked_tu, entry, claims,
+                                       public_address_points=True)
         report["ownedSections"] = owned
         for row in owned["rows"]:
             print(f"      {row['section']:8} {row.get('start', '-')}..{row.get('end', '-')} "

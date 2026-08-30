@@ -901,11 +901,13 @@ def rebias_object_symbols(raw, symbol_policies):
     isolation already rewrites imports to that public convention; a separately linked
     data partition must therefore expose its strong definition at the same point.
 
-    Content and relocations are deliberately untouched.  A policy may additionally
-    split the preamble into an exact storage-alias symbol by reusing one explicitly
-    deadstripped compiler-only symbol-table slot.  Reusing a slot keeps every ELF
-    offset stable; it is allowed only when the old name is an unreferenced GLOBAL/FUNC
-    import with enough exclusive string-table storage for the alias.
+    Content bytes are deliberately untouched.  Surviving RELA/ABS32 references to a
+    rebased definition have their addends reduced by the same bias, preserving the
+    resolved address exactly while changing the public symbol convention.  A policy
+    may additionally split the preamble into an exact storage-alias symbol by reusing
+    one explicitly deadstripped compiler-only symbol-table slot.  Reusing a slot keeps
+    every ELF offset stable; it is allowed only when the old name is an unreferenced
+    GLOBAL/FUNC import with enough exclusive string-table storage for the alias.
     """
     requested = {}
     for name, policy in dict(symbol_policies).items():
@@ -942,11 +944,6 @@ def rebias_object_symbols(raw, symbol_policies):
     if symtab is None:
         return None, {"rebased": [], "aliases": [], "error": "no .symtab"}
     syms = list(symtab.iter_symbols())
-    protected_sections = {
-        i: sec.data() for i, sec in enumerate(elf.iter_sections())
-        if ((sec.header["sh_type"] in CONTENT and sec.header["sh_size"])
-            or (isinstance(sec, RelocationSection) and sec.header["sh_size"]))
-    }
     by_name = {name: [(i, sym) for i, sym in enumerate(syms)
                       if sym.name == name and sym["st_shndx"] not in
                       ("SHN_UNDEF", "SHN_ABS")]
@@ -981,22 +978,76 @@ def rebias_object_symbols(raw, symbol_policies):
                           f"0x{sec.header['sh_size']:x}, manifest="
                           f"0x{requested[name]['size']:x})"}
 
-    # Rebiasing changes what a relocation to this definition means. No current owned
-    # data needs such a self-reference, so refuse it rather than guessing whether its
-    # addend used storage-start or public-address-point convention.
-    for relsec in elf.iter_sections():
+    import struct
+    endian = "<" if elf.little_endian else ">"
+
+    # Moving the definition from storage start to public address point must not move
+    # any resolved reference.  mwcc's live references use RELA/ABS32 with the ABI
+    # preamble bias in r_addend, so subtract exactly that bias and leave the content,
+    # relocation offset, and target symbol index untouched.
+    relocation_rewrites = []
+    mutable_relocation_sections = set()
+    for relsec_index, relsec in enumerate(elf.iter_sections()):
         if not isinstance(relsec, RelocationSection):
             continue
         source = elf.get_section(relsec.header["sh_info"])
         if source.header["sh_type"] not in CONTENT or not source.header["sh_size"]:
             continue
-        for reloc in relsec.iter_relocations():
+        for reloc_index, reloc in enumerate(relsec.iter_relocations()):
             target = symtab.get_symbol(reloc["r_info_sym"])
-            if target.name in requested:
+            if target.name not in requested:
+                continue
+            if relsec.header["sh_type"] != "SHT_RELA" or not reloc.is_RELA():
                 return None, {"rebased": [], "aliases": [],
-                              "error": f"surviving {source.name} "
-                              f"relocation at 0x{reloc['r_offset']:x} targets rebased "
-                              f"symbol {target.name}"}
+                              "relocations": [],
+                              "error": f"surviving {source.name} relocation at "
+                              f"0x{reloc['r_offset']:x} targets rebased symbol "
+                              f"{target.name} but is not SHT_RELA"}
+            if reloc["r_info_type"] != R_ARM_ABS32:
+                return None, {"rebased": [], "aliases": [],
+                              "relocations": [],
+                              "error": f"surviving {source.name} relocation at "
+                              f"0x{reloc['r_offset']:x} targets rebased symbol "
+                              f"{target.name} with unsupported type "
+                              f"{reloc['r_info_type']}"}
+            bias = requested[target.name]["bias"]
+            old_addend = int(reloc["r_addend"])
+            if old_addend < bias:
+                return None, {"rebased": [], "aliases": [],
+                              "relocations": [],
+                              "error": f"surviving {source.name} relocation at "
+                              f"0x{reloc['r_offset']:x} targets rebased symbol "
+                              f"{target.name} with addend {old_addend}, smaller than "
+                              f"bias {bias}"}
+            entry_size = int(relsec.header["sh_entsize"])
+            if entry_size < 12:
+                return None, {"rebased": [], "aliases": [],
+                              "relocations": [],
+                              "error": f"{relsec.name} has invalid RELA entry size "
+                              f"{entry_size}"}
+            entry_offset = reloc_index * entry_size
+            relocation_rewrites.append({
+                "sectionIndex": relsec_index, "section": source.name,
+                "relocationSection": relsec.name, "offset": reloc["r_offset"],
+                "symbol": target.name, "type": "R_ARM_ABS32",
+                "oldAddend": old_addend, "newAddend": old_addend - bias,
+                "entryOffset": entry_offset,
+                "fileOffset": relsec.header["sh_offset"] + entry_offset + 8,
+            })
+            mutable_relocation_sections.add(relsec_index)
+
+    protected_sections = {
+        i: sec.data() for i, sec in enumerate(elf.iter_sections())
+        if i not in mutable_relocation_sections
+        and ((sec.header["sh_type"] in CONTENT and sec.header["sh_size"])
+             or (isinstance(sec, RelocationSection) and sec.header["sh_size"]))
+    }
+    expected_relocation_sections = {
+        i: bytearray(elf.get_section(i).data()) for i in mutable_relocation_sections
+    }
+    for row in relocation_rewrites:
+        struct.pack_into(endian + "i", expected_relocation_sections[row["sectionIndex"]],
+                         row["entryOffset"] + 8, row["newAddend"])
 
     aliases = {}
     used_donors = set()
@@ -1087,8 +1138,6 @@ def rebias_object_symbols(raw, symbol_policies):
         for i, sym in enumerate(syms) if i not in mutable_symbol_indices
     }
 
-    import struct
-    endian = "<" if elf.little_endian else ">"
     base = symtab.header["sh_offset"]
     rows, alias_rows = [], []
     for name in sorted(requested):
@@ -1117,6 +1166,8 @@ def rebias_object_symbols(raw, symbol_policies):
         rows.append({"symbol": name, "bias": bias,
                      "oldValue": sym["st_value"], "newValue": new_value,
                      "oldSize": sym["st_size"], "newSize": new_size})
+    for row in relocation_rewrites:
+        struct.pack_into(endian + "i", raw_out, row["fileOffset"], row["newAddend"])
     out = bytes(raw_out)
     checked = ELFFile(io.BytesIO(out))
     checked_symtab = checked.get_section_by_name(".symtab")
@@ -1137,6 +1188,16 @@ def rebias_object_symbols(raw, symbol_policies):
     if checked_sections != protected_sections:
         return None, {"rebased": rows, "aliases": alias_rows,
                       "error": "storage rewrite changed content or relocation bytes"}
+    checked_relocation_sections = {
+        i: checked.get_section(i).data() for i in mutable_relocation_sections
+    }
+    expected_relocation_sections = {
+        i: bytes(data) for i, data in expected_relocation_sections.items()
+    }
+    if checked_relocation_sections != expected_relocation_sections:
+        return None, {"rebased": rows, "aliases": alias_rows,
+                      "relocations": relocation_rewrites,
+                      "error": "storage rewrite changed more than licensed RELA addends"}
     for name, alias in aliases.items():
         matches = [sym for sym in checked_symbols
                    if sym.name == alias["symbol"]]
@@ -1154,7 +1215,11 @@ def rebias_object_symbols(raw, symbol_policies):
             return None, {"rebased": rows, "aliases": alias_rows,
                           "error": f"post-rewrite storage split is not exact for "
                                    f"{alias['symbol']}/{name}"}
-    return out, {"rebased": rows, "aliases": alias_rows, "error": None}
+    public_relocations = [{k: v for k, v in row.items()
+                           if k not in ("sectionIndex", "entryOffset", "fileOffset")}
+                          for row in relocation_rewrites]
+    return out, {"rebased": rows, "aliases": alias_rows,
+                 "relocations": public_relocations, "error": None}
 
 
 def isolate(obj, keep_symbol):
