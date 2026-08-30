@@ -4110,6 +4110,88 @@ remainder is a reordering. Score merges by the gate.
 `add rN, sp, #imm` instructions from the candidate object and read off the frame-offset ->
 register map, then compare with the ROM's. Four lines of capstone, and it turns "25 words
 diverge" into "these four webs are rotated by one", which is a claim a sweep can falsify.
+
+### 6bq addendum: the siege on func_ov074_02121380, and three bugs its audit controls found
+
+The cylinder rebuild came back as the highest-value crack on the board once the port
+seating showed the boss's Behavior calls it unconditionally. It did not fall. What the
+second pass is worth recording is which of the new levers reached it and which did not,
+and one correction to the first pass's own evidence.
+
+**Correction to 6bq as first written.** Its pragma line claimed 14 pragmas and 91 pairs
+measured inert. Two of those names (`scheduling`, `register_coloring`) are not pragmas at
+all -- exactly the 6as trap -- and the sweep was single-axis on ONE source shape, which
+6bp then showed is not a valid way to measure a pragma. Re-run properly: the full
+246-name verified vocabulary at on and off, on BOTH attractor shapes, then crossed with
+all 120 record-store orders and 6 position-temp orders (5040 cells). No cell beats the
+baseline on either attractor. Only one pragma is even size-neutral and live here,
+`opt_dead_assignments off`, and it moves the body the wrong way (25 -> 62, 11 -> 48).
+The original conclusion survives; the evidence behind it did not, and would not have
+been worth citing.
+
+**6bp's named-address lever is real here but points the other way.** This residue IS a
+base-pointer rank problem, so the lever should have been the one. Measured: deleting the
+name of the record cursor `p` is completely free -- identical size AND identical
+divergence on both attractors, so mwccarm canonicalises that one; deleting the name of
+the rolling bone cursor `q` costs 8 bytes; and giving the three array bases names
+(`int *py = yoff;`) costs more still and drifts every frame offset. The rank of the four
+hoisted bases is set by the STORE SOURCE ORDER (6bq above), not by naming, and 6bp's
+lever cannot reach it. Both levers are about address-web rank; they are not the same
+lever, and a body can be immune to one and controlled by the other.
+
+**Statement RELOCATION (6bp) also does not contain the move.** Climbed to a local
+optimum from both attractors over the relocation neighbourhood of all three ordered
+statement sequences (127 neighbours a round). The register-correct attractor is already
+a local optimum at 11; the schedule-correct one climbs 25 -> 12 and stops.
+
+**6bn's spellings do not apply and were not faked.** Its narrowing-conversion triggers,
+the size-neutral `u16` inline parameter and the signed-16-bitfield-at-offset form all
+need a value that is narrowed on the way to a store. Every value this body moves is a
+32-bit Fix12 that is stored whole, and the one small integer it passes (the bone index)
+is a word load from a word array. There is no semantically valid narrowing to introduce,
+so the family is recorded as not-applicable rather than as measured-inert.
+
+**Two new axes swept, both inert.** The order of the three bone-position stores into the
+cursor (6 orders x 6 temp orders x all 120 record-store orders, 4320 cells), and a
+one-variable reuse where a single local holds the y component and is then reassigned to
+the record base -- which is what the cartridge's `ldr fp,[r4,#0x3b0]` into a
+callee-saved register looks like. The reuse is interesting and still lost: it INVERTS
+which store order colours correctly (RZHYX instead of RXHYZ) without lowering the floor,
+which is more evidence that the rank is a function of consumer order rather than of the
+webs themselves.
+
+**The permuter hazard from 6bn addendum 4, reproduced exactly.** ~16000 iterations over
+four runs on two structurally different seeds. On the div-11 seed every candidate the
+permuter scored BETTER than its base (445 and 575 against 665) is size-drifted to 0x378
+or 0x37c -- worse by the byte oracle, better by a scorer that charges 60 per reorder and
+5 per regalloc. With an ordering residue the two metrics point in opposite directions;
+score every permuter output through the byte oracle before believing it.
+
+**Three audit-harness bugs the controls caught, none of which the PASS side could show.**
+Adapting the ov034 harness (6bp addendum) to this function needed three fixes, and every
+one was invisible until a deliberately broken control failed to be caught:
+
+1. **`ldm`/`stm` were unimplemented.** The ov034 body had none; this one copies its
+   3-word bone table with them. This one at least announces itself -- the interpreter
+   raised on the first instruction rather than quietly agreeing.
+2. **Each side must map its OWN initialised data.** The bone table is a local array
+   initialiser whose image lives in the object's `.data` and is reached through a pooled
+   address that the harness patches with the ROM's address. Both sides therefore read the
+   ROM's table, and a control that changed the candidate's table to {1, 8, 9} passed.
+   Any pooled data the candidate defines itself has to be mapped per side.
+3. **Seeding that never reaches an arm silently narrows what the audit covers.** The
+   ground tests compare a bone y plus a scaled bias against the boss's own y; with the
+   bias always negative and the bone heights bracketing the threshold too tightly, the
+   `>=` arm never ran, so the boundary control (`<` -> `<=`) and the RMW-mask control
+   both passed. Fixed by deriving the stub's reported bone height FROM the bias, so one
+   selector lands exactly on the threshold and one lands above it.
+
+Worth carrying beyond this function: give every discriminating input its own digit in a
+mixed-radix trial index. That makes `--trials N` visit the state lattice exactly once
+each instead of sampling it, so "exhaustive over the discriminating states" becomes a
+claim with a number behind it (2700 here), and report the per-arm coverage next to the
+PASS -- a branch never taken is a branch the audit cannot speak for.
+
 ## 6bp. A named local holding an ADDRESS outranks the compiler's own address temp, and that rotates every register below it (`_ZN7Wiggler8BehaviorEv`, div 122 -> 20, 2026-08-30)
 
 The Wiggler's `Behavior` (ov034, 0x02112b5c, 0x6e0, 440 words) sat banked at div 122
