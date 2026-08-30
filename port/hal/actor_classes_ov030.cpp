@@ -207,7 +207,15 @@ extern unsigned char RollingLogTtm_SpawnInfo[];
 int _ZN13RollingLogTtm13InitResourcesEv(void *self);  /* slot 0, FACED at the bottom of this file */
 int _ZN13RollingLogTtm6RenderEv(void *self);          /* slot 9, FACED at the bottom of this file */
 int _ZN13RollingLogTtm16CleanupResourcesEv(void);    /* slot 3, .c body takes void */
-int _ZN13RollingLogTtm8BehaviorEv(void *self);       /* slot 6, HOST COPY (Ukiki_Behavior.cpp) */
+/* Slot 6 is the HOST COPY in port/unmatched/Ukiki_Behavior.cpp and it is
+   DELIBERATELY not exported under the Itanium name: src/__sinit_ov029_
+   02112c10.c declares _ZN13RollingLogTtm8BehaviorEv with no parameters and
+   hands its ADDRESS to func_020731dc as an ov029 SharedFilePtr destructor
+   callback -- a shared-load-window mis-attribution. Defining that name here
+   would trip aritycheck's receiver ratchet today and silently bind ov029's
+   callback to this class's Behavior the day lane W1-C slices that sinit.
+   See that file's own header for the full argument. */
+int port_ov030_ukiki_behavior(void *self);           /* slot 6, HOST COPY */
 void _ZN13RollingLogTtm16OnPendingDestroyEv(void);   /* slot 12, .c body takes void */
 int *_ZN13RollingLogTtmD0Ev(int *self);              /* slot 17 */
 int func_ov030_0211172c(void);                       /* slot 18, own OnYoshiTryEat, takes void */
@@ -584,7 +592,7 @@ static int __fastcall mky_init(void *s, void *)
 static int __fastcall mky_clean(void *s, void *)
 { (void)s; return _ZN13RollingLogTtm16CleanupResourcesEv(); }
 static int __fastcall mky_behavior(void *s, void *)
-{ return _ZN13RollingLogTtm8BehaviorEv(s); }
+{ return port_ov030_ukiki_behavior(s); }
 static int __fastcall mky_render(void *s, void *)
 { port_actor_render_probe("UKIKI", (char *)s + 0xd4);
   return _ZN13RollingLogTtm6RenderEv(s); }
@@ -644,7 +652,7 @@ extern "C" void hal_fill_ukiki_vtable(void)
 // (?InitResources@RollingLogTtm@@..., not __ZN13RollingLogTtm...), so the
 // Itanium names the vtable slots need are faced here -- the IceSheet /
 // OneUpLogo / BabyPenguin recipe.
-// _ZN13RollingLogTtm8BehaviorEv is NOT faced: it is the HOST COPY in
+// The Ukiki's Behavior is NOT faced: it is the HOST COPY in
 // port/unmatched/Ukiki_Behavior.cpp, which defines the Itanium name directly
 // (the ModelAnim slot-3 shadow, see that file's header).
 // _ZN13RollingLogTtm16CleanupResourcesEv and _ZN13RollingLogTtm16OnPendingDestroyEv

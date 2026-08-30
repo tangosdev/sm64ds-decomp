@@ -66,6 +66,36 @@
  *
  * EVERYTHING ELSE IS TRANSCRIBED STATEMENT FOR STATEMENT. Both DELTAs are
  * marked inline below.
+ *
+ * THE SYMBOL IS DELIBERATELY NOT _ZN13RollingLogTtm8BehaviorEv, and that is a
+ * DEPARTURE from the usual host-copy convention with two reasons, the second of
+ * them a live landmine for another lane.
+ *
+ * 1. THE RATCHET. src/__sinit_ov029_02112c10.c:5 declares
+ *    `extern int _ZN13RollingLogTtm8BehaviorEv();` -- no parameters -- and a
+ *    host definition under that exact name makes aritycheck's RECEIVER RATCHET
+ *    fire a new row. That ratchet may only shrink, and the declaring file is in
+ *    src/, which this lane does not edit. Measured against the base tree
+ *    f77f01169: run_checks already fails there on one pre-existing receiver row
+ *    (_ZN5Model6RenderEPK7Vector3, 166 baselined / 167 live / 1 NEW) and one
+ *    vtspan row (port_scene_fill_vs), and this seat added EXACTLY ONE row on
+ *    top. Renaming leaves the ratchet exactly where the lane found it.
+ *
+ * 2. THE LANDMINE, which is the better reason. ov029 and ov030 SHARE the level
+ *    overlay load window at base 0x021111a0, and dsd resolved a word in ov029's
+ *    own .init to the ov030 symbol that happens to sit at that address. The
+ *    ov029 sinit does not CALL it -- it hands the address to func_020731dc as a
+ *    SharedFilePtr destructor callback for data_ov029_02114270. Nothing builds
+ *    that TU today (ov029 is unseated; it is wave 1 lane W1-C's target). The
+ *    moment it IS built, a host definition under the Itanium name would bind
+ *    ov029's destructor callback to THE UKIKI'S BEHAVIOR -- the Coffin /
+ *    Spindrift wrong-object shape, which fails at no link and shows in no map.
+ *    Not defining the name keeps that binding impossible and leaves the ov029
+ *    lane a loud unresolved external instead of a silent wrong call.
+ *
+ * hal/actor_classes_ov030.cpp's slot-6 thunk calls this name directly, so the
+ * vtable seat is unaffected. Nothing else in the tree references the Itanium
+ * spelling except the ov029 sinit above and the matched src file itself.
  */
 #include "types.h"
 #include "ModelAnim.h"
@@ -83,13 +113,13 @@ void func_ov030_021141a8(void *c, int idx);
 void func_ov030_02114134(void *c);
 void func_ov030_02112094(void *c);
 void func_ov030_02111734(char *c);
-int _ZN13RollingLogTtm8BehaviorEv(void *self);
+int port_ov030_ukiki_behavior(void *self);
 }
 
 /* PORT_HOST_ABI: mwcc virtual-shadow dispatch (ROM vtable numbering vs MSVC's)
    on a ModelAnim sub-object; the ROM's slot 3 is UpdateVerts and the host's
    slot 3 is Virtual10, which over-pops four bytes. */
-extern "C" int _ZN13RollingLogTtm8BehaviorEv(void *self)
+extern "C" int port_ov030_ukiki_behavior(void *self)
 {
     char *c = (char *)self;
     if (_ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(self, 0x5dc000) != 0 &&
