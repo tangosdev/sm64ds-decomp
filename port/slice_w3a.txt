@@ -1,0 +1,251 @@
+# run rel0215 wave 3 (lane w3-a): ov065's Ttc CLUSTER.
+#
+# ###########################################################################
+# ##  THIS SLICE IS **NOT WIRED**. NOTHING IN port/CMakeLists.txt READS IT. ##
+# ###########################################################################
+#
+# It is a complete, checked recipe that MUST NOT be turned on until the
+# per-loaded-level re-patch seat described below exists. Wiring it as it stands
+# reproduces the wave-17 failure exactly: eleven Ttc ids spawn on level 27 and
+# hand MovingMeshCollider::SetFile a DS pointer as their CLPS_Block. Two of
+# them do that SILENTLY. Read correction 5 in port/ov065_syms.txt before
+# touching the CMake side, and see the end of this header for the measurement.
+#
+# Everything else here -- the cast map, the eleven ids, the seven vtables, the
+# language sweep, the four G0/G1 decodes, the two C2372 rulings -- is measured
+# and reusable as it stands. The lane's finding is that the blocker is a
+# different thing from what the tree believed, not that the cast map was hard.
+#
+# ============================================================================
+# WHY THIS IS **NOT** SEATABLE YET, WHICH IS THIS LANE'S RESULT
+# ============================================================================
+#
+# port/ov065_syms.txt parks this subset on ONE blocker, and it is neither the
+# registry nor the sinits nor the vtables: every Ttc class reads a CLPS
+# collision block or a texture-animation descriptor that lives in whichever
+# LEVEL overlay is loaded (ov035 on level 27). Wave 17 seated the cluster
+# against that and MEASURED the cost: ids 108 (x8) and 114 (x5) ticked 300
+# frames without faulting, SILENTLY, on a garbage CLPS, and id 112 divided by
+# zero in Animation::Advance because its descriptor read zero frames. The quiet
+# pair is why the seat came back out.
+#
+# Wave 18 landed port/ov035_syms.txt for exactly this and found TWELVE such
+# reads rather than wave 17's five; all twelve are mounted, two with :0x20
+# pins. run rel0215 wave 1 then wired port_ov035_syms_patch() into
+# port_ov35_bringup(). Both halves are real and both are on this lane's base.
+#
+# THEY ARE NOT SUFFICIENT. tools/ovdata.py's cross pass still refuses all
+# twelve, by design, because its ambiguity test is on WINDOWS and ov065 is an
+# actor overlay co-resident with every level overlay -- so every level's whole
+# mount contests every target. Measured on cc10acd4e, from the build's own
+# summary: "cross: 312 pointers rebased across 121 mounts, 9542 left raw (136
+# into a window contested by a co-resident mount, ...)" and "cross: ov065 9
+# pointers rebased onto another mount" -- those nine being ov065's typeinfo
+# words into ov002 gaps (build/port/host-src/ov_cross.c:449-457), with no ov035
+# target among them. cross_mode()'s own comment names the remedy: "Resolving it
+# correctly needs a seat that RE-PATCHES PER LOADED LEVEL."
+#
+# THE WORK THAT REMAINS, precisely: a per-loaded-level re-patch of ov065's
+# EIGHT mounted data words -- 0x0211cfd8, 0x0211cfe4, 0x0211d16c, 0x0211d170,
+# 0x0211d19c, 0x0211d1a8, 0x0211d364, 0x0211d370 -- onto ov035's host storage,
+# hooked through level_boot.cpp's port_level_mount_register and obeying its
+# per-level idempotency cache and .dsstate bracketing rule
+# (level_boot.cpp:1660-1730). The other four of the twelve (0x0211c03c,
+# 0x0211a454, 0x0211bb68, 0x0211b314) are literal-pool words inside ov065's
+# .text; a recompiled TU resolves those BY NAME and no data patch can reach
+# them. Once that seat exists and is proved on level 27, wire this slice.
+#
+# ============================================================================
+# THE CAST: ELEVEN IDS, SEVEN CLASSES, SEVEN VTABLES
+# ============================================================================
+#
+# Not "ten Ttc* classes" (ov065_syms.txt) and not five vtables. Derived four
+# independent ways, all agreeing -- see port/ov065_syms.txt's wave-3 section
+# for the full derivation and the two corrections it makes to its own header.
+#
+#   id   SpawnInfo record            vtable      RTTI at vtable[-1]     sinit
+#   108  TtcRotatingCube_SpawnInfo   0x0211d028  daObjCtRotateBlock_c   c660
+#   109  TtcRotatingPrism_SpawnInfo  0x0211d028  daObjCtRotateBlock_c   c660
+#   110  data_ov065_0211d0c8         0x0211d0ec  daObjCtMecha03_c       c76c
+#   111  TtcConveyorBeltLarge_Sp..   0x0211d1ec  daObjCtMecha04_c       c7d8
+#   112  TtcConveyorBeltSmall_Sp..   0x0211d1ec  daObjCtMecha04_c       c7d8
+#   113  TTC_MovingBar_SpawnInfo     0x0211d2b4  daObjCtMecha05_c       c890
+#   114  TtcRotatingGear_SpawnInfo   0x0211d3b4  daObjCtKaitendai_c     c8fc
+#   115  TtcRotatingTriangle_Sp..    0x0211d3b4  daObjCtKaitendai_c     c8fc
+#   116  TtcMovingCubeA_SpawnInfo    0x0211d494  daObjCtMecha08_c       c9b8
+#   117  TtcMovingCubeB_SpawnInfo    0x0211d494  daObjCtMecha08_c       c9b8
+#   118  TTC_MovingBeam_SpawnInfo    0x0211d568  daObjCtMecha09_c       ca74
+#
+# THE dsd BODY NAMES ARE SHIFTED AND THE SpawnInfo NAMES ARE NOT. Every record
+# reads its own id back at +4 and every word[0] lands in ov065's own image, so
+# the eleven records are trustworthy by name. The BODIES are not: the class
+# whose methods dsd spells _ZN15TtcRotatingGear* is ids 116/117, while
+# TtcRotatingGear_Spawn is id 114's factory. Read the table above, never the
+# prefix. Each row was fixed by the factory's own literal pool (which vtable
+# it stores) and by each D0's pool (which table it restores), independently.
+#
+# ============================================================================
+# THE FOUR G0/G1 CleanupResources, AND THE C2372 THAT ALMOST COST TWO TUs
+# ============================================================================
+#
+# Four Cleanups release two SharedFilePtrs each through the shared placeholders
+# G0 and G1. Neither placeholder may be left alone: include/decl_common.h:396
+# declares `extern int G1[];` and hal/cxx_aliases.cpp binds bare G1 to
+# _data_ov002_0210e05c and bare G0 to the game heap -- both wrong here, and
+# NEITHER WOULD FAIL A LINK (the ov006 finding at port/CMakeLists.txt:6285).
+# Each pair below is decoded from its own body's literal pool, read out of
+# extracted/overlays/overlay_0065.bin, never from the alias:
+#
+#   func_ov065_0211a15c   (id 110)      pool 0211a198/19c -> 0211d88c / 0211d894
+#   func_ov065_0211ad04   (id 113)      pool 0211ad40/44  -> 0211d904 / 0211d90c
+#   ..TtcRotatingGear..   (ids 116/117) pool 0211b8c8/8cc -> 0211d98c / 0211d97c
+#   ..TtcMovingCubeA..    (id 118)      pool 0211bd5c/60  -> 0211d9d4 / 0211d9cc
+#
+# and each pair is confirmed from the other side by the sinit that BUILDS it:
+# c76c writes 0211d88c.., c890 writes d904.., c9b8 writes d97c.., ca74 writes
+# d9cc.. -- the ownership lane w17 measured.
+#
+# TWO of the four cannot take a direct -D. decl_common.h ALSO declares their
+# targets, at a different type and a different indirection:
+#   287 extern char data_ov065_0211d904;    288 extern char data_ov065_0211d90c;
+#   289 extern char data_ov065_0211d97c[];  290 extern char data_ov065_0211d98c[];
+# so `-DG1=data_ov065_0211d90c` rewrites line 396 into a redefinition of line
+# 288 -- the C2372 the ov006 Mg3DEsp_Cleanup block measured and the ov035 lane
+# hit again (hal/actor_classes_ov035.cpp:155-163). ov006 answered it with a
+# host copy; ov035 found the cheaper answer and this lane uses ov035's: rename
+# the placeholder to a LANE-OWNED name that is declared nowhere, then
+# /alternatename that onto the mount symbol. Nothing is host-copied, and both
+# TUs stay matched. The aliases live in hal/actor_classes_ov065.cpp.
+#
+# The LHS decoration differs between the two, for the reason ov035 records:
+# decl_common.h wraps lines 20..3189 in `extern "C" {`, so a G1 rename is
+# always a C name, while a .cpp TU's OWN file-scope `extern int G0[];` sits
+# outside that block and decorates. Hence `?port_ov065_m08_file0@@3PAHA` beside
+# `_port_ov065_m08_file1`. Both were checked against the link's own unresolved
+# list rather than left to the derivation.
+#
+# The five ov065 TUs still unlinked after this lane are NOT this lane's:
+# Snufit/Swoop/Dorrie::Behavior and func_ov065_0211691c/02117944 are wave-5
+# host copies, and Snufit/Swoop/Dorrie::Render are WAVE 19's host copies over a
+# real c0000005 (the ModelAnim slot-5 collision, port/unmatched/
+# W19_Slot5_Renders.cpp). All three sit on port/slice_w5b.txt already.
+#
+# THAT TRAP DOES NOT REACH THIS CLUSTER, and it was checked rather than
+# assumed. Every Ttc Render is the same six-virtual local shadow dispatched at
+# +0xd4, but every one of the seven classes holds a plain Model there, not a
+# ModelAnim -- read off each class's own D1, which calls _ZN5ModelD1Ev(this +
+# 0xd4) in all seven. hal/cxxname_bridge.cpp:507-511 DUAL-FILLS _ZTV5Model at
+# slots 4 and 5, so a shadow dispatching the ROM's slot 5 lands on Render;
+# _ZTV9ModelAnim is the one that cannot be dual-filled (line 518-520) and no
+# Ttc class has one. The five Ttc Renders therefore stay matched TUs.
+#
+# ============================================================================
+# LANGUAGE: swept, not guessed
+# ============================================================================
+# 25 of the 71 are .cpp by extension. The other 46 were swept comment-stripped
+# for the //cpp marker and for `extern "C"`, `virtual`, `class`, `::`,
+# `template` and `bool` -- the set port/CMakeLists.txt:804-813 prescribes.
+# ZERO hits: no LANGUAGE CXX property block is needed for this slice.
+
+# ---- ids 108/109, daObjCtRotateBlock_c, table 0x0211d028 -------------------
+src/TtcRotatingCube_Spawn.c
+src/TtcRotatingPrism_Spawn.c
+src/_ZN15TtcRotatingCubeD1Ev.c
+src/_ZN15TtcRotatingCubeD0Ev.c
+src/_ZN15TtcRotatingCube13InitResourcesEv.cpp
+src/_ZN15TtcRotatingCube16CleanupResourcesEv.cpp
+src/_ZN15TtcRotatingCube8BehaviorEv.cpp
+src/_ZN15TtcRotatingCube6RenderEv.cpp
+src/func_ov065_02119794.c
+src/func_ov065_021198a0.cpp
+src/func_ov065_0211990c.c
+
+# ---- id 110, daObjCtMecha03_c, table 0x0211d0ec ----------------------------
+# dsd named no _ZTV here and no class methods, so every body is func_ov065_*.
+# The vtable slots say which is which: [0] InitResources 0211a358, [3] Cleanup
+# 0211a15c, [6] Behavior 0211a1c8, [9] Render 0211a1a0, [16] D1 02119f3c,
+# [17] D0 02119f88.
+src/func_ov065_0211a45c.c
+src/func_ov065_02119f3c.c
+src/func_ov065_02119f88.c
+src/func_ov065_02119fe8.cpp
+src/func_ov065_0211a114.c
+src/func_ov065_0211a15c.c
+src/func_ov065_0211a1a0.cpp
+src/func_ov065_0211a1c8.c
+src/func_ov065_0211a358.cpp
+
+# ---- ids 111/112, daObjCtMecha04_c, table 0x0211d1ec -----------------------
+src/TtcConveyorBeltLarge_Spawn.c
+src/TtcConveyorBeltSmall_Spawn.c
+src/_ZN20TtcConveyorBeltLargeD1Ev.c
+src/_ZN20TtcConveyorBeltLargeD0Ev.c
+src/_ZN20TtcConveyorBeltLarge13InitResourcesEv.cpp
+src/_ZN20TtcConveyorBeltLarge16CleanupResourcesEv.cpp
+src/_ZN20TtcConveyorBeltLarge8BehaviorEv.cpp
+src/_ZN20TtcConveyorBeltLarge6RenderEv.cpp
+src/func_ov065_0211a550.c
+src/func_ov065_0211aa38.c
+src/func_ov065_0211aacc.c
+
+# ---- id 113, daObjCtMecha05_c, table 0x0211d2b4 ----------------------------
+# The other unnamed class. Slots: [0] 0211b1d4, [3] 0211ad04, [6] 0211ae08,
+# [9] 0211ad48, [16] 0211ab60, [17] 0211abac.
+src/TTC_MovingBar_Spawn.c
+src/func_ov065_0211ab60.c
+src/func_ov065_0211abac.c
+src/func_ov065_0211ac0c.c
+src/func_ov065_0211ad04.c
+src/func_ov065_0211ad48.cpp
+src/func_ov065_0211ad70.c
+src/func_ov065_0211ae08.c
+src/func_ov065_0211b1d4.cpp
+src/func_ov065_0211b40c.c
+
+# ---- ids 114/115, daObjCtKaitendai_c, table 0x0211d3b4 ---------------------
+# dsd spells these bodies _ZN13TTC_MovingBar*, which is id 113's NAME. The
+# bodies are 114/115's. See the table at the top.
+src/TtcRotatingGear_Spawn.c
+src/TtcRotatingTriangle_Spawn.c
+src/_ZN13TTC_MovingBarD1Ev.c
+src/_ZN13TTC_MovingBarD0Ev.c
+src/_ZN13TTC_MovingBar13InitResourcesEv.cpp
+src/_ZN13TTC_MovingBar16CleanupResourcesEv.cpp
+src/_ZN13TTC_MovingBar8BehaviorEv.cpp
+src/_ZN13TTC_MovingBar6RenderEv.cpp
+
+# ---- ids 116/117, daObjCtMecha08_c, table 0x0211d494 -----------------------
+# dsd spells these _ZN15TtcRotatingGear*, which is id 114's name.
+src/TtcMovingCubeA_Spawn.c
+src/TtcMovingCubeB_Spawn.c
+src/_ZN15TtcRotatingGearD1Ev.c
+src/_ZN15TtcRotatingGearD0Ev.c
+src/_ZN15TtcRotatingGear13InitResourcesEv.cpp
+src/_ZN15TtcRotatingGear16CleanupResourcesEv.cpp
+src/_ZN15TtcRotatingGear8BehaviorEv.c
+src/_ZN15TtcRotatingGear6RenderEv.cpp
+
+# ---- id 118, daObjCtMecha09_c, table 0x0211d568 ----------------------------
+# dsd spells these _ZN14TtcMovingCubeA*, which is id 116's name.
+src/TTC_MovingBeam_Spawn.c
+src/_ZN14TtcMovingCubeAD1Ev.c
+src/_ZN14TtcMovingCubeAD0Ev.c
+src/_ZN14TtcMovingCubeA13InitResourcesEv.cpp
+src/_ZN14TtcMovingCubeA16CleanupResourcesEv.cpp
+src/_ZN14TtcMovingCubeA6RenderEv.cpp
+src/func_ov065_0211bc88.cpp
+
+# ---- the seven parked sinits ----------------------------------------------
+# Ownership was measured by lane w17 (each sinit's bss writes against each
+# class's own bss reads) and is reproduced independently here by each
+# CleanupResources' literal pool: id 110's reads 0x0211d88c/894 and c76c is
+# the sinit that writes there; id 113's reads d904/90c (c890); ids 116/117's
+# read d98c/97c (c9b8); id 118's read d9d4/9cc (ca74). All seven run now,
+# because this lane registers all eleven ids (the ov019 rule).
+src/__sinit_ov065_0211c660.c
+src/__sinit_ov065_0211c76c.c
+src/__sinit_ov065_0211c7d8.c
+src/__sinit_ov065_0211c890.c
+src/__sinit_ov065_0211c8fc.c
+src/__sinit_ov065_0211c9b8.c
+src/__sinit_ov065_0211ca74.c
