@@ -2738,7 +2738,14 @@ static const char *const PORT_RELAUNCH_CLEAR[] = {
        still running it also fails a bind and prints a refusal nobody asked
        for. The other three are its arguments and travel with it -- an
        inherited PORT would aim the child at the wrong session and an inherited
-       INJECT would put scripted stylus values on a wire the player is using. */
+       INJECT would put scripted stylus values on a wire the player is using.
+
+       ONE DESTINATION OVERRIDES THIS, and only one: port_menu_relaunch_vs
+       carries ROLE, PORT and SLOT back across the clear, because VS *is* the
+       multiplayer mode and a VS child is the one child that is supposed to be
+       in the session its parent was in. Its own banner has the argument. The
+       reasoning above is unchanged for the level and minigame destinations,
+       which are the ones it was written about. */
     "SM64DS_COMMS_ROLE",    "SM64DS_COMMS_PORT",
     "SM64DS_COMMS_SLOT",    "SM64DS_COMMS_INJECT",
 };
@@ -2803,7 +2810,26 @@ static int port_menu_relaunch(int scene_id, int level_id)
    the game-heap init) runs the ROM's own VS start off SM64DS_VS_MAP. The
    mode is NOT an input today because the ROM's VS has exactly one
    (port/slice_vs.txt section 4); when a second one ever exists this is where
-   its env would be set. */
+   its env would be set.
+
+   THE SESSION RIDES ALONG, AND THIS ONE IS THE EXCEPTION TO THE CLEAR TABLE.
+   Run rel0215, lane vsnet. PORT_RELAUNCH_CLEAR strips SM64DS_COMMS_ROLE and
+   _PORT because a MINIGAME or LEVEL child of a multiplayer run has no business
+   inheriting a session it was not launched into -- read its own banner. A VS
+   child is the opposite case and the only one: VS *is* the multiplayer mode,
+   so a player who started the game with a role and a session code and then
+   picks a VS map from the debug menu is asking for that session, and dropping
+   it here is how the menu route into VS came to be the one route that could
+   never pair. Carried by hand, after the shared clear, so the table itself
+   keeps saying what it says for the other two destinations.
+
+   THREE OF THE FIVE ARE CARRIED AND TWO ARE NOT, deliberately.
+   SM64DS_COMMS_RELAY / _CODE / _HOST / _BIND_ANY were never in the clear table
+   and already survive. ROLE, PORT and SLOT are carried here because they name
+   WHO THIS CONSOLE IS in the session. SM64DS_COMMS_INJECT is left cleared:
+   it is test scaffolding that pins a held key, and the clear table's own note
+   says an inherited INJECT would put scripted values on a wire a player is
+   using. */
 static int port_menu_relaunch_vs(int vs_map)
 {
     char exe[MAX_PATH];
@@ -2812,9 +2838,23 @@ static int port_menu_relaunch_vs(int vs_map)
     PROCESS_INFORMATION pi;
     if (!GetModuleFileNameA(0, exe, (DWORD)sizeof exe))
         return 0;
+    /* read BEFORE the shared clear runs over them, written back after */
+    char carry_role[64] = "", carry_port[64] = "", carry_slot[64] = "";
+    GetEnvironmentVariableA("SM64DS_COMMS_ROLE", carry_role, sizeof carry_role);
+    GetEnvironmentVariableA("SM64DS_COMMS_PORT", carry_port, sizeof carry_port);
+    GetEnvironmentVariableA("SM64DS_COMMS_SLOT", carry_slot, sizeof carry_slot);
     for (unsigned i = 0; i < sizeof PORT_RELAUNCH_CLEAR /
                              sizeof *PORT_RELAUNCH_CLEAR; ++i)
         SetEnvironmentVariableA(PORT_RELAUNCH_CLEAR[i], 0);
+    if (carry_role[0])
+        SetEnvironmentVariableA("SM64DS_COMMS_ROLE", carry_role);
+    if (carry_port[0])
+        SetEnvironmentVariableA("SM64DS_COMMS_PORT", carry_port);
+    if (carry_slot[0])
+        SetEnvironmentVariableA("SM64DS_COMMS_SLOT", carry_slot);
+    if (carry_role[0])
+        fprintf(stderr, "[menu] VS relaunch carries the session: "
+                "SM64DS_COMMS_ROLE=%s\n", carry_role);
     SetEnvironmentVariableA("SM64DS_SCENE", 0);
     SetEnvironmentVariableA("SM64DS_LEVEL", 0);
     SetEnvironmentVariableA("SM64DS_DUAL_SCREEN", 0);
