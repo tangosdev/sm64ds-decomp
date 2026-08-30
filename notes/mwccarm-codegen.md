@@ -4110,3 +4110,121 @@ remainder is a reordering. Score merges by the gate.
 `add rN, sp, #imm` instructions from the candidate object and read off the frame-offset ->
 register map, then compare with the ROM's. Four lines of capstone, and it turns "25 words
 diverge" into "these four webs are rotated by one", which is a claim a sweep can falsify.
+## 6bp. A named local holding an ADDRESS outranks the compiler's own address temp, and that rotates every register below it (`_ZN7Wiggler8BehaviorEv`, div 122 -> 20, 2026-08-30)
+
+The Wiggler's `Behavior` (ov034, 0x02112b5c, 0x6e0, 440 words) sat banked at div 122
+with a floor claim about "a global r6/r7 vs cylinder r5/r4/r6 allocation tradeoff". The
+tradeoff was real but it was a symptom. One source change moved 85 of the 102 words that
+eventually fell.
+
+**The lever.** `ldrh` carries only an 8-bit immediate offset. The angle field this
+function reads lives at `c + 0x446`, which does not fit, so mwccarm *must* materialise a
+base register and then load at `[base, #0x46]`. The cartridge's base is a
+**compiler-generated address temp**. The draft spelled the same value as a named local,
+`char *angbase = c + 0x400`, and a named local does not take the same rank in the scratch
+file as the temp the compiler would have invented. Measured on this body: as a named
+local the web landed in **r4, the TOP of the contended group**; the cartridge has it in
+**r0, the bottom**. Every other web in the group shifted one slot to compensate, so both
+blocks that used it came out as a clean uniform rotation:
+
+    ROM      angbase=r0  round=r1  zero=r2  hx=r3  hz=r4  scale=r5  tbl=r8
+    named    round=r0    zero=r1   hx=r2    hz=r3  angbase=r4  scale=r5  tbl=r8
+
+Deleting the local and writing `*(u16 *)(c + 0x446)` inline at both use sites took the
+head block 23 -> 2 and the particle block 48 -> 2, total **105 -> 37**. The same lever
+applied to the row cursor `char *p2 = c + (i << 1)` (spelled inline at its two uses) took
+**27 -> 20**. Both are the identical shape: *an address the compiler was going to
+materialise anyway must not be given a name*.
+
+This generalises past this function. Any field past an addressing-mode limit forces
+materialisation - 8 bits for `ldrh`/`ldrsh`/`strh`, 12 for `ldr`/`str`/`ldrb` - so any
+struct member above 0xFF (halfword) or 0xFFF (word) is a candidate. When a residue is a
+uniform rotation of the low registers, look for a named local holding a base address
+before reaching for declaration order.
+
+**Declaration order was not the lever, and 6bf's neighbourhood does not contain the one
+that was.** The full pairwise-transposition climb over all 14 declarations (74 compiles)
+found nothing, twice, at two different divergence levels. What worked was a different
+operator: **relocating a single statement a long distance**. Moving
+`angbase = c + 0x400` out of its block to before an earlier call was worth 131 -> 107 on
+its own, and no transposition of adjacent declarations contains that move. A relocation
+neighbourhood is cheap to build (only `local = expr;` with no memory or call on the
+right-hand side, at conditional depth 0, moved between the last writer of what it reads
+and the first reader of what it writes) and it is worth having beside 6bf's transposition
+climb. Watch one trap while building it: a **declaration line is not a reader**, and
+counting it as one gives every candidate zero legal positions and a silently empty search
+(the first version of this tool reported "local optimum" after 118 candidates because of
+exactly that).
+
+**A pragma's value is SHAPE-DEPENDENT, and measuring it on the wrong shape is how a
+sweep lies to you.** A 1024-point product sweep (every subset of the eight verified
+pragmas x four source shapes, scored per address region per 6bf) found
+`opt_strength_reduction off` load-bearing and `opt_common_subs off` apparently inert, and
+that second reading was carried forward as "the draft has been hauling a dead crutch". It
+was wrong, and the way it was wrong is the transferable part. Every shape in that sweep
+was seeded at or near the div-122 draft - i.e. BEFORE the named-address locals came out.
+Re-measured through the gate on both bodies:
+
+    div-122 draft   with `opt_common_subs off` 122   without 122   -> genuinely inert
+    shipped body    with `opt_common_subs off`  20   without  27   -> worth 7 words
+
+So the pragma did not start out dead and stay dead: it **became load-bearing once the
+named-address locals were deleted**. Removing `angbase` and `p2` is exactly what stops the
+source from pre-sharing those addresses by hand, which is what leaves a common
+subexpression for the pragma to have an opinion about in the first place. The two levers
+are coupled, and a single-axis pragma sweep run before the source-shape lever cannot see
+it.
+
+Two rules out of this. A pragma sweep is only valid for the source shape it was run on -
+re-run it after any structural lever, never carry the verdict across. And never write
+"inert" unqualified: say inert *on which body, measured through which gate*.
+Measured that way on both bodies: `scheduling off` is genuinely inert (122/122 and
+20/20), and `opt_lifetimes off` is catastrophic on both (159 on the draft, 122 on the
+shipped body). Only `opt_common_subs off` flipped -- and it flipped because a source
+lever, not a pragma, changed what it had to work on.
+
+**What the residue is, and why the permuter is the wrong tool for it.** 16 of the final
+20 words are pure REORDER: our exact instruction, with the registers already correct,
+appears in the cartridge a few words away. decomp-permuter's stock scorer charges 60 per
+reorder against 5 per regalloc, and on this body it duly found a "better" candidate -
+545 against a 755 base - whose actual byte divergence is **36, worse than the 20 it
+started from**. That is the upstream author's own caveat (quoted in
+notes/research-matching-levers.md F4.1) reproduced as a measurement: when the residue is
+ordering rather than allocation, the permuter's score and the byte oracle point in
+different directions, and following the score walks away from the match.
+
+### 6bp addendum: three bugs a differential-execution harness hides unless you make it fail first
+
+The NONMATCHING body ships with a differential-execution audit (an ARM interpreter over
+capstone's detailed decode - no unicorn on the build box - running the cartridge bytes
+and the candidate's compiled bytes over the same randomised state). The five
+deliberately-broken control candidates were not a formality: they caught three bugs, and
+every one of them was invisible from the PASS side because it hit both sides equally.
+
+1. **capstone's condition codes are 1=EQ, 2=NE.** Having those two swapped inverted every
+   conditional in both runs at once, so a correct candidate still compared equal while
+   the branches actually executed were the wrong ones.
+2. **capstone renders `lsl rd, rn, #k` with TWO operands**, carrying the amount in
+   `ops[1].shift` (it is MOV-with-shift underneath). Reading `ops[1]` as the amount makes
+   a *register* the shift count, so the two schedules shifted by different amounts.
+3. **The function's own bytes must be mapped as DATA.** Every `ldr rN, [pc, #k]` reads the
+   literal pool at the tail of the function; without the code image in memory those loads
+   return noise, so every pooled constant and every global address is garbage and the
+   pool-dependent branches are unreachable.
+
+Two design points worth carrying: compare the **final value of every written byte**, not
+the write sequence, because two correct schedules legitimately reorder independent stores
+(call *order* is semantic and should still be compared); and truncate each recorded call's
+arguments to that callee's **arity**, because registers above it hold caller garbage that
+differs harmlessly. Finally, uniform random memory is not enough - a rare-path control
+(`state == 2`, one in 256) went undetected until the discriminating fields were driven
+through their interesting values deliberately, and a call stub that always returns
+non-zero leaves every `if (f() != 0)` else-arm unreachable. Coverage was 21 of 22 callees
+before the harness was trusted (a reviewer's independent re-run read 22 of 22).
+
+State the harness's guarantee precisely, per control. Four of the five controls here are
+size-neutral and are caught by EXECUTION; control 2 (dropping the `+ 1` on the second
+sincos index) changes the instruction count, so it is caught by SIZE alone and never
+exercises the comparator. A control that the byte gate would have rejected anyway proves
+nothing about the interpreter, so count only the size-neutral ones when claiming what the
+audit can detect.
