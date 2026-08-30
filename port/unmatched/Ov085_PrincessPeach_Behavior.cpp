@@ -37,8 +37,8 @@
  * shadow over a plain Model still lands on Render -- which is why WALL_SIGN's
  * Render and this class's own Render link. _ZTV9ModelAnim cannot be
  * dual-filled, because ROM slot 5 IS Virtual18's MSVC slot, and that is why
- * LAKITU_BRO's and the RABBIT's renders are host copies. The same array, one
- * slot lower.
+ * LAKITU_BRO's and the RABBIT's renders are host copies. The same array, TWO
+ * slots lower: theirs is ROM slot 5, hers is ROM slot 3.
  *
  * THE ONE CHANGED LINE dispatches the same object through the same host table
  * at the index that stands for ROM slot 3. Kept virtual rather than folded

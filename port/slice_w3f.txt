@@ -24,9 +24,22 @@
 #   routes: tail 31, terminator 31, raw run 32, next dsd symbol 15,
 #           typeinfo 66 (wrong, and wrong in the documented fourth-trap way).
 #   The tail's reason is the one that decides it: slot 31 begins a
-#   pointer-to-member PAIR TABLE, not more vtable. That pair table is this
-#   class's own state table -- see the state seat below -- so the raw-run route
-#   walking one word into it is the same trap ov026 and TOAD both hit.
+#   pointer-to-member PAIR TABLE, not more vtable, so the raw-run route walking
+#   one word into it is the same trap ov026 and TOAD both hit.
+#
+#   THAT PAIR TABLE IS THE RABBIT'S, NOT HERS. An earlier draft of this file
+#   said it was her own state table and that was wrong; this overlay has two
+#   pair tables and they are on opposite sides of her vtable. Her table ends at
+#   0x0212ffc0 + 31*4 = 0x0213003c, and 0x0213003c is data_ov085_0213003c, the
+#   first of the RABBIT's sixteen {function, delta} statics
+#   (0x0213003c..0x021300b4, seated since gate 18 -- declared at
+#   hal/actor_overlays.cpp:45, seated at :641). The word there is 0x0212b4b4,
+#   which is inside the RABBIT's block (0x0212a6d4..0x0212cc87), not hers.
+#   HER OWN state table is 0x0212ff34..0x0212ff84, BELOW her vtable, and what
+#   it ends is TOAD'S: Toad's table at 0x0212feb8 plus 31 slots lands exactly
+#   on 0x0212ff34. That is what hal/actor_overlays.cpp:63-68 has been saying
+#   and it is the correct reading.
+#
 #   Slot 12 is this class's OWN OnPendingDestroy (0x0212a504), not ActorBase's,
 #   which is the one slot the shared 1..30 fill has to be overridden on.
 #

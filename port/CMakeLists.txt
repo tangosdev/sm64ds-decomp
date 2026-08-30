@@ -8583,7 +8583,7 @@ endforeach()
 # port/slice_w3f.txt with the reason:
 #   * Behavior dispatches its ModelAnim's ROM SLOT 3 and the matched TU spells
 #     MSVC index 3, which on an MSVC-numbered _ZTV9ModelAnim is Virtual10 -- one
-#     slot high, wrong arity. The wave-19 collision, one slot below where
+#     slot high, wrong arity. The wave-19 collision, TWO slots below where
 #     LAKITU_BRO and the RABBIT hit it. HOST COPY.
 #   * D1 is the shadow-class MSVC destructor shape TOAD's D1 has, spelled inline
 #     in the fill from the ROM D1's own five relocs.

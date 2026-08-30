@@ -415,12 +415,25 @@ extern "C" void hal_fill_toad_vtable(void)
 // port/tools/vtspan.py on this tree: tail 31, terminator 31, raw run 32, next
 // dsd symbol 15, typeinfo 66. THIRTY-ONE, by the semantic tail, and its reason
 // is the fourth width trap again -- "slot 31 begins a pointer-to-member pair
-// table, not more vtable". That pair table is data_ov085_0212ff34 onward, and
-// this lane can now say whose it is: it is THIS class's state table, ten
-// {function, 0} pairs that __sinit_ov085_0212f3a0 copies into
-// data_ov085_0213055c. The gate-205 header adjudicated the same bytes from
-// TOAD's side and called them "a pointer-to-member SOURCE table"; the sinit
-// names the owner.
+// table, not more vtable".
+//
+// THE PAIR TABLE PAST HER SLOT 31 IS THE RABBIT'S. An earlier draft of this
+// header said it was her own and that was wrong: this overlay has TWO pair
+// tables and they sit on opposite sides of her vtable.
+//   * past it: her table ends at 0x0212ffc0 + 31*4 = 0x0213003c, which is
+//     data_ov085_0213003c -- the first of the RABBIT's sixteen {function,
+//     delta} statics (0x0213003c..0x021300b4), seated since gate 18 and
+//     declared in this file's sibling at hal/actor_overlays.cpp:45, seated at
+//     :641. The word there is 0x0212b4b4, inside the RABBIT's block
+//     (0x0212a6d4..0x0212cc87).
+//   * below it: HER ten pairs are 0x0212ff34..0x0212ff84, and what THEY end is
+//     TOAD's table -- 0x0212feb8 plus 31 slots lands exactly on 0x0212ff34.
+//     That is the table the gate-205 header read from Toad's side and called
+//     "a pointer-to-member SOURCE table", and __sinit_ov085_0212f3a0 names its
+//     owner by copying those ten into data_ov085_0213055c. The state-seat
+//     comment at hal/actor_overlays.cpp:63-68 states it correctly.
+// So the width is still 31 and the tail's reason still holds; only the
+// OWNERSHIP of the bytes past slot 31 was misattributed.
 //
 // A plain Actor: no slot 31, the list ends at 30. But slot 12 is NOT
 // ActorBase::OnPendingDestroy the way TOAD's and WALL_SIGN's are -- this class
@@ -433,8 +446,9 @@ extern "C" void hal_fill_toad_vtable(void)
 //   slot 6   Behavior dispatches its ModelAnim's ROM SLOT 3 and the matched TU
 //            spells it as MSVC index 3, which is one slot high on an
 //            MSVC-numbered table. port/unmatched/Ov085_PrincessPeach_Behavior.cpp
-//            carries the derivation; it is the wave-19 collision one slot below
-//            where LAKITU_BRO and the RABBIT hit it.
+//            carries the derivation; it is the wave-19 collision TWO slots
+//            below where LAKITU_BRO and the RABBIT hit it -- theirs is ROM
+//            slot 5, hers is ROM slot 3.
 //   slot 16  D1 is the shadow-class MSVC destructor shape, the same one TOAD's
 //            D1 has, so it is spelled inline below from the ROM D1's own five
 //            relocs (0x02129d18, 0x48 bytes):

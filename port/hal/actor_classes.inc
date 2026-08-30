@@ -2575,6 +2575,27 @@ void hal_fill_princess_peach_vtable(void);           /* _ZTV13PrincessPeach, 31 
        0xe7, 0x90 and 0x9d and never 0xba. She is a CUTSCENE actor, so a \
        level walk does not exercise her; registered for the SPINY reason, \
        and because this row leaves ov085 with no unregistered factory \
-       standing behind its own mount. ---- */ \
+       standing behind its own mount. \
+       AND SHE HAS AN EXERCISER, so "no level dispatches this fill" is closed \
+       rather than open. The seat lane reported the gap; the review found the \
+       run and it reproduces: \
+         SM64DS_LEVEL=50 SM64DS_SPAWN_ACTOR=186 SM64DS_FAULTS_FATAL=1 \
+         SM64DS_WINDOW_SELFTEST=600 \
+       gives rc 0, census 27 -> 28 (12 classes, 0 skipped) with `+ 186 x1 \
+       PRINCESS_PEACH`, the watch probe still reading `186 x1 @(945,600,-1750)` \
+       at frame 540, and the instance still on the teardown census at 600. No \
+       fault, no quarantine, no UNHOSTED line. \
+       WHICH SLOTS THAT ACTUALLY DISPATCHES, measured rather than argued. Add \
+       SM64DS_ACTOR_PROBE=1 to the same run and it prints \
+         [actor] PRINCESS_PEACH model 30037280 file 300D9238 \
+                 transforms 300D8E48 mat.t (118,75,-219) scene \
+       -- so slot 9 runs, and its non-null file and transforms say slot 0 \
+       finished the load rather than bailing. Slot 6 is the hosted Behavior, \
+       and it runs every frame: it tail-calls the MAIN pointer-to-member \
+       dispatcher, which reads the ten-pair seat, so a wrong PMF stride or an \
+       unseated DS address would fault on the first frame under FAULTS_FATAL \
+       instead of surviving 600. Evidence: \
+       runs/rel0215/out/w3-f/exerciser_186_level50.txt and \
+       ..._actorprobe.txt. Do not re-open this as an unexercised seat. ---- */ \
     {186, "PRINCESS_PEACH", PrincessPeach_SpawnInfo, PrincessPeach_Spawn, \
      hal_fill_princess_peach_vtable},
