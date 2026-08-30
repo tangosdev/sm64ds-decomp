@@ -813,6 +813,46 @@ class Isolate(unittest.TestCase):
                          [r["addend"] - 8 for r in before_refs])
         self.assertEqual(len(report["relocations"]), len(before_refs))
 
+    def test_rebias_vtable_normalizes_undefined_base_import(self):
+        """An inlined base dtor's raw +8 import becomes the public +0 form."""
+        import io
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+
+        raw = self.build("struct B { virtual ~B(){} virtual int f(); }; "
+                         "struct D : B { virtual ~D(); }; D::~D(){}\n").read_bytes()
+
+        def addends(blob, name):
+            parsed = ELFFile(io.BytesIO(blob))
+            table = parsed.get_section_by_name(".symtab")
+            return sorted(reloc["r_addend"] for sec in parsed.iter_sections()
+                          if isinstance(sec, RelocationSection)
+                          for reloc in sec.iter_relocations()
+                          if table.get_symbol(reloc["r_info_sym"]).name == name)
+
+        parsed = ELFFile(io.BytesIO(raw))
+        table = parsed.get_section_by_name(".symtab")
+        symbols = list(table.iter_symbols())
+        own = next(s for s in symbols if s.name == "_ZTV1D"
+                   and s["st_shndx"] != "SHN_UNDEF")
+        base = next(s for s in symbols if s.name == "_ZTV1B")
+        self.assertEqual(base["st_shndx"], "SHN_UNDEF")
+        before = addends(raw, "_ZTV1B")
+        self.assertTrue(before)
+        self.assertTrue(all(value >= OI.VTABLE_PREAMBLE for value in before))
+        out, report = OI.rebias_object_symbols(
+            raw, {"_ZTV1D": {"bias": 8, "size": own["st_size"],
+                               "section": ".data"}},
+            normalize_undefined=True)
+        self.assertIsNone(report["error"])
+        self.assertEqual(addends(out, "_ZTV1B"),
+                         [value - OI.VTABLE_PREAMBLE for value in before])
+        imported = [row for row in report["relocations"]
+                    if row["symbol"] == "_ZTV1B"]
+        self.assertEqual(len(imported), len(before))
+        self.assertTrue(all(row["mode"] == "undefined-public-import"
+                            for row in imported))
+
     def test_vtable_addend_is_corrected_to_zero(self):
         """8 -> 0, because the ROM symbol is already past the preamble."""
         from elftools.elf.elffile import ELFFile
