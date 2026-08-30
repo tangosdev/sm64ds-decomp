@@ -1,0 +1,69 @@
+# run rel0215 wave 1, lane cast-sweep1: OV023's OWN CAST (level 15, Lethal
+# Lava Land's volcano interior, data/stage/fire_mt). Overlay 4 of 6.
+#
+# The three-way source inventory:
+#     delinked complete to a src/ TU   10
+#     present but NONMATCHING-bannered  0
+#     MISSING                           0
+#                                      --
+#                                      10  == config/arm9/overlays/ov023/
+#                                             symbols.txt's kind:function count
+#
+# All ten are here. Nothing to refuse and nothing host-copied: no asm-void
+# block, no scheduler, no card loader, no wireless wrapper, and no //cpp
+# real-destructor of the ov024 PyramidTag shape.
+#
+# ONE CLASS, SQUASHER (84), and it is the WHOLE of level 15's skip list. The
+# level spawns 55 actors and skips exactly one, so this seat takes level 15 to
+# zero skipped classes.
+#
+# SIX PER-SOURCE -D RENAMES travel with this slice (port/CMakeLists.txt), and
+# every one is pinned to a relocation or a literal pool, not to a guess:
+#
+#   _ZN8SquasherD1Ev.c   the two vtable stores are LABELLED BACKWARDS by the
+#   _ZN8SquasherD0Ev.c   resolver. The source writes _ZTV10dBgActor_c first and
+#                        VT1 second; the ROM writes the OWN table first
+#                        (pool 0x021111e4 = 0x02111fe4) and Platform's base
+#                        second (pool 0x021111e8 = 0x0210ae38). Same inversion
+#                        ov033's id-105 pair carries. D0 also takes G0 -> the
+#                        game heap 0x020a0eac.
+#   _ZN8Squasher16CleanupResourcesEv.cpp   G0 -> the MODEL SharedFilePtr
+#                        0x02112088, G1 -> the COLLISION one 0x02112080, in the
+#                        pool order the ROM body releases them (0x02111380 then
+#                        0x02111384). Private names, because that TU includes
+#                        decl_common.h which already declares 0x02112088 as a
+#                        scalar and a direct -D is a redeclaration.
+#   _ZN8Squasher13InitResourcesEv.cpp   TWO live alias races in one body:
+#                        func_ov026_02111308 -> ov023's OWN transform helper at
+#                        0x02111308 (the call at 0x021116a4 relocates there,
+#                        module ov023), and
+#                        _ZN32FloatOnWaterPlatformWdwRectangleD1Ev -> ov023's
+#                        collision SharedFilePtr at 0x02112080 (pool
+#                        0x0211171c). The second is the worse one: left alone
+#                        MeshCollider::LoadFile is handed the address of an
+#                        OV029 DESTRUCTOR as a file pointer. The first is
+#                        urgent for a different reason -- lane W1-A is seating
+#                        ov026 in this same wave, so func_ov026_02111308 is
+#                        about to become a DEFINED symbol and the call would
+#                        silently land in another level's overlay.
+#
+# ONE LINE IS APPENDED TO port/ov064_syms.txt, which this lane does not
+# otherwise own. Squasher's CLPS collision block genuinely lives in OV064 --
+# pool 0x02111720 relocates to 0x0211ba4c with module:overlay(64), so this is
+# a real cross-overlay read and not a naming race. ov064 is already mounted;
+# its per-symbol list simply did not carry that block. The ov046 precedent is
+# the same shape: a level overlay joined the per-symbol mounts for ONE CLPS
+# block another class reaches by name.
+#
+# THE MEASURED CLOSURE GAP: none. The first link added no arm9 TU.
+
+src/_ZN8SquasherD1Ev.c
+src/_ZN8SquasherD0Ev.c
+src/func_ov023_0211124c.c
+src/func_ov023_02111308.c
+src/_ZN8Squasher16CleanupResourcesEv.cpp
+src/_ZN8Squasher6RenderEv.cpp
+src/_ZN8Squasher8BehaviorEv.c
+src/_ZN8Squasher13InitResourcesEv.cpp
+src/Squasher_Spawn.c
+src/__sinit_ov023_02111aa8.c

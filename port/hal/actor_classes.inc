@@ -1324,6 +1324,19 @@ void hal_fill_tiny_cover_vtable(void);               /* data_ov033_0211237c, 32 
 extern unsigned char TinyWater_SpawnInfo[];          /* ov033 0x0211241c, +4 = 105 */
 void *TinyWater_Spawn(void);                         /* ov033 0x02111690, 56 B */
 void hal_fill_tiny_water_vtable(void);               /* _ZTV9TinyCover, 32 */
+/* run rel0215 wave 1 (lane cast-sweep1): OV023's ONE CLASS, the volcano
+   squasher -- and it is the WHOLE of level 15's skip list, so this row takes
+   that level to zero skipped classes. Its table is 32-slot Platform; the dsd
+   next-symbol landing OVER-reads it by seven slots because the next symbol is
+   the .bss base. Both attribution routes, the three T3 pins, the three alias
+   races its InitResources and destructors carry (two spelled with ov026 and
+   ov029 names for ov023's own addresses) and the one cross-overlay CLPS block
+   that genuinely lives in ov064 are derived in port/ov023_syms.txt; the fill
+   is hal/actor_classes_ov023.cpp and the slice is
+   port/slice_sweep1_ov023.txt. */
+extern unsigned char Squasher_SpawnInfo[];           /* ov023 0x02111fc0, +4 = 84 */
+void *Squasher_Spawn(void);                          /* ov023 0x02111728, 56 B */
+void hal_fill_squasher_vtable(void);                 /* _ZTV8Squasher, 32 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2013,4 +2026,8 @@ void hal_fill_tiny_water_vtable(void);               /* _ZTV9TinyCover, 32 */
     {104, "TINY_COVER", TinyCover_SpawnInfo, TinyCover_Spawn, \
      hal_fill_tiny_cover_vtable}, \
     {105, "TINY_WATER", TinyWater_SpawnInfo, TinyWater_Spawn, \
-     hal_fill_tiny_water_vtable},
+     hal_fill_tiny_water_vtable}, \
+    /* ---- run rel0215 wave 1 (lane cast-sweep1): ov023, the volcano \
+       squasher. Level 15's entire skip list, one row. ---- */ \
+    {84, "SQUASHER", Squasher_SpawnInfo, Squasher_Spawn, \
+     hal_fill_squasher_vtable},

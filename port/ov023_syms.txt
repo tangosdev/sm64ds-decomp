@@ -1,0 +1,108 @@
+# run rel0215 wave 1 (lane cast-sweep1): ov023's ONE CLASS, per symbol.
+# Overlay 4 of 6 in this lane.
+#
+# ov023 is a LEVEL overlay (level 15, Lethal Lava Land's volcano interior,
+# data/stage/fire_mt) and is already mounted WHOLE in PORT_LEVEL_OVERLAYS.
+# This is the SECOND mount of the same overlay, per symbol; the two do not
+# conflict. Same dual-mount shape as ov012/ov013/ov024/ov025/ov033/ov035/
+# ov045/ov052/ov056.
+#
+# delinks.txt sections, base 0x021111a0:
+#   .text   0x021111a0..0x02111760   .rodata 0x02111760..0x02111aa8
+#   .init   0x02111aa8..0x02111b14   .ctor   0x02111b14..0x02111b18
+#   .data   0x02111b20..0x02112080   .bss    0x02112080..0x021120c0
+# Every raw byte below came out of extracted/overlays/overlay_0023.bin (T4).
+#
+# ==== THE ONE CLASS, both attribution routes ===============================
+#
+#   id  arm9 slot   SpawnInfo   word[0]     factory         +4  x on L15
+#   84  0x020909b4  0x02111fc0  0x02111728  Squasher_Spawn  84   1
+#
+# The record's word[0] lands inside ov023 [0x021111a0, 0x02112080) and is the
+# overlay's only factory; the record reads its own id back at +4. Both routes
+# are required -- slot 84's candidate list reads
+# overlays(10,12,13,23,24,33,35,43,45,47,52,53,56).
+#
+# SQUASHER IS THE WHOLE OF LEVEL 15's SKIP LIST. The level spawns 55 actors and
+# skips exactly one, this one, so seating it takes the level to zero skipped.
+#
+# ==== ONE TABLE, 32 SLOTS, AND THE DSD LANDING OVER-READS ==================
+#
+# _ZTV8Squasher  0x02111fe4, THIRTY-TWO slots, ends 0x02112064.
+#   next dsd symbol 0x02112080 -- the .bss base, 0x9c away. The landing reads
+#   THIRTY-NINE, seven words past the end, straight through the 0x1c of .data
+#   padding between the table and the section boundary. This is the OPPOSITE
+#   error to ov024's and ov033's under-reads and it is the more dangerous one
+#   for a host array: seven extra slots of storage nothing ever writes, sitting
+#   where a reader that walked past slot 31 would find zeros instead of a fault.
+#   The pin is the ROM's own close:
+#       slot 29  0x02010124  _ZN5Actor16OnAimedAtWithEggEv
+#       slot 30  0x020100dc  _ZN5Actor25OnAimedAtWithEggReturnVecEv
+#       slot 31  0x020ee55c  _ZN8Platform4KillEv   (ov002 symbols.txt:1175)
+#   the 32-slot Platform close ov024's top, ov025's two, ov033's two, ov035's
+#   two, ov045's six, ov052's two and ov056's one all end on. The table is
+#   EXCLUDED from this mount and hosted as an array
+#   hal/actor_classes_ov023.cpp fills.
+#
+# ==== THREE T3 WIDTH PINS ==================================================
+#
+#   Squasher_SpawnInfo   natural next-symbol delta 0x24 -- the usual eight
+#     bytes of the next vtable's Itanium prologue past the end. Pinned to the
+#     record's real 0x1c.
+#   data_ov023_02112088  natural 0x4 (dsd named 0x0211208c INSIDE it). It is a
+#     SharedFilePtr and a SharedFilePtr is eight bytes -- its sibling
+#     0x02112080 sits eight from its own neighbour. Unpinned, the model file
+#     pointer's second word would land outside its own host array while the
+#     sinit writes it. This is the ov025 data_ov025_02113ab8 trap exactly.
+#   data_ov023_0211209c  natural 0x8 (dsd named 0x021120a4 inside it). It is a
+#     destructor chain node and func_020731dc writes THREE words through its
+#     node argument (src/func_020731dc.c), so it is 0xc.
+# data_ov023_02112080 and _02112090 already read 8 and 0xc and are left bare,
+# so the diff shows which two dsd got wrong.
+#
+# WHICH SINIT BUILDS WHAT, read off the one matched body:
+#   __sinit_ov023_02111aa8   02112088 file 1558 model  node 0211209c
+#                            02112080 file 1559 clsn   node 02112090
+#
+# ==== THREE ALIAS RACES, ALL LIVE, ALL IN ONE FUNCTION =====================
+#
+# src/_ZN8Squasher13InitResourcesEv.cpp is the worst-spelled body in this lane.
+# Its ROM pool at 0x02111718..0x02111724 and the relocations over it say what
+# each argument really is; the recovered source names two of the four wrong:
+#
+#   pool 0x02111718 -> 0x02112088  ov023's model SharedFilePtr.  Source spells
+#                      it data_ov023_02112088. CORRECT.
+#   pool 0x0211171c -> 0x02112080  ov023's collision SharedFilePtr.  Source
+#                      spells it &_ZN32FloatOnWaterPlatformWdwRectangleD1Ev --
+#                      an OV029 FUNCTION name at the same window address. Left
+#                      alone, MeshCollider::LoadFile is handed the address of a
+#                      destructor as a file pointer. Routed by -D.
+#   the call at 0x021116a4 -> 0x02111308  ov023's OWN transform helper. Source
+#                      calls it func_ov026_02111308 -- an OV026 name for the
+#                      same address, and lane W1-A is seating ov026 in this
+#                      same wave, so that name is about to become DEFINED.
+#                      Routed by -D.
+#   pool 0x02111720 -> 0x0211ba4c  module:overlay(64). NOT a race: the CLPS
+#                      block Squasher's collider uses genuinely lives in OV064,
+#                      the Lethal Lava Land actor pack, and the relocation says
+#                      so explicitly. ov064 is already mounted, but its
+#                      per-symbol list did not carry this block, so ONE LINE is
+#                      appended to port/ov064_syms.txt -- the ov046 shape,
+#                      where a level overlay joined the per-symbol mounts for a
+#                      single CLPS block another class reaches by name.
+#
+# ==== THE DESTRUCTOR LABELS ARE INVERTED, THE OV033 SHAPE AGAIN ============
+#
+# src/_ZN8SquasherD1Ev.c and D0Ev.c write _ZTV10dBgActor_c first and VT1
+# second. The ROM writes the OWN table first (0x021111e4 holds 0x02111fe4) and
+# Platform's base second (0x021111e8 holds 0x0210ae38). Same inversion ov033's
+# id-105 pair carries. Both spellings go to private names this lane owns; a
+# direct -D onto _ZTV10dBgActor_c is impossible because that name is a live
+# host array for every Platform in the port.
+
+# ---- .data: the one SpawnInfo record, pinned to the ROM's 0x1c ------------
+Squasher_SpawnInfo:0x1c
+
+# ---- .bss 0x02112080..0x021120c0: two SharedFilePtrs and two chain nodes --
+data_ov023_02112080 data_ov023_02112088:0x8
+data_ov023_02112090 data_ov023_0211209c:0xc

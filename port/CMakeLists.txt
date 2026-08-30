@@ -1941,6 +1941,19 @@ list(APPEND PORT_ACTOR_OVERLAYS ov005)
 # ov075 joins for the VS wiring lane (dScEntry_c, scene 6); the slice block
 # and the derivation pointer live beside SLICE_VS_SOURCES further down.
 list(APPEND PORT_ACTOR_OVERLAYS ov075)
+# run rel0215 wave 1 (lane cast-sweep1): ov023 (level 15's own overlay, Lethal
+# Lava Land's volcano interior, already whole-mounted in PORT_LEVEL_OVERLAYS)
+# joins the per-symbol mounts so SQUASHER (84) reaches its SpawnInfo record and
+# both sinit-built SharedFilePtrs by name. It is the WHOLE of level 15's skip
+# list -- one instance, one class -- so this seat takes that level to zero
+# skipped. Its vtable is excluded from the mount and hosted as an array
+# hal/actor_classes_ov023.cpp fills; dsd's landing on it OVER-reads by seven
+# slots (39 against a real 32), the opposite error to ov024's and ov033's.
+# That file also runs the mount bring-up, hal_fill_platform_vtable and the
+# overlay's single sinit from the registry fill (the ov025/ov045 pattern).
+# The three alias races its InitResources and destructors carry, all pinned to
+# ROM relocations, are in port/ov023_syms.txt. See port/slice_sweep1_ov023.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov023)
 # run rel0215 wave 1 (lane cast-sweep1): ov033 (level 25's own overlay, Tiny-
 # Huge Island's small side, already whole-mounted in PORT_LEVEL_OVERLAYS) joins
 # the per-symbol mounts so TINY_COVER (104) and TINY_WATER (105) reach their
@@ -8714,6 +8727,58 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov033_02111310.cpp"
     PROPERTIES COMPILE_DEFINITIONS "data_ov035_02111bfc=data_ov033_02111bfc")
 list(APPEND SWEEP1_SOURCES hal/actor_classes_ov033.cpp ${SLICE_SWEEP1_OV033_SOURCES})
+
+# ---- 4/6: ov023, level 15 (Lethal Lava Land's volcano) ---------------------
+# SQUASHER (84) x1 -- and it is the WHOLE of level 15's skip list, so this seat
+# takes that level to zero skipped classes. All ten of the overlay's TUs, no
+# host copy and no refusal. One 32-slot Platform table; the dsd landing
+# OVER-reads it by seven slots. See port/ov023_syms.txt and
+# port/slice_sweep1_ov023.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov023.txt" SLICE_SWEEP1_OV023_LINES)
+set(SLICE_SWEEP1_OV023_SOURCES "")
+foreach(line IN LISTS SLICE_SWEEP1_OV023_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SWEEP1_OV023_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# The destructors' two vtable stores are LABELLED BACKWARDS by the resolver:
+# the source writes _ZTV10dBgActor_c first and VT1 second, the ROM writes the
+# OWN table first (pool 0x021111e4 = 0x02111fe4) and Platform's base second
+# (0x021111e8 = 0x0210ae38). Same inversion ov033's id-105 pair carries. A
+# direct -D onto _ZTV10dBgActor_c is impossible: it is a live host array for
+# every Platform in the port.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8SquasherD1Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV10dBgActor_c=port_ov023_vt_own;VT1=port_ov023_vt_base")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8SquasherD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV10dBgActor_c=port_ov023_vt_own;VT1=port_ov023_vt_base;G0=data_020a0eac")
+# CleanupResources releases the model file then the collision one, in that
+# order (pool 0x02111380 then 0x02111384). Private names because that TU
+# includes decl_common.h, which already declares 0x02112088 as a scalar.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8Squasher16CleanupResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=port_ov023_sq_file0;G1=port_ov023_sq_file1")
+# TWO LIVE ALIAS RACES IN ONE BODY (T6), both pinned to the ROM:
+#   the call at 0x021116a4 relocates to 0x02111308 module ov023 -- the source
+#     calls it func_ov026_02111308, and lane W1-A is seating ov026 in this same
+#     wave, so that name is about to become DEFINED and the call would land in
+#     another level's overlay. A direct -D collides with decl_common.h's own
+#     func_ov023_02111308(char*) declaration, so it goes to a private name.
+#   pool 0x0211171c holds 0x02112080, ov023's collision SharedFilePtr -- the
+#     source spells it &_ZN32FloatOnWaterPlatformWdwRectangleD1Ev, an OV029
+#     FUNCTION name at ov023's data address. Left alone MeshCollider::LoadFile
+#     takes the address of a destructor as a file pointer.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8Squasher13InitResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_ov026_02111308=port_ov023_xform;_ZN32FloatOnWaterPlatformWdwRectangleD1Ev=port_ov023_clsn_file")
+list(APPEND SWEEP1_SOURCES hal/actor_classes_ov023.cpp ${SLICE_SWEEP1_OV023_SOURCES})
 # ---- end lane cast-sweep1 --------------------------------------------------
 
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'
