@@ -44,14 +44,20 @@ class RomBuildCheck(unittest.TestCase):
         report = RBC.analyze(self.config, "stock")
         self.assertTrue(report["passed"])
         self.assertEqual(report["moduleFidelity"]["percent"], 100.0)
+        digest = report["moduleFidelity"]["moduleSetSha256"]
+        self.assertEqual(len(digest), 64)
         self.assertEqual(report["sourceBuild"]["sourceFunctions"], 1)
         self.assertEqual(report["sourceBuild"]["sourceBytes"], 4)
         self.assertEqual(report["sourceBuild"]["sourceBytesPercent"], 50.0)
+        self.write_delinks("src/actors/Pair.cpp", end=0x00001008)
+        consolidated = RBC.analyze(self.config, "stock")
+        self.assertEqual(consolidated["moduleFidelity"]["moduleSetSha256"], digest)
 
     def test_shared_source_counts_every_owned_function(self):
         self.write_delinks("src/actors/Pair.cpp", end=0x00001008)
         report = RBC.analyze(self.config, "stock")
         self.assertTrue(report["passed"])
+        self.assertEqual(len(report["moduleFidelity"]["moduleSetSha256"]), 64)
         self.assertEqual(report["sourceBuild"]["sourceFunctions"], 2)
         self.assertEqual(report["sourceBuild"]["reproducingFunctions"], 2)
         self.assertEqual(report["sourceBuild"]["sourceBytes"], 8)

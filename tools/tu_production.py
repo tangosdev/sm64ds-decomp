@@ -159,6 +159,9 @@ def prepare_intact_link_verification(entries, jobs=4):
         diagnostics = {
             "rom": report.get("rom"),
             "baselineEvidence": report.get("baselineEvidence"),
+            "moduleSetSha256": (((report.get("analysis") or {})
+                                  .get("moduleFidelity") or {})
+                                 .get("moduleSetSha256")),
             "intactTusDemoted": report.get("intactTusDemoted"),
             "scratch": report.get("scratch"),
         }
