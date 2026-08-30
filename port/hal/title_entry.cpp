@@ -321,6 +321,149 @@ extern "C" int port_title_entry_taken(void)
     return g_taken;
 }
 
+/* ---- SM64DS_SKIP_MENU: BOOT TO FILE, THROUGH THE ROM'S OWN CHOICE ---------
+ *
+ * The owner asked for a toggle that skips the main menu and drops the player
+ * on the file select, where he picks A, B or C normally. This is that, and it
+ * is ONE CALL TO ONE MATCHED ROM FUNCTION with the value the ROM's own machine
+ * passes when the player taps that row. No state is written by the port.
+ *
+ * ---- WHAT THE CHAIN ACTUALLY DOES, MEASURED FRAME BY FRAME ----------------
+ *
+ * From a traced title run of the shipped binary (SM64DS_TITLE_TRACE=1, the
+ * five-tap chain, out/boot-title/A1_probe_short.log). Top-state on the left,
+ * the ROM's own words on the right:
+ *
+ *   f0     state 11   the title's opening animation. NOTHING SKIPS IT HERE --
+ *                     the taps at f200 and f400 changed nothing, because the
+ *                     ROM's own skip in src/func_ov007_020b0a20.c needs
+ *                     func_ov007_020aebac() == 0 and on this save state it is
+ *                     not. The state times out on its own.
+ *   f504   req 10     state 11's own exit: `unk8->unk2 = 0xA`.
+ *   f505   state 10   times out at its 0x3c frame into a screen fade.
+ *   f634   state 1    then asks for 0.
+ *   f666   state 0    THE TITLE'S FRONT SCREEN. Live, waiting.
+ *   f808   verdict 9, req 6      <- the tap at (160,168). This is the menu.
+ *   f809   state 6    the page change.
+ *   f878   state 0, ELEM 5       <- THE FILE SELECT IS UP.
+ *   f1008  verdict 3, req 11     <- the tap at (44,68): file A.
+ *   f1108  pending scene 3, and the bridge carries it into the adventure.
+ *
+ * So the whole of "the main menu" between the title coming up and the file
+ * select appearing is ONE PICK, and the pick's entire effect is a call to
+ *
+ *     func_ov007_020aec94(9)
+ *
+ * ---- WHY THAT FUNCTION AND NOT A STATE WRITE ------------------------------
+ *
+ * src/func_ov007_020aec94.c is the title's own "the player chose X". It is
+ * three statements and both of them matter:
+ *
+ *     g[4] = r4;                                 // g+0x10, the choice
+ *     ...
+ *     if ((unsigned)(r4 - 3) <= 2)               // 3,4,5 = files A, B, C
+ *         *(u16 *)(g[2] + 2) = 0xb;              // ask for top-state 11
+ *     else
+ *         *(u16 *)(g[2] + 2) = 6;                // ask for top-state 6
+ *
+ * g[2] IS THE TOP-STATE RECORD and +2 is its REQUESTED field -- the same word
+ * state 11's own exit writes, the same word the router func_ov007_020b1224
+ * writes, the same word hal/scene_boot.cpp's trace reads as `req`. So this
+ * function does not move the machine; it ASKS the machine, in the machine's
+ * own vocabulary, and src/func_ov007_020b0548.c's dispatcher performs the
+ * transition on its own next frame. The fade, the sound, the page build and
+ * the element rebuild are all the ROM's and all of them run.
+ *
+ * IT ALSO BRANCHES ON THE ROM'S OWN DATA AND THE PORT DOES NOT PRE-EMPT THAT.
+ * The same function's first branch is `if (r4 == 9) if (r5 || r6) ... ask for
+ * state 9 instead` -- the confirmation prompt -- where r5 and r6 are two save
+ * bytes at the title's own +0x37/+0x38. Whichever way that falls is the ROM's
+ * reading of its own save state, unchanged by this file.
+ *
+ * 9 IS MEASURED, NOT CHOSEN. It is what the player's own tap produced at f808
+ * above, and the page it opened is the page the f1008 tap picked file A on.
+ * The port supplies the choice; it does not invent the destination.
+ *
+ * ---- THE GUARD IS THE ROM'S TOO ------------------------------------------
+ *
+ * Fired on the first frame the front screen is live AND the menu is idle, and
+ * "idle" is not this file's opinion: it is the test src/func_ov007_020b1224.c
+ * opens with, the chain g+0x134 -> [0] -> [+4], zero when nothing is playing.
+ * Calling into a menu mid-animation is how a page gets built twice.
+ *
+ * ONCE PER PROCESS. The chain comes BACK to top-state 0 when the file select
+ * is up (f878 above, with the element machine at 5), so a condition of "state
+ * 0 and nothing chosen" is true twice and the second time is the screen the
+ * player is supposed to be looking at. Firing again there would take the file
+ * select away from him.
+ *
+ * ---- WHAT IT DELIBERATELY DOES NOT DO ------------------------------------
+ *
+ * It does not touch the title's opening animation. The owner's ruling is "boot
+ * to title", and states 11, 10 and 1 above ARE the title arriving -- roughly
+ * eleven seconds of the ROM's own timing that no input in the measured run
+ * shortened, because the ROM's own skip gate refused it. Forcing that gate
+ * would be the port overruling the game about its own save state, which is
+ * exactly the class of fix port/tools/linkage.py's north star refuses.
+ *
+ * And it does not pick a file. That is the player's, which is the whole point
+ * of the toggle. */
+extern "C" {
+extern char *data_ov007_0210342c;      /* dScDSMT_c's scene global */
+void func_ov007_020aec94(int choice);  /* src/func_ov007_020aec94.c */
+}
+
+enum { TITLE_CHOICE_FILE_SELECT = 9 };
+
+/* Is the title's own menu idle? src/func_ov007_020b1224.c's own opening test,
+   with the null checks a host has to add because the port can be ticking this
+   scene before the chain is built and a fault here would be the port's. */
+static int title_menu_idle(char *g)
+{
+    char *p1 = *(char **)(g + 0x134);
+    char *p2 = p1 ? *(char **)(p1) : 0;
+    char *p3 = p2 ? *(char **)(p2 + 4) : 0;
+    return p3 && *(short *)p3 == 0;
+}
+
+/* Called once per frame from hal/scene_boot.cpp's port_scene_tick, beside the
+   state trace and for the same reason: after the actor phases, so it reads the
+   state the frame ended in. Inert unless SM64DS_SKIP_MENU is set. */
+extern "C" void port_title_skip_tick(int frame)
+{
+    static int done;
+    if (done || !port_boot_skip_menu())
+        return;
+    /* Only on the title. port_scene_env_want is the same test the bridge
+       makes, and it is cheap and cached. */
+    if (port_scene_env_want() != SCENE_TITLE)
+        return;
+    char *g = data_ov007_0210342c;
+    if (!g)
+        return;                       /* the scene has not been built yet */
+    char *sp = *(char **)(g + 8);
+    if (!sp)
+        return;
+    if (*(short *)(sp + 0) != 0)
+        return;                       /* not the front screen yet */
+    if (*(short *)(sp + 2) != -1)
+        return;                       /* a transition is already requested */
+    if (*(int *)(g + 0x10) != 0)
+        return;                       /* something has already been chosen */
+    if (!title_menu_idle(g))
+        return;                       /* the ROM's own idle test says wait */
+
+    done = 1;
+    func_ov007_020aec94(TITLE_CHOICE_FILE_SELECT);
+    std::printf("[skip-menu] f%d: chose %d through the ROM's own "
+                "func_ov007_020aec94, which asked its own top-state machine "
+                "for %d. The file select comes up on the chain's own "
+                "transition; A, B and C are the player's.\n",
+                frame, TITLE_CHOICE_FILE_SELECT,
+                (int)*(short *)(sp + 2));
+    std::fflush(stdout);
+}
+
 /* THE HANDOFF TEST, called after a tick by every loop that can host the
    bridge. 0 = keep ticking. Non-zero = the title is done and the run should
    stop; whether that stop is an ENTRY or a REFUSAL is settled by

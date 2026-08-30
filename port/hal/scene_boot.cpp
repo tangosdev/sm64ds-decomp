@@ -4047,6 +4047,7 @@ extern "C" void port_window_copy_count(unsigned long long *copies,
 // capture byte-identical across this change.
 extern "C" int port_boot_default_scene(void);      /* hal/title_entry.cpp */
 extern "C" int port_boot_is_default_title(void);   /* hal/title_entry.cpp */
+extern "C" void port_title_skip_tick(int frame);   /* hal/title_entry.cpp */
 
 extern "C" int port_scene_env_want(void)
 {
@@ -5848,6 +5849,16 @@ extern "C" void port_scene_tick(int frame, int tick_game)
             /* AFTER the actor phases, so it reports the state the frame ended
                in rather than the one it started in. */
             port_title_state_trace(frame);
+            /* SM64DS_SKIP_MENU, and it sits HERE for the trace's reason and
+               one more. The trace's reason: the title writes its state from
+               inside port_actor_tick, so the words are only settled once that
+               has returned. The extra one: this is the seam BOTH title loops
+               go through -- the headless port_title_entry_run and
+               tests/walk_window.cpp's windowed scene_window_run both drive
+               port_scene_tick -- so the knob works in a measurement and in a
+               player's session without a second call site to keep in step.
+               Inert unless the knob is set; see hal/title_entry.cpp. */
+            port_title_skip_tick(frame);
             /* THE FRAME CLOCK, func_020197b8 phase 6 (hal/fader_wipes.cpp).
                After the actor phases and before the render. NOT the ROM's exact
                slot: the ROM steps it at phase 6, after phase 5 and so after its

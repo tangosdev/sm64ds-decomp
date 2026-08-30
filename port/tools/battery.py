@@ -20,6 +20,13 @@ Everything the merge gate runs, in order, stopping at the first failure:
                       list follows and for the same reason. A scene whose
                       blocker belongs to another lane runs with SCENE_SKIPS
                       naming it and is re-probed bare on every run
+  4c. default boot    walk_window.exe with NO SM64DS_* environment at all
+                      beyond the harness minimum, which since the owner's
+                      boot-to-title ruling is a title run rather than a level
+                      one. Asserts rc 0, the title chain's own two probe lines
+                      and a written frame. It replaces no level row: this is
+                      the question "where does a launch with no arguments go",
+                      which nothing here could ask while the answer was a level
   5. linkage          port/tools/linkage.py -- the linked count is printed and
                       compared against --linked-floor if given (a merge must
                       never lower it)
@@ -989,6 +996,112 @@ def shipcfg_missing_inputs(root):
     return missing
 
 
+def default_boot_env():
+    """THE ENVIRONMENT A PLAYER GETS, plus the harness minimum.
+
+    An ALLOWLIST, and it has to be. Every other env builder in this file starts
+    from os.environ and pops the knobs it knows about, which is right when the
+    row names its own destination -- an inherited SM64DS_SKIP_CLASS cannot make
+    a level row pass, because the row still says SM64DS_LEVEL=<n>. This row
+    names NOTHING, and that is the whole point of it: what it measures is what
+    the game does when nobody has said anything. A pop-list would leave exactly
+    the two names that decide this row's answer -- an inherited SM64DS_LEVEL or
+    SM64DS_SCENE turns "prove the default boots the title" into "prove a level
+    boots", silently and greenly. So this builds the environment from nothing
+    and adds four names.
+    """
+    env = {k: v for k, v in os.environ.items() if not k.startswith("SM64DS_")}
+    # The three the harness owes every run in this file: a bounded headless run
+    # (WINDOW_SELFTEST also forces the scene path headless -- see
+    # port_scene_want_window), faults that end the process instead of being
+    # quarantined and counted, and the quiet rule.
+    env["SM64DS_WINDOW_SELFTEST"] = SELFTEST_FRAMES
+    env["SM64DS_FAULTS_FATAL"] = "1"
+    env["SM64DS_NO_FOCUS"] = "1"
+    env["SM64DS_VOLUME"] = "0"
+    return env
+
+
+def default_boot_arm(build):
+    """Arm 4c: THE BARE LAUNCH REACHES THE TITLE.
+
+    The owner ruled that the game boots to its own first screen, so the run
+    with no environment at all stopped being a level boot and became the title
+    chain. Nothing in this battery covered that before, because before this
+    lane there was nothing to cover: a bare run was a level run and the level
+    rows measured it forty-six times over.
+
+    WHAT IT ASSERTS, and every line of it is the chain's own rather than this
+    file's opinion of it:
+
+      rc 0 under SM64DS_FAULTS_FATAL=1   the run finished and nothing faulted.
+                                         Read the caveat in section 9 of
+                                         port/ov007_seat.txt before trusting rc
+                                         alone -- which is why the two probe
+                                         lines below are also required.
+      "[scene] 1 = "                     hal/scene_boot.cpp's own boot line,
+                                         printed by port_scene_boot after the
+                                         ROM's spawn spine returned a scene
+                                         object. It is how the run says the
+                                         TITLE is what came up rather than
+                                         something that merely did not crash.
+      "frames of scene 1"                port_scene_finish's census, which the
+                                         same section 9 names as the line a run
+                                         must END with before any reading of it
+                                         counts. A truncated run and a clean
+                                         run that never got there otherwise
+                                         look identical.
+      walk_window_selftest.bmp           the run reached the renderer. Liveness
+                                         only, deliberately -- the pixels are
+                                         not compared, for the reason the
+                                         shipcfg arm gives at length. Deleted
+                                         first so a file an earlier row left
+                                         behind cannot answer for this one.
+
+    THIS ARM IS NOT A WEAKENED LEVEL ROW. It replaces nothing: all forty-six
+    level rows still run, still name their level and still compare their BMP.
+    This is a new question -- "where does a launch with no arguments go" --
+    that the tree could not previously ask.
+    """
+    exe = os.path.join(build, "walk_window.exe")
+    bmp = os.path.join(build, "walk_window_selftest.bmp")
+    if os.path.exists(bmp):
+        os.remove(bmp)
+    try:
+        r = run([exe], build, env=default_boot_env())
+    except subprocess.TimeoutExpired:
+        print(f"default boot: FAIL, a bare launch did not finish "
+              f"{SELFTEST_FRAMES} frames inside {STEP_TIMEOUT}s")
+        return False
+    out = (r.stdout or "") + (r.stderr or "")
+    if r.returncode:
+        print(f"default boot: FAIL rc={r.returncode} -- a launch with no "
+              f"SM64DS_* environment at all did not complete "
+              f"{SELFTEST_FRAMES} frames.")
+        print(out[-1500:])
+        return False
+    for probe, why in (("[scene] 1 = ",
+                        "the title scene never came up (no boot line from "
+                        "port_scene_boot)"),
+                       ("frames of scene 1",
+                        "the run never reached port_scene_finish's census, so "
+                        "it did not finish the title run it started")):
+        if probe not in out:
+            print(f"default boot: FAIL rc=0 but {why}. Expected {probe!r} in "
+                  f"the output.")
+            print(out[-1500:])
+            return False
+    if not os.path.isfile(bmp):
+        print("default boot: FAIL, rc=0 and the title ran but no "
+              "walk_window_selftest.bmp was written -- the run never reached "
+              "the renderer.")
+        return False
+    print(f"default boot: ok -- a bare launch reaches the TITLE, "
+          f"{SELFTEST_FRAMES} frames clean, and writes its frame "
+          f"({os.path.getsize(bmp):,} bytes, liveness only)")
+    return True
+
+
 def shipcfg_env(root):
     """The shipping exe's environment: an ALLOWLIST, not a pop-list.
 
@@ -1281,6 +1394,9 @@ def main():
         print(f"SKIP RETIRED: scene {sc} now runs {SELFTEST_FRAMES} frames "
               f"clean BARE. {skip[0]} is no longer needed, so delete scene "
               f"{sc} from SCENE_SKIPS in port/tools/battery.py.")
+
+    if not default_boot_arm(build):
+        return 1
 
     r = run([sys.executable, os.path.join(root, "port", "tools", "linkage.py"),
              root], root)

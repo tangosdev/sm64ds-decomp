@@ -16,6 +16,50 @@ build that never touches the byte-matching pipeline.
 - **32-bit host first.** The recovered ABI assumes 4-byte pointers. x64 comes
   after struct recovery makes layout host-independent.
 
+## How the game boots
+
+A launch with no `SM64DS_*` environment beyond what the launcher passes
+(`SM64DS_ASSET_ROOT`, `SM64DS_VOLUME`) boots the ROM's own opening:
+
+    title -> menu -> file select -> a slot is picked -> opening cutscene -> adventure
+
+That order is the ROM's, and it is worth reading carefully, because the
+cutscene is **last**, not first: `Stage::LoadClsnAndObjects` is what calls
+`StartIntroCutscene`, and that runs during the level boot `StartFile` asks for
+after the file has been picked. There is no cutscene before the title.
+
+Two toggles, both of which the launcher exposes:
+
+| Variable | Effect |
+|---|---|
+| `SM64DS_SKIP_MENU=1` | boot straight to the file select. The player still picks A, B or C. |
+| `SM64DS_SKIP_INTRO=1` | no opening cutscene. The title still comes up. |
+
+They compose. Both set is "file select, then straight into the game"; only
+`SKIP_MENU` still plays the cutscene, because the cutscene is downstream of the
+file pick rather than upstream of the title.
+
+**An absent variable means off.** The launcher removes the name when the box is
+unticked rather than writing `0`, so the game must read absence as off, and it
+does. A present `0` is honoured too.
+
+There is **no save medium yet**, so the file select offers three fresh files on
+every boot. All three are selectable and all three start a new adventure.
+Persistence is deliberately out of scope.
+
+### Developer opt-outs
+
+| Variable | Effect |
+|---|---|
+| `SM64DS_LEVEL=<n>` | boot that level directly, as before. The whole battery and every level proof uses this. |
+| `SM64DS_SCENE=<id>` | boot that scene directly, as before. Read **before** the default is consulted, so a named scene never sees the default. |
+| `SM64DS_VS_MAP=<0..3>` | boot a VS match. A destination too: the debug menu's VS row clears `SCENE` and `LEVEL` and sets only this. |
+| `SM64DS_BOOT_CLASSIC=1` | the pre-ruling boot, straight to castle grounds as Yoshi. `SM64DS_TITLE_ENTRY=0` is the same thing under the name the tree already used. |
+
+The whole decision lives in one place, `port_boot_default_scene` in
+`hal/title_entry.cpp`, and that file's banner carries the derivation and the
+frame-by-frame trace of the chain.
+
 ## Gate ledger
 
 Each gate is a slice manifest + a smoke binary that proves one seam with
