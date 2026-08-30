@@ -180,6 +180,136 @@
 # The eight extra bytes were inert -- nothing reads a table this file does not
 # mount -- but they were wrong, and a record whose width is pinned cannot have
 # its +4 id halfword moved by a later dsd relabel.
+#
+# ============================================================================
+# RUN REL0215 WAVE 3 (lane w3-a): FIVE CORRECTIONS, ALL RE-MEASURED
+# ============================================================================
+#
+# This lane set out to seat the parked Ttc subset. Everything below was
+# measured out of extracted/overlays/overlay_0065.bin (base 0x02115ee0) and
+# extracted/arm9_dec.bin, and every one of the five contradicts something this
+# file already says. The reproduction note first, because one of the two
+# addresses this file quotes has no base written next to it and the obvious
+# guess is wrong: THE arm9 SPAWN TABLE READ IS AT 0x02090864 + id*4 WITH
+# arm9_dec.bin BASED AT 0x02004000, not 0x02000000. At 0x02000000 the four
+# HMC records this file lists come out as noise; at 0x02004000 they reproduce
+# 236 -> 0x0211cb80, 237 -> 0x0211cc7c, 168 -> 0x0211cd84, 169 -> 0x0211cda0
+# exactly as written above.
+#
+# ---- CORRECTION 1: ELEVEN ids, not ten ------------------------------------
+# "the ten Ttc* classes (108-118)" is eleven ids. All eleven pass BOTH
+# attribution routes -- every record's word[0] lands inside ov065's own image
+# and every record reads its own id back at +4:
+#   108 0x0211cfe8 -> 0x02119efc TtcRotatingCube_Spawn        +4=108
+#   109 0x0211d004 -> 0x02119ebc TtcRotatingPrism_Spawn       +4=109
+#   110 0x0211d0c8 -> 0x0211a45c func_ov065_0211a45c          +4=110
+#   111 0x0211d1c8 -> 0x0211aae0 TtcConveyorBeltLarge_Spawn   +4=111
+#   112 0x0211d1ac -> 0x0211ab20 TtcConveyorBeltSmall_Spawn   +4=112
+#   113 0x0211d290 -> 0x0211b328 TTC_MovingBar_Spawn          +4=113
+#   114 0x0211d374 -> 0x0211b7b8 TtcRotatingGear_Spawn        +4=114
+#   115 0x0211d390 -> 0x0211b780 TtcRotatingTriangle_Spawn    +4=115
+#   116 0x0211d454 -> 0x0211bbac TtcMovingCubeA_Spawn         +4=116
+#   117 0x0211d470 -> 0x0211bb7c TtcMovingCubeB_Spawn         +4=117
+#   118 0x0211d544 -> 0x0211c040 TTC_MovingBeam_Spawn         +4=118
+# The eleventh is id 110. symbols/actor_renames_report.txt:199 already knew it
+# and could not place it: "UNRESOLVED actor 110 TTC_PENDULUM: spawninfo
+# 0x211d0c8" -- the same record address measured here.
+#
+# ---- CORRECTION 2: SEVEN vtables, not five, and this file denies two -------
+# "The five Ttc vtables (0x0211d028, 0x0211d1ec, 0x0211d3b4, 0x0211d494,
+# 0x0211d568)" is missing the two that ids 110 and 113 install. Read each
+# factory's own literal pool for the table it stores:
+#   ids 108,109 -> 0x0211d028   ids 111,112 -> 0x0211d1ec
+#   id  110     -> 0x0211d0ec   id  113     -> 0x0211d2b4
+#   ids 114,115 -> 0x0211d3b4   ids 116,117 -> 0x0211d494
+#   id  118     -> 0x0211d568
+# Both new tables are real: offset-to-top 0, a typeinfo record inside ov065's
+# own image, 32 slots with slot 30 Actor::OnAimedAtWithEggReturnVec and slot 31
+# 0x020ee55c Platform::Kill -- the same shape as the other five.
+#
+#   table       typeinfo    RTTI name at vtable[-1]   what dsd calls it
+#   0x0211d0ec  0x0211d0a8  16daObjCtMecha03_c        data_ov065_0211d0ec
+#   0x0211d2b4  0x0211d270  16daObjCtMecha05_c        data_ov065_0211d2b4
+#
+# SO THIS FILE'S OWN PARAGRAPH IS WRONG, and it is worth naming because it
+# would have cost the next lane the two classes outright. It says: "The probe's
+# two _ZTV16daObjCtMecha03_c/_05_c externs are NOT ov065 names at all (not in
+# its config) -- they are Ttc-subset dtor spellings from the same race". They
+# are ov065's own ids 110 and 113. They are absent from the config as _ZTV
+# NAMES only -- dsd labelled both tables as plain data, which is exactly why a
+# grep for the _ZTV spelling finds nothing and why the shift story looked like
+# it explained them. The decomp side already agreed: src/func_ov065_0211a358
+# carries "recovered name: daObjCtMecha03_c_InitResources" and it is slot 0 of
+# 0x0211d0ec.
+#
+# ---- CORRECTION 3: three more records need the SAME 0x1c pin ---------------
+# The wave-17 pin block above fixed the four PAIRS and left the three SOLO ids.
+# All three take the identical over-read, for the identical reason -- the next
+# config symbol is the following vtable, so the delta swallows that table's
+# Itanium prologue (offset-to-top + typeinfo pointer):
+#   data_ov065_0211d0c8      next 0x0211d0ec  -> 0x24 against a real 0x1c
+#   TTC_MovingBar_SpawnInfo  next 0x0211d2b4  -> 0x24 against a real 0x1c
+#   TTC_MovingBeam_SpawnInfo next 0x0211d568  -> 0x24 against a real 0x1c
+# Pinned in the list below. Same argument as wave 17's: inert today, wrong, and
+# a pinned record cannot have its +4 id halfword moved by a dsd relabel.
+#
+# ---- CORRECTION 4: one body is MISSING, and it is a vtable slot -----------
+# _ZN14TtcMovingCubeA8BehaviorEv, config addr 0x0211bd8c, size 0x178, is slot 6
+# of table 0x0211d568 -- id 118 TTC_MOVING_BEAM's Behavior. There is no src/ TU
+# for it and no host copy: it appears nowhere in the tree. It is therefore not
+# a matched TU, which is why linkage.py's 147 never counts it and why a census
+# of the 79 unlinked rows does not show it. Whoever seats id 118 owes it a LOUD
+# face (the hal/scene_boot.cpp l2_trap pattern), never a silent stub -- a beam
+# that returns 1 from a quiet stub is a platform that never moves and never
+# says so, which is the wave-17 failure mode in a new place.
+#
+# ---- CORRECTION 5, AND IT IS THE ONE THAT MATTERS -------------------------
+# THE BLOCKER THIS FILE PARKS THE SUBSET ON IS **NOT** REMOVED BY WAVE 18's
+# ov035 MOUNT, and both this file and port/ov035_syms.txt imply that it is.
+#
+# The blocker paragraph above is right that the twelve level-window reads must
+# land on host storage, and wave 18 duly mounted all twelve (two with :0x20
+# pins) and run rel0215 wave 1 wired port_ov035_syms_patch() into
+# port_ov35_bringup(). Both halves are real. They are not sufficient, and the
+# reason is in tools/ovdata.py's own cross_mode():
+#
+#   "Every level overlay is linked at the SAME base ... a pointer into that
+#    range names whichever level is currently loaded ... Resolving it correctly
+#    needs a seat that RE-PATCHES PER LOADED LEVEL; until there is one, raw is
+#    the honest answer and the sweep keeps it visible."
+#
+# and the test it applies is on WINDOWS, not on provided ranges, precisely so
+# that a --whole mount still counts as a contender. ov065 is an ACTOR overlay
+# co-resident with every level overlay, so every level's whole mount contests
+# every one of these targets and the pass drops all twelve. MEASURED on this
+# lane's base (cc10acd4e), from the build's own summary lines:
+#
+#   cross: 312 pointers rebased across 121 mounts, 9542 left raw (136 into a
+#   window contested by a co-resident mount, ...)
+#   cross: ov065 9 pointers rebased onto another mount
+#
+# and those NINE are ov065's typeinfo base-class words into ov002 gaps
+# (build/port/host-src/ov_cross.c:449-457) -- not one ov035 target among them.
+# grep the generated file: it names port_ov035_image twice, both times as a
+# DESTINATION of ov035's own typeinfo, never as a source of a CLPS block.
+#
+# So the twelve words are still DS addresses at run time on this tip, and a
+# seated Ttc class still hands MovingMeshCollider::SetFile a DS pointer -- the
+# exact state wave 17 measured, with ids 108 (x8) and 114 (x5) ticking 300
+# frames SILENTLY on a garbage CLPS. The remaining work is the seat ovdata.py
+# names: a per-loaded-level re-patch of ov065's EIGHT MOUNTED DATA words
+# (0x0211cfd8, 0x0211cfe4, 0x0211d16c, 0x0211d170, 0x0211d19c, 0x0211d1a8,
+# 0x0211d364, 0x0211d370). The other four of the twelve -- 0x0211c03c,
+# 0x0211a454, 0x0211bb68, 0x0211b314 -- are literal-pool words inside ov065's
+# .text, which a recompiled TU resolves BY NAME and which no data patch can
+# reach. level_boot.cpp's port_level_mount_register is the hook, and its
+# per-level idempotency cache and .dsstate bracketing rule
+# (level_boot.cpp:1660-1730) are the contract any such seat has to meet.
+#
+# THIS LANE DID NOT BUILD THAT SEAT. It is named here with its mechanism, its
+# measurement and its hook so the next lane starts from the real blocker
+# instead of re-deriving a removed one. The cast map above is complete and
+# checked four independent ways and is not the hard part; this is.
 
 data_ov065_0211c078 data_ov065_0211c080 data_ov065_0211c08c
 data_ov065_0211c0a8 data_ov065_0211c0b0 data_ov065_0211c0b8
@@ -200,17 +330,17 @@ data_ov065_0211cf44 data_ov065_0211cf64 data_ov065_0211cf84
 data_ov065_0211cfa4 data_ov065_0211cfa8 data_ov065_0211cfac
 data_ov065_0211cfb8 data_ov065_0211cfd0 data_ov065_0211cfd4
 data_ov065_0211cfd8 TtcRotatingCube_SpawnInfo:0x1c TtcRotatingPrism_SpawnInfo:0x1c
-data_ov065_0211d0a8 data_ov065_0211d0b4 data_ov065_0211d0c8
+data_ov065_0211d0a8 data_ov065_0211d0b4 data_ov065_0211d0c8:0x1c
 data_ov065_0211d0ec data_ov065_0211d16c data_ov065_0211d174
 data_ov065_0211d180 data_ov065_0211d194 data_ov065_0211d198
 data_ov065_0211d19c TtcConveyorBeltSmall_SpawnInfo:0x1c TtcConveyorBeltLarge_SpawnInfo:0x1c
 data_ov065_0211d26c data_ov065_0211d270 data_ov065_0211d27c
-TTC_MovingBar_SpawnInfo data_ov065_0211d2b4 data_ov065_0211d334
+TTC_MovingBar_SpawnInfo:0x1c data_ov065_0211d2b4 data_ov065_0211d334
 data_ov065_0211d338 data_ov065_0211d344 data_ov065_0211d35c
 data_ov065_0211d360 data_ov065_0211d364 TtcRotatingGear_SpawnInfo:0x1c
 TtcRotatingTriangle_SpawnInfo:0x1c data_ov065_0211d434 data_ov065_0211d440
 TtcMovingCubeA_SpawnInfo:0x1c TtcMovingCubeB_SpawnInfo:0x1c data_ov065_0211d514
-data_ov065_0211d520 data_ov065_0211d530 TTC_MovingBeam_SpawnInfo
+data_ov065_0211d520 data_ov065_0211d530 TTC_MovingBeam_SpawnInfo:0x1c
 data_ov065_0211d600 data_ov065_0211d608 data_ov065_0211d610
 data_ov065_0211d618 data_ov065_0211d620 data_ov065_0211d62c
 data_ov065_0211d638 data_ov065_0211d644 data_ov065_0211d650
