@@ -35,6 +35,7 @@ See notes/rom-build.md for the milestones and the enrollment rules.
 import argparse
 import concurrent.futures
 import hashlib
+import io
 import json
 import os
 import pathlib
@@ -294,8 +295,10 @@ def _isolate(obj, rel, syms, data_sink=None, compiler_only=None):
     """Reduce a compiled `src/` object to its declared function(s).
 
     A legacy source owns one function and takes the unchanged singular isolation path.
-    A consolidated, text-only source owns several functions in ROM order and takes
-    objisolate's separate fail-closed intact-object path. Returns an error or None.
+    A consolidated source owns several functions in ROM order and takes objisolate's
+    separate fail-closed intact-object path, which admits no content the manifest has
+    not licensed -- including the vtable a key function drags in. Returns an error or
+    None.
 
     `mods/` is deliberately exempt. A mod is not a recovered ROM function: it may
     legitimately define helpers and data alongside its entry point, and isolation
@@ -325,6 +328,15 @@ def _isolate(obj, rel, syms, data_sink=None, compiler_only=None):
             pol = (compiler_only or {}).get(rel.replace("\\", "/")) or {}
             dead = pol.get("deadstrip") or []
             if dead:
+                # Before the surgery, not after: once the sections are zeroed there is
+                # nothing left to compare against the cartridge.
+                differ = _data_body_reasons(obj, rel, pol.get("data") or [])
+                if differ:
+                    return "compiler-only data policy: " + "; ".join(differ)
+                differ = _duplicate_body_reasons(
+                    obj, rel, pol.get("expect") or {}, pol.get("homes") or {})
+                if differ:
+                    return "compiler-only duplicate policy: " + "; ".join(differ)
                 reduced, dead_plan = OI.derive_deadstrip(
                     obj.read_bytes(), dead, pol.get("expect") or {})
                 if reduced is None:
@@ -376,7 +388,7 @@ def enrolled_symbols():
             for rel, rows in grouped.items()}
 
 
-DISPOSITIONS = ("deadstrip", "deadstrip-duplicate")
+DISPOSITIONS = ("deadstrip", "deadstrip-duplicate", "deadstrip-data")
 
 _SYM_SIZES = None
 _MOD_IMAGES = {}
@@ -438,6 +450,123 @@ def _duplicate_body(symbol, homes_for):
     return body, None
 
 
+def _claimed_range(entry, module, addr):
+    """The entry's own declared range containing `addr`, or None.
+
+    A promoted TU claims exact address ranges and nothing else.  Everything outside
+    them is content dsd delinks straight from the cartridge no matter what this object
+    emits, which is the whole reason a data body can be discarded at all.
+
+    The caller has already refused an entry with no module of its own: without one
+    every range comparison here would come back "not mine", which is the answer that
+    licenses the discard.
+    """
+    if RL.normalize_module(str(entry.get("module", ""))) != RL.normalize_module(module):
+        return None
+    for sec in entry.get("sections") or []:
+        try:
+            start, end = int(str(sec.get("start")), 0), int(str(sec.get("end")), 0)
+        except (TypeError, ValueError):
+            continue
+        if start <= addr < end:
+            return f"{sec.get('name') or '?'} 0x{start:08x}-0x{end:08x}"
+    return None
+
+
+def _declared_home(row):
+    """(module, addr) a policy row claims for itself, ``"bad"``, or None.
+
+    These fields are written so a human reading the manifest sees the address the row
+    leans on.  Left unvalidated they drift silently against the config that actually
+    decides, so they are checked whenever they are present.
+    """
+    module, addr = row.get("canonical_module"), row.get("canonical_address")
+    if module is None and addr is None:
+        return None
+    try:
+        return RL.normalize_module(str(module)), int(str(addr), 0)
+    except (TypeError, ValueError):
+        return "bad"
+
+
+def _duplicate_body_reasons(obj, rel, expect, homes):
+    """Reasons a ``deadstrip-duplicate`` body is not the cartridge's own.
+
+    `objisolate` compares the raw section against the cartridge, which can only speak
+    for the words no relocation covers -- an addend is not a linked address, so every
+    `bl` and every vptr store has to be masked out there.  Those are precisely the
+    words that carry the wiring, so leaving them unchecked would license discarding a
+    body whose instructions match and whose call targets do not.
+
+    `linkcheck` already links a candidate body the way the linker would, for exactly
+    this comparison; the homes come from symbols.txt, which is why this lives here and
+    not in the surgery module.  Words it cannot resolve come back blind and are
+    excluded rather than counted as differences -- the same rule
+    :func:`_data_body_reasons` inherits from romdata_check.
+    """
+    if not expect:
+        return []
+    import linkcheck as LC  # noqa: PLC0415 - heavy, and only this path needs it
+    from elftools.elf.elffile import ELFFile  # noqa: PLC0415
+    raw, names, out = obj.read_bytes(), RDC.name_index(), []
+    elf = ELFFile(io.BytesIO(raw))
+    symtab = elf.get_section_by_name(".symtab")
+    for name, want in sorted(expect.items()):
+        home = (homes or {}).get(name)
+        if home is None:
+            continue
+        module, addr = home
+        sym = next((y for y in symtab.iter_symbols() if y.name == name
+                    and y["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")), None)
+        relocs = LC.func_relocs_typed(raw, name, names)
+        if sym is None or relocs is None:
+            out.append(f"{name} is not defined in this object")
+            continue
+        body = elf.get_section(sym["st_shndx"]).data()[
+            sym["st_value"]:sym["st_value"] + len(want)]
+        for rl in relocs:
+            # mwcc's `_ZTV<C>` addresses the vtable object; symbols.txt's addresses the
+            # slots, so the raw addend double-counts the preamble. Same correction
+            # romdata_check applies to a vptr field embedded in a data record.
+            if rl["sym"].startswith("_ZTV") and rl["add"] >= OI.VTABLE_PREAMBLE:
+                rl["add"] -= OI.VTABLE_PREAMBLE
+        linked, blind = LC.link_function(body, addr, relocs)
+        differing = [off for off in range(0, len(linked) & ~3, 4)
+                     if off not in blind and linked[off:off + 4] != want[off:off + 4]]
+        if differing:
+            out.append(f"{name} linked against {module}:0x{addr:08x} differs from the "
+                       f"cartridge in {len(differing)} word(s), first at "
+                       f"0x{differing[0]:x}")
+    return sorted(out)
+
+
+def _data_body_reasons(obj, rel, symbols):
+    """Reasons a ``deadstrip-data`` symbol's body is not the cartridge's own.
+
+    The disposition is licensed on an address argument -- the home lies outside every
+    range this source claims, so discarding it cannot cost the image a byte.  That
+    makes it sound; it does not make it right.  A vtable whose slots disagree with the
+    cartridge means the class model is wrong, and quietly dropping it would bury that
+    evidence in the very file that produced it.  romdata_check already resolves the
+    relocations and compares word by word.  It is advisory everywhere else, and binding
+    here because a policy row is an explicit, checked-in claim about these symbols.
+
+    Only DIFFERS is a refusal.  PARTIAL is the normal verdict for a vtable -- the ROM
+    extent is the distance to the next symbol, so a trailing alignment gap that belongs
+    to nobody makes a fully-matching body come back short.
+    """
+    if not symbols:
+        return []
+    want, out = set(symbols), []
+    for rec in RDC.check_object(obj, rel):
+        if rec.get("symbol") in want and rec.get("verdict") == RDC.DIFFERS:
+            out.append(f"{rec['symbol']} differs from the cartridge at "
+                       f"{rec.get('module')}:0x{rec.get('addr', 0):08x} in "
+                       f"{rec.get('differingBytes')} of {rec.get('bytes')} "
+                       f"compared bytes")
+    return sorted(out)
+
+
 def compiler_only_policies(enrolled=None, manifest=None, homes=None):
     """Exact dead-strip allow-lists for promoted multi-function sources.
 
@@ -446,12 +575,13 @@ def compiler_only_policies(enrolled=None, manifest=None, homes=None):
     remains objisolate's job; this preflight only proves the checked-in policy cannot
     hide a function that has a retail address.
 
-    Two dispositions, and the difference is the whole safety argument:
+    Three dispositions, and the difference between them is the whole safety argument:
 
     ``deadstrip``
-        The function is *homeless* -- mwcc emitted a body (a D2 variant, an inline
-        helper) that the retail link discarded and no configured symbol names.
-        Refused the moment it acquires a ROM home.
+        The symbol is *homeless* -- mwcc emitted a body (a D2 variant, an inline
+        helper, a typeinfo record for a class the ROM never names) that the retail link
+        discarded and no configured symbol names.  Refused the moment it acquires a
+        ROM home.
 
     ``deadstrip-duplicate``
         The function *must* have a ROM home, and the row must name it.  This is the
@@ -464,6 +594,20 @@ def compiler_only_policies(enrolled=None, manifest=None, homes=None):
         it did not the link would fail on an undefined symbol rather than quietly
         producing a hole.  This is what let a reconstructed TU be promoted at all --
         before it, every TU holding a ``Vector3`` was stuck at text-verified.
+
+    ``deadstrip-data``
+        The same shape one level up, for ``_ZTV``/``_ZTI``/``_ZTS`` rather than code.
+        A TU that names its key function emits its class's vtable, and an intact
+        multi-symbol object refuses any surviving non-``.text`` content -- so promotion
+        used to mean deleting the out-of-line destructor and losing the vtable with it.
+        The duplicate proof cannot be reused here: a vtable's words are relocation
+        addends in this object and linked addresses in the cartridge.  The argument is
+        an address one instead.  A promoted entry claims exact ranges; a data home
+        *outside* every one of them is content dsd delinks from the cartridge whatever
+        this object does, so discarding the copy cannot cost the image a byte, and a
+        home *inside* a claimed range is refused because that is a range the source
+        undertook to build.  The bodies are then proved word-by-word at isolation time,
+        with the relocations applied -- see :func:`_data_body_reasons`.
     """
     data = TUM.load() if manifest is None else manifest
     active = None if enrolled is None else {
@@ -489,7 +633,7 @@ def compiler_only_policies(enrolled=None, manifest=None, homes=None):
             errors.append(f"{source}: compiler-only policy is declared by multiple entries")
             continue
         licensed = {row.get("symbol") for row in entry.get("functions", [])}
-        wanted, expect = [], {}
+        wanted, expect, data, dup_homes = [], {}, [], {}
         for i, row in enumerate(rows):
             if not isinstance(row, dict):
                 errors.append(f"{source}: compiler_only_output[{i}] is not an object")
@@ -508,6 +652,17 @@ def compiler_only_policies(enrolled=None, manifest=None, homes=None):
                 errors.append(f"{source}: {symbol} is licensed by the manifest")
             if symbol in wanted:
                 errors.append(f"{source}: duplicate compiler-only symbol {symbol}")
+            declared = _declared_home(row)
+            if declared == "bad":
+                errors.append(f"{source}: {symbol} canonical_module/canonical_address "
+                              f"must name a module and an integer address")
+            elif declared is not None:
+                actual = {(RL.normalize_module(m), a)
+                          for m, a in homes.get(symbol) or []}
+                if declared not in actual:
+                    errors.append(f"{source}: {symbol} names canonical home "
+                                  f"{declared[0]}:0x{declared[1]:08x}, which is not one "
+                                  f"of its configured ROM home(s) {sorted(actual)}")
             if disposition == "deadstrip-duplicate":
                 if not homes.get(symbol):
                     errors.append(f"{source}: {symbol} is declared a duplicate but has "
@@ -518,12 +673,41 @@ def compiler_only_policies(enrolled=None, manifest=None, homes=None):
                         errors.append(f"{source}: {why}")
                     else:
                         expect[symbol] = body
-            elif homes.get(symbol):
+                        # The link address for the resolved comparison; _duplicate_body
+                        # has already refused anything but a single unambiguous home.
+                        dup_homes[symbol] = (RL.normalize_module(homes[symbol][0][0]),
+                                             homes[symbol][0][1])
+            elif disposition == "deadstrip-data":
+                if not str(entry.get("module") or ""):
+                    # Fail closed. The licence is that the home lies outside every
+                    # range this entry claims -- an entry with no module of its own
+                    # would clear that test vacuously, for every address in the ROM.
+                    errors.append(f"{source}: {symbol} is declared compiler-only data "
+                                  f"but this entry declares no module, so its claimed "
+                                  f"ranges cannot be compared against a ROM home")
+                elif not homes.get(symbol):
+                    errors.append(f"{source}: {symbol} is declared compiler-only data "
+                                  f"but has no configured ROM home; a homeless object "
+                                  f"is a plain deadstrip")
+                else:
+                    inside = [(m, a, _claimed_range(entry, m, a))
+                              for m, a in homes[symbol]]
+                    inside = [(m, a, r) for m, a, r in inside if r]
+                    if inside:
+                        m, a, r = inside[0]
+                        errors.append(f"{source}: {symbol}'s ROM home {m}:0x{a:08x} "
+                                      f"falls inside this entry's own {r}; a range the "
+                                      f"source claims must be built, not discarded")
+                    else:
+                        data.append(symbol)
+            elif disposition == "deadstrip" and homes.get(symbol):
                 errors.append(f"{source}: {symbol} has configured ROM home(s) "
-                              f"{homes[symbol]}; declare it deadstrip-duplicate and "
-                              f"prove the body, or drop the policy")
+                              f"{homes[symbol]}; declare it deadstrip-duplicate (a "
+                              f"function) or deadstrip-data (an object) and prove the "
+                              f"body, or drop the policy")
             wanted.append(symbol)
-        out[source] = {"deadstrip": wanted, "expect": expect}
+        out[source] = {"deadstrip": wanted, "expect": expect, "data": data,
+                       "homes": dup_homes}
     if errors:
         raise BuildError("compiler-only policy", 1, "\n".join(errors))
     return out

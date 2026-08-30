@@ -165,7 +165,7 @@ class RomBuildEnrollment(unittest.TestCase):
         }]}
         self.assertEqual(
             RB.compiler_only_policies(manifest=manifest, homes={}),
-            {"src/Pair.cpp": {"deadstrip": ["_ZN4PairC2Ev"], "expect": {}}})
+            {"src/Pair.cpp": {"deadstrip": ["_ZN4PairC2Ev"], "expect": {}, "data": [], "homes": {}}})
 
     def test_duplicate_disposition_requires_a_rom_home(self):
         """The two dispositions have opposite preconditions, deliberately."""
@@ -208,6 +208,58 @@ class RomBuildEnrollment(unittest.TestCase):
             RB.compiler_only_policies(manifest=manifest, homes={})
         self.assertIn("disposition must be one of", raised.exception.output)
 
+    def _data_manifest(self, **row):
+        base = {"symbol": "_ZTV4Pair", "disposition": "deadstrip-data",
+                "reason": "the cartridge owns this vtable"}
+        return {"entries": [{
+            "id": "arm9/Pair",
+            "module": "arm9",
+            "source": "src/Pair.cpp",
+            "sections": [{"name": ".text", "start": "0x02000000", "end": "0x02000100"}],
+            "functions": [{"symbol": "First"}],
+            "compiler_only_output": [base | row]}]}
+
+    def test_data_disposition_requires_a_rom_home(self):
+        """A homeless data object is a plain deadstrip -- there is nothing to prove."""
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.compiler_only_policies(manifest=self._data_manifest(), homes={})
+        self.assertIn("a homeless object is a plain deadstrip", raised.exception.output)
+
+    def test_data_disposition_refuses_an_entry_with_no_module(self):
+        """Without a module every claimed range reads as somebody else's, so the
+        address argument would clear itself vacuously for the whole ROM."""
+        manifest = self._data_manifest()
+        del manifest["entries"][0]["module"]
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.compiler_only_policies(manifest=manifest, homes={
+                "_ZTV4Pair": [("arm9", 0x02000040)]})
+        self.assertIn("this entry declares no module", raised.exception.output)
+
+    def test_data_disposition_refuses_a_home_this_entry_claims(self):
+        """Inside a claimed range, dsd does NOT delink it: the source must build it."""
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.compiler_only_policies(manifest=self._data_manifest(), homes={
+                "_ZTV4Pair": [("arm9", 0x02000040)]})
+        self.assertIn("must be built, not discarded", raised.exception.output)
+
+    def test_data_disposition_accepts_a_home_outside_every_claimed_range(self):
+        """The licence is an address argument: dsd delinks it from the cartridge
+        regardless, so discarding this object's copy cannot cost the image a byte."""
+        self.assertEqual(
+            RB.compiler_only_policies(manifest=self._data_manifest(), homes={
+                "_ZTV4Pair": [("arm9", 0x02008000)]}),
+            {"src/Pair.cpp": {"deadstrip": ["_ZTV4Pair"], "expect": {}, "homes": {},
+                              "data": ["_ZTV4Pair"]}})
+
+    def test_data_disposition_rejects_a_canonical_home_that_is_not_configured(self):
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.compiler_only_policies(
+                manifest=self._data_manifest(canonical_module="arm9",
+                                             canonical_address="0x02009999"),
+                homes={"_ZTV4Pair": [("arm9", 0x02008000)]})
+        self.assertIn("which is not one of its configured ROM home(s)",
+                      raised.exception.output)
+
     def test_policy_keys_on_the_promoted_path_not_the_src_tu_path(self):
         """A promoted entry is enrolled under promoted_source.
 
@@ -223,7 +275,7 @@ class RomBuildEnrollment(unittest.TestCase):
                                       "reason": "homeless variant"}]}]}
         self.assertEqual(
             RB.compiler_only_policies({"src/actors/TU.cpp"}, manifest=manifest, homes={}),
-            {"src/actors/TU.cpp": {"deadstrip": ["_ZN1PD2Ev"], "expect": {}}})
+            {"src/actors/TU.cpp": {"deadstrip": ["_ZN1PD2Ev"], "expect": {}, "data": [], "homes": {}}})
 
     def test_compiler_only_policy_ignores_unenrolled_shadow_manifests(self):
         manifest = {"entries": [{
