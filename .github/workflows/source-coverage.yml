@@ -42,6 +42,14 @@ on:
       - "config/**/delinks.txt"
       - "config/source-coverage-exceptions.jsonl"
       - "src/**"
+      # mods/** too, and this is not hypothetical: `src/**` is not the whole enrolled
+      # surface. config/arm9/overlays/ov002/delinks.txt:1837 enrolls
+      # mods/Player_ScaleByCharFactor.c -- 52 bytes, the only non-src/ path of the 10,973
+      # ranges enrolled tree-wide. Deleting just that file makes source_coverage.py exit 1
+      # with the correct -52 and correct blame (measured), but a PR touching only mods/
+      # matched no filter here, so the job never ran and the loss landed silent. A missing
+      # check reads exactly like a passing one.
+      - "mods/**"
       - "tools/source_coverage.py"
       - "tools/test_source_coverage.py"
       - ".github/workflows/source-coverage.yml"
@@ -51,6 +59,7 @@ on:
       - "config/**/delinks.txt"
       - "config/source-coverage-exceptions.jsonl"
       - "src/**"
+      - "mods/**"
       - "tools/source_coverage.py"
       - "tools/test_source_coverage.py"
       - ".github/workflows/source-coverage.yml"

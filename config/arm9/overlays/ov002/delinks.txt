@@ -288,37 +288,9 @@ src/OneUpMushroom_Spawn.c:
     complete
     .text start:0x020b0580 end:0x020b05d0
 
-src/_ZN13InvisiblePoleD1Ev.cpp:
+src/actors/daBar_c.cpp:
     complete
-    .text start:0x020b05d0 end:0x020b0600
-
-src/_ZN13InvisiblePoleD0Ev.cpp:
-    complete
-    .text start:0x020b0600 end:0x020b0644
-
-src/_ZN13InvisiblePole16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020b0644 end:0x020b064c
-
-src/_ZN13InvisiblePole16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x020b064c end:0x020b0650
-
-src/_ZN13InvisiblePole6RenderEv.cpp:
-    complete
-    .text start:0x020b0650 end:0x020b0658
-
-src/_ZN13InvisiblePole8BehaviorEv.cpp:
-    complete
-    .text start:0x020b0658 end:0x020b067c
-
-src/_ZN13InvisiblePole13InitResourcesEv.cpp:
-    complete
-    .text start:0x020b067c end:0x020b0710
-
-src/InvisiblePole_Spawn.c:
-    complete
-    .text start:0x020b0710 end:0x020b0748
+    .text start:0x020b05d0 end:0x020b0748
 
 src/_ZN9CameraTagD1Ev.cpp:
     complete

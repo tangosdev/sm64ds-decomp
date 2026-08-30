@@ -167,8 +167,16 @@ def module_of(delinks_path):
         return m.group(1)
     if p.endswith("config/arm9/delinks.txt"):
         return "arm9"
-    # Any other layout (config_tu/, a future module root): name it by its directory, so
+    # Any other layout under config/ (a future module root): name it by its directory, so
     # an unrecognised path is still attributed rather than silently merged with arm9.
+    #
+    # Not config_tu/, and do not "fix" the scanners to reach it. Both entries_from_tree()
+    # and entries_from_ref() are scoped to CONFIG_DIR on purpose: tu_config.py generates
+    # config_tu/ as a PARALLEL dsd root for the TU-shaped treemap experiment, and its own
+    # contract is that "config/**/delinks.txt remains the sole authority over what mwccarm
+    # compiles." Measured on main: 8 delinks files, 29 entries, ZERO marked `complete` --
+    # so widening the scan would not find a single source-built byte, it would only import
+    # 29 unenrolled entries and the false alarms that come with them.
     return pathlib.PurePosixPath(p).parent.name or p
 
 

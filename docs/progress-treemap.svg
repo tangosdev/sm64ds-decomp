@@ -12829,31 +12829,31 @@ matched: yes</title></rect><rect x="491.96" y="55.48" width="8.48" height="6.28"
 module: ov002
 addr: 0x020b0580
 size: 80 bytes
-matched: yes</title></rect><rect x="500.45" y="55.48" width="5.09" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13InvisiblePoleD1Ev
+matched: yes</title></rect><rect x="500.45" y="55.48" width="5.09" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daBar_cD1Ev
 module: ov002
 addr: 0x020b05d0
 size: 48 bytes
-matched: yes</title></rect><rect x="505.54" y="55.48" width="7.21" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13InvisiblePoleD0Ev
+matched: yes</title></rect><rect x="505.54" y="55.48" width="7.21" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daBar_cD0Ev
 module: ov002
 addr: 0x020b0600
 size: 68 bytes
-matched: yes</title></rect><rect x="512.75" y="55.48" width="0.85" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13InvisiblePole16CleanupResourcesEv
+matched: yes</title></rect><rect x="512.75" y="55.48" width="0.85" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daBar_c16CleanupResourcesEv
 module: ov002
 addr: 0x020b0644
 size: 8 bytes
-matched: yes</title></rect><rect x="513.60" y="55.48" width="0.42" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13InvisiblePole16OnPendingDestroyEv
+matched: yes</title></rect><rect x="513.60" y="55.48" width="0.42" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daBar_c16OnPendingDestroyEv
 module: ov002
 addr: 0x020b064c
 size: 4 bytes
-matched: yes</title></rect><rect x="514.02" y="55.48" width="0.85" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13InvisiblePole6RenderEv
+matched: yes</title></rect><rect x="514.02" y="55.48" width="0.85" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daBar_c6RenderEv
 module: ov002
 addr: 0x020b0650
 size: 8 bytes
-matched: yes</title></rect><rect x="514.87" y="55.48" width="3.82" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13InvisiblePole8BehaviorEv
+matched: yes</title></rect><rect x="514.87" y="55.48" width="3.82" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daBar_c8BehaviorEv
 module: ov002
 addr: 0x020b0658
 size: 36 bytes
-matched: yes</title></rect><rect x="518.69" y="55.48" width="15.70" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13InvisiblePole13InitResourcesEv
+matched: yes</title></rect><rect x="518.69" y="55.48" width="15.70" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7daBar_c13InitResourcesEv
 module: ov002
 addr: 0x020b067c
 size: 148 bytes

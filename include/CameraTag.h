@@ -18,17 +18,17 @@
  *                                stores _ZTV9CameraTag.
  *
  * THIS HEADER USED TO SAY 0x108, with a dCcAc_c at 0xd4. That was
- * InvisiblePole's layout, read off InvisiblePole_Spawn (0x020b0710) -- the
+ * daBar_c's layout, read off InvisiblePole_Spawn (0x020b0710) -- the
  * function immediately BEFORE this class's own factory, whose story the old
- * comment reproduced verbatim, down to naming it. InvisiblePole is a different
+ * comment reproduced verbatim, down to naming it. daBar_c is a different
  * class with a different vtable (0x02108480, RTTI daBar_c), and it is already
- * correctly declared at 0x108 in include/InvisiblePole.h, dCcAc_c and all.
+ * correctly declared at 0x108 in include/daBar_c.h, dCcAc_c and all.
  * Pairing a class to a factory by NAME is what produced that, and it is the
  * same defect PR #1556 had to retract two findings for. tools/opnew_sizes.py
  * pairs by vtable address instead, and that is what caught this one.
  *
  * THE VTABLE, at ov002 0x0210853c (config/arm9/overlays/ov002/symbols.txt),
- * overrides the same five fBase_c slots InvisiblePole does -- InitResources
+ * overrides the same five fBase_c slots daBar_c does -- InitResources
  * (0), CleanupResources (3), Behavior (6), Render (9), OnPendingDestroy (12)
  * -- plus the destructor at 16/17. Every other slot holds dActor_c's own word
  * and is inherited, so it is deliberately NOT redeclared here.

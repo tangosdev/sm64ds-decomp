@@ -202,7 +202,6 @@ src/InitCrashScreen.c	WEAK-refs-only	arm9				1		None		-
 src/InitialiseVramGlobals.c	PURE-C	arm9				1		None		-
 src/IntrWait.c	PURE-C					0		None		not-in-delinks
 src/InvMat4x3.c	WEAK-refs-only	arm9				1		None		-
-src/InvisiblePole_Spawn.c	S1-stores-rom-vptr	ov002			stores _ZTV13InvisiblePole	1		None	_ZTV13InvisiblePole	-
 src/IsAreaShowing.c	PURE-C	arm9				1		None		-
 src/IsButtonInputValid.c	PURE-C	arm9				1		None		-
 src/IsCannonOpen.c	PURE-C	arm9				1		None		-
@@ -711,7 +710,6 @@ src/_ZN13BigBrickBlock13InitResourcesEv.c	P1-vtable+mangled	ov002	daObjBlockL_c	
 src/_ZN13BowserShutterD0Ev.c	DTOR-ONLY	ov026	daObjWlKoopaShutter_c	BowserShutter/daObjWlKoopaShutter_c	_ZN13BowserShutterD0Ev	1		True	_ZTV10dBgActor_c/_ZTV13BowserShutter	-
 src/_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator.c	P3-mangled-method-only	arm9		ExpandingHeap	_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator	1		True	_ZTV13ExpandingHeap	-
 src/_ZN13ExpandingHeapD1Ev.cpp	DTOR-ONLY	arm9	mHeap::ExpHeap_t	ExpandingHeap/mHeap	_ZN13ExpandingHeapD1Ev	1		True	_ZTV13ExpandingHeap	-
-src/_ZN13InvisiblePoleD0Ev.c	DTOR-ONLY	ov002	daBar_c	InvisiblePole/daBar_c	_ZN13InvisiblePoleD0Ev	1		True	_ZTV13InvisiblePole	-
 src/_ZN10daPgMthr_c16OnPendingDestroyEv.c	P1-vtable+mangled	ov018	daPgMthr_c	daPgMthr_c/daPgMthr_c	vtable daPgMthr_c slot 12 @0x2112450 | _ZN10daPgMthr_c16OnPendingDestroyEv	1		True		-
 src/_ZN10daPgMthr_cD0Ev.c	DTOR-ONLY	ov018	daPgMthr_c	daPgMthr_c/daPgMthr_c	_ZN10daPgMthr_cD0Ev	1		True		-
 src/_ZN13OneUpMushroomD0Ev.c	DTOR-ONLY	ov002	da1up_c	OneUpMushroom/da1up_c	_ZN13OneUpMushroomD0Ev	1		True		-

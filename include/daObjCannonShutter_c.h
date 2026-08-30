@@ -42,9 +42,25 @@ typedef char daObjCannonShutter_c_size_must_be_0x330[sizeof(daObjCannonShutter_c
 
 #else
 
-/* The C spelling of the same object, flat. Kept because the D0 file is a C
-   translation unit that reads these fields, and D0 is compiler-generated so it
-   can never be migrated. Same arrangement as include/ShadowModel.h. */
+/* The C spelling of the same object, flat.
+
+   MEASURED, NO CURRENT CONSUMER. After the TU promotion that created
+   src/actors/daObjCannonShutter_c.cpp, that .cpp is the only translation unit in
+   the tree that includes this header, so nothing reaches this branch: the whole
+   build sees the C++ declaration above. The previous note here -- "kept because
+   the D0 file is a C translation unit that reads these fields" -- was not true even
+   before the promotion. The D0 file was src/_ZN20daObjCannonShutter_cD0Ev.cpp, a C++
+   TU, and the one .c file in the family, src/daObjCannonShutter_c_Spawn.c, declared
+   what it needed from decl_ActorBase.h / decl_common.h and never included this
+   header at all.
+
+   Retained deliberately, not by oversight: it is the flat offset record for the
+   inherited layout below 0x31e, which the C++ struct above no longer restates
+   because it inherits it from dBgActor_c. Deleting it would drop the only in-tree
+   spelling of those offsets and the provenance attached to them (the +0xd4 Model and
+   +0x124 dBgW_KcMbg relocation evidence). Because it is not compiled, no byte gate
+   and no offset gate covers it -- treat it as documentation and re-verify against
+   dBgActor_c.h before relying on it. Same arrangement as include/ShadowModel.h. */
 struct daObjCannonShutter_c {
     u8  pad_000[0x8];
     /* 0x008..0x05c is fBase_c's, and fBase_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8

@@ -7,7 +7,7 @@
     "no_codegen_trick",
     "no_mangled_refs"
   ],
-  "count": 2523,
+  "count": 2517,
   "converted": [
     "src/ARMMathLoadState.c",
     "src/ARMMathSaveState.c",
@@ -696,12 +696,6 @@
     "src/_ZN13FortressTowerD0Ev.cpp",
     "src/_ZN13FortressTowerD1Ev.cpp",
     "src/_ZN13HeapAllocator7DestroyEv.cpp",
-    "src/_ZN13InvisiblePole16CleanupResourcesEv.cpp",
-    "src/_ZN13InvisiblePole16OnPendingDestroyEv.cpp",
-    "src/_ZN13InvisiblePole6RenderEv.cpp",
-    "src/_ZN13InvisiblePole8BehaviorEv.cpp",
-    "src/_ZN13InvisiblePoleD0Ev.cpp",
-    "src/_ZN13InvisiblePoleD1Ev.cpp",
     "src/_ZN13KoopaTheQuick6RenderEv.cpp",
     "src/_ZN13KoopaTheQuickD0Ev.cpp",
     "src/_ZN13KoopaTheQuickD1Ev.cpp",

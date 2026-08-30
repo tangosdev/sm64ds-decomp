@@ -1,0 +1,222 @@
+{
+  "id": "ov002/daBar_c",
+  "module": "ov002",
+  "source": "src/actors/daBar_c.cpp",
+  "promoted_source": "src/actors/daBar_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x020b05d0..0x020b0748, 8 functions, from build/tu_map.json (tools/tu_map.py)",
+    "ROM class identity: _ZTS7daBar_c at 0x02108444 and _ZTI7daBar_c at 0x02108450",
+    "the class data group at 0x02108444..0x021084fc relocates to this run's factory, key function, lifecycle methods, and destructor pair; no sinit, ctor, or BSS range is claimed"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020b05d0",
+      "end": "0x020b0748"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN7daBar_cD1Ev",
+      "address": "0x020b05d0",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN13InvisiblePoleD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN7daBar_cD0Ev",
+      "address": "0x020b0600",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN13InvisiblePoleD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN7daBar_c16CleanupResourcesEv",
+      "address": "0x020b0644",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN13InvisiblePole16CleanupResourcesEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN7daBar_c16OnPendingDestroyEv",
+      "address": "0x020b064c",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN13InvisiblePole16OnPendingDestroyEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN7daBar_c6RenderEv",
+      "address": "0x020b0650",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN13InvisiblePole6RenderEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN7daBar_c8BehaviorEv",
+      "address": "0x020b0658",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN13InvisiblePole8BehaviorEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN7daBar_c13InitResourcesEv",
+      "address": "0x020b067c",
+      "size": "0x00000094",
+      "legacy_source": "src/_ZN13InvisiblePole13InitResourcesEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "InvisiblePole_Spawn",
+      "address": "0x020b0710",
+      "size": "0x00000038",
+      "legacy_source": "src/InvisiblePole_Spawn.c",
+      "ordinal": 7
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTS7daBar_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108444",
+      "reason": "InitResources naturally emits the ROM-proven daBar_c type-name string. romdata_check proves its exact payload before text-only isolation discards the copy."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTI7daBar_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108450",
+      "reason": "InitResources naturally emits the ROM-proven daBar_c single-inheritance RTTI. romdata_check proves its complete record and relocations before isolation."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its canonical arm9 home before isolation."
+    },
+    {
+      "symbol": "InvisiblePole_SpawnInfo",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x0210845c",
+      "reason": "The typed actor descriptor is naturally defined beside its factory. romdata_check proves the factory relocation and every descriptor word before isolation."
+    },
+    {
+      "symbol": "_ZTV7daBar_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108480",
+      "reason": "InitResources naturally emits the complete 0x84-byte class vtable storage. romdata_check applies the measured eight-byte public-address-point bias and proves every slot before isolation."
+    }
+  ],
+  "notes": [
+    "Genuine lifecycle source form: daBar_c defines its virtual destructor inline and InitResources as the key function. The compiler owns D1/D0 and the complete RTTI/vtable group; the source contains no hand-mangled member definition, forcing object, or shadow actor layout.",
+    "InvisiblePole_Spawn and InvisiblePole_SpawnInfo remain evidence-bounded C ABI aliases. The ROM proves the daBar_c identity through RTTI but does not preserve the factory or descriptor's original English spelling.",
+    "The factory retains retail's measured fBase_c allocator, dActor_c base construction, dCcAc_c member construction, and vptr sequence. Natural actor new targets the wrong global allocator relocation in this compiler family.",
+    "dActor_c::SetRanges and dCcAc_c::Init retain narrow ABI-equivalent declarations because their Fix12<int> by-value parameters trigger the documented mwccarm stack-homing wall when their definitions are expressed naturally.",
+    "The manifest is text-only. Natural class RTTI/type-name, typed SpawnInfo, vtable, and inherited vague-linkage RTTI copies are verified at canonical homes before production isolation discards them; no initializer, ctor, or BSS ownership is claimed.",
+    "The former coined InvisiblePole symbols cannot be compared as a normal legacy-object contribution after this ROM-proven identity correction. Eight direct blind linkchecks plus the production overlay/ROM link prove the new symbol identities and placements instead."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-daBar_c/daBar_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 8,
+    "functions_declared": 8,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7daBar_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI7daBar_c",
+        "_ZTI8dActor_c",
+        "_ZTI7dBase_c",
+        "InvisiblePole_SpawnInfo",
+        "_ZTV7daBar_c"
+      ],
+      "dataExternalized": [
+        "InvisiblePole_SpawnInfo",
+        "_ZTI7dBase_c",
+        "_ZTI7daBar_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS7dBase_c",
+        "_ZTS7daBar_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV7daBar_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}
