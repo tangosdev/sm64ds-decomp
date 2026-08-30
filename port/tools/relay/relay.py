@@ -21,6 +21,13 @@ A session is one code with one parent and up to three children. Once paired,
 every datagram that is not a HELLO is forwarded verbatim: parent to all
 children, child to the parent only. Payloads are opaque here, always.
 
+An address we have never paired gets no benefit of the doubt. The only thing
+it has any business sending is a HELLO, so a 16 byte datagram from it is read
+as one and anything else is dropped without a word. A reply is therefore never
+larger than what arrived, which is what stops this being useful as an
+amplifier. The flip side, and the game side has to respect it: a forwarded
+packet must not be exactly 16 bytes starting with "SMRC".
+
 Configuration (environment):
 
   SM64DS_RELAY_PORT     UDP port to bind          (default 41234)

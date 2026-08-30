@@ -222,6 +222,13 @@ Look for `leave ... (idle)`.
 **It stops relaying under fast play.** Check `drop_rate` in the counter line.
 If it is climbing, something is sending more than 120 packets a second.
 
+**A player who dropped out cannot get back in for a minute or so.** If their
+router hands them a different outside port when they reconnect, the relay sees
+a brand new player, and their old seat is still held by the address that went
+quiet. They get status 1 until that seat times out, which takes up to 90
+seconds. Waiting clears it; so does using a fresh session code. This is the
+price of never letting a stranger take over a seat by quoting the code.
+
 ## Security posture
 
 - Payloads are never inspected, logged, or interpreted.

@@ -37,7 +37,12 @@ while [ $# -gt 0 ]; do
         --user) SVC_USER="$2"; shift 2 ;;
         --idle) IDLE="$2"; shift 2 ;;
         --dry-run) DRY_RUN="yes"; shift ;;
-        -h|--help) sed -n '2,30p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
+        -h|--help)
+            # The header comment is the help text. Stop at the first line
+            # that is not a comment, so no code leaks into the output.
+            awk 'NR > 1 && /^#/ { sub(/^# ?/, ""); print; next }
+                 NR > 1 { exit }' "${BASH_SOURCE[0]}"
+            exit 0 ;;
         *) echo "unknown option: $1" >&2; exit 2 ;;
     esac
 done
@@ -49,7 +54,15 @@ UNIT_PATH="/etc/systemd/system/${SVC_NAME}.service"
 step() { printf '\n==> %s\n' "$*"; }
 info() { printf '    %s\n' "$*"; }
 run() {
-    printf '    $ %s\n' "$*"
+    # Echo the command quoted the way a human could paste it back, then run
+    # it. "$*" would drop the quoting and print a multi word argument as if
+    # it were several.
+    local shown=""
+    local arg
+    for arg in "$@"; do
+        shown="${shown} $(printf '%q' "$arg")"
+    done
+    printf '    $%s\n' "$shown"
     if [ "$DRY_RUN" = "yes" ]; then
         return 0
     fi
@@ -89,13 +102,18 @@ info "python3: ${PY_BIN} (${PY_VER})"
 "$PY_BIN" -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 7) else 1)' \
     || die "python 3.7 or newer required (found ${PY_VER})"
 
-"$PY_BIN" -m py_compile "${SRC_DIR}/relay.py" \
-    || die "relay.py does not compile with this python"
-info "relay.py compiles clean"
+# Parse it rather than py_compile it, so nothing is written next to the kit
+# and this still works from a read-only copy.
+"$PY_BIN" -c 'import ast,sys; ast.parse(open(sys.argv[1]).read())' \
+    "${SRC_DIR}/relay.py" \
+    || die "relay.py does not parse with this python"
+info "relay.py parses clean"
 
-if [ -f "${SRC_DIR}/relay.py" ] && grep -q $'\r' "${SRC_DIR}/relay.py"; then
-    die "relay.py has CRLF line endings; re-copy it with LF"
-fi
+for f in relay.py sm64ds-relay.service; do
+    if grep -q $'\r' "${SRC_DIR}/${f}"; then
+        die "${f} has CRLF line endings; re-copy the kit with LF endings"
+    fi
+done
 info "line endings look right"
 
 # ------------------------------------------------------------- service user
@@ -104,9 +122,13 @@ step "Ensuring the unprivileged service account exists"
 if id -u "$SVC_USER" >/dev/null 2>&1; then
     info "user ${SVC_USER} already exists (uid $(id -u "$SVC_USER"))"
 else
+    NOLOGIN="/usr/sbin/nologin"
+    [ -x "$NOLOGIN" ] || NOLOGIN="/sbin/nologin"
+    [ -x "$NOLOGIN" ] || NOLOGIN="/bin/false"
     info "user ${SVC_USER} does not exist, creating a system account with no login"
+    info "login shell will be ${NOLOGIN}"
     run useradd --system --create-home --home-dir "$HOME_DIR" \
-        --shell /usr/sbin/nologin --comment "SM64DS port UDP relay" "$SVC_USER"
+        --shell "$NOLOGIN" --comment "SM64DS port UDP relay" "$SVC_USER"
 fi
 
 step "Ensuring the install directory exists"
@@ -183,7 +205,18 @@ else
     else
         printf '\n'
         systemctl status "$SVC_NAME" --no-pager -l || true
-        die "service did not come up; the status above says why"
+        journalctl -u "$SVC_NAME" -n 30 --no-pager || true
+        printf '\n'
+        printf '    Two things to check before anything else:\n'
+        printf '      1. is UDP %s already in use?   ss -ulnp | grep %s\n' \
+            "$PORT" "$PORT"
+        printf '      2. if the log shows a permission or memory error at\n'
+        printf '         startup, this python may not like one of the\n'
+        printf '         hardening lines in %s. Comment out\n' "$UNIT_PATH"
+        printf '         MemoryDenyWriteExecute and SystemCallFilter, then\n'
+        printf '         systemctl daemon-reload && systemctl restart %s\n' \
+            "$SVC_NAME"
+        die "service did not come up; the status and log above say why"
     fi
 
     printf '\n'
@@ -204,11 +237,19 @@ fi
 
 # -------------------------------------------------------------- next steps
 
+if [ "$DRY_RUN" = "yes" ]; then
+    DONE_LINE="Dry run finished. Nothing was changed."
+    STATE_LINE="It WOULD be installed at ${APP_DIR}, running as ${SVC_USER}."
+else
+    DONE_LINE="Done."
+    STATE_LINE="The relay is installed at ${APP_DIR} and runs as ${SVC_USER}."
+fi
+
 cat <<EOF
 
-==> Done.
+==> ${DONE_LINE}
 
-The relay is installed at ${APP_DIR} and runs as ${SVC_USER}.
+${STATE_LINE}
 It listens on UDP ${PORT}. Nothing else on this box is touched.
 
 FIREWALL: only UDP ${PORT} needs to be reachable from the internet. This
