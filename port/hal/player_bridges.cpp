@@ -4,6 +4,7 @@
 // defining TUs compile them as real methods against the shared headers.
 // Same hop as gate 9 (cxxname_bridge.cpp), split into its own TU because
 // Player.h drags a wider include surface than the gate-9 file wants.
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 
@@ -179,10 +180,6 @@ void hal_render_player_body(void *player)
 { hal_render_player_body_ex(player, 1); }
 void hal_render_player_body_only(void *player)
 { hal_render_player_body_ex(player, 0); }
-/* scene-space variant: mat4x3 = Y-rotation(mAngleY) at 1.0 + the scene
-   translation, the head composed through the body's own matrix (the neck
-   bone is model-space) */
-extern "C" short data_02082214[];   /* s16 trig pairs [sin, cos], 4096 = 1 */
 /* the three matrix helpers and the scratch matrix Player::Render uses to seat
    mModelAnim4 (+0x174); all four are matched and already in the link */
 extern "C" {
@@ -240,11 +237,17 @@ static void m43_mul(const int *a, const int *b, int *out)
    func_ov002_020e444c -- which the port already runs every frame inside
    Player::Behavior (func_ov002_020e4bb8 -> func_ov002_020e444c, and via
    func_ov002_020e3f90 when Yoshi is carrying something) -- has already written
-   head+0x1c to the player-root matrix by the time render runs. In the port's
-   scene convention that value is bit-identical to the `scene` matrix the body
-   renders with (a head-vs-body matrix probe read head+0x1c == body+0x1c ==
-   scene on every frame). So the i==3 arm dispatches base Model::Render with
-   nothing seated, exactly as the ROM does.
+   head+0x1c to the player-root matrix by the time render runs. So the i==3 arm
+   dispatches base Model::Render with nothing seated, exactly as the ROM does.
+
+   THE PROBE THAT ONCE READ head+0x1c == body+0x1c == scene ON EVERY FRAME WAS
+   READING A STANDING PLAYER, and the claim it left here was wrong in motion.
+   The seat's matrix carries the X and Z rotations and a model offset that the
+   old hand-built `scene` did not; all of them are zero at rest and none of them
+   are at speed. That is where Yoshi's head-off-body separation came from, and
+   hal_render_player_world now reads the seated matrix instead of rebuilding
+   one -- see the banner there for the measurements. head+0x1c and body+0x1c are
+   the same write on the ROM, and they are the same value here now.
 
    Take 1 seated head+0x1c = scene by hand -- redundant, it already was -- and,
    worse, believed i==3 meant "mid-tongue" and so it read as a new render on top
@@ -346,6 +349,61 @@ static void hal_player_texseq_head(char *c, unsigned hid)
     }
 }
 
+/* ---- SM64DS_YHD_PROBE: the head-vs-body matrix separation, per frame --------
+   Prints the difference between the two matrices this function is about to draw
+   with -- `scene`, the body's, and the head's at +0x1c -- next to the player
+   fields func_ov002_020e444c builds both of them from. On the ROM those two are
+   the SAME WRITE (src/func_ov002_020e444c.c lines 55 and 66 both store
+   data_020a0e68), so every difference column here reads zero, and a nonzero one
+   is the gap the head is being drawn away from the body by. That is the
+   regression the banner in hal_render_player_world closed, so the probe stays.
+
+   dtr = head translation - body translation, in scene units (world >> 3).
+   drot = max |head rotation element - body rotation element|, Fix12 (0x1000=1).
+   spd  = horizontal |dpos| per frame in world Fix12, the "certain speeds" axis. */
+static double yhd_sqrt(double v) { return std::sqrt(v); }
+static void yhd_probe(char *c, const int *scene, const char *head)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = getenv("SM64DS_YHD_PROBE");
+        on = e ? atoi(e) : 0;
+        if (on)
+            printf("[yhd] frame spd sink u690 u694 angY angX angZ "
+                   "dtrx dtry dtrz |dtr| drot\n");
+    }
+    if (!on || !head) return;
+
+    static int frame = 0, px = 0, py = 0, pz = 0, primed = 0;
+    const int x = *(const int *)(c + 0x5c);
+    const int y = *(const int *)(c + 0x60);
+    const int z = *(const int *)(c + 0x64);
+    const int vx = primed ? x - px : 0;
+    const int vz = primed ? z - pz : 0;
+    px = x; py = y; pz = z; primed = 1;
+    (void)py;
+
+    const int *hm = (const int *)(head + 0x1c);
+    const int dtx = hm[9] - scene[9];
+    const int dty = hm[10] - scene[10];
+    const int dtz = hm[11] - scene[11];
+    int drot = 0;
+    for (int i = 0; i < 9; ++i) {
+        int d = hm[i] - scene[i];
+        if (d < 0) d = -d;
+        if (d > drot) drot = d;
+    }
+    const double spd = (double)vx * vx + (double)vz * vz;
+    const double dtr = (double)dtx * dtx + (double)dty * dty + (double)dtz * dtz;
+
+    printf("[yhd] %d %.1f %d %d %d %d %d %d %d %d %d %.1f %d\n", frame++,
+           yhd_sqrt(spd), *(const int *)(c + 0x68c),
+           *(const int *)(c + 0x690), *(const int *)(c + 0x694),
+           (int)*(const short *)(c + 0x8e), (int)*(const short *)(c + 0x8c),
+           (int)*(const short *)(c + 0x90), dtx, dty, dtz,
+           yhd_sqrt(dtr), drot);
+}
+
 void hal_render_player_world(void *player)
 {
     char *c = (char *)player;
@@ -407,20 +465,64 @@ void hal_render_player_world(void *player)
     unsigned id = _ZNK6Player14GetBodyModelIDEjb(c, *(int *)(c + 8) & 0xff, 0);
     ModelAnim *ma = ((ModelAnim **)(c + 0xdc))[id];
     if (!ma) return;
-    unsigned idx = ((unsigned short)*(short *)(c + 0x8e)) >> 4;
-    /* THE ROM'S OWN MATRIX: rotation rows at 1.0 and the translation row in
-       SCENE units, which is what an actor's Render writes and what
-       Camera::Render's view matrix expects. `(v + 4) >> 3` is Camera::Render's
-       own rounding for the same conversion.
-       The x8 rotation rows this replaces were that same matrix carried into a
-       world-unit frame; they came out the same size on screen and left Mario
-       ~145 world units tall, which is what the migration has to preserve. */
-    int s = data_02082214[idx * 2], co = data_02082214[idx * 2 + 1];
-    int scene[12] = {co, 0, -s, 0, 0x1000, 0, s, 0, co,
-                     (*(int *)(c + 0x5c) + 4) >> 3,
-                     (*(int *)(c + 0x60) + 4) >> 3,
-                     (*(int *)(c + 0x64) + 4) >> 3};
-    for (int i = 0; i < 12; ++i) ((int *)&ma->mat4x3)[i] = scene[i];
+    /* THE BODY MATRIX IS THE ONE THE SEAT ALREADY WROTE, and this function
+       must not build its own. That is the whole of the Yoshi head-vs-body
+       separation the field report described as the head coming off at speed
+       and on hard landings.
+
+       func_ov002_020e444c (src/func_ov002_020e444c.c) composes ONE matrix in
+       data_020a0e68 each frame inside Player::Behavior --
+
+           translation(RotateY(pos, mAngleY) + [0, unk_690 - mSinkDepth,
+                                                unk_694])
+           then rotation Y (+0x8e), then X (+0x8c), then Z (+0x90)
+
+       -- and stores that same matrix into the BODY model at +0x1c (line 55)
+       and into the HEAD model at +0x1c (line 66), in one statement group.
+       Player::Render (src/_ZN6Player6RenderEv.cpp:79 and :121) then draws both
+       with a bare Model::Render and sets NO matrix at render time. On the ROM
+       the two models cannot separate: they are literally the same write.
+
+       This function used to rebuild a matrix here from mAngleY and the
+       position alone and store it over the body's, leaving the head on the
+       seated one. The two agree while Yoshi stands still -- which is why an
+       earlier head-vs-body probe read them identical and the note above
+       recorded them as bit-identical -- but the seat also carries the X and Z
+       rotations, and +0x8c is the LEAN, driven by speed out of
+       func_ov002_020cd550. So the faster he ran the further the head pitched
+       away from a body that never pitched at all.
+
+       Measured on this tree before the change, castle grounds as Yoshi, the
+       largest rotation-element difference between the head's matrix and the
+       body's over 300 frames (Fix12, 0x1000 = 1.0):
+
+           idle       maxspeed      0    gap    0
+           walk       maxspeed  65520    gap  682   (lean 9.5 deg)
+           dash       maxspeed 131040    gap 1350   (lean 19.2 deg)
+           longjump   maxspeed 196560    gap 1112
+
+       and gap == 4096 * sin(lean) to within rounding at every sample, so the
+       separation was the lean angle exactly. Against the matrix the seat had
+       already left in the body, the head measured identical on every frame of
+       every run -- the right matrix was there the whole time and was being
+       thrown away.
+
+       Both halves of the field report are this one fault. The lean only exists
+       above a speed, and it grows with it, which is "at certain speeds". And it
+       engages in a SINGLE FRAME at full size around jumps and landings -- 0 to
+       1038 at frame 158 of the jump-spam run, 0 to 1050 at frame 98 of the
+       dash-jump run, 0 to 1073 at frame 234 of the long-jump run -- so the head
+       did not drift off, it popped off and back on, which is "when he hits the
+       ground too hard".
+
+       So: read it, do not build it. The scale and units are unchanged, because
+       the seat writes the same scene convention this function used to build
+       (its translation is `out >> 3`, the same world-to-scene shift, with the
+       rotation rows at 1.0 out of Matrix4x3_FromTranslation). `scene` stays the
+       name the neck-bone and wing composes below use, and they now compose
+       against the body's real matrix rather than a stand-in. */
+    int scene[12];
+    for (int i = 0; i < 12; ++i) scene[i] = ((const int *)&ma->mat4x3)[i];
     ma->ModelAnim::UpdateVerts();
     ma->ModelAnim::Render(0);
     hal_player_texseq_body(c);
@@ -429,6 +531,7 @@ void hal_render_player_world(void *player)
     if (hid != 8 && hid != 9) {
         char *head = ((char **)(c + 0x154))[hid];
         if (head) {
+            yhd_probe(c, scene, head);
             hal_render_head_group(c, head, hid, ma, scene);
             hal_player_texseq_head(c, hid);
         }
