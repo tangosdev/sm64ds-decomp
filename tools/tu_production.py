@@ -137,16 +137,21 @@ def prepare_intact_link_verification(entries, jobs=4):
     """
     admitted_errors = set()
     admitted_roms = set()
+    admitted_module_sets = set()
     for entry in entries.values():
         linkcheck = (entry.get("verification") or {}).get("linkcheck") or {}
         errors = linkcheck.get("symbolCheckErrors")
         rom_sha = (linkcheck.get("rom") or {}).get("sha256")
-        if not isinstance(errors, list) or not isinstance(rom_sha, str):
+        module_set_sha = linkcheck.get("moduleSetSha256")
+        if (not isinstance(errors, list) or not isinstance(rom_sha, str)
+                or not _is_sha256(module_set_sha)):
             raise ProductionTuError(
                 f"{entry.get('id', '<unknown>')}: admitted intact proof lacks its "
-                "symbol-error inventory or stock ROM SHA-256")
+                "symbol-error inventory, stock ROM SHA-256, or complete executable-"
+                "module fingerprint")
         admitted_errors.add(tuple(sorted(set(errors))))
         admitted_roms.add(rom_sha)
+        admitted_module_sets.add(module_set_sha)
     baseline = _current_or_bootstrapped_intact_baseline(entries, jobs)
     current_errors = tuple(baseline["symbolErrors"])
     if admitted_errors != {current_errors}:
@@ -154,22 +159,26 @@ def prepare_intact_link_verification(entries, jobs=4):
             "strict post-promotion control symbol errors do not equal the admitted "
             f"pre-promotion inventory: current={list(current_errors)!r}, "
             f"admitted={[list(rows) for rows in sorted(admitted_errors)]!r}")
-    if admitted_roms != {baseline["romSha256"]}:
-        report = baseline["report"]
+    if admitted_module_sets != {baseline["moduleSetSha256"]}:
+        report = baseline.get("report") or {}
         diagnostics = {
             "rom": report.get("rom"),
             "baselineEvidence": report.get("baselineEvidence"),
-            "moduleSetSha256": (((report.get("analysis") or {})
-                                  .get("moduleFidelity") or {})
-                                 .get("moduleSetSha256")),
+            "moduleSetSha256": baseline["moduleSetSha256"],
             "intactTusDemoted": report.get("intactTusDemoted"),
             "scratch": report.get("scratch"),
         }
         raise ProductionTuError(
-            "strict post-promotion control ROM SHA-256 does not equal the admitted "
-            f"stock proof: current={baseline['romSha256']}, "
-            f"admitted={sorted(admitted_roms)!r}, "
+            "strict post-promotion control executable-module fingerprint does not "
+            f"equal the admitted proof: current={baseline['moduleSetSha256']}, "
+            f"admitted={sorted(admitted_module_sets)!r}, "
             f"control={json.dumps(diagnostics, sort_keys=True)}")
+    if baseline["matchesStockRom"] is not True \
+            and admitted_roms != {baseline["romSha256"]}:
+        raise ProductionTuError(
+            "strict post-promotion control has no same-worker stock-ROM comparison "
+            "and its ROM SHA-256 does not equal the admitted bootstrap proof: "
+            f"current={baseline['romSha256']}, admitted={sorted(admitted_roms)!r}")
     prepared = []
     for source, entry in sorted(entries.items()):
         claims, reasons = TB.manifest_section_claims(entry)
@@ -180,7 +189,22 @@ def prepare_intact_link_verification(entries, jobs=4):
             _raise(f"{entry.get('id', source)} vtable address-point policy", reasons)
         prepared.append({"id": entry.get("id", source), "source": source,
                          "biases": biases})
-    return {"baseline": baseline, "entries": prepared}
+    return {
+        "baseline": baseline,
+        "entries": prepared,
+        "admittedRomSha256": sorted(admitted_roms),
+        "admittedModuleSetSha256": next(iter(admitted_module_sets)),
+    }
+
+
+def _is_sha256(value):
+    if not isinstance(value, str) or len(value) != 64:
+        return False
+    try:
+        int(value, 16)
+    except ValueError:
+        return False
+    return True
 
 
 def _strict_baseline(expected_intact=None):
@@ -222,6 +246,11 @@ def _strict_baseline(expected_intact=None):
                    .get("errors"))
     if not isinstance(base_errors, list):
         raise ProductionTuError("stock control has no baseline symbol-error inventory")
+    module_set_sha = (((report.get("analysis") or {}).get("moduleFidelity") or {})
+                      .get("moduleSetSha256"))
+    if not _is_sha256(module_set_sha):
+        raise ProductionTuError(
+            "stock control has no complete executable-module fingerprint")
     return {
         "report": report,
         "reportPath": report_path,
@@ -229,6 +258,8 @@ def _strict_baseline(expected_intact=None):
         "linkedElfSha256": hashlib.sha256(linked_elf.read_bytes()).hexdigest(),
         "symbolErrors": sorted(set(base_errors)),
         "romSha256": rom["sha256"],
+        "matchesStockRom": compared,
+        "moduleSetSha256": module_set_sha,
     }
 
 

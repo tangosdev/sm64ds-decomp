@@ -373,6 +373,25 @@ class RomBuildEnrollment(unittest.TestCase):
             RB.intact_tu_policies({"src/actors/TU.cpp"}, manifest=manifest)
         self.assertIn("baseline bootstrapping is non-circular", raised.exception.output)
 
+    def test_intact_rom_comparison_uses_current_same_worker_control(self):
+        verification = {
+            "baseline": {
+                "romSha256": "b" * 64,
+                "moduleSetSha256": "c" * 64,
+            },
+            "admittedRomSha256": ["a" * 64],
+        }
+        result = RB.intact_rom_comparison("b" * 64, verification)
+        self.assertEqual(result, {
+            "expectedSha256": "b" * 64,
+            "admittedBootstrapSha256": ["a" * 64],
+            "actualSha256": "b" * 64,
+            "moduleSetSha256": "c" * 64,
+            "identical": True,
+        })
+        self.assertFalse(
+            RB.intact_rom_comparison("d" * 64, verification)["identical"])
+
     def test_intact_policy_ignores_unenrolled_shadow(self):
         manifest = {"entries": [{
             "id": "ov047/Shadow", "status": "text-verified",
