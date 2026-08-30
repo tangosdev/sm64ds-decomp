@@ -44,10 +44,43 @@
 # All seven word[0]s land in 0x021111a0..0x021125b0 (ov036's .text). All seven
 # idhalves read back their own id. Both routes agree on all seven.
 #
-# A THIRD route falls out of the records and is used below as a cross-check:
-# each SpawnInfo's word[8] is the class's own __si_class_type_info record,
-# which is also the word at vtable[-1]. It confirms every id-to-table pairing
-# independently of the destructors.
+# A THIRD route falls out of the records and is used below as a cross-check on
+# SIX OF THE SEVEN, NOT ALL SEVEN. Where a class's SpawnInfo is nine words, its
+# word[8] is the class's own __si_class_type_info record, which is also the word
+# at vtable[-1], and that confirms the id-to-table pairing independently of the
+# destructors. It holds for 125, 126, 127, 129, 130 and 132:
+#
+#   id   SpawnInfo   word[8]     vtable[-1]  agree?
+#   127  0x02113a74  0x02113a54  0x02113a54  yes    16daObjRcBuranko_c
+#   129  0x02113b50  0x02113b20  0x02113b20  yes    19daObjRc_Kaitendai_c
+#   125  0x02113c14  0x02113bf4  0x02113bf4  yes    14daObjRc_Hane_c
+#   126  0x02113cd4  0x02113cb4  0x02113cb4  yes    16daObjRc_Tikuwa_c
+#   132  0x02113da8  0x02113d84  0x02113d84  yes    18daObjRc_Guruguru_c
+#   123  0x02113e6c  0x021140f4  0x02113e4c  NO     -- see below
+#   130  0x02113f78  0x02113f4c  0x02113f4c  yes    15daObjRcCarpet_c
+#
+# ID 123 (TRICKY_TRIANGLES) IS THE EXCEPTION AND THE ROUTE MUST NOT BE APPLIED
+# TO IT. Its record is not nine words: the next dsd symbol after
+# TrickyTriangles_SpawnInfo is data_ov036_02113e88, only 0x1c (seven words)
+# later, and that neighbour is the class's own three-word file record -- the
+# same one its Init and Cleanup pass to ov002 as their second argument. So the
+# word at SpawnInfo+0x20 (0x02113e8c) is not part of the SpawnInfo at all; it is
+# the SECOND WORD of data_ov036_02113e88, and it reads 0x021140f4, one of this
+# class's own eight-byte SharedFilePtrs (pinned :0x8 in the mount list below).
+# Reading it as a typeinfo pointer would have been a wrong answer that looks
+# like a right one, because 0x021140f4 is a real, live, correctly-mounted
+# address of this very class.
+#
+# 123's pairing is confirmed WITHOUT this route, and three ways:
+#   * route 1, the arm9 table slot 0x02090a50 -> 0x02113e6c, module list
+#     including overlay 36;
+#   * route 2, word[1] = 0x00fd007b whose low halfword is 0x7b = 123, with
+#     word[0] = 0x021120c8 landing inside ov036's own .text;
+#   * BLOCK CONTAINMENT, which is the one that settles the table: 0x021120c8
+#     TrickyTriangles_Spawn is the last function of block 6 (0x02111f8c..
+#     0x02112158), its own literal pool at 0x02112154 stores 0x02113ecc as the
+#     final vptr write, and 0x02113ecc's OWN vtable[-1] (0x02113ec8) reads
+#     0x02113e4c, whose name string is 16daObjRc_Dorifu_c.
 #
 # BASELINE CENSUS, this tree's own build, SM64DS_LEVEL=28 SM64DS_WINDOW_SELFTEST=300:
 #   164 spawned (33 classes), 52 skipped (9 classes)
@@ -85,8 +118,12 @@
 #       "Kaitendai" is a turntable. So _ZN18RotatingPlatformRrD1Ev at
 #       0x02111580 is NOT in RotatingPlatformRr's block; it opens block 3.
 #   (3) every table's own vtable[-1] __si_class_type_info reads through to the
-#       name string above, and every SpawnInfo's word[8] points at that same
-#       record. Three independent reads, one answer.
+#       name string above. On SIX of the seven (all but 123) the SpawnInfo's
+#       own word[8] points at that same record and is a third, independent
+#       read; id 123's record is seven words, so it has no word[8] and that
+#       cross-check does not apply to it -- see the THIRD ROUTE section above
+#       for what confirms 123 instead. Where it applies, three independent
+#       reads, one answer.
 #
 # THE SEATING TABLE THIS LANE USES. The pairing is BY ADDRESS.
 #

@@ -8,9 +8,16 @@
 // ============================================================================
 // config/arm9/overlays/ov036/symbols.txt attaches its C++ method and _ZTV
 // names ONE CLASS EARLY. The Spawn and SpawnInfo names are correct; the
-// _ZN.../_ZTV... names are not. Measured three ways in ov036_syms.txt (the
-// block layout, block 2's own slots 16/17, and every table's vtable[-1]
-// typeinfo name string cross-checked against each SpawnInfo's word[8]):
+// _ZN.../_ZTV... names are not. Measured three ways in ov036_syms.txt: the
+// block layout, block 2's own slots 16/17, and every table's own vtable[-1]
+// typeinfo name string. On SIX of the seven that name string is cross-checked
+// against the SpawnInfo's word[8] as a fourth, independent read -- but NOT on
+// id 123, whose record is seven words, not nine: the word at its SpawnInfo
+// +0x20 belongs to the neighbouring data_ov036_02113e88 file record and reads
+// one of TRICKY_TRIANGLES' own SharedFilePtrs. 123 is settled by block
+// containment instead (its Spawn's own literal pool stores 0x02113ecc, whose
+// vtable[-1] names 16daObjRc_Dorifu_c). See ov036_syms.txt's THIRD ROUTE
+// section for the per-id table.
 //
 //   id   registry name            ROM RTTI name          host vtable array
 //   127  SWINGING_PLATFORM        16daObjRcBuranko_c      data_ov036_02113a98         (0x02113a98, 32)
