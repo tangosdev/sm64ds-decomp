@@ -204,10 +204,78 @@ class Isolate(unittest.TestCase):
 
         _out, plan = OI.derive_deadstrip(raw, ["_ZN1VD1Ev"],
                                          {"_ZN1VD1Ev": bytes(len(real))})
+        self.assertIn("non-relocated offset", plan["error"])
+
+        # A length mismatch is a different body outright, not a masked word.
+        _out, plan = OI.derive_deadstrip(raw, ["_ZN1VD1Ev"],
+                                         {"_ZN1VD1Ev": real + bytes(4)})
         self.assertIn("not the cartridge's body", plan["error"])
 
         _out, plan = OI.derive_deadstrip(raw, ["_ZN1VD1Ev"], {"_ZN1VD2Ev": real})
         self.assertIn("was not requested", plan["error"])
+
+    KEY_FUNCTION_CLASS = ("struct B { virtual ~B(); virtual int f(); }; "
+                          "B::~B(){} int B::f(){ return 1; }")
+
+    def test_deadstrip_externalises_a_vtable_the_survivors_reference(self):
+        """A promoted TU keeps the vtable the ROM owns instead of losing it.
+
+        An out-of-line destructor is the key function, so mwcc emits `_ZTV` in this
+        object -- and the cartridge already has that vtable, at an address no promoted
+        source claims.  Discarding the definition while the destructor goes on storing
+        the vptr means the reference has to survive as an IMPORT, and the addend has to
+        lose mwcc's preamble skip: `_ZTV<C>` here addresses the vtable object, in
+        symbols.txt it addresses the slots.
+        """
+        raw = self.build(self.KEY_FUNCTION_CLASS).read_bytes()
+        before = self._reloc_addends(raw, "_ZTV1B")
+        self.assertTrue(any(a >= OI.VTABLE_PREAMBLE for a in before), before)
+
+        out, plan = OI.derive_deadstrip(raw, ["_ZTV1B"])
+        self.assertIsNone(plan["error"])
+        self.assertEqual(plan["externalise"], ["_ZTV1B"])
+        self.assertEqual(plan["dead"], [])
+        self.assertTrue(plan["rebase"], "the vptr store's section must be rebased")
+
+        after = self._reloc_addends(out, "_ZTV1B")
+        self.assertTrue(after, "the reference must survive as an import")
+        self.assertTrue(all(a < OI.VTABLE_PREAMBLE for a in after), after)
+        self.assertEqual(sorted(a + OI.VTABLE_PREAMBLE for a in after), sorted(before))
+
+    def test_deadstrip_refuses_a_non_rtti_data_import(self):
+        """Only the RTTI trio may be imported; anything else is an unsurveyed shape."""
+        obj = self.build("int g_table[4] = {1,2,3,4}; int read(){ return g_table[2]; }")
+        _out, plan = OI.derive_deadstrip(obj.read_bytes(), ["g_table"])
+        self.assertIn("only _ZTV/_ZTI/_ZTS may be imported this way", plan["error"])
+
+    def test_duplicate_body_evidence_is_function_only(self):
+        """A data object's words are addends here and addresses in the cartridge."""
+        raw = self.build(self.KEY_FUNCTION_CLASS).read_bytes()
+        _out, plan = OI.derive_deadstrip(
+            raw, ["_ZTV1B"], {"_ZTV1B": self._section_bytes(raw, "_ZTV1B")})
+        self.assertIn("function-only", plan["error"])
+
+    def _reloc_addends(self, raw, target):
+        """Addends of every relocation against `target` from a surviving code section."""
+        import io
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+        elf = ELFFile(io.BytesIO(raw))
+        secs = list(elf.iter_sections())
+        symtab = elf.get_section_by_name(".symtab")
+        out = []
+        for sec in secs:
+            if not isinstance(sec, RelocationSection):
+                continue
+            source = secs[sec.header["sh_info"]]
+            if not (source.header["sh_flags"] & OI.SHF_EXECINSTR):
+                continue
+            if not source.header["sh_size"]:
+                continue
+            for r in sec.iter_relocations():
+                if symtab.get_symbol(r["r_info_sym"]).name == target:
+                    out.append(r["r_addend"])
+        return out
 
     def _section_bytes(self, raw, name):
         import io
