@@ -3736,3 +3736,17 @@ colouring -- and exactly why the lever cannot be applied to it for free.
 Measured, not argued: holding the flip construct fixed and enumerating all 840
 linear extensions of block B's dependence poset yields 56 windows, best div 14,
 and the truncation never re-splits.
+
+### 6bn addendum 2: the residue is NOT a compiler-build artifact
+
+6ah puts the ROM's compiler at mwccarm 2.0 build 0053-0062, and `2004/b56` (build
+56) sits inside that window, so a build gap is not automatically available as an
+excuse here. Measured anyway: the div-4 candidate was compiled with all 25
+archived mwccarm builds. Four of them produce a size-correct object --
+`2004/b56`, `1.2/base`, `1.2/sp2`, `1.2/sp2p3` -- and **all four emit the same
+four wrong words with the same registers** (`lsl r0,r0,#9 / lsl r5,r5,#9 /
+asr r5,r5,#0x10 / asr r0,r0,#0x10`). The rest drift in size (`1.2/sp3`,
+`1.2/sp4` at 536; `2.0/*` at 396; `dsi/*` at 376). A coalescing preference that
+is stable across three years of compiler releases is a property of the SOURCE
+SHAPE, not of the build -- so "wrong build" is not an available explanation for
+this residue, and neither is it for the class.
