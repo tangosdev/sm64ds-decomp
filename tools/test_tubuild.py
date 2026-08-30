@@ -1430,6 +1430,7 @@ def test_record_linkcheck_preserves_all_owned_ranges():
         ],
         "objectAudit": {},
         "symbolsNew": [],
+        "analysis": {"moduleFidelity": {"moduleSetSha256": "b" * 64}},
         "rom": {"matchesStockRom": True, "sha256": "a" * 64},
     }
     original = tubuild.save_manifest
@@ -1442,6 +1443,7 @@ def test_record_linkcheck_preserves_all_owned_ranges():
     recorded = entry["verification"]["linkcheck"]
     assert recorded["tuRange"] == report["tuRange"]
     assert recorded["tuRanges"] == report["tuRanges"]
+    assert recorded["moduleSetSha256"] == "b" * 64
 
 # ---------------------------------------------------------------- create repairs
 # The three assemble_shadow_source behaviors proven by six modules of

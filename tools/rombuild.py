@@ -214,6 +214,19 @@ class BuildError(RuntimeError):
         self.output = output
 
 
+def intact_rom_comparison(actual_sha256, verification):
+    """Describe the final same-worker production/control ROM comparison."""
+    baseline = verification["baseline"]
+    expected = baseline["romSha256"]
+    return {
+        "expectedSha256": expected,
+        "admittedBootstrapSha256": verification["admittedRomSha256"],
+        "actualSha256": actual_sha256,
+        "moduleSetSha256": baseline["moduleSetSha256"],
+        "identical": actual_sha256 == expected,
+    }
+
+
 def run(cmd, what, quiet_patterns=()):
     r = subprocess.run(cmd, capture_output=True, text=True,
                        env=dict(os.environ, LM_LICENSE_FILE=str(LICENSE)), cwd=REPO)
@@ -1291,22 +1304,14 @@ def main():
                     "sha256": rom_sha256,
                 }
                 if intact_link_verification:
-                    expected = {
-                        (((entry.get("verification") or {}).get("linkcheck") or {})
-                         .get("rom") or {}).get("sha256")
-                        for entry in intact_tus.values()
-                    }
-                    expected.add(intact_link_verification["baseline"]["romSha256"])
-                    report["intactTuRom"] = {
-                        "expectedSha256": next(iter(expected)) if len(expected) == 1 else None,
-                        "actualSha256": rom_sha256,
-                        "identical": len(expected) == 1 and rom_sha256 in expected,
-                    }
-                    if len(expected) != 1 or rom_sha256 not in expected:
+                    comparison = intact_rom_comparison(
+                        rom_sha256, intact_link_verification)
+                    report["intactTuRom"] = comparison
+                    if not comparison["identical"]:
                         raise BuildError(
                             "intact TU ROM comparison", 1,
-                            f"built ROM sha256 {rom_sha256} differs from admitted "
-                            f"stock proof(s) {sorted(expected)}")
+                            f"built ROM sha256 {rom_sha256} differs from same-worker "
+                            f"independent control {comparison['expectedSha256']}")
                 if tu_prepared:
                     expected = tu_prepared["baseline"]["romSha256"]
                     report["partitionedTuRom"] = {

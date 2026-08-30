@@ -4797,6 +4797,9 @@ def _record_linkcheck(data, entry, report, baseline):
         "symbolCheckErrors": (((report.get("phases") or {}).get("checkSymbols") or {})
                               .get("errors")),
         "symbolCheckBaselineErrors": report.get("symbolsBaseline"),
+        "moduleSetSha256": (((report.get("analysis") or {})
+                              .get("moduleFidelity") or {})
+                             .get("moduleSetSha256")),
         "rom": report.get("rom"),
         "linkerOutput": report["phases"].get("link", {}).get("output"),
     }
