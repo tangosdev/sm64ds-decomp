@@ -276,6 +276,16 @@ extern "C" int _ZN5Stump8BehaviorEv(void *self)
  *     ((V *)((char *)&mModelAnim))->m5(0);
  * and index 5 of the host _ZTV9ModelAnim is Virtual18. This names
  * ModelAnim::Render, the body the ROM's slot 5 holds (arm9 0x020167f8).
+ *
+ * RE-DERIVED FROM THE ROM AFTER IT WAS WRITTEN, because this is the one body in
+ * this file transcribed by hand rather than propagated. 0x02134184, size 0x68:
+ *     ldr r1,[r0,#0x374] / cmp #1        -> return 1                 mVariant
+ *     ldr r1,[r0,#0xb0]  / ands #0x40000 -> return 1                 unk_0b0
+ *     add r0,r0,#0x300                   -> the ModelAnim
+ *     ldr r2,[r0,#0] / mov r1,#0 / ldr r2,[r2,#0x14] / blx r2
+ *     mov r0,#1
+ * 0x14 is 5 * 4, so the ROM dispatches SLOT 5 with a null second argument --
+ * which is what this body does by name.
  * ==========================================================================*/
 /* PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch. */
 extern "C" int _ZN5Stump6RenderEv(void *selfv)
