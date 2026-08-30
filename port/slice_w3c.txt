@@ -24,11 +24,23 @@ src/JetStream_Spawn.c
 #
 # ---- WATER_RING (244) ------------------------------------------------------
 #
-# A 912-byte Enemy. Two matched TUs are LEFT OUT ON PURPOSE, host-copied in
+# A 912-byte Enemy. FOUR matched TUs are LEFT OUT ON PURPOSE, host-copied in
 # port/unmatched/Ov064_WaterRing.cpp:
 #   _ZN9WaterRing8BehaviorEv.cpp   mwcc PMF over a forward-declared struct
 #   func_ov064_02119ecc.cpp        the same, the state-enter half
 #   _ZN9WaterRing6RenderEv.cpp     local six-virtual Model slot-5 shadow
+#   func_ov064_02119afc.cpp        a decl_common.h REDECLARATION, MEASURED off
+#     the first link of this slice rather than predicted: the TU declares
+#     `void func_ov064_02119ecc(void*, void*)` inside its own extern "C" block
+#     and include/decl_common.h:2762 already declares
+#     `extern void func_ov064_02119ecc(char*, void*)`, which is
+#     `error C2733: you cannot overload a function with 'extern "C"' linkage`
+#     the moment both are visible. src/ is not edited to fix it. This is the
+#     class the ov096 lane hit on src/func_ov096_02137088.cpp -- "the
+#     decl_common.h redeclaration that forced that one out of the slice"
+#     (port/CMakeLists.txt) -- and it takes that lane's treatment: the body is
+#     copied verbatim into the host file, which includes no decl_common.h, so
+#     the two declarations never meet.
 # Both destructors ARE here: src/_ZN9WaterRingD1Ev.c and D0Ev.c are .c bodies
 # with C linkage that restore _ZTV9WaterRing, so neither needs a host thunk --
 # the gate-179 Piece reading, not the Clam one.
@@ -38,7 +50,6 @@ src/_ZN9WaterRing16CleanupResourcesEv.c
 src/_ZN9WaterRing16OnPendingDestroyEv.c
 src/_ZN9WaterRingD1Ev.c
 src/_ZN9WaterRingD0Ev.c
-src/func_ov064_02119afc.cpp
 src/func_ov064_02119c60.c
 src/func_ov064_02119ce4.c
 src/func_ov064_02119d28.c

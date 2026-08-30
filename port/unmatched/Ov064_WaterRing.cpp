@@ -15,6 +15,20 @@
  *    matched source's control flow line for line; only the dispatch is read as
  *    a plain { fn, 0 } and the fn called with `this`.
  *
+ * 1b. func_ov064_02119afc is here for a DIFFERENT reason -- a decl_common.h
+ *    redeclaration, MEASURED off the first link of this slice rather than
+ *    predicted. The matched TU declares `void func_ov064_02119ecc(void*, void*)`
+ *    inside its own extern "C" block; include/decl_common.h:2762 already
+ *    declares `extern void func_ov064_02119ecc(char*, void*)`. Both visible in
+ *    one TU is `error C2733: you cannot overload a function with 'extern "C"'
+ *    linkage`, and src/ is not edited to fix it. The ov096 lane hit this exact
+ *    class on src/func_ov096_02137088.cpp and port/CMakeLists.txt records the
+ *    treatment in one line: "the decl_common.h redeclaration that forced that
+ *    one out of the slice". The body below is that TU verbatim, in a file that
+ *    includes no decl_common.h, so the two declarations never meet. It forms no
+ *    pointer-to-member of its own; it only passes &data_ov064_0211c944 to the
+ *    dispatcher above.
+ *
  * 2. WaterRing::Render dispatches its plain Model at +0x30c through a LOCAL
  *    six-virtual shadow (`struct Sub { ... virtual int g5(void*); }`), which
  *    counts in ROM/Itanium numbering, so its slot 5 is Render; the host
@@ -72,6 +86,18 @@ extern PortPmf data_ov064_0211c3b8[];   /* {02119c60, 0} */
 extern PortPmf data_ov064_0211c3c0[];   /* {02119ce4, 0} */
 extern PortPmf data_ov064_0211c3c8[];   /* {02119d28, 0} */
 
+/* what func_ov064_02119afc reaches, on top of the ring above */
+struct PortVec3 { int x, y, z; };
+void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
+        void *t, const PortVec3 &v);
+void *_ZN5Actor10FindWithIDEj(unsigned id);
+short Vec3_VertAngle(const PortVec3 *v1, const PortVec3 *v0);
+int AngleDiff(int a, int b);
+short _ZN5Actor18HorzAngleToCPlayerEv(void *t);
+void _ZN6Player4HealEi(void *p, int amt);
+extern PortVec3 data_ov064_0211c3d0;
+extern PortPmf data_ov064_0211c944[];   /* the record it switches to */
+
 }  /* extern "C" */
 
 /* PORT_HOST_ABI: mwcc pointer-to-member on a forward-declared struct. The
@@ -111,6 +137,52 @@ extern "C" int func_ov064_02119ecc(void *self, void *p)
     if (rec[0].fn == 0)
         return 1;
     return ((int (*)(void *))(size_t)rec[0].fn)(c);
+}
+
+/* PORT_HOST_ABI: displaced by a decl_common.h redeclaration (see 1b in this
+   file's header), not by an ABI fault of its own. src/func_ov064_02119afc.cpp
+   verbatim, including the two gotos and the sign-bit test the matched TU
+   spells as `(x >> 16) & 1`; only the declarations moved. */
+extern "C" void func_ov064_02119afc(char *c)
+{
+    PortVec3 hv;
+    PortVec3 v;
+    char *a;
+    int b;
+    unsigned id;
+
+    *(int *)(c + 0x368) = 0x1000;
+    v = data_ov064_0211c3d0;
+    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x110, v);
+    id = *(unsigned *)(c + 0x134);
+    if (id == 0) return;
+    a = (char *)_ZN5Actor10FindWithIDEj(id);
+    if (a == 0) return;
+    b = (*(unsigned short *)(a + 0xc) == 0xbf);
+    if (b == 0) return;
+    {
+        hv.x = *(int *)(a + 0x5c);
+        hv.y = *(int *)(a + 0x60);
+        hv.z = *(int *)(a + 0x64);
+    }
+    if (AngleDiff(*(short *)(c + 0x8c),
+                  Vec3_VertAngle((PortVec3 *)(c + 0x5c), &hv)) >= 0x3000)
+        return;
+    if (*(int *)(c + 0x37c) != 1) goto Lcheck;
+    if (((*(short *)(c + 0x388) >> 16) & 1)
+        != ((_ZN5Actor18HorzAngleToCPlayerEv(c) >> 16) & 1))
+        goto Lpassed;
+Lcheck:
+    if (*(int *)(c + 0x37c) == 1) goto Lkeep;
+Lpassed:
+    if (*(int *)(c + 0x37c) == 1)
+        _ZN6Player4HealEi(a, 0x100);
+    *(int *)(c + 0x368) = 0x4000;
+    func_ov064_02119ecc(c, &data_ov064_0211c944[0]);
+    return;
+Lkeep:
+    *(short *)(c + 0x388) = _ZN5Actor18HorzAngleToCPlayerEv(c);
+    return;
 }
 
 /* PORT_HOST_ABI: ROM-order Model slot-5 dispatch, the Whomp/Fish case. The
