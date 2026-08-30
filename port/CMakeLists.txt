@@ -2176,6 +2176,20 @@ list(APPEND PORT_ACTOR_OVERLAYS ov034)
 # _ZTV10RickshawBs is id 156's and _ZTV18RickshawPlatformBs is id 153's. Proven
 # three ways in port/ov047_syms.txt. See port/slice_sweep2_ov047.txt.
 list(APPEND PORT_ACTOR_OVERLAYS ov047)
+# 4/4: ov055 (level 47, Luigi's key arena) joins the per-symbol mounts so
+# MIRROR_LUIGI (195) reaches its SpawnInfo record, its four state words, its two
+# PMF source pairs and -- the important one -- the SIXTEEN-BYTE state cell at
+# data_ov055_02111b70, whose dsd landing reads ONE WORD OF FOUR. That is level
+# 47's whole skip list, so this mount takes the level to zero skipped. No
+# identity shift: _ZTV11MirrorLuigi is on the right class (RTTI "9daLuigi_c",
+# base typeinfo Actor's), the table is 31 slots because a MirrorLuigi is a plain
+# Actor and not a Platform, and no ov055 TU spells a resolver placeholder. This
+# mount DEFINES data_ov055_02111a94, which src/_ZN9ShipWater13InitResourcesEv.c
+# (ov017, LINKED) spells for OV017's object at the same shared-window address --
+# already routed by the wave-1 cast-sweep1 lane's per-source -D, which foresaw
+# this mount and is not defeated by a definition the way an /alternatename would
+# be. Derivation in port/ov055_syms.txt, slice in port/slice_sweep2_ov055.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov055)
 set(ACTOR_OV_SYMS "")
 foreach(ovn IN LISTS PORT_ACTOR_OVERLAYS)
     set(ovn_out "${CMAKE_BINARY_DIR}/host-src/${ovn}_syms.c")
@@ -9708,6 +9722,25 @@ set_source_files_properties(
     PROPERTIES COMPILE_DEFINITIONS
     "data_ov052_02112680=data_ov047_02112680;data_ov052_02112688=data_ov047_02112688;data_ov052_02112690=data_ov047_02112690;data_ov052_021126a8=data_ov047_021126a8")
 list(APPEND SWEEP2_SOURCES hal/actor_classes_ov047.cpp ${SLICE_SWEEP2_OV047_SOURCES})
+
+# ---- 4/4: ov055, level 47 (Luigi's key arena) ------------------------------
+# MIRROR_LUIGI (195) x1 -- level 47's WHOLE skip list, so this takes the level
+# to zero skipped. Ten of the overlay's thirteen TUs: two are the
+# pointer-to-member dispatch sites and one is the //cpp real-destructor shape,
+# hand-spelled in the seat. One 31-slot ACTOR table (not Platform), no identity
+# shift, and the ONLY overlay in this lane that needs no per-source -D at all.
+# See port/ov055_syms.txt and port/slice_sweep2_ov055.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep2_ov055.txt" SLICE_SWEEP2_OV055_LINES)
+set(SLICE_SWEEP2_OV055_SOURCES "")
+foreach(line IN LISTS SLICE_SWEEP2_OV055_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SWEEP2_OV055_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SWEEP2_SOURCES hal/actor_classes_ov055.cpp ${SLICE_SWEEP2_OV055_SOURCES}
+    unmatched/MirrorLuigi_StateEnter.cpp unmatched/MirrorLuigi_Behavior.cpp)
 # ---- end lane cast-sweep2 --------------------------------------------------
 
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'

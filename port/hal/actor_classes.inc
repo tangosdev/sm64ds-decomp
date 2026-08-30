@@ -1542,6 +1542,21 @@ void hal_fill_stairs_bs_vtable(void);                /* _ZTV18RickshawPlatformBs
 extern unsigned char data_ov047_02112358[];          /* ov047 0x02112358, +4 = 156 */
 void *func_ov047_021113bc(void);                     /* ov047 0x021113bc, 60 B */
 void hal_fill_rotating_platform_bs_vtable(void);     /* _ZTV10RickshawBs, 32 */
+/* run rel0215 wave 2 (lane cast-sweep2): OV055'S ONE CLASS, Luigi's key arena
+   -- and it is the WHOLE of level 47's skip list, so this row takes that level
+   to zero skipped. NO identity shift: _ZTV11MirrorLuigi (0x02111ae0) is on the
+   right class, its RTTI reads "9daLuigi_c" and its base typeinfo is ACTOR's,
+   which is why the table is 31 slots with a literal zero where a Platform
+   keeps Kill (the ov024 PYRAMID_TAG shape). dsd's landing reads FIVE. SEVEN
+   own slots: 12 OnPendingDestroy is a four-byte override. A 524-byte Actor
+   with a ModelAnim at +0xd4, a Model at +0x138, a ShadowModel at +0x188 and a
+   ONE-CELL pointer-to-member state machine at +0x1d8 whose tick mirrors the
+   player's X and Y angle -- the smallest instance of that machine in the tree.
+   Derivation in port/ov055_syms.txt, fill in hal/actor_classes_ov055.cpp,
+   slice in port/slice_sweep2_ov055.txt. */
+extern unsigned char MirrorLuigi_SpawnInfo[];        /* ov055 0x02111abc, +4 = 195 */
+void *MirrorLuigi_Spawn(void);                       /* ov055 0x02111860, 116 B */
+void hal_fill_mirror_luigi_vtable(void);             /* _ZTV11MirrorLuigi, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2328,4 +2343,8 @@ void hal_fill_rotating_platform_bs_vtable(void);     /* _ZTV10RickshawBs, 32 */
     {153, "STAIRS_BS", StairsBs_SpawnInfo, StairsBs_Spawn, \
      hal_fill_stairs_bs_vtable}, \
     {156, "ROTATING_PLATFORM_BS", data_ov047_02112358, \
-     func_ov047_021113bc, hal_fill_rotating_platform_bs_vtable},
+     func_ov047_021113bc, hal_fill_rotating_platform_bs_vtable}, \
+    /* ---- run rel0215 wave 2 (lane cast-sweep2): ov055, Luigi's key arena. \
+       Level 47's whole skip list in one row. ---- */ \
+    {195, "MIRROR_LUIGI", MirrorLuigi_SpawnInfo, MirrorLuigi_Spawn, \
+     hal_fill_mirror_luigi_vtable},
