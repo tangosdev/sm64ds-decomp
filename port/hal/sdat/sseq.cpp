@@ -15,6 +15,7 @@
 #include "sdat.h"
 
 #include <math.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -22,6 +23,58 @@
 namespace {
 
 enum { SD_PLAYERS = 16, SD_TRACKS = 16, SD_STACK = 4, SD_VARS = 32 };
+
+/* ---- the pitch dump ------------------------------------------------------
+ *
+ * SM64DS_PITCH_DUMP=<path> (or =1 for stderr). One line per voice start and
+ * one per pitch change, carrying every input the DS's own pitch computation
+ * takes, in the DS's own 1/64-semitone units. It exists because an off-key
+ * report cannot be answered by listening: the answer is a per-voice diff
+ * against the driver the ROM's ARM7 actually runs, and this is the side of
+ * that diff the port can supply.
+ *
+ * Latched once, off by default, every call site behind SD_PD, so with the
+ * variable unset it costs one predictable branch.
+ */
+int g_pdump;                    // 0 = off, 1 = armed
+FILE *g_pdumpFile;
+int g_frame;                    // 192 Hz sequencer frames since sd_seq_reset
+
+void sd_pdump(const char *fmt, ...)
+{
+    if (!g_pdumpFile) return;
+    va_list ap;
+    va_start(ap, fmt);
+    fputs("[pd] ", g_pdumpFile);
+    vfprintf(g_pdumpFile, fmt, ap);
+    va_end(ap);
+}
+
+#define SD_PD(...) do { if (g_pdump) sd_pdump(__VA_ARGS__); } while (0)
+
+void pdump_open(void)
+{
+    static int latched;
+    if (latched) return;
+    latched = 1;
+    const char *p = getenv("SM64DS_PITCH_DUMP");
+    if (!p || !*p) return;
+    if (!strcmp(p, "1") || !strcmp(p, "-")) {
+        g_pdumpFile = stderr;
+    } else {
+        g_pdumpFile = fopen(p, "w");
+        if (!g_pdumpFile) {
+            fprintf(stderr, "[pd] cannot open %s -- pitch dump off\n", p);
+            return;
+        }
+    }
+    g_pdump = 1;
+    fprintf(g_pdumpFile,
+            "[pd] units are 1/64 of a semitone, 768 to the octave. "
+            "pu = (bend * (range << 6)) >> 7 + ext, the ROM's "
+            "TrackUpdateChannel. rate is sample frames per output frame at "
+            "%d Hz.\n", (int)SD_MIX_RATE);
+}
 
 struct Track {
     int active;
@@ -35,6 +88,12 @@ struct Track {
     int wait;               // ticks still to burn before the next command
     int prog;               // program (instrument) number
     int volume, expression, pan, panSet;
+    // bend and bendRange are the two halves of ONE per-frame quantity, not a
+    // per-note one. See track_pitch_units below: the ROM recomputes them into
+    // the sounding channels every frame, so a PITCHBEND written while a note
+    // is still ringing bends THAT note. Reading them only at the note-on left
+    // the slide theme's lead a full semitone flat for 17.8% of its sounding
+    // time; the measurement is on track_pitch_units.
     int transpose, bend, bendRange;
     int priority;
     // TRACK_PARAM 0x0a and 0x0c: the two halves of the ARM7's per-track
@@ -104,11 +163,16 @@ struct NoteSlot {
     int ticks;
     int basePan;            // pan before the player's own bias
     int baseDb10;           // volume before the player's own attenuation
-    // Playback rate before the TRACK's own pitch offset. The track pitch is
-    // re-sent every frame while a positional sound plays, so retuning a
-    // sounding voice has to start from the rate the note was born with
-    // rather than compound the last offset into the next one.
+    // Playback rate for (key - baseNote) ALONE -- the ROM's
+    // (chn->midiKey - chn->rootMidiKey) * 0x40 term and nothing else. Every
+    // other pitch input the track has is re-applied to this every frame by
+    // player_update_channels, so retuning a sounding voice starts from the
+    // rate the note was born with rather than compounding the last offset
+    // into the next one.
     double baseRate;
+    // The track pitch last pushed onto this channel, so the dump can print a
+    // line when the pitch MOVES rather than 192 identical lines a second.
+    int lastUnits;
 };
 NoteSlot g_note[SD_CHANNELS];
 
@@ -144,6 +208,12 @@ void note_release(int ch, const char *why)
     if (ch < 0 || ch >= SD_CHANNELS) return;
     if (g_note[ch].released) return;
     g_note[ch].released = 1;
+    // The pitch dump needs the release because the ROM stops updating a
+    // channel's pitch here (envStatus 3 -- see retune_note_pitch), so a
+    // reader diffing the two has to know where the trajectory legitimately
+    // stops moving.
+    SD_PD("rel f=%d p=%d t=%d ch=%d why=%s\n", g_frame, g_note[ch].player,
+          g_note[ch].track, ch, why);
     sd_mix_release(ch, why);
 }
 
@@ -164,8 +234,81 @@ void note_detach(int ch)
 void reap_finished_channels(void)
 {
     for (int i = 0; i < SD_CHANNELS; i++)
-        if (g_note[i].active && !sd_mix_active(i))
+        if (g_note[i].active && !sd_mix_active(i)) {
+            SD_PD("end f=%d p=%d t=%d ch=%d\n", g_frame, g_note[i].player,
+                  g_note[i].track, i);
             g_note[i].active = 0;
+        }
+}
+
+/* THE TRACK'S PITCH, AND IT IS A PER-FRAME QUANTITY.
+ *
+ * SND_seq.c's TrackUpdateChannel, verbatim (lines 690 to 693):
+ *
+ *     pitch  = track->pitchBend;
+ *     pitch *= track->bendRange << 6;
+ *     pitch >>= 7;
+ *     pitch += track->extPitch;
+ *
+ * and three lines further down it is STORED INTO EVERY CHANNEL THE TRACK OWNS:
+ *
+ *     for (chn = track->channelLLHead; chn; chn = chn->channelLLNext) {
+ *         ...
+ *         if (chn->envStatus == 3) continue;      // SND_ENV_RELEASE
+ *         chn->userPitch = (s16)pitch;
+ *
+ * TrackUpdateChannel runs once per 192 Hz frame for every track of every
+ * playing player (SND_SeqMain calls PlayerSeqMain then PlayerUpdateChannel),
+ * and SND_ExChannelMain then computes the channel's timer from
+ *
+ *     pitch = (chn->midiKey - chn->rootMidiKey) * 0x40 + sweep
+ *           + chn->userPitch + lfo
+ *
+ * So the bend is NOT part of the note. It rides on top of the note's own
+ * interval, it is recomputed every frame, and a PITCHBEND written while a note
+ * is still sounding bends THAT note.
+ *
+ * This file used to fold the bend into the note's rate once, at the note-on,
+ * and never look at it again. Every song whose composer bends a note that is
+ * already ringing was wrong for as long as that note lasted -- 19 of the EU
+ * SDAT's 83 sequences, measured against a transliteration of the driver above.
+ * The worst of them is the slide theme, NCS_BGM_ATHRETIC (SEQ 65, the BGM the
+ * level table gives Cool Cool Mountain's slide, Tall Tall Mountain's slide and
+ * the secret-slide courses): its lead track opens notes under PITCHBEND -11 at
+ * BENDRANGE 12 and lets the bend go while they ring, so 684 of the lead's 3836
+ * sounding frames -- 17.8%, 3.56 s out of a 20 s sample -- came out exactly
+ * 103.1 cents flat. A semitone, on the melody. NCS_BGM_CHIJOU and
+ * NCS_BGM_SHIRO, whose composers only bend between notes, measured 0.00%.
+ *
+ * THE UNITS ARE 1/64 OF A SEMITONE, 768 to the octave, and the s16 truncation
+ * is the ROM's own: chn->userPitch is an s16 (SND_exChannel_shared.h +0x0E),
+ * so a caller that manages to overflow it wraps on hardware too.
+ *
+ * >> 7 rather than / 128 for the same reason: the ROM's is an arithmetic
+ * shift, which floors, and the two disagree by one unit on every negative
+ * value that is not an exact multiple of 128.
+ *
+ * AND THE 7 IS NOT A 6. It is what makes a full-scale bend come out at exactly
+ * +-bendRange semitones -- pitchBend is an s8, so full scale is +-128, and
+ * bend * (bendRange << 6) >> 7 is bend * bendRange / 2 units, which is
+ * bendRange semitones at 64 units to the semitone. This file once shifted by
+ * one place less and every bend in the game was twice as deep as the DS plays
+ * it: the ground loop re-randomises its bend with bendRange 2, so walking
+ * warbled +-1.5 semitones instead of +-0.75.
+ */
+int track_pitch_units(const Track &tk)
+{
+    int pitch = tk.bend;
+    pitch *= tk.bendRange << 6;
+    pitch >>= 7;
+    pitch += tk.pitch;          // extPitch, TRACK_PARAM 0x0c
+    return (int)(sd_s16)pitch;
+}
+
+// 1/64 of a semitone as a playback-rate multiplier.
+double pitch_units_scale(int units)
+{
+    return pow(2.0, (double)units / 64.0 / 12.0);
 }
 
 int track_has_channel(int p, int t)
@@ -271,27 +414,22 @@ void start_note(Player &pl, int pi, int ti, Track &tk, int note, int vel,
     if (pan < 0) pan = 0;
     if (pan > 127) pan = 127;
 
-    /* /128, not /64. The DS pitch domain is 1/64 of a semitone (768 units to
-       the octave) and a full-scale bend has to come out at exactly
-       +-bendRange semitones. pitchBend is an s8, so full scale is +-128:
+    /* The note's OWN interval, and nothing else: the ROM's
+       (chn->midiKey - chn->rootMidiKey) * 0x40, in semitones. This is the one
+       pitch input that is fixed for the life of the note, so it is the one
+       that belongs in baseRate.
 
-           units     = bend * bendRange * 64 / 128 = bend * bendRange / 2
-           semitones = units / 64                  = bend * bendRange / 128
-
-       which is the same bend * bendRange / 2 units NitroSDK computes. At /64
-       every bend in the game was twice as deep as the DS plays it. The ground
-       loop re-randomises its bend every iteration with bendRange 2, so
-       walking warbled +-1.5 semitones instead of +-0.75. */
-    double semis = (double)(key - n.baseNote)
-                 + (double)tk.bend * tk.bendRange / 128.0;
+       EVERYTHING THE TRACK CONTRIBUTES IS KEPT OUT OF IT ON PURPOSE. The pitch
+       bend used to be folded in here, which made it a property of the note;
+       on hardware it is a property of the TRACK, recomputed and re-applied
+       every frame, and a bend written while the note rings bends the ringing
+       note. TRACK_PARAM 0x0c was already outside for that reason and the bend
+       now joins it -- one quantity, one place, track_pitch_units. */
+    double semis = (double)(key - n.baseNote);
     double baseRate = (double)w.sampleRate * pow(2.0, semis / 12.0)
                     / SD_MIX_RATE;
-    /* TRACK_PARAM 0x0c rides on top, in the same domain the comment above
-       spells out: 64 units to the semitone. It is kept OUT of baseRate on
-       purpose -- the game re-sends it every frame for a moving sound, and
-       sd_seq_set_track_pitch retunes from baseRate so a hundred updates in a
-       row cannot accumulate. */
-    double rate = baseRate * pow(2.0, (double)tk.pitch / 64.0 / 12.0);
+    int pitchUnits = track_pitch_units(tk);
+    double rate = baseRate * pitch_units_scale(pitchUnits);
     // Everything that can refuse the note is settled BEFORE a channel is
     // taken. Allocating first and then bailing on the rate left a stolen
     // channel dead with the previous note's owner still recorded against it,
@@ -307,9 +445,10 @@ void start_note(Player &pl, int pi, int ti, Track &tk, int note, int vel,
     // back out of the rate alone.
     if (semis < -1.0 || semis > 1.0)
         SD_VT("note p%d t%d key %d: %+.2f semitones off base %d "
-              "(transpose %d, bend %d, range %d) -> rate %.4f\n",
+              "(transpose %d, bend %d, range %d, track pitch %d units) -> "
+              "rate %.4f\n",
               pi, ti, key, semis, n.baseNote, tk.transpose, tk.bend,
-              tk.bendRange, rate);
+              tk.bendRange, pitchUnits, rate);
 
     int ch = sd_mix_alloc(tk.priority);
     if (ch < 0) {
@@ -328,6 +467,16 @@ void start_note(Player &pl, int pi, int ti, Track &tk, int note, int vel,
     g_note[ch].basePan = basePan;
     g_note[ch].baseDb10 = baseDb10;
     g_note[ch].baseRate = baseRate;
+    g_note[ch].lastUnits = pitchUnits;
+    // The numeric dump. Every input the DS's own pitch is made of, in the
+    // DS's own units, and the channel it landed on, so an off-key report can
+    // be answered with a per-voice diff against the driver rather than with
+    // an ear. See sd_pdump.
+    SD_PD("on f=%d p=%d t=%d ch=%d prog=%d note=%d transpose=%d key=%d "
+          "root=%d bend=%d range=%d ext=%d pu=%d srate=%u rate=%.9f\n",
+          g_frame, pi, ti, ch, tk.prog, note, tk.transpose, key,
+          (int)n.baseNote, tk.bend, tk.bendRange, tk.pitch, pitchUnits,
+          (unsigned)w.sampleRate, rate);
     // Duration 0 means "no scheduled note-off" -- the note runs until its
     // envelope or its sample ends. Every sound effect in the SEQARCs is
     // written that way (a lone "program change, note, end of track"), so
@@ -592,8 +741,12 @@ int run_track(Player &pl, int pi, int ti)
 
 void sd_seq_reset(void)
 {
+    // Latched here for sd_mix_reset's reason: this runs before any sound can,
+    // and the flag has to be readable from the first note-on.
+    pdump_open();
     memset(g_pl, 0, sizeof g_pl);
     memset(g_note, 0, sizeof g_note);
+    g_frame = 0;
 }
 
 int sd_seq_active(int p)
@@ -706,6 +859,56 @@ void sd_seq_set_volume(int p, int v)
     g_pl[p].volume = v < 0 ? 0 : (v > 127 ? 127 : v);
 }
 
+/* ONE PLACE THAT KNOWS HOW A SOUNDING VOICE'S PITCH IS MADE UP, the twin of
+ * retune_note_vol below and for the same reason.
+ *
+ * A RELEASED VOICE IS SKIPPED, and that is the ROM's rule rather than a
+ * convenience: TrackUpdateChannel walks its track's channel list and its
+ * third line is
+ *
+ *     if (chn->envStatus == 3) continue;      // SND_ENV_RELEASE
+ *
+ * so a channel already running its release tail keeps whatever pitch it had
+ * when the note-off went out. NoteSlot.released is that same bit -- it is set
+ * by note_release, which is what sends the note-off -- so the test reads the
+ * same state the ROM tests. */
+static void retune_note_pitch(int i)
+{
+    if (!g_note[i].active || g_note[i].released) return;
+    const Track &tk = g_pl[g_note[i].player].tr[g_note[i].track];
+    int units = track_pitch_units(tk);
+    if (units != g_note[i].lastUnits) {
+        SD_PD("pit f=%d p=%d t=%d ch=%d bend=%d range=%d ext=%d pu=%d "
+              "was=%d rate=%.9f\n", g_frame, g_note[i].player,
+              g_note[i].track, i, tk.bend, tk.bendRange, tk.pitch, units,
+              g_note[i].lastUnits,
+              g_note[i].baseRate * pitch_units_scale(units));
+        g_note[i].lastUnits = units;
+    }
+    double rate = g_note[i].baseRate * pitch_units_scale(units);
+    /* The same refusal start_note applies, on the same side. A voice already
+       sounding is left at the rate it has rather than stopped: the ROM's own
+       driver clamps the timer reload (SND_CalcTimer returns 0xFFFF at the
+       ends), and dropping a live note here would turn an out-of-range trim
+       into a silence the DS does not have. */
+    if (rate > 0.0 && rate <= 64.0) sd_mix_set_rate(i, rate);
+}
+
+/* PlayerUpdateChannel: SND_SeqMain runs PlayerSeqMain (all this frame's ticks)
+ * and then this, once per 192 Hz frame, for every player that is playing. It
+ * is what makes the pitch bend a live control rather than a note property.
+ *
+ * The port has no per-track channel list -- ownership is recorded against the
+ * channel instead (see NoteSlot) -- so the same relation is walked the other
+ * way round: sixteen tests per player per frame. */
+static void player_update_channels(int p)
+{
+    for (int i = 0; i < SD_CHANNELS; i++) {
+        if (!g_note[i].active || g_note[i].player != p) continue;
+        retune_note_pitch(i);
+    }
+}
+
 // ONE PLACE THAT KNOWS HOW A SOUNDING VOICE'S LEVEL IS MADE UP. There are now
 // two attenuations riding on a note's own volume, the player's and its
 // track's, and three callers that have to retune a voice already sounding.
@@ -796,16 +999,17 @@ void sd_seq_set_track_pitch(int p, unsigned trackMask, int pitch)
     pitch = (int)(short)(unsigned short)pitch;
     for (int t = 0; t < SD_TRACKS; t++)
         if (trackMask & (1u << t)) g_pl[p].tr[t].pitch = pitch;
+    /* STORING IS THE WHOLE COMMAND. On hardware TRACK_PARAM 0x0c writes
+       track->extPitch and stops; the value reaches the sounding channels on
+       the next TrackUpdateChannel, which is at most one 192 Hz frame away.
+       player_update_channels is that call here, so the arithmetic that used
+       to be spelled out again at this call site is gone -- the bend and the
+       ext trim are one quantity now (track_pitch_units) and duplicating half
+       of it here is how the two would come apart later. */
     for (int i = 0; i < SD_CHANNELS; i++) {
         if (!g_note[i].active || g_note[i].player != p) continue;
         if (!(trackMask & (1u << g_note[i].track))) continue;
-        double rate = g_note[i].baseRate
-                    * pow(2.0, (double)pitch / 64.0 / 12.0);
-        /* Same refusal start_note applies. A voice already sounding is left
-           at the rate it has rather than stopped: the ROM's own driver
-           clamps the timer reload, and dropping a live note here would turn
-           an out-of-range trim into a silence the DS does not have. */
-        if (rate > 0.0 && rate <= 64.0) sd_mix_set_rate(i, rate);
+        retune_note_pitch(i);
     }
 }
 
@@ -831,6 +1035,7 @@ void sd_seq_frame(void)
     // a track parked in noteFinishWait sees the release in the same tick the
     // mixer finished it.
     reap_finished_channels();
+    g_frame++;
 
     for (int p = 0; p < SD_PLAYERS; p++) {
         Player &pl = g_pl[p];
@@ -881,5 +1086,11 @@ void sd_seq_frame(void)
                 break;
             }
         }
+
+        /* SND_SeqMain: PlayerSeqMain, then PlayerUpdateChannel. The order is
+           the point -- this frame's commands have already run, so a PITCHBEND
+           written this frame reaches the notes this frame, including the ones
+           that were already sounding when it was written. */
+        player_update_channels(p);
     }
 }
