@@ -174,8 +174,11 @@ port_scene_fill_flower         # scene 390 flower       seated mg5 lane CCN, com
 # the count: slice_vs.txt's "THE THREE PMF DISPATCH SITES are OUT of the slice"
 # block (the unnumbered one near the manifest's end) names THREE of them in this
 # scene, and there are exactly three pairs. func_ov075_0211afb0 -- the third
-# pair's target, and one of the two faces this seat still carries -- is
-# reachable through nothing else, which is why nothing else calls it.
+# pair's target, and one of the two faces this seat still carries -- has NO
+# arm_call anywhere in the config: its only two references are this pair word
+# and an ov006 data load at the shared window. It is dispatched THROUGH the
+# pair and nothing else, and it is entered every frame (299 face hits over a
+# 300-frame scene-6 run), which is the run-time half of the same claim.
 #
 # WHY vtspan MISSES IT, stated so the next reader does not re-derive it:
 # span()'s run only consults a terminator once n >= 31, and routes() only asks
