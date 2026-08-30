@@ -3482,3 +3482,61 @@ reaches the band. Full data: notes/collision-system.md Phase 3b.
   warning match.compile_c surfaces; `opt_generateconditionalassignments on`
   ICEs this build. On this function all 81 x on/off were inert or
   regressions -- the census exists so nobody re-guesses pragma names.
+
+## 6bl. A memory-homed local always sorts ABOVE every spilled scalar, and that is a frame-layout floor (func_ov075_0211621c, div 44 -> 40, 2026-08-29)
+
+`func_ov075_0211621c` (ov075, 0x394) is the VS/course-entry results row: for each
+player slot it draws the star icon, patches the star-count digit into the returned
+OAM entry from `data_0209f310[pid]`, then lays out a three-digit time from
+`data_0209f358[pid]`. Two independent near-misses (grok-4.6, div 49 then 44) stalled
+on the same residual.
+
+**The lever that moved it (44 -> 40).** Hoisting the pooled table read above the
+stride arithmetic fixes a two-register coloring swap at the top of the function.
+The ROM holds the `data_ov075_0211c6e8` base in `r2` and `d * 16` in `r1`; every
+spelling that computes the stride first gets them the other way round. The source
+order of two *independent* pooled reads in the prologue picks which one takes the
+lower scratch register, even though neither feeds the other:
+
+```c
+xbase  = data_ov075_0211c6e8[d];     /* must come first */
+stride = (d * 16) + 0x38;
+```
+
+That is the general form: when a prologue has two unrelated pool loads and one is
+mis-colored, permute their *statement* order before reaching for anything else.
+It cost four words here and is free to try anywhere.
+
+**The floor (40 words, one paired swap).** The ROM frame is
+`0x18 count, 0x1c stride, 0x20 hundreds, 0x24 i`, and `hundreds` (the `n / 100`
+digit) is memory-homed: mwcc writes the division back to its slot after every
+sub-step, three `str [sp, #0x20]` in a row. Reproducing that homing requires an
+aggregate spelling (`int hv[1]`); a plain scalar keeps the value in `fp` and the
+function comes out 0x390, one instruction short. But **mwccarm places a
+memory-homed aggregate above every spilled scalar in the frame, unconditionally**,
+so the array can only land at `0x24` and `i` takes `0x20`. The ROM wants the
+opposite order, which no aggregate spelling can produce.
+
+**Measured, per 6bg, by identity rather than by count.** Reading the allocated
+register out of word `+0x48` and the slot out of word `+0x180` across ~900 compiles:
+
+- all 720 function-top declaration permutations: `xoff` is `sb` in **720/720** and
+  `hundreds` is at `0x24` in **720/720**. What declaration order *does* move is
+  `i`'s slot, freely and uselessly, 240 each at `0x18` / `0x1c` / `0x20`. The count
+  reads 40 throughout, which is exactly the 6bg trap: the lever is alive, it just
+  never touches the web that is wrong.
+- 12 further positions for the `xoff` declaration inside the loop block: `sb`, 12/12.
+- the full pragma census from 6bk, all 69 `opt_*` names extracted from
+  `mwccarm.exe` x on/off on both the aggregate and the scalar base: 124 inert,
+  6 size regressions, 7 illegal-token (those take an argument), and **zero** that
+  moved either web.
+- seven memory-homing spellings (1-element array, plain scalar, `volatile` scalar,
+  address-taken through a pointer, innermost-scope array, a 2-element array holding
+  both values, two separate 1-element arrays), the access-expression levers from
+  section 2, and associativity/commutation on all four `(xbase + k) + xoff` sites.
+
+**Not marked as a floor** in the DB, per the 6bg convention. What would break it is
+a spelling that memory-homes a value *without* making it an aggregate, so it sorts
+with the spilled scalars. `opt_decomposeaggregates` / `opt_scalarize` /
+`opt_marknonregtemps` were the obvious candidates and all three are inert here. The
+near-miss stays live at div 40.
