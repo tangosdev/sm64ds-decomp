@@ -136,6 +136,24 @@ ACTOR_EXT_SLOT_AUTHORITY = {
     # clean it. Report 7447e46c is that word going unpopped.
     ('_data_ov002_0210af70', 32): 1,
     ('_data_ov100_0214857c', 32): 1,
+    # EYEROK (176, ov066), Platform-derived, slot 31 = Platform::Kill.
+    # run rel0215 wave 2, lane cast-ov066. NOT keyed off the slot number: the
+    # binary was swept for `call dword ptr [reg+7Ch]` the way this header's own
+    # slot-32 paragraph prescribes, and slot 31 has FOURTEEN dispatch sites in
+    # walk_window.exe -- 0046A22B, 005425F0, 005453C6, 005AF5DD, 005AF704,
+    # 005BD4FB, 005D3ED1, 005D410F, 005D4371, 005D468E, 005D46CE, 005D481D,
+    # 005D497C, 005DC24B -- and every single one is
+    #     mov ecx,<reg> / mov eax,dword ptr [<reg>] / call dword ptr [eax+7Ch]
+    # with NOTHING pushed. (The lone `push esi` in the 005DC24B window is that
+    # function's own prologue save; `mov esi,dword ptr [ebp+8]` follows it.)
+    # Slot 31 is UNANIMOUS where slot 32's three sites disagree, so ?ov66_kill's
+    # __fastcall(void*, void*) / ret 0 shape is right.
+    # ONLY THIS TABLE IS LISTED, deliberately. The same sweep would clear the
+    # thirty-odd other slot-31 `*_kill` rows in abicheck_extslot_baseline.txt,
+    # but retiring another lane's debt is that lane's call, not this one's, and
+    # a blanket slot-31 rule is exactly the shortcut this header forbids.
+    # Evidence: ...runs/rel0215/out/w2-ov066/slot31_dispatch_sweep.txt
+    ('__ZTV6Eyerok', 31): 0,
 }
 
 # calls that do not come back: the thunk's own `ret` is unreachable
