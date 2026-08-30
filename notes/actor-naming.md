@@ -74,7 +74,7 @@ header's size comments.
   `char*` array, `ACTOR_DEBUG_NAMES` (EU `0x02090e80`, immediately after the
   spawn table), gives Nintendo's own EAD debug-build name for every slot -
   `GetActorDebugName()` ([src/GetActorDebugName.c](../src/GetActorDebugName.c), formerly `func_020233d4`) is
-  the accessor, called from `ShowCrashScreen.c:66` to print the offending
+  the accessor, called from [ShowCrashScreen.c](../src/ShowCrashScreen.c):66 to print the offending
   actor/scene's name on a crash. All 391 names + the `END_OF` sentinel are
   captured in [symbols/actor_debug_names.tsv](../symbols/actor_debug_names.tsv) (index, name, string address).
   Indices 0-8 are the scene cluster (BOOT/DSMT/TITLE/STAGE/STAR_SELECT/
