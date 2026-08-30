@@ -211,6 +211,47 @@ The manifest should eventually record:
 - legacy source paths to remove on promotion;
 - current lifecycle state.
 
+### 6.1 Optional `goal` block
+
+The byte gates ask whether a TU's output matches the ROM. They cannot ask the
+other question -- whether the source is the period-accurate, idiomatic C++ the
+reconstruction is actually for. An entry MAY therefore carry a `goal` block
+recording the idiom census `tools/check_tu_idioms.py` measures for it, and
+the sentence that says why the current numbers are acceptable:
+
+```json
+"goal": {
+  "idiomCensus": {"externC": 14, "rawOffsets": 89},
+  "justification": "Banked pilot TU: shadow census accepted as the baseline; conversion to the real class shape is the tracked follow-up."
+}
+```
+
+- `idiomCensus.externC` -- extern "C" free-function definitions in the
+  entry's source (the shadow shape: byte-true, but not what the original
+  team wrote);
+- `idiomCensus.rawOffsets` -- hex pointer-arithmetic member accesses inside
+  function bodies (`c + 0x51b8`, folded chains, `p[0x2c]`);
+- `justification` -- required whenever either number is nonzero.
+
+The block is optional and additive: entries without it load exactly as
+before, `schema_version` stays 1, and `tu_manifest.load()` passes unknown
+keys through, so no reader needs a change. Nothing writes it automatically;
+it is added by hand (or by the conversion workflow) when a TU is gated.
+
+In gated mode (`python tools/check_tu_idioms.py <id>`, or `--strict` over
+the whole tree) the block is checked against what the code measures:
+
+- census disagrees with the claimed numbers -> FAIL, stale claim (prose the
+  code does not back -- the same failure class as a comment claiming the
+  wrong vtable slot, which every byte gate passes green);
+- nonzero census and no justification -> FAIL, unjustified shadow;
+- nonzero census, matching numbers and a justification -> PASS, with the
+  justification echoed next to the numbers;
+- genuinely zero census -> PASS on the numbers alone.
+
+That makes "zero-or-justified" the promotion prerequisite: a TU cannot pass
+`--strict` while it is still shadow and says nothing about it.
+
 Suggested lifecycle states:
 
 | State | Meaning |
