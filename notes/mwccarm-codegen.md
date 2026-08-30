@@ -3841,3 +3841,114 @@ availability/order/pragmas/flags/inlining/TU-context/compiler-build are measured
 dead ends. The next attempt should look for a construct that is a conversion to
 the colourer and dissolves before lowering -- or accept this as the hand-fix
 backlog it now is.
+## 6bo. A pragma x source-shape PRODUCT moves a web that neither factor moves alone (func_ov075_02116128, div 31 -> 20, 2026-08-30)
+
+`func_ov075_02116128` (ov075, 0xf4) recolours the 4-bit palette field of a 24x4 BG-map
+box border: four corner-column entries, then a 24-iteration loop over the top and bottom
+rows. Callees are `G2::GetBG1ScrPtr` and `func_02030958`; the only pool words are
+`data_0209fc50` and `0x00000fff`.
+
+Its residue is a pure register rotation with the ROM's SCHEDULE reproduced exactly -
+instruction for instruction, including where the loop-invariant palette materialises.
+The ROM colours `p`=r2, the shifted value=r3, the palette/store temp=r0, `i`=r1; the
+natural source colours them r2 / r0 / r1 / r3.
+
+**The stuck web is a birth coalesce, and single-axis sweeps cannot break it.** The value
+is born as the call's return in r0 (`add r0,r0,#0xa` / `lsl r0,r0,#0x10`) and the
+truncating `lsr` writes in place. It stayed in r0 across ~8,000 compiles: 1,501
+declaration permutations, 820 statement interleavings, a 600-cell value x pointer x loop
+x order cross, the complete 246-name pragma vocabulary (on and off, two bases), the
+expression respellings of 6ab, volatile / struct-member / union / array-element webs,
+extra and dropped parameters, a separate loop cursor, the three 6aa address-expression
+trees, and an inline helper. Two colourings, no movement.
+
+**What moved it was a PRODUCT of two levers, neither of which does anything alone:**
+
+    #pragma opt_lifetimes off        (or opt_common_subs off)
+    ...
+    w   = angle << 0x1c;            /* two NAMED variables in the shift chain */
+    pal = w >> 16;                  /* and `pal` used at all six store sites  */
+
+Ablated one axis at a time, exactly those two are necessary; the value's type, the
+pointer spelling, the loop form, block scoping and statement order are all free. With
+them the whole front half of the function is byte-exact through +0x5c, including the
+ROM's write-back truncation `lsr r3,r0,#0x10 / subne r0,r3,#4 / lslne / lsrne r3,r0`,
+and `p` and `i` both land on the ROM's registers.
+
+**Method rule this pins down:** a web that is invariant across a large single-axis sweep
+is not evidence of a floor - it can mean every axis was tested alone. Cross the pragma
+vocabulary with the source-shape axes before writing the floor note. The 986-job pragma
+sweep here reported "all inert", and the same pragma in the presence of one extra named
+local is what broke the wall.
+
+**The residual is a genuine two-attractor pin.** The named palette local is REQUIRED to
+break the coalesce, and it is also what takes r3 away from the shifted value:
+
+* palette named and used at all six sites -> shift value r0, palette r3, and the
+  palette materialises four words early (div 20)
+* palette left implicit (a CSE/LICM temp) -> the ROM's exact schedule, but the shift
+  value coalesces back into r0 (div 24)
+
+Every attempt to have both collapses to one attractor or the other: `pal` declared in an
+inner block, assigned after each of the five store sites in turn, spelled as `hi / 0x10000`
+or as a second copy, or split so the singles use the shifter-operand form - CSE folds it
+back every time (div 31).
+
+**Corpus check.** The ROM contains exactly one other instance of this 4-bit field insert
+(`lsl #0x1c` then `orr ..., lsr #16`): `func_ov007_020c0308`, which is matched. Its source
+spells the value as one named `u32` local, `hi = ((u32)(c << 28)) >> 16;`, under
+`#pragma opt_strength_reduction off`. Transplanted here that spelling reaches div 23 with
+the same colouring, so the sibling settles the SPELLING but not the allocation.
+
+**Two hypotheses closed with evidence while getting here:**
+
+* **Not a bitfield.** A `u16 tile:12 / pal:4` struct makes mwccarm emit `bic` +
+  `orr ..., lsl #12`; the ROM has `and #0xfff` + `orr ..., lsr #16`. The source masks
+  explicitly.
+* **TU shape is codegen-neutral here.** `tu_map.py` puts this function and
+  `func_ov075_0211621c` in one TU, but that TU is 82 functions
+  (0x02115ab8-0x0211a854), not a two-function unit. Compiling the body with neighbour
+  functions and file-scope statics before and after it, in six configurations, changes
+  nothing - same size, same divergence, same colouring. A "these two functions shared a
+  TU" argument is true here and still buys nothing.
+
+### 6bo addendum: score the ROLES, not the count, and sample before you climb
+
+Two method points from the same session, both of which changed what the search could see.
+
+**Divergence count has no gradient on a cascading residual.** One wrong web costs a
+dozen words here, so div is nearly constant across the whole neighbourhood and a greedy
+climb on it wanders. Scoring instead by *how many of the ROM's register roles the
+candidate reproduces* - read straight out of the object, six of them: the box pointer,
+the shifted value, the palette, the loop counter, the 0xfff mask and the second store's
+temp - turns one flat number into six independent bits and makes the local optima
+legible. That is 6bf's "score by address region" and 6bg's "measure the register
+identity" applied together, and it is what surfaced the third family below.
+
+**A grammar plus uniform sampling finds families hill climbing cannot reach.** 40,000
+random draws from a parameterised source grammar (declaration order x chain aliasing x
+statement interleaving x pointer form x loop form x type x pragma pairs) turned up a
+shape twice that ~30,000 hill-climb compiles never reached from any seed.
+
+Three attractors, and only three, over ~60,000 compiles. Roles are
+(p, shiftedValue, palette, i, mask, secondStoreTemp):
+
+    ROM                                   r2  r3  r0  r1  r4  r5
+    A  opt_lifetimes off + a two-name
+       shift chain, palette named and
+       used at all six sites              r2  r0  r3  r1  r4  r5   div 20
+    B  plain shape, palette implicit      r2  r0  r1  r3  r4  r5   div 24
+    C  opt_common_subs off + a copy
+       through a second name              r2  r5  r0  r1  r3  r4   div 34
+
+Each is a different rotation and each reproduces a different three of the six roles, and
+**the shifted value never once reaches r3** - it is r0, r1, r2 or r5 in every compile,
+while r3 is always taken by something else (the palette in A, the loop counter in B, the
+mask in C). C is the interesting one: it emits the ROM's in-place `lsl rV, rV, #0x1c` and
+puts the palette in r0 and the counter in r1, and its three wrong registers are a clean
+r5 -> r3 -> r4 -> r5 rotation in the callee-saved band, a different problem from A's and
+B's caller-saved pin.
+
+Banked as a live near-miss, not marked as a floor: what would break it is a lever that
+outranks a call-return-coalesced web against a loop-invariant one, and no rule in
+6k / 6q / 6y / 6ab / 6bf spells that yet.
