@@ -10,7 +10,13 @@ name: PR validation
 # Uses pull_request_target so repo secrets (the relay token) are available even
 # for fork PRs. SAFE because this workflow never checks out or runs PR code — it
 # only sends the PR number + immutable head/base SHAs to the relay. The actual validation
-# happens on the self-hosted worker behind the maintainer's NAT, sandboxed there.
+# happens on the self-hosted worker behind the maintainer's NAT.
+#
+# Be clear about what that second half means, though: the worker DOES run this
+# branch's own `tools/`, deliberately, so that a pull request can exercise its own
+# tool change. That code runs in the worker's container -- never on a GitHub runner,
+# never with these secrets -- but a `tools/` diff on a fork PR deserves a read before
+# it is approved.
 #
 # The attribution-override label is a maintainer's "I know, and I meant it" for a PR
 # that moves contributor credit on purpose — attribution.json pins are exactly that.
