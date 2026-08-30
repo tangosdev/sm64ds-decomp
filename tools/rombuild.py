@@ -1180,7 +1180,7 @@ def main():
             import tu_production as ITP
             try:
                 intact_link_verification = ITP.prepare_intact_link_verification(
-                    intact_tus)
+                    intact_tus, jobs=args.jobs)
             except ITP.ProductionTuError as exc:
                 raise BuildError("intact TU link control", 1, str(exc)) from exc
         elif intact_tus:
