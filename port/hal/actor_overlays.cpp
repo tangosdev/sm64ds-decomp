@@ -941,11 +941,14 @@ void port_ov081_syms_patch(void);
 void __sinit_ov081_021280e8(void);
 void __sinit_ov081_02128154(void);
 void __sinit_ov081_021287b8(void);
-/* gate 193: ov072 per-symbol -- daBgSnwmn_c's ("SNOWMAN") and
-   BabyPenguin's own sinits, each self-contained. SnowmanBody's/
-   SnowmanHead's stay off. */
+/* gate 193 + the lane w3-d extension: ov072 per-symbol. ALL FOUR of the
+   overlay's class sinits now run -- SnowmanBody's and SnowmanHead's used to
+   stay off because those two classes were unregistered, and they are
+   registered now. In ROM address order below. */
 void port_ov072_pack_check(void);
 void port_ov072_syms_patch(void);
+void __sinit_ov072_02122018(void);
+void __sinit_ov072_021221f8(void);
 void __sinit_ov072_02122350(void);
 void __sinit_ov072_02122414(void);
 /* gate 194: ov094 per-symbol -- HOOT_THE_OWL's own sinit, self-contained
@@ -1387,12 +1390,21 @@ extern "C" void port_actor_overlays_sinits(void)
     __sinit_ov081_02128154();   /* MR_BLIZZARD: also builds the 10-cell PMF table */
     __sinit_ov081_021287b8();   /* ICE_BLOCK */
 
-    /* gate 193: ov072's two own-class sinits (daBgSnwmn_c/"SNOWMAN",
-       BabyPenguin -- each self-contained, verified by reading their
-       bodies). SnowmanBody's (02122018) and SnowmanHead's (021221f8)
-       stay OFF -- neither class is hosted. */
+    /* gate 193 + lane w3-d: ALL FOUR of ov072's own-class sinits, in ROM
+       address order. Each is self-contained, verified by reading its body.
+       The first two used to be OFF because SnowmanBody and SnowmanHead were
+       unregistered; both classes are hosted now.
+
+       BOTH NEW SINITS BUILD A POINTER-TO-MEMBER STATE TABLE out of mounted
+       ROM data holding {DS function address, 0} pairs, so each class's fill
+       calls its own seat (port_snowman_body_states_seat /
+       port_snowman_head_states_seat, hal/actor_classes_ov072.cpp) to verify
+       the copy and replace every function word with the host body's address
+       BEFORE anything can dispatch through it. */
     port_ov072_pack_check();
     port_ov072_syms_patch();
+    __sinit_ov072_02122018();   /* SNOWMAN_BODY: also builds the 6-cell PMF table */
+    __sinit_ov072_021221f8();   /* SNOWMAN_HEAD: also builds the 4-cell PMF table */
     __sinit_ov072_02122350();   /* SNOWMAN (daBgSnwmn_c) */
     __sinit_ov072_02122414();   /* BABY_PENGUIN: also builds the 6-cell PMF table */
 

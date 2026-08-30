@@ -127,6 +127,16 @@ void hal_fill_snowman_vtable(void);
 extern unsigned char BabyPenguin_SpawnInfo[];           /* ov072 0x02122a6c */
 void *BabyPenguin_Spawn(void);                          /* ov072 0x02121fac */
 void hal_fill_baby_penguin_vtable(void);
+/* ---- gate 193 extension (lane w3-d): ov072's remaining two classes,
+   SNOWMAN_HEAD (273) and SNOWMAN_BODY (274). Both are plain 31-slot
+   Actors; dsd names both SpawnInfos and both vtables cleanly, unlike
+   daBgSnwmn_c's. Fills in hal/actor_classes_ov072.cpp. */
+extern unsigned char SnowmanHead_SpawnInfo[];           /* ov072 0x02122898 */
+void *SnowmanHead_Spawn(void);                          /* ov072 0x021207d4 */
+void hal_fill_snowman_head_vtable(void);
+extern unsigned char SnowmanBody_SpawnInfo[];           /* ov072 0x0212279c */
+void *SnowmanBody_Spawn(void);                          /* ov072 0x0211fedc */
+void hal_fill_snowman_body_vtable(void);
 /* ---- gate 194: HOOT_THE_OWL (234), ov094, a fresh per-symbol mount
    (ov094_syms.txt). SpawnInfo comes from that mount; the vtable fill is in
    hal/actor_classes_ov094.cpp. */
@@ -1979,14 +1989,30 @@ void hal_fill_mirror_luigi_vtable(void);             /* _ZTV11MirrorLuigi, 31 */
         culprit). Fix: the Render TU is host-copied in
         port/unmatched/ModelAnim_Renders.cpp and dropped from
         slice_gate193.txt; full forensics in hal/actor_classes_ov072.cpp's
-        header and the commit message. SnowmanHead (273) and SnowmanBody
-        (274) stay unregistered -- see port/ov072_syms.txt for the
-        class-identity derivation and the SnowmanHead spawn-then-orphan
-        coupling. */ \
+        header and the commit message. */ \
      {272, "SNOWMAN", data_ov072_02122954, func_ov072_02120c00, \
       hal_fill_snowman_vtable}, \
      {256, "BABY_PENGUIN", BabyPenguin_SpawnInfo, BabyPenguin_Spawn, \
       hal_fill_baby_penguin_vtable}, \
+     /* ---- gate 193 extension (lane w3-d): the other two ov072 classes.
+        This note used to say SnowmanHead (273) and SnowmanBody (274) stay
+        unregistered. They do not any more, and ov072 is now hosted whole.
+        SNOWMAN_HEAD is the one with a measured before/after: level 10's
+        baseline census on cons cc10acd4e reads "[spawn] actor 0x111 not
+        registered, skipped", and daBgSnwmn_c::InitResources spawns exactly
+        that id, unconditionally, until star 5 is collected -- so every Cool
+        Cool Mountain boot the port had ever done declined it.
+        SNOWMAN_BODY is registered on the same ROM evidence (identity by both
+        routes, 31-slot table read out of the overlay image) but is on NO
+        census in this lane's proof set and nothing in src/ spawns 0x112, so
+        its seat is correct-and-unexercised rather than demonstrated. The two
+        are not equally proved and are deliberately not written as if they
+        were. Both classes' PMF state cells are seated with host addresses
+        before their fills return; see hal/actor_classes_ov072.cpp. */ \
+     {273, "SNOWMAN_HEAD", SnowmanHead_SpawnInfo, SnowmanHead_Spawn, \
+      hal_fill_snowman_head_vtable}, \
+     {274, "SNOWMAN_BODY", SnowmanBody_SpawnInfo, SnowmanBody_Spawn, \
+      hal_fill_snowman_body_vtable}, \
      /* ---- gate 194: HOOT_THE_OWL (234), ov094 ---- */ \
      {234, "HOOT_THE_OWL", HootTheOwl_SpawnInfo, HootTheOwl_Spawn, \
       hal_fill_hoot_the_owl_vtable}, \
