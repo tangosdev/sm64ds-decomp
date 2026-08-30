@@ -472,9 +472,16 @@ def rungN6(a):
     """
     target = a.live or LIVE_RELAY
     print("      LIVE relay at %s, code '%s'" % (target, a.code))
-    res = run_pair("n6_live",
-                   {"SM64DS_COMMS_RELAY": target, "SM64DS_COMMS_CODE": a.code},
-                   {"SM64DS_COMMS_RELAY": target, "SM64DS_COMMS_CODE": a.code})
+    # STOP-AND-WAIT IS NOW A THING YOU HAVE TO ASK FOR, and this arm asks. Run
+    # rel0215 lane vslag moved the carrier's input-delay default off zero for
+    # the address modes, because an unset knob is what made the owner's live VS
+    # demo run at a round trip per frame. This arm is the CONTROL for the
+    # comparison below, so it pins the old behaviour explicitly; without the
+    # pin both arms would be pipelined and the speedup assertion would be
+    # measuring two identical configurations.
+    stopwait = {"SM64DS_COMMS_RELAY": target, "SM64DS_COMMS_CODE": a.code,
+                "SM64DS_COMMS_INPUT_DELAY": "0"}
+    res = run_pair("n6_live", dict(stopwait), dict(stopwait))
     good, why = session_ok(res["tp"], res["tc"])
     ok = M.verdict(good, "rungN6 LIVE RELAY SESSION OVER THE PUBLIC INTERNET "
                          "| %s" % why)

@@ -87,6 +87,27 @@
 //                                   4 ms republish is right on loopback and is
 //                                   flooding over the internet.
 //
+//   SM64DS_COMMS_INPUT_DELAY=<0..8> HOW MANY FRAMES AHEAD THE INPUT PIPELINE
+//                                   RUNS, and the one knob in this block that
+//                                   is NOT off by default. Frame R is handed
+//                                   the records from round R-N, so rounds
+//                                   overlap the wire instead of taking turns
+//                                   with it. Without it a session is
+//                                   STOP AND WAIT and the frame rate IS the
+//                                   round trip -- 90 ms of relay is 11 fps.
+//                                   Defaults: loopback 0, direct 2, relay 4;
+//                                   the derivation is over the parse in
+//                                   comms_loopback.cpp. Raise it on a worse
+//                                   path (the signal is `starved` in the
+//                                   report line: nonzero means frames are
+//                                   still waiting on the wire), or set 0 to
+//                                   get stop-and-wait back for a measurement.
+//                                   Both ends should run the same number.
+//                                   The SIMULATION IS UNTOUCHED either way:
+//                                   both consoles consume the same round
+//                                   sequence in the same order, nothing is
+//                                   predicted and nothing is rolled back.
+//
 // SLOT ASSIGNMENT OVER THE ADDRESS MODES: on loopback a child owns a slot by
 // BINDING its port, and the parent verifies the two agree. Off this machine a
 // peer binds whatever port it likes and a NAT rewrites it, so the child's slot

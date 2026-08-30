@@ -2281,36 +2281,94 @@ bool comms_loopback_install_from_env() {
     // rounded up. N=2 covers 66 ms, N=3 covers 100 ms, N=4 covers 133 ms. Too
     // low costs stalls (counted as `starved`); too high costs input lag.
     //
-    // Off by default, and off on loopback even when asked, because loopback's
-    // round trip is microseconds: there is nothing there to hide and it would
-    // only add frames of lag to a session that has none.
+    // Off on loopback even when asked, because loopback's round trip is
+    // microseconds: there is nothing there to hide and it would only add
+    // frames of lag to a session that has none.
+    //
+    // ---- AND IT IS ON BY DEFAULT OFF THIS MACHINE. Run rel0215 lane vslag,
+    // and "there is a knob for it" was not good enough:
+    //
+    //   The owner played the two-window VS demo through the live relay and
+    //   reported it "extremely laggy, very slow and low framerate". Nothing
+    //   was broken and nothing was mistuned. The knob was simply unset, so the
+    //   session ran STOP AND WAIT, and under stop-and-wait a frame cannot
+    //   finish until the peer's block for that same frame has crossed the wire
+    //   and come back: THE FRAME RATE IS THE ROUND TRIP. Measured on that
+    //   exact path -- port/tools/relay/test_client.py remote-check against the
+    //   live relay with both endpoints on one desk, which is the demo's own
+    //   shape -- the lockstep round trip is p50 90.6 ms, p95 98.8 ms. 1000/90.6
+    //   is about 11 frames a second against the VS scene's 30.
+    //
+    //   Zero is the right default for the wire this file was born on and the
+    //   wrong one for every wire it has grown to reach. So THE DEFAULT NOW
+    //   FOLLOWS THE MODE, which is the one thing both ends derive identically
+    //   without measuring anything and without a wire change: a relay session
+    //   is a relay session on both consoles, so both compute the same N. The
+    //   "a knob whose effective value nobody could state" objection that
+    //   killed auto does not reach a constant, and the report line states it.
+    //
+    //   RELAY 4, from the measurement above: ceil(98.8 / 33.3) is 3, plus one
+    //   frame of headroom, because a starved frame falls all the way back to a
+    //   round trip and a mixed pace feels worse than a consistent one.
+    //   DIRECT 2, which covers 66 ms. Direct mode is either a LAN
+    //   (microseconds, where two frames costs almost nothing) or a forwarded
+    //   port between two houses (tens of ms), and 2 is defensible for both
+    //   without charging a LAN four frames of lag it has no use for.
+    //   LOOPBACK 0, unchanged.
+    //
+    //   IT IS STILL A KNOB, in both directions. SM64DS_COMMS_INPUT_DELAY=0
+    //   restores stop-and-wait exactly, which is how this lane measured its
+    //   own before and after out of one binary; a pair on a worse path than
+    //   this desk should raise it. THE SIGNAL TO RAISE IT IS `starved` IN THE
+    //   REPORT LINE -- nonzero means frames are still waiting on the wire, and
+    //   every one of those is a stall.
+    //
+    //   WHAT IT DOES NOT TOUCH: the simulation. The ROM's lockstep is
+    //   untouched, both ends still consume the SAME round sequence in the same
+    //   order, and nothing is predicted, rolled back or discarded. Only the
+    //   offset between the frame being drawn and the round being read moves.
+    if (g_net_mode == kNetRelay)       g_input_delay = 4;
+    else if (g_net_mode == kNetDirect) g_input_delay = 2;
+
+    bool delay_from_env = false;
     if (const char *n = std::getenv("SM64DS_COMMS_INPUT_DELAY")) {
         int v = std::atoi(n);
         if (v < 0) v = 0;
         if (v > kInputDelayMax) v = kInputDelayMax;
         g_input_delay = v;
-        // REFUSED ON A BARE LOOPBACK, ALLOWED WHEN THERE IS A ROUND TRIP TO
-        // HIDE -- and the second half of that sentence was missing at first,
-        // which broke the one rig that most needed it. The guard keyed off the
-        // MODE, so an induced-latency run (loopback carrier, delay knob on,
-        // which is the whole controlled experiment) had its input delay
-        // silently thrown away and measured pipelining doing nothing. The
-        // right question is not "which mode is this" but "is there any latency
-        // here at all", and with the induction knobs on there certainly is.
-        if (g_net_mode == kNetLoopback && g_input_delay > 0 &&
-            g_delay_ms <= 0 && g_jitter_ms <= 0) {
-            std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_INPUT_DELAY is "
-                         "for a wire with a round trip on it; a bare loopback "
-                         "has none and no delay is being induced. Ignored.\n");
-            g_input_delay = 0;
-        }
-        if (g_input_delay > 0)
-            std::fprintf(stderr, "[comms:loopback] input delay %d frame(s): "
-                         "frame R is handed the records from round R-%d, so "
-                         "rounds overlap the wire instead of taking turns with "
-                         "it. Both ends should run the same number.\n",
-                         g_input_delay, g_input_delay);
+        delay_from_env = true;
     }
+    // REFUSED ON A BARE LOOPBACK, ALLOWED WHEN THERE IS A ROUND TRIP TO
+    // HIDE -- and the second half of that sentence was missing at first,
+    // which broke the one rig that most needed it. The guard keyed off the
+    // MODE, so an induced-latency run (loopback carrier, delay knob on,
+    // which is the whole controlled experiment) had its input delay
+    // silently thrown away and measured pipelining doing nothing. The
+    // right question is not "which mode is this" but "is there any latency
+    // here at all", and with the induction knobs on there certainly is.
+    //
+    // Only ever reached from the env now: the mode-derived default above is
+    // already 0 on loopback, so a bare loopback run prints nothing.
+    if (g_net_mode == kNetLoopback && g_input_delay > 0 &&
+        g_delay_ms <= 0 && g_jitter_ms <= 0) {
+        std::fprintf(stderr, "[comms:loopback] SM64DS_COMMS_INPUT_DELAY is "
+                     "for a wire with a round trip on it; a bare loopback "
+                     "has none and no delay is being induced. Ignored.\n");
+        g_input_delay = 0;
+    }
+    if (g_input_delay > 0)
+        std::fprintf(stderr, "[comms:loopback] input delay %d frame(s) (%s): "
+                     "frame R is handed the records from round R-%d, so "
+                     "rounds overlap the wire instead of taking turns with "
+                     "it. Both ends should run the same number.\n",
+                     g_input_delay,
+                     delay_from_env ? "SM64DS_COMMS_INPUT_DELAY"
+                                    : "the default for this net mode",
+                     g_input_delay);
+    else if (delay_from_env && g_net_mode != kNetLoopback)
+        std::fprintf(stderr, "[comms:loopback] input delay 0 by request: this "
+                     "session is STOP AND WAIT, so a frame costs a whole round "
+                     "trip and the frame rate is the round trip.\n");
 
     if (const char *s = std::getenv("SM64DS_COMMS_SLOT")) {
         const int v = std::atoi(s);
