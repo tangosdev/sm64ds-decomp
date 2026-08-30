@@ -1,6 +1,6 @@
 //cpp
-typedef struct { int a, b; } Pair2i;
-typedef struct { int x, y, z; } Vector3;
+#include "dBgCh_Lin.h"
+
 typedef struct {
     void *tag;
     int f04, f08, f0c, f10, f14;
@@ -12,11 +12,7 @@ extern "C" {
 extern int _ZN6Player7IsInAirEv(void *self);
 extern int _ZN6Player7IsStateERNS_5StateE(void *self, void *st);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void *self, void *st);
-extern void _ZN9dBgCh_LinC1Ev(void *self);
-extern void _ZN9dBgCh_LinD1Ev(void *self);
-extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *act);
-extern int _ZN9dBgCh_Lin10DetectClsnEv(void *self);
-extern void _ZN9dBgCh_Lin10GetClsnPosEv(void *ret, void *self);
+extern void _ZN9dBgCh_Lin10GetClsnPosEv(Vector3 *ret, dBgCh_Lin *self);
 extern void func_02035414(void *bgch);
 extern void func_02035428(void *bgch);
 extern int func_02037e38(unsigned int *p);
@@ -30,17 +26,15 @@ extern int data_02099368;
 
 extern "C" int func_ov002_020cef84(char *self)
 {
-    char rl[0x78];
     Vector3 v1, v2, cp;
     ClsnResultTmp tmp;
     int lim;
 
-    _ZN9dBgCh_LinC1Ev(rl);
+    dBgCh_Lin line;
     if (!_ZN6Player7IsInAirEv(self) || *(unsigned char *)(self + 0x706) != 0 ||
         *(int *)(self + 0xa8) <= 0 || _ZN6Player7IsStateERNS_5StateE(self, &data_ov002_0211001c) ||
         *(unsigned char *)(self + 0x703) != 0 || *(unsigned char *)(self + 0x708) != 0 ||
         *(unsigned char *)(self + 0x709) != 0) {
-        _ZN9dBgCh_LinD1Ev(rl);
         return 0;
     }
 
@@ -64,18 +58,17 @@ extern "C" int func_ov002_020cef84(char *self)
             }
         }
     }
-    func_02035414(rl);
+    func_02035414(&line);
     if (*(unsigned char *)(self + 0x6fb) != 0)
-        func_02035428(rl);
-    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &v1, &v2, self);
-    if (_ZN9dBgCh_Lin10DetectClsnEv(rl)) {
-        _ZN9dBgCh_Lin10GetClsnPosEv(&cp, rl);
-        if (func_02037e38((unsigned int *)(rl + 0x14)) == 3) {
+        func_02035428(&line);
+    line.SetObjAndLine(v1, v2, (dActor_c*)self);
+    if (line.DetectClsn()) {
+        _ZN9dBgCh_Lin10GetClsnPosEv(&cp, &line);
+        if (func_02037e38((unsigned int *)&line.surface) == 3) {
             int t2 = *(int *)(self + 0x358) != 0;
             if (t2 == false) {
                 _ZN6Player11ChangeStateERNS_5StateE(self, &data_ov002_0211001c);
                 *(int *)(self + 0x60) = cp.y - 0x78000;
-                _ZN9dBgCh_LinD1Ev(rl);
                 return 1;
             }
         }
@@ -88,19 +81,19 @@ extern "C" int func_ov002_020cef84(char *self)
                 int w0, w1;
                 *(int *)(self + 0xa8) = -0x1000;
                 *(unsigned char *)(self + 0x6e9) |= 8;
-                w0 = *(int *)(rl + 0x14);
-                w1 = *(int *)(rl + 0x18);
+                w0 = *(int *)((char *)&line + 0x14);
+                w1 = *(int *)((char *)&line + 0x18);
                 dst[0] = w1 ? w0 : w0;
                 dst[1] = w1;
-                dst[2] = *(int *)(rl + 0x1c);
-                dst[3] = *(int *)(rl + 0x20);
-                dst[4] = *(int *)(rl + 0x24);
+                dst[2] = *(int *)((char *)&line + 0x1c);
+                dst[3] = *(int *)((char *)&line + 0x20);
+                dst[4] = *(int *)((char *)&line + 0x24);
                 tmp.tag = &data_02099368;
-                tmp.f18 = *(unsigned short *)(rl + 0x28);
-                tmp.f1a = *(unsigned short *)(rl + 0x2a);
-                tmp.f1c = *(int *)(rl + 0x2c);
-                tmp.f20 = *(int *)(rl + 0x30);
-                tmp.f24 = *(int *)(rl + 0x34);
+                tmp.f18 = *(unsigned short *)((char *)&line + 0x28);
+                tmp.f1a = *(unsigned short *)((char *)&line + 0x2a);
+                tmp.f1c = *(int *)((char *)&line + 0x2c);
+                tmp.f20 = *(int *)((char *)&line + 0x30);
+                tmp.f24 = *(int *)((char *)&line + 0x34);
                 a = _ZN8dActor_c10FindWithIDEj(_ZNK5dBgPi9GetClsnIDEv(&tmp));
                 if (a)
                     (*(void (**)(void *, char *))(*(int *)a + 0x70))(a, self);
@@ -108,6 +101,5 @@ extern "C" int func_ov002_020cef84(char *self)
             }
         }
     }
-    _ZN9dBgCh_LinD1Ev(rl);
     return 0;
 }

@@ -1,10 +1,6 @@
 //cpp
-#include "types.h"
+#include "dBgCh_Lin.h"
 extern "C" {
-void _ZN9dBgCh_LinC1Ev(void* self);
-void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, void* a, void* b, void* act);
-int _ZN9dBgCh_Lin10DetectClsnEv(void* self);
-void _ZN9dBgCh_LinD1Ev(void* self);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, void* out);
 }
 
@@ -19,24 +15,20 @@ extern "C" int func_ov002_020c19d0(char* self, int arg1, int arg2) {
     V3 v1;
     V3 v2;
     V3 nrm;
-    char rl[0x78];
     int angle = *(unsigned short*)(self + 0x8e);
-    _ZN9dBgCh_LinC1Ev(rl);
+    dBgCh_Lin line;
     int k = angle >> 4;
     int cs = data_02082214[k * 2];
     int sn = data_02082214[k * 2 + 1];
     v1.set(*(int*)(self + 0x5c), *(int*)(self + 0x60) + (arg2 << 12), *(int*)(self + 0x64));
     v2.set(arg1 * cs + *(int*)(self + 0x5c), *(int*)(self + 0x60) + (arg2 << 12), arg1 * sn + *(int*)(self + 0x64));
-    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &v1, &v2, self);
-    if (_ZN9dBgCh_Lin10DetectClsnEv(rl) == 0) {
-        _ZN9dBgCh_LinD1Ev(rl);
+    line.SetObjAndLine(*(Vector3*)&v1, *(Vector3*)&v2, (dActor_c*)self);
+    if (!line.DetectClsn()) {
         return 0;
     }
-    _ZNK11SurfaceInfo12CopyNormalToER7Vector3(rl + 0x14, &nrm);
+    _ZNK11SurfaceInfo12CopyNormalToER7Vector3(&line.surface, &nrm);
     if (nrm.y != 0) {
-        _ZN9dBgCh_LinD1Ev(rl);
         return 0;
     }
-    _ZN9dBgCh_LinD1Ev(rl);
     return 1;
 }

@@ -4,14 +4,11 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
+#include "dBgCh_Lin.h"
 
 extern "C" {
 extern int _ZN6Player7IsStateERNS_5StateE(void* c, void* s);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, unsigned int anim, int a, int b, unsigned int d);
-extern void _ZN9dBgCh_LinC1Ev(void* self);
-extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, void* a, void* b, void* act);
-extern int _ZN9dBgCh_Lin10DetectClsnEv(void* self);
-extern void _ZN9dBgCh_LinD1Ev(void* self);
 extern short data_02082214[];
 }
 
@@ -19,7 +16,6 @@ extern "C" int func_ov002_020d5cec(char* c)
 {
     Vector3 v1;
     Vector3 v2;
-    char rl[0x78];
     char* d0;
     short* m;
     char* p;
@@ -50,9 +46,9 @@ extern "C" int func_ov002_020d5cec(char* c)
     v2.y = v1.y;
     v2.z = v1.z + (int)(((long long)data_02082214[shifted * 2 + 1] * 0x50000 + 0x800) >> 12);
 
-    _ZN9dBgCh_LinC1Ev(rl);
-    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &v1, &v2, c);
-    if (_ZN9dBgCh_Lin10DetectClsnEv(rl) != 0) {
+    dBgCh_Lin line;
+    line.SetObjAndLine(v1, v2, (dActor_c*)c);
+    if (line.DetectClsn()) {
         *(int*)(c + 0x5c) = v1.x;
         *(int*)(c + 0x60) = v1.y;
         *(int*)(c + 0x64) = v1.z;
@@ -68,6 +64,5 @@ extern "C" int func_ov002_020d5cec(char* c)
     *(unsigned short*)(c + 0x6a4) = 4;
     *(unsigned char*)(c + 0x708) = 1;
     *(int*)(c + 0xd0) = 0;
-    _ZN9dBgCh_LinD1Ev(rl);
     return 1;
 }
