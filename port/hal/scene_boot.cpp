@@ -1573,8 +1573,15 @@ L2_UNMATCHED(func_ov007_020c368c)
    and leaving the trap INSTEAD would be choosing a known-wrong answer over a
    derived one now that somebody has read the ROM at that address. */
 L2_UNMATCHED(func_ov007_020caeac)
-L2_UNMATCHED(func_ov007_020cb4b0)
-L2_UNMATCHED(func_ov007_020cb7c0)
+/* func_ov007_020cb4b0 AND func_ov007_020cb7c0 WERE HERE, AND BOTH TRAPS ARE
+   RETIRED. They are the file-select / settings-page renderers, matched on the
+   decomp's main via PR #1967, and run rel0215 lane prop15 brought them across
+   by address. Re-verified in the port tree rather than taken on main's word,
+   against extracted/overlays/overlay_0007.bin at the config base: tools/
+   match.py MATCH at 2004/b56 with strict relocs, tools/linkcheck.py VERIFIED
+   with 0 blind slots, for each. src/func_ov007_020cb4b0.c and
+   src/func_ov007_020cb7c0.c are in slice_ov007.txt now, so a trap here would
+   be an LNK2005 against them. */
 /* 020b8fd4 surfaced only in the SECOND link, because its one caller spells it
    untagged as func_020b8fd4 (face (a) below) and the untagged name resolved
    before the tagged one was ever asked for. It was the nineteenth of the
@@ -1588,11 +1595,17 @@ L2_UNMATCHED(func_ov007_020cb7c0)
    positioned -- the drawing surface never came up and the strokes the seated hub
    draws had no paper. Measured on this tree, scene 1 driven into the doodle
    screen entered this trap 402 times over 1200 frames. port/unmatched/
-   Ov007_DoodleCanvas_020b8fd4.cpp now carries a host transcription (the
+   Ov007_DoodleCanvas_020b8fd4.cpp carried a host transcription (the
    fanout-opus near-miss draft, every store and call target byte-identical to the
    ROM, register coloring unmatched), added by the DOODLE_INTERIM guard in
    port/CMakeLists.txt and retiring the day src/ gains a byte-matched body. A trap
-   here would now be an LNK2005 against that body. */
+   here would now be an LNK2005 against that body.
+
+   THAT DAY CAME. run rel0215 lane prop15 propagated the byte-match from main
+   (PR #1477) by address: src/func_ov007_020b8fd4.c is in slice_ov007.txt, and
+   the DOODLE_INTERIM guard read it and dropped the interim out of the build
+   without a hand edit, exactly as its author said it would. The interim file
+   stays on disk as the record of what was there; nothing links it. */
 #undef L2_UNMATCHED
 
 /* THE SEVENTEENTH ov007 FUNCTION WITHOUT A BODY HERE GETS NO TRAP, AND THE

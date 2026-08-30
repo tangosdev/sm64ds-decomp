@@ -138,3 +138,63 @@ port_scene_fill_booseek        # scene 387 booseek      seated mg9 lane WIG, com
 port_scene_fill_luckystars     # scene 388 luckystars   seated mg9 lane LKY, commit 035242666
 port_scene_fill_esp3d          # scene 389 esp3d        seated mg9 lane PSY, commit ae320216b
 port_scene_fill_flower         # scene 390 flower       seated mg5 lane CCN, commit 01020361a
+
+
+# --- THE THIRTY-SEVENTH ROW, AND IT CARRIES A SECOND FINDING ----------------
+#
+# Appended 2026-08-30 by run rel0215 lane prop15. port_scene_fill_vs is scene
+# 6, dScEntry_c, ov075 -- the VS / wireless entry menu, seated by run vs1 lane
+# VS-WIRING. It is the MENU row's shape exactly: a direct Scene subclass whose
+# seat (hal/scene_vs_menu.cpp) writes its eight own slots by index and hands
+# the other ten to port_scene_fill_rom(), which keys on the ROM WORD. --fills
+# sees the eight and reports slots 2/4/5/7/8/10/11/13/14/15 as never written.
+# Like the MENU row it carries its own runtime proof from the other side:
+# port_scene_fill_rom's leftover count is asserted at exactly eight on every
+# boot (`if (left != 8) fprintf(...)`), and that line has not fired.
+#
+# THE SECOND FINDING IS SLOT 18, AND IT IS vtspan's, NOT THE SEAT's. --fills
+# also lists 18, and that one is NOT the address-keyed blind spot: the fill
+# spans 18 slots (0..17) and never reaches an index 18 at all. vtspan sizes
+# data_ov075_0211d304 at NINETEEN. The ROM says eighteen, and the seat is
+# right to stop where it stops. Measured here from
+# extracted/overlays/overlay_0075.bin at the delinks base 0x02113ee0, and
+# cross-read against config/arm9/overlays/ov075/relocs.txt:
+#
+#   0x0211d304 .. 0x0211d348   18 consecutive relocated code words. The table.
+#   0x0211d34c -> 0x0211b1cc   0x0211d350 = 0x00000000 (no reloc)
+#   0x0211d354 -> 0x0211b260   0x0211d358 = 0x00000000 (no reloc)
+#   0x0211d35c -> 0x0211afb0   0x0211d360 = 0x00000000 (no reloc)
+#   0x0211d364 onward          zero
+#
+# Three {function, 0} pairs at 8-byte stride with a literal zero partner on
+# every one, and dsd names data_ov075_0211d34c and data_ov075_0211d354 at that
+# same 8-byte stride. That is vtspan's OWN documented pointer-to-member
+# signature, both of pmf_pairs_at()'s structural tells, and slice_vs.txt
+# section 1 called it a pair run when the seat was built. The corroboration is
+# the count: slice_vs.txt's "THE THREE PMF DISPATCH SITES are OUT of the slice"
+# block (the unnumbered one near the manifest's end) names THREE of them in this
+# scene, and there are exactly three pairs. func_ov075_0211afb0 -- the third
+# pair's target, and one of the two faces this seat still carries -- has NO
+# arm_call anywhere in the config: its only two references are this pair word
+# and an ov006 data load at the shared window. It is dispatched THROUGH the
+# pair and nothing else, and it is entered every frame (299 face hits over a
+# 300-frame scene-6 run), which is the run-time half of the same claim.
+#
+# WHY vtspan MISSES IT, stated so the next reader does not re-derive it:
+# span()'s run only consults a terminator once n >= 31, and routes() only asks
+# pmf_pairs_at() at slots 31 and 32. Both are right for an Actor-shaped table,
+# where the pair run can only start past Actor's own virtual list. A direct
+# Scene subclass is eighteen slots, so ITS pair run starts at 18, far below
+# where either terminator is armed, and the raw run walks into the first pair
+# and stops on its zero partner at 19. vtspan's own symbol-bound route already
+# answers 18 here and is overruled by the run.
+#
+# NOT FIXED IN vtspan, DELIBERATELY, and this is the honest half. Arming
+# pmf_pairs_at() below slot 31 would change widths for every table in the tree
+# at once, under the sweep baseline and 212 other fills, and this lane owns
+# neither. The narrow claim is what is banked: THIS table is 18, the seat is
+# correct, and a fill written to 19 would overwrite the first PMF pair's
+# function word with a host thunk -- an actively wrong "fix" that vtspan would
+# have called green. Whoever arms the checker below 31 retires this paragraph
+# and should expect other Scene-shaped tables to move by one the same way.
+port_scene_fill_vs             # scene 6   VS entry menu  seated vs1 lane VS-WIRING; slot 18 is the PMF pair run, see above

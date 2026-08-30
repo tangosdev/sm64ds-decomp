@@ -112,6 +112,28 @@
 # battery's one standing block: it now dies two call levels further on, at an
 # ARM register ride-through the host ABI cannot carry. port/ov007_seat.txt
 # section 5b is the derivation.
+#
+# ---- A SIXTH, SEVENTH AND EIGHTH TU: THE 0.2.15 PROPAGATION ---------------
+#
+# run rel0215 lane prop15. 534 delink blocks listed now. Three more of ov007's
+# bodies are matched on the decomp's main and came across BY ADDRESS -- no
+# merge, the files taken from origin/main unchanged:
+#
+#   020b8fd4  the title's DOODLE CANVAS/PAPER renderer. It had no trap, it had
+#             the host transcription in port/unmatched/Ov007_DoodleCanvas_
+#             020b8fd4.cpp, and the DOODLE_INTERIM guard in port/CMakeLists.txt
+#             drops that interim the moment this line exists. Matched on main
+#             via PR #1477.
+#   020cb4b0  and
+#   020cb7c0  the file-select / settings-page renderers, matched on main via
+#             PR #1967. Both had L2_UNMATCHED traps in hal/scene_boot.cpp; both
+#             traps are removed in the same change, because a trap and a body
+#             for one name is an LNK2005.
+#
+# RE-VERIFIED HERE rather than taken on main's word, against
+# extracted/overlays/overlay_0007.bin at the config base: tools/match.py MATCH
+# at 2004/b56 with strict relocs on all three, tools/linkcheck.py VERIFIED with
+# 0 blind slots on all three.
 
 # ---- the class's own eight entry points ------------------------------------
 # the factory. ActorBase::operator new(0x64), the base ctor, the three vptr writes in construction order, the +0x13 flag bits, and the +0x50 graphCallback_c sub-object vptr.
@@ -321,6 +343,7 @@ src/func_ov007_020b8f78.c
 src/func_ov007_020b8f8c.c
 src/func_ov007_020b8fa0.c
 src/func_ov007_020b8fb4.c
+src/func_ov007_020b8fd4.c
 src/func_ov007_020b91b4.c
 src/func_ov007_020b9640.c
 src/func_ov007_020b9770.cpp
@@ -649,6 +672,8 @@ src/func_ov007_020ca578.c
 src/func_ov007_020ca5f0.c
 src/func_ov007_020ca86c.c
 src/func_ov007_020cb3dc.c
+src/func_ov007_020cb4b0.c
+src/func_ov007_020cb7c0.c
 src/func_ov007_020cba78.c
 src/func_ov007_020cbb04.cpp
 src/func_ov007_020cbbb0.c

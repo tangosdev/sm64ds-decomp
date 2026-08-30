@@ -239,16 +239,63 @@ world, driven by two processes, physically colliding. Two things it went looking
 for in ov002 and did NOT find are recorded here rather than only in a lane's
 status file, because this is where the next person will look.
 
-1. THE VS STAR-STEAL LOGIC IS NOT LOCATED. In DS VS mode a player who is hit
-   drops a star and the attacker can take it. Searched for and not found: no
-   ov002 symbol matches a steal/drop/transfer shape, and the only VS star
-   symbols in the tree are RENDER-side (the HUD's star count). The PvP hit
-   consumer func_ov002_020d869c was read end to end -- it refuses any collision
-   whose partner is not actor id 0xbf (Player) -- and it does not move a star.
-   THIS IS AN OPEN QUESTION, NOT A MEASURED NEGATIVE: the search was by symbol
-   name and by reading the hit path, not by tracing the star count backwards
-   from its writer, which is what would settle it. Anyone picking up VS scoring
-   should start there.
+1. THE VS STAR-STEAL LOGIC IS LOCATED. ANSWERED, AND THE OLD ANSWER WAS WRONG.
+   This entry used to read "NOT LOCATED", with the caveat that the search had
+   been by symbol name and by reading the hit path rather than by tracing the
+   star count backwards from its writer. Somebody did the trace: run vsdec lane
+   SS, review-hardened, and the corrected verdict is theirs. MP3's caveat was
+   the right one -- the backwards trace is exactly what settled it.
+
+   WHY THE OLD SEARCH MISSED IT: the steal is not in the collision handler at
+   all. The drop fires on the VICTIM side inside the Player damage states, and
+   the attacker never "takes" anything -- a dropped star becomes a free-standing
+   PowerStar actor that anyone can collect. func_ov002_020d869c was read
+   correctly; it simply is not on this path.
+
+   THE STATE is data_0209f310[], the per-player carried-star array (dual
+   purpose: the VS star count and carried silver stars). The HUD reads it in
+   _ZN3HUD15RenderStarCountEv.cpp:53-57, gated on data_0209f2d8 == 1.
+
+   TWO WRITERS, not one:
+     GiveVsStars @ 0x0202a5ac (0x18 bytes) is the only DELTA mutator
+       (data_0209f310[idx] += delta), byte-verified from arm9_dec.bin.
+     _ZN5Stage13InitResourcesEv @ 0x0202cc0c (literal pool 0x0202d564) zeroes
+       the array per player at stage load, across the same data_0209f21c count.
+       That is where a fresh VS match resets its scores.
+
+   SUM AND WIN: NumVsStarsObtained @ 0x0202a55c sums across data_0209f21c
+   players; the win test is NumVsStarsObtained() == 5, at func_ov002_020ea420.c
+   :24 and _ZN9PowerStar13InitResourcesEv.cpp:177 -- the only two relocs to that
+   address land in exactly those two ranges.
+
+   THE COMPLETE GiveVsStars CALLER SET is six arm_calls, all ov002: 0x020d9524
+   (drop), 0x020e90e4 (collect), 0x020e96f0 (toss landing, +1 at timer 0x1e),
+   0x020e9e44 and 0x020e9eb8 (animation phases 1 and 5, +1 each), 0x020ea33c
+   (-1 when the carrier dies without a valid drop).
+
+   DROP is func_ov002_020d94cc @ 0x020d94cc (0x188): the victim must have a star
+   (data_0209f310[slot] > 0), GiveVsStars(victim, -1), then spawn actor 0xb2
+   (STAR, 178) when data_0209f2d8 == 1, else 0xb3 (SILVER_STAR, 179). Called
+   from three Player damage states -- St_Hurt_Main, St_DeadHit_Main,
+   St_HurtWater_Init -- sharing one gate on (mStateStep & 0xf0) being 0 or 0x10.
+   mHurtDamage != 0 additionally gates TWO of the three; St_DeadHit_Main has NO
+   mHurtDamage test. (Both of those are the review's corrections to the worker's
+   first reading: the worker claimed one writer and a uniform mHurtDamage gate.)
+
+   COLLECT -- the "steal" -- is func_ov002_020e8ef0 @ 0x020e8ef0 (0x41c), the
+   PowerStar collect handler. Its VS branch (line ~104) calls
+   GiveVsStars(toucher, +1); the solo branch sets Event bit 0x1e instead.
+
+   EVERY FUNCTION IN THE DROP/COLLECT/DELTA CHAIN IS ALREADY MATCHED AND
+   ENROLLED COMPLETE. VS scoring needs no new decomp to work in the port; the
+   chain goes live wherever data_0209f2d8 == 1 with real players. Reference
+   census: 15 relocs to 0x0209f310 (ov002 x10, arm9 x3, ov075 x2), 13 of them
+   into enrolled-complete sources; the arm9 0x0202d564 one lands in
+   Stage::InitResources, which is NONMATCHING and a terminal floor, and the
+   ov075 0x0211658c one lands in the func_ov075_0211621c near-miss.
+
+   PORT-SIDE FOLLOW-UP, DONE: run rel0215 lane prop15 span-checked how this
+   tree hosts data_0209f310. See section "THE data_0209f310 SPAN CHECK" below.
 
 2. THE PER-PLAYER Ctrl SPLIT SYMBOLS CAP THE GAME AT TWO PLAYERS, and the cap
    is in the PORT, not in ov002. On the DS data_0209f4a0/a2/a4/a6/ac are
@@ -273,6 +320,119 @@ status file, because this is where the next person will look.
    players run on mode-0 code that was already proven. Turning the flag on is a
    lane of its own and it wants ov075 (the VS menu) mounted first, because
    src/PrepareVsMode.c is what the ROM sets it from.
+
+
+================================================================================
+THE data_0209f310 SPAN CHECK (run rel0215, lane prop15) -- IT WAS SHORT
+================================================================================
+
+Item 1 above ends by naming the per-player carried-star array as live gameplay
+state. The undersized-host-globals trap says a hosted DS global must cover its
+whole ROM span, so it was measured. It did not, and the way it failed is one
+this file has not recorded before: a SPLIT, not a truncation.
+
+THE ROM SPAN IS FOUR BYTES, 0x0209f310..0x0209f313, and three independent
+readings agree:
+
+  * config/arm9/symbols.txt names data_0209f310 (0x0209f310), data_0209f311
+    (0x0209f311) and then data_0209f314 -- so dsd splits the run into a 1-byte
+    head and a 3-byte tail, and the next DIFFERENT object starts at +4.
+    data_0209f314 is the level area table, hosted in hal/camera_bridges.cpp,
+    and it carries six relocations of its own. It is not slack.
+  * the reloc census: 15 loads land on 0x0209f310 (arm9 3, ov002 10, ov075 2)
+    and exactly one on 0x0209f311, which is NumVsStarsObtained's second load.
+    Nothing addresses 0x0209f312 or 0x0209f313 directly -- they are reached by
+    indexing, which is why the symbol table alone cannot size this.
+  * THE DECIDING EVIDENCE IS A MATCHED TU, and it arrived in this same lane.
+    src/func_ov075_021165b0.c -- propagated from main tonight, byte-verified at
+    2004/b56 -- spells the width out literally:
+
+        if (data_0209f310[0] != 0 || data_0209f310[1] != 0 ||
+            data_0209f310[2] != 0 || data_0209f310[3] != 0 || ...
+
+    and walks the array twice more with `do { ... } while (i < 4)`. Four
+    players, one signed char each. That is the ROM's own answer, not an
+    inference from the symbol bound.
+
+WHAT THE PORT HOSTED. hal/actor_classes_star.cpp defines the pair as two
+grouped sections, .dsstate$hvsstar0000 (data_0209f310[1]) and $hvsstar0001
+(data_0209f311[31]), on the reasoning that MSVC lays $NNNN contributions out in
+suffix order and would therefore put them adjacent. The suffix-order half is
+true. The ADJACENCY half was never measured, and it was false: read out of the
+0.2.15 release build's own maps, before any change, on all three hosting
+targets --
+
+    walk_window.map        _data_0209f310 00d280d4   _data_0209f311 00d280d8
+    smoke_player.map       _data_0209f310 009fd0d0   _data_0209f311 009fd0d4
+    walk_window_hires.map  _data_0209f310 015980d4   _data_0209f311 015980d8
+
+-- f311 sat FOUR bytes behind f310 where the ROM puts it ONE. The linker gives
+each contribution its default four-byte alignment, so the one-byte head was
+padded out to four. hal/cxx_aliases.cpp's GXBANK macro has carried the missing
+half all along ("align(4) on every member would pad each one to four and put
++0x18 at +0x30"); this pair was written without any align() at all.
+
+WHAT IT COST, and why nothing ever faulted. Every WRITER indexes the array:
+GiveVsStars(idx, delta) does data_0209f310[idx] += delta, Stage::InitResources
+zeroes it with a walking p2, func_ov002_020d94cc's drop tests
+data_0209f310[slot] > 0, the three HUD readers index by data_0209f250, and
+func_ov075_021165b0 reads [0]..[3]. All of those land on host +0..+3. The one
+READER that walks by pointer is NumVsStarsObtained -- and its sum IS the VS win
+test, `NumVsStarsObtained() == 5` -- which takes player 0 from data_0209f310 and
+then walks from &data_0209f311, landing on host +4..+6 for players 1, 2 and 3.
+Three bytes of inter-contribution padding sat between the two, owned by no
+symbol. So nothing was corrupted and no neighbour was clobbered: player 0 read
+back correctly and players 1-3 always read zero. A VS match could not have been
+won by anyone but player 0, and the failure would have looked like a game rule
+rather than a bug.
+
+THE FIX is the GXBANK arrangement: __declspec(align(4)) on the head and
+__declspec(align(1)) on the member, so the linker places f311 at f310+1. AFTER,
+same three targets:
+
+    walk_window.map        _data_0209f310 00d290d8   _data_0209f311 00d290d9
+    smoke_player.map       _data_0209f310 009fe0d4   _data_0209f311 009fe0d5
+    walk_window_hires.map  _data_0209f310 015990d8   _data_0209f311 015990d9
+
+AND IT IS GATED NOW, twice. port_vsstar_layout_check() in
+hal/actor_classes_star.cpp reads the delta back once per process from
+port_scene_fill_vs, and port/tools/gxband_guard.py grew a band, 'vsstar', which
+asserts the config-derived offsets against EVERY hosting target's map at link
+time. Its own post-link line on the fixed build:
+
+    gxband_guard: gxbank 3/24 maps (floor 3), 13 members, 36 deltas; dtcm 3/24
+    maps (floor 3), 1 members, 0 deltas; vsrank 3/24 maps (floor 3), 2 members,
+    3 deltas; vsstar 3/24 maps (floor 3), 2 members, 3 deltas -- layout OK
+
+The runtime check alone would not have been enough -- ppu_gap_audit section 11a
+already measured a runtime layout check reading green over a broken band --
+which is why the link-time band is the real answer and the runtime one is the
+second opinion.
+
+AND IT WAS NOT THE ONLY ONE. Retiring the ov075 faces put func_ov075_021165b0
+in the link, and that one body walks FOUR split-symbol runs. Two more have the
+identical shape:
+
+  data_0209b2ec (1) + data_0209b2ed (3), the VS ranking counters, 0x0209b2f0
+      next. It had no host at all -- hal/auto_bss.cpp carried a generic
+      `int data_0209b2ec[8]` and nothing defined b2ed. Hosted as a
+      grouped-section pair in hal/scene_vs_menu.cpp now, gated by the 'vsrank'
+      band above, measured at f310+1 on all three maps.
+  data_0209fc5c (1) + data_0209fc5d (3), the per-slot ready bytes, 0x0209fc60
+      next. NOT FIXED, and the reason is recorded rather than papered over:
+      data_0209fc5c is already hosted as `int data_0209fc5c[8]` and the tree
+      reads that host through TWO INCOMPATIBLE VIEWS which predate this lane --
+      int[] in hal/comms_conductor.cpp, hal/level_boot.cpp (which WRITES
+      data_0209fc5c[i] = 1 per slot) and hal/player_bridges.cpp; u8[] in
+      src/_Z19LoadEntranceObjects...c, port/unmatched/LoadEntranceObjects.cpp,
+      Player_Behavior.cpp and now src/func_ov075_021165b0.c. Four-byte and
+      one-byte strides over one object cannot both be right, so slots 1..3
+      already disagree between the port's writer and the ROM's readers.
+      Reconciling it changes hal/level_boot.cpp, which lane prop15 was barred
+      from touching, and it is a bigger question than a propagation.
+      data_0209fc5d is hosted at its ROM span and DISJOINT from fc5c; the three
+      bytes read zero, which is what the DS reads in single player too. The
+      note in hal/scene_vs_menu.cpp is where the next lane picks it up.
 
 
 ================================================================================

@@ -4,8 +4,9 @@
  * THE DERIVATION LIVES IN port/slice_vs.txt and is not repeated here: the
  * scene id (spawn-table slot 6, the loader's id-6 special case), the class
  * identity (RTTI "10dScEntry_c" at 0x0211c8f8, a DIRECT Scene subclass -- the
- * dScMiniGm_c shape, 18 slots), the 138-TU inventory, the nine missing
- * bodies, and the four contested names this file carries storage for.
+ * dScMiniGm_c shape, 18 slots), the TU inventory, the missing bodies (nine
+ * when this seat was built, two after run rel0215's propagation -- section 2b
+ * there), and the four contested names this file carries storage for.
  *
  * THE SEAT IS THE dScMiniGm_c SEAT'S SHAPE (hal/scene_mg_menu.cpp), with
  * three additions that overlay demanded and this one did not:
@@ -129,9 +130,113 @@ unsigned char port_vs_bss_0211d650[0xc];
 DSSTATE_END
 }
 
-/* ---- the nine loud faces --------------------------------------------------
+/* ---- storage the 0.2.15 propagation made live -----------------------------
+   run rel0215 lane prop15. Retiring seven faces put seven real ov075 bodies in
+   the link, and they address four DS globals nothing in this tree had hosted:
+   the ranking counters, the per-slot ready bytes and the ROM's null PMF pair.
+   Every size below is the config's own next-symbol delta, not the width of the
+   first reader.
+
+   THE RANKING COUNTERS ARE A SPLIT-SYMBOL RUN, the data_0209f310 shape again.
+   dsd names data_0209b2ec (1 byte) and data_0209b2ed (3), and 0x0209b2f0 is a
+   different object. func_ov075_021165b0 walks BOTH names over the SAME four
+   bytes -- `pb = data_0209b2ec` for i<4, then `pb = data_0209b2ed` for i in
+   1..3 -- so they have to be the first two bytes of one block or the counters
+   the first loop increments are not the ones the second loop reads.
+   func_ov075_02116e00 clears data_0209b2ec[0..3] the same way. So this is the
+   GXBANK arrangement, align(4) on the head and align(1) on the member, and
+   port/tools/gxband_guard.py's 'vsrank' band asserts it against every target's
+   map. It MOVED here out of hal/auto_bss.cpp's generic `int data_0209b2ec[8]`
+   for the same reason data_0209f310 moved out of hal/actor_vtables.cpp: a
+   split run cannot be hosted as two disjoint objects. Every consumer in the
+   tree reads it as bytes (src/func_ov075_021165b0.c, _02116e00.c, _02117fe4.c),
+   so the type change costs nothing. */
+#pragma section(".dsstate$hvsrank0000", read, write)
+#pragma section(".dsstate$hvsrank0001", read, write)
+extern "C" {
+__declspec(allocate(".dsstate$hvsrank0000")) __declspec(align(4))
+unsigned char data_0209b2ec[1];
+__declspec(allocate(".dsstate$hvsrank0001")) __declspec(align(1))
+unsigned char data_0209b2ed[3];
+}
+
+/* THE PER-SLOT READY BYTES ARE THE SAME SPLIT AND ARE NOT FIXED HERE, and that
+   is a scope boundary rather than an oversight. dsd names data_0209fc5c
+   (1 byte) and data_0209fc5d (3), 0x0209fc60 is the next object, and
+   func_ov075_021165b0 walks both names over that one four-byte run exactly the
+   way it walks the ranking pair. But data_0209fc5c is ALREADY hosted, as
+   hal/auto_bss.cpp's `int data_0209fc5c[8]`, and the tree reads that host
+   through TWO INCOMPATIBLE VIEWS that predate this lane:
+
+     as int[]  hal/comms_conductor.cpp, hal/level_boot.cpp (which WRITES
+               data_0209fc5c[i] = 1 per slot) and hal/player_bridges.cpp
+     as u8[]   src/_Z19LoadEntranceObjects...c, port/unmatched/
+               LoadEntranceObjects.cpp, Player_Behavior.cpp, and now
+               src/func_ov075_021165b0.c
+
+   Four-byte strides and one-byte strides over the same object cannot both be
+   right, so slots 1..3 already disagree between the port's own writer and the
+   ROM's readers. Reconciling it means changing hal/level_boot.cpp, which this
+   lane is explicitly not allowed to touch, and it is a bigger question than a
+   propagation. data_0209fc5d is therefore hosted at its ROM span and DISJOINT
+   from fc5c, which is honest about what it is: the three bytes are zero and
+   func_ov075_021165b0's second loop reads zeros. In single player every one of
+   those bytes is zero on the DS too, so nothing observable changes today; in a
+   real VS session it is wrong, and it is wrong in the same direction the
+   int/u8 split already makes it wrong. Named here so the lane that reconciles
+   fc5c retires this paragraph and the disjoint definition together. */
+extern "C" {
+DSSTATE_BEGIN
+unsigned char data_0209fc5d[3];
+DSSTATE_END
+}
+
+/* The ROM's NULL pointer-to-member pair at 0x02086b58 (kind:data(any), 8 bytes
+   to .p__sinit_02073a24 at 0x02086b60) needs NO definition here, and the link
+   said so: romdata.c already emits it from the ROM's own bytes, so a host
+   definition beside it is an LNK2005 (measured -- this file carried one for
+   exactly one build). func_ov075_02119dc4 only needs its MSVC-mangled spelling
+   pointed at that mount, which the alias below does. */
+
+/* The C-linkage flip: eight spellings over six symbols, all of them this
+   propagation's. The .cpp TUs from main declare these data names OUTSIDE
+   extern "C", so MSVC mangles them while the ov075 mount, hal/auto_bss.cpp and
+   romdata.c define the C name -- and 0x0211d71c arrives with TWO manglings in
+   one build, `int` from func_ov075_02117d80 and `int *` from
+   func_ov075_02119dc4, which is why it needs two lines and not one. Same
+   object, second spelling; the
+   /alternatename only binds because nothing defines the mangled LHS.
+   port/tools/alternatename_guard.py is the check that stays true. */
+#pragma comment(linker, "/alternatename:?data_ov075_0211d71c@@3HA=_data_ov075_0211d71c")
+#pragma comment(linker, "/alternatename:?data_ov075_0211d71c@@3PAHA=_data_ov075_0211d71c")
+#pragma comment(linker, "/alternatename:?data_ov075_0211d810@@3PAHA=_data_ov075_0211d810")
+#pragma comment(linker, "/alternatename:?data_ov075_0211d920@@3PAHA=_data_ov075_0211d920")
+#pragma comment(linker, "/alternatename:?data_ov075_0211d930@@3PAHA=_data_ov075_0211d930")
+#pragma comment(linker, "/alternatename:?data_0209fc58@@3EA=_data_0209fc58")
+#pragma comment(linker, "/alternatename:?data_0209fc5d@@3PAEA=_data_0209fc5d")
+#pragma comment(linker, "/alternatename:?data_02086b58@@3PAHA=_data_02086b58")
+
+/* ---- the two loud faces, where there were nine -----------------------------
    The l2_trap discipline (hal/scene_boot.cpp): both streams, flushed, and a
-   counter, because a fault usually follows and stderr goes to the playlog. */
+   counter, because a fault usually follows and stderr goes to the playlog.
+
+   run rel0215 lane prop15 retired SEVEN of the original nine. Every one of
+   them is byte-matched on the decomp's main and was brought across by address
+   into src/ plus slice_vs.txt, so the face would now be an LNK2005 against the
+   body: 02115bcc, 021165b0, 02116818, 0211705c, 0211867c (matched before
+   tonight) and 02119dc4, 0211a948 (PR #1983). Re-verified in this tree with
+   tools/match.py at 2004/b56 (strict relocs) and tools/linkcheck.py (VERIFIED,
+   0 blind slots) rather than taken on main's word. 0211a948's note said it
+   also satisfied ov080's cross-window caller; that caller now reaches the
+   ROM's own body instead of a zero.
+
+   THE TWO THAT STAY ARE FLOORS WITH NAMES, not oversights:
+     func_ov075_0211621c  the VS results row -- NONMATCHING at 40 of 229 words
+                          on main (run vsdec lane SS), no source anywhere.
+     func_ov075_0211afb0  named a floor by PR #1983: two independent source
+                          shapes produce the same four wrong words at the same
+                          offsets, an allocator preference rather than a
+                          missing idea. Also the 0x0211d35c pair-run target. */
 static unsigned g_vs_face_hits;
 static void vs_face(const char *name)
 {
@@ -147,16 +252,27 @@ extern "C" unsigned port_vs_face_hits(void) { return g_vs_face_hits; }
 #define VS_FACE(sym)                                                           \
     extern "C" int sym(void);                                                  \
     extern "C" int sym(void) { vs_face(#sym); return 0; }
-VS_FACE(func_ov075_02115bcc)
 VS_FACE(func_ov075_0211621c)
-VS_FACE(func_ov075_021165b0)
-VS_FACE(func_ov075_02116818)
-VS_FACE(func_ov075_0211705c)
-VS_FACE(func_ov075_0211867c)
-VS_FACE(func_ov075_02119dc4)
-VS_FACE(func_ov075_0211a948)   /* also satisfies ov080's cross-window caller */
 VS_FACE(func_ov075_0211afb0)
 #undef VS_FACE
+
+/* THE FACES WERE ALSO THE DECLARATIONS, and that is why three of the seven
+   retirements broke the compile rather than the link. vs_data_patch.inc below
+   takes the ADDRESS of func_ov075_02115bcc, _0211705c and _0211867c to patch
+   the mount's code-pointer records, and the VS_FACE macro's `extern "C" int
+   sym(void);` line was the only declaration of those names in this TU. Deleting
+   a face therefore deletes a declaration, and the .inc stops compiling.
+
+   Declared here with their REAL signatures out of the propagated src TUs, not
+   with the face's placeholder `int sym(void)`: a wrong arity in a live
+   declaration is what port/tools/aritycheck.py exists to catch, and taking an
+   address through a lie is how it gets in. */
+extern "C" {
+void func_ov075_02115bcc(char *self);   /* src/func_ov075_02115bcc.c */
+void func_ov075_0211705c(void *thiz);   /* src/func_ov075_0211705c.c */
+void func_ov075_0211867c(char *self);   /* src/func_ov075_0211867c.c */
+int  port_vsstar_layout_check(void);    /* hal/actor_classes_star.cpp */
+}
 
 /* ---- the generated data patch --------------------------------------------- */
 extern "C" {
@@ -267,6 +383,15 @@ extern "C" void port_scene_fill_vs(void)
     static int done;
     if (!done) {
         done = 1;
+        /* run rel0215 lane prop15: the VS carried-star array's host layout,
+           read back once per process. data_0209f310 and data_0209f311 are the
+           first two BYTES of one DS run and the port hosts them as two grouped
+           sections; if the linker ever pads them apart again, every writer
+           indexes f310[player] and NumVsStarsObtained reads from &f311, so
+           players 1..3 score into bytes the win test never sums. The link-time
+           answer is gxband_guard's 'vsstar' band, over every target's map;
+           this is the same assertion from inside the one scene that uses it. */
+        port_vsstar_layout_check();
         port_ov075_pack_check();
         port_ov075_syms_patch();
         vs_apply_data_patch();

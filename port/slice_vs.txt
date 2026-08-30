@@ -46,6 +46,16 @@
 #                              slots. The seat treats 18 as the table width and
 #                              the pair run as data; the keyed fill's leftover
 #                              census is the check.
+#                              PROVEN 2026-08-30, run rel0215 lane prop15: all
+#                              three pairs have a LITERAL ZERO partner (0x0211
+#                              d350/d358/d360, no reloc on any of them) at
+#                              8-byte stride, which is vtspan's own pointer-to-
+#                              member signature, and there are exactly three
+#                              pairs for the three PMF dispatch sites the
+#                              "THREE PMF DISPATCH SITES" block near the end of
+#                              this file names. 18 is the width. port/tools/
+#                              vtspan_fills_baseline.txt carries the full
+#                              measurement and the vtspan gap that reads it 19.
 #   factory        0x0211a854  func_ov075_0211a854 (matched src): operator
 #                              new(0x288), ActorBase ctor, vptr data_0208e4b8
 #                              -> _ZTV5Scene -> data_ov075_0211d304, |=1 |=4 on
@@ -90,6 +100,62 @@
 #        135 + 3 + 9 = 147. The nine get loud L2-pattern faces in the seat,
 #        never silent stubs (hal/scene_boot.cpp's l2_trap is the model).
 #
+# ---- 2b. THE CENSUS AFTER THE 0.2.15 PROPAGATION -------------------------
+#
+# run rel0215 lane prop15. SEVEN of those nine are matched on the decomp's
+# main now and came across BY ADDRESS -- no merge, and no class conversion:
+#
+#   02115bcc  matched on main long ago, but main has since folded it into
+#             dScEntry_c as _ZN10dScEntry_c6icon_c6RenderEv. That conversion is
+#             eighteen renames and four headers this line does not carry, so
+#             the file here is the PRE-RENAME revision (main 1ad1b0ab7^): same
+#             address, same bytes, the spelling this tree's config expects.
+#   021165b0  taken from origin/main unchanged
+#   02116818  taken from origin/main with ONE by-address rename: 0x02013ee8 is
+#             _ZN12ActorDerived5SpawnEjP9ActorBaseii here and
+#             _ZN7dBase_c5SpawnEjP7fBase_cii on main. Same function, older
+#             name; main's spelling would leave the reloc unresolvable.
+#   0211705c  taken from origin/main unchanged
+#   0211867c  taken from origin/main unchanged
+#   02119dc4  PR #1983, the VS/wireless teardown, lands as .cpp
+#   0211a948  PR #1983, the entry menu's material setup
+#
+# And 02117d80 upgraded IN PLACE: its NONMATCHING .c is replaced by main's
+# byte-matched .cpp (PR #1983), file identity taken from main as-is so the
+# .c -> .cpp rename does not move the credit (attribution.json carries the
+# override rows across with it). So the "3 NONMATCHING" bucket above is 2 now.
+#
+# EVERY ONE RE-VERIFIED HERE, not taken on main's word, against
+# extracted/overlays/overlay_0075.bin at the config base: tools/match.py MATCH
+# at 2004/b56 with strict relocs, tools/linkcheck.py VERIFIED with 0 blind
+# slots, for all eight.
+#
+# THE TWO THAT STAY FACED, and they are floors with names, not oversights:
+#   func_ov075_0211621c  0x394  the VS results row. NONMATCHING at 40 of 229
+#                              words on main (run vsdec lane SS; size-exact,
+#                              nearmiss/db.jsonl). No source anywhere.
+#   func_ov075_0211afb0  0x21c  named a floor by PR #1983: two independent
+#                              source shapes produce the same four wrong words
+#                              at the same offsets, an allocator preference
+#                              rather than a missing idea.
+#
+#   135 delinked + 7 propagated + 1 upgraded = 143 with a byte-matched TU;
+#   143 + 2 NONMATCHING + 2 MISSING = 147, and the seat carries two faces
+#   where it carried nine.
+#
+# SIX OF THE SEVEN LINK, AND THE SEVENTH IS THE FLOOR'S FAULT, not the
+# propagation's. func_ov075_0211a948 byte-matches, is in src/, is in this
+# slice, and /OPT:REF drops its object because NOTHING in the binary references
+# it: config/arm9/overlays/ov075/relocs.txt has exactly one ov075 caller,
+# from:0x0211b01c kind:arm_call to:0x0211a948, and 0x0211b01c is INSIDE
+# func_ov075_0211afb0 (0x0211afb0, 0x21c) -- the body that is still a face
+# returning 0. The face's old note said 0211a948 "also satisfies ov080's
+# cross-window caller", and while it was a face in this always-linked TU that
+# reference was satisfied for free; as a standalone object it needs a real
+# caller. It links the day 0211afb0 does, and the other ov075 reference to
+# 0211a948 (ov060's data word at 0x0211a9ac) is a different overlay's storage
+# at the shared window, not a call.
+#
 # ---- 3. THE MOUNT, ON THE SCENE-5 TEMPLATE --------------------------------
 #
 # dScMiniGm_c (scene 5, ov005) is the working template and its three pieces
@@ -107,7 +173,8 @@
 #            exactly these two .c files carrying C++; same sweep the ov005
 #            slice ran).
 #   piece 3  hal/scene_vs_menu.cpp (the seat: factory wrapper over the matched
-#            src factory, keyed vtable fill, the nine loud faces) plus ONE
+#            src factory, keyed vtable fill, the loud faces -- nine when this
+#            was written, two after section 2b's propagation) plus ONE
 #            APPENDED row in hal/scene_boot.cpp's port_scene_classes:
 #            {6, "SCENE_VS_MENU", data_ov075_0211c880, ...}.
 #
@@ -219,6 +286,7 @@ src/func_ov075_02115ab8.cpp
 src/func_ov075_02115b28.c
 src/func_ov075_02115bac.c
 src/func_ov075_02115bc8.c
+src/func_ov075_02115bcc.c
 src/func_ov075_02115e1c.cpp
 src/func_ov075_02115e8c.c
 src/func_ov075_0211601c.c
@@ -228,6 +296,8 @@ src/func_ov075_02116040.c
 src/func_ov075_021160b4.c
 src/func_ov075_021160dc.cpp
 src/func_ov075_02116128.c
+src/func_ov075_021165b0.c
+src/func_ov075_02116818.c
 src/func_ov075_02116ad4.c
 src/func_ov075_02116c38.c
 src/func_ov075_02116c8c.c
@@ -238,6 +308,7 @@ src/func_ov075_02116e00.c
 src/func_ov075_02116e44.c
 src/func_ov075_02116ebc.c
 src/func_ov075_02116f40.cpp
+src/func_ov075_0211705c.c
 src/func_ov075_021173a8.c
 src/func_ov075_02117590.cpp
 src/func_ov075_0211763c.c
@@ -246,13 +317,14 @@ src/func_ov075_02117ac4.c
 src/func_ov075_02117b58.cpp
 src/func_ov075_02117bc4.c
 src/func_ov075_02117c0c.c
-src/func_ov075_02117d80.c
+src/func_ov075_02117d80.cpp
 src/func_ov075_02117e84.c
 src/func_ov075_02117f5c.c
 src/func_ov075_02117fe4.c
 src/func_ov075_02118248.c
 src/func_ov075_02118378.c
 src/func_ov075_021184b0.c
+src/func_ov075_0211867c.c
 src/func_ov075_021188b4.c
 src/func_ov075_02118a78.c
 src/func_ov075_02118a84.c
@@ -278,6 +350,7 @@ src/func_ov075_02119c38.c
 src/func_ov075_02119cc0.c
 src/func_ov075_02119d3c.c
 src/func_ov075_02119d78.c
+src/func_ov075_02119dc4.cpp
 src/func_ov075_0211a100.c
 src/func_ov075_0211a148.c
 src/func_ov075_0211a210.c
@@ -288,6 +361,7 @@ src/func_ov075_0211a740.c
 src/func_ov075_0211a834.c
 src/func_ov075_0211a838.c
 src/func_ov075_0211a854.c
+src/func_ov075_0211a948.c
 src/func_ov075_0211aa00.c
 src/func_ov075_0211aa94.c
 src/func_ov075_0211ab38.c
@@ -335,6 +409,7 @@ src/func_02020304.c
 src/func_02020334.c
 src/func_02020364.c
 src/func_0202048c.cpp
+src/func_02020768.c
 src/func_02020820.c
 src/func_0202deac.c
 src/func_0203083c.c
@@ -346,6 +421,7 @@ src/func_02030a6c.c
 src/func_02030a78.c
 src/func_02030aa4.c
 src/func_020331fc.c
+src/func_02032f9c.c
 src/func_02033390.cpp
 src/func_02033464.c
 src/func_020337ec.c
