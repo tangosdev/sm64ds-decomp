@@ -780,7 +780,39 @@ static void snd_coin_probe(void)
  * So the ROM's own break call is issued a second time at the PLAYER's own
  * +0x74, the camera-space position the coin probe already uses for the same
  * reason. Same entry point, same kind, same id. Nothing after either call is
- * the probe's. */
+ * the probe's.
+ *
+ * PICK AN EARLY FRAME, AND PROVE IT AGAINST A ONE-LINE-DIFFERENT BINARY.
+ * Both halves of that sentence are load-bearing and the first one cost a
+ * review round.
+ *
+ * A LATE frame is vacuous in an arena. Once the VS countdown has ended and the
+ * arena's own music is running (hal/star_flow.cpp's port_vs_countdown_tick,
+ * from about frame 60), three looping music tracks hold voices, and at frame
+ * 300 the break is refused at the ARM9 voice pool in BOTH builds. Two refusals
+ * that agree prove nothing about the thing under test: the voice budget, not
+ * the program number, is what answered. Frame 30 -- before the countdown ends
+ * -- is where the two builds actually differ, and where the answer is a drop on
+ * one side and a 965 ms note start on the other.
+ *
+ * And the comparison has to be against a binary that differs by the ONE line.
+ * Diffing an arena run against a build that also lacks the arena music changes
+ * the voice budget as well as the program number, so the voice-start counts
+ * are not a measurement of anything. The isolating build is a mask-only
+ * revert: put `& 0x7f` back in hal/sdat/sseq.cpp's case 0x81 and change
+ * nothing else. That is the third binary the review used, and it is what the
+ * numbers in that comment rest on.
+ *
+ * ONE MORE TRAP IN READING THE CONTROL RUN. Firing this probe on an adventure
+ * level is a good control -- it shows the glass break was silent there too, so
+ * the arena's bank was never the variable -- but the level has note drops of
+ * its OWN, and they are not the same sound. On Bob-omb Battlefield the level's
+ * own pre-fix drop is program 45 (173 masked), a different sound with the same
+ * failure shape; the program-72 drop in that log is the break this probe
+ * fired, and it exists only because the probe fired it. An earlier draft of
+ * this record called them "the same drop" and that was wrong. Read the player
+ * number: the break's drop is on whichever player the sequence at sdat+0x4b8ee
+ * was started on, printed by the [sseq] line immediately above it. */
 extern "C" {
 extern int data_020a4b78[];               /* the behaviour list head */
 extern void func_ov002_020e7d84(char *c); /* StarMarker's own break */

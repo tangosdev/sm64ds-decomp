@@ -470,6 +470,15 @@ void port_boot_course_sound(int level)
  * (ov059/ov051/ov037/ov050, levels 51/43/29/42) contain not one call. So seq
  * 0x4d, from here, is the only music a VS arena can have.
  *
+ * The SDAT agrees from the other end. Group 0x2b, NCS_GRP_VS_CASTLE -- the
+ * group Stage::InitResources loads for arena levels 1 and 0x33 -- has FOURTEEN
+ * members, and seq 0x4d is among them: WAVEARC 51/40/44, BANK 0/1/54/9, and
+ * SEQ 76/77/78/79/80/81/82. (An earlier draft of this record said the group
+ * "ships exactly SEQ 77 and BANK 54". It does not; those are two of its
+ * fourteen, and the other five SEQs are the rest of the VS set.) BANK 54 is
+ * 0x36, the bank seat above, and SEQ 77 is 0x4d, NCS_BGM_VSATHRETIC. The
+ * arena's own group carries the arena's own music.
+ *
  * cnt >= data_0209fc50 is the ROM's own readiness gate: SetNumPlayers writes
  * data_0209fc50 (SetNumPlayers -> func_020308d0), and +0x711 is set by the
  * player's own level-enter step func_ov002_020c71e0, which is in the link and
@@ -478,8 +487,29 @@ void port_boot_course_sound(int level)
  * so seating the counter without ticking it down would stop the match dead.
  * The two land together for that reason.
  *
+ * THE FREEZE IS NOT THE SAME LENGTH ON EVERY MAP, AND THE LONG ONE IS NOT A
+ * HITCH. The counter only runs once cnt has caught up with data_0209fc50, so
+ * the hold is 60 frames of countdown plus however long the players take to
+ * reach their level-enter step. Measured at 600 frames on all four maps: three
+ * of them end the countdown around frame 60, and the Battle Fort (map 4, level
+ * 42) around frame 109. That gap is the ROM's own readiness gate answering a
+ * heavier level, not the port stalling.
+ *
  * func_02012790 is Sound::Play2D(2, id): 0x2b three times for the counts,
- * 0x2a for the GO. Both are the ROM's ids at the ROM's frames. */
+ * 0x2a for the GO. Both are the ROM's ids at the ROM's frames.
+ *
+ * TWO ROM PRECONDITIONS THIS HOSTED STATEMENT DOES NOT CARRY, recorded rather
+ * than faked (and logged as one debt line in port/stage_lifecycle_map.txt).
+ * Stage::Behavior's VS branch has two early returns AHEAD of the countdown
+ * that this function does not reproduce -- the data_0209fc9c arm (the pause
+ * state, which returns after func_02032f54) and the data_0209fc68 == 6 arm
+ * (match end). The port hosts neither piece of state, so both read zero and
+ * the difference is currently unobservable; the day either goes live, this
+ * ticks where the ROM would suppress. Related, and the same debt: the ROM
+ * picks between UpdateMessage and this block on one data_0209f2d8 test, but
+ * port_message_pump does not self-guard on the mode while this arm does, so
+ * the pairing is half-implemented -- in a match the port runs both arms where
+ * the DS runs one. */
 void port_vs_countdown_tick(void)
 {
     if (data_0209f2d8 != 1)

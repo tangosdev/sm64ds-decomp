@@ -591,9 +591,15 @@ int run_track(Player &pl, int pi, int ti)
             //     instruments at 131, 200 and 209. Under a 7-bit mask no
             //     sequence can ever address them, so they would be dead bytes
             //     in a shipped ROM.
-            //   * the sequences encode exactly those numbers. The whole body
-            //     of SEQARC_SCENE entry 0x53, NCS_SE_SCT_GLASS_BROKEN -- the
-            //     star container shattering -- is `81 81 48 3c 6e 00 ff`: a
+            //   * the sequences encode exactly those numbers. Take
+            //     NCS_SE_SCT_GLASS_BROKEN, the star container shattering. It
+            //     is NOT a standalone SSEQ: it has no FAT entry and no 0x1c
+            //     SSEQ header of its own. It is SEQARC 3 (NCS_SEQARC_SCENE)
+            //     SUB-ENTRY 83, whose record gives a seqOffset of 0x105a from
+            //     that SEQARC's data base, i.e. absolute sdat 0x4b8ee. (The
+            //     FAT-entry-plus-0x1c-header route is the one seq 0x4d, the
+            //     arena music, travels; do not mix them up.) Its whole body at
+            //     that address is seven bytes, `81 81 48 3c 6e 00 ff`: a
             //     program change whose varlen is two bytes and works out to
             //     200, then one note, then end of track. Bank 0x36 has 200.
             //   * and the masked value is unreachable. 200 & 0x7f is 72, and
@@ -604,12 +610,50 @@ int run_track(Player &pl, int pi, int ti)
             //     request arrived, the voice was allocated, and the note was
             //     dropped one step later, without a sound.
             //
+            // ---- WHAT CHANGES, WHICH IS THE PART WORTH ARGUING ABOUT -------
+            //
             // A conservative count -- only entries whose FIRST command is the
             // program change, so no jump or call is followed -- puts 141
-            // SEQARC entries on the wrong side of that mask, 60 of them in
-            // SEQARC_SCENE. Three of those resolve in bank 0x36 unmasked and
-            // in nothing masked: FIRE_GO_OUT and KTL_FIRE_GO_OUT (program
-            // 131) and GLASS_BROKEN (200).
+            // SEQARC entries on the wrong side of that mask. Sorted by what a
+            // player would actually notice, against the banks a stage can
+            // load (the level table's own bank column over the 0x34 levels,
+            // plus 0x36):
+            //
+            //   AUDIBLE CHANGE, up to 31 entries. Nineteen of them are
+            //   SEQARC_SCENE entries with at least one stage bank where BOTH
+            //   the masked and the unmasked program are real instruments, so
+            //   the sound was never missing -- it was the WRONG INSTRUMENT,
+            //   and it becomes the right one. That set includes
+            //   NCS_SE_SCT_ENEMYDOWN (program 170, masked 42), which is the
+            //   most-heard sound in this whole change, and the enemy family
+            //   around it: DON_ATTACK, BDN_ATTACK, KRB_DOWN, NOK_CRY,
+            //   JAN_ATTACK/DAMAGE, KMO_WALK, CHO_DOWN, KID_ATTACK,
+            //   BMK_MESSAGE/DAMAGE, plus FIRE_GO_OUT, KTL_FIRE_GO_OUT,
+            //   UKY_SCRATCH, RBM_MESSAGE, PUZZLE and FLOWER_BLOOM.
+            //
+            //   SILENT BEFORE, 69 entries (60 is the SEQARC_SCENE bucket
+            //   alone, not the total -- an earlier draft of this comment
+            //   quoted the bucket as the total). These had no instrument at
+            //   the masked index in any stage bank, so they made no sound at
+            //   all; GLASS_BROKEN is one of them. None is in the core
+            //   movement loop, which is why the port walked this far without
+            //   the mask being noticed.
+            //
+            //   ONE REGRESSION, and it is documented rather than warned
+            //   about: NCS_SE_SCL_PEACH_STAR (program 139, masked 11) goes
+            //   silent everywhere. That is not a defect in this read --
+            //   program 139 is a HOLE in every stage bank, while 140 right
+            //   beside it is filled in nearly all of them. The instrument the
+            //   sound asks for is not in the ROM, so the DS's own lookup
+            //   answers the same nothing. It was audible before only because
+            //   the mask happened to land it on instrument 11.
+            //
+            // Net: 140 of 141 improve or are neutral.
+            //
+            // Requests do not move at all -- this sits downstream of every
+            // decision Sound::Play makes. Measured over a five-level sweep
+            // (1, 2, 6, 9, 14) the request streams are identical line for
+            // line, and the voice-start deltas are +1, -3, +1, -2 and 0.
             //
             // sdat_bank_note already bounds the index against the bank's own
             // instrument count, so an out-of-range program still refuses --

@@ -288,13 +288,23 @@ name; "none" means no writer exists anywhere in the port.
   data_0209f34c, data_0209f4f8,     none. The per-player star/coin clear
   data_0209f358, data_0209f30c,     loops are not run at all.
   data_0209f310
-  data_0209f2bc                     none, AND IT HAS A LIVE READER:
-                                    hal/player_bridges.cpp:539 reads
-                                    *(u8 *)data_0209f2bc into the player's
-                                    per-frame state dump. InitResources sets
-                                    it to 3 in VS mode and 0 otherwise.
-  data_0209f304, data_0209f308,     none.
-  data_0209f284, data_0209f290,
+  data_0209f2bc, data_0209f304,     SEATED (run rel0215, lane arenasnd):
+  data_0209f308                     hal/star_flow.cpp's seat_vs_countdown,
+                                    called from port_boot_course_sound, writes
+                                    InitResources' own 270-279 block -- 3 /
+                                    0x28 / 0 in VS mode, 0 / 0 otherwise. This
+                                    row used to say "none", and it stopped
+                                    being affordable when a SECOND reader
+                                    turned up: Stage::Behavior's VS countdown
+                                    consumes all three, and its last act is
+                                    Sound::LoadAndSetMusic_Layer1(0x4d), the
+                                    only music a VS arena has. With the three
+                                    at their bss zero the countdown could not
+                                    start and the arenas were silent.
+                                    hal/player_bridges.cpp:539's read of
+                                    *(u8 *)data_0209f2bc now gets the ROM's
+                                    value instead of a zero.
+  data_0209f284, data_0209f290,     none.
   data_0209f300, data_0209f2d4,
   data_0209cee8, data_02092778,
   data_0209f208
@@ -305,6 +315,32 @@ name; "none" means no writer exists anywhere in the port.
   readers change their input the moment it lands. Adding the writes by hand
   would be MORE scaffolding, not less, which is why this map names them and
   stops.
+
+2d-i. THE HOSTED HALVES OF Stage::Behavior, AND WHAT THEY DO NOT CARRY
+
+  Stage::Behavior is in no slice, so the port hosts individual STATEMENTS of it
+  where a subsystem needs one: hal/message_pump.cpp owns UpdateMessage, and
+  since run rel0215 hal/star_flow.cpp's port_vs_countdown_tick owns the VS
+  countdown. Both are called from tests/walk_window.cpp's frame loop. One debt
+  line covers both, and it is a fidelity gap rather than a live defect today:
+
+    * TWO EARLY RETURNS ARE MISSING FROM THE VS ARM. Stage::Behavior's VS
+      branch returns before the countdown on data_0209fc9c != 0 (the pause
+      state, after func_02032f54 and a data_0209fcc8 >= 7 arm) and on
+      data_0209fc68 == 6 (match end). port_vs_countdown_tick reproduces
+      neither. The port hosts neither piece of state, so both read zero and the
+      difference cannot be observed right now -- but the day either goes live,
+      the port ticks the countdown where the ROM would suppress it.
+
+    * THE PAIRING IS HALF-IMPLEMENTED. On the ROM these two hosted statements
+      are the two sides of ONE test: data_0209f2d8 != 1 calls UpdateMessage,
+      == 1 runs the VS block. port_vs_countdown_tick self-guards on the mode;
+      port_message_pump does not. So in a match the port runs both arms where
+      the DS runs exactly one. Harmless while the message box is idle in an
+      arena, and wrong the moment it is not.
+
+  Retiring either half means giving Stage::Behavior a slice and a real caller,
+  at which point both of these go away with it rather than being patched here.
 
   THREE MORE CADENCE MISMATCHES, same shape: port_stage_preload_shared_models
   (level_boot.cpp:2915) is the ROM's twelve Model::LoadFile over data_020756f0,
