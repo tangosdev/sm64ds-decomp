@@ -8533,6 +8533,88 @@ foreach(line IN LISTS SLICE202_LINES)
     list(APPEND SLICE202_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# ============================================================================
+# RUN REL0215 WAVE 1, LANE CAST-SWEEP1 -- the small-cast sweep.
+#
+# Six level overlays whose whole cast is one or two classes with a tiny vtable
+# set: ov035 (27), ov024 (16), ov033 (25), ov023 (15), ov017 (9), ov058 (50).
+# Each lands as its own commit; this region grows by one block per overlay and
+# is the ONLY place in this file the lane appends more than once. The three
+# target source lists take ${SWEEP1_SOURCES} exactly once, so a second overlay
+# costs the coordinator nothing outside this region.
+#
+# Every overlay here is already whole-mounted in PORT_LEVEL_OVERLAYS, so each
+# per-symbol mount is the SECOND mount of the same overlay -- the
+# ov012/ov013/ov025/ov045/ov052/ov056 dual shape. --whole emits
+# port_ovNNN_image/_patch/_at and nothing by name; --from-list --pack emits the
+# named arrays plus port_ovNNN_syms_patch. Every mount bring-up runs from the
+# lane's own hal/actor_classes_ovNNN.cpp behind a DSSTATE-bracketed done-guard
+# (the ov025/ov045/ov052/ov056/ov073 lane-ownership pattern), so this lane
+# appends NOTHING to hal/actor_overlays.cpp.
+set(SWEEP1_SOURCES "")
+
+# ---- 1/6: ov035, level 27 (Tick Tock Clock) --------------------------------
+# ROTATING_CLOCK_HAND (119) x2, SPINNING_PLATFORM (120) x13, ROTATING_COG_BIG
+# (121) x2, ROTATING_COG_SMALL (122) x2 -- nineteen of level 27's 57 skipped
+# instances. All twenty of ov035's TUs, no host copy, no refusal. Two 32-slot
+# Platform tables hosted in hal/actor_classes_ov035.cpp; ov035 is ALREADY in
+# PORT_ACTOR_OVERLAYS (wave 18 landed the list for the ov065 Ttc cluster's
+# cross-overlay reads) and this lane adds the cast's own symbols to that list
+# and, for the first time, a caller for port_ov035_syms_patch(). See
+# port/ov035_syms.txt's second header and port/slice_sweep1_ov035.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov035.txt" SLICE_SWEEP1_OV035_LINES)
+set(SLICE_SWEEP1_OV035_SOURCES "")
+foreach(line IN LISTS SLICE_SWEEP1_OV035_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SWEEP1_OV035_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# THE TWO SHARED-WINDOW ALIAS RACES (T6). ov017/ov023/ov035/ov045/ov055/ov056
+# all link at 0x021111a0 and the decomp was written against whichever dsd
+# export won the naming race, so two ov035 TUs spell ov035's own bytes with a
+# sibling overlay's name. data_ov045_02112cb0 IS DEFINED in this link
+# (port/ov045_syms.txt:123 mounts it), so an /alternatename with it on the left
+# would be defeated silently -- the R3 ov071/ov073 failure -- and left alone
+# the ov035 sinit would construct a SharedFilePtr over LEVEL 37's mounted data.
+# A -D is the remedy T6 prescribes. The second is routed the same way so the
+# pair cannot drift apart.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/__sinit_ov035_02111fc0.c"
+    PROPERTIES COMPILE_DEFINITIONS "data_ov045_02112cb0=data_ov035_02112cb0")
+# ...and this one goes to a PRIVATE name rather than straight to
+# data_ov035_02112c68, for the ov100 path-lift reason: decl_common.h declares
+# BOTH spellings, `extern char data_ov056_02112c68[]` at line 262 and
+# `extern int data_ov035_02112c68[]` at line 1149, so a direct -D makes 262
+# redeclare 1149 with a different element type. C2371, measured on the first
+# build of this seat, not predicted. hal/actor_classes_ov035.cpp binds it.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN16RotatingCogSmall16CleanupResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS "data_ov056_02112c68=port_ov035_rcs_clsn")
+# G0/G1 in id 120's CleanupResources are the two SharedFilePtrs at 0x02112cb0
+# and 0x02112cb8 (pool order read off the ROM body at 0x0211192c/0x02111930).
+# They go to PRIVATE names this lane owns rather than straight to
+# data_ov035_02112cb0/b8, because that TU includes decl_common.h, which
+# already declares both of those as `extern char` scalars -- a direct -D is a
+# C2040 redeclaration, the ov100 path-lift trap. hal/actor_classes_ov035.cpp
+# binds each private name onto the mounted object, and both LHS are undefined
+# everywhere so neither alias can be defeated.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN17RotatingClockHand16CleanupResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=port_ov035_sp_file0;G1=port_ov035_sp_file1")
+# G0 in the two deleting destructors is the GAME HEAP, 0x020a0eac -- the same
+# name meaning something else in a different TU, which is why every one of
+# these is per-source. Read off the ROM bodies' own literal pools
+# (0x02111238 and 0x02111794).
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN16RotatingCogSmallD0Ev.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN17RotatingClockHandD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS "G0=data_020a0eac")
+list(APPEND SWEEP1_SOURCES hal/actor_classes_ov035.cpp ${SLICE_SWEEP1_OV035_SOURCES})
+# ---- end lane cast-sweep1 --------------------------------------------------
+
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'
 # matched lifecycle closures -- WHOMP (164), WHOMP_KING (165), BULLET_BILL (222),
 # BILL_BLASTER (43), FORTRESS_WALL (47), FORTRESS_WALL_BREAKABLE (48). The two
@@ -9157,6 +9239,8 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
     unmatched/StarMarker_D1.cpp
+    # run rel0215 wave 1 (lane cast-sweep1): the six small-cast overlays
+    ${SWEEP1_SOURCES}
     "${ROMDATA_C}" "${OV009SYMS_C}" ${ACTOR_OV_SYMS} "${OVCROSS_C}")
 target_include_directories(smoke_player PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -9333,6 +9417,8 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
     unmatched/StarMarker_D1.cpp
+    # run rel0215 wave 1 (lane cast-sweep1): the six small-cast overlays
+    ${SWEEP1_SOURCES}
     # _ZTV5Stage SLOT 12 (run link60, lane L4). src/_ZN5Stage16OnPendingDestroyEv.cpp
     # is named on smoke_player and walk_window_hires above, because those two
     # targets compile hal/stage_bridges.cpp -- which seats the slot -- and do
@@ -9543,6 +9629,8 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
     unmatched/StarMarker_D1.cpp
+    # run rel0215 wave 1 (lane cast-sweep1): the six small-cast overlays
+    ${SWEEP1_SOURCES}
     "${PORT_GITTIP_C}"
     "${ROMDATA_C}" "${OV009SYMS_C}" ${ACTOR_OV_SYMS} "${OVCROSS_C}")
 target_include_directories(walk_window_hires PRIVATE

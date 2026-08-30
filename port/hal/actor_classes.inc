@@ -1267,6 +1267,29 @@ void hal_fill_wall_sign_vtable(void);                /* _ZTV8WallSign, 32 */
 extern unsigned char Toad_SpawnInfo[];               /* ov085 0x0212fe6c, +4 = 185 */
 void *Toad_Spawn(void);                              /* ov085 0x02129cd0, 72 B */
 void hal_fill_toad_vtable(void);                     /* _ZTV4Toad, 31 */
+/* run rel0215 wave 1 (lane cast-sweep1): OV035's OWN CAST, level 27's Tick
+   Tock Clock furniture -- nineteen of that level's 57 skipped instances, the
+   largest block on it. FOUR ids, TWO 32-slot Platform tables: 119, 121 and 122
+   share 0x02112b00 and every method body with it, 120 owns 0x02112bcc alone.
+   dsd's two vtable labels are shifted one class -- it put _ZTV17RotatingClockHand
+   on SPINNING_PLATFORM's table -- so the rows below are wired by ADDRESS and
+   the dsd spellings survive only as the host array names. The four factories'
+   installs, the RTTI names, both attribution routes, the nine T3 width pins and
+   the two live shared-window alias races are derived in port/ov035_syms.txt's
+   second header; the fills and the 32-slot Platform close are in
+   hal/actor_classes_ov035.cpp; the slice is port/slice_sweep1_ov035.txt.
+   id 121 has no dsd SpawnInfo name: 0x02112ac0 is ov010's Trap_SpawnInfo under
+   the shared window, and ov035's own record there is reached by address. */
+extern unsigned char RotatingClockHand_SpawnInfo[];  /* ov035 0x02112aa4, +4 = 119 */
+void *RotatingClockHand_Spawn(void);                 /* ov035 0x021116bc, 48 B */
+extern unsigned char SpinningPlatform_SpawnInfo[];   /* ov035 0x02112ba8, +4 = 120 */
+void *SpinningPlatform_Spawn(void);                  /* ov035 0x02111b98, 56 B */
+extern unsigned char data_ov035_02112ac0[];          /* ov035 0x02112ac0, +4 = 121 */
+void *func_ov035_0211168c(void);                     /* ov035 0x0211168c, 48 B */
+extern unsigned char RotatingCogSmall_SpawnInfo[];   /* ov035 0x02112adc, +4 = 122 */
+void *RotatingCogSmall_Spawn(void);                  /* ov035 0x0211165c, 48 B */
+void hal_fill_rotating_cog_vtable(void);             /* 0x02112b00, 32 slots */
+void hal_fill_spinning_platform_vtable(void);        /* 0x02112bcc, 32 slots */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -1933,4 +1956,15 @@ void hal_fill_toad_vtable(void);                     /* _ZTV4Toad, 31 */
        instances across levels 2, 4, 5 and 50 ---- */ \
     {183, "WALL_SIGN", WallSign_SpawnInfo, WallSign_Spawn, \
      hal_fill_wall_sign_vtable}, \
-    {185, "TOAD", Toad_SpawnInfo, Toad_Spawn, hal_fill_toad_vtable},
+    {185, "TOAD", Toad_SpawnInfo, Toad_Spawn, hal_fill_toad_vtable}, \
+    /* ---- run rel0215 wave 1 (lane cast-sweep1): ov035, level 27's own cast. \
+       Three ids take the SAME fill on purpose -- one table, one idempotent \
+       fill, the ov013 CLOCK_HAND_SHORT/LONG shape. ---- */ \
+    {119, "ROTATING_CLOCK_HAND", RotatingClockHand_SpawnInfo, \
+     RotatingClockHand_Spawn, hal_fill_rotating_cog_vtable}, \
+    {120, "SPINNING_PLATFORM", SpinningPlatform_SpawnInfo, \
+     SpinningPlatform_Spawn, hal_fill_spinning_platform_vtable}, \
+    {121, "ROTATING_COG_BIG", data_ov035_02112ac0, \
+     func_ov035_0211168c, hal_fill_rotating_cog_vtable}, \
+    {122, "ROTATING_COG_SMALL", RotatingCogSmall_SpawnInfo, \
+     RotatingCogSmall_Spawn, hal_fill_rotating_cog_vtable},
