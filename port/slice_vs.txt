@@ -130,10 +130,12 @@
 # at 2004/b56 with strict relocs, tools/linkcheck.py VERIFIED with 0 blind
 # slots, for all eight.
 #
-# THE TWO THAT STAY FACED, and they are floors with names, not oversights:
+# THE TWO THAT STAYED FACED at the end of prop15 -- both RETIRED in 2c below,
+# and they were floors with names rather than oversights:
 #   func_ov075_0211621c  0x394  the VS results row. NONMATCHING at 40 of 229
 #                              words on main (run vsdec lane SS; size-exact,
-#                              nearmiss/db.jsonl). No source anywhere.
+#                              nearmiss/db.jsonl). No source anywhere WHEN THIS
+#                              WAS WRITTEN; run vsdec landed the first one.
 #   func_ov075_0211afb0  0x21c  named a floor by PR #1983: two independent
 #                              source shapes produce the same four wrong words
 #                              at the same offsets, an allocator preference
@@ -155,6 +157,80 @@
 # caller. It links the day 0211afb0 does, and the other ov075 reference to
 # 0211a948 (ov060's data word at 0x0211a9ac) is a different overlay's storage
 # at the shared window, not a call.
+#   PAID OFF IN 2c: 0211afb0 is a real body now and 0211a948 is in the map.
+#
+# ---- 2c. THE LAST TWO FACES, AND WHAT ov075 HAS NO SOURCE FOR NOW ---------
+#
+# run rel0215 lane prop16. ZERO. The decomp's run vsdec closed the two floors
+# 2b left open and replaced the 02116128 body while it was in there, so the
+# three files below come across BY ADDRESS from origin/main 52d681683 -- no
+# merge, no rename, no edit. Every one is a src-only NONMATCHING body, the
+# ov005/ov075 precedent: the port compiles and runs an honest NONMATCHING body,
+# and there is no byte gate for it to pass.
+#
+#   0211afb0  PR #1998. First source ever for the grid-mesh renderer, and it is
+#             the caller 0211a948 was waiting for. NONMATCHING div 4: the four
+#             words at +0x164..+0x170 are the lsl/lsl/asr/asr quartet in the
+#             SECOND vertex emission, an allocator preference (mwccarm-codegen
+#             6bn). Reads no global but data_0209b3ec, already hosted.
+#   0211621c  PR #1999. First source ever for the per-player results row.
+#             NONMATCHING div 40, and the divergence is ROUTING ONLY -- 30
+#             register-field words and 10 sp-displacement words, no opcode,
+#             immediate, addressing mode or condition changed. The floor is a
+#             frame-slot ORDER mwccarm will not produce (6bl). It reads
+#             data_0209f310, which is downstream of the split-run fix 2b's
+#             lane made: before that fix this body would have read player 1..3
+#             scores out of three bytes of padding.
+#   02116128  PR #1999 REPLACED the body. This tree carried main's PRE-#1266
+#             revision under the old .c spelling (blob 49ec11e69, identical to
+#             main's own file at the extension rename), whose banner scored it
+#             div=31 against mwccarm 1.2/sp2p3 -- the WRONG compiler for this
+#             tree. Main's current .cpp is a different shape at the canonical
+#             2004/b56, div 20 by tools/match.py and 19 by the near-miss DB's
+#             disasm edit distance, with a differential-execution audit behind
+#             it (identical stores over all 880 distinguishable inputs). Same
+#             six stores, same masks, same (v << 0x1c) >> 0x10 palette splice;
+#             the host behaviour does not change, the provenance does.
+#
+# AND MAKING 0211afb0 REAL EXPOSED A CRASH, which is recorded in the seat and
+# not repeated here: its caller reaches it through an MSVC member pointer (a
+# __thiscall, receiver in ecx) and the mount's 0x0211d35c word pointed straight
+# at the cdecl C body, so the receiver never arrived. The face had survived
+# that call for a year only because it was int(void). hal/scene_vs_menu.cpp
+# carries the one __fastcall thunk that fixes it, the disassembly of all three
+# of this record's dispatch sites, and why the other two are left alone.
+#
+# RE-VERIFIED HERE against extracted/overlays/overlay_0075.bin at the config
+# base, not taken on main's word -- tools/match.py at 2004/b56 with strict
+# relocs, one run per file:
+#
+#   func_ov075_0211afb0  size 0x21c   MISMATCH 4    reloc(wildcard) 5    0 WRONG-DEST
+#   func_ov075_0211621c  size 0x394   MISMATCH 40   reloc(wildcard) 15   0 WRONG-DEST
+#   func_ov075_02116128  size 0xf4    MISMATCH 20   reloc(wildcard) 3    0 WRONG-DEST
+#
+# and the on-disk files are byte-identical to main's blobs
+# (8b28f5b09, ef7a180b6, 4d3166263 -- git hash-object, both sides).
+#
+#   135 delinked + 7 propagated + 1 upgraded = 143 with a byte-matched TU;
+#   143 + 4 NONMATCHING + 0 MISSING = 147. THE SEAT CARRIES NO FACES.
+#   The four NONMATCHING are 02116128, 021190a4, 0211621c and 0211afb0.
+#
+# ONE THING THIS LANE DID NOT DO, written down rather than quietly skipped.
+# func_ov075_0211afb0 reaches the geometry engine through LITERAL MMIO stores
+# (19 of them by tools/hostgen.py's count) and func_ov075_0211a948, which it is
+# now the only caller of, has 5 more. Compiled straight out of src/ those
+# writes latch into mapped host memory and trigger nothing -- the MTX_SCALE
+# failure hostgen.py's own header describes. They are NOT routed through
+# hostgen here, and that is deliberate: this slice ALREADY compiles eight
+# MMIO-touching TUs raw (measured with hostgen.py over every slice line:
+# func_0200f2cc 20, func_ov075_0211a410 12, _02116818 6, _0211a948 5,
+# _02116040 2, _02119dc4 1, _02118d1c 1, _02116e44 1), so the two new ones join
+# a posture this slice already has rather than creating one. Routing only these
+# two would make them the only writes in the scene that actually reach the
+# geometry engine, which is a rendering change no one has reviewed and is a
+# bigger question than a propagation. The mesh therefore still does not draw;
+# the bodies are real, the register writes are not yet live. Named here so the
+# lane that hostgens this slice does all eight at once.
 #
 # ---- 3. THE MOUNT, ON THE SCENE-5 TEMPLATE --------------------------------
 #
@@ -167,14 +243,16 @@
 #            mount (the ov005 treatment) so port_scene_fill_rom can key on the
 #            raw DS words. The SpawnInfo run 0x0211c740..0x0211c8a0 and the
 #            VS map list data_ov075_0211c6ec ride in the same .data mount.
-#   piece 2  this slice: the 138 TUs below (135 delinked + 3 NONMATCHING),
-#            with src/func_ov075_02116128.c and src/func_ov075_021184b0.c
-#            marked LANGUAGE CXX (the comment-stripped token sweep found
-#            exactly these two .c files carrying C++; same sweep the ov005
-#            slice ran).
+#   piece 2  this slice: the TUs below (135 delinked + the NONMATCHING set),
+#            with src/func_ov075_021184b0.c marked LANGUAGE CXX (the
+#            comment-stripped token sweep found exactly two .c files carrying
+#            C++; same sweep the ov005 slice ran). The OTHER one was
+#            src/func_ov075_02116128.c, and section 2c's propagation took
+#            main's .cpp spelling of it, so CMake picks the language off the
+#            extension and the marking row is one file now, not two.
 #   piece 3  hal/scene_vs_menu.cpp (the seat: factory wrapper over the matched
 #            src factory, keyed vtable fill, the loud faces -- nine when this
-#            was written, two after section 2b's propagation) plus ONE
+#            was written, two after section 2b, NONE after 2c) plus ONE
 #            APPENDED row in hal/scene_boot.cpp's port_scene_classes:
 #            {6, "SCENE_VS_MENU", data_ov075_0211c880, ...}.
 #
@@ -295,7 +373,8 @@ src/func_ov075_02116030.c
 src/func_ov075_02116040.c
 src/func_ov075_021160b4.c
 src/func_ov075_021160dc.cpp
-src/func_ov075_02116128.c
+src/func_ov075_02116128.cpp
+src/func_ov075_0211621c.c
 src/func_ov075_021165b0.c
 src/func_ov075_02116818.c
 src/func_ov075_02116ad4.c
@@ -372,6 +451,7 @@ src/func_ov075_0211aea4.c
 src/func_ov075_0211aeb8.c
 src/func_ov075_0211af0c.c
 src/func_ov075_0211af84.c
+src/func_ov075_0211afb0.c
 src/func_ov075_0211b1cc.c
 src/func_ov075_0211b260.c
 src/func_ov075_0211b3b8.c

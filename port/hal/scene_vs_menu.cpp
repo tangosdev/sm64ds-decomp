@@ -40,12 +40,18 @@
  * own body under port_vs_body_0211478c and the generated patch points the
  * one .data record that dispatches it (0x0211c618) at the renamed symbol.
  *
- * THE NINE MISSING BODIES get loud faces below -- both streams, flushed,
- * the l2_trap discipline -- never silent stubs. Anything VS fails to do has
- * these nine as its first suspects, in this order of likelihood:
- * func_ov075_0211705c (the c800 record's target, copied into bss by the
- * sinit) and func_ov075_0211afb0 (the 0x0211d35c pair-run target) are the
- * two a boot is most likely to walk into.
+ * THERE ARE NO MISSING BODIES LEFT. Nine of ov075's functions had no source
+ * anywhere when this seat was built and got loud faces below -- both streams,
+ * flushed, the l2_trap discipline, never silent stubs. run rel0215 propagated
+ * seven of them from the decomp's main by address (lane prop15) and the last
+ * two plus a replaced 02116128 body in lane prop16; slice_vs.txt sections 2b
+ * and 2c are the record. The face machinery is still here with an empty list,
+ * and a zero out of it is a STRUCTURAL fact rather than a measurement -- the
+ * block above the VS_FACE macro says what the linker does with it and why.
+ * WHAT REPLACED THE FACES AS THE FIRST SUSPECT: four of the propagated bodies
+ * reach the geometry engine through literal MMIO and are compiled raw out of
+ * src/, so their register writes latch and trigger nothing. slice_vs.txt
+ * section 2c names all eight TUs in that state and why this lane left them.
  *
  * THE ROM'S OWN VS START is at the bottom: port_vs_stage_and_start(map)
  * writes the lobby's own map-pick byte and calls func_ov075_02116c8c -- the
@@ -216,27 +222,54 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:?data_0209fc5d@@3PAEA=_data_0209fc5d")
 #pragma comment(linker, "/alternatename:?data_02086b58@@3PAHA=_data_02086b58")
 
-/* ---- the two loud faces, where there were nine -----------------------------
+/* ---- the face list is EMPTY, where it was nine ------------------------------
    The l2_trap discipline (hal/scene_boot.cpp): both streams, flushed, and a
    counter, because a fault usually follows and stderr goes to the playlog.
 
-   run rel0215 lane prop15 retired SEVEN of the original nine. Every one of
-   them is byte-matched on the decomp's main and was brought across by address
-   into src/ plus slice_vs.txt, so the face would now be an LNK2005 against the
-   body: 02115bcc, 021165b0, 02116818, 0211705c, 0211867c (matched before
-   tonight) and 02119dc4, 0211a948 (PR #1983). Re-verified in this tree with
-   tools/match.py at 2004/b56 (strict relocs) and tools/linkcheck.py (VERIFIED,
-   0 blind slots) rather than taken on main's word. 0211a948's note said it
-   also satisfied ov080's cross-window caller; that caller now reaches the
-   ROM's own body instead of a zero.
+   run rel0215 lane prop15 retired SEVEN of the original nine (02115bcc,
+   021165b0, 02116818, 0211705c, 0211867c, 02119dc4, 0211a948), all byte-matched
+   on the decomp's main and brought across by address into src/ plus
+   slice_vs.txt. LANE prop16 RETIRED THE LAST TWO. They were floors with names
+   and the decomp's run vsdec closed both:
 
-   THE TWO THAT STAY ARE FLOORS WITH NAMES, not oversights:
-     func_ov075_0211621c  the VS results row -- NONMATCHING at 40 of 229 words
-                          on main (run vsdec lane SS), no source anywhere.
-     func_ov075_0211afb0  named a floor by PR #1983: two independent source
-                          shapes produce the same four wrong words at the same
-                          offsets, an allocator preference rather than a
-                          missing idea. Also the 0x0211d35c pair-run target. */
+     func_ov075_0211621c  src/func_ov075_0211621c.c, from main 52d681683.
+                          The VS results row. First source it has ever had;
+                          NONMATCHING div 40 and the whole residue is routing
+                          (30 register-field words, 10 sp displacements, no
+                          opcode/immediate/mode/condition changed).
+     func_ov075_0211afb0  src/func_ov075_0211afb0.c, from main 52d681683. The
+                          grid-mesh renderer, and the 0x0211d35c pair-run
+                          target. NONMATCHING div 4 -- the lsl/lsl/asr/asr
+                          quartet at +0x164..+0x170, an allocator preference.
+                          It is also the CALLER func_ov075_0211a948 was waiting
+                          for: that body byte-matches and has been in this
+                          slice since prop15, and /OPT:REF dropped it because
+                          its one ov075 caller (relocs.txt from:0x0211b01c) was
+                          inside this face. Both are in the map now.
+
+   THE MACHINERY STAYS with no rows in it, and it is a SOURCE-LEVEL keepsake
+   for the next overlay this seat grows into, NOT a live proof surface. Be
+   exact about what an empty list does, because the obvious reading is wrong:
+   with no VS_FACE row, nothing calls vs_face and nothing calls
+   port_vs_face_hits, so both are gone from walk_window.map -- vs_face folded
+   away as an unreferenced static, port_vs_face_hits by /OPT:REF -- and the
+   only survivor is g_vs_face_hits, four bytes of .bss at 0x00b3ade0 that
+   nothing reads or writes. The format string is not in the binary either:
+   searching walk_window.exe for "MISSING ov075 body entered" finds nothing.
+
+   SO A ZERO HERE IS A STRUCTURAL FACT, NOT A PRINTED MEASUREMENT. Grepping a
+   run log for the face line cannot match, because no code that could emit it
+   exists; the honest claim is "there are no faces", never "the faces did not
+   fire". The two are the same number and completely different evidence, and a
+   later lane that re-adds one row turns the counter back into a real
+   measurement -- until then, read the map, not the log.
+
+   src/func_ov075_02116128 also changed underneath this seat in the same lane:
+   the tree carried main's pre-#1266 revision under the old .c spelling, banner
+   scored div=31 against mwccarm 1.2/sp2p3 (the wrong compiler for this tree),
+   and main's current .cpp is a different shape at the canonical 2004/b56 with a
+   differential-execution audit behind it. Same six stores, same palette splice;
+   nothing this file does changes. slice_vs.txt section 2c is the record. */
 static unsigned g_vs_face_hits;
 static void vs_face(const char *name)
 {
@@ -252,16 +285,16 @@ extern "C" unsigned port_vs_face_hits(void) { return g_vs_face_hits; }
 #define VS_FACE(sym)                                                           \
     extern "C" int sym(void);                                                  \
     extern "C" int sym(void) { vs_face(#sym); return 0; }
-VS_FACE(func_ov075_0211621c)
-VS_FACE(func_ov075_0211afb0)
+/* (no rows -- every ov075 function this scene reaches has a body in src/) */
 #undef VS_FACE
 
 /* THE FACES WERE ALSO THE DECLARATIONS, and that is why three of the seven
-   retirements broke the compile rather than the link. vs_data_patch.inc below
-   takes the ADDRESS of func_ov075_02115bcc, _0211705c and _0211867c to patch
-   the mount's code-pointer records, and the VS_FACE macro's `extern "C" int
-   sym(void);` line was the only declaration of those names in this TU. Deleting
-   a face therefore deletes a declaration, and the .inc stops compiling.
+   prop15 retirements broke the compile rather than the link. vs_data_patch.inc
+   below takes the ADDRESS of func_ov075_02115bcc, _0211705c, _0211867c and --
+   at 0x0211d35c -- _0211afb0, to patch the mount's code-pointer records, and
+   the VS_FACE macro's `extern "C" int sym(void);` line was the only declaration
+   of those names in this TU. Deleting a face therefore deletes a declaration,
+   and the .inc stops compiling.
 
    Declared here with their REAL signatures out of the propagated src TUs, not
    with the face's placeholder `int sym(void)`: a wrong arity in a live
@@ -271,12 +304,101 @@ extern "C" {
 void func_ov075_02115bcc(char *self);   /* src/func_ov075_02115bcc.c */
 void func_ov075_0211705c(void *thiz);   /* src/func_ov075_0211705c.c */
 void func_ov075_0211867c(char *self);   /* src/func_ov075_0211867c.c */
+void func_ov075_0211afb0(char *self);   /* src/func_ov075_0211afb0.c, and the
+                                           0x0211d35c patch row takes this */
+void func_ov075_0211621c(char *self);   /* src/func_ov075_0211621c.c */
 int  port_vsstar_layout_check(void);    /* hal/actor_classes_star.cpp */
 }
 
 /* ---- the generated data patch --------------------------------------------- */
 extern "C" {
 #include "vs_data_patch.inc"
+}
+
+/* ---- ONE CALLING-CONVENTION THUNK, over the entry record's third PMF -------
+   MEASURED, not predicted. Retiring the func_ov075_0211afb0 face made the ROM's
+   own body live, and the first scene-6 boot after that faulted at
+   func_ov075_0211afb0 +0xdc reading 0x15, under SM64DS_FAULTS_FATAL=1; without
+   it the playlog reads
+
+     [quarantine] actor 307FEE20 id 346 (?) faulted (code c0000005 +000dbb8c)
+                  -- FROZEN, frame continues
+
+   id 346 = 0x15a = UnknownVsEntry, frozen for the remaining 299 frames, which
+   is why the run still exited 0 and looked clean. The face survived the same
+   call for a year because it was `int(void)`: a cdecl body that reads no
+   argument does not care that the caller passed none.
+
+   THE SEAM IS THE ONE THIS SEAT ALREADY CROSSES EVERYWHERE (the thunks below,
+   and hal/scene_mg_menu.cpp section 4). UnknownVsEntry::Render calls
+   src/func_ov075_0211b3d8.cpp, a byte-matched TU whose whole body is
+   `(c->*c->ep->pmf)()` over a complete single-inheritance class, so MSVC emits
+   a __thiscall: the receiver rides in ecx and NOTHING goes to the stack. The
+   word behind that member pointer is the mount's 0x0211d35c, which
+   vs_apply_data_patch points at the plain cdecl C body, and a cdecl body reads
+   its first argument off the stack. The receiver never arrives.
+   __fastcall(self, edx) takes ecx as its first argument and cleans the same
+   zero bytes __thiscall does, so the thunk is the exact shape of the seam.
+
+   ONE ROW, DELIBERATELY. relocs.txt has exactly two references to 0x0211afb0
+   and one of them is ov006's storage at the shared window, so this record word
+   is the function's ONLY entry point and the thunk is complete.
+
+   THE OTHER TWO PAIRS IN THE SAME RECORD ARE LEFT EXACTLY AS THE BASE HAS
+   THEM, and the reason is SCOPE, not difficulty. __sinit_ov075_0211c51c copies
+   three pairs into data_ov075_0211d994: 0x0211d354 (func_ov075_0211b260,
+   dispatched by src/func_ov075_0211b458.cpp's own inline member call) and
+   0x0211d34c (func_ov075_0211b1cc, dispatched by src/func_ov075_0211b418.cpp)
+   are the other two, and both carry the identical receiver defect today.
+
+   ALL THREE SITES ARE THUNK-REACHABLE. An earlier revision of this comment
+   claimed 0211b458's was a third shape that a target-side thunk could not
+   reach, because its `struct Foo;` is never completed and MSVC therefore gives
+   that member pointer the most-general representation. The representation part
+   is right and the conclusion was WRONG; corrected here after reading the
+   emitted dispatch rather than reasoning about the language rule.
+
+   Disassembled out of walk_window.exe (capstone, 32-bit):
+
+     0211b3d8 / 0211b418   two-word form
+       mov ecx,[edx+0x14]   ; the pair's SECOND word
+       add ecx,eax          ; ecx = this + that word
+       mov eax,[edx+0x10]   ; the pair's FIRST word
+       call eax
+
+     0211b458              four-word (most-general) form
+       mov edx,[ep+0x0c]    ; vbtable index
+       test edx,edx
+       jne  <vbtable path>  ; NOT TAKEN
+       mov eax,[ep+0x04]    ; the adjustment
+       lea ecx,[eax+esi]    ; ecx = this + adjustment
+       call dword ptr [ep]  ; the pair's FIRST word
+
+   Every ROM pair in this record is {function, LITERAL ZERO} -- slice_vs.txt
+   section 1 measures exactly that, three pairs at 8-byte stride with no
+   relocation on any partner word -- and vs_apply_data_patch writes offset 0
+   only. So for 0211b458, ep+0x0c and ep+0x04 are both zero: the vbtable branch
+   is dead, the adjustment is zero, and `lea ecx,[eax+esi]` hands over `this`
+   exactly. (The 16-byte read does span into the next pair, so ep+0x08 is
+   pair[1]'s function word -- harmless, because ep+0x08 is only read on the
+   dead branch.) The call goes through ep+0, which is the word the patch owns,
+   so a __fastcall thunk at 0x0211d354 or 0x0211d34c would receive the correct
+   receiver exactly the way the one at 0x0211d35c does.
+
+   THE REASON THEY STAY IS THAT ENABLING THEM IS AN UNMEASURED RENDERING
+   CHANGE. Neither faults today: 0211b1cc bails on DecIfAbove0_Short and
+   0211b260 bails on a non-positive count, both off whatever the stack happened
+   to hold. Handing them a real receiver wakes up code this lane did not run --
+   0211b1cc's 400-element walk through func_ov075_0211addc, and 0211b260's
+   20x20 vertex-grid initialisation -- and that is a picture change nobody has
+   looked at, on a mesh whose register writes still latch (see slice_vs.txt 2c
+   on the eight raw-MMIO TUs). This lane fixed the one site its own change made
+   lethal and measured that. Named here so the lane that takes the entry record
+   does all three together and measures what wakes up. */
+/* (func_ov075_0211afb0 is declared with the other propagated bodies above) */
+static void __fastcall vs_pmf_grid_render(void *self, void *)
+{
+    func_ov075_0211afb0((char *)self);
 }
 
 static void vs_apply_data_patch(void)
@@ -395,6 +517,15 @@ extern "C" void port_scene_fill_vs(void)
         port_ov075_pack_check();
         port_ov075_syms_patch();
         vs_apply_data_patch();
+        /* and then ONE word back over the generated table's own answer: the
+           0x0211d35c pair is reached by an MSVC member-pointer call, so the
+           record holds the __fastcall thunk rather than the bare cdecl body.
+           It has to happen HERE, between the patch and the sinits, because
+           __sinit_ov075_0211c51c copies this word into data_ov075_0211d994[2]
+           and everything downstream reads the copy. The generated .inc is left
+           alone on purpose -- it is the ROM's own mapping and says to
+           regenerate rather than hand-edit; the convention seam is the seat's. */
+        *(void **)data_ov075_0211d35c = (void *)vs_pmf_grid_render;
         /* the excluded c800 record, rebuilt from the pinned mount extent --
            one code pointer (patched above) and a zero */
         std::memcpy(&port_vs_data_0211c800, data_ov075_0211c7f8 + 8, 8);
