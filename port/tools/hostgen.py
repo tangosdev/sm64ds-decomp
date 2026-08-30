@@ -566,10 +566,28 @@ def mmio_extern_patch(text, sym):
 # FlyGuy's state dispatcher, and FlyGuy is unregistered (no bootable level
 # spawns it), so the value is dead until a FlyGuy lane lands -- which should
 # re-derive it before trusting it.
+# run rel0215 wave 3 (lane w3-e) adds the SECOND entry, and its caveat is
+# smaller than the first's because the deadness is measured on both sides.
+# func_ov019_0211140c is RacingPenguin's ground/wall normal helper (ov019
+# 0x0211140c). On the ROM it ends `add sp,#0x1c; pop {r4-r7,lr}; bx lr` with r0
+# holding whatever SurfaceInfo::CopyNormalTo -- a void function -- left behind,
+# and ALL FOUR of its call sites discard the result: func_ov019_02111dec:31,
+# func_ov019_0211197c:44 and :79, func_ov019_021117a8:33. So there is no reader
+# to re-derive it for, on the host or on the DS.
 FALLS_OFF_RETURN = {
     "func_ov070_0211f0a4": [
         ("    a->KillAndTrackInDeathTable();\n}",
          "    a->KillAndTrackInDeathTable();\n"
+         "    return 1;  /* hostgen FALLS_OFF_RETURN: see the table's note */\n"
+         "}"),
+    ],
+    # The anchor is the WALL branch's CopyNormalTo, the one that writes n1; the
+    # floor branch above it writes n0 and is not matched by this text.
+    "func_ov019_0211140c": [
+        ("        _ZNK11SurfaceInfo12CopyNormalToER7Vector3("
+         "(char*)_ZNK12WithMeshClsn13GetWallResultEv(clsn)+4, n1);\n    }\n}",
+         "        _ZNK11SurfaceInfo12CopyNormalToER7Vector3("
+         "(char*)_ZNK12WithMeshClsn13GetWallResultEv(clsn)+4, n1);\n    }\n"
          "    return 1;  /* hostgen FALLS_OFF_RETURN: see the table's note */\n"
          "}"),
     ],

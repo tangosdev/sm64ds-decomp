@@ -10658,6 +10658,104 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN11PyramidStep16CleanupResourcesEv.cpp"
     PROPERTIES COMPILE_DEFINITIONS
     "G0=data_ov025_02113ab8;G1=data_ov025_02113ab0")
+# ---- w3-e / ov019, level 11 (Cool Cool Mountain's slide) ------------------
+#
+# RACING_PENGUIN (259), the one class gate 142/143 left in level 11's own
+# overlay. It is on NO mounted level's object list and nothing spawns it at run
+# time, so this block moves the LINKAGE count and not the census -- level 11's
+# baseline is already 84 spawned / 0 skipped. Said plainly here because a
+# reviewer reading the battery alone would see nothing move.
+# Also here: ICE_SLIDE_MANAGER's deleting destructor, whose slot 17 gate 143
+# trap-filled, so that class had no hosted D0 at all.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3e_ov019.txt" SLICE_W3E_OV019_LINES)
+set(SLICE_W3E_OV019_SOURCES "")
+foreach(line IN LISTS SLICE_W3E_OV019_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W3E_OV019_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# ONE ov019 TU IS GENERATED RATHER THAN SLICED. src/func_ov019_0211140c.cpp is
+# declared `int` and falls off the end -- legal for mwccarm, C4716 and a hard
+# error for MSVC -- so it goes through tools/hostgen.py's FALLS_OFF_RETURN
+# table, exactly the shape OV70GEN above already uses for
+# func_ov070_0211f0a4, and src/ is not touched. The returned value is dead on
+# both sides: the ROM body ends with r0 holding SurfaceInfo::CopyNormalTo's
+# leftover, and all four call sites discard it.
+set(OV19GEN_SYMS func_ov019_0211140c)
+set(OV19GEN "")
+foreach(sym IN LISTS OV19GEN_SYMS)
+    set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND OV19GEN "${sym_out}")
+endforeach()
+list(APPEND W3E_SOURCES hal/actor_classes_ov019_w3e.cpp
+    ${SLICE_W3E_OV019_SOURCES} ${OV19GEN}
+    unmatched/RacingPenguin_Render.cpp
+    unmatched/RacingPenguin_ShadowFaces.cpp)
+
+# W10, THE ONE DATA CROSS-NAME IN ov019, and it is the worst spelling in this
+# lane: src/_ZN13RacingPenguin16CleanupResourcesEv.cpp declares its seven
+# animation file pointers as `_ZN9HugeCover6RenderEv[7]` -- ov032's
+# HugeCover::Render, a FUNCTION this link DEFINES since wave 2 seated that
+# class. Linked as written it would call SharedFilePtr::Release on seven words
+# read out of ov032's code, and an /alternatename would be defeated without a
+# diagnostic. ov019's own reloc says what the address is:
+#     from:0x02112354 kind:load to:0x02112788 module:overlay(19)
+# The TU includes only types.h, so the rename collides with nothing in
+# decl_common.h (which declares data_ov019_02112788 with a different element
+# type -- the reason this is safe here and would not be if that header were in
+# scope).
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN13RacingPenguin16CleanupResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS "_ZN9HugeCover6RenderEv=data_ov019_02112788")
+#
+# W11, ICE_SLIDE_MANAGER's DELETING DESTRUCTOR. Its transient base-table
+# restore is spelled `VT`, which hal/cxx_aliases.cpp binds to ov002's
+# data_ov002_021081e4; its own pool says the store is its OWN table:
+#     from:0x02112670 kind:load to:0x021133cc module:overlay(19)
+# `HEAP` needs no row -- cxx_aliases already binds it to _data_020a0eac, which
+# is what the second pool word (0x02112674) holds. Safe as a rename because
+# both names are declared in include/decl_common.h with the IDENTICAL type
+# (`extern int VT[]` at 415, `extern int _ZTV15IceSlideManager[]` at 582), so
+# the rewrite is a duplicate declaration.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN15IceSlideManagerD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS "VT=_ZTV15IceSlideManager")
+#
+# W12, THE TWO POINTER-TO-MEMBER DISPATCHERS, the R9 wave-18 ruling again.
+# src/func_ov019_02112268.cpp applies a NONZERO offset (`c->pp + 1`) and is
+# R9's exact predicate; it is ALREADY in R9's `set_source_files_properties`
+# list above as an "ABSENT, inert today" row, and this lane makes that row
+# live. Its sibling src/func_ov019_021122a4.cpp reads record 0 and is listed
+# here so the two agree on the representation -- a TU that keeps MSVC's default
+# 4-byte form while its sibling uses the ROM's 8-byte one is the drift R9's
+# "PER-SOURCE, NEVER GLOBAL" paragraph warns about.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov019_021122a4.cpp"
+    PROPERTIES COMPILE_OPTIONS "/vmg;/vmm")
+#
+# W13, AN ALIAS THIS LANE DEFEATS, RE-ROUTED. hal/bob_enemy_bridges.cpp carried
+# /alternatename:_func_ov019_02111f54=_func_ov014_02111f54, because ChainChomp's
+# state-2 main (src/func_ov014_02111af0.c) spells an ov014 body with an ov019
+# tag -- dsd's per-overlay naming attaching a reference to the wrong one of the
+# four overlays that share this base -- and ov014's own reloc settles it:
+#     from:0x02111afc kind:arm_call to:0x02111f54 module:overlay(14)
+# RACING_PENGUIN's sixth pointer-to-member state body IS func_ov019_02111f54,
+# so seating it DEFINES that LHS and the alias goes inert. Caught by
+# alternatename_guard on this lane's first link, not reasoned about afterwards.
+# Left unrouted it is a wrong-object bind that never fails the link: the chomp's
+# state-2 main calling the penguin's body. The reader declares the name itself
+# and includes no header that declares it either, so the -D is exact.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov014_02111af0.c"
+    PROPERTIES COMPILE_DEFINITIONS "func_ov019_02111f54=func_ov014_02111f54")
 # ---- end lane w3-e ---------------------------------------------------------
 
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'

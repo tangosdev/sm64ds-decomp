@@ -1736,6 +1736,17 @@ void hal_fill_grindel_vtable(void);                   /* 0x02113850, 32 */
 extern unsigned char data_ov025_0211373c[];           /* ov025 0x0211373c, +4 = 163 */
 void *func_ov025_02111898(void);                      /* ov025 0x02111898, 48 B */
 void hal_fill_spindel_vtable(void);                   /* 0x02113760, 32 */
+/* run rel0215 wave 3 (lane w3-e): RACING_PENGUIN (259, ov019), the other class
+   in level 11's own overlay. It is on NO mounted level's object list and
+   nothing spawns it at run time -- level 11's baseline is 84 spawned, ZERO
+   skipped -- so this row is LINKAGE and changes no census. It is registered
+   because both attribution routes name it and its closure is complete; an
+   unseated class in a mounted overlay is a trap waiting for the first roster
+   that reaches it. 31 slots, an Actor and not a Platform. Derivation in
+   port/slice_w3e_ov019.txt, fill in hal/actor_classes_ov019_w3e.cpp. */
+extern unsigned char RacingPenguin_SpawnInfo[];       /* ov019 0x021132ec, +4 = 259 */
+void *RacingPenguin_Spawn(void);                      /* ov019 0x021125bc, 96 B */
+void hal_fill_racing_penguin_vtable(void);            /* _ZTV13RacingPenguin, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -2614,4 +2625,9 @@ void hal_fill_spindel_vtable(void);                   /* 0x02113760, 32 */
     {162, "GRINDEL", Grindel_SpawnInfo, Grindel_Spawn, \
      hal_fill_grindel_vtable}, \
     {163, "SPINDEL", data_ov025_0211373c, func_ov025_02111898, \
-     hal_fill_spindel_vtable},
+     hal_fill_spindel_vtable}, \
+    /* ---- run rel0215 wave 3 (lane w3-e): RACING_PENGUIN (259, ov019). Not on \
+       any mounted level's object list and not spawned at run time, so this row \
+       is linkage and moves no census -- see the note above the externs. ---- */ \
+    {259, "RACING_PENGUIN", RacingPenguin_SpawnInfo, RacingPenguin_Spawn, \
+     hal_fill_racing_penguin_vtable},

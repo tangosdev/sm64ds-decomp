@@ -1,0 +1,159 @@
+# run rel0215 wave 3, lane w3-e: ov019's RACING PENGUIN, and the two other
+# bodies level 11's own overlay had left unlinked.
+#
+# ov019 is level 11's overlay (data/stage/snow_slider, Cool Cool Mountain's
+# slide, course 3). Gate 142/143 seated ICE_SLIDE_MANAGER (356) with FOUR TUs
+# and left the rest; a fifth, _ZN13RacingPenguin16OnPendingDestroyEv.c, reaches
+# the binary through slice_gate191.txt. That is the whole of ov019's linked set.
+#
+# THE GAP CENSUS THIS LANE STARTED FROM. Every kind:function row in
+# config/arm9/overlays/ov019/symbols.txt joined to its delinks.txt src TU and
+# to walk_window's own object list in build/port/build.ninja:
+#     37 function rows, 37 distinct src TUs, 5 LINKED, 32 UNLINKED.
+#     0 MISSING bodies, 0 NONMATCHING banners, 0 rows without a delink row.
+#
+# THIS OVERLAY IS LINKAGE, NOT CENSUS, AND THAT IS THE HONEST READING.
+# RACING_PENGUIN (259) is on NO mounted level's object list -- level 11's
+# baseline on cons cc10acd4e is 84 spawned, ZERO skipped -- and nothing in
+# ov019 spawns it at run time (its Actor_Spawn call sites were swept; there are
+# none). Seating it therefore moves the linkage count and leaves the census
+# exactly where it was. It is seated anyway because both attribution routes
+# name it, its closure is complete, and an unseated class is a live trap the
+# moment a level roster reaches it.
+#
+# ==== THE ID, BOTH ATTRIBUTION ROUTES ======================================
+#
+#   id   SpawnInfo   word[0] spawnFunc            idhalf   x on L11
+#   259  0x021132ec  0x021125bc RacingPenguin_Spawn  259   (not placed)
+#   356  0x021133a8  0x0211274c IceSlideManager_Spawn 356  x1  (gate 142)
+#
+# Route 2, the Spawn's own vtable store: 0x02113310. Route 3, the RTTI at
+# vtable[-1]: 0x0211330c -> 0x021132d0 -> name string 0x021132dc
+# "10daPgRcer_c" (penguin racer), base typeinfo arm9 0x0208e390. dsd's
+# _ZTV10daPgRcer_c is on the right class and there is no identity shift.
+#
+# ==== THE WIDTH: THIRTY-ONE, AN ACTOR AND NOT A PLATFORM ===================
+#
+# Read out of extracted/overlays/overlay_0019.bin at 0x02113310:
+#   slot 29  0x0201012c            slot 30  0x020100dc  OnAimedAtWithEggReturnVec
+# and then 0x0209a764 -- the NEXT class's Itanium typeinfo record, not a slot
+# 31. There is no 0x020ee55c Platform::Kill anywhere in the run, which is the
+# second pin: this is a direct Actor subclass, the same reading gate 143
+# recorded for IceSlideManager next door.
+#   own slots  0 021123d4  3 021122f8  6 02112394  9 02112360
+#             12 0211235c (an OVERRIDE -- OnPendingDestroy, already linked)
+#             16 021111a0  17 021111f0
+#
+# ==== THE STATE MACHINE IS TWELVE POINTER-TO-MEMBER RECORDS ================
+#
+# __sinit_ov019_021127a4 copies TWELVE 8-byte {fn, delta} pairs out of .data
+# (0x02113270..0x021132d0, deltas ROM-ZERO on all twelve) into the .bss array
+# at 0x0211356c, and func_ov019_021122dc sets the actor's +0x370 to
+# `data_ov019_0211356c + (state << 4)` -- so SIX states of TWO records each.
+# func_ov019_021122a4 calls record 0 of the current state and
+# func_ov019_02112268 calls record 1.
+#
+# THE TWELVE FUNCTION WORDS ARE RE-SEATED, AND THE SOURCES ARE SEATED RATHER
+# THAN THE DESTINATION. The CrazedCrate recipe overwrites the bss copy after
+# the sinit has run; the Painting recipe overwrites the .data SOURCES before
+# it. Both end in the same state, and the second is chosen here for a reason
+# the first does not satisfy: port/tools/ptr_audit.py reads the EMITTED C, and
+# a mounted .data pair holding a DS code address that no host TU names is
+# exactly its finding. Naming all twelve sources in the fill answers the audit
+# and makes the DS addresses never live in the same move.
+#
+# Both dispatchers get /vmg /vmm (the R9 wave-18 ruling) so MSVC's
+# pointer-to-member is the ROM's 8-byte {fn, delta}: func_ov019_02112268
+# applies a NONZERO offset (`c->pp + 1`), which is R9's exact predicate.
+# func_ov019_021122a4 is at offset 0 and is listed with it for representation
+# agreement. CMakeLists.txt:3114 already carries the flags for 02112268 as an
+# "ABSENT, inert today" row; this lane makes that row live and adds its sibling.
+#
+# ==== THREE TUs HELD OUT, EACH FOR A RULING THE TREE ALREADY MADE ==========
+#
+#   src/_ZN13RacingPenguinD1Ev.cpp   (259 slot 16)
+#   src/_ZN15IceSlideManagerD1Ev.cpp (356 slot 16)
+# are real MSVC-synthesised destructors over shadow classes with no vtable
+# store of their own: MSVC mangles them ??1RacingPenguin@@UAE@XZ and
+# ??1IceSlideManager@@UAE@XZ, never as the Itanium names the slots need. That
+# is the MotherPenguin / OneUpLogo / BabyPenguin shape gate 191, gate 193 and
+# slice_ov030cast.txt all keep out. IceSlideManager's chain was already spelled
+# by hand (ism_d1 in hal/actor_classes_ccm.cpp, Actor::D2 alone);
+# RacingPenguin's is spelled in hal/actor_classes_ov019_w3e.cpp, HIGH ADDRESS
+# FIRST from its own member list: WithMeshClsn +0x1a8, MovingCylinderClsn
+# +0x174, ShadowModel +0x14c, TextureSequence +0x138, ModelAnim +0xd4,
+# Actor::D2.
+#
+#   src/_ZN13RacingPenguin6RenderEv.cpp (259 slot 9)
+# dispatches its ModelAnim's ROM slot 5 through a six-virtual LOCAL shadow
+# (`ldr r2,[r0]; ldr r2,[r2,#0x14]; blx r2` at 0x0211237c-84, read off the
+# ROM). hal/cxxname_bridge.cpp dual-fills _ZTV5Model[5] for exactly this shape
+# and says IN WRITING at line ~516 that _ZTV9ModelAnim cannot be: "Render's ROM
+# slot (5) is Virtual18's MSVC slot, so shadow-TU Render dispatch cannot be
+# served by the same array". +0xd4 here is a ModelAnim -- the D0 runs
+# ModelAnim::~ModelAnim on it -- so this is that TU. Host-copied in
+# port/unmatched/RacingPenguin_Render.cpp, which calls ModelAnim::Render
+# directly with the same +0x80 argument.
+#
+# ---- AND ONE THAT IS GENERATED RATHER THAN SLICED ------------------------
+#
+#   src/func_ov019_0211140c.cpp  (RacingPenguin's ground/wall normal helper)
+# is declared `int` and falls off the end. mwccarm allows that -- the value is
+# whatever r0 held -- and MSVC makes it C4716, a hard error, so the TU cannot
+# be compiled as written. It goes through port/tools/hostgen.py's
+# FALLS_OFF_RETURN table instead, exactly like func_ov070_0211f0a4 before it:
+# the generated copy in build/host-src/src/ gets `return 1;` and src/ is not
+# touched. The value is dead on BOTH sides and that is measured, not assumed --
+# the ROM body ends `add sp,#0x1c; pop {r4-r7,lr}; bx lr` with r0 holding what
+# SurfaceInfo::CopyNormalTo (void) left, and all four callers discard it
+# (func_ov019_02111dec:31, func_ov019_0211197c:44 and :79,
+# func_ov019_021117a8:33). Wired as ${OV19GEN} in port/CMakeLists.txt.
+#
+# 28 lines below; 28 sliced + 1 generated + 3 held out = the 32-row census
+# tail.
+
+# ---- RACING_PENGUIN (259), table 0x02113310 -------------------------------
+src/_ZN13RacingPenguinD0Ev.c
+src/func_ov019_02111254.c
+src/func_ov019_0211127c.cpp
+src/func_ov019_021112b8.c
+src/func_ov019_0211131c.c
+src/func_ov019_021113b0.c
+src/func_ov019_021114ec.cpp
+src/func_ov019_02111558.c
+src/func_ov019_02111754.cpp
+src/func_ov019_021117a8.c
+src/func_ov019_02111904.c
+src/func_ov019_0211197c.c
+src/func_ov019_02111d58.c
+src/func_ov019_02111dec.c
+src/func_ov019_02111f54.c
+src/func_ov019_02111fec.c
+src/func_ov019_0211213c.c
+src/func_ov019_02112168.c
+src/func_ov019_021121f8.c
+src/func_ov019_02112268.cpp
+src/func_ov019_021122a4.cpp
+src/func_ov019_021122dc.c
+src/_ZN13RacingPenguin16CleanupResourcesEv.cpp
+src/_ZN13RacingPenguin8BehaviorEv.cpp
+src/_ZN13RacingPenguin13InitResourcesEv.cpp
+src/RacingPenguin_Spawn.c
+
+# ---- ICE_SLIDE_MANAGER (356)'s deleting destructor -------------------------
+# Gate 143 trap-filled slot 17 (ccm_trap17), so the class had no hosted
+# deleting destructor at all. Its matched body needs one per-source rename --
+# it spells its transient base-table restore `VT`, which hal/cxx_aliases.cpp
+# binds to ov002's data_ov002_021081e4 -- and its pool says the store is really
+# its own table (from:0x02112670 kind:load to:0x021133cc module:overlay(19)).
+# HEAP needs nothing: cxx_aliases already binds it to _data_020a0eac, which is
+# what the second pool word holds.
+src/_ZN15IceSlideManagerD0Ev.c
+
+# ---- RACING_PENGUIN's static initialiser -----------------------------------
+# Twelve SharedFilePtrs (one model, seven animations, three texture sequences,
+# one collision), their twelve destructor-chain nodes, two Vector3 statics with
+# chain nodes of their own, and the twelve-record state table. Gate 142's
+# ov019_syms.txt header says this sinit "is deliberately not run"; this lane is
+# the class it was waiting for.
+src/__sinit_ov019_021127a4.c
