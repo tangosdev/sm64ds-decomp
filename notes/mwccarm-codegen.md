@@ -4380,7 +4380,7 @@ The match was:
     *(s32 *)(c + 0x60) = (y < lo) ? lo : ((y > hi) ? hi : y);
 
 with the plain block-scope declarations in order y, lo, hi. Changing `(y > hi) ? hi : y`
-back to `(y <= hi) ? y : hi` and nothing else moves it from a byte match to four words off.
+back to `(y <= hi) ? y : hi` and nothing else moves it from a byte match to seven words off (four in the clamp itself plus three range-test loads that recolour with it; reviewer-measured).
 
 HOW TO USE IT. On any near-miss whose residue is conditional moves plus the registers
 around them, sweep BOTH arm orders of every ternary and every `if/else` that selects a
