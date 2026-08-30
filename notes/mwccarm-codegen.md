@@ -3794,3 +3794,50 @@ Closed since addendum 2, all inert (byte-identical, div 4, our colouring):
   byte-identical to the shift pair (the useful new spelling); `short : 16`,
   `signed short : 16` and `unsigned short : 16` change the access entirely and
   shrink the function to 524 bytes.
+
+### 6bn addendum 4: the closing numbers, and a fake-match hazard in the permuter
+
+Final tallies for this campaign (2026-08-29/30), so the next attempt can start from
+the frontier instead of re-measuring it. Roughly 250,000 compiles.
+
+* **Four permuter seeds, four plateaus.** Structurally different bases, all run to
+  a flat line with `--stop-on-zero`:
+
+  | seed | shape | runtime | iterations | best score |
+  |---|---|---|---|---|
+  | `perm_cp0` | struct-array, `for` loops | 4h00m | 23,468 | 20 (= div 4) |
+  | `perm_db` | `char *` + byte offsets, `do/while` | 4h00m | 21,151 | 10 (= div 2) |
+  | `perm_bf` | 16-bit bitfield extract | 3h06m | 7,821 | 20 |
+  | `perm_d2` | the div-2 narrowing basin | 2h28m | 6,121 | 10 |
+
+* **FAKE-MATCH HAZARD, worth generalising.** `perm_db` reached score 10 on its own
+  by inserting `vz = (short)(*(int *)(p1 + 8));` -- independently rediscovering the
+  hand-found div-2 point, which confirms the finding but also shows the permuter's
+  mutations are NOT semantics-preserving: it will happily add a truncating cast that
+  changes the computed value in exchange for a better score. A score-0 result is
+  still safe (identical bytes implies identical semantics), but any NON-zero
+  permuter output is a byte-distance artefact and must never be banked as a
+  near-miss draft or read as progress without checking what it computes. That is
+  why this campaign banked no improved DB row: the only thing better than div 4 is
+  arithmetically wrong.
+
+* **Wide searches, all flat.** 166,000+ randomized whole-function structural samples
+  (loop forms, base/offset/pointer spellings, decl order, `j++` placement,
+  per-block per-component spellings, store-address forms); 87,600 evaluations of a
+  simulated annealer over (statement order x decl order); 55,296 G3-parameter-space
+  combinations; 5,040 (statement order x six equivalent z spellings); 840 block-A
+  orders; 7,000+ pragma pairs. Across all of them, **278 distinct register windows
+  were observed in that four-word slot, and the maximum agreement with the ROM any
+  of them reaches is 2 of 4** -- reached only by the narrowing family. No
+  semantically valid shape has ever produced even one of the four ROM words.
+
+* **Annealing inside the flipped basin does not help either**: 47 restarts holding
+  the `u16` z intermediate fixed while shuffling orders, decls and the x/y
+  spellings never improves on the basin's own floor and never gets past 2 of 4.
+
+Read together with addendums 1-3: the flip is reachable, the only known triggers
+are narrowing conversions, they all fuse the truncation the ROM splits, and
+availability/order/pragmas/flags/inlining/TU-context/compiler-build are measured
+dead ends. The next attempt should look for a construct that is a conversion to
+the colourer and dissolves before lowering -- or accept this as the hand-fix
+backlog it now is.
