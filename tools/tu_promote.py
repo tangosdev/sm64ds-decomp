@@ -204,7 +204,6 @@ def attribution_update(plans, lineage):
             if key not in ov:
                 ov[key] = who
                 added += 1
-    data["overrides"] = dict(sorted(ov.items()))
     return path, data, added
 
 
@@ -233,24 +232,27 @@ def converted_baseline_update(plans):
     if not isinstance(rows, list) or len(rows) != len(set(rows)):
         raise PromoteError("converted baseline must contain a unique converted list")
 
-    converted = set(rows)
+    converted = list(rows)
     moved = 0
     for p in plans:
         for f in p["functions"]:
             legacy = f["legacy_source"]
             symbol = f["symbol"]
             old_keys = (legacy, f"{legacy}#{symbol}")
-            if not any(key in converted for key in old_keys):
+            positions = [converted.index(key) for key in old_keys if key in converted]
+            if not positions:
                 continue
-            converted.difference_update(old_keys)
+            insert_at = min(positions)
+            converted = [key for key in converted if key not in old_keys]
             target = p["dest"] if len(p["functions"]) == 1 \
                 else f"{p['dest']}#{symbol}"
-            converted.add(target)
+            if target not in converted:
+                converted.insert(min(insert_at, len(converted)), target)
             moved += 1
 
     data["_note"] = TR.NOTE
     data["count"] = len(converted)
-    data["converted"] = sorted(converted)
+    data["converted"] = converted
     return path, data, moved
 
 
