@@ -31,7 +31,7 @@ WHY BACKSLIDE-ONLY, AND NOT A COUNT. Two reasons, and the second is the importan
 
 A PATH CAN LEAVE WITHOUT ANYTHING BEING LOST. The one legitimate way is a TU
 promotion: `tubuild.py` consolidates N per-symbol `src/_ZN....cpp` files into the one
-`src/actors/X.cpp` the original translation unit was, and git records N deletions plus
+`src/actors/<Class>.cpp` the original translation unit was, and git records N deletions plus
 one addition. A set ratchet reads all N as `GONE`. Measured on PR #1882
 (`tu/inline-dtor-order`, 9c6396c5f), 90 of 90 backslid paths were exactly that and
 none was a deletion, which is a report no one can read.
@@ -47,7 +47,7 @@ as a MOVE naming the `promoted_source` that absorbed it, and:
   * if it does not, that IS a backslide and still fails. The criteria are file-wide, so
     merging a clean function into a file with one bad line genuinely costs it its
     status, and the message says which criterion, e.g. "absorbed into
-    src/actors/X.cpp by TU promotion (ov100/daObjPathLift_c), which fails: Calls
+    src/actors/<Class>.cpp by TU promotion (ov100/daObjPathLift_c), which fails: Calls
     things by real names, not mangled _Z".
 
 A promotion is therefore never silently free. In practice it lands in the second case
@@ -144,7 +144,7 @@ def promoted_moves(root=None):
 
     A TU promotion is the one way a banked path legitimately stops existing without
     anything being deleted. `tubuild.py` consolidates N per-symbol `src/_ZN....cpp`
-    files into the single `src/actors/X.cpp` the original translation unit was, and
+    files into the single `src/actors/<Class>.cpp` the original translation unit was, and
     git records that as N deletions plus one addition -- so every one of the N banked
     paths reads to a set ratchet exactly like a file someone threw away. Measured on
     PR #1882 (`tu/inline-dtor-order`, 9c6396c5f): 90 of 90 backslid paths were TU

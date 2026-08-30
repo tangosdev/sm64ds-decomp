@@ -38,18 +38,16 @@
  * (InitResources) and slot 6 (Behavior) differ, both still fBase_c's own
  * slots in dActor_c -- CleanupResources, Render, OnPendingDestroy,
  * OnYoshiTryEat and OnTurnIntoEgg are all still the base's own words.
- * The readable src_tu shadow defines InitResources and Behavior as real member
- * functions and defines one ordinary destructor, from which mwccarm emits D1,
- * D0, D2, RTTI, and the vtable. Only the seven licensed text contributions are
- * currently used for verification. Production still keeps the pre-existing
- * one-function sources and ROM-supplied vtable/data until whole-TU ownership is
- * proven safe.
+ * The production translation unit defines InitResources and Behavior as real
+ * member functions. InitResources is the key function: defining it there emits
+ * the class vtable, whose inline destructor slots naturally make mwccarm emit
+ * retail's D1-then-D0 pair with no D2 and no forcing scaffold.
  */
 struct daObjAbuku_c : dActor_c {
     u8  pad_0d0[0x4];
     /* dCcAc_c member, named by daObjAbuku_c_Spawn's own C1 call
        and the class's own destructors' D1 call at +0xd4.
-       [daObjAbuku_c_Spawn.c, _ZN12daObjAbuku_cD1Ev.c, _ZN12daObjAbuku_cD0Ev.c] */
+       [src/actors/daObjAbuku_c.cpp] */
     dCcAc_c mdCcAc_c;            /* 0x0d4 */
     /* The same float WingFeather has, one bubble at a time: mSwayAngle
        advances 0x400 a frame, (mSwayAngle >> 4) * 2 + 1 indexes the sin/cos
@@ -57,14 +55,13 @@ struct daObjAbuku_c : dActor_c {
        mDriftSpeed eases toward 0x6000. mLifeTimer starts at 0x12c (300 frames)
        and pops the bubble at 0; mParticle is the handle
        Particle::System::New is fed and re-stores.
-       [src_tu/actors/daObjAbuku_c.cpp,
-        _ZN12daObjAbuku_c13InitResourcesEv.cpp] */
+       [src/actors/daObjAbuku_c.cpp] */
     s32 mDriftSpeed;            /* 0x108 */
     s16 mSwayAngle;            /* 0x10c */
     s16 mLifeTimer;            /* 0x10e */
     s32 mParticle;            /* 0x110 */
 
-    virtual ~daObjAbuku_c();            /* slots 16 (D1), 17 (D0) */
+    virtual ~daObjAbuku_c() {}            /* slots 16 (D1), 17 (D0) */
 
     virtual s32  InitResources();         /* slot  0 */
     virtual s32  Behavior();         /* slot  6 */
