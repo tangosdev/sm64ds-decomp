@@ -16,18 +16,48 @@
 // Wiggler. Wiggler_Spawn installs 0x021144bc and every _ZN7Wiggler* method sits
 // in that table's own slots. Checked against the image, not assumed.
 //
-// ---- THE ONE MISSING BODY -------------------------------------------------
+// ---- THE MISSING BODY LANDED (run rel0215 lane prop18) ---------------------
 //
-// _ZN7Wiggler8BehaviorEv (0x02112b5c, 0x6e0 bytes, slot 6) has neither a delink
-// block nor a src file anywhere in the tree -- the only such symbol in the
-// overlay (36 function symbols, 35 with a body). It is faced LOUDLY below
-// rather than stubbed, the hal/scene_boot.cpp l2_trap model and the ov030
-// func_ov030_021136b0 precedent. The face returns 1 because that is the ROM
-// body's ONLY return (0x021131dc `mov r0, #1`), so the Wiggler stays alive and
-// inert rather than being torn down by a value the ROM never produces.
-// CONSEQUENCE, stated plainly: the Wiggler spawns, initialises its five
-// segments, renders and holds state DEMOWAIT forever, because Behavior is the
-// only caller of the state machine's tick half.
+// _ZN7Wiggler8BehaviorEv (0x02112b5c, 0x6e0 bytes, slot 6) used to be the ONE
+// symbol in this overlay with neither a delink block nor a src file (36
+// function symbols, 35 with a body). Main matched it -- 36e8cbcce, PR #2008 --
+// and lane prop18 propagated src/_ZN7Wiggler8BehaviorEv.c here BY ADDRESS,
+// VERBATIM, blob 70a58eb36714d32803108c480fc7a9c9737a288d.
+//
+// WHAT IT IS, HONESTLY: a DECLARED NONMATCHING DRAFT at div 20 of 440 words.
+// Its own banner says so and it is deliberately not enrolled in
+// config/arm9/overlays/ov034/delinks.txt. All twenty residual words are
+// register/scheduling routing -- sixteen are pure instruction REORDER, where
+// our word appears in the cartridge a few words away with the registers
+// already right, and the other four are the setup block's 0x1000
+// materialisation and one address association. There is no opcode, immediate
+// or condition difference anywhere in the body, which is why it is admissible
+// as the port's running code while it is not yet admissible as a decomp match.
+// Re-measured in this tree at mwccarm 2004/b56 with strict relocs against
+// extracted/overlays/overlay_0034.bin at base 0x021111a0: size 0x6e0 exact,
+// 20 MISMATCH words, the same twenty.
+//
+// IT SEATS INTO A PLAIN VTABLE SLOT, AND THAT WAS VERIFIED RATHER THAN
+// ASSUMED. The only reference to 0x02112b5c in ov034's relocations is
+// `from:0x021144d4 kind:load`, and 0x021144d4 is _ZTV7Wiggler (0x021144bc)
+// plus 0x18 -- SLOT 6. No arm_call, no pointer-to-member record, no data-table
+// word. So there is no member-pointer dispatch to reconcile here and no
+// __fastcall(self, edx) thunk in play: the wg_behavior wrapper below already
+// carries MSVC's thiscall across, exactly as it did for the face, and the body
+// is a plain cdecl `int (void *)`. (A global `to:0x02112b5c` sweep also hits
+// ov025's relocs. That one is data_ov025_02112b5c kind:data(any): ov025 and
+// ov034 share the level-overlay base, so it is a different module's own object
+// at the same address, not this function.)
+//
+// WHAT CHANGES AT RUN TIME: the Wiggler was spawning, initialising its five
+// segments, rendering and holding state DEMOWAIT forever, because Behavior is
+// the only caller of the state machine's tick half. It now runs the ROM's own
+// frame -- the tick dispatcher (func_ov034_02112604), the yaw approach toward
+// +0x8d8, the JustHitGround landing dust, the footstep sounds, Animation::
+// Advance on all five segments, Actor::UpdatePos, Enemy::UpdateWMClsn, the
+// segment-follow with its per-segment ground raycast (func_ov034_02112874),
+// the damage particle, and the ten collision cylinders cleared and
+// re-registered every frame.
 //
 // ---- THE ELEVEN-STATE PMF TABLE -------------------------------------------
 //
@@ -119,7 +149,9 @@ int *_ZN7WigglerD1Ev(void *self);                 /* slot 16 */
 int *_ZN7WigglerD0Ev(void *self);                 /* slot 17 */
 int _ZN7Wiggler16CleanupResourcesEv(void);        /* slot 3, a plain .c body */
 int _ZN7Wiggler6RenderEv(void *self);             /* slot 9,  HOST COPY */
-/* slot 6, _ZN7Wiggler8BehaviorEv, HAS NO BODY -- faced below */
+/* slot 6, propagated from main 36e8cbcce by lane prop18. Its own source
+   spells the receiver `void *` and returns int; that is the shape here. */
+int _ZN7Wiggler8BehaviorEv(void *self);           /* slot 6,  src/ */
 
 /* the twenty-two state handlers, {enter, tick} per state */
 void func_ov034_02112484(void *c); void func_ov034_02112348(void *c);
@@ -173,6 +205,67 @@ DSSTATE_END
    cannot itself be defeated. */
 extern "C" char port_ov015_kdp_clsn_files[];
 #pragma comment(linker, "/alternatename:_port_ov015_kdp_clsn_files=_data_ov015_02114538")
+
+/* ---- THE NAMING DELTA BETWEEN THE TWO LINES, BRIDGED BY ADDRESS ----------
+   run rel0215 lane prop18. src/_ZN7Wiggler8BehaviorEv.c is taken VERBATIM off
+   the decomp line and that line has taken a C++ rename this branch has not, so
+   six of the names the body spells have no symbol here. They are the SAME SIX
+   FUNCTIONS, and the join is the ROM ADDRESS, which is the only thing both
+   lines agree on. Every address below is one of the thirty-seven relocations
+   the ROM records inside 0x02112b5c..0x0211323c:
+
+     0x02010c30  body `_ZN5Actor9UpdatePosEP5dCc_c`
+              -> here `_ZN5Actor9UpdatePosEP12CylinderClsn`
+     0x02014ff0  body `_ZN5dCc_c6UpdateEv`
+              -> here `_ZN12CylinderClsn6UpdateEv`
+     0x02015024  body `_ZN5dCc_c5ClearEv`
+              -> here `_ZN12CylinderClsn5ClearEv`
+     0x020356e8  body `_ZNK10dBgCh_Actr10IsOnGroundEv`
+              -> here `_ZNK12WithMeshClsn10IsOnGroundEv`
+     0x0203571c  body `_ZNK10dBgCh_Actr13JustHitGroundEv`
+              -> here `_ZNK12WithMeshClsn13JustHitGroundEv`
+     0x020aebf8  body `_ZN5Enemy12UpdateWMClsnER10dBgCh_Actrj`   (ov002)
+              -> here `_ZN5Enemy12UpdateWMClsnER12WithMeshClsnj`
+
+   Bridged rather than renamed at the source so the two lines reconcile without
+   a conflict, which is this tree's standing rule for a propagated body, and
+   the rule prop17 followed for ov074's three.
+
+   THE BODY'S EXTERN SET IS A MIX OF THE TWO LINES' SPELLINGS, and that is
+   worth writing down because it explains why nobody upstream noticed. It also
+   spells `_ZN5Actor11LandingDustEb` (0x0200fc0c) and
+   `_ZN9ActorBase18MarkForDestructionEv` (0x02043824), which are THIS
+   branch's spellings and do NOT exist on main -- main has
+   `_ZN8dActor_c11LandingDustEb` and `_ZN7fBase_c18MarkForDestructionEv`. The
+   file is a declared draft that is not enrolled in delinks.txt, so nothing
+   links it on the decomp side and the mixture is invisible there. Here it
+   means only these six need a bridge; those two resolve directly.
+
+   THE CALLING CONVENTIONS AGREE, CHECKED AGAINST THE DEFINITIONS RATHER THAN
+   ASSUMED, because a pure rename is only safe if both sides are the same ABI.
+   All six targets are cdecl C names taking the receiver as their FIRST STACK
+   ARGUMENT, which is exactly how the propagated body calls them:
+     src/_ZN5Actor9UpdatePosEP12CylinderClsn.c        `(struct Actor *, struct CylinderClsn *)`
+     src/_ZNK12WithMeshClsn10IsOnGroundEv.c           `(const struct WithMeshClsn *)`
+     src/_ZNK12WithMeshClsn13JustHitGroundEv.c        `(const struct WithMeshClsn *)`
+     src/_ZN5Enemy12UpdateWMClsnER12WithMeshClsnj.cpp `(struct Enemy *, struct WithMeshClsn *, u32)`
+   The two CylinderClsn ones are REAL C++ METHODS in src (`CylinderClsn::Clear`
+   and `::Update`, which MSVC mangles and calls __thiscall), so the C name the
+   ROM uses is not theirs -- it is the cdecl FACE in hal/method_faces.cpp:125
+   and :127, which takes `void *self` and forwards. That is the symbol these
+   two aliases land on, and it is the same one twenty-odd other port bodies
+   already call with the receiver pushed.
+
+   Every LHS below is DEFINED NOWHERE in this branch -- that is the whole
+   reason the bridge exists -- so no alias here can be defeated by a real
+   definition, and port/tools/alternatename_guard.py fails the build post-link
+   if that ever stops being true. */
+#pragma comment(linker, "/alternatename:__ZN5Actor9UpdatePosEP5dCc_c=__ZN5Actor9UpdatePosEP12CylinderClsn")
+#pragma comment(linker, "/alternatename:__ZN5dCc_c6UpdateEv=__ZN12CylinderClsn6UpdateEv")
+#pragma comment(linker, "/alternatename:__ZN5dCc_c5ClearEv=__ZN12CylinderClsn5ClearEv")
+#pragma comment(linker, "/alternatename:__ZNK10dBgCh_Actr10IsOnGroundEv=__ZNK12WithMeshClsn10IsOnGroundEv")
+#pragma comment(linker, "/alternatename:__ZNK10dBgCh_Actr13JustHitGroundEv=__ZNK12WithMeshClsn13JustHitGroundEv")
+#pragma comment(linker, "/alternatename:__ZN5Enemy12UpdateWMClsnER10dBgCh_Actrj=__ZN5Enemy12UpdateWMClsnER12WithMeshClsnj")
 
 /* The one body src defines as a real C++ method against include/Wiggler.h,
    faced here -- the ov013/ov024/ov025/ov032/ov033/ov035 recipe. Render is NOT
@@ -247,44 +340,20 @@ static void ov34_trap_report(void *self, int slot)
 OV34_TRAP(13) OV34_TRAP(14) OV34_TRAP(30)
 #undef OV34_TRAP
 
-/* _ZN7Wiggler8BehaviorEv (0x02112b5c, 0x6e0 bytes) is the ONE ov034 symbol with
-   no matched source. Faced the hal/scene_boot.cpp L2_TRAP way -- BOTH STREAMS,
-   FLUSHED, with a hit counter -- and NOT the port_actor_slot_decline way.
-   That distinction is deliberate and was measured, not assumed. The decline
-   hook is the RUNTIME QUARANTINE path: under SM64DS_FAULTS_FATAL it hard-aborts
-   and otherwise it raises a catchable AV so the walker freezes the actor. That
-   is right for a slot the ROM reaches RARELY -- the ov030 Ukiki state-3 tick
-   uses it -- and wrong for slot 6, which every actor phase calls EVERY FRAME:
-   wired that way this lane's first level-26 proof exited 0xC0000409 on frame 1
-   instead of running, and in play every Wiggler would quarantine itself
-   immediately. The l2_trap model is what PLAN.md section 3.3 actually names for
-   a MISSING body, and it is loud without being a fault.
-   The face returns 1 because that is the ROM body's ONLY return (0x021131dc
-   `mov r0, #1`), so the actor stays alive and inert rather than being torn down
-   by a value the ROM never produces. */
-static unsigned g_ov34_missing_behavior_hits;
-static int ov34_missing_behavior(void *c)
-{
-    unsigned id = c ? *(unsigned short *)((char *)c + 0xc) : 0u;
-    if (g_ov34_missing_behavior_hits++ == 0) {
-        const char *msg =
-            "  [ov034] UNMATCHED BODY ENTERED: _ZN7Wiggler8BehaviorEv "
-            "(0x02112b5c, 0x6e0 bytes, vtable slot 6) HAS NO MATCHED SOURCE -- "
-            "no delink block and no src file anywhere in the tree. The Wiggler "
-            "(actor id %u %s) will spawn and render but never leave state "
-            "DEMOWAIT, because Behavior is the only caller of its state "
-            "machine's tick half. Returns 1, the ROM body's only return. This "
-            "is the ONE missing body in ov034; see "
-            "port/slice_sweep2_ov034.txt.\n";
-        std::fprintf(stderr, msg, id, port_actor_class_name(id));
-        std::fflush(stderr);
-        std::printf(msg, id, port_actor_class_name(id));
-        std::fflush(stdout);
-    }
-    return 1;
-}
-extern "C" unsigned port_ov034_missing_behavior_hits(void)
-{ return g_ov34_missing_behavior_hits; }
+/* THE FACE THAT USED TO BE HERE IS GONE. run rel0215 lane prop18.
+   `ov34_missing_behavior` was the L2_TRAP-model loud face for
+   _ZN7Wiggler8BehaviorEv -- both streams, flushed, with a hit counter, and
+   deliberately NOT the port_actor_slot_decline quarantine hook, because
+   decline hard-aborts under SM64DS_FAULTS_FATAL and slot 6 runs every frame.
+   It returned 1, the ROM body's only return (0x021131dc `mov r0, #1`), so the
+   Wiggler stayed alive and inert.
+   It is DELETED rather than left wired-but-unreached, and so is its
+   `port_ov034_missing_behavior_hits()` accessor, which had no reader anywhere
+   in the tree. A FACE IS A TENANT, NOT A FIXTURE -- the same retirement
+   prop17 made for port_ov074_state0_tick_face when main matched that body.
+   The three ov34_trapNN slots below are a different thing and STAY: they are
+   vtable slots the ROM's own table does not fill for this class.
+   ov034 now has NO missing body: 36 of 36 function symbols have source. */
 
 static int __fastcall ov34_binit(void *s, void *)
 { return _ZN5Actor19BeforeInitResourcesEv(s); }
@@ -421,8 +490,15 @@ static int __fastcall wg_init(void *s, void *)
 { return _ZN7Wiggler13InitResourcesEv(s); }
 static int __fastcall wg_clean(void *s, void *)
 { (void)s; return _ZN7Wiggler16CleanupResourcesEv(); }
+/* Slot 6, the propagated body, seated bare. The wrapper is the same
+   __fastcall(self, dummy) shape every other slot in this table uses -- MSVC
+   calls a vtable entry __thiscall with the receiver in ecx and the dummy edx
+   soaks the second register argument -- and the callee is plain cdecl. There
+   is nothing extra to do here because the vtable slot is this function's ONLY
+   reference in the ROM (relocs.txt: one `kind:load` from 0x021144d4, no
+   code-pointer record), so the seat is the whole of its coverage. */
 static int __fastcall wg_behavior(void *s, void *)
-{ return ov34_missing_behavior(s); }
+{ return _ZN7Wiggler8BehaviorEv(s); }
 static int __fastcall wg_render(void *s, void *)
 { port_actor_render_probe("WIGGLER", (char *)s + 0x110);
   return _ZN7Wiggler6RenderEv(s); }          /* HOST COPY */
