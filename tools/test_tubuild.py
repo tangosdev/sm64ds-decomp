@@ -1318,6 +1318,33 @@ def test_partitioned_cli_modes_are_mutually_exclusive_before_any_build():
     assert code != 0
     assert "not allowed with argument" in out or "mutually exclusive" in out
 
+
+def test_record_linkcheck_preserves_all_owned_ranges():
+    entry = {"status": "text-verified"}
+    report = {
+        "result": "scratch-data-verified",
+        "scratch": "scratch/path",
+        "phases": {"link": {"ok": True}, "rom": {"ok": True}},
+        "tuRange": {"section": ".text", "differingBytes": 0},
+        "tuRanges": [
+            {"section": ".text", "differingBytes": 0},
+            {"section": ".data", "differingBytes": 0},
+        ],
+        "objectAudit": {},
+        "symbolsNew": [],
+        "rom": {"matchesStockRom": True, "sha256": "a" * 64},
+    }
+    original = tubuild.save_manifest
+    try:
+        tubuild.save_manifest = lambda _data: None
+        tubuild._record_linkcheck({"entries": [entry]}, entry, report, False)
+    finally:
+        tubuild.save_manifest = original
+
+    recorded = entry["verification"]["linkcheck"]
+    assert recorded["tuRange"] == report["tuRange"]
+    assert recorded["tuRanges"] == report["tuRanges"]
+
 # ---------------------------------------------------------------- create repairs
 # The three assemble_shadow_source behaviors proven by six modules of
 # hand-assembly (222 byte-verified functions) before being folded into the
