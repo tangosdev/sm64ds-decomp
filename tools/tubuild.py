@@ -3588,6 +3588,42 @@ def shared_build_bin_snapshot():
             for path in sorted((REPO / "build").glob("*.bin")) if path.is_file()}
 
 
+def compile_linkcheck_sources(srcs, vers, cache, init_srcs, syms, build_root, jobs):
+    """Compile a scratch linkcheck with the normal production object policies.
+
+    A baseline substitutes no candidate TU, but it still compiles production's
+    already-promoted multi-symbol objects. Those objects rely on manifest-backed
+    compiler-only policies for exact duplicate functions and data. Omitting the
+    policies makes the control fail before it reaches the candidate, even though the
+    normal ROM build accepts and verifies the same objects.
+    """
+    compiler_only = RB.compiler_only_policies(srcs)
+    failures, outcomes = [], collections.Counter()
+    with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as ex:
+        for rel, err, outcome in ex.map(
+                lambda s: RB.compile_one(
+                    s, vers, cache, init_srcs, syms, build_root=build_root,
+                    compiler_only=compiler_only), srcs):
+            outcomes[outcome] += 1
+            if err:
+                failures.append((rel, err))
+    return failures, outcomes
+
+
+def linkcheck_symbol_verdict(baseline, command_ok, new_errors):
+    """Whether the symbol phase is attributable-clean for this linkcheck.
+
+    The stock control's job is to inventory the tree's existing dsd errors. A
+    candidate is clean only when it adds none to that inventory; without a control it
+    must make the command itself pass.
+    """
+    if baseline:
+        return True
+    if new_errors is not None:
+        return not new_errors
+    return command_ok
+
+
 def cmd_linkcheck(args):
     data = load_manifest()
     entry = manifest_entry(data, args.id) if args.id else None
@@ -3804,14 +3840,8 @@ def cmd_linkcheck(args):
     init_srcs = RB.init_section_sources()
     syms = RB.enrolled_symbols()
     t0 = time.time()
-    failures, outcomes = [], collections.Counter()
-    with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
-        for rel, err, outcome in ex.map(
-                lambda s: RB.compile_one(s, vers, cache, init_srcs, syms, build_root=scratch),
-                srcs):
-            outcomes[outcome] += 1
-            if err:
-                failures.append((rel, err))
+    failures, outcomes = compile_linkcheck_sources(
+        srcs, vers, cache, init_srcs, syms, scratch, args.jobs)
     dt = time.time() - t0
     report["phases"]["compile"] = {"ok": not failures, "seconds": round(dt, 1),
                                    "outcomes": dict(outcomes)}
@@ -4320,12 +4350,7 @@ def cmd_linkcheck(args):
             report["strayOutputs"] = changed_shared
 
     # ------------------------------------------------------------------------ verdict
-    if baseline:
-        symbols_verdict = symbols_ok
-    elif symbols_new is not None:
-        symbols_verdict = not symbols_new
-    else:
-        symbols_verdict = symbols_ok
+    symbols_verdict = linkcheck_symbol_verdict(baseline, symbols_ok, symbols_new)
     equivalent = all(v["identical"] for _o, _s, v in partial_rows) if partial_rows else False
     verified = bool(module_ok and symbols_verdict and (rom_ok is not False))
     if partitioned:
