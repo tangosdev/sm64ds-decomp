@@ -7,7 +7,7 @@
     "no_codegen_trick",
     "no_mangled_refs"
   ],
-  "count": 2517,
+  "count": 2511,
   "converted": [
     "src/ARMMathLoadState.c",
     "src/ARMMathSaveState.c",
@@ -1005,12 +1005,6 @@
     "src/_ZN16daObjKaitendai_c6RenderEv.cpp",
     "src/_ZN16daObjKaitendai_cD0Ev.cpp",
     "src/_ZN16daObjKaitendai_cD1Ev.cpp",
-    "src/_ZN16daObjKinokoTag_c16CleanupResourcesEv.cpp",
-    "src/_ZN16daObjKinokoTag_c17SpawnMegaMushroomEv.cpp",
-    "src/_ZN16daObjKinokoTag_c20TrySpawnMegaMushroomEv.cpp",
-    "src/_ZN16daObjKinokoTag_c8BehaviorEv.cpp",
-    "src/_ZN16daObjKinokoTag_cD0Ev.cpp",
-    "src/_ZN16daObjKinokoTag_cD1Ev.cpp",
     "src/_ZN16daObjRc_Dorifu_c13InitResourcesEv.cpp",
     "src/_ZN16daObjRc_Dorifu_c16CleanupResourcesEv.cpp",
     "src/_ZN16daObjRc_Dorifu_cD0Ev.cpp",
