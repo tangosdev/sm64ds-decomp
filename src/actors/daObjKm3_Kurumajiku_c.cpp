@@ -1,10 +1,10 @@
 //cpp
-/* Manually curated shadow translation unit.
+/* Reconstructed production translation unit.
  * ov047/daObjKm3_Kurumajiku_c  (5 function(s))
  *
- * NOT ENROLLED and NOT CANONICAL. The readable class and member definitions
- * are compiled only by tubuild's scratch pipeline while the five legacy
- * production sources remain authoritative.
+ * This one compiler invocation owns the retail D1/D0 pair, both resource
+ * methods, the factory, resource descriptor, type-name string, SpawnInfo, and
+ * vtable storage. Exact per-member authorship remains in attribution.json.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
  * emits one .text section per function, in the REVERSE of source order, so
@@ -14,15 +14,10 @@
  * lives inline in the class definition so mwccarm emits only the retail D1/D0
  * pair, in retail order.
  *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x021111a0  src/_ZN21daObjKm3_Kurumajiku_cD1Ev.cpp
- *   [1] 0x021111f0  src/_ZN21daObjKm3_Kurumajiku_cD0Ev.c
- *   [2] 0x02111254  src/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp
- *   [3] 0x02111268  src/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp
- *   [4] 0x02111280  src/RickshawBs_Spawn.c
+ * The manifest records the five absorbed intake sources and the exact text/data
+ * ownership proof; do not recreate per-function production files for this class.
  */
 
-#define DAOBJKM3_KURUMAJIKU_INLINE_DTOR
 #include "daObjKm3_Kurumajiku_c.h"
 
 struct ResourceDescriptor {
