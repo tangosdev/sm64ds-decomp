@@ -193,6 +193,24 @@
 #       into it -- 32 bytes into a host object dsd would have sized at 8. This
 #       is the ov002 0x0210ffbc shape exactly: the overflow would run over the
 #       first three words of whatever the emitter placed next.
+#
+# A FIFTH PIN, and it goes the other way -- DOWN, not up:
+#   data_ov027_02113a24:0x2   gap 0x2   drops nothing
+#       ovdata.py's inferred size has a FLOOR of 4 (`max(4, nxt - a)`,
+#       port/tools/ovdata.py:1148), and this symbol's real gap is TWO, so the
+#       emitter sized it 4 and refused the pack: "data_ov027_02113a26 at
+#       0x02113a26 overlaps the symbol ending at 0x02113a28". The four names
+#       0x02113a1c / _a20 / _a24 / _a26 are FOUR VIEWS OF ONE ARRAY, not four
+#       objects: src/func_ov027_02111b2c.cpp indexes all four with the same
+#       [c+0x3d9] and the record stride is 0xc (record 0 at 0x02113a1c reads
+#       {00220000, 00005000, dd30, dd30}, record 1 at 0x02113a28 reads
+#       {0016c000, 0000a000, dd30, dd30}), so the four are the record's +0,
+#       +4, +8 and +10 fields. Pinning the s16 field to its real 2 bytes lets
+#       --pack lay all four contiguously, which reproduces the ROM bytes
+#       exactly and keeps every index correct. It is the only symbol in this
+#       mount whose natural gap is under 4; the whole list was swept for the
+#       shape rather than fixed one refusal at a time.
+#
 # Every other symbol's next-symbol delta already equals its ROM record size:
 # the bss reads as four sinit groups of N 8-byte SharedFilePtrs followed by N
 # 12-byte chain nodes, and each group's last node ends on the next group's
@@ -232,7 +250,7 @@ data_ov027_021138f0 data_ov027_021138f4 data_ov027_021138fc
 data_ov027_021139c4 data_ov027_021139cc data_ov027_021139d4
 data_ov027_021139dc data_ov027_021139e4 data_ov027_021139f0
 data_ov027_021139f4 data_ov027_02113a00 data_ov027_02113a1c
-data_ov027_02113a20 data_ov027_02113a24 data_ov027_02113a26
+data_ov027_02113a20 data_ov027_02113a24:0x2 data_ov027_02113a26
 data_ov027_02113a50 data_ov027_02113a74 data_ov027_02113b10
 data_ov027_02113b1c SnowmanBreath_SpawnInfo data_ov027_02113be0
 data_ov027_02113be8 data_ov027_02113bf0 data_ov027_02113bfc

@@ -1043,6 +1043,34 @@ void __sinit_ov036_02112730(void);
 void __sinit_ov036_0211279c(void);
 void __sinit_ov036_02112944(void);
 
+/* run rel0215 wave 2 (lane cast-ov027): ov027 per-symbol -- ALL FOUR of the
+   overlay's own sinits, and every class they serve is registered by this lane,
+   so none is left unrun. Verified by reading the bodies and by which cells
+   each one's relocs name:
+     02112cb0 -> 02113be0/02113be8                 SLIDING_ICE (92 + 93)
+     02112d1c -> 02113c08/c10/c18/c20/c28          CHILL_BULLY, the five files
+                                                   ChillBully_SpawnInfo's own
+                                                   tail names at 021138f4..02113904
+     02112df8 -> 02113c6c/c74/c7c/c84/c8c/c94      DA_PG_DFDR, six files, PLUS
+                                                   the four PMF pairs it copies
+                                                   into 02113ce4
+     02112f70 -> 02113d10                          SNOWMAN_BREATH's Vector3
+                                                   {0x27a52b, 0xdf2000, 0x2626bb},
+                                                   read by func_ov027_02112170
+                                                   and func_ov027_021124e4
+   02112df8 is the ONE PMF source-table constructor in this overlay; its
+   destination is pinned :0x20 in port/ov027_syms.txt because the ROM writes
+   four 8-byte pairs into a cell dsd sized at 4, and
+   port/unmatched/DaPgDfdr_StateDispatch.cpp checks the copy landed.
+   ov027 is already whole-mounted (PORT_LEVEL_OVERLAYS) for level 19's own
+   object-table walks; same dual-mount shape as ov012/ov013/ov036/ov045. */
+void port_ov027_pack_check(void);
+void port_ov027_syms_patch(void);
+void __sinit_ov027_02112cb0(void);
+void __sinit_ov027_02112d1c(void);
+void __sinit_ov027_02112df8(void);
+void __sinit_ov027_02112f70(void);
+
 /* The six wave-3/4/5 bring-ups, each defined beside the cast it serves and
    each holding its own done-guard. See the consolidation note at the bottom
    of port_actor_overlays_sinits(). */
@@ -1415,6 +1443,19 @@ extern "C" void port_actor_overlays_sinits(void)
     __sinit_ov036_02112730();   /* ARMED_ROTATING_PLATFORM's two */
     __sinit_ov036_0211279c();   /* TRICKY_TRIANGLES' ten */
     __sinit_ov036_02112944();   /* FLYING_CARPET's three */
+
+    /* run rel0215 wave 2 (lane cast-ov027): ov027's four own-class sinits, in
+       ROM ORDER (the .init section lays them out at 02112cb0, 02112d1c,
+       02112df8, 02112f70 and the .ctor table at 02112fc4 lists them in that
+       order too). All four belong to classes this lane registers, so all four
+       run. ov027 is also whole-mounted (PORT_LEVEL_OVERLAYS) for level 19's
+       own object-table walks. */
+    port_ov027_pack_check();
+    port_ov027_syms_patch();
+    __sinit_ov027_02112cb0();   /* SLIDING_ICE's model + collision files */
+    __sinit_ov027_02112d1c();   /* CHILL_BULLY's five */
+    __sinit_ov027_02112df8();   /* DA_PG_DFDR's six, then its four PMF copies */
+    __sinit_ov027_02112f70();   /* SNOWMAN_BREATH's Vector3 constant */
 
     /* ---- the six bring-ups that used to ride the first registry fill ------
      *

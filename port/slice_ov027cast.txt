@@ -1,0 +1,104 @@
+# run rel0215 wave 2, lane cast-ov027 (W2-ov027): ov027's SNOWMAN'S LAND cast.
+# Level 19. Five ids on four vtables -- SLIDING_ICE (92 spawner + 93 block),
+# CHILL_BULLY (217), DA_PG_DFDR (258) and SNOWMAN_BREATH (275).
+#
+# The derivation is port/ov027_syms.txt. The fill is
+# port/hal/actor_classes_ov027.cpp. Read those first; nothing is repeated here.
+#
+# ==== THE SOURCE INVENTORY, COUNTED THREE WAYS ============================
+# config/arm9/overlays/ov027/symbols.txt carries 53 kind:function rows.
+#   delinked complete to a src TU : 53
+#   present but NONMATCHING-banner:  0   (swept: no ov027 TU carries a banner)
+#   MISSING                       :  0
+# 53 + 0 + 0 = 53. The whole overlay has a decompiled body, so this lane needs
+# no loud L2 face for a missing one and none is written.
+#
+# ==== LANGUAGE ============================================================
+# 26 .cpp and 27 .c. The comment-stripped token sweep was RUN, not assumed:
+# no .c file in this set carries a //cpp marker or any C++ token, so no
+# set_source_files_properties(... LANGUAGE CXX) is needed and none is added.
+#
+# ==== THREE TUs ARE DELIBERATELY NOT HERE =================================
+# src/func_ov027_02111d38.cpp and src/func_ov027_02111cfc.cpp are DA_PG_DFDR's
+# two pointer-to-member dispatch sites, `(c->**p)()` over an mwcc eight-byte
+# member pointer. MSVC's is four bytes and cannot deliver `this` in ecx onto
+# the plain cdecl state bodies, so both are host-copied in
+# port/unmatched/DaPgDfdr_StateDispatch.cpp and the byte-matched originals stay
+# byte-locked in src/ as proof. That is the recipe's rule 13 and the
+# MgCurling/PathLift precedent.
+#
+# src/func_ov027_02111e00.cpp is DA_PG_DFDR's Render and is also not here. It
+# dispatches slot 5 of the ModelAnim at +0x320 through a six-virtual ROM-order
+# shadow, and the host _ZTV9ModelAnim is MSVC-numbered with Virtual18 really in
+# that slot -- the Whomp/Fish/FlyingCarpet collision. MEASURED, not predicted:
+# the lane's first seated boot of level 19 faulted on frame 2 in
+# Model::Virtual10 with a null, reached from pd_render through
+# func_ov027_02111e00. Host copy in port/unmatched/DaPgDfdr_Render.cpp, the
+# matched original byte-locked in src/.
+#
+# NOTHING ELSE IS REFUSED. No ARM asm primitive, no thread scheduler, no card
+# overlay loader tail and no wireless wrapper appears anywhere in this
+# overlay's 53 bodies, so the VS lane's caution -- refuse the SMALLEST subtree
+# that is genuinely unmodellable -- costs this lane three TUs and no faces.
+#
+# 50 of 53 compile. The three that do not are hosted, not dropped.
+#
+# ==== THE MEASURED EXTERNAL CLOSURE =======================================
+# There is none to add. Every arm9, ov002, ov062 and ov064 body this closure
+# reaches is ALREADY LINKED on the base tip -- checked symbol by symbol against
+# build/port/walk_window.map before the first configure, and confirmed by the
+# first link's own unresolved list afterwards. The one that looked missing,
+# _ZN5Bully16CleanupResourcesEv (CHILL_BULLY's slot 3), is linked as a real C++
+# method: the map carries ?CleanupResources@Bully@@QAEHXZ out of
+# _ZN5Bully16CleanupResourcesEv.cpp.obj via port/slice_gate177.txt, so the fill
+# calls it through include/Bully.h as the method it is rather than adding a TU.
+src/ChillBully_Spawn.c
+src/SlidingIceSpawner_Spawn.c
+src/SlidingIce_Spawn.c
+src/SnowmanBreath_Spawn.cpp
+src/_ZN10SlidingIce13InitResourcesEv.cpp
+src/_ZN10SlidingIce16CleanupResourcesEv.cpp
+src/_ZN10SlidingIce6RenderEv.cpp
+src/_ZN10SlidingIce8BehaviorEv.cpp
+src/_ZN10SlidingIceD0Ev.c
+src/_ZN10SlidingIceD1Ev.c
+src/_ZN13SnowmanBreath13InitResourcesEv.cpp
+src/_ZN13SnowmanBreath16CleanupResourcesEv.c
+src/_ZN13SnowmanBreath16OnPendingDestroyEv.c
+src/_ZN13SnowmanBreath6RenderEv.cpp
+src/_ZN13SnowmanBreath8BehaviorEv.cpp
+src/_ZN13SnowmanBreathD0Ev.cpp
+src/_ZN13SnowmanBreathD1Ev.cpp
+src/__sinit_ov027_02112cb0.c
+src/__sinit_ov027_02112d1c.c
+src/__sinit_ov027_02112df8.cpp
+src/__sinit_ov027_02112f70.c
+src/func_ov027_0211123c.cpp
+src/func_ov027_021115c4.c
+src/func_ov027_02111618.c
+src/func_ov027_02111680.c
+src/func_ov027_021116f0.cpp
+src/func_ov027_02111770.c
+src/func_ov027_0211181c.cpp
+src/func_ov027_021118c8.c
+src/func_ov027_02111924.c
+src/func_ov027_02111994.cpp
+src/func_ov027_02111a28.c
+src/func_ov027_02111b2c.cpp
+src/func_ov027_02111c48.c
+src/func_ov027_02111ca8.cpp
+src/func_ov027_02111d70.c
+src/func_ov027_02111d8c.c
+src/func_ov027_02111dfc.c
+src/func_ov027_02111e34.cpp
+src/func_ov027_02111eb4.cpp
+src/func_ov027_0211207c.c
+src/func_ov027_02112158.c
+src/func_ov027_02112170.cpp
+src/func_ov027_0211233c.cpp
+src/func_ov027_021123b0.c
+src/func_ov027_02112424.c
+src/func_ov027_02112480.cpp
+src/func_ov027_021124e4.c
+src/func_ov027_021125a8.c
+src/func_ov027_02112618.cpp
